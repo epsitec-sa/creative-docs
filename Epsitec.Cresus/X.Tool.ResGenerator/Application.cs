@@ -16,8 +16,6 @@ namespace Epsitec.Common.Tool.ResGenerator
 			}
 			else if (System.IO.File.Exists ("build.ini"))
 			{
-				string save_dir = System.IO.Directory.GetCurrentDirectory ();
-				
 				using (System.IO.StreamReader reader = new System.IO.StreamReader ("build.ini", System.Text.Encoding.UTF8))
 				{
 					for (int count = 0; ; count++)
@@ -73,12 +71,7 @@ namespace Epsitec.Common.Tool.ResGenerator
 				app_name      = split[1];
 			}
 			
-			string   save_dir = System.IO.Directory.GetCurrentDirectory ();
-			string   root_dir = System.IO.Path.Combine (app_directory, "resources");
-			
-//			System.IO.Directory.SetCurrentDirectory (app_directory);
 			Application.GenerateResFile (app_directory, default_namespace, app_name);
-//			System.IO.Directory.SetCurrentDirectory (save_dir);
 			
 			System.Console.Out.WriteLine ("Generated 'Res.cs' for {0}, application '{1}'", app_directory, app_name);
 		}
