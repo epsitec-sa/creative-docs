@@ -72,6 +72,6 @@ namespace Epsitec.Common.Types
 		}
 		#endregion
 		
-		DecimalRange							range;
+		private DecimalRange					range;
 	}
 }
