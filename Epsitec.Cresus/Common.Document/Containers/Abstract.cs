@@ -65,6 +65,13 @@ namespace Epsitec.Common.Document.Containers
 			this.Update();  // màj immédiate si l'agrégat est visible
 		}
 
+		// Indique qu'il faudra mettre à jour la sélection par noms.
+		public void SetDirtySelNames()
+		{
+			this.isDirtySelNames = true;
+			this.Update();  // màj immédiate si l'agrégat est visible
+		}
+
 		// Met à jour le contenu, si nécessaire.
 		protected void Update()
 		{
@@ -76,6 +83,7 @@ namespace Epsitec.Common.Document.Containers
 				this.isDirtyContent = false;  // propre
 				this.dirtyProperties.Clear();  // les propriétés sont forcément aussi à jour
 				this.dirtyObject = null;
+				this.isDirtySelNames = false;
 			}
 
 			if ( this.dirtyProperties.Count > 0 )
@@ -88,6 +96,12 @@ namespace Epsitec.Common.Document.Containers
 			{
 				this.DoUpdateObject(this.dirtyObject);
 				this.dirtyObject = null;
+			}
+
+			if ( this.isDirtySelNames )
+			{
+				this.DoUpdateSelNames();
+				this.isDirtySelNames = false;
 			}
 		}
 
@@ -103,6 +117,11 @@ namespace Epsitec.Common.Document.Containers
 
 		// Effectue la mise à jour d'un objet.
 		protected virtual void DoUpdateObject(Objects.Abstract obj)
+		{
+		}
+
+		// Effectue la mise à jour de la sélection par noms.
+		protected virtual void DoUpdateSelNames()
 		{
 		}
 
@@ -124,5 +143,6 @@ namespace Epsitec.Common.Document.Containers
 		protected bool							isDirtyContent;
 		protected System.Collections.ArrayList	dirtyProperties = new System.Collections.ArrayList();
 		protected Objects.Abstract				dirtyObject = null;
+		protected bool							isDirtySelNames;
 	}
 }

@@ -164,6 +164,15 @@ namespace Epsitec.Common.Widgets
 				state &= ~WidgetState.Selected;
 				adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
 			}
+
+			//	Le texte dans les boutons standards doit être remonté d'un pixel
+			//	pour paraître centré, mais surtout pas dans les IconButtons !
+			if ( this.buttonStyle == ButtonStyle.Normal        ||
+				 this.buttonStyle == ButtonStyle.DefaultAccept ||
+				 this.buttonStyle == ButtonStyle.DefaultCancel )
+			{
+				pos.Y ++;
+			}
 			
 			if ( this.innerZoom != 1.0 )
 			{

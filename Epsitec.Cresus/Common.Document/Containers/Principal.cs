@@ -13,12 +13,13 @@ namespace Epsitec.Common.Document.Containers
 		public Principal(Document document) : base(document)
 		{
 			this.CreateSelectorToolBar();
+			this.CreateSelectorPanel();
 
 			this.detailButton = new CheckButton();
 			this.detailButton.Text = "Détails";
 			this.detailButton.Dock = DockStyle.Top;
-			this.detailButton.DockMargins = new Margins(0, 0, 0, 10);
-			this.detailButton.TabIndex = 100;
+			this.detailButton.DockMargins = new Margins(0, 0, 5, 5);
+			this.detailButton.TabIndex = 1;
 			this.detailButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			this.detailButton.Clicked +=new MessageEventHandler(this.HandleDetailButtonClicked);
 
@@ -32,6 +33,7 @@ namespace Epsitec.Common.Document.Containers
 			this.scrollable.Parent = this;
 
 			this.colorSelector = new ColorSelector();
+			this.colorSelector.ColorPalette.ColorsCollection = this.document.GlobalSettings.ColorsCollection;
 			this.colorSelector.HasCloseButton = true;
 			this.colorSelector.Dock = DockStyle.Bottom;
 			this.colorSelector.DockMargins = new Margins(0, 0, 10, 0);
@@ -40,43 +42,17 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.TabIndex = 100;
 			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			this.colorSelector.Parent = this;
-
-			// Crée une fois pour toutes toutes les instances possibles des
-			// panneaux pour les propriétés.
-			int total = 0;
-			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
-			{
-				Properties.Type type = (Properties.Type) value;
-				total ++;
-			}
-			this.panelsList = new Panels.Abstract[total];
-
-			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
-			{
-				Properties.Type type = (Properties.Type) value;
-				Properties.Abstract prop = Properties.Abstract.NewProperty(this.document, type);
-				if ( prop == null )  continue;
-				Panels.Abstract panel = prop.CreatePanel(this.document);
-				panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
-				this.panelsList[value] = panel;
-			}
+			this.colorSelector.SetVisible(false);
 		}
 		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
-				if ( this.panelsList != null )
-				{
-					for ( int i=0 ; i<this.panelsList.Length ; i++ )
-					{
-						if ( this.panelsList[i] == null )  continue;
-						this.panelsList[i].OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
-						this.panelsList[i].Dispose();
-						this.panelsList[i] = null;
-					}
-					this.panelsList = null;
-				}
+				this.selectorName.TextChanged -= new EventHandler(this.HandleSelectorNameChanged);
+				this.selectorName.OpeningCombo -= new CancelEventHandler(this.HandleSelectorNameOpeningCombo);
+				this.selectorName.ClosedCombo -= new EventHandler(this.HandleSelectorNameClosedCombo);
+				this.selectorGo.Pressed -= new MessageEventHandler(this.HandleSelectorGo);
 			}
 
 			base.Dispose(disposing);
@@ -124,6 +100,39 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.selectorPartial, "Sélection partielle autorisée");
 		}
 
+		// Crée le panneau pour les sélections.
+		protected void CreateSelectorPanel()
+		{
+			this.selectorPanel = new Panel(this);
+			this.selectorPanel.Dock = DockStyle.Top;
+			this.selectorPanel.DockMargins = new Margins(0, 0, 0, 5);
+			this.selectorPanel.Hide();
+
+			this.selectorName = new TextFieldCombo(this.selectorPanel);
+			this.selectorName.Width = 150;
+			this.selectorName.Dock = DockStyle.Left;
+			this.selectorName.TextChanged += new EventHandler(this.HandleSelectorNameChanged);
+			this.selectorName.OpeningCombo += new CancelEventHandler(this.HandleSelectorNameOpeningCombo);
+			this.selectorName.ClosedCombo += new EventHandler(this.HandleSelectorNameClosedCombo);
+			ToolTip.Default.SetToolTip(this.selectorName, "Nom de l'objet à sélectionner");
+
+			this.selectorGo = new Button(this.selectorPanel);
+			this.selectorGo.Text = "Sélectionner";
+			this.selectorGo.Width = 80;
+			this.selectorGo.Dock = DockStyle.Left;
+			this.selectorGo.DockMargins = new Margins(3, 0, 0, 0);
+			this.selectorGo.Pressed += new MessageEventHandler(this.HandleSelectorGo);
+			ToolTip.Default.SetToolTip(this.selectorGo, "Sélectionne l'objet selon le nom");
+
+			this.UpdateSelectorGo();
+		}
+
+		// Met à jour le bouton de séleciton.
+		protected void UpdateSelectorGo()
+		{
+			this.selectorGo.SetEnabled(this.selectorName.Text.Length > 0);
+		}
+
 
 		// Met en évidence l'objet survolé par la souris.
 		public override void Hilite(Objects.Abstract hiliteObject)
@@ -160,6 +169,7 @@ namespace Epsitec.Common.Document.Containers
 				 this.document.Modifier.Tool == "Global" )
 			{
 				this.selectorToolBar.Show();
+				this.selectorPanel.SetVisible(this.document.Modifier.NamesExist);
 
 #if false
 				SelectorType sType = viewer.SelectorType;
@@ -175,6 +185,7 @@ namespace Epsitec.Common.Document.Containers
 			else
 			{
 				this.selectorToolBar.Hide();
+				this.selectorPanel.Hide();
 			}
 
 			this.detailButton.Parent = null;
@@ -184,6 +195,12 @@ namespace Epsitec.Common.Document.Containers
 
 			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
 			{
+				if ( widget is Panels.Abstract )
+				{
+					Panels.Abstract panel = widget as Panels.Abstract;
+					panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
+				}
+
 				widget.Parent = null; // retire de son parent
 			}
 
@@ -233,12 +250,14 @@ namespace Epsitec.Common.Document.Containers
 					}
 					lastBack = Properties.Abstract.BackgroundIntensity(property.Type);
 
-					Panels.Abstract panel = this.panelsList[(int)property.Type];
+					Panels.Abstract panel = property.CreatePanel(this.document);
 					if ( panel == null )  continue;
 					panel.Property = property;
 
 					panel.IsExtendedSize = this.document.Modifier.IsPropertiesExtended(property.Type);
 					panel.IsLayoutDirect = (property.Type == Properties.Type.Name);
+
+					panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
 
 					panel.TabIndex = index++;
 					panel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
@@ -279,6 +298,24 @@ namespace Epsitec.Common.Document.Containers
 			}
 
 			this.HandleOriginColorChanged(originColorLastPanel, true);
+		}
+
+		// Effectue la mise à jour de la sélection par noms.
+		protected override void DoUpdateSelNames()
+		{
+			if ( this.document.Modifier.Tool == "Select" ||
+				 this.document.Modifier.Tool == "Global" )
+			{
+				this.selectorPanel.SetVisible(this.document.Modifier.NamesExist);
+			}
+			else
+			{
+				this.selectorPanel.Hide();
+			}
+
+			this.ignoreChanged = true;
+			this.selectorName.Text = "";
+			this.ignoreChanged = false;
 		}
 
 
@@ -362,6 +399,37 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
+		// Texte du nom à sélectionner changé.
+		private void HandleSelectorNameChanged(object sender)
+		{
+			this.UpdateSelectorGo();
+		}
+
+		// Combo du texte du nom à sélectionner ouvert.
+		private void HandleSelectorNameOpeningCombo(object sender, CancelEventArgs e)
+		{
+			this.selectorName.Items.Clear();
+			System.Collections.ArrayList list = this.document.Modifier.SelectNames();
+			foreach ( string name in list )
+			{
+				this.selectorName.Items.Add(name);
+			}
+		}
+
+		// Combo du texte du nom à sélectionner fermé.
+		private void HandleSelectorNameClosedCombo(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			this.document.Modifier.SelectName(this.selectorName.Text);
+		}
+
+		// Bouton "chercher" actionné.
+		private void HandleSelectorGo(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.SelectName(this.selectorName.Text);
+		}
+
+
 		protected HToolBar						selectorToolBar;
 		protected IconButton					selectorAuto;
 		protected IconButton					selectorIndividual;
@@ -369,6 +437,9 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton					selectorStretch;
 		protected IconButton					selectorTotal;
 		protected IconButton					selectorPartial;
+		protected Panel							selectorPanel;
+		protected TextFieldCombo				selectorName;
+		protected Button						selectorGo;
 		protected CheckButton					detailButton;
 		protected Scrollable					scrollable;
 		protected ColorSelector					colorSelector;
@@ -376,6 +447,6 @@ namespace Epsitec.Common.Document.Containers
 		protected Properties.Type				originColorType = Properties.Type.None;
 		protected int							originColorRank = -1;
 		protected bool							ignoreColorChanged = false;
-		protected Panels.Abstract[]				panelsList;
+		protected bool							ignoreChanged = false;
 	}
 }

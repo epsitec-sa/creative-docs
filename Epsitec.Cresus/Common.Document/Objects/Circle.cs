@@ -292,7 +292,7 @@ namespace Epsitec.Common.Document.Objects
 				graphics.RenderSolid(drawingContext.HiliteOutlineColor);
 			}
 
-			if ( this.IsSelected || this.isCreating )
+			if ( this.IsDrawDash(drawingContext) )
 			{
 				this.PropertyLineMode.DrawPathDash(graphics, drawingContext, path, this.PropertyLineColor);
 			}

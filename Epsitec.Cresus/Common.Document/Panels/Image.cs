@@ -27,23 +27,31 @@ namespace Epsitec.Common.Document.Panels
 			this.buttonBrowse.Clicked += new MessageEventHandler(this.HandleBrowseClicked);
 			this.buttonBrowse.TabIndex = 2;
 			this.buttonBrowse.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonBrowse, "Choix du nom de fichier de l'image");
+
+			this.buttonUpdate = new Button(this);
+			this.buttonUpdate.Text = "Màj";
+			this.buttonUpdate.Clicked += new MessageEventHandler(this.HandleUpdateClicked);
+			this.buttonUpdate.TabIndex = 3;
+			this.buttonUpdate.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.buttonUpdate, "Actualise l'image");
 
 			this.buttonMirrorH = new CheckButton(this);
 			this.buttonMirrorH.Text = "Miroir X";
 			this.buttonMirrorH.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonMirrorH.TabIndex = 3;
+			this.buttonMirrorH.TabIndex = 4;
 			this.buttonMirrorH.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.buttonMirrorV = new CheckButton(this);
 			this.buttonMirrorV.Text = "Miroir Y";
 			this.buttonMirrorV.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonMirrorV.TabIndex = 4;
+			this.buttonMirrorV.TabIndex = 5;
 			this.buttonMirrorV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.buttonHomo = new CheckButton(this);
 			this.buttonHomo.Text = "Conserver proportions";
 			this.buttonHomo.ActiveStateChanged += new EventHandler(this.HandleButtonActiveStateChanged);
-			this.buttonHomo.TabIndex = 5;
+			this.buttonHomo.TabIndex = 6;
 			this.buttonHomo.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.isNormalAndExtended = true;
@@ -55,6 +63,7 @@ namespace Epsitec.Common.Document.Panels
 			{
 				this.fieldFilename.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.buttonBrowse.Clicked -= new MessageEventHandler(this.HandleBrowseClicked);
+				this.buttonUpdate.Clicked -= new MessageEventHandler(this.HandleUpdateClicked);
 				this.buttonMirrorH.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 				this.buttonMirrorV.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
 				this.buttonHomo.ActiveStateChanged -= new EventHandler(this.HandleButtonActiveStateChanged);
@@ -62,6 +71,7 @@ namespace Epsitec.Common.Document.Panels
 				this.label = null;
 				this.fieldFilename = null;
 				this.buttonBrowse = null;
+				this.buttonUpdate = null;
 				this.buttonMirrorH = null;
 				this.buttonMirrorV = null;
 				this.buttonHomo = null;
@@ -136,8 +146,11 @@ namespace Epsitec.Common.Document.Panels
 
 			r.Offset(0, -25);
 			r.Left = rect.Right-110;
-			r.Right = rect.Right;
+			r.Right = rect.Right-40;
 			this.buttonBrowse.Bounds = r;
+			r.Left = rect.Right-38;
+			r.Right = rect.Right;
+			this.buttonUpdate.Bounds = r;
 
 			r.Offset(0, -25);
 			r.Left = rect.Left;
@@ -184,10 +197,17 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldFilename.Cursor = dialog.FileName.Length;
 		}
 
+		private void HandleUpdateClicked(object sender, MessageEventArgs e)
+		{
+			Properties.Image p = this.property as Properties.Image;
+			p.Reload = true;
+		}
+
 
 		protected StaticText				label;
 		protected TextField					fieldFilename;
 		protected Button					buttonBrowse;
+		protected Button					buttonUpdate;
 		protected CheckButton				buttonMirrorH;
 		protected CheckButton				buttonMirrorV;
 		protected CheckButton				buttonHomo;

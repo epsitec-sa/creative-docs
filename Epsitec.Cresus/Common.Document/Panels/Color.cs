@@ -17,7 +17,8 @@ namespace Epsitec.Common.Document.Panels
 
 			this.field = new ColorSample(this);
 			this.field.PossibleOrigin = true;
-			this.field.Clicked += new MessageEventHandler(this.HandleFieldClicked);
+			this.field.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
+			this.field.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.field, "Couleur");
@@ -27,7 +28,8 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
-				this.field.Clicked -= new MessageEventHandler(this.HandleFieldClicked);
+				this.field.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
+				this.field.Changed -= new EventHandler(this.HandleFieldColorChanged);
 				this.field = null;
 				this.label = null;
 			}
@@ -110,9 +112,20 @@ namespace Epsitec.Common.Document.Panels
 		}
 		
 
-		private void HandleFieldClicked(object sender, MessageEventArgs e)
+		private void HandleFieldColorClicked(object sender, MessageEventArgs e)
 		{
 			this.OnOriginColorChanged();
+		}
+
+		private void HandleFieldColorChanged(object sender)
+		{
+			ColorSample cs = sender as ColorSample;
+			if ( cs.ActiveState == WidgetState.ActiveYes )
+			{
+				this.OnOriginColorChanged();
+			}
+
+			this.OnChanged();
 		}
 
 

@@ -975,7 +975,7 @@ namespace Epsitec.Common.Widgets
 				// Ne reproduit pas l'état sélectionné si on peint nous-même le fond
 				// de la ligne éditable.
 				state &= ~WidgetState.Selected;
-				adorner.PaintTextFieldBackground(graphics, rFill, state, this.textFieldStyle, this.navigator.IsReadOnly);
+				adorner.PaintTextFieldBackground(graphics, rFill, state, this.textFieldStyle, this.navigator.IsReadOnly&&!this.isCombo);
 			}
 			
 //			graphics.AddFilledRectangle(rText);

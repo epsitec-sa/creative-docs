@@ -557,6 +557,8 @@ namespace Epsitec.Common.Widgets
 			if ( !this.tabCapability )  return false;
 			if ( !this.DetectTabZone(pos) )  return false;
 
+			this.textNavigator.TabUndoMemorise();
+
 			this.mouseTabRank = this.DetectTabRank(pos);
 			if ( this.mouseTabRank == -1 )  // crée un nouveau tabulateur ?
 			{

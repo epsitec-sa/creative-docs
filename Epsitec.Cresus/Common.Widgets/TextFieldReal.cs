@@ -166,8 +166,7 @@ namespace Epsitec.Common.Widgets
 
 		public decimal InternalToReal(decimal value)
 		{
-			if ( this.realUnitType == RealUnitType.None   ||
-				 this.realUnitType == RealUnitType.Scalar )
+			if ( this.realUnitType == RealUnitType.None )
 			{
 				return value;
 			}
@@ -182,8 +181,7 @@ namespace Epsitec.Common.Widgets
 
 		public decimal RealToInternal(decimal value)
 		{
-			if ( this.realUnitType == RealUnitType.None   ||
-				 this.realUnitType == RealUnitType.Scalar )
+			if ( this.realUnitType == RealUnitType.None )
 			{
 				return value;
 			}

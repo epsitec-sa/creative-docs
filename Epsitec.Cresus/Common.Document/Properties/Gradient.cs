@@ -51,7 +51,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else
 			{
-				this.color1 = Drawing.Color.FromBrightness(0.95);
+				this.color1 = Drawing.Color.FromBrightness(0.8);
 				this.color2 = Drawing.Color.FromBrightness(0.5);
 			}
 			this.angle  = 0.0;
@@ -748,6 +748,17 @@ namespace Epsitec.Common.Document.Properties
 				graphics.AddLine(p2, p3);
 				graphics.AddLine(p3, p4);
 				graphics.AddLine(p4, p1);
+
+				if ( this.fillType == GradientFillType.Circle )
+				{
+					graphics.AddCircle(center.X, center.Y, System.Math.Abs(this.sx*bbox.Width), System.Math.Abs(this.sy*bbox.Height));
+				}
+
+				if ( this.fillType == GradientFillType.Diamond )
+				{
+					graphics.AddLine(p1, p3);
+					graphics.AddLine(p2, p4);
+				}
 
 				if ( this.fillType == GradientFillType.Conic )
 				{

@@ -512,6 +512,7 @@ namespace Epsitec.Common.Widgets.Adorner
 										  ButtonStyle style)
 		{
 			if ( text == null )  return;
+
 			if ( style != ButtonStyle.Tab )
 			{
 				state &= ~WidgetState.Focused;
@@ -1004,23 +1005,33 @@ namespace Epsitec.Common.Widgets.Adorner
 											MenuType type,
 											MenuItemType itemType)
 		{
-			if ( type == MenuType.Horizontal )
+			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				if ( itemType == MenuItemType.Select )
+				if ( type == MenuType.Horizontal )
 				{
-					this.PaintImageButton(graphics, rect, 0);
+					if ( itemType == MenuItemType.Select )
+					{
+						this.PaintImageButton(graphics, rect, 0);
+					}
+					if ( itemType == MenuItemType.Parent )
+					{
+						this.PaintImageButton(graphics, rect, 8);
+					}
 				}
-				if ( itemType == MenuItemType.Parent )
+
+				if ( type == MenuType.Vertical )
 				{
-					this.PaintImageButton(graphics, rect, 8);
+					if ( itemType != MenuItemType.Deselect )
+					{
+						this.PaintImageButton(graphics, rect, 0);
+					}
 				}
 			}
-
-			if ( type == MenuType.Vertical )
+			else
 			{
 				if ( itemType != MenuItemType.Deselect )
 				{
-					this.PaintImageButton(graphics, rect, 0);
+					this.PaintImageButton(graphics, rect, 3);
 				}
 			}
 		}

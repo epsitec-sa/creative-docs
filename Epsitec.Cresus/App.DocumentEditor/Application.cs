@@ -72,19 +72,19 @@ namespace Epsitec.App.DocumentEditor
 			switch ( type )
 			{
 				case DocumentType.Graphic:
-					this.mainWindow.Text = "Crésus documents";
+					this.mainWindow.Text = "Crésus Documents";
 					break;
 
 				case DocumentType.Pictogram:
-					this.mainWindow.Text = "Crésus pictogrammes";
+					this.mainWindow.Text = "Crésus Pictogrammes";
 					break;
 
 				case DocumentType.Text:
-					this.mainWindow.Text = "Crésus texte";
+					this.mainWindow.Text = "Crésus Texte";
 					break;
 
 				default:
-					this.mainWindow.Text = "Crésus documents";
+					this.mainWindow.Text = "Crésus Documents";
 					break;
 			}
 			

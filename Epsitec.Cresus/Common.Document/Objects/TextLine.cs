@@ -943,12 +943,12 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Retourne la largeur d'un caractère.
-		protected static double AdvanceString(Font font, string text)
+		protected double AdvanceString(Font font, string text)
 		{
 			System.Diagnostics.Debug.Assert(text.Length == 1);
 			if ( text[0] == TextLayout.CodeEndOfText )
 			{
-				return 0.000001;
+				return (this.advanceCharArray.Length <= 1) ? 1.0 : 0.000001;
 			}
 			else
 			{
@@ -957,7 +957,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Retourne la bbox d'un caractère.
-		protected static Drawing.Rectangle AdvanceBounds(Font font, string text)
+		protected Drawing.Rectangle AdvanceBounds(Font font, string text)
 		{
 			System.Diagnostics.Debug.Assert(text.Length == 1);
 			if ( text[0] == TextLayout.CodeEndOfText )
@@ -985,7 +985,7 @@ namespace Epsitec.Common.Document.Objects
 			for ( int i=0 ; i<this.advanceCharArray.Length ; i++ )
 			{
 				string s = new string(this.advanceCharArray[i].Character, 1);
-				width += TextLine.AdvanceString(this.advanceCharArray[i].Font, s)*this.advanceCharArray[i].FontSize;
+				width += this.AdvanceString(this.advanceCharArray[i].Font, s)*this.advanceCharArray[i].FontSize;
 				width += justif.Add*this.advanceCharArray[i].FontSize;
 
 				this.advanceMaxAscender = System.Math.Max(this.advanceMaxAscender, this.advanceCharArray[i].Font.Ascender*this.advanceCharArray[i].FontSize);
@@ -1058,7 +1058,7 @@ namespace Epsitec.Common.Document.Objects
 			fontSize = this.advanceCharArray[i].FontSize * this.advanceFactor;
 			fontColor = this.advanceCharArray[i].FontColor;
 
-			this.advanceWidth = TextLine.AdvanceString(font, character)*fontSize;
+			this.advanceWidth = this.AdvanceString(font, character)*fontSize;
 			this.advanceWidth += justif.Add*fontSize;
 			if ( !this.Advance(this.advanceWidth, this.advanceCheckEnd, ref this.advanceIndex, ref this.advanceBzt, ref this.advanceP2) )
 			{
@@ -1074,7 +1074,7 @@ namespace Epsitec.Common.Document.Objects
 
 			angle = Point.ComputeAngleDeg(this.advanceP1, this.advanceP2);
 
-			Drawing.Rectangle gb = TextLine.AdvanceBounds(font, character);
+			Drawing.Rectangle gb = this.AdvanceBounds(font, character);
 			gb.Top    = font.Ascender;
 			gb.Bottom = font.Descender;
 			gb.Scale(fontSize);

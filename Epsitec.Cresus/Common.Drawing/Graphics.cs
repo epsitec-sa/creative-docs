@@ -425,7 +425,7 @@ namespace Epsitec.Common.Drawing
 		
 		public void AddFilledCircle(Point p, double r)
 		{
-			this.AddCircle (p.X, p.Y, r, r);
+			this.AddFilledCircle (p.X, p.Y, r, r);
 		}
 		
 		public void AddFilledCircle(double x, double y, double r)

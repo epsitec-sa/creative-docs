@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Items.Add(this.buttonNew);
 			ToolTip.Default.SetToolTip(this.buttonNew, "Nouveau calque <b>dessus</b> le calque courant");
 
-			this.buttonDuplicate = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Duplicate.icon");
+			this.buttonDuplicate = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.DuplicateItem.icon");
 			this.buttonDuplicate.Clicked += new MessageEventHandler(this.HandleButtonDuplicate);
 			this.toolBar.Items.Add(this.buttonDuplicate);
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, "Dupliquer le calque");
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonDelete = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Delete.icon");
+			this.buttonDelete = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.DeleteItem.icon");
 			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDelete);
 			this.toolBar.Items.Add(this.buttonDelete);
 			ToolTip.Default.SetToolTip(this.buttonDelete, "Supprimer le calque");

@@ -1052,41 +1052,53 @@ namespace Epsitec.Common.Widgets.Adorner
 											MenuType type,
 											MenuItemType itemType)
 		{
-			if ( type == MenuType.Horizontal )
+			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				if ( itemType == MenuItemType.Select )
+				if ( type == MenuType.Horizontal )
 				{
-					Drawing.Path path = this.PathRoundRectangle(rect, 0);
+					if ( itemType == MenuItemType.Select )
+					{
+						Drawing.Path path = this.PathRoundRectangle(rect, 0);
 
-					graphics.Rasterizer.AddSurface(path);
-					graphics.RenderSolid(this.colorCaptionLight);
+						graphics.Rasterizer.AddSurface(path);
+						graphics.RenderSolid(this.colorCaptionLight);
 
-					graphics.Rasterizer.AddOutline(path, 1);
-					graphics.RenderSolid(this.colorCaption);
+						graphics.Rasterizer.AddOutline(path, 1);
+						graphics.RenderSolid(this.colorCaption);
+					}
+					if ( itemType == MenuItemType.Parent )
+					{
+						Drawing.Path path = this.PathTopRoundRectangle(rect, 0);
+
+						graphics.Rasterizer.AddSurface(path);
+						graphics.RenderSolid(this.colorCaptionLight);
+
+						graphics.Rasterizer.AddOutline(path, 1);
+						graphics.RenderSolid(this.colorControlDark);
+					}
 				}
-				if ( itemType == MenuItemType.Parent )
+
+				if ( type == MenuType.Vertical )
 				{
-					Drawing.Path path = this.PathTopRoundRectangle(rect, 0);
+					if ( itemType != MenuItemType.Deselect )
+					{
+						Drawing.Path path = this.PathRoundRectangle(rect, 0);
 
-					graphics.Rasterizer.AddSurface(path);
-					graphics.RenderSolid(this.colorCaptionLight);
+						graphics.Rasterizer.AddSurface(path);
+						graphics.RenderSolid(this.colorCaptionLight);
 
-					graphics.Rasterizer.AddOutline(path, 1);
-					graphics.RenderSolid(this.colorControlDark);
+						graphics.Rasterizer.AddOutline(path, 1);
+						graphics.RenderSolid(this.colorCaption);
+					}
 				}
 			}
-
-			if ( type == MenuType.Vertical )
+			else
 			{
 				if ( itemType != MenuItemType.Deselect )
 				{
-					Drawing.Path path = this.PathRoundRectangle(rect, 0);
-
-					graphics.Rasterizer.AddSurface(path);
-					graphics.RenderSolid(this.colorCaptionLight);
-
-					graphics.Rasterizer.AddOutline(path, 1);
-					graphics.RenderSolid(this.colorCaption);
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.ColorBorder);
 				}
 			}
 		}

@@ -18,7 +18,12 @@ namespace Epsitec.Common.Document.Objects
 		public Abstract(Document document, Objects.Abstract model)
 		{
 			this.document = document;
-			this.uniqueId = Modifier.GetNextUniqueObjectId();
+
+			if ( this.document != null && this.document.Modifier != null )
+			{
+				this.uniqueId = this.document.Modifier.GetNextUniqueObjectId();
+			}
+
 			this.properties = new UndoableList(this.document, UndoableListType.PropertiesInsideObject);
 		}
 
@@ -81,8 +86,8 @@ namespace Epsitec.Common.Document.Objects
 				case "ObjectVolume":     obj = new Volume(document, model);     break;
 				case "ObjectTextLine":   obj = new TextLine(document, model);   break;
 				case "ObjectTextBox":    obj = new TextBox(document, model);    break;
-				case "ObjectArray":      obj = new Array(document, model);      break;
 				case "ObjectImage":      obj = new Image(document, model);      break;
+				case "ObjectArray":      obj = new Array(document, model);      break;
 			}
 			System.Diagnostics.Debug.Assert(obj != null);
 			return obj;
@@ -1090,8 +1095,8 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Ajoute toutes les propriétés de l'objet dans une liste.
-		public virtual void PropertiesList(System.Collections.ArrayList list,
-										   bool propertiesDetail)
+		public void PropertiesList(System.Collections.ArrayList list,
+								   bool propertiesDetail)
 		{
 			foreach ( Properties.Abstract property in this.properties )
 			{
@@ -1139,8 +1144,8 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Ajoute toutes les propriétés de l'objet dans une liste.
-		public virtual void PropertiesList(System.Collections.ArrayList list,
-										   Objects.Abstract filter)
+		public void PropertiesList(System.Collections.ArrayList list,
+								   Objects.Abstract filter)
 		{
 			foreach ( Properties.Abstract property in this.properties )
 			{
@@ -1561,6 +1566,69 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Dessine le nom de l'objet.
+		public void DrawLabel(Graphics graphics, DrawingContext drawingContext)
+		{
+			if ( this.isHide )  return;
+
+			Properties.Name name = this.PropertyName;
+			if ( name == null || name.String == "" )  return;
+
+			double initialWidth = graphics.LineWidth;
+			graphics.LineWidth = 1.0/drawingContext.ScaleX;
+
+			Drawing.Rectangle bbox = this.BoundingBox;
+			graphics.Align(ref bbox);
+			bbox.Inflate(0.5/drawingContext.ScaleX);
+
+			string s = name.String;
+			Point pos = bbox.TopLeft;
+			Font font = Font.GetFont("Tahoma", "Regular");
+			double fs = 9.5/drawingContext.ScaleX;
+			double ta = font.GetTextAdvance(s)*fs;
+			double fa = font.Ascender*fs;
+			double fd = font.Descender*fs;
+			double h = fa-fd;
+			double m = 2.0/drawingContext.ScaleX;
+
+			Color lineColor = drawingContext.HiliteOutlineColor;
+			//?lineColor.A = 1.0;
+			if ( this.isHilite )  // survolé par la souris ?
+			{
+				lineColor = Color.FromRGB(1,0,0);  // rouge
+			}
+
+			Color textColor = Color.FromBrightness(0);  // noir
+			Color shadowColor = Color.FromBrightness(1);  // blanc
+			if ( lineColor.GetBrightness() < 0.5 )  // couleur foncée ?
+			{
+				textColor = Color.FromBrightness(1);  // blanc
+				shadowColor = Color.FromBrightness(0);  // noir
+			}
+
+			if ( m+ta+m <= bbox.Width )
+			{
+				Drawing.Rectangle rect = new Drawing.Rectangle(bbox.Left, bbox.Top-h, m+ta+m, h);
+				graphics.Align(ref rect);
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(lineColor);
+
+				pos.X += m;
+				pos.Y -= fa-1.0/drawingContext.ScaleX;
+
+				graphics.AddText(pos.X+1.0/drawingContext.ScaleX, pos.Y-1.0/drawingContext.ScaleX, s, font, fs);
+				graphics.RenderSolid(shadowColor);
+
+				graphics.AddText(pos.X, pos.Y, s, font, fs);
+				graphics.RenderSolid(textColor);
+			}
+
+			graphics.AddRectangle(bbox);
+			graphics.RenderSolid(lineColor);
+
+			graphics.LineWidth = initialWidth;
+		}
+
 		// Dessine les poignées de l'objet.
 		public virtual void DrawHandle(Graphics graphics, DrawingContext drawingContext)
 		{
@@ -1581,6 +1649,27 @@ namespace Epsitec.Common.Document.Objects
 					handle.Draw(graphics, drawingContext);
 				}
 			}
+		}
+
+		// Indique s'il faut dessiner le traitillé lorsqu'il n'y a pas de trait.
+		protected bool IsDrawDash(DrawingContext context)
+		{
+			if ( !context.IsActive )
+			{
+				return false;
+			}
+
+			if ( this.isCreating || this.IsHilite )
+			{
+				return true;
+			}
+
+			if ( this.IsSelected )
+			{
+				return !context.PreviewActive;
+			}
+
+			return false;
 		}
 
 		// Imprime la géométrie de l'objet.

@@ -526,7 +526,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
-			if ( this.IsSelected || this.isCreating )
+			if ( this.IsDrawDash(drawingContext) )
 			{
 				for ( int i=0 ; i<paths.Count ; i++ )
 				{

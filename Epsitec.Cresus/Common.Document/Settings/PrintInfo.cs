@@ -17,6 +17,8 @@ namespace Epsitec.Common.Document.Settings
 			this.autoZoom = false;
 			this.forceSimply = false;
 			this.forceComplex = false;
+			this.perfectJoin = false;
+			this.debugArea = false;
 		}
 
 		public double Zoom
@@ -61,6 +63,18 @@ namespace Epsitec.Common.Document.Settings
 			set { this.forceComplex = value; }
 		}
 
+		public bool PerfectJoin
+		{
+			get { return this.perfectJoin; }
+			set { this.perfectJoin = value; }
+		}
+
+		public bool DebugArea
+		{
+			get { return this.debugArea; }
+			set { this.debugArea = value; }
+		}
+
 
 		#region Serialization
 		// Sérialise les réglages.
@@ -96,5 +110,7 @@ namespace Epsitec.Common.Document.Settings
 		protected bool				autoLandscape;
 		protected bool				forceSimply;
 		protected bool				forceComplex;
+		protected bool				perfectJoin;
+		protected bool				debugArea;
 	}
 }

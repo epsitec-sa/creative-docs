@@ -19,6 +19,7 @@ namespace Epsitec.Common.Document.Properties
 			this.mirrorH  = false;
 			this.mirrorV  = false;
 			this.homo     = true;
+			this.reload   = false;
 		}
 
 		public string Filename
@@ -93,6 +94,31 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		public bool Reload
+		{
+			get
+			{
+				return this.reload;
+			}
+			
+			set
+			{
+				if ( this.reload != value )
+				{
+					if ( value )
+					{
+						this.NotifyBefore(false);
+						this.reload = value;
+						this.NotifyAfter(false);
+					}
+					else
+					{
+						this.reload = value;
+					}
+				}
+			}
+		}
+
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public override bool AlterBoundingBox
 		{
@@ -108,6 +134,7 @@ namespace Epsitec.Common.Document.Properties
 			p.mirrorH  = this.mirrorH;
 			p.mirrorV  = this.mirrorV;
 			p.homo     = this.homo;
+			p.reload   = this.reload;
 		}
 
 		// Compare deux propriétés.
@@ -120,6 +147,7 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.mirrorH  != this.mirrorH  )  return false;
 			if ( p.mirrorV  != this.mirrorV  )  return false;
 			if ( p.homo     != this.homo     )  return false;
+			if ( p.reload   != this.reload   )  return false;
 
 			return true;
 		}
@@ -175,5 +203,6 @@ namespace Epsitec.Common.Document.Properties
 		protected bool				mirrorH;
 		protected bool				mirrorV;
 		protected bool				homo;
+		protected bool				reload;
 	}
 }

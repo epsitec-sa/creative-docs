@@ -40,8 +40,16 @@ namespace Epsitec.Common.Document.Settings
 					this.text = "Déplacements avec la souris";
 					break;
 
+				case "PreviewActive":
+					this.text = "Comme imprimé";
+					break;
+
 				case "RulersShow":
 					this.text = "Règles visibles";
+					break;
+
+				case "LabelsShow":
+					this.text = "Affiche le nom des objets";
 					break;
 
 				case "PrintDraft":
@@ -58,6 +66,18 @@ namespace Epsitec.Common.Document.Settings
 
 				case "PrintAA":
 					this.text = "Anti-crénelage (pour imprimante couleur)";
+					break;
+
+				case "PrintPerfectJoin":
+					this.text = "Jointures parfaites (entre les zones d'une page)";
+					break;
+
+				case "PrintDebugArea":
+					this.text = "Imprime les zones détectées (debug)";
+					break;
+
+				case "RepeatDuplicateMove":
+					this.text = "Duplique avec répétition du dernier déplacement";
 					break;
 			}
 		}
@@ -83,8 +103,14 @@ namespace Epsitec.Common.Document.Settings
 					case "GuidesMouse":
 						return this.document.Modifier.ActiveViewer.DrawingContext.GuidesMouse;
 
+					case "PreviewActive":
+						return this.document.Modifier.ActiveViewer.DrawingContext.PreviewActive;
+
 					case "RulersShow":
 						return this.document.Modifier.ActiveViewer.DrawingContext.RulersShow;
+
+					case "LabelsShow":
+						return this.document.Modifier.ActiveViewer.DrawingContext.LabelsShow;
 
 					case "PrintDraft":
 						return this.document.Settings.PrintInfo.ForceSimply;
@@ -97,6 +123,15 @@ namespace Epsitec.Common.Document.Settings
 
 					case "PrintAA":
 						return (this.document.Settings.PrintInfo.Gamma != 0.0);
+
+					case "PrintPerfectJoin":
+						return this.document.Settings.PrintInfo.PerfectJoin;
+
+					case "PrintDebugArea":
+						return this.document.Settings.PrintInfo.DebugArea;
+
+					case "RepeatDuplicateMove":
+						return this.document.Modifier.RepeatDuplicateMove;
 				}
 
 				return false;
@@ -126,8 +161,16 @@ namespace Epsitec.Common.Document.Settings
 						this.document.Modifier.ActiveViewer.DrawingContext.GuidesMouse = value;
 						break;
 
+					case "PreviewActive":
+						this.document.Modifier.ActiveViewer.DrawingContext.PreviewActive = value;
+						break;
+
 					case "RulersShow":
 						this.document.Modifier.ActiveViewer.DrawingContext.RulersShow = value;
+						break;
+
+					case "LabelsShow":
+						this.document.Modifier.ActiveViewer.DrawingContext.LabelsShow = value;
 						break;
 
 					case "PrintDraft":
@@ -144,6 +187,18 @@ namespace Epsitec.Common.Document.Settings
 
 					case "PrintAA":
 						this.document.Settings.PrintInfo.Gamma = value ? 1.0 : 0.0;
+						break;
+
+					case "PrintPerfectJoin":
+						this.document.Settings.PrintInfo.PerfectJoin = value;
+						break;
+
+					case "PrintDebugArea":
+						this.document.Settings.PrintInfo.DebugArea = value;
+						break;
+
+					case "RepeatDuplicateMove":
+						this.document.Modifier.RepeatDuplicateMove = value;
 						break;
 				}
 			}

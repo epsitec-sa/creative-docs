@@ -16,6 +16,7 @@ namespace Epsitec.Common.Drawing
 			this.effects[GlyphPaintStyle.Disabled] = new Canvas (this, GlyphPaintStyle.Disabled);
 			this.effects[GlyphPaintStyle.Selected] = new Canvas (this, GlyphPaintStyle.Selected);
 			this.effects[GlyphPaintStyle.Entered]  = new Canvas (this, GlyphPaintStyle.Entered);
+			this.effects[GlyphPaintStyle.Shadow]   = new Canvas (this, GlyphPaintStyle.Shadow);
 			
 			Canvas.global_icon_cache.Add (this);
 		}

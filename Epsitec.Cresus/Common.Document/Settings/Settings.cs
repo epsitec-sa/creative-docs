@@ -39,9 +39,12 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultBool("GuidesShow");
 			this.CreateDefaultBool("GuidesMouse");
 
+			this.CreateDefaultBool("PreviewActive");
 			this.CreateDefaultBool("RulersShow");
+			this.CreateDefaultBool("LabelsShow");
 
 			this.CreateDefaultPoint("DuplicateMove");
+			this.CreateDefaultBool("RepeatDuplicateMove");
 			this.CreateDefaultPoint("ArrowMove");
 			this.CreateDefaultDouble("ArrowMoveMul");
 			this.CreateDefaultDouble("ArrowMoveDiv");
@@ -51,6 +54,8 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultBool("PrintAutoZoom");
 			this.CreateDefaultBool("PrintDraft");
 			this.CreateDefaultBool("PrintAA");
+			this.CreateDefaultBool("PrintPerfectJoin");
+			this.CreateDefaultBool("PrintDebugArea");
 			this.CreateDefaultDouble("PrintDpi");
 
 			this.CreateDefaultDouble("ImageDpi");
@@ -220,24 +225,8 @@ namespace Epsitec.Common.Document.Settings
 		{
 			this.document = Document.ReadDocument;
 			this.settings = (System.Collections.ArrayList) info.GetValue("Settings", typeof(System.Collections.ArrayList));
-
-			if ( Support.Serialization.Helper.FindElement(info, "GuidesList") )
-			{
-				this.guides = (UndoableList) info.GetValue("GuidesList", typeof(UndoableList));
-			}
-			else
-			{
-				this.guides = new UndoableList(this.document, UndoableListType.Guides);
-			}
-
-			if ( Support.Serialization.Helper.FindElement(info, "PrintInfo") )
-			{
-				this.printInfo = (PrintInfo) info.GetValue("PrintInfo", typeof(PrintInfo));
-			}
-			else
-			{
-				this.printInfo = new PrintInfo();
-			}
+			this.guides = (UndoableList) info.GetValue("GuidesList", typeof(UndoableList));
+			this.printInfo = (PrintInfo) info.GetValue("PrintInfo", typeof(PrintInfo));
 		}
 
 		// Adapte l'objet après une désérialisation.

@@ -260,13 +260,13 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Dessine la poignée.
-		public void Draw(Graphics graphics, DrawingContext drawingContext)
+		public void Draw(Graphics graphics, DrawingContext context)
 		{
 			if ( !this.isVisible )  return;
 
-			double scaleX     = drawingContext.ScaleX;
-			double scaleY     = drawingContext.ScaleY;
-			double handleSize = drawingContext.HandleSize;
+			double scaleX     = context.ScaleX;
+			double scaleY     = context.ScaleY;
+			double handleSize = context.HandleSize;
 
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/scaleX;
@@ -276,23 +276,26 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.isGlobalSelected )
 			{
-				Drawing.Rectangle rect = new Drawing.Rectangle();
-				rect.Left   = pos.X-handleSize*0.25;
-				rect.Right  = pos.X+handleSize*0.25;
-				rect.Bottom = pos.Y-handleSize*0.25;
-				rect.Top    = pos.Y+handleSize*0.25;
-				graphics.Align(ref rect);
-
-				if ( this.type == HandleType.Primary  ||
-					 this.type == HandleType.Starting ||
-					 this.type == HandleType.Ending   )
+				if ( !context.PreviewActive )
 				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(DrawingContext.ColorHandleGlobal);
+					Drawing.Rectangle rect = new Drawing.Rectangle();
+					rect.Left   = pos.X-handleSize*0.25;
+					rect.Right  = pos.X+handleSize*0.25;
+					rect.Bottom = pos.Y-handleSize*0.25;
+					rect.Top    = pos.Y+handleSize*0.25;
+					graphics.Align(ref rect);
 
-					rect.Deflate(0.5/scaleX, 0.5/scaleY);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(DrawingContext.ColorHandleOutline);
+					if ( this.type == HandleType.Primary  ||
+						this.type == HandleType.Starting ||
+						this.type == HandleType.Ending   )
+					{
+						graphics.AddFilledRectangle(rect);
+						graphics.RenderSolid(this.Adapt(DrawingContext.ColorHandleGlobal, context));
+
+						rect.Deflate(0.5/scaleX, 0.5/scaleY);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.Adapt(DrawingContext.ColorHandleOutline, context));
+					}
 				}
 			}
 			else
@@ -307,7 +310,7 @@ namespace Epsitec.Common.Document.Objects
 				Color color;
 				if ( this.isHilited )
 				{
-					color = drawingContext.HiliteOutlineColor;
+					color = context.HiliteOutlineColor;
 					color.A = 1.0;
 				}
 				else
@@ -330,25 +333,25 @@ namespace Epsitec.Common.Document.Objects
 					if ( this.constrainType == HandleConstrainType.Smooth )
 					{
 						rect.Inflate(0.5/scaleX, 0.5/scaleY);
-						this.PaintCircle(graphics, rect, DrawingContext.ColorHandleOutline);
+						this.PaintCircle(graphics, rect, DrawingContext.ColorHandleOutline, context);
 						rect.Deflate(1.0/scaleX, 1.0/scaleY);
-						this.PaintCircle(graphics, rect, color);
+						this.PaintCircle(graphics, rect, color, context);
 					}
 					else if ( this.constrainType == HandleConstrainType.Corner )
 					{
 						rect.Inflate(0.5/scaleX, 0.0);
-						this.PaintTriangle(graphics, rect, DrawingContext.ColorHandleOutline);
+						this.PaintTriangle(graphics, rect, DrawingContext.ColorHandleOutline, context);
 						rect.Deflate(1.0/scaleX, 1.0/scaleY);
-						this.PaintTriangle(graphics, rect, color);
+						this.PaintTriangle(graphics, rect, color, context);
 					}
 					else
 					{
 						graphics.AddFilledRectangle(rect);
-						graphics.RenderSolid(color);
+						graphics.RenderSolid(this.Adapt(color, context));
 
 						rect.Deflate(0.5/scaleX, 0.5/scaleY);
 						graphics.AddRectangle(rect);
-						graphics.RenderSolid(DrawingContext.ColorHandleOutline);
+						graphics.RenderSolid(this.Adapt(DrawingContext.ColorHandleOutline, context));
 					}
 
 					if ( this.type == HandleType.Ending )
@@ -356,7 +359,7 @@ namespace Epsitec.Common.Document.Objects
 						irect.Deflate(0.5/scaleX, 0.5/scaleY);
 						graphics.AddLine(irect.BottomLeft, irect.TopRight);
 						graphics.AddLine(irect.BottomRight, irect.TopLeft);
-						graphics.RenderSolid(DrawingContext.ColorHandleOutline);
+						graphics.RenderSolid(this.Adapt(DrawingContext.ColorHandleOutline, context));
 					}
 				}
 
@@ -365,22 +368,22 @@ namespace Epsitec.Common.Document.Objects
 				{
 					rect.Deflate(2.0/scaleX, 2.0/scaleY);
 					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(color);
+					graphics.RenderSolid(this.Adapt(color, context));
 
 					rect.Deflate(0.5/scaleX, 0.5/scaleY);
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(DrawingContext.ColorHandleOutline);
+					graphics.RenderSolid(this.Adapt(DrawingContext.ColorHandleOutline, context));
 				}
 
 				if ( this.type == HandleType.Property )
 				{
 					rect.Deflate(2.0/scaleX, 2.0/scaleY);
 					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(color);
+					graphics.RenderSolid(this.Adapt(color, context));
 
 					rect.Deflate(0.5/scaleX, 0.5/scaleY);
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(DrawingContext.ColorHandleOutline);
+					graphics.RenderSolid(this.Adapt(DrawingContext.ColorHandleOutline, context));
 				}
 
 				if ( this.type == HandleType.Center )
@@ -392,21 +395,21 @@ namespace Epsitec.Common.Document.Objects
 
 					graphics.AddFilledRectangle(r1);
 					graphics.AddFilledRectangle(r2);
-					graphics.RenderSolid(DrawingContext.ColorHandleOutline);
+					graphics.RenderSolid(this.Adapt(DrawingContext.ColorHandleOutline, context));
 
 					r1.Deflate(1.0/scaleX, 1.0/scaleY);
 					r2.Deflate(1.0/scaleX, 1.0/scaleY);
 					graphics.AddFilledRectangle(r1);
 					graphics.AddFilledRectangle(r2);
-					graphics.RenderSolid(color);
+					graphics.RenderSolid(this.Adapt(color, context));
 				}
 
 				if ( this.type == HandleType.Rotate )
 				{
 					rect.Inflate(0.5/scaleX, 0.5/scaleY);
-					this.PaintCircle(graphics, rect, DrawingContext.ColorHandleOutline);
+					this.PaintCircle(graphics, rect, DrawingContext.ColorHandleOutline, context);
 					rect.Deflate(1.0/scaleX, 1.0/scaleY);
-					this.PaintCircle(graphics, rect, color);
+					this.PaintCircle(graphics, rect, color, context);
 				}
 			}
 
@@ -414,18 +417,18 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Dessine un cercle complet.
-		protected void PaintCircle(Graphics graphics, Drawing.Rectangle rect, Color color)
+		protected void PaintCircle(Graphics graphics, Drawing.Rectangle rect, Color color, DrawingContext context)
 		{
 			double rx = rect.Width/2;
 			double ry = rect.Height/2;
 			Path path = new Path();
 			path.AppendCircle(rect.Center, rx, ry);
 			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(color);
+			graphics.RenderSolid(this.Adapt(color, context));
 		}
 
 		// Dessine un cercle complet.
-		protected void PaintTriangle(Graphics graphics, Drawing.Rectangle rect, Color color)
+		protected void PaintTriangle(Graphics graphics, Drawing.Rectangle rect, Color color, DrawingContext context)
 		{
 			Path path = new Path();
 			path.MoveTo((rect.Left+rect.Right)/2, rect.Top);
@@ -433,7 +436,18 @@ namespace Epsitec.Common.Document.Objects
 			path.LineTo(rect.Right, rect.Bottom);
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(color);
+			graphics.RenderSolid(this.Adapt(color, context));
+		}
+
+		// Adapte une couleur au mode d'aperçu avant impression.
+		protected Color Adapt(Color color, DrawingContext context)
+		{
+			if ( context.PreviewActive )
+			{
+				color = Color.FromBrightness(color.GetBrightness());
+				color.A *= 0.1;
+			}
+			return color;
 		}
 
 

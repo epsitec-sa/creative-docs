@@ -36,6 +36,7 @@ namespace Epsitec.Common.Document.Settings
 					this.textY = "Pas vertical";
 					this.factorMinValue = 0.001;  // 1mm
 					this.factorMaxValue = 0.1;  // 100mm
+					this.doubler = true;
 					break;
 
 				case "GridSubdiv":
@@ -58,6 +59,7 @@ namespace Epsitec.Common.Document.Settings
 					this.textX = "Déplacement à droite";
 					this.textY = "Déplacement en haut";
 					this.link = false;
+					this.doubler = true;
 					break;
 
 				case "ArrowMove":
@@ -65,6 +67,7 @@ namespace Epsitec.Common.Document.Settings
 					this.textY = "Déplacement vertical";
 					this.link = true;
 					this.factorMinValue = 0.0;
+					this.doubler = true;
 					break;
 			}
 		}
@@ -183,6 +186,14 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
+		public bool Doubler
+		{
+			get
+			{
+				return this.doubler;
+			}
+		}
+
 		public bool Integer
 		{
 			get
@@ -218,6 +229,7 @@ namespace Epsitec.Common.Document.Settings
 		protected double			factorMaxValue = 1.0;
 		protected double			factorStep = 1.0;
 		protected bool				link = true;
+		protected bool				doubler = false;
 		protected bool				integer = false;
 	}
 }

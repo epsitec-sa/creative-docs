@@ -174,7 +174,11 @@ namespace Epsitec.Common.Document.Objects
 			base.GetObjectData(info, context);
 
 			info.AddValue("LayerType", this.layerType);
-			info.AddValue("LayerPrint", this.layerPrint);
+
+			if ( this.document.Type != DocumentType.Pictogram )
+			{
+				info.AddValue("LayerPrint", this.layerPrint);
+			}
 		}
 
 		// Constructeur qui désérialise l'objet.
@@ -182,7 +186,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.layerType = (LayerType) info.GetValue("LayerType", typeof(LayerType));
 
-			if ( Support.Serialization.Helper.FindElement(info, "LayerPrint") )
+			if ( this.document.Type != DocumentType.Pictogram )
 			{
 				this.layerPrint = (LayerPrint) info.GetValue("LayerPrint", typeof(LayerPrint));
 			}

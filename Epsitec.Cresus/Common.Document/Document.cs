@@ -56,6 +56,10 @@ namespace Epsitec.Common.Document
 			this.propertiesAuto = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
 			this.propertiesSel = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
 			this.propertiesStyle = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
+			this.exportDirectory = "";
+			this.exportFilename = "";
+			this.exportFilter = 0;
+			this.printerName = "";
 
 			if ( this.mode == DocumentMode.Modify    ||
 				 this.mode == DocumentMode.Clipboard )
@@ -243,6 +247,62 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Nom du dossier d'exportation associé.
+		public string ExportDirectory
+		{
+			get
+			{
+				return this.exportDirectory;
+			}
+
+			set
+			{
+				this.exportDirectory = value;
+			}
+		}
+
+		// Nom du fichier (sans dossier) d'exportation associé.
+		public string ExportFilename
+		{
+			get
+			{
+				return this.exportFilename;
+			}
+
+			set
+			{
+				this.exportFilename = value;
+			}
+		}
+
+		// Type du fichier d'exportation associé.
+		public int ExportFilter
+		{
+			get
+			{
+				return this.exportFilter;
+			}
+
+			set
+			{
+				this.exportFilter = value;
+			}
+		}
+
+		// Nom de l'imprimante utilisée.
+		public string PrinterName
+		{
+			get
+			{
+				return this.printerName;
+			}
+
+			set
+			{
+				this.printerName = value;
+			}
+		}
+
 		// Indique si la sérialisation est nécessaire.
 		public bool IsDirtySerialize
 		{
@@ -386,6 +446,10 @@ namespace Epsitec.Common.Document
 			else
 			{
 				this.settings = doc.settings;
+				this.exportDirectory = doc.exportDirectory;
+				this.exportFilename = doc.exportFilename;
+				this.exportFilter = doc.exportFilter;
+				this.printerName = doc.printerName;
 			}
 
 			this.ReadFinalize();
@@ -393,6 +457,7 @@ namespace Epsitec.Common.Document
 			if ( this.Notifier != null )
 			{
 				this.Notifier.NotifyAllChanged();
+				this.Modifier.DirtyCounters();
 			}
 			return "";
 		}
@@ -535,7 +600,7 @@ namespace Epsitec.Common.Document
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			int revision = 1;
-			int version  = 0;
+			int version  = 1;
 			info.AddValue("Revision", revision);
 			info.AddValue("Version", version);
 			info.AddValue("Type", this.type);
@@ -549,10 +614,13 @@ namespace Epsitec.Common.Document
 			else
 			{
 				info.AddValue("Settings", this.settings);
+				info.AddValue("ExportFilename", this.exportFilename);
+				info.AddValue("ExportFilter", this.exportFilter);
+				info.AddValue("PrinterName", this.printerName);
 			}
 
-			info.AddValue("UniqueObjectId", Modifier.UniqueObjectId);
-			info.AddValue("UniqueStyleId", Modifier.UniqueStyleId);
+			info.AddValue("UniqueObjectId", this.modifier.UniqueObjectId);
+			info.AddValue("UniqueStyleId", this.modifier.UniqueStyleId);
 			info.AddValue("Objects", this.objects);
 			info.AddValue("Properties", this.propertiesAuto);
 			info.AddValue("Styles", this.propertiesStyle);
@@ -574,10 +642,28 @@ namespace Epsitec.Common.Document
 			else
 			{
 				this.settings = (Settings.Settings) info.GetValue("Settings", typeof(Settings.Settings));
+
+				if ( this.IsRevisionGreaterOrEqual(1,1) )
+				{
+					this.exportDirectory = "";
+					this.exportFilename = info.GetString("ExportFilename");
+					this.exportFilter = info.GetInt32("ExportFilter");
+					this.printerName = info.GetString("PrinterName");
+				}
+				else
+				{
+					this.exportDirectory = "";
+					this.exportFilename = "";
+					this.exportFilter = 0;
+					this.printerName = "";
+				}
 			}
 
-			Modifier.UniqueObjectId = info.GetInt32("UniqueObjectId");
-			Modifier.UniqueStyleId = info.GetInt32("UniqueStyleId");
+			if ( this.modifier != null )
+			{
+				this.modifier.UniqueObjectId = info.GetInt32("UniqueObjectId");
+				this.modifier.UniqueStyleId = info.GetInt32("UniqueStyleId");
+			}
 			this.objects = (UndoableList) info.GetValue("Objects", typeof(UndoableList));
 			this.propertiesAuto = (UndoableList) info.GetValue("Properties", typeof(UndoableList));
 			this.propertiesStyle = (UndoableList) info.GetValue("Styles", typeof(UndoableList));
@@ -589,16 +675,20 @@ namespace Epsitec.Common.Document
 			get { return this.ioDirectory; }
 		}
 
-		// Retourne le numéro de révision du fichier en cours de lecture.
-		public int ReadRevision
+		// Indique si un fichier est compatible avec une révision/version.
+		public bool IsRevisionGreaterOrEqual(int revision, int version)
 		{
-			get { return this.readRevision; }
-		}
+			if ( this.readRevision > revision )
+			{
+				return true;
+			}
 
-		// Retourne le numéro de version du fichier en cours de lecture.
-		public int ReadVersion
-		{
-			get { return this.readVersion; }
+			if ( this.readRevision < revision )
+			{
+				return false;
+			}
+
+			return ( this.readVersion >= version );
 		}
 		#endregion
 
@@ -613,51 +703,92 @@ namespace Epsitec.Common.Document
 				clipRect = drawingContext.Viewer.ScreenToInternal(clipRect);
 			}
 
-			Objects.Abstract branch = drawingContext.RootObject();
-			Objects.Abstract activLayer = drawingContext.RootObject(2);
 			Objects.Abstract page = drawingContext.RootObject(1);
-			foreach ( Objects.Layer layer in this.Flat(page) )
-			{
-				bool dimmedLayer = false;
-				if ( layer != activLayer )  // calque passif ?
-				{
-					if ( layer.Type == Objects.LayerType.Hide ||
-						 drawingContext.LayerDrawingMode == LayerDrawingMode.HideInactive )
-					{
-						continue;
-					}
 
-					if ( layer.Type == Objects.LayerType.Dimmed &&
-						 drawingContext.LayerDrawingMode == LayerDrawingMode.DimmedInactive )
+			if ( drawingContext.PreviewActive )
+			{
+				Rectangle initialClip = Rectangle.Empty;
+				if ( this.Modifier != null )
+				{
+					initialClip = graphics.SaveClippingRectangle();
+					clipRect = Rectangle.Intersection(clipRect, this.Modifier.PageArea);
+					Rectangle clip = drawingContext.Viewer.InternalToScreen(clipRect);
+					clip = drawingContext.Viewer.MapClientToRoot(clip);
+					graphics.SetClippingRectangle(clip);
+				}
+
+				foreach ( Objects.Layer layer in this.Flat(page) )
+				{
+					if ( layer.Print == Objects.LayerPrint.Hide )  continue;
+
+					Properties.ModColor modColor = layer.PropertyModColor;
+					drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
+					drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
+
+					foreach ( Objects.Abstract obj in this.Deep(layer) )
 					{
-						dimmedLayer = true;
+						if ( obj.IsHide )  continue;  // objet caché ?
+						if ( !obj.BoundingBox.IntersectsWith(clipRect) )  continue;
+
+						obj.DrawGeometry(graphics, drawingContext);
 					}
 				}
 
-				Properties.ModColor modColor = layer.PropertyModColor;
-				drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
-
-				foreach ( DeepBranchEntry entry in this.DeepBranch(layer, branch) )
+				if ( this.Modifier != null )
 				{
-					Objects.Abstract obj = entry.Object;
-					if ( !obj.BoundingBox.IntersectsWith(clipRect) )  continue;
+					graphics.RestoreClippingRectangle(initialClip);
+				}
+			}
+			else
+			{
+				bool isBase = drawingContext.RootStackIsBase;
+				Objects.Abstract branch = drawingContext.RootObject();
+				Objects.Abstract activLayer = drawingContext.RootObject(2);
 
-					if ( obj.IsHide )  // objet caché ?
+				foreach ( Objects.Layer layer in this.Flat(page) )
+				{
+					bool dimmedLayer = false;
+					if ( layer != activLayer )  // calque passif ?
 					{
-						if ( !drawingContext.HideHalfActive )  continue;
-						drawingContext.IsDimmed = true;
-					}
-					else
-					{
-						drawingContext.IsDimmed = dimmedLayer;
+						if ( layer.Type == Objects.LayerType.Hide ||
+							drawingContext.LayerDrawingMode == LayerDrawingMode.HideInactive )
+						{
+							continue;
+						}
+
+						if ( layer.Type == Objects.LayerType.Dimmed &&
+							drawingContext.LayerDrawingMode == LayerDrawingMode.DimmedInactive )
+						{
+							dimmedLayer = true;
+						}
 					}
 
-					if ( !entry.IsInsideBranch && layer.Type != Objects.LayerType.Show )
-					{
-						drawingContext.IsDimmed = true;
-					}
+					Properties.ModColor modColor = layer.PropertyModColor;
+					drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
 
-					obj.DrawGeometry(graphics, drawingContext);
+					foreach ( DeepBranchEntry entry in this.DeepBranch(layer, branch) )
+					{
+						Objects.Abstract obj = entry.Object;
+						if ( !obj.BoundingBox.IntersectsWith(clipRect) )  continue;
+
+						if ( obj.IsHide )  // objet caché ?
+						{
+							if ( !drawingContext.HideHalfActive )  continue;
+							drawingContext.IsDimmed = true;
+						}
+						else
+						{
+							drawingContext.IsDimmed = dimmedLayer;
+						}
+
+						if ( !entry.IsInsideBranch &&
+							(layer.Type != Objects.LayerType.Show || !isBase) )
+						{
+							drawingContext.IsDimmed = true;
+						}
+
+						obj.DrawGeometry(graphics, drawingContext);
+					}
 				}
 			}
 		}
@@ -665,12 +796,19 @@ namespace Epsitec.Common.Document
 		// Imprime le document.
 		public void Print(Common.Dialogs.Print dp)
 		{
+			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
+			this.Modifier.DeselectAll();
+
+			this.printerName = dp.Document.PrinterSettings.PrinterName;
 			this.printer.Print(dp);
 		}
 
 		// Exporte le document.
 		public string Export(string filename)
 		{
+			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
+			this.Modifier.DeselectAll();
+
 			return this.printer.Export(filename);
 		}
 
@@ -1162,6 +1300,10 @@ namespace Epsitec.Common.Document
 		protected Size							size;
 		protected Point							hotSpot;
 		protected string						filename;
+		protected string						exportDirectory;
+		protected string						exportFilename;
+		protected int							exportFilter;
+		protected string						printerName;
 		protected bool							isDirtySerialize;
 		protected UndoableList					objects;
 		protected UndoableList					propertiesAuto;

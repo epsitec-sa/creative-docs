@@ -955,7 +955,14 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			if ( itemType != MenuItemType.Deselect )
 			{
-				this.PaintImageButton(graphics, rect, 8);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintImageButton(graphics, rect, 8);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, rect, 11);
+				}
 			}
 		}
 

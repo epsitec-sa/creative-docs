@@ -392,7 +392,7 @@ namespace Epsitec.Common.Widgets
 			MenuItemType      iType = this.itemType;
 			Drawing.Point     pos   = new Drawing.Point();
 
-			if ( (state & WidgetState.Enabled) == 0 || this.separator )
+			if ( this.separator )
 			{
 				iType = MenuItemType.Deselect;
 			}

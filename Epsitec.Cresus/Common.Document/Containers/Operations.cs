@@ -12,279 +12,149 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Operations(Document document) : base(document)
 		{
+			this.tabIndex = 0;
+
 			// Déplacement.
-			this.boxMove = new GroupBox(this);
-			this.boxMove.Height = 45;
-			this.boxMove.Text = "Déplacements";
-			this.boxMove.Dock = DockStyle.Top;
-			this.boxMove.DockMargins = new Margins(0, 0, 0, 10);
-
-			this.toolBarMove = new HToolBar(this.boxMove);
-			this.toolBarMove.Dock = DockStyle.Top;
-			this.toolBarMove.DockMargins = new Margins(0, 0, 0, 10);
-
-			this.fieldMoveH = new TextFieldReal();
-			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldMoveH);
-			this.fieldMoveH.Width = 50;
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.fieldMoveH.InternalValue = 1.0M;
-			}
-			else
-			{
-				this.fieldMoveH.InternalValue = 100.0M;  // 10mm
-			}
-			ToolTip.Default.SetToolTip(this.fieldMoveH, "Valeur du déplacement horizontal");
-			this.toolBarMove.Items.Add(this.fieldMoveH);
-
-			this.buttonMoveHi = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperMoveHi.icon");
-			this.buttonMoveHi.Clicked += new MessageEventHandler(this.HandleButtonMoveHi);
-			ToolTip.Default.SetToolTip(this.buttonMoveHi, "Déplacement à gauche");
-			this.toolBarMove.Items.Add(this.buttonMoveHi);
-
-			this.buttonMoveH = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperMoveH.icon");
-			this.buttonMoveH.Clicked += new MessageEventHandler(this.HandleButtonMoveH);
-			ToolTip.Default.SetToolTip(this.buttonMoveH, "Déplacement à droite");
-			this.toolBarMove.Items.Add(this.buttonMoveH);
-
-			this.toolBarMove.Items.Add(new IconSeparator());
-
-			this.fieldMoveV = new TextFieldReal();
-			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldMoveV);
-			this.fieldMoveV.Width = 50;
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.fieldMoveV.InternalValue = 1.0M;
-			}
-			else
-			{
-				this.fieldMoveV.InternalValue = 100.0M;  // 10mm
-			}
-			ToolTip.Default.SetToolTip(this.fieldMoveV, "Valeur du déplacement vertical");
-			this.toolBarMove.Items.Add(this.fieldMoveV);
-
-			this.buttonMoveVi = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperMoveVi.icon");
-			this.buttonMoveVi.Clicked += new MessageEventHandler(this.HandleButtonMoveVi);
-			ToolTip.Default.SetToolTip(this.buttonMoveVi, "Déplacement en bas");
-			this.toolBarMove.Items.Add(this.buttonMoveVi);
-
-			this.buttonMoveV = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperMoveV.icon");
-			this.buttonMoveV.Clicked += new MessageEventHandler(this.HandleButtonMoveV);
-			ToolTip.Default.SetToolTip(this.buttonMoveV, "Déplacement en haut");
-			this.toolBarMove.Items.Add(this.buttonMoveV);
+			this.CreateHeader(ref this.boxMove, ref this.toolBarMove, "Déplacements");
+			this.CreateFieldMove(this.toolBarMove, ref this.fieldMoveH, "Valeur du déplacement horizontal");
+			this.CreateButton(this.toolBarMove, ref this.buttonMoveHi, "OperMoveHi", "Déplacement à gauche", new MessageEventHandler(this.HandleButtonMoveHi));
+			this.CreateButton(this.toolBarMove, ref this.buttonMoveH,  "OperMoveH",  "Déplacement à droite", new MessageEventHandler(this.HandleButtonMoveH));
+			this.CreateSeparator(this.toolBarMove);
+			this.CreateFieldMove(this.toolBarMove, ref this.fieldMoveV, "Valeur du déplacement vertical");
+			this.CreateButton(this.toolBarMove, ref this.buttonMoveVi, "OperMoveVi", "Déplacement en bas",  new MessageEventHandler(this.HandleButtonMoveVi));
+			this.CreateButton(this.toolBarMove, ref this.buttonMoveV,  "OperMoveV",  "Déplacement en haut", new MessageEventHandler(this.HandleButtonMoveV));
 
 			// Rotation.
-			this.boxRotate = new GroupBox(this);
-			this.boxRotate.Height = 45;
-			this.boxRotate.Text = "Rotations";
-			this.boxRotate.Dock = DockStyle.Top;
-			this.boxRotate.DockMargins = new Margins(0, 0, 0, 10);
-
-			this.toolBarRot = new HToolBar(this.boxRotate);
-			this.toolBarRot.Dock = DockStyle.Top;
-			this.toolBarRot.DockMargins = new Margins(0, 0, 0, 10);
-
-			this.buttonRotate90 = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperRot90.icon");
-			this.buttonRotate90.Clicked += new MessageEventHandler(this.HandleButtonRotate90);
-			ToolTip.Default.SetToolTip(this.buttonRotate90, "Quart de tour à gauche");
-			this.toolBarRot.Items.Add(this.buttonRotate90);
-
-			this.buttonRotate180 = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperRot180.icon");
-			this.buttonRotate180.Clicked += new MessageEventHandler(this.HandleButtonRotate180);
-			ToolTip.Default.SetToolTip(this.buttonRotate180, "Demi-tour");
-			this.toolBarRot.Items.Add(this.buttonRotate180);
-
-			this.buttonRotate270 = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperRot270.icon");
-			this.buttonRotate270.Clicked += new MessageEventHandler(this.HandleButtonRotate270);
-			ToolTip.Default.SetToolTip(this.buttonRotate270, "Quart de tour à droite");
-			this.toolBarRot.Items.Add(this.buttonRotate270);
-
-			this.toolBarRot.Items.Add(new IconSeparator());
-
-			this.fieldRotate = new TextFieldReal();
-			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldRotate);
-			this.fieldRotate.Width = 50;
-			this.fieldRotate.InternalValue = 10.0M;
-			ToolTip.Default.SetToolTip(this.fieldRotate, "Angle de rotation en degrés");
-			this.toolBarRot.Items.Add(this.fieldRotate);
-
-			this.buttonRotate = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperRot.icon");
-			this.buttonRotate.Clicked += new MessageEventHandler(this.HandleButtonRotate);
-			ToolTip.Default.SetToolTip(this.buttonRotate, "Rotation anti-horaire");
-			this.toolBarRot.Items.Add(this.buttonRotate);
-
-			this.buttonRotatei = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperRoti.icon");
-			this.buttonRotatei.Clicked += new MessageEventHandler(this.HandleButtonRotatei);
-			ToolTip.Default.SetToolTip(this.buttonRotatei, "Rotation horaire");
-			this.toolBarRot.Items.Add(this.buttonRotatei);
+			this.CreateHeader(ref this.boxRot, ref this.toolBarRot, "Rotations");
+			this.CreateButton(this.toolBarRot, ref this.buttonRotate90,  "OperRot90",  "Quart de tour à gauche", new MessageEventHandler(this.HandleButtonRotate90));
+			this.CreateButton(this.toolBarRot, ref this.buttonRotate180, "OperRot180", "Demi-tour",              new MessageEventHandler(this.HandleButtonRotate180));
+			this.CreateButton(this.toolBarRot, ref this.buttonRotate270, "OperRot270", "Quart de tour à droite", new MessageEventHandler(this.HandleButtonRotate270));
+			this.CreateSeparator(this.toolBarRot);
+			this.CreateFieldRot(this.toolBarRot, ref this.fieldRotate, "Angle de rotation en degrés");
+			this.CreateButton(this.toolBarRot, ref this.buttonRotate,  "OperRot",  "Rotation anti-horaire", new MessageEventHandler(this.HandleButtonRotate));
+			this.CreateButton(this.toolBarRot, ref this.buttonRotatei, "OperRoti", "Rotation horaire",      new MessageEventHandler(this.HandleButtonRotatei));
 
 			// Miroir.
-			this.boxMirror = new GroupBox(this);
-			this.boxMirror.Height = 45;
-			this.boxMirror.Text = "Miroirs";
-			this.boxMirror.Dock = DockStyle.Top;
-			this.boxMirror.DockMargins = new Margins(0, 0, 0, 10);
-
-			this.toolBarMirror = new HToolBar(this.boxMirror);
-			this.toolBarMirror.Dock = DockStyle.Top;
-			this.toolBarMirror.DockMargins = new Margins(0, 0, 0, 10);
-
-			this.buttonMirrorH = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperMirrorH.icon");
-			this.buttonMirrorH.Clicked += new MessageEventHandler(this.HandleButtonMirrorH);
-			ToolTip.Default.SetToolTip(this.buttonMirrorH, "Miroir horizontal");
-			this.toolBarMirror.Items.Add(this.buttonMirrorH);
-
-			this.buttonMirrorV = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperMirrorV.icon");
-			this.buttonMirrorV.Clicked += new MessageEventHandler(this.HandleButtonMirrorV);
-			ToolTip.Default.SetToolTip(this.buttonMirrorV, "Miroir vertical");
-			this.toolBarMirror.Items.Add(this.buttonMirrorV);
+			this.CreateHeader(ref this.boxMirror, ref this.toolBarMirror, "Miroirs");
+			this.CreateButton(this.toolBarMirror, ref this.buttonMirrorH, "OperMirrorH", "Miroir horizontal", new MessageEventHandler(this.HandleButtonMirrorH));
+			this.CreateButton(this.toolBarMirror, ref this.buttonMirrorV, "OperMirrorV", "Miroir vertical",   new MessageEventHandler(this.HandleButtonMirrorV));
 
 			// Zoom.
-			this.boxZoom = new GroupBox(this);
-			this.boxZoom.Height = 45;
-			this.boxZoom.Text = "Réductions et agrandissements";
-			this.boxZoom.Dock = DockStyle.Top;
-			this.boxZoom.DockMargins = new Margins(0, 0, 0, 10);
-
-			this.toolBarZoom = new HToolBar(this.boxZoom);
-			this.toolBarZoom.Dock = DockStyle.Top;
-			this.toolBarZoom.DockMargins = new Margins(0, 0, 0, 10);
-
-			this.buttonZoomDiv2 = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperZoomDiv2.icon");
-			this.buttonZoomDiv2.Clicked += new MessageEventHandler(this.HandleButtonZoomDiv2);
-			ToolTip.Default.SetToolTip(this.buttonZoomDiv2, "Réduction /2");
-			this.toolBarZoom.Items.Add(this.buttonZoomDiv2);
-
-			this.buttonZoomMul2 = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperZoomMul2.icon");
-			this.buttonZoomMul2.Clicked += new MessageEventHandler(this.HandleButtonZoomMul2);
-			ToolTip.Default.SetToolTip(this.buttonZoomMul2, "Agrandissement x2");
-			this.toolBarZoom.Items.Add(this.buttonZoomMul2);
-
-			this.toolBarZoom.Items.Add(new IconSeparator());
-
-			this.fieldZoom = new TextFieldReal();
-			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldZoom);
-			this.fieldZoom.Width = 50;
-			this.fieldZoom.InternalMinValue = 1.0M;
-			this.fieldZoom.InternalMaxValue = 2.0M;
-			this.fieldZoom.Step = 0.1M;
-			this.fieldZoom.Resolution = 0.01M;
-			this.fieldZoom.InternalValue = 1.2M;
-			ToolTip.Default.SetToolTip(this.fieldZoom, "Facteur d'agrandissement/réduction");
-			this.toolBarZoom.Items.Add(this.fieldZoom);
-
-			this.buttonZoomi = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperZoomi.icon");
-			this.buttonZoomi.Clicked += new MessageEventHandler(this.HandleButtonZoomi);
-			ToolTip.Default.SetToolTip(this.buttonZoomi, "Réduction");
-			this.toolBarZoom.Items.Add(this.buttonZoomi);
-
-			this.buttonZoom = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.OperZoom.icon");
-			this.buttonZoom.Clicked += new MessageEventHandler(this.HandleButtonZoom);
-			ToolTip.Default.SetToolTip(this.buttonZoom, "Agrandissement");
-			this.toolBarZoom.Items.Add(this.buttonZoom);
+			this.CreateHeader(ref this.boxZoom, ref this.toolBarZoom, "Réductions et agrandissements");
+			this.CreateButton(this.toolBarZoom, ref this.buttonZoomDiv2, "OperZoomDiv2", "Réduction /2",      new MessageEventHandler(this.HandleButtonZoomDiv2));
+			this.CreateButton(this.toolBarZoom, ref this.buttonZoomMul2, "OperZoomMul2", "Agrandissement x2", new MessageEventHandler(this.HandleButtonZoomMul2));
+			this.CreateSeparator(this.toolBarZoom);
+			this.CreateFieldZoom(this.toolBarZoom, ref this.fieldZoom, "Facteur d'agrandissement/réduction");
+			this.CreateButton(this.toolBarZoom, ref this.buttonZoomi, "OperZoomi", "Réduction",     new MessageEventHandler(this.HandleButtonZoomi));
+			this.CreateButton(this.toolBarZoom, ref this.buttonZoom,  "OperZoom", "Agrandissement", new MessageEventHandler(this.HandleButtonZoom));
 
 			// Alignement.
-			this.boxAlign = new GroupBox(this);
-			this.boxAlign.Height = 45;
-			this.boxAlign.Text = "Alignements";
-			this.boxAlign.Dock = DockStyle.Top;
-			this.boxAlign.DockMargins = new Margins(0, 0, 0, 10);
-
-			this.toolBarAlign = new HToolBar(this.boxAlign);
-			this.toolBarAlign.Dock = DockStyle.Top;
-			this.toolBarAlign.DockMargins = new Margins(0, 0, 0, 10);
-
-			this.buttonAlignGrid = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.AlignGrid.icon");
-			this.buttonAlignGrid.Clicked += new MessageEventHandler(this.HandleButtonAlignGrid);
-			ToolTip.Default.SetToolTip(this.buttonAlignGrid, "Alignement sur la grille magnétique");
-			this.toolBarAlign.Items.Add(this.buttonAlignGrid);
-
-			this.toolBarAlign.Items.Add(new IconSeparator());
-
-			this.buttonAlignLeft = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.AlignLeft.icon");
-			this.buttonAlignLeft.Clicked += new MessageEventHandler(this.HandleButtonAlignLeft);
-			ToolTip.Default.SetToolTip(this.buttonAlignLeft, "Alignement à gauche");
-			this.toolBarAlign.Items.Add(this.buttonAlignLeft);
-
-			this.buttonAlignCenterX = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.AlignCenterX.icon");
-			this.buttonAlignCenterX.Clicked += new MessageEventHandler(this.HandleButtonAlignCenterX);
-			ToolTip.Default.SetToolTip(this.buttonAlignCenterX, "Alignement centré horizontalement");
-			this.toolBarAlign.Items.Add(this.buttonAlignCenterX);
-
-			this.buttonAlignRight = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.AlignRight.icon");
-			this.buttonAlignRight.Clicked += new MessageEventHandler(this.HandleButtonAlignRight);
-			ToolTip.Default.SetToolTip(this.buttonAlignRight, "Alignement à droite");
-			this.toolBarAlign.Items.Add(this.buttonAlignRight);
-
-			this.toolBarAlign.Items.Add(new IconSeparator());
-
-			this.buttonAlignTop = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.AlignTop.icon");
-			this.buttonAlignTop.Clicked += new MessageEventHandler(this.HandleButtonAlignTop);
-			ToolTip.Default.SetToolTip(this.buttonAlignTop, "Alignement en haut");
-			this.toolBarAlign.Items.Add(this.buttonAlignTop);
-
-			this.buttonAlignCenterY = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.AlignCenterY.icon");
-			this.buttonAlignCenterY.Clicked += new MessageEventHandler(this.HandleButtonAlignCenterY);
-			ToolTip.Default.SetToolTip(this.buttonAlignCenterY, "Alignement centré verticalement");
-			this.toolBarAlign.Items.Add(this.buttonAlignCenterY);
-
-			this.buttonAlignBottom = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.AlignBottom.icon");
-			this.buttonAlignBottom.Clicked += new MessageEventHandler(this.HandleButtonAlignBottom);
-			ToolTip.Default.SetToolTip(this.buttonAlignBottom, "Alignement en bas");
-			this.toolBarAlign.Items.Add(this.buttonAlignBottom);
+			this.CreateHeader(ref this.boxAlign, ref this.toolBarAlign, "Alignements");
+			this.CreateButton(this.toolBarAlign, ref this.buttonAlignGrid,    "AlignGrid",    "Alignement sur la grille magnétique", new MessageEventHandler(this.HandleButtonAlignGrid));
+			this.CreateSeparator(this.toolBarAlign);
+			this.CreateButton(this.toolBarAlign, ref this.buttonAlignLeft,    "AlignLeft",    "Alignement à gauche",                 new MessageEventHandler(this.HandleButtonAlignLeft));
+			this.CreateButton(this.toolBarAlign, ref this.buttonAlignCenterX, "AlignCenterX", "Alignement centré horizontalement",   new MessageEventHandler(this.HandleButtonAlignCenterX));
+			this.CreateButton(this.toolBarAlign, ref this.buttonAlignRight,   "AlignRight",   "Alignement à droite",                 new MessageEventHandler(this.HandleButtonAlignRight));
+			this.CreateSeparator(this.toolBarAlign);
+			this.CreateButton(this.toolBarAlign, ref this.buttonAlignTop,     "AlignTop",     "Alignement en haut",                  new MessageEventHandler(this.HandleButtonAlignTop));
+			this.CreateButton(this.toolBarAlign, ref this.buttonAlignCenterY, "AlignCenterY", "Alignement centré verticalement",     new MessageEventHandler(this.HandleButtonAlignCenterY));
+			this.CreateButton(this.toolBarAlign, ref this.buttonAlignBottom,  "AlignBottom",  "Alignement en bas",                   new MessageEventHandler(this.HandleButtonAlignBottom));
 
 			// Distribution.
-			this.boxShare = new GroupBox(this);
-			this.boxShare.Height = 45;
-			this.boxShare.Text = "Distributions";
-			this.boxShare.Dock = DockStyle.Top;
-			this.boxShare.DockMargins = new Margins(0, 0, 0, 10);
+			this.CreateHeader(ref this.boxShare, ref this.toolBarShare, "Distributions");
+			this.CreateButton(this.toolBarShare, ref this.buttonShareSpaceX,  "ShareSpaceX",  "Distribution espacée horizontalement", new MessageEventHandler(this.HandleButtonShareSpaceX));
+			this.CreateButton(this.toolBarShare, ref this.buttonShareLeft,    "ShareLeft",    "Distribution sur la gauche",           new MessageEventHandler(this.HandleButtonShareLeft));
+			this.CreateButton(this.toolBarShare, ref this.buttonShareCenterX, "ShareCenterX", "Distribution centrée horizontalement", new MessageEventHandler(this.HandleButtonShareCenterX));
+			this.CreateButton(this.toolBarShare, ref this.buttonShareRight,   "ShareRight",   "Distribution sur la droite",           new MessageEventHandler(this.HandleButtonShareRight));
+			this.CreateSeparator(this.toolBarShare);
+			this.CreateButton(this.toolBarShare, ref this.buttonShareSpaceY,  "ShareSpaceX",  "Distribution espacée verticalement",   new MessageEventHandler(this.HandleButtonShareSpaceY));
+			this.CreateButton(this.toolBarShare, ref this.buttonShareTop,     "ShareTop",     "Distribution sur le haut",             new MessageEventHandler(this.HandleButtonShareTop));
+			this.CreateButton(this.toolBarShare, ref this.buttonShareCenterY, "ShareCenterX", "Distribution centrée verticalement",   new MessageEventHandler(this.HandleButtonShareCenterY));
+			this.CreateButton(this.toolBarShare, ref this.buttonShareBottom,  "ShareBottom",  "Distribution sur le bas",              new MessageEventHandler(this.HandleButtonShareBottom));
+		}
 
-			this.toolBarShare = new HToolBar(this.boxShare);
-			this.toolBarShare.Dock = DockStyle.Top;
-			this.toolBarShare.DockMargins = new Margins(0, 0, 0, 10);
+		// Crée l'en-tête d'un groupe.
+		protected void CreateHeader(ref GroupBox group, ref HToolBar bar, string title)
+		{
+			group = new GroupBox(this);
+			group.Height = 45;
+			group.Text = title;
+			group.Dock = DockStyle.Top;
+			group.DockMargins = new Margins(0, 0, 0, 10);
+			group.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 
-			this.buttonShareSpaceX = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareSpaceX.icon");
-			this.buttonShareSpaceX.Clicked += new MessageEventHandler(this.HandleButtonShareSpaceX);
-			ToolTip.Default.SetToolTip(this.buttonShareSpaceX, "Distribution espacée horizontalement");
-			this.toolBarShare.Items.Add(this.buttonShareSpaceX);
+			bar = new HToolBar(group);
+			bar.Dock = DockStyle.Top;
+			bar.DockMargins = new Margins(0, 0, 0, 10);
+			bar.TabIndex = this.tabIndex++;
+			bar.TabNavigation = Widget.TabNavigationMode.ForwardTabActive;
+		}
 
-			this.buttonShareLeft = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareLeft.icon");
-			this.buttonShareLeft.Clicked += new MessageEventHandler(this.HandleButtonShareLeft);
-			ToolTip.Default.SetToolTip(this.buttonShareLeft, "Distribution sur la gauche");
-			this.toolBarShare.Items.Add(this.buttonShareLeft);
+		// Crée un IconButton. 
+		protected void CreateButton(HToolBar bar, ref IconButton button, string icon, string tooltip, MessageEventHandler handler)
+		{
+			button = new IconButton(string.Format("manifest:Epsitec.App.DocumentEditor.Images.{0}.icon", icon));
+			button.Clicked += handler;
+			button.TabIndex = this.tabIndex++;
+			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(button, tooltip);
+			bar.Items.Add(button);
+		}
 
-			this.buttonShareCenterX = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareCenterX.icon");
-			this.buttonShareCenterX.Clicked += new MessageEventHandler(this.HandleButtonShareCenterX);
-			ToolTip.Default.SetToolTip(this.buttonShareCenterX, "Distribution centrée horizontalement");
-			this.toolBarShare.Items.Add(this.buttonShareCenterX);
+		// Crée un champ éditable pour un déplacement.
+		protected void CreateFieldMove(HToolBar bar, ref TextFieldReal field, string tooltip)
+		{
+			field = new TextFieldReal();
+			this.document.Modifier.AdaptTextFieldRealDimension(field);
+			field.Width = 50;
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				field.InternalValue = 1.0M;
+			}
+			else
+			{
+				field.InternalValue = 100.0M;  // 10mm
+			}
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(field, tooltip);
+			bar.Items.Add(field);
+		}
 
-			this.buttonShareRight = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareRight.icon");
-			this.buttonShareRight.Clicked += new MessageEventHandler(this.HandleButtonShareRight);
-			ToolTip.Default.SetToolTip(this.buttonShareRight, "Distribution sur la droite");
-			this.toolBarShare.Items.Add(this.buttonShareRight);
+		// Crée un champ éditable pour une rotation.
+		protected void CreateFieldRot(HToolBar bar, ref TextFieldReal field, string tooltip)
+		{
+			field = new TextFieldReal();
+			this.document.Modifier.AdaptTextFieldRealAngle(field);
+			field.Width = 50;
+			field.InternalValue = 10.0M;
+			field.TabIndex = tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(field, tooltip);
+			bar.Items.Add(this.fieldRotate);
+		}
 
-			this.toolBarShare.Items.Add(new IconSeparator());
+		// Crée un champ éditable pour un zoom.
+		protected void CreateFieldZoom(HToolBar bar, ref TextFieldReal field, string tooltip)
+		{
+			field = new TextFieldReal();
+			this.document.Modifier.AdaptTextFieldRealScalar(field);
+			field.Width = 50;
+			field.InternalMinValue = 1.0M;
+			field.InternalMaxValue = 2.0M;
+			field.Step = 0.1M;
+			field.Resolution = 0.01M;
+			field.InternalValue = 1.2M;
+			field.TabIndex = tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(field, tooltip);
+			bar.Items.Add(this.fieldZoom);
+		}
 
-			this.buttonShareSpaceY = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareSpaceY.icon");
-			this.buttonShareSpaceY.Clicked += new MessageEventHandler(this.HandleButtonShareSpaceY);
-			ToolTip.Default.SetToolTip(this.buttonShareSpaceY, "Distribution espacée verticalement");
-			this.toolBarShare.Items.Add(this.buttonShareSpaceY);
-
-			this.buttonShareTop = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareTop.icon");
-			this.buttonShareTop.Clicked += new MessageEventHandler(this.HandleButtonShareTop);
-			ToolTip.Default.SetToolTip(this.buttonShareTop, "Distribution sur le haut");
-			this.toolBarShare.Items.Add(this.buttonShareTop);
-
-			this.buttonShareCenterY = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareCenterY.icon");
-			this.buttonShareCenterY.Clicked += new MessageEventHandler(this.HandleButtonShareCenterY);
-			ToolTip.Default.SetToolTip(this.buttonShareCenterY, "Distribution centrée verticalement");
-			this.toolBarShare.Items.Add(this.buttonShareCenterY);
-
-			this.buttonShareBottom = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareBottom.icon");
-			this.buttonShareBottom.Clicked += new MessageEventHandler(this.HandleButtonShareBottom);
-			ToolTip.Default.SetToolTip(this.buttonShareBottom, "Distribution sur le bas");
-			this.toolBarShare.Items.Add(this.buttonShareBottom);
+		// Crée un séparateur.
+		protected void CreateSeparator(HToolBar bar)
+		{
+			bar.Items.Add(new IconSeparator());
 		}
 		
 
@@ -501,7 +371,7 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton			buttonMoveV;
 		protected IconButton			buttonMoveVi;
 
-		protected GroupBox				boxRotate;
+		protected GroupBox				boxRot;
 		protected HToolBar				toolBarRot;
 		protected IconButton			buttonRotate90;
 		protected IconButton			buttonRotate180;
@@ -543,5 +413,7 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton			buttonShareCenterY;
 		protected IconButton			buttonShareSpaceY;
 		protected IconButton			buttonShareBottom;
+
+		protected int					tabIndex;
 	}
 }

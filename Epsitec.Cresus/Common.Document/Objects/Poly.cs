@@ -757,7 +757,7 @@ namespace Epsitec.Common.Document.Objects
 				this.tempLine.DrawGeometry(graphics, drawingContext);
 			}
 
-			if ( this.IsSelected || this.isCreating )
+			if ( this.IsDrawDash(drawingContext) )
 			{
 				this.PropertyLineMode.DrawPathDash(graphics, drawingContext, pathLine, this.PropertyLineColor);
 

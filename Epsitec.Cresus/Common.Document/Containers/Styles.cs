@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Items.Add(this.buttonNew);
 			ToolTip.Default.SetToolTip(this.buttonNew, "Nouveau style");
 
-			this.buttonDuplicate = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Duplicate.icon");
+			this.buttonDuplicate = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.DuplicateItem.icon");
 			this.buttonDuplicate.Clicked += new MessageEventHandler(this.HandleButtonDuplicate);
 			this.toolBar.Items.Add(this.buttonDuplicate);
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, "Dupliquer le style");
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonDelete = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Delete.icon");
+			this.buttonDelete = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.DeleteItem.icon");
 			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDelete);
 			this.toolBar.Items.Add(this.buttonDelete);
 			ToolTip.Default.SetToolTip(this.buttonDelete, "Supprimer le style");
@@ -59,6 +59,7 @@ namespace Epsitec.Common.Document.Containers
 			this.table.DefHeight = 16;
 
 			this.colorSelector = new ColorSelector();
+			this.colorSelector.ColorPalette.ColorsCollection = this.document.GlobalSettings.ColorsCollection;
 			this.colorSelector.HasCloseButton = true;
 			this.colorSelector.Dock = DockStyle.Bottom;
 			this.colorSelector.DockMargins = new Margins(0, 0, 10, 0);

@@ -1071,44 +1071,58 @@ namespace Epsitec.Common.Widgets.Adorner
 											MenuType type,
 											MenuItemType itemType)
 		{
-			if ( type == MenuType.Horizontal )
+			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				if ( itemType == MenuItemType.Select )
+				if ( type == MenuType.Horizontal )
 				{
-					double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
-					Drawing.Path path = this.PathRoundRectangle(rect, radius);
+					if ( itemType == MenuItemType.Select )
+					{
+						double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
+						Drawing.Path path = this.PathRoundRectangle(rect, radius);
 
-					graphics.Rasterizer.AddSurface(path);
-					graphics.RenderSolid(this.colorCaptionLight);
+						graphics.Rasterizer.AddSurface(path);
+						graphics.RenderSolid(this.colorCaptionLight);
 
-					graphics.Rasterizer.AddOutline(path, 1);
-					graphics.RenderSolid(this.colorCaption);
+						graphics.Rasterizer.AddOutline(path, 1);
+						graphics.RenderSolid(this.colorCaption);
+					}
+					if ( itemType == MenuItemType.Parent )
+					{
+						double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
+						Drawing.Path path = this.PathTopRoundRectangle(rect, radius);
+
+						graphics.Rasterizer.AddSurface(path);
+						graphics.RenderSolid(this.colorControl);
+
+						graphics.Rasterizer.AddOutline(path, 1);
+						graphics.RenderSolid(this.colorControlDarkDark);
+					}
 				}
-				if ( itemType == MenuItemType.Parent )
+
+				if ( type == MenuType.Vertical )
 				{
-					double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
-					Drawing.Path path = this.PathTopRoundRectangle(rect, radius);
+					if ( itemType != MenuItemType.Deselect )
+					{
+						double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
+						Drawing.Path path = this.PathRoundRectangle(rect, radius);
 
-					graphics.Rasterizer.AddSurface(path);
-					graphics.RenderSolid(this.colorControl);
+						graphics.Rasterizer.AddSurface(path);
+						graphics.RenderSolid(this.colorCaptionLight);
 
-					graphics.Rasterizer.AddOutline(path, 1);
-					graphics.RenderSolid(this.colorControlDarkDark);
+						graphics.Rasterizer.AddOutline(path, 1);
+						graphics.RenderSolid(this.colorCaption);
+					}
 				}
 			}
-
-			if ( type == MenuType.Vertical )
+			else
 			{
 				if ( itemType != MenuItemType.Deselect )
 				{
 					double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
 					Drawing.Path path = this.PathRoundRectangle(rect, radius);
 
-					graphics.Rasterizer.AddSurface(path);
-					graphics.RenderSolid(this.colorCaptionLight);
-
 					graphics.Rasterizer.AddOutline(path, 1);
-					graphics.RenderSolid(this.colorCaption);
+					graphics.RenderSolid(this.ColorBorder);
 				}
 			}
 		}

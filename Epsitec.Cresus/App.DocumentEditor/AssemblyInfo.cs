@@ -6,11 +6,11 @@ using System.Runtime.CompilerServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 //
-[assembly: AssemblyTitle("EPSITEC Crésus documents")]
+[assembly: AssemblyTitle("EPSITEC Crésus Documents")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Epsitec")]
-[assembly: AssemblyProduct("Crésus documents")]
+[assembly: AssemblyProduct("Crésus Documents")]
 [assembly: AssemblyCopyright("Copyright © 2002-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]		
@@ -26,7 +26,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.0.2")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 

@@ -877,26 +877,38 @@ namespace Epsitec.Common.Widgets.Adorner
 											MenuType type,
 											MenuItemType itemType)
 		{
-			if ( type == MenuType.Horizontal )
+			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				if ( itemType == MenuItemType.Select )
+				if ( type == MenuType.Horizontal )
 				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.colorCaption);
+					if ( itemType == MenuItemType.Select )
+					{
+						graphics.AddFilledRectangle(rect);
+						graphics.RenderSolid(this.colorCaption);
+					}
+					if ( itemType == MenuItemType.Parent )
+					{
+						graphics.AddFilledRectangle(rect);
+						graphics.RenderSolid(this.colorControlLightLight);
+					}
 				}
-				if ( itemType == MenuItemType.Parent )
+
+				if ( type == MenuType.Vertical )
 				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.colorControlLightLight);
+					if ( itemType != MenuItemType.Deselect )
+					{
+						graphics.AddFilledRectangle(rect);
+						graphics.RenderSolid(this.colorCaption);
+					}
 				}
 			}
-
-			if ( type == MenuType.Vertical )
+			else
 			{
 				if ( itemType != MenuItemType.Deselect )
 				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(this.colorCaption);
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.ColorBorder);
 				}
 			}
 		}

@@ -117,6 +117,10 @@ namespace Epsitec.Common.Document
 				this.CreateBool(container, "PrintAutoLandscape");
 				this.CreateBool(container, "PrintAutoZoom");
 				this.CreateBool(container, "PrintDraft");
+				this.CreateBool(container, "PrintPerfectJoin");
+#if DEBUG
+				this.CreateBool(container, "PrintDebugArea");
+#endif
 				this.CreateBool(container, "PrintAA");
 				this.CreateDouble(container, "PrintDpi");
 
@@ -129,6 +133,7 @@ namespace Epsitec.Common.Document
 				this.tabIndex = 0;
 				Dialogs.CreateTitle(container, "Déplacement lorsqu'un objet est dupliqué");
 				this.CreatePoint(container, "DuplicateMove");
+				this.CreateBool(container, "RepeatDuplicateMove");
 
 				Dialogs.CreateTitle(container, "Déplacements avec les touches flèches");
 				this.CreatePoint(container, "ArrowMove");
@@ -572,7 +577,7 @@ namespace Epsitec.Common.Document
 			sep.DockMargins = new Margins(8, 0, 0, 0);
 
 			CheckButton check = new CheckButton(container);
-			check.Width = 50;
+			check.Width = 45;
 			check.Height = container.Height;
 			check.Name = sPoint.Name;
 			check.Text = "Liés";
@@ -583,6 +588,79 @@ namespace Epsitec.Common.Document
 			check.DockMargins = new Margins(-3, 0, 0, 0);
 			check.ActiveStateChanged += new EventHandler(this.HandleCheckPointActiveStateChanged);
 			this.WidgetsTableAdd(check, ".Link");
+
+			if ( sPoint.Doubler )
+			{
+				Button button;
+
+				Panel containerD = new Panel(container);
+				containerD.Width = 33;
+				containerD.TabIndex = this.tabIndex++;
+				containerD.Dock = DockStyle.Left;
+				containerD.DockMargins = new Margins(0, 0, 0, 0);
+
+				Panel containerDX = new Panel(containerD);
+				containerDX.Width = containerD.Width;
+				containerDX.Height = 22;
+				containerDX.TabIndex = this.tabIndex++;
+				containerDX.Dock = DockStyle.Top;
+				containerDX.DockMargins = new Margins(0, 0, 0, 0);
+
+				button = new Button(containerDX);
+				button.ButtonStyle = ButtonStyle.Icon;
+				button.Width = 16;
+				button.Name = sPoint.Name;
+				button.Text = "/2";
+				button.TabIndex = this.tabIndex++;
+				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				button.Dock = DockStyle.Left;
+				button.DockMargins = new Margins(0, 0, 2, 2);
+				button.Clicked += new MessageEventHandler(HandleDoublerPointDivXClicked);
+				this.WidgetsTableAdd(button, ".DoublerDivX");
+
+				button = new Button(containerDX);
+				button.ButtonStyle = ButtonStyle.Icon;
+				button.Width = 16;
+				button.Name = sPoint.Name;
+				button.Text = "x2";
+				button.TabIndex = this.tabIndex++;
+				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				button.Dock = DockStyle.Left;
+				button.DockMargins = new Margins(1, 0, 2, 2);
+				button.Clicked += new MessageEventHandler(HandleDoublerPointMulXClicked);
+				this.WidgetsTableAdd(button, ".DoublerMulX");
+
+				Panel containerDY = new Panel(containerD);
+				containerDY.Width = containerD.Width;
+				containerDY.Height = 22;
+				containerDY.TabIndex = this.tabIndex++;
+				containerDY.Dock = DockStyle.Top;
+				containerDY.DockMargins = new Margins(0, 0, 0, 0);
+
+				button = new Button(containerDY);
+				button.ButtonStyle = ButtonStyle.Icon;
+				button.Width = 16;
+				button.Name = sPoint.Name;
+				button.Text = "/2";
+				button.TabIndex = this.tabIndex++;
+				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				button.Dock = DockStyle.Left;
+				button.DockMargins = new Margins(0, 0, 2, 2);
+				button.Clicked += new MessageEventHandler(HandleDoublerPointDivYClicked);
+				this.WidgetsTableAdd(button, ".DoublerDivY");
+
+				button = new Button(containerDY);
+				button.ButtonStyle = ButtonStyle.Icon;
+				button.Width = 16;
+				button.Name = sPoint.Name;
+				button.Text = "x2";
+				button.TabIndex = this.tabIndex++;
+				button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				button.Dock = DockStyle.Left;
+				button.DockMargins = new Margins(1, 0, 2, 2);
+				button.Clicked += new MessageEventHandler(HandleDoublerPointMulYClicked);
+				this.WidgetsTableAdd(button, ".DoublerMulY");
+			}
 		}
 
 		private void HandleFieldPointXChanged(object sender)
@@ -636,6 +714,50 @@ namespace Epsitec.Common.Document
 			if ( sPoint == null )  return;
 
 			sPoint.Link = ( check.ActiveState == WidgetState.ActiveYes );
+		}
+
+		private void HandleDoublerPointDivXClicked(object sender, MessageEventArgs e)
+		{
+			Button button = sender as Button;
+			if ( button == null )  return;
+
+			TextFieldSlider field = this.WidgetsTableSearch(button.Name, ".X")as TextFieldSlider;
+			if ( field == null )  return;
+			field.Value = field.Value/2.0M;
+
+		}
+
+		private void HandleDoublerPointMulXClicked(object sender, MessageEventArgs e)
+		{
+			Button button = sender as Button;
+			if ( button == null )  return;
+
+			TextFieldSlider field = this.WidgetsTableSearch(button.Name, ".X")as TextFieldSlider;
+			if ( field == null )  return;
+			field.Value = field.Value*2.0M;
+
+		}
+
+		private void HandleDoublerPointDivYClicked(object sender, MessageEventArgs e)
+		{
+			Button button = sender as Button;
+			if ( button == null )  return;
+
+			TextFieldSlider field = this.WidgetsTableSearch(button.Name, ".Y")as TextFieldSlider;
+			if ( field == null )  return;
+			field.Value = field.Value/2.0M;
+
+		}
+
+		private void HandleDoublerPointMulYClicked(object sender, MessageEventArgs e)
+		{
+			Button button = sender as Button;
+			if ( button == null )  return;
+
+			TextFieldSlider field = this.WidgetsTableSearch(button.Name, ".Y")as TextFieldSlider;
+			if ( field == null )  return;
+			field.Value = field.Value*2.0M;
+
 		}
 		#endregion
 

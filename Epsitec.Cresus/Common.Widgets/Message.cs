@@ -928,6 +928,7 @@ namespace Epsitec.Common.Widgets
 		ShiftKeyLeft	= 160,
 		ShiftKeyRight	= 161,
 		Space			= 32,
+		Add				= 107,
 		Substract		= 109,
 		Tab				= 9,
 		

@@ -262,7 +262,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else
 			{
-				if ( image.Filename != this.filename )
+				if ( image.Reload || image.Filename != this.filename )
 				{
 					this.filename = image.Filename;
 					try
@@ -274,6 +274,7 @@ namespace Epsitec.Common.Document.Objects
 						this.imageOriginal = null;
 					}
 					this.imageDimmed = null;
+					image.Reload = false;
 				}
 			}
 		}

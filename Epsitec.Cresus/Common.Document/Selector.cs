@@ -282,6 +282,8 @@ namespace Epsitec.Common.Document
 
 			if ( rank == 0 )  // tout ?
 			{
+				Point ip1 = this.finalData.P1;
+
 				if ( this.finalData.TypeInUse == SelectorType.Zoomer )
 				{
 					Point dim = this.finalData.P2-this.finalData.P1;
@@ -296,6 +298,12 @@ namespace Epsitec.Common.Document
 					this.finalData.P3 += move;
 					this.finalData.P4 += move;
 				}
+
+				this.document.Modifier.AddMoveAfterDuplicate(this.finalData.P1-ip1);
+			}
+			else
+			{
+				this.document.Modifier.FlushMoveAfterDuplicate();
 			}
 
 			if ( rank == 1 )  // inf/gauche ?
@@ -477,7 +485,7 @@ namespace Epsitec.Common.Document
 			path.LineTo(p4);
 			path.Close();
 
-			if ( this.finalData.Handles )
+			if ( this.finalData.Handles && !drawingContext.PreviewActive )
 			{
 				Color filledColor = drawingContext.HiliteOutlineColor;
 				filledColor.A *= 0.2;

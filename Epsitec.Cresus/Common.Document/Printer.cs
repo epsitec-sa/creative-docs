@@ -20,6 +20,28 @@ namespace Epsitec.Common.Document
 			this.imageAA = 1.0;
 		}
 
+		// Sauvegarde les réglages d'impression.
+		public void SaveSettings(PrinterSettings settings)
+		{
+			if ( this.settingsMemory == null )
+			{
+				this.settingsMemory = new SettingsMemory(this.document);
+			}
+
+			this.settingsMemory.Save(settings);
+		}
+
+		// Restitue les réglages d'impression.
+		public void RestoreSettings(PrinterSettings settings)
+		{
+			if ( this.settingsMemory == null )
+			{
+				this.settingsMemory = new SettingsMemory(this.document);
+			}
+
+			this.settingsMemory.Restore(settings);
+		}
+
 		// Imprime le document selon les choix faits dans le dialogue Window (dp)
 		// ainsi que dans le dialogue des réglages (PrintInfo).
 		public void Print(Epsitec.Common.Dialogs.Print dp)
@@ -112,19 +134,38 @@ namespace Epsitec.Common.Document
 
 				// Reprend ici tous les choix effectués dans le dialogue Window
 				// de l'impression. Même s'il semble possible de les atteindre
-				// plus tard avec port.PageSettings.PrinterSettings, cela ne
-				// fonctionne pas.
+				// plus tard avec port.PageSettings.PrinterSettings, cela
+				// fonctionne mal.
 				this.fromPage = dp.Document.PrinterSettings.FromPage;
 				this.toPage   = dp.Document.PrinterSettings.ToPage;
 				this.copies   = dp.Document.PrinterSettings.Copies;
 				this.collate  = dp.Document.PrinterSettings.Collate;
+				this.duplex   = dp.Document.PrinterSettings.Duplex;
 				this.totalPages = this.toPage-this.fromPage+1;
 				this.pageCounter = 0;
+				this.multicopyByPrinter = false;
+
+				if ( this.collate == false &&
+					 this.duplex == DuplexMode.Simplex &&
+					 this.copies > 1 )
+				{
+					this.multicopyByPrinter = true;
+				}
+
+				if ( this.multicopyByPrinter )
+				{
+					this.copies = 1;
+				}
+				else
+				{
+					dp.Document.PrinterSettings.Copies = 1;
+				}
 			}
 
 			#region IPrintEngine Members
 			public void PrepareNewPage(Printing.PageSettings settings)
 			{
+				//?System.Diagnostics.Debug.WriteLine("PrepareNewPage");
 				settings.Margins = new Margins(0, 0, 0, 0);
 
 				if ( this.printer.PrintInfo.AutoLandscape )
@@ -135,25 +176,37 @@ namespace Epsitec.Common.Document
 			
 			public void StartingPrintJob()
 			{
+				//?System.Diagnostics.Debug.WriteLine("StartingPrintJob");
 			}
 			
 			public void FinishingPrintJob()
 			{
+				//?System.Diagnostics.Debug.WriteLine("FinishingPrintJob");
 			}
 			
 			public Printing.PrintEngineStatus PrintPage(Printing.PrintPort port)
 			{
 				int page = this.pageCounter;
 
-				if ( this.collate )  // 1,2,3 - 1,2,3 ?
+				if ( this.collate )  // 1,2,3,4 - 1,2,3,4 ?
 				{
 					page %= this.totalPages;
 				}
-				else	// 1,1 - 2,2 - 3,3 ?
+				else
 				{
-					page /= this.copies;
+					if ( this.duplex != DuplexMode.Simplex )  // 1,2 - 1,2 - 3,4 - 3,4 ?
+					{
+						     if ( (page&0x3) == 0x1 )  page = (page&~0x3)|0x2;
+						else if ( (page&0x3) == 0x2 )  page = (page&~0x3)|0x1;
+						page /= this.copies;
+					}
+					else	// 1,1 - 2,2 - 3,3 - 4,4 ?
+					{
+						page /= this.copies;
+					}
 				}
 				page += this.fromPage-1;
+				//?System.Diagnostics.Debug.WriteLine("PrintPage "+page.ToString());
 				this.printer.PrintGeometry(port, this.drawingContext, page);
 				this.pageCounter ++;
 
@@ -174,6 +227,8 @@ namespace Epsitec.Common.Document
 			protected int					totalPages;
 			protected int					copies;
 			protected bool					collate;
+			protected DuplexMode			duplex;
+			protected bool					multicopyByPrinter;
 		}
 
 
@@ -187,23 +242,144 @@ namespace Epsitec.Common.Document
 
 			if ( this.PrintInfo.ForceSimply )
 			{
-				this.PrintSimplyGeometry(port, drawingContext, pageNumber);
+				this.PrintSimplyGeometry(port, drawingContext, pageNumber, false);
 			}
 			else if ( this.PrintInfo.ForceComplex )
 			{
-				this.PrintComplexGeometry(port, drawingContext, pageNumber);
+				Rectangle clipRect = new Rectangle(0, 0, this.document.Size.Width, this.document.Size.Height);
+				this.PrintComplexGeometry(port, drawingContext, pageNumber, clipRect);
 			}
 			else
 			{
+#if true
+				this.PrintSimplyGeometry(port, drawingContext, pageNumber, true);
+
+				System.Collections.ArrayList areas = this.ComputeAreas(pageNumber);
+				foreach ( PrintingArea area in areas )
+				{
+					if ( area.IsComplex )
+					{
+						this.PrintComplexGeometry(port, drawingContext, pageNumber, area.Area);
+					}
+				}
+
+				if ( this.PrintInfo.DebugArea )
+				{
+					this.PrintAreas(port, drawingContext, areas);
+				}
+#else
 				if ( this.IsComplexPrinting(pageNumber) )
 				{
-					this.PrintComplexGeometry(port, drawingContext, pageNumber);
+					Rectangle clipRect = new Rectangle(0, 0, this.document.Size.Width, this.document.Size.Height);
+					this.PrintComplexGeometry(port, drawingContext, pageNumber, clipRect);
 				}
 				else
 				{
-					this.PrintSimplyGeometry(port, drawingContext, pageNumber);
+					this.PrintSimplyGeometry(port, drawingContext, pageNumber, false);
+				}
+#endif
+			}
+		}
+
+		// Calcule les zones d'impression.
+		// Les différentes zones n'ont aucune intersection entre elles.
+		protected System.Collections.ArrayList ComputeAreas(int pageNumber)
+		{
+			System.Collections.ArrayList areas = new System.Collections.ArrayList();
+			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
+			foreach ( Objects.Layer layer in this.document.Flat(page) )
+			{
+				if ( layer.Print == Objects.LayerPrint.Hide )  continue;
+
+				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
+				{
+					if ( obj.IsHide )  continue;  // objet caché ?
+					if ( !this.PrintInfo.PerfectJoin && !obj.IsComplexPrinting )  continue;
+					int i = PrintingArea.Intersect(areas, obj.BoundingBox);
+					if ( i == -1 )
+					{
+						PrintingArea area = new PrintingArea(obj);
+						areas.Add(area);
+					}
+					else
+					{
+						PrintingArea area = areas[i] as PrintingArea;
+						area.Append(obj);
+					}
 				}
 			}
+
+			for ( int i=0 ; i<areas.Count ; i++ )
+			{
+				PrintingArea area1 = areas[i] as PrintingArea;
+
+				bool merge;
+				do
+				{
+					merge = false;
+					for ( int j=i+1 ; j<areas.Count ; j++ )
+					{
+						PrintingArea area2 = areas[j] as PrintingArea;
+						if ( area1.Area.IntersectsWith(area2.Area) )
+						{
+							area1.Append(area2);
+							areas.RemoveAt(j);
+							merge = true;
+							break;
+						}
+					}
+				}
+				while ( merge );
+			}
+
+			return areas;
+		}
+
+		// PrintingArea représente une zone rectangulaire contenant un ou plusieurs
+		// objets. Si un seul objet de la zone nécessite le mode complexe, toute la
+		// zone est considérée comme complexe.
+		protected class PrintingArea
+		{
+			public PrintingArea(Objects.Abstract obj)
+			{
+				this.area = obj.BoundingBox;
+				this.isComplex = obj.IsComplexPrinting;
+			}
+
+			public void Append(Objects.Abstract obj)
+			{
+				this.area.MergeWith(obj.BoundingBox);
+				this.isComplex |= obj.IsComplexPrinting;
+			}
+
+			public void Append(PrintingArea area)
+			{
+				this.area.MergeWith(area.Area);
+				this.isComplex |= area.IsComplex;
+			}
+
+			public Rectangle Area
+			{
+				get { return this.area; }
+			}
+
+			public bool IsComplex
+			{
+				get { return this.isComplex; }
+			}
+
+			public static int Intersect(System.Collections.ArrayList areas, Rectangle bbox)
+			{
+				for ( int i=0 ; i<areas.Count ; i++ )
+				{
+					PrintingArea area = areas[i] as PrintingArea;
+					if ( bbox.IntersectsWith(area.Area) )  return i;
+				}
+				return -1;
+			}
+
+			protected Rectangle		area;
+			protected bool			isComplex;
 		}
 
 		// Indique si une impression complexe est nécessaire.
@@ -227,14 +403,23 @@ namespace Epsitec.Common.Document
 		// objets n'utilisent ni les dégradés ni la transparence.
 		protected void PrintSimplyGeometry(Printing.PrintPort port,
 										   DrawingContext drawingContext,
-										   int pageNumber)
+										   int pageNumber,
+										   bool onlySimply)
 		{
+			Transform initialTransform = port.Transform;
+
 			double zoom = 1.0;
 			if ( this.PrintInfo.AutoZoom )
 			{
 				Size paperSize = port.PageSettings.PaperSize.Size;
-				double zoomH = paperSize.Width  / this.document.Size.Width;
-				double zoomV = paperSize.Height / this.document.Size.Height;
+				double pw = paperSize.Width;
+				double ph = paperSize.Height;
+				if ( port.PageSettings.Landscape )
+				{
+					Misc.Swap(ref pw, ref ph);
+				}
+				double zoomH = pw / this.document.Size.Width;
+				double zoomV = ph / this.document.Size.Height;
 				zoom = System.Math.Min(zoomH, zoomV);
 			}
 			else
@@ -255,39 +440,51 @@ namespace Epsitec.Common.Document
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
 					if ( obj.IsHide )  continue;  // objet caché ?
+					if ( onlySimply && obj.IsComplexPrinting )  continue;
 					obj.PrintGeometry(port, drawingContext);
 				}
 			}
+
+			port.Transform = initialTransform;
 		}
 
 		// Imprime la géométrie complexe de tous les objets, en utilisant
 		// un bitmap intermédiaire.
 		protected void PrintComplexGeometry(Printing.PrintPort port,
 											DrawingContext drawingContext,
-											int pageNumber)
+											int pageNumber,
+											Rectangle clipRect)
 		{
+			Transform initialTransform = port.Transform;
+
 			double dpi = this.PrintInfo.Dpi;
 
+			double autoZoom = 1.0;
+			if ( this.PrintInfo.AutoZoom )
+			{
+				Size paperSize = port.PageSettings.PaperSize.Size;
+				double pw = paperSize.Width*10.0;
+				double ph = paperSize.Height*10.0;
+				if ( port.PageSettings.Landscape )
+				{
+					Misc.Swap(ref pw, ref ph);
+				}
+				double zoomH = pw / this.document.Size.Width;
+				double zoomV = ph / this.document.Size.Height;
+				autoZoom = System.Math.Min(zoomH, zoomV);
+			}
+
 			Graphics gfx = new Graphics();
-			int dx = (int) ((this.document.Size.Width/10.0)*(dpi/25.4));
-			int dy = (int) ((this.document.Size.Height/10.0)*(dpi/25.4));
+			int dx = (int) ((clipRect.Width/10.0)*(dpi/25.4)*autoZoom);
+			int dy = (int) ((clipRect.Height/10.0)*(dpi/25.4)*autoZoom);
 			gfx.SetPixmapSize(dx, dy);
 			gfx.SolidRenderer.ClearARGB(1,1,1,1);
 			gfx.Rasterizer.Gamma = this.PrintInfo.Gamma;
 
-			double zoom = 1.0;
-			if ( this.PrintInfo.AutoZoom )
-			{
-				double zoomH = dx / this.document.Size.Width;
-				double zoomV = dy / this.document.Size.Height;
-				zoom = System.Math.Min(zoomH, zoomV);
-			}
-			else
-			{
-				zoom = (dpi/25.4/10.0)*this.PrintInfo.Zoom;
-			}
+			double zoom = dx/clipRect.Width;
 			gfx.TranslateTransform(0, dy);
 			gfx.ScaleTransform(zoom, -zoom, 0, 0);
+			gfx.TranslateTransform(-clipRect.Left, -clipRect.Bottom);
 
 			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
 			foreach ( Objects.Layer layer in this.document.Flat(page) )
@@ -301,24 +498,56 @@ namespace Epsitec.Common.Document
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
 					if ( obj.IsHide )  continue;  // objet caché ?
+					if ( !clipRect.IntersectsWith(obj.BoundingBox) )  continue;
 					obj.DrawGeometry(gfx, drawingContext);
 				}
 			}
 
-#if true
 			port.ScaleTransform(0.1, 0.1, 0, 0);
 			Image bitmap = Bitmap.FromPixmap(gfx.Pixmap);
-			Rectangle rect = new Rectangle(0, 0, this.document.Size.Width, this.document.Size.Height);
+			Rectangle rect = clipRect;
+			rect.Scale(autoZoom);
 			port.PaintImage(bitmap, rect);
 
-			//?Path path = new Path();
-			//?path.AppendRectangle(100, 100, 2100-200, 2970-200);
-			//?port.Color = Color.FromRGB(1,0,0);
-			//?port.PaintOutline(path);
-#else
-			Image bitmap = Bitmap.FromPixmap(gfx.Pixmap);
-			port.PaintImage(bitmap, 0, 0, 210, 297, 0, 0, bitmap.Width, bitmap.Height);
-#endif
+			port.Transform = initialTransform;
+		}
+
+		// Imprime les zones rectangulaires (pour le debug).
+		protected void PrintAreas(Printing.PrintPort port,
+								  DrawingContext drawingContext,
+								  System.Collections.ArrayList areas)
+		{
+			Transform initialTransform = port.Transform;
+
+			double zoom = 1.0;
+			if ( this.PrintInfo.AutoZoom )
+			{
+				Size paperSize = port.PageSettings.PaperSize.Size;
+				double pw = paperSize.Width;
+				double ph = paperSize.Height;
+				if ( port.PageSettings.Landscape )
+				{
+					Misc.Swap(ref pw, ref ph);
+				}
+				double zoomH = pw / this.document.Size.Width;
+				double zoomV = ph / this.document.Size.Height;
+				zoom = System.Math.Min(zoomH, zoomV);
+			}
+			else
+			{
+				zoom = 0.1*this.PrintInfo.Zoom;
+			}
+			port.ScaleTransform(zoom, zoom, 0, 0);
+			
+			port.LineWidth = 0.1;
+			foreach ( PrintingArea area in areas )
+			{
+				Path path = new Path();
+				path.AppendRectangle(area.Area);
+				port.PaintOutline(path);
+			}
+
+			port.Transform = initialTransform;
 		}
 
 		// Exporte la géométrie complexe de tous les objets, en utilisant
@@ -408,6 +637,80 @@ namespace Epsitec.Common.Document
 		}
 
 
+		#region SettingsMemory
+		protected class SettingsMemory
+		{
+			public SettingsMemory(Document document)
+			{
+				this.document = document;
+
+				this.duplex = DuplexMode.Simplex;
+				this.collate = false;
+				this.copies = 1;
+				this.fromPage = 1;
+				this.toPage = this.document.Modifier.StatisticTotalPages();
+				this.printRange = PrintRange.AllPages;
+				this.outputFileName = "";
+				this.printToFile = false;
+			}
+
+			public void Save(PrinterSettings settings)
+			{
+				if ( settings.PrintRange == PrintRange.AllPages )
+				{
+					settings.FromPage = 1;
+					settings.ToPage = this.document.Modifier.StatisticTotalPages();
+				}
+
+				if ( settings.PrintRange == PrintRange.SelectedPages )
+				{
+					settings.FromPage = this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage+1;
+					settings.ToPage = settings.FromPage;
+				}
+
+				this.duplex = settings.Duplex;
+				this.collate = settings.Collate;
+				this.copies = settings.Copies;
+				this.fromPage = settings.FromPage;
+				this.toPage = settings.ToPage;
+				this.printRange = settings.PrintRange;
+				this.outputFileName = settings.OutputFileName;
+				this.printToFile = settings.PrintToFile;
+			}
+
+			public void Restore(PrinterSettings settings)
+			{
+				settings.Duplex = this.duplex;
+				settings.Collate = this.collate;
+				settings.Copies = this.copies;
+				settings.FromPage = this.fromPage;
+				settings.ToPage = this.toPage;
+				settings.PrintRange = this.printRange;
+				settings.OutputFileName = this.outputFileName;
+				settings.PrintToFile = this.printToFile;
+
+				settings.MinimumPage = 1;
+				settings.MaximumPage = this.document.Modifier.StatisticTotalPages();
+
+				if ( settings.ToPage > settings.MaximumPage )
+				{
+					settings.ToPage = settings.MaximumPage;
+				}
+			}
+
+			protected Document					document;
+			protected DuplexMode				duplex;
+			protected bool						collate;
+			protected int						copies;
+			protected int						fromPage;
+			protected int						toPage;
+			protected PrintRange				printRange;
+			protected string					outputFileName;
+			protected bool						printToFile;
+		}
+		#endregion
+
+
 		protected Document					document;
 		protected ImageFormat				imageFormat;
 		protected double					imageDpi;
@@ -415,5 +718,6 @@ namespace Epsitec.Common.Document
 		protected int						imageDepth;
 		protected double					imageQuality;
 		protected double					imageAA;
+		protected SettingsMemory			settingsMemory;
 	}
 }

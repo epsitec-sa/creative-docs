@@ -25,6 +25,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldColor1 = new ColorSample(this);
 			this.fieldColor1.PossibleOrigin = true;
 			this.fieldColor1.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
+			this.fieldColor1.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.fieldColor1.TabIndex = 2;
 			this.fieldColor1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldColor1, "Couleur 1");
@@ -32,6 +33,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldColor2 = new ColorSample(this);
 			this.fieldColor2.PossibleOrigin = true;
 			this.fieldColor2.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
+			this.fieldColor2.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.fieldColor2.TabIndex = 3;
 			this.fieldColor2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldColor2, "Couleur 2");
@@ -46,6 +48,7 @@ namespace Epsitec.Common.Document.Panels
 			this.listFill.SelectedIndexChanged += new EventHandler(this.HandleListChanged);
 			this.listFill.TabIndex = 4;
 			this.listFill.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.listFill, "Type du remplissage");
 
 			this.reset = new Button(this);
 			this.reset.Text = "R";
@@ -124,7 +127,9 @@ namespace Epsitec.Common.Document.Panels
 				this.listFill.SelectedIndexChanged -= new EventHandler(this.HandleListChanged);
 				this.reset.Clicked -= new MessageEventHandler(this.HandleReset);
 				this.fieldColor1.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
+				this.fieldColor1.Changed -= new EventHandler(this.HandleFieldColorChanged);
 				this.fieldColor2.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
+				this.fieldColor2.Changed -= new EventHandler(this.HandleFieldColorChanged);
 				this.fieldAngle.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.fieldRepeat.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.fieldMiddle.TextChanged -= new EventHandler(this.HandleTextChanged);
@@ -480,6 +485,17 @@ namespace Epsitec.Common.Document.Panels
 			if ( this.originFieldColor == this.fieldColor2 )  this.originFieldRank = 1;
 
 			this.OnOriginColorChanged();
+		}
+
+		private void HandleFieldColorChanged(object sender)
+		{
+			ColorSample cs = sender as ColorSample;
+			if ( cs.ActiveState == WidgetState.ActiveYes )
+			{
+				this.OnOriginColorChanged();
+			}
+
+			this.OnChanged();
 		}
 
 		private void HandleSwapColorClicked(object sender, MessageEventArgs e)

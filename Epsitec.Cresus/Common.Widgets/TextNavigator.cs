@@ -351,6 +351,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public void TabUndoMemorise()
+		{
+			this.UndoMemorise(UndoType.Tab);
+		}
+
 		public int TabInsert(Drawing.TextStyle.Tab tab)
 		{
 			int rank = this.textLayout.Style.TabInsert(tab);
@@ -460,12 +465,14 @@ namespace Epsitec.Common.Widgets
 				switch ( key )
 				{
 					case KeyCode.Return:
+						if ( this.isReadOnly )  return false;
 						this.UndoMemorise(UndoType.Insert);
 						this.textLayout.InsertCharacter(this.context, '\n');
 						this.OnTextInserted(false);
 						return true;
 
 					case KeyCode.Tab:
+						if ( this.isReadOnly )  return false;
 						this.UndoMemorise(UndoType.Insert);
 						this.textLayout.InsertCharacter(this.context, '\t');
 						this.OnTextInserted(false);
@@ -691,6 +698,7 @@ namespace Epsitec.Common.Widgets
 			Delete,
 			CascadableStyle,	// plusieurs modifs -> un seul undo global
 			AutonomusStyle,		// plusieurs modifs -> autant de undo que de modifs
+			Tab,
 		}
 
 		// Mémorise l'état actuel complet du texte, pour permettre l'annulation.
@@ -705,6 +713,7 @@ namespace Epsitec.Common.Widgets
 			{
 				TextOplet lastOplet = oplets[0] as TextOplet;
 				if ( type != UndoType.AutonomusStyle &&
+					 type != UndoType.Tab            &&
 					 lastOplet != null               &&
 					 lastOplet.Navigator == this     &&
 					 lastOplet.Type == type          )
@@ -732,6 +741,7 @@ namespace Epsitec.Common.Widgets
 				this.type = type;
 				this.textCopy = string.Copy(this.host.textLayout.InternalText);
 				this.contextCopy = TextLayout.Context.Copy(this.host.context);
+				this.host.textLayout.Style.TabCopyTo(out this.tabs);
 			}
 
 			public TextNavigator Navigator
@@ -757,6 +767,11 @@ namespace Epsitec.Common.Widgets
 				TextLayout.Context redoContext = TextLayout.Context.Copy(this.host.context);
 				undoContext.CopyTo(this.host.context);
 				redoContext.CopyTo(this.contextCopy);
+
+				Drawing.TextStyle.Tab[] temp;
+				this.host.textLayout.Style.TabCopyTo(out temp);
+				this.host.textLayout.Style.TabCopyFrom(this.tabs);
+				this.tabs = temp;
 
 				this.host.OnCursorChanged(true);
 			}
@@ -801,10 +816,11 @@ namespace Epsitec.Common.Widgets
 				return this;
 			}
 
-			protected TextNavigator			host;
-			protected UndoType				type;
-			protected string				textCopy;
-			protected TextLayout.Context	contextCopy;
+			protected TextNavigator				host;
+			protected UndoType					type;
+			protected string					textCopy;
+			protected TextLayout.Context		contextCopy;
+			protected Drawing.TextStyle.Tab[]	tabs;
 		}
 
 

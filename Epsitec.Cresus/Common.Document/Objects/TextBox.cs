@@ -249,6 +249,7 @@ namespace Epsitec.Common.Document.Objects
 
 			TextBox obj = src as TextBox;
 			this.textLayout.Text = obj.textLayout.Text;
+			obj.textLayout.Style.TabCopyTo(this.textLayout.Style);
 			obj.textNavigator.Context.CopyTo(this.textNavigator.Context);
 		}
 
@@ -645,14 +646,8 @@ namespace Epsitec.Common.Document.Objects
 			this.Initialise();
 			this.textLayout.Text = info.GetString("Text");
 
-			if ( Support.Serialization.Helper.FindElement(info, "TabArray") )
-			{
-				Drawing.TextStyle.Tab[] tabs = (Drawing.TextStyle.Tab[]) info.GetValue("TabArray", typeof(Drawing.TextStyle.Tab[]));
-				foreach ( Drawing.TextStyle.Tab tab in tabs )
-				{
-					this.textLayout.Style.TabInsert(tab);
-				}
-			}
+			Drawing.TextStyle.Tab[] tabs = (Drawing.TextStyle.Tab[]) info.GetValue("TabArray", typeof(Drawing.TextStyle.Tab[]));
+			this.textLayout.Style.TabCopyFrom(tabs);
 		}
 
 		// Vérifie si tous les fichiers existent.

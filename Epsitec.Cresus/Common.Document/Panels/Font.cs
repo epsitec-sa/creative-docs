@@ -43,7 +43,8 @@ namespace Epsitec.Common.Document.Panels
 
 			this.fontColor = new ColorSample(this);
 			this.fontColor.PossibleOrigin = true;
-			this.fontColor.Clicked += new MessageEventHandler(this.HandleColorClicked);
+			this.fontColor.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
+			this.fontColor.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.fontColor.TabIndex = 4;
 			this.fontColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontColor, "Couleur du texte par défaut");
@@ -66,7 +67,8 @@ namespace Epsitec.Common.Document.Panels
 				//?this.fontName.SelectedIndexChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontName.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontSize.TextChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fontColor.Clicked -= new MessageEventHandler(this.HandleColorClicked);
+				this.fontColor.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
+				this.fontColor.Changed -= new EventHandler(this.HandleFieldColorChanged);
 
 				this.label = null;
 				this.labelSize = null;
@@ -224,9 +226,20 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
-		private void HandleColorClicked(object sender, MessageEventArgs e)
+		private void HandleFieldColorClicked(object sender, MessageEventArgs e)
 		{
 			this.OnOriginColorChanged();
+		}
+
+		private void HandleFieldColorChanged(object sender)
+		{
+			ColorSample cs = sender as ColorSample;
+			if ( cs.ActiveState == WidgetState.ActiveYes )
+			{
+				this.OnOriginColorChanged();
+			}
+
+			this.OnChanged();
 		}
 
 

@@ -201,15 +201,17 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle aRect = new Drawing.Rectangle();
 
-				aRect.Left   = rect.Width-width;
-				aRect.Width  = width-adorner.GeometryUpDownRightMargin;
+				aRect.Left  = rect.Width-width;
+				aRect.Width = width-adorner.GeometryUpDownRightMargin;
+
+				double h = System.Math.Ceiling((rect.Height-adorner.GeometryUpDownBottomMargin-adorner.GeometryUpDownTopMargin)/2);
 
 				aRect.Bottom = adorner.GeometryUpDownBottomMargin;
-				aRect.Height = System.Math.Floor(rect.Height/2)+1-adorner.GeometryUpDownBottomMargin;
+				aRect.Height = h;
 				this.arrowDown.Bounds = aRect;
 
-				aRect.Bottom += aRect.Height-1;
-				aRect.Top    = rect.Height-adorner.GeometryUpDownTopMargin;
+				aRect.Bottom = rect.Height-adorner.GeometryUpDownTopMargin-h;
+				aRect.Height = h;
 				this.arrowUp.Bounds = aRect;
 			}
 		}

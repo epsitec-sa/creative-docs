@@ -27,6 +27,13 @@ namespace Epsitec.Common.Document
 			set { this.enable = value; }
 		}
 
+		// Etat du notificateur.
+		public bool EnableSelectionChanged
+		{
+			get { return this.enableSelectionChanged; }
+			set { this.enableSelectionChanged = value; }
+		}
+
 
 		// Indique que tout a changé.
 		public void NotifyAllChanged()
@@ -51,6 +58,7 @@ namespace Epsitec.Common.Document
 			this.guidesChanged = true;
 			this.hideHalfChanged = true;
 			this.debugChanged = true;
+			this.selNamesChanged = true;
 			this.NotifyArea();
 		}
 
@@ -107,7 +115,7 @@ namespace Epsitec.Common.Document
 		// Indique que les objets sélectionnés ont changé.
 		public void NotifySelectionChanged()
 		{
-			if ( !this.enable )  return;
+			if ( !this.enable || !this.enableSelectionChanged )  return;
 			this.selectionChanged = true;
 			this.NotifyAsync();
 		}
@@ -225,6 +233,14 @@ namespace Epsitec.Common.Document
 			{
 				this.propertyList.Add(property);
 			}
+			this.NotifyAsync();
+		}
+
+		// Indique que la sélection par noms a changé.
+		public void NotifySelNamesChanged()
+		{
+			if ( !this.enable )  return;
+			this.selNamesChanged = true;
 			this.NotifyAsync();
 		}
 
@@ -404,6 +420,12 @@ namespace Epsitec.Common.Document
 			{
 				this.OnPropertyChanged(this.propertyList);
 				this.propertyList.Clear();
+			}
+
+			if ( this.selNamesChanged )
+			{
+				this.OnSelNamesChanged();
+				this.selNamesChanged = false;
 			}
 
 			foreach ( Viewer viewer in this.document.Modifier.AttachViewers )
@@ -589,6 +611,14 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnSelNamesChanged()
+		{
+			if ( this.SelNamesChanged != null )  // qq'un écoute ?
+			{
+				this.SelNamesChanged();
+			}
+		}
+
 		protected void OnDrawChanged(Viewer viewer, Rectangle rect)
 		{
 			if ( this.DrawChanged != null )  // qq'un écoute ?
@@ -619,10 +649,12 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			HideHalfChanged;
 		public event SimpleEventHandler			DebugChanged;
 		public event PropertyEventHandler		PropertyChanged;
+		public event SimpleEventHandler			SelNamesChanged;
 		public event RedrawEventHandler			DrawChanged;
 
 		protected Document						document;
 		protected bool							enable = true;
+		protected bool							enableSelectionChanged = true;
 		protected bool							documentChanged;
 		protected bool							mouseChanged;
 		protected bool							originChanged;
@@ -644,5 +676,6 @@ namespace Epsitec.Common.Document
 		protected bool							hideHalfChanged;
 		protected bool							debugChanged;
 		protected System.Collections.ArrayList	propertyList = new System.Collections.ArrayList();
+		protected bool							selNamesChanged;
 	}
 }

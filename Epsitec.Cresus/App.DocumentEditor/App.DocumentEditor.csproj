@@ -148,6 +148,10 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Images\About.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\ActiveNo.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -276,6 +280,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\DeleteItem.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Deselect.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -285,6 +293,10 @@
                 />
                 <File
                     RelPath = "Images\Duplicate.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\DuplicateItem.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -300,11 +312,19 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\FineCursor.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Finger.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Images\FingerDup.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FingerPlus.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -433,6 +453,10 @@
                 />
                 <File
                     RelPath = "Images\JustifVTop.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Labels.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -624,15 +648,7 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
-                    RelPath = "Images\SelectGlobal.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
                     RelPath = "Images\SelectInvert.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\SelectMode.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -781,10 +797,6 @@
                 />
                 <File
                     RelPath = "Images\ZoomDefault.icon"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Images\ZoomMenu.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

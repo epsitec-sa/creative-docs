@@ -1041,6 +1041,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( (this.IsSelected || this.isCreating) &&
 				 drawingContext.IsActive &&
+				 !drawingContext.PreviewActive &&
 				 !this.IsGlobalSelected )
 			{
 				double initialWidth = graphics.LineWidth;
@@ -1057,7 +1058,7 @@ namespace Epsitec.Common.Document.Objects
 				graphics.LineWidth = initialWidth;
 			}
 
-			if ( this.IsSelected || this.isCreating )
+			if ( this.IsDrawDash(drawingContext) )
 			{
 				this.PropertyLineMode.DrawPathDash(graphics, drawingContext, pathLine, this.PropertyLineColor);
 

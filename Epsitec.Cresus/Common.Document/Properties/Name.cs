@@ -31,6 +31,10 @@ namespace Epsitec.Common.Document.Properties
 				{
 					this.NotifyBefore();
 					this.stringValue = value;
+					if ( value != "" )
+					{
+						this.document.Modifier.NamesExist = true;
+					}
 					this.NotifyAfter();
 				}
 			}

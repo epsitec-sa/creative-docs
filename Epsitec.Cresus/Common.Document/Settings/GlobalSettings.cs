@@ -46,6 +46,7 @@ namespace Epsitec.Common.Document.Settings
 			this.adorner = "LookMetal";
 			this.defaultZoom = 1.5;
 			this.mouseWheelAction = MouseWheelAction.Zoom;
+			this.fineCursor = false;
 			this.splashScreen = true;
 			this.firstAction = FirstAction.OpenNewDocument;
 			this.lastFilename = new System.Collections.ArrayList();
@@ -55,6 +56,10 @@ namespace Epsitec.Common.Document.Settings
 			// que l'application.
 			string dir = Support.Globals.Directories.Executable;
 			this.initialDirectory = dir + @"\Samples";
+
+			this.colorsCollection = new ColorsCollection();
+			this.colorsCollectionDirectory = "";
+			this.colorsCollectionFilename = "";
 		}
 
 		// Met tous les fichiers d'exemples dans la liste des 10 premiers
@@ -286,6 +291,19 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
+		public bool FineCursor
+		{
+			get
+			{
+				return this.fineCursor;
+			}
+
+			set
+			{
+				this.fineCursor = value;
+			}
+		}
+
 		public bool SplashScreen
 		{
 			get
@@ -372,6 +390,46 @@ namespace Epsitec.Common.Document.Settings
 			set
 			{
 				this.initialDirectory = value;
+			}
+		}
+
+
+		public Drawing.ColorsCollection ColorsCollection
+		{
+			get
+			{
+				return this.colorsCollection;
+			}
+
+			set
+			{
+				this.colorsCollection = value;
+			}
+		}
+
+		public string ColorsCollectionDirectory
+		{
+			get
+			{
+				return this.colorsCollectionDirectory;
+			}
+
+			set
+			{
+				this.colorsCollectionDirectory = value;
+			}
+		}
+
+		public string ColorsCollectionFilename
+		{
+			get
+			{
+				return this.colorsCollectionFilename;
+			}
+
+			set
+			{
+				this.colorsCollectionFilename = value;
 			}
 		}
 
@@ -477,10 +535,15 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("Adorner", this.adorner);
 			info.AddValue("DefaultZoom", this.defaultZoom);
 			info.AddValue("MouseWheelAction", this.mouseWheelAction);
+			info.AddValue("FineCursor", this.fineCursor);
 			info.AddValue("SplashScreen", this.splashScreen);
 			info.AddValue("FirstAction", this.firstAction);
 			info.AddValue("LastFilename", this.lastFilename);
 			info.AddValue("InitialDirectory", this.initialDirectory);
+
+			info.AddValue("ColorsCollection", this.colorsCollection);
+			info.AddValue("ColorsCollectionDirectory", this.colorsCollectionDirectory);
+			info.AddValue("ColorsCollectionFilename", this.colorsCollectionFilename);
 		}
 
 		// Constructeur qui désérialise les réglages.
@@ -506,10 +569,15 @@ namespace Epsitec.Common.Document.Settings
 			this.adorner = info.GetString("Adorner");
 			this.defaultZoom = info.GetDouble("DefaultZoom");
 			this.mouseWheelAction = (MouseWheelAction) info.GetValue("MouseWheelAction", typeof(MouseWheelAction));
+			this.fineCursor = info.GetBoolean("FineCursor");
 			this.splashScreen = info.GetBoolean("SplashScreen");
 			this.firstAction = (FirstAction) info.GetValue("FirstAction", typeof(FirstAction));
 			this.lastFilename = (System.Collections.ArrayList) info.GetValue("LastFilename", typeof(System.Collections.ArrayList));
 			this.initialDirectory = info.GetString("InitialDirectory");
+
+			this.colorsCollection = (ColorsCollection) info.GetValue("ColorsCollection", typeof(ColorsCollection));
+			this.colorsCollectionDirectory = info.GetString("ColorsCollectionDirectory");
+			this.colorsCollectionFilename = info.GetString("ColorsCollectionFilename");
 		}
 		#endregion
 
@@ -529,10 +597,14 @@ namespace Epsitec.Common.Document.Settings
 		protected string						adorner;
 		protected double						defaultZoom;
 		protected MouseWheelAction				mouseWheelAction;
+		protected bool							fineCursor;
 		protected bool							splashScreen;
 		protected FirstAction					firstAction;
 		protected System.Collections.ArrayList	lastFilename;
 		protected int							lastFilenameMax;
 		protected string						initialDirectory;
+		protected Drawing.ColorsCollection		colorsCollection;
+		protected string						colorsCollectionDirectory;
+		protected string						colorsCollectionFilename;
 	}
 }

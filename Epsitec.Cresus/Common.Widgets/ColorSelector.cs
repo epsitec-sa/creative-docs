@@ -76,34 +76,11 @@ namespace Epsitec.Common.Widgets
 			this.circle = new ColorWheel(this);
 			this.circle.Changed += new Support.EventHandler(this.HandleCircleChanged);
 
-			this.nbPalette = 16;
-			this.palette = new ColorSample[this.nbPalette];
-			for ( int i=0 ; i<this.nbPalette ; i++ )
-			{
-				this.palette[i] = new ColorSample(this);
-				this.palette[i].Clicked += new MessageEventHandler(this.HandleColorSelectorClicked);
-				this.palette[i].TabIndex = i;
-				this.palette[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			}
+			this.palette = new ColorPalette(this);
+			this.palette.HasOptionButton = true;
+			this.palette.Export += new Support.EventHandler(this.HandlePaletteExport);
+			this.palette.Import += new Support.EventHandler(this.HandlePaletteImport);
 
-			this.palette[ 0].Color = Drawing.Color.FromARGB(0.0, 1.0, 1.0, 1.0);
-			this.palette[ 1].Color = Drawing.Color.FromARGB(1.0, 1.0, 0.0, 0.0);
-			this.palette[ 2].Color = Drawing.Color.FromARGB(1.0, 1.0, 1.0, 0.0);
-			this.palette[ 3].Color = Drawing.Color.FromARGB(1.0, 0.0, 1.0, 0.0);
-			this.palette[ 4].Color = Drawing.Color.FromARGB(1.0, 0.0, 1.0, 1.0);
-			this.palette[ 5].Color = Drawing.Color.FromARGB(1.0, 0.0, 0.0, 1.0);
-			this.palette[ 6].Color = Drawing.Color.FromARGB(1.0, 1.0, 0.0, 1.0);
-			this.palette[ 7].Color = Drawing.Color.FromARGB(0.5, 0.5, 0.5, 0.5);
-
-			this.palette[ 8].Color = Drawing.Color.FromARGB(1.0, 1.0, 1.0, 1.0);
-			this.palette[ 9].Color = Drawing.Color.FromARGB(1.0, 0.9, 0.9, 0.9);
-			this.palette[10].Color = Drawing.Color.FromARGB(1.0, 0.8, 0.8, 0.8);
-			this.palette[11].Color = Drawing.Color.FromARGB(1.0, 0.7, 0.7, 0.7);
-			this.palette[12].Color = Drawing.Color.FromARGB(1.0, 0.6, 0.6, 0.6);
-			this.palette[13].Color = Drawing.Color.FromARGB(1.0, 0.5, 0.5, 0.5);
-			this.palette[14].Color = Drawing.Color.FromARGB(1.0, 0.4, 0.4, 0.4);
-			this.palette[15].Color = Drawing.Color.FromARGB(1.0, 0.0, 0.0, 0.0);
-			
 			this.picker = new Tools.Magnifier.DragSource(this);
 			this.picker.HotColorChanged += new Support.EventHandler(this.HandlePickerHotColorChanged);
 			ToolTip.Default.SetToolTip(this.picker, "Pipette-loupe");
@@ -146,6 +123,27 @@ namespace Epsitec.Common.Widgets
 					this.circle.Color = value;
 					this.UpdateColors();
 					this.suspendColorEvents = false;
+				}
+			}
+		}
+
+		public ColorPalette						ColorPalette
+		{
+			get
+			{
+				return this.palette;
+			}
+
+			set
+			{
+				if ( this.palette != value )
+				{
+					if ( this.palette != null )
+					{
+						this.palette.Dispose();
+					}
+
+					this.palette = value;
 				}
 			}
 		}
@@ -264,37 +262,22 @@ namespace Epsitec.Common.Widgets
 			this.circle.Bounds = r;
 			this.circle.SetVisible(visibleCircle);
 
-			double dx = System.Math.Floor((rect.Width-hCircle-10)/2);
+			double dx = System.Math.Floor((rect.Width-hCircle-10)/this.palette.Columns);
 			if ( dx > 4 )
 			{
-				double dy = System.Math.Floor(hCircle/(this.nbPalette/2));
-				dx = System.Math.Min(dx, dy);
-				Drawing.Point pos = new Drawing.Point();
-				pos.X = rect.Right-dx*2;
-				int i = 0;
-				for ( int x=0 ; x<2 ; x++ )
-				{
-					pos.Y = rect.Top;
-					for ( int y=0 ; y<this.nbPalette/2 ; y++ )
-					{
-						r.Left   = pos.X;
-						r.Right  = pos.X+dx+1;
-						r.Top    = pos.Y;
-						r.Bottom = pos.Y-dy-1;
-						this.palette[i].Bounds = r;
-						this.palette[i].SetVisible(visibleCircle);
-						i ++;
-						pos.Y -= dy;
-					}
-					pos.X += dx;
-				}
+				double dy = System.Math.Floor(hCircle/(this.palette.Rows));
+				dx = System.Math.Min(dx, dy)+1;
+
+				r.Left = rect.Right-(dx*this.palette.Columns-1)+1-15;
+				r.Right = rect.Right+1;
+				r.Top = rect.Top;
+				r.Bottom = rect.Top-(dx*this.palette.Rows-1);
+				this.palette.Bounds = r;
+				this.palette.Show();
 			}
 			else
 			{
-				for ( int i=0 ; i<this.nbPalette ; i++ )
-				{
-					this.palette[i].Hide();
-				}
+				this.palette.Hide();
 			}
 
 			r.Top    = rect.Bottom+3*19;
@@ -404,11 +387,12 @@ namespace Epsitec.Common.Widgets
 					this.circle.Changed -= new Support.EventHandler(this.HandleCircleChanged);
 				}
 
-				foreach ( ColorSample cs in this.palette )
+				if ( this.palette != null )
 				{
-					cs.Clicked -= new MessageEventHandler(this.HandleColorSelectorClicked);
+					this.palette.Export -= new Support.EventHandler(this.HandlePaletteExport);
+					this.palette.Import -= new Support.EventHandler(this.HandlePaletteImport);
 				}
-				
+
 				if ( this.picker != null )
 				{
 					this.picker.HotColorChanged -= new Support.EventHandler(this.HandlePickerHotColorChanged);
@@ -427,7 +411,7 @@ namespace Epsitec.Common.Widgets
 		// Une valeur RGB a été changée.
 		private void HandleTextRGBChanged(object sender)
 		{
-			if ( ! this.suspendColorEvents )
+			if ( !this.suspendColorEvents )
 			{
 				this.FieldsRGBToColor();
 			}
@@ -436,7 +420,7 @@ namespace Epsitec.Common.Widgets
 		// Une valeur HSV a été changée.
 		private void HandleTextHSVChanged(object sender)
 		{
-			if ( ! this.suspendColorEvents )
+			if ( !this.suspendColorEvents )
 			{
 				this.FieldsHSVToColor();
 			}
@@ -445,7 +429,7 @@ namespace Epsitec.Common.Widgets
 		// Couleur dans le cercle changée.
 		private void HandleCircleChanged(object sender)
 		{
-			if ( ! this.suspendColorEvents )
+			if ( !this.suspendColorEvents )
 			{
 				this.suspendColorEvents = true;
 				this.UpdateColors();
@@ -454,18 +438,16 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Couleur dans palette cliquée.
-		private void HandleColorSelectorClicked(object sender, MessageEventArgs e)
+		private void HandlePaletteExport(object sender)
 		{
-			ColorSample cs = sender as ColorSample;
-			if ( e != null && (e.Message.IsShiftPressed || e.Message.IsCtrlPressed) )
-			{
-				cs.Color = this.Color;
-			}
-			else
-			{
-				this.Color = cs.Color;
-				this.OnChanged();
-			}
+			this.Color = this.palette.Color;
+			this.OnChanged();
+		}
+
+		// Couleur dans palette cliquée.
+		private void HandlePaletteImport(object sender)
+		{
+			this.palette.Color = this.Color;
 		}
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
@@ -497,8 +479,7 @@ namespace Epsitec.Common.Widgets
 
 		protected Drawing.Color					black;
 		protected ColorWheel					circle;
-		protected int							nbPalette;
-		protected ColorSample[]					palette;
+		protected ColorPalette					palette;
 		protected int							nbField;
 		protected StaticText[]					labels;
 		protected TextFieldSlider[]				fields;

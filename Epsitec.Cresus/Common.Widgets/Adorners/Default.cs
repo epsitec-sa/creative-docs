@@ -916,7 +916,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 #if true
 			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.colorControlLightLight);
+			graphics.RenderSolid(this.colorControl);
 
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
@@ -957,8 +957,17 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			if ( itemType != MenuItemType.Deselect )
 			{
-				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.colorCaption);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.colorCaption);
+				}
+				else
+				{
+					rect.Deflate(0.5);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(this.ColorBorder);
+				}
 			}
 		}
 
@@ -1287,7 +1296,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.Rasterizer.Gamma = 0.5;
 				pos.X ++;
 				pos.Y --;
-				text.Paint(pos, graphics, clipRect, this.colorControlLightLight, Drawing.GlyphPaintStyle.Disabled);
+				text.Paint(pos, graphics, clipRect, this.colorControlLightLight, Drawing.GlyphPaintStyle.Shadow);
 				graphics.Rasterizer.Gamma = gamma;  // remet gamma initial
 				pos.X --;
 				pos.Y ++;
@@ -1474,7 +1483,8 @@ namespace Epsitec.Common.Widgets.Adorner
 
 		public void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
 		{
-			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled )
+			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled ||
+				 paintStyle == Drawing.GlyphPaintStyle.Shadow   )
 			{
 				color.R = uniqueColor.R;
 				color.G = uniqueColor.G;

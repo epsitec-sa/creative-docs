@@ -47,6 +47,9 @@ namespace Epsitec.Common.Document
 			{
 				this.isPropertiesExtended[i] = false;
 			}
+
+			this.repeatDuplicateMove = true;
+			this.FlushMoveAfterDuplicate();
 		}
 
 		// Outil sélectionné dans la palette.
@@ -217,6 +220,15 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Rectangle de la page de travail.
+		public Rectangle PageArea
+		{
+			get
+			{
+				return new Rectangle(new Point(0,0), this.document.Size);
+			}
+		}
+
 
 		#region RealUnit
 		// Choix de l'unité de dimension par défaut.
@@ -336,7 +348,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				field.UnitType = RealUnitType.DimensionMillimeter;
+				field.UnitType = RealUnitType.Scalar;
 				field.Scale = (decimal) Modifier.fontSizeScale;
 				field.InternalMinValue = 1.0M;
 				field.InternalMaxValue = (decimal) (200.0*Modifier.fontSizeScale);
@@ -362,13 +374,26 @@ namespace Epsitec.Common.Document
 			foreach ( Window window in Window.DebugAliveWindows )
 			{
 				if ( window.Root == null )  continue;
-				Widget[] widgets = window.Root.FindAllChildren();
-				foreach ( Widget widget in widgets )
+				this.AdaptAllTextFieldReal(window.Root);
+			}
+		}
+
+		// Modifie tous les widgets d'un panneau qui sera utilisé.
+		public void AdaptAllTextFieldReal(Widget parent)
+		{
+			Widget[] widgets = parent.FindAllChildren();
+			foreach ( Widget widget in widgets )
+			{
+				if ( widget is TextFieldReal )
 				{
-					if ( widget is TextFieldReal )
+					TextFieldReal field = widget as TextFieldReal;
+					if ( field.IsDimension )
 					{
-						TextFieldReal field = widget as TextFieldReal;
-						if ( field.IsDimension && field.Text != "" )
+						if ( field.Text == "" )
+						{
+							this.AdaptTextFieldRealDimension(field);
+						}
+						else
 						{
 							decimal val = field.InternalValue;
 							this.AdaptTextFieldRealDimension(field);
@@ -446,8 +471,8 @@ namespace Epsitec.Common.Document
 			this.ActiveViewer.CreateEnding(false);
 			this.OpletQueueEnable = false;
 
-			Modifier.UniqueObjectId = 0;
-			Modifier.UniqueStyleId = 0;
+			this.UniqueObjectId = 0;
+			this.UniqueStyleId = 0;
 			this.TotalSelected = 0;
 			this.totalHide = 0;
 			this.totalPageHide = 0;
@@ -525,11 +550,18 @@ namespace Epsitec.Common.Document
 
 			this.totalSelected = 0;
 			this.totalHide = 0;
+			this.NamesExist = false;
 			Objects.Abstract layer = context.RootObject();
-			foreach ( Objects.Abstract obj in this.document.Deep(layer) )
+			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
 			{
 				if ( obj.IsSelected )  this.totalSelected ++;
 				if ( obj.IsHide )  this.totalHide ++;
+
+				Properties.Name pn = obj.PropertyName;
+				if ( pn != null )
+				{
+					if ( pn.String != "" )  this.NamesExist = true;
+				}
 			}
 
 			this.dirtyCounters = false;
@@ -584,6 +616,24 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.dirtyCounters )  this.UpdateCounters();
 				return this.totalPageHide;
+			}
+		}
+
+		// Est-ce que le calque courant contient des noms d'objets ?
+		public bool NamesExist
+		{
+			get
+			{
+				return this.namesExist;
+			}
+
+			set
+			{
+				if ( this.namesExist != value )
+				{
+					this.namesExist = value;
+					this.document.Notifier.NotifySelNamesChanged();
+				}
 			}
 		}
 		#endregion
@@ -836,6 +886,8 @@ namespace Epsitec.Common.Document
 				}
 				this.OpletQueueValidateAction();
 			}
+
+			this.FlushMoveAfterDuplicate();
 		}
 
 		// Sélectionne tous les objets.
@@ -862,6 +914,8 @@ namespace Epsitec.Common.Document
 				this.ActiveViewer.UpdateSelector();
 				this.OpletQueueValidateAction();
 			}
+
+			this.FlushMoveAfterDuplicate();
 		}
 
 		// Inverse la sélection.
@@ -895,6 +949,82 @@ namespace Epsitec.Common.Document
 				this.ActiveViewer.UpdateSelector();
 				this.OpletQueueValidateAction();
 			}
+
+			this.FlushMoveAfterDuplicate();
+		}
+
+		// Retourne la liste de tous les objets ayant un nom dans la page
+		// et la calque courant.
+		public System.Collections.ArrayList SelectNames()
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
+			{
+				if ( obj.IsHide )  continue;
+
+				Properties.Name pn = obj.PropertyName;
+				if ( pn == null || pn.String == "" )  continue;
+
+				if ( list.Contains(pn.String) )  continue;
+				list.Add(pn.String);
+			}
+
+			list.Sort();
+			return list;
+		}
+
+		// Sélectionne d'après un nom d'objet.
+		public void SelectName(string name)
+		{
+			if ( name == "" )  return;
+
+			using ( this.OpletQueueBeginAction() )
+			{
+				this.ActiveViewer.CreateEnding(false);
+
+				this.opletCreate = false;
+				this.Tool = "Select";
+
+				DrawingContext context = this.ActiveViewer.DrawingContext;
+				Objects.Abstract layer = context.RootObject();
+				foreach ( Objects.Abstract obj in this.document.Flat(layer) )
+				{
+					if ( obj.IsHide )  continue;
+
+					string objName = "";
+					Properties.Name pn = obj.PropertyName;
+					if ( pn != null )
+					{
+						objName = pn.String;
+					}
+
+					if ( obj.IsSelected )
+					{
+						if ( objName != name )
+						{
+							obj.Deselect();
+							this.TotalSelected --;
+						}
+					}
+					else
+					{
+						if ( objName == name )
+						{
+							obj.Select();
+							this.TotalSelected ++;
+						}
+					}
+				}
+
+				this.ActiveViewer.UpdateSelector();
+				this.ShowSelection();
+				this.OpletQueueValidateAction();
+			}
+
+			this.FlushMoveAfterDuplicate();
 		}
 		#endregion
 
@@ -1022,6 +1152,52 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Annule le déplacement après un duplique.
+		public void FlushMoveAfterDuplicate()
+		{
+			this.lastOperIsDuplicate = false;
+			this.moveAfterDuplicate = new Point(0,0);
+		}
+
+		// Ajoute un déplacement effectué après un duplique.
+		public void AddMoveAfterDuplicate(Point move)
+		{
+			if ( this.lastOperIsDuplicate )
+			{
+				this.moveAfterDuplicate += move;
+			}
+		}
+
+		// Réglage "répète le dernier déplacement".
+		public bool RepeatDuplicateMove
+		{
+			get
+			{
+				return this.repeatDuplicateMove;
+			}
+
+			set
+			{
+				this.repeatDuplicateMove = value;
+			}
+		}
+
+		// Donne le déplacement effectif à utiliser pour la commande "dupliquer".
+		public Point EffectiveDuplicateMove
+		{
+			get
+			{
+				if ( !this.repeatDuplicateMove || this.moveAfterDuplicate.IsEmpty )
+				{
+					return this.duplicateMove;
+				}
+				else
+				{
+					return this.moveAfterDuplicate;
+				}
+			}
+		}
+
 		// Duplique tous les objets sélectionnés.
 		public void DuplicateSelection(Point move)
 		{
@@ -1036,10 +1212,14 @@ namespace Epsitec.Common.Document
 				Modifier.Duplicate(this.document, this.document, layer.Objects, layer.Objects, true, move, true);
 				this.ActiveViewer.UpdateSelector();
 
+				this.ShowSelection();
 				this.document.Notifier.NotifySelectionChanged();
 
 				this.OpletQueueValidateAction();
 			}
+
+			this.lastOperIsDuplicate = true;
+			this.moveAfterDuplicate = move;
 		}
 
 		// Coupe tous les objets sélectionnés dans le bloc-notes.
@@ -1112,20 +1292,7 @@ namespace Epsitec.Common.Document
 				this.document.Clipboard.Modifier.OpletQueueEnable = false;
 				this.Duplicate(this.document.Clipboard, this.document, new Point(0,0), true);
 				this.ActiveViewer.UpdateSelector();
-
-				Rectangle box = this.SelectedBbox;
-				if ( !this.ActiveViewer.ScrollRectangle.Contains(box) )
-				{
-					this.ZoomMemorize();
-					context.ZoomAndCenter(context.Zoom, box.Center);
-
-					box = this.SelectedBbox;
-					if ( !this.ActiveViewer.ScrollRectangle.Contains(box) )
-					{
-						this.ZoomSel();
-					}
-				}
-
+				this.ShowSelection();
 				this.document.Notifier.NotifySelectionChanged();
 
 				this.OpletQueueValidateAction();
@@ -1298,6 +1465,26 @@ namespace Epsitec.Common.Document
 
 		#region Operations
 		// Déplace tous les objets sélectionnés.
+		public void MoveSelection(Point dir, int alter)
+		{
+			Point move = Point.ScaleMul(this.arrowMove, dir);
+
+			if ( alter < 0 )  // touche Ctrl ?
+			{
+				move /= this.arrowMoveDiv;
+			}
+
+			if ( alter > 0 )  // touche Shift ?
+			{
+				move *= this.arrowMoveMul;
+			}
+
+			this.PrepareOper();
+			this.ActiveViewer.Selector.OperMove(move);
+			this.TerminateOper();
+		}
+
+		// Déplace tous les objets sélectionnés.
 		public void MoveSelection(Point move)
 		{
 			this.PrepareOper();
@@ -1335,14 +1522,20 @@ namespace Epsitec.Common.Document
 			this.document.IsDirtySerialize = true;
 			this.OpletQueueBeginAction();
 
+			this.document.Notifier.EnableSelectionChanged = false;
 			this.operInitialSelector = this.ActiveViewer.SelectorType;
 			this.ActiveViewer.SelectorType = SelectorType.Zoomer;
+			this.document.Notifier.EnableSelectionChanged = true;
 		}
 
 		// Termine l'opération.
 		protected void TerminateOper()
 		{
+			this.document.Notifier.EnableSelectionChanged = false;
 			this.ActiveViewer.SelectorType = this.operInitialSelector;
+			this.document.Notifier.EnableSelectionChanged = true;
+
+			this.ShowSelection();
 			this.OpletQueueValidateAction();
 		}
 		#endregion
@@ -1385,8 +1578,8 @@ namespace Epsitec.Common.Document
 					if ( dir == 0 )  move.Y = globalBox.Center.Y-objBox.Center.Y;
 					if ( dir >  0 )  move.Y = globalBox.Top-objBox.Top;
 				}
-				obj.MoveAllStarting();
-				obj.MoveAllProcess(move);
+				this.MoveAllStarting(obj);
+				this.MoveAllProcess(obj, move);
 			}
 			this.OpletQueueValidateAction();
 		}
@@ -1442,8 +1635,8 @@ namespace Epsitec.Common.Document
 				if ( horizontal )  move.X = pos.X-so.Position;
 				else               move.Y = pos.Y-so.Position;
 
-				obj.MoveAllStarting();
-				obj.MoveAllProcess(move);
+				this.MoveAllStarting(obj);
+				this.MoveAllProcess(obj, move);
 			}
 			this.OpletQueueValidateAction();
 		}
@@ -1484,12 +1677,40 @@ namespace Epsitec.Common.Document
 				if ( horizontal )  move.X = pos.X-so.Position;
 				else               move.Y = pos.Y-so.Position;
 
-				obj.MoveAllStarting();
-				obj.MoveAllProcess(move);
+				this.MoveAllStarting(obj);
+				this.MoveAllProcess(obj, move);
 
 				pos += obj.BoundingBoxDetect.Size/2;
 			}
 			this.OpletQueueValidateAction();
+		}
+
+		// Début du déplacement d'un objet isolé ou d'un groupe.
+		protected void MoveAllStarting(Objects.Abstract group)
+		{
+			group.MoveAllStarting();
+
+			if ( group is Objects.Group )
+			{
+				foreach ( Objects.Abstract obj in this.document.Deep(group) )
+				{
+					obj.MoveAllStarting();
+				}
+			}
+		}
+
+		// Effectue le déplacement d'un objet isolé ou d'un groupe.
+		protected void MoveAllProcess(Objects.Abstract group, Point move)
+		{
+			group.MoveAllProcess(move);
+
+			if ( group is Objects.Group )
+			{
+				foreach ( Objects.Abstract obj in this.document.Deep(group) )
+				{
+					obj.MoveAllProcess(move);
+				}
+			}
 		}
 
 		// Construit la liste triée de tous les objets à distribuer,
@@ -2790,6 +3011,26 @@ namespace Epsitec.Common.Document
 
 
 		#region Zoom
+		// Montre les objets sélectionnés si nécessaire.
+		protected void ShowSelection()
+		{
+			if ( this.TotalSelected == 0 )  return;
+
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Rectangle box = this.SelectedBbox;
+			if ( !this.ActiveViewer.ScrollRectangle.Contains(box) )
+			{
+				this.ZoomMemorize();
+				context.ZoomAndCenter(context.Zoom, box.Center);
+
+				box = this.SelectedBbox;
+				if ( !this.ActiveViewer.ScrollRectangle.Contains(box) )
+				{
+					this.ZoomSel();
+				}
+			}
+		}
+
 		// Zoom sur les objets sélectionnés.
 		public void ZoomSel()
 		{
@@ -3033,7 +3274,7 @@ namespace Epsitec.Common.Document
 						Properties.Abstract style = Properties.Abstract.NewProperty(this.document, property.Type);
 						property.CopyTo(style);
 						style.IsStyle = true;
-						style.StyleName = Modifier.GetNextStyleName();
+						style.StyleName = this.GetNextStyleName();
 						this.PropertyList(style).Add(style);
 
 						DrawingContext context = this.ActiveViewer.DrawingContext;
@@ -3047,7 +3288,7 @@ namespace Epsitec.Common.Document
 					{
 						this.PropertyList(property).Remove(property);
 						property.IsStyle = true;
-						property.StyleName = Modifier.GetNextStyleName();
+						property.StyleName = this.GetNextStyleName();
 						this.PropertyList(property).Add(property);
 					}
 
@@ -3064,7 +3305,7 @@ namespace Epsitec.Common.Document
 					Properties.Abstract style = Properties.Abstract.NewProperty(this.document, property.Type);
 					property.CopyTo(style);
 					style.IsStyle = true;
-					style.StyleName = Modifier.GetNextStyleName();
+					style.StyleName = this.GetNextStyleName();
 					this.PropertyList(true, style.IsSelected).Add(style);
 					this.ObjectMemoryTool.ChangeProperty(style);
 
@@ -3168,7 +3409,7 @@ namespace Epsitec.Common.Document
 				Properties.Abstract style = Properties.Abstract.NewProperty(this.document, type);
 				style.IsStyle = true;
 				style.IsOnlyForCreation = false;
-				style.StyleName = Modifier.GetNextStyleName();
+				style.StyleName = this.GetNextStyleName();
 				list.Insert(rank+1, style);
 				list.Selected = rank+1;
 
@@ -3194,7 +3435,7 @@ namespace Epsitec.Common.Document
 				property.CopyTo(style);
 				style.IsStyle = true;
 				style.IsOnlyForCreation = false;
-				style.StyleName = Modifier.GetNextStyleName();
+				style.StyleName = this.GetNextStyleName();
 				list.Insert(rank+1, style);
 				list.Selected = rank+1;
 
@@ -3277,43 +3518,39 @@ namespace Epsitec.Common.Document
 		}
 
 		// Donne le prochain nom unique de style.
-		protected static string GetNextStyleName()
+		protected string GetNextStyleName()
 		{
-			return string.Format("Style {0}", Modifier.GetNextUniqueStyleId());
+			return string.Format("Style {0}", this.GetNextUniqueStyleId());
 		}
 		#endregion
 
 
 		#region UniqueId
 		// Retourne le prochain identificateur unique pour les objets.
-		public static int GetNextUniqueObjectId()
+		public int GetNextUniqueObjectId()
 		{
-			return ++Modifier.uniqueObjectId;
+			return ++this.uniqueObjectId;
 		}
 
 		// Modification de l'identificateur unique.
-		public static int UniqueObjectId
+		public int UniqueObjectId
 		{
-			get { return Modifier.uniqueObjectId; }
-			set { Modifier.uniqueObjectId = value; }
+			get { return this.uniqueObjectId; }
+			set { this.uniqueObjectId = value; }
 		}
-
-		protected static int uniqueObjectId = 0;
 
 		// Retourne le prochain identificateur unique pour les noms de style.
-		public static int GetNextUniqueStyleId()
+		public int GetNextUniqueStyleId()
 		{
-			return ++Modifier.uniqueStyleId;
+			return ++this.uniqueStyleId;
 		}
 
 		// Modification de l'identificateur unique.
-		public static int UniqueStyleId
+		public int UniqueStyleId
 		{
-			get { return Modifier.uniqueStyleId; }
-			set { Modifier.uniqueStyleId = value; }
+			get { return this.uniqueStyleId; }
+			set { this.uniqueStyleId = value; }
 		}
-
-		protected static int uniqueStyleId = 0;
 		#endregion
 
 
@@ -3459,6 +3696,7 @@ namespace Epsitec.Common.Document
 		protected int							totalSelected;
 		protected int							totalHide;
 		protected int							totalPageHide;
+		protected bool							namesExist;
 		protected ZoomHistory					zoomHistory;
 		protected OpletQueue					opletQueue;
 		protected int							opletLevel;
@@ -3478,6 +3716,11 @@ namespace Epsitec.Common.Document
 		protected Point							arrowMove;
 		protected double						arrowMoveMul;
 		protected double						arrowMoveDiv;
+		protected bool							repeatDuplicateMove;
+		protected bool							lastOperIsDuplicate;
+		protected Point							moveAfterDuplicate;
+		protected int							uniqueObjectId = 0;
+		protected int							uniqueStyleId = 0;
 
 		public static readonly double			fontSizeScale = 3.5;  // empyrique !
 	}

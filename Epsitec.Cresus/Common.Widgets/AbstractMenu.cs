@@ -158,9 +158,9 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				// Retourne la case sélectionnée dans un menu.
-				for (int i = 0; i < this.items.Count; i++)
+				for ( int i=0 ; i<this.items.Count ; i++ )
 				{
-					if (this.items[i].ItemType != MenuItemType.Deselect)
+					if ( this.items[i].ItemType != MenuItemType.Deselect )
 					{
 						return i;
 					}
@@ -170,9 +170,9 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				// Sélectionne une (et une seule) case dans un menu.
-				for (int i = 0; i < this.items.Count; i++)
+				for ( int i=0 ; i<this.items.Count ; i++ )
 				{
-					if (i == value)
+					if ( i == value )
 					{
 						this.items[i].ItemType = this.isActive ? MenuItemType.Select : MenuItemType.Parent;
 					}
@@ -219,8 +219,8 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				AbstractMenu menu   = AbstractMenu.RootMenu;
-				Window       window = null;
+				AbstractMenu menu = AbstractMenu.RootMenu;
+				Window window = null;
 				
 				if ( menu != null )
 				{
@@ -254,9 +254,10 @@ namespace Epsitec.Common.Widgets
 		public void ShowAsContextMenu(Window owner, Drawing.Point pos)
 		{
 			// Affiche un menu contextuel dont on spécifie le coin supérieur/gauche.
+
+			this.isContextRoot = true;
 			
 			Window lastWindow = Message.State.LastWindow;
-			
 			if ( lastWindow != null )
 			{
 				lastWindow.MouseCursor = MouseCursor.Default;
@@ -282,9 +283,9 @@ namespace Epsitec.Common.Widgets
 			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.Width, this.Height);
 			
+			this.Parent = this.window.Root;
 			AbstractMenu.RegisterFilter(this);
 
-			this.window.Root.Children.Add(this);
 			this.window.AnimateShow(Animation.FadeIn);
 			this.SetFocused(true);
 			
@@ -472,10 +473,7 @@ namespace Epsitec.Common.Widgets
 						}
 						else
 						{
-							if ( !this.CloseMenuItem() )
-							{
-								parent.CloseSubmenu();
-							}
+							this.CloseMenuItem();
 						}
 					}
 					break;
@@ -550,11 +548,13 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		protected bool CloseMenuItem()
+		protected void CloseMenuItem()
 		{
 			// Ferme le sous-menu contenant la case sélectionnée.
-			if ( this.parentMenu == null )  return false;
-			return this.parentMenu.CloseSubmenu();
+			this.CloseSubmenu();
+
+			this.parentMenu.submenu = null;
+			this.parentMenu.isActive = true;
 		}
 		
 		protected void SelectOtherMenuItem(int dir)
@@ -617,12 +617,23 @@ namespace Epsitec.Common.Widgets
 			// Ferme complètement tous les menus ouverts.
 			AbstractMenu root = AbstractMenu.RootMenu;
 			
-			root.CloseSubmenu();
-			root.SelectedIndex = -1;
-			
+			if ( root.isContextRoot )  // racine du menu contextuel ?
+			{
+				root.CloseSubmenu();
+			}
+			else	// menu normal ?
+			{
+				if ( root.submenu != null )
+				{
+					root.submenu.CloseSubmenu();
+					root.submenu = null;
+				}
+				root.isActive = true;
+				root.SelectedIndex = -1;
+			}
+
 			// Il faut dés-enregistrer la même instance que celle qui avait été enregistrée
 			// au départ, sinon on se retrouve avec un filtre qui traîne...
-			
 			AbstractMenu.UnregisterFilter();
 		}
 
@@ -631,7 +642,7 @@ namespace Epsitec.Common.Widgets
 			AbstractMenu root = AbstractMenu.RootMenu;
 			AbstractMenu.CloseAll();
 			
-			if (root != null)
+			if ( root != null )
 			{
 				root.OnRejected();
 			}
@@ -642,7 +653,11 @@ namespace Epsitec.Common.Widgets
 			// Ouvre le sous-menu correspondant à un item.
 			
 			if ( this.submenu == item.Submenu )  return false;
-			bool closed = this.CloseSubmenu();
+			bool closed = false;
+			if ( this.submenu != null )
+			{
+				closed = this.submenu.CloseSubmenu();
+			}
 			this.submenu = item.Submenu;
 			if ( this.submenu == null )  return false;
 
@@ -695,30 +710,40 @@ namespace Epsitec.Common.Widgets
 			}
 
 			pos = item.MapClientToScreen(pos) + offset;
-			
-			this.window = new Window();
-			this.window.MakeFramelessWindow();
-			this.window.MakeFloatingWindow();
-			this.window.Owner = item.Window;
-			this.window.CommandDispatcher = item.Window.CommandDispatcher;
-			this.window.Name = "Menu";
+
+			if ( this.IsVertical )
+			{
+				ScreenInfo si = ScreenInfo.Find(pos);
+				Drawing.Rectangle wa = si.WorkingArea;
+				if ( pos.Y < wa.Bottom )
+				{
+					pos.Y = wa.Bottom;
+				}
+			}
+
+			this.submenu.window = new Window();
+			this.submenu.window.MakeFramelessWindow();
+			this.submenu.window.MakeFloatingWindow();
+			this.submenu.window.Owner = item.Window;
+			this.submenu.window.CommandDispatcher = item.Window.CommandDispatcher;
+			this.submenu.window.Name = "Menu";
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			if ( this.submenu.IsVertical && adorner.AlphaVMenu < 1.0 )
 			{
-				this.window.MakeLayeredWindow();
-				this.window.Alpha = adorner.AlphaVMenu;
-				this.window.Root.BackColor = Drawing.Color.Transparent;
+				this.submenu.window.MakeLayeredWindow();
+				this.submenu.window.Alpha = adorner.AlphaVMenu;
+				this.submenu.window.Root.BackColor = Drawing.Color.Transparent;
 			}
-			this.window.DisableMouseActivation();
-			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
+			this.submenu.window.DisableMouseActivation();
+			this.submenu.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
 			
-			this.submenu.Parent = this.window.Root;
+			this.submenu.Parent = this.submenu.window.Root;
 			AbstractMenu.RegisterFilter(this.submenu);
 			 
 			Animation anim = Animation.None;
 			if ( this.IsVertical || !closed )  anim = Animation.FadeIn;
 			if ( forceQuick )  anim = Animation.None;
-			this.window.AnimateShow(anim);
+			this.submenu.window.AnimateShow(anim);
 			this.submenu.SetFocused(true);
 			
 			AbstractMenu.menuLastLeaf = this.submenu;
@@ -1162,6 +1187,7 @@ namespace Epsitec.Common.Widgets
 		
 		private bool								isDirty;
 		private bool								isActive = true;	// dernier menu (feuille)
+		private bool								isContextRoot = false;
 		private double								margin = 2;			// pour menu horizontal
 		private Drawing.Margins						margins = new Drawing.Margins(2,2,2,2);
 		private Drawing.Margins						shadow  = new Drawing.Margins(0,0,0,0);

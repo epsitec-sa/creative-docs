@@ -20,11 +20,13 @@ namespace Epsitec.Common.Document
 			IBeam,
 			Cross,
 			Finger,
+			FingerPlus,
 			FingerDup,
 			Pen,
 			Zoom,
 			Picker,
 			PickerEmpty,
+			Fine,
 		}
 
 		public Viewer(Document document)
@@ -213,11 +215,22 @@ namespace Epsitec.Common.Document
 		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			//System.Diagnostics.Debug.WriteLine(string.Format("Message: {0}", message.Type));
+			//?System.Diagnostics.Debug.WriteLine(string.Format("Message: {0}", message.Type));
 			if ( !this.IsActiveViewer )  return;
 
 			Modifier modifier = this.document.Modifier;
 			if ( modifier == null )  return;
+
+			// Après un MouseUp, on reçoit toujours un MouseMove inutile,
+			// qui est filtré ici !!!
+			if ( message.Type == MessageType.MouseMove &&
+				 this.lastMessageType == MessageType.MouseUp &&
+				 pos == this.mousePosWidget )
+			{
+				//?System.Diagnostics.Debug.WriteLine("ProcessMessage: MouseMove après MouseUp poubellisé !");
+				return;
+			}
+			this.lastMessageType = message.Type;
 
 			this.mousePosWidget = pos;
 			pos = this.ScreenToInternal(pos);  // position en coordonnées internes
@@ -252,6 +265,7 @@ namespace Epsitec.Common.Document
 						this.AutoScrollTimerStop();
 						this.ProcessMouseUp(message, pos);
 						this.mouseDown = false;
+						this.ProcessMouseMove(message, pos);
 					}
 					break;
 
@@ -271,25 +285,17 @@ namespace Epsitec.Common.Document
 						this.UpdateMouseCursor(message);
 					}
 
-					if ( this.document.Modifier.Tool == "Select" )
+					if ( this.EditProcessMessage(message, pos) )
 					{
-						this.MoveSelection(message);
+						break;
 					}
 
-					this.EditProcessMessage(message, pos);
-
-					if ( message.IsAltPressed || message.IsCtrlPressed )
-					{
-						// Il ne faut jamais manger les pressions de touches avec
-						// ALT ou Ctrl, car elles sont utilisées par les raccourcis
-						// clavier globaux.
-						return;
-					}
 					if ( this.createRank != -1 )
 					{
 						if ( message.KeyCode == KeyCode.Escape )
 						{
 							this.CreateEnding(false);
+							break;
 						}
 					}
 
@@ -299,14 +305,18 @@ namespace Epsitec.Common.Document
 							 message.KeyCode == KeyCode.Delete )
 						{
 							modifier.DeleteSelection();
+							break;
 						}
 					}
 
 					if ( message.KeyCode == KeyCode.FuncF12 )
 					{
 						this.DirtyAllViews();
+						break;
 					}
-					break;
+
+					this.UseMouseCursor();
+					return;
 
 				case MessageType.KeyUp:
 					if ( message.KeyCode == KeyCode.ShiftKey   ||
@@ -315,26 +325,27 @@ namespace Epsitec.Common.Document
 						this.UpdateMouseCursor(message);
 					}
 
-					this.EditProcessMessage(message, pos);
-					break;
+					if ( this.EditProcessMessage(message, pos) )
+					{
+						break;
+					}
+
+					this.UseMouseCursor();
+					return;
 
 				default:
-					if ( message.Type == MessageType.KeyPress )
+					if ( this.EditProcessMessage(message, pos) )
 					{
-						if ( message.IsAltPressed || message.IsCtrlPressed )
-						{
-							// Il ne faut jamais manger les pressions de touches avec
-							// ALT ou Ctrl, car elles sont utilisées par les raccourcis
-							// clavier globaux.
-							return;
-						}
+						break;
 					}
-					this.EditProcessMessage(message, pos);
-					break;
+
+					this.UseMouseCursor();
+					return;
 			}
 			
 			this.document.Notifier.GenerateEvents();
 			message.Consumer = this;
+			this.UseMouseCursor();
 		}
 
 		// Gestion d'un bouton de la souris pressé.
@@ -346,11 +357,11 @@ namespace Epsitec.Common.Document
 			{
 				if ( modifier.Tool == "Select" )
 				{
-					this.SelectMouseDown(pos, message.ButtonDownCount, false);
+					this.SelectMouseDown(pos, message.ButtonDownCount, message.IsRightButton, false);
 				}
 				else if ( modifier.Tool == "Global" )
 				{
-					this.SelectMouseDown(pos, message.ButtonDownCount, true);
+					this.SelectMouseDown(pos, message.ButtonDownCount, message.IsRightButton, true);
 				}
 				else if ( modifier.Tool == "Edit" )
 				{
@@ -381,7 +392,7 @@ namespace Epsitec.Common.Document
 			if ( message.IsRightButton )
 			{
 				modifier.Tool = "Select";
-				this.SelectMouseDown(pos, message.ButtonDownCount, false);
+				this.SelectMouseDown(pos, message.ButtonDownCount, message.IsRightButton, false);
 			}
 		}
 
@@ -398,11 +409,11 @@ namespace Epsitec.Common.Document
 
 			if ( modifier.Tool == "Select" )
 			{
-				this.SelectMouseMove(pos, false);
+				this.SelectMouseMove(pos, message.IsRightButton, false);
 			}
 			else if ( modifier.Tool == "Global" )
 			{
-				this.SelectMouseMove(pos, true);
+				this.SelectMouseMove(pos, message.IsRightButton, true);
 			}
 			else if ( modifier.Tool == "Edit" )
 			{
@@ -503,43 +514,6 @@ namespace Epsitec.Common.Document
 				origin.Y = -System.Math.Min(-origin.Y, this.drawingContext.MaxOriginY);
 				
 				this.drawingContext.Origin(origin);
-			}
-		}
-
-		// Déplace la sélection en fonction des touches flèches, Shirt et Ctrl.
-		protected void MoveSelection(Message message)
-		{
-			Point move = new Point(0,0);
-
-			if ( message.KeyCode == KeyCode.ArrowRight )
-			{
-				move.X = this.document.Modifier.ArrowMove.X;
-			}
-			if ( message.KeyCode == KeyCode.ArrowLeft )
-			{
-				move.X = -this.document.Modifier.ArrowMove.X;
-			}
-			if ( message.KeyCode == KeyCode.ArrowUp )
-			{
-				move.Y = this.document.Modifier.ArrowMove.Y;
-			}
-			if ( message.KeyCode == KeyCode.ArrowDown )
-			{
-				move.Y = -this.document.Modifier.ArrowMove.Y;
-			}
-
-			if ( message.IsShiftPressed )
-			{
-				move *= this.document.Modifier.ArrowMoveMul;
-			}
-			if ( message.IsCtrlPressed )
-			{
-				move /= this.document.Modifier.ArrowMoveDiv;
-			}
-
-			if ( move.X != 0.0 || move.Y != 0.0 )
-			{
-				this.document.Modifier.MoveSelection(move);
 			}
 		}
 
@@ -688,7 +662,7 @@ namespace Epsitec.Common.Document
 
 
 		#region SelectMouse
-		protected void SelectMouseDown(Point mouse, int downCount, bool global)
+		protected void SelectMouseDown(Point mouse, int downCount, bool isRight, bool global)
 		{
 			this.document.Modifier.OpletQueueBeginAction();
 			this.moveStart = mouse;
@@ -700,21 +674,16 @@ namespace Epsitec.Common.Document
 			this.HiliteHandle(null, -1);
 			this.moveGlobal = -1;
 			this.moveObject = null;
-			this.cellObject = null;
+			this.selectChangeObject = null;
 			this.guideInteractive = -1;
 			this.guideCreate = false;
+			this.ctrlDown = this.drawingContext.IsCtrl;
 			this.ctrlDuplicate = false;
 
 			Objects.Abstract obj;
 			int rank;
 			if ( this.selector.Detect(mouse, !this.drawingContext.IsShift, out rank) )
 			{
-				if ( this.drawingContext.IsCtrl && rank == 0 )
-				{
-					this.document.Modifier.DuplicateSelection(new Point(0,0));
-					this.document.Modifier.ActiveViewer.UpdateSelector();
-					this.ctrlDuplicate = true;
-				}
 				this.moveGlobal = rank;
 				this.selector.MoveStarting(this.moveGlobal, mouse, this.drawingContext);
 				this.selector.HiliteHandle(this.moveGlobal);
@@ -736,6 +705,7 @@ namespace Epsitec.Common.Document
 					this.moveObject.MoveHandleStarting(this.moveHandle, mouse, this.drawingContext);
 					this.HiliteHandle(this.moveObject, this.moveHandle);
 					this.drawingContext.ConstrainFixStarting(obj.GetHandlePosition(rank));
+					this.document.Modifier.FlushMoveAfterDuplicate();
 				}
 				else if ( this.GuideDetect(mouse, out rank) )
 				{
@@ -748,6 +718,7 @@ namespace Epsitec.Common.Document
 					if ( obj == null )
 					{
 						this.selector.FixStarting(mouse);
+						this.document.Modifier.FlushMoveAfterDuplicate();
 					}
 					else
 					{
@@ -765,8 +736,10 @@ namespace Epsitec.Common.Document
 								{
 									obj.GlobalSelect(true);
 									this.SelectorInitialize(this.document.Modifier.SelectedBbox);
+									this.selectChangeObject = obj;
 								}
 							}
+							this.document.Modifier.FlushMoveAfterDuplicate();
 						}
 						else
 						{
@@ -774,14 +747,9 @@ namespace Epsitec.Common.Document
 							{
 								obj.Deselect();
 								this.document.Modifier.TotalSelected --;
+								this.selectChangeObject = obj;
+								this.document.Modifier.FlushMoveAfterDuplicate();
 							}
-						}
-
-						if ( this.drawingContext.IsCtrl && obj.IsSelected )
-						{
-							this.document.Modifier.DuplicateSelection(new Point(0,0));
-							this.document.Modifier.ActiveViewer.UpdateSelector();
-							this.ctrlDuplicate = true;
 						}
 
 						this.moveObject = obj;
@@ -794,13 +762,42 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		protected void SelectMouseMove(Point mouse, bool global)
+		protected void SelectMouseMove(Point mouse, bool isRight, bool global)
 		{
 			this.HiliteHandle(null, -1);
 			this.selector.HiliteHandle(-1);
 
 			if ( this.mouseDown )  // bouton souris pressé ?
 			{
+				// Duplique le ou les objets sélectionnés ?
+				if ( this.ctrlDown && !this.ctrlDuplicate &&
+					 (this.moveGlobal != -1 || (this.moveObject != null && this.moveHandle == -1)) )
+				{
+					double len = Point.Distance(mouse, this.moveStart);
+					if ( len > this.drawingContext.MinimalSize )
+					{
+						// Remet la sélection à la position de départ:
+						if ( this.moveGlobal != -1 )  // déplace le modificateur global ?
+						{
+							this.selector.MoveProcess(this.moveGlobal, this.moveStart, this.drawingContext);
+							this.MoveGlobalProcess(this.selector);
+							this.document.Modifier.GroupUpdateChildrens();
+							this.document.Modifier.GroupUpdateParents();
+							this.MoveGlobalEnding();
+						}
+
+						this.document.Modifier.DuplicateSelection(new Point(0,0));
+						this.document.Modifier.ActiveViewer.UpdateSelector();
+						this.ctrlDuplicate = true;
+
+						if ( this.moveGlobal != -1 )  // déplace le modificateur global ?
+						{
+							this.selector.MoveStarting(this.moveGlobal, this.moveStart, this.drawingContext);
+							this.MoveGlobalStarting();
+						}
+					}
+				}
+
 				if ( this.selector.Visible && !this.selector.Handles )
 				{
 					this.selector.FixEnding(mouse);
@@ -820,6 +817,7 @@ namespace Epsitec.Common.Document
 						mouse -= this.moveOffset;
 						this.MoveHandleProcess(this.moveObject, this.moveHandle, mouse);
 						this.HiliteHandle(this.moveObject, this.moveHandle);
+						this.document.Modifier.FlushMoveAfterDuplicate();
 					}
 					else	// déplace tout l'objet ?
 					{
@@ -828,24 +826,19 @@ namespace Epsitec.Common.Document
 						if ( !this.moveAccept )
 						{
 							double len = Point.Distance(mouse, this.moveStart);
-							if ( len <= this.drawingContext.MinimalSize )
-							{
-								mouse = this.moveStart;
-							}
-							else
+							if ( len > this.drawingContext.MinimalSize )
 							{
 								this.moveAccept = true;
 							}
 						}
-						this.drawingContext.SnapGrid(ref mouse);
-						this.MoveAllProcess(mouse-this.moveOffset);
-						this.moveOffset = mouse;
+
+						if ( this.moveAccept )
+						{
+							this.drawingContext.SnapGrid(ref mouse);
+							this.MoveAllProcess(mouse-this.moveOffset);
+							this.moveOffset = mouse;
+						}
 					}
-				}
-				else if ( this.cellObject != null )
-				{
-					this.cellRank = this.cellObject.DetectCell(mouse);
-					this.cellObject.MoveCellProcess(this.cellRank, mouse, this.drawingContext);
 				}
 			}
 			else	// bouton souris relâché ?
@@ -912,7 +905,6 @@ namespace Epsitec.Common.Document
 				double len = Point.Distance(mouse, this.moveStart);
 				if ( isRight && len <= this.drawingContext.MinimalSize )
 				{
-					this.selector.Visible = false;
 					globalMenu = true;
 				}
 				else
@@ -936,28 +928,13 @@ namespace Epsitec.Common.Document
 				this.moveHandle = -1;
 				this.UpdateSelector();
 			}
-			else if ( this.cellObject != null )
-			{
-				this.cellObject = null;
-				this.cellRank   = -1;
-			}
 
 			this.drawingContext.ConstrainDelStarting();
-			this.document.Notifier.GenerateEvents();
 			this.document.Modifier.OpletQueueValidateAction();
-
-			if ( this.ctrlDuplicate )
-			{
-				double len = Point.Distance(mouse, this.moveStart);
-				if ( len <= this.drawingContext.MinimalSize )
-				{
-					this.document.Modifier.Undo();
-					return;
-				}
-			}
 
 			if ( isRight )  // avec le bouton de droite de la souris ?
 			{
+				this.document.Notifier.GenerateEvents();
 				this.ContextMenu(mouse, globalMenu);
 			}
 		}
@@ -1001,15 +978,19 @@ namespace Epsitec.Common.Document
 			this.EditProcessMessage(message, mouse);
 		}
 
-		protected void EditProcessMessage(Message message, Point pos)
+		protected bool EditProcessMessage(Message message, Point pos)
 		{
 			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
-			if ( editObject == null )  return;
+			if ( editObject == null )  return false;
 
+			Rectangle ibbox = editObject.BoundingBox;
 			if ( editObject.EditProcessMessage(message, pos) )
 			{
+				this.document.Notifier.NotifyArea(ibbox);
 				this.document.Notifier.NotifyArea(editObject.BoundingBox);
+				return true;
 			}
+			return false;
 		}
 		#endregion
 
@@ -1453,6 +1434,8 @@ namespace Epsitec.Common.Document
 			{
 				obj.MoveAllProcess(move);
 			}
+
+			this.document.Modifier.AddMoveAfterDuplicate(move);
 		}
 
 		// Début du déplacement global de tous les objets sélectionnés.
@@ -1487,8 +1470,18 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.selector.Rectangle);
 		}
 
+		// Dessine les noms de tous les objets.
+		public void DrawLabels(Graphics graphics)
+		{
+			Objects.Abstract layer = this.drawingContext.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
+			{
+				obj.DrawLabel(graphics, this.drawingContext);
+			}
+		}
+
 		// Dessine les poignées de tous les objets.
-		public void DrawHandle(Graphics graphics)
+		public void DrawHandles(Graphics graphics)
 		{
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer) )
@@ -1522,27 +1515,81 @@ namespace Epsitec.Common.Document
 			this.Hilite(null);
 
 			int nbSel = this.document.Modifier.TotalSelected;
+
+			// Construit le sous-menu "opérations".
+			if ( globalMenu || nbSel == 0 )
+			{
+				this.contextMenuOper = null;
+			}
+			else
+			{
+				System.Collections.ArrayList listOper = new System.Collections.ArrayList();
+				ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "Rotate90",  "manifest:Epsitec.App.DocumentEditor.Images.OperRot90.icon",    "Quart de tour à gauche");
+				ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "Rotate180", "manifest:Epsitec.App.DocumentEditor.Images.OperRot180.icon",   "Demi-tour");
+				ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "Rotate270", "manifest:Epsitec.App.DocumentEditor.Images.OperRot270.icon",   "Quart de tour à droite");
+				ContextMenuItem.MenuAddSep(listOper);
+				ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "MirrorH",   "manifest:Epsitec.App.DocumentEditor.Images.OperMirrorH.icon",  "Miroir horizontal");
+				ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "MirrorV",   "manifest:Epsitec.App.DocumentEditor.Images.OperMirrorV.icon",  "Miroir vertical");
+				ContextMenuItem.MenuAddSep(listOper);
+				ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ZoomDiv2",  "manifest:Epsitec.App.DocumentEditor.Images.OperZoomDiv2.icon", "Réduction /2");
+				ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ZoomMul2",  "manifest:Epsitec.App.DocumentEditor.Images.OperZoomMul2.icon", "Agrandissement x2");
+
+				this.contextMenuOper = new VMenu();
+				this.contextMenuOper.Host = this;
+				ContextMenuItem.MenuCreate(this.contextMenuOper, listOper);
+				this.contextMenuOper.AdjustSize();
+			}
+
+			// Construit le sous-menu "géométrie".
+			if ( globalMenu || nbSel == 0 )
+			{
+				this.contextMenuGeom = null;
+			}
+			else
+			{
+				System.Collections.ArrayList listGeom = new System.Collections.ArrayList();
+				ContextMenuItem.MenuAddItem(listGeom, this.CommandDispatcher, "Combine",   "manifest:Epsitec.App.DocumentEditor.Images.Combine.icon",   "Combiner");
+				ContextMenuItem.MenuAddItem(listGeom, this.CommandDispatcher, "Uncombine", "manifest:Epsitec.App.DocumentEditor.Images.Uncombine.icon", "Scinder");
+				ContextMenuItem.MenuAddItem(listGeom, this.CommandDispatcher, "ToBezier",  "manifest:Epsitec.App.DocumentEditor.Images.ToBezier.icon",  "Convertir en courbes");
+				ContextMenuItem.MenuAddItem(listGeom, this.CommandDispatcher, "ToPoly",    "manifest:Epsitec.App.DocumentEditor.Images.ToPoly.icon",    "Convertir en droites");
+				ContextMenuItem.MenuAddItem(listGeom, this.CommandDispatcher, "Fragment",  "manifest:Epsitec.App.DocumentEditor.Images.Fragment.icon",  "Fragmenter");
+
+				this.contextMenuGeom = new VMenu();
+				this.contextMenuGeom.Host = this;
+				ContextMenuItem.MenuCreate(this.contextMenuGeom, listGeom);
+				this.contextMenuGeom.AdjustSize();
+			}
+
+			// Construit le menu principal.
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			if ( globalMenu || nbSel == 0 )
 			{
-				this.MenuAddItem(list, "Deselect",     "manifest:Epsitec.App.DocumentEditor.Images.Deselect.icon",     "Désélectionner tout");
-				this.MenuAddItem(list, "SelectAll",    "manifest:Epsitec.App.DocumentEditor.Images.SelectAll.icon",    "Tout sélectionner");
-				this.MenuAddItem(list, "SelectInvert", "manifest:Epsitec.App.DocumentEditor.Images.SelectInvert.icon", "Inverser la sélection");
-				this.MenuAddSep(list);
-				this.MenuAddItem(list, "HideSel",      "manifest:Epsitec.App.DocumentEditor.Images.HideSel.icon",      "Cacher la sélection");
-				this.MenuAddItem(list, "HideRest",     "manifest:Epsitec.App.DocumentEditor.Images.HideRest.icon",     "Cacher le reste");
-				this.MenuAddItem(list, "HideCancel",   "manifest:Epsitec.App.DocumentEditor.Images.HideCancel.icon",   "Montrer tout");
-				this.MenuAddSep(list);
-				this.MenuAddItem(list, "ZoomMin",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomMin.icon",      "Zoom minimal");
-				this.MenuAddItem(list, "ZoomDefault",  "manifest:Epsitec.App.DocumentEditor.Images.ZoomDefault.icon",  "Zoom 100%");
-				this.MenuAddItem(list, "ZoomSel",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomSel.icon",      "Zoom sélection");
-				this.MenuAddItem(list, "ZoomPrev",     "manifest:Epsitec.App.DocumentEditor.Images.ZoomPrev.icon",     "Zoom précédent");
-				this.MenuAddItem(list, "ZoomSub",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomSub.icon",      "Réduction");
-				this.MenuAddItem(list, "ZoomAdd",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomAdd.icon",      "Agrandissement");
-				this.MenuAddSep(list);
-				this.MenuAddItem(list, "Outside",      "manifest:Epsitec.App.DocumentEditor.Images.Outside.icon",      "Sortir du groupe");
-				this.MenuAddItem(list, "SelectMode",   "manifest:Epsitec.App.DocumentEditor.Images.SelectMode.icon",   "Sélection partielle");
-				this.MenuAddItem(list, "Grid",         "manifest:Epsitec.App.DocumentEditor.Images.Grid.icon",         "Grille magnétique");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Deselect",     "manifest:Epsitec.App.DocumentEditor.Images.Deselect.icon",     "Désélectionner tout");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "SelectAll",    "manifest:Epsitec.App.DocumentEditor.Images.SelectAll.icon",    "Tout sélectionner");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "SelectInvert", "manifest:Epsitec.App.DocumentEditor.Images.SelectInvert.icon", "Inverser la sélection");
+				ContextMenuItem.MenuAddSep(list);
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "HideSel",      "manifest:Epsitec.App.DocumentEditor.Images.HideSel.icon",      "Cacher la sélection");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "HideRest",     "manifest:Epsitec.App.DocumentEditor.Images.HideRest.icon",     "Cacher le reste");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "HideCancel",   "manifest:Epsitec.App.DocumentEditor.Images.HideCancel.icon",   "Montrer tout");
+				ContextMenuItem.MenuAddSep(list);
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "ZoomMin",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomMin.icon",      "Zoom minimal");
+				if ( this.document.Type != DocumentType.Pictogram )
+				{
+					ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "ZoomPage",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomPage.icon",      "Zoom pleine page");
+					ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "ZoomPageWidth", "manifest:Epsitec.App.DocumentEditor.Images.ZoomPageWidth.icon", "Zoom largeur page");
+				}
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "ZoomDefault",  "manifest:Epsitec.App.DocumentEditor.Images.ZoomDefault.icon",  "Zoom 100%");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "ZoomSel",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomSel.icon",      "Zoom sélection");
+				if ( this.document.Type != DocumentType.Pictogram )
+				{
+					ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "ZoomSelWidth",  "manifest:Epsitec.App.DocumentEditor.Images.ZoomSelWidth.icon",  "Zoom sélection");
+				}
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "ZoomPrev",     "manifest:Epsitec.App.DocumentEditor.Images.ZoomPrev.icon",     "Zoom précédent");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "ZoomSub",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomSub.icon",      "Réduction");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "ZoomAdd",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomAdd.icon",      "Agrandissement");
+				ContextMenuItem.MenuAddSep(list);
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Outside",      "manifest:Epsitec.App.DocumentEditor.Images.Outside.icon",      "Sortir du groupe");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Grid",         "manifest:Epsitec.App.DocumentEditor.Images.Grid.icon",         "Grille magnétique");
 			}
 			else
 			{
@@ -1554,31 +1601,28 @@ namespace Epsitec.Common.Document
 					this.contextMenuRank = -1;
 				}
 
-				this.MenuAddItem(list, "Delete",    "manifest:Epsitec.App.DocumentEditor.Images.Delete.icon",    "Supprimer");
-				this.MenuAddItem(list, "Duplicate", "manifest:Epsitec.App.DocumentEditor.Images.Duplicate.icon", "Dupliquer");
-				this.MenuAddItem(list, "OrderUp",   "manifest:Epsitec.App.DocumentEditor.Images.OrderUp.icon",   "Dessus");
-				this.MenuAddItem(list, "OrderDown", "manifest:Epsitec.App.DocumentEditor.Images.OrderDown.icon", "Dessous");
-				this.MenuAddItem(list, "Merge",     "manifest:Epsitec.App.DocumentEditor.Images.Merge.icon",     "Fusionner");
-				this.MenuAddItem(list, "Group",     "manifest:Epsitec.App.DocumentEditor.Images.Group.icon",     "Associer");
-				this.MenuAddItem(list, "Ungroup",   "manifest:Epsitec.App.DocumentEditor.Images.Ungroup.icon",   "Dissocier");
-				this.MenuAddItem(list, "Inside",    "manifest:Epsitec.App.DocumentEditor.Images.Inside.icon",    "Entrer dans groupe");
-				this.MenuAddItem(list, "Outside",   "manifest:Epsitec.App.DocumentEditor.Images.Outside.icon",   "Sortir du groupe");
-				this.MenuAddSep(list);
-				this.MenuAddItem(list, "ZoomSel",   "manifest:Epsitec.App.DocumentEditor.Images.ZoomSel.icon",   "Zoom sélection");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Delete",    "manifest:Epsitec.App.DocumentEditor.Images.Delete.icon",    "Supprimer");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Duplicate", "manifest:Epsitec.App.DocumentEditor.Images.Duplicate.icon", "Dupliquer");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "OrderUp",   "manifest:Epsitec.App.DocumentEditor.Images.OrderUp.icon",   "Dessus");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "OrderDown", "manifest:Epsitec.App.DocumentEditor.Images.OrderDown.icon", "Dessous");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Merge",     "manifest:Epsitec.App.DocumentEditor.Images.Merge.icon",     "Fusionner");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Group",     "manifest:Epsitec.App.DocumentEditor.Images.Group.icon",     "Associer");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Ungroup",   "manifest:Epsitec.App.DocumentEditor.Images.Ungroup.icon",   "Dissocier");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Inside",    "manifest:Epsitec.App.DocumentEditor.Images.Inside.icon",    "Entrer dans groupe");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Outside",   "manifest:Epsitec.App.DocumentEditor.Images.Outside.icon",   "Sortir du groupe");
+				ContextMenuItem.MenuAddSep(list);
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "ZoomSel",   "manifest:Epsitec.App.DocumentEditor.Images.ZoomSel.icon",   "Zoom sélection");
 				if ( this.document.Type != DocumentType.Pictogram )
 				{
-					this.MenuAddItem(list, "ZoomSelWidth", "manifest:Epsitec.App.DocumentEditor.Images.ZoomSelWidth.icon", "Zoom largeur sélection");
+					ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "ZoomSelWidth", "manifest:Epsitec.App.DocumentEditor.Images.ZoomSelWidth.icon", "Zoom largeur sélection");
 				}
-				this.MenuAddSep(list);
-				this.MenuAddItem(list, "HideSel",    "manifest:Epsitec.App.DocumentEditor.Images.HideSel.icon",    "Cacher la sélection");
-				this.MenuAddItem(list, "HideRest",   "manifest:Epsitec.App.DocumentEditor.Images.HideRest.icon",   "Cacher le reste");
-				this.MenuAddItem(list, "HideCancel", "manifest:Epsitec.App.DocumentEditor.Images.HideCancel.icon", "Montrer tout");
-				this.MenuAddSep(list);
-				this.MenuAddItem(list, "Combine",   "manifest:Epsitec.App.DocumentEditor.Images.Combine.icon",   "Combiner");
-				this.MenuAddItem(list, "Uncombine", "manifest:Epsitec.App.DocumentEditor.Images.Uncombine.icon", "Scinder");
-				this.MenuAddItem(list, "ToBezier",  "manifest:Epsitec.App.DocumentEditor.Images.ToBezier.icon",  "Convertir en courbes");
-				this.MenuAddItem(list, "ToPoly",    "manifest:Epsitec.App.DocumentEditor.Images.ToPoly.icon",    "Convertir en droites");
-				this.MenuAddItem(list, "Fragment",  "manifest:Epsitec.App.DocumentEditor.Images.Fragment.icon",  "Fragmenter");
+				ContextMenuItem.MenuAddSep(list);
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "HideSel",    "manifest:Epsitec.App.DocumentEditor.Images.HideSel.icon",    "Cacher la sélection");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "HideRest",   "manifest:Epsitec.App.DocumentEditor.Images.HideRest.icon",   "Cacher le reste");
+				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "HideCancel", "manifest:Epsitec.App.DocumentEditor.Images.HideCancel.icon", "Montrer tout");
+				ContextMenuItem.MenuAddSep(list);
+				ContextMenuItem.MenuAddSubmenu(list, this.contextMenuOper, "manifest:Epsitec.App.DocumentEditor.Images.OperMoveH.icon", "Opérations");
+				ContextMenuItem.MenuAddSubmenu(list, this.contextMenuGeom, "manifest:Epsitec.App.DocumentEditor.Images.Combine.icon", "Géométrie");
 
 				if ( nbSel == 1 && this.contextMenuObject != null )
 				{
@@ -1588,22 +1632,7 @@ namespace Epsitec.Common.Document
 
 			this.contextMenu = new VMenu();
 			this.contextMenu.Host = this;
-			
-			foreach ( ContextMenuItem cmi in list )
-			{
-				if ( cmi.Name == "" )
-				{
-					this.contextMenu.Items.Add(new MenuSeparator());
-				}
-				else
-				{
-					MenuItem mi = new MenuItem(cmi.Command, cmi.Icon, cmi.Text, "", cmi.Name);
-					mi.IconNameActiveNo = cmi.IconActiveNo;
-					mi.IconNameActiveYes = cmi.IconActiveYes;
-					mi.ActiveState = cmi.Active ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-					this.contextMenu.Items.Add(mi);
-				}
-			}
+			ContextMenuItem.MenuCreate(this.contextMenu, list);
 			this.contextMenu.AdjustSize();
 			mouse = this.InternalToScreen(mouse);
 			mouse = this.MapClientToScreen(mouse);
@@ -1617,30 +1646,6 @@ namespace Epsitec.Common.Document
 			}
 			
 			this.contextMenu.ShowAsContextMenu(this.Window, mouse);
-		}
-
-		// Ajoute une case dans le menu.
-		protected void MenuAddItem(System.Collections.ArrayList list, string cmd, string icon, string text)
-		{
-			CommandDispatcher.CommandState state = this.CommandDispatcher[cmd];
-			if ( state != null )
-			{
-				if ( !state.Enabled )  return;
-			}
-
-			ContextMenuItem item = new ContextMenuItem();
-			item.Command = cmd;
-			item.Name = cmd;
-			item.Icon = @icon;
-			item.Text = text;
-			list.Add(item);
-		}
-
-		// Ajoute un séparateur dans le menu.
-		protected void MenuAddSep(System.Collections.ArrayList list)
-		{
-			ContextMenuItem item = new ContextMenuItem();
-			list.Add(item);  // séparateur
 		}
 
 		// Exécute une commande locale à un objet.
@@ -1693,8 +1698,7 @@ namespace Epsitec.Common.Document
 			Objects.Abstract editObject = this.document.Modifier.RetEditObject();
 			if ( editObject == null )
 			{
-				this.textRuler.SetVisible(false);
-				this.textRuler.DetachFromText();
+				this.HideRuler();
 			}
 			else
 			{
@@ -1725,10 +1729,22 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					this.textRuler.SetVisible(false);
-					this.textRuler.DetachFromText();
+					this.HideRuler();
 				}
 			}
+		}
+
+		// Cache la règle.
+		protected void HideRuler()
+		{
+			if ( this.textRuler.IsVisible )
+			{
+				Rectangle rect = this.ScreenToInternal(this.textRuler.Bounds);
+				this.document.Notifier.NotifyArea(this, rect);
+			}
+
+			this.textRuler.SetVisible(false);
+			this.textRuler.DetachFromText();
 		}
 		#endregion
 
@@ -1737,10 +1753,15 @@ namespace Epsitec.Common.Document
 		// Adapte le sprite de la souris en fonction des touches Shift et Ctrl.
 		protected void UpdateMouseCursor(Message message)
 		{
-			if ( this.lastMouseCursorType == MouseCursorType.Arrow     ||
-				 this.lastMouseCursorType == MouseCursorType.ArrowPlus )
+			if ( this.mouseCursorType == MouseCursorType.Arrow     ||
+				 this.mouseCursorType == MouseCursorType.ArrowDup  ||
+				 this.mouseCursorType == MouseCursorType.ArrowPlus )
 			{
-				if ( message.IsShiftPressed )
+				if ( message.IsCtrlPressed )
+				{
+					this.ChangeMouseCursor(MouseCursorType.ArrowDup);
+				}
+				else if ( message.IsShiftPressed )
 				{
 					this.ChangeMouseCursor(MouseCursorType.ArrowPlus);
 				}
@@ -1750,12 +1771,17 @@ namespace Epsitec.Common.Document
 				}
 			}
 
-			if ( this.lastMouseCursorType == MouseCursorType.Finger    ||
-				 this.lastMouseCursorType == MouseCursorType.FingerDup )
+			if ( this.mouseCursorType == MouseCursorType.Finger     ||
+				 this.mouseCursorType == MouseCursorType.FingerDup  ||
+				 this.mouseCursorType == MouseCursorType.FingerPlus )
 			{
 				if ( message.IsCtrlPressed )
 				{
 					this.ChangeMouseCursor(MouseCursorType.FingerDup);
+				}
+				else if ( message.IsShiftPressed )
+				{
+					this.ChangeMouseCursor(MouseCursorType.FingerPlus);
 				}
 				else
 				{
@@ -1767,7 +1793,20 @@ namespace Epsitec.Common.Document
 		// Change le sprite de la souris.
 		protected void ChangeMouseCursor(MouseCursorType cursor)
 		{
-			if ( this.lastMouseCursorType == cursor )  return;
+			this.mouseCursorType = cursor;
+			this.UseMouseCursor();  // ajouté pour planter plus souvent !!!
+		}
+
+		// Utilise le bon sprite pour la souris.
+		protected void UseMouseCursor()
+		{
+			MouseCursorType cursor = this.mouseCursorType;
+			if ( this.document.GlobalSettings.FineCursor )
+			{
+				cursor = MouseCursorType.Fine;
+			}
+
+			if ( this.mouseCursorTypeUse == cursor )  return;
 
 			switch ( cursor )
 			{
@@ -1785,6 +1824,10 @@ namespace Epsitec.Common.Document
 
 				case MouseCursorType.Finger:
 					this.MouseCursorImage(ref this.mouseCursorFinger, "manifest:Epsitec.App.DocumentEditor.Images.Finger.icon");
+					break;
+
+				case MouseCursorType.FingerPlus:
+					this.MouseCursorImage(ref this.mouseCursorFingerPlus, "manifest:Epsitec.App.DocumentEditor.Images.FingerPlus.icon");
 					break;
 
 				case MouseCursorType.FingerDup:
@@ -1819,13 +1862,17 @@ namespace Epsitec.Common.Document
 					this.MouseCursorImage(ref this.mouseCursorPickerEmpty, "manifest:Epsitec.App.DocumentEditor.Images.PickerEmpty.icon");
 					break;
 
+				case MouseCursorType.Fine:
+					this.MouseCursorImage(ref this.mouseCursorFine, "manifest:Epsitec.App.DocumentEditor.Images.FineCursor.icon");
+					break;
+
 				default:
 					this.MouseCursor = MouseCursor.AsArrow;
 					break;
 			}
 
 			this.Window.MouseCursor = this.MouseCursor;
-			this.lastMouseCursorType = cursor;
+			this.mouseCursorTypeUse = cursor;
 		}
 
 		// Choix du sprite de la souris.
@@ -2018,7 +2065,7 @@ namespace Epsitec.Common.Document
 				if ( this.document.Type == DocumentType.Graphic )
 				{
 					// Dessine la "page".
-					Rectangle rect = new Rectangle(0, 0, this.document.Size.Width, this.document.Size.Height);
+					Rectangle rect = this.document.Modifier.PageArea;
 					graphics.Align(ref rect);
 					rect.Offset(ix, iy);
 
@@ -2045,8 +2092,6 @@ namespace Epsitec.Common.Document
 		// Dessine la grille magnétique dessus.
 		protected void DrawGridForeground(Graphics graphics, Rectangle clipRect)
 		{
-			if ( this.drawingContext.PreviewActive )  return;
-
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/this.drawingContext.ScaleX;
 
@@ -2056,131 +2101,147 @@ namespace Epsitec.Common.Document
 			clipRect = ScreenToInternal(clipRect);
 			clipRect = Rectangle.Intersection(clipRect, this.document.Modifier.RectangleArea);
 
-			// Dessine la grille.
-			if ( this.drawingContext.GridShow )
+			if ( this.drawingContext.PreviewActive )
 			{
-				double s = System.Math.Min(this.drawingContext.GridStep.X*this.drawingContext.ScaleX,
-										   this.drawingContext.GridStep.Y*this.drawingContext.ScaleY);
-				int mul = (int) System.Math.Max(10.0/s, 1.0);
-
-				Point origin = this.document.Modifier.OriginArea;
-				origin = Point.GridAlign(origin, -this.drawingContext.GridOffset, this.drawingContext.GridStep);
-
-				// Dessine les traits verticaux.
-				double step = this.drawingContext.GridStep.X*mul;
-				int subdiv = (int) this.drawingContext.GridSubdiv.X;
-				int rank = subdiv-(int)(-this.document.Modifier.OriginArea.X/step);
-				for ( double pos=origin.X ; pos<=this.document.Modifier.SizeArea.Width ; pos+=step )
+				if ( this.document.Type == DocumentType.Graphic )
 				{
-					if ( pos >= clipRect.Left && pos <= clipRect.Right )
+					// Dessine la "page".
+					Rectangle rect = this.document.Modifier.PageArea;
+					graphics.Align(ref rect);
+					rect.Offset(ix, iy);
+
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(Color.FromBrightness(0));
+				}
+			}
+			else
+			{
+				// Dessine la grille.
+				if ( this.drawingContext.GridShow )
+				{
+					double s = System.Math.Min(this.drawingContext.GridStep.X*this.drawingContext.ScaleX,
+											   this.drawingContext.GridStep.Y*this.drawingContext.ScaleY);
+					int mul = (int) System.Math.Max(10.0/s, 1.0);
+
+					Point origin = this.document.Modifier.OriginArea;
+					origin = Point.GridAlign(origin, -this.drawingContext.GridOffset, this.drawingContext.GridStep);
+
+					// Dessine les traits verticaux.
+					double step = this.drawingContext.GridStep.X*mul;
+					int subdiv = (int) this.drawingContext.GridSubdiv.X;
+					int rank = subdiv-(int)(-this.document.Modifier.OriginArea.X/step);
+					for ( double pos=origin.X ; pos<=this.document.Modifier.SizeArea.Width ; pos+=step )
 					{
-						double x = pos;
-						double y = clipRect.Bottom;
-						graphics.Align(ref x, ref y);
-						x += ix;
-						y += iy;
-						graphics.AddLine(x, y, x, clipRect.Top);
-						if ( rank%subdiv == 0 )
+						if ( pos >= clipRect.Left && pos <= clipRect.Right )
 						{
-							graphics.RenderSolid(Color.FromARGB(0.3, 0.6,0.6,0.6));  // gris
+							double x = pos;
+							double y = clipRect.Bottom;
+							graphics.Align(ref x, ref y);
+							x += ix;
+							y += iy;
+							graphics.AddLine(x, y, x, clipRect.Top);
+							if ( rank%subdiv == 0 )
+							{
+								graphics.RenderSolid(Color.FromARGB(0.3, 0.6,0.6,0.6));  // gris
+							}
+							else
+							{
+								graphics.RenderSolid(Color.FromARGB(0.1, 0.6,0.6,0.6));  // gris
+							}
+						}
+						rank ++;
+					}
+
+					// Dessine les traits horizontaux.
+					step = this.drawingContext.GridStep.Y*mul;
+					subdiv = (int) this.drawingContext.GridSubdiv.Y;
+					rank = subdiv-(int)(-this.document.Modifier.OriginArea.Y/step);
+					for ( double pos=origin.Y ; pos<=this.document.Modifier.SizeArea.Height ; pos+=step )
+					{
+						if ( pos >= clipRect.Bottom && pos <= clipRect.Top )
+						{
+							double x = clipRect.Left;
+							double y = pos;
+							graphics.Align(ref x, ref y);
+							x += ix;
+							y += iy;
+							graphics.AddLine(x, y, clipRect.Right, y);
+							if ( rank%subdiv == 0 )
+							{
+								graphics.RenderSolid(Color.FromARGB(0.3, 0.6,0.6,0.6));  // gris
+							}
+							else
+							{
+								graphics.RenderSolid(Color.FromARGB(0.1, 0.6,0.6,0.6));  // gris
+							}
+						}
+						rank ++;
+					}
+				}
+
+				// Dessine les repères.
+				if ( this.drawingContext.GuidesShow )
+				{
+					int total = this.document.Settings.GuidesCount;
+					for ( int i=0 ; i<total ; i++ )
+					{
+						Settings.Guide guide = this.document.Settings.GuidesGet(i);
+
+						if ( guide.IsHorizontal )  // repère horizontal ?
+						{
+							double x = clipRect.Left;
+							double y = guide.AbsolutePosition;
+							graphics.Align(ref x, ref y);
+							x += ix;
+							y += iy;
+							graphics.AddLine(x, y, clipRect.Right, y);
+						}
+						else	// repère vertical ?
+						{
+							double x = guide.AbsolutePosition;
+							double y = clipRect.Bottom;
+							graphics.Align(ref x, ref y);
+							x += ix;
+							y += iy;
+							graphics.AddLine(x, y, x, clipRect.Top);
+						}
+
+						if ( guide.Hilite )
+						{
+							graphics.RenderSolid(Color.FromARGB(0.5, 0.8,0.0,0.0));  // rouge
 						}
 						else
 						{
-							graphics.RenderSolid(Color.FromARGB(0.1, 0.6,0.6,0.6));  // gris
+							graphics.RenderSolid(Color.FromARGB(0.5, 0.0,0.0,0.8));  // bleuté
 						}
 					}
-					rank ++;
 				}
 
-				// Dessine les traits horizontaux.
-				step = this.drawingContext.GridStep.Y*mul;
-				subdiv = (int) this.drawingContext.GridSubdiv.Y;
-				rank = subdiv-(int)(-this.document.Modifier.OriginArea.Y/step);
-				for ( double pos=origin.Y ; pos<=this.document.Modifier.SizeArea.Height ; pos+=step )
+				// Dessine la cible.
+				if ( this.IsActiveViewer )
 				{
-					if ( pos >= clipRect.Bottom && pos <= clipRect.Top )
+					if ( this.document.Type == DocumentType.Pictogram )
 					{
-						double x = clipRect.Left;
-						double y = pos;
-						graphics.Align(ref x, ref y);
-						x += ix;
-						y += iy;
-						graphics.AddLine(x, y, clipRect.Right, y);
-						if ( rank%subdiv == 0 )
-						{
-							graphics.RenderSolid(Color.FromARGB(0.3, 0.6,0.6,0.6));  // gris
-						}
-						else
-						{
-							graphics.RenderSolid(Color.FromARGB(0.1, 0.6,0.6,0.6));  // gris
-						}
+						Rectangle rect = new Rectangle(0, 0, this.document.Size.Width, this.document.Size.Height);
+						graphics.Align(ref rect);
+						rect.Offset(ix, iy);
+						graphics.AddRectangle(rect);
+
+						rect.Offset(-ix, -iy);
+						rect.Deflate(2);
+						graphics.Align(ref rect);
+						rect.Offset(ix, iy);
+						graphics.AddRectangle(rect);
+
+						double cx = this.document.Size.Width/2;
+						double cy = this.document.Size.Height/2;
+						graphics.Align(ref cx, ref cy);
+						cx += ix;
+						cy += iy;
+						graphics.AddLine(cx, 0, cx, this.document.Size.Height);
+						graphics.AddLine(0, cy, this.document.Size.Width, cy);
+						graphics.RenderSolid(Color.FromARGB(0.4, 0.5,0.5,0.5));
 					}
-					rank ++;
-				}
-			}
-
-			// Dessine les repères.
-			if ( this.drawingContext.GuidesShow )
-			{
-				int total = this.document.Settings.GuidesCount;
-				for ( int i=0 ; i<total ; i++ )
-				{
-					Settings.Guide guide = this.document.Settings.GuidesGet(i);
-
-					if ( guide.IsHorizontal )  // repère horizontal ?
-					{
-						double x = clipRect.Left;
-						double y = guide.AbsolutePosition;
-						graphics.Align(ref x, ref y);
-						x += ix;
-						y += iy;
-						graphics.AddLine(x, y, clipRect.Right, y);
-					}
-					else	// repère vertical ?
-					{
-						double x = guide.AbsolutePosition;
-						double y = clipRect.Bottom;
-						graphics.Align(ref x, ref y);
-						x += ix;
-						y += iy;
-						graphics.AddLine(x, y, x, clipRect.Top);
-					}
-
-					if ( guide.Hilite )
-					{
-						graphics.RenderSolid(Color.FromARGB(0.5, 0.8,0.0,0.0));  // rouge
-					}
-					else
-					{
-						graphics.RenderSolid(Color.FromARGB(0.5, 0.0,0.0,0.8));  // bleuté
-					}
-				}
-			}
-
-			// Dessine la cible.
-			if ( this.IsActiveViewer )
-			{
-				if ( this.document.Type == DocumentType.Pictogram )
-				{
-					Rectangle rect = new Rectangle(0, 0, this.document.Size.Width, this.document.Size.Height);
-					graphics.Align(ref rect);
-					rect.Offset(ix, iy);
-					graphics.AddRectangle(rect);
-
-					rect.Offset(-ix, -iy);
-					rect.Deflate(2);
-					graphics.Align(ref rect);
-					rect.Offset(ix, iy);
-					graphics.AddRectangle(rect);
-
-					double cx = this.document.Size.Width/2;
-					double cy = this.document.Size.Height/2;
-					graphics.Align(ref cx, ref cy);
-					cx += ix;
-					cy += iy;
-					graphics.AddLine(cx, 0, cx, this.document.Size.Height);
-					graphics.AddLine(0, cy, this.document.Size.Width, cy);
-					graphics.RenderSolid(Color.FromARGB(0.4, 0.5,0.5,0.5));
 				}
 			}
 
@@ -2224,6 +2285,7 @@ namespace Epsitec.Common.Document
 		// Dessine le document.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			//?System.Diagnostics.Debug.WriteLine("PaintBackgroundImplementation "+clipRect.ToString());
 			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
 
 			if ( this.document.Type == DocumentType.Pictogram )
@@ -2260,10 +2322,16 @@ namespace Epsitec.Common.Document
 			// Dessine la grille magnétique dessus.
 			this.DrawGridForeground(graphics, clipRect);
 
+			// Dessine les noms de objets.
+			if ( this.IsActiveViewer && this.drawingContext.LabelsShow && !this.drawingContext.PreviewActive )
+			{
+				this.DrawLabels(graphics);
+			}
+
 			// Dessine les poignées.
 			if ( this.IsActiveViewer )
 			{
-				this.DrawHandle(graphics);
+				this.DrawHandles(graphics);
 			}
 
 			// Dessine le hotspot.
@@ -2406,6 +2474,7 @@ namespace Epsitec.Common.Document
 		protected Selector						zoomer;
 		protected bool							partialSelect;
 		protected Rectangle						redrawArea;
+		protected MessageType					lastMessageType;
 		protected Point							mousePosWidget;
 		protected Point							mousePos;
 		protected bool							mousePosValid = false;
@@ -2417,33 +2486,38 @@ namespace Epsitec.Common.Document
 		protected int							moveHandle = -1;
 		protected int							moveGlobal = -1;
 		protected Objects.Abstract				moveObject;
-		protected Objects.Abstract				cellObject;
+		protected Objects.Abstract				selectChangeObject;
 		protected Objects.Abstract				hiliteHandleObject;
 		protected int							hiliteHandleRank = -1;
-		protected int							cellRank = -1;
 		protected int							createRank = -1;
 		protected bool							debugDirty;
 		protected TextRuler						textRuler;
 		protected Timer							autoScrollTimer;
 		protected int							guideInteractive = -1;
 		protected bool							guideCreate = false;
+		protected bool							ctrlDown = false;
 		protected bool							ctrlDuplicate = false;
 
 		protected VMenu							contextMenu;
+		protected VMenu							contextMenuOper;
+		protected VMenu							contextMenuGeom;
 		protected Objects.Abstract				contextMenuObject;
 		protected Point							contextMenuPos;
 		protected int							contextMenuRank;
 
-		protected MouseCursorType				lastMouseCursorType = MouseCursorType.Unknow;
+		protected MouseCursorType				mouseCursorType = MouseCursorType.Unknow;
+		protected MouseCursorType				mouseCursorTypeUse = MouseCursorType.Unknow;
 		protected Image							mouseCursorArrow = null;
 		protected Image							mouseCursorArrowPlus = null;
 		protected Image							mouseCursorArrowDup = null;
 		protected Image							mouseCursorFinger = null;
+		protected Image							mouseCursorFingerPlus = null;
 		protected Image							mouseCursorFingerDup = null;
 		protected Image							mouseCursorPen = null;
 		protected Image							mouseCursorZoom = null;
 		protected Image							mouseCursorHand = null;
 		protected Image							mouseCursorPicker = null;
 		protected Image							mouseCursorPickerEmpty = null;
+		protected Image							mouseCursorFine = null;
 	}
 }

@@ -4,6 +4,18 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
+	public enum StandardDashType
+	{
+		Full       = 0,
+		Line       = 1,
+		LineDense  = 2,
+		LineExpand = 3,
+		Dot        = 4,
+		LineDot    = 5,
+		LineDotDot = 6,
+		Custom     = 100,
+	}
+
 	/// <summary>
 	/// La classe Line représente une propriété d'un objet graphique.
 	/// </summary>
@@ -120,6 +132,141 @@ namespace Epsitec.Common.Document.Properties
 					this.limit = value;
 					this.NotifyAfter();
 				}
+			}
+		}
+
+		public StandardDashType StandardDash
+		{
+			get
+			{
+				if ( this.dash )
+				{
+					if ( this.dashPen[0] != 0.0 &&
+						 this.dashGap[0] == this.dashPen[0] &&
+						 this.dashPen[1] == 0.0 &&
+						 this.dashGap[1] == 0.0 &&
+						 this.dashPen[2] == 0.0 &&
+						 this.dashGap[2] == 0.0 )  return StandardDashType.Line;
+
+					if ( this.dashPen[0] != 0.0 &&
+						 this.dashGap[0] == this.dashPen[0]*0.5 &&
+						 this.dashPen[1] == 0.0 &&
+						 this.dashGap[1] == 0.0 &&
+						 this.dashPen[2] == 0.0 &&
+						 this.dashGap[2] == 0.0 )  return StandardDashType.LineDense;
+
+					if ( this.dashPen[0] != 0.0 &&
+						 this.dashGap[0] == this.dashPen[0]*2.0 &&
+						 this.dashPen[1] == 0.0 &&
+						 this.dashGap[1] == 0.0 &&
+						 this.dashPen[2] == 0.0 &&
+						 this.dashGap[2] == 0.0 )  return StandardDashType.LineExpand;
+
+					if ( this.dashPen[0] == 0.0 &&
+						 this.dashGap[0] != 0.0 &&
+						 this.dashPen[1] == 0.0 &&
+						 this.dashGap[1] == 0.0 &&
+						 this.dashPen[2] == 0.0 &&
+						 this.dashGap[2] == 0.0 )  return StandardDashType.Dot;
+
+					if ( this.dashPen[0] == this.dashGap[0]*2.0 &&
+						 this.dashPen[1] == 0.0 &&
+						 this.dashGap[1] == this.dashGap[0] &&
+						 this.dashPen[2] == 0.0 &&
+						 this.dashGap[2] == 0.0 )  return StandardDashType.LineDot;
+
+					if ( this.dashPen[0] == this.dashGap[0]*2.0 &&
+						 this.dashPen[1] == 0.0 &&
+						 this.dashGap[1] == this.dashGap[0] &&
+						 this.dashPen[2] == 0.0 &&
+						 this.dashGap[2] == this.dashGap[0] )  return StandardDashType.LineDotDot;
+
+					return StandardDashType.Custom;
+				}
+				return StandardDashType.Full;
+			}
+			
+			set
+			{
+				switch ( value )
+				{
+					case StandardDashType.Full:
+						this.Dash = false;
+						break;
+
+					case StandardDashType.Line:
+						this.Dash = true;
+						this.DashPen1 = this.DashGap1;
+						this.DashPen2 = 0.0;
+						this.DashGap2 = 0.0;
+						this.DashPen3 = 0.0;
+						this.DashGap3 = 0.0;
+						break;
+
+					case StandardDashType.LineDense:
+						this.Dash = true;
+						this.DashPen1 = this.DashGap1*0.5;
+						this.DashPen2 = 0.0;
+						this.DashGap2 = 0.0;
+						this.DashPen3 = 0.0;
+						this.DashGap3 = 0.0;
+						break;
+
+					case StandardDashType.LineExpand:
+						this.Dash = true;
+						this.DashPen1 = this.DashGap1*2.0;
+						this.DashPen2 = 0.0;
+						this.DashGap2 = 0.0;
+						this.DashPen3 = 0.0;
+						this.DashGap3 = 0.0;
+						break;
+
+					case StandardDashType.Dot:
+						this.Dash = true;
+						this.DashPen1 = 0.0;
+						this.DashPen2 = 0.0;
+						this.DashGap2 = 0.0;
+						this.DashPen3 = 0.0;
+						this.DashGap3 = 0.0;
+						break;
+
+					case StandardDashType.LineDot:
+						this.Dash = true;
+						this.DashPen1 = this.DashGap1*2.0;
+						this.DashPen2 = 0.0;
+						this.DashGap2 = this.DashGap1;
+						this.DashPen3 = 0.0;
+						this.DashGap3 = 0.0;
+						break;
+
+					case StandardDashType.LineDotDot:
+						this.Dash = true;
+						this.DashPen1 = this.DashGap1*2.0;
+						this.DashPen2 = 0.0;
+						this.DashGap2 = this.DashGap1;
+						this.DashPen3 = 0.0;
+						this.DashGap3 = this.DashGap1;
+						break;
+
+					case StandardDashType.Custom:
+						this.Dash = true;
+						break;
+				}
+			}
+		}
+
+		public double StandardLength
+		{
+			get
+			{
+				return this.DashGap1;
+			}
+			
+			set
+			{
+				StandardDashType type = this.StandardDash;
+				this.DashGap1 = value;
+				this.StandardDash = type;
 			}
 		}
 
@@ -533,6 +680,7 @@ namespace Epsitec.Common.Document.Properties
 		protected CapStyle					cap;
 		protected JoinStyle					join;
 		protected double					limit;  // longueur (et non angle) !
+		protected StandardDashType			standardDash;
 		protected bool						dash;
 		protected double[]					dashPen;
 		protected double[]					dashGap;

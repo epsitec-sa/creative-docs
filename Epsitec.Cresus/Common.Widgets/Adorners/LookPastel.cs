@@ -998,39 +998,51 @@ namespace Epsitec.Common.Widgets.Adorner
 											MenuType type,
 											MenuItemType itemType)
 		{
-			if ( type == MenuType.Horizontal )
+			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				if ( itemType == MenuItemType.Select )
+				if ( type == MenuType.Horizontal )
 				{
-					this.PaintImageButton(graphics, rect, 8);
+					if ( itemType == MenuItemType.Select )
+					{
+						this.PaintImageButton(graphics, rect, 8);
 
-					rect.Deflate(0.5);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.ColorOutline(state));
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.ColorOutline(state));
+					}
+					if ( itemType == MenuItemType.Parent )
+					{
+						this.PaintImageButton(graphics, rect, 8);
+
+						Drawing.Rectangle rInside;
+						rInside = rect;
+						rInside.Deflate(0.5);
+						graphics.AddLine(rInside.Left, rInside.Bottom-0.5, rInside.Left, rInside.Top);
+						graphics.AddLine(rInside.Left, rInside.Top, rInside.Right, rInside.Top);
+						graphics.AddLine(rInside.Right, rInside.Top, rInside.Right, rInside.Bottom-0.5);
+						graphics.RenderSolid(this.ColorOutline(state));
+					}
 				}
-				if ( itemType == MenuItemType.Parent )
-				{
-					this.PaintImageButton(graphics, rect, 8);
 
-					Drawing.Rectangle rInside;
-					rInside = rect;
-					rInside.Deflate(0.5);
-					graphics.AddLine(rInside.Left, rInside.Bottom-0.5, rInside.Left, rInside.Top);
-					graphics.AddLine(rInside.Left, rInside.Top, rInside.Right, rInside.Top);
-					graphics.AddLine(rInside.Right, rInside.Top, rInside.Right, rInside.Bottom-0.5);
-					graphics.RenderSolid(this.ColorOutline(state));
+				if ( type == MenuType.Vertical )
+				{
+					if ( itemType != MenuItemType.Deselect )
+					{
+						this.PaintImageButton(graphics, rect, 8);
+
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(this.ColorOutline(state));
+					}
 				}
 			}
-
-			if ( type == MenuType.Vertical )
+			else
 			{
 				if ( itemType != MenuItemType.Deselect )
 				{
-					this.PaintImageButton(graphics, rect, 8);
-
 					rect.Deflate(0.5);
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(this.ColorOutline(state));
+					graphics.RenderSolid(this.colorBorder);
 				}
 			}
 		}
@@ -1685,10 +1697,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				double alpha = color.A;
 				double intensity = color.GetBrightness();
-				intensity = 0.5+(intensity-0.5)*0.4;  // diminue le contraste
+				intensity = intensity*1.4-0.4;  // augmente le contraste
 				color = Drawing.Color.FromBrightness(intensity);
 				color.R *= 0.7;
-				color.B *= 1.3;  // bleuté
+				color.G *= 0.9;
+				color.B *= 1.4;  // bleuté
 				color = color.ClipToRange();
 				color.A = alpha;
 			}

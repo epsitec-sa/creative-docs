@@ -311,6 +311,18 @@ namespace Epsitec.Common.Widgets
 			
 			mouse.Y -= size.Height;
 			
+			// Modifie la position du tooltip pour qu'il ne dépasse pas de l'écran.
+			ScreenInfo si = ScreenInfo.Find(mouse);
+			Drawing.Rectangle wa = si.WorkingArea;
+			if ( mouse.Y < wa.Bottom )  // dépasse en bas ?
+			{
+				mouse.Y = wa.Bottom;
+			}
+			if ( mouse.X > wa.Right-size.Width )  // dépasse à droite ?
+			{
+				mouse.X = wa.Right-size.Width;
+			}
+			
 			this.window.ClientSize = size;
 			this.window.WindowBounds = new Drawing.Rectangle(mouse, size);
 			this.window.Owner = this.widget.Window;

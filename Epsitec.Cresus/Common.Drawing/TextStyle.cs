@@ -425,6 +425,38 @@ namespace Epsitec.Common.Drawing
 		{
 			return (Tab[]) this.tabs.ToArray (typeof (Tab));
 		}
+
+		public void TabCopyTo(TextStyle dst)
+		{
+			this.CheckForDefaultStyle ();
+			dst.tabs.Clear();
+			foreach ( Tab tab in this.tabs )
+			{
+				dst.tabs.Add(new Tab(tab));
+			}
+		}
+		
+		public void TabCopyTo(out Tab[] dst)
+		{
+			this.CheckForDefaultStyle ();
+			dst = new Tab[this.tabs.Count];
+			for ( int i=0 ; i<this.tabs.Count ; i++ )
+			{
+				Tab tab = this.tabs[i] as Tab;
+				dst[i] = new Tab(tab);
+			}
+		}
+		
+		public void TabCopyFrom(Tab[] src)
+		{
+			this.CheckForDefaultStyle ();
+			this.tabs.Clear();
+			for ( int i=0 ; i<src.Length ; i++ )
+			{
+				this.tabs.Add(new Tab(src[i]));
+			}
+			this.OnChanged ();
+		}
 		
 		public void SetTabPosition(int rank, double pos)
 		{

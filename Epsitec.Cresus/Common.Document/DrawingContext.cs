@@ -438,7 +438,7 @@ namespace Epsitec.Common.Document
 			set { this.layerDrawingMode = value; }
 		}
 
-		// Mode "aperçu avant impression".
+		// Mode "comme imprimé".
 		public bool PreviewActive
 		{
 			get
@@ -653,7 +653,33 @@ namespace Epsitec.Common.Document
 				}
 			}
 		}
+		#endregion
 
+
+		#region Label
+		// Affichage des noms de objets.
+		public bool LabelsShow
+		{
+			get
+			{
+				return this.labelsShow;
+			}
+
+			set
+			{
+				if ( this.labelsShow != value )
+				{
+					this.labelsShow = value;
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifyArea(this.viewer);
+						this.document.Notifier.NotifyGridChanged();
+						this.document.IsDirtySerialize = true;
+					}
+				}
+			}
+		}
 		#endregion
 
 
@@ -791,7 +817,7 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				return ( this.viewer == this.document.Modifier.ActiveViewer );
+				return ( this.viewer != null && this.viewer == this.document.Modifier.ActiveViewer );
 			}
 		}
 
@@ -967,7 +993,13 @@ namespace Epsitec.Common.Document
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
-				return Color.FromColor(adorner.ColorCaption, 0.8);
+				Color color = Color.FromColor(adorner.ColorCaption, 0.8);
+				if ( this.previewActive )
+				{
+					color = Color.FromBrightness(color.GetBrightness());
+					color.A *= 0.5;
+				}
+				return color;
 			}
 		}
 
@@ -977,7 +1009,13 @@ namespace Epsitec.Common.Document
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
-				return Color.FromColor(adorner.ColorCaption, 0.4);
+				Color color = Color.FromColor(adorner.ColorCaption, 0.4);
+				if ( this.previewActive )
+				{
+					color = Color.FromBrightness(color.GetBrightness());
+					color.A *= 0.5;
+				}
+				return color;
 			}
 		}
 
@@ -993,15 +1031,7 @@ namespace Epsitec.Common.Document
 			
 			set
 			{
-				if ( this.isShift != value )
-				{
-					this.isShift = value;
-
-					if ( this.constrainType != ConstrainType.None )
-					{
-						this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-					}
-				}
+				this.isShift = value;
 			}
 		}
 
@@ -1015,7 +1045,15 @@ namespace Epsitec.Common.Document
 			
 			set
 			{
-				this.isCtrl = value;
+				if ( this.isCtrl != value )
+				{
+					this.isCtrl = value;
+
+					if ( this.constrainType != ConstrainType.None )
+					{
+						this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+					}
+				}
 			}
 		}
 
@@ -1056,7 +1094,7 @@ namespace Epsitec.Common.Document
 			{
 				this.constrainType = type;
 
-				if ( this.IsShift )
+				if ( this.IsCtrl )
 				{
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 				}
@@ -1066,7 +1104,7 @@ namespace Epsitec.Common.Document
 		// Retourne une position éventuellement contrainte.
 		public void ConstrainSnapPos(ref Point pos)
 		{
-			if ( this.constrainType == ConstrainType.None || !this.isShift )  return;
+			if ( this.constrainType == ConstrainType.None || !this.isCtrl )  return;
 
 			if ( this.constrainType == ConstrainType.Normal ||
 				this.constrainType == ConstrainType.Rotate )
@@ -1128,7 +1166,7 @@ namespace Epsitec.Common.Document
 			if ( this.constrainType == ConstrainType.None )  return;
 			this.constrainType = ConstrainType.None;
 
-			if ( this.IsShift )
+			if ( this.IsCtrl )
 			{
 				this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 			}
@@ -1137,7 +1175,7 @@ namespace Epsitec.Common.Document
 		// Dessine les contraintes.
 		public void DrawConstrain(Graphics graphics, Size size)
 		{
-			if ( this.constrainType == ConstrainType.None || !this.isShift )  return;
+			if ( this.constrainType == ConstrainType.None || !this.isCtrl )  return;
 
 			graphics.LineWidth = 1.0/this.ScaleX;
 			Point pos = this.constrainStarting;
@@ -1549,6 +1587,7 @@ namespace Epsitec.Common.Document
 		protected bool							guidesShow = true;
 		protected bool							guidesMouse = true;
 		protected bool							rulersShow = true;
+		protected bool							labelsShow = false;
 		protected bool							hideHalfActive = true;
 		protected bool							isDimmed = false;
 		protected bool							isDrawBoxThin = false;
