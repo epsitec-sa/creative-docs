@@ -564,30 +564,13 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 		}
 
-		// Dessine le texte statique dans un tableau.
-		public void PaintArrayTextLayout(Drawing.Graphics graphics,
-										 Drawing.Rectangle rect,
-										 TextLayout text,
-										 WidgetState state,
-										 Direction shadow)
+		// Dessine le fond d'une cellule.
+		public void PaintCellBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow)
 		{
-			Drawing.Point pos = new Drawing.Point(0,0);
-			if ( (state&WidgetState.Selected) == 0 )
-			{
-				if ( text != null )
-				{
-					text.Paint(pos, graphics);
-				}
-			}
-			else
+			if ( (state&WidgetState.Selected) != 0 )
 			{
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.colorCaption);
-
-				if ( text != null )
-				{
-					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorCaptionText);
-				}
 			}
 		}
 
@@ -661,7 +644,14 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				text.Paint(pos, graphics);
+				if ( (state&WidgetState.Selected) != 0 )
+				{
+					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorCaptionText);
+				}
+				else
+				{
+					text.Paint(pos, graphics);
+				}
 			}
 			else
 			{

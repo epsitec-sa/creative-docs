@@ -17,7 +17,7 @@ namespace Epsitec.Common.Tests
 			
 			window.Root.Clicked += new MessageEventHandler(Root_Clicked);
 			window.Root.DoubleClicked += new MessageEventHandler(Root_DoubleClicked);
-			window.Root.Text = "Hel&lo";
+			window.Root.Text = "Hel<m>l</m>o";
 			window.Root.ShortcutPressed += new EventHandler(Root_ShortcutPressed);
 			
 			window.Text = "CheckFrameCreation";

@@ -796,7 +796,7 @@ namespace Epsitec.Common.Widgets
 					}
 					this.textLayouts[row,column].LayoutSize = new Drawing.Size(this.widthColumns[column]-this.textMargin*2, this.rowHeight);
 					this.textLayouts[row,column].Alignment = this.alignmentColumns[column];
-					this.textLayouts[row,column].BreakMode = Drawing.TextBreakMode.Ellipsis;  // TODO: "abc def" -> "abc d..."
+					this.textLayouts[row,column].BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 				}
 			}
 		}

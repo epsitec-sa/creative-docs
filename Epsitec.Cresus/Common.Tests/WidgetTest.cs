@@ -80,7 +80,7 @@ namespace Epsitec.Common.Tests
 		[Test] public void CheckText()
 		{
 			Widget widget = new Widget ();
-			string text = "Hel&Lo";
+			string text = "Hel<m>l</m>o";
 			widget.Text = text;
 			Assertion.Assert (widget.Text == text);
 			Assertion.Assert (widget.Mnemonic == 'L');

@@ -8,7 +8,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public AbstractButton()
 		{
-			this.internal_state |= InternalState.AcceptTaggedText;
 			this.internal_state |= InternalState.AutoFocus;
 			this.internal_state |= InternalState.AutoEngage;
 			this.internal_state |= InternalState.Focusable;

@@ -7,7 +7,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public GroupBox()
 		{
-			this.internal_state |= InternalState.AcceptTaggedText;
 		}
 
 		// Retourne l'alignement par défaut d'un bouton.

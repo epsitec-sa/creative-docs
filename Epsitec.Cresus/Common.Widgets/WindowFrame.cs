@@ -22,6 +22,8 @@ namespace Epsitec.Common.Widgets
 			this.winforms_timer.Tick += new System.EventHandler(HandleWinFormsTimerTick);
 			this.winforms_timer.Interval = 50;
 			
+			this.prevent_close = false;
+			
 			this.ReallocatePixmap ();
 		}
 		
@@ -102,6 +104,12 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 			}
+		}
+		
+		public bool						PreventAutoClose
+		{
+			get { return this.prevent_close; }
+			set { this.prevent_close = value; }
 		}
 		
 		
@@ -186,15 +194,19 @@ namespace Epsitec.Common.Widgets
 		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
 		{
 			base.OnClosing (e);
-			e.Cancel = true;
 			
-			//	Empêche la fermeture de la fenêtre lorsque l'utilisateur clique sur le bouton de
-			//	fermeture, et synthétise un événement clavier ALT + F4 à la place...
-			
-			System.Windows.Forms.Keys alt_f4 = System.Windows.Forms.Keys.F4 | System.Windows.Forms.Keys.Alt;
-			System.Windows.Forms.KeyEventArgs fake_event = new System.Windows.Forms.KeyEventArgs (alt_f4);
-			Message message = Message.FromKeyEvent (MessageType.KeyDown, fake_event);
-			this.DispatchMessage (message);
+			if (this.prevent_close)
+			{
+				e.Cancel = true;
+				
+				//	Empêche la fermeture de la fenêtre lorsque l'utilisateur clique sur le bouton de
+				//	fermeture, et synthétise un événement clavier ALT + F4 à la place...
+				
+				System.Windows.Forms.Keys alt_f4 = System.Windows.Forms.Keys.F4 | System.Windows.Forms.Keys.Alt;
+				System.Windows.Forms.KeyEventArgs fake_event = new System.Windows.Forms.KeyEventArgs (alt_f4);
+				Message message = Message.FromKeyEvent (MessageType.KeyDown, fake_event);
+				this.DispatchMessage (message);
+			}
 		}
 		
 		protected override void OnKeyDown(System.Windows.Forms.KeyEventArgs e)
@@ -748,5 +760,7 @@ namespace Epsitec.Common.Widgets
 		protected Widget						engaged_widget;
 		protected System.Windows.Forms.Timer	winforms_timer;
 		protected int							tick_count;
+		
+		private bool							prevent_close;
 	}
 }

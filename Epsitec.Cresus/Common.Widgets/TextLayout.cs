@@ -22,12 +22,18 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( this.text == null || value != this.text )
+				if ( value == null )
+				{
+					value = "";
+				}
+				
+				if ( this.text != value )
 				{
 					int offsetError;
 					if ( TextLayout.CheckSyntax(value, out offsetError) )
 					{
 						this.text = value;
+						this.textLength = value.Length;
 						this.isDirty = true;
 					}
 					else
@@ -36,6 +42,11 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 			}
+		}
+		
+		public int TextLength
+		{
+			get { return this.textLength; }
 		}
 		
 		// Fonte par défaut.
@@ -629,7 +640,7 @@ namespace Epsitec.Common.Widgets
 		// Si on est au début d'un tag, donne la longueur jusqu'à la fin.
 		public int AdvanceTag(int offset)
 		{
-			if ( offset >= this.text.Length )  return 0;
+			if ( offset >= this.textLength )  return 0;
 
 			if ( this.text[offset] == '<' )  // tag <xx> ?
 			{
@@ -637,7 +648,7 @@ namespace Epsitec.Common.Widgets
 				while ( this.text[offset] != '>' )
 				{
 					offset ++;
-					if ( offset >= this.text.Length )  break;
+					if ( offset >= this.textLength )  break;
 				}
 				return offset-initial+1;
 			}
@@ -648,7 +659,7 @@ namespace Epsitec.Common.Widgets
 				while ( this.text[offset] != ';' )
 				{
 					offset ++;
-					if ( offset >= this.text.Length )  break;
+					if ( offset >= this.textLength )  break;
 				}
 				return offset-initial+1;
 			}
@@ -697,10 +708,11 @@ namespace Epsitec.Common.Widgets
 		{
 			int    index = 0;
 			int    beginOffset;
-
-			for ( int endOffset=0 ; endOffset<=this.text.Length ; )
+			int    endOffset = 0;
+			
+			while ( endOffset <= this.textLength )
 			{
-				if ( endOffset == this.text.Length )  return endOffset;
+				if ( endOffset == this.textLength )  return endOffset;
 				beginOffset = endOffset;
 
 				if ( this.text[endOffset] == '<' )
@@ -739,7 +751,9 @@ namespace Epsitec.Common.Widgets
 
 			if ( taggedTextOffset == 0 )  return index;
 
-			for ( int endOffset=0 ; endOffset<this.text.Length ; )
+			int endOffset = 0;
+			
+			while ( endOffset < this.textLength )
 			{
 				beginOffset = endOffset;
 
@@ -799,7 +813,7 @@ namespace Epsitec.Common.Widgets
 		// reconnus.
 		public bool AnalyseTagsAtOffset(int offset, out string[] tags)
 		{
-			if ( offset < 0 || offset > this.Text.Length )
+			if ( offset < 0 || offset > this.textLength )
 			{
 				tags = null;
 				return false;
@@ -883,6 +897,7 @@ namespace Epsitec.Common.Widgets
 		// Avance d'un caractère ou d'un tag dans le texte.
 		public static Tag ParseTag(string text, ref int offset, out System.Collections.Hashtable parameters)
 		{
+			System.Diagnostics.Debug.Assert(text != null);
 			parameters = null;
 			
 			if ( offset < text.Length && text[offset] == '<' )
@@ -986,6 +1001,7 @@ namespace Epsitec.Common.Widgets
 		// de x comme code mnémonique (en majuscules).
 		public static char ExtractMnemonic(string text)
 		{
+			System.Diagnostics.Debug.Assert(text != null);
 			System.Collections.Hashtable parameters;
 
 			int    offset = 0;
@@ -1010,6 +1026,7 @@ namespace Epsitec.Common.Widgets
 		// toute occurrence de "<", "&" et ">" dans le texte.
 		public static string ConvertToTaggedText(string text, bool autoMnemonic)
 		{
+			System.Diagnostics.Debug.Assert(text != null);
 			if ( autoMnemonic )
 			{
 				// Cherche les occurrences de "&" dans le texte et gère comme suit:
@@ -1083,6 +1100,7 @@ namespace Epsitec.Common.Widgets
 		// En plus, les images sont remplacées par le texte 'imageReplacement'
 		public static string ConvertToSimpleText(string text, string imageReplacement)
 		{
+			System.Diagnostics.Debug.Assert(text != null);
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder();
 
 			for ( int offset=0 ; offset<text.Length ; )
@@ -1159,7 +1177,7 @@ namespace Epsitec.Common.Widgets
 
 			// Si le texte n'existe pas, met quand même un bloc vide,
 			// afin de voir apparaître le curseur (FindTextCursor).
-			if ( this.text.Length == 0 )
+			if ( this.textLength == 0 )
 			{
 				fontItem = (FontItem)fontStack.Peek();
 				Drawing.Font blockFont = fontItem.RetFont();
@@ -1190,7 +1208,7 @@ namespace Epsitec.Common.Widgets
 			int		endOffset = 0;
 			int		index = 0;
 			int		textIndex = 0;
-			while ( endOffset <= this.text.Length )
+			while ( endOffset <= this.textLength )
 			{
 				beginOffset = endOffset;
 				TextLayout.Tag tag = TextLayout.ParseTag(this.text, ref endOffset, out parameters);
@@ -1777,6 +1795,7 @@ namespace Epsitec.Common.Widgets
 		// Variables membres de TextLayout.
 		protected bool							isDirty;
 		protected string						text;
+		protected int							textLength;
 		protected Drawing.Font					font = Drawing.Font.DefaultFont;
 		protected double						fontSize = Drawing.Font.DefaultFontSize;
 		protected Drawing.Size					layoutSize;

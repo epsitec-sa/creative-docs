@@ -8,7 +8,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public StaticText()
 		{
-			this.internal_state |= InternalState.AcceptTaggedText;
 		}
 
 

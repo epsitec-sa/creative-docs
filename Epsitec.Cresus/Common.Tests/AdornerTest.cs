@@ -12,7 +12,7 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(400, 300);
-			window.Text = "CheckAdorner";
+			window.Text = "CheckAdornerWidgets";
 
 			Button a = new Button();
 			a.Name = "A";
@@ -221,7 +221,7 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(400, 300);
-			window.Text = "CheckAdorner";
+			window.Text = "CheckAdornerBigText";
 
 			TextField multi = new TextField(TextFieldType.MultiLine);
 			multi.Name = "Multi";
@@ -250,7 +250,7 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(400, 300);
-			window.Text = "CheckAdorner";
+			window.Text = "CheckAdornerTab";
 
 			TabBook tb = new TabBook(TabBookStyle.Normal);
 			//TabBook tb = new TabBook(TabBookStyle.Right);
@@ -410,7 +410,7 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(400, 300);
-			window.Text = "CheckAdorner";
+			window.Text = "CheckAdornerCell1";
 
 			CreateRadioLook(window.Root.Children, new Point(10, 245));
 
@@ -437,17 +437,22 @@ namespace Epsitec.Common.Tests
 				for ( int x=0 ; x<5 ; x++ )
 				{
 #if true
-					Cell cell = new Cell();
-					ArrayText st = new ArrayText();
-					string s = "";
-					s += y+1;
-					s += ".";
-					s += x+1;
-					if ( x != 0 || y != 0 )  st.Text = s;
-					st.Alignment = ContentAlignment.MiddleCenter;
-					st.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-					cell.Children.Add(st);
-					table[x,y] = cell;
+					StaticText text = new StaticText();
+					if ( x != 0 || y != 0 ) text.Text = string.Format("{0}.{1}", y+1, x+1);
+					text.Alignment = ContentAlignment.MiddleCenter;
+					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+					
+					if ( x == 2 && y == 2 )
+					{
+						CheckButton widget = new CheckButton ();
+						widget.Text = "surprise";
+						widget.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+						table[x,y].Insert (widget);
+					}
+					else if ( x != 1 || y != 1 )
+					{
+						table[x,y].Insert (text);
+					}
 #endif
 #if false
 					Cell cell = new Cell();
@@ -489,7 +494,7 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(500, 300);
-			window.Text = "CheckAdorner";
+			window.Text = "CheckAdornerCell2";
 
 			CreateRadioLook(window.Root.Children, new Point(10, 245));
 
@@ -563,7 +568,7 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(400, 300);
-			window.Text = "CheckAdorner";
+			window.Text = "CheckAdornerCell3";
 
 			CreateRadioLook(window.Root.Children, new Point(10, 245));
 
@@ -614,17 +619,10 @@ namespace Epsitec.Common.Tests
 			{
 				for ( int x=0 ; x<5 ; x++ )
 				{
-					Cell cell = new Cell();
-					ArrayText st = new ArrayText();
-					string s = " ";
-					s += "L";
-					s += x+1;
-					s += "C";
-					s += y+1;
-					st.Text = s;
-					st.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-					cell.Children.Add(st);
-					table[x,y] = cell;
+					StaticText text = new StaticText();
+					text.Text = string.Format("L{0} C{1}", x+1, y+1);
+					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+					table[x,y].Insert (text);
 				}
 			}
 			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
@@ -640,7 +638,7 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(400, 300);
-			window.Text = "CheckAdorner";
+			window.Text = "CheckAdornerScrollArray";
 
 			CreateRadioLook(window.Root.Children, new Point(10, 245));
 
@@ -666,7 +664,7 @@ namespace Epsitec.Common.Tests
 			{
 				for ( int x=0 ; x<table.Columns ; x++ )
 				{
-					string s = "";
+					string s = "Val ";
 					s += y+1;
 					s += ".";
 					s += x+1;
@@ -735,7 +733,7 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(400, 300);
-			window.Text = "CheckAdorner";
+			window.Text = "CheckAdornerBug";
 
 			Button button1 = new Button();
 			//button1.Text = "";
@@ -752,7 +750,7 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(400, 300);
-			window.Text = "CheckAdorner";
+			window.Text = "CheckAdornerBug2";
 
 			TextField text = new TextField(TextFieldType.SingleLine);
 			text.Name = "TextField";
@@ -772,7 +770,7 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(400, 300);
-			window.Text = "CheckAdorner";
+			window.Text = "CheckAdornerTestParents";
 
 			Button button1 = new Button();
 			button1.Text = "Pere";
@@ -796,7 +794,7 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(300, 200);
-			window.Text = "CheckAdorner";
+			window.Text = "CheckAdornerBase";
 			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_Paint1);
 
 			window.Show();

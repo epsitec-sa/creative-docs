@@ -26,7 +26,6 @@ namespace Epsitec.Common.Widgets
 		{
 			this.type = type;
 
-			this.internal_state |= InternalState.AcceptTaggedText;
 			this.internal_state |= InternalState.AutoFocus;
 			this.internal_state |= InternalState.AutoEngage;
 			this.internal_state |= InternalState.Focusable;
@@ -74,6 +73,8 @@ namespace Epsitec.Common.Widgets
 					this.Children.Add(this.arrowDown);
 					break;
 			}
+			
+			this.CreateTextLayout ();
 		}
 
 		
@@ -91,8 +92,10 @@ namespace Epsitec.Common.Widgets
 				{
 					value = value.Substring(0, this.maxChar);
 				}
-
-				if ( this.text_layout == null || base.Text == null || base.Text != value )
+				
+				System.Diagnostics.Debug.Assert(this.text_layout != null);
+				
+				if ( base.Text != value )
 				{
 					base.Text = value;
 					this.Invalidate();
@@ -100,6 +103,13 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		protected override void DisposeTextLayout()
+		{
+			//	Ne fait rien, on veut s'assurer que le TextLayout associé avec le TextField
+			//	n'est jamais détruit du vivant du TextField.
+		}
+
 
 		// Nombre max de caractères dans la ligne éditée.
 		public int MaxChar
@@ -607,6 +617,8 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque le bouton de la souris est pressé.
 		protected void BeginPress(Drawing.Point pos)
 		{
+			System.Diagnostics.Debug.Assert(this.text_layout != null);
+			
 			int detect = this.text_layout.DetectIndex(pos);
 			if ( detect != -1 )
 			{
@@ -619,6 +631,8 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque la souris est déplacée, bouton pressé.
 		protected void MovePress(Drawing.Point pos)
 		{
+			System.Diagnostics.Debug.Assert(this.text_layout != null);
+			
 			int detect = this.text_layout.DetectIndex(pos);
 			if ( detect != -1 )
 			{
@@ -630,6 +644,8 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque le bouton de la souris est relâché.
 		protected void EndPress(Drawing.Point pos)
 		{
+			System.Diagnostics.Debug.Assert(this.text_layout != null);
+			
 			int detect = this.text_layout.DetectIndex(pos);
 			if ( detect != -1 )
 			{
@@ -781,7 +797,8 @@ namespace Epsitec.Common.Widgets
 		// Insère une chaîne correspondant à un caractère ou un tag (jamais plus).
 		protected bool InsertString(string ins)
 		{
-			DeleteSelectedCharacter(false);
+			System.Diagnostics.Debug.Assert(this.text_layout != null);
+			this.DeleteSelectedCharacter(false);
 
 			if ( this.Text.Length+ins.Length > this.maxChar )  return false;
 
@@ -802,7 +819,8 @@ namespace Epsitec.Common.Widgets
 		// Supprime le caractère à gauche ou à droite du curseur.
 		protected bool DeleteCharacter(int dir)
 		{
-			if ( DeleteSelectedCharacter(true) )  return false;
+			System.Diagnostics.Debug.Assert(this.text_layout != null);
+			if ( this.DeleteSelectedCharacter(true) )  return false;
 
 			int cursor = this.text_layout.FindOffsetFromIndex(this.cursorTo);
 
@@ -843,6 +861,8 @@ namespace Epsitec.Common.Widgets
 		// Supprime les caractères sélectionnés dans le texte.
 		protected bool DeleteSelectedCharacter(bool signalTextChanged)
 		{
+			System.Diagnostics.Debug.Assert(this.text_layout != null);
+			
 			int cursorFrom = this.text_layout.FindOffsetFromIndex(this.cursorFrom);
 			int cursorTo   = this.text_layout.FindOffsetFromIndex(this.cursorTo);
 
@@ -879,6 +899,8 @@ namespace Epsitec.Common.Widgets
 		// Déplace le curseur au début ou à la fin d'une ligne.
 		protected bool MoveExtremity(int move, bool isShiftPressed, bool isCtrlPressed)
 		{
+			System.Diagnostics.Debug.Assert(this.text_layout != null);
+			
 			if ( isCtrlPressed )  // début/fin du texte ?
 			{
 				return MoveCursor(move*1000000, isShiftPressed, false);
@@ -903,6 +925,8 @@ namespace Epsitec.Common.Widgets
 		// Déplace le curseur par lignes.
 		protected bool MoveLine(int move, bool isShiftPressed, bool isCtrlPressed)
 		{
+			System.Diagnostics.Debug.Assert(this.text_layout != null);
+			
 			int cursor = this.text_layout.DetectIndex(this.cursorPosX, this.cursorLine+move);
 			if ( cursor == -1 )  return false;
 			this.cursorTo = cursor;
@@ -1050,6 +1074,8 @@ namespace Epsitec.Common.Widgets
 		// Calcule le scrolling pour que le curseur soit visible.
 		protected void CursorScroll()
 		{
+			System.Diagnostics.Debug.Assert(this.text_layout != null);
+			
 			if ( this.mouseDown )  return;
 
 			this.scrollOffset = new Drawing.Point(0, 0);
@@ -1103,6 +1129,8 @@ namespace Epsitec.Common.Widgets
 		// Dessine le texte en cours d'édition.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			System.Diagnostics.Debug.Assert(this.text_layout != null);
+			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);

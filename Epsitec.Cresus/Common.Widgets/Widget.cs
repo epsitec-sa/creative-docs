@@ -532,11 +532,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool							AcceptTaggedText
-		{
-			get { return (this.internal_state & InternalState.AcceptTaggedText) != 0; }
-		}
-		
 		
 		public WidgetCollection				Children
 		{
@@ -698,32 +693,25 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ((this.text == null) || (this.text.Length == 0))
+				if (this.text_layout == null)
 				{
 					return "";
 				}
 				
-				return this.text;
+				return this.text_layout.Text;
 			}
 			
 			set
 			{
 				if ((value == null) || (value.Length == 0))
 				{
-					this.text = null;
-					this.UpdateLayoutText ();
+					this.DisposeTextLayout ();
 					this.Shortcut.Mnemonic = (char) 0;
 				}
 				else
 				{
-					this.text = value;
-					
-					if (this.text_layout == null)
-					{
-						this.CreateTextLayout ();
-					}
-					
-					this.UpdateLayoutText ();
+					this.CreateTextLayout ();
+					this.text_layout.Text = value;
 					this.Shortcut.Mnemonic = this.Mnemonic;
 				}
 			}
@@ -733,32 +721,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				string text = this.Text;
-				
-				if ((text != null) &&
-					(this.AutoMnemonic))
+				if (this.AutoMnemonic)
 				{
-					if (this.AcceptTaggedText)
-					{
-						//	Le texte stocké dans le widget n'est pas un texte simple, mais
-						//	un texte formaté avec des tags. Le code mnémonique est préfixé
-						//	par des tags <m>..</m>.
-						
-						return TextLayout.ExtractMnemonic (text);
-					}
-					else
-					{
-						int max = text.Length - 1;
-						for (int i = 0; i < max; i++)
-						{
-							if ((text[i] == '&') && (text[i+1] != '&'))
-							{
-								char mnemonic = text[i+1];
-								mnemonic = System.Char.ToUpper (mnemonic, System.Globalization.CultureInfo.CurrentCulture);
-								return mnemonic;
-							}
-						}
-					}
+					//	Le code mnémonique est encapsulé par des tags <m>..</m>.
+					
+					return TextLayout.ExtractMnemonic (this.Text);
 				}
 				
 				return (char) 0;
@@ -1461,23 +1428,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void UpdateLayoutText()
-		{
-			if (this.text_layout != null)
-			{
-				if (this.AcceptTaggedText)
-				{
-					this.text_layout.Text = this.Text;
-				}
-				else
-				{
-					//	Le widget n'accepte pas de texte formaté en entrée; on doit donc
-					//	s'assurer que le texte passé à TextLayout est conforme.
-					
-					this.text_layout.Text = TextLayout.ConvertToTaggedText (this.Text, this.AutoMnemonic);
-				}
-			}
-		}
 		
 		
 		protected virtual void UpdateClientGeometry()
@@ -1856,14 +1806,25 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void CreateTextLayout()
 		{
-			this.text_layout = new TextLayout ();
-			
-			this.text_layout.Font       = this.DefaultFont;
-			this.text_layout.FontSize   = this.DefaultFontSize;
-			
-			this.UpdateLayoutSize ();
-			this.UpdateLayoutText ();
+			if (this.text_layout == null)
+			{
+				this.text_layout = new TextLayout ();
+				
+				this.text_layout.Font     = this.DefaultFont;
+				this.text_layout.FontSize = this.DefaultFontSize;
+				
+				this.UpdateLayoutSize ();
+			}
 		}
+		
+		protected virtual void DisposeTextLayout()
+		{
+			if (this.text_layout != null)
+			{
+				this.text_layout = null;
+			}
+		}
+		
 		
 		protected virtual void OnPaintBackground(PaintEventArgs e)
 		{
@@ -2051,7 +2012,6 @@ namespace Epsitec.Common.Widgets
 			Frozen				= 0x00000080,		//	=> n'accepte aucun événement
 			Visible				= 0x00000100,
 			AcceptThreeState	= 0x00000200,
-			AcceptTaggedText	= 0x00000400,
 			
 			AutoCapture			= 0x00010000,
 			AutoFocus			= 0x00020000,
@@ -2374,7 +2334,6 @@ namespace Epsitec.Common.Widgets
 		protected WidgetCollection			children;
 		protected Widget					parent;
 		protected string					name;
-		protected string					text;
 		protected TextLayout				text_layout;
 		protected ContentAlignment			alignment;
 		protected LayoutInfo				layout_info;

@@ -205,28 +205,27 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
+				System.Diagnostics.Debug.Assert(this.array[column, row] != null);
 				return this.array[column, row];
 			}
 			
 			set
 			{
-				if ( this.array[column, row] != null )
-				{
-					this.array[column, row].SetArrayRank(null, -1, -1);
-					//this.container.Children.Remove(this.array[column, row]);
-				}
+				System.Diagnostics.Debug.Assert(this.array[column, row] != null);
+				if ( value == null ) value = new Cell ();
 				
+				this.array[column, row].SetArrayRank(null, -1, -1);
 				this.array[column, row] = value;
+				this.array[column, row].SetArrayRank(this, column, row);
 				
-				if ( this.array[column, row] != null )
-				{
-					this.array[column, row].SetArrayRank(this, column, row);
-					//this.container.Children.Add(this.array[column, row]);
-				}
-
-				this.isDirty = true;
-				this.Invalidate();
+				this.NotifyCellChanged (value);
 			}
+		}
+		
+		public virtual void NotifyCellChanged(Cell cell)
+		{
+			this.isDirty = true;
+			this.Invalidate();
 		}
 
 
@@ -1380,12 +1379,11 @@ namespace Epsitec.Common.Widgets
 						 cRect.Top   > 0 && cRect.Bottom < rect.Height )
 					{
 						this.array[x,y].Bounds = cRect;
-						this.container.Children.Add(this.array[x,y]);
-						this.array[x,y].Show();
+						this.array[x,y].Parent = this.container;
 					}
 					else
 					{
-						this.array[x,y].Hide();
+						System.Diagnostics.Debug.Assert (this.array[x,y].Parent == null);
 					}
 					px += dx;
 				}
@@ -1407,28 +1405,22 @@ namespace Epsitec.Common.Widgets
 			{
 				for ( int row=0 ; row<this.maxRows ; row++ )
 				{
-					Cell cell = this.array[col,row];
-					
-					if ( cell != null )
-					{
-						cell.SetArrayRank(null, -1, -1);
-						this.array[col,row] = null;
-					}
+					this.array[col,row].SetArrayRank(null, -1, -1);
+					this.array[col,row] = null;
 				}
 			}
 			
-			// Supprime les lignes excédentaires.
+			int minMaxCol = System.Math.Min(maxColumns, this.maxColumns);
+			int minMaxRow = System.Math.Min(maxRows,    this.maxRows   );
+			
+			// Supprime les lignes excédentaires, sans parcourir une seconde
+			// fois les colonnes déjà supprimées.
 			for ( int row=maxRows ; row<this.maxRows ; row++ )
 			{
-				for ( int col=0 ; col<this.maxColumns ; col++ )
+				for ( int col=0 ; col<minMaxCol ; col++ )
 				{
-					Cell cell = array[col,row];
-					
-					if ( cell != null )
-					{
-						cell.SetArrayRank(null, -1, -1);
-						this.array[col,row] = null;
-					}
+					array[col,row].SetArrayRank(null, -1, -1);
+					this.array[col,row] = null;
 				}
 			}
 			
@@ -1436,16 +1428,39 @@ namespace Epsitec.Common.Widgets
 			// dans le nouveau. L'ancien sera perdu.
 			Cell[,] newArray = (maxColumns*maxRows > 0) ? new Cell[maxColumns, maxRows] : null;
 			
-			int minMaxCol = System.Math.Min(maxColumns, this.maxColumns);
-			int minMaxRow = System.Math.Min(maxRows,    this.maxRows   );
-			
 			for ( int col=0 ; col<minMaxCol ; col++ )
 			{
 				for ( int row=0 ; row<minMaxRow ; row++ )
 				{
+					System.Diagnostics.Debug.Assert(newArray[col,row] == null);
 					newArray[col,row] = this.array[col,row];
 				}
 			}
+			
+			// Remplit les colonnes nouvelles du tableau avec des cellules vides.
+			for ( int col=this.maxColumns ; col<maxColumns ; col++ )
+			{
+				for ( int row=0 ; row<maxRows ; row++ )
+				{
+					System.Diagnostics.Debug.Assert(newArray[col,row] == null);
+					newArray[col,row] = new Cell ();
+					newArray[col,row].SetArrayRank(this, col, row);
+				}
+			}
+			
+			// Remplit les lignes nouvelles du tableau avec des cellules vides,
+			// sans parcourir une seconde fois les colonnes déjà initialisées.
+			for ( int row=this.maxRows ; row<maxRows ; row++ )
+			{
+				for ( int col=0 ; col<minMaxCol ; col++ )
+				{
+					System.Diagnostics.Debug.Assert(newArray[col,row] == null);
+					newArray[col,row] = new Cell ();
+					newArray[col,row].SetArrayRank(this, col, row);
+				}
+			}
+			
+			
 			this.array = newArray;
 			
 			if ( maxColumns != this.maxColumns )
