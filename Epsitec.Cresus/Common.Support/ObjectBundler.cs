@@ -13,6 +13,7 @@ namespace Epsitec.Common.Support
 	using TypeDescriptor = System.ComponentModel.TypeDescriptor;
 	using TypeConverter  = System.ComponentModel.TypeConverter;
 	
+	#region BundlingEvent & BundlingPropertyEvent...
 	public class BundlingEventArgs : System.EventArgs
 	{
 		public BundlingEventArgs(ResourceBundle bundle, object obj)
@@ -46,6 +47,7 @@ namespace Epsitec.Common.Support
 			this.prop_value   = prop_value;
 			this.prop_default = prop_default;
 		}
+		
 		
 		public string					PropertyName
 		{
@@ -96,6 +98,7 @@ namespace Epsitec.Common.Support
 	
 	public delegate void BundlingEventHandler(object sender, BundlingEventArgs e);
 	public delegate void BundlingPropertyEventHandler(object sender, BundlingPropertyEventArgs e);
+	#endregion
 	
 	/// <summary>
 	/// La classe ObjectBundler s'occupe de déballer des bundles pour en
@@ -130,12 +133,22 @@ namespace Epsitec.Common.Support
 		{
 			ObjectBundler.classes = new System.Collections.Hashtable ();
 			
-			//	TODO: énumérer toutes les assembly chargées et identifier toutes les classes
-			//	qui implémentent directement l'interface IBundleSupport, puis appeler Register
-			//	avec une instance créée dynamiquement pour chacune.
+			System.AppDomain             domain     = System.AppDomain.CurrentDomain;
+			System.Reflection.Assembly[] assemblies = domain.GetAssemblies ();
+			
+			for (int i = 0; i < assemblies.Length; i++)
+			{
+				ObjectBundler.RegisterAssembly (assemblies[i]);
+			}
 		}
 		
-		public static void RegisterAssembly(System.Reflection.Assembly assembly)
+		static public void Initialise()
+		{
+			//	En appelant cette méthode statique, on peut garantir que le constructeur
+			//	statique de ObjectBundler a bien été exécuté.
+		}
+		
+		protected static void RegisterAssembly(System.Reflection.Assembly assembly)
 		{
 			System.Type[] assembly_types = assembly.GetTypes ();
 			
@@ -171,7 +184,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public static void Register(IBundleSupport bundle_support)
+		protected static void Register(IBundleSupport bundle_support)
 		{
 			System.Diagnostics.Debug.Assert (bundle_support != null);
 			System.Diagnostics.Debug.Assert (bundle_support.PublicClassName != null);
