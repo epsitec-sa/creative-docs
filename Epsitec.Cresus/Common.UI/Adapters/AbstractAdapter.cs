@@ -50,9 +50,9 @@ namespace Epsitec.Common.UI.Adapters
 		{
 			this.WriteToBinder ();
 			
-			if (this.ValueChanged != null)
+			if (this.Changed != null)
 			{
-				this.ValueChanged (this);
+				this.Changed (this);
 			}
 		}
 		
@@ -60,13 +60,23 @@ namespace Epsitec.Common.UI.Adapters
 		protected virtual bool ReadFromBinder()
 		{
 			if ((this.binder != null) &&
-				(this.binder.IsValid))
+				(this.binder.IsValid) &&
+				(this.job_in_progress == false))
 			{
 				object data;
 				
-				if (this.binder.ReadData (out data))
+				try
 				{
-					return this.ConvertFromObject (data);
+					this.job_in_progress = true;
+					
+					if (this.binder.ReadData (out data))
+					{
+						return this.ConvertFromObject (data);
+					}
+				}
+				finally
+				{
+					this.job_in_progress = false;
 				}
 			}
 			
@@ -76,13 +86,23 @@ namespace Epsitec.Common.UI.Adapters
 		protected virtual bool WriteToBinder()
 		{
 			if ((this.binder != null) &&
-				(this.binder.IsValid))
+				(this.binder.IsValid) &&
+				(this.job_in_progress == false))
 			{
 				object data = this.ConvertToObject ();
 				
-				if (this.binder.WriteData (data))
+				try
 				{
-					return true;
+					this.job_in_progress = true;
+					
+					if (this.binder.WriteData (data))
+					{
+						return true;
+					}
+				}
+				finally
+				{
+					this.job_in_progress = false;
 				}
 			}
 			
@@ -94,8 +114,9 @@ namespace Epsitec.Common.UI.Adapters
 		protected abstract bool   ConvertFromObject(object data);
 		
 		
-		public event EventHandler				ValueChanged;
+		public event EventHandler				Changed;
 		
 		protected Binders.IBinder				binder;
+		protected bool							job_in_progress;
 	}
 }
