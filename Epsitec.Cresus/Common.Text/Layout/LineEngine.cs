@@ -186,8 +186,6 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 							context.LayoutEngine   = engine;
 							context.LayoutProperty = layout;
 							
-							context.TextStretchProfile.Add (scratch.StretchProfile);
-							
 							return Layout.Status.SwitchLayout;
 						}
 						

@@ -480,13 +480,22 @@ restart:
 			this.ox      = line_base_x;
 			this.oy_base = line_base_y;
 			
+			this.line_width = line_width + this.mx_left + this.mx_right;
+			
 			Debug.Assert.IsNotNull (this.layout_engine);
 			Debug.Assert.IsNotNull (this.text_context);
 			
 			this.text_profile = profile;
 			this.hyphenate    = false;
 			
-			profile.ComputeScales (line_width, out this.text_scales);
+			double space;
+			
+			space  = line_width - profile.TotalWidth;
+			space *= 1.0 - this.justification;
+			
+			this.ox += space * this.disposition;
+			
+			profile.ComputeScales (line_width - space, out this.text_scales);
 			
 			int               end            = this.text_offset + length;
 			Unicode.BreakInfo end_break_info = Unicode.Bits.GetBreakInfo (this.text[this.text_start + end - 1]);
