@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier
 
 namespace Epsitec.Common.Support
@@ -9,8 +9,13 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public class CommandDispatcher
 	{
-		public CommandDispatcher()
+		public CommandDispatcher() : this ("anonymous")
 		{
+		}
+		
+		public CommandDispatcher(string name)
+		{
+			this.dispatcher_name = name;
 		}
 		
 		
@@ -268,8 +273,9 @@ namespace Epsitec.Common.Support
 		
 		
 		protected System.Collections.Hashtable	event_handlers = new System.Collections.Hashtable ();
+		protected string						dispatcher_name;
 		
 		private static System.Type				command_attr_type  = typeof (CommandAttribute);
-		private static CommandDispatcher		default_dispatcher = new CommandDispatcher ();
+		private static CommandDispatcher		default_dispatcher = new CommandDispatcher ("default");
 	}
 }
