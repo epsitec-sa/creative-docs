@@ -4,7 +4,9 @@
 namespace Epsitec.Common.Script.Glue
 {
 	/// <summary>
-	/// Summary description for IScriptHost.
+	/// L'interface IScriptHost doit être implémentée par la partie "hôte" qui crée
+	/// le AppDomain et télécommande le script proprement dit; cette interface permet
+	/// au script d'accéder à l'environnement de son hôte.
 	/// </summary>
 	public interface IScriptHost
 	{

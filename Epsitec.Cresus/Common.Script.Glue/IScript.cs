@@ -4,7 +4,9 @@
 namespace Epsitec.Common.Script.Glue
 {
 	/// <summary>
-	/// Summary description for IScript.
+	/// L'interface IScript est réduite au minimum : c'est au travers d'elle
+	/// que la communication entre une application et un script se fait, en
+	/// franchissant les frontières des AppDomains.
 	/// </summary>
 	public interface IScript
 	{

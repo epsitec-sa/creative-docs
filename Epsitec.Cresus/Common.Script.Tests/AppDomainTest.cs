@@ -39,7 +39,7 @@ namespace Epsitec.Common.Script
 				"}\n";
 			
 			Engine engine = new Engine ();
-			Script script = engine.Compile (source);
+			Script script = engine.Compile ("test", source);
 			
 			if (script.HasErrors)
 			{
