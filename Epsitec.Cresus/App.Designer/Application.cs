@@ -38,6 +38,8 @@ namespace Epsitec.Designer
 			button.CreateCommandState ();
 			
 			this.StringEditController.Window.Show ();
+			this.BuilderController.CreationWindow.Show ();
+			this.BuilderController.AttributeWindow.Show ();
 		}
 		
 		#region Application Commands
