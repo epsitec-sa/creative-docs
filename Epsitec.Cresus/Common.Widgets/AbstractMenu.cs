@@ -504,6 +504,7 @@ namespace Epsitec.Common.Widgets
 			this.window.MakeFramelessWindow();
 			this.window.MakeToolWindow();
 			this.window.Owner = owner;
+			this.window.CommandDispatcher = owner.CommandDispatcher;
 			this.window.Name = "ContextMenu";
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			if ( adorner.AlphaVMenu < 1.0 )
@@ -585,6 +586,7 @@ namespace Epsitec.Common.Widgets
 			this.window.MakeFramelessWindow();
 			this.window.MakeToolWindow();
 			this.window.Owner = item.Window;
+			this.window.CommandDispatcher = item.Window.CommandDispatcher;
 			this.window.Name = "Menu";
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			if ( this.submenu.IsVertical && adorner.AlphaVMenu < 1.0 )

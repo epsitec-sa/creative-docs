@@ -17,7 +17,6 @@ namespace Epsitec.Common.Widgets
 			this.button.GlyphType = GlyphType.ArrowDown;
 			this.button.ButtonStyle = ButtonStyle.Combo;
 			this.button.Pressed += new MessageEventHandler(this.HandleButtonPressed);
-			//this.button.Dock = DockStyle.Right;
 
 			this.margins.Right = this.button.Width;
 		}
@@ -304,6 +303,11 @@ namespace Epsitec.Common.Widgets
 		
 		private void OpenCombo()
 		{
+			if ( this.scrollList != null )
+			{
+				return;
+			}
+			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			Drawing.Margins shadow = adorner.GeometryMenuShadow;
 

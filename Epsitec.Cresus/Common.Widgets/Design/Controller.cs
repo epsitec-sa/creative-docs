@@ -84,6 +84,7 @@ namespace Epsitec.Common.Widgets.Design
 			//	pour construire une interface par drag & drop.
 			
 			this.creation_window = this.CreateWindow ("widget palette");
+			this.creation_window.Text = "Widgets...";
 			this.creation_window.MakeFixedSizeWindow ();
 			this.creation_window.MakeSecondaryWindow ();
 			
@@ -124,6 +125,7 @@ namespace Epsitec.Common.Widgets.Design
 			//	Crée la fenêtre contenant les attributs.
 			
 			this.attribute_window = this.CreateWindow ("widget palette");
+			this.attribute_window.Text = "Attributes";
 			this.attribute_window.MakeFixedSizeWindow ();
 			this.attribute_window.MakeSecondaryWindow ();
 			

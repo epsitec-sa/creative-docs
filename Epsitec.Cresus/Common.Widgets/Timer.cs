@@ -234,10 +234,21 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnTimeElapsed()
 		{
-			System.Diagnostics.Debug.Assert (this.state != TimerState.Disposed);
-			System.Diagnostics.Debug.Assert (this.state != TimerState.Invalid);
-			System.Diagnostics.Debug.Assert (this.state != TimerState.Elapsed);
-			System.Diagnostics.Debug.Assert (this.state != TimerState.Suspended);
+			switch (this.state)
+			{
+				case TimerState.Disposed:
+					return;
+				
+				case TimerState.Invalid:
+				case TimerState.Elapsed:
+				case TimerState.Suspended:
+					throw new System.InvalidOperationException (string.Format ("Timer got event while in {0} state.", this.state));
+				
+				case TimerState.Stopped:
+				case TimerState.Running:
+					this.state = TimerState.Elapsed;
+					break;
+			}
 			
 			this.state = TimerState.Elapsed;
 			
@@ -246,7 +257,8 @@ namespace Epsitec.Common.Widgets
 				this.TimeElapsed (this);
 			}
 			
-			if (this.auto_repeat > 0)
+			if ((this.auto_repeat > 0) &&
+				(this.state == TimerState.Elapsed))
 			{
 				this.ExpirationDate = this.ExpirationDate.AddSeconds (this.auto_repeat);
 				this.Start ();
