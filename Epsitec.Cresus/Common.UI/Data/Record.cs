@@ -93,6 +93,21 @@ namespace Epsitec.Common.UI.Data
 		}
 		
 		
+		public Types.IDataValue[] GetDataValues()
+		{
+			if (this.fields == null)
+			{
+				this.UpdateCachedItemArray ();
+			}
+			
+			Types.IDataValue[] values = new Types.IDataValue[this.fields.Length];
+			
+			this.fields.CopyTo (values, 0);
+			
+			return values;
+		}
+		
+		
 		#region IDataItem Members
 		public Types.DataItemClasses			Classes
 		{
