@@ -11,6 +11,9 @@ import os.path
 import shutil
 import time
 import popen2
+import time
+import string
+import difflib
 
 class CopyProject:
     def __init__(self, src_root, dst_root):
@@ -30,11 +33,41 @@ class CopyProject:
         self.copy_ext.append('.sln')
         self.copy_ext.append('.config')
         self.copy_ext.append('.info')
+        self.copy_ext.append('.log')
 
         self.file_count = 0
         self.proj_count = 0
         self.sol_count = 0
         self.bad_count = 0
+
+    def current_time(self):
+        return ''.join ((string.zfill(str (time.localtime(time.time()).tm_mday), 2), '/',
+                         string.zfill(str (time.localtime(time.time()).tm_mon), 2), '/',
+                         str (time.localtime(time.time()).tm_year), ' ',
+                         string.zfill(str (time.localtime(time.time()).tm_hour), 2), ':',
+                         string.zfill(str (time.localtime(time.time()).tm_min), 2)))
+    
+                         
+
+    def log_history(self):
+        try:
+            f = open (self.src_root + "\\history.log", 'rt')
+            lines = f.readlines()
+            revnum = 1
+            for line in lines:
+                if line[0:2].isdigit():
+                    revnum += 1
+            f.close ()
+        except IOError, e:
+            lines = list()
+            revnum = 1
+
+        new_line = self.current_time() + ' Rev ' + str(revnum) + '\n'
+        lines.append (new_line)
+        f = open (self.src_root + "\\history.log", 'wt')
+        f.writelines (lines)
+        f.close()
+        return revnum
     
     def strip_scc_info(self, name):
         f = open(name, 'r')
@@ -156,47 +189,148 @@ class CopyProject:
             print "Failed to process %(n)d files" % { 'n': self.bad_count }
             time.sleep(2)
 
-def analyse(arg, dirname, fnames):
+
+
+class DiffProject:
+    def __init__(self, new_root, ref_root, diff_file):
+        self.new_root = new_root
+        self.ref_root = ref_root
+        self.diff = diff_file
+
+    def diff_file(self, path, name):
+        new_path = path
+        ref_path = path.replace (self.new_root, self.ref_root)
+        new_file = new_path + "\\" + name
+        ref_file = ref_path + "\\" + name
+        if os.path.isfile(ref_file) & os.path.isfile(new_file):
+            f = open(ref_file, 'r')
+            ref_data = f.read()
+            f.close()
+            f = open(new_file, 'r')
+            new_data = f.read()
+            f.close()
+            if ref_data <> new_data:
+                print "Keeping " + new_file.replace (self.new_root, ".")
+                self.diff.write ("  " + new_file.replace (self.new_root, ".") + '\n')
+            else:
+                os.remove(new_file)
+        else:
+            if os.path.isfile(new_file):
+                print "New " + new_file.replace (self.new_root, ".")
+                self.diff.write ("  " + new_file.replace (self.new_root, ".") + '\t(new)\n')
+            
+
+
+def copy_analyse(arg, dirname, fnames):
     for name in fnames:
         arg.copy_file(dirname, name)
 
 
+def diff_analyse(arg, dirname, fnames):
+    for name in fnames:
+        arg.diff_file(dirname, name)
+
+
+def do_it(src,dst,zip):
+
+    copy_project = CopyProject (src, dst + "\\temp")
+    rev = str(copy_project.log_history())
+
+    try:
+        shutil.rmtree(dst + "\\temp")
+    except OSError, e:
+        e = ''
+    
+    try:
+        shutil.rmtree(dst + "\\delta")
+    except OSError, e:
+        e = ''
+
+    print "Copying clean source tree..."
+    os.path.walk(src,copy_analyse,copy_project)
+    copy_project.print_statistics()
+
+    shutil.copytree(dst+"\\temp", dst+"\\delta")
+
+    if os.path.isdir(dst+"\\ref"):
+        diff_log = file (src+"\\history.log", 'a')
+        diff_log.seek(0,2)
+        diff_project = DiffProject (dst + "\\delta", dst + "\\ref", diff_log)
+        os.path.walk(dst + "\\delta",diff_analyse,diff_project)
+        diff_log.write ("\n")
+        diff_log.close()
+        os.remove (dst + "\\delta\\history.log")
+        os.remove (dst + "\\temp\\history.log")
+        shutil.copy (src+"\\history.log", dst + "\\delta\\history.log")
+        shutil.copy (src+"\\history.log", dst + "\\temp\\history.log")
+    else:
+        diff_log = file (src+"\\history.log", 'a')
+        diff_log.seek(0,2)
+        diff_log.write ("  full copy\n")
+        diff_log.write ("\n")
+        diff_log.close ()
+
+    
+    print "Updating reference..."
+
+    try:
+        os.rename(dst+"\\ref", dst+"\\ref-old")
+    except OSError, e:
+        e = ''
+
+    os.rename(dst+"\\temp", dst+"\\ref")
+
+    zip = dst + '\\' + zip + '-' + rev + '.zip'
+
+    try:
+        os.remove(zip)
+    except OSError, e:
+        e = ''
+
+    print "Zipping deltas..."
+
+    wzzip = 'c:\\Progra~1\\winzip\\wzzip'
+    opt   = '-a -p -r'
+    qzip  = '"' + zip + '"'
+    what  = '"' + dst + '\\delta\\*.*"'
+
+    cmd   = wzzip+' '+opt+' '+qzip+' '+what
+
+    r,w,e = popen2.popen3 (cmd)
+    result = r.read()
+    errors = e.read()
+
+    if os.path.isfile(zip):
+        print 'Created file '+zip
+    else:
+        print 'error: ZIP file not created'
+        time.sleep (2)
+
+    try:
+        print "Removing temporary data..."
+        shutil.rmtree(dst + "\\temp")
+    except OSError, e:
+        e = ''
+    
+    try:
+        print "Removing old reference..."
+        shutil.rmtree(dst + "\\ref-old")
+    except OSError, e:
+        e = ''
+    
+    try:
+        print "Removing delta..."
+        shutil.rmtree(dst + "\\delta")
+    except OSError, e:
+        e = ''
+
+    print "Done."
 
 
 src = "C:\\Documents and Settings\\Arnaud\\My Documents\\Visual Studio Projects\\Epsitec.Cresus"
 dst = "C:\\Epsitec"
-zip = "Epsitec.Cresus.zip"
+zip = "Epsitec.Cresus"
 
+# run the script...
 
-
-copy_project = CopyProject (src, dst)
-
-os.path.walk(src,analyse,copy_project)
-copy_project.print_statistics()
-
-
-
-
-zip = dst + '\\' + zip
-
-try:
-    os.remove(zip)
-except OSError, e:
-    e = ''
-
-wzzip = 'c:\\Progra~1\\winzip\\wzzip'
-opt   = '-a -p -r'
-qzip  = '"' + zip + '"'
-what  = '"' + dst + '\\*.*"'
-
-cmd   = wzzip+' '+opt+' '+qzip+' '+what
-
-r,w,e = popen2.popen3 (cmd)
-result = r.read()
-errors = e.read()
-
-if os.path.isfile(zip):
-    print 'Created file '+zip
-else:
-    print 'error: ZIP file not created'
-    time.sleep (2)
+do_it(src,dst,zip)
