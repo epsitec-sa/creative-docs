@@ -136,32 +136,32 @@ namespace Epsitec.Common.Drawing
 			this.PaintText (x, y, text, font, size, color);
 		}
 		
-		public void PaintImage(Bitmap bitmap, Rectangle fill)
+		public void PaintImage(Image bitmap, Rectangle fill)
 		{
 			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, 0, 0, bitmap.Width, bitmap.Height);
 		}
 		
-		public void PaintImage(Bitmap bitmap, double fill_x, double fill_y, double fill_width, double fill_height)
+		public void PaintImage(Image bitmap, double fill_x, double fill_y, double fill_width, double fill_height)
 		{
 			this.PaintImage (bitmap, fill_x, fill_y, fill_width, fill_height, 0, 0, bitmap.Width, bitmap.Height);
 		}
 		
-		public void PaintImage(Bitmap bitmap, Rectangle fill, Point image_origin)
+		public void PaintImage(Image bitmap, Rectangle fill, Point image_origin)
 		{
 			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, image_origin.X, image_origin.Y, fill.Width, fill.Height);
 		}
 		
-		public void PaintImage(Bitmap bitmap, Rectangle fill, Rectangle image_rect)
+		public void PaintImage(Image bitmap, Rectangle fill, Rectangle image_rect)
 		{
 			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, image_rect.Left, image_rect.Bottom, image_rect.Width, image_rect.Height);
 		}
 		
-		public void PaintImage(Bitmap bitmap, double fill_x, double fill_y, double fill_width, double fill_height, double image_origin_x, double image_origin_y)
+		public void PaintImage(Image bitmap, double fill_x, double fill_y, double fill_width, double fill_height, double image_origin_x, double image_origin_y)
 		{
 			this.PaintImage (bitmap, fill_x, fill_y, fill_width, fill_height, image_origin_x, image_origin_y, fill_width, fill_height);
 		}
 		
-		public void PaintImage(Bitmap bitmap, double fill_x, double fill_y, double fill_width, double fill_height, double image_origin_x, double image_origin_y, double image_width, double image_height)
+		public void PaintImage(Image bitmap, double fill_x, double fill_y, double fill_width, double fill_height, double image_origin_x, double image_origin_y, double image_width, double image_height)
 		{
 			double ix1 = image_origin_x;
 			double iy1 = image_origin_y;
@@ -207,7 +207,7 @@ namespace Epsitec.Common.Drawing
 			transform.Translate (fill_x, fill_y);
 			
 			this.AddFilledRectangle (fill_x, fill_y, fill_width, fill_height);
-			this.ImageRenderer.Bitmap = bitmap;
+			this.ImageRenderer.BitmapImage = bitmap;
 			this.ImageRenderer.Transform = transform;
 			this.RenderImage ();
 		}
@@ -285,6 +285,20 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			this.AddText (x, y, text, font, size);
+		}
+		
+		public double GetTransformZoom()
+		{
+			//	Détermine le zoom approximatif en vigueur dans la transformation actuelle.
+			//	Calcule la longueur d'un segment diagonal [1 1] après transformation pour
+			//	connaître ce zoom.
+			
+			Transform transform = this.SaveTransform ();
+			
+			double a = transform.XX + transform.XY;
+			double b = transform.YX + transform.YY;
+			
+			return System.Math.Sqrt ((a*a + b*b) / 2);
 		}
 		
 		
