@@ -1100,6 +1100,7 @@ namespace Epsitec.Common.Widgets
 				this.host.InteractionModeChanged += new Support.EventHandler (this.HandleHostInteractionModeChanged);
 				this.host.SelectedIndexChanged   += new Support.EventHandler (this.HandleHostSelectedIndexChanged);
 				this.host.TextArrayStoreChanged  += new Support.EventHandler (this.HandleHostTextArrayStoreChanged);
+				this.host.ContentsInvalidated    += new Support.EventHandler (this.HandleHostContentsInvalidated);
 				
 				this.UpdateStore ();
 			}
@@ -1361,6 +1362,12 @@ namespace Epsitec.Common.Widgets
 			private void HandleHostTextArrayStoreChanged(object sender)
 			{
 				this.UpdateStore ();
+			}
+			
+			private void HandleHostContentsInvalidated(object sender)
+			{
+				this.UpdateStore ();
+				this.UpdateCommandStates ();
 			}
 			
 			
