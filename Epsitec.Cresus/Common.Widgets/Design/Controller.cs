@@ -20,7 +20,7 @@ namespace Epsitec.Common.Widgets.Design
 			
 			//	Crée toute l'infrastructure nécessaire au designer de GUI.
 			
-			this.CreateWidgetPalette ();
+			this.CreateWidgetPaletteWindow ();
 			
 			this.is_initialised = true;
 		}
@@ -47,8 +47,11 @@ namespace Epsitec.Common.Widgets.Design
 		}
 		
 		
-		protected virtual void CreateWidgetPalette()
+		protected virtual void CreateWidgetPaletteWindow()
 		{
+			//	Crée la fenêtre contenant la palette des widgets qui peuvent être utilisés
+			//	pour construire une interface par drag & drop.
+			
 			this.w_widget_palette = this.CreateWindow ("widget palette");
 			this.w_widget_palette.MakeFixedSizeWindow ();
 			this.w_widget_palette.MakeSecondaryWindow ();
