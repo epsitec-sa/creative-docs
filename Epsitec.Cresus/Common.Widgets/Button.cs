@@ -56,7 +56,18 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.buttonStyle != value )
 				{
+					if ( this.buttonStyle == ButtonStyle.DefaultActive )
+					{
+						this.Shortcut = null;
+					}
+					
 					this.buttonStyle = value;
+					
+					if ( this.buttonStyle == ButtonStyle.DefaultActive )
+					{
+						this.Shortcut = new Shortcut(KeyCode.Return);
+					}
+					
 					this.Invalidate();
 				}
 			}
@@ -75,6 +86,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
+		protected override void OnShortcutChanged()
+		{
+			base.OnShortcutChanged ();
+			
+			if (this.Shortcut.KeyCode == KeyCode.Return)
+			{
+				if (this.ButtonStyle == ButtonStyle.Normal)
+				{
+					this.ButtonStyle = ButtonStyle.DefaultActive;
+				}
+			}
+		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{

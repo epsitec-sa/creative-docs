@@ -275,7 +275,8 @@ namespace Epsitec.Common.Widgets.Adorner
 			double radFocus = 0;
 
 			if ( style == ButtonStyle.Normal        ||
-				 style == ButtonStyle.DefaultActive )
+				 style == ButtonStyle.DefaultAccept ||
+				 style == ButtonStyle.DefaultCancel )
 			{
 				Drawing.Path path = this.PathRoundRectangle(rect, 0);
 			
@@ -316,7 +317,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 
 				if ( (state&WidgetState.Enabled) != 0 &&
-					 style == ButtonStyle.DefaultActive )
+					 style == ButtonStyle.DefaultAccept )
 				{
 					rect.Deflate(1, 1);
 					path = this.PathRoundRectangle(rect, 0);

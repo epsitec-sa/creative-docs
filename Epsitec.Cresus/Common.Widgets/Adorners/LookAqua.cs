@@ -246,7 +246,8 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Widgets.ButtonStyle style)
 		{
 			if ( style == ButtonStyle.Normal        ||
-				 style == ButtonStyle.DefaultActive )
+				 style == ButtonStyle.DefaultAccept ||
+				 style == ButtonStyle.DefaultCancel )
 			{
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
@@ -260,7 +261,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					{
 						Drawing.Path path = this.PathRoundRectangle(rect, this.RetRadiusButton(rect));
 						graphics.Rasterizer.AddSurface(path);
-						if ( style == ButtonStyle.DefaultActive )
+						if ( style == ButtonStyle.DefaultAccept )
 						{
 							graphics.RenderSolid(Drawing.Color.FromRGB(1.0, 0.0, 1.0));
 						}
@@ -270,7 +271,7 @@ namespace Epsitec.Common.Widgets.Adorner
 						}
 					}
 
-					if ( style == ButtonStyle.DefaultActive )
+					if ( style == ButtonStyle.DefaultAccept )
 					{
 						this.PaintImageButton(graphics, rect, 0);
 					}

@@ -210,7 +210,7 @@ namespace Epsitec.Common.Widgets
 			a.Location = new Point(10, 30);
 			a.Width = 75;
 			a.Text = "O<m>K</m>";
-			a.ButtonStyle = ButtonStyle.DefaultActive;
+			a.ButtonStyle = ButtonStyle.DefaultAccept;
 			a.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			a.TabIndex = 20;
 			a.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -687,7 +687,7 @@ namespace Epsitec.Common.Widgets
 			a.Location = new Point(10, 10);
 			a.Size = new Size(75, 24);
 			a.Text = "O<m>K</m>";
-			a.ButtonStyle = ButtonStyle.DefaultActive;
+			a.ButtonStyle = ButtonStyle.DefaultAccept;
 			//a.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			page1.Children.Add(a);
 
@@ -770,7 +770,7 @@ namespace Epsitec.Common.Widgets
 			add.Location = new Point(100, 100);
 			add.Size = new Size(140, 24);
 			add.Text = "<m>A</m>jouter un onglet";
-			add.ButtonStyle = ButtonStyle.DefaultActive;
+			add.ButtonStyle = ButtonStyle.DefaultAccept;
 			add.Clicked += new MessageEventHandler(HandleAdd);
 			//add.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			page5.Children.Add(add);
@@ -1385,7 +1385,7 @@ namespace Epsitec.Common.Widgets
 			a.Location = new Point(10, 10);
 			a.Size = new Size(75, 24);
 			a.Text = "O<m>K</m>";
-			a.ButtonStyle = ButtonStyle.DefaultActive;
+			a.ButtonStyle = ButtonStyle.DefaultAccept;
 			page1.Children.Add(a);
 #endif
 

@@ -79,7 +79,6 @@ namespace Epsitec.Common.Dialogs
 			button.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 2*80 - 2*8, 16, 80, 24);
 			button.Text          = "OK";
 			button.Command       = "ValidateDialog";
-			button.ButtonStyle   = ButtonStyle.DefaultActive;
 			button.TabIndex      = 2;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			button.Shortcut      = new Shortcut (KeyCode.Return);

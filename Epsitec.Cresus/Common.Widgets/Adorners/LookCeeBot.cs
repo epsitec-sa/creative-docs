@@ -250,7 +250,8 @@ namespace Epsitec.Common.Widgets.Adorner
 			rInside.Deflate(1, 1);
 
 			if ( style == ButtonStyle.Normal        ||
-				 style == ButtonStyle.DefaultActive )
+				 style == ButtonStyle.DefaultAccept ||
+				 style == ButtonStyle.DefaultCancel )
 			{
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
@@ -264,7 +265,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					}
 					else
 					{
-						if ( style == ButtonStyle.DefaultActive )
+						if ( style == ButtonStyle.DefaultAccept )
 						{
 							this.PaintImageButton(graphics, rInside, 2);
 						}

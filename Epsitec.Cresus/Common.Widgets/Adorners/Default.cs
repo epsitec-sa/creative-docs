@@ -239,7 +239,8 @@ namespace Epsitec.Common.Widgets.Adorner
 			Direction shadow = Direction.Up;
 
 			if ( style == ButtonStyle.Normal        ||
-				 style == ButtonStyle.DefaultActive )
+				 style == ButtonStyle.DefaultAccept ||
+				 style == ButtonStyle.DefaultCancel )
 			{
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.colorControl);
@@ -263,7 +264,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 				else
 				{
-					if ( style == ButtonStyle.DefaultActive )
+					if ( style == ButtonStyle.DefaultAccept )
 					{
 						// Rectangle noir autour.
 						Drawing.Rectangle rOut = rect;

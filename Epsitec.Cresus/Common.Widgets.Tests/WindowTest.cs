@@ -279,7 +279,7 @@ namespace Epsitec.Common.Widgets
 			button.TabIndex = 1;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			button.SetFocused(true);
-			button.ButtonStyle = ButtonStyle.DefaultActive;
+			button.ButtonStyle = ButtonStyle.DefaultAccept;
 			
 			button = new Button ("B");
 			button.Bounds = new Drawing.Rectangle (10, 140, 40, 25);

@@ -257,10 +257,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			rFocus.Deflate(3.5, 3.5);
 
 			if ( style == ButtonStyle.Normal        ||
-				 style == ButtonStyle.DefaultActive )
+				 style == ButtonStyle.DefaultAccept ||
+				 style == ButtonStyle.DefaultCancel )
 			{
 				if ( (state&WidgetState.Enabled) != 0 &&
-					 style == ButtonStyle.DefaultActive )
+					 style == ButtonStyle.DefaultAccept )
 				{
 					rect.Deflate(1, 1);
 				}
@@ -314,7 +315,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 
 				if ( (state&WidgetState.Enabled) != 0 &&
-					 style == ButtonStyle.DefaultActive )
+					 style == ButtonStyle.DefaultAccept )
 				{
 					rect.Inflate(1, 1);
 					path = this.PathRoundRectangle(rect, 0);
