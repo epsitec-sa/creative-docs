@@ -1,5 +1,6 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 07/10/2003
+//			 remis en chantier, DD, 19/11/2003 (ToString)
 
 namespace Epsitec.Cresus.Database
 {
@@ -115,7 +116,96 @@ namespace Epsitec.Cresus.Database
 		{
 			get { return this.c; }
 		}
-		
+
+		public override string ToString()
+		{
+			//	Converti la fonction en chaîne de caractère SQL standard
+			//	DD:	me semble utile d'avoir cette primitive dans la classe SqlFunction
+			//		si certain moteur on besoin d'une autre convertion,
+			//		alors il faudrait dérivée une classe fille (ie SqlFunctionFirebird)
+			switch (this.type)
+			{
+				case SqlFunctionType.MathAdd:
+					return	this.A.ToString() + " + " + this.B.ToString();
+
+				case SqlFunctionType.MathSubstract:
+					return	this.A.ToString() + " - " + this.B.ToString();
+				case SqlFunctionType.MathMultiply:
+					return	this.A.ToString() + " * " + this.B.ToString();
+				case SqlFunctionType.MathDivide:
+					return	this.A.ToString() + " / " + this.B.ToString();
+					
+				case SqlFunctionType.CompareEqual:
+					return	this.A.ToString() + " = " + this.B.ToString();
+
+				case SqlFunctionType.CompareNotEqual:
+					return	this.A.ToString() + " <> " + this.B.ToString();
+
+				case SqlFunctionType.CompareLessThan:
+					return	this.A.ToString() + " < " + this.B.ToString();
+
+				case SqlFunctionType.CompareLessThanOrEqual:
+					return	this.A.ToString() + " <= " + this.B.ToString();
+
+				case SqlFunctionType.CompareGreaterThan:
+					return	this.A.ToString() + " > " + this.B.ToString();
+
+				case SqlFunctionType.CompareGreaterThanOrEqual:
+					return	this.A.ToString() + " >= " + this.B.ToString();
+					
+				case SqlFunctionType.CompareIsNull:
+					return	this.A.ToString() + " IS NULL";
+
+				case SqlFunctionType.CompareIsNotNull:
+					return	this.A.ToString() + " IS NOT NULL";
+					
+				case SqlFunctionType.CompareLike:
+					return	this.A.ToString() + " LIKE " + this.B.ToString();
+				case SqlFunctionType.CompareNotLike:
+					return	this.A.ToString() + " NOT LIKE " + this.B.ToString();	// ?
+					
+				case SqlFunctionType.SetIn:
+					return	this.A.ToString() + " IN " + this.B.ToString();
+
+				case SqlFunctionType.SetNotIn:
+					return	this.A.ToString() + " NOT IN " + this.B.ToString();
+					
+				case SqlFunctionType.SetBetween:
+					return	this.A.ToString() + " BETWEEN " + this.B.ToString() + " AND " + this.C.ToString();
+
+				case SqlFunctionType.SetNotBetween:
+					return	this.A.ToString() + " NOT BETWEEN " + this.B.ToString() + " AND " + this.C.ToString();
+					
+				case SqlFunctionType.SetExists:
+					return	this.A.ToString() + " EXISTS";
+
+				case SqlFunctionType.SetNotExists:
+					return	this.A.ToString() + " NOT EXISTS";
+					
+				case SqlFunctionType.LogicNot:
+					return	"NOT " + this.A.ToString();
+
+				case SqlFunctionType.LogicAnd:
+					return	this.A.ToString() + " AND " + this.B.ToString();
+
+				case SqlFunctionType.LogicOr:
+					return	this.A.ToString() + " OR " + this.B.ToString();
+
+				case SqlFunctionType.JoinInner:
+					return	this.A.AsName + " INNER JOIN " + this.B.AsName + " ON " +
+							this.A.AsQualifiedName + " = " + this.B.AsQualifiedName;
+
+				case SqlFunctionType.Substring:
+					return	"SUBSTRING(" + this.A.ToString() + " FROM " + this.B.ToString() +
+							" FOR " + this.C.ToString() + ")";
+
+				case SqlFunctionType.Upper:
+					return	"UPPER(" + this.A.ToString() + ")";
+					
+				default:
+					return	"";
+			}
+		}
 		
 		protected SqlFunctionType		type;
 		protected SqlField				a, b, c;
