@@ -15,6 +15,8 @@ namespace Epsitec.Common.Drawing
 		
 		
 		public abstract void DefineZoom(double zoom);
+		public abstract void DefineColor(Drawing.Color color);
+		public abstract void DefineAdorner(object adorner);
 		
 		public virtual void MergeTransform(Transform transform)
 		{
