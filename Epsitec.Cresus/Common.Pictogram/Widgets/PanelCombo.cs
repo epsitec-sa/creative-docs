@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelCombo permet de choisir un rang dans un TextFieldCombo.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelCombo : AbstractPanel
 	{
 		public PanelCombo()

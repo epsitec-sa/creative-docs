@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelBool permet de choisir une valeur booléenne.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelBool : AbstractPanel
 	{
 		public PanelBool()

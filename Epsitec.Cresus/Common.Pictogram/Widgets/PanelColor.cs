@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelColor permet de choisir une couleur.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelColor : AbstractPanel
 	{
 		public PanelColor()
