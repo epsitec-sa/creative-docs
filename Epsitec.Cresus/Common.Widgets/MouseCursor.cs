@@ -46,6 +46,16 @@ namespace Epsitec.Common.Widgets
 			get { return MouseCursor.as_v_split; }
 		}
 		
+		public static MouseCursor			AsCross
+		{
+			get { return MouseCursor.as_cross; }
+		}
+		
+		public static MouseCursor			AsSizeAll
+		{
+			get { return MouseCursor.as_size_all; }
+		}
+		
 		public static MouseCursor			AsWait
 		{
 			get { return MouseCursor.as_wait; }
@@ -60,6 +70,8 @@ namespace Epsitec.Common.Widgets
 		private static MouseCursor			as_I_beam  = new MouseCursor (System.Windows.Forms.Cursors.IBeam);
 		private static MouseCursor			as_h_split = new MouseCursor (System.Windows.Forms.Cursors.HSplit);
 		private static MouseCursor			as_v_split = new MouseCursor (System.Windows.Forms.Cursors.VSplit);
+		private static MouseCursor			as_cross    = new MouseCursor (System.Windows.Forms.Cursors.Cross);
+		private static MouseCursor			as_size_all = new MouseCursor (System.Windows.Forms.Cursors.SizeAll);
 		private static MouseCursor			as_wait    = new MouseCursor (System.Windows.Forms.Cursors.WaitCursor);
 	}
 }
