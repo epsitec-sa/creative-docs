@@ -122,7 +122,7 @@ namespace Epsitec.Common.Widgets
 				this.root.InternalUpdateGeometry ();
 			}
 			
-			this.window.Show ();
+			this.window.ShowWindow ();
 		}
 		
 		public void Hide()
@@ -881,6 +881,13 @@ namespace Epsitec.Common.Widgets
 				if (shortcut != null)
 				{
 					message.Handled = this.root.ShortcutHandler (shortcut);
+				}
+				
+				if ((! message.Handled) &&
+					(this.owner != null))
+				{
+					System.Diagnostics.Debug.WriteLine ("> " + message);
+					this.owner.DispatchMessage (message);
 				}
 			}
 		}
