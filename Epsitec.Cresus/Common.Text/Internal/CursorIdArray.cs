@@ -122,6 +122,13 @@ namespace Epsitec.Common.Text.Internal
 			return this.elements[element].id;
 		}
 		
+		public int GetElementCursorOffset(int element)
+		{
+			Debug.Assert.IsInBounds (element, 0, this.elements.Length-1);
+			
+			return this.elements[element].offset;
+		}
+		
 		
 		public void ProcessInsertion(int position, int length)
 		{

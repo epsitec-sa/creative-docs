@@ -57,6 +57,14 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_2) == 0);
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_3) == 3);
 			
+			CursorInfo[] info_0 = table.FindCursors (0, 100); Debug.Assert.IsTrue (info_0.Length == 3); Debug.Assert.IsTrue (info_0[1].Position == 3);
+			CursorInfo[] info_2 = table.FindCursors (2, 100); Debug.Assert.IsTrue (info_2.Length == 2); Debug.Assert.IsTrue (info_2[1].Position == 5);
+			CursorInfo[] info_3 = table.FindCursors (3, 100); Debug.Assert.IsTrue (info_3.Length == 2); Debug.Assert.IsTrue (info_3[1].CursorId == cursor_1);
+			CursorInfo[] info_4 = table.FindCursors (4, 100); Debug.Assert.IsTrue (info_4.Length == 1); Debug.Assert.IsTrue (info_4[0].Position == 5);
+			CursorInfo[] info_5 = table.FindCursors (5, 100); Debug.Assert.IsTrue (info_5.Length == 1); Debug.Assert.IsTrue (info_5[0].CursorId == cursor_1);
+			CursorInfo[] info_6 = table.FindCursors (6, 100); Debug.Assert.IsTrue (info_6.Length == 0);
+			
+			
 			Debug.Assert.IsTrue (table.ReadText (cursor_1, 10, ref text) == 0);
 			Debug.Assert.IsTrue (table.ReadText (cursor_2, 10, ref text) == 5);
 			
@@ -215,6 +223,18 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Trace.WriteLine ("xxx="+xxx+"\nyyy="+yyy);
 			
 			
+			table3.MoveCursor (cursor_3_1, 8000);
+			table3.MoveCursor (cursor_3_2, 25000);
+			
+			CursorInfo[] info_3_a = table3.FindCursors (10, 100);
+			CursorInfo[] info_3_b = table3.FindCursors (10, 10000);
+			CursorInfo[] info_3_c = table3.FindCursors (10000, 30000);
+			CursorInfo[] info_3_d = table3.FindCursors (1000, 30000);
+			
+			Debug.Assert.IsTrue (info_3_a.Length == 0);
+			Debug.Assert.IsTrue (info_3_b.Length == 1); Debug.Assert.IsTrue (info_3_b[0].Position == 8000);
+			Debug.Assert.IsTrue (info_3_c.Length == 1); Debug.Assert.IsTrue (info_3_c[0].Position == 25000);
+			Debug.Assert.IsTrue (info_3_d.Length == 2); Debug.Assert.IsTrue (info_3_d[0].Position == 8000);  Debug.Assert.IsTrue (info_3_d[1].Position == 25000);
 #if false
 			using (System.IO.FileStream input = new System.IO.FileStream (@"c:\source.txt", System.IO.FileMode.Open, System.IO.FileAccess.Read))
 			{

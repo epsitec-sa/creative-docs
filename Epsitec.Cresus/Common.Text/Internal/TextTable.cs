@@ -185,26 +185,120 @@ namespace Epsitec.Common.Text.Internal
 		
 		public CursorInfo[] FindCursors(int position, int length)
 		{
-			Internal.TextChunkId id = this.FindTextChunkId (position);
+			//	Trouve tous les curseurs compris dans la plage indiquée.
 			
+			if (position > this.text_length)
+			{
+				return new CursorInfo[0];
+			}
+			
+			int id     = this.FindTextChunkId (position);
 			int origin = this.FindTextChunkPosition (id);
 			int end    = System.Math.Min (position + length, this.text_length);
 			
-			int pos    = position;
-			int offset = position - origin;
-			int count  = 0;
+			int i_org = origin;
+			int i_id  = id - 1;
+			int i_num = 0;
+			int i_pos = origin;
+			int i_off = position - origin;
 			
-			while (pos < end)
+			while (i_pos <= end)
 			{
-				int n = this.text_chunks[id-1].GetCursorCount ();
-				int i = this.text_chunks[id-1].GetCursorIndexBeforePosition (offset);
+				Internal.TextChunk chunk = this.text_chunks[i_id];
 				
-				//	TODO: ......
+				int n = chunk.GetCursorCount ();
+				int i = (i_off > 0) ? (chunk.GetCursorIndexBeforePosition (i_off) + 1) : 0;
+				int j = 0;
+				
+				while (j < n)
+				{
+					i_pos += chunk.GetNthCursorOffset (j);
+					
+					if (i_pos > end)
+					{
+						goto done_phase_1;
+					}
+					
+					if (j >= i)
+					{
+						i_num++;
+					}
+					
+					j++;
+				}
+				
+				//	On vient de finir de passer en revue un morceau de texte. Il
+				//	faut analyser le suivant, s'il y en a un :
+				
+				if (++i_id == this.text_chunks.Length)
+				{
+					break;
+				}
+				
+				i_off  = 0;
+				i_org += chunk.TextLength;
+				i_pos  = i_org;
 			}
-
-			//	TODO: ......
 			
-			return null;
+		done_phase_1:
+			
+			//	On a trouvé combien il y a de curseurs dans la tranche considérée.
+			//	Alloue la table et refait un second parcours :
+			
+			CursorInfo[] infos = new CursorInfo[i_num];
+			
+			i_org = origin;
+			i_id  = id - 1;
+			i_num = 0;
+			i_pos = origin;
+			i_off = position - origin;
+			
+			while (i_pos <= end)
+			{
+				Internal.TextChunk chunk = this.text_chunks[i_id];
+				
+				int n = chunk.GetCursorCount ();
+				int i = (i_off > 0) ? (chunk.GetCursorIndexBeforePosition (i_off) + 1) : 0;
+				int j = 0;
+				
+				while (j < n)
+				{
+					i_pos += chunk.GetNthCursorOffset (j);
+					
+					if (i_pos > end)
+					{
+						goto done_phase_2;
+					}
+					
+					if (j >= i)
+					{
+						infos[i_num] = new CursorInfo (chunk.GetNthCursorId (j), i_pos);
+						i_num++;
+					}
+					
+					j++;
+				}
+				
+				//	On vient de finir de passer en revue un morceau de texte. Il
+				//	faut analyser le suivant, s'il y en a un :
+				
+				if (++i_id == this.text_chunks.Length)
+				{
+					break;
+				}
+				
+				i_off  = 0;
+				i_org += chunk.TextLength;
+				i_pos  = i_org;
+			}
+			
+		done_phase_2:
+			
+			Debug.Assert.IsTrue (i_num == infos.Length);
+			
+			//	Terminé.
+			
+			return infos;
 		}
 		
 		

@@ -323,6 +323,11 @@ namespace Epsitec.Common.Text.Internal
 			return this.cursors.GetElementCursorId (index);
 		}
 		
+		public int GetNthCursorOffset(int index)
+		{
+			return this.cursors.GetElementCursorOffset (index);
+		}
+		
 		
 		private CursorIdArray				cursors;
 		private System.UInt64[]				text;

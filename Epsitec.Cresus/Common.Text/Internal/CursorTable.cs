@@ -74,23 +74,6 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public void InvalidatePositionCache()
-		{
-			System.Array.Clear (this.cache_flags, 0, this.cache_flags.Length);
-		}
-		
-		public bool IsPositionCacheValid(Internal.CursorId id)
-		{
-			int index  = id;
-			int offset = index / 32;
-			int bit    = index & 0x1F;
-			
-			uint mask = (1u << bit);
-			
-			return (mask & this.cache_flags[offset]) != 0;
-		}
-		
-		
 		public Internal.TextChunkId GetCursorTextChunkId(Internal.CursorId id)
 		{
 			Debug.Assert.IsTrue (id.IsValid);
@@ -166,6 +149,29 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public void InvalidatePositionCache()
+		{
+			//	Efface tous les bits de validité attachés à tous les curseurs.
+			//	Le plus rapide est de mettre à zéro le contenu du tableau :
+			
+			System.Array.Clear (this.cache_flags, 0, this.cache_flags.Length);
+		}
+		
+		public bool IsPositionCacheValid(Internal.CursorId id)
+		{
+			//	Vérifie que le cache de position du curseur spécifié est bien
+			//	valide :
+			
+			int index  = id;
+			int offset = index / 32;
+			int bit    = index & 0x1F;
+			
+			uint mask = (1u << bit);
+			
+			return (mask & this.cache_flags[offset]) != 0;
+		}
+		
+		
 		private void GrowCursors()
 		{
 			Debug.Assert.IsTrue (this.free_cursor_id == 0);
@@ -192,7 +198,8 @@ namespace Epsitec.Common.Text.Internal
 			
 			this.cursors = new_data;
 			
-			//	Agrandit, au besoin, les fanions de validité du cache :
+			//	Agrandit, au besoin, la table des bits de validité du cache
+			//	de position :
 			
 			int cache_words = (this.cursors.Length+31) / 32;
 			
@@ -207,9 +214,11 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		
 		private void ValidateCache(Internal.CursorId id)
 		{
+			//	Prend note que le curseur indiqué contient une position valide
+			//	dans son champ CachedPosition :
+			
 			int index  = id;
 			int offset = index / 32;
 			int bit    = index & 0x1F;
@@ -221,6 +230,9 @@ namespace Epsitec.Common.Text.Internal
 		
 		private void InvalidateCache(Internal.CursorId id)
 		{
+			//	Prend note que le curseur indiqué contient une position non valide
+			//	dans son champ CachedPosition :
+			
 			int index  = id;
 			int offset = index / 32;
 			int bit    = index & 0x1F;
@@ -310,7 +322,7 @@ namespace Epsitec.Common.Text.Internal
 		#endregion
 		
 		private Internal.Cursor[]				cursors;			//	1..n; prendre index tel quel (zéro = invalide)
-		private uint[]							cache_flags;		//	1..n; 32 bits à la fois
+		private uint[]							cache_flags;		//	validité du cache: 1 bit par curseur
 		private Internal.CursorId				free_cursor_id;
 		private int								free_cursor_count;
 		private int								version;
