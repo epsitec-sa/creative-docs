@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 			this.tabButton = new TabButton(null);
 			this.tabButton.Alignment = Drawing.ContentAlignment.MiddleCenter;
 			
-			this.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			this.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 		}
 		
 		public TabPage(Widget embedder) : this()

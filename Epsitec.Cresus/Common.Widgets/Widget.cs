@@ -3338,6 +3338,18 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		public void SetFocusOnTabWidget()
+		{
+			Widget widget = this.FindTabWidget (TabNavigationDir.Forwards, TabNavigationMode.ActivateOnTab, false, true);
+			
+			if (widget == null)
+			{
+				widget = this;
+			}
+			
+			widget.SetFocused (true);
+		}
+		
 		public Widget FindTabWidget(TabNavigationDir dir, TabNavigationMode mode)
 		{
 			return this.FindTabWidget (dir, mode, false, false);
@@ -5156,7 +5168,10 @@ namespace Epsitec.Common.Widgets
 			ActivateOnPage		= 0x00000008,
 			
 			ForwardToChildren	= 0x00010000,		//	transmet aux widgets enfants
-			ForwardOnly			= 0x00020000		//	utilisé avec ForwardToChilden: ne prend pas le focus soi-même
+			ForwardOnly			= 0x00020000,		//	utilisé avec ForwardToChilden: ne prend pas le focus soi-même
+			
+			ForwardTabActive	= ActivateOnTab | ForwardToChildren,
+			ForwardTabPassive	= ActivateOnTab | ForwardToChildren | ForwardOnly,
 		}
 		
 		public enum TabNavigationDir

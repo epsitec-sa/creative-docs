@@ -41,6 +41,8 @@ namespace Epsitec.Common.Widgets
 			this.buttonClose.GlyphShape = GlyphShape.Close;
 			this.buttonClose.ButtonStyle = ButtonStyle.Scroller;
 			this.buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+			
+			this.TabNavigation = Widget.TabNavigationMode.ForwardTabActive;
 		}
 		
 		public TabBook(Widget embedder) : this()
@@ -648,6 +650,7 @@ namespace Epsitec.Common.Widgets
 			if ( message.Type == MessageType.KeyDown )
 			{
 				int dir = 0;
+				bool cycle = false;
 				
 				switch ( message.KeyCode )
 				{
@@ -668,7 +671,8 @@ namespace Epsitec.Common.Widgets
 					case KeyCode.Tab:
 						if ( message.IsCtrlPressed )
 						{
-							dir = message.IsShiftPressed ? -1 : 1;
+							dir   = message.IsShiftPressed ? -1 : 1;
+							cycle = true;
 						}
 						break;
 				}
@@ -676,11 +680,39 @@ namespace Epsitec.Common.Widgets
 				if ( dir != 0 )
 				{
 					int index = this.ActivePageIndex + dir;
-					index = System.Math.Min(index, this.PageCount-1);
-					index = System.Math.Max(index, 0);
-					this.ActivePageIndex = index;
-					this.SetFocused(true);
-					message.Consumer = this;
+					
+					if (cycle)
+					{
+						if (index < 0)
+						{
+							index = this.PageCount - 1;
+						}
+						else if (index >= this.PageCount)
+						{
+							index = 0;
+						}
+					}
+					else
+					{
+						index = System.Math.Max (index, 0);
+						index = System.Math.Min (index, this.PageCount - 1);
+					}
+					
+					if (this.ActivePageIndex != index)
+					{
+						this.ActivePageIndex = index;
+						
+						if (! this.IsFocused)
+						{
+							//	On n'a pas le focus clavier, il faut donc activer le focus de la
+							//	nouvelle page activée.
+							
+							this.ActivePage.SetFocusOnTabWidget ();
+						}
+					}
+					
+					message.Consumer  = this;
+					message.Swallowed = true;
 					return;
 				}
 			}

@@ -420,7 +420,7 @@ namespace Epsitec.Common.Widgets
 				this.host = host;
 				
 				this.SetEmbedder (this.host);
-				this.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+				this.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			}
 			
 			
