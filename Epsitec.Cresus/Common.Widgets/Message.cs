@@ -22,6 +22,7 @@ namespace Epsitec.Common.Widgets
 		public bool							FilterNoChildren
 		{
 			get { return this.filter_no_children; }
+			set { this.filter_no_children = value; }
 		}
 		
 		public bool							FilterOnlyFocused
@@ -34,10 +35,33 @@ namespace Epsitec.Common.Widgets
 			get { return this.filter_only_on_hit; }
 		}
 		
+		
+		public bool							Captured
+		{
+			get { return this.is_captured; }
+			set { this.is_captured = value; }
+		}
+		
 		public bool							Handled
 		{
 			get { return this.is_handled; }
 			set { this.is_handled = value; }
+		}
+		
+		public Widget						Consumer
+		{
+			get { return this.consumer; }
+			set
+			{
+				this.consumer   = value;
+				this.is_handled = (value == null) ? false : true;
+			}
+		}
+		
+		public Widget						InWidget
+		{
+			get { return this.in_widget; }
+			set { this.in_widget = value; }
 		}
 		
 		
@@ -131,6 +155,22 @@ namespace Epsitec.Common.Widgets
 					case MessageType.MouseMove:
 					case MessageType.MouseUp:
 					case MessageType.MouseWheel:
+						return true;
+				}
+				
+				return false;
+			}
+		}
+		
+		public bool							IsKeyType
+		{
+			get
+			{
+				switch (this.type)
+				{
+					case MessageType.KeyDown:
+					case MessageType.KeyUp:
+					case MessageType.KeyPress:
 						return true;
 				}
 				
@@ -249,6 +289,7 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
+			buffer.Append ("{");
 			buffer.Append (this.type.ToString ());
 			buffer.Append (" ");
 			buffer.Append (this.cursor.ToString ());
@@ -274,6 +315,14 @@ namespace Epsitec.Common.Widgets
 				buffer.Append (this.key_char.ToString ());
 			}
 			
+			if (this.in_widget != null)
+			{
+				buffer.Append (" in='");
+				buffer.Append (this.in_widget.Name);
+				buffer.Append ("'");
+			}
+			
+			buffer.Append ("}");
 			return buffer.ToString ();
 		}
 
@@ -281,7 +330,10 @@ namespace Epsitec.Common.Widgets
 		protected bool						filter_no_children;
 		protected bool						filter_only_focused;
 		protected bool						filter_only_on_hit;
+		protected bool						is_captured;
 		protected bool						is_handled;
+		protected Widget					in_widget;
+		protected Widget					consumer;
 		
 		protected MessageType				type;
 		protected int						tick_count;
@@ -296,7 +348,6 @@ namespace Epsitec.Common.Widgets
 		protected int						key_char;
 		
 		protected static MessageState		state;
-		
 	}
 	
 	public struct MessageState
