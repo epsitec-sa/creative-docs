@@ -17,6 +17,7 @@
         <Configuration XmlKeyName="Release" Enabled="1" />
       </Configurations>
     </Step>
+    <Step XmlKeyName="Step_3" StepTypeName="MegaBuild.CommandStep" Name="Create%20delta%20ZIP%20file." Description="" IncludeInBuild="1" Level="0" WaitForCompletion="1" IgnoreFailure="0" PromptFirst="0" OnlyIfParentSucceeded="1" Timeout="0" TimeoutMinutes="10" RedirectStandardError="0" Command="c%3A%5Cpython22%5Cpython.exe" Arguments="%22C%3A%5CDocuments%20and%20Settings%5CArnaud%5CMy%20Documents%5CVisual%20Studio%20Projects%5CEpsitec.Cresus%5Ccopyproject.py%22" WorkingDirectory="C%3A%5CDocuments%20and%20Settings%5CArnaud%5CMy%20Documents%5CVisual%20Studio%20Projects%5CEpsitec.Cresus" WindowState="1" FirstSuccessCode="0" LastSuccessCode="0" UseShellExecute="0" Verb="" RedirectStreams="1" />
   </Steps>
   <Steps XmlKeyName="FailureSteps" />
 </MegaBuildProject>
