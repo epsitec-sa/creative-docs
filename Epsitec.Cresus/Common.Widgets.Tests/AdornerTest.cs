@@ -1047,7 +1047,6 @@ namespace Epsitec.Common.Widgets
 			{
 				for ( int x=0 ; x<5 ; x++ )
 				{
-					Cell cell = new Cell();
 					TextField text = new TextField();
 					text.TextFieldStyle = TextFieldStyle.Flat;
 					if ( x != 1 )
@@ -1056,8 +1055,7 @@ namespace Epsitec.Common.Widgets
 					}
 					text.Text = texts[y*5+x];
 					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-					cell.Children.Add(text);
-					table[x,y] = cell;
+					table[x,y].Insert(text);
 				}
 			}
 			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
