@@ -90,6 +90,16 @@ namespace Epsitec.Common.Tests
 			window.Show ();
 		}
 
+		[Test] public void CheckImageRect()
+		{
+			WindowFrame window = new WindowFrame ();
+			
+			window.Text = "CheckImageRect";
+			window.Root.PaintForeground += new PaintEventHandler(ImageRect_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+
 		private void Text_PaintForeground(object sender, PaintEventArgs e)
 		{
 			WindowRoot root = sender as WindowRoot;
@@ -444,6 +454,35 @@ namespace Epsitec.Common.Tests
 				
 				x += width;
 			}
+		}
+		
+		private void ImageRect_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double cx = root.Client.Width / 2;
+			double cy = root.Client.Height / 2;
+			
+			e.Graphics.RotateTransform (0, cx, cy);
+			
+			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
+			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
+			e.Graphics.RenderSolid (Color.FromBrightness (0));
+			
+			Bitmap bitmap = ImageProvider.Default.GetImage (@"file:..\..\test.png").BitmapImage;
+			
+			//	L'image fait 115 x 102 pixels
+			
+			e.Graphics.PaintImage (bitmap,  10,  10, 64, 48);					//	stretch, toute l'image
+			e.Graphics.PaintImage (bitmap,  75,  10, 64, 48, 60, 40);			//	clip, origine dans image [60;40]
+			e.Graphics.PaintImage (bitmap, 150,  10, 64, 48, 60, 40, 32, 48);	//	stretch, origine dans image [60;40], taille source [32;48]
+			
+			e.Graphics.PaintImage (bitmap,  10,  60, 200, 20);					//	stretch
+			e.Graphics.PaintImage (bitmap,  10,  82, 200, 20, 0, 0);			//	clip
+			e.Graphics.PaintImage (bitmap,  10, 104, 200, 20, 0, 0, 125, 20);	//	clip + stretch
+			e.Graphics.PaintImage (bitmap,  10, 126, 200, 20, 0, 10, 200, 80);	//	clip + stretch
+			e.Graphics.PaintImage (bitmap,  10, 148, 200, 20, 100, 10, 200, 80);//	clip + stretch (déborde de l'image, 185 pixels en dehors à droite)
+			e.Graphics.PaintImage (bitmap,  10, 148, 200, 20, 120, 10, 200, 80);//	clip + stretch (plus rien)
 		}
 	}
 }

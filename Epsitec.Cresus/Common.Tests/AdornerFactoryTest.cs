@@ -28,6 +28,7 @@ namespace Epsitec.Common.Tests
 			foreach (string name in names)
 			{
 				Assertion.Assert (Epsitec.Common.Widgets.Adorner.Factory.SetActive (name));
+				Assertion.AssertEquals (name, Epsitec.Common.Widgets.Adorner.Factory.ActiveName);
 				Assertion.AssertNotNull (Epsitec.Common.Widgets.Adorner.Factory.Active);
 			}
 		}

@@ -137,6 +137,82 @@ namespace Epsitec.Common.Drawing
 			this.PaintText (x, y, text, font, size, color);
 		}
 		
+		public void PaintImage(Bitmap bitmap, Rectangle fill)
+		{
+			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, 0, 0, bitmap.Width, bitmap.Height);
+		}
+		
+		public void PaintImage(Bitmap bitmap, double fill_x, double fill_y, double fill_width, double fill_height)
+		{
+			this.PaintImage (bitmap, fill_x, fill_y, fill_width, fill_height, 0, 0, bitmap.Width, bitmap.Height);
+		}
+		
+		public void PaintImage(Bitmap bitmap, Rectangle fill, Point image_origin)
+		{
+			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, image_origin.X, image_origin.Y, fill.Width, fill.Height);
+		}
+		
+		public void PaintImage(Bitmap bitmap, Rectangle fill, Rectangle image_rect)
+		{
+			this.PaintImage (bitmap, fill.Left, fill.Bottom, fill.Width, fill.Height, image_rect.Left, image_rect.Bottom, image_rect.Width, image_rect.Height);
+		}
+		
+		public void PaintImage(Bitmap bitmap, double fill_x, double fill_y, double fill_width, double fill_height, double image_origin_x, double image_origin_y)
+		{
+			this.PaintImage (bitmap, fill_x, fill_y, fill_width, fill_height, image_origin_x, image_origin_y, fill_width, fill_height);
+		}
+		
+		public void PaintImage(Bitmap bitmap, double fill_x, double fill_y, double fill_width, double fill_height, double image_origin_x, double image_origin_y, double image_width, double image_height)
+		{
+			double ix1 = image_origin_x;
+			double iy1 = image_origin_y;
+			double ix2 = image_origin_x + image_width;
+			double iy2 = image_origin_y + image_height;
+			
+			double idx = bitmap.Width;
+			double idy = bitmap.Height;
+			
+			if (ix1 >= idx) return;
+			if (iy1 >= idy) return;
+			
+			if (ix1 < 0)			//	Clipping à gauche.
+			{
+				fill_x     -= ix1;
+				fill_width += ix1;
+				ix1 = 0;
+			}
+			
+			if (iy1 < 0)			//	Clipping en bas
+			{
+				fill_y      -= iy1;
+				fill_height += iy1;
+				iy1 = 0;
+			}
+			
+			if (ix2 > idx)			//	Clipping à droite
+			{
+				fill_width -= ix2 - idx;
+				ix2 = idx;
+			}
+			
+			if (iy2 > idy)			//	Clipping en haut
+			{
+				fill_height -= iy2 - idy;
+				iy2 = idy;
+			}
+			
+			Transform transform = new Transform ();
+			
+			transform.Translate (-ix1, -iy1);
+			transform.Scale (fill_width / (ix2-ix1), fill_height / (iy2-iy1));
+			transform.Translate (fill_x, fill_y);
+			
+			this.AddFilledRectangle (fill_x, fill_y, fill_width, fill_height);
+			this.ImageRenderer.Bitmap = bitmap;
+			this.ImageRenderer.Transform = transform;
+			this.RenderImage ();
+		}
+		
 		public virtual void AddLine(double x1, double y1, double x2, double y2)
 		{
 		}

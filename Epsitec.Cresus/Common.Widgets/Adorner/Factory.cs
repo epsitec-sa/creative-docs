@@ -65,6 +65,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			get { return Factory.active_adorner; }
 		}
 		
+		public static string			ActiveName
+		{
+			get
+			{
+				return Factory.Active.GetType ().Name;
+			}
+		}
+		
 		public static string[]			AdornerNames
 		{
 			get
