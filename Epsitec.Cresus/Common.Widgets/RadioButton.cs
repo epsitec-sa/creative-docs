@@ -1,3 +1,6 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
 	using BundleAttribute  = Support.BundleAttribute;
@@ -30,7 +33,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.DefaultFontHeight+1;
+				return System.Math.Ceiling (this.DefaultFontHeight + 1);
 			}
 		}
 
@@ -41,6 +44,28 @@ namespace Epsitec.Common.Widgets
 				return Drawing.ContentAlignment.MiddleLeft;
 			}
 		}
+		
+		public Drawing.Point					LabelOffset
+		{
+			get
+			{
+				return new Drawing.Point (RadioButton.RadioWidth, 0);
+			}
+		}
+
+		
+		[Bundle]	public string				Group
+		{
+			get
+			{
+				return this.group;
+			}
+			set
+			{
+				this.group = value;
+			}
+		}
+		
 		
 		public RadioButton.GroupController		Controller
 		{
@@ -69,19 +94,6 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				return null;
-			}
-		}
-		
-		
-		[Bundle]	public string				Group
-		{
-			get
-			{
-				return this.group;
-			}
-			set
-			{
-				this.group = value;
 			}
 		}
 		
@@ -177,18 +189,27 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			Drawing.Rectangle rect = base.GetShapeBounds();
+			System.Diagnostics.Debug.Assert (this.TextLayout != null);
 			
-			if ( this.TextLayout != null )
-			{
-				Drawing.Rectangle text = this.TextLayout.StandardRectangle;
-				text.Offset(this.LabelOffset);
-				text.Inflate(1, 1);
-				text.Inflate(Widgets.Adorner.Factory.Active.GeometryRadioShapeBounds);
-				rect.MergeWith(text);
-			}
+			Drawing.Rectangle base_rect = base.GetShapeBounds ();
+			Drawing.Rectangle text_rect = this.TextLayout.StandardRectangle;
 			
-			return rect;
+			text_rect.Offset (this.LabelOffset);
+			text_rect.Inflate (1, 1);
+			text_rect.Inflate (Widgets.Adorner.Factory.Active.GeometryRadioShapeBounds);
+			base_rect.MergeWith (text_rect);
+			
+			return base_rect;
+		}
+
+		public override Epsitec.Common.Drawing.Size GetBestFitSize()
+		{
+			Drawing.Size size = this.TextLayout.SingleLineSize;
+			
+			size.Width  = System.Math.Ceiling (size.Width + RadioButton.RadioWidth + 3);
+			size.Height = System.Math.Max (System.Math.Ceiling (size.Height), RadioButton.RadioHeight);
+			
+			return size;
 		}
 
 		
@@ -276,14 +297,15 @@ namespace Epsitec.Common.Widgets
 
 		protected override void UpdateTextLayout()
 		{
-			if ( this.TextLayout != null )
-			{
-				Drawing.Point offset = this.LabelOffset;
-				double dx = this.Client.Width - offset.X;
-				double dy = this.Client.Height;
-				this.TextLayout.Alignment = this.Alignment;
-				this.TextLayout.LayoutSize = new Drawing.Size(dx, dy);
-			}
+			System.Diagnostics.Debug.Assert (this.TextLayout != null);
+			
+			Drawing.Point offset = this.LabelOffset;
+			
+			double dx = this.Client.Width - offset.X;
+			double dy = this.Client.Height;
+			
+			this.TextLayout.Alignment  = this.Alignment;
+			this.TextLayout.LayoutSize = new Drawing.Size (dx, dy);
 		}
 		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
@@ -441,27 +463,16 @@ namespace Epsitec.Common.Widgets
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
-			Drawing.Rectangle rect = new Drawing.Rectangle();
-			rect.Left   = 0;
-			rect.Right  = RadioButton.radioHeight;
-			rect.Bottom = (this.Client.Height-RadioButton.radioHeight)/2;
-			rect.Top    = rect.Bottom+RadioButton.radioHeight;
-			adorner.PaintRadio(graphics, rect, this.PaintState);
-
-			adorner.PaintGeneralTextLayout(graphics, this.LabelOffset, this.TextLayout, this.PaintState, PaintTextStyle.RadioButton, this.BackColor);
+			Drawing.Rectangle rect  = new Drawing.Rectangle (0, (this.Client.Height-RadioButton.RadioHeight)/2, RadioButton.RadioHeight, RadioButton.RadioHeight);
+			WidgetState       state = this.PaintState;
+			
+			adorner.PaintRadio (graphics, rect, state);
+			adorner.PaintGeneralTextLayout (graphics, this.LabelOffset, this.TextLayout, state, PaintTextStyle.RadioButton, this.BackColor);
 		}
 		
-		protected Drawing.Point LabelOffset
-		{
-			get
-			{
-				return new Drawing.Point(RadioButton.radioWidth, 0);
-			}
-		}
 
-
-		protected static readonly double		radioHeight = 13;
-		protected static readonly double		radioWidth = 20;
+		protected static readonly double		RadioHeight = 13;
+		protected static readonly double		RadioWidth  = 20;
 		protected string						group;
 	}
 }

@@ -14,8 +14,6 @@ namespace Epsitec.Designer
 		{
 			this.name = "Designer";
 			
-			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
-			
 			Button button;
 			
 			button = new Button ("New bundle");
@@ -56,6 +54,8 @@ namespace Epsitec.Designer
 		#region Application Startup
 		[System.STAThread] static void Main() 
 		{
+			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
+			
 			Application.application = new Application ();
 			Application.application.MainWindow.Run ();
 		}

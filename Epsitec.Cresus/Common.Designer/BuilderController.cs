@@ -148,11 +148,12 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		public Window CreateWindow(string name)
+		public Window CreateWindow(string name, string caption)
 		{
 			Window window = new Window ();
 			
 			window.Name = name;
+			window.Text = caption;
 			window.CommandDispatcher = this.dispatcher;
 			window.MakeToolWindow ();
 			
@@ -176,25 +177,41 @@ namespace Epsitec.Common.Designer
 			//	Crée la fenêtre contenant la palette des widgets qui peuvent être utilisés
 			//	pour construire une interface par drag & drop.
 			
-			this.creation_window = this.CreateWindow ("widget palette");
-			this.creation_window.Text = "Widgets...";
+			this.creation_window = this.CreateWindow ("ToolKitWindow", "Boîte à outils");
+			this.creation_book   = new TabBook (this.creation_window.Root);
+			this.widget_palette  = new Panels.WidgetSourcePalette ();
+			this.data_palette    = new Panels.DataSourcePalette ();
 			
-			this.widget_palette = new Panels.WidgetSourcePalette ();
+			double dx = System.Math.Max (this.widget_palette.Size.Width,  this.data_palette.Size.Width);
+			double dy = System.Math.Max (this.widget_palette.Size.Height, this.data_palette.Size.Height);
 			
-			double dx = this.widget_palette.Size.Width;
-			double dy = this.widget_palette.Size.Height;
+			Drawing.Size book_frame_size = this.creation_book.Client.Size - this.creation_book.InnerBounds.Size;
+			
+			dx += book_frame_size.Width;
+			dy += book_frame_size.Height;
 			
 			this.creation_window.ClientSize = new Drawing.Size (dx, dy);
+			this.creation_book.Dock = DockStyle.Fill;
 			
-			Widget root   = this.creation_window.Root;
-			Widget widget;
+			TabPage page_1 = new TabPage ();
+			TabPage page_2 = new TabPage ();
 			
-			//	Initialisation de la palette des widgets drag-ables :
+			page_1.TabTitle = "Widgets";
+			page_2.TabTitle = "Données";
 			
-			widget = this.widget_palette.Widget;
+			this.creation_book.Items.Add (page_1);
+			this.creation_book.Items.Add (page_2);
 			
-			widget.Parent = root;
-			widget.Dock   = DockStyle.Fill;
+			//	Initialisation des palettes :
+			
+			Widget widget_panel = this.widget_palette.Widget;
+			Widget data_panel   = this.data_palette.Widget;
+			
+			widget_panel.SetEmbedder (page_1);
+			widget_panel.Dock = DockStyle.Fill;
+			
+			data_panel.SetEmbedder (page_2);
+			data_panel.Dock = DockStyle.Fill;
 			
 			this.widget_palette.DragBegin += new Support.EventHandler (this.HandleSourceDragBegin);
 			this.widget_palette.DragEnd   += new Support.EventHandler (this.HandleSourceDragEnd);
@@ -204,9 +221,7 @@ namespace Epsitec.Common.Designer
 		{
 			//	Crée la fenêtre contenant les attributs.
 			
-			this.attribute_window = this.CreateWindow ("widget palette");
-			this.attribute_window.Text = "Attributes";
-			
+			this.attribute_window  = this.CreateWindow ("AttributesWindow", "Attributs");
 			this.attribute_palette = new Panels.WidgetAttributePalette ();
 			this.tool_bar          = new HToolBar ();
 			
@@ -281,11 +296,13 @@ namespace Epsitec.Common.Designer
 		
 		private void HandleSourceDragEnd(object sender)
 		{
-			System.Diagnostics.Debug.Assert (this.widget_palette == sender);
+			System.Diagnostics.Debug.Assert ((this.widget_palette == sender) || (this.data_palette == sender));
+			
+			Panels.IDropSource drop_source = sender as Panels.IDropSource;
 			
 			//	Le drag & drop vient de se terminer.
 			
-			Widget widget = this.widget_palette.DroppedWidget;
+			Widget widget = drop_source.DroppedWidget;
 			
 			if (widget != null)
 			{
@@ -762,14 +779,17 @@ namespace Epsitec.Common.Designer
 		protected Support.CommandDispatcher		dispatcher;
 		protected bool							is_initialised;
 		
+		protected Window						creation_window;
+		protected TabBook						creation_book;
 		protected Panels.WidgetSourcePalette	widget_palette;
-		protected Panels.WidgetAttributePalette	attribute_palette;
+		protected Panels.DataSourcePalette		data_palette;
+		
 		protected AbstractToolBar				tool_bar;
 		protected bool							tool_tab_setter_active;
 		protected bool							tool_tab_picker_active;
 		
-		protected Window						creation_window;
 		protected Window						attribute_window;
+		protected Panels.WidgetAttributePalette	attribute_palette;
 		protected System.Collections.ArrayList	edit_window_list;
 		
 		protected Editors.WidgetEditor			active_editor;

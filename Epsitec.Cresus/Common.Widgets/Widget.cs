@@ -2070,6 +2070,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public virtual Drawing.Size GetBestFitSize()
+		{
+			return new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
+		}
+		
+		
 		public virtual void Hide()
 		{
 			this.SetVisible (false);
@@ -2123,6 +2129,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
 		
 		internal void AddValidator(Support.IValidator value)
 		{
@@ -4323,7 +4330,11 @@ namespace Epsitec.Common.Widgets
 			
 			Widget[] children = this.Children.Widgets;
 			
-			this.UpdateTextLayout ();
+			if (this.TextLayout != null)
+			{
+				this.UpdateTextLayout ();
+			}
+			
 			this.UpdateHasDockedChildren (children);
 			this.UpdateMinMaxBasedOnDockedChildren (children);
 			this.UpdateDockedChildrenLayout (children);
