@@ -144,7 +144,7 @@ namespace Epsitec.Common.Drawing
 			return new Margins (-a.left, -a.right, -a.top, -a.bottom);
 		}
 		
-		public class Converter : Epsitec.Common.Converters.AbstractStringConverter
+		public class Converter : Epsitec.Common.Types.AbstractStringConverter
 		{
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)
 			{
