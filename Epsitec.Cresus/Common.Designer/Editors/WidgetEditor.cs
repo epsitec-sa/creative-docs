@@ -184,15 +184,30 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
-		public void Save(string path)
+		public void Save()
 		{
-			Support.ObjectBundler  bundler = new Support.ObjectBundler ();
-			Support.ResourceBundle bundle  = Support.ResourceBundle.Create ("file", this.root.Name, ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
+			string full_name  = this.dialog_designer.ResourceName;
 			
-			bundler.SetupPrefix ("file");
+			if ((full_name == null) ||
+				(full_name.Length == 0))
+			{
+				//	TODO: demande sous quel nom sauver !
+				
+				full_name = "file:test";
+			}
+			
+			
+			string res_prefix = Support.Resources.ExtractPrefix (full_name);
+			string res_name   = Support.Resources.ExtractName (full_name);
+			
+			Support.ObjectBundler  bundler = new Support.ObjectBundler ();
+			Support.ResourceBundle bundle  = Support.ResourceBundle.Create (res_prefix, res_name, ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
+			
+			bundler.SetupPrefix (res_prefix);
 			bundler.FillBundleFromObject (bundle, this.root);
 			
-			bundle.CreateXmlDocument (false).Save (path);
+			Resources.SetBundle (bundle, Support.ResourceSetMode.Write);
+//			bundle.CreateXmlDocument (false).Save (path);
 			
 			this.is_dirty = false;
 		}

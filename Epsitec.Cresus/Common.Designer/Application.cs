@@ -252,17 +252,23 @@ namespace Epsitec.Common.Designer
 		
 		private void HandleMainWindowClosed(object sender)
 		{
-			System.Diagnostics.Debug.Assert (this.main_window == sender);
-			
-			this.Kill ();
+			if (this.is_initialised)
+			{
+				System.Diagnostics.Debug.Assert (this.main_window == sender);
+				
+				this.Kill ();
+			}
 		}
 		
 		private void HandleMainWindowDisposed(object sender)
 		{
-			System.Diagnostics.Debug.Assert (this.main_window == sender);
-			System.Diagnostics.Debug.WriteLine ("Main window disposed.");
-			
-			this.Kill ();
+			if (this.is_initialised)
+			{
+				System.Diagnostics.Debug.Assert (this.main_window == sender);
+				System.Diagnostics.Debug.WriteLine ("Main window disposed.");
+				
+				this.Kill ();
+			}
 		}
 		
 		#region Application Commands

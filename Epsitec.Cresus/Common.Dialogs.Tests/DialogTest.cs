@@ -4,6 +4,11 @@ namespace Epsitec.Common.Dialogs
 {
 	[TestFixture] public class DialogTest
 	{
+		[SetUp] public void SetUp()
+		{
+			Epsitec.Common.Widgets.Widget.Initialise ();
+		}
+		
 		[Test] public void CheckLoadDesignerFactory()
 		{
 			Assert.IsTrue (Dialog.LoadDesignerFactory ());
@@ -25,6 +30,12 @@ namespace Epsitec.Common.Dialogs
 			
 			designer.DialogWindow = window;
 			designer.StartDesign ();
+		}
+		
+		[Test] public void CheckLoad1()
+		{
+			Dialog dialog = new Dialog ();
+			dialog.Load ("file:unknown_dialog");
 		}
 	}
 }

@@ -42,7 +42,7 @@ namespace Epsitec.Common.Designer
 				}
 			}
 		}
-
+		
 		public Window							DialogWindow
 		{
 			get
@@ -60,13 +60,26 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		public string							ResourceName
+		{
+			get
+			{
+				return this.resource_name;
+			}
+			set
+			{
+				this.resource_name = value;
+			}
+		}
+		
+		
 		public void StartDesign()
 		{
 			if (this.dialog_window != null)
 			{
 				this.application.Initialise ();
 				this.application.MainWindow.Show ();
-				this.application.InterfaceEditController.CreateEditorForWindow (this.dialog_window);
+				this.application.InterfaceEditController.CreateEditorForWindow (this.dialog_window, this.resource_name);
 			}
 		}
 		#endregion
@@ -122,6 +135,7 @@ namespace Epsitec.Common.Designer
 		private Application						application;
 		private Types.IDataGraph				dialog_data;
 		private Window							dialog_window;
+		private string							resource_name;
 		
 		private const string					prop_dialog_designer = "$designer$dialog designer$";
 	}

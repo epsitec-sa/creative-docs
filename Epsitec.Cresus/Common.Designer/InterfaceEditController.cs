@@ -135,6 +135,9 @@ namespace Epsitec.Common.Designer
 			
 			window.WindowActivated += new Support.EventHandler (this.HandleEditWindowWindowActivated);
 			window.Show ();
+			
+			this.SetActiveEditor (editor);
+			this.UpdateActiveWidget ();
 		}
 		
 		

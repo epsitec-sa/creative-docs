@@ -14,6 +14,69 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
+		public Types.IDataGraph					Data
+		{
+			get
+			{
+				return this.data;
+			}
+			set
+			{
+				if (this.data != value)
+				{
+					if (this.data != null)
+					{
+						throw new System.InvalidOperationException ("Data may not be set twice.");
+					}
+					
+					this.data = value;
+					
+					if (this.designer != null)
+					{
+						this.designer.DialogData = this.data;
+					}
+				}
+			}
+		}
+		
+		public Widgets.Window					Window
+		{
+			get
+			{
+				return this.window;
+			}
+		}
+		
+		
+		
+		public void Load(string full_name)
+		{
+			if ((this.designer != null) ||
+				(this.window != null))
+			{
+				throw new System.InvalidOperationException ("Dialog may not be loaded twice.");
+			}
+			
+			Support.ResourceBundle bundle = Support.Resources.GetBundle (full_name);
+			
+			if (bundle == null)
+			{
+				this.designer = Dialog.CreateDesigner ();
+				this.window   = new Widgets.Window ();
+				
+				this.window.Root.Text = "&lt; à créer ... &gt;";
+				
+				this.designer.DialogData   = this.data;
+				this.designer.DialogWindow = this.window;
+				
+				this.designer.StartDesign ();
+			}
+			else
+			{
+			}
+		}
+		
+		
 		
 		public static IDialogDesignerFactory	DesignerFactory
 		{
@@ -65,5 +128,9 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		private static IDialogDesignerFactory	factory;
+		
+		protected Types.IDataGraph				data;
+		protected Widgets.Window				window;
+		protected IDialogDesigner				designer;
 	}
 }
