@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.scroller = new VScroller(this);
 			this.scroller.SetEnabled(false);
-			this.scroller.Moved += new EventHandler(this.HandleScrollerMoved);
+			this.scroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
 			this.scroller.Dock = DockStyle.Right;
 			
 			this.rightMargin = this.scroller.Width;
@@ -24,7 +24,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.scroller.Moved -= new EventHandler(this.HandleScrollerMoved);
+				this.scroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
 				this.scroller.Dispose ();
 				this.scroller = null;
 			}
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void HandleScrollerMoved(object sender)
+		private void HandleScrollerValueChanged(object sender)
 		{
 			this.scrollOffset.Y = this.scroller.Value-this.scroller.Range+AbstractTextField.Infinity-this.realSize.Height;
 			this.Invalidate();

@@ -8,7 +8,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public ToggleButton()
 		{
-			this.internalState |= InternalState.AutoToggle;
+			this.InternalState |= InternalState.AutoToggle;
 		}
 		
 		public ToggleButton(Widget embedder) : this()
