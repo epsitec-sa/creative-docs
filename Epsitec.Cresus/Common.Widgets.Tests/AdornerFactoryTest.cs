@@ -9,8 +9,8 @@ namespace Epsitec.Common.Widgets
 		{
 			string[] names = Epsitec.Common.Widgets.Adorner.Factory.AdornerNames;
 			
-			Assertion.AssertNotNull (names);
-			Assertion.Assert (names.Length > 0);
+			Assert.IsNotNull (names);
+			Assert.IsTrue (names.Length > 0);
 			
 			foreach (string name in names)
 			{
@@ -22,14 +22,14 @@ namespace Epsitec.Common.Widgets
 		{
 			string[] names = Epsitec.Common.Widgets.Adorner.Factory.AdornerNames;
 			
-			Assertion.AssertNotNull (names);
-			Assertion.Assert (names.Length > 0);
+			Assert.IsNotNull (names);
+			Assert.IsTrue (names.Length > 0);
 			
 			foreach (string name in names)
 			{
-				Assertion.Assert (Epsitec.Common.Widgets.Adorner.Factory.SetActive (name));
-				Assertion.AssertEquals (name, Epsitec.Common.Widgets.Adorner.Factory.ActiveName);
-				Assertion.AssertNotNull (Epsitec.Common.Widgets.Adorner.Factory.Active);
+				Assert.IsTrue (Epsitec.Common.Widgets.Adorner.Factory.SetActive (name));
+				Assert.AreEqual (name, Epsitec.Common.Widgets.Adorner.Factory.ActiveName);
+				Assert.IsNotNull (Epsitec.Common.Widgets.Adorner.Factory.Active);
 			}
 		}
 	}
