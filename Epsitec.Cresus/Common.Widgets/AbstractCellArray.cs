@@ -1234,7 +1234,7 @@ namespace Epsitec.Common.Widgets
 					HeaderButton button = this.FindButtonV(i);
 					button.Show();
 					button.Bounds = hRect;
-					button.Dynamic = ( (this.styleV & CellArrayStyle.Sort) != 0 );
+					button.IsDynamic = ( (this.styleV & CellArrayStyle.Sort) != 0 );
 					if ( this.isGrimy )  this.containerV.Children.Add(button);
 					hRect.Top = hRect.Bottom;
 				}
@@ -1291,7 +1291,7 @@ namespace Epsitec.Common.Widgets
 					HeaderButton button = this.FindButtonH(i);
 					button.Show();
 					button.Bounds = hRect;
-					button.Dynamic = ( (this.styleH & CellArrayStyle.Sort) != 0 );
+					button.IsDynamic = ( (this.styleH & CellArrayStyle.Sort) != 0 );
 					if ( this.isGrimy )  this.containerH.Children.Add(button);
 					hRect.Left = hRect.Right;
 				}
