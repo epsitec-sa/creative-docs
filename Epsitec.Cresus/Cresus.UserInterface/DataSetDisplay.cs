@@ -1,0 +1,97 @@
+using System;
+
+namespace Epsitec.Cresus.UserInterface
+{
+	using Widgets = Epsitec.Common.Widgets;
+	using Drawing = Epsitec.Common.Drawing;
+	
+	/// <summary>
+	/// Summary description for DataSetDisplay.
+	/// </summary>
+	public class DataSetDisplay
+	{
+		public DataSetDisplay(System.Data.DataSet data)
+		{
+			this.data = data;
+			
+			this.CreateWindow ();
+			
+			foreach (System.Data.DataTable table in this.data.Tables)
+			{
+				this.CreateTabPage (table);
+			}
+			
+			this.book.ActivePage = this.book.Items[0];
+			
+			this.window.Show();
+		}
+		
+		public void CreateWindow()
+		{
+			this.window = new Widgets.Window ();
+			
+			this.window.ClientSize = new Drawing.Size (400, 300);
+			this.window.Text = "DataSet Explorer";
+			this.window.Root.PreferHorizontalDockLayout = false;
+			
+			this.book = new Widgets.TabBook ();
+			this.book.Dock = Widgets.DockStyle.Fill;
+			this.book.Parent = this.window.Root;
+		}
+		
+		public void CreateTabPage(System.Data.DataTable data_table)
+		{
+			Widgets.TabPage page = new Widgets.TabPage ();
+			
+			page.TabTitle = string.Format ("Table <i>{0}</i>", data_table.TableName);
+			page.DockMargins = new Drawing.Margins (4, 4, 4, 4);
+			this.book.Items.Add (page);
+			
+			Widgets.CellTable table = new Widgets.CellTable ();
+			
+			int col_n = data_table.Columns.Count;
+			int row_n = data_table.Rows.Count;
+			
+			table.StyleH  = Widgets.CellArrayStyle.ScrollNorm;
+			table.StyleH |= Widgets.CellArrayStyle.Header;
+			table.StyleH |= Widgets.CellArrayStyle.Separator;
+			table.StyleH |= Widgets.CellArrayStyle.Mobile;
+			table.StyleH |= Widgets.CellArrayStyle.Sort;
+			table.StyleV  = Widgets.CellArrayStyle.ScrollNorm;
+			table.StyleV |= Widgets.CellArrayStyle.Header;
+			table.StyleV |= Widgets.CellArrayStyle.Separator;
+			table.StyleV |= Widgets.CellArrayStyle.SelectLine;
+			table.Name = "Table";
+			table.SetArraySize(col_n, row_n);
+			
+			for (int i = 0; i < col_n; i++)
+			{
+				table.SetHeaderTextH (i, data_table.Columns[i].Caption);
+			}
+			for (int i = 0; i < row_n; i++)
+			{
+				table.SetHeaderTextV (i, i.ToString ());
+			}
+			
+			for (int row = 0; row < row_n; row++)
+			{
+				System.Data.DataRow data_row = data_table.Rows[row];
+				for (int col = 0; col < col_n; col++)
+				{
+					Widgets.StaticText text = new Widgets.StaticText ();
+					text.Text      = Widgets.TextLayout.ConvertToTaggedText (data_row[col].ToString ());
+					text.Alignment = Drawing.ContentAlignment.MiddleLeft;
+					text.Dock      = Widgets.DockStyle.Fill;
+					table[col,row].Insert (text);
+				}
+			}
+			
+			table.Dock = Widgets.DockStyle.Fill;
+			table.Parent = page;
+		}
+		
+		private System.Data.DataSet		data;
+		private Widgets.Window			window;
+		private Widgets.TabBook			book;
+	}
+}
