@@ -30,10 +30,20 @@ namespace Epsitec.Common.Drawing
 			AntiGrain.Path.RemoveAll (this.agg_path);
 		}
 		
+		public void MoveTo(Point p)
+		{
+			this.MoveTo (p.X, p.Y);
+		}
+		
 		public void MoveTo(double x, double y)
 		{
 			this.CreateOnTheFly ();
 			AntiGrain.Path.MoveTo (this.agg_path, x, y);
+		}
+		
+		public void LineTo(Point p)
+		{
+			this.LineTo (p.X, p.Y);
 		}
 		
 		public void LineTo(double x, double y)
@@ -42,11 +52,21 @@ namespace Epsitec.Common.Drawing
 			AntiGrain.Path.LineTo (this.agg_path, x, y);
 		}
 		
+		public void CurveTo(Point c1, Point c2, Point p)
+		{
+			this.CurveTo (c1.X, c1.Y, c2.X, c2.Y, p.X, p.Y);
+		}
+		
 		public void CurveTo(double x_c1, double y_c1, double x_c2, double y_c2, double x, double y)
 		{
 			this.CreateOnTheFly ();
 			this.has_curve = true;
 			AntiGrain.Path.Curve4 (this.agg_path, x_c1, y_c1, x_c2, y_c2, x, y);
+		}
+		
+		public void CurveTo(Point c, Point p)
+		{
+			this.CurveTo (c.X, c.Y, p.X, p.Y);
 		}
 		
 		public void CurveTo(double x_c, double y_c, double x, double y)
