@@ -939,7 +939,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			mouse = this.IconToScreen(mouse);
 			mouse = this.MapClientToScreen(mouse);
 			this.commandDispatcher.SynchroniseCommandStates();
-			this.contextMenu.ShowContextMenu(mouse);
+			this.contextMenu.ShowContextMenu(this.Window, mouse);
 		}
 
 		// Ajoute une case dans le menu.

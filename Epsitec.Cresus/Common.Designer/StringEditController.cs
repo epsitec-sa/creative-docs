@@ -282,6 +282,7 @@ namespace Epsitec.Common.Designer
 			if (e.CommandArgs.Length == 0)
 			{
 				Dialogs.BundleName dialog = new Dialogs.BundleName ("CreateStringBundle (\"{0}\")", this.dispatcher);
+				dialog.Owner = this.Window;
 				dialog.Show ();
 			}
 			else if (e.CommandArgs.Length == 1)
@@ -299,6 +300,7 @@ namespace Epsitec.Common.Designer
 			if (e.CommandArgs.Length == 0)
 			{
 				Dialogs.OpenExistingBundle dialog = new Dialogs.OpenExistingBundle ("OpenStringBundle (\"{0}\", {1})", this.dispatcher);
+				dialog.Owner = this.Window;
 				dialog.Show ();
 			}
 			else if (e.CommandArgs.Length == 2)

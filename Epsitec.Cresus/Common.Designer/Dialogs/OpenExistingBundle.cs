@@ -90,7 +90,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			
 			double h = radio.DefaultHeight;
 			
-			radio.Text = "version par défaut";
+			radio.Text = "version par <m>d</m>éfaut";
 			radio.Bounds = new Drawing.Rectangle (0, h*2, 140, h);
 			radio.Group  = "level";
 			radio.Index  = (int) ResourceLevel.Default;
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			radio.ActiveStateChanged += new EventHandler (this.HandleRadioActiveStateChanged);
 			
 			radio = new RadioButton (body);
-			radio.Text = "version traduite, choix de la langue : ";
+			radio.Text = "version <m>t</m>raduite, choix de la langue : ";
 			radio.Bounds = new Drawing.Rectangle (0, h*1, 205, h);
 			radio.Group  = "level";
 			radio.Index  = (int) ResourceLevel.Localised;
@@ -118,7 +118,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.lang_id.Focused += new Support.EventHandler (this.HandleLangIdFocused);
 			
 			radio = new RadioButton (body);
-			radio.Text = "version personnalisée";
+			radio.Text = "version <m>p</m>ersonnalisée";
 			radio.Bounds = new Drawing.Rectangle (0, h*0, 140, h);
 			radio.Group  = "level";
 			radio.Index  = (int) ResourceLevel.Customised;
