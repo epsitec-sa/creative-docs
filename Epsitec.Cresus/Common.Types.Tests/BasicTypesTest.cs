@@ -36,9 +36,9 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (et.CheckConstraint ("{Other}"));
 		}
 		
-		[Test] public void CheckCustomEnumType()
+		[Test] public void CheckOpenEnumType()
 		{
-			EnumType et = new CustomEnumType (typeof (MyEnum));
+			EnumType et = new OpenEnumType (typeof (MyEnum));
 			
 			Assert.AreEqual (5, et.Values.Length);
 			Assert.IsTrue (et.IsCustomizable);
