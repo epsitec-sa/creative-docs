@@ -94,6 +94,11 @@
                     AssemblyName = "Common.IO"
                     HintPath = "..\..\..\..\..\Epsitec.Cresus\Common.IO\bin\Debug\Common.IO.dll"
                 />
+                <Reference
+                    Name = "Common.Support"
+                    AssemblyName = "Common.Support"
+                    HintPath = "..\..\..\..\..\Epsitec.Cresus\Common.Support\bin\Debug\Common.Support.dll"
+                />
             </References>
         </Build>
         <Files>

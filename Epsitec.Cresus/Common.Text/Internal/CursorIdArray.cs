@@ -248,19 +248,6 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		public void ProcessRemovalCleanup(CursorInfo[] removed)
-		{
-			//	Supprime les curseurs spécifiés de notre table.
-			
-			if (removed != null)
-			{
-				for (int i = 0; i < removed.Length; i++)
-				{
-					this.Remove (removed[i].CursorId);
-				}
-			}
-		}
-		
 		public void ProcessMigration(int origin, ref CursorIdArray destination)
 		{
 			//	Migre des curseurs situés après la position indiquée vers

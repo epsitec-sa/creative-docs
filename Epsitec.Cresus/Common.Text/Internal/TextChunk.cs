@@ -93,12 +93,10 @@ namespace Epsitec.Common.Text.Internal
 			
 			this.length += length;
 			
-			//	TODO: support pour le undo
-			
 			this.cursors.ProcessInsertion (position, length);
 		}
 		
-		public void RemoveText(int position, int length, int abs_origin, bool removal_continuation, out CursorInfo[] infos)
+		public void DeleteText(int position, int length, int abs_origin, bool removal_continuation, out CursorInfo[] infos)
 		{
 			//	Supprime le texte commençant à la position indiquée et comprenant
 			//	'length' caractères.
@@ -122,10 +120,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			this.length -= length;
 			
-			//	TODO: support pour le undo
-			
 			this.cursors.ProcessRemoval (position, length, abs_origin, removal_continuation, out infos);
-			this.cursors.ProcessRemovalCleanup (infos);
 			
 			if (this.acc_markers != 0)
 			{

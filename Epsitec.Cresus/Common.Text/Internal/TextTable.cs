@@ -35,7 +35,7 @@ namespace Epsitec.Common.Text.Internal
 			get
 			{
 				ulong[] buffer = { 0 };
-				this.ReadText (cursor_id, 1, ref buffer, 0);
+				this.ReadText (cursor_id, 1, buffer, 0);
 				return buffer[0];
 			}
 		}
@@ -181,6 +181,11 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			return 0;
+		}
+		
+		public void SetCursorPosition(Internal.CursorId id, int position)
+		{
+			this.MoveCursor (id, position - this.GetCursorPosition (id));
 		}
 		
 		public CursorInfo[] FindCursors(int position, int length)
@@ -364,7 +369,8 @@ namespace Epsitec.Common.Text.Internal
 			this.cursors.InvalidatePositionCache ();
 		}
 		
-		public void RemoveText(Internal.CursorId cursor_id, int length, out CursorInfo[] infos)
+		
+		public void DeleteText(Internal.CursorId cursor_id, int length, out CursorInfo[] infos)
 		{
 			Internal.Cursor cursor = this.cursors.ReadCursor (cursor_id);
 			
@@ -388,7 +394,7 @@ namespace Epsitec.Common.Text.Internal
 				int size = chunk.TextLength;
 				int room = System.Math.Min (length, size - offset);
 				
-				chunk.RemoveText (offset, room, start, removal_continuation, out infos);
+				chunk.DeleteText (offset, room, start, removal_continuation, out infos);
 				
 				if ((infos != null) &&
 					(infos.Length > 0))
@@ -429,12 +435,12 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public int ReadText(Internal.CursorId cursor_id, int length, ref ulong[] buffer)
+		public int ReadText(Internal.CursorId cursor_id, int length, ulong[] buffer)
 		{
-			return this.ReadText (cursor_id, length, ref buffer, 0);
+			return this.ReadText (cursor_id, length, buffer, 0);
 		}
 		
-		public int ReadText(Internal.CursorId cursor_id, int length, ref ulong[] buffer, int offset)
+		public int ReadText(Internal.CursorId cursor_id, int length, ulong[] buffer, int offset)
 		{
 			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
 			
