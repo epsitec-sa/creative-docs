@@ -24,6 +24,7 @@ namespace Epsitec.Common.Designer.Editors
 			this.CreatePropPane ("Command",		new UI.Adapters.StringAdapter ());
 			this.CreatePropPane ("Location",	new UI.Adapters.Num2Adapter ());
 			this.CreatePropPane ("Size",		new UI.Adapters.Num2Adapter ());
+			this.CreatePropPane ("TabIndex",	new UI.Adapters.StringAdapter ());
 		}
 	}
 }
