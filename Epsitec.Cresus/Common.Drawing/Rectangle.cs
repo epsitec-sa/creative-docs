@@ -668,7 +668,7 @@ namespace Epsitec.Common.Drawing
 			double y1 = System.Math.Min (a.y1, b.y1);
 			double y2 = System.Math.Max (a.y2, b.y2);
 			
-			return ((x1 >= x2) || (y1 >= y2)) ? Rectangle.Empty : Rectangle.FromCorners (x1, y1, x2, y2);
+			return ((x1 > x2) || (y1 > y2)) ? Rectangle.Empty : Rectangle.FromCorners (x1, y1, x2, y2);
 		}
 		
 		public static Rectangle Intersection(Rectangle a, Rectangle b)
@@ -683,7 +683,7 @@ namespace Epsitec.Common.Drawing
 			double y1 = System.Math.Max (a.y1, b.y1);
 			double y2 = System.Math.Min (a.y2, b.y2);
 			
-			return ((x1 >= x2) || (y1 >= y2)) ? Rectangle.Empty : Rectangle.FromCorners (x1, y1, x2, y2);
+			return ((x1 > x2) || (y1 > y2)) ? Rectangle.Empty : Rectangle.FromCorners (x1, y1, x2, y2);
 		}
 
 		
