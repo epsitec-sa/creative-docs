@@ -70,7 +70,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public decimal							MinValue
+		public virtual decimal					MinValue
 		{
 			get
 			{
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public decimal							MaxValue
+		public virtual decimal					MaxValue
 		{
 			get
 			{
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public decimal							Resolution
+		public virtual decimal					Resolution
 		{
 			get
 			{
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public decimal Range
+		public virtual decimal					Range
 		{
 			get
 			{
