@@ -82,6 +82,55 @@ namespace Epsitec.Common.Script
 			return buffer.ToString ();
 		}
 		
+		
+		public Method FindMethod(string signature)
+		{
+			foreach (Method method in this.Methods)
+			{
+				if (method.Signature == signature)
+				{
+					return method;
+				}
+			}
+			
+			return null;
+		}
+		
+		
+		public static bool Find(string[] lines, int line, int column, out string method_signature, out int section_id, out int line_id)
+		{
+			method_signature = null;
+			section_id       = -1;
+			line_id          = -1;
+			
+			int i = line;
+			
+			while (i >= 0)
+			{
+				if ((lines[i].StartsWith ("//$SectionBegin=")) &&
+					(section_id == -1))
+				{
+					string arg = lines[i].Substring (16);
+					arg = arg.Substring (0, arg.IndexOf ("$"));
+					
+					Types.Converter.Convert (arg, out section_id);
+					
+					line_id = line - i - 1;
+				}
+				
+				if (lines[i].StartsWith ("//$MethodBegin="))
+				{
+					method_signature = lines[i].Substring (15, lines[i].Length-16);
+					break;
+				}
+				
+				i--;
+			}
+			
+			return line_id >= 0;
+		}
+		
+		
 		private void GenerateConstructor(System.Text.StringBuilder buffer, string name)
 		{
 			buffer.Append ("public ");
@@ -95,6 +144,11 @@ namespace Epsitec.Common.Script
 		
 		private void GenerateDataAccessors(System.Text.StringBuilder buffer)
 		{
+			if (this.values == null)
+			{
+				return;
+			}
+			
 			foreach (Types.IDataValue value in this.values)
 			{
 				buffer.Append ("private ");
@@ -305,24 +359,28 @@ namespace Epsitec.Common.Script
 		
 		private void GenerateScriptMethodBody(System.Text.StringBuilder buffer, Method method)
 		{
-			int section_id = 1;
+			int section_id = 0;
+			
+			string method_signature = method.Signature;
+			
+			buffer.Append ("//$MethodBegin=");
+			buffer.Append (method_signature);
+			buffer.Append ("$\n");
 			
 			foreach (CodeSection section in method.CodeSections)
 			{
 				System.Diagnostics.Debug.Assert (section.CodeType == CodeType.Local);
 				
-				buffer.Append ("// $Section=");
+				buffer.Append ("//$SectionBegin=");
 				buffer.Append (section_id.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append ("$, CodeType is ");
 				buffer.Append (section.CodeType);
 				buffer.Append ("\n");
 				
-				section_id++;
-				
 				switch (section.CodeType)
 				{
 					case CodeType.Local:
-						buffer.Append (System.Utilities.XmlBreakToText (section.Code));
+						buffer.Append (System.Utilities.XmlBreakToText (section.Code).Replace ('\u00A0', ' '));
 						buffer.Append ("\n\n");
 						break;
 					case CodeType.Comment:
@@ -334,7 +392,17 @@ namespace Epsitec.Common.Script
 					default:
 						throw new System.ArgumentException (string.Format ("Code Section type {0} not recognized.", section.CodeType));
 				}
+				
+				buffer.Append ("//$SectionEnd=");
+				buffer.Append (section_id.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append ("$\n");
+				
+				section_id++;
 			}
+			
+			buffer.Append ("//$MethodEnd=");
+			buffer.Append (method_signature);
+			buffer.Append ("$\n");
 		}
 		
 		
@@ -516,6 +584,71 @@ namespace Epsitec.Common.Script
 			}
 			
 			
+			public static string RemoveWaveTag(string text)
+			{
+				for (;;)
+				{
+					int pos = text.IndexOf ("<w");
+					
+					if (pos == -1)
+					{
+						break;
+					}
+					
+					int end = text.IndexOf (">", pos);
+					
+					text = string.Concat (text.Substring (0, pos), text.Substring (end+1));
+				}
+				
+				return text.Replace ("</w>", "");
+			}
+			
+			
+			public void HiliteError(int line, int column, int tag_id)
+			{
+				string clean;
+				
+				clean = this.code.Replace ("<br/>", "\n");
+				
+				if (line == -1)
+				{
+					clean = CodeSection.RemoveWaveTag (clean);
+				}
+				
+				string[] lines = clean.Split ('\n');
+				
+				if ((line >= 0) &&
+					(line < lines.Length))
+				{
+					string text = lines[line];
+					int    len  = System.Utilities.SkipXmlChars (text, column);
+					
+					string before = text.Substring (0, len);
+					string middle = text.Substring (len);
+					string after  = "";
+					
+					for (int i = 0; i < middle.Length; i++)
+					{
+						if ((System.Char.IsLetterOrDigit (middle[i])) ||
+							(middle[i] == '_'))
+						{
+							continue;
+						}
+						
+						after  = middle.Substring (i);
+						middle = middle.Substring (0, i);
+					}
+					
+					text = string.Concat (before, "<w id=\"", tag_id.ToString (System.Globalization.CultureInfo.InvariantCulture), "\">", middle, "</w>", after);
+					
+					lines[line] = text;
+				}
+				
+				clean = string.Join ("<br/>", lines);
+				
+				this.code = clean;
+			}
+			
 			private CodeType					code_type;
 			private string						code;
 		}
@@ -574,6 +707,35 @@ namespace Epsitec.Common.Script
 				get
 				{
 					return this.code_sections;
+				}
+			}
+			
+			public string						Signature
+			{
+				get
+				{
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+					
+					buffer.Append (this.Name);
+					buffer.Append (":");
+					buffer.Append (this.ReturnType.Name);
+					buffer.Append ("(");
+					
+					int i = 0;
+					
+					foreach (ParameterInfo info in this.Parameters)
+					{
+						if (i++ > 0)
+						{
+							buffer.Append (",");
+						}
+						
+						buffer.Append (info.Type.Name);
+					}
+					
+					buffer.Append (")");
+					
+					return buffer.ToString ();
 				}
 			}
 			

@@ -13,13 +13,8 @@ namespace Epsitec.Common.Script
 		
 		[Test] public void CheckSourceGeneration()
 		{
-			Types.IDataValue[]    values  = new Types.IDataValue[1];
 			Common.UI.Data.Record record  = new Epsitec.Common.UI.Data.Record ();
-			Common.UI.Data.Field  field_1 = new Epsitec.Common.UI.Data.Field ("UserName", "anonymous", new Types.StringType ());
-			
-			record.Add (field_1);
-			
-			values[0] = field_1;
+			Types.IDataValue[]    values  = this.CreateValues (out record);
 			
 			Source source = this.CreateSource (values);
 			
@@ -163,12 +158,15 @@ namespace Epsitec.Common.Script
 		{
 			Widgets.Window window = new Widgets.Window ();
 			
+			Common.UI.Data.Record record  = new Epsitec.Common.UI.Data.Record ();
+			Types.IDataValue[]    values  = this.CreateValues (out record);
+			
 			Developer.EditionController controller = new Developer.EditionController ();
 			
 			window.Text       = "CheckDeveloper3";
 			window.ClientSize = new Drawing.Size (600, 400);
 			
-			Source source = this.CreateSource (null);
+			Source source = this.CreateSource (values);
 			
 			controller.Source = source;
 			controller.CreateWidgets (window.Root);
@@ -197,6 +195,20 @@ namespace Epsitec.Common.Script
 			methods[1] = new Source.Method ("Mysterious", Types.VoidType.Default, par_2, code_2);
 			
 			return new Source ("Hello", methods, values, "");
+		}
+		
+		private Types.IDataValue[] CreateValues(out Common.UI.Data.Record record)
+		{
+			record  = new Epsitec.Common.UI.Data.Record ();
+			
+			Types.IDataValue[]    values  = new Types.IDataValue[1];
+			Common.UI.Data.Field  field_1 = new Epsitec.Common.UI.Data.Field ("UserName", "anonymous", new Types.StringType ());
+			
+			record.Add (field_1);
+			
+			values[0] = field_1;
+			
+			return values;
 		}
 	}
 }

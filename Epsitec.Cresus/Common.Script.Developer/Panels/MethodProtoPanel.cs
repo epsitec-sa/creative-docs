@@ -42,6 +42,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 					if (this.text_name != null)
 					{
 						this.text_name.Text = this.method_name;
+						this.text_name.SelectAll ();
 					}
 				}
 			}
@@ -67,10 +68,18 @@ namespace Epsitec.Common.Script.Developer.Panels
 			}
 		}
 
+		public Widget							MethodNameWidget
+		{
+			get
+			{
+				return this.text_name;
+			}
+		}
+		
 		
 		protected override void CreateWidgets(Widget parent)
 		{
-			this.text_name  = new TextField (parent);
+			this.text_name  = new TextFieldEx (parent);
 			this.combo_type = new TextFieldCombo (parent);
 			
 			this.type_info.FillTypeNames (this.combo_type.Items);
@@ -85,6 +94,8 @@ namespace Epsitec.Common.Script.Developer.Panels
 			
 			this.text_name.Anchor         = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.text_name.AnchorMargins  = new Drawing.Margins (width, 0, 0, 0);
+			this.text_name.DefocusAction  = DefocusAction.AutoAcceptOrRejectEdition;
+			this.text_name.ButtonShowCondition = ShowCondition.WhenModified;
 			
 			this.combo_type.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.combo_type.AnchorMargins = new Drawing.Margins (width, 0, this.text_name.Height + 2, 0);
@@ -100,7 +111,11 @@ namespace Epsitec.Common.Script.Developer.Panels
 			Widget.BaseLineAlign (this.combo_type, label_2);
 			
 			this.text_name.TextEdited  += new EventHandler (this.HandleTextNameTextEdited);
+			this.text_name.TextChanged += new EventHandler (this.HandleTextNameTextChanged);
+			
 			this.combo_type.SelectedIndexChanged += new EventHandler (this.HandleComboTypeSelectedIndexChanged);
+			
+			new Widgets.Validators.RegexValidator (this.text_name, Support.RegexFactory.AlphaNumName, false);
 		}
 		
 		
@@ -109,9 +124,15 @@ namespace Epsitec.Common.Script.Developer.Panels
 			this.IsModified = true;
 		}
 		
+		private void HandleTextNameTextChanged(object sender)
+		{
+			this.method_name = this.text_name.Text;
+		}
+		
 		private void HandleComboTypeSelectedIndexChanged(object sender)
 		{
-			this.IsModified = true;
+			this.method_type = this.type_info.GetTypeFromName (this.combo_type.Text);
+			this.IsModified  = true;
 		}
 		
 		
@@ -120,7 +141,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 		
 		protected Helpers.ParameterInfoStore	type_info;
 		
-		protected TextField						text_name;
+		protected TextFieldEx					text_name;
 		protected TextFieldCombo				combo_type;
 	}
 }
