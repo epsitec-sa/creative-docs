@@ -75,9 +75,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Crée le panneau permettant d'éditer la propriété.
-		public override AbstractPanel CreatePanel()
+		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
-			return new PanelList();
+			return new PanelList(drawer);
 		}
 
 		protected int							choice = 0;
