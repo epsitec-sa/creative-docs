@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelDouble permet de choisir un nombre réel.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelDouble : AbstractPanel
 	{
 		public PanelDouble()
