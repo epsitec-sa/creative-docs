@@ -48,15 +48,22 @@ namespace Epsitec.Common.Widgets
 			this.fields[1].Color = Drawing.Color.FromRGB(0,1,0);
 			this.fields[2].Color = Drawing.Color.FromRGB(0,0,1);
 			this.fields[3].Color = Drawing.Color.FromRGB(0.5,0.5,0.5);
+			ToolTip.Default.SetToolTip(this.fields[0], "Rouge");
+			ToolTip.Default.SetToolTip(this.fields[1], "Vert");
+			ToolTip.Default.SetToolTip(this.fields[2], "Bleu");
+			ToolTip.Default.SetToolTip(this.fields[3], "Alpha (transparence)");
 
 			this.fields[4].Color = Drawing.Color.FromRGB(0,0,0);
 			this.fields[4].BackColor = Drawing.Color.FromRGB(0.5,0.5,0.5);
+			ToolTip.Default.SetToolTip(this.fields[4], "Teinte");
 
 			this.fields[5].Color = Drawing.Color.FromRGB(0,0,0);
 			this.fields[5].BackColor = Drawing.Color.FromRGB(1,1,1);
+			ToolTip.Default.SetToolTip(this.fields[5], "Saturation");
 			
 			this.fields[6].Color = Drawing.Color.FromRGB(1,1,1);
 			this.fields[6].BackColor = Drawing.Color.FromRGB(0,0,0);
+			ToolTip.Default.SetToolTip(this.fields[6], "Luminosité");
 
 			this.labels[0].Text = "R";
 			this.labels[1].Text = "V";
@@ -98,8 +105,8 @@ namespace Epsitec.Common.Widgets
 			this.palette[15].Color = Drawing.Color.FromARGB(1.0, 0.0, 0.0, 0.0);
 			
 			this.picker = new Tools.Magnifier.DragSource (this);
-			
 			this.picker.HotColorChanged += new Support.EventHandler (this.HandlePickerHotColorChanged);
+			ToolTip.Default.SetToolTip(this.picker, "Pipette-loupe");
 		}
 		
 		public ColorSelector(Widget embedder) : this()
