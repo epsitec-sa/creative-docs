@@ -142,9 +142,14 @@ namespace Epsitec.Common.UI.Widgets
 			for (int i = 0; i < this.controllers.Length; i++)
 			{
 				Widget view = this.CreateViewWidget (margins);
+				
 				this.controllers[i].CreateUI (view);
 				this.controllers[i].Caption = caption;
+				
 				list.Add (view);
+				
+				view.TabIndex      = i+1;
+				view.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			}
 		}
 		
