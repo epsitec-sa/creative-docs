@@ -21,7 +21,8 @@ namespace Epsitec.Cresus.Database
 		
 		System.Data.IDbCommand NewDbCommand();
 		System.Data.IDataAdapter NewDataAdapter(System.Data.IDbCommand command);
-		System.Data.IDbTransaction BeginTransaction();
+		System.Data.IDbTransaction BeginReadOnlyTransaction();
+		System.Data.IDbTransaction BeginReadWriteTransaction();
 		
 		void ReleaseConnection();
 	}

@@ -11,12 +11,13 @@ namespace Epsitec.Cresus.Database
 	/// Cela permet par exemple à DbInfrastructure de vérifier que l'appelant
 	/// ne crée pas de transactions imbriquées.
 	/// </summary>
-	public class DbTransaction : System.IDisposable, System.Data.IDbTransaction
+	public sealed class DbTransaction : System.IDisposable, System.Data.IDbTransaction, Epsitec.Common.Types.IReadOnly
 	{
-		internal DbTransaction(System.Data.IDbTransaction transaction, DbInfrastructure infrastructure)
+		internal DbTransaction(System.Data.IDbTransaction transaction, DbInfrastructure infrastructure, DbTransactionMode mode)
 		{
 			this.transaction    = transaction;
 			this.infrastructure = infrastructure;
+			this.mode           = mode;
 			
 			this.infrastructure.NotifyBeginTransaction (this);
 		}
@@ -38,6 +39,22 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public bool								IsReadOnly
+		{
+			get
+			{
+				return this.mode == DbTransactionMode.ReadOnly;
+			}
+		}
+		
+		public bool								IsReadWrite
+		{
+			get
+			{
+				return this.mode == DbTransactionMode.ReadWrite;
+			}
+		}
+		
 		
 		#region IDbTransaction Members
 		public void Rollback()
@@ -56,6 +73,7 @@ namespace Epsitec.Cresus.Database
 			this.OnReleased ();
 		}
 
+		
 		public System.Data.IDbConnection		Connection
 		{
 			get
@@ -90,7 +108,7 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion
 		
-		protected virtual void OnReleased()
+		private void OnReleased()
 		{
 			if (this.Released != null)
 			{
@@ -98,9 +116,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		
 		public event EventHandler				Released;
 		
-		protected System.Data.IDbTransaction	transaction;
-		protected DbInfrastructure				infrastructure;
+		private System.Data.IDbTransaction		transaction;
+		private DbInfrastructure				infrastructure;
+		private readonly DbTransactionMode		mode;
 	}
 }

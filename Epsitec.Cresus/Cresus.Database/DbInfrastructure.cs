@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Database
 				
 				this.client_id = 0;
 				
-				this.BootSetupTables (transaction);
+				this.SetupTables (transaction);
 				
 				transaction.Commit ();
 			}
@@ -183,10 +183,31 @@ namespace Epsitec.Cresus.Database
 		
 		public DbTransaction BeginTransaction()
 		{
+			return this.BeginTransaction (DbTransactionMode.ReadWrite);
+		}
+		
+		public DbTransaction BeginTransaction(DbTransactionMode mode)
+		{
 			//	Débute une nouvelle transaction. Ceci n'est possible que si aucune
 			//	autre transaction n'est actuellement en cours sur cette connexion.
 			
-			return new DbTransaction (this.db_abstraction.BeginTransaction (), this);
+			DbTransaction transaction = null;
+			
+			switch (mode)
+			{
+				case DbTransactionMode.ReadOnly:
+					transaction = new DbTransaction (this.db_abstraction.BeginReadOnlyTransaction (), this, mode);
+					break;
+				
+				case DbTransactionMode.ReadWrite:
+					transaction = new DbTransaction (this.db_abstraction.BeginReadWriteTransaction (), this, mode);
+					break;
+				
+				default:
+					throw new System.ArgumentOutOfRangeException ("mode", mode, string.Format ("Transaction mode {0} not accepted.", mode.ToString ()));
+			}
+			
+			return transaction;
 		}
 		
 		
@@ -237,14 +258,14 @@ namespace Epsitec.Cresus.Database
 			table.DefineInternalKey (new DbKey (table_id));
 			table.UpdatePrimaryKeyInfo ();
 			
-			this.BootInsertTableDefRow (transaction, table);
+			this.InsertTableDefRow (transaction, table);
 			
 			//	Crée les lignes de description des colonnes :
 			
 			for (int i = 0; i < table.Columns.Count; i++)
 			{
 				table.Columns[i].DefineInternalKey (new DbKey (column_id + i));
-				this.BootInsertColumnDefRow (transaction, table, table.Columns[i]);
+				this.InsertColumnDefRow (transaction, table, table.Columns[i]);
 			}
 			
 			//	Finalement, il faut créer la table elle-même :
@@ -450,25 +471,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		protected void UpdateColumnRelation(DbTransaction transaction, DbKey source_table_key, DbKey source_column_key, DbKey parent_table_key)
-		{
-			System.Diagnostics.Debug.Assert (transaction != null);
-			
-			System.Diagnostics.Debug.Assert (source_table_key  != null);
-			System.Diagnostics.Debug.Assert (source_column_key != null);
-			System.Diagnostics.Debug.Assert (parent_table_key  != null);
-			
-			Collections.SqlFields fields = new Collections.SqlFields ();
-			Collections.SqlFields conds  = new Collections.SqlFields ();
-			
-			fields.Add (Tags.ColumnRefParent, SqlField.CreateConstant (parent_table_key.Id, DbKey.RawTypeForId));
-
-			DbInfrastructure.AddKeyExtraction (conds, Tags.TableColumnDef, source_column_key);
-			
-			this.sql_builder.UpdateData (Tags.TableColumnDef, fields, conds);
-			this.ExecuteSilent (transaction);
-		}
-		
 		
 		public DbType    CreateDbType(string name, int length, bool is_fixed)
 		{
@@ -531,8 +533,7 @@ namespace Epsitec.Cresus.Database
 			//	Crée la ligne de description du type :
 			
 			type.DefineInternalKey (new DbKey (table_id));
-			
-			this.BootInsertTypeDefRow (transaction, type);
+			this.InsertTypeDefRow (transaction, type);
 			
 			if (type_enum != null)
 			{
@@ -543,7 +544,7 @@ namespace Epsitec.Cresus.Database
 				for (int i = 0; i < enum_values.Length; i++)
 				{
 					enum_values[i].DefineInternalKey (new DbKey (enum_id + i));
-					this.BootInsertEnumValueDefRow (transaction, type, enum_values[i]);
+					this.InsertEnumValueDefRow (transaction, type, enum_values[i]);
 				}
 			}
 		}
@@ -1502,6 +1503,94 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		private void SetupLogger(DbTransaction transaction)
+		{
+			this.logger = new DbLogger ();
+			this.logger.DefineClientId (this.client_id);
+			this.logger.Attach (this, this.internal_tables[Tags.TableLog]);
+			this.logger.FindCurrentLogId (transaction);
+		}
+		
+		private void SetupTables(DbTransaction transaction)
+		{
+			//	Remplit les tables de gestion (CR_*) avec les valeurs par défaut et
+			//	les définitions initiales de la structure interne de la base vide.
+			
+			int log_key_id		= 1;
+			int type_key_id     = 1;
+			int table_key_id    = 1;
+			int column_key_id   = 1;
+			int enum_val_key_id = 1;
+			
+			//	Initialisation partielle de DbLogger (juste ce qu'il faut pour pouvoir
+			//	accéder à this.logger.CurrentId) :
+			
+			this.logger = new DbLogger ();
+			this.logger.DefineClientId (this.client_id);
+			this.logger.DefineLogId (log_key_id++);
+			
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID == 1);
+			
+			//	Il faut commencer par finir d'initialiser les descriptions des types, parce
+			//	que les description des colonnes doivent y faire référence.
+			
+			foreach (DbType type in this.internal_types)
+			{
+				//	Attribue à chaque type interne une clef unique et établit les informations de base
+				//	dans la table de définition des types.
+				
+				type.DefineInternalKey (new DbKey (type_key_id++));
+				this.InsertTypeDefRow (transaction, type);
+			}
+			
+			foreach (DbTable table in this.internal_tables)
+			{
+				//	Attribue à chaque table interne une clef unique et établit les informations de base
+				//	dans la table de définition des tables.
+				
+				table.DefineInternalKey (new DbKey (table_key_id++));
+				table.UpdatePrimaryKeyInfo ();
+				
+				this.InsertTableDefRow (transaction, table);
+				
+				foreach (DbColumn column in table.Columns)
+				{
+					//	Pour chaque colonne de la table, établit les informations de base dans la table de
+					//	définition des colonnes.
+					
+					column.DefineInternalKey (new DbKey (column_key_id++));
+					this.InsertColumnDefRow (transaction, table, column);
+				}
+			}
+			
+			//	Complète encore les informations au sujet des relations :
+			//
+			//	- La description d'une colonne fait référence à la table et à un type.
+			//	- La description d'une valeur d'enum fait référence à un type.
+			//	- La description d'une référence fait elle-même référence à la table
+			//	  source et destination, ainsi qu'à la colonne.
+			
+			this.UpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefTable,  Tags.TableTableDef);
+			this.UpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefType,   Tags.TableTypeDef);
+			this.UpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefParent, Tags.TableTypeDef);
+			this.UpdateColumnRelation (transaction, Tags.TableEnumValDef,  Tags.ColumnRefType,   Tags.TableTypeDef);
+			
+			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableTableDef].InternalKey, table_key_id);
+			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableColumnDef].InternalKey, column_key_id);
+			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableTypeDef].InternalKey, type_key_id);
+			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableEnumValDef].InternalKey, enum_val_key_id);
+			
+			//	On ne peut attacher le DbLogger qu'ici, car avant, les tables et les clefs
+			//	indispensables ne sont pas encore utilisables :
+			
+			this.logger.Attach (this, this.internal_tables[Tags.TableLog]);
+			this.logger.Insert (transaction, new DbLogger.Entry (1, this.client_id));
+			
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID == 1);
+			System.Diagnostics.Debug.Assert (this.NextRowIdInTable (transaction, this.internal_tables[Tags.TableLog].InternalKey) == 2);
+		}
+		
+		
 		protected static void SetCategory(DbColumn[] columns, DbElementCat cat)
 		{
 			for (int i = 0; i < columns.Length; i++)
@@ -1510,6 +1599,191 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		
+		protected void UpdateColumnRelation(DbTransaction transaction, DbKey source_table_key, DbKey source_column_key, DbKey parent_table_key)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			
+			System.Diagnostics.Debug.Assert (source_table_key  != null);
+			System.Diagnostics.Debug.Assert (source_column_key != null);
+			System.Diagnostics.Debug.Assert (parent_table_key  != null);
+			
+			Collections.SqlFields fields = new Collections.SqlFields ();
+			Collections.SqlFields conds  = new Collections.SqlFields ();
+			
+			fields.Add (Tags.ColumnRefParent, SqlField.CreateConstant (parent_table_key.Id, DbKey.RawTypeForId));
+
+			DbInfrastructure.AddKeyExtraction (conds, Tags.TableColumnDef, source_column_key);
+			
+			this.sql_builder.UpdateData (Tags.TableColumnDef, fields, conds);
+			this.ExecuteSilent (transaction);
+		}
+		
+		protected void UpdateColumnRelation(DbTransaction transaction, string src_table_name, string src_column_name, string parent_table_name)
+		{
+			DbTable  source = this.internal_tables[src_table_name];
+			DbTable  parent = this.internal_tables[parent_table_name];
+			DbColumn column = source.Columns[src_column_name];
+			
+			DbKey src_table_key    = source.InternalKey;
+			DbKey src_column_key   = column.InternalKey;
+			DbKey parent_table_key = parent.InternalKey;
+			
+			this.UpdateColumnRelation (transaction, src_table_key, src_column_key, parent_table_key);
+		}
+				
+		
+		protected void InsertTypeDefRow(DbTransaction transaction, DbType type)
+		{
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID > 0);
+			
+			DbTable type_def = this.internal_tables[Tags.TableTypeDef];
+			
+			//	Insère une ligne dans la table de définition des types.
+			
+			Collections.SqlFields fields = new Collections.SqlFields ();
+			
+			fields.Add (type_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, type.InternalKey.Id));
+			fields.Add (type_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, type.InternalKey.IntStatus));
+			fields.Add (type_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
+			fields.Add (type_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, type.Name));
+			fields.Add (type_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTypeFactory.SerializeToXml (type, false)));
+			
+			//	TODO: Initialiser les colonnes descriptives
+			
+			this.sql_builder.InsertData (type_def.CreateSqlName (), fields);
+			this.ExecuteSilent (transaction);
+		}
+		
+		protected void InsertEnumValueDefRow(DbTransaction transaction, DbType type, DbEnumValue value)
+		{
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID > 0);
+			
+			DbTable enum_def = this.internal_tables[Tags.TableEnumValDef];
+			
+			//	Insère une ligne dans la table de définition des énumérations.
+			
+			Collections.SqlFields fields = new Collections.SqlFields ();
+			
+			fields.Add (enum_def.Columns[Tags.ColumnId]	     .CreateSqlField (this.type_converter, value.InternalKey.Id));
+			fields.Add (enum_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, value.InternalKey.IntStatus));
+			fields.Add (enum_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
+			fields.Add (enum_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, value.Name));
+			fields.Add (enum_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbEnumValue.SerializeToXml (value, false)));
+			fields.Add (enum_def.Columns[Tags.ColumnRefType] .CreateSqlField (this.type_converter, type.InternalKey.Id));
+			
+			//	TODO: Initialiser les colonnes descriptives
+			
+			this.sql_builder.InsertData (enum_def.CreateSqlName (), fields);
+			this.ExecuteSilent (transaction);
+		}
+		
+		protected void InsertTableDefRow(DbTransaction transaction, DbTable table)
+		{
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID > 0);
+			
+			DbTable table_def = this.internal_tables[Tags.TableTableDef];
+			
+			//	Insère une ligne dans la table de définition des tables.
+			
+			Collections.SqlFields fields = new Collections.SqlFields ();
+			
+			fields.Add (table_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, table.InternalKey.Id));
+			fields.Add (table_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, table.InternalKey.IntStatus));
+			fields.Add (table_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
+			fields.Add (table_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, table.Name));
+			fields.Add (table_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTable.SerializeToXml (table, false)));
+			fields.Add (table_def.Columns[Tags.ColumnNextId]  .CreateSqlField (this.type_converter, 0));
+			
+			//	TODO: Initialiser les colonnes descriptives
+			
+			this.sql_builder.InsertData (table_def.CreateSqlName (), fields);
+			this.ExecuteSilent (transaction);
+		}
+		
+		protected void InsertColumnDefRow(DbTransaction transaction, DbTable table, DbColumn column)
+		{
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID > 0);
+			
+			DbTable column_def = this.internal_tables[Tags.TableColumnDef];
+			
+			//	Insère une ligne dans la table de définition des colonnes.
+			
+			Collections.SqlFields fields = new Collections.SqlFields ();
+			
+			fields.Add (column_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, column.InternalKey.Id));
+			fields.Add (column_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, column.InternalKey.IntStatus));
+			fields.Add (column_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
+			fields.Add (column_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, column.Name));
+			fields.Add (column_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbColumn.SerializeToXml (column, false)));
+			fields.Add (column_def.Columns[Tags.ColumnRefTable].CreateSqlField (this.type_converter, table.InternalKey.Id));
+			fields.Add (column_def.Columns[Tags.ColumnRefType] .CreateSqlField (this.type_converter, column.Type.InternalKey.Id));
+			
+			//	TODO: Initialiser les colonnes descriptives
+			
+			this.sql_builder.InsertData (column_def.CreateSqlName (), fields);
+			this.ExecuteSilent (transaction);
+		}
+		
+		
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.logger != null)
+				{
+					this.logger.Detach ();
+					this.logger = null;
+				}
+				
+				if (this.db_abstraction != null)
+				{
+					this.db_abstraction.Dispose ();
+					
+					System.Diagnostics.Debug.Assert (this.db_abstraction.IsConnectionOpen == false);
+					
+					this.db_abstraction = null;
+					this.sql_builder = null;
+					this.sql_engine = null;
+					this.type_converter = null;
+				}
+				
+				System.Diagnostics.Debug.Assert (this.sql_builder == null);
+				System.Diagnostics.Debug.Assert (this.sql_engine == null);
+				System.Diagnostics.Debug.Assert (this.type_converter == null);
+			}
+		}
+		
+		
+		#region Initialisation
+		protected void InitialiseDatabaseAbstraction()
+		{
+			this.types = new TypeHelper (this);
+			
+			this.db_abstraction = DbFactory.FindDbAbstraction (this.db_access);
+			
+			this.sql_builder = this.db_abstraction.SqlBuilder;
+			this.sql_engine  = this.db_abstraction.SqlEngine;
+			
+			System.Diagnostics.Debug.Assert (this.sql_builder != null);
+			System.Diagnostics.Debug.Assert (this.sql_engine != null);
+			
+			this.type_converter = this.db_abstraction.Factory.TypeConverter;
+			
+			System.Diagnostics.Debug.Assert (this.type_converter != null);
+			
+			this.sql_builder.AutoClear = true;
+		}
+		#endregion
+		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		#endregion
 		
 		#region BootHelper Class
 		public class BootHelper
@@ -1523,9 +1797,9 @@ namespace Epsitec.Cresus.Database
 			
 			public void CreateTableTableDef()
 			{
-				DbTypeCache types   = this.infrastructure.types;
-				DbTable     table   = new DbTable (Tags.TableTableDef);
-				DbColumn[]  columns = new DbColumn[]
+				TypeHelper types   = this.infrastructure.types;
+				DbTable    table   = new DbTable (Tags.TableTableDef);
+				DbColumn[] columns = new DbColumn[]
 					{
 						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
 						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
@@ -1542,9 +1816,9 @@ namespace Epsitec.Cresus.Database
 			
 			public void CreateTableColumnDef()
 			{
-				DbTypeCache types   = this.infrastructure.types;
-				DbTable     table   = new DbTable (Tags.TableColumnDef);
-				DbColumn[]  columns = new DbColumn[]
+				TypeHelper types   = this.infrastructure.types;
+				DbTable    table   = new DbTable (Tags.TableColumnDef);
+				DbColumn[] columns = new DbColumn[]
 					{
 						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
 						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
@@ -1563,9 +1837,9 @@ namespace Epsitec.Cresus.Database
 			
 			public void CreateTableTypeDef()
 			{
-				DbTypeCache types   = this.infrastructure.types;
-				DbTable     table   = new DbTable (Tags.TableTypeDef);
-				DbColumn[]  columns = new DbColumn[]
+				TypeHelper types   = this.infrastructure.types;
+				DbTable    table   = new DbTable (Tags.TableTypeDef);
+				DbColumn[] columns = new DbColumn[]
 					{
 						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
 						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
@@ -1581,9 +1855,9 @@ namespace Epsitec.Cresus.Database
 			
 			public void CreateTableEnumValDef()
 			{
-				DbTypeCache types   = this.infrastructure.types;
-				DbTable     table   = new DbTable (Tags.TableEnumValDef);
-				DbColumn[]  columns = new DbColumn[]
+				TypeHelper types   = this.infrastructure.types;
+				DbTable    table   = new DbTable (Tags.TableEnumValDef);
+				DbColumn[] columns = new DbColumn[]
 					{
 						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
 						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
@@ -1600,9 +1874,9 @@ namespace Epsitec.Cresus.Database
 			
 			public void CreateTableLog()
 			{
-				DbTypeCache types   = this.infrastructure.types;
-				DbTable     table   = new DbTable (Tags.TableLog);
-				DbColumn[]  columns = new DbColumn[]
+				TypeHelper types   = this.infrastructure.types;
+				DbTable    table   = new DbTable (Tags.TableLog);
+				DbColumn[] columns = new DbColumn[]
 					{
 						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
 						new DbColumn (Tags.ColumnDateTime,	  types.DateTime,	 Nullable.No,  DbColumnClass.Data)
@@ -1637,273 +1911,10 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion
 		
-		
-		protected void BootInsertLogRow(DbTransaction transaction, DbId id, long date_time)
+		#region TypeHelper Class
+		protected class TypeHelper
 		{
-			DbTable log_table = this.internal_tables[Tags.TableLog];
-			
-			//	Phase d'initialisation de la base : insère une ligne dans la table de logging.
-			
-			Collections.SqlFields fields = new Collections.SqlFields ();
-			
-			fields.Add (log_table.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, id));
-			fields.Add (log_table.Columns[Tags.ColumnDateTime].CreateSqlField (this.type_converter, date_time));
-			
-			this.sql_builder.InsertData (log_table.CreateSqlName (), fields);
-			this.ExecuteSilent (transaction);
-		}
-		
-		protected void BootInsertTypeDefRow(DbTransaction transaction, DbType type)
-		{
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID > 0);
-			
-			DbTable type_def = this.internal_tables[Tags.TableTypeDef];
-			
-			//	Phase d'initialisation de la base : insère une ligne dans la table de définition des
-			//	types. Les colonnes descriptives (pour l'utilisateur) ne sont pas initialisées.
-			
-			Collections.SqlFields fields = new Collections.SqlFields ();
-			
-			fields.Add (type_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, type.InternalKey.Id));
-			fields.Add (type_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, type.InternalKey.IntStatus));
-			fields.Add (type_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
-			fields.Add (type_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, type.Name));
-			fields.Add (type_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTypeFactory.SerializeToXml (type, false)));
-			
-			this.sql_builder.InsertData (type_def.CreateSqlName (), fields);
-			this.ExecuteSilent (transaction);
-		}
-		
-		protected void BootInsertEnumValueDefRow(DbTransaction transaction, DbType type, DbEnumValue value)
-		{
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID > 0);
-			
-			DbTable enum_def = this.internal_tables[Tags.TableEnumValDef];
-			
-			//	Phase d'initialisation de la base : insère une ligne dans la table de définition des
-			//	énumérations. Les colonnes descriptives (pour l'utilisateur) ne sont pas initialisées.
-			
-			Collections.SqlFields fields = new Collections.SqlFields ();
-			
-			fields.Add (enum_def.Columns[Tags.ColumnId]	     .CreateSqlField (this.type_converter, value.InternalKey.Id));
-			fields.Add (enum_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, value.InternalKey.IntStatus));
-			fields.Add (enum_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
-			fields.Add (enum_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, value.Name));
-			fields.Add (enum_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbEnumValue.SerializeToXml (value, false)));
-			fields.Add (enum_def.Columns[Tags.ColumnRefType] .CreateSqlField (this.type_converter, type.InternalKey.Id));
-			
-			this.sql_builder.InsertData (enum_def.CreateSqlName (), fields);
-			this.ExecuteSilent (transaction);
-		}
-		
-		protected void BootInsertTableDefRow(DbTransaction transaction, DbTable table)
-		{
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID > 0);
-			
-			DbTable table_def = this.internal_tables[Tags.TableTableDef];
-			
-			//	Phase d'initialisation de la base : insère une ligne dans la table de définition des
-			//	tables. Les colonnes descriptives (pour l'utilisateur) ne sont pas initialisées.
-			
-			Collections.SqlFields fields = new Collections.SqlFields ();
-			
-			fields.Add (table_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, table.InternalKey.Id));
-			fields.Add (table_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, table.InternalKey.IntStatus));
-			fields.Add (table_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
-			fields.Add (table_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, table.Name));
-			fields.Add (table_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTable.SerializeToXml (table, false)));
-			fields.Add (table_def.Columns[Tags.ColumnNextId]  .CreateSqlField (this.type_converter, 0));
-			
-			this.sql_builder.InsertData (table_def.CreateSqlName (), fields);
-			this.ExecuteSilent (transaction);
-		}
-		
-		protected void BootInsertColumnDefRow(DbTransaction transaction, DbTable table, DbColumn column)
-		{
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID > 0);
-			
-			DbTable column_def = this.internal_tables[Tags.TableColumnDef];
-			
-			//	Phase d'initialisation de la base : insère une ligne dans la table de définition des
-			//	colonnes. Les colonnes descriptives (pour l'utilisateur) ne sont pas initialisées.
-			
-			Collections.SqlFields fields = new Collections.SqlFields ();
-			
-			fields.Add (column_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, column.InternalKey.Id));
-			fields.Add (column_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, column.InternalKey.IntStatus));
-			fields.Add (column_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
-			fields.Add (column_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, column.Name));
-			fields.Add (column_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbColumn.SerializeToXml (column, false)));
-			fields.Add (column_def.Columns[Tags.ColumnRefTable].CreateSqlField (this.type_converter, table.InternalKey.Id));
-			fields.Add (column_def.Columns[Tags.ColumnRefType] .CreateSqlField (this.type_converter, column.Type.InternalKey.Id));
-			
-			this.sql_builder.InsertData (column_def.CreateSqlName (), fields);
-			this.ExecuteSilent (transaction);
-		}
-		
-		protected void BootUpdateColumnRelation(DbTransaction transaction, string src_table_name, string src_column_name, string parent_table_name)
-		{
-			Collections.SqlFields fields = new Collections.SqlFields ();
-			Collections.SqlFields conds  = new Collections.SqlFields ();
-			
-			DbTable  source = this.internal_tables[src_table_name];
-			DbTable  parent = this.internal_tables[parent_table_name];
-			DbColumn column = source.Columns[src_column_name];
-			
-			fields.Add (Tags.ColumnRefParent, SqlField.CreateConstant (parent.InternalKey.Id, DbKey.RawTypeForId));
-
-			DbInfrastructure.AddKeyExtraction (conds, Tags.TableColumnDef, column.InternalKey);
-			
-			this.sql_builder.UpdateData (Tags.TableColumnDef, fields, conds);
-			this.ExecuteSilent (transaction);
-		}
-		
-		protected void SetupLogger(DbTransaction transaction)
-		{
-			this.logger = new DbLogger ();
-			this.logger.DefineClientId (this.client_id);
-			this.logger.Attach (this, this.internal_tables[Tags.TableLog]);
-			this.logger.FindCurrentLogId (transaction);
-		}
-		
-		protected void BootSetupTables(DbTransaction transaction)
-		{
-			int log_key_id		= 1;
-			int type_key_id     = 1;
-			int table_key_id    = 1;
-			int column_key_id   = 1;
-			int enum_val_key_id = 1;
-			
-			//	Initialisation partielle de DbLogger (juste ce qu'il faut pour pouvoir
-			//	accéder à this.logger.CurrentId) :
-			
-			this.logger = new DbLogger ();
-			this.logger.DefineClientId (this.client_id);
-			this.logger.DefineLogId (log_key_id++);
-			
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID == 1);
-			
-			//	Il faut commencer par finir d'initialiser les descriptions des types, parce
-			//	que les description des colonnes doivent y faire référence.
-			
-			foreach (DbType type in this.internal_types)
-			{
-				//	Attribue à chaque type interne une clef unique et établit les informations de base
-				//	dans la table de définition des types.
-				
-				type.DefineInternalKey (new DbKey (type_key_id++));
-				this.BootInsertTypeDefRow (transaction, type);
-			}
-			
-			foreach (DbTable table in this.internal_tables)
-			{
-				//	Attribue à chaque table interne une clef unique et établit les informations de base
-				//	dans la table de définition des tables.
-				
-				table.DefineInternalKey (new DbKey (table_key_id++));
-				table.UpdatePrimaryKeyInfo ();
-				
-				this.BootInsertTableDefRow (transaction, table);
-				
-				foreach (DbColumn column in table.Columns)
-				{
-					//	Pour chaque colonne de la table, établit les informations de base dans la table de
-					//	définition des colonnes.
-					
-					column.DefineInternalKey (new DbKey (column_key_id++));
-					this.BootInsertColumnDefRow (transaction, table, column);
-				}
-			}
-			
-			//	Complète encore les informations au sujet des relations :
-			//
-			//	- La description d'une colonne fait référence à la table et à un type.
-			//	- La description d'une valeur d'enum fait référence à un type.
-			//	- La description d'une référence fait elle-même référence à la table
-			//	  source et destination, ainsi qu'à la colonne.
-			
-			this.BootUpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefTable,  Tags.TableTableDef);
-			this.BootUpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefType,   Tags.TableTypeDef);
-			this.BootUpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefParent, Tags.TableTypeDef);
-			this.BootUpdateColumnRelation (transaction, Tags.TableEnumValDef,  Tags.ColumnRefType,   Tags.TableTypeDef);
-			
-			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableTableDef].InternalKey, table_key_id);
-			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableColumnDef].InternalKey, column_key_id);
-			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableTypeDef].InternalKey, type_key_id);
-			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableEnumValDef].InternalKey, enum_val_key_id);
-			
-			//	On ne peut attacher le DbLogger qu'ici, car avant, les tables et les clefs
-			//	indispensables ne sont pas encore utilisables :
-			
-			this.logger.Attach (this, this.internal_tables[Tags.TableLog]);
-			this.logger.Insert (transaction, new DbLogger.Entry (1, this.client_id));
-			
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID == 1);
-			System.Diagnostics.Debug.Assert (this.NextRowIdInTable (transaction, this.internal_tables[Tags.TableLog].InternalKey) == 2);
-		}
-		
-		
-		#region Initialisation
-		protected void InitialiseDatabaseAbstraction()
-		{
-			this.types = new DbTypeCache (this);
-			
-			this.db_abstraction = DbFactory.FindDbAbstraction (this.db_access);
-			
-			this.sql_builder = this.db_abstraction.SqlBuilder;
-			this.sql_engine  = this.db_abstraction.SqlEngine;
-			
-			System.Diagnostics.Debug.Assert (this.sql_builder != null);
-			System.Diagnostics.Debug.Assert (this.sql_engine != null);
-			
-			this.type_converter = this.db_abstraction.Factory.TypeConverter;
-			
-			System.Diagnostics.Debug.Assert (this.type_converter != null);
-			
-			this.sql_builder.AutoClear = true;
-		}
-		#endregion
-		
-		#region IDisposable Members
-		public void Dispose()
-		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
-		}
-		#endregion
-		
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				if (this.logger != null)
-				{
-					this.logger.Detach ();
-					this.logger = null;
-				}
-				
-				if (this.db_abstraction != null)
-				{
-					this.db_abstraction.Dispose ();
-					
-					System.Diagnostics.Debug.Assert (this.db_abstraction.IsConnectionOpen == false);
-					
-					this.db_abstraction = null;
-					this.sql_builder = null;
-					this.sql_engine = null;
-					this.type_converter = null;
-				}
-				
-				System.Diagnostics.Debug.Assert (this.sql_builder == null);
-				System.Diagnostics.Debug.Assert (this.sql_engine == null);
-				System.Diagnostics.Debug.Assert (this.type_converter == null);
-			}
-		}
-		
-		
-		protected class DbTypeCache
-		{
-			public DbTypeCache(DbInfrastructure infrastructure)
+			public TypeHelper(DbInfrastructure infrastructure)
 			{
 				this.infrastructure = infrastructure;
 			}
@@ -2085,6 +2096,7 @@ namespace Epsitec.Cresus.Database
 			protected DbTypeString				str_type_dict_key;
 			protected DbTypeString				str_type_dict_value;
 		}
+		#endregion
 		
 		
 		protected DbAccess						db_access;
@@ -2094,8 +2106,8 @@ namespace Epsitec.Cresus.Database
 		protected ISqlEngine					sql_engine;
 		protected ITypeConverter				type_converter;
 		
-		protected DbTypeCache					types;
-		protected DbLogger						logger;
+		private TypeHelper						types;
+		private DbLogger						logger;
 		
 		protected Collections.DbTables			internal_tables = new Collections.DbTables ();
 		protected Collections.DbTypes			internal_types  = new Collections.DbTypes ();

@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Database
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
 			System.Data.IDataReader reader;
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			reader = command.ExecuteReader ();
 			int result = 0;
 			for (;;)
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			
 			using (System.Data.IDataReader reader = command.ExecuteReader ())
 			{
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 
 			command.Transaction.Commit ();
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 
 			command.Transaction.Commit ();
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 			
 			command.Transaction.Commit ();
@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 			
 			command.Transaction.Commit ();
@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			command.ExecuteNonQuery ();
 			command.Transaction.Commit ();
 			//command.Transaction.Dispose ();
@@ -305,7 +305,7 @@ namespace Epsitec.Cresus.Database
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			System.Console.Out.WriteLine ("SQL Command Type: {0}", command_type.ToString ());
 			
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			
 			sql_engine.Execute (command, command_type, sql_builder.CommandCount);
 			
@@ -328,7 +328,7 @@ namespace Epsitec.Cresus.Database
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			System.Console.Out.WriteLine ("SQL Command Type: {0}", command_type.ToString ());
 			
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			
 			sql_engine.Execute (command, command_type, sql_builder.CommandCount);
 			
@@ -353,7 +353,7 @@ namespace Epsitec.Cresus.Database
 			command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 				
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			try
 			{
 				command.ExecuteNonQuery ();
@@ -388,7 +388,7 @@ namespace Epsitec.Cresus.Database
 			
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 			
@@ -421,7 +421,7 @@ namespace Epsitec.Cresus.Database
 			command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 			
 			command.Transaction.Commit ();
@@ -451,7 +451,7 @@ namespace Epsitec.Cresus.Database
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 
 			DataSet data_set = new DataSet ();
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
 
 			Assert.AreEqual (typeof (int),          data_set.Tables[0].Columns[0].DataType);

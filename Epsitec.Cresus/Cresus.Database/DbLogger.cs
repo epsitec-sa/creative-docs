@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Database
 	/// La classe DbLogger gère le journal des modifications (CR_LOG).
 	/// </summary>
 	
-	public sealed class DbLogger : IAttachable
+	internal sealed class DbLogger : IAttachable
 	{
 		public DbLogger()
 		{
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (this.infrastructure != null);
 			System.Diagnostics.Debug.Assert (this.table != null);
 			
-			this.log_id = this.infrastructure.NextRowIdInTable (transaction, this.table_key);
+			this.log_id = this.infrastructure.NextRowIdInTable (transaction, this.table_key) - 1;
 			
 			System.Diagnostics.Debug.Assert (this.log_id > 0);
 			System.Diagnostics.Debug.Assert (this.log_id < DbId.LocalRange);
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion
 		
-		
+		#region Entry Class
 		internal class Entry
 		{
 			public Entry() : this (0, 0)
@@ -132,6 +132,7 @@ namespace Epsitec.Cresus.Database
 			private DbId						id;
 			private System.DateTime				date_time;
 		}
+		#endregion
 		
 		private DbInfrastructure				infrastructure;
 		private DbTable							table;

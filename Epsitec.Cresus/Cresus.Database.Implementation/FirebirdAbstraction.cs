@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				System.Collections.ArrayList list = new System.Collections.ArrayList ();
 				
-				using (System.Data.IDbTransaction transaction = this.BeginTransaction ())
+				using (System.Data.IDbTransaction transaction = this.BeginReadOnlyTransaction ())
 				{
 					using (System.Data.IDbCommand command = this.NewDbCommand ())
 					{
@@ -353,10 +353,26 @@ namespace Epsitec.Cresus.Database.Implementation
 			return new FbDataAdapter (fb_command);
 		}
 		
-		public System.Data.IDbTransaction BeginTransaction()
+		public System.Data.IDbTransaction BeginReadOnlyTransaction()
 		{
 			this.EnsureConnection ();
-			return this.db_connection.BeginTransaction (System.Data.IsolationLevel.RepeatableRead);
+			
+			FbTransactionOptions options = FbTransactionOptions.Concurrency |
+				/**/					   FbTransactionOptions.Wait |
+				/**/					   FbTransactionOptions.Read;
+			
+			return this.db_connection.BeginTransaction (options);
+		}
+		
+		public System.Data.IDbTransaction BeginReadWriteTransaction()
+		{
+			this.EnsureConnection ();
+			
+			FbTransactionOptions options = FbTransactionOptions.Concurrency |
+				/**/					   FbTransactionOptions.Wait |
+				/**/					   FbTransactionOptions.Write;
+			
+			return this.db_connection.BeginTransaction (options);
 		}
 		
 		public void ReleaseConnection()

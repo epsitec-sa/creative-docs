@@ -274,6 +274,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DbTransactionMode.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DbType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Database
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			System.Data.IDbCommand command = db_abstraction.NewDbCommand ();
 			
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadOnlyTransaction ();
 			command.CommandType = System.Data.CommandType.Text;
 			command.CommandText = "SELECT CURRENT_TIMESTAMP FROM RDB$DATABASE;";
 			
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Database
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			System.Data.IDbCommand command = db_abstraction.NewDbCommand ();
 			
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadOnlyTransaction ();
 			command.CommandType = System.Data.CommandType.Text;
 			command.CommandText = "SELECT * FROM RDB$DATABASE;";
 			
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Database
 			{
 				using (System.Data.IDbCommand command = db_abstraction.NewDbCommand ())
 				{
-					using (System.Data.IDbTransaction transaction = db_abstraction.BeginTransaction ())
+					using (System.Data.IDbTransaction transaction = db_abstraction.BeginReadWriteTransaction ())
 					{
 						command.Transaction = transaction;
 						command.CommandType = System.Data.CommandType.Text;
@@ -128,6 +128,33 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual (-1, name.IndexOf (' '), string.Format ("Name contains white space: ({0})", name));
 				System.Console.Out.WriteLine ("Table : " + name);
 			}
+		}
+		
+		[Test] public void CheckReadOnlyTransaction()
+		{
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
+			string error_message = "";
+			
+			try
+			{
+				using (System.Data.IDbCommand command = db_abstraction.NewDbCommand ())
+				{
+					using (System.Data.IDbTransaction transaction = db_abstraction.BeginReadOnlyTransaction ())
+					{
+						command.Transaction = transaction;
+						command.CommandType = System.Data.CommandType.Text;
+						command.CommandText = "CREATE TABLE X_TABLE_1(FIELD VARCHAR(50));";
+						command.ExecuteNonQuery ();
+						transaction.Commit ();
+					}
+				}
+			}
+			catch (System.Exception e)
+			{
+				error_message = e.Message;
+			}
+			
+			Assertion.Assert (error_message.IndexOf ("attempted update during read-only transaction") > 0);
 		}
 		
 		[Test] public void CheckDebugDumpRegisteredDbAbstractions ()

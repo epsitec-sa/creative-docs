@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Database
 			
 			//	lecture des résultats
 			DataSet data_set = new DataSet();
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadOnlyTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
 
 			int n = this.DumpDataSet (data_set); 
@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Database
 			
 			//	lecture des résultats
 			DataSet data_set = new DataSet();
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadOnlyTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
 
 			int n = this.DumpDataSet (data_set);
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Database
 			
 			//	lecture des résultats
 			DataSet data_set = new DataSet();
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadOnlyTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
 
 			int n = this.DumpDataSet (data_set);
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Database
 			
 			//	lecture des résultats
 			DataSet data_set = new DataSet();
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadOnlyTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
 
 			int n = this.DumpDataSet (data_set);
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Database
 			
 			//	lecture des résultats
 			DataSet data_set = new DataSet();
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadOnlyTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
 
 			int n = this.DumpDataSet (data_set);
@@ -343,7 +343,7 @@ namespace Epsitec.Cresus.Database
 			
 			//	lecture des résultats
 			DataSet data_set = new DataSet();
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadOnlyTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
 
 			int n = this.DumpDataSet (data_set);
@@ -403,7 +403,7 @@ namespace Epsitec.Cresus.Database
 			
 			//	lecture des résultats
 			DataSet data_set = new DataSet();
-			command.Transaction = db_abstraction.BeginTransaction ();
+			command.Transaction = db_abstraction.BeginReadOnlyTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
 
 			int n = this.DumpDataSet (data_set);
