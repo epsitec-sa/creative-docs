@@ -11,6 +11,9 @@ Ce qu'il reste à faire dans "Database"
 	indépendants de SQL, ou alors ajouter un ensemble de méthodes dans
 	DbInfrastructure pour créer un objet SqlSelect ad hoc.
 	
+	>>> DbSelectCondition est un premier pas dans cette direction;
+	>>> peut-être est-il suffisant pour les besoins courants ?
+	
 	Voir par exemple DbRichCommandTest pour un exemple de ce qui est
 	fait actuellement manuellement, mais qui pourrait être déplacé dans
 	la logique de DbInfrastructure.

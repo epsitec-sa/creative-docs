@@ -686,7 +686,6 @@ namespace Epsitec.Common.Drawing
 		{
 			try
 			{
-				System.Threading.Thread.Sleep (30000);
 				Agg.Library.TrapZeroPointer ();
 			}
 			catch (System.Exception ex)
