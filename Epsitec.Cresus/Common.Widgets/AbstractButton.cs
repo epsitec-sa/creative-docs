@@ -48,15 +48,10 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.MouseEnter:
-					break;
-				
 				case MessageType.MouseDown:
-					break;
-				
 				case MessageType.MouseUp:
-					break;
-				
 				case MessageType.MouseLeave:
+				case MessageType.MouseMove:
 					break;
 				
 				case MessageType.KeyPress:
@@ -70,13 +65,21 @@ namespace Epsitec.Common.Widgets
 					{
 						this.isKeyboardPressed = true;
 						this.OnShortcutPressed();
+						break;
 					}
 					
-					break;
+					return;
 				
 				case MessageType.KeyUp:
-					this.isKeyboardPressed = false;
-					break;
+					if (this.isKeyboardPressed)
+					{
+						this.isKeyboardPressed = false;
+						break;
+					}
+					return;
+				
+				default:
+					return;
 			}
 			
 			message.Consumer = this;

@@ -3592,6 +3592,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public void DispatchDummyMouseMoveEvent()
+		{
+			Window window = this.Window;
+			
+			if (window != null)
+			{
+				window.DispatchMessage (Message.CreateDummyMouseMoveEvent ());
+			}
+		}
+		
 		public void MessageHandler(Message message)
 		{
 			Drawing.Point point = message.Cursor;

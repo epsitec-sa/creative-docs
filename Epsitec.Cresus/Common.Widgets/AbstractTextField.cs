@@ -279,9 +279,14 @@ namespace Epsitec.Common.Widgets
 		// Sélectione tous les caractéres.
 		public void SelectAll()
 		{
+			this.SelectAll(false);
+		}
+		
+		public virtual void SelectAll(bool silent)
+		{
 			this.cursorFrom = 0;
 			this.cursorTo   = this.Text.Length;
-			this.OnCursorChanged();
+			this.OnCursorChanged(silent);
 		}
 
 		protected override void UpdateTextLayout()
@@ -713,6 +718,7 @@ namespace Epsitec.Common.Widgets
 		protected override void OnDefocused()
 		{
 			TextField.blinking = null;
+			this.SelectAll(true);
 			base.OnDefocused();
 		}
 
@@ -747,11 +753,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnCursorChanged()
+		protected void OnCursorChanged()
+		{
+			this.OnCursorChanged (false);
+		}
+		
+		protected virtual void OnCursorChanged(bool silent)
 		{
 			// Ne génère rien pour l'instant...
 			
-			this.CursorScroll();
+			if (silent == false)
+			{
+				this.CursorScroll();
+			}
+			
 			this.ResetCursor();
 			this.Invalidate();
 		}
