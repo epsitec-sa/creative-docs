@@ -494,7 +494,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		#region EditWidget class
+		#region EditWidget Class
 		/// <summary>
 		/// La classe EditWidget est utilisée comme conteneur pour les widgets en cours
 		/// d'édition. C'est elle qui gère la navigation au moyen de TAB.
@@ -809,15 +809,15 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.edit_widgets[i] == null)
 					{
+						System.Type type = this.host.Columns[i].EditionWidgetType;
+						
 						if (this.host.edition_add_rows > 0)
 						{
-							this.edit_widgets[i] = new TextFieldMulti (this);
+							type = typeof (TextFieldMulti);
 						}
-						else
-						{
-							this.edit_widgets[i] = new TextField (this);
-							this.edit_widgets[i].TextFieldStyle = style;
-						}
+						
+						this.edit_widgets[i] = System.Activator.CreateInstance (type, new object[] { this } ) as AbstractTextField;
+						this.edit_widgets[i].TextFieldStyle = style;
 						
 						this.Attach (this.edit_widgets[i], i);
 					}
@@ -955,7 +955,7 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		#region Header class
+		#region Header Class
 		[Support.SuppressBundleSupport] public class Header : Widget
 		{
 			public Header(EditArray host)
@@ -1076,6 +1076,7 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		#region Controller Class
 		public class Controller
 		{
 			public Controller(EditArray host, string name)
@@ -1420,7 +1421,9 @@ namespace Epsitec.Common.Widgets
 			protected ToolTip					tips;
 			Support.Data.ITextArrayStore		store;
 		}
+		#endregion
 		
+		#region SelfStore Class
 		public class SelfStore : Support.Data.ITextArrayStore
 		{
 			public SelfStore(ScrollArray host)
@@ -1527,7 +1530,7 @@ namespace Epsitec.Common.Widgets
 			
 			protected ScrollArray				host;
 		}
-		
+		#endregion
 		
 		public event Support.EventHandler		EditTextChanged;
 		

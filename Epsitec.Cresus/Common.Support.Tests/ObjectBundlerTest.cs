@@ -267,6 +267,33 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (@"<ref target=""a#&lt;b&gt;"" />", widget.GetProperty (ObjectBundler.GetPropNameForXmlRef ("PropC")));
 		}
 		
+		[Test] public void CheckCopyObject()
+		{
+			A a1 = new A ();
+			A a2 = new A ();
+			C c1 = new C ();
+			C c2 = new C ();
+			
+			a1.Value = "A1";
+			c1.Value = "C1-Value";
+			c1.Extra = "C1-Extra";
+			
+			ObjectBundler bundler = new ObjectBundler ();
+			
+			Assert.IsTrue (bundler.CopyObject (a1, a2));
+			Assert.IsTrue (bundler.CopyObject (a1, c2));
+			Assert.AreEqual ("A1", a2.Value);
+			Assert.AreEqual ("A1", c2.Value);
+			
+			Assert.IsTrue (bundler.CopyObject (c1, a2));
+			Assert.IsTrue (bundler.CopyObject (c1, c2));
+			
+			Assert.AreEqual ("C1-Value", a2.Value);
+			Assert.AreEqual ("C1-Value", c2.Value);
+			Assert.AreEqual ("C1-Extra", c2.Extra);
+		}
+		
+		
 		private static bool		register_window_cancel = true;
 		private Widgets.Window	test_window;
 		
@@ -375,6 +402,80 @@ namespace Epsitec.Common.Support
 			{
 				return base.GetValue ().ToLower ();
 			}
+		}
+		
+		private class C : IBundleSupport
+		{
+			public C()
+			{
+			}
+			
+			
+			[Bundle] public string				Value
+			{
+				get
+				{
+					return this.GetValue ();
+				}
+				set
+				{
+					this.value = value;
+				}
+			}
+			
+			[Bundle] public string				Extra
+			{
+				get
+				{
+					return this.extra;
+				}
+				set
+				{
+					this.extra = value;
+				}
+			}
+			
+			
+			protected virtual string GetValue()
+			{
+				return this.value;
+			}
+			
+			
+			#region IBundleSupport Members
+			public void SerializeToBundle(ObjectBundler bundler, ResourceBundle bundle)
+			{
+			}
+
+			public void RestoreFromBundle(ObjectBundler bundler, ResourceBundle bundle)
+			{
+			}
+			
+			public string						BundleName
+			{
+				get
+				{
+					return null;
+				}
+			}
+
+			public string PublicClassName
+			{
+				get
+				{
+					return this.GetType ().Name;
+				}
+			}
+			#endregion
+			
+			#region IDisposable Members
+			public void Dispose()
+			{
+			}
+			#endregion
+			
+			protected string					value = "";
+			protected string					extra = "";
 		}
 	}
 }

@@ -259,7 +259,7 @@ namespace Epsitec.Common.Support
 					
 					System.Diagnostics.Debug.Assert (prop_info != null);
 					
-					while (this.CopyProperty (source, copy, prop_info) == false)
+					while (this.CopyProperty (source, copy, prop_info, prop_info) == false)
 					{
 						type = type.BaseType;
 						
@@ -279,6 +279,58 @@ namespace Epsitec.Common.Support
 			}
 			
 			return copy;
+		}
+		
+		public bool CopyObject(object source, object destination)
+		{
+			IBundleSupport src_obj = source as IBundleSupport;
+			IBundleSupport dst_obj = destination as IBundleSupport;
+			
+			if ((src_obj == null) ||
+				(dst_obj == null))
+			{
+				return false;
+			}
+			
+			foreach (MemberInfo member_info in source.GetType ().GetMembers (BindingFlags.Public | BindingFlags.Instance))
+			{
+				//	Passe en revue tous les membres publics. Ceux qui sont des propriétés
+				//	vont nécessiter une attention toute particulière...
+				
+				if (member_info.MemberType == MemberTypes.Property)
+				{
+					System.Type  type_src      = source.GetType ();
+					System.Type  type_dst      = destination.GetType ();
+					PropertyInfo prop_info_src = member_info as PropertyInfo;
+					PropertyInfo prop_info_dst = type_dst.GetProperty (prop_info_src.Name, prop_info_src.PropertyType);
+					
+					if (prop_info_dst == null)
+					{
+						continue;
+					}
+					
+					System.Diagnostics.Debug.Assert (prop_info_src != null);
+					
+					while (this.CopyProperty (source, destination, prop_info_src, prop_info_dst) == false)
+					{
+						type_src = type_src.BaseType;
+						
+						if (type_src == null)
+						{
+							break;
+						}
+						
+						prop_info_src = type_src.GetProperty (prop_info_src.Name, prop_info_src.PropertyType);
+						
+						if (prop_info_src == null)
+						{
+							break;
+						}
+					}
+				}
+			}
+			
+			return true;
 		}
 		
 		public object CreateFromBundle(ResourceBundle bundle)
@@ -873,24 +925,27 @@ namespace Epsitec.Common.Support
 		
 		
 		
-		public bool CopyProperty(object source, object copy, PropertyInfo prop_info)
+		public bool CopyProperty(object source, object copy, PropertyInfo prop_info_src, PropertyInfo prop_info_dst)
 		{
-			if ((prop_info.CanRead) &&
-				(prop_info.CanWrite) &&
-				(prop_info.IsDefined (typeof (BundleAttribute), true)))
+			if ((prop_info_src.CanRead) &&
+				(prop_info_dst.CanWrite) &&
+				(prop_info_src.IsDefined (typeof (BundleAttribute), true)) &&
+				(prop_info_dst.IsDefined (typeof (BundleAttribute), true)))
 			{
+				System.Diagnostics.Debug.Assert (prop_info_src.PropertyType == prop_info_dst.PropertyType);
+				
 				//	C'est bien une propriété qui peut être lue et écrite, et qui a l'attribut
 				//	[Bundle] défini.
 				
 				//	TODO: gérer les propriétés de type non-string (collections, etc.)
 				
-				object        data = prop_info.GetValue (source, null);
-				TypeConverter conv = TypeDescriptor.GetConverter (prop_info.PropertyType);
+				object        data = prop_info_src.GetValue (source, null);
+				TypeConverter conv = TypeDescriptor.GetConverter (prop_info_src.PropertyType);
 				string        text = conv.ConvertToInvariantString (data);
 				
 				data = conv.ConvertFromInvariantString (text);
 				
-				prop_info.SetValue (copy, data, null);
+				prop_info_dst.SetValue (copy, data, null);
 				
 				return true;
 			}
@@ -1005,6 +1060,14 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public static ObjectBundler					Default
+		{
+			get
+			{
+				return ObjectBundler.default_bundler;
+			}
+		}
+		
 		public static System.Xml.XmlDocument		XmlDocument
 		{
 			get
@@ -1022,6 +1085,7 @@ namespace Epsitec.Common.Support
 		
 		protected static Hashtable					classes;
 		protected static System.Xml.XmlDocument		xmldoc = new System.Xml.XmlDocument ();
+		protected static ObjectBundler				default_bundler = new ObjectBundler ();
 		
 		protected Hashtable							obj_to_bundle;			//	lien entre noms de bundles et objets
 		protected string							default_prefix;

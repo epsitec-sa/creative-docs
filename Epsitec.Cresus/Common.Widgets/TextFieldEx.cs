@@ -10,12 +10,12 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldEx()
 		{
-			this.accept_cancel_behavior = new Helpers.AcceptCancelBehavior (this);
+			this.accept_reject_behavior = new Helpers.AcceptRejectBehavior (this);
 			
-			this.accept_cancel_behavior.CancelClicked += new Support.EventHandler(this.HandleAcceptCancelCancelClicked);
-			this.accept_cancel_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptCancelAcceptClicked);
+			this.accept_reject_behavior.RejectClicked += new Support.EventHandler(this.HandleAcceptRejectRejectClicked);
+			this.accept_reject_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptRejectAcceptClicked);
 			
-			this.ShowAcceptCancel (true);
+			this.ShowAcceptReject (true);
 		}
 		
 		public TextFieldEx(Widget embedder) : this ()
@@ -28,10 +28,10 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.accept_cancel_behavior.CancelClicked -= new Support.EventHandler(this.HandleAcceptCancelCancelClicked);
-				this.accept_cancel_behavior.AcceptClicked -= new Support.EventHandler(this.HandleAcceptCancelAcceptClicked);
+				this.accept_reject_behavior.RejectClicked -= new Support.EventHandler(this.HandleAcceptRejectRejectClicked);
+				this.accept_reject_behavior.AcceptClicked -= new Support.EventHandler(this.HandleAcceptRejectAcceptClicked);
 				
-				this.accept_cancel_behavior = null;
+				this.accept_reject_behavior = null;
 			}
 			
 			base.Dispose (disposing);
@@ -39,16 +39,16 @@ namespace Epsitec.Common.Widgets
 
 		
 		
-		public bool CancelEdition()
+		public bool AcceptEdition()
 		{
-			this.OnEditionCancelled ();
-			return false;
+			this.OnEditionAccepted ();
+			return true;
 		}
 		
-		public bool ValidateEdition()
+		public bool RejectEdition()
 		{
-			this.OnEditionValidated ();
-			return true;
+			this.OnEditionRejected ();
+			return false;
 		}
 		
 		
@@ -71,46 +71,46 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateButtonGeometry ();
 			
-			if (this.accept_cancel_behavior != null)
+			if (this.accept_reject_behavior != null)
 			{
-				this.accept_cancel_behavior.UpdateButtonGeometry ();
+				this.margins.Right = this.accept_reject_behavior.DefaultWidth;
+				this.accept_reject_behavior.UpdateButtonGeometry ();
 			}
 		}
 
 		
-		protected virtual void ShowAcceptCancel(bool show)
+		public void ShowAcceptReject(bool show)
 		{
 			if (this.show_buttons != show)
 			{
 				this.show_buttons = show;
-				
-				if (this.accept_cancel_behavior == null)
-				{
-					return;
-				}
-				
-				if (show)
-				{
-					this.margins.Right = this.accept_cancel_behavior.DefaultWidth;
-					this.accept_cancel_behavior.SetVisible (true);
-				}
-				else
-				{
-					this.margins.Right = 0;
-					this.accept_cancel_behavior.SetVisible (false);
-				}
+				this.SetAcceptRejectVisible (show);
+			}
+		}
+		
+		protected virtual void SetAcceptRejectVisible(bool show)
+		{
+			if (this.accept_reject_behavior == null)
+			{
+				return;
+			}
+			
+			if (this.accept_reject_behavior.IsVisible != show)
+			{
+				this.accept_reject_behavior.SetVisible (show);
 				
 				this.UpdateButtonGeometry ();
 				this.UpdateButtonEnable ();
 				this.UpdateTextLayout ();
+				this.UpdateMouseCursor (this.MapRootToClient (Message.State.LastPosition));
 			}
 		}
 		
 		protected virtual void UpdateButtonEnable()
 		{
-			if (this.accept_cancel_behavior != null)
+			if (this.accept_reject_behavior != null)
 			{
-				this.accept_cancel_behavior.SetEnabledOk (this.IsValid);
+				this.accept_reject_behavior.SetEnabledOk (this.IsValid);
 			}
 		}
 		
@@ -121,41 +121,47 @@ namespace Epsitec.Common.Widgets
 			this.UpdateButtonEnable ();
 		}
 
-		
-		protected virtual void OnEditionValidated()
+		protected override void OnFocusChanged()
 		{
-			if (this.EditionValidated != null)
+			base.OnFocusChanged ();
+			
+			this.SetAcceptRejectVisible (this.IsFocusedFlagSet && this.show_buttons);
+		}
+		
+		protected virtual void OnEditionAccepted()
+		{
+			if (this.EditionAccepted != null)
 			{
-				this.EditionValidated (this);
+				this.EditionAccepted (this);
 			}
 		}
 		
-		protected virtual void OnEditionCancelled()
+		protected virtual void OnEditionRejected()
 		{
-			if (this.EditionCancelled != null)
+			if (this.EditionRejected != null)
 			{
-				this.EditionCancelled (this);
+				this.EditionRejected (this);
 			}
 		}
 		
 		
-		private void HandleAcceptCancelAcceptClicked(object sender)
+		private void HandleAcceptRejectAcceptClicked(object sender)
 		{
-			System.Diagnostics.Debug.Assert (sender == this.accept_cancel_behavior);
-			this.ValidateEdition ();
+			System.Diagnostics.Debug.Assert (sender == this.accept_reject_behavior);
+			this.AcceptEdition ();
 		}		
 		
-		private void HandleAcceptCancelCancelClicked(object sender)
+		private void HandleAcceptRejectRejectClicked(object sender)
 		{
-			System.Diagnostics.Debug.Assert (sender == this.accept_cancel_behavior);
-			this.OnEditionCancelled ();
+			System.Diagnostics.Debug.Assert (sender == this.accept_reject_behavior);
+			this.RejectEdition ();
 		}		
 		
 		
-		public event Support.EventHandler		EditionValidated;
-		public event Support.EventHandler		EditionCancelled;
+		public event Support.EventHandler		EditionAccepted;
+		public event Support.EventHandler		EditionRejected;
 		
 		protected bool							show_buttons;
-		protected Helpers.AcceptCancelBehavior	accept_cancel_behavior;
+		protected Helpers.AcceptRejectBehavior	accept_reject_behavior;
 	}
 }

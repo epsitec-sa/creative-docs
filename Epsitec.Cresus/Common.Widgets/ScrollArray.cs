@@ -2211,6 +2211,7 @@ invalid:	row    = -1;
 		public event Support.EventHandler		SelectedIndexChanged;
 		
 		
+		#region ColumnDefinition Class
 		public class ColumnDefinition : System.IDisposable, Types.IReadOnly
 		{
 			internal ColumnDefinition(ScrollArray host, int column, double width, Drawing.ContentAlignment alignment)
@@ -2236,6 +2237,8 @@ invalid:	row    = -1;
 				this.header_slider.DragMoved   += new MessageEventHandler (this.host.HandleSliderDragMoved);
 				this.header_slider.DragEnded   += new MessageEventHandler (this.host.HandleSliderDragEnded);
 				this.header_slider.SetEmbedder (this.host.header);
+				
+				this.edition_widget_type = typeof (TextField);
 			}
 			
 			
@@ -2319,6 +2322,17 @@ invalid:	row    = -1;
 				}
 			}
 			
+			public System.Type					EditionWidgetType
+			{
+				get
+				{
+					return this.edition_widget_type;
+				}
+				set
+				{
+					this.edition_widget_type = value;
+				}
+			}
 			
 			internal void DefineColumnIndex(int index)
 			{
@@ -2384,8 +2398,9 @@ invalid:	row    = -1;
 			
 			private HeaderButton				header_button;
 			private HeaderSlider				header_slider;
+			private System.Type					edition_widget_type;
 		}
-		
+		#endregion
 		
 		
 		protected bool							is_dirty;

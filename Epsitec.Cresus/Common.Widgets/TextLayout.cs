@@ -81,12 +81,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int								MaxTextOffset
+		public int								MaxTextOffset			// offset maximum (position "physique" dans le texte brut)
 		{
 			get { return (this.text == null) ? 0 : this.text.Length; }
 		}
 		
-		public int								MaxTextIndex
+		public int								MaxTextIndex			// index maximum (position "logique", indépendante des tags de formatage)
 		{
 			get { return this.FindIndexFromOffset(this.MaxTextOffset); }
 		}

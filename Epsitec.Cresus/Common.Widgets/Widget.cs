@@ -5436,9 +5436,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnFocusChanged()
+		{
+			if (this.FocusChanged != null)
+			{
+				this.FocusChanged (this);
+			}
+		}
 		
 		protected virtual void OnFocused()
 		{
+			this.OnFocusChanged ();
+			
 			if (this.Focused != null)
 			{
 				this.Focused (this);
@@ -5447,6 +5456,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnDefocused()
 		{
+			this.OnFocusChanged ();
+			
 			if (this.Defocused != null)
 			{
 				this.Defocused (this);
@@ -5562,6 +5573,7 @@ namespace Epsitec.Common.Widgets
 		public event MessageEventHandler			PreProcessing;
 		public event MessageEventHandler			PostProcessing;
 		
+		public event Support.EventHandler			FocusChanged;
 		public event Support.EventHandler			Focused;
 		public event Support.EventHandler			Defocused;
 		public event Support.EventHandler			Selected;

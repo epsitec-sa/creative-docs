@@ -19,10 +19,10 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldExList()
 		{
-			this.accept_cancel_behavior = new Helpers.AcceptCancelBehavior (this);
+			this.accept_reject_behavior = new Helpers.AcceptRejectBehavior (this);
 			
-			this.accept_cancel_behavior.CancelClicked += new Support.EventHandler(this.HandleAcceptCancelCancelClicked);
-			this.accept_cancel_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptCancelAcceptClicked);
+			this.accept_reject_behavior.RejectClicked += new Support.EventHandler(this.HandleAcceptRejectRejectClicked);
+			this.accept_reject_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptRejectAcceptClicked);
 			
 			this.IsReadOnly = true;
 			this.SwitchToState (TextFieldExListMode.Combo);
@@ -38,10 +38,10 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.accept_cancel_behavior.CancelClicked -= new Support.EventHandler(this.HandleAcceptCancelCancelClicked);
-				this.accept_cancel_behavior.AcceptClicked -= new Support.EventHandler(this.HandleAcceptCancelAcceptClicked);
+				this.accept_reject_behavior.RejectClicked -= new Support.EventHandler(this.HandleAcceptRejectRejectClicked);
+				this.accept_reject_behavior.AcceptClicked -= new Support.EventHandler(this.HandleAcceptRejectAcceptClicked);
 				
-				this.accept_cancel_behavior = null;
+				this.accept_reject_behavior = null;
 			}
 			
 			base.Dispose (disposing);
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void StartPassiveEdition(string text)
 		{
-//-			this.CancelEdition ();
+//-			this.RejectEdition ();
 			this.SelectedItem = text;
 			this.SwitchToState (TextFieldExListMode.EditPassive);
 			this.OnEditionStarted ();
@@ -88,27 +88,27 @@ namespace Epsitec.Common.Widgets
 		
 		public void StartActiveEdition(string text)
 		{
-//-			this.CancelEdition ();
+//-			this.RejectEdition ();
 			this.SelectedItem = text;
 			this.SwitchToState (TextFieldExListMode.EditActive);
 			this.OnEditionStarted ();
 		}
 		
-		public bool CancelEdition()
+		public bool RejectEdition()
 		{
 			if ((this.mode == TextFieldExListMode.EditActive) ||
 				(this.mode == TextFieldExListMode.EditPassive))
 			{
 				this.SwitchToState (TextFieldExListMode.Combo);
 				this.SelectedItem = this.saved_item;
-				this.OnEditionCancelled ();
+				this.OnEditionRejected ();
 				return true;
 			}
 			
 			return false;
 		}
 		
-		public bool ValidateEdition()
+		public bool AcceptEdition()
 		{
 			if ((this.mode == TextFieldExListMode.EditActive) ||
 				(this.mode == TextFieldExListMode.EditPassive))
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.SwitchToState (TextFieldExListMode.Combo);
 					this.SelectedItem = this.Text;
-					this.OnEditionValidated ();
+					this.OnEditionAccepted ();
 					return true;
 				}
 			}
@@ -219,9 +219,9 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateButtonGeometry ();
 			
-			if (this.accept_cancel_behavior != null)
+			if (this.accept_reject_behavior != null)
 			{
-				this.accept_cancel_behavior.UpdateButtonGeometry ();
+				this.accept_reject_behavior.UpdateButtonGeometry ();
 			}
 		}
 
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Widgets
 				this.mode = mode;
 				
 				if ((this.button == null) ||
-					(this.accept_cancel_behavior == null))
+					(this.accept_reject_behavior == null))
 				{
 					return;
 				}
@@ -242,15 +242,15 @@ namespace Epsitec.Common.Widgets
 				{
 					//	Montre les boutons de validation et d'annulation :
 					
-					this.margins.Right = this.accept_cancel_behavior.DefaultWidth;
+					this.margins.Right = this.accept_reject_behavior.DefaultWidth;
 					this.button.SetVisible (false);
-					this.accept_cancel_behavior.SetVisible (true);
+					this.accept_reject_behavior.SetVisible (true);
 				}
 				else
 				{
 					this.margins.Right = this.button.DefaultWidth;
 					this.button.SetVisible (true);
-					this.accept_cancel_behavior.SetVisible (false);
+					this.accept_reject_behavior.SetVisible (false);
 				}
 				
 				this.UpdateButtonGeometry ();
@@ -263,10 +263,10 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateButtonEnable()
 		{
-			if ((this.accept_cancel_behavior != null) &&
+			if ((this.accept_reject_behavior != null) &&
 				(this.mode == TextFieldExListMode.EditActive))
 			{
-				this.accept_cancel_behavior.SetEnabledOk (this.IsValid);
+				this.accept_reject_behavior.SetEnabledOk (this.IsValid);
 			}
 		}
 		
@@ -286,19 +286,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnEditionValidated()
+		protected virtual void OnEditionAccepted()
 		{
-			if (this.EditionValidated != null)
+			if (this.EditionAccepted != null)
 			{
-				this.EditionValidated (this);
+				this.EditionAccepted (this);
 			}
 		}
 		
-		protected virtual void OnEditionCancelled()
+		protected virtual void OnEditionRejected()
 		{
-			if (this.EditionCancelled != null)
+			if (this.EditionRejected != null)
 			{
-				this.EditionCancelled (this);
+				this.EditionRejected (this);
 			}
 		}
 		
@@ -333,15 +333,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		private void HandleAcceptCancelAcceptClicked(object sender)
+		private void HandleAcceptRejectAcceptClicked(object sender)
 		{
-			System.Diagnostics.Debug.Assert (sender == this.accept_cancel_behavior);
-			this.ValidateEdition ();
+			System.Diagnostics.Debug.Assert (sender == this.accept_reject_behavior);
+			this.AcceptEdition ();
 		}		
 		
-		private void HandleAcceptCancelCancelClicked(object sender)
+		private void HandleAcceptRejectRejectClicked(object sender)
 		{
-			System.Diagnostics.Debug.Assert (sender == this.accept_cancel_behavior);
+			System.Diagnostics.Debug.Assert (sender == this.accept_reject_behavior);
 			
 			if (this.Items.FindExactMatch (this.saved_item) == -1)
 			{
@@ -356,18 +356,18 @@ namespace Epsitec.Common.Widgets
 				this.SwitchToState (TextFieldExListMode.Combo);
 			}
 			
-			this.OnEditionCancelled ();
+			this.OnEditionRejected ();
 		}		
 		
 		
 		public event Support.EventHandler		EditionStarted;
-		public event Support.EventHandler		EditionValidated;
-		public event Support.EventHandler		EditionCancelled;
+		public event Support.EventHandler		EditionAccepted;
+		public event Support.EventHandler		EditionRejected;
 		
 		protected string						place_holder;
 		protected string						saved_item;
 		
 		protected TextFieldExListMode			mode = TextFieldExListMode.Undefined;
-		protected Helpers.AcceptCancelBehavior	accept_cancel_behavior;
+		protected Helpers.AcceptRejectBehavior	accept_reject_behavior;
 	}
 }

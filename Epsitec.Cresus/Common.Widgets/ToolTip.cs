@@ -275,6 +275,14 @@ namespace Epsitec.Common.Widgets
 		#endregion
 
 		
+		public static ToolTip			Default
+		{
+			get
+			{
+				return ToolTip.defaultToolTip;
+			}
+		}
+
 
 		protected ToolTipBehaviour		behaviour = ToolTipBehaviour.Normal;
 		protected Window				owner;
@@ -290,5 +298,6 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Color			colorFrame;
 		protected System.Collections.Hashtable	hash = new System.Collections.Hashtable();
 		protected int					filterRegisterCount;
+		protected static ToolTip		defaultToolTip = new ToolTip();
 	}
 }

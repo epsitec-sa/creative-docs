@@ -209,7 +209,14 @@ namespace Epsitec.Common.Widgets
 			table.EditionZoneHeight = 1;
 			table.TitleWidget       = header;
 			table.SearchCaption     = @"<b>Search. </b><font size=""90%"">Type in some text below to search for it in the table.</font>";
-			table.Columns[0].EditionWidgetType = typeof (TextFieldEx);
+			
+			TextFieldEx model_field_1 = new TextFieldEx ();
+			
+			model_field_1.ButtonShowCondition = ShowCondition.WhenFocusedFlagSet;
+			model_field_1.DefocusAction       = DefocusAction.ModalIfInvalid;
+			
+			table.Columns[0].EditionWidgetModel = model_field_1;
+			table.EditWidgetsCreated += new EventHandler(this.HandleTableEditWidgetsCreated);
 			
 			header.Caption = @"<font size=""120%"">Search Test.</font>";
 			
@@ -366,6 +373,13 @@ namespace Epsitec.Common.Widgets
 				table.SelectedItem = string.Join (table.Separator.ToString (), search);
 				table.ShowSelected (ScrollShowMode.Center);
 			}
+		}
+		
+		private void HandleTableEditWidgetsCreated(object sender)
+		{
+			EditArray edit = sender as EditArray;
+			
+			IValidator validator = new Validators.RegexValidator (edit.Columns[0].EditionWidget, Support.RegexFactory.ResourceName);
 		}
 		
 		

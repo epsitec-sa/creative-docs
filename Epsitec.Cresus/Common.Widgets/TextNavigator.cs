@@ -84,7 +84,7 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				value = System.Math.Max(value, 0);
-				value = System.Math.Min(value, this.textLayout.Text.Length);
+				value = System.Math.Min(value, this.textLayout.MaxTextIndex);
 
 				if ( value != this.context.CursorFrom || value != this.context.CursorTo )
 				{
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				value = System.Math.Max(value, 0);
-				value = System.Math.Min(value, this.textLayout.Text.Length);
+				value = System.Math.Min(value, this.textLayout.MaxTextIndex);
 
 				if ( value != this.context.CursorFrom )
 				{
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				value = System.Math.Max(value, 0);
-				value = System.Math.Min(value, this.textLayout.Text.Length);
+				value = System.Math.Min(value, this.textLayout.MaxTextIndex);
 
 				if ( value != this.context.CursorTo )
 				{
@@ -156,6 +156,34 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
+		public void SetCursors(int from, int to)
+		{
+			this.SetCursors(from, to, this.CursorAfter);
+		}
+		
+		public void SetCursors(int from, int to, bool after)
+		{
+			// Modifie les deux curseurs en même temps.
+			
+			int len = this.textLayout.MaxTextIndex;
+			
+			from = System.Math.Max(from, 0);
+			from = System.Math.Min(from, len);
+			
+			to = System.Math.Max(to, 0);
+			to = System.Math.Min(to, len);
+			
+			if ( from != this.context.CursorFrom || to != this.context.CursorTo || after != this.context.CursorAfter )
+			{
+				this.context.CursorFrom  = from;
+				this.context.CursorTo    = to;
+				this.context.CursorAfter = after;
+				this.OnCursorScrolled();
+				this.OnCursorChanged(true);
+			}
+		}
+		
 		
 		public bool ProcessMessage(Message message, Drawing.Point pos)
 		{

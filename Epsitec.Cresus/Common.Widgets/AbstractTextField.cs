@@ -80,13 +80,7 @@ namespace Epsitec.Common.Widgets
 						// Ne changeons l'aspect de la souris que si actuellement le curseur se trouve
 						// dans la zone éditable; si la souris se trouve sur un bouton, on ne fait rien.
 						
-						Drawing.Point pos = this.MapRootToClient(Message.State.LastPosition);
-					    
-						if ( pos.X >= this.margins.Left &&
-						     pos.X <= this.Client.Width - this.margins.Right )
-						{
-							this.MouseCursor = this.navigator.IsReadOnly ? MouseCursor.AsArrow : MouseCursor.AsIBeam;
-						}
+						this.UpdateMouseCursor(this.MapRootToClient(Message.State.LastPosition));
 					}
 					
 					this.OnReadOnlyChanged();
@@ -589,6 +583,19 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
+			Shortcut shortcut = Shortcut.FromMessage(message);
+			
+			if ( shortcut != null )
+			{
+				if ( this.ShortcutHandler(shortcut) )
+				{
+					message.Handled   = true;
+					message.Swallowed = true;
+					
+					return;
+				}
+			}
+			
 			this.lastMousePos = pos;
 			pos = this.Client.Bounds.Constrain(pos);
 			pos.X -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
@@ -613,10 +620,8 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						if ( pos.X >= this.margins.Left &&
-						     pos.X <= this.Client.Width - this.margins.Right )
+						if (this.UpdateMouseCursor(pos))
 						{
-							this.MouseCursor = this.navigator.IsReadOnly ? MouseCursor.AsArrow : MouseCursor.AsIBeam;
 							message.Consumer = this;
 						}
 					}
@@ -761,6 +766,13 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnTextChanged()
 		{
+			int from = this.CursorFrom;
+			int to   = this.CursorTo;
+			
+			// En réaffectant les positions de curseurs, on force implicitement une vérification sur
+			// les positions maximales tolérées (grâce à TextNavigator).
+			this.navigator.SetCursors(from, to);
+			
 			// Génère un événement pour dire que le texte a changé (tout changement).
 			this.ResetCursor();
 			this.CursorScroll(false);
@@ -1089,6 +1101,26 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		protected virtual bool UpdateMouseCursor(Drawing.Point pos)
+		{
+			if (this.Client.Bounds.Contains(pos))
+			{
+				if ((pos.X >= this.margins.Left) &&
+					(pos.X <= this.Client.Width - this.margins.Right) &&
+					(this.navigator.IsReadOnly == false))
+				{
+					this.MouseCursor = MouseCursor.AsIBeam;
+				}
+				else
+				{
+					this.MouseCursor = MouseCursor.AsArrow;
+				}
+				
+				return true;
+			}
+			
+			return false;
+		}
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
