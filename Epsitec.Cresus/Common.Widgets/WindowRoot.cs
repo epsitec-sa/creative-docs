@@ -167,8 +167,8 @@ namespace Epsitec.Common.Widgets
 						{
 							Widget focus;
 							
-							if (focused.AboutToLoseFocus (dir, mode) &&
-								find.AboutToGetFocus (dir, mode, out focus))
+							if (focused.InternalAboutToLoseFocus (dir, mode) &&
+								find.InternalAboutToGetFocus (dir, mode, out focus))
 							{
 								focus.SetFocused (true);
 							}
