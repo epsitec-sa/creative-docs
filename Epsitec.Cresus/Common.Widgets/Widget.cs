@@ -1765,7 +1765,11 @@ namespace Epsitec.Common.Widgets
 					this.CreateTextLayout ();
 				}
 				
-				this.text_layout.BreakMode = value;
+				if (this.text_layout.BreakMode != value)
+				{
+					this.text_layout.BreakMode = value;
+					this.Invalidate ();
+				}
 			}
 		}
 		

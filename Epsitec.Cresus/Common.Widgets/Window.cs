@@ -198,6 +198,11 @@ namespace Epsitec.Common.Widgets
 			this.window.MakeFixedSizeWindow ();
 		}
 		
+		public void MakeButtonlessWindow()
+		{
+			this.window.MakeButtonlessWindow ();
+		}
+		
 		public void MakeSecondaryWindow()
 		{
 			this.window.MakeSecondaryWindow ();

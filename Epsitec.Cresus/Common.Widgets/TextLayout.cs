@@ -246,12 +246,12 @@ namespace Epsitec.Common.Widgets
 				this.LayoutSize = new Drawing.Size(TextLayout.Infinite, TextLayout.Infinite);
 				this.Alignment  = Drawing.ContentAlignment.TopLeft;
 
-				Drawing.Point end = this.FindTextEnd();
+				Drawing.Rectangle end = this.StandardRectangle;
 				
 				this.LayoutSize = originalSize;
 				this.Alignment  = originalAlignment;
-
-				return new Drawing.Size(end.X, TextLayout.Infinite-end.Y);
+				
+				return new Drawing.Size(end.Width, end.Height);
 			}
 		}
 		
