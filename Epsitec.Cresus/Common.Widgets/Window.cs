@@ -903,6 +903,15 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected void OnAsyncNotification()
+		{
+			if (this.AsyncNotification != null)
+			{
+				this.AsyncNotification (this);
+			}
+		}
+		
+		
 		internal void OnWindowActivated()
 		{
 			if (this.WindowActivated != null)
@@ -1125,6 +1134,15 @@ namespace Epsitec.Common.Widgets
 			this.window.SendQueueCommand ();
 		}
 		
+		public void AsyncNotify()
+		{
+			if (this.is_async_notification_queued == false)
+			{
+				this.is_async_notification_queued = true;
+				this.window.SendQueueCommand ();
+			}
+		}
+		
 		public void AsyncValidation()
 		{
 			if (this.pending_validation == false)
@@ -1134,10 +1152,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		private void HandleValidationRuleBecameDirty(object sender)
 		{
 			this.AsyncValidation ();
 		}
+		
 		
 		internal void DispatchQueuedCommands()
 		{
@@ -1160,6 +1180,11 @@ namespace Epsitec.Common.Widgets
 			if (this.is_dispose_queued)
 			{
 				this.Dispose ();
+			}
+			if (this.is_async_notification_queued)
+			{
+				this.is_async_notification_queued = false;
+				this.OnAsyncNotification ();
 			}
 		}
 		
@@ -1542,6 +1567,8 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		public event EventHandler				AsyncNotification;
+		
 		public event EventHandler				WindowActivated;
 		public event EventHandler				WindowDeactivated;
 		public event EventHandler				WindowShown;
@@ -1586,6 +1613,7 @@ namespace Epsitec.Common.Widgets
 		private Support.CommandDispatcher		cmd_dispatcher;
 		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();
 		private bool							is_dispose_queued;
+		private bool							is_async_notification_queued;
 		private bool							is_disposed;
 		private bool							pending_validation;
 		

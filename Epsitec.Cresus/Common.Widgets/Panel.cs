@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 23/04/2004
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
@@ -43,6 +43,29 @@ namespace Epsitec.Common.Widgets
 					this.surface_size = value;
 					this.OnSurfaceSizeChanged ();
 				}
+			}
+		}
+		
+		[Bundle]	public bool					IsAutoFitting
+		{
+			get
+			{
+				return this.is_auto_fitting;
+			}
+			set
+			{
+				if (this.is_auto_fitting != value)
+				{
+					this.is_auto_fitting = value;
+					
+					this.OnIsAutoFittingChanged ();
+					
+					if (this.is_auto_fitting)
+					{
+						this.ForceLayout ();
+					}
+				}
+				
 			}
 		}
 		
@@ -118,6 +141,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected override void UpdateMinMaxBasedOnDockedChildren(Widget[] children)
+		{
+			base.UpdateMinMaxBasedOnDockedChildren (children);
+			
+			if (this.is_auto_fitting)
+			{
+				this.SurfaceSize = this.MinSize;
+			}
+		}
+
+		
 		protected virtual void OnSurfaceSizeChanged()
 		{
 			if (this.SurfaceSizeChanged != null)
@@ -126,11 +160,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnIsAutoFittingChanged()
+		{
+			if (this.IsAutoFittingChanged != null)
+			{
+				this.IsAutoFittingChanged (this);
+			}
+		}
+		
 		
 		public event Support.EventHandler		SurfaceSizeChanged;
+		public event Support.EventHandler		IsAutoFittingChanged;
 		
 		
 		protected Drawing.Rectangle				aperture;
 		protected Drawing.Size					surface_size;
+		protected bool							is_auto_fitting;
 	}
 }

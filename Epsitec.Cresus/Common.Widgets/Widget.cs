@@ -2273,7 +2273,7 @@ namespace Epsitec.Common.Widgets
 						this.parent.UpdateChildrenLayout ();
 					}
 					
-					this.OnVisibleChanged ();
+					this.NotifyChangedToVisible ();
 				}
 			}
 			else
@@ -2292,7 +2292,7 @@ namespace Epsitec.Common.Widgets
 						this.parent.UpdateChildrenLayout ();
 					}
 					
-					this.OnVisibleChanged ();
+					this.NotifyChangedToHidden ();
 				}
 			}
 		}
@@ -4457,8 +4457,25 @@ namespace Epsitec.Common.Widgets
 				this.UpdateTextLayout ();
 			}
 			
-			this.UpdateHasDockedChildren (children);
-			this.UpdateMinMaxBasedOnDockedChildren (children);
+			//	La méthode UpdateMinMaxBasedOnDockedChildren peut être utilisée (par Panel, par ex.) pour
+			//	déterminer une nouvelle taille pour le widget. Si on ne désactive pas temporairement le
+			//	layout ici, on bouclerait (peut-être sans fin) :
+			
+			this.suspend_counter++;
+			
+			try
+			{
+				this.UpdateHasDockedChildren (children);
+				this.UpdateMinMaxBasedOnDockedChildren (children);
+			}
+			finally
+			{
+				this.suspend_counter--;
+			}
+			
+			//	Ce n'est que maintenant que l'on va s'occuper de placer les enfants correctement, en
+			//	tenant compte de leur docking et ancrage :
+			
 			this.UpdateDockedChildrenLayout (children);
 			
 			System.Diagnostics.Debug.Assert (this.client_info != null);
@@ -4568,7 +4585,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected void UpdateMinMaxBasedOnDockedChildren(Widget[] children)
+		protected virtual void UpdateMinMaxBasedOnDockedChildren(Widget[] children)
 		{
 			//	Recalcule les tailles minimales et maximales en se basant sur les enfants
 			//	contenus dans le widget.
@@ -5350,6 +5367,22 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.OnParentChanged ();
+			
+			if (this.parent == null)
+			{
+				if (this.IsVisibleFlagSet)
+				{
+					this.NotifyChangedToHidden ();
+				}
+			}
+			else
+			{
+				if ((this.IsVisibleFlagSet) &&
+					(this.IsVisible))
+				{
+					this.NotifyChangedToVisible ();
+				}
+			}
 		}
 		
 		protected void HandleChildrenChanged()
@@ -5735,18 +5768,43 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnVisibleChanged()
+		
+		private void NotifyChangedToHidden()
 		{
-			if (this.VisibleChanged != null)
-			{
-				this.VisibleChanged (this);
-			}
+			this.OnVisibleChanged ();
 			
 			Widget[] children = this.Children.Widgets;
 			
 			foreach (Widget child in children)
 			{
-				child.OnVisibleChanged ();
+				if (child.IsVisibleFlagSet)
+				{
+					child.NotifyChangedToHidden ();
+				}
+			}
+		}
+		
+		private void NotifyChangedToVisible()
+		{
+			this.OnVisibleChanged ();
+			
+			Widget[] children = this.Children.Widgets;
+			
+			foreach (Widget child in children)
+			{
+				if (child.IsVisibleFlagSet)
+				{
+					child.NotifyChangedToVisible ();
+				}
+			}
+		}
+		
+		
+		protected virtual void OnVisibleChanged()
+		{
+			if (this.VisibleChanged != null)
+			{
+				this.VisibleChanged (this);
 			}
 		}
 		
