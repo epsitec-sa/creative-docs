@@ -94,8 +94,8 @@ namespace Epsitec.Common.Support
 			bundle = Resources.GetBundle ("file:complex");
 			
 			Assertion.AssertNotNull (bundle);
-			Assertion.AssertEquals (ResourceFieldType.Data, bundle.GetFieldType ("class"));
-			Assertion.AssertEquals (ResourceFieldType.List, bundle.GetFieldType ("widgets"));
+			Assertion.AssertEquals (ResourceFieldType.Data, bundle["class"].Type);
+			Assertion.AssertEquals (ResourceFieldType.List, bundle["widgets"].Type);
 			Assertion.AssertEquals (3, bundle["widgets"].AsList.Count);
 			Assertion.AssertEquals ("CheckButton", bundle["widgets"].AsList[0].AsBundle["class"].AsString);
 			Assertion.AssertEquals ("RadioButton", bundle["widgets"].AsList[1].AsBundle["class"].AsString);

@@ -153,16 +153,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ResourceBundleXmlDom.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ResourceBundleXmlReader.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "ResourceException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
