@@ -26,7 +26,7 @@ namespace Epsitec.Common.UI.Adapters
 		}
 		
 		
-		public string							Value
+		public System.Enum						Value
 		{
 			get
 			{
@@ -54,19 +54,23 @@ namespace Epsitec.Common.UI.Adapters
 		protected override object ConvertToObject()
 		{
 			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (this.binder.GetDataType ());
-			return converter.ConvertFromString (this.Value);
+			return converter.ConvertFromString (this.Value.ToString ());
 		}
 		
 		protected override bool ConvertFromObject(object data)
 		{
 			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (this.binder.GetDataType ());
-			this.Value = converter.ConvertToString (data);
+			System.Enum value;
+			
+			Types.Converter.Convert (data, this.enum_type.SystemType, out value);
+			
+			this.Value = value;
 			return true;
 		}
 		
 		
 		
-		private string							value;
+		private System.Enum						value;
 		private Types.IEnum						enum_type;
 	}
 }

@@ -79,7 +79,10 @@ namespace Epsitec.Common.UI.Controllers
 					}
 				}
 				
-				this.combo_value.SelectedName = adapter.Value;
+				if (adapter.Value != null)
+				{
+					this.combo_value.SelectedName = adapter.Value.ToString ();
+				}
 			}
 		}
 		
@@ -90,7 +93,13 @@ namespace Epsitec.Common.UI.Controllers
 			if ((adapter != null) &&
 				(this.combo_value != null))
 			{
-				adapter.Value = this.combo_value.SelectedName;
+				string      name = this.combo_value.SelectedName;
+				System.Type type = adapter.EnumType.SystemType;
+				System.Enum value;
+				
+				Types.Converter.Convert (name, type, out value);
+				
+				adapter.Value = value;
 			}
 		}
 		

@@ -71,7 +71,13 @@ namespace Epsitec.Common.UI.Controllers
 			if ((adapter != null) &&
 				(this.data_widget != null))
 			{
-				adapter.Value = this.data_source.Value.ToString ();
+				string      name = this.data_source.Value.ToString ();
+				System.Type type = adapter.EnumType.SystemType;
+				System.Enum value;
+				
+				Types.Converter.Convert (name, type, out value);
+				
+				adapter.Value = value;
 			}
 		}
 		
