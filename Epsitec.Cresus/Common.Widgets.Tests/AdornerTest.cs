@@ -596,12 +596,12 @@ namespace Epsitec.Common.Tests
 			window.WindowClosed += new EventHandler(this.HandleWindowClosed);
 
 			TabBook tb = new TabBook();
-			tb.TabBookStyle = TabBookStyle.Normal;
+			tb.TabBookStyle = TabBookStyle.Right;
 			tb.Name = "TabBook";
 			tb.Location = new Point(10, 10);
 			tb.Size = new Size(380, 280);
 			tb.Text = "";
-			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			tb.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			window.Root.Children.Add(tb);
 			this.tabBook = tb;
 
@@ -746,12 +746,12 @@ namespace Epsitec.Common.Tests
 			window.WindowClosed += new EventHandler(this.HandleWindowClosed);
 
 			TabBook tb = new TabBook();
-			tb.TabBookStyle = TabBookStyle.Normal;
+			tb.TabBookStyle = TabBookStyle.Right;
 			tb.Name = "TabBook";
 			tb.Location = new Point(10, 10);
 			tb.Size = new Size(380, 280);
 			tb.Text = "";
-			tb.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
+			tb.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			window.Root.Children.Add(tb);
 			this.tabBook = tb;
 
@@ -806,7 +806,6 @@ namespace Epsitec.Common.Tests
 #endif
 			};
 
-#if false
 			for ( int i=0 ; i<21 ; i++ )
 			{
 				TabPage page = new TabPage();
@@ -815,16 +814,6 @@ namespace Epsitec.Common.Tests
 				tb.Items.Add(page);
 				if ( i == 20 )  tb.ActivePage = page;
 			}
-#else
-			for ( int i=0 ; i<5 ; i++ )
-			{
-				TabPage page = new TabPage();
-				page.Bounds = inside;
-				page.TabTitle = "Table DbTable.[3.0]...";
-				tb.Items.Add(page);
-				if ( i == 4 )  tb.ActivePage = page;
-			}
-#endif
 
 			window.FocusedWidget = tb;
 
@@ -879,20 +868,20 @@ namespace Epsitec.Common.Tests
 					StaticText text = new StaticText();
 					if ( x != 0 || y != 0 )  text.Text = string.Format("{0}.{1}", y+1, x+1);
 					text.Alignment = ContentAlignment.MiddleCenter;
-					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+					text.Dock = Widgets.DockStyle.Fill;
 					
 					if ( x == 2 && y == 2 )
 					{
 						CheckButton widget = new CheckButton();
 						widget.Text = "surprise";
-						widget.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+						widget.Dock = Widgets.DockStyle.Fill;
 						table[x,y].Insert(widget);
 					}
 					else if ( x == 3 && y == 3 )
 					{
 						Button widget = new Button();
 						widget.Text = "OK";
-						widget.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+						widget.Dock = Widgets.DockStyle.Fill;
 						table[x,y].Insert(widget);
 					}
 					else if ( x != 1 || y != 1 )
@@ -1053,7 +1042,8 @@ namespace Epsitec.Common.Tests
 					text.Text = string.Format("L{0} C{1}", x+1, y+1);
 					text.Alignment = ContentAlignment.MiddleLeft;
 					//text.Alignment = ContentAlignment.BottomLeft;
-					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+					//text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+					text.Dock = Widgets.DockStyle.Fill;
 					table[x,y].Insert(text);
 #endif
 				}
@@ -1274,7 +1264,7 @@ namespace Epsitec.Common.Tests
 			window.Text = "CheckAdornerTab";
 
 			TabBook tb = new TabBook();
-			tb.TabBookStyle = TabBookStyle.Normal;
+			tb.TabBookStyle = TabBookStyle.Right;
 			tb.Name = "TabBook";
 			tb.Location = new Point(10, 10);
 			tb.Size = new Size(380, 280);
@@ -1517,7 +1507,7 @@ namespace Epsitec.Common.Tests
 
 			PanePage p1 = new PanePage();
 			p1.PaneRelativeSize = 10;
-			p1.PaneMinSize = 50;
+			p1.PaneHideSize = 50;
 			p1.PaneElasticity = 0;
 			book.Items.Add(p1);
 
@@ -1531,7 +1521,7 @@ namespace Epsitec.Common.Tests
 
 			PanePage p2 = new PanePage();
 			p2.PaneRelativeSize = 10;
-			p2.PaneMinSize = 50;
+			p2.PaneHideSize = 50;
 			p2.PaneElasticity = 1;
 			book.Items.Add(p2);
 
@@ -1578,7 +1568,7 @@ namespace Epsitec.Common.Tests
 
 			PanePage p2 = new PanePage();
 			p2.PaneRelativeSize = 10;
-//-			p2.PaneAbsoluteSize = 200;
+			p2.PaneAbsoluteSize = 200;
 			p2.PaneMinSize = 50;
 			p2.PaneElasticity = 0;
 			book.Items.Add(p2);
@@ -1602,7 +1592,7 @@ namespace Epsitec.Common.Tests
 			window.Text = "CheckAdornerAntialiasing1";
 			window.WindowClosed += new EventHandler(this.HandleWindowClosed);
 
-			Point pos = new Point(100, 10);
+			Point pos = new Point(100, 10.5);
 			for ( int i=0 ; i<20 ; i++ )
 			{
 				StaticText st = new StaticText();
@@ -1630,14 +1620,12 @@ namespace Epsitec.Common.Tests
 			for ( int i=0 ; i<10 ; i++ )
 			{
 				StaticText st = new StaticText();
-				StaticText co = new StaticText();
 				st.Location = pos;
 				st.Width = 120;
 				st.Text = "Table <i>DbTable.[2.0]</i>...";
 				st.Alignment = ContentAlignment.MiddleCenter;
 				st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
 				window.Root.Children.Add(st);
-				
 				pos.X += 120.0+3.0/7.0;
 			}
 
