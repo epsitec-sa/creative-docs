@@ -6,6 +6,12 @@ namespace Epsitec.Common.Widgets
 		BottomTop,			// 2 panneaux l'un en dessus de l'autre (0=bottom, 1=top)
 	}
 
+	public enum PaneBehaviour
+	{
+		Draft,				// déplace lorsque le bouton est relâché
+		FollowMe,			// suit la souris
+	}
+
 	/// <summary>
 	/// La classe Pane implémente un double conteneur avec frontière déplaçable.
 	/// </summary>
@@ -77,6 +83,20 @@ namespace Epsitec.Common.Widgets
 				{
 					this.slider.PaneButtonStyle = PaneButtonStyle.Horizontal;
 				}
+			}
+		}
+
+		// Comportement lorsque la frontière est déplacée.
+		public PaneBehaviour PaneBehaviour
+		{
+			get
+			{
+				return this.paneBehaviour;
+			}
+
+			set
+			{
+				this.paneBehaviour = value;
 			}
 		}
 
@@ -309,15 +329,39 @@ namespace Epsitec.Common.Widgets
 			Widget slider = sender as Widget;
 			Drawing.Point pos = slider.MapClientToParent(e.Point);
 			
-			switch ( this.paneStyle )
+			switch ( this.paneBehaviour )
 			{
-				case PaneStyle.LeftRight:
-					this.sliderDragPos = pos.X;
-					this.sliderDragDim = this.panes[0].Width;
+				case PaneBehaviour.Draft:
+					this.alphaBar = new AlphaBar();
+					this.alphaBar.Bounds = this.slider.Bounds;
+					this.alphaBar.Parent = this.Window.Root;
+					this.sliderDragRect = this.slider.Bounds;
+
+					switch ( this.paneStyle )
+					{
+						case PaneStyle.LeftRight:
+							this.sliderDragPos = pos.X;
+							this.sliderDragDim = this.panes[0].Width;
+							break;
+						case PaneStyle.BottomTop:
+							this.sliderDragPos = pos.Y;
+							this.sliderDragDim = this.panes[1].Height;
+							break;
+					}
 					break;
-				case PaneStyle.BottomTop:
-					this.sliderDragPos = pos.Y;
-					this.sliderDragDim = this.panes[1].Height;
+
+				case PaneBehaviour.FollowMe:
+					switch ( this.paneStyle )
+					{
+						case PaneStyle.LeftRight:
+							this.sliderDragPos = pos.X;
+							this.sliderDragDim = this.panes[0].Width;
+							break;
+						case PaneStyle.BottomTop:
+							this.sliderDragPos = pos.Y;
+							this.sliderDragDim = this.panes[1].Height;
+							break;
+					}
 					break;
 			}
 		}
@@ -329,21 +373,42 @@ namespace Epsitec.Common.Widgets
 
 			Widget slider = sender as Widget;
 			Drawing.Point pos = slider.MapClientToParent(e.Point);
+			Drawing.Rectangle rect = this.sliderDragRect;
 			
 			System.Diagnostics.Debug.Assert(this.panes.Length == 2);
 			
-			switch ( this.paneStyle )
+			switch ( this.paneBehaviour )
 			{
-				case PaneStyle.LeftRight:
-					this.sliderDragDim += pos.X - this.sliderDragPos;
-					this.sliderDragPos  = pos.X;
-					this.SetDimension(0, this.sliderDragDim);
+				case PaneBehaviour.Draft:
+					switch ( this.paneStyle )
+					{
+						case PaneStyle.LeftRight:
+							rect.Offset(pos.X-this.sliderDragPos, 0);
+							this.alphaBar.Bounds = rect;
+							break;
+						
+						case PaneStyle.BottomTop:
+							rect.Offset(0, pos.Y-this.sliderDragPos);
+							this.alphaBar.Bounds = rect;
+							break;
+					}
 					break;
-				
-				case PaneStyle.BottomTop:
-					this.sliderDragDim -= pos.Y - this.sliderDragPos;
-					this.sliderDragPos  = pos.Y;
-					this.SetDimension(1, this.sliderDragDim);
+
+				case PaneBehaviour.FollowMe:
+					switch ( this.paneStyle )
+					{
+						case PaneStyle.LeftRight:
+							this.sliderDragDim += pos.X - this.sliderDragPos;
+							this.sliderDragPos  = pos.X;
+							this.SetDimension(0, this.sliderDragDim);
+							break;
+					
+						case PaneStyle.BottomTop:
+							this.sliderDragDim -= pos.Y - this.sliderDragPos;
+							this.sliderDragPos  = pos.Y;
+							this.SetDimension(1, this.sliderDragDim);
+							break;
+					}
 					break;
 			}
 			
@@ -353,6 +418,38 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque le slider est fini de déplacer.
 		private void HandleSliderDragEnded(object sender, MessageEventArgs e)
 		{
+			if ( this.flipFlop )  return;
+
+			Widget slider = sender as Widget;
+			Drawing.Point pos = slider.MapClientToParent(e.Point);
+			
+			switch ( this.paneBehaviour )
+			{
+				case PaneBehaviour.Draft:
+					switch ( this.paneStyle )
+					{
+						case PaneStyle.LeftRight:
+							this.sliderDragDim += pos.X - this.sliderDragPos;
+							this.sliderDragPos  = pos.X;
+							this.SetDimension(0, this.sliderDragDim);
+							break;
+						
+						case PaneStyle.BottomTop:
+							this.sliderDragDim -= pos.Y - this.sliderDragPos;
+							this.sliderDragPos  = pos.Y;
+							this.SetDimension(1, this.sliderDragDim);
+							break;
+					}
+
+					this.Window.Root.Children.Remove(this.alphaBar);
+					this.alphaBar = null;
+					break;
+
+				case PaneBehaviour.FollowMe:
+					break;
+			}
+
+			this.OnDimensionChanged();
 		}
 
 		// Bouton flip-flop cliqué.
@@ -400,6 +497,7 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler DimensionChanged;
 
 		protected PaneStyle					paneStyle = PaneStyle.LeftRight;
+		protected PaneBehaviour				paneBehaviour = PaneBehaviour.Draft;
 		protected bool						flipFlop = false;
 		protected Widget[]					panes;
 		protected ArrowButton				button;
@@ -407,8 +505,10 @@ namespace Epsitec.Common.Widgets
 		protected double					sliderDim = 5;
 		protected double					sliderDragPos;
 		protected double					sliderDragDim;
+		protected Drawing.Rectangle			sliderDragRect;
 		protected double[]					hideDimension = new double[2];
 		protected double[]					minDimension = new double[2];
 		protected double[]					maxDimension = new double[2];
+		protected AlphaBar					alphaBar;
 	}
 }

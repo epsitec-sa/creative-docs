@@ -11,11 +11,12 @@ namespace Epsitec.Common.Widgets
 	/// Summary description for TabBook.
 	/// </summary>
 	[Support.SuppressBundleSupport]
-	public class TabBook : AbstractGroup
+	public class TabBook : AbstractGroup, Helpers.IWidgetCollectionHost
 	{
 		public TabBook()
 		{
 			this.type = TabBookStyle.Normal;
+			this.items = new TabPageCollection(this);
 
 			this.arrowLeft = new ArrowButton(this);
 			this.arrowRight = new ArrowButton(this);
@@ -36,6 +37,25 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
+		#region Interface IBundleSupport
+		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
+		{
+			base.RestoreFromBundle (bundler, bundle);
+			
+			System.Collections.IList item_list = bundle.GetFieldBundleList("items");
+			
+			if ( item_list != null )
+			{
+				//	Notre bundle contient une liste de sous-bundles contenant les descriptions des
+				//	items composant le menu.
+				foreach ( Support.ResourceBundle item_bundle in item_list )
+				{
+					TabPage item = bundler.CreateFromBundle(item_bundle) as TabPage;
+					this.Items.Add(item);
+				}
+			}
+		}
+		#endregion
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -68,6 +88,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public TabPageCollection Items
+		{
+			get
+			{
+				return this.items;
+			}
+		}
+
 		public Direction Direction
 		{
 			get
@@ -85,29 +113,6 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.type = value;
-			}
-		}
-		
-		public bool Sorted
-		{
-			get
-			{
-				return this.sorted;
-			}
-
-			set
-			{
-				this.sorted = value;
-			}
-		}
-		
-		public TabPage[] Pages
-		{
-			get
-			{
-				TabPage[] pages = new TabPage[this.tabPages.Count];
-				this.tabPages.CopyTo(pages);
-				return pages;
 			}
 		}
 		
@@ -141,7 +146,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.tabPages.Count;
+				return this.items.Count;
 			}
 		}
 		
@@ -212,91 +217,21 @@ namespace Epsitec.Common.Widgets
 				return max;
 			}
 		}
-		
-		
-		public void Add(TabPage page)
-		{
-			System.Diagnostics.Debug.Assert(page != null);
-			
-			TabBook oldBook = page.Book;
-			
-			if ( oldBook != null )
-			{
-				oldBook.Remove(page);
-			}
-			
-			page.Bounds = this.Inside;
-			page.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-			
-			this.tabPages.Add(page);
-			this.Children.Add(page);
-			this.Children.Add(page.TabButton);  // TabButton fils de TabBook !
-			page.TabButton.Pressed += new MessageEventHandler(this.HandleTabButton);
-			page.RankChanged += new System.EventHandler(this.HandlePageRankChanged);
-			
-			this.SortPages();
-			this.UpdateVisiblePages();
-			this.UpdateTabButtons();
-			this.UpdateArrowButtons();
-		}
 
-		public void Remove(TabPage page)
-		{
-			int index = this.tabPages.IndexOf(page);
-			
-			if ( index < 0 )
-			{
-				throw new System.IndexOutOfRangeException("Page not found");
-			}
-			
-			this.RemoveAt(index);
-		}
-		
-		public void RemoveAt(int index)
-		{
-			TabPage page = this.tabPages[index] as TabPage;
-			
-			this.tabPages.RemoveAt(index);
-			this.Children.Remove(page);
-			
-			if ( this.activePage == page )
-			{
-				if ( index >= this.tabPages.Count )
-				{
-					index --;
-				}
-				
-				if ( index > 0 )
-				{
-					this.activePage = this.tabPages[index] as TabPage;
-				}
-				else
-				{
-					this.activePage = null;
-				}
-			}
-			
-			page.TabButton.Clicked -= new MessageEventHandler(this.HandleTabButton);
-			page.RankChanged -= new System.EventHandler(this.HandlePageRankChanged);
-		}
-		
 		public void Clear()
 		{
-			while ( this.tabPages.Count > 0 )
-			{
-				this.RemoveAt(0);
-			}
+			this.items.Clear();
 		}
 		
 		
 		public TabPage FindPage(int index)
 		{
-			return this.tabPages[index] as TabPage;
+			return this.items[index] as TabPage;
 		}
 		
 		public int FindPage(TabPage page)
 		{
-			return this.tabPages.IndexOf(page);
+			return this.items.IndexOf(page);
 		}
 
 
@@ -306,7 +241,7 @@ namespace Epsitec.Common.Widgets
 			if ( !(sender is TabButton) )  return;
 			TabButton button = sender as TabButton;
 
-			foreach ( TabPage page in this.tabPages )
+			foreach ( TabPage page in this.items )
 			{
 				if ( page.TabButton == button )
 				{
@@ -362,7 +297,7 @@ namespace Epsitec.Common.Widgets
 		// Met à jour la page visible. Toutes les autres sont cachées.
 		protected void UpdateVisiblePages()
 		{
-			foreach ( TabPage page in this.tabPages )
+			foreach ( TabPage page in this.items )
 			{
 				if ( page == this.activePage )  // est-ce la page active ?
 				{
@@ -384,7 +319,7 @@ namespace Epsitec.Common.Widgets
 
 			double begin = 0;
 			double end = 0;
-			foreach ( TabPage page in this.tabPages )
+			foreach ( TabPage page in this.items )
 			{
 				if ( page == this.activePage )  // est-ce la page active ?
 				{
@@ -437,12 +372,14 @@ namespace Epsitec.Common.Widgets
 		// Met à jour tous les boutons des onglets.
 		protected void UpdateTabButtons()
 		{
+			if ( this.items == null )  return;
+
 			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			rect.Bottom = rect.Top-this.TabHeight;
 			rect.Left -= this.scrollOffset;
 
 			this.scrollTotalWidth = 0;
-			foreach ( TabPage page in this.tabPages )
+			foreach ( TabPage page in this.items )
 			{
 				Drawing.Size size = page.TabSize;
 				double len = System.Math.Floor(size.Width+size.Height);
@@ -512,18 +449,8 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected virtual void SortPages()
-		{
-			if ( this.sorted )
-			{
-				this.tabPages.Sort(new TabComparer());
-				this.Invalidate();
-			}
-		}
-		
 		protected virtual void HandlePageRankChanged(object sender, System.EventArgs e)
 		{
-			this.SortPages();
 		}
 		
 		
@@ -562,12 +489,89 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
+		#region IWidgetCollectionHost Members
+		public void NotifyInsertion(Widget widget)
+		{
+			TabPage item = widget as TabPage;
+
+			TabBook oldBook = item.Book;
+			if ( oldBook != null )
+			{
+				oldBook.items.Remove(item);
+			}
+			
+			item.Bounds = this.Inside;
+			item.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+			
+			this.Children.Add(item);
+			this.Children.Add(item.TabButton);  // TabButton fils de TabBook !
+			item.TabButton.Pressed += new MessageEventHandler(this.HandleTabButton);
+			item.RankChanged += new System.EventHandler(this.HandlePageRankChanged);
+			
+			this.UpdateVisiblePages();
+			this.UpdateTabButtons();
+			this.UpdateArrowButtons();
+		}
+
+		public void NotifyRemoval(Widget widget)
+		{
+			TabPage item = widget as TabPage;
+
+			if ( this.activePage == item )
+			{
+				if ( index >= this.items.Count )
+				{
+					index --;
+				}
+				
+				if ( index > 0 )
+				{
+					this.activePage = this.items[index] as TabPage;
+				}
+				else
+				{
+					this.activePage = null;
+				}
+			}
+
+			item.TabButton.Clicked -= new MessageEventHandler(this.HandleTabButton);
+			item.RankChanged -= new System.EventHandler(this.HandlePageRankChanged);
+
+			this.Children.Remove(item);
+		}
+		#endregion
+
+		#region TabPageCollection Class
+		public class TabPageCollection : Helpers.WidgetCollection
+		{
+			public TabPageCollection(TabBook book) : base(book)
+			{
+			}
+			
+			public new TabPage this[int index]
+			{
+				get
+				{
+					return base[index] as TabPage;
+				}
+			}
+			
+			public new TabPage this[string name]
+			{
+				get
+				{
+					return base[name] as TabPage;
+				}
+			}
+		}
+		#endregion
+
+
 		protected TabBookStyle					type = TabBookStyle.Normal;
-		protected System.Collections.ArrayList	tabPages = new System.Collections.ArrayList();
+		protected TabPageCollection				items;
 		protected TabPage						activePage;
 		protected Direction						direction;
 		protected double						tabHeight = 20;
-		protected bool							sorted = false;
 		protected bool							scrollArrow = false;
 		protected ArrowButton					arrowLeft;
 		protected ArrowButton					arrowRight;
