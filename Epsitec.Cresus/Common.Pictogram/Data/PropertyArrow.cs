@@ -344,9 +344,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Crée le panneau permettant d'éditer la propriété.
-		public override AbstractPanel CreatePanel()
+		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
-			return new PanelArrow();
+			return new PanelArrow(drawer);
 		}
 
 
@@ -507,8 +507,8 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			Drawing.Point c = Drawing.Point.Move(p1, p2, distPara);
 			Drawing.Point p = Drawing.Point.Move(c, p2, System.Math.Abs(distPerp));
-			double angle = (distPerp > 0) ? System.Math.PI/2 : -System.Math.PI/2;
-			return Drawing.Transform.RotatePointRad(c, angle, p);
+			double angle = (distPerp > 0) ? 90 : -90;
+			return Drawing.Transform.RotatePointDeg(c, angle, p);
 		}
 
 
