@@ -99,6 +99,54 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public Drawing.Rectangle		WindowBounds
+		{
+			get
+			{
+				double ox = this.MapFromWinFormsX (this.Left);
+				double oy = this.MapFromWinFormsY (this.Bottom);
+				double dx = this.MapFromWinFormsWidth (this.Width);
+				double dy = this.MapFromWinFormsHeight (this.Height);
+				
+				return new Drawing.Rectangle (ox, oy, dx, dy);
+			}
+			set
+			{
+				int ox = this.MapToWinFormsX (value.Left);
+				int oy = this.MapToWinFormsY (value.Top);
+				int dx = this.MapToWinFormsWidth (value.Width);
+				int dy = this.MapToWinFormsHeight (value.Height);
+				
+				this.Bounds = new System.Drawing.Rectangle (ox, oy, dx, dy);
+				this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+			}
+		}
+		
+		public Drawing.Point			WindowLocation
+		{
+			get
+			{
+				return this.WindowBounds.Location;
+			}
+			set
+			{
+				this.WindowBounds = new Drawing.Rectangle (value, this.WindowSize);
+			}
+		}
+		
+		public Drawing.Size				WindowSize
+		{
+			get
+			{
+				return this.WindowBounds.Size;
+			}
+			set
+			{
+				this.WindowBounds = new Drawing.Rectangle (this.WindowLocation, value);
+			}
+		}
+		
+		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -236,6 +284,74 @@ namespace Epsitec.Common.Widgets
 			
 			this.root.Size       = new Drawing.Size (width, height);
 			this.dirty_rectangle = new Drawing.Rectangle (0, 0, width, height);
+		}
+		
+		
+		protected int MapToWinFormsX(double x)
+		{
+			return (int)(x + 0.5);
+		}
+		
+		protected int MapToWinFormsY(double y)
+		{
+			return System.Windows.Forms.SystemInformation.VirtualScreen.Height - (int)(y + 0.5);
+		}
+		
+		protected int MapToWinFormsWidth(double width)
+		{
+			return (int)(width + 0.5);
+		}
+		
+		protected int MapToWinFormsHeight(double height)
+		{
+			return (int)(height + 0.5);
+		}
+		
+		protected double MapFromWinFormsX(int x)
+		{
+			return x;
+		}
+		
+		protected double MapFromWinFormsY(int y)
+		{
+			return System.Windows.Forms.SystemInformation.VirtualScreen.Height - y;
+		}
+		
+		protected double MapFromWinFormsWidth(int width)
+		{
+			return width;
+		}
+		
+		protected double MapFromWinFormsHeight(int height)
+		{
+			return height;
+		}
+		
+		
+		public virtual Drawing.Point MapWindowToScreen(Drawing.Point point)
+		{
+			int x = (int)(point.X + 0.5);
+			int y = this.ClientSize.Height-1 - (int)(point.Y + 0.5);
+			
+			System.Drawing.Point pt = this.PointToScreen (new System.Drawing.Point (x, y));
+			
+			double xx = this.MapFromWinFormsX (pt.X);
+			double yy = this.MapFromWinFormsY (pt.Y)-1;
+			
+			return new Drawing.Point (xx, yy);
+		}
+		
+		public virtual Drawing.Point MapScreenToWindow(Drawing.Point point)
+		{
+			int x = this.MapToWinFormsX (point.X);
+			int y = this.MapToWinFormsY (point.Y)-1;
+			
+			System.Drawing.Point pt = this.PointToClient (new System.Drawing.Point (x, y));
+			
+			double xx = pt.X;
+			double yy = this.ClientSize.Height-1 - pt.Y;
+			
+			return new Drawing.Point (xx, yy);
 		}
 		
 		
