@@ -118,6 +118,7 @@ namespace Epsitec.Common.Widgets
 		Drawing.Color ColorWindow { get; }
 		Drawing.Color ColorDisabled { get; }
 		Drawing.Color ColorBorder { get; }
+		Drawing.Color ColorText(WidgetState state);
 		Drawing.Color ColorTextSliderBorder(bool enabled);
 		Drawing.Color ColorTextFieldBorder(bool enabled);
 

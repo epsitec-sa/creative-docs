@@ -1855,6 +1855,25 @@ namespace Epsitec.Common.Widgets.Adorner
 			get { return this.colorBorder; }
 		}
 
+		public Drawing.Color ColorText(WidgetState state)
+		{
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				if ( (state&WidgetState.Selected) != 0 )
+				{
+					return this.colorCaptionText;
+				}
+				else
+				{
+					return this.colorBlack;
+				}
+			}
+			else
+			{
+				return this.colorDisabled;
+			}
+		}
+
 		public Drawing.Color ColorTextSliderBorder(bool enabled)
 		{
 			return (enabled ? this.colorBorder : this.colorDisabled);

@@ -1082,17 +1082,18 @@ namespace Epsitec.Common.Widgets
 			double posx = rect.Left+this.leftMargin;
 			int rank = 0;
 
+			graphics.SolidRenderer.Color = adorner.ColorText(this.PaintState);
 			while ( posx+0.5 < rect.Right-this.rightMargin )
 			{
 				double h = rect.Height;
 				     if ( rank%10 == 0 )  h *= 1.0;
-				else if ( rank% 5 == 0 )  h *= 0.5;
-				else                      h *= 0.3;
+				else if ( rank% 5 == 0 )  h *= 0.4;
+				else                      h *= 0.2;
 				graphics.AddLine(posx+0.5, rect.Bottom, posx+0.5, rect.Bottom+h);
 
 				if ( rank%10 == 0 )
 				{
-					double value = (posx-rect.Left-this.leftMargin)/this.scale/this.ppm/10;
+					double value = (posx-rect.Left-this.leftMargin)/this.scale/this.ppm;
 					value *= 1000000.0;
 					value = System.Math.Floor(value+0.5);  // arrondi à la 6ème décimale
 					value /= 1000000.0;
@@ -1111,7 +1112,7 @@ namespace Epsitec.Common.Widgets
 				posx += step;
 				rank ++;
 			}
-			graphics.RenderSolid(adorner.ColorTextFieldBorder(this.IsEnabled));
+			graphics.RenderSolid(adorner.ColorText(this.PaintState));
 		}
 
 		protected void PaintTab(Drawing.Graphics graphics)

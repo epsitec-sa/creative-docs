@@ -134,6 +134,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "AbstractRuler.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AbstractScroller.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -270,6 +275,11 @@
                 />
                 <File
                     RelPath = "HMenu.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "HRuler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -515,6 +525,11 @@
                 />
                 <File
                     RelPath = "VMenu.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "VRuler.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
