@@ -390,7 +390,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.h_scroller.Value != this.h_scroller_value)
 			{
-				this.panel_offset.X = this.h_scroller.DoubleValue;
+				this.panel_offset.X = System.Math.Floor (this.h_scroller.DoubleValue);
 				this.UpdatePanelLocation ();
 			}
 		}
@@ -401,7 +401,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.v_scroller.Value != this.v_scroller_value)
 			{
-				this.panel_offset.Y = this.v_scroller.DoubleValue;
+				this.panel_offset.Y = System.Math.Floor (this.v_scroller.DoubleValue);
 				this.UpdatePanelLocation ();
 			}
 		}
