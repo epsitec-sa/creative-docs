@@ -10,6 +10,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.drag_behavior  = new Helpers.DragBehavior (this);
 			this.widget_margins = new Drawing.Margins (3, 3, 3, 3);
+			this.drop_adorner   = new Design.HiliteAdorner ();
 		}
 		
 		public DragSource(Widget embedder) : this()
@@ -55,10 +56,54 @@ namespace Epsitec.Common.Widgets
 			return window;
 		}
 		
-		public Window FindTargetWindow(Drawing.Rectangle bounds)
+		public Window FindTargetWindow(Drawing.Point pos)
 		{
+			Window[] windows = Platform.WindowList.GetVisibleWindows ();
+			
+			for (int i = 0; i < windows.Length; i++)
+			{
+				if (windows[i] is DragWindow)
+				{
+					continue;
+				}
+				
+				if (windows[i].WindowBounds.Contains (pos))
+				{
+					return windows[i];
+				}
+			}
+			
 			return null;
 		}
+		
+		public Widget FindTargetWidget(Window window, Drawing.Point pos)
+		{
+			if (window == null)
+			{
+				return null;
+			}
+			
+			pos = window.Root.MapScreenToClient (pos);
+			Widget hit    = window.Root;
+			Widget widget = window.Root;
+			Widget temp   = window.Root;
+			
+			do
+			{
+				widget = temp;
+				pos    = widget.MapParentToClient (pos);
+				temp   = widget.FindChild (pos, Widget.ChildFindMode.SkipDisabled | Widget.ChildFindMode.SkipHidden);
+				
+				if (widget.PossibleContainer)
+				{
+					hit = widget;
+				}
+			}
+			while (temp != null);
+			
+			return hit;
+		}
+		
 		
 		protected void AttachWidget(Widget widget)
 		{
@@ -112,10 +157,16 @@ namespace Epsitec.Common.Widgets
 		
 		void Helpers.IDragBehaviorHost.OnDragging(DragEventArgs e)
 		{
-			this.drag_location = this.Window.MapWindowToScreen (Message.State.LastPosition) - new Drawing.Point (1, 1);
+			this.drag_cursor = this.Window.MapWindowToScreen (Message.State.LastPosition) - new Drawing.Point (1, 1);
 			this.drag_window.WindowLocation += e.Offset;
 			
-			System.Diagnostics.Debug.WriteLine ("Hot: " + this.drag_location.ToString () + " Wdo: " + this.drag_window.WindowBounds.ToString ());
+			Window target = this.FindTargetWindow (this.drag_cursor);
+			Widget widget = this.FindTargetWidget (target, this.drag_cursor);
+			string title  = widget == null ? "-" : widget.ToString ();
+			
+			this.drop_adorner.Widget = widget;
+			
+			System.Diagnostics.Debug.WriteLine ("Hot: " + this.drag_cursor.ToString () + " Wdo: " + this.drag_window.WindowBounds.ToString () + " => " + title);
 			
 			if (this.Dragging != null)
 			{
@@ -125,6 +176,20 @@ namespace Epsitec.Common.Widgets
 		
 		void Helpers.IDragBehaviorHost.OnDragEnd()
 		{
+			if (this.drop_adorner.Widget != null)
+			{
+				Support.ObjectBundler bundler = new Support.ObjectBundler ();
+				Drawing.Point         offset  = new Drawing.Point (this.widget_margins.Left, this.widget_margins.Bottom);
+				Widget                copy    = bundler.CopyObject (this.widget) as Widget;
+				
+				copy.Location = this.drop_adorner.Widget.MapScreenToClient (this.DragLocation) + offset;
+				copy.Dock     = DockStyle.None;
+				copy.Anchor   = AnchorStyles.Left | AnchorStyles.Top;
+				
+				this.drop_adorner.Widget.Children.Add (copy);
+				this.drop_adorner.Widget = null;
+			}
+			
 			this.drag_window.Hide ();
 			this.drag_window.Dispose ();
 			this.drag_window = null;
@@ -136,8 +201,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected Widget					widget;
 		protected Drawing.Margins			widget_margins;
-		protected Drawing.Point				drag_location;
+		protected Drawing.Point				drag_cursor;
 		protected DragWindow				drag_window;
 		protected Helpers.DragBehavior		drag_behavior;
+		protected Design.HiliteAdorner		drop_adorner;
 	}
 }
