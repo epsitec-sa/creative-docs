@@ -13,8 +13,6 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.AutoEngage;
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
-			
-			this.TextBreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 		}
 		
 		public AbstractButton(Widget embedder) : this()
