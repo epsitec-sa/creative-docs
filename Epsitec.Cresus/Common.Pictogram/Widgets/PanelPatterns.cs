@@ -262,7 +262,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				Cell cell = this.table[1, sel-1];
 				TextField edit = cell.Children[0] as TextField;
 				if ( selectText )  edit.SelectAll();
-				if ( edit.IsVisible)  edit.SetFocused(true);
+				if ( edit.IsVisible)  edit.Focus();
 			}
 
 			this.toolBar.SetEnabled(sel != 0);
