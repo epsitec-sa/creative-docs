@@ -94,6 +94,9 @@ namespace Epsitec.Common.Widgets
 		void PaintStatusItemBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintStatusItemForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 
+		void PaintTagBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Drawing.Color color);
+		void PaintTagForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Drawing.Color color);
+
 		void PaintTooltipBackground(Drawing.Graphics graphics, Drawing.Rectangle rect);
 		void PaintTooltipTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text);
 
@@ -103,8 +106,8 @@ namespace Epsitec.Common.Widgets
 		
 		void PaintFocusBox(Drawing.Graphics graphics, Drawing.Rectangle rect);
 		void PaintTextCursor(Drawing.Graphics graphics, Drawing.Rectangle rect, bool cursorOn);
-		void PaintTextSelectionBackground(Drawing.Graphics graphics, Drawing.Rectangle[] rect);
-		void PaintTextSelectionForeground(Drawing.Graphics graphics, Drawing.Rectangle[] rect);
+		void PaintTextSelectionBackground(Drawing.Graphics graphics, Drawing.Rectangle[] rect, WidgetState state);
+		void PaintTextSelectionForeground(Drawing.Graphics graphics, Drawing.Rectangle[] rect, WidgetState state);
 		
 		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, PaintTextStyle style, Drawing.Color backColor);
 
