@@ -12,17 +12,17 @@ namespace Epsitec.Cresus.DataLayer
 		{
 		}
 		
-		public void Initialise(DataClass data_class, string binder_name)
+		public DataType(string binder_name)
 		{
-			this.data_class  = data_class;
+			this.Initialise (binder_name);
+		}
+		
+		
+		public void Initialise(string binder_name)
+		{
 			this.binder_name = binder_name;
 		}
 		
-		
-		public DataClass						DataClass
-		{
-			get { return this.data_class; }
-		}
 		
 		public string							BinderName
 		{
@@ -30,24 +30,6 @@ namespace Epsitec.Cresus.DataLayer
 		}
 		
 		
-		
 		protected string						binder_name;
-		protected DataClass						data_class = DataClass.Null;
-	}
-	
-	public enum DataClass
-	{
-		Unsupported,					//	type non supporté
-		Null,							//	type pas analysable, donnée absente
-		
-		Complex,						//	type complexe (contenant d'autres types)
-		
-		Decimal,						//	tout ce qui est numérique (booléen, entier, réel, temps, ...)
-		String,							//	texte (Unicode)
-		Date,							//	date, uniquement
-		Time,							//	heure, uniquement
-		DateTime,						//	date et heure, 64 bits (résolution de 1ms ou mieux)
-		ByteArray,						//	tableau de bytes
-		Guid,							//	identificateur globalement unique, 128 bits
 	}
 }

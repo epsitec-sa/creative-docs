@@ -145,5 +145,14 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("b").DataState);
 			Assertion.AssertEquals ("hello", test.GetData ("b"));
 		}
+		
+		[Test] [ExpectedException (typeof (DataException))] public void CheckDataFieldSetDataTypeEx()
+		{
+			DataField test = new DataField ();
+			DataType  type = new DataType ();
+			
+			test.SetDataType (type);
+			test.SetDataType (type);
+		}
 	}
 }

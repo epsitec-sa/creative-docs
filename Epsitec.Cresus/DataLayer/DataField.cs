@@ -88,6 +88,17 @@ namespace Epsitec.Cresus.DataLayer
 			return data;
 		}
 		
+		
+		public void SetDataType(DataType type)
+		{
+			if (this.data_type != null)
+			{
+				throw new DataException ("Cannot set data type more than once");
+			}
+			
+			this.data_type = type;
+		}
+		
 		public void SetData(object data)
 		{
 			this.SetData (DataVersion.Active, data);
@@ -133,6 +144,7 @@ namespace Epsitec.Cresus.DataLayer
 			
 			throw new DataException ("SetData failed");
 		}
+		
 		
 		public void ResetData()
 		{
