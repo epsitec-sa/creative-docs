@@ -9,22 +9,26 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			list.Add (new DbEnumValue ("id=2", "name=MME", "capt=Madame"));
-			list.Add (new DbEnumValue ("id=3", "name=MLLE", "capt=Mademoiselle"));
-			list.Add (new DbEnumValue ("id=1", "name=M", "capt=Monsieur"));
+			DbEnumValue ev_1 = new DbEnumValue (2, "MME");	ev_1.DefineAttributes ("capt=Madame");
+			DbEnumValue ev_2 = new DbEnumValue (3, "MLLE");	ev_2.DefineAttributes ("capt=Mademoiselle");
+			DbEnumValue ev_3 = new DbEnumValue (1, "M");	ev_3.DefineAttributes ("capt=Monsieur");
+			
+			list.Add (ev_1);
+			list.Add (ev_2);
+			list.Add (ev_3);
 			
 			DbTypeEnum e_type = new DbTypeEnum (list);
 			DbTypeEnum e_copy = e_type.Clone () as DbTypeEnum;
 			
-			Assertion.AssertEquals ("1", e_type[0].Id);
 			Assertion.AssertEquals ("M", e_type[0].Name);
-			Assertion.AssertEquals ("1", e_type["M"].Id);
 			Assertion.AssertEquals ("M", e_type["M"].Name);
+			Assertion.AssertEquals (1, e_type[0].Rank);
+			Assertion.AssertEquals (1, e_type["M"].Rank);
 			
-			Assertion.AssertEquals ("2",   e_copy[1].Id);
 			Assertion.AssertEquals ("MME", e_copy[1].Name);
-			Assertion.AssertEquals ("2",   e_copy["MME"].Id);
 			Assertion.AssertEquals ("MME", e_copy["MME"].Name);
+			Assertion.AssertEquals (2, e_copy[1].Rank);
+			Assertion.AssertEquals (2, e_copy["MME"].Rank);
 			
 			Assertion.AssertNull (e_type["X"]);
 			
@@ -37,20 +41,9 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			list.Add (new DbEnumValue ("id=2", "name=A"));
-			list.Add (new DbEnumValue ("id=3", "name=B"));
-			list.Add (new DbEnumValue ("id=1", "name=A"));
-			
-			DbTypeEnum e_type = new DbTypeEnum (list);
-		}
-		
-		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckDbTypeEnumEx2()
-		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
-			list.Add (new DbEnumValue ("id=1", "name=A"));
-			list.Add (new DbEnumValue ("id=2", "name=B"));
-			list.Add (new DbEnumValue ("id=1", "name=C"));
+			list.Add (new DbEnumValue ("name=A"));
+			list.Add (new DbEnumValue ("name=B"));
+			list.Add (new DbEnumValue ("name=A"));
 			
 			DbTypeEnum e_type = new DbTypeEnum (list);
 		}
