@@ -425,7 +425,17 @@ namespace Epsitec.Common.Drawing
 			public override string ToString(object value, System.Globalization.CultureInfo culture)
 			{
 				Point point = (Point) value;
-				return string.Format ("{0};{1}", point.X, point.Y);
+				return string.Format (culture, "{0};{1}", point.X, point.Y);
+			}
+			
+			public static string ToString(object value, System.Globalization.CultureInfo culture, bool suppress_x, bool suppress_y)
+			{
+				Point point = (Point) value;
+				
+				string arg1 = suppress_x ? "*" : point.X.ToString (culture);
+				string arg2 = suppress_y ? "*" : point.Y.ToString (culture);
+				
+				return string.Format (culture, "{0};{1}", arg1, arg2);
 			}
 		}
 		

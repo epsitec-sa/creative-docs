@@ -1,5 +1,12 @@
 namespace Epsitec.Common.Drawing
 {
+	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
+	using XmlIgnore    = System.Xml.Serialization.XmlIgnoreAttribute;
+	
+	
+	[System.Serializable]
+	[System.ComponentModel.TypeConverter (typeof (Margins.Converter))]
+	
 	public struct Margins
 	{
 		public Margins(double left, double right, double top, double bottom)
@@ -11,25 +18,25 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public double					Left
+		[XmlAttribute] public double	Left
 		{
 			get { return this.left; }
 			set { this.left = value; }
 		}
 		
-		public double					Right
+		[XmlAttribute] public double	Right
 		{
 			get { return this.right; }
 			set { this.right = value; }
 		}
 		
-		public double					Top
+		[XmlAttribute] public double	Top
 		{
 			get { return this.top; }
 			set { this.top = value; }
 		}
 		
-		public double					Bottom
+		[XmlAttribute] public double	Bottom
 		{
 			get { return this.bottom; }
 			set { this.bottom = value; }
@@ -71,7 +78,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public static Margins Parse(string value)
+		public static Margins Parse(string value, System.Globalization.CultureInfo culture)
 		{
 			string[] args = value.Split (new char[] { ';', ':' });
 			
@@ -85,15 +92,15 @@ namespace Epsitec.Common.Drawing
 			string arg_y1 = args[2].Trim ();
 			string arg_y2 = args[3].Trim ();
 			
-			double x1 = System.Double.Parse (arg_x1, System.Globalization.CultureInfo.InvariantCulture);
-			double x2 = System.Double.Parse (arg_x2, System.Globalization.CultureInfo.InvariantCulture);
-			double y1 = System.Double.Parse (arg_y1, System.Globalization.CultureInfo.InvariantCulture);
-			double y2 = System.Double.Parse (arg_y2, System.Globalization.CultureInfo.InvariantCulture);
+			double x1 = System.Double.Parse (arg_x1, culture);
+			double x2 = System.Double.Parse (arg_x2, culture);
+			double y1 = System.Double.Parse (arg_y1, culture);
+			double y2 = System.Double.Parse (arg_y2, culture);
 			
 			return new Margins (x1, x2, y1, y2);
 		}
 		
-		public static Margins Parse(string value, Margins default_value)
+		public static Margins Parse(string value, System.Globalization.CultureInfo culture, Margins default_value)
 		{
 			string[] args = value.Split (new char[] { ';', ':' });
 			
@@ -107,10 +114,10 @@ namespace Epsitec.Common.Drawing
 			string arg_y1 = args[2].Trim ();
 			string arg_y2 = args[3].Trim ();
 			
-			if (arg_x1 != "*") default_value.Left   = System.Double.Parse (arg_x1, System.Globalization.CultureInfo.InvariantCulture);
-			if (arg_x2 != "*") default_value.Right  = System.Double.Parse (arg_x2, System.Globalization.CultureInfo.InvariantCulture);
-			if (arg_y1 != "*") default_value.Top    = System.Double.Parse (arg_y1, System.Globalization.CultureInfo.InvariantCulture);
-			if (arg_y2 != "*") default_value.Bottom = System.Double.Parse (arg_y2, System.Globalization.CultureInfo.InvariantCulture);
+			if (arg_x1 != "*") default_value.Left   = System.Double.Parse (arg_x1, culture);
+			if (arg_x2 != "*") default_value.Right  = System.Double.Parse (arg_x2, culture);
+			if (arg_y1 != "*") default_value.Top    = System.Double.Parse (arg_y1, culture);
+			if (arg_y2 != "*") default_value.Bottom = System.Double.Parse (arg_y2, culture);
 			
 			return default_value;
 		}
@@ -124,6 +131,33 @@ namespace Epsitec.Common.Drawing
 		{
 			return !a.Equals (b);
 		}
+		
+		public class Converter : Epsitec.Common.Converters.AbstractStringConverter
+		{
+			public override object ParseString(string value, System.Globalization.CultureInfo culture)
+			{
+				return Margins.Parse (value, culture);
+			}
+			
+			public override string ToString(object value, System.Globalization.CultureInfo culture)
+			{
+				Margins margins = (Margins) value;
+				return string.Format (culture, "{0};{1};{2};{3}", margins.Left, margins.Right, margins.Top, margins.Bottom);
+			}
+			
+			public static string ToString(object value, System.Globalization.CultureInfo culture, bool suppress_left, bool suppress_right, bool suppress_top, bool suppress_bottom)
+			{
+				Margins margins = (Margins) value;
+				
+				string arg1 = suppress_left   ? "*" : margins.Left.ToString (culture);
+				string arg2 = suppress_right  ? "*" : margins.Right.ToString (culture);
+				string arg3 = suppress_top    ? "*" : margins.Top.ToString (culture);
+				string arg4 = suppress_bottom ? "*" : margins.Bottom.ToString (culture);
+				
+				return string.Format (culture, "{0};{1};{2};{3}", arg1, arg2, arg3, arg4);
+			}
+		}
+		
 		
 		
 		private double					left;
