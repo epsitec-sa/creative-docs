@@ -3,7 +3,7 @@ namespace Epsitec.Common.Drawing
 	/// <summary>
 	/// La classe Image permet de représenter une image de type bitmap.
 	/// </summary>
-	public abstract class Image
+	public abstract class Image : System.IDisposable
 	{
 		public Image()
 		{
@@ -14,27 +14,35 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public Size						Size
+		public abstract void DefineZoom(double zoom);
+		
+		public virtual void MergeTransform(Transform transform)
+		{
+			//	Fusionne la transformation spécifiée avec la transformation propre à l'image
+			//	(changement d'échelle pour que la taille logique soit respectée).
+		}
+		
+		public virtual Size				Size
 		{
 			get { return this.size; }
 		}
 		
 		public double					Width
 		{
-			get { return this.size.Width; }
+			get { return this.Size.Width; }
 		}
 		
 		public double					Height
 		{
-			get { return this.size.Height; }
+			get { return this.Size.Height; }
 		}
 		
-		public Point					Origin			//	0 < origin < size: l'origine est dans l'image
+		public virtual Point			Origin//	0 < origin < size: l'origine est dans l'image
 		{
 			get { return this.origin; }
 		}
 		
-		public bool						IsOriginDefined
+		public virtual bool				IsOriginDefined
 		{
 			get { return this.is_origin_defined; }
 		}
@@ -57,8 +65,26 @@ namespace Epsitec.Common.Drawing
 		
 		public static readonly Image	Empty;
 		
+		~Image()
+		{
+			this.Dispose (false);
+		}
 		
-		protected bool					is_origin_defined;
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		#endregion
+		
+		protected virtual void Dispose(bool disposing)
+		{
+		}
+		
+		
+		internal bool					is_origin_defined;
+		
 		protected Size					size;
 		protected Point					origin;
 		protected long					unique_id;
