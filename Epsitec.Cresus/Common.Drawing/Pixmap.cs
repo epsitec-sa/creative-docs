@@ -1,5 +1,8 @@
 namespace Epsitec.Common.Drawing
 {
+	using PixelFormat = System.Drawing.Imaging.PixelFormat;
+	using BitmapData  = System.Drawing.Imaging.BitmapData;
+	
 	public class Pixmap : System.IDisposable
 	{
 		public Pixmap()
@@ -157,8 +160,226 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public class RawData : System.IDisposable
+		{
+			public RawData(Pixmap pixmap)
+			{
+				pixmap.GetMemoryLayout (out this.dx, out this.dy, out this.stride, out this.format, out this.pixels);
+			}
+			
+			public RawData(System.Drawing.Bitmap bitmap) : this (bitmap, System.Drawing.Imaging.PixelFormat.Format32bppArgb)
+			{
+			}
+			
+			public RawData(System.Drawing.Bitmap bitmap, System.Drawing.Imaging.PixelFormat format)
+			{
+				System.Drawing.Rectangle             clip   = new System.Drawing.Rectangle (0, 0, bitmap.Width, bitmap.Height);
+				System.Drawing.Imaging.ImageLockMode mode   = System.Drawing.Imaging.ImageLockMode.ReadWrite;
+				
+				this.bm = bitmap;
+				this.bm_data = bitmap.LockBits (clip, mode, format);
+				
+				this.stride = this.bm_data.Stride;
+				this.pixels = this.bm_data.Scan0;
+				this.dx     = this.bm_data.Width;
+				this.dy     = this.bm_data.Height;
+				this.format = format;
+			}
+			
+			public RawData(Image image) : this (image.BitmapImage.NativeBitmap)
+			{
+			}
+			
+			
+			public PixelFormat				PixelFormat
+			{
+				get { return this.format; }
+			}
+			
+			public int						Stride
+			{
+				get { return this.stride; }
+			}
+			
+			public System.IntPtr			Pixels
+			{
+				get { return this.pixels; }
+			}
+			
+			public int						Width
+			{
+				get { return this.dx; }
+			}
+			
+			public int						Height
+			{
+				get { return this.dy; }
+			}
+			
+			public bool						IsBottomUp
+			{
+				get { return this.bm == null; }
+			}
+			
+			
+			public Color					this[int x, int y]
+			{
+				get
+				{
+					byte r, g, b, a;
+					
+					switch (this.format)
+					{
+						case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+						case System.Drawing.Imaging.PixelFormat.Format32bppPArgb:
+						case System.Drawing.Imaging.PixelFormat.Format32bppRgb:
+							break;
+						default:
+							throw new System.InvalidOperationException (string.Format ("Cannot access pixel of format {0}.", this.format));
+					}
+					
+					unsafe
+					{
+						byte* ptr = x * 4 + y * this.stride + (byte*) this.Pixels.ToPointer ();
+						a = ptr[3];
+						r = ptr[2];
+						g = ptr[1];
+						b = ptr[0];
+					}
+					
+					return Color.FromARGB (a / 255.0, r / 255.0, g / 255.0, b / 255.0);
+				}
+				set
+				{
+					byte r = (byte) (value.R * 255.0 + .5);
+					byte g = (byte) (value.G * 255.0 + .5);
+					byte b = (byte) (value.B * 255.0 + .5);
+					byte a = (byte) (value.A * 255.0 + .5);
+					
+					switch (this.format)
+					{
+						case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+						case System.Drawing.Imaging.PixelFormat.Format32bppPArgb:
+						case System.Drawing.Imaging.PixelFormat.Format32bppRgb:
+							break;
+						default:
+							throw new System.InvalidOperationException (string.Format ("Cannot access pixel of format {0}.", this.format));
+					}
+					
+					unsafe
+					{
+						byte* ptr = x * 4 + y * this.stride + (byte*) this.Pixels.ToPointer ();
+						ptr[3] = a;
+						ptr[2] = r;
+						ptr[1] = g;
+						ptr[0] = b;
+					}
+				}
+			}
+			
+			#region IDisposable Members
+			public void Dispose()
+			{
+				this.Dispose (true);
+				System.GC.SuppressFinalize (this);
+			}
+			#endregion
+			
+			public void CopyFrom(RawData that)
+			{
+				if (this.format != that.format)
+				{
+					throw new System.InvalidOperationException (string.Format ("Cannot copy formats {0} to {1}.", this.format, that.format));
+				}
+				
+				int bpp = 0;
+				
+				switch (this.format)
+				{
+					case System.Drawing.Imaging.PixelFormat.Format32bppArgb:
+					case System.Drawing.Imaging.PixelFormat.Format32bppPArgb:
+					case System.Drawing.Imaging.PixelFormat.Format32bppRgb:
+						bpp = 4;
+						break;
+				}
+				
+				if (bpp == 0)
+				{
+					throw new System.InvalidOperationException (string.Format ("Copy does not support format {0}.", this.format));
+				}
+				
+				unsafe
+				{
+					System.IntPtr srcscan0  = that.Pixels;
+					System.IntPtr dstscan0  = this.Pixels;
+					int           srcstride = that.Stride;
+					int           dststride = this.Stride;
+					
+					int dx = System.Math.Min (this.Width,  that.Width);
+					int dy = System.Math.Min (this.Height, that.Height);
+					
+					int* srcdata = (int*) srcscan0.ToPointer ();
+					int* dstdata = (int*) dstscan0.ToPointer ();
+					int  srcymul = srcstride / 4;
+					int  dstymul = dststride / 4;
+					
+					if (that.IsBottomUp == false)
+					{
+						srcdata += that.Height * srcymul;
+						srcdata -= srcymul;
+						srcymul  = - srcymul;
+					}
+					if (this.IsBottomUp == false)
+					{
+						dstdata += this.Height * dstymul;
+						dstdata -= dstymul;
+						dstymul  = - dstymul;
+					}
+					
+					for (int y = 0; y < dy; y++)
+					{
+						for (int x = 0; x < dx; x++)
+						{
+							dstdata[x] = srcdata[x];
+						}
+						
+						srcdata += srcymul;
+						dstdata += dstymul;
+					}
+				}
+			}
+			
+			public void CopyTo(RawData raw)
+			{
+				raw.CopyFrom (this);
+			}
+			
+			
+			protected virtual void Dispose(bool disposing)
+			{
+				if (disposing)
+				{
+					if (this.bm != null)
+					{
+						this.bm.UnlockBits (this.bm_data);
+						
+						this.bm      = null;
+						this.bm_data = null;
+					}
+				}
+			}
+			
+			
+			protected int					stride;
+			protected System.IntPtr			pixels;
+			protected int					dx, dy;
+			protected PixelFormat			format;
+			
+			protected System.Drawing.Bitmap	bm;
+			protected BitmapData			bm_data;
+		}
 		
-		protected System.IntPtr			agg_buffer;
-		protected System.Drawing.Size	size;
+		protected System.IntPtr				agg_buffer;
+		protected System.Drawing.Size		size;
 	}
 }
