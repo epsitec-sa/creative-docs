@@ -12,29 +12,29 @@ namespace Epsitec.Cresus.Database
 			SqlColumn sql_col_c = new SqlColumn ("C", DbRawType.String, 100, false, Nullable.Undefined);
 			SqlColumn sql_col_d = new SqlColumn ("D", DbRawType.ByteArray, 50, true, Nullable.Yes);
 			
-			Assertion.AssertEquals ("A",				sql_col_a.Name);
-			Assertion.AssertEquals (DbRawType.Int32,	sql_col_a.Type);
-			Assertion.AssertEquals (false,				sql_col_a.IsNullAllowed);
-			Assertion.AssertEquals (1,					sql_col_a.Length);
-			Assertion.AssertEquals (true,				sql_col_a.IsFixedLength);
+			Assert.AreEqual ("A",				sql_col_a.Name);
+			Assert.AreEqual (DbRawType.Int32,	sql_col_a.Type);
+			Assert.AreEqual (false,				sql_col_a.IsNullAllowed);
+			Assert.AreEqual (1,					sql_col_a.Length);
+			Assert.AreEqual (true,				sql_col_a.IsFixedLength);
 			
-			Assertion.AssertEquals ("B",				sql_col_b.Name);
-			Assertion.AssertEquals (DbRawType.Int64,	sql_col_b.Type);
-			Assertion.AssertEquals (true,				sql_col_b.IsNullAllowed);
-			Assertion.AssertEquals (1,					sql_col_b.Length);
-			Assertion.AssertEquals (true,				sql_col_b.IsFixedLength);
+			Assert.AreEqual ("B",				sql_col_b.Name);
+			Assert.AreEqual (DbRawType.Int64,	sql_col_b.Type);
+			Assert.AreEqual (true,				sql_col_b.IsNullAllowed);
+			Assert.AreEqual (1,					sql_col_b.Length);
+			Assert.AreEqual (true,				sql_col_b.IsFixedLength);
 			
-			Assertion.AssertEquals ("C",				sql_col_c.Name);
-			Assertion.AssertEquals (DbRawType.String,	sql_col_c.Type);
-			Assertion.AssertEquals (false,				sql_col_c.IsNullAllowed);
-			Assertion.AssertEquals (100,				sql_col_c.Length);
-			Assertion.AssertEquals (false,				sql_col_c.IsFixedLength);
+			Assert.AreEqual ("C",				sql_col_c.Name);
+			Assert.AreEqual (DbRawType.String,	sql_col_c.Type);
+			Assert.AreEqual (false,				sql_col_c.IsNullAllowed);
+			Assert.AreEqual (100,				sql_col_c.Length);
+			Assert.AreEqual (false,				sql_col_c.IsFixedLength);
 			
-			Assertion.AssertEquals ("D",				sql_col_d.Name);
-			Assertion.AssertEquals (DbRawType.ByteArray,sql_col_d.Type);
-			Assertion.AssertEquals (true,				sql_col_d.IsNullAllowed);
-			Assertion.AssertEquals (50,					sql_col_d.Length);
-			Assertion.AssertEquals (true,				sql_col_d.IsFixedLength);
+			Assert.AreEqual ("D",				sql_col_d.Name);
+			Assert.AreEqual (DbRawType.ByteArray,sql_col_d.Type);
+			Assert.AreEqual (true,				sql_col_d.IsNullAllowed);
+			Assert.AreEqual (50,					sql_col_d.Length);
+			Assert.AreEqual (true,				sql_col_d.IsFixedLength);
 		}
 
 		[Test] [ExpectedException (typeof (System.ArgumentOutOfRangeException))] public void CheckEx1()
