@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Database
 				
 				simple = TypeConverter.MapToSimpleType (raw, out num_def);
 				
-				Assertion.AssertEquals (string.Format ("Cannot match {0}", raw.ToString ()), raw, TypeConverter.MapToRawType (simple, num_def));
+				Assert.AreEqual (raw, TypeConverter.MapToRawType (simple, num_def), string.Format ("Cannot match {0}", raw.ToString ()));
 			}
 		}
 		
@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Database
 			
 			for (int i = 0; i < objects.Length; i++)
 			{
-				Assertion.Assert (TypeConverter.IsCompatibleToSimpleType (objects[i].GetType (), types[i]));
+				Assert.IsTrue (TypeConverter.IsCompatibleToSimpleType (objects[i].GetType (), types[i]));
 			}
 		}
 		
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			Assertion.Assert ("ConverToSimpleType: 100000 to Int16 should fail", exception_thrown);
+			Assert.IsTrue (exception_thrown, "ConverToSimpleType: 100000 to Int16 should fail");
 		}
 		
 		[Test] public void CheckNumericConversionsWithNumDefConversion()
@@ -79,11 +79,11 @@ namespace Epsitec.Cresus.Database
 			val = def.ConvertToInt64 (12.345M);
 			obj = TypeConverter.ConvertToSimpleType (val, DbSimpleType.Decimal, def);
 			
-			Assertion.AssertEquals (12.345M, obj);
+			Assert.AreEqual (12.345M, obj);
 			
 			res = TypeConverter.ConvertFromSimpleType (obj, DbSimpleType.Decimal, def);
 			
-			Assertion.AssertEquals (res, val);
+			Assert.AreEqual (res, val);
 			
 			bool exception_thrown = false;
 			
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			Assertion.Assert ("ConverToSimpleType: incompatible values should fail", exception_thrown);
+			Assert.IsTrue (exception_thrown, "ConverToSimpleType: incompatible values should fail");
 		}
 		[Test] public void CheckMiscConversions()
 		{
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Database
 			
 			System.Console.Out.WriteLine ("Today is {0}", obj);
 			
-			Assertion.AssertEquals (new Common.Types.Date (val), new Common.Types.Date (res));
+			Assert.AreEqual (new Common.Types.Date (val), new Common.Types.Date (res));
 			
 			val = System.DateTime.Now;
 			def = null;
@@ -126,28 +126,28 @@ namespace Epsitec.Cresus.Database
 			
 			System.Console.Out.WriteLine ("Now is {0}", obj);
 			
-			Assertion.AssertEquals (new Common.Types.Time (val), new Common.Types.Time (res));
+			Assert.AreEqual (new Common.Types.Time (val), new Common.Types.Time (res));
 			
 			val = "Hello";
 			def = null;
 			obj = TypeConverter.ConvertToSimpleType (val, DbSimpleType.String, def);
 			res = TypeConverter.ConvertFromSimpleType (obj, DbSimpleType.String, def);
 			
-			Assertion.AssertEquals (val, res);
+			Assert.AreEqual (val, res);
 			
 			val = new byte[] { 0, 1, 2, 4 };
 			def = null;
 			obj = TypeConverter.ConvertToSimpleType (val, DbSimpleType.ByteArray, def);
 			res = TypeConverter.ConvertFromSimpleType (obj, DbSimpleType.ByteArray, def);
 			
-			Assertion.AssertEquals (val, res);
+			Assert.AreEqual (val, res);
 			
 			val = System.Guid.NewGuid ();
 			def = null;
 			obj = TypeConverter.ConvertToSimpleType (val, DbSimpleType.Guid, def);
 			res = TypeConverter.ConvertFromSimpleType (obj, DbSimpleType.Guid, def);
 			
-			Assertion.AssertEquals (val, res);
+			Assert.AreEqual (val, res);
 		}
 	}
 }

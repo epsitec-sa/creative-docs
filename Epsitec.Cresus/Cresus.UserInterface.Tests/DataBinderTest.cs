@@ -16,7 +16,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckBinderFactory()
 		{
 			IBinder binder = BinderFactory.FindBinderForType ("Test");
-			Assertion.AssertNull (binder);
+			Assert.IsNull (binder);
 		}
 		
 		[Test] public void CheckBinderWithSimpleWindow()
@@ -65,24 +65,24 @@ namespace Epsitec.Common.Support
 			
 			System.Console.Out.WriteLine ("XML meta description:{0}", buffer.ToString ());
 			
-			Assertion.AssertEquals ("boolean", db_table.Columns["a"].Type.Name);
-			Assertion.AssertEquals ("boolean", data.FindDbColumn ("x.*.a").Type.Name);
-			Assertion.AssertEquals ("boolean", data.FindDbColumn ("x.*.b").Type.Name);
+			Assert.AreEqual ("boolean", db_table.Columns["a"].Type.Name);
+			Assert.AreEqual ("boolean", data.FindDbColumn ("x.*.a").Type.Name);
+			Assert.AreEqual ("boolean", data.FindDbColumn ("x.*.b").Type.Name);
 			
-			Assertion.AssertEquals ("Option vitale 'A'",			data.FindDbColumn ("x.*.a").Caption);
-			Assertion.AssertEquals ("Copie de l'option vitale 'A'",	data.FindDbColumn ("x.*.b").Caption);
+			Assert.AreEqual ("Option vitale 'A'",			data.FindDbColumn ("x.*.a").Caption);
+			Assert.AreEqual ("Copie de l'option vitale 'A'",	data.FindDbColumn ("x.*.b").Caption);
 			
 			data.AttachObserver ("x.*.a", new DataChangeEventHandler (HandleDataChanged));
 			data.AttachObserver ("x.*.b", new DataChangeEventHandler (HandleDataChanged));
 			
-			Assertion.AssertNotNull (bundle);
-			Assertion.AssertNotNull (bundler);
+			Assert.IsNotNull (bundle);
+			Assert.IsNotNull (bundler);
 			
 			object             obj  = bundler.CreateFromBundle (bundle);
 			Widgets.WindowRoot root = obj as Widgets.WindowRoot;
 			
-			Assertion.AssertNotNull (obj);
-			Assertion.AssertNotNull (root);
+			Assert.IsNotNull (obj);
+			Assert.IsNotNull (root);
 			
 			root.Window.Show ();
 		}
