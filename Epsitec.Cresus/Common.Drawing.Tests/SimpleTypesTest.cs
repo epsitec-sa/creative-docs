@@ -6,7 +6,7 @@ namespace Epsitec.Common.Drawing
 {
 	[TestFixture] public class SimpleTypesTest
 	{
-		[Test] public void CheckPointSerialisation()
+		[Test] public void CheckPointSerialization()
 		{
 			Point  point_1 = new Point (10, 20.5);
 			object point_2;
@@ -56,7 +56,7 @@ namespace Epsitec.Common.Drawing
 			Assertion.AssertEquals (point_1, point_2);
 		}
 		
-		[Test] public void CheckSizeSerialisation()
+		[Test] public void CheckSizeSerialization()
 		{
 			Size   size_1 = new Size (10, 20.5);
 			object size_2;
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Drawing
 			Assertion.AssertEquals (size_1, size_2);
 		}
 		
-		[Test] public void CheckColorSerialisation()
+		[Test] public void CheckColorSerialization()
 		{
 			Color  color_1 = new Color (0.1, 0.2, 0.3, 0.4);
 			object color_2;
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Drawing
 			Assertion.AssertEquals (color_1, color_2);
 		}
 		
-		[Test] public void CheckRectangleSerialisation()
+		[Test] public void CheckRectangleSerialization()
 		{
 			Rectangle rect_1 = new Rectangle (5, 6, 10, 20.5);
 			object    rect_2;
