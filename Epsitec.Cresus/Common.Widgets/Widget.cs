@@ -2180,6 +2180,8 @@ namespace Epsitec.Common.Widgets
 					{
 						this.parent.UpdateChildrenLayout ();
 					}
+					
+					this.OnVisibleChanged ();
 				}
 			}
 			else
@@ -2197,6 +2199,8 @@ namespace Epsitec.Common.Widgets
 					{
 						this.parent.UpdateChildrenLayout ();
 					}
+					
+					this.OnVisibleChanged ();
 				}
 			}
 		}
@@ -5594,6 +5598,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnVisibleChanged()
+		{
+			if (this.VisibleChanged != null)
+			{
+				this.VisibleChanged (this);
+			}
+		}
+		
 		protected virtual void OnFocusChanged()
 		{
 			if (this.FocusChanged != null)
@@ -5748,6 +5760,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			NameChanged;
 		public event Support.EventHandler			SizeChanged;
 		public event Support.EventHandler			LocationChanged;
+		public event Support.EventHandler			VisibleChanged;
 		
 		public event PaintBoundsCallback			PaintBoundsCallback;
 		#endregion

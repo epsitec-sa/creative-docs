@@ -82,6 +82,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
+		public static void GrabScreen(Drawing.Image bitmap, int x, int y)
+		{
+			Win32Api.GrabScreen (bitmap, x, y);
+		}
+		
 		public static Window FindFirstLiveWindow()
 		{
 			for (int i = 0; i < Window.windows.Count; )
@@ -180,6 +186,7 @@ namespace Epsitec.Common.Widgets
 			
 			return null;
 		}
+		
 		
 		public void MakeTopLevelWindow()
 		{
@@ -819,6 +826,11 @@ namespace Epsitec.Common.Widgets
 				if (Message.State.LastWindow == this)
 				{
 					Message.ClearLastWindow ();
+				}
+				
+				if (this.WindowDisposed != null)
+				{
+					this.WindowDisposed (this);
 				}
 			}
 		}
@@ -1461,6 +1473,7 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				WindowAnimationEnded;
 		public event EventHandler				WindowFocused;
 		public event EventHandler				WindowDefocused;
+		public event EventHandler				WindowDisposed;
 		
 		public static event MessageHandler		MessageFilter;
 		public static event EventHandler		ApplicationActivated;

@@ -6,7 +6,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Win32Api exporte quelques fonctions de l'API Win32 utilisées
 	/// par des couches très bas niveau.
 	/// </summary>
-	public class Win32Api
+	internal class Win32Api
 	{
 		[DllImport ("User32.dll")]	internal extern static int SetWindowLong(System.IntPtr handle, int index, int value);
 		[DllImport ("User32.dll")]	internal extern static int GetWindowLong(System.IntPtr handle, int index);

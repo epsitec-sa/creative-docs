@@ -3,7 +3,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe Win32Const exporte des constantes liées à Windows.
 	/// </summary>
-	public class Win32Const
+	internal class Win32Const
 	{
 		public const int WM_ACTIVATE		= 0x0006;
 		public const int WM_ACTIVATEAPP		= 0x001C;

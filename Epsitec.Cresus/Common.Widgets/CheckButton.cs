@@ -51,7 +51,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Rectangle rect = base.GetShapeBounds ();
 			
-			if (this.TextLayout != null)
+			if ((this.TextLayout != null) &&
+				(this.Text.Length > 0))
 			{
 				Drawing.Rectangle text_rect = this.TextLayout.StandardRectangle;
 				

@@ -189,9 +189,14 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			System.Diagnostics.Debug.Assert (this.TextLayout != null);
-			
 			Drawing.Rectangle base_rect = base.GetShapeBounds ();
+			
+			if ((this.TextLayout == null) ||
+				(this.Text.Length == 0))
+			{
+				return base_rect;
+			}
+			
 			Drawing.Rectangle text_rect = this.TextLayout.StandardRectangle;
 			
 			text_rect.Offset (this.LabelOffset);
@@ -204,9 +209,15 @@ namespace Epsitec.Common.Widgets
 
 		public override Epsitec.Common.Drawing.Size GetBestFitSize()
 		{
+			if ((this.TextLayout == null) ||
+				(this.Text.Length == 0))
+			{
+				return new Drawing.Size (RadioButton.RadioWidth, RadioButton.RadioHeight);
+			}
+			
 			Drawing.Size size = this.TextLayout.SingleLineSize;
 			
-			size.Width  = System.Math.Ceiling (size.Width + RadioButton.RadioWidth + 3);
+			size.Width  = System.Math.Ceiling (RadioButton.RadioWidth + size.Width + 3);
 			size.Height = System.Math.Max (System.Math.Ceiling (size.Height), RadioButton.RadioHeight);
 			
 			return size;

@@ -187,9 +187,16 @@ namespace Epsitec.Common.Support.Implementation
 					bundle.RefInclusionEnabled = false;
 					bundle.AutoMergeEnabled    = false;
 					
+					byte[] data = this.GetData (bundle_name, ResourceLevel.Default, culture);
+					
+					if (ResourceBundle.CheckBundleHeader (data) == false)
+					{
+						continue;
+					}
+					
 					try
 					{
-						bundle.Compile (this.GetData (bundle_name, ResourceLevel.Default, culture));
+						bundle.Compile (data);
 					}
 					catch (System.Xml.XmlException)
 					{

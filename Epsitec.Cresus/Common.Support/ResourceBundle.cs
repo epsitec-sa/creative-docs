@@ -415,13 +415,47 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public static bool CheckBundleHeader(byte[] data)
+		{
+			if ((data == null) ||
+				(data.Length < 16))
+			{
+				return false;
+			}
+			
+			System.Text.Decoder decoder = System.Text.Encoding.UTF8.GetDecoder ();
+			
+			int byte_length = 16;
+			int char_length = decoder.GetCharCount (data, 0, byte_length);
+				
+			char[] chars = new char[char_length];
+				
+			decoder.GetChars (data, 0, byte_length, chars, 0);
+				
+			string header = new string (chars);
+				
+			if ((header.StartsWith ("<?xml")) ||
+				(header.StartsWith ("<bundle")))
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		
+		
 		public void Compile(byte[] data)
 		{
+			if (data == null)
+			{
+				return;
+			}
+			
 			//	La compilation des données part du principe que le bundle XML est "well formed",
 			//	c'est-à-dire qu'il comprend un seul bloc à la racine (<bundle>..</bundle>), et
 			//	que son contenu est valide (l'en-tête <?xml ...?> n'est pas requis).
 			
-			if (data != null)
+			if (ResourceBundle.CheckBundleHeader (data))
 			{
 				System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false);
 				System.Xml.XmlDocument xmldoc = new System.Xml.XmlDocument ();
@@ -438,6 +472,10 @@ namespace Epsitec.Common.Support
 				}
 				
 				this.Compile (xmldoc.DocumentElement);
+			}
+			else
+			{
+				throw new ResourceException ("Cannot compile garbage; invalid data provided.");
 			}
 		}
 		
