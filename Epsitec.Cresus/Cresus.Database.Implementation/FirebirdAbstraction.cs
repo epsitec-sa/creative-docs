@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Database.Implementation
 	/// <summary>
 	/// Implémentation de IDbAbstraction pour Firebird.
 	/// </summary>
-	public class FirebirdAbstraction : IDbAbstraction, System.IDisposable
+	public class FirebirdAbstraction : IDbAbstraction
 	{
 		public FirebirdAbstraction(DbAccess db_access, IDbAbstractionFactory db_factory)
 		{
@@ -69,10 +69,24 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			if (disposing)
 			{
-				//	TODO: libère les ressources "managed" => appeler 'Dispose'
+				if (this.sql_builder != null)
+				{
+					this.sql_builder.Dispose ();
+					this.sql_builder = null;
+				}
+				
+				if (this.sql_engine != null)
+				{
+					this.sql_engine.Dispose ();
+					this.sql_engine = null;
+				}
+				
+				if (this.db_connection != null)
+				{
+					this.db_connection.Dispose ();
+					this.db_connection = null;
+				}
 			}
-			
-			//	TODO: libère les ressources non "managed"
 		}
 		
 		protected virtual void CreateConnection()

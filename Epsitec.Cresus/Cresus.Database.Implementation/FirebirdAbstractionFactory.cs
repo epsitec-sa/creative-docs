@@ -34,7 +34,6 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			get { return this.type_converter; }
 		}
-		
 		#endregion
 		
 		protected FirebirdTypeConverter	type_converter = new FirebirdTypeConverter ();
