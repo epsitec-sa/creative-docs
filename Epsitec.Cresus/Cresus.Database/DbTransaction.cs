@@ -1,5 +1,7 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 01/12/2003
+//	Responsable: Pierre ARNAUD
+
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Database
 {
@@ -36,6 +38,7 @@ namespace Epsitec.Cresus.Database
 			this.transaction.Rollback ();
 			this.infrastructure.NotifyEndTransaction (this);
 			this.infrastructure = null;
+			this.OnReleased ();
 		}
 
 		public void Commit()
@@ -43,6 +46,7 @@ namespace Epsitec.Cresus.Database
 			this.transaction.Commit ();
 			this.infrastructure.NotifyEndTransaction (this);
 			this.infrastructure = null;
+			this.OnReleased ();
 		}
 
 		public System.Data.IDbConnection		Connection
@@ -69,6 +73,7 @@ namespace Epsitec.Cresus.Database
 			{
 				this.infrastructure.NotifyEndTransaction (this);
 				this.infrastructure = null;
+				this.OnReleased ();
 			}
 			if (this.transaction != null)
 			{
@@ -77,6 +82,16 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		#endregion
+		
+		protected virtual void OnReleased()
+		{
+			if (this.Released != null)
+			{
+				this.Released (this);
+			}
+		}
+		
+		public event EventHandler				Released;
 		
 		protected System.Data.IDbTransaction	transaction;
 		protected DbInfrastructure				infrastructure;

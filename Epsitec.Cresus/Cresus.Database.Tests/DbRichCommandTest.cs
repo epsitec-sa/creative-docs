@@ -47,8 +47,7 @@ namespace Epsitec.Cresus.Database
 			select_a.Tables.Add ("A", SqlField.CreateName (db_table_a.CreateSqlName ()));
 			select_b.Tables.Add ("B", SqlField.CreateName (db_table_b.CreateSqlName ()));
 			
-			DbTransaction transaction;
-			DbRichCommand command = new DbRichCommand ();
+			DbRichCommand command = new DbRichCommand (infrastructure);
 			
 			sql_builder.SelectData (select_a);
 			System.Data.IDbCommand command_a = sql_builder.Command;
@@ -62,13 +61,7 @@ namespace Epsitec.Cresus.Database
 			command.Tables.Add (db_table_a);
 			command.Tables.Add (db_table_b);
 			
-			using (transaction = infrastructure.BeginTransaction ())
-			{
-				command.Transaction = transaction.Transaction;
-				
-				sql_engine.Execute (command);
-				transaction.Commit ();
-			}
+			infrastructure.Execute (null, command);
 			
 			System.Console.Out.WriteLine ("Tables : {0}", command.DataSet.Tables.Count);
 			foreach (System.Data.DataTable table in command.DataSet.Tables)
@@ -95,10 +88,9 @@ namespace Epsitec.Cresus.Database
 			DbInfrastructureTest.DisplayDataSet (infrastructure, ado_table_a.TableName, ado_table_a);
 			DbInfrastructureTest.DisplayDataSet (infrastructure, ado_table_b.TableName, ado_table_b);
 			
-			using (transaction = infrastructure.BeginTransaction ())
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
 			{
-				command.Transaction = transaction.Transaction;
-				command.UpdateTables ();
+				command.UpdateTables (transaction);
 				transaction.Commit ();
 			}
 			
@@ -146,7 +138,7 @@ namespace Epsitec.Cresus.Database
 //			command.Tables.Add (db_table_a);
 //			command.Tables.Add (db_table_b);
 //			command.CreateEmptyDataSet (infrastructure);
-			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, new DbTable[] { db_table_a, db_table_b });
+			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, db_table_a, db_table_b);
 			
 			foreach (System.Data.DataRelation relation in command.DataSet.Relations)
 			{
@@ -168,7 +160,7 @@ namespace Epsitec.Cresus.Database
 			System.Data.DataRow row_2;
 			System.Data.DataRow row_3;
 			
-			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, new DbTable[] { db_table_a, db_table_b });
+			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, db_table_a, db_table_b);
 			
 			command.CreateNewRow ("Personnes", out row_1);
 			command.CreateNewRow ("Personnes", out row_2);
@@ -188,10 +180,17 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbTransaction transaction = infrastructure.BeginTransaction ())
 			{
-				command.Transaction = transaction.Transaction;
-				command.UpdateTables ();
+				command.UpdateTables (transaction);
 				transaction.Commit ();
 			}
+		}
+		
+		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckInternalFillDataSetEx()
+		{
+			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
+			DbRichCommand    command        = new DbRichCommand (infrastructure);
+			
+			command.InternalFillDataSet (DbAccess.Empty, null, null);
 		}
 		
 		[Test] public void Check99UnregisterDbTables()

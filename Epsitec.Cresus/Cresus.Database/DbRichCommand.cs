@@ -10,8 +10,10 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public class DbRichCommand
 	{
-		public DbRichCommand()
+		public DbRichCommand(DbInfrastructure infrastructure)
 		{
+			this.infrastructure = infrastructure;
+			
 			this.commands = new Collections.DbCommands ();
 			this.tables   = new Collections.DbTables ();
 		}
@@ -33,22 +35,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public System.Data.IDbTransaction		Transaction
-		{
-			get
-			{
-				return this.transaction;
-			}
-			set
-			{
-				if (this.transaction != value)
-				{
-					this.transaction = value;
-					this.SetCommandTransaction ();
-				}
-			}
-		}
-		
 		public System.Data.DataSet				DataSet
 		{
 			get
@@ -57,25 +43,52 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		
-		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, System.Collections.IEnumerable tables)
+		public DbInfrastructure					Infrastructure
 		{
-			DbRichCommand command = new DbRichCommand ();
-			
-			foreach (DbTable table in tables)
+			get
 			{
+				return this.infrastructure;
+			}
+		}
+		
+		
+		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, Collections.DbTables tables)
+		{
+			return DbRichCommand.CreateFromTables (infrastructure, tables.Array);
+		}
+		
+		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, params DbTable[] tables)
+		{
+			return DbRichCommand.CreateFromTables (infrastructure, tables, new DbSelectCondition[tables.Length]);
+		}
+
+		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, DbTable[] tables, DbSelectCondition[] conditions)
+		{
+			System.Diagnostics.Debug.Assert (tables.Length == conditions.Length);
+			
+			DbRichCommand command = new DbRichCommand (infrastructure);
+			
+			int n = tables.Length;
+			
+			for (int i = 0; i < n; i++)
+			{
+				DbTable           table     = tables[i];
+				DbSelectCondition condition = conditions[i];
+				
 				SqlSelect   select  = new SqlSelect ();
 				ISqlBuilder builder = infrastructure.SqlBuilder;
 				
-//				SqlField field_0 = SqlField.CreateConstant (0, DbRawType.Int32);
-//				SqlField field_1 = SqlField.CreateConstant (1, DbRawType.Int32);
-//				
-//				SqlFunction always_false = new SqlFunction (SqlFunctionType.CompareEqual, field_0, field_1);
-				SqlFunction always_false = new SqlFunction (SqlFunctionType.CompareFalse);
-				
 				select.Fields.Add (SqlField.CreateAll ());
 				select.Tables.Add (table.Name, SqlField.CreateName (table.CreateSqlName ()));
-				select.Conditions.Add (always_false);
+				
+				if (condition == null)
+				{
+					select.Conditions.Add (new SqlFunction (SqlFunctionType.CompareFalse));
+				}
+				else
+				{
+					//	TODO: ...tenir compte de la condition de sélection...
+				}
 				
 				builder.SelectData (select);
 				
@@ -83,108 +96,139 @@ namespace Epsitec.Cresus.Database
 				command.Tables.Add (table);
 			}
 			
-			using (DbTransaction transaction = infrastructure.BeginTransaction ())
-			{
-				command.Transaction = transaction.Transaction;
-				
-				infrastructure.SqlEngine.Execute (command);
-				transaction.Commit ();
-			}
+			infrastructure.Execute (null, command);
 			
 			return command;
 		}
 		
-		public void FillDataSet(System.Data.IDbDataAdapter[] adapters)
+		
+		public void InternalFillDataSet(DbAccess db_access, System.Data.IDbTransaction transaction, System.Data.IDbDataAdapter[] adapters)
 		{
+			//	Utiliser DbInfrastructure.Execute en lieu et place de cette méthode !
+			
+			//	Cette méthode ne devrait jamais être appelée par un utilisateur : elle est réservée
+			//	aux classes implémentant ISqlEngine. Pour s'assurer que personne ne se trompe, on
+			//	vérifie l'identité de l'appelant :
+			//
+			//	xxx --> DbInfrastructure --> ISqlEngine --> DbRichCommand
+			
+			System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace (true);
+			System.Diagnostics.StackFrame caller_1 = trace.GetFrame (1);
+			System.Diagnostics.StackFrame caller_2 = trace.GetFrame (2);
+			
+			System.Type caller_class_type = caller_1.GetMethod ().DeclaringType;
+			System.Type req_interf_type   = typeof (Epsitec.Cresus.Database.ISqlEngine);
+			
+			if ((caller_class_type.GetInterface (req_interf_type.FullName) != req_interf_type) ||
+				(caller_2.GetMethod ().DeclaringType != typeof (DbInfrastructure)))
+			{
+				throw new System.InvalidOperationException (string.Format ("Method may not be called by {0}.{1}", caller_class_type.FullName, caller_1.GetMethod ().Name));
+			}
+			
+			System.Diagnostics.Debug.Assert (db_access.IsValid);
+			
+			if (transaction == null)
+			{
+				throw new DbMissingTransactionException (db_access);
+			}
+			
+			if (this.data_set != null)
+			{
+				throw new DbException (db_access, "DataSet already exists.");
+			}
+			
 			//	Définit et remplit le DataSet en se basant sur les données fournies
 			//	par l'objet 'adapter' (ADO.NET).
 			
-			this.data_set = new System.Data.DataSet ();
-			this.adapters = adapters;
+			this.db_access = db_access;
+			this.data_set  = new System.Data.DataSet ();
+			this.adapters  = adapters;
 			
-			this.SetCommandTransaction ();
+			this.SetCommandTransaction (transaction);
 			
-			for (int i = 0; i < this.tables.Count; i++)
+			try
 			{
-				DbTable db_table = this.tables[i];
-				
-				string  ado_name_table = "Table";
-				string  db_name_table  = db_table.Name;
-				
-				//	Il faut (re)nommer les tables afin d'avoir les noms qui correspondent
-				//	à ce que définit DbTable, et faire pareil pour les colonnes.
-				
-				System.Data.ITableMapping mapping = this.adapters[i].TableMappings.Add (ado_name_table, db_name_table);
-				
-				for (int c = 0; c < db_table.Columns.Count; c++)
+				for (int i = 0; i < this.tables.Count; i++)
 				{
-					DbColumn db_column = db_table.Columns[c];
+					DbTable db_table = this.tables[i];
 					
-					string db_name_column  = db_column.CreateDisplayName ();
-					string ado_name_column = db_column.CreateSqlName ();
+					string  ado_name_table = "Table";
+					string  db_name_table  = db_table.Name;
 					
-					mapping.ColumnMappings.Add (ado_name_column, db_name_column);
+					//	Il faut (re)nommer les tables afin d'avoir les noms qui correspondent
+					//	à ce que définit DbTable, et faire pareil pour les colonnes.
+					
+					System.Data.ITableMapping mapping = this.adapters[i].TableMappings.Add (ado_name_table, db_name_table);
+					
+					for (int c = 0; c < db_table.Columns.Count; c++)
+					{
+						DbColumn db_column = db_table.Columns[c];
+						
+						string db_name_column  = db_column.CreateDisplayName ();
+						string ado_name_column = db_column.CreateSqlName ();
+						
+						mapping.ColumnMappings.Add (ado_name_column, db_name_column);
+					}
+					
+					this.adapters[i].Fill (this.data_set);
 				}
-				
-				this.adapters[i].Fill (this.data_set);
+			}
+			finally
+			{
+				this.SetCommandTransaction (null);
 			}
 			
 			this.CreateDataRelations ();
 		}
 		
-		public void UpdateTables()
+		
+		public void UpdateTables(DbTransaction transaction)
 		{
-			if (this.adapters != null)
+			if (transaction == null)
+			{
+				throw new DbMissingTransactionException (this.db_access);
+			}
+			
+			this.CheckValidState ();
+			this.SetCommandTransaction (transaction);
+			
+			try
 			{
 				for (int i = 0; i < this.adapters.Length; i++)
 				{
 					this.adapters[i].Update (this.data_set);
 				}
 			}
+			finally
+			{
+				this.SetCommandTransaction (null);
+			}
+		}
+		
+		public void UpdateRealIds(DbTransaction transaction)
+		{
+			if (transaction == null)
+			{
+				throw new DbMissingTransactionException (this.db_access);
+			}
+			
+			this.CheckValidState ();
+			this.SetCommandTransaction (transaction);
+			
+			try
+			{
+				//	TODO: ...
+			}
+			finally
+			{
+				this.SetCommandTransaction (null);
+			}
 		}
 		
 		
-//		public void CreateEmptyDataSet(DbInfrastructure infrastructure)
-//		{
-//			if (this.data_set != null)
-//			{
-//				throw new System.InvalidOperationException ("DataSet already exists.");
-//			}
-//			
-//			ITypeConverter type_converter = infrastructure.TypeConverter;
-//			
-//			//	Crée un DataSet vide, en ajoutant le schéma correspondant aux tables
-//			//	définies.
-//			
-//			this.data_set = new System.Data.DataSet ();
-//			
-//			for (int i = 0; i < this.tables.Count; i++)
-//			{
-//				DbTable db_table      = this.tables[i];
-//				string  db_name_table = db_table.Name;
-//				
-//				System.Data.DataTable ado_table = this.data_set.Tables.Add (db_name_table);
-//				
-//				for (int c = 0; c < db_table.Columns.Count; c++)
-//				{
-//					DbColumn  db_column  = db_table.Columns[c];
-//					SqlColumn sql_column = db_column.CreateSqlColumn (type_converter);
-//					
-//					string db_name_column  = db_column.CreateDisplayName ();
-//					string ado_name_column = db_column.CreateSqlName ();
-//					
-//					System.Type native_type = TypeConverter.MapToNativeType (sql_column.Type);
-//					
-//					ado_table.Columns.Add (db_name_column, native_type);
-//				}
-//			}
-//			
-//			this.CreateDataRelations ();
-//		}
-		
 		public void CreateNewRow(string table_name, out System.Data.DataRow data_row)
 		{
-			this.CheckValidDataSet ();
+			this.CheckValidState ();
 			
 			System.Data.DataTable table = this.data_set.Tables[table_name];
 			
@@ -250,27 +294,60 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		protected void SetCommandTransaction()
+		protected void SetCommandTransaction(System.Data.IDbTransaction transaction)
 		{
+			if (transaction is DbTransaction)
+			{
+				transaction = ((DbTransaction) transaction).Transaction;
+			}
+			
 			for (int i = 0; i < this.commands.Count; i++)
 			{
-				this.commands[i].Transaction = this.transaction;
+				this.commands[i].Transaction = transaction;
 			}
 		}
 		
-		protected void CheckValidDataSet()
+		protected void CheckValidState()
 		{
+			if (this.db_access.IsValid == false)
+			{
+				throw new System.InvalidOperationException ("No database access defined.");
+			}
+			
 			if (this.data_set == null)
 			{
-				throw new System.InvalidOperationException ("No data set defined.");
+				throw new DbException (this.db_access, "No data set defined.");
+			}
+			
+			if ((this.adapters == null) ||
+				(this.adapters.Length == 0))
+			{
+				throw new DbException (this.db_access, "No adapters defined.");
+			}
+			
+			if (this.commands.Count == 0)
+			{
+				throw new DbException (this.db_access, "No commands defined.");
+			}
+			
+			if (this.tables.Count == 0)
+			{
+				throw new DbException (this.db_access, "No tables defined.");
+			}
+			
+			if (this.infrastructure == null)
+			{
+				throw new DbException (this.db_access, "No infrastructure defined.");
 			}
 		}
 		
 		
+		
+		protected DbInfrastructure				infrastructure;
 		protected Collections.DbCommands		commands;
-		protected System.Data.IDbTransaction	transaction;
 		protected Collections.DbTables			tables;
 		protected System.Data.DataSet			data_set;
+		protected DbAccess						db_access;
 		protected System.Data.IDataAdapter[]	adapters;
 	}
 }

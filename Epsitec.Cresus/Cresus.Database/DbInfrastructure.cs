@@ -739,6 +739,21 @@ namespace Epsitec.Cresus.Database
 		
 		
 		
+		public void Execute(DbTransaction transaction, DbRichCommand command)
+		{
+			if (transaction == null)
+			{
+				using (transaction = this.BeginTransaction ())
+				{
+					this.Execute (transaction, command);
+					transaction.Commit ();
+					return;
+				}
+			}
+			
+			this.sql_engine.Execute (this, transaction.Transaction, command);
+		}
+		
 		
 		public void					ExecuteSilent(DbTransaction transaction)
 		{

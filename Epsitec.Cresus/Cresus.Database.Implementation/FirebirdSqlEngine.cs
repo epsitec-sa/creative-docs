@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 07/10/2003
 
 using FirebirdSql.Data.Firebird;
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 		
-		public void Execute(DbRichCommand rich_command)
+		public void Execute(DbInfrastructure infrastructure, System.Data.IDbTransaction transaction, DbRichCommand rich_command)
 		{
 			int num_commands = rich_command.Commands.Count;
 			
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				adapters[i] = adapter;
 			}
 				
-			rich_command.FillDataSet (adapters);
+			rich_command.InternalFillDataSet (this.fb.DbAccess, transaction, adapters);
 		}
 		#endregion
 		
