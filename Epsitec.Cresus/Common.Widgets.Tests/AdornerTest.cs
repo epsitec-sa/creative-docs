@@ -9,6 +9,38 @@ namespace Epsitec.Common.Tests
 	{
 		[Test] public void CheckAdornerWidgets()
 		{
+			this.CreateAdornerWidgets();
+		}
+		
+		[Test] public void CheckAdornerWidgetsDisabled()
+		{
+			Window window = this.CreateAdornerWidgets();
+			this.RecursiveDisable(window.Root, true);
+		}
+		
+		void RecursiveDisable(Widget widget, bool top_level)
+		{
+			if (widget.IsEnabled)
+			{
+				widget.SetEnabled (top_level);
+
+				foreach (Widget child in widget.Children)
+				{
+					if (! child.IsEmbedded)
+					{
+						this.RecursiveDisable(child, false);
+					}
+				}
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine ("Already disabled: " + widget.CommandName + " / " + widget.GetType().Name + " / " + widget.Text);
+			}
+		}
+		
+		
+		private Window CreateAdornerWidgets()
+		{
 			Window window = new Window();
 			
 			window.ClientSize = new Size(600, 300);
@@ -331,8 +363,10 @@ namespace Epsitec.Common.Tests
 			window.FocusedWidget = a;
 
 			window.Show();
+			return window;
 		}
 
+		
 		[Test] public void CheckAdornerDisabled()
 		{
 			Window window = new Window();
@@ -1022,7 +1056,7 @@ namespace Epsitec.Common.Tests
 			ScrollList sl = sender as ScrollList;
 			int sel = sl.SelectedIndex;
 			Widgets.Adorner.Factory.SetActive(sl.Items[sel]);
-			sl.RootParent.Invalidate();  // redessine toute la fenêtre
+			Window.InvalidateAll();  // redessine toutes les fenêtres
 		}
 
 		[Test] public void CheckAdornerBug1()

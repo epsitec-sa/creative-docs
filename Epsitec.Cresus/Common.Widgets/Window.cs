@@ -23,8 +23,30 @@ namespace Epsitec.Common.Widgets
 			
 			this.timer.TimeElapsed += new EventHandler(HandleTimeElapsed);
 			this.timer.AutoRepeat = 0.050;
+			
+			Window.windows.Add (new System.WeakReference (this));
 		}
 		
+		
+		public static void InvalidateAll()
+		{
+			for (int i = 0; i < Window.windows.Count; )
+			{
+				System.WeakReference weak_ref = Window.windows[i] as System.WeakReference;
+				
+				Window target = weak_ref.Target as Window;
+				
+				if (target == null)
+				{
+					Window.windows.RemoveAt (i);
+				}
+				else
+				{
+					target.Root.Invalidate ();
+					i++;
+				}
+			}
+		}
 		
 		public void MakeFramelessWindow()
 		{
@@ -698,5 +720,7 @@ namespace Epsitec.Common.Widgets
 		
 		private Support.CommandDispatcher	cmd_dispatcher;
 		private System.Collections.Queue	cmd_queue = new System.Collections.Queue ();
+		
+		static System.Collections.ArrayList	windows = new System.Collections.ArrayList ();
 	}
 }

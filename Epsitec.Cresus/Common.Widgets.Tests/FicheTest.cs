@@ -9,11 +9,11 @@ namespace Epsitec.Common.Tests
 	{
 		[Test] public void CheckFicheApplication()
 		{
+			Widgets.Adorner.Factory.SetActive("LookDany");
+			
 			this.window = new Window();
 			this.window.Root.LayoutChanged += new EventHandler(this.Root_LayoutChanged);
 			
-			Widgets.Adorner.Factory.SetActive("LookDany");
-
 			this.window.ClientSize = new Size(1024, 768);
 			this.window.Text = "Crésus-fiche";
 			this.window.WindowClosed += new EventHandler(this.HandleWindowClosed);
@@ -553,7 +553,7 @@ namespace Epsitec.Common.Tests
 			ScrollList sl = sender as ScrollList;
 			int sel = sl.SelectedIndex;
 			Widgets.Adorner.Factory.SetActive(sl.Items[sel]);
-			sl.RootParent.Invalidate();  // redessine toute la fenêtre
+			Window.InvalidateAll();	// redessine toutes les fenêtres
 		}
 
 		protected void ResizeLayout()

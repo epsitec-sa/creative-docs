@@ -637,6 +637,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool							IsEmbedded
+		{
+			get { return (this.internalState & InternalState.Embedded) != 0; }
+		}
+		
 		public bool							AutoCapture
 		{
 			get { return (this.internalState & InternalState.AutoCapture) != 0; }
