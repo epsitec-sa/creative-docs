@@ -246,6 +246,31 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public static Bitmap CopyImage(Image image)
+		{
+			if (image == null)
+			{
+				return null;
+			}
+			
+			System.Drawing.Bitmap src_bitmap = image.BitmapImage.bitmap;
+			System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (src_bitmap.Width, src_bitmap.Height);
+			
+			using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+			{
+				graphics.DrawImageUnscaled (src_bitmap, 0, 0, src_bitmap.Width, src_bitmap.Height);
+			}
+			
+			Bitmap bitmap = new Bitmap ();
+			
+			bitmap.bitmap			 = dst_bitmap;
+			bitmap.size				 = image.Size;
+			bitmap.origin			 = image.Origin;
+			bitmap.is_origin_defined = image.IsOriginDefined;
+			
+			return bitmap;
+		}
+		
 		public static Bitmap FromLargerImage(Image image, Rectangle clip)
 		{
 			Bitmap bitmap = Bitmap.FromLargerImage (image, clip, Point.Empty);
