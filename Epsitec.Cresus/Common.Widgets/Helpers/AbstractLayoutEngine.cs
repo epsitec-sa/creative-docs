@@ -81,8 +81,8 @@ namespace Epsitec.Common.Widgets.Helpers
 				panel.ChildrenChanged += new EventHandler (this.HandlePanelChildrenChanged);
 				panel.PreparePaint    += new EventHandler (this.HandlePanelPreparePaint);
 				
-				panel.SetPropagationModes (Widget.PropagationModes.UpChildrenChanged, true,
-					/**/				   Widget.PropagationSetting.IncludeChildren);
+				panel.SetEventPropagation (Widget.Propagate.ChildrenChanged, true,
+					/**/				   Widget.Setting.IncludeChildren);
 				
 				this.Invalidate ();
 			}

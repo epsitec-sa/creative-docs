@@ -148,7 +148,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.panel.ChildrenChanged += new EventHandler (this.HandlePanelChildrenChanged);
 			this.panel.PreparePaint    += new EventHandler (this.HandlePanelPreparePaint);
 			
-			this.panel.SetPropagationModes (Widget.PropagationModes.UpChildrenChanged, true, Widget.PropagationSetting.IncludeChildren);
+			this.panel.SetEventPropagation (Widget.Propagate.ChildrenChanged, true, Widget.Setting.IncludeChildren);
 		}
 		
 		protected void DetachPanel()
