@@ -154,7 +154,7 @@ namespace Epsitec.Common.Drawing
 			Font   font = Font.GetFont ("Times New Roman", "Regular");
 			string text = "The quick brown     fox jumps over the lazy dog. Whatever, we just need a piece of long text to break apart.";
 			double width = 100;
-			TextBreak tb = new TextBreak (font, text, 12.0, TextBreakMode.None);
+			TextBreakOld tb = new TextBreakOld (font, text, 12.0, TextBreakMode.None);
 			
 			string break_text;
 			double break_width;
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Drawing
 			
 			tb.Dispose ();
 			
-			tb = new TextBreak (font, "absolutely   ", 12.0, TextBreakMode.None);
+			tb = new TextBreakOld (font, "absolutely   ", 12.0, TextBreakMode.None);
 			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			Assert.AreEqual ("", break_text);
 			Assert.AreEqual (0.0, break_width);
@@ -197,13 +197,13 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual (true, tb.GetNextBreak (55.0, out break_text, out break_width, out n_char));
 			tb.Dispose ();
 			
-			tb = new TextBreak (font, "absolutely   ", 12.0, TextBreakMode.None);
+			tb = new TextBreakOld (font, "absolutely   ", 12.0, TextBreakMode.None);
 			Assert.AreEqual (true, tb.GetNextBreak (60.0, out break_text, out break_width, out n_char));
 			Assert.AreEqual ("absolutely   ", break_text);
 			Assert.AreEqual (false, tb.GetNextBreak (60.0, out break_text, out break_width, out n_char));
 			tb.Dispose ();
 			
-			tb = new TextBreak (font, "absolutely, really", 12.0, TextBreakMode.Split);
+			tb = new TextBreakOld (font, "absolutely, really", 12.0, TextBreakMode.Split);
 			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			Assert.AreEqual ("absolute", break_text);
 			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
@@ -213,7 +213,7 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual (false, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			tb.Dispose ();
 			
-			tb = new TextBreak (font, "absolutely, really", 12.0, TextBreakMode.Ellipsis);
+			tb = new TextBreakOld (font, "absolutely, really", 12.0, TextBreakMode.Ellipsis);
 			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			Assert.AreEqual ("absol\u2026", break_text);
 			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));

@@ -165,7 +165,7 @@ namespace Epsitec.Common.Widgets
 		{
 			TextLayout layout = this.NewTextLayout();
 			
-			string reference = "Link, Bold text, normal text, italic text...\nAnd some <more> text,  nice & clean.";
+			string reference = "Link, Bold text, normal text, italic text...\nAnd some <more> text, \ufffc nice & clean.";
 			string text = TextLayout.ConvertToSimpleText(layout.Text);
 			Assert.AreEqual(reference, text);
 

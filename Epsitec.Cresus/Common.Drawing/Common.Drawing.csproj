@@ -233,7 +233,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TextBreakNew.cs"
+                    RelPath = "TextBreakOld.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -729,7 +729,7 @@ namespace Epsitec.Common.Widgets
 				if ( prepare )  this.Simplify();  // supprime les préparations <put...>
 			}
 
-			this.MemoryCursorPosX(context);
+			this.DefineCursorPosX(context);
 			return true;
 		}
 
@@ -814,7 +814,7 @@ namespace Epsitec.Common.Widgets
 			if ( !select )  context.CursorFrom = index;
 			context.CursorAfter = after;
 
-			this.MemoryCursorPosX(context);
+			this.DefineCursorPosX(context);
 			return true;
 		}
 
@@ -874,7 +874,7 @@ namespace Epsitec.Common.Widgets
 				if ( !context.CursorAfter && this.IsDualCursor(context.CursorTo) )
 				{
 					context.CursorAfter = true;
-					this.MemoryCursorPosX(context);
+					this.DefineCursorPosX(context);
 					return true;
 				}
 			}
@@ -884,7 +884,7 @@ namespace Epsitec.Common.Widgets
 				if ( context.CursorAfter && this.IsDualCursor(context.CursorTo) )
 				{
 					context.CursorAfter = false;
-					this.MemoryCursorPosX(context);
+					this.DefineCursorPosX(context);
 					return true;
 				}
 			}
@@ -938,11 +938,11 @@ namespace Epsitec.Common.Widgets
 			context.CursorTo = cursor;
 			if ( !select )  context.CursorFrom = cursor;
 
-			this.MemoryCursorPosX(context);
+			this.DefineCursorPosX(context);
 			return true;
 		}
 
-		public void MemoryCursorPosX(TextLayout.Context context)
+		public void DefineCursorPosX(TextLayout.Context context)
 		{
 			// Mémorise la position horizontale du curseur, afin de pouvoir y
 			// revenir en cas de déplacement par lignes.
@@ -1084,8 +1084,8 @@ namespace Epsitec.Common.Widgets
 
 					JustifLine line = (JustifLine)this.lines[block.indexLine];
 					Drawing.Rectangle rect = new Drawing.Rectangle();
-					rect.Top    = pos.Y+block.pos.Y+line.ascender;
-					rect.Bottom = pos.Y+block.pos.Y+line.descender;
+					rect.Top    = pos.Y+block.pos.Y+block.font.Ascender*block.fontSize; //line.ascender;
+					rect.Bottom = pos.Y+block.pos.Y+block.font.Descender*block.fontSize; //line.descender;
 					rect.Left   = pos.X+block.pos.X+width;
 					rect.Width  = rect.Height*0.5;
 					graphics.Color = color;
@@ -1276,7 +1276,7 @@ namespace Epsitec.Common.Widgets
 						{
 							if ( block.image )
 							{
-								index = block.beginIndex;
+								index = ( pos.X-block.pos.X > width/2 ) ? block.endIndex : block.beginIndex;
 								after = false;
 								return true;
 							}
@@ -1376,7 +1376,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			if ( index <= block.beginIndex )  return block.pos.X;
-			if ( index >  block.endIndex   )  return block.pos.X + block.width;
+			if ( index >  block.endIndex   )  index = block.beginIndex+block.text.Length;
 
 			double[] charsWidth;
 			if ( block.infos == null )
@@ -1411,12 +1411,13 @@ namespace Epsitec.Common.Widgets
 				if ( !block.visible )  continue;
 
 				int bbi = block.beginIndex;
-				int bei = block.endIndex;
+				int bei = bbi + block.text.Length;
 				if ( block.lineBreak )  bei ++;
 				int localBegin = System.Math.Max(indexBegin, bbi);
 				int localEnd   = System.Math.Min(indexEnd,   bei);
 
-				if ( localBegin >= localEnd )  continue;
+				if ( localBegin >= localEnd )                            continue;
+				if ( localBegin >= block.endIndex && !block.lineBreak )  continue;
 
 				double top    = line.pos.Y+line.ascender;
 				double bottom = line.pos.Y+line.descender;
@@ -1530,8 +1531,16 @@ namespace Epsitec.Common.Widgets
 					p1.Y = line.pos.Y+line.descender;
 					if ( block.image )
 					{
-						p1.X = block.pos.X;
-						p2.X = p1.X;
+						if ( index == block.beginIndex )
+						{
+							p1.X = block.pos.X;
+							p2.X = p1.X;
+						}
+						else
+						{
+							p1.X = block.pos.X+block.width;
+							p2.X = p1.X;
+						}
 					}
 					else
 					{
@@ -1711,9 +1720,9 @@ namespace Epsitec.Common.Widgets
 					int length = this.text.IndexOf(">", endOffset)-endOffset+1;
 					if ( length < 0 )  return -1;
 					endOffset += length;
-
-					string tag = this.text.Substring(beginOffset, length);
-					if ( tag != "<br/>" )  continue;
+					string startOfTag = this.text.Substring(beginOffset, 5);
+					
+					if ( startOfTag != "<br/>" && startOfTag != "<img " )  continue;
 				}
 				else if ( this.text[endOffset] == '&' )
 				{
@@ -1758,8 +1767,9 @@ namespace Epsitec.Common.Widgets
 					if ( length < 0 )  return -1;
 					endOffset += length;
 
-					string tag = this.text.Substring(beginOffset, length);
-					if ( tag == "<br/>" )
+					string startOfTag = this.text.Substring(beginOffset, 5);
+					
+					if ( startOfTag == "<br/>" || startOfTag == "<img " )
 					{
 						index ++;
 					}
@@ -2001,7 +2011,12 @@ namespace Epsitec.Common.Widgets
 			
 			if ( offset >= text.Length )
 			{
-				return Tag.Ending;
+				return Tag.EndOfText;
+			}
+			
+			if (text[offset] == TextLayout.CodeLineBreak)
+			{
+				return Tag.LineBreak;
 			}
 
 			offset ++;
@@ -2112,7 +2127,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static string ConvertToSimpleText(string text)
 		{
-			return TextLayout.ConvertToSimpleText(text, "");
+			return TextLayout.ConvertToSimpleText(text, TextLayout.CodeObject.ToString ());
 		}
 		
 		public static string ConvertToSimpleText(string text, string imageReplacement)
@@ -2201,7 +2216,7 @@ namespace Epsitec.Common.Widgets
 			{
 				int begin = offset;
 				Tag tag = TextLayout.ParseTag(this.text, ref offset, out parameters);
-				if ( tag == Tag.Ending )  break;
+				if ( tag == Tag.EndOfText )  break;
 
 				switch ( tag )
 				{
@@ -2569,7 +2584,6 @@ namespace Epsitec.Common.Widgets
 			int       textLength = this.TextLength;
 			SupplItem supplItem  = new SupplItem();
 			
-			double	restWidth = this.layoutSize.Width;
 			int		beginOffset;
 			int		endOffset = 0;
 			int     fontIndex = -1;
@@ -2587,7 +2601,7 @@ namespace Epsitec.Common.Widgets
 				Tag      tag      = TextLayout.ParseTag(this.text, ref endOffset, out parameters);
 				FontItem fontItem = fontStack.Peek() as FontItem;
 				
-				if ( tag == Tag.Ending )  break;
+				if ( tag == Tag.EndOfText )  break;
 				
 				bool processed_tag = this.ProcessFormatTags(tag, fontStack, supplItem, parameters);
 				
@@ -2639,11 +2653,11 @@ namespace Epsitec.Common.Widgets
 							
 							this.FinishRun(runList, run);
 							this.FinishRun(runList, new Drawing.TextBreakNew.Run(1, -1, image.Width));
-							buffer.Append('\ufffc');
+							buffer.Append(TextLayout.CodeObject);
 							break;
 
 						case Tag.LineBreak:
-							buffer.Append('\u2028');	//	line separator
+							buffer.Append(TextLayout.CodeLineBreak);	//	line separator
 							run.Length++;
 							break;
 
@@ -2663,25 +2677,13 @@ namespace Epsitec.Common.Widgets
 			//	TextBreak. Cette information ne changera que si le texte sous-jacent
 			//	est modifié.
 			
-			Drawing.TextBreakNew tbn = new Drawing.TextBreakNew();
-			tbn.SetText(buffer.ToString(), this.breakMode);
-			tbn.SetFonts(fontList);
-			tbn.SetRuns(runList);
-			
-			double width = this.layoutSize.Width;
-			
-			tbn.Rewind();
-			
-			string chunkText;
-			double chunkWidth;
-			int    chunkSkip;
-			
-			while (tbn.GetNextBreak(width, out chunkText, out chunkWidth, out chunkSkip))
-			{
-				System.Diagnostics.Debug.WriteLine(chunkText);
-			}
+			this.textBreak = new Drawing.TextBreakNew();
+			this.textBreak.SetText(buffer.ToString(), this.breakMode);
+			this.textBreak.SetFonts(fontList);
+			this.textBreak.SetRuns(runList);
 		}
-
+		
+		
 		protected void JustifBlocks()
 		{
 			// Met à jour this.blocks en fonction du texte, de la fonte et des dimensions.
@@ -2696,6 +2698,7 @@ namespace Epsitec.Common.Widgets
 			// Si le texte n'existe pas, met quand même un bloc vide,
 			// afin de voir apparaître le curseur (FindTextCursor).
 			int textLength = this.TextLength;
+no_text:
 			if ( textLength == 0 )
 			{
 				fontItem = (FontItem)fontStack.Peek();
@@ -2728,10 +2731,26 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
+			this.SetupTextBreak();
+			
+			Drawing.TextBreakNew.Line[] lines = this.textBreak.GetLines(this.layoutSize.Width);
+			
+			if ( lines == null )
+			{
+				textLength = 0;
+				goto no_text;
+			}
+			
+			
+			int lineNumber = 0;
+			int lineSkip   = 0;
+			
+			int sourceLength = 0;
+			
 			SupplItem supplItem = new SupplItem();
 			buffer = new System.Text.StringBuilder();
 			bool	bol = true;
-			double	restWidth = this.layoutSize.Width;
+			double	remainingWidth = this.layoutSize.Width;
 			int		beginOffset;
 			int		endOffset = 0;
 			int		index = 0;
@@ -2740,22 +2759,79 @@ namespace Epsitec.Common.Widgets
 			{
 				beginOffset = endOffset;
 				Tag tag = TextLayout.ParseTag(this.text, ref endOffset, out parameters);
-
-				if ( tag != Tag.None )
+				Tag tag2 = tag;
+				char c = TextLayout.CodeNull;
+				
+				if ( tag == Tag.None )
+				{
+					if ( lineSkip <= lines[lineNumber].Skip )
+					{
+						if ( buffer.Length == 0 )  textIndex = index;
+						endOffset = beginOffset;
+						c = TextLayout.AnalyseEntityChar(this.text, ref endOffset);
+					}
+					else
+					{
+						System.Diagnostics.Debug.WriteLine("lineSkip error");
+					}
+				}
+				else if ( tag == Tag.LineBreak )
+				{
+					if ( buffer.Length == 0 )  textIndex = index;
+					lineNumber++;
+					lineSkip = 0;
+				}
+				else if ( tag == Tag.Image )
+				{
+					if ( buffer.Length == 0 )  textIndex = index;
+					c = TextLayout.CodeObject;
+				}
+				else if ( tag == Tag.EndOfText )
+				{
+					if ( buffer.Length == 0 )  textIndex = index;
+				}
+				
+				if ( c != TextLayout.CodeNull )
+				{
+					if ( lineSkip == lines[lineNumber].Skip )
+					{
+						// Nous avons atteint la fin de la ligne courante. Il faut, par conséquent, forcer
+						// le passage à un nouveau bloc; d'abord, il faut copier les éventuels caractères
+						// supplémentaires rajoutés automatiquement pour représenter la césure :
+						
+						string lineText = lines[lineNumber].Text;
+						
+						while ( lineSkip < lineText.Length )
+						{
+							buffer.Append(lineText[lineSkip++]);
+						}
+						
+						lineNumber++;
+						lineSkip = 1;
+						
+						tag2 = Tag.AutoLineBreak;
+					}
+					else
+					{
+						lineSkip++;
+					}
+				}
+				
+				if ( tag2 != Tag.None )
 				{
 					fontItem = (FontItem)fontStack.Peek();
 					Drawing.Font blockFont = fontItem.RetFont(supplItem.bold>0, supplItem.italic>0);
 					
 					if ( (tag == Tag.LineBreak && buffer.Length == 0) ||
-						 (tag == Tag.Ending && buffer.Length == 0 && bol) )
+						 (tag == Tag.EndOfText && buffer.Length == 0 && bol) )
 					{
 						JustifBlock block = new JustifBlock();
 						block.bol        = bol;
 						block.lineBreak  = (tag == Tag.LineBreak);
 						block.image      = false;
 						block.text       = "";
-						block.beginIndex = index;
-						block.endIndex   = index;
+						block.beginIndex = textIndex;
+						block.endIndex   = textIndex;
 						block.indexLine  = 0;
 						block.font       = blockFont;
 						block.fontSize   = fontItem.fontSize;
@@ -2776,6 +2852,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
+#if false
 						Drawing.TextBreakMode mode = this.breakMode;
 						if ( !bol )  mode &= ~Drawing.TextBreakMode.Split;
 						Drawing.TextBreak tb = new Drawing.TextBreak(blockFont, buffer.ToString(), fontItem.fontSize, mode);
@@ -2783,12 +2860,12 @@ namespace Epsitec.Common.Widgets
 						string breakText;
 						double breakWidth;
 						int    breakChars;
-						while ( tb.GetNextBreak(restWidth, out breakText, out breakWidth, out breakChars) )
+						while ( tb.GetNextBreak(remainingWidth, out breakText, out breakWidth, out breakChars) )
 						{
 							if ( breakWidth == 0 )  // pas la place ?
 							{
-								if ( restWidth == this.layoutSize.Width )  break;
-								restWidth = this.layoutSize.Width;
+								if ( remainingWidth == this.layoutSize.Width )  break;
+								remainingWidth = this.layoutSize.Width;
 								bol = true;
 								continue;
 							}
@@ -2830,22 +2907,81 @@ namespace Epsitec.Common.Widgets
 
 							if ( tb.MoreText )  // reste encore du texte ?
 							{
-								restWidth = this.layoutSize.Width;
+								remainingWidth = this.layoutSize.Width;
 								bol = true;
 							}
 							else
 							{
-								restWidth -= breakWidth;
+								remainingWidth -= breakWidth;
 								bol = false;
 							}
 							textIndex += breakChars;
 						}
+#else
+						string text = buffer.ToString();
+						
+						if ( tag2 == Tag.AutoLineBreak )
+						{
+							sourceLength -= text.Length;
+							text = text.TrimEnd(TextLayout.CodeSpace);
+							sourceLength += text.Length;
+						}
+						
+						JustifBlock block = new JustifBlock();
+						block.bol        = bol;
+						block.lineBreak  = tag == Tag.LineBreak;
+						block.image      = false;
+						block.text       = text;
+						block.beginIndex = textIndex;
+						block.endIndex   = textIndex+sourceLength;
+						block.indexLine  = 0;
+						block.font       = blockFont;
+						block.fontSize   = fontItem.fontSize;
+						block.fontColor  = fontItem.fontColor;
+						block.bold       = supplItem.bold > 0;
+						block.italic     = supplItem.italic > 0;
+						block.underline  = supplItem.underline > 0;
+						block.anchor     = supplItem.anchor > 0;
+						block.wave       = supplItem.wave > 0;
+						block.waveColor  = supplItem.waveColor;
+						block.width      = blockFont.GetTextAdvance(text)*fontItem.fontSize;
+						block.pos        = new Drawing.Point(0,0);
+						block.visible    = false;
+						
+						if ( this.justifMode == TextJustifMode.None )
+						{
+							block.infos     = null;
+							block.infoWidth = 0;
+							block.infoElast = 0;
+						}
+						else if ( block.text != "" )
+						{
+							block.font.GetTextClassInfos(block.text, out block.infos, out block.infoWidth, out block.infoElast);
+						}
+						
+						if ( block.text != "" || block.lineBreak )
+						{
+							this.blocks.Add(block);
+						}
+						
+						if ( tag2 == Tag.AutoLineBreak )
+						{
+							remainingWidth = this.layoutSize.Width;
+							bol = true;
+						}
+						else if ( block.text != "" )
+						{
+							remainingWidth -= block.width;
+							bol = false;
+						}
+						textIndex = index;
+#endif
 					}
-
-					buffer = new System.Text.StringBuilder();
+					buffer.Length = 0;
+					sourceLength = 0;
 				}
 
-				if ( tag == Tag.Ending )  break;
+				if ( tag == Tag.EndOfText )  break;
 
 				if ( this.ProcessFormatTags(tag, fontStack, supplItem, parameters) == false )
 				{
@@ -2867,9 +3003,9 @@ namespace Epsitec.Common.Widgets
 									double dx = image.Width;
 									double dy = image.Height;
 
-									if ( dx > restWidth )
+									if ( dx > remainingWidth )
 									{
-										restWidth = this.layoutSize.Width;
+										remainingWidth = this.layoutSize.Width;
 										bol = true;
 									}
 
@@ -2886,7 +3022,7 @@ namespace Epsitec.Common.Widgets
 									block.image      = true;
 									block.text       = imageName;
 									block.beginIndex = index;
-									block.endIndex   = endOffset-beginOffset;
+									block.endIndex   = index+1;
 									block.indexLine  = 0;
 									block.font       = blockFont;
 									block.fontSize   = fontItem.fontSize;
@@ -2924,23 +3060,22 @@ namespace Epsitec.Common.Widgets
 
 									this.blocks.Add(block);
 
-									restWidth -= dx;
+									remainingWidth -= dx;
 									bol = false;
+									index ++;
 								}
 							}
 							break;
 
 						case Tag.LineBreak:
-							restWidth = this.layoutSize.Width;
+							remainingWidth = this.layoutSize.Width;
 							bol = true;
 							index ++;
 							break;
 
 						case Tag.None:
-							if ( buffer.Length == 0 )  textIndex = index;
-							endOffset = beginOffset;
-							char c = TextLayout.AnalyseEntityChar(this.text, ref endOffset);
 							buffer.Append(c);
+							sourceLength ++;
 							index ++;
 							break;
 					}
@@ -3313,9 +3448,11 @@ namespace Epsitec.Common.Widgets
 			None,							// pas un tag
 			Unknown,						// tag pas reconnu
 			SyntaxError,					// syntaxe du tag pas correcte
-			Ending,							// fin du texte
+			EndOfText,						// fin du texte
 			
+			AutoLineBreak,					// coupure automatique en fin de ligne
 			LineBreak,						// <br/>
+			
 			Bold,		BoldEnd,			// <b>...</b>
 			Italic,		ItalicEnd,			// <i>...</i>
 			Underline,	UnderlineEnd,		// <u>...</u>
@@ -3575,7 +3712,13 @@ namespace Epsitec.Common.Widgets
 		protected static Drawing.Color			anchorColor		= new Drawing.Color(0,0,1);
 		protected static Drawing.Color			waveColor		= new Drawing.Color(1,0,0);
 		protected bool							showLineBreak	= false;
+		protected Drawing.TextBreakNew			textBreak;
 		
 		public const double						Infinite		= 1000000;
+		
+		public const char						CodeNull		= '\u0000';
+		public const char						CodeSpace		= '\u0020';
+		public const char						CodeObject		= '\ufffc';
+		public const char						CodeLineBreak	= '\u2028';
 	}
 }

@@ -6,7 +6,7 @@ namespace Epsitec.Common.Drawing
 	{
 		[Test] public void CheckBreak()
 		{
-			TextBreakNew tb = new TextBreakNew ();
+			TextBreak tb = new TextBreak ();
 			
 			string[] text = new string[3];
 			

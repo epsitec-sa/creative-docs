@@ -677,7 +677,7 @@ namespace Epsitec.Common.Widgets
 			s += "On donnait ce jour-là un grand dîner, où, pour la première fois, je vis avec beaucoup d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête. Par hasard on vint à parler de la devise de la maison de Solar, qui était sur la tapisserie avec les armoiries: <i>Tel fiert qui ne tue pas</i>. Comme les Piémontais ne sont pas pour l'ordinaire consommés par la langue française, quelqu'un trouva dans cette devise une faute d'orthographe, et dit qu'au mot <i>fiert</i> il ne fallait point de <i>t</i>.<br/>";
 			s += "Le vieux comte de Gouvon allait répondre; mais ayant jeté les yeux sur moi, il vit que je souriait sans oser rien dire: il m'ordonna de parler. Alors je dis que je ne croyait pas que le <i>t</i> fût de trop, que <i>fiert</i> était un vieux mots français qui ne venait pas du nom <i>ferus</i>, fier, menaçant, mais du verbe <i>ferit</i>, il frappe, il blesse; qu'ainsi la devise ne me paraissait pas dire: Tel menace, mais <i>tel frappe qui ne tue pas</i>.<br/>";
 			s += "Tout le monde me regardait et se regardait sans rien dire. On ne vit de la vie un pareil étonnement. Mais ce qui me flatta davantage fut de voir clairement sur le visage de Mlle de Breil un air de satisfaction. Cette personne si dédaigneuse daigna me jeter un second regard qui valait tout au moins le premier; puis, tournant les yeux vers son grand-papa, elle semblait attendre avec une sorte d'impatience la louange qu'il me devait, et qu'il me donna en effet si pleine et entière et d'un air si content, que toute la table s'empressa de faire chorus. Ce moment fut court, mais délicieux à tous égards. Ce fut un de ces moments trop rares qui replacent les choses dans leur ordre naturel, et vengent le mérite avili des outrages de la fortune.<br/>";
-			s += "<b>FIN</b>";
+			s += "<b>FIN</b><br/><br/>Voici une image <img src=\"file:images/icon.png\"/> intégrée dans le texte.";
 			multi.Text = s;
 
 			multi.Alignment = Drawing.ContentAlignment.TopLeft;
@@ -688,6 +688,7 @@ namespace Epsitec.Common.Widgets
 			multi.ScrollZone = 0.2;
 			multi.Anchor = AnchorStyles.All;
 			multi.AnchorMargins = new Margins(10, 10, 40, 30);
+			multi.AnchorMargins = new Margins(60, 60, 40, 30);
 			multi.Parent = window.Root;
 			multi.SetProperty("stats", stats);
 			multi.SelectionChanged += new EventHandler(this.HandleMultiSelectionOrCursorChanged);
@@ -794,7 +795,7 @@ namespace Epsitec.Common.Widgets
 			window.FocusedWidget    = multi;
 			window.Show();
 			
-			multi.Text = @"abc <b>def</b> ghi.<br/>123 <i>456</i> 789 <b>qrs</b>.<br/>A<img src=""file:images/icon.png""/>B<br/>";
+//			multi.Text = @"abc <b>def</b> ghi.<br/>123 <i>456</i> 789 <b>qrs</b>.<br/>A<img src=""file:images/icon.png""/>B<br/>";
 			
 			return window;
 		}

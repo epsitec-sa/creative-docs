@@ -372,7 +372,7 @@ namespace Epsitec.Common.Widgets
 				this.context.CursorFrom  = index;
 				this.context.CursorTo    = index;
 				this.context.CursorAfter = after;
-				this.textLayout.MemoryCursorPosX(this.context);
+				this.textLayout.DefineCursorPosX(this.context);
 				this.OnCursorChanged(true);
 				return true;
 			}
@@ -389,7 +389,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.context.CursorTo    = index;
 				this.context.CursorAfter = after;
-				this.textLayout.MemoryCursorPosX(this.context);
+				this.textLayout.DefineCursorPosX(this.context);
 				this.OnCursorChanged(true);
 			}
 		}
@@ -424,7 +424,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.context.CursorTo    = index;
 					this.context.CursorAfter = after;
-					this.textLayout.MemoryCursorPosX(this.context);
+					this.textLayout.DefineCursorPosX(this.context);
 				}
 			}
 
