@@ -9,8 +9,6 @@ namespace Epsitec.Common.Tests
 	{
 		static TransformTest()
 		{
-			try { System.Diagnostics.Debug.WriteLine (""); } 
-			catch { }
 		}
 		
 		[SetUp] public void Initialise()

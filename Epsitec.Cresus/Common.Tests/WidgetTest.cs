@@ -10,7 +10,6 @@ namespace Epsitec.Common.Tests
 	{
 		static WidgetTest()
 		{
-			try { System.Diagnostics.Debug.WriteLine (""); } catch { }
 		}
 		
 		[Test] public void CheckParentChildRelationship()

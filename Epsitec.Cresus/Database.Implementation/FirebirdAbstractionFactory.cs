@@ -16,7 +16,11 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		public IDbAbstraction NewDbAbstraction(DbAccess db_access)
 		{
-			return null;
+			System.Diagnostics.Debug.Assert (db_access.provider == this.ProviderName);
+			
+			FirebirdAbstraction fb = new FirebirdAbstraction (db_access, this);
+			
+			return fb;
 		}
 		
 		public string								ProviderName

@@ -9,8 +9,6 @@ namespace Epsitec.Common.Tests
 	{
 		static CustomWidgetTest()
 		{
-			try { System.Diagnostics.Debug.WriteLine (""); } 
-			catch { }
 		}
 		
 		[Test] public void CheckCustomWidgetSimpleWindow()
