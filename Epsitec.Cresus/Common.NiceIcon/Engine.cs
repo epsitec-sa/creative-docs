@@ -38,7 +38,8 @@ namespace Epsitec.Common.NiceIcon
 					context.ScaleX = size.Width / 100;
 					context.ScaleY = size.Height / 100;
 					
-					graphics.ScaleTransform(context.ScaleX, context.ScaleY, 0.5, 2);
+					graphics.TranslateTransform(0.5, 0.5);
+					graphics.ScaleTransform(context.ScaleX, context.ScaleY, 0, 0);
 					
 					icon.DrawGeometry(graphics, context);
 				}

@@ -151,6 +151,16 @@ namespace Epsitec.Common.Drawing
 			return new Point (a.x - b.Width, a.y - b.Height);
 		}
 		
+		public static Point operator *(Point a, double value)
+		{
+			return new Point (a.x * value, a.y * value);
+		}
+		
+		public static Point operator /(Point a, double value)
+		{
+			return new Point (a.x / value, a.y / value);
+		}
+		
 		
 		public static bool operator ==(Point a, Point b)
 		{

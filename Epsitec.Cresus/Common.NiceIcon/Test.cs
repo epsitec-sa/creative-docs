@@ -200,9 +200,9 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new Drawing.Size(200, 180);
 			window.Text = "CheckCanvasEngine";
 			
-			StaticText icon1 = new StaticText (@"<img src=""file:images/open2.icon""/>");
-			StaticText icon2 = new StaticText (@"<img src=""file:images/open2.icon""/>");
-			StaticText icon3 = new StaticText (@"<img src=""file:images/open2.icon""/>");
+			StaticText icon1 = new StaticText (@"<img src=""file:images/new1.icon""/>");
+			StaticText icon2 = new StaticText (@"<img src=""file:images/new1.icon""/>");
+			StaticText icon3 = new StaticText (@"<img src=""file:images/new1.icon""/>");
 			
 			icon1.Dock = DockStyle.Top;
 			icon1.Parent = window.Root;
@@ -238,7 +238,7 @@ namespace Epsitec.Common.Tests
 
 		private void CanvasEngineButtonClicked(object sender, MessageEventArgs e)
 		{
-			Support.ImageProvider.Default.ClearImageCache ("file:images/open2.icon");
+			Support.ImageProvider.Default.ClearImageCache ("file:images/new1.icon");
 			System.Diagnostics.Debug.WriteLine ("Image cache cleared.");
 			Widget widget = sender as Widget;
 			widget.RootParent.Invalidate ();
