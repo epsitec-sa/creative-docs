@@ -1207,7 +1207,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 					case Drawing.PathElement.LineTo:
 						p1 = points[i++];
-						if ( Drawing.Point.Detect(current,p1, pos, width) )  return rank;
+						if ( Drawing.Point.DetectSegment(current,p1, pos, width) )  return rank;
 						rank ++;
 						current = p1;
 						break;
@@ -1215,7 +1215,7 @@ namespace Epsitec.Common.Pictogram.Data
 					case Drawing.PathElement.Curve3:
 						p1 = points[i++];
 						p2 = points[i++];
-						if ( Drawing.Point.Detect(current,p1,p1,p2, pos, width) )  return rank;
+						if ( Drawing.Point.DetectBezier(current,p1,p1,p2, pos, width) )  return rank;
 						rank ++;
 						current = p2;
 						break;
@@ -1224,7 +1224,7 @@ namespace Epsitec.Common.Pictogram.Data
 						p1 = points[i++];
 						p2 = points[i++];
 						p3 = points[i++];
-						if ( Drawing.Point.Detect(current,p1,p2,p3, pos, width) )  return rank;
+						if ( Drawing.Point.DetectBezier(current,p1,p2,p3, pos, width) )  return rank;
 						rank ++;
 						current = p3;
 						break;
@@ -1232,7 +1232,7 @@ namespace Epsitec.Common.Pictogram.Data
 					default:
 						if ( (elements[i] & Drawing.PathElement.FlagClose) != 0 )
 						{
-							if ( Drawing.Point.Detect(current,start, pos, width) )  return rank;
+							if ( Drawing.Point.DetectSegment(current,start, pos, width) )  return rank;
 							rank ++;
 						}
 						i ++;
@@ -1397,7 +1397,7 @@ namespace Epsitec.Common.Pictogram.Data
 			double step = 1.0/10.0;  // nombre arbitraire de 10 subdivisions
 			for ( double t=0 ; t<=1.0 ; t+=step )
 			{
-				bbox.MergeWith(Drawing.Point.Bezier(p1, s1, s2, p2, t));
+				bbox.MergeWith(Drawing.Point.FromBezier(p1, s1, s2, p2, t));
 			}
 		}
 

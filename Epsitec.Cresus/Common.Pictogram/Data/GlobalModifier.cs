@@ -382,12 +382,12 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			get
 			{
-				return this.p1+(this.p2-this.p1).ScaleMul(this.center);
+				return this.p1+Drawing.Point.ScaleMul(this.p2-this.p1, this.center);
 			}
 
 			set
 			{
-				this.center = (value-this.p1).ScaleDiv(this.p2-this.p1);
+				this.center = Drawing.Point.ScaleDiv(value-this.p1, this.p2-this.p1);
 			}
 		}
 
@@ -421,8 +421,8 @@ namespace Epsitec.Common.Pictogram.Data
 		// Transforme un point.
 		static public Drawing.Point Transform(GlobalModifierData initial, GlobalModifierData final, Drawing.Point pos)
 		{
-			Drawing.Point f = (pos-initial.P1).ScaleDiv(initial.P2-initial.P1);
-			pos = f.ScaleMul(final.P2-final.P1)+final.P1;
+			Drawing.Point f = Drawing.Point.ScaleDiv(pos-initial.P1, initial.P2-initial.P1);
+			pos = Drawing.Point.ScaleMul(f, final.P2-final.P1)+final.P1;
 
 			double rot = final.Angle-initial.Angle;
 			if ( rot != 0 )

@@ -95,7 +95,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public void SnapGrid(ref Drawing.Point pos)
 		{
 			if ( !this.gridActive )  return;
-			pos = pos.GridAlign(new Drawing.Point(this.gridStep.X/2, this.gridStep.Y/2), this.gridStep);
+			pos = Drawing.Point.GridAlign(pos, new Drawing.Point(this.gridStep.X/2, this.gridStep.Y/2), this.gridStep);
 		}
 
 		// Force un point sur la grille magnétique.
@@ -103,7 +103,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			if ( !this.gridActive )  return;
 			pos -= origin;
-			pos = pos.GridAlign(new Drawing.Point(0, 0), this.gridStep);
+			pos = Drawing.Point.GridAlign(pos, new Drawing.Point(0, 0), this.gridStep);
 			pos += origin;
 		}
 
