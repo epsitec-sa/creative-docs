@@ -121,7 +121,7 @@ namespace Epsitec.Common.Designer
 				
 				for (int i = 0; i < num; i++)
 				{
-					ResourceBundle.Field field = this.bundle.CreateEmptyField (ResourceFieldType.Data);
+					ResourceBundle.Field field = this.bundle.CreateField (ResourceFieldType.Data);
 					this.bundle.Insert (row++, field);
 				}
 				
@@ -159,6 +159,12 @@ namespace Epsitec.Common.Designer
 					this.SetCellText (row_a, i, b);
 					this.SetCellText (row_b, i, a);
 				}
+				
+				string about_a = this.bundle[row_a].About;
+				string about_b = this.bundle[row_b].About;
+				
+				this.bundle[row_a].SetAbout (about_b);
+				this.bundle[row_b].SetAbout (about_a);
 				
 				this.changing--;
 				this.OnStoreChanged ();

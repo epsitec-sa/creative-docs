@@ -505,7 +505,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public Field CreateEmptyField(ResourceFieldType type)
+		public Field CreateField(ResourceFieldType type)
 		{
 			if (type != ResourceFieldType.Data)
 			{
@@ -910,6 +910,26 @@ namespace Epsitec.Common.Support
 			public bool						IsEmpty
 			{
 				get { return this.parent == null; }
+			}
+			
+			public bool						IsValid
+			{
+				get
+				{
+					if (this.IsEmpty)
+					{
+						return false;
+					}
+					
+					if ((this.name == null) ||
+						(this.name.Length == 0) ||
+						(this.name == "?"))
+					{
+						return false;
+					}
+					
+					return true;
+				}
 			}
 			
 			public bool						IsRef

@@ -429,8 +429,8 @@ namespace Epsitec.Common.Support
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			
-			ResourceBundle.Field field_1 = bundle.CreateEmptyField (ResourceFieldType.Data);
-			ResourceBundle.Field field_2 = bundle.CreateEmptyField (ResourceFieldType.Data);
+			ResourceBundle.Field field_1 = bundle.CreateField (ResourceFieldType.Data);
+			ResourceBundle.Field field_2 = bundle.CreateField (ResourceFieldType.Data);
 			
 			field_1.SetName ("a");
 			field_1.SetStringValue ("A");

@@ -63,9 +63,8 @@ namespace Epsitec.Common.Designer.Panels
 			this.edit_array.TitleWidget = title;
 			this.edit_array.SearchCaption = @"<b>Recherche. </b><font size=""90%"">Tapez le texte à chercher ci-dessous&#160;:</font>";
 			
-			this.edit_array.SelectedIndexChanging += new EventHandler(this.HandleEditArraySelectedIndexChanging);
-			this.edit_array.SelectedIndexChanged  += new EventHandler(this.HandleEditArraySelectedIndexChanged);
-			this.edit_array.DoubleClicked         += new MessageEventHandler (this.HandleEditArrayDoubleClicked);
+			this.edit_array.SelectedIndexChanged += new EventHandler(this.HandleEditArraySelectedIndexChanged);
+			this.edit_array.DoubleClicked        += new MessageEventHandler (this.HandleEditArrayDoubleClicked);
 			this.edit_array.TabIndex = 0;
 			
 			StaticText     text_label = new StaticText (parent);
@@ -80,6 +79,7 @@ namespace Epsitec.Common.Designer.Panels
 			text_field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			text_field.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
 			text_field.TabIndex      = 1;
+			text_field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
 			title.Caption = @"<font size=""120%"">Bundle.</font> Édition des données contenues dans la ressource.";
 			
@@ -95,16 +95,6 @@ namespace Epsitec.Common.Designer.Panels
 			this.edit_array.SelectedIndex = 0;
 		}
 		
-		
-		private void HandleEditArraySelectedIndexChanging(object sender)
-		{
-			int index = this.edit_array.SelectedIndex;
-			
-			if (index >= 0)
-			{
-				this.bundle[index].SetAbout (this.comment.Text);
-			}
-		}
 		
 		private void HandleEditArraySelectedIndexChanged(object sender)
 		{
