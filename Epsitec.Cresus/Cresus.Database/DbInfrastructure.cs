@@ -1291,11 +1291,17 @@ namespace Epsitec.Cresus.Database
 				//	contient toute l'information nécessaire à la création d'une instance de la
 				//	class DbEnumValue :
 				
-				values[i] = new DbEnumValue ();
+				string val_name = Converter.ToString (data_row["E_NAME"]);
+				string val_id   = Converter.ToString (data_row["E_ID"]);
+				string val_info = Converter.ToString (data_row["E_INFO"]);
 				
-				values[i].Attributes.SetAttribute (Tags.Name,	 Converter.ToString (data_row["E_NAME"]));
-				values[i].Attributes.SetAttribute (Tags.InfoXml, Converter.ToString (data_row["E_INFO"]));
-				values[i].Attributes.SetAttribute (Tags.Id,		 Converter.ToString (data_row["E_ID"]));
+				System.Xml.XmlDocument xml = new System.Xml.XmlDocument ();
+				xml.LoadXml (val_info);
+				
+				values[i] = new DbEnumValue (xml.DocumentElement);
+				
+				values[i].Attributes.SetAttribute (Tags.Name, val_name);
+				values[i].Attributes.SetAttribute (Tags.Id, val_id);
 				
 				this.DefineLocalisedAttributes (data_row, "ENUM_CAPTION", DbColumn.TagCaption, values[i].Attributes, Tags.Caption);
 				this.DefineLocalisedAttributes (data_row, "ENUM_DESCRIPTION", DbColumn.TagDescription, values[i].Attributes, Tags.Description);
@@ -1621,7 +1627,7 @@ namespace Epsitec.Cresus.Database
 			fields.Add (enum_def.Columns[DbColumn.TagRevision]	.CreateSqlField (this.type_converter, value.InternalKey.Revision));
 			fields.Add (enum_def.Columns[DbColumn.TagStatus]	.CreateSqlField (this.type_converter, value.InternalKey.RawStatus));
 			fields.Add (enum_def.Columns[DbColumn.TagName]		.CreateSqlField (this.type_converter, value.Name));
-			fields.Add (enum_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, DbEnumValue.ConvertValueToXml (value)));
+			fields.Add (enum_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, DbEnumValue.ConvertValueToXml (value, false)));
 			fields.Add (enum_def.Columns[DbColumn.TagRefType]	.CreateSqlField (this.type_converter, type.InternalKey.Id));
 			
 			this.sql_builder.InsertData (enum_def.CreateSqlName (), fields);
