@@ -212,9 +212,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Crée le panneau permettant d'éditer la propriété.
-		public override AbstractPanel CreatePanel()
+		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
-			return new PanelGradient();
+			return new PanelGradient(drawer);
 		}
 
 
@@ -230,7 +230,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( this.middle != 0.0 )
 			{
 				double delta = System.Math.Sin(System.Math.PI*progress)*this.middle*0.45;
-				Drawing.Point p = Drawing.Transform.RotatePointRad(System.Math.PI/4, new Drawing.Point(progress*System.Math.Sqrt(2), delta));
+				Drawing.Point p = Drawing.Transform.RotatePointDeg(45, new Drawing.Point(progress*System.Math.Sqrt(2), delta));
 				progress = p.Y;
 			}
 			return progress;
@@ -507,8 +507,8 @@ namespace Epsitec.Common.Pictogram.Data
 			double distPerp = Drawing.Point.Distance(p1, p2)*perp;
 			Drawing.Point c = Drawing.Point.Move(p2, p1, distPara);
 			Drawing.Point p = Drawing.Point.Move(c, Drawing.Point.Symmetry(p2, p1), distPerp);
-			double angle = (rank==0) ? System.Math.PI/2 : -System.Math.PI/2;
-			return Drawing.Transform.RotatePointRad(c, angle, p);
+			double angle = (rank==0) ? 90 : -90;
+			return Drawing.Transform.RotatePointDeg(c, angle, p);
 		}
 
 		// Dessine les traits de construction avant les poignées.
