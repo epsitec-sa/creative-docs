@@ -158,10 +158,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			Drawing.Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			r.Right = rect.Right-100;
+			r.Right = rect.Right-110;
 			this.label.Bounds = r;
 
-			r.Left = rect.Right-100;
+			r.Left = rect.Right-110;
 			r.Right = rect.Right;
 			this.fieldType.Bounds = r;
 
