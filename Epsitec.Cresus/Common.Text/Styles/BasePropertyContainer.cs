@@ -53,6 +53,14 @@ namespace Epsitec.Common.Text.Styles
 			}
 		}
 		
+		public bool								IsEmpty
+		{
+			get
+			{
+				return (this.properties == null) || (this.properties.Length == 0);
+			}
+		}
+		
 		
 		public void IncrementUserCount()
 		{

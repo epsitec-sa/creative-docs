@@ -199,7 +199,9 @@ namespace Epsitec.Common.Text
 			
 			TextConverter.ConvertFromString (simple_text, out utf32);
 			
-			//	Génère l'objet style correspondant aux attributs spécifiés :
+			//	Trie les propriétés selon leur type; certaines vont servir à
+			//	définir le style, d'autres à définir les réglages locaux et
+			//	spéciaux :
 			
 			int length = properties.Count;
 			
@@ -218,24 +220,30 @@ namespace Epsitec.Common.Text
 					case Properties.PropertyType.Style:
 						prop_style.Add (prop_mixed[i]);
 						break;
+					
 					case Properties.PropertyType.LocalSetting:
 						prop_local.Add (prop_mixed[i]);
 						break;
+					
 					case Properties.PropertyType.ExtraSetting:
 						prop_extra.Add (prop_mixed[i]);
 						break;
+					
 					default:
 						throw new System.ArgumentException ("Invalid property type", "properties");
 				}
 			}
 			
-			//	TODO: générer 'style'
+			//	Génère le style et les réglages en fonction des propriétés :
 			
 			Styles.SimpleStyle   search_style = new Styles.SimpleStyle (prop_style);
 			Styles.LocalSettings search_local = new Styles.LocalSettings (prop_local);
 			Styles.ExtraSettings search_extra = new Styles.ExtraSettings (prop_extra);
 			
 			ulong style = 0;
+			
+			//	Attache le style et les réglages; réutilise de manière interne
+			//	un style existant, si possible :
 			
 			this.style_list.StyleTable.Attach (ref style, search_style, search_local, search_extra);
 			

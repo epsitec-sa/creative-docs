@@ -47,6 +47,18 @@ namespace Epsitec.Common.Text.Internal
 			//	Variante de Attach avec réglages spécifiques (voir méthode simple
 			//	ci-dessus).
 			
+			if ((local_settings != null) &&
+				(local_settings.IsEmpty))
+			{
+				local_settings = null;
+			}
+			
+			if ((extra_settings != null) &&
+				(extra_settings.IsEmpty))
+			{
+				extra_settings = null;
+			}
+			
 			if ((local_settings == null) &&
 				(extra_settings == null))
 			{
