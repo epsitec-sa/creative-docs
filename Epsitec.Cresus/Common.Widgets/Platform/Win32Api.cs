@@ -27,6 +27,8 @@ namespace Epsitec.Common.Widgets
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr SelectObject(System.IntPtr dc, System.IntPtr handle_object);
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr DeleteObject(System.IntPtr handle_object);
 		[DllImport ("GDI32.dll")]	internal extern static bool DeleteDC(System.IntPtr dc);
+		[DllImport ("GDI32.dll")]	internal extern static void SetStretchBltMode(System.IntPtr dc, int mode);
+		[DllImport ("GDI32.dll")]	internal extern static void StretchBlt(System.IntPtr dc, int x, int y, int dx, int dy, System.IntPtr src_dc, int src_x, int src_y, int src_dx, int src_dy, int rop);
 		
 		[StructLayout(LayoutKind.Sequential, Pack=1)] public struct Point
 		{
@@ -123,6 +125,26 @@ namespace Epsitec.Common.Widgets
 			Win32Api.DeleteDC (memory_dc);
 			
 			return res;
+		}
+		
+		public static void GrabScreen(Drawing.Image bitmap, int x, int y)
+		{
+			System.Drawing.Bitmap   native = bitmap.BitmapImage.NativeBitmap;
+			System.Drawing.Graphics gfx = System.Drawing.Graphics.FromImage (native);
+			
+			System.IntPtr bitmap_dc  = gfx.GetHdc ();
+			System.IntPtr desktop_dc = Win32Api.GetDC (System.IntPtr.Zero);
+			
+			int dx = native.Width;
+			int dy = native.Height;
+			
+			Win32Api.SetStretchBltMode (bitmap_dc, Win32Const.BLT_COLOR_ON_COLOR);
+			Win32Api.StretchBlt (bitmap_dc, 0, 0, dx, dy, desktop_dc, x, y, dx, dy, Win32Const.ROP_SRC_COPY);
+			
+			gfx.ReleaseHdc (bitmap_dc);
+			Win32Api.ReleaseDC (System.IntPtr.Zero, desktop_dc);
+			gfx.Flush ();
+			gfx.Dispose ();
 		}
 	}
 }

@@ -90,5 +90,8 @@ namespace Epsitec.Common.Widgets
 		public const int SW_RESTORE          = 9;
 		public const int SW_SHOWDEFAULT      = 10;
 		public const int SW_FORCEMINIMIZE    = 11;
+		
+		public const int ROP_SRC_COPY		= 0xCC0020;
+		public const int BLT_COLOR_ON_COLOR	= 0x03;
 	}
 }
