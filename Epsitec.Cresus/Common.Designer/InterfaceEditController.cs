@@ -142,6 +142,32 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.DeselectAllWidgets ();
+				
+				this.active_editor = null;
+				this.active_widget = null;
+				
+				this.edit_window_list.Clear ();
+				this.editors = null;
+				
+				this.creation_book     = null;
+				
+				this.attribute_panel   = null;
+				this.main_panel        = null;
+				this.creation_panel    = null;
+				
+				this.attribute_palette = null;
+				this.widget_palette    = null;
+				this.data_palette      = null;
+			}
+			
+			base.Dispose (disposing);
+		}
+		
 		
 		protected void CreateMainPanel()
 		{
