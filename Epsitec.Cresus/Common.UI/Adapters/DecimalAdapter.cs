@@ -12,49 +12,60 @@ namespace Epsitec.Common.UI.Adapters
 	
 //	[Controller (1, typeof (Controllers.StringController))]
 	
-public class DecimalAdapter : AbstractAdapter
-{
-public DecimalAdapter()
-{
-}
+	public class DecimalAdapter : AbstractAdapter
+	{
+		public DecimalAdapter()
+		{
+		}
 		
-public DecimalAdapter(Binders.IBinder binder) : this ()
-{
-this.Binder = binder;
-this.Binder.Adapter = this;
-}
-		
-		
-public decimal							Value
-{
-get
-{
-return this.value;
-}
-set
-{
-if (this.value != value)
-{
-this.value = value;
-this.OnValueChanged ();
-}
-}
-}
+		public DecimalAdapter(Binders.IBinder binder) : this ()
+		{
+			this.Binder = binder;
+			this.Binder.Adapter = this;
+		}
 		
 		
-protected override object ConvertToObject()
-{
-return this.Value;
-}
+		public decimal							Value
+		{
+			get
+			{
+				return this.value;
+			}
+			set
+			{
+				if (this.value != value)
+				{
+					this.value = value;
+					this.OnValueChanged ();
+				}
+			}
+		}
 		
-protected override bool ConvertFromObject(object data)
-{
-this.Value = (decimal) data;
-return true;
-}
+		
+		protected override object ConvertToObject()
+		{
+			return this.Value;
+		}
+		
+		protected override bool ConvertFromObject(object data)
+		{
+			//	L'objet passé en entrée peut être de type decimal, mais peut très bien
+			//	aussi être de type bool, int, long ou string. Le passage par la classe
+			//	de conversion nous affranchit de ces problèmes.
+			
+			decimal value;
+			
+			if (Common.Converters.Converter.Convert (data, out value))
+			{
+				this.Value = value;
+				return true;
+			}
+			
+			return false;
+		}
 		
 		
 		
-private decimal							value;
-}
+		private decimal							value;
+	}
 }

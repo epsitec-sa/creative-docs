@@ -223,6 +223,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Controllers\WidgetStateController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Controllers\WidgetTextController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
