@@ -184,6 +184,26 @@ namespace Epsitec.Common.DynamicData
 		}
 		
 		
+		public static DynamicFieldCollection GetDynamicFiels(System.Data.DataTable table)
+		{
+			return table.ExtendedProperties[DynamicFieldCollection.DynamicFieldsName] as DynamicFieldCollection;
+		}
+		
+		public static void SetDynamicFiels(System.Data.DataTable table, DynamicFieldCollection dynamic_fields)
+		{
+			if (dynamic_fields == null)
+			{
+				if (table.ExtendedProperties.Contains (DynamicFieldCollection.DynamicFieldsName))
+				{
+					table.ExtendedProperties.Remove (DynamicFieldCollection.DynamicFieldsName);
+				}
+			}
+			else
+			{
+				table.ExtendedProperties[DynamicFieldCollection.DynamicFieldsName] = dynamic_fields;
+			}
+		}
+		
 		public static FieldMatchResult Combine(FieldMatchResult a, FieldMatchResult b)
 		{
 			switch (a)
@@ -359,6 +379,7 @@ namespace Epsitec.Common.DynamicData
 		public event Support.EventHandler		Changed;
 		#endregion
 		
+		private const string					DynamicFieldsName = "DynamicFields";
 		private System.Collections.ArrayList	list;
 	}
 }

@@ -18,7 +18,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (this.IsReady)
 			{
-				if (this.window == null)
+				if (this.Window == null)
 				{
 					throw new System.InvalidOperationException ("Cannot show window.");
 				}
@@ -28,28 +28,28 @@ namespace Epsitec.Common.Dialogs
 				if (owner != null)
 				{
 					Drawing.Rectangle owner_bounds  = owner.WindowBounds;
-					Drawing.Rectangle dialog_bounds = this.window.WindowBounds;
+					Drawing.Rectangle dialog_bounds = this.Window.WindowBounds;
 					
 					double ox = System.Math.Floor (owner_bounds.Left + (owner_bounds.Width - dialog_bounds.Width) / 2);
 					double oy = System.Math.Floor (owner_bounds.Top  - (owner_bounds.Height - dialog_bounds.Height) / 3 - dialog_bounds.Height);
 					
 					dialog_bounds.Location = new Drawing.Point (ox, oy);
 					
-					this.window.WindowBounds = dialog_bounds;
+					this.Window.WindowBounds = dialog_bounds;
 				}
 				
 				this.OnDialogOpening ();
 				
 				if (this.is_modal)
 				{
-					this.window.WindowShown += new Support.EventHandler (this.HandleWindowShown);
-					this.window.ShowDialog ();
-					this.window.WindowShown -= new Support.EventHandler (this.HandleWindowShown);
+					this.Window.WindowShown += new Support.EventHandler (this.HandleWindowShown);
+					this.Window.ShowDialog ();
+					this.Window.WindowShown -= new Support.EventHandler (this.HandleWindowShown);
 				}
 				else
 				{
-					this.window.Show ();
-					this.HandleWindowShown (this.window);
+					this.Window.Show ();
+					this.HandleWindowShown (this.Window);
 				}
 			}
 		}
@@ -58,9 +58,9 @@ namespace Epsitec.Common.Dialogs
 		{
 			if (this.IsReady)
 			{
-				if (this.window != null)
+				if (this.Window != null)
 				{
-					if (this.window.IsActive)
+					if (this.Window.IsActive)
 					{
 						//	Si la fenêtre est active, il faut faire attention à rendre d'abord
 						//	le parent actif, avant de cacher la fenêtre, pour éviter que le focus
@@ -74,16 +74,16 @@ namespace Epsitec.Common.Dialogs
 						}
 					}
 					
-					this.window.Hide ();
-					this.window.CommandDispatcher.Dispose ();
-					this.window.CommandDispatcher = null;
+					this.Window.Hide ();
+					this.Window.CommandDispatcher.Dispose ();
+					this.Window.CommandDispatcher = null;
 					
 					if (this.is_modal)
 					{
-						this.window.Close ();
+						this.Window.Close ();
 					}
 					
-					this.window.AsyncDispose ();
+					this.Window.AsyncDispose ();
 				}
 			}
 		}
@@ -110,10 +110,10 @@ namespace Epsitec.Common.Dialogs
 			}
 			set
 			{
-				if ((this.window != null) &&
-					(this.window.Owner != value))
+				if ((this.Window != null) &&
+					(this.Window.Owner != value))
 				{
-					this.window.Owner = value;
+					this.Window.Owner = value;
 					this.OnOwnerChanged ();
 				}
 			}
