@@ -89,6 +89,12 @@ namespace Epsitec.Cresus.Database
 					case SqlFunctionType.JoinInner:
 						return 2;
 
+					case SqlFunctionType.Substring:
+						return 3;
+
+					case SqlFunctionType.Upper:
+						return 1;
+					
 					default:
 						return 0;
 				}
@@ -145,6 +151,10 @@ namespace Epsitec.Cresus.Database
 		LogicNot,						//	NOT a
 		LogicAnd,						//	a AND b
 		LogicOr,						//	a OR b
+		
+		Substring,						//	SUBSTRING(a FROM b FOR c)
+		Upper,							//	UPPER(a)
+		Cast,							//	CAST(a AS b)
 		
 		//	Spécial, utilisé dans une condition SqlSelect pour générer une clause JOIN
 		

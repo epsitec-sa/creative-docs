@@ -366,7 +366,7 @@ namespace Epsitec.Cresus.Database
 		ParameterInOut,					//	paramètre en entrée et en sortie
 		ParameterResult,				//	paramètre en sortie (résultat de procédure)
 		
-		Name,							//	nom simple (nom de colonne, nom de table, ...)
+		Name,							//	nom simple (nom de colonne, nom de table, nom de type, ...)
 		QualifiedName,					//	nom qualifié (nom de table + nom de colonne)
 		
 		Aggregate,
