@@ -34,8 +34,8 @@ namespace Epsitec.Common.Widgets
 			
 			window.WindowLocation = new Point (50, 100);
 			
-			Assertion.AssertEquals ( 50.0, window.WindowLocation.X);
-			Assertion.AssertEquals (100.0, window.WindowLocation.Y);
+			Assert.AreEqual ( 50.0, window.WindowLocation.X);
+			Assert.AreEqual (100.0, window.WindowLocation.Y);
 			
 			System.Console.Out.WriteLine ("(2) Common.Widgets says Window is at " + window.WindowBounds.ToString ());
 			System.Console.Out.WriteLine ("    Windows.Forms says Window is at " + window.PlatformBounds.ToString ());
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("(3) Common.Widgets says Window is at " + window.WindowBounds.ToString ());
 			System.Console.Out.WriteLine ("    Windows.Forms says Window is at " + window.PlatformBounds.ToString ());
 			
-			Assertion.AssertEquals (ScreenInfo.GlobalArea.Top, window.WindowBounds.Top);
+			Assert.AreEqual (ScreenInfo.GlobalArea.Top, window.WindowBounds.Top);
 		}
 		
 		[Test] public void CheckMapWindowAndScreen()
@@ -60,8 +60,8 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("Position in window is {0}", pt0);
 			System.Console.Out.WriteLine ("Position in screen is {0}", pt1);
 			
-			Assertion.AssertEquals (0.0, pt2.X);
-			Assertion.AssertEquals (0.0, pt2.Y);
+			Assert.AreEqual (0.0, pt2.X);
+			Assert.AreEqual (0.0, pt2.Y);
 			
 			window.Show ();
 		}
@@ -511,5 +511,17 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (Window.IsApplicationActive == false);
 			System.Diagnostics.Debug.WriteLine ("Application deactivated");
 		}
+		
+//		[Test] public void Zzz()
+//		{
+//			Window window = new Window ();
+//			window.Text = "Zzz...";
+//			StaticText text = new StaticText ("Close this window to stop test");
+//			text.Parent = window.Root;
+//			text.Dock   = DockStyle.Fill;
+//			window.WindowSize = new Drawing.Size (200, 80);
+//			window.Show ();
+//			window.Run ();
+//		}
 	}
 }
