@@ -19,22 +19,10 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldExList()
 		{
-			this.button_ok     = new GlyphButton(this);
-			this.button_cancel = new GlyphButton(this);
+			this.accept_cancel_behavior = new Helpers.AcceptCancelBehavior (this);
 			
-			IFeel feel = Feel.Factory.Active;
-			
-			this.button_ok.Name        = "OK";
-			this.button_ok.GlyphShape  = GlyphShape.Validate;
-			this.button_ok.ButtonStyle = ButtonStyle.ExListMiddle;
-			this.button_ok.Clicked    += new MessageEventHandler(this.HandleButtonOkClicked);
-			this.button_ok.Shortcut    = feel.AcceptShortcut;
-			
-			this.button_cancel.Name        = "Cancel";
-			this.button_cancel.GlyphShape  = GlyphShape.Cancel;
-			this.button_cancel.ButtonStyle = ButtonStyle.ExListRight;
-			this.button_cancel.Clicked    += new MessageEventHandler(this.HandleButtonCancelClicked);
-			this.button_cancel.Shortcut    = feel.CancelShortcut;
+			this.accept_cancel_behavior.CancelClicked += new Support.EventHandler(this.HandleAcceptCancelCancelClicked);
+			this.accept_cancel_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptCancelAcceptClicked);
 			
 			this.IsReadOnly = true;
 			this.SwitchToState (TextFieldExListMode.Combo);
@@ -44,6 +32,21 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder (embedder);
 		}
+		
+		
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.accept_cancel_behavior.CancelClicked -= new Support.EventHandler(this.HandleAcceptCancelCancelClicked);
+				this.accept_cancel_behavior.AcceptClicked -= new Support.EventHandler(this.HandleAcceptCancelAcceptClicked);
+				
+				this.accept_cancel_behavior = null;
+			}
+			
+			base.Dispose (disposing);
+		}
+
 		
 		
 		public string							PlaceHolder
@@ -216,18 +219,9 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateButtonGeometry ();
 			
-			if ((this.button_ok != null) &&
-				(this.button_cancel != null))
+			if (this.accept_cancel_behavior != null)
 			{
-				Drawing.Rectangle bounds = this.GetButtonBounds ();
-				Drawing.Rectangle rect_1 = bounds;
-				Drawing.Rectangle rect_2 = bounds;
-				
-				rect_1.Right = rect_1.Left + rect_1.Width / 2;
-				rect_2.Left  = rect_1.Right;
-				
-				this.button_ok.Bounds     = rect_1;
-				this.button_cancel.Bounds = rect_2;
+				this.accept_cancel_behavior.UpdateButtonGeometry ();
 			}
 		}
 
@@ -239,8 +233,7 @@ namespace Epsitec.Common.Widgets
 				this.mode = mode;
 				
 				if ((this.button == null) ||
-					(this.button_ok == null) ||
-					(this.button_cancel == null))
+					(this.accept_cancel_behavior == null))
 				{
 					return;
 				}
@@ -249,17 +242,15 @@ namespace Epsitec.Common.Widgets
 				{
 					//	Montre les boutons de validation et d'annulation :
 					
-					this.margins.Right = this.button_ok.DefaultWidth + this.button_cancel.DefaultWidth;
+					this.margins.Right = this.accept_cancel_behavior.DefaultWidth;
 					this.button.SetVisible (false);
-					this.button_ok.SetVisible (true);
-					this.button_cancel.SetVisible (true);
+					this.accept_cancel_behavior.SetVisible (true);
 				}
 				else
 				{
 					this.margins.Right = this.button.DefaultWidth;
 					this.button.SetVisible (true);
-					this.button_ok.SetVisible (false);
-					this.button_cancel.SetVisible (false);
+					this.accept_cancel_behavior.SetVisible (false);
 				}
 				
 				this.UpdateButtonGeometry ();
@@ -272,12 +263,10 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateButtonEnable()
 		{
-			if ((this.button_ok != null) &&
+			if ((this.accept_cancel_behavior != null) &&
 				(this.mode == TextFieldExListMode.EditActive))
 			{
-				bool enable_ok = this.IsValid;
-				
-				this.button_ok.SetEnabled (enable_ok);
+				this.accept_cancel_behavior.SetEnabledOk (this.IsValid);
 			}
 		}
 		
@@ -344,15 +333,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		private void HandleButtonOkClicked(object sender, MessageEventArgs e)
+		private void HandleAcceptCancelAcceptClicked(object sender)
 		{
-			System.Diagnostics.Debug.Assert (sender == this.button_ok);
+			System.Diagnostics.Debug.Assert (sender == this.accept_cancel_behavior);
 			this.ValidateEdition ();
 		}		
 		
-		private void HandleButtonCancelClicked(object sender, MessageEventArgs e)
+		private void HandleAcceptCancelCancelClicked(object sender)
 		{
-			System.Diagnostics.Debug.Assert (sender == this.button_cancel);
+			System.Diagnostics.Debug.Assert (sender == this.accept_cancel_behavior);
 			
 			if (this.Items.FindExactMatch (this.saved_item) == -1)
 			{
@@ -379,8 +368,6 @@ namespace Epsitec.Common.Widgets
 		protected string						saved_item;
 		
 		protected TextFieldExListMode			mode = TextFieldExListMode.Undefined;
-		
-		protected GlyphButton					button_ok;
-		protected GlyphButton					button_cancel;
+		protected Helpers.AcceptCancelBehavior	accept_cancel_behavior;
 	}
 }

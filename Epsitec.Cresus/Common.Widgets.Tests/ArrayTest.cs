@@ -5,113 +5,12 @@ namespace Epsitec.Common.Widgets
 {
 	[TestFixture] public class ArrayTest
 	{
-#if false
-		[Test] public void CheckVirtualRows()
+		[SetUp] public void SetUp()
 		{
-			ScrollArray sa = new ScrollArray ();
-			
-			sa.RowCount    = 9;
-			sa.ColumnCount = 2;
-			
-			//	Exactement 4 lignes visibles :
-			
-			sa.AdjustToRows (ScrollAdjustMode.MoveUp, 4);
-			
-			Assert.AreEqual (9, sa.RowCount);
-			Assert.AreEqual (4, sa.VisibleRowCount);
-			Assert.AreEqual (4, sa.FullyVisibleRowCount);
-			
-			//	Ajuste un tout petit poil pour avoir une 5è partiellement visible :
-			
-			sa.Top = sa.Top + 1;
-			
-			Assert.AreEqual (5, sa.VisibleRowCount);
-			Assert.AreEqual (4, sa.FullyVisibleRowCount);
-			
-			//	Teste avec la configuration :
-			//
-			//	0		virtual 0
-			//	1		virtual 1
-			//	2		virtual 2 < Zone en cours.. >
-			//			virtual 3 < ..d'édition     >
-			//	3		virtual 4
-			//	4		virtual 5
-			//	5		virtual 6
-			//	6		virtual 7
-			//	7		virtual 8
-			//	8		virtual 9
-			
-			sa.Top = sa.Top - 1;
-			
-			sa.EditionIndex      = 2;
-			sa.EditionZoneHeight = 2;
-			sa.SelectedIndex     = 5;
-			
-			Assert.AreEqual (10, sa.VirtualRowCount);
-			
-			Assert.AreEqual (1, sa.ToVirtualRow (1));
-			Assert.AreEqual (2, sa.ToVirtualRow (2));
-			Assert.AreEqual (4, sa.ToVirtualRow (3));
-			
-			Assert.AreEqual (1, sa.FromVirtualRow (1));
-			Assert.AreEqual (2, sa.FromVirtualRow (2));
-			Assert.AreEqual (2, sa.FromVirtualRow (3));
-			Assert.AreEqual (3, sa.FromVirtualRow (4));
-			
-			sa.FirstVisibleIndex = 2;
-			Assert.AreEqual (2, sa.FirstVisibleIndex);
-			Assert.IsTrue (! sa.IsSelectedVisible);
-			
-			sa.FirstVisibleIndex = 3;
-			Assert.AreEqual (3, sa.FirstVisibleIndex);
-			Assert.IsTrue (sa.IsSelectedVisible);
-			
-			sa.FirstVisibleIndex = 4;
-			Assert.AreEqual (4, sa.FirstVisibleIndex);
-			Assert.IsTrue (sa.IsSelectedVisible);
-			
-			sa.FirstVisibleIndex = 5;
-			Assert.AreEqual (5, sa.FirstVisibleIndex);
-			Assert.IsTrue (sa.IsSelectedVisible);
-			
-			sa.FirstVisibleIndex = 6;
-			Assert.AreEqual (5, sa.FirstVisibleIndex);
-			Assert.IsTrue (sa.IsSelectedVisible);
-			
-			sa.EditionIndex      = 8;
-			sa.FirstVisibleIndex = 7;
-			sa.SelectedIndex     = 6;
-			
-			Assert.AreEqual (6, sa.FirstVisibleIndex);
-			Assert.IsTrue (sa.IsSelectedVisible);
-			
-			//	Sélectionne la première ligne et rend celle-ci visible; force un
-			//	alignement en haut :
-			
-			sa.SelectedIndex     = 0;
-			sa.EditionIndex      = 2;
-			sa.EditionZoneHeight = 3;
-			sa.ShowSelected (ScrollShowMode.Extremity);
-			Assert.AreEqual (0, sa.FirstVisibleIndex);
-			
-			//	Sélectionner la ligne suivante ne devrait rien bouger :
-			
-			sa.SelectedIndex     = 1;
-			sa.ShowSelected (ScrollShowMode.Extremity);
-			Assert.AreEqual (0, sa.FirstVisibleIndex);
-			
-			//	Mais sélectionner la ligne 2 nécessitera un scroll, car elle occupe les
-			//	lignes virtuelles 2,3,4 et 4 dépasse avec le positionnement précédent :
-			
-			sa.SelectedIndex = 2;
-			sa.ShowSelected (ScrollShowMode.Extremity);
-			Assert.AreEqual (1, sa.FirstVisibleIndex);
-			
-			sa.SelectedIndex = 8;
-			sa.ShowSelected (ScrollShowMode.Extremity);
-			Assert.AreEqual (5, sa.FirstVisibleIndex);
+			Widgets.Widget.Initialise ();
+			Pictogram.Engine.Initialise ();
+			Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
 		}
-#endif
 		
 		[Test] public void CheckInteractive()
 		{
@@ -310,6 +209,7 @@ namespace Epsitec.Common.Widgets
 			table.EditionZoneHeight = 1;
 			table.TitleWidget       = header;
 			table.SearchCaption     = @"<b>Search. </b><font size=""90%"">Type in some text below to search for it in the table.</font>";
+			table.Columns[0].EditionWidgetType = typeof (TextFieldEx);
 			
 			header.Caption = @"<font size=""120%"">Search Test.</font>";
 			

@@ -635,7 +635,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Helpers\AcceptCancelBehavior.cs"
+                    RelPath = "Helpers\AcceptRejectBehavior.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

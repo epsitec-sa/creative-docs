@@ -607,12 +607,23 @@ namespace Epsitec.Common.Widgets
 			
 			TextFieldEx text_ex_1 = new TextFieldEx();
 			text_ex_1.Parent = page3;
-			text_ex_1.Bounds = new Drawing.Rectangle(10, page3.Height-30, 80, text_ex_1.Height);
+			text_ex_1.Bounds = new Drawing.Rectangle(10, page3.Height-30, 120, text_ex_1.Height);
+			text_ex_1.TabIndex = 1;
+			text_ex_1.EditionAccepted += new EventHandler(this.HandleTextExEditionAccepted);
+			text_ex_1.EditionRejected += new EventHandler(this.HandleTextExEditionRejected);
 			
 			TextFieldEx text_ex_2 = new TextFieldEx();
 			text_ex_2.Parent = page3;
-			text_ex_2.Bounds = new Drawing.Rectangle(10, page3.Height-58, 80, text_ex_2.Height);
-			text_ex_2.SetEnabled(false);
+			text_ex_2.Bounds = new Drawing.Rectangle(10, page3.Height-30-28, 120, text_ex_2.Height);
+			text_ex_2.TabIndex = 2;
+			text_ex_2.EditionAccepted += new EventHandler(this.HandleTextExEditionAccepted);
+			text_ex_2.EditionRejected += new EventHandler(this.HandleTextExEditionRejected);
+			
+			TextFieldEx text_ex_3 = new TextFieldEx();
+			text_ex_3.Parent = page3;
+			text_ex_3.Bounds = new Drawing.Rectangle(10, page3.Height-30-28-28, 120, text_ex_3.Height);
+			text_ex_3.SetEnabled(false);
+			text_ex_3.TabIndex = 3;
 			
 			page3.TabIndex = 3;
 			page3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
@@ -1561,9 +1572,22 @@ namespace Epsitec.Common.Widgets
 
 			window.Show();
 		}
+		
+		private void HandleTextExEditionAccepted(object sender)
+		{
+			TextFieldEx text = sender as TextFieldEx;
+			text.SelectAll ();
+		}
+
+		private void HandleTextExEditionRejected(object sender)
+		{
+			TextFieldEx text = sender as TextFieldEx;
+			text.Text = "";
+		}
 
 
 		protected TabBook			tabBook;
 		protected TextFieldMulti	bigText;
+
 	}
 }

@@ -63,8 +63,8 @@ namespace Epsitec.Common.Designer.UI
 			
 			this.combo_bundle.SelectedIndexChanged += new EventHandler (this.HandleComboBundleSelectedIndexChanged);
 			this.combo_field.SelectedIndexChanged  += new EventHandler (this.HandleComboFieldSelectedIndexChanged);
-			this.combo_field.EditionValidated      += new EventHandler (this.HandleComboFieldEditionValidated);
-			this.combo_field.EditionCancelled      += new EventHandler (this.HandleComboFieldEditionCancelled);
+			this.combo_field.EditionAccepted       += new EventHandler (this.HandleComboFieldEditionAccepted);
+			this.combo_field.EditionRejected       += new EventHandler (this.HandleComboFieldEditionRejected);
 			
 			this.OnCaptionChanged ();
 			
@@ -226,7 +226,7 @@ namespace Epsitec.Common.Designer.UI
 			}
 		}
 		
-		private void HandleComboFieldEditionValidated(object sender)
+		private void HandleComboFieldEditionAccepted(object sender)
 		{
 			if (this.sync_level > 0)
 			{
@@ -254,7 +254,7 @@ namespace Epsitec.Common.Designer.UI
 			}
 		}
 		
-		private void HandleComboFieldEditionCancelled(object sender)
+		private void HandleComboFieldEditionRejected(object sender)
 		{
 			if (this.sync_level > 0)
 			{
@@ -263,7 +263,7 @@ namespace Epsitec.Common.Designer.UI
 			
 			System.Diagnostics.Debug.Assert (sender == this.combo_field);
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Cancelled field, restored to {0}#{1}.", this.combo_bundle.Text, this.combo_field.Text));
+			System.Diagnostics.Debug.WriteLine (string.Format ("Rejected field, restored to {0}#{1}.", this.combo_bundle.Text, this.combo_field.Text));
 		}
 		
 		
@@ -282,14 +282,14 @@ namespace Epsitec.Common.Designer.UI
 					switch (value)
 					{
 						case InternalState.Passive:
-							this.combo_field.CancelEdition ();
+							this.combo_field.RejectEdition ();
 							break;
 						case InternalState.UsingCustomText:
 							this.combo_field.StartPassiveEdition (this.combo_field.PlaceHolder);
 							adapter.XmlRefTarget = "";
 							break;
 						case InternalState.UsingExistingText:
-							this.combo_field.CancelEdition ();
+							this.combo_field.RejectEdition ();
 							break;
 						case InternalState.UsingUndefinedText:
 							this.combo_field.StartPassiveEdition (this.combo_field.PlaceHolder);
