@@ -47,6 +47,8 @@ namespace Epsitec.Common.Widgets
 			// Dessine le texte.
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
+			if ( this.textLayout == null )  return;
+
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
 			Direction         dir   = this.RootDirection;
@@ -58,6 +60,7 @@ namespace Epsitec.Common.Widgets
 				graphics.RenderSolid(this.BackColor);
 			}
 			
+			this.textLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 			adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state, dir);
 		}
 	}
