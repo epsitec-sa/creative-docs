@@ -28,8 +28,10 @@ namespace Epsitec.Common.Support.Tests
 			binder.DataSet = data;
 			
 			data.AddData ("a", true, new DataType ("boolean"));
+			data.AddData ("b", false, new DataType ("boolean"));
 			data.ValidateChanges ();
 			data.AttachObserver ("a", new DataChangedHandler (HandleDataChanged));
+			data.AttachObserver ("b", new DataChangedHandler (HandleDataChanged));
 			
 			Assertion.AssertNotNull (bundle);
 			Assertion.AssertNotNull (bundler);
@@ -46,6 +48,17 @@ namespace Epsitec.Common.Support.Tests
 		private void HandleDataChanged(DataRecord sender, string path)
 		{
 			System.Diagnostics.Debug.WriteLine ("Data changed: " + path);
+			
+			if (path == "a")
+			{
+				//	On change la valeur "b" dès que la valeur "a" change... Mais pas
+				//	le contraire. Ca permet de montrer que les événements de l'interface
+				//	modifient bien les données, et la modification de celles-ci met bien
+				//	à jour l'interface...
+				
+				DataSet data_set = sender as DataSet;
+				data_set.UpdateData ("b", data_set.GetData ("a"));
+			}
 		}
 	}
 }

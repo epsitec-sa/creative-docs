@@ -161,18 +161,24 @@ namespace Epsitec.Cresus.DataLayer
 		
 		internal virtual void NotifyDataChanged(string name)
 		{
-			if (this.Name != null)
+			string path;
+			
+			if (this.Name == null)
 			{
-				name = this.Name + "." + name;
+				path = name;
+			}
+			else
+			{
+				path = this.Name + "." + name;
 			}
 			
 			if (this.parent != null)
 			{
-				this.parent.NotifyDataChanged (name);
+				this.parent.NotifyDataChanged (path);
 			}
 			else if (this.data_changed_events != null)
 			{
-				DataChangedHandler handler = this.data_changed_events[name] as DataChangedHandler;
+				DataChangedHandler handler = this.data_changed_events[path] as DataChangedHandler;
 				
 				if (handler != null)
 				{

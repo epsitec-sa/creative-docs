@@ -27,10 +27,19 @@
    <field name='pos'>50;165</field>
   </bundle>
   <bundle>
+   <field name='class'>CheckButton</field>
+   <field name='text'><![CDATA[Copie du premier bouton]]></field>
+   <field name='name'>checkB</field>
+   <field name='cmd'>on</field>
+   <field name='size'>200;*</field>
+   <field name='pos'>10;140</field>
+   <field name='binding'>b</field>
+  </bundle>
+  <bundle>
    <field name='class'>GroupBox</field>
    <field name='anchor'>Left, Right, Top, Bottom</field>
    <field name='text'><![CDATA[Choix <i>cornelien</i>...]]></field>
-   <field name='size'>215;85</field>
+   <field name='size'>215;75</field>
    <field name='pos'>10;60</field>
    <field name='dock_h'>no</field>
    <field name='dock_m'>5;5;20;5</field>

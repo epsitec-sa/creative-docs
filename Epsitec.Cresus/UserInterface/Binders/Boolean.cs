@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.UserInterface.Binders
 			BinderFactory.RegisterBinder ("boolean", this);
 		}
 		
+		
 		#region IBinder Members
 		public void CreateBinding(object ui_object, DataLayer.DataSet root, string binding, DataLayer.DataRecord data_record)
 		{
@@ -22,9 +23,7 @@ namespace Epsitec.Cresus.UserInterface.Binders
 			System.Diagnostics.Debug.Assert (widget != null);
 			System.Diagnostics.Debug.Assert (field != null);
 			
-			Controller controller = new Controller (widget, root, binding);
-			
-			controller.SetWidgetValue ((bool) field.GetData ());
+			new Controller (widget, root, binding);
 		}
 		#endregion
 		
@@ -36,22 +35,41 @@ namespace Epsitec.Cresus.UserInterface.Binders
 				this.data_set = data_set;
 				this.binding  = binding;
 				
-				this.widget.ActiveStateChanged += new Epsitec.Common.Widgets.EventHandler(this.HandleActiveStateChanged);
+				this.widget.ActiveStateChanged += new Epsitec.Common.Widgets.EventHandler(this.SetDataFromWidget);
+				data_set.AttachObserver (binding, new DataLayer.DataChangedHandler (this.SetWidgetFromData));
+				
+				this.SetWidgetFromData (null, null);
 			}
 			
 			public void SetWidgetValue(bool value)
 			{
 				widget.ActiveState = value ? Epsitec.Common.Widgets.WidgetState.ActiveYes : Epsitec.Common.Widgets.WidgetState.ActiveNo;
 				
-				System.Diagnostics.Debug.WriteLine ("Widget changed to " + value.ToString ());
+				System.Diagnostics.Debug.WriteLine ("Setting widget to " + value.ToString ());
 			}
 			
-			public void HandleActiveStateChanged(object sender)
+			public void SetDataFromWidget(object sender)
 			{
-				bool value = (this.widget.ActiveState == Epsitec.Common.Widgets.WidgetState.ActiveYes);
-				this.data_set.UpdateData (this.binding, value);
+				bool value1 = (this.widget.ActiveState == Epsitec.Common.Widgets.WidgetState.ActiveYes);
+				bool value2 = (bool) this.data_set.GetData (this.binding);
 				
-				System.Diagnostics.Debug.WriteLine ("Widget changed to " + value.ToString ());
+				if (value1 != value2)
+				{
+					System.Diagnostics.Debug.WriteLine ("Widget changed to " + value1.ToString () + ", updating data");
+					this.data_set.UpdateData (this.binding, value1);
+				}
+			}
+			
+			public void SetWidgetFromData(DataLayer.DataRecord data, string path)
+			{
+				bool value1 = (bool) this.data_set.GetData (this.binding);
+				bool value2 = (this.widget.ActiveState == Epsitec.Common.Widgets.WidgetState.ActiveYes);
+				
+				if (value1 != value2)
+				{
+					System.Diagnostics.Debug.WriteLine ("Data changed to " + value1.ToString () + ", updating widget");
+					widget.ActiveState = value1 ? Epsitec.Common.Widgets.WidgetState.ActiveYes : Epsitec.Common.Widgets.WidgetState.ActiveNo;
+				}
 			}
 			
 			private Epsitec.Common.Widgets.Widget	widget;
