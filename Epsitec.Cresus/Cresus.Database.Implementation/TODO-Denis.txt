@@ -34,9 +34,9 @@ A FAIRE
 	IRawTypeConverter. (OK amha)
 
 -	Compléter les méthodes de création de SqlField, ainsi que la méthode
-	de validation.
+	de validation. (OK pour l'instant)
 
--	Ecrire la classe de test SqlFieldTest.
+-	Ecrire la classe de test SqlFieldTest. (Done)
 
 -	Ajouter les méthodes manquantes dans SqlSelect. Il faudra ajouter des
 	méthodes permettant de spécifier les conditions, etc.
