@@ -23,9 +23,12 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		public void AttachNewBundle(string full_id, string prefix, ResourceLevel level, CultureInfo culture)
+		public void AttachNewBundle(string full_id, string prefix, string type, ResourceLevel level, CultureInfo culture)
 		{
-			ResourceBundle bundle = ResourceBundle.Create (full_id, prefix, level, culture);
+			string bundle_id = Resources.ExtractName (full_id);
+			ResourceBundle bundle = ResourceBundle.Create (bundle_id, prefix, level, culture);
+			
+			bundle.DefineType (type);
 			
 			this.AttachExistingBundle (bundle);
 			this.ActivateTabBookPage ();
@@ -334,11 +337,11 @@ namespace Epsitec.Common.Designer
 				string bundle_level  = e.CommandArgs[2];
 				string culture_code  = e.CommandArgs[3];
 				
-				string      full_id = bundle_prefix + bundle_id;
+				string      full_id = Resources.MakeFullName (bundle_prefix, bundle_id);
 				ResourceLevel level = (ResourceLevel) System.Enum.Parse (typeof (ResourceLevel), bundle_level);
 				CultureInfo culture = Resources.FindCultureInfo (culture_code);
 				
-				this.AttachNewBundle (full_id, bundle_prefix, level, culture);
+				this.AttachNewBundle (full_id, bundle_prefix, "String", level, culture);
 			}
 			else
 			{
@@ -351,7 +354,9 @@ namespace Epsitec.Common.Designer
 			if (e.CommandArgs.Length == 0)
 			{
 				Dialogs.OpenExistingBundle dialog = new Dialogs.OpenExistingBundle ("OpenStringBundle (\"{0}\", {1})", this.dispatcher);
+				dialog.SubBundleSpec.TypeFilter = "String";
 				dialog.Owner = this.Window;
+				dialog.UpdateListContents ();
 				dialog.Show ();
 			}
 			else if (e.CommandArgs.Length == 2)

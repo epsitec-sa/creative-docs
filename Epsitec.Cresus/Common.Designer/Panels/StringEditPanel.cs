@@ -97,7 +97,7 @@ namespace Epsitec.Common.Designer.Panels
 			this.comment = text_field;
 			this.comment.TextChanged += new EventHandler (this.HandleCommentTextChanged);
 			
-			this.edit_array.SelectedIndex = 0;
+			this.edit_array.SelectedIndex = -1;
 		}
 		
 		
