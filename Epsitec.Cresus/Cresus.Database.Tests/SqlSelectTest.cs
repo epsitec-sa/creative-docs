@@ -81,12 +81,19 @@ namespace Epsitec.Cresus.Database
 			command.Transaction = db_abstraction.BeginTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, out data_set);
 
+			int n = this.DumpDataSet (data_set); 
+		}
+
+		int DumpDataSet(DataSet data_set)
+		{
+			int		nb = 0;
 			// For each table in the DataSet, print the row values.
 			foreach(DataTable myTable in data_set.Tables)
 			{
 				System.Console.Out.WriteLine("TableName = " + myTable.TableName.ToString());
 				foreach(DataRow myRow in myTable.Rows)
 				{
+					nb++;
 					foreach (DataColumn myColumn in myTable.Columns)
 					{
 						System.Console.Out.Write(myRow[myColumn]);
@@ -95,7 +102,92 @@ namespace Epsitec.Cresus.Database
 					System.Console.Out.WriteLine();
 				}
 			}
+			System.Console.Out.WriteLine("{0} fiches listées", nb);
+			return nb;
+		}
 
+		[Test] public void CheckSqlSelectExecute2()
+		{
+			//	Test pour la clause ORDER BY
+			//	C:\Program Files\firebird15\Data\Epsitec\Employee.Firebird
+
+			DbAccess db_access = SqlSelectTest.CreateDbAccess ();
+
+			IDbAbstraction db_abstraction = null;
+			db_abstraction = DbFactory.FindDbAbstraction (db_access);
+
+			ISqlEngine     sql_engine    = db_abstraction.SqlEngine;
+			ISqlBuilder    sql_builder   = db_abstraction.SqlBuilder;
+
+			//	fait la liste des noms de personne distincts de la table EMPLOYEE
+			SqlSelect sql_select = new SqlSelect ();
+			sql_select.Predicate = SqlSelectPredicate.Distinct;
+
+			sql_select.Fields.Add(new SqlField("LAST_NAME", null, SqlFieldOrder.Inverse));
+			sql_select.Tables.Add(SqlField.CreateName ("EMPLOYEE"));
+
+			//	construit la commande d'extraction
+			sql_builder.SelectData(sql_select);
+
+			System.Data.IDbCommand command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			//	lecture des résultats
+			DataSet data_set = new DataSet();
+			command.Transaction = db_abstraction.BeginTransaction ();
+			sql_engine.Execute (command, sql_builder.CommandType, out data_set);
+
+			int n = this.DumpDataSet (data_set);
+		}
+
+		[Test] public void CheckSqlSelectExecute3()
+		{
+			//	Test pour la clause WHERE
+			//	C:\Program Files\firebird15\Data\Epsitec\Employee.Firebird
+
+			DbAccess db_access = SqlSelectTest.CreateDbAccess ();
+
+			IDbAbstraction db_abstraction = null;
+			db_abstraction = DbFactory.FindDbAbstraction (db_access);
+
+			ISqlEngine     sql_engine    = db_abstraction.SqlEngine;
+			ISqlBuilder    sql_builder   = db_abstraction.SqlBuilder;
+
+			//	fait la liste des noms de personne distincts de la table EMPLOYEE
+			SqlSelect sql_select = new SqlSelect ();
+
+			sql_select.Fields.Add(SqlField.CreateName ("LAST_NAME"));
+			sql_select.Fields.Add(SqlField.CreateName ("FIRST_NAME"));
+			sql_select.Fields.Add(SqlField.CreateName ("JOB_GRADE"));
+			sql_select.Fields.Add(SqlField.CreateName ("JOB_COUNTRY"));
+			sql_select.Tables.Add(SqlField.CreateName ("EMPLOYEE"));
+
+			//	défini la fonction JOB_COUNTRY <> 'England'
+			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareNotEqual, 
+													SqlField.CreateName("JOB_COUNTRY"),
+													SqlField.CreateConstant("'England'", DbRawType.String));
+
+			sql_select.Conditions.Add(SqlField.CreateFunction(sql_func));
+
+			//	et JOB_GRADE > 3
+			sql_func = new SqlFunction (SqlFunctionType.CompareGreaterThan, 
+				SqlField.CreateName("JOB_GRADE"),
+				SqlField.CreateConstant(3, DbRawType.Int16));
+
+			sql_select.Conditions.Add(SqlField.CreateFunction(sql_func));
+
+			//	construit la commande d'extraction
+			sql_builder.SelectData(sql_select);
+
+			System.Data.IDbCommand command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			//	lecture des résultats
+			DataSet data_set = new DataSet();
+			command.Transaction = db_abstraction.BeginTransaction ();
+			sql_engine.Execute (command, sql_builder.CommandType, out data_set);
+
+			int n = this.DumpDataSet (data_set);
 		}
 	}
 }

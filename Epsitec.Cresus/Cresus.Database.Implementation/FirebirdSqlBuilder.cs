@@ -410,9 +410,23 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			this.buffer.Append ("SELECT ");
 			bool first_field = true;
+
+			if (query.Predicate == SqlSelectPredicate.Distinct)
+			{
+				this.buffer.Append ("DISTINCT ");
+			}
 			
 			foreach (SqlField field in query.Fields)
 			{
+				if (first_field)
+				{
+					first_field = false;
+				}
+				else
+				{
+					this.buffer.Append (", ");
+				}
+
 				switch ( field.Type )
 				{
 					case SqlFieldType.All:
@@ -426,7 +440,19 @@ namespace Epsitec.Cresus.Database.Implementation
 						this.ThrowError (string.Format ("Unsupported field {0} in SELECT.", field.AsName));
 						break;
 				}
-				
+			}
+
+			if (first_field)
+			{
+				// aucun champ spécifiée !
+				this.ThrowError (string.Format ("No field specified in SELECT."));
+			}
+
+			this.buffer.Append ("FROM ");
+			first_field = true;
+
+			foreach (SqlField field in query.Tables)
+			{
 				if (first_field)
 				{
 					first_field = false;
@@ -435,13 +461,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				{
 					this.buffer.Append (", ");
 				}
-			}
 
-			this.buffer.Append ("FROM ");
-			first_field = true;
-
-			foreach (SqlField field in query.Tables)
-			{
 				switch ( field.Type )
 				{
 					case SqlFieldType.Name:
@@ -452,11 +472,60 @@ namespace Epsitec.Cresus.Database.Implementation
 						this.ThrowError (string.Format ("Unsupported field {0} in SELECT FROM.", field.AsName));
 						break;
 				}
-				
+			}
+
+			if (first_field)
+			{
+				// aucune table spécifiée !
+				this.ThrowError (string.Format ("No table specified in SELECT."));
+			}
+
+			first_field = true;
+
+			foreach (SqlField field in query.Conditions)
+			{
+				if (first_field)
+				{
+					this.buffer.Append ("WHERE ");
+					first_field = false;
+				}
+				else
+				{
+					this.buffer.Append ("AND ");
+				}
+
+				if (field.Type != SqlFieldType.Function)
+				{
+					this.ThrowError (string.Format ("Invalid field {0} in SELECT ... WHERE.", field.AsName));
+					break;
+				}
+
+				this.buffer.Append( field.AsFunction.ToString() );
+			}
+
+			first_field = true;
+
+			foreach (SqlField field in query.Fields)
+			{
+				if (field.Order == SqlFieldOrder.None) continue;
+		
+				if (first_field)
+				{
+					this.buffer.Append ("ORDER BY ");
+				}
+
+				this.buffer.Append (field.AsName);
+				this.buffer.Append (' ');
+
+				if (field.Order == SqlFieldOrder.Inverse)
+				{
+					this.buffer.Append ("DESC");
+				}
+
 				if (first_field)
 				{
 					first_field = false;
-				}
+				}				
 				else
 				{
 					this.buffer.Append (", ");

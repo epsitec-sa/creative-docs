@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Database
 			sql_field.SetParameterOutResult("abc");
 			Assertion.AssertEquals ("abc", sql_field.AsParameter);
 
-			//	crée un champ à tout usage
+			//	crée un champ pour une extraction sur tout ( * ) 
 			sql_field = SqlField.CreateAll();
 			Assertion.AssertEquals (SqlFieldType.All, sql_field.Type);
 			Assertion.AssertEquals (null, sql_field.AsName);
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (SqlFieldType.Variable, sql_field.Type);
 
 			//	crée un champ pour une fonction
-			sql_field = SqlField.CreateFunction ();
+			sql_field = SqlField.CreateFunction (null);
 			Assertion.AssertEquals (SqlFieldType.Function, sql_field.Type);
 
 			//	crée un champ pour une procédure

@@ -357,11 +357,12 @@ namespace Epsitec.Cresus.Database
 			return field;
 		}
 		
-		public static SqlField CreateFunction()
+		public static SqlField CreateFunction(SqlFunction function)
 		{
 			SqlField field	= new SqlField ();
 			
 			field.type		= SqlFieldType.Function;
+			field.value		= function;
 
 			return field;
 		}
@@ -385,8 +386,48 @@ namespace Epsitec.Cresus.Database
 
 			return field;
 		}
-		
-		
+
+		public override string ToString()
+		{
+			//	Convertion d'un champ en chaîne, quel que soit son type
+			//	DD: me semble pratique d'avoir cela ici, même s'il 
+			//		est imaginable que le ToString dépende du moteur utilisé
+
+			switch(this.type)
+			{
+				case SqlFieldType.Unsupported:
+                    return "<unsupported>";
+				case SqlFieldType.Null:
+                    return "NULL";
+				case SqlFieldType.All:
+                    return "*";
+				case SqlFieldType.Default:
+                    return "<default>";
+				case SqlFieldType.Constant:
+				case SqlFieldType.ParameterOut:
+				case SqlFieldType.ParameterInOut:
+				case SqlFieldType.ParameterResult:
+                    return this.AsConstant.ToString();
+				case SqlFieldType.Name:
+                    return this.AsName;
+				case SqlFieldType.QualifiedName:
+                    return this.AsQualifiedName;
+				case SqlFieldType.Aggregate:
+                    return this.AsAggregate.ToString();
+				case SqlFieldType.Variable:
+                    return this.AsVariable.ToString();
+				case SqlFieldType.Function:
+                    return this.AsFunction.ToString();
+				case SqlFieldType.Procedure:
+                    return this.AsProcedure;
+				case SqlFieldType.SubQuery:
+                    return this.AsSubQuery.ToString();
+				default:
+					return "<unsupported>";
+			}
+		}
+
+				
 		
 		protected SqlFieldType			type = SqlFieldType.Unsupported;
 		protected SqlFieldOrder			order = SqlFieldOrder.None;
