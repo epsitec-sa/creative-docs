@@ -17,6 +17,33 @@ namespace Epsitec.Common.Support
 		{
 		}
 		
+		static ImageProvider()
+		{
+			string   path   = System.IO.Directory.GetCurrentDirectory ();
+			string   other  = null;
+			string[] strips = new string[] { @"\bin\Debug", @"\bin\Release" };
+			
+			for (int i = 0; i < strips.Length; i++)
+			{
+				if (path.EndsWith (strips[i]))
+				{
+					other = path.Substring (0, path.Length - strips[i].Length);
+					break;
+				}
+			}
+			
+			ImageProvider.default_provider = new ImageProvider ();
+			ImageProvider.default_paths    = new string[3];
+			ImageProvider.default_paths[0] = System.Windows.Forms.Application.StartupPath;
+			ImageProvider.default_paths[1] = path;
+			ImageProvider.default_paths[2] = other;
+		}
+		
+		public static void Initialise()
+		{
+			//	En appelant cette méthode statique, on peut garantir que le constructeur
+			//	statique de ImageProvider a bien été exécuté.
+		}
 		
 		public static ImageProvider		Default
 		{
@@ -56,26 +83,47 @@ namespace Epsitec.Common.Support
 				//	TODO: vérifier le nom du fichier pour éviter de faire des bêtises ici
 				//	(pour améliorer la sécurité, mais ce n'est probablement pas un problème).
 				
-				string file_name = name.Remove (0, 5);
-				Drawing.Image image = null;
+				Drawing.Image                image     = null;
+				string                       base_name = name.Remove (0, 5);
+				System.Collections.ArrayList attempts  = new System.Collections.ArrayList ();
 				
-				try
+				
+				for (int i = 0; i < ImageProvider.default_paths.Length; i++)
 				{
-					image = Drawing.Bitmap.FromFile (file_name);
-				}
-				catch
-				{
+					string path = ImageProvider.default_paths[i];
+					
+					//	Il se peut que cette option ne soit pas définie :
+					
+					if (path == null)
+					{
+						continue;
+					}
+					
+					//	Nom du chemin complet.
+					
+					string file_name = path + System.IO.Path.DirectorySeparatorChar + base_name;
+					
 					try
 					{
-						image = Drawing.Bitmap.FromFile (@"..\..\"+file_name);
+						image = Drawing.Bitmap.FromFile (file_name);
+						break;
 					}
 					catch
 					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("Cannot open file '{0}'.", file_name));
+						attempts.Add (file_name);
 					}
 				}
 				
-				if (image != null)
+				if (image == null)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Tried to resolve '{0}' and failed while checking", name));
+					
+					foreach (string attempt in attempts)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("  here: {0}", attempt));
+					}
+				}
+				else
 				{
 					this.images[name] = new System.WeakReference (image);
 				}
@@ -258,6 +306,7 @@ namespace Epsitec.Common.Support
 		protected Hashtable				assemblies = new Hashtable ();
 		protected string				default_resource_provider = "file:";
 		
-		protected static ImageProvider	default_provider = new ImageProvider ();
+		protected static ImageProvider	default_provider;
+		protected static string[]		default_paths;
 	}
 }
