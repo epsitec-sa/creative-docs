@@ -19,6 +19,22 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public void DefineCategory(DbElementCat category)
+		{
+			if (this.category == category)
+			{
+				return;
+			}
+			
+			if (this.category != DbElementCat.Unknown)
+			{
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot change its category.", this.Name));
+			}
+			
+			this.category = category;
+		}
+		
+		
 		public string					Name
 		{
 			get { return this.name; }
@@ -75,6 +91,11 @@ namespace Epsitec.Cresus.Database
 				this.primary_key.Clear ();
 				this.primary_key.AddRange (value);
 			}
+		}
+		
+		public DbElementCat				Category
+		{
+			get { return this.category; }
 		}
 		
 		
@@ -140,5 +161,6 @@ namespace Epsitec.Cresus.Database
 		protected string				name;
 		protected DbColumnCollection	columns = new DbColumnCollection ();
 		protected DbColumnCollection	primary_key = null;
+		protected DbElementCat			category;
 	}
 }
