@@ -322,7 +322,7 @@ namespace Epsitec.Common.Support.Implementation
 			//	Nous ne sommes intéressés qu'aux lignes de la table qui sont "live" et
 			//	dont la révision est 0 (= version actuelle).
 			
-			condition.Revision = DbSelectRevision.LiveCurrent;
+			condition.Revision = DbSelectRevision.LiveActive;
 			
 			condition.AddCondition (this.data_table.Columns["Name"], DbCompare.Equal, name);
 			condition.AddCondition (this.data_table.Columns["Level"], DbCompare.Equal, level);
@@ -337,7 +337,7 @@ namespace Epsitec.Common.Support.Implementation
 			//	Nous ne sommes intéressés qu'aux lignes de la table qui sont "live" et
 			//	dont la révision est 0 (= version actuelle).
 			
-			condition.Revision = DbSelectRevision.LiveCurrent;
+			condition.Revision = DbSelectRevision.LiveActive;
 			
 			condition.AddCondition (this.data_table.Columns["Name"], DbCompare.Equal, name);
 			
