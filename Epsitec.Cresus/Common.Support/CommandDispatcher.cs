@@ -26,6 +26,25 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public void RegisterController(object controller)
+		{
+			if (controller != null)
+			{
+				System.Type attr_type = typeof (CommandAttribute);
+				
+				System.Type type = controller.GetType ();
+				System.Reflection.MemberInfo[] members = type.GetMembers (System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic);
+				
+				for (int i = 0; i < members.Length; i++)
+				{
+					if (members[i].IsDefined (attr_type, true))
+					{
+						System.Diagnostics.Debug.WriteLine ("Method: " + members[i].Name + " in " + type.Name + " is a command.");
+					}
+				}
+			}
+		}
+		
 		public void Register(string command, CommandEventHandler handler)
 		{
 			if (! this.handlers.Contains (command))
