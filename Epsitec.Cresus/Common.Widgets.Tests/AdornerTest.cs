@@ -68,10 +68,10 @@ namespace Epsitec.Common.Widgets
 			fileMenu.Host = window;
 			fileMenu.Name = "file";
 			fileMenu.Items.Add(new MenuItem("new", "", "Nouveau", "Ctrl+N"));
-			fileMenu.Items.Add(new MenuItem("open", @"file:images/open1.icon", "Ouvrir...", "Ctrl+O"));
+			fileMenu.Items.Add(new MenuItem("open", @"file:images/open.icon", "Ouvrir...", "Ctrl+O"));
 			fileMenu.Items.Add(new MenuItem("close", "", "Fermer", ""));
 			fileMenu.Items.Add(new MenuSeparator ());
-			fileMenu.Items.Add(new MenuItem("save", @"file:images/save1.icon", "Enregistrer", "Ctrl+S"));
+			fileMenu.Items.Add(new MenuItem("save", @"file:images/save.icon", "Enregistrer", "Ctrl+S"));
 			fileMenu.Items.Add(new MenuItem("saveas", "", "Enregistrer sous...", ""));
 			fileMenu.Items.Add(new MenuSeparator ());
 			fileMenu.Items.Add(new MenuItem("print", "", "Imprimer...", "Ctrl+P"));
@@ -88,9 +88,9 @@ namespace Epsitec.Common.Widgets
 			editMenu.Name = "edit";
 			editMenu.Items.Add(new MenuItem("undo", "", "Annuler", "Ctrl+Z"));
 			editMenu.Items.Add(new MenuSeparator ());
-			editMenu.Items.Add(new MenuItem("cut", @"file:images/cut1.icon", "Couper", "Ctrl+X"));
-			editMenu.Items.Add(new MenuItem("copy", @"file:images/copy1.icon", "Copier", "Ctrl+C"));
-			editMenu.Items.Add(new MenuItem("paste", @"file:images/paste1.icon", "Coller", "Ctrl+V"));
+			editMenu.Items.Add(new MenuItem("cut", @"file:images/cut.icon", "Couper", "Ctrl+X"));
+			editMenu.Items.Add(new MenuItem("copy", @"file:images/copy.icon", "Copier", "Ctrl+C"));
+			editMenu.Items.Add(new MenuItem("paste", @"file:images/paste.icon", "Coller", "Ctrl+V"));
 			editMenu.AdjustSize();
 			menu.Items[1].Submenu = editMenu;
 
@@ -177,8 +177,8 @@ namespace Epsitec.Common.Widgets
 			tb.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
 			window.Root.Children.Add(tb);
 
-			tb.Items.Add(new IconButton("open", @"file:images/open1.icon"));
-			tb.Items.Add(new IconButton("save", @"file:images/save1.icon"));
+			tb.Items.Add(new IconButton("open", @"file:images/open.icon"));
+			tb.Items.Add(new IconButton("save", @"file:images/save.icon"));
 			tb.Items.Add(new IconSeparator());
 
 			TextFieldCombo t1 = new TextFieldCombo();
@@ -190,9 +190,9 @@ namespace Epsitec.Common.Widgets
 
 			tb.Items.Add(t1);
 			tb.Items.Add(new IconSeparator());
-			tb.Items.Add(new IconButton("cut",   @"file:images/cut1.icon"));
-			tb.Items.Add(new IconButton("copy",  @"file:images/copy1.icon"));
-			tb.Items.Add(new IconButton("paste", @"file:images/paste1.icon"));
+			tb.Items.Add(new IconButton("cut",   @"file:images/cut.icon"));
+			tb.Items.Add(new IconButton("copy",  @"file:images/copy.icon"));
+			tb.Items.Add(new IconButton("paste", @"file:images/paste.icon"));
 
 			StatusBar sb = new StatusBar();
 			sb.Location = new Point(0, 0);
@@ -953,6 +953,30 @@ namespace Epsitec.Common.Widgets
 					{
 						Button widget = new Button();
 						widget.Text = "OK";
+						widget.Dock = Widgets.DockStyle.Fill;
+						table[x,y].Insert(widget);
+					}
+					else if ( x == 1 && y == 4 )
+					{
+						TextField widget = new TextField();
+						widget.Text = "Standard";
+						widget.Dock = Widgets.DockStyle.Fill;
+						table[x,y].Insert(widget);
+					}
+					else if ( x == 2 && y == 5 )
+					{
+						TextField widget = new TextField();
+						widget.TextFieldStyle = TextFieldStyle.Flat;
+						widget.Text = "Flat";
+						widget.Dock = Widgets.DockStyle.Fill;
+						table[x,y].Insert(widget);
+					}
+					else if ( x == 1 && y == 6 )
+					{
+						TextField widget = new TextField();
+						widget.TextFieldStyle = TextFieldStyle.Flat;
+						widget.BackColor = Color.Transparent;
+						widget.Text = "Flat/Transparent";
 						widget.Dock = Widgets.DockStyle.Fill;
 						table[x,y].Insert(widget);
 					}

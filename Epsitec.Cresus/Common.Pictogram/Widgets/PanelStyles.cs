@@ -278,7 +278,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 				edit.Text = property.StyleName;
 				this.ignoreListTextChanged = false;
 			}
-
+			
+			this.table.Update();
 			this.UpdateToolBar();
 		}
 
