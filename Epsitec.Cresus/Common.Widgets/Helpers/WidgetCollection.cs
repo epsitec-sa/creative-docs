@@ -31,12 +31,58 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 		
+		
 		public void Dispose()
 		{
 			System.Diagnostics.Debug.Assert (this.list.Count == 0);
 			
 			this.host = null;
 			this.list = null;
+		}
+		
+		
+		public virtual void RestoreFromBundle(string items_name, Support.ObjectBundler bundler, Support.ResourceBundle bundle)
+		{
+			Support.ResourceBundle.FieldList item_list = bundle[items_name].AsList;
+			
+			if (item_list != null)
+			{
+				//	Le bundle passé en entrée contient une liste de sous-bundles contenant les
+				//	descriptions des widgets à placer dans la collection :
+				
+				foreach (Support.ResourceBundle.Field field in item_list)
+				{
+					Support.ResourceBundle item_bundle = field.AsBundle;
+					Widget                 item_widget = bundler.CreateFromBundle (item_bundle) as Widget;
+					
+					this.Add (item_widget);
+				}
+			}
+		}
+		
+		public virtual void SerializeToBundle(string items_name, Support.ObjectBundler bundler, Support.ResourceBundle bundle)
+		{
+			int n = this.list.Count;
+			
+			if (n > 0)
+			{
+				Support.ResourceBundle[] bundles = new Support.ResourceBundle[n];
+				Widget[]                 widgets = new Widget[n];
+				
+				this.list.CopyTo (widgets, 0);
+				
+				for (int i = 0; i < n; i++)
+				{
+					bundles[i] = bundler.CreateEmptyBundle (widgets[i].BundleName);
+					bundler.FillBundleFromObject (bundles[i], widgets[i]);
+				}
+				
+				Support.ResourceBundle.Field field = bundle.CreateField (Support.ResourceFieldType.List, bundles);
+				
+				field.SetName (items_name);
+				
+				bundle.Add (field);
+			}
 		}
 		
 		
@@ -172,6 +218,13 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		protected void HandleInsert(Widget item)
 		{
+			Widget embedder = this.host as Widget;
+			
+			if (embedder != null)
+			{
+				item.SetEmbedder (embedder);
+			}
+			
 			this.RenumberItems ();
 			this.host.NotifyInsertion (item);
 		}

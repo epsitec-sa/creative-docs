@@ -58,22 +58,13 @@ namespace Epsitec.Common.Widgets
 		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
 		{
 			base.RestoreFromBundle (bundler, bundle);
-			
-			Support.ResourceBundle.FieldList item_list = bundle["items"].AsList;
-			
-			if (item_list != null)
-			{
-				//	Notre bundle contient une liste de sous-bundles contenant les descriptions des
-				//	items composant le menu.
-				
-				foreach (Support.ResourceBundle.Field field in item_list)
-				{
-					Support.ResourceBundle item_bundle = field.AsBundle;
-					Widget                 item_widget = bundler.CreateFromBundle (item_bundle) as Widget;
-					
-					this.Items.Add (item_widget);
-				}
-			}
+			this.items.RestoreFromBundle ("items", bundler, bundle);
+		}
+		
+		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
+		{
+			base.SerializeToBundle (bundler, bundle);
+			this.items.SerializeToBundle ("items", bundler, bundle);
 		}
 		#endregion
 		

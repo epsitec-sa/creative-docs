@@ -245,9 +245,9 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		#endregion
 		
-		public void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
+		public void RestoreFromBundle(string items_name, Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
-			Support.ResourceBundle items = bundle["items"].AsBundle;
+			Support.ResourceBundle items = bundle[items_name].AsBundle;
 			
 			if (items != null)
 			{
@@ -264,8 +264,39 @@ namespace Epsitec.Common.Widgets.Helpers
 						throw new Support.ResourceException (string.Format ("Item '{0}' is invalid.", name));
 					}
 					
-					this.Add (Support.ResourceBundle.ExtractName (name), item);
+					this.Add (Support.ResourceBundle.ExtractSortName (name), item);
 				}
+			}
+		}
+		
+		public virtual void SerializeToBundle(string items_name, Support.ObjectBundler bundler, Support.ResourceBundle bundle)
+		{
+			int n = this.list.Count;
+			
+			if (n > 0)
+			{
+				Support.ResourceBundle items = bundler.CreateEmptyBundle (items_name);
+				Support.ResourceBundle.Field field;
+				
+				int digits = (n-1).ToString (System.Globalization.CultureInfo.InvariantCulture).Length;
+				
+				for (int i = 0; i < n; i++)
+				{
+					string name = this.names[i] as string;
+					string item = this.list[i] as string;
+					
+					field = items.CreateField (Support.ResourceFieldType.Data);
+					
+					field.SetName (Support.ResourceBundle.CreateSortName (name, i, digits));
+					field.SetStringValue (item);
+					
+					items.Add (field);
+				}
+				
+				field = bundle.CreateField (Support.ResourceFieldType.Bundle, items);
+				field.SetName (items_name);
+				
+				bundle.Add (field);
 			}
 		}
 		
