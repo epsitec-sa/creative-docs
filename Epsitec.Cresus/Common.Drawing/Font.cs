@@ -114,6 +114,27 @@ namespace Epsitec.Common.Drawing
 			return Agg.Library.AggFontFaceGetTextAdvance (this.handle, text, 0);
 		}
 		
+		public Rectangle GetGlyphBounds(int glyph)
+		{
+			double x1, y1, x2, y2;
+			Agg.Library.AggFontFaceGetGlyphBounds (this.handle, glyph, out x1, out y1, out x2, out y2);
+			return new Rectangle (x1, y1, x2 - x1, y2 - y1);
+		}
+		
+		public Rectangle GetCharBounds(int unicode)
+		{
+			double x1, y1, x2, y2;
+			Agg.Library.AggFontFaceGetCharBounds (this.handle, unicode, out x1, out y1, out x2, out y2);
+			return new Rectangle (x1, y1, x2 - x1, y2 - y1);
+		}
+		
+		public Rectangle GetTextBounds(string text)
+		{
+			double x1, y1, x2, y2;
+			Agg.Library.AggFontFaceGetTextBounds (this.handle, text, 0, out x1, out y1, out x2, out y2);
+			return new Rectangle (x1, y1, x2 - x1, y2 - y1);
+		}
+		
 		
 		protected virtual void Dispose(bool disposing)
 		{
