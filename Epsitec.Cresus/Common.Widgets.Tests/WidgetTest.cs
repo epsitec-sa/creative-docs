@@ -1,9 +1,7 @@
 using NUnit.Framework;
-
-using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Common.Tests
+namespace Epsitec.Common.Widgets
 {
 	[TestFixture]
 	public class WidgetTest
