@@ -197,6 +197,31 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.DrawString (string.Format ("Drawing & Filling the path: {1} ms, high quality.", c2, c2 / cpu_speed / 1000), form.Font, System.Drawing.Brushes.Black, 10, 20);
 			
 			//	Mesures: 3ms en HighSpeed, 15ms en HighQuality; en cas de redimensionnement: 50ms et 200ms ?!
+			
+			e.Graphics.DrawString ("Hello, world. 14pt", font.GetOsFont (14.0), System.Drawing.Brushes.Black, 10,  80);
+			e.Graphics.DrawString ("Hello, world. 13pt", font.GetOsFont (13.0), System.Drawing.Brushes.Black, 10,  90);
+			e.Graphics.DrawString ("Hello, world. 12pt", font.GetOsFont (12.0), System.Drawing.Brushes.Black, 10, 100);
+			e.Graphics.DrawString ("Hello, world. 11pt", font.GetOsFont (11.0), System.Drawing.Brushes.Black, 10, 110);
+			e.Graphics.DrawString ("Hello, world. 10pt", font.GetOsFont (10.0), System.Drawing.Brushes.Black, 10, 120);
+			e.Graphics.DrawString ("Hello, world. 9pt",  font.GetOsFont (9.0),  System.Drawing.Brushes.Black, 10, 130);
+			
+			this.DrawString ("Hello, world. 14pt", 10, 60, 14, e.Graphics, font);
+		}
+		
+		private void DrawString(string text, double x, double y, double size, System.Drawing.Graphics os_graphics, Font font)
+		{
+			System.Drawing.Font os_font = font.GetOsFont (size);
+			
+			double[] xxx = font.GetTextCharEndX (text);
+			double ox = 0;
+			
+			for (int i = 0; i < text.Length; i++)
+			{
+				os_graphics.DrawString (text.Substring (i, 1), os_font, System.Drawing.Brushes.Black, (float) x, (float) y);
+				
+				x += (xxx[i]-ox) * size;
+				ox = xxx[i];
+			}
 		}
 
 		private void HandleFormSizeChanged(object sender, System.EventArgs e)
