@@ -86,24 +86,33 @@ namespace Epsitec.Common.Text
 				throw new System.ArgumentException ("Not a valid FitterCursor.", "cursor");
 			}
 			
-			double oy = 0;
-			double fence_before = 100;
-			double fence_after  = 20;
-			
 			ulong[] text;
 			int length = c.ParagraphLength;
 			
 			text   = new ulong[length];
 			length = this.story.ReadText (c, length, text);
 			
-			Layout.Context layout = new Layout.Context (this.story.TextContext, text, 0, oy, 14.0, 1000, 0, 0, fence_before, fence_after);
+			Layout.Context layout = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
 			
 			int n = c.Elements.Length;
 			
 			for (int i = 0; i < n; i++)
 			{
-				layout.RenderLine (renderer, c.Elements[i].Profile, c.Elements[i].Length, i, i == n-1);
-				layout.TextOffset += c.Elements[i].Length;
+				int frame = c.Elements[i].FrameIndex;
+				int count = c.Elements[i].Length;
+				
+				double ox    = c.Elements[i].LineBaseX;
+				double oy    = c.Elements[i].LineBaseY;
+				double width = c.Elements[i].LineWidth;
+				
+				Layout.StretchProfile profile = c.Elements[i].Profile;
+				
+				layout.SelectFrame (frame, 0);
+				
+				layout.Frame.MapToView (ref ox, ref oy);
+				
+				layout.RenderLine (renderer, profile, count, ox, oy, width, i, i == n-1);
+				layout.TextOffset += count;
 			}
 		}
 		
@@ -123,7 +132,8 @@ namespace Epsitec.Common.Text
 			{
 				for (;;)
 				{
-					//	TODO: lock et détection d'altérations du texte
+					//	TODO: lock et détection d'altérations du texte (et de la liste des
+					//	ITextFrame liés à ce TextFitter).
 					
 					int max    = this.story.TextLength;
 					int length = System.Math.Min (max - pos, 10000);
@@ -267,11 +277,12 @@ namespace Epsitec.Common.Text
 					end_of_text = true;
 				}
 				
-				element.Length  = offset - line_start;
-				element.Profile = profile;
+				element.Length     = offset - line_start;
+				element.Profile    = profile;
 				element.FrameIndex = layout.FrameIndex;
-				element.FrameY     = layout.FrameY;
-				element.FrameWidth = layout.LineWidth;
+				element.LineBaseX  = layout.X;
+				element.LineBaseY  = layout.Y;
+				element.LineWidth  = layout.AvailableWidth;
 				
 				list.Add (element);
 				

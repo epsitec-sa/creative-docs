@@ -162,27 +162,39 @@ namespace Epsitec.Common.Text.Cursors
 				}
 			}
 			
-			public double						FrameY
+			public double						LineBaseX
 			{
 				get
 				{
-					return this.frame_y;
+					return this.line_base_x;
 				}
 				set
 				{
-					this.frame_y = value;
+					this.line_base_x = value;
 				}
 			}
 			
-			public double						FrameWidth
+			public double						LineBaseY
 			{
 				get
 				{
-					return this.frame_width;
+					return this.line_base_y;
 				}
 				set
 				{
-					this.frame_width = value;
+					this.line_base_y = value;
+				}
+			}
+			
+			public double						LineWidth
+			{
+				get
+				{
+					return this.line_width;
+				}
+				set
+				{
+					this.line_width = value;
 				}
 			}
 			
@@ -190,8 +202,9 @@ namespace Epsitec.Common.Text.Cursors
 			private ushort						length;
 			private Layout.StretchProfile		profile;
 			private int							frame_index;
-			private double						frame_y;
-			private double						frame_width;
+			private double						line_base_x;
+			private double						line_base_y;
+			private double						line_width;
 		}
 		#endregion
 		

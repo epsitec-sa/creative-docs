@@ -25,13 +25,12 @@ namespace Epsitec.Common.Text.Layout
 			this.line_height = line_height;
 			this.line_width  = line_width;
 			
+			this.ox       = mx_left;
 			this.mx_left  = mx_left;
 			this.mx_right = mx_right;
 			
 			this.break_fence_before = break_fence_before;
 			this.break_fence_after  = break_fence_after;
-			
-			this.Reset ();
 			
 			this.left_to_right = 0;
 		}
@@ -42,8 +41,6 @@ namespace Epsitec.Common.Text.Layout
 			this.text         = text;
 			this.text_start   = start;
 			this.frame_list   = frame_list;
-			
-			this.Reset ();
 		}
 		
 		
@@ -257,6 +254,14 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public ITextFrame						Frame
+		{
+			get
+			{
+				return this.frame;
+			}
+		}
+		
 		public int								FrameIndex
 		{
 			get
@@ -304,7 +309,9 @@ namespace Epsitec.Common.Text.Layout
 			this.SelectLayoutEngine (this.text_offset);
 			this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
 			this.SelectLineHeight (this.text_offset);
-			this.Reset ();
+			
+			this.ox        = this.mx_left;
+			this.hyphenate = false;
 			
 			Debug.Assert.IsNotNull (this.layout_engine);
 			Debug.Assert.IsNotNull (this.text);
@@ -440,7 +447,7 @@ restart:
 			return Layout.Status.ErrorCannotFit;
 		}
 		
-		public void RenderLine(ITextRenderer renderer, Layout.StretchProfile profile, int length, int paragraph_line_count, bool is_last_line)
+		public void RenderLine(ITextRenderer renderer, Layout.StretchProfile profile, int length, double line_base_x, double line_base_y, double line_width, int paragraph_line_count, bool is_last_line)
 		{
 			//	Réalise le rendu de la ligne, en appelant les divers moteurs de
 			//	layout associés au texte.
@@ -453,7 +460,9 @@ restart:
 			this.SelectLayoutEngine (this.text_offset);
 			this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, is_last_line);
 			this.SelectLineHeight (this.text_offset);
-			this.Reset ();
+			
+			this.ox      = line_base_x;
+			this.oy_base = line_base_y;
 			
 			Debug.Assert.IsNotNull (this.layout_engine);
 			Debug.Assert.IsNotNull (this.text_context);
@@ -461,7 +470,7 @@ restart:
 			this.text_profile = profile;
 			this.hyphenate    = false;
 			
-			profile.ComputeScales (this.AvailableWidth, out this.text_scales);
+			profile.ComputeScales (line_width, out this.text_scales);
 			
 			int               end            = this.text_offset + length;
 			Unicode.BreakInfo end_break_info = Unicode.Bits.GetBreakInfo (this.text[this.text_start + end - 1]);
@@ -471,6 +480,10 @@ restart:
 				case Unicode.BreakInfo.HyphenateGoodChoice:
 				case Unicode.BreakInfo.HyphenatePoorChoice:
 					this.hyphenate = true;
+					break;
+				
+				default:
+					this.hyphenate = false;
 					break;
 			}
 			
@@ -492,12 +505,6 @@ restart:
 			}
 		}
 		
-		
-		public void Reset()
-		{
-			this.hyphenate = false;
-			this.ox        = this.mx_left;
-		}
 		
 		public void RecordAscender(double value)
 		{

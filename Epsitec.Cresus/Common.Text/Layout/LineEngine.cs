@@ -373,8 +373,11 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			int n = glyphs.Length;
 			
+			double y = context.Y;
+			
 			double[] x_scale = new double[n];
 			double[] x_pos   = new double[n];
+			double[] y_pos   = new double[n];
 			
 			for (int i = 0; i < n; i++)
 			{
@@ -389,11 +392,13 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					default:
 						throw new System.InvalidOperationException ();
 				}
+				
+				y_pos[i] = y;
 			}
 			
 			scratch.Advance += scratch.Font.GetPositions (glyphs, scratch.FontSize, scratch.Advance, x_pos, x_scale);
 			
-			renderer.Render (scratch.Font, scratch.FontSize, glyphs, x_pos, null, x_scale, null);
+			renderer.Render (context.Frame, scratch.Font, scratch.FontSize, glyphs, x_pos, y_pos, x_scale, null);
 		}
 		
 		

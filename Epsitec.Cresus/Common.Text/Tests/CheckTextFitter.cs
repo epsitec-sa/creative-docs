@@ -208,7 +208,12 @@ namespace Epsitec.Common.Text.Tests
 			
 			
 			#region ITextRenderer Members
-			public void Render(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+			public bool IsFrameAreaVisible(ITextFrame frame, double x, double y, double width, double height)
+			{
+				return true;
+			}
+			
+			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 			{
 				for (int i = 0; i < glyphs.Length; i++)
 				{
@@ -257,7 +262,12 @@ namespace Epsitec.Common.Text.Tests
 			
 			
 			#region ITextRenderer Members
-			public void Render(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+			public bool IsFrameAreaVisible(ITextFrame frame, double x, double y, double width, double height)
+			{
+				return true;
+			}
+			
+			public void Render(ITextFrame frame, Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
 			{
 			}
 			#endregion

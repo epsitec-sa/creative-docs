@@ -122,6 +122,12 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public void MapToView(ref double x, ref double y)
+		{
+			x += this.x;
+			y += this.y + this.height;
+		}
+		
 		
 		private double							x, y;
 		private double							width, height;
