@@ -92,6 +92,34 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public void SuspendLayout()
+		{
+			lock (this)
+			{
+				this.suspend_counter++;
+			}
+		}
+		
+		public void ResumeLayout()
+		{
+			lock (this)
+			{
+				if (this.suspend_counter > 0)
+				{
+					this.suspend_counter--;
+				}
+				
+				if (this.suspend_counter == 0)
+				{
+					if ((this.internal_state & InternalState.ChildrenChanged) != 0)
+					{
+						this.internal_state -= InternalState.ChildrenChanged;
+						this.OnChildrenChanged (System.EventArgs.Empty);
+					}
+				}
+			}
+		}
+		
 		public void SetClientAngle(int angle)
 		{
 			this.client_info.SetAngle (angle);
@@ -281,6 +309,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public int							TabIndex
+		{
+			get { return this.tab_index; }
+			set { this.tab_index = value; }
+		}
+		
+		public TabNavigationMode			TabNavigation
+		{
+			get { return this.tab_navigation_mode; }
+			set { this.tab_navigation_mode = value; }
+		}
+		
+		
+		public event PaintEventHandler		PaintBackground;
+		public event PaintEventHandler		PaintForeground;
+		public event System.EventHandler	ChildrenChanged;
 		
 		
 		//	Cursor
@@ -291,60 +335,6 @@ namespace Epsitec.Common.Widgets
 		//	Hide/Show/SetVisible
 		//	FindNextWidget/FindPrevWidget
 		//	Invalidate/Update/Refresh
-		
-		protected Widget FindChild(System.Drawing.PointF point)
-		{
-			return this.FindChild (point, ChildFindMode.All);
-		}
-		
-		protected virtual Widget FindChild(System.Drawing.PointF point, ChildFindMode mode)
-		{
-			if (this.Children.Count == 0)
-			{
-				return null;
-			}
-			
-			Widget[] children = this.Children.Widgets;
-			int  children_num = children.Length;
-			
-			for (int i = 0; i < children_num; i++)
-			{
-				Widget widget = children[children_num-1 - i];
-				
-				System.Diagnostics.Debug.Assert (widget != null);
-				
-				if (mode != ChildFindMode.All)
-				{
-					if ((mode & ChildFindMode.SkipDisabled) != 0)
-					{
-						if (widget.IsEnabled == false)
-						{
-							continue;
-						}
-					}
-					else if ((mode & ChildFindMode.SkipHidden) != 0)
-					{
-						if (widget.IsVisible == false)
-						{
-							continue;
-						}
-					}
-				}
-				
-				if (widget.HitTest (point))
-				{
-					if ((mode & ChildFindMode.SkipTransparent) != 0)
-					{
-						//	TODO: vérifier que le point en question n'est pas transparent
-					}
-					
-					return widget;
-				}
-			}
-			
-			return null;
-		}
-		
 		
 		public virtual bool HitTest(System.Drawing.PointF point)
 		{
@@ -358,7 +348,7 @@ namespace Epsitec.Common.Widgets
 			
 			return false;
 		}
-
+		
 		
 		public virtual System.Drawing.PointF MapParentToClient(System.Drawing.PointF point)
 		{
@@ -427,7 +417,7 @@ namespace Epsitec.Common.Widgets
 			
 			return new System.Drawing.PointF (x + this.x1, y + this.y1);
 		}
-
+		
 		public virtual System.Drawing.PointF MapRootToClient(System.Drawing.PointF point)
 		{
 			Widget parent = this.Parent;
@@ -593,6 +583,60 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected Widget FindChild(System.Drawing.PointF point)
+		{
+			return this.FindChild (point, ChildFindMode.All);
+		}
+		
+		protected virtual Widget FindChild(System.Drawing.PointF point, ChildFindMode mode)
+		{
+			if (this.Children.Count == 0)
+			{
+				return null;
+			}
+			
+			Widget[] children = this.Children.Widgets;
+			int  children_num = children.Length;
+			
+			for (int i = 0; i < children_num; i++)
+			{
+				Widget widget = children[children_num-1 - i];
+				
+				System.Diagnostics.Debug.Assert (widget != null);
+				
+				if (mode != ChildFindMode.All)
+				{
+					if ((mode & ChildFindMode.SkipDisabled) != 0)
+					{
+						if (widget.IsEnabled == false)
+						{
+							continue;
+						}
+					}
+					else if ((mode & ChildFindMode.SkipHidden) != 0)
+					{
+						if (widget.IsVisible == false)
+						{
+							continue;
+						}
+					}
+				}
+				
+				if (widget.HitTest (point))
+				{
+					if ((mode & ChildFindMode.SkipTransparent) != 0)
+					{
+						//	TODO: vérifier que le point en question n'est pas transparent
+					}
+					
+					return widget;
+				}
+			}
+			
+			return null;
+		}
+		
+		
 		protected virtual void SetBounds(float x1, float y1, float x2, float y2)
 		{
 			if ((x1 == this.x1) && (y1 == this.y1) && (x2 == this.x2) && (y2 == this.y2))
@@ -710,17 +754,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual bool PaintCheckClipping(PaintEventArgs e)
+		protected virtual void PaintHandler(Graphics graphics, System.Drawing.RectangleF clip_rect)
 		{
-			return e.ClipRectangle.IntersectsWith (this.Bounds);
-		}
-		
-		protected virtual void PaintAlgorithm(PaintEventArgs e)
-		{
-			if (this.PaintCheckClipping (e))
+			if (this.PaintCheckClipping (clip_rect))
 			{
-				Graphics                  graphics  = e.Graphics;
-				System.Drawing.RectangleF clip_rect = this.MapParentToClient (e.ClipRectangle);
+				clip_rect = this.MapParentToClient (clip_rect);
 				
 				Transform original_transform = graphics.Transform;
 				Transform graphics_transform = new Transform (original_transform);
@@ -755,7 +793,7 @@ namespace Epsitec.Common.Widgets
 						
 							if (widget.IsVisible)
 							{
-								widget.PaintAlgorithm (local_paint_args);
+								widget.PaintHandler (graphics, clip_rect);
 							}
 						}
 					}
@@ -772,14 +810,75 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnPaintBackground(PaintEventArgs e)
+		protected virtual void PaintBackgroundImplementation(Graphics graphics)
 		{
+			//	Implémenter le dessin du fond dans cette méthode.
 		}
 		
-		protected virtual void OnPaintForeground(PaintEventArgs e)
+		protected virtual void PaintForegroundImplementation(Graphics graphics)
 		{
+			//	Implémenter le dessin des enjoliveurs additionnels dans cette méthode.
 		}
 		
+		protected virtual bool PaintCheckClipping(System.Drawing.RectangleF clip_rect)
+		{
+			return clip_rect.IntersectsWith (this.Bounds);
+		}
+		
+		
+		protected virtual void MessageHandler(Message message, System.Drawing.PointF pos)
+		{
+			this.PreProcessMessage (message, pos);
+			
+			//	En premier lieu, si le message peut être transmis aux descendants de ce widget, passe
+			//	en revue ceux-ci dans l'ordre inverse de leur affichage (commence par le widget qui est
+			//	visuellement au sommet).
+			
+			if ((message.FilterNoChildren == false) &&
+				(message.Processed == false) &&
+				(this.Children.Count > 0))
+			{
+				System.Drawing.PointF client_pos = this.MapParentToClient (pos);
+				
+				Widget[] children = this.Children.Widgets;
+				int  children_num = children.Length;
+				
+				for (int i = 0; i < children_num; i++)
+				{
+					Widget widget = children[children_num-1 - i];
+					
+					if ((widget.IsEnabled) &&
+						((message.FilterOnlyFocused == false) || (widget.IsFocused)) &&
+						((message.FilterOnlyOnHit == false) || (widget.HitTest (client_pos))))
+					{
+						widget.MessageHandler (message, client_pos);
+						
+						if (message.Processed)
+						{
+							break;
+						}
+					}
+				}
+			}
+			
+			this.DispatchMessage (message, pos);
+			
+			this.PostProcessMessage (message, pos);
+		}
+		
+		protected virtual void PreProcessMessage(Message message, System.Drawing.PointF pos)
+		{
+			//	...appelé avant que l'événement ne soit traité...
+		}
+		
+		protected virtual void PostProcessMessage(Message message, System.Drawing.PointF pos)
+		{
+			//	...appelé après que l'événement ait été traité...
+		}
+		
+		protected virtual void DispatchMessage(Message message, System.Drawing.PointF pos)
+		{
+		}
 		
 		
 		protected virtual WidgetCollection CreateWidgetCollection()
@@ -788,10 +887,65 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected virtual void OnPaintBackground(PaintEventArgs e)
+		{
+			if (this.PaintBackground != null)
+			{
+				e.Suppress = false;
+				
+				this.PaintBackground (this, e);
+				
+				if (e.Suppress)
+				{
+					return;
+				}
+			}
+			
+			this.PaintBackgroundImplementation (e.Graphics);
+		}
+		
+		protected virtual void OnPaintForeground(PaintEventArgs e)
+		{
+			if (this.PaintForeground != null)
+			{
+				e.Suppress = false;
+				
+				this.PaintForeground (this, e);
+				
+				if (e.Suppress)
+				{
+					return;
+				}
+			}
+			
+			this.PaintForegroundImplementation (e.Graphics);
+		}
+		
+		protected virtual void OnChildrenChanged(System.EventArgs e)
+		{
+			if (this.ChildrenChanged != null)
+			{
+				this.ChildrenChanged (this, e);
+			}
+		}
+		
+		
 		
 		[System.Flags] protected enum InternalState
 		{
-			None		= 0,
+			None				= 0,
+			ChildrenChanged		= 0x00000001,
+		}
+		
+		[System.Flags] public enum TabNavigationMode
+		{
+			Passive				= 0,
+			
+			ActivateOnTab		= 0x00000001,
+			ActivateOnCursorX	= 0x00000002,
+			ActivateOnCursorY	= 0x00000004,
+			ActivateOnCursor	= ActivateOnCursorX + ActivateOnCursorY,
+			ActivateOnPage		= 0x00000008,
 		}
 		
 		[System.Flags] public enum ChildFindMode
@@ -916,6 +1070,18 @@ namespace Epsitec.Common.Widgets
 				widget.parent = this.widget;
 			}
 			
+			private void PostInsert(object widget)
+			{
+				if (this.widget.suspend_counter == 0)
+				{
+					this.widget.OnChildrenChanged (System.EventArgs.Empty);
+				}
+				else
+				{
+					this.widget.internal_state |= InternalState.ChildrenChanged;
+				}
+			}
+			
 			private void PreRemove(object widget)
 			{
 				if (widget is Widget)
@@ -933,6 +1099,19 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert (widget.parent == this.widget);
 				widget.parent = null;
 			}
+			
+			private void NotifyChanged()
+			{
+				if (this.widget.suspend_counter == 0)
+				{
+					this.widget.OnChildrenChanged (System.EventArgs.Empty);
+				}
+				else
+				{
+					this.widget.internal_state |= InternalState.ChildrenChanged;
+				}
+			}
+			
 			
 			
 			#region IList Members
@@ -953,6 +1132,7 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert (this.list[index] != null);
 				this.PreRemove (this.list[index]);
 				this.list.RemoveAt (index);
+				this.NotifyChanged ();
 			}
 			
 			public void Insert(int index, object value)
@@ -964,6 +1144,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.PreRemove (value);
 				this.list.Remove (value);
+				this.NotifyChanged ();
 			}
 			
 			public bool Contains(object value)
@@ -987,7 +1168,9 @@ namespace Epsitec.Common.Widgets
 			public int Add(object value)
 			{
 				this.PreInsert (value);
-				return this.list.Add (value);
+				int result = this.list.Add (value);
+				this.NotifyChanged ();
+				return result;
 			}
 			
 			public bool IsFixedSize
@@ -1075,5 +1258,8 @@ namespace Epsitec.Common.Widgets
 		protected string					text;
 		protected LayoutInfo				layout_info;
 		protected InternalState				internal_state;
+		protected int						suspend_counter;
+		protected int						tab_index;
+		protected TabNavigationMode			tab_navigation_mode;
 	}
 }

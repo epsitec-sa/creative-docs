@@ -2,6 +2,8 @@ namespace Epsitec.Common.Widgets
 {
 	using Epsitec.Common.Drawing;
 	
+	public delegate void PaintEventHandler(object sender, PaintEventArgs e);
+	
 	/// <summary>
 	/// La classe PaintEventArgs décrit les arguments pour une opération de dessin, ce qui
 	/// comprend un contexte graphique et un rectangle de clipping.
@@ -12,11 +14,6 @@ namespace Epsitec.Common.Widgets
 		{
 			this.graphics  = graphics;
 			this.clip_rect = clip_rect;
-		}
-
-		~ PaintEventArgs()
-		{
-			this.Dispose (false);
 		}
 		
 		public Graphics						Graphics
@@ -29,6 +26,13 @@ namespace Epsitec.Common.Widgets
 			get { return this.clip_rect; }
 		}
 		
+		public bool							Suppress
+		{
+			get { return this.suppress; }
+			set { this.suppress = value; }
+		}
+		
+		
 		#region IDisposable Members
 
 		public void Dispose()
@@ -38,6 +42,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		#endregion
+		
+		~ PaintEventArgs()
+		{
+			this.Dispose (false);
+		}
 		
 		protected virtual void Dispose(bool disposing)
 		{
@@ -51,5 +60,6 @@ namespace Epsitec.Common.Widgets
 		
 		private Graphics					graphics;
 		private System.Drawing.RectangleF	clip_rect;
+		private bool						suppress;
 	}
 }
