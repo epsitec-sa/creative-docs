@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Statut : OK/PA, 02/02/2004
 
 namespace Epsitec.Common.Widgets.Layouts
 {
