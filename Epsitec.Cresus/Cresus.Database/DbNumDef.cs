@@ -169,6 +169,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		
 		[System.Diagnostics.Conditional ("DEBUG")] protected void DebugCheckAbsolute(decimal value)
 		{
 			//	Utilisé pour vérifier que ni le min_value, ni le max_value
