@@ -356,7 +356,7 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		[Bundle ("anchor")]	public AnchorStyles		Anchor
+		[Bundle]			public AnchorStyles		Anchor
 		{
 			get
 			{
@@ -368,7 +368,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle ("dock")]	public DockStyle		Dock
+		[Bundle]			public DockStyle		Dock
 		{
 			get
 			{
@@ -392,7 +392,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle ("dock_m")] public Drawing.Margins	DockMargins
+		[Bundle]			public Drawing.Margins	DockPadding
+		{
+			get
+			{
+				return this.dock_padding;
+			}
+			set
+			{
+				if (this.dock_padding != value)
+				{
+					this.dock_padding = value;
+					this.UpdateChildrenLayout ();
+				}
+			}
+		}
+		
+		[Bundle]			public Drawing.Margins	DockMargins
 		{
 			get
 			{
@@ -408,23 +424,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle ("dock_s")] public Drawing.Margins	DockSpacer
-		{
-			get
-			{
-				return this.dock_spacer;
-			}
-			set
-			{
-				if (this.dock_spacer != value)
-				{
-					this.dock_spacer = value;
-					this.UpdateChildrenLayout ();
-				}
-			}
-		}
-		
-		[Bundle ("dock_h")]	public bool				PreferHorizontalDockLayout
+		[Bundle ("DockH")]	public bool				PreferHorizontalDockLayout
 		{
 			get { return (this.internal_state & InternalState.PreferXLayout) != 0; }
 			set
@@ -445,7 +445,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle ("lay_f")]	public LayoutFlags		LayoutFlags
+		[Bundle]			public LayoutFlags		LayoutFlags
 		{
 			get { return this.layout_flags; }
 			set
@@ -548,13 +548,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		[Bundle ("pos")]	public Drawing.Point	Location
+		[Bundle]			public Drawing.Point	Location
 		{
 			get { return new Drawing.Point (this.x1, this.y1); }
 			set { this.SetBounds (value.X, value.Y, value.X + this.x2 - this.x1, value.Y + this.y2 - this.y1); }
 		}
 		
-		[Bundle ("size")]	public Drawing.Size		Size
+		[Bundle]			public Drawing.Size		Size
 		{
 			get { return new Drawing.Size (this.x2 - this.x1, this.y2 - this.y1); }
 			set { this.SetBounds (this.x1, this.y1, this.x1 + value.Width, this.y1 + value.Height); }
@@ -1418,7 +1418,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		[Bundle ("name")]	public string			Name
+		[Bundle]			public string			Name
 		{
 			get
 			{
@@ -1448,7 +1448,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[Bundle ("cmd")]	public string			Command
+		[Bundle]			public string			Command
 		{
 			get
 			{
@@ -1506,7 +1506,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle ("text")]	public string			Text
+		[Bundle]			public string			Text
 		{
 			get
 			{
@@ -1594,7 +1594,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle ("tabi")]	public int				TabIndex
+		[Bundle]			public int				TabIndex
 		{
 			get { return this.tab_index; }
 			set
@@ -4202,7 +4202,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle client_rect = this.InnerBounds;
 			Drawing.Rectangle bounds;
 			
-			client_rect.Deflate (this.DockMargins);
+			client_rect.Deflate (this.DockPadding);
 			
 			for (int i = 0; i < children.Length; i++)
 			{
@@ -4223,7 +4223,7 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				bounds = child.Bounds;
-				bounds.Inflate (child.DockSpacer);
+				bounds.Inflate (child.DockMargins);
 				
 				double dx = bounds.Width;
 				double dy = bounds.Height;
@@ -4232,28 +4232,28 @@ namespace Epsitec.Common.Widgets
 				{
 					case DockStyle.Top:
 						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Top - dy, client_rect.Width, dy);
-						bounds.Deflate (child.DockSpacer);
+						bounds.Deflate (child.DockMargins);
 						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
 						client_rect.Top -= dy;
 						break;
 						
 					case DockStyle.Bottom:
 						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, client_rect.Width, dy);
-						bounds.Deflate (child.DockSpacer);
+						bounds.Deflate (child.DockMargins);
 						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
 						client_rect.Bottom += dy;
 						break;
 					
 					case DockStyle.Left:
 						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, dx, client_rect.Height);
-						bounds.Deflate (child.DockSpacer);
+						bounds.Deflate (child.DockMargins);
 						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
 						client_rect.Left += dx;
 						break;
 					
 					case DockStyle.Right:
 						bounds = new Drawing.Rectangle (client_rect.Right - dx, client_rect.Bottom, dx, client_rect.Height);
-						bounds.Deflate (child.DockSpacer);
+						bounds.Deflate (child.DockMargins);
 						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
 						client_rect.Right -= dx;
 						break;
@@ -4278,7 +4278,7 @@ namespace Epsitec.Common.Widgets
 					foreach (Widget child in fill_queue)
 					{
 						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, fill_dx / n, client_rect.Height);
-						bounds.Deflate (child.DockSpacer);
+						bounds.Deflate (child.DockMargins);
 						
 						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
 						client_rect.Left += fill_dx / n;
@@ -4292,7 +4292,7 @@ namespace Epsitec.Common.Widgets
 					foreach (Widget child in fill_queue)
 					{
 						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Top - fill_dy / n, client_rect.Width, fill_dy / n);
-						bounds.Deflate (child.DockSpacer);
+						bounds.Deflate (child.DockMargins);
 						
 						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
 						client_rect.Top -= fill_dy / n;
@@ -5777,8 +5777,8 @@ namespace Epsitec.Common.Widgets
 		private AnchorStyles					anchor;
 		
 		private DockStyle						dock;
+		private Drawing.Margins					dock_padding;
 		private Drawing.Margins					dock_margins;
-		private Drawing.Margins					dock_spacer;
 		
 		private ClientInfo						client_info = new ClientInfo ();
 		

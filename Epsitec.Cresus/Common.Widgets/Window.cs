@@ -539,7 +539,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		[Bundle ("size")] public Drawing.Size	ClientSize
+		[Bundle ("Size")]	public Drawing.Size	ClientSize
 		{
 			get { return new Drawing.Size (this.window.ClientSize); }
 			set
@@ -556,13 +556,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle ("text")] public string			Text
+		[Bundle]			public string		Text
 		{
 			get { return this.text; }
 			set { this.window.Text = this.text = value; }
 		}
 
-		[Bundle ("name")] public string			Name
+		[Bundle]			public string		Name
 		{
 			get { return this.name; }
 			set { this.window.Name = this.name = value; }
