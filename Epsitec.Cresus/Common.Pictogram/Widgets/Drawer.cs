@@ -54,14 +54,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 
 		// Indique si l'icône est active.
-		public bool IsActive
+		public bool IsIconActive
 		{
 			get { return this.isActive; }
 			set { this.isActive = value; }
 		}
 
 		// Indique si l'icône est éditable.
-		public bool IsEditable
+		public bool IsIconEditable
 		{
 			get
 			{
