@@ -25,36 +25,24 @@ namespace Epsitec.Common.Support
 		{
 			//	Transmet la commande à ceux qui sont intéressés
 			
-			System.Diagnostics.Debug.WriteLine ("Command: " + command);
-			System.Diagnostics.Debug.WriteLine ("Source:  " + source);
-			
 			CommandEventArgs command_event = new CommandEventArgs (source, command);
 			
-			string[] command_elements = command.Split ('.');
+			string[] command_elements = command.Split ('/');
 			int      command_length   = command_elements.Length;
-			int      command_subpart  = 0;
 			
-			for (;;)
+			System.Diagnostics.Debug.Assert (command_length == 1);
+			System.Diagnostics.Debug.Assert (command.IndexOf ("*") < 0);
+			
+			
+			EventSlot slot = this.event_handlers[command] as EventSlot;
+			
+			if (slot != null)
 			{
-				EventSlot slot = this.event_handlers[command] as EventSlot;
-				
-				if (slot != null)
-				{
-					slot.Fire (this, command_event);
-				}
-				
-				if (command_length < 2)
-				{
-					break;
-				}
-				
-				//	Réduit une commande du genre a.b.c successivement en *.b.c puis *.c avant
-				//	d'arrêter la recherche d'une commande adéquate.
-				
-				command_elements[command_subpart] = "*";
-				command = string.Join (".", command_elements, command_subpart, command_length);
-				command_subpart++;
-				command_length--;
+				slot.Fire (this, command_event);
+			}
+			else
+			{
+				System.Diagnostics.Debug.WriteLine ("Command " + command + " not handled.");
 			}
 		}
 		

@@ -678,24 +678,47 @@ namespace Epsitec.Common.Widgets
 			System.GC.Collect ();
 		}
 		
-		[Test] public void CheckCommandName()
+		[Test] public void CheckFullPathName()
 		{
-			Widget w1 = new Widget ();	w1.Name = "a";					w1.IsCommand = true;
-			Widget w2 = new Widget ();	w2.Name = "b";	w2.Parent = w1;	w2.IsCommand = true;
-			Widget w3 = new Widget ();	w3.Name = "c";	w3.Parent = w2;	w3.IsCommand = true;
+			Widget w1 = new Widget (); w1.Name = "XA";
+			Widget w2 = new Widget (); w2.Name = "XB"; w2.Parent = w1;
+			Widget w3 = new Widget (); w3.Name = "XC"; w3.Parent = w2;
 			
-			Assertion.AssertEquals ("a", w1.CommandName);
-			Assertion.AssertEquals ("a.b", w2.CommandName);
-			Assertion.AssertEquals ("a.b.c", w3.CommandName);
+			Assertion.AssertEquals ("XA", w1.FullPathName);
+			Assertion.AssertEquals ("XA.XB", w2.FullPathName);
+			Assertion.AssertEquals ("XA.XB.XC", w3.FullPathName);
 			
-			Assertion.AssertEquals (w2, w1.FindCommandWidget ("a.b"));
-			Assertion.AssertEquals (w3, w1.FindCommandWidget ("a.b.c"));
+			Assertion.AssertEquals (w2, w1.FindChildByPath ("XA.XB"));
+			Assertion.AssertEquals (w3, w1.FindChildByPath ("XA.XB.XC"));
 			
-			Widget[] find = w1.FindCommandWidgets (Support.RegexFactory.FromSimpleJoker ("a.*"));
+			Widget[] find = Widget.FindAllFullPathWidgets (Support.RegexFactory.FromSimpleJoker ("*XB*"));
 			
 			Assertion.AssertEquals (2, find.Length);
 			Assertion.AssertEquals (w2, find[0]);
 			Assertion.AssertEquals (w3, find[1]);
+		}
+		
+		[Test] public void CheckCommandName()
+		{
+			Widget w1 = new Widget (); w1.Name = "A"; w1.CommandName = "a";
+			Widget w2 = new Widget (); w2.Name = "B"; w2.CommandName = "b"; w2.Parent = w1;
+			Widget w3 = new Widget (); w3.Name = "C"; w3.CommandName = "c"; w3.Parent = w2;
+			
+			Assertion.AssertEquals ("a", w1.CommandName);
+			Assertion.AssertEquals ("b", w2.CommandName);
+			Assertion.AssertEquals ("c", w3.CommandName);
+			
+			Assertion.Assert (w1.IsCommand);
+			Assertion.Assert (w2.IsCommand);
+			Assertion.Assert (w3.IsCommand);
+			
+			Assertion.AssertEquals (w2, w1.FindChildByPath ("A.B"));
+			Assertion.AssertEquals (w3, w1.FindChildByPath ("A.B.C"));
+			
+			Widget[] find = w1.FindCommandWidgets ("b");
+			
+			Assertion.AssertEquals (1, find.Length);
+			Assertion.AssertEquals (w2, find[0]);
 		}
 		
 		[Test] public void CheckFindAllCommandNames()
@@ -751,22 +774,23 @@ namespace Epsitec.Common.Widgets
 		[Test] public void CheckFindChildBasedOnCommandName()
 		{
 			Widget root = new Widget ();
-			Widget w1 = new Widget ();	w1.Name = "a";	w1.Parent = root;
-			Widget w2 = new Widget ();					w2.Parent = root;
-			Widget w3 = new Widget ();	w3.Name = "b";	w3.Parent = w2;	w3.IsCommand = true;
-			Widget w4 = new Widget ();	w4.Name = "c";	w4.Parent = w2;
-			Widget w5 = new Widget ();	w5.Name = "d";	w5.Parent = w4;	w5.IsCommand = true;
-			Widget w6 = new Widget ();	w6.Name = "e";	w6.Parent = w1;	w6.IsCommand = true;
+			Widget w1 = new Widget ();	w1.CommandName = "a";	w1.Parent = root;
+			Widget w2 = new Widget ();							w2.Parent = root;
+			Widget w3 = new Widget ();	w3.CommandName = "b";	w3.Parent = w2;
+			Widget w4 = new Widget ();	w4.CommandName = "c";	w4.Parent = w2;
+			Widget w5 = new Widget ();	w5.CommandName = "d";	w5.Parent = w4;
+			Widget w6 = new Widget ();	w6.Name = "e";			w6.Parent = w1;
 			
-			Assertion.AssertEquals (w1, root.FindCommandWidget ("a"));
-			Assertion.AssertEquals (w3, root.FindCommandWidget ("b"));
-			Assertion.AssertEquals (w4, root.FindCommandWidget ("c"));
-			Assertion.AssertEquals (w5, root.FindCommandWidget ("c.d"));
-			Assertion.AssertEquals (w6, root.FindCommandWidget ("a.e"));
+			Assertion.AssertEquals (w1, root.FindCommandWidgets ("a") [0]);
+			Assertion.AssertEquals (w3, root.FindCommandWidgets ("b") [0]);
+			Assertion.AssertEquals (w4, root.FindCommandWidgets ("c") [0]);
+			Assertion.AssertEquals (w5, root.FindCommandWidgets ("d") [0]);
+			
+			Assertion.Assert (root.FindCommandWidgets ("e").Length == 0);
 			
 			Widget[] command_widgets = root.FindCommandWidgets ();
 			
-			Assertion.AssertEquals (3, command_widgets.Length);
+			Assertion.AssertEquals (4, command_widgets.Length);
 		}
 		
 		

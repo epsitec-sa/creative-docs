@@ -15,6 +15,7 @@ namespace Epsitec.Common.Widgets.Design
 		{
 			this.drop_adorner = new Design.HiliteAdorner ();
 			this.selections   = new System.Collections.ArrayList ();
+			this.Name         = string.Format ("GripsOverlay{0}", GripsOverlay.overlay_id++);
 		}
 		
 		public GripsOverlay(Widget embedder) : this()
@@ -154,6 +155,8 @@ namespace Epsitec.Common.Widgets.Design
 		{
 			Selection sel = new Selection (this, widget);
 			
+			widget.SetProperty ("Selected by " + this.Name, sel);
+			
 			if (this.Parent == null)
 			{
 				this.Parent = widget.Window.Root;
@@ -185,6 +188,8 @@ namespace Epsitec.Common.Widgets.Design
 				
 				if (sel.Widget == widget)
 				{
+					System.Diagnostics.Debug.Assert (widget.GetProperty ("Selected by " + this.Name) == sel);
+					widget.ClearProperty ("Selected by " + this.Name);
 					this.selections.RemoveAt (i);
 					sel.Dispose ();
 					break;
@@ -220,6 +225,10 @@ namespace Epsitec.Common.Widgets.Design
 			}
 		}
 		
+		protected virtual bool WidgetAlignFilter(Widget widget)
+		{
+			return widget.IsPropertyDefined ("Selected by " + this.Name);
+		}
 		
 		protected override void UpdateClientGeometry()
 		{
@@ -298,6 +307,7 @@ namespace Epsitec.Common.Widgets.Design
 				this.overlay       = overlay;
 				this.target_widget = widget;
 				this.target_parent = widget.Parent;
+				this.filter        = new Design.SmartGuide.Filter (this.overlay.WidgetAlignFilter);
 				
 				this.CreateGrips ();
 				
@@ -419,7 +429,7 @@ namespace Epsitec.Common.Widgets.Design
 				this.overlay.drop_adorner.HiliteMode = HiliteMode.DropCandidate;
 				this.overlay.drop_adorner.Path.Clear ();
 				
-				Design.SmartGuide guide  = new Design.SmartGuide (this.target_widget, grip, this.target_parent);
+				Design.SmartGuide guide  = new Design.SmartGuide (this.target_widget, grip, this.target_parent, this.filter);
 				Drawing.Rectangle bounds = new_bounds;
 				Drawing.Point     bline  = this.target_widget.BaseLine;
 				
@@ -581,6 +591,7 @@ namespace Epsitec.Common.Widgets.Design
 				}
 			}
 			
+			
 			protected GripsOverlay				overlay;
 			protected Grip[]					grips;
 			protected Grip						active_grip;
@@ -588,6 +599,7 @@ namespace Epsitec.Common.Widgets.Design
 			protected Widget					target_parent;
 			protected Drawing.Rectangle			target_bounds;
 			protected Drawing.Rectangle			target_clip;
+			protected Design.SmartGuide.Filter	filter;
 		}
 		
 		protected void HandleGripDragBegin(Selection selection)
@@ -671,5 +683,7 @@ namespace Epsitec.Common.Widgets.Design
 		
 		protected Helpers.WidgetCollection		selected_widgets;
 		protected System.Collections.ArrayList	selections;
+		
+		static long								overlay_id;
 	}
 }

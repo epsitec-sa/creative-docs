@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : System.IDisposable, IBundleSupport, IContainer, Support.ICommandDispatcherHost
+	public class Window : System.IDisposable, IBundleSupport, IContainer, Support.ICommandDispatcherHost, Support.IPropertyProvider
 	{
 		public Window()
 		{
@@ -359,7 +359,27 @@ namespace Epsitec.Common.Widgets
 			set { this.window.WindowSize = value; }
 		}
 		
+
+		[Bundle ("size")]	public Drawing.Size		ClientSize
+		{
+			get { return new Drawing.Size (this.window.ClientSize); }
+			set { this.window.ClientSize = new System.Drawing.Size ((int)(value.Width + 0.5), (int)(value.Height + 0.5)); }
+		}
 		
+		[Bundle ("text")]	public string			Text
+		{
+			get { return this.text; }
+			set { this.window.Text = this.text = value; }
+		}
+
+		[Bundle ("name")]	public string			Name
+		{
+			get { return this.name; }
+			set { this.window.Name = this.name = value; }
+		}
+		
+		
+		#region IPropertyProvider Members
 		public void SetProperty(string key, object value)
 		{
 			if (this.property_hash == null)
@@ -380,25 +400,24 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 		
-		
-		[Bundle ("size")]	public Drawing.Size		ClientSize
+		public bool IsPropertyDefined(string key)
 		{
-			get { return new Drawing.Size (this.window.ClientSize); }
-			set { this.window.ClientSize = new System.Drawing.Size ((int)(value.Width + 0.5), (int)(value.Height + 0.5)); }
+			if (this.property_hash != null)
+			{
+				return this.property_hash.Contains (key);
+			}
+			
+			return false;
 		}
 		
-		[Bundle ("text")]	public string			Text
+		public void ClearProperty(string key)
 		{
-			get { return this.text; }
-			set { this.window.Text = this.text = value; }
+			if (this.property_hash != null)
+			{
+				this.property_hash.Remove (key);
+			}
 		}
-
-		[Bundle ("name")]	public string			Name
-		{
-			get { return this.name; }
-			set { this.window.Name = this.name = value; }
-		}
-		
+		#endregion
 		
 		#region ICommandDispatcherHost Members
 		Support.CommandDispatcher Support.ICommandDispatcherHost.CommandDispatcher

@@ -18,15 +18,14 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
-		public IconButton(string name) : this()
+		public IconButton(string icon) : this()
 		{
-			this.IconName = name;
+			this.IconName = icon;
 		}
 		
-		public IconButton(string name, string icon) : this(icon)
+		public IconButton(string command, string icon) : this(icon)
 		{
-			this.Name = name;
-			this.IsCommand = true;
+			this.CommandName = command;
 		}
 		
 		

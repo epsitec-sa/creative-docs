@@ -27,6 +27,11 @@ namespace Epsitec.Common.Widgets.Design
 			this.target = target;
 		}
 		
+		public SmartGuide(Widget widget, Drawing.GripId id, Widget target, Filter filter) : this(widget, id, target)
+		{
+			this.filter = filter;
+		}
+		
 		
 		public Drawing.GripId			GripId
 		{
@@ -149,6 +154,12 @@ namespace Epsitec.Common.Widgets.Design
 					continue;
 				}
 				
+				if ((this.filter != null) &&
+					(this.filter (widget)))
+				{
+					continue;
+				}
+				
 				double y1 = System.Math.Min (model.Bottom, bounds.Bottom);
 				double y2 = System.Math.Max (model.Top, bounds.Top);
 				
@@ -229,6 +240,12 @@ namespace Epsitec.Common.Widgets.Design
 					continue;
 				}
 				
+				if ((this.filter != null) &&
+					(this.filter (widget)))
+				{
+					continue;
+				}
+				
 				double x1 = System.Math.Min (model.Left, bounds.Left);
 				double x2 = System.Math.Max (model.Right, bounds.Right);
 				
@@ -275,6 +292,7 @@ namespace Epsitec.Common.Widgets.Design
 			}
 		}
 		
+		public delegate bool Filter(Widget widget);
 		
 		#region DefaultGuideAlign class
 		protected class DefaultGuideAlign : IGuideAlign
@@ -295,6 +313,7 @@ namespace Epsitec.Common.Widgets.Design
 		protected Widget					widget;
 		protected Widget					target;
 		protected IGuideAlign				align;
+		protected Filter					filter;
 		
 		protected static IGuideAlign		default_align = new DefaultGuideAlign();
 		protected static Drawing.Margins	root_margins  = new Drawing.Margins (12, 12, 20, 20);

@@ -62,23 +62,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected override void BuildCommandName(System.Text.StringBuilder buffer)
-		{
-			if (this.parentMenu != null)
-			{
-				this.parentMenu.BuildCommandName (buffer);
-			}
-			int length = buffer.Length;
-			
-			if ((length > 0) &&
-				(buffer[length-1] != '.'))
-			{
-				buffer.Append (".");
-			}
-			
-			buffer.Append (this.Name);
-		}
-		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )

@@ -104,7 +104,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Widget implémente la classe de base dont dérivent tous les
 	/// widgets de l'interface graphique ("controls" dans l'appellation Windows).
 	/// </summary>
-	public class Widget : System.IDisposable, Support.IBundleSupport, Support.ICommandDispatcherHost
+	public class Widget : System.IDisposable, Support.IBundleSupport, Support.ICommandDispatcherHost, Support.IPropertyProvider
 	{
 		public Widget()
 		{
@@ -196,6 +196,46 @@ namespace Epsitec.Common.Widgets
 			}
 			
 //			this.ResumeLayout ();
+		}
+		#endregion
+		
+		#region IPropertyProvider Members
+		public void SetProperty(string key, object value)
+		{
+			if (this.property_hash == null)
+			{
+				this.property_hash = new System.Collections.Hashtable ();
+			}
+			
+			this.property_hash[key] = value;
+		}
+		
+		public object GetProperty(string key)
+		{
+			if (this.property_hash != null)
+			{
+				return this.property_hash[key];
+			}
+			
+			return null;
+		}
+		
+		public bool IsPropertyDefined(string key)
+		{
+			if (this.property_hash != null)
+			{
+				return this.property_hash.Contains (key);
+			}
+			
+			return false;
+		}
+		
+		public void ClearProperty(string key)
+		{
+			if (this.property_hash != null)
+			{
+				this.property_hash.Remove (key);
+			}
 		}
 		#endregion
 		
@@ -4557,6 +4597,7 @@ namespace Epsitec.Common.Widgets
 		private Shortcut						shortcut;
 		private double							default_font_height;
 		private MouseCursor						mouse_cursor;
+		private System.Collections.Hashtable	property_hash;
 		
 		static System.Collections.ArrayList		entered_widgets = new System.Collections.ArrayList ();
 		static System.Collections.ArrayList		alive_widgets   = new System.Collections.ArrayList ();

@@ -14,8 +14,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public MenuItem()
 		{
-			this.InternalState |= InternalState.Command;
-			
 			this.InternalState &= ~InternalState.AutoCapture;
 			this.InternalState &= ~InternalState.AutoFocus;
 			this.InternalState &= ~InternalState.AutoEngage;
@@ -45,30 +43,39 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
-		public MenuItem(string name, string text) : this()
+		public MenuItem(string command, string text) : this()
 		{
-			this.Name     = name;
-			this.MainText = text;
-			this.onlyText = true;
+			this.CommandName = command;
+			this.MainText    = text;
+			this.onlyText    = true;
 		}
 		
-		public MenuItem(string name, string icon, string text, string shortcut) : this()
+		public MenuItem(string command, string icon, string text, string shortcut) : this()
 		{
-			this.Name     = name;
-			this.IconName = icon;
-			this.MainText = text;
-			this.ShortKey = shortcut;
-			this.onlyText = false;
+			this.CommandName = command;
+			this.IconName    = icon;
+			this.MainText    = text;
+			this.ShortKey    = shortcut;
+			this.onlyText    = false;
 		}
 		
-		public MenuItem(string name, string icon, string text, string shortcut, AbstractMenu submenu) : this()
+		public MenuItem(string command, string icon, string text, string shortcut, string name) : this(command, icon, text, shortcut)
 		{
-			this.Name     = name;
-			this.IconName = icon;
-			this.MainText = text;
-			this.ShortKey = shortcut;
-			this.onlyText = false;
-			this.Submenu  = submenu;
+			this.Name = name;
+		}
+		
+		public MenuItem(AbstractMenu submenu, string icon, string text, string shortcut) : this()
+		{
+			this.IconName    = icon;
+			this.MainText    = text;
+			this.ShortKey    = shortcut;
+			this.onlyText    = false;
+			this.Submenu     = submenu;
+		}
+		
+		public MenuItem(AbstractMenu submenu, string icon, string text, string shortcut, string name) : this(submenu, icon, text, shortcut)
+		{
+			this.Name = name;
 		}
 		
 		
@@ -248,15 +255,6 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if (value == null)
-				{
-					this.InternalState |= InternalState.Command;
-				}
-				else
-				{
-					this.InternalState &= ~InternalState.Command;
-				}
-				
 				this.separator = false;
 				this.submenu = value;
 			}
