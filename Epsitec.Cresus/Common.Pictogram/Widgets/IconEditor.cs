@@ -10,7 +10,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// </summary>
 	
 	[SuppressBundleSupport]
-		
+	
 	public class IconEditor : Epsitec.Common.Widgets.Widget
 	{
 		public IconEditor()
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.MenuAdd(fileMenu, @"file:images/open.icon", "Open", "Ouvrir...", "Ctrl+O");
 			this.MenuAdd(fileMenu, @"file:images/save.icon", "Save", "Enregistrer sous...", "Ctrl+S");
 			this.MenuAdd(fileMenu, @"", "", "", "");
-			this.MenuAdd(fileMenu, @"", "Quit", "Quitter", "");
+			this.MenuAdd(fileMenu, @"", "QuitApplication", "Quitter", "");
 			fileMenu.AdjustSize();
 			this.menu.Items[0].Submenu = fileMenu;
 
@@ -295,23 +295,23 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			this.vToolBar = new VToolBar();
 			this.vToolBar.Parent = this;
-			this.VToolBarAdd(@"file:images/select.icon", "SelectTool", "Sélectionner", "Select");
-			//?this.VToolBarAdd(@"file:images/edit.icon", "SelectTool", "Editer", "Edit");
-			this.VToolBarAdd(@"file:images/zoom.icon", "SelectTool", "Agrandir", "Zoom");
-			this.VToolBarAdd(@"file:images/hand.icon", "SelectTool", "Déplacer", "Hand");
-			this.VToolBarAdd(@"file:images/picker.icon", "SelectTool", "Pipette", "Picker");
+			this.VToolBarAdd(@"file:images/select.icon", "SelectTool(this.Name)", "Sélectionner", "Select");
+			//?this.VToolBarAdd(@"file:images/edit.icon", "SelectTool(this.Name)", "Editer", "Edit");
+			this.VToolBarAdd(@"file:images/zoom.icon", "SelectTool(this.Name)", "Agrandir", "Zoom");
+			this.VToolBarAdd(@"file:images/hand.icon", "SelectTool(this.Name)", "Déplacer", "Hand");
+			this.VToolBarAdd(@"file:images/picker.icon", "SelectTool(this.Name)", "Pipette", "Picker");
 			this.VToolBarAdd("", "", "");
-			this.VToolBarAdd(@"file:images/line.icon", "SelectTool", "Segment de ligne", "ObjectLine");
-			this.VToolBarAdd(@"file:images/rectangle.icon", "SelectTool", "Rectangle", "ObjectRectangle");
-			this.VToolBarAdd(@"file:images/circle.icon", "SelectTool", "Cercle", "ObjectCircle");
-			this.VToolBarAdd(@"file:images/ellipse.icon", "SelectTool", "Ellipse", "ObjectEllipse");
-			this.VToolBarAdd(@"file:images/regular.icon", "SelectTool", "Polygone régulier", "ObjectRegular");
-			this.VToolBarAdd(@"file:images/poly.icon", "SelectTool", "Polygone quelconque", "ObjectPoly");
-			this.VToolBarAdd(@"file:images/bezier.icon", "SelectTool", "Courbes de Bézier", "ObjectBezier");
-			this.VToolBarAdd(@"file:images/textline.icon", "SelectTool", "Ligne de texte", "ObjectTextLine");
-			this.VToolBarAdd(@"file:images/textbox.icon", "SelectTool", "Pavé de texte", "ObjectTextBox");
-			this.VToolBarAdd(@"file:images/array.icon", "SelectTool", "Tableau", "ObjectArray");
-			this.VToolBarAdd(@"file:images/image.icon", "SelectTool", "Image bitmap", "ObjectImage");
+			this.VToolBarAdd(@"file:images/line.icon", "SelectTool(this.Name)", "Segment de ligne", "ObjectLine");
+			this.VToolBarAdd(@"file:images/rectangle.icon", "SelectTool(this.Name)", "Rectangle", "ObjectRectangle");
+			this.VToolBarAdd(@"file:images/circle.icon", "SelectTool(this.Name)", "Cercle", "ObjectCircle");
+			this.VToolBarAdd(@"file:images/ellipse.icon", "SelectTool(this.Name)", "Ellipse", "ObjectEllipse");
+			this.VToolBarAdd(@"file:images/regular.icon", "SelectTool(this.Name)", "Polygone régulier", "ObjectRegular");
+			this.VToolBarAdd(@"file:images/poly.icon", "SelectTool(this.Name)", "Polygone quelconque", "ObjectPoly");
+			this.VToolBarAdd(@"file:images/bezier.icon", "SelectTool(this.Name)", "Courbes de Bézier", "ObjectBezier");
+			this.VToolBarAdd(@"file:images/textline.icon", "SelectTool(this.Name)", "Ligne de texte", "ObjectTextLine");
+			this.VToolBarAdd(@"file:images/textbox.icon", "SelectTool(this.Name)", "Pavé de texte", "ObjectTextBox");
+			this.VToolBarAdd(@"file:images/array.icon", "SelectTool(this.Name)", "Tableau", "ObjectArray");
+			this.VToolBarAdd(@"file:images/image.icon", "SelectTool(this.Name)", "Image bitmap", "ObjectImage");
 			this.VToolBarAdd("", "", "");
 			
 			this.root = new Widget();
@@ -1134,8 +1134,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			if ( this.drawer.IsVisible )
 			{
-				Widget widget = e.Source as Widget;
-				this.drawer.SelectedTool = widget.Name;
+				this.drawer.SelectedTool = e.CommandArgs[0];
 			}
 			else
 			{
@@ -1202,6 +1201,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdateInfoDocument();
 
 			this.drawer.CommandSave(this.filename);
+		}
+		
+		[Command ("QuitApplication")]
+		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			Window.Quit ();
 		}
 
 		[Command ("Mode")]
