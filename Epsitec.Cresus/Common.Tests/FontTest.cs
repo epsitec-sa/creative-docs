@@ -33,7 +33,7 @@ namespace Epsitec.Common.Tests
 				Font find = Font.GetFont (font.FaceName, font.StyleName, font.OpticalName);
 				
 				Assertion.AssertNotNull (find);
-				Assertion.Assert (find.Handle == font.Handle);
+				Assertion.AssertEquals (font.Handle, find.Handle);
 			}
 			
 			Assertion.AssertNull (Font.GetFont (n+1));

@@ -42,6 +42,7 @@ namespace Epsitec.Common.Tests
 			this.internal_state |= InternalState.AutoEngage;
 			this.internal_state |= InternalState.Focusable;
 			this.internal_state |= InternalState.Engageable;
+			this.internal_state |= InternalState.AutoToggle;
 		}
 		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
@@ -84,6 +85,27 @@ namespace Epsitec.Common.Tests
 			graphics.AddText (x, y, this.Text, font, size);
 			graphics.Rasterizer.AddOutline (path, 0.6);
 			graphics.RenderSolid ();
+			
+			if (this.ActiveState == WidgetState.ActiveYes)
+			{
+				graphics.Solid.Color = Color.FromRGB (1.0, 0, 0);
+				graphics.AddText (2, 2, dx-4, dy-4, "A", font, size, ContentAlignment.MiddleRight);
+				graphics.RenderSolid ();
+			}
+			
+			if (this.IsEngaged)
+			{
+				graphics.Solid.Color = Color.FromRGB (0, 0, 1.0);
+				graphics.AddText (2, 2, dx-4, dy-4, "E  ", font, size, ContentAlignment.MiddleRight);
+				graphics.RenderSolid ();
+			}
+			
+			if (this.IsSelected)
+			{
+				graphics.Solid.Color = Color.FromRGB (0, 0.5, 0);
+				graphics.AddText (2, 2, dx-4, dy-4, "S    ", font, size, ContentAlignment.MiddleRight);
+				graphics.RenderSolid ();
+			}
 		}
 		
 		public override Rectangle GetPaintBounds()
@@ -122,10 +144,17 @@ namespace Epsitec.Common.Tests
 					{
 						return;
 					}
-					if ((message.IsCtrlPressed == false) &&
-						(message.KeyCode == 27))
+					if (message.IsCtrlPressed == false)
 					{
-						this.SetFocused (false);
+						switch (message.KeyCode)
+						{
+							case 27:
+								this.SetFocused (false);
+								break;
+							case ' ':
+								this.Toggle ();
+								break;
+						}
 					}
 					
 					break;

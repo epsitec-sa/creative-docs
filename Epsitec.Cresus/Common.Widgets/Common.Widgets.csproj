@@ -95,7 +95,7 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
             </References>
@@ -108,7 +108,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Button.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Events.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IAdorner.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -139,6 +149,16 @@
                 />
                 <File
                     RelPath = "WindowRoot.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Adorner\Default.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Adorner\Factory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

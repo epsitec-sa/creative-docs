@@ -13,7 +13,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		
 		static Factory()
 		{
-			Factory.adorner = new Default ();
+			Factory.adorner = null; // TODO: new Default ();
 		}
 		
 		public static IAdorner			Adorner

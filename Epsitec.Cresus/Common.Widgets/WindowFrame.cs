@@ -42,16 +42,45 @@ namespace Epsitec.Common.Widgets
 					Widget old_focus = this.focused_widget;
 					Widget new_focus = value;
 					
-					this.focused_widget = new_focus;
+					this.focused_widget = null;
 					
 					if (old_focus != null)
 					{
-						old_focus.SetFocus (false);
+						old_focus.SetFocused (false);
 					}
+					
+					this.focused_widget = new_focus;
 					
 					if (new_focus != null)
 					{
-						new_focus.SetFocus (true);
+						new_focus.SetFocused (true);
+					}
+				}
+			}
+		}
+		
+		public Widget					EngagedWidget
+		{
+			get { return this.engaged_widget; }
+			set
+			{
+				if (this.engaged_widget != value)
+				{
+					Widget old_engage = this.engaged_widget;
+					Widget new_engage = value;
+					
+					this.engaged_widget = null;
+					
+					if (old_engage != null)
+					{
+						old_engage.SetEngaged (false);
+					}
+					
+					this.engaged_widget = new_engage;
+					
+					if (new_engage != null)
+					{
+						new_engage.SetEngaged (true);
 					}
 				}
 			}
@@ -319,6 +348,7 @@ namespace Epsitec.Common.Widgets
 				if (message.Type == MessageType.MouseDown)
 				{
 					Widget consumer = message.Consumer;
+					
 					if (consumer != null)
 					{
 						if (consumer.AutoCapture)
@@ -332,6 +362,13 @@ namespace Epsitec.Common.Widgets
 							(consumer.CanFocus))
 						{
 							this.FocusedWidget = consumer;
+						}
+						
+						if ((consumer.AutoEngage) &&
+							(consumer.IsEngaged == false) &&
+							(consumer.CanEngage))
+						{
+							this.EngagedWidget = consumer;
 						}
 					}
 				}
@@ -369,6 +406,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.capturing_widget = null;
 				this.Capture = false;
+				this.EngagedWidget = null;
 			}
 		}
 		
@@ -385,5 +423,6 @@ namespace Epsitec.Common.Widgets
 		protected Widget				last_in_widget;
 		protected Widget				capturing_widget;
 		protected Widget				focused_widget;
+		protected Widget				engaged_widget;
 	}
 }

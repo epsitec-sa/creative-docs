@@ -27,12 +27,37 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert (layout.VisibleRectangle.Height <= layout.TotalRectangle.Height);
 		}
 		
+		[Test] public void CheckTextConversions()
+		{
+			string t1 = "(a < b) && (b > c)";
+			string t2 = "(a &lt; b) &amp;&amp; (b &gt; c)";
+			string t3 = TextLayout.ConvertToTaggedText (t1);
+			string t4 = TextLayout.ConvertToSimpleText (t3);
+			
+			Assertion.AssertEquals (t2, t3);
+			Assertion.AssertEquals (t1, t4);
+		}
+		
+		[Test] public void CheckMnemonic()
+		{
+			string t1 = "Hel&lo && <bye>";
+			string t2 = "Hel<m>l</m>o &amp; &lt;bye&gt;";
+			string t3 = TextLayout.ConvertToTaggedText (t1, true);
+			string t4 = TextLayout.ConvertToSimpleText (t3);
+			string t5 = "Hello & <bye>";
+			
+			Assertion.AssertEquals (t2, t3);
+			Assertion.AssertEquals (t5, t4);
+			
+			Assertion.AssertEquals ('L', TextLayout.ExtractMnemonic (t2));
+		}
+		
 		[Test] public void CheckTextManipulation()
 		{
 			TextLayout layout = this.NewTextLayout ();
 			
 			string reference = "Link, Bold text, normal text, italic text...\nAnd some <more> text, # nice & clean.";
-			string text = layout.CleanText;
+			string text = TextLayout.ConvertToSimpleText (layout.Text, "#");
 			int pos_0   = layout.FindOffsetFromIndex (0);
 			int pos_1   = layout.FindOffsetFromIndex (1);
 			int pos_4   = layout.FindOffsetFromIndex (4);

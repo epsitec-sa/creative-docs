@@ -1,5 +1,33 @@
 namespace Epsitec.Common.Widgets
 {
+	[System.Flags] public enum AnchorStyles
+	{
+		None			= 0,
+		Top				= 1,
+		Bottom			= 2,
+		Left			= 4,
+		Right			= 8,
+			
+		LeftAndRight	= Left + Right,
+		TopAndBottom	= Top + Bottom,
+	}
+	
+	[System.Flags] public enum WidgetState
+	{
+		ActiveNo		= 0,
+		ActiveYes		= 1,
+		ActiveMaybe		= 2,
+		ActiveMask		= ActiveNo | ActiveYes | ActiveMaybe,
+		
+		
+		None			= 0x00000000,		//	=> neutre
+		Enabled			= 0x00010000,		//	=> pas grisé
+		Focused			= 0x00020000,		//	=> reçoit les événements clavier
+		Entered			= 0x00040000,		//	=> contient la souris
+		Selected		= 0x00080000,		//	=> sélectionné
+		Engaged			= 0x00100000,		//	=> pression en cours
+	}
+	
 	/// <summary>
 	/// 
 	/// </summary>
@@ -7,7 +35,9 @@ namespace Epsitec.Common.Widgets
 	{
 		public Widget()
 		{
-			this.internal_state = InternalState.Enabled | InternalState.Visible | InternalState.AutoCapture;
+			this.internal_state = InternalState.Visible | InternalState.AutoCapture;
+			this.widget_state   = WidgetState.Enabled;
+			
 			this.anchor = AnchorStyles.Left | AnchorStyles.Top;
 			this.back_color = new Drawing.Color (0.9);
 			this.fore_color = new Drawing.Color (0.0);
@@ -165,7 +195,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ((this.internal_state & InternalState.Enabled) == 0)
+				if ((this.widget_state & WidgetState.Enabled) == 0)
 				{
 					return false;
 				}
@@ -194,14 +224,23 @@ namespace Epsitec.Common.Widgets
 
 		public bool							IsFocused
 		{
-			get { return (this.internal_state & InternalState.Focused) != 0; }
+			get { return (this.widget_state & WidgetState.Focused) != 0; }
 		}
 		
 		public bool							IsEntered
 		{
-			get { return (this.internal_state & InternalState.Entered) != 0; }
+			get { return (this.widget_state & WidgetState.Entered) != 0; }
 		}
 		
+		public bool							IsSelected
+		{
+			get { return (this.widget_state & WidgetState.Selected) != 0; }
+		}
+		
+		public bool							IsEngaged
+		{
+			get { return (this.widget_state & WidgetState.Engaged) != 0; }
+		}
 		
 		public bool							AutoCapture
 		{
@@ -235,7 +274,31 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool							AutoEngage
+		{
+			get { return (this.internal_state & InternalState.AutoEngage) != 0; }
+			set
+			{
+				if (value)
+				{
+					this.internal_state |= InternalState.AutoEngage;
+				}
+				else
+				{
+					this.internal_state &= ~InternalState.AutoEngage;
+				}
+			}
+		}
 		
+		public virtual WidgetState			State
+		{
+			get { return this.widget_state; }
+		}
+		
+		public virtual WidgetState			ActiveState
+		{
+			get { return this.widget_state & WidgetState.ActiveMask; }
+		}
 		public bool							ContainsFocus
 		{
 			get
@@ -271,6 +334,11 @@ namespace Epsitec.Common.Widgets
 		public bool							CanSelect
 		{
 			get { return (this.internal_state & InternalState.Selectable) != 0; }
+		}
+		
+		public bool							CanEngage
+		{
+			get { return this.IsEnabled && ((this.internal_state & InternalState.Engageable) != 0); }
 		}
 		
 		
@@ -465,6 +533,11 @@ namespace Epsitec.Common.Widgets
 		public event MessageEventHandler	DoubleClicked;
 		public event System.EventHandler	ShortcutPressed;
 		
+		public event System.EventHandler	Focused;
+		public event System.EventHandler	Defocused;
+		public event System.EventHandler	Selected;
+		public event System.EventHandler	Deselected;
+		
 		
 		//	Cursor
 		//	FindNextWidget/FindPrevWidget
@@ -499,7 +572,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void SetFocus(bool focused)
+		public virtual void SetFocused(bool focused)
 		{
 			WindowFrame frame = this.WindowFrame;
 			
@@ -508,12 +581,13 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			if ((this.internal_state & InternalState.Focused) == 0)
+			if ((this.widget_state & WidgetState.Focused) == 0)
 			{
 				if (focused)
 				{
-					this.internal_state |= InternalState.Focused;
+					this.widget_state |= WidgetState.Focused;
 					frame.FocusedWidget = this;
+					this.OnFocused (System.EventArgs.Empty);
 					this.Invalidate ();
 				}
 			}
@@ -521,12 +595,64 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!focused)
 				{
-					this.internal_state &= ~ InternalState.Focused;
+					this.widget_state &= ~ WidgetState.Focused;
+					frame.FocusedWidget = null;
+					this.OnDefocused (System.EventArgs.Empty);
 					this.Invalidate ();
 				}
 			}
 		}
 		
+		public virtual void SetSelected(bool selected)
+		{
+			if ((this.widget_state & WidgetState.Selected) == 0)
+			{
+				if (selected)
+				{
+					this.widget_state |= WidgetState.Selected;
+					this.Invalidate ();
+					this.OnSelected (System.EventArgs.Empty);
+				}
+			}
+			else
+			{
+				if (!selected)
+				{
+					this.widget_state &= ~WidgetState.Selected;
+					this.Invalidate ();
+					this.OnDeselected (System.EventArgs.Empty);
+				}
+			}
+		}
+		
+		public virtual void SetEngaged(bool focused)
+		{
+			WindowFrame frame = this.WindowFrame;
+			
+			if (frame == null)
+			{
+				return;
+			}
+			
+			if ((this.widget_state & WidgetState.Engaged) == 0)
+			{
+				if (focused)
+				{
+					this.widget_state |= WidgetState.Engaged;
+					frame.EngagedWidget = this;
+					this.Invalidate ();
+				}
+			}
+			else
+			{
+				if (!focused)
+				{
+					this.widget_state &= ~ WidgetState.Engaged;
+					frame.EngagedWidget = null;
+					this.Invalidate ();
+				}
+			}
+		}
 		
 		
 		protected void SetEntered(bool entered)
@@ -536,13 +662,13 @@ namespace Epsitec.Common.Widgets
 				if (entered)
 				{
 					Widget.entered_widgets.Add (this);
-					this.internal_state |= InternalState.Entered;
+					this.widget_state |= WidgetState.Entered;
 					this.MessageHandler (Message.FromMouseEvent (MessageType.MouseEnter, null, null));
 				}
 				else
 				{
 					Widget.entered_widgets.Remove (this);
-					this.internal_state &= ~ InternalState.Entered;
+					this.widget_state &= ~ WidgetState.Entered;
 					this.MessageHandler (Message.FromMouseEvent (MessageType.MouseLeave, null, null));
 				}
 			}
@@ -1441,6 +1567,39 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected virtual void OnFocused(System.EventArgs e)
+		{
+			if (this.Focused != null)
+			{
+				this.Focused (this, e);
+			}
+		}
+		
+		protected virtual void OnDefocused(System.EventArgs e)
+		{
+			if (this.Defocused != null)
+			{
+				this.Defocused (this, e);
+			}
+		}
+		
+		protected virtual void OnSelected(System.EventArgs e)
+		{
+			if (this.Selected != null)
+			{
+				this.Selected (this, e);
+			}
+		}
+		
+		protected virtual void OnDeselected(System.EventArgs e)
+		{
+			if (this.Deselected != null)
+			{
+				this.Deselected (this, e);
+			}
+		}
+		
+		
 		[System.Flags] protected enum InternalState
 		{
 			None				= 0,
@@ -1448,15 +1607,13 @@ namespace Epsitec.Common.Widgets
 			
 			Focusable			= 0x00000010,
 			Selectable			= 0x00000020,
+			Engageable			= 0x00000040,
 			
 			Visible				= 0x00000100,
-			Enabled				= 0x00000200,
-			Focused				= 0x00000400,
-			Entered				= 0x00000800,
-			Selected			= 0x00001000,
 			
 			AutoCapture			= 0x00010000,
 			AutoFocus			= 0x00020000,
+			AutoEngage			= 0x00040000,
 		}
 		
 		[System.Flags] public enum TabNavigationMode
@@ -1476,18 +1633,6 @@ namespace Epsitec.Common.Widgets
 			SkipHidden		= 1,
 			SkipDisabled	= 2,
 			SkipTransparent	= 4
-		}
-		
-		[System.Flags] public enum AnchorStyles
-		{
-			None			= 0,
-			Top				= 1,
-			Bottom			= 2,
-			Left			= 4,
-			Right			= 8,
-			
-			LeftAndRight	= Left + Right,
-			TopAndBottom	= Top + Bottom,
 		}
 		
 		
@@ -1776,6 +1921,7 @@ namespace Epsitec.Common.Widgets
 		protected string					text;
 		protected LayoutInfo				layout_info;
 		protected InternalState				internal_state;
+		protected WidgetState				widget_state;
 		protected int						suspend_counter;
 		protected int						tab_index;
 		protected TabNavigationMode			tab_navigation_mode;

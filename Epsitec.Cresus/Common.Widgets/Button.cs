@@ -11,15 +11,30 @@ namespace Epsitec.Common.Widgets
 	}
 	
 	/// <summary>
-	/// Summary description for Button.
+	/// La class Button représente un bouton standard.
 	/// </summary>
-	public class Button
+	public class Button : AbstractButton
 	{
 		public Button()
 		{
-			//
-			// TODO: Add constructor logic here
-			//
+			this.button_style = ButtonStyle.Normal;
 		}
+		
+		public ButtonStyle				ButtonStyle
+		{
+			get { return this.button_style; }
+			set
+			{
+				if (this.button_style != value)
+				{
+					this.button_style = value;
+					this.Invalidate ();
+				}
+			}
+		}
+		
+
+
+		protected ButtonStyle			button_style;
 	}
 }
