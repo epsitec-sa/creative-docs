@@ -11,6 +11,7 @@ namespace Epsitec.Common.Widgets
 		Icon,							// bouton pour une icône
 		ToolItem,						// bouton pour barre d'icône
 		ListItem,						// bouton pour liste
+		HeaderSlider,					// bouton pour modifier une largeur de colonne
 		
 		DefaultAccept,					// bouton pour accepter un choix dans un dialogue (OK)
 		DefaultCancel,					// bouton pour refuser un choix dans un dialogue (Cancel)

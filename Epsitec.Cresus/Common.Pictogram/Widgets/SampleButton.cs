@@ -39,19 +39,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		public IconObjects IconObjects
 		{
-			get
-			{
-				return this.iconObjects;
-			}
-
-			set
-			{
-				if ( this.iconObjects != value )
-				{
-					this.iconObjects = value;
-					this.Invalidate();
-				}
-			}
+			get { return this.iconObjects; }
 		}
 
 		// Dessine le bouton.
@@ -71,7 +59,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			adorner.PaintButtonBackground(graphics, rect, state, dir, this.buttonStyle);
 
-			if ( this.iconObjects != null )
+			if ( this.iconObjects != null && this.iconObjects.Objects.Count != 0 )
 			{
 				this.iconContext.Adorner = adorner;
 
@@ -97,7 +85,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				graphics.TranslateTransform(1, 1);
 				graphics.ScaleTransform(this.iconContext.ScaleX, this.iconContext.ScaleY, 0, 0);
 
-				this.iconObjects.DrawGeometry(graphics, this.iconContext, adorner);
+				this.iconObjects.DrawGeometry(graphics, this.iconContext, adorner, clipRect, true);
 
 				graphics.Transform = save;
 				graphics.LineWidth = initialWidth;
