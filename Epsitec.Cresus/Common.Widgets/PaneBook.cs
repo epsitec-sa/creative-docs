@@ -33,22 +33,13 @@ namespace Epsitec.Common.Widgets
 		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
 		{
 			base.RestoreFromBundle (bundler, bundle);
-			
-			Support.ResourceBundle.FieldList item_list = bundle["items"].AsList;
-			
-			if (item_list != null)
-			{
-				//	Notre bundle contient une liste de sous-bundles contenant les descriptions des
-				//	items composant le menu.
-				
-				foreach (Support.ResourceBundle.Field field in item_list)
-				{
-					Support.ResourceBundle item_bundle = field.AsBundle;
-					PanePage               item_widget = bundler.CreateFromBundle (item_bundle) as PanePage;
-					
-					this.Items.Add (item_widget);
-				}
-			}
+			this.items.RestoreFromBundle ("items", bundler, bundle);
+		}
+		
+		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
+		{
+			base.SerializeToBundle (bundler, bundle);
+			this.items.SerializeToBundle ("items", bundler, bundle);
 		}
 		#endregion
 		
@@ -793,23 +784,25 @@ namespace Epsitec.Common.Widgets
 			PanePage item = widget as PanePage;
 
 			PaneBook oldBook = item.Book;
-			if ( oldBook != null )
+			
+			if ((oldBook != null) &&
+				(oldBook != this))
 			{
 				oldBook.items.Remove(item);
 			}
+			
+			System.Diagnostics.Debug.Assert (oldBook == this);
 
 			item.Bounds = this.InnerBounds;
-			item.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 			item.PaneButton.PaneButtonStyle = ( this.type == PaneBookStyle.LeftRight ) ? PaneButtonStyle.Vertical : PaneButtonStyle.Horizontal;
 			
-			this.Children.Add(item);
-			this.Children.Add(item.PaneButton);  // PaneButton fils de PaneBook !
+			item.PaneButton.Parent = this;
 			item.PaneButton.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);
 			item.PaneButton.DragMoved   += new MessageEventHandler(this.HandleSliderDragMoved);
 			item.PaneButton.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
 			item.RankChanged += new System.EventHandler(this.HandlePageRankChanged);
 			
-			this.Children.Add(item.GlyphButton);  // GlyphButton fils de PaneBook !
+			item.GlyphButton.Parent = this;
 			item.GlyphButton.Clicked += new MessageEventHandler(this.HandleGlyphButtonClicked);
 
 			this.UpdatePaneButtons();

@@ -56,22 +56,13 @@ namespace Epsitec.Common.Widgets
 		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
 		{
 			base.RestoreFromBundle (bundler, bundle);
-			
-			Support.ResourceBundle.FieldList item_list = bundle["items"].AsList;
-			
-			if (item_list != null)
-			{
-				//	Notre bundle contient une liste de sous-bundles contenant les descriptions des
-				//	items composant le menu.
-				
-				foreach (Support.ResourceBundle.Field field in item_list)
-				{
-					Support.ResourceBundle item_bundle = field.AsBundle;
-					TabPage                item_widget = bundler.CreateFromBundle (item_bundle) as TabPage;
-					
-					this.Items.Add (item_widget);
-				}
-			}
+			this.items.RestoreFromBundle ("items", bundler, bundle);
+		}
+		
+		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
+		{
+			base.SerializeToBundle (bundler, bundle);
+			this.items.SerializeToBundle ("items", bundler, bundle);
 		}
 		#endregion
 		
@@ -763,19 +754,22 @@ namespace Epsitec.Common.Widgets
 		
 		public void NotifyInsertion(Widget widget)
 		{
-			TabPage item = widget as TabPage;
-
+			TabPage item    = widget as TabPage;
 			TabBook oldBook = item.Book;
-			if ( oldBook != null )
+			
+			if ((oldBook != null) &&
+				(oldBook != this))
 			{
 				oldBook.items.Remove(item);
 			}
 			
-			item.Bounds = this.InnerBounds;
-			item.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+//			item.Bounds = this.InnerBounds;
+			item.Anchor = AnchorStyles.All;
+			item.AnchorMargins = new Drawing.Margins (2, 2, this.TabHeight + 2, 2);
 			
-			this.Children.Add(item);
-			this.Children.Add(item.TabButton);  // TabButton fils de TabBook !
+			System.Diagnostics.Debug.Assert (oldBook == this);
+			
+			item.TabButton.Parent = this;
 			item.TabButton.Pressed += new MessageEventHandler(this.HandleTabButton);
 			item.RankChanged += new System.EventHandler(this.HandlePageRankChanged);
 			this.isRefreshNeeded = true;
