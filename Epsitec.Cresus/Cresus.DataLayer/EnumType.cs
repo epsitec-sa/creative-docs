@@ -12,19 +12,52 @@ namespace Epsitec.Cresus.DataLayer
 		{
 		}
 		
+		public EnumType(params string[] attributes) : base (attributes)
+		{
+		}
+		
 		
 		public override object Clone()
 		{
 			EnumType def = base.Clone () as EnumType;
 			
-			def.values = new EnumValue[this.values.Length];
-			
-			for (int i = 0; i < this.values.Length; i++)
+			if (this.values != null)
 			{
-				def.values[i] = this.values[i].Clone () as EnumValue;
+				def.CopyValues (this.values);
 			}
 			
 			return def;
+		}
+		
+		
+		public void DefineValues(System.Collections.ICollection values)
+		{
+			if (this.values != null)
+			{
+				throw new System.InvalidOperationException ("Cannot redefine values");
+			}
+			
+			EnumValue[] temp = new EnumValue[values.Count];
+			values.CopyTo (temp, 0);
+			System.Array.Sort (temp, EnumValue.IdComparer);
+			
+			if ((System.Utilities.CheckForDuplicates (temp, EnumValue.IdComparer, false)) ||
+				(System.Utilities.CheckForDuplicates (temp, EnumValue.NameComparer)))
+			{
+				throw new System.ArgumentException ("Duplicates found");
+			}
+			
+			this.CopyValues (temp);
+		}
+		
+		protected void CopyValues(EnumValue[] values)
+		{
+			this.values = new EnumValue[values.Length];
+			
+			for (int i = 0; i < values.Length; i++)
+			{
+				this.values[i] = values[i].Clone () as EnumValue;
+			}
 		}
 		
 		

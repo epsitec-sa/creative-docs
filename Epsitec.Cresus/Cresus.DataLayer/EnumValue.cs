@@ -89,7 +89,87 @@ namespace Epsitec.Cresus.DataLayer
 			string name = this.Name;
 			return (name == null) ? 0 : name.GetHashCode ();
 		}
+		
+		public static System.Collections.IComparer	IdComparer
+		{
+			get
+			{
+				return new IdComparerClass ();
+			}
+		}
+		
+		public static System.Collections.IComparer	NameComparer
+		{
+			get
+			{
+				return new NameComparerClass ();
+			}
+		}
+		
+		
+		private class IdComparerClass : System.Collections.IComparer
+		{
+			public IdComparerClass()
+			{
+			}
+			
+			#region IComparer Members
+			public int Compare(object x, object y)
+			{
+				EnumValue ex = x as EnumValue;
+				EnumValue ey = y as EnumValue;
 
+				if (ex == ey)
+				{
+					return 0;
+				}
+				
+				if (ex == null)
+				{
+					return -1;
+				}
+				if (ey == null)
+				{
+					return 1;
+				}
+				
+				return string.Compare (ex.Id, ey.Id);
+			}
+			#endregion
+		}
+		
+		private class NameComparerClass : System.Collections.IComparer
+		{
+			public NameComparerClass()
+			{
+			}
+			
+			#region IComparer Members
+			public int Compare(object x, object y)
+			{
+				EnumValue ex = x as EnumValue;
+				EnumValue ey = y as EnumValue;
+
+				if (ex == ey)
+				{
+					return 0;
+				}
+				
+				if (ex == null)
+				{
+					return -1;
+				}
+				if (ey == null)
+				{
+					return 1;
+				}
+				
+				return string.Compare (ex.Name, ey.Name);
+			}
+			#endregion
+		}
+		
+		
 		
 		protected DataAttributes			attributes;
 	}

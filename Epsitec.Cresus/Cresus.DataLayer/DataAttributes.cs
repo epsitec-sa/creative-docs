@@ -21,7 +21,10 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DataAttributes attr = System.Activator.CreateInstance (this.GetType ()) as DataAttributes;
 			
-			attr.attributes = this.attributes.Clone () as System.Collections.Hashtable;
+			if (this.attributes != null)
+			{
+				attr.attributes = this.attributes.Clone () as System.Collections.Hashtable;
+			}
 			
 			return attr;
 		}
@@ -48,15 +51,21 @@ namespace Epsitec.Cresus.DataLayer
 		
 		public override string ToString()
 		{
+			string[] names = new string[this.attributes.Keys.Count];
+			
+			this.attributes.Keys.CopyTo (names, 0);
+			
+			System.Array.Sort (names);
+			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			string sep = "";
 			
-			foreach (System.Collections.DictionaryEntry entry in this.attributes)
+			foreach (string name in names)
 			{
 				buffer.Append (sep);
-				buffer.Append (entry.Key as string);
+				buffer.Append (name);
 				buffer.Append (@"=""");
-				buffer.Append (entry.Value as string);
+				buffer.Append (this.attributes[name] as string);
 				buffer.Append (@"""");
 				
 				sep = "; ";

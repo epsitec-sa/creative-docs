@@ -41,9 +41,9 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			DataType type = System.Activator.CreateInstance (this.GetType ()) as DataType;
 			
-			type.attributes     = this.Attributes.Clone () as DataAttributes;
+			type.attributes     = this.attributes == null ? null : this.attributes.Clone () as DataAttributes;
 			type.db_simple_type = this.db_simple_type;
-			type.db_num_def     = this.db_num_def.Clone () as Database.DbNumDef;
+			type.db_num_def     = this.db_num_def == null ? null : this.db_num_def.Clone () as Database.DbNumDef;
 			
 			return type;
 		}
