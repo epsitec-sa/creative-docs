@@ -949,36 +949,38 @@ namespace Epsitec.Common.Widgets
 		
 		public void SyncWithTextArrayStore(bool update)
 		{
-			int index_selected = this.SelectedIndex;
-			int index_edition  = this.EditionIndex;
-			int index_first_vv = this.first_virtvis_row;
-			
-			this.Clear ();
-			
+//			int index_selected = this.SelectedIndex;
+//			int index_edition  = this.EditionIndex;
+//			int index_first_vv = this.first_virtvis_row;
+//			
+//			this.Clear ();
+//			
 			if (this.text_array_store != null)
 			{
 				this.ColumnCount = this.text_array_store.GetColumnCount ();
 				this.RowCount    = this.text_array_store.GetRowCount ();
 			}
 			
+			this.InvalidateContents ();
+			
 			if (update)
 			{
 				this.Update ();
 			}
-			
-			if ((index_selected >= 0) &&
-				(index_selected < this.RowCount))
-			{
-				this.SelectedIndex = index_selected;
-			}
-			
-			if ((index_edition >= 0) &&
-				(index_edition < this.RowCount))
-			{
-				this.EditionIndex = index_edition;
-			}
-			
-			this.SetFirstVirtualVisibleIndex (index_first_vv);
+//			
+//			if ((index_selected >= 0) &&
+//				(index_selected < this.RowCount))
+//			{
+//				this.SelectedIndex = index_selected;
+//			}
+//			
+//			if ((index_edition >= 0) &&
+//				(index_edition < this.RowCount))
+//			{
+//				this.EditionIndex = index_edition;
+//			}
+//			
+//			this.SetFirstVirtualVisibleIndex (index_first_vv);
 		}
 		
 		public bool HitTestTable(Drawing.Point pos)

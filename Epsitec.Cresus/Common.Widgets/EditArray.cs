@@ -1044,14 +1044,32 @@ namespace Epsitec.Common.Widgets
 			
 			public virtual void InsertBefore()
 			{
+				EditArrayMode mode = this.SaveModeAndReset ();
+				int           row  = this.host.SelectedIndex;
+				
+				this.store.InsertRows (row, 1);
+				this.host.SelectedIndex = row;
+				this.RestoreMode (EditArrayMode.Edition);
 			}
 			
 			public virtual void InsertAfter()
 			{
+				EditArrayMode mode = this.SaveModeAndReset ();
+				int           row  = this.host.SelectedIndex + 1;
+				
+				this.store.InsertRows (row, 1);
+				this.host.SelectedIndex = row;
+				this.RestoreMode (EditArrayMode.Edition);
 			}
 			
 			public virtual void Delete()
 			{
+				EditArrayMode mode = this.SaveModeAndReset ();
+				int           row  = this.host.SelectedIndex;
+				
+				this.store.RemoveRows (row, 1);
+				this.host.SelectedIndex = row;
+				this.RestoreMode (mode);
 			}
 			
 			public virtual void MoveUp()
