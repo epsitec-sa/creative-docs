@@ -60,9 +60,9 @@ namespace Epsitec.Common.Designer.Panels
 			
 			Common.UI.Engine.BindWidget (this.data_graph.Root, this.data_list);
 			
-			this.CreateDragSource (typeof (Button), "[ 1 ]", 10+34*0, 133, 32, 32);
-			this.CreateDragSource (typeof (Button), "[ 2 ]", 10+34*1, 133, 32, 32);
-			this.CreateDragSource (typeof (Button), "[ 3 ]", 10+34*2, 133, 32, 32);
+			this.CreateDragSource (typeof (Button), "[ 1 ]", "1", 10+34*0, 133, 32, 32);
+			this.CreateDragSource (typeof (Button), "[ 2 ]", "2", 10+34*1, 133, 32, 32);
+			this.CreateDragSource (typeof (Button), "[ 3 ]", "3", 10+34*2, 133, 32, 32);
 			
 			Button test = new Button (this.widget);
 			
@@ -73,22 +73,81 @@ namespace Epsitec.Common.Designer.Panels
 			test.Clicked      += new MessageEventHandler(this.HandleTestClicked);
 		}
 		
-		protected void CreateDragSource(System.Type type, string text, double x, double y, double dx, double dy)
+		protected void CreateDragSource(System.Type type, string text, string name, double x, double y, double dx, double dy)
 		{
 			Widget             widget = System.Activator.CreateInstance (type) as Widget;
 			Widgets.DragSource source = new Widgets.DragSource (this.widget);
 			
 			widget.Text = text;
+			widget.Name = name;
 			
 			source.Widget   = widget;
 			source.Parent   = this.widget;
 			source.Location = new Drawing.Point (x, this.size.Height - y - dy);
 			source.Size     = new Drawing.Size (dx, dy);
 			
-			source.DragBegin += new Support.EventHandler (this.HandleSourceDragBegin);
-			source.DragEnd   += new Support.EventHandler (this.HandleSourceDragEnd);
+			source.DragBeginning += new Widgets.DragBeginningEventHandler (this.HandleSourceDragBeginning);
+			source.DragBegin     += new Support.EventHandler (this.HandleSourceDragBegin);
+			source.DragEnd       += new Support.EventHandler (this.HandleSourceDragEnd);
 		}
 		
+		protected Common.UI.Widgets.DataWidget CreateDataWidget (Common.UI.Data.Representation mode)
+		{
+			Common.UI.Widgets.DataWidget widget = new Common.UI.Widgets.DataWidget ();
+			
+			if (this.data_list.SelectedIndex < 0)
+			{
+				return null;
+			}
+			
+			Types.IDataValue data = this.data_graph.Navigate (this.data_list.SelectedName) as Types.IDataValue;
+			
+			if (data == null)
+			{
+				return null;
+			}
+			
+			if (Common.UI.Widgets.DataWidget.CheckCompatibility (data, mode) == false)
+			{
+				return null;
+			}
+			
+			widget.Representation = mode;
+			widget.DataSource     = data;
+			widget.Size           = widget.GetBestFitSize ();
+			
+			return widget;
+		}
+		
+		private void HandleSourceDragBeginning(object sender, Widgets.DragBeginningEventArgs e)
+		{
+			string name   = e.Model.Name;
+			Widget widget = null;
+			
+			switch (name)
+			{
+				case "1":
+					widget = this.CreateDataWidget (Common.UI.Data.Representation.TextField);
+					break;
+				
+				case "2":
+					widget = this.CreateDataWidget (Common.UI.Data.Representation.NumericUpDown);
+					break;
+				
+				case "3":
+					widget = this.CreateDataWidget (Common.UI.Data.Representation.RadioList);
+					break;
+			}
+			
+			if (widget == null)
+			{
+				e.Cancel = true;
+			}
+			else
+			{
+				e.Replacement = widget;
+			}
+		}
 		
 		private void HandleSourceDragBegin(object sender)
 		{
@@ -115,14 +174,6 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		
 		
-		public event Support.EventHandler		DragBegin;
-		public event Support.EventHandler		DragEnd;
-		
-		
-		protected Widgets.DragSource			active_drag_source;
-		protected ScrollList					data_list;
-		protected Types.IDataGraph				data_graph;
-
 		private void HandleTestClicked(object sender, MessageEventArgs e)
 		{
 			Common.UI.Data.Record record = this.data_graph as Common.UI.Data.Record;
@@ -130,5 +181,14 @@ namespace Epsitec.Common.Designer.Panels
 			
 			record.Add (field);
 		}
+		
+		
+		public event Support.EventHandler		DragBegin;
+		public event Support.EventHandler		DragEnd;
+		
+		
+		protected Widgets.DragSource			active_drag_source;
+		protected ScrollList					data_list;
+		protected Types.IDataGraph				data_graph;
 	}
 }

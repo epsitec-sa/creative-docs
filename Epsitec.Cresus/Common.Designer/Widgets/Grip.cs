@@ -187,12 +187,14 @@ namespace Epsitec.Common.Designer.Widgets
 		}
 		
 		
-		void IDragBehaviorHost.OnDragBegin(Drawing.Point cursor)
+		bool IDragBehaviorHost.OnDragBegin(Drawing.Point cursor)
 		{
 			if (this.DragBegin != null)
 			{
 				this.DragBegin (this);
 			}
+			
+			return true;
 		}
 		
 		void IDragBehaviorHost.OnDragging(DragEventArgs e)

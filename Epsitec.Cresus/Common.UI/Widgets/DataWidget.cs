@@ -55,6 +55,44 @@ namespace Epsitec.Common.UI.Widgets
 		}
 		
 		
+		public static bool CheckCompatibility(Types.IDataValue data, Data.Representation representation)
+		{
+			if ((data == null) ||
+				(representation == Data.Representation.None))
+			{
+				return false;
+			}
+			
+			Types.INamedType type      = data.DataType;
+			Types.IEnum      enum_type = type as Types.IEnum;
+			
+			if (type == null)
+			{
+				return false;
+			}
+			
+			representation = DataWidget.GetExactRepresentation (data, representation);
+			
+			switch (representation)
+			{
+				case Data.Representation.TextField:
+					return true;
+				case Data.Representation.NumericUpDown:
+					return (type is Types.INum) || (enum_type != null);
+				case Data.Representation.RadioList:
+				case Data.Representation.RadioColumns:
+				case Data.Representation.RadioRows:
+					return (enum_type != null) && (enum_type.IsCustomizable == false);
+				case Data.Representation.ComboConstantList:
+					return (enum_type != null) && (enum_type.IsCustomizable == false);
+				case Data.Representation.ComboEditableList:
+					return (enum_type != null) && (enum_type.IsCustomizable == true);
+			}
+			
+			return false;
+		}
+		
+		
 		#region ISelfBindingWidget Members
 		public bool BindWidget(Epsitec.Common.Types.IDataValue source)
 		{
@@ -79,7 +117,7 @@ namespace Epsitec.Common.UI.Widgets
 				return false;
 			}
 			
-			this.active_representation = this.GetExactRepresentation ();
+			this.active_representation = DataWidget.GetExactRepresentation (this.source, this.representation);
 			
 			this.CreateUIFromRepresentation ();
 			
@@ -122,6 +160,7 @@ namespace Epsitec.Common.UI.Widgets
 					break;
 			}
 		}
+		
 		
 		protected virtual void CreateUITextField()
 		{
@@ -234,15 +273,16 @@ namespace Epsitec.Common.UI.Widgets
 		}
 		
 		
-		protected virtual Data.Representation GetExactRepresentation()
+		protected static Data.Representation GetExactRepresentation(Types.IDataValue data, Data.Representation representation)
 		{
-			if (this.representation == Data.Representation.Automatic)
+			if (representation == Data.Representation.Automatic)
 			{
-				return Engine.FindDefaultRepresentation (this.source);
+				return Engine.FindDefaultRepresentation (data);
 			}
 			
-			return this.representation;
+			return representation;
 		}
+		
 		
 		protected virtual Drawing.Size GetCellSize()
 		{
@@ -366,14 +406,13 @@ namespace Epsitec.Common.UI.Widgets
 			}
 		}
 		
+		
 		protected enum LayoutMode
 		{
 			None,
 			Rows,
 			Columns
 		}
-		
-
 		
 		protected Types.IDataValue				source;
 		protected Data.Representation			representation;
