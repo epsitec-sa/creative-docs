@@ -852,6 +852,7 @@ namespace Epsitec.Common.Designer
 			this.tab_book.ActivePageChanged += new EventHandler (this.HandleTabBookActivePageChanged);
 			
 			this.UpdateCommandStates ();
+			this.SyncCommandStates ();
 		}
 		
 		
@@ -972,6 +973,11 @@ namespace Epsitec.Common.Designer
 				}
 				this.save_command_state.Enabled = false;
 			}
+		}
+		
+		private void SyncCommandStates()
+		{
+			this.save_command_state.Synchronise ();
 		}
 		
 		
