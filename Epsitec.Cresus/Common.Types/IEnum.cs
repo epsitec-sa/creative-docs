@@ -9,5 +9,8 @@ namespace Epsitec.Common.Types
 	public interface IEnum : INamedType
 	{
 		IEnumValue[]	Values		{ get; }
+		
+		IEnumValue		this[string name]	{ get; }
+		IEnumValue		this[int rank]		{ get; }
 	}
 }
