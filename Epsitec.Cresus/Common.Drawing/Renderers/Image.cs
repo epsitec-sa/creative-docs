@@ -113,7 +113,7 @@ namespace Epsitec.Common.Drawing.Renderers
 				this.AssertAttached ();
 				this.transform     = new Transform (value);
 				this.int_transform = new Transform (value);
-				this.OnTransformUpdating (System.EventArgs.Empty);
+				this.OnTransformUpdating ();
 				
 				Transform inverse = Transform.Inverse (this.int_transform);
 				
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 		}
 		
-		public event System.EventHandler		TransformUpdating;
+		public event Support.EventHandler		TransformUpdating;
 		
 		public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
 		{
@@ -191,11 +191,11 @@ namespace Epsitec.Common.Drawing.Renderers
 		}
 		
 		
-		protected virtual void OnTransformUpdating(System.EventArgs e)
+		protected virtual void OnTransformUpdating()
 		{
 			if (this.TransformUpdating != null)
 			{
-				this.TransformUpdating (this, e);
+				this.TransformUpdating (this);
 			}
 		}
 		
