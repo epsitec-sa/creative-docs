@@ -212,8 +212,10 @@ namespace Epsitec.Common.Drawing
 		{
 			System.Drawing.Font os_font = font.GetOsFont (size);
 			
-			double[] xxx = font.GetTextCharEndX (text);
+			double[] xxx;
 			double ox = 0;
+			
+			font.GetTextCharEndX (text, out xxx);
 			
 			for (int i = 0; i < text.Length; i++)
 			{

@@ -10,7 +10,7 @@ namespace Epsitec.Common.Drawing
 		{
 			Window window = new Window ();
 			
-			window.ClientSize = new Size (300, 290);
+			window.ClientSize = new Size (300, 640);
 			window.Text = "CheckTextOutput";
 			window.Root.PaintForeground += new PaintEventHandler(Text_PaintForeground);
 			window.Root.Invalidate ();
@@ -222,6 +222,46 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.PaintText (10, 30, "Hello, world. 11pt", font, 11.0, Color.FromRGB (0, 0, 0));
 			e.Graphics.PaintText (10, 20, "Hello, world. 10pt", font, 10.0, Color.FromRGB (0, 0, 0));
 			e.Graphics.PaintText (10, 10, "Hello, world. 9pt",  font,  9.0, Color.FromRGB (0, 0, 0));
+			
+			text = "Quelle idée\u00A0! Un fjord finlandais...";
+			y    = 80;
+			
+			double font_size  = 14;
+			double line_width = font.GetTextAdvance (text) * font_size - 10;
+			
+			while (line_width < width)
+			{
+				Font.ClassInfo[] text_infos;
+				double           text_width;
+				double           text_elasticity;
+				
+				font.GetTextClassInfos (text, out text_infos, out text_width, out text_elasticity);
+				
+				text_width      *= font_size;
+				text_elasticity *= font_size;
+				
+				double delta = line_width - text_width;
+				
+				if ((text_elasticity > 0) && (delta != 0))
+				{
+					for (int i = 0; i < text_infos.Length; i++)
+					{
+						double width_ratio = text_infos[i].Width / delta;
+						double elast_ratio = text_infos[i].Elasticity / text_elasticity;
+						text_infos[i].Scale = 1.00 + elast_ratio / width_ratio;
+					}
+				}
+				
+				e.Graphics.PaintText (10, y, text, font, font_size, Color.FromRGB (0, 0, 0), text_infos);
+				e.Graphics.LineWidth = 0.8;
+				e.Graphics.AddLine (10, y, 10, y+10);
+				e.Graphics.AddLine (10 + text_width, y, 10 + text_width, y+10);
+				e.Graphics.AddLine (10 + line_width, y, 10 + line_width, y+10);
+				e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
+				
+				y += font_size;
+				line_width += 5;
+			}
 		}
 		
 		private void Gamma_PaintForeground(object sender, PaintEventArgs e)
