@@ -25,5 +25,26 @@ namespace Epsitec.Cresus.Database
 			
 			return (num == 0) ? "" : string.Join ("_", list, 0, num);
 		}
+		
+		public static DbElementCat ParseElementCategory(string text)
+		{
+			if ((text == null) ||
+				(text == ""))
+			{
+				return DbElementCat.Unknown;
+			}
+			
+			return (DbElementCat) System.Enum.Parse (typeof (DbElementCat), text, true);
+		}
+		
+		public static string ElementCategoryToString(DbElementCat cat)
+		{
+			if (cat == DbElementCat.Unknown)
+			{
+				return null;
+			}
+			
+			return cat.ToString ();
+		}
 	}
 }
