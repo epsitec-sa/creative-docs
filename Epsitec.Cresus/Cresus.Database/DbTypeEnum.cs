@@ -8,6 +8,10 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public class DbTypeEnum : DbType, System.Collections.ICollection
 	{
+		public DbTypeEnum() : base ()
+		{
+		}
+		
 		public DbTypeEnum(params string[] attributes) : base (attributes)
 		{
 		}
@@ -64,11 +68,11 @@ namespace Epsitec.Cresus.Database
 		
 		public override object Clone()
 		{
-			DbTypeEnum def = base.Clone () as DbTypeEnum;
+			DbTypeEnum type = base.Clone () as DbTypeEnum;
 			
-			def.CopyValues (this.values);
+			type.CopyValues (this.values);
 			
-			return def;
+			return type;
 		}
 		
 		
