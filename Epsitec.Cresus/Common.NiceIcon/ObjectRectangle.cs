@@ -140,7 +140,7 @@ namespace Epsitec.Common.NiceIcon
 		// pas exister et doit être détruit.
 		public override bool CreateIsExist(IconContext iconContext)
 		{
-			double len = Widgets.Math.Distance(this.Handle(0).Position, this.Handle(1).Position);
+			double len = Drawing.Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > this.minimalSize );
 		}
 
@@ -182,7 +182,7 @@ namespace Epsitec.Common.NiceIcon
 			rect.Bottom = this.Handle(0).Position.Y;
 			rect.Right  = this.Handle(1).Position.X;
 			rect.Top    = this.Handle(1).Position.Y;
-			Widgets.Math.RectNormalize(ref rect);
+			rect.Normalise();
 
 			double radius = this.PropertyDouble(3).Value;
 			if ( radius == 0 )

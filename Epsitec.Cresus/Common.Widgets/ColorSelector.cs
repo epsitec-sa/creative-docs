@@ -172,7 +172,7 @@ namespace Epsitec.Common.Widgets
 		protected void ColorToFieldsHSV()
 		{
 			double h,s,v;
-			this.color.ToHSV(out h, out s, out v);
+			this.color.GetHSV(out h, out s, out v);
 			this.fields[4].Value = System.Math.Floor(h);
 			this.fields[5].Value = System.Math.Floor(s*100+0.5);
 			this.fields[6].Value = System.Math.Floor(v*100+0.5);
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Widgets
 		protected void ColorToSliders()
 		{
 			double h,s,v;
-			this.color.ToHSV(out h, out s, out v);
+			this.color.GetHSV(out h, out s, out v);
 			Drawing.Color saturate = Drawing.Color.FromHSV(h,1,1);
 			this.fields[4].Color = saturate;
 			this.fields[5].Color = saturate;

@@ -22,7 +22,7 @@ namespace Epsitec.Common.NiceIcon
 		public void AddLine(Drawing.Point a, Drawing.Point b)
 		{
 			Drawing.Point i;
-			if ( Math.Intersect(a,b, this.p.Y, out i) )
+			if ( Drawing.Point.Intersect(a,b, this.p.Y, out i) )
 			{
 				if ( a.Y == b.Y )  return;  // ligne horizontale ?
 				if ( this.total < this.list.Length )
@@ -39,7 +39,7 @@ namespace Epsitec.Common.NiceIcon
 			double step = 1.0/InsideSurface.bezierStep;
 			for ( double t=step ; t<=1.0 ; t+=step )
 			{
-				Drawing.Point b = Math.Bezier(p1, s1, s2, p2, t);
+				Drawing.Point b = Drawing.Point.Bezier(p1, s1, s2, p2, t);
 				this.AddLine(a, b);
 				a = b;
 			}

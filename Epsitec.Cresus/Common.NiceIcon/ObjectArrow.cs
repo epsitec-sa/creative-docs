@@ -51,13 +51,13 @@ namespace Epsitec.Common.NiceIcon
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
-			if ( Widgets.Math.Detect(p1,p2, pos, width) )  return true;
+			if ( Drawing.Point.Detect(p1,p2, pos, width) )  return true;
 
 			p1 = this.ComputeExtremity(0);
-			if ( Widgets.Math.Detect(p1,p2, pos, width) )  return true;
+			if ( Drawing.Point.Detect(p1,p2, pos, width) )  return true;
 
 			p1 = this.ComputeExtremity(1);
-			if ( Widgets.Math.Detect(p1,p2, pos, width) )  return true;
+			if ( Drawing.Point.Detect(p1,p2, pos, width) )  return true;
 
 			return false;
 		}
@@ -117,7 +117,7 @@ namespace Epsitec.Common.NiceIcon
 		// pas exister et doit être détruit.
 		public override bool CreateIsExist(IconContext iconContext)
 		{
-			double len = Widgets.Math.Distance(this.Handle(0).Position, this.Handle(1).Position);
+			double len = Drawing.Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > this.minimalSize );
 		}
 
@@ -127,10 +127,10 @@ namespace Epsitec.Common.NiceIcon
 		{
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
-			Drawing.Point c = Widgets.Math.Avance(p2, p1, this.distPara);
-			Drawing.Point p = Widgets.Math.Avance(c, p2, this.distPerp);
+			Drawing.Point c = Drawing.Point.Move(p2, p1, this.distPara);
+			Drawing.Point p = Drawing.Point.Move(c, p2, this.distPerp);
 			double angle = (rank==0) ? System.Math.PI/2 : -System.Math.PI/2;
-			return Widgets.Math.RotatePoint(c, angle, p);
+			return Drawing.Transform.RotatePoint(c, angle, p);
 		}
 
 		// Calcule les distances en fonction de la position de l'extrémité.
@@ -138,9 +138,9 @@ namespace Epsitec.Common.NiceIcon
 		{
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
-			Drawing.Point p = Widgets.Math.Projection(p1, p2, pos);
-			this.distPara = Widgets.Math.Distance(p2, p);
-			this.distPerp = Widgets.Math.Distance(p, pos);
+			Drawing.Point p = Drawing.Point.Projection(p1, p2, pos);
+			this.distPara = Drawing.Point.Distance(p2, p);
+			this.distPerp = Drawing.Point.Distance(p, pos);
 		}
 
 

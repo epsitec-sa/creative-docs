@@ -36,7 +36,7 @@ namespace Epsitec.Common.NiceIcon
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
-			return Widgets.Math.Detect(p1,p2, pos, width);
+			return Drawing.Point.Detect(p1,p2, pos, width);
 		}
 
 
@@ -67,7 +67,7 @@ namespace Epsitec.Common.NiceIcon
 		// pas exister et doit être détruit.
 		public override bool CreateIsExist(IconContext iconContext)
 		{
-			double len = Widgets.Math.Distance(this.Handle(0).Position, this.Handle(1).Position);
+			double len = Drawing.Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > this.minimalSize );
 		}
 

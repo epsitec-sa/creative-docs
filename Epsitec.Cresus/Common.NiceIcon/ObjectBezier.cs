@@ -59,7 +59,7 @@ namespace Epsitec.Common.NiceIcon
 				Drawing.Point s1 = this.Handle(i+2).Position;
 				Drawing.Point s2 = this.Handle(i+3).Position;
 				Drawing.Point p2 = this.Handle(i+4).Position;
-				if ( Widgets.Math.Detect(p1,s1,s2,p2, pos, width) )  return i;
+				if ( Drawing.Point.Detect(p1,s1,s2,p2, pos, width) )  return i;
 			}
 			if ( this.PropertyBool(3).Bool )  // fermé ?
 			{
@@ -67,7 +67,7 @@ namespace Epsitec.Common.NiceIcon
 				Drawing.Point s1 = this.Handle(total-1).Position;
 				Drawing.Point s2 = this.Handle(0).Position;
 				Drawing.Point p2 = this.Handle(1).Position;
-				if ( Widgets.Math.Detect(p1,s1,s2,p2, pos, width) )  return total-3;
+				if ( Drawing.Point.Detect(p1,s1,s2,p2, pos, width) )  return total-3;
 			}
 			return -1;
 		}
@@ -110,7 +110,7 @@ namespace Epsitec.Common.NiceIcon
 			double step = 1.0/10.0;  // nombre arbitraire de 10 subdivisions
 			for ( double t=0 ; t<=1.0 ; t+=step )
 			{
-				Drawing.Point a = Widgets.Math.Bezier(p1, s1, s2, p2, t);
+				Drawing.Point a = Drawing.Point.Bezier(p1, s1, s2, p2, t);
 				bbox.Left   = System.Math.Min(bbox.Left,   a.X);
 				bbox.Right  = System.Math.Max(bbox.Right,  a.X);
 				bbox.Bottom = System.Math.Min(bbox.Bottom, a.Y);
@@ -346,7 +346,7 @@ namespace Epsitec.Common.NiceIcon
 
 			if ( this.Handle(prev+2).Type == HandleType.Hide && this.Handle(next+0).Type == HandleType.Hide )
 			{
-				pos = Widgets.Math.Projection(this.Handle(prev+1).Position, this.Handle(next+1).Position, pos);
+				pos = Drawing.Point.Projection(this.Handle(prev+1).Position, this.Handle(next+1).Position, pos);
 				this.Handle(curr+0).Position = pos;
 				this.Handle(curr+1).Position = pos;
 				this.Handle(curr+2).Position = pos;
@@ -355,13 +355,13 @@ namespace Epsitec.Common.NiceIcon
 			}
 			else
 			{
-				double t = Widgets.Math.Bezier(this.Handle(prev+1).Position, this.Handle(prev+2).Position, this.Handle(next+0).Position, this.Handle(next+1).Position, pos);
-				this.Handle(curr+1).Position = Widgets.Math.Bezier(this.Handle(prev+1).Position, this.Handle(prev+2).Position, this.Handle(next+0).Position, this.Handle(next+1).Position, t);
-				pos = Widgets.Math.VectorMul(this.Handle(prev+2).Position, this.Handle(next+0).Position, t);
-				this.Handle(prev+2).Position = Widgets.Math.VectorMul(this.Handle(prev+1).Position, this.Handle(prev+2).Position, t);
-				this.Handle(next+0).Position = Widgets.Math.VectorMul(this.Handle(next+1).Position, this.Handle(next+0).Position, 1-t);
-				this.Handle(curr+0).Position = Widgets.Math.VectorMul(this.Handle(prev+2).Position, pos, t);
-				this.Handle(curr+2).Position = Widgets.Math.VectorMul(this.Handle(next+0).Position, pos, 1-t);
+				double t = Drawing.Point.Bezier(this.Handle(prev+1).Position, this.Handle(prev+2).Position, this.Handle(next+0).Position, this.Handle(next+1).Position, pos);
+				this.Handle(curr+1).Position = Drawing.Point.Bezier(this.Handle(prev+1).Position, this.Handle(prev+2).Position, this.Handle(next+0).Position, this.Handle(next+1).Position, t);
+				pos = Drawing.Point.Scale(this.Handle(prev+2).Position, this.Handle(next+0).Position, t);
+				this.Handle(prev+2).Position = Drawing.Point.Scale(this.Handle(prev+1).Position, this.Handle(prev+2).Position, t);
+				this.Handle(next+0).Position = Drawing.Point.Scale(this.Handle(next+1).Position, this.Handle(next+0).Position, 1-t);
+				this.Handle(curr+0).Position = Drawing.Point.Scale(this.Handle(prev+2).Position, pos, t);
+				this.Handle(curr+2).Position = Drawing.Point.Scale(this.Handle(next+0).Position, pos, 1-t);
 
 				this.Handle(curr+1).ConstrainType = HandleConstrainType.Smooth;
 				if ( this.Handle(prev+1).ConstrainType == HandleConstrainType.Symetric )  this.Handle(prev+1).ConstrainType = HandleConstrainType.Smooth;
@@ -408,8 +408,8 @@ namespace Epsitec.Common.NiceIcon
 		{
 			int next = rank+3;
 			if ( next >= this.handles.Count )  next = 0;
-			this.Handle(rank+2).Position = Widgets.Math.VectorMul(this.Handle(rank+1).Position, this.Handle(next+1).Position, 0.25);
-			this.Handle(next+0).Position = Widgets.Math.VectorMul(this.Handle(next+1).Position, this.Handle(rank+1).Position, 0.25);
+			this.Handle(rank+2).Position = Drawing.Point.Scale(this.Handle(rank+1).Position, this.Handle(next+1).Position, 0.25);
+			this.Handle(next+0).Position = Drawing.Point.Scale(this.Handle(next+1).Position, this.Handle(rank+1).Position, 0.25);
 			this.Handle(rank+2).Type = HandleType.Secondary;
 			this.Handle(next+0).Type = HandleType.Secondary;
 			this.Handle(rank+1).ConstrainType = HandleConstrainType.Corner;
@@ -428,10 +428,10 @@ namespace Epsitec.Common.NiceIcon
 			int rankOpposite = rankPrimary - (rankSecondary-rankPrimary);
 			if ( this.Handle(rankOpposite).Type != HandleType.Hide )  return;
 
-			double dist = Widgets.Math.Distance(this.Handle(rankPrimary).Position, this.Handle(rankSecondary).Position);
+			double dist = Drawing.Point.Distance(this.Handle(rankPrimary).Position, this.Handle(rankSecondary).Position);
 			Drawing.Point pos = new Drawing.Point();
-			pos = Widgets.Math.Avance(this.Handle(rankPrimary).Position, this.Handle(rankExtremity).Position, dist);
-			pos = Widgets.Math.Symetry(this.Handle(rankPrimary).Position, pos);
+			pos = Drawing.Point.Move(this.Handle(rankPrimary).Position, this.Handle(rankExtremity).Position, dist);
+			pos = Drawing.Point.Symmetry(this.Handle(rankPrimary).Position, pos);
 			this.Handle(rankSecondary).Position = pos;
 		}
 
@@ -473,21 +473,21 @@ namespace Epsitec.Common.NiceIcon
 						rankOpposite -= 2;
 						if ( rankOpposite < 0 )  rankOpposite = this.handles.Count-2;
 					}
-					this.Handle(rankSecondary).Position = Widgets.Math.Projection(this.Handle(rankPrimary).Position, this.Handle(rankOpposite).Position, pos);
+					this.Handle(rankSecondary).Position = Drawing.Point.Projection(this.Handle(rankPrimary).Position, this.Handle(rankOpposite).Position, pos);
 				}
 			}
 			else	// courbe ?
 			{
 				if ( type == HandleConstrainType.Symetric )
 				{
-					this.Handle(rankOpposite).Position = Widgets.Math.Symetry(this.Handle(rankPrimary).Position, this.Handle(rankSecondary).Position);
+					this.Handle(rankOpposite).Position = Drawing.Point.Symmetry(this.Handle(rankPrimary).Position, this.Handle(rankSecondary).Position);
 				}
 
 				if ( type == HandleConstrainType.Smooth )
 				{
-					double dist = Widgets.Math.Distance(this.Handle(rankPrimary).Position, this.Handle(rankOpposite).Position);
-					Drawing.Point p = Widgets.Math.Avance(this.Handle(rankPrimary).Position, this.Handle(rankSecondary).Position, dist);
-					this.Handle(rankOpposite).Position = Widgets.Math.Symetry(this.Handle(rankPrimary).Position, p);
+					double dist = Drawing.Point.Distance(this.Handle(rankPrimary).Position, this.Handle(rankOpposite).Position);
+					Drawing.Point p = Drawing.Point.Move(this.Handle(rankPrimary).Position, this.Handle(rankSecondary).Position, dist);
+					this.Handle(rankOpposite).Position = Drawing.Point.Symmetry(this.Handle(rankPrimary).Position, p);
 				}
 			}
 		}
@@ -524,7 +524,7 @@ namespace Epsitec.Common.NiceIcon
 			}
 			else
 			{
-				double len = Widgets.Math.Distance(pos, this.Handle(1).Position);
+				double len = Drawing.Point.Distance(pos, this.Handle(1).Position);
 				if ( len <= this.closeMargin )
 				{
 					pos = this.Handle(1).Position;
@@ -550,7 +550,7 @@ namespace Epsitec.Common.NiceIcon
 					int rank = this.TotalHandle-6;
 					if ( this.Handle(rank).Type == HandleType.Hide )
 					{
-						this.Handle(rank+2).Position = Widgets.Math.VectorMul(this.Handle(rank+1).Position, pos, 0.5);
+						this.Handle(rank+2).Position = Drawing.Point.Scale(this.Handle(rank+1).Position, pos, 0.5);
 					}
 				}
 				this.Handle(this.TotalHandle-2).IsSelected = true;
@@ -576,13 +576,13 @@ namespace Epsitec.Common.NiceIcon
 					rank = this.TotalHandle-2;
 				}
 				this.Handle(rank+1).Position = pos;
-				this.Handle(rank-1).Position = Widgets.Math.Symetry(this.Handle(rank).Position, pos);
+				this.Handle(rank-1).Position = Drawing.Point.Symmetry(this.Handle(rank).Position, pos);
 			}
 			else
 			{
 				if ( this.TotalHandle > 0 )
 				{
-					double len = Widgets.Math.Distance(pos, this.Handle(1).Position);
+					double len = Drawing.Point.Distance(pos, this.Handle(1).Position);
 					if ( len <= this.closeMargin )
 					{
 						this.Handle(1).Type = HandleType.Ending;
@@ -599,7 +599,7 @@ namespace Epsitec.Common.NiceIcon
 		public override void CreateMouseUp(Drawing.Point pos, IconContext iconContext)
 		{
 			int rank = this.TotalHandle;
-			double len = Widgets.Math.Distance(this.Handle(rank-1).Position, this.Handle(rank-2).Position);
+			double len = Drawing.Point.Distance(this.Handle(rank-1).Position, this.Handle(rank-2).Position);
 			if ( rank <= 3 )
 			{
 				if ( len <= this.minimalSize )

@@ -55,7 +55,7 @@ namespace Epsitec.Common.NiceIcon
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
 			while ( this.ComputeLine(i++, out a, out b) )
 			{
-				if ( Widgets.Math.Detect(a,b, pos, width) )  return true;
+				if ( Drawing.Point.Detect(a,b, pos, width) )  return true;
 			}
 
 			if ( !this.PropertyGradient(2).IsVisible() )  return false;
@@ -106,7 +106,7 @@ namespace Epsitec.Common.NiceIcon
 		// pas exister et doit être détruit.
 		public override bool CreateIsExist(IconContext iconContext)
 		{
-			double len = Widgets.Math.Distance(this.Handle(0).Position, this.Handle(1).Position);
+			double len = Drawing.Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > this.minimalSize );
 		}
 
@@ -129,16 +129,16 @@ namespace Epsitec.Common.NiceIcon
 				star.X = center.X + (corner.X-center.X)*(1-this.PropertyDouble(5).Value/100);
 				star.Y = center.Y + (corner.Y-center.Y)*(1-this.PropertyDouble(5).Value/100);
 
-				a = Widgets.Math.RotatePoint(center, System.Math.PI*2*(i+0)/(total*2), (i%2==0) ? corner : star);
-				b = Widgets.Math.RotatePoint(center, System.Math.PI*2*(i+1)/(total*2), (i%2==0) ? star : corner);
+				a = Drawing.Transform.RotatePoint(center, System.Math.PI*2*(i+0)/(total*2), (i%2==0) ? corner : star);
+				b = Drawing.Transform.RotatePoint(center, System.Math.PI*2*(i+1)/(total*2), (i%2==0) ? star : corner);
 				return true;
 			}
 			else	// polygone ?
 			{
 				if ( i >= total )  return false;
 
-				a = Widgets.Math.RotatePoint(center, System.Math.PI*2*(i+0)/total, corner);
-				b = Widgets.Math.RotatePoint(center, System.Math.PI*2*(i+1)/total, corner);
+				a = Drawing.Transform.RotatePoint(center, System.Math.PI*2*(i+0)/total, corner);
+				b = Drawing.Transform.RotatePoint(center, System.Math.PI*2*(i+1)/total, corner);
 				return true;
 			}
 		}

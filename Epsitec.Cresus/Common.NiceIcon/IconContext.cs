@@ -78,9 +78,8 @@ namespace Epsitec.Common.NiceIcon
 		{
 			if ( !this.IsEnable )  // desabled ?
 			{
-				color = Widgets.Math.BlackAndWhite(color);
 				double alpha = color.A;
-				double intensity = color.R;
+				double intensity = color.GetBrightness ();
 				intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
 				intensity = System.Math.Min(intensity+0.3, 1.0);  // diminue l'intensité
 				color = Drawing.Color.FromBrightness(intensity);
@@ -133,20 +132,20 @@ namespace Epsitec.Common.NiceIcon
 
 			if ( this.constrainType == ConstrainType.Normal )
 			{
-				double angle = Widgets.Math.RotateAngle(this.constrainStarting, pos);
-				double dist = Widgets.Math.Distance(pos, this.constrainStarting);
+				double angle = Drawing.Point.ComputeAngle(this.constrainStarting, pos);
+				double dist = Drawing.Point.Distance(pos, this.constrainStarting);
 				angle = System.Math.Floor((angle+System.Math.PI/8)/(System.Math.PI/4))*(System.Math.PI/4);
-				pos = Widgets.Math.RotatePoint(this.constrainStarting, angle, this.constrainStarting+new Drawing.Point(dist,0));
+				pos = Drawing.Transform.RotatePoint(this.constrainStarting, angle, this.constrainStarting+new Drawing.Point(dist,0));
 			}
 
 			if ( this.constrainType == ConstrainType.Square )
 			{
-				double angle = Widgets.Math.RotateAngle(this.constrainStarting, pos);
-				double dist = Widgets.Math.Distance(pos, this.constrainStarting);
+				double angle = Drawing.Point.ComputeAngle(this.constrainStarting, pos);
+				double dist = Drawing.Point.Distance(pos, this.constrainStarting);
 				angle += System.Math.PI/4;
 				angle = System.Math.Floor((angle+System.Math.PI/4)/(System.Math.PI/2))*(System.Math.PI/2);
 				angle -= System.Math.PI/4;
-				pos = Widgets.Math.RotatePoint(this.constrainStarting, angle, this.constrainStarting+new Drawing.Point(dist,0));
+				pos = Drawing.Transform.RotatePoint(this.constrainStarting, angle, this.constrainStarting+new Drawing.Point(dist,0));
 			}
 
 			if ( this.constrainType == ConstrainType.Line )

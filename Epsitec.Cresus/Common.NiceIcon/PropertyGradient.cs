@@ -233,7 +233,7 @@ namespace Epsitec.Common.NiceIcon
 			if ( this.middle != 0.0 )
 			{
 				double delta = System.Math.Sin(System.Math.PI*progress)*this.middle*0.45;
-				Drawing.Point p = Math.RotatePoint(System.Math.PI/4, new Drawing.Point(progress*System.Math.Sqrt(2), delta));
+				Drawing.Point p = Drawing.Transform.RotatePoint(System.Math.PI/4, new Drawing.Point(progress*System.Math.Sqrt(2), delta));
 				progress = p.Y;
 			}
 			return progress;
@@ -299,9 +299,9 @@ namespace Epsitec.Common.NiceIcon
 					a = System.Math.Sin(a);
 					a = System.Math.Abs(a);
 					a = System.Math.Asin(a);
-					Drawing.Point p1 = Math.RotatePoint(center, a, new Drawing.Point(rect.Right, center.Y));
-					Drawing.Point p2 = Math.Projection(center, p1, new Drawing.Point(rect.Right, rect.Top));
-					double len = Math.Distance(center, p2)*2;
+					Drawing.Point p1 = Drawing.Transform.RotatePoint(center, a, new Drawing.Point(rect.Right, center.Y));
+					Drawing.Point p2 = Drawing.Point.Projection(center, p1, new Drawing.Point(rect.Right, rect.Top));
+					double len = Drawing.Point.Distance(center, p2)*2;
 					graphics.GradientRenderer.SetParameters(0, len);
 					t.Translate(-len/2, 0);
 					t.Rotate(this.angle-90.0);

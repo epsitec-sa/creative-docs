@@ -50,7 +50,7 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				double h,s,v,a;
-				value.ToHSV(out h, out s, out v);
+				value.GetHSV(out h, out s, out v);
 				a = value.A;
 				if ( h != this.h || s != this.s || v != this.v || a != this.a )
 				{
@@ -83,14 +83,14 @@ namespace Epsitec.Common.Widgets
 			this.centerCircle.Y = this.rectCircle.Bottom+this.rectCircle.Height/2;
 
 			Drawing.Point p1 = this.centerCircle + new Drawing.Point(this.radiusCircleMin*0.95, 0);
-			Drawing.Point p2 = Math.RotatePoint(this.centerCircle, (180.0+60.0)*System.Math.PI/180.0, p1);
+			Drawing.Point p2 = Drawing.Transform.RotatePoint(this.centerCircle, (180.0+60.0)*System.Math.PI/180.0, p1);
 			this.rectTriangle.Left   = p2.X;
 			this.rectTriangle.Right  = p1.X;
 			this.rectTriangle.Bottom = p2.Y;
 			this.rectTriangle.Top    = p2.Y+(p1.Y-p2.Y)*2;
 
-			Drawing.Point p3 = Math.RotatePoint(this.centerCircle, (180.0+45.0)*System.Math.PI/180.0, p1);
-			Drawing.Point p4 = Math.RotatePoint(this.centerCircle, 45.0*System.Math.PI/180.0, p1);
+			Drawing.Point p3 = Drawing.Transform.RotatePoint(this.centerCircle, (180.0+45.0)*System.Math.PI/180.0, p1);
+			Drawing.Point p4 = Drawing.Transform.RotatePoint(this.centerCircle, 45.0*System.Math.PI/180.0, p1);
 			this.rectSquare.Left   = p3.X;
 			this.rectSquare.Right  = p4.X;
 			this.rectSquare.Bottom = p3.Y;
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Widgets
 		{
 			double radius = (this.radiusCircleMax+this.radiusCircleMin)/2;
 			double angle = this.h*System.Math.PI*2/360;  // 0..2*PI
-			this.posHandlerH = this.centerCircle + Math.RotatePoint(angle, new Drawing.Point(0, radius));
+			this.posHandlerH = this.centerCircle + Drawing.Transform.RotatePoint(angle, new Drawing.Point(0, radius));
 
 			this.posHandlerSV.X = this.rectSquare.Left + this.rectSquare.Width*this.s;
 			this.posHandlerSV.Y = this.rectSquare.Bottom + this.rectSquare.Height*this.v;
@@ -170,19 +170,44 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( restricted )
 			{
-				double dist = Math.Distance(this.centerCircle, pos);
+				double dist = Drawing.Point.Distance(this.centerCircle, pos);
 				if ( dist > this.radiusCircleMax || dist < this.radiusCircleMin )
 				{
 					return false;
 				}
 			}
 
-			double angle = Math.RotateAngle(this.centerCircle, pos);
-			angle = Math.NormAngle(angle-System.Math.PI/2);
+			double angle = Drawing.Point.ComputeAngle(this.centerCircle, pos);
+			angle = ColorCircle.ClipAngle(angle-System.Math.PI/2);
 			h = angle/(System.Math.PI*2)*360;  // 0..360
 			return true;
 		}
 
+		protected static double ClipAngle(double angle)
+		{
+			// Retourne un angle normalisé, c'est-à-dire compris entre 0 et 2*PI.
+			
+			angle = angle % (System.Math.PI*2.0);
+			
+			if ( angle < 0.0 )
+			{
+				return System.Math.PI*2.0 + angle;
+			}
+			else
+			{
+				return angle;
+			}
+		}
+		
+		protected static double Clip(double n)
+		{
+			// Retourne la valeur normalisée |n| d'un nombre.
+			if ( n < 0.0 )  return 0.0;
+			if ( n > 1.0 )  return 1.0;
+			return n;
+		}
+		
+		
 		// Détecte la saturation et l'intensité dans le carré des couleurs.
 		protected bool DetectSV(Drawing.Point pos, bool restricted, ref double s, ref double v)
 		{
@@ -196,8 +221,8 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			s = Math.Norm((pos.X-this.rectSquare.Left)/this.rectSquare.Width);
-			v = Math.Norm((pos.Y-this.rectSquare.Bottom)/this.rectSquare.Height);
+			s = ColorCircle.Clip((pos.X-this.rectSquare.Left)/this.rectSquare.Width);
+			v = ColorCircle.Clip((pos.Y-this.rectSquare.Bottom)/this.rectSquare.Height);
 			return true;
 		}
 
@@ -248,7 +273,7 @@ namespace Epsitec.Common.Widgets
 			
 				for ( int i=0 ; i<256 ; i++ )
 				{
-					Drawing.Color.HSVtoRGB(i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
+					Drawing.Color.ConvertHSVtoRGB(i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
 					a[i] = 1.0;
 				}
 			

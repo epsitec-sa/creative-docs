@@ -110,18 +110,17 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public void ClipToRange()
+		public Color ClipToRange()
 		{
-			if (this.r < 0.0f) this.r = 0.0f;
-			if (this.r > 1.0f) this.r = 1.0f;
-			if (this.g < 0.0f) this.g = 0.0f;
-			if (this.g > 1.0f) this.g = 1.0f;
-			if (this.b < 0.0f) this.b = 0.0f;
-			if (this.b > 1.0f) this.b = 1.0f;
-			if (this.a < 0.0f) this.a = 0.0f;
-			if (this.a > 1.0f) this.a = 1.0f;
+			Color color = new Color ();
+			
+			color.r = Epsitec.Common.Math.Clip (this.r);
+			color.g = Epsitec.Common.Math.Clip (this.g);
+			color.b = Epsitec.Common.Math.Clip (this.b);
+			color.a = Epsitec.Common.Math.Clip (this.a);
+			
+			return color;
 		}
-		
 		
 		public double GetBrightness()
 		{
@@ -322,6 +321,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		
 		
 		private float					r, g, b, a;
 		private bool					is_empty;

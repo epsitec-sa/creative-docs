@@ -51,7 +51,7 @@ namespace Epsitec.Common.Drawing
 			Assertion.Assert (color.IsValid);
 			Assertion.Assert (color.IsInRange == false);
 			
-			color.ClipToRange ();
+			color = color.ClipToRange ();
 			
 			Assertion.Assert (color.IsInRange);
 			Assertion.Assert (color.A == 1.0);

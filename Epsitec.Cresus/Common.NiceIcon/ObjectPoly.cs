@@ -56,13 +56,13 @@ namespace Epsitec.Common.NiceIcon
 			{
 				Drawing.Point p1 = this.Handle(i+0).Position;
 				Drawing.Point p2 = this.Handle(i+1).Position;
-				if ( Widgets.Math.Detect(p1,p2, pos, width) )  return i;
+				if ( Drawing.Point.Detect(p1,p2, pos, width) )  return i;
 			}
 			if ( this.PropertyBool(3).Bool && total > 2 )  // fermé ?
 			{
 				Drawing.Point p1 = this.Handle(0).Position;
 				Drawing.Point p2 = this.Handle(total-1).Position;
-				if ( Widgets.Math.Detect(p1,p2, pos, width) )  return total-1;
+				if ( Drawing.Point.Detect(p1,p2, pos, width) )  return total-1;
 			}
 			return -1;
 		}
@@ -133,7 +133,7 @@ namespace Epsitec.Common.NiceIcon
 
 				int next = rank+1;
 				if ( next >= this.handles.Count )  next = 0;
-				Drawing.Point p = Widgets.Math.Projection(this.Handle(rank).Position, this.Handle(next).Position, pos);
+				Drawing.Point p = Drawing.Point.Projection(this.Handle(rank).Position, this.Handle(next).Position, pos);
 
 				Handle handle = new Handle();
 				handle.Position = p;
@@ -177,7 +177,7 @@ namespace Epsitec.Common.NiceIcon
 			int rank = this.TotalHandle-1;
 			if ( rank > 0 )
 			{
-				double len = Widgets.Math.Distance(this.Handle(0).Position, pos);
+				double len = Drawing.Point.Distance(this.Handle(0).Position, pos);
 				if ( len <= this.closeMargin )
 				{
 					this.Handle(0).Type = HandleType.Ending;
@@ -213,7 +213,7 @@ namespace Epsitec.Common.NiceIcon
 			if ( this.TotalHandle < 2 )  return false;
 
 			int rank = this.TotalHandle-1;
-			double len = Widgets.Math.Distance(this.Handle(0).Position, this.Handle(rank).Position);
+			double len = Drawing.Point.Distance(this.Handle(0).Position, this.Handle(rank).Position);
 			if ( len > this.closeMargin )  return false;  // pas fini
 
 			this.HandleDelete(rank);

@@ -43,7 +43,7 @@ namespace Epsitec.Common.NiceIcon
 		{
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
-			return Widgets.Math.Detect(p1,p2, pos, this.lineWidth/this.scaleX);
+			return Drawing.Point.Detect(p1,p2, pos, this.lineWidth/this.scaleX);
 		}
 
 
@@ -77,7 +77,7 @@ namespace Epsitec.Common.NiceIcon
 		public override bool CreateIsExist(IconContext iconContext)
 		{
 			this.DeselectObject();
-			double len = Widgets.Math.Distance(this.Handle(0).Position, this.Handle(1).Position);
+			double len = Drawing.Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > this.minimalSize );
 		}
 
@@ -94,7 +94,7 @@ namespace Epsitec.Common.NiceIcon
 
 			Drawing.Transform ot = graphics.SaveTransform();
 
-			double angle = Widgets.Math.RotateAngle(p1, p2);
+			double angle = Drawing.Point.ComputeAngle(p1, p2);
 			angle *= 180.0/System.Math.PI;  // radians -> degrés
 			graphics.RotateTransform(angle, p1.X, p1.Y);
 
@@ -118,7 +118,7 @@ namespace Epsitec.Common.NiceIcon
 			double width = font.GetTextAdvance(this.PropertyString(1).String);
 			if ( width != 0 )
 			{
-				double len = Widgets.Math.Distance(p1, p2)/width;
+				double len = Drawing.Point.Distance(p1, p2)/width;
 				graphics.AddText(p1.X, p1.Y, this.PropertyString(1).String, font, len);
 				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(0).Color));
 			}

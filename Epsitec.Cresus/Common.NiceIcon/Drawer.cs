@@ -699,7 +699,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( this.moveHandle == -1 )  // déplace tout l'objet ?
 					{
-						double len = Math.Distance(mouse, this.moveStart);
+						double len = Drawing.Point.Distance(mouse, this.moveStart);
 						if ( len <= this.iconContext.MinimalSize )
 						{
 							mouse = this.moveStart;
@@ -761,7 +761,7 @@ namespace Epsitec.Common.Widgets
 				rSelect.Right  = this.selectRectP2.X;
 				rSelect.Bottom = this.selectRectP1.Y;
 				rSelect.Top    = this.selectRectP2.Y;
-				Math.RectNormalize(ref rSelect);
+				rSelect.Normalise();
 				this.Select(rSelect, isCtrl);  // sélectionne les objets dans le rectangle
 				this.selectRect = false;
 				this.UndoMemorizeRemove();
@@ -772,7 +772,7 @@ namespace Epsitec.Common.Widgets
 				this.moveObject = null;
 				this.moveHandle = -1;
 
-				double len = Math.Distance(mouse, this.moveStart);
+				double len = Drawing.Point.Distance(mouse, this.moveStart);
 				if ( len <= this.iconContext.MinimalSize )
 				{
 					this.UndoMemorizeRemove();
@@ -783,7 +783,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( isRight )  // avec le bouton de droite de la souris ?
 			{
-				double len = Math.Distance(mouse, this.moveStart);
+				double len = Drawing.Point.Distance(mouse, this.moveStart);
 				if ( len <= this.iconContext.MinimalSize )
 				{
 					this.ContextMenu(mouse);
@@ -1159,7 +1159,7 @@ namespace Epsitec.Common.Widgets
 		protected void SnapGrid(ref Drawing.Point pos)
 		{
 			if ( !this.gridShow )  return;
-			pos = Math.Grid(pos, this.gridStep);
+			pos = pos.GridAlign(this.gridStep);
 		}
 
 		// Dessine la grille magnétique.
@@ -1218,12 +1218,12 @@ namespace Epsitec.Common.Widgets
 
 			if ( type == ConstrainType.Normal || type == ConstrainType.Square )
 			{
-				Drawing.Point p1 = Math.RotatePoint(pos, System.Math.PI*0.25, pos+new Drawing.Point(100,0));
-				Drawing.Point p2 = Math.RotatePoint(pos, System.Math.PI*1.25, pos+new Drawing.Point(100,0));
+				Drawing.Point p1 = Drawing.Transform.RotatePoint(pos, System.Math.PI*0.25, pos+new Drawing.Point(100,0));
+				Drawing.Point p2 = Drawing.Transform.RotatePoint(pos, System.Math.PI*1.25, pos+new Drawing.Point(100,0));
 				graphics.AddLine(p1, p2);
 
-				p1 = Math.RotatePoint(pos, System.Math.PI*0.75, pos+new Drawing.Point(100,0));
-				p2 = Math.RotatePoint(pos, System.Math.PI*1.75, pos+new Drawing.Point(100,0));
+				p1 = Drawing.Transform.RotatePoint(pos, System.Math.PI*0.75, pos+new Drawing.Point(100,0));
+				p2 = Drawing.Transform.RotatePoint(pos, System.Math.PI*1.75, pos+new Drawing.Point(100,0));
 				graphics.AddLine(p1, p2);
 
 				graphics.RenderSolid(Drawing.Color.FromARGB(0.5, 1,0,0));
@@ -1262,7 +1262,7 @@ namespace Epsitec.Common.Widgets
 				rSelect.Right  = this.selectRectP2.X;
 				rSelect.Bottom = this.selectRectP1.Y;
 				rSelect.Top    = this.selectRectP2.Y;
-				Math.RectNormalize(ref rSelect);
+				rSelect.Normalise();
 
 				graphics.LineWidth = 1.0/this.iconContext.ScaleX;
 				rSelect.Inflate(-0.5/this.iconContext.ScaleX, -0.5/this.iconContext.ScaleY);

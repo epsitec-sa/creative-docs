@@ -49,7 +49,7 @@ namespace Epsitec.Common.NiceIcon
 			for ( int i=0 ; i<4 ; i++ )
 			{
 				this.ComputeBezier(i, center, rx, ry, out p1, out s1, out s2, out p2);
-				if ( Widgets.Math.Detect(p1,s1,s2,p2, pos, width) )  return true;
+				if ( Drawing.Point.Detect(p1,s1,s2,p2, pos, width) )  return true;
 			}
 
 			if ( !this.PropertyGradient(2).IsVisible() )  return false;
@@ -146,7 +146,7 @@ namespace Epsitec.Common.NiceIcon
 		// pas exister et doit être détruit.
 		public override bool CreateIsExist(IconContext iconContext)
 		{
-			double len = Widgets.Math.Distance(this.Handle(0).Position, this.Handle(1).Position);
+			double len = Drawing.Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > this.minimalSize );
 		}
 
