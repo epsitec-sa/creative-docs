@@ -839,7 +839,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected PanePage						rightPane;
 		protected Separator						separator;
 		protected Widget						panel;
-		protected ColorCircle					circle;
+		protected ColorWheel					circle;
 		protected Drawer						drawer;
 		protected HScroller						hScroller;
 		protected VScroller						vScroller;

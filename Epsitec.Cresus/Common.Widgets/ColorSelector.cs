@@ -64,7 +64,7 @@ namespace Epsitec.Common.Widgets
 			this.labels[5].Text = "S";
 			this.labels[6].Text = "L";
 
-			this.circle = new ColorCircle(this);
+			this.circle = new ColorWheel(this);
 			this.circle.Changed += new EventHandler(this.HandleCircleChanged);
 
 			this.nbPalette = 16;
@@ -396,7 +396,7 @@ namespace Epsitec.Common.Widgets
 
 
 		protected Drawing.Color				colorBlack;
-		protected ColorCircle				circle;
+		protected ColorWheel				circle;
 		protected int						nbPalette;
 		protected ColorSample[]				palette;
 		protected int						nbField;
