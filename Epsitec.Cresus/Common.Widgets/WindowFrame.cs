@@ -605,6 +605,26 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void OnVisibleChanged(System.EventArgs e)
+		{
+			base.OnVisibleChanged (e);
+			
+			if (this.Visible)
+			{
+				if (this.WindowShown != null)
+				{
+					this.WindowShown (this, e);
+				}
+			}
+			else
+			{
+				if (this.WindowHidden != null)
+				{
+					this.WindowHidden (this, e);
+				}
+			}
+		}
+
 		
 		protected virtual void ReallocatePixmap()
 		{
@@ -1254,6 +1274,8 @@ namespace Epsitec.Common.Widgets
 		
 		public event System.EventHandler		WindowActivated;
 		public event System.EventHandler		WindowDeactivated;
+		public event System.EventHandler		WindowShown;
+		public event System.EventHandler		WindowHidden;
 		public event EventHandler				WindowAnimationEnded;
 		
 		public static event MessageHandler		MessageFilter;
