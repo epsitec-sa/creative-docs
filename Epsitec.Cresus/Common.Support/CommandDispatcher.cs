@@ -172,7 +172,7 @@ namespace Epsitec.Common.Support
 				return command;
 			}
 			
-			return command.Substring (0, pos-1).Trim ();
+			return command.Substring (0, pos).Trim ();
 		}
 		
 		public static bool IsSimpleCommand(string command)
