@@ -266,7 +266,7 @@ namespace Epsitec.Common.Support
 				BundleAttribute attr = attributes[0] as BundleAttribute;
 				string     prop_name = attr.PropertyName;
 				
-				switch (bundle.GetFieldType (prop_name))
+				switch (bundle[prop_name].Type)
 				{
 					case ResourceFieldType.Bundle:
 						prop_info.SetValue (obj, this.CreateFromBundle (bundle[prop_name].AsBundle), null);

@@ -142,6 +142,31 @@ namespace Epsitec.Common.Support
 			Assertion.Assert (bundle["d"].IsEmpty);
 		}
 		
+		[Test] public void CheckCompileAndNoMerge()
+		{
+			ResourceBundle bundle = ResourceBundle.Create ("test");
+			string test_string_1 = "<bundle><data name='a'>A</data><data name='b'>B</data></bundle>";
+			string test_string_2 = "<bundle><data name='a'>X</data><data name='c'>C</data></bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data_1 = encoding.GetBytes (test_string_1);
+			byte[] test_data_2 = encoding.GetBytes (test_string_2);
+			
+			bundle.AutoMergeEnabled = false;
+			
+			bundle.Compile (test_data_1);
+			bundle.Compile (test_data_2);
+			
+			string[] names = bundle.FieldNames;
+			
+			System.Array.Sort (names);
+			
+			Assertion.AssertEquals (4, bundle.CountFields);
+			Assertion.AssertEquals ("a", names[0]);
+			Assertion.AssertEquals ("a", names[1]);
+			Assertion.AssertEquals ("b", names[2]);
+			Assertion.AssertEquals ("c", names[3]);
+		}
+		
 		[Test] [ExpectedException (typeof (System.Xml.XmlException))] public void CheckCompileEx1()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
@@ -303,6 +328,117 @@ namespace Epsitec.Common.Support
 		{
 			string test_string = "<bundle><data name='a'>A</data>\n<ref target='file:button.cancel' type='x'/></bundle>";
 			this.CompileWithExceptionHandling (test_string);
+		}
+		
+		[Test] public void CheckCreateXmlNode1()
+		{
+			ResourceBundle bundle = ResourceBundle.Create ("test");
+			string test_string =
+				"<bundle name='test'>\r\n" +
+				"  <data name='a'>Aà</data>\r\n" +
+				"  <bundle name='b'>\r\n" +
+				"    <data name='a'>B:A</data>\r\n" +
+				"    <data name='b'>B:B</data>\r\n" +
+				"  </bundle>\r\n" +
+				"</bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			
+			bundle.Compile (test_data);
+			
+			byte[] live_data = bundle.CreateXmlAsData ();
+			
+			ResourceBundleTest.XmlDumpIfDifferent (test_data, live_data, bundle);
+			Assertion.Assert ("Serialised data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
+		}
+		
+		[Test] public void CheckCreateXmlNode2()
+		{
+			ResourceBundle bundle = ResourceBundle.Create ("test");
+			string test_string = 
+				"<bundle name='test'>\r\n" +
+				"  <data name='a'>\r\n" +
+				"    <ref target='strings#label.OK' />\r\n" +
+				"  </data>\r\n" +
+				"</bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			
+			bundle.Compile (test_data);
+			
+			byte[] live_data = bundle.CreateXmlAsData ();
+			
+			ResourceBundleTest.XmlDumpIfDifferent (test_data, live_data, bundle);
+			Assertion.Assert ("Serialised data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
+		}
+		
+		[Test] public void CheckCreateXmlNode3()
+		{
+			ResourceBundle bundle = ResourceBundle.Create ("test");
+			string test_string = 
+				"<bundle name='test'>\r\n" +
+				"  <ref target='file:button.cancel' />\r\n" +
+				"</bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			
+			bundle.RefInclusionEnabled = false;
+			
+			bundle.Compile (test_data);
+			
+			byte[] live_data = bundle.CreateXmlAsData ();
+			
+			ResourceBundleTest.XmlDumpIfDifferent (test_data, live_data, bundle);
+			Assertion.Assert ("Serialised data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
+		}
+		
+		
+		static void XmlDumpIfDifferent(byte[] a, byte[] b, ResourceBundle bundle)
+		{
+			if (ResourceBundleTest.XmlTestEqual (a, b) == false)
+			{
+				bundle.CreateXmlDocument (false).Save (System.Console.Out);
+				System.Console.Out.WriteLine ();
+				System.Console.Out.WriteLine ("Bundle original XML source uses {0} bytes:", a.Length);
+				ResourceBundleTest.XmlDumpData (a);
+				System.Console.Out.WriteLine ("Bundle produced XML source uses {0} bytes:", b.Length);
+				ResourceBundleTest.XmlDumpData (b);
+			}
+		}
+		
+		static bool XmlTestEqual(byte[] a, byte[] b)
+		{
+			if (a.Length != b.Length)
+			{
+				return false;
+			}
+			
+			for (int i = 0; i < a.Length; i++)
+			{
+				byte x = a[i];
+				byte y = b[i];
+				
+				if (x == '\'') x = (byte) '\"';
+				if (y == '\'') y = (byte) '\"';
+				
+				if (x != y)
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
+		static void XmlDumpData(byte[] data)
+		{
+			for (int i = 0; i < data.Length; i++)
+			{
+				if ((i > 0) && ((i % 20) == 0)) System.Console.Out.WriteLine ();
+				System.Console.Out.Write ("{0,3:x2}", data[i]);
+			}
+			
+			System.Console.Out.WriteLine ();
 		}
 	}
 }

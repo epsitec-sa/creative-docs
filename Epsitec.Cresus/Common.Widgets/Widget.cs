@@ -1608,7 +1608,12 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				this.MessageHandler (message);
-				window.PostProcessMessage (message);
+				
+				if (window != null)
+				{
+					window.PostProcessMessage (message);
+				}
+				
 				this.Invalidate ();
 			}
 		}
