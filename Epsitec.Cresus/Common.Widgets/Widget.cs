@@ -698,7 +698,14 @@ namespace Epsitec.Common.Widgets
 					return "";
 				}
 				
-				return this.text_layout.Text;
+				string text = this.text_layout.Text;
+				
+				if (text == null)
+				{
+					return "";
+				}
+				
+				return text;
 			}
 			
 			set

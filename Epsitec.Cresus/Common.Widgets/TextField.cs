@@ -108,6 +108,8 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Ne fait rien, on veut s'assurer que le TextLayout associé avec le TextField
 			//	n'est jamais détruit du vivant du TextField.
+			
+			this.text_layout.Text = "";
 		}
 
 

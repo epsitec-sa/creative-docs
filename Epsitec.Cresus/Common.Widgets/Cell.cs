@@ -10,12 +10,37 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		public Cell(Widget widget)
+		{
+			this.Insert(widget);
+		}
+		
+		public void Insert(Widget widget)
+		{
+			this.Children.Add(widget);
+			
+			if (this.cellArray != null)
+			{
+				this.cellArray.NotifyCellChanged (this);
+			}
+		}
+		
+		public void Remove(Widget widget)
+		{
+			this.Children.Remove(widget);
+			
+			if (this.cellArray != null)
+			{
+				this.cellArray.NotifyCellChanged (this);
+			}
+		}
+		
 		
 		public AbstractCellArray CellArray
 		{
 			get
 			{
-				return this.Parent as AbstractCellArray;
+				return this.cellArray;
 			}
 		}
 		
@@ -39,12 +64,23 @@ namespace Epsitec.Common.Widgets
 		
 		internal void SetArrayRank(AbstractCellArray array, int column, int row)
 		{
-			this.Parent     = array;
+			this.cellArray  = array;
 			this.rankColumn = column;
 			this.rankRow    = row;
 		}
 		
 
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+
+			Drawing.Rectangle rect  = this.Client.Bounds;
+			WidgetState       state = this.PaintState;
+			Direction         dir   = this.RootDirection;
+			
+			adorner.PaintCellBackground(graphics, rect, state, dir);
+		}
+		
 #if false
 		// Dessine la cellule.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
@@ -65,7 +101,8 @@ namespace Epsitec.Common.Widgets
 		}
 #endif
 		
-		protected int			rankColumn;
-		protected int			rankRow;
+		protected AbstractCellArray		cellArray;
+		protected int					rankColumn;
+		protected int					rankRow;
 	}
 }
