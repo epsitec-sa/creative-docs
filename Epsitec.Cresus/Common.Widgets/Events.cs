@@ -5,6 +5,7 @@ namespace Epsitec.Common.Widgets
 	public delegate void PaintEventHandler(object sender, PaintEventArgs e);
 	public delegate void MessageEventHandler(object sender, MessageEventArgs e);
 	public delegate void EventHandler(object sender);
+	public delegate void DragEventHandler(object sender, DragEventArgs e);
 	
 	
 	/// <summary>
@@ -100,5 +101,37 @@ namespace Epsitec.Common.Widgets
 		private Message						message;
 		private Drawing.Point				point;
 		private bool						suppress;
+	}
+	
+	/// <summary>
+	/// La classe DragEventArgs décrit un déplacement (drag) produit par l'utilisateur.
+	/// </summary>
+	public class DragEventArgs : System.EventArgs
+	{
+		public DragEventArgs(Drawing.Point p1, Drawing.Point p2)
+		{
+			this.p1 = p1;
+			this.p2 = p2;
+		}
+		
+		
+		public Drawing.Point				FromPoint
+		{
+			get { return this.p1; }
+		}
+		
+		public Drawing.Point				ToPoint
+		{
+			get { return this.p2; }
+		}
+		
+		public Drawing.Point				Offset
+		{
+			get { return this.p2 - this.p1; }
+		}
+		
+		
+		private Drawing.Point				p1;
+		private Drawing.Point				p2;
 	}
 }
