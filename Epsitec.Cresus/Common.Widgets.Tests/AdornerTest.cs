@@ -995,6 +995,7 @@ namespace Epsitec.Common.Widgets
 			table.StyleV |= CellArrayStyle.Header;
 			table.StyleV |= CellArrayStyle.Separator;
 			table.StyleV |= CellArrayStyle.SelectLine;
+			table.StyleV |= CellArrayStyle.SelectMulti;
 			table.StyleV |= CellArrayStyle.Mobile;
 			table.StyleV |= CellArrayStyle.Sort;
 			table.Name = "Table";
