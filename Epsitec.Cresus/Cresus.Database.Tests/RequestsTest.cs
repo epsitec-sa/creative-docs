@@ -785,11 +785,34 @@ namespace Epsitec.Cresus.Database
 				if (buffer != null)
 				{
 					Replication.ClientEngine engine = new Replication.ClientEngine (infrastructure, service);
-					engine.ApplyChanges (infrastructure.DefaultDbAbstraction, operation);
+					ReplicationHelper        helper = new ReplicationHelper ();
+					
+					engine.ApplyChanges (infrastructure.DefaultDbAbstraction, operation, new Replication.ClientEngine.Callback (helper.BeforeCommit));
+					
 					operation.WaitForProgress (100, System.TimeSpan.FromSeconds (10.0));
 				}
 				
 				System.Diagnostics.Debug.WriteLine ("Done.");
+			}
+		}
+		
+		class ReplicationHelper
+		{
+			public ReplicationHelper()
+			{
+			}
+			
+			public void BeforeCommit(Replication.ClientEngine engine, DbTransaction transaction)
+			{
+				System.Diagnostics.Debug.WriteLine ("About to commit changes in replication.");
+				
+				if (engine.LargestLogId.IsValid)
+				{
+					transaction.Infrastructure.LocalSettings.SyncLogId = engine.LargestLogId;
+					transaction.Infrastructure.LocalSettings.PersistToBase (transaction);
+					
+					System.Diagnostics.Debug.WriteLine ("Persisted SyncLogId.");
+				}
 			}
 		}
 		

@@ -42,6 +42,29 @@ namespace Epsitec.Cresus.Database
 		}
 
 		
+		public bool								IsServer
+		{
+			get
+			{
+				return (this.ClientId == 1);
+			}
+		}
+		
+		public bool								IsValid
+		{
+			get
+			{
+				if ((this.value < DbId.MinimumValid) ||
+					(this.value > DbId.MaximumValid))
+				{
+					return false;
+				}
+				
+				return true;
+			}
+		}
+		
+		
 		public static DbIdClass AnalyzeClass(DbId id)
 		{
 			long local_id  = id.LocalId;
@@ -80,7 +103,7 @@ namespace Epsitec.Cresus.Database
 			return new DbId (local_id + DbId.MinimumTemp);
 		}
 
-
+		
 		public static implicit operator long(DbId id)
 		{
 			return id.value;
@@ -94,7 +117,34 @@ namespace Epsitec.Cresus.Database
 		
 		public override bool Equals(object obj)
 		{
-			return this.value.Equals (obj);
+			if (obj == null)
+			{
+				return false;
+			}
+			if (obj.GetType () != typeof (DbId))
+			{
+				return false;
+			}
+			
+			DbId that = (DbId) obj;
+			
+			//	On s'assure que deux IDs invalides sont considérés comme égaux.
+			
+			if ((that.value < DbId.MinimumValid) ||
+				(that.Value > DbId.MaximumValid))
+			{
+				if ((this.value < DbId.MinimumValid) ||
+					(this.Value > DbId.MaximumValid))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			
+			return this.value == that.value;
 		}
 		
 		public override int GetHashCode()
@@ -148,7 +198,8 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion
 		
-		public static readonly DbId				Zero = new DbId (0);
+		public static readonly DbId				Invalid = new DbId (-1);
+		public static readonly DbId				Zero    = new DbId (0);
 		
 		public const long						LocalRange		= 1000000000000;	//	10^12
 		public const int						ClientRange		= 1000000;			//	10^6

@@ -18,15 +18,15 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
-		public System.Data.DataTable ExtractData(DbTable table, DbId sync_id)
+		public System.Data.DataTable ExtractDataUsingLogIds(DbTable table, DbId sync_id)
 		{
 			//	Extrait les données de la table spécifiée en ne considérant que ce qui a changé
 			//	depuis la synchronisation définie par 'sync_id'.
 			
-			return this.ExtractData (table, sync_id, DbId.CreateId (DbId.LocalRange-1, sync_id.ClientId));
+			return this.ExtractDataUsingLogIds (table, sync_id, DbId.CreateId (DbId.LocalRange-1, sync_id.ClientId));
 		}
 		
-		public System.Data.DataTable ExtractData(DbTable table, DbId sync_start_id, DbId sync_end_id)
+		public System.Data.DataTable ExtractDataUsingLogIds(DbTable table, DbId sync_start_id, DbId sync_end_id)
 		{
 			long sync_id_min = sync_start_id.Value;
 			long sync_id_max = sync_end_id.Value;
@@ -38,6 +38,25 @@ namespace Epsitec.Cresus.Replication
 			
 			condition.AddCondition (table.Columns[Tags.ColumnRefLog], DbCompare.GreaterThanOrEqual, sync_id_min);
 			condition.AddCondition (table.Columns[Tags.ColumnRefLog], DbCompare.LessThanOrEqual, sync_id_max);
+			
+			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
+			{
+				return command.DataSet.Tables[0];
+			}
+		}
+		
+		public System.Data.DataTable ExtractDataUsingIds(DbTable table, DbId sync_start_id, DbId sync_end_id)
+		{
+			long sync_id_min = sync_start_id.Value;
+			long sync_id_max = sync_end_id.Value;
+			
+			System.Diagnostics.Debug.Assert (DbId.AnalyzeClass (sync_id_min) == DbIdClass.Standard);
+			System.Diagnostics.Debug.Assert (DbId.AnalyzeClass (sync_id_max) == DbIdClass.Standard);
+			
+			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.TypeConverter);
+			
+			condition.AddCondition (table.Columns[Tags.ColumnId], DbCompare.GreaterThanOrEqual, sync_id_min);
+			condition.AddCondition (table.Columns[Tags.ColumnId], DbCompare.LessThanOrEqual, sync_id_max);
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{

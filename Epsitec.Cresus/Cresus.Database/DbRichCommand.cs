@@ -273,14 +273,6 @@ namespace Epsitec.Cresus.Database
 		
 		public void ReplaceTables(DbTransaction transaction)
 		{
-			//	ATTENTION: Cette méthode ne gère pas les conflits; elle écrase les données
-			//	dans la base en fonction du contenu des tables du DataSet.
-			
-			if (this.is_read_only)
-			{
-				throw new Exceptions.ReadOnlyException (this.db_access);
-			}
-			
 			//	Similaire à UpdateTables, mais en écrasant les données contenues dans
 			//	la base, sans égard pour d'éventuelles anciennes données déjà présentes
 			//	(là aussi, UPDATE sera utilisé d'abord et INSERT en cas de besoin).
@@ -292,6 +284,19 @@ namespace Epsitec.Cresus.Database
 			
 			this.CheckValidState ();
 			this.CheckRowIds ();
+			
+			this.ReplaceTablesWithoutValidityChecking(transaction);
+		}
+		
+		public void ReplaceTablesWithoutValidityChecking(DbTransaction transaction)
+		{
+			//	ATTENTION: Cette méthode ne gère pas les conflits; elle écrase les données
+			//	dans la base en fonction du contenu des tables du DataSet.
+			
+			if (this.is_read_only)
+			{
+				throw new Exceptions.ReadOnlyException (this.db_access);
+			}
 			
 			//	On ne touche à rien dans les tables ! Le log ID par exemple est conservé
 			//	tel quel. On va simplement exécuter "à la main" une série de UPDATE et

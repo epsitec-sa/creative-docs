@@ -19,6 +19,15 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
+		public DbId							LargestLogId
+		{
+			get
+			{
+				return this.largest_log_id;
+			}
+		}
+		
+		
 		public void ApplyChanges(IDbAbstraction database, Remoting.IOperation operation)
 		{
 			this.ApplyChanges (database, operation, null);
@@ -47,7 +56,7 @@ namespace Epsitec.Cresus.Replication
 		
 		
 		#region Delegates
-		public delegate void Callback(DbTransaction transaction);
+		public delegate void Callback(ClientEngine engine, DbTransaction transaction);
 		#endregion
 		
 		private void ApplyChanges(IDbAbstraction database, byte[] compressed_data)
@@ -73,6 +82,12 @@ namespace Epsitec.Cresus.Replication
 			PackedTableData def_column  = ClientEngine.FindPackedTable (list, Tags.TableColumnDef);
 			PackedTableData def_type    = ClientEngine.FindPackedTable (list, Tags.TableTypeDef);
 			PackedTableData def_enumval = ClientEngine.FindPackedTable (list, Tags.TableEnumValDef);
+			PackedTableData log_table   = ClientEngine.FindPackedTable (list, Tags.TableLog);
+			
+			if (log_table != null)
+			{
+				list.Remove (log_table);
+			}
 			
 			//	Il faut appliquer les changements concernant les tables de gestion internes
 			//	(s'il y en a) avant de pouvoir appliquer les autres changements :
@@ -117,6 +132,7 @@ namespace Epsitec.Cresus.Replication
 					
 					using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, database))
 					{
+						this.ApplyLogChanges (transaction, log_table);
 						this.ApplyChanges (transaction, list);
 						this.NotifyBeforeCommit (transaction);
 						transaction.Commit ();
@@ -131,6 +147,7 @@ namespace Epsitec.Cresus.Replication
 			{
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, database))
 				{
+					this.ApplyLogChanges (transaction, log_table);
 					this.ApplyChanges (transaction, list);
 					this.NotifyBeforeCommit (transaction);
 					transaction.Commit ();
@@ -151,7 +168,7 @@ namespace Epsitec.Cresus.Replication
 		private void ApplyChanges(DbTransaction transaction, PackedTableData data)
 		{
 			//	Applique les modifications décrites pour la table spécifiée. Pour ce faire,
-			//	on remplit une table avec les lignes à répliquer et on utiliser un 'REPLACE'
+			//	on remplit une table avec les lignes à répliquer et on utilise un 'REPLACE'
 			//	de toutes celles-ci :
 			
 			DbTable table = this.infrastructure.ResolveDbTable (transaction, new DbKey (data.Key));
@@ -168,6 +185,49 @@ namespace Epsitec.Cresus.Replication
 				System.Diagnostics.Debug.Assert (data_table.Rows.Count > 0);
 				
 				command.ReplaceTables (transaction);
+			}
+		}
+		
+		private void ApplyLogChanges(DbTransaction transaction, PackedTableData data)
+		{
+			if (data == null)
+			{
+				return;
+			}
+			
+			//	Applique les modifications décrites pour la table de LOG. Pour ce faire,
+			//	on remplit une table avec les lignes à répliquer et on utilise un 'REPLACE'
+			//	de toutes celles-ci :
+			
+			DbTable table = this.infrastructure.ResolveDbTable (transaction, new DbKey (data.Key));
+			
+			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table))
+			{
+				System.Diagnostics.Debug.Assert (command.DataSet != null);
+				System.Diagnostics.Debug.Assert (command.DataSet.Tables.Count == 1);
+				
+				System.Data.DataTable data_table = command.DataSet.Tables[0];
+				
+				data.FillTable (data_table);
+				
+				System.Diagnostics.Debug.Assert (data_table.Rows.Count > 0);
+				
+				command.ReplaceTablesWithoutValidityChecking (transaction);
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("Replicated {0} lines from CR_LOG.", data_table.Rows.Count));
+				
+				for (int i = 0; i < data_table.Rows.Count; i++)
+				{
+					System.Data.DataRow row = data_table.Rows[i];
+					
+					DbId id = new DbId ((long) row[0]);
+					
+					if ((id.IsServer) &&
+						(id.LocalId > this.largest_log_id.LocalId))
+					{
+						this.largest_log_id = id;
+					}
+				}
 			}
 		}
 		
@@ -261,13 +321,14 @@ namespace Epsitec.Cresus.Replication
 		{
 			if (this.before_commit_callback != null)
 			{
-				this.before_commit_callback (transaction);
+				this.before_commit_callback (this, transaction);
 			}
 		}
 		
 		
 		private DbInfrastructure				infrastructure;
 		private Remoting.IReplicationService	replication_service;
+		private DbId							largest_log_id = DbId.Invalid;
 		
 		private Callback						before_commit_callback;
 	}

@@ -179,6 +179,8 @@ namespace Epsitec.Cresus.Replication
 				this.ProcessTable (cruncher, sync_start, sync_end, def_type_table, data);
 				this.ProcessTable (cruncher, sync_start, sync_end, def_enumval_table, data);
 				
+				this.ProcessLogTable (cruncher, sync_start, sync_end, log_table, data);
+				
 				ServerEngine.RemoveTables (tables, DbReplicationMode.Private);
 				
 				System.Diagnostics.Debug.WriteLine (string.Format ("Scrubbed, remaining {0} tables.", tables.Count));
@@ -204,7 +206,19 @@ namespace Epsitec.Cresus.Replication
 		
 		protected virtual void ProcessTable(DataCruncher cruncher, DbId sync_start, DbId sync_end, DbTable table, ReplicationData data)
 		{
-			System.Data.DataTable data_table = cruncher.ExtractData (table, sync_start, sync_end);
+			System.Data.DataTable data_table = cruncher.ExtractDataUsingLogIds (table, sync_start, sync_end);
+					
+			if (data_table.Rows.Count > 0)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Table {0} contains {1} rows to replicate.", data_table.TableName, data_table.Rows.Count));
+				
+				data.Add (PackedTableData.CreateFromTable (table, data_table));
+			}
+		}
+		
+		protected virtual void ProcessLogTable(DataCruncher cruncher, DbId sync_start, DbId sync_end, DbTable table, ReplicationData data)
+		{
+			System.Data.DataTable data_table = cruncher.ExtractDataUsingIds (table, sync_start, sync_end);
 					
 			if (data_table.Rows.Count > 0)
 			{
