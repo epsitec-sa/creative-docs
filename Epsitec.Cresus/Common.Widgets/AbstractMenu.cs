@@ -95,13 +95,33 @@ namespace Epsitec.Common.Widgets
 			set { this.host = value; }
 		}
 		
+		protected Support.ICommandDispatcherHost GetHost()
+		{
+			if (this.host != null)
+			{
+				return this.host;
+			}
+			if (this.parentMenu != null)
+			{
+				this.parentMenu.GetHost ();
+			}
+			if (this.Window != null)
+			{
+				return this.Window;
+			}
+			
+			return null;
+		}
+		
 		public override Support.CommandDispatcher CommandDispatcher
 		{
 			get
 			{
-				if (this.host != null)
+				Support.ICommandDispatcherHost host = this.GetHost ();
+				
+				if (host != null)
 				{
-					return this.host.CommandDispatcher;
+					return host.CommandDispatcher;
 				}
 				
 				return base.CommandDispatcher;
@@ -827,7 +847,7 @@ namespace Epsitec.Common.Widgets
 		// Dessine le menu.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			System.Diagnostics.Debug.Assert (this.host != null, "No Host defined for menu.",
+			System.Diagnostics.Debug.Assert (this.GetHost () != null, "No Host defined for menu.",
 				/**/						 "The menu you are trying to display has no associated command dispatcher host.\n"+
 				/**/						 "Use AbstractMenu.Host to define it when you setup the menu.");
 			
