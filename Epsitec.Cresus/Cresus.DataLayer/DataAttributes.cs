@@ -9,12 +9,23 @@ namespace Epsitec.Cresus.DataLayer
 	/// La classe DataAttributes représente des attributs qui peuvent exister
 	/// en diverses variantes (localisation).
 	/// </summary>
-	public class DataAttributes
+	public class DataAttributes : System.ICloneable
 	{
 		public DataAttributes()
 		{
 		}
 		
+		
+		#region ICloneable Members
+		public object Clone()
+		{
+			DataAttributes attr = System.Activator.CreateInstance (this.GetType ()) as DataAttributes;
+			
+			attr.attributes = this.attributes.Clone () as System.Collections.Hashtable;
+			
+			return attr;
+		}
+		#endregion		
 		
 		public void SetFromInitialisationList(params string[] list)
 		{
@@ -132,12 +143,13 @@ namespace Epsitec.Cresus.DataLayer
 		}
 		
 		
-		
+		public const string						TagId			= "id";
 		public const string						TagName			= "name";
 		public const string						TagData			= "data";
 		public const string						TagLabel		= "label";
 		public const string						TagDescription	= "descr";
 		
 		protected System.Collections.Hashtable	attributes;
+
 	}
 }

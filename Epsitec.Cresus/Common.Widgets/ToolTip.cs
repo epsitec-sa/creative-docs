@@ -2,6 +2,12 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
+	public enum ToolTipBehaviour
+	{
+		Normal,							// presque comme Window
+		FollowMe,						// suit la souris
+	}
+
 	/// <summary>
 	/// La classe ToolTip implémente les "info bulles".
 	/// </summary>
@@ -61,6 +67,20 @@ namespace Epsitec.Common.Widgets
 				{
 					this.Disposed (this, System.EventArgs.Empty);
 				}
+			}
+		}
+
+		// Choix du comportement des tooltips.
+		public ToolTipBehaviour Behaviour
+		{
+			get
+			{
+				return this.behaviour;
+			}
+
+			set
+			{
+				this.behaviour = value;
 			}
 		}
 
@@ -150,15 +170,28 @@ namespace Epsitec.Common.Widgets
 			{
 				case MessageType.MouseMove:
 					Drawing.Point mouse = Message.State.LastWindow.MapWindowToScreen(Message.State.LastPosition);
-					double dist = System.Math.Sqrt(System.Math.Pow(mouse.X-this.birthPos.X, 2) + System.Math.Pow(mouse.Y-this.birthPos.Y, 2));
-					if ( dist > 12 )
-					{
-						this.timer.Stop();
-						this.HideToolTip();
 
-						this.timer.Delay = SystemInformation.ToolTipShowDelay;
-						this.timer.Start();
+					switch ( this.behaviour )
+					{
+						case ToolTipBehaviour.Normal:
+							double dist = System.Math.Sqrt(System.Math.Pow(mouse.X-this.birthPos.X, 2) + System.Math.Pow(mouse.Y-this.birthPos.Y, 2));
+							if ( dist > this.deadDist )
+							{
+								this.timer.Stop();
+								this.HideToolTip();
+
+								this.timer.Delay = SystemInformation.ToolTipShowDelay;
+								this.timer.Start();
+							}
+							break;
+
+						case ToolTipBehaviour.FollowMe:
+							mouse += this.offset;
+							mouse.Y -= this.Size.Height;
+							this.window.WindowLocation = mouse;
+							break;
 					}
+
 					break;
 			}
 		}
@@ -243,13 +276,15 @@ namespace Epsitec.Common.Widgets
 		#endregion
 
 		
-		
+
+		protected ToolTipBehaviour		behaviour = ToolTipBehaviour.Normal;
 		protected Window				owner;
 		protected Window				window;
 		protected bool					isVisible = false;
 		protected Timer					timer;
 		protected Widget				widget;
 		protected Drawing.Point			birthPos;
+		protected double				deadDist = 12;
 		protected Drawing.Point			margin = new Drawing.Point(3, 2);
 		protected Drawing.Point			offset = new Drawing.Point(8, -16);
 		protected Drawing.Color			colorBack;

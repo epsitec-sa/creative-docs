@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.DataLayer
 	/// <summary>
 	/// La classe DataType décrit un type de donnée.
 	/// </summary>
-	public class DataType : IDataAttributesHost
+	public class DataType : IDataAttributesHost, System.ICloneable
 	{
 		public DataType()
 		{
@@ -20,24 +20,37 @@ namespace Epsitec.Cresus.DataLayer
 		}
 		
 		
-		public string							Name
+		public string						Name
 		{
 			get { return this.Attributes.GetAttribute (DataAttributes.TagName, ResourceLevel.Default); }
 		}
 		
-		public string							UserLabel
+		public string						UserLabel
 		{
 			get { return this.Attributes.GetAttribute (DataAttributes.TagLabel); }
 		}
 		
-		public string							UserDescription
+		public string						UserDescription
 		{
 			get { return this.Attributes.GetAttribute (DataAttributes.TagDescription); }
 		}
 		
 		
+		#region ICloneable Members
+		public virtual object Clone()
+		{
+			DataType type = System.Activator.CreateInstance (this.GetType ()) as DataType;
+			
+			type.attributes     = this.Attributes.Clone () as DataAttributes;
+			type.db_simple_type = this.db_simple_type;
+			type.db_num_def     = this.db_num_def.Clone () as Database.DbNumDef;
+			
+			return type;
+		}
+		#endregion
+		
 		#region IDataAttributesHost Members
-		public DataAttributes					Attributes
+		public DataAttributes				Attributes
 		{
 			get
 			{
@@ -74,6 +87,9 @@ namespace Epsitec.Cresus.DataLayer
 
 		
 		
-		protected DataAttributes				attributes;
+		protected DataAttributes			attributes;
+		
+		protected Database.DbSimpleType		db_simple_type;
+		protected Database.DbNumDef			db_num_def;
 	}
 }

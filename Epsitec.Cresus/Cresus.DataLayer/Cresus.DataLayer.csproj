@@ -88,6 +88,11 @@
                     Project = "{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Cresus.Database"
+                    Project = "{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
@@ -149,6 +154,16 @@
                 />
                 <File
                     RelPath = "DbTools.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "EnumType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "EnumValue.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
