@@ -16,6 +16,7 @@ namespace Epsitec.Common.Designer.Panels
 		{
 			this.size  = new Drawing.Size (250, 600);
 			this.props = new System.Collections.ArrayList ();
+			this.infos = new System.Collections.Hashtable ();
 			
 			this.application = application;
 		}
@@ -180,6 +181,7 @@ namespace Epsitec.Common.Designer.Panels
 			int         active_index    = this.book.ActivePageIndex;
 			System.Type active_tab_type = (active_index < 0) ? null : this.props[active_index].GetType ();
 			
+			this.SavePropsVisibleViews ();
 			this.DetachAllProps ();
 			this.SelectMatchingProps ();
 			this.DisposeUnusedProps ();
@@ -230,6 +232,8 @@ namespace Epsitec.Common.Designer.Panels
 			
 			this.book.ActivePageIndex = active_index;
 			
+			this.RestorePropsVisibleViews ();
+			
 			//	Lors du changement du contenu des onglets, on aimerait conserver le focus clavier
 			//	sur le widget précédent, si cela est possible. Pour ce faire, on a pris note plus
 			//	haut du chemin d'accès au widget qui avait le focus, et on tente de trouver quelque
@@ -243,6 +247,37 @@ namespace Epsitec.Common.Designer.Panels
 				if (to_be_focused != null)
 				{
 					to_be_focused.Focus ();
+				}
+			}
+		}
+		
+		protected void SavePropsVisibleViews()
+		{
+			foreach (Editors.AbstractPropEdit prop in this.props)
+			{
+				int[] infos = new int[prop.PropPanes.Length];
+				
+				for (int i = 0; i < prop.PropPanes.Length; i++)
+				{
+					infos[i] = prop.PropPanes[i].VisibleViewIndex;
+				}
+				
+				this.infos[prop.GetType ()] = infos;
+			}
+		}
+		
+		protected void RestorePropsVisibleViews()
+		{
+			foreach (Editors.AbstractPropEdit prop in this.props)
+			{
+				System.Array array = this.infos[prop.GetType ()] as System.Array;
+				
+				if (array != null)
+				{
+					for (int i = 0; i < prop.PropPanes.Length; i++)
+					{
+						prop.PropPanes[i].VisibleViewIndex = ((int[]) array)[i];
+					}
 				}
 			}
 		}
@@ -290,6 +325,7 @@ namespace Epsitec.Common.Designer.Panels
 		protected System.Type					type;
 		protected TabBook						book;
 		protected System.Collections.ArrayList	props;
+		protected System.Collections.Hashtable	infos;
 		protected Application					application;
 	}
 }

@@ -59,6 +59,20 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
+		public Common.UI.Widgets.PropPane[]		PropPanes
+		{
+			get
+			{
+				if (this.prop_panes != null)
+				{
+					Common.UI.Widgets.PropPane[] value = new Common.UI.Widgets.PropPane[this.prop_panes.Count];
+					this.prop_panes.CopyTo (value);
+					return value;
+				}
+				
+				return new Common.UI.Widgets.PropPane[0];
+			}
+		}
 		
 		public static System.Type[] FindMatching(System.Type type)
 		{

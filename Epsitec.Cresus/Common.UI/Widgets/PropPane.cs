@@ -68,6 +68,21 @@ namespace Epsitec.Common.UI.Widgets
 			}
 		}
 		
+		public int								VisibleViewIndex
+		{
+			get
+			{
+				return this.visible_view_index;
+			}
+			set
+			{
+				if (this.visible_view_index != value)
+				{
+					this.MakeViewVisible (value);
+				}
+			}
+		}
+		
 		public override double					DefaultWidth
 		{
 			get
