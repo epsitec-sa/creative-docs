@@ -127,6 +127,7 @@ namespace Epsitec.Common.Widgets
 			table.SelectedIndex     = 0;
 			table.EditionIndex      = 1;
 			table.EditionZoneHeight = 2;
+			table.TitleHeight       = 32;
 			table.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
 			table.Clicked              += new MessageEventHandler(this.HandleClicked);
 			table.DoubleClicked        += new MessageEventHandler(this.HandleDoubleClicked);
@@ -143,6 +144,12 @@ namespace Epsitec.Common.Widgets
 					table[y,x] = string.Format ("Val {0}.{1}", y, x);
 				}
 			}
+			
+			StaticText title = new StaticText (@"<font size=""160%"">ScrollArray test.</font> Double-click to start edition.");
+			
+			title.Parent = table;
+			title.Bounds = table.TitleBounds;
+			title.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			
 			window.Show();
 		}
@@ -168,6 +175,7 @@ namespace Epsitec.Common.Widgets
 			table.HitTestTable (e.Point, out row, out column);
 			System.Diagnostics.Debug.WriteLine ("Double-clicked : " + row + "," + column);
 			table.EditionIndex = row;
+			table.ShowEdition (ScrollArrayShowMode.Extremity);
 		}
 	}
 }

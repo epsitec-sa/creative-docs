@@ -161,7 +161,7 @@ namespace Epsitec.Common.Widgets
 						this.column_alignments[i] = Drawing.ContentAlignment.MiddleLeft;
 					}
 					
-					this.InvalidateContents ();
+					this.RefreshContents ();
 					this.UpdateTotalWidth ();
 					this.UpdateHeader ();
 					this.Update ();
@@ -201,7 +201,7 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 					
-					this.InvalidateContents ();
+					this.RefreshContents ();
 				}
 			}
 		}
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Widgets
 				if (value != this.selected_row)
 				{
 					this.selected_row = value;
-					this.InvalidateContents ();
+					this.RefreshContents ();
 					this.OnSelectedIndexChanged ();
 				}
 			}
@@ -281,8 +281,13 @@ namespace Epsitec.Common.Widgets
 				}
 				if (this.edition_row != value)
 				{
-					this.edition_row = value;
-					this.InvalidateContents ();
+					int top = this.FromVirtualRow (this.first_virtvis_row);
+					
+					this.edition_row       = value;
+					this.first_virtvis_row = this.ToVirtualRow (top);
+					
+					this.RefreshContents ();
+					this.ShowSelected (ScrollArrayShowMode.Extremity);
 				}
 			}
 		}
@@ -300,7 +305,11 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.edition_add_rows != value)
 				{
-					this.edition_add_rows = value;
+					int top = this.FromVirtualRow (this.first_virtvis_row);
+					
+					this.edition_add_rows  = value;
+					this.first_virtvis_row = this.ToVirtualRow (top);
+					this.RefreshContents ();
 				}
 			}
 		}
@@ -444,6 +453,51 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public bool HitTestTable(Drawing.Point pos)
+		{
+			return this.table_bounds.Contains (pos);
+		}
+		
+		public bool HitTestTable(Drawing.Point pos, out int row, out int column)
+		{
+			if (this.HitTestTable (pos))
+			{
+				double x = this.offset + pos.X - this.table_bounds.Left;
+				double y = this.Client.Height - pos.Y - this.frame_margins.Top - this.table_margins.Top;
+				
+				int line = (int) (y / this.row_height);
+				int top  = this.first_virtvis_row;
+				
+				if ((line < 0) ||
+					(line >= this.n_visible_rows) ||
+					(line + top >= this.VirtualRowCount))
+				{
+					goto invalid;
+				}
+				
+				double width = 0;
+				
+				for (int i = 0; i < this.column_widths.Length; i++)
+				{
+					width += this.column_widths[i];
+					
+					if (x < width)
+					{
+						row    = this.FromVirtualRow (line + top);
+						column = i;
+						
+						return true;
+					}
+				}
+			}
+			
+invalid:	row    = -1;
+			column = -1;
+			
+			return false;
+		}
+		
+		
 		public void SetColumnAlignment(int column, Drawing.ContentAlignment alignment)
 		{
 			System.Diagnostics.Debug.Assert (this.column_alignments != null);
@@ -535,6 +589,10 @@ namespace Epsitec.Common.Widgets
 			{
 				return;
 			}
+			if (this.is_mouse_down)
+			{
+				return;
+			}
 			
 			int row    = this.ToVirtualRow (this.selected_row);
 			int top    = this.first_virtvis_row;
@@ -567,8 +625,12 @@ namespace Epsitec.Common.Widgets
 					first = System.Math.Max (first - num + 1, 0);
 					break;
 			}
-
-			this.first_virtvis_row = first;
+			
+			if (this.first_virtvis_row != first)
+			{
+				this.first_virtvis_row = first;
+				this.RefreshContents ();
+			}
 		}
 
 		
@@ -760,14 +822,17 @@ namespace Epsitec.Common.Widgets
 			switch (message.Type)
 			{
 				case MessageType.MouseDown :
-					this.is_mouse_down = true;
-					this.ProcessMouseSelect (pos.Y);
+					if (this.HitTestTable (pos))
+					{
+						this.is_mouse_down = true;
+						this.ProcessMouseSelect (pos);
+					}
 					break;
 
 				case MessageType.MouseMove :
 					if (this.is_mouse_down)
 					{
-						this.ProcessMouseSelect (pos.Y);
+						this.ProcessMouseSelect (pos);
 					}
 
 					break;
@@ -775,8 +840,9 @@ namespace Epsitec.Common.Widgets
 				case MessageType.MouseUp :
 					if (this.is_mouse_down)
 					{
-						this.ProcessMouseSelect (pos.Y);
+						this.ProcessMouseSelect (pos);
 						this.is_mouse_down = false;
+						this.ShowSelected (ScrollArrayShowMode.Extremity);
 					}
 
 					break;
@@ -789,24 +855,13 @@ namespace Epsitec.Common.Widgets
 			message.Consumer = this;
 		}
 
-		protected virtual  void ProcessMouseSelect(double pos)
+		protected virtual  void ProcessMouseSelect(Drawing.Point pos)
 		{
-			pos = this.Client.Height - pos;
+			int row, column;
 			
-			int line = (int) ((pos - this.frame_margins.Top - this.table_margins.Top) / this.row_height);
-			int top  = this.first_virtvis_row;
-			
-			if ((line < 0) ||
-				(line >= this.n_visible_rows))
+			if (this.HitTestTable (pos, out row, out column))
 			{
-				return;
-			}
-			
-			line += top;
-			
-			if (line < this.max_rows)
-			{
-				this.SelectedIndex = this.FromVirtualRow (line);
+				this.SelectedIndex = row;
 			}
 		}
 
@@ -1370,8 +1425,10 @@ namespace Epsitec.Common.Widgets
 		protected Widget						header;
 		protected System.Collections.ArrayList	header_buttons		= new System.Collections.ArrayList ();
 		protected System.Collections.ArrayList	header_sliders		= new System.Collections.ArrayList ();
+		
 		protected VScroller						v_scroller;
 		protected HScroller						h_scroller;
+		
 		protected int							n_visible_rows;
 		protected int							n_fully_visible_rows;
 		protected int							first_virtvis_row;
