@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer.Panels
 	{
 		public WidgetSourcePalette()
 		{
-			this.size = new Drawing.Size (172+2*10, 125+2*10);
+			this.size = new Drawing.Size (172+2*10, 145+2*10);
 		}
 		
 		
@@ -44,17 +44,17 @@ namespace Epsitec.Common.Designer.Panels
 		{
 			System.Diagnostics.Debug.Assert (this.widget == parent);
 			
-			//	TODO: gérer l'orientation préférentielle passée en entrée, au cas où
-			//	on voudrait mettre la palette dans une barre vericale, etc.
-			
-			this.CreateDragSource (typeof (Button),          "Button",  10,  10, 86, 23+6);
-			this.CreateDragSource (typeof (CheckButton),     "Check",   10,  40, 66, 14+6);
-			this.CreateDragSource (typeof (RadioButton),     "Radio",   10,  60, 66, 14+6);
-			this.CreateDragSource (typeof (TextField),       "",        10,  80, 86, 21+6);
-			this.CreateDragSource (typeof (TextFieldUpDown), "10",      10, 108, 43, 21+6);
-			this.CreateDragSource (typeof (TextFieldSlider), "40",      53, 108, 43, 21+6);
-			this.CreateDragSource (typeof (TextFieldMulti),  "",        96,  80, 86, 55);
-			this.CreateDragSource (typeof (GroupBox),        "Group",   96,  10, 86, 69);
+			this.CreateDragSource (typeof (StaticText),      "Texte",		 10,  12, 33, 14+6);
+			this.CreateDragSource (typeof (StaticTextSmall), "Petit texte",  43,  14, 54, 12+6);
+			this.CreateDragSource (typeof (StaticTextLarge), "Grand texte",  97,  10, 78, 17+6);
+			this.CreateDragSource (typeof (Button),          "Bouton",		 10,  35, 86, 23+6);
+			this.CreateDragSource (typeof (CheckButton),     "Coche",		 10,  65, 66, 14+6);
+			this.CreateDragSource (typeof (RadioButton),     "Radio",		 10,  85, 66, 14+6);
+			this.CreateDragSource (typeof (TextField),       "",			 10, 105, 86, 21+6);
+			this.CreateDragSource (typeof (TextFieldUpDown), "10",			 10, 133, 43, 21+6);
+			this.CreateDragSource (typeof (TextFieldSlider), "40",			 53, 133, 43, 21+6);
+			this.CreateDragSource (typeof (TextFieldMulti),  "",			 96, 105, 86, 55);
+			this.CreateDragSource (typeof (GroupBox),        "Groupe",		 96,  35, 86, 69);
 			
 //			this.CreateDragSource (typeof (VScroller), x, ref y, 0, dy);
 //			this.CreateDragSource (typeof (TextFieldCombo),  x, ref y, dx2, 0);
