@@ -14,6 +14,8 @@ namespace Epsitec.Common.Widgets
 		Menu,
 		Close,
 		Dots,
+		Validate,
+		Cancel
 	}
 	
 	/// <summary>
