@@ -426,5 +426,25 @@ namespace Epsitec.Common.Pictogram.Data
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}
+
+		// Imprime l'objet.
+		public override void PrintGeometry(Printing.PrintPort port, IconContext iconContext, IconObjects iconObjects)
+		{
+			base.PrintGeometry(port, iconContext, iconObjects);
+
+			if ( this.TotalHandle < 2 )  return;
+
+			Drawing.Path path = this.PathBuild(iconContext);
+
+			if ( this.PropertyGradient(3).PaintColor(port, iconContext) )
+			{
+				port.PaintSurface(path);
+			}
+
+			if ( this.PropertyColor(2).PaintColor(port, iconContext) )
+			{
+				this.PropertyLine(1).PaintOutline(port, iconContext, path);
+			}
+		}
 	}
 }

@@ -1051,6 +1051,51 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+		// Imprime l'objet.
+		public override void PrintGeometry(Printing.PrintPort port, IconContext iconContext, IconObjects iconObjects)
+		{
+			base.PrintGeometry(port, iconContext, iconObjects);
+
+			int total = this.TotalHandlePrimary;
+			if ( total < 3 )  return;
+
+			Drawing.Path pathStart;  bool outlineStart, surfaceStart;
+			Drawing.Path pathEnd;    bool outlineEnd,   surfaceEnd;
+			Drawing.Path pathLine;
+			this.PathBuild(iconContext,
+						   out pathStart, out outlineStart, out surfaceStart,
+						   out pathEnd,   out outlineEnd,   out surfaceEnd,
+						   out pathLine);
+
+			if ( this.PropertyGradient(4).PaintColor(port, iconContext) )
+			{
+				port.PaintSurface(pathLine);
+			}
+
+			if ( this.PropertyColor(2).PaintColor(port, iconContext) )
+			{
+				if ( outlineStart )
+				{
+					this.PropertyLine(1).PaintOutline(port, iconContext, pathStart);
+				}
+				if ( surfaceStart )
+				{
+					port.PaintSurface(pathStart);
+				}
+
+				if ( outlineEnd )
+				{
+					this.PropertyLine(1).PaintOutline(port, iconContext, pathEnd);
+				}
+				if ( surfaceEnd )
+				{
+					port.PaintSurface(pathEnd);
+				}
+
+				this.PropertyLine(1).PaintOutline(port, iconContext, pathLine);
+			}
+		}
+
 
 		protected bool				mouseDown = false;
 		protected bool				lastPoint;
