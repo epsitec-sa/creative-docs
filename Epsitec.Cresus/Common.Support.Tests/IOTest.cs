@@ -30,7 +30,7 @@ namespace Epsitec.Common.Support
 			
 			for (int i = 0; i < buffer.Length; i++)
 			{
-				Assertion.AssertEquals (string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]), buffer[i], read[i]);
+				Assert.AreEqual (buffer[i], read[i], string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]));
 			}
 		}
 		
@@ -59,7 +59,7 @@ namespace Epsitec.Common.Support
 			
 			for (int i = 0; i < buffer.Length; i++)
 			{
-				Assertion.AssertEquals (string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]), buffer[i], read[i]);
+				Assert.AreEqual (buffer[i], read[i], string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]));
 			}
 		}
 		
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Support
 			
 			for (int i = 0; i < buffer.Length; i++)
 			{
-				Assertion.AssertEquals (string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]), buffer[i], read[i]);
+				Assert.AreEqual (buffer[i], read[i], string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]));
 			}
 		}
 		
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Support
 			
 			for (int i = 0; i < buffer.Length; i++)
 			{
-				Assertion.AssertEquals (string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]), buffer[i], read[i]);
+				Assert.AreEqual (buffer[i], read[i], string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]));
 			}
 		}
 		
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Support
 			
 			for (int i = 0; i < buffer.Length; i++)
 			{
-				Assertion.AssertEquals (string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]), buffer[i], read[i]);
+				Assert.AreEqual (buffer[i], read[i], string.Format ("offset {0}: {1} != {2}", i, (char) buffer[i], (char) read[i]));
 			}
 		}
 		
@@ -155,10 +155,10 @@ namespace Epsitec.Common.Support
 			IO.IChecksum checksum = IO.Checksum.CreateCrc32 ();
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
 			
-			Assertion.AssertEquals (0, checksum.Value);
+			Assert.AreEqual (0, checksum.Value);
 			
 			checksum.Reset ();
-			Assertion.AssertEquals (0, checksum.Value);
+			Assert.AreEqual (0, checksum.Value);
 			checksum.Update (buffer);
 			
 			long value_0 = checksum.Value;
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Support
 			buffer[20] = b10;
 			
 			checksum.Reset ();
-			Assertion.AssertEquals (0, checksum.Value);
+			Assert.AreEqual (0, checksum.Value);
 			checksum.Update (buffer);
 			
 			long value_1 = checksum.Value;
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Support
 			System.Console.Out.WriteLine ();
 			System.Console.Out.WriteLine ("CRC32 : {0:X}, after byte swap {1:X}", value_0, value_1);
 			
-			Assertion.Assert (value_0 != value_1);
+			Assert.IsTrue (value_0 != value_1);
 		}
 		
 		[Test] public void CheckChecksumAdler()
@@ -185,10 +185,10 @@ namespace Epsitec.Common.Support
 			IO.IChecksum checksum = IO.Checksum.CreateAdler32 ();
 			byte[] buffer = System.Text.Encoding.UTF8.GetBytes (IOTest.SampleText);
 			
-			Assertion.AssertEquals (1, checksum.Value);
+			Assert.AreEqual (1, checksum.Value);
 			
 			checksum.Reset ();
-			Assertion.AssertEquals (1, checksum.Value);
+			Assert.AreEqual (1, checksum.Value);
 			checksum.Update (buffer);
 			
 			long value_0 = checksum.Value;
@@ -199,14 +199,14 @@ namespace Epsitec.Common.Support
 			buffer[20] = b10;
 			
 			checksum.Reset ();
-			Assertion.AssertEquals (1, checksum.Value);
+			Assert.AreEqual (1, checksum.Value);
 			checksum.Update (buffer);
 			
 			long value_1 = checksum.Value;
 			
 			System.Console.Out.WriteLine ("Adler : {0:X}, after byte swap {1:X}", value_0, value_1);
 			
-			Assertion.Assert (value_0 != value_1);
+			Assert.IsTrue (value_0 != value_1);
 		}
 		
 		
