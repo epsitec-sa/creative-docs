@@ -191,7 +191,7 @@ namespace Epsitec.Common.Widgets
 			
 			Window window = new Window ();
 			window.ClientSize = new Size (200, 200);
-			window.MouseCursor = MouseCursor.FromImage (image, 4, 4);
+			window.MouseCursor = MouseCursor.FromImage (image, 4, 28);
 			window.Text = "CheckMouseCursor";
 			window.Show ();
 		}
