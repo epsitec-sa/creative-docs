@@ -57,6 +57,11 @@ namespace Epsitec.Common.Widgets
 
 		public const int GWL_EXSTYLE		= -20;
 		
+		public const int GCL_STYLE			= -26;
+		
+		public const int CS_VREDRAW			= 0x1;		
+		public const int CS_HREDRAW			= 0x2;		
+		
 		public const int WS_EX_LAYERED		= 0x080000;
 		
 		public const int ULW_COLORKEY		= 0x00000001;

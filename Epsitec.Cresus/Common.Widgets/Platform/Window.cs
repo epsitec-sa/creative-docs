@@ -27,6 +27,17 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			Window.DummyHandleEater (this.Handle);
 			
+			//	Fait en sorte que les changements de dimensions en [x] et en [y] provoquent un
+			//	redessin complet de la fenêtre, sinon Windows tente de recopier l'ancien contenu
+			//	en le décalant, ce qui donne des effets bizarres :
+			
+			int class_window_style = Win32Api.GetClassLong (this.Handle, Win32Const.GCL_STYLE);
+			
+			class_window_style |= Win32Const.CS_HREDRAW;
+			class_window_style |= Win32Const.CS_VREDRAW;
+			
+			Win32Api.SetClassLong (this.Handle, Win32Const.GCL_STYLE, class_window_style);
+			
 			this.ReallocatePixmap ();
 			
 			WindowList.Insert (this);

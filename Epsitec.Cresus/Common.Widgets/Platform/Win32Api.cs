@@ -10,6 +10,8 @@ namespace Epsitec.Common.Widgets
 	{
 		[DllImport ("User32.dll")]	internal extern static int SetWindowLong(System.IntPtr handle, int index, int value);
 		[DllImport ("User32.dll")]	internal extern static int GetWindowLong(System.IntPtr handle, int index);
+		[DllImport ("User32.dll")]	internal extern static int SetClassLong(System.IntPtr handle, int index, int value);
+		[DllImport ("User32.dll")]	internal extern static int GetClassLong(System.IntPtr handle, int index);
 		[DllImport ("User32.dll", SetLastError=true)]	internal extern static bool UpdateLayeredWindow(System.IntPtr handle, System.IntPtr dst_dc, ref Win32Api.Point dst, ref Win32Api.Size size, System.IntPtr src_dc, ref Win32Api.Point src, int color, ref Win32Api.BlendFunction blend, int flags);
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetDC(System.IntPtr handle);
 		[DllImport ("User32.dll")]	internal extern static int ReleaseDC(System.IntPtr handle, System.IntPtr dc);
