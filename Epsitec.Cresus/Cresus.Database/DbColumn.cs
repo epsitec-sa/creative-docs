@@ -382,7 +382,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (column != null)
 			{
-				column.Name          = this.Name;
+				column.Name          = this.CreateSqlName ();
 				column.IsNullAllowed = this.IsNullAllowed;
 				column.IsUnique      = this.IsUnique;
 				column.IsIndexed     = this.IsIndexed;
@@ -390,6 +390,12 @@ namespace Epsitec.Cresus.Database
 			
 			return column;
 		}
+		
+		public string CreateSqlName()
+		{
+			return DbSqlStandard.CreateSimpleSqlName (this.Name);
+		}
+		
 		
 		public SqlField CreateSqlField(ITypeConverter type_converter, int value)
 		{
@@ -414,6 +420,7 @@ namespace Epsitec.Cresus.Database
 			field.Alias = this.Name;
 			return field;
 		}
+		
 		
 		internal void SetType(DbSimpleType type)
 		{

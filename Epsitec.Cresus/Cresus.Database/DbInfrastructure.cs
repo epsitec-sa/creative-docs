@@ -275,12 +275,20 @@ namespace Epsitec.Cresus.Database
 		{
 			//	Enregistre une nouvelle table dans la base de données. Ceci va attribuer à
 			//	la table une clef DbKey et vérifier qu'il n'y a pas de collision avec une
-			//	éventuelle table déjà existante.
+			//	éventuelle table déjà existante. Cela va aussi attribuer des colonnes pour
+			//	la nouvelle table.
 			
 			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
 			{
 				try
 				{
+					//	Cherche si une table avec ce nom existe dans la base.
+					
+//					if (this.CountMatchingNamedRows (DbTable.TagTableDef, table.CreateSqlName ()))
+					{
+					}
+					
+					
 					int col_num = table.Columns.Count;
 					
 					long table_id  = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagTableDef].InternalKey, 1);
@@ -895,11 +903,11 @@ namespace Epsitec.Cresus.Database
 			fields.Add (table_def.Columns[DbColumn.TagId]		.CreateSqlField (this.type_converter, table.InternalKey.Id));
 			fields.Add (table_def.Columns[DbColumn.TagRevision]	.CreateSqlField (this.type_converter, table.InternalKey.Revision));
 			fields.Add (table_def.Columns[DbColumn.TagStatus]	.CreateSqlField (this.type_converter, table.InternalKey.RawStatus));
-			fields.Add (table_def.Columns[DbColumn.TagName]		.CreateSqlField (this.type_converter, table.Name));
+			fields.Add (table_def.Columns[DbColumn.TagName]		.CreateSqlField (this.type_converter, table.CreateSqlName ()));
 			fields.Add (table_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, "<table/>"));
 			fields.Add (table_def.Columns[DbColumn.TagNextId]	.CreateSqlField (this.type_converter, 0));
 			
-			this.sql_builder.InsertData (table_def.Name, fields);
+			this.sql_builder.InsertData (table_def.CreateSqlName (), fields);
 			
 			this.ExecuteSilent ();
 		}
@@ -932,12 +940,12 @@ namespace Epsitec.Cresus.Database
 			fields.Add (column_def.Columns[DbColumn.TagId]		.CreateSqlField (this.type_converter, column.InternalKey.Id));
 			fields.Add (column_def.Columns[DbColumn.TagRevision].CreateSqlField (this.type_converter, column.InternalKey.Revision));
 			fields.Add (column_def.Columns[DbColumn.TagStatus]	.CreateSqlField (this.type_converter, column.InternalKey.RawStatus));
-			fields.Add (column_def.Columns[DbColumn.TagName]	.CreateSqlField (this.type_converter, column.Name));
+			fields.Add (column_def.Columns[DbColumn.TagName]	.CreateSqlField (this.type_converter, column.CreateSqlName ()));
 			fields.Add (column_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, DbColumn.ConvertColumnToXml (column)));
 			fields.Add (column_def.Columns[DbColumn.TagRefTable].CreateSqlField (this.type_converter, table.InternalKey.Id));
 			fields.Add (column_def.Columns[DbColumn.TagRefType]	.CreateSqlField (this.type_converter, column.Type.InternalKey.Id));
 			
-			this.sql_builder.InsertData (column_def.Name, fields);
+			this.sql_builder.InsertData (column_def.CreateSqlName (), fields);
 			
 			this.ExecuteSilent ();
 		}
@@ -960,7 +968,7 @@ namespace Epsitec.Cresus.Database
 			fields.Add (ref_def.Columns[DbColumn.TagRefSource].CreateSqlField (this.type_converter, source.InternalKey.Id));
 			fields.Add (ref_def.Columns[DbColumn.TagRefTarget].CreateSqlField (this.type_converter, target.InternalKey.Id));
 			
-			this.sql_builder.InsertData (ref_def.Name, fields);
+			this.sql_builder.InsertData (ref_def.CreateSqlName (), fields);
 			
 			this.ExecuteSilent ();
 		}
