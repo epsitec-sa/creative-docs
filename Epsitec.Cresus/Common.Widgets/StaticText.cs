@@ -15,7 +15,6 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
-		
 		public StaticText(string text) : this()
 		{
 			this.Text = text;
@@ -50,7 +49,9 @@ namespace Epsitec.Common.Widgets
 		{
 			// Dessine le texte.
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			
+
+			if ( this.textLayout == null )  return;
+
 			if (this.Name == "A4")
 			{
 				System.Diagnostics.Debug.WriteLine ("A4 at " + this.Bounds);
@@ -61,17 +62,14 @@ namespace Epsitec.Common.Widgets
 			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 			
-			if (!this.BackColor.IsTransparent)
+			if ( !this.BackColor.IsTransparent )
 			{
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (this.BackColor);
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.BackColor);
 			}
 			
-			if (this.textLayout != null)
-			{
-				this.textLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
-				adorner.PaintGeneralTextLayout (graphics, pos, this.textLayout, state, dir);
-			}
+			this.textLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
+			adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state, dir);
 		}
 	}
 }
