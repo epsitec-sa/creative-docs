@@ -1436,22 +1436,67 @@ invalid:	row    = -1;
 		
 		protected virtual void UpdateGeometry()
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			this.is_dirty = false;
 			
-			this.is_dirty      = false;
-			this.row_height    = System.Math.Floor (this.DefaultFontHeight * 1.25 + 0.5);
-			this.frame_margins = adorner.GeometryArrayMargins;
+			this.UpdateRowHeight ();
+			this.UpdateTableBounds ();
+			this.UpdateVisibleRows ();
+			this.UpdateLayoutCache ();
+			this.UpdateHeaderGeometry ();
+			this.UpdateScrollerGeometry ();
+			this.UpdateScrollers ();
+		}
+		
+		protected virtual void UpdateColumnCount()
+		{
+			this.is_header_dirty   = true;
+			this.column_widths     = new double[this.max_columns];
+			this.column_alignments = new Drawing.ContentAlignment[this.max_columns];
+					
+			for (int i = 0; i < this.max_columns; i++)
+			{
+				this.column_widths[i] = this.def_width;
+			}
+					
+			for (int i = 0; i < this.max_columns; i++)
+			{
+				this.column_alignments[i] = Drawing.ContentAlignment.MiddleLeft;
+			}
+					
+			this.RefreshContents ();
+			this.UpdateTotalWidth ();
+			this.UpdateHeaderContents ();
+			this.Update ();
+		}
+		
+		protected virtual void UpdateRowHeight()
+		{
+			this.row_height = System.Math.Floor (this.DefaultFontHeight * 1.25 + 0.5);
+		}
+		
+		protected virtual void UpdateTableBounds()
+		{
+			this.frame_margins = Widgets.Adorner.Factory.Active.GeometryArrayMargins;
 			this.table_margins = new Drawing.Margins (0, this.v_scroller.Width - 1, this.row_height + this.title_height, this.h_scroller.Height - 1);
-			this.table_bounds  = this.Client.Bounds;
 			
-			this.table_bounds.Deflate (this.frame_margins);
-			this.table_bounds.Deflate (this.table_margins);
+			Drawing.Rectangle bounds = this.Client.Bounds;
 			
+			bounds.Deflate (this.frame_margins);
+			bounds.Deflate (this.table_margins);
+			
+			this.table_bounds = bounds;
+		}
+		
+		protected virtual void UpdateVisibleRows()
+		{
 			double v = this.table_bounds.Height / this.row_height;
 
 			this.n_visible_rows       = (int) System.Math.Ceiling (v);	//	compte la dernière ligne partielle
 			this.n_fully_visible_rows = (int) System.Math.Floor (v);	//	nb de lignes entières
-			
+		}
+		
+		protected virtual void UpdateLayoutCache()
+		{
 			//	Alloue le tableau des textes :
 			
 			int dx = System.Math.Max (this.n_visible_rows, 1);
@@ -1465,7 +1510,10 @@ invalid:	row    = -1;
 				this.cache_dy = dy;
 				this.cache_visible_rows = -1;
 			}
-			
+		}
+		
+		protected virtual void UpdateHeaderGeometry()
+		{
 			//	Positionne l'en-tête :
 			
 			Drawing.Rectangle rect = this.table_bounds;
@@ -1522,49 +1570,28 @@ invalid:	row    = -1;
 			}
 			
 			this.header.ResumeLayout ();
-			
+			this.is_header_dirty = false;
+		}
+		
+		protected virtual void UpdateScrollerGeometry()
+		{
 			//	Place l'ascenseur vertical :
 			
-			rect.Left   = this.table_bounds.Right-1;
-			rect.Right  = this.table_bounds.Right-1 + this.v_scroller.Width;
-			rect.Bottom = this.table_bounds.Bottom;
-			rect.Top    = this.table_bounds.Top;
+			Drawing.Rectangle rect;
+			
+			rect       = this.table_bounds;
+			rect.Left  = this.table_bounds.Right-1;
+			rect.Right = this.table_bounds.Right-1 + this.v_scroller.Width;
 			
 			this.v_scroller.Bounds = rect;
 			
 			//	Place l'ascenseur horizontal :
 			
-			rect.Left   = this.table_bounds.Left;
-			rect.Right  = this.table_bounds.Right;
+			rect        = this.table_bounds;
 			rect.Bottom = this.table_bounds.Bottom+1 - this.h_scroller.Height;
 			rect.Top    = this.table_bounds.Bottom+1;
 			
 			this.h_scroller.Bounds = rect;
-			
-			this.is_header_dirty = false;
-			this.UpdateScrollers ();
-		}
-		
-		protected virtual void UpdateColumnCount()
-		{
-			this.is_header_dirty   = true;
-			this.column_widths     = new double[this.max_columns];
-			this.column_alignments = new Drawing.ContentAlignment[this.max_columns];
-					
-			for (int i = 0; i < this.max_columns; i++)
-			{
-				this.column_widths[i] = this.def_width;
-			}
-					
-			for (int i = 0; i < this.max_columns; i++)
-			{
-				this.column_alignments[i] = Drawing.ContentAlignment.MiddleLeft;
-			}
-					
-			this.RefreshContents ();
-			this.UpdateTotalWidth ();
-			this.UpdateHeader ();
-			this.Update ();
 		}
 		
 		protected virtual void UpdateScrollers()
@@ -1686,7 +1713,7 @@ invalid:	row    = -1;
 			}
 		}
 		
-		protected virtual void UpdateHeader()
+		protected virtual void UpdateHeaderContents()
 		{
 			foreach (HeaderButton button in this.header_buttons)
 			{

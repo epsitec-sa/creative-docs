@@ -20,6 +20,36 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public EditArrayMode					EditArrayMode
+		{
+			get
+			{
+				return this.mode;
+			}
+			set
+			{
+				if (this.mode != value)
+				{
+					this.mode = value;
+					
+					if (this.mode == EditArrayMode.Search)
+					{
+						double height = System.Math.Floor (this.EditionZoneHeight * this.row_height + 2);
+						
+						this.InnerTopMargin = height;
+					}
+					else
+					{
+						this.InnerTopMargin = 0;
+					}
+					
+					this.RefreshContents ();
+					this.OnEditArrayModeChanged ();
+				}
+			}
+		}
+		
+		
 		public void StartEdition(int row, int column)
 		{
 			this.EditionIndex  = row;
@@ -33,8 +63,7 @@ namespace Epsitec.Common.Widgets
 				this.ShowEdition (ScrollArrayShowMode.Extremity);
 				this.Update ();
 				this.DispatchDummyMouseMoveEvent ();
-				this.edit_widgets[column].SetFocused (true);
-				this.edit_widgets[column].SelectAll ();
+				this.edit_line.FocusColumn (column);
 			}
 			
 			this.Invalidate ();
@@ -62,10 +91,7 @@ namespace Epsitec.Common.Widgets
 			{
 				string[] values = this.GetRowTexts (this.edit_active);
 				
-				for (int i = 0; i < this.max_columns; i++)
-				{
-					this.edit_widgets[i].Text = values[i];
-				}
+				this.edit_line.SetValues (values);
 				
 				if (finished)
 				{
@@ -79,12 +105,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.edit_active > -1)
 			{
-				string[] values = new string[this.edit_widgets.Length];
-				
-				for (int i = 0; i < this.edit_widgets.Length; i++)
-				{
-					values[i] = this.edit_widgets[i].Text;
-				}
+				string[] values = this.edit_line.GetValues ();
 				
 				this.SetRowTexts (this.edit_active, values);
 				
@@ -101,10 +122,9 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.DetachEditWidgets ();
+				this.edit_line.DetachEditWidgets ();
 				
 				this.max_columns  = 0;
-				this.edit_widgets = null;
 			}
 			
 			base.Dispose (disposing);
@@ -115,20 +135,9 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateColumnCount ();
 			
-			if (this.edit_widgets.Length != this.max_columns)
+			if (this.edit_line.ColumnCount != this.max_columns)
 			{
-				AbstractTextField[] widgets = new AbstractTextField[this.max_columns];
-				
-				int n = System.Math.Min (this.max_columns, this.edit_widgets.Length);
-				
-				for (int i = 0; i < n; i++)
-				{
-					widgets[i] = this.edit_widgets[i];
-				}
-				
-				this.edit_widgets = widgets;
-				
-				this.AttachEditWidgets ();
+				this.edit_line.ColumnCount = this.max_columns;
 			}
 		}
 		
@@ -143,7 +152,7 @@ namespace Epsitec.Common.Widgets
 			//	Si la géométrie a changé, on met à jour la position des divers widgets utilisés
 			//	pour l'édition, ainsi que la géométrie du conteneur EditWidget :
 			
-			Drawing.Rectangle bounds = this.GetRowBounds (this.EditionIndex);
+			Drawing.Rectangle bounds = this.GetEditBounds ();
 			
 			if ((this.edit_bounds != bounds) ||
 				(this.edit_offset != this.offset) ||
@@ -164,19 +173,19 @@ namespace Epsitec.Common.Widgets
 					
 					for (int i = 0; i < this.max_columns; i++)
 					{
-						Drawing.Rectangle cell = this.GetUnclippedCellBounds (this.EditionIndex, i);
+						Drawing.Rectangle cell = this.GetEditCellBounds (i);
 						
 						if (cell.IsValid)
 						{
 							cell.Offset (- this.edit_bounds.X, - this.edit_bounds.Y);
 							cell.Inflate (new Drawing.Margins (1, 0, 1, 0));
 							
-							this.edit_widgets[i].Bounds = cell;
-							this.edit_widgets[i].SetVisible (true);
+							this.edit_line[i].Bounds = cell;
+							this.edit_line[i].SetVisible (true);
 						}
 						else
 						{
-							this.edit_widgets[i].SetVisible (false);
+							this.edit_line[i].SetVisible (false);
 						}
 					}
 				}
@@ -188,43 +197,43 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void AttachEditWidgets()
+		protected virtual Drawing.Rectangle GetEditBounds()
 		{
-			for (int i = 0; i < this.edit_widgets.Length; i++)
+			switch (this.mode)
 			{
-				if (this.edit_widgets[i] == null)
-				{
-					if (this.edition_add_rows > 0)
-					{
-						this.edit_widgets[i] = new TextFieldMulti (this.edit_line);
-					}
-					else
-					{
-						this.edit_widgets[i] = new TextField (this.edit_line);
-						this.edit_widgets[i].TextFieldStyle = TextFieldStyle.Flat;
-					}
-					
-					this.edit_widgets[i].Index         = i;
-					this.edit_widgets[i].TabIndex      = i;
-					this.edit_widgets[i].TabNavigation = TabNavigationMode.ActivateOnTab;
-					this.edit_widgets[i].Focused      += new Support.EventHandler (this.HandleEditArrayFocused);
-				}
+				case EditArrayMode.Standard:
+					break;
+				case EditArrayMode.Edition:
+					return this.GetRowBounds (this.EditionIndex);
+				case EditArrayMode.Search:
+					return new Drawing.Rectangle (this.inner_bounds.Left, this.inner_bounds.Top, this.inner_bounds.Width, this.table_bounds.Height - this.inner_bounds.Height);
 			}
+			
+			return Drawing.Rectangle.Empty;
 		}
 		
-		protected virtual void DetachEditWidgets()
+		protected virtual Drawing.Rectangle GetEditCellBounds(int column)
 		{
-			for (int i = 0; i < this.edit_widgets.Length; i++)
+			double x1;
+			double x2;
+			
+			switch (this.mode)
 			{
-				if (this.edit_widgets[i] != null)
-				{
-					this.edit_widgets[i].Focused -= new Support.EventHandler (this.HandleEditArrayFocused);
-					this.edit_widgets[i].Parent   = null;
-					this.edit_widgets[i].Dispose ();
-					this.edit_widgets[i] = null;
-				}
+				case EditArrayMode.Standard:
+					break;
+				case EditArrayMode.Edition:
+					return this.GetUnclippedCellBounds (this.EditionIndex, column);
+				case EditArrayMode.Search:
+					if (this.GetUnclippedCellX (column, out x1, out x2))
+					{
+						return new Drawing.Rectangle (x1, this.inner_bounds.Top, x2 - x1, this.table_bounds.Height - this.inner_bounds.Height);
+					}
+					break;
 			}
+			
+			return Drawing.Rectangle.Empty;
 		}
+		
 
 		
 		protected override void OnEditionIndexChanged()
@@ -234,8 +243,19 @@ namespace Epsitec.Common.Widgets
 			if (this.EditionIndex != this.edit_active)
 			{
 				this.ValidateEdition (false);
-				this.edit_active = this.EditionIndex;
+				
+				this.edit_active   = this.EditionIndex;
+				this.EditArrayMode = (this.edit_active < 0 ? EditArrayMode.Standard : EditArrayMode.Edition);
+				
 				this.ReloadEdition ();
+			}
+		}
+		
+		protected virtual  void OnEditArrayModeChanged()
+		{
+			if (this.EditArrayModeChanged != null)
+			{
+				this.EditArrayModeChanged (this);
 			}
 		}
 		
@@ -257,17 +277,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private void HandleEditArrayFocused(object sender)
-		{
-			Widget widget = sender as Widget;
-			
-			int row    = this.EditionIndex;
-			int column = widget.Index;
-			
-			this.ShowCell (ScrollArrayShowMode.Extremity, row, column);
-		}
-		
-		
 		#region EditWidget class
 		/// <summary>
 		/// La classe EditWidget est utilisée comme conteneur pour les widgets en cours
@@ -284,30 +293,59 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
+			public AbstractTextField			this[int i]
+			{
+				get
+				{
+					return this.edit_widgets[i];
+				}
+			}
+			
+			
 			protected override bool ProcessTabChildrenExit(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 			{
-				int move = 0;
-				
-				switch (dir)
+				if (this.host.mode == EditArrayMode.Search)
 				{
-					case TabNavigationDir.Forwards:  move =  1; break;
-					case TabNavigationDir.Backwards: move = -1; break;
-				}
-				
-				if (this.host.MoveEditionToLine (move))
-				{
-					if (move > 0)
+					switch (dir)
 					{
-						focus = this.host.edit_widgets[0];
-					}
-					else
-					{
-						focus = this.host.edit_widgets[this.host.edit_widgets.Length-1];
+						case TabNavigationDir.Forwards:
+							focus = this.edit_widgets[0];
+							break;
+						
+						case TabNavigationDir.Backwards:
+							focus = this.edit_widgets[this.edit_widgets.Length-1];
+							break;
+						
+						default:
+							focus = null;
+							break;
 					}
 				}
 				else
 				{
-					focus = null;
+					int move = 0;
+					
+					switch (dir)
+					{
+						case TabNavigationDir.Forwards:  move =  1; break;
+						case TabNavigationDir.Backwards: move = -1; break;
+					}
+					
+					if (this.host.MoveEditionToLine (move))
+					{
+						if (move > 0)
+						{
+							focus = this.edit_widgets[0];
+						}
+						else
+						{
+							focus = this.edit_widgets[this.edit_widgets.Length-1];
+						}
+					}
+					else
+					{
+						focus = null;
+					}
 				}
 				
 				return true;
@@ -317,17 +355,32 @@ namespace Epsitec.Common.Widgets
 			{
 				if (message.Type == MessageType.KeyPress)
 				{
-					if (message.KeyCode == KeyCode.Escape)
+					if (this.host.mode == EditArrayMode.Search)
 					{
-						this.host.CancelEdition ();
-						message.Consumer = this;
-						return;
+						if (message.KeyCode == KeyCode.Escape)
+						{
+							this.host.EditArrayMode = EditArrayMode.Standard;
+							this.host.SetFocused (true);
+							message.Consumer = this;
+							return;
+						}
 					}
-					if (message.KeyCode == KeyCode.Return)
+					else
 					{
-						this.host.ValidateEdition ();
-						message.Consumer = this;
-						return;
+						if (message.KeyCode == KeyCode.Escape)
+						{
+							this.host.CancelEdition ();
+							this.host.SetFocused (true);
+							message.Consumer = this;
+							return;
+						}
+						if (message.KeyCode == KeyCode.Return)
+						{
+							this.host.ValidateEdition ();
+							this.host.SetFocused (true);
+							message.Consumer = this;
+							return;
+						}
 					}
 				}
 				
@@ -335,15 +388,140 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
+			public void FocusColumn(int column)
+			{
+				this.edit_widgets[column].SetFocused (true);
+				this.edit_widgets[column].SelectAll ();
+			}
+			
+			public void SetValues(string[] values)
+			{
+				for (int i = 0; i < this.edit_widgets.Length; i++)
+				{
+					this.edit_widgets[i].Text = values[i];
+				}
+			}
+			
+			public string[] GetValues()
+			{
+				string[] values = new string[this.edit_widgets.Length];
+				
+				for (int i = 0; i < this.edit_widgets.Length; i++)
+				{
+					values[i] = this.edit_widgets[i].Text;
+				}
+				
+				return values;
+			}
+			
+			public int							ColumnCount
+			{
+				get
+				{
+					return this.edit_widgets.Length;
+				}
+				set
+				{
+					AbstractTextField[] widgets = new AbstractTextField[value];
+					
+					int n = System.Math.Min (value, this.edit_widgets.Length);
+					
+					for (int i = 0; i < n; i++)
+					{
+						widgets[i] = this.edit_widgets[i];
+					}
+					
+					for (int i = n; i < this.edit_widgets.Length; i++)
+					{
+						this.Detach (this.edit_widgets[i]);
+					}
+					
+					this.edit_widgets = widgets;
+					
+					this.AttachEditWidgets ();
+				}
+			}
+			
+			public void AttachEditWidgets()
+			{
+				for (int i = 0; i < this.edit_widgets.Length; i++)
+				{
+					if (this.edit_widgets[i] == null)
+					{
+						if (this.host.edition_add_rows > 0)
+						{
+							this.edit_widgets[i] = new TextFieldMulti (this);
+						}
+						else
+						{
+							this.edit_widgets[i] = new TextField (this);
+							this.edit_widgets[i].TextFieldStyle = TextFieldStyle.Flat;
+						}
+						
+						this.Attach (this.edit_widgets[i], i);
+					}
+				}
+			}
+			
+			public void DetachEditWidgets()
+			{
+				this.ColumnCount = 0;
+			}
+			
+			
+			protected void Attach(AbstractTextField widget, int i)
+			{
+				widget.Index         = i;
+				widget.TabIndex      = i;
+				widget.TabNavigation = TabNavigationMode.ActivateOnTab;
+				widget.Focused      += new Support.EventHandler (this.HandleEditArrayFocused);
+			}
+			
+			protected void Detach(AbstractTextField widget)
+			{
+				if (widget != null)
+				{
+					widget.Focused -= new Support.EventHandler (this.HandleEditArrayFocused);
+					widget.Parent   = null;
+					widget.Dispose ();
+					widget = null;
+				}
+			}
+			
+			
+			private void HandleEditArrayFocused(object sender)
+			{
+				Widget widget = sender as Widget;
+				
+				int row    = this.host.EditionIndex;
+				int column = widget.Index;
+				
+				this.host.ShowCell (ScrollArrayShowMode.Extremity, row, column);
+			}
+			
+			
+			
 			protected EditArray					host;
+			protected AbstractTextField[]		edit_widgets = new AbstractTextField[0];
 		}
 		#endregion
 		
+		
+		public event Support.EventHandler		EditArrayModeChanged;
+		
 		protected int							edit_active  = -1;
-		protected AbstractTextField[]			edit_widgets = new AbstractTextField[0];
 		protected EditWidget					edit_line    = null;
 		protected Drawing.Rectangle				edit_bounds  = Drawing.Rectangle.Empty;
 		protected double						edit_offset  = 0;
 		protected double						edit_width   = 0;
+		
+		protected EditArrayMode					mode = EditArrayMode.Standard;
+	}
+	
+	public enum EditArrayMode
+	{
+		Standard,
+		Edition,
+		Search
 	}
 }
