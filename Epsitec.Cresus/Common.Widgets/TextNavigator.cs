@@ -11,7 +11,7 @@ namespace Epsitec.Common.Widgets
 		public TextNavigator(TextLayout textLayout)
 		{
 			this.textLayout = textLayout;
-			this.context = new TextLayout.Context();
+			this.context = new TextLayout.Context(textLayout);
 		}
 
 		
@@ -192,6 +192,7 @@ namespace Epsitec.Common.Widgets
 				case MessageType.KeyDown:
 					if ( this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed) )
 					{
+						//?System.Diagnostics.Debug.WriteLine(this.textLayout.Text);
 						message.Swallowed = true;
 						return true;
 					}
@@ -200,6 +201,7 @@ namespace Epsitec.Common.Widgets
 				case MessageType.KeyPress:
 					if ( this.ProcessKeyPress(message.KeyChar) )
 					{
+						//?System.Diagnostics.Debug.WriteLine(this.textLayout.Text);
 						return true;
 					}
 					break;

@@ -23,10 +23,10 @@ namespace Epsitec.Common.Widgets
 
 			this.fieldFontSize = new TextFieldUpDown(this);
 			this.fieldFontSize.AutoFocus = false;
-			this.fieldFontSize.MinValue =  0.1M;
+			this.fieldFontSize.MinValue =  1.0M;
 			this.fieldFontSize.MaxValue = 20.0M;
-			this.fieldFontSize.Step = 0.1M;
-			this.fieldFontSize.Resolution = 0.01M;
+			this.fieldFontSize.Step = 0.5M;
+			this.fieldFontSize.Resolution = 0.1M;
 			this.fieldFontSize.TextChanged += new Support.EventHandler(this.HandleFieldFontSizeChanged);
 
 			this.buttonBold = new IconButton(this);
@@ -50,6 +50,22 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
+		
+		protected override void Dispose(bool disposing)
+		{
+			if ( disposing )
+			{
+				this.DetachFromText();
+				this.fieldFontName.SelectedIndexChanged -= new Support.EventHandler(this.HandleFieldFontNameChanged);
+				this.fieldFontSize.TextChanged -= new Support.EventHandler(this.HandleFieldFontSizeChanged);
+				this.buttonBold.Clicked -= new MessageEventHandler(this.HandleButtonBoldClicked);
+				this.buttonItalic.Clicked -= new MessageEventHandler(this.HandleButtonItalicClicked);
+				this.buttonUnderlined.Clicked -= new MessageEventHandler(this.HandleButtonUnderlinedClicked);
+			}
+			
+			base.Dispose(disposing);
+		}
+
 		
 		public double							MinimalWidth
 		{
@@ -99,6 +115,11 @@ namespace Epsitec.Common.Widgets
 					{
 						this.textLayout.SetSelectionFontName(this.textNavigator.Context, this.fontName);
 					}
+
+					if ( this.textField != null )
+					{
+						this.textField.Invalidate();
+					}
 				}
 			}
 		}
@@ -120,6 +141,11 @@ namespace Epsitec.Common.Widgets
 					if ( this.textLayout != null && this.textNavigator != null )
 					{
 						this.textLayout.SetSelectionFontSize(this.textNavigator.Context, this.fontSize);
+					}
+
+					if ( this.textField != null )
+					{
+						this.textField.Invalidate();
 					}
 				}
 			}
@@ -144,6 +170,11 @@ namespace Epsitec.Common.Widgets
 					{
 						this.textLayout.SetSelectionBold(this.textNavigator.Context, this.bold);
 					}
+
+					if ( this.textField != null )
+					{
+						this.textField.Invalidate();
+					}
 				}
 			}
 		}
@@ -166,6 +197,11 @@ namespace Epsitec.Common.Widgets
 					if ( this.textLayout != null && this.textNavigator != null )
 					{
 						this.textLayout.SetSelectionItalic(this.textNavigator.Context, this.italic);
+					}
+
+					if ( this.textField != null )
+					{
+						this.textField.Invalidate();
 					}
 				}
 			}
@@ -190,16 +226,27 @@ namespace Epsitec.Common.Widgets
 					{
 						this.textLayout.SetSelectionUnderlined(this.textNavigator.Context, this.underlined);
 					}
+
+					if ( this.textField != null )
+					{
+						this.textField.Invalidate();
+					}
 				}
 			}
 		}
 
 
+		public void AttachToText(AbstractTextField text)
+		{
+			this.textField = text;
+			this.AttachToText(text.TextLayout, text.TextNavigator);
+		}
+
 		public void AttachToText(TextLayout textLayout, TextNavigator textNavigator)
 		{
 			// Lie la règle à un texte éditable.
 			if ( this.textLayout    == textLayout    &&
-				this.textNavigator == textNavigator )  return;
+				 this.textNavigator == textNavigator )  return;
 
 			if ( this.textNavigator != null )
 			{
@@ -212,56 +259,48 @@ namespace Epsitec.Common.Widgets
 			if ( this.textNavigator != null )
 			{
 				this.textNavigator.CursorChanged += new Epsitec.Common.Support.EventHandler(this.HandleCursorChanged);
+				this.HandleCursorChanged(null);
 			}
 		}
 		
 		public void DetachFromText()
 		{
+			this.textField = null;
 			this.AttachToText(null, null);
-		}
-
-		protected override void Dispose(bool disposing)
-		{
-			if ( disposing )
-			{
-				this.DetachFromText();
-				this.fieldFontName.SelectedIndexChanged -= new Support.EventHandler(this.HandleFieldFontNameChanged);
-				this.fieldFontSize.TextChanged -= new Support.EventHandler(this.HandleFieldFontSizeChanged);
-				this.buttonBold.Clicked -= new MessageEventHandler(this.HandleButtonBoldClicked);
-				this.buttonItalic.Clicked -= new MessageEventHandler(this.HandleButtonItalicClicked);
-				this.buttonUnderlined.Clicked -= new MessageEventHandler(this.HandleButtonUnderlinedClicked);
-			}
-			
-			base.Dispose(disposing);
 		}
 		
 		
 		private void HandleFieldFontNameChanged(object sender)
 		{
+			if ( this.silent )  return;
 			this.FontName = this.ComboSelectedName(this.fieldFontName);
 			this.OnChanged();
 		}
 
 		private void HandleFieldFontSizeChanged(object sender)
 		{
+			if ( this.silent )  return;
 			this.FontSize = (double) this.fieldFontSize.Value;
 			this.OnChanged();
 		}
 
 		private void HandleButtonBoldClicked(object sender, MessageEventArgs e)
 		{
+			if ( this.silent )  return;
 			this.Bold = !this.Bold;
 			this.OnChanged();
 		}
 
 		private void HandleButtonItalicClicked(object sender, MessageEventArgs e)
 		{
+			if ( this.silent )  return;
 			this.Italic = !this.Italic;
 			this.OnChanged();
 		}
 
 		private void HandleButtonUnderlinedClicked(object sender, MessageEventArgs e)
 		{
+			if ( this.silent )  return;
 			this.Underlined = !this.Underlined;
 			this.OnChanged();
 		}
@@ -314,11 +353,13 @@ namespace Epsitec.Common.Widgets
 
 		protected void UpdateButtons()
 		{
+			this.silent = true;
 			this.ComboSelectedName(this.fieldFontName, this.fontName);
 			this.fieldFontSize.Value = (decimal) this.fontSize;
 			this.ButtonActive(this.buttonBold,       this.bold      );
 			this.ButtonActive(this.buttonItalic,     this.italic    );
 			this.ButtonActive(this.buttonUnderlined, this.underlined);
+			this.silent = false;
 		}
 
 		protected void ButtonActive(Button button, bool active)
@@ -379,7 +420,8 @@ namespace Epsitec.Common.Widgets
 		
 		public event Support.EventHandler	Changed;
 
-		
+
+		protected AbstractTextField			textField;
 		protected TextLayout				textLayout;
 		protected TextNavigator				textNavigator;
 		protected string					fontName = "";
@@ -393,6 +435,7 @@ namespace Epsitec.Common.Widgets
 		protected IconButton				buttonBold;
 		protected IconButton				buttonItalic;
 		protected IconButton				buttonUnderlined;
+		protected bool						silent = false;
 
 		protected static readonly double	buttonMargin = 3;
 		protected static readonly double	buttonWidth = 20;
