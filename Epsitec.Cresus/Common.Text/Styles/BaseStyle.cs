@@ -32,7 +32,78 @@ namespace Epsitec.Common.Text.Styles
 			get;
 		}
 		
+		public int								CountUsers
+		{
+			get
+			{
+				return this.user_count;
+			}
+		}
 		
+		public int								CountLocalSettings
+		{
+			get
+			{
+				return this.local_settings == null ? 0 : this.local_settings.Length;
+			}
+		}
+
+		public int								CountExtraSettings
+		{
+			get
+			{
+				return this.extra_settings == null ? 0 : this.extra_settings.Length;
+			}
+		}
+		
+		internal void IncrementUserCount()
+		{
+			Debug.Assert.IsInBounds (this.user_count+1, 1, 1000000-1);
+			this.user_count++;
+		}
+		
+		internal void DecrementUserCount()
+		{
+			Debug.Assert.IsInBounds (this.user_count, 1, 1000000-1);
+			this.user_count--;
+		}
+		
+		
+		internal int FindSettings(Styles.LocalSettings settings)
+		{
+			if (this.local_settings != null)
+			{
+				for (int i = 0; i < this.local_settings.Length; i++)
+				{
+					if (Styles.LocalSettings.CompareEqual (this.local_settings[i], settings))
+					{
+						Debug.Assert.IsTrue (this.local_settings[i].SettingsIndex == i+1);
+						return i+1;
+					}
+				}
+			}
+			
+			return 0;
+		}
+		
+		internal int FindSettings(Styles.ExtraSettings settings)
+		{
+			if (this.extra_settings != null)
+			{
+				for (int i = 0; i < this.extra_settings.Length; i++)
+				{
+					if (Styles.ExtraSettings.CompareEqual (this.extra_settings[i], settings))
+					{
+						Debug.Assert.IsTrue (this.extra_settings[i].SettingsIndex == i+1);
+						return i+1;
+					}
+				}
+			}
+			
+			return 0;
+		}
+		
+        
 		
 		public Styles.LocalSettings GetLocalSettings(ulong code)
 		{
@@ -48,9 +119,9 @@ namespace Epsitec.Common.Text.Styles
 			
 			index--;
 			
-			Debug.Assert.IsTrue (this.local_settings != null);
+			Debug.Assert.IsNotNull (this.local_settings);
 			Debug.Assert.IsInBounds (index, 0, this.local_settings.Length-1);
-			Debug.Assert.IsTrue (this.local_settings[index] != null);
+			Debug.Assert.IsNotNull (this.local_settings[index]);
 			Debug.Assert.IsTrue (this.local_settings[index].SettingsIndex == index+1);
 			
 			return this.local_settings[index];
@@ -70,42 +141,58 @@ namespace Epsitec.Common.Text.Styles
 			
 			index--;
 			
-			Debug.Assert.IsTrue (this.extra_settings != null);
+			Debug.Assert.IsNotNull (this.extra_settings);
 			Debug.Assert.IsInBounds (index, 0, this.extra_settings.Length-1);
-			Debug.Assert.IsTrue (this.extra_settings[index] != null);
+			Debug.Assert.IsNotNull (this.extra_settings[index]);
 			Debug.Assert.IsTrue (this.extra_settings[index].SettingsIndex == index+1);
 			
 			return this.extra_settings[index];
 		}
 		
 		
-		public int Add(Styles.LocalSettings settings)
+		internal Styles.LocalSettings Attach(Styles.LocalSettings settings)
 		{
 			//	Ajoute des réglages locaux. S'il n'y a plus de place dans
-			//	ce style, retourne 0, sinon retourne l'index à utiliser.
+			//	ce style, retourne null, sinon retourne les réglages qui
+			//	ont été réellement utilisés.
 			
 			if (this.local_settings == null)
 			{
-				this.local_settings = new Styles.LocalSettings[1];
-				this.local_settings[0] = settings;
-				return 1;
+				this.local_settings = new Styles.LocalSettings[0];
+			}
+			else if (this.local_settings.Length == BaseStyle.MaxSettingsCount)
+			{
+				return null;
 			}
 			
-			if (this.local_settings.Length == BaseStyle.MaxSettingsCount)
-			{
-				return 0;
-			}
+			int index;
 			
-			for (int i = 0; i < this.local_settings.Length; i++)
+			//	Essaie de réutiliser des réglages identiques :
+			
+			for (index = 0; index < this.local_settings.Length; index++)
 			{
-				if (this.local_settings[i] == null)
+				if (Styles.LocalSettings.CompareEqual (this.local_settings[index], settings))
 				{
-					this.local_settings[i] = settings;
-					return i+1;
+					Debug.Assert.IsTrue (this.local_settings[index].SettingsIndex == index+1);
+					goto assign;
 				}
 			}
 			
-			int index = this.local_settings.Length;
+			//	Essaie de réutiliser un emplacement vide de la table des réglages :
+			
+			for (index = 0; index < this.local_settings.Length; index++)
+			{
+				if (this.local_settings[index] == null)
+				{
+					this.local_settings[index] = settings;
+					goto assign;
+				}
+			}
+			
+			//	Agrandit la table des réglages et ajoute le nouveau réglage à
+			//	la fin :
+			
+			Debug.Assert.IsTrue (index == this.local_settings.Length);
 			
 			Styles.LocalSettings[] old_settings = this.local_settings;
 			Styles.LocalSettings[] new_settings = new Styles.LocalSettings[index+1];
@@ -115,38 +202,59 @@ namespace Epsitec.Common.Text.Styles
 			new_settings[index] = settings;
 			this.local_settings = new_settings;
 			
-			settings.SettingsIndex = index+1;
+			//	Trouvé le bon enregistrement pour les réglages; il faut encore
+			//	mettre à jour le compteur d'utilisation :
 			
-			return index+1;
+		assign:
+			this.local_settings[index].SettingsIndex = index+1;
+			this.local_settings[index].IncrementUserCount ();
+			
+			return this.local_settings[index];
 		}
 		
-		public int Add(Styles.ExtraSettings settings)
+		internal Styles.ExtraSettings Attach(Styles.ExtraSettings settings)
 		{
 			//	Ajoute des réglages supplémentaires. S'il n'y a plus de place dans
-			//	ce style, retourne 0, sinon retourne l'index à utiliser.
+			//	ce style, retourne null, sinon retourne les réglages qui
+			//	ont été réellement utilisés.
 			
 			if (this.extra_settings == null)
 			{
-				this.extra_settings = new Styles.ExtraSettings[1];
-				this.extra_settings[0] = settings;
-				return 1;
+				this.extra_settings = new Styles.ExtraSettings[0];
+			}
+			else if (this.extra_settings.Length == BaseStyle.MaxSettingsCount)
+			{
+				return null;
 			}
 			
-			if (this.extra_settings.Length == BaseStyle.MaxSettingsCount)
-			{
-				return 0;
-			}
+			int index;
 			
-			for (int i = 0; i < this.extra_settings.Length; i++)
+			//	Essaie de réutiliser des réglages identiques :
+			
+			for (index = 0; index < this.extra_settings.Length; index++)
 			{
-				if (this.extra_settings[i] == null)
+				if (Styles.ExtraSettings.CompareEqual (this.extra_settings[index], settings))
 				{
-					this.extra_settings[i] = settings;
-					return i+1;
+					Debug.Assert.IsTrue (this.extra_settings[index].SettingsIndex == index+1);
+					goto assign;
 				}
 			}
 			
-			int index = this.extra_settings.Length;
+			//	Essaie de réutiliser un emplacement vide de la table des réglages :
+			
+			for (index = 0; index < this.extra_settings.Length; index++)
+			{
+				if (this.extra_settings[index] == null)
+				{
+					this.extra_settings[index] = settings;
+					goto assign;
+				}
+			}
+			
+			//	Agrandit la table des réglages et ajoute le nouveau réglage à
+			//	la fin :
+			
+			Debug.Assert.IsTrue (index == this.extra_settings.Length);
 			
 			Styles.ExtraSettings[] old_settings = this.extra_settings;
 			Styles.ExtraSettings[] new_settings = new Styles.ExtraSettings[index+1];
@@ -156,9 +264,14 @@ namespace Epsitec.Common.Text.Styles
 			new_settings[index] = settings;
 			this.extra_settings = new_settings;
 			
-			settings.SettingsIndex = index+1;
+			//	Trouvé le bon enregistrement pour les réglages; il faut encore
+			//	mettre à jour le compteur d'utilisation :
 			
-			return index+1;
+		assign:
+			this.extra_settings[index].SettingsIndex = index+1;
+			this.extra_settings[index].IncrementUserCount ();
+			
+			return this.extra_settings[index];
 		}
 		
 		
@@ -280,6 +393,7 @@ namespace Epsitec.Common.Text.Styles
 		
 		private int								style_index;
 		private int								contents_signature;
+		private int								user_count;
 		
 		private Styles.LocalSettings[]			local_settings;
 		private Styles.ExtraSettings[]			extra_settings;
