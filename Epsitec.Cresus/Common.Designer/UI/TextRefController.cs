@@ -205,6 +205,8 @@ namespace Epsitec.Common.Designer.UI
 		
 		private void HandleComboTextButtonClicked(object sender, MessageEventArgs e)
 		{
+			//	TODO: ...
+			
 			Application.Current.OpenStringPicker ();
 		}
 		
