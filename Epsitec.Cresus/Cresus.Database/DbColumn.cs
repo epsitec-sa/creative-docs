@@ -372,7 +372,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				if (this.type is DbTypeString)
+				if (this.Type is DbTypeString)
 				{
 					DbTypeString type = this.type as DbTypeString;
 					return type.Length;
@@ -382,6 +382,8 @@ namespace Epsitec.Cresus.Database
 					DbTypeEnum type = this.Type as DbTypeEnum;
 					return type.MaxNameLength;
 				}
+
+				// DD TODO: ajouter DbTypeByteArray
 				
 				return 1;
 			}
@@ -574,6 +576,7 @@ namespace Epsitec.Cresus.Database
 		public SqlField CreateSqlField(ITypeConverter type_converter, int value)
 		{
 			//	TODO: implémenter pour de vrai
+			//	DD:	c'est à dire ??
 			SqlField field = SqlField.CreateConstant (value, DbRawType.Int32);
 			field.Alias = this.Name;
 			return field;
@@ -582,6 +585,7 @@ namespace Epsitec.Cresus.Database
 		public SqlField CreateSqlField(ITypeConverter type_converter, long value)
 		{
 			//	TODO: implémenter pour de vrai
+			//	DD:	c'est à dire ??
 			SqlField field = SqlField.CreateConstant (value, DbRawType.Int64);
 			field.Alias = this.Name;
 			return field;
@@ -590,6 +594,7 @@ namespace Epsitec.Cresus.Database
 		public SqlField CreateSqlField(ITypeConverter type_converter, string value)
 		{
 			//	TODO: implémenter pour de vrai
+			//	DD:	c'est à dire ??
 			SqlField field = SqlField.CreateConstant (value, DbRawType.String);
 			field.Alias = this.Name;
 			return field;
@@ -651,6 +656,10 @@ namespace Epsitec.Cresus.Database
 				
 				case DbSimpleType.ByteArray:
 					throw new System.NotImplementedException ("ByteArray not implemented yet");
+
+//					this.type = new DbType (DbSimpleType.ByteArray);	
+					// DD TODO	il faudra créer une classe DbTypeByteArray
+					break;
 					
 				case DbSimpleType.Decimal:
 					this.type = new DbTypeNum (num_def);
