@@ -124,7 +124,7 @@ namespace Epsitec.Common.Converters
 					return false;
 				}
 				
-				switch (text.ToLower ().Trim ())
+				switch (text.ToLower (System.Globalization.CultureInfo.InvariantCulture))
 				{
 					case "false":
 					case "off":
