@@ -19,8 +19,8 @@ namespace Epsitec.Common.Designer.Editors
 		{
 			base.FillTabPage ();
 			
-			this.CreatePropPane ("Test 1", 30);
-			this.CreatePropPane ("Test 2", 30);
+			this.CreatePropPane ("Name", new UI.Adapters.StringAdapter ());
+			this.CreatePropPane ("Text", new UI.Adapters.StringAdapter ());
 		}
 	}
 }

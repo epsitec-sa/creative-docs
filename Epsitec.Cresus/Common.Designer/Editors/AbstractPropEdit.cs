@@ -100,15 +100,18 @@ namespace Epsitec.Common.Designer.Editors
 		}
 		
 		
-		protected Widget CreatePropPane(string title, double height)
+		protected Widget CreatePropPane(string property_name, UI.Adapters.IAdapter adapter)
 		{
-			Widget widget = new Ui.Widgets.PropPane ();
+			UI.Widgets.PropPane       pane   = new UI.Widgets.PropPane ();
+			UI.Binders.PropertyBinder binder = this.GetBinder (property_name, adapter);
 			
-			widget.Dock   = DockStyle.Top;
-			widget.Size   = new Drawing.Size (this.page.Width, height);
-			widget.Parent = this.page;
+			pane.Dock   = DockStyle.Top;
+			pane.Width  = this.page.Width;
+			pane.Parent = this.page;
 			
-			return widget;
+			pane.Attach (adapter);
+			
+			return pane;
 		}
 		
 		protected virtual void FillTabPage()
@@ -117,6 +120,31 @@ namespace Epsitec.Common.Designer.Editors
 		
 		protected virtual void LoadContents()
 		{
+			foreach (UI.Binders.PropertyBinder binder in this.binders.Values)
+			{
+				binder.Source = this.active;
+			}
+		}
+		
+		protected UI.Binders.PropertyBinder GetBinder(string name, UI.Adapters.IAdapter adapter)
+		{
+			if (this.binders == null)
+			{
+				this.binders = new System.Collections.Hashtable ();
+			}
+			
+			UI.Binders.PropertyBinder binder = this.binders[name] as UI.Binders.PropertyBinder;
+			
+			if (binder == null)
+			{
+				binder = new UI.Binders.PropertyBinder (name);
+				this.binders[name] = binder;
+			}
+			
+			binder.Adapter = adapter;
+			adapter.Binder = binder;
+			
+			return binder;
 		}
 		
 		
@@ -151,9 +179,12 @@ namespace Epsitec.Common.Designer.Editors
 		}
 		
 		
+		
 		protected System.Object					active;
 		protected System.Type					type;
 		protected int							rank;
 		protected TabPage						page;
+		
+		protected System.Collections.Hashtable	binders;
 	}
 }
