@@ -1,5 +1,5 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Cache
 {
@@ -31,6 +31,12 @@ namespace Epsitec.Cresus.Database.Cache
 					this.cache[key] = value;
 				}
 			}
+		}
+		
+		
+		public void ClearCache()
+		{
+			this.cache.Clear ();
 		}
 		
 		

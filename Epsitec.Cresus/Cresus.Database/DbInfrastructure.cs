@@ -110,6 +110,13 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public bool								IsInGlobalLock
+		{
+			get
+			{
+				return this.global_lock.IsWriterLockHeld;
+			}
+		}
 		
 		public Settings.Globals					GlobalSettings
 		{
@@ -379,7 +386,7 @@ namespace Epsitec.Cresus.Database
 			
 			DbTransaction transaction = null;
 			
-			this.LockDatabase (db_abstraction);
+			this.DatabaseLock (db_abstraction);
 			
 			try
 			{
@@ -399,7 +406,7 @@ namespace Epsitec.Cresus.Database
 			}
 			catch
 			{
-				this.UnlockDatabase (db_abstraction);
+				this.DatabaseUnlock (db_abstraction);
 				throw;
 			}
 			
@@ -558,6 +565,18 @@ namespace Epsitec.Cresus.Database
 			return tables;
 		}
 		
+		
+		public void ClearCaches()
+		{
+			lock (this.cache_db_tables)
+			{
+				this.cache_db_tables.ClearCache ();
+			}
+			lock (this.cache_db_types)
+			{
+				this.cache_db_types.ClearCache ();
+			}
+		}
 		
 		public DbColumn   CreateColumn(string column_name, DbType type)
 		{
@@ -939,6 +958,35 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public void GlobalLock()
+		{
+			this.global_lock.AcquireWriterLock (this.lock_timeout);
+		}
+		
+		public void GlobalUnlock()
+		{
+			this.global_lock.ReleaseWriterLock ();
+		}
+		
+		
+		internal void DatabaseLock(IDbAbstraction database)
+		{
+			this.global_lock.AcquireReaderLock (this.lock_timeout);
+			
+			if (System.Threading.Monitor.TryEnter (database, this.lock_timeout) == false)
+			{
+				this.global_lock.ReleaseReaderLock ();
+				throw new Exceptions.DeadLockException (this.db_access, "Cannot lock database.");
+			}
+		}
+		
+		internal void DatabaseUnlock(IDbAbstraction database)
+		{
+			this.global_lock.ReleaseReaderLock ();
+			System.Threading.Monitor.Exit (database);
+		}
+		
+		
 		internal void NotifyBeginTransaction(DbTransaction transaction)
 		{
 			IDbAbstraction db_abstraction = transaction.Database;
@@ -958,7 +1006,7 @@ namespace Epsitec.Cresus.Database
 		{
 			IDbAbstraction db_abstraction = transaction.Database;
 			
-			this.UnlockDatabase (db_abstraction);
+			this.DatabaseUnlock (db_abstraction);
 			
 			lock (this.live_transactions)
 			{
@@ -975,19 +1023,6 @@ namespace Epsitec.Cresus.Database
 					this.ReleaseConnection (db_abstraction);
 				}
 			}
-		}
-		
-		internal void LockDatabase(IDbAbstraction database)
-		{
-			if (System.Threading.Monitor.TryEnter (database, this.lock_timeout) == false)
-			{
-				throw new Exceptions.DeadLockException (this.db_access, "Cannot lock database.");
-			}
-		}
-		
-		internal void UnlockDatabase(IDbAbstraction database)
-		{
-			System.Threading.Monitor.Exit (database);
 		}
 		
 		
@@ -2014,11 +2049,16 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
+				if (this.global_lock != null)
+				{
+					this.global_lock.ReleaseLock ();
+					this.global_lock = null;
+				}
+				
 				if (this.logger != null)
 				{
 					this.logger.Detach ();
@@ -2474,5 +2514,6 @@ namespace Epsitec.Cresus.Database
 		protected System.Collections.Hashtable	live_transactions;
 		protected System.Collections.ArrayList	release_requested;
 		protected int							lock_timeout = 15000;
+		System.Threading.ReaderWriterLock		global_lock = new System.Threading.ReaderWriterLock ();
 	}
 }

@@ -46,6 +46,29 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public DbKey(object[] data_row)
+		{
+			object value_id       = data_row[0];
+			object value_status   = data_row[1];
+			
+			long id;
+			
+			if ((Common.Types.Converter.Convert (value_id, out id)) &&
+				(id >= 0))
+			{
+				short status;
+				
+				Common.Types.Converter.Convert (value_status, out status);
+				
+				this.id         = id;
+				this.int_status = status;
+			}
+			else
+			{
+				throw new System.ArgumentException ("Row does not contain valid key.", "data_row");
+			}
+		}
+		
 		
 		public DbId								Id
 		{

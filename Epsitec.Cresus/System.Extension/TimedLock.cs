@@ -17,7 +17,7 @@ namespace System
 			return TimedLock.Lock (o, System.TimeSpan.FromSeconds (10));
 		}
 		
-		public static System.IDisposable Lock (object o, System.TimeSpan timeout)
+		public static System.IDisposable Lock(object o, System.TimeSpan timeout)
 		{
 			TimedLock tl = new TimedLock (o);
 			
@@ -34,7 +34,7 @@ namespace System
 			this.target = o;
 		}
 		
-		public void Dispose ()
+		public void Dispose()
 		{
 			System.Threading.Monitor.Exit (this.target);
 			

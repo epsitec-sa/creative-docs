@@ -243,6 +243,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
+		
 		[Test] public void Check05ServerEngine()
 		{
 			Remoting.IReplicationService service = Services.Engine.GetRemoteReplicationService ("localhost", 1234);
@@ -285,6 +286,45 @@ namespace Epsitec.Cresus.Database
 						
 						System.Console.WriteLine ("  {0}", message.ToString ());
 					}
+				}
+			}
+		}
+		
+		[Test] public void Check06ClientEngine()
+		{
+			Remoting.IReplicationService service = Services.Engine.GetRemoteReplicationService ("localhost", 1234);
+			
+			Assert.IsNotNull (service);
+			
+			byte[] buffer;
+			
+			DbId from_id = DbId.CreateId (1, 1);
+			DbId to_id   = DbId.CreateId (999999, 1);
+			
+			System.Diagnostics.Debug.WriteLine ("Asking server for replication data.");
+			service.AcceptReplication (new Remoting.ClientIdentity ("test", 1000), from_id, to_id, out buffer);
+			System.Diagnostics.Debug.WriteLine ("Server reply received.");
+			
+			System.Console.WriteLine ("Replication produced {0} bytes of data.", (buffer == null ? 0 : buffer.Length));
+			
+			if (buffer != null)
+			{
+				try
+				{
+					System.IO.File.Delete (@"C:\Program Files\firebird15\Data\Epsitec\REPLITEST.FIREBIRD");
+				}
+				catch (System.IO.IOException ex)
+				{
+					System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}\nWaiting for 5 seconds...", ex.ToString ());
+				}
+				
+				using (DbInfrastructure infrastructure = new DbInfrastructure ())
+				{
+					DbAccess db_access = DbInfrastructure.CreateDbAccess ("replitest");
+					
+					infrastructure.CreateDatabase (db_access);
+					Replication.ClientEngine client = new Replication.ClientEngine (infrastructure);
+					client.ApplyChanges (infrastructure.DefaultDbAbstraction, buffer);
 				}
 			}
 		}
