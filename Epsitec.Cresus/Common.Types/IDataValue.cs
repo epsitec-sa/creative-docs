@@ -10,6 +10,9 @@ namespace Epsitec.Common.Types
 	{
 		INamedType		DataType		{ get; }
 		IDataConstraint	DataConstraint	{ get; }
+		bool			IsValueValid	{ get; }
+		
+		event Support.EventHandler	Changed;
 		
 		object ReadValue();
 		void WriteValue(object value);

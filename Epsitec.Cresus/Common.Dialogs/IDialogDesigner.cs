@@ -14,6 +14,7 @@ namespace Epsitec.Common.Dialogs
 		Types.IDataGraph			DialogData			{ get; set; }
 		Support.CommandDispatcher	DialogCommands		{ get; set; }
 		string						ResourceName		{ get; set; }
+		Script.IScriptSource		DialogScript		{ get; set; }
 		
 		void StartDesign();
 		

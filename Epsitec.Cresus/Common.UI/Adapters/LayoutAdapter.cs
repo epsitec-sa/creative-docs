@@ -28,9 +28,11 @@ namespace Epsitec.Common.UI.Adapters
 			}
 			set
 			{
-				if (this.value != value)
+				if ((this.value != value) ||
+					(this.validity == false))
 				{
-					this.value = value;
+					this.value    = value;
+					this.Validity = true;
 					this.OnValueChanged ();
 				}
 			}

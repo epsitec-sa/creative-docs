@@ -238,9 +238,10 @@ namespace Epsitec.Common.Dialogs
 		
 		protected virtual void AttachDesigner()
 		{
-			this.designer.DialogData   = this.data;
-			this.designer.DialogWindow = this.window;
-			this.designer.ResourceName = this.full_name;
+			this.designer.DialogData     = this.data;
+			this.designer.DialogWindow   = this.window;
+			this.designer.ResourceName   = this.full_name;
+			this.designer.DialogCommands = this.dispatcher;
 			
 			this.designer.Disposed += new Support.EventHandler (this.HandleDesignerDisposed);
 		}
