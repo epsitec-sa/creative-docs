@@ -69,18 +69,19 @@ namespace Epsitec.Common.Widgets
 		{
 			base.RestoreFromBundle (bundler, bundle);
 			
-			System.Collections.IList item_list = bundle.GetFieldBundleList ("items");
+			Support.ResourceBundle.FieldList item_list = bundle["items"].AsList;
 			
 			if (item_list != null)
 			{
 				//	Notre bundle contient une liste de sous-bundles contenant les descriptions des
 				//	items composant le menu.
 				
-				foreach (Support.ResourceBundle item_bundle in item_list)
+				foreach (Support.ResourceBundle.Field field in item_list)
 				{
-					Widget item = bundler.CreateFromBundle (item_bundle) as Widget;
+					Support.ResourceBundle item_bundle = field.AsBundle;
+					Widget                 item_widget = bundler.CreateFromBundle (item_bundle) as Widget;
 					
-					this.Items.Add (item);
+					this.Items.Add (item_widget);
 				}
 			}
 		}
