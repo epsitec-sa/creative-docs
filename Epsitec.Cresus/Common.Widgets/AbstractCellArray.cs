@@ -1313,7 +1313,7 @@ namespace Epsitec.Common.Widgets
 		public override Drawing.Rectangle GetShapeBounds()
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Inflate(adorner.GeometryListShapeBounds);
 			return rect;
 		}
@@ -1620,7 +1620,7 @@ namespace Epsitec.Common.Widgets
 			this.Update();  // mis à jour si nécessaire
 
 			// Dessine le cadre et le fond du tableau.
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect = this.Client.Bounds;
 			WidgetState state = this.PaintState;
 			adorner.PaintArrayBackground(graphics, rect, state);
 
@@ -1696,7 +1696,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			// Dessine le cadre du tableau.
-			rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			rect = this.Client.Bounds;
 			adorner.PaintArrayForeground(graphics, rect, state);
 		}
 		
