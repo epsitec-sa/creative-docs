@@ -732,6 +732,7 @@ namespace Epsitec.Cresus.Database
 				data_row[4] = new System.DateTime (1885, 10, 7);
 				data_row.EndEdit ();
 				
+#if true
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
 					command.UpdateRealIds (transaction);
@@ -746,6 +747,7 @@ namespace Epsitec.Cresus.Database
 				{
 					orchestrator.ExecutionQueue.Enqueue (factory.CreateGroup ());
 				}
+#endif
 				
 				System.Diagnostics.Debug.WriteLine ("Waiting for requests to be executed.");
 				

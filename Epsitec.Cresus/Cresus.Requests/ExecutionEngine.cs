@@ -60,9 +60,9 @@ namespace Epsitec.Cresus.Requests
 				this.DefineCurrentTransaction (transaction);
 				
 				request.Execute (this);
-				System.Threading.Thread.Sleep (100);
 				
 #if false
+				System.Threading.Thread.Sleep (100);
 				DbRichCommand.DebugDumpCommand (this.CurrentSqlBuilder.Command);
 #endif
 				

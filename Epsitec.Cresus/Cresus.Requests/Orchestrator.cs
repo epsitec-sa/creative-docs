@@ -534,6 +534,27 @@ namespace Epsitec.Cresus.Requests
 				
 				System.Diagnostics.Debug.Assert (this.execution_queue.HasConflictingOnServer == false);
 			}
+			
+			if (this.execution_queue.HasExecutedByServer)
+			{
+				//	La queue locale contient des requêtes marquées comme ayant été
+				//	exécutées sur le serveur.
+				//	
+				//	Ces requêtes n'ont plus aucun intérêt maintenant, car elles ont
+				//	déjà été supprimées de la queue du serveur à ce point.
+				
+				System.Diagnostics.Debug.WriteLine ("Removing ExecutedByServer local states.");
+				
+				foreach (System.Data.DataRow row in rows)
+				{
+					if (this.execution_queue.GetRequestExecutionState (row) == ExecutionState.ExecutedByServer)
+					{
+						this.execution_queue.RemoveRequest (row);
+					}
+				}
+				
+				System.Diagnostics.Debug.Assert (this.execution_queue.HasExecutedByServer == false);
+			}
 		}
 		
 		protected void ProcessShutdown()

@@ -1063,20 +1063,24 @@ namespace Epsitec.Cresus.Database
 		
 		public void ExecuteSilent(DbTransaction transaction)
 		{
-			this.ExecuteSilent (transaction, transaction.SqlBuilder);
-		}
-		
-		public void ExecuteSilent(DbTransaction transaction, ISqlBuilder builder)
-		{
 			if (transaction == null)
 			{
 				using (transaction = this.BeginTransaction ())
 				{
-					this.ExecuteSilent (transaction, builder);
+					this.ExecuteSilent (transaction, transaction.SqlBuilder);
 					transaction.Commit ();
-					return;
 				}
 			}
+			else
+			{
+				this.ExecuteSilent (transaction, transaction.SqlBuilder);
+			}
+		}
+		
+		public void ExecuteSilent(DbTransaction transaction, ISqlBuilder builder)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			System.Diagnostics.Debug.Assert (builder != null);
 			
 			int count = builder.CommandCount;
 			
@@ -1093,20 +1097,25 @@ namespace Epsitec.Cresus.Database
 		
 		public object ExecuteScalar(DbTransaction transaction)
 		{
-			return this.ExecuteScalar (transaction, transaction.SqlBuilder);
-		}
-		
-		public object ExecuteScalar(DbTransaction transaction, ISqlBuilder builder)
-		{
 			if (transaction == null)
 			{
 				using (transaction = this.BeginTransaction ())
 				{
-					object value = this.ExecuteScalar (transaction);
+					object value = this.ExecuteScalar (transaction, transaction.SqlBuilder);
 					transaction.Commit ();
 					return value;
 				}
 			}
+			else
+			{
+				return this.ExecuteScalar (transaction, transaction.SqlBuilder);
+			}
+		}
+		
+		public object ExecuteScalar(DbTransaction transaction, ISqlBuilder builder)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			System.Diagnostics.Debug.Assert (builder != null);
 			
 			int count = builder.CommandCount;
 			
@@ -1127,20 +1136,25 @@ namespace Epsitec.Cresus.Database
 		
 		public object ExecuteNonQuery(DbTransaction transaction)
 		{
-			return this.ExecuteNonQuery (transaction, transaction.SqlBuilder);
-		}
-		
-		public object ExecuteNonQuery(DbTransaction transaction, ISqlBuilder builder)
-		{
 			if (transaction == null)
 			{
 				using (transaction = this.BeginTransaction ())
 				{
-					object value = this.ExecuteNonQuery (transaction);
+					object value = this.ExecuteNonQuery (transaction, transaction.SqlBuilder);
 					transaction.Commit ();
 					return value;
 				}
 			}
+			else
+			{
+				return this.ExecuteNonQuery (transaction, transaction.SqlBuilder);
+			}
+		}
+		
+		public object ExecuteNonQuery(DbTransaction transaction, ISqlBuilder builder)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			System.Diagnostics.Debug.Assert (builder != null);
 			
 			int count = builder.CommandCount;
 			
@@ -1161,20 +1175,25 @@ namespace Epsitec.Cresus.Database
 		
 		public System.Data.DataSet ExecuteRetData(DbTransaction transaction)
 		{
-			return this.ExecuteRetData (transaction, transaction.SqlBuilder);
-		}
-		
-		public System.Data.DataSet ExecuteRetData(DbTransaction transaction, ISqlBuilder builder)
-		{
 			if (transaction == null)
 			{
 				using (transaction = this.BeginTransaction ())
 				{
-					System.Data.DataSet value = this.ExecuteRetData (transaction);
+					System.Data.DataSet value = this.ExecuteRetData (transaction, transaction.SqlBuilder);
 					transaction.Commit ();
 					return value;
 				}
 			}
+			else
+			{
+				return this.ExecuteRetData (transaction, transaction.SqlBuilder);
+			}
+		}
+		
+		public System.Data.DataSet ExecuteRetData(DbTransaction transaction, ISqlBuilder builder)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			System.Diagnostics.Debug.Assert (builder != null);
 			
 			int count = builder.CommandCount;
 			
@@ -1195,20 +1214,25 @@ namespace Epsitec.Cresus.Database
 		
 		public System.Data.DataTable ExecuteSqlSelect(DbTransaction transaction, SqlSelect query, int min_rows)
 		{
-			return this.ExecuteSqlSelect (transaction, transaction.SqlBuilder, query, min_rows);
-		}
-		
-		public System.Data.DataTable ExecuteSqlSelect(DbTransaction transaction, ISqlBuilder builder, SqlSelect query, int min_rows)
-		{
 			if (transaction == null)
 			{
 				using (transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
 				{
-					System.Data.DataTable value = this.ExecuteSqlSelect (transaction, query, min_rows);
+					System.Data.DataTable value = this.ExecuteSqlSelect (transaction, transaction.SqlBuilder, query, min_rows);
 					transaction.Commit ();
 					return value;
 				}
 			}
+			else
+			{
+				return this.ExecuteSqlSelect (transaction, transaction.SqlBuilder, query, min_rows);
+			}
+		}
+		
+		public System.Data.DataTable ExecuteSqlSelect(DbTransaction transaction, ISqlBuilder builder, SqlSelect query, int min_rows)
+		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			System.Diagnostics.Debug.Assert (builder != null);
 			
 			builder.SelectData (query);
 			

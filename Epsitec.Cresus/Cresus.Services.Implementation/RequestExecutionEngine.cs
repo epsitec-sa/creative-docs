@@ -99,6 +99,13 @@ namespace Epsitec.Cresus.Services
 				System.Collections.ArrayList list = new System.Collections.ArrayList ();
 				System.Data.DataRow[]        rows = this.execution_queue.DateTimeSortedRows;
 				
+				System.Diagnostics.Debug.WriteLine ("RemoveRequestStates: ");
+				
+				for (int i = 0; i < states.Length; i++)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("  {0}: {1} in state {2}", i, states[i].Identifier, (Requests.ExecutionState)states[i].State));
+				}
+				
 				for (int i = 0; i < rows.Length; i++)
 				{
 					Database.DbKey row_key   = new Database.DbKey (rows[i]);
