@@ -56,16 +56,6 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Détecte si l'objet est dans un rectangle.
-		public override bool Detect(Drawing.Rectangle rect, bool all)
-		{
-			if ( this.isHide )  return false;
-			Drawing.Rectangle fullBbox = this.BoundingBox;
-			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
-			fullBbox.Inflate(width, width);
-			return rect.Contains(fullBbox);
-		}
-
 
 		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
@@ -77,6 +67,7 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 
 			if ( rank == 0 )  // centre ?
 			{
@@ -104,6 +95,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public override void CreateMouseMove(Drawing.Point pos, IconContext iconContext)
 		{
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			this.dirtyBbox = true;
 		}
@@ -112,6 +104,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public override void CreateMouseUp(Drawing.Point pos, IconContext iconContext)
 		{
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			iconContext.ConstrainDelStarting();
 		}
@@ -164,7 +157,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
 		{
-			if ( this.isHide )  return;
+			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext);
 
 			if ( this.TotalHandle != 2 )  return;

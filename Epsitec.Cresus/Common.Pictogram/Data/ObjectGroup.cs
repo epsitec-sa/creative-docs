@@ -55,6 +55,7 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 
 			GlobalModifierData initial = new GlobalModifierData();
 			GlobalModifierData final = new GlobalModifierData();
@@ -232,7 +233,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
 		{
-			if ( this.isHide )  return;
+			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext);
 
 			if ( this.TotalHandle < 2 )  return;
@@ -244,11 +245,14 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Point p4 = this.Handle(3).Position;
 			Drawing.Path path = this.PathCorners(p1, p2, p3, p4);
 
-			Drawing.Color color = Drawing.Color.FromBrightness(0.7);
-			if ( this.IsSelected() )  color = Drawing.Color.FromRGB(1,0,0);
+			if ( !iconContext.PreviewActive )
+			{
+				Drawing.Color color = Drawing.Color.FromBrightness(0.7);
+				if ( this.IsSelected() )  color = Drawing.Color.FromRGB(1,0,0);
 
-			graphics.Rasterizer.AddOutline(path, 1.0/iconContext.ScaleX);
-			graphics.RenderSolid(color);
+				graphics.Rasterizer.AddOutline(path, 1.0/iconContext.ScaleX);
+				graphics.RenderSolid(color);
+			}
 
 			if ( this.IsHilite )
 			{

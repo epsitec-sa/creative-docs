@@ -161,6 +161,7 @@ namespace Epsitec.Common.Pictogram.Data
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "Curve";
+					item.Icon = @"file:images/tocurve.icon";
 					item.Text = "Courbe";
 					list.Add(item);
 				}
@@ -169,12 +170,10 @@ namespace Epsitec.Common.Pictogram.Data
 					item = new ContextMenuItem();
 					item.Command = "Object";
 					item.Name = "Line";
+					item.Icon = @"file:images/toline.icon";
 					item.Text = "Droit";
 					list.Add(item);
 				}
-
-				item = new ContextMenuItem();
-				list.Add(item);  // séparateur
 
 				item = new ContextMenuItem();
 				item.Command = "Object";
@@ -530,6 +529,7 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 
 			if ( this.Handle(rank).Type == HandleType.Primary )  // principale ?
 			{
@@ -645,6 +645,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public override void CreateMouseMove(Drawing.Point pos, IconContext iconContext)
 		{
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 
 			if ( this.mouseDown )
 			{
@@ -947,7 +948,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
 		{
-			if ( this.isHide )  return;
+			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext);
 
 			int total = this.TotalHandlePrimary;
