@@ -24,9 +24,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.radio_dock    = new RadioButton (panel);
 			this.edge_select   = new EdgeSelectWidget (panel, this);
 			
-			double h_pane = System.Math.Max (panel.Height, 80 + 6);
-			
-			panel.Height = h_pane;
+			panel.Height = System.Math.Max (panel.Height, 80 + 6);
 			
 			this.caption_label.Width         = 80;
 			this.caption_label.Anchor        = AnchorStyles.TopLeft;
