@@ -109,11 +109,35 @@ namespace Epsitec.Common.Widgets
 				
 				//	TODO: gère les commandes globales
 				
-				if (shortcut.KeyCode == KeyCode.Tab)
+				Widget focused = this.window.FocusedWidget;
+				
+				if (focused == null)
 				{
-					Widget focused = this.window.FocusedWidget;
+					return false;
+				}
+				
+				Widget.TabNavigationMode mode = Widget.TabNavigationMode.Passive;
+				Widget.TabNavigationDir  dir  = Widget.TabNavigationDir.None;
+				
+				switch (shortcut.KeyCode)
+				{
+					case KeyCode.Tab:
+						mode = Widget.TabNavigationMode.ActivateOnTab;
+						dir  = Message.State.IsShiftPressed ? Widget.TabNavigationDir.Backwards : Widget.TabNavigationDir.Forwards;
+						break;
+				}
+				
+				if ((mode != Widget.TabNavigationMode.Passive) &&
+					(dir != Widget.TabNavigationDir.None))
+				{
+					//	Navigue dans la hiérarchie...
 					
-					System.Diagnostics.Debug.WriteLine ("TAB pressed. Focus on " + focused + " in window " + this.window.Text);
+					Widget find = focused.FindTabWidget (dir, mode);
+					
+					if (find != null)
+					{
+						find.SetFocused (true);
+					}
 				}
 				
 				return false;

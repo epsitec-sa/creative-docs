@@ -2930,6 +2930,215 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public Widget FindTabWidget(TabNavigationDir dir, TabNavigationMode filter)
+		{
+			return this.FindTabWidget (dir, filter, false, false);
+		}
+		
+		protected virtual Widget FindTabWidget(TabNavigationDir dir, TabNavigationMode filter, bool disable_first_enter, bool accept_focus)
+		{
+			Widget find = null;
+			
+			if ((!disable_first_enter) &&
+				((this.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0) &&
+				(this.HasChildren) &&
+				(dir == TabNavigationDir.Forwards))
+			{
+				//	Ce widget permet aux enfants d'entrer dans la liste accessible par la
+				//	touche TAB.
+				
+				find = this.Children[0].FindTabWidget (dir, filter, false, true);
+				
+				if (find != null)
+				{
+					return find;
+				}
+			}
+			
+			if (accept_focus)
+			{
+				if ((this.tab_navigation_mode & filter) != 0)
+				{
+					return this;
+				}
+			}
+			
+			//	Cherche parmi les frères...
+			
+			Widget[] siblings = this.FindTabWidgets (filter);
+			bool     search_z = true;
+			
+			for (int i = 0; i < siblings.Length; i++)
+			{
+				if (siblings[i] == this)
+				{
+					//	On vient de trouver notre position dans la liste des widgets activables
+					//	par la touche TAB.
+					
+					search_z = false;
+					
+					switch (dir)
+					{
+						case TabNavigationDir.Backwards:
+							if (i > 0)
+							{
+								find = siblings[i-1];
+								
+								if (((find.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0) &&
+									(find.HasChildren))
+								{
+									//	Entre en marche arrière dans le widget...
+									
+									int    count = find.Children.Count;
+									Widget enter = find.Children[count - 1].FindTabWidget (dir, filter, false, true);
+									
+									if (find != null)
+									{
+										find = enter;
+									}
+								}
+							}
+							break;
+						
+						case TabNavigationDir.Forwards:
+							if (i < siblings.Length-1)
+							{
+								find = siblings[i+1];
+								
+								if (((find.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0) &&
+									((find.tab_navigation_mode & TabNavigationMode.ForwardOnly) != 0) &&
+									(find.HasChildren))
+								{
+									//	Entre en marche avant dans le widget...
+									
+									Widget enter = find.Children[0].FindTabWidget (dir, filter, false, true);
+									
+									if (find != null)
+									{
+										find = enter;
+									}
+								}
+							}
+							break;
+					}
+					
+					break;
+				}
+			}
+			
+			if (search_z)
+			{
+				find = this;
+				
+				while (true)
+				{
+					if (dir == TabNavigationDir.Forwards)
+					{
+						find = this.Children.FindNext (find);
+					}
+					else if (dir == TabNavigationDir.Backwards)
+					{
+						find = this.Children.FindPrevious (find);
+					}
+					if ((find == null) ||
+						((find.tab_navigation_mode & filter) != 0))
+					{
+						break;
+					}
+				}
+			}
+			
+			if (find == null)
+			{
+				//	Toujours rien trouvé. On a demandé aux enfants et aux frères. Il ne nous
+				//	reste plus qu'à transmettre au père.
+				
+				if (this.parent != null)
+				{
+					if ((this.parent.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0)
+					{
+						bool accept;
+						
+						switch (dir)
+						{
+							case TabNavigationDir.Backwards:
+								accept = (this.parent.tab_navigation_mode & TabNavigationMode.ForwardOnly) == 0;
+								find   = this.parent.FindTabWidget (dir, filter, true, accept);
+								break;
+							
+							case TabNavigationDir.Forwards:
+								find = this.parent.FindTabWidget (dir, filter, true, false);
+								break;
+						}
+					}
+				}
+			}
+			
+			if (find == null)
+			{
+				//	On ne peut plus avancer, donc on tente de boucler.
+				
+				if (siblings.Length > 1)
+				{
+					switch (dir)
+					{
+						case TabNavigationDir.Backwards:
+							find = siblings[siblings.Length-1];
+							break;
+							
+						case TabNavigationDir.Forwards:
+							find = siblings[0];
+							break;
+					}
+				}
+			}
+			
+			return find;
+		}
+		
+		
+		protected virtual Widget[] FindTabWidgets(TabNavigationMode filter)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			Widget parent = this.parent;
+			
+			if (parent != null)
+			{
+				Widget[] siblings = parent.Children.Widgets;
+				
+				for (int i = 0; i < siblings.Length; i++)
+				{
+					if ((siblings[i].TabNavigation & filter) != 0)
+					{
+						list.Add (siblings[i]);
+					}
+				}
+			}
+			
+			list.Sort (new TabIndexComparer ());
+			
+			Widget[] widgets = new Widget[list.Count];
+			list.CopyTo (widgets);
+			
+			return widgets;
+		}
+		
+		#region TabIndexComparer class
+		protected class TabIndexComparer : System.Collections.IComparer
+		{
+			public int Compare(object x, object y)
+			{
+				Widget wx = x as Widget;
+				Widget wy = y as Widget;
+				if (wx == wy) return 0;
+				if (wx == null) return -1;
+				if (wy == null) return 1;
+				return wx.TabIndex - wy.TabIndex;
+			}
+		}
+		#endregion
+		
 		#region CommandWidgetFinder class
 		protected class CommandWidgetFinder
 		{
@@ -4353,6 +4562,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		#region Enums...
 		public enum Setting : byte
 		{
 			None				= 0,
@@ -4377,6 +4587,16 @@ namespace Epsitec.Common.Widgets
 			ActivateOnCursorY	= 0x00000004,
 			ActivateOnCursor	= ActivateOnCursorX + ActivateOnCursorY,
 			ActivateOnPage		= 0x00000008,
+			
+			ForwardToChildren	= 0x00010000,		//	transmet aux widgets enfants
+			ForwardOnly			= 0x00020000		//	utilisé avec ForwardToChilden: ne prend pas le focus soi-même
+		}
+		
+		public enum TabNavigationDir
+		{
+			None				=  0,
+			Forwards			=  1,
+			Backwards			= -1
 		}
 		
 		[System.Flags] public enum ChildFindMode
@@ -4390,7 +4610,7 @@ namespace Epsitec.Common.Widgets
 			
 			Deep				= 0x00010000
 		}
-		
+		#endregion
 		
 		public class ClientInfo
 		{
@@ -4494,6 +4714,37 @@ namespace Epsitec.Common.Widgets
 			public Widget					this[int index]
 			{
 				get { return this.list[index] as Widget; }
+			}
+			
+			
+			public Widget FindNext(Widget widget)
+			{
+				Widget[] widgets = this.Widgets;
+				
+				for (int i = 0; i < widgets.Length; i++)
+				{
+					if (widgets[i] == widget)
+					{
+						return (++i < widgets.Length) ? widgets[i] : null;
+					}
+				}
+				
+				return null;
+			}
+			
+			public Widget FindPrevious(Widget widget)
+			{
+				Widget[] widgets = this.Widgets;
+				
+				for (int i = 0; i < widgets.Length; i++)
+				{
+					if (widgets[i] == widget)
+					{
+						return (--i >= 0) ? widgets[i] : null;
+					}
+				}
+				
+				return null;
 			}
 			
 			
