@@ -1,5 +1,6 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 07/10/2003
+//			 DD, 19/04/2004, ajouté 'Joins'
 
 namespace Epsitec.Cresus.Database
 {
@@ -53,6 +54,11 @@ namespace Epsitec.Cresus.Database
 		{
 			get { return this.where_coll; }
 		}
+
+		public SqlFieldCollection		Joins
+		{
+			get { return this.join_coll; }
+		}
 		
 		
 		public SqlSelect				SelectSetQuery
@@ -71,6 +77,7 @@ namespace Epsitec.Cresus.Database
 		protected SqlFieldCollection	field_coll	= new SqlFieldCollection ();
 		protected SqlFieldCollection	table_coll	= new SqlFieldCollection ();
 		protected SqlFieldCollection	where_coll	= new SqlFieldCollection ();
+		protected SqlFieldCollection	join_coll	= new SqlFieldCollection ();
 		
 		protected SqlSelectSetOp		set_op		= SqlSelectSetOp.None;
 		protected SqlSelect				set_query	= null;
