@@ -136,7 +136,8 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle rect = this.InnerBounds;
 				
-				if (this.Client.Height < 18)
+				if ((this.Client.Height < 18) &&
+					(this.textStyle != TextFieldStyle.Flat))
 				{
 					if (this.Client.Height >= 17)
 					{

@@ -341,6 +341,7 @@ namespace Epsitec.Common.Widgets
 			
 			ctrl.CreateCommands ();
 			ctrl.CreateToolBarButtons ();
+			ctrl.StartReadOnly ();
 			
 			for (int x = 0 ; x < table.ColumnCount; x++)
 			{

@@ -735,6 +735,38 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Images\DeleteCell.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\InsertAfterCell.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\InsertBeforeCell.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\MoveDownCell.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\MoveUpCell.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\TableEdition.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\TableReadOnly.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\TableSearch.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Layouts\Abstract.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
