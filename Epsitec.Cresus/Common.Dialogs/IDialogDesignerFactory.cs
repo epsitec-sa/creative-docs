@@ -9,13 +9,6 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public interface IDialogDesignerFactory
 	{
-		IDialogDesigner CreateDialogDesigner(DesignerType type);
-	}
-	
-	
-	public enum DesignerType
-	{
-		Generic,				//	designer générique (capable de créer toute forme d'interface)
-		DialogWindow			//	designer permettant d'éditer un dialogue ou une fenêtre
+		IDialogDesigner CreateDialogDesigner(UI.InterfaceType type);
 	}
 }

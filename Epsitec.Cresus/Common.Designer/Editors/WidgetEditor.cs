@@ -9,14 +9,17 @@ namespace Epsitec.Common.Designer.Editors
 	using WidgetCollection = Epsitec.Common.Widgets.Helpers.WidgetCollection;
 	
 	/// <summary>
-	/// La classe WidgetEditor...
+	/// La classe WidgetEditor gère l'édition d'un élément d'interface graphique;
+	/// c'est en principe une fenêtre, un onglet ou un masque de saisie.
 	/// </summary>
 	public class WidgetEditor : Support.ICommandDispatcherHost, System.IDisposable
 	{
 		public WidgetEditor(InterfaceEditController interf_edit_controller)
 		{
 			this.interf_edit_controller = interf_edit_controller;
-			
+
+			this.interface_type = Common.UI.InterfaceType.Any;
+
 			this.hilite_adorner = new HiliteWidgetAdorner ();
 			this.grips_overlay  = new Widgets.GripsOverlay (this);
 			this.tab_o_overlay  = new Widgets.TabOrderOverlay ();
@@ -300,6 +303,7 @@ namespace Epsitec.Common.Designer.Editors
 			if (this.dialog_designer != null)
 			{
 				this.dialog_designer.DialogDataChanged += new EventHandler(this.HandleDialogDesignerDialogDataChanged);
+				this.interface_type = this.dialog_designer.InterfaceType;
 			}
 		}
 		
@@ -309,6 +313,7 @@ namespace Epsitec.Common.Designer.Editors
 			{
 				this.dialog_designer.DialogDataChanged -= new EventHandler(this.HandleDialogDesignerDialogDataChanged);
 				this.dialog_designer = null;
+				this.interface_type  = Common.UI.InterfaceType.Any;
 			}
 		}
 		
@@ -564,9 +569,10 @@ namespace Epsitec.Common.Designer.Editors
 		public event Support.EventHandler		DialogDesignerChanged;
 		
 		
-		protected Support.CommandDispatcher		dispatcher;
-		protected InterfaceEditController		interf_edit_controller;
-		protected DialogDesigner				dialog_designer;
+		private Support.CommandDispatcher		dispatcher;
+		private InterfaceEditController			interf_edit_controller;
+		private DialogDesigner					dialog_designer;
+		private Common.UI.InterfaceType			interface_type;
 		
 		protected Widget						hot_widget;
 		protected Widget						root;

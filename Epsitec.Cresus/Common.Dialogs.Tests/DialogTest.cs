@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Epsitec.Common.UI;
 using Epsitec.Common.UI.Data;
 using Epsitec.Common.Script;
 
@@ -19,14 +20,14 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckCreateDesigner()
 		{
-			IDialogDesigner designer = Dialog.CreateDesigner (DesignerType.Generic);
+			IDialogDesigner designer = Dialog.CreateDesigner ();
 			
 			Assert.IsNotNull (designer);
 		}
 		
 		[Test] public void CheckCreateEmptyDialog()
 		{
-			IDialogDesigner designer = Dialog.CreateDesigner (DesignerType.DialogWindow);
+			IDialogDesigner designer = Dialog.CreateDesigner ();
 			Widgets.Window  window   = new Widgets.Window ();
 			
 			Assert.IsNotNull (designer);

@@ -7,7 +7,8 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Designer
 {
 	/// <summary>
-	/// Summary description for DialogDesignerFactory.
+	///	La classe DialogDesignerFactory permet d'instancier un DialogDesigner qui
+	/// sert d'intermédiaire entre un dialogue et le designer.
 	/// </summary>
 	public class DialogDesignerFactory : Epsitec.Common.Dialogs.IDialogDesignerFactory
 	{
@@ -18,7 +19,7 @@ namespace Epsitec.Common.Designer
 		
 		
 		#region IDialogDesignerFactory Members
-		public Epsitec.Common.Dialogs.IDialogDesigner CreateDialogDesigner(Epsitec.Common.Dialogs.DesignerType type)
+		public Epsitec.Common.Dialogs.IDialogDesigner CreateDialogDesigner(Common.UI.InterfaceType type)
 		{
 			return new DialogDesigner (this.application, type);
 		}

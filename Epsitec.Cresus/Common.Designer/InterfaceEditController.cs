@@ -36,7 +36,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		public Panels.WidgetSourcePanel		WidgetSourcePalette
+		public Panels.WidgetSourcePanel			WidgetSourcePalette
 		{
 			get
 			{
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		public Panels.WidgetAttributePanel	WidgetAttributePalette
+		public Panels.WidgetAttributePanel		WidgetAttributePalette
 		{
 			get
 			{
@@ -90,9 +90,30 @@ namespace Epsitec.Common.Designer
 		
 		public override void FillToolBar(AbstractToolBar tool_bar)
 		{
-			tool_bar.Items.Add (IconButton.CreateSimple (Command.CreateNewInterface,  "manifest:Epsitec.Common.Designer.Images.New.icon"));
-			tool_bar.Items.Add (IconButton.CreateSimple (Command.OpenLoadInterface,   "manifest:Epsitec.Common.Designer.Images.Open.icon"));
-			tool_bar.Items.Add (IconButton.CreateSimple (Command.SaveActiveInterface, "manifest:Epsitec.Common.Designer.Images.Save.icon"));
+			Common.UI.InterfaceType type = Common.UI.InterfaceType.Any;
+
+			if ((this.active_editor != null) &&
+				(this.active_editor.DialogDesigner != null))
+			{
+				type = this.active_editor.DialogDesigner.InterfaceType;
+			}
+
+			tool_bar.Items.Add (IconButton.CreateSimple (Command.CreateNewInterface, "manifest:Epsitec.Common.Designer.Images.New.icon"));
+			
+			switch (type)
+			{
+				case Common.UI.InterfaceType.Any:
+					tool_bar.Items.Add (IconButton.CreateSimple (Command.OpenLoadInterface, "manifest:Epsitec.Common.Designer.Images.Open.icon"));
+					tool_bar.Items.Add (IconButton.CreateSimple (Command.SaveActiveInterface, "manifest:Epsitec.Common.Designer.Images.Save.icon"));
+					break;
+				
+				case Common.UI.InterfaceType.DialogWindow:
+					tool_bar.Items.Add (IconButton.CreateSimple (Command.SaveActiveInterface, "manifest:Epsitec.Common.Designer.Images.Save.icon"));
+					break;
+				
+				case Common.UI.InterfaceType.Panel:
+					break;
+			}
 			
 			this.SyncCommandStates ();
 		}
@@ -121,7 +142,7 @@ namespace Epsitec.Common.Designer
 			
 			public static void Restore(Window window)
 			{
-				SavedWindowParams saved = window.GetProperty (InterfaceEditController.PropertySavedWindowParams) as SavedWindowParams;
+				SavedWindowParams saved = window.GetProperty (InterfaceEditController.prop_saved_window_params) as SavedWindowParams;
 				
 				if (saved != null)
 				{
@@ -130,7 +151,7 @@ namespace Epsitec.Common.Designer
 					window.PreventAutoQuit       = saved.prevent_auto_quit;
 					window.Owner                 = saved.owner;
 					
-					window.ClearProperty (InterfaceEditController.PropertySavedWindowParams);
+					window.ClearProperty (InterfaceEditController.prop_saved_window_params);
 				}
 			}
 			
@@ -143,7 +164,9 @@ namespace Epsitec.Common.Designer
 		
 		internal void CreateEditorForWindow(Window window, string resource_name)
 		{
-			window.SetProperty (InterfaceEditController.PropertySavedWindowParams, new SavedWindowParams (window));
+			//	Crée un éditeur pour la fenêtre spécifiée.
+			
+			window.SetProperty (InterfaceEditController.prop_saved_window_params, new SavedWindowParams (window));
 			
 			window.Root.IsEditionEnabled = true;
 			window.PreventAutoClose      = true;
@@ -160,7 +183,12 @@ namespace Epsitec.Common.Designer
 			
 			if (designer == null)
 			{
-				designer = new DialogDesigner (this.application, DesignerType.DialogWindow);
+				//	Comme c'est pour une fenêtre que l'on crée un designer, on va choisir
+				//	le type d'interface dialogue/fenêtre :
+				
+				Common.UI.InterfaceType interface_type = Common.UI.InterfaceType.DialogWindow;
+				
+				designer = new DialogDesigner (this.application, interface_type);
 				
 				designer.DialogWindow = window;
 				designer.DialogData   = null;
@@ -602,6 +630,8 @@ namespace Epsitec.Common.Designer
 				this.widget_palette.NotifyActiveEditorChanged (this.active_editor);
 				this.data_palette.NotifyActiveEditorChanged (this.active_editor);
 				this.attribute_palette.NotifyActiveEditorChanged (this.active_editor);
+				
+				this.OnActiveEditorChanged ();
 			}
 		}
 		
@@ -912,9 +942,23 @@ namespace Epsitec.Common.Designer
 			TabIndexPicker,
 			TabIndexResetSeq,
 		}
+
+
+		protected virtual void OnActiveEditorChanged()
+		{
+			if (this.ActiveEditorChanged != null)
+			{
+				this.ActiveEditorChanged (this);
+			}
+		}
 		
 		
-		private const string					PropertySavedWindowParams = "$designer$saved window params$";
+		
+		private const string					prop_saved_window_params = "$designer$saved window params$";
+		
+		
+		public event Support.EventHandler		ActiveEditorChanged;
+		
 		
 		private bool							is_initialised;
 		

@@ -123,6 +123,8 @@ namespace Epsitec.Common.Designer
 			this.CreateToolBar ();
 			this.CreateSwitcher ();
 			
+			this.interf_edit_controller.ActiveEditorChanged += new EventHandler (this.HandleInterfaceEditControllerActiveEditorChanged);
+			
 			Widget panel;
 			
 			panel = this.interf_edit_controller.MainPanel;
@@ -265,7 +267,12 @@ namespace Epsitec.Common.Designer
 			tool_bar.Items.Add (this.lang_swap);
 			tool_bar.Items.Add (this.lang_sep);
 		}
-		
+
+
+		private void HandleInterfaceEditControllerActiveEditorChanged(object sender)
+		{
+			this.UpdateVisiblePanel ();
+		}
 		
 		private void HandleLanguageComboSelectedIndexChanged(object sender)
 		{

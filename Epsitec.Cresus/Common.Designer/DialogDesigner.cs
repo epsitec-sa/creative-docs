@@ -12,10 +12,10 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class DialogDesigner : Epsitec.Common.Dialogs.IDialogDesigner
 	{
-		public DialogDesigner(Application application, DesignerType type)
+		public DialogDesigner(Application application, Common.UI.InterfaceType type)
 		{
-			this.application   = application;
-			this.designer_type = type;
+			this.application    = application;
+			this.interface_type = type;
 		}
 		
 		
@@ -24,6 +24,14 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return this.application;
+			}
+		}
+
+		public Common.UI.InterfaceType			InterfaceType
+		{
+			get
+			{
+				return this.interface_type;
 			}
 		}
 		
@@ -208,7 +216,7 @@ namespace Epsitec.Common.Designer
 		public event Support.EventHandler		Disposed;
 		
 		private Application						application;
-		private DesignerType					designer_type;
+		private Common.UI.InterfaceType			interface_type;
 		private Types.IDataGraph				dialog_data;
 		private Window							dialog_window;
 		private Support.CommandDispatcher		dialog_commands;
