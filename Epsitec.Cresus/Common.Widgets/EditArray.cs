@@ -1044,69 +1044,84 @@ namespace Epsitec.Common.Widgets
 			
 			public virtual void InsertBefore()
 			{
-				EditArrayMode mode = this.SaveModeAndReset ();
-				int           row  = this.host.SelectedIndex;
+				EditArrayMode mode;
+				int row, column;
+				this.SaveModeAndReset (out mode, out row, out column);
 				
 				this.store.InsertRows (row, 1);
-				this.host.SelectedIndex = row;
-				this.RestoreMode (EditArrayMode.Edition);
+				this.RestoreMode (EditArrayMode.Edition, row, 0);
 			}
 			
 			public virtual void InsertAfter()
 			{
-				EditArrayMode mode = this.SaveModeAndReset ();
-				int           row  = this.host.SelectedIndex + 1;
+				EditArrayMode mode;
+				int row, column;
+				this.SaveModeAndReset (out mode, out row, out column);
 				
-				this.store.InsertRows (row, 1);
-				this.host.SelectedIndex = row;
-				this.RestoreMode (EditArrayMode.Edition);
+				this.store.InsertRows (row+1, 1);
+				this.RestoreMode (EditArrayMode.Edition, row+1, 0);
 			}
 			
 			public virtual void Delete()
 			{
-				EditArrayMode mode = this.SaveModeAndReset ();
-				int           row  = this.host.SelectedIndex;
+				EditArrayMode mode;
+				int row, column;
+				this.SaveModeAndReset (out mode, out row, out column);
 				
 				this.store.RemoveRows (row, 1);
-				this.host.SelectedIndex = row;
-				this.RestoreMode (mode);
+				this.RestoreMode (mode, row, 0);
 			}
 			
 			public virtual void MoveUp()
 			{
-				EditArrayMode mode = this.SaveModeAndReset ();
-				int           row  = this.host.SelectedIndex;
+				EditArrayMode mode;
+				int row, column;
+				this.SaveModeAndReset (out mode, out row, out column);
 				
 				this.store.MoveRow (row, -1);
-				this.host.SelectedIndex = row-1;
-				this.RestoreMode (mode);
+				this.RestoreMode (mode, row-1, column);
 			}
 			
 			public virtual void MoveDown()
 			{
-				EditArrayMode mode = this.SaveModeAndReset ();
-				int           row  = this.host.SelectedIndex;
+				EditArrayMode mode;
+				int row, column;
+				this.SaveModeAndReset (out mode, out row, out column);
 				
 				this.store.MoveRow (row, 1);
-				this.host.SelectedIndex = row+1;
-				this.RestoreMode (mode);
+				this.RestoreMode (mode, row+1, column);
 			}
 			
 			
-			protected EditArrayMode SaveModeAndReset()
+			protected void SaveModeAndReset(out EditArrayMode mode, out int row, out int column)
 			{
-				EditArrayMode mode = this.host.EditArrayMode;
+				mode   = this.host.EditArrayMode;
+				column = this.host.edit_line.FindFocusedColumn ();
+				
 				this.StartReadOnly ();
-				return mode;
+				
+				row = this.host.SelectedIndex;
 			}
 			
-			protected void RestoreMode(EditArrayMode mode)
+			protected void RestoreMode(EditArrayMode mode, int row, int column)
 			{
+				this.host.SelectedIndex = row;
+				
 				switch (mode)
 				{
-					case EditArrayMode.Standard:	this.StartReadOnly ();	break;
-					case EditArrayMode.Edition:		this.StartEdition ();	break;
-					case EditArrayMode.Search:		this.StartSearch ();	break;
+					case EditArrayMode.Standard:
+						this.StartReadOnly ();
+						break;
+					
+					case EditArrayMode.Edition:
+						this.StartEdition ();
+						this.host.edit_line.FocusColumn (column);
+						break;
+					
+					case EditArrayMode.Search:
+						this.StartSearch ();
+						this.host.edit_line.FocusColumn (column);
+						break;
 				}
 			}
 			
