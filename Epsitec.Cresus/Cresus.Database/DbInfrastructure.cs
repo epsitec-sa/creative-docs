@@ -68,6 +68,12 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public CallbackDisplayDataSet	DisplayDataSet
+		{
+			set { this.display_data_set = value; }
+		}
+		
+		
 		public void ExecuteSilent()
 		{
 			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
@@ -121,6 +127,31 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public System.Data.DataTable ExecuteSqlSelect(SqlSelect query, int min_rows)
+		{
+			this.sql_builder.SelectData (query);
+			
+			System.Data.DataSet data_set;
+			System.Data.DataTable data_table;
+			
+			this.ExecuteReturningData (out data_set);
+			
+			if ((data_set == null) ||
+				(data_set.Tables.Count != 1))
+			{
+				throw new DbException (this.db_access, string.Format ("Query failed."));
+			}
+			
+			data_table = data_set.Tables[0];
+			
+			if (data_table.Rows.Count < min_rows)
+			{
+				throw new DbException (this.db_access, string.Format ("Query returned to few rows; expected {0}, found {1}.", min_rows, data_table.Rows.Count));
+			}
+			
+			return data_table;
+		}
+		
 		
 		public DbKey FindDbTableKey(string name)
 		{
@@ -160,16 +191,7 @@ namespace Epsitec.Cresus.Database
 			
 			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName ("T", DbColumn.TagName), SqlField.CreateConstant (row_name, DbRawType.String)));
 			
-			this.sql_builder.SelectData (query);
-			
-			System.Data.DataSet   data_set;
-			System.Data.DataTable data_table;
-			
-			this.ExecuteReturningData (out data_set);
-			
-			System.Diagnostics.Debug.Assert (data_set.Tables.Count == 1);
-			
-			data_table = data_set.Tables[0];
+			System.Data.DataTable data_table = this.ExecuteSqlSelect (query, 0);
 			
 			if (this.display_data_set != null)
 			{
@@ -266,38 +288,41 @@ namespace Epsitec.Cresus.Database
 		
 		public DbTable LoadDbTable(DbKey key)
 		{
+			//	Charge les définitions pour la table au moyen d'une requête unique qui va
+			//	aussi retourner les diverses définitions de colonnes.
+			
 			SqlSelect query = new SqlSelect ();
+			
+			//	Ce qui est propre à la table :
 			
 			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TABLE", DbColumn.TagName));
 			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TABLE", DbColumn.TagInfoXml));
 			
-			this.AddLocalisedColumns (query, "T_TABLE", DbColumn.TagCaption);
-			this.AddLocalisedColumns (query, "T_TABLE", DbColumn.TagDescription);
+			this.AddLocalisedColumns (query, "TABLE_CAPTION", "T_TABLE", DbColumn.TagCaption);
+			this.AddLocalisedColumns (query, "TABLE_DESCRIPTION", "T_TABLE", DbColumn.TagDescription);
+			
+			//	Ce qui est propre aux colonnes :
 			
 			query.Fields.Add ("C_ID",   SqlField.CreateName ("T_COLUMN", DbColumn.TagId));
 			query.Fields.Add ("C_NAME", SqlField.CreateName ("T_COLUMN", DbColumn.TagName));
 			query.Fields.Add ("C_INFO", SqlField.CreateName ("T_COLUMN", DbColumn.TagInfoXml));
 			query.Fields.Add ("C_TYPE", SqlField.CreateName ("T_COLUMN", DbColumn.TagRefType));
 			
-			this.AddLocalisedColumns (query, "T_COLUMN", DbColumn.TagCaption);
-			this.AddLocalisedColumns (query, "T_COLUMN", DbColumn.TagDescription);
+			this.AddLocalisedColumns (query, "COLUMN_CAPTION", "T_COLUMN", DbColumn.TagCaption);
+			this.AddLocalisedColumns (query, "COLUMN_DESCRIPTION", "T_COLUMN", DbColumn.TagDescription);
+			
+			//	Les deux tables utilisées pour l'extraction :
 			
 			query.Tables.Add ("T_TABLE",  SqlField.CreateName (DbTable.TagTableDef));
 			query.Tables.Add ("T_COLUMN", SqlField.CreateName (DbTable.TagColumnDef));
 			
+			//	On extrait toutes les lignes de T_TABLE qui ont un CR_ID = key, ainsi que
+			//	les lignes correspondantes de T_COLUMN qui ont un CREF_TABLE = key.
+			
 			this.AddKeyExtraction (query, key, "T_TABLE", DbKeyMatchMode.ExactRevisionId);
 			this.AddKeyExtraction (query, "T_COLUMN", DbColumn.TagRefTable, key);
 			
-			this.sql_builder.SelectData (query);
-			
-			System.Data.DataSet   data_set;
-			System.Data.DataTable data_table;
-			
-			this.ExecuteReturningData (out data_set);
-			
-			System.Diagnostics.Debug.Assert (data_set.Tables.Count == 1);
-			
-			data_table = data_set.Tables[0];
+			System.Data.DataTable data_table = this.ExecuteSqlSelect (query, 1);
 			
 			if (this.display_data_set != null)
 			{
@@ -306,13 +331,13 @@ namespace Epsitec.Cresus.Database
 			
 			System.Data.DataRow row_zero = data_table.Rows[0];
 			
-			DbTable db_table = new DbTable ();
+			DbTable db_table = DbTable.NewTable (Converter.ToString (row_zero["T_INFO"]));
 			
 			db_table.Attributes.SetAttribute (Tags.Name, Converter.ToString (row_zero["T_NAME"]));
-			db_table.Attributes.SetAttribute (Tags.InfoXml, Converter.ToString (row_zero["T_INFO"]));
+			db_table.DefineInternalKey (key);
 			
-			this.DefineLocalisedAttributes (row_zero, DbColumn.TagCaption, db_table.Attributes, Tags.Caption);
-			this.DefineLocalisedAttributes (row_zero, DbColumn.TagDescription, db_table.Attributes, Tags.Description);
+			this.DefineLocalisedAttributes (row_zero, "TABLE_CAPTION", DbColumn.TagCaption, db_table.Attributes, Tags.Caption);
+			this.DefineLocalisedAttributes (row_zero, "TABLE_DESCRIPTION", DbColumn.TagDescription, db_table.Attributes, Tags.Description);
 			
 			foreach (System.Data.DataRow data_row in data_table.Rows)
 			{
@@ -327,8 +352,8 @@ namespace Epsitec.Cresus.Database
 				db_column.Attributes.SetAttribute (Tags.Name, Converter.ToString (data_row["C_NAME"]));
 				db_column.DefineInternalKey (new DbKey (column_id));
 				
-				this.DefineLocalisedAttributes (data_row, DbColumn.TagCaption, db_column.Attributes, Tags.Caption);
-				this.DefineLocalisedAttributes (data_row, DbColumn.TagDescription, db_column.Attributes, Tags.Description);
+				this.DefineLocalisedAttributes (data_row, "COLUMN_CAPTION", DbColumn.TagCaption, db_column.Attributes, Tags.Caption);
+				this.DefineLocalisedAttributes (data_row, "COLUMN_DESCRIPTION", DbColumn.TagDescription, db_column.Attributes, Tags.Description);
 				
 				DbType db_type = this.ResolveDbType (new DbKey (type_ref_id));
 				
@@ -344,40 +369,25 @@ namespace Epsitec.Cresus.Database
 			return db_table;
 		}
 		
-		public DbType LoadDbType(DbKey type_ref)
+		public DbType  LoadDbType(DbKey key)
 		{
 			SqlSelect query = new SqlSelect ();
 			
 			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TYPE", DbColumn.TagName));
 			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TYPE", DbColumn.TagInfoXml));
 			
-			this.AddLocalisedColumns (query, "T_TYPE", DbColumn.TagCaption);
-			this.AddLocalisedColumns (query, "T_TYPE", DbColumn.TagDescription);
+			this.AddLocalisedColumns (query, "TYPE_CAPTION", "T_TYPE", DbColumn.TagCaption);
+			this.AddLocalisedColumns (query, "TYPE_DESCRIPTION", "T_TYPE", DbColumn.TagDescription);
 			
 			query.Tables.Add ("T_TYPE", SqlField.CreateName (DbTable.TagTypeDef));
 			
-			//	Cherche la ligne de la table dont 'CR_ID = type_ref' en ne considérant que
+			//	Cherche la ligne de la table dont 'CR_ID = key' en ne considérant que
 			//	l'ID et dont la révision = 0.
 			
-			this.AddKeyExtraction (query, type_ref, "T_TYPE", DbKeyMatchMode.LiveId);
+			this.AddKeyExtraction (query, key, "T_TYPE", DbKeyMatchMode.LiveId);
 			
-			this.sql_builder.SelectData (query);
-			
-			System.Data.DataSet data_set;
-			System.Data.DataRow data_row;
-			
-			this.ExecuteReturningData (out data_set);
-			
-			if ((data_set.Tables.Count != 1) ||
-				(data_set.Tables[0].Rows.Count != 1))
-			{
-				//	On devrait toujours avoir exactement une table avec exactement une
-				//	ligne pour cette requête. Le contraire serait une erreur grave !
-				
-				throw new DbException (this.db_access, string.Format ("DbType: query returned garbage on ID={0}.", type_ref));
-			}
-			
-			data_row = data_set.Tables[0].Rows[0];
+			System.Data.DataTable data_table = this.ExecuteSqlSelect (query, 1);
+			System.Data.DataRow   data_row   = data_table.Rows[0];
 			
 			string type_name = data_row["T_NAME"] as string;
 			string type_info = data_row["T_INFO"] as string;
@@ -388,10 +398,10 @@ namespace Epsitec.Cresus.Database
 			DbType type = DbTypeFactory.NewType (type_info);
 			
 			type.DefineName (type_name);
-			type.DefineInternalKey (type_ref);
+			type.DefineInternalKey (key);
 			
-			this.DefineLocalisedAttributes (data_row, DbColumn.TagCaption,     type.Attributes, Tags.Caption);
-			this.DefineLocalisedAttributes (data_row, DbColumn.TagDescription, type.Attributes, Tags.Description);
+			this.DefineLocalisedAttributes (data_row, "TYPE_CAPTION", DbColumn.TagCaption, type.Attributes, Tags.Caption);
+			this.DefineLocalisedAttributes (data_row, "TYPE_DESCRIPTION", DbColumn.TagDescription, type.Attributes, Tags.Description);
 			
 			if (type is DbTypeEnum)
 			{
@@ -400,8 +410,6 @@ namespace Epsitec.Cresus.Database
 				
 				type_enum.Initialise (values);
 			}
-			
-			data_set.Dispose ();
 			
 			return type;
 		}
@@ -418,8 +426,8 @@ namespace Epsitec.Cresus.Database
 			query.Fields.Add ("E_NAME", SqlField.CreateName ("T_ENUM", DbColumn.TagName));
 			query.Fields.Add ("E_INFO", SqlField.CreateName ("T_ENUM", DbColumn.TagInfoXml));
 			
-			this.AddLocalisedColumns (query, "T_ENUM", DbColumn.TagCaption);
-			this.AddLocalisedColumns (query, "T_ENUM", DbColumn.TagDescription);
+			this.AddLocalisedColumns (query, "ENUM_CAPTION", "T_ENUM", DbColumn.TagCaption);
+			this.AddLocalisedColumns (query, "ENUM_DESCRIPTION", "T_ENUM", DbColumn.TagDescription);
 			
 			query.Tables.Add ("T_ENUM", SqlField.CreateName (DbTable.TagEnumValDef));
 			
@@ -427,24 +435,7 @@ namespace Epsitec.Cresus.Database
 			
 			this.AddKeyExtraction (query, "T_ENUM", DbColumn.TagRefType, type_enum.InternalKey);
 			
-			this.sql_builder.SelectData (query);
-			
-			System.Data.DataSet   data_set;
-			System.Data.DataTable data_table;
-			
-			this.ExecuteReturningData (out data_set);
-			
-			if (data_set.Tables.Count == 0)
-			{
-				//	Si aucune information n'existe pour ce type, c'est une erreur fatale,
-				//	car on avait une référence d'énumération valide.
-				
-				throw new System.ArgumentException (string.Format ("Type {0} has no DbEnumValues defined.", type_enum.Name));
-			}
-			
-			System.Diagnostics.Debug.Assert (data_set.Tables.Count == 1);
-			
-			data_table = data_set.Tables[0];
+			System.Data.DataTable data_table = this.ExecuteSqlSelect (query, 1);
 			
 			DbEnumValue[] values = new DbEnumValue[data_table.Rows.Count];
 			
@@ -462,25 +453,37 @@ namespace Epsitec.Cresus.Database
 				values[i].Attributes.SetAttribute (Tags.InfoXml, Converter.ToString (data_row["E_INFO"]));
 				values[i].Attributes.SetAttribute (Tags.Id,		 Converter.ToString (data_row["E_ID"]));
 				
-				this.DefineLocalisedAttributes (data_row, DbColumn.TagCaption,     values[i].Attributes, Tags.Caption);
-				this.DefineLocalisedAttributes (data_row, DbColumn.TagDescription, values[i].Attributes, Tags.Description);
+				this.DefineLocalisedAttributes (data_row, "ENUM_CAPTION", DbColumn.TagCaption, values[i].Attributes, Tags.Caption);
+				this.DefineLocalisedAttributes (data_row, "ENUM_DESCRIPTION", DbColumn.TagDescription, values[i].Attributes, Tags.Description);
 			}
-			
-			data_set.Dispose ();
 			
 			return values;
 		}
 		
 		
-		protected void DefineLocalisedAttributes(System.Data.DataRow row, string column, DbAttributes attributes, string tag)
+		protected void DefineLocalisedAttributes(System.Data.DataRow row, string prefix, string column, DbAttributes attributes, string tag)
 		{
-			string alias = "LOC_" + column;
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append ("LOC_");
+			buffer.Append (prefix);
+			
+			int initial_length = buffer.Length;
+			
 			string value;
 			
 			for (int i = 0; i < this.localisations.Length; i++)
 			{
 				string locale = this.localisations[i];
-				string index  = locale == "" ? alias : alias + "_" + locale;
+				buffer.Length = initial_length;
+				
+				if (locale != "")
+				{
+					buffer.Append ("_");
+					buffer.Append (locale);
+				}
+				
+				string index = buffer.ToString ();
 				
 				if (Converter.Convert (row[index], out value))
 				{
@@ -489,14 +492,27 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		protected void AddLocalisedColumns(SqlSelect query, string table, string column)
+		protected void AddLocalisedColumns(SqlSelect query, string prefix, string table, string column)
 		{
-			string alias = "LOC_" + column;
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append ("LOC_");
+			buffer.Append (prefix);
+			
+			int initial_length = buffer.Length;
 			
 			for (int i = 0; i < this.localisations.Length; i++)
 			{
 				string locale = this.localisations[i];
-				string index  = locale == "" ? alias : alias + "_" + locale;
+				buffer.Length = initial_length;
+				
+				if (locale != "")
+				{
+					buffer.Append ("_");
+					buffer.Append (locale);
+				}
+				
+				string index = buffer.ToString ();
 				
 				query.Fields.Add (index, SqlField.CreateName (table, column));
 			}
@@ -544,11 +560,13 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public CallbackDisplayDataSet	DisplayDataSet
+		protected void SetCategory(DbColumn[] columns, DbElementCat cat)
 		{
-			set { this.display_data_set = value; }
+			for (int i = 0; i < columns.Length; i++)
+			{
+				columns[i].DefineCategory (cat);
+			}
 		}
-		
 		
 		
 		#region Bootstrapping
@@ -564,6 +582,13 @@ namespace Epsitec.Cresus.Database
 			columns[4] = new DbColumn (DbColumn.TagCaption,		this.str_type_caption, Nullable.Yes);
 			columns[5] = new DbColumn (DbColumn.TagDescription,	this.str_type_description, Nullable.Yes);
 			columns[6] = new DbColumn (DbColumn.TagInfoXml,		this.str_type_info_xml, Nullable.No);
+			
+			columns[0].DefineColumnClass (DbColumnClass.KeyId);
+			columns[1].DefineColumnClass (DbColumnClass.KeyRevision);
+			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			
+			this.SetCategory (columns, DbElementCat.Internal);
 			
 			table.Columns.AddRange (columns);
 			table.PrimaryKey = new DbColumn[] { columns[0], columns[1] };
@@ -590,6 +615,15 @@ namespace Epsitec.Cresus.Database
 			columns[7] = new DbColumn (DbColumn.TagRefTable,	this.num_type_id);
 			columns[8] = new DbColumn (DbColumn.TagRefType,		this.num_type_id);
 			
+			columns[0].DefineColumnClass (DbColumnClass.KeyId);
+			columns[1].DefineColumnClass (DbColumnClass.KeyRevision);
+			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			columns[7].DefineColumnClass (DbColumnClass.Ref);
+			columns[8].DefineColumnClass (DbColumnClass.Ref);
+			
+			this.SetCategory (columns, DbElementCat.Internal);
+			
 			table.Columns.AddRange (columns);
 			table.PrimaryKey = new DbColumn[] { columns[0], columns[1] };
 			
@@ -612,6 +646,13 @@ namespace Epsitec.Cresus.Database
 			columns[4] = new DbColumn (DbColumn.TagCaption,		this.str_type_caption, Nullable.Yes);
 			columns[5] = new DbColumn (DbColumn.TagDescription,	this.str_type_description, Nullable.Yes);
 			columns[6] = new DbColumn (DbColumn.TagInfoXml,		this.str_type_info_xml, Nullable.No);
+			
+			columns[0].DefineColumnClass (DbColumnClass.KeyId);
+			columns[1].DefineColumnClass (DbColumnClass.KeyRevision);
+			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			
+			this.SetCategory (columns, DbElementCat.Internal);
 			
 			table.Columns.AddRange (columns);
 			table.PrimaryKey = new DbColumn[] { columns[0], columns[1] };
@@ -637,6 +678,14 @@ namespace Epsitec.Cresus.Database
 			columns[6] = new DbColumn (DbColumn.TagInfoXml,		this.str_type_info_xml, Nullable.No);
 			columns[7] = new DbColumn (DbColumn.TagRefType,		this.num_type_id);
 			
+			columns[0].DefineColumnClass (DbColumnClass.KeyId);
+			columns[1].DefineColumnClass (DbColumnClass.KeyRevision);
+			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			columns[7].DefineColumnClass (DbColumnClass.Ref);
+			
+			this.SetCategory (columns, DbElementCat.Internal);
+			
 			table.Columns.AddRange (columns);
 			table.PrimaryKey = new DbColumn[] { columns[0], columns[1] };
 			
@@ -656,6 +705,13 @@ namespace Epsitec.Cresus.Database
 			columns[1] = new DbColumn (DbColumn.TagRefColumn,	this.num_type_id);
 			columns[2] = new DbColumn (DbColumn.TagRefSource,	this.num_type_id);
 			columns[3] = new DbColumn (DbColumn.TagRefTarget,	this.num_type_id);
+			
+			columns[0].DefineColumnClass (DbColumnClass.KeyId);
+			columns[1].DefineColumnClass (DbColumnClass.Ref);
+			columns[2].DefineColumnClass (DbColumnClass.Ref);
+			columns[3].DefineColumnClass (DbColumnClass.Ref);
+			
+			this.SetCategory (columns, DbElementCat.Internal);
 			
 			table.Columns.AddRange (columns);
 			table.PrimaryKey = new DbColumn[] { columns[0] };

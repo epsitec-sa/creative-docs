@@ -1,8 +1,10 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 19/11/2003
+//	Statut : OK/PA, 26/11/2003
 
 namespace Epsitec.Cresus.Database
 {
+	using Converter = Epsitec.Common.Support.Data.Converter;
+	
 	/// <summary>
 	/// La classe DbTools fournit quelques fonctions utilitaires qui n'ont pas
 	/// de rapport direct avec SQL, mais sont utiles aux classes DbXyz.
@@ -38,7 +40,9 @@ namespace Epsitec.Cresus.Database
 				return DbElementCat.Unknown;
 			}
 			
-			return (DbElementCat) System.Enum.Parse (typeof (DbElementCat), text, true);
+			int cat;
+			Converter.Convert (text, out cat);
+			return (DbElementCat) cat;
 		}
 		
 		public static string ElementCategoryToString(DbElementCat cat)
@@ -48,7 +52,7 @@ namespace Epsitec.Cresus.Database
 				return null;
 			}
 			
-			return cat.ToString ();
+			return Converter.ToString ((int) cat);
 		}
 	}
 }

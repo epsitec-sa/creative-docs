@@ -21,6 +21,46 @@ namespace Epsitec.Cresus.Database
 			this.Attributes.SetAttribute (Tags.Name, name);
 		}
 		
+		public DbTable(System.Xml.XmlElement xml)
+		{
+			this.ProcessXmlDefinition (xml);
+		}
+		
+		
+		public static DbTable NewTable(string xml)
+		{
+			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+			
+			doc.LoadXml (xml);
+			
+			return DbTable.NewTable (doc.DocumentElement);
+		}
+		
+		public static DbTable NewTable(System.Xml.XmlElement xml)
+		{
+			return new DbTable (xml);
+		}
+
+		
+		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer)
+		{
+			buffer.Append (@"<table");
+			
+			//	TODO: ajoute les réglages propres à la table
+			
+			buffer.Append (@"/>");
+		}
+		
+		protected void ProcessXmlDefinition(System.Xml.XmlElement xml)
+		{
+			if (xml.Name != "table")
+			{
+				throw new System.ArgumentException (string.Format ("Expected root element named <table>, but found <{0}>.", xml.Name));
+			}
+			
+			//	TODO: extrait les réglages propres à la table
+		}
+		
 		
 		public void DefineCategory(DbElementCat category)
 		{
