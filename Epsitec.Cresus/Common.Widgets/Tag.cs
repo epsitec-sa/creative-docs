@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Tag implémente une petite étiquette (pastille) qui peut servir
 	/// à l'implémentation de "smart tags".
 	/// </summary>
-	public class Tag : IconButton
+	public class Tag : GlyphButton
 	{
 		public Tag() : this (null, null)
 		{
@@ -22,10 +22,10 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
-		public Tag(string command, string name) : base (command, null, name)
+		public Tag(string command, string name) : base (command, name)
 		{
-			this.AutoFocus   = false;
 			this.ButtonStyle = ButtonStyle.Flat;
+			this.GlyphShape  = GlyphShape.Menu;
 			this.ResetDefaultColors ();
 		}
 		
@@ -57,6 +57,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Direction						Direction
+		{
+			get
+			{
+				return this.direction;
+			}
+			set
+			{
+				if (this.direction != value)
+				{
+					this.direction = value;
+					this.Invalidate ();
+				}
+			}
+		}
+		
 		
 		public void ResetDefaultColors()
 		{
@@ -70,12 +86,13 @@ namespace Epsitec.Common.Widgets
 			IAdorner          adorner = Widgets.Adorner.Factory.Active;
 			Drawing.Rectangle rect    = this.Client.Bounds;
 			WidgetState       state   = this.PaintState;
-			Drawing.Color     color   = this.Color;
 			
-			adorner.PaintTagBackground (graphics, rect, state, color);
+			adorner.PaintTagBackground (graphics, rect, state, this.color, this.direction);
+			adorner.PaintGlyph (graphics, rect, state, this.GlyphShape, PaintTextStyle.Button);
 		}
 		
 		
 		private Drawing.Color					color;
+		private Direction						direction;
 	}
 }

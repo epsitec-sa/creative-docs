@@ -14,8 +14,8 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown = new GlyphButton(this);
 			this.arrowUp.Name = "Up";
 			this.arrowDown.Name = "Down";
-			this.arrowUp.GlyphType = GlyphType.ArrowUp;
-			this.arrowDown.GlyphType = GlyphType.ArrowDown;
+			this.arrowUp.GlyphShape = GlyphShape.ArrowUp;
+			this.arrowDown.GlyphShape = GlyphShape.ArrowDown;
 			this.arrowUp.ButtonStyle = ButtonStyle.UpDown;
 			this.arrowDown.ButtonStyle = ButtonStyle.UpDown;
 			this.arrowUp.Engaged += new Support.EventHandler(this.HandleButton);

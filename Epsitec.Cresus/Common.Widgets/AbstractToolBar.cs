@@ -88,6 +88,7 @@ namespace Epsitec.Common.Widgets
 			widget.Dock = this.iconDockStyle;
 			widget.AutoFocus = false;
 			widget.SetEmbedder (this);
+			this.OnItemsChanged ();
 		}
 
 		public void NotifyRemoval(Widget widget)
@@ -97,8 +98,20 @@ namespace Epsitec.Common.Widgets
 		
 		public void NotifyPostRemoval(Widget widget)
 		{
+			this.OnItemsChanged ();
 		}
 		#endregion
+		
+		protected virtual void OnItemsChanged()
+		{
+			if (this.ItemsChanged != null)
+			{
+				this.ItemsChanged (this);
+			}
+		}
+		
+		
+		public event Support.EventHandler	ItemsChanged;
 		
 		protected DockStyle					iconDockStyle;
 		protected Direction					direction;

@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.button = new GlyphButton(this);
 			this.button.Name = "Open";
-			this.button.GlyphType = GlyphType.ArrowDown;
+			this.button.GlyphShape = GlyphShape.ArrowDown;
 			this.button.ButtonStyle = ButtonStyle.Combo;
 			this.button.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 

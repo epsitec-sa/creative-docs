@@ -113,7 +113,17 @@ namespace Epsitec.Common.Widgets
 				
 				if ( this.textStyle != TextFieldStyle.Flat )
 				{
-					rect.Deflate(AbstractTextField.FrameMargin, AbstractTextField.FrameMargin);
+					if (this.Client.Height < 18)
+					{
+						if (this.Client.Height >= 15)
+						{
+							rect.Deflate(AbstractTextField.FrameMargin / 2, AbstractTextField.FrameMargin / 2);
+						}
+					}
+					else
+					{
+						rect.Deflate(AbstractTextField.FrameMargin, AbstractTextField.FrameMargin);
+					}
 				}
 				
 				return rect;
@@ -125,7 +135,18 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				Drawing.Rectangle rect = this.InnerBounds;
-				rect.Deflate(AbstractTextField.TextMargin, AbstractTextField.TextMargin);
+				
+				if (this.Client.Height < 18)
+				{
+					if (this.Client.Height >= 17)
+					{
+						rect.Deflate(AbstractTextField.TextMargin / 2, AbstractTextField.TextMargin / 2);
+					}
+				}
+				else
+				{
+					rect.Deflate(AbstractTextField.TextMargin, AbstractTextField.TextMargin);
+				}
 				
 				return rect;
 			}

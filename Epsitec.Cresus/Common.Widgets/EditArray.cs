@@ -35,13 +35,13 @@ namespace Epsitec.Common.Widgets
 					if (this.mode == EditArrayMode.Search)
 					{
 						this.InnerTopMargin = this.edit_line.DesiredHeight;
-						this.edit_line.DetachEditWidgets ();
+						this.edit_line.ColumnCount = 0;
 						this.edit_line.ColumnCount = this.max_columns;
 					}
 					else
 					{
 						this.InnerTopMargin = 0;
-						this.edit_line.DetachEditWidgets ();
+						this.edit_line.ColumnCount = 0;
 						this.edit_line.ColumnCount = this.max_columns;
 					}
 					
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.edit_line.DetachEditWidgets ();
+				this.edit_line.ColumnCount = 0;
 				
 				this.max_columns  = 0;
 			}
@@ -238,11 +238,12 @@ namespace Epsitec.Common.Widgets
 					break;
 				case EditArrayMode.Edition:
 					cell = this.GetUnclippedCellBounds (this.EditionIndex, column);
+					cell.Inflate (0, 1, 0, 1);
 					break;
 				case EditArrayMode.Search:
 					if (this.GetUnclippedCellX (column, out x1, out x2))
 					{
-						cell = new Drawing.Rectangle (x1, this.inner_bounds.Top, x2-x1, this.table_bounds.Top - this.inner_bounds.Top);
+						cell = new Drawing.Rectangle (x1, this.inner_bounds.Top - 1, x2-x1+1, this.table_bounds.Top - this.inner_bounds.Top + 1);
 					}
 					break;
 			}
@@ -401,7 +402,8 @@ namespace Epsitec.Common.Widgets
 			{
 				get
 				{
-					if (this.caption == null)
+					if ((this.caption == null) ||
+						(this.host.EditArrayMode != EditArrayMode.Search))
 					{
 						return this.LineHeight;
 					}
@@ -568,18 +570,14 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			public void DetachEditWidgets()
-			{
-				this.ColumnCount = 0;
-			}
-			
 			public void UpdateGeometry()
 			{
 				double height = this.LineHeight;
 				double ox = -this.Bounds.X;
 				double oy = -this.Bounds.Y;
 				
-				if (this.caption != null)
+				if ((this.caption != null) &&
+					(this.host.EditArrayMode == EditArrayMode.Search))
 				{
 					double dy = this.caption.Height;
 					double yy = 4;
@@ -596,8 +594,7 @@ namespace Epsitec.Common.Widgets
 					if (cell.IsValid)
 					{
 						cell.Offset (ox, oy);
-						cell.Inflate (0, 1, 0, 1);
-						cell.Height = height;
+						cell.Height = height - 1;
 						
 						this.edit_widgets[i].Bounds = cell;
 						this.edit_widgets[i].SetVisible (true);
@@ -696,6 +693,346 @@ namespace Epsitec.Common.Widgets
 
 		}
 		#endregion
+		
+		#region Header class
+		public class Header : Widget
+		{
+			public Header(EditArray host)
+			{
+				if (host == null)
+				{
+					throw new System.ArgumentNullException ("host", "Header must be hosted in EditArray.");
+				}
+				
+				this.host = host;
+				this.SetEmbedder (this.host);
+				
+				this.caption = new StaticText (this);
+				this.toolbar = new HToolBar (this);
+				
+				this.caption.Dock = DockStyle.Fill;
+				this.caption.SetVisible (false);
+				
+				this.toolbar.Dock = DockStyle.Bottom;
+				this.toolbar.SetVisible (false);
+				this.toolbar.ClientGeometryUpdated += new Support.EventHandler (this.HandleToolBarGeometryChanged);
+				this.toolbar.ItemsChanged += new Support.EventHandler (this.HandleToolBarItemsChanged);
+				
+				this.UpdateHeaderHeight ();
+			}
+			
+			
+			public string						Caption
+			{
+				get
+				{
+					return this.caption.Text;
+				}
+				set
+				{
+					if (this.caption.Text != value)
+					{
+						if ((value == null) ||
+							(value.Length == 0))
+						{
+							this.caption.Text = "";
+							this.caption.Hide ();
+						}
+						else
+						{
+							this.caption.Text = value;
+							this.caption_height = System.Math.Floor (this.caption.TextLayout.SingleLineSize.Height * 1.2);
+							this.caption.Show ();
+						}
+						
+						this.UpdateHeaderHeight ();
+					}
+				}
+			}
+			
+			public AbstractToolBar				ToolBar
+			{
+				get
+				{
+					return this.toolbar;
+				}
+			}
+			
+			
+			protected void UpdateHeaderHeight()
+			{
+				double height = 0;
+				
+				if (this.toolbar.IsVisible)
+				{
+					height += this.toolbar.Height;
+				}
+				if (this.caption.IsVisible)
+				{
+					height += this.caption_height;
+				}
+				
+				this.host.TitleHeight = height;
+			}
+			
+			
+			private void HandleToolBarGeometryChanged(object sender)
+			{
+				this.UpdateHeaderHeight ();
+			}
+			
+			private void HandleToolBarItemsChanged(object sender)
+			{
+				if (this.toolbar.Items.Count == 0)
+				{
+					if (this.toolbar.IsVisible)
+					{
+						this.toolbar.Hide ();
+						this.UpdateHeaderHeight ();
+					}
+				}
+				else
+				{
+					if (this.toolbar.IsVisible == false)
+					{
+						this.toolbar.Show ();
+						this.UpdateHeaderHeight ();
+					}
+				}
+			}
+			
+			
+			protected EditArray					host;
+			protected StaticText				caption;
+			protected double					caption_height;
+			protected HToolBar					toolbar;
+		}
+		#endregion
+		
+		public class Controller
+		{
+			public Controller(EditArray host, string name)
+			{
+				if (host == null)
+				{
+					throw new System.ArgumentNullException ("host", "Controller must be hosted in EditArray.");
+				}
+				
+				this.host = host;
+				this.name = name;
+				
+				this.host.EditArrayModeChanged += new Support.EventHandler (this.HandleHostEditArrayModeChanged);
+				this.host.SelectedIndexChanged += new Support.EventHandler (this.HandleHostSelectedIndexChanged);
+			}
+			
+			
+			public void CreateCommands()
+			{
+				Support.CommandDispatcher dispatcher = this.host.CommandDispatcher;
+				
+				dispatcher.Register (this.GetCommandName ("StartEdition"),  new Support.CommandEventHandler (this.CommandStartEdition));
+				dispatcher.Register (this.GetCommandName ("StartSearch"),   new Support.CommandEventHandler (this.CommandStartSearch));
+				dispatcher.Register (this.GetCommandName ("StartReadOnly"), new Support.CommandEventHandler (this.CommandStartReadOnly));
+				dispatcher.Register (this.GetCommandName ("InsertBefore"),  new Support.CommandEventHandler (this.CommandInsertBefore));
+				dispatcher.Register (this.GetCommandName ("InsertAfter"),   new Support.CommandEventHandler (this.CommandInsertAfter));
+				dispatcher.Register (this.GetCommandName ("Delete"),        new Support.CommandEventHandler (this.CommandDelete));
+				dispatcher.Register (this.GetCommandName ("MoveUp"),        new Support.CommandEventHandler (this.CommandMoveUp));
+				dispatcher.Register (this.GetCommandName ("MoveDown"),      new Support.CommandEventHandler (this.CommandMoveDown));
+			}
+			
+			public void CreateToolBarButtons()
+			{
+				EditArray.Header header = this.host.TitleWidget as EditArray.Header;
+				
+				if (header != null)
+				{
+					AbstractToolBar toolbar = header.ToolBar;
+					
+					toolbar.SuspendLayout ();
+					toolbar.Items.Add (this.CreateIconButton ("StartEdition", null, "Modifie les données"));
+					toolbar.Items.Add (this.CreateIconButton ("StartSearch",  null, "Démarre une recherche"));
+					toolbar.Items.Add (this.CreateIconButton ("StartReadOnly",null, "Consultation uniquement"));
+					toolbar.Items.Add (new IconSeparator ());
+					toolbar.Items.Add (this.CreateIconButton ("InsertBefore", null, "Insère une ligne avant"));
+					toolbar.Items.Add (this.CreateIconButton ("InsertAfter",  null, "Insère une ligne après"));
+					toolbar.Items.Add (this.CreateIconButton ("Delete",       null, "Supprime une ligne"));
+					toolbar.Items.Add (this.CreateIconButton ("MoveUp",       null, "Déplace la ligne vers le haut"));
+					toolbar.Items.Add (this.CreateIconButton ("MoveDown",     null, "Déplace la ligne vers le bas"));
+					toolbar.ResumeLayout ();
+				}
+			}
+			
+			
+			public virtual void StartEdition()
+			{
+				this.StartReadOnly ();
+				
+				int row = this.host.SelectedIndex;
+				int col = 0;
+				
+				this.host.StartEdition (row, col);
+			}
+			
+			public virtual void StartSearch()
+			{
+				if (this.host.EditArrayMode == EditArrayMode.Edition)
+				{
+					this.host.ValidateEdition ();
+				}
+				
+				this.host.EditArrayMode = EditArrayMode.Search;
+			}
+			
+			public virtual void StartReadOnly()
+			{
+				if (this.host.EditArrayMode == EditArrayMode.Edition)
+				{
+					this.host.ValidateEdition ();
+				}
+				
+				this.host.EditArrayMode = EditArrayMode.Standard;
+			}
+			
+			public virtual void InsertBefore()
+			{
+			}
+			
+			public virtual void InsertAfter()
+			{
+			}
+			
+			public virtual void Delete()
+			{
+			}
+			
+			public virtual void MoveUp()
+			{
+			}
+			
+			public virtual void MoveDown()
+			{
+			}
+			
+			
+			protected string GetCommandName(string command_name)
+			{
+				return this.name + command_name;
+			}
+			
+			protected CommandState GetCommandState(string command_name)
+			{
+				return CommandState.Find (this.GetCommandName (command_name), this.host.CommandDispatcher);
+			}
+			
+			
+			protected IconButton CreateIconButton(string command_name, string icon_name, string tool_tip)
+			{
+				IconButton button = new IconButton (this.GetCommandName (command_name), icon_name);
+				this.CreateToolTip (button, tool_tip);
+				return button;
+			}
+			
+			protected void       CreateToolTip(Widget widget, string text)
+			{
+				if (this.tips == null)
+				{
+					this.tips = new ToolTip ();
+				}
+				
+				this.tips.SetToolTip (widget, text);
+			}
+			
+			
+			#region Commands...
+			private void CommandStartEdition(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			{
+				this.StartEdition ();
+			}
+			
+			private void CommandStartSearch(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			{
+				this.StartSearch ();
+			}
+			
+			private void CommandStartReadOnly(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			{
+				this.StartReadOnly ();
+			}
+			
+			private void CommandInsertBefore(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			{
+				this.InsertBefore ();
+			}
+			
+			private void CommandInsertAfter(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			{
+				this.InsertAfter ();
+			}
+			
+			private void CommandDelete(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			{
+				this.Delete ();
+			}
+			
+			private void CommandMoveUp(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			{
+				this.MoveUp ();
+			}
+			
+			private void CommandMoveDown(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			{
+				this.MoveDown ();
+			}
+			#endregion
+			
+			private void HandleHostEditArrayModeChanged(object sender)
+			{
+				this.UpdateCommandStates ();
+			}
+			
+			private void HandleHostSelectedIndexChanged(object sender)
+			{
+				this.UpdateCommandStates ();
+			}
+			
+			
+			protected virtual void UpdateCommandStates()
+			{
+				int sel_index  = this.host.SelectedIndex;
+				int edit_index = this.host.EditionIndex;
+				int act_index  = -1;
+				
+				switch (this.host.EditArrayMode)
+				{
+					case EditArrayMode.Standard:
+						act_index = sel_index;
+						break;
+					
+					case EditArrayMode.Edition:
+						act_index = edit_index;
+						break;
+					
+					case EditArrayMode.Search:
+						act_index = sel_index;
+						break;
+				}
+				
+				this.GetCommandState ("StartEdition") .Enabled = (act_index >= 0);
+				this.GetCommandState ("StartSearch")  .Enabled = true;
+				this.GetCommandState ("StartReadOnly").Enabled = true;
+				this.GetCommandState ("InsertBefore") .Enabled = (act_index >= 0);
+				this.GetCommandState ("InsertAfter")  .Enabled = (act_index >= 0);
+				this.GetCommandState ("Delete")       .Enabled = (act_index >= 0);
+				this.GetCommandState ("MoveUp")       .Enabled = (act_index >  0);
+				this.GetCommandState ("MoveDown")     .Enabled = (act_index >= 0) && (act_index+1 < this.host.RowCount);
+			}
+			
+			
+			protected EditArray					host;
+			protected string					name;
+			protected ToolTip					tips;
+		}
+		
 		
 		
 		public event Support.EventHandler		EditArrayModeChanged;

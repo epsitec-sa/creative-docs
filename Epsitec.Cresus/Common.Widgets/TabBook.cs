@@ -21,8 +21,8 @@ namespace Epsitec.Common.Widgets
 
 			this.arrowLeft = new GlyphButton(this);
 			this.arrowRight = new GlyphButton(this);
-			this.arrowLeft.GlyphType = GlyphType.ArrowLeft;
-			this.arrowRight.GlyphType = GlyphType.ArrowRight;
+			this.arrowLeft.GlyphShape = GlyphShape.ArrowLeft;
+			this.arrowRight.GlyphShape = GlyphShape.ArrowRight;
 			this.arrowLeft.ButtonStyle = ButtonStyle.Scroller;
 			this.arrowRight.ButtonStyle = ButtonStyle.Scroller;
 			this.arrowLeft.Engaged += new Support.EventHandler(this.HandleScrollButton);
@@ -33,12 +33,12 @@ namespace Epsitec.Common.Widgets
 			this.arrowRight.AutoRepeatEngaged = true;
 
 			this.buttonMenu = new GlyphButton(this);
-			this.buttonMenu.GlyphType = GlyphType.Menu;
+			this.buttonMenu.GlyphShape = GlyphShape.Menu;
 			this.buttonMenu.ButtonStyle = ButtonStyle.Scroller;
 			this.buttonMenu.Clicked += new MessageEventHandler(this.HandleButtonMenuClicked);
 
 			this.buttonClose = new GlyphButton(this);
-			this.buttonClose.GlyphType = GlyphType.Close;
+			this.buttonClose.GlyphShape = GlyphShape.Close;
 			this.buttonClose.ButtonStyle = ButtonStyle.Scroller;
 			this.buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 		}
