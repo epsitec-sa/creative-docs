@@ -741,34 +741,40 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.table != null )
 			{
-				this.table.RefreshContent();
+				this.table.RefreshContents();
 			}
 		}
 
 		// Changement de sélection dans la liste.
 		private void table_SelectedIndexChanged(object sender)
 		{
-			this.recordRank = this.table.SelectedIndex;
-			this.recordCreated = false;
-			this.UpdateLayout();
-			this.UpdateButton();
+			if (this.textFields != null)
+			{
+				this.recordRank = this.table.SelectedIndex;
+				this.recordCreated = false;
+				this.UpdateLayout();
+				this.UpdateButton();
+			}
 		}
 
 		// Changement de tri dans la liste.
 		private void table_SortChanged(object sender)
 		{
-			int column;
-			SortMode mode;
-			this.table.GetSortingHeader(out column, out mode);
-			int fieldID = this.db.RetFieldID(column);
-			int sel = this.db.SortToInternal(this.recordRank);
-			this.SetSort(fieldID, mode);
-			this.recordRank = this.db.InternalToSort(sel);
-			this.recordCreated = false;
-			this.UpdateTable();
-			this.UpdateLayout();
-			this.UpdateButton();
-			this.table.SetFocused(true);
+			if (this.textFields != null)
+			{
+				int column;
+				SortMode mode;
+				this.table.GetSortingHeader(out column, out mode);
+				int fieldID = this.db.RetFieldID(column);
+				int sel = this.db.SortToInternal(this.recordRank);
+				this.SetSort(fieldID, mode);
+				this.recordRank = this.db.InternalToSort(sel);
+				this.recordCreated = false;
+				this.UpdateTable();
+				this.UpdateLayout();
+				this.UpdateButton();
+				this.table.SetFocused(true);
+			}
 		}
 
 		// Critère de recherche complété.
