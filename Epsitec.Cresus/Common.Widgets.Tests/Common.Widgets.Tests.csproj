@@ -168,6 +168,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ScrollArrayTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "SystemInformationTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
