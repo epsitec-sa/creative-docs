@@ -435,11 +435,6 @@ namespace Epsitec.Common.Drawing
 			AntiGrain.Font.PixelCache.Fill (this.handle, text, size, ox, oy);
 		}
 		
-		public void RenderPixelCache(Pixmap pixmap, string text, double size, double ox, double oy)
-		{
-			AntiGrain.Font.PixelCache.Render (pixmap.Handle, this.handle, text, size, ox, oy);
-		}
-		
 		public double PaintPixelCache(Pixmap pixmap, string text, double size, double ox, double oy, Color color)
 		{
 			return AntiGrain.Font.PixelCache.Paint (pixmap.Handle, this.handle, text, size, ox, oy, color.R, color.G, color.B, color.A);

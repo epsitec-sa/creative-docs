@@ -603,7 +603,7 @@ namespace Epsitec.Common.Drawing
 			double   size  = 10.6;
 			string   text  = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
 			Font     font  = Font.GetFont ("Tahoma", "Regular");
-			Color    color = Color.FromBrightness (0);
+			Color    black = Color.FromBrightness (0);
 			
 			long cc = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			long c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
@@ -616,7 +616,7 @@ namespace Epsitec.Common.Drawing
 			gra.SolidRenderer.Color = Color.FromBrightness (0);
 			
 			font.FillPixelCache ("", size, 10, 200);
-			font.RenderPixelCache (gra.Pixmap, "", size, 10, 200);
+			font.PaintPixelCache (gra.Pixmap, "", size, 10, 200, black);
 			
 			c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			font.FillPixelCache ("", size, 10, 200);
@@ -639,7 +639,7 @@ namespace Epsitec.Common.Drawing
 			for (int i = 0; i < 100; i++)
 			{
 				c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
-				font.RenderPixelCache (gra.Pixmap, text, size, 10, 200);
+				font.PaintPixelCache (gra.Pixmap, text, size, 10, 200, black);
 				c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 				
 				tot += c2;
@@ -647,7 +647,7 @@ namespace Epsitec.Common.Drawing
 			
 			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " cycles -> " + (tot * 10 / cpu_speed / text.Length) + "ns / char in Cached AGG");
 			
-			gra.SolidRenderer.Color = color;
+			gra.SolidRenderer.Color = black;
 			
 			tot = 0;
 			
@@ -665,7 +665,7 @@ namespace Epsitec.Common.Drawing
 			
 			
 			font.FillPixelCache (text, size, 10, 240);
-			font.RenderPixelCache (gra.Pixmap, text, size, 10, 240);
+			font.PaintPixelCache (gra.Pixmap, text, size, 10, 240, black);
 			
 			gra.AddText (10, 220, text, font, size);
 			gra.RenderSolid ();
