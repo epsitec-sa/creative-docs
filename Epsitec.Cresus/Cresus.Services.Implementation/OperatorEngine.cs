@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Services
 	/// <summary>
 	/// Summary description for OperatorEngine.
 	/// </summary>
-	internal class OperatorEngine : AbstractServiceEngine, Remoting.IOperatorService
+	internal sealed class OperatorEngine : AbstractServiceEngine, Remoting.IOperatorService
 	{
 		public OperatorEngine(Engine engine) : base (engine, "Operator")
 		{
@@ -16,16 +16,19 @@ namespace Epsitec.Cresus.Services
 		#region IOperatorService Members
 		public void CreateRoamingClient(out Remoting.IOperation operation)
 		{
-			operation = new Operation ();
+			operation = new Operation (this);
 		}
 		#endregion
 		
+		
 		private class Operation : Remoting.AbstractThreadedOperation
 		{
-			public Operation()
+			public Operation(OperatorEngine oper)
 			{
+				this.oper = oper;
 				this.Start ();
 			}
+			
 			
 			protected override void ProcessOperation()
 			{
@@ -33,6 +36,8 @@ namespace Epsitec.Cresus.Services
 				
 				try
 				{
+					this.Step1_CopyDatabase ();
+					
 					while (! this.IsCancelRequested)
 					{
 						//	TODO: faire du travail réel ici
@@ -49,6 +54,17 @@ namespace Epsitec.Cresus.Services
 					System.Diagnostics.Debug.WriteLine ("Operator: operation thread exited.");
 				}
 			}
+			
+			private void Step1_CopyDatabase()
+			{
+				Database.DbInfrastructure infrastructure = this.oper.engine.Orchestrator.Infrastructure;
+				Database.IDbServiceTools  tools          = infrastructure.DefaultDbAbstraction.ServiceTools;
+				
+				tools.Backup (@"c:\test.backup.firebird");
+			}
+			
+			
+			private OperatorEngine				oper;
 		}
 	}
 }

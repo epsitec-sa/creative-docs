@@ -561,7 +561,7 @@ namespace Epsitec.Cresus.Database
 			
 			for (int i = 0; i < 10; i++)
 			{
-				System.Threading.Thread.Sleep (20);
+				System.Threading.Thread.Sleep (100);
 				bool finished = operation.HasFinished;
 				System.Diagnostics.Debug.WriteLine ("Operation: " + (finished ? "finished" : "running") + " after " + (int) operation.RunningDuration.TotalMilliseconds + " ms.");
 				if (finished) break;
@@ -570,9 +570,9 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.WriteLine ("Cancelling...");
 			operation.CancelOperation (out progress);
 			
-			for (int i = 0; i < 10; i++)
+			for (int i = 0; i < 100; i++)
 			{
-				System.Threading.Thread.Sleep (20);
+				System.Threading.Thread.Sleep (10);
 				bool finished = progress.HasFinished;
 				System.Diagnostics.Debug.WriteLine ("Cancellation: " + (finished ? "finished" : "running") + " after " + (int) progress.RunningDuration.TotalMilliseconds + " ms.");
 				if (finished) break;

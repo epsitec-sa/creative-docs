@@ -13,6 +13,7 @@ namespace Epsitec.Cresus.Database
 		System.Data.IDbConnection	Connection			{ get; }
 		ISqlBuilder					SqlBuilder			{ get; }
 		ISqlEngine					SqlEngine			{ get; }
+		IDbServiceTools				ServiceTools		{ get; }
 		
 		bool						IsConnectionOpen	{ get; }
 		bool						IsConnectionAlive	{ get; }

@@ -10,8 +10,6 @@ namespace Epsitec.Cresus.Remoting
 	{
 		public AbstractProgress()
 		{
-			this.progress_percent = -1;
-			this.start_time       = System.DateTime.Now;
 		}
 		
 		
@@ -29,6 +27,22 @@ namespace Epsitec.Cresus.Remoting
 			get
 			{
 				return this.ProgressPercent == 100;
+			}
+		}
+		
+		public virtual int						CurrentStep
+		{
+			get
+			{
+				return this.current_step;
+			}
+		}
+		
+		public virtual int						LastStep
+		{
+			get
+			{
+				return this.last_step;
 			}
 		}
 		
@@ -151,7 +165,11 @@ namespace Epsitec.Cresus.Remoting
 		
 		
 		private System.Threading.AutoResetEvent	wait_progress_event;
-		private System.DateTime					start_time;
-		private volatile int					progress_percent;
+		
+		private System.DateTime					start_time       = System.DateTime.Now;
+		private volatile int					progress_percent = -1;
+		
+		protected volatile int					current_step     = 0;
+		protected volatile int					last_step	     = -1;
 	}
 }

@@ -11,6 +11,8 @@ namespace Epsitec.Cresus.Remoting
 	{
 		int				ProgressPercent		{ get; }	//	avancement 0..100, -1 = indéterminé
 		bool			HasFinished			{ get; }	//	true => opération terminée
+		int				CurrentStep			{ get; }	//	# de l'étape en cours (0..n)
+		int				LastStep			{ get; }	//	# de la dernière étape, -1 = indéterminé
 		
 		System.TimeSpan	RunningDuration		{ get; }	//	durée d'exécution actuelle
 		System.TimeSpan	ExpectedDuration	{ get; }	//	durée totale estimée, indéterminée si < 0

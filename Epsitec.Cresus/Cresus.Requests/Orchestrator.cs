@@ -33,6 +33,14 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
+		public DbInfrastructure					Infrastructure
+		{
+			get
+			{
+				return this.infrastructure;
+			}
+		}
+		
 		
 		#region IDisposable Members
 		public void Dispose()

@@ -125,6 +125,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "FirebirdServiceTools.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "FirebirdSqlBuilder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -54,6 +54,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			this.sql_builder = new FirebirdSqlBuilder (this);
 			this.sql_engine  = new FirebirdSqlEngine (this);
+			this.db_service_tools = new FirebirdServiceTools (this);
 		}
 
 		~FirebirdAbstraction()
@@ -274,6 +275,13 @@ namespace Epsitec.Cresus.Database.Implementation
 			get { return this.sql_engine; }
 		}
 
+		public IDbServiceTools						ServiceTools
+		{
+			get
+			{
+				return this.db_service_tools;
+			}
+		}
 		
 		public bool									IsConnectionOpen
 		{
@@ -405,6 +413,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		private string					db_connection_string;
 		private FirebirdSqlBuilder		sql_builder;
 		private FirebirdSqlEngine		sql_engine;
+		private FirebirdServiceTools	db_service_tools;
 		
 		private bool					auto_reopen_connection;
 		
