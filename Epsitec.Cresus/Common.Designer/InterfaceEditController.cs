@@ -101,7 +101,7 @@ namespace Epsitec.Common.Designer
 			this.attribute_palette.NotifyActiveEditionWidgetChanged (widget, restart_edition);
 		}
 		
-		internal void CreateEditorForWindow(Window window)
+		internal void CreateEditorForWindow(Window window, string resource_name)
 		{
 			window.Root.IsEditionEnabled = true;
 			window.PreventAutoClose      = true;
@@ -122,6 +122,7 @@ namespace Epsitec.Common.Designer
 				
 				designer.DialogWindow = window;
 				designer.DialogData   = null;
+				designer.ResourceName = resource_name;
 			}
 			
 			editor.DialogDesigner = designer;
@@ -644,7 +645,7 @@ namespace Epsitec.Common.Designer
 			
 			window.ClientSize = new Drawing.Size (400, 300);
 			
-			this.CreateEditorForWindow (window);
+			this.CreateEditorForWindow (window, null);
 		}
 		
 		[Command ("SaveActiveInterface")]		void CommandSaveActiveInterface()
@@ -658,7 +659,7 @@ namespace Epsitec.Common.Designer
 			this.DeselectAllWidgets ();
 			
 			this.application.StringEditController.SaveAllBundles ();
-			this.active_editor.Save (@"resources\test.00.resource");
+			this.active_editor.Save ();
 			
 			this.ReselectWidgets (selected);
 			this.UpdateCommandStates ();
@@ -674,7 +675,7 @@ namespace Epsitec.Common.Designer
 			Widget root   = bundler.CreateFromBundle (bundle) as Widget;
 			Window window = root.Window;
 			
-			this.CreateEditorForWindow (window);
+			this.CreateEditorForWindow (window, bundle.PrefixedName);
 		}
 		
 		

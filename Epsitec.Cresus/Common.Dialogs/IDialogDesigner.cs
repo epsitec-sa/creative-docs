@@ -12,6 +12,7 @@ namespace Epsitec.Common.Dialogs
 	{
 		Widgets.Window			DialogWindow		{ get; set; }
 		Types.IDataGraph		DialogData			{ get; set; }
+		string					ResourceName		{ get; set; }
 		
 		void StartDesign();
 	}

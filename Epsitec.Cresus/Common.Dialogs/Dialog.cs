@@ -35,6 +35,10 @@ namespace Epsitec.Common.Dialogs
 					{
 						this.designer.DialogData = this.data;
 					}
+					else if (this.window != null)
+					{
+						UI.Engine.BindWidgets (this.data, this.window.Root);
+					}
 				}
 			}
 		}
@@ -68,11 +72,24 @@ namespace Epsitec.Common.Dialogs
 				
 				this.designer.DialogData   = this.data;
 				this.designer.DialogWindow = this.window;
+				this.designer.ResourceName = full_name;
 				
 				this.designer.StartDesign ();
 			}
 			else
 			{
+				Support.ObjectBundler bundler = new Support.ObjectBundler ();
+				
+				Widgets.Widget root = bundler.CreateFromBundle (bundle) as Widgets.Widget;
+				
+				System.Diagnostics.Debug.Assert (root != null);
+				
+				this.window = root.Window;
+				
+				if (this.data != null)
+				{
+					UI.Engine.BindWidgets (this.data, root);
+				}
 			}
 		}
 		

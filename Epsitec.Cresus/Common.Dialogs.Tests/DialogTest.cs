@@ -36,6 +36,14 @@ namespace Epsitec.Common.Dialogs
 		{
 			Dialog dialog = new Dialog ();
 			dialog.Load ("file:unknown_dialog");
+			dialog.Window.Show ();
+		}
+		
+		[Test] public void CheckLoad2()
+		{
+			Dialog dialog = new Dialog ();
+			dialog.Load ("file:test");
+			dialog.Window.Show ();
 		}
 	}
 }
