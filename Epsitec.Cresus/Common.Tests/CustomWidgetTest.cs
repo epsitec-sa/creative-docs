@@ -39,7 +39,7 @@ namespace Epsitec.Common.Tests
 		{
 		}
 		
-		protected override void PaintBackgroundImplementation(Graphics graphics)
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
 		{
 			Path path = new Path ();
 			
