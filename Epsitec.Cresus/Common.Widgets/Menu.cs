@@ -288,7 +288,7 @@ namespace Epsitec.Common.Widgets
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
 			this.window.WindowDeactivated += new System.EventHandler(this.HandleWindowDeactivated);
 			this.window.Root.Children.Add(this.submenu);
-			this.window.AnimateShow(Animation.RollDown);
+			this.window.AnimateShow(Animation.FadeIn);
 			this.submenu.SetFocused(true);
 			return true;
 		}

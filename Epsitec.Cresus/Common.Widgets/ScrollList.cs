@@ -441,7 +441,7 @@ namespace Epsitec.Common.Widgets
 				}
 
 				//this.textLayouts[i].Paint(pos, graphics, Drawing.Rectangle.Empty, color);
-				adorner.PaintButtonTextLayout(graphics, pos, this.textLayouts[i], state, dir, ButtonStyle.MenuItem);
+				adorner.PaintButtonTextLayout(graphics, pos, this.textLayouts[i], state, dir, ButtonStyle.MenuItemV);
 				pos.Y -= this.lineHeight;
 			}
 		}

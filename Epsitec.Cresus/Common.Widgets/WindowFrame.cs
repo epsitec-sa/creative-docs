@@ -5,6 +5,9 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class WindowFrame : System.Windows.Forms.Form
 	{
+		protected delegate void BoundsOffsetCallback(Drawing.Rectangle bounds, Drawing.Point offset);
+		protected delegate void AnimatorCallback(Animator animator);
+		
 		public WindowFrame()
 		{
 			this.SetStyle (System.Windows.Forms.ControlStyles.AllPaintingInWmPaint, true);
@@ -34,6 +37,56 @@ namespace Epsitec.Common.Widgets
 			this.ShowInTaskbar   = false;
 		}
 		
+		public void AnimateShow(Animation animation)
+		{
+			this.AnimateShow (animation, this.WindowBounds);
+		}
+		
+		public void AnimateShow(Animation animation, Drawing.Rectangle bounds)
+		{
+			switch (animation)
+			{
+				case Animation.None:
+					this.Show ();
+					break;
+				
+				case Animation.RollDown:
+					Drawing.Rectangle b1 = new Drawing.Rectangle (bounds.Left, bounds.Top - 1, bounds.Width, 1);
+					Drawing.Rectangle b2 = bounds;
+					
+					this.WindowBounds = bounds;
+					this.MarkForRepaint ();
+					this.RefreshGraphics ();
+					this.is_frozen = true;
+					this.WindowBounds = b1;
+					
+					Animator animator = new Animator (bounds.Height * 0.0025);
+					animator.SetCallback (new BoundsOffsetCallback (this.AnimateWindowBounds), new AnimatorCallback (this.AnimateCleanup));
+					animator.SetValue (0, b1, b2);
+					animator.SetValue (1, new Drawing.Point (0.0, - bounds.Height + 1), new Drawing.Point (0.0, 0.0));
+					animator.Start ();
+					this.Show ();
+					break;
+				
+				case Animation.RollUp:
+					break;
+			}
+		}
+		
+		protected virtual void AnimateWindowBounds(Drawing.Rectangle bounds, Drawing.Point offset)
+		{
+			this.WindowBounds = bounds;
+			this.paint_offset = offset;
+			this.Invalidate ();
+		}
+		
+		protected virtual void AnimateCleanup(Animator animator)
+		{
+			this.is_frozen = false;
+			this.Invalidate ();
+			
+			animator.Dispose ();
+		}
 		
 		public WindowRoot				Root
 		{
@@ -139,6 +192,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool						IsFrozen
+		{
+			get { return this.is_frozen; }
+		}
+		
 		public double					Alpha
 		{
 			get { return this.alpha; }
@@ -151,6 +209,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
 		
 		public Drawing.Rectangle		WindowBounds
 		{
@@ -399,13 +458,20 @@ namespace Epsitec.Common.Widgets
 			int width  = this.ClientSize.Width;
 			int height = this.ClientSize.Height;
 			
-			this.graphics.SetPixmapSize (width, height);
-			this.graphics.Pixmap.Clear ();
+			if (this.is_frozen)
+			{
+				return;
+			}
 			
-			this.root.Size       = new Drawing.Size (width, height);
-			this.dirty_rectangle = new Drawing.Rectangle (0, 0, width, height);
-			
-			this.UpdateLayeredWindow ();
+			if (this.graphics.SetPixmapSize (width, height))
+			{
+				this.graphics.Pixmap.Clear ();
+				
+				this.root.Size       = new Drawing.Size (width, height);
+				this.dirty_rectangle = new Drawing.Rectangle (0, 0, width, height);
+				
+				this.UpdateLayeredWindow ();
+			}
 		}
 		
 		
@@ -476,6 +542,11 @@ namespace Epsitec.Common.Widgets
 			return new Drawing.Point (xx, yy);
 		}
 		
+		
+		public virtual void MarkForRepaint()
+		{
+			this.MarkForRepaint (new Drawing.Rectangle (0, 0, this.ClientSize.Width, this.ClientSize.Height));
+		}
 		
 		public virtual void MarkForRepaint(Drawing.Rectangle rect)
 		{
@@ -706,47 +777,50 @@ namespace Epsitec.Common.Widgets
 			//	de type WM_PAINT (PaintEvent), on doit simplement afficher le contenu de la fenêtre, sans regénérer le
 			//	contenu du pixmap servant de cache.
 			
-			if (this.dirty_rectangle.IsEmpty == false)
-			{
-				Drawing.Rectangle repaint = this.dirty_rectangle;
-				
-				this.dirty_rectangle = Drawing.Rectangle.Empty;
-				
-				this.graphics.ResetClippingRectangle ();
-				this.graphics.SetClippingRectangle (repaint);
-				
-				this.root.PaintHandler (this.graphics, repaint);
-			}
-			
 			if (this.UpdateLayeredWindow ())
 			{
 				Drawing.Pixmap pixmap = this.graphics.Pixmap;
-			
+				
 				if (pixmap != null)
 				{
-					pixmap.Paint (win_graphics, win_clip_rect);
+					System.Drawing.Point offset = new System.Drawing.Point ((int)(this.paint_offset.X), (int)(this.paint_offset.Y));
+					pixmap.Paint (win_graphics, offset, win_clip_rect);
 				}
 			}
+		}
+		
+		protected virtual bool RefreshGraphics()
+		{
+			if (this.is_frozen)
+			{
+				return false;
+			}
+			
+			if (this.dirty_rectangle.IsEmpty == false)
+			{
+				Drawing.Rectangle repaint = this.dirty_rectangle;
+					
+				this.dirty_rectangle = Drawing.Rectangle.Empty;
+					
+				this.graphics.ResetClippingRectangle ();
+				this.graphics.SetClippingRectangle (repaint);
+					
+				this.root.PaintHandler (this.graphics, repaint);
+				
+				return true;
+			}
+			
+			return false;
 		}
 		
 		protected virtual bool UpdateLayeredWindow()
 		{
 			bool paint_needed = true;
 			
+			this.RefreshGraphics ();
+			
 			if (this.is_layered)
 			{
-				if (this.dirty_rectangle.IsEmpty == false)
-				{
-					Drawing.Rectangle repaint = this.dirty_rectangle;
-					
-					this.dirty_rectangle = Drawing.Rectangle.Empty;
-					
-					this.graphics.ResetClippingRectangle ();
-					this.graphics.SetClippingRectangle (repaint);
-					
-					this.root.PaintHandler (this.graphics, repaint);
-				}
-				
 				using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (this.Width, this.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
 				{
 					System.Drawing.Point  client = this.PointToScreen (new System.Drawing.Point (0, 0));
@@ -764,6 +838,7 @@ namespace Epsitec.Common.Widgets
 			
 			return paint_needed;
 		}
+		
 		
 		public virtual void DispatchMessage(Message message)
 		{
@@ -939,6 +1014,7 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Graphics				graphics;
 		protected Drawing.Rectangle				dirty_rectangle;
 		protected Drawing.Rectangle				window_bounds;
+		protected Drawing.Point					paint_offset;
 		protected System.Drawing.Rectangle		form_bounds;
 		protected bool							form_bounds_set = false;
 		protected bool							on_resize_event = false;
@@ -949,9 +1025,10 @@ namespace Epsitec.Common.Widgets
 		protected System.Windows.Forms.Timer	winforms_timer;
 		protected int							tick_count;
 		
-		private bool							prevent_close;
-		private bool							is_layered;
-		private double							alpha = 1.0;
-		private int								wnd_proc_depth;
+		protected bool							prevent_close;
+		protected bool							is_layered;
+		protected bool							is_frozen;
+		protected double						alpha = 1.0;
+		protected int							wnd_proc_depth;
 	}
 }

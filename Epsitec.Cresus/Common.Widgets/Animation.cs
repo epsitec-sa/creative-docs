@@ -4,6 +4,9 @@ namespace Epsitec.Common.Widgets
 	{
 		None,
 		RollDown,
-		RollUp
+		RollUp,
+		RollRight,
+		RollLeft,
+		FadeIn
 	}
 }
