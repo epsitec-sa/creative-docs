@@ -68,10 +68,17 @@ namespace Epsitec.Common.UI.Data
 				
 				return;
 			}
+			if (value is bool)
+			{
+				this.value = value;
+				this.type  = new Types.BooleanType ();
+				
+				return;
+			}
 			if (value is int)
 			{
 				this.value = value;
-				this.type  = new Types.DecimalType ();
+				this.type  = new Types.IntegerType ();
 				
 				return;
 			}
@@ -95,6 +102,18 @@ namespace Epsitec.Common.UI.Data
 		{
 			get
 			{
+//				if (this.type != null)
+//				{
+//					object value;
+//					
+//					if (Common.Converters.Converter.Convert (this.value, this.type.SystemType, out value))
+//					{
+//						return value;
+//					}
+//					
+//					throw new System.InvalidOperationException ("Value cannot be mapped to required type.");
+//				}
+				
 				return this.value;
 			}
 			set
@@ -132,12 +151,35 @@ namespace Epsitec.Common.UI.Data
 		
 		public object ReadValue()
 		{
-			return this.Value;
+			object value = this.Value;
+			
+			if ((value != null) &&
+				(this.type != null) &&
+				(value.GetType () != this.type.SystemType))
+			{
+				throw new System.InvalidOperationException ("Value is not of required type.");
+			}
+			
+			return value;
 		}
 
 		public void WriteValue(object value)
 		{
-			this.Value = value;
+			if (this.type != null)
+			{
+				if (Common.Converters.Converter.Convert (value, this.type.SystemType, out value))
+				{
+					this.Value = value;
+				}
+				else
+				{
+					throw new System.InvalidOperationException ("Value cannot be mapped to required type.");
+				}
+			}
+			else
+			{
+				this.Value = value;
+			}
 		}
 		#endregion
 

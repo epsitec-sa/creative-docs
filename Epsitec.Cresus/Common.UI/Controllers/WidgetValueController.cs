@@ -8,7 +8,7 @@ namespace Epsitec.Common.UI.Controllers
 {
 	/// <summary>
 	/// La classe WidgetValueController réalise un contrôleur très simple qui
-	/// s'appuie sur un widget existant et interagit avec sa propriété Text.
+	/// s'appuie sur un widget existant et interagit avec sa propriété Value.
 	/// </summary>
 	public class WidgetValueController : AbstractConstrainedController
 	{

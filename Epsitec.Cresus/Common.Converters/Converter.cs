@@ -170,54 +170,82 @@ namespace Epsitec.Common.Converters
 		
 		public static bool Convert(object obj, System.Type type, out object value)
 		{
-			if (type == typeof (string))
+			if (obj == null)
 			{
-				string result;
+				value = null;
 				
-				if (Converter.Convert (obj, out result))
+				if (type.IsValueType)
 				{
-					value = result;
-					return true;
+					//	On ne peut pas convertir 'null' en une valeur...
+					
+					return false;
+				}
+				
+				return true;
+			}
+			
+			if (obj.GetType () == type)
+			{
+				//	Le type est déjà correct, on n'a donc rien à faire :
+				
+				value = obj;
+				return true;
+			}
+			
+			if (type.IsValueType)
+			{
+				if (type == typeof (bool))
+				{
+					bool result;
+					
+					if (Converter.Convert (obj, out result))
+					{
+						value = result;
+						return true;
+					}
+				}
+				else if (type == typeof (int))
+				{
+					int result;
+					
+					if (Converter.Convert (obj, out result))
+					{
+						value = result;
+						return true;
+					}
+				}
+				else if (type == typeof (long))
+				{
+					long result;
+					
+					if (Converter.Convert (obj, out result))
+					{
+						value = result;
+						return true;
+					}
+				}
+				else if (type == typeof (decimal))
+				{
+					decimal result;
+					
+					if (Converter.Convert (obj, out result))
+					{
+						value = result;
+						return true;
+					}
 				}
 			}
-			else if (type == typeof (bool))
+			else
 			{
-				bool result;
-				
-				if (Converter.Convert (obj, out result))
+				if (type == typeof (string))
 				{
-					value = result;
-					return true;
-				}
-			}
-			else if (type == typeof (int))
-			{
-				int result;
-				
-				if (Converter.Convert (obj, out result))
-				{
-					value = result;
-					return true;
-				}
-			}
-			else if (type == typeof (long))
-			{
-				long result;
-				
-				if (Converter.Convert (obj, out result))
-				{
-					value = result;
-					return true;
-				}
-			}
-			else if (type == typeof (decimal))
-			{
-				decimal result;
-				
-				if (Converter.Convert (obj, out result))
-				{
-					value = result;
-					return true;
+					string result;
+					
+					if (Converter.Convert (obj, out result))
+					{
+						value = result;
+						return true;
+					}
 				}
 			}
 			

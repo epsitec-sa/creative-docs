@@ -71,7 +71,19 @@ namespace Epsitec.Common.UI
 				Binders.DataValueBinder binder     = new Binders.DataValueBinder (source);
 				Adapters.DecimalAdapter adapter    = new Adapters.DecimalAdapter (binder);
 				
-				new Controllers.WidgetValueController (adapter, widget, constraint, num_type);
+				//	Si le widget supporte l'interface INumValue, utilise la propriété Value
+				//	du widget pour échanger des données; sinon, part du principe que c'est
+				//	l'état du widget qui doit être exploité (sous la forme d'un booléen
+				//	ou d'un index dans le cas d'un groupe de boutons radio) :
+				
+				if (widget is Support.Data.INumValue)
+				{
+					new Controllers.WidgetValueController (adapter, widget, constraint, num_type);
+				}
+				else
+				{
+					new Controllers.WidgetStateController (adapter, widget);
+				}
 				
 				return;
 			}
