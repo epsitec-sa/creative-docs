@@ -230,6 +230,62 @@ namespace Epsitec.Common.Drawing
 			return x_array;
 		}
 		
+		public void GetGlyphAndTextCharEndX(string text, out double[] glyph_x, out int[] glyph, out byte[] glyph_n)
+		{
+			int n = text.Length;
+			
+			glyph_x = this.GetTextCharEndX (text);
+			glyph   = new int[n];
+			glyph_n = new byte[n];
+			
+			for (int i = 0; i < n; i++)
+			{
+				glyph[i]   = this.GetGlyphIndex (text[i]);
+				glyph_n[i] = 1;
+			}
+		}
+		
+		
+		public System.Drawing.Font GetOsFont(double scale)
+		{
+			if (this.os_font == null)
+			{
+				if (this.IsSynthetic)
+				{
+					return null;
+				}
+				
+				System.IntPtr hfont = AntiGrain.Font.Face.GetOsHandle (this.handle);
+				
+				if (hfont != System.IntPtr.Zero)
+				{
+					this.os_font = System.Drawing.Font.FromHfont (hfont);
+				}
+				
+				if (this.os_font_cache == null)
+				{
+					this.os_font_cache = new System.Collections.Hashtable ();
+				}
+			}
+			
+			if (this.os_font != null)
+			{
+				if (this.os_font_cache.Contains (scale))
+				{
+					return this.os_font_cache[scale] as System.Drawing.Font;
+				}
+				
+				double              size = this.os_font.SizeInPoints / this.os_font.Size;
+				System.Drawing.Font font = new System.Drawing.Font (this.os_font.FontFamily, (float) (scale * size), this.os_font.Style);
+				
+				this.os_font_cache[scale] = font;
+				
+				return font;
+			}
+			
+			return null;
+		}
+		
 		
 		public void FillPixelCache(string text, double size, double ox, double oy)
 		{
@@ -457,6 +513,8 @@ namespace Epsitec.Common.Drawing
 		protected System.IntPtr							handle;
 		protected string								synthetic_style;
 		protected SyntheticFontMode						synthetic_mode;
+		protected System.Drawing.Font					os_font;
+		protected System.Collections.Hashtable			os_font_cache;
 		
 		protected static Font[]							array = null;
 		protected static System.Collections.Hashtable	hash;
