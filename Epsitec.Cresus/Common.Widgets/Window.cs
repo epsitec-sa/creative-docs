@@ -2,7 +2,11 @@ namespace Epsitec.Common.Widgets
 {
 	using BundleAttribute  = Epsitec.Common.Support.BundleAttribute;
 	
-	
+	/// <summary>
+	/// La classe Window représente une fenêtre du système d'exploitation. Ce
+	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
+	/// racine de la fenêtre.
+	/// </summary>
 	public class Window : System.IDisposable, Epsitec.Common.Support.IBundleSupport
 	{
 		public Window()
@@ -21,10 +25,22 @@ namespace Epsitec.Common.Widgets
 			this.timer.AutoRepeat = 0.050;
 		}
 		
+		
 		public void MakeFramelessWindow()
 		{
 			this.window.MakeFramelessWindow ();
 		}
+		
+		public void MakeLayeredWindow()
+		{
+			this.window.IsLayered = true;
+		}
+		
+		public void DisableMouseActivation()
+		{
+			this.window.IsMouseActivationEnabled = false;
+		}
+		
 		
 		public void Show()
 		{
@@ -35,6 +51,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.window.Hide ();
 		}
+		
 		
 		public void AnimateShow(Animation animation)
 		{
@@ -47,23 +64,34 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public WindowRoot						Root
+		public WindowRoot					Root
 		{
 			get { return this.root; }
 		}
 		
-		public Support.CommandDispatcher		CommandDispatcher
+		public Window						Owner
 		{
-			get { return this.cmd_dispatcher; }
-			set { this.cmd_dispatcher = value; }
+			get { return this.owner; }
+			set
+			{
+				if (this.owner != value)
+				{
+					this.owner = value;
+					
+					if (value == null)
+					{
+						this.window.Owner = null;
+					}
+					else
+					{
+						this.window.Owner = this.owner.window;
+					}
+				}
+			}
 		}
 		
-		public Widget							CapturingWidget
-		{
-			get { return this.capturing_widget; }
-		}
 		
-		public Widget							FocusedWidget
+		public Widget						FocusedWidget
 		{
 			get { return this.focused_widget; }
 			set
@@ -90,7 +118,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Widget							EngagedWidget
+		public Widget						EngagedWidget
 		{
 			get { return this.engaged_widget; }
 			set
@@ -119,123 +147,108 @@ namespace Epsitec.Common.Widgets
 							this.timer.Stop ();
 							this.timer.AutoRepeat = SystemInformation.InitialKeyboardDelay;
 							this.timer.Start ();
-							this.tick_count = 0;
 						}
 					}
 				}
 			}
 		}
 		
-		public object							Cursor
+		public MouseCursor					MouseCursor
 		{
-			set { this.window.Cursor = value as System.Windows.Forms.Cursor; }
+			set
+			{
+				this.window.Cursor = value == null ? null : value.GetPlatformCursor ();
+			}
 		}
 		
-		public bool								PreventAutoClose
-		{
-			get { return this.window.PreventAutoClose; }
-			set { this.window.PreventAutoClose = value; }
-		}
 		
-		public bool								IsLayered
-		{
-			get { return this.window.IsLayered; }
-			set { this.window.IsLayered = value; }
-		}
-		
-		public bool								IsFrozen
+		public bool							IsFrozen
 		{
 			get { return (this.window == null) || this.window.IsFrozen; }
 		}
 		
-		public bool								IsMouseActivationEnabled
-		{
-			get { return this.window.IsMouseActivationEnabled; }
-			set { this.window.IsMouseActivationEnabled = value; }
-		}
-		
-		public bool								IsFocused
+		public bool							IsFocused
 		{
 			get { return this.window.Focused; }
 		}
 		
-		public Window							Owner
-		{
-			get { return this.owner; }
-			set
-			{
-				if (this.owner != value)
-				{
-					this.owner = value;
-					
-					if (value == null)
-					{
-						this.window.Owner = null;
-					}
-					else
-					{
-						this.window.Owner = this.owner.window;
-					}
-				}
-			}
-		}
-		
-		public double							Alpha
+		public double						Alpha
 		{
 			get { return this.window.Alpha; }
 			set { this.window.Alpha = value; }
 		}
 		
-		public Drawing.Rectangle				WindowBounds
+		public Drawing.Rectangle			WindowBounds
 		{
 			get { return this.window.WindowBounds; }
 			set { this.window.WindowBounds = value; }
 		}
 		
-		public Drawing.Image					Icon
+		public Drawing.Image				Icon
 		{
 			get { return this.window.Icon; }
 			set { this.window.Icon = value; }
 		}
 		
 		
-		public Drawing.Rectangle				Bounds
+		public Support.CommandDispatcher	CommandDispatcher
+		{
+			get { return this.cmd_dispatcher; }
+			set { this.cmd_dispatcher = value; }
+		}
+		
+		
+		public static bool					IsApplicationActive
+		{
+			get { return Platform.Window.IsApplicationActive; }
+		}
+		
+		
+		public Drawing.Rectangle			PlatformBounds
 		{
 			get { return new Drawing.Rectangle (this.window.Bounds); }
-//			set { this.window.ClientSize = new System.Drawing.Size ((int)(value.Width + 0.5), (int)(value.Height + 0.5)); }
 		}
 		
-		[Bundle ("size")]  public Drawing.Size	ClientSize
-		{
-			get { return new Drawing.Size (this.window.ClientSize); }
-			set { this.window.ClientSize = new System.Drawing.Size ((int)(value.Width + 0.5), (int)(value.Height + 0.5)); }
-		}
-		
-		[Bundle ("pos")]   public Drawing.Point	Location
+		public Drawing.Point				PlatformLocation
 		{
 			get { return new Drawing.Point (this.window.Location); }
 			set { this.window.Location = new System.Drawing.Point ((int)(value.X + 0.5), (int)(value.Y + 0.5)); }
 		}
 		
-		[Bundle ("wpos")]  public Drawing.Point	WindowLocation
+		public Drawing.Size					PlatformSize
+		{
+			get { return new Drawing.Size (this.window.Size); }
+			set { this.window.Size = new System.Drawing.Size ((int)(value.Width + 0.5), (int)(value.Height + 0.5)); }
+		}
+		
+		
+		public Drawing.Point				WindowLocation
 		{
 			get { return this.window.WindowLocation; }
 			set { this.window.WindowLocation = value; }
 		}
 		
-		[Bundle ("wsize")] public Drawing.Size	WindowSize
+		public Drawing.Size					WindowSize
 		{
 			get { return this.window.WindowSize; }
 			set { this.window.WindowSize = value; }
 		}
 		
-		[Bundle ("text")]  public string		Text
+		
+		
+		[Bundle ("size")]	public Drawing.Size		ClientSize
+		{
+			get { return new Drawing.Size (this.window.ClientSize); }
+			set { this.window.ClientSize = new System.Drawing.Size ((int)(value.Width + 0.5), (int)(value.Height + 0.5)); }
+		}
+		
+		[Bundle ("text")]	public string			Text
 		{
 			get { return this.window.Text; }
 			set { this.window.Text = value; }
 		}
 
-		[Bundle ("name")]  public string		Name
+		[Bundle ("name")]	public string			Name
 		{
 			get { return this.window.Name; }
 			set { this.window.Name = value; }
@@ -273,7 +286,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -288,7 +300,7 @@ namespace Epsitec.Common.Widgets
 					this.window.Dispose ();
 				}
 				
-				this.root = null;
+				this.root   = null;
 				this.window = null;
 			}
 		}
@@ -358,6 +370,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		internal bool FilterMessage(Message message)
 		{
 			if (Window.MessageFilter != null)
@@ -393,19 +406,28 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
-		
-		internal void DispatchCommands()
+		internal void QueueCommand(Widget source)
 		{
-			while (this.command_queue.Count > 0)
+			this.cmd_queue.Enqueue (source);
+			
+			if (this.cmd_queue.Count == 1)
 			{
-				Widget widget = this.command_queue.Dequeue () as Widget;
+				this.window.SendQueueCommand ();
+			}
+		}
+		
+		internal void DispatchQueuedCommands()
+		{
+			while (this.cmd_queue.Count > 0)
+			{
+				Widget widget = this.cmd_queue.Dequeue () as Widget;
 				string name   = widget.CommandName;
 				
 				this.cmd_dispatcher.Dispatch (name, widget);
 			}
 		}
 		
-		internal virtual void DispatchMessage(Message message)
+		internal void DispatchMessage(Message message)
 		{
 			if (this.IsFrozen)
 			{
@@ -460,7 +482,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void PostProcessMessage(Message message)
+		internal void PostProcessMessage(Message message)
 		{
 			Widget consumer = message.Consumer;
 			
@@ -575,44 +597,26 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual Widget DetectWidget(Drawing.Point pos)
+		
+		protected Widget DetectWidget(Drawing.Point pos)
 		{
 			Widget child = this.root.FindChild (pos);
 			return (child == null) ? this.root : child;
 		}
 		
-		protected void HandleRootMinSizeChanged(object sender)
-		{
-			int width  = (int) (this.root.MinSize.Width + 0.5);
-			int height = (int) (this.root.MinSize.Height + 0.5);
-			
-			width  += this.window.Size.Width  - this.window.ClientSize.Width;
-			height += this.window.Size.Height - this.window.ClientSize.Height;
-			
-			this.window.MinimumSize = new System.Drawing.Size (width, height);
-		}
-
-		public virtual void QueueCommand(Widget source)
-		{
-			this.command_queue.Enqueue (source);
-			
-			if (this.command_queue.Count == 1)
-			{
-				this.window.SendQueueCommand ();
-			}
-		}
 		
-		public virtual void MarkForRepaint()
+		public void MarkForRepaint()
 		{
 			this.window.MarkForRepaint ();
 		}
 		
-		public virtual void MarkForRepaint(Drawing.Rectangle rect)
+		public void MarkForRepaint(Drawing.Rectangle rect)
 		{
 			this.window.MarkForRepaint (rect);
 		}
 		
-		public virtual Drawing.Point MapWindowToScreen(Drawing.Point point)
+		
+		public Drawing.Point MapWindowToScreen(Drawing.Point point)
 		{
 			int x = (int)(point.X + 0.5);
 			int y = this.window.ClientSize.Height-1 - (int)(point.Y + 0.5);
@@ -625,7 +629,7 @@ namespace Epsitec.Common.Widgets
 			return new Drawing.Point (xx, yy);
 		}
 		
-		public virtual Drawing.Point MapScreenToWindow(Drawing.Point point)
+		public Drawing.Point MapScreenToWindow(Drawing.Point point)
 		{
 			int x = this.window.MapToWinFormsX (point.X);
 			int y = this.window.MapToWinFormsY (point.Y)-1;
@@ -639,12 +643,10 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void HandleTimeElapsed(object sender)
+		protected void HandleTimeElapsed(object sender)
 		{
 			if (this.engaged_widget != null)
 			{
-				this.tick_count++;
-				
 				this.timer.AutoRepeat = SystemInformation.KeyboardRepeatPeriod;
 				
 				if (this.engaged_widget.IsEngaged)
@@ -657,40 +659,44 @@ namespace Epsitec.Common.Widgets
 			this.timer.Stop ();
 		}
 
-		public static bool						IsApplicationActive
+		protected void HandleRootMinSizeChanged(object sender)
 		{
-			get { return Platform.Window.IsApplicationActive; }
+			int width  = (int) (this.root.MinSize.Width + 0.5);
+			int height = (int) (this.root.MinSize.Height + 0.5);
+			
+			width  += this.window.Size.Width  - this.window.ClientSize.Width;
+			height += this.window.Size.Height - this.window.ClientSize.Height;
+			
+			this.window.MinimumSize = new System.Drawing.Size (width, height);
 		}
+
 		
 		
-		public event EventHandler				WindowActivated;
-		public event EventHandler				WindowDeactivated;
-		public event EventHandler				WindowShown;
-		public event EventHandler				WindowHidden;
-		public event EventHandler				WindowClosed;
-		public event EventHandler				WindowAnimationEnded;
 		
-		public static event MessageHandler		MessageFilter;
-		public static event EventHandler		ApplicationActivated;
-		public static event EventHandler		ApplicationDeactivated;
+		public event EventHandler			WindowActivated;
+		public event EventHandler			WindowDeactivated;
+		public event EventHandler			WindowShown;
+		public event EventHandler			WindowHidden;
+		public event EventHandler			WindowClosed;
+		public event EventHandler			WindowAnimationEnded;
 		
-		
+		public static event MessageHandler	MessageFilter;
+		public static event EventHandler	ApplicationActivated;
+		public static event EventHandler	ApplicationDeactivated;
 		
 		
 		
 		private Platform.Window				window;
 		private Window						owner;
-		
-		private Support.CommandDispatcher		cmd_dispatcher;
 		private WindowRoot					root;
+		
 		private Widget						last_in_widget;
 		private Widget						capturing_widget;
 		private Widget						focused_widget;
 		private Widget						engaged_widget;
 		private Timer						timer;
 		
-		private int							tick_count;
-		
-		private System.Collections.Queue		command_queue = new System.Collections.Queue ();
+		private Support.CommandDispatcher	cmd_dispatcher;
+		private System.Collections.Queue	cmd_queue = new System.Collections.Queue ();
 	}
 }

@@ -440,7 +440,7 @@ namespace Epsitec.Common.Widgets
 
 			this.window = new Window();
 			this.window.MakeFramelessWindow();
-			this.window.IsMouseActivationEnabled = false;
+			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
 			Window.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
 			this.window.Root.Children.Add(this.submenu);

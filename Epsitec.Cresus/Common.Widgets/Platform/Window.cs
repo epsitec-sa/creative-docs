@@ -8,13 +8,13 @@ namespace Epsitec.Common.Widgets.Platform
 	/// <summary>
 	/// La classe Platform.Window fait le lien avec les WinForms.
 	/// </summary>
-	public class Window : System.Windows.Forms.Form
+	internal class Window : System.Windows.Forms.Form
 	{
-		protected delegate void BoundsOffsetCallback(Drawing.Rectangle bounds, Drawing.Point offset);
-		protected delegate void AnimatorCallback(Animator animator);
-		protected delegate void DoubleCallback(double value);
+		private delegate void BoundsOffsetCallback(Drawing.Rectangle bounds, Drawing.Point offset);
+		private delegate void AnimatorCallback(Animator animator);
+		private delegate void DoubleCallback(double value);
 		
-		public Window(Epsitec.Common.Widgets.Window window)
+		internal Window(Epsitec.Common.Widgets.Window window)
 		{
 			this.window = window;
 			
@@ -28,19 +28,14 @@ namespace Epsitec.Common.Widgets.Platform
 			this.ReallocatePixmap ();
 		}
 		
-		public void MakeFramelessWindow()
+		internal void MakeFramelessWindow()
 		{
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.ShowInTaskbar   = false;
 		}
 		
-		public new void Show()
-		{
-			base.Show ();
-		}
 		
-		
-		public void AnimateShow(Animation animation, Drawing.Rectangle bounds)
+		internal void AnimateShow(Animation animation, Drawing.Rectangle bounds)
 		{
 			Drawing.Rectangle b1;
 			Drawing.Rectangle b2;
@@ -135,7 +130,6 @@ namespace Epsitec.Common.Widgets.Platform
 		}
 		
 		
-		
 		protected void AnimateWindowBounds(Drawing.Rectangle bounds, Drawing.Point offset)
 		{
 			if (this.IsDisposed)
@@ -174,13 +168,13 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		
 		
-		public bool							PreventAutoClose
+		internal bool							PreventAutoClose
 		{
 			get { return this.prevent_close; }
 			set { this.prevent_close = value; }
 		}
 		
-		public bool							IsLayered
+		internal bool							IsLayered
 		{
 			get
 			{
@@ -206,12 +200,12 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
-		public bool							IsFrozen
+		internal bool							IsFrozen
 		{
 			get { return this.is_frozen || (this.window.Root == null); }
 		}
 		
-		public bool							IsMouseActivationEnabled
+		internal bool							IsMouseActivationEnabled
 		{
 			get
 			{
@@ -224,21 +218,8 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
-		public double						Alpha
-		{
-			get { return this.alpha; }
-			set
-			{
-				if (this.alpha != value)
-				{
-					this.alpha = value;
-					this.UpdateLayeredWindow ();
-				}
-			}
-		}
 		
-									
-		public Drawing.Rectangle			WindowBounds
+		internal Drawing.Rectangle				WindowBounds
 		{
 			get
 			{
@@ -269,7 +250,43 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
-		public new Drawing.Image			Icon
+		internal Drawing.Point					WindowLocation
+		{
+			get
+			{
+				return this.WindowBounds.Location;
+			}
+			set
+			{
+				this.WindowBounds = new Drawing.Rectangle (value, this.WindowSize);
+			}
+		}
+		
+		internal Drawing.Size					WindowSize
+		{
+			get
+			{
+				return this.WindowBounds.Size;
+			}
+			set
+			{
+				this.WindowBounds = new Drawing.Rectangle (this.WindowLocation, value);
+			}
+		}
+		
+		internal new string						Text
+		{
+			get { return TextLayout.ConvertToTaggedText (base.Text); }
+			set { base.Text = TextLayout.ConvertToSimpleText (value); }
+		}
+		
+		internal new string						Name
+		{
+			get { return base.Name; }
+			set { base.Name = value; }
+		}
+		
+		internal new Drawing.Image				Icon
 		{
 			get
 			{
@@ -293,44 +310,36 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
-		
-		public Drawing.Point				WindowLocation
+		internal double							Alpha
 		{
-			get
-			{
-				return this.WindowBounds.Location;
-			}
+			get { return this.alpha; }
 			set
 			{
-				this.WindowBounds = new Drawing.Rectangle (value, this.WindowSize);
+				if (this.alpha != value)
+				{
+					this.alpha = value;
+					this.UpdateLayeredWindow ();
+				}
 			}
 		}
 		
-		public Drawing.Size					WindowSize
-		{
-			get
-			{
-				return this.WindowBounds.Size;
-			}
-			set
-			{
-				this.WindowBounds = new Drawing.Rectangle (this.WindowLocation, value);
-			}
-		}
 		
-		public new string					Text
+		internal bool							FilterMouseMessages
 		{
-			get { return TextLayout.ConvertToTaggedText (base.Text); }
-			set { base.Text = TextLayout.ConvertToSimpleText (value); }
-		}
-		
-		public new string					Name
-		{
-			get { return base.Name; }
-			set { base.Name = value; }
+			get { return this.filter_mouse_messages; }
+			set { this.filter_mouse_messages = value; }
 		}
 		
 		
+		internal Epsitec.Common.Widgets.Window	HostingWidgetWindow
+		{
+			get { return this.window; }
+		}
+		
+		internal static bool					IsApplicationActive
+		{
+			get { return Window.is_app_active; }
+		}
 		
 		
 		protected override void Dispose(bool disposing)
@@ -518,7 +527,7 @@ namespace Epsitec.Common.Widgets.Platform
 		}
 
 		
-		protected virtual void ReallocatePixmap()
+		protected void ReallocatePixmap()
 		{
 			int width  = this.ClientSize.Width;
 			int height = this.ClientSize.Height;
@@ -540,13 +549,6 @@ namespace Epsitec.Common.Widgets.Platform
 		}
 
 		
-		internal bool					FilterMouseMessages
-		{
-			get { return this.filter_mouse_messages; }
-			set { this.filter_mouse_messages = value; }
-		}
-		
-		
 		internal int MapToWinFormsX(double x)
 		{
 			return (int) System.Math.Floor (x + 0.5);
@@ -566,6 +568,7 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			return (int)(height + 0.5);
 		}
+		
 		
 		internal double MapFromWinFormsX(int x)
 		{
@@ -588,13 +591,12 @@ namespace Epsitec.Common.Widgets.Platform
 		}
 		
 		
-		
-		public virtual void MarkForRepaint()
+		internal void MarkForRepaint()
 		{
 			this.MarkForRepaint (new Drawing.Rectangle (0, 0, this.ClientSize.Width, this.ClientSize.Height));
 		}
 		
-		public virtual void MarkForRepaint(Drawing.Rectangle rect)
+		internal void MarkForRepaint(Drawing.Rectangle rect)
 		{
 			this.dirty_rectangle.MergeWith (rect);
 			
@@ -606,7 +608,7 @@ namespace Epsitec.Common.Widgets.Platform
 			this.Invalidate (new System.Drawing.Rectangle (x, y, width, height));
 		}
 		
-		public virtual void SynchronousRepaint()
+		internal void SynchronousRepaint()
 		{
 			this.Update ();
 		}
@@ -616,8 +618,6 @@ namespace Epsitec.Common.Widgets.Platform
 			Win32Api.PostMessage (this.Handle, Win32Const.WM_APP_EXEC_CMD, System.IntPtr.Zero, System.IntPtr.Zero);
 		}
 
-		
-		
 		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
 		{
@@ -636,7 +636,7 @@ namespace Epsitec.Common.Widgets.Platform
 			if (msg.Msg == Win32Const.WM_APP_EXEC_CMD)
 			{
 				System.Diagnostics.Debug.Assert (this.wnd_proc_depth == 0);
-				this.window.DispatchCommands ();
+				this.window.DispatchQueuedCommands ();
 				return;
 			}
 			
@@ -712,7 +712,7 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
-		protected virtual bool WndProcActivation(ref System.Windows.Forms.Message msg)
+		protected bool WndProcActivation(ref System.Windows.Forms.Message msg)
 		{
 			System.Windows.Forms.Message message;
 			
@@ -761,7 +761,7 @@ namespace Epsitec.Common.Widgets.Platform
 			return false;
 		}
 
-		protected virtual bool WndProcFiltering(ref System.Windows.Forms.Message msg)
+		protected bool WndProcFiltering(ref System.Windows.Forms.Message msg)
 		{
 			Message message = Message.FromWndProcMessage (this, ref msg);
 			
@@ -823,7 +823,7 @@ namespace Epsitec.Common.Widgets.Platform
 		}
 		
 		
-		protected virtual void DispatchPaint(System.Drawing.Graphics win_graphics, System.Drawing.Rectangle win_clip_rect)
+		protected void DispatchPaint(System.Drawing.Graphics win_graphics, System.Drawing.Rectangle win_clip_rect)
 		{
 			//	Ce que Windows appelle "Paint", nous l'appelons "Display". En effet, lorsque l'on reçoit un événement
 			//	de type WM_PAINT (PaintEvent), on doit simplement afficher le contenu de la fenêtre, sans regénérer le
@@ -841,7 +841,7 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
-		protected virtual bool RefreshGraphics()
+		protected bool RefreshGraphics()
 		{
 			if (this.IsFrozen)
 			{
@@ -865,7 +865,7 @@ namespace Epsitec.Common.Widgets.Platform
 			return false;
 		}
 		
-		protected virtual bool UpdateLayeredWindow()
+		protected bool UpdateLayeredWindow()
 		{
 			bool paint_needed = true;
 			
@@ -892,22 +892,11 @@ namespace Epsitec.Common.Widgets.Platform
 		}
 		
 		
-		public virtual void DispatchMessage(Message message)
+		internal void DispatchMessage(Message message)
 		{
 			this.window.DispatchMessage (message);
 		}
 		
-
-		
-		public Epsitec.Common.Widgets.Window	HostingWidgetWindow
-		{
-			get { return this.window; }
-		}
-		
-		public static bool						IsApplicationActive
-		{
-			get { return Window.is_app_active; }
-		}
 		
 		
 		

@@ -54,7 +54,7 @@ namespace Epsitec.Common.Tests
 			link.Width = 200;
 			link.Text = @"Visitez notre <a href=""http://www.epsitec.ch"">site web</a> !";
 			link.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
-			link.HyperTextClicked += new MessageEventHandler(link_HyperTextClicked);
+			link.HypertextClicked += new MessageEventHandler(link_HypertextClicked);
 			window.Root.Children.Add(link);
 
 			CreateListLook(window.Root.Children, new Point(10, 195), tip);
@@ -346,10 +346,10 @@ namespace Epsitec.Common.Tests
 //			button.Toggle();
 		}
 
-		private void link_HyperTextClicked(object sender, MessageEventArgs e)
+		private void link_HypertextClicked(object sender, MessageEventArgs e)
 		{
 			Widget widget = sender as Widget;
-			System.Diagnostics.Process.Start ("IExplore.exe", widget.HyperText);
+			System.Diagnostics.Process.Start ("IExplore.exe", widget.Hypertext);
 		}
 
 

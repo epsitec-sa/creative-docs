@@ -11,12 +11,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public void SetWindowCursor(Window window)
+		internal System.Windows.Forms.Cursor GetPlatformCursor()
 		{
-			if (window != null)
-			{
-				window.Cursor = this.cursor;
-			}
+			return this.cursor;
 		}
 		
 		public static MouseCursor			Default

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 
 			this.window = new Window();
 			this.window.MakeFramelessWindow();
-			this.window.IsMouseActivationEnabled = false;
+			this.window.DisableMouseActivation();
 			this.window.Root.Children.Add(this);
 			this.window.Hide();
 

@@ -353,6 +353,8 @@ namespace Epsitec.Common.Widgets
 			int y;
 			int wheel;
 			
+			System.Drawing.Point point;
+			
 			switch (msg.Msg)
 			{
 				case Win32Const.WM_KEYDOWN:
@@ -376,9 +378,9 @@ namespace Epsitec.Common.Widgets
 					//	En principe, l'application ne doit pas traiter cet événement !
 					
 					Message.XYFromLParam (msg.LParam, out x, out y);
-					System.Drawing.Point pt = form.PointToClient (new System.Drawing.Point (x, y));
-					x = pt.X;
-					y = pt.Y;
+					point = form.PointToClient (new System.Drawing.Point (x, y));
+					x = point.X;
+					y = point.Y;
 					buttons = Message.ButtonFromMsg (msg);
 					message = Message.FromMouseEvent (MessageType.MouseDown, form, new System.Windows.Forms.MouseEventArgs (buttons, 0, x, y, 0));
 					message.is_non_client = true;
@@ -407,7 +409,7 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case Win32Const.WM_MOUSEWHEEL:
-					System.Drawing.Point point = form.PointToClient (System.Windows.Forms.Control.MousePosition);
+					point = form.PointToClient (System.Windows.Forms.Control.MousePosition);
 					x = point.X;
 					y = point.Y;
 					buttons = Message.ButtonsFromWParam (msg.WParam);

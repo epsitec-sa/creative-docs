@@ -1079,16 +1079,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public string						HyperText
+		public string						Hypertext
 		{
 			get
 			{
-				if (this.hyperText == null)
+				if (this.hypertext == null)
 				{
 					return null;
 				}
 				
-				return this.hyperText.Anchor;
+				return this.hypertext.Anchor;
 			}
 		}
 		
@@ -1104,8 +1104,8 @@ namespace Epsitec.Common.Widgets
 		public event MessageEventHandler	Entered;
 		public event MessageEventHandler	Exited;
 		public event EventHandler			ShortcutPressed;
-		public event EventHandler			HyperTextHot;
-		public event MessageEventHandler	HyperTextClicked;
+		public event EventHandler			HypertextHot;
+		public event MessageEventHandler	HypertextClicked;
 		
 		public event EventHandler			Focused;
 		public event EventHandler			Defocused;
@@ -2481,9 +2481,9 @@ namespace Epsitec.Common.Widgets
 			
 				try
 				{
-					if (this.hyperTextList != null)
+					if (this.hypertextList != null)
 					{
-						this.hyperTextList.Clear ();
+						this.hypertextList.Clear ();
 					}
 					
 					PaintEventArgs local_paint_args = new PaintEventArgs (graphics, repaint);
@@ -2669,13 +2669,13 @@ namespace Epsitec.Common.Widgets
 			{
 				bool reset = true;
 				
-				if (this.hyperTextList != null)
+				if (this.hypertextList != null)
 				{
-					foreach (HyperTextInfo info in this.hyperTextList)
+					foreach (HypertextInfo info in this.hypertextList)
 					{
 						if (info.Bounds.Contains (pos))
 						{
-							this.SetHyperText (info);
+							this.SetHypertext (info);
 							reset = false;
 							break;
 						}
@@ -2684,27 +2684,27 @@ namespace Epsitec.Common.Widgets
 				
 				if (reset)
 				{
-					this.SetHyperText (null);
+					this.SetHypertext (null);
 				}
 			}
 		}
 		
-		protected virtual void SetHyperText(HyperTextInfo info)
+		protected virtual void SetHypertext(HypertextInfo info)
 		{
-			if (this.hyperText == null)
+			if (this.hypertext == null)
 			{
 				if (info == null)
 				{
 					return;
 				}
 			}
-			else if (this.hyperText.Equals (info))
+			else if (this.hypertext.Equals (info))
 			{
 				return;
 			}
 			
-			this.hyperText = info;
-			this.OnHyperTextHot ();
+			this.hypertext = info;
+			this.OnHypertextHot ();
 		}
 		
 		protected virtual void ProcessMessage(Message message, Drawing.Point pos)
@@ -2830,14 +2830,14 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (sender == this.textLayout);
 			
-			HyperTextInfo info = new HyperTextInfo (this.textLayout, e.Bounds, e.Index);
+			HypertextInfo info = new HypertextInfo (this.textLayout, e.Bounds, e.Index);
 			
-			if (this.hyperTextList == null)
+			if (this.hypertextList == null)
 			{
-				this.hyperTextList = new System.Collections.ArrayList ();
+				this.hypertextList = new System.Collections.ArrayList ();
 			}
 			
-			this.hyperTextList.Add (info);
+			this.hypertextList.Add (info);
 		}
 		
 		protected virtual void OnPaintBackground(PaintEventArgs e)
@@ -2919,9 +2919,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnClicked(MessageEventArgs e)
 		{
-			if (this.hyperText != null)
+			if (this.hypertext != null)
 			{
-				this.OnHyperTextClicked (e);
+				this.OnHypertextClicked (e);
 				
 				if (e.Message.Consumer != null)
 				{
@@ -2961,7 +2961,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnEntered(MessageEventArgs e)
 		{
-			this.MouseCursor.SetWindowCursor (this.Window);
+			this.Window.MouseCursor = this.MouseCursor;
 			
 			if (this.Entered != null)
 			{
@@ -2978,7 +2978,12 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.parent != null)
 			{
-				this.parent.MouseCursor.SetWindowCursor (this.Window);
+				Window window = this.Window;
+				
+				if (window != null)
+				{
+					window.MouseCursor = this.parent.MouseCursor;
+				}
 			}
 			
 			if (this.Exited != null)
@@ -3000,29 +3005,34 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void OnHyperTextHot()
+		protected virtual void OnHypertextHot()
 		{
-			if (this.hyperText == null)
+			Window window = this.Window;
+			if (window != null)
 			{
-				this.MouseCursor.SetWindowCursor (this.Window);
-			}
-			else
-			{
-				MouseCursor.AsHand.SetWindowCursor (this.Window);
+				if (this.hypertext == null)
+				{
+				
+					window.MouseCursor = this.MouseCursor;
+				}
+				else
+				{
+					window.MouseCursor = MouseCursor.AsHand;
+				}
 			}
 			
-			if (this.HyperTextHot != null)
+			if (this.HypertextHot != null)
 			{
-				this.HyperTextHot (this);
+				this.HypertextHot (this);
 			}
 		}
 		
-		protected virtual void OnHyperTextClicked(MessageEventArgs e)
+		protected virtual void OnHypertextClicked(MessageEventArgs e)
 		{
-			if (this.HyperTextClicked != null)
+			if (this.HypertextClicked != null)
 			{
 				e.Message.Consumer = this;
-				this.HyperTextClicked (this, e);
+				this.HypertextClicked (this, e);
 			}
 		}
 		
@@ -3439,9 +3449,9 @@ namespace Epsitec.Common.Widgets
 			private double					width, height;
 		}
 		
-		protected class HyperTextInfo : System.ICloneable, System.IComparable
+		protected class HypertextInfo : System.ICloneable, System.IComparable
 		{
-			internal HyperTextInfo(TextLayout layout, Drawing.Rectangle bounds, int index)
+			internal HypertextInfo(TextLayout layout, Drawing.Rectangle bounds, int index)
 			{
 				this.layout = layout;
 				this.bounds = bounds;
@@ -3452,7 +3462,7 @@ namespace Epsitec.Common.Widgets
 			#region ICloneable Members
 			public object Clone()
 			{
-				return new HyperTextInfo (this.layout, this.bounds, this.index);
+				return new HypertextInfo (this.layout, this.bounds, this.index);
 			}
 			#endregion
 
@@ -3464,7 +3474,7 @@ namespace Epsitec.Common.Widgets
 					return 1;
 				}
 				
-				HyperTextInfo that = obj as HyperTextInfo;
+				HypertextInfo that = obj as HypertextInfo;
 				
 				if ((that == null) || (that.layout != this.layout))
 				{
@@ -3512,8 +3522,8 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Size					minSize;
 		protected Drawing.Size					maxSize;
 		protected ClientInfo					clientInfo = new ClientInfo ();
-		protected System.Collections.ArrayList	hyperTextList;
-		protected HyperTextInfo					hyperText;
+		protected System.Collections.ArrayList	hypertextList;
+		protected HypertextInfo					hypertext;
 		
 		protected WidgetCollection				children;
 		protected Widget						parent;

@@ -29,7 +29,7 @@ namespace Epsitec.Common.Tests
 			Window window = new Window ();
 			
 			System.Console.Out.WriteLine ("(1) Common.Widgets says Window is at " + window.WindowBounds.ToString ());
-			System.Console.Out.WriteLine ("    Windows.Forms says Window is at " + window.Bounds.ToString ());
+			System.Console.Out.WriteLine ("    Windows.Forms says Window is at " + window.PlatformBounds.ToString ());
 			
 			window.WindowLocation = new Point (50, 100);
 			
@@ -37,12 +37,12 @@ namespace Epsitec.Common.Tests
 			Assertion.AssertEquals (100.0, window.WindowLocation.Y);
 			
 			System.Console.Out.WriteLine ("(2) Common.Widgets says Window is at " + window.WindowBounds.ToString ());
-			System.Console.Out.WriteLine ("    Windows.Forms says Window is at " + window.Bounds.ToString ());
+			System.Console.Out.WriteLine ("    Windows.Forms says Window is at " + window.PlatformBounds.ToString ());
 			
-			window.Location = new Point (0, 0);
+			window.PlatformLocation = new Point (0, 0);
 			
 			System.Console.Out.WriteLine ("(3) Common.Widgets says Window is at " + window.WindowBounds.ToString ());
-			System.Console.Out.WriteLine ("    Windows.Forms says Window is at " + window.Bounds.ToString ());
+			System.Console.Out.WriteLine ("    Windows.Forms says Window is at " + window.PlatformBounds.ToString ());
 			
 			Assertion.AssertEquals (ScreenInfo.GlobalArea.Top, window.WindowBounds.Top);
 		}
@@ -117,7 +117,7 @@ namespace Epsitec.Common.Tests
 			Window window = new Window ();
 			window.Root.BackColor = new Color (0, 0, 0, 0);
 			window.MakeFramelessWindow ();
-			window.IsLayered = true;
+			window.MakeLayeredWindow ();
 			window.Alpha = 0.5;
 			window.WindowBounds = new Rectangle (ScreenInfo.GlobalArea.Left+50, 200, 100*zoom, 200*zoom);
 			

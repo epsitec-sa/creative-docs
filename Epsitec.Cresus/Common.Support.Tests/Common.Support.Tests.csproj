@@ -99,11 +99,6 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "System.Windows.Forms"
-                    AssemblyName = "System.Windows.Forms"
-                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
-                />
-                <Reference
                     Name = "Common.Support.Implementation"
                     Project = "{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
