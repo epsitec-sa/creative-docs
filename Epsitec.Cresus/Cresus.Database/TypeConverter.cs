@@ -38,6 +38,29 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public static System.Type MapToNativeType(DbRawType raw_type)
+		{
+			switch (raw_type)
+			{
+				case DbRawType.Null:			return typeof (System.DBNull);
+				case DbRawType.Boolean:			return typeof (System.Boolean);
+				case DbRawType.Int16:			return typeof (System.Int16);
+				case DbRawType.Int32:			return typeof (System.Int32);
+				case DbRawType.Int64:			return typeof (System.Int64);
+				case DbRawType.SmallDecimal:	return typeof (System.Decimal);
+				case DbRawType.LargeDecimal:	return typeof (System.Decimal);
+				case DbRawType.String:			return typeof (System.String);
+				case DbRawType.Date:			return typeof (System.Date);
+				case DbRawType.Time:			return typeof (System.Time);
+				case DbRawType.DateTime:		return typeof (System.DateTime);
+				case DbRawType.ByteArray:		return typeof (byte[]);
+				case DbRawType.Guid:			return typeof (System.Guid);
+			}
+			
+			return null;
+		}
+		
+		
 		public static DbSimpleType MapToSimpleType(DbRawType raw_type)
 		{
 			DbNumDef num_def;
