@@ -51,7 +51,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.RestoreFromBundle (bundler, bundle);
 			
-			Support.ResourceBundle items = bundle.GetFieldBundle ("items");
+			Support.ResourceBundle items = bundle["items"].AsBundle;
 			
 			if (items != null)
 			{
@@ -61,7 +61,7 @@ namespace Epsitec.Common.Widgets
 				for (int i = 0; i < items.CountFields; i++)
 				{
 					string name = names[i];
-					string item = items[name] as string;
+					string item = items[name].AsString;
 					
 					if (item == null)
 					{
