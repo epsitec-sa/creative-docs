@@ -429,18 +429,49 @@ namespace Epsitec.Common.Drawing
 			path2.LineTo (20, 15);
 			path2.CurveTo (20, 20, 5, 20, 5, 15);
 			
+			DashedPath path3 = new DashedPath ();
+			DashedPath path4 = new DashedPath ();
+			
+			path3.DefaultZoom = 10;
+			path4.DefaultZoom = 10;
+			
+			path3.MoveTo (1, 1);
+			path3.LineTo (1, 11);
+			path3.LineTo (11, 6);
+			path3.Close ();
+			path3.AddDash (1, 0.2);
+			path3.AddDash (0.4, 0.2);
+			path3.DashOffset = 0.5;
+			
+			path4.Append (path2);
+			path4.AddDash (0.5, 0.5);
+			
 			e.Graphics.SmoothRenderer.Color = Color.FromRGB (0, 0, 1);
 			e.Graphics.SmoothRenderer.SetParameters (1, 1);
 			e.Graphics.SmoothRenderer.AddPath (path1);
 			e.Graphics.SmoothRenderer.AddPath (path2);
 			
+			using (Path dashed = path3.GenerateDashedPath ())
+			{
+				e.Graphics.Rasterizer.AddOutline (dashed, 0.2);
+			}
+			
+			using (Path dashed = path4.GenerateDashedPath ())
+			{
+				e.Graphics.Rasterizer.AddOutline (dashed, 0.2);
+			}
+			
+			e.Graphics.RenderSolid (Color.FromRGB (0, 1, 0));
+			
+			
 			e.Graphics.RotateTransform (15, cx/10, cy/10);
 			e.Graphics.TranslateTransform (5, 2);
 			
-			e.Graphics.SmoothRenderer.Color = Color.FromARGB (0.5, 0, 0, 1);
+			e.Graphics.SmoothRenderer.Color = Color.FromARGB (0.5, 1, 0, 0);
 			e.Graphics.SmoothRenderer.SetParameters (1, 1);
 			e.Graphics.SmoothRenderer.AddPath (path1);
 			e.Graphics.SmoothRenderer.AddPath (path2);
+			
 		}
 		
 		private void AlphaMask_PaintForeground(object sender, PaintEventArgs e)

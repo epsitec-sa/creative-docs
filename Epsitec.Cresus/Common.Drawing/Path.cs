@@ -622,12 +622,80 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		private System.IntPtr			agg_path;
+		internal void InternalCreateNonEmpty()
+		{
+			this.CreateOnTheFly ();
+			this.is_empty = false;
+		}
+		
+		protected System.IntPtr			agg_path;
+		protected double				default_zoom = 1.0;
+		
 		private bool					has_curve = false;
 		private bool					is_empty = true;
 		private Point					current_point = Point.Empty;
 		private bool					has_current_point = false;
-		private double					default_zoom = 1.0;
+	}
+	
+	public class DashedPath : Path
+	{
+		public DashedPath()
+		{
+		}
+		
+		
+		public double					DashOffset
+		{
+			get
+			{
+				return this.start;
+			}
+			set
+			{
+				this.CreateOnTheFly ();
+				this.start = value;
+				AntiGrain.Path.SetDashOffset (this.agg_path, this.start);
+			}
+		}
+		
+		
+		public void ResetDash()
+		{
+			this.CreateOnTheFly ();
+			AntiGrain.Path.ResetDash (this.agg_path);
+		}
+		
+		public void AddDash(double dash_length, double gap_length)
+		{
+			this.CreateOnTheFly ();
+			AntiGrain.Path.AddDash (this.agg_path, dash_length, gap_length);
+		}
+		
+		
+		
+		public Path GenerateDashedPath()
+		{
+			return this.GenerateDashedPath (this.default_zoom);
+		}
+		
+		public Path GenerateDashedPath(double approximation_zoom)
+		{
+			if (this.IsEmpty)
+			{
+				return null;
+			}
+			
+			Path path = new Path ();
+			
+			this.CreateOnTheFly ();
+			path.InternalCreateNonEmpty ();
+			
+			AntiGrain.Path.AppendDashedPath (path.Handle, this.agg_path, approximation_zoom);
+			
+			return path;
+		}
+		
+		private double					start;
 	}
 	
 	[System.Flags]
