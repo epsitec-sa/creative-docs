@@ -50,6 +50,17 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public double					DefaultZoom
+		{
+			get
+			{
+				return this.default_zoom;
+			}
+			set
+			{
+				this.default_zoom = value;
+			}
+		}
 		
 		
 		public void Clear()
@@ -155,36 +166,41 @@ namespace Epsitec.Common.Drawing
 		
 		public void Append(Path path)
 		{
-			this.Append (path, 1, 0, 0, 1, 0, 0, 1);
+			this.Append (path, 1, 0, 0, 1, 0, 0, this.default_zoom);
 		}
 		
-		public void Append(Path path, Transform transform, double approximation_scale)
+		public void Append(Path path, double approximation_zoom)
 		{
-			this.Append (path, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY, approximation_scale);
+			this.Append (path, 1, 0, 0, 1, 0, 0, approximation_zoom);
 		}
 		
-		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty, double approximation_scale)
+		public void Append(Path path, Transform transform, double approximation_zoom)
 		{
-			this.CreateOnTheFly ();
-			this.has_curve |= path.has_curve;
-			this.is_empty  &= path.is_empty;
-			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, approximation_scale, 0);
+			this.Append (path, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY, approximation_zoom);
 		}
 		
-		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty, double approximation_scale, double bold_width)
+		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty, double approximation_zoom)
 		{
 			this.CreateOnTheFly ();
 			this.has_curve |= path.has_curve;
 			this.is_empty  &= path.is_empty;
-			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, approximation_scale, bold_width);
+			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, approximation_zoom, 0);
 		}
 		
-		public void Append(Path path, double approximation_scale, double bold_width)
+		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty, double approximation_zoom, double bold_width)
 		{
 			this.CreateOnTheFly ();
 			this.has_curve |= path.has_curve;
 			this.is_empty  &= path.is_empty;
-			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, 1, 0, 0, 1, 0, 0, approximation_scale, bold_width);
+			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, approximation_zoom, bold_width);
+		}
+		
+		public void Append(Path path, double approximation_zoom, double bold_width)
+		{
+			this.CreateOnTheFly ();
+			this.has_curve |= path.has_curve;
+			this.is_empty  &= path.is_empty;
+			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, 1, 0, 0, 1, 0, 0, approximation_zoom, bold_width);
 		}
 		
 		public void Append(Font font, int glyph, double x, double y, double size)
@@ -240,7 +256,7 @@ namespace Epsitec.Common.Drawing
 			path.CurveTo (cx-rx*0.56, cy-ry*1.00, cx-rx*1.00, cy-ry*0.56, cx-rx, cy);
 			path.Close ();
 			
-			this.Append (path);
+			this.Append (path, 0);
 		}
 		
 		
@@ -494,6 +510,7 @@ namespace Epsitec.Common.Drawing
 		private bool					is_empty = true;
 		private Point					current_point = Point.Empty;
 		private bool					has_current_point = false;
+		private double					default_zoom = 1.0;
 	}
 	
 	[System.Flags]
