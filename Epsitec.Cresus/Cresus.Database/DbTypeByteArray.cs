@@ -18,20 +18,9 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
-		public DbTypeByteArray(int length, bool is_fixed_length) : base (DbSimpleType.ByteArray)
+		public DbTypeByteArray(int length, params string[] attributes) : base (DbSimpleType.ByteArray, attributes)
 		{
 			this.length = length;
-			this.is_fixed_length = is_fixed_length;
-		}
-		
-		public DbTypeByteArray(int length, params string[] attributes) : this (length, true, attributes)
-		{
-		}
-		
-		public DbTypeByteArray(int length, bool is_fixed_length, params string[] attributes) : base (DbSimpleType.ByteArray, attributes)
-		{
-			this.length = length;
-			this.is_fixed_length = is_fixed_length;
 		}
 		
 		
@@ -39,15 +28,7 @@ namespace Epsitec.Cresus.Database
 		{
 			buffer.Append (@" length=""");
 			buffer.Append (this.length.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			
-			if (this.is_fixed_length)
-			{
-				buffer.Append (@""" fixed=""1""");
-			}
-			else
-			{
-				buffer.Append (@"""");
-			}
+			buffer.Append (@"""");
 			
 			base.SerializeXmlAttributes (buffer, full);
 		}
@@ -57,29 +38,19 @@ namespace Epsitec.Cresus.Database
 			base.DeserializeXmlAttributes (xml);
 			
 			string arg_length = xml.GetAttribute ("length");
-			string arg_fixed  = xml.GetAttribute ("fixed");
 			
 			if (arg_length.Length == 0)
 			{
 				throw new System.ArgumentException ("No length specification found.");
 			}
 			
-			this.length          = System.Int32.Parse (arg_length, System.Globalization.CultureInfo.InvariantCulture);
-			this.is_fixed_length = (arg_fixed == "1") ? true : false;
+			this.length = System.Int32.Parse (arg_length, System.Globalization.CultureInfo.InvariantCulture);
 		}
 		
 		
-		public int						Length
+		public int								Length
 		{
 			get { return this.length; }
-		}
-		
-		public bool						IsFixedLength
-		{
-			get
-			{
-				return this.is_fixed_length;
-			}
 		}
 		
 		
@@ -95,13 +66,11 @@ namespace Epsitec.Cresus.Database
 			base.CloneCopyToNewObject (that);
 			
 			that.length = this.length;
-			that.is_fixed_length = this.is_fixed_length;
 			
 			return that;
 		}
 		
 		
-		private int						length;
-		private bool					is_fixed_length;		// cela a-t-il un sens pour un byte[] ?
+		private int								length;
 	}
 }
