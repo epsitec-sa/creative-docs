@@ -12,16 +12,16 @@ namespace Epsitec.Cresus.Database
 			def.DigitPrecision = 3;
 			def.DigitShift     = 0;
 			
-			Assertion.AssertEquals (false, def.IsMinMaxDefined);
-			Assertion.AssertEquals (true, def.IsDigitDefined);
-			Assertion.AssertEquals ( 999M, def.MaxValue);
-			Assertion.AssertEquals (-999M, def.MinValue);
+			Assert.AreEqual (false, def.IsMinMaxDefined);
+			Assert.AreEqual (true, def.IsDigitDefined);
+			Assert.AreEqual ( 999M, def.MaxValue);
+			Assert.AreEqual (-999M, def.MinValue);
 			
 			def.DigitPrecision = 6;
 			def.DigitShift     = 3;
 			
-			Assertion.AssertEquals ( 999.999M, def.MaxValue);
-			Assertion.AssertEquals (-999.999M, def.MinValue);
+			Assert.AreEqual ( 999.999M, def.MaxValue);
+			Assert.AreEqual (-999.999M, def.MinValue);
 		}
 		
 		[Test] public void CheckDefaultPrecisionShift()
@@ -31,36 +31,36 @@ namespace Epsitec.Cresus.Database
 			def.MinValue = 0;
 			def.MaxValue = 9;
 			
-			Assertion.AssertEquals (false, def.IsDigitDefined);
-			Assertion.AssertEquals (true, def.IsMinMaxDefined);
-			Assertion.AssertEquals (1, def.DigitPrecision);
-			Assertion.AssertEquals (0, def.DigitShift);
+			Assert.AreEqual (false, def.IsDigitDefined);
+			Assert.AreEqual (true, def.IsMinMaxDefined);
+			Assert.AreEqual (1, def.DigitPrecision);
+			Assert.AreEqual (0, def.DigitShift);
 			
-			Assertion.AssertEquals (0,    def.ToDecimalRange ().Minimum);
-			Assertion.AssertEquals (9,    def.ToDecimalRange ().Maximum);
-			Assertion.AssertEquals (1.0M, def.ToDecimalRange ().Resolution);
+			Assert.AreEqual (0,    def.ToDecimalRange ().Minimum);
+			Assert.AreEqual (9,    def.ToDecimalRange ().Maximum);
+			Assert.AreEqual (1.0M, def.ToDecimalRange ().Resolution);
 			
 			def.MinValue =  0.01M;
 			def.MaxValue = 10.00M;
 			
-			Assertion.AssertEquals (false, def.IsDigitDefined);
-			Assertion.AssertEquals (4, def.DigitPrecision);
-			Assertion.AssertEquals (2, def.DigitShift);
+			Assert.AreEqual (false, def.IsDigitDefined);
+			Assert.AreEqual (4, def.DigitPrecision);
+			Assert.AreEqual (2, def.DigitShift);
 			
-			Assertion.AssertEquals ( 0.01M, def.ToDecimalRange ().Minimum);
-			Assertion.AssertEquals (10.00M, def.ToDecimalRange ().Maximum);
-			Assertion.AssertEquals ( 0.01M, def.ToDecimalRange ().Resolution);
+			Assert.AreEqual ( 0.01M, def.ToDecimalRange ().Minimum);
+			Assert.AreEqual (10.00M, def.ToDecimalRange ().Maximum);
+			Assert.AreEqual ( 0.01M, def.ToDecimalRange ().Resolution);
 			
 			def.MinValue = -9.999M;
 			def.MaxValue =  9.999M;
 			
-			Assertion.AssertEquals (false, def.IsDigitDefined);
-			Assertion.AssertEquals (4, def.DigitPrecision);
-			Assertion.AssertEquals (3, def.DigitShift);
+			Assert.AreEqual (false, def.IsDigitDefined);
+			Assert.AreEqual (4, def.DigitPrecision);
+			Assert.AreEqual (3, def.DigitShift);
 			
-			Assertion.AssertEquals (-9.999M, def.ToDecimalRange ().Minimum);
-			Assertion.AssertEquals ( 9.999M, def.ToDecimalRange ().Maximum);
-			Assertion.AssertEquals ( 0.001M, def.ToDecimalRange ().Resolution);
+			Assert.AreEqual (-9.999M, def.ToDecimalRange ().Minimum);
+			Assert.AreEqual ( 9.999M, def.ToDecimalRange ().Maximum);
+			Assert.AreEqual ( 0.001M, def.ToDecimalRange ().Resolution);
 		}
 
 		[Test] public void CheckInvalidCase()
@@ -70,11 +70,11 @@ namespace Epsitec.Cresus.Database
 			def.MinValue = -1;
 			def.MaxValue = 99;
 			
-			Assertion.AssertEquals (true, def.IsDigitDefined);
-			Assertion.AssertEquals (true, def.IsMinMaxDefined);
-			Assertion.AssertEquals (1, def.DigitPrecision);
-			Assertion.AssertEquals (0, def.DigitShift);
-			Assertion.AssertEquals (false, def.IsValid);
+			Assert.AreEqual (true, def.IsDigitDefined);
+			Assert.AreEqual (true, def.IsMinMaxDefined);
+			Assert.AreEqual (1, def.DigitPrecision);
+			Assert.AreEqual (0, def.DigitShift);
+			Assert.AreEqual (false, def.IsValid);
 		}
 
 /*		[Test] [Ignore("Assert in code, no exception thrown")] [ExpectedException (typeof (System.OverflowException))] public void CheckOverflowMax()
@@ -91,27 +91,27 @@ namespace Epsitec.Cresus.Database
 			
 			def.MinValue = 0;
 			def.MaxValue = 127;
-			Assertion.AssertEquals (7, def.MinimumBits);
+			Assert.AreEqual (7, def.MinimumBits);
 			
 			def.MinValue = -127;
 			def.MaxValue =  127;
-			Assertion.AssertEquals (8, def.MinimumBits);
+			Assert.AreEqual (8, def.MinimumBits);
 			
 			def.MinValue = -128;
 			def.MaxValue =  127;
-			Assertion.AssertEquals (8, def.MinimumBits);
+			Assert.AreEqual (8, def.MinimumBits);
 			
 			def.MinValue = -128;
 			def.MaxValue =  128;
-			Assertion.AssertEquals (9, def.MinimumBits);
+			Assert.AreEqual (9, def.MinimumBits);
 			
 			def.MinValue = 1;
 			def.MaxValue = 256;
-			Assertion.AssertEquals (8, def.MinimumBits);
+			Assert.AreEqual (8, def.MinimumBits);
 			
 			def.MinValue = 500;
 			def.MaxValue = 515;
-			Assertion.AssertEquals (4, def.MinimumBits);
+			Assert.AreEqual (4, def.MinimumBits);
 		}
 		
 		[Test] public void CheckMinimumBitsFrac()
@@ -120,27 +120,27 @@ namespace Epsitec.Cresus.Database
 			
 			def.MinValue =   0.00M;
 			def.MaxValue = 127.00M;			//	127.00 => BIN(11000110011100) * 0.01
-			Assertion.AssertEquals (14, def.MinimumBits);
+			Assert.AreEqual (14, def.MinimumBits);
 			
 			def.MinValue = -1.27M;
 			def.MaxValue =  1.27M;
-			Assertion.AssertEquals (8, def.MinimumBits);
+			Assert.AreEqual (8, def.MinimumBits);
 			
 			def.MinValue = -1.28M;
 			def.MaxValue =  1.27M;
-			Assertion.AssertEquals (8, def.MinimumBits);
+			Assert.AreEqual (8, def.MinimumBits);
 			
 			def.MinValue = -1.28M;
 			def.MaxValue =  1.28M;
-			Assertion.AssertEquals (9, def.MinimumBits);
+			Assert.AreEqual (9, def.MinimumBits);
 			
 			def.MinValue = 0.01M;
 			def.MaxValue = 2.56M;
-			Assertion.AssertEquals (8, def.MinimumBits);
+			Assert.AreEqual (8, def.MinimumBits);
 			
 			def.MinValue = 5.00M;
 			def.MaxValue = 5.15M;
-			Assertion.AssertEquals (4, def.MinimumBits);
+			Assert.AreEqual (4, def.MinimumBits);
 		}
 		
 		[Test] public void CheckDbRawTypes()
@@ -149,67 +149,67 @@ namespace Epsitec.Cresus.Database
 			
 			def = DbNumDef.FromRawType (DbRawType.Int16);
 			
-			Assertion.Assert (def.CheckCompatibility (System.Int16.MinValue));
-			Assertion.Assert (def.CheckCompatibility (System.Int16.MaxValue));
-			Assertion.Assert (def.CheckCompatibility (System.Int16.MinValue-1) == false);
-			Assertion.Assert (def.CheckCompatibility (System.Int16.MaxValue+1) == false);
+			Assert.IsTrue (def.CheckCompatibility (System.Int16.MinValue));
+			Assert.IsTrue (def.CheckCompatibility (System.Int16.MaxValue));
+			Assert.IsTrue (def.CheckCompatibility (System.Int16.MinValue-1) == false);
+			Assert.IsTrue (def.CheckCompatibility (System.Int16.MaxValue+1) == false);
 			
 			def = DbNumDef.FromRawType (DbRawType.Int32);
 			
-			Assertion.Assert (def.CheckCompatibility (System.Int32.MinValue));
-			Assertion.Assert (def.CheckCompatibility (System.Int32.MaxValue));
-			Assertion.Assert (def.CheckCompatibility (System.Int32.MinValue-1L) == false);
-			Assertion.Assert (def.CheckCompatibility (System.Int32.MaxValue+1L) == false);
+			Assert.IsTrue (def.CheckCompatibility (System.Int32.MinValue));
+			Assert.IsTrue (def.CheckCompatibility (System.Int32.MaxValue));
+			Assert.IsTrue (def.CheckCompatibility (System.Int32.MinValue-1L) == false);
+			Assert.IsTrue (def.CheckCompatibility (System.Int32.MaxValue+1L) == false);
 			
 			def = DbNumDef.FromRawType (DbRawType.Int64);
 			
-			Assertion.Assert (def.CheckCompatibility (System.Int64.MinValue));
-			Assertion.Assert (def.CheckCompatibility (System.Int64.MaxValue));
-			Assertion.AssertEquals (64, def.MinimumBits);
+			Assert.IsTrue (def.CheckCompatibility (System.Int64.MinValue));
+			Assert.IsTrue (def.CheckCompatibility (System.Int64.MaxValue));
+			Assert.AreEqual (64, def.MinimumBits);
 			
 			def = DbNumDef.FromRawType (DbRawType.SmallDecimal);
 			
-			Assertion.Assert (def.CheckCompatibility (0.000000001M));
-			Assertion.Assert (def.CheckCompatibility (0.0000000001M) == false);
-			Assertion.Assert (def.CheckCompatibility ( 999999999M));
-			Assertion.Assert (def.CheckCompatibility (1000000000M) == false);
+			Assert.IsTrue (def.CheckCompatibility (0.000000001M));
+			Assert.IsTrue (def.CheckCompatibility (0.0000000001M) == false);
+			Assert.IsTrue (def.CheckCompatibility ( 999999999M));
+			Assert.IsTrue (def.CheckCompatibility (1000000000M) == false);
 			
 			def = DbNumDef.FromRawType (DbRawType.LargeDecimal);
 			
-			Assertion.Assert (def.CheckCompatibility (0.001M));
-			Assertion.Assert (def.CheckCompatibility (0.0001M) == false);
-			Assertion.Assert (def.CheckCompatibility ( 999999999999999M));
-			Assertion.Assert (def.CheckCompatibility (1000000000000000M) == false);
+			Assert.IsTrue (def.CheckCompatibility (0.001M));
+			Assert.IsTrue (def.CheckCompatibility (0.0001M) == false);
+			Assert.IsTrue (def.CheckCompatibility ( 999999999999999M));
+			Assert.IsTrue (def.CheckCompatibility (1000000000000000M) == false);
 		}
 		
 		[Test] public void CheckConvert()
 		{
 			DbNumDef def = new DbNumDef (5, 2, 5.00M, 5.15M);
 			
-			Assertion.AssertEquals ( 0, def.ConvertToInt64 (def.ConvertFromInt64 (0)));
-			Assertion.AssertEquals (15, def.ConvertToInt64 (def.ConvertFromInt64 (15)));
+			Assert.AreEqual ( 0, def.ConvertToInt64 (def.ConvertFromInt64 (0)));
+			Assert.AreEqual (15, def.ConvertToInt64 (def.ConvertFromInt64 (15)));
 			
-			Assertion.AssertEquals (5.00M, def.ConvertFromInt64 (def.ConvertToInt64 (5.00M)));
-			Assertion.AssertEquals (5.15M, def.ConvertFromInt64 (def.ConvertToInt64 (5.15M)));
+			Assert.AreEqual (5.00M, def.ConvertFromInt64 (def.ConvertToInt64 (5.00M)));
+			Assert.AreEqual (5.15M, def.ConvertFromInt64 (def.ConvertToInt64 (5.15M)));
 			
-			Assertion.AssertEquals ( 0, def.ConvertToInt64 (5.00M));
-			Assertion.AssertEquals (15, def.ConvertToInt64 (5.15M));
+			Assert.AreEqual ( 0, def.ConvertToInt64 (5.00M));
+			Assert.AreEqual (15, def.ConvertToInt64 (5.15M));
 			
-			Assertion.AssertEquals (5.00M, def.ConvertFromInt64 (0));
-			Assertion.AssertEquals (5.15M, def.ConvertFromInt64 (15));
+			Assert.AreEqual (5.00M, def.ConvertFromInt64 (0));
+			Assert.AreEqual (5.15M, def.ConvertFromInt64 (15));
 		}
 		
 		[Test] public void CheckCheckCompatibility()
 		{
 			DbNumDef def = new DbNumDef (6, 2, 0, 1000.00M);
 			
-			Assertion.AssertEquals (false, def.CheckCompatibility (-1));
-			Assertion.AssertEquals (true,  def.CheckCompatibility (0));
-			Assertion.AssertEquals (false, def.CheckCompatibility (0.001M));
-			Assertion.AssertEquals (true,  def.CheckCompatibility (0.010M));
-			Assertion.AssertEquals (true,  def.CheckCompatibility (1000.00M));
-			Assertion.AssertEquals (true,  def.CheckCompatibility (999.99M));
-			Assertion.AssertEquals (false, def.CheckCompatibility (5.250001M));
+			Assert.AreEqual (false, def.CheckCompatibility (-1));
+			Assert.AreEqual (true,  def.CheckCompatibility (0));
+			Assert.AreEqual (false, def.CheckCompatibility (0.001M));
+			Assert.AreEqual (true,  def.CheckCompatibility (0.010M));
+			Assert.AreEqual (true,  def.CheckCompatibility (1000.00M));
+			Assert.AreEqual (true,  def.CheckCompatibility (999.99M));
+			Assert.AreEqual (false, def.CheckCompatibility (5.250001M));
 		}
 		
 		[Test] public void CheckRound()
@@ -218,15 +218,15 @@ namespace Epsitec.Cresus.Database
 			
 			//	Si la valeur est hors des bornes, l'arrondi doit quand-même se faire !
 			
-			Assertion.AssertEquals (2000.05M, def.Round (2000.05M));
-			Assertion.AssertEquals (false, def.CheckCompatibility (2000.05M));
+			Assert.AreEqual (2000.05M, def.Round (2000.05M));
+			Assert.AreEqual (false, def.CheckCompatibility (2000.05M));
 			
-			Assertion.AssertEquals (0.00M, def.Round (0.001M));
-			Assertion.AssertEquals (0.00M, def.Round (-0.001M));
-			Assertion.AssertEquals (0.99M, def.Round (0.994M));
-			Assertion.AssertEquals (0.99M, def.Round (0.9949999M));
-			Assertion.AssertEquals (1.00M, def.Round (0.995M));
-			Assertion.AssertEquals (1.00M, def.Round (1.0049999M));
+			Assert.AreEqual (0.00M, def.Round (0.001M));
+			Assert.AreEqual (0.00M, def.Round (-0.001M));
+			Assert.AreEqual (0.99M, def.Round (0.994M));
+			Assert.AreEqual (0.99M, def.Round (0.9949999M));
+			Assert.AreEqual (1.00M, def.Round (0.995M));
+			Assert.AreEqual (1.00M, def.Round (1.0049999M));
 		}
 		
 		[Test] public void CheckClip()
@@ -236,15 +236,15 @@ namespace Epsitec.Cresus.Database
 			//	Si la valeur a une précision trop élevée, la valeur n'est pas
 			//	arrondie...
 			
-			Assertion.AssertEquals (0.001M, def.Clip (0.001M));
-			Assertion.AssertEquals (-1000.00M, def.Clip (-2000.00M));
-			Assertion.AssertEquals ( 1000.00M, def.Clip ( 2000.00M));
+			Assert.AreEqual (0.001M, def.Clip (0.001M));
+			Assert.AreEqual (-1000.00M, def.Clip (-2000.00M));
+			Assert.AreEqual ( 1000.00M, def.Clip ( 2000.00M));
 		}
 		
 		[Test] public void CheckParse0()
 		{
 			DbNumDef def = new DbNumDef (3, 1, 0.0M, 49.9M);
-			Assertion.AssertEquals (10.5M, def.Parse ("10.5", System.Globalization.CultureInfo.InvariantCulture));
+			Assert.AreEqual (10.5M, def.Parse ("10.5", System.Globalization.CultureInfo.InvariantCulture));
 		}
 		
 		[Test] [ExpectedException (typeof (System.OverflowException))] public void CheckParse1()
@@ -270,14 +270,14 @@ namespace Epsitec.Cresus.Database
 			System.IFormatProvider format_provider = System.Globalization.CultureInfo.InvariantCulture;
 			DbNumDef def;
 			def = new DbNumDef (3, 1, 0.0M, 49.9M);
-			Assertion.AssertEquals ("10.5", def.ToString (10.5M, format_provider));
+			Assert.AreEqual ("10.5", def.ToString (10.5M, format_provider));
 			
 			def = new DbNumDef (6, 3, 0.0M, 49.995M);
-			Assertion.AssertEquals ("10.500", def.ToString (10.5M, format_provider));
+			Assert.AreEqual ("10.500", def.ToString (10.5M, format_provider));
 			
 			def = new DbNumDef (3, 2, -9.99M, 9.99M);
-			Assertion.AssertEquals ("1.00", def.ToString (1.000M, format_provider));
-			Assertion.AssertEquals ("-3.50", def.ToString (-3.5M, format_provider));
+			Assert.AreEqual ("1.00", def.ToString (1.000M, format_provider));
+			Assert.AreEqual ("-3.50", def.ToString (-3.5M, format_provider));
 		}
 	}
 }

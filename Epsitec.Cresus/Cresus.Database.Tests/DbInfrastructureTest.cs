@@ -28,33 +28,33 @@ namespace Epsitec.Cresus.Database
 				
 				table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
 				
-				Assertion.AssertNotNull (table);
-				Assertion.Assert (table.InternalKey.Id == 1);
-				Assertion.Assert (table.Columns.Count == 8);
+				Assert.IsNotNull (table);
+				Assert.IsTrue (table.InternalKey.Id == 1);
+				Assert.IsTrue (table.Columns.Count == 8);
 				
 				table = infrastructure.ResolveDbTable (null, "CR_COLUMN_DEF");
 				
-				Assertion.AssertNotNull (table);
-				Assertion.Assert (table.InternalKey.Id == 2);
-				Assertion.Assert (table.Columns.Count == 9);
+				Assert.IsNotNull (table);
+				Assert.IsTrue (table.InternalKey.Id == 2);
+				Assert.IsTrue (table.Columns.Count == 9);
 				
 				table = infrastructure.ResolveDbTable (null, "CR_TYPE_DEF");
 				
-				Assertion.AssertNotNull (table);
-				Assertion.Assert (table.InternalKey.Id == 3);
-				Assertion.Assert (table.Columns.Count == 7);
+				Assert.IsNotNull (table);
+				Assert.IsTrue (table.InternalKey.Id == 3);
+				Assert.IsTrue (table.Columns.Count == 7);
 				
-				Assertion.AssertEquals (0, infrastructure.CountMatchingRows (null, "CR_COLUMN_DEF", "CR_NAME", DbSqlStandard.CreateSimpleSqlName ("MyColumn")));
-				Assertion.AssertEquals (4, infrastructure.CountMatchingRows (null, "CR_COLUMN_DEF", "CR_NAME", "CR_INFO"));
+				Assert.AreEqual (0, infrastructure.CountMatchingRows (null, "CR_COLUMN_DEF", "CR_NAME", DbSqlStandard.CreateSimpleSqlName ("MyColumn")));
+				Assert.AreEqual (4, infrastructure.CountMatchingRows (null, "CR_COLUMN_DEF", "CR_NAME", "CR_INFO"));
 				
 				//	Vérifie que les statements UPDATE ... lors de la création ont bien passé,
 				//	puis vérifie aussi que l'incrément de l'ID fonctionne correctement.
 				
 				table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
 				
-				Assertion.AssertEquals (6L, infrastructure.NewRowIdInTable (null, table.InternalKey, 2));
-				Assertion.AssertEquals (8L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
-				Assertion.AssertEquals (8L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
+				Assert.AreEqual (6L, infrastructure.NewRowIdInTable (null, table.InternalKey, 2));
+				Assert.AreEqual (8L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
+				Assert.AreEqual (8L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
 			}
 		}
 		
@@ -62,21 +62,21 @@ namespace Epsitec.Cresus.Database
 		{
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
 			{
-				Assertion.AssertNotNull (infrastructure);
+				Assert.IsNotNull (infrastructure);
 				
 				DbTable db_table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
 				DbType  db_type1 = infrastructure.ResolveDbType (null, "CR_NameType");
 				DbType  db_type2 = infrastructure.ResolveDbType (null, "CR_NameType");
 				DbType  db_type3 = infrastructure.ResolveDbType (null, "CR_KeyIdType");
 				
-				Assertion.AssertNotNull (db_table);
-				Assertion.AssertNotNull (db_type1);
+				Assert.IsNotNull (db_table);
+				Assert.IsNotNull (db_type1);
 				
-				Assertion.AssertEquals (db_type1, db_type2);
+				Assert.AreEqual (db_type1, db_type2);
 				
-				Assertion.AssertEquals (8, db_table.Columns.Count);
-				Assertion.AssertEquals ("CR_ID", db_table.Columns[0].Name);
-				Assertion.AssertEquals (db_type1, db_table.Columns["CR_NAME"].Type);
+				Assert.AreEqual (8, db_table.Columns.Count);
+				Assert.AreEqual ("CR_ID", db_table.Columns[0].Name);
+				Assert.AreEqual (db_type1, db_table.Columns["CR_NAME"].Type);
 			}
 		}
 		
@@ -105,13 +105,13 @@ namespace Epsitec.Cresus.Database
 				DbType db_type_2 = infrastructure.ResolveDbType (null, "NUPO");
 				DbType db_type_3 = infrastructure.ResolveDbType (null, "Titre");
 				
-				Assertion.AssertNotNull (db_type_1);
-				Assertion.AssertNotNull (db_type_2);
-				Assertion.AssertNotNull (db_type_3);
+				Assert.IsNotNull (db_type_1);
+				Assert.IsNotNull (db_type_2);
+				Assert.IsNotNull (db_type_3);
 				
-				Assertion.AssertEquals ("Nom",   db_type_1.Name);
-				Assertion.AssertEquals ("NUPO",  db_type_2.Name);
-				Assertion.AssertEquals ("Titre", db_type_3.Name);
+				Assert.AreEqual ("Nom",   db_type_1.Name);
+				Assert.AreEqual ("NUPO",  db_type_2.Name);
+				Assert.AreEqual ("Titre", db_type_3.Name);
 				
 				infrastructure.UnregisterDbType (null, db_type_1);
 				infrastructure.UnregisterDbType (null, db_type_2);
@@ -121,9 +121,9 @@ namespace Epsitec.Cresus.Database
 				db_type_2 = infrastructure.ResolveDbType (null, "NUPO");
 //				db_type_3 = infrastructure.ResolveDbType (null, "Titre");
 				
-				Assertion.AssertNull (db_type_1);
-				Assertion.AssertNull (db_type_2);
-//				Assertion.AssertNull (db_type_3);
+				Assert.IsNull (db_type_1);
+				Assert.IsNull (db_type_2);
+//				Assert.IsNull (db_type_3);
 			}
 		}
 		
@@ -138,17 +138,17 @@ namespace Epsitec.Cresus.Database
 				DbType db_type_2 = infrastructure.ResolveDbType (null, "NUPO");
 				DbType db_type_3 = infrastructure.ResolveDbType (null, "Titre");
 				
-				Assertion.AssertNull (db_type_1);
-				Assertion.AssertNull (db_type_2);
-				Assertion.AssertNotNull (db_type_3);
+				Assert.IsNull (db_type_1);
+				Assert.IsNull (db_type_2);
+				Assert.IsNotNull (db_type_3);
 				
-				Assertion.AssertEquals ("Titre", db_type_3.Name);
+				Assert.AreEqual ("Titre", db_type_3.Name);
 				
 				infrastructure.UnregisterDbType (null, db_type_3);
 				
 				db_type_3 = infrastructure.ResolveDbType (null, "Titre");
 				
-				Assertion.AssertNull (db_type_3);
+				Assert.IsNull (db_type_3);
 			}
 		}
 		
@@ -164,16 +164,16 @@ namespace Epsitec.Cresus.Database
 				
 				DbTable db_table2 = infrastructure.ResolveDbTable (null, "SimpleTest");
 				
-				Assertion.AssertNotNull (db_table2);
+				Assert.IsNotNull (db_table2);
 				
-				Assertion.AssertEquals (db_table1.Name,					db_table2.Name);
-				Assertion.AssertEquals (db_table1.Category,				db_table2.Category);
-				Assertion.AssertEquals (db_table1.PrimaryKeys.Count,	db_table2.PrimaryKeys.Count);
-				Assertion.AssertEquals (db_table1.PrimaryKeys[0].Name,	db_table2.PrimaryKeys[0].Name);
-				Assertion.AssertEquals (db_table1.Columns.Count,		db_table2.Columns.Count);
+				Assert.AreEqual (db_table1.Name,					db_table2.Name);
+				Assert.AreEqual (db_table1.Category,				db_table2.Category);
+				Assert.AreEqual (db_table1.PrimaryKeys.Count,	db_table2.PrimaryKeys.Count);
+				Assert.AreEqual (db_table1.PrimaryKeys[0].Name,	db_table2.PrimaryKeys[0].Name);
+				Assert.AreEqual (db_table1.Columns.Count,		db_table2.Columns.Count);
 				
-				Assertion.Assert (infrastructure.FindHighestRowRevision (null, "CR_TABLE_DEF", 1) >= 0);
-				Assertion.Assert (infrastructure.FindHighestRowRevision (null, "CR_TABLE_DEF", 100) == -1);
+				Assert.IsTrue (infrastructure.FindHighestRowRevision (null, "CR_TABLE_DEF", 1) >= 0);
+				Assert.IsTrue (infrastructure.FindHighestRowRevision (null, "CR_TABLE_DEF", 100) == -1);
 			}
 		}
 		
@@ -248,13 +248,13 @@ namespace Epsitec.Cresus.Database
 			{
 				DbTable db_table1 = infrastructure.ResolveDbTable (null, "SimpleTest");
 				
-				Assertion.AssertNotNull (db_table1);
+				Assert.IsNotNull (db_table1);
 				
 				infrastructure.UnregisterDbTable (null, db_table1);
 				
 				DbTable db_table2 = infrastructure.ResolveDbTable (null, "SimpleTest");
 				
-				Assertion.AssertNull (db_table2);
+				Assert.IsNull (db_table2);
 			}
 		}
 		
@@ -267,9 +267,9 @@ namespace Epsitec.Cresus.Database
 				DbTable db_table = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.UserDataManaged);
 				infrastructure.RegisterNewDbTable (null, db_table);
 				
-				Assertion.AssertNotNull (infrastructure.ResolveDbTable (null, db_table.Name));
-				Assertion.AssertEquals (9L, db_table.InternalKey.Id);
-				Assertion.AssertEquals (0, db_table.InternalKey.Revision);
+				Assert.IsNotNull (infrastructure.ResolveDbTable (null, db_table.Name));
+				Assert.AreEqual (9L, db_table.InternalKey.Id);
+				Assert.AreEqual (0, db_table.InternalKey.Revision);
 			}
 		}
 		
@@ -281,10 +281,10 @@ namespace Epsitec.Cresus.Database
 			{
 				DbTable db_table = infrastructure.ResolveDbTable (null, "SimpleTest");
 				
-				Assertion.AssertNotNull (db_table);
+				Assert.IsNotNull (db_table);
 				
 				infrastructure.UnregisterDbTable (null, db_table);
-				Assertion.AssertNull (infrastructure.ResolveDbTable (null, db_table.Name));
+				Assert.IsNull (infrastructure.ResolveDbTable (null, db_table.Name));
 				infrastructure.UnregisterDbTable (null, db_table);
 			}
 		}
