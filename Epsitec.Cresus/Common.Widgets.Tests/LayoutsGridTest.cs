@@ -161,12 +161,12 @@ namespace Epsitec.Common.Widgets
 			layout.Root = wa;
 			layout.DesiredWidth  = 200;
 			layout.DesiredHeight = 150;
+			layout.Invalidate ();
 			
 			window.ClientSize = new Drawing.Size (layout.CurrentWidth + 20, layout.CurrentHeight + 20);
 			
-			wa.Parent = window.Root;
-			wa.Left   = 10;
-			wa.Bottom = 10;
+			wa.Parent   = window.Root;
+			wa.Location = new Drawing.Point (10, 10);
 			
 			window.Show ();
 		}
