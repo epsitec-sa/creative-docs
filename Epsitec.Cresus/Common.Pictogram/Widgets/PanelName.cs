@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelName : AbstractPanel
 	{
-		public PanelName()
+		public PanelName(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -21,11 +21,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-		}
-		
-		public PanelName(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
+			ToolTip.Default.SetToolTip(this.field, "Nom de l'objet");
 		}
 		
 		protected override void Dispose(bool disposing)
