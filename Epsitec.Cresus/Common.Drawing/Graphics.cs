@@ -92,6 +92,7 @@ namespace Epsitec.Common.Drawing
 		public abstract Renderers.Smooth	SmoothRenderer	{ get; }
 		
 		public abstract double PaintText(double x, double y, string text, Font font, double size, Color color);
+		public abstract double PaintText(double x, double y, string text, Font font, double size, Color color, Font.ClassInfo[] infos);
 		
 		public abstract Graphics CreateAlphaMask();
 		
