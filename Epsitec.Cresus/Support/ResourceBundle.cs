@@ -233,6 +233,17 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 		
+		public static string ExtractName(string sort_name)
+		{
+			int pos = sort_name.IndexOf ('/');
+			
+			if (pos < 0)
+			{
+				throw new ResourceException (string.Format ("'{0}' is an invalid sort name", sort_name));
+			}
+			
+			return sort_name.Substring (pos+1);
+		}
 		
 		protected void ParseXml(System.Xml.XmlTextReader reader, string default_prefix, ResourceLevel level, int reader_depth, int recursion)
 		{

@@ -44,6 +44,33 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
+		{
+			base.RestoreFromBundle (bundler, bundle);
+			
+			Support.ResourceBundle items = bundle.GetFieldBundle ("items");
+			
+			if (items != null)
+			{
+				string[] names = items.FieldNames;
+				System.Array.Sort (names);
+				
+				for (int i = 0; i < items.CountFields; i++)
+				{
+					string name = names[i];
+					string item = items[name] as string;
+					
+					if (item == null)
+					{
+						throw new Support.ResourceException (string.Format ("Item '{0}' is invalid", name));
+					}
+					
+					this.Items.Add (Support.ResourceBundle.ExtractName (name), item);
+				}
+			}
+		}
+		
+		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
@@ -118,6 +145,40 @@ namespace Epsitec.Common.Widgets
 					this.selectedLine = value;
 					this.SetDirty ();
 					this.OnSelectedIndexChanged();
+				}
+			}
+		}
+
+		public string						SelectedName
+		{
+			// Nom de la ligne sélectionnée, null si aucune.
+			get
+			{
+				if (this.selectedLine == -1)
+				{
+					return null;
+				}
+				
+				return this.items.GetName (this.selectedLine);
+			}
+
+			set
+			{
+				if ( this.SelectedName != value )
+				{
+					int index = -1;
+					
+					if (value != null)
+					{
+						index = this.items.FindNameIndex (value);
+					
+						if (index < 0)
+						{
+							throw new System.ArgumentException (string.Format ("No element named '{0}' in list", value));
+						}
+					}
+					
+					this.SelectedIndex = index;
 				}
 			}
 		}

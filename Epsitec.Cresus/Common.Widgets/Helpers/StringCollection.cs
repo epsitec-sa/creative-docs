@@ -4,8 +4,9 @@ namespace Epsitec.Common.Widgets.Helpers
 	{
 		public StringCollection(IStringCollectionHost host)
 		{
-			this.host = host;
-			this.list = new System.Collections.ArrayList ();
+			this.host  = host;
+			this.list  = new System.Collections.ArrayList ();
+			this.names = new System.Collections.ArrayList ();
 		}
 		
 		public string							this[int index]
@@ -17,6 +18,35 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 		
+		public int Add(string name, object value)
+		{
+			int index_0 = this.list.Add (value);
+			int index_1 = this.names.Add (name);
+			
+			System.Diagnostics.Debug.Assert (index_0 == index_1);
+			
+			this.HandleInsert (value);
+			this.HandleChange ();
+			
+			return index_0;
+		}
+		
+		
+		public int FindNameIndex(string name)
+		{
+			return this.names.IndexOf (name);
+		}
+		
+		public void SetName(int index, string name)
+		{
+			this.names[index] = name;
+		}
+
+		public string GetName(int index)
+		{
+			return this.names[index] as string;
+		}
+
 		
 		public int FindExactMatch(string find)
 		{
@@ -64,7 +94,9 @@ namespace Epsitec.Common.Widgets.Helpers
 			if (disposing)
 			{
 				this.list.Clear ();
+				this.names.Clear ();
 				this.list = null;
+				this.names = null;
 			}
 		}
 		
@@ -95,21 +127,28 @@ namespace Epsitec.Common.Widgets.Helpers
 			object item = this.list[index];
 			this.HandleRemove (item);
 			this.list.RemoveAt (index);
+			this.names.RemoveAt (index);
 			this.HandleChange ();
 		}
 
 		public void Insert(int index, object value)
 		{
 			this.list.Insert (index, value);
+			this.names.Insert (index, null);
 			this.HandleInsert (value);
 			this.HandleChange ();
 		}
 
 		public void Remove(object value)
 		{
-			this.HandleRemove (value);
-			this.list.Remove (value);
-			this.HandleChange ();
+			int index = this.list.IndexOf (value);
+			if (index >= 0)
+			{
+				this.HandleRemove (value);
+				this.list.RemoveAt (index);
+				this.names.RemoveAt (index);
+				this.HandleChange ();
+			}
 		}
 
 		public bool Contains(object value)
@@ -124,6 +163,7 @@ namespace Epsitec.Common.Widgets.Helpers
 				this.HandleRemove (item);
 			}
 			this.list.Clear ();
+			this.names.Clear ();
 			this.HandleChange ();
 		}
 
@@ -134,10 +174,15 @@ namespace Epsitec.Common.Widgets.Helpers
 
 		public int Add(object value)
 		{
-			int index = this.list.Add (value);
+			int index_0 = this.list.Add (value);
+			int index_1 = this.names.Add (null);
+			
+			System.Diagnostics.Debug.Assert (index_0 == index_1);
+			
 			this.HandleInsert (value);
 			this.HandleChange ();
-			return index;
+			
+			return index_0;
 		}
 
 		public bool IsFixedSize
@@ -207,5 +252,6 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		private IStringCollectionHost			host;
 		private System.Collections.ArrayList	list;
+		private System.Collections.ArrayList	names;
 	}
 }

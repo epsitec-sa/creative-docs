@@ -44,7 +44,7 @@ namespace Epsitec.Common.Widgets
 						throw new Support.ResourceException (string.Format ("Item '{0}' is invalid", name));
 					}
 					
-					this.Items.Add (item);
+					this.Items.Add (Support.ResourceBundle.ExtractName (name), item);
 				}
 			}
 		}
@@ -187,9 +187,11 @@ namespace Epsitec.Common.Widgets
 			this.scrollList.ComboMode = true;
 			this.scrollList.Bounds = new Drawing.Rectangle (0, 0, this.Width, 200);
 			
-			foreach (string text in this.items)
+			for (int i = 0; i < this.items.Count; i++)
 			{
-				this.scrollList.Items.Add(text);
+				string name = this.items.GetName (i);
+				string text = this.items[i];
+				this.scrollList.Items.Add(name, text);
 			}
 			
 			Drawing.Point     pos  = this.MapClientToScreen (new Drawing.Point(0, 0));

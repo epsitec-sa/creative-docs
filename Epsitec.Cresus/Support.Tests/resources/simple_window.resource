@@ -74,10 +74,10 @@
      <field name='size'>80;*</field>
      <field name='pos'>100;170</field>
      <bundle name='items'>
-      <field name='0'>Choix A</field>
-      <field name='1'>Choix B</field>
-      <field name='2'><![CDATA[Choix <b>C</b> <i>(meilleur de tous)</i>]]></field>
-      <field name='3'>Choix D</field>
+      <field name='00/SelectA'>Choix A</field>
+      <field name='01/SelectB'>Choix B</field>
+      <field name='02/BestSelectC'><![CDATA[Choix <b>C</b> <i>(meilleur de tous)</i>]]></field>
+      <field name='03/SelectD'>Choix D</field>
      </bundle>
     </bundle>
     <bundle>

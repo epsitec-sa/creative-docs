@@ -250,9 +250,9 @@ namespace Epsitec.Common.Tests
 			TextFieldCombo t1 = new TextFieldCombo();
 			t1.Width = 70;
 			t1.Text = "Rouge";
-			t1.Items.Add("Rouge");
-			t1.Items.Add("Vert");
-			t1.Items.Add("Bleu");
+			t1.Items.Add("red",   "Rouge");
+			t1.Items.Add("green", "Vert");
+			t1.Items.Add("blue",  "Bleu");
 
 			tb.Insert(t1);
 			tb.InsertSep(5);

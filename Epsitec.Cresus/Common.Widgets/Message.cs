@@ -359,7 +359,6 @@ namespace Epsitec.Common.Widgets
 				case Win32Const.WM_KEYUP:
 				case Win32Const.WM_CHAR:
 					message = Message.FromKeyEvent (msg.Msg, msg.WParam, msg.LParam);
-					System.Diagnostics.Debug.WriteLine ("Message = " + message);
 					break;
 				
 				case Win32Const.WM_MOUSEMOVE:
