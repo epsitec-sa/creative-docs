@@ -746,7 +746,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public event EventHandler SizeChanged;
+		public event Support.EventHandler SizeChanged;
 
 		
 		// Dessine le groupe de panneaux.
