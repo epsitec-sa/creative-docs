@@ -4657,6 +4657,14 @@ namespace Epsitec.Common.Widgets
 				return result;
 			}
 			
+			public void AddRange(System.Collections.IList list)
+			{
+				for (int i = 0; i < list.Count; i++)
+				{
+					this.Add (list[i]);
+				}
+			}
+			
 			public bool IsFixedSize
 			{
 				get	{ return false; }
