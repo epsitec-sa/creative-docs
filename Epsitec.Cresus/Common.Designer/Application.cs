@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
@@ -74,12 +74,12 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		public BuilderController				BuilderController
+		public InterfaceEditController			InterfaceEditController
 		{
 			get
 			{
 				System.Diagnostics.Debug.Assert (this.is_initialised);
-				return this.builder_controller;
+				return this.interf_edit_controller;
 			}
 		}
 		
@@ -104,10 +104,33 @@ namespace Epsitec.Common.Designer
 			this.is_initialising = false;
 			
 			this.bundle_edit_controller = new BundleEditController (this);
-			this.builder_controller     = new BuilderController (this.CommandDispatcher);
-			this.string_edit_controller = new StringEditController (this.CommandDispatcher);
+			this.interf_edit_controller = new InterfaceEditController (this);
+			this.string_edit_controller = new StringEditController (this);
 			
-			this.builder_controller.Initialise ();
+			this.bundle_edit_controller.Initialise ();
+			this.interf_edit_controller.Initialise ();
+			this.string_edit_controller.Initialise ();
+			
+			this.switcher = new Widgets.Switcher ();
+			
+			this.switcher.Items.Add ("interface", "Interface utilisateur");
+			this.switcher.Items.Add ("string",    "Ressources (textes)");
+			
+			this.switcher.Dock   = DockStyle.Top;
+			this.switcher.Parent = this.main_window.Root;
+			this.switcher.Mode   = Widgets.SwitcherMode.Select;
+			
+			this.switcher.SelectedName = "interface";
+			
+			Widget panel;
+			
+			panel = this.interf_edit_controller.Panel;
+			
+			panel.Dock   = DockStyle.Top;
+			panel.Parent = this.main_window.Root;
+			
+			this.main_window.ClientSize = this.main_window.Root.MinSize;
+			
 		}
 		
 		
@@ -143,9 +166,11 @@ namespace Epsitec.Common.Designer
 		protected Window						main_window;
 		protected Support.CommandDispatcher		dispatcher;
 		protected StringEditController			string_edit_controller;
-		protected BuilderController				builder_controller;
+		protected InterfaceEditController		interf_edit_controller;
 		protected BundleEditController			bundle_edit_controller;
 		protected string						name;
+		
+		protected Widgets.Switcher				switcher;
 		
 		protected static Application			application;
 	}
