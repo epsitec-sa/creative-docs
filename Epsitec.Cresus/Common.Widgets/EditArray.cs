@@ -20,28 +20,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public EditArrayMode					EditArrayMode
-		{
-			get
-			{
-				return this.mode;
-			}
-			set
-			{
-				if (this.mode != value)
-				{
-					this.mode = value;
-					
-					this.edit_line.ReallocateLines ();
-					this.edit_line.UpdateCaption ();
-					this.edit_bounds = Drawing.Rectangle.Empty;
-					
-					this.InvalidateContents ();
-					this.OnEditArrayModeChanged ();
-				}
-			}
-		}
-		
 		public string[]							EditValues
 		{
 			get
@@ -74,27 +52,31 @@ namespace Epsitec.Common.Widgets
 		
 		public void StartEdition(int row, int column)
 		{
-			this.EditionIndex  = row;
-			this.SelectedIndex = -1;
-			
-			if (row > -1)
+			if ((row < 0) || (row >= this.max_rows))
 			{
-				column = System.Math.Max (column, 0);
-				column = System.Math.Min (column, this.max_columns-1);
-			
-				this.ShowEdition (ScrollShowMode.Extremity);
-				this.InvalidateContents ();
-				this.Update ();
-				this.DispatchDummyMouseMoveEvent ();
-				this.edit_line.FocusColumn (column);
+				throw new System.ArgumentOutOfRangeException ("row", row, "Cannot edit specified row.");
 			}
 			
+			if ((column < 0) || (column>= this.max_columns))
+			{
+				throw new System.ArgumentOutOfRangeException ("column", column, "Cannot edit specified column.");
+			}
+			
+			this.SelectedIndex = row;
+			this.SetInteractionMode (ScrollInteractionMode.Edition);
+			this.ShowEdition (ScrollShowMode.Extremity);
+			this.InvalidateContents ();
+			this.Update ();
+			this.edit_line.Values = this.GetRowTexts (row);
+			this.edit_line.FocusColumn (column);
 			this.Invalidate ();
 		}
 		
 		public void StartSearch()
 		{
-			this.EditArrayMode = EditArrayMode.Search;
+			this.SetInteractionMode (ScrollInteractionMode.Search);
+			this.InvalidateContents ();
+			this.Update ();
 			this.edit_line.FocusColumn (0);
 			this.Invalidate ();
 		}
@@ -117,36 +99,61 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void CancelEdition(bool finished)
 		{
-			if (this.edit_active > -1)
+			if (this.InteractionMode == ScrollInteractionMode.Edition)
 			{
-				this.edit_line.Values = this.GetRowTexts (this.edit_active);
-				
-				this.InvalidateContents ();
+				if (this.SelectedIndex >= 0)
+				{
+					this.edit_line.Values = this.GetRowTexts (this.SelectedIndex);
+					this.edit_line.SelectFocusedColumn ();
+				}
 				
 				if (finished)
 				{
-					this.SelectedIndex = this.edit_active;
-					this.EditionIndex  = -1;
+					this.SetInteractionMode (ScrollInteractionMode.ReadOnly);
 				}
+				
+				this.InvalidateContents ();
+				this.Update ();
 			}
 		}
 		
 		public virtual void ValidateEdition(bool finished)
 		{
-			if (this.edit_active > -1)
+			if (this.InteractionMode == ScrollInteractionMode.Edition)
 			{
-				this.SetRowTexts (this.edit_active, this.edit_line.Values);
-				
-				this.InvalidateContents ();
+				if (this.SelectedIndex >= 0)
+				{
+					this.SetRowTexts (this.SelectedIndex, this.edit_line.Values);
+				}
 				
 				if (finished)
 				{
-					this.SelectedIndex = this.edit_active;
-					this.EditionIndex = -1;
+					this.SetInteractionMode (ScrollInteractionMode.ReadOnly);
 				}
+				
+				this.InvalidateContents ();
+				this.Update ();
 			}
 		}
 		
+		
+		public virtual bool Grow()
+		{
+			//	Ajoute une ligne en fin de liste.
+			
+			Support.Data.ITextArrayStore store = this.TextArrayStore;
+								
+			if (store != null)
+			{
+				if (store.CheckInsertRows (this.RowCount, 1))
+				{
+					store.InsertRows (this.RowCount, 1);
+					return true;
+				}
+			}
+			
+			return false;
+		}
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -224,7 +231,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual  void UpdateInnerTopMargin()
 		{
-			if (this.mode == EditArrayMode.Search)
+			if (this.InteractionMode == ScrollInteractionMode.Search)
 			{
 				this.InnerTopMargin = this.edit_line.DesiredHeight;
 			}
@@ -238,16 +245,16 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Rectangle bounds = Drawing.Rectangle.Empty;
 			
-			switch (this.mode)
+			switch (this.InteractionMode)
 			{
-				case EditArrayMode.Standard:
+				case ScrollInteractionMode.ReadOnly:
 					break;
 				
-				case EditArrayMode.Edition:
-					bounds = this.GetRowBounds (this.EditionIndex);
+				case ScrollInteractionMode.Edition:
+					bounds = this.GetRowBounds (this.SelectedIndex);
 					break;
 				
-				case EditArrayMode.Search:
+				case ScrollInteractionMode.Search:
 					bounds = new Drawing.Rectangle (this.inner_bounds.Left, this.inner_bounds.Top, this.inner_bounds.Width, this.table_bounds.Height - this.inner_bounds.Height);
 					break;
 			}
@@ -269,15 +276,15 @@ namespace Epsitec.Common.Widgets
 			
 			Drawing.Rectangle cell = Drawing.Rectangle.Empty;
 			
-			switch (this.mode)
+			switch (this.InteractionMode)
 			{
-				case EditArrayMode.Standard:
+				case ScrollInteractionMode.ReadOnly:
 					break;
-				case EditArrayMode.Edition:
-					cell = this.GetUnclippedCellBounds (this.EditionIndex, column);
+				case ScrollInteractionMode.Edition:
+					cell = this.GetUnclippedCellBounds (this.SelectedIndex, column);
 					cell.Inflate (0, 1, 0, 1);
 					break;
-				case EditArrayMode.Search:
+				case ScrollInteractionMode.Search:
 					if (this.GetUnclippedCellX (column, out x1, out x2))
 					{
 						cell = new Drawing.Rectangle (x1, this.inner_bounds.Top - 1, x2-x1+1, this.table_bounds.Top - this.inner_bounds.Top + 1);
@@ -299,39 +306,35 @@ namespace Epsitec.Common.Widgets
 				{
 					int row, column;
 					
-					if ((this.HitTestTable (pos, out row, out column)) &&
-						(this.EditArrayMode == EditArrayMode.Edition))
+					if (this.InteractionMode == ScrollInteractionMode.Edition)
 					{
-						window.MouseCursor = MouseCursor.AsIBeam;
-						
-						if ((message.Type == MessageType.MouseDown) &&
-							(message.ButtonDownCount == 1) &&
-							(message.IsLeftButton) &&
-							(row >= 0) && (row < this.max_rows))
+						if (this.HitTestTable (pos, out row, out column))
 						{
-							//	L'utilisateur a cliqué dans une cellule de la table. On va faire en sorte
-							//	de changer la cellule active (repositionner les lignes éditables) :
+							window.MouseCursor = MouseCursor.AsIBeam;
 							
-							this.EditionIndex  = row;
-							this.SelectedIndex = row;
-							this.Update ();
-							
-							this.edit_line.FocusColumn (column);
-							
-							message.Consumer  = this.edit_line[column];
-							message.Swallowed = true;
-							
-//							window.DispatchMessage (message, this.edit_line[column]);
-//							
-//							System.Diagnostics.Debug.Assert (this.is_mouse_down == false);
-//							System.Diagnostics.Debug.Assert (message.Consumer == this.edit_line[column]);
-							
-							return;
+							if ((message.Type == MessageType.MouseDown) &&
+								(message.ButtonDownCount == 1) &&
+								(message.IsLeftButton) &&
+								(row >= 0) && (row < this.max_rows))
+							{
+								//	L'utilisateur a cliqué dans une cellule de la table. On va faire en sorte
+								//	de changer la cellule active (repositionner les lignes éditables) :
+								
+								this.SelectedIndex = row;
+								this.Update ();
+								
+								this.edit_line.FocusColumn (column);
+								
+								message.Consumer  = this.edit_line[column];
+								message.Swallowed = true;
+								
+								return;
+							}
 						}
-					}
-					else
-					{
-						window.MouseCursor = this.MouseCursor;
+						else
+						{
+							window.MouseCursor = this.MouseCursor;
+						}
 					}
 				}
 			}
@@ -340,27 +343,33 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected override void OnEditionIndexChanged()
+		protected override void OnSelectedIndexChanging()
 		{
-			base.OnEditionIndexChanged ();
+			base.OnSelectedIndexChanging ();
 			
-			if (this.EditionIndex != this.edit_active)
+			if (this.InteractionMode == ScrollInteractionMode.Edition)
 			{
 				this.ValidateEdition (false);
-				
-				this.edit_active   = this.EditionIndex;
-				this.EditArrayMode = (this.edit_active < 0 ? EditArrayMode.Standard : EditArrayMode.Edition);
-				
+			}
+		}
+		
+		protected override void OnSelectedIndexChanged()
+		{
+			base.OnSelectedIndexChanged ();
+			
+			if (this.InteractionMode == ScrollInteractionMode.Edition)
+			{
 				this.ReloadEdition ();
 			}
 		}
 		
-		protected virtual  void OnEditArrayModeChanged()
+		protected override void OnInteractionModeChanged()
 		{
-			if (this.EditArrayModeChanged != null)
-			{
-				this.EditArrayModeChanged (this);
-			}
+			this.edit_line.ReallocateLines ();
+			this.edit_line.UpdateCaption ();
+			this.edit_bounds = Drawing.Rectangle.Empty;
+			
+			base.OnInteractionModeChanged ();
 		}
 		
 		protected virtual  void OnEditTextChanged()
@@ -393,15 +402,18 @@ namespace Epsitec.Common.Widgets
 		
 		protected bool MoveEditionToLine(int offset)
 		{
-			int row = this.EditionIndex + offset;
-			
-			row = System.Math.Min (row, this.max_rows-1);
-			row = System.Math.Max (row, 0);
-			
-			if (this.EditionIndex != row)
+			if (this.InteractionMode == ScrollInteractionMode.Edition)
 			{
-				this.EditionIndex = row;
-				return true;
+				int row = this.SelectedIndex + offset;
+				
+				row = System.Math.Min (row, this.max_rows-1);
+				row = System.Math.Max (row, 0);
+				
+				if (this.SelectedIndex != row)
+				{
+					this.SelectedIndex = row;
+					return true;
+				}
 			}
 			
 			return false;
@@ -505,7 +517,7 @@ namespace Epsitec.Common.Widgets
 				get
 				{
 					if ((this.caption == null) ||
-						(this.host.EditArrayMode != EditArrayMode.Search))
+						(this.host.InteractionMode != ScrollInteractionMode.Search))
 					{
 						return this.LineHeight;
 					}
@@ -537,7 +549,7 @@ namespace Epsitec.Common.Widgets
 
 			protected override bool ProcessTabChildrenExit(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 			{
-				if (this.host.mode == EditArrayMode.Search)
+				if (this.host.InteractionMode == ScrollInteractionMode.Search)
 				{
 					switch (dir)
 					{
@@ -580,7 +592,7 @@ namespace Epsitec.Common.Widgets
 						//	On ne peut plus avancer/reculer, car est arrivé en extrémité de table.
 						
 						if ((move > 0) &&
-							(this.host.mode == EditArrayMode.Edition) &&
+							(this.host.InteractionMode == ScrollInteractionMode.Edition) &&
 							(this.host.TextArrayStore != null) &&
 							(this.host.TextArrayStore.CheckInsertRows (this.host.RowCount, 1)))
 						{
@@ -606,53 +618,72 @@ namespace Epsitec.Common.Widgets
 			{
 				if ((message.Type == MessageType.KeyPress) &&
 					(message.IsCtrlPressed == false) &&
-					(message.IsShiftPressed == false) &&
 					(message.IsAltPressed == false))
 				{
-					if (this.host.mode == EditArrayMode.Search)
+					if (this.host.InteractionMode == ScrollInteractionMode.Search)
 					{
 						switch (message.KeyCode)
 						{
 							case KeyCode.Escape:
-								this.host.EditArrayMode = EditArrayMode.Standard;
-								this.host.SetFocused (true);
+								if (message.IsShiftPressed == false)
+								{
+									this.host.SetInteractionMode (ScrollInteractionMode.ReadOnly);
+									this.host.SetFocused (true);
+									message.Consumer  = this;
+									message.Swallowed = true;
+									return;
+								}
 								break;
 							
 							case KeyCode.Return:
-								this.host.OnEditTextChanged ();
+								if (message.IsShiftPressed == false)
+								{
+									this.host.OnEditTextChanged ();
+									message.Consumer  = this;
+									message.Swallowed = true;
+									return;
+								}
 								break;
 							
 							default:
 								if (this.host.ProcessKeyEvent (message))
 								{
 									//	L'événement a été traité par la liste; on va donc le consommer.
-								}
-								else
-								{
-									base.ProcessMessage (message, pos);
+									
+									message.Consumer = this;
+									message.Swallowed = true;
 									return;
 								}
 								break;
 						}
-						
-						message.Consumer = this;
-						return;
 					}
-					else
+					else if (this.host.InteractionMode == ScrollInteractionMode.Edition)
 					{
 						if (message.KeyCode == KeyCode.Escape)
-						{
-							this.host.CancelEdition ();
-							this.host.SetFocused (true);
-							message.Consumer = this;
-							return;
-						}
-						if (message.KeyCode == KeyCode.Return)
 						{
 							this.host.ValidateEdition ();
 							this.host.SetFocused (true);
 							message.Consumer = this;
+							message.Swallowed = true;
 							return;
+						}
+						if (message.KeyCode == KeyCode.Return)
+						{
+							int index = (message.IsShiftPressed) ? this.host.SelectedIndex - 1 : this.host.SelectedIndex + 1;
+							
+							if (index == this.host.RowCount)
+							{
+								this.host.Grow ();
+							}
+							
+							if ((index >= 0) &&
+								(index < this.host.RowCount))
+							{
+								this.host.StartEdition (index, 0);
+								message.Consumer = this;
+								message.Swallowed = true;
+								return;
+							}
 						}
 					}
 				}
@@ -661,13 +692,21 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			public void FocusColumn(int column)
+			public void SelectFocusedColumn()
 			{
-				this.edit_widgets[column].SetFocused (true);
-				this.edit_widgets[column].SelectAll ();
+				this.FocusColumn (this.FindFocusedColumn ());
 			}
 			
-			public int FindFocusedColumn()
+			public void FocusColumn(int column)
+			{
+				if (column >= 0)
+				{
+					this.edit_widgets[column].SetFocused (true);
+					this.edit_widgets[column].SelectAll ();
+				}
+			}
+			
+			public int  FindFocusedColumn()
 			{
 				for (int i = 0; i < this.edit_widgets.Length; i++)
 				{
@@ -682,7 +721,7 @@ namespace Epsitec.Common.Widgets
 			
 			public void AttachEditWidgets()
 			{
-				TextFieldStyle style = (this.host.mode == EditArrayMode.Search ? TextFieldStyle.Normal : TextFieldStyle.Flat);
+				TextFieldStyle style = (this.host.InteractionMode == ScrollInteractionMode.Search ? TextFieldStyle.Normal : TextFieldStyle.Flat);
 				
 				for (int i = 0; i < this.edit_widgets.Length; i++)
 				{
@@ -710,7 +749,7 @@ namespace Epsitec.Common.Widgets
 				double oy = -this.Bounds.Y;
 				
 				if ((this.caption != null) &&
-					(this.host.EditArrayMode == EditArrayMode.Search))
+					(this.host.InteractionMode == ScrollInteractionMode.Search))
 				{
 					double dy = this.caption.Height;
 					double yy = 4;
@@ -743,7 +782,7 @@ namespace Epsitec.Common.Widgets
 			{
 				string caption = null;
 				
-				if (this.host.mode == EditArrayMode.Search)
+				if (this.host.InteractionMode == ScrollInteractionMode.Search)
 				{
 					caption = this.host.search_caption;
 				}
@@ -806,7 +845,7 @@ namespace Epsitec.Common.Widgets
 			{
 				AbstractTextField widget = sender as AbstractTextField;
 				
-				int row    = this.host.EditionIndex;
+				int row    = this.host.SelectedIndex;
 				int column = widget.Index;
 				
 				this.host.ShowCell (ScrollShowMode.Extremity, row, column);
@@ -967,9 +1006,9 @@ namespace Epsitec.Common.Widgets
 				this.host = host;
 				this.name = name;
 				
-				this.host.EditArrayModeChanged  += new Support.EventHandler (this.HandleHostEditArrayModeChanged);
-				this.host.SelectedIndexChanged  += new Support.EventHandler (this.HandleHostSelectedIndexChanged);
-				this.host.TextArrayStoreChanged += new Support.EventHandler (this.HandleHostTextArrayStoreChanged);
+				this.host.InteractionModeChanged += new Support.EventHandler (this.HandleHostInteractionModeChanged);
+				this.host.SelectedIndexChanged   += new Support.EventHandler (this.HandleHostSelectedIndexChanged);
+				this.host.TextArrayStoreChanged  += new Support.EventHandler (this.HandleHostTextArrayStoreChanged);
 				
 				this.UpdateStore ();
 			}
@@ -979,16 +1018,7 @@ namespace Epsitec.Common.Widgets
 			{
 				get
 				{
-					int row = -1;
-					
-					switch (this.host.EditArrayMode)
-					{
-						case EditArrayMode.Standard:	row = this.host.SelectedIndex;	break;
-						case EditArrayMode.Edition:		row = this.host.EditionIndex;	break;
-						case EditArrayMode.Search:		row = this.host.SelectedIndex;	break;
-					}
-					
-					return row;
+					return this.host.SelectedIndex;
 				}
 			}
 			
@@ -1022,7 +1052,7 @@ namespace Epsitec.Common.Widgets
 					toolbar.Items.Add (new IconSeparator ());
 					toolbar.Items.Add (this.CreateIconButton ("InsertBefore",  "manifest:Epsitec.Common.Widgets/Images.InsertBeforeCell.icon", "Insère une ligne avant"));
 					toolbar.Items.Add (this.CreateIconButton ("InsertAfter",   "manifest:Epsitec.Common.Widgets/Images.InsertAfterCell.icon",  "Insère une ligne après"));
-					toolbar.Items.Add (this.CreateIconButton ("Delete",        "manifest:Epsitec.Common.Widgets/Images.DeleteCell.icon",       "Supprime une ligne"));
+					toolbar.Items.Add (this.CreateIconButton ("Delete",        "manifest:Epsitec.Common.Widgets/Images.DeleteCell.icon",       "Supprime une ligne", KeyCode.Delete));
 					toolbar.Items.Add (this.CreateIconButton ("MoveUp",        "manifest:Epsitec.Common.Widgets/Images.MoveUpCell.icon",       "Déplace la ligne vers le haut"));
 					toolbar.Items.Add (this.CreateIconButton ("MoveDown",      "manifest:Epsitec.Common.Widgets/Images.MoveDownCell.icon",     "Déplace la ligne vers le bas"));
 					toolbar.ResumeLayout ();
@@ -1034,14 +1064,12 @@ namespace Epsitec.Common.Widgets
 			
 			public virtual void StartReadOnly()
 			{
-				if (this.host.EditArrayMode == EditArrayMode.Edition)
+				if (this.host.InteractionMode == ScrollInteractionMode.Edition)
 				{
 					this.host.ValidateEdition ();
 				}
 				
-				System.Diagnostics.Debug.Assert (this.host.EditionIndex == -1);
-				
-				this.host.EditArrayMode = EditArrayMode.Standard;
+				this.host.SetInteractionMode (ScrollInteractionMode.ReadOnly);
 				this.host.SetFocused (true);
 				this.host.ShowSelected (ScrollShowMode.Extremity);
 			}
@@ -1062,27 +1090,27 @@ namespace Epsitec.Common.Widgets
 			
 			public virtual void InsertBefore()
 			{
-				EditArrayMode mode;
+				ScrollInteractionMode mode;
 				int row, column;
 				this.SaveModeAndReset (out mode, out row, out column);
 				
 				this.store.InsertRows (row, 1);
-				this.RestoreMode (EditArrayMode.Edition, row, 0);
+				this.RestoreMode (ScrollInteractionMode.Edition, row, 0);
 			}
 			
 			public virtual void InsertAfter()
 			{
-				EditArrayMode mode;
+				ScrollInteractionMode mode;
 				int row, column;
 				this.SaveModeAndReset (out mode, out row, out column);
 				
 				this.store.InsertRows (row+1, 1);
-				this.RestoreMode (EditArrayMode.Edition, row+1, 0);
+				this.RestoreMode (ScrollInteractionMode.Edition, row+1, 0);
 			}
 			
 			public virtual void Delete()
 			{
-				EditArrayMode mode;
+				ScrollInteractionMode mode;
 				int row, column;
 				this.SaveModeAndReset (out mode, out row, out column);
 				
@@ -1092,7 +1120,7 @@ namespace Epsitec.Common.Widgets
 			
 			public virtual void MoveUp()
 			{
-				EditArrayMode mode;
+				ScrollInteractionMode mode;
 				int row, column;
 				this.SaveModeAndReset (out mode, out row, out column);
 				
@@ -1102,7 +1130,7 @@ namespace Epsitec.Common.Widgets
 			
 			public virtual void MoveDown()
 			{
-				EditArrayMode mode;
+				ScrollInteractionMode mode;
 				int row, column;
 				this.SaveModeAndReset (out mode, out row, out column);
 				
@@ -1111,9 +1139,9 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			protected void SaveModeAndReset(out EditArrayMode mode, out int row, out int column)
+			protected void SaveModeAndReset(out ScrollInteractionMode mode, out int row, out int column)
 			{
-				mode   = this.host.EditArrayMode;
+				mode   = this.host.InteractionMode;
 				column = this.host.edit_line.FindFocusedColumn ();
 				
 				this.StartReadOnly ();
@@ -1121,7 +1149,7 @@ namespace Epsitec.Common.Widgets
 				row = this.host.SelectedIndex;
 			}
 			
-			protected void RestoreMode(EditArrayMode mode, int row, int column)
+			protected void RestoreMode(ScrollInteractionMode mode, int row, int column)
 			{
 				if (row >= this.host.RowCount)
 				{
@@ -1132,16 +1160,16 @@ namespace Epsitec.Common.Widgets
 				
 				switch (mode)
 				{
-					case EditArrayMode.Standard:
+					case ScrollInteractionMode.ReadOnly:
 						this.StartReadOnly ();
 						break;
 					
-					case EditArrayMode.Edition:
+					case ScrollInteractionMode.Edition:
 						this.StartEdition ();
 						this.host.edit_line.FocusColumn (column);
 						break;
 					
-					case EditArrayMode.Search:
+					case ScrollInteractionMode.Search:
 						this.StartSearch ();
 						this.host.edit_line.FocusColumn (column);
 						break;
@@ -1227,7 +1255,7 @@ namespace Epsitec.Common.Widgets
 			}
 			#endregion
 			
-			private void HandleHostEditArrayModeChanged(object sender)
+			private void HandleHostInteractionModeChanged(object sender)
 			{
 				this.UpdateCommandStates ();
 			}
@@ -1255,39 +1283,25 @@ namespace Epsitec.Common.Widgets
 			
 			protected virtual void UpdateCommandStates()
 			{
-				int sel_index  = this.host.SelectedIndex;
-				int edit_index = this.host.EditionIndex;
-				int act_index  = -1;
+				int index  = this.host.SelectedIndex;
 				
 				WidgetState act_edition  = WidgetState.ActiveNo;
 				WidgetState act_search   = WidgetState.ActiveNo;
 				WidgetState act_readonly = WidgetState.ActiveNo;
 				
-				switch (this.host.EditArrayMode)
+				switch (this.host.InteractionMode)
 				{
-					case EditArrayMode.Standard:
-						act_index = sel_index;
-						act_readonly = WidgetState.ActiveYes;
-						break;
-					
-					case EditArrayMode.Edition:
-						act_index = edit_index;
-						act_edition = WidgetState.ActiveYes;
-						break;
-					
-					case EditArrayMode.Search:
-						act_index = sel_index;
-						act_search = WidgetState.ActiveYes;
-						break;
+					case ScrollInteractionMode.ReadOnly: act_readonly = WidgetState.ActiveYes;	break;
+					case ScrollInteractionMode.Edition:  act_edition = WidgetState.ActiveYes;	break;
+					case ScrollInteractionMode.Search:   act_search = WidgetState.ActiveYes;	break;
 				}
 				
-				
-				bool ok_edit       = this.store.CheckSetRow (act_index);
-				bool ok_ins_before = this.store.CheckInsertRows (act_index, 1);
-				bool ok_ins_after  = this.store.CheckInsertRows (act_index+1, 1);
-				bool ok_delete     = this.store.CheckRemoveRows (act_index, 1);
-				bool ok_move_up    = this.store.CheckMoveRow (act_index, -1);
-				bool ok_move_down  = this.store.CheckMoveRow (act_index, 1);
+				bool ok_edit       = this.store.CheckSetRow (index);
+				bool ok_ins_before = this.store.CheckInsertRows (index, 1);
+				bool ok_ins_after  = this.store.CheckInsertRows (index+1, 1);
+				bool ok_delete     = this.store.CheckRemoveRows (index, 1);
+				bool ok_move_up    = this.store.CheckMoveRow (index, -1);
+				bool ok_move_down  = this.store.CheckMoveRow (index, 1);
 				
 				this.UpdateCommandState ("StartReadOnly", true, act_readonly);
 				this.UpdateCommandState ("StartEdition", ok_edit, act_edition);
@@ -1419,24 +1433,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event Support.EventHandler		EditArrayModeChanged;
 		public event Support.EventHandler		EditTextChanged;
 		
-		protected int							edit_active  = -1;
 		protected EditWidget					edit_line    = null;
 		protected Drawing.Rectangle				edit_bounds  = Drawing.Rectangle.Empty;
 		protected double						edit_offset  = 0;
 		protected double						edit_width   = 0;
 		
-		protected EditArrayMode					mode = EditArrayMode.Standard;
 		protected string						search_caption;
 		protected int							focused_column = -1;
-	}
-	
-	public enum EditArrayMode
-	{
-		Standard,
-		Edition,
-		Search
 	}
 }
