@@ -21,12 +21,14 @@
         <data name='text'>Ouvrir..</data>
         <data name='icon'>res:image#open</data>
         <data name='name'>open</data>
+        <data name='cmd'>OpenSimpleWindow</data>
        </bundle>
        <bundle>
         <data name='class'>MenuItem</data>
         <data name='text'>Enregistrer..</data>
         <data name='icon'>res:image#save</data>
         <data name='name'>save</data>
+        <data name='cmd'>SaveSimpleWindow</data>
        </bundle>
        <bundle>
         <data name='class'>MenuSeparator</data>
@@ -35,6 +37,7 @@
         <data name='class'>MenuItem</data>
         <data name='text'>Quitter</data>
         <data name='name'>quit</data>
+        <data name='cmd'>QuitSimpleWindow</data>
        </bundle>
       </list>
      </bundle>
@@ -93,8 +96,7 @@
     <bundle>
      <data name='class'>CheckButton</data>
      <data name='text'><![CDATA[Pour rire, voici une icone&nbsp;:&nbsp;<img src="res:image#open"/>]]></data>
-     <data name='name'>checkA</data>
-     <data name='cmd'>on</data>
+     <data name='name'>A</data>
      <data name='size'>200;*</data>
      <data name='pos'>10;215</data>
      <data name='bind'>a;a#label</data>
@@ -131,8 +133,7 @@
     <bundle>
      <data name='class'>CheckButton</data>
      <data name='text'><![CDATA[Copie du premier bouton]]></data>
-     <data name='name'>checkB</data>
-     <data name='cmd'>on</data>
+     <data name='name'>B</data>
      <data name='size'>200;*</data>
      <data name='pos'>10;140</data>
      <data name='bind'>b;b#label</data>
@@ -165,8 +166,8 @@
     </bundle>
     <bundle>
      <ref target='button.cancel'/>
-     <data name='cmd'>on</data>
      <data name='pos'>10;10</data>
+     <data name='cmd'>CancelSimpleWindow</data>
     </bundle>
    </list>
   </bundle>
