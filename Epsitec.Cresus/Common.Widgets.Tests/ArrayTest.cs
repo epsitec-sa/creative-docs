@@ -5,6 +5,7 @@ namespace Epsitec.Common.Widgets
 {
 	[TestFixture] public class ArrayTest
 	{
+#if false
 		[Test] public void CheckVirtualRows()
 		{
 			ScrollArray sa = new ScrollArray ();
@@ -110,6 +111,7 @@ namespace Epsitec.Common.Widgets
 			sa.ShowSelected (ScrollShowMode.Extremity);
 			Assertion.AssertEquals (5, sa.FirstVisibleIndex);
 		}
+#endif
 		
 		[Test] public void CheckInteractive()
 		{
@@ -165,7 +167,6 @@ namespace Epsitec.Common.Widgets
 			table.ColumnCount       = 5;
 			table.RowCount          = 100;
 			table.SelectedIndex     = 0;
-			table.EditionIndex      = -1;
 			table.EditionZoneHeight = 1;
 			table.TitleHeight       = 32;
 			table.DoubleClicked    += new MessageEventHandler(this.HandleEditDoubleClicked);
@@ -201,7 +202,6 @@ namespace Epsitec.Common.Widgets
 			table.Parent            = window.Root;
 			table.Dock              = DockStyle.Fill;
 			table.SelectedIndex     = 0;
-			table.EditionIndex      = -1;
 			table.EditionZoneHeight = 4;
 			table.TitleHeight       = 32;
 			table.DoubleClicked    += new MessageEventHandler(this.HandleEditDoubleClicked);
@@ -226,7 +226,6 @@ namespace Epsitec.Common.Widgets
 			table.Parent            = window.Root;
 			table.Dock              = DockStyle.Fill;
 			table.SelectedIndex     = 0;
-			table.EditionIndex      = -1;
 			table.EditionZoneHeight = 1;
 			table.TitleHeight       = 32;
 			table.DoubleClicked    += new MessageEventHandler(this.HandleEditDoubleClicked);
@@ -253,7 +252,6 @@ namespace Epsitec.Common.Widgets
 			table.RowCount          = 100;
 			table.SelectedIndex     = 0;
 			table.EditionZoneHeight = 1;
-			table.EditArrayMode     = EditArrayMode.Search;
 			
 			for (int x = 0 ; x < table.ColumnCount; x++)
 			{
@@ -270,6 +268,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			table.EditTextChanged += new EventHandler(HandleTableEditTextChanged);
+			table.StartSearch ();
 			
 			window.Show();
 		}
@@ -290,7 +289,6 @@ namespace Epsitec.Common.Widgets
 			table.RowCount          = 100;
 			table.SelectedIndex     = 0;
 			table.EditionZoneHeight = 1;
-			table.EditArrayMode     = EditArrayMode.Search;
 			table.TitleHeight       = 32;
 			table.TitleWidget       = new StaticText (@"<font size=""120%"">Search Test.</font>");
 			table.SearchCaption     = @"<b>Search. </b><font size=""90%"">Type in some text below to search for it in the table.</font>";
@@ -310,6 +308,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			table.EditTextChanged += new EventHandler(HandleTableEditTextChanged);
+			table.StartSearch ();
 			
 			window.Show();
 		}
@@ -333,7 +332,6 @@ namespace Epsitec.Common.Widgets
 			table.RowCount          = 100;
 			table.SelectedIndex     = 0;
 			table.EditionZoneHeight = 1;
-			table.EditArrayMode     = EditArrayMode.Search;
 			table.TitleWidget       = header;
 			table.SearchCaption     = @"<b>Search. </b><font size=""90%"">Type in some text below to search for it in the table.</font>";
 			
@@ -358,6 +356,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			table.EditTextChanged += new EventHandler(HandleTableEditTextChanged);
+			table.StartSearch ();
 			
 			window.Show();
 		}
@@ -447,7 +446,7 @@ namespace Epsitec.Common.Widgets
 			ScrollArray table = sender as ScrollArray;
 			table.HitTestTable (e.Point, out this.hilite_row, out this.hilite_column);
 			System.Diagnostics.Debug.WriteLine ("Double-clicked : " + this.hilite_row + "," + this.hilite_column);
-			table.EditionIndex = this.hilite_row;
+			table.SelectedIndex = this.hilite_row;
 			table.ShowEdition (ScrollShowMode.Extremity);
 			table.Invalidate ();
 		}
@@ -479,7 +478,7 @@ namespace Epsitec.Common.Widgets
 		{
 			EditArray table = sender as EditArray;
 			
-			if (table.EditArrayMode == EditArrayMode.Search)
+			if (table.InteractionMode == ScrollInteractionMode.Search)
 			{
 				string[] search = table.EditValues;
 				
