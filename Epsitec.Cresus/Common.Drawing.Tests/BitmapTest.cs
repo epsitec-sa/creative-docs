@@ -7,24 +7,24 @@ namespace Epsitec.Common.Drawing
 	{
 		[Test] public void CheckImageFormat()
 		{
-			Assertion.AssertNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.Bmp));
-			Assertion.AssertNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.Gif));
-			Assertion.AssertNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.Png));
-			Assertion.AssertNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.Tiff));
-			Assertion.AssertNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.Jpeg));
-			Assertion.AssertNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.Exif));
-			Assertion.AssertNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.WindowsIcon));
-			Assertion.AssertNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.WindowsEmf));
-			Assertion.AssertNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.WindowsWmf));
+			Assert.IsNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.Bmp));
+			Assert.IsNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.Gif));
+			Assert.IsNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.Png));
+			Assert.IsNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.Tiff));
+			Assert.IsNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.Jpeg));
+			Assert.IsNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.Exif));
+			Assert.IsNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.WindowsIcon));
+			Assert.IsNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.WindowsEmf));
+			Assert.IsNotNull (Bitmap.MapToMicrosoftImageFormat (ImageFormat.WindowsWmf));
 		}
 		
 		[Test] public void CheckEncoders()
 		{
-			Assertion.AssertNotNull (Bitmap.GetFilenameExtensions (ImageFormat.Bmp));
-			Assertion.AssertNotNull (Bitmap.GetFilenameExtensions (ImageFormat.Gif));
-			Assertion.AssertNotNull (Bitmap.GetFilenameExtensions (ImageFormat.Png));
-			Assertion.AssertNotNull (Bitmap.GetFilenameExtensions (ImageFormat.Tiff));
-			Assertion.AssertNotNull (Bitmap.GetFilenameExtensions (ImageFormat.Jpeg));
+			Assert.IsNotNull (Bitmap.GetFilenameExtensions (ImageFormat.Bmp));
+			Assert.IsNotNull (Bitmap.GetFilenameExtensions (ImageFormat.Gif));
+			Assert.IsNotNull (Bitmap.GetFilenameExtensions (ImageFormat.Png));
+			Assert.IsNotNull (Bitmap.GetFilenameExtensions (ImageFormat.Tiff));
+			Assert.IsNotNull (Bitmap.GetFilenameExtensions (ImageFormat.Jpeg));
 		}
 		
 		[Test] public void CheckBitmapSave()
