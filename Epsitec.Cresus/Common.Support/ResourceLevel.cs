@@ -14,6 +14,8 @@ namespace Epsitec.Common.Support
 		
 		Default,						//	ressources par défaut
 		Localised,						//	ressources localisées
-		Customised						//	ressources personnalisées
+		Customised,						//	ressources personnalisées
+		
+		All								//	toutes les variantes (pour GetBundleIds)
 	}
 }
