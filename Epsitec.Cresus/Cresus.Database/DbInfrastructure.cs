@@ -302,23 +302,35 @@ namespace Epsitec.Cresus.Database
 		
 		public DbTransaction BeginTransaction(DbTransactionMode mode, IDbAbstraction db_abstraction)
 		{
+			System.Diagnostics.Debug.Assert (db_abstraction != null);
+			
 			//	Débute une nouvelle transaction. Ceci n'est possible que si aucune
 			//	autre transaction n'est actuellement en cours sur cette connexion.
 			
 			DbTransaction transaction = null;
 			
-			switch (mode)
+			this.LockDatabase (db_abstraction);
+			
+			try
 			{
-				case DbTransactionMode.ReadOnly:
-					transaction = new DbTransaction (db_abstraction.BeginReadOnlyTransaction (), db_abstraction, this, mode);
-					break;
-				
-				case DbTransactionMode.ReadWrite:
-					transaction = new DbTransaction (db_abstraction.BeginReadWriteTransaction (), db_abstraction, this, mode);
-					break;
-				
-				default:
-					throw new System.ArgumentOutOfRangeException ("mode", mode, string.Format ("Transaction mode {0} not accepted.", mode.ToString ()));
+				switch (mode)
+				{
+					case DbTransactionMode.ReadOnly:
+						transaction = new DbTransaction (db_abstraction.BeginReadOnlyTransaction (), db_abstraction, this, mode);
+						break;
+					
+					case DbTransactionMode.ReadWrite:
+						transaction = new DbTransaction (db_abstraction.BeginReadWriteTransaction (), db_abstraction, this, mode);
+						break;
+					
+					default:
+						throw new System.ArgumentOutOfRangeException ("mode", mode, string.Format ("Transaction mode {0} not accepted.", mode.ToString ()));
+				}
+			}
+			catch
+			{
+				this.UnlockDatabase (db_abstraction);
+				throw;
 			}
 			
 			return transaction;
@@ -876,6 +888,8 @@ namespace Epsitec.Cresus.Database
 		{
 			IDbAbstraction db_abstraction = transaction.Database;
 			
+			this.UnlockDatabase (db_abstraction);
+			
 			lock (this.live_transactions)
 			{
 				if (this.live_transactions[db_abstraction] != transaction)
@@ -893,6 +907,20 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		internal void LockDatabase(IDbAbstraction database)
+		{
+			System.Diagnostics.Debug.WriteLine ("Locking");
+			if (System.Threading.Monitor.TryEnter (database, this.lock_timeout) == false)
+			{
+				throw new Exceptions.DeadLockException (this.db_access, "Cannot lock database.");
+			}
+		}
+		
+		internal void UnlockDatabase(IDbAbstraction database)
+		{
+			System.Diagnostics.Debug.WriteLine ("Unlocking");
+			System.Threading.Monitor.Exit (database);
+		}
 		
 		
 		public void Execute(DbTransaction transaction, DbRichCommand command)
@@ -2102,6 +2130,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnStatus,		types.KeyStatus, Nullable.No,  DbColumnClass.KeyStatus),
 						new DbColumn (Tags.ColumnRefLog,		types.KeyId,	 Nullable.No,  DbColumnClass.RefInternal),
 						new DbColumn (Tags.ColumnClientId,		types.KeyId,	 Nullable.No,  DbColumnClass.Data),
+						new DbColumn (Tags.ColumnClientName,	types.Name,      Nullable.No,  DbColumnClass.Data),
 						new DbColumn (Tags.ColumnClientSync,	types.KeyId,	 Nullable.No,  DbColumnClass.Data),
 						new DbColumn (Tags.ColumnClientCreDate,	types.DateTime,  Nullable.No,  DbColumnClass.Data),
 						new DbColumn (Tags.ColumnClientConDate,	types.DateTime,  Nullable.No,  DbColumnClass.Data)
@@ -2376,5 +2405,6 @@ namespace Epsitec.Cresus.Database
 		
 		protected System.Collections.Hashtable	live_transactions;
 		protected System.Collections.ArrayList	release_requested;
+		protected int							lock_timeout = 15000;
 	}
 }

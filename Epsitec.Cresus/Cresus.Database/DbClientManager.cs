@@ -53,22 +53,22 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public DbClientManager.Entry CreateNewClient()
+		public DbClientManager.Entry CreateNewClient(string client_name)
 		{
 			int  client_id   = this.FindFreeClientId ();
 			long sync_log_id = 0;
 			
-			Entry entry = new Entry (client_id, sync_log_id);
+			Entry entry = new Entry (client_name, client_id, sync_log_id);
 			
 			return entry;
 		}
 
-		public DbClientManager.Entry CreateAndInsertNewClient()
+		public DbClientManager.Entry CreateAndInsertNewClient(string client_name)
 		{
 			int  client_id   = this.FindFreeClientId ();
 			long sync_log_id = 0;
 			
-			Entry entry = new Entry (client_id, sync_log_id);
+			Entry entry = new Entry (client_name, client_id, sync_log_id);
 			
 			this.Insert (entry);
 			
@@ -108,6 +108,7 @@ namespace Epsitec.Cresus.Database
 			this.rich_command.CreateNewRow (data_table.TableName, out data_row);
 			
 			data_row.BeginEdit ();
+			data_row[Tags.ColumnClientName]    = entry.ClientName;
 			data_row[Tags.ColumnClientId]      = entry.ClientId;
 			data_row[Tags.ColumnClientSync]    = entry.SyncLogId;
 			data_row[Tags.ColumnClientCreDate] = entry.CreationDateTime;
@@ -205,18 +206,20 @@ namespace Epsitec.Cresus.Database
 					continue;
 				}
 				
-				int  client_id;
-				long client_sync_log_id;
+				string client_name;
+				int    client_id;
+				long   client_sync_log_id;
 				
 				System.DateTime creation_date_time;
 				System.DateTime connection_date_time;
 				
+				Epsitec.Common.Types.Converter.Convert (row[Tags.ColumnClientName], out client_name);
 				Epsitec.Common.Types.Converter.Convert (row[Tags.ColumnClientId], out client_id);
 				Epsitec.Common.Types.Converter.Convert (row[Tags.ColumnClientSync], out client_sync_log_id);
 				Epsitec.Common.Types.Converter.Convert (row[Tags.ColumnClientCreDate], out creation_date_time);
 				Epsitec.Common.Types.Converter.Convert (row[Tags.ColumnClientConDate], out connection_date_time);
 				
-				list.Add (new Entry (client_id, client_sync_log_id, creation_date_time, connection_date_time));
+				list.Add (new Entry (client_name, client_id, client_sync_log_id, creation_date_time, connection_date_time));
 			}
 			
 			Entry[] entries = new Entry[list.Count];
@@ -267,26 +270,36 @@ namespace Epsitec.Cresus.Database
 		#region Entry Class
 		public class Entry
 		{
-			public Entry() : this (0, 0)
+			public Entry() : this ("", 0, 0)
 			{
 			}
 			
-			public Entry(int client_id, long sync_log_id)
+			public Entry(string client_name, int client_id, long sync_log_id)
 			{
+				this.client_name   = client_name;
 				this.client_id     = client_id;
 				this.sync_log_id   = sync_log_id;
 				this.cre_date_time = System.DateTime.UtcNow;
 				this.con_date_time = this.cre_date_time;
 			}
 			
-			public Entry(int client_id, long sync_log_id, System.DateTime creation_date_time, System.DateTime connection_date_time)
+			public Entry(string client_name, int client_id, long sync_log_id, System.DateTime creation_date_time, System.DateTime connection_date_time)
 			{
+				this.client_name   = client_name;
 				this.client_id     = client_id;
 				this.sync_log_id   = sync_log_id;
 				this.cre_date_time = creation_date_time;
 				this.con_date_time = connection_date_time;
 			}
 			
+			
+			public string						ClientName
+			{
+				get
+				{
+					return this.client_name;
+				}
+			}
 			
 			public int							ClientId
 			{
@@ -321,6 +334,7 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			
+			private string						client_name;
 			private int							client_id;
 			private long						sync_log_id;
 			private System.DateTime				cre_date_time;

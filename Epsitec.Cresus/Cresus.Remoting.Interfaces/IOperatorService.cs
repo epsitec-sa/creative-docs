@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Remoting
 	/// </summary>
 	public interface IOperatorService
 	{
-		void CreateRoamingClient(out IOperation operation);
+		void CreateRoamingClient(string client_name, out IOperation operation);
 		
 		void GetRoamingClientData(IOperation operation, out ClientIdentity client, out byte[] compressed_data);
 	}

@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.Services
 		
 		
 		#region IOperatorService Members
-		public void CreateRoamingClient(out Remoting.IOperation operation)
+		public void CreateRoamingClient(string name, out Remoting.IOperation operation)
 		{
-			operation = new Operation (this);
+			operation = new CreateRoamingClientOperation (this, name);
 		}
 		
 		public void GetRoamingClientData(Remoting.IOperation operation, out Remoting.ClientIdentity client, out byte[] compressed_data)
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Services
 				throw new System.ArgumentNullException ("operation");
 			}
 			
-			Operation op = operation as Operation;
+			CreateRoamingClientOperation op = operation as CreateRoamingClientOperation;
 			
 			if (op == null)
 			{
@@ -42,48 +42,67 @@ namespace Epsitec.Cresus.Services
 			
 			//	Récupère les données qui attendent le client :
 			
-			client          = new Remoting.ClientIdentity ("", 101);	//	TODO: générer l'identité correctement
-			compressed_data = op.GetCompressedData ();
+			client          = new Remoting.ClientIdentity (op.ClientName, op.ClientId);
+			compressed_data = op.CompressedData;
 		}
 		#endregion
 		
 		
-		private class Operation : Remoting.AbstractThreadedOperation
+		#region CreateRoamingClientOperation Class
+		
+		/// <summary>
+		/// La classe CreateRoamingClientOperation crée une copie de la base de données
+		/// active, la comprime et remplit un buffer avec ces données pour pouvoir les
+		/// retourner à l'appelant.
+		/// </summary>
+		
+		private class CreateRoamingClientOperation : Remoting.AbstractStepThreadedOperation
 		{
-			public Operation(OperatorEngine oper)
+			public CreateRoamingClientOperation(OperatorEngine oper, string name)
 			{
 				this.oper = oper;
+				this.client_name = name;
 				this.Start ();
 			}
 			
 			
-			public byte[] GetCompressedData()
+			public byte[]						CompressedData
 			{
-				return this.data;
+				get
+				{
+					return this.data;
+				}
+			}
+			
+			public int							ClientId
+			{
+				get
+				{
+					return this.client_id;
+				}
+			}
+			
+			public string						ClientName
+			{
+				get
+				{
+					return this.client_name;
+				}
 			}
 			
 			
 			protected override void ProcessOperation()
 			{
-				//	Cette méthode fait le véritable travail.
-				
 				try
 				{
-					this.SetLastStep (3);
+					this.temp = new Epsitec.Common.IO.TemporaryFile ();
 					
-					this.temp = new TemporaryFile ();
+					this.Add (new Step (this.Step_CreateClient));
+					this.Add (new Step (this.Step_CopyDatabase));
+					this.Add (new Step (this.Step_CompressDatabase));
+					this.Add (new Step (this.Step_Finished));
 					
-					this.Step1_CopyDatabase ();				this.InterruptIfCancelRequested ();
-					this.Step2_CompressDatabase ();			this.InterruptIfCancelRequested ();
-					this.Step3_Finished ();
-				}
-				catch (Remoting.Exceptions.InterruptedException)
-				{
-					this.SetCancelled ();
-				}
-				catch (System.Exception exception)
-				{
-					this.SetFailed (exception.ToString ());
+					base.ProcessOperation ();
 				}
 				finally
 				{
@@ -98,10 +117,25 @@ namespace Epsitec.Cresus.Services
 			}
 			
 			
-			private void Step1_CopyDatabase()
+			private void Step_CreateClient()
 			{
-				this.SetCurrentStep (1);
+				Database.DbInfrastructure infrastructure = this.oper.engine.Orchestrator.Infrastructure;
+				Database.DbClientManager  client_manager = infrastructure.ClientManager;
 				
+				Database.DbClientManager.Entry client = client_manager.CreateAndInsertNewClient (this.client_name);
+				
+				this.client_id = client.ClientId;
+				
+				using (Database.DbTransaction transaction = infrastructure.BeginTransaction (Database.DbTransactionMode.ReadWrite))
+				{
+					client_manager.SerializeToBase (transaction);
+					
+					transaction.Commit ();
+				}
+			}
+			
+			private void Step_CopyDatabase()
+			{
 				Database.DbInfrastructure infrastructure = this.oper.engine.Orchestrator.Infrastructure;
 				Database.IDbServiceTools  tools          = infrastructure.DefaultDbAbstraction.ServiceTools;
 				
@@ -113,11 +147,9 @@ namespace Epsitec.Cresus.Services
 				}
 			}
 			
-			private void Step2_CompressDatabase()
+			private void Step_CompressDatabase()
 			{
 				System.Diagnostics.Debug.WriteLine ("Compressing...");
-				
-				this.SetCurrentStep (2);
 				
 				System.IO.FileStream   source     = System.IO.File.OpenRead (this.temp.Path);
 				System.IO.MemoryStream memory     = new System.IO.MemoryStream ();
@@ -146,10 +178,9 @@ namespace Epsitec.Cresus.Services
 				this.data = memory.ToArray ();
 			}
 			
-			private void Step3_Finished()
+			private void Step_Finished()
 			{
-				this.SetCurrentStep (3);
-				this.SetProgress (100);
+				System.Diagnostics.Debug.WriteLine ("Ready for data transfer.");
 			}
 			
 			
@@ -198,88 +229,12 @@ namespace Epsitec.Cresus.Services
 			}
 			
 			
-			private TemporaryFile				temp;
-			private OperatorEngine				oper;
-			private byte[]						data;
+			Epsitec.Common.IO.TemporaryFile		temp;
+			OperatorEngine						oper;
+			byte[]								data;
+			int									client_id;
+			string								client_name;
 		}
-		
-		private class TemporaryFile : System.IDisposable
-		{
-			public TemporaryFile()
-			{
-				this.name = System.IO.Path.GetTempFileName ();
-			}
-			
-			~ TemporaryFile()
-			{
-				this.Dispose (false);
-			}
-			
-			
-			public string						Path
-			{
-				get
-				{
-					return this.name;
-				}
-			}
-			
-			
-			public void Delete()
-			{
-				//	Tente de supprimer le fichier tout de suite. Si on n'y réussit pas,
-				//	ce sera le 'finalizer' qui s'en chargera...
-				
-				this.RemoveFile ();
-				
-				if (this.name == null)
-				{
-					//	Fichier détruit, plus besoin d'exécuter le 'finalizer'.
-					
-					System.GC.SuppressFinalize (this);
-				}
-			}
-			
-			
-			#region IDisposable Members
-			public void Dispose()
-			{
-				this.Dispose (true);
-				System.GC.SuppressFinalize (this);
-			}
-			#endregion
-			
-			protected virtual void Dispose(bool disposing)
-			{
-				if (disposing)
-				{
-					//	rien à faire de plus...
-				}
-				
-				this.RemoveFile ();
-			}
-			
-			protected virtual void RemoveFile()
-			{
-				if (this.name != null)
-				{
-					try
-					{
-						if (System.IO.File.Exists (this.name))
-						{
-							System.IO.File.Delete (this.name);
-							this.name = null;
-						}
-					}
-					catch (System.Exception ex)
-					{
-						System.Diagnostics.Debug.WriteLine ("Could not remove file " + this.name + ";\n" + ex.ToString ());
-					}
-				}
-			}
-			
-			
-			private string						name;
-		}
+		#endregion
 	}
 }

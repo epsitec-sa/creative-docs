@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Database
 		public const string	ColumnRefParent		= "CREF_PARENT_TABLE";
 		public const string ColumnRefLog		= "CREF_LOG";
 		
+		public const string ColumnClientName	= "CR_CLIENT_NAME";
 		public const string ColumnClientId		= "CR_CLIENT_ID";
 		public const string ColumnClientSync	= "CR_CLIENT_SYNC";
 		public const string ColumnClientCreDate	= "CR_CLIENT_CRE_DATE";

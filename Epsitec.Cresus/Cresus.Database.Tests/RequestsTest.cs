@@ -430,7 +430,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-#if false
+#if true
 		[Test] [Ignore ("Temporary")] public void Check12ServiceServer()
 		{
 			DbInfrastructure      infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
@@ -566,7 +566,7 @@ namespace Epsitec.Cresus.Database
 			
 			Assert.IsNotNull (service);
 			
-			service.CreateRoamingClient (out operation);
+			service.CreateRoamingClient ("test", out operation);
 			
 			for (int i = 0; i < 10; i++)
 			{
@@ -619,7 +619,7 @@ namespace Epsitec.Cresus.Database
 			
 			System.Diagnostics.Debug.WriteLine ("Starting asynchronous request.");
 			
-			service.CreateRoamingClient (out operation);
+			service.CreateRoamingClient ("test", out operation);
 			
 			Remoting.ClientIdentity client;
 			byte[]                  data;

@@ -417,17 +417,17 @@ namespace Epsitec.Cresus.Database
 				DbClientManager.Entry entry_2;
 				DbClientManager.Entry entry_3;
 				
-				entry_1 = cm.CreateNewClient ();
-				entry_2 = cm.CreateNewClient ();
+				entry_1 = cm.CreateNewClient ("A");
+				entry_2 = cm.CreateNewClient ("B");
 				
 				Assert.AreEqual (DbClientManager.MinClientId, entry_1.ClientId);
 				Assert.AreEqual (DbClientManager.MinClientId, entry_2.ClientId);
 				Assert.AreEqual (entry_1.CreationDateTime, entry_1.ConnectionDateTime);
 				Assert.AreEqual (entry_2.CreationDateTime, entry_2.ConnectionDateTime);
 				
-				entry_1 = cm.CreateAndInsertNewClient ();
-				entry_2 = cm.CreateAndInsertNewClient ();
-				entry_3 = cm.CreateAndInsertNewClient ();
+				entry_1 = cm.CreateAndInsertNewClient ("A");
+				entry_2 = cm.CreateAndInsertNewClient ("B");
+				entry_3 = cm.CreateAndInsertNewClient ("C");
 				
 				Assert.AreEqual (DbClientManager.MinClientId + 0, entry_1.ClientId);
 				Assert.AreEqual (DbClientManager.MinClientId + 1, entry_2.ClientId);
@@ -435,7 +435,7 @@ namespace Epsitec.Cresus.Database
 				
 				cm.Remove (entry_2.ClientId);
 				
-				entry_2 = cm.CreateNewClient ();
+				entry_2 = cm.CreateNewClient ("D");
 				
 				Assert.AreEqual (DbClientManager.MinClientId + 1, entry_2.ClientId);
 				
@@ -449,7 +449,7 @@ namespace Epsitec.Cresus.Database
 				
 				cm.Remove (entry_2.ClientId);
 				
-				entry_2 = cm.CreateNewClient ();
+				entry_2 = cm.CreateNewClient ("E");
 				
 				Assert.AreEqual (DbClientManager.MinClientId + 1, entry_2.ClientId);
 				
@@ -477,8 +477,8 @@ namespace Epsitec.Cresus.Database
 				DbClientManager.Entry entry_1;
 				DbClientManager.Entry entry_2;
 				
-				entry_1 = cm.CreateNewClient ();
-				entry_2 = cm.CreateNewClient ();
+				entry_1 = cm.CreateNewClient ("A");
+				entry_2 = cm.CreateNewClient ("B");
 				
 				cm.Insert (entry_1);
 				cm.Insert (entry_2);

@@ -41,6 +41,14 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
+		public IDbAbstraction					Database
+		{
+			get
+			{
+				return this.database;
+			}
+		}
+		
 		
 		#region IDisposable Members
 		public void Dispose()

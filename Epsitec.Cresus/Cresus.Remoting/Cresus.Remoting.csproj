@@ -109,6 +109,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "AbstractStepThreadedOperation.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AbstractThreadedOperation.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

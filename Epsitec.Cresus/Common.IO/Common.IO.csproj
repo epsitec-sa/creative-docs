@@ -74,6 +74,16 @@
                     AssemblyName = "ICSharpCode.SharpZipLib"
                     HintPath = "..\External\ICSharpCode.SharpZipLib.dll"
                 />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
+                <Reference
+                    Name = "System.XML"
+                    AssemblyName = "System.XML"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -105,6 +115,11 @@
                 />
                 <File
                     RelPath = "IChecksum.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TemporaryFile.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
