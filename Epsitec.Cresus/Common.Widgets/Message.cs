@@ -237,9 +237,15 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		static internal void ClearLastWindow()
+		internal static void ClearLastWindow()
 		{
 			Message.state.window = null;
+		}
+		
+		
+		public static void ResetButtonDownCounter()
+		{
+			Message.state.button_down_count = 0;
 		}
 		
 		
