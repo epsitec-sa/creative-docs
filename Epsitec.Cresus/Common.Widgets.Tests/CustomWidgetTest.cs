@@ -165,12 +165,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Rectangle GetPaintBounds()
+		public override Rectangle GetShapeBounds()
 		{
 			double growth = System.Math.Max (this.Client.Width, this.Client.Height) * 0.03;
 			double margin = 0.3 + (this.highlight ? growth : 0);
 			
-			return Rectangle.Inflate (base.GetPaintBounds (), margin, margin);
+			return Rectangle.Inflate (base.GetShapeBounds (), margin, margin);
 		}
 
 		
