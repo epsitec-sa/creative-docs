@@ -119,6 +119,16 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 
+		[Test] public void CheckGradient3()
+		{
+			Window window = new Window ();
+			
+			window.Text = "CheckGradient3";
+			window.Root.PaintForeground += new PaintEventHandler(Gradient3_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+
 		[Test] public void CheckImage()
 		{
 			Window window = new Window ();
@@ -635,6 +645,39 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.RenderSolid (Color.FromBrightness (0));
 		}
 
+		private void Gradient3_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+
+			Rectangle rect = new Rectangle(50, 100, 150, 50);
+
+			Path path = new Path();
+			path.MoveTo(rect.Left, rect.Bottom);
+			path.LineTo(rect.Left, rect.Top);
+			path.LineTo(rect.Right, rect.Top);
+			path.LineTo(rect.Right, rect.Bottom);
+			
+			e.Graphics.Rasterizer.AddOutline(path, 1);
+			//e.Graphics.RenderSolid(Color.FromBrightness(0));
+
+			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
+			e.Graphics.GradientRenderer.SetColors(Color.FromRGB(1,0,0), Color.FromRGB(0,0,1));
+
+			Transform ot = e.Graphics.GradientRenderer.Transform;
+			Transform t = new Transform();
+
+			e.Graphics.GradientRenderer.Fill = GradientFill.Y;
+			Point center = rect.Center;
+			e.Graphics.GradientRenderer.SetParameters(-100, 100);
+			t.Scale(rect.Width/100/2, rect.Height/100/2);
+			t.Translate(center);
+			t.Rotate(0, center);
+
+			e.Graphics.GradientRenderer.Transform = t;
+			e.Graphics.RenderGradient();
+			e.Graphics.GradientRenderer.Transform = ot;
+		}
+		
 		private void Image_PaintForeground(object sender, PaintEventArgs e)
 		{
 			WindowRoot root = sender as WindowRoot;
