@@ -7,15 +7,12 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Script.Developer.Panels
 {
 	/// <summary>
-	/// Summary description for AbstractPanel.
+	/// Classe de base (locale) pour l'implémentation des panneaux.
 	/// </summary>
 	public abstract class AbstractPanel : Common.UI.AbstractPanel
 	{
 		public AbstractPanel()
 		{
-			//
-			// TODO: Add constructor logic here
-			//
 		}
 		
 		
