@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
@@ -224,6 +224,22 @@ namespace Epsitec.Common.Support
 			}
 			
 			this.temp_queue.Add (oplet);
+		}
+		
+		public void DefineActionName(string name)
+		{
+			if (this.IsDisabled)
+			{
+				return;
+			}
+			
+			if ((this.fence_id <= 0) ||
+				(this.action == null))
+			{
+				throw new System.InvalidOperationException ("BeginAction/ValidateAction mismatch.");
+			}
+			
+			this.action.Name = name;
 		}
 		
 		public void ValidateAction()
@@ -529,6 +545,18 @@ namespace Epsitec.Common.Support
 				queue.action = this;
 			}
 			
+			
+			public string						Name
+			{
+				get
+				{
+					return this.name;
+				}
+				set
+				{
+					this.name = value;
+				}
+			}
 			
 			public AutoActionCleanup			Link
 			{
