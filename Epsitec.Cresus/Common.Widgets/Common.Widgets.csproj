@@ -302,6 +302,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Scrollable.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "ScrollArray.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

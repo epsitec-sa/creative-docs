@@ -220,12 +220,14 @@ namespace Epsitec.Common.Widgets.Design
 			this.widget_original_surface.MaxSize     = this.widget.MaxSize;
 			this.widget_original_surface.Name        = "WidgetWrapper Original Surface";
 			this.widget_original_surface.BackColor   = Drawing.Color.Transparent;
+			this.widget_original_surface.Anchor      = this.widget.Anchor;
 			
 			this.widget_original_surface.SetLayoutArgs (this.widget.LayoutArg1, this.widget.LayoutArg2);
 			
 			this.parent.Children.Replace (this.widget, this.widget_original_surface);
 			
 			this.widget.Dock   = DockStyle.None;
+			this.widget.Anchor = AnchorStyles.None;
 			this.widget.Parent = this.parent;
 			
 			this.GripsVisible = false;
@@ -240,6 +242,7 @@ namespace Epsitec.Common.Widgets.Design
 			this.widget.LayoutFlags = this.widget_original_surface.LayoutFlags;
 			this.widget.MinSize     = this.widget_original_surface.MinSize;
 			this.widget.MaxSize     = this.widget_original_surface.MaxSize;
+			this.widget.Anchor      = this.widget_original_surface.Anchor;
 			
 			this.widget.SetLayoutArgs (this.widget_original_surface.LayoutArg1, this.widget_original_surface.LayoutArg2);
 			

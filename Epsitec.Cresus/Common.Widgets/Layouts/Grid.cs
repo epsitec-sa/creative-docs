@@ -194,15 +194,24 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			
 			this.UpdateColumnsGeometry ();
-			this.UpdateCurrentHeight ();
-			this.LayoutWidgets (this.root, 0, 0, this.current_height);
+//			this.UpdateCurrentHeightBefore ();
+			this.LayoutWidgets (this.root, 0, 0, 0);
+//			this.UpdateCurrentHeightAfter ();
 			
-			Drawing.Rectangle bounds = this.root.Bounds;
+			if (this.designer_adjust_widget != null)
+			{
+				Drawing.Point pos = new Drawing.Point (this.designer_adjust_widget.Left, this.designer_adjust_widget.Bottom + this.current_height);
+				this.UpdateWidgetOffset ();
+				this.designer_adjust_widget.Location = pos;
+				System.Diagnostics.Debug.WriteLine ("Adjusted to: " + this.designer_adjust_widget.Bounds);
+				this.designer_adjust_widget = null;
+			}
+			else
+			{
+				this.UpdateWidgetOffset ();
+			}
 			
-			bounds.Bottom = bounds.Top  - this.current_height;
-			bounds.Right  = bounds.Left + this.current_width;
-			
-			this.root.Bounds = bounds;
+			this.root.Size = new Drawing.Size (this.current_width, this.current_height);
 			this.root.Invalidate ();
 		}
 		
@@ -279,9 +288,13 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
-		protected void UpdateCurrentHeight()
+		protected void UpdateCurrentHeightBefore()
 		{
-#if false
+			this.current_height = this.desired_height;
+		}
+		
+		protected void UpdateCurrentHeightAfter()
+		{
 			if (this.is_dragging)
 			{
 				return;
@@ -297,9 +310,38 @@ namespace Epsitec.Common.Widgets.Layouts
 			{
 				this.current_height = this.horizontals[0].y_live - this.horizontals[last].y_live;
 			}
-#else
-			this.current_height = this.desired_height;
-#endif
+		}
+		
+		protected void UpdateWidgetOffset()
+		{
+			int last = this.horizontals.Length - 1;
+			
+			if (last < 1)
+			{
+				this.current_height = this.desired_height;
+			}
+			else
+			{
+				this.current_height = this.horizontals[0].y_live - this.horizontals[last].y_live;
+			}
+			
+			double offset = this.current_height;
+			
+			Widget.WidgetCollection widgets = root.Children;
+			
+			for (int i = 0; i < widgets.Count; i++)
+			{
+				Widget widget = widgets[i] as Widget;
+				if (widget.Dock == DockStyle.Layout)
+				{
+					widget.Location = new Drawing.Point (widget.Left, widget.Bottom + offset);
+				}
+			}
+			
+			for (int i = 0; i < this.horizontals.Length; i++)
+			{
+//				this.horizontals[i].y_live += offset;
+			}
 		}
 		
 		protected void UpdateLineGap()
@@ -653,8 +695,12 @@ namespace Epsitec.Common.Widgets.Layouts
 			{
 				System.Diagnostics.Debug.Assert (this.designer_drag_rect.IsValid);
 				
-				double x = this.designer_drag_rect.Left;
-				double y = this.designer_drag_rect.Top;
+				Drawing.Rectangle rect = this.designer_drag_rect;
+				
+				rect.Offset (0, this.current_height);
+				
+				double x = rect.Left;
+				double y = rect.Top;
 				double w = 6;
 				
 				Drawing.Path path = new Drawing.Path ();
@@ -667,10 +713,10 @@ namespace Epsitec.Common.Widgets.Layouts
 				
 				graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
 				graphics.Rasterizer.AddSurface (path);
-				graphics.AddRectangle (this.designer_drag_rect);
+				graphics.AddRectangle (rect);
 				graphics.RenderSolid (Drawing.Color.FromARGB (1.0, 1, 0, 0));
 				
-				graphics.AddFilledRectangle (this.designer_drag_rect);
+				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (Drawing.Color.FromARGB (0.2, 1, 0, 0));
 			}
 		}
@@ -881,7 +927,10 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			Drawing.Rectangle rect_drop = this.designer.OriginalBounds;
 			
+			mouse.Y -= this.current_height;
+			
 			this.designer_drag_rect = this.designer.GetDraggingRectangle (mouse);
+			this.designer_adjust_widget = null;
 			
 			int    col_count = this.designer.Widget.LayoutArg2 - this.designer.Widget.LayoutArg1;
 			double center_x  = this.designer_drag_rect.Center.X;
@@ -924,6 +973,8 @@ namespace Epsitec.Common.Widgets.Layouts
 					
 					double dy = this.designer.OriginalBounds.Height;
 					rect_drop = new Drawing.Rectangle (x1, this.frozen_lines_y[line]-dy, x2-x1, dy);
+					
+					this.designer_adjust_widget = this.designer.Widget;
 				}
 				else if (this.IsHorizontalRangeEmpty (line, col1, col2, this.designer.WidgetOriginalSurface))
 				{
@@ -934,6 +985,8 @@ namespace Epsitec.Common.Widgets.Layouts
 					double dy = System.Math.Min (this.designer.OriginalBounds.Height, y2-y1);
 					
 					rect_drop = new Drawing.Rectangle (x1, y2-dy, x2-x1, dy);
+					
+					this.designer_adjust_widget = this.designer.Widget;
 				}
 			}
 			
@@ -1585,6 +1638,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		protected int					designer_drop_col1;
 		protected int					designer_drop_col2;
 		protected int					designer_drop_line;
+		protected Widget				designer_adjust_widget;
 		
 		protected double[]				frozen_lines_y;
 		
