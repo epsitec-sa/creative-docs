@@ -1059,6 +1059,7 @@ namespace Epsitec.Cresus.Database
 						mapping.ColumnMappings.Add (ado_name_column, db_name_column);
 					}
 					
+					this.adapters[i].MissingSchemaAction = System.Data.MissingSchemaAction.AddWithKey;
 					this.adapters[i].Fill (this.data_set);
 				}
 			}
