@@ -361,14 +361,11 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( this.edited && this.textNavigator.Context.CursorTo != -1 )
 			{
-				Drawing.Rectangle rect = this.textLayout.FindTextCursor(this.textNavigator.Context.CursorTo, this.textNavigator.Context.CursorAfter, out this.textNavigator.Context.CursorLine);
-				if ( !rect.IsEmpty )
+				Drawing.Point c1, c2;
+				if ( this.textLayout.FindTextCursor(this.textNavigator.Context.CursorTo, this.textNavigator.Context.CursorAfter, out c1, out c2, out this.textNavigator.Context.CursorLine) )
 				{
-					this.textNavigator.Context.CursorPosX = (rect.Left+rect.Right)/2;
-
-					rect.Left  -= 0.5/iconContext.ScaleX;
-					rect.Right += 0.5/iconContext.ScaleX;
-					graphics.AddFilledRectangle(rect);
+					graphics.LineWidth = 1.0/iconContext.ScaleX;
+					graphics.AddLine(c1, c2);
 					graphics.RenderSolid(IconContext.ColorFrameEdit);
 				}
 			}

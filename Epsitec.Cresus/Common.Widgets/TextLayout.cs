@@ -69,7 +69,6 @@ namespace Epsitec.Common.Widgets
 					if ( TextLayout.CheckSyntax(value, out offsetError) )
 					{
 						this.text = value;
-						this.textLength = value.Length;
 						this.isDirty = true;
 					}
 					else
@@ -82,7 +81,7 @@ namespace Epsitec.Common.Widgets
 		
 		public int								TextLength
 		{
-			get { return this.textLength; }
+			get { return (this.text == null) ? 0 : this.text.Length; }
 		}
 		
 		public Drawing.Font						Font
@@ -354,19 +353,148 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Sélectionne tout le texte.
+		public bool SelectBold(TextLayout.Context context)
+		{
+			// Indique si les caractères sélectionnés sont gras.
+			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+			if ( block == null )  return false;
+			int i = block.font.StyleName.IndexOf("Bold");
+			return ( i >= 0 );
+		}
+
+		public void SelectBold(TextLayout.Context context, bool bold)
+		{
+			// Met en gras ou en normal tous les caractères sélectionnés.
+			string state = bold ? "yes" : "no";
+			this.PutSelect(context, "bold=\"" + state + "\"");
+		}
+
+		public bool SelectItalic(TextLayout.Context context)
+		{
+			// Indique si les caractères sélectionnés sont italiques.
+			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+			if ( block == null )  return false;
+			int i = block.font.StyleName.IndexOf("Italic");
+			int j = block.font.StyleName.IndexOf("Oblique");
+			return ( i >= 0 || j >= 0 );
+		}
+
+		public void SelectItalic(TextLayout.Context context, bool italic)
+		{
+			// Met en italique ou en normal tous les caractères sélectionnés.
+			string state = italic ? "yes" : "no";
+			this.PutSelect(context, "italic=\"" + state + "\"");
+		}
+
+		public bool SelectUnderline(TextLayout.Context context)
+		{
+			// Indique si les caractères sélectionnés sont soulignés.
+			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+			if ( block == null )  return false;
+			return block.underline;
+		}
+
+		public void SelectUnderline(TextLayout.Context context, bool underline)
+		{
+			// Met en souligné ou en normal tous les caractères sélectionnés.
+			string state = underline ? "yes" : "no";
+			this.PutSelect(context, "underline=\"" + state + "\"");
+		}
+
+		public string SelectFontName(TextLayout.Context context)
+		{
+			// Indique le nom de la fonte des caractères sélectionnés.
+			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+			if ( block == null )  return "";
+			return block.font.FaceName;
+		}
+
+		public void SelectFontName(TextLayout.Context context, string name)
+		{
+			// Modifie le nom de la fonte des caractères sélectionnés.
+			this.PutSelect(context, "face=\"" + name + "\"");
+		}
+
+		public double SelectFontSize(TextLayout.Context context)
+		{
+			// Indique la taille des caractères sélectionnés.
+			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+			if ( block == null )  return Drawing.Font.DefaultFontSize;
+			return block.fontSize;
+		}
+
+		public void SelectFontSize(TextLayout.Context context, double size)
+		{
+			// Modifie la taille des caractères sélectionnés.
+			this.PutSelect(context, "size=\"" + size + "\"");
+		}
+
+		public Drawing.Color SelectFontColor(TextLayout.Context context)
+		{
+			// Indique la couleur des caractères sélectionnés.
+			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+			if ( block == null )  return Drawing.Color.Empty;
+			return block.fontColor;
+		}
+
+		public void SelectFontColor(TextLayout.Context context, Drawing.Color color)
+		{
+			// Modifie la couleur des caractères sélectionnés.
+			string s = "#" + Drawing.Color.ToHexa(color);
+			this.PutSelect(context, "color=\"" + s + "\"");
+		}
+
+		protected JustifBlock SearchJustifBlock(int index)
+		{
+			// Cherche le premier bloc correspondant à un index.
+			this.UpdateLayout();
+
+			JustifBlock found = null;
+			foreach ( JustifBlock block in this.blocks )
+			{
+				if ( index >= block.beginIndex && index <= block.endIndex )
+				{
+					found = block;
+				}
+				if ( index < block.endIndex )
+				{
+					break;
+				}
+			}
+			return found;
+		}
+
+		protected void PutSelect(TextLayout.Context context, string cmd)
+		{
+			// Modifie les caractères sélectionnés avec une commande <put..>..</put>.
+			int cursorFrom = System.Math.Min(context.CursorFrom, context.CursorTo);
+			int cursorTo   = System.Math.Max(context.CursorFrom, context.CursorTo);
+			if ( cursorFrom == cursorTo )  return;
+
+			int from = this.FindOffsetFromIndex(cursorFrom, false);
+			int to   = this.FindOffsetFromIndex(cursorTo, true);
+
+			string text = this.Text;
+			text = text.Insert(to, "</put>");
+			text = text.Insert(from, "<put " + cmd + ">");
+			this.Text = text;
+			this.Simplify();
+		}
+
+
 		public void SelectAll(TextLayout.Context context)
 		{
+			// Sélectionne tout le texte.
 			if ( this.text == null )  return;
 
 			context.CursorFrom  = 0;
-			context.CursorTo    = this.Text.Length;
+			context.CursorTo    = this.TextLength;
 			context.CursorAfter = false;
 		}
 
-		// Sélectionne toute la ligne.
 		public void SelectLine(TextLayout.Context context)
 		{
+			// Sélectionne toute la ligne.
 			this.MoveExtremity(context, -1, false);
 			int from = context.CursorFrom;
 			this.MoveExtremity(context, 1, false);
@@ -374,9 +502,9 @@ namespace Epsitec.Common.Widgets
 			context.CursorAfter = false;
 		}
 
-		// Sélectionne tout le mot.
 		public void SelectWord(TextLayout.Context context)
 		{
+			// Sélectionne tout le mot.
 			string simple = TextLayout.ConvertToSimpleText(this.Text);
 
 			while ( context.CursorFrom > 0 )
@@ -394,6 +522,29 @@ namespace Epsitec.Common.Widgets
 			context.CursorAfter = false;
 		}
 
+		protected void DeleteText(int from, int to)
+		{
+			// Supprime des caractères, tout en conservant les commandes.
+			System.Collections.Hashtable parameters;
+			string text = this.Text;
+
+			while ( from < to )
+			{
+				int begin = from;
+				Tag tag = TextLayout.ParseTag(text, ref from, out parameters);
+				if ( tag == Tag.None      ||
+					 tag == Tag.LineBreak ||
+					 tag == Tag.Image     )
+				{
+					text = text.Remove(begin, from-begin);
+					to -= from-begin;
+					from = begin;
+				}
+			}
+
+			this.Text = text;
+		}
+
 		public bool DeleteSelection(TextLayout.Context context)
 		{
 			// Supprime les caractères sélectionnés dans le texte.
@@ -405,13 +556,11 @@ namespace Epsitec.Common.Widgets
 			
 			if ( from == to )  return false;
 			
-			string text = this.Text;
-			text = text.Remove(from, to-from);
+			this.DeleteText(from, to);
 			from = this.FindIndexFromOffset(from);
 			context.CursorTo   = from;
 			context.CursorFrom = from;
-			this.Text = text;
-			
+			this.Simplify();
 			return true;
 		}
 
@@ -424,22 +573,18 @@ namespace Epsitec.Common.Widgets
 			int from = System.Math.Min(cursorFrom, cursorTo);
 			int to   = System.Math.Max(cursorFrom, cursorTo);
 			
-			string text = this.Text;
-			
 			if ( from < to )
 			{
-				text = text.Remove(from, to-from);
+				this.DeleteText(from, to);
 				from = this.FindIndexFromOffset(from);
 				context.CursorTo   = from;
 				context.CursorFrom = from;
+				this.Simplify();
 			}
 			
-			if ( this.Text.Length+ins.Length > context.MaxChar )
-			{
-				this.Text = text;
-				return false;
-			}
+			if ( this.TextLength+ins.Length > context.MaxChar )  return false;
 			
+			string text = this.Text;
 			int cursor = this.FindOffsetFromIndex(context.CursorTo, context.CursorAfter);
 			text = text.Insert(cursor, ins);
 			this.Text = text;
@@ -460,28 +605,25 @@ namespace Epsitec.Common.Widgets
 			// Supprime le caractère à gauche ou à droite du curseur.
 			if ( this.DeleteSelection(context) )  return false;
 
-			int cursor = this.FindOffsetFromIndex(context.CursorTo);
-
+			int from, to;
 			if ( dir < 0 )  // à gauche du curseur ?
 			{
-				if ( cursor <= 0 )  return false;
-
-				string text = this.Text;
-				int len = this.RecedeTag(cursor);
-				text = text.Remove(cursor-len, len);
-				context.CursorTo --;
-				context.CursorFrom = context.CursorTo;
-				this.Text = text;
+				if ( context.CursorTo == 0 )  return false;
+				from = this.FindOffsetFromIndex(context.CursorTo-1);
+				to   = this.FindOffsetFromIndex(context.CursorTo);
 			}
 			else	// à droite du curseur ?
 			{
-				if ( cursor >= this.Text.Length )  return false;
-
-				string text = this.Text;
-				int len = this.AdvanceTag(cursor);
-				text = text.Remove(cursor, len);
-				this.Text = text;
+				from = this.FindOffsetFromIndex(context.CursorTo);
+				to   = this.FindOffsetFromIndex(context.CursorTo+1);
 			}
+
+			if ( from == to )  return false;
+			this.DeleteText(from, to);
+			from = this.FindIndexFromOffset(from);
+			context.CursorTo   = from;
+			context.CursorFrom = from;
+			this.Simplify();
 			return true;
 		}
 		
@@ -653,8 +795,11 @@ namespace Epsitec.Common.Widgets
 		{
 			// Mémorise la position horizontale du curseur, afin de pouvoir y
 			// revenir en cas de déplacement par lignes.
-			Drawing.Rectangle cursor = this.FindTextCursor(context.CursorTo, context.CursorAfter, out context.CursorLine);
-			context.CursorPosX = (cursor.Left+cursor.Right)/2;
+			Drawing.Point p1, p2;
+			if ( this.FindTextCursor(context.CursorTo, context.CursorAfter, out p1, out p2, out context.CursorLine) )
+			{
+				context.CursorPosX = p1.X;
+			}
 		}
 
 
@@ -774,11 +919,20 @@ namespace Epsitec.Common.Widgets
 
 				if ( this.showLineBreak && block.lineBreak )
 				{
+					double width = block.width;
+
+					if ( block.infos != null )
+					{
+						double[] charsWidth;
+						block.font.GetTextCharEndX(block.text, block.infos, out charsWidth);
+						width = charsWidth[charsWidth.Length-1]*block.fontSize;
+					}
+
 					JustifLine line = (JustifLine)this.lines[block.indexLine];
 					Drawing.Rectangle rect = new Drawing.Rectangle();
 					rect.Top    = pos.Y+block.pos.Y+line.ascender;
 					rect.Bottom = pos.Y+block.pos.Y+line.descender;
-					rect.Left   = pos.X+block.pos.X+block.width;
+					rect.Left   = pos.X+block.pos.X+width;
 					rect.Width  = rect.Height*0.5;
 					graphics.Color = color;
 					graphics.PaintSurface(this.PathLineBreak(rect));
@@ -937,6 +1091,12 @@ namespace Epsitec.Common.Widgets
 					{
 						JustifBlock block = (JustifBlock)this.blocks[j];
 
+						double before = 0;
+						if ( block.bol )
+						{
+							before = block.pos.X;
+						}
+
 						double width = block.width;
 						if ( j == this.blocks.Count-1 )  // dernier bloc ?
 						{
@@ -955,8 +1115,8 @@ namespace Epsitec.Common.Widgets
 							}
 						}
 
-						if ( pos.X >= block.pos.X       &&
-							 pos.X <= block.pos.X+width )
+						if ( pos.X >= block.pos.X-before &&
+							 pos.X <= block.pos.X+width  )
 						{
 							if ( block.image )
 							{
@@ -981,7 +1141,7 @@ namespace Epsitec.Common.Widgets
 								for ( int k=0 ; k<max ; k++ )
 								{
 									right = charsWidth[k]*block.fontSize;
-									if ( pos.X-line.pos.X-block.pos.X <= left+(right-left)/2 )
+									if ( pos.X-block.pos.X <= left+(right-left)/2 )
 									{
 										index = block.beginIndex+k;
 										after = this.IsAfter(j, index);
@@ -1176,12 +1336,16 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		public Drawing.Rectangle FindTextCursor(int index, bool after, out int rankLine)
+		public bool FindTextCursor(int index, bool after,
+								   out Drawing.Point p1, out Drawing.Point p2,
+								   out int rankLine)
 		{
-			// Retourne le rectangle correspondant au curseur.
+			// Retourne les deux extrémités du curseur.
 			// Indique également le numéro de la ligne (0..n).
 			this.UpdateLayout();
 
+			p1 = new Drawing.Point();
+			p2 = new Drawing.Point();
 			rankLine = -1;
 			int i = after ? this.blocks.Count-1 : 0;
 			while ( i >= 0 && i < this.blocks.Count )
@@ -1190,26 +1354,31 @@ namespace Epsitec.Common.Widgets
 				JustifLine line = (JustifLine)this.lines[block.indexLine];
 				if ( block.visible && index >= block.beginIndex && index <= block.endIndex )
 				{
-					Drawing.Rectangle rect = new Drawing.Rectangle();
-					rect.Top    = line.pos.Y+line.ascender;
-					rect.Bottom = line.pos.Y+line.descender;
+					p2.Y = line.pos.Y+line.ascender;
+					p1.Y = line.pos.Y+line.descender;
 					if ( block.image )
 					{
-						rect.Left  = block.pos.X;
-						rect.Right = block.pos.X+block.width;
+						p1.X = block.pos.X;
+						p2.X = p1.X;
 					}
 					else
 					{
-						rect.Left  = this.IndexToPosX(block, index);
-						rect.Right = rect.Left;
+						p1.X = this.IndexToPosX(block, index);
+						p2.X = p1.X;
+					}
+					if ( block.italic )  // incline le curseur ?
+					{
+						double f = System.Math.Sin(Drawing.Font.DefaultObliqueAngle*System.Math.PI/180.0);
+						p2.X += line.ascender*f;
+						p1.X += line.descender*f;
 					}
 					rankLine = line.rank;
-					return rect;
+					return true;
 				}
 				i += after ? -1 : 1;
 			}
 
-			return Drawing.Rectangle.Empty;
+			return false;
 		}
 
 		public Drawing.Point FindTextEnd()
@@ -1228,10 +1397,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+#if false
 		public int AdvanceTag(int offset)
 		{
 			// Si on est au début d'un tag, donne la longueur jusqu'à la fin.
-			if ( offset >= this.textLength )  return 0;
+			if ( offset >= this.TextLength )  return 0;
 
 			if ( this.text[offset] == '<' )  // tag <xx> ?
 			{
@@ -1239,7 +1409,7 @@ namespace Epsitec.Common.Widgets
 				while ( this.text[offset] != '>' )
 				{
 					offset ++;
-					if ( offset >= this.textLength )  break;
+					if ( offset >= this.TextLength )  break;
 				}
 				return offset-initial+1;
 			}
@@ -1250,7 +1420,7 @@ namespace Epsitec.Common.Widgets
 				while ( this.text[offset] != ';' )
 				{
 					offset ++;
-					if ( offset >= this.textLength )  break;
+					if ( offset >= this.TextLength )  break;
 				}
 				return offset-initial+1;
 			}
@@ -1288,6 +1458,7 @@ namespace Epsitec.Common.Widgets
 
 			return 1;
 		}
+#endif
 
 
 		public int FindOffsetFromIndex(int textIndex)
@@ -1298,16 +1469,17 @@ namespace Epsitec.Common.Widgets
 		public int FindOffsetFromIndex(int textIndex, bool after)
 		{
 			// Retourne l'offset dans le texte interne, correspondant à l'index
-			// spécifié pour le texte sans tags. On saute tous les tags qui précèdent
-			// le caractère indiqué (textIndex=0 => premier caractère non tag dans
-			// le texte).
+			// spécifié pour le texte sans tags. Si after=true, on saute tous les
+			// tags qui précèdent le caractère indiqué (textIndex=0 => premier
+			// caractère non tag dans le texte).
 			int    index = 0;
 			int    beginOffset;
 			int    endOffset = 0;
+			int    textLength = this.TextLength;
 			
-			while ( endOffset <= this.textLength )
+			while ( endOffset <= textLength )
 			{
-				if ( endOffset == this.textLength )  return endOffset;
+				if ( endOffset == textLength )  return endOffset;
 				beginOffset = endOffset;
 
 				if ( !after )
@@ -1321,7 +1493,7 @@ namespace Epsitec.Common.Widgets
 					if ( length < 0 )  return -1;
 					endOffset += length;
 
-					string tag = this.text.Substring(beginOffset, length).ToLower();
+					string tag = this.text.Substring(beginOffset, length);
 					if ( tag != "<br/>" )  continue;
 				}
 				else if ( this.text[endOffset] == '&' )
@@ -1355,8 +1527,9 @@ namespace Epsitec.Common.Widgets
 			if ( taggedTextOffset == 0 )  return index;
 
 			int endOffset = 0;
+			int textLength = this.TextLength;
 			
-			while ( endOffset < this.textLength )
+			while ( endOffset < textLength )
 			{
 				beginOffset = endOffset;
 
@@ -1366,7 +1539,7 @@ namespace Epsitec.Common.Widgets
 					if ( length < 0 )  return -1;
 					endOffset += length;
 
-					string tag = this.text.Substring(beginOffset, length).ToLower();
+					string tag = this.text.Substring(beginOffset, length);
 					if ( tag == "<br/>" )
 					{
 						index ++;
@@ -1398,7 +1571,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert(endTag.StartsWith("</"));
 			System.Diagnostics.Debug.Assert(endTag.EndsWith(">"));
 
-			endTag = endTag.Substring(2, endTag.Length-3).ToLower();  // </b> -> b
+			endTag = endTag.Substring(2, endTag.Length-3);  // </b> -> b
 
 			for ( int i=list.Count-1 ; i>=0 ; i-- )
 			{
@@ -1417,7 +1590,7 @@ namespace Epsitec.Common.Widgets
 		{
 			// Parcourt le texte et accumule les informations sur les tags <>
 			// reconnus.
-			if ( offset < 0 || offset > this.textLength )
+			if ( offset < 0 || offset > this.TextLength )
 			{
 				tags = null;
 				return false;
@@ -1479,7 +1652,7 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				char code;
-				string entity = text.Substring(offset, length).ToLower();
+				string entity = text.Substring(offset, length);
 				
 				switch ( entity )
 				{
@@ -1527,11 +1700,9 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					string tag = text.Substring(offset, length);
-					string tagLower = tag.ToLower();
-					
 					offset += length;
 					
-					switch ( tagLower )
+					switch ( tag )
 					{
 						case "<br/>":    return Tag.LineBreak;
 						case "<b>":      return Tag.Bold;
@@ -1548,13 +1719,14 @@ namespace Epsitec.Common.Widgets
 						
 						case "</a>":     return Tag.AnchorEnd;
 						case "</font>":  return Tag.FontEnd;
+						case "</put>":   return Tag.PutEnd;
 					}
 					
 					int space = tag.IndexOf(" ");
 					
 					if ( space > 0 )
 					{
-						string pfx = tagLower.Substring(0, space);
+						string pfx = tag.Substring(0, space);
 						string end = tag.Remove(0, space).TrimStart(' ');
 						Tag tagId = Tag.Unknown;
 						
@@ -1566,6 +1738,7 @@ namespace Epsitec.Common.Widgets
 							case "<img":   tagId = Tag.Image;   close = "/>";  break;
 							case "<font":  tagId = Tag.Font;    close = ">";   break;
 							case "<w":     tagId = Tag.Wave;    close = ">";   break;
+							case "<put":   tagId = Tag.Put;     close = ">";   break;
 						}
 						
 						if ( !end.EndsWith(close) )
@@ -1739,15 +1912,14 @@ namespace Epsitec.Common.Widgets
 					if ( length > 0 )
 					{
 						string tag = text.Substring(offset, length);
-						string tagLower = tag.ToLower();
 					
 						offset += length;
 
-						if ( tagLower.IndexOf("<img ") == 0 )
+						if ( tag.IndexOf("<img ") == 0 )
 						{
 							buffer.Append(imageReplacement);
 						}
-						if ( tagLower.IndexOf("<br") == 0 )
+						if ( tag.IndexOf("<br") == 0 )
 						{
 							buffer.Append("\n");
 						}
@@ -1778,6 +1950,275 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public void Simplify()
+		{
+			// Simplifie et met à plat toutes les commandes HTML du texte.
+			// Les commandes <put..>..</put> sont gérées puis supprimées.
+			System.Collections.Stack		fontStack;
+			FontSimplify					fontItem;
+			FontSimplify					fontCurrent;
+			System.Text.StringBuilder		buffer;
+			System.Collections.Hashtable	parameters;
+
+			this.blocks.Clear();
+			fontStack = new System.Collections.Stack();
+
+			// Prépare la fonte initiale par défaut.
+			fontItem = new FontSimplify();
+			fontItem.fontName  = "";
+			fontItem.fontSize  = "";
+			fontItem.fontColor = "";
+
+			fontStack.Push(fontItem);  // push la fonte initiale (jamais de pop)
+			fontCurrent = fontItem.Copy();
+
+			SupplSimplify supplItem = new SupplSimplify();
+			SupplSimplify supplCurrent = new SupplSimplify();
+			buffer = new System.Text.StringBuilder();
+			bool	fontCmd = false;
+			int		offset = 0;
+			int		textLength = this.TextLength;
+			while ( offset <= textLength )
+			{
+				int begin = offset;
+				Tag tag = TextLayout.ParseTag(this.text, ref offset, out parameters);
+				if ( tag == Tag.Ending )  break;
+
+				switch ( tag )
+				{
+					case Tag.Font:
+						if ( parameters != null )
+						{
+							fontItem = ((FontSimplify)fontStack.Peek()).Copy();
+							if ( parameters.ContainsKey("face")  )  fontItem.fontName  = (string)parameters["face"];
+							if ( parameters.ContainsKey("size")  )  fontItem.fontSize  = (string)parameters["size"];
+							if ( parameters.ContainsKey("color") )  fontItem.fontColor = (string)parameters["color"];
+							fontStack.Push(fontItem);
+						}
+						break;
+
+					case Tag.FontEnd:
+						if ( fontStack.Count > 1 )
+						{
+							fontStack.Pop();
+						}
+						fontItem = (FontSimplify)fontStack.Peek();
+						break;
+
+					case Tag.Bold:
+						supplItem.bold ++;
+						break;
+					case Tag.BoldEnd:
+						supplItem.bold --;
+						break;
+
+					case Tag.Italic:
+						supplItem.italic ++;
+						break;
+					case Tag.ItalicEnd:
+						supplItem.italic --;
+						break;
+
+					case Tag.Underline:
+						supplItem.underline ++;
+						break;
+					case Tag.UnderlineEnd:
+						supplItem.underline --;
+						break;
+
+					case Tag.Mnemonic:
+						supplItem.mnemonic ++;
+						break;
+					case Tag.MnemonicEnd:
+						supplItem.mnemonic --;
+						break;
+
+					case Tag.Anchor:
+						supplItem.anchor ++;
+						supplItem.stringAnchor = "";
+						if ( parameters != null && parameters.ContainsKey("href") )
+						{
+							supplItem.stringAnchor = (string)parameters["href"];
+						}
+						break;
+					case Tag.AnchorEnd:
+						supplItem.anchor --;
+						break;
+
+					case Tag.Wave:
+						supplItem.wave ++;
+						supplItem.waveColor = "";
+						if ( parameters != null && parameters.ContainsKey("color") )
+						{
+							supplItem.waveColor = (string)parameters["color"];
+						}
+						break;
+					case Tag.WaveEnd:
+						supplItem.wave --;
+						break;
+
+					case Tag.Put:
+						if ( parameters != null )
+						{
+							if ( parameters.ContainsKey("face")      )  supplItem.putFontName  = (string)parameters["face"];
+							if ( parameters.ContainsKey("size")      )  supplItem.putFontSize  = (string)parameters["size"];
+							if ( parameters.ContainsKey("color")     )  supplItem.putFontColor = (string)parameters["color"];
+							if ( parameters.ContainsKey("bold")      )  supplItem.putBold      = (string)parameters["bold"];
+							if ( parameters.ContainsKey("italic")    )  supplItem.putItalic    = (string)parameters["italic"];
+							if ( parameters.ContainsKey("underline") )  supplItem.putUnderline = (string)parameters["underline"];
+						}
+						break;
+					case Tag.PutEnd:
+						supplItem.putFontName  = "";
+						supplItem.putFontSize  = "";
+						supplItem.putFontColor = "";
+						supplItem.putBold      = "";
+						supplItem.putItalic    = "";
+						supplItem.putUnderline = "";
+						break;
+
+					case Tag.Image:
+					case Tag.LineBreak:
+					case Tag.None:
+						this.SimplifyPutCommand(buffer, fontCurrent, fontItem, supplCurrent, supplItem, ref fontCmd);
+						fontCurrent = fontItem.Copy();
+						supplCurrent = supplItem.Copy();
+						buffer.Append(this.text.Substring(begin, offset-begin));
+						break;
+				}
+			}
+
+			fontItem = (FontSimplify)fontStack.Peek();
+			supplItem.bold   = 0;
+			supplItem.italic = 0;
+			this.SimplifyPutCommand(buffer, fontCurrent, fontItem, supplCurrent, supplItem, ref fontCmd);
+
+			if ( fontCmd )
+			{
+				buffer.Append("</font>");
+			}
+
+			this.text = buffer.ToString();
+		}
+
+		protected void SimplifyPutCommand(System.Text.StringBuilder buffer,
+										  FontSimplify fontCurrent, FontSimplify fontItem,
+										  SupplSimplify supplCurrent, SupplSimplify supplItem,
+										  ref bool fontCmd)
+		{
+			string itemFontName  = (supplItem.putFontName  != "") ? supplItem.putFontName  : fontItem.fontName;
+			string itemFontSize  = (supplItem.putFontSize  != "") ? supplItem.putFontSize  : fontItem.fontSize;
+			string itemFontColor = (supplItem.putFontColor != "") ? supplItem.putFontColor : fontItem.fontColor;
+
+			string currFontName  = (supplCurrent.putFontName  != "") ? supplCurrent.putFontName  : fontCurrent.fontName;
+			string currFontSize  = (supplCurrent.putFontSize  != "") ? supplCurrent.putFontSize  : fontCurrent.fontSize;
+			string currFontColor = (supplCurrent.putFontColor != "") ? supplCurrent.putFontColor : fontCurrent.fontColor;
+
+			if ( itemFontName  != currFontName  ||
+				 itemFontSize  != currFontSize  ||
+				 itemFontColor != currFontColor )
+			{
+				if ( fontCmd )
+				{
+					buffer.Append("</font>");
+					fontCmd = false;
+				}
+
+				if ( itemFontName  != "" ||
+					 itemFontSize  != "" ||
+					 itemFontColor != "" )
+				{
+					buffer.Append("<font");
+
+					if ( itemFontName != "" )
+					{
+						buffer.Append(" face=\"");
+						buffer.Append(itemFontName);
+						buffer.Append("\"");
+					}
+
+					if ( itemFontSize != "" )
+					{
+						buffer.Append(" size=\"");
+						buffer.Append(itemFontSize);
+						buffer.Append("\"");
+					}
+
+					if ( itemFontColor != "" )
+					{
+						buffer.Append(" color=\"");
+						buffer.Append(itemFontColor);
+						buffer.Append("\"");
+					}
+
+					buffer.Append(">");
+					fontCmd = true;
+				}
+			}
+
+			if ( supplItem.IsBold != supplCurrent.IsBold )
+			{
+				buffer.Append(supplItem.IsBold ? "<b>" : "</b>");
+			}
+
+			if ( supplItem.IsItalic != supplCurrent.IsItalic )
+			{
+				buffer.Append(supplItem.IsItalic ? "<i>" : "</i>");
+			}
+
+			if ( supplItem.IsUnderline != supplCurrent.IsUnderline )
+			{
+				buffer.Append(supplItem.IsUnderline ? "<u>" : "</u>");
+			}
+
+			if ( (supplItem.mnemonic != 0) != (supplCurrent.mnemonic != 0) )
+			{
+				buffer.Append((supplItem.mnemonic != 0) ? "<m>" : "</m>");
+			}
+
+			if ( (supplItem.anchor != 0) != (supplCurrent.anchor != 0) )
+			{
+				if ( supplItem.anchor != 0 )
+				{
+					if ( supplItem.stringAnchor == "" )
+					{
+						buffer.Append("<a>");
+					}
+					else
+					{
+						buffer.Append("<a href=\">");
+						buffer.Append(supplItem.stringAnchor);
+						buffer.Append("\"");
+					}
+				}
+				else
+				{
+					buffer.Append("</a>");
+				}
+			}
+
+			if ( (supplItem.wave != 0) != (supplCurrent.wave != 0) )
+			{
+				if ( supplItem.wave != 0 )
+				{
+					if ( supplItem.waveColor == "" )
+					{
+						buffer.Append("<w>");
+					}
+					else
+					{
+						buffer.Append("<w color=\">");
+						buffer.Append(supplItem.waveColor);
+						buffer.Append("\"");
+					}
+				}
+				else
+				{
+					buffer.Append("</w>");
+				}
+			}
+		}
+
 		protected void JustifBlocks()
 		{
 			// Met à jour this.blocks en fonction du texte, de la fonte et des dimensions.
@@ -1794,21 +2235,16 @@ namespace Epsitec.Common.Widgets
 			fontItem.fontName  = this.font.FaceName;
 			fontItem.fontSize  = this.fontSize;
 			fontItem.fontColor = Drawing.Color.FromBrightness(0);  // noir
-			fontItem.bold      = 0;
-			fontItem.italic    = 0;
-			fontItem.underline = 0;
-			fontItem.anchor    = 0;
-			fontItem.wave      = 0;
-			fontItem.waveColor = Drawing.Color.Empty;
 
 			fontStack.Push(fontItem);  // push la fonte initiale (jamais de pop)
 
 			// Si le texte n'existe pas, met quand même un bloc vide,
 			// afin de voir apparaître le curseur (FindTextCursor).
-			if ( this.textLength == 0 )
+			int textLength = this.TextLength;
+			if ( textLength == 0 )
 			{
 				fontItem = (FontItem)fontStack.Peek();
-				Drawing.Font blockFont = fontItem.RetFont();
+				Drawing.Font blockFont = fontItem.RetFont(false, false);
 
 				JustifBlock block = new JustifBlock();
 				block.bol        = true;
@@ -1821,10 +2257,12 @@ namespace Epsitec.Common.Widgets
 				block.font       = blockFont;
 				block.fontSize   = fontItem.fontSize;
 				block.fontColor  = fontItem.fontColor;
+				block.bold       = false;
+				block.italic     = false;
 				block.underline  = false;
 				block.anchor     = false;
 				block.wave       = false;
-				block.waveColor  = fontItem.waveColor;
+				block.waveColor  = Drawing.Color.Empty;
 				block.width      = 0;
 				block.pos        = new Drawing.Point(0,0);
 				block.visible    = false;
@@ -1835,6 +2273,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
+			SupplItem supplItem = new SupplItem();
 			buffer = new System.Text.StringBuilder();
 			bool	bol = true;
 			double	restWidth = this.layoutSize.Width;
@@ -1842,7 +2281,7 @@ namespace Epsitec.Common.Widgets
 			int		endOffset = 0;
 			int		index = 0;
 			int		textIndex = 0;
-			while ( endOffset <= this.textLength )
+			while ( endOffset <= textLength )
 			{
 				beginOffset = endOffset;
 				Tag tag = TextLayout.ParseTag(this.text, ref endOffset, out parameters);
@@ -1850,7 +2289,7 @@ namespace Epsitec.Common.Widgets
 				if ( tag != Tag.None )
 				{
 					fontItem = (FontItem)fontStack.Peek();
-					Drawing.Font blockFont = fontItem.RetFont();
+					Drawing.Font blockFont = fontItem.RetFont(supplItem.bold>0, supplItem.italic>0);
 					
 					if ( (tag == Tag.LineBreak && buffer.Length == 0) ||
 						 (tag == Tag.Ending && buffer.Length == 0 && bol) )
@@ -1866,10 +2305,12 @@ namespace Epsitec.Common.Widgets
 						block.font       = blockFont;
 						block.fontSize   = fontItem.fontSize;
 						block.fontColor  = fontItem.fontColor;
-						block.underline  = fontItem.underline > 0;
-						block.anchor     = fontItem.anchor > 0;
-						block.wave       = fontItem.wave > 0;
-						block.waveColor  = fontItem.waveColor;
+						block.bold       = supplItem.bold > 0;
+						block.italic     = supplItem.italic > 0;
+						block.underline  = supplItem.underline > 0;
+						block.anchor     = supplItem.anchor > 0;
+						block.wave       = supplItem.wave > 0;
+						block.waveColor  = supplItem.waveColor;
 						block.width      = 0;
 						block.pos        = new Drawing.Point(0,0);
 						block.visible    = false;
@@ -1908,10 +2349,12 @@ namespace Epsitec.Common.Widgets
 							block.font       = blockFont;
 							block.fontSize   = fontItem.fontSize;
 							block.fontColor  = fontItem.fontColor;
-							block.underline  = fontItem.underline > 0;
-							block.anchor     = fontItem.anchor > 0;
-							block.wave       = fontItem.wave > 0;
-							block.waveColor  = fontItem.waveColor;
+							block.bold       = supplItem.bold > 0;
+							block.italic     = supplItem.italic > 0;
+							block.underline  = supplItem.underline > 0;
+							block.anchor     = supplItem.anchor > 0;
+							block.wave       = supplItem.wave > 0;
+							block.waveColor  = supplItem.waveColor;
 							block.width      = breakWidth;
 							block.pos        = new Drawing.Point(0,0);
 							block.visible    = false;
@@ -1992,64 +2435,54 @@ namespace Epsitec.Common.Widgets
 						break;
 
 					case Tag.Bold:
-						fontItem = (FontItem)fontStack.Peek();
-						fontItem.bold ++;
+						supplItem.bold ++;
 						break;
 					case Tag.BoldEnd:
-						fontItem = (FontItem)fontStack.Peek();
-						fontItem.bold --;
+						supplItem.bold --;
 						break;
 
 					case Tag.Italic:
-						fontItem = (FontItem)fontStack.Peek();
-						fontItem.italic ++;
+						supplItem.italic ++;
 						break;
 					case Tag.ItalicEnd:
-						fontItem = (FontItem)fontStack.Peek();
-						fontItem.italic --;
+						supplItem.italic --;
 						break;
 
 					case Tag.Underline:
 					case Tag.Mnemonic:
-						fontItem = (FontItem)fontStack.Peek();
-						fontItem.underline ++;
+						supplItem.underline ++;
 						break;
 					case Tag.UnderlineEnd:
 					case Tag.MnemonicEnd:
-						fontItem = (FontItem)fontStack.Peek();
-						fontItem.underline --;
+						supplItem.underline --;
 						break;
 
 					case Tag.Anchor:
-						fontItem = (FontItem)fontStack.Peek();
-						fontItem.anchor ++;
-						fontItem.underline ++;
+						supplItem.anchor ++;
+						supplItem.underline ++;
 						break;
 					case Tag.AnchorEnd:
-						fontItem = (FontItem)fontStack.Peek();
-						fontItem.anchor --;
-						fontItem.underline --;
+						supplItem.anchor --;
+						supplItem.underline --;
 						break;
 
 					case Tag.Wave:
-						fontItem = (FontItem)fontStack.Peek();
-						fontItem.wave ++;
+						supplItem.wave ++;
 						if ( parameters == null )
 						{
-							fontItem.waveColor = Drawing.Color.Empty;
+							supplItem.waveColor = Drawing.Color.Empty;
 						}
 						else
 						{
 							if ( parameters.ContainsKey("color") )
 							{
 								string s = parameters["color"] as string;
-								fontItem.waveColor = Drawing.Color.FromName(s);
+								supplItem.waveColor = Drawing.Color.FromName(s);
 							}
 						}
 						break;
 					case Tag.WaveEnd:
-						fontItem = (FontItem)fontStack.Peek();
-						fontItem.wave --;
+						supplItem.wave --;
 						break;
 
 					case Tag.Image:
@@ -2075,7 +2508,7 @@ namespace Epsitec.Common.Widgets
 								}
 
 								fontItem = (FontItem)fontStack.Peek();
-								Drawing.Font blockFont = fontItem.RetFont();
+								Drawing.Font blockFont = fontItem.RetFont(supplItem.bold>0, supplItem.italic>0);
 
 								double fontAscender  = blockFont.Ascender;
 								double fontDescender = blockFont.Descender;
@@ -2092,10 +2525,12 @@ namespace Epsitec.Common.Widgets
 								block.font       = blockFont;
 								block.fontSize   = fontItem.fontSize;
 								block.fontColor  = fontItem.fontColor;
-								block.underline  = fontItem.underline > 0;
-								block.anchor     = fontItem.anchor > 0;
-								block.wave       = fontItem.wave > 0;
-								block.waveColor  = fontItem.waveColor;
+								block.bold       = supplItem.bold > 0;
+								block.italic     = supplItem.italic > 0;
+								block.underline  = supplItem.underline > 0;
+								block.anchor     = supplItem.anchor > 0;
+								block.wave       = supplItem.wave > 0;
+								block.waveColor  = supplItem.waveColor;
 								block.width      = dx;
 								
 								if ( image.IsOriginDefined )
@@ -2419,7 +2854,7 @@ namespace Epsitec.Common.Widgets
 						return false;
 					}
 				
-					string entity = text.Substring(endOffset, length).ToLower();
+					string entity = text.Substring(endOffset, length);
 					switch ( entity )
 					{
 						case "&amp;":   break;
@@ -2518,13 +2953,82 @@ namespace Epsitec.Common.Widgets
 			Italic,		ItalicEnd,			// <i>...</i>
 			Underline,	UnderlineEnd,		// <u>...</u>
 			Mnemonic,	MnemonicEnd,		// <m>...</m>  --> comme <u>...</u>
-			Wave,		WaveEnd,			// <w>...</w>
+			Wave,		WaveEnd,			// <w>...</w> ou <w color="#FF00FF">
 			Font,		FontEnd,			// <font ...>...</font>
 			Anchor,		AnchorEnd,			// <a href="x">...</a>
 			Image,							// <img src="x"/>
+
+			Put,		PutEnd,				// <put ...>...</put>
 		}
 		
 		
+		// Fonte servant à refléter simplifier les commandes HTML rencontrées.
+		// Un stack de FontSimplify est créé.
+		protected class FontSimplify
+		{
+			public FontSimplify Copy()
+			{
+				return this.MemberwiseClone() as FontSimplify;
+			}
+
+			public string		fontName;
+			public string		fontSize;
+			public string		fontColor;
+		}
+
+		protected class SupplSimplify
+		{
+			public SupplSimplify Copy()
+			{
+				return this.MemberwiseClone() as SupplSimplify;
+			}
+
+			public bool IsBold
+			{
+				get
+				{
+					if ( this.putBold == "yes" )  return true;
+					if ( this.putBold == "no"  )  return false;
+					return (this.bold > 0);
+				}
+			}
+
+			public bool IsItalic
+			{
+				get
+				{
+					if ( this.putItalic == "yes" )  return true;
+					if ( this.putItalic == "no"  )  return false;
+					return (this.italic > 0);
+				}
+			}
+
+			public bool IsUnderline
+			{
+				get
+				{
+					if ( this.putUnderline == "yes" )  return true;
+					if ( this.putUnderline == "no"  )  return false;
+					return (this.underline > 0);
+				}
+			}
+
+			public int		bold         = 0;	// gras si > 0
+			public int		italic       = 0;	// italique si > 0
+			public int		underline    = 0;	// souligné si > 0
+			public int		mnemonic     = 0;	// souligné si > 0
+			public int		anchor       = 0;	// lien si > 0
+			public string	stringAnchor = "";
+			public int		wave         = 0;	// vague si > 0
+			public string	waveColor    = "";
+			public string	putFontName  = "";
+			public string	putFontSize  = "";
+			public string	putFontColor = "";
+			public string	putBold      = "";
+			public string	putItalic    = "";
+			public string	putUnderline = "";
+		}
+
 		// Fonte servant à refléter les commandes HTML rencontrées.
 		// Un stack de FontItem est créé.
 		protected class FontItem
@@ -2539,20 +3043,20 @@ namespace Epsitec.Common.Widgets
 				return this.MemberwiseClone() as FontItem;
 			}
 
-			public Drawing.Font RetFont()
+			public Drawing.Font RetFont(bool bold, bool italic)
 			{
 				Drawing.Font	font;
 				string			fontStyle;
 
-				if ( this.bold > 0 && this.italic == 0 )
+				if ( bold && !italic )
 				{
 					fontStyle = "Bold";
 				}
-				else if ( this.bold == 0 && this.italic > 0 )
+				else if ( !bold && italic )
 				{
 					fontStyle = "Italic";
 				}
-				else if ( this.bold > 0 && this.italic > 0 )
+				else if ( bold && italic )
 				{
 					fontStyle = "Bold Italic";
 				}
@@ -2576,80 +3080,82 @@ namespace Epsitec.Common.Widgets
 				return font;
 			}
 
+			protected TextLayout	host;
 			
-			protected TextLayout				host;
-			
-			public string						fontName;
-			public double						fontSize;
-			public Drawing.Color				fontColor;
-			public int							bold;		// gras si > 0
-			public int							italic;		// italique si > 0
-			public int							underline;	// souligné si > 0
-			public int							anchor;		// lien si > 0
-			public int							wave;		// vague si > 0
-			public Drawing.Color				waveColor;
+			public string			fontName;
+			public double			fontSize;
+			public Drawing.Color	fontColor;
+		}
+
+		protected class SupplItem
+		{
+			public int				bold      = 0;	// gras si > 0
+			public int				italic    = 0;	// italique si > 0
+			public int				underline = 0;	// souligné si > 0
+			public int				anchor    = 0;	// lien si > 0
+			public int				wave      = 0;	// vague si > 0
+			public Drawing.Color	waveColor = Drawing.Color.Empty;
 		}
 
 		// Descripteur d'un bloc de texte. Tous les caractères du bloc ont
 		// la même fonte, même taille et même couleur.
 		protected class JustifBlock
 		{
-			public bool							bol;		// begin of line
-			public bool							lineBreak;	// ending with br
-			public bool							image;		// image bitmap
-			public string						text;
-			public int							beginIndex;
-			public int							endIndex;
-			public int							indexLine;	// index dans this.lines
-			public Drawing.Font					font;
-			public double						fontSize;
-			public Drawing.Color				fontColor;
-			public bool							underline;
-			public bool							anchor;
-			public bool							wave;
-			public Drawing.Color				waveColor;
-			public double						width;		// largeur du bloc
-			public double						imageAscender;
-			public double						imageDescender;
-			public Drawing.Point				pos;		// sur la ligne de base
-			public bool							visible;
-			public Drawing.Font.ClassInfo[]		infos;
-			public double						infoWidth;
-			public double						infoElast;
+			public bool						bol;		// begin of line
+			public bool						lineBreak;	// ending with br
+			public bool						image;		// image bitmap
+			public string					text;
+			public int						beginIndex;
+			public int						endIndex;
+			public int						indexLine;	// index dans this.lines
+			public Drawing.Font				font;
+			public double					fontSize;
+			public Drawing.Color			fontColor;
+			public bool						bold;
+			public bool						italic;
+			public bool						underline;
+			public bool						anchor;
+			public bool						wave;
+			public Drawing.Color			waveColor;
+			public double					width;		// largeur du bloc
+			public double					imageAscender;
+			public double					imageDescender;
+			public Drawing.Point			pos;		// sur la ligne de base
+			public bool						visible;
+			public Drawing.Font.ClassInfo[]	infos;
+			public double					infoWidth;
+			public double					infoElast;
 		}
 
 		// Descripteur d'une ligne de texte. Une ligne est composée
 		// d'un ou plusieurs blocs.
 		protected class JustifLine
 		{
-			public int							firstBlock;	// index du premier bloc
-			public int							lastBlock;	// index du dernier bloc
-			public int							rank;		// rang de la ligne (0..n)
-			public Drawing.Point				pos;		// position sur la ligne de base
-			public double						width;		// largeur occupée par la ligne
-			public double						height;		// interligne
-			public double						ascender;	// hauteur en-dessus de la ligne de base (+)
-			public double						descender;	// hauteur en-dessous de la ligne de base (-)
-			public bool							visible;
+			public int						firstBlock;	// index du premier bloc
+			public int						lastBlock;	// index du dernier bloc
+			public int						rank;		// rang de la ligne (0..n)
+			public Drawing.Point			pos;		// position sur la ligne de base
+			public double					width;		// largeur occupée par la ligne
+			public double					height;		// interligne
+			public double					ascender;	// hauteur en-dessus de la ligne de base (+)
+			public double					descender;	// hauteur en-dessous de la ligne de base (-)
+			public bool						visible;
 		}
 
 		public class Context
 		{
-			public int							CursorFrom  = 0;
-			public int							CursorTo    = 0;
-			public bool							CursorAfter = false;
-			public int							CursorLine  = 0;
-			public double						CursorPosX  = 0;
-			public int							MaxChar     = 1000;
+			public int						CursorFrom  = 0;
+			public int						CursorTo    = 0;
+			public bool						CursorAfter = false;
+			public int						CursorLine  = 0;
+			public double					CursorPosX  = 0;
+			public int						MaxChar     = 1000;
 		}
 		
 		public event AnchorEventHandler			Anchor;
-
-		
 		
 		protected bool							isDirty;
 		protected string						text;
-		protected int							textLength;
 		protected Drawing.Font					font			= Drawing.Font.DefaultFont;
 		protected double						fontSize		= Drawing.Font.DefaultFontSize;
 		protected Drawing.Size					layoutSize;

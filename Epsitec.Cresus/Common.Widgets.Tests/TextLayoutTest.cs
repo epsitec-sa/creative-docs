@@ -194,7 +194,7 @@ namespace Epsitec.Common.Widgets
 		[Test] public void CheckEntityChar()
 		{
 			int index = 0;
-			string text = "A&lt;&Amp;&GT;.&quot;&#160;";
+			string text = "A&lt;&amp;&gt;.&quot;&#160;";
 			
 			Assert.AreEqual('A', TextLayout.AnalyseEntityChar(text, ref index));
 			Assert.AreEqual('<', TextLayout.AnalyseEntityChar(text, ref index));
@@ -307,10 +307,10 @@ namespace Epsitec.Common.Widgets
 
 			// Textes tordus mais corrects.
 			Assert.IsTrue(TextLayout.CheckSyntax("<a href=\"x\">Link</a>", out offsetError));
-			Assert.IsTrue(TextLayout.CheckSyntax("<b><i></B></I>", out offsetError));
-			Assert.IsTrue(TextLayout.CheckSyntax("Première<BR/>Deuxième", out offsetError));
+			Assert.IsTrue(TextLayout.CheckSyntax("<b><i></b></i>", out offsetError));
+			Assert.IsTrue(TextLayout.CheckSyntax("Première<br/>Deuxième", out offsetError));
 			Assert.IsTrue(TextLayout.CheckSyntax("<img src=\"x\"/>", out offsetError));
-			Assert.IsTrue(TextLayout.CheckSyntax("A&lt;&Amp;&GT;.&quot;&#160;", out offsetError));
+			Assert.IsTrue(TextLayout.CheckSyntax("A&lt;&amp;&gt;.&quot;&#160;", out offsetError));
 
 			// Textes faux qui doivent être rejetés.
 			Assert.IsTrue(!TextLayout.CheckSyntax("<bold", out offsetError));

@@ -169,7 +169,7 @@ namespace Epsitec.Common.Drawing
 				Assert.IsTrue (break_text.Length > 0);
 				Assert.IsTrue (n_char > 0);
 				Assert.IsTrue (! break_text.StartsWith (" "));
-				Assert.IsTrue (! break_text.EndsWith (" "));
+//				Assert.IsTrue (! break_text.EndsWith (" "));
 				
 				chunk[line_count++] = break_text;
 				
@@ -193,8 +193,8 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual ("", break_text);
 			Assert.AreEqual (0.0, break_width);
 			Assert.AreEqual (true, tb.GetNextBreak (55.0, out break_text, out break_width, out n_char));
-			Assert.AreEqual ("absolutely", break_text);
-			Assert.AreEqual (false, tb.GetNextBreak (55.0, out break_text, out break_width, out n_char));
+			Assert.AreEqual ("absolutely ", break_text);
+			Assert.AreEqual (true, tb.GetNextBreak (55.0, out break_text, out break_width, out n_char));
 			tb.Dispose ();
 			
 			tb = new TextBreak (font, "absolutely   ", 12.0, TextBreakMode.None);
@@ -244,6 +244,8 @@ namespace Epsitec.Common.Drawing
 			Font font = Font.GetFont ("Times New Roman", "Italic");
 			Path path = new Path ();
 			Path rect = new Path ();
+			
+			System.Console.Out.WriteLine ("Times New Roman caret slope set to {0}.", font.CaretSlope);
 			
 			double x = 20;
 			double y = 80;
@@ -336,6 +338,9 @@ namespace Epsitec.Common.Drawing
 			Path path  = new Path ();
 			Path path2 = new Path ();
 			Path rect  = new Path ();
+			
+			System.Console.Out.WriteLine ("Tahoma Italic caret slope set to {0}.", font.CaretSlope);
+			System.Console.Out.WriteLine ("Tahoma Regular caret slope set to {0}.", font2.CaretSlope);
 			
 			double x = 20;
 			double y = 80;

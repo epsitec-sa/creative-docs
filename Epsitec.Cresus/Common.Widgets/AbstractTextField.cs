@@ -365,10 +365,16 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Sélectione tous les caractères.
 		public void SelectAll()
 		{
+			// Sélectione tous les caractères.
 			this.SelectAll(false);
+		}
+
+		protected void SelectAll(bool silent)
+		{
+			this.TextLayout.SelectAll(this.navigator.Context);
+			this.OnCursorChanged(silent);
 		}
 
 		public void DeleteSelection()
@@ -380,11 +386,96 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected void SelectAll(bool silent)
+		public bool SelectBold
 		{
-			this.TextLayout.SelectAll(this.navigator.Context);
-			this.OnCursorChanged(silent);
+			// Attribut typographique "gras" des caractères sélectionnés.
+			get
+			{
+				return this.TextLayout.SelectBold(this.navigator.Context);
+			}
+
+			set
+			{
+				this.TextLayout.SelectBold(this.navigator.Context, value);
+				this.OnTextChanged();
+			}
 		}
+
+		public bool SelectItalic
+		{
+			// Attribut typographique "italique" des caractères sélectionnés.
+			get
+			{
+				return this.TextLayout.SelectItalic(this.navigator.Context);
+			}
+
+			set
+			{
+				this.TextLayout.SelectItalic(this.navigator.Context, value);
+				this.OnTextChanged();
+			}
+		}
+
+		public bool SelectUnderline
+		{
+			// Attribut typographique "souligné" des caractères sélectionnés.
+			get
+			{
+				return this.TextLayout.SelectUnderline(this.navigator.Context);
+			}
+
+			set
+			{
+				this.TextLayout.SelectUnderline(this.navigator.Context, value);
+				this.OnTextChanged();
+			}
+		}
+
+		public string SelectFontName
+		{
+			// Nom de la police des caractères sélectionnés.
+			get
+			{
+				return this.TextLayout.SelectFontName(this.navigator.Context);
+			}
+
+			set
+			{
+				this.TextLayout.SelectFontName(this.navigator.Context, value);
+				this.OnTextChanged();
+			}
+		}
+
+		public double SelectFontSize
+		{
+			// Taille de la police des caractères sélectionnés.
+			get
+			{
+				return this.TextLayout.SelectFontSize(this.navigator.Context);
+			}
+
+			set
+			{
+				this.TextLayout.SelectFontSize(this.navigator.Context, value);
+				this.OnTextChanged();
+			}
+		}
+
+		public Drawing.Color SelectFontColor
+		{
+			// Couleur de la police des caractères sélectionnés.
+			get
+			{
+				return this.TextLayout.SelectFontColor(this.navigator.Context);
+			}
+
+			set
+			{
+				this.TextLayout.SelectFontColor(this.navigator.Context, value);
+				this.OnTextChanged();
+			}
+		}
+
 
 		protected override void UpdateTextLayout()
 		{
@@ -587,7 +678,6 @@ namespace Epsitec.Common.Widgets
 		protected override void OnDefocused()
 		{
 			TextField.blinking = null;
-			
 			base.OnDefocused();
 		}
 
@@ -657,8 +747,12 @@ namespace Epsitec.Common.Widgets
 			if ( this.mouseDown )  return;
 			if ( this.navigator == null ) return;
 
-			Drawing.Rectangle cursor = this.TextLayout.FindTextCursor(this.navigator.Context.CursorTo, this.navigator.Context.CursorAfter, out this.navigator.Context.CursorLine);
-			this.CursorScrollText(cursor, force);
+			Drawing.Point p1, p2;
+			if ( this.TextLayout.FindTextCursor(this.navigator.Context.CursorTo, this.navigator.Context.CursorAfter, out p1, out p2, out this.navigator.Context.CursorLine) )
+			{
+				Drawing.Rectangle cursor = new Drawing.Rectangle(p1, p2);
+				this.CursorScrollText(cursor, force);
+			}
 		}
 		
 		protected virtual void CursorScrollText(Drawing.Rectangle cursor, bool force)
@@ -758,13 +852,13 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.BackColor.IsTransparent )
 			{
-				// Ne peint pas le fond de la ligne éditable si celle-ci a un fond explicitement
-				// défini comme "transparent".
+				// Ne peint pas le fond de la ligne éditable si celle-ci a un fond
+				// explicitement défini comme "transparent".
 			}
 			else
 			{
-				// Ne reproduit pas l'état sélectionné si on peint nous-même le fond de la ligne
-				// éditable.
+				// Ne reproduit pas l'état sélectionné si on peint nous-même le fond
+				// de la ligne éditable.
 				state &= ~WidgetState.Selected;
 				adorner.PaintTextFieldBackground(graphics, rFill, state, this.textFieldStyle, this.navigator.IsReadOnly);
 			}
@@ -824,18 +918,23 @@ namespace Epsitec.Common.Widgets
 					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.BackColor);
 				}
 				
-				if ( !this.navigator.IsReadOnly )
+				if ( !this.navigator.IsReadOnly && visibleCursor )
 				{
 					// Dessine le curseur :
-					Drawing.Rectangle cursor = this.TextLayout.FindTextCursor(this.navigator.Context.CursorTo, this.navigator.Context.CursorAfter, out this.navigator.Context.CursorLine);
-					cursor.Offset(0, -1);
-					double x = cursor.Left;
-					double y = cursor.Bottom;
-					graphics.Align(ref x, ref y);
-					cursor.Left = x;
-					cursor.Right = x+1;
-					cursor.Offset(pos);
-					adorner.PaintTextCursor(graphics, cursor, visibleCursor);
+					Drawing.Point p1, p2;
+					if ( this.TextLayout.FindTextCursor(this.navigator.Context.CursorTo, this.navigator.Context.CursorAfter, out p1, out p2, out this.navigator.Context.CursorLine) )
+					{
+						p1 += pos;
+						p2 += pos;
+						graphics.Align(ref p1);
+						graphics.Align(ref p2);
+						p1.X -= 0.5;
+						p2.X -= 0.5;
+						p1.Y -= 0.5;
+						p2.Y -= 0.5;
+						graphics.AddLine(p1, p2);
+						graphics.RenderSolid(Drawing.Color.FromBrightness(0));
+					}
 				}
 			}
 			else

@@ -673,25 +673,118 @@ namespace Epsitec.Common.Widgets
 			s += "<b>FIN</b>";
 			multi.Text = s;
 
+			multi.Alignment = Drawing.ContentAlignment.TopLeft;
 			multi.TextLayout.JustifMode = TextJustifMode.AllButLast;
+			//?multi.Alignment = Drawing.ContentAlignment.TopRight;
+			//?multi.TextLayout.JustifMode = TextJustifMode.None;
 			multi.TextLayout.ShowLineBreak = true;
 			multi.ScrollZone = 0.2;
 			multi.Anchor = AnchorStyles.All;
-			multi.AnchorMargins = new Margins(10, 10, 10, 30);
+			multi.AnchorMargins = new Margins(10, 10, 40, 30);
 			multi.Parent = window.Root;
 			multi.SetProperty("stats", stats);
 			multi.SelectionChanged += new EventHandler(this.HandleMultiSelectionOrCursorChanged);
 			multi.CursorChanged    += new EventHandler(this.HandleMultiSelectionOrCursorChanged);
+			this.bigText = multi;
 			
 //			stats.Bounds = new Rectangle(10, 2, 380, 26);
 			stats.Height = 26;
 			stats.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
 			stats.AnchorMargins = new Margins(10, 10, 0, 2);
 			stats.Parent = window.Root;
+
+			Button buttonBold = new Button();
+			buttonBold.Text = "<b>B</b>";
+			buttonBold.Width = 30;
+			buttonBold.AutoFocus = false;
+			buttonBold.Anchor = AnchorStyles.TopLeft;
+			buttonBold.AnchorMargins = new Margins(10, 0, 10, 0);
+			buttonBold.Parent = window.Root;
+			buttonBold.Clicked += new MessageEventHandler(this.HandleMultiBold);
+			
+			Button buttonItalic = new Button();
+			buttonItalic.Text = "<i>I</i>";
+			buttonItalic.Width = 30;
+			buttonItalic.AutoFocus = false;
+			buttonItalic.Anchor = AnchorStyles.TopLeft;
+			buttonItalic.AnchorMargins = new Margins(40, 0, 10, 0);
+			buttonItalic.Parent = window.Root;
+			buttonItalic.Clicked += new MessageEventHandler(this.HandleMultiItalic);
+			
+			Button buttonUnderline = new Button();
+			buttonUnderline.Text = "<u>U</u>";
+			buttonUnderline.Width = 30;
+			buttonUnderline.AutoFocus = false;
+			buttonUnderline.Anchor = AnchorStyles.TopLeft;
+			buttonUnderline.AnchorMargins = new Margins(70, 0, 10, 0);
+			buttonUnderline.Parent = window.Root;
+			buttonUnderline.Clicked += new MessageEventHandler(this.HandleMultiUnderline);
+			
+			Button buttonFace1 = new Button();
+			buttonFace1.Text = "<font face=\"Tahoma\">A</font>";
+			buttonFace1.Width = 30;
+			buttonFace1.AutoFocus = false;
+			buttonFace1.Anchor = AnchorStyles.TopLeft;
+			buttonFace1.AnchorMargins = new Margins(110, 0, 10, 0);
+			buttonFace1.Parent = window.Root;
+			buttonFace1.Clicked += new MessageEventHandler(this.HandleMultiFace1);
+			
+			Button buttonFace2 = new Button();
+			buttonFace2.Text = "<font face=\"Courier New\">A</font>";
+			buttonFace2.Width = 30;
+			buttonFace2.AutoFocus = false;
+			buttonFace2.Anchor = AnchorStyles.TopLeft;
+			buttonFace2.AnchorMargins = new Margins(140, 0, 10, 0);
+			buttonFace2.Parent = window.Root;
+			buttonFace2.Clicked += new MessageEventHandler(this.HandleMultiFace2);
+			
+			Button buttonFace3 = new Button();
+			buttonFace3.Text = "<font face=\"Times New Roman\">A</font>";
+			buttonFace3.Width = 30;
+			buttonFace3.AutoFocus = false;
+			buttonFace3.Anchor = AnchorStyles.TopLeft;
+			buttonFace3.AnchorMargins = new Margins(170, 0, 10, 0);
+			buttonFace3.Parent = window.Root;
+			buttonFace3.Clicked += new MessageEventHandler(this.HandleMultiFace3);
+			
+			Button buttonSize1 = new Button();
+			buttonSize1.Text = "10";
+			buttonSize1.Width = 30;
+			buttonSize1.AutoFocus = false;
+			buttonSize1.Anchor = AnchorStyles.TopLeft;
+			buttonSize1.AnchorMargins = new Margins(210, 0, 10, 0);
+			buttonSize1.Parent = window.Root;
+			buttonSize1.Clicked += new MessageEventHandler(this.HandleMultiSize1);
+			
+			Button buttonSize2 = new Button();
+			buttonSize2.Text = "20";
+			buttonSize2.Width = 30;
+			buttonSize2.AutoFocus = false;
+			buttonSize2.Anchor = AnchorStyles.TopLeft;
+			buttonSize2.AnchorMargins = new Margins(240, 0, 10, 0);
+			buttonSize2.Parent = window.Root;
+			buttonSize2.Clicked += new MessageEventHandler(this.HandleMultiSize2);
+			
+			Button buttonColor1 = new Button();
+			buttonColor1.Text = "<b><font color=\"#000000\">o</font></b>";
+			buttonColor1.Width = 30;
+			buttonColor1.AutoFocus = false;
+			buttonColor1.Anchor = AnchorStyles.TopLeft;
+			buttonColor1.AnchorMargins = new Margins(280, 0, 10, 0);
+			buttonColor1.Parent = window.Root;
+			buttonColor1.Clicked += new MessageEventHandler(this.HandleMultiColor1);
+			
+			Button buttonColor2 = new Button();
+			buttonColor2.Text = "<b><font color=\"#FF0000\">o</font></b>";
+			buttonColor2.Width = 30;
+			buttonColor2.AutoFocus = false;
+			buttonColor2.Anchor = AnchorStyles.TopLeft;
+			buttonColor2.AnchorMargins = new Margins(310, 0, 10, 0);
+			buttonColor2.Parent = window.Root;
+			buttonColor2.Clicked += new MessageEventHandler(this.HandleMultiColor2);
 			
 			window.Root.DebugActive = true;
 			window.FocusedWidget    = multi;
-
 			window.Show();
 			
 			return window;
@@ -704,6 +797,57 @@ namespace Epsitec.Common.Widgets
 			
 			stats.Text = string.Format("{0} - {1},  after={2}", text.CursorFrom, text.CursorTo, text.CursorAfter);
 		}
+
+		private void HandleMultiBold(object sender, MessageEventArgs e)
+		{
+			this.bigText.SelectBold = !this.bigText.SelectBold;
+		}
+
+		private void HandleMultiItalic(object sender, MessageEventArgs e)
+		{
+			this.bigText.SelectItalic = !this.bigText.SelectItalic;
+		}
+
+		private void HandleMultiUnderline(object sender, MessageEventArgs e)
+		{
+			this.bigText.SelectUnderline = !this.bigText.SelectUnderline;
+		}
+
+		private void HandleMultiFace1(object sender, MessageEventArgs e)
+		{
+			this.bigText.SelectFontName = "Tahoma";
+		}
+
+		private void HandleMultiFace2(object sender, MessageEventArgs e)
+		{
+			this.bigText.SelectFontName = "Courier New";
+		}
+
+		private void HandleMultiFace3(object sender, MessageEventArgs e)
+		{
+			this.bigText.SelectFontName = "Times New Roman";
+		}
+
+		private void HandleMultiSize1(object sender, MessageEventArgs e)
+		{
+			this.bigText.SelectFontSize = Drawing.Font.DefaultFontSize;
+		}
+
+		private void HandleMultiSize2(object sender, MessageEventArgs e)
+		{
+			this.bigText.SelectFontSize = 20;
+		}
+
+		private void HandleMultiColor1(object sender, MessageEventArgs e)
+		{
+			this.bigText.SelectFontColor = Drawing.Color.FromBrightness(0);
+		}
+
+		private void HandleMultiColor2(object sender, MessageEventArgs e)
+		{
+			this.bigText.SelectFontColor = Drawing.Color.FromRGB(1,0,0);
+		}
+
 
 		[Test] public void CheckAdornerTab1()
 		{
@@ -1399,6 +1543,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected TabBook	tabBook;
+		protected TabBook			tabBook;
+		protected TextFieldMulti	bigText;
 	}
 }

@@ -2188,14 +2188,11 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( edited && textNavigator.Context.CursorTo != -1 )
 			{
-				Drawing.Rectangle rect = textLayout.FindTextCursor(textNavigator.Context.CursorTo, textNavigator.Context.CursorAfter, out textNavigator.Context.CursorLine);
-				if ( !rect.IsEmpty )
+				Drawing.Point c1, c2;
+				if ( textLayout.FindTextCursor(textNavigator.Context.CursorTo, textNavigator.Context.CursorAfter, out c1, out c2, out textNavigator.Context.CursorLine) )
 				{
-					textNavigator.Context.CursorPosX = (rect.Left+rect.Right)/2;
-
-					rect.Left  -= 0.5/iconContext.ScaleX;
-					rect.Right += 0.5/iconContext.ScaleX;
-					graphics.AddFilledRectangle(rect);
+					graphics.LineWidth = 1.0/iconContext.ScaleX;
+					graphics.AddLine(c1, c2);
 					graphics.RenderSolid(IconContext.ColorFrameEdit);
 				}
 			}
