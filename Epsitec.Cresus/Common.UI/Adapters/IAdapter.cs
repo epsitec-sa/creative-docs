@@ -9,12 +9,10 @@ namespace Epsitec.Common.UI.Adapters
 	/// <summary>
 	/// Summary description for IAdapter.
 	/// </summary>
-	public interface IAdapter
+	public interface IAdapter : Support.Data.IChangedSource
 	{
 		Binders.IBinder		Binder		{ get; set; }
 		
 		void SyncFromBinder();
-		
-		event EventHandler	ValueChanged;
 	}
 }
