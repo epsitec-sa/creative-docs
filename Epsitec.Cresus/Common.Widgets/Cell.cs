@@ -17,12 +17,8 @@ namespace Epsitec.Common.Widgets
 		
 		public void Insert(Widget widget)
 		{
-			this.Children.Add(widget);
-
-			Drawing.Rectangle rect = widget.Parent.Bounds;
-			rect.Left += 1;
-			rect.Top  -= 1;  // laisse la place pour la grille
-			widget.Bounds = rect;
+			widget.Parent = this;
+			widget.Bounds = widget.Parent.Bounds;
 			
 			if ( this.cellArray != null )
 			{
