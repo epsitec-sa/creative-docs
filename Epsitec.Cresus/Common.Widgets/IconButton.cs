@@ -23,6 +23,12 @@ namespace Epsitec.Common.Widgets
 			this.IconName = name;
 		}
 		
+		public IconButton(string name, string icon) : this(icon)
+		{
+			this.Name = name;
+			this.IsCommand = true;
+		}
+		
 		
 		public override double DefaultWidth
 		{

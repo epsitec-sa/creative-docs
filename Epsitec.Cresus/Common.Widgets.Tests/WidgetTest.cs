@@ -680,13 +680,54 @@ namespace Epsitec.Common.Widgets
 		
 		[Test] public void CheckCommandName()
 		{
-			Widget w1 = new Widget ();	w1.Name = "a";
-			Widget w2 = new Widget ();	w2.Name = "b";	w2.Parent = w1;
-			Widget w3 = new Widget ();	w3.Name = "c";	w3.Parent = w2;
+			Widget w1 = new Widget ();	w1.Name = "a";					w1.IsCommand = true;
+			Widget w2 = new Widget ();	w2.Name = "b";	w2.Parent = w1;	w2.IsCommand = true;
+			Widget w3 = new Widget ();	w3.Name = "c";	w3.Parent = w2;	w3.IsCommand = true;
 			
 			Assertion.AssertEquals ("a", w1.CommandName);
 			Assertion.AssertEquals ("a.b", w2.CommandName);
 			Assertion.AssertEquals ("a.b.c", w3.CommandName);
+			
+			Assertion.AssertEquals (w2, w1.FindCommandWidget ("a.b"));
+			Assertion.AssertEquals (w3, w1.FindCommandWidget ("a.b.c"));
+			
+			Widget[] find = w1.FindCommandWidgets (Support.RegexFactory.FromSimpleJoker ("a.*"));
+			
+			Assertion.AssertEquals (2, find.Length);
+			Assertion.AssertEquals (w2, find[0]);
+			Assertion.AssertEquals (w3, find[1]);
+		}
+		
+		[Test] public void CheckFindAllCommandNames()
+		{
+			Widget[] find = Widget.FindAllCommandWidgets (Support.RegexFactory.FromSimpleJoker ("*"));
+			
+			for (int i = 0; i < find.Length; i++)
+			{
+				System.Console.Out.WriteLine ("{0} : '{1}' in {2}", i, find[i].CommandName, find[i].ToString ());
+			}
+		}
+		
+		[Test] public void CheckSaveCommandEnable()
+		{
+			Widget[] find = Widget.FindAllCommandWidgets (Support.RegexFactory.FromSimpleJoker ("*.save"));
+			
+			for (int i = 0; i < find.Length; i++)
+			{
+				find[i].SetEnabled (true);
+				find[i].Invalidate ();
+			}
+		}
+		
+		[Test] public void CheckSaveCommandDisable()
+		{
+			Widget[] find = Widget.FindAllCommandWidgets (Support.RegexFactory.FromSimpleJoker ("*.save"));
+			
+			for (int i = 0; i < find.Length; i++)
+			{
+				find[i].SetEnabled (false);
+				find[i].Invalidate ();
+			}
 		}
 		
 		[Test] public void CheckFindChildBasedOnName()
@@ -720,6 +761,7 @@ namespace Epsitec.Common.Widgets
 			
 			Assertion.AssertEquals (3, command_widgets.Length);
 		}
+		
 		
 		
 		private void CheckTextLayoutInfoPaintForeground(object sender, PaintEventArgs e)

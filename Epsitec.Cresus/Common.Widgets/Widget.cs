@@ -124,7 +124,10 @@ namespace Epsitec.Common.Widgets
 			this.min_size = this.DefaultMinSize;
 			this.max_size = this.DefaultMaxSize;
 			
-			Widget.alive_widgets.Add (new System.WeakReference (this));
+			lock (Widget.alive_widgets)
+			{
+				Widget.alive_widgets.Add (new System.WeakReference (this));
+			}
 		}
 		
 		public Widget(Widget embedder) : this()
@@ -250,15 +253,25 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Collections.ArrayList alive = new System.Collections.ArrayList ();
 				
-				foreach (System.WeakReference weak_ref in Widget.alive_widgets)
+				lock (Widget.alive_widgets)
 				{
-					if (weak_ref.IsAlive)
+					//	Passe en revue tous les widgets connus (même les décédés) et reconstruit
+					//	une liste ne contenant que les widgets vivants :
+					
+					foreach (System.WeakReference weak_ref in Widget.alive_widgets)
 					{
-						alive.Add (weak_ref);
+						if (weak_ref.IsAlive)
+						{
+							alive.Add (weak_ref);
+						}
 					}
+					
+					//	Remplace la liste des widgets connus par la liste à jour qui vient d'être
+					//	construite :
+					
+					Widget.alive_widgets = alive;
 				}
 				
-				Widget.alive_widgets = alive;
 				return alive.Count;
 			}
 		}
@@ -267,17 +280,21 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				Widget[] widgets = new Widget[Widget.DebugAliveWidgetsCount];
+				System.Collections.ArrayList alive = new System.Collections.ArrayList ();
 				
-				int i = 0;
-				
-				foreach (System.WeakReference weak_ref in Widget.alive_widgets)
+				lock (Widget.alive_widgets)
 				{
-					if (weak_ref.IsAlive)
+					foreach (System.WeakReference weak_ref in Widget.alive_widgets)
 					{
-						widgets[i++] = weak_ref.Target as Widget;
+						if (weak_ref.IsAlive)
+						{
+							alive.Add (weak_ref.Target);
+						}
 					}
 				}
+				
+				Widget[] widgets = new Widget[alive.Count];
+				alive.CopyTo (widgets);
 				
 				return widgets;
 			}
@@ -2619,8 +2636,7 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 		
-		
-		public Widget[] FindCommandWidgets()
+		public Widget[]	        FindCommandWidgets()
 		{
 			//	Passe en revue tous les widgets de la descendance et accumule
 			//	ceux qui sont des widgets de commande.
@@ -2632,22 +2648,113 @@ namespace Epsitec.Common.Widgets
 			return finder.Widgets;
 		}
 		
+		public Widget[]	        FindCommandWidgets(System.Text.RegularExpressions.Regex regex)
+		{
+			//	Passe en revue tous les widgets de la descendance et accumule
+			//	ceux qui sont des widgets de commande qui correspondent au critère
+			//	de recherche.
+			
+			CommandWidgetFinder finder = new CommandWidgetFinder (regex);
+			
+			this.WalkChildren (new WalkWidgetCallback (finder.Analyse));
+			
+			return finder.Widgets;
+		}
 		
+		public static Widget[]	FindAllCommandWidgets(System.Text.RegularExpressions.Regex regex)
+		{
+			//	Passe en revue absolument tous les widgets qui existent et cherche ceux qui ont
+			//	une commande qui correspond au critère spécifié.
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			System.Collections.ArrayList dead = new System.Collections.ArrayList ();
+			
+			lock (Widget.alive_widgets)
+			{
+				foreach (System.WeakReference weak_ref in Widget.alive_widgets)
+				{
+					//	On utilise la liste des widgets connus qui permet d'avoir accès immédiatement
+					//	à tous les widgets sans nécessiter de descente récursive :
+					
+					if (weak_ref.IsAlive)
+					{
+						//	Le widget trouvé existe (encore) :
+						
+						Widget widget = weak_ref.Target as Widget;
+						
+						if ((widget.IsCommand) &&
+							(widget.Name != ""))
+						{
+							if (regex.Match (widget.CommandName).Success)
+							{
+								list.Add (widget);
+							}
+						}
+					}
+					else
+					{
+						dead.Add (weak_ref);
+					}
+				}
+				
+				//	Profite de l'occasion, puisqu'on vient de passer en revue tous les widgets,
+				//	de supprimer ceux qui sont morts entre temps :
+				
+				foreach (System.WeakReference weak_ref in dead)
+				{
+					Widget.alive_widgets.Remove (weak_ref);
+				}
+			}
+			
+			Widget[] widgets = new Widget[list.Count];
+			list.CopyTo (widgets);
+			
+			return widgets;
+		}
+		
+		
+		#region CommandWidgetFinder class
 		protected class CommandWidgetFinder
 		{
 			public CommandWidgetFinder()
 			{
 			}
 			
+			public CommandWidgetFinder(System.Text.RegularExpressions.Regex regex)
+			{
+				this.regex = regex;
+			}
+			
 			public bool Analyse(Widget widget)
 			{
-				if (widget.IsCommand)
+				if ((widget.IsCommand) &&
+					(widget.Name != ""))
 				{
-					this.list.Add (widget);
+					if (this.regex == null)
+					{
+						this.list.Add (widget);
+					}
+					else
+					{
+						//	Une expression régulière a été définie pour filtrer les widgets en
+						//	fonction de leur nom. On applique cette expression pour voir si le
+						//	nom de la commande est conforme...
+						
+						System.Text.RegularExpressions.Match match = this.regex.Match (widget.CommandName);
+						
+						//	...en cas de succès, on prend note du widget, sinon on passe simplement
+						//	au suivant.
+						
+						if (match.Success)
+						{
+							this.list.Add (widget);
+						}
+					}
 				}
 				
 				return true;
 			}
+			
 			
 			public Widget[]					Widgets
 			{
@@ -2659,9 +2766,11 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			System.Collections.ArrayList	list = new System.Collections.ArrayList ();
+			
+			System.Collections.ArrayList			list  = new System.Collections.ArrayList ();
+			System.Text.RegularExpressions.Regex	regex = null;
 		}
-		
+		#endregion
 		
 		public virtual bool WalkChildren(WalkWidgetCallback callback)
 		{
@@ -2690,7 +2799,8 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void ExecuteCommand()
 		{
-			if (this.IsCommand)
+			if ((this.IsCommand) &&
+				(this.Name != ""))
 			{
 				Window window = this.Window;
 				

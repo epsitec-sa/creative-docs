@@ -15,6 +15,11 @@ namespace Epsitec.Common.Support
 		{
 		}
 		
+		public static System.Text.RegularExpressions.Regex FromSimpleJoker(string pattern)
+		{
+			return RegexFactory.FromSimpleJoker (pattern, Options.None);
+		}
+		
 		public static System.Text.RegularExpressions.Regex FromSimpleJoker(string pattern, Options options)
 		{
 			RegexOptions              regex_options = RegexOptions.ExplicitCapture;

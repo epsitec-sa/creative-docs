@@ -62,6 +62,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(menu);
 
 			VMenu fileMenu = new VMenu();
+			fileMenu.Name = "file";
 			fileMenu.Items.Add(new MenuItem("new", "", "Nouveau", "Ctrl+N"));
 			fileMenu.Items.Add(new MenuItem("open", @"file:images/open1.icon", "Ouvrir...", "Ctrl+O"));
 			fileMenu.Items.Add(new MenuItem("close", "", "Fermer", ""));
@@ -79,6 +80,7 @@ namespace Epsitec.Common.Widgets
 			fileMenu.Items[4].SetEnabled(false);
 
 			VMenu editMenu = new VMenu();
+			editMenu.Name = "edit";
 			editMenu.Items.Add(new MenuItem("undo", "", "Annuler", "Ctrl+Z"));
 			editMenu.Items.Add(new MenuSeparator ());
 			editMenu.Items.Add(new MenuItem("cut", @"file:images/cut1.icon", "Couper", "Ctrl+X"));
@@ -88,6 +90,7 @@ namespace Epsitec.Common.Widgets
 			menu.Items[1].Submenu = editMenu;
 
 			VMenu showMenu = new VMenu();
+			showMenu.Name = "show";
 			showMenu.Items.Add(new MenuItem("addr", "", "Adresses", "F5"));
 			showMenu.Items.Add(new MenuItem("objs", "", "Objets", "F6"));
 			showMenu.Items.Add(new MenuSeparator ());
@@ -98,6 +101,7 @@ namespace Epsitec.Common.Widgets
 			showMenu.Items[1].SetEnabled(false);
 
 			VMenu optMenu = new VMenu();
+			optMenu.Name = "opt";
 			optMenu.Items.Add(new MenuItem("misc", "", "Divers...", ""));
 			optMenu.Items.Add(new MenuItem("print", "", "Impression...", ""));
 			optMenu.Items.Add(new MenuItem("open", "", "Fichiers...", ""));
@@ -105,6 +109,7 @@ namespace Epsitec.Common.Widgets
 			showMenu.Items[3].Submenu = optMenu;
 
 			VMenu setupMenu = new VMenu();
+			setupMenu.Name = "setup";
 			setupMenu.Items.Add(new MenuItem("base", "", "Base...", ""));
 			setupMenu.Items.Add(new MenuItem("global", "", "Global...", ""));
 			setupMenu.Items.Add(new MenuItem("list", "", "Liste...", ""));
@@ -114,6 +119,7 @@ namespace Epsitec.Common.Widgets
 			showMenu.Items[4].Submenu = setupMenu;
 
 			VMenu debugMenu = new VMenu();
+			debugMenu.Name = "debug";
 			debugMenu.Items.Add(new MenuItem("colorA", "", "Couleur A", ""));
 			debugMenu.Items.Add(new MenuItem("colorB", "", "Couleur B", ""));
 			debugMenu.Items.Add(new MenuItem("colorC", "", "Couleur C", ""));
@@ -121,6 +127,7 @@ namespace Epsitec.Common.Widgets
 			menu.Items[3].Submenu = debugMenu;
 
 			VMenu debugMenu1 = new VMenu();
+			debugMenu1.Name = "debug1";
 			debugMenu1.Items.Add(new MenuItem("red", "", "Rouge", ""));
 			debugMenu1.Items.Add(new MenuItem("green", "", "Vert", ""));
 			debugMenu1.Items.Add(new MenuItem("blue", "", "Bleu", ""));
@@ -128,6 +135,7 @@ namespace Epsitec.Common.Widgets
 			debugMenu.Items[0].Submenu = debugMenu1;
 
 			VMenu debugMenu2 = new VMenu();
+			debugMenu2.Name = "debug2";
 			debugMenu2.Items.Add(new MenuItem("red", "", "Rouge", ""));
 			debugMenu2.Items.Add(new MenuItem("green", "", "Vert", ""));
 			debugMenu2.Items.Add(new MenuItem("blue", "", "Bleu", ""));
@@ -135,6 +143,7 @@ namespace Epsitec.Common.Widgets
 			debugMenu.Items[1].Submenu = debugMenu2;
 
 			VMenu debugMenu3 = new VMenu();
+			debugMenu3.Name = "debug3";
 			debugMenu3.Items.Add(new MenuItem("red", "", "Rouge", ""));
 			debugMenu3.Items.Add(new MenuItem("green", "", "Vert", ""));
 			debugMenu3.Items.Add(new MenuItem("blue", "", "Bleu", ""));
@@ -142,6 +151,7 @@ namespace Epsitec.Common.Widgets
 			debugMenu.Items[2].Submenu = debugMenu3;
 
 			VMenu helpMenu = new VMenu();
+			helpMenu.Name = "help";
 			helpMenu.Items.Add(new MenuItem("help", "", "Aide", "F1"));
 			helpMenu.Items.Add(new MenuItem("ctxhelp", "", "Aide contextuelle", ""));
 			helpMenu.Items.Add(new MenuItem("about", "", "A propos de...", ""));
@@ -154,8 +164,8 @@ namespace Epsitec.Common.Widgets
 			tb.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
 			window.Root.Children.Add(tb);
 
-			tb.Items.Add(new IconButton(@"file:images/open1.icon"));
-			tb.Items.Add(new IconButton(@"file:images/save1.icon"));
+			tb.Items.Add(new IconButton("open", @"file:images/open1.icon"));
+			tb.Items.Add(new IconButton("save", @"file:images/save1.icon"));
 			tb.Items.Add(new IconSeparator());
 
 			TextFieldCombo t1 = new TextFieldCombo();
@@ -167,9 +177,9 @@ namespace Epsitec.Common.Widgets
 
 			tb.Items.Add(t1);
 			tb.Items.Add(new IconSeparator());
-			tb.Items.Add(new IconButton(@"file:images/cut1.icon"));
-			tb.Items.Add(new IconButton(@"file:images/copy1.icon"));
-			tb.Items.Add(new IconButton(@"file:images/paste1.icon"));
+			tb.Items.Add(new IconButton("cut",   @"file:images/cut1.icon"));
+			tb.Items.Add(new IconButton("copy",  @"file:images/copy1.icon"));
+			tb.Items.Add(new IconButton("paste", @"file:images/paste1.icon"));
 
 			StatusBar sb = new StatusBar();
 			sb.Location = new Point(0, 0);
