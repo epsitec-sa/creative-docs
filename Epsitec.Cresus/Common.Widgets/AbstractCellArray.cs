@@ -838,7 +838,7 @@ namespace Epsitec.Common.Widgets
 					this.selectedColumn = column;
 					this.selectedRow = row;
 				}
-				OnSelectChanged();
+				this.OnSelectionChanged();
 
 				if ( (this.styleV & AbstractCellArrayStyle.SelectLine) != 0 )
 				{
@@ -906,7 +906,7 @@ namespace Epsitec.Common.Widgets
 			this.SelectCell(column, row, true);
 			this.selectedColumn = column;
 			this.selectedRow = row;
-			OnSelectChanged();
+			this.OnSelectionChanged();
 
 			if ( (this.styleV & AbstractCellArrayStyle.SelectLine) != 0 )
 			{
@@ -985,7 +985,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Indique si une cellule est sélectionnée.
-		public bool IsSelectedCell(int row, int column)
+		public bool IsCellSelected(int row, int column)
 		{
 			if ( row < 0 || row >= this.maxRows )  return false;
 			if ( column < 0 || column >= this.maxColumns )  return false;
@@ -1011,11 +1011,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Génère un événement pour dire que la sélection a changé.
-		protected virtual void OnSelectChanged()
+		protected virtual void OnSelectionChanged()
 		{
-			if ( this.SelectChanged != null )  // qq'un écoute ?
+			if ( this.SelectionChanged != null )  // qq'un écoute ?
 			{
-				this.SelectChanged(this);
+				this.SelectionChanged(this);
 			}
 		}
 
@@ -1652,7 +1652,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		public event EventHandler SelectChanged;
+		public event EventHandler SelectionChanged;
 		public event EventHandler SortChanged;
 
 		protected bool							isDirty;

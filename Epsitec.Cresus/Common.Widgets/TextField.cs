@@ -615,9 +615,9 @@ namespace Epsitec.Common.Widgets
 #endif
 			this.scrollList.AdjustToContent(ScrollListAdjust.MoveUp, 40, hMax);
 
-			this.scrollList.Select = sel;
+			this.scrollList.SelectedIndex = sel;
 			this.scrollList.ShowSelect(ScrollListShow.Middle);
-			this.scrollList.SelectChanged += new EventHandler(this.HandleScrollListSelectChanged);
+			this.scrollList.SelectedIndexChanged += new EventHandler(this.HandleScrollListSelectedIndexChanged);
 
 			this.comboWindow = new WindowFrame();
 			this.comboWindow.MakeFramelessWindow();
@@ -633,9 +633,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Gestion d'un événement lorsque la scroll-liste est sélectionnée.
-		private void HandleScrollListSelectChanged(object sender)
+		private void HandleScrollListSelectedIndexChanged(object sender)
 		{
-			int sel = this.scrollList.Select;
+			int sel = this.scrollList.SelectedIndex;
 			if ( sel == -1 )  return;
 			this.Text = this.scrollList.GetText(sel);
 			this.OnTextChanged();
@@ -643,7 +643,7 @@ namespace Epsitec.Common.Widgets
 			this.SelectAll();
 			this.SetFocused(true);
 
-			this.scrollList.SelectChanged -= new EventHandler(this.HandleScrollListSelectChanged);
+			this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollListSelectedIndexChanged);
 			this.comboWindow.WindowDeactivated -= new System.EventHandler(this.HandleComboWindowDeactivated);
 			this.scrollList.Dispose();
 			this.scrollList = null;
@@ -655,7 +655,7 @@ namespace Epsitec.Common.Widgets
 		private void HandleComboWindowDeactivated(object sender, System.EventArgs e)
 		{
 			if ( this.scrollList == null )  return;
-			this.scrollList.SelectChanged -= new EventHandler(this.HandleScrollListSelectChanged);
+			this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollListSelectedIndexChanged);
 			this.comboWindow.WindowDeactivated -= new System.EventHandler(this.HandleComboWindowDeactivated);
 			this.scrollList.Dispose();
 			this.scrollList = null;

@@ -94,7 +94,7 @@ namespace Epsitec.Common.Widgets
 			this.list.Clear();
 			this.isDirty = true;
 			this.Invalidate();
-			OnSelectChanged();
+			this.OnSelectedIndexChanged();
 		}
 
 		// Ajoute un texte à la fin de la liste.
@@ -113,7 +113,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Ligne sélectionnée, -1 si aucune.
-		public int Select
+		public int SelectedIndex
 		{
 			get
 			{
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Widgets
 					this.Invalidate();
 					if ( !this.isComboList )
 					{
-						OnSelectChanged();
+						this.OnSelectedIndexChanged();
 					}
 				}
 			}
@@ -254,23 +254,23 @@ namespace Epsitec.Common.Widgets
 			{
 				case MessageType.MouseDown:
 					this.mouseDown = true;
-					MouseSelect(pos.Y);
+					this.MouseSelect(pos.Y);
 					break;
 				
 				case MessageType.MouseMove:
 					if ( this.mouseDown || this.isComboList )
 					{
-						MouseSelect(pos.Y);
+						this.MouseSelect(pos.Y);
 					}
 					break;
 
 				case MessageType.MouseUp:
 					if ( this.mouseDown )
 					{
-						MouseSelect(pos.Y);
+						this.MouseSelect(pos.Y);
 						if ( this.isComboList )
 						{
-							OnSelectChanged();
+							this.OnSelectedIndexChanged();
 						}
 						this.mouseDown = false;
 					}
@@ -291,7 +291,7 @@ namespace Epsitec.Common.Widgets
 			pos = this.Client.Height-pos;
 			int line = (int)((pos-this.margin)/this.lineHeight);
 			if ( line < 0 || line >= this.visibleLines )  return false;
-			this.Select = this.firstLine+line;
+			this.SelectedIndex = this.firstLine+line;
 			return true;
 		}
 
@@ -303,19 +303,19 @@ namespace Epsitec.Common.Widgets
 			switch ( key )
 			{
 				case (int)System.Windows.Forms.Keys.Up:
-					sel = this.Select-1;
+					sel = this.SelectedIndex-1;
 					if ( sel >= 0 )
 					{
-						Select = sel;
+						this.SelectedIndex = sel;
 						if ( !this.IsShowSelect() )  this.ShowSelect(ScrollListShow.Extremity);
 					}
 					break;
 
 				case (int)System.Windows.Forms.Keys.Down:
-					sel = this.Select+1;
+					sel = this.SelectedIndex+1;
 					if ( sel < this.list.Count )
 					{
-						Select = sel;
+						this.SelectedIndex = sel;
 						if ( !this.IsShowSelect() )  this.ShowSelect(ScrollListShow.Extremity);
 					}
 					break;
@@ -324,7 +324,7 @@ namespace Epsitec.Common.Widgets
 				case (int)System.Windows.Forms.Keys.Space:
 					if ( this.isComboList )
 					{
-						OnSelectChanged();
+						this.OnSelectedIndexChanged();
 					}
 					break;
 			}
@@ -405,11 +405,11 @@ namespace Epsitec.Common.Widgets
 
 
 		// Génère un événement pour dire que la sélection dans la liste a changé.
-		protected virtual void OnSelectChanged()
+		protected virtual void OnSelectedIndexChanged()
 		{
-			if ( this.SelectChanged != null )  // qq'un écoute ?
+			if ( this.SelectedIndexChanged != null )  // qq'un écoute ?
 			{
-				this.SelectChanged(this);
+				this.SelectedIndexChanged(this);
 			}
 		}
 
@@ -465,7 +465,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public event EventHandler SelectChanged;
+		public event EventHandler SelectedIndexChanged;
 
 		protected ScrollListStyle				scrollListStyle;
 		protected bool							isComboList = false;

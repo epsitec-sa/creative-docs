@@ -446,7 +446,7 @@ namespace Epsitec.Common.Tests
 			this.topPane.Children.Add(this.listCrit);
 
 			this.table = new ScrollArray();
-			this.table.SelectChanged += new EventHandler(this.table_SelectChanged);
+			this.table.SelectedIndexChanged += new EventHandler(this.table_SelectedIndexChanged);
 			this.table.SortChanged += new EventHandler(this.table_SortChanged);
 			this.InitTable();
 			this.UpdateTable();
@@ -470,7 +470,7 @@ namespace Epsitec.Common.Tests
 			this.staticTexts = new System.Collections.ArrayList();
 			this.textFields = new System.Collections.ArrayList();
 			this.listCrit.AddText("<i><b>Partout</b></i>");
-			this.listCrit.Select = 0;
+			this.listCrit.SelectedIndex = 0;
 			this.staticTexts.Clear();
 			this.textFields.Clear();
 			int nbField = this.db.TotalField;
@@ -655,7 +655,7 @@ namespace Epsitec.Common.Tests
 			TinyDataBase.FieldDesc fd = this.db.RetFieldDesc(field);
 			this.table.SetHeaderSort(fd.rank, mode);
 
-			this.table.Select = this.recordRank;
+			this.table.SelectedIndex = this.recordRank;
 			this.table.ShowSelect(ScrollArrayShow.Extremity);
 		}
 
@@ -689,9 +689,9 @@ namespace Epsitec.Common.Tests
 		}
 
 		// Changement de sélection dans la liste.
-		private void table_SelectChanged(object sender)
+		private void table_SelectedIndexChanged(object sender)
 		{
-			this.recordRank = this.table.Select;
+			this.recordRank = this.table.SelectedIndex;
 			this.recordCreated = false;
 			this.UpdateLayout();
 			this.UpdateButton();
@@ -725,7 +725,7 @@ namespace Epsitec.Common.Tests
 			if ( this.db.SearchCritere(ref rank, out field, 1, crit, out complete) )
 			{
 				this.recordRank = rank;
-				this.table.Select = this.recordRank;
+				this.table.SelectedIndex = this.recordRank;
 				this.table.ShowSelect(ScrollArrayShow.Extremity);
 				this.UpdateLayout();
 
@@ -745,7 +745,7 @@ namespace Epsitec.Common.Tests
 			if ( this.db.SearchCritere(ref rank, out field, 1, crit, out complete) )
 			{
 				this.recordRank = rank;
-				this.table.Select = this.recordRank;
+				this.table.SelectedIndex = this.recordRank;
 				this.table.ShowSelect(ScrollArrayShow.Extremity);
 				this.UpdateLayout();
 				this.UpdateButton();
@@ -814,7 +814,7 @@ namespace Epsitec.Common.Tests
 		private void buttonCancel_Clicked(object sender, MessageEventArgs e)
 		{
 			this.recordCreated = false;
-			this.recordRank = this.table.Select;
+			this.recordRank = this.table.SelectedIndex;
 			this.UpdateLayout();
 			this.UpdateButton();
 			this.table.SetFocused(true);

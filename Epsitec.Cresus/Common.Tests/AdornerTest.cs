@@ -185,7 +185,7 @@ namespace Epsitec.Common.Tests
 			sl.AddText("Novembre");
 			sl.AddText("Decembre");
 #endif
-			sl.Select = 5;  // sélectionne juin
+			sl.SelectedIndex = 5;  // sélectionne juin
 			if ( !sl.IsShowSelect() )  sl.ShowSelect(ScrollListShow.Middle);
 			sl.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(sl);
@@ -1148,7 +1148,7 @@ namespace Epsitec.Common.Tests
 			sl.AddText("Octobre");
 			sl.AddText("Novembre");
 			sl.AddText("Decembre");
-			sl.Select = 5;  // sélectionne juin
+			sl.SelectedIndex = 5;  // sélectionne juin
 			if ( !sl.IsShowSelect() )  sl.ShowSelect(ScrollListShow.Middle);
 			sl.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			sl.SetEnabled(false);

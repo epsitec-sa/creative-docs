@@ -199,7 +199,7 @@ namespace Epsitec.Common.Widgets
 
 
 		// Ligne sélectionnée, -1 si aucune.
-		public int Select
+		public int SelectedIndex
 		{
 			get
 			{
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Widgets
 					this.selectedRow = value;
 					this.isDirty = true;
 					this.Invalidate();
-					OnSelectChanged();
+					this.OnSelectedIndexChanged();
 				}
 			}
 		}
@@ -526,20 +526,20 @@ namespace Epsitec.Common.Widgets
 			{
 				case MessageType.MouseDown:
 					this.mouseDown = true;
-					MouseSelect(pos.Y);
+					this.MouseSelect(pos.Y);
 					break;
 				
 				case MessageType.MouseMove:
 					if ( this.mouseDown  )
 					{
-						MouseSelect(pos.Y);
+						this.MouseSelect(pos.Y);
 					}
 					break;
 
 				case MessageType.MouseUp:
 					if ( this.mouseDown )
 					{
-						MouseSelect(pos.Y);
+						this.MouseSelect(pos.Y);
 						this.mouseDown = false;
 					}
 					break;
@@ -561,7 +561,7 @@ namespace Epsitec.Common.Widgets
 			if ( line < 0 || line >= this.visibleRows )  return false;
 			line += this.firstRow;
 			if ( line > this.maxRows-1 )  return false;
-			this.Select = line;
+			this.SelectedIndex = line;
 			return true;
 		}
 
@@ -573,19 +573,19 @@ namespace Epsitec.Common.Widgets
 			switch ( key )
 			{
 				case (int)System.Windows.Forms.Keys.Up:
-					sel = this.Select-1;
+					sel = this.SelectedIndex-1;
 					if ( sel >= 0 )
 					{
-						Select = sel;
+						this.SelectedIndex = sel;
 						if ( !this.IsShowSelect() )  this.ShowSelect(ScrollArrayShow.Extremity);
 					}
 					break;
 
 				case (int)System.Windows.Forms.Keys.Down:
-					sel = this.Select+1;
+					sel = this.SelectedIndex+1;
 					if ( sel < this.maxRows )
 					{
-						Select = sel;
+						this.SelectedIndex = sel;
 						if ( !this.IsShowSelect() )  this.ShowSelect(ScrollArrayShow.Extremity);
 					}
 					break;
@@ -788,11 +788,11 @@ namespace Epsitec.Common.Widgets
 
 
 		// Génère un événement pour dire que la sélection dans la liste a changé.
-		protected void OnSelectChanged()
+		protected void OnSelectedIndexChanged()
 		{
-			if ( this.SelectChanged != null )  // qq'un écoute ?
+			if ( this.SelectedIndexChanged != null )  // qq'un écoute ?
 			{
-				this.SelectChanged(this);
+				this.SelectedIndexChanged(this);
 			}
 		}
 
@@ -917,7 +917,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public event EventHandler SelectChanged;
+		public event EventHandler SelectedIndexChanged;
 		public event EventHandler SortChanged;
 
 		public delegate string FillText(int row, int column);
