@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -224,6 +224,25 @@ namespace Epsitec.Common.Drawing
 			get { return new Point ((this.x1 + this.x2) / 2, (this.y1 + this.y2) / 2); }
 		}
 		
+		public double					Surface
+		{
+			get
+			{
+				if (this.IsSurfaceZero)
+				{
+					return 0;
+				}
+				else if (this.IsInfinite)
+				{
+					return 1000000000.0*1000000000.0;
+				}
+				else
+				{
+					return this.Width * this.Height;
+				}
+			}
+		}
+		
 		
 		public Point GetGrip(GripId grip)
 		{
@@ -339,7 +358,12 @@ namespace Epsitec.Common.Drawing
 		
 		public bool Contains(Rectangle r)
 		{
-			return (!r.IsEmpty) && (!this.IsEmpty) && (r.x1 >= this.x1) && (r.x2 <= this.x2) && (r.y1 >= this.y1) && (r.y2 <= this.y2);
+			if (r.IsEmpty)
+			{
+				return true;
+			}
+			
+			return (!this.IsEmpty) && (r.x1 >= this.x1) && (r.x2 <= this.x2) && (r.y1 >= this.y1) && (r.y2 <= this.y2);
 		}
 		
 		

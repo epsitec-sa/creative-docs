@@ -109,6 +109,11 @@
                     Project = "{10453A3B-CA2A-4D36-B634-78BA87AAAB26}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -225,6 +230,11 @@
                 />
                 <File
                     RelPath = "Segment.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SimpleRegion.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

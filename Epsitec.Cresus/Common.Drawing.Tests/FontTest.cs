@@ -231,6 +231,7 @@ namespace Epsitec.Common.Drawing
 			Assert.IsTrue (end_x[end_x.Length-1] == width);
 		}
 		
+#if false
 		[Test] public void CheckTextBreak()
 		{
 			Font   font = Font.GetFont ("Times New Roman", "Regular");
@@ -303,6 +304,7 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual (false, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			tb.Dispose ();
 		}
+#endif
 		
 		[Test] public void CheckGlyphPaint()
 		{

@@ -21,9 +21,9 @@ namespace Epsitec.Common.Drawing
 	{
 		public ColorCollection()
 		{
-			this.colors = new Color[ColorCollection.DefaultSize];
+			this.colors = new Color[ColorCollection.DefaultCount];
 			
-			for ( int i=0 ; i<ColorCollection.DefaultSize ; i++ )
+			for ( int i=0 ; i<ColorCollection.DefaultCount ; i++ )
 			{
 				this.colors[i] = Color.Empty;
 			}
@@ -269,6 +269,6 @@ namespace Epsitec.Common.Drawing
 		public event Support.EventHandler		Changed;
 
 		protected Color[]						colors;
-		protected const int						DefaultSize = 32;
+		protected const int						DefaultCount = 32;
 	}
 }
