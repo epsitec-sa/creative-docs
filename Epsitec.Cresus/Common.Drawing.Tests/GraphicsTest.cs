@@ -385,7 +385,7 @@ namespace Epsitec.Common.Drawing
 		{
 			WindowRoot root = sender as WindowRoot;
 			
-			Agg.Graphics gfx = new Agg.Graphics ();
+			Graphics gfx = new Graphics ();
 			gfx.SetPixmapSize (40, 40)	;
 			gfx.SolidRenderer.Color = Color.FromRGB (1, 0.2, 0);
 			gfx.PaintText (2, 8, "@", Font.DefaultFont, 40);
@@ -631,7 +631,7 @@ namespace Epsitec.Common.Drawing
 			double cx = root.Client.Width / 2;
 			double cy = root.Client.Height / 2;
 			
-			Transform t = e.Graphics.SaveTransform ();
+			Transform t = e.Graphics.Transform;
 			
 			e.Graphics.RotateTransformDeg (15, cx, cy);
 			e.Graphics.ScaleTransform (1.2, 1.2, 0, 0);
@@ -671,7 +671,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
 			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
 			e.Graphics.ResetClippingRectangle ();
-			e.Graphics.RestoreTransform (t);
+			e.Graphics.Transform = t;
 			
 			Rectangle r1 = new Rectangle (10, root.Client.Height - 20, 100, 10);
 			Rectangle r2 = new Rectangle (10, root.Client.Height - 32, 100,  5);
@@ -948,7 +948,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.Color = Color.FromRGB (0.5, 0.5, 0.5);
 			e.Graphics.PaintSurface (Path.FromRectangle (cx+0, cy+20, 120, 40));
 			
-			Graphics draft_graphics = new Agg.Graphics ();
+			Graphics draft_graphics = new Graphics ();
 			
 			draft_graphics.SetPixmapSize (40, 40);
 			

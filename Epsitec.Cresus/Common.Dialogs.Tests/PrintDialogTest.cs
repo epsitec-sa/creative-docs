@@ -95,7 +95,7 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckPort()
 		{
-			Drawing.Agg.Graphics preview = new Drawing.Agg.Graphics ();
+			Drawing.Graphics preview = new Drawing.Graphics ();
 			preview.SetPixmapSize (250, 120);
 			
 			PrintDialogTest.Helper.TestDocument (preview);
@@ -154,7 +154,7 @@ namespace Epsitec.Common.Dialogs
 		[Support.SuppressBundleSupport]
 		protected class AggPreview : Widgets.Widget
 		{
-			public AggPreview(Drawing.Agg.Graphics port)
+			public AggPreview(Drawing.Graphics port)
 			{
 				this.port = port;
 			}
@@ -181,7 +181,7 @@ namespace Epsitec.Common.Dialogs
 			}
 
 			
-			Drawing.Agg.Graphics				port;
+			Drawing.Graphics					port;
 		}
 		
 		protected class PrintEngine : Printing.IPrintEngine
