@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Validators
@@ -79,8 +79,8 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		protected override void ValidateText(string text)
 		{
-			if (((this.accept_empty) || (text.Length > 0)) &&
-				(this.regex.IsMatch (text)))
+			if (((this.accept_empty) && (text.Length == 0)) ||
+				((text.Length > 0)) && (this.regex.IsMatch (text)))
 			{
 				this.state = Support.ValidationState.Ok;
 			}

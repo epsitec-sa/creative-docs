@@ -5939,6 +5939,10 @@ namespace Epsitec.Common.Widgets
 			{
 				this.TextChanged (this);
 			}
+			if (this.validator != null)
+			{
+				this.validator.MakeDirty (true);
+			}
 		}
 		
 		protected virtual void OnSizeChanged()

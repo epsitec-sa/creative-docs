@@ -15,7 +15,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public IValidator[]						Validators
+		public IValidator[]							Validators
 		{
 			get
 			{

@@ -152,6 +152,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public virtual bool						IsDefaultValueDefined
+		{
+			get
+			{
+				return this.isDefaultValueDefined;
+			}
+		}
+		
 		public virtual decimal					DefaultValue
 		{
 			get
@@ -160,7 +168,16 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.defaultValue = value;
+				if ( this.defaultValue != value || this.isDefaultValueDefined == false )
+				{
+					this.defaultValue = value;
+					this.isDefaultValueDefined = true;
+					
+					if ( this.Validator != null )
+					{
+						this.Validator.MakeDirty(true);
+					}
+				}
 			}
 		}
 		
@@ -213,6 +230,18 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		public void ClearDefaultValue()
+		{
+			if ( this.isDefaultValueDefined )
+			{
+				this.isDefaultValueDefined = false;
+				
+				if ( this.Validator != null )
+				{
+					this.Validator.MakeDirty(true);
+				}
+			}
+		}
 		
 		protected override void SelectAll(bool silent)
 		{
@@ -338,7 +367,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnTextChanged();
 			
-			if ( this.IsValueInRange )
+			if ( this.IsValid )
 			{
 				this.IsError = false;
 				this.OnValueChanged();
@@ -349,7 +378,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual  void OnValueChanged()
+		
+		protected virtual void OnValueChanged()
 		{
 			if ( this.ValueChanged != null )  // qq'un écoute ?
 			{
@@ -357,7 +387,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual  void OnDecimalRangeChanged()
+		protected virtual void OnDecimalRangeChanged()
 		{
 			if ( this.DecimalRangeChanged != null )
 			{
@@ -365,7 +395,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual  void OnTextSuffixChanged()
+		protected virtual void OnTextSuffixChanged()
 		{
 			if ( this.TextSuffixChanged != null )
 			{
@@ -413,11 +443,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.validator_1 == null)
 			{
-				this.validator_1 = new Validators.RegexValidator (this, Support.RegexFactory.DecimalNum, false);
+				this.validator_1 = new Validators.RegexValidator(this, Support.RegexFactory.DecimalNum, this.IsDefaultValueDefined);
 			}
 			if (this.validator_2 == null)
 			{
-				this.validator_2 = new Validators.NumRangeValidator (this);
+				this.validator_2 = new Validators.NumRangeValidator(this);
 			}
 		}
 		
@@ -450,8 +480,9 @@ namespace Epsitec.Common.Widgets
 		protected GlyphButton					arrowUp;
 		protected GlyphButton					arrowDown;
 		protected decimal						defaultValue = 0;
+		protected bool							isDefaultValueDefined = false;
 		protected decimal						step = 1;
-		protected Support.IValidator			validator_1;
-		protected Support.IValidator			validator_2;
+		protected Validators.RegexValidator		validator_1;
+		protected Validators.NumRangeValidator	validator_2;
 	}
 }

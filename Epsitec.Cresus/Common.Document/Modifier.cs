@@ -458,7 +458,7 @@ namespace Epsitec.Common.Document
 			field.InternalMaxValue = 360.0M;
 			field.Step = 2.5M;
 			field.Resolution = 0.1M;
-			field.TextSuffix = "\u00B0";  // symbole unicode "degré" (#176)
+			field.TextSuffix = "°";
 		}
 
 		// Modifie tous les widgets de l'application reflétant des dimensions
