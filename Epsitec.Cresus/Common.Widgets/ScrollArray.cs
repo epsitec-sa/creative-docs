@@ -1805,7 +1805,7 @@ invalid:	row    = -1;
 					{
 						if (this.layouts[row, column] == null)
 						{
-							this.layouts[row, column] = new TextLayout ();
+							this.layouts[row, column] = new TextLayout (this.ResourceManager);
 						}
 						
 						string text = this[row + top, column];
@@ -1945,6 +1945,28 @@ invalid:	row    = -1;
 			base.OnAdornerChanged ();
 		}
 		
+		protected override void OnResourceManagerChanged()
+		{
+			base.OnResourceManagerChanged ();
+			
+			Support.ResourceManager resource_manager = this.ResourceManager;
+			
+			for (int i = 0; i < this.layouts.GetLength (0); i++)
+			{
+				for (int j = 0; j < this.layouts.GetLength (1); j++)
+				{
+					TextLayout layout = this.layouts[i,j];
+					
+					if (layout != null)
+					{
+						layout.ResourceManager = resource_manager;
+					}
+				}
+			}
+			
+			this.Invalidate ();
+		}
+
 		protected virtual  void OnSelectedIndexChanging()
 		{
 			if (this.SelectedIndexChanging != null)

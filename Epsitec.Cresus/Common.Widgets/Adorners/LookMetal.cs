@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets.Adorner
 	{
 		public LookMetal()
 		{
-			this.bitmap = Drawing.Bitmap.FromManifestResource("Epsitec.Common.Widgets.Adorners.Resources.LookMetal.png", this.GetType().Assembly);
+			this.bitmap = Drawing.Bitmap.FromManifestResource("Epsitec.Common.Widgets.Adorners.Resources", "LookMetal.png", typeof (IAdorner));
 			this.RefreshColors();
 		}
 

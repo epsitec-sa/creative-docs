@@ -461,25 +461,6 @@ namespace Epsitec.Common.Drawing
 		}
 
 		
-		public IImageProvider					ImageProvider
-		{
-			get
-			{
-				return (this.image_provider == null) ? this.parent.ImageProvider : this.image_provider;
-			}
-			set
-			{
-				this.CheckForDefaultStyle ();
-				
-				if (this.image_provider != value)
-				{
-					this.image_provider = value;
-					this.OnChanged ();
-				}
-			}
-		}
-
-		
 		public static TextStyle					Default
 		{
 			get
@@ -598,11 +579,6 @@ namespace Epsitec.Common.Drawing
 			TextStyle.default_style.color = color;
 		}
 		
-		public static void DefineDefaultImageProvider(IImageProvider provider)
-		{
-			TextStyle.Default.image_provider = provider;
-		}
-		
 		
 		protected void CheckForDefaultStyle ()
 		{
@@ -637,7 +613,6 @@ namespace Epsitec.Common.Drawing
 			that.show_line_break = this.show_line_break;
 			that.show_tab        = this.show_tab;
 			that.language        = this.language;
-			that.image_provider  = this.image_provider;
 			that.tabs            = new System.Collections.ArrayList (this.tabs);	//	##
 			
 			return that;
@@ -719,6 +694,5 @@ namespace Epsitec.Common.Drawing
 		private string							language;
 		private double							def_tab_width;
 		private System.Collections.ArrayList	tabs;
-		private IImageProvider					image_provider;
 	}
 }

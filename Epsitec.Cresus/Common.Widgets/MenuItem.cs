@@ -286,6 +286,20 @@ namespace Epsitec.Common.Widgets
 			this.AdjustSize (ref this.mainTextSize);
 		}
 
+		protected override void OnResourceManagerChanged()
+		{
+			base.OnResourceManagerChanged ();
+			
+			Support.ResourceManager resource_manager = this.ResourceManager;
+			
+			this.icon.ResourceManager          = resource_manager;
+			this.iconActiveNo.ResourceManager  = resource_manager;
+			this.iconActiveYes.ResourceManager = resource_manager;
+			this.shortKey.ResourceManager      = resource_manager;
+
+			this.Invalidate ();
+		}
+		
 		// Ajuste des dimensions d'un TextLayout.
 		protected void AdjustSize(ref Drawing.Size size)
 		{

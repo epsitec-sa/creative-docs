@@ -1,5 +1,7 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 26/11/2003
+//	Responsable: Pierre ARNAUD
+
+using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Database
 {
@@ -15,6 +17,21 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
+		
+		public static string BuildLocalisedName(string name, Common.Support.ResourceLevel level)
+		{
+			//	TODO: gérer les suffixes en fonction de la culture active, non en fonction de
+			//	la culture par défaut du gestionnaire de ressources par défaut !
+			
+			switch (level)
+			{
+				case ResourceLevel.Default:		return name;
+				case ResourceLevel.Customised:	return DbTools.BuildCompositeName (name, Resources.CustomisedSuffix);
+				case ResourceLevel.Localised:	return DbTools.BuildCompositeName (name, Resources.LocalisedSuffix);
+			}
+			
+			throw new System.ArgumentException (string.Format ("Level {0} not valid here (name='{1}').", level, name), "level");
+		}
 		
 		public static string BuildCompositeName(params string[] list)
 		{

@@ -51,8 +51,10 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				TextLayout tl = new TextLayout();
+				TextLayout tl = new TextLayout(this.ResourceManager);
+				
 				tl.Text = this.tabButton.Text;
+				
 				return tl.SingleLineSize;
 			}
 		}

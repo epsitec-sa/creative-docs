@@ -229,7 +229,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.resource_manager == null);
 			System.Diagnostics.Debug.Assert (resource_manager != null);
 			
-			this.resource_manager = resource_manager;
+			this.ResourceManager = resource_manager;
 		}
 		
 		public virtual void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
@@ -1676,6 +1676,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
+				if (this.resource_manager == null)
+				{
+					System.Diagnostics.Debug.WriteLine ("Falling back to default resource manager: " + this.ToString ());
+					return Support.Resources.DefaultManager;
+				}
+				
 				return this.resource_manager;
 			}
 			set
@@ -1683,6 +1689,13 @@ namespace Epsitec.Common.Widgets
 				if (this.resource_manager != value)
 				{
 					this.resource_manager = value;
+					
+					if (this.text_layout != null)
+					{
+						this.text_layout.ResourceManager = value;
+					}
+					
+					this.OnResourceManagerChanged ();
 				}
 			}
 		}
@@ -1899,7 +1912,13 @@ namespace Epsitec.Common.Widgets
 					return "";
 				}
 				
-				string text = (this.AutoResolveResRef && Support.Resources.IsTextRef (this.text)) ? this.text : this.text_layout.Text;
+				string text = this.text;
+				
+				if ((this.AutoResolveResRef == false) ||
+					(Support.Resources.IsTextRef (text)))
+				{
+					text = this.text_layout.Text;
+				}
 				
 				if (text == null)
 				{
@@ -5358,6 +5377,7 @@ namespace Epsitec.Common.Widgets
 				this.text_layout.DefaultFont     = this.DefaultFont;
 				this.text_layout.DefaultFontSize = this.DefaultFontSize;
 				this.text_layout.Anchor         += new AnchorEventHandler (this.HandleTextLayoutAnchor);
+				this.text_layout.ResourceManager = this.ResourceManager;
 				
 				this.UpdateTextLayout ();
 			}
@@ -5951,6 +5971,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnResourceManagerChanged()
+		{
+			if (this.ResourceManagerChanged != null)
+			{
+				this.ResourceManagerChanged (this);
+			}
+		}
+		
 		
 		#region Events
 		public event Support.EventHandler			ClientGeometryUpdated;
@@ -5977,6 +6005,7 @@ namespace Epsitec.Common.Widgets
 		public event MessageEventHandler			HypertextClicked;
 		public event Support.EventHandler			ValidatorChanged;
 		public event Support.EventHandler			BindingInfoChanged;
+		public event Support.EventHandler			ResourceManagerChanged;
 		
 		public event MessageEventHandler			PreProcessing;
 		public event MessageEventHandler			PostProcessing;

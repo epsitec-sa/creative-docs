@@ -107,6 +107,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public IImageProvider					ImageProvider
+		{
+			get
+			{
+				return Support.ImageProvider.Default;
+			}
+		}
+
 		
 		public bool								IsReady
 		{
@@ -436,6 +444,12 @@ namespace Epsitec.Common.Support
 			}
 			
 			return bundle;
+		}
+		
+		
+		public Drawing.Image GetImage(string name)
+		{
+			return this.ImageProvider.GetImage (name, this);
 		}
 		
 		

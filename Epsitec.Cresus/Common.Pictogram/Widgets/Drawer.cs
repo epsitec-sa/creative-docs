@@ -378,7 +378,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			if ( image == null )
 			{
-				image = Support.ImageProvider.Default.GetImage(name);
+				image = Support.Resources.DefaultManager.GetImage(name);
 			}
 			
 			this.MouseCursor = MouseCursor.FromImage(image);

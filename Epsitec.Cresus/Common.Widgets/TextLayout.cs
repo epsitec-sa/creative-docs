@@ -42,6 +42,11 @@ namespace Epsitec.Common.Widgets
 			this.verticalMark = double.NaN;
 		}
 		
+		public TextLayout(Support.ResourceManager resource_manager) : this ()
+		{
+			this.resourceManager = resource_manager;
+		}
+		
 
 		public string							Text
 		{
@@ -117,6 +122,23 @@ namespace Epsitec.Common.Widgets
 			get { return this.FindIndexFromOffset(this.MaxTextOffset); }
 		}
 		
+		
+		public Support.ResourceManager			ResourceManager
+		{
+			get
+			{
+				if (this.resourceManager == null)
+				{
+					return Support.Resources.DefaultManager;
+				}
+				
+				return this.resourceManager;
+			}
+			set
+			{
+				this.resourceManager = value;
+			}
+		}
 		
 		public Drawing.TextStyle				Style
 		{
@@ -357,22 +379,22 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public Drawing.IImageProvider			ImageProvider
-		{
-			// Gestionnaire d'images.
-			get
-			{
-				return this.style.ImageProvider;
-			}
-			set
-			{
-				if ( this.ImageProvider != value )
-				{
-					this.CloneStyleIfDefaultStyleInUse();
-					this.style.ImageProvider = value;
-				}
-			}
-		}
+//		public Drawing.IImageProvider			ImageProvider
+//		{
+//			// Gestionnaire d'images.
+//			get
+//			{
+//				return this.style.ImageProvider;
+//			}
+//			set
+//			{
+//				if ( this.ImageProvider != value )
+//				{
+//					this.CloneStyleIfDefaultStyleInUse();
+//					this.style.ImageProvider = value;
+//				}
+//			}
+//		}
 
 		public Drawing.Size						LayoutSize
 		{
@@ -3487,12 +3509,7 @@ namespace Epsitec.Common.Widgets
 								System.Diagnostics.Debug.Assert( parameters != null && parameters.ContainsKey("src") );
 								string imageName = parameters["src"] as string;
 							
-								if ( this.ImageProvider == null )
-								{
-									throw new System.FormatException(string.Format("<img> tag for image '{0}' needs an Image Provider.", imageName));
-								}
-							
-								Drawing.Image image = this.ImageProvider.GetImage(imageName);
+								Drawing.Image image = this.ResourceManager.GetImage(imageName);
 								if ( image == null )
 								{
 									throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
@@ -4714,6 +4731,7 @@ noText:
 		}
 
 
+		protected Support.ResourceManager		resourceManager;
 		protected Drawing.TextStyle				style;
 		
 		protected bool							isContentsDirty;

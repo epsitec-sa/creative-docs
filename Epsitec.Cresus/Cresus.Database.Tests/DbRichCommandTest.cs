@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Database
 			DbType db_type_rev  = infrastructure.ResolveDbType (null, "CR_KeyRevisionType");
 			
 			Assertion.AssertEquals (5, db_table_a.Columns.Count);
-			Assertion.AssertEquals (6, db_table_b.Columns.Count);
+			Assertion.AssertEquals (7, db_table_b.Columns.Count);
 			
 			Assertion.AssertEquals ("Nom",    db_table_a.Columns[3].Name);
 			Assertion.AssertEquals ("Prenom", db_table_a.Columns[4].Name);
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Database
 			
 			command.CreateNewRow ("Personnes", out row_1); row_1["Nom"] = "Toto"; row_1["Prenom"] = "Foo";
 			command.CreateNewRow ("Personnes", out row_2); row_2["Nom"] = "Titi"; row_2["Prenom"] = "Bar";
-			command.CreateNewRow ("Domiciles", out row_3); row_3["Ville"] = "New York";
+			command.CreateNewRow ("Domiciles", out row_3); row_3["Ville"] = "New York"; row_3["NPA"] = 12345;
 			
 			DbKey k1 = new DbKey (row_1);
 			DbKey k2 = new DbKey (row_2);

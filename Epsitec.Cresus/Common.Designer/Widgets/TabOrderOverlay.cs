@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer.Widgets
 			
 			if (this.is_picker_active)
 			{
-				cursor = MouseCursor.FromImage (Support.ImageProvider.Default.GetImage ("file:images/numpicker.icon"));
+				cursor = MouseCursor.FromImage (Application.ResourceManager.GetImage ("file:images/numpicker.icon"));
 				
 				is_interactive = true;
 			}

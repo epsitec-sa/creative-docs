@@ -417,6 +417,7 @@ namespace Epsitec.Common.Widgets
 					
 					string text = this.items[i+this.firstLine];
 					
+					this.textLayouts[i].ResourceManager = this.ResourceManager;
 					this.textLayouts[i].Text            = this.AutoResolveResRef ? this.ResourceManager.ResolveTextRef (text) : text;
 					this.textLayouts[i].DefaultFont     = this.DefaultFont;
 					this.textLayouts[i].DefaultFontSize = this.DefaultFontSize;
@@ -461,6 +462,25 @@ namespace Epsitec.Common.Widgets
 			base.OnAdornerChanged ();
 		}
 		
+		protected override void OnResourceManagerChanged()
+		{
+			base.OnResourceManagerChanged ();
+			
+			Support.ResourceManager resource_manager = this.ResourceManager;
+			
+			for (int i = 0; i < this.textLayouts.GetLength (0); i++)
+			{
+				TextLayout layout = this.textLayouts[i];
+				
+				if (layout != null)
+				{
+					layout.ResourceManager = resource_manager;
+				}
+			}
+			
+			this.Invalidate ();
+		}
+
 		protected void UpdateMargins()
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;

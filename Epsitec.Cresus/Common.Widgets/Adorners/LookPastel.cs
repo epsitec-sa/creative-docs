@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets.Adorner
 	{
 		public LookPastel()
 		{
-			this.bitmap = Drawing.Bitmap.FromManifestResource("Epsitec.Common.Widgets.Adorners.Resources.LookPastel.png", this.GetType().Assembly);
+			this.bitmap = Drawing.Bitmap.FromManifestResource("Epsitec.Common.Widgets.Adorners.Resources", "LookPastel.png", typeof (IAdorner));
 			this.RefreshColors();
 		}
 

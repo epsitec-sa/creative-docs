@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets.Adorner
 	{
 		public LookCeeBot()
 		{
-			this.bitmap = Drawing.Bitmap.FromManifestResource ("Epsitec.Common.Widgets.Adorners.Resources.LookCeeBot.png", this.GetType ().Assembly);
+			this.bitmap = Drawing.Bitmap.FromManifestResource ("Epsitec.Common.Widgets.Adorners.Resources", "LookCeeBot.png", typeof (IAdorner));
 			this.RefreshColors();
 		}
 

@@ -331,6 +331,8 @@ namespace Epsitec.Common.Support
 				return false;
 			}
 			
+			dst_obj.AttachResourceManager (this.manager);
+			
 			foreach (MemberInfo member_info in source.GetType ().GetMembers (BindingFlags.Public | BindingFlags.Instance))
 			{
 				//	Passe en revue tous les membres publics. Ceux qui sont des propriétés

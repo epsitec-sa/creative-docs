@@ -388,6 +388,11 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public static Image FromManifestResource(string namespace_name, string resource_name, System.Type type)
+		{
+			return Bitmap.FromManifestResource (string.Concat (namespace_name, ".", resource_name), type.Assembly);
+		}
+		
 		public static Image FromManifestResource(string resource_name, System.Reflection.Assembly assembly)
 		{
 			Image bitmap = Bitmap.FromManifestResource (resource_name, assembly, new Point (0, 0));

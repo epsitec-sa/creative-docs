@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 19/11/2003
+//	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Database
 				string name  = args[0];
 				string value = System.Utilities.StringSimplify (args[1]);
 				
-				this.SetAttribute (name, value, null);
+				this.SetAttribute (name, value);
 			}
 		}
 		
@@ -144,17 +144,13 @@ namespace Epsitec.Cresus.Database
 			
 			switch (level)
 			{
-				case ResourceLevel.Default:		find = name; break;
-				case ResourceLevel.Customised:	find = DbTools.BuildCompositeName (name, Resources.CustomisedSuffix);	break;
-				case ResourceLevel.Localised:	find = DbTools.BuildCompositeName (name, Resources.LocalisedSuffix);	break;
-				
 				case ResourceLevel.Merged:
 					
 					//	Cas spécial: on veut trouver automatiquement l'attribut le meilleur dans
 					//	ce contexte; commence par chercher la variante personnalisée, puis la
 					//	variante localisée, pour enfin chercher la variante de base.
 					
-					find = DbTools.BuildCompositeName (name, Resources.CustomisedSuffix);
+					find = DbTools.BuildLocalisedName (name, ResourceLevel.Customised);
 					
 					if (this.attributes.Contains (find))
 					{
@@ -162,72 +158,64 @@ namespace Epsitec.Cresus.Database
 					}
 					
 					
-					find = DbTools.BuildCompositeName (name, Resources.LocalisedSuffix);
+					find = DbTools.BuildLocalisedName (name, ResourceLevel.Localised);
 					
 					if (this.attributes.Contains (find))
 					{
 						return this.attributes[find] as string;
 					}
 					
-					find = name;
+					find = DbTools.BuildLocalisedName (name, ResourceLevel.Default);
 					break;
 				
 				default:
-					throw new ResourceException ("Invalid ResourceLevel");
+					find = DbTools.BuildLocalisedName (name, level);
+					break;
 			}
 			
 			return (this.attributes.Contains (find)) ? this.attributes[find] as string : null;
 		}
 		
-		internal string GetAttribute(string name, string localisation_suffix)
+		internal string GetAttribute(string name, string suffix)
 		{
-			if (this.attributes == null)
+			if (suffix == null)
 			{
-				return null;
+				return this.GetAttribute (name);
 			}
-			
-			if (localisation_suffix != null)
+			else
 			{
-				name = DbTools.BuildCompositeName (name, localisation_suffix);
+				return this.GetAttribute (DbTools.BuildCompositeName (name, suffix));
 			}
-			
-			return (this.attributes.Contains (name)) ? this.attributes[name] as string : null;
 		}
 		
-		
-		internal void SetAttribute(string name, string value)
-		{
-			this.SetAttribute (name, value, null);
-		}
 		
 		internal void SetAttribute(string name, string value, ResourceLevel level)
 		{
-			switch (level)
-			{
-				case ResourceLevel.Default:		this.SetAttribute (name, value, null);							break;
-				case ResourceLevel.Customised:	this.SetAttribute (name, value, Resources.CustomisedSuffix);	break;
-				case ResourceLevel.Localised:	this.SetAttribute (name, value, Resources.LocalisedSuffix);		break;
-				
-				default:
-					throw new System.ArgumentException ("Unsupported ResourceLevel");
-			}
+			this.SetAttribute (DbTools.BuildLocalisedName (name, level), value);
 		}
 		
-		internal void SetAttribute(string name, string value, string localisation_suffix)
+		internal void SetAttribute(string name, string value)
 		{
 			if (this.attributes == null)
 			{
 				this.attributes = new System.Collections.Hashtable ();
 			}
 			
-			if (localisation_suffix != null)
-			{
-				name = DbTools.BuildCompositeName (name, localisation_suffix);
-			}
-			
 			this.attributes[name] = value;
 		}
 		
+		
+		internal void SetAttribute(string name, string value, string suffix)
+		{
+			if (suffix == null)
+			{
+				this.SetAttribute (name, value);
+			}
+			else
+			{
+				this.SetAttribute (DbTools.BuildCompositeName (name, suffix), value);
+			}
+		}
 		
 		internal void SerializeXmlAttributes(System.Text.StringBuilder buffer)
 		{
@@ -238,7 +226,7 @@ namespace Epsitec.Cresus.Database
 				buffer.Append (" attr.");
 				buffer.Append (names[i]);
 				buffer.Append (@"=""");
-				buffer.Append (System.Utilities.TextToXml (this.GetAttribute (names[i], null)));
+				buffer.Append (System.Utilities.TextToXml (this.GetAttribute (names[i])));
 				buffer.Append (@"""");
 			}
 		}
@@ -252,7 +240,7 @@ namespace Epsitec.Cresus.Database
 					string name  = attr.Name.Substring (5);
 					string value = attr.Value;
 					
-					this.SetAttribute (name, value, null);
+					this.SetAttribute (name, value);
 				}
 			}
 		}

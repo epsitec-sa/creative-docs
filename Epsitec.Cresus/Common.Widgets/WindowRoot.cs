@@ -148,7 +148,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (bundle["icon"].Type == Support.ResourceFieldType.Data)
 			{
-				this.window.Icon = Support.ImageProvider.Default.GetImage ("res:" + bundle["icon"].AsString);
+				this.window.Icon = this.ResourceManager.GetImage ("res:" + bundle["icon"].AsString);
 			}
 			
 			this.is_ready = true;

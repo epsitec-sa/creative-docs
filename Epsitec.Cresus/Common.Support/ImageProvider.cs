@@ -11,7 +11,7 @@ namespace Epsitec.Common.Support
 	/// - "file:name", accès direct à une image dans un fichier (name)
 	/// - "res:id#field", accès direct à une image dans un bundle de ressources
 	/// </summary>
-	public class ImageProvider : Drawing.IImageProvider
+	public class ImageProvider : IImageProvider
 	{
 		private ImageProvider()
 		{
@@ -38,8 +38,6 @@ namespace Epsitec.Common.Support
 			ImageProvider.default_paths[1] = path;
 			ImageProvider.default_paths[2] = other;
 			ImageProvider.default_paths[3] = "";
-			
-			Drawing.TextStyle.DefineDefaultImageProvider (ImageProvider.default_provider);
 		}
 		
 		
@@ -68,7 +66,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public Drawing.Image GetImage(string name)
+		public Drawing.Image GetImage(string name, Support.ResourceManager resource_manager)
 		{
 			if ((name == null) ||
 				(name.Length < 1))
@@ -186,7 +184,7 @@ namespace Epsitec.Common.Support
 				
 				if (ResourceBundle.SplitTarget (res_full, out res_bundle, out res_field))
 				{
-					ResourceBundle bundle = Resources.GetBundle (res_bundle);
+					ResourceBundle bundle = resource_manager.GetBundle (res_bundle);
 					
 					if (bundle != null)
 					{
@@ -195,7 +193,7 @@ namespace Epsitec.Common.Support
 				}
 				else
 				{
-					byte[] data = Resources.GetBinaryData (res_full);
+					byte[] data = resource_manager.GetBinaryData (res_full);
 					image = Drawing.Bitmap.FromData (data);
 				}
 				
