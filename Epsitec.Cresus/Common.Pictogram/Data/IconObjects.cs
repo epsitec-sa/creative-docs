@@ -783,7 +783,10 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Dessine la géométrie de tous les objets.
-		public void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, Drawing.Color color, object adorner)
+		public void DrawGeometry(Drawing.Graphics graphics,
+								 IconContext iconContext,
+								 Drawing.Color color,
+								 object adorner)
 		{
 			this.DrawGeometry(this.objects, graphics, color, adorner, iconContext, true);
 		}
