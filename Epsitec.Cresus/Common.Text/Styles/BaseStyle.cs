@@ -27,7 +27,7 @@ namespace Epsitec.Common.Text.Styles
 			}
 		}
 		
-		public abstract bool					IsSpecialStyle
+		public abstract bool					IsRichStyle
 		{
 			get;
 		}
@@ -337,7 +337,7 @@ namespace Epsitec.Common.Text.Styles
 			{
 				return false;
 			}
-			if (a.IsSpecialStyle != b.IsSpecialStyle)
+			if (a.IsRichStyle != b.IsRichStyle)
 			{
 				return false;
 			}

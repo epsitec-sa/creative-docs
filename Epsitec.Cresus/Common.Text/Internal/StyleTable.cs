@@ -10,8 +10,8 @@ namespace Epsitec.Common.Text.Internal
 	{
 		public StyleTable()
 		{
-			this.font_styles      = null;
-			this.special_styles   = null;
+			this.font_styles = null;
+			this.rich_styles = null;
 		}
 		
 		
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Text.Internal
 			Internal.CharMarker.SetStyleIndex (ref code, find.StyleIndex);
 			Internal.CharMarker.SetLocalIndex (ref code, 0);
 			Internal.CharMarker.SetExtraIndex (ref code, 0);
-			Internal.CharMarker.SetSpecialStyleFlag (ref code, find.IsSpecialStyle);
+			Internal.CharMarker.SetRichStyleFlag (ref code, find.IsRichStyle);
 		}
 		
 		public void Attach(ref ulong code, Styles.BaseStyle style, Styles.LocalSettings local_settings, Styles.ExtraSettings extra_settings)
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Text.Internal
 				Internal.CharMarker.SetStyleIndex (ref code, find.StyleIndex);
 				Internal.CharMarker.SetLocalIndex (ref code, local_settings == null ? 0 : local_settings.SettingsIndex);
 				Internal.CharMarker.SetExtraIndex (ref code, extra_settings == null ? 0 : extra_settings.SettingsIndex);
-				Internal.CharMarker.SetSpecialStyleFlag (ref code, find.IsSpecialStyle);
+				Internal.CharMarker.SetRichStyleFlag (ref code, find.IsRichStyle);
 			}
 		}
 		
@@ -182,9 +182,9 @@ namespace Epsitec.Common.Text.Internal
 			//	Cherche si un style identique existe déjà. Si oui, retourne la
 			//	référence au style en question; si non, retourne null.
 			
-			if (style.IsSpecialStyle)
+			if (style.IsRichStyle)
 			{
-				return this.FindSpecialStyle (style, matcher);
+				return this.FindRichStyle (style, matcher);
 			}
 			else
 			{
@@ -215,15 +215,15 @@ namespace Epsitec.Common.Text.Internal
 			return null;
 		}
 		
-		private Styles.SpecialStyle FindSpecialStyle(Styles.BaseStyle style, StyleMatcher matcher)
+		private Styles.RichStyle FindRichStyle(Styles.BaseStyle style, StyleMatcher matcher)
 		{
-			if ((this.special_styles == null) ||
-				(this.special_styles.Count == 0))
+			if ((this.rich_styles == null) ||
+				(this.rich_styles.Count == 0))
 			{
 				return null;
 			}
 			
-			foreach (Styles.SpecialStyle find in this.special_styles)
+			foreach (Styles.RichStyle find in this.rich_styles)
 			{
 				if (Styles.BaseStyle.CompareEqual (find, style))
 				{
@@ -244,22 +244,22 @@ namespace Epsitec.Common.Text.Internal
 			//	Ajoute le style (qui ne doit pas encore être contenu dans la
 			//	liste). Ceci n'affecte nullement le compteur d'utilisations.
 			
-			if (style.IsSpecialStyle)
+			if (style.IsRichStyle)
 			{
 				Debug.Assert.IsTrue (style.StyleIndex == 0);
 				Debug.Assert.IsTrue (style.CountUsers == 0);
 				
-				for (int i = 0; i < special_styles.Count; i++)
+				for (int i = 0; i < rich_styles.Count; i++)
 				{
-					if (this.special_styles[i] == null)
+					if (this.rich_styles[i] == null)
 					{
-						this.special_styles[i] = style;
+						this.rich_styles[i] = style;
 						style.StyleIndex = i+1;
 						return;
 					}
 				}
 				
-				style.StyleIndex = this.special_styles.Add (style) + 1;
+				style.StyleIndex = this.rich_styles.Add (style) + 1;
 			}
 			else
 			{
@@ -285,15 +285,15 @@ namespace Epsitec.Common.Text.Internal
 			//	Supprime le style. Le style doit exister dans la liste.
 			//	Ceci n'affecte nullement le compteur d'utilisations.
 			
-			if (style.IsSpecialStyle)
+			if (style.IsRichStyle)
 			{
 				Debug.Assert.IsTrue (style.StyleIndex != 0);
-				Debug.Assert.IsTrue (this.special_styles[style.StyleIndex-1] == style);
+				Debug.Assert.IsTrue (this.rich_styles[style.StyleIndex-1] == style);
 				
 				//	Retire de la liste, sans pour autant réorganiser la liste
 				//	elle-même :
 				
-				this.special_styles[style.StyleIndex-1] = null;
+				this.rich_styles[style.StyleIndex-1] = null;
 				
 				style.StyleIndex = 0;
 			}
@@ -321,6 +321,6 @@ namespace Epsitec.Common.Text.Internal
 		private delegate bool StyleMatcher(Styles.BaseStyle style);
 		
 		private System.Collections.ArrayList	font_styles;
-		private System.Collections.ArrayList	special_styles;
+		private System.Collections.ArrayList	rich_styles;
 	}
 }

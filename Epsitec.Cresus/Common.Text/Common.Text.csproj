@@ -194,7 +194,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Styles\SpecialStyle.cs"
+                    RelPath = "Styles\RichStyle.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

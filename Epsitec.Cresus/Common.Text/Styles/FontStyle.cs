@@ -13,7 +13,7 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		public override bool					IsSpecialStyle
+		public override bool					IsRichStyle
 		{
 			get
 			{

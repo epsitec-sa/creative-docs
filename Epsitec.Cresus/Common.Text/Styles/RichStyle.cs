@@ -4,16 +4,16 @@
 namespace Epsitec.Common.Text.Styles
 {
 	/// <summary>
-	/// Summary description for SpecialStyle.
+	/// Summary description for RichStyle.
 	/// </summary>
-	public class SpecialStyle : BaseStyle
+	public class RichStyle : BaseStyle
 	{
-		public SpecialStyle()
+		public RichStyle()
 		{
 		}
 		
 		
-		public override bool					IsSpecialStyle
+		public override bool					IsRichStyle
 		{
 			get
 			{
