@@ -72,9 +72,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Extension.Tests", "S
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.UserInterface.Tests", "Cresus.UserInterface.Tests\Cresus.UserInterface.Tests.csproj", "{6A7B4CDB-5772-4371-9D57-A21B370660AD}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 19
+		SccNumberOfProjects = 20
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -150,6 +154,10 @@ Global
 		SccLocalPath18 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection18 = System.Extension.Tests\\
+		SccProjectUniqueName19 = Cresus.UserInterface.Tests\\Cresus.UserInterface.Tests.csproj
+		SccLocalPath19 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection19 = Cresus.UserInterface.Tests\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -226,6 +234,10 @@ Global
 		{E9786766-8E62-4E55-850F-0C0363933664}.Debug.Build.0 = Debug|.NET
 		{E9786766-8E62-4E55-850F-0C0363933664}.Release.ActiveCfg = Release|.NET
 		{E9786766-8E62-4E55-850F-0C0363933664}.Release.Build.0 = Release|.NET
+		{6A7B4CDB-5772-4371-9D57-A21B370660AD}.Debug.ActiveCfg = Debug|.NET
+		{6A7B4CDB-5772-4371-9D57-A21B370660AD}.Debug.Build.0 = Debug|.NET
+		{6A7B4CDB-5772-4371-9D57-A21B370660AD}.Release.ActiveCfg = Release|.NET
+		{6A7B4CDB-5772-4371-9D57-A21B370660AD}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info
