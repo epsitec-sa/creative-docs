@@ -1,5 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
+	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
+	
 	/// <summary>
 	/// La classe IconButton permet de dessiner de petits pictogrammes, en
 	/// particulier pour remplir une ToolBar.
@@ -36,7 +38,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public string IconName
+		[ Bundle("icon") ] public string IconName
 		{
 			get
 			{

@@ -242,8 +242,8 @@ namespace Epsitec.Common.Tests
 			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(tb);
 
-			tb.Items.Add (new IconButton (@"file:images\open.png"));
-			tb.Items.Add (new IconButton (@"file:images\save.png"));
+			tb.Items.Add (new IconButton (@"file:images/open.png"));
+			tb.Items.Add (new IconButton (@"file:images/save.png"));
 			tb.Items.Add (new IconSeparator());
 
 			TextFieldCombo t1 = new TextFieldCombo();
@@ -255,15 +255,15 @@ namespace Epsitec.Common.Tests
 
 			tb.Items.Add(t1);
 			tb.Items.Add (new IconSeparator());
-			tb.Items.Add (new IconButton (@"file:images\cut.png"));
-			tb.Items.Add (new IconButton (@"file:images\copy.png"));
-			tb.Items.Add (new IconButton (@"file:images\paste.png"));
+			tb.Items.Add (new IconButton (@"file:images/cut.png"));
+			tb.Items.Add (new IconButton (@"file:images/copy.png"));
+			tb.Items.Add (new IconButton (@"file:images/paste.png"));
 
 #if true
 			VMenu fileMenu = new VMenu();
 			fileMenu.Name = "0 (root menu)";
-			fileMenu.Items.Add(new MenuItem ("open", @"file:images\open.png", "Ouvrir...", "Ctrl+O"));
-			fileMenu.Items.Add(new MenuItem ("save", @"file:images\save.png", "Enregistrer...", "Ctrl+S"));
+			fileMenu.Items.Add(new MenuItem ("open", @"file:images/open.png", "Ouvrir...", "Ctrl+O"));
+			fileMenu.Items.Add(new MenuItem ("save", @"file:images/save.png", "Enregistrer...", "Ctrl+S"));
 			fileMenu.Items.Add(new MenuSeparator ());
 			fileMenu.Items.Add(new MenuItem ("opt1", "", "Options 1", ""));
 			fileMenu.Items.Add(new MenuItem ("opt2", "", "Options 2", ""));
@@ -277,8 +277,8 @@ namespace Epsitec.Common.Tests
 			optMenu1.Name = "1a";
 			optMenu1.Items.Add(new MenuItem ("set1A", "", "Reglages 1.A", ""));
 			optMenu1.Items.Add(new MenuItem ("set1B", "", "Reglages 1.B", ""));
-			optMenu1.Items.Add(new MenuItem ("print", @"file:images\print.png", "Impression...", ""));
-			optMenu1.Items.Add(new MenuItem ("open",  @"file:images\open.png", "Fichiers...", ""));
+			optMenu1.Items.Add(new MenuItem ("print", @"file:images/print.png", "Impression...", ""));
+			optMenu1.Items.Add(new MenuItem ("open",  @"file:images/open.png", "Fichiers...", ""));
 			optMenu1.AdjustSize();
 			fileMenu.Items[3].Submenu = optMenu1;
 
@@ -286,8 +286,8 @@ namespace Epsitec.Common.Tests
 			optMenu2.Name = "1b";
 			optMenu2.Items.Add(new MenuItem ("set2A", "", "Reglages 2.A", ""));
 			optMenu2.Items.Add(new MenuItem ("set2B", "", "Reglages 2.B", ""));
-			optMenu2.Items.Add(new MenuItem ("print", @"file:images\print.png", "Impression...", ""));
-			optMenu2.Items.Add(new MenuItem ("open",  @"file:images\open.png", "Fichiers...", ""));
+			optMenu2.Items.Add(new MenuItem ("print", @"file:images/print.png", "Impression...", ""));
+			optMenu2.Items.Add(new MenuItem ("open",  @"file:images/open.png", "Fichiers...", ""));
 			optMenu2.AdjustSize();
 			fileMenu.Items[4].Submenu = optMenu2;
 
@@ -480,17 +480,17 @@ namespace Epsitec.Common.Tests
 			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(tb);
 
-			tb.Items.Add (new IconButton (@"file:images\open.png"));
-			tb.Items.Add (new IconButton (@"file:images\save.png"));
+			tb.Items.Add (new IconButton (@"file:images/open.png"));
+			tb.Items.Add (new IconButton (@"file:images/save.png"));
 			tb.Items.Add (new IconSeparator());
-			tb.Items.Add (new IconButton (@"file:images\cut.png"));
-			tb.Items.Add (new IconButton (@"file:images\copy.png"));
-			tb.Items.Add (new IconButton (@"file:images\paste.png"));
+			tb.Items.Add (new IconButton (@"file:images/cut.png"));
+			tb.Items.Add (new IconButton (@"file:images/copy.png"));
+			tb.Items.Add (new IconButton (@"file:images/paste.png"));
 			tb.Items[1].SetEnabled(false);
 
 			VMenu fileMenu = new VMenu();
-			fileMenu.Items.Add(new MenuItem ("open", @"file:images\open.png", "Ouvrir...", "Ctrl+O"));
-			fileMenu.Items.Add(new MenuItem ("save", @"file:images\save.png", "Enregistrer...", "Ctrl+S"));
+			fileMenu.Items.Add(new MenuItem ("open", @"file:images/open.png", "Ouvrir...", "Ctrl+O"));
+			fileMenu.Items.Add(new MenuItem ("save", @"file:images/save.png", "Enregistrer...", "Ctrl+S"));
 			fileMenu.Items.Add (new MenuSeparator ());
 			fileMenu.Items.Add(new MenuItem ("quit", "", "Quitter", ""));
 			fileMenu.AdjustSize();

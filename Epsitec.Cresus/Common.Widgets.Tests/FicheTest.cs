@@ -291,14 +291,14 @@ namespace Epsitec.Common.Tests
 			VMenu fileMenu = new VMenu();
 			fileMenu.Name = "fileMenu";
 			fileMenu.Items.Add(new MenuItem ("new", "", "Nouveau", "Ctrl+N"));
-			fileMenu.Items.Add(new MenuItem ("open", @"file:images\open.png", "Ouvrir...", "Ctrl+O"));
+			fileMenu.Items.Add(new MenuItem ("open", @"file:images/open.png", "Ouvrir...", "Ctrl+O"));
 			fileMenu.Items.Add(new MenuItem ("close", "", "Fermer", ""));
 			fileMenu.Items.Add(new MenuSeparator ());
-			fileMenu.Items.Add(new MenuItem ("save", @"file:images\save.png", "Enregistrer", "Ctrl+S"));
+			fileMenu.Items.Add(new MenuItem ("save", @"file:images/save.png", "Enregistrer", "Ctrl+S"));
 			fileMenu.Items.Add(new MenuItem ("saveas", "", "Enregistrer sous...", ""));
 			fileMenu.Items.Add(new MenuSeparator ());
-			fileMenu.Items.Add(new MenuItem ("print", @"file:images\print.png", "Imprimer...", "Ctrl+P"));
-			fileMenu.Items.Add(new MenuItem ("preview", @"file:images\preview.png", "Apercu avant impression", ""));
+			fileMenu.Items.Add(new MenuItem ("print", @"file:images/print.png", "Imprimer...", "Ctrl+P"));
+			fileMenu.Items.Add(new MenuItem ("preview", @"file:images/preview.png", "Apercu avant impression", ""));
 			fileMenu.Items.Add(new MenuItem ("warning", "", "Mise en page...", ""));
 			fileMenu.Items.Add(new MenuSeparator ());
 			fileMenu.Items.Add(new MenuItem ("quit", "", "Quitter", ""));
@@ -309,9 +309,9 @@ namespace Epsitec.Common.Tests
 			editMenu.Name = "editMenu";
 			editMenu.Items.Add(new MenuItem ("undo", "", "Annuler", "Ctrl+Z"));
 			editMenu.Items.Add(new MenuSeparator ());
-			editMenu.Items.Add(new MenuItem ("cut", @"file:images\cut.png", "Couper", "Ctrl+X"));
-			editMenu.Items.Add(new MenuItem ("copy", @"file:images\copy.png", "Copier", "Ctrl+C"));
-			editMenu.Items.Add(new MenuItem ("paste", @"file:images\paste.png", "Coller", "Ctrl+V"));
+			editMenu.Items.Add(new MenuItem ("cut", @"file:images/cut.png", "Couper", "Ctrl+X"));
+			editMenu.Items.Add(new MenuItem ("copy", @"file:images/copy.png", "Copier", "Ctrl+C"));
+			editMenu.Items.Add(new MenuItem ("paste", @"file:images/paste.png", "Coller", "Ctrl+V"));
 			editMenu.AdjustSize();
 			this.menu.Items[1].Submenu = editMenu;
 
@@ -328,8 +328,8 @@ namespace Epsitec.Common.Tests
 			VMenu optMenu = new VMenu();
 			optMenu.Name = "optMenu";
 			optMenu.Items.Add(new MenuItem ("misc", "", "Divers...", ""));
-			optMenu.Items.Add(new MenuItem ("print", @"file:images\print.png", "Impression...", ""));
-			optMenu.Items.Add(new MenuItem ("open", @"file:images\open.png", "Fichiers...", ""));
+			optMenu.Items.Add(new MenuItem ("print", @"file:images/print.png", "Impression...", ""));
+			optMenu.Items.Add(new MenuItem ("open", @"file:images/open.png", "Fichiers...", ""));
 			optMenu.AdjustSize();
 			showMenu.Items[3].Submenu = optMenu;
 
@@ -378,7 +378,7 @@ namespace Epsitec.Common.Tests
 			VMenu helpMenu = new VMenu();
 			helpMenu.Name = "helpMenu";
 			helpMenu.Items.Add(new MenuItem ("help", "", "Aide", "F1"));
-			helpMenu.Items.Add(new MenuItem ("ctxhelp", @"file:images\help.png", "Aide contextuelle", ""));
+			helpMenu.Items.Add(new MenuItem ("ctxhelp", @"file:images/help.png", "Aide contextuelle", ""));
 			helpMenu.Items.Add(new MenuItem ("about", "", "A propos de...", ""));
 			helpMenu.AdjustSize();
 			this.menu.Items[4].Submenu = helpMenu;
@@ -387,12 +387,12 @@ namespace Epsitec.Common.Tests
 			this.toolBar.Location = new Point(0, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
 			this.toolBar.Size = new Size(rect.Width, this.toolBar.DefaultHeight);
 			this.toolBar.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
-			this.toolBar.Items.Add (new IconButton (@"file:images\open.png"));
-			this.toolBar.Items.Add (new IconButton (@"file:images\save.png"));
+			this.toolBar.Items.Add (new IconButton (@"file:images/open.png"));
+			this.toolBar.Items.Add (new IconButton (@"file:images/save.png"));
 			this.toolBar.Items.Add (new IconSeparator());
-			this.toolBar.Items.Add (new IconButton (@"file:images\cut.png"));
-			this.toolBar.Items.Add (new IconButton (@"file:images\copy.png"));
-			this.toolBar.Items.Add (new IconButton (@"file:images\paste.png"));
+			this.toolBar.Items.Add (new IconButton (@"file:images/cut.png"));
+			this.toolBar.Items.Add (new IconButton (@"file:images/copy.png"));
+			this.toolBar.Items.Add (new IconButton (@"file:images/paste.png"));
 			this.toolBar.Parent = this.window.Root;
 
 			Widget root = new Widget();

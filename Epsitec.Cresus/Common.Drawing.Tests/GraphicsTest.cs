@@ -434,7 +434,7 @@ namespace Epsitec.Common.Tests
 			double size = 50;
 			
 			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
-			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:images\test.png").BitmapImage;
+			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:images/test.png").BitmapImage;
 			string text = "TOMATE";
 			
 			double max_width = 0;
@@ -479,7 +479,7 @@ namespace Epsitec.Common.Tests
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
 			e.Graphics.RenderSolid (Color.FromBrightness (0));
 			
-			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:images\test.png").BitmapImage;
+			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:images/test.png").BitmapImage;
 			
 			//	L'image fait 115 x 102 pixels
 			
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Tests
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
 			e.Graphics.RenderSolid (Color.FromBrightness (0));
 			
-			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:images\image1.tif").BitmapImage;
+			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:images/image1.tif").BitmapImage;
 			
 			//	L'image fait 96 x 96 pixels
 			

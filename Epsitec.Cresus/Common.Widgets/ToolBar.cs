@@ -70,6 +70,28 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		#region Interface IBundleSupport
+		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
+		{
+			base.RestoreFromBundle (bundler, bundle);
+			
+			System.Collections.IList item_list = bundle.GetFieldBundleList ("items");
+			
+			if (item_list != null)
+			{
+				//	Notre bundle contient une liste de sous-bundles contenant les descriptions des
+				//	items composant le menu.
+				
+				foreach (Support.ResourceBundle item_bundle in item_list)
+				{
+					Widget item = bundler.CreateFromBundle (item_bundle) as Widget;
+					
+					this.Items.Add (item);
+				}
+			}
+		}
+		#endregion
+		
 		#region IWidgetCollectionHost Members
 		public void NotifyInsertion(Widget widget)
 		{
