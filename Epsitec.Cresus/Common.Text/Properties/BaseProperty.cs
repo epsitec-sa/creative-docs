@@ -13,7 +13,7 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
-		public long 							Version
+		public virtual long 					Version
 		{
 			get
 			{
@@ -88,6 +88,11 @@ namespace Epsitec.Common.Text.Properties
 			return buffer.ToString ();
 		}
 		
+		
+		protected void DefineVersion(long version)
+		{
+			this.version = version;
+		}
 		
 		
 		private int								contents_signature;

@@ -27,6 +27,26 @@ namespace Epsitec.Common.Text.Properties
 		}
 
 		
+		public override long					Version
+		{
+			get
+			{
+				long version = base.Version;
+				
+				for (int i = 0; i < this.styles.Length; i++)
+				{
+					long style_version = this.styles[i].Version;
+					
+					if (style_version > version)
+					{
+						version = style_version;
+					}
+				}
+				
+				return version;
+			}
+		}
+
 		public override PropertyType			PropertyType
 		{
 			get
@@ -40,6 +60,29 @@ namespace Epsitec.Common.Text.Properties
 			get
 			{
 				return WellKnownType.Styles;
+			}
+		}
+		
+		
+		public TextStyle[]						Styles
+		{
+			get
+			{
+				return this.styles.Clone () as TextStyle[];
+			}
+			set
+			{
+				if (value == null)
+				{
+					value = new TextStyle[0];
+				}
+				
+				if (StylesProperty.CompareEqualContents (this.styles, value) == false)
+				{
+					this.styles = new TextStyle[value.Length];
+					value.CopyTo (this.styles, 0);
+					this.Invalidate ();
+				}
 			}
 		}
 		
@@ -94,6 +137,8 @@ namespace Epsitec.Common.Text.Properties
 			a.styles.CopyTo (c.styles, 0);
 			b.styles.CopyTo (c.styles, a.styles.Length);
 			
+			c.DefineVersion (System.Math.Max (a.Version, b.Version));
+			
 			return c;
 		}
 		
@@ -113,16 +158,32 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(StylesProperty a, StylesProperty b)
 		{
-			if (a.styles.Length != b.styles.Length)
+			return StylesProperty.CompareEqualContents (a.styles, b.styles);
+		}
+		
+		private static bool CompareEqualContents(TextStyle[] a, TextStyle[] b)
+		{
+			if (a == b)
+			{
+				return true;
+			}
+			
+			if ((a == null) ||
+				(b == null))
 			{
 				return false;
 			}
 			
-			int n = a.styles.Length;
+			if (a.Length != b.Length)
+			{
+				return false;
+			}
+			
+			int n = a.Length;
 			
 			for (int i = 0; i < n; i++)
 			{
-				if (a.GetContentsSignature () != b.GetContentsSignature ())
+				if (a[i].GetContentsSignature () != b[i].GetContentsSignature ())
 				{
 					return false;
 				}
@@ -130,7 +191,7 @@ namespace Epsitec.Common.Text.Properties
 			
 			for (int i = 0; i < n; i++)
 			{
-				if (TextStyle.CompareEqualContents (a.styles[i], b.styles[i]) == false)
+				if (TextStyle.CompareEqualContents (a[i], b[i]) == false)
 				{
 					return false;
 				}
@@ -138,7 +199,6 @@ namespace Epsitec.Common.Text.Properties
 			
 			return true;
 		}
-		
 		
 		
 		private TextStyle[]						styles;

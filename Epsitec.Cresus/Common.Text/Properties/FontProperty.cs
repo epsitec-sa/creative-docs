@@ -12,6 +12,12 @@ namespace Epsitec.Common.Text.Properties
 		{
 		}
 		
+		public FontProperty(string face, string style)
+		{
+			this.face_name  = face;
+			this.style_name = style;
+		}
+		
 		
 		public override WellKnownType			WellKnownType
 		{
@@ -30,6 +36,39 @@ namespace Epsitec.Common.Text.Properties
 		}
 
 		
+		public string							FaceName
+		{
+			get
+			{
+				return this.face_name;
+			}
+			set
+			{
+				if (this.face_name != value)
+				{
+					this.face_name = value;
+					this.Invalidate ();
+				}
+			}
+		}
+		
+		public string							StyleName
+		{
+			get
+			{
+				return this.style_name;
+			}
+			set
+			{
+				if (this.style_name != value)
+				{
+					this.style_name = value;
+					this.Invalidate ();
+				}
+			}
+		}
+		
+		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
 			//	TODO: ...
@@ -44,20 +83,20 @@ namespace Epsitec.Common.Text.Properties
 		{
 			Debug.Assert.IsTrue (property is Properties.FontProperty);
 			
-			//	TODO: gérer les propriétés cascadées où l'ancêtre modifie l'état
-			//	du descendant.
+			FontProperty a = this;
+			FontProperty b = property as FontProperty;
+			FontProperty c = new FontProperty (b.FaceName == null ? a.FaceName : b.FaceName, b.StyleName == null ? a.StyleName : b.StyleName);
 			
-			return property;
+			c.DefineVersion (System.Math.Max (a.Version, b.Version));
+			
+			return c;
 		}
 
 		
-		
-		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			checksum.UpdateValue (this.font_face);
-			checksum.UpdateValue (this.font_style);
-			checksum.UpdateValue (this.font_optical);
+			checksum.UpdateValue (this.face_name);
+			checksum.UpdateValue (this.style_name);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -68,16 +107,13 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(FontProperty a, FontProperty b)
 		{
-			return a.font_face == b.font_face
-				&& a.font_style == b.font_style
-				&& a.font_optical == b.font_optical;
+			return a.face_name == b.face_name
+				&& a.style_name == b.style_name;
 		}
 		
 		
-		private string							font_face;
-		private string							font_style;
-		private string							font_optical;
-		
+		private string							face_name;
+		private string							style_name;
 	}
 	
 	public enum FontStyle : byte

@@ -11,6 +11,7 @@ namespace Epsitec.Common.Text.Properties
 	public enum WellKnownType
 	{
 		Font			= 1,
+		FontSize,
 		
 		Styles,
 		
