@@ -22,11 +22,22 @@ namespace Epsitec.Common.Drawing
 			get { return this.has_curve; }
 		}
 		
+		public bool						IsEmpty
+		{
+			get { return this.is_empty; }
+		}
+		
+		public bool						IsValid
+		{
+			get { return ! this.is_empty; }
+		}
+		
 		
 		public void Clear()
 		{
 			this.CreateOnTheFly ();
 			this.has_curve = false;
+			this.is_empty  = true;
 			AntiGrain.Path.RemoveAll (this.agg_path);
 		}
 		
@@ -38,6 +49,7 @@ namespace Epsitec.Common.Drawing
 		public void MoveTo(double x, double y)
 		{
 			this.CreateOnTheFly ();
+			this.is_empty = false;
 			AntiGrain.Path.MoveTo (this.agg_path, x, y);
 		}
 		
@@ -49,6 +61,7 @@ namespace Epsitec.Common.Drawing
 		public void LineTo(double x, double y)
 		{
 			this.CreateOnTheFly ();
+			this.is_empty = false;
 			AntiGrain.Path.LineTo (this.agg_path, x, y);
 		}
 		
@@ -60,6 +73,7 @@ namespace Epsitec.Common.Drawing
 		public void CurveTo(double x_c1, double y_c1, double x_c2, double y_c2, double x, double y)
 		{
 			this.CreateOnTheFly ();
+			this.is_empty  = false;
 			this.has_curve = true;
 			AntiGrain.Path.Curve4 (this.agg_path, x_c1, y_c1, x_c2, y_c2, x, y);
 		}
@@ -72,20 +86,27 @@ namespace Epsitec.Common.Drawing
 		public void CurveTo(double x_c, double y_c, double x, double y)
 		{
 			this.CreateOnTheFly ();
+			this.is_empty  = false;
 			this.has_curve = true;
 			AntiGrain.Path.Curve3 (this.agg_path, x_c, y_c, x, y);
 		}
 		
 		public void Close()
 		{
-			this.CreateOnTheFly ();
-			AntiGrain.Path.Close (this.agg_path);
+			if (! this.is_empty)
+			{
+				this.CreateOnTheFly ();
+				AntiGrain.Path.Close (this.agg_path);
+			}
 		}
 		
 		public void StartNewPath()
 		{
-			this.CreateOnTheFly ();
-			AntiGrain.Path.AddNewPath (this.agg_path);
+			if (! this.is_empty)
+			{
+				this.CreateOnTheFly ();
+				AntiGrain.Path.AddNewPath (this.agg_path);
+			}
 		}
 		
 		
@@ -103,6 +124,7 @@ namespace Epsitec.Common.Drawing
 		{
 			this.CreateOnTheFly ();
 			this.has_curve |= path.has_curve;
+			this.is_empty  &= path.is_empty;
 			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, approximation_scale, 0);
 		}
 		
@@ -110,6 +132,7 @@ namespace Epsitec.Common.Drawing
 		{
 			this.CreateOnTheFly ();
 			this.has_curve |= path.has_curve;
+			this.is_empty  &= path.is_empty;
 			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, approximation_scale, bold_width);
 		}
 		
@@ -117,6 +140,7 @@ namespace Epsitec.Common.Drawing
 		{
 			this.CreateOnTheFly ();
 			this.has_curve |= path.has_curve;
+			this.is_empty  &= path.is_empty;
 			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, 1, 0, 0, 1, 0, 0, approximation_scale, bold_width);
 		}
 		
@@ -134,6 +158,7 @@ namespace Epsitec.Common.Drawing
 		{
 			this.CreateOnTheFly ();
 			this.has_curve = true;
+			this.is_empty  = false;
 			AntiGrain.Path.AppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, 0);
 		}
 		
@@ -141,6 +166,7 @@ namespace Epsitec.Common.Drawing
 		{
 			this.CreateOnTheFly ();
 			this.has_curve = true;
+			this.is_empty  = false;
 			AntiGrain.Path.AppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, bold_width);
 		}
 		
@@ -177,43 +203,73 @@ namespace Epsitec.Common.Drawing
 		
 		public void ComputeBounds(out double x1, out double y1, out double x2, out double y2)
 		{
-			this.CreateOnTheFly ();
-			AntiGrain.Path.ComputeBounds (this.agg_path, out x1, out y1, out x2, out y2);
+			if (this.is_empty)
+			{
+				x1 = 0;
+				y1 = 0;
+				x2 = -1;
+				y2 = -1;
+			}
+			else
+			{
+				this.CreateOnTheFly ();
+				AntiGrain.Path.ComputeBounds (this.agg_path, out x1, out y1, out x2, out y2);
+			}
 		}
 		
 		public Rectangle ComputeBounds()
 		{
-			double x1, y1, x2, y2;
-			this.ComputeBounds (out x1, out y1, out x2, out y2);
-			return new Rectangle (x1, y1, x2-x1, y2-y1);
+			if (this.is_empty)
+			{
+				return Rectangle.Empty;
+			}
+			else
+			{
+				double x1, y1, x2, y2;
+				this.ComputeBounds (out x1, out y1, out x2, out y2);
+				return new Rectangle (x1, y1, x2-x1, y2-y1);
+			}
 		}
 		
 		
 		public void GetElements(out PathElement[] elements, out Point[] points)
 		{
-			this.CreateOnTheFly ();
-			
-			int n = AntiGrain.Path.ElemCount (this.agg_path);
-			
-			int[]    e = new int[n];
-			double[] x = new double[n];
-			double[] y = new double[n];
-			
-			AntiGrain.Path.ElemGet (this.agg_path, n, e, x, y);
-			
-			elements = new PathElement[n];
-			points   = new Point[n];
-			
-			for (int i = 0; i < n; i++)
+			if (this.is_empty)
 			{
-				elements[i] = (PathElement) e[i];
-				points[i]   = new Point (x[i], y[i]);
+				elements = new PathElement[0];
+				points   = new Point[0];
+			}
+			else
+			{
+				this.CreateOnTheFly ();
+				
+				int n = AntiGrain.Path.ElemCount (this.agg_path);
+				
+				int[]    e = new int[n];
+				double[] x = new double[n];
+				double[] y = new double[n];
+				
+				AntiGrain.Path.ElemGet (this.agg_path, n, e, x, y);
+				
+				elements = new PathElement[n];
+				points   = new Point[n];
+				
+				for (int i = 0; i < n; i++)
+				{
+					elements[i] = (PathElement) e[i];
+					points[i]   = new Point (x[i], y[i]);
+				}
 			}
 		}
 		
 
 		public override string ToString()
 		{
+			if (this.is_empty)
+			{
+				return "empty\r\n";
+			}
+			
 			PathElement[] elements;
 			Point[] points;
 			
@@ -284,6 +340,7 @@ namespace Epsitec.Common.Drawing
 			System.GC.SuppressFinalize (this);
 		}
 		
+		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -309,6 +366,7 @@ namespace Epsitec.Common.Drawing
 		
 		private System.IntPtr			agg_path;
 		private bool					has_curve = false;
+		private bool					is_empty = true;
 	}
 	
 	[System.Flags]
