@@ -1,3 +1,6 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -8,14 +11,20 @@ namespace Epsitec.Common.Widgets
 	{
 		public StaticText()
 		{
-			this.paintTextStyle = PaintTextStyle.StaticText;
+			this.TextBreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 		}
 		
 		public StaticText(Widget embedder) : this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
+		
 		public StaticText(string text) : this ()
+		{
+			this.Text = text;
+		}
+		
+		public StaticText(Widget embedder, string text) : this (embedder)
 		{
 			this.Text = text;
 		}
@@ -23,7 +32,6 @@ namespace Epsitec.Common.Widgets
 		
 		public override double						DefaultHeight
 		{
-			// Retourne la hauteur standard.
 			get
 			{
 				return this.DefaultFontHeight;
@@ -32,7 +40,6 @@ namespace Epsitec.Common.Widgets
 
 		public override Drawing.ContentAlignment	DefaultAlignment
 		{
-			// Retourne l'alignement par défaut d'un bouton.
 			get
 			{
 				return Drawing.ContentAlignment.MiddleLeft;
@@ -41,7 +48,6 @@ namespace Epsitec.Common.Widgets
 
 		public override Drawing.Size				PreferredSize
 		{
-			// Retourne les dimensions minimales pour représenter le texte.
 			get
 			{
 				return this.MapClientToParent (this.TextLayout.SingleLineSize);
@@ -63,34 +69,45 @@ namespace Epsitec.Common.Widgets
 		
 		public PaintTextStyle						PaintTextStyle
 		{
-			get { return this.paintTextStyle; }
-			set { this.paintTextStyle = value; }
+			get
+			{
+				return this.paint_text_style;
+			}
+			set
+			{
+				if (this.paint_text_style != value)
+				{
+					this.paint_text_style = value;
+					this.Invalidate ();
+				}
+			}
 		}
-
-
+		
+		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			// Dessine le texte.
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-
-			if ( this.TextLayout == null )  return;
-
+			
+			if (this.TextLayout == null)
+			{
+				return;
+			}
+			
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetState       state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point();
 			
-			if ( this.BackColor.IsVisible )
+			if (this.BackColor.IsVisible)
 			{
-				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.BackColor);
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (this.BackColor);
 			}
 			
-			this.TextLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
-			adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state, this.paintTextStyle, this.BackColor);
+			adorner.PaintGeneralTextLayout (graphics, pos, this.TextLayout, state, this.paint_text_style, this.BackColor);
 		}
 
 
-		protected PaintTextStyle					paintTextStyle;
+		protected PaintTextStyle					paint_text_style = PaintTextStyle.StaticText;
 	}
 	
 	public class StaticTextSmall : StaticText
@@ -109,6 +126,11 @@ namespace Epsitec.Common.Widgets
 		{
 			this.Text = text;
 		}
+		
+		public StaticTextSmall(Widget embedder, string text) : this (embedder)
+		{
+			this.Text = text;
+		}
 	}
 	
 	public class StaticTextLarge : StaticText
@@ -124,6 +146,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		public StaticTextLarge(string text) : this ()
+		{
+			this.Text = text;
+		}
+		
+		public StaticTextLarge(Widget embedder, string text) : this (embedder)
 		{
 			this.Text = text;
 		}
