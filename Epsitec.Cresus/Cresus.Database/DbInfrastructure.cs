@@ -64,6 +64,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public DbLogger							Logger
+		{
+			get
+			{
+				return this.logger;
+			}
+		}
+		
 		
 		public void CreateDatabase(DbAccess db_access)
 		{
@@ -1529,7 +1537,7 @@ namespace Epsitec.Cresus.Database
 			this.logger.DefineClientId (this.client_id);
 			this.logger.DefineLogId (log_key_id++);
 			
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID == 1);
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId == 1);
 			
 			//	Il faut commencer par finir d'initialiser les descriptions des types, parce
 			//	que les description des colonnes doivent y faire référence.
@@ -1586,7 +1594,7 @@ namespace Epsitec.Cresus.Database
 			this.logger.Attach (this, this.internal_tables[Tags.TableLog]);
 			this.logger.Insert (transaction, new DbLogger.Entry (1, this.client_id));
 			
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID == 1);
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId == 1);
 			System.Diagnostics.Debug.Assert (this.NextRowIdInTable (transaction, this.internal_tables[Tags.TableLog].InternalKey) == 2);
 		}
 		
@@ -1635,7 +1643,7 @@ namespace Epsitec.Cresus.Database
 		
 		protected void InsertTypeDefRow(DbTransaction transaction, DbType type)
 		{
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID > 0);
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
 			
 			DbTable type_def = this.internal_tables[Tags.TableTypeDef];
 			
@@ -1657,7 +1665,7 @@ namespace Epsitec.Cresus.Database
 		
 		protected void InsertEnumValueDefRow(DbTransaction transaction, DbType type, DbEnumValue value)
 		{
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID > 0);
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
 			
 			DbTable enum_def = this.internal_tables[Tags.TableEnumValDef];
 			
@@ -1680,7 +1688,7 @@ namespace Epsitec.Cresus.Database
 		
 		protected void InsertTableDefRow(DbTransaction transaction, DbTable table)
 		{
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID > 0);
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
 			
 			DbTable table_def = this.internal_tables[Tags.TableTableDef];
 			
@@ -1703,7 +1711,7 @@ namespace Epsitec.Cresus.Database
 		
 		protected void InsertColumnDefRow(DbTransaction transaction, DbTable table, DbColumn column)
 		{
-			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalID > 0);
+			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId > 0);
 			
 			DbTable column_def = this.internal_tables[Tags.TableColumnDef];
 			

@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 		
-		public long								LocalID
+		public long								LocalId
 		{
 			get
 			{
@@ -25,19 +25,27 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public int								ClientID
+		public int								ClientId
 		{
 			get
 			{
 				return (int) ((this.value / DbId.LocalRange) % DbId.ClientRange);
 			}
 		}
+		
+		public long								Value
+		{
+			get
+			{
+				return this;
+			}
+		}
 
 		
 		public static DbIdClass AnalyzeClass(DbId id)
 		{
-			long local_id  = id.LocalID;
-			int  client_id = id.ClientID;
+			long local_id  = id.LocalId;
+			int  client_id = id.ClientId;
 			
 			if ((id.value < DbId.MinimumValid) ||
 				(id.value > DbId.MaximumValid))
@@ -45,7 +53,7 @@ namespace Epsitec.Cresus.Database
 				return DbIdClass.Invalid;
 			}
 			
-			if (client_id == DbId.TempClientID)
+			if (client_id == DbId.TempClientId)
 			{
 				return DbIdClass.Temporary;
 			}
@@ -54,7 +62,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 		
-		public static DbId CreateID(long local_id, int client_id)
+		public static DbId CreateId(long local_id, int client_id)
 		{
 			System.Diagnostics.Debug.Assert (local_id >= 0);
 			System.Diagnostics.Debug.Assert (local_id < DbId.LocalRange);
@@ -64,7 +72,7 @@ namespace Epsitec.Cresus.Database
 			return new DbId (local_id + DbId.LocalRange * client_id);
 		}
 
-		public static DbId CreateTempID(long local_id)
+		public static DbId CreateTempId(long local_id)
 		{
 			System.Diagnostics.Debug.Assert (local_id >= 0);
 			System.Diagnostics.Debug.Assert (local_id < DbId.LocalRange);
@@ -141,13 +149,13 @@ namespace Epsitec.Cresus.Database
 		#endregion
 		
 		public const long						LocalRange		= 1000000000000;	//	10^12
-		public const long						ClientRange		= 1000000;			//	10^6
+		public const int						ClientRange		= 1000000;			//	10^6
 		
-		private const long						TempClientID	= DbId.ClientRange - 1;
+		public const int						TempClientId	= DbId.ClientRange - 1;
 		
 		public const long						MinimumValid	= 0;
 		public const long						MaximumValid	= DbId.LocalRange * DbId.ClientRange - 1;
-		public const long						MinimumTemp		= DbId.LocalRange * DbId.TempClientID;
+		public const long						MinimumTemp		= DbId.LocalRange * DbId.TempClientId;
 		public const long						MaximumTemp		= DbId.MinimumTemp + DbId.LocalRange - 1;
 		
 		private long							value;

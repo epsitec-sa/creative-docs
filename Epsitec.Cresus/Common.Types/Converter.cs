@@ -323,6 +323,22 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 		
+		public static bool Convert(object obj, out System.DateTime value)
+		{
+			if ((obj == null) || (obj is System.DBNull))
+			{
+				throw new System.NullReferenceException ("Cannot convert null to DateTime.");
+			}
+			
+			if (obj.GetType () == typeof (System.DateTime))
+			{
+				value = (System.DateTime) obj;
+				return true;
+			}
+			
+			throw new System.NotSupportedException (string.Format ("Type {0}: conversion not supported.", obj.GetType ().Name));
+		}
+		
 		
 		public static bool Convert(object obj, System.Type type, out object value)
 		{

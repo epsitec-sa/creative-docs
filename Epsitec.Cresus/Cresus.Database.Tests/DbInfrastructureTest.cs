@@ -88,6 +88,8 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
+				infrastructure.Logger.CreateTemporaryEntry (null);
+				
 				DbEnumValue[] values = new DbEnumValue[3];
 				
 				values[0] = new DbEnumValue (1, "M");		values[0].DefineAttributes ("capt=Monsieur");
@@ -135,6 +137,8 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
+				infrastructure.Logger.CreateTemporaryEntry (null);
+				
 				DbType db_type_1 = infrastructure.ResolveDbType (null, "Nom");
 				DbType db_type_2 = infrastructure.ResolveDbType (null, "NUPO");
 				DbType db_type_3 = infrastructure.ResolveDbType (null, "Titre");
@@ -160,6 +164,8 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
+				infrastructure.Logger.CreateTemporaryEntry (null);
+				
 				DbTable db_table1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
 				
 				DbType db_type_name  = infrastructure.CreateDbType ("Name", 80, false) as DbTypeString;
@@ -310,6 +316,33 @@ namespace Epsitec.Cresus.Database
 				infrastructure.UnregisterDbTable (null, db_table);
 			}
 		}
+		
+		[Test] public void Check12LoggerFind()
+		{
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
+			{
+				DbLogger.Entry[] entries = infrastructure.Logger.Find (null, DbId.MinimumTemp, DbId.MaximumTemp);
+				
+				foreach (DbLogger.Entry entry in entries)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("ID={1}:{0}, created at {2} - ticks = {3}", entry.Id.LocalId, entry.Id.ClientId, entry.DateTime, entry.DateTime.Ticks));
+				}
+			}
+		}
+		
+		[Test] public void Check13LoggerRemove()
+		{
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
+			{
+				Assertion.Assert (infrastructure.Logger.Remove (null, DbId.MinimumTemp + 2));
+				
+				infrastructure.Logger.RemoveRange (null, DbId.MinimumTemp, DbId.MinimumTemp + 3);
+				
+				Assertion.Assert (! infrastructure.Logger.Remove (null, DbId.MinimumTemp + 3));
+				Assertion.Assert (infrastructure.Logger.Remove (null, DbId.MinimumTemp + 4));
+			}
+		}
+		
 		
 		
 		#region Support Code
