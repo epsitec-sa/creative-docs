@@ -11,6 +11,8 @@ namespace Epsitec.Common.Widgets
 		{
 			this.tabButton = new TabButton(null);
 			this.tabButton.Alignment = Drawing.ContentAlignment.MiddleCenter;
+			
+			this.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 		}
 		
 		public TabPage(Widget embedder) : this()
@@ -18,7 +20,8 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 
-		public string TabTitle
+		
+		public string					TabTitle
 		{
 			get
 			{
@@ -31,7 +34,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Drawing.Rectangle TabBounds
+		public Drawing.Rectangle		TabBounds
 		{
 			get
 			{
@@ -44,7 +47,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Drawing.Size TabSize
+		public Drawing.Size				TabSize
 		{
 			get
 			{
@@ -54,7 +57,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public TabButton TabButton
+		public TabButton				TabButton
 		{
 			get
 			{
@@ -62,7 +65,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public TabBook Book
+		public TabBook					Book
 		{
 			get
 			{
@@ -71,7 +74,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Direction Direction
+		public Direction				Direction
 		{
 			get
 			{
@@ -85,7 +88,7 @@ namespace Epsitec.Common.Widgets
 				return book.Direction;
 			}
 		}
-		public int Rank
+		public int						Rank
 		{
 			get
 			{
@@ -96,7 +99,8 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.rank != value )
 				{
-					this.rank = value;
+					this.rank     = value;
+					this.TabIndex = this.rank;
 					this.OnRankChanged(System.EventArgs.Empty);
 				}
 			}
