@@ -91,11 +91,17 @@ namespace Epsitec.Common.Tests
 			double dx = root.Client.Width;
 			double dy = root.Client.Height;
 			
+			double sx = dx / 870.0;
+			double sy = dy / 360.0;
+			double s  = System.Math.Min (sx, sy);
+			
 			Font     font     = Font.GetFont ("Tahoma", "Regular");
 			double   size     = 9.0;
 			Color    black    = Color.FromBrightness (0);
 			Graphics graphics = e.Graphics;
 			string[] colors   = System.Enum.GetNames (typeof (System.Drawing.KnownColor));
+			
+			graphics.ScaleTransform (s, s, 0, 0);
 			
 			System.Array.Sort (colors);
 			
@@ -110,7 +116,7 @@ namespace Epsitec.Common.Tests
 						string color_name = colors[n++];
 						
 						double x = 5 + j * 20 * size;
-						double y = dy - 15 - i * (size + 1);
+						double y = 360.0 - 15 - i * (size + 1);
 						
 						graphics.AddText (x+50, y, color_name, font, size);
 						graphics.AddRectangle (x, y - 2, 45, size);
