@@ -454,8 +454,8 @@ namespace Epsitec.Cresus.Database
 			command.Transaction = db_abstraction.BeginTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
 
-			Assert.AreEqual (typeof (int),    data_set.Tables[0].Columns[0].DataType);
-			Assert.AreEqual (typeof (object), data_set.Tables[0].Columns[1].DataType);
+			Assert.AreEqual (typeof (int),          data_set.Tables[0].Columns[0].DataType);
+			Assert.AreEqual (typeof (System.Array), data_set.Tables[0].Columns[1].DataType);
 			
 			//	récupère l'objet de la première ligne, seconde colonne
 			
@@ -464,9 +464,9 @@ namespace Epsitec.Cresus.Database
 			System.Type blob_type  = blob_column.DataType;
 			
 			//	Hélas, on n'a pas un type exact pour la colonne ici... J'aurais bien aimé que le
-			//	provider retourne un type byte[] !
+			//	provider retourne un type byte[] ! Mais System.Array est déjà une bonne approximation.
 			
-			Assert.AreEqual (typeof (object), blob_type);
+			Assert.AreEqual (typeof (System.Array), blob_type);
 //-			Assert.AreEqual (11000, blob_column.MaxLength);
 			
 			DataRow     data_row  = data_table.Rows[0];
