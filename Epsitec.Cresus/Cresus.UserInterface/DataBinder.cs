@@ -32,15 +32,15 @@ namespace Epsitec.Cresus.UserInterface
 			get { return this.object_bundler; }
 		}
 		
-		public DataLayer.DataSet			DataSet
+		public DataLayer.DataStore			DataStore
 		{
-			get{ return this.root_data_set; }
+			get{ return this.data_store; }
 			set
 			{
-				if (this.root_data_set != value)
+				if (this.data_store != value)
 				{
 					this.Detach ();
-					this.root_data_set = value;
+					this.data_store = value;
 					this.Attach ();
 				}
 			}
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.UserInterface
 		
 		protected virtual void Attach()
 		{
-			if (this.root_data_set != null)
+			if (this.data_store != null)
 			{
 				//	S'il y a des objets qui n'ont pas été attachés (l'utilisateur
 				//	a appelé ObjectBundler.CreateFromBundle avant d'attacher le data
@@ -89,9 +89,9 @@ namespace Epsitec.Cresus.UserInterface
 		
 		protected virtual void Detach()
 		{
-			if (this.root_data_set != null)
+			if (this.data_store != null)
 			{
-				this.root_data_set = null;
+				this.data_store = null;
 			}		
 		}
 		
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.UserInterface
 		protected virtual void CreateBinding(object obj, string full_binding)
 		{
 			System.Diagnostics.Debug.Assert (this.CheckBindingName (full_binding));
-			System.Diagnostics.Debug.Assert (this.root_data_set != null);
+			System.Diagnostics.Debug.Assert (this.data_store != null);
 			
 			//	Etablit un lien entre l'objet qui appartient à l'interface graphique et
 			//	les données qui se trouvent dans le data set. La description du lien est
@@ -133,12 +133,8 @@ namespace Epsitec.Cresus.UserInterface
 				bind_tag = full_binding.Substring (pos_sep+1);
 			}
 			
-			DataLayer.DataRecord data_record = this.root_data_set.FindRecord (binding, DataLayer.DataVersion.Original);
+			Database.DbColumn db_column = this.data_store.FindDbColumn (binding);
 			
-			if (data_record == null)
-			{
-				throw new BinderException (string.Format ("Cannot bind object {0} to data '{1}'", obj.GetType ().Name, binding));
-			}
 			
 			//	Le binding peut se faire soit sur les données (nom#data), soit sur
 			//	d'autres champs, comme sur l'étiquette (nom#label) ou encore sur la
@@ -146,30 +142,30 @@ namespace Epsitec.Cresus.UserInterface
 			
 			switch (bind_tag)
 			{
-				case Tags.Data:			this.CreateDataBinding (obj, data_record, binding);			break;
-				case Tags.Caption:		this.CreateLabelBinding (obj, data_record, binding);		break;
-				case Tags.Description:	this.CreateDescriptionBinding (obj, data_record, binding);	break;
+				case Tags.Data:			this.CreateDataBinding (obj, db_column, binding);			break;
+				case Tags.Caption:		this.CreateCaptionBinding (obj, db_column, binding);		break;
+				case Tags.Description:	this.CreateDescriptionBinding (obj, db_column, binding);	break;
 				
 				default:
 					throw new BinderException (string.Format ("Unknown bind tag '{0}' used with data '{1}'", bind_tag, binding));
 			}
 		}
 		
-		protected virtual void CreateDataBinding(object obj, DataLayer.DataRecord data_record, string binding_path)
+		protected virtual void CreateDataBinding(object obj, Database.DbColumn db_column, string binding_path)
 		{
-			IBinder binder = BinderFactory.FindBinderForType (data_record.DataType);
+			IBinder binder = BinderFactory.FindBinderForType (db_column.Type);
 			
 			if (binder == null)
 			{
 				throw new BinderException (string.Format ("No binder for data '{1}' on object {0}", obj.GetType ().Name, binding_path));
 			}
 			
-			binder.CreateBinding (obj, this.DataSet, binding_path, data_record);
+			binder.CreateBinding (obj, this.DataStore, binding_path, db_column);
 		}
 		
-		protected virtual void CreateLabelBinding(object obj, DataLayer.DataRecord data_record, string binding_path)
+		protected virtual void CreateCaptionBinding(object obj, Database.DbColumn db_column, string binding_path)
 		{
-			string text = data_record.UserLabel;
+			string text = db_column.Caption;
 			
 			if (text != null)
 			{
@@ -182,9 +178,9 @@ namespace Epsitec.Cresus.UserInterface
 			}
 		}
 		
-		protected virtual void CreateDescriptionBinding(object obj, DataLayer.DataRecord data_record, string binding_path)
+		protected virtual void CreateDescriptionBinding(object obj, Database.DbColumn db_column, string binding_path)
 		{
-			string text = data_record.UserDescription;
+			string text = db_column.Description;
 			
 			if (text != null)
 			{
@@ -218,7 +214,7 @@ namespace Epsitec.Cresus.UserInterface
 						
 						if (this.CheckBindingName (bind_arg))
 						{
-							if (this.root_data_set != null)
+							if (this.data_store != null)
 							{
 								this.CreateBinding (obj, bind_arg);
 							}
@@ -243,6 +239,6 @@ namespace Epsitec.Cresus.UserInterface
 		
 		protected ObjectBundler					object_bundler;
 		protected System.Collections.ArrayList	object_list;
-		protected DataLayer.DataSet				root_data_set;
+		protected DataLayer.DataStore			data_store;
 	}
 }
