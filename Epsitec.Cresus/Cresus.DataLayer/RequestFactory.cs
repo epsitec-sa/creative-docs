@@ -9,12 +9,13 @@ namespace Epsitec.Cresus.DataLayer
 	/// La classe RequestFactory permet de construire les requêtes correspondant
 	/// aux modifications stockées dans un DataSet.
 	/// </summary>
-	public class RequestFactory
+	public class RequestFactory : System.IDisposable
 	{
 		public RequestFactory()
 		{
 			this.requests = new System.Collections.ArrayList ();
 		}
+		
 		
 		public void GenerateRequests(System.Data.DataSet data_set)
 		{
@@ -48,28 +49,84 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 		
-		public void GenerateInsertRowRequest(System.Data.DataRow row, int row_index, DynamicFieldCollection dynamic, FieldMatchResult[] matches)
+		
+		public Requests.Group CreateGroup()
+		{
+			//	Crée un objet "groupe de requêtes" contenant toutes les requêtes individuelles
+			//	générées au moyen d'appels à GenerateRequests.
+			
+			Requests.Group group = new Requests.Group ();
+			
+			group.AddRange (this.requests);
+			
+			return group;
+		}
+		
+		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+		}
+		#endregion
+		
+		protected void GenerateInsertRowRequest(System.Data.DataRow row, int row_index, DynamicFieldCollection dynamic, FieldMatchResult[] matches)
 		{
 			//	Crée une requête d'insertion pour la ligne spécifiée.
 			
 			if ((dynamic == null) ||
 				(matches[row_index] == FieldMatchResult.Zero))
 			{
-				//	La ligne ne contient aucun champ dynamique. On crée par conséquent 
+				//	La ligne ne contient aucun champ dynamique. On crée par conséquent une
+				//	requête de création de ligne statique :
+				
 				this.requests.Add (new Requests.InsertStaticData (row));
 			}
 			else
 			{
+				//	TODO: créer une ligne comprenant des données dynamiques
+				
+				throw new System.NotImplementedException ("Dynamic fields not supported.");
 			}
 		}
 		
-		public void GenerateUpdateRowRequest(System.Data.DataRow row, int row_index, DynamicFieldCollection dynamic, FieldMatchResult[] matches)
+		protected void GenerateUpdateRowRequest(System.Data.DataRow row, int row_index, DynamicFieldCollection dynamic, FieldMatchResult[] matches)
 		{
+			//	Crée une requête de mise à jour pour la ligne spécifiée.
+			
+			if ((dynamic == null) ||
+				(matches[row_index] == FieldMatchResult.Zero))
+			{
+				//	La ligne ne contient aucun champ dynamique. On crée par conséquent une
+				//	requête de mise à jour de ligne statique :
+				
+				this.requests.Add (new Requests.UpdateStaticData (row, Requests.UpdateMode.Changed));
+			}
+			else
+			{
+				//	TODO: mettre à jour une ligne comprenant des données dynamiques
+				
+				throw new System.NotImplementedException ("Dynamic fields not supported.");
+			}
 		}
 		
-		public void GenerateRemoveRowRequest(System.Data.DataRow row)
+		protected void GenerateRemoveRowRequest(System.Data.DataRow row)
 		{
+			//	Crée une requête de suppression pour la ligne spécifiée.
+			
+			throw new System.NotImplementedException ("Row removal not supported.");
 		}
+		
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.requests.Clear ();
+				this.requests = null;
+			}
+		}
+		
 		
 		private System.Collections.ArrayList	requests;
 	}
