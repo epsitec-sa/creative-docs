@@ -92,12 +92,12 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateLayoutSize();
 			
-			if ( this.textLayout != null )
+			if ( this.TextLayout != null )
 			{
 				double dx = this.Client.Width - HeaderButton.Margin*2;
 				double dy = this.Client.Height;
-				this.textLayout.Alignment = this.Alignment;
-				this.textLayout.LayoutSize = new Drawing.Size(dx, dy);
+				this.TextLayout.Alignment = this.Alignment;
+				this.TextLayout.LayoutSize = new Drawing.Size(dx, dy);
 			}
 		}
 
@@ -127,11 +127,11 @@ namespace Epsitec.Common.Widgets
 			}
 			adorner.PaintHeaderBackground(graphics, rect, state, dir);
 
-			if ( this.textLayout != null )
+			if ( this.TextLayout != null )
 			{
 				pos.X += HeaderButton.Margin;
-				this.textLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
-				adorner.PaintButtonTextLayout(graphics, pos, this.textLayout, state, ButtonStyle.Flat);
+				this.TextLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
+				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, ButtonStyle.Flat);
 			}
 
 			if ( this.sortMode != 0 )  // triangle ?

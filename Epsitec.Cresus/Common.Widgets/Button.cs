@@ -77,7 +77,7 @@ namespace Epsitec.Common.Widgets
 				state &= ~WidgetState.Engaged;
 			}
 			adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
-			adorner.PaintButtonTextLayout(graphics, pos, this.textLayout, state, this.buttonStyle);
+			adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
 		}
 		
 		
