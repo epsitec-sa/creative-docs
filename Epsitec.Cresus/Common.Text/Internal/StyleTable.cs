@@ -16,6 +16,15 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public long								Version
+		{
+			get
+			{
+				return this.version;
+			}
+		}
+		
+		
 		public void Attach(ref ulong code, Styles.SimpleStyle style)
 		{
 			//	Attache un style au caractère passé en entrée.
@@ -258,6 +267,8 @@ namespace Epsitec.Common.Text.Internal
 				this.styles = new System.Collections.ArrayList ();
 			}
 			
+			this.version++;
+			
 			for (int i = 0; i < this.styles.Count; i++)
 			{
 				if (this.styles[i] == null)
@@ -278,7 +289,9 @@ namespace Epsitec.Common.Text.Internal
 			
 			Debug.Assert.IsTrue (style.StyleIndex > 0);
 			Debug.Assert.IsTrue (this.styles[style.StyleIndex-1] == style);
-
+			
+			this.version++;
+			
 			//	Retire de la liste, sans pour autant réorganiser la liste
 			//	elle-même :
 			
@@ -369,5 +382,6 @@ namespace Epsitec.Common.Text.Internal
 		public delegate bool StyleMatcher(Styles.SimpleStyle style);
 		
 		private System.Collections.ArrayList	styles;
+		private long							version;
 	}
 }

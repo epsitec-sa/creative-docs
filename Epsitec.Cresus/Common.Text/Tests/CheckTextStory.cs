@@ -39,6 +39,17 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (font.FontIdentity.InvariantFaceName == "Arial");
 			Debug.Assert.IsTrue (font.FontIdentity.InvariantStyleName == "Regular");
 			Debug.Assert.IsTrue (font_size == 12.0);
+			
+			System.Diagnostics.Trace.WriteLine ("Timing Context.GetFont :");
+			for (int i = 0; i < 1000000; i++)
+			{
+				story.Context.GetFont (text[1], out font, out font_size);
+			}
+			System.Diagnostics.Trace.WriteLine ("Done");
+			
+			Debug.Assert.IsTrue (font.FontIdentity.InvariantFaceName == "Arial");
+			Debug.Assert.IsTrue (font.FontIdentity.InvariantStyleName == "Regular");
+			Debug.Assert.IsTrue (font_size == 12.0);
 		}
 		
 		private static void TestInsertUndoRedo()

@@ -53,6 +53,19 @@ namespace Epsitec.Common.Text
 		
 		public void GetFont(ulong code, out OpenType.Font font, out double font_size)
 		{
+			code &= 0xffffffff00000000ul;
+			
+			long current_style_version = this.style_list.InternalStyleTable.Version;
+			
+			if ((this.get_font_last_style_version == current_style_version) &&
+				(this.get_font_last_code == code))
+			{
+//				font      = this.get_font_last_font;
+//				font_size = this.get_font_last_font_size;
+//				
+//				return;
+			}
+			
 			Styles.SimpleStyle style = this.style_list[code];
 			
 			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
@@ -74,6 +87,11 @@ namespace Epsitec.Common.Text
 				font = this.font_collection.CreateFont (font_face, font_style);
 				this.font_cache[font_full] = font;
 			}
+			
+			this.get_font_last_style_version = current_style_version;
+			this.get_font_last_code          = code;
+			this.get_font_last_font          = font;
+			this.get_font_last_font_size     = font_size;
 		}
 		
 		
@@ -117,5 +135,10 @@ namespace Epsitec.Common.Text
 		private Markers							markers;
 		private OpenType.FontCollection			font_collection;
 		private System.Collections.Hashtable	font_cache;
+		
+		private long							get_font_last_style_version;
+		private ulong							get_font_last_code;
+		private OpenType.Font					get_font_last_font;
+		private double							get_font_last_font_size;
 	}
 }
