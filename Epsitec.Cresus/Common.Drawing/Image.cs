@@ -9,6 +9,8 @@ namespace Epsitec.Common.Drawing
 		{
 			this.size   = Size.Empty;
 			this.origin = new Point ();
+			this.dpi_x  = 96;
+			this.dpi_y  = 96;
 			
 			this.unique_id = System.Threading.Interlocked.Increment (ref Image.unique_id_seed);
 		}
@@ -33,6 +35,7 @@ namespace Epsitec.Common.Drawing
 			
 			return null;
 		}
+		
 		
 		public virtual Size				Size
 		{
@@ -76,6 +79,22 @@ namespace Epsitec.Common.Drawing
 			get { return this.unique_id; }
 		}
 		
+		public double					DpiX
+		{
+			get
+			{
+				return this.dpi_x;
+			}
+		}
+		
+		public double					DpiY
+		{
+			get
+			{
+				return this.dpi_y;
+			}
+		}
+		
 		
 		public static readonly Image	Empty;
 		
@@ -83,6 +102,7 @@ namespace Epsitec.Common.Drawing
 		{
 			this.Dispose (false);
 		}
+		
 		
 		#region IDisposable Members
 		public void Dispose()
@@ -108,6 +128,8 @@ namespace Epsitec.Common.Drawing
 		
 		
 		internal bool					is_origin_defined;
+		internal double					dpi_x;
+		internal double					dpi_y;
 		
 		protected Size					size;
 		protected Point					origin;
