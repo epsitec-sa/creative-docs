@@ -375,7 +375,7 @@ namespace Epsitec.Common.Drawing
 			i = a;
 			
 			if ((y < System.Math.Min (a.Y, b.Y)) ||
-				(y > System.Math.Max (a.Y, b.Y)))
+				(y >= System.Math.Max (a.Y, b.Y)))
 			{
 				return false;
 			}
