@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Database
 			db_table_a.Columns.Add (infrastructure.CreateColumn ("Nom", db_type_name));
 			db_table_a.Columns.Add (infrastructure.CreateColumn ("Prenom", db_type_name));
 			
-			db_table_b.Columns.AddRange (infrastructure.CreateRefColumns ("Personne", "Personnes", DbKeyMatchMode.ExactIdRevision));
+			db_table_b.Columns.AddRange (infrastructure.CreateRefColumns ("Personne", "Personnes", DbKeyMatchMode.ExactIdRevision, Nullable.Yes));
 			db_table_b.Columns.Add (infrastructure.CreateColumn ("Ville", db_type_name));
 			
 			Assertion.AssertEquals ("Personnes", db_table_b.Columns[3].ParentTableName);
@@ -76,31 +76,46 @@ namespace Epsitec.Cresus.Database
 			System.Data.DataTable ado_table_a = command.DataSet.Tables["Personnes"];
 			System.Data.DataTable ado_table_b = command.DataSet.Tables["Domiciles"];
 			
-			ado_table_a.Rows.Add (new object[] { 1, 0, 0, "Arnaud",   "Pierre" });
-			ado_table_a.Rows.Add (new object[] { 2, 0, 0, "Dumoulin", "Denis" });
-			ado_table_a.Rows.Add (new object[] { 3, 0, 0, "Roux",     "Daniel" });
+			System.Data.DataRow row_p1, row_p2, row_p3;
+			System.Data.DataRow row_d1, row_d2, row_d3, row_d4;
 			
-			ado_table_b.Rows.Add (new object[] { 1, 0, 0, 1, 0, "Yverdon-les-Bains" });
-			ado_table_b.Rows.Add (new object[] { 2, 0, 0, 2, 0, "Morges" });
-			ado_table_b.Rows.Add (new object[] { 3, 0, 0, 2, 0, "Saverne" });
-			ado_table_b.Rows.Add (new object[] { 4, 0, 0, 3, 0, "Crissier" });
+			command.CreateNewRow ("Personnes", out row_p1);
+			command.CreateNewRow ("Personnes", out row_p2);
+			command.CreateNewRow ("Personnes", out row_p3);
+			command.CreateNewRow ("Domiciles", out row_d1);
+			command.CreateNewRow ("Domiciles", out row_d2);
+			command.CreateNewRow ("Domiciles", out row_d3);
+			command.CreateNewRow ("Domiciles", out row_d4);
+			
+			row_p1.BeginEdit (); row_p1["Nom"] = "Arnaud";   row_p1["Prenom"] = "Pierre"; row_p1.EndEdit ();
+			row_p2.BeginEdit (); row_p2["Nom"] = "Dumoulin"; row_p2["Prenom"] = "Denis";  row_p2.EndEdit ();
+			row_p3.BeginEdit (); row_p3["Nom"] = "Roux";     row_p3["Prenom"] = "Daniel"; row_p3.EndEdit ();
+			
+			row_d1.BeginEdit (); row_d1["Ville"] = "Yverdon";  row_d1["Personne (ID)"] = row_p1["CR_ID"]; row_d1["Personne (REV)"] = row_p1["CR_REV"]; row_d1.EndEdit ();
+			row_d2.BeginEdit (); row_d2["Ville"] = "Morges";   row_d2["Personne (ID)"] = row_p2["CR_ID"]; row_d2["Personne (REV)"] = row_p2["CR_REV"]; row_d2.EndEdit ();
+			row_d3.BeginEdit (); row_d3["Ville"] = "Saverne";  row_d3["Personne (ID)"] = row_p2["CR_ID"]; row_d3["Personne (REV)"] = row_p2["CR_REV"]; row_d3.EndEdit ();
+			row_d4.BeginEdit (); row_d4["Ville"] = "Crissier"; row_d4["Personne (ID)"] = row_p3["CR_ID"]; row_d4["Personne (REV)"] = row_p3["CR_REV"]; row_d4.EndEdit ();
 			
 			DbInfrastructureTest.DisplayDataSet (infrastructure, ado_table_a.TableName, ado_table_a);
 			DbInfrastructureTest.DisplayDataSet (infrastructure, ado_table_b.TableName, ado_table_b);
 			
 			using (DbTransaction transaction = infrastructure.BeginTransaction ())
 			{
+				command.UpdateRealIds (transaction);
 				command.UpdateTables (transaction);
 				transaction.Commit ();
 			}
 			
-			Assertion.AssertEquals (2, ado_table_b.Rows[1]["Personne (ID)"]);
-			Assertion.AssertEquals (2, ado_table_b.Rows[2]["Personne (ID)"]);
+			Assertion.AssertEquals (1, ado_table_a.Rows[1]["CR_ID"]);
+			Assertion.AssertEquals (1, ado_table_b.Rows[1]["Personne (ID)"]);
+			Assertion.AssertEquals (1, ado_table_b.Rows[2]["Personne (ID)"]);
 			
-			ado_table_a.Rows[1]["CR_ID"] = 4;
+			ado_table_a.Rows[1]["CR_ID"] = 100;
 			
-			Assertion.AssertEquals (4, ado_table_b.Rows[1]["Personne (ID)"]);
-			Assertion.AssertEquals (4, ado_table_b.Rows[2]["Personne (ID)"]);
+			Assertion.AssertEquals (100, ado_table_b.Rows[1]["Personne (ID)"]);
+			Assertion.AssertEquals (100, ado_table_b.Rows[2]["Personne (ID)"]);
+			
+			infrastructure.Dispose ();
 		}
 		
 		[Test] public void Check02CreateEmptyDataSet()
@@ -133,11 +148,6 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals ("Ville", db_table_b.Columns[5].Name);
 			Assertion.AssertEquals (db_type_name.InternalKey, db_table_b.Columns[5].Type.InternalKey);
 			
-//			DbRichCommand command = new DbRichCommand ();
-//			
-//			command.Tables.Add (db_table_a);
-//			command.Tables.Add (db_table_b);
-//			command.CreateEmptyDataSet (infrastructure);
 			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, db_table_a, db_table_b);
 			
 			foreach (System.Data.DataRelation relation in command.DataSet.Relations)
@@ -147,6 +157,8 @@ namespace Epsitec.Cresus.Database
 					System.Console.Out.WriteLine ("{0}.{1} -> {2}.{3}", relation.ChildTable.TableName, relation.ChildColumns[i].ColumnName, relation.ParentTable.TableName, relation.ParentColumns[i].ColumnName);
 				}
 			}
+			
+			infrastructure.Dispose ();
 		}
 		
 		[Test] public void Check03CreateNewRow()
@@ -162,9 +174,9 @@ namespace Epsitec.Cresus.Database
 			
 			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, db_table_a, db_table_b);
 			
-			command.CreateNewRow ("Personnes", out row_1);
-			command.CreateNewRow ("Personnes", out row_2);
-			command.CreateNewRow ("Domiciles", out row_3);
+			command.CreateNewRow ("Personnes", out row_1); row_1["Nom"] = "Toto"; row_1["Prenom"] = "Foo";
+			command.CreateNewRow ("Personnes", out row_2); row_2["Nom"] = "Titi"; row_2["Prenom"] = "Bar";
+			command.CreateNewRow ("Domiciles", out row_3); row_3["Ville"] = System.DBNull.Value; // "New York";
 			
 			DbKey k1 = new DbKey (row_1);
 			DbKey k2 = new DbKey (row_2);
@@ -180,9 +192,12 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbTransaction transaction = infrastructure.BeginTransaction ())
 			{
+				command.UpdateRealIds (transaction);
 				command.UpdateTables (transaction);
-				transaction.Commit ();
+				transaction.Rollback ();
 			}
+			
+			infrastructure.Dispose ();
 		}
 		
 		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckInternalFillDataSetEx()
@@ -191,6 +206,8 @@ namespace Epsitec.Cresus.Database
 			DbRichCommand    command        = new DbRichCommand (infrastructure);
 			
 			command.InternalFillDataSet (DbAccess.Empty, null, null);
+			
+			infrastructure.Dispose ();
 		}
 		
 		[Test] public void Check99UnregisterDbTables()
@@ -202,6 +219,8 @@ namespace Epsitec.Cresus.Database
 			
 			infrastructure.UnregisterDbTable (null, db_table_a);
 			infrastructure.UnregisterDbTable (null, db_table_b);
+			
+			infrastructure.Dispose ();
 		}
 	}
 }

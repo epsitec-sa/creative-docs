@@ -352,7 +352,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		protected static int			fb_port				= 3050;
 		protected static byte			fb_dialect			= 3;
 		protected static short			fb_page_size		= 8192;
-		protected static int			fb_server_type		= 1;
+		protected static int			fb_server_type		= 0; // 1 = local, 0 = server
 		protected static string			fb_charset			= "UNICODE_FSS";
 		protected static string			fb_root_path		= @"C:\Program Files\Firebird15";
 		protected static string			fb_root_db_path		= @"C:\Program Files\Firebird15\Data\Epsitec";

@@ -78,6 +78,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public bool								IsTemporary
+		{
+			get
+			{
+				return DbKey.CheckTemporaryId (this.id);
+			}
+		}
+		
 		
 		public static long CreateTemporaryId()
 		{

@@ -184,6 +184,10 @@ namespace Epsitec.Cresus.Database
 		
 		public void UpdateTables(DbTransaction transaction)
 		{
+			//	Sauve les données contenues du DataSet dans la base de données;
+			//	pour cela, il faut que DbRichCommand ait été rempli correctement
+			//	au moyen de DbInfrastructure.Execute.
+			
 			if (transaction == null)
 			{
 				throw new DbMissingTransactionException (this.db_access);
@@ -207,6 +211,8 @@ namespace Epsitec.Cresus.Database
 		
 		public void UpdateRealIds(DbTransaction transaction)
 		{
+			//	Met à jour les IDs des nouvelles lignes des diverses tables.
+			
 			if (transaction == null)
 			{
 				throw new DbMissingTransactionException (this.db_access);
@@ -217,7 +223,46 @@ namespace Epsitec.Cresus.Database
 			
 			try
 			{
-				//	TODO: ...
+				foreach (System.Data.DataTable table in this.data_set.Tables)
+				{
+					DbKey table_key = this.infrastructure.FindDbTableKey (transaction, table.TableName);
+					
+					int n = table.Rows.Count;
+					int m = 0;
+					
+					for (int i = 0; i < n; i++)
+					{
+						DbKey key = new DbKey (table.Rows[i]);
+						
+						if (key.IsTemporary)
+						{
+							m++;
+						}
+					}
+					
+					if (m > 0)
+					{
+						long id = this.infrastructure.NewRowIdInTable (transaction, table_key, m);
+						
+						for (int i = 0; i < n; i++)
+						{
+							System.Data.DataRow data_row = table.Rows[i];
+							
+							DbKey key = new DbKey (data_row);
+							
+							if (key.IsTemporary)
+							{
+								key = new DbKey (id++);
+								
+								data_row.BeginEdit ();
+								data_row[Tags.ColumnId]       = key.Id;
+								data_row[Tags.ColumnRevision] = key.Revision;
+								data_row[Tags.ColumnStatus]   = key.IntStatus;
+								data_row.EndEdit ();
+							}
+						}
+					}
+				}
 			}
 			finally
 			{

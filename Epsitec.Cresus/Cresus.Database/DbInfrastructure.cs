@@ -324,6 +324,11 @@ namespace Epsitec.Cresus.Database
 		
 		public DbColumn[] CreateRefColumns(string column_name, string parent_table_name, DbKeyMatchMode match_mode)
 		{
+			return this.CreateRefColumns (column_name, parent_table_name, match_mode, Nullable.Undefined);
+		}
+		
+		public DbColumn[] CreateRefColumns(string column_name, string parent_table_name, DbKeyMatchMode match_mode, Nullable nullable)
+		{
 			//	Crée la ou les colonnes nécessaires à la définition d'une référence à une autre
 			//	table.
 			
@@ -335,19 +340,19 @@ namespace Epsitec.Cresus.Database
 				case DbKeyMatchMode.SimpleId:
 					type_id = this.internal_types[Tags.TypeKeyId];
 					
-					return new DbColumn[] { DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefSimpleId, type_id) };
+					return new DbColumn[] { DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefSimpleId, type_id, nullable) };
 				
 				case DbKeyMatchMode.LiveId:
 					type_id = this.internal_types[Tags.TypeKeyId];
 					
-					return new DbColumn[] { DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefLiveId, type_id) };
+					return new DbColumn[] { DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefLiveId, type_id, nullable) };
 				
 				case DbKeyMatchMode.ExactIdRevision:
 					type_id  = this.internal_types[Tags.TypeKeyId];
 					type_rev = this.internal_types[Tags.TypeKeyRevision];
 					
-					return new DbColumn[] { DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefTupleId, type_id),
-						/**/				DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefTupleRevision, type_rev) };
+					return new DbColumn[] { DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefTupleId, type_id, nullable),
+						/**/				DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefTupleRevision, type_rev, nullable) };
 			}
 			
 			return null;
@@ -1866,6 +1871,9 @@ namespace Epsitec.Cresus.Database
 				if (this.db_abstraction != null)
 				{
 					this.db_abstraction.Dispose ();
+					
+					System.Diagnostics.Debug.Assert (this.db_abstraction.IsConnectionOpen == false);
+					
 					this.db_abstraction = null;
 					this.sql_builder = null;
 					this.sql_engine = null;
