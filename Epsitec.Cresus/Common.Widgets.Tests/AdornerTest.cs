@@ -10,7 +10,6 @@ namespace Epsitec.Common.Widgets
 		[SetUp] public void Initialise()
 		{
 			Epsitec.Common.UI.Engine.Initialise ();
-			Epsitec.Common.Pictogram.Engine.Initialise ();
 			Epsitec.Common.Document.Engine.Initialise ();
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
 		}
@@ -60,7 +59,6 @@ namespace Epsitec.Common.Widgets
 		
 		private Window CreateAdornerWidgets()
 		{
-			Pictogram.Engine.Initialise();
 			Document.Engine.Initialise ();
 
 			Window window = new Window();
@@ -983,7 +981,6 @@ namespace Epsitec.Common.Widgets
 
 		private Window CreateTextRuler()
 		{
-			Pictogram.Engine.Initialise();
 			Document.Engine.Initialise ();
 			Window window = new Window();
 			

@@ -59,23 +59,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.Implementat
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Pictogram", "Common.Pictogram\Common.Pictogram.csproj", "{1922B387-70D5-407A-9718-B991404D436C}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Icons", "App.IconEditor\App.Icons.csproj", "{2FD3B557-9C1D-472E-A634-EA0338CA6F67}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Dialogs", "Common.Dialogs\Common.Dialogs.csproj", "{560DFD49-3052-4F41-A4C3-6216E6135DC9}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Dialogs.Tests", "Common.Dialogs.Tests\Common.Dialogs.Tests.csproj", "{867C60BD-6537-489D-8FE5-57D171496008}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Pictogram.Tests", "Common.Pictogram.Tests\Common.Pictogram.Tests.csproj", "{01477BAD-9EB1-4FF1-8793-3B9300BD9340}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -253,14 +241,6 @@ Global
 		{C757AD58-605D-4480-BC2E-03E8076368B2}.Debug.Build.0 = Debug|.NET
 		{C757AD58-605D-4480-BC2E-03E8076368B2}.Release.ActiveCfg = Release|.NET
 		{C757AD58-605D-4480-BC2E-03E8076368B2}.Release.Build.0 = Release|.NET
-		{1922B387-70D5-407A-9718-B991404D436C}.Debug.ActiveCfg = Debug|.NET
-		{1922B387-70D5-407A-9718-B991404D436C}.Debug.Build.0 = Debug|.NET
-		{1922B387-70D5-407A-9718-B991404D436C}.Release.ActiveCfg = Release|.NET
-		{1922B387-70D5-407A-9718-B991404D436C}.Release.Build.0 = Release|.NET
-		{2FD3B557-9C1D-472E-A634-EA0338CA6F67}.Debug.ActiveCfg = Debug|.NET
-		{2FD3B557-9C1D-472E-A634-EA0338CA6F67}.Debug.Build.0 = Debug|.NET
-		{2FD3B557-9C1D-472E-A634-EA0338CA6F67}.Release.ActiveCfg = Release|.NET
-		{2FD3B557-9C1D-472E-A634-EA0338CA6F67}.Release.Build.0 = Release|.NET
 		{560DFD49-3052-4F41-A4C3-6216E6135DC9}.Debug.ActiveCfg = Debug|.NET
 		{560DFD49-3052-4F41-A4C3-6216E6135DC9}.Debug.Build.0 = Debug|.NET
 		{560DFD49-3052-4F41-A4C3-6216E6135DC9}.Release.ActiveCfg = Release|.NET
@@ -269,10 +249,6 @@ Global
 		{867C60BD-6537-489D-8FE5-57D171496008}.Debug.Build.0 = Debug|.NET
 		{867C60BD-6537-489D-8FE5-57D171496008}.Release.ActiveCfg = Release|.NET
 		{867C60BD-6537-489D-8FE5-57D171496008}.Release.Build.0 = Release|.NET
-		{01477BAD-9EB1-4FF1-8793-3B9300BD9340}.Debug.ActiveCfg = Debug|.NET
-		{01477BAD-9EB1-4FF1-8793-3B9300BD9340}.Debug.Build.0 = Debug|.NET
-		{01477BAD-9EB1-4FF1-8793-3B9300BD9340}.Release.ActiveCfg = Release|.NET
-		{01477BAD-9EB1-4FF1-8793-3B9300BD9340}.Release.Build.0 = Release|.NET
 		{55C3166C-C975-4147-91B1-9A57E4F48538}.Debug.ActiveCfg = Debug|.NET
 		{55C3166C-C975-4147-91B1-9A57E4F48538}.Debug.Build.0 = Debug|.NET
 		{55C3166C-C975-4147-91B1-9A57E4F48538}.Release.ActiveCfg = Release|.NET

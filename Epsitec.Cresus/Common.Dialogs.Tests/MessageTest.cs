@@ -9,7 +9,6 @@ namespace Epsitec.Common.Dialogs
 		[SetUp] public void Initialise()
 		{
 			Common.Widgets.Widget.Initialise ();
-			Common.Pictogram.Engine.Initialise ();
 			Common.Document.Engine.Initialise ();
 			Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
 		}

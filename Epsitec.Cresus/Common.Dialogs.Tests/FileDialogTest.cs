@@ -1,7 +1,6 @@
 using NUnit.Framework;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
-using Epsitec.Common.Pictogram;
 
 namespace Epsitec.Common.Dialogs
 {
@@ -9,7 +8,7 @@ namespace Epsitec.Common.Dialogs
 	{
 		[Test] public void CheckApplication()
 		{
-			Engine.Initialise();
+			Epsitec.Common.Document.Engine.Initialise();
 
 			Window window = new Window();
 			

@@ -90,11 +90,6 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "Common.Pictogram"
-                    Project = "{1922B387-70D5-407A-9718-B991404D436C}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
                     Name = "Common.Script"
                     Project = "{6CFA7609-E5A8-4B9D-B174-BE1CC57A6954}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"

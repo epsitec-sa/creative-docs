@@ -377,7 +377,7 @@ namespace Epsitec.Common.Drawing
 			y -= size;
 			
 			
-			for (int i = 0; i < 64; i += 4)
+			for (int i = 4; i < 64; i += 4)
 			{
 				e.Graphics.Rasterizer.AddGlyph (font, i+0, x + 0, y, size);
 				e.Graphics.Rasterizer.AddGlyph (font, i+1, x + 64, y, size);
