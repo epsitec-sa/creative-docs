@@ -16,6 +16,8 @@ namespace Epsitec.Cresus.Database
 	{
 		public DbInfrastructure()
 		{
+			this.localisations = new string[1] { "" };
+			
 			this.InitialiseNumDefs ();
 			this.InitialiseStrTypes ();
 		}
@@ -117,6 +119,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		
 		public DbTable ReadDbTableMeta(string table_name)
 		{
 			SqlSelect query = new SqlSelect ();
@@ -168,61 +171,73 @@ namespace Epsitec.Cresus.Database
 			return null;
 		}
 		
+		
 		public DbType ResolveType(DbKey type_ref)
+		{
+			lock (this.cache_db_types)
+			{
+				DbType type = this.cache_db_types[type_ref];
+				if (type == null)
+				{
+					type = this.LoadType (type_ref);
+					this.cache_db_types[type_ref] = type;
+				}
+				return type;
+			}
+		}
+		
+		public DbType LoadType(DbKey type_ref)
 		{
 			SqlSelect query = new SqlSelect ();
 			
 			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TYPE", DbColumn.TagName));
 			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TYPE", DbColumn.TagInfoXml));
-//			query.Fields.Add ("E_ID",   SqlField.CreateName ("T_ENUM", DbColumn.TagId));
-//			query.Fields.Add ("E_NAME", SqlField.CreateName ("T_ENUM", DbColumn.TagName));
+			
+			this.AddLocalisedColumns (query, "T_TYPE", DbColumn.TagCaption);
+			this.AddLocalisedColumns (query, "T_TYPE", DbColumn.TagDescription);
 			
 			query.Tables.Add ("T_TYPE", SqlField.CreateName (DbTable.TagTypeDef));
-//			query.Tables.Add ("T_ENUM", SqlField.CreateName (DbTable.TagEnumValDef));
+			
+			//	Cherche la ligne de la table dont 'CR_ID = type_ref' en ne considérant que
+			//	l'ID et dont la révision = 0.
 			
 			this.AddKeyExtraction (query, type_ref, "T_TYPE", DbKeyMatchMode.LiveId);
 			
 			this.sql_builder.SelectData (query);
 			
-			System.Data.DataSet   data_set;
-			System.Data.DataTable data_table;
-			System.Data.DataRow   data_row;
+			System.Data.DataSet data_set;
+			System.Data.DataRow data_row;
 			
 			this.ExecuteReturningData (out data_set);
 			
-			if (data_set.Tables.Count == 0)
+			if ((data_set.Tables.Count != 1) ||
+				(data_set.Tables[0].Rows.Count != 1))
 			{
-				//	Aucune information n'existe pour ce type ! C'est une erreur fatale,
-				//	car on avait une référence valide.
+				//	On devrait toujours avoir exactement une table avec exactement une
+				//	ligne pour cette requête. Le contraire serait une erreur grave !
 				
-				return null;
+				throw new DbException (this.db_access, string.Format ("DbType: query returned garbage on ID={0}.", type_ref));
 			}
 			
-			System.Diagnostics.Debug.Assert (data_set.Tables.Count == 1);
-			System.Diagnostics.Debug.Assert (data_set.Tables[0].Rows.Count == 1);
-			
-			data_table = data_set.Tables[0];
-			data_row   = data_table.Rows[0];
-			
-			if (this.debug_display_data_set != null)
-			{
-				this.debug_display_data_set (this, "CR_TYPE_DEF("+type_ref.Id.ToString ()+")", data_table);
-			}
-			
-			//	A partir de l'information trouvée dans la base, génère l'objet DbType
-			//	adéquat.
+			data_row = data_set.Tables[0].Rows[0];
 			
 			string type_name = data_row["T_NAME"] as string;
 			string type_info = data_row["T_INFO"] as string;
+			
+			//	A partir de l'information trouvée dans la base, génère l'objet DbType
+			//	qui correspond.
 			
 			DbType type = DbTypeFactory.NewType (type_info);
 			
 			type.DefineName (type_name);
 			type.DefineInternalKey (type_ref);
 			
+			this.DefineLocalisedAttributes (data_row, DbColumn.TagCaption,     type.Attributes, Tags.Caption);
+			this.DefineLocalisedAttributes (data_row, DbColumn.TagDescription, type.Attributes, Tags.Description);
+			
 			if (type is DbTypeEnum)
 			{
-				this.PopulateEnumValues (type as DbTypeEnum);
+				this.LoadEnumValues (type as DbTypeEnum);
 			}
 			
 			data_set.Dispose ();
@@ -230,16 +245,24 @@ namespace Epsitec.Cresus.Database
 			return type;
 		}
 		
-		protected void PopulateEnumValues(DbTypeEnum type_enum)
+		
+		protected void LoadEnumValues(DbTypeEnum type_enum)
 		{
+			System.Diagnostics.Debug.Assert (type_enum != null);
+			System.Diagnostics.Debug.Assert (type_enum.Count == 0);
+			
 			SqlSelect query = new SqlSelect ();
 			
 			query.Fields.Add ("E_ID",   SqlField.CreateName ("T_ENUM", DbColumn.TagId));
 			query.Fields.Add ("E_NAME", SqlField.CreateName ("T_ENUM", DbColumn.TagName));
-			query.Fields.Add ("E_CAPT", SqlField.CreateName ("T_ENUM", DbColumn.TagCaption));
-			query.Fields.Add ("E_DESC", SqlField.CreateName ("T_ENUM", DbColumn.TagDescription));
+			query.Fields.Add ("E_INFO", SqlField.CreateName ("T_ENUM", DbColumn.TagInfoXml));
+			
+			this.AddLocalisedColumns (query, "T_ENUM", DbColumn.TagCaption);
+			this.AddLocalisedColumns (query, "T_ENUM", DbColumn.TagDescription);
 			
 			query.Tables.Add ("T_ENUM", SqlField.CreateName (DbTable.TagEnumValDef));
+			
+			//	Cherche les lignes de la table dont la colonne CREF_TYPE correspond à l'ID du type.
 			
 			this.AddKeyExtraction (query, "T_ENUM", DbColumn.TagRefType, type_enum.InternalKey);
 			
@@ -251,21 +274,78 @@ namespace Epsitec.Cresus.Database
 			
 			if (data_set.Tables.Count == 0)
 			{
-				//	Aucune information n'existe pour ce type ! C'est une erreur fatale,
-				//	car on avait une référence valide.
+				//	Si aucune information n'existe pour ce type, c'est une erreur fatale,
+				//	car on avait une référence d'énumération valide.
 				
 				throw new System.ArgumentException (string.Format ("Type {0} has no DbEnumValues defined.", type_enum.Name));
 			}
 			
 			System.Diagnostics.Debug.Assert (data_set.Tables.Count == 1);
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
 			foreach (System.Data.DataRow data_row in data_set.Tables[0].Rows)
 			{
-				System.Console.Out.WriteLine (string.Format ("Enum {0} : {1}, {2}", type_enum.Name, data_row["E_NAME"], data_row["E_CAPT"]));
+				//	Pour chaque valeur retournée dans la table, il y a une ligne. Cette ligne
+				//	contient toute l'information nécessaire à la création d'une instance de la
+				//	class DbEnumValue :
+				
+				DbEnumValue value = new DbEnumValue ();
+				
+				string arg_name;
+				string arg_info;
+				string arg_id;
+				
+				Epsitec.Common.Support.Data.Converter.Convert (data_row["E_NAME"], out arg_name);
+				Epsitec.Common.Support.Data.Converter.Convert (data_row["E_INFO"], out arg_info);
+				Epsitec.Common.Support.Data.Converter.Convert (data_row["E_ID"],   out arg_id);
+				
+				value.Attributes.SetAttribute (Tags.Name,	 arg_name);
+				value.Attributes.SetAttribute (Tags.InfoXml, arg_info);
+				value.Attributes.SetAttribute (Tags.Id,		 arg_id);
+				
+				this.DefineLocalisedAttributes (data_row, DbColumn.TagCaption,     value.Attributes, Tags.Caption);
+				this.DefineLocalisedAttributes (data_row, DbColumn.TagDescription, value.Attributes, Tags.Description);
+				
+				list.Add (value);
 			}
+			
+			//	Initialise le type avec la liste des valeurs de l'énumération.
+			
+			type_enum.Initialise (list);
 			
 			data_set.Dispose ();
 		}
+		
+		protected void DefineLocalisedAttributes(System.Data.DataRow row, string column, DbAttributes attributes, string tag)
+		{
+			string alias = "LOC_" + column;
+			string value;
+			
+			for (int i = 0; i < this.localisations.Length; i++)
+			{
+				string locale = this.localisations[i];
+				string index  = locale == "" ? alias : alias + "_" + locale;
+				
+				if (Epsitec.Common.Support.Data.Converter.Convert (row[index], out value))
+				{
+					attributes.SetAttribute (tag, value, locale);
+				}
+			}
+		}
+		
+		protected void AddLocalisedColumns(SqlSelect query, string table, string column)
+		{
+			string alias = "LOC_" + column;
+			
+			for (int i = 0; i < this.localisations.Length; i++)
+			{
+				string locale = this.localisations[i];
+				string index  = locale == "" ? alias : alias + "_" + locale;
+				
+				query.Fields.Add (index, SqlField.CreateName (table, column));
+			}
+		}
+		
 		
 		protected void AddKeyExtraction(SqlSelect query, DbKey key, string target_table_name, DbKeyMatchMode mode)
 		{
@@ -663,5 +743,9 @@ namespace Epsitec.Cresus.Database
 		protected DbTypeCollection		internal_types  = new DbTypeCollection ();
 		
 		CallbackDebugDisplayDataSet		debug_display_data_set;
+		string[]						localisations;
+		
+		Cache.DbTypes					cache_db_types = new Cache.DbTypes ();
+		
 	}
 }

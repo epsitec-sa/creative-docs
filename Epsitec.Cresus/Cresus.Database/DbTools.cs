@@ -18,6 +18,10 @@ namespace Epsitec.Cresus.Database
 		{
 			int num = list.Length;
 			
+			//	Retire de la liste toutes les chaînes vides qui pourraient s'être
+			//	accumulées à la fin; ça évite que la composition de "a" avec "" ne
+			//	donne "a_" en fin de compte (le résultat sera "a", simplement).
+			
 			while (num > 0 && (list[num-1] == ""))
 			{
 				num--;

@@ -54,6 +54,29 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion
 		
+		public override bool Equals(object obj)
+		{
+			DbKey key = obj as DbKey;
+			
+			if (key == null)
+			{
+				return false;
+			}
+			
+			return (key.id == this.id) && (key.revision == this.revision) && (key.raw_status == this.raw_status);
+		}
+		
+		public override int GetHashCode()
+		{
+			return this.id.GetHashCode () ^ (this.revision) ^ (this.raw_status << 16);
+		}
+		
+		public override string ToString()
+		{
+			return string.Format ("[{0}.{1}]", this.id, this.revision);
+		}
+
+		
 		
 		protected long					id;
 		protected int					revision;
