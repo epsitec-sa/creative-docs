@@ -21,19 +21,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldRadius.MinRange =  0;
 			this.fieldRadius.MaxRange = 10;
 			this.fieldRadius.Step = 1;
-			this.fieldRadius.TextChanged += new EventHandler(this.TextChanged);
+			this.fieldRadius.TextChanged += new EventHandler(this.HandleTextChanged);
 
 			this.fieldOx = new TextFieldSlider(this);
 			this.fieldOx.MinRange = -10;
 			this.fieldOx.MaxRange =  10;
 			this.fieldOx.Step = 1;
-			this.fieldOx.TextChanged += new EventHandler(this.TextChanged);
+			this.fieldOx.TextChanged += new EventHandler(this.HandleTextChanged);
 
 			this.fieldOy = new TextFieldSlider(this);
 			this.fieldOy.MinRange = -10;
 			this.fieldOy.MaxRange =  10;
 			this.fieldOy.Step = 1;
-			this.fieldOy.TextChanged += new EventHandler(this.TextChanged);
+			this.fieldOy.TextChanged += new EventHandler(this.HandleTextChanged);
 
 			this.labelRadius = new StaticText(this);
 			this.labelRadius.Text = "R";
@@ -58,9 +58,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected override void Dispose(bool disposing)
 		{
 			this.fieldColor.Clicked -= new MessageEventHandler(this.FieldColorClicked);
-			this.fieldRadius.TextChanged -= new EventHandler(this.TextChanged);
-			this.fieldOx.TextChanged -= new EventHandler(this.TextChanged);
-			this.fieldOy.TextChanged -= new EventHandler(this.TextChanged);
+			this.fieldRadius.TextChanged -= new EventHandler(this.HandleTextChanged);
+			this.fieldOx.TextChanged -= new EventHandler(this.HandleTextChanged);
+			this.fieldOy.TextChanged -= new EventHandler(this.HandleTextChanged);
 
 			base.Dispose(disposing);
 		}
@@ -179,7 +179,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnOriginColorChanged();
 		}
 
-		private void TextChanged(object sender)
+		private void HandleTextChanged(object sender)
 		{
 			this.OnChanged();
 		}

@@ -17,7 +17,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.field.MinRange = 0;
 			this.field.MaxRange = 5;
 			this.field.Step = 0.5;
-			this.field.TextChanged += new EventHandler(this.TextChanged);
+			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
 
 			this.buttons = new IconButton[6];
 			for ( int i=0 ; i<6 ; i++ )
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			if ( disposing )
 			{
-				this.field.TextChanged -= new EventHandler(this.TextChanged);
+				this.field.TextChanged -= new EventHandler(this.HandleTextChanged);
 
 				for ( int i=0 ; i<6 ; i++ )
 				{
@@ -194,7 +194,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 		
 		// Une valeur a été changée.
-		private void TextChanged(object sender)
+		private void HandleTextChanged(object sender)
 		{
 			this.OnChanged();
 		}
