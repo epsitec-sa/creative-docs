@@ -146,7 +146,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckFillBundleFromSimpleWindow()
 		{
-			System.Time time_1 = System.Time.Now;
+			Types.Time time_1 = Types.Time.Now;
 			
 			ResourceBundle bundle = Resources.GetBundle ("file:simple_window");
 			ObjectBundler bundler = new ObjectBundler ();
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Support
 			Assertion.AssertNotNull (obj);
 			Assertion.AssertNotNull (root);
 			
-			System.Time time_2 = System.Time.Now;
+			Types.Time time_2 = Types.Time.Now;
 			
 			bundler = new ObjectBundler ();
 			bundle  = ResourceBundle.Create ("cloned_simple_window", "file", ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
@@ -169,11 +169,11 @@ namespace Epsitec.Common.Support
 			bundler.SetupPrefix ("file");
 			bundler.FillBundleFromObject (bundle, root);
 			
-			System.Time time_3 = System.Time.Now;
+			Types.Time time_3 = Types.Time.Now;
 			
 			bundle.CreateXmlDocument (false).Save ("test.xml");
 			
-			System.Time time_4 = System.Time.Now;
+			Types.Time time_4 = Types.Time.Now;
 			
 			
 			System.Console.Out.WriteLine ("Load:  {0} ms", (time_2.Ticks-time_1.Ticks)/10000);
