@@ -438,7 +438,7 @@ namespace Epsitec.Common.Support
 				
 				if (dispatcher != null)
 				{
-					this.Add (dispatcher.FindOrCreateCommandState (value));
+					this.Add (dispatcher.CreateCommandState (value));
 				}
 				else
 				{
@@ -574,7 +574,7 @@ namespace Epsitec.Common.Support
 				{
 					foreach (string name in this.names)
 					{
-						this.Add (dispatcher.FindOrCreateCommandState (name));
+						this.Add (dispatcher.CreateCommandState (name));
 					}
 					
 					this.names.Clear ();

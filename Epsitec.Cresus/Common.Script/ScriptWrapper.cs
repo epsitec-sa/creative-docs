@@ -97,25 +97,27 @@ namespace Epsitec.Common.Script
 			}
 		}
 		
-		
-		public string[] GetMethodNames()
+		public string[]							MethodNames
 		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
-			foreach (Source.Method method in this.source.Methods)
+			get
 			{
-				string name = method.Name;
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
 				
-				if (! list.Contains (name))
+				foreach (Source.Method method in this.source.Methods)
 				{
-					list.Add (name);
+					string name = method.Name;
+					
+					if (! list.Contains (name))
+					{
+						list.Add (name);
+					}
 				}
+				
+				string[] names = new string[list.Count];
+				list.CopyTo (names);
+				
+				return names;
 			}
-			
-			string[] names = new string[list.Count];
-			list.CopyTo (names);
-			
-			return names;
 		}
 		
 		

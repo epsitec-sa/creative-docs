@@ -8,7 +8,7 @@ namespace Epsitec.Common.Widgets
 	{
 		static CommandState()
 		{
-			Support.CommandDispatcher.DefaultFindCommandStateCallback = new Support.CommandDispatcher.FindCommandStateCallback (CommandState.DefaultFind);
+			Support.CommandDispatcher.DefineCommandStateCreationCallback (new Support.CommandDispatcher.CreateCommandStateCallback (CommandState.DefaultCreate));
 		}
 		
 		
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Widgets
 		
 		public Widget[] FindWidgets()
 		{
-			return Widget.FindAllCommandWidgets (this.regex, this.dispatcher);
+			return Widget.FindAllCommandWidgets (this.Regex, this.CommandDispatcher);
 		}
 		
 		
@@ -116,30 +116,14 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			System.Diagnostics.Debug.Assert (command_name != null);
-			System.Diagnostics.Debug.Assert (command_name != "");
+			System.Diagnostics.Debug.Assert (command_name.Length > 0);
 			
-			Support.CommandDispatcher.CommandState[] states = dispatcher.FindCommandStates (command_name);
-			
-			for (int i = 0; i < states.Length; i++)
-			{
-				CommandState state = states[i] as CommandState;
-				
-				if (state != null)
-				{
-					return state;
-				}
-			}
-			
-			//	Il n'y a pas d'objet CommandState avec ce nom de commande. Il faut donc
-			//	en créer un. La prochaine fois que cette méthode sera appelée, on retournera
-			//	le même objet (grâce à CommandDispatcher).
-			
-			return new CommandState (command_name, dispatcher);
+			return dispatcher.CreateCommandState (command_name) as CommandState;
 		}
 		
-		static Support.CommandDispatcher.CommandState DefaultFind(string command_name, Support.CommandDispatcher dispatcher)
+		static Support.CommandDispatcher.CommandState DefaultCreate(string command_name, Support.CommandDispatcher dispatcher)
 		{
-			return CommandState.Find (command_name, dispatcher);
+			return new CommandState (command_name, dispatcher);
 		}
 		
 		

@@ -1158,7 +1158,7 @@ namespace Epsitec.Common.Widgets
 		internal void DispatchValidation()
 		{
 			this.pending_validation = false;
-			Support.CommandDispatcher.ApplyAllValidationRules ();
+			Support.CommandDispatcher.SyncAllValidationRules ();
 		}
 		
 		internal void DispatchMessage(Message message)

@@ -1,10 +1,12 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using System.Text.RegularExpressions;
-
 namespace Epsitec.Common.Support
 {
+	using Match        = System.Text.RegularExpressions.Match;
+	using Regex        = System.Text.RegularExpressions.Regex;
+	using RegexOptions = System.Text.RegularExpressions.RegexOptions;
+	
 	/// <summary>
 	/// La classe CommandDispatcher permet de gérer la distribution des
 	/// commandes de l'interface graphique vers les routines de traitement.
@@ -13,6 +15,11 @@ namespace Epsitec.Common.Support
 	{
 		static CommandDispatcher()
 		{
+			//	Initialise les champs statiques :
+			
+			CommandDispatcher.global_list = new System.Collections.ArrayList ();
+			CommandDispatcher.local_list  = new System.Collections.ArrayList ();
+			
 			//	Capture le nom et les arguments d'une commande complexe, en filtrant les
 			//	caractères et vérifiant ainsi la validité de la syntaxe. Voici l'inter-
 			//	prétation de la regex :
@@ -21,24 +28,29 @@ namespace Epsitec.Common.Support
 			//	- suit une parenthèse ouvrante, avec évtl. des espaces;
 			//	- suit zéro à n arguments <arg> séparés par une virgule;
 			//	- chaque <arg> est soit une chaîne "", soit une chaîne '',
-			//	  soit une valeur numérique, soit un mot.
+			//	  soit une valeur numérique, soit un nom (avec des '.' pour
+			//	  séparer les divers termes).
 			//
 			//	La capture retourne dans l'ordre <name>, puis la liste des <arg> trouvés.
+			//	Il peut y avoir zéro à n arguments séparés par des virgules, le tout entre
+			//	parenthèses.
 			
-			string regex_1 = @"\A(?<name>(\w+))\s*\(\s*((?<arg>((\""[^\""]{0,}\""|(\'[^\']{0,}\'|(\-{0,}\d{1,}([\.]\d{1,}){0,1}|[\w.]{1,})))))\s*(\,?)\s*){0,}\)\s*\z";
-			
-			//	Filtre les valeurs numériques correctement formatées, avec ou sans signe '-'
-			//	comme préfixe et avec une partie fractionnaire ('.nnn') optionnelle.
-			
-			string regex_2 = @"\A\s*\-{0,}\d{1,}([\.]\d{1,}){0,1}\s*\z";
+			string regex_1 = @"\A(?<name>([a-zA-Z](\w|(\.\w))*))" +
+				//                       <---- nom valide ---->
+				/**/       @"\s*\(\s*((((?<arg>(" +
+				/**/                          @"(\""[^\""]{0,}\"")|" +
+				//                              <-- guillemets -->
+				/**/                          @"(\'[^\']{0,}\')|" +
+				//                              <-- apostr. -->
+				/**/                          @"((\-|\+)?((\d{1,12}(\.\d{0,12})?0*)|(\d{0,12}\.(\d{0,12})?0*)))|" +
+				//                              <----------- valeur décimale avec signe en option ------------>
+				/**/                          @"([a-zA-Z](\w|(\.\w))*)))" +
+				//                              <---- nom valide ---->
+				/**/                         @"((\s*\,\s*)|(\s*\)\s*\z)))*)|(\)\s*))\z";
 			
 			RegexOptions options = RegexOptions.Compiled | RegexOptions.ExplicitCapture;
 			
-			CommandDispatcher.command_arg_regex = new Regex (regex_1, options);
-			CommandDispatcher.numeric_regex     = new Regex (regex_2, options);
-			
-			CommandDispatcher.global_list = new System.Collections.ArrayList ();
-			CommandDispatcher.local_list  = new System.Collections.ArrayList ();
+			CommandDispatcher.command_arg_regex  = new Regex (regex_1, options);
 			CommandDispatcher.default_dispatcher = new CommandDispatcher ("default");
 		}
 		
@@ -82,6 +94,7 @@ namespace Epsitec.Common.Support
 				return null;
 			}
 		}
+		
 		
 		public string							Name
 		{
@@ -130,7 +143,7 @@ namespace Epsitec.Common.Support
 				if (this.oplet_queue != value)
 				{
 					this.oplet_queue = value;
-					this.OnOpletQueueChanged ();
+					this.OnOpletQueueBindingChanged ();
 				}
 			}
 		}
@@ -140,6 +153,17 @@ namespace Epsitec.Common.Support
 			get
 			{
 				return this.validation_rule;
+			}
+		}
+		
+		public string[]							CommandNames
+		{
+			get
+			{
+				string[] names = new string[this.event_handlers.Keys.Count];
+				this.event_handlers.Keys.CopyTo (names, 0);
+				System.Array.Sort (names);
+				return names;
 			}
 		}
 		
@@ -201,14 +225,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		
-		public void CancelTopPendingMultipleCommands()
+		public void DispatchCancelTopPendingMultipleCommands()
 		{
 			this.pending_commands.Pop ();
 			this.pending_commands.Push (null);
 		}
 		
-		public void SynchroniseCommandStates()
+		
+		public void SyncCommandStates()
 		{
 			//	Passe en revue tous les CommandStates connus et resynchronise ceux-ci. Afin d'éviter
 			//	des surprises en cas de modifications en cours de synchronisation, on copie la liste
@@ -223,45 +247,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		
-		public CommandDispatcher.CommandState[] FindCommandStates(string command_name)
-		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
-			foreach (CommandState state in this.command_states)
-			{
-				if (state.Name == command_name)
-				{
-					list.Add (state);
-				}
-			}
-			
-			CommandState[] states = new CommandState[list.Count];
-			list.CopyTo (states);
-			
-			return states;
-		}
-		
-		public CommandDispatcher.CommandState FindOrCreateCommandState(string command_name)
-		{
-			if (CommandDispatcher.find_command_state_callback == null)
-			{
-				throw new System.InvalidOperationException ("Missing default find callback.");
-			}
-			
-			return CommandDispatcher.find_command_state_callback (command_name, this);
-		}
-		
-		public string[] FindCommandNames()
-		{
-			string[] names = new string[this.event_handlers.Keys.Count];
-			this.event_handlers.Keys.CopyTo (names, 0);
-			System.Array.Sort (names);
-			return names;
-		}
-		
-		
-		public void ApplyValidationRule()
+		public void SyncValidationRule()
 		{
 			if (this.validation_rule.State == ValidationState.Dirty)
 			{
@@ -269,85 +255,30 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public static void ApplyAllValidationRules()
+		
+		public CommandDispatcher.CommandState CreateCommandState(string command_name)
 		{
-			foreach (CommandDispatcher dispatcher in CommandDispatcher.global_list)
+			//	Retourne un object CommandState pour le nom spécifié; si l'objet n'existe pas encore,
+			//	il sera créé dynamiquement.
+			
+			CommandState state = this[command_name];
+			
+			if (state != null)
 			{
-				dispatcher.ApplyValidationRule ();
+				return state;
 			}
-			foreach (CommandDispatcher dispatcher in CommandDispatcher.local_list)
+			
+			//	La création se fait dans Widgets.CommandState et pour éviter des problèmes de
+			//	dépendances circulaires, on utilise un callback :
+			
+			if (CommandDispatcher.create_command_state_callback == null)
 			{
-				dispatcher.ApplyValidationRule ();
+				throw new System.InvalidOperationException ("Missing CommandState creation callback.");
 			}
+			
+			return CommandDispatcher.create_command_state_callback (command_name, this);
 		}
 		
-		internal void NotifyValidationRuleBecameDirty()
-		{
-			this.OnValidationRuleBecameDirty ();
-		}
-		
-		
-		
-		protected void DispatchSingleCommand(string command, object source)
-		{
-			command = command.Trim ();
-			
-			//	Transmet la commande à ceux qui sont intéressés
-			
-			string   command_name     = CommandDispatcher.ExtractCommandName (command);
-			string[] command_elements = command_name.Split ('/');
-			int      command_length   = command_elements.Length;
-			string[] command_args     = CommandDispatcher.ExtractAndParseCommandArgs (command, source);
-			
-			System.Diagnostics.Debug.Assert (command_length == 1);
-			System.Diagnostics.Debug.Assert (command_name.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + command + "' may not contain a '*' in its name.\nPlease fix the command name definition source code.");
-			System.Diagnostics.Debug.Assert (command_name.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + command + "' may not contain a '.' in its name.\nPlease fix the command name definition source code.");
-			
-			CommandEventArgs e = new CommandEventArgs (source, command_name, command_args);
-			
-			EventSlot slot = this.event_handlers[command_name] as EventSlot;
-			int    handled = 0;
-			
-			if (slot != null)
-			{
-				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' fired.");
-				
-				if (slot.DispatchCommand (this, e))
-				{
-					handled++;
-				}
-			}
-			
-			foreach (ICommandDispatcher extra in this.extra_dispatchers)
-			{
-				if (extra.DispatchCommand (this, e))
-				{
-					handled++;
-				}
-			}
-			
-			if (handled == 0)
-			{
-				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' not handled.");
-			}
-		}
-		
-		
-		protected void OnValidationRuleBecameDirty()
-		{
-			if (this.ValidationRuleBecameDirty != null)
-			{
-				this.ValidationRuleBecameDirty (this);
-			}
-		}
-		
-		protected void OnOpletQueueChanged()
-		{
-			if (this.OpletQueueChanged != null)
-			{
-				this.OpletQueueChanged (this);
-			}
-		}
 		
 		
 		public void RegisterController(object controller)
@@ -415,6 +346,25 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		#region Internal use only
+		public static void SyncAllValidationRules()
+		{
+			foreach (CommandDispatcher dispatcher in CommandDispatcher.global_list)
+			{
+				dispatcher.SyncValidationRule ();
+			}
+			foreach (CommandDispatcher dispatcher in CommandDispatcher.local_list)
+			{
+				dispatcher.SyncValidationRule ();
+			}
+		}
+		
+		public static void DefineCommandStateCreationCallback(CreateCommandStateCallback value)
+		{
+			CommandDispatcher.create_command_state_callback = value;
+		}
+		#endregion
+		
 		public static string ExtractCommandName(string command)
 		{
 			int pos = command.IndexOf ('(');
@@ -467,7 +417,7 @@ namespace Epsitec.Common.Support
 			for (int i = 0; i < args.Length; i++)
 			{
 				string arg   = args[i];
-				Match  match = CommandDispatcher.numeric_regex.Match (arg);
+				Match  match = RegexFactory.DecimalNum.Match (arg);
 				
 				if (match.Success)
 				{
@@ -520,75 +470,6 @@ namespace Epsitec.Common.Support
 			}
 			
 			return args;
-		}
-		
-		
-		protected void RegisterMethod(object controller, System.Reflection.MethodInfo info)
-		{
-			//	Ne parcourt que les attributs au niveau d'implémentation actuel (pas les classes dérivées,
-			//	ni les classes parent). Le parcours des parent est assuré par l'appelant.
-			
-			object[] attributes = info.GetCustomAttributes (CommandDispatcher.command_attr_type, false);
-			
-			foreach (CommandAttribute attribute in attributes)
-			{
-				this.RegisterMethod (controller, info, attribute);
-			}
-		}
-		
-		protected void RegisterMethod(object controller, System.Reflection.MethodInfo method_info, CommandAttribute attribute)
-		{
-			System.Diagnostics.Debug.WriteLine ("Command '" + attribute.CommandName + "' implemented by method " + method_info.Name + " in class " + method_info.DeclaringType.Name + ", prototype: " + method_info.ToString ());
-			
-			System.Diagnostics.Debug.Assert (attribute.CommandName.IndexOf ("*") < 0, "Found '*' in command name.", "The method handling command '" + attribute.CommandName + "' may not contain specify '*' in the command name.\nPlease fix the source code for " + method_info.Name + " in class " + method_info.DeclaringType.Name + ".");
-			System.Diagnostics.Debug.Assert (attribute.CommandName.IndexOf (".") < 0, "Found '.' in command name.", "The method handling command '" + attribute.CommandName + "' may not contain specify '.' in the command name.\nPlease fix the source code for " + method_info.Name + " in class " + method_info.DeclaringType.Name + ".");
-			
-			System.Reflection.ParameterInfo[] param_info = method_info.GetParameters ();
-			
-			CommandEventHandler handler = null;
-			EventRelay          relay   = new EventRelay (controller, method_info);
-			
-			switch (param_info.Length)
-			{
-				case 0:
-					//	La méthode n'a aucun argument :
-					
-					handler = new CommandEventHandler (relay.InvokeWithoutArgument);
-					break;
-				
-				case 1:
-					//	La méthode a un unique argument. Ce n'est acceptable que si cet argument est
-					//	de type CommandDispatcher, soit :
-					//
-					//		void Method(CommandDispatcher)
-					
-					if (param_info[0].ParameterType == typeof (CommandDispatcher))
-					{
-						handler = new CommandEventHandler (relay.InvokeWithCommandDispatcher);
-					}
-					break;
-				
-				case 2:
-					//	La méthode a deux arguments. Ce n'est acceptable que si le premier est de type
-					//	CommandDispatcher et le second de type CommandEventArgs, soit :
-					//
-					//		void Method(CommandDispatcher, CommandEventArgs)
-					
-					if ((param_info[0].ParameterType == typeof (CommandDispatcher)) &&
-						(param_info[1].ParameterType == typeof (CommandEventArgs)))
-					{
-						handler = new CommandEventHandler (relay.InvokeWithCommandDispatcherAndEventArgs);
-					}
-					break;
-			}
-			
-			if (handler == null)
-			{
-				throw new System.FormatException (string.Format ("{0}.{1} uses invalid signature: {2}.", controller.GetType ().Name, method_info.Name, method_info.ToString ()));
-			}
-			
-			this.Register (attribute.CommandName, handler);
-			
 		}
 		
 		
@@ -722,11 +603,10 @@ namespace Epsitec.Common.Support
 				System.Diagnostics.Debug.Assert (name.Length > 0);
 				System.Diagnostics.Debug.Assert (dispatcher != null);
 				
-				System.Diagnostics.Debug.Assert (dispatcher.FindCommandStates (name).Length == 0, "CommandState created twice.", string.Format ("The CommandState {0} for dispatcher {1} already exists.\nIt cannot be created more than once.", name, dispatcher.Name));
+				System.Diagnostics.Debug.Assert (dispatcher[name] == null, "CommandState created twice.", string.Format ("The CommandState {0} for dispatcher {1} already exists.\nIt cannot be created more than once.", name, dispatcher.Name));
 				
 				this.name       = name;
 				this.dispatcher = dispatcher;
-				this.regex      = Support.RegexFactory.FromSimpleJoker (this.name, Support.RegexFactory.Options.None);
 				
 				this.dispatcher.command_states.Add (this);
 			}
@@ -742,7 +622,20 @@ namespace Epsitec.Common.Support
 				get { return this.dispatcher; }
 			}
 			
+			public Regex						Regex
+			{
+				get
+				{
+					if (this.regex == null)
+					{
+						this.regex = Support.RegexFactory.FromSimpleJoker (this.name, Support.RegexFactory.Options.None);
+					}
+					
+					return this.regex;
+				}
+			}
 			public abstract bool				Enabled { get; set; }
+			
 			
 			public abstract void Synchronise();
 			
@@ -764,34 +657,159 @@ namespace Epsitec.Common.Support
 			}
 
 			
-			protected string					name;
-			protected Support.CommandDispatcher	dispatcher;
-			protected Regex						regex;
+			private string						name;
+			private Support.CommandDispatcher	dispatcher;
+			private Regex						regex;
 		}
 		#endregion
 		
-		#region FindCommandStateCallback Delegate
-		public delegate CommandDispatcher.CommandState FindCommandStateCallback(string name, CommandDispatcher dispatcher);
+		#region CreateCommandStateCallback Delegate
+		public delegate CommandDispatcher.CommandState CreateCommandStateCallback(string name, CommandDispatcher dispatcher);
 		#endregion
 		
+		internal void NotifyValidationRuleBecameDirty()
+		{
+			this.OnValidationRuleBecameDirty ();
+		}
+		
+		
+		protected void RegisterMethod(object controller, System.Reflection.MethodInfo info)
+		{
+			//	Ne parcourt que les attributs au niveau d'implémentation actuel (pas les classes dérivées,
+			//	ni les classes parent). Le parcours des parent est assuré par l'appelant.
+			
+			object[] attributes = info.GetCustomAttributes (CommandDispatcher.command_attr_type, false);
+			
+			foreach (CommandAttribute attribute in attributes)
+			{
+				this.RegisterMethod (controller, info, attribute);
+			}
+		}
+		
+		protected void RegisterMethod(object controller, System.Reflection.MethodInfo method_info, CommandAttribute attribute)
+		{
+			System.Diagnostics.Debug.WriteLine ("Command '" + attribute.CommandName + "' implemented by method " + method_info.Name + " in class " + method_info.DeclaringType.Name + ", prototype: " + method_info.ToString ());
+			
+			System.Diagnostics.Debug.Assert (attribute.CommandName.IndexOf ("*") < 0, "Found '*' in command name.", "The method handling command '" + attribute.CommandName + "' may not contain specify '*' in the command name.\nPlease fix the source code for " + method_info.Name + " in class " + method_info.DeclaringType.Name + ".");
+			System.Diagnostics.Debug.Assert (attribute.CommandName.IndexOf (".") < 0, "Found '.' in command name.", "The method handling command '" + attribute.CommandName + "' may not contain specify '.' in the command name.\nPlease fix the source code for " + method_info.Name + " in class " + method_info.DeclaringType.Name + ".");
+			
+			System.Reflection.ParameterInfo[] param_info = method_info.GetParameters ();
+			
+			CommandEventHandler handler = null;
+			EventRelay          relay   = new EventRelay (controller, method_info);
+			
+			switch (param_info.Length)
+			{
+				case 0:
+					//	La méthode n'a aucun argument :
+					
+					handler = new CommandEventHandler (relay.InvokeWithoutArgument);
+					break;
+				
+				case 1:
+					//	La méthode a un unique argument. Ce n'est acceptable que si cet argument est
+					//	de type CommandDispatcher, soit :
+					//
+					//		void Method(CommandDispatcher)
+					
+					if (param_info[0].ParameterType == typeof (CommandDispatcher))
+					{
+						handler = new CommandEventHandler (relay.InvokeWithCommandDispatcher);
+					}
+					break;
+				
+				case 2:
+					//	La méthode a deux arguments. Ce n'est acceptable que si le premier est de type
+					//	CommandDispatcher et le second de type CommandEventArgs, soit :
+					//
+					//		void Method(CommandDispatcher, CommandEventArgs)
+					
+					if ((param_info[0].ParameterType == typeof (CommandDispatcher)) &&
+						(param_info[1].ParameterType == typeof (CommandEventArgs)))
+					{
+						handler = new CommandEventHandler (relay.InvokeWithCommandDispatcherAndEventArgs);
+					}
+					break;
+			}
+			
+			if (handler == null)
+			{
+				throw new System.FormatException (string.Format ("{0}.{1} uses invalid signature: {2}.", controller.GetType ().Name, method_info.Name, method_info.ToString ()));
+			}
+			
+			this.Register (attribute.CommandName, handler);
+			
+		}
+		
+		
+		protected void DispatchSingleCommand(string command, object source)
+		{
+			command = command.Trim ();
+			
+			//	Transmet la commande à ceux qui sont intéressés
+			
+			string   command_name     = CommandDispatcher.ExtractCommandName (command);
+			string[] command_elements = command_name.Split ('/');
+			int      command_length   = command_elements.Length;
+			string[] command_args     = CommandDispatcher.ExtractAndParseCommandArgs (command, source);
+			
+			System.Diagnostics.Debug.Assert (command_length == 1);
+			System.Diagnostics.Debug.Assert (command_name.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + command + "' may not contain a '*' in its name.\nPlease fix the command name definition source code.");
+			System.Diagnostics.Debug.Assert (command_name.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + command + "' may not contain a '.' in its name.\nPlease fix the command name definition source code.");
+			
+			CommandEventArgs e = new CommandEventArgs (source, command_name, command_args);
+			
+			EventSlot slot = this.event_handlers[command_name] as EventSlot;
+			int    handled = 0;
+			
+			if (slot != null)
+			{
+				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' fired.");
+				
+				if (slot.DispatchCommand (this, e))
+				{
+					handled++;
+				}
+			}
+			
+			foreach (ICommandDispatcher extra in this.extra_dispatchers)
+			{
+				if (extra.DispatchCommand (this, e))
+				{
+					handled++;
+				}
+			}
+			
+			if (handled == 0)
+			{
+				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' not handled.");
+			}
+		}
+		
+		
+		protected void OnValidationRuleBecameDirty()
+		{
+			if (this.ValidationRuleBecameDirty != null)
+			{
+				this.ValidationRuleBecameDirty (this);
+			}
+		}
+		
+		protected void OnOpletQueueBindingChanged()
+		{
+			if (this.OpletQueueBindingChanged != null)
+			{
+				this.OpletQueueBindingChanged (this);
+			}
+		}
+		
+		
 		public event EventHandler				ValidationRuleBecameDirty;
-		public event EventHandler				OpletQueueChanged;
+		public event EventHandler				OpletQueueBindingChanged;
 		
 		public static CommandDispatcher			Default
 		{
 			get { return CommandDispatcher.default_dispatcher; }
-		}
-		
-		public static FindCommandStateCallback	DefaultFindCommandStateCallback
-		{
-			get
-			{
-				return CommandDispatcher.find_command_state_callback;
-			}
-			set
-			{
-				CommandDispatcher.find_command_state_callback = value;
-			}
 		}
 		
 		
@@ -805,9 +823,8 @@ namespace Epsitec.Common.Support
 		protected bool							aborted;
 		protected OpletQueue					oplet_queue;
 		
-		static FindCommandStateCallback			find_command_state_callback;
+		static CreateCommandStateCallback		create_command_state_callback;
 		static Regex							command_arg_regex;
-		static Regex							numeric_regex;
 		static System.Type						command_attr_type  = typeof (CommandAttribute);
 		static CommandDispatcher				default_dispatcher;
 		static int								generation = 1;

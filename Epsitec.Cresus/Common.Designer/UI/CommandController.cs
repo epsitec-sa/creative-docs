@@ -101,12 +101,12 @@ namespace Epsitec.Common.Designer.UI
 			
 			if (commands != null)
 			{
-				this.combo_cmd.Items.AddRange (commands.FindCommandNames ());
+				this.combo_cmd.Items.AddRange (commands.CommandNames);
 			}
 			
 			if (scripts != null)
 			{
-				this.combo_cmd.Items.AddRange (scripts.GetMethodNames ());
+				this.combo_cmd.Items.AddRange (scripts.MethodNames);
 			}
 		}
 		

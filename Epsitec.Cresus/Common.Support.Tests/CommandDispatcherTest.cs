@@ -98,7 +98,7 @@ namespace Epsitec.Common.Support
 			CommandState s2 = new CommandState ("s2", dispatcher);
 			CommandState s3 = new CommandState ("s3", dispatcher);
 			
-			dispatcher.SynchroniseCommandStates ();
+			dispatcher.SyncCommandStates ();
 			
 			Assert.AreEqual ("s1/s2/s3/", CommandDispatcherTest.buffer.ToString ());
 		}
@@ -138,6 +138,42 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("123",                CommandDispatcher.ExtractCommandArgs (cmd5)[2]);
 			Assert.AreEqual ("\"Hello, world !\"", CommandDispatcher.ExtractCommandArgs (cmd6)[1]);
 			Assert.AreEqual ("123",                CommandDispatcher.ExtractCommandArgs (cmd6)[2]);
+		}
+		
+		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckExtractCommandArgsEx1()
+		{
+			string cmd = "foo (123x)";
+			CommandDispatcher.ExtractCommandArgs (cmd);
+		}
+		
+		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckExtractCommandArgsEx2()
+		{
+			string cmd = "foo..bar (1)";
+			CommandDispatcher.ExtractCommandArgs (cmd);
+		}
+		
+		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckExtractCommandArgsEx3()
+		{
+			string cmd = "foo ('x'x')";
+			CommandDispatcher.ExtractCommandArgs (cmd);
+		}
+		
+		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckExtractCommandArgsEx4()
+		{
+			string cmd = "foo (a.)";
+			CommandDispatcher.ExtractCommandArgs (cmd);
+		}
+		
+		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckExtractCommandArgsEx5()
+		{
+			string cmd = "foo (a,)";
+			CommandDispatcher.ExtractCommandArgs (cmd);
+		}
+		
+		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckExtractCommandArgsEx6()
+		{
+			string cmd = "foo (a";
+			CommandDispatcher.ExtractCommandArgs (cmd);
 		}
 		
 		[Test] public void CheckExtractAndParseCommandArgs()
@@ -242,7 +278,7 @@ namespace Epsitec.Common.Support
 				if (dispatcher.HasPendingMultipleCommands)
 				{
 					CommandDispatcherTest.buffer.Append ("CM/");
-					dispatcher.CancelTopPendingMultipleCommands ();
+					dispatcher.DispatchCancelTopPendingMultipleCommands ();
 				}
 				else
 				{
@@ -312,7 +348,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (ValidationState.Dirty, v11.State);
 			Assert.AreEqual (ValidationState.Dirty, v2.State);
 			
-			dispatcher.ApplyValidationRule ();
+			dispatcher.SyncValidationRule ();
 			
 			Assert.AreEqual (ValidationState.Ok, v1.State);
 			Assert.AreEqual (ValidationState.Ok, v11.State);
@@ -330,7 +366,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (ValidationState.Dirty, v11.State);
 			Assert.AreEqual (ValidationState.Ok, v2.State);
 			
-			dispatcher.ApplyValidationRule ();
+			dispatcher.SyncValidationRule ();
 			
 			v2.MakeDirty (false);
 			

@@ -1515,15 +1515,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.contextMenu.AdjustSize();
 			mouse = this.IconToScreen(mouse);
 			mouse = this.MapClientToScreen(mouse);
-			this.commandDispatcher.SynchroniseCommandStates();
+			this.commandDispatcher.SyncCommandStates();
 			this.contextMenu.ShowAsContextMenu(this.Window, mouse);
 		}
 
 		// Ajoute une case dans le menu.
 		protected void MenuAddItem(System.Collections.ArrayList list, string cmd, string icon, string text)
 		{
-			CommandDispatcher.CommandState[] states = this.commandDispatcher.FindCommandStates(cmd);
-			foreach ( CommandState state in states )
+			CommandDispatcher.CommandState state = this.commandDispatcher[cmd];
+			if ( state != null )
 			{
 				if ( !state.Enabled )  return;
 			}
