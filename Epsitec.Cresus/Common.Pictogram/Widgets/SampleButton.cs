@@ -88,7 +88,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				graphics.TranslateTransform(1, 1);
 				graphics.ScaleTransform(this.iconContext.ScaleX, this.iconContext.ScaleY, 0, 0);
 
-				this.iconObjects.DrawGeometry(graphics, this.iconContext, adorner, clipRect, true);
+				this.iconObjects.DrawGeometry(graphics, this.iconContext, this.iconObjects, adorner, clipRect, true);
 
 				graphics.Transform = save;
 				graphics.LineWidth = initialWidth;

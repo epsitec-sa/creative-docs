@@ -545,7 +545,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			int sel = this.Styles.CreateProperty(property);
 			if ( sel == -1 )  return;
 			this.UpdateTable();
-			this.TableSelect(sel, true, true);  // TODO: pourquoi n'est pas sélectionné ?
+			this.TableSelect(sel, true, true);
 			this.UpdatePanels(this.Styles.GetProperty(sel));
 			this.UpdateToolBar();
 		}
