@@ -255,6 +255,14 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
+				if ( value != null )
+				{
+					//	Un MenuItem qui pointe sur un sous-menu ne peut pas avoir de
+					//	commande associée :
+					
+					this.Command = null;
+				}
+				
 				this.separator = false;
 				this.submenu = value;
 			}

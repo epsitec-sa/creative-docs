@@ -362,7 +362,10 @@ namespace Epsitec.Common.Widgets
 			this.scrollList.Dispose();
 			this.scrollList = null;
 			
-			this.Window.MakeActive();
+			if ( Window.IsApplicationActive )
+			{
+				this.Window.MakeActive();
+			}
 			
 			this.comboWindow.Dispose();
 			this.comboWindow = null;

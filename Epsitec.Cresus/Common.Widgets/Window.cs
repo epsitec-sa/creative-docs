@@ -79,6 +79,27 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public static Window FindFirstLiveWindow()
+		{
+			for (int i = 0; i < Window.windows.Count; )
+			{
+				System.WeakReference weak_ref = Window.windows[i] as System.WeakReference;
+				
+				Window target = weak_ref.Target as Window;
+				
+				if ((target == null) || (target.IsDisposed))
+				{
+					Window.windows.RemoveAt (i);
+				}
+				else
+				{
+					return target;
+				}
+			}
+			
+			return null;
+		}
+		
 		public static Window FindFromText(string text)
 		{
 			for (int i = 0; i < Window.windows.Count; )
@@ -282,7 +303,6 @@ namespace Epsitec.Common.Widgets
 					if (new_focus != null)
 					{
 						new_focus.SetFocused (true);
-						System.Diagnostics.Debug.WriteLine ("Focused : " + new_focus);
 					}
 				}
 			}
@@ -374,7 +394,6 @@ namespace Epsitec.Common.Widgets
 			get { return this.window.Icon; }
 			set { this.window.Icon = value; }
 		}
-		
 		
 		public Support.CommandDispatcher		CommandDispatcher
 		{
@@ -572,6 +591,32 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
+				if (this.cmd_queue.Count > 0)
+				{
+					//	Il y a encore des commandes dans la queue d'exécution. Il faut soit les transmettre
+					//	à une autre fenêtre encore en vie, soit les exécuter tout de suite.
+					
+					Window helper = this.Owner;
+					
+					if (helper == null)
+					{
+						helper = Window.FindFirstLiveWindow ();
+					}
+					
+					if (helper == null)
+					{
+						this.DispatchQueuedCommands ();
+					}
+					else
+					{
+						while (this.cmd_queue.Count > 0)
+						{
+							QueueItem item = this.cmd_queue.Dequeue () as QueueItem;
+							helper.QueueCommand (item);
+						}
+					}
+				}
+				
 				if (this.root != null)
 				{
 					this.root.MinSizeChanged -= new EventHandler (this.HandleRootMinSizeChanged);
@@ -587,7 +632,7 @@ namespace Epsitec.Common.Widgets
 						owned[i].HostingWidgetWindow.Dispose ();
 					}
 					
-					if (this.window.IsActive)
+					if (this.window.IsActive && Window.IsApplicationActive)
 					{
 						//	Si la fenêtre est active au moment de sa destruction, Windows a tendance
 						//	à se comporter de manière étrange. On va donc se dépêcher d'activer une
@@ -795,14 +840,7 @@ namespace Epsitec.Common.Widgets
 		
 		public void QueueCommand(Widget source)
 		{
-			QueueItem item = new QueueItem (source);
-			
-			this.cmd_queue.Enqueue (item);
-			
-			if (this.cmd_queue.Count == 1)
-			{
-				this.window.SendQueueCommand ();
-			}
+			this.QueueCommand (new QueueItem (source));
 		}
 		
 		public void QueueCommand(object source, string command)
@@ -812,8 +850,11 @@ namespace Epsitec.Common.Widgets
 		
 		public void QueueCommand(object source, string command, Support.CommandDispatcher dispatcher)
 		{
-			QueueItem item = new QueueItem (source, command, dispatcher);
-			
+			this.QueueCommand (new QueueItem (source, command, dispatcher));
+		}
+		
+		protected void QueueCommand(QueueItem item)
+		{
 			this.cmd_queue.Enqueue (item);
 			
 			if (this.cmd_queue.Count == 1)

@@ -859,7 +859,7 @@ namespace Epsitec.Common.Widgets.Platform
 				case Win32Const.WM_ACTIVATE:
 					active = (((int) msg.WParam) != 0);
 					
-					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} got WM_ACTIVATE {1}.", this.Name, active));
+//					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} got WM_ACTIVATE {1}.", this.Name, active));
 					
 					if (active)
 					{
@@ -881,8 +881,6 @@ namespace Epsitec.Common.Widgets.Platform
 						//	Notre fenêtre vient d'être désactivée.
 						
 						Widgets.Window window = Widgets.Window.FindFromHandle (msg.LParam);
-						
-						System.Diagnostics.Debug.WriteLine (string.Format ("because window {0} got activated.", window == null ? "<unknown>" : window.Name));
 						
 						if (window != null)
 						{
@@ -916,25 +914,25 @@ namespace Epsitec.Common.Widgets.Platform
 						(active == true))
 					{
 						Window.is_app_active = true;
-						System.Diagnostics.Debug.WriteLine ("Fire ApplicationActivated (synthetic)");
+//						System.Diagnostics.Debug.WriteLine ("Fire ApplicationActivated (synthetic)");
 						this.widget_window.OnApplicationActivated ();
 					}
 					break;
 				
 				case Win32Const.WM_ACTIVATEAPP:
 					active = (((int) msg.WParam) != 0);
-					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} got WM_ACTIVATEAPP {1}.", this.Name, active));
+//					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} got WM_ACTIVATEAPP {1}.", this.Name, active));
 					if (Window.is_app_active != active)
 					{
 						Window.is_app_active = active;
 						if (active)
 						{
-							System.Diagnostics.Debug.WriteLine ("Fire ApplicationActivated");
+//							System.Diagnostics.Debug.WriteLine ("Fire ApplicationActivated");
 							this.widget_window.OnApplicationActivated ();
 						}
 						else
 						{
-							System.Diagnostics.Debug.WriteLine ("Fire ApplicationDeactivated");
+//							System.Diagnostics.Debug.WriteLine ("Fire ApplicationDeactivated");
 							this.widget_window.OnApplicationDeactivated ();
 						}
 					}
@@ -942,24 +940,12 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				case Win32Const.WM_NCACTIVATE:
 					active = (((int) msg.WParam) != 0);
-					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} got WM_NCACTIVATE {1}.", this.Name, active));
+//					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} got WM_NCACTIVATE {1}.", this.Name, active));
 					msg.Result = (System.IntPtr) 1;
 					return true;
 			}
 			
 			return false;
-		}
-		
-		protected void FakeActivate(bool active)
-		{
-			this.has_active_frame = active;
-			
-			if (this.FormBorderStyle != System.Windows.Forms.FormBorderStyle.None)
-			{
-				System.Windows.Forms.Message message = Window.CreateNCActivate (this, active);
-				System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} faking WM_NCACTIVATE {1}.", this.Name, active));
-				base.WndProc (ref message);
-			}
 		}
 		
 		internal Platform.Window FindRootOwner()
@@ -985,6 +971,21 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 			
 			return windows;
+		}
+		
+		protected void FakeActivate(bool active)
+		{
+			if (this.has_active_frame != active)
+			{
+				this.has_active_frame = active;
+				
+				if (this.FormBorderStyle != System.Windows.Forms.FormBorderStyle.None)
+				{
+					System.Windows.Forms.Message message = Window.CreateNCActivate (this, active);
+//					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} faking WM_NCACTIVATE {1}.", this.Name, active));
+					base.WndProc (ref message);
+				}
+			}
 		}
 		
 		protected void FakeActivateOwned(bool active)
@@ -1027,31 +1028,6 @@ namespace Epsitec.Common.Widgets.Platform
 			return false;
 		}
 		
-		protected bool PatchActivate()
-		{
-			if (this.is_tool_window)
-			{
-				return true;
-			}
-			
-			System.Windows.Forms.Form[] forms = this.OwnedForms;
-			
-			for (int i = 0; i < forms.Length; i++)
-			{
-				Window window = forms[i] as Window;
-				
-				if (window != null)
-				{
-					if (window.is_tool_window)
-					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} has child {1}.", this.Name, window.Name));
-						return true;
-					}
-				}
-			}
-			
-			return false;
-		}
 
 		protected bool WndProcFiltering(ref System.Windows.Forms.Message msg)
 		{

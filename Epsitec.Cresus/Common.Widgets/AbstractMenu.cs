@@ -596,7 +596,6 @@ namespace Epsitec.Common.Widgets
 			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
 			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
-			System.Diagnostics.Debug.WriteLine ("Registered HandleApplicationDeactivated");
 			
 			this.submenu.Parent = this.window.Root;
 			
@@ -629,13 +628,15 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			Window.ApplicationDeactivated -= new Support.EventHandler(this.HandleApplicationDeactivated);
-			System.Diagnostics.Debug.WriteLine ("Unregistered HandleApplicationDeactivated");
 			this.window.Root.Children.Clear();
 			this.submenu = null;
 			
 			if ( this.Window != null )
 			{
-				this.Window.MakeActive();
+				if ( Window.IsApplicationActive )
+				{
+					this.Window.MakeActive();
+				}
 			
 				// Ce menu devient la dernière feuille de l'arbre des menus...
 				AbstractMenu.menuLastLeaf = this;
@@ -846,8 +847,6 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleApplicationDeactivated(object sender)
 		{
-			System.Diagnostics.Debug.WriteLine ("ApplicationDeactivated");
-			// TODO: pourquoi ce n'est pas toujours appelé ?
 			this.CloseAll();
 		}
 
