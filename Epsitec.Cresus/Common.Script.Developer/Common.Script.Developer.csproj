@@ -148,6 +148,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Panels\AbstractPanel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Panels\MethodEditionPanel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Panels\MethodProtoPanel.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
