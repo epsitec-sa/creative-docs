@@ -415,7 +415,8 @@ namespace Epsitec.Common.Widgets
 					this.OnAnchor(new AnchorEventArgs(x, y+descender, block.width, ascender-descender, block.beginIndex));
 				}
 
-				graphics.PaintText(x, y, block.text, block.font, block.fontSize, color);
+				graphics.SolidRenderer.Color = color;
+				graphics.PaintText(x, y, block.text, block.font, block.fontSize);
 
 				if ( block.underline )
 				{
