@@ -514,7 +514,7 @@ restart:
 			
 			for (;;)
 			{
-				Layout.Status status = this.layout_engine.Render (this, renderer, end);
+				Layout.Status status = this.layout_engine.Render (this, renderer, end - this.text_offset);
 				
 				switch (status)
 				{
@@ -599,6 +599,32 @@ restart:
 			for (int i = 0; i < length; i++)
 			{
 				text[i] = this.text[pos+i];
+			}
+			
+			return true;
+		}
+		
+		public bool GetTextCopy(int offset, out ulong[] text, ref int length)
+		{
+			//	TODO: gérer le sens <-- pour l'avance du texte
+			
+			int end = System.Math.Min (this.text_start + offset + length, this.text.Length);
+			int pos = this.text_start + offset;
+
+			length = end - pos;
+			text = this.GetInternalBuffer(length);
+			
+			if (length == 0)
+			{
+				return false;
+			}
+			
+			//	Copie le texte dans le buffer temporaire. C'est plus rapide de faire
+			//	la copie à la main que d'appeler System.Array.Copy :
+			
+			for (int i = 0; i < length; i++)
+			{
+				text[i] = this.text[pos + i];
 			}
 			
 			return true;

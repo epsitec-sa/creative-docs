@@ -526,6 +526,22 @@ namespace Epsitec.Common.Text
 				return StretchClass.Character;
 			}
 			
+			public static byte GetStretchClass(ulong code)
+			{
+				return (byte) BreakAnalyzer.GetStretchClass ((int) code);
+			}
+			
+			public static void GetStretchClass(ulong[] text, int start, int length, byte[] attributes)
+			{
+				for (int i = 0; i < length; i++)
+				{
+					int          code    = Unicode.Bits.GetCode (text[start+i]);
+					StretchClass stretch = BreakAnalyzer.GetStretchClass (code);
+					
+					attributes[i] = (byte) stretch;
+				}
+			}
+			
 			
 			public void GenerateBreaks(ulong[] text, int start, int length, Unicode.BreakInfo[] breaks)
 			{

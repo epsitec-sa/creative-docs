@@ -43,7 +43,7 @@ namespace Epsitec.Common.Text.Layout
 			return Layout.Status.Ok;
 		}
 		
-		public virtual Layout.Status Render(Layout.Context context, ITextRenderer renderer, int end_offset)
+		public virtual Layout.Status Render(Layout.Context context, ITextRenderer renderer, int length)
 		{
 			return Layout.Status.Ok;
 		}

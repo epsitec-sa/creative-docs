@@ -44,7 +44,7 @@ namespace Epsitec.Common.Text.Layout
 						}
 						
 						//	Détermine la prochaine tranche de caractères contigus utilisant
-						//	le même style de fonte :
+						//	exactement le même style :
 						
 						scratch.RunLength = this.GetRunLength (scratch.Text, scratch.TextStart, scratch.TextLength);
 						
@@ -139,75 +139,58 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			return Layout.Status.Ok;
 		}
 		
-		public override Layout.Status Render(Layout.Context context, ITextRenderer renderer, int end_offset)
+		public override Layout.Status Render(Layout.Context context, ITextRenderer renderer, int length)
 		{
-			FitScratch scratch = new FitScratch ();
+			double  ox = context.X;
+			double  oy = context.Y;
+			ulong[] text;
 			
-			scratch.Offset  = context.TextOffset;
-			scratch.Advance = context.X;
-			
-			while (scratch.Offset < end_offset)
+			if (context.GetTextCopy (context.TextOffset, out text, ref length))
 			{
-				if (context.GetNextWord (scratch.Offset, out scratch.Text, out scratch.TextLength, out scratch.WordBreakInfo))
+				int offset = 0;
+				
+				while (length > 0)
 				{
-					int word_end = scratch.Offset + scratch.TextLength;
+					//	Détermine la prochaine tranche de caractères contigus utilisant
+					//	exactement le même style :
 					
-					if (word_end > end_offset)
+					int run_length = this.GetRunLength (text, offset, length);
+					
+					Layout.BaseEngine         engine;
+					Properties.LayoutProperty layout;
+					
+					context.TextContext.GetLayoutEngine (text[offset], out engine, out layout);
+					
+					if ((engine != this) ||
+						(layout != context.LayoutProperty))
 					{
-						scratch.TextLength -= word_end;
-						scratch.TextLength += end_offset;
+						//	Change de moteur de layout. Il faut par conséquent mémoriser où on
+						//	s'arrête pour que le suivant sache où reprendre :
+						
+						context.X              = ox;
+						context.TextOffset    += offset;
+						context.LayoutEngine   = engine;
+						context.LayoutProperty = layout;
+						
+						return Layout.Status.SwitchLayout;
 					}
 					
-					scratch.TextStart = 0;
+					this.RenderRun (context, renderer, ref ox, oy, text, offset, run_length);
 					
-					while (scratch.TextLength > 0)
-					{
-						//	Détermine la prochaine tranche de caractères contigus utilisant
-						//	le même style de fonte :
-						
-						scratch.RunLength = this.GetRunLength (scratch.Text, scratch.TextStart, scratch.TextLength);
-						
-						ulong code = scratch.Text[scratch.TextStart];
-						
-						Layout.BaseEngine         engine;
-						Properties.LayoutProperty layout;
-						
-						context.TextContext.GetFont (code, out scratch.Font, out scratch.FontSize);
-						context.TextContext.GetLayoutEngine (code, out engine, out layout);
-						
-						if ((engine != this) ||
-							(layout != context.LayoutProperty))
-						{
-							//	Change de moteur de layout. Il faut par conséquent mémoriser où on
-							//	s'arrête pour que le suivant sache où reprendre :
-							
-							context.X              = scratch.Advance;
-							context.TextOffset     = scratch.Offset;
-							context.LayoutEngine   = engine;
-							context.LayoutProperty = layout;
-							
-							return Layout.Status.SwitchLayout;
-						}
-						
-						this.RenderRun (context, renderer, ref scratch);
-						
-						//	Avance au morceau suivant :
-						
-						scratch.Advance    += scratch.TextWidth;
-						scratch.Offset     += scratch.RunLength;
-						scratch.TextStart  += scratch.RunLength;
-						scratch.TextLength -= scratch.RunLength;
-					}
+					//	Avance au morceau suivant :
+					
+					offset += run_length;
+					length -= run_length;
 				}
-				else
-				{
-					//	Il n'y a plus aucun résultat disponible, sans pour autant
-					//	que l'on ait atteint la fin du paragraphe; abandonne.
-					
-					//	Ceci est une erreur fatale dans ce contexte.
-					
-					return Layout.Status.ErrorNeedMoreText;
-				}
+			}
+			else
+			{
+				//	Il n'y a plus aucun résultat disponible, sans pour autant que
+				//	l'on ait atteint la fin du paragraphe; abandonne.
+				
+				//	Ceci est une erreur fatale dans ce contexte.
+				
+				return Layout.Status.ErrorNeedMoreText;
 			}
 			
 			//	Nous avons atteint la fin du texte spécifiée par l'appelant. La ligne
@@ -241,6 +224,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					frag_length = scratch.RunLength;
 				}
 				
+				ulong    hyphen = scratch.Font.GetHyphen ();
 				ushort[] glyphs;
 				bool     can_break;
 				double   penalty;
@@ -252,7 +236,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					//	qui peuvent provoquer le dédoublement de certains caractères) :
 					
 					ulong save = scratch.Text[scratch.TextStart+frag_length];
-					scratch.Text[scratch.TextStart+frag_length] = '-';
+					scratch.Text[scratch.TextStart+frag_length] = hyphen;
 					
 					glyphs    = scratch.Font.GenerateGlyphs (scratch.Text, scratch.TextStart, frag_length+1);
 					can_break = true;
@@ -265,13 +249,23 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				}
 				else
 				{
-					glyphs    = scratch.Font.GenerateGlyphs (scratch.Text, scratch.TextStart, frag_length);
+					//	Détermine si le texte se termine par des espaces. Si oui, il
+					//	ne faut pas en tenir compte dans le calcul de la pénalité, ni
+					//	dans le calcul de la largeur.
+					
+					int black_length = frag_length;
+					int white_length = 0;
+					
 					can_break = (scratch.RunLength == scratch.TextLength);
 					hyphenate = hyphenate && (scratch.WordBreakInfo == Unicode.BreakInfo.Optional);
 					penalty   = 1;
-					profile   = scratch.StretchProfile;
 					
-					scratch.StretchProfile.Add (scratch.Font, scratch.FontSize, scratch.Text, scratch.TextStart, frag_length);
+					//	TODO: gérer les espaces qui dépassent de la ligne...
+					
+					profile = scratch.StretchProfile;
+					glyphs  = scratch.Font.GenerateGlyphs(scratch.Text, scratch.TextStart, black_length);
+					
+					scratch.StretchProfile.Add (scratch.Font, scratch.FontSize, scratch.Text, scratch.TextStart, black_length);
 				}
 				
 				scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize);
@@ -286,36 +280,6 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				
 				if (can_break)
 				{
-#if false
-					double total_width = context.AvailableWidth;
-					double text_width  = scratch.Advance + scratch.TextWidth - context.LeftMargin;
-					
-					Debug.Assert.IsTrue (total_width > 0);
-					Debug.Assert.IsTrue (text_width > 0);
-					
-					double badness;
-					
-					//	Si le texte est plus large que l'espace disponible, c'est pire du
-					//	point de vue qualitatif que s'il occupe trop peu de place (il est
-					//	plus facile d'étendre des espaces que de les compresser).
-					
-					//	TODO: idéalement, le calcul de la "badness" devrait dépendre de
-					//	l'élasticité du texte contenu dans cette ligne...
-					
-					if (text_width > total_width)
-					{
-						badness = 10 * (text_width - total_width) / total_width;
-					}
-					else
-					{
-						badness = (total_width - text_width) / total_width;
-					}
-					
-					Debug.Assert.IsTrue (badness >=  0.0);
-					Debug.Assert.IsTrue (badness <= 10.0);
-					
-					penalty = penalty * (100 * badness);
-#endif
 					scratch.LastBreakOffset    = scratch.Offset + frag_length;
 					scratch.LastBreakAdvance   = scratch.Advance + scratch.TextWidth;
 					scratch.LastBreakPenalty   = penalty;
@@ -333,19 +297,24 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			return false;
 		}
-		
-		private void RenderRun(Layout.Context context, ITextRenderer renderer, ref FitScratch scratch)
+
+		private void RenderRun(Layout.Context context, ITextRenderer renderer, ref double ox, double oy, ulong[] text, int offset, int length)
 		{
-			int length = scratch.RunLength;
-			int pos    = scratch.TextStart;
+			//	Détermine la font qu'il faudra utiliser pour le fragment de texte
+			//	dont il faut faire le rendu :
 			
+			OpenType.Font font;
+			double        font_size;
+			context.TextContext.GetFont (text[offset], out font, out font_size);
+			
+			//	Génère les glyphes et les informations relatives à l'extensibilité
+			//	pour le fragment de texte :
+			
+			ulong    hyphen     = font.GetHyphen ();
 			ushort[] glyphs     = null;
 			byte[]   attributes = new byte[length+10];
 			
-			for (int i = 0; i < length; i++)
-			{
-				attributes[i] = (byte) Unicode.BreakAnalyzer.GetStretchClass (Unicode.Bits.GetCode (scratch.Text[pos+i]));
-			}
+			Unicode.BreakAnalyzer.GetStretchClass (text, offset, length, attributes);
 			
 			if (context.Hyphenate)
 			{
@@ -353,25 +322,27 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				//	correctement des langues comme le norvégien ou l'ancien allemand
 				//	qui peuvent provoquer le dédoublement de certains caractères) :
 				
-				ulong save = scratch.Text[pos+length];
+				int   end = offset + length;
+				ulong old = text[end];
 				
-				scratch.Text[pos+length] = '-';
-				attributes[pos+length]   = (byte) Unicode.BreakAnalyzer.GetStretchClass ('-');
+				text[end]       = hyphen;
+				attributes[end] = Unicode.BreakAnalyzer.GetStretchClass (hyphen);
 				
-				scratch.Font.GenerateGlyphs (scratch.Text, pos, length, out glyphs, attributes);
+				font.GenerateGlyphs (text, offset, length, out glyphs, attributes);
 				
-				scratch.Text[pos+length] = save;
+				text[end] = old;
 			}
 			else
 			{
-				scratch.Font.GenerateGlyphs (scratch.Text, pos, length, out glyphs, attributes);
+				font.GenerateGlyphs (text, offset, length, out glyphs, attributes);
 			}
+			
+			//	Détermine les mises à l'échelle des divers glyphes, selon leur
+			//	classe d'élasticité :
 			
 			StretchProfile.Scales scales = context.TextStretchScales;
 			
 			int n = glyphs.Length;
-			
-			double y = context.Y;
 			
 			double[] x_scale = new double[n];
 			double[] x_pos   = new double[n];
@@ -385,18 +356,23 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					case Unicode.StretchClass.Character:		x_scale[i] = scales.ScaleCharacter;	break;
 					case Unicode.StretchClass.CharacterSpace:	x_scale[i] = scales.ScaleCharacter;	break;
 					case Unicode.StretchClass.Space:			x_scale[i] = scales.ScaleSpace;		break;
-					case Unicode.StretchClass.Kashida:			x_scale[i] = scales.ScaleKashida;		break;
+					case Unicode.StretchClass.Kashida:			x_scale[i] = scales.ScaleKashida;	break;
 					
 					default:
 						throw new System.InvalidOperationException ();
 				}
 				
-				y_pos[i] = y;
+				y_pos[i] = oy;
 			}
 			
-			scratch.Advance += scratch.Font.GetPositions (glyphs, scratch.FontSize, scratch.Advance, x_pos, x_scale);
+			//	Détermine la position horizontale de chaque glyphe :
 			
-			renderer.Render (context.Frame, scratch.Font, scratch.FontSize, glyphs, x_pos, y_pos, x_scale, null);
+			ox += font.GetPositions (glyphs, font_size, ox, x_pos, x_scale);
+			
+			//	Demande à ITextRenderer de faire le rendu avec les positions que
+			//	nous venons de déterminer :
+			
+			renderer.Render (context.Frame, font, font_size, glyphs, x_pos, y_pos, x_scale, null);
 		}
 		
 		
