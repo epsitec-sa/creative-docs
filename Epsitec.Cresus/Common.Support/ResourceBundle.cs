@@ -11,6 +11,11 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public class ResourceBundle
 	{
+		public static ResourceBundle Create(string name)
+		{
+			return ResourceBundle.Create (name, null, ResourceLevel.Merged, 0);
+		}
+		
 		public static ResourceBundle Create(string name, string prefix, ResourceLevel level, int recursion)
 		{
 			ResourceBundle bundle = new ResourceBundle (name);
@@ -20,11 +25,6 @@ namespace Epsitec.Common.Support
 			bundle.depth  = recursion;
 			
 			return bundle;
-		}
-		
-		public static ResourceBundle Create(string name)
-		{
-			return ResourceBundle.Create (name, null, ResourceLevel.Merged, 0);
 		}
 		
 		
@@ -72,9 +72,7 @@ namespace Epsitec.Common.Support
 			this.depth  = parent.depth + 1;
 			
 			this.Compile (xmlroot);
-			this.Merge ();
 		}
-		
 		
 		
 		public string						Name
@@ -85,14 +83,6 @@ namespace Epsitec.Common.Support
 		public bool							IsEmpty
 		{
 			get { return this.CountFields == 0; }
-		}
-		
-		public Field[]						Fields
-		{
-			get
-			{
-				return this.fields.Clone () as Field[];
-			}
 		}
 		
 		public int							CountFields
@@ -119,53 +109,123 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public bool							RefInclusionEnabled
+		{
+			get { return this.ref_inclusion; }
+			set { this.ref_inclusion = value; }
+		}
+		
+		public bool							AutoMergeEnabled
+		{
+			get { return this.auto_merge; }
+			set { this.auto_merge = value; }
+		}
+		
+		
 		public Field						this[string name]
 		{
 			get
 			{
-				Field field = this.GetField (name);
-				
-				if (field != null)
+				for (int i = 0; i < this.fields.Length; i++)
 				{
-					return field;
+					if (this.fields[i].Name == name)
+					{
+						return this.fields[i];
+					}
 				}
 				
 				return Field.Empty;
 			}
 		}
 		
-		
-		public Field GetField(string name)
+		public Field						this[int index]
 		{
-			for (int i = 0; i < this.fields.Length; i++)
+			get
 			{
-				if (this.fields[i].Name == name)
-				{
-					return this.fields[i];
-				}
+				return this.fields[index];
 			}
-			
-			return null;
 		}
 		
-		protected string GetAttributeValue(System.Xml.XmlNode node, string name)
-		{
-			System.Xml.XmlAttribute attr = node.Attributes[name];
-			
-			if (attr != null)
-			{
-				return attr.Value;
-			}
-			
-			return null;
-		}
 		
 		public bool Contains(string name)
 		{
-			return this.GetField (name) != null;
+			return this[name].IsEmpty == false;
 		}
 		
 		
+		public int Add(Field field)
+		{
+			int index = this.fields.Length;
+			
+			Field[] temp = new Field[index + 1];
+			
+			this.fields.CopyTo (temp, 0);
+			temp[index] = field;
+			this.fields = temp;
+			
+			return index;
+		}
+		
+		public int AddRange(Field[] fields)
+		{
+			int index = this.fields.Length;
+			
+			Field[] temp = new Field[index + fields.Length];
+			
+			this.fields.CopyTo (temp, 0);
+			fields.CopyTo (temp, index);
+			this.fields = temp;
+			
+			return index;
+		}
+		
+		
+		public void Merge()
+		{
+			ArrayList list = new ArrayList ();
+			Hashtable hash = new Hashtable ();
+			
+			for (int i = 0; i < this.fields.Length; i++)
+			{
+				string name = this.fields[i].Name;
+				
+				if (name == null)
+				{
+					//	En principe, tous les champs doivent avoir un nom valide.
+					
+					if (this.ref_inclusion == false)
+					{
+						//	Cas particulier: si l'utilisateur a désactivé l'inclusion des <ref>
+						//	alors il se peut qu'un champ soit en fait un <ref> sans nom, auquel
+						//	cas on doit le copier tel quel, sans faire de merge.
+						
+						list.Add (this.fields[i]);
+					}
+					else
+					{
+						throw new ResourceException (string.Format ("Field has no name. XML: {0}.", this.fields[i].Xml.OuterXml));
+					}
+				}
+				else if (hash.Contains (name))
+				{
+					//	Le champ est déjà connu: on remplace simplement l'ancienne occurrence
+					//	dans la liste.
+					
+					int index = (int) hash[name];
+					list[index] = this.fields[i];
+				}
+				else
+				{
+					//	Le champ n'est pas connu: on ajoute le champ en fin de liste et on prend
+					//	note de son index, pour pouvoir y accéder rapidement par la suite.
+					
+					hash[name] = list.Add (this.fields[i]);
+				}
+			}
+			
+			this.fields = new Field[list.Count];
+			list.CopyTo (this.fields);
+		}
 		
 		
 		public void Compile(byte[] data)
@@ -191,7 +251,6 @@ namespace Epsitec.Common.Support
 				}
 				
 				this.Compile (xmldoc.DocumentElement);
-				this.Merge ();
 			}
 		}
 		
@@ -213,37 +272,66 @@ namespace Epsitec.Common.Support
 			list.CopyTo (this.fields);
 			
 			this.compile_count++;
+			
+			if (this.auto_merge)
+			{
+				this.Merge ();
+			}
 		}
 		
-		protected void Merge()
+		
+		public byte[] CreateXmlAsData()
 		{
-			ArrayList list = new ArrayList ();
-			Hashtable hash = new Hashtable ();
+			byte[] data;
+			
+			using (System.IO.MemoryStream stream = new System.IO.MemoryStream ())
+			{
+				System.Xml.XmlDocument xmldoc = this.CreateXmlDocument (false);
+				xmldoc.Save (stream);
+				data = stream.ToArray ();
+			}
+			
+			return data;
+		}
+		
+		public System.Xml.XmlDocument CreateXmlDocument(bool include_declaration)
+		{
+			System.Xml.XmlDocument xmldoc  = new System.Xml.XmlDocument ();
+			System.Xml.XmlNode     xmlnode = this.CreateXmlNode (xmldoc);
+			
+			if (include_declaration)
+			{
+				xmldoc.AppendChild (xmldoc.CreateXmlDeclaration ("1.0", "utf-8", null));
+			}
+			
+			xmldoc.AppendChild (xmlnode);
+			
+			return xmldoc;
+		}
+		
+		public System.Xml.XmlNode CreateXmlNode(System.Xml.XmlDocument xmldoc)
+		{
+			System.Xml.XmlElement   bundle_node = xmldoc.CreateElement ("bundle");
+			System.Xml.XmlAttribute name_attr   = xmldoc.CreateAttribute ("name");
+			
+			name_attr.Value = this.Name;
+			bundle_node.Attributes.Append (name_attr);
 			
 			for (int i = 0; i < this.fields.Length; i++)
 			{
-				string name = this.fields[i].Name;
+				Field  field  = this.fields[i];
+				string source = field.Xml.OuterXml;
 				
-				if (hash.Contains (name))
-				{
-					//	Le champ est déjà connu: on remplace simplement l'ancienne occurrence
-					//	dans la liste.
-					
-					int index = (int) hash[name];
-					list[index] = this.fields[i];
-				}
-				else
-				{
-					//	Le champ n'est pas connu: on ajoute le champ en fin de liste et on prend
-					//	note de son index, pour pouvoir y accéder rapidement par la suite.
-					
-					hash[name] = list.Add (this.fields[i]);
-				}
+				System.Xml.XmlDocumentFragment fragment =  xmldoc.CreateDocumentFragment ();
+				
+				fragment.InnerXml = source;
+				
+				bundle_node.AppendChild (fragment);
 			}
 			
-			this.fields = new Field[list.Count];
-			list.CopyTo (this.fields);
+			return bundle_node;
 		}
+		
 		
 		protected void CreateFieldList(System.Xml.XmlNode xmlroot, ArrayList list, bool unpack_bundle_ref)
 		{
@@ -251,7 +339,7 @@ namespace Epsitec.Common.Support
 			{
 				if (node.NodeType == System.Xml.XmlNodeType.Element)
 				{
-					if (node.Name == "ref")
+					if ((node.Name == "ref") && (this.ref_inclusion))
 					{
 						//	Cas particulier: on inclut des champs en provenance d'un bundle
 						//	référencé par un tag <ref>.
@@ -260,8 +348,7 @@ namespace Epsitec.Common.Support
 						
 						if (unpack_bundle_ref)
 						{
-							Field[] fields = bundle.Fields;
-							list.AddRange (fields);
+							list.AddRange (bundle.fields);
 						}
 						else
 						{
@@ -292,18 +379,18 @@ namespace Epsitec.Common.Support
 			
 			if (target_field != null)
 			{
-				throw new ResourceException (string.Format ("<ref target='{0}'/> does not reference a bundle.", ref_target));
+				throw new ResourceException (string.Format ("<ref target='{0}'/> does not reference a bundle. XML: {1}.", ref_target, node.OuterXml));
 			}
 			if (ref_type != null)
 			{
-				throw new ResourceException (string.Format ("<ref target='{0}'/> specifies type='{1}'.", ref_target, ref_type));
+				throw new ResourceException (string.Format ("<ref target='{0}'/> specifies type='{1}'. XML: {2}.", ref_target, ref_type, node.OuterXml));
 			}
 			
 			ResourceBundle bundle = Resources.GetBundle (target_bundle, this.level, this.depth + 1) as ResourceBundle;
 			
 			if (bundle == null)
 			{
-				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing bundle.", ref_target));
+				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing bundle. XML: {1}.", ref_target, node.OuterXml));
 			}
 			
 			return bundle;
@@ -322,25 +409,25 @@ namespace Epsitec.Common.Support
 			
 			if (target_field == null)
 			{
-				throw new ResourceException (string.Format ("<ref target='{0}'/> does not reference a field.", ref_target));
+				throw new ResourceException (string.Format ("<ref target='{0}'/> does not reference a field. XML: {1}.", ref_target, node.OuterXml));
 			}
 			if (ref_type != null)
 			{
-				throw new ResourceException (string.Format ("<ref target='{0}'/> specifies type='{1}'.", ref_target, ref_type));
+				throw new ResourceException (string.Format ("<ref target='{0}'/> specifies type='{1}'. XML: {2}.", ref_target, ref_type, node.OuterXml));
 			}
 			
 			ResourceBundle bundle = Resources.GetBundle (target_bundle, this.level, this.depth + 1) as ResourceBundle;
 			
 			if (bundle == null)
 			{
-				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing bundle.", ref_target));
+				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing bundle. XML: {1}.", ref_target, node.OuterXml));
 			}
 			
-			Field field = bundle.GetField (target_field);
+			Field field = bundle[target_field];
 			
-			if (field == null)
+			if (field.IsEmpty)
 			{
-				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing field.", ref_target));
+				throw new ResourceException (string.Format ("<ref target='{0}'/> could not be resolved. Missing field. XML: {1}.", ref_target, node.OuterXml));
 			}
 			
 			return field;
@@ -363,13 +450,13 @@ namespace Epsitec.Common.Support
 				
 				if (data == null)
 				{
-					throw new ResourceException (string.Format ("Binary target '{0}' cannot be resolved.", ref_target));
+					throw new ResourceException (string.Format ("Binary target '{0}' cannot be resolved. XML: {1}.", ref_target, node.OuterXml));
 				}
 				
 				return data;
 			}
 			
-			throw new ResourceException (string.Format ("Illegal reference to binary target '{0}'.", ref_target));
+			throw new ResourceException (string.Format ("Illegal reference to binary target '{0}'. XML: {1}.", ref_target, node.OuterXml));
 		}		
 		
 		protected string GetTargetSpecification(string target)
@@ -390,6 +477,18 @@ namespace Epsitec.Common.Support
 			}
 			
 			return target;
+		}
+		
+		protected string GetAttributeValue(System.Xml.XmlNode node, string name)
+		{
+			System.Xml.XmlAttribute attr = node.Attributes[name];
+			
+			if (attr != null)
+			{
+				return attr.Value;
+			}
+			
+			return null;
 		}
 		
 		
@@ -572,7 +671,7 @@ namespace Epsitec.Common.Support
 						return this.Data as string;
 					}
 					
-					throw new ResourceException (string.Format ("Cannot convert field '{0}' to string.", this.Name));
+					throw new ResourceException (string.Format ("Cannot convert field '{0}' to string. XML: {1}.", this.Name, this.xml == null ? "-" : this.xml.OuterXml));
 				}
 			}
 			
@@ -590,7 +689,7 @@ namespace Epsitec.Common.Support
 						return this.Data as byte[];
 					}
 					
-					throw new ResourceException (string.Format ("Cannot convert field '{0}' to binary.", this.Name));
+					throw new ResourceException (string.Format ("Cannot convert field '{0}' to binary. XML: {1}.", this.Name, this.xml == null ? "-" : this.xml.OuterXml));
 				}
 			}
 			
@@ -608,7 +707,7 @@ namespace Epsitec.Common.Support
 						return this.Data as ResourceBundle;
 					}
 					
-					throw new ResourceException (string.Format ("Cannot convert field '{0}' to bundle.", this.Name));
+					throw new ResourceException (string.Format ("Cannot convert field '{0}' to bundle. XML: {1}.", this.Name, this.xml == null ? "-" : this.xml.OuterXml));
 				}
 			}
 			
@@ -626,7 +725,7 @@ namespace Epsitec.Common.Support
 						return this.Data as FieldList;
 					}
 					
-					throw new ResourceException (string.Format ("Cannot convert field '{0}' to list.", this.Name));
+					throw new ResourceException (string.Format ("Cannot convert field '{0}' to list. XML: {1}.", this.Name, this.xml == null ? "-" : this.xml.OuterXml));
 				}
 			}
 			
@@ -656,8 +755,11 @@ namespace Epsitec.Common.Support
 							this.CompileList ();
 							break;
 						
+						case "ref":
+							throw new ResourceException (string.Format ("Field contains unresolved <ref>, it cannot be compiled. XML: {0}.", this.xml.OuterXml));
+						
 						default:
-							throw new ResourceException (string.Format ("Unsupported tag <{0}> cannot be compiled.", this.xml.Name));
+							throw new ResourceException (string.Format ("Unsupported tag <{0}> cannot be compiled. XML: {1}.", this.xml.Name, this.xml.OuterXml));
 					}
 					
 					System.Diagnostics.Debug.Assert (this.type != ResourceFieldType.None);
@@ -721,7 +823,7 @@ namespace Epsitec.Common.Support
 				if (field.Type != ResourceFieldType.Data)
 				{
 					string target = this.parent.GetAttributeValue (node, "target");
-					throw new ResourceException (string.Format ("<ref target='{0}'/> resolution is not <data> compatible.", target));
+					throw new ResourceException (string.Format ("<ref target='{0}'/> resolution is not <data> compatible. XML: {1}.", target, field.Xml.OuterXml));
 				}
 				
 				string data = field.Data as string;
@@ -764,6 +866,8 @@ namespace Epsitec.Common.Support
 		protected string					prefix;
 		protected ResourceLevel				level;
 		protected Field[]					fields;
+		protected bool						ref_inclusion = true;
+		protected bool						auto_merge    = true;
 		
 		protected const int					MaxRecursion = 50;
 	}
