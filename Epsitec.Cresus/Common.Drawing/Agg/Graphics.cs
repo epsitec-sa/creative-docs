@@ -231,9 +231,15 @@ namespace Epsitec.Common.Drawing.Agg
 			this.UpdateTransform ();
 		}
 		
-		public override void RotateTransform(double angle, double cx, double cy)
+		public override void RotateTransformDeg(double angle, double cx, double cy)
 		{
-			this.transform.MultiplyByPostfix (Drawing.Transform.FromRotation (angle, cx, cy));
+			this.transform.MultiplyByPostfix (Drawing.Transform.FromRotationDeg (angle, cx, cy));
+			this.UpdateTransform ();
+		}
+		
+		public override void RotateTransformRad(double angle, double cx, double cy)
+		{
+			this.transform.MultiplyByPostfix (Drawing.Transform.FromRotationRad (angle, cx, cy));
 			this.UpdateTransform ();
 		}
 		
