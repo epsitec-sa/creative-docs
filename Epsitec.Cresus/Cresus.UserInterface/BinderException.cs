@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 03/11/2003
 
 namespace Epsitec.Cresus.UserInterface
@@ -7,7 +7,10 @@ namespace Epsitec.Cresus.UserInterface
 	/// La classe BinderException représente une exception liée au DataBinder
 	/// ou IBinder.
 	/// </summary>
-	public class BinderException : System.Exception
+	
+	[System.Serializable]
+	
+	public class BinderException : System.ApplicationException
 	{
 		public BinderException()
 		{

@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 07/10/2003
 
 namespace Epsitec.Cresus.Database
@@ -6,7 +6,10 @@ namespace Epsitec.Cresus.Database
 	/// <summary>
 	/// Classe de base pour les exceptions de l'interface avec la base de données.
 	/// </summary>
-	public class DbException : System.Exception
+	
+	[System.Serializable]
+	
+	public class DbException : System.ApplicationException, System.Runtime.Serialization.ISerializable
 	{
 		public DbException(DbAccess db_access)
 		{
@@ -23,6 +26,19 @@ namespace Epsitec.Cresus.Database
 			this.db_access = db_access;
 		}
 		
+		
+		#region ISerializable Members
+		protected DbException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+		{
+			this.db_access = (DbAccess) info.GetValue ("db_access", typeof (DbAccess));
+		}
+		
+		void System.Runtime.Serialization.ISerializable.GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+		{
+			info.AddValue ("db_access", this.db_access);
+			base.GetObjectData (info, context);
+		}
+		#endregion
 		
 		public DbAccess					DbAccess
 		{
