@@ -31,9 +31,10 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}		
 		
-		// Bouton dans en-tête supérieure ou gauche ?
-		public HeaderButtonStyle Style
+		
+		public HeaderButtonStyle			Style
 		{
+			// Bouton dans en-tête supérieure ou gauche ?
 			get
 			{
 				return this.headerButtonStyle;
@@ -49,23 +50,25 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Bouton statique ou dynamique ?
-		public bool Dynamic
+		
+		public bool							IsDynamic
 		{
+			//	Bouton statique ou dynamique ? Un clic sur un bouton dynamique permet de changer
+			//	l'ordre des tris (c'est géré par ScrollArray, entre autres).
 			get
 			{
-				return this.dynamic;
+				return this.isDynamic;
 			}
 
 			set
 			{
-				this.dynamic = value;
+				this.isDynamic = value;
 			}
 		}
 
-		// Choix pour le triangle du bouton.
 		public SortMode						SortMode
 		{
+			// Choix pour le triangle du bouton.
 			get
 			{
 				return this.sortMode;
@@ -81,6 +84,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
 		protected override void UpdateTextLayout()
 		{
 			base.UpdateTextLayout();
@@ -94,7 +98,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Dessine le bouton.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
@@ -103,7 +106,7 @@ namespace Epsitec.Common.Widgets
 			WidgetState       state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point();
 
-			if ( !this.dynamic )
+			if ( !this.isDynamic )
 			{
 				state &= ~WidgetState.Engaged;
 				state &= ~WidgetState.Entered;
@@ -168,8 +171,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		protected HeaderButtonStyle			headerButtonStyle;
-		protected bool						dynamic = false;
+		protected bool						isDynamic = false;
 		protected SortMode					sortMode = SortMode.None;
 		
 		protected const double				Margin = 2;
