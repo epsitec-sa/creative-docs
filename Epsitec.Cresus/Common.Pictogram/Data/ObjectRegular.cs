@@ -244,16 +244,16 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( i >= total*2 )  return false;
 
 				Drawing.Point star = center + (corner-center)*(1-this.PropertyRegular(4).Deep);
-				a = Drawing.Transform.RotatePoint(center, System.Math.PI*2*(i+0)/(total*2), (i%2==0) ? corner : star);
-				b = Drawing.Transform.RotatePoint(center, System.Math.PI*2*(i+1)/(total*2), (i%2==0) ? star : corner);
+				a = Drawing.Transform.RotatePointRad(center, System.Math.PI*2*(i+0)/(total*2), (i%2==0) ? corner : star);
+				b = Drawing.Transform.RotatePointRad(center, System.Math.PI*2*(i+1)/(total*2), (i%2==0) ? star : corner);
 				return true;
 			}
 			else	// polygone ?
 			{
 				if ( i >= total )  return false;
 
-				a = Drawing.Transform.RotatePoint(center, System.Math.PI*2*(i+0)/total, corner);
-				b = Drawing.Transform.RotatePoint(center, System.Math.PI*2*(i+1)/total, corner);
+				a = Drawing.Transform.RotatePointRad(center, System.Math.PI*2*(i+0)/total, corner);
+				b = Drawing.Transform.RotatePointRad(center, System.Math.PI*2*(i+1)/total, corner);
 				return true;
 			}
 		}

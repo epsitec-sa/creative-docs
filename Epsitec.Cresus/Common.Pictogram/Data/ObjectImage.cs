@@ -146,19 +146,19 @@ namespace Epsitec.Common.Pictogram.Data
 
 			p.X = center.X-width/2;
 			p.Y = center.Y-height/2;
-			Drawing.Point p1 = Drawing.Transform.RotatePoint(center, angle, p);
+			Drawing.Point p1 = Drawing.Transform.RotatePointDeg(center, angle, p);
 
 			p.X = center.X+width/2;
 			p.Y = center.Y-height/2;
-			Drawing.Point p2 = Drawing.Transform.RotatePoint(center, angle, p);
+			Drawing.Point p2 = Drawing.Transform.RotatePointDeg(center, angle, p);
 
 			p.X = center.X+width/2;
 			p.Y = center.Y+height/2;
-			Drawing.Point p3 = Drawing.Transform.RotatePoint(center, angle, p);
+			Drawing.Point p3 = Drawing.Transform.RotatePointDeg(center, angle, p);
 
 			p.X = center.X-width/2;
 			p.Y = center.Y+height/2;
-			Drawing.Point p4 = Drawing.Transform.RotatePoint(center, angle, p);
+			Drawing.Point p4 = Drawing.Transform.RotatePointDeg(center, angle, p);
 
 			Drawing.Path path = new Drawing.Path();
 			path.MoveTo(p1);
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Pictogram.Data
 			center = (pbl+pbr+ptl+ptr)/4;
 			width  = System.Math.Min(Drawing.Point.Distance(pbl,pbr), Drawing.Point.Distance(ptl,ptr));
 			height = System.Math.Min(Drawing.Point.Distance(pbl,ptl), Drawing.Point.Distance(pbr,ptr));
-			angle  = Drawing.Point.ComputeAngle(pbl, pbr);
+			angle  = Drawing.Point.ComputeAngleRad(pbl, pbr);
 		}
 
 		// Ouvre le bitmap de l'image si nécessaire.
@@ -351,8 +351,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 					graphics.TranslateTransform(center.X, center.Y);
 
-					angle *= 180.0/System.Math.PI;  // radians -> degrés
-					graphics.RotateTransform(angle, 0, 0);
+					graphics.RotateTransformRad(angle, 0, 0);
 
 					double mirrorx = property.MirrorH ? -1 : 1;
 					double mirrory = property.MirrorV ? -1 : 1;
