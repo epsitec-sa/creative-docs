@@ -16,9 +16,10 @@ namespace Epsitec.Common.Drawing
 		NonZero		= 2
 	}
 	
-	public class Rasterizer : System.IDisposable
+	
+	public abstract class Rasterizer : System.IDisposable
 	{
-		public Rasterizer()
+		protected Rasterizer()
 		{
 		}
 		
@@ -26,6 +27,7 @@ namespace Epsitec.Common.Drawing
 		{
 			this.Dispose (false);
 		}
+		
 		
 		public FillMode					FillMode
 		{
@@ -38,8 +40,7 @@ namespace Epsitec.Common.Drawing
 				if (this.fill_mode != value)
 				{
 					this.fill_mode = value;
-					this.CreateOnTheFly ();
-					Agg.Library.AggRasterizerFillingRule (this.agg_ras, (int) value);
+					this.SyncFillMode ();
 				}
 			}
 		}
@@ -55,8 +56,7 @@ namespace Epsitec.Common.Drawing
 				if (this.gamma != value)
 				{
 					this.gamma = value;
-					this.CreateOnTheFly ();
-					Agg.Library.AggRasterizerGamma (this.agg_ras, value);
+					this.SyncGamma ();
 				}
 			}
 		}
@@ -76,33 +76,37 @@ namespace Epsitec.Common.Drawing
 				
 				if (this.transform != value)
 				{
-					this.CreateOnTheFly ();
 					this.transform = new Transform (value);
-					Agg.Library.AggRasterizerSetTransform (this.agg_ras, value.XX, value.XY, value.YX, value.YY, value.TX, value.TY);
+					this.SyncTransform ();
 				}
 			}
 		}
 		
 		
-		public void SetClipBox(double x1, double y1, double x2, double y2)
+		protected virtual void SyncFillMode()
 		{
-			//	The clip box is specified in destination pixel coordinates (without any transform
-			//	matrix).
-			this.CreateOnTheFly ();
-			Agg.Library.AggRasterizerSetClipBox (this.agg_ras, x1, y1, x2, y2);
 		}
 		
-		public void ResetClipBox()
+		protected virtual void SyncGamma()
 		{
-			this.CreateOnTheFly ();
-			Agg.Library.AggRasterizerResetClipBox (this.agg_ras);
+		}
+		
+		protected virtual void SyncTransform()
+		{
 		}
 		
 		
-		public void AddSurface(Path path)
+		public virtual void SetClipBox(double x1, double y1, double x2, double y2)
 		{
-			this.CreateOnTheFly ();
-			Agg.Library.AggRasterizerAddPath (this.agg_ras, path.Handle, path.ContainsCurves);
+		}
+		
+		public virtual void ResetClipBox()
+		{
+		}
+		
+		
+		public virtual void AddSurface(Path path)
+		{
 		}
 		
 		public void AddOutline(Path path)
@@ -110,10 +114,8 @@ namespace Epsitec.Common.Drawing
 			this.AddOutline (path, 1);
 		}
 		
-		public void AddOutline(Path path, double width)
+		public virtual void AddOutline(Path path, double width)
 		{
-			this.CreateOnTheFly ();
-			Agg.Library.AggRasterizerAddPathStroke1 (this.agg_ras, path.Handle, width, path.ContainsCurves);
 		}
 		
 		public void AddOutline(Path path, double width, CapStyle cap, JoinStyle join)
@@ -121,86 +123,30 @@ namespace Epsitec.Common.Drawing
 			this.AddOutline (path, width, cap, join, 4.0);
 		}
 
-		public void AddOutline(Path path, double width, CapStyle cap, JoinStyle join, double miter_limit)
+		public virtual void AddOutline(Path path, double width, CapStyle cap, JoinStyle join, double miter_limit)
 		{
-			this.CreateOnTheFly ();
-			Agg.Library.AggRasterizerAddPathStroke2 (this.agg_ras, path.Handle, width, (int) cap, (int) join, miter_limit, path.ContainsCurves);
 		}
 		
-		public void AddGlyph(Font font, int glyph, double x, double y, double scale)
+		public virtual void AddGlyph(Font font, int glyph, double x, double y, double scale)
 		{
-			this.CreateOnTheFly ();
-			
-			if (font.IsSynthetic)
-			{
-				Transform font_transform = font.SyntheticTransform;
-				
-				font_transform.TX = x;
-				font_transform.TY = y;
-				
-				switch (font.SyntheticFontMode)
-				{
-					case SyntheticFontMode.Oblique:
-						font_transform.MultiplyBy (this.transform);
-						Agg.Library.AggRasterizerSetTransform (this.agg_ras, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
-						Agg.Library.AggRasterizerAddGlyph(this.agg_ras, font.Handle, glyph, 0, 0, scale);
-						Agg.Library.AggRasterizerSetTransform (this.agg_ras, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
-						return;
-					
-					default:
-						break;
-				}
-			}
-			
-			Agg.Library.AggRasterizerAddGlyph(this.agg_ras, font.Handle, glyph, x, y, scale);
 		}
 		
-		public double AddText(Font font, string text, double x, double y, double scale)
+		public virtual double AddText(Font font, string text, double x, double y, double scale)
 		{
-			this.CreateOnTheFly ();
-			
-			if (font.IsSynthetic)
-			{
-				Transform font_transform = font.SyntheticTransform;
-				
-				font_transform.Scale (scale);
-				
-				font_transform.TX = x;
-				font_transform.TY = y;
-				
-				switch (font.SyntheticFontMode)
-				{
-					case SyntheticFontMode.Oblique:
-						return Agg.Library.AggRasterizerAddText (this.agg_ras, font.Handle, text, 0, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
-					
-					default:
-						break;
-				}
-			}
-			
-			return Agg.Library.AggRasterizerAddText (this.agg_ras, font.Handle, text, 0, scale, 0, 0, scale, x, y);
+			return font.GetTextAdvance (text) * scale;
 		}
 		
 		
-		public void Render(Renderer.Solid renderer)
+		public virtual void Render(Renderer.Solid renderer)
 		{
-			this.CreateOnTheFly ();
-			Agg.Library.AggRasterizerRenderSolid (this.agg_ras, renderer.Handle);
-			Agg.Library.AggRasterizerClear (this.agg_ras);
 		}
 		
-		public void Render(Renderer.Image renderer)
+		public virtual void Render(Renderer.Image renderer)
 		{
-			this.CreateOnTheFly ();
-			Agg.Library.AggRasterizerRenderImage (this.agg_ras, renderer.Handle);
-			Agg.Library.AggRasterizerClear (this.agg_ras);
 		}
 		
-		public void Render(Renderer.Gradient renderer)
+		public virtual void Render(Renderer.Gradient renderer)
 		{
-			this.CreateOnTheFly ();
-			Agg.Library.AggRasterizerRenderGradient (this.agg_ras, renderer.Handle);
-			Agg.Library.AggRasterizerClear (this.agg_ras);
 		}
 		
 		
@@ -212,31 +158,13 @@ namespace Epsitec.Common.Drawing
 		
 		protected virtual void Dispose(bool disposing)
 		{
-			if (disposing)
-			{
-				//	nothing
-			}
-			
-			if (this.agg_ras != System.IntPtr.Zero)
-			{
-				Agg.Library.AggRasterizerDelete (this.agg_ras);
-				this.agg_ras = System.IntPtr.Zero;
-			}
 		}
 		
 		
-		protected virtual void CreateOnTheFly()
-		{
-			if (this.agg_ras == System.IntPtr.Zero)
-			{
-				this.agg_ras = Agg.Library.AggRasterizerNew ();
-			}
-		}
 		
+		protected FillMode						fill_mode = FillMode.NonZero;
+		protected double						gamma = 1.0;
 		
-		private System.IntPtr					agg_ras;
-		private FillMode						fill_mode = FillMode.NonZero;
-		private Transform						transform = new Transform ();
-		private double							gamma = 1.0;
+		protected Transform						transform = new Transform ();
 	}
 }

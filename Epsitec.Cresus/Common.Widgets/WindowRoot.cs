@@ -54,8 +54,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
-			Drawing.Path path = new Drawing.Path ();
-			
 			double dx = this.Client.Width;
 			double dy = this.Client.Height;
 			
@@ -64,14 +62,8 @@ namespace Epsitec.Common.Widgets
 			double x2 = System.Math.Min (clip_rect.Right, dx);
 			double y2 = System.Math.Min (clip_rect.Top, dy);
 			
-			path.MoveTo (x1, y1);
-			path.LineTo (x2, y1);
-			path.LineTo (x2, y2);
-			path.LineTo (x1, y2);
-			path.Close ();
-			
 			graphics.SolidRenderer.Color = this.BackColor;
-			graphics.Rasterizer.AddSurface (path);
+			graphics.AddFilledRectangle (x1, y1, x2-x1, y2-y1);
 			graphics.RenderSolid ();
 		}
 		

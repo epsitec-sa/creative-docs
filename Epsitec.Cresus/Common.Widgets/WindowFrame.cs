@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 			this.SetStyle (System.Windows.Forms.ControlStyles.ResizeRedraw, true);
 			this.SetStyle (System.Windows.Forms.ControlStyles.UserPaint, true);
 			
-			this.graphics = new Epsitec.Common.Drawing.Graphics ();
+			this.graphics = Epsitec.Common.Drawing.GraphicsFactory.NewGraphics ();
 			this.root     = new WindowRoot (this);
 			
 			this.root.Size = new Drawing.Size (this.ClientSize);
@@ -544,7 +544,12 @@ namespace Epsitec.Common.Widgets
 				this.root.PaintHandler (this.graphics, repaint);
 			}
 			
-			this.graphics.Pixmap.Paint (win_graphics, win_clip_rect);
+			Drawing.Pixmap pixmap = this.graphics.Pixmap;
+			
+			if (pixmap != null)
+			{
+				pixmap.Paint (win_graphics, win_clip_rect);
+			}
 		}
 		
 		public virtual void DispatchMessage(Message message)

@@ -123,6 +123,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "GraphicsFactory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IImageProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -183,7 +188,37 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Agg\Graphics.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Agg\Library.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Agg\Rasterizer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Agg\SolidRenderer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Null\Graphics.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Null\Rasterizer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Null\SolidRenderer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

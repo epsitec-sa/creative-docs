@@ -172,11 +172,11 @@ namespace Epsitec.Common.Tests
 			this.global_pixmap_1.Size = form.ClientSize;
 			this.global_pixmap_1.Clear ();
 			
-			Epsitec.Common.Drawing.Renderer.Solid renderer = new Common.Drawing.Renderer.Solid ();
+			Epsitec.Common.Drawing.Renderer.Solid renderer = new Common.Drawing.Agg.SolidRenderer ();
 			renderer.Pixmap = this.global_pixmap_1;
 			renderer.Clear (Color.FromBrightness (1));
 			
-			Rasterizer rasterizer = new Rasterizer ();
+			Rasterizer rasterizer = new Epsitec.Common.Drawing.Agg.Rasterizer ();
 			rasterizer.Gamma = 1.2;
 			
 			Font font = Font.GetFont ("Times New Roman", "Italic");
@@ -245,11 +245,11 @@ namespace Epsitec.Common.Tests
 			this.global_pixmap_2.Size = form.ClientSize;
 			this.global_pixmap_2.Clear ();
 			
-			Epsitec.Common.Drawing.Renderer.Solid renderer = new Common.Drawing.Renderer.Solid ();
+			Epsitec.Common.Drawing.Renderer.Solid renderer = new Common.Drawing.Agg.SolidRenderer ();
 			renderer.Pixmap = this.global_pixmap_2;
 			renderer.Clear (Color.FromBrightness (1));
 			
-			Rasterizer rasterizer = new Rasterizer ();
+			Rasterizer rasterizer = new Epsitec.Common.Drawing.Agg.Rasterizer ();
 			rasterizer.Gamma = 1.2;
 			rasterizer.Transform = Transform.FromScale (0.8, 0.8);
 			
@@ -338,11 +338,11 @@ namespace Epsitec.Common.Tests
 			this.global_pixmap_3.Size = form.ClientSize;
 			this.global_pixmap_3.Clear ();
 			
-			Epsitec.Common.Drawing.Renderer.Solid renderer = new Common.Drawing.Renderer.Solid ();
+			Epsitec.Common.Drawing.Renderer.Solid renderer = new Common.Drawing.Agg.SolidRenderer ();
 			renderer.Pixmap = this.global_pixmap_3;
 			renderer.Clear (Color.FromBrightness (1));
 			
-			Rasterizer rasterizer = new Rasterizer ();
+			Rasterizer rasterizer = new Epsitec.Common.Drawing.Agg.Rasterizer ();
 			rasterizer.Gamma = 1.2;
 			rasterizer.Transform = Transform.FromScale (0.25, 0.25);
 			
@@ -384,7 +384,7 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckRenderingSpeed()
 		{
-			Graphics gra  = new Graphics ();
+			Graphics gra  = new Epsitec.Common.Drawing.Agg.Graphics ();
 			Font     font = Font.GetFont ("Tahoma", "Regular");
 			double   size = 10.6;
 			string   text = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
@@ -506,7 +506,7 @@ namespace Epsitec.Common.Tests
 		
 		[Test] public void CheckFillPixelCache()
 		{
-			Graphics gra  = new Graphics ();
+			Graphics gra  = new Epsitec.Common.Drawing.Agg.Graphics ();
 			double   size = 10.6;
 			string   text = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
 			Font     font = Font.GetFont ("Tahoma", "Regular");

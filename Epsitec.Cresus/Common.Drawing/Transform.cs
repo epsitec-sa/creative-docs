@@ -184,30 +184,36 @@ namespace Epsitec.Common.Drawing
 		
 		public void MultiplyBy(Transform t)
 		{
-			Transform c = Transform.Multiply (t, this);
-			
-			this.xx = c.xx;
-			this.xy = c.xy;
-			this.tx = c.tx;
-			this.yx = c.yx;
-			this.yy = c.yy;
-			this.ty = c.ty;
-			
-			this.OnChanged (System.EventArgs.Empty);
+			if (t != null)
+			{
+				Transform c = Transform.Multiply (t, this);
+				
+				this.xx = c.xx;
+				this.xy = c.xy;
+				this.tx = c.tx;
+				this.yx = c.yx;
+				this.yy = c.yy;
+				this.ty = c.ty;
+				
+				this.OnChanged (System.EventArgs.Empty);
+			}
 		}
 		
 		public void MultiplyByPostfix(Transform t)
 		{
-			Transform c = Transform.Multiply (this, t);
-			
-			this.xx = c.xx;
-			this.xy = c.xy;
-			this.tx = c.tx;
-			this.yx = c.yx;
-			this.yy = c.yy;
-			this.ty = c.ty;
-			
-			this.OnChanged (System.EventArgs.Empty);
+			if (t != null)
+			{
+				Transform c = Transform.Multiply (this, t);
+				
+				this.xx = c.xx;
+				this.xy = c.xy;
+				this.tx = c.tx;
+				this.yx = c.yx;
+				this.yy = c.yy;
+				this.ty = c.ty;
+				
+				this.OnChanged (System.EventArgs.Empty);
+			}
 		}
 		
 		public void Round()

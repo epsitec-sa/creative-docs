@@ -1,6 +1,6 @@
 namespace Epsitec.Common.Drawing
 {
-	public class Path
+	public class Path : System.IDisposable
 	{
 		public Path()
 		{
