@@ -73,6 +73,14 @@ namespace Epsitec.Common.Converters
 			return true;
 		}
 		
+		public static bool Convert(object obj, out bool value)
+		{
+			decimal value_decimal;
+			bool ok = Converter.Convert (obj, out value_decimal);
+			value = (value_decimal == 0) ? false : true;
+			return ok;
+		}
+		
 		public static bool Convert(object obj, out int value)
 		{
 			decimal value_decimal;
@@ -112,6 +120,21 @@ namespace Epsitec.Common.Converters
 				{
 					value = 0;
 					return false;
+				}
+				
+				switch (text.ToLower ().Trim ())
+				{
+					case "false":
+					case "off":
+					case "no":
+						value = 0;
+						return true;
+					
+					case "true":
+					case "on":
+					case "yes":
+						value = 1;
+						return true;
 				}
 				
 				value = System.Decimal.Parse (text, System.Globalization.CultureInfo.InvariantCulture);
