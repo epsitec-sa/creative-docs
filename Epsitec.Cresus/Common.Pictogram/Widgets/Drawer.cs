@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe Drawer permet de représenter vectoriellement des icônes.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class Drawer : Epsitec.Common.Widgets.Button
 	{
 		public Drawer()
@@ -1218,6 +1221,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 					break;
 
 				case MessageType.KeyDown:
+					if ( message.IsAltPressed )
+					{
+						// Il ne faut jamais manger les pressions de touches avec ALT, car elles sont
+						// utilisées par les raccourcis clavier globaux.
+						
+						return;
+					}
 					if ( message.KeyCode == KeyCode.ControlKey )
 					{
 						this.iconContext.IsCtrl = true;

@@ -7,7 +7,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe AbstractPanel est la classe de base pour tous les panels.
 	/// </summary>
-	public class AbstractPanel : Epsitec.Common.Widgets.Widget
+	
+	[SuppressBundleSupport]
+	
+	public abstract class AbstractPanel : Epsitec.Common.Widgets.Widget
 	{
 		public AbstractPanel()
 		{
