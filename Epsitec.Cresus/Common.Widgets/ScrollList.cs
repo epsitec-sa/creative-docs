@@ -145,7 +145,6 @@ namespace Epsitec.Common.Widgets
 				{
 					this.selectedLine = value;
 					this.SetDirty ();
-					this.OnSelectedIndexChanged();
 				}
 			}
 		}
@@ -310,6 +309,7 @@ namespace Epsitec.Common.Widgets
 					if ( this.mouseDown )
 					{
 						this.MouseSelect(pos);
+						this.OnSelectedIndexChanged();
 						this.OnValidation();
 						this.mouseDown = false;
 					}
@@ -357,6 +357,7 @@ namespace Epsitec.Common.Widgets
 					if ( sel >= 0 )
 					{
 						this.SelectedIndex = sel;
+						this.OnSelectedIndexChanged();
 						this.ShowSelectedLine(ScrollListShow.Extremity);
 					}
 					break;
@@ -366,6 +367,7 @@ namespace Epsitec.Common.Widgets
 					if ( sel < this.items.Count )
 					{
 						this.SelectedIndex = sel;
+						this.OnSelectedIndexChanged();
 						this.ShowSelectedLine(ScrollListShow.Extremity);
 					}
 					break;

@@ -76,6 +76,10 @@ namespace Epsitec.Common.Widgets
 		void PaintTextSelectionForeground(Drawing.Graphics graphics, Drawing.Rectangle[] rect);
 		
 		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, Direction shadow);
+
+		Drawing.Color GetColorCaption();
+		Drawing.Color GetColorControl();
+		Drawing.Color GetColorWindow();
 	}
 	
 	public enum Direction

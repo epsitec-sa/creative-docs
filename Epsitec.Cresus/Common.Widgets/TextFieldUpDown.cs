@@ -74,7 +74,7 @@ namespace Epsitec.Common.Widgets
 			{
 				number = System.Convert.ToDouble(text);
 			}
-			catch
+			catch (System.Exception ex)
 			{
 				return;
 			}
@@ -92,6 +92,7 @@ namespace Epsitec.Common.Widgets
 
 			text = System.Convert.ToString(number);
 			this.Text = text;
+			this.OnTextChanged();
 			this.cursorFrom = 0;
 			this.cursorTo   = text.Length;
 			this.Invalidate();
@@ -104,13 +105,16 @@ namespace Epsitec.Common.Widgets
 			{
 				string text = this.Text;
 				double number = 0;
-				try
+				if ( text != "" )
 				{
-					number = System.Convert.ToDouble(text);
-				}
-				catch
-				{
-					number = 0;
+					try
+					{
+						number = System.Convert.ToDouble(text);
+					}
+					catch (System.Exception ex)
+					{
+						number = 0;
+					}
 				}
 				return number;
 			}
