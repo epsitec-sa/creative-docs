@@ -16,6 +16,8 @@ namespace Epsitec.Cresus.Requests
 		ExecutedByClient	= 3,				//	exécution par le client OK
 		SentToServer		= 4,				//	envoi au serveur OK
 		ExecutedByServer	= 5,				//	exécution par le serveur OK
+		
+		Count
 	}
 	
 	//	Les transitions suivantes sont possibles :

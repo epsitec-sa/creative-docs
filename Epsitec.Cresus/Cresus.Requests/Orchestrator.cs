@@ -5,6 +5,8 @@ using Epsitec.Cresus.Database;
 
 namespace Epsitec.Cresus.Requests
 {
+	using EventHandler = Common.Support.EventHandler;
+	
 	/// <summary>
 	/// La classe Orchestrator gère l'arrivée de requêtes, leur mise en queue et
 	/// leur traitement.
@@ -18,7 +20,7 @@ namespace Epsitec.Cresus.Requests
 			this.execution_engine = new ExecutionEngine (this.infrastructure);
 			this.execution_queue  = new ExecutionQueue (this.infrastructure, this.database);
 			
-			this.thread_abort_event = new System.Threading.ManualResetEvent (false);
+			this.abort_event   = new System.Threading.ManualResetEvent (false);
 			this.worker_thread = new System.Threading.Thread (new System.Threading.ThreadStart (this.WorkerThread));
 			
 			this.worker_thread.Start ();
@@ -30,6 +32,14 @@ namespace Epsitec.Cresus.Requests
 			get
 			{
 				return this.execution_queue;
+			}
+		}
+		
+		public ExecutionEngine					ExecutionEngine
+		{
+			get
+			{
+				return this.execution_engine;
 			}
 		}
 		
@@ -49,6 +59,14 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
+		public OrchestratorState				State
+		{
+			get
+			{
+				return this.state;
+			}
+		}
+		
 		
 		#region IDisposable Members
 		public void Dispose()
@@ -64,20 +82,40 @@ namespace Epsitec.Cresus.Requests
 			{
 				System.Diagnostics.Debug.WriteLine ("Requests.Orchestrator Worker Thread launched.");
 				
+				System.Threading.WaitHandle[] wait_events = new System.Threading.WaitHandle[3];
+				
+				wait_events[0] = this.execution_queue.EnqueueWaitEvent;
+				wait_events[1] = this.execution_queue.ExecutionStateWaitEvent;
+				wait_events[2] = this.abort_event;
+				
 				for (;;)
 				{
-					int handle_index = Common.Support.Sync.Wait (this.execution_queue.EnqueueEvent, this.thread_abort_event);
+					int handle_index = Common.Support.Sync.Wait (wait_events);
 					
-					//	Tout événement autre que celui lié à la queue provoque l'interruption
+					//	Tout événement autre que ceux liés à la queue provoque l'interruption
 					//	du processus :
 					
-					if (handle_index != 0)
+					if ((handle_index < 0) ||
+						(handle_index > 1))
 					{
 						this.ProcessShutdown ();
 						break;
 					}
 					
-					this.ProcessQueue ();
+					//	Analyse le contenu de la queue.
+					
+					if (this.execution_queue.HasConflicting)
+					{
+						//	La queue contient des éléments en conflit.
+						
+						this.ChangeToState (OrchestratorState.Conflicting);
+					}
+					else
+					{
+						this.ChangeToState (OrchestratorState.Processing);
+						this.ProcessQueue ();
+						this.ChangeToState (this.execution_queue.HasConflicting ? OrchestratorState.Conflicting : OrchestratorState.Ready);
+					}
 				}
 			}
 			catch (System.Exception exception)
@@ -88,6 +126,16 @@ namespace Epsitec.Cresus.Requests
 			finally
 			{
 				System.Diagnostics.Debug.WriteLine ("Requests.Orchestrator Worker Thread terminated.");
+			}
+		}
+		
+		
+		protected void ChangeToState(OrchestratorState state)
+		{
+			if (this.state != state)
+			{
+				this.state = state;
+				this.OnStateChanged ();
 			}
 		}
 		
@@ -107,6 +155,11 @@ namespace Epsitec.Cresus.Requests
 			
 			for (int i = 0; i < n; i++)
 			{
+				if (this.execution_queue.HasConflicting)
+				{
+					break;
+				}
+				
 				System.Data.DataRow row = rows[i];
 				
 				if (DbRichCommand.IsRowDeleted (row))
@@ -166,6 +219,8 @@ namespace Epsitec.Cresus.Requests
 				transaction.Dispose ();
 			}
 			
+			this.OnRequestExecuted ();
+			
 			if (conflict_detected)
 			{
 				this.ProcessDetectedConflict (row, request);
@@ -203,7 +258,7 @@ namespace Epsitec.Cresus.Requests
 		{
 			if (disposing)
 			{
-				this.thread_abort_event.Set ();
+				this.abort_event.Set ();
 				this.worker_thread.Join ();
 				
 				this.database.Dispose ();
@@ -213,12 +268,34 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
+		protected virtual void OnStateChanged()
+		{
+			if (this.StateChanged != null)
+			{
+				this.StateChanged (this);
+			}
+		}
+		
+		protected virtual void OnRequestExecuted()
+		{
+			if (this.RequestExecuted != null)
+			{
+				this.RequestExecuted (this);
+			}
+		}
+		
+		
+		public event EventHandler				StateChanged;
+		public event EventHandler				RequestExecuted;
+		
+		
 		protected DbInfrastructure				infrastructure;
 		protected ExecutionQueue				execution_queue;
 		protected ExecutionEngine				execution_engine;
 		protected IDbAbstraction				database;
+		protected OrchestratorState				state;
 		
 		System.Threading.Thread					worker_thread;
-		System.Threading.ManualResetEvent		thread_abort_event;
+		System.Threading.ManualResetEvent		abort_event;
 	}
 }

@@ -16,7 +16,11 @@ namespace Epsitec.Cresus.Requests
 			this.infrastructure = infrastructure;
 			this.database       = (database == null) ? this.infrastructure.DefaultDbAbstraction : database;
 			this.enqueue_event  = new System.Threading.AutoResetEvent (false);
+			this.exstate_event  = new System.Threading.AutoResetEvent (false);
 			this.is_server      = this.infrastructure.LocalSettings.IsServer;
+			
+			int n = (int) ExecutionState.Count;
+			this.state_count = new int[n];
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly, this.database))
 			{
@@ -46,7 +50,8 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
-		public System.Threading.AutoResetEvent	EnqueueEvent
+		
+		public System.Threading.AutoResetEvent	EnqueueWaitEvent
 		{
 			get
 			{
@@ -54,11 +59,87 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
+		public System.Threading.AutoResetEvent	ExecutionStateWaitEvent
+		{
+			get
+			{
+				return this.exstate_event;
+			}
+		}
+		
+		
 		public bool								IsRunningAsServer
 		{
 			get
 			{
 				return this.is_server;
+			}
+		}
+		
+		
+		public bool								HasPending
+		{
+			get
+			{
+				lock (this)
+				{
+					return this.state_count[(int) ExecutionState.Pending] > 0;
+				}
+			}
+		}
+		
+		public bool								HasConflicting
+		{
+			get
+			{
+				lock (this)
+				{
+					return this.state_count[(int) ExecutionState.Conflicting] > 0;
+				}
+			}
+		}
+		
+		public bool								HasConflictResolved
+		{
+			get
+			{
+				lock (this)
+				{
+					return this.state_count[(int) ExecutionState.ConflictResolved] > 0;
+				}
+			}
+		}
+		
+		public bool								HasExecutedByClient
+		{
+			get
+			{
+				lock (this)
+				{
+					return this.state_count[(int) ExecutionState.ExecutedByClient] > 0;
+				}
+			}
+		}
+		
+		public bool								HasSentToServer
+		{
+			get
+			{
+				lock (this)
+				{
+					return this.state_count[(int) ExecutionState.SentToServer] > 0;
+				}
+			}
+		}
+		
+		public bool								HasExecutedByServer
+		{
+			get
+			{
+				lock (this)
+				{
+					return this.state_count[(int) ExecutionState.ExecutedByServer] > 0;
+				}
 			}
 		}
 		
@@ -169,14 +250,27 @@ namespace Epsitec.Cresus.Requests
 		
 		public void SetRequestExecutionState(System.Data.DataRow row, ExecutionState new_state)
 		{
-			ExecutionState current_state = this.GetRequestExecutionState (row);
+			ExecutionState old_state = this.GetRequestExecutionState (row);
 			
-			if (StateMachine.Check (current_state, new_state) == false)
+			if (old_state == new_state)
 			{
-				throw new System.InvalidOperationException (string.Format ("Cannot change from state {0} to {1}.", current_state, new_state));
+				return;
+			}
+			
+			if (StateMachine.Check (old_state, new_state) == false)
+			{
+				throw new System.InvalidOperationException (string.Format ("Cannot change from state {0} to {1}.", old_state, new_state));
 			}
 			
 			row[Tags.ColumnReqExState] = (short) new_state;
+			
+			lock (this)
+			{
+				this.state_count[(int) old_state]--;
+				this.state_count[(int) new_state]++;
+			}
+			
+			this.exstate_event.Set ();
 		}
 		
 		
@@ -214,6 +308,8 @@ namespace Epsitec.Cresus.Requests
 			this.queue_command    = DbRichCommand.CreateFromTable (this.infrastructure, transaction, this.queue_db_table, DbSelectRevision.LiveActive);
 			this.queue_data_set   = this.queue_command.DataSet;
 			this.queue_data_table = this.queue_data_set.Tables[Tags.TableRequestQueue];
+			
+			this.UpdateCounts ();
 		}
 		
 		public void SerializeToBase(DbTransaction transaction)
@@ -248,6 +344,26 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
+		protected void UpdateCounts()
+		{
+			int   n     = (int) ExecutionState.Count;
+			int[] count = new int[n];
+			
+			foreach (System.Data.DataRow row in this.queue_data_table.Rows)
+			{
+				if (DbRichCommand.IsRowDeleted (row) == false)
+				{
+					short state = (short) row[Tags.ColumnReqExState];
+					count[state]++;
+				}
+			}
+			
+			lock (this)
+			{
+				this.state_count = count;
+			}
+		}
+		
 		
 		private DbInfrastructure				infrastructure;
 		private IDbAbstraction					database;
@@ -257,6 +373,8 @@ namespace Epsitec.Cresus.Requests
 		private System.Data.DataTable			queue_data_table;
 		
 		private System.Threading.AutoResetEvent	enqueue_event;
+		private System.Threading.AutoResetEvent	exstate_event;
 		private bool							is_server;
+		private int[]							state_count;
 	}
 }
