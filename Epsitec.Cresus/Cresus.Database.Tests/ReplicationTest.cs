@@ -125,7 +125,28 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
-		[Test] public void Check04PackedTableData()
+		[Test] public void Check04DataCruncherExtractRowSets()
+		{
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				Replication.DataCruncher cruncher = new Replication.DataCruncher (this.infrastructure, transaction);
+				Replication.DataCruncher.TableRowSet[] sets = cruncher.ExtractRowSetsUsingLogIds (DbId.CreateId (2, 1), DbId.CreateId (999999999, 1));
+				
+				for (int i = 0; i < sets.Length; i++)
+				{
+					Replication.DataCruncher.TableRowSet row_set = sets[i];
+					System.Text.StringBuilder            buffer  = new System.Text.StringBuilder ();
+					
+					System.Console.WriteLine ("{0} - Table {1} ({2}) :", i, row_set.Table.Name, row_set.Table.CreateSqlName ());
+					
+					for (int r = 0; r < row_set.RowIds.Length; r++)
+					{
+						System.Console.WriteLine ("  {0,3} : {1}", r, row_set.RowIds[r]);
+					}
+				}
+			}
+		}
+		[Test] public void Check05PackedTableData()
 		{
 			System.Data.DataTable table_a = new System.Data.DataTable ("A");
 			
@@ -248,7 +269,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] public void Check05ServerEngine()
+		[Test] public void Check06ServerEngine()
 		{
 			Remoting.IReplicationService service = Services.Engine.GetRemoteReplicationService ("localhost", 1234);
 			
@@ -297,7 +318,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] public void Check06ClientEngine()
+		[Test] public void Check07ClientEngine()
 		{
 			Remoting.IReplicationService service = Services.Engine.GetRemoteReplicationService ("localhost", 1234);
 			

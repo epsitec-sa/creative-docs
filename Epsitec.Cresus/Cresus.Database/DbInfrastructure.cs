@@ -485,7 +485,7 @@ namespace Epsitec.Cresus.Database
 				
 				if (table == null)
 				{
-					System.Collections.ArrayList tables = this.LoadDbTable (transaction, key);
+					System.Collections.ArrayList tables = this.LoadDbTable (transaction, key, DbRowSearchMode.LiveActive);
 					
 					if (tables.Count > 0)
 					{
@@ -502,9 +502,14 @@ namespace Epsitec.Cresus.Database
 		
 		public DbTable[] FindDbTables(DbTransaction transaction, DbElementCat category)
 		{
+			return this.FindDbTables (transaction, category, DbRowSearchMode.LiveActive);
+		}
+		
+		public DbTable[] FindDbTables(DbTransaction transaction, DbElementCat category, DbRowSearchMode row_search_mode)
+		{
 			//	Liste toutes les tables appartenant à la catégorie spécifiée.
 			
-			System.Collections.ArrayList list = this.LoadDbTable (transaction, null);
+			System.Collections.ArrayList list = this.LoadDbTable (transaction, null, row_search_mode);
 			
 			if (category != DbElementCat.Any)
 			{
@@ -772,7 +777,7 @@ namespace Epsitec.Cresus.Database
 				
 				if (type == null)
 				{
-					System.Collections.ArrayList types = this.LoadDbType (transaction, key);
+					System.Collections.ArrayList types = this.LoadDbType (transaction, key, DbRowSearchMode.LiveActive);
 					
 					if (types.Count > 0)
 					{
@@ -791,9 +796,14 @@ namespace Epsitec.Cresus.Database
 		
 		public DbType[]  FindDbTypes(DbTransaction transaction)
 		{
+			return this.FindDbTypes (transaction, DbRowSearchMode.LiveActive);
+		}
+		
+		public DbType[]  FindDbTypes(DbTransaction transaction, DbRowSearchMode row_search_mode)
+		{
 			//	Liste tous les types.
 			
-			System.Collections.ArrayList list = this.LoadDbType (transaction, null);
+			System.Collections.ArrayList list = this.LoadDbType (transaction, null, row_search_mode);
 			
 			DbType[] types = new DbType[list.Count];
 			list.CopyTo (types, 0);
@@ -1418,7 +1428,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public System.Collections.ArrayList LoadDbTable(DbTransaction transaction, DbKey key)
+		public System.Collections.ArrayList LoadDbTable(DbTransaction transaction, DbKey key, DbRowSearchMode row_search_mode)
 		{
 			//	Charge les définitions pour la table au moyen d'une requête unique qui va
 			//	aussi retourner les diverses définitions de colonnes.
@@ -1456,7 +1466,7 @@ namespace Epsitec.Cresus.Database
 				//	'active' (ignore les versions archivées et détruites). Extrait aussi les colonnes
 				//	correspondantes.
 				
-				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TABLE", DbRowSearchMode.LiveActive);
+				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TABLE", row_search_mode);
 				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_COLUMN", Tags.ColumnRefTable, "T_TABLE");
 			}
 			else
@@ -1517,7 +1527,11 @@ namespace Epsitec.Cresus.Database
 						//	aussi d'éviter des boucles sans fin dans le cas de tables qui ont des références circulaires, car
 						//	la prochaine recherche avec ResolveDbTable s'appliquant à cette table se terminera avec succès.
 						
-						this.cache_db_tables[table_key] = db_table;
+						if ((table_key.Status != DbRowStatus.Live) ||
+							(table_key.Status == DbRowStatus.Copied))
+						{
+							this.cache_db_tables[table_key] = db_table;
+						}
 					}
 					else
 					{
@@ -1587,7 +1601,7 @@ namespace Epsitec.Cresus.Database
 			return tables;
 		}
 		
-		public System.Collections.ArrayList LoadDbType(DbTransaction transaction, DbKey key)
+		public System.Collections.ArrayList LoadDbType(DbTransaction transaction, DbKey key, DbRowSearchMode row_search_mode)
 		{
 			SqlSelect query = new SqlSelect ();
 			
@@ -1605,7 +1619,7 @@ namespace Epsitec.Cresus.Database
 				//	On extrait toutes les définitions de types qui correspondent à la version
 				//	'active'.
 				
-				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", DbRowSearchMode.LiveActive);
+				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", row_search_mode);
 			}
 			else
 			{

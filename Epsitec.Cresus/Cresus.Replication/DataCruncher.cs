@@ -30,14 +30,6 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
-//		public System.Data.DataTable ExtractDataUsingLogIds(DbTable table, DbId sync_id)
-//		{
-//			//	Extrait les données de la table spécifiée en ne considérant que ce qui a changé
-//			//	depuis la synchronisation définie par 'sync_id'.
-//			
-//			return this.ExtractDataUsingLogIds (table, sync_id, DbId.CreateId (DbId.LocalRange-1, sync_id.ClientId));
-//		}
-		
 		public System.Data.DataTable ExtractDataUsingLogIds(DbTable table, DbId sync_start_id, DbId sync_end_id)
 		{
 			long sync_id_min = sync_start_id.Value;
@@ -71,6 +63,69 @@ namespace Epsitec.Cresus.Replication
 			{
 				return command.DataSet.Tables[0];
 			}
+		}
+		
+		
+		public TableRowSet[] ExtractRowSetsUsingLogId(DbId log_id)
+		{
+			return this.ExtractRowSetsUsingLogId (log_id, DbElementCat.Any);
+		}
+		
+		public TableRowSet[] ExtractRowSetsUsingLogId(DbId log_id, DbElementCat category)
+		{
+			DbTable[] tables = this.infrastructure.FindDbTables (this.transaction, category, DbRowSearchMode.All);
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			for (int i = 0; i < tables.Length; i++)
+			{
+				if (tables[i].Name == Tags.TableLog)
+				{
+					continue;
+				}
+				
+				System.Data.DataTable data = this.ExtractDataUsingLogId (tables[i], log_id);
+				
+				if (data.Rows.Count > 0)
+				{
+					list.Add (new TableRowSet (tables[i], data));
+				}
+			}
+			
+			TableRowSet[] sets = new TableRowSet[list.Count];
+			list.CopyTo (sets);
+			return sets;
+		}
+		
+		public TableRowSet[] ExtractRowSetsUsingLogIds(DbId sync_start_id, DbId sync_end_id)
+		{
+			return this.ExtractRowSetsUsingLogIds (sync_start_id, sync_end_id, DbElementCat.Any);
+		}
+		
+		public TableRowSet[] ExtractRowSetsUsingLogIds(DbId sync_start_id, DbId sync_end_id, DbElementCat category)
+		{
+			DbTable[] tables = this.infrastructure.FindDbTables (this.transaction, category, DbRowSearchMode.All);
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			for (int i = 0; i < tables.Length; i++)
+			{
+				if (tables[i].Name == Tags.TableLog)
+				{
+					continue;
+				}
+				
+				System.Data.DataTable data = this.ExtractDataUsingLogIds (tables[i], sync_start_id, sync_end_id);
+				
+				if (data.Rows.Count > 0)
+				{
+					list.Add (new TableRowSet (tables[i], data));
+				}
+			}
+			
+			TableRowSet[] sets = new TableRowSet[list.Count];
+			list.CopyTo (sets);
+			return sets;
 		}
 		
 		
@@ -479,6 +534,49 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
+		
+		public class TableRowSet
+		{
+			public TableRowSet(DbTable table, System.Collections.ICollection row_ids)
+			{
+				this.table = table;
+				this.ids   = new long[row_ids.Count];
+				
+				row_ids.CopyTo (this.ids, 0);
+			}
+			
+			public TableRowSet(DbTable table, System.Data.DataTable data)
+			{
+				this.table = table;
+				this.ids   = new long[data.Rows.Count];
+				
+				for (int i = 0; i < data.Rows.Count; i++)
+				{
+					this.ids[i] = (long) data.Rows[i][0];
+				}
+			}
+			
+			
+			public DbTable						Table
+			{
+				get
+				{
+					return this.table;
+				}
+			}
+			
+			public long[]						RowIds
+			{
+				get
+				{
+					return this.ids;
+				}
+			}
+			
+			
+			private DbTable						table;
+			private long[]						ids;
+		}
 		
 		private DbInfrastructure				infrastructure;
 		private DbTransaction					transaction;
