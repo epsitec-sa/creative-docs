@@ -1,3 +1,4 @@
+using Epsitec.Common.Support;
 using System.Xml.Serialization;
 
 namespace Epsitec.Common.Pictogram.Data
@@ -24,11 +25,22 @@ namespace Epsitec.Common.Pictogram.Data
 			PropertyGradient fillGradient = new PropertyGradient();
 			fillGradient.Type = PropertyType.FillGradient;
 			this.AddProperty(fillGradient);
+
+			PropertyArc arc = new PropertyArc();
+			arc.Type = PropertyType.Arc;
+			arc.Changed += new EventHandler(this.HandleArcChanged);
+			this.AddProperty(arc);
 		}
 
 		protected override AbstractObject CreateNewObject()
 		{
 			return new ObjectCircle();
+		}
+
+		public override void Dispose()
+		{
+			if ( this.ExistProperty(4) )  this.PropertyArc(4).Changed -= new EventHandler(this.HandleArcChanged);
+			base.Dispose();
 		}
 
 
@@ -83,7 +95,38 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				this.Handle(1).Position = pos;
 			}
+			else if ( rank == 2 )
+			{
+				this.PropertyArc(4).StartingAngle = this.ComputeArcHandle(pos);
+			}
+			else if ( rank == 3 )
+			{
+				this.PropertyArc(4).EndingAngle = this.ComputeArcHandle(pos);
+			}
+			this.UpdateArcHandle();
 			this.dirtyBbox = true;
+		}
+
+
+		// Indique si le déplacement d'une poignée doit se répercuter sur les propriétés.
+		public override bool IsMoveHandlePropertyChanged(int rank)
+		{
+			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
+			{
+				return base.IsMoveHandlePropertyChanged(rank);
+			}
+			return ( rank >= 2 );
+		}
+
+		// Retourne la propriété modifiée en déplaçant une poignée.
+		public override AbstractProperty MoveHandleProperty(int rank)
+		{
+			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
+			{
+				return base.MoveHandleProperty(rank);
+			}
+			if ( rank >= 2 )  return this.PropertyArc(4);
+			return null;
 		}
 
 
@@ -111,6 +154,8 @@ namespace Epsitec.Common.Pictogram.Data
 			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			iconContext.ConstrainDelStarting();
+
+			this.UpdateArcHandle();
 		}
 
 		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
@@ -119,6 +164,50 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			double len = Drawing.Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > this.minimalSize );
+		}
+
+		private void HandleArcChanged(object sender)
+		{
+			this.UpdateArcHandle();
+		}
+
+		// Met à jour les poignées pour l'arc.
+		protected void UpdateArcHandle()
+		{
+			if ( this.handles.Count < 2 )  return;
+			PropertyArc arc = this.PropertyArc(4);
+			if ( arc.ArcType == ArcType.Full )
+			{
+				if ( this.handles.Count > 2 )
+				{
+					this.HandleDelete(3);
+					this.HandleDelete(2);
+				}
+			}
+			else
+			{
+				Drawing.Point p2 = this.ComputeArcHandle(arc.StartingAngle);
+				Drawing.Point p3 = this.ComputeArcHandle(arc.EndingAngle);
+
+				if ( this.handles.Count == 2 )
+				{
+					this.HandleAdd(p2, HandleType.Secondary);
+					this.HandleAdd(p3, HandleType.Secondary);
+				}
+				else
+				{
+					this.Handle(2).Position = p2;
+					this.Handle(3).Position = p3;
+				}
+
+				this.Handle(2).IsSelected = this.Handle(0).IsSelected;
+				this.Handle(3).IsSelected = this.Handle(0).IsSelected;
+
+				for ( int i=2 ; i<4 ; i++ )
+				{
+					this.GlobalHandleAdapt(i);
+				}
+			}
 		}
 
 		
@@ -132,16 +221,73 @@ namespace Epsitec.Common.Pictogram.Data
 			this.PropertyLine(1).InflateBoundingBox(ref this.bboxGeom);
 
 			this.bboxFull = this.bboxGeom;
+			if ( this.TotalHandle >= 2 )
+			{
+				this.bboxFull.MergeWith(this.Handle(1).Position);
+			}
 			this.bboxGeom.MergeWith(this.PropertyGradient(3).BoundingBoxGeom(this.bboxThin));
 			this.bboxFull.MergeWith(this.PropertyGradient(3).BoundingBoxFull(this.bboxThin));
 			this.bboxFull.MergeWith(this.bboxGeom);
 		}
 
+		// Calcule la géométrie de l'ellipse.
+		protected void ComputeGeometry(out Drawing.Point center, out double radius, out double angle)
+		{
+			center = this.Handle(0).Position;
+			Drawing.Point p = this.Handle(1).Position;
+			radius = Drawing.Point.Distance(center, p);
+			angle = Drawing.Point.ComputeAngleDeg(center, p);
+		}
+
+		// Calcule la position d'une poignée pour l'arc.
+		protected Drawing.Point ComputeArcHandle(double angle)
+		{
+			Drawing.Point center, p;
+			double radius, rot;
+			this.ComputeGeometry(out center, out radius, out rot);
+
+			if ( radius == 0.0 )
+			{
+				return center;
+			}
+			else
+			{
+				p = center;
+				p.X += radius;
+				p = Drawing.Transform.RotatePointDeg(center, angle, p);
+				return Drawing.Transform.RotatePointDeg(center, rot, p);
+			}
+		}
+
+		// Calcule l'angle d'après la position de la souris.
+		protected double ComputeArcHandle(Drawing.Point pos)
+		{
+			Drawing.Point center, p;
+			double radius, rot;
+			this.ComputeGeometry(out center, out radius, out rot);
+
+			if ( radius == 0.0 )
+			{
+				return 0.0;
+			}
+			else
+			{
+				p = Drawing.Transform.RotatePointDeg(center, -rot, pos);
+				double angle = Drawing.Point.ComputeAngleDeg(center, p);
+				if ( angle < 0.0 )  angle += 360.0;  // 0..360
+				return angle;
+			}
+		}
+
 		// Crée le chemin d'un cercle.
 		protected Drawing.Path PathCircle(IconContext iconContext, Drawing.Point c, double rx, double ry)
 		{
+			Drawing.Point center;
+			double radius, rot;
+			this.ComputeGeometry(out center, out radius, out rot);
+
 			Drawing.Path path = new Drawing.Path();
-#if true
+
 			if ( iconContext == null )
 			{
 				path.DefaultZoom = 10.0;
@@ -151,15 +297,34 @@ namespace Epsitec.Common.Pictogram.Data
 				path.DefaultZoom = iconContext.ScaleX;
 			}
 
-			path.ArcDeg(c, rx, ry, 0.0, 360.0, true);
-#else
-			path.MoveTo(c.X-rx, c.Y);
-			path.CurveTo(c.X-rx, c.Y+ry*0.56, c.X-rx*0.56, c.Y+ry, c.X, c.Y+ry);
-			path.CurveTo(c.X+rx*0.56, c.Y+ry, c.X+rx, c.Y+ry*0.56, c.X+rx, c.Y);
-			path.CurveTo(c.X+rx, c.Y-ry*0.56, c.X+rx*0.56, c.Y-ry, c.X, c.Y-ry);
-			path.CurveTo(c.X-rx*0.56, c.Y-ry, c.X-rx, c.Y-ry*0.56, c.X-rx, c.Y);
-#endif
-			path.Close();
+			PropertyArc arc = this.PropertyArc(4);
+			double a1, a2;
+			if ( arc.ArcType == ArcType.Full )
+			{
+				a1 =   0.0;
+				a2 = 360.0;
+			}
+			else
+			{
+				a1 = arc.StartingAngle;
+				a2 = arc.EndingAngle;
+			}
+
+			if ( a1 != a2 )
+			{
+				path.ArcDeg(center, radius, radius, a1+rot, a2+rot, true);
+			}
+
+			if ( arc.ArcType == ArcType.Close )
+			{
+				path.Close();
+			}
+			if ( arc.ArcType == ArcType.Pie )
+			{
+				path.LineTo(center);
+				path.Close();
+			}
+
 			return path;
 		}
 
@@ -177,7 +342,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext, iconObjects);
 
-			if ( this.TotalHandle != 2 )  return;
+			if ( this.TotalHandle < 2 )  return;
 
 			Drawing.Path path = this.PathBuild(iconContext);
 			this.PropertyGradient(3).Render(graphics, iconContext, path, this.BoundingBoxThin);
