@@ -77,6 +77,14 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public StretchProfile					TextStretchProfile
+		{
+			get
+			{
+				return this.text_profile;
+			}
+		}
+		
 		
 		public double							X
 		{
@@ -213,6 +221,8 @@ namespace Epsitec.Common.Text.Layout
 				result.Clear ();
 			}
 			
+			this.text_profile = new StretchProfile ();
+			
 			for (int pass = 0; pass < 2; )
 			{
 				if (pass > 0)
@@ -233,7 +243,7 @@ namespace Epsitec.Common.Text.Layout
 						return status;
 						
 					case Layout.Status.SwitchLayout:
-						break;
+						continue;
 					
 					case Layout.Status.ErrorCannotFit:
 						this.hyphenate = true;
@@ -391,6 +401,8 @@ namespace Epsitec.Common.Text.Layout
 		private ulong[]							text;
 		private int								text_start;
 		private int								text_offset;
+		private StretchProfile					text_profile;
+		
 		private int								left_to_right;
 		
 		private double							oy_base;

@@ -203,7 +203,7 @@ namespace Epsitec.Common.Text.Tests
 			story.Context.GetFont (story_text[0], out font, out font_size);
 			
 			Layout.StretchProfile profile = new Layout.StretchProfile ();
-			Layout.StretchProfile.Analyse (font, font_size, story_text, 0, 26, profile);
+			profile.Add (font, font_size, story_text, 0, 26);
 			
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
 			status  = context.Fit (ref breaks);

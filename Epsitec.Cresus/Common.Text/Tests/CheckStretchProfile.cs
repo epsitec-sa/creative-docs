@@ -19,7 +19,7 @@ namespace Epsitec.Common.Text.Tests
 			double p5;
 			double p6;
 			
-			profile.Add (Unicode.StretchClass.No,        10.0);
+			profile.Add (Unicode.StretchClass.NoStretch, 10.0);
 			profile.Add (Unicode.StretchClass.Character, 90.0);
 			profile.Add (Unicode.StretchClass.Space,     10.0);
 			
@@ -56,19 +56,37 @@ namespace Epsitec.Common.Text.Tests
 			double[] widths = new double[] { 10, 20, 30, 20, 10, 5, 5, 2, 8 };
 			double[] scales = new double[widths.Length];
 			Unicode.StretchClass[] stretch = new Unicode.StretchClass[] { Unicode.StretchClass.Character, Unicode.StretchClass.Character, Unicode.StretchClass.Character, Unicode.StretchClass.Character, Unicode.StretchClass.Character, Unicode.StretchClass.Space, Unicode.StretchClass.Space, Unicode.StretchClass.Kashida, Unicode.StretchClass.Kashida };
-			double delta;
 			
-			delta  = profile.AdjustWidths (120, widths, stretch, scales);
+			Layout.StretchProfile.Scales class_scales;
+			profile.ComputeScales (120, out class_scales);
 			
-			Debug.Assert.IsTrue ((int)(delta*1000+0.5) == 10*1000);
+			Debug.Assert.IsTrue (class_scales.ScaleCharacter > 1.0009);
+			Debug.Assert.IsTrue (class_scales.ScaleKashida   > 1.9017);
+			Debug.Assert.IsTrue (class_scales.ScaleSpace     > 1.0901);
+			Debug.Assert.IsTrue (class_scales.ScaleCharacter < 1.0010);
+			Debug.Assert.IsTrue (class_scales.ScaleKashida   < 1.9018);
+			Debug.Assert.IsTrue (class_scales.ScaleSpace     < 1.0902);
+			Debug.Assert.IsTrue (class_scales.ScaleNoStretch == 1.0);
 			
-			delta  = profile.AdjustWidths (150, widths, stretch, scales);
+			profile.ComputeScales (150, out class_scales);
 			
-			Debug.Assert.IsTrue ((int)(delta*1000+0.5) == 40*1000);
+			Debug.Assert.IsTrue (class_scales.ScaleCharacter > 1.0036);
+			Debug.Assert.IsTrue (class_scales.ScaleKashida   > 4.6068);
+			Debug.Assert.IsTrue (class_scales.ScaleSpace     > 1.3606);
+			Debug.Assert.IsTrue (class_scales.ScaleCharacter < 1.0037);
+			Debug.Assert.IsTrue (class_scales.ScaleKashida   < 4.6069);
+			Debug.Assert.IsTrue (class_scales.ScaleSpace     < 1.3607);
+			Debug.Assert.IsTrue (class_scales.ScaleNoStretch == 1.0);
 			
-			delta  = profile.AdjustWidths (108, widths, stretch, scales);
+			profile.ComputeScales (108, out class_scales);
 			
-			Debug.Assert.IsTrue ((int)(delta*1000-0.5) == -2*1000);
+			Debug.Assert.IsTrue (class_scales.ScaleCharacter > 0.9999);
+			Debug.Assert.IsTrue (class_scales.ScaleKashida   > 0.9000);
+			Debug.Assert.IsTrue (class_scales.ScaleSpace     > 0.9000);
+			Debug.Assert.IsTrue (class_scales.ScaleCharacter < 1.0000);
+			Debug.Assert.IsTrue (class_scales.ScaleKashida   < 0.9001);
+			Debug.Assert.IsTrue (class_scales.ScaleSpace     < 0.9001);
+			Debug.Assert.IsTrue (class_scales.ScaleNoStretch == 1.0);
 		}
 	}
 }

@@ -67,6 +67,8 @@ namespace Epsitec.Common.Text.Layout
 							context.LayoutEngine   = engine;
 							context.LayoutProperty = layout;
 							
+							context.TextStretchProfile.Add (scratch.StretchProfile);
+							
 							return Layout.Status.SwitchLayout;
 						}
 						

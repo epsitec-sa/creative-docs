@@ -275,7 +275,7 @@ namespace Epsitec.Common.Text
 		
 		public enum StretchClass : byte
 		{
-			No					= 0,
+			NoStretch			= 0,
 			Character			= 1,
 			Space				= 2,
 			CharacterSpace		= 3,
@@ -516,7 +516,7 @@ namespace Epsitec.Common.Text
 					case Unicode.Code.ZeroWidthNonJoiner:
 					case Unicode.Code.ZeroWidthJoiner:
 					case Unicode.Code.WordJoiner:
-						return StretchClass.No;
+						return StretchClass.NoStretch;
 					
 					case Unicode.Code.FigureSpace:
 					case Unicode.Code.PunctuationSpace:
