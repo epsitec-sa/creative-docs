@@ -2213,7 +2213,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Dessine les traits d'une cellule.
-		protected void DrawCellOutline(Drawing.Graphics graphics, IconContext iconContext, int c, int r)
+		protected void DrawCellOutline(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects, int c, int r)
 		{
 			PropertyLine line;
 			PropertyColor color;
@@ -2222,17 +2222,15 @@ namespace Epsitec.Common.Pictogram.Data
 			path.MoveTo(this.Cell(c,r).BottomLeft);
 			path.LineTo(this.Cell(c,r).BottomRight);
 			line = this.Cell(c,r).BottomLine;
-			graphics.Rasterizer.AddOutline(path, line.Width, line.Cap, line.Join, line.Limit);
 			color = this.Cell(c,r).BottomColor;
-			graphics.RenderSolid(iconContext.AdaptColor(color.Color));
+			line.DrawPath(graphics, iconContext, iconObjects, path, color.Color);
 
 			path = new Drawing.Path();
 			path.MoveTo(this.Cell(c,r).BottomLeft);
 			path.LineTo(this.Cell(c,r).TopLeft);
 			line = this.Cell(c,r).LeftLine;
-			graphics.Rasterizer.AddOutline(path, line.Width, line.Cap, line.Join, line.Limit);
 			color = this.Cell(c,r).LeftColor;
-			graphics.RenderSolid(iconContext.AdaptColor(color.Color));
+			line.DrawPath(graphics, iconContext, iconObjects, path, color.Color);
 		}
 
 		// Dessine la mise en évidence d'une cellule.
@@ -2322,7 +2320,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				for ( int r=0 ; r<this.rows+1 ; r++ )
 				{
-					this.DrawCellOutline(graphics, iconContext, c,r);
+					this.DrawCellOutline(graphics, iconContext, iconObjects, c,r);
 				}
 			}
 
