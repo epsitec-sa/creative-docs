@@ -202,6 +202,15 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			e.Graphics.RenderSolid (Color.FromBrightness (0));
+			
+			font = Font.GetFont ("Times New Roman", "Italic");
+			
+			e.Graphics.PaintText (10, 60, "Hello, world. 14pt", font, 14.0, Color.FromRGB (0, 0, 0));
+			e.Graphics.PaintText (10, 50, "Hello, world. 13pt", font, 13.0, Color.FromRGB (0, 0, 0));
+			e.Graphics.PaintText (10, 40, "Hello, world. 12pt", font, 12.0, Color.FromRGB (0, 0, 0));
+			e.Graphics.PaintText (10, 30, "Hello, world. 11pt", font, 11.0, Color.FromRGB (0, 0, 0));
+			e.Graphics.PaintText (10, 20, "Hello, world. 10pt", font, 10.0, Color.FromRGB (0, 0, 0));
+			e.Graphics.PaintText (10, 10, "Hello, world. 9pt",  font,  9.0, Color.FromRGB (0, 0, 0));
 		}
 		
 		private void Gamma_PaintForeground(object sender, PaintEventArgs e)
