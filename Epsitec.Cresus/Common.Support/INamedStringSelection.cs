@@ -5,14 +5,10 @@ namespace Epsitec.Common.Support
 {
 	/// <summary>
 	/// L'interface INamedStringSelection définit les propriétés de base nécessaires
-	/// à un widget qui permet de choisir un élément (texte/nom) dans une liste.
+	/// à un objet qui permet de choisir un élément (texte/nom) dans une liste.
 	/// </summary>
-	public interface INamedStringSelection
+	public interface INamedStringSelection : IStringSelection
 	{
-		int		SelectedIndex	{ get; set; }
-		string	SelectedItem	{ get; set; }
 		string	SelectedName	{ get; set; }
-		
-		event EventHandler	SelectedIndexChanged;
 	}
 }
