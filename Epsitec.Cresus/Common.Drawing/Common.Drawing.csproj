@@ -239,11 +239,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TextBreakOld.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "TextStyle.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
