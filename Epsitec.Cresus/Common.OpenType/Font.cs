@@ -86,6 +86,20 @@ namespace Epsitec.Common.OpenType
 		
 		public double GetTotalWidth(ushort[] glyphs, double size)
 		{
+			if (this.use_system_glyph_size)
+			{
+				FontIdentity.SizeInfo info = this.identity.GetSizeInfo ((int)(size + 0.5));
+				
+				int width = 0;
+				
+				for (int i = 0; i < glyphs.Length; i++)
+				{
+					width += info.GetGlyphWidth (glyphs[i]);
+				}
+				
+				return width;
+			}
+			
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
 			
@@ -114,6 +128,8 @@ namespace Epsitec.Common.OpenType
 		
 		public double GetPositions(ushort[] glyphs, double size, double ox, double[] x_pos)
 		{
+			//	TODO: gérer use_system_glyph_size
+			
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
 			
@@ -144,6 +160,8 @@ namespace Epsitec.Common.OpenType
 		
 		public double GetPositions(ushort[] glyphs, double size, double ox, double oy, double[] x_pos, double[] y_pos)
 		{
+			//	TODO: gérer use_system_glyph_size
+			
 			int num_glyph     = this.ot_maxp.NumGlyphs;
 			int num_h_metrics = this.ot_hhea.NumHMetrics;
 			
@@ -322,6 +340,20 @@ namespace Epsitec.Common.OpenType
 			}
 			
 			this.GenerateSubstitutionLookups (active_features);
+		}
+		
+		public void SelectFontManager(string manager)
+		{
+			switch (manager)
+			{
+				case "OpenType":
+					this.use_system_glyph_size = false;
+					break;
+				
+				case "System":
+					this.use_system_glyph_size = true;
+					break;
+			}
 		}
 		
 		
@@ -714,6 +746,8 @@ namespace Epsitec.Common.OpenType
 		
 		private bool HitTest(ushort[] glyphs, int[] gl_map, double size, int pos, out double x, out double y)
 		{
+			//	TODO: gérer use_system_glyph_size
+			
 			double scale = size / this.ot_head.UnitsPerEm;
 			
 			int num_glyph     = this.ot_maxp.NumGlyphs;
@@ -771,6 +805,8 @@ namespace Epsitec.Common.OpenType
 		
 		private bool HitTest(ushort[] glyphs, int[] gl_map, double size, double x, double y, out int pos, out double subpos)
 		{
+			//	TODO: gérer use_system_glyph_size
+			
 			if (x <= 0)
 			{
 				pos    = 0;
@@ -935,6 +971,7 @@ namespace Epsitec.Common.OpenType
 		private IndexMappingTable				ot_index_mapping;
 		
 		private bool							map_default_ligatures;
+		private bool							use_system_glyph_size;
 		
 		private TaggedFeatureTable				script_required_feature;
 		private TaggedFeatureTable[]			script_optional_features;

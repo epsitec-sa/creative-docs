@@ -28,18 +28,15 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			foreach (int size in sizes)
 			{
-				FontIdentity.SizeInfo arial_si = arial_id.GetSizeInfo (size);
-				
 				ushort[] glyphs = arial.GenerateGlyphs ("Affiche un petit texte pour vérifier le bon fonctionnement du calcul des largeurs.");
-				int      width  = 0;
-				double   ideal  = arial.GetTotalWidth (glyphs, size);
 				
-				for (int i = 0; i < glyphs.Length; i++)
-				{
-					width += arial_si.GetGlyphWidth (glyphs[i]);
-				}
+				arial.SelectFontManager ("System");
+				double system = arial.GetTotalWidth (glyphs, size);
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0}, size {4}, text width is {1}, ideal is {2}, ratio {3}", arial_id.FullName, width, ideal, width/ideal, size));
+				arial.SelectFontManager ("OpenType");
+				double perfect = arial.GetTotalWidth (glyphs, size);
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}, size {4}, text width is {1}, perfect is {2}, delta is {3:0.00}%", arial_id.FullName, system, perfect, 100*system/perfect-100, size));
 			}
 			
 			CheckTables.TestFeatureTable ();
