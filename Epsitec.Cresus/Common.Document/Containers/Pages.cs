@@ -63,12 +63,12 @@ namespace Epsitec.Common.Document.Containers
 			this.panelMisc = new Widget(this);
 			this.panelMisc.Dock = DockStyle.Bottom;
 			this.panelMisc.DockMargins = new Margins(0, 0, 5, 0);
-			this.panelMisc.Height = 120;
+			this.panelMisc.Height = 160;
 
 			this.radioMasterGroup = new GroupBox(this.panelMisc);
 			this.radioMasterGroup.Dock = DockStyle.Bottom;
 			this.radioMasterGroup.DockMargins = new Margins(0, 0, 0, 4);
-			this.radioMasterGroup.Height = 90;
+			this.radioMasterGroup.Height = 130;
 			this.radioMasterGroup.Text = "Destination :";
 
 			this.radioAll = new RadioButton(this.radioMasterGroup);
@@ -95,11 +95,37 @@ namespace Epsitec.Common.Document.Containers
 			this.radioNone.Text = "Appliquer à la demande";
 			this.radioNone.Clicked += new MessageEventHandler(this.HandleRadioClicked);
 
+			this.checkAutoStop = new CheckButton(this.radioMasterGroup);
+			this.checkAutoStop.Dock = DockStyle.Top;
+			this.checkAutoStop.DockMargins = new Margins(10, 10, 4, 0);
+			this.checkAutoStop.Text = "Stopper à la prochaine page modèle";
+			this.checkAutoStop.Clicked += new MessageEventHandler(this.HandleCheckClicked);
+
+			this.specificGroup = new Widget(this.radioMasterGroup);
+			this.specificGroup.Dock = DockStyle.Top;
+			this.specificGroup.DockMargins = new Margins(10, 10, 2, 0);
+			this.specificGroup.Width = 170;
+
+			this.checkSpecific = new CheckButton(this.specificGroup);
+			this.checkSpecific.Width = 160;
+			this.checkSpecific.Dock = DockStyle.Left;
+			this.checkSpecific.DockMargins = new Margins(0, 0, 0, 0);
+			this.checkSpecific.Text = "Inclure cette page modèle";
+			this.checkSpecific.Clicked += new MessageEventHandler(this.HandleCheckClicked);
+
+			this.specificMasterPage = new TextFieldCombo(this.specificGroup);
+			this.specificMasterPage.Width = 50;
+			this.specificMasterPage.IsReadOnly = true;
+			this.specificMasterPage.Dock = DockStyle.Left;
+			this.specificMasterPage.DockMargins = new Margins(0, 0, 0, 0);
+			this.specificMasterPage.OpeningCombo += new CancelEventHandler(this.HandleOpeningCombo);
+			this.specificMasterPage.ClosedCombo += new EventHandler(this.HandleClosedCombo);
+
 
 			this.radioSlaveGroup = new GroupBox(this.panelMisc);
 			this.radioSlaveGroup.Dock = DockStyle.Bottom;
 			this.radioSlaveGroup.DockMargins = new Margins(0, 0, 0, 4);
-			this.radioSlaveGroup.Height = 90;
+			this.radioSlaveGroup.Height = 130;
 			this.radioSlaveGroup.Text = "Inclure les pages modèles ?";
 
 			this.radioGroupLeft = new Widget(this.radioSlaveGroup);
@@ -136,12 +162,12 @@ namespace Epsitec.Common.Document.Containers
 			this.radioGroupRight.DockMargins = new Margins(0, 0, 5, 0);
 			this.radioGroupRight.Width = 50;
 
-			this.specificPage = new TextFieldCombo(this.radioGroupRight);
-			this.specificPage.IsReadOnly = true;
-			this.specificPage.Dock = DockStyle.Bottom;
-			this.specificPage.DockMargins = new Margins(0, 0, 0, 21);
-			this.specificPage.OpeningCombo += new CancelEventHandler(this.HandleOpeningCombo);
-			this.specificPage.ClosedCombo += new EventHandler(this.HandleClosedCombo);
+			this.specificSlavePage = new TextFieldCombo(this.radioGroupRight);
+			this.specificSlavePage.IsReadOnly = true;
+			this.specificSlavePage.Dock = DockStyle.Bottom;
+			this.specificSlavePage.DockMargins = new Margins(0, 0, 0, 61);
+			this.specificSlavePage.OpeningCombo += new CancelEventHandler(this.HandleOpeningCombo);
+			this.specificSlavePage.ClosedCombo += new EventHandler(this.HandleClosedCombo);
 
 
 			this.radioGroup = new Widget(this.panelMisc);
@@ -292,15 +318,28 @@ namespace Epsitec.Common.Document.Containers
 
 			this.checkGuides.ActiveState = page.MasterGuides ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 
-			this.specificPage.SetEnabled(page.MasterUse == Objects.MasterUse.Specific);
+			this.specificSlavePage.SetEnabled(page.MasterUse == Objects.MasterUse.Specific);
 			if ( page.MasterPageToUse == null ||
 				 page.MasterPageToUse.MasterType == Objects.MasterType.Slave )
 			{
-				this.specificPage.Text = "";
+				this.specificSlavePage.Text = "";
 			}
 			else
 			{
-				this.specificPage.Text = page.MasterPageToUse.ShortName;
+				this.specificSlavePage.Text = page.MasterPageToUse.ShortName;
+			}
+
+			this.checkAutoStop.ActiveState = page.MasterAutoStop ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.checkSpecific.ActiveState = page.MasterSpecific ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
+			this.specificMasterPage.SetEnabled(page.MasterSpecific);
+			if ( page.MasterPageToUse == null || !page.MasterSpecific )
+			{
+				this.specificMasterPage.Text = "";
+			}
+			else
+			{
+				this.specificMasterPage.Text = page.MasterPageToUse.ShortName;
 			}
 		}
 
@@ -400,6 +439,18 @@ namespace Epsitec.Common.Document.Containers
 				this.document.Notifier.NotifyPagesChanged();
 			}
 
+			if ( sender == this.checkAutoStop )
+			{
+				page.MasterAutoStop = !page.MasterAutoStop;
+				this.document.Notifier.NotifyPagesChanged();
+			}
+
+			if ( sender == this.checkSpecific )
+			{
+				page.MasterSpecific = !page.MasterSpecific;
+				this.document.Notifier.NotifyPagesChanged();
+			}
+
 			this.UpdatePanel();
 			this.document.Modifier.OpletQueueValidateAction();
 		}
@@ -407,17 +458,20 @@ namespace Epsitec.Common.Document.Containers
 		// Combo ouvert.
 		private void HandleOpeningCombo(object sender, CancelEventArgs e)
 		{
-			this.specificPage.Items.Clear();
+			TextFieldCombo field = sender as TextFieldCombo;
+			field.Items.Clear();
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			UndoableList doc = this.document.GetObjects;
+			Objects.Page currentPage = context.RootObject(1) as Objects.Page;
 			int total = context.TotalPages();
 			for ( int i=0 ; i<total ; i++ )
 			{
 				Objects.Page page = doc[i] as Objects.Page;
+				if ( page == currentPage )  continue;
 				if ( page.MasterType != Objects.MasterType.Slave )
 				{
-					this.specificPage.Items.Add(page.ShortName);
+					field.Items.Add(page.ShortName);
 				}
 			}
 		}
@@ -426,13 +480,14 @@ namespace Epsitec.Common.Document.Containers
 		private void HandleClosedCombo(object sender)
 		{
 			if ( this.ignoreChanged )  return;
+			TextFieldCombo field = sender as TextFieldCombo;
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			UndoableList doc = this.document.GetObjects;
 			int total = context.TotalPages();
 			for ( int i=0 ; i<total ; i++ )
 			{
 				Objects.Page page = doc[i] as Objects.Page;
-				if ( page.ShortName == this.specificPage.Text )
+				if ( page.ShortName == field.Text )
 				{
 					this.document.Modifier.OpletQueueBeginAction();
 					Objects.Page currentPage = context.RootObject(1) as Objects.Page;
@@ -464,6 +519,10 @@ namespace Epsitec.Common.Document.Containers
 		protected RadioButton			radioEven;
 		protected RadioButton			radioOdd;
 		protected RadioButton			radioNone;
+		protected CheckButton			checkAutoStop;
+		protected Widget				specificGroup;
+		protected CheckButton			checkSpecific;
+		protected TextFieldCombo		specificMasterPage;
 
 		protected GroupBox				radioSlaveGroup;
 		protected Widget				radioGroupLeft;
@@ -472,7 +531,7 @@ namespace Epsitec.Common.Document.Containers
 		protected RadioButton			radioDefault;
 		protected RadioButton			radioSpecific;
 		protected CheckButton			checkGuides;
-		protected TextFieldCombo		specificPage;
+		protected TextFieldCombo		specificSlavePage;
 
 		protected bool					isExtended = false;
 		protected bool					ignoreChanged = false;

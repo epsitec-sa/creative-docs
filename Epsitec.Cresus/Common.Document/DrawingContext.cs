@@ -1166,7 +1166,7 @@ namespace Epsitec.Common.Document
 			if ( this.constrainType == ConstrainType.None || !this.isCtrl )  return;
 
 			if ( this.constrainType == ConstrainType.Normal ||
-				this.constrainType == ConstrainType.Rotate )
+				 this.constrainType == ConstrainType.Rotate )
 			{
 				double angle = Point.ComputeAngleDeg(this.constrainStarting, pos);
 				double dist = Point.Distance(pos, this.constrainStarting);
@@ -1450,12 +1450,13 @@ namespace Epsitec.Common.Document
 		// Spécifie une page et un calque.
 		public void InternalPageLayer(int page, int layer)
 		{
+			bool ie = this.document.Modifier.OpletQueueEnable;
 			this.document.Modifier.OpletQueueEnable = false;
 			this.RootStackClear();
 			this.RootStackPush(page);
 			this.RootStackPush(layer);
 			this.UpdateAfterPageChanged();
-			this.document.Modifier.OpletQueueEnable = true;
+			this.document.Modifier.OpletQueueEnable = ie;
 		}
 
 		// Retourne le nombre total de pages.

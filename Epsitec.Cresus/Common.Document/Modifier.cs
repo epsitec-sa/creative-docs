@@ -2062,6 +2062,7 @@ namespace Epsitec.Common.Document
 			Objects.Abstract layer = context.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 			{
+				// A chaque itération, l'objet tend vers la bonne largeur.
 				for ( int i=0 ; i<10 ; i++ )
 				{
 					Rectangle objBox = obj.BoundingBoxGeom;
@@ -2077,7 +2078,7 @@ namespace Epsitec.Common.Document
 						finalBox.Bottom = globalBox.Bottom;
 						finalBox.Top    = globalBox.Top;
 					}
-					selector.QuickStretch(objBox, finalBox);
+					selector.QuickZoom(objBox, finalBox);
 
 					obj.MoveGlobalStarting();
 					obj.MoveGlobalProcess(selector);
@@ -3096,6 +3097,7 @@ namespace Epsitec.Common.Document
 				Objects.Page srcPage = list[rank] as Objects.Page;
 
 				Objects.Page page = new Objects.Page(this.document, srcPage);
+				page.CloneObject(srcPage);
 				if ( name == "" )
 				{
 					page.Name = Misc.CopyName(srcPage.Name);
@@ -3300,46 +3302,101 @@ namespace Epsitec.Common.Document
 			masterPageList.Clear();
 			Objects.Page currentPage = this.document.GetObjects[pageNumber] as Objects.Page;
 
-			if ( currentPage.MasterType != Objects.MasterType.Slave )  return;
-
-			if ( currentPage.MasterUse == Objects.MasterUse.Specific )
+			if ( currentPage.MasterType == Objects.MasterType.Slave )
 			{
-				if ( currentPage.MasterPageToUse != null &&
-					 currentPage.MasterPageToUse.MasterType != Objects.MasterType.Slave )
+				if ( currentPage.MasterUse == Objects.MasterUse.Specific )
 				{
-					masterPageList.Add(currentPage.MasterPageToUse);
+					if ( currentPage.MasterPageToUse != null &&
+						 currentPage.MasterPageToUse.MasterType != Objects.MasterType.Slave )
+					{
+						this.ComputeMasterPageList(masterPageList, currentPage.MasterPageToUse);
+					}
+				}
+
+				if ( currentPage.MasterUse == Objects.MasterUse.Default )
+				{
+					int total = this.document.GetObjects.Count;
+					for ( int i=0 ; i<total ; i++ )
+					{
+						Objects.Page page = this.document.GetObjects[i] as Objects.Page;
+
+						if ( page.MasterAutoStop )
+						{
+							if ( this.IsRejectMaster(i, pageNumber) )  continue;
+						}
+
+						if ( page.MasterType == Objects.MasterType.All )
+						{
+							this.ComputeMasterPageList(masterPageList, page);
+						}
+
+						if ( page.MasterType == Objects.MasterType.Even )
+						{
+							if ( currentPage.Rank%2 != 0 )
+							{
+								this.ComputeMasterPageList(masterPageList, page);
+							}
+						}
+
+						if ( page.MasterType == Objects.MasterType.Odd )
+						{
+							if ( currentPage.Rank%2 == 0 )
+							{
+								this.ComputeMasterPageList(masterPageList, page);
+							}
+						}
+					}
+				}
+			}
+			else	// page modèle ?
+			{
+				if ( currentPage.MasterSpecific )
+				{
+					if ( currentPage.MasterPageToUse != null &&
+						 currentPage.MasterPageToUse.MasterType != Objects.MasterType.Slave )
+					{
+						this.ComputeMasterPageList(masterPageList, currentPage.MasterPageToUse);
+					}
 				}
 			}
 
-			if ( currentPage.MasterUse == Objects.MasterUse.Default )
+			masterPageList.Reverse();
+		}
+
+		protected void ComputeMasterPageList(System.Collections.ArrayList masterPageList, Objects.Page master)
+		{
+			if ( masterPageList.Contains(master) )  return;
+
+			masterPageList.Add(master);
+
+			if ( master.MasterSpecific )
 			{
-				int total = this.document.GetObjects.Count;
-				for ( int i=0 ; i<total ; i++ )
+				if ( master.MasterPageToUse != null &&
+					 master.MasterPageToUse.MasterType != Objects.MasterType.Slave )
 				{
-					Objects.Page page = this.document.GetObjects[i] as Objects.Page;
-
-					if ( page.MasterType == Objects.MasterType.All )
-					{
-						masterPageList.Add(page);
-					}
-
-					if ( page.MasterType == Objects.MasterType.Even )
-					{
-						if ( currentPage.Rank%2 != 0 )
-						{
-							masterPageList.Add(page);
-						}
-					}
-
-					if ( page.MasterType == Objects.MasterType.Odd )
-					{
-						if ( currentPage.Rank%2 == 0 )
-						{
-							masterPageList.Add(page);
-						}
-					}
+					this.ComputeMasterPageList(masterPageList, master.MasterPageToUse);
 				}
 			}
+		}
+
+		protected bool IsRejectMaster(int rankMaster, int pageNumber)
+		{
+			if ( rankMaster >= pageNumber )  return true;
+
+			while ( rankMaster < pageNumber )
+			{
+				Objects.Page page = this.document.GetObjects[rankMaster] as Objects.Page;
+				if ( page.MasterType == Objects.MasterType.Slave )  break;
+				rankMaster ++;
+			}
+
+			for ( int i=rankMaster ; i<pageNumber ; i++ )
+			{
+				Objects.Page page = this.document.GetObjects[i] as Objects.Page;
+				if ( page.MasterType != Objects.MasterType.Slave )  return true;
+			}
+
+			return false;
 		}
 		#endregion
 

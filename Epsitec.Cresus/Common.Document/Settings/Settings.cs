@@ -271,6 +271,16 @@ namespace Epsitec.Common.Document.Settings
 			return index;
 		}
 
+		// Ajoute un nouveau guide dans l'autre (global/local) liste.
+		public int GuidesAddOther(Guide guide)
+		{
+			int index = this.GuidesListOther.Add(guide);
+			this.document.Notifier.NotifyGuidesChanged();
+			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+			this.document.IsDirtySerialize = true;
+			return index;
+		}
+
 		// Ajoute un nouveau guide.
 		public void GuidesInsert(int index, Guide guide)
 		{
@@ -295,6 +305,24 @@ namespace Epsitec.Common.Document.Settings
 			get
 			{
 				if ( this.globalGuides )
+				{
+					return this.guides;
+				}
+				else
+				{
+					int cp = this.document.Modifier.ActiveViewer.DrawingContext.CurrentPage;
+					Objects.Page page = this.document.GetObjects[cp] as Objects.Page;
+					return page.Guides;
+				}
+			}
+		}
+
+		// Retourne l'autre (global/local) liste des repères.
+		protected UndoableList GuidesListOther
+		{
+			get
+			{
+				if ( !this.globalGuides )
 				{
 					return this.guides;
 				}

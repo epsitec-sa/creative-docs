@@ -132,7 +132,7 @@ namespace Epsitec.Common.Document.Settings
 						break;
 
 					case GuideType.VerticalCenter:
-						this.Position = size.Width/2 - value;
+						this.Position = value - size.Width/2;
 						break;
 
 					case GuideType.VerticalRight:
@@ -144,7 +144,7 @@ namespace Epsitec.Common.Document.Settings
 						break;
 
 					case GuideType.HorizontalCenter:
-						this.Position = size.Height/2 - value;
+						this.Position = value - size.Height/2;
 						break;
 
 					case GuideType.HorizontalTop:

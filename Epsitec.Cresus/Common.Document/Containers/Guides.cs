@@ -50,6 +50,11 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar.Items.Add(this.buttonDuplicate);
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, "Dupliquer le repère");
 
+			this.buttonXfer = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.GuideXfer.icon");
+			this.buttonXfer.Clicked += new MessageEventHandler(this.HandleButtonXfer);
+			this.toolBar.Items.Add(this.buttonXfer);
+			ToolTip.Default.SetToolTip(this.buttonXfer, "Global &lt;-&gt; page courante");
+
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonUp = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Up.icon");
@@ -158,6 +163,7 @@ namespace Epsitec.Common.Document.Containers
 			int sel = this.document.Settings.GuidesSelected;
 
 			this.buttonDuplicate.SetEnabled(sel != -1);
+			this.buttonXfer.SetEnabled(sel != -1 && total > 0);
 			this.buttonUp.SetEnabled(sel != -1 && sel > 0);
 			this.buttonDown.SetEnabled(sel != -1 && sel < total-1);
 			this.buttonDelete.SetEnabled(sel != -1 && total > 0);
@@ -311,6 +317,28 @@ namespace Epsitec.Common.Document.Containers
 			this.editPosition.Focus();
 		}
 
+		// Transfère un repère (global <-> local).
+		private void HandleButtonXfer(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.OpletQueueBeginAction();
+			int sel = this.document.Settings.GuidesSelected;
+
+			Settings.Guide guide = new Settings.Guide(this.document);
+			this.document.Settings.GuidesGet(sel).CopyTo(guide);
+			this.document.Settings.GuidesAddOther(guide);
+
+			this.document.Settings.GuidesRemoveAt(sel);
+
+			if ( sel >= this.document.Settings.GuidesCount )
+			{
+				sel = this.document.Settings.GuidesCount-1;
+				this.table.SelectRow(sel, true);
+				this.document.Settings.GuidesSelected = sel;
+				this.UpdateEdits();
+			}
+			this.document.Modifier.OpletQueueValidateAction();
+		}
+
 		// Monte d'une ligne le repère sélectionné.
 		private void HandleButtonUp(object sender, MessageEventArgs e)
 		{
@@ -421,6 +449,7 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton			buttonNewH;
 		protected IconButton			buttonNewV;
 		protected IconButton			buttonDuplicate;
+		protected IconButton			buttonXfer;
 		protected IconButton			buttonUp;
 		protected IconButton			buttonDown;
 		protected IconButton			buttonDelete;

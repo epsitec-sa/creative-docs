@@ -458,6 +458,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\GuideXfer.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Hand.icon"
                     BuildAction = "EmbeddedResource"
                 />

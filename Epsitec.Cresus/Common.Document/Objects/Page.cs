@@ -40,6 +40,8 @@ namespace Epsitec.Common.Document.Objects
 			this.masterType = MasterType.Slave;
 			this.masterUse = MasterUse.Default;
 			this.masterPageToUse = null;
+			this.masterAutoStop = false;
+			this.masterSpecific = false;
 			this.masterGuides = true;
 		}
 
@@ -182,6 +184,34 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Indique si l'application s'arrête à la prochaine page modèle.
+		public bool MasterAutoStop
+		{
+			get
+			{
+				return this.masterAutoStop;
+			}
+
+			set
+			{
+				this.masterAutoStop = value;
+			}
+		}
+
+		// Indique si la page modèle utilise elle-même une page modèle.
+		public bool MasterSpecific
+		{
+			get
+			{
+				return this.masterSpecific;
+			}
+
+			set
+			{
+				this.masterSpecific = value;
+			}
+		}
+
 		// Pour une page maître, retourne le rang du premier calque qui sera
 		// à l'avant.
 		// - S'il n'y a qu'un calque, il vient derrière.
@@ -223,6 +253,8 @@ namespace Epsitec.Common.Document.Objects
 			this.masterType      = page.masterType;
 			this.masterUse       = page.masterUse;
 			this.masterPageToUse = page.masterPageToUse;
+			this.masterAutoStop  = page.masterAutoStop;
+			this.masterSpecific  = page.masterSpecific;
 			this.masterGuides    = page.masterGuides;
 
 			this.guides.Clear();
@@ -251,6 +283,8 @@ namespace Epsitec.Common.Document.Objects
 				this.masterType = host.masterType;
 				this.masterUse = host.masterUse;
 				this.masterPageToUse = host.masterPageToUse;
+				this.masterAutoStop = host.masterAutoStop;
+				this.masterSpecific = host.masterSpecific;
 				this.masterGuides = host.masterGuides;
 			}
 
@@ -273,6 +307,8 @@ namespace Epsitec.Common.Document.Objects
 				this.host.document.Notifier.NotifyPagesChanged();
 				this.host.document.Notifier.NotifyArea(this.host.document.Modifier.ActiveViewer);
 
+				Misc.Swap(ref host.masterAutoStop, ref this.masterAutoStop);
+				Misc.Swap(ref host.masterSpecific, ref this.masterSpecific);
 				Misc.Swap(ref host.masterGuides, ref this.masterGuides);
 			}
 
@@ -292,6 +328,8 @@ namespace Epsitec.Common.Document.Objects
 			protected MasterType			masterType;
 			protected MasterUse				masterUse;
 			protected Page					masterPageToUse;
+			protected bool					masterAutoStop;
+			protected bool					masterSpecific;
 			protected bool					masterGuides;
 		}
 		#endregion
@@ -308,6 +346,8 @@ namespace Epsitec.Common.Document.Objects
 				info.AddValue("MasterType", this.masterType);
 				info.AddValue("MasterUse", this.masterUse);
 				info.AddValue("MasterPageToUse", this.masterPageToUse);
+				info.AddValue("MasterAutoStop", this.masterAutoStop);
+				info.AddValue("MasterSpecific", this.masterSpecific);
 				info.AddValue("MasterGuides", this.masterGuides);
 				info.AddValue("GuidesList", this.guides);
 			}
@@ -317,6 +357,8 @@ namespace Epsitec.Common.Document.Objects
 		protected Page(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 			bool master = false;
+			this.masterAutoStop = false;
+			this.masterSpecific = false;
 			this.masterGuides = true;
 
 			if ( this.document.Type != DocumentType.Pictogram )
@@ -328,6 +370,12 @@ namespace Epsitec.Common.Document.Objects
 					this.masterPageToUse = (Page) info.GetValue("MasterPageToUse", typeof(Page));
 					this.guides = (UndoableList) info.GetValue("GuidesList", typeof(UndoableList));
 					master = true;
+				}
+
+				if ( this.document.IsRevisionGreaterOrEqual(1,0,12) )
+				{
+					this.masterAutoStop = info.GetBoolean("MasterAutoStop");
+					this.masterSpecific = info.GetBoolean("MasterSpecific");
 				}
 
 				if ( this.document.IsRevisionGreaterOrEqual(1,0,11) )
@@ -353,6 +401,8 @@ namespace Epsitec.Common.Document.Objects
 		protected MasterType			masterType;
 		protected MasterUse				masterUse;
 		protected Page					masterPageToUse;
+		protected bool					masterAutoStop;
+		protected bool					masterSpecific;
 		protected bool					masterGuides;
 		protected UndoableList			guides;
 	}

@@ -1204,7 +1204,7 @@ namespace Epsitec.Common.Document
 
 			Button button = new Button(container);
 			button.Name = sString.Name;
-			button.Text = "Imprimante...";
+			button.Text = "Propriétés...";
 			button.Width = 80;
 			button.Dock = DockStyle.Left;
 			button.DockMargins = new Margins(3, 0, 0, 0);

@@ -175,9 +175,9 @@ namespace Epsitec.Common.Document
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
-		// Initialise le sélectionneur pour effectuer un stretch rapide
+		// Initialise le sélectionneur pour effectuer un zoom rapide
 		// (c'est-à-dire non interactif).
-		public void QuickStretch(Rectangle rInitial, Rectangle rFinal)
+		public void QuickZoom(Rectangle rInitial, Rectangle rFinal)
 		{
 			this.initialData.P1 = rInitial.BottomLeft;
 			this.initialData.P2 = rInitial.TopRight;
