@@ -103,6 +103,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					break;
 
 				case GlyphShape.Close:
+				case GlyphShape.Cancel:
 					path.MoveTo(center.X-rect.Width*0.20*zoom, center.Y-rect.Height*0.30*zoom);
 					path.LineTo(center.X-rect.Width*0.30*zoom, center.Y-rect.Height*0.20*zoom);
 					path.LineTo(center.X-rect.Width*0.10*zoom, center.Y+rect.Height*0.00*zoom);
@@ -133,10 +134,22 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+rect.Width*0.30*zoom, center.Y-rect.Height*0.06*zoom);
 					path.LineTo(center.X+rect.Width*0.18*zoom, center.Y-rect.Height*0.06*zoom);
 					break;
+
+				case GlyphShape.Validate:
+					path.MoveTo(center.X-rect.Width*0.30, center.Y+rect.Height*0.00);
+					path.LineTo(center.X-rect.Width*0.20, center.Y+rect.Height*0.10);
+					path.LineTo(center.X-rect.Width*0.10, center.Y-rect.Height*0.05);
+					path.LineTo(center.X+rect.Width*0.20, center.Y+rect.Height*0.30);
+					path.LineTo(center.X+rect.Width*0.30, center.Y+rect.Height*0.20);
+					path.LineTo(center.X-rect.Width*0.10, center.Y-rect.Height*0.30);
+					break;
 			}
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(this.colorBlack);
+			Drawing.Color color = this.colorBlack;
+			if ( type == GlyphShape.Cancel   )  color = Drawing.Color.FromRGB(0.5, 0.0, 0.0);  // rouge foncé
+			if ( type == GlyphShape.Validate )  color = Drawing.Color.FromRGB(0.0, 0.5, 0.0);  // vert foncé
+			graphics.RenderSolid(color);
 		}
 
 		// Dessine un bouton à cocher sans texte.
@@ -534,6 +547,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				thumbRect.Left  -= 1;
 				thumbRect.Right += 1;
 			}
+			state &= ~WidgetState.Engaged;
 			this.PaintButtonBackground(graphics, thumbRect, state, dir, ButtonStyle.Scroller);
 
 			Drawing.Rectangle	rect = new Drawing.Rectangle();
@@ -1130,13 +1144,22 @@ namespace Epsitec.Common.Widgets.Adorner
 
 		// Dessine le curseur du texte.
 		public void PaintTextCursor(Drawing.Graphics graphics,
-									Drawing.Rectangle rect,
+									Drawing.Point p1, Drawing.Point p2,
 									bool cursorOn)
 		{
 			if ( cursorOn )
 			{
-				graphics.AddFilledRectangle(rect);
+				double original = graphics.LineWidth;
+				graphics.LineWidth = 1;
+				graphics.Align(ref p1);
+				graphics.Align(ref p2);
+				p1.X -= 0.5;
+				p2.X -= 0.5;
+				p1.Y -= 0.5;
+				p2.Y -= 0.5;
+				graphics.AddLine(p1, p2);
 				graphics.RenderSolid(this.colorBlack);
+				graphics.LineWidth = original;
 			}
 		}
 		
