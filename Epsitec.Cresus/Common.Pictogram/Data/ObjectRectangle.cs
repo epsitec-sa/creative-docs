@@ -59,9 +59,9 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Rectangle bbox = this.BoundingBox;
 			if ( !bbox.Contains(pos) )  return false;
 
-			Drawing.Path path = this.PathBuild();
+			Drawing.Path path = this.PathBuild(null);
 
-			double width = System.Math.Max(this.PropertyLine(1).Width/2, this.minimalWidth);
+			double width = System.Math.Max(this.PropertyLine(1).PatternWidth/2, this.minimalWidth);
 			if ( AbstractObject.DetectOutline(path, width, pos) )  return true;
 			
 			if ( this.PropertyGradient(3).IsVisible() )
@@ -266,7 +266,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Met à jour le rectangle englobant l'objet.
 		protected override void UpdateBoundingBox()
 		{
-			Drawing.Path path = this.PathBuild();
+			Drawing.Path path = this.PathBuild(null);
 			this.bboxThin = AbstractObject.ComputeBoundingBox(path);
 
 			this.bboxGeom = this.bboxThin;
@@ -285,7 +285,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Crée le chemin de l'objet.
-		protected Drawing.Path PathBuild()
+		protected Drawing.Path PathBuild(IconContext iconContext)
 		{
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = new Drawing.Point();
@@ -306,11 +306,11 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 
 			PropertyCorner corner = this.PropertyCorner(4);
-			return this.PathCornerRectangle(p1, p2, p3, p4, corner);
+			return this.PathCornerRectangle(iconContext, p1, p2, p3, p4, corner);
 		}
 
 		// Crée le chemin d'un rectangle à coins quelconques.
-		protected Drawing.Path PathCornerRectangle(Drawing.Point p1, Drawing.Point p2, Drawing.Point p3, Drawing.Point p4, PropertyCorner corner)
+		protected Drawing.Path PathCornerRectangle(IconContext iconContext, Drawing.Point p1, Drawing.Point p2, Drawing.Point p3, Drawing.Point p4, PropertyCorner corner)
 		{
 			double d12 = Drawing.Point.Distance(p1, p2);
 			double d23 = Drawing.Point.Distance(p2, p3);
@@ -321,6 +321,15 @@ namespace Epsitec.Common.Pictogram.Data
 
 			Drawing.Path path = new Drawing.Path();
 			
+			if ( iconContext == null )
+			{
+				path.DefaultZoom = 10.0;
+			}
+			else
+			{
+				path.DefaultZoom = iconContext.ScaleX;
+			}
+
 			if ( corner.CornerType == CornerType.Right || radius == 0 )
 			{
 				path.MoveTo(p1);
@@ -367,7 +376,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( this.TotalHandle < 2 )  return;
 
-			Drawing.Path path = this.PathBuild();
+			Drawing.Path path = this.PathBuild(iconContext);
 			this.PropertyGradient(3).Render(graphics, iconContext, path, this.BoundingBoxThin);
 
 			this.PropertyLine(1).DrawPath(graphics, iconContext, iconObjects, path, this.PropertyColor(2).Color);
@@ -380,7 +389,7 @@ namespace Epsitec.Common.Pictogram.Data
 					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 				}
 
-				graphics.Rasterizer.AddOutline(path, this.PropertyLine(1).Width+iconContext.HiliteSize, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
+				this.PropertyLine(1).AddOutline(graphics, path, iconContext.HiliteSize);
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}

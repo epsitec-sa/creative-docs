@@ -55,11 +55,12 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Path pathStart;  bool outlineStart, surfaceStart;
 			Drawing.Path pathEnd;    bool outlineEnd,   surfaceEnd;
 			Drawing.Path pathLine;
-			this.PathBuild(out pathStart, out outlineStart, out surfaceStart,
+			this.PathBuild(null,
+						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
 						   out pathLine);
 
-			double width = System.Math.Max(this.PropertyLine(1).Width/2, this.minimalWidth);
+			double width = System.Math.Max(this.PropertyLine(1).PatternWidth/2, this.minimalWidth);
 
 			if (                 AbstractObject.DetectOutline(pathLine,  width, pos) )  return true;
 			if ( outlineStart && AbstractObject.DetectOutline(pathStart, width, pos) )  return true;
@@ -242,7 +243,8 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Path pathStart;  bool outlineStart, surfaceStart;
 			Drawing.Path pathEnd;    bool outlineEnd,   surfaceEnd;
 			Drawing.Path pathLine;
-			this.PathBuild(out pathStart, out outlineStart, out surfaceStart,
+			this.PathBuild(null,
+						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
 						   out pathLine);
 
@@ -264,13 +266,27 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Crée les 3 chemins de l'objet.
-		protected void PathBuild(out Drawing.Path pathStart, out bool outlineStart, out bool surfaceStart,
+		protected void PathBuild(IconContext iconContext,
+								 out Drawing.Path pathStart, out bool outlineStart, out bool surfaceStart,
 								 out Drawing.Path pathEnd,   out bool outlineEnd,   out bool surfaceEnd,
 								 out Drawing.Path pathLine)
 		{
 			pathStart = new Drawing.Path();
 			pathEnd   = new Drawing.Path();
 			pathLine  = new Drawing.Path();
+
+			if ( iconContext == null )
+			{
+				pathStart.DefaultZoom = 10.0;
+				pathEnd.DefaultZoom = 10.0;
+				pathLine.DefaultZoom = 10.0;
+			}
+			else
+			{
+				pathStart.DefaultZoom = iconContext.ScaleX;
+				pathEnd.DefaultZoom = iconContext.ScaleX;
+				pathLine.DefaultZoom = iconContext.ScaleX;
+			}
 
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
@@ -294,13 +310,14 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Path pathStart;  bool outlineStart, surfaceStart;
 			Drawing.Path pathEnd;    bool outlineEnd,   surfaceEnd;
 			Drawing.Path pathLine;
-			this.PathBuild(out pathStart, out outlineStart, out surfaceStart,
+			this.PathBuild(iconContext,
+						   out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
 						   out pathLine);
 
 			if ( outlineStart )
 			{
-				graphics.Rasterizer.AddOutline(pathStart, this.PropertyLine(1).Width, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
+				this.PropertyLine(1).AddOutline(graphics, pathStart, 0.0);
 				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(2).Color));
 			}
 			if ( surfaceStart )
@@ -311,7 +328,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( outlineEnd )
 			{
-				graphics.Rasterizer.AddOutline(pathEnd, this.PropertyLine(1).Width, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
+				this.PropertyLine(1).AddOutline(graphics, pathEnd, 0.0);
 				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(2).Color));
 			}
 			if ( surfaceEnd )
@@ -326,7 +343,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				if ( outlineStart )
 				{
-					graphics.Rasterizer.AddOutline(pathStart, this.PropertyLine(1).Width+iconContext.HiliteSize, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
+					this.PropertyLine(1).AddOutline(graphics, pathStart, iconContext.HiliteSize);
 					graphics.RenderSolid(iconContext.HiliteOutlineColor);
 				}
 				if ( surfaceStart )
@@ -337,7 +354,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 				if ( outlineEnd )
 				{
-					graphics.Rasterizer.AddOutline(pathEnd, this.PropertyLine(1).Width+iconContext.HiliteSize, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
+					this.PropertyLine(1).AddOutline(graphics, pathEnd, iconContext.HiliteSize);
 					graphics.RenderSolid(iconContext.HiliteOutlineColor);
 				}
 				if ( surfaceEnd )
@@ -346,7 +363,7 @@ namespace Epsitec.Common.Pictogram.Data
 					graphics.RenderSolid(iconContext.HiliteOutlineColor);
 				}
 
-				graphics.Rasterizer.AddOutline(pathLine, this.PropertyLine(1).Width+iconContext.HiliteSize, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
+				this.PropertyLine(1).AddOutline(graphics, pathLine, iconContext.HiliteSize);
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}

@@ -79,6 +79,13 @@ namespace Epsitec.Common.Pictogram.Data
 			regular.Deep = 0.5;
 			this.AddProperty(regular);
 
+			PropertyArc arc = new PropertyArc();
+			arc.Type = PropertyType.Arc;
+			arc.ArcType       = ArcType.Full;
+			arc.StartingAngle =  90.0;
+			arc.EndingAngle   = 360.0;
+			this.AddProperty(arc);
+
 			PropertyColor backColor = new PropertyColor();
 			backColor.Type = PropertyType.BackColor;
 			backColor.Color = Drawing.Color.FromBrightness(1.0);
