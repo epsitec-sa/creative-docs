@@ -25,6 +25,9 @@ namespace Epsitec.Common.Text.Layout
 			this.width_character  = profile.width_character;
 			this.width_space      = profile.width_space;
 			this.width_kashida    = profile.width_kashida;
+			
+			this.count_end_space  = profile.count_end_space;
+			this.width_end_space  = profile.width_end_space;
 		}
 		
 		
@@ -49,6 +52,14 @@ namespace Epsitec.Common.Text.Layout
 			get
 			{
 				return this.count_space;
+			}
+		}
+		
+		public short							CountEndSpace
+		{
+			get
+			{
+				return this.count_end_space;
 			}
 		}
 		
@@ -85,6 +96,14 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public double							WidthEndSpace
+		{
+			get
+			{
+				return this.width_end_space;
+			}
+		}
+		
 		public double							WidthKashida
 		{
 			get
@@ -114,24 +133,62 @@ namespace Epsitec.Common.Text.Layout
 			this.width_character  = 0;
 			this.width_space      = 0;
 			this.width_kashida    = 0;
+			
+			this.count_end_space  = 0;
+			this.width_end_space  = 0;
+		}
+		
+		public void IncludeEndSpace()
+		{
+			this.count_space += this.count_end_space;
+			this.width_space += this.width_end_space;
+			
+			this.count_end_space = 0;
+			this.width_end_space = 0;
 		}
 		
 		
 		public void Add(StretchProfile profile)
 		{
-			this.count_no_stretch += profile.count_no_stretch;
-			this.count_character  += profile.count_character;
-			this.count_space      += profile.count_space;
-			this.count_kashida    += profile.count_kashida;
-			
-			this.width_no_stretch += profile.width_no_stretch;
-			this.width_character  += profile.width_character;
-			this.width_space      += profile.width_space;
-			this.width_kashida    += profile.width_kashida;
+			if ((profile.count_no_stretch > 0) ||
+				(profile.count_character > 0) ||
+				(profile.count_kashida > 0))
+			{
+				this.count_space += this.count_end_space;
+				this.width_space += this.width_end_space;
+				
+				this.count_end_space = 0;
+				this.width_end_space = 0;
+				
+				this.count_no_stretch += profile.count_no_stretch;
+				this.count_character  += profile.count_character;
+				this.count_space      += profile.count_space;
+				this.count_kashida    += profile.count_kashida;
+				
+				this.width_no_stretch += profile.width_no_stretch;
+				this.width_character  += profile.width_character;
+				this.width_space      += profile.width_space;
+				this.width_kashida    += profile.width_kashida;
+			}
+			else
+			{
+				this.count_end_space += profile.CountSpace;
+				this.width_end_space += profile.WidthSpace;
+			}
 		}
 		
 		public void Add(Unicode.StretchClass stretch, double width)
 		{
+			if ((stretch != Unicode.StretchClass.Space) &&
+				(this.count_end_space > 0))
+			{
+				this.count_space += this.count_end_space;
+				this.width_space += this.width_end_space;
+				
+				this.count_end_space = 0;
+				this.width_end_space = 0;
+			}
+			
 			switch (stretch)
 			{
 				case Unicode.StretchClass.NoStretch:
@@ -146,8 +203,8 @@ namespace Epsitec.Common.Text.Layout
 					break;
 				
 				case Unicode.StretchClass.Space:
-					this.count_space += 1;
-					this.width_space += width;
+					this.count_end_space += 1;
+					this.width_end_space += width;
 					break;
 				
 				case Unicode.StretchClass.Kashida:
@@ -194,6 +251,9 @@ namespace Epsitec.Common.Text.Layout
 			//	Une pénalité nulle est attribuée à une ligne qui occupe parfaitement
 			//	l'espace disponible. Une pénalité maximale est attribuée à une ligne
 			//	qui ne "tient" pas dans l'espace donné.
+			
+			//	NB: le calcul de la pénalité ne tient pas compte des espaces qui
+			//		débordent en fin de texte.
 			
 			double total_width = this.TotalWidth;
 			
@@ -248,6 +308,9 @@ namespace Epsitec.Common.Text.Layout
 			//	Détermine l'échelle à utiliser pour ajuster chaque glyphe contenu
 			//	dans la ligne afin d'obtenir une justification optimale; se base
 			//	sur les classes des caractères.
+			
+			//	NB: le calcul de l'échelle ne tient pas compte des espaces qui
+			//		débordent en fin de texte.
 			
 			double total_width = this.TotalWidth;
 			
@@ -321,6 +384,9 @@ namespace Epsitec.Common.Text.Layout
 		private short							count_character;
 		private short							count_space;
 		private short							count_kashida;
+		
+		private short							count_end_space;
+		private double							width_end_space;
 		
 		private double							width_no_stretch;
 		private double							width_character;

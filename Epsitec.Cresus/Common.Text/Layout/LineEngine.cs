@@ -297,7 +297,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					scratch.StretchProfile.Add (scratch.Font, scratch.FontSize, text, offset, frag_length);
 				}
 				
-				if (scratch.Advance+scratch.TextWidth > scratch.FenceMaxX)
+				if (scratch.Advance+scratch.TextWidth-scratch.StretchProfile.WidthEndSpace > scratch.FenceMaxX)
 				{
 					//	Dépassé la marge de droite. Arrête immédiatement sans tenir compte
 					//	du résultat :
@@ -308,7 +308,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				if (can_break)
 				{
 					scratch.LastBreakOffset    = scratch.Offset + frag_length;
-					scratch.LastBreakAdvance   = scratch.Advance + scratch.TextWidth;
+					scratch.LastBreakAdvance   = scratch.Advance + scratch.TextWidth - scratch.StretchProfile.WidthEndSpace;
 					scratch.LastBreakPenalty   = penalty;
 					scratch.LastStretchProfile = new StretchProfile (profile);
 					

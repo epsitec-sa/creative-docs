@@ -13,6 +13,7 @@ namespace Epsitec.Common.Text.Tests
 			CheckLayout.TestLineEngine ();
 			CheckLayout.TestLineEngineWithFrame ();
 			CheckLayout.TestLineEngineWithHyphens ();
+			CheckLayout.TestLineEngineWithSpaces ();
 		}
 		
 		
@@ -145,7 +146,7 @@ namespace Epsitec.Common.Text.Tests
 			context.TextOffset = breaks[0].Offset;
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
-			Debug.Assert.IsTrue (breaks[0].Offset == 38);
+			Debug.Assert.IsTrue (breaks[0].Offset == 46);
 			Debug.Assert.IsTrue (context.FrameIndex == 0);
 			
 			//	Diminue la hauteur du cadre 0 pour que la ligne en Arial 16 ne
@@ -231,8 +232,8 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 17);
-			Debug.Assert.IsTrue (breaks[0].Advance > 92.06);
-			Debug.Assert.IsTrue (breaks[0].Advance < 92.07);
+			Debug.Assert.IsTrue (breaks[0].Advance + breaks[0].Profile.WidthEndSpace > 92.06);
+			Debug.Assert.IsTrue (breaks[0].Advance + breaks[0].Profile.WidthEndSpace < 92.07);
 			
 			double y1 = context.MaxY;
 			double y2 = context.MinY;
@@ -242,8 +243,8 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 27);
-			Debug.Assert.IsTrue (breaks[0].Advance > 148.75);
-			Debug.Assert.IsTrue (breaks[0].Advance < 148.76);
+			Debug.Assert.IsTrue (breaks[0].Advance + breaks[0].Profile.WidthEndSpace > 148.75);
+			Debug.Assert.IsTrue (breaks[0].Advance + breaks[0].Profile.WidthEndSpace < 148.76);
 			
 			double y3 = context.MaxY;
 			double y4 = context.MinY;
@@ -254,11 +255,11 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks.Count == 2);
 			Debug.Assert.IsTrue (breaks[0].Offset == 53);
-			Debug.Assert.IsTrue (breaks[0].Advance > 291.09);
-			Debug.Assert.IsTrue (breaks[0].Advance < 291.10);
+			Debug.Assert.IsTrue (breaks[0].Advance + breaks[0].Profile.WidthEndSpace > 291.09);
+			Debug.Assert.IsTrue (breaks[0].Advance + breaks[0].Profile.WidthEndSpace < 291.10);
 			Debug.Assert.IsTrue (breaks[1].Offset == 56);
-			Debug.Assert.IsTrue (breaks[1].Advance > 307.10);
-			Debug.Assert.IsTrue (breaks[1].Advance < 307.11);
+			Debug.Assert.IsTrue (breaks[1].Advance + breaks[1].Profile.WidthEndSpace > 307.10);
+			Debug.Assert.IsTrue (breaks[1].Advance + breaks[1].Profile.WidthEndSpace < 307.11);
 			
 			context = new Layout.Context (story.TextContext, story_text, 0, -100, 14.0, 400, 0, 0, 40, 10);
 			status  = context.Fit (ref breaks, 0);
@@ -387,6 +388,65 @@ namespace Epsitec.Common.Text.Tests
 //				status  = context.Fit (ref breaks, 0);
 //			}
 //			System.Diagnostics.Trace.WriteLine ("Done.");
+		}
+		
+		private static void TestLineEngineWithSpaces()
+		{
+			TextStory story  = new TextStory ();
+			ICursor   cursor = new Cursors.SimpleCursor ();
+			
+			ulong[] story_text;
+			
+			story.NewCursor (cursor);
+			
+			ulong[] styled_text;
+			System.Collections.ArrayList properties;
+			
+			properties = new System.Collections.ArrayList ();
+			
+			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			
+			story.ConvertToStyledText ("Essai tout simple. XXXXXXXXXX", properties, out styled_text);
+			story.InsertText (cursor, styled_text);
+			
+			story.MoveCursor (cursor, - story.TextLength);
+			
+			story_text = new ulong[story.TextLength];
+			
+			story.ReadText (cursor, story_text.Length, story_text);
+			
+			Layout.LineEngine layout = new Layout.LineEngine ();
+			Layout.Context    context;
+			
+			Layout.BreakCollection breaks = null;
+			Layout.Status status;
+			
+			context = new Layout.Context (story.TextContext, story_text, 0, 0, 14.0, 105, 0, 0, 0, 0);
+			status  = context.Fit (ref breaks, 0);
+			
+			Debug.Assert.IsTrue (breaks.Count == 1);
+			Debug.Assert.IsTrue (breaks[0].Offset == 19);
+			Debug.Assert.IsTrue (breaks[0].Advance > 94.03);
+			Debug.Assert.IsTrue (breaks[0].Advance < 94.04);
+			
+			story.MoveCursor (cursor, story.TextLength - 10);
+			story.ConvertToStyledText ("    ", properties, out styled_text);
+			story.InsertText (cursor, styled_text);
+			
+			story.MoveCursor (cursor, - (story.TextLength - 10));
+			
+			story_text = new ulong[story.TextLength];
+			
+			story.ReadText (cursor, story_text.Length, story_text);
+			
+			context = new Layout.Context (story.TextContext, story_text, 0, 0, 14.0, 105, 0, 0, 0, 0);
+			status  = context.Fit (ref breaks, 0);
+			
+			Debug.Assert.IsTrue (breaks.Count == 1);
+			Debug.Assert.IsTrue (breaks[0].Offset == 23);
+			Debug.Assert.IsTrue (breaks[0].Advance > 94.03);
+			Debug.Assert.IsTrue (breaks[0].Advance < 94.04);
 		}
 	}
 }
