@@ -68,9 +68,9 @@ namespace Epsitec.Common.DynamicData
 			IDynamicField f01 = new DynamicFieldAllInColumn (table.Columns["C1"]);
 			IDynamicField f22 = new DynamicFieldOne (table.Rows[2], table.Columns["C2"]);
 			
-			dfc.Add (f00);
-			dfc.Add (f01);
-			dfc.Add (f22);
+			dfc.Add (f00);		//	0:0
+			dfc.Add (f01);		//	*:1 -> 0:1, 1:1, 2:1, 3:1
+			dfc.Add (f22);		//	2:2
 			
 			CellIndex[] cells = dfc.FindDynamicCells (table);
 			

@@ -42,7 +42,8 @@ namespace Epsitec.Common.DynamicData
 		
 		public CellIndex[] FindDynamicCells(System.Data.DataTable table)
 		{
-			//	TODO: à tester !
+			//	Construit et retourne la table contenant les index des cellules pour
+			//	lesquelles il y a des champs dynamiques.
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			

@@ -13,6 +13,9 @@ namespace Epsitec.Common.Drawing
 	/// <summary>
 	/// La classe Segment représente un segment horizontal ou vertical.
 	/// </summary>
+	
+	[System.Serializable]
+	
 	public struct Segment
 	{
 		public Segment(Drawing.Point p1, Drawing.Point p2)
