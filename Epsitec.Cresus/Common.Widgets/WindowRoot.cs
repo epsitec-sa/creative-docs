@@ -12,7 +12,6 @@ namespace Epsitec.Common.Widgets
 			this.window = window;
 		}
 		
-		
 		public override bool			IsVisible
 		{
 			get { return true; }
@@ -33,7 +32,7 @@ namespace Epsitec.Common.Widgets
 			
 			base.Dispose (disposing);
 		}
-		
+
 		protected override bool ShortcutHandler(Shortcut shortcut, bool execute_focused)
 		{
 			if (base.ShortcutHandler (shortcut, execute_focused) == false)
@@ -92,7 +91,7 @@ namespace Epsitec.Common.Widgets
 #else
 				IAdorner adorner = Widgets.Adorner.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle(x1, y1, x2-x1, y2-y1);
-				adorner.PaintWindowBackground(graphics, rect, WidgetState.None, Direction.None);
+				adorner.PaintWindowBackground(graphics, this.Client.Bounds, rect, WidgetState.None);
 #endif
 			}
 		}
@@ -102,7 +101,6 @@ namespace Epsitec.Common.Widgets
 			this.HandleAdornerChanged ();
 		}
 		
-		
-		protected Window				window;
+		protected Window					window;
 	}
 }
