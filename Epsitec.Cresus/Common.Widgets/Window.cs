@@ -678,7 +678,7 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		internal void QueueCommand(Widget source)
+		public void QueueCommand(Widget source)
 		{
 			QueueItem item = new QueueItem (source);
 			
@@ -690,9 +690,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		internal void QueueCommand(object source, string command)
+		public void QueueCommand(object source, string command)
 		{
-			QueueItem item = new QueueItem (source, command, this.CommandDispatcher);
+			this.QueueCommand (source, command, this.CommandDispatcher);
+		}
+		
+		public void QueueCommand(object source, string command, Support.CommandDispatcher dispatcher)
+		{
+			QueueItem item = new QueueItem (source, command, dispatcher);
 			
 			this.cmd_queue.Enqueue (item);
 			
@@ -701,6 +706,13 @@ namespace Epsitec.Common.Widgets
 				this.window.SendQueueCommand ();
 			}
 		}
+		
+		public void AsyncDispose()
+		{
+			this.is_dispose_queued = true;
+			this.window.SendQueueCommand ();
+		}
+		
 		
 		internal void DispatchQueuedCommands()
 		{
@@ -718,6 +730,11 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				dispatcher.Dispatch (command, source);
+			}
+			
+			if (this.is_dispose_queued)
+			{
+				this.Dispose ();
 			}
 		}
 		
@@ -1096,6 +1113,7 @@ namespace Epsitec.Common.Widgets
 		
 		private Support.CommandDispatcher		cmd_dispatcher;
 		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();
+		private bool							is_dispose_queued;
 		
 		private System.Collections.Queue		post_paint_queue = new System.Collections.Queue ();
 		private System.Collections.Hashtable	property_hash;

@@ -1422,13 +1422,13 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event EventHandler					PreparePaint;
+		public event Support.EventHandler			PreparePaint;
 		public event PaintEventHandler				PaintBackground;
 		public event PaintEventHandler				PaintForeground;
-		public event EventHandler					ChildrenChanged;
-		public event EventHandler					ParentChanged;
-		public event EventHandler					AdornerChanged;
-		public event EventHandler					LayoutChanged;
+		public event Support.EventHandler			ChildrenChanged;
+		public event Support.EventHandler			ParentChanged;
+		public event Support.EventHandler			AdornerChanged;
+		public event Support.EventHandler			LayoutChanged;
 		
 		public event Layouts.UpdateEventHandler		LayoutUpdate;
 		
@@ -1438,26 +1438,26 @@ namespace Epsitec.Common.Widgets
 		public event MessageEventHandler			DoubleClicked;
 		public event MessageEventHandler			Entered;
 		public event MessageEventHandler			Exited;
-		public event EventHandler					ShortcutPressed;
-		public event EventHandler					HypertextHot;
+		public event Support.EventHandler			ShortcutPressed;
+		public event Support.EventHandler			HypertextHot;
 		public event MessageEventHandler			HypertextClicked;
 		
 		public event MessageEventHandler			PreProcessing;
 		public event MessageEventHandler			PostProcessing;
 		
-		public event EventHandler					Focused;
-		public event EventHandler					Defocused;
-		public event EventHandler					Selected;
-		public event EventHandler					Deselected;
-		public event EventHandler					Engaged;
-		public event EventHandler					StillEngaged;
-		public event EventHandler					Disengaged;
-		public event EventHandler					ActiveStateChanged;
-		public event EventHandler					MinSizeChanged;
-		public event EventHandler					MaxSizeChanged;
-		public event EventHandler					Disposing;
-		public event EventHandler					TextChanged;
-		public event EventHandler					NameChanged;
+		public event Support.EventHandler			Focused;
+		public event Support.EventHandler			Defocused;
+		public event Support.EventHandler			Selected;
+		public event Support.EventHandler			Deselected;
+		public event Support.EventHandler			Engaged;
+		public event Support.EventHandler			StillEngaged;
+		public event Support.EventHandler			Disengaged;
+		public event Support.EventHandler			ActiveStateChanged;
+		public event Support.EventHandler			MinSizeChanged;
+		public event Support.EventHandler			MaxSizeChanged;
+		public event Support.EventHandler			Disposing;
+		public event Support.EventHandler			TextChanged;
+		public event Support.EventHandler			NameChanged;
 		
 		public event PaintBoundsCallback			PaintBoundsCallback;
 		
