@@ -26,7 +26,9 @@ namespace Epsitec.Common.Drawing.Renderer
 				{
 					if (value == null)
 					{
+						this.Bitmap = null;
 						this.Detach ();
+						this.transform.Reset ();
 					}
 					else
 					{
@@ -49,8 +51,6 @@ namespace Epsitec.Common.Drawing.Renderer
 				{
 					if (this.bitmap != null)
 					{
-						System.Diagnostics.Debug.Assert (this.bitmap != null);
-						
 						this.bitmap.UnlockBits ();
 						this.AssertAttached ();
 						
@@ -129,6 +129,7 @@ namespace Epsitec.Common.Drawing.Renderer
 				}
 				
 				Bitmap bitmap = this.bitmap;
+				
 				this.Bitmap = null;
 				
 				if (bitmap != null)
@@ -153,20 +154,18 @@ namespace Epsitec.Common.Drawing.Renderer
 		{
 			this.Detach ();
 			
+			this.transform.Reset ();
 			this.agg_ren = Agg.Library.AggRendererImageNew (pixmap.Handle);
 			this.pixmap  = pixmap;
 		}
 		
 		protected void Detach()
 		{
-			this.Bitmap = null;
-			
 			if (this.agg_ren != System.IntPtr.Zero)
 			{
 				Agg.Library.AggRendererImageDelete (this.agg_ren);
 				this.agg_ren = System.IntPtr.Zero;
 				this.pixmap  = null;
-				this.transform.Reset ();
 			}
 		}
 		
