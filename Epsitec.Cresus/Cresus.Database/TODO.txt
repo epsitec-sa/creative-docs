@@ -41,7 +41,6 @@ Les tables suivantes sont définies :
     CR_COLUMN_DEF       (nom DbTable.TagColumnDef)
     CR_TYPE_DEF         (nom DbTable.TagTypeDef)
     CR_ENUM_VAL_DEF     (nom DbTable.TagEnumValDef)
-    CR_RELATION_DEF     (nom DbTable.TagRelationDef)
 
 - CR_TABLE_DEF définit les informations de base d'une table :
 
@@ -57,6 +56,8 @@ Les tables suivantes sont définies :
     o Nom de haut niveau, titre, description, info XML.
     o Référence à l'ID de la table (CREF_TABLE).
     o Référence au type (CREF_TYPE).
+    o Référence à une table parent (CREF_PARENT_TABLE) pour
+      définir des "foreign keys".
 
 - CR_TYPE_DEF définit un type de donnée :
 
@@ -68,16 +69,6 @@ Les tables suivantes sont définies :
     o Clef.
     o Nom de haut niveau, titre, description, info XML.
     o Référence au type (CREF_TYPE) qui utilise cette valeur.
-
-- CR_RELATION_DEF définit une relation entre la colonne d'une table
-  source et une table cible :
-
-    o Clef.
-    o Référence à la colonne source (CREF_COLUMN).
-    o Référence à la table source (CREF_SOURCE) qui est en
-      soi superflue, puisqu'on peut la défirver de CREF_COLUMN,
-      mais ça permet de simplifier les choses).
-    o Référence à la table cible (CREF_TARGET).
 
 La clef est soit une clef simple (CR_ID), soit une clef avec
 numéro de version (CR_ID+CR_REV). Dans ce dernier cas, CR_STAT
