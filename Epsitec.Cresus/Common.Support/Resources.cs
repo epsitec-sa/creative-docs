@@ -256,7 +256,12 @@ namespace Epsitec.Common.Support
 			}
 			if (prefix == null)
 			{
-				throw new ResourceException ("Cannot make full name if prefix is missing.");
+				prefix = Resources.DefaultPrefix;
+				
+				if (prefix == null)
+				{
+					throw new ResourceException (string.Format ("Cannot make full name if prefix is missing for resource {0}.", name));
+				}
 			}
 			
 			return string.Concat (prefix, ":", name);

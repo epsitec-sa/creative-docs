@@ -159,6 +159,11 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
+		public void AddRule(Support.IValidator validator, string command_states)
+		{
+			this.CommandDispatcher.AddValidator (new Support.ValidationRule (validator, command_states));
+		}
+		
 		
 		public void StoreInitialData()
 		{

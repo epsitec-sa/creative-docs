@@ -169,6 +169,12 @@ namespace Epsitec.Common.Support
 		
 		
 		
+		public void AddValidator(IValidator validator)
+		{
+			this.ValidationRule.AddValidator (validator);
+		}
+		
+		
 		public void Dispatch(string command, object source)
 		{
 			this.aborted = false;

@@ -25,9 +25,26 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public ValidationRule() : this (null, false)
+		{
+		}
+		
 		public ValidationRule(string name) : this (name, false)
 		{
 		}
+		
+		public ValidationRule(IValidator validator, string command_states) : this (null, false)
+		{
+			this.AddValidator (validator);
+			
+			string[] names = command_states.Split (';', ',');
+			
+			foreach (string name in names)
+			{
+				this.AddCommandState (name.Trim ());
+			}
+		}
+		
 		
 		
 		public string								Name

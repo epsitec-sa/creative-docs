@@ -13,6 +13,7 @@
       <data name="Anchor">TopLeft</data>
       <data name="AnchorMargins">8;86;16;166</data>
       <data name="Size">270;21</data>
+      <data name="TabIndex">1</data>
       <data name="BindingInfo">&lt;bind path="UserName"/&gt;</data>
     </bundle>
     <bundle>
@@ -20,8 +21,9 @@
       <data name="Representation">NumericUpDown</data>
       <data name="CaptionWidth">100</data>
       <data name="Anchor">TopLeft</data>
-      <data name="AnchorMargins">8;136;39;143</data>
-      <data name="Size">220;21</data>
+      <data name="AnchorMargins">8;184;39;150</data>
+      <data name="Size">172;21</data>
+      <data name="TabIndex">2</data>
       <data name="BindingInfo">&lt;bind path="UserAge"/&gt;</data>
     </bundle>
     <bundle>
@@ -30,21 +32,32 @@
       <data name="Anchor">TopLeft</data>
       <data name="AnchorMargins">8;8;62;170</data>
       <data name="Size">348;87</data>
+      <data name="TabIndex">3</data>
       <data name="BindingInfo">&lt;bind path="Representation"/&gt;</data>
     </bundle>
     <bundle>
       <data name="class">Button</data>
       <data name="Anchor">BottomRight</data>
-      <data name="AnchorMargins">188;96;171;16</data>
+      <data name="AnchorMargins">100;184;171;16</data>
       <data name="Command">Ok</data>
       <data name="Text">[res:strings#label.OK]</data>
+      <data name="TabIndex">4</data>
+    </bundle>
+    <bundle>
+      <data name="class">Button</data>
+      <data name="Anchor">BottomRight</data>
+      <data name="AnchorMargins">188;96;171;16</data>
+      <data name="Command">Cancel</data>
+      <data name="Text">[res:strings#label.Cancel]</data>
+      <data name="TabIndex">5</data>
     </bundle>
     <bundle>
       <data name="class">Button</data>
       <data name="Anchor">BottomRight</data>
       <data name="AnchorMargins">276;8;171;16</data>
-      <data name="Command">Cancel</data>
-      <data name="Text">[res:strings#label.Cancel]</data>
+      <data name="Command">Apply</data>
+      <data name="Text">[res:strings#label.Apply]</data>
+      <data name="TabIndex">6</data>
     </bundle>
   </list>
 </bundle>

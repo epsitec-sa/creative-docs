@@ -70,7 +70,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			rule.AddValidator (new Epsitec.Common.Widgets.Validators.SelectionValidator (this.list));
 			rule.AddCommandState ("ValidateDialog");
 			
-			this.private_dispatcher.ValidationRule.AddValidator (rule);
+			this.private_dispatcher.AddValidator (rule);
 			
 			return widget;
 		}

@@ -14,19 +14,44 @@ namespace Epsitec.Common.UI.Data
 			this.graph = new Types.DataGraph (this);
 		}
 		
-		public Record(string name) : this (name, null, null)
+		public Record(string name) : this (name, null)
 		{
 		}
 		
-		public Record(string name, string prefix) : this (name, prefix, null)
-		{
-		}
-		
-		public Record(string name, string prefix, Support.EventHandler handler) : this ()
+		public Record(string name, string prefix) : this ()
 		{
 			this.DefineName (name);
 			this.DefineResourcePrefix (prefix);
-			this.DefineFieldChangedEventHandler (handler);
+		}
+		
+		
+		public new Field						this[string name]
+		{
+			get
+			{
+				return base[name] as Field;
+			}
+		}
+
+		public new Field						this[int index]
+		{
+			get
+			{
+				return base[index] as Field;
+			}
+		}
+		
+		public Support.IValidator				Validator
+		{
+			get
+			{
+				if (this.validator == null)
+				{
+					this.validator = new RecordValidator (this);
+				}
+				
+				return this.validator;
+			}
 		}
 		
 		
@@ -50,26 +75,6 @@ namespace Epsitec.Common.UI.Data
 			this.resource_prefix = prefix;
 		}
 		
-		public void DefineFieldChangedEventHandler(Support.EventHandler handler)
-		{
-			if (this.field_changed_event_handler != null)
-			{
-				foreach (Field field in this.list)
-				{
-					field.Changed -= this.field_changed_event_handler;
-				}
-			}
-			
-			this.field_changed_event_handler = handler;
-			
-			if (this.field_changed_event_handler != null)
-			{
-				foreach (Field field in this.list)
-				{
-					field.Changed += this.field_changed_event_handler;
-				}
-			}
-		}
 		
 		
 		public override void Add(Types.IDataItem item)
@@ -83,10 +88,7 @@ namespace Epsitec.Common.UI.Data
 			
 			base.Add (field);
 			
-			if (this.field_changed_event_handler != null)
-			{
-				field.Changed += this.field_changed_event_handler;
-			}
+			field.AttachToRecord (this);
 			
 			this.OnChanged ();
 		}
@@ -106,12 +108,9 @@ namespace Epsitec.Common.UI.Data
 				this.list.AddRange (fields);
 				this.ClearCachedItemArray ();
 				
-				if (this.field_changed_event_handler != null)
+				foreach (Field field in fields)
 				{
-					foreach (Field field in fields)
-					{
-						field.Changed += this.field_changed_event_handler;
-					}
+					field.AttachToRecord (this);
 				}
 				
 				this.OnChanged ();
@@ -151,48 +150,35 @@ namespace Epsitec.Common.UI.Data
 		
 		public void Clear()
 		{
+			foreach (Field field in this.list)
+			{
+				field.DetachFromRecord (this);
+			}
+			
 			this.list.Clear ();
 			this.ClearCachedItemArray ();
 			this.OnChanged ();
 		}
 		
 		
-		public Field AddNewField(string name)
+		public Field AddField(string name)
 		{
 			return this.InitFieldAndAdd (new Field (name));
 		}
 		
-		public Field AddNewField(string name, object value)
+		public Field AddField(string name, object value)
 		{
 			return this.InitFieldAndAdd (new Field (name, value));
 		}
 		
-		public Field AddNewField(string name, object value, Types.INamedType type)
+		public Field AddField(string name, object value, Types.INamedType type)
 		{
 			return this.InitFieldAndAdd (new Field (name, value, type));
 		}
 		
-		public Field AddNewField(string name, object value, Types.INamedType type, Types.IDataConstraint constraint)
+		public Field AddField(string name, object value, Types.INamedType type, Types.IDataConstraint constraint)
 		{
 			return this.InitFieldAndAdd (new Field (name, value, type, constraint));
-		}
-		
-		
-		
-		public new Field						this[string name]
-		{
-			get
-			{
-				return base[name] as Field;
-			}
-		}
-
-		public new Field						this[int index]
-		{
-			get
-			{
-				return base[index] as Field;
-			}
 		}
 		
 		
@@ -204,10 +190,17 @@ namespace Epsitec.Common.UI.Data
 			}
 			
 			Types.IDataValue[] values = new Types.IDataValue[this.fields.Length];
-			
 			this.fields.CopyTo (values, 0);
 			
 			return values;
+		}
+		
+		
+		public Record Clone()
+		{
+			System.ICloneable cloneable = this;
+
+			return cloneable.Clone () as Record;
 		}
 		
 		
@@ -267,18 +260,6 @@ namespace Epsitec.Common.UI.Data
 		}
 		#endregion
 		
-		#region IChangedSource Members
-		public event Support.EventHandler		Changed;
-		#endregion
-		
-		public Record Clone()
-		{
-			System.ICloneable cloneable = this;
-
-			return cloneable.Clone () as Record;
-		}
-		
-		
 		protected override object CloneNewObject()
 		{
 			return new Record ();
@@ -292,7 +273,6 @@ namespace Epsitec.Common.UI.Data
 			
 			that.DefineName (this.name);
 			that.DefineResourcePrefix (this.resource_prefix);
-			that.DefineFieldChangedEventHandler (this.field_changed_event_handler);
 			
 			return that;
 		}
@@ -324,9 +304,27 @@ namespace Epsitec.Common.UI.Data
 		
 		protected virtual void OnChanged()
 		{
+			if (this.validator != null)
+			{
+				this.validator.MakeDirty (false);
+			}
+			
 			if (this.Changed != null)
 			{
 				this.Changed (this);
+			}
+		}
+		
+		protected virtual void OnFieldChanged(Field field)
+		{
+			if (this.validator != null)
+			{
+				this.validator.MakeDirty (false);
+			}
+			
+			if (this.FieldChanged != null)
+			{
+				this.FieldChanged (field);
 			}
 		}
 		
@@ -352,10 +350,98 @@ namespace Epsitec.Common.UI.Data
 		}
 
 		
+		internal void NotifyFieldChanged(Field field)
+		{
+			this.OnFieldChanged (field);
+		}
+		
+		
+		#region RecordValidator Class
+		protected class RecordValidator : Support.IValidator
+		{
+			public RecordValidator(Record record)
+			{
+				this.record = record;
+				this.state  = Support.ValidationState.Dirty;
+			}
+			
+			
+			public Support.ValidationState		State
+			{
+				get
+				{
+					return this.state;
+				}
+			}
+			
+			public bool							IsValid
+			{
+				get
+				{
+					if (this.state == Support.ValidationState.Dirty)
+					{
+						this.Validate ();
+					}
+				
+					return (this.state == Support.ValidationState.Ok);
+				}
+			}
+			
+			public string						ErrorMessage
+			{
+				get
+				{
+					return null;
+				}
+			}
+			
+			
+			public void Validate()
+			{
+				this.state = Support.ValidationState.Unknown;
+				
+				foreach (Field field in this.record.CachedItemArray)
+				{
+					if (field.IsValueValid == false)
+					{
+						this.state = Support.ValidationState.Error;
+						return;
+					}
+				}
+				
+				this.state = Support.ValidationState.Ok;
+			}
+			
+			public void MakeDirty(bool deep)
+			{
+				this.state = Support.ValidationState.Dirty;
+				this.OnBecameDirty ();
+			}
+			
+			
+			protected void OnBecameDirty()
+			{
+				if (this.BecameDirty != null)
+				{
+					this.BecameDirty (this);
+				}
+			}
+			
+			
+			public event Support.EventHandler	BecameDirty;
+			
+			private Record						record;
+			private Support.ValidationState		state;
+		}
+		#endregion
+		
+		public event Support.EventHandler		Changed;
+		public event Support.EventHandler		FieldChanged;
+		
 		private Field[]							fields;
 		private Types.DataGraph					graph;
 		private string							name;
 		private string							resource_prefix;
-		private Support.EventHandler			field_changed_event_handler;
+		private RecordValidator					validator;
 	}
 }

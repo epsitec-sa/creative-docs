@@ -57,7 +57,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			rule.AddValidator (new Epsitec.Common.Widgets.Validators.RegexValidator (this.text, Support.RegexFactory.AlphaNumName));
 			rule.AddCommandState ("ValidateDialog");
 			
-			this.private_dispatcher.ValidationRule.AddValidator (rule);
+			this.private_dispatcher.AddValidator (rule);
 			
 			return body;
 		}

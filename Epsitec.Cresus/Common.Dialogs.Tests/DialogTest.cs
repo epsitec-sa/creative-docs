@@ -61,12 +61,15 @@ namespace Epsitec.Common.Dialogs
 			
 			dialog.CommandDispatcher.RegisterController (this);
 			
-			Record record = new Record ("Rec", "dialog_with_data_strings", new Support.EventHandler (this.HandleFieldChanged));
+			Record record = new Record ("Rec", "dialog_with_data_strings");
 			
-			record.AddNewField ("UserName", "Test", new Types.StringType (), new Support.RegexConstraint (Support.PredefinedRegex.Alpha));
-			record.AddNewField ("UserAge",  10);
-			record.AddNewField ("Representation", Representation.None);
+			record.AddField ("UserName", "Test", new Types.StringType (), new Support.RegexConstraint (Support.PredefinedRegex.Alpha));
+			record.AddField ("UserAge",  10);
+			record.AddField ("Representation", Representation.None);
 			
+			record.FieldChanged += new Support.EventHandler (this.HandleFieldChanged);
+			
+			dialog.AddRule (record.Validator, "Ok;Apply");
 			
 			Assertion.AssertEquals ("Test", record["UserName"].Value);
 			Assertion.AssertEquals (10, record["UserAge"].Value);

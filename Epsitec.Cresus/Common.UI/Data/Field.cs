@@ -48,6 +48,38 @@ namespace Epsitec.Common.UI.Data
 		}
 		
 		
+		public object							Value
+		{
+			get
+			{
+				return this.value;
+			}
+			set
+			{
+				if ((this.is_value_valid == false) ||
+					(Common.Types.Comparer.Equal (this.value, value) == false))
+				{
+					if (this.type == null)
+					{
+						throw new System.InvalidOperationException ("Value cannot be changed; no type is defined.");
+					}
+					
+					this.value          = value;
+					this.is_value_valid = true;
+					this.OnChanged ();
+				}
+			}
+		}
+		
+		public Record							Record
+		{
+			get
+			{
+				return this.record;
+			}
+		}
+		
+		
 		public void DefineValue(object value)
 		{
 			if (value is string)
@@ -118,30 +150,6 @@ namespace Epsitec.Common.UI.Data
 		public void DefineDescription(string description)
 		{
 			this.description = description;
-		}
-		
-		
-		public object							Value
-		{
-			get
-			{
-				return this.value;
-			}
-			set
-			{
-				if ((this.is_value_valid == false) ||
-					(Common.Types.Comparer.Equal (this.value, value) == false))
-				{
-					if (this.type == null)
-					{
-						throw new System.InvalidOperationException ("Value cannot be changed; no type is defined.");
-					}
-					
-					this.value          = value;
-					this.is_value_valid = true;
-					this.OnChanged ();
-				}
-			}
 		}
 		
 		
@@ -273,6 +281,22 @@ namespace Epsitec.Common.UI.Data
 		}
 		
 		
+		internal void AttachToRecord(Record record)
+		{
+			System.Diagnostics.Debug.Assert (this.record == null);
+			System.Diagnostics.Debug.Assert (record != null);
+			
+			this.record = record;
+		}
+		
+		internal void DetachFromRecord(Record record)
+		{
+			System.Diagnostics.Debug.Assert (this.record == record);
+			
+			this.record = null;
+		}
+		
+		
 		protected virtual object CloneNewObject()
 		{
 			return new Field ();
@@ -317,6 +341,11 @@ namespace Epsitec.Common.UI.Data
 			{
 				this.Changed (this);
 			}
+			
+			if (this.record != null)
+			{
+				this.record.NotifyFieldChanged (this);
+			}
 		}
 		
 		
@@ -327,6 +356,7 @@ namespace Epsitec.Common.UI.Data
 		private Types.INamedType				type;
 		private Types.IDataConstraint			constraint;
 		
+		private Record							record;
 		private object							value;
 		private bool							is_value_valid;
 	}

@@ -226,10 +226,14 @@ namespace Epsitec.Common.Types
 				object o1 = v1.ReadValue ();
 				object o2 = v2.ReadValue ();
 				
-				if (Comparer.Equal (o1, o2) == false)
+				if ((v2.IsValueValid == false) ||
+					(Comparer.Equal (o1, o2) == false))
 				{
-					v2.WriteValue (o1);
-					count++;
+					if (v1.IsValueValid)
+					{
+						v2.WriteValue (o1);
+						count++;
+					}
 				}
 			}
 		}

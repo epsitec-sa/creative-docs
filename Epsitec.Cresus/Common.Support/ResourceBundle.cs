@@ -126,11 +126,6 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (this.prefix == null)
-				{
-					throw new ResourceException (string.Format ("Resource bundle '{0}' has no prefix.", this.Name));
-				}
-				
 				return Resources.MakeFullName (this.prefix, this.name);
 			}
 		}
