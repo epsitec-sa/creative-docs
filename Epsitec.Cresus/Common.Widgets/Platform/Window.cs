@@ -56,8 +56,17 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal void MakeToolWindow()
 		{
-			this.MakeSecondaryWindow ();
-			this.is_tool_window = true;
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+			this.ShowInTaskbar   = false;
+			this.is_tool_window  = true;
+			Window.DummyHandleEater (this.Handle);
+		}
+		
+		internal void MakeFloatingWindow()
+		{
+			this.ShowInTaskbar   = false;
+			this.is_tool_window  = true;
+			Window.DummyHandleEater (this.Handle);
 		}
 		
 		internal void ResetHostingWidgetWindow()
@@ -263,6 +272,14 @@ namespace Epsitec.Common.Widgets.Platform
 			set
 			{
 				this.is_no_activate = !value;
+			}
+		}
+		
+		internal bool							IsToolWindow
+		{
+			get
+			{
+				return this.is_tool_window;
 			}
 		}
 		
