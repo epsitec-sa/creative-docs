@@ -38,13 +38,36 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			Assertion.AssertNotNull (test.DataType);
 		}
 		
+		[Test] public void CheckDataType()
+		{
+			DataType test1 = new DataType ("name=a", "binder=b", "label=c", "descr=d", "extra=e");
+			DataType test2 = new DataType ("name=a", "label=c2", "descr=d2", "extra=e2");
+			DataType test3 = new DataType ("name=x");
+			
+			Assertion.AssertEquals ("a", test1.Name);
+			Assertion.AssertEquals ("b", test1.BinderEngine);
+			Assertion.AssertEquals ("c", test1.UserLabel);
+			Assertion.AssertEquals ("d", test1.UserDescription);
+			Assertion.AssertEquals ("e", test1.Attributes.GetAttribute ("extra"));
+			
+			Assertion.AssertEquals ("a", test2.Name);
+			Assertion.AssertEquals ("a", test2.BinderEngine);
+			
+			Assertion.AssertEquals ("x", test3.Name);
+			
+			Assertion.Assert (test1.Equals (test2));
+			Assertion.Assert (! test1.Equals (test3));
+			
+			Assertion.AssertNull (test1.Attributes.GetAttribute ("missing"));
+		}
+		
 		[Test] public void CheckCreateSet()
 		{
 			DataSet test = new DataSet ("test");
 			
-			test.AddData ("a", 1,		new DataType ("numeric"));
-			test.AddData ("b", "hello", new DataType ("text"));
-			test.AddData ("c", 10.5,	new DataType ("numeric"));
+			test.AddData ("a", 1,		new DataType ("name=numeric"));
+			test.AddData ("b", "hello", new DataType ("name=text"));
+			test.AddData ("c", 10.5,	new DataType ("name=numeric"));
 			
 			Assertion.AssertNotNull (test.FindRecord ("a"));
 			Assertion.AssertNotNull (test.FindRecord ("b"));
@@ -61,7 +84,7 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			test.RemoveData ("b");
 			test.RemoveData ("c");
 			
-			test.AddData ("b", "bye", new DataType ("text"));
+			test.AddData ("b", "bye", new DataType ("name=text"));
 			
 			Assertion.AssertNotNull (test.FindRecord ("b"));
 			Assertion.AssertNull (test.FindRecord ("c"));
@@ -74,9 +97,9 @@ namespace Epsitec.Cresus.DataLayer.Tests
 		{
 			DataSet test = new DataSet ("test");
 			
-			test.AddData ("a", 1,		new DataType ("numeric"));
-			test.AddData ("b", "hello", new DataType ("text"));
-			test.AddData ("c", 10.5,	new DataType ("numeric"));
+			test.AddData ("a", 1,		new DataType ("name=numeric"));
+			test.AddData ("b", "hello", new DataType ("name=text"));
+			test.AddData ("c", 10.5,	new DataType ("name=numeric"));
 			
 			test.ValidateChanges ();
 			
@@ -95,8 +118,8 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			test.RemoveData ("b");
 			test.RemoveData ("c");
 			
-			test.AddData ("b", "bye", new DataType ("text"));
-			test.AddData ("d", true,  new DataType ("boolean"));
+			test.AddData ("b", "bye", new DataType ("name=text"));
+			test.AddData ("d", true,  new DataType ("name=boolean"));
 			
 			Assertion.AssertNotNull (test.FindRecord ("b"));
 			Assertion.AssertNull (test.FindRecord ("c"));
@@ -118,9 +141,9 @@ namespace Epsitec.Cresus.DataLayer.Tests
 		{
 			DataSet test = new DataSet ("test");
 			
-			test.AddData ("a", 1,		new DataType ("numeric"));
-			test.AddData ("b", "hello", new DataType ("text"));
-			test.AddData ("c", 10.5,	new DataType ("numeric"));
+			test.AddData ("a", 1,		new DataType ("name=numeric"));
+			test.AddData ("b", "hello", new DataType ("name=text"));
+			test.AddData ("c", 10.5,	new DataType ("name=numeric"));
 			
 			test.ValidateChanges ();
 			
@@ -147,8 +170,8 @@ namespace Epsitec.Cresus.DataLayer.Tests
 		[Test] [ExpectedException (typeof (DataException))] public void CheckDataFieldSetDataTypeEx()
 		{
 			DataField test  = new DataField ();
-			DataType  type1 = new DataType ("a");
-			DataType  type2 = new DataType ("b");
+			DataType  type1 = new DataType ("name=a");
+			DataType  type2 = new DataType ("name=b");
 			
 			test.SetDataType (type1);
 			test.SetDataType (type2);
