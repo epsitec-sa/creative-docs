@@ -688,12 +688,17 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal void MarkForRepaint(Drawing.Rectangle rect)
 		{
+			rect.RoundInflate ();
+			
 			this.dirty_rectangle.MergeWith (rect);
 			
-			int x = (int) (rect.Left);
-			int y = this.ClientSize.Height - (int) (rect.Top + 0.9999);
-			int width  = (int) (rect.Width + 0.9999);
-			int height = (int) (rect.Height + 0.9999);
+			int top    = (int) (rect.Top);
+			int bottom = (int) (rect.Bottom);
+			
+			int width  = (int) (rect.Width);
+			int height = top - bottom + 1;
+			int x      = (int) (rect.Left);
+			int y      = this.ClientSize.Height - top;
 			
 			if (this.is_layered)
 			{

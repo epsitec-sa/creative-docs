@@ -1418,7 +1418,18 @@ namespace Epsitec.Common.Widgets
 		public int									TabIndex
 		{
 			get { return this.tab_index; }
-			set { this.tab_index = value; }
+			set
+			{
+				if (this.tab_index != value)
+				{
+					this.tab_index = value;
+					
+					if (this.tab_navigation_mode == TabNavigationMode.Passive)
+					{
+						this.tab_navigation_mode = TabNavigationMode.ActivateOnTab;
+					}
+				}
+			}
 		}
 		
 		public TabNavigationMode					TabNavigation
@@ -2825,6 +2836,28 @@ namespace Epsitec.Common.Widgets
 			
 			return finder.Widgets;
 		}
+		
+		public Widget[]         FindAllChildren()
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			this.FindAllChildren (list);
+			
+			Widget[] widgets = new Widget[list.Count];
+			list.CopyTo (widgets);
+			
+			return widgets;
+		}
+		
+		
+		protected virtual void FindAllChildren(System.Collections.ArrayList list)
+		{
+			foreach (Widget child in this.Children)
+			{
+				list.Add (child);
+				child.FindAllChildren (list);
+			}
+		}
+		
 		
 		public static Widget[]	FindAllCommandWidgets(string command)
 		{
@@ -4527,11 +4560,14 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.hypertext != null)
 			{
-				this.OnHypertextClicked (e);
-				
-				if (e.Message.Consumer != null)
+				if (e != null)
 				{
-					return;
+					this.OnHypertextClicked (e);
+					
+					if (e.Message.Consumer != null)
+					{
+						return;
+					}
 				}
 			}
 			

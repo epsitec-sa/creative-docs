@@ -84,7 +84,7 @@ namespace Epsitec.Common.Widgets
 				return list;
 			}
 			
-			foreach (Widget widget in parent.Children)
+			foreach (Widget widget in parent.FindAllChildren ())
 			{
 				RadioButton radio = widget as RadioButton;
 				
@@ -98,6 +98,30 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			return list;
+		}
+		
+		public static void Activate(Widget parent, string group, int index)
+		{
+			RadioButton radio = RadioButton.FindRadio (parent, group, index);
+			
+			if (radio != null)
+			{
+				radio.ActiveState = WidgetState.ActiveYes;
+			}
+		}
+		
+		public static RadioButton FindRadio(Widget parent, string group, int index)
+		{
+			foreach (RadioButton radio in RadioButton.FindRadioChildren (parent, group))
+			{
+				if ((radio.Group == group) &&
+					(radio.Index == index))
+				{
+					return radio;
+				}
+			}
+			
+			return null;
 		}
 		
 		
@@ -254,7 +278,7 @@ namespace Epsitec.Common.Widgets
 			
 			protected int					dir;
 		}
-
+		
 
 		// Retourne l'alignement par défaut d'un bouton.
 		public override Drawing.ContentAlignment DefaultAlignment

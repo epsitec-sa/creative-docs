@@ -35,7 +35,6 @@ namespace Epsitec.Common.Widgets
 			this.scroller = new VScroller(null);
 			this.scroller.IsInverted = true;
 			this.scroller.Parent = this;
-			//this.scroller.Dock = DockStyle.Right;
 			this.scroller.ValueChanged += new Support.EventHandler(this.HandleScrollerValueChanged);
 			this.scroller.Hide();
 		}
