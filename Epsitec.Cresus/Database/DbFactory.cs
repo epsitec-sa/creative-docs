@@ -14,21 +14,21 @@ namespace Epsitec.Cresus.Database
 			//	instanciation impossible
 		}
 		
-		public static void Initialise()
+		static DbFactory()
 		{
-			if (DbFactory.Initialised == false)
+			DbFactory.Initialise ();
+		}
+		
+		protected static void Initialise()
+		{
+			System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadWithPartialName ("Database.Implementation");
+			System.Type[] types_in_assembly = assembly.GetTypes ();
+			
+			foreach (System.Type type in types_in_assembly)
 			{
-				DbFactory.Initialised = true;
-				
-				System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadWithPartialName ("Database.Implementation");
-				System.Type[] types_in_assembly = assembly.GetTypes ();
-				
-				foreach (System.Type type in types_in_assembly)
+				if (type.Name.EndsWith ("AbstractionFactory"))
 				{
-					if (type.Name.EndsWith ("AbstractionFactory"))
-					{
-						System.Activator.CreateInstance (type);
-					}
+					System.Activator.CreateInstance (type);
 				}
 			}
 		}
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (db_access.Provider != null);
 			
-			foreach (IDbAbstractionFactory db_factory in DbFactory.DbFactories)
+			foreach (IDbAbstractionFactory db_factory in DbFactory.db_factories)
 			{
 				if (db_factory.ProviderName == db_access.Provider)
 				{
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (provider != null);
 			
-			foreach (IDbAbstractionFactory db_factory in DbFactory.DbFactories)
+			foreach (IDbAbstractionFactory db_factory in DbFactory.db_factories)
 			{
 				if (db_factory.ProviderName == provider)
 				{
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Database
 		
 		public static void DebugDumpRegisteredDbAbstractions()
 		{
-			foreach (IDbAbstractionFactory entry in DbFactory.DbFactories)
+			foreach (IDbAbstractionFactory entry in DbFactory.db_factories)
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 				
@@ -90,13 +90,12 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (db_factory != null);
 			System.Diagnostics.Debug.Assert (db_factory.ProviderName != null);
-			System.Diagnostics.Debug.Assert (DbFactory.DbFactories.Contains (db_factory) == false);
+			System.Diagnostics.Debug.Assert (DbFactory.db_factories.Contains (db_factory) == false);
 			
-			DbFactory.DbFactories.Add (db_factory);
+			DbFactory.db_factories.Add (db_factory);
 		}
 		
 		
-		private static System.Collections.ArrayList		DbFactories = new System.Collections.ArrayList ();
-		private static bool								Initialised = false;
+		protected static System.Collections.ArrayList	db_factories = new System.Collections.ArrayList ();
 	}
 }

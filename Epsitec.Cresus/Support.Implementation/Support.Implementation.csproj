@@ -3,7 +3,7 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{BA604F89-53C1-4228-AC76-5D5E68205029}"
+        ProjectGuid = "{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}"
         SccProjectName = "SAK"
         SccLocalPath = "SAK"
         SccAuxPath = "SAK"
@@ -13,7 +13,7 @@
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "DataLayer"
+                AssemblyName = "Support.Implementation"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -22,7 +22,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "Epsitec.Cresus.DataLayer"
+                RootNamespace = "Epsitec.Cresus.Support.Implementation"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -80,7 +80,7 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.Xml"
+                    AssemblyName = "System.XML"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
             </References>

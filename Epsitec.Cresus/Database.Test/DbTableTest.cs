@@ -5,11 +5,6 @@ namespace Epsitec.Cresus.Database
 	[TestFixture]
 	public class DbTableTest
 	{
-		[SetUp] public void LoadAssemblies()
-		{
-			DbFactory.Initialise ();
-		}
-		
 		[Test] public void CheckCreateSqlTable()
 		{
 			IDbAbstraction db_abstraction = DbFactoryTest.CreateDbAbstraction (true);

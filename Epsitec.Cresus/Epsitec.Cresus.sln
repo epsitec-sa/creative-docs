@@ -32,9 +32,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemExt", "System\SystemE
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Support", "Support\Support.csproj", "{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 9
+		SccNumberOfProjects = 10
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -70,6 +74,10 @@ Global
 		SccLocalPath8 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection8 = System\\
+		SccProjectUniqueName9 = Support\\Support.csproj
+		SccLocalPath9 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection9 = Support\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -108,6 +116,10 @@ Global
 		{10453A3B-CA2A-4D36-B634-78BA87AAAB26}.Debug.Build.0 = Debug|.NET
 		{10453A3B-CA2A-4D36-B634-78BA87AAAB26}.Release.ActiveCfg = Release|.NET
 		{10453A3B-CA2A-4D36-B634-78BA87AAAB26}.Release.Build.0 = Release|.NET
+		{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}.Debug.ActiveCfg = Debug|.NET
+		{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}.Debug.Build.0 = Debug|.NET
+		{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}.Release.ActiveCfg = Release|.NET
+		{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info

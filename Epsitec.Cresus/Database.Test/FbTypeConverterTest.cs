@@ -5,11 +5,6 @@ namespace Epsitec.Cresus.Database
 	[TestFixture]
 	public class FbTypeConverterTest
 	{
-		[SetUp] public void LoadAssemblies()
-		{
-			DbFactory.Initialise ();
-		}
-		
 		[Test] public void CheckFindTypeConverter()
 		{
 			IDbAbstractionFactory dbf = DbFactoryTest.CreateDbAbstractionFactory ();
