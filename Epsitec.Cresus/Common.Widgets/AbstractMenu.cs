@@ -17,6 +17,7 @@ namespace Epsitec.Common.Widgets
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			this.margins = adorner.GeometryMenuMargins;
+			this.shadow  = adorner.GeometryMenuShadow;
 
 			this.type  = type;
 			this.items = new MenuItemCollection(this);
@@ -152,6 +153,7 @@ namespace Epsitec.Common.Widgets
 			{
 				IAdorner adorner = Widgets.Adorner.Factory.Active;
 				this.margins = adorner.GeometryMenuMargins;
+				this.shadow  = adorner.GeometryMenuShadow;
 
 				this.Size = this.RequiredSize;
 			}
@@ -177,8 +179,8 @@ namespace Epsitec.Common.Widgets
 					size.Width = System.Math.Max(size.Width, rs.Width);
 					size.Height += rs.Height;
 				}
-				size.Width  += this.margins.Width;
-				size.Height += this.margins.Height;
+				size.Width  += this.shadow.Width  + this.margins.Width;
+				size.Height += this.shadow.Height + this.margins.Height;
 				return size;
 			}
 		}
@@ -199,6 +201,7 @@ namespace Epsitec.Common.Widgets
 
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			this.margins = adorner.GeometryMenuMargins;
+			this.shadow  = adorner.GeometryMenuShadow;
 
 			if ( this.IsHorizontal )
 			{
@@ -217,14 +220,14 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				double y = this.Height-this.margins.Top;
+				double y = this.Height-this.shadow.Top-this.margins.Top;
 				foreach ( MenuItem cell in this.items )
 				{
 					Drawing.Size rs = cell.RequiredSize;
 					y -= rs.Height;
 					Drawing.Rectangle rect = new Drawing.Rectangle();
-					rect.Left   = this.margins.Left;
-					rect.Right  = this.Width-this.margins.Right;
+					rect.Left   = this.shadow.Left+this.margins.Left;
+					rect.Right  = this.Width-this.shadow.Right-this.margins.Right;
 					rect.Bottom = y;
 					rect.Top    = y+rs.Height;
 					cell.Bounds = rect;
@@ -453,6 +456,8 @@ namespace Epsitec.Common.Widgets
 		public void ShowContextMenu(Drawing.Point pos)
 		{
 			pos.Y -= this.Height;
+			pos.X -= this.shadow.Left;
+			pos.Y += this.shadow.Top;
 
 			this.window = new Window();
 			this.window.MakeFramelessWindow();
@@ -461,6 +466,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.window.MakeLayeredWindow();
 				this.window.Alpha = adorner.AlphaVMenu;
+				this.window.Root.BackColor = Drawing.Color.Transparent;
 			}
 			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.Width, this.Height);
@@ -505,6 +511,7 @@ namespace Epsitec.Common.Widgets
 				this.submenu.ParentRect = pRect;
 
 				pos = new Drawing.Point(0, -this.submenu.Height);
+				pos.X -= this.shadow.Left;
 			}
 			else
 			{
@@ -523,6 +530,8 @@ namespace Epsitec.Common.Widgets
 				{
 					pos = new Drawing.Point(-this.submenu.Width, item.Height-this.submenu.Height+1);
 				}
+				pos.X -= this.shadow.Left;
+				pos.Y += this.shadow.Top;
 			}
 
 			pos = item.MapClientToScreen(pos);
@@ -534,6 +543,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.window.MakeLayeredWindow();
 				this.window.Alpha = adorner.AlphaVMenu;
+				this.window.Root.BackColor = Drawing.Color.Transparent;
 			}
 			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
@@ -889,6 +899,7 @@ namespace Epsitec.Common.Widgets
 		protected bool						isActive = true;  // dernier menu (feuille)
 		protected double					margin = 2;  // pour menu horizontal
 		protected Drawing.Margins			margins = new Drawing.Margins(2,2,2,2);
+		protected Drawing.Margins			shadow  = new Drawing.Margins(0,0,0,0);
 		protected MenuItemCollection		items;
 		protected Window					window;
 		protected Timer						timer;

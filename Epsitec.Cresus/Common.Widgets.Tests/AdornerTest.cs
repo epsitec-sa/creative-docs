@@ -44,7 +44,7 @@ namespace Epsitec.Common.Widgets
 
 			Window window = new Window();
 			
-			window.ClientSize = new Size(600, 320);
+			window.ClientSize = new Size(600, 340);
 			window.Text = "CheckAdornerWidgets";
 
 			ToolTip tip = new ToolTip();
@@ -171,8 +171,20 @@ namespace Epsitec.Common.Widgets
 			tb.Items.Add(new IconButton(@"file:images/copy1.icon"));
 			tb.Items.Add(new IconButton(@"file:images/paste1.icon"));
 
+			StatusBar sb = new StatusBar();
+			sb.Location = new Point(0, 0);
+			sb.Width = window.ClientSize.Width;
+			sb.Anchor = AnchorStyles.Bottom|AnchorStyles.LeftAndRight;
+			StatusField sf1 = new StatusField();
+			sf1.Text = "Statuts 1";
+			sb.Items.Add(sf1);
+			StatusField sf2 = new StatusField();
+			sf2.Text = "Statuts 2";
+			sb.Items.Add(sf2);
+			window.Root.Children.Add(sb);
+
 			Button a = new Button();
-			a.Location = new Point(10, 10);
+			a.Location = new Point(10, 30);
 			a.Width = 75;
 			a.Text = "O<m>K</m>";
 			a.ButtonStyle = ButtonStyle.DefaultActive;
@@ -181,7 +193,7 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(a, "C'est d'accord, tout baigne");
 
 			Button b = new Button();
-			b.Location = new Point(95, 10);
+			b.Location = new Point(95, 30);
 			b.Width = 75;
 			b.Text = "<m>A</m>nnuler";
 			b.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
@@ -189,7 +201,7 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(b, "Annule tout<br/>Deuxieme ligne, juste pour voir !");
 
 			Button c = new Button();
-			c.Location = new Point(95+150, 10);
+			c.Location = new Point(95+150, 30);
 			c.Width = 75;
 			c.Text = "Ai<m>d</m>e";
 			c.SetEnabled(false);
@@ -198,16 +210,16 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(c, "Au secours !");
 
 			StaticText st = new StaticText();
-			st.Location = new Point(10, 245);
+			st.Location = new Point(10, 265);
 			st.Width = 150;
 			st.Text = @"Choix du <b>look</b> de l'<i>interface</i> :";
 			st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
 			window.Root.Children.Add(st);
 
-			CreateListLook(window.Root.Children, new Point(10, 175), tip);
+			CreateListLook(window.Root.Children, new Point(10, 195), tip);
 
 			StaticText link = new StaticText();
-			link.Location = new Point(360, 16);
+			link.Location = new Point(360, 36);
 			link.Width = 200;
 			link.Text = @"Visitez notre <a href=""http://www.epsitec.ch"">site web</a> !";
 			link.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
@@ -215,7 +227,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(link);
 
 			CheckButton check = new CheckButton();
-			check.Location = new Point(10, 50);
+			check.Location = new Point(10, 70);
 			check.Width = 100;
 			check.Text = "<m>C</m>ochez ici";
 			check.ActiveState = WidgetState.ActiveYes;
@@ -225,7 +237,7 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(check, "Juste pour voir");
 
 			GroupBox box = new GroupBox();
-			box.Location = new Point(10, 80);
+			box.Location = new Point(10, 100);
 			box.Size = new Size(100, 75);
 			box.Text = "Couleur";
 			box.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
@@ -263,7 +275,7 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(radio3, "Couleur bleue");
 
 			VScroller scrollv = new VScroller();
-			scrollv.Location = new Point(120, 50);
+			scrollv.Location = new Point(120, 70);
 			scrollv.Size = new Size(17, 120);
 			scrollv.Range = 10;
 			scrollv.VisibleRangeRatio = 3.0/10.0;
@@ -275,7 +287,7 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(scrollv, "Ascenseur vertical");
 
 			HScroller scrollh = new HScroller();
-			scrollh.Location = new Point(140, 50);
+			scrollh.Location = new Point(140, 70);
 			scrollh.Size = new Size(120, 17);
 			scrollh.Range = 10;
 			scrollh.VisibleRangeRatio = 7.0/10.0;
@@ -287,7 +299,7 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(scrollh, "Ascenseur horizontal");
 
 			TextFieldCombo combo = new TextFieldCombo();
-			combo.Location = new Point(160, 200);
+			combo.Location = new Point(160, 220);
 			combo.Width = 100;
 			combo.Text = "Janvier";
 			combo.Cursor = combo.Text.Length;
@@ -315,7 +327,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(combo);
 
 			TextField text = new TextField();
-			text.Location = new Point(160, 170);
+			text.Location = new Point(160, 190);
 			text.Width = 100;
 			text.Text = "Bonjour";
 			text.Cursor = text.Text.Length;
@@ -323,7 +335,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(text);
 
 			TextFieldUpDown tud = new TextFieldUpDown();
-			tud.Location = new Point(160, 140);
+			tud.Location = new Point(160, 160);
 			tud.Width = 45;
 			tud.Value = 50;
 			tud.MinRange = -100;
@@ -333,7 +345,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(tud);
 
 			TextFieldSlider slider = new TextFieldSlider();
-			slider.Location = new Point(215, 140);
+			slider.Location = new Point(215, 160);
 			slider.Width = 45;
 			slider.Value = 50;
 			slider.MinRange = -100;
@@ -343,7 +355,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(slider);
 
 			TextFieldMulti multi = new TextFieldMulti();
-			multi.Location = new Point(160, 80);
+			multi.Location = new Point(160, 100);
 			multi.Size = new Size(100, 50);
 			multi.Text = "Ceci est une petite phrase ridicule.<br/>Mais elle est assez longue pour faire des essais.";
 			multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
@@ -351,7 +363,7 @@ namespace Epsitec.Common.Widgets
 
 			TabBook tab = new TabBook();
 			tab.TabBookStyle = TabBookStyle.Right;
-			tab.Location = new Point(280, 50);
+			tab.Location = new Point(280, 70);
 			tab.Size = new Size(300, 180);
 			tab.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			window.Root.Children.Add(tab);

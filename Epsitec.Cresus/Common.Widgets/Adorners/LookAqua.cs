@@ -10,6 +10,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.bitmap = Drawing.Bitmap.FromManifestResource("Epsitec.Common.Widgets.Adorners.Resources.LookAqua.png", this.GetType().Assembly);
 			this.metal = Drawing.Bitmap.FromManifestResource("Epsitec.Common.Widgets.Adorners.Resources.metal1.png", this.GetType().Assembly);
 			this.metalRenderer = false;
+			this.dynamicReflect = false;
 			this.RefreshColors();
 		}
 
@@ -35,14 +36,15 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Drawing.Rectangle paintRect,
 										  WidgetState state)
 		{
-			this.PaintBackground(graphics, windowRect, paintRect, 1.0, 20.0);
+			this.PaintBackground(graphics, windowRect, paintRect, 1.0, 20.0, true);
 		}
 
 		// Dessine une flèche (dans un bouton d'ascenseur par exemple).
 		public void PaintArrow(Drawing.Graphics graphics,
 							   Drawing.Rectangle rect,
 							   Widgets.WidgetState state,
-							   Widgets.Direction dir)
+							   Widgets.Direction dir,
+							   PaintTextStyle style)
 		{
 			double zoom = 1.0;
 			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
@@ -225,6 +227,12 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
+					Drawing.Rectangle shadow = rect;
+					shadow.Left   -= 2;
+					shadow.Right  += 2;
+					shadow.Bottom -= 5;
+					this.PaintImageButton(graphics, shadow, 72);
+
 					if ( style == ButtonStyle.DefaultActive )
 					{
 						this.PaintImageButton(graphics, rect, 0);
@@ -303,7 +311,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				if ( (state&WidgetState.Enabled) == 0 )
 				{
 					graphics.AddLine(rect.Left+0.5, rect.Bottom, rect.Left+0.5, rect.Top);
-					graphics.RenderSolid(this.colorBorder);
+					graphics.RenderSolid(this.ColorBorder);
 				}
 
 				if ( dir == Direction.Up )
@@ -427,8 +435,18 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.RenderSolid(Drawing.Color.FromBrightness(0.9));
 				}
 
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintRoundTopShadow(graphics, rect);
+				}
+
 				graphics.Rasterizer.AddOutline(path, 1);
-				graphics.RenderSolid(this.colorBorder);
+				graphics.RenderSolid(this.ColorBorder);
+
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintRoundShadow(graphics, rect, 1, 0.3, 0.7, true);
+				}
 			}
 			else if ( style == TextFieldStyle.UpDown )
 			{
@@ -446,8 +464,18 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.RenderSolid(Drawing.Color.FromBrightness(0.9));
 				}
 
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintRoundTopShadow(graphics, rect);
+				}
+
 				graphics.Rasterizer.AddOutline(path, 1);
-				graphics.RenderSolid(this.colorBorder);
+				graphics.RenderSolid(this.ColorBorder);
+
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintRoundShadow(graphics, rect, 1, 0.3, 0.7, true);
+				}
 			}
 			else if ( style == TextFieldStyle.Multi  )
 			{
@@ -462,9 +490,20 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.RenderSolid(Drawing.Color.FromBrightness(0.9));
 				}
 
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintRectTopShadow(graphics, rect);
+				}
+
 				rect.Inflate(-0.5, -0.5);
 				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.colorBorder);
+				graphics.RenderSolid(this.ColorBorder);
+
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					rect.Inflate(0.5, 0.5);
+					this.PaintRectShadow(graphics, rect, 1, 0.3, 0.7, true);
+				}
 			}
 			else if ( style == TextFieldStyle.Simple )
 			{
@@ -481,7 +520,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 				rect.Inflate(-0.5, -0.5);
 				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.colorBorder);
+				graphics.RenderSolid(this.ColorBorder);
 			}
 			else
 			{
@@ -525,7 +564,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorBorder);
+			graphics.RenderSolid(this.ColorBorder);
 		}
 
 		// Dessine la cabine d'un ascenseur.
@@ -612,9 +651,20 @@ namespace Epsitec.Common.Widgets.Adorner
 #else
 			frameRect.Top -= titleRect.Height/2;
 			double radius = this.RetRadiusFrame(frameRect);
-			Drawing.Path path = PathRoundRectangle(frameRect, radius);
+			Drawing.Path path;
+
+			if ( this.metalRenderer )
+			{
+				frameRect.Offset(0, -1);
+				path = PathRoundRectangle(frameRect, radius);
+				graphics.Rasterizer.AddOutline(path, 1);
+				graphics.RenderSolid(Drawing.Color.FromARGB(0.7, 1,1,1));
+				frameRect.Offset(0, 1);
+			}
+
+			path = PathRoundRectangle(frameRect, radius);
 			graphics.Rasterizer.AddOutline(path, 1);
-			graphics.RenderSolid(this.colorBorder);
+			graphics.RenderSolid(this.ColorBorder);
 #endif
 		}
 
@@ -663,18 +713,24 @@ namespace Epsitec.Common.Widgets.Adorner
 								  Widgets.WidgetState state,
 								  Widgets.Direction dir)
 		{
-			this.PaintBackground(graphics, rect, rect, 0.95, 0.0);
+			this.PaintBackground(graphics, rect, rect, 0.95, 0.0, false);
 
 			Drawing.Rectangle top = rect;
+			Drawing.Rectangle full = rect;
 
 			rect.Inflate(-0.5, -0.5);
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorBorder);
+			graphics.RenderSolid(this.ColorBorder);
 
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
 				top.Bottom = top.Top-10;
 				this.PaintImageButton(graphics, top, 56);
+			}
+
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				this.PaintRectShadow(graphics, full, 2, 0.3, 0.7, true);
 			}
 		}
 
@@ -748,11 +804,17 @@ namespace Epsitec.Common.Widgets.Adorner
 										 Drawing.Rectangle rect,
 										 WidgetState state)
 		{
-			this.PaintBackground(graphics, rect, rect, 0.95, 10.0);
+			this.PaintBackground(graphics, rect, rect, 0.95, 10.0, false);
 
 			rect.Inflate(-0.5, -0.5);
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorBorder);
+			graphics.RenderSolid(this.ColorBorder);
+
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				rect.Inflate(0.5, 0.5);
+				this.PaintRectShadow(graphics, rect, 2, 0.3, 0.7, true);
+			}
 		}
 
 		public void PaintArrayForeground(Drawing.Graphics graphics,
@@ -761,7 +823,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			rect.Inflate(-0.5, -0.5);
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorBorder);
+			graphics.RenderSolid(this.ColorBorder);
 		}
 
 		// Dessine le fond d'une cellule.
@@ -803,7 +865,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 
 				graphics.AddLine(rect.Left+0.5, rect.Bottom, rect.Left+0.5, rect.Top);
-				graphics.RenderSolid(this.colorBorder);
+				graphics.RenderSolid(this.ColorBorder);
 			}
 
 			if ( dir == Direction.Left )
@@ -822,7 +884,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 
 				graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
-				graphics.RenderSolid(this.colorBorder);
+				graphics.RenderSolid(this.ColorBorder);
 			}
 		}
 
@@ -839,18 +901,25 @@ namespace Epsitec.Common.Widgets.Adorner
 										WidgetState state,
 										Direction dir)
 		{
-			this.PaintBackground(graphics, rect, rect, 0.95, 16.0);
+			this.PaintBackground(graphics, rect, rect, 0.95, 16.0, false);
 
 			if ( dir == Direction.Up )
 			{
 				graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
-				graphics.RenderSolid(this.colorBorder);
+				graphics.RenderSolid(this.ColorBorder);
+
+				if ( this.metalRenderer )
+				{
+					rect.Bottom -= 10;
+					rect.Top    += 10;
+					this.PaintRectShadow(graphics, rect, 3, 0.4, 0.3, false);
+				}
 			}
 
 			if ( dir == Direction.Left )
 			{
 				graphics.AddLine(rect.Right-0.5, rect.Bottom, rect.Right-0.5, rect.Top);
-				graphics.RenderSolid(this.colorBorder);
+				graphics.RenderSolid(this.ColorBorder);
 			}
 		}
 
@@ -869,11 +938,14 @@ namespace Epsitec.Common.Widgets.Adorner
 										Drawing.Rectangle parentRect,
 										double iconWidth)
 		{
-			this.PaintBackground(graphics, rect, rect, 1.05, 30.0);
+			this.PaintMenuShadow(graphics, rect);
+
+			rect.Inflate(-this.GeometryMenuShadow);
+			this.PaintBackground(graphics, rect, rect, 1.05, 30.0, false);
 
 			rect.Inflate(-0.5, -0.5);
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorBorder);
+			graphics.RenderSolid(this.ColorBorder);
 		}
 
 		public void PaintMenuForeground(Drawing.Graphics graphics,
@@ -973,7 +1045,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.AddLine(p1, p2);
 			}
 
-			graphics.RenderSolid(this.colorBorder);
+			graphics.RenderSolid(this.ColorBorder);
 		}
 
 		public void PaintSeparatorForeground(Drawing.Graphics graphics,
@@ -1012,10 +1084,17 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Drawing.Rectangle rect,
 										  WidgetState state)
 		{
-			this.PaintBackground(graphics, rect, rect, 0.95, 12.0);
+			if ( this.metalRenderer )
+			{
+				this.PaintRectTopShadow(graphics, rect);
+			}
+			else
+			{
+				this.PaintBackground(graphics, rect, rect, 0.95, 12.0, false);
+			}
 
 			graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
-			graphics.RenderSolid(this.colorBorder);
+			graphics.RenderSolid(this.ColorBorder);
 		}
 
 		public void PaintStatusForeground(Drawing.Graphics graphics,
@@ -1030,14 +1109,35 @@ namespace Epsitec.Common.Widgets.Adorner
 											  WidgetState state)
 		{
 			rect.Width -= 1;
-			double radius = this.RetRadiusFrame(rect);
-			Drawing.Path pInside = PathRoundRectangle(rect, radius);
 
-			graphics.Rasterizer.AddSurface(pInside);
-			graphics.RenderSolid(Drawing.Color.FromARGB(0.2, 1,1,1));
+			if ( this.metalRenderer )
+			{
+				rect.Inflate(-1, -1);
 
-			graphics.Rasterizer.AddOutline(pInside);
-			graphics.RenderSolid(this.colorBorder);
+				double radius = this.RetRadiusFrame(rect);
+				Drawing.Path pInside = PathRoundRectangle(rect, radius);
+
+				graphics.Rasterizer.AddSurface(pInside);
+				graphics.RenderSolid(Drawing.Color.FromARGB(0.6, 1,1,1));
+
+				this.PaintRoundTopShadow(graphics, rect);
+
+				graphics.Rasterizer.AddOutline(pInside);
+				graphics.RenderSolid(this.ColorBorder);
+
+				this.PaintRoundShadow(graphics, rect, 1, 0.3, 0.7, true);
+			}
+			else
+			{
+				double radius = this.RetRadiusFrame(rect);
+				Drawing.Path pInside = PathRoundRectangle(rect, radius);
+
+				graphics.Rasterizer.AddSurface(pInside);
+				graphics.RenderSolid(Drawing.Color.FromARGB(0.2, 1,1,1));
+
+				graphics.Rasterizer.AddOutline(pInside);
+				graphics.RenderSolid(this.ColorBorder);
+			}
 		}
 
 		public void PaintStatusItemForeground(Drawing.Graphics graphics,
@@ -1119,6 +1219,17 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 				else
 				{
+					if ( this.metalRenderer &&
+						 (style == PaintTextStyle.StaticText  ||
+						  style == PaintTextStyle.CheckButton ||
+						  style == PaintTextStyle.RadioButton ||
+						  style == PaintTextStyle.Group       ||
+						  style == PaintTextStyle.HMenu       ) )
+					{
+						pos.Y --;
+						text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(1), Drawing.GlyphPaintStyle.Disabled);
+						pos.Y ++;
+					}
 					text.Paint(pos, graphics);
 				}
 			}
@@ -1302,7 +1413,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			icon.Bottom = icon.Top-32;
 			icon.Inflate(margins);
 
-			if ( rank < 16 || rank == 48 || rank == 50 )
+			if ( rank < 16 || rank == 48 || rank == 50 || rank == 72 )
 			{
 				icon.Width *= 2;
 				this.PaintImageButton3h(graphics, rect, icon);
@@ -1411,27 +1522,90 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 		}
 
+		// Dessine l'ombre sous un menu.
+		protected void PaintMenuShadow(Drawing.Graphics graphics, Drawing.Rectangle rect)
+		{
+			Drawing.Margins margins = this.GeometryMenuShadow;
+			Drawing.Rectangle part = new Drawing.Rectangle();
+
+			// Dessine le coin sup/gauche.
+			part.Left   = rect.Left;
+			part.Width  = margins.Left;
+			part.Bottom = rect.Top-margins.Bottom;
+			part.Height = margins.Bottom;
+			this.PaintImageButton(graphics, part, 74, new Drawing.Margins(0,-26,0,-26));
+
+			// Dessine le coin sup/droite.
+			part.Left   = rect.Right-margins.Right;
+			part.Right  = rect.Right;
+			this.PaintImageButton(graphics, part, 74, new Drawing.Margins(-26,0,0,-26));
+
+			// Dessine la bande gauche.
+			part.Left   = rect.Left;
+			part.Width  = margins.Left;
+			part.Bottom = rect.Bottom+margins.Bottom;
+			part.Top    = rect.Top-margins.Bottom;
+			this.PaintImageButton(graphics, part, 74, new Drawing.Margins(0,-26,-6,-6));
+
+			// Dessine la bande droite.
+			part.Left   = rect.Right-margins.Right;
+			part.Right  = rect.Right;
+			this.PaintImageButton(graphics, part, 74, new Drawing.Margins(-26,0,-6,-6));
+
+			// Dessine le coin inf/gauche.
+			part.Left   = rect.Left;
+			part.Width  = margins.Left;
+			part.Bottom = rect.Bottom;
+			part.Height = margins.Bottom;
+			this.PaintImageButton(graphics, part, 74, new Drawing.Margins(0,-26,-26,0));
+
+			// Dessine la bande inférieure.
+			part.Left   = rect.Left+margins.Left;
+			part.Right  = rect.Right-margins.Right;
+			this.PaintImageButton(graphics, part, 74, new Drawing.Margins(-6,-6,-26,0));
+
+			// Dessine le coin inf/droite.
+			part.Left   = rect.Right-margins.Right;
+			part.Right  = rect.Right;
+			this.PaintImageButton(graphics, part, 74, new Drawing.Margins(-26,0,-26,0));
+		}
+
 		// Dessine un fond de fenêtre hachuré horizontalement.
 		protected void PaintBackground(Drawing.Graphics graphics,
 									   Drawing.Rectangle windowRect,
 									   Drawing.Rectangle paintRect,
 									   double lightning,
-									   double topShadow)
+									   double topShadow,
+									   bool mainWindow)
 		{
 			if ( this.metalRenderer )
 			{
-				double dx = 512;
-				double dy = 512;
-				for ( double y=windowRect.Bottom ; y<windowRect.Top ; y+=dy )
+				if ( mainWindow )
 				{
-					for ( double x=windowRect.Left ; x<windowRect.Right ; x+=dx )
+					double dx = 512;
+					double dy = 512;
+					for ( double y=windowRect.Bottom ; y<windowRect.Top ; y+=dy )
 					{
-						Drawing.Rectangle rect = new Drawing.Rectangle(x, y, dx, dy);
-						if ( rect.IntersectsWith(paintRect) )
+						for ( double x=windowRect.Left ; x<windowRect.Right ; x+=dx )
 						{
-							graphics.PaintImage(this.metal, rect, new Drawing.Rectangle(0,0,dx,dy));
+							Drawing.Rectangle rect = new Drawing.Rectangle(x, y, dx, dy);
+							if ( rect.IntersectsWith(paintRect) )
+							{
+								graphics.PaintImage(this.metal, rect, new Drawing.Rectangle(0,0,dx,dy));
+							}
 						}
 					}
+					if ( this.dynamicReflect )
+					{
+						this.PaintImageButton(graphics, windowRect, 58);
+					}
+					this.PaintRectShadow(graphics, windowRect, 3, 0.4, 0.3, false);
+					topShadow = 0;
+				}
+				else
+				{
+					graphics.AddFilledRectangle(paintRect);
+					graphics.RenderSolid(Drawing.Color.FromBrightness(0.95));
 				}
 			}
 			else
@@ -1471,13 +1645,166 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 		}
 
+		// Dessine une ombre autour d'un rectangle.
+		protected void PaintRectShadow(Drawing.Graphics graphics,
+									   Drawing.Rectangle rect,
+									   int deep,
+									   double alphaTop, double alphaBottom,
+									   bool hole)
+		{
+			if ( !this.metalRenderer )  return;
+
+			double incTop = alphaTop/(double)deep;
+			double incBottom = alphaBottom/(double)deep;
+
+			for ( int i=0 ; i<deep ; i++ )
+			{
+				if ( hole )  rect.Inflate(1, 1);
+
+				graphics.AddLine(rect.Left+0.5, rect.Bottom, rect.Left+0.5, rect.Top-1.0);
+				graphics.AddLine(rect.Right-0.5, rect.Bottom, rect.Right-0.5, rect.Top-1.0);
+				graphics.AddLine(rect.Left+1.0, rect.Bottom+0.5, rect.Right-1.0, rect.Bottom+0.5);
+				if ( hole )  graphics.RenderSolid(Drawing.Color.FromARGB(alphaBottom, 1,1,1));
+				else         graphics.RenderSolid(Drawing.Color.FromARGB(alphaBottom, 0,0,0));
+
+				graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
+				if ( hole )  graphics.RenderSolid(Drawing.Color.FromARGB(alphaTop, 0,0,0));
+				else         graphics.RenderSolid(Drawing.Color.FromARGB(alphaTop, 1,1,1));
+
+				if ( !hole )  rect.Inflate(-1, -1);
+				alphaTop -= incTop;
+				alphaBottom -= incBottom;
+			}
+		}
+
+		// Dessine une ombre autour d'un rectangle arrondi.
+		protected void PaintRoundShadow(Drawing.Graphics graphics,
+										Drawing.Rectangle rect,
+										int deep,
+										double alphaTop, double alphaBottom,
+										bool hole)
+		{
+			if ( !this.metalRenderer )  return;
+
+			Drawing.Path path;
+
+			double incTop = alphaTop/(double)deep;
+			double incBottom = alphaBottom/(double)deep;
+
+			for ( int i=0 ; i<deep ; i++ )
+			{
+				if ( hole )  rect.Inflate(1, 1);
+				double radius = this.RetRadiusFrame(rect);
+
+				double ox = rect.Left;
+				double oy = rect.Bottom;
+				double dx = rect.Width;
+				double dy = rect.Height;
+
+				path = new Drawing.Path();
+				path.MoveTo (ox+0.5, oy+dy-radius-0.5);
+				path.LineTo (ox+0.5, oy+radius+0.5);
+				path.CurveTo(ox+0.5, oy+0.5, ox+radius+0.5, oy+0.5);
+				path.LineTo (ox+dx-radius-0.5, oy+0.5);
+				path.CurveTo(ox+dx-0.5, oy+0.5, ox+dx-0.5, oy+radius+0.5);
+				path.LineTo (ox+dx-0.5, oy+dy-radius-0.5);
+				graphics.Rasterizer.AddOutline(path, 1);
+				if ( hole )  graphics.RenderSolid(Drawing.Color.FromARGB(alphaBottom, 1,1,1));
+				else         graphics.RenderSolid(Drawing.Color.FromARGB(alphaBottom, 0,0,0));
+
+				path = new Drawing.Path();
+				path.MoveTo (ox+dx-0.5, oy+dy-radius-0.5);
+				path.CurveTo(ox+dx-0.5, oy+dy-0.5, ox+dx-radius-0.5, oy+dy-0.5);
+				path.LineTo (ox+radius+0.5, oy+dy-0.5);
+				path.CurveTo(ox+0.5, oy+dy-0.5, ox+0.5, oy+dy-radius-0.5);
+				graphics.Rasterizer.AddOutline(path, 1);
+				Drawing.Rectangle up = rect;
+				up.Bottom = up.Top-radius;
+				Drawing.Color bottomColor, topColor;
+				if ( hole )  bottomColor = Drawing.Color.FromARGB(alphaBottom, 1,1,1);
+				else         bottomColor = Drawing.Color.FromARGB(alphaBottom, 0,0,0);
+				if ( hole )  topColor    = Drawing.Color.FromARGB(alphaTop, 0,0,0);
+				else         topColor    = Drawing.Color.FromARGB(alphaTop, 1,1,1);
+				this.Gradient(graphics, up, bottomColor, topColor);
+
+				if ( !hole )  rect.Inflate(-1, -1);
+				alphaTop -= incTop;
+				alphaBottom -= incBottom;
+			}
+		}
+
+		// Dessine une ombre en haut d'un rectangle arrondi.
+		protected void PaintRoundTopShadow(Drawing.Graphics graphics,
+										   Drawing.Rectangle rect)
+		{
+			double radius = this.RetRadiusFrame(rect);
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo (ox+dx-0.5, oy+dy-radius-0.5);
+			path.CurveTo(ox+dx-0.5, oy+dy-0.5, ox+dx-radius-0.5, oy+dy-0.5);
+			path.LineTo (ox+radius+0.5, oy+dy-0.5);
+			path.CurveTo(ox+0.5, oy+dy-0.5, ox+0.5, oy+dy-radius-0.5);
+			path.Close();
+			graphics.Rasterizer.AddSurface(path);
+			Drawing.Rectangle up = rect;
+			up.Bottom = up.Top-radius;
+			this.Gradient(graphics, up, Drawing.Color.FromARGB(0.0, 0,0,0), Drawing.Color.FromARGB(0.2, 0,0,0));
+		}
+
+		// Dessine une ombre en haut d'un rectangle.
+		protected void PaintRectTopShadow(Drawing.Graphics graphics,
+										  Drawing.Rectangle rect)
+		{
+			double radius = this.RetRadiusFrame(rect);
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo(ox+dx-0.5, oy+dy-radius-0.5);
+			path.LineTo(ox+dx-0.5, oy+dy-0.5);
+			path.LineTo(ox+0.5, oy+dy-0.5);
+			path.LineTo(ox+0.5, oy+dy-radius-0.5);
+			path.Close();
+			graphics.Rasterizer.AddSurface(path);
+			Drawing.Rectangle up = rect;
+			up.Bottom = up.Top-radius;
+			this.Gradient(graphics, up, Drawing.Color.FromARGB(0.0, 0,0,0), Drawing.Color.FromARGB(0.2, 0,0,0));
+		}
+
+		protected void Gradient(Drawing.Graphics graphics,
+								Drawing.Rectangle rect,
+								Drawing.Color bottomColor,
+								Drawing.Color topColor)
+		{
+			graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
+			graphics.GradientRenderer.Fill = Drawing.GradientFill.Y;
+			graphics.GradientRenderer.SetColors(bottomColor, topColor);
+			graphics.GradientRenderer.SetParameters(-100, 100);
+			
+			Drawing.Transform ot = graphics.GradientRenderer.Transform;
+			Drawing.Transform t = new Drawing.Transform();
+			Drawing.Point center = rect.Center;
+			t.Scale(rect.Width/100/2, rect.Height/100/2);
+			t.Translate(center);
+			t.Rotate(0, center);
+			graphics.GradientRenderer.Transform = t;
+			graphics.RenderGradient();
+			graphics.GradientRenderer.Transform = ot;
+		}
+
 
 		public void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
 		{
 			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled )
 			{
 				double alpha = color.A;
-				double intensity = color.GetBrightness ();
+				double intensity = color.GetBrightness();
 				intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
 				intensity = System.Math.Min(intensity+0.4, 1.0);  // augmente l'intensité
 				color = Drawing.Color.FromBrightness(intensity);
@@ -1507,20 +1834,29 @@ namespace Epsitec.Common.Widgets.Adorner
 
 		public Drawing.Color ColorBorder
 		{
-			get { return this.colorBorder; }
+			get
+			{
+				if ( this.metalRenderer )  return Drawing.Color.FromBrightness(0.55);
+				return this.colorBorder;
+			}
 		}
 
 		public Drawing.Color ColorTextFieldBorder(bool enabled)
 		{
-			return this.colorBorder;
+			return this.ColorBorder;
 		}
 
 		public double AlphaVMenu { get { return 0.9; } }
 
+		public Drawing.Margins GeometryMenuShadow { get { return new Drawing.Margins(5,5,0,7); } }
 		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(1,1,6,6); } }
 		public Drawing.Margins GeometryArrayMargins { get { return new Drawing.Margins(0,0,0,0); } }
-		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
-		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
+		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,4,0); } }
+		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,0,1); } }
+		public Drawing.Margins GeometryToolShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
+		public Drawing.Margins GeometryButtonShapeBounds { get { return new Drawing.Margins(2,2,0,5); } }
+		public Drawing.Margins GeometryTextFieldShapeBounds { get { return new Drawing.Margins(1,1,1,1); } }
+		public Drawing.Margins GeometryListShapeBounds { get { return new Drawing.Margins(2,2,2,2); } }
 		public double GeometryComboRightMargin { get { return 0; } }
 		public double GeometryComboBottomMargin { get { return 0; } }
 		public double GeometryComboTopMargin { get { return 0; } }
@@ -1538,6 +1874,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Image		bitmap;
 		protected Drawing.Image		metal;
 		protected bool				metalRenderer;
+		protected bool				dynamicReflect;
 		protected Drawing.Color		colorBlack;
 		protected Drawing.Color		colorControl;
 		protected Drawing.Color		colorCaption;
@@ -1547,11 +1884,13 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorWindow;
 	}
+
 	public class LookAquaMetal : LookAqua
 	{
 		public LookAquaMetal()
 		{
 			this.metalRenderer = true;
+			this.dynamicReflect = false;
 			this.RefreshColors();
 		}
 	}

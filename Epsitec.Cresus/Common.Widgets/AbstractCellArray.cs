@@ -1296,6 +1296,14 @@ namespace Epsitec.Common.Widgets
 			base.HandleAdornerChanged();
 		}
 
+		public override Drawing.Rectangle GetShapeBounds()
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			rect.Inflate(adorner.GeometryListShapeBounds);
+			return rect;
+		}
+
 		// Met à jour les ascenseurs en fonction du tableau.
 		protected void UpdateScrollers()
 		{
@@ -1312,7 +1320,8 @@ namespace Epsitec.Common.Widgets
 				}
 
 				if ((totalHeight <= areaHeight) ||
-					(totalHeight <= 0))
+					(totalHeight <= 0) ||
+					(areaHeight <= 0))
 				{
 					this.scrollerV.SetEnabled(false);
 					this.scrollerV.Range = 1;
@@ -1342,7 +1351,8 @@ namespace Epsitec.Common.Widgets
 				}
 
 				if ((totalWidth <= areaWidth) ||
-					(totalWidth <= 0))
+					(totalWidth <= 0) ||
+					(areaWidth <= 0))
 				{
 					this.scrollerH.SetEnabled(false);
 					this.scrollerH.Range = 1;

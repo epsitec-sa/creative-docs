@@ -170,7 +170,7 @@ namespace Epsitec.Common.Widgets
 						dir = Direction.Left;
 					}
 				}
-				adorner.PaintArrow(graphics, rect, state, dir);
+				adorner.PaintArrow(graphics, rect, state, dir, PaintTextStyle.Header);
 			}
 		}
 		

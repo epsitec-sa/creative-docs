@@ -11,6 +11,7 @@ namespace Epsitec.Common.Widgets
 		RadioButton,
 		List,
 		Array,
+		Header,
 		HMenu,
 		VMenu,
 	}
@@ -36,7 +37,7 @@ namespace Epsitec.Common.Widgets
 
 		void PaintWindowBackground(Drawing.Graphics graphics, Drawing.Rectangle windowRect, Drawing.Rectangle paintRect, WidgetState state);
 
-		void PaintArrow(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir);
+		void PaintArrow(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir, PaintTextStyle style);
 		void PaintCheck(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintRadio(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintIcon(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, string icon);
@@ -118,10 +119,15 @@ namespace Epsitec.Common.Widgets
 
 		double AlphaVMenu { get; }
 
+		Drawing.Margins GeometryMenuShadow { get; }
 		Drawing.Margins GeometryMenuMargins { get; }
 		Drawing.Margins GeometryArrayMargins { get; }
 		Drawing.Margins GeometryRadioShapeBounds { get; }
 		Drawing.Margins GeometryGroupShapeBounds { get; }
+		Drawing.Margins GeometryToolShapeBounds { get; }
+		Drawing.Margins GeometryButtonShapeBounds { get; }
+		Drawing.Margins GeometryTextFieldShapeBounds { get; }
+		Drawing.Margins GeometryListShapeBounds { get; }
 		double GeometryComboRightMargin { get; }
 		double GeometryComboBottomMargin { get; }
 		double GeometryComboTopMargin { get; }

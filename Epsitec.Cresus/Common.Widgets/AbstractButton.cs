@@ -96,8 +96,16 @@ namespace Epsitec.Common.Widgets
 			
 			base.OnShortcutPressed();
 		}
-		
-		
+
+		public override Drawing.Rectangle GetShapeBounds()
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			rect.Inflate(adorner.GeometryButtonShapeBounds);
+			return rect;
+		}
+
+
 		protected bool								isKeyboardPressed;
 	}
 }

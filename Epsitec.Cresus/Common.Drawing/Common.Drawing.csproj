@@ -203,6 +203,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Segment.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Size.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

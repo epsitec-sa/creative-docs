@@ -57,7 +57,8 @@ namespace Epsitec.Common.Widgets.Adorner
 		public void PaintArrow(Drawing.Graphics graphics,
 							   Drawing.Rectangle rect,
 							   Widgets.WidgetState state,
-							   Widgets.Direction dir)
+							   Widgets.Direction dir,
+							   PaintTextStyle style)
 		{
 			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 			{
@@ -1297,9 +1298,14 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double AlphaVMenu { get { return 1.0; } }
 
 		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(2,2,2,2); } }
+		public Drawing.Margins GeometryMenuShadow { get { return new Drawing.Margins(0,0,0,0); } }
 		public Drawing.Margins GeometryArrayMargins { get { return new Drawing.Margins(3,3,3,3); } }
 		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
+		public Drawing.Margins GeometryToolShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
+		public Drawing.Margins GeometryButtonShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
+		public Drawing.Margins GeometryTextFieldShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
+		public Drawing.Margins GeometryListShapeBounds { get { return new Drawing.Margins(0,0,0,0); } }
 		public double GeometryComboRightMargin { get { return 2; } }
 		public double GeometryComboBottomMargin { get { return 2; } }
 		public double GeometryComboTopMargin { get { return 2; } }
