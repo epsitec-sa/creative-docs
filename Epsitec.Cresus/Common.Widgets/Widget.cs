@@ -49,8 +49,8 @@ namespace Epsitec.Common.Widgets
 		None				= 0,
 		
 		ChildrenChanged		= 0x00000001,		//	certains enfants ont changé
-		ChildrenDocked		= 0x00000002,		//	certains enfants utilisent un DockStyle simple
-		ChildrenLayout		= 0x00000004,		//	certains enfants nécessitent un layout particulier
+		LayoutChanged		= 0x00000002,		//	le layout a changé
+		ChildrenDocked		= 0x00000004,		//	certains enfants spécifient un DockStyle
 		
 		Embedded			= 0x00000008,		//	=> widget appartient au parent (widgets composés)
 		
@@ -488,6 +488,11 @@ namespace Epsitec.Common.Widgets
 			get { return this.client_info; }
 		}
 		
+		public virtual Drawing.Rectangle			InnerBounds
+		{
+			get { return this.Client.Bounds; }
+		}
+		
 		public virtual Drawing.Size					MinSize
 		{
 			get
@@ -744,12 +749,13 @@ namespace Epsitec.Common.Widgets
 					if (value)
 					{
 						this.internal_state |= InternalState.AutoMinMax;
-						this.UpdateMinMaxBasedOnDockedChildren ();
 					}
 					else
 					{
 						this.internal_state &= ~ InternalState.AutoMinMax;
 					}
+					
+					this.UpdateChildrenLayout ();
 				}
 			}
 		}
@@ -1336,13 +1342,12 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.suspend_counter == 0)
 				{
-					if (this.layout_info != null)
+					if ((this.internal_state & InternalState.LayoutChanged) != 0)
 					{
 						if (update)
 						{
 							this.UpdateChildrenLayout ();
-							this.OnLayoutChanged ();
-							this.layout_info = null;
+							System.Diagnostics.Debug.Assert (this.layout_info == null);
 						}
 					}
 					if ((this.internal_state & InternalState.ChildrenChanged) != 0)
@@ -1602,7 +1607,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		internal virtual void FireStillEngaged()
+		
+		internal void FireStillEngaged()
 		{
 			if (this.IsEngaged)
 			{
@@ -1610,19 +1616,26 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		internal virtual void SimulatePressed()
+		internal void SimulatePressed()
 		{
 			this.OnPressed (null);
 		}
 		
-		internal virtual void SimulateReleased()
+		internal void SimulateReleased()
 		{
 			this.OnReleased (null);
 		}
 		
-		internal virtual void SimulateClicked()
+		internal void SimulateClicked()
 		{
 			this.OnClicked (null);
+		}
+		
+		
+		public void SetEmbedder(Widget embedder)
+		{
+			this.Parent = embedder;
+			this.internal_state |= InternalState.Embedded;
 		}
 		
 		
@@ -1733,12 +1746,6 @@ namespace Epsitec.Common.Widgets
 					i++;
 				}
 			}
-		}
-		
-		public void SetEmbedder(Widget embedder)
-		{
-			this.Parent = embedder;
-			this.internal_state |= InternalState.Embedded;
 		}
 		
 		
@@ -2657,9 +2664,48 @@ namespace Epsitec.Common.Widgets
 			this.x2 = x2;
 			this.y2 = y2;
 			
-			this.Invalidate ();
 			this.UpdateClientGeometry ();
 			this.UpdateTextLayout ();
+			this.Invalidate ();
+		}
+		
+		protected virtual void UpdateClientGeometry()
+		{
+			if (this.layout_info == null)
+			{
+				this.layout_info = new LayoutInfo (this.client_info.width, this.client_info.height);
+			}
+			
+			double zoom = this.client_info.zoom;
+			
+			double dx = (this.x2 - this.x1) / zoom;
+			double dy = (this.y2 - this.y1) / zoom;
+			
+			switch (this.client_info.angle)
+			{
+				case 0:
+				case 180:
+					this.client_info.SetSize (dx, dy);
+					break;
+				
+				case 90:
+				case 270:
+					this.client_info.SetSize (dy, dx);
+					break;
+				
+				default:
+					double angle = this.client_info.angle * System.Math.PI / 180.0;
+					double cos = System.Math.Cos (angle);
+					double sin = System.Math.Sin (angle);
+					this.client_info.SetSize (cos*cos*dx + sin*sin*dy, sin*sin*dx + cos*cos*dy);
+					break;
+			}
+			
+			if (this.suspend_counter == 0)
+			{
+				this.UpdateChildrenLayout ();
+				System.Diagnostics.Debug.Assert (this.layout_info == null);
+			}
 		}
 		
 		protected virtual void UpdateTextLayout()
@@ -2671,7 +2717,108 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void UpdateHasDockedChildren()
+		protected virtual void UpdateChildrenLayout()
+		{
+			if (this.suspend_counter > 0)
+			{
+				//	L'utilisateur a suspendu toute opération de layout, donc on ne va rien faire maintenant
+				//	mais laisser le soin au ResumeLayout final de nous appeler à nouveau.
+				
+				this.internal_state |= InternalState.LayoutChanged;
+				
+				return;
+			}
+			
+			Widget[] children = this.Children.Widgets;
+			
+			this.UpdateHasDockedChildren (children);
+			this.UpdateMinMaxBasedOnDockedChildren (children);
+			this.UpdateDockedChildrenLayout (children);
+			
+			if (this.layout_info == null)
+			{
+				//	Le layout n'a pas changé, donc on ne fait rien de plus ici...
+				
+				return;
+			}
+			
+			System.Diagnostics.Debug.Assert (this.client_info != null);
+			System.Diagnostics.Debug.Assert (this.layout_info != null);
+			
+			try
+			{
+				if (this.HasChildren)
+				{
+					double width_diff  = this.client_info.width  - this.layout_info.OriginalWidth;
+					double height_diff = this.client_info.height - this.layout_info.OriginalHeight;
+					
+					for (int i = 0; i < children.Length; i++)
+					{
+						Widget child = children[i];
+						
+						if (child.Dock != DockStyle.None)
+						{
+							//	Saute les widgets qui sont "docked" dans le parent, car ils ont déjà été
+							//	positionnés par la méthode UpdateDockedChildrenLayout.
+							
+							continue;
+						}
+						
+						AnchorStyles anchor_x = (AnchorStyles) child.Anchor & AnchorStyles.LeftAndRight;
+						AnchorStyles anchor_y = (AnchorStyles) child.Anchor & AnchorStyles.TopAndBottom;
+						
+						double x1 = child.x1;
+						double x2 = child.x2;
+						double y1 = child.y1;
+						double y2 = child.y2;
+						
+						switch (anchor_x)
+						{
+							case AnchorStyles.Left:							//	[x1] fixe à gauche
+								break;
+							case AnchorStyles.Right:						//	[x2] fixe à droite
+								x1 += width_diff;
+								x2 += width_diff;
+								break;
+							case AnchorStyles.None:							//	[x1] et [x2] mobiles (centré)
+								x1 += width_diff / 2.0f;
+								x2 += width_diff / 2.0f;
+								break;
+							case AnchorStyles.LeftAndRight:					//	[x1] fixe à gauche, [x2] fixe à droite
+								x2 += width_diff;
+								break;
+						}
+						
+						switch (anchor_y)
+						{
+							case AnchorStyles.Bottom:						//	[y1] fixe en bas
+								break;
+							case AnchorStyles.Top:							//	[y2] fixe en haut
+								y1 += height_diff;
+								y2 += height_diff;
+								break;
+							case AnchorStyles.None:							//	[y1] et [y2] mobiles (centré)
+								y1 += height_diff / 2.0f;
+								y2 += height_diff / 2.0f;
+								break;
+							case AnchorStyles.TopAndBottom:					//	[y1] fixe en bas, [y2] fixe en haut
+								y2 += height_diff;
+								break;
+						}
+						
+						child.SetBounds (x1, y1, x2, y2);
+					}
+				}
+				
+				this.OnLayoutChanged ();
+			}
+			finally
+			{
+				this.layout_info = null;
+			}
+		}
+		
+		protected virtual void UpdateHasDockedChildren(Widget[] children)
 		{
 			//	Met à jour le flag interne qui indique s'il y a des widgets dans l'état
 			//	docked, ou non.
@@ -2680,8 +2827,10 @@ namespace Epsitec.Common.Widgets
 			{
 				this.internal_state &= ~InternalState.ChildrenDocked;
 				
-				foreach (Widget child in this.Children)
+				for (int i = 0; i < children.Length; i++)
 				{
+					Widget child = children[i];
+					
 					if ((child.Dock != DockStyle.None) &&
 						(child.Dock != DockStyle.Layout))
 					{
@@ -2692,56 +2841,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void UpdateClientGeometry()
-		{
-			if (this.layout_info == null)
-			{
-				this.layout_info = new LayoutInfo (this.client_info.width, this.client_info.height);
-			}
-			
-			try
-			{
-				double zoom = this.client_info.zoom;
-				
-				double dx = (this.x2 - this.x1) / zoom;
-				double dy = (this.y2 - this.y1) / zoom;
-				
-				switch (this.client_info.angle)
-				{
-					case 0:
-					case 180:
-						this.client_info.SetSize (dx, dy);
-						break;
-					
-					case 90:
-					case 270:
-						this.client_info.SetSize (dy, dx);
-						break;
-					
-					default:
-						double angle = this.client_info.angle * System.Math.PI / 180.0;
-						double cos = System.Math.Cos (angle);
-						double sin = System.Math.Sin (angle);
-						this.client_info.SetSize (cos*cos*dx + sin*sin*dy, sin*sin*dx + cos*cos*dy);
-						break;
-				}
-				
-				if (this.suspend_counter == 0)
-				{
-					this.UpdateChildrenLayout ();
-					this.OnLayoutChanged ();
-				}
-			}
-			finally
-			{
-				if (this.suspend_counter == 0)
-				{
-					this.layout_info = null;
-				}
-			}
-		}
-		
-		protected virtual void UpdateMinMaxBasedOnDockedChildren()
+		protected virtual void UpdateMinMaxBasedOnDockedChildren(Widget[] children)
 		{
 			//	Recalcule les tailles minimales et maximales en se basant sur les enfants
 			//	contenus dans le widget.
@@ -2792,8 +2892,10 @@ namespace Epsitec.Common.Widgets
 				fill_max_dx = max_dx;
 			}
 			
-			foreach (Widget child in this.Children)
+			for (int i = 0; i < children.Length; i++)
 			{
+				Widget child = children[i];
+				
 				if ((child.Dock == DockStyle.None) ||
 					(child.Dock == DockStyle.Layout))
 				{
@@ -2875,15 +2977,7 @@ namespace Epsitec.Common.Widgets
 			this.MaxSize = this.MapClientToParent (new Drawing.Size (max_width, max_height));
 		}
 		
-		protected virtual void AdjustDockBounds(ref Drawing.Rectangle bounds)
-		{
-			bounds.Left   += this.DockMargins.Left;
-			bounds.Right  -= this.DockMargins.Right;
-			bounds.Top    -= this.DockMargins.Top;
-			bounds.Bottom += this.DockMargins.Bottom;
-		}
-		
-		protected virtual void UpdateDockedChildrenLayout()
+		protected virtual void UpdateDockedChildrenLayout(Widget[] children)
 		{
 			if (this.HasDockedChildren == false)
 			{
@@ -2893,12 +2987,14 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.HasChildren);
 			
 			System.Collections.Queue fill_queue = null;
-			Drawing.Rectangle client_rect = this.client_info.Bounds;
+			Drawing.Rectangle client_rect = this.InnerBounds;
 			
-			this.AdjustDockBounds (ref client_rect);
+			client_rect.Deflate (this.DockMargins);
 			
-			foreach (Widget child in this.Children)
+			for (int i = 0; i < children.Length; i++)
 			{
+				Widget child = children[i];
+				
 				if ((child.Dock == DockStyle.None) ||
 					(child.Dock == DockStyle.Layout))
 				{
@@ -2966,82 +3062,6 @@ namespace Epsitec.Common.Widgets
 						child.SetBounds (client_rect.Left, client_rect.Top - fill_dy / n, client_rect.Right, client_rect.Top);
 						client_rect.Top -= fill_dy / n;
 					}
-				}
-			}
-		}
-		
-		protected virtual void UpdateChildrenLayout()
-		{
-			this.UpdateHasDockedChildren ();
-			this.UpdateMinMaxBasedOnDockedChildren ();
-			this.UpdateDockedChildrenLayout ();
-			
-			if (this.layout_info == null)
-			{
-				return;
-			}
-			
-			System.Diagnostics.Debug.Assert (this.client_info != null);
-			System.Diagnostics.Debug.Assert (this.layout_info != null);
-			
-			if (this.HasChildren)
-			{
-				double width_diff  = this.client_info.width  - this.layout_info.OriginalWidth;
-				double height_diff = this.client_info.height - this.layout_info.OriginalHeight;
-				
-				foreach (Widget child in this.Children)
-				{
-					if (child.Dock != DockStyle.None)
-					{
-						//	Saute les widgets qui sont "docked" dans le parent, car ils ont déjà été
-						//	positionnés par la méthode UpdateDockedChildrenLayout.
-						
-						continue;
-					}
-					
-					AnchorStyles anchor_x = (AnchorStyles) child.Anchor & AnchorStyles.LeftAndRight;
-					AnchorStyles anchor_y = (AnchorStyles) child.Anchor & AnchorStyles.TopAndBottom;
-					
-					double x1 = child.x1;
-					double x2 = child.x2;
-					double y1 = child.y1;
-					double y2 = child.y2;
-					
-					switch (anchor_x)
-					{
-						case AnchorStyles.Left:							//	[x1] fixe à gauche
-							break;
-						case AnchorStyles.Right:						//	[x2] fixe à droite
-							x1 += width_diff;
-							x2 += width_diff;
-							break;
-						case AnchorStyles.None:							//	[x1] et [x2] mobiles (centré)
-							x1 += width_diff / 2.0f;
-							x2 += width_diff / 2.0f;
-							break;
-						case AnchorStyles.LeftAndRight:					//	[x1] fixe à gauche, [x2] fixe à droite
-							x2 += width_diff;
-							break;
-					}
-					
-					switch (anchor_y)
-					{
-						case AnchorStyles.Bottom:						//	[y1] fixe en bas
-							break;
-						case AnchorStyles.Top:							//	[y2] fixe en haut
-							y1 += height_diff;
-							y2 += height_diff;
-							break;
-						case AnchorStyles.None:							//	[y1] et [y2] mobiles (centré)
-							y1 += height_diff / 2.0f;
-							y2 += height_diff / 2.0f;
-							break;
-						case AnchorStyles.TopAndBottom:					//	[y1] fixe en bas, [y2] fixe en haut
-							y2 += height_diff;
-							break;
-					}
-					
-					child.SetBounds (x1, y1, x2, y2);
 				}
 			}
 		}
