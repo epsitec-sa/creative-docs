@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Database
 			DbAccess db_access = DbFactoryTest.CreateDbAccess ("fiche");
 			
 			infrastructure.AttachDatabase (db_access);
-			infrastructure.DebugDisplayDataSet = new CallbackDebugDisplayDataSet (this.DebugDisplay);
+			infrastructure.DisplayDataSet = new CallbackDisplayDataSet (this.DisplayDataSet);
 			
 			DbTable db_table = infrastructure.ReadDbTableMeta ("CR_TABLE_DEF");
 			DbType  db_type1 = infrastructure.ResolveType (new DbKey (8));
@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Database
 			infrastructure.Dispose ();
 		}
 		
-		private void DebugDisplay(DbInfrastructure infrastructure, string name, System.Data.DataTable table)
+		private void DisplayDataSet(DbInfrastructure infrastructure, string name, System.Data.DataTable table)
 		{
 			this.display.AddTable (name, table);
 			this.display.ShowWindow ();

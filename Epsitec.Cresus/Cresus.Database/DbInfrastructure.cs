@@ -4,8 +4,9 @@
 namespace Epsitec.Cresus.Database
 {
 	using Tags = Epsitec.Common.Support.Tags;
+	using Converter = Epsitec.Common.Support.Data.Converter;
 	
-	public delegate void CallbackDebugDisplayDataSet(DbInfrastructure infrastructure, string name, System.Data.DataTable table);
+	public delegate void CallbackDisplayDataSet(DbInfrastructure infrastructure, string name, System.Data.DataTable table);
 	
 	/// <summary>
 	/// La classe DbInfrastructure offre le support pour l'infrastructure
@@ -157,9 +158,9 @@ namespace Epsitec.Cresus.Database
 			
 			data_table = data_set.Tables[0];
 			
-			if (this.debug_display_data_set != null)
+			if (this.display_data_set != null)
 			{
-				this.debug_display_data_set (this, table_name, data_table);
+				this.display_data_set (this, table_name, data_table);
 			}
 			
 			foreach (System.Data.DataRow data_row in data_table.Rows)
@@ -301,17 +302,9 @@ namespace Epsitec.Cresus.Database
 				
 				DbEnumValue value = new DbEnumValue ();
 				
-				string arg_name;
-				string arg_info;
-				string arg_id;
-				
-				Epsitec.Common.Support.Data.Converter.Convert (data_row["E_NAME"], out arg_name);
-				Epsitec.Common.Support.Data.Converter.Convert (data_row["E_INFO"], out arg_info);
-				Epsitec.Common.Support.Data.Converter.Convert (data_row["E_ID"],   out arg_id);
-				
-				value.Attributes.SetAttribute (Tags.Name,	 arg_name);
-				value.Attributes.SetAttribute (Tags.InfoXml, arg_info);
-				value.Attributes.SetAttribute (Tags.Id,		 arg_id);
+				value.Attributes.SetAttribute (Tags.Name,	 Converter.ToString (data_row["E_NAME"]));
+				value.Attributes.SetAttribute (Tags.InfoXml, Converter.ToString (data_row["E_INFO"]));
+				value.Attributes.SetAttribute (Tags.Id,		 Converter.ToString (data_row["E_ID"]));
 				
 				this.DefineLocalisedAttributes (data_row, DbColumn.TagCaption,     value.Attributes, Tags.Caption);
 				this.DefineLocalisedAttributes (data_row, DbColumn.TagDescription, value.Attributes, Tags.Description);
@@ -336,7 +329,7 @@ namespace Epsitec.Cresus.Database
 				string locale = this.localisations[i];
 				string index  = locale == "" ? alias : alias + "_" + locale;
 				
-				if (Epsitec.Common.Support.Data.Converter.Convert (row[index], out value))
+				if (Converter.Convert (row[index], out value))
 				{
 					attributes.SetAttribute (tag, value, locale);
 				}
@@ -397,9 +390,10 @@ namespace Epsitec.Cresus.Database
 			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, source_col, constant_id));
 		}
 		
-		public CallbackDebugDisplayDataSet DebugDisplayDataSet
+		
+		public CallbackDisplayDataSet	DisplayDataSet
 		{
-			set { this.debug_display_data_set = value; }
+			set { this.display_data_set = value; }
 		}
 		
 		
@@ -752,7 +746,7 @@ namespace Epsitec.Cresus.Database
 		protected DbTableCollection		internal_tables = new DbTableCollection ();
 		protected DbTypeCollection		internal_types  = new DbTypeCollection ();
 		
-		CallbackDebugDisplayDataSet		debug_display_data_set;
+		CallbackDisplayDataSet			display_data_set;
 		string[]						localisations;
 		
 		Cache.DbTypes					cache_db_types = new Cache.DbTypes ();

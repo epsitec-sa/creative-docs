@@ -14,6 +14,14 @@ namespace Epsitec.Common.Support.Data
 		}
 		
 		
+		public static string ToString(object obj)
+		{
+			string value;
+			Converter.Convert (obj, out value);
+			return value;
+		}
+		
+		
 		public static bool Convert(object obj, out string value)
 		{
 			if ((obj == null) || (obj is System.DBNull))
