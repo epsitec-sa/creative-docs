@@ -1573,7 +1573,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public int									Index
+		[Bundle] public int							Index
 		{
 			get
 			{
@@ -1840,6 +1840,27 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.validator;
+			}
+		}
+		
+		[Bundle]			public string			BindingInfo
+		{
+			get
+			{
+				if (this.IsPropertyDefined (Widget.prop_binding_info))
+				{
+					return this.GetProperty (Widget.prop_binding_info) as string;
+				}
+				
+				return null;
+			}
+			set
+			{
+				if (this.BindingInfo != value)
+				{
+					this.SetProperty (Widget.prop_binding_info, value);
+					this.OnBindingInfoChanged ();
+				}
 			}
 		}
 		
@@ -5420,6 +5441,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnBindingInfoChanged()
+		{
+			if (this.BindingInfoChanged != null)
+			{
+				this.BindingInfoChanged (this);
+			}
+		}
+		
 		
 		#region Events
 		public event Support.EventHandler			ClientGeometryUpdated;
@@ -5444,6 +5473,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			HypertextHot;
 		public event MessageEventHandler			HypertextClicked;
 		public event Support.EventHandler			ValidatorChanged;
+		public event Support.EventHandler			BindingInfoChanged;
 		
 		public event MessageEventHandler			PreProcessing;
 		public event MessageEventHandler			PostProcessing;
@@ -5985,5 +6015,7 @@ namespace Epsitec.Common.Widgets
 		
 		static System.Collections.ArrayList		entered_widgets = new System.Collections.ArrayList ();
 		static System.Collections.ArrayList		alive_widgets   = new System.Collections.ArrayList ();
+		
+		private const string					prop_binding_info = "$BindingInfo$";
 	}
 }

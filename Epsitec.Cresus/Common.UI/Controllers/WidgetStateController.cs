@@ -24,8 +24,9 @@ namespace Epsitec.Common.UI.Controllers
 			this.Adapter = adapter;
 		}
 		
-		public WidgetStateController(Adapters.IAdapter adapter, Widget widget, Types.INamedType type) : this ()
+		public WidgetStateController(Adapters.IAdapter adapter, Widget widget, string caption, Types.INamedType type) : this ()
 		{
+			this.caption  = caption;
 			this.Adapter  = adapter;
 			this.DataType = type;
 			
@@ -95,6 +96,13 @@ namespace Epsitec.Common.UI.Controllers
 			else
 			{
 				this.widget = widget;
+				
+				if ((this.widget.Text == "") &&
+					(this.caption != null))
+				{
+					this.widget.Text = this.caption;
+				}
+				
 				this.widget.ActiveStateChanged += new EventHandler (this.HandleStateChanged);
 			}
 			

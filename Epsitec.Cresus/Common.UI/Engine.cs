@@ -12,6 +12,46 @@ namespace Epsitec.Common.UI
 		{
 		}
 		
+		public static void BindWidgets(Types.IDataGraph graph, Common.Widgets.Widget root)
+		{
+			//	Attache tous les widgets, à partir de la racine.
+			
+			WidgetBinder binder = new WidgetBinder (graph);
+			
+			//	WalkChildren réalise une descente dans tous les enfants, mais il ne faut pas
+			//	oublier de traiter aussi la racine :
+			
+			binder.Process (root);
+			
+			root.WalkChildren (new Common.Widgets.WalkWidgetCallback (binder.Process));
+		}
+		
+		#region WidgetBinder Class
+		private class WidgetBinder
+		{
+			public WidgetBinder(Types.IDataGraph graph)
+			{
+				this.graph = graph;
+			}
+			
+			
+			public bool Process(Common.Widgets.Widget widget)
+			{
+				string binding = widget.BindingInfo;
+				
+				if (binding != null)
+				{
+					Engine.BindWidget (this.graph, widget, binding);
+				}
+				
+				return true;
+			}
+			
+			
+			private Types.IDataGraph			graph;
+		}
+		#endregion
+		
 		public static void BindWidget(Types.IDataGraph graph, Common.Widgets.Widget widget, string binding)
 		{
 			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
@@ -82,7 +122,7 @@ namespace Epsitec.Common.UI
 				}
 				else
 				{
-					new Controllers.WidgetStateController (adapter, widget, num_type);
+					new Controllers.WidgetStateController (adapter, widget, source.Caption, num_type);
 				}
 				
 				return;
@@ -129,7 +169,7 @@ namespace Epsitec.Common.UI
 				}
 				else
 				{
-					new Controllers.WidgetStateController (adapter, widget, enum_type);
+					new Controllers.WidgetStateController (adapter, widget, source.Caption, enum_type);
 				}
 				
 				return;

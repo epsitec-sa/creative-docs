@@ -104,6 +104,16 @@ namespace Epsitec.Common.UI.Data
 			this.constraint = constraint;
 		}
 		
+		public void DefineCaption(string caption)
+		{
+			this.caption = caption;
+		}
+		
+		public void DefineDescription(string description)
+		{
+			this.description = description;
+		}
+		
 		
 		public object							Value
 		{

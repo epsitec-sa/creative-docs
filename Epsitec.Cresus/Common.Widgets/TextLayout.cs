@@ -660,32 +660,27 @@ namespace Epsitec.Common.Widgets
 
 				if ( block.underline )
 				{
-					double p1x = pos.X+block.pos.X;
-					double p2x = p1x+block.width;
-					double py = pos.Y+block.pos.Y;
-					JustifLine line = (JustifLine)this.lines[block.indexLine];
-					py += line.descender/2;
-					graphics.Align(ref p1x, ref py);
-					graphics.Align(ref p2x, ref py);
-					py -= 0.5;  // pour feinter l'anti-aliasing !
-					graphics.LineWidth = 1;
+					Drawing.Point p1, p2;
+					this.UnderlinePoints(graphics, block, pos, out p1, out p2);
+					graphics.LineWidth = 1.0;
 					graphics.Color = color;
-					graphics.PaintOutline(Drawing.Path.FromLine(p1x, py, p2x, py));
+					graphics.PaintOutline(Drawing.Path.FromLine(p1, p2));
 				}
 
 				if ( block.wave )
 				{
-					double p1x = pos.X+block.pos.X;
-					double p2x = p1x+block.width;
-					double py = pos.Y+block.pos.Y;
-					JustifLine line = (JustifLine)this.lines[block.indexLine];
-					py += line.descender/2;
-					graphics.Align(ref p1x, ref py);
-					graphics.Align(ref p2x, ref py);
-					py -= 0.5;  // pour feinter l'anti-aliasing !
-					graphics.LineWidth = 1;
-					graphics.Color = TextLayout.waveColor;
-					graphics.PaintOutline(Drawing.Path.FromLine(p1x, py, p2x, py));
+					Drawing.Point p1, p2;
+					this.UnderlinePoints(graphics, block, pos, out p1, out p2);
+					graphics.LineWidth = 0.75;
+					if ( block.waveColor.IsEmpty )
+					{
+						graphics.Color = TextLayout.waveColor;
+					}
+					else
+					{
+						graphics.Color = block.waveColor;
+					}
+					graphics.PaintOutline(this.PathWave(p1, p2));
 				}
 
 				if ( this.showLineBreak && block.lineBreak )
@@ -700,6 +695,96 @@ namespace Epsitec.Common.Widgets
 					graphics.PaintSurface(this.PathLineBreak(rect));
 				}
 			}
+		}
+
+		protected void UnderlinePoints(Drawing.IPaintPort graphics, JustifBlock block,
+									   Drawing.Point pos,
+									   out Drawing.Point p1, out Drawing.Point p2)
+		{
+			// Calcule les points de la ligne pour souligner un bloc.
+			double width = block.width;
+
+			if ( block.infos != null )
+			{
+				double[] charsWidth;
+				block.font.GetTextCharEndX(block.text, block.infos, out charsWidth);
+				width = charsWidth[charsWidth.Length-1]*block.fontSize;
+			}
+
+			p1 = new Drawing.Point();
+			p2 = new Drawing.Point();
+			p1.X = pos.X+block.pos.X;
+			p2.X = p1.X+width;
+			p1.Y = pos.Y+block.pos.Y;
+
+			JustifLine line = (JustifLine)this.lines[block.indexLine];
+			p1.Y += line.descender/2;
+			p2.Y = p1.Y;
+
+			double x,y;
+			x = p1.X;  y = p1.Y;
+			graphics.Align(ref x, ref y);
+			p1.X = x;  p1.Y = y;
+
+			x = p2.X;  y = p2.Y;
+			graphics.Align(ref x, ref y);
+			p2.X = x;  p2.Y = y;
+
+			p1.Y -= 0.5;  // pour feinter l'anti-aliasing !
+			p2.Y -= 0.5;
+		}
+
+		protected Drawing.Path PathWave(Drawing.Point p1, Drawing.Point p2)
+		{
+			// Génère le chemin d'une vague "/\/\/\/\/\/\".
+			// Le début "montant" de la vague est toujours aligné sur x=0, afin que
+			// deux vagues successives soient jointives.
+			Drawing.Path path = new Drawing.Path();
+			double len = 4;  // période d'une vague
+			p1.Y -= 1;
+			double start = p1.X-p1.X%len-0.5;  // -0.5 pour feinter l'anti-aliasing !
+			double end   = p2.X-p2.X%len+len+0.5;
+			for ( double x=start ; x<=end ; x+=len )
+			{
+				for ( int i=0 ; i<2 ; i++ )
+				{
+					Drawing.Point pp1 = new Drawing.Point();
+					Drawing.Point pp2 = new Drawing.Point();
+
+					if ( i == 0 )  // segment montant / ?
+					{
+						pp1.X = x+len*0.0;
+						pp2.X = x+len*0.5;
+						pp1.Y = p1.Y-len*0.25;
+						pp2.Y = p1.Y+len*0.25;
+					}
+					else	// segment descendant \ ?
+					{
+						pp1.X = x+len*0.5;
+						pp2.X = x+len*1.0;
+						pp1.Y = p1.Y+len*0.25;
+						pp2.Y = p1.Y-len*0.25;
+					}
+
+					if ( pp1.X >= p2.X || pp2.X <= p1.X )  continue;
+
+					if ( pp1.X < p1.X )  // dépasse à gauche ?
+					{
+						pp1.Y += (pp2.Y-pp1.Y)*(p1.X-pp1.X)/(pp2.X-pp1.X);
+						pp1.X = p1.X;
+					}
+
+					if ( pp2.X > p2.X )  // dépasse à droite ?
+					{
+						pp2.Y += (pp1.Y-pp2.Y)*(p2.X-pp2.X)/(pp1.X-pp2.X);
+						pp2.X = p2.X;
+					}
+
+					if ( path.IsEmpty )  path.MoveTo(pp1);
+					path.LineTo(pp2);
+				}
+			}
+			return path;
 		}
 
 		protected Drawing.Path PathLineBreak(Drawing.Rectangle rect)
@@ -1408,6 +1493,7 @@ namespace Epsitec.Common.Widgets
 							case "<a":     tagId = Tag.Anchor;  close = ">";   break;
 							case "<img":   tagId = Tag.Image;   close = "/>";  break;
 							case "<font":  tagId = Tag.Font;    close = ">";   break;
+							case "<w":     tagId = Tag.Wave;    close = ">";   break;
 						}
 						
 						if ( !end.EndsWith(close) )
@@ -1641,6 +1727,7 @@ namespace Epsitec.Common.Widgets
 			fontItem.underline = 0;
 			fontItem.anchor    = 0;
 			fontItem.wave      = 0;
+			fontItem.waveColor = Drawing.Color.Empty;
 
 			fontStack.Push(fontItem);  // push la fonte initiale (jamais de pop)
 
@@ -1665,6 +1752,7 @@ namespace Epsitec.Common.Widgets
 				block.underline  = false;
 				block.anchor     = false;
 				block.wave       = false;
+				block.waveColor  = fontItem.waveColor;
 				block.width      = 0;
 				block.pos        = new Drawing.Point(0,0);
 				block.visible    = false;
@@ -1709,6 +1797,7 @@ namespace Epsitec.Common.Widgets
 						block.underline  = fontItem.underline > 0;
 						block.anchor     = fontItem.anchor > 0;
 						block.wave       = fontItem.wave > 0;
+						block.waveColor  = fontItem.waveColor;
 						block.width      = 0;
 						block.pos        = new Drawing.Point(0,0);
 						block.visible    = false;
@@ -1750,6 +1839,7 @@ namespace Epsitec.Common.Widgets
 							block.underline  = fontItem.underline > 0;
 							block.anchor     = fontItem.anchor > 0;
 							block.wave       = fontItem.wave > 0;
+							block.waveColor  = fontItem.waveColor;
 							block.width      = breakWidth;
 							block.pos        = new Drawing.Point(0,0);
 							block.visible    = false;
@@ -1872,6 +1962,18 @@ namespace Epsitec.Common.Widgets
 					case Tag.Wave:
 						fontItem = (FontItem)fontStack.Peek();
 						fontItem.wave ++;
+						if ( parameters == null )
+						{
+							fontItem.waveColor = Drawing.Color.Empty;
+						}
+						else
+						{
+							if ( parameters.ContainsKey("color") )
+							{
+								string s = parameters["color"] as string;
+								fontItem.waveColor = Drawing.Color.FromName(s);
+							}
+						}
 						break;
 					case Tag.WaveEnd:
 						fontItem = (FontItem)fontStack.Peek();
@@ -1921,6 +2023,7 @@ namespace Epsitec.Common.Widgets
 								block.underline  = fontItem.underline > 0;
 								block.anchor     = fontItem.anchor > 0;
 								block.wave       = fontItem.wave > 0;
+								block.waveColor  = fontItem.waveColor;
 								block.width      = dx;
 								
 								if ( image.IsOriginDefined )
@@ -2412,6 +2515,7 @@ namespace Epsitec.Common.Widgets
 			public int							underline;	// souligné si > 0
 			public int							anchor;		// lien si > 0
 			public int							wave;		// vague si > 0
+			public Drawing.Color				waveColor;
 		}
 
 		// Descripteur d'un bloc de texte. Tous les caractères du bloc ont
@@ -2431,6 +2535,7 @@ namespace Epsitec.Common.Widgets
 			public bool							underline;
 			public bool							anchor;
 			public bool							wave;
+			public Drawing.Color				waveColor;
 			public double						width;		// largeur du bloc
 			public double						imageAscender;
 			public double						imageDescender;

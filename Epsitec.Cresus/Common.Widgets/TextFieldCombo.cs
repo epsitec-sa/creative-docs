@@ -61,6 +61,13 @@ namespace Epsitec.Common.Widgets
 			if ( index < 0 )
 			{
 				exactMatch = false;
+				
+				if ( find == "" )
+				{
+					return false;
+				}
+				
+				
 				index = this.items.FindStartMatch(find);
 				
 				if ( index < 0 )

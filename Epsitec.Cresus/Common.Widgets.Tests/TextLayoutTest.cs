@@ -28,6 +28,28 @@ namespace Epsitec.Common.Widgets
 			window.Show();
 		}
 
+		[Test] public void CheckPaintUnderline()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Size(300, 200);
+			window.Text = "CheckPaintUnderline";
+			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_PaintUnderline1);
+			window.Root.Invalidate();
+			window.Show();
+		}
+
+		[Test] public void CheckPaintWave()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Size(300, 200);
+			window.Text = "CheckPaintWave";
+			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_PaintWave1);
+			window.Root.Invalidate();
+			window.Show();
+		}
+
 		[Test] public void CheckRectangle()
 		{
 			Window window = new Window();
@@ -351,7 +373,7 @@ namespace Epsitec.Common.Widgets
 		{
 			TextLayout layout = new TextLayout();
 
-			layout.Text = @"Voilà une image <img src=""file:images/icon.png""/> simple, suivie d'une deuxième <img src=""file:images/icon.png""/> et une troisième <img src=""file:images/icon.png""/>.<br/><br/>On donnait ce jour-là un grand dîner, où, pour la première fois, je vis avec beaucoup d'étonnement le <w>maître d'hôtel</w> servir l'épée au côté et le chapeau sur la tête.";
+			layout.Text = @"Voilà une image <img src=""file:images/icon.png""/> <w>simple</w>, suivie d'une deuxième <img src=""file:images/icon.png""/> et une troisième <img src=""file:images/icon.png""/>.<br/><br/>On donnait ce jour-là un grand dîner, où, pour la première fois, je vis avec beaucoup d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête.";
 			layout.Font = Font.GetFont("Tahoma", "Regular");
 			layout.FontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleLeft;
@@ -369,6 +391,60 @@ namespace Epsitec.Common.Widgets
 				e.Graphics.AddFilledRectangle(rects[i].Left, rects[i].Bottom, rects[i].Width, rects[i].Height);
 				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
 			}
+
+			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
+		}
+
+		private void CheckPaint_PaintUnderline1(object sender, PaintEventArgs e)
+		{
+			TextLayout layout = new TextLayout();
+
+			layout.Text = @"On <u>donnait</u> ce jour-là <u>un grand dîner</u>, où, pour la <u>première <b>fois</b></u>, je vis avec beaucoup <u>d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête</u>.";
+			layout.Font = Font.GetFont("Tahoma", "Regular");
+			layout.FontSize = 11.0;
+			layout.Alignment = ContentAlignment.MiddleLeft;
+			layout.JustifMode = TextJustifMode.AllButLast;
+			layout.LayoutSize = new Size(150, 150);
+
+			Point pos = new Point(20, 20);
+			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
+			e.Graphics.RenderSolid(Color.FromBrightness(1));
+
+			Rectangle[] rects = layout.FindTextRange(pos, 0, layout.Text.Length);
+			for ( int i=0 ; i<rects.Length ; i++ )
+			{
+				e.Graphics.Align (ref rects[i]);
+				e.Graphics.AddFilledRectangle(rects[i].Left, rects[i].Bottom, rects[i].Width, rects[i].Height);
+				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
+			}
+
+			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
+		}
+
+		private void CheckPaint_PaintWave1(object sender, PaintEventArgs e)
+		{
+			TextLayout layout = new TextLayout();
+
+			layout.Text = @"On <w>donnait</w> ce jour-là <w color=""#0000FF"">un grand dîner</w>, où, pour la <w>première <b>fois</b></w>, je vis avec beaucoup <w>d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête</w>.";
+			layout.Font = Font.GetFont("Tahoma", "Regular");
+			layout.FontSize = 11.0;
+			layout.Alignment = ContentAlignment.MiddleLeft;
+			layout.JustifMode = TextJustifMode.AllButLast;
+			layout.LayoutSize = new Size(150, 150);
+
+			Point pos = new Point(20, 20);
+			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
+			e.Graphics.RenderSolid(Color.FromBrightness(1));
+
+#if false
+			Rectangle[] rects = layout.FindTextRange(pos, 0, layout.Text.Length);
+			for ( int i=0 ; i<rects.Length ; i++ )
+			{
+				e.Graphics.Align (ref rects[i]);
+				e.Graphics.AddFilledRectangle(rects[i].Left, rects[i].Bottom, rects[i].Width, rects[i].Height);
+				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
+			}
+#endif
 
 			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
 		}
