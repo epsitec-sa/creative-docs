@@ -36,19 +36,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldRepeat.MinRange = 1;
 			this.fieldRepeat.MaxRange = 8;
 			this.fieldRepeat.Step = 1;
-			this.fieldRepeat.TextChanged += new EventHandler(this.TextChanged);
+			this.fieldRepeat.TextChanged += new EventHandler(this.HandleTextChanged);
 
 			this.fieldMiddle = new TextFieldSlider(this);
 			this.fieldMiddle.MinRange = -100;
 			this.fieldMiddle.MaxRange =  100;
 			this.fieldMiddle.Step = 10;
-			this.fieldMiddle.TextChanged += new EventHandler(this.TextChanged);
+			this.fieldMiddle.TextChanged += new EventHandler(this.HandleTextChanged);
 
 			this.fieldSmooth = new TextFieldSlider(this);
 			this.fieldSmooth.MinRange =  0;
 			this.fieldSmooth.MaxRange = 10;
 			this.fieldSmooth.Step = 1;
-			this.fieldSmooth.TextChanged += new EventHandler(this.TextChanged);
+			this.fieldSmooth.TextChanged += new EventHandler(this.HandleTextChanged);
 
 			this.labelRepeat = new StaticText(this);
 			this.labelRepeat.Text = "n";
@@ -80,9 +80,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.sample.Clicked -= new MessageEventHandler(this.SampleClicked);
 			this.fieldColor1.Clicked -= new MessageEventHandler(this.FieldColorClicked);
 			this.fieldColor2.Clicked -= new MessageEventHandler(this.FieldColorClicked);
-			this.fieldRepeat.TextChanged -= new EventHandler(this.TextChanged);
-			this.fieldMiddle.TextChanged -= new EventHandler(this.TextChanged);
-			this.fieldSmooth.TextChanged -= new EventHandler(this.TextChanged);
+			this.fieldRepeat.TextChanged -= new EventHandler(this.HandleTextChanged);
+			this.fieldMiddle.TextChanged -= new EventHandler(this.HandleTextChanged);
+			this.fieldSmooth.TextChanged -= new EventHandler(this.HandleTextChanged);
 			this.swapColor.Clicked -= new MessageEventHandler(this.SwapColorClicked);
 
 			base.Dispose(disposing);
@@ -367,7 +367,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnChanged();
 		}
 
-		private void TextChanged(object sender)
+		private void HandleTextChanged(object sender)
 		{
 			this.OnChanged();
 		}
