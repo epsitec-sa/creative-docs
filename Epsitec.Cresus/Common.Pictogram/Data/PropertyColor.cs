@@ -41,9 +41,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Crée le panneau permettant d'éditer la propriété.
-		public override AbstractPanel CreatePanel()
+		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
-			return new PanelColor();
+			return new PanelColor(drawer);
 		}
 
 		[XmlAttribute]
