@@ -11,6 +11,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	{
 		public Drawer()
 		{
+			this.InternalState |= InternalState.AutoDoubleClick;
+			this.BackColor = Drawing.Color.FromBrightness(1);  // fond blanc
+
 			this.ButtonStyle = ButtonStyle.ToolItem;
 
 			this.iconObjects = new IconObjects();
@@ -159,7 +162,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			get
 			{
 				string text;
-				text = string.Format("Selection: {0}/{1}", this.iconObjects.TotalSelected(), this.iconObjects.Count);
+				text = string.Format("Sélection: {0}/{1}", this.iconObjects.TotalSelected(), this.iconObjects.Count);
 				return text;
 			}
 		}
@@ -186,7 +189,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Indique si un objet est en cours de création.
+		// Indique quel est l'objet en cours de création.
 		public AbstractObject CreatingObject
 		{
 			get
@@ -201,6 +204,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.rankLastCreated = -1;
 			this.hiliteHandleObject = null;
+			this.editObject = null;
 			this.iconObjects.DeselectAll();
 			this.globalModifier.Visible = false;
 		}
@@ -226,8 +230,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 					{
 						if ( lastTool == false && this.rankLastCreated != -1 )
 						{
-							this.Select(this.iconObjects[this.rankLastCreated], false);
-							this.iconObjects.UpdateEditProperties();
+							this.Select(this.iconObjects[this.rankLastCreated], false, false);
+							this.iconObjects.UpdateEditProperties(this.objectMemory);
 							this.rankLastCreated = -1;
 							this.InvalidateAll();
 							this.OnInfoObjectChanged();
@@ -236,6 +240,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 						if ( this.selectedTool == "Select" )
 						{
 							this.MouseCursor = MouseCursor.AsArrow;
+						}
+						if ( this.selectedTool == "Edit" )
+						{
+							this.MouseCursor = MouseCursor.AsIBeam;
 						}
 						if ( this.selectedTool == "Zoom" )
 						{
@@ -249,10 +257,52 @@ namespace Epsitec.Common.Pictogram.Widgets
 						{
 							this.MouseCursorImage(ref this.mouseCursorPicker, @"file:images/picker.icon");
 						}
+
+						if ( this.IsTool() && this.selectedTool != "Edit" )
+						{
+							AbstractObject sel = this.iconObjects.RetFirstSelected();
+							if ( sel != null && sel.IsEdited() )
+							{
+								sel.Select(true);
+								this.OnPanelChanged();
+								this.OnInfoObjectChanged();
+								this.InvalidateAll();
+							}
+						}
+
+						if ( this.selectedTool == "Edit" )
+						{
+							int total = this.iconObjects.TotalSelected();
+							if ( total == 1 )
+							{
+								AbstractObject sel = this.iconObjects.RetFirstSelected();
+								if ( sel != null && !sel.IsEdited() )
+								{
+									if ( sel.IsEditable() )
+									{
+										sel.Select(true, true);
+									}
+									else
+									{
+										this.iconObjects.DeselectAll();
+									}
+									this.OnPanelChanged();
+									this.OnInfoObjectChanged();
+									this.InvalidateAll();
+								}
+							}
+							else if ( total > 1 )
+							{
+								this.iconObjects.DeselectAll();
+								this.OnPanelChanged();
+								this.OnInfoObjectChanged();
+								this.InvalidateAll();
+							}
+						}
 					}
 					else
 					{
-						this.Select(null, false);  // désélectionne tout
+						this.Select(null, false, false);  // désélectionne tout
 						this.InvalidateAll();
 						this.OnInfoObjectChanged();
 						this.MouseCursor = MouseCursor.AsCross;
@@ -289,6 +339,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected bool IsTool()
 		{
 			if ( this.selectedTool == "Select" )  return true;
+			if ( this.selectedTool == "Edit"   )  return true;
 			if ( this.selectedTool == "Zoom"   )  return true;
 			if ( this.selectedTool == "Hand"   )  return true;
 			if ( this.selectedTool == "Picker" )  return true;
@@ -304,39 +355,30 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			if ( this.IsTool() )
 			{
-				this.iconObjects.PropertiesList(list, this.objectMemory);
+				this.iconObjects.PropertiesList(list);
 			}
 			else
 			{
 				this.newObject = this.CreateObject();
 				this.newObject.CloneProperties(this.objectMemory);
-
-				int total = this.newObject.TotalProperty;
-				for ( int i=0 ; i<total ; i++ )
-				{
-					AbstractProperty property = this.newObject.Property(i);
-					property.Multi = false;
-					list.Add(property);
-				}
+				this.newObject.PropertiesList(list);
 			}
 
 			return list;
 		}
 
-		// Modifie juste l'état "étendu" d'une propriété.
-		public void SetPropertyExtended(AbstractProperty property)
+		// Mémorise l'état étendu d'une propriété.
+		public void SetPropertyExtended(PropertyType type, bool extended)
 		{
-			if ( this.IsTool() )
-			{
-				this.iconObjects.SetPropertyExtended(property);
-				this.InvalidateAll();
-			}
-			else
-			{
-				this.newObject.SetPropertyExtended(property);
-			}
+			this.objectMemory.SetPropertyExtended(type, extended);
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
+			this.InvalidateAll();
+		}
 
-			this.objectMemory.SetPropertyExtended(property);
+		// Retourne l'état étendu d'une propriété.
+		public bool GetPropertyExtended(PropertyType type)
+		{
+			return this.objectMemory.GetPropertyExtended(type);
 		}
 
 		// Modifie une propriété.
@@ -349,10 +391,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 				Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 				this.iconObjects.SetProperty(property, ref bbox, changeStylesCollection);
-				this.iconObjects.UpdateEditProperties();
+				this.iconObjects.UpdateEditProperties(this.objectMemory);
 				this.InvalidateAll(bbox);
 			}
-			else
+
+			if ( this.newObject != null )
 			{
 				this.newObject.SetProperty(property);
 			}
@@ -413,7 +456,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconObjects.StyleFreeAll(property);
 
 			if ( this.newObject != null &&
-				 this.newObject.IsLinkProperty(property) )
+				this.newObject.IsLinkProperty(property) )
 			{
 				AbstractProperty objProp = this.newObject.GetProperty(property.Type);
 				objProp.StyleID = 0;
@@ -430,6 +473,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			for ( int i=0 ; i<total ; i++ )
 			{
 				AbstractProperty property = this.objectMemory.Property(i);
+				if ( property == null )  break;
 				property.StyleID = 0;
 				property.StyleName = "";
 			}
@@ -479,6 +523,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.selectInvertState = new CommandState("SelectInvert", this.commandDispatcher);
 			this.selectGlobalState = new CommandState("SelectGlobal", this.commandDispatcher);
 			this.selectModeState = new CommandState("SelectMode", this.commandDispatcher);
+			this.hideHalfState = new CommandState("HideHalf", this.commandDispatcher);
 			this.hideSelState = new CommandState("HideSel", this.commandDispatcher);
 			this.hideRestState = new CommandState("HideRest", this.commandDispatcher);
 			this.hideCancelState = new CommandState("HideCancel", this.commandDispatcher);
@@ -488,8 +533,28 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.zoomPrevState = new CommandState("ZoomPrev", this.commandDispatcher);
 			this.zoomSubState = new CommandState("ZoomSub", this.commandDispatcher);
 			this.zoomAddState = new CommandState("ZoomAdd", this.commandDispatcher);
+			this.previewState = new CommandState("Preview", this.commandDispatcher);
 			this.gridState = new CommandState("Grid", this.commandDispatcher);
 			this.modeState = new CommandState("Mode", this.commandDispatcher);
+
+			this.arrayOutlineFrameState = new CommandState("ArrayOutlineFrame", this.commandDispatcher);
+			this.arrayOutlineHorizState = new CommandState("ArrayOutlineHoriz", this.commandDispatcher);
+			this.arrayOutlineVertiState = new CommandState("ArrayOutlineVerti", this.commandDispatcher);
+			this.arrayAddColumnLeftState = new CommandState("ArrayAddColumnLeft", this.commandDispatcher);
+			this.arrayAddColumnRightState = new CommandState("ArrayAddColumnRight", this.commandDispatcher);
+			this.arrayAddRowTopState = new CommandState("ArrayAddRowTop", this.commandDispatcher);
+			this.arrayAddRowBottomState = new CommandState("ArrayAddRowBottom", this.commandDispatcher);
+			this.arrayDelColumnState = new CommandState("ArrayDelColumn", this.commandDispatcher);
+			this.arrayDelRowState = new CommandState("ArrayDelRow", this.commandDispatcher);
+			this.arrayAlignColumnState = new CommandState("ArrayAlignColumn", this.commandDispatcher);
+			this.arrayAlignRowState = new CommandState("ArrayAlignRow", this.commandDispatcher);
+			this.arraySwapColumnState = new CommandState("ArraySwapColumn", this.commandDispatcher);
+			this.arraySwapRowState = new CommandState("ArraySwapRow", this.commandDispatcher);
+			this.arrayLookState = new CommandState("ArrayLook", this.commandDispatcher);
+
+			this.debugBboxThinState = new CommandState("DebugBboxThin", this.commandDispatcher);
+			this.debugBboxGeomState = new CommandState("DebugBboxGeom", this.commandDispatcher);
+			this.debugBboxFullState = new CommandState("DebugBboxFull", this.commandDispatcher);
 		}
 
 		// Met à jour toutes les commandes (dans les menus, les barres, etc.).
@@ -510,40 +575,69 @@ namespace Epsitec.Common.Pictogram.Widgets
 			int totalSelected = this.iconObjects.TotalSelected();
 			int totalHide = this.iconObjects.RetTotalHide();
 			int count = this.iconObjects.Count;
+			AbstractObject first = this.iconObjects.RetFirstSelected();
 
-			this.saveState.Enabled = ( this.iconObjects.TotalCount() > 2 );
+			this.saveState.Enabled = ( this.iconObjects.TotalCount() > 2 && this.createRank == -1 );
 			this.deleteState.Enabled = ( totalSelected > 0 );
-			this.duplicateState.Enabled = ( totalSelected > 0 );
-			this.cutState.Enabled = ( totalSelected > 0 );
-			this.copyState.Enabled = ( totalSelected > 0 );
-			this.pasteState.Enabled = ( !this.iconObjects.IsEmptyClipboard() );
-			this.orderUpState.Enabled = ( count > 1 && totalSelected > 0 );
-			this.orderDownState.Enabled = ( count > 1 && totalSelected > 0 );
-			this.mergeState.Enabled = ( totalSelected > 1 );
-			this.groupState.Enabled = ( totalSelected > 1 );
-			this.ungroupState.Enabled = ( totalSelected == 1 && this.iconObjects.RetFirstSelected() is ObjectGroup );
-			this.insideState.Enabled = ( totalSelected == 1 && this.iconObjects.RetFirstSelected() is ObjectGroup );
-			this.outsideState.Enabled = ( !this.iconObjects.IsInitialGroup() );
-			//?this.undoState.Enabled = ( this.undoIndex > 0 );
-			//?this.redoState.Enabled = ( this.undoIndex < this.undoList.Count-1 );
+			this.duplicateState.Enabled = ( totalSelected > 0 && this.createRank == -1 );
+			this.cutState.Enabled = ( totalSelected > 0 && this.createRank == -1 );
+			this.copyState.Enabled = ( totalSelected > 0 && this.createRank == -1 );
+			this.pasteState.Enabled = ( !this.iconObjects.IsEmptyClipboard() && this.createRank == -1 );
+			this.orderUpState.Enabled = ( count > 1 && totalSelected > 0 && this.createRank == -1 );
+			this.orderDownState.Enabled = ( count > 1 && totalSelected > 0 && this.createRank == -1 );
+			this.mergeState.Enabled = ( totalSelected > 1 && this.createRank == -1 );
+			this.groupState.Enabled = ( totalSelected > 1 && this.createRank == -1 );
+			this.ungroupState.Enabled = ( totalSelected == 1 && first is ObjectGroup && this.createRank == -1 );
+			this.insideState.Enabled = ( totalSelected == 1 && first is ObjectGroup && this.createRank == -1 );
+			this.outsideState.Enabled = ( !this.iconObjects.IsInitialGroup() && this.createRank == -1 );
+			//?this.undoState.Enabled = ( this.undoIndex > 0 && this.createRank == -1 );
+			//?this.redoState.Enabled = ( this.undoIndex < this.undoList.Count-1 && this.createRank == -1 );
 			this.undoState.Enabled = false;
 			this.redoState.Enabled = false;
-			this.deselectState.Enabled = ( totalSelected > 0 );
-			this.selectAllState.Enabled = ( totalSelected < count );
-			this.selectInvertState.Enabled = ( count > 0 );
-			this.selectGlobalState.Enabled = ( totalSelected > 0 );
+			this.deselectState.Enabled = ( totalSelected > 0 && this.createRank == -1 );
+			this.selectAllState.Enabled = ( totalSelected < count && this.createRank == -1 );
+			this.selectInvertState.Enabled = ( count > 0 && this.createRank == -1 );
+			this.selectGlobalState.Enabled = ( totalSelected > 0 && this.createRank == -1 );
 			this.selectModeState.ActiveState = this.selectModePartial ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.hideSelState.Enabled = ( totalSelected > 0 );
-			this.hideRestState.Enabled = ( totalSelected > 0 && count-totalSelected-totalHide > 0 );
-			this.hideCancelState.Enabled = ( totalHide > 0 );
+			this.selectModeState.Enabled = ( this.createRank == -1 );
+			this.hideHalfState.ActiveState = this.iconContext.HideHalfActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.hideSelState.Enabled = ( totalSelected > 0 && this.createRank == -1 );
+			this.hideRestState.Enabled = ( totalSelected > 0 && count-totalSelected-totalHide > 0 && this.createRank == -1 );
+			this.hideCancelState.Enabled = ( totalHide > 0 && this.createRank == -1 );
 			this.zoomMinState.Enabled = ( this.Zoom > this.ZoomMin );
 			this.zoomDefaultState.Enabled = ( this.Zoom != 1 || this.OriginX != 0 || this.OriginY != 0 );
 			this.zoomSelState.Enabled = ( totalSelected > 0 );
 			this.zoomPrevState.Enabled = ( this.zoomHistory.Count > 0 );
 			this.zoomSubState.Enabled = ( this.Zoom > this.ZoomMin );
 			this.zoomAddState.Enabled = ( this.Zoom < this.ZoomMax );
+			this.previewState.ActiveState = this.iconContext.PreviewActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			this.gridState.ActiveState = this.iconContext.GridActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			this.modeState.ActiveState = !this.isActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.modeState.Enabled = ( this.createRank == -1 );
+
+			ObjectArray array = first as ObjectArray;
+			bool enabled = ( totalSelected == 1 ) && ( array != null );
+			this.arrayOutlineFrameState.Enabled = ( enabled );
+			this.arrayOutlineHorizState.Enabled = ( enabled );
+			this.arrayOutlineVertiState.Enabled = ( enabled );
+			this.arrayOutlineFrameState.ActiveState = (enabled && array.OutlineFrame) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.arrayOutlineHorizState.ActiveState = (enabled && array.OutlineHoriz) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.arrayOutlineVertiState.ActiveState = (enabled && array.OutlineVerti) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.arrayAddColumnLeftState.Enabled = ( enabled && array.EnabledAddColumnLeft );
+			this.arrayAddColumnRightState.Enabled = ( enabled && array.EnabledAddColumnRight );
+			this.arrayAddRowTopState.Enabled = ( enabled && array.EnabledAddRowTop );
+			this.arrayAddRowBottomState.Enabled = ( enabled && array.EnabledAddRowBottom );
+			this.arrayDelColumnState.Enabled = ( enabled && array.EnabledDelColumn );
+			this.arrayDelRowState.Enabled = ( enabled && array.EnabledDelRow );
+			this.arrayAlignColumnState.Enabled = ( enabled && array.EnabledAlignColumn );
+			this.arrayAlignRowState.Enabled = ( enabled && array.EnabledAlignRow );
+			this.arraySwapColumnState.Enabled = ( enabled && array.EnabledSwapColumn );
+			this.arraySwapRowState.Enabled = ( enabled && array.EnabledSwapRow );
+			this.arrayLookState.Enabled = ( enabled && array.EnabledLook );
+
+			this.debugBboxThinState.ActiveState = this.iconContext.IsDrawBoxThin ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.debugBboxGeomState.ActiveState = this.iconContext.IsDrawBoxGeom ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.debugBboxFullState.ActiveState = this.iconContext.IsDrawBoxFull ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 		}
 
 		public void CommandNew()
@@ -553,7 +647,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.StyleFreeAll();
 			this.globalModifier.Visible = false;
 			this.rankLastCreated = -1;
+			this.createRank = -1;
 			this.hiliteHandleObject = null;
+			this.editObject = null;
 			this.Zoom = 1;
 			this.OriginX = 0;
 			this.OriginY = 0;
@@ -571,7 +667,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.StyleFreeAll();
 			this.globalModifier.Visible = false;
 			this.rankLastCreated = -1;
+			this.createRank = -1;
 			this.hiliteHandleObject = null;
+			this.editObject = null;
 			this.iconObjects.Read(filename);
 			this.Zoom = 1;
 			this.OriginX = 0;
@@ -594,6 +692,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UndoMemorize("Delete");
 			this.iconObjects.DeleteSelection();
 			this.globalModifier.Visible = false;
+			this.createRank = -1;
 			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
@@ -607,7 +706,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			Drawing.Point move = new Drawing.Point(1, 1);
 			this.iconObjects.DuplicateSelection(move);
 			this.globalModifier.MoveAll(move);
-			this.iconObjects.UpdateEditProperties();
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
 			this.InvalidateAll();
@@ -647,7 +746,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.globalModifier.Initialize(this.iconObjects.RetSelectedBbox());
 			}
 			
-			this.iconObjects.UpdateEditProperties();
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
 			this.InvalidateAll();
@@ -734,6 +833,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		void CommandOutside(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.OutsideSelection();
+			this.globalModifier.Visible = false;
 			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
@@ -748,13 +848,21 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnCommandChanged();
 		}
 
+		[Command ("Preview")]
+		void CommandPreview(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.iconContext.PreviewActive = !this.iconContext.PreviewActive;
+			this.Invalidate();
+			this.OnCommandChanged();
+		}
+
 		[Command ("Deselect")]
 		void CommandDeselect(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.SelectedTool = "Select";
 			this.ChangeSelection("Deselect");
 			this.OnPanelChanged();
-			this.iconObjects.UpdateEditProperties();
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
 			this.InvalidateAll();
@@ -766,7 +874,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.SelectedTool = "Select";
 			this.ChangeSelection("SelectAll");
 			this.OnPanelChanged();
-			this.iconObjects.UpdateEditProperties();
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
 			this.InvalidateAll();
@@ -779,7 +887,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.SelectedTool = "Select";
 			this.ChangeSelection("SelectInvert");
 			this.OnPanelChanged();
-			this.iconObjects.UpdateEditProperties();
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
 			this.InvalidateAll();
@@ -797,7 +905,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.globalModifier.Initialize(this.iconObjects.RetSelectedBbox());
 			}
 			this.OnPanelChanged();
-			this.iconObjects.UpdateEditProperties();
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
 			this.InvalidateAll();
@@ -813,6 +921,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.InvalidateAll();
 		}
 
+		[Command ("HideHalf")]
+		void CommandHideHalf(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.SelectedTool = "Select";
+			this.iconContext.HideHalfActive = !this.iconContext.HideHalfActive;
+			this.OnCommandChanged();
+			this.InvalidateAll();
+		}
+
 		[Command ("HideSel")]
 		void CommandHideSel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -820,7 +937,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconObjects.HideSelection();
 			this.globalModifier.Visible = false;
 			this.OnPanelChanged();
-			this.iconObjects.UpdateEditProperties();
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
 			this.InvalidateAll();
@@ -832,7 +949,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.SelectedTool = "Select";
 			this.iconObjects.HideRest();
 			this.OnPanelChanged();
-			this.iconObjects.UpdateEditProperties();
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
 			this.InvalidateAll();
@@ -847,7 +964,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconObjects.GlobalSelect(this.globalModifier.Visible);
 			this.globalModifier.Initialize(this.iconObjects.RetSelectedBbox());
 			this.OnPanelChanged();
-			this.iconObjects.UpdateEditProperties();
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
 			this.InvalidateAll();
@@ -895,10 +1012,52 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.ZoomChange(2.0);
 		}
 
-		[Command ("DebugBbox")]
-		void CommandDebugBbox(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("ArrayOutlineFrame")]
+		[Command ("ArrayOutlineHoriz")]
+		[Command ("ArrayOutlineVerti")]
+		[Command ("ArrayAddColumnLeft")]
+		[Command ("ArrayAddColumnRight")]
+		[Command ("ArrayAddRowTop")]
+		[Command ("ArrayAddRowBottom")]
+		[Command ("ArrayDelColumn")]
+		[Command ("ArrayDelRow")]
+		[Command ("ArrayAlignColumn")]
+		[Command ("ArrayAlignRow")]
+		[Command ("ArraySwapColumn")]
+		[Command ("ArraySwapRow")]
+		[Command ("ArrayLook")]
+		void CommandArray(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.iconContext.IsDrawBox = !this.iconContext.IsDrawBox;
+			ObjectArray array = this.iconObjects.RetFirstSelected() as ObjectArray;
+			if ( array == null )  return;
+			array.ExecuteCommand(e.CommandName, (e.CommandArgs.Length == 0) ? "" : e.CommandArgs[0]);
+			this.OnPanelChanged();
+			this.OnInfoObjectChanged();
+			this.OnCommandChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("DebugBboxThin")]
+		void CommandDebugBboxThin(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.iconContext.IsDrawBoxThin = !this.iconContext.IsDrawBoxThin;
+			this.OnCommandChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("DebugBboxGeom")]
+		void CommandDebugBboxGeom(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.iconContext.IsDrawBoxGeom = !this.iconContext.IsDrawBoxGeom;
+			this.OnCommandChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("DebugBboxFull")]
+		void CommandDebugBboxFull(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.iconContext.IsDrawBoxFull = !this.iconContext.IsDrawBoxFull;
+			this.OnCommandChanged();
 			this.InvalidateAll();
 		}
 
@@ -917,7 +1076,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 				case "ObjectRegular":    obj = new ObjectRegular();    break;
 				case "ObjectPoly":       obj = new ObjectPoly();       break;
 				case "ObjectBezier":     obj = new ObjectBezier();     break;
-				case "ObjectText":       obj = new ObjectText();       break;
+				case "ObjectTextLine":   obj = new ObjectTextLine();   break;
+				case "ObjectTextBox":    obj = new ObjectTextBox();    break;
+				case "ObjectArray":      obj = new ObjectArray();      break;
+				case "ObjectImage":      obj = new ObjectImage();      break;
 			}
 			if ( obj == null )  return null;
 			return obj;
@@ -956,7 +1118,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 					{
 						if ( this.selectedTool == "Select" )
 						{
-							this.SelectMouseDown(pos, message.IsShiftPressed, message.IsCtrlPressed);
+							this.SelectMouseDown(pos, message.IsShiftPressed, message.IsCtrlPressed, message.ButtonDownCount);
+						}
+						else if ( this.selectedTool == "Edit" )
+						{
+							this.EditMouseDown(pos, message.IsShiftPressed, message.IsCtrlPressed, message.ButtonDownCount);
 						}
 						else if ( this.selectedTool == "Zoom" )
 						{
@@ -980,7 +1146,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 						this.rankLastCreated = -1;
 						this.SelectedTool = "Select";
 						this.OnAllChanged();
-						this.SelectMouseDown(pos, message.IsShiftPressed, message.IsCtrlPressed);
+						this.SelectMouseDown(pos, message.IsShiftPressed, message.IsCtrlPressed, message.ButtonDownCount);
 					}
 					this.mouseDown = true;
 					break;
@@ -992,6 +1158,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 					if ( this.selectedTool == "Select" )
 					{
 						this.SelectMouseMove(pos, message.IsShiftPressed, message.IsCtrlPressed);
+					}
+					else if ( this.selectedTool == "Edit" )
+					{
+						this.EditMouseMove(pos, message.IsShiftPressed, message.IsCtrlPressed);
 					}
 					else if ( this.selectedTool == "Zoom" )
 					{
@@ -1017,6 +1187,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 						if ( this.selectedTool == "Select" )
 						{
 							this.SelectMouseUp(pos, message.IsShiftPressed, message.IsCtrlPressed, message.IsRightButton);
+						}
+						else if ( this.selectedTool == "Edit" )
+						{
+							this.EditMouseUp(pos, message.IsShiftPressed, message.IsCtrlPressed, message.IsRightButton);
 						}
 						else if ( this.selectedTool == "Zoom" )
 						{
@@ -1215,7 +1389,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		protected void SelectMouseDown(Drawing.Point mouse, bool isShift, bool isCtrl)
+		protected void SelectMouseDown(Drawing.Point mouse, bool isShift, bool isCtrl, int downCount)
 		{
 			this.UndoMemorize("Select");
 			this.moveStart = mouse;
@@ -1227,6 +1401,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.HiliteHandle(null, -1, ref bbox);
 			this.moveGlobal = -1;
 			this.moveObject = null;
+			this.cellObject = null;
+			this.editObject = null;
 			this.selectRect = false;
 
 			AbstractObject obj;
@@ -1242,7 +1418,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				if ( this.globalModifier.Visible )
 				{
 					this.globalModifier.Visible = false;
-					this.Select(null, false);
+					this.Select(null, false, false);
 				}
 
 				if ( this.iconObjects.DetectHandle(mouse, out obj, out rank) )
@@ -1252,6 +1428,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 					this.moveOffset = mouse-obj.Handle(rank).Position;
 					this.moveObject.MoveHandleStarting(this.moveHandle, mouse, this.iconContext);
 					this.HiliteHandle(this.moveObject, this.moveHandle, ref bbox);
+					this.iconContext.ConstrainFixStarting(obj.Handle(rank).Position);
+				}
+				else if ( this.iconObjects.DetectCell(mouse, out obj, out rank) )
+				{
+					this.cellObject = obj;
+					this.cellRank   = rank;
+					this.cellObject.MoveCellStarting(this.cellRank, mouse, isShift, isCtrl, downCount, this.iconContext);
+					this.iconContext.ConstrainDelStarting();
 				}
 				else
 				{
@@ -1267,7 +1451,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					{
 						if ( !obj.IsSelected() )
 						{
-							this.Select(obj, isCtrl);
+							this.Select(obj, false, isCtrl);
 							this.OnInfoObjectChanged();
 						}
 						else
@@ -1275,7 +1459,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 							if ( isCtrl )
 							{
 								obj.Deselect();
-								this.iconObjects.UpdateEditProperties();
+								this.iconObjects.UpdateEditProperties(this.objectMemory);
 								this.OnPanelChanged();
 								this.OnInfoObjectChanged();
 							}
@@ -1324,7 +1508,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 					if ( this.moveHandle != -1 )  // déplace une poignée ?
 					{
 						mouse -= this.moveOffset;
-						this.iconContext.SnapGrid(ref mouse);
 						this.iconObjects.MoveHandleProcess(this.moveObject, this.moveHandle, mouse, this.iconContext, ref bbox);
 						this.HiliteHandle(this.moveObject, this.moveHandle, ref bbox);
 					}
@@ -1341,6 +1524,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 						this.iconObjects.MoveSelection(mouse-this.moveOffset, ref bbox);
 						this.moveOffset = mouse;
 					}
+				}
+				else if ( this.cellObject != null )
+				{
+					this.cellRank = this.cellObject.DetectCell(mouse);
+					this.cellObject.MoveCellProcess(this.cellRank, mouse, isShift, isCtrl, this.iconContext);
+					bbox.MergeWith(this.cellObject.BoundingBox);
 				}
 			}
 			else	// bouton souris relâché ?
@@ -1420,7 +1609,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.iconObjects.GroupUpdateParents(ref bbox);
 				//this.InvalidateAll(bbox);
 			}
-            else if ( this.moveObject != null )
+			else if ( this.moveObject != null )
 			{
 				this.iconObjects.GroupUpdate(ref bbox);
 				this.iconObjects.GroupUpdateParents(ref bbox);
@@ -1444,6 +1633,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.moveObject = null;
 				this.moveHandle = -1;
 			}
+			else if ( this.cellObject != null )
+			{
+				this.cellObject = null;
+				this.cellRank   = -1;
+				this.OnPanelChanged();
+			}
 
 			this.iconContext.ConstrainDelStarting();
 			this.InvalidateAll(bbox);
@@ -1454,6 +1649,63 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 
 			this.OnCommandChanged();
+		}
+
+
+		protected void EditMouseDown(Drawing.Point mouse, bool isShift, bool isCtrl, int downCount)
+		{
+			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
+			this.editObject = null;
+
+			AbstractObject obj;
+			obj = this.iconObjects.DetectEdit(mouse);
+			if ( obj != null )
+			{
+				this.Select(obj, true, false);
+				this.OnInfoObjectChanged();
+				this.editObject = obj;
+				this.editObject.MoveEditStarting(mouse, iconContext);
+				bbox.MergeWith(this.editObject.BoundingBox);
+			}
+
+			this.InvalidateAll(bbox);
+		}
+
+		protected void EditMouseMove(Drawing.Point mouse, bool isShift, bool isCtrl)
+		{
+			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
+
+			AbstractObject obj;
+			if ( this.mouseDown )  // bouton souris pressé ?
+			{
+				if ( this.editObject != null )
+				{
+					this.editObject.MoveEditProcess(mouse, iconContext);
+					bbox.MergeWith(this.editObject.BoundingBox);
+				}
+			}
+			else	// bouton souris relâché ?
+			{
+				obj = this.iconObjects.DetectEdit(mouse);
+				this.iconObjects.Hilite(obj, ref bbox);
+				if ( obj != null )
+				{
+					bbox.MergeWith(obj.BoundingBox);
+				}
+
+				this.MouseCursor = MouseCursor.AsIBeam;
+				this.Window.MouseCursor = this.MouseCursor;
+			}
+
+			this.InvalidateAll(bbox);
+		}
+
+		protected void EditMouseUp(Drawing.Point mouse, bool isShift, bool isCtrl, bool isRight)
+		{
+			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
+
+			this.OnPanelChanged();
+			this.InvalidateAll(bbox);
 		}
 
 
@@ -1625,7 +1877,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		protected void PickerMouseUp(Drawing.Point mouse, bool isShift, bool isCtrl)
 		{
-			this.iconObjects.UpdateEditProperties();
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 		}
 
 		// Modifie toutes les propriétés des objets sélectionnés en fonction
@@ -1639,8 +1891,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				for ( int i=0 ; i<total ; i++ )
 				{
-					seed.CloneInfoProperties(this.objectMemory);
 					AbstractProperty property = seed.Property(i);
+					if ( property == null )  break;
 					this.newObject.SetProperty(property);
 					this.objectMemory.SetProperty(property);
 				}
@@ -1649,8 +1901,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				for ( int i=0 ; i<total ; i++ )
 				{
-					seed.CloneInfoProperties(this.objectMemory);
 					AbstractProperty property = seed.Property(i);
+					if ( property == null )  break;
 					this.iconObjects.SetPropertyPicker(property, ref bbox);
 					this.objectMemory.SetProperty(property);
 				}
@@ -1682,10 +1934,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 
 		// Sélectionne un objet et désélectionne tous les autres.
-		protected void Select(AbstractObject obj, bool add)
+		protected void Select(AbstractObject obj, bool edit, bool add)
 		{
-			this.iconObjects.Select(obj, add);
-			this.iconObjects.UpdateEditProperties();
+			this.iconObjects.Select(obj, edit, add);
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.globalModifier.Visible = false;
 			this.OnPanelChanged();
 		}
@@ -1694,7 +1946,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected void Select(Drawing.Rectangle rect, bool add)
 		{
 			this.iconObjects.Select(rect, add, !this.selectModePartial);
-			this.iconObjects.UpdateEditProperties();
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.globalModifier.Visible = false;
 			this.OnPanelChanged();
 		}
@@ -1714,6 +1966,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 			this.iconObjects.GroupUpdateParents(ref bbox);
 			this.iconObjects.OutsideGroup();
+			this.iconObjects.UpdateEditProperties(this.objectMemory);
 		}
 
 		// Modifie la sélection courante.
@@ -1787,7 +2040,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected void CreateMouseMove(Drawing.Point mouse, bool isShift, bool isCtrl)
 		{
 			this.iconContext.IsCtrl = isCtrl;
-			this.iconContext.SnapGrid(ref mouse);
+			//?this.iconContext.SnapGrid(ref mouse);
 
 			if ( this.createRank == -1 )  return;
 			Drawing.Rectangle bbox = this.iconObjects[this.createRank].BoundingBox;
@@ -1799,17 +2052,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected void CreateMouseUp(Drawing.Point mouse, bool isShift, bool isCtrl)
 		{
 			this.iconContext.IsCtrl = isCtrl;
-			this.iconContext.SnapGrid(ref mouse);
+			//?this.iconContext.SnapGrid(ref mouse);
 
 			if ( this.createRank == -1 )  return;
 			this.iconObjects[this.createRank].CreateMouseUp(mouse, this.iconContext);
 
+			bool selectAfterCreation = false;
 			if ( this.iconObjects[this.createRank].CreateIsEnding(this.iconContext) )
 			{
 				if ( this.iconObjects[this.createRank].CreateIsExist(this.iconContext) )
 				{
 					this.iconObjects[this.createRank].Deselect();
 					this.rankLastCreated = this.createRank;
+					selectAfterCreation = this.iconObjects[this.createRank].SelectAfterCreation();
 				}
 				else
 				{
@@ -1822,13 +2077,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 			this.iconObjects.GroupUpdateParents(ref bbox);
 
+			if ( selectAfterCreation )
+			{
+				this.SelectedTool = "Select";
+			}
+
 			this.InvalidateAll();
 			this.OnPanelChanged();
 			this.OnInfoObjectChanged();
 			this.OnCommandChanged();
 		}
 
-		protected void CreateEnding()
+		public void CreateEnding()
 		{
 			if ( this.createRank == -1 )  return;
 			if ( this.iconObjects[this.createRank].CreateEnding(this.iconContext) )
@@ -2091,6 +2351,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Dessine l'icône.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			if ( !this.BackColor.IsTransparent && this.iconContext.PreviewActive )
+			{
+				graphics.AddFilledRectangle(clipRect);
+				graphics.RenderSolid(this.BackColor);
+			}
+
 			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
 			this.iconContext.UniqueColor = Drawing.Color.Empty;
 
@@ -2120,7 +2386,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconObjects.DrawGeometry(graphics, this.iconContext, adorner, clipRect, false);
 
 			// Dessine la grille magnétique.
-			if ( this.isEditable )
+			if ( this.isEditable && !this.iconContext.PreviewActive )
 			{
 				//?this.DrawGridForeground(graphics);
 				this.DrawGridBackground(graphics);
@@ -2268,6 +2534,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected int					moveHandle;
 		protected Drawing.Point			moveStart;
 		protected Drawing.Point			moveOffset;
+		protected AbstractObject		cellObject;
+		protected int					cellRank;
 		protected bool					selectRect;
 		protected Drawing.Point			selectRectP1;
 		protected Drawing.Point			selectRectP2;
@@ -2276,6 +2544,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected GlobalModifier		globalModifier = new GlobalModifier();
 		protected AbstractObject		hiliteHandleObject = null;
 		protected int					hiliteHandleRank = -1;
+		protected AbstractObject		editObject;
 
 		protected VMenu					contextMenu;
 		protected AbstractObject		contextMenuObject;
@@ -2314,6 +2583,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected CommandState			selectInvertState;
 		protected CommandState			selectGlobalState;
 		protected CommandState			selectModeState;
+		protected CommandState			hideHalfState;
 		protected CommandState			hideSelState;
 		protected CommandState			hideRestState;
 		protected CommandState			hideCancelState;
@@ -2323,8 +2593,26 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected CommandState			zoomPrevState;
 		protected CommandState			zoomSubState;
 		protected CommandState			zoomAddState;
+		protected CommandState			previewState;
 		protected CommandState			gridState;
 		protected CommandState			modeState;
+		protected CommandState			arrayOutlineFrameState;
+		protected CommandState			arrayOutlineHorizState;
+		protected CommandState			arrayOutlineVertiState;
+		protected CommandState			arrayAddColumnLeftState;
+		protected CommandState			arrayAddColumnRightState;
+		protected CommandState			arrayAddRowTopState;
+		protected CommandState			arrayAddRowBottomState;
+		protected CommandState			arrayDelColumnState;
+		protected CommandState			arrayDelRowState;
+		protected CommandState			arrayAlignColumnState;
+		protected CommandState			arrayAlignRowState;
+		protected CommandState			arraySwapColumnState;
+		protected CommandState			arraySwapRowState;
+		protected CommandState			arrayLookState;
+		protected CommandState			debugBboxThinState;
+		protected CommandState			debugBboxGeomState;
+		protected CommandState			debugBboxFullState;
 
 		protected Drawing.Image			mouseCursorZoom = null;
 		protected Drawing.Image			mouseCursorHand = null;

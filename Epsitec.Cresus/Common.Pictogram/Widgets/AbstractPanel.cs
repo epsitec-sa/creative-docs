@@ -65,6 +65,21 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return this.isNormalAndExtended;
 		}
 
+		// Indique si le panneau est réduit (petite hauteur) ou étendu (grande hauteur).
+		public virtual bool ExtendedSize
+		{
+			get
+			{
+				return this.extendedSize;
+			}
+
+			set
+			{
+				this.extendedSize = value;
+				this.extendedButton.GlyphShape = this.extendedSize ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
+			}
+		}
+
 		// Indique si le panneau représente des propriétés contradictoires.
 		public bool Multi
 		{
@@ -107,9 +122,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.backgroundIntensity = property.BackgroundIntensity;
 			this.styleID             = property.StyleID;
 			this.styleName           = property.StyleName;
-			this.extendedSize        = property.ExtendedSize;
-
-			this.extendedButton.GlyphShape = this.extendedSize ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
 		}
 
 		// Widget -> propriété.
@@ -120,12 +132,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		protected void GetProperty(AbstractProperty property)
 		{
-			property.Type                = this.type;
-			property.Text                = this.text;
-			property.BackgroundIntensity = this.backgroundIntensity;
-			property.StyleID             = this.styleID;
-			property.StyleName           = this.styleName;
-			property.ExtendedSize        = this.extendedSize;
+			property.Type      = this.type;
+			property.StyleID   = this.styleID;
+			property.StyleName = this.styleName;
 		}
 
 		// Retourne le type de la propriété éditée par le panneau.
@@ -135,6 +144,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				return this.type;
 			}
+		}
+
+
+		// Met le focus par défaut dans ce panneau.
+		public virtual bool DefaultFocus()
+		{
+			return false;
 		}
 
 
@@ -214,7 +230,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Le bouton pour étendre/réduire le panneau a été cliqué.
 		private void ExtendedButtonClicked(object sender, MessageEventArgs e)
 		{
-			this.extendedSize = !this.extendedSize;
+			this.ExtendedSize = !this.extendedSize;
 			this.OnExtendedChanged();
 		}
 
@@ -307,7 +323,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected Drawer					drawer;
 		protected Drawing.Color				colorBlack;
 		protected double					backgroundIntensity;
-		protected bool						extendedSize;
+		protected bool						extendedSize = false;
 		protected PropertyType				type;
 		protected string					text;
 		protected string					textStyle;

@@ -117,17 +117,6 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Adapte toutes les propriétés pour leurs redonner les informations communes.
-		public void AdaptInfoProperties(Drawer drawer)
-		{
-			foreach ( AbstractProperty property in this.styles )
-			{
-				AbstractProperty refProp = drawer.NewProperty(property.Type);
-				if ( refProp == null )  continue;
-				refProp.CopyInfoTo(property);
-			}
-		}
-
 		// Cherche une propriété d'après son nom et ayant le même type.
 		public AbstractProperty SearchProperty(AbstractProperty property)
 		{
