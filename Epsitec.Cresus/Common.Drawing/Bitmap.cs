@@ -16,8 +16,6 @@ namespace Epsitec.Common.Drawing
 		{
 			//	Le zoom de l'appelant ne joue aucun rôle... La définition de
 			//	l'image est fixe.
-			
-			System.Diagnostics.Debug.WriteLine ("Zoom : " + zoom);
 		}
 		
 		public override void MergeTransform(Transform transform)
@@ -251,6 +249,11 @@ namespace Epsitec.Common.Drawing
 			if (image == null)
 			{
 				return null;
+			}
+			
+			if (image.IsDisabledDefined)
+			{
+				return image.GetDisabled ();
 			}
 			
 			int r = (int)(background.R * 255.5);

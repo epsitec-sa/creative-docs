@@ -112,7 +112,7 @@ namespace Epsitec.Common.Drawing
 		
 		public void GetMemoryLayout(out int width, out int height, out int stride, out System.Drawing.Imaging.PixelFormat format, out System.IntPtr scan0)
 		{
-			format = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
+			format = System.Drawing.Imaging.PixelFormat.Format32bppPArgb;
 			AntiGrain.Buffer.GetMemoryLayout (this.agg_buffer, out width, out height, out stride, out scan0);
 		}
 		

@@ -22,6 +22,11 @@ namespace Epsitec.Common.Drawing
 			//	(changement d'échelle pour que la taille logique soit respectée).
 		}
 		
+		public virtual Image GetDisabled()
+		{
+			return null;
+		}
+		
 		public virtual Size				Size
 		{
 			get { return this.size; }
@@ -50,6 +55,11 @@ namespace Epsitec.Common.Drawing
 		public bool						IsEmpty
 		{
 			get { return this.Size.IsEmpty; }
+		}
+		
+		public virtual bool				IsDisabledDefined
+		{
+			get { return false; }
 		}
 		
 		public abstract Bitmap			BitmapImage

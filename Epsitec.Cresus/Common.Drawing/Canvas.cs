@@ -9,12 +9,28 @@ namespace Epsitec.Common.Drawing
 		{
 			this.data = new byte[data.Length];
 			data.CopyTo (this.data, 0);
+			
+			this.disabled = new Canvas (this);
+		}
+		
+		protected Canvas(Canvas original)
+		{
+			//	Version "disabled" du même dessin; on partage les données avec le modèle
+			//	original...
+			
+			this.data     = original.data;
+			this.disabled = this;
 		}
 		
 		public override void DefineZoom(double zoom)
 		{
 			this.zoom = zoom;
 			this.InvalidateCache ();
+		}
+		
+		public override Image GetDisabled()
+		{
+			return this.disabled;
 		}
 		
 		
@@ -56,6 +72,11 @@ namespace Epsitec.Common.Drawing
 			get { return true; }
 		}
 		
+		public override bool			IsDisabledDefined
+		{
+			get { return true; }
+		}
+		
 		
 		protected void ValidateCache()
 		{
@@ -74,48 +95,52 @@ namespace Epsitec.Common.Drawing
 					Drawing.Pixmap pixmap = graphics.Pixmap;
 					pixmap.Clear ();
 					
-					Canvas.Engine.Paint (graphics, size, this.data);
+					bool is_disabled = (this == this.disabled);
 					
-					System.Drawing.Bitmap win32_bitmap = new System.Drawing.Bitmap (dx, dy, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+					Canvas.Engine.Paint (graphics, size, this.data, is_disabled);
 					
-					using (System.Drawing.Graphics win32_graphics = System.Drawing.Graphics.FromImage (win32_bitmap))
-					{
-						System.Drawing.Rectangle clip = new System.Drawing.Rectangle (0, 0, dx, dy);
-						pixmap.Blend (win32_graphics, new System.Drawing.Point (0, 0), clip);
-					}
-					
-					System.Diagnostics.Debug.WriteLine ("Cached bitmap size: " + this.Size.ToString ());
-					
-					int width;
-					int height;
-					int stride;
+					int width, height, stride;
 					System.Drawing.Imaging.PixelFormat format;
 					System.IntPtr scan0;
+					
 					pixmap.GetMemoryLayout (out width, out height, out stride, out format, out scan0);
 					
-					System.Drawing.Imaging.BitmapData data = win32_bitmap.LockBits (new System.Drawing.Rectangle (0, 0, width, height), System.Drawing.Imaging.ImageLockMode.WriteOnly, format);
+					System.Diagnostics.Debug.Assert (width == dx);
+					System.Diagnostics.Debug.Assert (height == dy);
 					
-					unsafe
+
+					System.Drawing.Bitmap                bitmap = new System.Drawing.Bitmap (dx, dy, format);
+					System.Drawing.Rectangle             bbox   = new System.Drawing.Rectangle (0, 0, dx, dy);
+					System.Drawing.Imaging.ImageLockMode mode   = System.Drawing.Imaging.ImageLockMode.WriteOnly;
+					System.Drawing.Imaging.BitmapData    data   = bitmap.LockBits (bbox, mode, format);
+					
+					try
 					{
-						uint* src = (uint*) scan0.ToPointer ();
-						uint* dst = (uint*) data.Scan0.ToPointer () + height * stride / 4;
-						
-						for (int line = 0; line < height; line++)
+						unsafe
 						{
-							dst -= stride / 4;
-							uint* ptr = dst;
-							
-							for (int x = 0; x < stride / 4; x++)
+							int   num = stride / 4;
+							uint* src = (uint*) scan0.ToPointer ();
+							uint* buf = (uint*) data.Scan0.ToPointer () + dy * num;
+						
+							for (int line = 0; line < dy; line++)
 							{
-								*ptr++ = *src++;
+								buf -= num;
+							
+								uint* dst = buf;
+							
+								for (int i = 0; i < num; i++)
+								{
+									*dst++ = *src++;
+								}
 							}
 						}
 					}
-					win32_bitmap.UnlockBits (data);
+					finally
+					{
+						bitmap.UnlockBits (data);
+					}
 					
-					System.Diagnostics.Debug.WriteLine (width+"x"+height+", "+stride+", ptr="+scan0.ToString());
-					
-					this.cache = Bitmap.FromNativeBitmap (win32_bitmap, this.Origin, this.Size).BitmapImage;
+					this.cache = Bitmap.FromNativeBitmap (bitmap, this.Origin, this.Size).BitmapImage;
 				}
 			}
 		}
@@ -160,6 +185,7 @@ namespace Epsitec.Common.Drawing
 		protected bool					is_disposed;
 		protected bool					is_geom_ok;
 		
+		protected Canvas				disabled;
 		protected byte[]				data;
 		protected double				zoom = 1.0;
 		protected Bitmap				cache;
