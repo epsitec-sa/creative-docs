@@ -133,6 +133,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Dialogs\BundleName.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Panels\AbstractPanel.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

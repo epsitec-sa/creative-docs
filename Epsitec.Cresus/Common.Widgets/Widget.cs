@@ -1101,11 +1101,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		#region ICommandDispatcherHost Members
 		public virtual Support.CommandDispatcher	CommandDispatcher
 		{
 			get
 			{
+				if (this.dispatcher != null)
+				{
+					return this.dispatcher;
+				}
+				
 				if (this.parent != null)
 				{
 					return this.parent.CommandDispatcher;
@@ -1743,6 +1749,11 @@ namespace Epsitec.Common.Widgets
 					this.children[i].SetEventPropagation (events, on, setting);
 				}
 			}
+		}
+		
+		public virtual void SetCommandDispatcher(Support.CommandDispatcher dispatcher)
+		{
+			this.dispatcher = dispatcher;
 		}
 		
 		
@@ -5176,6 +5187,7 @@ namespace Epsitec.Common.Widgets
 		private double							default_font_height;
 		private MouseCursor						mouse_cursor;
 		private System.Collections.Hashtable	property_hash;
+		private Support.CommandDispatcher		dispatcher;
 		
 		static System.Collections.ArrayList		entered_widgets = new System.Collections.ArrayList ();
 		static System.Collections.ArrayList		alive_widgets   = new System.Collections.ArrayList ();

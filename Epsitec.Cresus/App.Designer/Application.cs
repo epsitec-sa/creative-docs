@@ -14,7 +14,7 @@ namespace Epsitec.Designer
 		{
 			Button button  = new Button ("New bundle");
 			button.Bounds  = new Rectangle (10, 10, 80, 24);
-			button.Command = "CreateStringBundle ('NewBundle')";
+			button.Command = "CreateStringBundle";
 			button.Parent  = this.MainWindow.Root;
 			button.Anchor  = AnchorStyles.BottomLeft;
 			
