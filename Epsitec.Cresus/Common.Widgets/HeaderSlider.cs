@@ -125,7 +125,7 @@ namespace Epsitec.Common.Widgets
 			{
 				state |= WidgetState.Entered;
 				state &= ~WidgetState.Focused;
-				adorner.PaintButtonBackground(graphics, rect, state, Direction.Up, ButtonStyle.Normal);
+				adorner.PaintButtonBackground(graphics, rect, state, Direction.Up, ButtonStyle.HeaderSlider);
 			}
 		}
 		
