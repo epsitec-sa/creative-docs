@@ -105,14 +105,12 @@ namespace Epsitec.Common.UI.Controllers
 			
 			try
 			{
-				System.Diagnostics.Debug.WriteLine ("UI>");
 				this.counter++;
 				this.SyncFromUI ();
 			}
 			finally
 			{
 				this.counter--;
-				System.Diagnostics.Debug.WriteLine ("UI<");
 			}
 		}
 		
@@ -128,14 +126,12 @@ namespace Epsitec.Common.UI.Controllers
 			
 			try
 			{
-				System.Diagnostics.Debug.WriteLine ("Adapter>");
 				this.counter++;
 				this.SyncFromAdapter (adapter.SyncReason);
 			}
 			finally
 			{
 				this.counter--;
-				System.Diagnostics.Debug.WriteLine ("Adapter<");
 			}
 		}
 		

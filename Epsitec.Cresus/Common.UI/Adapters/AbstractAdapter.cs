@@ -83,6 +83,15 @@ namespace Epsitec.Common.UI.Adapters
 		
 		protected virtual void OnValidityChanged()
 		{
+			if (this.validity == false)
+			{
+				this.binder.NotifyInvalidData ();
+			}
+			else
+			{
+				this.WriteToBinder ();
+			}
+			
 			this.OnChanged ();
 		}
 		

@@ -111,6 +111,23 @@ namespace Epsitec.Common.Types
 		}
 		
 		
+		public bool CheckInRange(decimal value)
+		{
+			decimal constrained = this.Constrain (value);
+			return constrained == value;
+		}
+		
+		public bool CheckInRange(double value)
+		{
+			return this.CheckInRange ((decimal) value);
+		}
+		
+		public bool CheckInRange(int value)
+		{
+			return this.CheckInRange ((decimal) value);
+		}
+		
+		
 		public decimal Constrain(decimal value)
 		{
 			if (this.IsValid)

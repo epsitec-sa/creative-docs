@@ -775,6 +775,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Validators\NumRangeValidator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Validators\RegexValidator.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

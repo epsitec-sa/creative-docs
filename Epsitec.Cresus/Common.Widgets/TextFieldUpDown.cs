@@ -233,7 +233,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected override bool ShouldSerializeValidator(Support.IValidator validator)
 		{
-			if (this.validator == validator)
+			if ((this.validator_1 == validator) ||
+				(this.validator_2 == validator))
 			{
 				//	On ne sérialise pas le validateur interne qui est là juste pour
 				//	s'assurer que la valeur est bien un nombre.
@@ -311,7 +312,14 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateValidator()
 		{
-			//	TODO: met à jour le validateur
+			if (this.validator_1 == null)
+			{
+				this.validator_1 = new Validators.RegexValidator (this, Support.RegexFactory.DecimalNum, false);
+			}
+			if (this.validator_2 == null)
+			{
+				this.validator_2 = new Validators.NumRangeValidator (this);
+			}
 		}
 		
 		
@@ -342,6 +350,7 @@ namespace Epsitec.Common.Widgets
 		protected GlyphButton					arrowDown;
 		protected decimal						defaultValue = 0;
 		protected decimal						step = 1;
-		protected Support.IValidator			validator;
+		protected Support.IValidator			validator_1;
+		protected Support.IValidator			validator_2;
 	}
 }

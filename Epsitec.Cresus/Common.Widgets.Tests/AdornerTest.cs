@@ -672,6 +672,14 @@ namespace Epsitec.Common.Widgets
 			page4.TabIndex = 4;
 			page4.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page4);
+			
+			TextFieldUpDown text_up_down = new TextFieldUpDown (page4);
+			text_up_down.MinValue   = -1000M;
+			text_up_down.MaxValue   =  1000000000000000M;
+			text_up_down.Resolution = 0.0000000000000001M;
+			text_up_down.Bounds = new Drawing.Rectangle (10, 10, 200, text_up_down.Height);
+			text_up_down.TextChanged += new EventHandler (this.HandleTextUpDownTextChanged);
+			
 
 			// Crée l'onglet 5.
 			TabPage page5 = new TabPage();
@@ -695,7 +703,12 @@ namespace Epsitec.Common.Widgets
 			window.Show();
 			return window;
 		}
-
+		
+		private void HandleTextUpDownTextChanged(object sender)
+		{
+			TextFieldUpDown up_down = sender as TextFieldUpDown;
+			System.Diagnostics.Debug.WriteLine (string.Format ("'{0}', value={1}, valid={2}", up_down.Text, up_down.Value, up_down.IsValid));
+		}
 		
 		private void HandleCheck(object sender, MessageEventArgs e)
 		{

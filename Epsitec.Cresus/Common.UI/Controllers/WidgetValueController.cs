@@ -96,6 +96,8 @@ namespace Epsitec.Common.UI.Controllers
 				if ((this.num_value.IsValid) &&
 					(this.CheckConstraint (value)))
 				{
+					System.Diagnostics.Debug.Assert (this.num_type.Range.CheckInRange (value));
+					
 					adapter.Value    = value;
 					adapter.Validity = true;
 				}

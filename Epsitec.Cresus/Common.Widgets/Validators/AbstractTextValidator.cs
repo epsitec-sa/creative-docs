@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets.Validators
 {
 	using BundleAttribute = Support.BundleAttribute;
@@ -32,14 +35,14 @@ namespace Epsitec.Common.Widgets.Validators
 		{
 			base.AttachWidget (widget);
 			
-			widget.TextChanged += new Epsitec.Common.Support.EventHandler (this.HandleWidgetTextChanged);
+			widget.TextChanged += new Support.EventHandler (this.HandleWidgetTextChanged);
 		}
 		
 		protected override void DetachWidget(Widget widget)
 		{
 			base.DetachWidget (widget);
 			
-			widget.TextChanged -= new Epsitec.Common.Support.EventHandler (this.HandleWidgetTextChanged);
+			widget.TextChanged -= new Support.EventHandler (this.HandleWidgetTextChanged);
 		}
 		
 		

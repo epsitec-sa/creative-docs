@@ -25,6 +25,7 @@ namespace Epsitec.Common.Support
 			RegexFactory.file_name      = new Regex (@"^[a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]([a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]*((?![\. ]$)(?<X>[\. ])(?!\k<X>))*)*$", options);
 			RegexFactory.path_name      = new Regex (@"^[a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]([a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]*((?![\.\/\ ]$)(?<X>[\.\/\ ])(?!\k<X>))*)*$", options);
 			RegexFactory.resource_name  = new Regex (@"^[a-zA-Z_](([a-zA-Z0-9_]*((?![\.\#]$)(?<X>[\.\#])(?!\k<X>))*)|(\[[0-9]+\]))*$", options);
+			RegexFactory.decimal_num    = new Regex (@"^(\-|\+)?((\d{1,12}(\.\d{0,12})?0*)|(\d{0,12}\.(\d{0,12})?0*))$", options);
 		}
 		
 		
@@ -135,6 +136,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public static Regex						DecimalNum
+		{
+			get
+			{
+				return RegexFactory.decimal_num;
+			}
+		}
+		
 		
 		[System.Flags] public enum Options
 		{
@@ -151,5 +160,6 @@ namespace Epsitec.Common.Support
 		private static Regex					file_name;
 		private static Regex					path_name;
 		private static Regex					resource_name;
+		private static Regex					decimal_num;
 	}
 }

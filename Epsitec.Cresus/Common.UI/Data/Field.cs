@@ -129,7 +129,8 @@ namespace Epsitec.Common.UI.Data
 			}
 			set
 			{
-				if (Common.Types.Comparer.Equal (this.value, value) == false)
+				if ((this.is_value_valid == false) ||
+					(Common.Types.Comparer.Equal (this.value, value) == false))
 				{
 					if (this.type == null)
 					{
