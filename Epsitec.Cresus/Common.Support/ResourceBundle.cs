@@ -127,7 +127,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public Drawing.Bitmap GetBitmap(string image_name)
+		public Drawing.Image GetBitmap(string image_name)
 		{
 			string field_name = "i." + image_name;
 			
@@ -750,7 +750,7 @@ namespace Epsitec.Common.Support
 		
 		protected string				name;
 		protected Hashtable				fields;
-		protected Drawing.Bitmap		bitmap_cache;
+		protected Drawing.Image			bitmap_cache;
 		
 		protected const int				max_recursion = 50;
 	}
