@@ -909,7 +909,6 @@ namespace Epsitec.Cresus.Database
 		
 		internal void LockDatabase(IDbAbstraction database)
 		{
-			System.Diagnostics.Debug.WriteLine ("Locking");
 			if (System.Threading.Monitor.TryEnter (database, this.lock_timeout) == false)
 			{
 				throw new Exceptions.DeadLockException (this.db_access, "Cannot lock database.");
@@ -918,7 +917,6 @@ namespace Epsitec.Cresus.Database
 		
 		internal void UnlockDatabase(IDbAbstraction database)
 		{
-			System.Diagnostics.Debug.WriteLine ("Unlocking");
 			System.Threading.Monitor.Exit (database);
 		}
 		

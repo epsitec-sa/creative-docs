@@ -430,7 +430,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-#if true
+#if false
 		[Test] [Ignore ("Temporary")] public void Check12ServiceServer()
 		{
 			DbInfrastructure      infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);

@@ -17,6 +17,17 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 
+		[Test] public void CheckTextOutputStabilityCheck()
+		{
+			Window window = new Window ();
+			
+			window.ClientSize = new Size (800, 120);
+			window.Text = "CheckTextOutputStabilityCheck";
+			window.Root.PaintForeground += new PaintEventHandler(TextStabilityCheck_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+
 		[Test] public void CheckTextOutputWingdings()
 		{
 			Window window = new Window ();
@@ -294,6 +305,59 @@ namespace Epsitec.Common.Drawing
 				
 				y += font_size;
 				line_width += 5;
+			}
+		}
+		
+		private void TextStabilityCheck_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			string text = "abcdefghijklmnopqrstuvwxyz 0123456789 +@#*%&/()= ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+			Font   font = Font.GetFont ("Tahoma", "Regular");
+			double size = 10.6;
+			Graphics g = e.Graphics;
+			
+			for (double x = 0.0; x < 1.0; x += 0.08)
+			{
+				for (double y = 0.0; y < 2.0; y += 0.39)
+				{
+					g.PaintText (x+20, y+20, text, font, size);
+					g.RenderSolid (Color.FromBrightness (0));
+				}
+			}
+			
+			size = 10.2;
+			
+			for (double x = 0.0; x < 1.0; x += 0.08)
+			{
+				for (double y = 0.0; y < 2.0; y += 0.39)
+				{
+					g.PaintText (x+20, y+35, text, font, size);
+					g.RenderSolid (Color.FromBrightness (0));
+				}
+			}
+			
+			size = 10.8;
+			
+			for (double x = 0.0; x < 1.0; x += 0.08)
+			{
+				for (double y = 0.0; y < 2.0; y += 0.39)
+				{
+					g.PaintText (x+20, y+50, text, font, size);
+					g.RenderSolid (Color.FromBrightness (0));
+				}
+			}
+			
+			font = Font.GetFont ("Arial", "Regular");
+			size = 10.8;
+			
+			for (double x = 0.0; x < 1.0; x += 0.08)
+			{
+				for (double y = 0.0; y < 2.0; y += 0.39)
+				{
+					g.PaintText (x+20, y+65, text, font, size);
+					g.RenderSolid (Color.FromBrightness (0));
+				}
 			}
 		}
 		
