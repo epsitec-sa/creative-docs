@@ -330,6 +330,40 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
+		internal System.Drawing.Size			BorderSize
+		{
+			get
+			{
+				System.Drawing.Size border_size = new System.Drawing.Size (0, 0);
+				
+				switch (this.FormBorderStyle)
+				{
+					case System.Windows.Forms.FormBorderStyle.Fixed3D:
+						border_size = System.Windows.Forms.SystemInformation.Border3DSize;
+						break;
+					
+					case System.Windows.Forms.FormBorderStyle.Sizable:
+					case System.Windows.Forms.FormBorderStyle.SizableToolWindow:
+						border_size = System.Windows.Forms.SystemInformation.FrameBorderSize;
+						break;
+					
+					case System.Windows.Forms.FormBorderStyle.FixedDialog:
+						border_size = System.Windows.Forms.SystemInformation.FixedFrameBorderSize;
+						break;
+					
+					case System.Windows.Forms.FormBorderStyle.FixedSingle:
+					case System.Windows.Forms.FormBorderStyle.FixedToolWindow:
+						border_size = new System.Drawing.Size (1, 1);
+						break;
+					
+					case System.Windows.Forms.FormBorderStyle.None:
+						break;
+				}
+				
+				return border_size;
+			}
+		}
+		
 		
 		internal bool							FilterMouseMessages
 		{

@@ -1902,7 +1902,9 @@ namespace Epsitec.Common.Widgets
 		public virtual Drawing.Point MapClientToScreen(Drawing.Point point)
 		{
 			point = this.MapClientToRoot (point);
+			Drawing.Point point_wdo = point;
 			point = this.Window.MapWindowToScreen (point);
+			System.Diagnostics.Debug.WriteLine (string.Format ("{0} -> {1}", point_wdo, point));
 			return point;
 		}
 		
