@@ -245,6 +245,38 @@ namespace Epsitec.Common.OpenType
 			return advance * scale;
 		}
 		
+		public double GetPositions(ushort[] glyphs, double size, double ox, double[] x_pos, double[] x_scale)
+		{
+			//	TODO: gérer use_system_glyph_size
+			
+			int num_glyph     = this.ot_maxp.NumGlyphs;
+			int num_h_metrics = this.ot_hhea.NumHMetrics;
+			
+			double scale   = size / this.ot_head.UnitsPerEm;
+			double advance = 0;
+			
+			for (int i = 0; i < glyphs.Length; i++)
+			{
+				ushort glyph = glyphs[i];
+				
+				x_pos[i] = ox + advance;
+				
+				if (glyph < num_glyph)
+				{
+					if (glyph < num_h_metrics)
+					{
+						advance += this.ot_hmtx.GetAdvanceWidth (glyph) * x_scale[i] * scale;
+					}
+					else
+					{
+						advance += this.ot_hmtx.GetAdvanceWidth (num_h_metrics-1) * x_scale[i] * scale;
+					}
+				}
+			}
+			
+			return advance;
+		}
+		
 		public double GetPositions(ushort[] glyphs, double size, double ox, double oy, double[] x_pos, double[] y_pos)
 		{
 			//	TODO: gérer use_system_glyph_size
