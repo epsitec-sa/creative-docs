@@ -8,6 +8,7 @@ namespace Epsitec.Common.Widgets
 		public AbstractToolBar()
 		{
 			this.items = new Helpers.WidgetCollection (this);
+			this.items.AutoEmbedding = true;
 			
 			using (IconButton button = new IconButton ())
 			{

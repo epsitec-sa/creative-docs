@@ -17,6 +17,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.arrows = TabBookArrows.Right;
 			this.items = new TabPageCollection(this);
+			this.items.AutoEmbedding = true;
 			
 			this.InternalState &= ~InternalState.PossibleContainer;
 

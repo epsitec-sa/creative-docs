@@ -10,25 +10,6 @@ namespace Epsitec.Common.Widgets
 	public delegate bool WalkWidgetCallback(Widget widget);
 	public delegate void PaintBoundsCallback(Widget widget, ref Drawing.Rectangle bounds);
 	
-	#region AnchorStyles enum
-	[System.Flags] public enum AnchorStyles : byte
-	{
-		None				= 0,
-		Top					= 1,
-		Bottom				= 2,
-		Left				= 4,
-		Right				= 8,
-		
-		TopLeft				= Top | Left,
-		BottomLeft			= Bottom | Left,
-		TopRight			= Top | Right,
-		BottomRight			= Bottom | Right,
-		LeftAndRight		= Left | Right,
-		TopAndBottom		= Top | Bottom,
-		All					= TopAndBottom | LeftAndRight
-	}
-	#endregion
-	
 	#region WidgetState enum
 	[System.Flags] public enum WidgetState : uint
 	{
@@ -87,6 +68,25 @@ namespace Epsitec.Common.Widgets
 	}
 	#endregion
 	
+	#region AnchorStyles enum
+	[System.Flags] public enum AnchorStyles : byte
+	{
+		None				= 0x00,
+		Top					= 0x10,
+		Bottom				= 0x20,
+		Left				= 0x40,
+		Right				= 0x80,
+		
+		TopLeft				= Top | Left,
+		BottomLeft			= Bottom | Left,
+		TopRight			= Top | Right,
+		BottomRight			= Bottom | Right,
+		LeftAndRight		= Left | Right,
+		TopAndBottom		= Top | Bottom,
+		All					= TopAndBottom | LeftAndRight
+	}
+	#endregion
+	
 	#region DockStyle enum
 	public enum DockStyle : byte
 	{
@@ -98,19 +98,40 @@ namespace Epsitec.Common.Widgets
 		Right				= 4,				//	colle à droite
 		Fill				= 5,				//	remplit tout
 		
-		Layout				= 6,				//	utilise un Layout Manager externe
+//		Layout				= 6,				//	utilise un Layout Manager externe
 	}
 	#endregion
 	
-	#region LayoutFlags enum
-	[System.Flags] public enum LayoutFlags : byte
+	#region LayoutStyles enum
+	[System.Flags] public enum LayoutStyles : byte
 	{
-		None				= 0,
-		
-		StartNewLine		= 0x40,				//	force layout sur une nouvelle ligne
-		IncludeChildren		= 0x80				//	inclut les enfants
+		Manual			= 0,
+			
+		DockLeft		= DockStyle.Left,
+		DockRight		= DockStyle.Right,
+		DockTop			= DockStyle.Top,
+		DockBottom		= DockStyle.Bottom,
+		DockFill		= DockStyle.Fill,
+			
+		AnchorLeft		= AnchorStyles.Left,
+		AnchorRight		= AnchorStyles.Right,
+		AnchorTop		= AnchorStyles.Top,
+		AnchorBottom	= AnchorStyles.Bottom,
+			
+		MaskDock		= 0x0F,
+		MaskAnchor		= 0xF0,
 	}
 	#endregion
+	
+	//	#region LayoutFlags enum
+//	[System.Flags] public enum LayoutFlags : byte
+//	{
+//		None				= 0,
+//		
+//		StartNewLine		= 0x40,				//	force layout sur une nouvelle ligne
+//		IncludeChildren		= 0x80				//	inclut les enfants
+//	}
+//	#endregion
 	
 	/// <summary>
 	/// La classe Widget implémente la classe de base dont dérivent tous les
@@ -128,7 +149,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.default_font_height = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
 			this.alignment           = this.DefaultAlignment;
-			this.anchor              = AnchorStyles.None;
+			this.layout              = LayoutStyles.Manual;
 			this.back_color          = Drawing.Color.Empty;
 			
 			this.Size = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
@@ -399,17 +420,17 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		[Bundle]			public AnchorStyles		Anchor
+		public LayoutStyles							Layout
 		{
 			get
 			{
-				return this.anchor;
+				return this.layout;
 			}
 			set
 			{
-				if (this.anchor != value)
+				if (this.layout != value)
 				{
-					this.anchor = value;
+					this.layout = value;
 					
 					if ((this.parent != null) &&
 						(this.IsLayoutSuspended == false))
@@ -423,6 +444,20 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		
+		[Bundle]			public AnchorStyles		Anchor
+		{
+			get
+			{
+				return (AnchorStyles) (this.layout & LayoutStyles.MaskAnchor);
+			}
+			set
+			{
+				this.Layout = (LayoutStyles) value;
+			}
+		}
+		
 		[Bundle]			public Drawing.Margins	AnchorMargins
 		{
 			get
@@ -452,24 +487,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.dock;
+				return (DockStyle) (this.layout & LayoutStyles.MaskDock);
 			}
 			set
 			{
-				if (this.dock != value)
-				{
-					this.dock = value;
-					
-					if ((this.parent != null) &&
-						(this.IsLayoutSuspended == false))
-					{
-						//	Si le widget a un parent, il faut donner l'occasion au parent de
-						//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
-						//	de notre nouveau mode de docking.
-						
-						this.parent.UpdateChildrenLayout ();
-					}
-				}
+				this.Layout = (LayoutStyles) value;
 			}
 		}
 		
@@ -526,22 +548,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle]			public LayoutFlags		LayoutFlags
-		{
-			get { return this.layout_flags; }
-			set
-			{
-				if (this.layout_flags != value)
-				{
-					this.layout_flags = value;
-					
-					if (this.parent != null)
-					{
-						this.parent.UpdateChildrenLayout ();
-					}
-				}
-			}
-		}
+//		[Bundle]			public LayoutFlags		LayoutFlags
+//		{
+//			get { return this.layout_flags; }
+//			set
+//			{
+//				if (this.layout_flags != value)
+//				{
+//					this.layout_flags = value;
+//					
+//					if (this.parent != null)
+//					{
+//						this.parent.UpdateChildrenLayout ();
+//					}
+//				}
+//			}
+//		}
 		
 		
 		public Layouts.LayoutInfo					LayoutInfo
@@ -1805,6 +1827,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public void ForceLayout()
+		{
+			if (this.parent != null)
+			{
+				this.parent.UpdateChildrenLayout ();
+			}
+		}
+		
 		
 		public void SetClientAngle(int angle)
 		{
@@ -1897,7 +1927,7 @@ namespace Epsitec.Common.Widgets
 					this.internal_state |= InternalState.Visible;
 					this.Invalidate ();
 					
-					if (this.dock != DockStyle.None)
+					if (this.Dock != DockStyle.None)
 					{
 						this.parent.UpdateChildrenLayout ();
 					}
@@ -1914,7 +1944,7 @@ namespace Epsitec.Common.Widgets
 					this.Invalidate ();
 					this.internal_state &= ~ InternalState.Visible;
 					
-					if (this.dock != DockStyle.None)
+					if (this.Dock != DockStyle.None)
 					{
 						this.parent.UpdateChildrenLayout ();
 					}
@@ -4098,13 +4128,6 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
-				if (this.layout_info == null)
-				{
-					//	Le layout n'a pas changé, donc on ne fait rien de plus ici...
-				
-					return;
-				}
-			
 				this.OnLayoutChanged ();
 			}
 			finally
@@ -4126,8 +4149,7 @@ namespace Epsitec.Common.Widgets
 				{
 					Widget child = children[i];
 					
-					if ((child.Dock != DockStyle.None) &&
-						(child.Dock != DockStyle.Layout))
+					if (child.Dock != DockStyle.None)
 					{
 						this.internal_state |= InternalState.ChildrenDocked;
 						break;
@@ -4191,8 +4213,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Widget child = children[i];
 				
-				if ((child.Dock == DockStyle.None) ||
-					(child.Dock == DockStyle.Layout))
+				if (child.Dock == DockStyle.None)
 				{
 					//	Saute les widgets qui ne sont pas "docked", car leur taille n'est pas prise
 					//	en compte dans le calcul des minima/maxima.
@@ -4297,8 +4318,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Widget child = children[i];
 				
-				if ((child.Dock == DockStyle.None) ||
-					(child.Dock == DockStyle.Layout))
+				if (child.Dock == DockStyle.None)
 				{
 					//	Saute les widgets qui ne sont pas "docked", car ils doivent être
 					//	positionnés par d'autres moyens.
@@ -5867,10 +5887,13 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		private AnchorStyles					anchor;
+		
+		private LayoutStyles					layout;
+		
+//		private AnchorStyles					anchor;
 		private Drawing.Margins					anchor_margins;
 		
-		private DockStyle						dock;
+//		private DockStyle						dock;
 		private Drawing.Margins					dock_padding;
 		private Drawing.Margins					dock_margins;
 		
@@ -5880,7 +5903,7 @@ namespace Epsitec.Common.Widgets
 		private WidgetState						widget_state;
 		
 		private Layouts.LayoutInfo				layout_info;
-		private LayoutFlags						layout_flags;
+//		private LayoutFlags						layout_flags;
 		private byte							layout_arg1;
 		private byte							layout_arg2;
 		

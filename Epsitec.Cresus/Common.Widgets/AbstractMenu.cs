@@ -21,6 +21,7 @@ namespace Epsitec.Common.Widgets
 
 			this.type  = type;
 			this.items = new MenuItemCollection(this);
+			this.items.AutoEmbedding = true;
 			this.timer = new Timer();
 			this.timer.TimeElapsed += new Support.EventHandler(this.HandleTimerTimeElapsed);
 		}

@@ -86,8 +86,9 @@ namespace Epsitec.Common.Widgets
 			
 			root.Children.Add (widget);
 			
-			widget.Anchor = AnchorStyles.Left;
 			widget.Bounds = new Rectangle (20, 10, 80, 30);
+			widget.Anchor = AnchorStyles.Left;
+			widget.AnchorMargins = new Drawing.Margins (20, 0, 0, 0);
 			
 			Assertion.Assert (widget.Anchor == AnchorStyles.Left);
 			
@@ -99,13 +100,16 @@ namespace Epsitec.Common.Widgets
 			Assertion.Assert (widget.Left == 20);
 			Assertion.Assert (widget.Width == 80);
 			
-			widget.Anchor = AnchorStyles.Right;
 			widget.Bounds = new Rectangle (20, 10, 80, 30);
+			widget.Anchor = AnchorStyles.Right;
+			widget.AnchorMargins = new Drawing.Margins (0, 20, 0, 0);
 			
 			Assertion.Assert (widget.Anchor == AnchorStyles.Right);
+			Assertion.Assert ("AnchorStyles.Right, widget.Right not OK", widget.Right == 100);
+			Assertion.Assert ("AnchorStyles.Right, widget.Left not OK",  widget.Left  == 20);
 			
 			root.Width = 140;
-			Assertion.Assert ("AnchorStyles.Right, widget.Left not OK", widget.Left == 40);
+			Assertion.Assert ("AnchorStyles.Right, widget.Left not OK",  widget.Left  == 40);
 			Assertion.Assert ("AnchorStyles.Right, widget.Width not OK", widget.Width == 80);
 			
 			root.Width = 120;
@@ -138,8 +142,8 @@ namespace Epsitec.Common.Widgets
 			text.SetClientZoom (3);
 			
 			text.Size     = new Drawing.Size (text.PreferredSize.Width / 2, text.PreferredSize.Height * 2) * 3;
-			text.Location = new Drawing.Point (10, window.ClientSize.Height - 10 - text.Height);
 			text.Anchor   = AnchorStyles.TopLeft;
+			text.AnchorMargins = new Drawing.Margins (10, 0, 10, 0);
 			text.Parent   = window.Root;
 			text.PaintForeground += new PaintEventHandler(this.CheckTextLayoutInfoPaintForeground);
 			

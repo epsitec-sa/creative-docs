@@ -41,6 +41,18 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		
 		
+		public bool								AutoEmbedding
+		{
+			get
+			{
+				return this.auto_embedding;
+			}
+			set
+			{
+				this.auto_embedding = value;
+			}
+		}
+		
 		public virtual void RestoreFromBundle(string items_name, Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
 			Support.ResourceBundle.FieldList item_list = bundle[items_name].AsList;
@@ -218,10 +230,13 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		protected void HandleInsert(Widget item)
 		{
-			Widget embedder = this.host as Widget;
-			
-			if (embedder != null)
+			if (this.auto_embedding)
 			{
+				Widget embedder = this.host as Widget;
+				
+				System.Diagnostics.Debug.Assert (embedder != null);
+				System.Diagnostics.Debug.Assert (item.Parent == null);
+				
 				item.SetEmbedder (embedder);
 			}
 			
@@ -253,5 +268,6 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		private System.Collections.ArrayList	list;
 		private IWidgetCollectionHost			host;
+		private bool							auto_embedding;
 	}
 }
