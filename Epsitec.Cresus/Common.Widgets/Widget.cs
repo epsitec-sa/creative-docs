@@ -751,6 +751,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool									IsActive
+		{
+			get
+			{
+				return this.ActiveState == WidgetState.ActiveYes;
+			}
+		}
+		
 		public bool									IsFocused
 		{
 			get
@@ -1363,6 +1371,20 @@ namespace Epsitec.Common.Widgets
 			get { return this.parent != null; }
 		}
 		
+		public bool									HasSiblings
+		{
+			get
+			{
+				if ((this.parent != null) &&
+					(this.parent.children.Count > 1))
+				{
+					return true;
+				}
+				
+				return false;
+			}
+		}
+		
 		public bool									HasDockedChildren
 		{
 			get { return (this.internal_state & InternalState.ChildrenDocked) != 0; }
@@ -1558,7 +1580,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int									TabIndex
+		[Bundle ("tabi")]	public int				TabIndex
 		{
 			get { return this.tab_index; }
 			set
@@ -1567,9 +1589,15 @@ namespace Epsitec.Common.Widgets
 				{
 					this.tab_index = value;
 					
-					if (this.tab_navigation_mode == TabNavigationMode.Passive)
+					if ((this.tab_navigation_mode == TabNavigationMode.Passive) &&
+						(this.tab_index > 0))
 					{
 						this.tab_navigation_mode = TabNavigationMode.ActivateOnTab;
+					}
+					else if ((this.tab_navigation_mode == TabNavigationMode.ActivateOnTab) &&
+						/**/ (this.tab_index <= 0))
+					{
+						this.tab_navigation_mode = TabNavigationMode.Passive;
 					}
 				}
 			}
