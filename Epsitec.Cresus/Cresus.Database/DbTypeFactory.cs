@@ -20,39 +20,28 @@ namespace Epsitec.Cresus.Database
 				throw new System.ArgumentException (string.Format ("Expected root element named <type>, but found <{0}>.", root.Name));
 			}
 			
-			return null;
-		}
-		
-		public static DbType NewType(string description)
-		{
-			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
-			byte[] utf8_bytes = encoding.GetBytes (description);
+			string type_class = root.GetAttribute ("class");
 			
-			System.IO.MemoryStream   stream = new System.IO.MemoryStream (utf8_bytes, false);
-			System.Xml.XmlTextReader reader = new System.Xml.XmlTextReader (stream);
+			if (type_class == "")
+			{
+				throw new System.ArgumentException (string.Format ("Tag <type> does not define attribute named 'class'."));
+			}
 			
 			DbType type = null;
 			
-			try
+			switch (type_class)
 			{
-				type = DbTypeFactory.NewType (reader);
-			}
-			catch
-			{
-				//	Mange l'exception.
-			}
-			finally
-			{
-				reader.Close ();
-				stream.Close ();
+				case "base":	type = new DbType (root);		break;
+				case "num":		type = new DbTypeNum (root);	break;
+				case "str":		type = new DbTypeString (root);	break;
+				case "enum":	type = new DbTypeEnum (root);	break;
+				
+				default:
+					throw new System.ArgumentException (string.Format ("Unsupported value for <type class='{0}'>.", type_class));
+					
 			}
 			
 			return type;
-		}
-		
-		public static DbType NewType(System.Xml.XmlTextReader reader)
-		{
-			return null;
 		}
 	}
 }

@@ -9,20 +9,38 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public class DbTypeString : DbType
 	{
-		public DbTypeString(int length) : base (DbSimpleType.String)
+		public DbTypeString(int length) : this (length, true)
 		{
-			this.length = length;
 		}
 		
-		public DbTypeString(int length, params string[] attributes) : base (DbSimpleType.String, attributes)
+		public DbTypeString(int length, bool is_fixed_length) : base (DbSimpleType.String)
 		{
 			this.length = length;
+			this.is_fixed_length = is_fixed_length;
+		}
+		
+		public DbTypeString(int length, params string[] attributes) : this (length, true, attributes)
+		{
+		}
+		
+		public DbTypeString(int length, bool is_fixed_length, params string[] attributes) : base (DbSimpleType.String, attributes)
+		{
+			this.length = length;
+			this.is_fixed_length = is_fixed_length;
 		}
 		
 		
-		public int							Length
+		public int						Length
 		{
 			get { return this.length; }
+		}
+		
+		public bool						IsFixedLength
+		{
+			get
+			{
+				return this.is_fixed_length;
+			}
 		}
 		
 		
@@ -31,11 +49,13 @@ namespace Epsitec.Cresus.Database
 			DbTypeString type = base.Clone () as DbTypeString;
 			
 			type.length = this.length;
+			type.is_fixed_length = this.is_fixed_length;
 			
 			return type;
 		}
 		
 		
-		protected int						length;
+		protected int					length;
+		protected bool					is_fixed_length;
 	}
 }

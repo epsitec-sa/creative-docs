@@ -1296,6 +1296,115 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 
+		[Test] public void CheckAdornerPaneBook()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Size(500, 300);
+			window.Text = "CheckAdornerPaneBook";
+
+			PaneBook book = new PaneBook();
+			book.Location = new Point(10, 10);
+			book.Size = new Size(480, 280);
+			book.PaneBookStyle = PaneBookStyle.LeftRight;
+			book.PaneBehaviour = PaneBookBehaviour.FollowMe;
+			//book.PaneBehaviour = PaneBookBehaviour.Draft;
+			book.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			book.Parent = window.Root;
+
+			PanePage p1 = new PanePage();
+			p1.PaneRelativeSize = 20;
+			p1.PaneMinSize = 50;
+			p1.PaneElasticity = 0;
+			book.Items.Add(p1);
+
+			Button button1 = new Button();
+			button1.Location = new Point(10, 10);
+			button1.Width = p1.Width-20;
+			button1.Height = p1.Height-20;
+			button1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			button1.Text = "P1";
+			p1.Children.Add(button1);
+
+			PanePage p2 = new PanePage();
+			p2.PaneRelativeSize = 20;
+			p2.PaneMinSize = 50;
+			p2.PaneMaxSize = 200;
+			p2.PaneElasticity = 0;
+			book.Items.Add(p2);
+
+			PanePage p3 = new PanePage();
+			p3.PaneRelativeSize = 20;
+			p3.PaneMinSize = 50;
+			p3.PaneElasticity = 1;
+			book.Items.Add(p3);
+
+			Button button3 = new Button();
+#if true
+			button3.Dock = DockStyle.Fill;
+			p3.DockMargins = new Margins (10, 10, 10, 10);
+#else
+			button3.Location = new Point(10, 10);
+			button3.Width = p3.Width-20;
+			button3.Height = p3.Height-20;
+			button3.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+#endif
+			button3.Text = "P3";
+			p3.Children.Add(button3);
+
+			PanePage p4 = new PanePage();
+			p4.PaneRelativeSize = 40;
+			p4.PaneMinSize = 50;
+			p4.PaneElasticity = 1;
+			book.Items.Add(p4);
+
+			Button button4 = new Button();
+			button4.Location = new Point(10, 10);
+			button4.Width = p4.Width-20;
+			button4.Height = p4.Height-20;
+			button4.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			button4.Text = "P4";
+			p4.Children.Add(button4);
+
+			// -----
+			PaneBook bookv = new PaneBook();
+			bookv.Location = new Point(0, 0);
+			bookv.Size = p2.Size;
+			bookv.PaneBookStyle = PaneBookStyle.BottomTop;
+			bookv.PaneBehaviour = PaneBookBehaviour.FollowMe;
+			//bookv.PaneBehaviour = PaneBookBehaviour.Draft;
+			bookv.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			p2.Children.Add(bookv);
+
+			PanePage v1 = new PanePage();
+			v1.PaneRelativeSize = 30;
+			v1.PaneMinSize = 50;
+			bookv.Items.Add(v1);
+
+			Button buttonv1 = new Button();
+			buttonv1.Location = new Point(10, 10);
+			buttonv1.Width = v1.Width-20;
+			buttonv1.Height = v1.Height-20;
+			buttonv1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			buttonv1.Text = "P2.1";
+			v1.Children.Add(buttonv1);
+
+			PanePage v2 = new PanePage();
+			v2.PaneRelativeSize = 70;
+			v2.PaneMinSize = 50;
+			bookv.Items.Add(v2);
+
+			Button buttonv2 = new Button();
+			buttonv2.Location = new Point(10, 10);
+			buttonv2.Width = v2.Width-20;
+			buttonv2.Height = v2.Height-20;
+			buttonv2.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			buttonv2.Text = "P2.2";
+			v2.Children.Add(buttonv2);
+
+			window.Show();
+		}
+
 
 		protected TabBook	tabBook;
 	}

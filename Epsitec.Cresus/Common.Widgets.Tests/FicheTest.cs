@@ -405,14 +405,14 @@ namespace Epsitec.Common.Tests
 			
 			this.pane = new Pane();
 			this.pane.PaneStyle = PaneStyle.LeftRight;
-			this.pane.DimensionChanged += new EventHandler(this.pane_DimensionChanged);
+			this.pane.SizeChanged += new EventHandler(this.pane_SizeChanged);
 			this.pane.Parent = root;
 			this.leftPane  = this.pane.RetPane(0);
 			this.rightPane = this.pane.RetPane(1);
 
 			this.subPane = new Pane();
 			this.subPane.PaneStyle = PaneStyle.BottomTop;
-			this.subPane.DimensionChanged += new EventHandler(this.pane_DimensionChanged);
+			this.subPane.SizeChanged += new EventHandler(this.pane_SizeChanged);
 			this.subPane.Parent = this.leftPane;
 			this.topPane    = this.subPane.RetPane(1);
 			this.bottomPane = this.subPane.RetPane(0);
@@ -533,17 +533,17 @@ namespace Epsitec.Common.Tests
 			this.ResizeLayout();
 		}
 
-		private void pane_DimensionChanged(object sender)
+		private void pane_SizeChanged(object sender)
 		{
 			Pane pane = (Pane)sender;
 
 			if ( pane == this.pane )
 			{
-				this.listWidth = this.pane.RetDimension(0);
+				this.listWidth = this.pane.RetSize(0);
 			}
 			if ( pane == this.subPane )
 			{
-				this.critHeight = this.subPane.RetDimension(1);
+				this.critHeight = this.subPane.RetSize(1);
 			}
 			this.ResizeLayout();
 		}
@@ -565,16 +565,16 @@ namespace Epsitec.Common.Tests
 			this.pane.Location = new Point(0, 0);
 			this.pane.Size = new Size(windowDim.Width, windowDim.Height);
 			this.pane.PaneBehaviour = PaneBehaviour.Draft;
-			this.pane.SetHideDimension(0, 100);
-			this.pane.SetMinDimension(1, 300);
-			this.pane.SetDimension(0, this.listWidth);
+			this.pane.SetHideSize(0, 100);
+			this.pane.SetMinSize(1, 300);
+			this.pane.SetSize(0, this.listWidth);
 
 			this.subPane.Location = new Point(0, 0);
 			this.subPane.Size = new Size(this.leftPane.Width, this.leftPane.Height);
 			this.subPane.FlipFlop = true;
-			this.subPane.SetMinDimension(1, 80);
-			this.subPane.SetMaxDimension(1, 80+this.listCritHeight+10);
-			this.subPane.SetDimension(1, this.critHeight);
+			this.subPane.SetMinSize(1, 80);
+			this.subPane.SetMaxSize(1, 80+this.listCritHeight+10);
+			this.subPane.SetSize(1, this.critHeight);
 
 			this.title.Location = new Point(10, this.topPane.Height-50);
 			this.title.Size = new Size(this.topPane.Width, 50);
