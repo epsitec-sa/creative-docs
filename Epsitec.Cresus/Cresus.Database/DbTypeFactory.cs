@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Database
 			
 			string type_class = xml.GetAttribute ("class");
 			
-			if (type_class == "")
+			if (type_class.Length == 0)
 			{
 				throw new System.ArgumentException (string.Format ("Tag <type> does not define attribute named 'class'."));
 			}

@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Database
 			//	accumulées à la fin; ça évite que la composition de "a" avec "" ne
 			//	donne "a_" en fin de compte (le résultat sera "a", simplement).
 			
-			while (num > 0 && (list[num-1] == ""))
+			while (num > 0 && (list[num-1].Length == 0))
 			{
 				num--;
 			}
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Database
 		public static DbElementCat ParseElementCategory(string text)
 		{
 			if ((text == null) ||
-				(text == ""))
+				(text.Length == 0))
 			{
 				return DbElementCat.Unknown;
 			}

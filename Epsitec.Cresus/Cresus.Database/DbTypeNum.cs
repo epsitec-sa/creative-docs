@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Database
 			string arg_max    = xml.GetAttribute ("max");
 			string arg_type   = xml.GetAttribute ("type");
 			
-			if (arg_type != "")
+			if (arg_type.Length > 0)
 			{
 				//	Le type numérique correspond à un type brut natif.
 				

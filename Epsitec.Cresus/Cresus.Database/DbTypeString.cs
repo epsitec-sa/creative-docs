@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Database
 			string arg_length = xml.GetAttribute ("length");
 			string arg_fixed  = xml.GetAttribute ("fixed");
 			
-			if (arg_length == "")
+			if (arg_length.Length == 0)
 			{
 				throw new System.ArgumentException ("No length specification found.");
 			}

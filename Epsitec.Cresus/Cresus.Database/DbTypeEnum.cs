@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Database
 		{
 			string arg_nmlen = xml.GetAttribute ("nmlen");
 			
-			if (arg_nmlen != "")
+			if (arg_nmlen.Length > 0)
 			{
 				this.max_name_length = System.Int32.Parse (arg_nmlen, System.Globalization.CultureInfo.InvariantCulture);
 			}
