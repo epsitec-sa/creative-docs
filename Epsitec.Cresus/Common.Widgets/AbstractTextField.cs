@@ -737,7 +737,7 @@ namespace Epsitec.Common.Widgets
 			
 			pos -= this.scrollOffset;
 			
-			if (this.isCombo)
+			if ( this.isCombo )
 			{
 				adorner.PaintTextFieldBackground(graphics, rect, state, dir, this.textStyle, false);
 			}
@@ -752,6 +752,11 @@ namespace Epsitec.Common.Widgets
 			rClip = this.MapClientToRoot (rClip);
 			graphics.SetClippingRectangle(rClip);
 
+			if ( rClip.Height < 17 )	//	TODO: remplacer cette constante par qqch de plus adéquat...
+			{
+				pos.Y += (17-rClip.Height)/2;  // remonte le texte si la hauteur est très petite
+			}
+
 			if ( this.IsFocused )
 			{
 				bool visibleCursor = false;
@@ -759,7 +764,7 @@ namespace Epsitec.Common.Widgets
 				int from = System.Math.Min(this.cursorFrom, this.cursorTo);
 				int to   = System.Math.Max(this.cursorFrom, this.cursorTo);
 				
-				if (this.isCombo && this.isReadOnly)
+				if ( this.isCombo && this.isReadOnly )
 				{
 					Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
 					rects[0] = rect;
