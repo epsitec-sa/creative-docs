@@ -147,6 +147,7 @@ namespace Epsitec.Common.Document
 			int dy = (int) ((this.document.Size.Height/10)*(dpi/25.4));
 			gfx.SetPixmapSize(dx, dy);
 			gfx.SolidRenderer.ClearARGB(1,1,1,1);
+			gfx.Rasterizer.Gamma = 0.0;
 
 			//?gfx.AddRectangle(100, 100, dx-200, dy-200);
 			//?gfx.RenderSolid(Color.FromRGB(0,0,1));

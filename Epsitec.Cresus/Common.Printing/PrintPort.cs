@@ -365,9 +365,13 @@ namespace Epsitec.Common.Printing
 				System.Diagnostics.Debug.Assert (glyph.Length == n);
 				System.Diagnostics.Debug.Assert (glyph_n.Length == n);
 				
+				Drawing.Transform ft = font.SyntheticTransform;
+				
+				ft.Scale (size);
+				
 				for (int i = 0; i < n; i++)
 				{
-					path.Append (font, glyph[i], x, y, size);
+					path.Append (font, glyph[i], ft.XX, ft.XY, ft.YX, ft.YY, ft.TX + x, ft.TY + y);
 					
 					x += (glyph_x[i]-ox) * size;
 					ox = glyph_x[i];

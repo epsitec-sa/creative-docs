@@ -219,8 +219,8 @@ namespace Epsitec.Common.Dialogs
 			
 			public Printing.PrintEngineStatus PrintPage(Printing.PrintPort port)
 			{
-				Drawing.Font font = Drawing.Font.GetFont ("Arial", "Regular");
-				//?Drawing.Font font = Drawing.Font.GetFont ("Tahoma", "Regular");
+				//?Drawing.Font font = Drawing.Font.GetFont ("Arial", "Regular");
+				Drawing.Font font = Drawing.Font.GetFont ("Tahoma", "Italic");
 				
 				port.LineWidth = 0.1;
 				port.Color     = Drawing.Color.FromRGB (0, 0, 0);
