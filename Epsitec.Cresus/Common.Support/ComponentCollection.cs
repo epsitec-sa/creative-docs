@@ -1,3 +1,6 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 08/12/2003
+
 namespace Epsitec.Common.Support
 {
 	/// <summary>
@@ -49,6 +52,7 @@ namespace Epsitec.Common.Support
 			this.list.RemoveAt (index);
 			this.container.NotifyComponentRemoval (this, component);
 		}
+		
 		
 		#region ICollection Members
 		public bool IsSynchronized
