@@ -356,10 +356,17 @@ namespace Epsitec.Common.Widgets
 		public bool IsSelectionBold(TextLayout.Context context)
 		{
 			// Indique si les caractères sélectionnés sont gras.
-			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
-			if ( block == null )  return false;
-			int i = block.font.StyleName.IndexOf("Bold");
-			return ( i >= 0 );
+			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			{
+				return this.IsPrepared(context, "bold");
+			}
+			else
+			{
+				JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+				if ( block == null )  return false;
+				int i = block.font.StyleName.IndexOf("Bold");
+				return ( i >= 0 );
+			}
 		}
 
 		public void SetSelectionBold(TextLayout.Context context, bool bold)
@@ -372,11 +379,18 @@ namespace Epsitec.Common.Widgets
 		public bool IsSelectionItalic(TextLayout.Context context)
 		{
 			// Indique si les caractères sélectionnés sont italiques.
-			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
-			if ( block == null )  return false;
-			int i = block.font.StyleName.IndexOf("Italic");
-			int j = block.font.StyleName.IndexOf("Oblique");
-			return ( i >= 0 || j >= 0 );
+			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			{
+				return this.IsPrepared(context, "italic");
+			}
+			else
+			{
+				JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+				if ( block == null )  return false;
+				int i = block.font.StyleName.IndexOf("Italic");
+				int j = block.font.StyleName.IndexOf("Oblique");
+				return ( i >= 0 || j >= 0 );
+			}
 		}
 
 		public void SetSelectionItalic(TextLayout.Context context, bool italic)
@@ -389,9 +403,16 @@ namespace Epsitec.Common.Widgets
 		public bool IsSelectionUnderlined(TextLayout.Context context)
 		{
 			// Indique si les caractères sélectionnés sont soulignés.
-			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
-			if ( block == null )  return false;
-			return block.underline;
+			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			{
+				return this.IsPrepared(context, "underline");
+			}
+			else
+			{
+				JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+				if ( block == null )  return false;
+				return block.underline;
+			}
 		}
 
 		public void SetSelectionUnderlined(TextLayout.Context context, bool underline)
@@ -404,9 +425,16 @@ namespace Epsitec.Common.Widgets
 		public string GetSelectionFontName(TextLayout.Context context)
 		{
 			// Indique le nom de la fonte des caractères sélectionnés.
-			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
-			if ( block == null )  return "";
-			return block.font.FaceName;
+			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			{
+				return this.SearchPrepared(context, "face");
+			}
+			else
+			{
+				JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+				if ( block == null )  return "";
+				return block.font.FaceName;
+			}
 		}
 
 		public void SetSelectionFontName(TextLayout.Context context, string name)
@@ -418,9 +446,18 @@ namespace Epsitec.Common.Widgets
 		public double GetSelectionFontSize(TextLayout.Context context)
 		{
 			// Indique la taille des caractères sélectionnés.
-			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
-			if ( block == null )  return Drawing.Font.DefaultFontSize;
-			return block.fontSize;
+			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			{
+				string s = this.SearchPrepared(context, "size");
+				if ( s == "" )  return 0.0;
+				return System.Double.Parse(s);
+			}
+			else
+			{
+				JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+				if ( block == null )  return Drawing.Font.DefaultFontSize;
+				return block.fontSize;
+			}
 		}
 
 		public void SetSelectionFontSize(TextLayout.Context context, double size)
@@ -432,9 +469,17 @@ namespace Epsitec.Common.Widgets
 		public Drawing.Color GetSelectionFontColor(TextLayout.Context context)
 		{
 			// Indique la couleur des caractères sélectionnés.
-			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
-			if ( block == null )  return Drawing.Color.Empty;
-			return block.fontColor;
+			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			{
+				string s = this.SearchPrepared(context, "color");
+				return Drawing.Color.FromName(s);
+			}
+			else
+			{
+				JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+				if ( block == null )  return Drawing.Color.Empty;
+				return block.fontColor;
+			}
 		}
 
 		public void SetSelectionFontColor(TextLayout.Context context, Drawing.Color color)
@@ -465,21 +510,77 @@ namespace Epsitec.Common.Widgets
 			return found;
 		}
 
+		protected bool IsPrepared(TextLayout.Context context, string key)
+		{
+			// Cherche si la préparation contient une commande donnée.
+			if ( context.PrepareOffset == -1 )  return false;
+			return (this.SearchPrepared(context, key) == "yes");
+		}
+
+		protected string SearchPrepared(TextLayout.Context context, string key)
+		{
+			// Cherche si la préparation contient une commande donnée.
+			if ( context.PrepareOffset == -1 )  return "";
+
+			System.Collections.Hashtable parameters;
+			string text = this.Text;
+			string found = "";  // rien encore trouvé
+			int from = context.PrepareOffset;
+			int to   = context.PrepareOffset + context.PrepareLength1;
+			while ( from < to )
+			{
+				Tag tag = TextLayout.ParseTag(text, ref from, out parameters);
+				if ( tag == Tag.Put )
+				{
+					if ( parameters.ContainsKey(key) )  found = (string)parameters[key];
+				}
+			}
+			return found;  // retourne la *dernière* préparation trouvée
+		}
+
 		protected void PutSelect(TextLayout.Context context, string cmd)
 		{
 			// Modifie les caractères sélectionnés avec une commande <put..>..</put>.
-			int cursorFrom = System.Math.Min(context.CursorFrom, context.CursorTo);
-			int cursorTo   = System.Math.Max(context.CursorFrom, context.CursorTo);
-			if ( cursorFrom == cursorTo )  return;
+			string begin = "<put " + cmd + ">";
+			string end   = "</put>";
 
-			int from = this.FindOffsetFromIndex(cursorFrom, false);
-			int to   = this.FindOffsetFromIndex(cursorTo, true);
+			if ( context.CursorFrom == context.CursorTo )  // prépare l'insertion ?
+			{
+				int cursor1 = this.FindOffsetFromIndex(context.CursorFrom, true);
+				int cursor2 = cursor1;
+				if ( context.PrepareOffset == -1 )  // première préparation ?
+				{
+					context.PrepareOffset  = cursor1;
+					context.PrepareLength1 = 0;
+					context.PrepareLength2 = 0;
+				}
+				else	// ajoute à une préparation existante ?
+				{
+					cursor1 = context.PrepareOffset + context.PrepareLength1;
+					cursor2 = cursor1 + context.PrepareLength2;
+				}
+				string text = this.Text;
+				text = text.Insert(cursor2, end);
+				text = text.Insert(cursor1, begin);
+				context.PrepareLength1 += begin.Length;
+				context.PrepareLength2 += end.Length;
+				this.Text = text;
+				// Il ne faut surtout pas faire de this.Simplify() ici !
+			}
+			else	// modifie les caractères sélectionnés ?
+			{
+				int cursorFrom = System.Math.Min(context.CursorFrom, context.CursorTo);
+				int cursorTo   = System.Math.Max(context.CursorFrom, context.CursorTo);
 
-			string text = this.Text;
-			text = text.Insert(to, "</put>");
-			text = text.Insert(from, "<put " + cmd + ">");
-			this.Text = text;
-			this.Simplify();
+				int from = this.FindOffsetFromIndex(cursorFrom, false);
+				int to   = this.FindOffsetFromIndex(cursorTo, true);
+
+				string text = this.Text;
+				text = text.Insert(to, end);
+				text = text.Insert(from, begin);
+				this.Text = text;
+				this.Simplify();
+			}
 		}
 
 
@@ -524,12 +625,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected void DeleteText(int from, int to)
+		protected int DeleteText(int from, int to)
 		{
 			// Supprime des caractères, tout en conservant les commandes.
+			// Retourne l'index où insérer les caractères remplaçants.
 			System.Collections.Hashtable parameters;
 			string text = this.Text;
 
+			int ins = -1;
 			while ( from < to )
 			{
 				int begin = from;
@@ -541,10 +644,12 @@ namespace Epsitec.Common.Widgets
 					text = text.Remove(begin, from-begin);
 					to -= from-begin;
 					from = begin;
+					if ( ins == -1 )  ins = begin;
 				}
 			}
 
 			this.Text = text;
+			return (ins == -1) ? to : ins;
 		}
 
 		
@@ -576,23 +681,47 @@ namespace Epsitec.Common.Widgets
 			int from = System.Math.Min(cursorFrom, cursorTo);
 			int to   = System.Math.Max(cursorFrom, cursorTo);
 			
-			if ( from < to )
+			if ( from < to )  // caractères sélectionnés à supprimer ?
 			{
-				this.DeleteText(from, to);
+				int cursor = this.DeleteText(from, to);
 				from = this.FindIndexFromOffset(from);
 				context.CursorTo   = from;
 				context.CursorFrom = from;
+
+				if ( this.TextLength+ins.Length > context.MaxChar )  return false;
+
+				string text = this.Text;
+				text = text.Insert(cursor, ins);
+				this.Text = text;
+				context.CursorTo    = this.FindIndexFromOffset(cursor + ins.Length);
+				context.CursorFrom  = context.CursorTo;
+				context.CursorAfter = false;
+
+				// Simplifie seulement après avoir supprimé la sélection puis inséré
+				// le caractère, afin qu'il utilise les mêmes attributs typographiques.
 				this.Simplify();
 			}
+			else
+			{
+				if ( this.TextLength+ins.Length > context.MaxChar )  return false;
 			
-			if ( this.TextLength+ins.Length > context.MaxChar )  return false;
-			
-			string text = this.Text;
-			int cursor = this.FindOffsetFromIndex(context.CursorTo, context.CursorAfter);
-			text = text.Insert(cursor, ins);
-			this.Text = text;
-			context.CursorTo   = this.FindIndexFromOffset(cursor + ins.Length);
-			context.CursorFrom = context.CursorTo;
+				string text = this.Text;
+				int cursor = this.FindOffsetFromIndex(context.CursorTo, context.CursorAfter);
+				bool prepare = false;
+				if ( context.PrepareOffset != -1 )  // a-t-on préparé des attributs typographiques ?
+				{
+					cursor = context.PrepareOffset + context.PrepareLength1;
+					prepare = true;
+				}
+				text = text.Insert(cursor, ins);
+				this.Text = text;
+				context.CursorTo    = this.FindIndexFromOffset(cursor + ins.Length);
+				context.CursorFrom  = context.CursorTo;
+				context.CursorAfter = false;
+
+				if ( prepare )  this.Simplify();  // supprime les préparations <put...>
+			}
+
 			this.MemoryCursorPosX(context);
 			return true;
 		}
@@ -1376,7 +1505,8 @@ namespace Epsitec.Common.Widgets
 					}
 					if ( block.italic )  // incline le curseur ?
 					{
-						double f = System.Math.Sin(Drawing.Font.DefaultObliqueAngle*System.Math.PI/180.0);
+						double angle = (90-block.font.CaretSlope)*System.Math.PI/180.0;
+						double f = System.Math.Sin(angle);
 						p2.X += line.ascender*f;
 						p1.X += line.descender*f;
 					}
@@ -3152,12 +3282,43 @@ namespace Epsitec.Common.Widgets
 
 		public class Context
 		{
-			public int						CursorFrom  = 0;
-			public int						CursorTo    = 0;
-			public bool						CursorAfter = false;
-			public int						CursorLine  = 0;
-			public double					CursorPosX  = 0;
-			public int						MaxChar     = 1000;
+			public int CursorFrom
+			{
+				get
+				{
+					return this.cursorFrom;
+				}
+
+				set
+				{
+					this.cursorFrom = value;
+					this.PrepareOffset = -1;  // annule la préparation pour l'insertion
+				}
+			}
+
+			public int CursorTo
+			{
+				get
+				{
+					return this.cursorTo;
+				}
+
+				set
+				{
+					this.cursorTo = value;
+					this.PrepareOffset = -1;  // annule la préparation pour l'insertion
+				}
+			}
+
+			protected int					cursorFrom     = 0;
+			protected int					cursorTo       = 0;
+			public bool						CursorAfter    = false;
+			public int						CursorLine     = 0;
+			public double					CursorPosX     = 0;
+			public int						PrepareOffset  = -1;
+			public int						PrepareLength1 = 0;
+			public int						PrepareLength2 = 0;
+			public int						MaxChar        = 1000;
 		}
 		
 		public event AnchorEventHandler			Anchor;
