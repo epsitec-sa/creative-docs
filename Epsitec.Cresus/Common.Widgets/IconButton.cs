@@ -42,7 +42,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
+
 		[ Bundle("icon") ] public string IconName
 		{
 			get
@@ -59,14 +59,17 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
+
+
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			return new Drawing.Rectangle(0, 0, this.Client.Width+1, this.Client.Height);
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			rect.Inflate(adorner.GeometryToolShapeBounds);
+			return rect;
 		}
 
-		
+
 		protected string				iconName;
 	}
 }
