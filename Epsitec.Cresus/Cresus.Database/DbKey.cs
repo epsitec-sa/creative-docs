@@ -59,4 +59,11 @@ namespace Epsitec.Cresus.Database
 		protected int					revision;
 		protected int					raw_status;
 	}
+	
+	public enum DbKeyMatchMode
+	{
+		Id,								//	ne compare que l'identificateur (ID)
+		LiveId,							//	compare l'identificateur, révision=0
+		ExactRevisionId					//	compare l'identificateur et la révision
+	}
 }

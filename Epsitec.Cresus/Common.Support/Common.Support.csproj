@@ -186,6 +186,16 @@
                     RelPath = "TODO.txt"
                     BuildAction = "Content"
                 />
+                <File
+                    RelPath = "Data\Converter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\Copier.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
             </Include>
         </Files>
     </CSHARP>
