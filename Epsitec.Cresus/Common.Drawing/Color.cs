@@ -69,6 +69,11 @@ namespace Epsitec.Common.Drawing
 			get { return this.is_empty; }
 		}
 		
+		public bool						IsValid
+		{
+			get { return !this.is_empty; }
+		}
+		
 		public bool						IsTransparent
 		{
 			get { return this.a == 0.0; }

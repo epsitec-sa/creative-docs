@@ -19,9 +19,9 @@ namespace Epsitec.Common.Drawing
 			Assertion.Assert (c1 == c2);
 			Assertion.Assert (c1 == c3);
 			Assertion.Assert (c1 != c4);
-			Assertion.Assert (c1.IsEmpty == false);
+			Assertion.Assert (c1.IsValid);
 			Assertion.Assert (c1.IsInRange == true);
-			Assertion.Assert (c4.IsEmpty == false);
+			Assertion.Assert (c4.IsValid);
 			Assertion.Assert (c4.IsInRange == true);
 			Assertion.Assert (c5.IsEmpty);
 			Assertion.AssertEquals ("Empty test failed", c5, Color.Empty);
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Drawing
 		{
 			Color color = Color.FromARGB (1.8, 0.5, -0.1, 10);
 			
-			Assertion.Assert (color.IsEmpty == false);
+			Assertion.Assert (color.IsValid);
 			Assertion.Assert (color.IsInRange == false);
 			
 			color.ClipToRange ();
