@@ -103,6 +103,22 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public bool								HasPendingMultipleCommands
+		{
+			get
+			{
+				return this.pending_commands.Peek () != null;
+			}
+		}
+		
+		public string							TopPendingMulitpleCommands
+		{
+			get
+			{
+				return this.pending_commands.Peek () as string;
+			}
+		}
+		
 		
 		public void Dispatch(string command, object source)
 		{
@@ -117,23 +133,53 @@ namespace Epsitec.Common.Support
 			//	succès; en cas d'interruption, il faudrait pouvoir ne pas exécuter les commandes
 			//	mises en attente, mais les supprimer.
 			
-			if (command.IndexOf ("&&") >= 0)
+			if (command.IndexOf ("->") >= 0)
 			{
-				string[] commands = System.Utilities.Split (command, "&&");
+				string[] commands = System.Utilities.Split (command, "->");
 				
-				for (int i = 0; i < commands.Length; i++)
+				System.Diagnostics.Debug.Assert (commands.Length > 0);
+				
+				while (commands.Length > 1)
 				{
-					this.Dispatch (commands[i].Trim (), source);
+					command = string.Join ("->", commands, 1, commands.Length-1);
 					
-					if (this.aborted)
+					try
 					{
-						break;
+						this.pending_commands.Push (command);
+						this.DispatchSingleCommand (commands[0], source);
 					}
+					finally
+					{
+						command = this.pending_commands.Pop () as string;
+					}
+					
+					//	Si la commande a été annulée, on s'arrête immédiatement.
+					
+					if (command == null)
+					{
+						return;
+					}
+					
+					//	Il reste des commandes inexploitées. On va donc passer à la suite.
+					
+					commands = System.Utilities.Split (command, "->");
 				}
-				
-				return;
 			}
 			
+			try
+			{
+				this.pending_commands.Push (null);
+				this.DispatchSingleCommand (command, source);
+			}
+			finally
+			{
+				this.pending_commands.Pop ();
+			}
+		}
+		
+		
+		protected void DispatchSingleCommand(string command, object source)
+		{
 			//	Transmet la commande à ceux qui sont intéressés
 			
 			string   command_name     = CommandDispatcher.ExtractCommandName (command);
@@ -161,6 +207,12 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		
+		public void CancelTopPendingMultipleCommands()
+		{
+			this.pending_commands.Pop ();
+			this.pending_commands.Push (null);
+		}
 		
 		public void SynchroniseCommandStates()
 		{
@@ -312,7 +364,7 @@ namespace Epsitec.Common.Support
 			int pos = command.IndexOf ('(');
 			if (pos < 0)
 			{
-				return command;
+				return command.Trim ();
 			}
 			
 			return command.Substring (0, pos).Trim ();
@@ -679,9 +731,10 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		protected System.Collections.Hashtable	event_handlers = new System.Collections.Hashtable ();
-		protected System.Collections.ArrayList	command_states = new System.Collections.ArrayList ();
+		protected System.Collections.Hashtable	event_handlers    = new System.Collections.Hashtable ();
+		protected System.Collections.ArrayList	command_states    = new System.Collections.ArrayList ();
 		protected System.Collections.ArrayList	validation_states = new System.Collections.ArrayList ();
+		protected System.Collections.Stack		pending_commands  = new System.Collections.Stack ();
 		protected string						dispatcher_name;
 		protected ValidationRule				validation_rules;
 		protected bool							aborted;

@@ -44,6 +44,24 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("ba/bx/bb/bc/bd/", CommandDispatcherTest.buffer.ToString ());
 		}
 		
+		[Test] public void CheckDispatchMultipleCommands()
+		{
+			CommandDispatcher  dispatcher = new CommandDispatcher ();
+			BaseTestController controller = new BaseTestController ();
+			
+			dispatcher.RegisterController (controller);
+			
+			CommandDispatcherTest.buffer.Length = 0;
+			
+			//	Vérifie que le dispatch se fait correctement.
+			
+			dispatcher.Dispatch ("private-base-a -> protected-base-b -> public-base-virtual-c", null);
+			dispatcher.Dispatch ("private-base-a -> cancel-multiple", null);
+			dispatcher.Dispatch ("private-base-a -> cancel-multiple -> protected-base-b -> public-base-virtual-c", null);
+			
+			Assert.AreEqual ("ba/bb/bc/ba/cm/ba/CM/", CommandDispatcherTest.buffer.ToString ());
+		}
+		
 		[Test] public void CheckDispatchDerived()
 		{
 			CommandDispatcher     dispatcher = new CommandDispatcher ();
@@ -217,6 +235,19 @@ namespace Epsitec.Common.Support
 			[Command ("public-base-d")] public void PublicD(CommandDispatcher dispatcher, CommandEventArgs e)
 			{
 				CommandDispatcherTest.buffer.Append ("bd/");
+			}
+			
+			[Command ("cancel-multiple")] public void CancelMultiple(CommandDispatcher dispatcher, CommandEventArgs e)
+			{
+				if (dispatcher.HasPendingMultipleCommands)
+				{
+					CommandDispatcherTest.buffer.Append ("CM/");
+					dispatcher.CancelTopPendingMultipleCommands ();
+				}
+				else
+				{
+					CommandDispatcherTest.buffer.Append ("cm/");
+				}
 			}
 			
 			public virtual void PublicE()

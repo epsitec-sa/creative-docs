@@ -1,3 +1,6 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Denis DUMOULIN
+
 namespace System
 {
 	/// <summary>
@@ -287,6 +290,11 @@ namespace System
 			//
 			//	Si un séparateur se trouve entre guillemets ou dans un tag, il est sauté.
 			
+			if (text == null)
+			{
+				return new string[0];
+			}
+			
 			if (text.IndexOf (sep) < 0)
 			{
 				//	Optimisation pour le cas le plus fréquent : il n'y a qu'un seul élément
@@ -372,7 +380,13 @@ namespace System
 			//	Comme ci-dessus, avec une chaîne de caractères comme séparateur
 			//	Tous texte entre guillemets ou dans un tag est sauté.
 
-			if (separator.Length == 0)
+			if (text == null)
+			{
+				return new string[0];
+			}
+			
+			if ((separator == null) ||
+				(separator.Length == 0))
 			{
 				throw new System.ArgumentException (string.Format ("Empty separator for split: {0}.", text));
 			}
