@@ -135,11 +135,12 @@ namespace Epsitec.Common.Drawing
 				string   face   = faces[i].Name;
 				string[] styles = faces[i].StyleNames;
 				
-				Font font_regular = faces[i].GetFont (false, false, 12.0);
+				Font font_regular  = faces[i].GetFont (false, false, 12.0);
+				Font fallback_font = Font.GetFontFallback (face);
 				
 				if (font_regular == null)
 				{
-					System.Console.WriteLine ("{0}: {1}", face, string.Join (", ", styles));
+					System.Console.WriteLine ("{0}: {1} --> {2}", face, string.Join (", ", styles), fallback_font.FullName);
 					
 					Font[] fonts = faces[i].GetFonts ();
 					
@@ -147,6 +148,8 @@ namespace Epsitec.Common.Drawing
 					{
 						Assert.IsFalse (font.IsStyleRegular);
 					}
+					
+					
 				}
 			}
 		}

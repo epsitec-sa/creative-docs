@@ -18,11 +18,7 @@ namespace Epsitec.Common.Widgets
 			this.fieldFontName = new TextFieldCombo(this);
 			this.fieldFontName.AutoFocus = false;
 			this.fieldFontName.IsReadOnly = true;
-			this.fieldFontName.Items.Add("Par défaut...");
-			this.fieldFontName.Items.Add("Tahoma");
-			this.fieldFontName.Items.Add("Arial");
-			this.fieldFontName.Items.Add("Courier New");
-			this.fieldFontName.Items.Add("Times New Roman");
+			this.UpdateFieldFontName();
 			this.fieldFontName.SelectedIndexChanged += new Support.EventHandler(this.HandleFieldFontNameChanged);
 			ToolTip.Default.SetToolTip(this.fieldFontName, "Police de caractère");
 
@@ -194,6 +190,24 @@ namespace Epsitec.Common.Widgets
 					this.tabCapability = value;
 					this.UpdateGeometry();
 					this.Invalidate();
+				}
+			}
+		}
+
+		public bool								AllFonts
+		{
+			// Indique si la règle permet l'accès à toutes les fontes.
+			get
+			{
+				return this.allFonts;
+			}
+
+			set
+			{
+				if ( this.allFonts != value )
+				{
+					this.allFonts = value;
+					this.UpdateFieldFontName();
 				}
 			}
 		}
@@ -1140,6 +1154,32 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		protected void UpdateFieldFontName()
+		{
+			this.fieldFontName.Items.Clear();
+			this.fieldFontName.Items.Add("Par défaut...");
+
+			if ( this.allFonts )
+			{
+				Drawing.Font.FaceInfo[] list = Drawing.Font.Faces;
+				foreach ( Drawing.Font.FaceInfo info in list )
+				{
+					if ( info.IsLatin )
+					{
+						this.fieldFontName.Items.Add(info.Name);
+					}
+				}
+			}
+			else
+			{
+				this.fieldFontName.Items.Add("Tahoma");
+				this.fieldFontName.Items.Add("Arial");
+				this.fieldFontName.Items.Add("Courier New");
+				this.fieldFontName.Items.Add("Times New Roman");
+			}
+		}
+
+
 		// Génère un événement pour dire que la règle a changé.
 		protected void OnChanged()
 		{
@@ -1171,6 +1211,7 @@ namespace Epsitec.Common.Widgets
 		protected double					scale = 1.0;
 		protected bool						listCapability = true;
 		protected bool						tabCapability = true;
+		protected bool						allFonts = true;
 
 		protected GlyphButton				buttonTab;
 		protected TextFieldCombo			fieldFontName;
@@ -1186,7 +1227,7 @@ namespace Epsitec.Common.Widgets
 
 		protected static readonly double	buttonMargin = 3;
 		protected static readonly double	buttonWidth = 20;
-		protected static readonly double	buttonFontNameMinWidth = 60;
+		protected static readonly double	buttonFontNameMinWidth = 100;
 		protected static readonly double	buttonFontNameMaxWidth = 150;
 		protected static readonly double	buttonFontScaleWidth = 45;
 		protected static readonly double	buttonFontColorWidth = 90;

@@ -403,6 +403,58 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Imprime l'objet.
+		public override void PrintGeometry(Printing.PrintPort port, DrawingContext drawingContext)
+		{
+			base.PrintGeometry(port, drawingContext);
+
+			if ( this.TotalHandle < 2 )  return;
+
+			this.OpenBitmapOriginal();
+			this.OpenBitmapDimmed(drawingContext);
+
+			Drawing.Image image = drawingContext.IsDimmed ? this.imageDimmed : this.imageOriginal;
+			if ( image == null )
+			{
+				Path path = this.PathBuildOutline();
+				port.LineWidth = 1.0/drawingContext.ScaleX;
+				port.Color = Color.FromBrightness(0.5);
+				port.PaintOutline(path);
+			}
+			else
+			{
+				Transform ot = port.Transform;
+
+				Point center;
+				double width, height, angle;
+				this.ImageGeometry(out center, out width, out height, out angle);
+
+				if ( width > 0 && height > 0 )
+				{
+					Properties.Image property = this.PropertyImage;
+
+					if ( property.Homo )  // conserve les proportions ?
+					{
+						double rapport = image.Height/image.Width;
+						if ( rapport < height/width )  height = width*rapport;
+						else                           width  = height/rapport;
+					}
+
+					port.TranslateTransform(center.X, center.Y);
+					port.RotateTransformDeg(angle, 0, 0);
+
+					double mirrorx = property.MirrorH ? -1 : 1;
+					double mirrory = property.MirrorV ? -1 : 1;
+					port.ScaleTransform(mirrorx, mirrory, 0, 0);
+
+					Drawing.Rectangle rect = new Drawing.Rectangle(-width/2, -height/2, width, height);
+					port.PaintImage(image, rect);
+				}
+
+				port.Transform = ot;
+			}
+		}
+
 
 		#region Serialization
 		// Sérialise l'objet.

@@ -79,11 +79,11 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				switch (this.StyleName)
+				if (this.StyleName.IndexOf ("Bold") > -1)
 				{
-					case "Bold":
-						return true;
+					return true;
 				}
+				
 				return false;
 			}
 		}
@@ -92,12 +92,12 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				switch (this.StyleName)
+				if ((this.StyleName.IndexOf ("Italic") > -1) ||
+					(this.StyleName.IndexOf ("Oblique") > -1))
 				{
-					case "Italic":
-					case "Oblique":
-						return true;
+					return true;
 				}
+                
 				return false;
 			}
 		}
@@ -934,24 +934,37 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 			
-			if (font == null)
+			return font;
+		}
+		
+		public static Font.FaceInfo GetFaceInfo(string face)
+		{
+			return Font.face_hash[face] as FaceInfo;
+		}
+		
+		public static Font GetFontFallback(string face)
+		{
+			FaceInfo info = Font.face_hash[face] as FaceInfo;
+			
+			if (info != null)
 			{
-				//	Cherche encore directement à partir des familles de fontes...
+				Font[] fonts = info.GetFonts ();
 				
-				FaceInfo info = Font.face_hash[face] as FaceInfo;
-				
-				if (info != null)
+				for (int i = 0; i < fonts.Length; i++)
 				{
-					Font[] fonts = info.GetFonts ();
+					Font font = fonts[i];
 					
-					if (fonts.Length == 1)
+					if ((font.IsStyleBold == false) &&
+						(font.IsStyleItalic == false))
 					{
-						font = fonts[0];
+						return font;
 					}
 				}
+				
+				return fonts[0];
 			}
 			
-			return font;
+			return null;
 		}
 		
 		
@@ -1094,6 +1107,14 @@ namespace Epsitec.Common.Drawing
 				}
 			}
 			
+			public bool							IsLatin
+			{
+				get
+				{
+					return this.fonts[0].GetGlyphIndex ('e') > 0;
+				}
+			}
+			
 			
 			public Font GetFont(bool bold, bool italic, double size)
 			{
@@ -1142,11 +1163,6 @@ namespace Epsitec.Common.Drawing
 				//	voir si ce n'est pas possible d'obtenir une fonte synthétique :
 				
 				Font synthetic = Font.GetFont (this.name, style_1);
-				
-				if (synthetic != null)
-				{
-					System.Diagnostics.Debug.Assert (synthetic.IsSynthetic);
-				}
 				
 				return synthetic;
 			}

@@ -4455,31 +4455,19 @@ noText:
 
 			public Drawing.Font RetFont(bool bold, bool italic)
 			{
-				Drawing.Font	font;
-				string			fontStyle;
-
-				if ( bold && !italic )
+				Drawing.Font font     = null;
+				string       fontFace = TextLayout.FontName(this.FontName);
+				
+				Drawing.Font.FaceInfo face = Drawing.Font.GetFaceInfo(fontFace);
+				
+				if ( face != null )
 				{
-					fontStyle = "Bold";
+					font = face.GetFont(bold, italic, this.FontScale);
 				}
-				else if ( !bold && italic )
-				{
-					fontStyle = "Italic";
-				}
-				else if ( bold && italic )
-				{
-					fontStyle = "Bold Italic";
-				}
-				else
-				{
-					fontStyle = "Regular";
-				}
-
-				font = Drawing.Font.GetFont(TextLayout.FontName(this.FontName), fontStyle);
 				
 				if ( font == null )
 				{
-					font = Drawing.Font.GetFont(TextLayout.FontName(this.FontName), "Regular");
+					font = Drawing.Font.GetFontFallback(fontFace);
 				}
 				
 				if ( font == null )

@@ -137,7 +137,14 @@ namespace Epsitec.Common.Document.Properties
 		// Retourne la fonte à utiliser.
 		public Drawing.Font GetFont()
 		{
-			return Drawing.Font.GetFont(this.fontName, "Regular");
+			Drawing.Font font = Drawing.Font.GetFont(this.fontName, "Regular");
+			
+			if ( font == null )
+			{
+				font = Drawing.Font.GetFontFallback(this.fontName);
+			}
+			
+			return font;
 		}
 
 

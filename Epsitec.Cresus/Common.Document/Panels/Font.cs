@@ -255,7 +255,10 @@ namespace Epsitec.Common.Document.Panels
 			Drawing.Font.FaceInfo[] list = Drawing.Font.Faces;
 			foreach ( Drawing.Font.FaceInfo info in list )
 			{
-				combo.Items.Add(info.Name);
+				if ( info.IsLatin )
+				{
+					combo.Items.Add(info.Name);
+				}
 			}
 #endif
 		}
