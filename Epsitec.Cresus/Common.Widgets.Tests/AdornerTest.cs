@@ -143,7 +143,7 @@ namespace Epsitec.Common.Widgets
 			scrollv.Location = new Point(120, 50);
 			scrollv.Size = new Size(17, 120);
 			scrollv.Range = 10;
-			scrollv.VisibleRange = 3;
+			scrollv.VisibleRangeRatio = 3.0/10.0;
 			scrollv.Value = 1;
 			scrollv.SmallChange = 1;
 			scrollv.LargeChange = 2;
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Widgets
 			scrollh.Location = new Point(140, 50);
 			scrollh.Size = new Size(120, 17);
 			scrollh.Range = 10;
-			scrollh.VisibleRange = 7;
+			scrollh.VisibleRangeRatio = 7.0/10.0;
 			scrollh.Value = 1;
 			scrollh.SmallChange = 1;
 			scrollh.LargeChange = 2;
@@ -650,7 +650,7 @@ namespace Epsitec.Common.Widgets
 			scrollv.Location = new Point(10, 10);
 			scrollv.Size = new Size(17, inside.Height-20);
 			scrollv.Range = 10;
-			scrollv.VisibleRange = 3;
+			scrollv.VisibleRangeRatio = 3.0/10.0;
 			scrollv.Value = 1;
 			scrollv.SmallChange = 1;
 			scrollv.LargeChange = 2;
@@ -1302,7 +1302,7 @@ namespace Epsitec.Common.Widgets
 			scrollv.Location = new Point(10, 10);
 			scrollv.Size = new Size(17, inside.Height-20);
 			scrollv.Range = 10;
-			scrollv.VisibleRange = 3;
+			scrollv.VisibleRangeRatio = 3.0/10.0;
 			scrollv.Value = 1;
 			scrollv.SmallChange = 1;
 			scrollv.LargeChange = 2;
