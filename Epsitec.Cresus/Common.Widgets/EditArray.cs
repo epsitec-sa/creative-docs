@@ -999,8 +999,8 @@ namespace Epsitec.Common.Widgets
 					
 					toolbar.SuspendLayout ();
 					toolbar.Items.Add (this.CreateIconButton ("StartReadOnly", "manifest:Epsitec.Common.Widgets/Images.TableReadOnly.icon", "Consultation uniquement"));
-					toolbar.Items.Add (this.CreateIconButton ("StartEdition",  "manifest:Epsitec.Common.Widgets/Images.TableEdition.icon",  "Modifie les données"));
-					toolbar.Items.Add (this.CreateIconButton ("StartSearch",   "manifest:Epsitec.Common.Widgets/Images.TableSearch.icon",   "Démarre une recherche"));
+					toolbar.Items.Add (this.CreateIconButton ("StartEdition",  "manifest:Epsitec.Common.Widgets/Images.TableEdition.icon",  "Modifie les données", KeyCode.FuncF2));
+					toolbar.Items.Add (this.CreateIconButton ("StartSearch",   "manifest:Epsitec.Common.Widgets/Images.TableSearch.icon",   "Démarre une recherche", KeyCode.ModifierControl | KeyCode.AlphaF));
 					toolbar.Items.Add (new IconSeparator ());
 					toolbar.Items.Add (this.CreateIconButton ("InsertBefore",  "manifest:Epsitec.Common.Widgets/Images.InsertBeforeCell.icon", "Insère une ligne avant"));
 					toolbar.Items.Add (this.CreateIconButton ("InsertAfter",   "manifest:Epsitec.Common.Widgets/Images.InsertAfterCell.icon",  "Insère une ligne après"));
@@ -1126,6 +1126,13 @@ namespace Epsitec.Common.Widgets
 			{
 				IconButton button = new IconButton (this.GetCommandName (command_name), icon_name);
 				this.CreateToolTip (button, tool_tip);
+				return button;
+			}
+			
+			protected IconButton CreateIconButton(string command_name, string icon_name, string tool_tip, KeyCode shortcut)
+			{
+				IconButton button = this.CreateIconButton (command_name, icon_name, tool_tip);
+				button.Shortcut.KeyCode = shortcut;
 				return button;
 			}
 			

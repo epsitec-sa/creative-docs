@@ -940,7 +940,7 @@ namespace Epsitec.Common.Widgets
 			this.InvalidateContents ();
 		}
 		
-		public virtual void InvalidateContents()
+		public void InvalidateContents()
 		{
 			this.cache_visible_rows = -1;
 			this.is_dirty = true;
@@ -949,12 +949,6 @@ namespace Epsitec.Common.Widgets
 		
 		public void SyncWithTextArrayStore(bool update)
 		{
-//			int index_selected = this.SelectedIndex;
-//			int index_edition  = this.EditionIndex;
-//			int index_first_vv = this.first_virtvis_row;
-//			
-//			this.Clear ();
-//			
 			if (this.text_array_store != null)
 			{
 				this.ColumnCount = this.text_array_store.GetColumnCount ();
@@ -967,20 +961,6 @@ namespace Epsitec.Common.Widgets
 			{
 				this.Update ();
 			}
-//			
-//			if ((index_selected >= 0) &&
-//				(index_selected < this.RowCount))
-//			{
-//				this.SelectedIndex = index_selected;
-//			}
-//			
-//			if ((index_edition >= 0) &&
-//				(index_edition < this.RowCount))
-//			{
-//				this.EditionIndex = index_edition;
-//			}
-//			
-//			this.SetFirstVirtualVisibleIndex (index_first_vv);
 		}
 		
 		public bool HitTestTable(Drawing.Point pos)
