@@ -30,6 +30,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Expect.Exception (new Debug.Method (Ex2), typeof (TextConverter.IllegalUnicodeException));
 		}
 		
+		
 		public static void Ex1()
 		{
 			uint[] text = { 0xD800, 0xDC00, 0x1234 };

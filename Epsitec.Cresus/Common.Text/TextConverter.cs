@@ -27,8 +27,8 @@ namespace Epsitec.Common.Text
 				
 				//	S'agit-il là d'un caractère potentiellement complexe ?
 				
-				if ((c >= TextConverter.UnicodeSurrogateMin) &&
-					(c <= TextConverter.UnicodeSurrogateMax))
+				if ((c >= Unicode.SurrogateMin) &&
+					(c <= Unicode.SurrogateMax))
 				{
 					//	On vient de tomber sur une partie de 'surrogate pair'. Il
 					//	faut donc traiter tout le texte comme un texte complexe :
@@ -70,13 +70,13 @@ namespace Epsitec.Common.Text
 					uint low  = (code >> 10) & 0x03FF;
 					uint high = (code >>  0) & 0x03FF;
 					
-					buffer.Append ((char) (low  + TextConverter.UnicodeSurrogateLowMin));
-					buffer.Append ((char) (high + TextConverter.UnicodeSurrogateHighMin));
+					buffer.Append ((char) (low  + Unicode.SurrogateLowMin));
+					buffer.Append ((char) (high + Unicode.SurrogateHighMin));
 				}
 				else
 				{
-					if ((code >= TextConverter.UnicodeSurrogateMin) &&
-						(code <= TextConverter.UnicodeSurrogateMax))
+					if ((code >= Unicode.SurrogateMin) &&
+						(code <= Unicode.SurrogateMax))
 					{
 						//	Un surrogate pair n'a pas le droit d'apparaître dans le texte
 						//	source, car UTF-32 considère ces codes comme non valides.
@@ -105,8 +105,8 @@ namespace Epsitec.Common.Text
 				char c    = text[i];
 				uint code = c;
 				
-				if ((c >= TextConverter.UnicodeSurrogateLowMin) &&
-					(c <= TextConverter.UnicodeSurrogateLowMax))
+				if ((c >= Unicode.SurrogateLowMin) &&
+					(c <= Unicode.SurrogateLowMax))
 				{
 					//	Traitement des 'surrogate pairs'.
 					//
@@ -114,8 +114,8 @@ namespace Epsitec.Common.Text
 					//	http://www.i18nguy.com/unicode/surrogatetable.html
 					
 					if ((i >= text.Length-1) ||
-						(text[i+1] < TextConverter.UnicodeSurrogateHighMin) ||
-						(text[i+1] > TextConverter.UnicodeSurrogateHighMax))
+						(text[i+1] < Unicode.SurrogateHighMin) ||
+						(text[i+1] > Unicode.SurrogateHighMax))
 					{
 						//	Demi paire ou paire incorrecte; ceci implique une erreur de
 						//	codage de la part de l'appelant.
@@ -123,8 +123,8 @@ namespace Epsitec.Common.Text
 						throw new IllegalUnicodeException ();
 					}
 					
-					uint low  = (uint)text[i+0] - TextConverter.UnicodeSurrogateLowMin;
-					uint high = (uint)text[i+1] - TextConverter.UnicodeSurrogateHighMin;
+					uint low  = (uint)text[i+0] - Unicode.SurrogateLowMin;
+					uint high = (uint)text[i+1] - Unicode.SurrogateHighMin;
 					
 					Debug.Assert.IsInBounds (low, 0, 0x3FF);
 					Debug.Assert.IsInBounds (high, 0, 0x3FF);
@@ -137,8 +137,8 @@ namespace Epsitec.Common.Text
 					
 					i++;
 				}
-				else if ((c >= TextConverter.UnicodeSurrogateHighMin) &&
-					/**/ (c <= TextConverter.UnicodeSurrogateHighMax))
+				else if ((c >= Unicode.SurrogateHighMin) &&
+					/**/ (c <= Unicode.SurrogateHighMax))
 				{
 					throw new IllegalUnicodeException ();
 				}
@@ -170,13 +170,5 @@ namespace Epsitec.Common.Text
 			}
 		}
 		#endregion
-		
-		public const char						UnicodeSurrogateLowMin	= (char) 0xD800;
-		public const char						UnicodeSurrogateLowMax	= (char) 0xDBFF;
-		public const char						UnicodeSurrogateHighMin = (char) 0xDC00;
-		public const char						UnicodeSurrogateHighMax = (char) 0xDFFF;
-		
-		public const char						UnicodeSurrogateMin		= UnicodeSurrogateLowMin;
-		public const char						UnicodeSurrogateMax		= UnicodeSurrogateHighMax;
 	}
 }
