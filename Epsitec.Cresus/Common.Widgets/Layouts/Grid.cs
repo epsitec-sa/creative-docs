@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 		
 		
-		public Widget					Root
+		public Panel					Root
 		{
 			get { return this.root; }
 			set
@@ -112,6 +112,28 @@ namespace Epsitec.Common.Widgets.Layouts
 			{
 				this.Update ();
 				return this.current_height;
+			}
+		}
+		
+		
+		public bool						EditionEnabled
+		{
+			get { return this.is_edition_enabled; }
+			set
+			{
+				if (this.is_edition_enabled != value)
+				{
+					if (this.root == null)
+					{
+						this.is_edition_enabled = value;
+					}
+					else
+					{
+						this.root.Invalidate ();
+						this.is_edition_enabled = value;
+						this.root.Invalidate ();
+					}
+				}
 			}
 		}
 		
@@ -422,7 +444,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 		
 		
-		protected void AttachRootWidget(Widget root)
+		protected void AttachRootWidget(Panel root)
 		{
 			this.root = root;
 			this.Invalidate ();
@@ -605,34 +627,46 @@ namespace Epsitec.Common.Widgets.Layouts
 			System.Diagnostics.Debug.Assert (this.root == sender);
 			System.Diagnostics.Debug.Assert (this.is_dirty == false);
 			
-			//	La peinture des "ornements" se fait après-coup, dans une dernière phase
-			//	d'affichage, afin d'être sûr qu'aucun widget ne couvre notre dessin.
-			
-			this.root.Window.QueuePostPaintHandler (this, e.Graphics, e.ClipRectangle);
+			if (this.is_edition_enabled)
+			{
+				//	La peinture des "ornements" se fait après-coup, dans une dernière phase
+				//	d'affichage, afin d'être sûr qu'aucun widget ne couvre notre dessin.
+				
+				this.root.Window.QueuePostPaintHandler (this, e.Graphics, e.ClipRectangle);
+			}
 		}
 		
 		private void HandleRootPreProcessing(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.Assert (this.root == sender);
 			
-			e.Suppress |= this.ProcessMessage (e.Message);
+			if (this.is_edition_enabled)
+			{
+				e.Suppress |= this.ProcessMessage (e.Message);
+			}
 		}
 		
 		private void HandleRootPaintBoundsCallback(Widget widget, ref Drawing.Rectangle bounds)
 		{
-			bounds.Inflate (Grid.GripperRadius + 1, Grid.GripperRadius + 1);
+			if (this.is_edition_enabled)
+			{
+				bounds.Inflate (Grid.GripperRadius + 1, Grid.GripperRadius + 1);
+			}
 		}
 		#endregion
 		
 		#region IPostPaintHandler Members
 		void Window.IPostPaintHandler.Paint(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle repaint)
 		{
-			double m = Grid.GripperRadius + 1;
-			graphics.RestoreClippingRectangle (Drawing.Rectangle.Inflate (graphics.SaveClippingRectangle (), m, m));
-			
-			this.PaintDropShape (graphics);
-			this.PaintDragShape (graphics);
-			this.PaintVerticals (graphics);
+			if (this.is_edition_enabled)
+			{
+				double m = Grid.GripperRadius + 1;
+				graphics.RestoreClippingRectangle (Drawing.Rectangle.Inflate (graphics.SaveClippingRectangle (), m, m));
+				
+				this.PaintDropShape (graphics);
+				this.PaintDragShape (graphics);
+				this.PaintVerticals (graphics);
+			}
 		}
 		#endregion
 		
@@ -1581,7 +1615,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		#endregion
 		
 		
-		protected Widget				root;
+		protected Panel					root;
 		
 		protected Grid.ColumnCollection	columns;
 		protected Grid.Vertical[]		verticals;
@@ -1591,6 +1625,8 @@ namespace Epsitec.Common.Widgets.Layouts
 		protected double				desired_height;
 		protected double				current_width;
 		protected double				current_height;
+		
+		protected bool					is_edition_enabled;			//	l'édition est possible
 		
 		protected bool					is_dirty;					//	Grid.Invalidate a été appelé
 		protected bool					is_dragging;				//	opération de dragging en cours
