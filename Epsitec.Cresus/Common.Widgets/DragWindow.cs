@@ -11,7 +11,7 @@ namespace Epsitec.Common.Widgets
 			this.Root.BackColor = Drawing.Color.Transparent;
 			
 			this.MakeFramelessWindow ();
-			this.MakeToolWindow();
+			this.MakeFloatingWindow();
 			this.MakeLayeredWindow ();
 			this.DisableMouseActivation ();
 			
