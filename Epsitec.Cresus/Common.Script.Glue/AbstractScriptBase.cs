@@ -22,6 +22,19 @@ namespace Epsitec.Common.Script.Glue
 		}
 		
 		
+		protected object ReadData(string name, System.Type type)
+		{
+			System.Diagnostics.Debug.WriteLine ("Read data '" + name + "' of type " + type.FullName);
+			object value;
+			
+			if (this.host.ReadData (name, out value))
+			{
+				return value;
+			}
+			
+			throw new System.ArgumentException (string.Format ("Data '{0}' not found in Script Host.", name));
+		}
+		
 		public abstract bool Execute(string name, object[] in_args);
 		
 		#region Remaining IScript Members
