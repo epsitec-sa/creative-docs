@@ -40,6 +40,8 @@ namespace Epsitec.Common.Widgets
 		
 		private Window CreateAdornerWidgets()
 		{
+			Pictogram.Engine.Initialise();
+			
 			Window window = new Window();
 			
 			window.ClientSize = new Size(600, 300);
@@ -284,7 +286,7 @@ namespace Epsitec.Common.Widgets
 			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(tb);
 
-			tb.Items.Add (new IconButton (@"file:images/open.png"));
+			tb.Items.Add (new IconButton (@"file:images/open1.icon"));
 			tb.Items.Add (new IconButton (@"file:images/save.png"));
 			tb.Items.Add (new IconSeparator());
 
