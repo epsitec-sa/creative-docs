@@ -97,35 +97,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected override void UpdateClientGeometry()
+		protected override void UpdateButtonGeometry()
 		{
-			base.UpdateClientGeometry();
-			this.UpdateButtonGeometry();
-		}
-		
-		protected virtual void UpdateButtonGeometry()
-		{
+			base.UpdateButtonGeometry();
+			
 			if ( this.button != null )
 			{
 				this.button.Bounds = this.GetButtonBounds();
 			}
-		}
-		
-		protected virtual Drawing.Rectangle GetButtonBounds()
-		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			Drawing.Rectangle rect = new Drawing.Rectangle();
-			rect.Left   = this.Bounds.Width-this.margins.Right-adorner.GeometryComboRightMargin;
-			rect.Right  = this.Bounds.Width-adorner.GeometryComboRightMargin;
-			rect.Bottom = adorner.GeometryComboBottomMargin;
-			rect.Top    = this.Bounds.Height-adorner.GeometryComboTopMargin;
-			return rect;
-		}
-
-		protected override void OnAdornerChanged()
-		{
-			this.UpdateClientGeometry();
-			base.OnAdornerChanged();
 		}
 		
 		protected virtual void OnSelectedIndexChanged()
