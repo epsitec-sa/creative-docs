@@ -526,6 +526,7 @@ namespace Epsitec.Common.Tests
 			
 			window.ClientSize = new System.Drawing.Size(400, 300);
 			window.Text = "CheckDocking";
+			window.Root.PreferHorizontalDockLayout = true;
 			
 			Button button;
 			button = new Button();
