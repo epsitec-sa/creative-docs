@@ -1,0 +1,458 @@
+<VisualStudioProject>
+    <CSHARP
+        ProjectType = "Local"
+        ProductVersion = "7.10.3077"
+        SchemaVersion = "2.0"
+        ProjectGuid = "{1922B387-70D5-407A-9718-B991404D436C}"
+        SccProjectName = "SAK"
+        SccLocalPath = "SAK"
+        SccAuxPath = "SAK"
+        SccProvider = "SAK"
+    >
+        <Build>
+            <Settings
+                ApplicationIcon = ""
+                AssemblyKeyContainerName = ""
+                AssemblyName = "Common.NiceIcon"
+                AssemblyOriginatorKeyFile = ""
+                DefaultClientScript = "JScript"
+                DefaultHTMLPageLayout = "Grid"
+                DefaultTargetSchema = "IE50"
+                DelaySign = "false"
+                OutputType = "Library"
+                PreBuildEvent = ""
+                PostBuildEvent = ""
+                RootNamespace = "Epsitec.Common.NiceIcon"
+                RunPostBuildEvent = "OnBuildSuccess"
+                StartupObject = ""
+            >
+                <Config
+                    Name = "Debug"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "DEBUG;TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "true"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "false"
+                    OutputPath = "bin\Debug\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+                <Config
+                    Name = "Release"
+                    AllowUnsafeBlocks = "false"
+                    BaseAddress = "285212672"
+                    CheckForOverflowUnderflow = "false"
+                    ConfigurationOverrideFile = ""
+                    DefineConstants = "TRACE"
+                    DocumentationFile = ""
+                    DebugSymbols = "false"
+                    FileAlignment = "4096"
+                    IncrementalBuild = "false"
+                    NoStdLib = "false"
+                    NoWarn = ""
+                    Optimize = "true"
+                    OutputPath = "bin\Release\"
+                    RegisterForComInterop = "false"
+                    RemoveIntegerChecks = "false"
+                    TreatWarningsAsErrors = "false"
+                    WarningLevel = "4"
+                />
+            </Settings>
+            <References>
+                <Reference
+                    Name = "System"
+                    AssemblyName = "System"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                />
+                <Reference
+                    Name = "System.Drawing"
+                    AssemblyName = "System.Drawing"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+                />
+                <Reference
+                    Name = "Common.Drawing"
+                    Project = "{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Common.Support"
+                    Project = "{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Common.Widgets"
+                    Project = "{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "nunit.framework"
+                    AssemblyName = "nunit.framework"
+                    HintPath = "..\External\nunit.framework.dll"
+                />
+                <Reference
+                    Name = "System.XML"
+                    AssemblyName = "System.Xml"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
+            </References>
+        </Build>
+        <Files>
+            <Include>
+                <File
+                    RelPath = "AbstractObject.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AbstractPanel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "AbstractProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ButtonGraphics.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ContextMenuItem.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Drawer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GradientSample.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Handle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IconContext.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IconEditor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IconObjects.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "InsideSurface.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Lister.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ObjectArrow.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ObjectBezier.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ObjectCircle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ObjectEllipse.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ObjectLine.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ObjectMemory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ObjectPoly.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ObjectRectangle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ObjectRegular.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ObjectText.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PanelBool.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PanelColor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PanelDouble.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PanelGradient.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PanelLine.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PanelList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PanelString.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PropertyBool.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PropertyColor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PropertyDouble.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PropertyGradient.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PropertyLine.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PropertyList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PropertyString.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Test.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "UndoSituation.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Images\add.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\arrow.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\bezier.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\capbutt.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\capround.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\capsquare.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\check.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\circle.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\copy.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\cut.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\delete.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\duplicate.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ellipse.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\grid.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\help.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\joinbevel.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\joinmiter.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\joinround.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\line.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\mode.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\new.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\open.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\orderdown.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\orderup.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\paste.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\poly.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\preview.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\print.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\rectangle.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\redo.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\regular.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\save.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\select.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\sub.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\text.png"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\undo.png"
+                    BuildAction = "EmbeddedResource"
+                />
+            </Include>
+        </Files>
+    </CSHARP>
+</VisualStudioProject>
+
