@@ -2,9 +2,9 @@ namespace Epsitec.Common.Widgets
 {
 	public enum ScrollListStyle
 	{
-		Flat,							// pas de cadre, ni de relief
-		Normal,							// bouton normal
-		Simple,							// cadre tout simple
+		Flat,			// pas de cadre, ni de relief
+		Normal,			// bouton normal
+		Simple,			// cadre tout simple
 	}
 
 	public enum ScrollListShow
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Widgets
 		public ScrollList()
 		{
 			this.items = new Helpers.StringCollection(this);
-			this.DockMargins = new Drawing.Margins (2, 2, 2, 2);
+			this.DockMargins = new Drawing.Margins(2, 2, 2, 2);
 			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.Focusable;
 
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Widgets
 			this.scroller = new VScroller(null);
 			this.scroller.IsInverted = true;
 			this.scroller.Parent = this;
-			this.scroller.Dock = DockStyle.Right;
+			//this.scroller.Dock = DockStyle.Right;
 			this.scroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
 			this.scroller.Hide ();
 		}
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Widgets
 			base.Dispose(disposing);
 		}
 
-		
+
 		public Helpers.StringCollection		Items
 		{
 			get { return this.items; }
@@ -460,6 +460,17 @@ namespace Epsitec.Common.Widgets
 			this.textLayouts = new TextLayout[this.visibleLines];
 			
 			this.SetDirty ();
+
+			if ( this.scroller != null )
+			{
+				IAdorner adorner = Widgets.Adorner.Factory.Active;
+				rect = new Drawing.Rectangle();
+				rect.Left   = this.Bounds.Width-this.scroller.Width-adorner.GeometryScrollerRightMargin;
+				rect.Right  = this.Bounds.Width-adorner.GeometryScrollerRightMargin;
+				rect.Bottom = adorner.GeometryScrollerBottomMargin;
+				rect.Top    = this.Bounds.Height-adorner.GeometryScrollerTopMargin;
+				this.scroller.Bounds = rect;
+			}
 		}
 
 
@@ -493,15 +504,8 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
 			
-			TextFieldStyle style = TextFieldStyle.Normal;
-			switch ( this.scrollListStyle )
-			{
-				case ScrollListStyle.Flat:    style = TextFieldStyle.Flat;    break;
-				case ScrollListStyle.Simple:  style = TextFieldStyle.Simple;  break;
-			}
-			adorner.PaintTextFieldBackground(graphics, rect, state, dir, style, false);
+			adorner.PaintMenuBackground(graphics, rect, state, Direction.Up, Drawing.Rectangle.Empty, 0);
 
 			Drawing.Point pos = new Drawing.Point(ScrollList.Margin, rect.Height-ScrollList.Margin-this.lineHeight);
 			int max = System.Math.Min(this.visibleLines, this.items.Count);
@@ -530,7 +534,7 @@ namespace Epsitec.Common.Widgets
 				}
 
 				//this.textLayouts[i].Paint(pos, graphics, Drawing.Rectangle.Empty, color);
-				adorner.PaintButtonTextLayout(graphics, pos, this.textLayouts[i], state, dir, ButtonStyle.ListItem);
+				adorner.PaintButtonTextLayout(graphics, pos, this.textLayouts[i], state, ButtonStyle.ListItem);
 				pos.Y -= this.lineHeight;
 			}
 		}

@@ -837,9 +837,8 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
 			
-			adorner.PaintArrayBackground(graphics, rect, state, dir);
+			adorner.PaintArrayBackground(graphics, rect, state);
 
 			Drawing.Rectangle localClip = this.MapClientToRoot(this.rectInside);
 			Drawing.Rectangle saveClip  = graphics.SaveClippingRectangle();
@@ -860,15 +859,14 @@ namespace Epsitec.Common.Widgets
 
 				if ( row+this.firstRow == this.selectedRow )  // ligne sélectionnée ?
 				{
-					Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
-					rects[0].Left   = this.rectInside.Left;
-					rects[0].Right  = maxx;
-					rects[0].Bottom = pos.Y;
-					rects[0].Top    = pos.Y+this.rowHeight;
-					adorner.PaintTextSelectionBackground(graphics, rects);
-
 					widgetState |= WidgetState.Selected;
 				}
+				Drawing.Rectangle rectLine = new Drawing.Rectangle();
+				rectLine.Left   = this.rectInside.Left;
+				rectLine.Right  = maxx;
+				rectLine.Bottom = pos.Y;
+				rectLine.Top    = pos.Y+this.rowHeight;
+				adorner.PaintCellBackground(graphics, rectLine, widgetState);
 
 				pos.X += this.textMargin-System.Math.Floor(this.offsetH);
 				for ( int column=0 ; column<this.maxColumns ; column++ )
@@ -876,7 +874,7 @@ namespace Epsitec.Common.Widgets
 					double endx = pos.X+this.widthColumns[column];
 					if ( pos.X < localClip.Right && endx > localClip.Left )
 					{
-						adorner.PaintGeneralTextLayout(graphics, pos, this.textLayouts[row,column], widgetState, Direction.None);
+						adorner.PaintGeneralTextLayout(graphics, pos, this.textLayouts[row,column], widgetState);
 					}
 					pos.X = endx;
 				}
@@ -888,7 +886,7 @@ namespace Epsitec.Common.Widgets
 
 			graphics.LineWidth = 1;
 			Drawing.Color color;
-			color = adorner.GetColorBorder();
+			color = adorner.ColorBorder;
 
 			// Dessine le rectangle englobant.
 			graphics.AddRectangle(rect);
