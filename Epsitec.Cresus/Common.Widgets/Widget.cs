@@ -3049,11 +3049,16 @@ namespace Epsitec.Common.Widgets
 				//	Ce widget permet aux enfants d'entrer dans la liste accessible par la
 				//	touche TAB.
 				
-				find = this.Children[0].FindTabWidget (dir, mode, false, true);
+				Widget[] candidates = this.Children[0].FindTabWidgets (mode);
 				
-				if (find != null)
+				if (candidates.Length > 0)
 				{
-					return find;
+					find = candidates[0].FindTabWidget (dir, mode, false, true);
+					
+					if (find != null)
+					{
+						return find;
+					}
 				}
 			}
 			
@@ -3194,11 +3199,11 @@ namespace Epsitec.Common.Widgets
 					switch (dir)
 					{
 						case TabNavigationDir.Backwards:
-							find = siblings[siblings.Length-1];
+							find = siblings[siblings.Length-1].FindTabWidget (dir, mode, false, true);
 							break;
 							
 						case TabNavigationDir.Forwards:
-							find = siblings[0];
+							find = siblings[0].FindTabWidget (dir, mode, false, true);
 							break;
 					}
 				}

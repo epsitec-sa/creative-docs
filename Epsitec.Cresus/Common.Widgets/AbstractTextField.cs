@@ -21,12 +21,6 @@ namespace Epsitec.Common.Widgets
 	[Support.SuppressBundleSupport]
 	public abstract class AbstractTextField : Widget
 	{
-		static AbstractTextField()
-		{
-			TextField.flashTimer.TimeElapsed += new Support.EventHandler(TextField.HandleFlashTimer);
-		}
-		
-		
 		public AbstractTextField()
 		{
 			this.InternalState |= InternalState.AutoFocus;
@@ -348,7 +342,7 @@ namespace Epsitec.Common.Widgets
 		// Allume le curseur au prochain affichage.
 		protected void ResetCursor()
 		{
-			if ( this.IsFocused && this.Window.IsFocused )
+			if ( this.IsFocused && this.Window.IsFocused && TextField.flashTimer != null )
 			{
 				double delay = SystemInformation.CursorBlinkDelay;
 				TextField.flashTimer.Delay = delay;
@@ -827,6 +821,19 @@ namespace Epsitec.Common.Widgets
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			if (AbstractTextField.flashTimerStarted == false)
+			{
+				//	Il faut enregistrer le timer; on ne peut pas le faire avant que le
+				//	premier TextField ne s'affiche, car sinon les WinForms semblent se
+				//	mélanger les pinceaux :
+				
+				TextField.flashTimer = new Timer();
+				TextField.flashTimer.TimeElapsed += new Support.EventHandler(TextField.HandleFlashTimer);
+				TextField.flashTimerStarted = true;
+				
+				this.ResetCursor();
+			}
+			
 			//	Dessine le texte en cours d'édition :
 			
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
@@ -957,8 +964,9 @@ namespace Epsitec.Common.Widgets
 		protected int							maxChar = 1000;
 		protected bool							mouseDown = false;
 		
-		protected static Timer					flashTimer = new Timer();
-		protected static bool					showCursor = true;
+		private static Timer					flashTimer;
+		private static bool						flashTimerStarted = false;
+		private static bool						showCursor = true;
 		
 		protected static AbstractTextField		blinking;
 	}

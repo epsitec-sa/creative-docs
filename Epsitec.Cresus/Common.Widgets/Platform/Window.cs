@@ -40,6 +40,9 @@ namespace Epsitec.Common.Widgets.Platform
 		internal void MakeFixedSizeWindow()
 		{
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.ControlBox      = false;
+			this.MaximizeBox     = false;
+			this.MinimizeBox     = false;
 		}
 		
 		internal void MakeSecondaryWindow()
