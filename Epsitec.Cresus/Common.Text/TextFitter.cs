@@ -63,11 +63,13 @@ namespace Epsitec.Common.Text
 		public void ClearAllMarks()
 		{
 			this.Process (new Execute (this.ExecuteClear));
+			this.frame_list.ClearCursorMap ();
 		}
 		
 		public void GenerateAllMarks()
 		{
 			this.Process (new Execute (this.ExecuteGenerate));
+			this.frame_list.ClearCursorMap ();
 		}
 		
 		
@@ -81,8 +83,6 @@ namespace Epsitec.Common.Text
 			}
 			
 			double oy = 0;
-			double mx_left  = 0;
-			double mx_right = 1000;
 			double fence_before = 100;
 			double fence_after  = 20;
 			
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Text
 			text   = new ulong[length];
 			length = this.story.ReadText (c, length, text);
 			
-			Layout.Context layout = new Layout.Context (this.story.TextContext, text, 0, oy, mx_left, mx_right, fence_before, fence_after);
+			Layout.Context layout = new Layout.Context (this.story.TextContext, text, 0, oy, 14.0, 1000, 0, 0, fence_before, fence_after);
 			
 			int n = c.Elements.Length;
 			
@@ -161,8 +161,6 @@ namespace Epsitec.Common.Text
 			//	correspondants.
 			
 			double oy = 0;
-			double mx_left  = 0;
-			double mx_right = 1000;
 			double fence_before = 100;
 			double fence_after  = 20;
 			
@@ -192,7 +190,7 @@ namespace Epsitec.Common.Text
 				text[length] = code;
 			}
 			
-			Layout.Context         layout = new Layout.Context (this.story.TextContext, text, 0, oy, mx_left, mx_right, fence_before, fence_after);
+			Layout.Context         layout = new Layout.Context (this.story.TextContext, text, 0, oy, 14.0, 1000, 0, 0, fence_before, fence_after);
 			Layout.BreakCollection result = new Layout.BreakCollection ();
 			
 			int line_count      = 0;

@@ -21,8 +21,8 @@ namespace Epsitec.Common.Text.Layout
 			
 			scratch.Offset    = context.TextOffset;
 			scratch.Hyphenate = context.Hyphenate;
-			scratch.FenceMinX = context.RightMargin-context.BreakFenceBefore;
-			scratch.FenceMaxX = context.RightMargin+context.BreakFenceAfter;
+			scratch.FenceMinX = context.LineWidth-context.RightMargin-context.BreakFenceBefore;
+			scratch.FenceMaxX = context.LineWidth-context.RightMargin+context.BreakFenceAfter;
 			
 			scratch.Advance        = context.X;
 			scratch.WordBreakInfo  = Unicode.BreakInfo.No;
@@ -74,6 +74,7 @@ namespace Epsitec.Common.Text.Layout
 						
 						context.RecordAscender (scratch.Font.GetAscender (scratch.FontSize));
 						context.RecordDescender (scratch.Font.GetDescender (scratch.FontSize));
+						context.RecordLineHeight (scratch.FontSize * 1.2);
 						
 						if (this.FitRun (context, ref scratch, ref result))
 						{
@@ -124,7 +125,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				{
 					StretchProfile profile = scratch.LastStretchProfile;
 					
-					double total_width   = context.RightMargin - context.LeftMargin;
+					double total_width   = context.AvailableWidth;
 					double total_penalty = scratch.LastBreakPenalty * profile.ComputePenalty (total_width, context.BreakFenceBefore, context.BreakFenceAfter);
 						
 					result.Add (new Layout.Break (scratch.LastBreakOffset, scratch.LastBreakAdvance, total_penalty, profile));
@@ -288,7 +289,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				if (can_break)
 				{
 #if false
-					double total_width = context.RightMargin - context.LeftMargin;
+					double total_width = context.AvailableWidth;
 					double text_width  = scratch.Advance + scratch.TextWidth - context.LeftMargin;
 					
 					Debug.Assert.IsTrue (total_width > 0);
@@ -324,7 +325,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					
 					if (hyphenate)
 					{
-						double total_width   = context.RightMargin - context.LeftMargin;
+						double total_width   = context.AvailableWidth;
 						double total_penalty = scratch.LastBreakPenalty * profile.ComputePenalty (total_width, context.BreakFenceBefore, context.BreakFenceAfter);
 						
 						result.Add (new Layout.Break (scratch.LastBreakOffset, scratch.LastBreakAdvance, total_penalty, profile));

@@ -10,9 +10,56 @@ namespace Epsitec.Common.Text.Tests
 	{
 		public static void RunTests()
 		{
+			CheckTextFitter.TestSimpleTextFrame ();
 			CheckTextFitter.TestFit ();
 		}
-
+		
+		
+		private static void TestSimpleTextFrame()
+		{
+			SimpleTextFrame frame = new SimpleTextFrame ();
+			
+			frame.X      = 100;
+			frame.Y      = 200;
+			frame.Height = 50;
+			frame.Width  = 120;
+			
+			frame.PageNumber = 0;
+			
+			double y = 0;
+			
+			double asc    = 10;
+			double desc   = -2;
+			double height = 14;
+			
+			double ox, oy, width;
+			bool ok;
+			
+			ok = frame.ConstrainLineBox (y, asc, desc, height, out ox, out oy, out width, out y);
+			
+			Debug.Assert.IsTrue (ok);
+			Debug.Assert.IsTrue (oy == -11);
+			
+			ok = frame.ConstrainLineBox (y, asc, desc, height, out ox, out oy, out width, out y);
+			
+			Debug.Assert.IsTrue (ok);
+			Debug.Assert.IsTrue (oy == -25);
+			
+			ok = frame.ConstrainLineBox (y, asc, desc, height, out ox, out oy, out width, out y);
+						
+			Debug.Assert.IsTrue (ok);
+			Debug.Assert.IsTrue (oy == -39);
+			
+			ok = frame.ConstrainLineBox (y, asc, desc, height, out ox, out oy, out width, out y);
+			
+			Debug.Assert.IsFalse (ok);
+			Debug.Assert.IsTrue (oy == -53);
+			
+			ok = frame.ConstrainLineBox (y, asc, desc, height, out ox, out oy, out width, out y);
+			
+			Debug.Assert.IsFalse (ok);
+			Debug.Assert.IsTrue (oy == -53);
+		}
 		
 		private static void TestFit()
 		{
@@ -125,6 +172,7 @@ namespace Epsitec.Common.Text.Tests
 		}
 		
 		
+		#region Renderer Classes
 		private class Renderer : Text.ITextRenderer
 		{
 			public Renderer()
@@ -199,6 +247,6 @@ namespace Epsitec.Common.Text.Tests
 			}
 			#endregion
 		}
-
+		#endregion
 	}
 }

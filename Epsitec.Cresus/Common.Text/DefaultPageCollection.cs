@@ -29,6 +29,13 @@ namespace Epsitec.Common.Text
 		{
 			PageFlags flags = PageFlags.None;
 			
+			Debug.Assert.IsInBounds (page, 0, this.count-1);
+			
+			//	Comme les numéros de pages "physiques" partent de 0, on convertit
+			//	en numéros "logiques" (1..n) pour la suite des opérations :
+			
+			page += 1;
+			
 			if (page == 1)
 			{
 				flags |= PageFlags.First;

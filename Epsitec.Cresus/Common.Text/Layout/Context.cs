@@ -9,7 +9,7 @@ namespace Epsitec.Common.Text.Layout
 	/// </summary>
 	public class Context
 	{
-		public Context(Text.Context text_context, ulong[] text, int start, double oy_base, double mx_left, double mx_right, double break_fence_before, double break_fence_after)
+		public Context(Text.Context text_context, ulong[] text, int start, double oy_base, double line_height, double line_width, double mx_left, double mx_right, double break_fence_before, double break_fence_after)
 		{
 			this.buffer = null;
 			
@@ -18,9 +18,13 @@ namespace Epsitec.Common.Text.Layout
 			this.text       = text;
 			this.text_start = start;
 			
-			this.oy_base    = oy_base;
+			this.oy_base      = oy_base;
+			this.oy_ascender  = oy_base;
+			this.oy_descender = oy_base;
 			
-			this.width    = mx_right - mx_left;
+			this.line_height = line_height;
+			this.line_width  = line_width;
+			
 			this.mx_left  = mx_left;
 			this.mx_right = mx_right;
 			
@@ -30,6 +34,16 @@ namespace Epsitec.Common.Text.Layout
 			this.Reset ();
 			
 			this.left_to_right = 0;
+		}
+		
+		public Context(Text.Context context, ulong[] text, int start, FrameList frame_list)
+		{
+			this.text_context = context;
+			this.text         = text;
+			this.text_start   = start;
+			this.frame_list   = frame_list;
+			
+			this.Reset ();
 		}
 		
 		
@@ -188,6 +202,31 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public double							LineHeight
+		{
+			get
+			{
+				return this.line_height;
+			}
+		}
+		
+		public double							LineWidth
+		{
+			get
+			{
+				return this.line_width;
+			}
+		}
+		
+		public double							AvailableWidth
+		{
+			get
+			{
+				return this.line_width - this.mx_left - this.mx_right;
+			}
+		}
+		
+		
 		
 		public bool								IsLeftToRight
 		{
@@ -218,6 +257,40 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public int								FrameIndex
+		{
+			get
+			{
+				return this.frame_index;
+			}
+		}
+		
+		public double							FrameY
+		{
+			get
+			{
+				return this.frame_y;
+			}
+		}
+		
+		
+		public void SelectFrame(int frame_index, double y)
+		{
+			if (frame_index == -1)
+			{
+				this.frame_index = -1;
+				this.frame       = null;
+				this.frame_y     = 0;
+			}
+			else
+			{
+				this.frame_index = frame_index;
+				this.frame       = this.frame_list[this.frame_index];
+				this.frame_y     = y;
+			}
+		}
+		
+		
 		public Layout.Status Fit(ref Layout.BreakCollection result, int paragraph_line_count)
 		{
 			//	Détermine les points de découpe pour le texte, selon le contexte
@@ -230,6 +303,7 @@ namespace Epsitec.Common.Text.Layout
 			
 			this.SelectLayoutEngine (this.text_offset);
 			this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
+			this.SelectLineHeight (this.text_offset);
 			this.Reset ();
 			
 			Debug.Assert.IsNotNull (this.layout_engine);
@@ -249,11 +323,73 @@ namespace Epsitec.Common.Text.Layout
 			
 			this.text_profile = new StretchProfile ();
 			
-			for (int pass = 0; pass < 2; )
+			double initial_line_height = 0;
+			double initial_line_width  = 0;
+restart:
+			int pass = 0;
+			
+			for (;;)
 			{
-				if (pass > 0)
+				if ((pass > 1) &&
+					(result.Count > 0))
 				{
-					snapshot.Restore (this);
+					return Layout.Status.Ok;
+				}
+				
+				if (this.frame != null)
+				{
+					double line_ascender  = this.oy_ascender - this.oy_base;
+					double line_descender = this.oy_descender - this.oy_base;
+					double line_height    = this.line_height;
+					
+					double ox, oy, dx;
+					double next_frame_y;
+					
+					while ((this.frame.ConstrainLineBox (this.frame_y, line_ascender, line_descender, line_height, out ox, out oy, out dx, out next_frame_y) == false)
+						|| (dx < this.mx_left + this.mx_right)
+						|| (pass > 1))
+					{
+						//	Il n'y a plus de place dans le ITextFrame courant, passe au
+						//	suivant, s'il en reste encore un (ou plus)...
+						
+						int frame_index = this.frame_index + 1;
+						
+						if (frame_index < this.frame_list.Count)
+						{
+							//	Reprend avec un autre cadre. On reprend tout à zéro depuis
+							//	ici :
+							
+							this.SelectFrame (frame_index, 0);
+							this.SelectLineHeight (this.text_offset);
+							
+							goto restart;
+						}
+						
+						//	Il n'y a plus de ITextFrame ! On s'arrête donc immédiatement
+						//	avec une erreur.
+						
+						return Layout.Status.ErrorNeedMoreRoom;
+					}
+					
+					this.ox           = ox + this.mx_left;
+					this.oy_base      = oy;
+					this.oy_ascender  = oy + line_ascender;
+					this.oy_descender = oy + line_descender;
+					this.frame_y      = next_frame_y;
+					this.line_width   = dx;
+					this.line_height  = line_height;
+					
+					if ((initial_line_height == 0) &&
+						(initial_line_width == 0))
+					{
+						initial_line_height = this.line_height;
+						initial_line_width  = this.line_width;
+					}
+				}
+				
+				if (pass > 1)
+				{
+					break;
 				}
 				
 				Layout.Status status = this.layout_engine.Fit (this, ref result);
@@ -262,6 +398,20 @@ namespace Epsitec.Common.Text.Layout
 				{
 					case Layout.Status.Ok:
 					case Layout.Status.OkFitEnded:
+						if ((this.frame_list != null) &&
+							(this.line_height > initial_line_height))
+						{
+							//	Oups. On vient de réaliser un fit idéal, mais qui ne tient
+							//	pas dans l'espace alloué verticalement. Il faut forcer une
+							//	seconde passe :
+							
+							initial_line_height = this.line_height;
+							result.Clear ();
+							this.hyphenate = false;
+							pass = 0;
+							break;
+						}
+						
 						return status;
 					
 					case Layout.Status.ErrorNeedMoreText:
@@ -279,12 +429,11 @@ namespace Epsitec.Common.Text.Layout
 					default:
 						throw new System.InvalidOperationException ();
 				}
+				
+				snapshot.Restore (this);
 			}
 			
-			if (result.Count > 0)
-			{
-				return Layout.Status.Ok;
-			}
+			Debug.Assert.IsTrue (result.Count == 0);
 			
 			snapshot.Restore (this);
 			
@@ -303,6 +452,7 @@ namespace Epsitec.Common.Text.Layout
 			
 			this.SelectLayoutEngine (this.text_offset);
 			this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, is_last_line);
+			this.SelectLineHeight (this.text_offset);
 			this.Reset ();
 			
 			Debug.Assert.IsNotNull (this.layout_engine);
@@ -311,7 +461,7 @@ namespace Epsitec.Common.Text.Layout
 			this.text_profile = profile;
 			this.hyphenate    = false;
 			
-			profile.ComputeScales (this.RightMargin - this.LeftMargin, out this.text_scales);
+			profile.ComputeScales (this.AvailableWidth, out this.text_scales);
 			
 			int               end            = this.text_offset + length;
 			Unicode.BreakInfo end_break_info = Unicode.Bits.GetBreakInfo (this.text[this.text_start + end - 1]);
@@ -346,11 +496,7 @@ namespace Epsitec.Common.Text.Layout
 		public void Reset()
 		{
 			this.hyphenate = false;
-			
-			this.ox = this.mx_left;
-			
-			this.oy_ascender  = oy_base;
-			this.oy_descender = oy_base;
+			this.ox        = this.mx_left;
 		}
 		
 		public void RecordAscender(double value)
@@ -360,6 +506,14 @@ namespace Epsitec.Common.Text.Layout
 			if (y > this.oy_ascender)
 			{
 				this.oy_ascender = y;
+			}
+		}
+		
+		public void RecordLineHeight(double value)
+		{
+			if (value > this.line_height)
+			{
+				this.line_height = value;
 			}
 		}
 		
@@ -436,10 +590,27 @@ namespace Epsitec.Common.Text.Layout
 			if (margins != null)
 			{
 				this.mx_left  = paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody;
-				this.mx_right = this.width - (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody);
+				this.mx_right = paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody;
 				
 				this.justification = is_last_line ? margins.JustificationLastLine : margins.JustificationBody;
 				this.disposition   = margins.Disposition;
+			}
+		}
+		
+		private void SelectLineHeight(int offset)
+		{
+			ulong code = this.text[this.text_start + offset];
+			
+			OpenType.Font font;
+			double        font_size;
+			
+			this.text_context.GetFont (code, out font, out font_size);
+			
+			if (font != null)
+			{
+				this.oy_ascender  = this.oy_base + font.GetAscender (font_size);
+				this.oy_descender = this.oy_base + font.GetDescender (font_size);
+				this.line_height  = font_size * 1.2;
 			}
 		}
 		
@@ -468,16 +639,27 @@ namespace Epsitec.Common.Text.Layout
 				this.layout_engine = context.layout_engine;
 				this.ox            = context.ox;
 				this.oy_base       = context.oy_base;
+				
+				this.frame_index   = context.frame_index;
+				this.frame_y       = context.frame_y;
 			}
 			
 			
 			public void Restore(Context context)
 			{
+				double ascender  = context.oy_ascender  - context.oy_base;
+				double descender = context.oy_descender - context.oy_base;
+				
 				context.snapshot      = this.snapshot;
 				context.text_offset   = this.text_offset;
 				context.layout_engine = this.layout_engine;
 				context.ox            = this.ox;
+				
 				context.oy_base       = this.oy_base;
+				context.oy_ascender   = this.oy_base + ascender;
+				context.oy_descender  = this.oy_base + descender;
+				
+				context.SelectFrame (this.frame_index, this.frame_y);
 			}
 			
 			
@@ -485,6 +667,8 @@ namespace Epsitec.Common.Text.Layout
 			private int							text_offset;
 			private Layout.BaseEngine			layout_engine;
 			private double						ox, oy_base;
+			private int							frame_index;
+			private double						frame_y;
 		}
 		
 		
@@ -496,13 +680,19 @@ namespace Epsitec.Common.Text.Layout
 		private StretchProfile					text_profile;
 		private StretchProfile.Scales			text_scales;
 		
+		private FrameList						frame_list;
+		private int								frame_index = -1;
+		private ITextFrame						frame;
+		private double							frame_y;
+		
 		private int								left_to_right;
 		
+		private double							ox;
 		private double							oy_base;
 		private double							oy_ascender;
 		private double							oy_descender;
-		private double							ox;
-		private double							width;
+		private double							line_height;
+		private double							line_width;
 		private double							mx_left;
 		private double							mx_right;
 		private double							justification;

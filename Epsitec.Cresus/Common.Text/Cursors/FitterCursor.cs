@@ -162,10 +162,36 @@ namespace Epsitec.Common.Text.Cursors
 				}
 			}
 			
+			public double						FrameOy
+			{
+				get
+				{
+					return this.frame_oy;
+				}
+				set
+				{
+					this.frame_oy = value;
+				}
+			}
+			
+			public double						FrameWidth
+			{
+				get
+				{
+					return this.frame_width;
+				}
+				set
+				{
+					this.frame_width = value;
+				}
+			}
+			
 			
 			private ushort						length;
 			private Layout.StretchProfile		profile;
 			private int							frame_index;
+			private double						frame_oy;
+			private double						frame_width;
 		}
 		#endregion
 		

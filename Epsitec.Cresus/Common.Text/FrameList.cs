@@ -50,6 +50,12 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void ClearCursorMap()
+		{
+			this.cursor_map.Clear ();
+		}
+		
+		
 		public int IndexOf(ITextFrame frame)
 		{
 			return this.frames.IndexOf (frame);
@@ -133,12 +139,6 @@ namespace Epsitec.Common.Text
 		private void HandleRemoval(ITextFrame frame)
 		{
 			this.ClearCursorMap ();
-		}
-		
-		
-		private void ClearCursorMap()
-		{
-			this.cursor_map.Clear ();
 		}
 		
 		

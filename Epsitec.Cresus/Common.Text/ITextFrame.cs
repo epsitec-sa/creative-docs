@@ -10,5 +10,7 @@ namespace Epsitec.Common.Text
 	public interface ITextFrame
 	{
 		int		PageNumber		{ get; set; }
+		
+		bool ConstrainLineBox(double y_dist, double ascender, double descender, double height, out double ox, out double oy, out double width, out double next_y_dist);
 	}
 }

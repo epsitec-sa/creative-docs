@@ -13,6 +13,12 @@ namespace Epsitec.Common.Text
 		{
 		}
 		
+		public SimpleTextFrame(double width, double height)
+		{
+			this.width  = width;
+			this.height = height;
+		}
+		
 		
 		public double							X
 		{
@@ -87,6 +93,32 @@ namespace Epsitec.Common.Text
 				{
 					this.page_number = value;
 				}
+			}
+		}
+		
+		
+		public bool ConstrainLineBox(double y_dist, double ascender, double descender, double height, out double ox, out double oy, out double width, out double next_y_dist)
+		{
+			double line_dy = height;
+			double text_dy = ascender - descender;
+			double leading = line_dy - text_dy;
+			
+			double y_top = y_dist;
+			double y_bot = y_top - line_dy;
+			
+			ox    = 0;
+			oy    = y_top - ascender - leading / 2;
+			width = this.width;
+			
+			if (y_bot < -this.height)
+			{
+				next_y_dist = y_dist;
+				return false;
+			}
+			else
+			{
+				next_y_dist = y_dist - line_dy;
+				return true;
 			}
 		}
 		
