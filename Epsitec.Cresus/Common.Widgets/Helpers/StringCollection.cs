@@ -245,6 +245,31 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		#endregion
 		
+		public void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
+		{
+			Support.ResourceBundle items = bundle["items"].AsBundle;
+			
+			if (items != null)
+			{
+				string[] names = items.FieldNames;
+				System.Array.Sort (names);
+				
+				for (int i=0 ; i < names.Length; i++)
+				{
+					string name = names[i];
+					string item = items[name].AsString;
+					
+					if (item == null)
+					{
+						throw new Support.ResourceException (string.Format ("Item '{0}' is invalid.", name));
+					}
+					
+					this.Add (Support.ResourceBundle.ExtractName (name), item);
+				}
+			}
+		}
+		
+		
 		protected virtual void HandleInsert(object item)
 		{
 		}

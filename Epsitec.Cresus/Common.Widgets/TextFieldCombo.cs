@@ -3,7 +3,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe TextFieldCombo implémente la ligne éditable avec bouton "v".
 	/// </summary>
-	public class TextFieldCombo : AbstractTextField, Helpers.IStringCollectionHost, Support.IBundleSupport
+	public class TextFieldCombo : AbstractTextField, Helpers.IStringCollectionHost
 	{
 		public TextFieldCombo()
 		{
@@ -30,37 +30,23 @@ namespace Epsitec.Common.Widgets
 		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
 		{
 			base.RestoreFromBundle(bundler, bundle);
-			
-			Support.ResourceBundle items = bundle["items"].AsBundle;
-			
-			if ( items != null )
-			{
-				string[] names = items.FieldNames;
-				System.Array.Sort(names);
-				
-				for ( int i=0 ; i<items.CountFields ; i++ )
-				{
-					string name = names[i];
-					string item = items[name].AsString;
-					
-					if ( item == null )
-					{
-						throw new Support.ResourceException(string.Format("Item '{0}' is invalid", name));
-					}
-					
-					this.Items.Add(Support.ResourceBundle.ExtractName(name), item);
-				}
-			}
+			this.items.RestoreFromBundle (bundler, bundle);
 		}
 		
-		
-		public Helpers.StringCollection Items
+		protected override void Dispose(bool disposing)
 		{
-			get { return this.items; }
+			if ( disposing )
+			{
+				this.button.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+				this.button.Dispose();
+				this.button = null;
+			}
+			
+			base.Dispose(disposing);
 		}
+
 		
-		
-		public int SelectedIndex
+		public int									SelectedIndex
 		{
 			get
 			{
@@ -89,7 +75,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public string SelectedItem
+		public string								SelectedItem
 		{
 			get
 			{
@@ -104,7 +90,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public string SelectedName
+		public string								SelectedName
 		{
 			// Nom de la ligne sélectionnée, null si aucune.
 			get
@@ -135,6 +121,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
 		public bool FindMatch(string find, out int index, out bool exactMatch)
 		{
 			index = this.items.FindExactMatch(find);
@@ -158,18 +145,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected override void Dispose(bool disposing)
-		{
-			base.Dispose(disposing);
-			
-			if ( disposing )
-			{
-				this.button.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
-				this.button.Dispose();
-				this.button = null;
-			}
-		}
-
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
@@ -405,12 +380,18 @@ namespace Epsitec.Common.Widgets
 			this.SelectedIndex = this.scrollList.SelectedIndex;
 		}
 
+		
 		#region IStringCollectionHost Members
 		public void StringCollectionChanged()
 		{
 		}
-		#endregion
 		
+		
+		public Helpers.StringCollection				Items
+		{
+			get { return this.items; }
+		}
+		#endregion
 		
 		public event Support.EventHandler			SelectedIndexChanged;
 		

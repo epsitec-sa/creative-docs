@@ -1081,7 +1081,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.IsFocused)
+				if (this.IsFocusedOrPassive)
 				{
 					return true;
 				}
@@ -1772,17 +1772,16 @@ namespace Epsitec.Common.Widgets
 		{
 			Window window = this.Window;
 			
-			if (window == null)
-			{
-				return;
-			}
-			
 			if (! this.IsFocusedOrPassive)
 			{
 				if (focused)
 				{
 					this.widget_state |= WidgetState.Focused;
-					window.FocusedWidget = this;
+					
+					if (window != null)
+					{
+						window.FocusedWidget = this;
+					}
 					
 					if (this.IsFocused)
 					{
@@ -1796,7 +1795,12 @@ namespace Epsitec.Common.Widgets
 				if (!focused)
 				{
 					this.widget_state &= ~ WidgetState.Focused;
-					window.FocusedWidget = null;
+					
+					if (window != null)
+					{
+						window.FocusedWidget = null;
+					}
+					
 					this.OnDefocused ();
 					this.Invalidate ();
 				}
@@ -1944,6 +1948,18 @@ namespace Epsitec.Common.Widgets
 		internal void SimulateClicked()
 		{
 			this.OnClicked (null);
+		}
+		
+		internal void SimulateFocused()
+		{
+			this.OnFocused ();
+			this.Invalidate ();
+		}
+		
+		internal void SimulateDefocused()
+		{
+			this.OnDefocused ();
+			this.Invalidate ();
 		}
 		
 		
@@ -2995,6 +3011,32 @@ namespace Epsitec.Common.Widgets
 			return widgets;
 		}
 		
+		public Widget			FindFocusedChild()
+		{
+			Window window = this.Window;
+			
+			if (window != null)
+			{
+				if (window.FocusedWidget != null)
+				{
+					//	Il y a un widget avec le focus. Ca peut être nous, un de nos descendants
+					//	ou un autre widget sans aucun lien.
+					
+					if (this.IsFocusedOrPassive)
+					{
+						return this;
+					}
+					
+					if (this.IsDescendantWidget (window.FocusedWidget))
+					{
+						return window.FocusedWidget;
+					}
+				}
+			}
+			
+			return null;
+		}
+		
 		
 		protected virtual void FindAllChildren(System.Collections.ArrayList list)
 		{
@@ -3559,6 +3601,25 @@ namespace Epsitec.Common.Widgets
 		internal virtual bool AboutToLoseFocus(TabNavigationDir dir, TabNavigationMode mode)
 		{
 			return true;
+		}
+		
+		
+		protected virtual void AboutToBecomeOrphan()
+		{
+			this.SetFocused (false);
+			this.SetEngaged (false);
+			this.SetEntered (false);
+			
+			if (this.HasChildren)
+			{
+				Widget[] children = this.Children.Widgets;
+				int  children_num = children.Length;
+				
+				for (int i = 0; i < children_num; i++)
+				{
+					children[i].AboutToBecomeOrphan ();
+				}
+			}
 		}
 		
 		
@@ -4196,11 +4257,12 @@ namespace Epsitec.Common.Widgets
 				
 				for (int i = 0; i < children_num; i++)
 				{
-					Widget widget = children[children_num-1 - i];
+					Widget widget         = children[children_num-1 - i];
+					bool   contains_focus = widget.ContainsFocus;
 					
-					if ((widget.IsVisible) &&
-						(widget.IsFrozen == false) &&
-						((message.FilterOnlyFocused == false) || (widget.ContainsFocus)) &&
+					if ((widget.IsFrozen == false) &&
+						((widget.IsVisible) || (contains_focus && message.IsKeyType)) &&
+						((message.FilterOnlyFocused == false) || (contains_focus)) &&
 						((message.FilterOnlyOnHit == false) || (widget.HitTest (client_pos))))
 					{
 						if (widget.IsEnabled)
@@ -4252,7 +4314,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void DispatchMessage(Message message, Drawing.Point pos)
 		{
-			if (this.IsVisible)
+			if (this.IsVisible || message.IsKeyType)
 			{
 				bool is_entered = this.IsEntered;
 				
@@ -4868,19 +4930,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal void GeneratedFocused()
-		{
-			this.OnFocused ();
-			this.Invalidate ();
-		}
-		
-		internal void GeneratedDefocused()
-		{
-			this.OnDefocused ();
-			this.Invalidate ();
-		}
-		
-		
 		protected virtual void OnFocused()
 		{
 			if (this.Focused != null)
@@ -5299,9 +5348,7 @@ namespace Epsitec.Common.Widgets
 			private void PreRemove(Widget widget)
 			{
 				System.Diagnostics.Debug.Assert (widget.parent == this.widget);
-				widget.SetFocused (false);
-				widget.SetEngaged (false);
-				widget.SetEntered (false);
+				widget.AboutToBecomeOrphan ();
 				widget.parent = null;
 				widget.HandleParentChanged ();
 			}

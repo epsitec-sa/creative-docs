@@ -785,7 +785,7 @@ namespace Epsitec.Common.Widgets
 			}
 			if (this.focused_widget != null)
 			{
-				this.focused_widget.GeneratedFocused ();
+				this.focused_widget.SimulateFocused ();
 			}
 		}
 		
@@ -797,7 +797,7 @@ namespace Epsitec.Common.Widgets
 			}
 			if (this.focused_widget != null)
 			{
-				this.focused_widget.GeneratedDefocused ();
+				this.focused_widget.SimulateDefocused ();
 			}
 		}
 		

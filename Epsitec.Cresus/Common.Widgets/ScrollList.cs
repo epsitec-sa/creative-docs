@@ -49,45 +49,18 @@ namespace Epsitec.Common.Widgets
 		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
 		{
 			base.RestoreFromBundle(bundler, bundle);
-			
-			Support.ResourceBundle items = bundle["items"].AsBundle;
-			
-			if ( items != null )
-			{
-				string[] names = items.FieldNames;
-				System.Array.Sort(names);
-				
-				for ( int i=0 ; i<items.CountFields ; i++ )
-				{
-					string name = names[i];
-					string item = items[name].AsString;
-					
-					if ( item == null )
-					{
-						throw new Support.ResourceException(string.Format("Item '{0}' is invalid", name));
-					}
-					
-					this.Items.Add(Support.ResourceBundle.ExtractName(name), item);
-				}
-			}
+			this.items.RestoreFromBundle (bundler, bundle);
 		}
-		
-		
 		protected override void Dispose(bool disposing)
 		{
-			if ( disposing )
+			if (disposing)
 			{
-				this.scroller.ValueChanged -= new Support.EventHandler(this.HandleScrollerValueChanged);
+				this.scroller.ValueChanged -= new Support.EventHandler (this.HandleScrollerValueChanged);
 			}
 			
-			base.Dispose(disposing);
+			base.Dispose (disposing);
 		}
 
-
-		public Helpers.StringCollection		Items
-		{
-			get { return this.items; }
-		}
 
 		public ScrollListStyle				ScrollListStyle
 		{
@@ -110,7 +83,6 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return this.scroller; }
 		}
-
 
 		public int							SelectedIndex
 		{
@@ -205,6 +177,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
+		
 		
 		public void ShowSelectedLine(ScrollListShow mode)
 		{
@@ -438,9 +412,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Met à jour les textes.
 		protected void UpdatetextLayouts()
 		{
+			//	Met à jour les textes.
+			
 			if ( this.isDirty )
 			{
 				this.UpdateScroller();
@@ -463,9 +438,10 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Met à jour la géométrie de l'ascenseur de la liste.
 		protected override void UpdateClientGeometry()
 		{
+			//	Met à jour la géométrie de l'ascenseur de la liste.
+			
 			base.UpdateClientGeometry();
 			
 			if ( this.lineHeight == 0 )  return;
@@ -506,9 +482,11 @@ namespace Epsitec.Common.Widgets
 			return rect;
 		}
 
-		// Calcule la largeur utile pour le texte.
+		
 		protected double GetTextWidth()
 		{
+			//	Calcule la largeur utile pour le texte.
+			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			double width = this.Client.Width-ScrollList.Margin*2;
@@ -542,7 +520,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Dessine la liste.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			this.UpdatetextLayouts();
@@ -604,6 +581,12 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.SetDirty ();
+		}
+		
+		
+		public Helpers.StringCollection		Items
+		{
+			get { return this.items; }
 		}
 		#endregion
 

@@ -56,6 +56,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.scrollerV.ValueChanged -= new Support.EventHandler(this.HandleScrollerV);
 				this.scrollerH.ValueChanged -= new Support.EventHandler(this.HandleScrollerH);
+				
+				this.SetFocusedCell(null);
 			}
 			
 			base.Dispose(disposing);
