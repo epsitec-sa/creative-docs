@@ -39,7 +39,7 @@ namespace Epsitec.Common.Pictogram
 			}
 		}
 
-		public void Paint(Drawing.Graphics graphics, Drawing.Size size, byte[] data, bool disabled, Drawing.Color color, object adorner_object)
+		public void Paint(Drawing.Graphics graphics, Drawing.Size size, byte[] data, Drawing.GlyphPaintStyle style, Drawing.Color color, object adorner_object)
 		{
 			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
 			{
@@ -55,6 +55,9 @@ namespace Epsitec.Common.Pictogram
 					context.ScaleX = size.Width / icon.Size.Width;
 					context.ScaleY = size.Height / icon.Size.Height;
 					graphics.ScaleTransform(context.ScaleX, context.ScaleY, 0, 0);
+					
+					//PA: il faudra modifier DrawGeometry pour tenir compte du style de peinture
+					// requis ici (GlyphPaintStyle).
 					
 					icon.DrawGeometry(graphics, context, color, adorner_object);
 				}
