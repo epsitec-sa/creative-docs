@@ -1810,9 +1810,9 @@ invalid:	row    = -1;
 						
 						string text = this[row + top, column];
 						
-						this.layouts[row, column].Text     = this.AutoResolveResRef ? Support.Resources.ResolveTextRef (text) : text;
-						this.layouts[row, column].Font     = this.DefaultFont;
-						this.layouts[row, column].FontSize = this.DefaultFontSize;
+						this.layouts[row, column].Text            = this.AutoResolveResRef ? Support.Resources.ResolveTextRef (text) : text;
+						this.layouts[row, column].DefaultFont     = this.DefaultFont;
+						this.layouts[row, column].DefaultFontSize = this.DefaultFontSize;
 					}
 					
 					this.layouts[row, column].LayoutSize = new Drawing.Size (this.Columns[column].Width - this.text_margin * 2, this.row_height);
