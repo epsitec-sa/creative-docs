@@ -8,7 +8,6 @@ namespace Epsitec.Cresus.Database
 	/// de savoir s'il faut appeler ExecuteNonQuery ou l'une des variantes retournant
 	/// des données (ExecuteScalar, ExecuteReader, IDataAdapter.Fill, etc.).
 	/// </summary>
-	[System.Flags]
 	public enum DbCommandType
 	{
 		None			= 0,			//	pas de commande
@@ -16,10 +15,6 @@ namespace Epsitec.Cresus.Database
 		Silent			= 1,			//	ExecuteNonQuery retourne -1
 		NonQuery		= 2,			//	ExecuteNonQuery retourne nb. lignes affectées
 		
-		ReturningData	= 3,			//	retourne des données (requête SELECT)
-		
-		Mask			= 0x00FF,		//	masque pour les valeurs
-		
-		FlagMultiple	= 0x0100		//	commande multiple
+		ReturningData	= 3				//	retourne des données (requête SELECT)
 	}
 }
