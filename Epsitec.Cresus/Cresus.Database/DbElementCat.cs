@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 22/10/2003
 
 namespace Epsitec.Cresus.Database
@@ -9,14 +9,14 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public enum DbElementCat : byte
 	{
-		Unsupported			= 0,	//	catégorie non supportée
-		Unknown = Unsupported,		//	catégorie inconnue (= non supportée)
+		Unsupported			= 0,		//	catégorie non supportée
+		Unknown = Unsupported,			//	catégorie inconnue (= non supportée)
 		
-		Internal			= 1,	//	élément à usage interne
-		UserDataManaged		= 2,	//	élément sous contrôle de l'utilisateur, géré par Crésus
-		UserDataExternal	= 3,	//	élément sous contrôle de l'utilisateur, non géré (source externe)
+		Internal			= 1,		//	élément à usage interne
+		UserDataManaged		= 2,		//	élément sous contrôle de l'utilisateur, géré par Crésus
+		UserDataExternal	= 3,		//	élément sous contrôle de l'utilisateur, non géré (source externe)
 		
-		Synthetic			= 4,	//	élément synthétique (n'existe pas en tant que tel dans la base)
-		Any					= 5,	//	n'importe (utilisable uniquement dans les critères d'extraction)
+		Synthetic			= 4,		//	élément synthétique (n'existe pas en tant que tel dans la base)
+		Any					= 5,		//	n'importe (utilisable uniquement dans les critères d'extraction)
 	}
 }
