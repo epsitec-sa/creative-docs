@@ -505,10 +505,12 @@ namespace Epsitec.Cresus.Database
 			{
 				//	Crée les lignes de description des valeurs de l'énumération :
 				
-				for (int i = 0; i < type_enum.Count; i++)
+				DbEnumValue[] enum_values = type_enum.Values;
+				
+				for (int i = 0; i < enum_values.Length; i++)
 				{
-					type_enum[i].DefineInternalKey (new DbKey (enum_id + i));
-					this.BootInsertEnumValueDefRow (transaction, type, type_enum[i]);
+					enum_values[i].DefineInternalKey (new DbKey (enum_id + i));
+					this.BootInsertEnumValueDefRow (transaction, type, enum_values[i]);
 				}
 			}
 		}

@@ -20,15 +20,23 @@ namespace Epsitec.Cresus.Database
 			DbTypeEnum e_type = new DbTypeEnum (list);
 			DbTypeEnum e_copy = e_type.Clone () as DbTypeEnum;
 			
-			Assertion.AssertEquals ("M", e_type[0].Name);
+			Assertion.AssertEquals ("M", e_type.Values[0].Name);
+			Assertion.AssertEquals ("M", e_type[1].Name);
 			Assertion.AssertEquals ("M", e_type["M"].Name);
-			Assertion.AssertEquals (1, e_type[0].Rank);
+			Assertion.AssertEquals (1, e_type.Values[0].Rank);
 			Assertion.AssertEquals (1, e_type["M"].Rank);
 			
-			Assertion.AssertEquals ("MME", e_copy[1].Name);
+			Assertion.AssertEquals ("MME", e_copy.Values[1].Name);
+			Assertion.AssertEquals ("MME", e_copy[2].Name);
 			Assertion.AssertEquals ("MME", e_copy["MME"].Name);
-			Assertion.AssertEquals (2, e_copy[1].Rank);
+			Assertion.AssertEquals (2, e_copy.Values[1].Rank);
 			Assertion.AssertEquals (2, e_copy["MME"].Rank);
+			
+			Assertion.AssertEquals ("MLLE", e_copy.Values[2].Name);
+			Assertion.AssertEquals ("MLLE", e_copy[3].Name);
+			Assertion.AssertEquals ("MLLE", e_copy["MLLE"].Name);
+			Assertion.AssertEquals (3, e_copy.Values[2].Rank);
+			Assertion.AssertEquals (3, e_copy["MLLE"].Rank);
 			
 			Assertion.AssertNull (e_type["X"]);
 			
@@ -98,9 +106,9 @@ namespace Epsitec.Cresus.Database
 			
 			for (int i = 0; i < 3; i++)
 			{
-				Assertion.AssertEquals (e_type[i].Name,    copy[i].Name);
-				Assertion.AssertEquals (e_type[i].Rank,    copy[i].Rank);
-				Assertion.AssertEquals (e_type[i].Caption, copy[i].Caption);
+				Assertion.AssertEquals (e_type.Values[i].Name,    copy.Values[i].Name);
+				Assertion.AssertEquals (e_type.Values[i].Rank,    copy.Values[i].Rank);
+				Assertion.AssertEquals (e_type.Values[i].Caption, copy.Values[i].Caption);
 			}
 		}
 		
