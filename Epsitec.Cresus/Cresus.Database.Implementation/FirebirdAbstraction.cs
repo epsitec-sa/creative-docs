@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				
 				if (base_already_exists)
 				{
-					throw new DbExistsException (db_access, "Cannot create existing database");
+					throw new Exceptions.ExistsException (db_access, "Cannot create existing database");
 				}
 			}
 			else
@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 				
 				default:
-					throw new Database.DbFactoryException (string.Format ("EngineType {0} not supported.", this.engine_type));
+					throw new Database.Exceptions.FactoryException (string.Format ("EngineType {0} not supported.", this.engine_type));
 			}
 			
 			buffer.Append (db_access.Database);
@@ -243,12 +243,12 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			if (name.Length > 100)
 			{
-				throw new DbSyntaxException (db_access, string.Format ("Name is too long (length={0})", name));
+				throw new Exceptions.SyntaxException (db_access, string.Format ("Name is too long (length={0})", name));
 			}
 			
 			if (Epsitec.Common.Support.RegexFactory.AlphaNumName.IsMatch (name) == false)
 			{
-				throw new DbSyntaxException (db_access, string.Format ("{0} contains an invalid character", name));
+				throw new Exceptions.SyntaxException (db_access, string.Format ("{0} contains an invalid character", name));
 			}
 		}
 		
@@ -347,7 +347,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			if (fb_command == null)
 			{
-				throw new DbException (this.db_access, "Invalid command object");
+				throw new Exceptions.GenericException (this.db_access, "Invalid command object");
 			}
 			
 			return new FbDataAdapter (fb_command);

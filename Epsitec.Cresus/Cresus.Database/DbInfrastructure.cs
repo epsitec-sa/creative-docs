@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (this.db_access.IsValid)
 			{
-				throw new DbException (this.db_access, "A database already exists for this DbInfrastructure.");
+				throw new Exceptions.GenericException (this.db_access, "A database already exists for this DbInfrastructure.");
 			}
 			
 			this.db_access = db_access;
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Database
 		{
 			if (this.db_access.IsValid)
 			{
-				throw new DbException (this.db_access, "Database already attached");
+				throw new Exceptions.GenericException (this.db_access, "Database already attached");
 			}
 			
 			this.db_access = db_access;
@@ -269,13 +269,13 @@ namespace Epsitec.Cresus.Database
 			switch (category)
 			{
 				case DbElementCat.Internal:
-					throw new DbException (this.db_access, string.Format ("User may not create internal table. Table '{0}'.", name));
+					throw new Exceptions.GenericException (this.db_access, string.Format ("User may not create internal table. Table '{0}'.", name));
 				
 				case DbElementCat.UserDataManaged:
 					return this.CreateTable(name, category, revision_mode);
 				
 				default:
-					throw new DbException (this.db_access, string.Format ("Unsupported category {0} specified. Table '{1}'.", category, name));
+					throw new Exceptions.GenericException (this.db_access, string.Format ("Unsupported category {0} specified. Table '{1}'.", category, name));
 			}
 		}
 		
@@ -485,7 +485,7 @@ namespace Epsitec.Cresus.Database
 							if (parent_table == null)
 							{
 								string message = string.Format ("Table '{0}' referenced from '{1}.{2}' not found in database.", parent_name, table.Name, column.Name);
-								throw new DbException (this.db_access, message);
+								throw new Exceptions.GenericException (this.db_access, message);
 							}
 							
 							DbKey source_table_key  = table.InternalKey;
@@ -495,19 +495,19 @@ namespace Epsitec.Cresus.Database
 							if (source_table_key == null)
 							{
 								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{1}'.", parent_name, table.Name, column.Name);
-								throw new DbException (this.db_access, message);
+								throw new Exceptions.GenericException (this.db_access, message);
 							}
 							
 							if (source_column_key == null)
 							{
 								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered column '{2}'.", parent_name, table.Name, column.Name);
-								throw new DbException (this.db_access, message);
+								throw new Exceptions.GenericException (this.db_access, message);
 							}
 							
 							if (parent_table_key == null)
 							{
 								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{0}'.", parent_name, table.Name, column.Name);
-								throw new DbException (this.db_access, message);
+								throw new Exceptions.GenericException (this.db_access, message);
 							}
 							
 							this.UpdateColumnRelation (transaction, source_table_key, source_column_key, parent_table_key);
@@ -725,7 +725,7 @@ namespace Epsitec.Cresus.Database
 					string message = string.Format ("Unregistered type '{0}' used in table '{1}', column '{2}'.",
 						type.Name, table.Name, columns[i].Name);
 					
-					throw new DbException (this.db_access, message);
+					throw new Exceptions.GenericException (this.db_access, message);
 				}
 			}
 		}
@@ -737,7 +737,7 @@ namespace Epsitec.Cresus.Database
 			if (this.CountMatchingRows (transaction, Tags.TableTypeDef, Tags.ColumnName, type.Name) > 0)
 			{
 				string message = string.Format ("Type {0} already exists in database.", type.Name);
-				throw new DbException (this.db_access, message);
+				throw new Exceptions.GenericException (this.db_access, message);
 			}
 		}
 		
@@ -748,7 +748,7 @@ namespace Epsitec.Cresus.Database
 			if (this.CountMatchingRows (transaction, Tags.TableTypeDef, Tags.ColumnName, type.Name) == 0)
 			{
 				string message = string.Format ("Type {0} does not exist in database.", type.Name);
-				throw new DbException (this.db_access, message);
+				throw new Exceptions.GenericException (this.db_access, message);
 			}
 		}
 		
@@ -767,7 +767,7 @@ namespace Epsitec.Cresus.Database
 			if (this.CountMatchingRows (transaction, Tags.TableTableDef, Tags.ColumnName, table.Name) > 0)
 			{
 				string message = string.Format ("Table {0} already exists in database.", table.Name);
-				throw new DbException (this.db_access, message);
+				throw new Exceptions.GenericException (this.db_access, message);
 			}
 		}
 		
@@ -786,7 +786,7 @@ namespace Epsitec.Cresus.Database
 			if (this.CountMatchingRows (transaction, Tags.TableTableDef, Tags.ColumnName, table.Name) == 0)
 			{
 				string message = string.Format ("Table {0} does not exist in database.", table.Name);
-				throw new DbException (this.db_access, message);
+				throw new Exceptions.GenericException (this.db_access, message);
 			}
 		}
 		
@@ -795,7 +795,7 @@ namespace Epsitec.Cresus.Database
 		{
 			if (this.live_transaction != null)
 			{
-				throw new DbException (this.db_access, string.Format ("Nested transactions not supported."));
+				throw new Exceptions.GenericException (this.db_access, string.Format ("Nested transactions not supported."));
 			}
 			
 			this.live_transaction = transaction;
@@ -805,7 +805,7 @@ namespace Epsitec.Cresus.Database
 		{
 			if (this.live_transaction != transaction)
 			{
-				throw new DbException (this.db_access, string.Format ("Ending wrong transaction."));
+				throw new Exceptions.GenericException (this.db_access, string.Format ("Ending wrong transaction."));
 			}
 			
 			this.live_transaction = null;
@@ -960,14 +960,14 @@ namespace Epsitec.Cresus.Database
 			if ((data_set == null) ||
 				(data_set.Tables.Count != 1))
 			{
-				throw new DbException (this.db_access, string.Format ("Query failed."));
+				throw new Exceptions.GenericException (this.db_access, string.Format ("Query failed."));
 			}
 			
 			data_table = data_set.Tables[0];
 			
 			if (data_table.Rows.Count < min_rows)
 			{
-				throw new DbException (this.db_access, string.Format ("Query returned to few rows; expected {0}, found {1}.", min_rows, data_table.Rows.Count));
+				throw new Exceptions.GenericException (this.db_access, string.Format ("Query returned to few rows; expected {0}, found {1}.", min_rows, data_table.Rows.Count));
 			}
 			
 			return data_table;
@@ -1086,7 +1086,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (num_rows_affected != 1)
 			{
-				throw new DbException (this.db_access, string.Format ("Update of row {0} in table {1} produced {2} updates.", old_key, table_name, num_rows_affected));
+				throw new Exceptions.GenericException (this.db_access, string.Format ("Update of row {0} in table {1} produced {2} updates.", old_key, table_name, num_rows_affected));
 			}
 		}
 		
@@ -1252,7 +1252,7 @@ namespace Epsitec.Cresus.Database
 				
 				if (db_type == null)
 				{
-					throw new DbException (this.db_access, string.Format ("Missing type for column {0} in table {1}.", db_column.Name, db_table.Name));
+					throw new Exceptions.GenericException (this.db_access, string.Format ("Missing type for column {0} in table {1}.", db_column.Name, db_table.Name));
 				}
 				
 				db_column.SetType (db_type);

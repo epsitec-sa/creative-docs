@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Database
 							return DbRawType.Int64;
 						}
 						
-						throw new DbFormatException (string.Format ("Unsupported numeric format, {0} bits required", bits));
+						throw new Exceptions.FormatException (string.Format ("Unsupported numeric format, {0} bits required", bits));
 					}
 					
 					return num_def.InternalRawType;
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Database
 					}
 					else
 					{
-						throw new DbFormatException (string.Format ("Expected numeric format, got {0}", value.GetType ().ToString ()));
+						throw new Exceptions.FormatException (string.Format ("Expected numeric format, got {0}", value.GetType ().ToString ()));
 					}
 						
 					if (num_def.IsConversionNeeded)
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Database
 						return num;
 					}
 					
-					throw new DbFormatException (string.Format ("Incompatible numeric format for {0}", num));
+					throw new Exceptions.FormatException (string.Format ("Incompatible numeric format for {0}", num));
 				
 				case DbSimpleType.String:		return value;
 				case DbSimpleType.Date:			return new Common.Types.Date (value);
@@ -328,7 +328,7 @@ namespace Epsitec.Cresus.Database
 					return value;
 			}
 			
-			throw new DbFormatException (string.Format ("Invalid value format {0}, cannot convert to {1}", value.GetType ().ToString (), simple_type.ToString ()));
+			throw new Exceptions.FormatException (string.Format ("Invalid value format {0}, cannot convert to {1}", value.GetType ().ToString (), simple_type.ToString ()));
 		}
 		
 		

@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Database
 			{
 				if (this.type == SqlFieldType.Name)
 				{
-					throw new DbFormatException (string.Format ("{0} is not a qualified name.", this.AsName));
+					throw new Exceptions.FormatException (string.Format ("{0} is not a qualified name.", this.AsName));
 				}
 				if (this.type == SqlFieldType.QualifiedName)
 				{
@@ -382,7 +382,7 @@ namespace Epsitec.Cresus.Database
 				return new SqlField (name);
 			}
 			
-			throw new DbFormatException (string.Format ("{0} is not a valid SQL name.", name));
+			throw new Exceptions.FormatException (string.Format ("{0} is not a valid SQL name.", name));
 		}
 		
 		public static SqlField CreateName(string table_name, string column_name)
@@ -394,7 +394,7 @@ namespace Epsitec.Cresus.Database
 				return new SqlField (name);
 			}
 			
-			throw new DbFormatException (string.Format ("{0} is not a valid SQL name.", name));
+			throw new Exceptions.FormatException (string.Format ("{0} is not a valid SQL name.", name));
 		}
 		
 		public static SqlField CreateAggregate(SqlAggregate aggregate)

@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Database
 				return a + b;
 			}
 			
-			throw new DbFormatException (string.Format ("Expected two names: {0} and {1}", a, b));
+			throw new Exceptions.FormatException (string.Format ("Expected two names: {0} and {1}", a, b));
 		}
 		
 		public static string ConcatStrings(string a, string b)
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Database
 				return "'" + a.Substring (1, a.Length-2) + b.Substring (1, b.Length-2) + "'";
 			}
 			
-			throw new DbFormatException (string.Format ("Expected two strings: {0} and {1}", a, b));
+			throw new Exceptions.FormatException (string.Format ("Expected two strings: {0} and {1}", a, b));
 		}
 		
 		
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Database
 				return qualifier + "." + name;
 			}
 			
-			throw new DbFormatException (string.Format ("Cannot make qualified name from {0} and {1}", qualifier, name));
+			throw new Exceptions.FormatException (string.Format ("Cannot make qualified name from {0} and {1}", qualifier, name));
 		}
 		
 		public static void SplitQualifiedName(string value, out string qualifier, out string name)
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Database
 
 				if ( nb != 2 )
 				{
-					throw new DbFormatException (string.Format ("{0} is not a qualified name", value));
+					throw new Exceptions.FormatException (string.Format ("{0} is not a qualified name", value));
 				}
 
 				qualifier = tokens [0];
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Database
 				return;
 			}
 			
-			throw new DbFormatException (string.Format ("{0} is not a qualified name", value));
+			throw new Exceptions.FormatException (string.Format ("{0} is not a qualified name", value));
 		}
 		
 		
@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.Database
 					{
 						return name;
 					}
-					throw new DbException (DbAccess.Empty, string.Format ("'{0}' is an invalid internal table name.", name));
+					throw new Exceptions.GenericException (DbAccess.Empty, string.Format ("'{0}' is an invalid internal table name.", name));
 				
 				case DbElementCat.UserDataManaged:
 					buffer = new System.Text.StringBuilder ();
@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Database
 					{
 						return name;
 					}
-					throw new DbException (DbAccess.Empty, string.Format ("'{0}' is an invalid internal name.", name));
+					throw new Exceptions.GenericException (DbAccess.Empty, string.Format ("'{0}' is an invalid internal name.", name));
 				
 				case DbElementCat.UserDataManaged:
 					buffer = new System.Text.StringBuilder ();

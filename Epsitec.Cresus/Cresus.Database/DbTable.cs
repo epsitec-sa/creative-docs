@@ -213,7 +213,7 @@ namespace Epsitec.Cresus.Database
 				if (sql_table.Columns.IndexOf (sql_column.Name) >= 0)
 				{
 					string message = string.Format ("Multiple columns with same name ({0}) are forbidden", sql_column.Name);
-					throw new DbSyntaxException (DbAccess.Empty, message);
+					throw new Exceptions.SyntaxException (DbAccess.Empty, message);
 				}
 				
 				sql_table.Columns.Add (sql_column);
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Database
 					if (sql_table.Columns.IndexOf (key_name) < 0)
 					{
 						string message = string.Format ("Primary key {0} not found in columns", key_name);
-						throw new DbSyntaxException (DbAccess.Empty, message);
+						throw new Exceptions.SyntaxException (DbAccess.Empty, message);
 					}
 					
 					SqlColumn sql_key  = sql_table.Columns[key_name];
@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.Database
 					if (sql_key.IsNullAllowed)
 					{
 						string message = string.Format ("Primary key {0} may not be nullable", key_name);
-						throw new DbSyntaxException (DbAccess.Empty, message);
+						throw new Exceptions.SyntaxException (DbAccess.Empty, message);
 					}
 					
 					primary_keys[i] = sql_key;
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (key == null)
 			{
-				throw new DbException (DbAccess.Empty, string.Format ("Table {0} uses unsupported key format.", this.Name));
+				throw new Exceptions.GenericException (DbAccess.Empty, string.Format ("Table {0} uses unsupported key format.", this.Name));
 			}
 			
 			return key;

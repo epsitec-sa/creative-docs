@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			if (this.expect_more)
 			{
-				throw new DbSyntaxException (this.fb.DbAccess, string.Format ("Command is defined partially: AppendMore called without additional commands."));
+				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Command is defined partially: AppendMore called without additional commands."));
 			}
 			
 			if (this.command_cache == null)
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			if (basic_type == null)
 			{
-				throw new DbFormatException (string.Format ("Unsupported type {0} in column {1}.", column.Type.ToString (), column.Name));
+				throw new Exceptions.FormatException (string.Format ("Unsupported type {0} in column {1}.", column.Type.ToString (), column.Name));
 			}
 			
 			return basic_type;
@@ -742,7 +742,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				
 				if (this.command_type != DbCommandType.None)
 				{
-					throw new DbException (this.fb.DbAccess, "Previous command not cleared");
+					throw new Exceptions.GenericException (this.fb.DbAccess, "Previous command not cleared");
 				}
 			}
 		}
@@ -832,7 +832,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		public void ThrowError(string message)
 		{
-			throw new DbSyntaxException (this.fb.DbAccess, message);
+			throw new Exceptions.SyntaxException (this.fb.DbAccess, message);
 		}
 		
 		

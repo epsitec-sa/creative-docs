@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (true, sql_field.Validate(sql_builder));
 		}
 		
-		[Test] [ExpectedException (typeof (DbFormatException))] public void CheckValidateEx1()
+		[Test] [ExpectedException (typeof (Exceptions.FormatException))] public void CheckValidateEx1()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Database
 			SqlField sql_field = SqlField.CreateName ("TestNotQualifiedBut&Invalid");
 		}
 		
-		[Test] [ExpectedException (typeof (DbFormatException))] public void CheckValidateEx2()
+		[Test] [ExpectedException (typeof (Exceptions.FormatException))] public void CheckValidateEx2()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;

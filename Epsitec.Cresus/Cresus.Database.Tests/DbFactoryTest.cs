@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Database
 			{
 				db_abstraction = DbFactory.FindDbAbstraction (db_access);
 			}
-			catch (DbExistsException)
+			catch (Exceptions.ExistsException)
 			{
 				//	OK: la base existait déjà... on ne peut pas la créer !
 				

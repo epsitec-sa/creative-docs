@@ -146,12 +146,12 @@ namespace Epsitec.Cresus.Database
 			
 			if (transaction == null)
 			{
-				throw new DbMissingTransactionException (db_access);
+				throw new Exceptions.MissingTransactionException (db_access);
 			}
 			
 			if (this.data_set != null)
 			{
-				throw new DbException (db_access, "DataSet already exists.");
+				throw new Exceptions.GenericException (db_access, "DataSet already exists.");
 			}
 			
 			//	Définit et remplit le DataSet en se basant sur les données fournies
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (transaction == null)
 			{
-				throw new DbMissingTransactionException (this.db_access);
+				throw new Exceptions.MissingTransactionException (this.db_access);
 			}
 			
 			this.CheckValidState ();
@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (transaction == null)
 			{
-				throw new DbMissingTransactionException (this.db_access);
+				throw new Exceptions.MissingTransactionException (this.db_access);
 			}
 			
 			this.CheckValidState ();
@@ -455,28 +455,28 @@ namespace Epsitec.Cresus.Database
 			
 			if (this.data_set == null)
 			{
-				throw new DbException (this.db_access, "No data set defined.");
+				throw new Exceptions.GenericException (this.db_access, "No data set defined.");
 			}
 			
 			if ((this.adapters == null) ||
 				(this.adapters.Length == 0))
 			{
-				throw new DbException (this.db_access, "No adapters defined.");
+				throw new Exceptions.GenericException (this.db_access, "No adapters defined.");
 			}
 			
 			if (this.commands.Count == 0)
 			{
-				throw new DbException (this.db_access, "No commands defined.");
+				throw new Exceptions.GenericException (this.db_access, "No commands defined.");
 			}
 			
 			if (this.tables.Count == 0)
 			{
-				throw new DbException (this.db_access, "No tables defined.");
+				throw new Exceptions.GenericException (this.db_access, "No tables defined.");
 			}
 			
 			if (this.infrastructure == null)
 			{
-				throw new DbException (this.db_access, "No infrastructure defined.");
+				throw new Exceptions.GenericException (this.db_access, "No infrastructure defined.");
 			}
 		}
 		

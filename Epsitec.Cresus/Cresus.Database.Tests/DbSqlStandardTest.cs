@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual ("CR_TEST",      std2);
 		}
 		
-		[Test] [ExpectedException (typeof (DbException))] public void CheckCreateSqlTableNameEx1()
+		[Test] [ExpectedException (typeof (Exceptions.GenericException))] public void CheckCreateSqlTableNameEx1()
 		{
 			string name = "test-x";
 			string std  = DbSqlStandard.MakeSqlTableName (name, DbElementCat.Internal, new DbKey (123));

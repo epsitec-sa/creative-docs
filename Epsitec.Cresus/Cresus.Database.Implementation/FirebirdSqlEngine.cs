@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 				
 				default:
-					throw new DbException (this.fb.DbAccess, "Illegal command type");
+					throw new Exceptions.GenericException (this.fb.DbAccess, "Illegal command type");
 			}
 			
 			if (command_count > 1)
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			if (command_count > 1)
 			{
-				throw new DbException (this.fb.DbAccess, "Multiple command not supported");
+				throw new Exceptions.GenericException (this.fb.DbAccess, "Multiple command not supported");
 			}
 			if (command_count < 1)
 			{
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 				
 				default:
-					throw new DbException (this.fb.DbAccess, "Illegal command type");
+					throw new Exceptions.GenericException (this.fb.DbAccess, "Illegal command type");
 			}
 		}
 		
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 				
 				default:
-					throw new DbException (this.fb.DbAccess, "Illegal command type");
+					throw new Exceptions.GenericException (this.fb.DbAccess, "Illegal command type");
 			}
 		}
 		

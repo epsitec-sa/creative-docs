@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Database
 			Assert.IsNotNull (sql_builder);
 		}
 		
-		[Test] [ExpectedException (typeof (DbSyntaxException))] public void Check02InsertTableExPrimaryKey()
+		[Test] [ExpectedException (typeof (Exceptions.SyntaxException))] public void Check02InsertTableExPrimaryKey()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;

@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Database
 				def = DbNumDef.FromRawType (raw);
 				obj = TypeConverter.ConvertToSimpleType (val, DbSimpleType.Decimal, def);
 			}
-			catch (DbFormatException ex)
+			catch (Exceptions.FormatException ex)
 			{
 				if (ex.Message.StartsWith ("Incompatible"))
 				{
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Database
 				val = new DbNumDef (6, 4, 0.000M, 20.000M).ConvertToInt64 (19.9999M);
 				obj = TypeConverter.ConvertToSimpleType (val, DbSimpleType.Decimal, def);
 			}
-			catch (DbFormatException ex)
+			catch (Exceptions.FormatException ex)
 			{
 				if (ex.Message.StartsWith ("Incompatible"))
 				{

@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Database
 					{
 						return db_factory.NewDbAbstraction (db_access);
 					}
-					catch (DbFactoryException)
+					catch (Exceptions.FactoryException)
 					{
 						//	mange l'exception
 					}

@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] [ExpectedException (typeof (DbException))] public void Check06CreateDbTableEx1()
+		[Test] [ExpectedException (typeof (Exceptions.GenericException))] public void Check06CreateDbTableEx1()
 		{
 			//	Exécuter deux fois une création de table va nécessairement générer une exception.
 			//	Il faut exécuter le test CheckCreateDbTable avant celui-ci.
@@ -305,7 +305,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] [ExpectedException (typeof (DbException))] public void Check11UnregisterDbTableEx1()
+		[Test] [ExpectedException (typeof (Exceptions.GenericException))] public void Check11UnregisterDbTableEx1()
 		{
 			//	Il faut exécuter le test CheckRegisterDbTableSameAsUnregistered avant celui-ci.
 			

@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual ("U_E_X", sql_table.Columns[4].Name);
 		}
 		
-		[Test] [ExpectedException (typeof (DbSyntaxException))] public void CheckCreateSqlTableEx1()
+		[Test] [ExpectedException (typeof (Exceptions.SyntaxException))] public void CheckCreateSqlTableEx1()
 		{
 			IDbAbstraction db_abstraction = DbFactoryTest.CreateDbAbstraction (true);
 			ITypeConverter type_converter = db_abstraction.Factory.TypeConverter;
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Database
 			//	exception: colonnes a et b ne font pas partie de la table
 		}
 		
-		[Test] [ExpectedException (typeof (DbSyntaxException))] public void CheckCreateSqlTableEx2()
+		[Test] [ExpectedException (typeof (Exceptions.SyntaxException))] public void CheckCreateSqlTableEx2()
 		{
 			IDbAbstraction db_abstraction = DbFactoryTest.CreateDbAbstraction (true);
 			ITypeConverter type_converter = db_abstraction.Factory.TypeConverter;
@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Database
 			//	exception: colonne A est nullable
 		}
 		
-		[Test] [ExpectedException (typeof (DbSyntaxException))] public void CheckCreateSqlTableEx3()
+		[Test] [ExpectedException (typeof (Exceptions.SyntaxException))] public void CheckCreateSqlTableEx3()
 		{
 			IDbAbstraction db_abstraction = DbFactoryTest.CreateDbAbstraction (true);
 			ITypeConverter type_converter = db_abstraction.Factory.TypeConverter;

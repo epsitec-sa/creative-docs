@@ -149,32 +149,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DbException.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DbExistsException.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "DbFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DbFactoryException.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "DbForeignKey.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DbFormatException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -195,11 +175,6 @@
                 />
                 <File
                     RelPath = "DbLogger.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DbMissingTransactionException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -250,11 +225,6 @@
                 />
                 <File
                     RelPath = "DbSqlStandard.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DbSyntaxException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -462,7 +432,36 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
-                <Folder RelPath = "Exceptions\" />
+                <File
+                    RelPath = "Exceptions\DbException.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Exceptions\DbExistsException.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Exceptions\DbFactoryException.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Exceptions\DbFormatException.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Exceptions\DbMissingTransactionException.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Exceptions\DbSyntaxException.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
                 <File
                     RelPath = "Requests\Base.cs"
                     SubType = "Code"
