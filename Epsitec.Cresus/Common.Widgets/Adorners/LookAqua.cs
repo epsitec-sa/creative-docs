@@ -263,8 +263,8 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Widgets.ButtonStyle style)
 		{
 			if ( style == ButtonStyle.Normal        ||
-				 style == ButtonStyle.DefaultAccept ||
-				 style == ButtonStyle.DefaultCancel )
+				style == ButtonStyle.DefaultAccept ||
+				style == ButtonStyle.DefaultCancel )
 			{
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 
 				if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
-					 (state&WidgetState.Entered) != 0 )   // bouton survolé ?
+					(state&WidgetState.Entered) != 0 )   // bouton survolé ?
 				{
 					this.PaintImageButton(graphics, rect, 62);
 				}
@@ -381,7 +381,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					}
 
 					if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
-						 (state&WidgetState.Entered) != 0 )   // bouton survolé ?
+						(state&WidgetState.Entered) != 0 )   // bouton survolé ?
 					{
 						this.PaintImageButton(graphics, rect, 70);
 					}
@@ -398,7 +398,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					}
 
 					if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
-						 (state&WidgetState.Entered) != 0 )   // bouton survolé ?
+						(state&WidgetState.Entered) != 0 )   // bouton survolé ?
 					{
 						this.PaintImageButton(graphics, rect, 71);
 					}
@@ -423,7 +423,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 
 				if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
-					 (state&WidgetState.Entered) != 0 )   // bouton survolé ?
+					(state&WidgetState.Entered) != 0 )   // bouton survolé ?
 				{
 					this.PaintImageButton(graphics, rect, 42);
 				}
@@ -446,6 +446,18 @@ namespace Epsitec.Common.Widgets.Adorner
 				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
 				{
 					this.PaintImageButton(graphics, rect, 44);
+				}
+			}
+			else if ( style == ButtonStyle.HeaderSlider )
+			{
+				if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
+					 (state&WidgetState.Entered) != 0 )   // bouton survolé ?
+				{
+					this.PaintImageButton(graphics, rect, 36);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, rect, 34);
 				}
 			}
 			else if ( style == ButtonStyle.ListItem )

@@ -302,10 +302,11 @@ namespace Epsitec.Common.Widgets.Adorner
 					PaintL(graphics, rInside, this.colorControlDark, shadow);
 				}
 			}
-			else if ( style == ButtonStyle.Scroller ||
-					  style == ButtonStyle.Combo    ||
-					  style == ButtonStyle.UpDown   ||
-					  style == ButtonStyle.Icon     )
+			else if ( style == ButtonStyle.Scroller     ||
+					  style == ButtonStyle.Combo        ||
+					  style == ButtonStyle.UpDown       ||
+					  style == ButtonStyle.Icon         ||
+					  style == ButtonStyle.HeaderSlider )
 			{
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.colorControl);
@@ -534,9 +535,7 @@ namespace Epsitec.Common.Widgets.Adorner
 								  Drawing.Rectangle titleRect,
 								  Widgets.WidgetState state)
 		{
-			Drawing.Rectangle rect = new Drawing.Rectangle();
-
-			rect = frameRect;
+			Drawing.Rectangle rect = frameRect;
 			rect.Deflate(1);
 			graphics.LineWidth = 2;
 			this.RectangleGroupBox(graphics, rect, titleRect.Left, titleRect.Right);
@@ -621,8 +620,7 @@ namespace Epsitec.Common.Widgets.Adorner
 											Widgets.WidgetState state,
 											Widgets.Direction dir)
 		{
-			Drawing.Rectangle rBack = new Drawing.Rectangle();
-			rBack = titleRect;
+			Drawing.Rectangle rBack = titleRect;
 			rBack.Right  -= 2;
 			rBack.Bottom -= 1;
 			rBack.Top    -= 2;

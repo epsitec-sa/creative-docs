@@ -264,10 +264,11 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.RenderSolid(this.colorBackDisabled);
 				}
 			}
-			else if ( style == ButtonStyle.Scroller ||
-					  style == ButtonStyle.Combo    ||
-					  style == ButtonStyle.UpDown   ||
-					  style == ButtonStyle.Icon     )
+			else if ( style == ButtonStyle.Scroller     ||
+					  style == ButtonStyle.Combo        ||
+					  style == ButtonStyle.UpDown       ||
+					  style == ButtonStyle.Icon         ||
+					  style == ButtonStyle.HeaderSlider )
 			{
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
@@ -1021,9 +1022,14 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				if ( (state&WidgetState.Selected) != 0 )
+				if ( (state&WidgetState.Selected)  != 0 ||
+					 (state&WidgetState.ActiveYes) != 0 )
 				{
 					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorCaptionText, Drawing.GlyphPaintStyle.Selected);
+				}
+				else if ( (state&WidgetState.Entered) != 0 )
+				{
+					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.Empty, Drawing.GlyphPaintStyle.Entered);
 				}
 				else
 				{
@@ -1128,6 +1134,14 @@ namespace Epsitec.Common.Widgets.Adorner
 
 		public void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
 		{
+			if ( paintStyle == Drawing.GlyphPaintStyle.Normal )
+			{
+				double alpha = color.A;
+				double intensity = color.GetBrightness();
+				color = Drawing.Color.FromBrightness(intensity);
+				color.A = alpha;
+			}
+
 			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled )
 			{
 				double alpha = color.A;

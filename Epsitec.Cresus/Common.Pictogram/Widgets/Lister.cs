@@ -93,7 +93,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 				}
 			}
 
-			Cell			cell;
 			StaticText		st;
 			IconButton		ib;
 			ColorSample		cs;
@@ -103,38 +102,32 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				AbstractObject obj = this.iconObjects[index];
 
-				if ( this.table[0, index].Children.Count == 0 )
+				if ( this.table[0, index].IsEmpty )
 				{
-					cell = new Cell();
 					st = new StaticText();
 					st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 					st.Dock = DockStyle.Fill;
-					cell.Children.Add(st);
-					this.table[0, index] = cell;
+					this.table[0, index].Insert(st);
 				}
 				st = this.table[0, index].Children[0] as StaticText;
 				st.Text = System.Convert.ToString(index+1);
 
-				if ( this.table[1, index].Children.Count == 0 )
+				if ( this.table[1, index].IsEmpty )
 				{
-					cell = new Cell();
 					ib = new IconButton();
 					ib.SetFrozen(true);
 					ib.Dock = DockStyle.Fill;
-					cell.Children.Add(ib);
-					this.table[1, index] = cell;
+					this.table[1, index].Insert(ib);
 				}
 				ib = this.table[1, index].Children[0] as IconButton;
 				ib.IconName = obj.IconName;
 
-				if ( this.table[2, index].Children.Count == 0 )
+				if ( this.table[2, index].IsEmpty )
 				{
-					cell = new Cell();
 					st = new StaticText();
 					st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 					st.Dock = DockStyle.Fill;
-					cell.Children.Add(st);
-					this.table[2, index] = cell;
+					this.table[2, index].Insert(st);
 				}
 				st = this.table[2, index].Children[0] as StaticText;
 				st.Text = obj.IsHide ? "Caché" : "Visible";
@@ -146,14 +139,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 					if ( po is PropertyBool )
 					{
-						if ( this.table[p+3, index].Children.Count == 0 )
+						if ( this.table[p+3, index].IsEmpty )
 						{
-							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
-							cell.Children.Add(st);
-							this.table[p+3, index] = cell;
+							this.table[p+3, index].Insert(st);
 						}
 						PropertyBool prop = po as PropertyBool;
 						st = this.table[p+3, index].Children[0] as StaticText;
@@ -162,14 +153,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 					else if ( po is PropertyDouble )
 					{
-						if ( this.table[p+3, index].Children.Count == 0 )
+						if ( this.table[p+3, index].IsEmpty )
 						{
-							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
-							cell.Children.Add(st);
-							this.table[p+3, index] = cell;
+							this.table[p+3, index].Insert(st);
 						}
 						PropertyDouble prop = po as PropertyDouble;
 						st = this.table[p+3, index].Children[0] as StaticText;
@@ -177,14 +166,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 					else if ( po is PropertyLine )
 					{
-						if ( this.table[p+3, index].Children.Count == 0 )
+						if ( this.table[p+3, index].IsEmpty )
 						{
-							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
-							cell.Children.Add(st);
-							this.table[p+3, index] = cell;
+							this.table[p+3, index].Insert(st);
 						}
 						PropertyLine prop = po as PropertyLine;
 						st = this.table[p+3, index].Children[0] as StaticText;
@@ -192,14 +179,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 					else if ( po is PropertyString )
 					{
-						if ( this.table[p+3, index].Children.Count == 0 )
+						if ( this.table[p+3, index].IsEmpty )
 						{
-							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
-							cell.Children.Add(st);
-							this.table[p+3, index] = cell;
+							this.table[p+3, index].Insert(st);
 						}
 						PropertyString prop = po as PropertyString;
 						st = this.table[p+3, index].Children[0] as StaticText;
@@ -207,14 +192,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 					else if ( po is PropertyList )
 					{
-						if ( this.table[p+3, index].Children.Count == 0 )
+						if ( this.table[p+3, index].IsEmpty )
 						{
-							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
-							cell.Children.Add(st);
-							this.table[p+3, index] = cell;
+							this.table[p+3, index].Insert(st);
 						}
 						PropertyList prop = po as PropertyList;
 						st = this.table[p+3, index].Children[0] as StaticText;
@@ -222,14 +205,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 					else if ( po is PropertyCombo )
 					{
-						if ( this.table[p+3, index].Children.Count == 0 )
+						if ( this.table[p+3, index].IsEmpty )
 						{
-							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
-							cell.Children.Add(st);
-							this.table[p+3, index] = cell;
+							this.table[p+3, index].Insert(st);
 						}
 						PropertyCombo prop = po as PropertyCombo;
 						st = this.table[p+3, index].Children[0] as StaticText;
@@ -237,14 +218,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 					else if ( po is PropertyColor )
 					{
-						if ( this.table[p+3, index].Children.Count == 0 )
+						if ( this.table[p+3, index].IsEmpty )
 						{
-							cell = new Cell();
 							cs = new ColorSample();
 							cs.SetFrozen(true);
 							cs.Dock = DockStyle.Fill;
-							cell.Children.Add(cs);
-							this.table[p+3, index] = cell;
+							this.table[p+3, index].Insert(cs);
 						}
 						PropertyColor prop = po as PropertyColor;
 						cs = this.table[p+3, index].Children[0] as ColorSample;
@@ -252,14 +231,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 					else if ( po is PropertyGradient )
 					{
-						if ( this.table[p+3, index].Children.Count == 0 )
+						if ( this.table[p+3, index].IsEmpty )
 						{
-							cell = new Cell();
 							gs = new GradientSample();
 							gs.SetFrozen(true);
 							gs.Dock = DockStyle.Fill;
-							cell.Children.Add(gs);
-							this.table[p+3, index] = cell;
+							this.table[p+3, index].Insert(gs);
 						}
 						PropertyGradient prop = po as PropertyGradient;
 						gs = this.table[p+3, index].Children[0] as GradientSample;
@@ -267,14 +244,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 					else if ( po is PropertyArrow )
 					{
-						if ( this.table[p+3, index].Children.Count == 0 )
+						if ( this.table[p+3, index].IsEmpty )
 						{
-							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
-							cell.Children.Add(st);
-							this.table[p+3, index] = cell;
+							this.table[p+3, index].Insert(st);
 						}
 						PropertyArrow prop = po as PropertyArrow;
 						st = this.table[p+3, index].Children[0] as StaticText;
@@ -282,14 +257,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 					else if ( po is PropertyCorner )
 					{
-						if ( this.table[p+3, index].Children.Count == 0 )
+						if ( this.table[p+3, index].IsEmpty )
 						{
-							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
-							cell.Children.Add(st);
-							this.table[p+3, index] = cell;
+							this.table[p+3, index].Insert(st);
 						}
 						PropertyCorner prop = po as PropertyCorner;
 						st = this.table[p+3, index].Children[0] as StaticText;
@@ -297,14 +270,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 					else if ( po is PropertyRegular )
 					{
-						if ( this.table[p+3, index].Children.Count == 0 )
+						if ( this.table[p+3, index].IsEmpty )
 						{
-							cell = new Cell();
 							st = new StaticText();
 							st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 							st.Dock = DockStyle.Fill;
-							cell.Children.Add(st);
-							this.table[p+3, index] = cell;
+							this.table[p+3, index].Insert(st);
 						}
 						PropertyRegular prop = po as PropertyRegular;
 						st = this.table[p+3, index].Children[0] as StaticText;

@@ -316,21 +316,21 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.InfoMouseChanged += new EventHandler(this.HandleDrawerInfoMouseChanged);
 			this.drawer.InfoZoomChanged += new EventHandler(this.HandleDrawerInfoZoomChanged);
 			this.drawer.UsePropertiesPanel += new EventHandler(this.HandleDrawerUsePropertiesPanel);
-			this.drawer.SetSyncPaint(true);
+			//?this.drawer.SetSyncPaint(true);
 			this.drawer.Parent = this.leftPane;
 
 			this.lister = new Lister();
 			this.lister.PanelChanged += new EventHandler(this.HandleDrawerAllChanged);
 			this.lister.IconObjects = this.drawer.IconObjects;
 			this.lister.Parent = this.leftPane;
-			this.lister.SetSyncPaint(true);
+			//?this.lister.SetSyncPaint(true);
 			this.lister.Hide();
 
 			this.frame1 = new SampleButton();
 			this.frame1.ButtonStyle = ButtonStyle.ToolItem;
 			this.frame1.ActiveState = WidgetState.ActiveYes;
 			this.frame1.IconObjects.Objects = this.drawer.Objects;
-			this.frame1.SetSyncPaint(true);
+			//?this.frame1.SetSyncPaint(true);
 			this.frame1.Parent = this.rightPane;
 
 			this.frame2 = new SampleButton();
@@ -338,7 +338,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.frame2.ActiveState = WidgetState.ActiveYes;
 			this.frame2.SetEnabled(false);
 			this.frame2.IconObjects.Objects = this.drawer.Objects;
-			this.frame2.SetSyncPaint(true);
+			//?this.frame2.SetSyncPaint(true);
 			this.frame2.Parent = this.rightPane;
 
 			this.drawer.AddClone(this.frame1);
@@ -414,7 +414,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.InfoAdd("", 90, "StatusZoom", "");
 			this.InfoAdd("", 120, "StatusMouse", "");
 			StatusField infoField = this.info.Items["StatusMouse"] as StatusField;
-			infoField.SetSyncPaint(true);
+			//?infoField.SetSyncPaint(true);
 
 			this.allWidgets = true;
 			this.ResizeLayout();

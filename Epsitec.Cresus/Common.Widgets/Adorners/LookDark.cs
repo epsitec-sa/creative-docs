@@ -342,10 +342,11 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.RenderSolid(this.colorBlack);
 				}
 			}
-			else if ( style == ButtonStyle.Scroller ||
-					  style == ButtonStyle.Combo    ||
-					  style == ButtonStyle.UpDown   ||
-					  style == ButtonStyle.Icon     )
+			else if ( style == ButtonStyle.Scroller     ||
+					  style == ButtonStyle.Combo        ||
+					  style == ButtonStyle.UpDown       ||
+					  style == ButtonStyle.Icon         ||
+					  style == ButtonStyle.HeaderSlider )
 			{
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )
@@ -540,8 +541,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.AddFilledRectangle(frameRect);
 			graphics.RenderSolid(this.colorScrollerBack);
 
-			Drawing.Rectangle rInside = new Drawing.Rectangle();
-			rInside = frameRect;
+			Drawing.Rectangle rInside = frameRect;
 			rInside.Deflate(0.5);
 			graphics.AddRectangle(rInside);
 			if ( (state&WidgetState.Enabled) != 0 )
@@ -689,9 +689,7 @@ namespace Epsitec.Common.Widgets.Adorner
 								  Drawing.Rectangle titleRect,
 								  Widgets.WidgetState state)
 		{
-			Drawing.Rectangle rect = new Drawing.Rectangle();
-
-			rect = frameRect;
+			Drawing.Rectangle rect = frameRect;
 			rect.Deflate(0.5);
 			graphics.LineWidth = 1;
 			this.RectangleGroupBox(graphics, rect, titleRect.Left, titleRect.Right);
@@ -776,8 +774,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 			{
-				Drawing.Rectangle rHilite = new Drawing.Rectangle();
-				rHilite = titleRect;
+				Drawing.Rectangle rHilite = titleRect;
 				rHilite.Bottom = rHilite.Top-2;
 				Drawing.Path pHilite = this.PathTopCornerRectangle(rHilite);
 				graphics.Rasterizer.AddSurface(pHilite);
@@ -819,8 +816,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 			{
-				Drawing.Rectangle rHilite = new Drawing.Rectangle();
-				rHilite = titleRect;
+				Drawing.Rectangle rHilite = titleRect;
 				rHilite.Bottom = rHilite.Top-2;
 				Drawing.Path pHilite = this.PathTopCornerRectangle(rHilite);
 				graphics.Rasterizer.AddSurface(pHilite);

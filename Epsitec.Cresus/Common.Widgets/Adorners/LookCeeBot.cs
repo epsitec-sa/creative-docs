@@ -306,10 +306,11 @@ namespace Epsitec.Common.Widgets.Adorner
 				rFocus.Offset(-0.5, 0.5);
 				radFocus = this.RetRadius(rFocus);
 			}
-			else if ( style == ButtonStyle.Scroller ||
-					  style == ButtonStyle.Combo    ||
-					  style == ButtonStyle.UpDown   ||
-					  style == ButtonStyle.Icon     )
+			else if ( style == ButtonStyle.Scroller     ||
+					  style == ButtonStyle.Combo        ||
+					  style == ButtonStyle.UpDown       ||
+					  style == ButtonStyle.Icon         ||
+					  style == ButtonStyle.HeaderSlider )
 			{
 				if ( (state&WidgetState.Enabled) != 0 )
 				{

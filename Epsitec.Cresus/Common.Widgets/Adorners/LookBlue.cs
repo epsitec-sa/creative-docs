@@ -341,10 +341,11 @@ namespace Epsitec.Common.Widgets.Adorner
 					rect.Deflate(1);
 				}
 			}
-			else if ( style == ButtonStyle.Scroller ||
-					  style == ButtonStyle.Combo    ||
-					  style == ButtonStyle.UpDown   ||
-					  style == ButtonStyle.Icon     )
+			else if ( style == ButtonStyle.Scroller     ||
+					  style == ButtonStyle.Combo        ||
+					  style == ButtonStyle.UpDown       ||
+					  style == ButtonStyle.Icon         ||
+					  style == ButtonStyle.HeaderSlider )
 			{
 				double radius = (style == ButtonStyle.UpDown) ? -1 : 0;
 				Drawing.Path path = this.PathRoundRectangle(rect, radius);
@@ -699,8 +700,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 			{
-				Drawing.Rectangle rHilite = new Drawing.Rectangle();
-				rHilite = titleRect;
+				Drawing.Rectangle rHilite = titleRect;
 				rHilite.Bottom = rHilite.Top-3;
 				Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, 0);
 				graphics.Rasterizer.AddSurface(pHilite);
@@ -736,8 +736,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 			{
-				Drawing.Rectangle rHilite = new Drawing.Rectangle();
-				rHilite = titleRect;
+				Drawing.Rectangle rHilite = titleRect;
 				rHilite.Bottom = rHilite.Top-3;
 				Drawing.Path pHilite = this.PathTopRoundRectangle(rHilite, 0);
 				graphics.Rasterizer.AddSurface(pHilite);

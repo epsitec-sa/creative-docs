@@ -319,10 +319,11 @@ namespace Epsitec.Common.Widgets.Adorner
 					this.PaintImageButton(graphics, rect, 3);
 				}
 			}
-			else if ( style == ButtonStyle.Scroller ||
-					  style == ButtonStyle.Combo    ||
-					  style == ButtonStyle.UpDown   ||
-					  style == ButtonStyle.Icon     )
+			else if ( style == ButtonStyle.Scroller     ||
+					  style == ButtonStyle.Combo        ||
+					  style == ButtonStyle.UpDown       ||
+					  style == ButtonStyle.Icon         ||
+					  style == ButtonStyle.HeaderSlider )
 			{
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
@@ -441,7 +442,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 				else
 				{
-					this.PaintImageButton(graphics, rect, 18);
+					this.PaintImageButton(graphics, rect, 19);
 				}
 				rect.Deflate(0.5);
 				graphics.AddRectangle(rect);
@@ -488,12 +489,12 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				this.PaintImageButton(graphics, frameRect, 18);
+				this.PaintImageButton(graphics, frameRect, 19);
 			}
 
 			if ( !tabRect.IsSurfaceZero && (state&WidgetState.Engaged) != 0 )
 			{
-				this.PaintImageButton(graphics, tabRect, 19);
+				this.PaintImageButton(graphics, tabRect, 18);
 			}
 		}
 
@@ -580,9 +581,7 @@ namespace Epsitec.Common.Widgets.Adorner
 								  Drawing.Rectangle titleRect,
 								  Widgets.WidgetState state)
 		{
-			Drawing.Rectangle rect = new Drawing.Rectangle();
-
-			rect = frameRect;
+			Drawing.Rectangle rect = frameRect;
 			rect.Deflate(0.5);
 			graphics.LineWidth = 1;
 			this.RectangleGroupBox(graphics, rect, titleRect.Left, titleRect.Right);
@@ -737,7 +736,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				this.PaintImageButton(graphics, rect, 18);
+				this.PaintImageButton(graphics, rect, 19);
 			}
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
@@ -970,7 +969,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.AddLine(p1, p2);
 			}
 
-			graphics.RenderSolid(Drawing.Color.FromBrightness(0.75));
+			graphics.RenderSolid(this.colorBorder);
 		}
 
 		public void PaintSeparatorForeground(Drawing.Graphics graphics,
@@ -1056,7 +1055,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			rect.Width -= 1;
 			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
+			graphics.RenderSolid(this.colorBorder);
 		}
 
 		public void PaintStatusItemForeground(Drawing.Graphics graphics,
@@ -1417,7 +1416,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			icon.Top    = 256-32*(rank/8);
 			icon.Bottom = icon.Top-32;
 
-			if ( rank == 16 || rank == 17 || rank == 18 || rank == 21 || rank == 28 || rank == 44 )
+			if ( rank == 16 || rank == 17 || rank == 19 || rank == 21 || rank == 28 || rank == 44 )
 			{
 				this.PaintImageButton1(graphics, rect, icon);
 			}
@@ -1538,7 +1537,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 		public Drawing.Color ColorBorder
 		{
-			get { return Drawing.Color.FromBrightness(0.0); }
+			get { return this.colorBorder; }
 		}
 
 		public Drawing.Color ColorTextSliderBorder(bool enabled)

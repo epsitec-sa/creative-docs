@@ -206,7 +206,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					st = new StaticText();
 					st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 					st.Dock = DockStyle.Fill;
-					this.table[0, i].Insert (st);
+					this.table[0, i].Insert(st);
 				}
 				st = this.table[0, i].Children[0] as StaticText;
 				st.Text = (i+1).ToString();
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					edit.Name = i.ToString();
 					edit.Clicked += new MessageEventHandler(this.HandleListTextClicked);
 					edit.TextChanged += new EventHandler(this.HandleListTextChanged);
-					this.table[1, i].Insert (edit);
+					this.table[1, i].Insert(edit);
 				}
 				edit = this.table[1, i].Children[0] as TextField;
 				this.ignoreListTextChanged = true;

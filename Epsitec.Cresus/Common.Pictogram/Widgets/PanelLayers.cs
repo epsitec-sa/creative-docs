@@ -276,7 +276,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.table.SetHeaderTextH(1, "Position");
 			this.table.SetHeaderTextH(2, "Nom");
 
-			Cell			cell;
 			StaticText		st;
 			TextField		edit;
 
@@ -285,39 +284,33 @@ namespace Epsitec.Common.Pictogram.Widgets
 				int ii = rows-i-1;
 				ObjectLayer layer = this.drawer.IconObjects.Layer(ii);
 
-				if ( this.table[0, i].Children.Count == 0 )
+				if ( this.table[0, i].IsEmpty )
 				{
-					cell = new Cell();
 					st = new StaticText();
 					st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 					st.Dock = DockStyle.Fill;
-					cell.Children.Add(st);
-					this.table[0, i] = cell;
+					this.table[0, i].Insert(st);
 				}
 				st = this.table[0, i].Children[0] as StaticText;
 				st.Text = ((char)('A'+i)).ToString();
 
-				if ( this.table[1, i].Children.Count == 0 )
+				if ( this.table[1, i].IsEmpty )
 				{
-					cell = new Cell();
 					st = new StaticText();
 					st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 					st.Dock = DockStyle.Fill;
-					cell.Children.Add(st);
-					this.table[1, i] = cell;
+					this.table[1, i].Insert(st);
 				}
 				st = this.table[1, i].Children[0] as StaticText;
 				st.Text = this.LayerPosition(ii);
 
-				if ( this.table[2, i].Children.Count == 0 )
+				if ( this.table[2, i].IsEmpty )
 				{
-					cell = new Cell();
 					edit = new TextField();
 					edit.Dock = DockStyle.Fill;
 					edit.Clicked += new MessageEventHandler(this.HandleListTextClicked);
 					edit.TextChanged += new EventHandler(this.HandleListTextChanged);
-					cell.Children.Add(edit);
-					this.table[2, i] = cell;
+					this.table[2, i].Insert(edit);
 				}
 				edit = this.table[2, i].Children[0] as TextField;
 				edit.Name = ii.ToString();
