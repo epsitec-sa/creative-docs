@@ -362,7 +362,7 @@ namespace Epsitec.Common.Text
 						string code_range = line.Substring (0, pos);
 						string break_name = line.Substring (pos+1, 2);
 						
-						Unicode.BreakClass break_class = Unicode.ParseBreakClass (break_name);
+						Unicode.BreakClass break_class = BreakAnalyzer.ParseBreakClass (break_name);
 						
 						int code_begin;
 						int code_end;
@@ -785,6 +785,43 @@ namespace Epsitec.Common.Text
 			}
 			
 			
+			private static Unicode.BreakClass ParseBreakClass(string token)
+			{
+				switch (token)
+				{
+					case "XX": return Unicode.BreakClass.XX_Unknown;
+					case "BK": return Unicode.BreakClass.BK_MandatoryBreak;
+					case "CM": return Unicode.BreakClass.CM_CombiningMarks;
+					case "SG": return Unicode.BreakClass.SG_Surrogates;
+					case "ZW": return Unicode.BreakClass.ZW_ZeroWidthSpace;
+					case "GL": return Unicode.BreakClass.GL_NonBreakingGlue;
+					case "CB": return Unicode.BreakClass.CB_ContingentBreakOpportunity;
+					case "SP": return Unicode.BreakClass.SP_Space;
+					case "BA": return Unicode.BreakClass.BA_BreakOpportunityAfter;
+					case "BB": return Unicode.BreakClass.BB_BreakOpportunityBefore;
+					case "B2": return Unicode.BreakClass.B2_BreakOpportunityBeforeAndAfter;
+					case "HY": return Unicode.BreakClass.HY_Hyphen;
+					case "IN": return Unicode.BreakClass.IN_Inseparable;
+					case "NS": return Unicode.BreakClass.NS_NonStarter;
+					case "OP": return Unicode.BreakClass.OP_OpeningPunctuation;
+					case "CL": return Unicode.BreakClass.CL_ClosingPunctuation;
+					case "QU": return Unicode.BreakClass.QU_AmbiguousQuotation;
+					case "EX": return Unicode.BreakClass.EX_ExclamationInterrogation;
+					case "NU": return Unicode.BreakClass.NU_Numeric;
+					case "IS": return Unicode.BreakClass.IS_InfixSeparatorNumeric;
+					case "SY": return Unicode.BreakClass.SY_SymbolsAllowingBreaks;
+					case "PR": return Unicode.BreakClass.PR_PrefixNumeric;
+					case "PO": return Unicode.BreakClass.PO_PostfixNumeric;
+					case "AL": return Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol;
+					case "ID": return Unicode.BreakClass.ID_Ideographic;
+					case "AI": return Unicode.BreakClass.AI_AmbiguousAlphabeticOrIdeographic;
+					case "SA": return Unicode.BreakClass.SA_ComplexContextSouthEastAsian;
+				}
+			
+				throw new System.ArgumentOutOfRangeException ("token", token, "Invalid token");
+			}
+			
+			
 			private Element						TailElement
 			{
 				get
@@ -805,42 +842,6 @@ namespace Epsitec.Common.Text
 			Unicode.BreakClass[]				table_1;
 			Unicode.BreakClass[]				table_2;
 			System.Collections.ArrayList		elements;
-		}
-		
-		private static Unicode.BreakClass ParseBreakClass(string token)
-		{
-			switch (token)
-			{
-				case "XX": return Unicode.BreakClass.XX_Unknown;
-				case "BK": return Unicode.BreakClass.BK_MandatoryBreak;
-				case "CM": return Unicode.BreakClass.CM_CombiningMarks;
-				case "SG": return Unicode.BreakClass.SG_Surrogates;
-				case "ZW": return Unicode.BreakClass.ZW_ZeroWidthSpace;
-				case "GL": return Unicode.BreakClass.GL_NonBreakingGlue;
-				case "CB": return Unicode.BreakClass.CB_ContingentBreakOpportunity;
-				case "SP": return Unicode.BreakClass.SP_Space;
-				case "BA": return Unicode.BreakClass.BA_BreakOpportunityAfter;
-				case "BB": return Unicode.BreakClass.BB_BreakOpportunityBefore;
-				case "B2": return Unicode.BreakClass.B2_BreakOpportunityBeforeAndAfter;
-				case "HY": return Unicode.BreakClass.HY_Hyphen;
-				case "IN": return Unicode.BreakClass.IN_Inseparable;
-				case "NS": return Unicode.BreakClass.NS_NonStarter;
-				case "OP": return Unicode.BreakClass.OP_OpeningPunctuation;
-				case "CL": return Unicode.BreakClass.CL_ClosingPunctuation;
-				case "QU": return Unicode.BreakClass.QU_AmbiguousQuotation;
-				case "EX": return Unicode.BreakClass.EX_ExclamationInterrogation;
-				case "NU": return Unicode.BreakClass.NU_Numeric;
-				case "IS": return Unicode.BreakClass.IS_InfixSeparatorNumeric;
-				case "SY": return Unicode.BreakClass.SY_SymbolsAllowingBreaks;
-				case "PR": return Unicode.BreakClass.PR_PrefixNumeric;
-				case "PO": return Unicode.BreakClass.PO_PostfixNumeric;
-				case "AL": return Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol;
-				case "ID": return Unicode.BreakClass.ID_Ideographic;
-				case "AI": return Unicode.BreakClass.AI_AmbiguousAlphabeticOrIdeographic;
-				case "SA": return Unicode.BreakClass.SA_ComplexContextSouthEastAsian;
-			}
-			
-			throw new System.ArgumentOutOfRangeException ("token", token, "Invalid token");
 		}
 	}
 	
