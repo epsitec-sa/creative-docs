@@ -121,13 +121,18 @@ namespace Epsitec.Common.Support
 		
 		public void EnableMapping()
 		{
-			if (this.store_mapping == false)
+			if (this.obj_to_bundle == null)
 			{
-				this.store_mapping = true;
 				this.obj_to_bundle = new System.Collections.Hashtable ();
 			}
 		}
 		
+		public void SetupPrefix(string prefix)
+		{
+			this.default_prefix  = prefix;
+			this.default_level   = ResourceLevel.Default;
+			this.default_culture = System.Globalization.CultureInfo.CurrentCulture;
+		}
 		
 		static ObjectBundler()
 		{
@@ -316,22 +321,7 @@ namespace Epsitec.Common.Support
 					
 					System.Diagnostics.Debug.Assert (prop_info != null);
 					
-					while (this.RestoreProperty (bundle, obj, prop_info) == false)
-					{
-						type = type.BaseType;
-						
-						if (type == null)
-						{
-							break;
-						}
-						
-						prop_info = type.GetProperty (prop_info.Name, prop_info.PropertyType);
-						
-						if (prop_info == null)
-						{
-							break;
-						}
-					}
+					this.RestoreProperty (bundle, obj, prop_info);
 				}
 			}
 			
@@ -340,7 +330,7 @@ namespace Epsitec.Common.Support
 			//	Si le ObjectBundler a été configuré de manière à se souvenir des objets créés,
 			//	on prend note de l'objet et de son bundle associé.
 			
-			if (this.store_mapping)
+			if (this.obj_to_bundle != null)
 			{
 				this.obj_to_bundle[obj] = bundle;
 			}
@@ -348,6 +338,17 @@ namespace Epsitec.Common.Support
 			this.OnObjectUnbundled (new BundlingEventArgs (bundle, obj));
 			
 			return obj;
+		}
+		
+		
+		public ResourceBundle CreateEmptyBundle(string name)
+		{
+			if (name == "")
+			{
+				name = null;
+			}
+			
+			return ResourceBundle.Create (name, this.default_prefix, this.default_level, this.default_culture);
 		}
 		
 		public bool FillBundleFromObject(ResourceBundle bundle, object source)
@@ -401,22 +402,7 @@ namespace Epsitec.Common.Support
 					
 					System.Diagnostics.Debug.Assert (prop_info != null);
 					
-					while (this.SerialiseProperty (bundle, obj, obj_default, prop_info) == false)
-					{
-						type = type.BaseType;
-						
-						if (type == null)
-						{
-							break;
-						}
-						
-						prop_info = type.GetProperty (prop_info.Name, prop_info.PropertyType);
-						
-						if (prop_info == null)
-						{
-							break;
-						}
-					}
+					this.SerialiseProperty (bundle, obj, obj_default, prop_info);
 				}
 			}
 			
@@ -427,8 +413,8 @@ namespace Epsitec.Common.Support
 				obj_default_disposable.Dispose ();
 			}
 			
-//			obj.RestoreFromBundle (this, bundle);
-//			this.OnObjectUnbundled (obj, bundle);
+			obj.SerialiseToBundle (this, bundle);
+//			this.OnObjectBundled (obj, bundle);
 			
 			System.Diagnostics.Debug.Assert (ObjectBundler.xmldoc.ChildNodes.Count == 0);
 			
@@ -447,6 +433,25 @@ namespace Epsitec.Common.Support
 			
 			bundle.Add (new ResourceBundle.Field (bundle, xmlnode));
 		}
+		
+		protected void BundleAddDataFieldXml(ResourceBundle bundle, string name, string value)
+		{
+			System.Xml.XmlElement   xmlnode = ObjectBundler.xmldoc.CreateElement ("data");
+			System.Xml.XmlAttribute xmlattr = ObjectBundler.xmldoc.CreateAttribute ("name");
+			
+			xmlattr.Value = name;
+			xmlnode.Attributes.Append (xmlattr);
+			xmlnode.InnerXml = value;
+			
+			bundle.Add (new ResourceBundle.Field (bundle, xmlnode));
+		}
+		
+		protected void BundleAddBundleField(ResourceBundle bundle, ResourceBundle sub_bundle)
+		{
+			System.Xml.XmlNode xmlnode = sub_bundle.CreateXmlNode (bundle.XmlDocument);
+			bundle.Add (new ResourceBundle.Field (bundle, xmlnode));
+		}
+		
 		
 		protected bool SerialiseProperty(ResourceBundle bundle, object obj, object obj_default, string property_name)
 		{
@@ -467,7 +472,7 @@ namespace Epsitec.Common.Support
 			
 			if ((prop_info != null) &&
 				(prop_info.CanRead) &&
-				(prop_info.IsDefined (typeof (BundleAttribute), true)))
+				(prop_info.IsDefined (typeof (BundleAttribute), false)))
 			{
 				//	C'est bien une propriété qui peut être lue et qui a l'attribut [Bundle] défini.
 				
@@ -486,16 +491,52 @@ namespace Epsitec.Common.Support
 					prop_name = prop_info.Name;
 				}
 				
+				IPropertyProvider prop = obj as IPropertyProvider;
+				
+				System.Diagnostics.Debug.Assert (prop_name != null);
+				System.Diagnostics.Debug.Assert (prop_name != "");
+				
 				BundlingPropertyEventArgs e = new BundlingPropertyEventArgs (bundle, obj, prop_info, prop_name, prop_value, prop_def);
 				
-				e.PropertyData     = TypeDescriptor.GetConverter (prop_info.PropertyType).ConvertToInvariantString (prop_value);
-				e.SuppressProperty = this.IsPropertyEqual (obj_default, prop_info, e.PropertyData);
+				if (prop_value is IBundleSupport)
+				{
+					//	La valeur qu'il faut sérialiser est elle-même décrite par un bundle.
+				}
+				else
+				{
+					e.PropertyData     = TypeDescriptor.GetConverter (prop_info.PropertyType).ConvertToInvariantString (prop_value);
+					e.SuppressProperty = this.IsPropertyEqual (obj_default, prop_info, e.PropertyData);
+				}
 				
 				this.OnPropertyBundled (e);
 				
 				if (e.SuppressProperty == false)
 				{
-					this.BundleAddDataField (bundle, e.PropertyName, e.PropertyData);
+					string xml_ref = ObjectBundler.GetPropNameForXmlRef (prop_name);
+					
+					if ((prop != null) &&
+						(prop.IsPropertyDefined (xml_ref)))
+					{
+						//	L'objet possède une information spéciale qui redéfinit la valeur de la propriété
+						//	au moyen d'une référence à une autre ressource.
+						
+						this.BundleAddDataFieldXml (bundle, e.PropertyName, prop.GetProperty (xml_ref) as string);
+					}
+					else if (prop_value is IBundleSupport)
+					{
+						//	Sérialise la valeur de la propriété en tant que bundle.
+						
+						IBundleSupport bundle_sup  = prop_value as IBundleSupport;
+						ResourceBundle prop_bundle = this.CreateEmptyBundle (bundle_sup.BundleName);
+						
+						this.FillBundleFromObject (prop_bundle, prop_value);
+						
+						this.BundleAddBundleField (bundle, prop_bundle);
+					}
+					else
+					{
+						this.BundleAddDataField (bundle, e.PropertyName, e.PropertyData);
+					}
 				}
 				
 				return true;
@@ -562,7 +603,7 @@ namespace Epsitec.Common.Support
 			
 			if ((prop_info != null) &&
 				(prop_info.CanRead) &&
-				(prop_info.IsDefined (typeof (BundleAttribute), true)))
+				(prop_info.IsDefined (typeof (BundleAttribute), false)))
 			{
 				//	C'est bien une propriété qui peut être lue et qui a l'attribut [Bundle] défini.
 				
@@ -578,10 +619,12 @@ namespace Epsitec.Common.Support
 					prop_name = prop_info.Name;
 				}
 				
-				switch (bundle[prop_name].Type)
+				ResourceBundle.Field field = bundle[prop_name];
+				
+				switch (field.Type)
 				{
 					case ResourceFieldType.Bundle:
-						prop_info.SetValue (obj, this.CreateFromBundle (bundle[prop_name].AsBundle), null);
+						prop_info.SetValue (obj, this.CreateFromBundle (field.AsBundle), null);
 						ok = true;
 						break;
 					
@@ -590,7 +633,7 @@ namespace Epsitec.Common.Support
 						//	La valeur source trouvée dans le bundle est un texte. Il faut faire
 						//	en sorte que cette valeur puisse être affectée à la propriété.
 						
-						string str_value = bundle[prop_name].AsString;
+						string str_value = field.AsString;
 						
 						if ((str_value != null) && (str_value != ""))
 						{
@@ -684,7 +727,7 @@ namespace Epsitec.Common.Support
 							{
 								//	C'est un booléen. Accepte "0/1", "off/on", "no/yes", "false/true".
 								
-								switch (str_value)
+								switch (str_value.ToLower (System.Globalization.CultureInfo.InvariantCulture))
 								{
 									case "0":
 									case "false":
@@ -714,9 +757,30 @@ namespace Epsitec.Common.Support
 					default:
 						break;
 				}
+				
+				if (ok && (this.obj_to_bundle != null))
+				{
+					//	L'appelant désire conserver des informations au sujet de la définition des propriétés.
+					
+					IPropertyProvider prop = obj as IPropertyProvider;
+					
+					//	Si la propriété est définie au moyen d'un champ <ref...>, on prend note du code XML
+					//	source :
+					
+					if ((prop != null) &&
+						(field.IsRef))
+					{
+						prop.SetProperty (ObjectBundler.GetPropNameForXmlRef (prop_name), field.Xml.InnerXml);
+					}
+				}
 			}
 			
 			return ok;
+		}
+		
+		public static string GetPropNameForXmlRef(string name)
+		{
+			return "$bundle$ref$" + name.ToLower (System.Globalization.CultureInfo.InvariantCulture);
 		}
 		
 		
@@ -795,7 +859,7 @@ namespace Epsitec.Common.Support
 		{
 			//	Trouve le bundle qui a servi à générer un objet.
 			
-			if (this.store_mapping)
+			if (this.obj_to_bundle != null)
 			{
 				return this.obj_to_bundle[obj] as ResourceBundle;
 			}
@@ -809,7 +873,7 @@ namespace Epsitec.Common.Support
 			//	spécifié. Comme un bundle peut servir à générer plusieurs objets, on
 			//	retrourne un array.
 			
-			if (this.store_mapping)
+			if (this.obj_to_bundle != null)
 			{
 				System.Collections.ArrayList list = new System.Collections.ArrayList ();
 				
@@ -868,7 +932,9 @@ namespace Epsitec.Common.Support
 		protected static Hashtable					classes;
 		protected static System.Xml.XmlDocument		xmldoc = new System.Xml.XmlDocument ();
 		
-		protected bool								store_mapping;
 		protected Hashtable							obj_to_bundle;			//	lien entre noms de bundles et objets
+		protected string							default_prefix;
+		protected ResourceLevel						default_level;
+		protected System.Globalization.CultureInfo	default_culture;
 	}
 }
