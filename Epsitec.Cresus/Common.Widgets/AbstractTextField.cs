@@ -28,13 +28,19 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
 			this.InternalState |= InternalState.AutoDoubleClick;
-			this.textStyle = TextFieldStyle.Normal;
 			
 			this.ResetCursor();
 			this.MouseCursor = MouseCursor.AsIBeam;
 			
 			this.CreateTextLayout();
-			this.copyPasteBehavior = new Helpers.CopyPasteBehavior (this);
+			this.navigator = new TextNavigator(this.TextLayout);
+			this.navigator.TextDeleted += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextDeleted);
+			this.navigator.TextInserted += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextInserted);
+			this.navigator.CursorScrolled += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorScrolled);
+			this.navigator.CursorChanged += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorChanged);
+			this.textFieldStyle = TextFieldStyle.Normal;
+
+			this.copyPasteBehavior = new Helpers.CopyPasteBehavior(this);
 			this.OnCursorChanged(true);
 		}
 		
@@ -45,17 +51,9 @@ namespace Epsitec.Common.Widgets
 		
 		
 
-		protected override void Dispose(bool disposing)
+		protected TextNavigator					TextNavigator
 		{
-			if ( disposing )
-			{
-				if ( TextField.blinking == this )
-				{
-					TextField.blinking = null;
-				}
-			}
-			
-			base.Dispose(disposing);
+			get { return this.navigator; }
 		}
 
 		
@@ -63,15 +61,15 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.isReadOnly;
+				return this.navigator.IsReadOnly;
 			}
 
 			set
 			{
-				if ( this.isReadOnly != value )
+				if ( this.navigator.IsReadOnly != value )
 				{
-					this.isReadOnly = value;
-					this.MouseCursor = this.isReadOnly ? MouseCursor.AsArrow : MouseCursor.AsIBeam;
+					this.navigator.IsReadOnly = value;
+					this.MouseCursor = this.navigator.IsReadOnly ? MouseCursor.AsArrow : MouseCursor.AsIBeam;
 				}
 			}
 		}
@@ -95,17 +93,17 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.TextLayout != null)
+				if ( this.TextLayout != null )
 				{
 					Drawing.Point pos   = this.TextLayout.GetLineOrigin(0);
 					Drawing.Point shift = this.InnerTextBounds.Location;
-					
-					double y_from_top = this.TextLayout.LayoutSize.Height - pos.Y;
-					double y_from_bot = this.realSize.Height - y_from_top + shift.Y + 1;
-					
-					return this.MapClientToParent (new Drawing.Point(shift.X, y_from_bot)) - this.Location;
+
+					double yFromTop = this.TextLayout.LayoutSize.Height - pos.Y;
+					double yFromBot = this.realSize.Height - yFromTop + shift.Y + 1;
+
+					return this.MapClientToParent(new Drawing.Point(shift.X, yFromBot)) - this.Location;
 				}
-				
+
 				return base.BaseLine;
 			}
 		}
@@ -118,13 +116,13 @@ namespace Epsitec.Common.Widgets
 				
 				rect.Deflate(this.margins);
 				
-				if ( this.textStyle != TextFieldStyle.Flat )
+				if ( this.navigator != null && this.textFieldStyle != TextFieldStyle.Flat )
 				{
-					if (this.Client.Height < 18)
+					if ( this.Client.Height < 18 )
 					{
-						if (this.Client.Height >= 15)
+						if ( this.Client.Height >= 15 )
 						{
-							rect.Deflate(AbstractTextField.FrameMargin / 2, AbstractTextField.FrameMargin / 2);
+							rect.Deflate(AbstractTextField.FrameMargin/2, AbstractTextField.FrameMargin/2);
 						}
 					}
 					else
@@ -143,12 +141,11 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle rect = this.InnerBounds;
 				
-				if ((this.Client.Height < 18) &&
-					(this.textStyle != TextFieldStyle.Flat))
+				if ( this.Client.Height < 18 && this.textFieldStyle != TextFieldStyle.Flat )
 				{
-					if (this.Client.Height >= 17)
+					if ( this.Client.Height >= 17 )
 					{
-						rect.Deflate(AbstractTextField.TextMargin / 2, AbstractTextField.TextMargin / 2);
+						rect.Deflate(AbstractTextField.TextMargin/2, AbstractTextField.TextMargin/2);
 					}
 				}
 				else
@@ -161,21 +158,10 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
-		{
-			if ( mode != TabNavigationMode.Passive )
-			{
-				this.SelectAll();
-			}
-			
-			return base.AboutToGetFocus(dir, mode, out focus);
-		}
-
-
 		public int								MaxChar
 		{
-			get { return this.maxChar; }
-			set { this.maxChar = value; }
+			get { return this.navigator.MaxChar; }
+			set { this.navigator.MaxChar = value; }
 		}
 
 		public virtual Drawing.Margins			Margins
@@ -212,30 +198,30 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.textStyle;
+				return this.textFieldStyle;
 			}
 
 			set
 			{
-				if (this.textStyle != value)
+				if ( this.textFieldStyle != value )
 				{
-					if ((this.textStyle == TextFieldStyle.Normal) ||
-						(this.textStyle == TextFieldStyle.Simple) ||
-						(this.textStyle == TextFieldStyle.Static) ||
-						(this.textStyle == TextFieldStyle.Flat))
+					if ( this.textFieldStyle == TextFieldStyle.Normal ||
+						 this.textFieldStyle == TextFieldStyle.Simple ||
+						 this.textFieldStyle == TextFieldStyle.Static ||
+						 this.textFieldStyle == TextFieldStyle.Flat   )
 					{
-						if ((value == TextFieldStyle.Normal) ||
-							(value == TextFieldStyle.Simple) ||
-							(value == TextFieldStyle.Static) ||
-							(value == TextFieldStyle.Flat))
+						if ( value == TextFieldStyle.Normal ||
+							 value == TextFieldStyle.Simple ||
+							 value == TextFieldStyle.Static ||
+							 value == TextFieldStyle.Flat   )
 						{
-							this.textStyle = value;
-							this.Invalidate ();
+							this.textFieldStyle = value;
+							this.Invalidate();
 							return;
 						}
 					}
 					
-					throw new System.InvalidOperationException (string.Format ("Cannot switch from {0} to {1}.", this.textStyle, value));
+					throw new System.InvalidOperationException(string.Format("Cannot switch from {0} to {1}.", this.textFieldStyle, value));
 				}
 			}
 		}
@@ -245,19 +231,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				int cursorFrom = this.TextLayout.FindOffsetFromIndex(this.cursorFrom);
-				int cursorTo   = this.TextLayout.FindOffsetFromIndex(this.cursorTo);
-				
-				int from = System.Math.Min(cursorFrom, cursorTo);
-				int to   = System.Math.Max(cursorFrom, cursorTo);
-				
-				string text = this.Text;
-				
-				return text.Substring (from, to - from);
+				return this.navigator.Selection;
 			}
+
 			set
 			{
-				this.ReplaceSelection (value);
+				this.navigator.Selection = value;
 			}
 		}
 		
@@ -266,20 +245,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.cursorTo;
+				return this.navigator.Cursor;
 			}
 
 			set
 			{
-				value = System.Math.Max(value, 0);
-				value = System.Math.Min(value, this.Text.Length);
-
-				if ( value != this.cursorFrom && value != this.cursorTo )
-				{
-					this.cursorFrom = value;
-					this.cursorTo   = value;
-					this.OnCursorChanged();
-				}
+				this.navigator.Cursor = value;
 			}
 		}
 		
@@ -287,19 +258,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.cursorFrom;
+				return this.navigator.CursorFrom;
 			}
 
 			set
 			{
-				value = System.Math.Max(value, 0);
-				value = System.Math.Min(value, this.Text.Length);
-
-				if ( value != this.cursorFrom )
-				{
-					this.cursorFrom = value;
-					this.OnCursorChanged();
-				}
+				this.navigator.CursorFrom = value;
 			}
 		}
 		
@@ -307,82 +271,81 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.cursorTo;
+				return this.navigator.CursorTo;
 			}
 
 			set
 			{
-				value = System.Math.Max(value, 0);
-				value = System.Math.Min(value, this.Text.Length);
-
-				if ( value != this.cursorTo )
-				{
-					this.cursorTo = value;
-					this.CursorScroll();
-					this.Invalidate();
-				}
+				this.navigator.CursorTo = value;
 			}
 		}
 
+
+		protected override void Dispose(bool disposing)
+		{
+			if ( disposing )
+			{
+				if ( TextField.blinking == this )
+				{
+					this.navigator.TextDeleted -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextDeleted);
+					this.navigator.TextInserted -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextInserted);
+					this.navigator.CursorScrolled -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorScrolled);
+					this.navigator.CursorChanged -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorChanged);
+					TextField.blinking = null;
+				}
+			}
+			
+			base.Dispose(disposing);
+		}
+
 		
-		
+		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
+		{
+			if ( mode != TabNavigationMode.Passive )
+			{
+				this.SelectAll();
+			}
+			
+			return base.AboutToGetFocus(dir, mode, out focus);
+		}
+
 		protected override void ModifyTextLayout(string text)
 		{
-			if ( text.Length > this.maxChar )
+			if ( text.Length > this.navigator.MaxChar )
 			{
-				text = text.Substring(0, this.maxChar);
+				text = text.Substring(0, this.navigator.MaxChar);
 			}
 			
 			base.ModifyTextLayout(text);
 		}
-		
+
 		protected override void DisposeTextLayout()
 		{
 			// Ne fait rien, on veut s'assurer que le TextLayout associé avec le
 			// TextField n'est jamais détruit du vivant du TextField.
 			this.TextLayout.Text = "";
 		}
-		
+
+
 		// Sélectione tous les caractères.
 		public void SelectAll()
 		{
 			this.SelectAll(false);
 		}
-		
-		public virtual void SelectAll(bool silent)
+
+		public void DeleteSelection()
 		{
-			this.cursorFrom = 0;
-			this.cursorTo   = this.Text.Length;
+			if ( this.TextLayout.DeleteSelection(this.navigator.Context) )
+			{
+				this.OnTextChanged();
+			}
+		}
+
+
+		protected void SelectAll(bool silent)
+		{
+			this.TextLayout.SelectAll(this.navigator.Context);
 			this.OnCursorChanged(silent);
-		}
-
-		// Sélectionne toute la ligne (triple clic).
-		public virtual void SelectLine()
-		{
-			this.MoveExtremity(-1, false, false);
-			int from = this.cursorFrom;
-			this.MoveExtremity(1, false, false);
-			this.cursorFrom = from;
-		}
-
-		// Sélectionne tout le mot (double clic).
-		public virtual void SelectWord()
-		{
-			string simple = TextLayout.ConvertToSimpleText(this.Text);
-
-			while ( this.cursorFrom > 0 )
-			{
-				if ( this.IsWordSeparator(simple[this.cursorFrom-1]) )  break;
-				this.cursorFrom --;
-			}
-
-			while ( this.cursorTo < simple.Length )
-			{
-				if ( this.IsWordSeparator(simple[this.cursorTo]) )  break;
-				this.cursorTo ++;
-			}
-
-			this.OnCursorChanged();
 		}
 
 		protected override void UpdateTextLayout()
@@ -427,15 +390,15 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		// Fait clignoter le curseur.
 		protected void FlashCursor()
 		{
+			// Fait clignoter le curseur.
 			this.Invalidate();
 		}
 
-		// Allume le curseur au prochain affichage.
 		protected void ResetCursor()
 		{
+			// Allume le curseur au prochain affichage.
 			if ( this.IsFocused && TextField.flashTimer != null )
 			{
 				double delay = SystemInformation.CursorBlinkDelay;
@@ -448,27 +411,27 @@ namespace Epsitec.Common.Widgets
 
 
 
-		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			if (this.copyPasteBehavior.ProcessMessage (message, pos))
+			// Gestion d'un événement.
+			if ( this.copyPasteBehavior.ProcessMessage(message, pos) )
 			{
 				return;
 			}
 			
 			pos.X -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
 			pos.Y -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
+			pos = this.Client.Bounds.Constrain(pos);
 			pos += this.scrollOffset;
 
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
-					this.ProcessBeginPress (pos);
+					this.navigator.ProcessMessage(message, pos);
 					
-					if ((this.AutoSelectOnFocus) &&
-						(this.IsFocusedFlagSet == false))
+					if ( this.AutoSelectOnFocus && !this.IsFocusedFlagSet )
 					{
-						this.SelectAll ();
+						this.SelectAll();
 						message.Consumer  = this;
 						message.Swallowed = true;
 					}
@@ -476,15 +439,13 @@ namespace Epsitec.Common.Widgets
 					{
 						message.Consumer = this;
 						this.mouseDown = true;
-						this.preventScroll = true;
 					}
-					
 					break;
 				
 				case MessageType.MouseMove:
 					if ( this.mouseDown )
 					{
-						this.ProcessMovePress(pos);
+						this.navigator.ProcessMessage(message, pos);
 						message.Consumer = this;
 					}
 					break;
@@ -492,23 +453,21 @@ namespace Epsitec.Common.Widgets
 				case MessageType.MouseUp:
 					if ( this.mouseDown )
 					{
-						this.ProcessEndPress(pos, message.ButtonDownCount);
+						this.navigator.ProcessMessage(message, pos);
 						this.mouseDown = false;
-						this.preventScroll = false;
 						message.Consumer = this;
 					}
 					break;
 				
 				case MessageType.KeyDown:
-					if ( this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed) )
+					if ( this.ProcessKeyDown(message, pos) )
 					{
 						message.Consumer  = this;
-						message.Swallowed = true;
 					}
 					break;
 				
 				case MessageType.KeyPress:
-					if ( this.ProcessKeyPress(message.KeyChar) )
+					if ( this.navigator.ProcessMessage(message, pos) )
 					{
 						message.Consumer = this;
 					}
@@ -516,334 +475,31 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Appelé lorsque le bouton de la souris est pressé.
-		protected bool ProcessBeginPress(Drawing.Point pos)
+		protected virtual bool ProcessKeyDown(Message message, Drawing.Point pos)
 		{
-			System.Diagnostics.Debug.Assert(this.TextLayout != null);
-			
-			int detect = this.TextLayout.DetectIndex(this.Client.Bounds.Constrain(pos-this.scrollOffset)+this.scrollOffset);
-			if ( detect != -1 )
-			{
-				this.cursorFrom = detect;
-				this.cursorTo   = detect;
-				this.OnCursorChanged();
-				return true;
-			}
-			
-			return false;
+			// Gestion d'une touche pressée avec KeyDown dans le texte.
+			return this.navigator.ProcessMessage(message, pos);
 		}
 
-		// Appelé lorsque la souris est déplacée, bouton pressé.
-		protected void ProcessMovePress(Drawing.Point pos)
+
+		private void HandleNavigatorTextDeleted(object sender)
 		{
-			System.Diagnostics.Debug.Assert(this.TextLayout != null);
-			
-			int detect = this.TextLayout.DetectIndex(this.Client.Bounds.Constrain(pos-this.scrollOffset)+this.scrollOffset);
-			if ( detect != -1 )
-			{
-				this.cursorTo = detect;
-				this.OnCursorChanged();
-			}
-		}
-
-		// Appelé lorsque le bouton de la souris est relâché.
-		protected void ProcessEndPress(Drawing.Point pos, int downCount)
-		{
-			System.Diagnostics.Debug.Assert(this.TextLayout != null);
-			
-			if ( this.textStyle == TextFieldStyle.UpDown )
-			{
-				if ( downCount >= 2 )  downCount = 4;  // double clic -> sélectionne tout
-			}
-
-			if ( downCount >= 4 )  // quadruple clic ?
-			{
-				this.SelectAll();
-			}
-			else if ( downCount >= 3 )  // triple clic ?
-			{
-				this.SelectLine();
-			}
-			else if ( downCount >= 2 )  // double clic ?
-			{
-				this.SelectWord();
-			}
-			else	// simple clic ?
-			{
-				int detect = this.TextLayout.DetectIndex(this.Client.Bounds.Constrain(pos-this.scrollOffset)+this.scrollOffset);
-				if ( detect != -1 )
-				{
-					this.cursorTo = detect;
-					this.OnCursorChanged();
-				}
-			}
-		}
-
-		// Gestion d'une touche pressée avec KeyDown dans le texte.
-		protected virtual bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
-		{
-			switch ( key )
-			{
-				case KeyCode.Back:
-					if ( isShiftPressed || isCtrlPressed )  return false;
-					this.DeleteCharacter(-1);
-					break;
-				
-				case KeyCode.Delete:
-					this.DeleteCharacter(1);
-					break;
-				
-				case KeyCode.Home:
-					this.MoveCursor(-1000000, isShiftPressed, false);  // recule beaucoup
-					break;
-				
-				case KeyCode.End:
-					this.MoveCursor(1000000, isShiftPressed, false);  // avance beaucoup
-					break;
-				
-				case KeyCode.ArrowLeft:
-					this.MoveCursor(-1, isShiftPressed, isCtrlPressed);
-					break;
-				
-				case KeyCode.ArrowRight:
-					this.MoveCursor(1, isShiftPressed, isCtrlPressed);
-					break;
-				
-				default:
-					return false;
-			}
-			
-			return true;
-		}
-
-		// Gestion d'une touche pressée avec KeyPress dans le texte.
-		protected virtual bool ProcessKeyPress(int key)
-		{
-			if ( key >= 32 )  // TODO: à vérifier ...
-			{
-				this.InsertCharacter((char)key);
-				return true;
-			}
-			
-			return false;
-		}
-
-		// Insère un caractère.
-		protected bool InsertCharacter(char character)
-		{
-			return this.ReplaceSelection(TextLayout.ConvertToTaggedText(character));
-		}
-
-		// Insère une chaîne correspondant à un caractère ou un tag (jamais plus).
-		protected bool ReplaceSelection(string ins)
-		{
-			System.Diagnostics.Debug.Assert(this.TextLayout != null);
-			if ( this.isReadOnly )  return false;
-			
-			int cursorFrom = this.TextLayout.FindOffsetFromIndex(this.cursorFrom);
-			int cursorTo   = this.TextLayout.FindOffsetFromIndex(this.cursorTo);
-			
-			int from = System.Math.Min(cursorFrom, cursorTo);
-			int to   = System.Math.Max(cursorFrom, cursorTo);
-			
-			string text = this.Text;
-			
-			if ( from < to )
-			{
-				text = text.Remove(from, to-from);
-				from = this.TextLayout.FindIndexFromOffset(from);
-				this.cursorTo   = from;
-				this.cursorFrom = from;
-			}
-			
-			if ( this.Text.Length+ins.Length > this.maxChar )
-			{
-				this.Text = text;
-				this.OnTextDeleted();
-				this.OnCursorChanged();
-				return false;
-			}
-			
-			int cursor = this.TextLayout.FindOffsetFromIndex(this.cursorTo);
-			text = text.Insert(cursor, ins);
-			this.Text = text;
-			this.cursorTo   = this.TextLayout.FindIndexFromOffset (cursor + ins.Length);
-			this.cursorFrom = this.cursorTo;
-			this.OnTextInserted();
-			this.OnCursorChanged();
-			return true;
-		}
-
-		// Supprime le caractère à gauche ou à droite du curseur.
-		protected bool DeleteCharacter(int dir)
-		{
-			System.Diagnostics.Debug.Assert(this.TextLayout != null);
-			if ( this.isReadOnly )  return false;
-			if ( this.DeleteSelection() )  return false;
-
-			int cursor = this.TextLayout.FindOffsetFromIndex(this.cursorTo);
-
-			if ( dir < 0 )  // à gauche du curseur ?
-			{
-				if ( cursor <= 0 )  return false;
-
-				string text = this.Text;
-				int len = this.TextLayout.RecedeTag(cursor);
-				text = text.Remove(cursor-len, len);
-				this.cursorTo --;
-				this.cursorFrom = this.cursorTo;
-				this.Text = text;
-				this.OnTextDeleted();
-				this.OnCursorChanged();
-			}
-			else	// à droite du curseur ?
-			{
-				if ( cursor >= this.Text.Length )  return false;
-
-				string text = this.Text;
-				int len = this.TextLayout.AdvanceTag(cursor);
-				text = text.Remove(cursor, len);
-				this.Text = text;
-				this.OnTextDeleted();
-			}
-
-			return true;
-		}
-		
-		public bool DeleteSelection()
-		{
-			// Supprime les caractères sélectionnés dans le texte.
-			
-			System.Diagnostics.Debug.Assert(this.TextLayout != null);
-			
-			if ( this.isReadOnly )  return false;
-			
-			int cursorFrom = this.TextLayout.FindOffsetFromIndex(this.cursorFrom);
-			int cursorTo   = this.TextLayout.FindOffsetFromIndex(this.cursorTo);
-			
-			int from = System.Math.Min(cursorFrom, cursorTo);
-			int to   = System.Math.Max(cursorFrom, cursorTo);
-			
-			if ( from == to )  return false;
-			
-			string text = this.Text;
-			text = text.Remove(from, to-from);
-			from = this.TextLayout.FindIndexFromOffset(from);
-			this.cursorTo   = from;
-			this.cursorFrom = from;
-			this.Text = text;
 			this.OnTextDeleted();
-			this.OnCursorChanged();
-			
-			return true;
 		}
 
-		// Indique si un caractère est un séparateur pour les déplacements
-		// avec Ctrl+flèche.
-		protected bool IsWordSeparator(char character)
+		private void HandleNavigatorTextInserted(object sender)
 		{
-			character = System.Char.ToUpper(character);
-			if ( character == '_' )  return false;
-			if ( character >= 'A' && character <= 'Z' )  return false;
-			if ( character >= '0' && character <= '9' )  return false;
-			return true;
+			this.OnTextInserted();
 		}
 
-		// Déplace le curseur au début ou à la fin d'une ligne.
-		protected bool MoveExtremity(int move, bool isShiftPressed, bool isCtrlPressed)
+		private void HandleNavigatorCursorScrolled(object sender)
 		{
-			System.Diagnostics.Debug.Assert(this.TextLayout != null);
-			
-			if ( isCtrlPressed )  // début/fin du texte ?
-			{
-				return this.MoveCursor(move*1000000, isShiftPressed, false);
-			}
-
-			double posx;
-			if ( move < 0 )  posx = 0;
-			else             posx = this.TextLayout.LayoutSize.Width;
-			int cursor = this.TextLayout.DetectIndex(posx, this.cursorLine);
-			if ( cursor == -1 )  return false;
-			this.cursorTo = cursor;
-			
-			if ( !isShiftPressed )
-			{
-				this.cursorFrom = cursor;
-			}
-			
-			this.OnCursorChanged();
-			return true;
+			this.CursorScroll();
 		}
 
-		// Déplace le curseur par lignes.
-		protected bool MoveLine(int move, bool isShiftPressed, bool isCtrlPressed)
+		private void HandleNavigatorCursorChanged(object sender)
 		{
-			System.Diagnostics.Debug.Assert(this.TextLayout != null);
-			
-			int cursor = this.TextLayout.DetectIndex(this.cursorPosX, this.cursorLine+move);
-			if ( cursor == -1 )  return false;
-			this.cursorTo = cursor;
-			
-			if ( !isShiftPressed )
-			{
-				this.cursorFrom = cursor;
-			}
-			
-			this.OnCursorChanged();
-			return true;
-		}
-
-		// Déplace le curseur.
-		protected bool MoveCursor(int move, bool isShiftPressed, bool isCtrlPressed)
-		{
-			int cursor = this.cursorTo;
-			string simple = TextLayout.ConvertToSimpleText(this.Text);
-
-			if ( isCtrlPressed )  // déplacement par mots ?
-			{
-				if ( move < 0 )
-				{
-					while ( cursor > 0 )
-					{
-						if ( !this.IsWordSeparator(simple[cursor-1]) )  break;
-						cursor --;
-					}
-					while ( cursor > 0 )
-					{
-						if ( this.IsWordSeparator(simple[cursor-1]) )  break;
-						cursor --;
-					}
-				}
-				else
-				{
-					while ( cursor < simple.Length )
-					{
-						if ( this.IsWordSeparator(simple[cursor]) )  break;
-						cursor ++;
-					}
-					while ( cursor < simple.Length )
-					{
-						if ( !this.IsWordSeparator(simple[cursor]) )  break;
-						cursor ++;
-					}
-				}
-			}
-			else	// déplacement par caractères ?
-			{
-				cursor += move;
-			}
-
-			cursor = System.Math.Max(cursor, 0);
-			cursor = System.Math.Min(cursor, simple.Length);
-			if ( cursor == this.cursorTo && cursor == this.cursorFrom )  return false;
-			this.cursorTo = cursor;
-			if ( !isShiftPressed )
-			{
-				this.cursorFrom = cursor;
-			}
-			
-			this.OnCursorChanged();
-			return true;
+			this.OnCursorChanged(false);
 		}
 
 
@@ -865,9 +521,9 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.IsFocusedFlagSet )
 			{
-				//	On a perdu le focus visible, mais pas le focus réel, vraisemblablement
-				//	parce que la fenêtre a perdu le focus. On ne doit pas toucher à la
-				//	sélection actuelle...
+				// On a perdu le focus visible, mais pas le focus réel, vraisemblablement
+				// parce que la fenêtre a perdu le focus. On ne doit pas toucher à la
+				// sélection actuelle...
 			}
 			else
 			{
@@ -887,73 +543,53 @@ namespace Epsitec.Common.Widgets
 			
 			base.OnTextChanged();
 		}
-
-		protected virtual void OnTextInserted()
+		
+		protected void OnTextDeleted()
 		{
-			// Génère un événement pour dire que le texte a changé (ajout).
-			
+			this.OnTextChanged();
+
+			if ( this.TextDeleted != null )  // qq'un écoute ?
+			{
+				this.TextDeleted(this);
+			}
+		}
+
+		protected void OnTextInserted()
+		{
+			this.OnTextChanged();
+
 			if ( this.TextInserted != null )  // qq'un écoute ?
 			{
 				this.TextInserted(this);
 			}
 		}
 
-		protected virtual void OnTextDeleted()
-		{
-			// Génère un événement pour dire que le texte a changé (suppression).
-			
-			if ( this.TextDeleted != null )  // qq'un écoute ?
-			{
-				this.TextDeleted(this);
-			}
-		}
-		
-		protected void OnCursorChanged()
-		{
-			this.OnCursorChanged(false);
-		}
-		
 		protected virtual void OnCursorChanged(bool silent)
 		{
-			// Ne génère rien pour l'instant...
-			
-			this.CursorScroll();
 			this.ResetCursor();
 			this.Invalidate();
-			
-			if ((this.cursorFrom != this.oldCursorFrom) ||
-				(this.cursorTo != this.oldCursorTo))
-			{
-				int new_delta = this.cursorTo - this.cursorFrom;
-				int old_delta = this.oldCursorTo - this.oldCursorFrom;
-				
-				if ((new_delta != old_delta) ||
-					(new_delta != 0))
-				{
-					this.OnSelectionChanged ();
-				}
-				
-				if ((!silent) &&
-					(old_delta == 0) &&
-					(new_delta == 0))
-				{
-					if (this.CursorChanged != null)
-					{
-						this.CursorChanged (this);
-					}
-				}
-				
-				this.oldCursorTo   = this.cursorTo;
-				this.oldCursorFrom = this.cursorFrom;
-			}
-		}
 
-		protected virtual void OnSelectionChanged()
-		{
-			if (this.SelectionChanged != null)
+			if ( this.navigator == null )  return;
+
+			if ( this.navigator.Context.CursorFrom != this.navigator.Context.CursorTo ||
+				 this.lastCursorFrom != this.lastCursorTo )
 			{
-				this.SelectionChanged (this);
+				if ( this.SelectionChanged != null )  // qq'un écoute ?
+				{
+					this.SelectionChanged(this);
+				}
 			}
+
+			if ( !silent && this.navigator.Context.CursorFrom == this.navigator.Context.CursorTo )
+			{
+				if ( this.CursorChanged != null )  // qq'un écoute ?
+				{
+					this.CursorChanged(this);
+				}
+			}
+
+			this.lastCursorFrom = this.navigator.Context.CursorFrom;
+			this.lastCursorTo   = this.navigator.Context.CursorTo;
 		}
 
 		
@@ -961,17 +597,13 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Calcule le scrolling pour que le curseur soit visible.
 			
-			if (this.TextLayout == null)
-			{
-				return;
-			}
-			
+			if ( this.TextLayout == null )  return;
 			if ( this.mouseDown )  return;
 
 			this.scrollOffset = new Drawing.Point();
 
-			Drawing.Rectangle cursor = this.TextLayout.FindTextCursor(this.cursorTo, out this.cursorLine);
-			this.cursorPosX = (cursor.Left+cursor.Right)/2;
+			Drawing.Rectangle cursor = this.TextLayout.FindTextCursor(this.navigator.Context.CursorTo, out this.navigator.Context.CursorLine);
+			this.navigator.Context.CursorPosX = (cursor.Left+cursor.Right)/2;
 
 			Drawing.Point end = this.TextLayout.FindTextEnd();
 			
@@ -990,12 +622,11 @@ namespace Epsitec.Common.Widgets
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			if (AbstractTextField.flashTimerStarted == false)
+			if ( AbstractTextField.flashTimerStarted == false )
 			{
 				//	Il faut enregistrer le timer; on ne peut pas le faire avant que le
 				//	premier TextField ne s'affiche, car sinon les WinForms semblent se
 				//	mélanger les pinceaux :
-				
 				TextField.flashTimer = new Timer();
 				TextField.flashTimer.TimeElapsed += new Support.EventHandler(TextField.HandleFlashTimer);
 				TextField.flashTimerStarted = true;
@@ -1017,7 +648,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rClip     = rInside;
 			Drawing.Rectangle rFill     = this.Client.Bounds;
 			
-			if ( this.textStyle == TextFieldStyle.Flat )
+			if ( this.textFieldStyle == TextFieldStyle.Flat )
 			{
 				rFill.Deflate(1, 1);
 			}
@@ -1033,7 +664,7 @@ namespace Epsitec.Common.Widgets
 				//	éditable.
 				
 				state &= ~WidgetState.Selected;
-				adorner.PaintTextFieldBackground(graphics, rFill, state, this.textStyle, this.isReadOnly);
+				adorner.PaintTextFieldBackground(graphics, rFill, state, this.textFieldStyle, this.navigator.IsReadOnly);
 			}
 			
 //			graphics.AddFilledRectangle(rText);
@@ -1046,10 +677,10 @@ namespace Epsitec.Common.Widgets
 			{
 				bool visibleCursor = false;
 				
-				int from = System.Math.Min(this.cursorFrom, this.cursorTo);
-				int to   = System.Math.Max(this.cursorFrom, this.cursorTo);
+				int from = System.Math.Min(this.navigator.Context.CursorFrom, this.navigator.Context.CursorTo);
+				int to   = System.Math.Max(this.navigator.Context.CursorFrom, this.navigator.Context.CursorTo);
 				
-				if ( this.isCombo && this.isReadOnly )
+				if ( this.isCombo && this.navigator.IsReadOnly )
 				{
 					Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
 					rects[0] = rInside;
@@ -1065,11 +696,10 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					//	Un morceau de texte a été sélectionné. Peint en plusieurs étapes :
-					//
-					//	- Peint tout le texte normalement
-					//	- Peint les rectangles de sélection
-					//	- Peint tout le texte en mode sélectionné, avec clipping
+					// Un morceau de texte a été sélectionné. Peint en plusieurs étapes :
+					// - Peint tout le texte normalement
+					// - Peint les rectangles de sélection
+					// - Peint tout le texte en mode sélectionné, avec clipping
 					
 					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state&~(WidgetState.Focused|WidgetState.Selected), PaintTextStyle.TextField, this.BackColor);
 					
@@ -1077,6 +707,7 @@ namespace Epsitec.Common.Widgets
 					
 					for ( int i=0 ; i<rects.Length ; i++ )
 					{
+						rects[i].Offset(0, -1);
 						graphics.Align(ref rects[i]);
 					}
 					
@@ -1091,12 +722,12 @@ namespace Epsitec.Common.Widgets
 					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.BackColor);
 				}
 				
-				if ( !this.isReadOnly )
+				if ( !this.navigator.IsReadOnly )
 				{
-					//	Dessine le curseur :
-					
-					Drawing.Rectangle cursor = this.TextLayout.FindTextCursor(this.cursorTo, out this.cursorLine);
-					this.cursorPosX = (cursor.Left + cursor.Right)/2;
+					// Dessine le curseur :
+					Drawing.Rectangle cursor = this.TextLayout.FindTextCursor(this.navigator.Context.CursorTo, out this.navigator.Context.CursorLine);
+					this.navigator.Context.CursorPosX = (cursor.Left+cursor.Right)/2;
+					cursor.Offset(0, -1);
 					double x = cursor.Left;
 					double y = cursor.Bottom;
 					graphics.Align(ref x, ref y);
@@ -1116,7 +747,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void UpdateClientGeometry()
 		{
-			base.UpdateClientGeometry ();
+			base.UpdateClientGeometry();
 			this.OnCursorChanged(true);
 		}
 
@@ -1140,24 +771,20 @@ namespace Epsitec.Common.Widgets
 		internal static readonly double			FrameMargin = 2;
 		internal static readonly double			Infinity = 1000000;
 		
-		protected bool							isReadOnly = false;
 		protected bool							isCombo = false;
 		protected bool							autoSelectOnFocus = false;
 		protected Drawing.Margins				margins = new Drawing.Margins();
 		protected Drawing.Size					realSize;
 		protected Drawing.Point					scrollOffset = new Drawing.Point();
-		protected TextFieldStyle				textStyle;
-		protected int							cursorFrom = 0;
-		protected int							cursorTo = 0;
-		protected int							cursorLine;
-		protected double						cursorPosX;
-		protected int							maxChar = 1000;
 		protected bool							mouseDown = false;
-		protected bool							preventScroll = false;
+		
+		protected TextFieldStyle				textFieldStyle = TextFieldStyle.Normal;
+		
+		private TextNavigator					navigator;
+		private int								lastCursorFrom = -1;
+		private int								lastCursorTo = -1;
 		
 		private Helpers.CopyPasteBehavior		copyPasteBehavior;
-		private int								oldCursorFrom;
-		private int								oldCursorTo;
 		
 		private static Timer					flashTimer;
 		private static bool						flashTimerStarted = false;

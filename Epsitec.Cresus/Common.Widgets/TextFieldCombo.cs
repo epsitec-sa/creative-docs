@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldCombo()
 		{
-			this.textStyle = TextFieldStyle.Combo;
+			this.textFieldStyle = TextFieldStyle.Combo;
 
 			this.items = new Helpers.StringCollection(this);
 			this.isCombo = true;
@@ -101,21 +101,21 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnSelectedIndexChanged()
 		{
-			if (this.scrollList == null)
+			if ( this.scrollList == null )
 			{
-				if (this.SelectedIndexChanged != null)
+				if ( this.SelectedIndexChanged != null )
 				{
-					this.SelectedIndexChanged (this);
+					this.SelectedIndexChanged(this);
 				}
 			}
 		}
 
 		
-		protected override bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
+		protected override bool ProcessKeyDown(Message message, Drawing.Point pos)
 		{
 			if ( this.IsReadOnly )
 			{
-				if ( key == KeyCode.ArrowUp || key == KeyCode.ArrowDown )
+				if ( message.KeyCode == KeyCode.ArrowUp || message.KeyCode == KeyCode.ArrowDown )
 				{
 					this.OpenCombo();
 					return true;
@@ -123,15 +123,14 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				switch (key)
+				switch ( message.KeyCode )
 				{
-					case KeyCode.ArrowUp:	this.Navigate (-1);	break;
-					case KeyCode.ArrowDown:	this.Navigate (1);	break;
+					case KeyCode.ArrowUp:	this.Navigate(-1);	break;
+					case KeyCode.ArrowDown:	this.Navigate(1);	break;
 					
 					default:
-						return base.ProcessKeyDown(key, isShiftPressed, isCtrlPressed);
+						return base.ProcessKeyDown(message, pos);
 				}
-				
 				return true;
 			}
 			
@@ -375,7 +374,7 @@ namespace Epsitec.Common.Widgets
 			
 			set
 			{
-				this.SelectedIndex = this.Items.IndexOf (value);
+				this.SelectedIndex = this.Items.IndexOf(value);
 			}
 		}
 
