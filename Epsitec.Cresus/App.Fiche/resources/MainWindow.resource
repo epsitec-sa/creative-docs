@@ -1,68 +1,68 @@
 <bundle>
- <field name='class'>Window</field>
- <field name='name'>MainWindow</field>
- <field name='text'>EPSITEC mini Fiche</field>
- <field name='size'>800;600</field>
- <field name='icon'>AppIcon</field>
+ <data name='class'>Window</data>
+ <data name='name'>MainWindow</data>
+ <data name='text'>EPSITEC mini Fiche</data>
+ <data name='size'>800;600</data>
+ <data name='icon'>AppIcon</data>
  <list name='widgets'>
  
   <bundle>									<!-- Définition du menu -->
-   <field name='class'>HMenu</field>
-   <field name='name'>MainMenu</field>
-   <field name='dock'>Top</field>
+   <data name='class'>HMenu</data>
+   <data name='name'>MainMenu</data>
+   <data name='dock'>Top</data>
    <list name='items'>
     <bundle>
-     <field name='class'>MenuItem</field>
-     <field name='text'>Fichier</field>
+     <data name='class'>MenuItem</data>
+     <data name='text'>Fichier</data>
      <bundle name='menu'>
-      <field name='class'>VMenu</field>
+      <data name='class'>VMenu</data>
       <list name='items'>
        <bundle>
-        <field name='class'>MenuItem</field>
-        <field name='text'>Ouvrir..</field>
-        <field name='icon'>res:BaseIcons#open</field>
-        <field name='name'>Open</field>
+        <data name='class'>MenuItem</data>
+        <data name='text'>Ouvrir..</data>
+        <data name='icon'>res:BaseIcons#open</data>
+        <data name='name'>Open</data>
        </bundle>
        <bundle>
-        <field name='class'>MenuItem</field>
-        <field name='text'>Enregistrer..</field>
-        <field name='icon'>res:BaseIcons#save</field>
-        <field name='name'>Save</field>
+        <data name='class'>MenuItem</data>
+        <data name='text'>Enregistrer..</data>
+        <data name='icon'>res:BaseIcons#save</data>
+        <data name='name'>Save</data>
        </bundle>
        <bundle>
-        <field name='class'>MenuSeparator</field>
+        <data name='class'>MenuSeparator</data>
        </bundle>
        <bundle>
-        <field name='class'>MenuItem</field>
-        <field name='text'>Quitter</field>
-        <field name='name'>Quit</field>
+        <data name='class'>MenuItem</data>
+        <data name='text'>Quitter</data>
+        <data name='cmd'>Quit</data>
        </bundle>
       </list>
      </bundle>
     </bundle>
     <bundle>
-     <field name='class'>MenuItem</field>
-     <field name='text'>Edition</field>
+     <data name='class'>MenuItem</data>
+     <data name='text'>Edition</data>
      <bundle name='menu'>
-      <field name='class'>VMenu</field>
+      <data name='class'>VMenu</data>
       <list name='items'>
        <bundle>
-        <field name='class'>MenuItem</field>
-        <field name='text'>Couper</field>
-        <field name='icon'>res:BaseIcons#cut</field>
-        <field name='name'>Open</field>
+        <data name='class'>MenuItem</data>
+        <data name='text'>Couper</data>
+        <data name='icon'>res:BaseIcons#cut</data>
+        <data name='name'>Open</data>
        </bundle>
        <bundle>
-        <field name='class'>MenuItem</field>
-        <field name='text'>Copier</field>
-        <field name='icon'>res:BaseIcons#copy</field>
-        <field name='name'>Save</field>
+        <data name='class'>MenuItem</data>
+        <data name='text'>Copier</data>
+        <data name='icon'>res:BaseIcons#copy</data>
+        <data name='name'>Save</data>
        </bundle>
        <bundle>
-        <field name='class'>MenuItem</field>
-        <field name='text'>Coller</field>
-        <field name='icon'>res:BaseIcons#paste</field>
-        <field name='name'>Save</field>
+        <data name='class'>MenuItem</data>
+        <data name='text'>Coller</data>
+        <data name='icon'>res:BaseIcons#paste</data>
+        <data name='name'>Save</data>
        </bundle>
       </list>
      </bundle>
@@ -71,83 +71,83 @@
   </bundle>
   
   <bundle>									<!-- Définition de la barre d'icônes -->
-   <field name='class'>ToolBar</field>
-   <field name='dock'>Top</field>
+   <data name='class'>HToolBar</data>
+   <data name='dock'>Top</data>
    <list name='items'>
     <bundle>
-     <field name='class'>IconButton</field>
-     <field name='icon'>res:BaseIcons#open</field>
+     <data name='class'>IconButton</data>
+     <data name='icon'>res:BaseIcons#open</data>
     </bundle>
     <bundle>
-     <field name='class'>IconButton</field>
-     <field name='icon'>res:BaseIcons#save</field>
+     <data name='class'>IconButton</data>
+     <data name='icon'>res:BaseIcons#save</data>
     </bundle>
     <bundle>
-     <field name='class'>IconSeparator</field>
+     <data name='class'>IconSeparator</data>
     </bundle>
     <bundle>
-     <field name='class'>TextFieldCombo</field>
-     <field name='text'>Adresses</field>
-     <field name='ro'>true</field>
-     <field name='size'>80;*</field>
+     <data name='class'>TextFieldCombo</data>
+     <data name='text'>Adresses</data>
+     <data name='ro'>true</data>
+     <data name='size'>80;*</data>
      <bundle name='items'>
-      <field name='00/DB1'>Adresses</field>
-      <field name='01/DB2'>Livres</field>
-      <field name='02/DB3'>CD</field>
-      <field name='03/DB4'>DVD</field>
+      <data name='00/DB1'>Adresses</data>
+      <data name='01/DB2'>Livres</data>
+      <data name='02/DB3'>CD</data>
+      <data name='03/DB4'>DVD</data>
      </bundle>
     </bundle>
     <bundle>
-     <field name='class'>IconSeparator</field>
+     <data name='class'>IconSeparator</data>
     </bundle>
     <bundle>
-     <field name='class'>IconButton</field>
-     <field name='icon'>res:BaseIcons#cut</field>
+     <data name='class'>IconButton</data>
+     <data name='icon'>res:BaseIcons#cut</data>
     </bundle>
     <bundle>
-     <field name='class'>IconButton</field>
-     <field name='icon'>res:BaseIcons#copy</field>
+     <data name='class'>IconButton</data>
+     <data name='icon'>res:BaseIcons#copy</data>
     </bundle>
     <bundle>
-     <field name='class'>IconButton</field>
-     <field name='icon'>res:BaseIcons#paste</field>
+     <data name='class'>IconButton</data>
+     <data name='icon'>res:BaseIcons#paste</data>
     </bundle>
    </list>
   </bundle>
   
   <bundle>
-   <field name='class'>PaneBook</field>
-   <field name='dock'>Fill</field>
-   <field name='style'>LeftRight</field>
-   <field name='behaviour'>FollowMe</field>
+   <data name='class'>PaneBook</data>
+   <data name='dock'>Fill</data>
+   <data name='style'>LeftRight</data>
+   <data name='behaviour'>FollowMe</data>
    <list name='items'>
     <bundle>
-     <field name='class'>PanePage</field>
-     <field name='rs'>10</field>
-     <field name='min'>50</field>
-     <field name='e'>0</field>
+     <data name='class'>PanePage</data>
+     <data name='rs'>10</data>
+     <data name='min'>50</data>
+     <data name='e'>0</data>
      <list name='widgets'>
       <bundle>
-       <field name='class'>Button</field>
-       <field name='text'>Panneau 1</field>
-       <field name='pos'>50;100</field>
-       <field name='size'>80;*</field>
-       <field name='anchor'>Bottom, Left</field>
+       <data name='class'>Button</data>
+       <data name='text'>Panneau 1</data>
+       <data name='pos'>50;100</data>
+       <data name='size'>80;*</data>
+       <data name='anchor'>Bottom, Left</data>
       </bundle>
      </list>
     </bundle>
     <bundle>
-     <field name='class'>PanePage</field>
-     <field name='rs'>10</field>
-     <field name='min'>50</field>
-     <field name='e'>1</field>
+     <data name='class'>PanePage</data>
+     <data name='rs'>10</data>
+     <data name='min'>50</data>
+     <data name='e'>1</data>
      <list name='widgets'>
       <bundle>
-       <field name='class'>Button</field>
-       <field name='text'>Panneau 2</field>
-       <field name='pos'>50;100</field>
-       <field name='size'>80;*</field>
-       <field name='anchor'>Bottom, Left</field>
+       <data name='class'>Button</data>
+       <data name='text'>Panneau 2</data>
+       <data name='pos'>50;100</data>
+       <data name='size'>80;*</data>
+       <data name='anchor'>Bottom, Left</data>
       </bundle>
      </list>
     </bundle>
