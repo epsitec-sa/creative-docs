@@ -1,4 +1,4 @@
-namespace Epsitec.Common.Drawing.Renderer
+namespace Epsitec.Common.Drawing
 {
 	public enum GradientFill
 	{
@@ -9,7 +9,10 @@ namespace Epsitec.Common.Drawing.Renderer
 		SqrtXY,
 		Conic
 	}
-	
+}
+
+namespace Epsitec.Common.Drawing.Renderer
+{
 	public class Gradient : IRenderer, System.IDisposable
 	{
 		public Gradient()
@@ -90,18 +93,9 @@ namespace Epsitec.Common.Drawing.Renderer
 		}
 		
 		
-		public void SetColors(System.Drawing.Color a, System.Drawing.Color b)
+		public void SetColors(Color a, Color b)
 		{
-			double ar = a.R / 255.0;
-			double ag = a.G / 255.0;
-			double ab = a.B / 255.0;
-			double aa = a.A / 255.0;
-			double br = b.R / 255.0;
-			double bg = b.G / 255.0;
-			double bb = b.B / 255.0;
-			double ba = b.A / 255.0;
-			
-			this.SetColors (ar, ag, ab, aa, br, bg, bb, ba);
+			this.SetColors (a.R, a.G, a.B, a.A, b.R, b.G, b.B, b.A);
 		}
 		
 		public void SetColors(double ar, double ag, double ab, double br, double bg, double bb)
@@ -198,6 +192,8 @@ namespace Epsitec.Common.Drawing.Renderer
 				Agg.Library.AggRendererGradientDelete (this.agg_ren);
 				this.agg_ren = System.IntPtr.Zero;
 				this.pixmap  = null;
+				this.fill    = GradientFill.None;
+				this.transform.Reset ();
 			}
 		}
 		
