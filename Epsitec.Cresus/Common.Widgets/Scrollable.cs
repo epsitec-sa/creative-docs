@@ -18,9 +18,14 @@ namespace Epsitec.Common.Widgets
 			this.h_scroller.Parent = this;
 			this.h_scroller.Minimum = 0;
 			this.h_scroller.Maximum = 1;
-			this.h_scroller.Display = 0;
+			this.h_scroller.VisibleRange = 1;
 			
 			this.v_scroller.Parent = this;
+			this.v_scroller.Minimum = 0;
+			this.v_scroller.Maximum = 1;
+			this.v_scroller.VisibleRange = 1;
+			this.v_scroller.IsInverted = true;
+			
 			this.h_scroller.ValueChanged += new EventHandler (HandleHScrollerValueChanged);
 			this.v_scroller.ValueChanged += new EventHandler(HandleVScrollerValueChanged);
 			
@@ -157,7 +162,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.panel_container.Bounds = new Drawing.Rectangle (0, margin_y, vis_dx, vis_dy);
-			this.panel.Location = new Drawing.Point (offset_x, offset_y + this.Client.Height - this.panel.Height);
+			this.panel.Location = new Drawing.Point (- offset_x, offset_y + this.Client.Height - this.panel.Height - margin_y);
 			
 			this.h_scroller.SetVisible (margin_y > 0);
 			this.v_scroller.SetVisible (margin_x > 0);
