@@ -47,8 +47,8 @@ namespace Epsitec.Common.Widgets
 		
 		public int								MaxChar
 		{
-			get { return this.maxChar; }
-			set { this.maxChar = value; }
+			get { return this.context.MaxChar; }
+			set { this.context.MaxChar = value; }
 		}
 
 		public string							Selection
@@ -195,6 +195,14 @@ namespace Epsitec.Common.Widgets
 			this.mouseDown = true;
 		}
 
+		public void MouseMoveMessage(Drawing.Point pos)
+		{
+			if ( this.mouseDrag )
+			{
+				this.ProcessMovePress(pos);
+			}
+		}
+
 		// Gestion d'une touche pressée avec KeyDown dans le texte.
 		protected bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
@@ -206,6 +214,7 @@ namespace Epsitec.Common.Widgets
 				{
 					case KeyCode.Return:
 						this.textLayout.InsertCharacter(this.context, '\n');
+						this.OnTextInserted(false);
 						return true;
 
 					case KeyCode.Home:
@@ -235,16 +244,22 @@ namespace Epsitec.Common.Widgets
 						return true;
 
 					case KeyCode.ArrowUp:
-						this.textLayout.MoveLine(this.context, -1, isShiftPressed);
-						this.OnCursorScrolled();
-						this.OnCursorChanged(false);
-						return true;
+						if ( this.textLayout.MoveLine(this.context, -1, isShiftPressed) )
+						{
+							this.OnCursorScrolled();
+							this.OnCursorChanged(false);
+							return true;
+						}
+						break;
 
 					case KeyCode.ArrowDown:
-						this.textLayout.MoveLine(this.context, 1, isShiftPressed);
-						this.OnCursorScrolled();
-						this.OnCursorChanged(false);
-						return true;
+						if ( this.textLayout.MoveLine(this.context, 1, isShiftPressed) )
+						{
+							this.OnCursorScrolled();
+							this.OnCursorChanged(false);
+							return true;
+						}
+						break;
 				
 					case KeyCode.PageUp:
 					case KeyCode.PageDown:
@@ -274,28 +289,40 @@ namespace Epsitec.Common.Widgets
 					return true;
 				
 				case KeyCode.Home:
-					this.textLayout.MoveCursor(this.context, -1000000, isShiftPressed, false);  // recule beaucoup
-					this.OnCursorScrolled();
-					this.OnCursorChanged(false);
-					return true;
+					if ( this.textLayout.MoveCursor(this.context, -1000000, isShiftPressed, false) )  // recule beaucoup
+					{
+						this.OnCursorScrolled();
+						this.OnCursorChanged(false);
+						return true;
+					}
+					break;
 				
 				case KeyCode.End:
-					this.textLayout.MoveCursor(this.context, 1000000, isShiftPressed, false);  // avance beaucoup
-					this.OnCursorScrolled();
-					this.OnCursorChanged(false);
-					return true;
+					if ( this.textLayout.MoveCursor(this.context, 1000000, isShiftPressed, false) )  // avance beaucoup
+					{
+						this.OnCursorScrolled();
+						this.OnCursorChanged(false);
+						return true;
+					}
+					break;
 				
 				case KeyCode.ArrowLeft:
-					this.textLayout.MoveCursor(this.context, -1, isShiftPressed, isCtrlPressed);
-					this.OnCursorScrolled();
-					this.OnCursorChanged(false);
-					return true;
+					if ( this.textLayout.MoveCursor(this.context, -1, isShiftPressed, isCtrlPressed) )
+					{
+						this.OnCursorScrolled();
+						this.OnCursorChanged(false);
+						return true;
+					}
+					break;
 				
 				case KeyCode.ArrowRight:
-					this.textLayout.MoveCursor(this.context, 1, isShiftPressed, isCtrlPressed);
-					this.OnCursorScrolled();
-					this.OnCursorChanged(false);
-					return true;
+					if ( this.textLayout.MoveCursor(this.context, 1, isShiftPressed, isCtrlPressed) )
+					{
+						this.OnCursorScrolled();
+						this.OnCursorChanged(false);
+						return true;
+					}
+					break;
 			}
 			
 			return false;
@@ -441,7 +468,6 @@ namespace Epsitec.Common.Widgets
 		protected TextLayout.Context			context;
 		protected bool							isReadOnly = false;
 		protected bool							isNumeric = false;
-		protected int							maxChar = 1000;
 		protected int							iCursorFrom;
 		protected int							iCursorTo;
 		protected int							iTextLength;
