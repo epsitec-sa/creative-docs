@@ -538,7 +538,18 @@ namespace Epsitec.Common.Widgets
 		[Bundle ("size")] public Drawing.Size	ClientSize
 		{
 			get { return new Drawing.Size (this.window.ClientSize); }
-			set { this.window.ClientSize = new System.Drawing.Size ((int)(value.Width + 0.5), (int)(value.Height + 0.5)); }
+			set
+			{
+				if (this.window != null)
+				{
+					System.Drawing.Size size = new System.Drawing.Size ((int)(value.Width + 0.5), (int)(value.Height + 0.5));
+					
+					if (this.window.ClientSize != size)
+					{
+						this.window.ClientSize = size;
+					}
+				}
+			}
 		}
 		
 		[Bundle ("text")] public string			Text
