@@ -451,17 +451,17 @@ namespace Epsitec.Common.Drawing
 		
 		public static bool Equal(Point a, Point b)
 		{
-			return Equal (a.X, b.X) && Equal (a.Y, b.Y);
+			return Transform.Equal (a.X, b.X) && Transform.Equal (a.Y, b.Y);
 		}
 		
 		public static bool Equal(Size a, Size b)
 		{
-			return Equal (a.Width, b.Width) && Equal (a.Height, b.Height);
+			return Transform.Equal (a.Width, b.Width) && Transform.Equal (a.Height, b.Height);
 		}
 		
 		public static bool Equal(Rectangle a, Rectangle b)
 		{
-			return Equal (a.Location, b.Location) && Equal (a.Size, b.Size);
+			return Transform.Equal (a.Location, b.Location) && Transform.Equal (a.Size, b.Size);
 		}
 		
 		public static bool IsZero(double a)
@@ -495,12 +495,12 @@ namespace Epsitec.Common.Drawing
 				{
 					return 1;
 				}
-				if (Equal (this.XX, t.XX) &&
-					Equal (this.XY, t.XY) &&
-					Equal (this.YX, t.YX) &&
-					Equal (this.YY, t.YY) &&
-					Equal (this.TX, t.TX) &&
-					Equal (this.TY, t.TY))
+				if (Transform.Equal (this.XX, t.XX) &&
+					Transform.Equal (this.XY, t.XY) &&
+					Transform.Equal (this.YX, t.YX) &&
+					Transform.Equal (this.YY, t.YY) &&
+					Transform.Equal (this.TX, t.TX) &&
+					Transform.Equal (this.TY, t.TY))
 				{
 					return 0;
 				}
@@ -538,12 +538,12 @@ namespace Epsitec.Common.Drawing
 			
 			if ((oa != null) && (ob != null))
 			{
-				if (Equal (a.XX, b.XX) &&
-					Equal (a.XY, b.XY) &&
-					Equal (a.YX, b.YX) &&
-					Equal (a.YY, b.YY) &&
-					Equal (a.TX, b.TX) &&
-					Equal (a.TY, b.TY))
+				if (Transform.Equal (a.XX, b.XX) &&
+					Transform.Equal (a.XY, b.XY) &&
+					Transform.Equal (a.YX, b.YX) &&
+					Transform.Equal (a.YY, b.YY) &&
+					Transform.Equal (a.TX, b.TX) &&
+					Transform.Equal (a.TY, b.TY))
 				{
 					return true;
 				}
@@ -564,12 +564,12 @@ namespace Epsitec.Common.Drawing
 			
 			if ((oa != null) && (ob != null))
 			{
-				if (!Equal (a.XX, b.XX) ||
-					!Equal (a.XY, b.XY) ||
-					!Equal (a.YX, b.YX) ||
-					!Equal (a.YY, b.YY) ||
-					!Equal (a.TX, b.TX) ||
-					!Equal (a.TY, b.TY))
+				if (!Transform.Equal (a.XX, b.XX) ||
+					!Transform.Equal (a.XY, b.XY) ||
+					!Transform.Equal (a.YX, b.YX) ||
+					!Transform.Equal (a.YY, b.YY) ||
+					!Transform.Equal (a.TX, b.TX) ||
+					!Transform.Equal (a.TY, b.TY))
 				{
 					return true;
 				}
@@ -589,12 +589,12 @@ namespace Epsitec.Common.Drawing
 				{
 					return false;
 				}
-				if (Equal (this.XX, t.XX) &&
-					Equal (this.XY, t.XY) &&
-					Equal (this.YX, t.YX) &&
-					Equal (this.YY, t.YY) &&
-					Equal (this.TX, t.TX) &&
-					Equal (this.TY, t.TY))
+				if (Transform.Equal (this.XX, t.XX) &&
+					Transform.Equal (this.XY, t.XY) &&
+					Transform.Equal (this.YX, t.YX) &&
+					Transform.Equal (this.YY, t.YY) &&
+					Transform.Equal (this.TX, t.TX) &&
+					Transform.Equal (this.TY, t.TY))
 				{
 					return true;
 				}
