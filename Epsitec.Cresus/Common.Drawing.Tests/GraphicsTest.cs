@@ -407,24 +407,37 @@ namespace Epsitec.Common.Tests
 				r[i] = 0.5 + sin1*sin1 * 0.3;
 				g[i] = 0.5 + sin2*sin2 * 0.3;
 				b[i] = 1.0;
+				Color.HSVtoRGB (i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
 				a[i] = 1.0;
 			}
 			
+			//	Pour voir les extrémités :
+			
+			r[0]   = g[0]   = b[0]   = 1.0;
+			r[255] = g[255] = b[255] = 1.0;
+			
 			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
-			e.Graphics.AddFilledRectangle (0, cy+50, root.Client.Width, 10);
-			e.Graphics.Rasterizer.AddSurface (path1);
-			e.Graphics.Rasterizer.AddSurface (path2);
-			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
-			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
+//			e.Graphics.AddFilledRectangle (0, cy+50, root.Client.Width, 10);
+//			e.Graphics.Rasterizer.AddSurface (path1);
+//			e.Graphics.Rasterizer.AddSurface (path2);
+//			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
+//			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
+			e.Graphics.AddFilledRectangle (0, 0, 2*cx, 2*cy);
 			e.Graphics.GradientRenderer.Fill = Epsitec.Common.Drawing.GradientFill.X;
-			e.Graphics.GradientRenderer.SetParameters (0, root.Client.Width);
+//			e.Graphics.GradientRenderer.SetParameters (0, root.Client.Width);
+			e.Graphics.GradientRenderer.SetParameters (0, 100);
 			e.Graphics.GradientRenderer.SetColors (r, g, b, a);
 			
 			Transform t = new Transform ();
-			t.Rotate (30, cx, cy);
+			t.Translate (-50, 0);
+			t.Rotate (45, 0, 0);
+			t.Translate (cx, cy);
 			e.Graphics.GradientRenderer.Transform = t;
 			
 			e.Graphics.RenderGradient ();
+			
+			e.Graphics.AddRectangle (cx - 50, cy - 30, 100, 60);
+			e.Graphics.RenderSolid (Color.FromBrightness (0));
 		}
 		
 		private void Gradient2_PaintForeground(object sender, PaintEventArgs e)
