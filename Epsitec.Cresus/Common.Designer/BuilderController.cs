@@ -136,13 +136,9 @@ namespace Epsitec.Common.Designer
 			this.creation_window.Text = "Widgets...";
 			
 			this.widget_palette = new Panels.WidgetSourcePalette ();
-			this.tool_bar       = new HToolBar ();
 			
 			double dx = this.widget_palette.Size.Width;
 			double dy = this.widget_palette.Size.Height;
-			
-//			dx  = System.Math.Max (dx, this.tool_bar.Size.Width);
-			dy += this.tool_bar.DefaultHeight;
 			
 			this.creation_window.ClientSize = new Drawing.Size (dx, dy);
 			
@@ -158,20 +154,6 @@ namespace Epsitec.Common.Designer
 			
 			this.widget_palette.DragBegin += new Support.EventHandler (this.HandleSourceDragBegin);
 			this.widget_palette.DragEnd   += new Support.EventHandler (this.HandleSourceDragEnd);
-			
-			//	Initialisation de la barre d'outils pour l'édition :
-			
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("CreateNewWindow", "file:images/new.icon"));
-			this.tool_bar.Items.Add (new IconSeparator ());
-			this.tool_bar.Items.Add (IconButton.CreateToggle ("TabIndexSetter(this.IsActive)",	"file:images/numtabindex.icon"));
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("TabIndexResetSeq",				"file:images/numone.icon"));
-			this.tool_bar.Items.Add (IconButton.CreateToggle ("TabIndexPicker(this.IsActive)",	"file:images/numpicker.icon"));
-			this.tool_bar.Items.Add (new IconSeparator ());
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("DeleteActiveSelection", "file:images/delete.icon"));
-			
-			this.tool_bar.Size   = new Drawing.Size (dx, this.tool_bar.DefaultHeight);
-			this.tool_bar.Parent = root;
-			this.tool_bar.Dock   = DockStyle.Top;
 		}
 		
 		protected void CreateAttributeWindow()
@@ -182,9 +164,10 @@ namespace Epsitec.Common.Designer
 			this.attribute_window.Text = "Attributes";
 			
 			this.attribute_palette = new Panels.WidgetAttributePalette ();
+			this.tool_bar          = new HToolBar ();
 			
 			double dx = this.attribute_palette.Size.Width;
-			double dy = this.attribute_palette.Size.Height;
+			double dy = this.attribute_palette.Size.Height + this.tool_bar.DefaultHeight;
 			
 			this.attribute_window.ClientSize = new Drawing.Size (dx, dy);
 			
@@ -197,6 +180,22 @@ namespace Epsitec.Common.Designer
 			
 			widget.Parent = root;
 			widget.Dock   = DockStyle.Fill;
+			
+			//	Initialisation de la barre d'outils pour l'édition :
+			
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("CreateNewWindow",  "file:images/new.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("OpenLoadWindow",   "file:images/open.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("SaveActiveWindow", "file:images/save.icon"));
+			this.tool_bar.Items.Add (new IconSeparator ());
+			this.tool_bar.Items.Add (IconButton.CreateToggle ("TabIndexSetter(this.IsActive)",	"file:images/numtabindex.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("TabIndexResetSeq",				"file:images/numone.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateToggle ("TabIndexPicker(this.IsActive)",	"file:images/numpicker.icon"));
+			this.tool_bar.Items.Add (new IconSeparator ());
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("DeleteActiveSelection", "file:images/delete.icon"));
+			
+			this.tool_bar.Size   = new Drawing.Size (dx, this.tool_bar.DefaultHeight);
+			this.tool_bar.Parent = root;
+			this.tool_bar.Dock   = DockStyle.Top;
 		}
 		
 		
@@ -466,6 +465,47 @@ namespace Epsitec.Common.Designer
 			surface.Dock   = DockStyle.Fill;
 			surface.Parent = window.Root;
 			surface.IsEditionEnabled = true;
+			
+			this.edit_window_list.Add (window);
+			
+			Editors.AbsPosWidgetEdit editor = new Editors.AbsPosWidgetEdit ();
+			
+			editor.Panel = surface.Panel;
+			editor.Root  = window.Root;
+			
+			editor.Selected   += new SelectionEventHandler (this.HandleEditorSelected);
+			editor.Deselected += new SelectionEventHandler (this.HandleEditorDeselected);
+			
+			window.WindowActivated += new Support.EventHandler (this.HandleEditWindowWindowActivated);
+			
+			window.SetProperty ("$editor", editor);
+			window.Show ();
+		}
+		
+		[Command ("SaveActiveWindow")]			void CommandSaveActiveWindow()
+		{
+			System.Diagnostics.Debug.Assert (this.active_editor != null);
+			System.Diagnostics.Debug.Assert (this.active_editor.Root != null);
+			
+			Widget root = this.active_editor.Root;
+			
+			Support.ObjectBundler  bundler = new Support.ObjectBundler ();
+			Support.ResourceBundle bundle  = Support.ResourceBundle.Create (root.Name, "file", ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
+			
+			bundler.SetupPrefix ("file");
+			bundler.FillBundleFromObject (bundle, root);
+			
+			bundle.CreateXmlDocument (false).Save (@"resources\test.00.resource");
+		}
+		
+		[Command ("OpenLoadWindow")]			void CommandOpenLoadWindow()
+		{
+			Support.ObjectBundler  bundler = new Support.ObjectBundler ();
+			Support.ResourceBundle bundle  = Support.Resources.GetBundle ("file:test");
+			
+			Widget     root    = bundler.CreateFromBundle (bundle) as Widget;
+			Window     window  = root.Window;
+			Scrollable surface = root.Children[0] as Scrollable;
 			
 			this.edit_window_list.Add (window);
 			
