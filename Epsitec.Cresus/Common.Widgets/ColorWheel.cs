@@ -231,7 +231,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event EventHandler Changed;
+		public event Support.EventHandler Changed;
 
 
 		// Dessine un cercle inscrit dans un rectangle.
