@@ -4,6 +4,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe AbstractScroller implémente la classe de base des ascenseurs
 	/// HScroller et VScroller.
 	/// </summary>
+	[Support.SuppressBundleSupport]
 	public abstract class AbstractScroller : Widget
 	{
 		// Constructeur de l'ascenseur.

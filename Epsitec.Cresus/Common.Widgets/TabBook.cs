@@ -10,6 +10,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// Summary description for TabBook.
 	/// </summary>
+	[Support.SuppressBundleSupport]
 	public class TabBook : AbstractGroup
 	{
 		public TabBook(TabBookStyle type)

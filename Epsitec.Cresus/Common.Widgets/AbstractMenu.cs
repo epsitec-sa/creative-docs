@@ -12,7 +12,8 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe Menu représente un menu horizontal ou vertical.
 	/// </summary>
-	public class AbstractMenu : Widget
+	[Support.SuppressBundleSupport]
+	public abstract class AbstractMenu : Widget
 	{
 		protected AbstractMenu(MenuType type)
 		{

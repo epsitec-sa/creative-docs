@@ -1,0 +1,561 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : en chantier
+
+namespace Epsitec.Cresus.Database
+{
+	/// <summary>
+	/// La classe DbNumDef définit un format numérique.
+	/// digit_precision défini le nombre de digits acceptable pour le nombre (1 à 24)
+	/// digit_shift défini la position de la virgule
+	/// par exemple, precision = 5, shift = 3, accepte les nombres de -99.999 à +99.999
+	/// </summary>
+	public class DbNumDef : System.ICloneable
+	{
+		public DbNumDef()
+		{
+		}
+		
+		public DbNumDef(int digit_precision)
+		{
+			System.Diagnostics.Debug.Assert ((digit_precision >= 0) && (digit_precision < DbNumDef.digit_max));
+			this.digit_precision = digit_precision;
+		}
+		
+		public DbNumDef(int digit_precision, int digit_shift)
+		{
+			System.Diagnostics.Debug.Assert ((digit_precision >= 0) && (digit_precision < DbNumDef.digit_max));
+			System.Diagnostics.Debug.Assert ((digit_shift >= 0) && (digit_shift < DbNumDef.digit_max));
+			
+			this.digit_precision = digit_precision;
+			this.digit_shift     = digit_shift;
+		}
+		
+		public DbNumDef(int digit_precision, int digit_shift, decimal min_value, decimal max_value)
+		{
+			System.Diagnostics.Debug.Assert ((digit_precision >= 0) && (digit_precision < DbNumDef.digit_max));
+			System.Diagnostics.Debug.Assert ((digit_shift >= 0) && (digit_shift < DbNumDef.digit_max));
+			
+			this.digit_precision = digit_precision;
+			this.digit_shift     = digit_shift;
+			this.min_value       = min_value;
+			this.max_value       = max_value;
+
+			this.InvalidateAutoPrecision ();
+		}
+		
+		
+		#region ICloneable Members
+		public object Clone()
+		{
+			DbNumDef num = new DbNumDef ();
+			
+			num.raw_type  = this.raw_type;
+			
+			num.min_value = this.min_value;
+			num.max_value = this.max_value;
+			
+			num.digit_precision = this.digit_precision;
+			num.digit_shift     = this.digit_shift;
+			
+			return num;
+		}
+		#endregion
+		
+		
+		public static DbNumDef FromRawType(DbRawType raw_type)
+		{
+			DbNumDef def;
+			
+			switch (raw_type)
+			{
+				case DbRawType.Boolean:
+					def = new DbNumDef ( 1, 0, 0, 1);
+					def.raw_type = raw_type;
+					break;
+				
+				case DbRawType.Int16:
+					def = new DbNumDef ( 5, 0, System.Int16.MinValue, System.Int16.MaxValue);
+					def.raw_type = raw_type;
+					break;
+				
+				case DbRawType.Int32:
+					def = new DbNumDef (10, 0, System.Int32.MinValue, System.Int32.MaxValue);
+					def.raw_type = raw_type;
+					break;
+				
+				case DbRawType.Int64:
+					def = new DbNumDef (19, 0, System.Int64.MinValue, System.Int64.MaxValue);
+					def.raw_type = raw_type;
+					break;
+				
+				case DbRawType.SmallDecimal:
+					def = new DbNumDef (18, 9);
+					def.raw_type = raw_type;
+					break;
+				
+				case DbRawType.LargeDecimal:
+					def = new DbNumDef (18, 3);
+					def.raw_type = raw_type;
+					break;
+				
+				default:
+					def = null;
+					break;
+			}
+			
+			return def;
+		}
+		
+		
+		protected void UpdateAutoPrecision()
+		{
+			//	Détermine la précision nécessaire à la représentation d'un nombre donné.
+			
+			//	La routine donne à la fois la précision (nombre total de décimales) et
+			//	le "shift" (nombre de décimales après le point décimal).
+			
+			//	Le résultat est mémorisé de manière à ne pas devoir recalculer cela à
+			//	chaque fois que nécessaire.
+			
+			System.Diagnostics.Debug.Assert (this.IsMinMaxDefined);		
+			System.Diagnostics.Debug.Assert (this.digit_shift_auto == 0);
+			System.Diagnostics.Debug.Assert (this.digit_precision_auto == 0);
+			
+			decimal min = System.Math.Abs (this.MinValue);
+			decimal max = System.Math.Abs (this.MaxValue);
+
+			//	Cherche déjà le nombre de décimales :
+			
+			while ((System.Decimal.Truncate(min) != min) ||
+				   (System.Decimal.Truncate(max) != max))
+			{
+				this.digit_shift_auto++;
+				min *= 10M; 
+				max *= 10M; 
+			}
+			System.Diagnostics.Debug.Assert (this.digit_shift_auto < DbNumDef.digit_max);
+			
+			//	Puis cherche le nombre de digits :
+			
+			while ((DbNumDef.digit_table[this.digit_precision_auto] <= min) || 
+				   (DbNumDef.digit_table[this.digit_precision_auto] <= max))
+			{
+				this.digit_precision_auto++;
+			}
+			System.Diagnostics.Debug.Assert (this.digit_precision_auto < DbNumDef.digit_max);
+		}
+		
+		protected void InvalidateAutoPrecision()
+		{
+			this.digit_precision_auto = 0;
+			this.digit_shift_auto     = 0;
+
+			if (this.IsMinMaxDefined)
+			{
+				//	Détermine de suite la précision selon Min et Max
+				this.UpdateAutoPrecision ();
+			}
+		}
+
+		[System.Diagnostics.Conditional ("DEBUG")] protected void DebugCheckAbsolute(decimal value)
+		{
+			//	Utilisé pour vérifier que ni le min_value, ni le max_value
+			//	n'est pas donné au delà des 24 digits autorisés. Cette méthode
+			//	de vérification n'est pas appelée si le projet est compilé en
+			//	mode 'Release'.
+			
+			System.Diagnostics.Debug.Assert (value >= min_absolute);
+			System.Diagnostics.Debug.Assert (value <= max_absolute);
+		}
+		
+		
+		public int						DigitPrecision
+		{
+			get
+			{
+				if (this.digit_precision == 0)
+				{
+					return this.digit_precision_auto;
+				}
+				
+				return this.digit_precision;
+			}
+			set
+			{
+				//	On ne touche pas aux valeurs min/max, car l'utilisateur a peut-être décidé
+				//	de spécifier le min, le max, la précision puis le shift. C'est superflu,
+				//	mais il ne faudrait pas que ça altère les définitions.
+				
+				this.digit_precision = value;
+			}
+		}
+		
+		public int						DigitShift
+		{
+			get
+			{ 
+				if (this.digit_precision == 0)
+				{
+					return this.digit_shift_auto;
+				}
+				return this.digit_shift;
+			}
+			set 
+			{
+				//	Cf. remarque DigitPrecision.
+				this.digit_shift = value; 
+			}
+		}
+		
+		public bool						IsDigitDefined
+		{
+			get
+			{
+				return this.digit_precision > 0;
+			}
+		}
+		
+		public bool						IsMinMaxDefined
+		{
+			get
+			{
+				return this.min_value < this.max_value;
+			}
+		}
+		
+		public bool						IsConversionNeeded
+		{
+			get
+			{
+				return this.raw_type == DbRawType.Unsupported;
+			}
+		}
+		
+		public DbRawType				InternalRawType
+		{
+			get
+			{
+				return this.raw_type;
+			}
+		}
+		
+		public decimal					MinValue
+		{
+			get
+			{
+				if (this.IsMinMaxDefined)
+				{
+					return this.min_value;
+				}
+				
+				//	MaxValue est peut-être définie. Si ce n'est pas le cas, il y a un
+				//	algorithme dans MaxValue qui détermine une valeur plausible en
+				//	fonction du nombre de décimales.
+				
+				return - this.MaxValue;
+			}
+			set
+			{
+				this.DebugCheckAbsolute (value);
+
+				this.min_value = value;
+				this.InvalidateAutoPrecision ();				
+			}
+		}
+		
+		public decimal					MaxValue
+		{
+			get
+			{
+				if (this.IsMinMaxDefined)
+				{
+					return this.max_value;
+				}
+				
+				//	Le maximum n'est pas défini, alors on va utiliser une valeur automatique
+				//	liée au nombre de décimales et à la précision (nombre de décimales après
+				//	le point décimal) :
+				
+				decimal max = DbNumDef.digit_table[this.digit_precision] - 1M;
+				
+				System.Diagnostics.Debug.Assert (max == decimal.Truncate (max));
+				
+				max *= DbNumDef.digit_table_scale[this.digit_shift];
+				
+				return max;
+			}
+			set
+			{
+				this.DebugCheckAbsolute (value);
+
+				this.max_value = value;
+				this.InvalidateAutoPrecision ();
+			}
+		}
+		
+		public int						MinimumBits
+		{
+			get
+			{
+				//	Calcule le nombre de bits nécessaire pour représenter un nombre
+				//	compris entre le minimum et le maximum (bornes comprises), en tenant
+				//	en outre compte de l'échelle (shift).
+
+				switch (this.raw_type)
+				{
+					case DbRawType.Boolean:
+						return 1;
+					case DbRawType.Int16:
+						return 16;
+					case DbRawType.Int32:
+						return 32;
+					case DbRawType.Int64:
+						return 64;
+					case DbRawType.SmallDecimal:
+					case DbRawType.LargeDecimal:
+						return 64;
+				}
+				
+				//	Le nombre ne correspond à aucun format prédéfini. On va donc convertir
+				//	la plus grande valeur possible en une représentation "transportable"
+				//	(entier positif) et déterminer combien de bits sont nécessaires à son
+				//	stockage :
+				
+				long span = this.ConvertToInt64 (this.MaxValue);
+				int  bits = 0;
+				
+				System.Diagnostics.Debug.Assert (span > 0);
+				
+				while (span > 0)
+				{
+					span = span >> 1;
+					bits++;
+				}
+				
+				return bits;
+			}
+		}
+		
+		public bool						IsValid
+		{
+			get
+			{
+				if (this.IsMinMaxDefined && this.IsDigitDefined)
+				{
+					//	Contrôle que la précision donnée est suffisante pour représenter le min et le max
+					if ( this.digit_precision < this.digit_precision_auto ) return false;
+					if ( this.digit_shift     < this.digit_shift_auto     ) return false;
+				}
+				return true;
+			}
+		}
+		
+
+		public bool CheckCompatibility(decimal value)
+		{
+			if ((value >= this.MinValue) && (value <= this.MaxValue))
+			{
+				//	Vérifie que le nombre de décimales après le point décimal ne
+				//	dépasse le maximum autorisé :
+				
+				decimal v1 = value * DbNumDef.digit_table[this.digit_shift];
+				decimal v2 = System.Decimal.Truncate (v1);
+				
+				return v1 == v2;
+			}
+			
+			return false;
+		}
+		
+		public bool CheckCompatibilityAndClipRound(ref decimal value)
+		{
+			if (this.CheckCompatibility (value))
+			{
+				//	Valeur compatible telle quelle, pas besoin de l'éditer !
+				
+				return true;
+			}
+			
+			value = this.Round (value);
+			value = this.Clip (value);
+			
+			return false;
+		}
+		
+		
+		public decimal Round(decimal value)
+		{
+			//	Arrondit la valeur selon l'échelle (shift) :
+			
+			value *= DbNumDef.digit_table[this.digit_shift];
+			value  = System.Decimal.Truncate (value + 0.5M);
+			value *= DbNumDef.digit_table_scale[this.digit_shift];
+			
+			return value;
+		}
+		
+		public decimal Clip(decimal value)
+		{
+			//	Limite la valeur aux bornes minimales/maximales actives.
+			
+			if (value < this.MinValue)
+			{
+				return this.MinValue;
+			}
+			if (value > this.MaxValue)
+			{
+				return this.MaxValue;
+			}
+			
+			return value;
+		}
+		
+		
+		public long ConvertToInt64(decimal value)
+		{
+			//	Convertit (encode) la valeur décimale en une représentation compacte,
+			//	occupant au maximum 63 bits dans un entier positif.
+			
+			value -= this.MinValue;
+			value *= DbNumDef.digit_table[this.DigitShift];
+			
+			return (long) value;
+		}
+		
+		public decimal ConvertFromInt64(long value)
+		{
+			//	Convertit (décode) une représentation compacte générée par la méthode
+			//	ConvertToInt64 en sa valeur décimale d'origine.
+			
+			decimal conv = value;
+			conv *= DbNumDef.digit_table_scale[this.DigitShift];
+			conv += this.MinValue;
+			
+			return (decimal) conv;
+		}
+		
+		
+		public decimal Parse(string value)
+		{
+			return this.Parse (value, System.Globalization.CultureInfo.CurrentCulture);
+		}
+		
+		public decimal Parse(string value, System.IFormatProvider format_provider)
+		{
+			//	Convertit le texte en une valeur numérique correspondante, vérifie que la
+			//	syntaxe est respectée et que la valeur est dans les bornes admises. Lève une
+			//	exception dans le cas contraire...
+			
+			decimal	retval = System.Decimal.Parse (value, format_provider);
+			
+			if (!this.CheckCompatibility (retval))
+			{
+				throw new System.OverflowException (value);
+			}
+			
+			return retval;
+		}
+		
+		
+		public string ToString(decimal value)
+		{
+			return this.ToString (value, System.Globalization.CultureInfo.CurrentCulture);
+		}
+		
+		public string ToString(decimal value, System.IFormatProvider format_provider)
+		{
+			if (!this.CheckCompatibility (value))
+			{
+				throw new System.OverflowException (value.ToString (format_provider));
+			}
+			
+			int frac_digits = this.DigitShift;
+			
+			//	Commence par faire en sorte de laisser tomber les zéros superflus (ce qui
+			//	peut arriver avec le type 'decimal', car 1.00M stocke en effet les deux
+			//	décimales).
+			
+			value *= DbNumDef.digit_table[frac_digits];
+			value  = decimal.Truncate (value);
+			value *= DbNumDef.digit_table_scale[frac_digits];
+			
+			//	Convertit la valeur en un texte, en tenant compte des divers réglages
+			//	internes (nombre de décimales, etc.)
+			
+			//	(1) Convertit déjà le nombre en chaîne selon ToString de la classe "decimal" :
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			string decimal_string = value.ToString (format_provider);
+			
+			buffer.Append (decimal_string);
+			
+			//	(2) Détermine quel séparateur utiliser :
+			
+			System.Globalization.CultureInfo culture = format_provider as System.Globalization.CultureInfo;
+			string sep = (culture == null) ? "." : culture.NumberFormat.NumberDecimalSeparator;
+			
+			//	(3) Retrouve la position du séparateur décimal dans le nombre :
+			
+			int pos = decimal_string.IndexOf (sep);
+			
+			if (pos < 0)
+			{
+				if (frac_digits > 0)
+				{
+					buffer.Append (sep);
+				}
+			}
+			else
+			{
+				frac_digits -= decimal_string.Length - pos - 1;
+				System.Diagnostics.Debug.Assert (frac_digits >= 0);
+			}
+			
+			if (frac_digits > 0)
+			{
+				buffer.Append ('0', frac_digits);
+			}
+			
+			return buffer.ToString ();
+		}
+		
+		
+		static DbNumDef()
+		{
+			//	Constructeur statique de la classe.
+			
+			//	Initialise la table de conversion entre nombre de décimales après la
+			//	virgule et facteur multiplicatif/facteur d'échelle.
+			
+			DbNumDef.digit_table = new decimal[DbNumDef.digit_max];
+			DbNumDef.digit_table_scale = new decimal[DbNumDef.digit_max];
+			
+			decimal multiple = 1;
+			decimal scale = 1;
+			
+			for (int i = 0; i < DbNumDef.digit_max; i++)
+			{
+				DbNumDef.digit_table[i] = multiple;
+				DbNumDef.digit_table_scale[i] = scale;
+				multiple *= 10M;
+				scale *= 0.1M;
+			}
+		}
+		
+		
+		protected static readonly int		digit_max		= 24;
+		protected static readonly decimal	max_absolute	= 999999999999999999999999.0M;
+		protected static readonly decimal	min_absolute	= -max_absolute;
+		protected static decimal[]			digit_table;
+		protected static decimal[]			digit_table_scale;
+		
+		protected DbRawType					raw_type = DbRawType.Unsupported;
+		protected int						digit_precision;
+		protected int						digit_shift;
+		protected decimal					min_value		=  max_absolute;
+		protected decimal					max_value		=  min_absolute;
+
+		protected int						digit_precision_auto;	//	cache les val. dét. selon Min et Max
+		protected int						digit_shift_auto;		//	cache les val. dét. selon Min et Max
+	}
+}

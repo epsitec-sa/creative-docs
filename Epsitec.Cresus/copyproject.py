@@ -24,6 +24,7 @@ class CopyProject:
 
         self.copy_ext.append('.cs')
         self.copy_ext.append('.csproj')
+        self.copy_ext.append('.csproj.user')
         self.copy_ext.append('.bat')
         self.copy_ext.append('.ico')
         self.copy_ext.append('.txt')

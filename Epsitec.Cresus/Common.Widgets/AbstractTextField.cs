@@ -16,6 +16,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe TextField implémente la ligne éditable, tout en permettant
 	/// aussi de réaliser l'équivalent de la ComboBox Windows.
 	/// </summary>
+	[Support.SuppressBundleSupport]
 	public abstract class AbstractTextField : Widget
 	{
 		static AbstractTextField()

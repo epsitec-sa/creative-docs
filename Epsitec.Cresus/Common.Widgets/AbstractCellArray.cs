@@ -22,6 +22,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe AbstractCellArray est la classe de base pour les tableaux
 	/// et les listes.
 	/// </summary>
+	[Support.SuppressBundleSupport]
 	public abstract class AbstractCellArray : AbstractGroup
 	{
 		public AbstractCellArray()

@@ -1,14 +1,14 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database", "Database\Database.csproj", "{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database", "Cresus.Database\Cresus.Database.csproj", "{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database.Implementation", "Database.Implementation\Database.Implementation.csproj", "{C757AD58-605D-4480-BC2E-03E8076368B2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.Implementation", "Cresus.Database.Implementation\Cresus.Database.Implementation.csproj", "{C757AD58-605D-4480-BC2E-03E8076368B2}"
 	ProjectSection(ProjectDependencies) = postProject
 		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349} = {BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Database.Tests", "Database.Tests\Database.Tests.csproj", "{065F982F-9739-426E-99C3-D7C1ED2E791C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.Tests", "Cresus.Database.Tests\Cresus.Database.Tests.csproj", "{065F982F-9739-426E-99C3-D7C1ED2E791C}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -16,7 +16,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Widgets", "Common.Wi
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Tests", "Common.Tests\Common.Tests.csproj", "{DD959763-7F9E-4170-ABEE-4CEE60C14468}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Widgets.Tests", "Common.Widgets.Tests\Common.Widgets.Tests.csproj", "{DD959763-7F9E-4170-ABEE-4CEE60C14468}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -24,92 +24,100 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Drawing", "Common.Dr
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer", "DataLayer\DataLayer.csproj", "{BA604F89-53C1-4228-AC76-5D5E68205029}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.DataLayer", "Cresus.DataLayer\Cresus.DataLayer.csproj", "{BA604F89-53C1-4228-AC76-5D5E68205029}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SystemExt", "System\SystemExt.csproj", "{10453A3B-CA2A-4D36-B634-78BA87AAAB26}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Extension", "System.Extension\System.Extension.csproj", "{10453A3B-CA2A-4D36-B634-78BA87AAAB26}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Support", "Support\Support.csproj", "{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Support", "Common.Support\Common.Support.csproj", "{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Support.Implementation", "Support.Implementation\Support.Implementation.csproj", "{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Support.Implementation", "Common.Support.Implementation\Common.Support.Implementation.csproj", "{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Support.Tests", "Support.Tests\Support.Tests.csproj", "{99DC1B23-014D-4BE4-8D4D-3FC613360102}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Support.Tests", "Common.Support.Tests\Common.Support.Tests.csproj", "{99DC1B23-014D-4BE4-8D4D-3FC613360102}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInterface", "UserInterface\UserInterface.csproj", "{5E8E51FA-AB4A-4E48-BD20-7796EDCA1B63}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.UserInterface", "Cresus.UserInterface\Cresus.UserInterface.csproj", "{5E8E51FA-AB4A-4E48-BD20-7796EDCA1B63}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataLayer.Tests", "DataLayer.Tests\DataLayer.Tests.csproj", "{D2ADDD9E-56DE-4285-B209-013A19D9DCDC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.DataLayer.Tests", "Cresus.DataLayer.Tests\Cresus.DataLayer.Tests.csproj", "{D2ADDD9E-56DE-4285-B209-013A19D9DCDC}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Drawing.Platform", "Common.Drawing.Platform\Common.Drawing.Platform.csproj", "{0202C35E-E79E-43BE-9E35-1ACECB0BBE9B}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 14
+		SccNumberOfProjects = 15
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
-		SccProjectUniqueName1 = Database.Implementation\\Database.Implementation.csproj
+		SccProjectUniqueName1 = Common.Widgets\\Common.Widgets.csproj
 		SccLocalPath1 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection1 = Database.Implementation\\
-		SccProjectUniqueName2 = Database\\Database.csproj
+		SccProjectFilePathRelativizedFromConnection1 = Common.Widgets\\
+		SccProjectUniqueName2 = Common.Drawing\\Common.Drawing.csproj
 		SccLocalPath2 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection2 = Database\\
-		SccProjectUniqueName3 = Common.Tests\\Common.Tests.csproj
+		SccProjectFilePathRelativizedFromConnection2 = Common.Drawing\\
+		SccProjectUniqueName3 = Common.Support\\Common.Support.csproj
 		SccLocalPath3 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection3 = Common.Tests\\
-		SccProjectUniqueName4 = Common.Widgets\\Common.Widgets.csproj
+		SccProjectFilePathRelativizedFromConnection3 = Common.Support\\
+		SccProjectUniqueName4 = Common.Support.Implementation\\Common.Support.Implementation.csproj
 		SccLocalPath4 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection4 = Common.Widgets\\
-		SccProjectUniqueName5 = Common.Drawing\\Common.Drawing.csproj
+		SccProjectFilePathRelativizedFromConnection4 = Common.Support.Implementation\\
+		SccProjectUniqueName5 = Common.Support.Tests\\Common.Support.Tests.csproj
 		SccLocalPath5 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection5 = Common.Drawing\\
-		SccProjectUniqueName6 = DataLayer\\DataLayer.csproj
+		SccProjectFilePathRelativizedFromConnection5 = Common.Support.Tests\\
+		SccProjectUniqueName6 = Common.Drawing.Platform\\Common.Drawing.Platform.csproj
 		SccLocalPath6 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection6 = DataLayer\\
-		SccProjectUniqueName7 = System\\SystemExt.csproj
+		SccProjectFilePathRelativizedFromConnection6 = Common.Drawing.Platform\\
+		SccProjectUniqueName7 = Common.Widgets.Tests\\Common.Widgets.Tests.csproj
 		SccLocalPath7 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection7 = System\\
-		SccProjectUniqueName8 = Support\\Support.csproj
+		SccProjectFilePathRelativizedFromConnection7 = Common.Widgets.Tests\\
+		SccProjectUniqueName8 = Cresus.Database\\Cresus.Database.csproj
 		SccLocalPath8 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection8 = Support\\
-		SccProjectUniqueName9 = Support.Implementation\\Support.Implementation.csproj
+		SccProjectFilePathRelativizedFromConnection8 = Cresus.Database\\
+		SccProjectUniqueName9 = Cresus.Database.Implementation\\Cresus.Database.Implementation.csproj
 		SccLocalPath9 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection9 = Support.Implementation\\
-		SccProjectUniqueName10 = Support.Tests\\Support.Tests.csproj
+		SccProjectFilePathRelativizedFromConnection9 = Cresus.Database.Implementation\\
+		SccProjectUniqueName10 = Cresus.Database.Tests\\Cresus.Database.Tests.csproj
 		SccLocalPath10 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection10 = Support.Tests\\
-		SccProjectUniqueName11 = UserInterface\\UserInterface.csproj
+		SccProjectFilePathRelativizedFromConnection10 = Cresus.Database.Tests\\
+		SccProjectUniqueName11 = Cresus.DataLayer\\Cresus.DataLayer.csproj
 		SccLocalPath11 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection11 = UserInterface\\
-		SccProjectUniqueName12 = DataLayer.Tests\\DataLayer.Tests.csproj
+		SccProjectFilePathRelativizedFromConnection11 = Cresus.DataLayer\\
+		SccProjectUniqueName12 = Cresus.DataLayer.Tests\\Cresus.DataLayer.Tests.csproj
 		SccLocalPath12 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection12 = DataLayer.Tests\\
-		SccProjectUniqueName13 = Database.Tests\\Database.Tests.csproj
+		SccProjectFilePathRelativizedFromConnection12 = Cresus.DataLayer.Tests\\
+		SccProjectUniqueName13 = Cresus.UserInterface\\Cresus.UserInterface.csproj
 		SccLocalPath13 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection13 = Database.Tests\\
+		SccProjectFilePathRelativizedFromConnection13 = Cresus.UserInterface\\
+		SccProjectUniqueName14 = System.Extension\\System.Extension.csproj
+		SccLocalPath14 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection14 = System.Extension\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -168,6 +176,10 @@ Global
 		{D2ADDD9E-56DE-4285-B209-013A19D9DCDC}.Debug.Build.0 = Debug|.NET
 		{D2ADDD9E-56DE-4285-B209-013A19D9DCDC}.Release.ActiveCfg = Release|.NET
 		{D2ADDD9E-56DE-4285-B209-013A19D9DCDC}.Release.Build.0 = Release|.NET
+		{0202C35E-E79E-43BE-9E35-1ACECB0BBE9B}.Debug.ActiveCfg = Debug|.NET
+		{0202C35E-E79E-43BE-9E35-1ACECB0BBE9B}.Debug.Build.0 = Debug|.NET
+		{0202C35E-E79E-43BE-9E35-1ACECB0BBE9B}.Release.ActiveCfg = Release|.NET
+		{0202C35E-E79E-43BE-9E35-1ACECB0BBE9B}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info
