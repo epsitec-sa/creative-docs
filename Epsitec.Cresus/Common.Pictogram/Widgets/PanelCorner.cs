@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelCorner : AbstractPanel
 	{
-		public PanelCorner()
+		public PanelCorner(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -37,6 +37,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldRadius.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldRadius.TabIndex = 2;
 			this.fieldRadius.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldRadius, "Rayon");
 
 			this.fieldEffect1 = new TextFieldSlider(this);
 			this.fieldEffect1.MinValue = -100;
@@ -45,6 +46,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldEffect1.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldEffect1.TabIndex = 3;
 			this.fieldEffect1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldEffect1, "Paramètre A");
 
 			this.fieldEffect2 = new TextFieldSlider(this);
 			this.fieldEffect2.MinValue = -100;
@@ -53,6 +55,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldEffect2.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldEffect2.TabIndex = 4;
 			this.fieldEffect2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldEffect2, "Paramètre B");
 
 			this.labelRadius = new StaticText(this);
 			this.labelRadius.Text = "R";
@@ -67,11 +70,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.labelEffect2.Alignment = Drawing.ContentAlignment.MiddleRight;
 
 			this.isNormalAndExtended = true;
-		}
-		
-		public PanelCorner(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)
