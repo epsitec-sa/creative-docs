@@ -1272,6 +1272,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public bool									IsEmpty
+		{
+			get { return (this.children == null) || (this.children.Count == 0); }
+		}
+		
 		public bool									HasChildren
 		{
 			get { return (this.children != null) && (this.children.Count > 0); }
@@ -2139,7 +2144,18 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.parent != null)
 				{
-					this.parent.Invalidate (this.MapClientToParent (rect));
+					if ((this.InternalState & InternalState.SyncPaint) != 0)
+					{
+						Window window = this.Window;
+						
+						window.SynchronousRepaint ();
+						this.parent.Invalidate (this.MapClientToParent (rect));
+						window.SynchronousRepaint ();
+					}
+					else
+					{
+						this.parent.Invalidate (this.MapClientToParent (rect));
+					}
 				}
 			}
 		}
