@@ -169,17 +169,17 @@ namespace Epsitec.Common.Pictogram.Data
 				Drawing.Point next = Drawing.Point.Move(p1,p2, advance+0.001);
 				advance += this.width;
 
-				double angle = Drawing.Point.ComputeAngle(pos, next);
+				double angle = Drawing.Point.ComputeAngleRad(pos, next);
 
 				if ( this.patternShift != 0 )
 				{
-					pos = Drawing.Transform.RotatePoint(pos, angle+System.Math.PI/2, new Drawing.Point(pos.X+this.width*this.patternShift, pos.Y));
+					pos = Drawing.Transform.RotatePointRad(pos, angle+System.Math.PI/2, new Drawing.Point(pos.X+this.width*this.patternShift, pos.Y));
 				}
 
 				Drawing.Transform ot = graphics.SaveTransform();
 				graphics.TranslateTransform(pos.X, pos.Y);
 				graphics.ScaleTransform(this.width/10*this.patternSize, this.width/10*this.patternSize, 0, 0);
-				graphics.RotateTransform((angle+this.patternAngle)*180/System.Math.PI, 0, 0);
+				graphics.RotateTransformRad((angle+this.patternAngle), 0, 0);
 				graphics.TranslateTransform(-5, -5);
 				iconObjects.DrawGeometry(page.Objects, graphics, iconContext, iconObjects, adorner, Drawing.Rectangle.Infinite, true, false);
 				graphics.Transform = ot;

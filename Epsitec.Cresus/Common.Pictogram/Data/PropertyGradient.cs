@@ -230,7 +230,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( this.middle != 0.0 )
 			{
 				double delta = System.Math.Sin(System.Math.PI*progress)*this.middle*0.45;
-				Drawing.Point p = Drawing.Transform.RotatePoint(System.Math.PI/4, new Drawing.Point(progress*System.Math.Sqrt(2), delta));
+				Drawing.Point p = Drawing.Transform.RotatePointRad(System.Math.PI/4, new Drawing.Point(progress*System.Math.Sqrt(2), delta));
 				progress = p.Y;
 			}
 			return progress;
@@ -338,7 +338,7 @@ namespace Epsitec.Common.Pictogram.Data
 					graphics.GradientRenderer.SetParameters(-100, 100);
 					t.Scale(bbox.Width/100/2*this.sx, bbox.Height/100/2*this.sy);
 					t.Translate(center);
-					t.Rotate(this.angle+180, center);
+					t.RotateDeg(this.angle+180, center);
 				}
 				else if ( this.fill == GradientFill.Circle )
 				{
@@ -347,7 +347,7 @@ namespace Epsitec.Common.Pictogram.Data
 					graphics.GradientRenderer.SetParameters(0, 100);
 					t.Scale(bbox.Width/100/2*this.sx, bbox.Height/100/2*this.sy);
 					t.Translate(center);
-					t.Rotate(this.angle, center);
+					t.RotateDeg(this.angle, center);
 				}
 				else if ( this.fill == GradientFill.Diamond )
 				{
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Pictogram.Data
 					graphics.GradientRenderer.SetParameters(0, 100);
 					t.Scale(bbox.Width/100/2*this.sx, bbox.Height/100/2*this.sy);
 					t.Translate(center);
-					t.Rotate(this.angle, center);
+					t.RotateDeg(this.angle, center);
 				}
 				else if ( this.fill == GradientFill.Conic )
 				{
@@ -365,7 +365,7 @@ namespace Epsitec.Common.Pictogram.Data
 					graphics.GradientRenderer.SetParameters(0, 250);
 					t.Scale(bbox.Width/100/2*this.sx, bbox.Height/100/2*this.sy);
 					t.Translate(center);
-					t.Rotate(this.angle-90.0, center);
+					t.RotateDeg(this.angle-90.0, center);
 				}
 
 				graphics.GradientRenderer.Transform = t;
@@ -396,10 +396,10 @@ namespace Epsitec.Common.Pictogram.Data
 				Drawing.Point center = this.Handle(0, bbox).Position;
 				double dx = this.sx*bbox.Width/2;
 				double dy = this.sy*bbox.Height/2;
-				Drawing.Point p1 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point( dx,  dy));
-				Drawing.Point p2 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point(-dx,  dy));
-				Drawing.Point p3 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point(-dx, -dy));
-				Drawing.Point p4 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point( dx, -dy));
+				Drawing.Point p1 = center + Drawing.Transform.RotatePointDeg(this.angle, new Drawing.Point( dx,  dy));
+				Drawing.Point p2 = center + Drawing.Transform.RotatePointDeg(this.angle, new Drawing.Point(-dx,  dy));
+				Drawing.Point p3 = center + Drawing.Transform.RotatePointDeg(this.angle, new Drawing.Point(-dx, -dy));
+				Drawing.Point p4 = center + Drawing.Transform.RotatePointDeg(this.angle, new Drawing.Point( dx, -dy));
 
 				bbox.MergeWith(p1);
 				bbox.MergeWith(p2);
@@ -440,7 +440,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				Drawing.Point p = center;
 				p.Y += this.sy*bbox.Height/2;
-				p = Drawing.Transform.RotatePoint(center, this.angle*System.Math.PI/180, p);
+				p = Drawing.Transform.RotatePointDeg(center, this.angle, p);
 				handle.Position = p;
 			}
 
@@ -448,7 +448,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				Drawing.Point p = center;
 				p.X += this.sx*bbox.Width/2;
-				p = Drawing.Transform.RotatePoint(center, this.angle*System.Math.PI/180, p);
+				p = Drawing.Transform.RotatePointDeg(center, this.angle, p);
 				handle.Position = p;
 			}
 
@@ -477,18 +477,16 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( rank == 1 )  // angle et échelle y ?
 			{
 				Drawing.Point center = this.Handle(0, bbox).Position;
-				double a = Drawing.Point.ComputeAngle(center, pos)-System.Math.PI/2;
-				this.angle = a*180/System.Math.PI;  // en degrés
-				pos = Drawing.Transform.RotatePoint(center, -this.angle*System.Math.PI/180, pos);
+				this.angle = Drawing.Point.ComputeAngleDeg(center, pos)-90;
+				pos = Drawing.Transform.RotatePointDeg(center, -this.angle, pos);
 				this.sy = (pos.Y-center.Y)/bbox.Height*2;
 			}
 
 			if ( rank == 2 )  // angle et échelle x ?
 			{
 				Drawing.Point center = this.Handle(0, bbox).Position;
-				double a = Drawing.Point.ComputeAngle(center, pos);
-				this.angle = a*180/System.Math.PI;  // en degrés
-				pos = Drawing.Transform.RotatePoint(center, -this.angle*System.Math.PI/180, pos);
+				this.angle = Drawing.Point.ComputeAngleDeg(center, pos);
+				pos = Drawing.Transform.RotatePointDeg(center, -this.angle, pos);
 				this.sx = (pos.X-center.X)/bbox.Width*2;
 			}
 		}
@@ -510,7 +508,7 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Point c = Drawing.Point.Move(p2, p1, distPara);
 			Drawing.Point p = Drawing.Point.Move(c, Drawing.Point.Symmetry(p2, p1), distPerp);
 			double angle = (rank==0) ? System.Math.PI/2 : -System.Math.PI/2;
-			return Drawing.Transform.RotatePoint(c, angle, p);
+			return Drawing.Transform.RotatePointRad(c, angle, p);
 		}
 
 		// Dessine les traits de construction avant les poignées.
@@ -521,14 +519,14 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Point center = this.Handle(0, bbox).Position;
 			double dx = this.sx*bbox.Width/2;
 			double dy = this.sy*bbox.Height/2;
-			Drawing.Point p1 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point( dx,  dy));
-			Drawing.Point p2 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point(-dx,  dy));
-			Drawing.Point p3 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point(-dx, -dy));
-			Drawing.Point p4 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point( dx, -dy));
-			Drawing.Point p5 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point(  0, -dy));
-			Drawing.Point p6 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point(  0,  dy));
-			Drawing.Point p7 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point(-dx,   0));
-			Drawing.Point p8 = center + Drawing.Transform.RotatePoint(this.angle*System.Math.PI/180, new Drawing.Point( dx,   0));
+			Drawing.Point p1 = center + Drawing.Transform.RotatePointDeg(this.angle, new Drawing.Point( dx,  dy));
+			Drawing.Point p2 = center + Drawing.Transform.RotatePointDeg(this.angle, new Drawing.Point(-dx,  dy));
+			Drawing.Point p3 = center + Drawing.Transform.RotatePointDeg(this.angle, new Drawing.Point(-dx, -dy));
+			Drawing.Point p4 = center + Drawing.Transform.RotatePointDeg(this.angle, new Drawing.Point( dx, -dy));
+			Drawing.Point p5 = center + Drawing.Transform.RotatePointDeg(this.angle, new Drawing.Point(  0, -dy));
+			Drawing.Point p6 = center + Drawing.Transform.RotatePointDeg(this.angle, new Drawing.Point(  0,  dy));
+			Drawing.Point p7 = center + Drawing.Transform.RotatePointDeg(this.angle, new Drawing.Point(-dx,   0));
+			Drawing.Point p8 = center + Drawing.Transform.RotatePointDeg(this.angle, new Drawing.Point( dx,   0));
 
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/iconContext.ScaleX;
