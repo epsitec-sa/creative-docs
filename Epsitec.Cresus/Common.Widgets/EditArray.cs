@@ -949,14 +949,28 @@ namespace Epsitec.Common.Widgets
 				this.host = host;
 				this.name = name;
 				
-				this.host.EditArrayModeChanged += new Support.EventHandler (this.HandleHostEditArrayModeChanged);
-				this.host.SelectedIndexChanged += new Support.EventHandler (this.HandleHostSelectedIndexChanged);
+				this.host.EditArrayModeChanged  += new Support.EventHandler (this.HandleHostEditArrayModeChanged);
+				this.host.SelectedIndexChanged  += new Support.EventHandler (this.HandleHostSelectedIndexChanged);
+				this.host.TextArrayStoreChanged += new Support.EventHandler (this.HandleHostTextArrayStoreChanged);
 				
-				this.store = this.host.TextArrayStore;
-				
-				if (this.store == null)
+				this.UpdateStore ();
+			}
+			
+			
+			public int							ActiveRow
+			{
+				get
 				{
-					this.store = new EditArray.SelfStore (this.host);
+					int row = -1;
+					
+					switch (this.host.EditArrayMode)
+					{
+						case EditArrayMode.Standard:	row = this.host.SelectedIndex;	break;
+						case EditArrayMode.Edition:		row = this.host.EditionIndex;	break;
+						case EditArrayMode.Search:		row = this.host.SelectedIndex;	break;
+					}
+					
+					return row;
 				}
 			}
 			
@@ -1006,6 +1020,8 @@ namespace Epsitec.Common.Widgets
 				{
 					this.host.ValidateEdition ();
 				}
+				
+				System.Diagnostics.Debug.Assert (this.host.EditionIndex == -1);
 				
 				this.host.EditArrayMode = EditArrayMode.Standard;
 				this.host.SetFocused (true);
@@ -1077,25 +1093,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			public int							ActiveRow
-			{
-				get
-				{
-					int row = -1;
-					
-					switch (this.host.EditArrayMode)
-					{
-						case EditArrayMode.Standard:	row = this.host.SelectedIndex;	break;
-						case EditArrayMode.Edition:		row = this.host.EditionIndex;	break;
-						case EditArrayMode.Search:		row = this.host.SelectedIndex;	break;
-					}
-					
-					return row;
-				}
-			}
-			
-			
-			protected string GetCommandName(string command_name)
+			protected string       GetCommandName(string command_name)
 			{
 				return this.name + command_name;
 			}
@@ -1176,6 +1174,21 @@ namespace Epsitec.Common.Widgets
 				this.UpdateCommandStates ();
 			}
 			
+			private void HandleHostTextArrayStoreChanged(object sender)
+			{
+				this.UpdateStore ();
+			}
+			
+			
+			protected virtual void UpdateStore()
+			{
+				this.store = this.host.TextArrayStore;
+				
+				if (this.store == null)
+				{
+					this.store = new EditArray.SelfStore (this.host);
+				}
+			}
 			
 			protected virtual void UpdateCommandStates()
 			{

@@ -109,7 +109,8 @@ namespace Epsitec.Common.Widgets
 						this.text_array_store.StoreChanged += new Support.EventHandler (this.HandleStoreChanged);
 					}
 					
-					this.SyncWithTextArrayStore ();
+					this.OnTextArrayStoreChanged ();
+					this.SyncWithTextArrayStore (false);
 				}
 			}
 		}
@@ -946,8 +947,12 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate ();
 		}
 		
-		public void SyncWithTextArrayStore()
+		public void SyncWithTextArrayStore(bool update)
 		{
+			int index_selected = this.SelectedIndex;
+			int index_edition  = this.EditionIndex;
+			int index_first_vv = this.first_virtvis_row;
+			
 			this.Clear ();
 			
 			if (this.text_array_store != null)
@@ -955,6 +960,25 @@ namespace Epsitec.Common.Widgets
 				this.ColumnCount = this.text_array_store.GetColumnCount ();
 				this.RowCount    = this.text_array_store.GetRowCount ();
 			}
+			
+			if (update)
+			{
+				this.Update ();
+			}
+			
+			if ((index_selected >= 0) &&
+				(index_selected < this.RowCount))
+			{
+				this.SelectedIndex = index_selected;
+			}
+			
+			if ((index_edition >= 0) &&
+				(index_edition < this.RowCount))
+			{
+				this.EditionIndex = index_edition;
+			}
+			
+			this.SetFirstVirtualVisibleIndex (index_first_vv);
 		}
 		
 		public bool HitTestTable(Drawing.Point pos)
@@ -1382,7 +1406,7 @@ invalid:	row    = -1;
 
 		private void HandleStoreChanged(object sender)
 		{
-			this.SyncWithTextArrayStore ();
+			this.SyncWithTextArrayStore (false);
 		}
 		
 		
@@ -1965,6 +1989,13 @@ invalid:	row    = -1;
 			}
 		}
 		
+		protected virtual  void OnTextArrayStoreChanged()
+		{
+			if (this.TextArrayStoreChanged != null)
+			{
+				this.TextArrayStoreChanged (this);
+			}
+		}
 		
 		protected HeaderButton FindButton(int index)
 		{
@@ -2236,6 +2267,7 @@ invalid:	row    = -1;
 		public event Support.EventHandler		ContentsChanged;
 		public event Support.EventHandler		SortChanged;
 		public event Support.EventHandler		LayoutUpdated;
+		public event Support.EventHandler		TextArrayStoreChanged;
 		
 		
 		protected bool							is_dirty;

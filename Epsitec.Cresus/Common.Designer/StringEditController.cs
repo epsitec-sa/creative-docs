@@ -99,17 +99,17 @@ namespace Epsitec.Common.Designer
 			
 			private void HandleBundleFieldsChanged(object sender)
 			{
-				if (this.changing == 0)
-				{
-					this.OnStoreChanged ();
-				}
+				this.OnStoreChanged ();
 			}
 			
 			protected virtual void OnStoreChanged()
 			{
-				if (this.StoreChanged != null)
+				if (this.changing == 0)
 				{
-					this.StoreChanged (this);
+					if (this.StoreChanged != null)
+					{
+						this.StoreChanged (this);
+					}
 				}
 			}
 			
@@ -117,15 +117,29 @@ namespace Epsitec.Common.Designer
 			#region ITextArrayStore Members
 			public void InsertRows(int row, int num)
 			{
-				if (row == this.CountBundleFields)
+				this.changing++;
+				
+				for (int i = 0; i < num; i++)
 				{
 					ResourceBundle.Field field = this.bundle.CreateEmptyField (ResourceFieldType.Data);
-					this.bundle.Add (field);
+					this.bundle.Insert (row++, field);
 				}
+				
+				this.changing--;
+				this.OnStoreChanged ();
 			}
 			
 			public void RemoveRows(int row, int num)
 			{
+				this.changing++;
+				
+				for (int i = 0; i < num; i++)
+				{
+					this.bundle.Remove (row);
+				}
+				
+				this.changing--;
+				this.OnStoreChanged ();
 			}
 			
 			public void MoveRow(int row, int distance)
@@ -147,17 +161,11 @@ namespace Epsitec.Common.Designer
 				}
 				
 				this.changing--;
-				
 				this.OnStoreChanged ();
 			}
 			
 			public string GetCellText(int row, int column)
 			{
-				if (row == this.CountBundleFields)
-				{
-					return "";
-				}
-				
 				ResourceBundle.Field field = this.bundle[row];
 				
 				switch (column)
@@ -173,45 +181,22 @@ namespace Epsitec.Common.Designer
 			
 			public void SetCellText(int row, int column, string value)
 			{
-				if (row == this.CountBundleFields)
+				this.changing++;
+				
+				ResourceBundle.Field field = this.bundle[row];
+				
+				switch (column)
 				{
-					switch (column)
-					{
-						case 0:
-							this.col_0_cache = value;
-							break;
-						case 1:
-							this.col_1_cache = value;
-							if ((this.col_0_cache != "") &&
-								(this.col_1_cache != ""))
-							{
-								this.InsertRows (row, 1);
-								this.changing++;
-								this.SetCellText (row, 0, this.col_0_cache);
-								this.SetCellText (row, 1, this.col_1_cache);
-								this.changing--;
-							}
-							break;
-					}
+					case 0:
+						field.SetName (TextLayout.ConvertToSimpleText (value));
+						break;
+					case 1:
+						field.SetStringValue (value);
+						break;
 				}
-				else
-				{
-					this.changing++;
-					
-					ResourceBundle.Field field = this.bundle[row];
-					
-					switch (column)
-					{
-						case 0:
-							field.SetName (TextLayout.ConvertToSimpleText (value));
-							break;
-						case 1:
-							field.SetStringValue (value);
-							break;
-					}
-					
-					this.changing--;
-				}
+				
+				this.changing--;
+				this.OnStoreChanged ();
 			}
 			
 			public int GetColumnCount()
@@ -221,24 +206,24 @@ namespace Epsitec.Common.Designer
 			
 			public int GetRowCount()
 			{
-				return this.CountBundleFields + 1;
+				return this.CountBundleFields;
 			}
 			
 			public bool CheckSetRow(int row)
 			{
 				return (row >= 0) && (row < this.GetRowCount ());
 			}
-		
+			
 			public bool CheckInsertRows(int row, int num)
 			{
-				return true;
+				return (row >= 0) && (row <= this.GetRowCount ());
 			}
-
+			
 			public bool CheckRemoveRows(int row, int num)
 			{
-				return false;
+				return (row >= 0) && (row < this.GetRowCount ()) && (row + num <= this.GetRowCount ());
 			}
-
+			
 			public bool CheckMoveRow(int row, int distance)
 			{
 				int max = this.GetRowCount ();

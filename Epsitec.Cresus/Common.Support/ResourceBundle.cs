@@ -179,6 +179,48 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public void Insert(int index, Field field)
+		{
+			int len = this.fields.Length;
+			Field[] temp = new Field[len + 1];
+			
+			for (int i = 0; i < index; i++)
+			{
+				temp[i] = this.fields[i];
+			}
+			
+			temp[index] = field;
+			
+			for (int i = index; i < len; i++)
+			{
+				temp[i+1] = this.fields[i];
+			}
+			
+			this.fields = temp;
+			
+			this.OnFieldsChanged ();
+		}
+		
+		public void Remove(int index)
+		{
+			int len = this.fields.Length;
+			Field[] temp = new Field[len - 1];
+			
+			for (int i = 0; i < index; i++)
+			{
+				temp[i] = this.fields[i];
+			}
+			
+			for (int i = index+1; i < len; i++)
+			{
+				temp[i-1] = this.fields[i];
+			}
+			
+			this.fields = temp;
+			
+			this.OnFieldsChanged ();
+		}
+		
 		public int Add(Field field)
 		{
 			int index = this.fields.Length;
