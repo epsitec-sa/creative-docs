@@ -47,20 +47,29 @@ namespace Epsitec.Common.Drawing.Agg
 		
 		public override void AddSurface(Path path)
 		{
-			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.AddPath (this.agg_ras, path.Handle, path.ContainsCurves);
+			if (path != null)
+			{
+				this.CreateOnTheFly ();
+				AntiGrain.Rasterizer.AddPath (this.agg_ras, path.Handle, path.ContainsCurves);
+			}
 		}
 		
 		public override void AddOutline(Path path, double width)
 		{
-			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.AddPathStroke1 (this.agg_ras, path.Handle, width, path.ContainsCurves);
+			if (path != null)
+			{
+				this.CreateOnTheFly ();
+				AntiGrain.Rasterizer.AddPathStroke1 (this.agg_ras, path.Handle, width, path.ContainsCurves);
+			}
 		}
 		
 		public override void AddOutline(Path path, double width, CapStyle cap, JoinStyle join, double miter_limit)
 		{
-			this.CreateOnTheFly ();
-			AntiGrain.Rasterizer.AddPathStroke2 (this.agg_ras, path.Handle, width, (int) cap, (int) join, miter_limit, path.ContainsCurves);
+			if (path != null)
+			{
+				this.CreateOnTheFly ();
+				AntiGrain.Rasterizer.AddPathStroke2 (this.agg_ras, path.Handle, width, (int) cap, (int) join, miter_limit, path.ContainsCurves);
+			}
 		}
 		
 		public override void AddGlyph(Font font, int glyph, double x, double y, double scale)
