@@ -535,6 +535,7 @@ namespace Epsitec.Cresus.Database
 		internal const string			TagCaption			= "CR_CAPTION";
 		internal const string			TagDescription		= "CR_DESCRIPTION";
 		internal const string			TagInfoXml			= "CR_INFO";
+		internal const string			TagNextId			= "CR_NEXT_ID";
 		
 		internal const string			TagRefTable			= "CREF_TABLE";
 		internal const string			TagRefType			= "CREF_TYPE";

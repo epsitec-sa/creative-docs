@@ -27,9 +27,17 @@ namespace Epsitec.Cresus.Database
 		
 		public virtual void Add(SqlFunction function)
 		{
-			this.List.Add (SqlField.CreateFunction (function));
+			SqlField field = SqlField.CreateFunction (function);
+			this.List.Add (field);
 		}
 
+		public virtual void Add(string alias, SqlFunction function)
+		{
+			SqlField field = SqlField.CreateFunction (function);
+			field.Alias = alias;
+			this.List.Add (field);
+		}
+		
 		public virtual void AddRange(SqlField[] fields)
 		{
 			if (fields == null)
