@@ -31,7 +31,7 @@ namespace Epsitec.Common.Support
 					}
 				}
 				
-				Assertion.Assert (string.Format ("{0} not found in derived formats.", fmt_1[i]), ok);
+				Assert.IsTrue (ok, string.Format ("{0} not found in derived formats.", fmt_1[i]));
 				
 				System.Console.Out.WriteLine ("  {0}: {1}", i, fmt_1[i]);
 			}
@@ -54,7 +54,7 @@ namespace Epsitec.Common.Support
 			string source = "ABC‡ÈË";
 			byte[] bytes  = System.Text.Encoding.UTF8.GetBytes (source);
 			
-			Assertion.AssertEquals (9, bytes.Length);
+			Assert.AreEqual (9, bytes.Length);
 			
 			for (int i = 0; i < bytes.Length; i++)
 			{
@@ -64,7 +64,7 @@ namespace Epsitec.Common.Support
 			string utf8fix = buffer.ToString ();
 			string unicode = Clipboard.ConvertBrokenUtf8ToString (utf8fix);
 			
-			Assertion.AssertEquals (source, unicode);
+			Assert.AreEqual (source, unicode);
 		}
 		
 		[Test] public void CheckReadHtmlFragment()
