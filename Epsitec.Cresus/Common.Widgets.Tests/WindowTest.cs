@@ -137,7 +137,7 @@ namespace Epsitec.Common.Widgets
 			scroller.Location = new Point (80, 10);
 			scroller.Size = new Size(17, 180);
 			scroller.Range = 1.0;
-			scroller.VisibleRange = 0.1;
+			scroller.VisibleRangeRatio = 0.1;
 			scroller.Value = 0.0;
 			scroller.SmallChange = 0.01;
 			scroller.LargeChange = 0.10;

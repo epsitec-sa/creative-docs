@@ -720,14 +720,14 @@ namespace Epsitec.Common.Widgets
 			{
 				this.scrollerV.SetEnabled(false);
 				this.scrollerV.Range = 1;
-				this.scrollerV.VisibleRange = 1;
+				this.scrollerV.VisibleRangeRatio = 1;
 				this.scrollerV.Value = 0;
 			}
 			else
 			{
 				this.scrollerV.SetEnabled(true);
 				this.scrollerV.Range = n_rows-this.visibleRowsFull;
-				this.scrollerV.VisibleRange = this.scrollerV.Range * this.visibleRowsFull/n_rows;
+				this.scrollerV.VisibleRangeRatio = this.visibleRowsFull/n_rows;
 				this.scrollerV.Value = this.firstRow;
 				this.scrollerV.SmallChange = 1;
 				this.scrollerV.LargeChange = this.visibleRowsFull/2.0;
@@ -745,14 +745,14 @@ namespace Epsitec.Common.Widgets
 			{
 				this.scrollerH.SetEnabled(false);
 				this.scrollerH.Range = 1;
-				this.scrollerH.VisibleRange = 1;
+				this.scrollerH.VisibleRangeRatio = 1;
 				this.scrollerH.Value = 0;
 			}
 			else
 			{
 				this.scrollerH.SetEnabled(true);
 				this.scrollerH.Range = width-this.rectInside.Width;
-				this.scrollerH.VisibleRange = this.scrollerH.Range * this.rectInside.Width/width;
+				this.scrollerH.VisibleRangeRatio = this.rectInside.Width/width;
 				this.scrollerH.Value = this.offsetH;
 				this.scrollerH.SmallChange = 10;
 				this.scrollerH.LargeChange = this.rectInside.Width/2.0;

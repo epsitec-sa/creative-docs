@@ -108,9 +108,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public double VisibleRange
+		public double VisibleRangeRatio
 		{
-			//	Hauteur visible représentée par l'ascenseur (unités quelconques).
+			//	Hauteur visible représentée par l'ascenseur (de 0 à 1).
 			
 			get
 			{
@@ -119,7 +119,8 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				System.Diagnostics.Debug.Assert (value >= 0);
+				System.Diagnostics.Debug.Assert (value >= 0.0);
+				System.Diagnostics.Debug.Assert (value <= 1.0);
 				
 				if (this.display != value)
 				{
@@ -166,7 +167,12 @@ namespace Epsitec.Common.Widgets
 			// Valeur représentée par l'ascenseur (position).
 			get
 			{
-				return this.position + this.minimum;
+				double pos = this.position + this.minimum;
+				
+				pos = System.Math.Min (pos, this.maximum);
+				pos = System.Math.Max (pos, this.Minimum);
+				
+				return pos;
 			}
 
 			set
@@ -273,7 +279,7 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
-					if ( this.Range > 0 && this.VisibleRange > 0 )
+					if ( this.Range > 0 && this.VisibleRangeRatio > 0 )
 					{
 						this.mouseDown = true;
 						this.BeginPress(this.vertical ? pos.Y : pos.X);
@@ -443,14 +449,14 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle tabRect = Drawing.Rectangle.Empty;
 
-			if ( this.Range > 0 && this.VisibleRange > 0 )
+			if ( this.Range > 0 && this.VisibleRangeRatio > 0 )
 			{
 				double pos = this.position;
 				if ( this.invert )  pos = this.Range-pos;
 
 				if ( this.vertical )
 				{
-					double h = this.sliderRect.Height*this.display/this.Range;
+					double h = this.sliderRect.Height*this.display;
 					if ( h < AbstractScroller.minimalThumb )  h = AbstractScroller.minimalThumb;
 					double p = (pos/this.Range)*(this.sliderRect.Height-h);
 					this.thumbRect = this.sliderRect;
@@ -470,7 +476,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					double h = this.sliderRect.Width*this.display/this.Range;
+					double h = this.sliderRect.Width*this.display;
 					if ( h < AbstractScroller.minimalThumb )  h = AbstractScroller.minimalThumb;
 					double p = (pos/this.Range)*(this.sliderRect.Width-h);
 					this.thumbRect = this.sliderRect;
@@ -494,7 +500,7 @@ namespace Epsitec.Common.Widgets
 			adorner.PaintScrollerBackground(graphics, rect, tabRect, this.PaintState, this.RootDirection);
 			
 			// Dessine la cabine.
-			if ( this.Range > 0 && this.VisibleRange > 0 && this.IsEnabled )
+			if ( this.Range > 0 && this.VisibleRangeRatio > 0 && this.IsEnabled )
 			{
 				Widgets.Direction dir = this.vertical ? Direction.Up : Direction.Left;
 				adorner.PaintScrollerHandle(graphics, this.thumbRect, Drawing.Rectangle.Empty, this.PaintState&(~WidgetState.Engaged), dir);
