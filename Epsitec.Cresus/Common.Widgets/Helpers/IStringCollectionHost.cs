@@ -7,5 +7,7 @@ namespace Epsitec.Common.Widgets.Helpers
 	public interface IStringCollectionHost
 	{
 		void StringCollectionChanged();
+		
+		StringCollection	Items		{ get; }
 	}
 }
