@@ -17,6 +17,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.CreateLayout();
 			this.UpdatePanels();
+			this.panelPatterns.Update();
 			this.panelPages.Update();
 			this.panelLayers.Update();
 			this.panelStyles.UpdateAll(-1);
@@ -46,6 +47,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.book = null;
 				this.bookPanel = null;
 				this.bookStyles = null;
+				this.bookPatterns = null;
 				this.bookPages = null;
 				this.bookLayers = null;
 				this.panel = null;
@@ -62,6 +64,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.frame1 = null;
 				this.frame2 = null;
 				this.panelStyles = null;
+				this.panelPatterns = null;
 				this.panelPages = null;
 				this.panelLayers = null;
 			}
@@ -296,7 +299,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.vToolBar = new VToolBar();
 			this.vToolBar.Parent = this;
 			this.VToolBarAdd(@"file:images/select.icon", "SelectTool(this.Name)", "Sélectionner", "Select");
-			//?this.VToolBarAdd(@"file:images/edit.icon", "SelectTool(this.Name)", "Editer", "Edit");
+			this.VToolBarAdd(@"file:images/edit.icon", "SelectTool(this.Name)", "Editer", "Edit");
 			this.VToolBarAdd(@"file:images/zoom.icon", "SelectTool(this.Name)", "Agrandir", "Zoom");
 			this.VToolBarAdd(@"file:images/hand.icon", "SelectTool(this.Name)", "Déplacer", "Hand");
 			this.VToolBarAdd(@"file:images/picker.icon", "SelectTool(this.Name)", "Pipette", "Picker");
@@ -337,7 +340,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.pane.Items.Add(this.rightPane);
 
 			this.book = new TabBook();
-			this.book.Arrows = TabBookArrows.Right;
+			this.book.Arrows = TabBookArrows.Stretch;
 			this.book.ActivePageChanged += new EventHandler(this.HandleActivePageChanged);
 			this.book.Parent = this;
 
@@ -348,6 +351,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.bookStyles = new TabPage();
 			this.bookStyles.TabTitle = "Styles";
 			this.book.Items.Add(this.bookStyles);
+
+			this.bookPatterns = new TabPage();
+			this.bookPatterns.TabTitle = "Motifs";
+			//?this.book.Items.Add(this.bookPatterns);
 
 			this.bookPages = new TabPage();
 			this.bookPages.TabTitle = "Pages";
@@ -371,6 +378,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.CommandChanged += new EventHandler(this.HandleDrawerCommandChanged);
 			this.drawer.AllChanged += new EventHandler(this.HandleDrawerAllChanged);
 			this.drawer.ScrollerChanged += new EventHandler(this.HandleDrawerScrollerChanged);
+			this.drawer.InfoDocumentChanged += new EventHandler(this.HandleDrawerInfoDocumentChanged);
 			this.drawer.InfoObjectChanged += new EventHandler(this.HandleDrawerInfoObjectChanged);
 			this.drawer.InfoMouseChanged += new EventHandler(this.HandleDrawerInfoMouseChanged);
 			this.drawer.InfoZoomChanged += new EventHandler(this.HandleDrawerInfoZoomChanged);
@@ -444,6 +452,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			this.panelStyles = new PanelStyles(this.drawer, this.toolTip);
 			this.panelStyles.Parent = this.bookStyles;
+
+			this.panelPatterns = new PanelPatterns(this.drawer, this.toolTip);
+			this.panelPatterns.ObjectsChanged += new EventHandler(this.HandlePanelPatternsObjectsChanged);
+			this.panelPatterns.Parent = this.bookPatterns;
 
 			this.panelPages = new PanelPages(this.drawer, this.toolTip);
 			this.panelPages.ObjectsChanged += new EventHandler(this.HandlePanelPagesObjectsChanged);
@@ -716,22 +728,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
-		// Extrait le nom de fichier, en ignorant les noms de dossiers et l'extension.
-		// "c:\rep\abc.txt" devient "abc".
-		public string ExtractName(string filename)
-		{
-			int i = filename.LastIndexOf("\\")+1;
-			if ( i < 0 )  i = 0;
-			int j = filename.IndexOf(".", i);
-			if ( j < 0 )  j = filename.Length;
-			if ( j <= i )  return "";
-			return filename.Substring(i, j-i);
-		}
-
-		private void UpdateInfoDocument()
+		private void HandleDrawerInfoDocumentChanged(object sender)
 		{
 			StatusField field = this.info.Items["StatusDocument"] as StatusField;
-			string name = this.ExtractName(this.filename);
+			string name = Misc.ExtractName(this.filename);
 			Drawing.Size size = this.drawer.IconObjects.Size;
 			field.Text = string.Format("{0} ({1}x{2})", name, size.Width, size.Height);
 			field.Invalidate();
@@ -771,6 +771,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 		private void HandleVScrollerValueChanged(object sender)
 		{
 			this.drawer.OriginY = (double) -this.vScroller.Value;
+		}
+
+		private void HandlePanelPatternsObjectsChanged(object sender)
+		{
+			this.drawer.PageOrLayerChanged();
+			this.drawer.InvalidateAll();
+			this.drawer.UpdateCommands();
+			this.HandleDrawerInfoObjectChanged(null);
+			this.panelPages.Update();
+			this.panelLayers.Update();
+			this.UpdatePagesLayers();
 		}
 
 		private void HandlePanelPagesObjectsChanged(object sender)
@@ -831,15 +842,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 
 			// Crée tous les panneaux.
-			Drawing.Rectangle rect = new Drawing.Rectangle();
-			double posy = this.panel.Height-1;
 			Widget originColorLastPanel = null;
 
 			AbstractObject creatingObject = this.drawer.CreatingObject;
 			if ( creatingObject == null )
 			{
 				System.Collections.ArrayList list = this.drawer.PropertiesList();
-				double lastBack = -1;
 				int index = 0;
 				foreach ( AbstractProperty property in list )
 				{
@@ -848,26 +856,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 						if ( this.drawer.SelectedTool == "Edit" )  continue;
 					}
 
-					if ( lastBack != -1 && lastBack != property.BackgroundIntensity )
-					{
-						posy -= 5;
-					}
-					lastBack = property.BackgroundIntensity;
-
 					panel = property.CreatePanel();
 					panel.Drawer = this.drawer;
 					panel.ExtendedSize = this.drawer.GetPropertyExtended(property.Type);
 					panel.Multi = property.Multi;
+					panel.LayoutDirect = (property.Type == PropertyType.Name);
 
 					AbstractProperty p = this.drawer.GetProperty(property.Type);
 					panel.SetProperty(p);
 
-					rect.Left   = 1;
-					rect.Right  = this.panel.Width-1;
-					rect.Bottom = posy-panel.DefaultHeight;
-					rect.Top    = posy;
-					panel.Bounds = rect;
-					panel.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
 					panel.Changed += new EventHandler(this.HandlePanelChanged);
 					panel.ExtendedChanged += new EventHandler(this.HandleExtendedChanged);
 					panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
@@ -879,8 +876,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 					{
 						originColorLastPanel = panel;
 					}
-
-					posy -= rect.Height;
 				}
 
 				foreach ( Widget widget in this.panel.Children )
@@ -892,7 +887,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			else	// objet en cours de création ?
 			{
-				posy -= 50;
 				for ( i=0 ; i<100 ; i++ )
 				{
 					string cmd, name, text;
@@ -901,12 +895,66 @@ namespace Epsitec.Common.Pictogram.Widgets
 					button.Command = cmd;
 					button.Name = name;
 					button.Text = text;
+					button.Parent = this.panel;
+				}
+			}
+			this.GeometryPanels();
+
+			this.HandleOriginColorChanged(originColorLastPanel, true);
+			this.HandleDrawerScrollerChanged(null);
+			this.HandleDrawerInfoDocumentChanged(null);
+			this.HandleDrawerInfoObjectChanged(null);
+			this.HandleDrawerInfoMouseChanged(null);
+			this.HandleDrawerInfoZoomChanged(null);
+		}
+
+		// Repositionne tous les panels.
+		protected void GeometryPanels()
+		{
+			if ( this.colorSelector == null )  return;
+
+			Drawing.Rectangle rect = new Drawing.Rectangle();
+			double posy = this.panel.Height-1;
+
+			AbstractObject creatingObject = this.drawer.CreatingObject;
+			if ( creatingObject == null )
+			{
+				double lastBack = -1;
+				foreach ( Widget widget in this.panel.Children )
+				{
+					AbstractPanel panel = widget as AbstractPanel;
+					if ( panel == null )  continue;
+
+					AbstractProperty property = panel.GetProperty();
+
+					if ( lastBack != -1 && lastBack != property.BackgroundIntensity )
+					{
+						posy -= 5;
+					}
+					lastBack = property.BackgroundIntensity;
+
+					rect.Left   = 1;
+					rect.Right  = this.panel.Width-1;
+					rect.Bottom = posy-panel.DefaultHeight;
+					rect.Top    = posy;
+					panel.Bounds = rect;
+
+					posy -= rect.Height;
+				}
+			}
+			else
+			{
+				posy -= 50;
+				foreach ( Widget widget in this.panel.Children )
+				{
+					Button button = widget as Button;
+					if ( button == null )  continue;
+
 					rect.Left   = 1;
 					rect.Right  = this.panel.Width-1;
 					rect.Bottom = posy-button.DefaultHeight;
 					rect.Top    = posy;
 					button.Bounds = rect;
-					button.Parent = this.panel;
 
 					posy -= rect.Height+10;
 				}
@@ -919,13 +967,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			rect.Bottom = 0;
 			rect.Top    = System.Math.Min(this.colorSelector.DefaultHeight, this.panel.Height-this.leftHeightUsed);
 			this.colorSelector.Bounds = rect;
-
-			this.HandleOriginColorChanged(originColorLastPanel, true);
-			this.HandleDrawerScrollerChanged(null);
-			this.HandleDrawerInfoObjectChanged(null);
-			this.HandleDrawerInfoMouseChanged(null);
-			this.HandleDrawerInfoZoomChanged(null);
-			this.UpdateInfoDocument();
 		}
 
 		// Le contenu d'un panneau a été changé.
@@ -1039,6 +1080,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			inside.Top -= 10;
 			this.panel.Bounds = inside;
 			this.panelStyles.Bounds = inside;
+			this.panelPatterns.Bounds = inside;
 			this.panelPages.Bounds = inside;
 			this.panelLayers.Bounds = inside;
 
@@ -1116,6 +1158,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			rect.Inflate(1);
 			this.frame2.Bounds = rect;
 			rect.Deflate(1);
+
+			this.GeometryPanels();
 		}
 
 		private void HandlePaneSizeChanged(object sender)
@@ -1158,7 +1202,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.drawer.CommandNew();
 			this.filename = "";
-			this.UpdateInfoDocument();
+			this.HandleDrawerInfoDocumentChanged(null);
+			this.panelPatterns.Update();
 			this.panelPages.Update();
 			this.panelLayers.Update();
 			this.UpdatePagesLayers();
@@ -1175,13 +1220,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 			dialog.Show();
 
 			this.filename = dialog.FileName;
-			this.UpdateInfoDocument();
+			this.HandleDrawerInfoDocumentChanged(null);
 
 			this.drawer.CommandOpen(this.filename);
 
 			this.ResizeLayout();
 			this.Invalidate();
-			this.UpdateInfoDocument();
+			this.HandleDrawerInfoDocumentChanged(null);
+			this.panelPatterns.Update();
 			this.panelPages.Update();
 			this.panelLayers.Update();
 			this.UpdatePagesLayers();
@@ -1198,7 +1244,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			dialog.Show();
 
 			this.filename = dialog.FileName;
-			this.UpdateInfoDocument();
+			this.HandleDrawerInfoDocumentChanged(null);
 
 			this.drawer.CommandSave(this.filename);
 		}
@@ -1206,7 +1252,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("QuitApplication")]
 		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			Window.Quit ();
+			Window.Quit();
 		}
 
 		[Command ("Mode")]
@@ -1300,6 +1346,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected TabBook						book;
 		protected TabPage						bookPanel;
 		protected TabPage						bookStyles;
+		protected TabPage						bookPatterns;
 		protected TabPage						bookPages;
 		protected TabPage						bookLayers;
 		protected Widget						panel;
@@ -1317,6 +1364,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected SampleButton					frame2;
 		protected ColorSelector					colorSelector;
 		protected PanelStyles					panelStyles;
+		protected PanelPatterns					panelPatterns;
 		protected PanelPages					panelPages;
 		protected PanelLayers					panelLayers;
 		protected AbstractPanel					originColorPanel = null;

@@ -20,6 +20,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.ButtonStyle = ButtonStyle.ToolItem;
 
 			this.iconObjects = new IconObjects();
+			this.iconObjects.Drawer = this;
 			this.iconObjects.Clear();
 
 			this.iconContext = new IconContext();
@@ -263,10 +264,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 						if ( this.IsTool() && this.selectedTool != "Edit" )
 						{
-							AbstractObject sel = this.iconObjects.RetFirstSelected();
-							if ( sel != null && sel.IsEdited() )
+							if ( this.editObject != null )
 							{
-								sel.Select(true);
+								this.editObject.Select(true);
+								this.editObject = null;
 								this.OnPanelChanged();
 								this.OnInfoObjectChanged();
 								this.InvalidateAll();
@@ -279,15 +280,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 							if ( total == 1 )
 							{
 								AbstractObject sel = this.iconObjects.RetFirstSelected();
-								if ( sel != null && !sel.IsEdited() )
+								if ( sel != null )
 								{
 									if ( sel.IsEditable() )
 									{
 										sel.Select(true, true);
+										this.editObject = sel;
 									}
 									else
 									{
 										this.iconObjects.DeselectAll();
+										this.editObject = null;
 									}
 									this.OnPanelChanged();
 									this.OnInfoObjectChanged();
@@ -297,6 +300,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 							else if ( total > 1 )
 							{
 								this.iconObjects.DeselectAll();
+								this.editObject = null;
 								this.OnPanelChanged();
 								this.OnInfoObjectChanged();
 								this.InvalidateAll();
@@ -361,7 +365,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				this.newObject = this.CreateObject();
 				this.newObject.CloneProperties(this.objectMemory);
-				this.newObject.PropertiesList(list);
+				this.newObject.PropertiesList(list, true);
 			}
 
 			return list;
@@ -671,6 +675,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.hiliteHandleObject = null;
 			this.editObject = null;
 			this.iconObjects.Read(filename);
+			this.UpdateSizeSamples();
 			this.Zoom = 1;
 			this.OriginX = 0;
 			this.OriginY = 0;
@@ -708,6 +713,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconObjects.DuplicateSelection(move);
 			this.globalModifier.MoveAll(move);
 			this.iconObjects.UpdateEditProperties(this.objectMemory);
+			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
 			this.InvalidateAll();
@@ -791,9 +797,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		void CommandMerge(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.UndoMemorize("Merge");
+			string name = this.iconObjects.GroupName();
 			this.iconObjects.UngroupSelection();
 			this.iconObjects.GroupSelection();
+			this.iconObjects.GroupName(name);
 			this.globalModifier.Visible = false;
+			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
 			this.InvalidateAll();
@@ -805,6 +814,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UndoMemorize("Group");
 			this.iconObjects.GroupSelection();
 			this.globalModifier.Visible = false;
+			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
 			this.InvalidateAll();
@@ -815,6 +825,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.UndoMemorize("UnGroup");
 			this.iconObjects.UngroupSelection();
+			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
 			this.InvalidateAll();
@@ -825,6 +836,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.InsideSelection();
 			this.globalModifier.Visible = false;
+			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
 			this.InvalidateAll();
@@ -1111,6 +1123,20 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			pos = this.ScreenToIcon(pos);
 
+			if ( this.selectedTool == "Edit" && this.editObject != null )
+			{
+				if ( message.Type == MessageType.MouseUp )
+				{
+					this.mouseDown = false;
+				}
+
+				if ( this.EditProcessMessage(message, pos) )
+				{
+					message.Consumer = this;
+					return;
+				}
+			}
+
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
@@ -1123,7 +1149,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 						}
 						else if ( this.selectedTool == "Edit" )
 						{
-							this.EditMouseDown(pos, message.IsShiftPressed, message.IsCtrlPressed, message.ButtonDownCount);
+							if ( this.EditMouseDown(pos, message.IsShiftPressed, message.IsCtrlPressed, message.ButtonDownCount) )
+							{
+								this.EditMouseDownMessage(pos);
+							}
 						}
 						else if ( this.selectedTool == "Zoom" )
 						{
@@ -1162,7 +1191,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 					else if ( this.selectedTool == "Edit" )
 					{
-						this.EditMouseMove(pos, message.IsShiftPressed, message.IsCtrlPressed);
+						if ( this.EditMouseMove(pos, message.IsShiftPressed, message.IsCtrlPressed) )
+						{
+							this.EditMouseDownMessage(pos);
+						}
 					}
 					else if ( this.selectedTool == "Zoom" )
 					{
@@ -1223,7 +1255,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 					{
 						// Il ne faut jamais manger les pressions de touches avec ALT, car elles sont
 						// utilisées par les raccourcis clavier globaux.
-						
 						return;
 					}
 					if ( message.KeyCode == KeyCode.ControlKey )
@@ -1401,6 +1432,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.UndoMemorize("Select");
 			this.moveStart = mouse;
+			this.moveAccept = false;
 			this.iconContext.IsCtrl = isCtrl;
 			this.iconContext.ConstrainFixStarting(mouse);
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
@@ -1523,10 +1555,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 					{
 						this.iconContext.ConstrainSnapPos(ref mouse);
 
-						double len = Drawing.Point.Distance(mouse, this.moveStart);
-						if ( len <= this.iconContext.MinimalSize )
+						if ( !this.moveAccept )
 						{
-							mouse = this.moveStart;
+							double len = Drawing.Point.Distance(mouse, this.moveStart);
+							if ( len <= this.iconContext.MinimalSize )
+							{
+								mouse = this.moveStart;
+							}
+							else
+							{
+								this.moveAccept = true;
+							}
 						}
 						this.iconContext.SnapGrid(ref mouse);
 						this.iconObjects.MoveSelection(mouse-this.moveOffset, ref bbox);
@@ -1632,8 +1671,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 				}
 
-				double len = Drawing.Point.Distance(mouse, this.moveStart);
-				if ( len <= this.iconContext.MinimalSize )
+				if ( !this.moveAccept )
 				{
 					this.UndoMemorizeRemove();  // juste sélectionné (pas déplacé)
 				}
@@ -1660,41 +1698,62 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		protected void EditMouseDown(Drawing.Point mouse, bool isShift, bool isCtrl, int downCount)
+		protected bool EditProcessMessage(Message message, Drawing.Point pos)
 		{
-			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
-			this.editObject = null;
-
-			AbstractObject obj;
-			obj = this.iconObjects.DetectEdit(mouse);
-			if ( obj != null )
+			if ( this.editObject.EditProcessMessage(message, pos) )
 			{
-				this.Select(obj, true, false);
+				this.InvalidateAll(this.editObject.BoundingBox);
+				return true;
+			}
+			return false;
+		}
+
+		protected void EditMouseDownMessage(Drawing.Point pos)
+		{
+			this.editObject.EditMouseDownMessage(pos);
+			this.InvalidateAll(this.editObject.BoundingBox);
+		}
+
+		protected bool EditMouseDown(Drawing.Point mouse, bool isShift, bool isCtrl, int downCount)
+		{
+			bool newEdit = false;
+			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
+
+			this.editObject = this.iconObjects.DetectEdit(mouse);
+			if ( this.editObject != null )
+			{
+				this.Select(this.editObject, true, false);
 				this.OnInfoObjectChanged();
-				this.editObject = obj;
-				this.editObject.MoveEditStarting(mouse, iconContext);
 				bbox.MergeWith(this.editObject.BoundingBox);
+				newEdit = true;
 			}
 
 			this.InvalidateAll(bbox);
+			return newEdit;
 		}
 
-		protected void EditMouseMove(Drawing.Point mouse, bool isShift, bool isCtrl)
+		protected bool EditMouseMove(Drawing.Point mouse, bool isShift, bool isCtrl)
 		{
+			bool newEdit = false;
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 
-			AbstractObject obj;
 			if ( this.mouseDown )  // bouton souris pressé ?
 			{
-				if ( this.editObject != null )
+				if ( this.editObject == null )
 				{
-					this.editObject.MoveEditProcess(mouse, iconContext);
-					bbox.MergeWith(this.editObject.BoundingBox);
+					this.editObject = this.iconObjects.DetectEdit(mouse);
+					if ( this.editObject != null )
+					{
+						this.Select(this.editObject, true, false);
+						this.OnInfoObjectChanged();
+						bbox.MergeWith(this.editObject.BoundingBox);
+						newEdit = true;
+					}
 				}
 			}
 			else	// bouton souris relâché ?
 			{
-				obj = this.iconObjects.DetectEdit(mouse);
+				AbstractObject obj = this.iconObjects.DetectEdit(mouse);
 				this.iconObjects.Hilite(obj, ref bbox);
 				if ( obj != null )
 				{
@@ -1706,6 +1765,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 
 			this.InvalidateAll(bbox);
+			return newEdit;
 		}
 
 		protected void EditMouseUp(Drawing.Point mouse, bool isShift, bool isCtrl, bool isRight)
@@ -2035,6 +2095,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				AbstractObject obj = this.CreateObject();
 				if ( obj == null )  return;
 				obj.CloneProperties(this.newObject);
+				obj.PasteAdaptProperties(this.iconObjects.CurrentPattern == 0);
 				obj.Select();
 				obj.EditProperties = false;
 				this.createRank = this.iconObjects.Add(obj);
@@ -2066,6 +2127,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconObjects[this.createRank].CreateMouseUp(mouse, this.iconContext);
 
 			bool selectAfterCreation = false;
+			bool editAfterCreation = false;
 			if ( this.iconObjects[this.createRank].CreateIsEnding(this.iconContext) )
 			{
 				if ( this.iconObjects[this.createRank].CreateIsExist(this.iconContext) )
@@ -2073,6 +2135,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					this.iconObjects[this.createRank].Deselect();
 					this.rankLastCreated = this.createRank;
 					selectAfterCreation = this.iconObjects[this.createRank].SelectAfterCreation();
+					editAfterCreation = this.iconObjects[this.createRank].EditAfterCreation();
 				}
 				else
 				{
@@ -2088,6 +2151,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( selectAfterCreation )
 			{
 				this.SelectedTool = "Select";
+			}
+			if ( editAfterCreation )
+			{
+				this.SelectedTool = "Edit";
 			}
 
 			this.InvalidateAll();
@@ -2228,30 +2295,38 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Invalide la zone ainsi que celles des clones.
-		public void InvalidateAll(Drawing.Rectangle bbox)
+		// Met à jour les tailles des SampleButton.
+		protected void UpdateSizeSamples()
 		{
-#if true
-			if ( bbox.IsEmpty )  return;
-
-			bbox.Inflate(this.iconContext.SelectMarginSize);
-			bbox.BottomLeft = this.IconToScreen(bbox.BottomLeft);
-			bbox.TopRight   = this.IconToScreen(bbox.TopRight);
-			this.Invalidate(bbox);
-#else
-			this.Invalidate();
-#endif
-
 			foreach ( Widget widget in this.clones )
 			{
 				SampleButton sample = widget as SampleButton;
 				if ( sample != null )
 				{
-					sample.IconObjects.Size = this.iconObjects.Size;
+					sample.IconObjects.Size   = this.iconObjects.Size;
 					sample.IconObjects.Origin = this.iconObjects.Origin;
 				}
-				
+			}
+		}
+
+		// Invalide la zone ainsi que celles des clones.
+		public void InvalidateAll(Drawing.Rectangle bbox)
+		{
+			if ( bbox.IsEmpty )  return;
+
+			bbox.Inflate(this.iconContext.SelectMarginSize);
+			bbox.BottomLeft = this.IconToScreen(bbox.BottomLeft);
+			bbox.TopRight   = this.IconToScreen(bbox.TopRight);
+
+			this.SetSyncPaint(true);
+			this.Invalidate(bbox);
+			this.SetSyncPaint(false);
+
+			foreach ( Widget widget in this.clones )
+			{
+				widget.SetSyncPaint(true);
 				widget.Invalidate();
+				widget.SetSyncPaint(false);
 			}
 		}
 
@@ -2262,13 +2337,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			foreach ( Widget widget in this.clones )
 			{
-				SampleButton sample = widget as SampleButton;
-				if ( sample != null )
-				{
-					sample.IconObjects.Size = this.iconObjects.Size;
-					sample.IconObjects.Origin = this.iconObjects.Origin;
-				}
-				
 				widget.Invalidate();
 			}
 		}
@@ -2305,7 +2373,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 					y += iy;
 					graphics.AddLine(x, y, this.iconObjects.SizeArea.Width, y);
 				}
-				//?graphics.RenderSolid(Drawing.Color.FromBrightness(0.9));
 				graphics.RenderSolid(Drawing.Color.FromARGB(0.3, 0.6,0.6,0.6));
 			}
 
@@ -2314,11 +2381,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 			rect.Offset(ix, iy);
 			graphics.AddRectangle(rect);
 
-			rect.Offset(-ix, -iy);
-			rect.Deflate(2);
-			graphics.Align(ref rect);
-			rect.Offset(ix, iy);
-			graphics.AddRectangle(rect);
+			if ( this.iconObjects.CurrentPattern == 0 )
+			{
+				rect.Offset(-ix, -iy);
+				rect.Deflate(2);
+				graphics.Align(ref rect);
+				rect.Offset(ix, iy);
+				graphics.AddRectangle(rect);
+			}
 
 			double cx = this.iconObjects.Size.Width/2;
 			double cy = this.iconObjects.Size.Height/2;
@@ -2327,7 +2397,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			cy += iy;
 			graphics.AddLine(cx, 0, cx, this.iconObjects.Size.Height);
 			graphics.AddLine(0, cy, this.iconObjects.Size.Width, cy);
-			//?graphics.RenderSolid(Drawing.Color.FromBrightness(1.0));
 			graphics.RenderSolid(Drawing.Color.FromARGB(0.4, 0.5,0.5,0.5));
 
 			graphics.LineWidth = initialWidth;
@@ -2359,6 +2428,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Dessine l'icône.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			//?Drawing.Rectangle clip = graphics.SaveClippingRectangle();
+			//?graphics.ResetClippingRectangle();
+			//?graphics.SetClippingRectangle(this.InnerBounds);
+
 			if ( !this.BackColor.IsTransparent && this.iconContext.PreviewActive )
 			{
 				graphics.AddFilledRectangle(clipRect);
@@ -2377,12 +2450,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			clipRect.BottomLeft = this.ScreenToIcon(clipRect.BottomLeft);
 			clipRect.TopRight   = this.ScreenToIcon(clipRect.TopRight);
-			//TODO: Pourquoi clipRect est trop grand ?
-			//System.Diagnostics.Debug.WriteLine(string.Format("clipRect = {0};{1} {2};{3}", clipRect.Left.ToString("F2"), clipRect.Bottom.ToString("F2"), clipRect.Right.ToString("F2"), clipRect.Top.ToString("F2")));
-
-			//TODO: Drawing.Rectangle clip = graphics.SaveClippingRectangle();
-			//TODO: graphics.ResetClippingRectangle();
-			//TODO: graphics.SetClippingRectangle(clipRect);
 
 			// Dessine la grille magnétique.
 			if ( this.isEditable )
@@ -2391,7 +2458,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 
 			// Dessine les géométries.
-			this.iconObjects.DrawGeometry(graphics, this.iconContext, adorner, clipRect, false);
+			this.iconObjects.DrawGeometry(graphics, this.iconContext, this.iconObjects, adorner, clipRect, false);
 
 			// Dessine la grille magnétique.
 			if ( this.isEditable && !this.iconContext.PreviewActive )
@@ -2425,9 +2492,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.iconContext.DrawConstrain(graphics, this.iconObjects.SizeArea);
 			}
 
-			//TODO: graphics.RestoreClippingRectangle(clip);
 			graphics.Transform = save;
 			graphics.LineWidth = initialWidth;
+			//?graphics.RestoreClippingRectangle(clip);
 
 			// Dessine le cadre.
 			if ( this.isEditable )
@@ -2486,6 +2553,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public event EventHandler ScrollerChanged;
 
 		// Génère un événement pour dire qu'il faut changer les informations.
+		public virtual void OnInfoDocumentChanged()
+		{
+			if ( this.InfoDocumentChanged != null )  // qq'un écoute ?
+			{
+				this.InfoDocumentChanged(this);
+			}
+		}
+
+		public event EventHandler InfoDocumentChanged;
+
+		// Génère un événement pour dire qu'il faut changer les informations.
 		protected virtual void OnInfoObjectChanged()
 		{
 			if ( this.InfoObjectChanged != null )  // qq'un écoute ?
@@ -2541,6 +2619,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected int					moveGlobal;
 		protected int					moveHandle;
 		protected Drawing.Point			moveStart;
+		protected bool					moveAccept;
 		protected Drawing.Point			moveOffset;
 		protected AbstractObject		cellObject;
 		protected int					cellRank;
