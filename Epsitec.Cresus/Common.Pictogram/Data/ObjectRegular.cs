@@ -94,6 +94,7 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 
 			if ( rank == 0 )  // centre ?
 			{
@@ -149,6 +150,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public override void CreateMouseMove(Drawing.Point pos, IconContext iconContext)
 		{
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			this.dirtyBbox = true;
 		}
@@ -157,6 +159,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public override void CreateMouseUp(Drawing.Point pos, IconContext iconContext)
 		{
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			iconContext.ConstrainDelStarting();
 			this.UpdateRegularHandle();
@@ -201,6 +204,7 @@ namespace Epsitec.Common.Pictogram.Data
 					this.Handle(2).Position = pos;
 				}
 				this.Handle(2).IsSelected = this.Handle(1).IsSelected;
+				this.GlobalHandleAdapt(2);
 			}
 		}
 
@@ -309,7 +313,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
 		{
-			if ( this.isHide )  return;
+			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext);
 
 			if ( this.TotalHandle < 2 )  return;

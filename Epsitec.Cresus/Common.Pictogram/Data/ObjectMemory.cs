@@ -10,24 +10,18 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			PropertyLine lineMode = new PropertyLine();
 			lineMode.Type = PropertyType.LineMode;
-			lineMode.Text = "Epaisseur trait";
-			lineMode.BackgroundIntensity = 0.85;
-			lineMode.Width = 1.0;
+			lineMode.Width = 0.1;
 			lineMode.Cap   = Drawing.CapStyle.Round;
 			lineMode.Join  = Drawing.JoinStyle.Round;
 			this.AddProperty(lineMode);
 
 			PropertyColor lineColor = new PropertyColor();
 			lineColor.Type = PropertyType.LineColor;
-			lineColor.Text = "Couleur trait";
-			lineColor.BackgroundIntensity = 0.85;
 			lineColor.Color = Drawing.Color.FromBrightness(0.0);
 			this.AddProperty(lineColor);
 
 			PropertyArrow arrow = new PropertyArrow();
 			arrow.Type = PropertyType.Arrow;
-			arrow.Text = "Extrémités";
-			arrow.BackgroundIntensity = 0.85;
 			arrow.ArrowType1 = ArrowType.Right;
 			arrow.ArrowType2 = ArrowType.Right;
 			arrow.Length1  = 2.0;
@@ -40,8 +34,6 @@ namespace Epsitec.Common.Pictogram.Data
 
 			PropertyGradient fillGradient = new PropertyGradient();
 			fillGradient.Type = PropertyType.FillGradient;
-			fillGradient.Text = "Couleur intérieure";
-			fillGradient.BackgroundIntensity = 0.95;
 			fillGradient.Fill   = GradientFill.None;
 			fillGradient.Color1 = Drawing.Color.FromBrightness(1.0);
 			fillGradient.Color2 = Drawing.Color.FromBrightness(0.5);
@@ -69,15 +61,11 @@ namespace Epsitec.Common.Pictogram.Data
 
 			PropertyBool fillClose = new PropertyBool();
 			fillClose.Type = PropertyType.PolyClose;
-			fillClose.Text = "Contour fermé";
-			fillClose.BackgroundIntensity = 0.90;
 			fillClose.Bool = false;
 			this.AddProperty(fillClose);
 
 			PropertyCorner corner = new PropertyCorner();
 			corner.Type = PropertyType.Corner;
-			corner.Text = "Coins";
-			corner.BackgroundIntensity = 0.90;
 			corner.CornerType = CornerType.Right;
 			corner.Radius = 2.0;
 			corner.Effect1 = 0.5;
@@ -86,41 +74,53 @@ namespace Epsitec.Common.Pictogram.Data
 
 			PropertyRegular regular = new PropertyRegular();
 			regular.Type = PropertyType.Regular;
-			regular.Text = "Nombre de côtés";
-			regular.BackgroundIntensity = 0.90;
 			regular.NbFaces = 6;
 			regular.Star = false;
 			regular.Deep = 0.5;
 			this.AddProperty(regular);
 
+			PropertyColor backColor = new PropertyColor();
+			backColor.Type = PropertyType.BackColor;
+			backColor.Color = Drawing.Color.FromBrightness(1.0);
+			this.AddProperty(backColor);
+
 			PropertyString textString = new PropertyString();
 			textString.Type = PropertyType.TextString;
-			textString.Text = "Texte";
-			textString.BackgroundIntensity = 0.80;
-			textString.String = "Abc";
+			textString.String = "";
 			this.AddProperty(textString);
 
-			PropertyCombo textFontName = new PropertyCombo();
-			textFontName.Type = PropertyType.TextFontName;
-			textFontName.Text = "Police";
-			textFontName.BackgroundIntensity = 0.80;
-			textFontName.Choice = 0;
-			textFontName.Add("Tahoma");
-			textFontName.Add("Arial");
-			textFontName.Add("Courrier");
-			textFontName.Add("Times");
-			this.AddProperty(textFontName);
+			PropertyFont textFont = new PropertyFont();
+			textFont.Type = PropertyType.TextFont;
+			textFont.FontName    = "Tahoma";
+			textFont.FontOptical = "Regular";
+			textFont.FontSize    = 1.0;
+			textFont.FontColor   = Drawing.Color.FromBrightness(0);
+			this.AddProperty(textFont);
 
-			PropertyCombo textFontOptical = new PropertyCombo();
-			textFontOptical.Type = PropertyType.TextFontOptical;
-			textFontOptical.Text = "Style";
-			textFontOptical.BackgroundIntensity = 0.80;
-			textFontOptical.Choice = 0;
-			textFontOptical.Add("Normal");
-			textFontOptical.Add("Gras");
-			textFontOptical.Add("Italique");
-			textFontOptical.Add("Gras italique");
-			this.AddProperty(textFontOptical);
+			PropertyJustif textJustif = new PropertyJustif();
+			textJustif.Type = PropertyType.TextJustif;
+			textJustif.Horizontal  = JustifHorizontal.Left;
+			textJustif.Vertical    = JustifVertical.Center;
+			textJustif.Orientation = JustifOrientation.LeftToRight;
+			textJustif.MarginH     = 0.2;
+			textJustif.MarginV     = 0.1;
+			textJustif.OffsetV     = 0.0;
+			this.AddProperty(textJustif);
+
+			PropertyTextLine textLine = new PropertyTextLine();
+			textLine.Type = PropertyType.TextLine;
+			textLine.Horizontal = JustifHorizontal.Left;
+			textLine.Offset     = 0.0;
+			textLine.Add        = 0.0;
+			this.AddProperty(textLine);
+
+			PropertyImage image = new PropertyImage();
+			image.Type = PropertyType.Image;
+			image.Filename = "";
+			image.MirrorH = false;
+			image.MirrorV = false;
+			image.Homo = true;
+			this.AddProperty(image);
 		}
 
 		protected override AbstractObject CreateNewObject()

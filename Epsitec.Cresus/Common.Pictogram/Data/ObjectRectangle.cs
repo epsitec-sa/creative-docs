@@ -79,38 +79,16 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 
 			if ( rank < 4 )
 			{
-				if ( AbstractObject.IsRectangular(this.Handle(0).Position, this.Handle(1).Position, this.Handle(2).Position, this.Handle(3).Position) )
-				{
-					this.Handle(rank).Position = pos;
+				     if ( rank == 0 )  this.MoveCorner(pos, 0, 2,3, 1);
+				else if ( rank == 1 )  this.MoveCorner(pos, 1, 3,2, 0);
+				else if ( rank == 2 )  this.MoveCorner(pos, 2, 0,1, 3);
+				else if ( rank == 3 )  this.MoveCorner(pos, 3, 1,0, 2);
+				else                   this.Handle(rank).Position = pos;
 
-					if ( rank == 0 )
-					{
-						this.Handle(2).Position = Drawing.Point.Projection(this.Handle(2).Position, this.Handle(1).Position, pos);
-						this.Handle(3).Position = Drawing.Point.Projection(this.Handle(3).Position, this.Handle(1).Position, pos);
-					}
-					if ( rank == 1 )
-					{
-						this.Handle(2).Position = Drawing.Point.Projection(this.Handle(2).Position, this.Handle(0).Position, pos);
-						this.Handle(3).Position = Drawing.Point.Projection(this.Handle(3).Position, this.Handle(0).Position, pos);
-					}
-					if ( rank == 2 )
-					{
-						this.Handle(0).Position = Drawing.Point.Projection(this.Handle(0).Position, this.Handle(3).Position, pos);
-						this.Handle(1).Position = Drawing.Point.Projection(this.Handle(1).Position, this.Handle(3).Position, pos);
-					}
-					if ( rank == 3 )
-					{
-						this.Handle(0).Position = Drawing.Point.Projection(this.Handle(0).Position, this.Handle(2).Position, pos);
-						this.Handle(1).Position = Drawing.Point.Projection(this.Handle(1).Position, this.Handle(2).Position, pos);
-					}
-				}
-				else
-				{
-					this.Handle(rank).Position = pos;
-				}
 			}
 			else if ( rank == 4 || rank == 5 )
 			{
@@ -165,6 +143,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public override void CreateMouseMove(Drawing.Point pos, IconContext iconContext)
 		{
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			this.dirtyBbox = true;
 		}
@@ -173,6 +152,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public override void CreateMouseUp(Drawing.Point pos, IconContext iconContext)
 		{
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 			this.Handle(1).Position = pos;
 			iconContext.ConstrainDelStarting();
 
@@ -270,6 +250,11 @@ namespace Epsitec.Common.Pictogram.Data
 				this.Handle(9).IsSelected  = this.Handle(1).IsSelected && corner.Radius > 0;
 				this.Handle(10).IsSelected = this.Handle(3).IsSelected && corner.Radius > 0;
 				this.Handle(11).IsSelected = this.Handle(3).IsSelected && corner.Radius > 0;
+
+				for ( int i=4 ; i<12 ; i++ )
+				{
+					this.GlobalHandleAdapt(i);
+				}
 			}
 		}
 
@@ -278,15 +263,21 @@ namespace Epsitec.Common.Pictogram.Data
 		protected override void UpdateBoundingBox()
 		{
 			Drawing.Path path = this.PathBuild();
-			this.bboxThin = path.ComputeBounds();
+			this.bboxThin = AbstractObject.ComputeBoundingBox(path);
 
 			this.bboxGeom = this.bboxThin;
 			this.PropertyLine(0).InflateBoundingBox(ref this.bboxGeom);
+			this.bboxGeom.MergeWith(this.PropertyGradient(2).BoundingBoxGeom(this.bboxThin));
 
 			this.bboxFull = this.bboxGeom;
-			this.bboxGeom.MergeWith(this.PropertyGradient(2).BoundingBoxGeom(this.bboxThin));
+			if ( this.TotalHandle >= 4 )
+			{
+				this.bboxFull.MergeWith(this.Handle(0).Position);
+				this.bboxFull.MergeWith(this.Handle(1).Position);
+				this.bboxFull.MergeWith(this.Handle(2).Position);
+				this.bboxFull.MergeWith(this.Handle(3).Position);
+			}
 			this.bboxFull.MergeWith(this.PropertyGradient(2).BoundingBoxFull(this.bboxThin));
-			this.bboxFull.MergeWith(this.bboxGeom);
 		}
 
 		// Crée le chemin de l'objet.
@@ -367,7 +358,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
 		{
-			if ( this.isHide )  return;
+			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext);
 
 			if ( this.TotalHandle < 2 )  return;

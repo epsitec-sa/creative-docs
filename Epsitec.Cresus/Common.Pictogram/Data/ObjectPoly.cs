@@ -99,6 +99,7 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 
 			if ( this.Handle(rank).Type == HandleType.Primary )  // principale ?
 			{
@@ -252,12 +253,18 @@ namespace Epsitec.Common.Pictogram.Data
 		// Retourne le rank de la poignée de départ, ou -1
 		protected int DetectOutline(Drawing.Point pos)
 		{
+			PropertyCorner corner = this.PropertyCorner(5);
+			CornerType type = corner.CornerType;
+			corner.CornerType = CornerType.Right;
+
 			Drawing.Path pathStart;  bool outlineStart, surfaceStart;
 			Drawing.Path pathEnd;    bool outlineEnd,   surfaceEnd;
 			Drawing.Path pathLine;
 			this.PathBuild(out pathStart, out outlineStart, out surfaceStart,
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
 						   out pathLine);
+
+			corner.CornerType = type;
 
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
 			return AbstractObject.DetectOutlineRank(pathLine, width, pos);
@@ -268,6 +275,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public override void CreateMouseDown(Drawing.Point pos, IconContext iconContext)
 		{
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 
 			if ( this.TotalHandle == 0 )
 			{
@@ -288,6 +296,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public override void CreateMouseMove(Drawing.Point pos, IconContext iconContext)
 		{
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 
 			int rank = this.TotalHandle-1;
 			if ( rank > 0 )
@@ -316,6 +325,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public override void CreateMouseUp(Drawing.Point pos, IconContext iconContext)
 		{
 			iconContext.ConstrainSnapPos(ref pos);
+			iconContext.SnapGrid(ref pos);
 			int rank = this.TotalHandle-1;
 			this.Handle(rank).Position = pos;
 			iconContext.ConstrainFixStarting(pos);
@@ -507,8 +517,10 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Rectangle bboxLine  = AbstractObject.ComputeBoundingBox(pathLine);
 
 			this.bboxThin = bboxLine;
-			this.bboxThin.MergeWith(this.Handle(0).Position);
-			this.bboxThin.MergeWith(this.Handle(this.TotalHandlePrimary-1).Position);
+			for ( int i=0 ; i<this.TotalHandle ; i++ )
+			{
+				this.bboxThin.MergeWith(this.Handle(i).Position);
+			}
 
 			this.PropertyLine(0).InflateBoundingBox(ref bboxLine);
 			this.bboxGeom = bboxLine;
@@ -680,7 +692,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
 		{
-			if ( this.isHide )  return;
+			if ( base.IsFullHide(iconContext) )  return;
 			base.DrawGeometry(graphics, iconContext);
 
 			if ( this.TotalHandle < 1 )  return;
