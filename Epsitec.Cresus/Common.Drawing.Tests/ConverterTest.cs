@@ -58,5 +58,32 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual (sa1, conv.ConvertToString (b1));
 			Assert.AreEqual (sa2, conv.ConvertToString (b2));
 		}
+		
+		[Test] public void CheckTextStyle()
+		{
+			TextStyle a = new TextStyle ();
+			
+			a.Font = Font.GetFont ("Tahoma", "Regular");
+			a.Size = 12.0;
+			
+			//	TODO : ajouter les autres propriétés ici...
+			
+			string sa = a.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			
+			Assert.IsTrue (sa.Length > 0);
+			Assert.IsTrue (sa.StartsWith ("<"));
+			Assert.IsTrue (sa.EndsWith (">"));
+			
+			System.Console.Out.WriteLine (sa);
+			
+			TextStyle b = new TextStyle ();
+			b.Parse (sa, System.Globalization.CultureInfo.InvariantCulture);
+			
+			Assert.IsNotNull (b);
+			Assert.AreEqual (a.Font, b.Font);
+			Assert.AreEqual (a.Size, b.Size);
+			
+			//	TODO : ajouter les autres propriétés ici...
+		}
 	}
 }
