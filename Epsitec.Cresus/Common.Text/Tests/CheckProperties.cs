@@ -15,6 +15,7 @@ namespace Epsitec.Common.Text.Tests
 			CheckProperties.TestMargins ();
 		}
 
+		
 		private static void TestFont()
 		{
 			Properties.FontProperty font_a = new Properties.FontProperty ("Futura", "Roman");
@@ -86,9 +87,10 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (margins_f.LeftMarginBody      == 10.0);
 			Debug.Assert.IsTrue (margins_f.RightMarginBody     == 10.0);
 			
-			Debug.Assert.IsTrue (margins_a.ToString () == "<NaN>/10/<NaN>/10");
-			Debug.Assert.IsTrue (margins_b.ToString () == "15/20/0/0");
+			Debug.Assert.IsTrue (margins_a.ToString () == "<NaN>/10/<NaN>/10/0/0/0");
+			Debug.Assert.IsTrue (margins_b.ToString () == "15/20/0/0/0/0/0");
 		}
+		
 		
 		private static void Ex1()
 		{
