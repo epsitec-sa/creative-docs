@@ -250,10 +250,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OpenCombo()
 		{
-			if ( this.scrollList != null )
-			{
-				return;
-			}
+			if ( this.scrollList != null )  return;
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			Drawing.Margins shadow = adorner.GeometryMenuShadow;
@@ -285,7 +282,7 @@ namespace Epsitec.Common.Widgets
 			}
 			pos = this.MapClientToScreen(new Drawing.Point(0, 0));
 			pos.X -= shadow.Left;
-			pos.Y -= this.scrollList.Height-shadow.Bottom;
+			pos.Y -= this.scrollList.Height+shadow.Bottom;
 			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width+shadow.Width, this.scrollList.Height+shadow.Height);
 			this.scrollList.Location = new Drawing.Point(shadow.Left, shadow.Bottom);
 			this.scrollList.SelectedIndexChanged += new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);

@@ -56,6 +56,18 @@ namespace Epsitec.Common.Widgets.Adorner
 							   GlyphShape type,
 							   PaintTextStyle style)
 		{
+			if ( rect.Width > rect.Height )
+			{
+				rect.Left += (rect.Width-rect.Height)/2;
+				rect.Width = rect.Height;
+			}
+
+			if ( rect.Height > rect.Width )
+			{
+				rect.Bottom += (rect.Height-rect.Width)/2;
+				rect.Height = rect.Width;
+			}
+
 			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 			{
 				rect.Offset(1, -1);
@@ -317,6 +329,9 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else if ( style == ButtonStyle.Scroller     ||
 					  style == ButtonStyle.Combo        ||
+					  style == ButtonStyle.ExListLeft   ||
+					  style == ButtonStyle.ExListMiddle ||
+					  style == ButtonStyle.ExListRight  ||
 					  style == ButtonStyle.UpDown       ||
 					  style == ButtonStyle.Icon         ||
 					  style == ButtonStyle.HeaderSlider )

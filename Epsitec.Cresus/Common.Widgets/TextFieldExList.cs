@@ -24,12 +24,12 @@ namespace Epsitec.Common.Widgets
 			
 			this.button_ok.Name        = "OK";
 			this.button_ok.GlyphShape  = GlyphShape.Validate;
-			this.button_ok.ButtonStyle = ButtonStyle.Combo;
+			this.button_ok.ButtonStyle = ButtonStyle.ExListMiddle;
 			this.button_ok.Clicked    += new MessageEventHandler(this.HandleButtonOkClicked);
 			
 			this.button_cancel.Name        = "Cancel";
 			this.button_cancel.GlyphShape  = GlyphShape.Cancel;
-			this.button_cancel.ButtonStyle = ButtonStyle.Combo;
+			this.button_cancel.ButtonStyle = ButtonStyle.ExListRight;
 			this.button_cancel.Clicked    += new MessageEventHandler(this.HandleButtonCancelClicked);
 			
 			this.IsReadOnly = true;
@@ -261,6 +261,7 @@ namespace Epsitec.Common.Widgets
 				
 				this.UpdateButtonGeometry ();
 				this.UpdateButtonEnable ();
+				this.UpdateTextLayout ();
 			}
 			
 			this.IsReadOnly = (this.mode == TextFieldExListMode.Combo);

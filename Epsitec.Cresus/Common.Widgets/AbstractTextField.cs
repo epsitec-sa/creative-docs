@@ -914,25 +914,32 @@ namespace Epsitec.Common.Widgets
 					// - Peint les rectangles de sélection
 					// - Peint tout le texte en mode sélectionné, avec clipping
 					
-					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state&~(WidgetState.Focused|WidgetState.Selected), PaintTextStyle.TextField, this.BackColor);
-					
 					TextLayout.SelectedArea[] areas = this.TextLayout.FindTextRange(pos, from, to);
-					
-					for ( int i=0 ; i<areas.Length ; i++ )
+					if ( areas.Length == 0 )
 					{
-						areas[i].Rect.Offset(0, -1);
-						graphics.Align(ref areas[i].Rect);
+						adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.BackColor);
+						visibleCursor = TextField.showCursor && this.Window.IsFocused;
 					}
-					adorner.PaintTextSelectionBackground(graphics, areas, state);
-					
-					Drawing.Rectangle[] rects = new Drawing.Rectangle[areas.Length];
-					for ( int i=0 ; i<areas.Length ; i++ )
+					else
 					{
-						rects[i] = this.MapClientToRoot(areas[i].Rect);
-					}
-					graphics.SetClippingRectangles(rects);
+						adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state&~(WidgetState.Focused|WidgetState.Selected), PaintTextStyle.TextField, this.BackColor);
+					
+						for ( int i=0 ; i<areas.Length ; i++ )
+						{
+							areas[i].Rect.Offset(0, -1);
+							graphics.Align(ref areas[i].Rect);
+						}
+						adorner.PaintTextSelectionBackground(graphics, areas, state);
+					
+						Drawing.Rectangle[] rects = new Drawing.Rectangle[areas.Length];
+						for ( int i=0 ; i<areas.Length ; i++ )
+						{
+							rects[i] = this.MapClientToRoot(areas[i].Rect);
+						}
+						graphics.SetClippingRectangles(rects);
 
-					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.BackColor);
+						adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.BackColor);
+					}
 				}
 				
 				if ( !this.navigator.IsReadOnly && visibleCursor )

@@ -60,6 +60,18 @@ namespace Epsitec.Common.Widgets.Adorner
 							   GlyphShape type,
 							   PaintTextStyle style)
 		{
+			if ( rect.Width > rect.Height )
+			{
+				rect.Left += (rect.Width-rect.Height)/2;
+				rect.Width = rect.Height;
+			}
+
+			if ( rect.Height > rect.Width )
+			{
+				rect.Bottom += (rect.Height-rect.Width)/2;
+				rect.Height = rect.Width;
+			}
+
 			double zoom = 1.0;
 			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 			{
@@ -136,12 +148,12 @@ namespace Epsitec.Common.Widgets.Adorner
 					break;
 
 				case GlyphShape.Validate:
-					path.MoveTo(center.X-rect.Width*0.30, center.Y+rect.Height*0.00);
-					path.LineTo(center.X-rect.Width*0.20, center.Y+rect.Height*0.10);
-					path.LineTo(center.X-rect.Width*0.10, center.Y-rect.Height*0.05);
-					path.LineTo(center.X+rect.Width*0.20, center.Y+rect.Height*0.30);
-					path.LineTo(center.X+rect.Width*0.30, center.Y+rect.Height*0.20);
-					path.LineTo(center.X-rect.Width*0.10, center.Y-rect.Height*0.30);
+					path.MoveTo(center.X-rect.Width*0.30*zoom, center.Y+rect.Height*0.00*zoom);
+					path.LineTo(center.X-rect.Width*0.20*zoom, center.Y+rect.Height*0.10*zoom);
+					path.LineTo(center.X-rect.Width*0.10*zoom, center.Y-rect.Height*0.05*zoom);
+					path.LineTo(center.X+rect.Width*0.20*zoom, center.Y+rect.Height*0.30*zoom);
+					path.LineTo(center.X+rect.Width*0.30*zoom, center.Y+rect.Height*0.20*zoom);
+					path.LineTo(center.X-rect.Width*0.10*zoom, center.Y-rect.Height*0.30*zoom);
 					break;
 			}
 			path.Close();
@@ -334,6 +346,9 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 			}
 			else if ( style == ButtonStyle.Combo        ||
+					  style == ButtonStyle.ExListLeft   ||
+					  style == ButtonStyle.ExListMiddle ||
+					  style == ButtonStyle.ExListRight  ||
 					  style == ButtonStyle.Icon         ||
 					  style == ButtonStyle.HeaderSlider )
 			{

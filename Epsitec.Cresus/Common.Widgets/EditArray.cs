@@ -408,7 +408,7 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintCellContents(int row_line, int column, Drawing.Graphics graphics, IAdorner adorner, Drawing.Point pos, WidgetState state, TextLayout layout)
 		{
 			if ((this.Columns[column].IsReadOnly) ||
-				(this.TextArrayStore.CheckEnabledCell (row_line, column) == false))
+				((this.TextArrayStore != null) && (this.TextArrayStore.CheckEnabledCell (row_line, column) == false)))
 			{
 				state &= ~ WidgetState.Enabled;
 			}
