@@ -22,11 +22,11 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assertion.AssertEquals (2, bundle.CountFields);
-			Assertion.AssertEquals ("a", names[0]);
-			Assertion.AssertEquals ("b", names[1]);
-			Assertion.AssertEquals ("test", bundle.Name);
-			Assertion.AssertEquals ("String", bundle.Type);
+			Assert.AreEqual (2, bundle.CountFields);
+			Assert.AreEqual ("a", names[0]);
+			Assert.AreEqual ("b", names[1]);
+			Assert.AreEqual ("test", bundle.Name);
+			Assert.AreEqual ("String", bundle.Type);
 		}
 		
 		[Test] public void CheckCompileRefBundle()
@@ -41,11 +41,11 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assertion.AssertEquals (2, bundle.CountFields);
-			Assertion.AssertEquals ("a", names[0]);
-			Assertion.AssertEquals ("b", names[1]);
-			Assertion.AssertEquals ("A", bundle["a"].AsString);
-			Assertion.Assert (bundle["b"].Data is ResourceBundle);
+			Assert.AreEqual (2, bundle.CountFields);
+			Assert.AreEqual ("a", names[0]);
+			Assert.AreEqual ("b", names[1]);
+			Assert.AreEqual ("A", bundle["a"].AsString);
+			Assert.IsTrue (bundle["b"].Data is ResourceBundle);
 		}
 		
 		[Test] public void CheckCompileSubBundle()
@@ -60,18 +60,18 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assertion.AssertEquals (2, bundle.CountFields);
-			Assertion.AssertEquals ("a", names[0]);
-			Assertion.AssertEquals ("b", names[1]);
-			Assertion.AssertEquals ("A0", bundle["a"].AsString);
+			Assert.AreEqual (2, bundle.CountFields);
+			Assert.AreEqual ("a", names[0]);
+			Assert.AreEqual ("b", names[1]);
+			Assert.AreEqual ("A0", bundle["a"].AsString);
 			
-			Assertion.Assert (bundle["b"].Data is ResourceBundle);
+			Assert.IsTrue (bundle["b"].Data is ResourceBundle);
 			
-			Assertion.AssertEquals (2, bundle["b"].AsBundle.CountFields);
-			Assertion.AssertEquals ("A1", bundle["b"].AsBundle["a"].AsString);
-			Assertion.AssertEquals ("B1", bundle["b"].AsBundle["b"].AsString);
-			Assertion.AssertEquals ("test", bundle.Name);
-			Assertion.AssertEquals ("test#b", bundle["b"].AsBundle.Name);
+			Assert.AreEqual (2, bundle["b"].AsBundle.CountFields);
+			Assert.AreEqual ("A1", bundle["b"].AsBundle["a"].AsString);
+			Assert.AreEqual ("B1", bundle["b"].AsBundle["b"].AsString);
+			Assert.AreEqual ("test", bundle.Name);
+			Assert.AreEqual ("test#b", bundle["b"].AsBundle.Name);
 		}
 		
 		[Test] public void CheckCompileCDATA()
@@ -84,9 +84,9 @@ namespace Epsitec.Common.Support
 			
 			string[] names = bundle.FieldNames;
 			
-			Assertion.AssertEquals (1, bundle.CountFields);
-			Assertion.AssertEquals ("text", names[0]);
-			Assertion.AssertEquals ("Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.", bundle["text"].AsString);
+			Assert.AreEqual (1, bundle.CountFields);
+			Assert.AreEqual ("text", names[0]);
+			Assert.AreEqual ("Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.", bundle["text"].AsString);
 		}
 		
 		[Test] public void CheckCompileEmbeddedXml()
@@ -99,9 +99,9 @@ namespace Epsitec.Common.Support
 			
 			string[] names = bundle.FieldNames;
 			
-			Assertion.AssertEquals (1, bundle.CountFields);
-			Assertion.AssertEquals ("text", names[0]);
-			Assertion.AssertEquals ("Small <b>text</b> to <i>check</i> if embedded &lt;xml&gt; works.", bundle["text"].AsString);
+			Assert.AreEqual (1, bundle.CountFields);
+			Assert.AreEqual ("text", names[0]);
+			Assert.AreEqual ("Small <b>text</b> to <i>check</i> if embedded &lt;xml&gt; works.", bundle["text"].AsString);
 		}
 		
 		[Test] public void CheckCompileEscapes()
@@ -114,9 +114,9 @@ namespace Epsitec.Common.Support
 			
 			string[] names = bundle.FieldNames;
 			
-			Assertion.AssertEquals (1, bundle.CountFields);
-			Assertion.AssertEquals ("text", names[0]);
-			Assertion.AssertEquals ("<&>", bundle["text"].AsString);
+			Assert.AreEqual (1, bundle.CountFields);
+			Assert.AreEqual ("text", names[0]);
+			Assert.AreEqual ("<&>", bundle["text"].AsString);
 		}
 		
 		[Test] public void CheckCompileAndMerge()
@@ -134,14 +134,14 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assertion.AssertEquals (3, bundle.CountFields);
-			Assertion.AssertEquals ("a", names[0]);
-			Assertion.AssertEquals ("b", names[1]);
-			Assertion.AssertEquals ("c", names[2]);
-			Assertion.AssertEquals ("X", bundle["a"].AsString);
-			Assertion.AssertEquals ("B", bundle["b"].AsString);
-			Assertion.AssertEquals ("C", bundle["c"].AsString);
-			Assertion.Assert (bundle["d"].IsEmpty);
+			Assert.AreEqual (3, bundle.CountFields);
+			Assert.AreEqual ("a", names[0]);
+			Assert.AreEqual ("b", names[1]);
+			Assert.AreEqual ("c", names[2]);
+			Assert.AreEqual ("X", bundle["a"].AsString);
+			Assert.AreEqual ("B", bundle["b"].AsString);
+			Assert.AreEqual ("C", bundle["c"].AsString);
+			Assert.IsTrue (bundle["d"].IsEmpty);
 		}
 		
 		[Test] public void CheckCompileAndNoMerge()
@@ -162,11 +162,11 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assertion.AssertEquals (4, bundle.CountFields);
-			Assertion.AssertEquals ("a", names[0]);
-			Assertion.AssertEquals ("a", names[1]);
-			Assertion.AssertEquals ("b", names[2]);
-			Assertion.AssertEquals ("c", names[3]);
+			Assert.AreEqual (4, bundle.CountFields);
+			Assert.AreEqual ("a", names[0]);
+			Assert.AreEqual ("a", names[1]);
+			Assert.AreEqual ("b", names[2]);
+			Assert.AreEqual ("c", names[3]);
 		}
 		
 		[Test] [ExpectedException (typeof (System.Xml.XmlException))] public void CheckCompileEx1()
@@ -208,12 +208,12 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assertion.AssertEquals (5, bundle.CountFields);
-			Assertion.AssertEquals ("a",      names[0]);
-			Assertion.AssertEquals ("class",  names[1]);
-			Assertion.AssertEquals ("Name",   names[2]);
-			Assertion.AssertEquals ("Size",   names[3]);
-			Assertion.AssertEquals ("Text",   names[4]);
+			Assert.AreEqual (5, bundle.CountFields);
+			Assert.AreEqual ("a",      names[0]);
+			Assert.AreEqual ("class",  names[1]);
+			Assert.AreEqual ("Name",   names[2]);
+			Assert.AreEqual ("Size",   names[3]);
+			Assert.AreEqual ("Text",   names[4]);
 		}
 		
 		[Test] public void CheckCompileRefLevel2()
@@ -228,10 +228,10 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assertion.AssertEquals (3, bundle.CountFields);
-			Assertion.AssertEquals ("a", names[0]);
-			Assertion.AssertEquals ("b", names[1]);
-			Assertion.AssertEquals ("c", names[2]);
+			Assert.AreEqual (3, bundle.CountFields);
+			Assert.AreEqual ("a", names[0]);
+			Assert.AreEqual ("b", names[1]);
+			Assert.AreEqual ("c", names[2]);
 			
 			System.Console.Out.WriteLine ("Referenced field 'b' contains '{0}'.", bundle["b"].AsString);
 			System.Console.Out.WriteLine ("Referenced field 'c' contains '{0}'.", bundle["c"].AsString);
@@ -249,10 +249,10 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assertion.AssertEquals (2, bundle.CountFields);
-			Assertion.AssertEquals ("a", names[0]);
-			Assertion.AssertEquals ("b", names[1]);
-			Assertion.AssertEquals ("Cancel", bundle["b"].AsString);
+			Assert.AreEqual (2, bundle.CountFields);
+			Assert.AreEqual ("a", names[0]);
+			Assert.AreEqual ("b", names[1]);
+			Assert.AreEqual ("Cancel", bundle["b"].AsString);
 		}
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx1()
@@ -359,7 +359,7 @@ namespace Epsitec.Common.Support
 			byte[] live_data = bundle.CreateXmlAsData ();
 			
 			ResourceBundleTest.XmlDumpIfDifferent (test_data, live_data, bundle);
-			Assertion.Assert ("Serialized data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
+			Assert.IsTrue (ResourceBundleTest.XmlTestEqual (test_data, live_data), "Serialized data not equal to source data");
 		}
 		
 		[Test] public void CheckCreateXmlNode2()
@@ -376,13 +376,13 @@ namespace Epsitec.Common.Support
 			
 			bundle.Compile (test_data);
 			
-			Assertion.AssertEquals ("\"test\"", bundle.Name);
-			Assertion.AssertEquals ("String", bundle.Type);
+			Assert.AreEqual ("\"test\"", bundle.Name);
+			Assert.AreEqual ("String", bundle.Type);
 			
 			byte[] live_data = bundle.CreateXmlAsData ();
 			
 			ResourceBundleTest.XmlDumpIfDifferent (test_data, live_data, bundle);
-			Assertion.Assert ("Serialized data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
+			Assert.IsTrue (ResourceBundleTest.XmlTestEqual (test_data, live_data), "Serialized data not equal to source data");
 			
 			System.Console.Out.WriteLine (bundle[0].Xml.InnerXml);
 		}
@@ -405,8 +405,8 @@ namespace Epsitec.Common.Support
 			
 			ResourceBundleTest.XmlDumpIfDifferent (test_data, live_data, bundle);
 			
-			Assertion.Assert ("Serialized data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
-			Assertion.Assert ("Field not recognized as <ref> tag.", bundle[0].IsRef);
+			Assert.IsTrue (ResourceBundleTest.XmlTestEqual (test_data, live_data), "Serialized data not equal to source data");
+			Assert.IsTrue (bundle[0].IsRef, "Field not recognized as <ref> tag.");
 			
 			System.Console.Out.WriteLine (bundle[0].Xml.OuterXml);
 		}
@@ -447,14 +447,14 @@ namespace Epsitec.Common.Support
 			byte[] live_data = bundle.CreateXmlAsData ();
 			
 			ResourceBundleTest.XmlDumpIfDifferent (test_data, live_data, bundle);
-			Assertion.Assert ("Serialized data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
+			Assert.IsTrue (ResourceBundleTest.XmlTestEqual (test_data, live_data), "Serialized data not equal to source data");
 			
 			bundle = ResourceBundle.Create ();
 			bundle.Compile (test_data);
 			
-			Assertion.AssertEquals ("A", bundle[0].AsString);
-			Assertion.AssertEquals ("<b>B  B</b>", bundle[1].AsString);
-			Assertion.AssertEquals ("Simple description...", bundle.About);
+			Assert.AreEqual ("A", bundle[0].AsString);
+			Assert.AreEqual ("<b>B  B</b>", bundle[1].AsString);
+			Assert.AreEqual ("Simple description...", bundle.About);
 		}
 		
 		[Test] public void CheckSortName()
@@ -463,13 +463,13 @@ namespace Epsitec.Common.Support
 			string x2 = ResourceBundle.CreateSortName ("abc",  5, 2);
 			string x3 = ResourceBundle.CreateSortName ("abc", 54, 2);
 			
-			Assertion.AssertEquals ("0/abc",  x1);
-			Assertion.AssertEquals ("05/abc", x2);
-			Assertion.AssertEquals ("54/abc", x3);
+			Assert.AreEqual ("0/abc",  x1);
+			Assert.AreEqual ("05/abc", x2);
+			Assert.AreEqual ("54/abc", x3);
 			
-			Assertion.AssertEquals ("abc", ResourceBundle.ExtractSortName (x1));
-			Assertion.AssertEquals ("abc", ResourceBundle.ExtractSortName (x2));
-			Assertion.AssertEquals ("abc", ResourceBundle.ExtractSortName (x3));
+			Assert.AreEqual ("abc", ResourceBundle.ExtractSortName (x1));
+			Assert.AreEqual ("abc", ResourceBundle.ExtractSortName (x2));
+			Assert.AreEqual ("abc", ResourceBundle.ExtractSortName (x3));
 		}
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckSortNameEx1()
