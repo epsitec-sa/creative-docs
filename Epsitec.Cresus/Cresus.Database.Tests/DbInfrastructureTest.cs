@@ -65,9 +65,9 @@ namespace Epsitec.Cresus.Database
 				Assertion.AssertNotNull (infrastructure);
 				
 				DbTable db_table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
-				DbType  db_type1 = infrastructure.ResolveDbType (null, "CR_Name");
-				DbType  db_type2 = infrastructure.ResolveDbType (null, "CR_Name");
-				DbType  db_type3 = infrastructure.ResolveDbType (null, "CR_KeyId");
+				DbType  db_type1 = infrastructure.ResolveDbType (null, "CR_NameType");
+				DbType  db_type2 = infrastructure.ResolveDbType (null, "CR_NameType");
+				DbType  db_type3 = infrastructure.ResolveDbType (null, "CR_KeyIdType");
 				
 				Assertion.AssertNotNull (db_table);
 				Assertion.AssertNotNull (db_type1);
