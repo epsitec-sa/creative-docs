@@ -1,5 +1,5 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Responsable: Denis DUMOULIN
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Denis DUMOULIN & Pierre ARNAUD
 
 namespace System
 {
@@ -245,7 +245,7 @@ namespace System
 		
 		public static string XmlBreakToText(string text)
 		{
-			return Utilities.XmlToText (text.Replace ("<br/>", "\n"));
+			return Utilities.XmlToText (text.Replace ("<br/>", "\n").Replace ("<tab/>", "\t"));
 		}
 		
 		

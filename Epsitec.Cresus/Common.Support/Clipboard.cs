@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
@@ -588,6 +588,9 @@ namespace Epsitec.Common.Support
 			
 			public void WriteText(string value)
 			{
+				value = value.Replace ("\r\n", "\n");
+				value = value.Replace ("\n", "\r\n");
+				
 				this.data.SetData ("UnicodeText", true, value);
 			}
 			
@@ -597,7 +600,7 @@ namespace Epsitec.Common.Support
 				//	version textuelle :
 				
 				string text = value.Replace ("<br />", "\r\n");
-				this.WriteText (System.Utilities.XmlToText (text));
+				this.WriteText (System.Utilities.XmlBreakToText (text));
 				
 				System.Text.StringBuilder html = new System.Text.StringBuilder ();
 				
