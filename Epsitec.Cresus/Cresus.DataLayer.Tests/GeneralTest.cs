@@ -9,10 +9,6 @@ namespace Epsitec.Cresus.DataLayer.Tests
 		{
 			DataRecord test = new DataField ();
 			
-			Assertion.AssertEquals (true,  test.IsField);
-			Assertion.AssertEquals (false, test.IsSet);
-			Assertion.AssertEquals (false, test.IsTable);
-			
 			Assertion.AssertNull (test.DataType);
 		}
 		
@@ -20,20 +16,12 @@ namespace Epsitec.Cresus.DataLayer.Tests
 		{
 			DataRecord test = new DataSet ("test");
 			
-			Assertion.AssertEquals (false, test.IsField);
-			Assertion.AssertEquals (true,  test.IsSet);
-			Assertion.AssertEquals (false, test.IsTable);
-			
 			Assertion.AssertNotNull (test.DataType);
 		}
 		
 		[Test] public void CheckDataTable()
 		{
 			DataRecord test = new DataTable ();
-			
-			Assertion.AssertEquals (false, test.IsField);
-			Assertion.AssertEquals (false, test.IsSet);
-			Assertion.AssertEquals (true,  test.IsTable);
 			
 			Assertion.AssertNotNull (test.DataType);
 		}
@@ -141,13 +129,13 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			Assertion.AssertNotNull (test.FindRecord ("b"));
 			Assertion.AssertNotNull (test.FindRecord ("c"));
 			
-			Assertion.Assert (test.FindRecord ("a").IsField);
-			Assertion.Assert (test.FindRecord ("b").IsField);
-			Assertion.Assert (test.FindRecord ("c").IsField);
+			Assertion.Assert (test.FindRecord ("a") is DataField);
+			Assertion.Assert (test.FindRecord ("b") is DataField);
+			Assertion.Assert (test.FindRecord ("c") is DataField);
 			
-			Assertion.AssertEquals (DataState.Added, test.FindRecord ("a").DataState);
-			Assertion.AssertEquals (DataState.Added, test.FindRecord ("b").DataState);
-			Assertion.AssertEquals (DataState.Added, test.FindRecord ("c").DataState);
+			Assertion.AssertEquals (DataState.Added, test.FindRecord ("a").State);
+			Assertion.AssertEquals (DataState.Added, test.FindRecord ("b").State);
+			Assertion.AssertEquals (DataState.Added, test.FindRecord ("c").State);
 			
 			test.RemoveData ("b");
 			test.RemoveData ("c");
@@ -157,8 +145,8 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			Assertion.AssertNotNull (test.FindRecord ("b"));
 			Assertion.AssertNull (test.FindRecord ("c"));
 			
-			Assertion.AssertEquals (DataState.Added,   test.FindRecord ("b").DataState);
-			Assertion.AssertEquals (DataState.Invalid, test.FindRecord ("c", DataVersion.ActiveOrDead).DataState);
+			Assertion.AssertEquals (DataState.Added,   test.FindRecord ("b").State);
+			Assertion.AssertEquals (DataState.Invalid, test.FindRecord ("c", DataVersion.ActiveOrDead).State);
 		}
 		
 		[Test] public void CheckValidateSet()
@@ -175,13 +163,13 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			Assertion.AssertNotNull (test.FindRecord ("b"));
 			Assertion.AssertNotNull (test.FindRecord ("c"));
 			
-			Assertion.Assert (test.FindRecord ("a").IsField);
-			Assertion.Assert (test.FindRecord ("b").IsField);
-			Assertion.Assert (test.FindRecord ("c").IsField);
+			Assertion.Assert (test.FindRecord ("a") is DataField);
+			Assertion.Assert (test.FindRecord ("b") is DataField);
+			Assertion.Assert (test.FindRecord ("c") is DataField);
 			
-			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("a").DataState);
-			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("b").DataState);
-			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("c").DataState);
+			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("a").State);
+			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("b").State);
+			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("c").State);
 			
 			test.RemoveData ("b");
 			test.RemoveData ("c");
@@ -193,15 +181,15 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			Assertion.AssertNull (test.FindRecord ("c"));
 			Assertion.AssertNotNull (test.FindRecord ("d"));
 			
-			Assertion.AssertEquals (DataState.Modified, test.FindRecord ("b").DataState);
-			Assertion.AssertEquals (DataState.Removed,  test.FindRecord ("c", DataVersion.ActiveOrDead).DataState);
-			Assertion.AssertEquals (DataState.Added,    test.FindRecord ("d").DataState);
+			Assertion.AssertEquals (DataState.Modified, test.FindRecord ("b").State);
+			Assertion.AssertEquals (DataState.Removed,  test.FindRecord ("c", DataVersion.ActiveOrDead).State);
+			Assertion.AssertEquals (DataState.Added,    test.FindRecord ("d").State);
 			
 			test.ValidateChanges ();
 			
-			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("a").DataState);
-			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("b").DataState);
-			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("d").DataState);
+			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("a").State);
+			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("b").State);
+			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("d").State);
 			Assertion.AssertNull (test.FindRecord ("c", DataVersion.ActiveOrDead));
 		}
 		
@@ -218,20 +206,20 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			test.UpdateData ("a", 2);
 			test.UpdateData ("b", "bye");
 			
-			Assertion.AssertEquals (DataState.Modified, test.FindRecord ("a").DataState);
-			Assertion.AssertEquals (DataState.Modified, test.FindRecord ("b").DataState);
+			Assertion.AssertEquals (DataState.Modified, test.FindRecord ("a").State);
+			Assertion.AssertEquals (DataState.Modified, test.FindRecord ("b").State);
 			Assertion.AssertEquals (2,     test.GetData ("a"));
 			Assertion.AssertEquals ("bye", test.GetData ("b"));
 			
 			test.ResetData ("b");
-			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("b").DataState);
+			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("b").State);
 			Assertion.AssertEquals ("hello", test.GetData ("b"));
 			
 			test.RemoveData ("b");
-			Assertion.AssertEquals (DataState.Removed, test.FindRecord ("b", DataVersion.ActiveOrDead).DataState);
+			Assertion.AssertEquals (DataState.Removed, test.FindRecord ("b", DataVersion.ActiveOrDead).State);
 			
 			test.ResetData ("b");
-			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("b").DataState);
+			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("b").State);
 			Assertion.AssertEquals ("hello", test.GetData ("b"));
 		}
 		
