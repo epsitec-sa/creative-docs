@@ -135,5 +135,29 @@ namespace Epsitec.Common.Drawing
 			Assertion.AssertEquals (210, bounds.Right);
 			Assertion.AssertEquals (210, bounds.Top);
 		}
+		
+		[Test] public void CheckSystemInterop()
+		{
+			System.Windows.Forms.Form form = new System.Windows.Forms.Form ();
+			form.Paint += new System.Windows.Forms.PaintEventHandler(this.HandleFormPaint);
+			form.Width  = 400;
+			form.Height = 200;
+			form.Text   = "CheckSystemInterop";
+			form.Show ();
+		}
+
+		private void HandleFormPaint(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			Font font = Font.GetFont ("Times New Roman", "Italic");
+			Path path = new Path ();
+			
+			path.Append (font, font.GetGlyphIndex ('f'),   0, 30, 120.0);
+			path.Append (font, font.GetGlyphIndex ('j'),  80, 30, 120.0);
+			path.Append (font, font.GetGlyphIndex ('@'), 160, 30, 120.0);
+			
+			System.Drawing.Drawing2D.GraphicsPath os_path = path.CreateSystemPath ();
+			
+			e.Graphics.DrawPath (System.Drawing.Pens.Black, os_path);
+		}
 	}
 }
