@@ -185,8 +185,6 @@ namespace Epsitec.Common.Widgets.Design
 			graphics.SetClippingRectangle (this.target_clip);
 			graphics.AddRectangle (Drawing.Rectangle.Inflate (this.target_bounds, -0.5, -0.5));
 			graphics.RenderSolid (Drawing.Color.FromRGB (1.0, 0.0, 0.0));
-//			graphics.AddFilledRectangle (this.target_clip);
-//			graphics.RenderSolid (Drawing.Color.FromARGB (0.3, 1.0, 1.0, 0.0));
 		}
 		
 		private void HandleTargetLayoutChanged(object sender)
