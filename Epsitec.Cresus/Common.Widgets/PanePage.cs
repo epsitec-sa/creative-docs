@@ -227,19 +227,19 @@ namespace Epsitec.Common.Widgets
 				if ( this.rank != value )
 				{
 					this.rank = value;
-					this.OnRankChanged(System.EventArgs.Empty);
+					this.OnRankChanged();
 				}
 			}
 		}
 
 		
-		public event System.EventHandler		RankChanged;
+		public event Support.EventHandler		RankChanged;
 		
-		protected virtual void OnRankChanged(System.EventArgs e)
+		protected virtual void OnRankChanged()
 		{
 			if ( this.RankChanged != null )
 			{
-				this.RankChanged(this, e);
+				this.RankChanged(this);
 			}
 		}
 		

@@ -712,7 +712,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected virtual void HandlePageRankChanged(object sender, System.EventArgs e)
+		protected virtual void HandlePageRankChanged(object sender)
 		{
 		}
 		
@@ -801,7 +801,7 @@ namespace Epsitec.Common.Widgets
 			item.PaneButton.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);
 			item.PaneButton.DragMoved   += new MessageEventHandler(this.HandleSliderDragMoved);
 			item.PaneButton.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
-			item.RankChanged += new System.EventHandler(this.HandlePageRankChanged);
+			item.RankChanged += new Support.EventHandler(this.HandlePageRankChanged);
 			
 			item.GlyphButton.Parent = this;
 			item.GlyphButton.Clicked += new MessageEventHandler(this.HandleGlyphButtonClicked);
@@ -816,7 +816,7 @@ namespace Epsitec.Common.Widgets
 			item.PaneButton.DragStarted -= new MessageEventHandler(this.HandleSliderDragStarted);
 			item.PaneButton.DragMoved   -= new MessageEventHandler(this.HandleSliderDragMoved);
 			item.PaneButton.DragEnded   -= new MessageEventHandler(this.HandleSliderDragEnded);
-			item.RankChanged -= new System.EventHandler(this.HandlePageRankChanged);
+			item.RankChanged -= new Support.EventHandler(this.HandlePageRankChanged);
 
 			item.GlyphButton.Clicked -= new MessageEventHandler(this.HandleGlyphButtonClicked);
 
