@@ -823,6 +823,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 		#region IWidgetCollectionHost Members
+		Helpers.WidgetCollection Helpers.IWidgetCollectionHost.GetWidgetCollection()
+		{
+			return this.Items;
+		}
+		
 		public void NotifyInsertion(Widget widget)
 		{
 			MenuItem item = widget as MenuItem;

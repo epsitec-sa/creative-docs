@@ -35,16 +35,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		// Retourne la hauteur standard d'un bouton.
-		public override double DefaultHeight
+		public override double			DefaultHeight
 		{
+			// Retourne la hauteur standard d'un bouton.
 			get
 			{
 				return this.DefaultFontHeight+10;
 			}
 		}
 
-		public ButtonStyle ButtonStyle
+		public ButtonStyle				ButtonStyle
 		{
 			get
 			{
@@ -61,9 +61,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Dessine le bouton.
+		public override Drawing.Point	BaseLine
+		{
+			get
+			{
+				if (this.TextLayout != null)
+				{
+					return this.TextLayout.GetLineOrigin (0);
+				}
+				
+				return base.BaseLine;
+			}
+		}
+		
+		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			// Dessine le bouton.
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
