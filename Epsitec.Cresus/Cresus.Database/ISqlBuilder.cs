@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 27/11/2003
 
 namespace Epsitec.Cresus.Database
@@ -40,17 +40,17 @@ namespace Epsitec.Cresus.Database
 		//	Création de requêtes standard :
 		
 		void SelectData(SqlSelect query);
-		void InsertData(string table_name, SqlFieldCollection fields);
-		void UpdateData(string table_name, SqlFieldCollection fields, SqlFieldCollection conditions);
-		void RemoveData(string table_name, SqlFieldCollection conditions);
+		void InsertData(string table_name, Collections.SqlFields fields);
+		void UpdateData(string table_name, Collections.SqlFields fields, Collections.SqlFields conditions);
+		void RemoveData(string table_name, Collections.SqlFields conditions);
 		
 		//	Création d'une requête d'exécution de procédure SQL :
 		
-		void ExecuteProcedure(string procedure_name, SqlFieldCollection fields);
+		void ExecuteProcedure(string procedure_name, Collections.SqlFields fields);
 		
 		//	Manipule les paramètres d'un appel de procédure SQL :
 		
-		void SetSqlParameters(System.Data.IDbCommand command, SqlFieldCollection fields);
-		void GetSqlParameters(System.Data.IDbCommand command, SqlFieldCollection fields);
+		void SetSqlParameters(System.Data.IDbCommand command, Collections.SqlFields fields);
+		void GetSqlParameters(System.Data.IDbCommand command, Collections.SqlFields fields);
 	}
 }
