@@ -26,9 +26,9 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		public System.Data.DataRow AddRequest(Requests.AbstractRequest request)
+		public System.Data.DataRow AddRequest(AbstractRequest request)
 		{
-			byte[] buffer = Requests.AbstractRequest.SerializeToMemory (request);
+			byte[] buffer = AbstractRequest.SerializeToMemory (request);
 			int    length = buffer.Length;
 			
 			System.Diagnostics.Debug.Assert (length > 0);
@@ -45,12 +45,12 @@ namespace Epsitec.Cresus.Requests
 			return row;
 		}
 		
-		public Requests.AbstractRequest GetRequest(System.Data.DataRow row)
+		public AbstractRequest GetRequest(System.Data.DataRow row)
 		{
 			if (row != null)
 			{
 				byte[] buffer = row[Tags.ColumnReqData] as byte[];
-				return Requests.AbstractRequest.DeserializeFromMemory (buffer);
+				return AbstractRequest.DeserializeFromMemory (buffer);
 			}
 			
 			return null;

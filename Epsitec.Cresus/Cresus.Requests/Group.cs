@@ -17,13 +17,13 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 
-		public Requests.AbstractRequest			this[int index]
+		public AbstractRequest					this[int index]
 		{
 			get
 			{
 				if (this.Count > 0)
 				{
-					return this.requests[index] as Requests.AbstractRequest;
+					return this.requests[index] as AbstractRequest;
 				}
 				
 				throw new System.IndexOutOfRangeException ("Index invalid.");
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		public void Add(Requests.AbstractRequest request)
+		public void Add(AbstractRequest request)
 		{
 			if (request == null)
 			{

@@ -155,10 +155,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Requests", "Cresus.R
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.DynamicData", "Common.DynamicData\Common.DynamicData.csproj", "{380B6C79-26C5-4274-8F40-BA21DEE4354F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
-	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
-		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
-	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
 		Release = Release
@@ -318,6 +319,10 @@ Global
 		{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}.Debug.Build.0 = Debug|.NET
 		{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}.Release.ActiveCfg = Release|.NET
 		{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}.Release.Build.0 = Release|.NET
+		{380B6C79-26C5-4274-8F40-BA21DEE4354F}.Debug.ActiveCfg = Debug|.NET
+		{380B6C79-26C5-4274-8F40-BA21DEE4354F}.Debug.Build.0 = Debug|.NET
+		{380B6C79-26C5-4274-8F40-BA21DEE4354F}.Release.ActiveCfg = Release|.NET
+		{380B6C79-26C5-4274-8F40-BA21DEE4354F}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info
@@ -341,5 +346,8 @@ Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
 	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
+		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
 	EndGlobalSection
 EndGlobal
