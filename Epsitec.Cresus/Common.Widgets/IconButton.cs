@@ -33,6 +33,21 @@ namespace Epsitec.Common.Widgets
 			this.Name = name;
 		}
 		
+		public static IconButton CreateSimple(string command, string icon)
+		{
+			IconButton button = new IconButton (command, icon);
+			
+			return button;
+		}
+		
+		public static IconButton CreateToggle(string command, string icon)
+		{
+			IconButton button = new IconButton (command, icon);
+			
+			button.InternalState |= InternalState.AutoToggle;
+			
+			return button;
+		}
 		
 		public override double DefaultWidth
 		{
