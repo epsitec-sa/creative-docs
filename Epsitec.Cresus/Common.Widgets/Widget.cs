@@ -97,8 +97,6 @@ namespace Epsitec.Common.Widgets
 		Left				= 3,				//	colle à gauche
 		Right				= 4,				//	colle à droite
 		Fill				= 5,				//	remplit tout
-		
-//		Layout				= 6,				//	utilise un Layout Manager externe
 	}
 	#endregion
 	
@@ -577,16 +575,6 @@ namespace Epsitec.Common.Widgets
 			get { return this.layout_info; }
 		}
 		
-		public int									LayoutArg1
-		{
-			get { return this.layout_arg1; }
-		}
-		
-		public int									LayoutArg2
-		{
-			get { return this.layout_arg2; }
-		}
-		
 		
 		public MouseCursor							MouseCursor
 		{
@@ -858,7 +846,10 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Point				BaseLine
 		{
-			get { return Drawing.Point.Empty; }
+			get
+			{
+				return Drawing.Point.Empty;
+			}
 		}
 		
 		
@@ -2165,18 +2156,6 @@ namespace Epsitec.Common.Widgets
 					this.OnDisengaged ();
 				}
 			}
-		}
-		
-		public virtual void SetLayoutArgs(int arg1, int arg2)
-		{
-			this.layout_arg1 = (byte) arg1;
-			this.layout_arg2 = (byte) arg2;
-		}
-		
-		public virtual void GetLayoutArgs(out int arg1, out int arg2)
-		{
-			arg1 = this.layout_arg1;
-			arg2 = this.layout_arg2;
 		}
 		
 		public virtual void SetEventPropagation(Propagate events, bool on, Setting setting)
@@ -5968,11 +5947,8 @@ namespace Epsitec.Common.Widgets
 		
 		
 		private LayoutStyles					layout;
-		
-//		private AnchorStyles					anchor;
+		private Layouts.LayoutInfo				layout_info;
 		private Drawing.Margins					anchor_margins;
-		
-//		private DockStyle						dock;
 		private Drawing.Margins					dock_padding;
 		private Drawing.Margins					dock_margins;
 		
@@ -5980,10 +5956,6 @@ namespace Epsitec.Common.Widgets
 		
 		private InternalState					internal_state;
 		private WidgetState						widget_state;
-		
-		private Layouts.LayoutInfo				layout_info;
-		private byte							layout_arg1;
-		private byte							layout_arg2;
 		
 		private Propagate						propagate;
 		

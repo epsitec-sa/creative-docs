@@ -3,9 +3,10 @@
 
 namespace Epsitec.Cresus.Database
 {
-	using Tags = Epsitec.Common.Support.Tags;
-	using ResourceLevel = Epsitec.Common.Support.ResourceLevel;
-	using Converter = Epsitec.Common.Converters.Converter;
+	using Tags				= Epsitec.Common.Support.Tags;
+	using ResourceLevel		= Epsitec.Common.Support.ResourceLevel;
+	using Converter			= Epsitec.Common.Converters.Converter;
+	using IComparer			= System.Collections.IComparer;
 	
 	/// <summary>
 	/// La classe DbEnumValue représente exactement une valeur d'une énumération,
@@ -34,27 +35,27 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public string						Name
+		public string							Name
 		{
 			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
 		}
 		
-		public string						Caption
+		public string							Caption
 		{
 			get { return this.Attributes[Tags.Caption]; }
 		}
 		
-		public string						Description
+		public string							Description
 		{
 			get { return this.Attributes[Tags.Description]; }
 		}
 		
-		public int							Rank
+		public int								Rank
 		{
 			get { return this.rank; }
 		}
 		
-		public DbKey						InternalKey
+		public DbKey							InternalKey
 		{
 			get { return this.internal_key; }
 		}
@@ -210,15 +211,15 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion
 		
-		public static System.Collections.IComparer	NameComparer
+		public static IComparer					NameComparer
 		{
 			get
 			{
-				return new ComparerClass (Tags.Name);
+				return new NameComparerClass (Tags.Name);
 			}
 		}
 		
-		public static System.Collections.IComparer	RankComparer
+		public static IComparer					RankComparer
 		{
 			get
 			{
@@ -227,12 +228,14 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		private class ComparerClass : System.Collections.IComparer
+		#region NameComparerClass class
+		private class NameComparerClass : System.Collections.IComparer
 		{
-			public ComparerClass(string tag)
+			public NameComparerClass(string tag)
 			{
 				this.tag = tag;
 			}
+			
 			
 			#region IComparer Members
 			public int Compare(object x, object y)
@@ -260,8 +263,9 @@ namespace Epsitec.Cresus.Database
 			
 			private string					tag;
 		}
+		#endregion
 		
-		
+		#region RankComparerClass
 		private class RankComparerClass : System.Collections.IComparer
 		{
 			#region IComparer Members
@@ -291,11 +295,10 @@ namespace Epsitec.Cresus.Database
 			}
 			#endregion
 		}
+		#endregion
 		
-		
-		
-		protected DbAttributes				attributes = new DbAttributes ();
-		protected int						rank = -2;
-		protected DbKey						internal_key = null;
+		protected DbAttributes					attributes = new DbAttributes ();
+		protected int							rank = -2;
+		protected DbKey							internal_key = null;
 	}
 }
