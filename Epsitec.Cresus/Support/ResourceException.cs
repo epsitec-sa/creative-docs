@@ -1,4 +1,7 @@
-namespace Epsitec.Cresus.Support
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 09/10/2003
+
+namespace Epsitec.Common.Support
 {
 	/// <summary>
 	/// L'exception ResourceException est levée lorsqu'un problème survient avec

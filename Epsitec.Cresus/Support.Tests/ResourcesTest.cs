@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace Epsitec.Cresus.Support.Tests
+namespace Epsitec.Common.Support.Tests
 {
 	[TestFixture]
 	public class ResourcesTest
