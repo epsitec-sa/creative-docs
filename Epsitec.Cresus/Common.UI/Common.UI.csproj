@@ -173,6 +173,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Adapters\Num1Adapter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Adapters\Num2Adapter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -254,6 +259,11 @@
                 />
                 <File
                     RelPath = "Controllers\LayoutController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Controllers\Num1Controller.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
