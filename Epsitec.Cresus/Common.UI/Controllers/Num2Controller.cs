@@ -30,11 +30,13 @@ namespace Epsitec.Common.UI.Controllers
 			
 			double y = System.Math.Floor ((h_pane - h_line) / 2);
 			
-			this.caption_label.Bounds = new Drawing.Rectangle (0, y, 80, h_line);
-			this.caption_label.Anchor = AnchorStyles.TopLeft;
+			this.caption_label.Size          = new Drawing.Size (80, h_line);
+			this.caption_label.Anchor        = AnchorStyles.TopLeft;
+			this.caption_label.AnchorMargins = new Drawing.Margins (0, 0, h_pane - y - h_line, 0);
 			
-			this.container.Bounds = new Drawing.Rectangle (this.caption_label.Right, y, panel.Width - this.caption_label.Width, h_line);
+			this.container.Height = h_line;
 			this.container.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.container.AnchorMargins = new Drawing.Margins (this.caption_label.Right, 0, h_pane - y - h_line, 0);
 			this.container.PreferHorizontalDockLayout = true;
 			
 			this.text_field_1.Dock        = DockStyle.Fill;
