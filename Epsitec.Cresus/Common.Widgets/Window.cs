@@ -426,6 +426,20 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public bool								IsVisible
+		{
+			get
+			{
+				if ((this.window != null) &&
+					(this.window.Visible))
+				{
+					return true;
+				}
+				
+				return false;
+			}
+		}
+		
 		public bool								IsActive
 		{
 			get
