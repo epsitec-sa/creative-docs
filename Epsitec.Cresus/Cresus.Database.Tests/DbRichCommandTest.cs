@@ -23,8 +23,7 @@ namespace Epsitec.Cresus.Database
 			db_table_a.Columns.Add (new DbColumn ("Nom",      db_type_name, DbColumnClass.Data, DbElementCat.UserDataManaged));
 			db_table_a.Columns.Add (new DbColumn ("Prenom",   db_type_name, DbColumnClass.Data, DbElementCat.UserDataManaged));
 			
-			db_table_b.Columns.Add (new DbColumn ("Personne", db_type_id,   DbColumnClass.RefTupleId, DbElementCat.UserDataManaged));
-			db_table_b.Columns.Add (new DbColumn ("Personne", db_type_rev,  DbColumnClass.RefTupleRevision, DbElementCat.UserDataManaged));
+			db_table_b.Columns.AddRange (infrastructure.CreateRefColumns ("Personne", "Personnes", DbKeyMatchMode.ExactIdRevision));
 			db_table_b.Columns.Add (new DbColumn ("Ville",    db_type_name, DbColumnClass.Data, DbElementCat.UserDataManaged));
 			
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_a.Name, db_table_a.Columns.Count);

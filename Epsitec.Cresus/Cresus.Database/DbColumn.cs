@@ -116,7 +116,15 @@ namespace Epsitec.Cresus.Database
 
 		public static DbColumn NewRefColumn(string column_name, string target_table_name, DbColumnClass column_class, DbType type)
 		{
-			return null;
+			System.Diagnostics.Debug.Assert (type != null);
+			
+			DbColumn column = new DbColumn (column_name, type);
+			
+			column.DefineColumnClass (column_class);
+			column.DefineCategory (DbElementCat.UserDataManaged);
+			column.Attributes.SetAttribute (Tags.Target, target_table_name);
+			
+			return column;
 		}
 		
 		public static string ConvertColumnToXml(DbColumn column)
@@ -292,6 +300,11 @@ namespace Epsitec.Cresus.Database
 		public string					Description
 		{
 			get { return this.Attributes[Tags.Description]; }
+		}
+		
+		public string					TargetTableName
+		{
+			get { return this.Attributes[Tags.Target]; }
 		}
 		
 		public DbType					Type

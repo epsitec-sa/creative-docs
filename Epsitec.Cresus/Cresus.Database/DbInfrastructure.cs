@@ -304,19 +304,19 @@ namespace Epsitec.Cresus.Database
 				case DbKeyMatchMode.SimpleId:
 					type_id = this.internal_types[DbType.TagKeyId];
 					
-					return new DbColumn[] { DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefSimpleId, type_id) };
+					return new DbColumn[] { DbColumn.NewRefColumn (column_name, target_table_name, DbColumnClass.RefSimpleId, type_id) };
 				
 				case DbKeyMatchMode.LiveId:
 					type_id = this.internal_types[DbType.TagKeyId];
 					
-					return new DbColumn[] { DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefLiveId, type_id) };
+					return new DbColumn[] { DbColumn.NewRefColumn (column_name, target_table_name, DbColumnClass.RefLiveId, type_id) };
 				
 				case DbKeyMatchMode.ExactIdRevision:
 					type_id  = this.internal_types[DbType.TagKeyId];
 					type_rev = this.internal_types[DbType.TagKeyRevision];
 					
-					return new DbColumn[] { DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefTupleId, type_id),
-											DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefTupleRevision, type_rev) };
+					return new DbColumn[] { DbColumn.NewRefColumn (column_name, target_table_name, DbColumnClass.RefTupleId, type_id),
+						/**/				DbColumn.NewRefColumn (column_name, target_table_name, DbColumnClass.RefTupleRevision, type_rev) };
 			}
 			
 			return null;
