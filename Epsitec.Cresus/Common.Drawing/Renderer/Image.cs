@@ -61,8 +61,8 @@ namespace Epsitec.Common.Drawing.Renderer
 					
 					if (this.bitmap != null)
 					{
-						int width  = this.bitmap.Width;
-						int height = this.bitmap.Height;
+						int width  = this.bitmap.PixelWidth;
+						int height = this.bitmap.PixelHeight;
 						
 						this.bitmap.LockBits ();
 						this.AssertAttached ();

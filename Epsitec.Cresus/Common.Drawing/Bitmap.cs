@@ -28,6 +28,15 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public int						PixelWidth
+		{
+			get { return this.bitmap.Width; }
+		}
+		public int						PixelHeight
+		{
+			get { return this.bitmap.Height; }
+		}
+		
 		public bool LockBits()
 		{
 			lock (this)

@@ -310,8 +310,8 @@ namespace Epsitec.Common.Widgets
 				if ( block.image )
 				{
 					Drawing.Image image = this.imageProvider.GetImage(block.text);
-					int dx = image.Width;
-					int dy = image.Height;
+					double dx = image.Width;
+					double dy = image.Height;
 					double ix = pos.X+block.pos.X;
 					double iy = pos.Y+block.pos.Y+block.imageDescender;
 					graphics.Align (ref ix, ref iy);
@@ -1377,8 +1377,8 @@ namespace Epsitec.Common.Widgets
 							{
 								string imageName = "file:" + parameters["src"] as string;
 								Drawing.Image image = this.imageProvider.GetImage(imageName);
-								int dx = image.Width;
-								int dy = image.Height;
+								double dx = image.Width;
+								double dy = image.Height;
 
 								if ( dx > restWidth )
 								{

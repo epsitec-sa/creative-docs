@@ -17,14 +17,14 @@ namespace Epsitec.Common.Drawing
 			get { return this.size; }
 		}
 		
-		public int						Width
+		public double					Width
 		{
-			get { return (int) this.size.Width; }
+			get { return this.size.Width; }
 		}
 		
-		public int						Height
+		public double					Height
 		{
-			get { return (int) this.size.Height; }
+			get { return this.size.Height; }
 		}
 		
 		public Point					Origin			//	0 < origin < size: l'origine est dans l'image

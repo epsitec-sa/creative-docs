@@ -14,6 +14,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.graphics = Epsitec.Common.Drawing.GraphicsFactory.NewGraphics ();
 			this.root     = new WindowRoot (this);
+			this.root.MinSizeChanged += new EventHandler (RootMinSizeChanged);
 			
 			this.root.Size = new Drawing.Size (this.ClientSize);
 			this.root.Name = "Root";
@@ -858,6 +859,19 @@ namespace Epsitec.Common.Widgets
 			return (child == null) ? this.root : child;
 		}
 
+		
+		protected virtual void RootMinSizeChanged(object sender)
+		{
+			int width  = (int) (this.root.MinSize.Width + 0.5);
+			int height = (int) (this.root.MinSize.Height + 0.5);
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Minimum Window Size : {0} x {1}", width, height));
+			
+			width  += this.Size.Width  - this.ClientSize.Width;
+			height += this.Size.Height - this.ClientSize.Height;
+			
+			this.MinimumSize = new System.Drawing.Size (width, height);
+		}
 		
 		public static double					InitialKeyboardDelay
 		{

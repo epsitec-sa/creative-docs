@@ -63,6 +63,9 @@ namespace Epsitec.Common.Widgets
 			
 			this.backColor = Drawing.Color.FromName ("Control");
 			this.foreColor = Drawing.Color.FromName ("ControlText");
+			
+			this.minSize = this.DefaultMinSize;
+			this.maxSize = this.DefaultMaxSize;
 		}
 		
 		public void Dispose()
@@ -208,6 +211,38 @@ namespace Epsitec.Common.Widgets
 			get { return this.clientInfo; }
 		}
 		
+		public virtual Drawing.Size			MinSize
+		{
+			get
+			{
+				return this.minSize;
+			}
+			set
+			{
+				if (this.minSize != value)
+				{
+					this.minSize = value;
+					this.OnMinSizeChanged ();
+				}
+			}
+		}
+		
+		public virtual Drawing.Size			MaxSize
+		{
+			get
+			{
+				return this.maxSize;
+			}
+			set
+			{
+				if (this.maxSize != value)
+				{
+					this.maxSize = value;
+					this.OnMaxSizeChanged ();
+				}
+			}
+		}
+		
 		
 		public void SuspendLayout()
 		{
@@ -304,6 +339,16 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return this.defaultFontHeight; }
 		}
+		public virtual Drawing.Size			DefaultMinSize
+		{
+			get { return new Drawing.Size (4, 4); }
+		}
+		
+		public virtual Drawing.Size			DefaultMaxSize
+		{
+			get { return new Drawing.Size (1000000, 1000000); }
+		}
+		
 #if false
 		public bool							CausesValidation
 		{
@@ -882,6 +927,8 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler			StillEngaged;
 		public event EventHandler			Disengaged;
 		public event EventHandler			ActiveStateChanged;
+		public event EventHandler			MinSizeChanged;
+		public event EventHandler			MaxSizeChanged;
 		
 		
 		//	Cursor
@@ -1079,6 +1126,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public virtual void SetAutoMinMax(bool automatic)
+		{
+			if (automatic)
+			{
+				this.internalState |= InternalState.AutoMinMax;
+				this.UpdateMinMaxBasedOnDockedChildren ();
+			}
+			else
+			{
+				this.internalState &= ~ InternalState.AutoMinMax;
+			}
+		}
+		
 		internal virtual void FireStillEngaged()
 		{
 			if (this.IsEngaged)
@@ -1101,6 +1161,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.OnClicked (null);
 		}
+		
 		
 		protected void SetEntered(bool entered)
 		{
@@ -1133,6 +1194,7 @@ namespace Epsitec.Common.Widgets
 				this.Invalidate ();
 			}
 		}
+		
 		
 		public static void UpdateEntered(Message message)
 		{
@@ -1351,6 +1413,61 @@ namespace Epsitec.Common.Widgets
 			return rect;
 		}
 
+		
+		public virtual Drawing.Size MapParentToClient(Drawing.Size size)
+		{
+			Drawing.Size result = new Drawing.Size ();
+			
+			double z = this.clientInfo.zoom;
+			
+			switch (this.clientInfo.angle)
+			{
+				case 0:
+				case 180:
+					result.Width  = size.Width / z;
+					result.Height = size.Height / z;
+					break;
+				
+				case 90:
+				case 270:
+					result.Width  = size.Height / z;
+					result.Height = size.Width / z;
+					break;
+				
+				default:
+					throw new System.ArgumentOutOfRangeException ("Invalid angle");
+			}
+			
+			return result;
+		}
+		
+		public virtual Drawing.Size MapClientToParent(Drawing.Size size)
+		{
+			Drawing.Size result = new Drawing.Size ();
+			
+			double z = this.clientInfo.zoom;
+			
+			switch (this.clientInfo.angle)
+			{
+				case 0:
+				case 180:
+					result.Width  = size.Width * z;
+					result.Height = size.Height * z;
+					break;
+				
+				case 90:
+				case 270:
+					result.Width  = size.Height * z;
+					result.Height = size.Width * z;
+					break;
+				
+				default:
+					throw new System.ArgumentOutOfRangeException ("Invalid angle");
+			}
+			
+			return result;
+		}
+		
 		
 		public virtual Epsitec.Common.Drawing.Transform GetRootToClientTransform()
 		{
@@ -1579,8 +1696,143 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void UpdateMinMaxBasedOnDockedChildren()
+		{
+			if ((this.internalState & InternalState.ChildrenDocked) == 0)
+			{
+				return;
+			}
+			
+			System.Diagnostics.Debug.Assert (this.HasChildren);
+			
+			//	Décompose les dimensions comme suit :
+			//
+			//	|											  |
+			//	|<---min_ox1--->| zone de travail |<-min_ox2->|
+			//	|											  |
+			//	|<-------------------min_dx------------------>|
+			//
+			//	min_ox = min_ox1 + min_ox2
+			//	min_dx = minimum courant
+			//
+			//	La partie centrale (DockStyle.Fill) va s'additionner au reste de manière
+			//	indépendante au moyen du fill_min_dx.
+			//
+			//	Idem par analogie pour dy et max.
+			
+			double min_ox = 0;
+			double min_oy = 0;
+			double max_ox = 0;
+			double max_oy = 0;
+			
+			double min_dx = 0;
+			double min_dy = 0;
+			double max_dx = 1000000;
+			double max_dy = 1000000;
+			
+			double fill_min_dx = 0;
+			double fill_min_dy = 0;
+			double fill_max_dx = 0;
+			double fill_max_dy = 0;
+			
+			if (this.PreferHorizontalDockLayout)
+			{
+				fill_max_dy = max_dy;
+			}
+			else
+			{
+				fill_max_dx = max_dx;
+			}
+			
+			foreach (Widget child in this.Children)
+			{
+				if (child.Dock == DockStyle.None)
+				{
+					//	Saute les widgets qui ne sont pas "docked", car leur taille n'est pas prise
+					//	en compte dans le calcul des minima/maxima.
+					
+					continue;
+				}
+				
+				Drawing.Size min = child.MinSize;
+				Drawing.Size max = child.MaxSize;
+				
+				switch (child.Dock)
+				{
+					case DockStyle.Top:
+						min_dx  = System.Math.Max (min_dx, min.Width    + min_ox);
+						min_dy  = System.Math.Max (min_dy, child.Height + min_oy);
+						min_oy += child.Height;
+						max_dx  = System.Math.Min (max_dx, max.Width    + max_ox);
+						max_dy  = System.Math.Min (max_dy, child.Height + max_oy);
+						max_oy += child.Height;
+						break;
+					
+					case DockStyle.Bottom:
+						min_dx  = System.Math.Max (min_dx, min.Width    + min_ox);
+						min_dy  = System.Math.Max (min_dy, child.Height + min_oy);
+						min_oy += child.Height;
+						max_dx  = System.Math.Min (max_dx, max.Width    + max_ox);
+						max_dy  = System.Math.Min (max_dy, child.Height + max_oy);
+						max_oy += child.Height;
+						break;
+						
+					case DockStyle.Left:
+						min_dx  = System.Math.Max (min_dx, child.Width  + min_ox);
+						min_dy  = System.Math.Max (min_dy, min.Height   + min_oy);
+						min_ox += child.Width;
+						max_dx  = System.Math.Min (max_dx, child.Width  + max_ox);
+						max_dy  = System.Math.Min (max_dy, max.Height   + max_oy);
+						max_ox += child.Width;
+						break;
+					
+					case DockStyle.Right:
+						min_dx  = System.Math.Max (min_dx, child.Width  + min_ox);
+						min_dy  = System.Math.Max (min_dy, min.Height   + min_oy);
+						min_ox += child.Width;
+						max_dx  = System.Math.Min (max_dx, child.Width  + max_ox);
+						max_dy  = System.Math.Min (max_dy, max.Height   + max_oy);
+						max_ox += child.Width;
+						break;
+					
+					case DockStyle.Fill:
+						if (this.PreferHorizontalDockLayout)
+						{
+							fill_min_dx += min.Width;
+							fill_min_dy  = System.Math.Max (fill_min_dy, min.Height);
+							fill_max_dx += max.Width;
+							fill_max_dy  = System.Math.Min (fill_max_dy, max.Height);
+						}
+						else
+						{
+							fill_min_dx  = System.Math.Max (fill_min_dx, min.Width);
+							fill_min_dy += min.Height;
+							fill_max_dx  = System.Math.Min (fill_max_dx, max.Width);
+							fill_max_dy += max.Height;
+						}
+						break;
+				}
+			}
+			
+			double min_width  = System.Math.Max (min_dx, fill_min_dx + min_ox);
+			double min_height = System.Math.Max (min_dy, fill_min_dy + min_oy);
+			double max_width  = System.Math.Min (max_dx, fill_max_dx + max_ox);
+			double max_height = System.Math.Min (max_dy, fill_max_dy + max_oy);
+			
+			//	Tous les calculs ont été faits en coordonnées client, il faut donc encore transformer
+			//	ces dimensions en coordonnées parents.
+			
+			this.MinSize = this.MapClientToParent (new Drawing.Size (min_width, min_height));
+			this.MaxSize = this.MapClientToParent (new Drawing.Size (max_width, max_height));
+		}
+		
 		protected virtual void UpdateDockedChildrenLayout()
 		{
+			if ((this.internalState & InternalState.AutoMinMax) != 0)
+			{
+				this.UpdateMinMaxBasedOnDockedChildren ();
+			}
+			
 			if ((this.internalState & InternalState.ChildrenDocked) == 0)
 			{
 				return;
@@ -2263,6 +2515,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnMinSizeChanged()
+		{
+			if (this.MinSizeChanged != null)
+			{
+				this.MinSizeChanged (this);
+			}
+		}
+		
+		protected virtual void OnMaxSizeChanged()
+		{
+			if (this.MaxSizeChanged != null)
+			{
+				this.MaxSizeChanged (this);
+			}
+		}
+		
 		
 		[System.Flags] protected enum InternalState
 		{
@@ -2279,6 +2547,7 @@ namespace Epsitec.Common.Widgets
 			
 			PreferXLayout		= 0x00000400,		//	=> en cas de DockStyle.Fill multiple, place le contenu horizontalement
 			
+			AutoMinMax			= 0x00008000,		//	=> calcule automatiquement les tailles min et max
 			AutoCapture			= 0x00010000,
 			AutoFocus			= 0x00020000,
 			AutoEngage			= 0x00040000,
@@ -2598,6 +2867,8 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Color				backColor;
 		protected Drawing.Color				foreColor;
 		protected double					x1, y1, x2, y2;
+		protected Drawing.Size				minSize;
+		protected Drawing.Size				maxSize;
 		protected ClientInfo				clientInfo = new ClientInfo ();
 		
 		protected WidgetCollection			children;
