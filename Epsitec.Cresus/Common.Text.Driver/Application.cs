@@ -14,6 +14,8 @@ namespace Epsitec.Common.Text.Driver
 			Tests.CheckInternalCursorTable.RunTests ();
 			Tests.CheckInternalCursorIdArray.RunTests ();
 			Tests.CheckTextConverter.RunTests ();
+			Tests.CheckTextTable.RunTests ();
+			Tests.CheckTextStory.RunTests ();
 			
 //			CheckPerformance.RunTests (100*1000, 1000);
 			
