@@ -50,40 +50,96 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public override Bitmap			BitmapImage
+		public override Bitmap					BitmapImage
 		{
-			get { return this; }
+			get
+			{
+				return this;
+			}
 		}
 		
-		public System.Drawing.Bitmap	NativeBitmap
+		public System.Drawing.Bitmap			NativeBitmap
 		{
-			get { return this.bitmap; }
+			get
+			{
+				if (this.bitmap == null)
+				{
+					if ((this.IsLocked) &&
+						(this.Stride != 0) &&
+						(this.Scan0 != System.IntPtr.Zero) &&
+						(this.bitmap_dx > 0) &&
+						(this.bitmap_dy > 0))
+					{
+						//	Des pixels sont définis, mais pas d'objet bitmap natif. On peut donc créer ici le bitmap
+						//	en se basant sur ces pixels :
+						
+						return new System.Drawing.Bitmap (this.bitmap_dx, this.bitmap_dy, this.Stride, System.Drawing.Imaging.PixelFormat.Format32bppArgb, this.Scan0);
+					}
+				}
+				
+				return this.bitmap;
+			}
 		}
 		
-		public System.IntPtr			Scan0
+		public bool								IsLocked
 		{
-			get { return this.bitmap_data.Scan0; }
+			get
+			{
+				return this.bitmap_data != null;
+			}
 		}
 		
-		public int						Stride
+		public System.IntPtr					Scan0
 		{
-			get { return this.bitmap_data.Stride; }
+			get
+			{
+				if (this.bitmap_data == null)
+				{
+					return System.IntPtr.Zero;
+				}
+				
+				return this.bitmap_data.Scan0;
+			}
+		}
+		
+		public int								Stride
+		{
+			get
+			{
+				if (this.bitmap_data == null)
+				{
+					return 0;
+				}
+				
+				return this.bitmap_data.Stride;
+			}
 		}
 		
 		
-		public bool						IsValid
+		public bool								IsValid
 		{
-			get { return this.bitmap != null; }
+			get
+			{
+				return this.bitmap != null;
+			}
 		}
 
-		public int						PixelWidth
+		public int								PixelWidth
 		{
-			get { return this.bitmap.Width; }
+			get
+			{
+				return this.bitmap_dx;
+			}
 		}
-		public int						PixelHeight
+		
+		public int								PixelHeight
 		{
-			get { return this.bitmap.Height; }
+			get
+			{
+				return this.bitmap_dy;
+			}
 		}
+		
 		
 		public bool LockBits()
 		{
@@ -94,8 +150,8 @@ namespace Epsitec.Common.Drawing
 					System.Drawing.Imaging.ImageLockMode mode = System.Drawing.Imaging.ImageLockMode.ReadOnly;
 					System.Drawing.Imaging.PixelFormat format = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
 					
-					int width  = this.bitmap.Width;
-					int height = this.bitmap.Height;
+					int width  = this.bitmap_dx;
+					int height = this.bitmap_dy;
 					
 					this.bitmap_data = this.bitmap.LockBits (new System.Drawing.Rectangle (0, 0, width, height), mode, format);
 				}
@@ -144,6 +200,41 @@ namespace Epsitec.Common.Drawing
 			return null;
 		}
 		
+		
+		public static Image FromPixmap(Pixmap pixmap)
+		{
+			Bitmap bitmap = new Bitmap ();
+			
+			bitmap.pixmap    = pixmap;
+			bitmap.bitmap    = null;
+			bitmap.bitmap_dx = pixmap.Size.Width;
+			bitmap.bitmap_dy = pixmap.Size.Height;
+			bitmap.size      = new Size (bitmap.bitmap_dx, bitmap.bitmap_dy);
+			bitmap.origin    = new Point (0, 0);
+			
+			//	Prétend que le bitmap est verrouillé, puisqu'on a de toute façons déjà accès aux
+			//	pixels (c'est d'ailleurs bien la seule chose qu'on a) :
+			
+			bitmap.bitmap_lock_count = 1;
+			bitmap.is_origin_defined = true;
+			
+			int dx, dy, stride;
+			System.IntPtr pixels;
+			System.Drawing.Imaging.PixelFormat format;
+			
+			pixmap.GetMemoryLayout (out dx, out dy, out stride, out format, out pixels);
+			
+			bitmap.bitmap_data = new BitmapData ();
+			
+			bitmap.bitmap_data.Width       = dx;
+			bitmap.bitmap_data.Height      = dy;
+			bitmap.bitmap_data.PixelFormat = format;
+			bitmap.bitmap_data.Scan0       = pixels;
+			bitmap.bitmap_data.Stride      = stride;
+			
+			return bitmap;
+		}
+		
 		public static Image FromNativeBitmap(System.Drawing.Bitmap native)
 		{
 			Image bitmap = Bitmap.FromNativeBitmap (native, new Point (0, 0));
@@ -164,9 +255,12 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			Bitmap bitmap = new Bitmap ();
-			bitmap.bitmap = native;
-			bitmap.size   = size;
-			bitmap.origin = origin;
+			
+			bitmap.bitmap    = native;
+			bitmap.bitmap_dx = native.Width;
+			bitmap.bitmap_dy = native.Height;
+			bitmap.size      = size;
+			bitmap.origin    = origin;
 			
 			bitmap.is_origin_defined = true;
 			
@@ -305,6 +399,8 @@ namespace Epsitec.Common.Drawing
 				Bitmap bitmap = new Bitmap ();
 				
 				bitmap.bitmap			 = dst_bitmap;
+				bitmap.bitmap_dx         = dst_bitmap.Width;
+				bitmap.bitmap_dy         = dst_bitmap.Height;
 				bitmap.size				 = image.Size;
 				bitmap.origin			 = image.Origin;
 				bitmap.is_origin_defined = image.IsOriginDefined;
@@ -338,6 +434,8 @@ namespace Epsitec.Common.Drawing
 			Bitmap bitmap = new Bitmap ();
 			
 			bitmap.bitmap			 = dst_bitmap;
+			bitmap.bitmap_dx         = dst_bitmap.Width;
+			bitmap.bitmap_dy         = dst_bitmap.Height;
 			bitmap.size				 = image.Size;
 			bitmap.origin			 = image.Origin;
 			bitmap.is_origin_defined = image.IsOriginDefined;
@@ -383,6 +481,8 @@ namespace Epsitec.Common.Drawing
 			double sy = image.Height / src_bitmap.Height;
 			
 			bitmap.bitmap			 = dst_bitmap;
+			bitmap.bitmap_dx         = dst_bitmap.Width;
+			bitmap.bitmap_dy         = dst_bitmap.Height;
 			bitmap.size				 = new Size (sx * dx, sy * dy);
 			bitmap.origin			 = origin;
 			bitmap.is_origin_defined = true;
@@ -424,6 +524,7 @@ namespace Epsitec.Common.Drawing
 				this.id = id;
 			}
 			
+			
 			public override int GetHashCode()
 			{
 				return this.r ^ this.g ^ this.b ^ this.id.GetHashCode ();
@@ -447,14 +548,18 @@ namespace Epsitec.Common.Drawing
 				return false;
 			}
 			
+			
 			private int							r, g, b;
 			private long						id;
 		}
 		
 		
 		protected System.Drawing.Bitmap			bitmap;
+		protected int							bitmap_dx;
+		protected int							bitmap_dy;
 		protected BitmapData					bitmap_data;
 		protected volatile int					bitmap_lock_count;
+		protected Pixmap						pixmap;
 		
 		protected bool							is_disposed;
 		
