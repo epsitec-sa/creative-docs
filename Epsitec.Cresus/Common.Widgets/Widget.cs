@@ -8,6 +8,7 @@ namespace Epsitec.Common.Widgets
 	
 	
 	public delegate bool WalkWidgetCallback(Widget widget);
+	public delegate void PaintBoundsCallback(Widget widget, ref Drawing.Rectangle bounds);
 	
 	[System.Flags] public enum AnchorStyles : byte
 	{
@@ -1240,6 +1241,8 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler			MaxSizeChanged;
 		public event EventHandler			Disposing;
 		
+		public event PaintBoundsCallback	PaintBoundsCallback;
+		
 		
 		//	FindNextWidget/FindPrevWidget
 		
@@ -1627,7 +1630,14 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Rectangle GetPaintBounds()
 		{
-			return new Drawing.Rectangle (0, 0, this.clientInfo.width, this.clientInfo.height);
+			Drawing.Rectangle bounds = new Drawing.Rectangle (0, 0, this.clientInfo.width, this.clientInfo.height);
+			
+			if (this.PaintBoundsCallback != null)
+			{
+				this.PaintBoundsCallback (this, ref bounds);
+			}
+			
+			return bounds;
 		}
 		
 		public virtual void Invalidate()
@@ -3532,6 +3542,45 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
+			public Widget					this[int index]
+			{
+				get { return this.list[index] as Widget; }
+			}
+			
+			
+			public void Replace(Widget old_widget, Widget new_widget)
+			{
+				if (old_widget == new_widget)
+				{
+					return;
+				}
+				
+				int pos1 = this.list.IndexOf (old_widget);
+				int pos2 = this.list.IndexOf (new_widget);
+				
+				if (pos1 < 0)
+				{
+					throw new System.ArgumentException ("Widget not in collection", "old_widget");
+				}
+				if (pos2 < 0)
+				{
+					this.PreRemove (old_widget);
+					this.PreInsert (new_widget);
+					this.list[pos1] = new_widget;
+					this.array[pos1] = new_widget;
+					this.NotifyChanged ();
+				}
+				else
+				{
+					this.list[pos1] = new_widget;
+					this.list[pos2] = old_widget;
+					this.array[pos1] = new_widget;
+					this.array[pos2] = old_widget;
+					this.NotifyChanged ();
+				}
+			}
+			
+			
 			private void PreInsert(object widget)
 			{
 				if (widget is Widget)
@@ -3555,18 +3604,6 @@ namespace Epsitec.Common.Widgets
 				
 				widget.parent = this.widget;
 				widget.OnParentChanged ();
-			}
-			
-			private void PostInsert(object widget)
-			{
-				if (this.widget.suspendCounter == 0)
-				{
-					this.widget.HandleChildrenChanged ();
-				}
-				else
-				{
-					this.widget.internalState |= InternalState.ChildrenChanged;
-				}
 			}
 			
 			private void PreRemove(object widget)
@@ -3601,12 +3638,6 @@ namespace Epsitec.Common.Widgets
 				{
 					this.widget.internalState |= InternalState.ChildrenChanged;
 				}
-			}
-			
-			
-			public Widget					this[int index]
-			{
-				get { return this.list[index] as Widget; }
 			}
 			
 			
