@@ -7,6 +7,7 @@ namespace Epsitec.Common.Widgets
 		RollUp,
 		RollRight,
 		RollLeft,
-		FadeIn
+		FadeIn,
+		FadeOut
 	}
 }

@@ -7,6 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		protected delegate void BoundsOffsetCallback(Drawing.Rectangle bounds, Drawing.Point offset);
 		protected delegate void AnimatorCallback(Animator animator);
+		protected delegate void DoubleCallback(double value);
 		
 		public WindowFrame()
 		{
@@ -44,48 +45,118 @@ namespace Epsitec.Common.Widgets
 		
 		public void AnimateShow(Animation animation, Drawing.Rectangle bounds)
 		{
+			Drawing.Rectangle b1;
+			Drawing.Rectangle b2;
+			Drawing.Point o1;
+			Drawing.Point o2;
+			
+			this.WindowBounds = bounds;
+			this.MarkForRepaint ();
+			this.RefreshGraphics ();
+			
 			switch (animation)
 			{
 				case Animation.None:
 					this.Show ();
-					break;
+					return;
 				
 				case Animation.RollDown:
-					Drawing.Rectangle b1 = new Drawing.Rectangle (bounds.Left, bounds.Top - 1, bounds.Width, 1);
-					Drawing.Rectangle b2 = bounds;
+					b1 = new Drawing.Rectangle (bounds.Left, bounds.Top - 1, bounds.Width, 1);
+					b2 = bounds;
+					o1 = new Drawing.Point (0, 1 - bounds.Height);
+					o2 = new Drawing.Point (0, 0);
+					break;
+				
+				case Animation.RollUp:
+					b1 = new Drawing.Rectangle (bounds.Left, bounds.Bottom, bounds.Width, 1);
+					b2 = bounds;
+					o1 = new Drawing.Point (0, 0);
+					o2 = new Drawing.Point (0, 0);
+					break;
+				
+				case Animation.RollRight:
+					b1 = new Drawing.Rectangle (bounds.Left, bounds.Bottom, 1, bounds.Height);
+					b2 = bounds;
+					o1 = new Drawing.Point (1 - bounds.Width, 0);
+					o2 = new Drawing.Point (0, 0);
+					break;
+				
+				case Animation.RollLeft:
+					b1 = new Drawing.Rectangle (bounds.Right - 1, bounds.Bottom, 1, bounds.Height);
+					b2 = bounds;
+					o1 = new Drawing.Point (0, 0);
+					o2 = new Drawing.Point (0, 0);
+					break;
+				
+				case Animation.FadeIn:
+					this.is_frozen = true;
+					this.IsLayered = true;
+					this.Alpha = 0.0;
 					
-					this.WindowBounds = bounds;
-					this.MarkForRepaint ();
-					this.RefreshGraphics ();
+					Animator animator = new Animator (0.5);
+					animator.SetCallback (new DoubleCallback (this.AnimateAlpha), new AnimatorCallback (this.AnimateCleanup));
+					animator.SetValue (0.0, 1.0);
+					animator.Start ();
+					this.Show ();
+					return;
+				
+				default:
+					this.Show ();
+					return;
+			}
+			
+			switch (animation)
+			{
+				case Animation.RollDown:
+				case Animation.RollUp:
+				case Animation.RollRight:
+				case Animation.RollLeft:
 					this.is_frozen = true;
 					this.WindowBounds = b1;
 					
 					Animator animator = new Animator (bounds.Height * 0.0025);
 					animator.SetCallback (new BoundsOffsetCallback (this.AnimateWindowBounds), new AnimatorCallback (this.AnimateCleanup));
 					animator.SetValue (0, b1, b2);
-					animator.SetValue (1, new Drawing.Point (0.0, - bounds.Height + 1), new Drawing.Point (0.0, 0.0));
+					animator.SetValue (1, o1, o2);
 					animator.Start ();
 					this.Show ();
-					break;
-				
-				case Animation.RollUp:
 					break;
 			}
 		}
 		
 		protected virtual void AnimateWindowBounds(Drawing.Rectangle bounds, Drawing.Point offset)
 		{
+			if (this.IsDisposed)
+			{
+				return;
+			}
+			
 			this.WindowBounds = bounds;
 			this.paint_offset = offset;
 			this.Invalidate ();
 		}
 		
+		protected virtual void AnimateAlpha(double alpha)
+		{
+			if (this.IsDisposed)
+			{
+				return;
+			}
+			
+			this.Alpha = alpha;
+		}
+		
 		protected virtual void AnimateCleanup(Animator animator)
 		{
+			animator.Dispose ();
+			
+			if (this.IsDisposed)
+			{
+				return;
+			}
+			
 			this.is_frozen = false;
 			this.Invalidate ();
-			
-			animator.Dispose ();
 		}
 		
 		public WindowRoot				Root
