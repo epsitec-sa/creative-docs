@@ -101,8 +101,6 @@ namespace Epsitec.Common.Widgets.Design
 			Widget root   = this.creation_window.Root;
 			Widget widget;
 			
-			root.IsEditionDisabled = true;
-			
 			//	Initialisation de la palette des widgets drag-ables :
 			
 			widget = this.widget_palette.Widget;
@@ -110,7 +108,8 @@ namespace Epsitec.Common.Widgets.Design
 			widget.Parent = root;
 			widget.Dock   = DockStyle.Fill;
 			
-			this.widget_palette.DragBegin += new EventHandler(this.HandleSourceDragBegin);
+			this.widget_palette.DragBegin += new EventHandler (this.HandleSourceDragBegin);
+			this.widget_palette.DragEnd   += new EventHandler (this.HandleSourceDragEnd);
 			
 			//	Initialisation de la barre d'outils pour l'édition :
 			
@@ -137,8 +136,6 @@ namespace Epsitec.Common.Widgets.Design
 			
 			Widget root   = this.attribute_window.Root;
 			Widget widget;
-			
-			root.IsEditionDisabled = true;
 			
 			//	Initialisation de la palette des attributs :
 			
@@ -180,6 +177,25 @@ namespace Epsitec.Common.Widgets.Design
 				AbstractWidgetEdit editor = this.FindEditor (window);
 				
 				editor.SelectedWidgets.Clear ();
+			}
+		}
+		
+		private void HandleSourceDragEnd(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.widget_palette == sender);
+			
+			//	Le drag & drop vient de se terminer.
+			
+			Widget widget = this.widget_palette.DroppedWidget;
+			
+			if (widget != null)
+			{
+				AbstractWidgetEdit editor = this.FindEditor (widget.Window);
+				
+				System.Diagnostics.Debug.Assert (editor != null);
+				System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Count == 0);
+				
+				editor.SelectedWidgets.Add (widget);
 			}
 		}
 		
@@ -321,6 +337,7 @@ namespace Epsitec.Common.Widgets.Design
 			surface.Size   = window.ClientSize;
 			surface.Dock   = DockStyle.Fill;
 			surface.Parent = window.Root;
+			surface.IsEditionEnabled = true;
 			
 			this.edit_window_list.Add (window);
 			

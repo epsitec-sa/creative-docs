@@ -34,6 +34,19 @@ namespace Epsitec.Common.Widgets.Design.Panels
 			}
 		}
 		
+		public Widget					DroppedWidget
+		{
+			get
+			{
+				if (this.active_drag_source != null)
+				{
+					return this.active_drag_source.DroppedWidget;
+				}
+				
+				return null;
+			}
+		}
+		
 		
 		protected override Widget CreateWidget()
 		{

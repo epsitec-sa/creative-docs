@@ -33,6 +33,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Widget						DroppedWidget
+		{
+			get { return this.dropped_widget; }
+		}
+		
+		
 		public Drawing.Rectangle			DropScreenBounds
 		{
 			get
@@ -138,7 +144,7 @@ namespace Epsitec.Common.Widgets
 				pos    = widget.MapParentToClient (pos);
 				temp   = widget.FindChild (pos, Widget.ChildFindMode.SkipDisabled | Widget.ChildFindMode.SkipHidden);
 				
-				if (widget.PossibleContainer && !widget.IsEditionDisabled)
+				if (widget.PossibleContainer && widget.IsEditionEnabled)
 				{
 					hit = widget;
 				}
@@ -324,11 +330,15 @@ namespace Epsitec.Common.Widgets
 				
 				this.drop_adorner.Widget.Children.Add (copy);
 				this.drop_adorner.Widget = null;
+				
+				this.dropped_widget = copy;
 			}
 			else
 			{
 				//	TODO: animation réplaçant la fenêtre miniature à sa position d'origine pour
 				//	montrer que le drop a échoué.
+				
+				this.dropped_widget = null;
 			}
 			
 			this.drag_window.Hide ();
@@ -354,5 +364,7 @@ namespace Epsitec.Common.Widgets
 		protected Design.HiliteAdorner		drop_adorner;
 		protected Design.Constraint			drop_cx;
 		protected Design.Constraint			drop_cy;
+		
+		protected Widget					dropped_widget;
 	}
 }
