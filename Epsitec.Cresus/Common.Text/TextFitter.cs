@@ -13,6 +13,9 @@ namespace Epsitec.Common.Text
 			this.story        = story;
 			this.cursors      = new System.Collections.ArrayList ();
 			this.free_cursors = new System.Collections.Stack ();
+			
+			this.frame_list      = new FrameList (this);
+			this.page_collection = new DefaultPageCollection ();
 		}
 		
 		
@@ -32,6 +35,29 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		
+		public FrameList						FrameList
+		{
+			get
+			{
+				return this.frame_list;
+			}
+		}
+		
+		public IPageCollection					PageCollection
+		{
+			get
+			{
+				return this.page_collection;
+			}
+			set
+			{
+				if (this.page_collection != value)
+				{
+					this.page_collection = value;
+				}
+			}
+		}
 		
 		
 		public void ClearAllMarks()
@@ -315,5 +341,8 @@ namespace Epsitec.Common.Text
 		private TextStory						story;
 		private System.Collections.ArrayList	cursors;
 		private System.Collections.Stack		free_cursors;
+		
+		private FrameList						frame_list;
+		private IPageCollection					page_collection;
 	}
 }

@@ -9,10 +9,10 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public sealed class FrameList
 	{
-		public FrameList(Text.Context context)
+		public FrameList(TextFitter fitter)
 		{
-			this.context = context;
-			this.list    = new System.Collections.ArrayList ();
+			this.fitter = fitter;
+			this.frames = new System.Collections.ArrayList ();
 		}
 		
 		
@@ -20,7 +20,7 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.list[index] as ITextFrame;
+				return this.frames[index] as ITextFrame;
 			}
 		}
 		
@@ -28,15 +28,15 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.list.Count;
+				return this.frames.Count;
 			}
 		}
 		
-		public Text.Context						TextContext
+		public TextFitter						TextFitter
 		{
 			get
 			{
-				return this.context;
+				return this.fitter;
 			}
 		}
 		
@@ -44,45 +44,45 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.context.PageCollection;
+				return this.fitter.PageCollection;
 			}
 		}
 		
 		
 		public int IndexOf(ITextFrame frame)
 		{
-			return this.list.IndexOf (frame);
+			return this.frames.IndexOf (frame);
 		}
 		
 		
 		public void InsertAt(int index, ITextFrame new_frame)
 		{
-			this.list.Insert (index, new_frame);
+			this.frames.Insert (index, new_frame);
 			this.HandleInsertion (new_frame);
 		}
 		
 		public void InsertBefore(ITextFrame existing_frame, ITextFrame new_frame)
 		{
-			Debug.Assert.IsFalse (this.list.Contains (new_frame));
-			Debug.Assert.IsTrue (this.list.Contains (existing_frame));
+			Debug.Assert.IsFalse (this.frames.Contains (new_frame));
+			Debug.Assert.IsTrue (this.frames.Contains (existing_frame));
 			
-			this.list.Insert (this.list.IndexOf (existing_frame)+0, new_frame);
+			this.frames.Insert (this.frames.IndexOf (existing_frame)+0, new_frame);
 			this.HandleInsertion (new_frame);
 		}
 		
 		public void InsertAfter(ITextFrame existing_frame, ITextFrame new_frame)
 		{
-			Debug.Assert.IsFalse (this.list.Contains (new_frame));
-			Debug.Assert.IsTrue (this.list.Contains (existing_frame));
+			Debug.Assert.IsFalse (this.frames.Contains (new_frame));
+			Debug.Assert.IsTrue (this.frames.Contains (existing_frame));
 			
-			this.list.Insert (this.list.IndexOf (existing_frame)+1, new_frame);
+			this.frames.Insert (this.frames.IndexOf (existing_frame)+1, new_frame);
 			this.HandleInsertion (new_frame);
 		}
 		
 		
 		public void Remove(ITextFrame frame)
 		{
-			this.list.Remove (frame);
+			this.frames.Remove (frame);
 			this.HandleRemoval (frame);
 		}
 		
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Text
 		
 		
 		
-		private Text.Context					context;
-		private System.Collections.ArrayList	list;
+		private TextFitter						fitter;
+		private System.Collections.ArrayList	frames;
 	}
 }

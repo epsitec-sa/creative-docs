@@ -106,9 +106,22 @@ namespace Epsitec.Common.Text.Cursors
 				}
 			}
 			
+			public int							FrameIndex
+			{
+				get
+				{
+					return this.frame_index;
+				}
+				set
+				{
+					this.frame_index = value;
+				}
+			}
+			
 			
 			private ushort						length;
 			private Layout.StretchProfile		profile;
+			private int							frame_index;
 		}
 		
 		

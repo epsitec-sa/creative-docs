@@ -11,7 +11,7 @@ namespace Epsitec.Common.Text
 		public LayoutList(Text.Context context)
 		{
 			this.context = context;
-			this.hash    = new System.Collections.Hashtable ();
+			this.layouts = new System.Collections.Hashtable ();
 		}
 		
 		
@@ -19,30 +19,30 @@ namespace Epsitec.Common.Text
 		{
 			get
 			{
-				return this.hash[name] as Layout.BaseEngine;
+				return this.layouts[name] as Layout.BaseEngine;
 			}
 		}
 		
 		
 		public Layout.BaseEngine NewEngine(string name, System.Type type)
 		{
-			Debug.Assert.IsFalse (this.hash.Contains (name));
+			Debug.Assert.IsFalse (this.layouts.Contains (name));
 			
 			Layout.BaseEngine engine = System.Activator.CreateInstance (type) as Layout.BaseEngine;
 			
 			engine.Initialise (this.context, name);
 			
-			this.hash[name] = engine;
+			this.layouts[name] = engine;
 			
 			return engine;
 		}
 		
 		public void DisposeEngine(Layout.BaseEngine engine)
 		{
-			Debug.Assert.IsTrue (this.hash.Contains (engine.Name));
+			Debug.Assert.IsTrue (this.layouts.Contains (engine.Name));
 			Debug.Assert.IsTrue (this.context == engine.TextContext);
 			
-			this.hash.Remove (engine.Name);
+			this.layouts.Remove (engine.Name);
 			
 			engine.Dispose ();
 		}
@@ -50,6 +50,6 @@ namespace Epsitec.Common.Text
 		
 		
 		private Text.Context					context;
-		private System.Collections.Hashtable	hash;
+		private System.Collections.Hashtable	layouts;
 	}
 }
