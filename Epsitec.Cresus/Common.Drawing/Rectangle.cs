@@ -404,6 +404,19 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public Point Constrain(Point p)
+		{
+			if (this.IsValid)
+			{
+				p.X = System.Math.Max (this.x1, p.X);
+				p.X = System.Math.Min (this.x2, p.X);
+				p.Y = System.Math.Max (this.y1, p.Y);
+				p.Y = System.Math.Min (this.y2, p.Y);
+			}
+			
+			return p;
+		}
+		
 		public bool IntersectsWith(Rectangle r)
 		{
 			return (!r.IsEmpty) && (!this.IsEmpty) && (this.x1 < r.x2) && (this.x2 > r.x1) && (this.y1 < r.y2) && (this.y2 > r.y1);
