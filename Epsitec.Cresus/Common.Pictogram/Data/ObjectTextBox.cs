@@ -281,7 +281,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Dessine le texte du pavé.
-		protected void DrawText(Drawing.Graphics graphics, IconContext iconContext)
+		protected void DrawText(Drawing.IPaintPort graphics, IconContext iconContext)
 		{
 			Drawing.Point p1, p2, p3, p4;
 			switch ( this.PropertyJustif(4).Orientation )
@@ -345,7 +345,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			     if ( jh == JustifHorizontal.Justif )  this.textLayout.JustifMode = Drawing.TextJustifMode.AllButLast;
 			else if ( jh == JustifHorizontal.All    )  this.textLayout.JustifMode = Drawing.TextJustifMode.All;
-			else                                       this.textLayout.JustifMode = Drawing.TextJustifMode.NoLine;
+			else                                       this.textLayout.JustifMode = Drawing.TextJustifMode.None;
 
 			Drawing.Transform ot = graphics.Transform;
 
@@ -355,30 +355,32 @@ namespace Epsitec.Common.Pictogram.Data
 			transform.RotateDeg(angle, p1);
 			graphics.MergeTransform(transform);
 
-			if ( this.edited && this.textNavigator.Context.CursorFrom != this.textNavigator.Context.CursorTo )
+			if ( graphics is Drawing.Graphics && this.edited && this.textNavigator.Context.CursorFrom != this.textNavigator.Context.CursorTo )
 			{
+				Drawing.Graphics g = graphics as Drawing.Graphics;
 				int from = System.Math.Min(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
 				int to   = System.Math.Max(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
 				TextLayout.SelectedArea[] areas = this.textLayout.FindTextRange(new Drawing.Point(0,0), from, to);
 				for ( int i=0 ; i<areas.Length ; i++ )
 				{
-					graphics.Align(ref areas[i].Rect);
-					graphics.AddFilledRectangle(areas[i].Rect);
-					graphics.RenderSolid(IconContext.ColorSelectEdit);
+					g.Align(ref areas[i].Rect);
+					g.AddFilledRectangle(areas[i].Rect);
+					g.RenderSolid(IconContext.ColorSelectEdit);
 				}
 			}
 
 			this.textLayout.ShowLineBreak = this.edited;
 			this.textLayout.Paint(new Drawing.Point(0,0), graphics);
 
-			if ( this.edited && this.textNavigator.Context.CursorTo != -1 )
+			if ( graphics is Drawing.Graphics && this.edited && this.textNavigator.Context.CursorTo != -1 )
 			{
 				Drawing.Point c1, c2;
 				if ( this.textLayout.FindTextCursor(this.textNavigator.Context, out c1, out c2) )
 				{
+					Drawing.Graphics g = graphics as Drawing.Graphics;
 					graphics.LineWidth = 1.0/iconContext.ScaleX;
-					graphics.AddLine(c1, c2);
-					graphics.RenderSolid(IconContext.ColorFrameEdit);
+					g.AddLine(c1, c2);
+					g.RenderSolid(IconContext.ColorFrameEdit);
 				}
 			}
 
@@ -419,6 +421,31 @@ namespace Epsitec.Common.Pictogram.Data
 					this.PropertyLine(1).AddOutline(graphics, path, 0.0);
 					graphics.RenderSolid(iconContext.HiliteOutlineColor);
 				}
+			}
+		}
+
+		// Imprime l'objet.
+		public override void PrintGeometry(Printing.PrintPort port, IconContext iconContext, IconObjects iconObjects)
+		{
+			base.PrintGeometry(port, iconContext, iconObjects);
+
+			if ( this.TotalHandle < 2 )  return;
+
+			Drawing.Path path = this.PathBuild();
+
+			if ( this.PropertyGradient(3).PaintColor(port, iconContext) )
+			{
+				port.PaintSurface(path);
+			}
+
+			if ( this.PropertyColor(2).PaintColor(port, iconContext) )
+			{
+				this.PropertyLine(1).PaintOutline(port, iconContext, path);
+			}
+
+			if ( this.TotalHandle >= 4 )
+			{
+				this.DrawText(port, iconContext);
 			}
 		}
 
