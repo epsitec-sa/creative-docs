@@ -303,6 +303,13 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("Réglages", text_merged);
 		}
 		
+		[Test] public void CheckRes()
+		{
+			Assert.AreEqual (Res.Strings.Label.Hello, "Hello <i>world</i>&nbsp;!");
+			Assert.AreEqual (Res.Strings.Title.Dialog.Open, "Open..");
+			Assert.AreEqual (Res.Strings.Title.SettingsWindow, "Réglages");
+		}
+		
 		[Test] public void CheckGetBundleIds()
 		{
 			string[] names_1 = Resources.GetBundleIds ("file:*");
@@ -360,3 +367,5 @@ namespace Epsitec.Common.Support
 		}
 	}
 }
+
+

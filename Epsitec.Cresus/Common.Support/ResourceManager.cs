@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Globalization;
@@ -11,14 +11,37 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public sealed class ResourceManager
 	{
-		public ResourceManager()
+		public ResourceManager() : this ("")
 		{
+		}
+		
+		public ResourceManager(System.Type type) : this (System.IO.Path.GetDirectoryName (type.Assembly.Location))
+		{
+		}
+		
+		public ResourceManager(string path)
+		{
+			string save_dir = System.IO.Directory.GetCurrentDirectory ();
+			
 			this.resource_providers     = new IResourceProvider[0];
 			this.resource_provider_hash = new System.Collections.Hashtable ();
 			this.bundle_providers       = new IBundleProvider[0];
 			this.culture                = CultureInfo.CurrentCulture;
 			
-			this.InternalInitialise ();
+			try
+			{
+				if ((path != null) &&
+					(path.Length > 0))
+				{
+					System.IO.Directory.SetCurrentDirectory (path);
+				}
+				
+				this.InternalInitialise ();
+			}
+			finally
+			{
+				System.IO.Directory.SetCurrentDirectory (save_dir);
+			}
 		}
 		
 		

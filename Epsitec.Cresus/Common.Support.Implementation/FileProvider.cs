@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Globalization;
@@ -20,11 +20,11 @@ namespace Epsitec.Common.Support.Implementation
 			//	Pas très propre, mais ça suffit maintenant: on supprime le chemin \bin\... pour remonter au niveau
 			//	plus intéressant (celui des sources).
 			
-			if (this.path_prefix.EndsWith (@"\bin\Debug\"))
+			if (this.path_prefix.ToLower ().EndsWith (@"\bin\debug\"))
 			{
 				this.path_prefix = this.path_prefix.Substring (0, this.path_prefix.Length - 10);
 			}
-			else if (this.path_prefix.EndsWith (@"\bin\Release\"))
+			else if (this.path_prefix.ToLower ().EndsWith (@"\bin\release\"))
 			{
 				this.path_prefix = this.path_prefix.Substring (0, this.path_prefix.Length - 12);
 			}
@@ -84,6 +84,19 @@ namespace Epsitec.Common.Support.Implementation
 		
 		public override bool SetupApplication(string application)
 		{
+			this.application = application;
+			
+			if ((this.application != null) &&
+				(this.application.Length > 0))
+			{
+				string path = System.IO.Path.Combine (this.path_prefix, this.application);
+				
+				if (System.IO.Directory.Exists (path))
+				{
+					this.path_prefix = path + System.IO.Path.DirectorySeparatorChar;
+				}
+			}
+			
 			return true;
 		}
 
@@ -290,5 +303,7 @@ namespace Epsitec.Common.Support.Implementation
 		protected string					file_local;
 		protected string					file_custom;
 		protected string					file_all;
+		
+		protected string					application;
 	}
 }

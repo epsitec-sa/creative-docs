@@ -229,9 +229,9 @@ namespace Epsitec.App.DocumentEditor
 
 			this.menu = new HMenu();
 			this.menu.Host = this;
-			this.menu.Items.Add(new MenuItem("", "Fichier"));
-			this.menu.Items.Add(new MenuItem("", "Edition"));
-			this.menu.Items.Add(new MenuItem("", "Objets"));
+			this.menu.Items.Add(new MenuItem("", Res.Strings.Menu.File));
+			this.menu.Items.Add(new MenuItem("", Res.Strings.Menu.Edition));
+			this.menu.Items.Add(new MenuItem("", Res.Strings.Menu.Objects));
 			this.menu.Items.Add(new MenuItem("", "Affichage"));
 			if ( this.useArray )
 			{

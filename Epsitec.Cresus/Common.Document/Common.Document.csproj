@@ -199,6 +199,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Res.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Selector.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -582,6 +587,10 @@
                     RelPath = "Properties\Volume.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Resources\Document\Strings.00.resource"
+                    BuildAction = "Content"
                 />
                 <File
                     RelPath = "Settings\Abstract.cs"

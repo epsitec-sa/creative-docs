@@ -38,6 +38,7 @@ class CopyProject:
         self.copy_ext.append('.csproj.user')
         self.copy_ext.append('.bat')
         self.copy_ext.append('.ico')
+        self.copy_ext.append('.ini')
         self.copy_ext.append('.txt')
         self.copy_ext.append('.png')
         self.copy_ext.append('.jpg')
@@ -252,6 +253,8 @@ class CopyProject:
                         if name.endswith('.vdproj'):
                             self.strip_scc_info_vdproj(delta_name)
                         if name.endswith('.csproj.user'):
+                            self.patch_path_info(delta_name)
+                        if name.endswith('.ini'):
                             self.patch_path_info(delta_name)
                         if name.endswith('.sln'):
                             self.strip_solution(delta_name)

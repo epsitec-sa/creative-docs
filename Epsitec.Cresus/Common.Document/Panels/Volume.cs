@@ -27,7 +27,7 @@ namespace Epsitec.Common.Document.Panels
 			this.volumeType.TextChanged += new EventHandler(this.HandleTypeChanged);
 			this.volumeType.TabIndex = 1;
 			this.volumeType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.volumeType, "Type du volume 3d");
+			ToolTip.Default.SetToolTip(this.volumeType, Res.Strings.ToolTip.Volume3DType);
 
 			this.labelRapport = new StaticText(this);
 			this.labelRapport.Text = "Point milieu";

@@ -16,7 +16,7 @@
                 DefaultTargetSchema = "IE50"
                 DelaySign = "false"
                 OutputType = "WinExe"
-                PreBuildEvent = ""
+                PreBuildEvent = 'xcopy "$(SolutionDir)Common.Document\Resources\*" "$(ProjectDir)Resources\" /S/Y /EXCLUDE:..\..\excludesvn.ini'
                 PostBuildEvent = ""
                 RootNamespace = "Epsitec.App.DocumentEditor"
                 RunPostBuildEvent = "OnBuildSuccess"
@@ -169,6 +169,11 @@
                 />
                 <File
                     RelPath = "DocumentEditor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Res.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -1041,6 +1046,10 @@
                 <File
                     RelPath = "Images\ZoomSub.icon"
                     BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Resources\App\Strings.00.resource"
+                    BuildAction = "Content"
                 />
             </Include>
         </Files>
