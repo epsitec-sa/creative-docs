@@ -126,7 +126,6 @@ namespace Epsitec.Common.Support
 			return (list == null) ? null : list[index] as ResourceBundle;
 		}
 		
-		
 		public Drawing.Image GetBitmap(string image_name)
 		{
 			string field_name = "i." + image_name;
@@ -175,6 +174,7 @@ namespace Epsitec.Common.Support
 			
 			return null;
 		}
+		
 		
 		public void Compile(byte[] data)
 		{
@@ -284,8 +284,11 @@ namespace Epsitec.Common.Support
 						if (name == "ref")
 						{
 							ResourceBundle new_bundle;
+							RefRecord ref_record = new RefRecord (element_name);
 							
+							ref_record.ParseBegin (reader, buffer);
 							this.ParseXmlRef (reader, default_prefix, level, reader_depth, recursion, element_name, buffer, out new_bundle);
+							ref_record.ParseEnd (buffer);
 							
 							if (new_bundle != null)
 							{
@@ -745,6 +748,93 @@ namespace Epsitec.Common.Support
 				
 				this.fields[entry.Key] = entry.Value;
 			}
+		}
+		
+		
+		public class RefRecord
+		{
+			public RefRecord(string element_name)
+			{
+				this.element_name = element_name;
+			}
+			
+			
+			public void ParseBegin(System.Xml.XmlTextReader reader, System.Text.StringBuilder buffer)
+			{
+				for (int i = 0; i < reader.AttributeCount; i++)
+				{
+					reader.MoveToAttribute (i);
+					
+					string arg_name  = reader.Name;
+					string arg_value = reader.Value;
+					
+					this.arguments[arg_name] = arg_value;
+				}
+				
+				reader.MoveToFirstAttribute ();
+				
+				this.buffer_offset = buffer.Length;
+			}
+			
+			public void ParseEnd(System.Text.StringBuilder buffer)
+			{
+				this.buffer_insert = buffer.Length - this.buffer_offset;
+			}
+			
+			
+			public void DefineBuffer(int offset, int length)
+			{
+				this.buffer_offset = offset;
+				this.buffer_insert = length;
+			}
+			
+			public string				ElementName
+			{
+				get { return this.element_name; }
+			}
+			
+			public int					BufferOffset
+			{
+				get { return this.buffer_offset; }
+			}
+			
+			public int					BufferInsert
+			{
+				get { return this.buffer_insert; }
+			}
+			
+			public Hashtable			Arguments
+			{
+				get { return this.arguments; }
+			}
+			
+			
+			public override string ToString()
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				buffer.Append ("<ref");
+				
+				foreach (string key in this.arguments.Keys)
+				{
+					buffer.Append (" ");
+					buffer.Append (key);
+					buffer.Append (@"=""");
+					buffer.Append (this.arguments[key]);
+					buffer.Append (@"""");
+				}
+				
+				buffer.Append ("/>");
+				
+				return buffer.ToString ();
+			}
+
+			
+			
+			private string				element_name;
+			private Hashtable			arguments = new Hashtable ();
+			private int					buffer_offset;
+			private int					buffer_insert;
 		}
 		
 		
