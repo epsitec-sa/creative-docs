@@ -85,6 +85,14 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public StretchProfile.Scales			TextStretchScales
+		{
+			get
+			{
+				return this.text_scales;
+			}
+		}
+		
 		
 		public double							X
 		{
@@ -265,8 +273,54 @@ namespace Epsitec.Common.Text.Layout
 			return Layout.Status.ErrorCannotFit;
 		}
 		
-		public void RenderLine(ITextRenderer renderer)
+		public void RenderLine(ITextRenderer renderer, Layout.StretchProfile profile, int length)
 		{
+			//	Réalise le rendu de la ligne, en appelant les divers moteurs de
+			//	layout associés au texte.
+			
+			Debug.Assert.IsNotNull (this.text);
+			
+			Debug.Assert.IsTrue (length > 0);
+			Debug.Assert.IsTrue (this.text_start + this.text_offset + length <= this.text.Length);
+			
+			this.SelectLayoutEngine (this.text_offset);
+			this.Reset ();
+			
+			Debug.Assert.IsNotNull (this.layout_engine);
+			Debug.Assert.IsNotNull (this.text_context);
+			
+			this.text_profile = profile;
+			this.hyphenate    = false;
+			
+			profile.ComputeScales (this.RightMargin - this.LeftMargin, out this.text_scales);
+			
+			int               end            = this.text_offset + length;
+			Unicode.BreakInfo end_break_info = Unicode.Bits.GetBreakInfo (this.text[this.text_start + end - 1]);
+			
+			switch (end_break_info)
+			{
+				case Unicode.BreakInfo.HyphenateGoodChoice:
+				case Unicode.BreakInfo.HyphenatePoorChoice:
+					this.hyphenate = true;
+					break;
+			}
+			
+			for (;;)
+			{
+				Layout.Status status = this.layout_engine.Render (this, renderer, end);
+				
+				switch (status)
+				{
+					case Layout.Status.Ok:
+						return;
+					
+					case Layout.Status.SwitchLayout:
+						continue;
+					
+					default:
+						throw new System.InvalidOperationException ();
+				}
+			}
 		}
 		
 		
@@ -402,6 +456,7 @@ namespace Epsitec.Common.Text.Layout
 		private int								text_start;
 		private int								text_offset;
 		private StretchProfile					text_profile;
+		private StretchProfile.Scales			text_scales;
 		
 		private int								left_to_right;
 		

@@ -105,9 +105,99 @@ namespace Epsitec.Common.Text.Tests
 			
 			System.Diagnostics.Trace.WriteLine (string.Format ("Fitter produced {0} paragraphs and {1} lines.", fitter.CursorCount, count));
 			
+			ZeroRenderer renderer = new ZeroRenderer ();
+			
+			System.Diagnostics.Trace.WriteLine ("Fitter: render.");
+			foreach (CursorInfo info in infos)
+			{
+				Cursors.FitterCursor fitter_cursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
+//				System.Console.Out.WriteLine ("{0}:", story.GetCursorPosition (fitter_cursor));
+				fitter.RenderParagraph (fitter_cursor, renderer);
+				renderer.NewParagraph ();
+			}
+			System.Diagnostics.Trace.WriteLine ("Done.");
+			
+			
 			System.Diagnostics.Trace.WriteLine ("Fitter: clear.");
 			fitter.ClearAllMarks ();
 			System.Diagnostics.Trace.WriteLine ("Done.");
 		}
+		
+		
+		private class Renderer : Text.ITextRenderer
+		{
+			public Renderer()
+			{
+				this.buffer = new System.Text.StringBuilder ();
+				this.count  = 0;
+			}
+			
+			
+			public void NewParagraph()
+			{
+				System.Console.Out.WriteLine (this.buffer.ToString ());
+				System.Console.Out.WriteLine ();
+				
+				this.buffer.Length = 0;
+				this.count = 0;
+			}
+			
+			
+			#region ITextRenderer Members
+			public void Render(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+			{
+				for (int i = 0; i < glyphs.Length; i++)
+				{
+					if (this.count > 0)
+					{
+						buffer.Append (" ");
+						if ((this.count % 4) == 0)
+						{
+							buffer.Append ("\n");
+						}
+					}
+					
+					buffer.AppendFormat ("{0:000}", glyphs[i]);
+					buffer.Append ("-");
+					buffer.AppendFormat ("{0:000.00}", x[i]);
+					buffer.Append (":");
+					buffer.AppendFormat ("{0:00.00}", sx[i]);
+					
+					this.count++;
+					
+					if (this.count == 16)
+					{
+						System.Console.Out.WriteLine (buffer.ToString ());
+						
+						this.count         = 0;
+						this.buffer.Length = 0;
+					}
+				}
+			}
+			#endregion
+
+			private System.Text.StringBuilder	buffer;
+			private int							count;
+		}
+
+		private class ZeroRenderer : Text.ITextRenderer
+		{
+			public ZeroRenderer()
+			{
+			}
+			
+			
+			public void NewParagraph()
+			{
+			}
+			
+			
+			#region ITextRenderer Members
+			public void Render(Epsitec.Common.OpenType.Font font, double size, ushort[] glyphs, double[] x, double[] y, double[] sx, double[] sy)
+			{
+			}
+			#endregion
+		}
+
 	}
 }

@@ -45,6 +45,37 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void RenderParagraph(ICursor cursor, ITextRenderer renderer)
+		{
+			Cursors.FitterCursor c = cursor as Cursors.FitterCursor;
+			
+			if (c == null)
+			{
+				throw new System.ArgumentException ("Not a valid FitterCursor.", "cursor");
+			}
+			
+			double oy = 0;
+			double mx_left  = 20;
+			double mx_right = 1000;
+			double fence_before = 100;
+			double fence_after  = 20;
+			
+			ulong[] text;
+			int length = c.ParagraphLength;
+			
+			text   = new ulong[length];
+			length = this.story.ReadText (c, length, text);
+			
+			Layout.Context layout = new Layout.Context (this.story.Context, text, 0, oy, mx_left, mx_right, fence_before, fence_after);
+			
+			for (int i = 0; i < c.Elements.Length; i++)
+			{
+				layout.RenderLine (renderer, c.Elements[i].Profile, c.Elements[i].Length);
+				layout.TextOffset += c.Elements[i].Length;
+			}
+		}
+		
+		
 		protected void Process(Execute method)
 		{
 			//	Exécute une méthode pour chaque tout le texte, en procédant par
@@ -196,6 +227,14 @@ namespace Epsitec.Common.Text
 				
 				Cursors.FitterCursor.Element element = new Cursors.FitterCursor.Element ();
 				
+				bool end_of_text = false;
+				
+				if (pos + offset > story.TextLength)
+				{
+					offset     -= 1;
+					end_of_text = true;
+				}
+				
 				element.Length  = offset - line_start;
 				element.Profile = profile;
 				
@@ -210,7 +249,7 @@ namespace Epsitec.Common.Text
 					mark.AddRange (list);
 					list.Clear ();
 					
-					story.MoveCursor (mark, pos + line_start);
+					story.MoveCursor (mark, pos + paragraph_start);
 					
 					line_start      = offset;
 					paragraph_start = offset;
@@ -218,6 +257,12 @@ namespace Epsitec.Common.Text
 				else
 				{
 					line_start = offset;
+				}
+				
+				if (end_of_text)
+				{
+					length = paragraph_start;
+					return;
 				}
 			}
 		}

@@ -29,6 +29,20 @@ namespace Epsitec.Common.Text.Cursors
 			}
 		}
 		
+		public int								ParagraphLength
+		{
+			get
+			{
+				int length = 0;
+				
+				for (int i = 0; i < this.elements.Length; i++)
+				{
+					length += this.elements[i].Length;
+				}
+				
+				return length;
+			}
+		}
 		
 		
 		public void AddRange(System.Collections.IList values)

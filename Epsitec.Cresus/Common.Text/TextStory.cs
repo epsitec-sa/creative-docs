@@ -241,14 +241,14 @@ namespace Epsitec.Common.Text
 			this.UpdateTextBreakInformation (position, 0);
 		}
 		
-		public void ReadText(ICursor cursor, int length, ulong[] buffer)
+		public int ReadText(ICursor cursor, int length, ulong[] buffer)
 		{
-			this.ReadText (cursor, length, buffer, 0);
+			return this.ReadText (cursor, length, buffer, 0);
 		}
 		
-		public void ReadText(ICursor cursor, int length, ulong[] buffer, int offset)
+		public int ReadText(ICursor cursor, int length, ulong[] buffer, int offset)
 		{
-			this.text.ReadText (cursor.CursorId, length, buffer, offset);
+			return this.text.ReadText (cursor.CursorId, length, buffer, offset);
 		}
 		
 		public void ChangeMarkers(ICursor cursor, int length, ulong marker, bool set)
