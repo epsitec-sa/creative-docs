@@ -4,7 +4,8 @@
 namespace Epsitec.Common.UI
 {
 	/// <summary>
-	/// La classe Engine...
+	/// La classe Engine permet de lier une interface graphique avec une structure
+	/// de données.
 	/// </summary>
 	public class Engine
 	{

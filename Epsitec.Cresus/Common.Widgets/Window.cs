@@ -254,6 +254,11 @@ namespace Epsitec.Common.Widgets
 			this.window.Hide ();
 		}
 		
+		public void Close()
+		{
+			this.window.Close ();
+		}
+		
 		public void SynchronousRepaint()
 		{
 			if (this.window != null)

@@ -548,6 +548,19 @@ namespace Epsitec.Common.Widgets.Platform
 		}
 		
 		
+		internal new void Close()
+		{
+			try
+			{
+				this.forced_close = true;
+				base.Close ();
+			}
+			finally
+			{
+				this.forced_close = false;
+			}
+		}
+		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -624,6 +637,11 @@ namespace Epsitec.Common.Widgets.Platform
 		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
 		{
 			base.OnClosing (e);
+			
+			if (this.forced_close)
+			{
+				return;
+			}
 			
 			if (this.prevent_close)
 			{
@@ -1375,7 +1393,8 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		private bool							has_active_frame;
 		
-		private bool							prevent_close = false;
+		private bool							prevent_close;
+		private bool							forced_close;
 		private bool							filter_mouse_messages;
 		private bool							filter_key_messages;
 		private double							alpha = 1.0;

@@ -104,7 +104,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					break;
 
 				case GlyphShape.Close:
-				case GlyphShape.Cancel:
+				case GlyphShape.Reject:
 					path.MoveTo(center.X-rect.Width*0.20*zoom, center.Y-rect.Height*0.30*zoom);
 					path.LineTo(center.X-rect.Width*0.30*zoom, center.Y-rect.Height*0.20*zoom);
 					path.LineTo(center.X-rect.Width*0.10*zoom, center.Y+rect.Height*0.00*zoom);
@@ -136,7 +136,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+rect.Width*0.18*zoom, center.Y-rect.Height*0.06*zoom);
 					break;
 
-				case GlyphShape.Validate:
+				case GlyphShape.Accept:
 					path.MoveTo(center.X-rect.Width*0.30*zoom, center.Y+rect.Height*0.00*zoom);
 					path.LineTo(center.X-rect.Width*0.20*zoom, center.Y+rect.Height*0.10*zoom);
 					path.LineTo(center.X-rect.Width*0.10*zoom, center.Y-rect.Height*0.05*zoom);
@@ -150,8 +150,8 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
 				Drawing.Color color = this.colorBlack;
-				if ( type == GlyphShape.Cancel   )  color = Drawing.Color.FromRGB(0.7, 0.0, 0.0);  // rouge foncé
-				if ( type == GlyphShape.Validate )  color = Drawing.Color.FromRGB(0.0, 0.6, 0.0);  // vert foncé
+				if ( type == GlyphShape.Reject )  color = Drawing.Color.FromRGB(0.7, 0.0, 0.0);  // rouge foncé
+				if ( type == GlyphShape.Accept )  color = Drawing.Color.FromRGB(0.0, 0.6, 0.0);  // vert foncé
 				graphics.RenderSolid(color);
 			}
 			else

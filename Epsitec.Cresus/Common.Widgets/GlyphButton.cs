@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -14,29 +17,30 @@ namespace Epsitec.Common.Widgets
 		Menu,
 		Close,
 		Dots,
-		Validate,
-		Cancel
+		Accept,
+		Reject
 	}
 	
 	/// <summary>
 	/// La classe GlyphButton dessine un bouton avec une icône simple.
 	/// </summary>
-	public class GlyphButton : IconButton
+	public class GlyphButton : Button
 	{
-		public GlyphButton() : this (null, null)
+		public GlyphButton()
 		{
+			this.ButtonStyle = ButtonStyle.Icon;
+			this.InternalState &= ~InternalState.AutoFocus;
+			this.InternalState &= ~InternalState.Focusable;
 		}
 		
 		public GlyphButton(string command) : this (command, null)
 		{
 		}
 		
-		public GlyphButton(string command, string name) : base (command, null, name)
+		public GlyphButton(string command, string name) : this ()
 		{
-			this.ButtonStyle = ButtonStyle.Icon;
-			this.shape = GlyphShape.None;
-			this.InternalState &= ~InternalState.AutoFocus;
-			this.InternalState &= ~InternalState.Focusable;
+			this.Command = command;
+			this.Name    = name;
 		}
 		
 		public GlyphButton(Widget embedder) : this()
@@ -46,7 +50,6 @@ namespace Epsitec.Common.Widgets
 		
 		public GlyphButton(Widget embedder, GlyphShape shape) : this (embedder)
 		{
-			this.ButtonStyle = ButtonStyle.Icon;
 			this.GlyphShape  = shape;
 		}
 		
@@ -67,6 +70,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		public override double					DefaultWidth
 		{
 			get { return 17; }
@@ -75,6 +79,15 @@ namespace Epsitec.Common.Widgets
 		public override double					DefaultHeight
 		{
 			get { return 17; }
+		}
+		
+		
+		public override Drawing.Rectangle GetShapeBounds()
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			Drawing.Rectangle rect = this.Client.Bounds;
+			rect.Inflate(adorner.GeometryToolShapeBounds);
+			return rect;
 		}
 		
 		
