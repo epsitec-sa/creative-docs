@@ -21,8 +21,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public ScrollArray()
 		{
-			this.internalState |= InternalState.AutoFocus;
-			this.internalState |= InternalState.Focusable;
+			this.InternalState |= InternalState.AutoFocus;
+			this.InternalState |= InternalState.Focusable;
 
 			this.header = new Widget(this);
 
@@ -30,8 +30,8 @@ namespace Epsitec.Common.Widgets
 			this.scrollerH = new HScroller(this);
 			
 			this.scrollerV.IsInverted = true;
-			this.scrollerV.Moved += new EventHandler(this.HandleScrollerV);
-			this.scrollerH.Moved += new EventHandler(this.HandleScrollerH);
+			this.scrollerV.ValueChanged += new EventHandler(this.HandleScrollerV);
+			this.scrollerH.ValueChanged += new EventHandler(this.HandleScrollerH);
 
 			this.rowHeight = this.DefaultFontHeight+2;
 		}

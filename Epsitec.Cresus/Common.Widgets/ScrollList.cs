@@ -28,8 +28,8 @@ namespace Epsitec.Common.Widgets
 		{
 			this.items = new Helpers.StringCollection(this);
 			this.DockMargins = new Drawing.Margins (2, 2, 2, 2);
-			this.internalState |= InternalState.AutoFocus;
-			this.internalState |= InternalState.Focusable;
+			this.InternalState |= InternalState.AutoFocus;
+			this.InternalState |= InternalState.Focusable;
 
 			this.scrollListStyle = ScrollListStyle.Normal;
 			this.lineHeight = this.DefaultFontHeight+1;
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Widgets
 			this.scroller.IsInverted = true;
 			this.scroller.Parent = this;
 			this.scroller.Dock = DockStyle.Right;
-			this.scroller.Moved += new EventHandler(this.HandleScrollerMoved);
+			this.scroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
 			this.scroller.Hide ();
 		}
 		
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.scroller.Moved -= new EventHandler(this.HandleScrollerMoved);
+				this.scroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -279,7 +279,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		private void HandleScrollerMoved(object sender)
+		private void HandleScrollerValueChanged(object sender)
 		{
 			// Appelé lorsque l'ascenseur a bougé.
 			
