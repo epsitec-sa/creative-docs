@@ -111,6 +111,8 @@ namespace Epsitec.Common.Support
 			
 			if (slot != null)
 			{
+				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' fired.");
+				
 				slot.Fire (this, e);
 			}
 			else

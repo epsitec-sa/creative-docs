@@ -46,7 +46,6 @@ namespace Epsitec.Common.Widgets
 					
 					foreach (Widget widget in this.FindWidgets ())
 					{
-						System.Diagnostics.Debug.WriteLine ("Enable="+value.ToString ()+" for "+widget.ToString ());
 						widget.SetEnabled (value);
 						widget.Invalidate ();
 					}
