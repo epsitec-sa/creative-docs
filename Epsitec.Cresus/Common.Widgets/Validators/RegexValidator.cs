@@ -6,9 +6,24 @@ namespace Epsitec.Common.Widgets.Validators
 	/// </summary>
 	public class RegexValidator : AbstractTextValidator
 	{
-		public RegexValidator(Widget widget, string regex) : base (widget)
+		public RegexValidator(Widget widget, string regex) : this (widget, regex, true)
+		{
+		}
+		
+		public RegexValidator(Widget widget, string regex, bool accept_empty) : base (widget)
 		{
 			this.SetRegex (regex);
+			this.accept_empty = accept_empty;
+		}
+		
+		public RegexValidator(Widget widget, System.Text.RegularExpressions.Regex regex) : this (widget, regex, true)
+		{
+		}
+		
+		public RegexValidator(Widget widget, System.Text.RegularExpressions.Regex regex, bool accept_empty) : base (widget)
+		{
+			this.SetRegex (regex);
+			this.accept_empty = accept_empty;
 		}
 		
 		
@@ -19,10 +34,16 @@ namespace Epsitec.Common.Widgets.Validators
 			this.regex = new System.Text.RegularExpressions.Regex (regex, options);
 		}
 		
+		public void SetRegex(System.Text.RegularExpressions.Regex regex)
+		{
+			this.regex = regex;
+		}
+		
 		
 		protected override void ValidateText(string text)
 		{
-			if (this.regex.IsMatch (text))
+			if (((this.accept_empty) || (text.Length > 0)) &&
+				(this.regex.IsMatch (text)))
 			{
 				this.state = Support.ValidationState.Ok;
 			}
@@ -34,5 +55,6 @@ namespace Epsitec.Common.Widgets.Validators
 		
 		
 		protected System.Text.RegularExpressions.Regex	regex;
+		protected bool									accept_empty;
 	}
 }
