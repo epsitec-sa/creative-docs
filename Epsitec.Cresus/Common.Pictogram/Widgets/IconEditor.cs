@@ -10,7 +10,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// </summary>
 	
 	[SuppressBundleSupport]
-	
+		
 	public class IconEditor : Epsitec.Common.Widgets.Widget
 	{
 		public IconEditor()
@@ -96,6 +96,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.menu.Items.Add(new MenuItem("", "Edition"));
 			this.menu.Items.Add(new MenuItem("", "Objets"));
 			this.menu.Items.Add(new MenuItem("", "Affichage"));
+			this.menu.Items.Add(new MenuItem("", "Tableau"));
 			this.menu.Items.Add(new MenuItem("", "Debug"));
 			this.menu.Items.Add(new MenuItem("", "Aide"));
 
@@ -133,6 +134,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.MenuAdd(objMenu, @"file:images/selectinvert.icon", "SelectInvert", "Inverser la sélection", "");
 			this.MenuAdd(objMenu, @"file:images/selectglobal.icon", "SelectGlobal", "Changer le mode de sélection", "");
 			this.MenuAdd(objMenu, @"", "", "", "");
+			this.MenuAdd(objMenu, @"y/n", "HideHalf", "Mode estompé", "");
 			this.MenuAdd(objMenu, @"file:images/hidesel.icon", "HideSel", "Cacher la sélection", "");
 			this.MenuAdd(objMenu, @"file:images/hiderest.icon", "HideRest", "Cacher le reste", "");
 			this.MenuAdd(objMenu, @"file:images/hidecancel.icon", "HideCancel", "Montrer tout", "");
@@ -154,12 +156,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.MenuAdd(groupMenu, @"file:images/inside.icon", "Inside", "Entrer dans le groupe", "");
 			this.MenuAdd(groupMenu, @"file:images/outside.icon", "Outside", "Sortir du groupe", "");
 			groupMenu.AdjustSize();
-			objMenu.Items[12].Submenu = groupMenu;
+			objMenu.Items[13].Submenu = groupMenu;
 
 			VMenu showMenu = new VMenu();
 			showMenu.Name = "Show";
 			showMenu.Host = this;
 			this.MenuAdd(showMenu, @"file:images/selectmode.icon", "SelectMode", "Sélection partielle", "");
+			this.MenuAdd(showMenu, @"file:images/preview.icon", "Preview", "Aperçu avant impression", "");
 			this.MenuAdd(showMenu, @"file:images/grid.icon", "Grid", "Grille magnétique", "");
 			this.MenuAdd(showMenu, @"file:images/mode.icon", "Mode", "Tableau des objets", "");
 			this.MenuAdd(showMenu, @"", "", "", "");
@@ -180,7 +183,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.MenuAdd(zoomMenu, @"file:images/zoomsub.icon", "ZoomSub", "Réduction", "");
 			this.MenuAdd(zoomMenu, @"file:images/zoomadd.icon", "ZoomAdd", "Agrandissement", "");
 			zoomMenu.AdjustSize();
-			showMenu.Items[4].Submenu = zoomMenu;
+			showMenu.Items[5].Submenu = zoomMenu;
 
 			VMenu lookMenu = new VMenu();
 			lookMenu.Name = "Look";
@@ -191,14 +194,60 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.MenuAdd(lookMenu, @"y/n", "SelectLook(this.Name)", name, "", name);
 			}
 			lookMenu.AdjustSize();
-			showMenu.Items[6].Submenu = lookMenu;
+			showMenu.Items[7].Submenu = lookMenu;
+
+			VMenu arrayMenu = new VMenu();
+			arrayMenu.Name = "Array";
+			arrayMenu.Host = this;
+			this.MenuAdd(arrayMenu, @"file:images/arrayframe.icon", "ArrayOutlineFrame", "Modifie le cadre", "");
+			this.MenuAdd(arrayMenu, @"file:images/arrayhoriz.icon", "ArrayOutlineHoriz", "Modifie l'intérieur horizontal", "");
+			this.MenuAdd(arrayMenu, @"file:images/arrayverti.icon", "ArrayOutlineVerti", "Modifie l'intérieur vertical", "");
+			this.MenuAdd(arrayMenu, @"", "", "", "");
+			this.MenuAdd(arrayMenu, @"", "", "Assistants", "");
+			this.MenuAdd(arrayMenu, @"", "", "", "");
+			this.MenuAdd(arrayMenu, @"", "ArrayAddColumnLeft", "Insérer des colonnes à gauche", "");
+			this.MenuAdd(arrayMenu, @"", "ArrayAddColumnRight", "Insérer des colonnes à droite", "");
+			this.MenuAdd(arrayMenu, @"", "ArrayAddRowTop", "Insérer des lignes en dessus", "");
+			this.MenuAdd(arrayMenu, @"", "ArrayAddRowBottom", "Insérer des lignes en dessous", "");
+			this.MenuAdd(arrayMenu, @"", "", "", "");
+			this.MenuAdd(arrayMenu, @"", "ArrayDelColumn", "Supprimer les colonnes", "");
+			this.MenuAdd(arrayMenu, @"", "ArrayDelRow", "Supprimer les lignes", "");
+			this.MenuAdd(arrayMenu, @"", "", "", "");
+			this.MenuAdd(arrayMenu, @"", "ArrayAlignColumn", "Egaliser les largeurs de colonne", "");
+			this.MenuAdd(arrayMenu, @"", "ArrayAlignRow", "Egaliser les hauteurs de ligne", "");
+			this.MenuAdd(arrayMenu, @"", "", "", "");
+			this.MenuAdd(arrayMenu, @"", "ArraySwapColumn", "Permuter le contenu des colonnes", "");
+			this.MenuAdd(arrayMenu, @"", "ArraySwapRow", "Permuter le contenu des lignes", "");
+			arrayMenu.AdjustSize();
+			this.menu.Items[4].Submenu = arrayMenu;
+
+			VMenu arrayLookMenu = new VMenu();
+			arrayLookMenu.Name = "ArrayLook";
+			arrayLookMenu.Host = this;
+			for ( int i=0 ; i<100 ; i++ )
+			{
+				string text, name;
+				if ( !ObjectArray.CommandLook(i, out text, out name) )  break;
+				if ( name == "" )
+				{
+					this.MenuAdd(arrayLookMenu, @"", "", "", "");
+				}
+				else
+				{
+					this.MenuAdd(arrayLookMenu, @"", "ArrayLook(this.Name)", text, "", name);
+				}
+			}
+			arrayLookMenu.AdjustSize();
+			arrayMenu.Items[4].Submenu = arrayLookMenu;
 
 			VMenu debugMenu = new VMenu();
 			debugMenu.Name = "Debug";
 			debugMenu.Host = this;
-			this.MenuAdd(debugMenu, @"", "DebugBbox", "Affiche les bbox", "");
+			this.MenuAdd(debugMenu, @"y/n", "DebugBboxThin", "BBoxThin", "");
+			this.MenuAdd(debugMenu, @"y/n", "DebugBboxGeom", "BBoxGeom", "");
+			this.MenuAdd(debugMenu, @"y/n", "DebugBboxFull", "BBoxFull", "");
 			debugMenu.AdjustSize();
-			this.menu.Items[4].Submenu = debugMenu;
+			this.menu.Items[5].Submenu = debugMenu;
 
 			VMenu helpMenu = new VMenu();
 			helpMenu.Name = "Help";
@@ -207,7 +256,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			helpMenu.Items.Add(new MenuItem("ctxhelp", "", "Aide contextuelle", ""));
 			helpMenu.Items.Add(new MenuItem("about", "", "A propos de...", ""));
 			helpMenu.AdjustSize();
-			this.menu.Items[5].Submenu = helpMenu;
+			this.menu.Items[6].Submenu = helpMenu;
 
 			this.hToolBar = new HToolBar();
 			this.hToolBar.Parent = this;
@@ -235,13 +284,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.HToolBarAdd(@"file:images/outside.icon", "Outside", "Sortir du groupe");
 			this.HToolBarAdd("", "", "");
 			this.HToolBarAdd(@"file:images/selectmode.icon", "SelectMode", "Sélection partielle");
+			this.HToolBarAdd(@"file:images/preview.icon", "Preview", "Aperçu avant impression");
 			this.HToolBarAdd(@"file:images/grid.icon", "Grid", "Grille magnétique");
 			this.HToolBarAdd(@"file:images/mode.icon", "Mode", "Tableau des objets");
+			this.HToolBarAdd("", "", "");
+			this.HToolBarAdd(@"file:images/arrayframe.icon", "ArrayOutlineFrame", "Modifie le cadre");
+			this.HToolBarAdd(@"file:images/arrayhoriz.icon", "ArrayOutlineHoriz", "Modifie l'intérieur horizontal");
+			this.HToolBarAdd(@"file:images/arrayverti.icon", "ArrayOutlineVerti", "Modifie l'intérieur vertical");
 			this.HToolBarAdd("", "", "");
 
 			this.vToolBar = new VToolBar();
 			this.vToolBar.Parent = this;
 			this.VToolBarAdd(@"file:images/select.icon", "SelectTool", "Sélectionner", "Select");
+			//?this.VToolBarAdd(@"file:images/edit.icon", "SelectTool", "Editer", "Edit");
 			this.VToolBarAdd(@"file:images/zoom.icon", "SelectTool", "Agrandir", "Zoom");
 			this.VToolBarAdd(@"file:images/hand.icon", "SelectTool", "Déplacer", "Hand");
 			this.VToolBarAdd(@"file:images/picker.icon", "SelectTool", "Pipette", "Picker");
@@ -253,7 +308,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.VToolBarAdd(@"file:images/regular.icon", "SelectTool", "Polygone régulier", "ObjectRegular");
 			this.VToolBarAdd(@"file:images/poly.icon", "SelectTool", "Polygone quelconque", "ObjectPoly");
 			this.VToolBarAdd(@"file:images/bezier.icon", "SelectTool", "Courbes de Bézier", "ObjectBezier");
-			this.VToolBarAdd(@"file:images/text.icon", "SelectTool", "Texte", "ObjectText");
+			this.VToolBarAdd(@"file:images/textline.icon", "SelectTool", "Ligne de texte", "ObjectTextLine");
+			this.VToolBarAdd(@"file:images/textbox.icon", "SelectTool", "Pavé de texte", "ObjectTextBox");
+			this.VToolBarAdd(@"file:images/array.icon", "SelectTool", "Tableau", "ObjectArray");
+			this.VToolBarAdd(@"file:images/image.icon", "SelectTool", "Image bitmap", "ObjectImage");
 			this.VToolBarAdd("", "", "");
 			
 			this.root = new Widget();
@@ -429,6 +487,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		private void HandleActivePageChanged(object sender)
 		{
+			if ( this.drawer != null )
+			{
+				this.drawer.CreateEnding();
+			}
 			this.UpdatePanels();
 		}
 
@@ -781,6 +843,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 				int index = 0;
 				foreach ( AbstractProperty property in list )
 				{
+					if ( property.Type == PropertyType.TextString )
+					{
+						if ( this.drawer.SelectedTool == "Edit" )  continue;
+					}
+
 					if ( lastBack != -1 && lastBack != property.BackgroundIntensity )
 					{
 						posy -= 5;
@@ -789,10 +856,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 					panel = property.CreatePanel();
 					panel.Drawer = this.drawer;
+					panel.ExtendedSize = this.drawer.GetPropertyExtended(property.Type);
+					panel.Multi = property.Multi;
 
 					AbstractProperty p = this.drawer.GetProperty(property.Type);
 					panel.SetProperty(p);
-					panel.Multi = p.Multi;
 
 					rect.Left   = 1;
 					rect.Right  = this.panel.Width-1;
@@ -813,6 +881,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 
 					posy -= rect.Height;
+				}
+
+				foreach ( Widget widget in this.panel.Children )
+				{
+					panel = widget as AbstractPanel;
+					if ( panel == null ) continue;
+					if ( panel.DefaultFocus() )  break;;
 				}
 			}
 			else	// objet en cours de création ?
@@ -867,7 +942,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			AbstractPanel panel = sender as AbstractPanel;
 			AbstractProperty property = panel.GetProperty();
-			this.drawer.SetPropertyExtended(property);
+			this.drawer.SetPropertyExtended(property.Type, panel.ExtendedSize);
 			this.UpdatePanels();
 		}
 
