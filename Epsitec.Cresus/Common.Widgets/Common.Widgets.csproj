@@ -489,6 +489,11 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Design\WidgetWrapper.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Helpers\IStringCollectionHost.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -155,11 +155,12 @@ namespace Epsitec.Common.Widgets
 			wa5.Name        = "A5";
 			wa5.MinSize     = new Drawing.Size (30, 30);
 			wa5.Dock        = DockStyle.Layout;
+			wa5.LayoutFlags = LayoutFlags.StartNewLine;
 			wa5.SetLayoutArgs (1, 3);
 			
 			layout.Root = wa;
 			layout.DesiredWidth  = 200;
-			layout.DesiredHeight = 120;
+			layout.DesiredHeight = 150;
 			
 			window.ClientSize = new Drawing.Size (layout.CurrentWidth + 20, layout.CurrentHeight + 20);
 			
