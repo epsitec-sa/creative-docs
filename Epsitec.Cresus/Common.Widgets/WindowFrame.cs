@@ -490,7 +490,7 @@ namespace Epsitec.Common.Widgets
 					if ((key_code != 0) && (message.IsAltPressed))
 					{
 						shortcut = new Shortcut ();
-						shortcut.KeyCode = message.KeyCode;
+						shortcut.KeyCode = message.KeyCode | (int) (System.Windows.Forms.Keys.Alt);
 					}
 				}
 				else if (message.Type == MessageType.KeyPress)
