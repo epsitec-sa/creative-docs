@@ -24,7 +24,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 		{
 			get
 			{
-				if (this.IsModified)
+//				if (this.IsModified)
 				{
 					this.UpdateFromUI ();
 				}
@@ -67,6 +67,8 @@ namespace Epsitec.Common.Script.Developer.Panels
 		{
 			Widget panel = new Widget (parent);
 			
+			panel.TabIndex      = 10;
+			panel.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			panel.Size = this.panel_size;
 			panel.Dock = DockStyle.Left;
 			
@@ -78,6 +80,12 @@ namespace Epsitec.Common.Script.Developer.Panels
 			
 			widget_proto.SetEmbedder (panel);
 			widget_param.SetEmbedder (panel);
+			
+			widget_proto.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			widget_proto.TabIndex      = 15;
+			
+			widget_param.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
+			widget_param.TabIndex      = 20;
 			
 			widget_proto.Dock = DockStyle.Top;
 			widget_param.Dock = DockStyle.Fill;
@@ -92,6 +100,9 @@ namespace Epsitec.Common.Script.Developer.Panels
 			this.text_source.TextLayout.DefaultFont = Drawing.Font.GetFont ("Courier New", "Regular");
 			this.text_source.TextLayout.DefaultFontSize = 13.0;
 			this.text_source.TextEdited += new EventHandler (this.HandleTextSourceEdited);
+			
+			this.text_source.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.text_source.TabIndex      = 10;
 			
 			this.UpdateFromMethod ();
 		}

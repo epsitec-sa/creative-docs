@@ -18,7 +18,7 @@ namespace Epsitec.Common.Script.Developer
 			
 			this.save_command_state = CommandState.Find ("SaveSource", this.dispatcher);
 			this.compile_command_state = CommandState.Find ("CompileSourceCode", this.dispatcher);
-			this.find_error_command_state = CommandState.Find ("FindNextError", this.dispatcher);
+			this.next_error_command_state = CommandState.Find ("FindNextError", this.dispatcher);
 		}
 		
 		
@@ -45,26 +45,41 @@ namespace Epsitec.Common.Script.Developer
 			this.tool_bar = new HToolBar (parent);
 			this.tool_tip = new ToolTip ();
 			
-			this.tool_tip.Behaviour = ToolTipBehaviour.Manual;
+			this.tool_bar.Dock = DockStyle.Top;
 			
-			this.method_combo = new TextFieldCombo ();
-			this.method_combo.Width      = 120;
-			this.method_combo.IsReadOnly = true;
-			this.method_combo.SelectedIndexChanged += new EventHandler (this.HandleSelectedMethodChanged);
-			this.method_combo.OpeningCombo         += new CancelEventHandler (this.HandleMethodOpeningCombo);
+			TabPage page = new TabPage ();
+			
+			page.TabTitle = "Source";
+			
+			this.method_book = new TabBook (parent);
+			this.method_book.HasCloseButton = true;
+			this.method_book.HasMenuButton  = true;
+			this.method_book.Dock        = DockStyle.Fill;
+			this.method_book.DockMargins = new Drawing.Margins (4, 4, 4, 4);
+			this.method_book.Items.Add (page);
+			
+			this.method_book.ActivePageChanged += new EventHandler (this.HandleActivePageChanged);
+			
+			this.tool_tip.Behaviour = ToolTipBehaviour.Manual;
 			
 			this.compile_button = new Button ();
 			this.compile_button.Text = "Compile";
 			this.compile_button.Command = "CompileSourceCode";
+			this.compile_button.Shortcut = new Shortcut (KeyCode.FuncF7);
+			
+			this.find_prev_error_button = new Button ();
+			this.find_prev_error_button.Width = 20;
+			this.find_prev_error_button.Text = "&lt;";
+			this.find_prev_error_button.Command = "FindNextError(-1)";
+			this.find_prev_error_button.Shortcut = new Shortcut (KeyCode.FuncF8 | KeyCode.ModifierShift);
 			
 			this.find_next_error_button = new Button ();
 			this.find_next_error_button.Width = 20;
 			this.find_next_error_button.Text = "&gt;";
-			this.find_next_error_button.Command = "FindNextError";
+			this.find_next_error_button.Command = "FindNextError(1)";
+			this.find_next_error_button.Shortcut = new Shortcut (KeyCode.FuncF8);
 			
-			this.tool_bar.Dock = DockStyle.Top;
-			
-			this.panel.Widget.Parent      = parent;
+			this.panel.Widget.Parent      = page;
 			this.panel.Widget.Dock        = DockStyle.Fill;
 			this.panel.Widget.DockMargins = new Drawing.Margins (4, 4, 4, 4);
 			
@@ -77,6 +92,8 @@ namespace Epsitec.Common.Script.Developer
 			
 			new UniqueValueValidator (this, this.panel.MethodProtoPanel.MethodNameWidget);
 			
+			this.panel.MethodProtoPanel.MethodNameWidget.TextChanged += new EventHandler (this.HandleMethodNameWidgetTextChanged);
+			
 			parent.Window.FocusedWidgetChanged += new EventHandler (this.HandleWindowFocusedWidgetChanged);
 		}
 		
@@ -88,9 +105,8 @@ namespace Epsitec.Common.Script.Developer
 			this.tool_bar.Items.Clear ();
 			this.tool_bar.Items.Add (IconButton.CreateSimple ("SaveSource", "manifest:Epsitec.Common.Script.Developer.Images.Save.icon"));
 			this.tool_bar.Items.Add (new IconSeparator ());
-			this.tool_bar.Items.Add (this.method_combo);
-			this.tool_bar.Items.Add (new IconSeparator ());
 			this.tool_bar.Items.Add (this.compile_button);
+			this.tool_bar.Items.Add (this.find_prev_error_button);
 			this.tool_bar.Items.Add (this.find_next_error_button);
 		}
 		
@@ -100,62 +116,78 @@ namespace Epsitec.Common.Script.Developer
 			{
 				this.panel.Method = this.source.Methods[this.method_index];
 				
-				this.UpdateMethodCombo ();
+				this.UpdateMethodBook ();
+				
+				object c_from = this.source_cursor_from[this.method_index];
+				object c_to   = this.source_cursor_to[this.method_index];
+				
+				if ((c_from != null) &&
+					(c_to   != null))
+				{
+					this.panel.SourceWidget.CursorFrom = (int) c_from;
+					this.panel.SourceWidget.CursorTo   = (int) c_to;
+				}
 			}
 		}
 		
-		protected virtual void UpdateMethodCombo()
+		protected virtual void UpdateMethodBook()
 		{
-			this.method_combo.Items.Clear ();
-			
-			foreach (Source.Method method in this.source.Methods)
+			if (this.source.Methods.Length != this.method_book.Items.Count)
 			{
-				this.method_combo.Items.Add (method.Signature, method.Name);
+				this.panel.Widget.Parent = null;
+				
+				this.method_book.Items.Clear ();
+				
+				foreach (Source.Method method in this.source.Methods)
+				{
+					TabPage page = new TabPage ();
+					
+					page.Name     = method.Signature;
+					page.TabTitle = method.Name;
+					page.TabButton.AutoFocus = false;
+					
+					this.method_book.Items.Add (page);
+				}
+			}
+			else
+			{
+				for (int i = 0; i < this.source.Methods.Length; i++)
+				{
+					TabPage       page   = this.method_book.Items[i];
+					Source.Method method = this.source.Methods[i];
+					
+					page.Name     = method.Signature;
+					page.TabTitle = method.Name;
+					page.TabButton.AutoFocus = false;
+				}
 			}
 			
-			if ((this.method_combo.SelectedIndex == -1) &&
-				(this.method_combo.Items.Count > 0))
-			{
-				this.method_combo.SelectedIndex = 0;
-			}
+			this.UpdateVisiblePage ();
 		}
 		
 		protected virtual void UpdateCommandStates(bool synchronise)
 		{
 			this.save_command_state.Enabled       = this.panel.IsModified;
 			this.compile_command_state.Enabled    = this.source.Methods.Length > 0;
-			this.find_error_command_state.Enabled = this.errors.Count > 0;
+			this.next_error_command_state.Enabled = this.errors.Count > 0;
 			
 			if (synchronise)
 			{
 				this.save_command_state.Synchronise ();
 				this.compile_command_state.Synchronise ();
-				this.find_error_command_state.Synchronise ();
+				this.next_error_command_state.Synchronise ();
 			}
 		}
 		
-		
-		protected virtual void SyncFromUI ()
+		protected virtual void UpdateVisiblePage()
 		{
-			if (this.method_index != -1)
-			{
-				this.tool_tip.HideToolTipForWidget (this.panel.SourceWidget);
-				
-				this.source.Methods[this.method_index] = this.panel.Method;
-				
-				this.UpdateMethodCombo ();
-			}
+			this.method_book.ActivePageIndex = this.method_index;
+			this.panel.Widget.Parent = this.method_book.ActivePage;
 		}
 		
-		
-		private void HandlePanelIsModifiedChanged(object sender)
+		protected virtual void UpdateErrorMessage()
 		{
-			this.UpdateCommandStates (false);
-		}
-		
-		private void HandleSourceCursorChanged(object sender)
-		{
-			TextFieldMulti text = sender as TextFieldMulti;
+			TextFieldMulti text = this.panel.SourceWidget;
 			
 			int tag;
 			
@@ -166,19 +198,26 @@ namespace Epsitec.Common.Script.Developer
 			{
 				Error error = this.errors[tag] as Error;
 				
-				Drawing.Point p1, p2;
+				this.UpdateErrorMessage (error);
+			}
+			else
+			{
+				this.UpdateErrorMessage (null);
+			}
+		}
 				
-				if ((error == null) ||
-					(text.GetCursorPosition (out p1, out p2) == false))
-				{
-					this.tool_tip.HideToolTipForWidget (text);
-				}
-				else
-				{
-					this.tool_tip.InitialLocation = text.MapClientToScreen (p1);
-					this.tool_tip.SetToolTip (text, error.Description);
-					this.tool_tip.ShowToolTipForWidget (text);
-				}
+		protected virtual void UpdateErrorMessage(Error error)
+		{
+			TextFieldMulti text = this.panel.SourceWidget;
+			
+			Drawing.Point p1, p2;
+			
+			if ((error != null) &&
+				(text.GetCursorPosition (out p1, out p2)))
+			{
+				this.tool_tip.InitialLocation = text.MapClientToScreen (p1);
+				this.tool_tip.SetToolTip (text, error.Description);
+				this.tool_tip.ShowToolTipForWidget (text);
 			}
 			else
 			{
@@ -186,12 +225,81 @@ namespace Epsitec.Common.Script.Developer
 			}
 		}
 		
-		private void HandleSelectedMethodChanged(object sender)
+		
+		protected virtual void ShowMethod(string signature)
 		{
-			if (this.method_index != this.method_combo.SelectedIndex)
+			this.UpdateMethodBook ();
+			
+			foreach (TabPage page in this.method_book.Items)
 			{
-				this.method_index = this.method_combo.SelectedIndex;
-				this.UpdateFromSource ();
+				if (page.Name == signature)
+				{
+					this.method_book.ActivePage = page;
+					return;
+				}
+			}
+		}
+		
+		protected virtual void SyncFromUI ()
+		{
+			if (this.method_index != -1)
+			{
+				this.source_cursor_from[this.method_index] = this.panel.SourceWidget.CursorFrom;
+				this.source_cursor_to[this.method_index]   = this.panel.SourceWidget.CursorTo;
+				
+				this.tool_tip.HideToolTipForWidget (this.panel.SourceWidget);
+				
+				this.source.Methods[this.method_index] = this.panel.Method;
+			}
+		}
+		
+		protected virtual void FocusSource ()
+		{
+			this.panel.SourceWidget.Focus ();
+		}
+		
+		private void HandlePanelIsModifiedChanged(object sender)
+		{
+			this.UpdateCommandStates (false);
+		}
+		
+		private void HandleSourceCursorChanged(object sender)
+		{
+			this.UpdateErrorMessage ();
+		}
+		
+		private void HandleActivePageChanged(object sender)
+		{
+			if (this.is_changing_page)
+			{
+				return;
+			}
+			
+			try
+			{
+				this.is_changing_page = true;
+				
+				if (this.method_index != this.method_book.ActivePageIndex)
+				{
+					//	En retirant le panel de son parent, on force automatiquement la mise à jour
+					//	des éventuels champs qui avaient encore le focus (en particulier, le nom de
+					//	la méthode) :
+					
+					this.panel.Widget.Parent = null;
+					this.SyncFromUI ();
+					
+					this.tool_tip.HideToolTipForWidget (this.panel.SourceWidget);
+					
+					this.method_index = this.method_book.ActivePageIndex;
+					
+					this.UpdateVisiblePage ();
+					this.UpdateFromSource ();
+					this.FocusSource ();
+				}
+			}
+			finally
+			{
+				this.is_changing_page = false;
 			}
 		}
 		
@@ -216,20 +324,22 @@ namespace Epsitec.Common.Script.Developer
 			}
 		}
 		
-		private void HandleMethodOpeningCombo(object sender, CancelEventArgs e)
+		private void HandleMethodNameWidgetTextChanged(object sender)
 		{
-			this.SyncFromUI ();
+			this.method_book.ActivePage.TabTitle = this.panel.MethodProtoPanel.MethodNameWidget.Text;
 		}
 		
 		
 		[Command ("SaveSource")]		void CommandSaveSource()
 		{
+			this.FocusSource ();
 			this.SyncFromUI ();
 			this.panel.IsModified = false;
 		}
 		
 		[Command ("CompileSourceCode")]	void CommandCompileSourceCode()
 		{
+			this.FocusSource ();
 			this.SyncFromUI ();
 			
 			string source = this.source.GenerateAssemblySource ();
@@ -245,7 +355,7 @@ namespace Epsitec.Common.Script.Developer
 			}
 			
 			this.errors.Clear ();
-			this.next_error = 0;
+			this.next_error = -1;
 			
 			if (script.HasErrors)
 			{
@@ -293,22 +403,50 @@ namespace Epsitec.Common.Script.Developer
 			this.UpdateCommandStates (false);
 		}
 		
-		[Command ("FindNextError")]		void CommandFindNextError()
+		[Command ("FindNextError")]		void CommandFindNextError(CommandDispatcher d, CommandEventArgs e)
 		{
+			this.FocusSource ();
 			this.SyncFromUI ();
+			
+			int dir = 1;
+			
+			if (e.CommandArgs.Length >= 1)
+			{
+				Types.Converter.Convert (e.CommandArgs[0], out dir);
+			}
 			
 			if (this.errors.Count > 0)
 			{
 				int next = this.next_error;
 				
-				this.next_error = (next+1) < this.errors.Count ? next+1 : 0;
+				if (dir > 0)
+				{
+					next++;
+				}
+				else
+				{
+					next--;
+				}
+				
+				if (next < 0)
+				{
+					next = this.errors.Count-1;
+				}
+				else if (next >= this.errors.Count)
+				{
+					next = 0;
+				}
+				
+				this.next_error = next;
 				
 				Error error = this.errors[next] as Error;
 				
-				this.method_combo.SelectedName = error.Method.Signature;
+				this.ShowMethod (error.Method.Signature);
 				this.panel.SourceWidget.Cursor = Error.FindPosInRichText (this.panel.SourceWidget.Text, error.Line, error.Column);
+				this.UpdateErrorMessage (error);
 			}
 		}
+		
 		
 		
 		#region UniqueValueValidator Class
@@ -532,19 +670,23 @@ namespace Epsitec.Common.Script.Developer
 		
 		protected CommandDispatcher				dispatcher;
 		protected Source						source;
+		protected System.Collections.Hashtable	source_cursor_from = new System.Collections.Hashtable ();
+		protected System.Collections.Hashtable	source_cursor_to   = new System.Collections.Hashtable ();
 		protected Panels.MethodEditionPanel		panel;
 		protected ToolTip						tool_tip;
 		protected HToolBar						tool_bar;
-		protected TextFieldCombo				method_combo;
+		protected TabBook						method_book;
 		protected Button						compile_button;
+		protected Button						find_prev_error_button;
 		protected Button						find_next_error_button;
 		protected int							method_index;
 		protected bool							edit_array_focused;
 		protected System.Collections.ArrayList	errors = new System.Collections.ArrayList ();
 		protected int							next_error;
+		protected bool							is_changing_page;
 		
 		protected CommandState					save_command_state;
 		protected CommandState					compile_command_state;
-		protected CommandState					find_error_command_state;
+		protected CommandState					next_error_command_state;
 	}
 }
