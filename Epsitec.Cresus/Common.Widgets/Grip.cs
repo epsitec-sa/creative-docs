@@ -135,7 +135,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			if (this.drag_behavior.ProcessMessage (message, pos))
+			if (! this.drag_behavior.ProcessMessage (message, pos))
 			{
 				base.ProcessMessage (message, pos);
 			}

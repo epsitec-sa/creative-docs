@@ -705,6 +705,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Helpers\CopyPasteBehavior.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Helpers\DragBehavior.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -346,7 +346,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (! this.is_scrolling)
 			{
-				if (this.drag_behavior.ProcessMessage (message, pos))
+				if (! this.drag_behavior.ProcessMessage (message, pos))
 				{
 					base.ProcessMessage (message, pos);
 				}

@@ -29,11 +29,12 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.Engageable;
 			this.InternalState |= InternalState.AutoDoubleClick;
 			this.textStyle = TextFieldStyle.Normal;
-
+			
 			this.ResetCursor();
 			this.MouseCursor = MouseCursor.AsIBeam;
-
+			
 			this.CreateTextLayout();
+			this.copyPasteBehavior = new Helpers.CopyPasteBehavior (this);
 		}
 		
 		public AbstractTextField(Widget embedder) : this()
@@ -215,14 +216,50 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( this.textStyle != value )
+				if (this.textStyle != value)
 				{
-					this.textStyle = value;
-					this.Invalidate();
+					if ((this.textStyle == TextFieldStyle.Normal) ||
+						(this.textStyle == TextFieldStyle.Simple) ||
+						(this.textStyle == TextFieldStyle.Static) ||
+						(this.textStyle == TextFieldStyle.Flat))
+					{
+						if ((value == TextFieldStyle.Normal) ||
+							(value == TextFieldStyle.Simple) ||
+							(value == TextFieldStyle.Static) ||
+							(value == TextFieldStyle.Flat))
+						{
+							this.textStyle = value;
+							this.Invalidate ();
+							return;
+						}
+					}
+					
+					throw new System.InvalidOperationException (string.Format ("Cannot switch from {0} to {1}.", this.textStyle, value));
 				}
 			}
 		}
 
+		
+		public string							Selection
+		{
+			get
+			{
+				int cursorFrom = this.TextLayout.FindOffsetFromIndex(this.cursorFrom);
+				int cursorTo   = this.TextLayout.FindOffsetFromIndex(this.cursorTo);
+				
+				int from = System.Math.Min(cursorFrom, cursorTo);
+				int to   = System.Math.Max(cursorFrom, cursorTo);
+				
+				string text = this.Text;
+				
+				return text.Substring (from, to - from);
+			}
+			set
+			{
+				this.ReplaceSelection (value);
+			}
+		}
+		
 		
 		public int								Cursor
 		{
@@ -413,6 +450,11 @@ namespace Epsitec.Common.Widgets
 		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
+			if (this.copyPasteBehavior.ProcessMessage (message, pos))
+			{
+				return;
+			}
+			
 			pos.X -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
 			pos.Y -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
 			pos += this.scrollOffset;
@@ -457,7 +499,8 @@ namespace Epsitec.Common.Widgets
 				case MessageType.KeyDown:
 					if ( this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed) )
 					{
-						message.Consumer = this;
+						message.Consumer  = this;
+						message.Swallowed = true;
 					}
 					break;
 				
@@ -585,11 +628,11 @@ namespace Epsitec.Common.Widgets
 		// Insère un caractère.
 		protected bool InsertCharacter(char character)
 		{
-			return this.InsertString(TextLayout.ConvertToTaggedText(character));
+			return this.ReplaceSelection(TextLayout.ConvertToTaggedText(character));
 		}
 
 		// Insère une chaîne correspondant à un caractère ou un tag (jamais plus).
-		protected bool InsertString(string ins)
+		protected bool ReplaceSelection(string ins)
 		{
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
 			if ( this.isReadOnly )  return false;
@@ -620,9 +663,9 @@ namespace Epsitec.Common.Widgets
 			
 			int cursor = this.TextLayout.FindOffsetFromIndex(this.cursorTo);
 			text = text.Insert(cursor, ins);
-			this.cursorTo ++;
-			this.cursorFrom = this.cursorTo;
 			this.Text = text;
+			this.cursorTo   = this.TextLayout.FindIndexFromOffset (cursor + ins.Length);
+			this.cursorFrom = this.cursorTo;
 			this.OnTextInserted();
 			this.OnCursorChanged();
 			return true;
@@ -1044,8 +1087,8 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public event Support.EventHandler TextInserted;
-		public event Support.EventHandler TextDeleted;
+		public event Support.EventHandler		TextInserted;
+		public event Support.EventHandler		TextDeleted;
 		
 		
 		internal static readonly double			TextMargin = 2;
@@ -1065,6 +1108,8 @@ namespace Epsitec.Common.Widgets
 		protected double						cursorPosX;
 		protected int							maxChar = 1000;
 		protected bool							mouseDown = false;
+		
+		private Helpers.CopyPasteBehavior		copyPasteBehavior;
 		
 		private static Timer					flashTimer;
 		private static bool						flashTimerStarted = false;
