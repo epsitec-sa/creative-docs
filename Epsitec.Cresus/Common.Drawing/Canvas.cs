@@ -71,6 +71,8 @@ namespace Epsitec.Common.Drawing
 				using (Drawing.Agg.Graphics graphics = new Agg.Graphics ())
 				{
 					graphics.SetPixmapSize (dx, dy);
+					Drawing.Pixmap pixmap = graphics.Pixmap;
+					pixmap.Clear ();
 					
 					Canvas.Engine.Paint (graphics, size, this.data);
 					
@@ -79,11 +81,39 @@ namespace Epsitec.Common.Drawing
 					using (System.Drawing.Graphics win32_graphics = System.Drawing.Graphics.FromImage (win32_bitmap))
 					{
 						System.Drawing.Rectangle clip = new System.Drawing.Rectangle (0, 0, dx, dy);
-						Drawing.Pixmap pixmap = graphics.Pixmap;
 						pixmap.Blend (win32_graphics, new System.Drawing.Point (0, 0), clip);
 					}
 					
 					System.Diagnostics.Debug.WriteLine ("Cached bitmap size: " + this.Size.ToString ());
+					
+					int width;
+					int height;
+					int stride;
+					System.Drawing.Imaging.PixelFormat format;
+					System.IntPtr scan0;
+					pixmap.GetMemoryLayout (out width, out height, out stride, out format, out scan0);
+					
+					System.Drawing.Imaging.BitmapData data = win32_bitmap.LockBits (new System.Drawing.Rectangle (0, 0, width, height), System.Drawing.Imaging.ImageLockMode.WriteOnly, format);
+					
+					unsafe
+					{
+						uint* src = (uint*) scan0.ToPointer ();
+						uint* dst = (uint*) data.Scan0.ToPointer () + height * stride / 4;
+						
+						for (int line = 0; line < height; line++)
+						{
+							dst -= stride / 4;
+							uint* ptr = dst;
+							
+							for (int x = 0; x < stride / 4; x++)
+							{
+								*ptr++ = *src++;
+							}
+						}
+					}
+					win32_bitmap.UnlockBits (data);
+					
+					System.Diagnostics.Debug.WriteLine (width+"x"+height+", "+stride+", ptr="+scan0.ToString());
 					
 					this.cache = Bitmap.FromNativeBitmap (win32_bitmap, this.Origin, this.Size).BitmapImage;
 				}
