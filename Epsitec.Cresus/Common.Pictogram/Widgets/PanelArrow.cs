@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelArrow : AbstractPanel
 	{
-		public PanelArrow()
+		public PanelArrow(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -48,6 +48,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.fieldLength[j].TextChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldLength[j].TabIndex = index++;
 				this.fieldLength[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				ToolTip.Default.SetToolTip(this.fieldLength[j], "Longueur");
 
 				this.fieldEffect1[j] = new TextFieldSlider(this);
 				this.fieldEffect1[j].MinValue = -100;
@@ -56,6 +57,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.fieldEffect1[j].TextChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldEffect1[j].TabIndex = index++;
 				this.fieldEffect1[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				ToolTip.Default.SetToolTip(this.fieldEffect1[j], "Paramètre A");
 
 				this.fieldEffect2[j] = new TextFieldSlider(this);
 				this.fieldEffect2[j].MinValue = -100;
@@ -64,6 +66,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.fieldEffect2[j].TextChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldEffect2[j].TabIndex = index++;
 				this.fieldEffect2[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				ToolTip.Default.SetToolTip(this.fieldEffect2[j], "Paramètre B");
 
 				this.labelLength[j] = new StaticText(this);
 				this.labelLength[j].Text = "L";
@@ -83,13 +86,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.swapArrow = new IconButton(this);
 			this.swapArrow.IconName = @"file:images/swapdata.icon";
 			this.swapArrow.Clicked += new MessageEventHandler(this.SwapArrowClicked);
+			ToolTip.Default.SetToolTip(this.swapArrow, "Permute les extrémités");
 
 			this.isNormalAndExtended = true;
-		}
-		
-		public PanelArrow(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)
