@@ -118,6 +118,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DecimalType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IDataCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -179,11 +184,6 @@
                 />
                 <File
                     RelPath = "IString.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "NumType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
