@@ -711,7 +711,7 @@ namespace Epsitec.Common.Widgets
 			this.table.SetSortingHeader(fd.rank, mode);
 
 			this.table.SelectedIndex = this.recordRank;
-			this.table.ShowSelect(ScrollArrayShow.Extremity);
+			this.table.ShowSelected(ScrollArrayShowMode.Extremity);
 		}
 
 		// Initialise la liste d'une ligne éditable "combo".
@@ -784,7 +784,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.recordRank = rank;
 				this.table.SelectedIndex = this.recordRank;
-				this.table.ShowSelect(ScrollArrayShow.Extremity);
+				this.table.ShowSelected(ScrollArrayShowMode.Extremity);
 				this.UpdateLayout();
 
 				this.editCrit.Text = complete;
@@ -804,7 +804,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.recordRank = rank;
 				this.table.SelectedIndex = this.recordRank;
-				this.table.ShowSelect(ScrollArrayShow.Extremity);
+				this.table.ShowSelected(ScrollArrayShowMode.Extremity);
 				this.UpdateLayout();
 				this.UpdateButton();
 				this.SetFocus(field);

@@ -1,12 +1,12 @@
 namespace Epsitec.Common.Widgets
 {
-	public enum ScrollArrayShow
+	public enum ScrollArrayShowMode
 	{
 		Extremity,		// déplacement minimal aux extrémités
 		Center,			// déplacement central
 	}
 
-	public enum ScrollArrayAdjust
+	public enum ScrollArrayAdjustMode
 	{
 		MoveUp,			// déplace le haut
 		MoveDown,		// déplace le bas
@@ -287,6 +287,25 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								IsSelectedVisible
+		{
+			get
+			{
+				if (this.selected_row == -1)
+				{
+					return true;
+				}
+				
+				if ((this.selected_row >= this.first_visible_row) &&
+					(this.selected_row < this.first_visible_row + this.n_fully_visible_rows))
+				{
+					return true;
+				}
+				
+				return false;
+			}
+		}
+		
 		
 		public void SetColumnWidth(int column, double width)
 		{
@@ -329,7 +348,7 @@ namespace Epsitec.Common.Widgets
 		{
 			foreach (HeaderButton button in this.header_buttons)
 			{
-				button.Clicked     -= new MessageEventHandler (this.HandleButtonClicked);
+				button.Clicked     -= new MessageEventHandler (this.HandleHeaderButtonClicked);
 			}
 			foreach (HeaderSlider slider in this.header_sliders)
 			{
@@ -348,7 +367,7 @@ namespace Epsitec.Common.Widgets
 				button.Style    = HeaderButtonStyle.Top;
 				button.Dynamic  = true;
 				button.Index    = i;
-				button.Clicked += new MessageEventHandler (this.HandleButtonClicked);
+				button.Clicked += new MessageEventHandler (this.HandleHeaderButtonClicked);
 				
 				this.header_buttons.Add (button);
 			}
@@ -418,213 +437,221 @@ namespace Epsitec.Common.Widgets
 			{
 				throw new System.ArgumentOutOfRangeException ("column", column, "Column index out of range");
 			}
-
-			for (int i = 0; i < this.max_columns; i++)
+			
+			if (this.FindButton (column).SortMode != mode)
 			{
-				this.FindButton (i).SortMode = i == column ? mode : SortMode.None;
+				for (int i = 0; i < this.max_columns; i++)
+				{
+					this.FindButton (i).SortMode = i == column ? mode : SortMode.None;
+				}
+				
+				this.OnSortChanged ();
 			}
 		}
 
-		// Retourne la colonne de tri.
 		public bool GetSortingHeader(out int column, out SortMode mode)
 		{
-			for (column = 0; column < this.max_columns; column++)
+			for (int i = 0; i < this.max_columns; i++)
 			{
-				HeaderButton button = this.FindButton (column);
-
-				mode = button.SortMode;
-				if (mode != 0)  return true;
+				HeaderButton button = this.FindButton (i);
+				
+				if (button.SortMode != SortMode.None)
+				{
+					column = i;
+					mode   = button.SortMode;
+					
+					return true;
+				}
 			}
 
 			column = -1;
-			mode = 0;
+			mode   = SortMode.None;
+			
 			return false;
 		}
 
-		// Indique si la ligne sélectionnée est visible.
-		public bool IsShowSelect()
+		
+		
+		public void ShowSelected(ScrollArrayShowMode mode)
 		{
-			if (this.selected_row == -1)  return true;
-
-			if (this.selected_row >= this.first_visible_row && this.selected_row < this.first_visible_row + this.n_fully_visible_rows)  return true;
-
-			return false;
-		}
-
-		// Rend la ligne sélectionnée visible.
-		public void ShowSelect(ScrollArrayShow mode)
-		{
-			if (this.selected_row == -1)  return;
-
-			int fl = this.first_visible_row;
-
-			if (mode == ScrollArrayShow.Extremity)
+			if (this.selected_row == -1)
 			{
-				if (this.selected_row < this.first_visible_row)
-				{
-					fl = this.selected_row;
-				}
-
-				if (this.selected_row > this.first_visible_row + this.n_fully_visible_rows - 1)
-				{
-					fl = this.selected_row - (this.n_fully_visible_rows - 1);
-				}
+				return;
+			}
+			
+			int first  = this.first_visible_row;
+			int num    = System.Math.Min (this.n_fully_visible_rows, this.max_rows);
+			int height = 1;
+			
+			switch (mode)
+			{
+				case ScrollArrayShowMode.Extremity:
+					if (this.selected_row < this.first_visible_row)
+					{
+						//	La ligne était en-dessus du sommet de la liste :
+						
+						first = this.selected_row;
+					}
+					
+					if (this.selected_row > this.first_visible_row + this.n_fully_visible_rows - height)
+					{
+						//	La ligne était en-dessous du bas de la liste :
+						
+						first = this.selected_row - (this.n_fully_visible_rows - height);
+					}
+					break;
+				
+				case ScrollArrayShowMode.Center:
+					first = System.Math.Min (this.selected_row + num / 2, this.max_rows - 1);
+					first = System.Math.Max (first - num + 1, 0);
+					break;
 			}
 
-			if (mode == ScrollArrayShow.Center)
-			{
-				int display = System.Math.Min (this.n_fully_visible_rows, this.max_rows);
-
-				fl = System.Math.Min (this.selected_row + display / 2, this.max_rows - 1);
-				fl = System.Math.Max (fl - display + 1, 0);
-			}
-
-			this.first_visible_row = fl;
+			this.first_visible_row = first;
 		}
 
-		// Ajuste la hauteur pour afficher pile un nombre entier de lignes.
-		public bool AdjustToMultiple(ScrollArrayAdjust mode)
+		public bool AdjustToMultiple(ScrollArrayAdjustMode mode)
 		{
+			//	Ajuste la hauteur pour afficher pile un nombre entier de lignes.
+			
 			this.Update ();
-
-			double h = this.table_bounds.Height;
-			int nbLines = (int) (h / this.row_height);
-			double adjust = h - nbLines * this.row_height;
-
-			if (adjust == 0)  return false;
-
-			if (mode == ScrollArrayAdjust.MoveUp)
+			
+			double height = this.table_bounds.Height;
+			int    num    = (int) (height / this.row_height);
+			double adjust = height - num * this.row_height;
+			
+			if (adjust == 0)
 			{
-				this.Top = System.Math.Floor (this.Top - adjust);
+				return false;
 			}
-
-			if (mode == ScrollArrayAdjust.MoveDown)
+			
+			switch (mode)
 			{
-				this.Bottom = System.Math.Floor (this.Bottom + adjust);
+				case ScrollArrayAdjustMode.MoveUp:
+					this.Top    = System.Math.Floor (this.Top - adjust);
+					break;
+				
+				case ScrollArrayAdjustMode.MoveDown:
+					this.Bottom = System.Math.Floor (this.Bottom + adjust);
+					break;
 			}
 
 			this.Invalidate ();
+			
 			return true;
 		}
 
-		// Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
-		public bool AdjustToContent(ScrollArrayAdjust mode, double hMin, double hMax)
+		public bool AdjustToContents(ScrollArrayAdjustMode mode, double min_height, double max_height)
 		{
+			//	Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
+			
 			this.Update ();
-
-			double h = this.row_height * this.max_rows + this.frame_margins.Height + this.table_margins.Height;
-			double hope = h;
-
-			h = System.Math.Max (h, hMin);
-			h = System.Math.Min (h, hMax);
-			if (h == this.Height)  return false;
-
-			if (mode == ScrollArrayAdjust.MoveUp)
+			
+			double height = this.row_height * this.max_rows + this.frame_margins.Height + this.table_margins.Height;
+			double desire = height;
+			
+			height = System.Math.Max (height, min_height);
+			height = System.Math.Min (height, max_height);
+			
+			if (height == this.Height)
 			{
-				this.Top = this.Bottom + h;
+				return false;
 			}
-
-			if (mode == ScrollArrayAdjust.MoveDown)
+			
+			switch (mode)
 			{
-				this.Bottom = this.Top - h;
+				case ScrollArrayAdjustMode.MoveUp:
+					this.Top    = this.Bottom + height;
+					break;
+				case ScrollArrayAdjustMode.MoveDown:
+					this.Bottom = this.Top - height;
+					break;
 			}
-
+			
 			this.Invalidate ();
-			if (h != hope)  AdjustToMultiple (mode);
-
+			
+			if (height != desire)
+			{
+				this.AdjustToMultiple (mode);
+			}
+			
 			return true;
 		}
 
-		// Appelé lorsque l'ascenseur a bougé.
+		
 		private void HandleVScrollerChanged(object sender)
 		{
 			this.FirstVisibleIndex = (int) System.Math.Floor (this.v_scroller.Value + 0.5);
-			//this.SetFocused(true);
 		}
 
-		// Appelé lorsque l'ascenseur a bougé.
 		private void HandleHScrollerChanged(object sender)
 		{
 			this.Offset = System.Math.Floor (this.h_scroller.Value);
-			//this.SetFocused(true);
 		}
 
-		// Appelé lorsque le bouton d'en-tête a été cliqué.
-		private void HandleButtonClicked(object sender, MessageEventArgs e)
+		private void HandleHeaderButtonClicked(object sender, MessageEventArgs e)
 		{
-			foreach (HeaderButton button in this.header_buttons)
+			HeaderButton button = sender as HeaderButton;
+			
+			int      column = button.Index;
+			SortMode mode   = button.SortMode;
+			
+			switch (mode)
 			{
-				if (sender == button)
-				{
-					int      column = button.Index;
-					SortMode mode   = button.SortMode;
-					
-					switch (mode)
-					{
-						case SortMode.Up:
-						case SortMode.None:
-							mode = SortMode.Down;
-							break;
+				case SortMode.Up:
+				case SortMode.None:
+					mode = SortMode.Down;
+					break;
 
-						case SortMode.Down:
-							mode = SortMode.Up;
-							break;
-					}
-					this.SetSortingHeader (column, mode);
-					this.OnSortChanged ();
-					return;
-				}
+				case SortMode.Down:
+					mode = SortMode.Up;
+					break;
 			}
+			
+			this.SetSortingHeader (column, mode);
+			
 		}
 
-		// Appelé lorsque le slider va être déplacé.
 		private void HandleSliderDragStarted(object sender, MessageEventArgs e)
 		{
 			HeaderSlider slider = sender as HeaderSlider;
-
 			this.DragStartedColumn (slider.Index, e.Point.X);
 		}
 
-		// Appelé lorsque le slider est déplacé.
 		private void HandleSliderDragMoved(object sender, MessageEventArgs e)
 		{
 			HeaderSlider slider = sender as HeaderSlider;
-
 			this.DragMovedColumn (slider.Index, e.Point.X);
 		}
-
-		// Appelé lorsque le slider est fini de déplacer.
+		
 		private void HandleSliderDragEnded(object sender, MessageEventArgs e)
 		{
 			HeaderSlider slider = sender as HeaderSlider;
-
 			this.DragEndedColumn (slider.Index, e.Point.X);
 		}
 
-		// La largeur d'une colonne va être modifiée.
-		protected void DragStartedColumn(int column, double pos)
+		
+		protected virtual void DragStartedColumn(int column, double pos)
 		{
-			this.dragRank = column;
-			this.dragPos = pos;
-			this.dragDim = this.GetColumnWidth (column);
+			this.drag_rank = column;
+			this.drag_pos  = pos;
+			this.drag_dim  = this.GetColumnWidth (column);
 		}
 
-		// Modifie la largeur d'une colonne.
-		protected void DragMovedColumn(int column, double pos)
+		protected virtual void DragMovedColumn(int column, double pos)
 		{
-			double newWidth = this.GetColumnWidth (column) + pos - this.dragPos;
+			double width = this.GetColumnWidth (column) + pos - this.drag_pos;
 
-			this.SetColumnWidth (this.dragRank, newWidth);
+			this.SetColumnWidth (this.drag_rank, width);
 			this.InvalidateContents ();
 		}
 
-		// La largeur d'une colonne a été modifiée.
-		protected void DragEndedColumn(int column, double pos)
+		protected virtual void DragEndedColumn(int column, double pos)
 		{
 			this.InvalidateContents ();
 		}
 
-		// Gestion d'un événement.
+		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			switch (message.Type)
@@ -652,30 +679,38 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.KeyDown :
-					ProcessKeyDown (message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
+					this.ProcessKeyDown (message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
 					break;
 			}
+			
 			message.Consumer = this;
 		}
 
-		// Sélectionne la ligne selon la souris.
-		protected bool MouseSelect(double pos)
+		
+		protected virtual bool MouseSelect(double pos)
 		{
 			pos = this.Client.Height - pos;
-
+			
 			int line = (int) ((pos - this.frame_margins.Top - this.table_margins.Top) / this.row_height);
-
-			if (line < 0 || line >= this.n_visible_rows)  return false;
-
+			
+			if ((line < 0) ||
+				(line >= this.n_visible_rows))
+			{
+				return false;
+			}
+			
 			line += this.first_visible_row;
-			if (line > this.max_rows - 1)  return false;
-
+			
+			if (line > this.max_rows - 1)
+			{
+				return false;
+			}
+			
 			this.SelectedIndex = line;
 			return true;
 		}
 
-		// Gestion d'une touche pressée avec KeyDown dans la liste.
-		protected void ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
+		protected virtual void ProcessKeyDown(KeyCode key, bool is_shift_pressed, bool is_ctrl_pressed)
 		{
 			int sel;
 
@@ -683,144 +718,167 @@ namespace Epsitec.Common.Widgets
 			{
 				case KeyCode.ArrowUp :
 					sel = this.SelectedIndex - 1;
+					
 					if (sel >= 0)
 					{
 						this.SelectedIndex = sel;
-						if (!this.IsShowSelect ())  this.ShowSelect (ScrollArrayShow.Extremity);
+						
+						if (!this.IsSelectedVisible)
+						{
+							this.ShowSelected (ScrollArrayShowMode.Extremity);
+						}
 					}
-
 					break;
-
+				
 				case KeyCode.ArrowDown :
 					sel = this.SelectedIndex + 1;
+					
 					if (sel < this.max_rows)
 					{
 						this.SelectedIndex = sel;
-						if (!this.IsShowSelect ())  this.ShowSelect (ScrollArrayShow.Extremity);
+						if (!this.IsSelectedVisible)
+						{
+							this.ShowSelected (ScrollArrayShowMode.Extremity);
+						}
 					}
-
 					break;
 			}
 		}
 
-		// Demande de régénérer tout le contenu.
 		public void RefreshContent()
 		{
-			this.lastVisibleRows = -1;
+			this.last_visible_rows = -1;
 			this.InvalidateContents ();
 		}
 
-		// Met à jour la géométrie du tableau.
 		protected void Update()
 		{
-			if (this.column_widths == null)  return;
-
-			if (!this.is_dirty)  return;
-
-			this.UpdateClientGeometry ();
+			if (this.is_dirty)
+			{
+				this.UpdateClientGeometry ();
+			}
 		}
-
-		// Met à jour la géométrie de la liste.
+		
+		
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry ();
 			
 			
-			if (this.column_widths == null)  return;
-
-			if (this.v_scroller == null || this.h_scroller == null)  return;
-
+			if ((this.column_widths == null) ||
+				(this.v_scroller == null) ||
+				(this.h_scroller == null) ||
+				(this.header == null))
+			{
+				return;
+			}
+			
 			this.is_dirty = false;
-
+			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			this.row_height    = this.DefaultFontHeight + 2;
 			this.frame_margins = adorner.GeometryArrayMargins;
 			this.table_margins = new Drawing.Margins (0, this.v_scroller.Width - 1, this.row_height, this.h_scroller.Height - 1);
+			this.table_bounds  = this.Client.Bounds;
 			
-			this.table_bounds = this.Client.Bounds;
 			this.table_bounds.Deflate (this.frame_margins);
 			this.table_bounds.Deflate (this.table_margins);
 			
 			double v = this.table_bounds.Height / this.row_height;
 
-			this.n_visible_rows = (int) System.Math.Ceiling (v);  // compte la dernière ligne partielle
-			this.n_fully_visible_rows = (int) System.Math.Floor (v);  // nb de lignes entières
-
-			// Alloue le tableau des textes.
+			this.n_visible_rows       = (int) System.Math.Ceiling (v);	//	compte la dernière ligne partielle
+			this.n_fully_visible_rows = (int) System.Math.Floor (v);	//	nb de lignes entières
+			
+			//	Alloue le tableau des textes :
+			
 			int dx = System.Math.Max (this.n_visible_rows, 1);
 			int dy = System.Math.Max (this.max_columns, 1);
-
-			if (dx != this.lastDx || dy != this.lastDy)
+			
+			if ((dx != this.last_dx) ||
+				(dy != this.last_dy))
 			{
 				this.layouts = new TextLayout[dx, dy];
-				this.lastDx  = dx;
-				this.lastDy  = dy;
-				this.lastVisibleRows = -1;
+				this.last_dx = dx;
+				this.last_dy = dy;
+				this.last_visible_rows = -1;
 			}
-
-			// Place l'en-tête
-			Drawing.Rectangle aRect = new Drawing.Rectangle ();
-
-			aRect.Left   = this.table_bounds.Left;
-			aRect.Right  = this.table_bounds.Right;
-			aRect.Bottom = this.table_bounds.Top;
-			aRect.Top    = this.table_bounds.Top + this.row_height;
-			this.header.Bounds = aRect;
-			if (this.is_header_dirty)  this.header.Children.Clear ();
-
-			// Place les boutons dans l'en-tête.
-			aRect.Bottom = 0;
-			aRect.Top    = this.table_margins.Top;
-			aRect.Left   = -this.offset;
+			
+			//	Positionne l'en-tête :
+			
+			Drawing.Rectangle rect = this.table_bounds;
+			
+			rect.Bottom = this.table_bounds.Top;
+			rect.Top    = this.table_bounds.Top + this.row_height;
+			
+			this.header.Bounds = rect;
+			this.header.SuspendLayout ();
+			
+			//	Place les boutons dans l'en-tête :
+			
+			rect.Bottom = 0;
+			rect.Top    = this.table_margins.Top;
+			rect.Left   = -this.offset;
+			
 			for (int i = 0; i < this.max_columns; i++)
 			{
-				aRect.Right = aRect.Left + this.GetColumnWidth (i);
-
 				HeaderButton button = this.FindButton (i);
-
+				
+				rect.Right = rect.Left + this.GetColumnWidth (i);
+				
 				button.Show ();
-				button.Bounds = aRect;
-				if (this.is_header_dirty)  this.header.Children.Add (button);
-
-				aRect.Left = aRect.Right;
+				button.Bounds = rect;
+				
+				rect.Left  = rect.Right;
 			}
-
-			// Place les sliders dans l'en-tête.
-			aRect.Bottom = 0;
-			aRect.Top = this.table_margins.Top;
-			aRect.Left = -this.offset;
+			
+			//	Place les sliders dans l'en-tête :
+			
+			rect.Bottom = 0;
+			rect.Top    = this.table_margins.Top;
+			rect.Left   = -this.offset;
+			
 			for (int i = 0; i < this.max_columns; i++)
 			{
-				aRect.Right = aRect.Left + this.GetColumnWidth (i);
-
-				HeaderSlider slider = this.FindSlider (i);
-				Drawing.Rectangle sRect = new Drawing.Rectangle ();
-
-				sRect.Left   = aRect.Right - this.slider_dim / 2;
-				sRect.Right  = aRect.Right + this.slider_dim / 2;
-				sRect.Bottom = aRect.Bottom;
-				sRect.Top    = aRect.Top;
+				HeaderSlider      slider = this.FindSlider (i);
+				Drawing.Rectangle bounds = rect;
+				
+				rect.Right   = rect.Left + this.GetColumnWidth (i);
+				bounds.Left  = rect.Right - this.slider_dim / 2;
+				bounds.Right = rect.Right + this.slider_dim / 2;
+				rect.Left    = rect.Right;
+				
 				slider.Show ();
-				slider.Bounds = sRect;
-				if (this.is_header_dirty)  this.header.Children.Add (slider);
-
-				aRect.Left = aRect.Right;
+				slider.Bounds = bounds;
 			}
-
-			// Place l'ascenseur vertical.
-			aRect.Left   = this.table_bounds.Right-1;
-			aRect.Right  = this.table_bounds.Right-1 + this.v_scroller.Width;
-			aRect.Bottom = this.table_bounds.Bottom;
-			aRect.Top    = this.table_bounds.Top;
-			this.v_scroller.Bounds = aRect;
-
-			// Place l'ascenseur horizontal.
-			aRect.Left   = this.table_bounds.Left;
-			aRect.Right  = this.table_bounds.Right;
-			aRect.Bottom = this.table_bounds.Bottom+1 - this.h_scroller.Height;
-			aRect.Top    = this.table_bounds.Bottom+1;
-			this.h_scroller.Bounds = aRect;
+			
+			if (this.is_header_dirty)
+			{
+				this.header.Children.Clear ();
+				this.header.Children.AddRange (this.header_buttons);
+				this.header.Children.AddRange (this.header_sliders);
+			}
+			
+			this.header.ResumeLayout ();
+			
+			//	Place l'ascenseur vertical :
+			
+			rect.Left   = this.table_bounds.Right-1;
+			rect.Right  = this.table_bounds.Right-1 + this.v_scroller.Width;
+			rect.Bottom = this.table_bounds.Bottom;
+			rect.Top    = this.table_bounds.Top;
+			
+			this.v_scroller.Bounds = rect;
+			
+			//	Place l'ascenseur horizontal :
+			
+			rect.Left   = this.table_bounds.Left;
+			rect.Right  = this.table_bounds.Right;
+			rect.Bottom = this.table_bounds.Bottom+1 - this.h_scroller.Height;
+			rect.Top    = this.table_bounds.Bottom+1;
+			
+			this.h_scroller.Bounds = rect;
+			
 			this.is_header_dirty = false;
 			this.UpdateScrollers ();
 		}
@@ -894,10 +952,10 @@ namespace Epsitec.Common.Widgets
 			if (this.column_widths == null)  return;
 
 			int max = System.Math.Min (this.n_visible_rows, this.max_rows);
-			bool quick = (max == this.lastVisibleRows && this.first_visible_row == this.lastFirstRow);
+			bool quick = (max == this.last_visible_rows && this.first_visible_row == this.last_first_row);
 
-			this.lastVisibleRows = max;
-			this.lastFirstRow = this.first_visible_row;
+			this.last_visible_rows = max;
+			this.last_first_row = this.first_visible_row;
 			for (int row = 0; row < max; row++)
 			{
 				for (int column = 0; column < this.max_columns; column++)
@@ -1117,12 +1175,12 @@ namespace Epsitec.Common.Widgets
 		protected int first_visible_row = 0;
 		protected int selected_row = -1;
 		protected double offset = 0;
-		protected int dragRank;
-		protected double dragPos;
-		protected double dragDim;
-		protected int lastDx;
-		protected int lastDy;
-		protected int lastVisibleRows;
-		protected int lastFirstRow;
+		protected int drag_rank;
+		protected double drag_pos;
+		protected double drag_dim;
+		protected int last_dx;
+		protected int last_dy;
+		protected int last_visible_rows;
+		protected int last_first_row;
 	}
 }
