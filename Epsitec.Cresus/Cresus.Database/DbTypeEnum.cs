@@ -66,6 +66,15 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public System.Type						SystemType
+		{
+			get
+			{
+				return typeof (string);
+			}
+		}
+		
+		
 		internal override void SerializeXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{
 			buffer.Append (@" nmlen=""");

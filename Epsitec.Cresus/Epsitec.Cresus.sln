@@ -135,6 +135,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Types.Tests", "Commo
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UI.Tests", "Common.UI.Tests\Common.UI.Tests.csproj", "{D824EAFD-3E55-4B86-9F9C-BAFDF9D14362}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
@@ -418,6 +422,10 @@ Global
 		{B8A20FF0-D043-4EE7-BDC2-02518955A0F9}.Debug.Build.0 = Debug|.NET
 		{B8A20FF0-D043-4EE7-BDC2-02518955A0F9}.Release.ActiveCfg = Release|.NET
 		{B8A20FF0-D043-4EE7-BDC2-02518955A0F9}.Release.Build.0 = Release|.NET
+		{D824EAFD-3E55-4B86-9F9C-BAFDF9D14362}.Debug.ActiveCfg = Debug|.NET
+		{D824EAFD-3E55-4B86-9F9C-BAFDF9D14362}.Debug.Build.0 = Debug|.NET
+		{D824EAFD-3E55-4B86-9F9C-BAFDF9D14362}.Release.ActiveCfg = Release|.NET
+		{D824EAFD-3E55-4B86-9F9C-BAFDF9D14362}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info

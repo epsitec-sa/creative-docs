@@ -29,6 +29,13 @@ namespace Epsitec.Cresus.Database
 			get { return this.num_def; }
 		}
 		
+		public System.Type						SystemType
+		{
+			get
+			{
+				return typeof (decimal);
+			}
+		}
 		
 		public Common.Types.DecimalRange		Range
 		{
@@ -37,6 +44,7 @@ namespace Epsitec.Cresus.Database
 				return this.num_def.ToDecimalRange ();
 			}
 		}
+		
 		
 		internal override void SerializeXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{
