@@ -959,8 +959,8 @@ namespace Epsitec.Common.Widgets
 				if ( index >= block.beginIndex && index <= block.endIndex )
 				{
 					Drawing.Rectangle rect = new Drawing.Rectangle();
-					rect.Top    = line.pos.Y+line.ascender-1;
-					rect.Bottom = line.pos.Y+line.descender-1;
+					rect.Top    = line.pos.Y+line.ascender;
+					rect.Bottom = line.pos.Y+line.descender;
 					if ( block.image )
 					{
 						rect.Left  = block.pos.X;
@@ -970,8 +970,6 @@ namespace Epsitec.Common.Widgets
 					{
 						rect.Left  = IndexToPosX(block, index);
 						rect.Right = rect.Left;
-						rect.Left  -= 0.5;
-						rect.Right += 0.5;
 					}
 					rankLine = line.rank;
 					return rect;

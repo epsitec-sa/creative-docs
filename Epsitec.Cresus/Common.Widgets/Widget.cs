@@ -128,7 +128,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.default_font_height = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
 			this.alignment           = this.DefaultAlignment;
-			this.anchor              = this.DefaultAnchor;
+			this.anchor              = AnchorStyles.None;
 			this.back_color          = Drawing.Color.Empty;
 			
 			this.Size = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
@@ -407,7 +407,44 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.anchor = value;
+				if (this.anchor != value)
+				{
+					this.anchor = value;
+					
+					if ((this.parent != null) &&
+						(this.IsLayoutSuspended == false))
+					{
+						//	Si le widget a un parent, il faut donner l'occasion au parent de
+						//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
+						//	de notre nouveau mode de docking.
+						
+						this.parent.UpdateChildrenLayout ();
+					}
+				}
+			}
+		}
+		[Bundle]			public Drawing.Margins	AnchorMargins
+		{
+			get
+			{
+				return this.anchor_margins;
+			}
+			set
+			{
+				if (this.anchor_margins != value)
+				{
+					this.anchor_margins = value;
+					
+					if ((this.parent != null) &&
+						(this.IsLayoutSuspended == false))
+					{
+						//	Si le widget a un parent, il faut donner l'occasion au parent de
+						//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
+						//	de notre nouveau mode de docking.
+						
+						this.parent.UpdateChildrenLayout ();
+					}
+				}
 			}
 		}
 		
@@ -423,7 +460,8 @@ namespace Epsitec.Common.Widgets
 				{
 					this.dock = value;
 					
-					if (this.parent != null)
+					if ((this.parent != null) &&
+						(this.IsLayoutSuspended == false))
 					{
 						//	Si le widget a un parent, il faut donner l'occasion au parent de
 						//	repositionner tous ses enfants (donc nous aussi) pour tenir compte
@@ -681,11 +719,6 @@ namespace Epsitec.Common.Widgets
 			get { return ContentAlignment.MiddleLeft; }
 		}
 
-		public virtual AnchorStyles					DefaultAnchor
-		{
-			get { return AnchorStyles.Left | AnchorStyles.Top; }
-		}
-		
 		public virtual Drawing.Font					DefaultFont
 		{
 			get { return Drawing.Font.DefaultFont; }
@@ -3988,15 +4021,7 @@ namespace Epsitec.Common.Widgets
 			this.UpdateMinMaxBasedOnDockedChildren (children);
 			this.UpdateDockedChildrenLayout (children);
 			
-			if (this.layout_info == null)
-			{
-				//	Le layout n'a pas changé, donc on ne fait rien de plus ici...
-				
-				return;
-			}
-			
 			System.Diagnostics.Debug.Assert (this.client_info != null);
-			System.Diagnostics.Debug.Assert (this.layout_info != null);
 			
 			try
 			{
@@ -4011,23 +4036,22 @@ namespace Epsitec.Common.Widgets
 				
 				if (update)
 				{
-					double width_diff  = this.client_info.width  - this.layout_info.OriginalWidth;
-					double height_diff = this.client_info.height - this.layout_info.OriginalHeight;
-					
 					for (int i = 0; i < children.Length; i++)
 					{
 						Widget child = children[i];
 						
-						if (child.Dock != DockStyle.None)
+						if ((child.Dock != DockStyle.None) ||
+							(child.Anchor == AnchorStyles.None))
 						{
 							//	Saute les widgets qui sont "docked" dans le parent, car ils ont déjà été
-							//	positionnés par la méthode UpdateDockedChildrenLayout.
+							//	positionnés par la méthode UpdateDockedChildrenLayout. Ceux qui ne sont
+							//	pas ancrés ne bougent pas non plus.
 							
 							continue;
 						}
 						
-						AnchorStyles anchor_x = (AnchorStyles) child.Anchor & AnchorStyles.LeftAndRight;
-						AnchorStyles anchor_y = (AnchorStyles) child.Anchor & AnchorStyles.TopAndBottom;
+						AnchorStyles anchor_x = child.Anchor & AnchorStyles.LeftAndRight;
+						AnchorStyles anchor_y = child.Anchor & AnchorStyles.TopAndBottom;
 						
 						double x1 = child.x1;
 						double x2 = child.x2;
@@ -4037,34 +4061,36 @@ namespace Epsitec.Common.Widgets
 						switch (anchor_x)
 						{
 							case AnchorStyles.Left:							//	[x1] fixe à gauche
+								x1 = child.anchor_margins.Left;
+								x2 = x1 + child.Width;
 								break;
 							case AnchorStyles.Right:						//	[x2] fixe à droite
-								x1 += width_diff;
-								x2 += width_diff;
+								x2 = this.client_info.width - child.anchor_margins.Right;
+								x1 = x2 - child.Width;
 								break;
-							case AnchorStyles.None:							//	[x1] et [x2] mobiles (centré)
-								x1 += width_diff / 2.0f;
-								x2 += width_diff / 2.0f;
+							case AnchorStyles.None:							//	ne touche à rien...
 								break;
 							case AnchorStyles.LeftAndRight:					//	[x1] fixe à gauche, [x2] fixe à droite
-								x2 += width_diff;
+								x1 = child.anchor_margins.Left;
+								x2 = this.client_info.width - child.anchor_margins.Right;
 								break;
 						}
 						
 						switch (anchor_y)
 						{
 							case AnchorStyles.Bottom:						//	[y1] fixe en bas
+								y1 = child.anchor_margins.Bottom;
+								y2 = y1 + child.Height;
 								break;
 							case AnchorStyles.Top:							//	[y2] fixe en haut
-								y1 += height_diff;
-								y2 += height_diff;
+								y2 = this.client_info.height - child.anchor_margins.Top;
+								y1 = y2 - child.Height;
 								break;
-							case AnchorStyles.None:							//	[y1] et [y2] mobiles (centré)
-								y1 += height_diff / 2.0f;
-								y2 += height_diff / 2.0f;
+							case AnchorStyles.None:							//	ne touche à rien...
 								break;
 							case AnchorStyles.TopAndBottom:					//	[y1] fixe en bas, [y2] fixe en haut
-								y2 += height_diff;
+								y1 = child.anchor_margins.Bottom;
+								y2 = this.client_info.height - child.anchor_margins.Top;
 								break;
 						}
 						
@@ -4072,6 +4098,13 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
+				if (this.layout_info == null)
+				{
+					//	Le layout n'a pas changé, donc on ne fait rien de plus ici...
+				
+					return;
+				}
+			
 				this.OnLayoutChanged ();
 			}
 			finally
@@ -5831,6 +5864,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		private AnchorStyles					anchor;
+		private Drawing.Margins					anchor_margins;
 		
 		private DockStyle						dock;
 		private Drawing.Margins					dock_padding;
