@@ -10,9 +10,9 @@ namespace Epsitec.Common.Support
 			Drawing.Image im2 = Support.ImageProvider.Default.GetImage ("file:images/open.icon");
 			Drawing.Image im3 = Support.ImageProvider.Default.GetImage ("file:images/non-existing-image.png");
 			
-			Assertion.AssertNotNull (im1);
-			Assertion.AssertNotNull (im2);
-			Assertion.AssertNull (im3);
+			Assert.IsNotNull (im1);
+			Assert.IsNotNull (im2);
+			Assert.IsNull (im3);
 		}
 		
 		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckGetImageEx1()
