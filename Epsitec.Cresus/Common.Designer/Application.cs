@@ -48,6 +48,13 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		public string							Name
+		{
+			get
+			{
+				return this.name;
+			}
+		}
 		
 		public BundleEditController				BundleEditController
 		{
@@ -75,6 +82,7 @@ namespace Epsitec.Common.Designer
 				return this.builder_controller;
 			}
 		}
+		
 		
 		protected void Initialise()
 		{
@@ -121,7 +129,13 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		
+		public static Application				Current
+		{
+			get
+			{
+				return Application.application;
+			}
+		}
 		
 		protected bool							is_initialised;
 		protected bool							is_initialising;
@@ -131,5 +145,8 @@ namespace Epsitec.Common.Designer
 		protected StringEditController			string_edit_controller;
 		protected BuilderController				builder_controller;
 		protected BundleEditController			bundle_edit_controller;
+		protected string						name;
+		
+		protected static Application			application;
 	}
 }
