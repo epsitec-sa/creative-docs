@@ -258,8 +258,9 @@ namespace Epsitec.Common.Pictogram.Data
 				mask = graphics.CreateAlphaMask();
 
 				int step = (int)(this.smooth*sx);
-				if ( step <  2 )  step =  2;
 				if ( step > 20 )  step = 20;
+				if ( iconContext != null && !iconContext.PreviewActive )  step /= 4;  // brouillon
+				if ( step <  2 )  step =  2;
 				for ( int i=0 ; i<step ; i++ )
 				{
 					double width = this.smooth-i*this.smooth/step;
