@@ -13,3 +13,8 @@ FirebirdNETProviderSDK.chm
 
 AntiGrain.NET.dll
 AntiGrain.Win32.dll
+
+# Copy the ICSharpCode libraries
+
+ICSharpCode.SharpZipLib.dll
+
