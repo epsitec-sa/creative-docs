@@ -46,7 +46,14 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		public void SetColor(Color color)
 		{
-			this.SetColor (color.R, color.G, color.B, color.A);
+			if (color.IsEmpty)
+			{
+					this.SetColor (0, 0, 0, 0);
+			}
+			else
+			{
+				this.SetColor (color.R, color.G, color.B, color.A);
+			}
 		}
 		
 		public void SetColor(double r, double g, double b)
