@@ -13,19 +13,20 @@ namespace Epsitec.Common.Text.Layout
 		{
 			this.buffer = null;
 			
-			this.text_context  = text_context;
+			this.text_context = text_context;
 			
 			this.text       = text;
 			this.text_start = start;
 			
-			this.oy_base  = oy_base;
+			this.oy_base    = oy_base;
+			
 			this.mx_left  = mx_left;
 			this.mx_right = mx_right;
 			
 			this.break_fence_before = break_fence_before;
 			this.break_fence_after  = break_fence_after;
 			
-			this.ox = this.mx_left;
+			this.Reset ();
 			
 			this.left_to_right = 0;
 		}
@@ -82,6 +83,22 @@ namespace Epsitec.Common.Text.Layout
 			get
 			{
 				return this.oy_base;
+			}
+		}
+		
+		public double							MaxY
+		{
+			get
+			{
+				return this.oy_ascender;
+			}
+		}
+		
+		public double							MinY
+		{
+			get
+			{
+				return this.oy_descender;
 			}
 		}
 		
@@ -158,10 +175,11 @@ namespace Epsitec.Common.Text.Layout
 		
 		public Layout.Status Fit(Layout.BaseEngine engine, ref Layout.BreakCollection result)
 		{
-			//	Détermine les points de découpe pour le texte courant.
+			//	Détermine les points de découpe pour le texte, selon le contexte
+			//	courant.
 			
-			this.hyphenate     = false;
 			this.layout_engine = engine;
+			this.Reset ();
 			
 			Snapshot snapshot = new Snapshot (this);
 			
@@ -214,6 +232,37 @@ namespace Epsitec.Common.Text.Layout
 			snapshot.Restore (this);
 			
 			return Layout.Status.ErrorCannotFit;
+		}
+		
+		
+		public void Reset()
+		{
+			this.hyphenate = false;
+			
+			this.ox = this.mx_left;
+			
+			this.oy_ascender  = oy_base;
+			this.oy_descender = oy_base;
+		}
+		
+		public void RecordAscender(double value)
+		{
+			double y = this.oy_base + value;
+			
+			if (y > this.oy_ascender)
+			{
+				this.oy_ascender = y;
+			}
+		}
+		
+		public void RecordDescender(double value)
+		{
+			double y = this.oy_base + value;
+			
+			if (y < this.oy_descender)
+			{
+				this.oy_descender = y;
+			}
 		}
 		
 		
@@ -314,6 +363,8 @@ namespace Epsitec.Common.Text.Layout
 		private int								left_to_right;
 		
 		private double							oy_base;
+		private double							oy_ascender;
+		private double							oy_descender;
 		private double							ox;
 		private double							mx_left;
 		private double							mx_right;

@@ -61,7 +61,7 @@ namespace Epsitec.Common.Text.Tests
 			Layout.Status status;
 			
 			breaks  = null;
-			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1100, 40, 10);
+			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1100, 40, 10);
 			status  = context.Fit (layout, ref breaks);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
@@ -69,7 +69,10 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[0].Advance > 1092.06);
 			Debug.Assert.IsTrue (breaks[0].Advance < 1092.07);
 			
-			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1170, 40, 10);
+			double y1 = context.MaxY;
+			double y2 = context.MinY;
+			
+			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1170, 40, 10);
 			status  = context.Fit (layout, ref breaks);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
@@ -77,7 +80,10 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[0].Advance > 1148.75);
 			Debug.Assert.IsTrue (breaks[0].Advance < 1148.76);
 			
-			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1300, 40, 10);
+			double y3 = context.MaxY;
+			double y4 = context.MinY;
+			
+			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1300, 40, 10);
 			status  = context.Fit (layout, ref breaks);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
@@ -85,12 +91,12 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[0].Advance > 1307.10);
 			Debug.Assert.IsTrue (breaks[0].Advance < 1307.11);
 			
-			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1400, 40, 10);
+			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1400, 40, 10);
 			status  = context.Fit (layout, ref breaks);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.ErrorNeedMoreText);
 			
-			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1020, 10, 10);
+			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1020, 10, 10);
 			status  = context.Fit (layout, ref breaks);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.ErrorCannotFit);
@@ -108,9 +114,28 @@ namespace Epsitec.Common.Text.Tests
 			story_text = new ulong[story.TextLength];
 			story.ReadText (cursor, story_text.Length, story_text);
 			
-			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1400, 10, 10);
+			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1400, 10, 10);
 			status  = context.Fit (layout, ref breaks);
 			
+			Debug.Assert.IsTrue (status == Layout.Status.OkFitEnded);
+			
+			
+			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1200, 10, 10);
+			status  = context.Fit (layout, ref breaks);
+			
+			Debug.Assert.IsTrue (breaks[0].Offset == 27);
+			Debug.Assert.IsTrue (status == Layout.Status.Ok);
+			
+			context.TextOffset = breaks[0].Offset;
+			status  = context.Fit (layout, ref breaks);
+			
+			Debug.Assert.IsTrue (breaks[0].Offset == 56);
+			Debug.Assert.IsTrue (status == Layout.Status.Ok);
+			
+			context.TextOffset = breaks[0].Offset;
+			status  = context.Fit (layout, ref breaks);
+			
+			Debug.Assert.IsTrue (breaks[0].Offset == 68);
 			Debug.Assert.IsTrue (status == Layout.Status.OkFitEnded);
 		}
 		

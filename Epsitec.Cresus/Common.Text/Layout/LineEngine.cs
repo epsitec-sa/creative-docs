@@ -66,6 +66,9 @@ namespace Epsitec.Common.Text.Layout
 							return Layout.Status.SwitchLayout;
 						}
 						
+						context.RecordAscender (scratch.Font.GetAscender (scratch.FontSize));
+						context.RecordDescender (scratch.Font.GetDescender (scratch.FontSize));
+						
 						if (this.FitAnalyseRun (ref scratch, ref result))
 						{
 							goto stop; // --------------------------------------------------------------------------.
