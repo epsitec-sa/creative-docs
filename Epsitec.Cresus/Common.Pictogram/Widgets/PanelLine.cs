@@ -26,12 +26,22 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			this.patternLabel = new StaticText(this);
+			this.patternLabel.Alignment = Drawing.ContentAlignment.MiddleLeft;
+			this.patternLabel.Text = "Motif";
+
+			this.patternId = new TextFieldCombo(this);
+			this.patternId.IsReadOnly = true;
+			this.patternId.SelectedIndexChanged += new EventHandler(this.HandlePatternIdChanged);
+			this.patternId.TabIndex = 2;
+			this.patternId.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
 			this.buttons = new IconButton[6];
 			for ( int i=0 ; i<6 ; i++ )
 			{
 				this.buttons[i] = new IconButton(this);
 				this.buttons[i].Clicked += new MessageEventHandler(this.PanelLineClicked);
-				this.buttons[i].TabIndex = 2+i;
+				this.buttons[i].TabIndex = 3+i;
 				this.buttons[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
@@ -42,6 +52,45 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.buttons[3].IconName = @"file:images/joinround.icon";
 			this.buttons[4].IconName = @"file:images/joinmiter.icon";
 			this.buttons[5].IconName = @"file:images/joinbevel.icon";
+
+			this.fieldSize = new TextFieldSlider(this);
+			this.fieldSize.MinValue =  10;
+			this.fieldSize.MaxValue = 200;
+			this.fieldSize.Step = 5.0M;
+			this.fieldSize.Resolution = 1.0M;
+			this.fieldSize.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldSize.TabIndex = 10;
+			this.fieldSize.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.fieldShift = new TextFieldSlider(this);
+			this.fieldShift.MinValue = -100;
+			this.fieldShift.MaxValue =  100;
+			this.fieldShift.Step = 5.0M;
+			this.fieldShift.Resolution = 1.0M;
+			this.fieldShift.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldShift.TabIndex = 11;
+			this.fieldShift.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.fieldAngle = new TextFieldSlider(this);
+			this.fieldAngle.MinValue = -180;
+			this.fieldAngle.MaxValue =  180;
+			this.fieldAngle.Step = 5.0M;
+			this.fieldAngle.Resolution = 1.0M;
+			this.fieldAngle.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fieldAngle.TabIndex = 12;
+			this.fieldAngle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.labelSize = new StaticText(this);
+			this.labelSize.Text = "Z";
+			this.labelSize.Alignment = Drawing.ContentAlignment.MiddleCenter;
+
+			this.labelShift = new StaticText(this);
+			this.labelShift.Text = "D";
+			this.labelShift.Alignment = Drawing.ContentAlignment.MiddleRight;
+
+			this.labelAngle = new StaticText(this);
+			this.labelAngle.Text = "A";
+			this.labelAngle.Alignment = Drawing.ContentAlignment.MiddleRight;
 
 			this.isNormalAndExtended = true;
 		}
@@ -56,10 +105,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( disposing )
 			{
 				this.field.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.patternId.SelectedIndexChanged -= new EventHandler(this.HandlePatternIdChanged);
 
 				for ( int i=0 ; i<6 ; i++ )
 				{
 					this.buttons[i].Clicked -= new MessageEventHandler(this.PanelLineClicked);
+					this.fieldSize.TextChanged -= new EventHandler(this.HandleFieldChanged);
+					this.fieldShift.TextChanged -= new EventHandler(this.HandleFieldChanged);
+					this.fieldAngle.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				}
 			}
 			
@@ -72,7 +125,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			get
 			{
-				return ( this.extendedSize ? 55 : 30 );
+				if ( this.extendedSize )
+				{
+					return this.IsPatternPossible() ? 80 : 55;
+				}
+				else
+				{
+					return 30;
+				}
 			}
 		}
 
@@ -86,6 +146,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( p == null )  return;
 
 			this.field.Value = (decimal) p.Width;
+			this.UpdatePatternId();
+			this.patternId.SelectedIndex = this.IdToSel(p.PatternId);
 
 			int sel = -1;
 			if ( p.Cap == Drawing.CapStyle.Round  )  sel = 0;
@@ -99,6 +161,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( p.Join == Drawing.JoinStyle.Bevel )  sel = 2;
 			this.SelectButtonJoin = sel;
 
+			this.fieldSize.Value  = (decimal) p.PatternSize*100;
+			this.fieldShift.Value = (decimal) p.PatternShift*100;
+			this.fieldAngle.Value = (decimal) (p.PatternAngle*180/System.Math.PI);
+
 			this.EnableWidgets();
 		}
 
@@ -109,6 +175,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			base.GetProperty(p);
 
 			p.Width = (double) this.field.Value;
+			p.PatternId = this.SelToId(this.patternId.SelectedIndex);
 
 			int sel = this.SelectButtonCap;
 			if ( sel == 0 )  p.Cap = Drawing.CapStyle.Round;
@@ -120,7 +187,49 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( sel == 1 )  p.Join = Drawing.JoinStyle.Miter;
 			if ( sel == 2 )  p.Join = Drawing.JoinStyle.Bevel;
 
+			p.PatternSize  = (double) this.fieldSize.Value/100;
+			p.PatternShift = (double) this.fieldShift.Value/100;
+			p.PatternAngle = (double) this.fieldAngle.Value*System.Math.PI/180;
+
 			return p;
+		}
+
+		protected void UpdatePatternId()
+		{
+			this.patternId.Items.Clear();
+			this.patternId.Items.Add("Trait simple");
+
+			int total = this.drawer.IconObjects.TotalPatterns();
+			for ( int i=1 ; i<total ; i++ )
+			{
+				ObjectPattern pattern = this.drawer.IconObjects.Objects[i] as ObjectPattern;
+				string name = pattern.Name;
+				if ( name == "" )
+				{
+					name = string.Format("Motif numéro {0}", i);
+				}
+				this.patternId.Items.Add(name);
+			}
+		}
+
+		protected int IdToSel(int id)
+		{
+			if ( id == 0 || !this.IsPatternPossible() )  return 0;
+			int total = this.drawer.IconObjects.TotalPatterns();
+			for ( int i=1 ; i<total ; i++ )
+			{
+				ObjectPattern pattern = this.drawer.IconObjects.Objects[i] as ObjectPattern;
+				if ( pattern.Id == id )  return i;
+			}
+			return -1;
+		}
+
+		protected int SelToId(int sel)
+		{
+			if ( sel == 0 || !this.IsPatternPossible() )  return 0;
+			if ( sel >= this.drawer.IconObjects.TotalPatterns() )  return 0;
+			ObjectPattern pattern = this.drawer.IconObjects.Objects[sel] as ObjectPattern;
+			return pattern.Id;
 		}
 
 		protected int SelectButtonCap
@@ -167,9 +276,43 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
-			for ( int i=0 ; i<6 ; i++ )
+			if ( this.IsPatternPossible() )
 			{
-				this.buttons[i].SetEnabled(this.extendedSize);
+				bool simply = (this.patternId.SelectedIndex == 0);
+
+				this.patternId.SetVisible(true);
+				this.patternLabel.SetVisible(true);
+
+				for ( int i=0 ; i<6 ; i++ )
+				{
+					this.buttons[i].SetEnabled(this.extendedSize);
+					this.buttons[i].SetVisible(simply);
+				}
+
+				this.fieldSize.SetVisible(!simply);
+				this.fieldShift.SetVisible(!simply);
+				this.fieldAngle.SetVisible(!simply);
+				this.labelSize.SetVisible(!simply);
+				this.labelShift.SetVisible(!simply);
+				this.labelAngle.SetVisible(!simply);
+			}
+			else
+			{
+				this.patternId.SetVisible(false);
+				this.patternLabel.SetVisible(false);
+
+				for ( int i=0 ; i<6 ; i++ )
+				{
+					this.buttons[i].SetEnabled(this.extendedSize);
+					this.buttons[i].SetVisible(true);
+				}
+
+				this.fieldSize.SetVisible(false);
+				this.fieldShift.SetVisible(false);
+				this.fieldAngle.SetVisible(false);
+				this.labelSize.SetVisible(false);
+				this.labelShift.SetVisible(false);
+				this.labelAngle.SetVisible(false);
 			}
 		}
 
@@ -188,26 +331,68 @@ namespace Epsitec.Common.Pictogram.Widgets
 			r.Bottom = r.Top-20;
 			r.Right = rect.Right-50;
 			this.label.Bounds = r;
-
 			r.Left = rect.Right-50;
 			r.Right = rect.Right;
 			this.field.Bounds = r;
 
-			rect.Top = r.Bottom-5;
-			rect.Bottom = rect.Top-20;
-			rect.Left = rect.Right-(20*6+15);
-			rect.Width = 20;
-			for ( int i=0 ; i<6 ; i++ )
+			if ( this.IsPatternPossible() )
 			{
-				this.buttons[i].Bounds = rect;
-				rect.Offset(20+((i==2)?15:0), 0);
+				r.Top = r.Bottom-5;
+				r.Bottom = r.Top-20;
+				r.Left = rect.Left;
+				r.Right = rect.Left+65;
+				this.patternLabel.Bounds = r;
+				r.Left = r.Right;
+				r.Right = rect.Right;
+				this.patternId.Bounds = r;
 			}
 
+			r.Top = r.Bottom-5;
+			r.Bottom = r.Top-20;
+			r.Left = rect.Right-(20*6+15);
+			r.Width = 20;
+			for ( int i=0 ; i<6 ; i++ )
+			{
+				this.buttons[i].Bounds = r;
+				r.Offset(20+((i==2)?15:0), 0);
+			}
+
+			r.Left = rect.Left;
+			r.Width = 14;
+			this.labelSize.Bounds = r;
+			r.Left = r.Right;
+			r.Width = 44;
+			this.fieldSize.Bounds = r;
+			r.Left = r.Right;
+			r.Width = 15;
+			this.labelShift.Bounds = r;
+			r.Left = r.Right+2;
+			r.Width = 44;
+			this.fieldShift.Bounds = r;
+			r.Left = r.Right;
+			r.Width = 10;
+			this.labelAngle.Bounds = r;
+			r.Left = r.Right+2;
+			r.Width = 44;
+			this.fieldAngle.Bounds = r;
+		}
+
+		// Indique si les traits avec des patterns sont possibles.
+		protected bool IsPatternPossible()
+		{
+			return (this.drawer.IconObjects.CurrentPattern == 0);
 		}
 		
 		// Une valeur a été changée.
 		private void HandleTextChanged(object sender)
 		{
+			this.OnChanged();
+		}
+
+		// Le motif a été changé.
+		private void HandlePatternIdChanged(object sender)
+		{
+			this.EnableWidgets();
 			this.OnChanged();
 		}
 
@@ -227,9 +412,23 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnChanged();
 		}
 
+		// Un champ a été changé.
+		private void HandleFieldChanged(object sender)
+		{
+			this.OnChanged();
+		}
+
 
 		protected StaticText				label;
 		protected TextFieldSlider			field;
+		protected StaticText				patternLabel;
+		protected TextFieldCombo			patternId;
 		protected IconButton[]				buttons;
+		protected TextFieldSlider			fieldSize;
+		protected TextFieldSlider			fieldShift;
+		protected TextFieldSlider			fieldAngle;
+		protected StaticText				labelSize;
+		protected StaticText				labelShift;
+		protected StaticText				labelAngle;
 	}
 }

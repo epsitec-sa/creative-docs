@@ -23,7 +23,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fontName.Items.Add("Arial");
 			this.fontName.Items.Add("Courier New");
 			this.fontName.Items.Add("Times New Roman");
-			this.fontName.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fontName.SelectedIndexChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontName.TabIndex = 1;
 			this.fontName.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fontOptical.Items.Add("Bold");
 			this.fontOptical.Items.Add("Italic");
 			this.fontOptical.Items.Add("Bold Italic");
-			this.fontOptical.TextChanged += new EventHandler(this.HandleFieldChanged);
+			this.fontOptical.SelectedIndexChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontOptical.TabIndex = 2;
 			this.fontOptical.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -76,8 +76,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			if ( disposing )
 			{
-				this.fontName.TextChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fontOptical.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fontName.SelectedIndexChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fontOptical.SelectedIndexChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontSize.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleColorClicked);
 			}

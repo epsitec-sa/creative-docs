@@ -462,20 +462,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 			// Crée le panneau pour le calque.
 			PropertyModColor modColor = this.drawer.IconObjects.LayerModColor();
 
-			Drawing.Rectangle rect;
 			panel = new PanelModColor();
 			panel.Drawer = this.drawer;
 			panel.ExtendedSize = true;
 			panel.SetProperty(modColor);
 			panel.LayoutDirect = true;
-
-			rect = new Drawing.Rectangle();
-			rect.Left   = 1;
-			rect.Right  = this.panel.Width-1;
-			rect.Bottom = this.panel.Height-1-panel.DefaultHeight;
-			rect.Top    = this.panel.Height-1;
-			panel.Bounds = rect;
-			panel.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
+			panel.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.All;
+			Drawing.Margins margins = new Drawing.Margins();
+			margins.Left   = 1;
+			margins.Right  = 1;
+			margins.Top    = 1;
+			margins.Bottom = this.panel.Height-1-panel.DefaultHeight;
+			panel.AnchorMargins = margins;
 			panel.Changed += new EventHandler(this.HandlePanelChanged);
 			panel.Parent = this.panel;
 		}
@@ -553,6 +551,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			r.Top = r.Bottom;
 			r.Bottom = r.Top-this.radioShow.DefaultHeight;
 			this.radioHide.Bounds = r;
+
+			this.UpdatePanels();
 		}
 
 

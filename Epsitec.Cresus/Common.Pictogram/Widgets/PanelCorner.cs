@@ -25,7 +25,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				if ( type == CornerType.None )  break;
 				this.fieldType.Items.Add(PropertyCorner.GetName(type));
 			}
-			this.fieldType.TextChanged += new EventHandler(this.HandleTypeChanged);
+			this.fieldType.SelectedIndexChanged += new EventHandler(this.HandleTypeChanged);
 			this.fieldType.TabIndex = 1;
 			this.fieldType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			if ( disposing )
 			{
-				this.fieldType.TextChanged -= new EventHandler(this.HandleTypeChanged);
+				this.fieldType.SelectedIndexChanged -= new EventHandler(this.HandleTypeChanged);
 				this.fieldRadius.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fieldEffect1.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fieldEffect2.TextChanged -= new EventHandler(this.HandleFieldChanged);
