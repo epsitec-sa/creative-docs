@@ -150,7 +150,7 @@ namespace Epsitec.Common.UI.Widgets
 		
 		protected Widget CreateViewWidget(Drawing.Margins margins)
 		{
-			Widget widget = new Widget (this);
+			Widget widget = new FatWidget (this);
 			
 			widget.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			widget.AnchorMargins = margins;
@@ -254,6 +254,23 @@ namespace Epsitec.Common.UI.Widgets
 			graphics.RenderSolid (adorner.ColorBorder);
 		}
 		
+		
+		
+		[SuppressBundleSupport]
+		internal class FatWidget : Widget
+		{
+			public FatWidget(Widget embedder)
+			{
+				this.SetEmbedder (embedder);
+			}
+			
+			public override Epsitec.Common.Drawing.Rectangle GetShapeBounds()
+			{
+				Drawing.Rectangle bounds = base.GetShapeBounds ();
+				bounds.Inflate (3, 3, 3, 3);
+				return bounds;
+			}
+		}
 		
 		protected const double					button_dim   = 13;
 		protected const double					toggle_width = PropPane.button_dim+2;

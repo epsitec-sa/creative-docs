@@ -113,6 +113,7 @@ namespace Epsitec.Common.UI.Controllers
 			}
 		}
 		
+		
 		protected void SetShowMode(ShowMode mode)
 		{
 			if (this.show_mode != mode)
@@ -124,6 +125,12 @@ namespace Epsitec.Common.UI.Controllers
 				{
 					RadioButton.Activate (this.radio_manual.Parent, this.radio_manual.Group, (int) this.show_mode);
 					this.edge_select.Invalidate ();
+				}
+				
+				if (this.show_mode == ShowMode.Manual)
+				{
+					this.layout = LayoutStyles.Manual;
+					this.SyncFromUI ();
 				}
 			}
 		}
@@ -140,28 +147,21 @@ namespace Epsitec.Common.UI.Controllers
 			}
 		}
 		
+		
 		protected enum ShowMode
 		{
 			Manual, Anchor, Dock
 		}
 		
 		[SuppressBundleSupport]
-		protected class EdgeSelectWidget : Widget
+		internal class EdgeSelectWidget : Widgets.PropPane.FatWidget
 		{
-			public EdgeSelectWidget(Widget embedder, LayoutController host)
+			public EdgeSelectWidget(Widget embedder, LayoutController host) : base (embedder)
 			{
-				this.SetEmbedder (embedder);
 				this.host = host;
 			}
 			
 			
-			public override Drawing.Rectangle GetShapeBounds()
-			{
-				Drawing.Rectangle bounds = base.GetShapeBounds ();
-				bounds.Inflate (2, 2, 2, 2);
-				return bounds;
-			}
-
 			protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
 			{
 				if (message.IsMouseType)
@@ -239,6 +239,58 @@ namespace Epsitec.Common.UI.Controllers
 								break;
 						}
 					}
+					else if (this.host.show_mode == ShowMode.Anchor)
+					{
+						double dx = this.Client.Width;
+						double dy = this.Client.Height;
+						double dd = 25;
+						
+						switch (message.Type)
+						{
+							case MessageType.MouseLeave:
+								hilite = Drawing.Rectangle.Empty;
+								break;
+							
+							case MessageType.MouseMove:
+								if (! this.Client.Bounds.Contains (pos))
+								{
+									hilite = Drawing.Rectangle.Empty;
+								}
+								else if ((pos.X < dd) &&
+									/**/ (pos.Y > dy/2-5) &&
+									/**/ (pos.Y < dy/2+5))
+								{
+									hilite = new Drawing.Rectangle (0, 0, dd, dy);
+									this.candidate = LayoutStyles.AnchorLeft;
+								}
+								else if (((dx - pos.X) < dd) &&
+									/**/ (pos.Y > dy/2-5) &&
+									/**/ (pos.Y < dy/2+5))
+								{
+									hilite = new Drawing.Rectangle (dx-dd, 0, dd, dy);
+									this.candidate = LayoutStyles.AnchorRight;
+								}
+								else if ((pos.Y < dd) &&
+									/**/ (pos.X > dx/2-5) &&
+									/**/ (pos.X < dx/2+5))
+								{
+									hilite = new Drawing.Rectangle (0, 0, dx, dd);
+									this.candidate = LayoutStyles.AnchorBottom;
+								}
+								else if (((dy - pos.Y) < dd) &&
+									/**/ (pos.X > dx/2-5) &&
+									/**/ (pos.X < dx/2+5))
+								{
+									hilite = new Drawing.Rectangle (0, dy-dd, dx, dd);
+									this.candidate = LayoutStyles.AnchorTop;
+								}
+								else
+								{
+									hilite = Drawing.Rectangle.Empty;
+								}
+								break;
+						}
+					}
 					else
 					{
 						this.hilite = Drawing.Rectangle.Empty;
@@ -253,19 +305,20 @@ namespace Epsitec.Common.UI.Controllers
 							if (this.host.layout == this.candidate)
 							{
 								this.host.layout = LayoutStyles.Manual;
-								this.host.SyncFromUI ();
-								this.Invalidate ();
 							}
 							else
 							{
 								this.host.layout = this.candidate;
-								this.host.SyncFromUI ();
-								this.Invalidate ();
 							}
 						}
-						else
+						else if (this.host.show_mode == ShowMode.Anchor)
 						{
+							this.host.layout &= LayoutStyles.MaskAnchor;
+							this.host.layout ^= this.candidate;
 						}
+						
+						this.host.SyncFromUI ();
+						this.Invalidate ();
 					}
 					
 					if (this.hilite != hilite)
@@ -315,6 +368,17 @@ namespace Epsitec.Common.UI.Controllers
 					
 					case ShowMode.Anchor:
 						outline.AppendRectangle (rect_2);
+						
+						this.AppendLink (rect_1.Left,  cy,  25, picture, Direction.Left);
+						this.AppendLink (rect_1.Right, cy,  25, picture, Direction.Right);
+						this.AppendLink (cx, rect_1.Top,    20, picture, Direction.Up);
+						this.AppendLink (cx, rect_1.Bottom, 20, picture, Direction.Down);
+						
+						if ((this.host.layout & LayoutStyles.AnchorLeft) != 0)		this.AppendLink (rect_1.Left,  cy,  25, surface, Direction.Left);
+						if ((this.host.layout & LayoutStyles.AnchorRight) != 0)		this.AppendLink (rect_1.Right, cy,  25, surface, Direction.Right);
+						if ((this.host.layout & LayoutStyles.AnchorTop) != 0)		this.AppendLink (cx, rect_1.Top,    20, surface, Direction.Up);
+						if ((this.host.layout & LayoutStyles.AnchorBottom) != 0)	this.AppendLink (cx, rect_1.Bottom, 20, surface, Direction.Down);
+						
 						break;
 					
 					case ShowMode.Dock:
@@ -341,6 +405,12 @@ namespace Epsitec.Common.UI.Controllers
 						break;
 				}
 				
+				if (outline.IsValid)
+				{
+					graphics.Rasterizer.AddOutline (outline, 1.0, Drawing.CapStyle.Square, Drawing.JoinStyle.Miter);
+					graphics.RenderSolid (adorner.ColorBorder);
+				}
+				
 				if (surface.IsValid)
 				{
 					graphics.Rasterizer.AddSurface (surface);
@@ -357,11 +427,9 @@ namespace Epsitec.Common.UI.Controllers
 					graphics.RestoreClippingRectangle (clip);
 				}
 				
-				outline.Append (picture);
-				
-				if (outline.IsValid)
+				if (picture.IsValid)
 				{
-					graphics.Rasterizer.AddOutline (outline, 1.0, Drawing.CapStyle.Square, Drawing.JoinStyle.Miter);
+					graphics.Rasterizer.AddOutline (picture, 1.0, Drawing.CapStyle.Square, Drawing.JoinStyle.Miter);
 					graphics.RenderSolid (adorner.ColorBorder);
 				}
 				
@@ -369,6 +437,7 @@ namespace Epsitec.Common.UI.Controllers
 				outline.Dispose ();
 				picture.Dispose ();
 			}
+			
 			
 			protected void AppendArrow(double x, double y, double s, Drawing.Path path, Direction direction)
 			{
@@ -420,6 +489,40 @@ namespace Epsitec.Common.UI.Controllers
 						path.LineTo (x-0.50*s, y+0.50*s);
 						path.LineTo (x, y);
 						path.Close ();
+						break;
+				}
+			}
+			
+			protected void AppendLink(double x, double y, double s, Drawing.Path path, Direction direction)
+			{
+				switch (direction)
+				{
+					case Direction.Up:
+						path.AppendCircle (x, y, 3);
+						path.MoveTo (x, y-3);
+						path.LineTo (x, y-s+3);
+						path.AppendCircle (x, y-s, 3);
+						break;
+					
+					case Direction.Down:
+						path.AppendCircle (x, y, 3);
+						path.MoveTo (x, y+3);
+						path.LineTo (x, y+s-3);
+						path.AppendCircle (x, y+s, 3);
+						break;
+					
+					case Direction.Left:
+						path.AppendCircle (x, y, 3);
+						path.MoveTo (x+3, y);
+						path.LineTo (x+s-3, y);
+						path.AppendCircle (x+s, y, 3);
+						break;
+					
+					case Direction.Right:
+						path.AppendCircle (x, y, 3);
+						path.MoveTo (x-3, y);
+						path.LineTo (x-s+3, y);
+						path.AppendCircle (x-s, y, 3);
 						break;
 				}
 			}
