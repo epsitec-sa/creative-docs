@@ -665,6 +665,18 @@ namespace Epsitec.Common.Document.Objects
 		// Gestion d'un événement pendant l'édition.
 		public override bool EditProcessMessage(Message message, Point pos)
 		{
+			if ( message.Type == MessageType.KeyDown   ||
+				 message.Type == MessageType.KeyPress  ||
+				 message.Type == MessageType.MouseDown )
+			{
+				this.autoScrollOneShot = true;
+			}
+
+			if ( message.Type == MessageType.KeyPress )
+			{
+				if ( this.EditProcessKeyPress(message) )  return true;
+			}
+
 			if ( message.IsMouseType )
 			{
 				int rank = this.DetectTextCurveRank(pos);
@@ -683,6 +695,70 @@ namespace Epsitec.Common.Document.Objects
 			this.dirtyBbox = true;
 			return true;
 		}
+
+		// Gestion des événements clavier.
+		protected bool EditProcessKeyPress(Message message)
+		{
+			if ( message.IsCtrlPressed )
+			{
+				switch ( message.KeyCode )
+				{
+					case KeyCode.AlphaX:  return this.EditCut();
+					case KeyCode.AlphaC:  return this.EditCopy();
+					case KeyCode.AlphaV:  return this.EditPaste();
+					case KeyCode.AlphaA:  return this.EditSelectAll();
+				}
+			}
+			return false;
+		}
+
+		#region CopyPaste
+		public override bool EditCut()
+		{
+			string text = this.textNavigator.Selection;
+			if ( text == "" )  return false;
+			Support.Clipboard.WriteData data = new Support.Clipboard.WriteData();
+			data.WriteHtmlFragment(Support.Clipboard.ConvertSimpleXmlToHtml(text));
+			Support.Clipboard.SetData(data);
+			this.textNavigator.Selection = "";
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+			return true;
+		}
+		
+		public override bool EditCopy()
+		{
+			string text = this.textNavigator.Selection;
+			Support.Clipboard.WriteData data = new Support.Clipboard.WriteData();
+			if ( text == "" )  return false;
+			data.WriteHtmlFragment(Support.Clipboard.ConvertSimpleXmlToHtml(text));
+			Support.Clipboard.SetData(data);
+			return true;
+		}
+		
+		public override bool EditPaste()
+		{
+			Support.Clipboard.ReadData data = Support.Clipboard.GetData();
+			string html = data.ReadHtmlFragment();
+			if ( html != null )
+			{
+				html = Support.Clipboard.ConvertHtmlToSimpleXml(html);
+			}
+			else
+			{
+				html = TextLayout.ConvertToTaggedText(data.ReadText());
+			}
+			if ( html == null )  return false;
+			this.textNavigator.Selection = html;
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+			return true;
+		}
+
+		public override bool EditSelectAll()
+		{
+			this.textLayout.SelectAll(this.textNavigator.Context);
+			return true;
+		}
+		#endregion
 
 		// Gestion d'un événement pendant l'édition.
 		public override void EditMouseDownMessage(Point pos)
@@ -1142,6 +1218,8 @@ namespace Epsitec.Common.Document.Objects
 			Color	fontColor;
 			Point	pos, ptl, pbl, ptr, pbr;
 			double	angle;
+			Point   c1 = new Point(0,0);
+			Point   c2 = new Point(0,0);
 
 			bool	active = true;
 			if ( this.document.Modifier != null )
@@ -1196,6 +1274,8 @@ namespace Epsitec.Common.Document.Objects
 					graphics.LineWidth = 1.0/drawingContext.ScaleX;
 					graphics.AddLine(ptl, pbl);
 					graphics.RenderSolid(DrawingContext.ColorFrameEdit);
+					c1 = ptl;
+					c2 = pbl;
 				}
 				
 				lastTop    = ptr;
@@ -1211,6 +1291,13 @@ namespace Epsitec.Common.Document.Objects
 				graphics.LineWidth = 1.0/drawingContext.ScaleX;
 				graphics.AddLine(lastTop, lastBottom);
 				graphics.RenderSolid(DrawingContext.ColorFrameEdit);
+				c1 = lastTop;
+				c2 = lastBottom;
+			}
+
+			if ( c1.X != 0.0 || c1.Y != 0.0 || c2.X != 0.0 || c2.Y != 0.0 )
+			{
+				this.ComputeAutoScroll(c1, c2);
 			}
 		}
 

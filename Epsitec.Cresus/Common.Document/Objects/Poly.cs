@@ -104,9 +104,9 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Déplace globalement l'objet.
-		public override void MoveGlobalProcess(SelectorData initial, SelectorData final)
+		public override void MoveGlobalProcess(Selector selector)
 		{
-			base.MoveGlobalProcess(initial, final);
+			base.MoveGlobalProcess(selector);
 			this.HandlePropertiesUpdatePosition();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -195,6 +195,8 @@ namespace Epsitec.Common.Document.Objects
 			if ( cmd == "HandleDelete" )
 			{
 				this.HandleDelete(handleRank);
+				// Il doit toujours y avoir une poignée de départ !
+				this.Handle(0).Type = HandleType.Starting;
 				this.HandlePropertiesUpdateVisible();
 				this.HandlePropertiesUpdatePosition();
 			}
@@ -321,7 +323,7 @@ namespace Epsitec.Common.Document.Objects
 			this.ChangePropertyPolyClose(true);
 
 			this.TempDelete();
-			this.Handle(0).Type = HandleType.Primary;
+			this.Handle(0).Type = HandleType.Starting;
 			this.Deselect();
 			drawingContext.ConstrainDelStarting();
 
@@ -347,7 +349,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( this.TotalHandle < 2 )  return false;
 
 			this.TempDelete();
-			this.Handle(0).Type = HandleType.Primary;
+			this.Handle(0).Type = HandleType.Starting;
 			this.Deselect();
 			drawingContext.ConstrainDelStarting();
 
@@ -724,6 +726,31 @@ namespace Epsitec.Common.Document.Objects
 
 				this.PropertyLineMode.PaintOutline(port, drawingContext, pathLine);
 			}
+		}
+
+
+		// Retourne le chemin géométrique de l'objet.
+		public override Path GetPath()
+		{
+			Path pathStart;  bool outlineStart, surfaceStart;
+			Path pathEnd;    bool outlineEnd,   surfaceEnd;
+			Path pathLine;
+			this.PathBuild(null,
+						   out pathStart, out outlineStart, out surfaceStart,
+						   out pathEnd,   out outlineEnd,   out surfaceEnd,
+						   out pathLine);
+
+			if ( outlineStart || surfaceStart )
+			{
+				pathLine.Append(pathStart);
+			}
+
+			if ( outlineEnd || surfaceEnd )
+			{
+				pathLine.Append(pathEnd);
+			}
+
+			return pathLine;
 		}
 
 

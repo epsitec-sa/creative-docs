@@ -22,6 +22,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.textLayout = new TextLayout();
 			this.textNavigator = new TextNavigator(this.textLayout);
+			this.textNavigator.MaxChar = 10000;
 			this.textLayout.BreakMode = TextBreakMode.Hyphenate;
 			if ( this.document.Modifier != null )
 			{
@@ -254,10 +255,86 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.transform == null )  return false;
 
+			if ( message.Type == MessageType.KeyDown   ||
+				 message.Type == MessageType.KeyPress  ||
+				 message.Type == MessageType.MouseDown )
+			{
+				this.autoScrollOneShot = true;
+			}
+
+			if ( message.Type == MessageType.KeyPress )
+			{
+				if ( this.EditProcessKeyPress(message) )  return true;
+			}
+
 			pos = this.transform.TransformInverse(pos);
 			if ( !this.textNavigator.ProcessMessage(message, pos) )  return false;
 			return true;
 		}
+
+		// Gestion des événements clavier.
+		protected bool EditProcessKeyPress(Message message)
+		{
+			if ( message.IsCtrlPressed )
+			{
+				switch ( message.KeyCode )
+				{
+					case KeyCode.AlphaX:  return this.EditCut();
+					case KeyCode.AlphaC:  return this.EditCopy();
+					case KeyCode.AlphaV:  return this.EditPaste();
+					case KeyCode.AlphaA:  return this.EditSelectAll();
+				}
+			}
+			return false;
+		}
+
+		#region CopyPaste
+		public override bool EditCut()
+		{
+			string text = this.textNavigator.Selection;
+			if ( text == "" )  return false;
+			Support.Clipboard.WriteData data = new Support.Clipboard.WriteData();
+			data.WriteHtmlFragment(Support.Clipboard.ConvertSimpleXmlToHtml(text));
+			Support.Clipboard.SetData(data);
+			this.textNavigator.Selection = "";
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+			return true;
+		}
+		
+		public override bool EditCopy()
+		{
+			string text = this.textNavigator.Selection;
+			Support.Clipboard.WriteData data = new Support.Clipboard.WriteData();
+			if ( text == "" )  return false;
+			data.WriteHtmlFragment(Support.Clipboard.ConvertSimpleXmlToHtml(text));
+			Support.Clipboard.SetData(data);
+			return true;
+		}
+		
+		public override bool EditPaste()
+		{
+			Support.Clipboard.ReadData data = Support.Clipboard.GetData();
+			string html = data.ReadHtmlFragment();
+			if ( html != null )
+			{
+				html = Support.Clipboard.ConvertHtmlToSimpleXml(html);
+			}
+			else
+			{
+				html = TextLayout.ConvertToTaggedText(data.ReadText());
+			}
+			if ( html == null )  return false;
+			this.textNavigator.Selection = html;
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+			return true;
+		}
+
+		public override bool EditSelectAll()
+		{
+			this.textLayout.SelectAll(this.textNavigator.Context);
+			return true;
+		}
+		#endregion
 
 		// Gestion d'un événement pendant l'édition.
 		public override void EditMouseDownMessage(Point pos)
@@ -439,6 +516,10 @@ namespace Epsitec.Common.Document.Objects
 					graphics.LineWidth = 1.0/drawingContext.ScaleX;
 					graphics.AddLine(c1, c2);
 					graphics.RenderSolid(DrawingContext.ColorFrameEdit);
+
+					c1 = this.transform.TransformDirect(c1);
+					c2 = this.transform.TransformDirect(c2);
+					this.ComputeAutoScroll(c1, c2);
 				}
 			}
 
@@ -523,6 +604,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			base.GetObjectData(info, context);
 			info.AddValue("Text", this.textLayout.Text);
+			info.AddValue("TabArray", this.textLayout.Style.GetTabArray());
 		}
 
 		// Constructeur qui désérialise l'objet.
@@ -530,6 +612,15 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.Initialise();
 			this.textLayout.Text = info.GetString("Text");
+
+			if ( Support.Serialization.Helper.FindElement(info, "TabArray") )
+			{
+				Drawing.TextStyle.Tab[] tabs = (Drawing.TextStyle.Tab[]) info.GetValue("TabArray", typeof(Drawing.TextStyle.Tab[]));
+				foreach ( Drawing.TextStyle.Tab tab in tabs )
+				{
+					this.textLayout.Style.TabInsert(tab);
+				}
+			}
 		}
 
 		// Vérifie si tous les fichiers existent.

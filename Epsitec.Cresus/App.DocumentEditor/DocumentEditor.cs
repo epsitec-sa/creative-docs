@@ -13,6 +13,7 @@ namespace Epsitec.App.DocumentEditor
 	using Dialogs        = Common.Dialogs;
 	using Containers     = Common.Document.Containers;
 	using Objects        = Common.Document.Objects;
+	using Settings       = Common.Document.Settings;
 	using GlobalSettings = Common.Document.Settings.GlobalSettings;
 
 	/// <summary>
@@ -33,6 +34,11 @@ namespace Epsitec.App.DocumentEditor
 				this.globalSettings = new GlobalSettings();
 			}
 
+			if ( this.type != DocumentType.Pictogram &&
+				 this.globalSettings.SplashScreen )
+			{
+				this.CreateWindowSplash();
+			}
 			this.CreateLayout();
 			this.InitCommands();
 
@@ -41,7 +47,6 @@ namespace Epsitec.App.DocumentEditor
 
 			this.documents = new System.Collections.ArrayList();
 			this.currentDocument = -1;
-			this.CreateDocument();
 
 			string[] args = System.Environment.GetCommandLineArgs();
 			if ( args.Length >= 2 )
@@ -53,10 +58,37 @@ namespace Epsitec.App.DocumentEditor
 				}
 				this.DialogError(this.commandDispatcher, err);
 			}
+			else
+			{
+				if ( this.globalSettings.FirstAction == Settings.FirstAction.OpenNewDocument )
+				{
+					this.CreateDocument();
+				}
 
-			this.firstInitialise = true;
-			this.CurrentDocument.Notifier.NotifyAllChanged();
-			this.CurrentDocument.Notifier.GenerateEvents();
+				if ( this.globalSettings.FirstAction == Settings.FirstAction.OpenLastFile &&
+					 this.globalSettings.LastFilenameCount > 0 )
+				{
+					this.CreateDocument();
+					string filename = this.globalSettings.LastFilenameGet(0);
+					string err = this.CurrentDocument.Read(filename);
+					if ( err == "" )
+					{
+						this.DialogWarnings(this.commandDispatcher, this.CurrentDocument.ReadWarnings);
+					}
+				}
+			}
+
+			if ( this.IsCurrentDocument )
+			{
+				this.firstInitialise = true;
+				this.CurrentDocument.Notifier.NotifyAllChanged();
+				this.CurrentDocument.Notifier.GenerateEvents();
+			}
+			else
+			{
+				this.UseDocument(-1);
+				this.UpdateCloseCommand();
+			}
 		}
 
 		protected override void Dispose(bool disposing)
@@ -133,14 +165,15 @@ namespace Epsitec.App.DocumentEditor
 			fileMenu.Host = this;
 			this.MenuAdd(fileMenu, "manifest:Epsitec.App.DocumentEditor.Images.New.icon", "New", "Nouveau", "Ctrl+N");
 			this.MenuAdd(fileMenu, "manifest:Epsitec.App.DocumentEditor.Images.Open.icon", "Open", "Ouvrir...", "Ctrl+O");
-			this.MenuAdd(fileMenu, "manifest:Epsitec.App.DocumentEditor.Images.Save.icon", "Save", "Enregistrer", "Ctrl+S");
-			this.MenuAdd(fileMenu, "manifest:Epsitec.App.DocumentEditor.Images.SaveAs.icon", "SaveAs", "Enregistrer sous...", "");
 			this.MenuAdd(fileMenu, "", "Close", "Fermer", "");
 			this.MenuAdd(fileMenu, "", "CloseAll", "Fermer tout", "");
 			this.MenuAdd(fileMenu, "", "", "", "");
+			this.MenuAdd(fileMenu, "manifest:Epsitec.App.DocumentEditor.Images.Save.icon", "Save", "Enregistrer", "Ctrl+S");
+			this.MenuAdd(fileMenu, "manifest:Epsitec.App.DocumentEditor.Images.SaveAs.icon", "SaveAs", "Enregistrer sous...", "");
+			this.MenuAdd(fileMenu, "", "", "", "");
 			this.MenuAdd(fileMenu, "manifest:Epsitec.App.DocumentEditor.Images.Print.icon", "Print", "Imprimer...", "Ctrl+P");
 			this.MenuAdd(fileMenu, "", "", "", "");
-			this.MenuAdd(fileMenu, "", "", "Derniers fichiers", "");
+			this.MenuAdd(fileMenu, "", "", "Fichiers récents", "");
 			this.MenuAdd(fileMenu, "", "", "", "");
 			this.MenuAdd(fileMenu, "", "QuitApplication", "Quitter", "");
 			fileMenu.AdjustSize();
@@ -170,8 +203,6 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.Deselect.icon", "Deselect", "Désélectionner tout", "");
 			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.SelectAll.icon", "SelectAll", "Tout sélectionner", "");
 			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.SelectInvert.icon", "SelectInvert", "Inverser la sélection", "");
-			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.SelectPartial.icon", "SelectPartial", "Sélection partielle", "");
-			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.SelectGlobal.icon", "SelectGlobal", "Sélection groupée", "");
 			this.MenuAdd(objMenu, "", "", "", "");
 			this.MenuAdd(objMenu, "y/n", "HideHalf", "Mode estompé", "");
 			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.HideSel.icon", "HideSel", "Cacher la sélection", "");
@@ -181,25 +212,26 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.OrderUp.icon", "OrderUp", "Dessus", "");
 			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.OrderDown.icon", "OrderDown", "Dessous", "");
 			this.MenuAdd(objMenu, "", "", "", "");
-			this.MenuAdd(objMenu, "", "", "Opérations", "");
+			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.OperMoveH.icon", "", "Opérations", "");
 			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.GroupEmpty.icon", "", "Groupe", "");
+			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.Combine.icon", "", "Géométrie", "");
 			objMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = objMenu;
 
 			VMenu operMenu = new VMenu();
 			operMenu.Name = "Oper";
 			operMenu.Host = this;
-			this.MenuAdd(operMenu, "", "Rotate90", "Quart de tour à gauche", "");
-			this.MenuAdd(operMenu, "", "Rotate180", "Demi-tour", "");
-			this.MenuAdd(operMenu, "", "Rotate270", "Quart de tour à droite", "");
+			this.MenuAdd(operMenu, "manifest:Epsitec.App.DocumentEditor.Images.OperRot90.icon", "Rotate90", "Quart de tour à gauche", "");
+			this.MenuAdd(operMenu, "manifest:Epsitec.App.DocumentEditor.Images.OperRot180.icon", "Rotate180", "Demi-tour", "");
+			this.MenuAdd(operMenu, "manifest:Epsitec.App.DocumentEditor.Images.OperRot270.icon", "Rotate270", "Quart de tour à droite", "");
 			this.MenuAdd(operMenu, "", "", "", "");
-			this.MenuAdd(operMenu, "", "MirrorH", "Miroir horizontal", "");
-			this.MenuAdd(operMenu, "", "MirrorV", "Miroir vertical", "");
+			this.MenuAdd(operMenu, "manifest:Epsitec.App.DocumentEditor.Images.OperMirrorH.icon", "MirrorH", "Miroir horizontal", "");
+			this.MenuAdd(operMenu, "manifest:Epsitec.App.DocumentEditor.Images.OperMirrorV.icon", "MirrorV", "Miroir vertical", "");
 			this.MenuAdd(operMenu, "", "", "", "");
-			this.MenuAdd(operMenu, "", "ZoomDiv2", "Réduction /2", "");
-			this.MenuAdd(operMenu, "", "ZoomMul2", "Agrandissement x2", "");
+			this.MenuAdd(operMenu, "manifest:Epsitec.App.DocumentEditor.Images.OperZoomDiv2.icon", "ZoomDiv2", "Réduction /2", "");
+			this.MenuAdd(operMenu, "manifest:Epsitec.App.DocumentEditor.Images.OperZoomMul2.icon", "ZoomMul2", "Agrandissement x2", "");
 			operMenu.AdjustSize();
-			objMenu.Items[14].Submenu = operMenu;
+			objMenu.Items[12].Submenu = operMenu;
 
 			VMenu groupMenu = new VMenu();
 			groupMenu.Name = "Group";
@@ -211,7 +243,18 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(groupMenu, "manifest:Epsitec.App.DocumentEditor.Images.Inside.icon", "Inside", "Entrer dans le groupe", "");
 			this.MenuAdd(groupMenu, "manifest:Epsitec.App.DocumentEditor.Images.Outside.icon", "Outside", "Sortir du groupe", "");
 			groupMenu.AdjustSize();
-			objMenu.Items[15].Submenu = groupMenu;
+			objMenu.Items[13].Submenu = groupMenu;
+
+			VMenu geomMenu = new VMenu();
+			geomMenu.Name = "Geom";
+			geomMenu.Host = this;
+			this.MenuAdd(geomMenu, "manifest:Epsitec.App.DocumentEditor.Images.Combine.icon", "Combine", "Combiner", "");
+			this.MenuAdd(geomMenu, "manifest:Epsitec.App.DocumentEditor.Images.Uncombine.icon", "Uncombine", "Scinder", "");
+			this.MenuAdd(geomMenu, "", "", "", "");
+			this.MenuAdd(geomMenu, "manifest:Epsitec.App.DocumentEditor.Images.ToBezier.icon", "ToBezier", "Convertir en courbes", "");
+			this.MenuAdd(geomMenu, "manifest:Epsitec.App.DocumentEditor.Images.Fragment.icon", "Fragment", "Fragmenter", "");
+			geomMenu.AdjustSize();
+			objMenu.Items[14].Submenu = geomMenu;
 
 			VMenu showMenu = new VMenu();
 			showMenu.Name = "Show";
@@ -219,39 +262,23 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.Preview.icon", "Preview", "Aperçu avant impression", "");
 			this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.Grid.icon", "Grid", "Grille magnétique", "");
 			this.MenuAdd(showMenu, "", "", "", "");
-			this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomMenu.icon", "", "Zoom", "");
-			this.MenuAdd(showMenu, "", "", "", "");
-			this.MenuAdd(showMenu, "", "", "Apparence", "");
-			showMenu.AdjustSize();
-			this.menu.Items[i++].Submenu = showMenu;
-
-			VMenu zoomMenu = new VMenu();
-			zoomMenu.Name = "Zoom";
-			zoomMenu.Host = this;
-			this.MenuAdd(zoomMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomMin.icon", "ZoomMin", "Zoom minimal", "");
+			this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomMin.icon", "ZoomMin", "Zoom minimal", "");
 			if ( this.type != DocumentType.Pictogram )
 			{
-				this.MenuAdd(zoomMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomPage.icon", "ZoomPage", "Zoom pleine page", "");
+				this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomPage.icon", "ZoomPage", "Zoom pleine page", "");
+				this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomPageWidth.icon", "ZoomPageWidth", "Zoom largeur page", "");
 			}
-			this.MenuAdd(zoomMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomDefault.icon", "ZoomDefault", "Zoom 100%", "");
-			this.MenuAdd(zoomMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomSel.icon", "ZoomSel", "Zoom sélection", "");
-			this.MenuAdd(zoomMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomPrev.icon", "ZoomPrev", "Zoom précédent", "");
-			this.MenuAdd(zoomMenu, "", "", "", "");
-			this.MenuAdd(zoomMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomSub.icon", "ZoomSub", "Réduction", "");
-			this.MenuAdd(zoomMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomAdd.icon", "ZoomAdd", "Agrandissement", "");
-			zoomMenu.AdjustSize();
-			showMenu.Items[3].Submenu = zoomMenu;
-
-			VMenu lookMenu = new VMenu();
-			lookMenu.Name = "Look";
-			lookMenu.Host = this;
-			string[] list = Widgets.Adorner.Factory.AdornerNames;
-			foreach ( string name in list )
+			this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomDefault.icon", "ZoomDefault", "Zoom 100%", "");
+			this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomSel.icon", "ZoomSel", "Zoom sélection", "");
+			if ( this.type != DocumentType.Pictogram )
 			{
-				this.MenuAdd(lookMenu, "y/n", "SelectLook(this.Name)", name, "", name);
+				this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomSelWidth.icon", "ZoomSelWidth", "Zoom largeur sélection", "");
 			}
-			lookMenu.AdjustSize();
-			showMenu.Items[5].Submenu = lookMenu;
+			this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomPrev.icon", "ZoomPrev", "Zoom précédent", "");
+			this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomSub.icon", "ZoomSub", "Réduction", "");
+			this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomAdd.icon", "ZoomAdd", "Agrandissement", "");
+			showMenu.AdjustSize();
+			this.menu.Items[i++].Submenu = showMenu;
 
 			if ( this.useArray )
 			{
@@ -327,6 +354,9 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(debugMenu, "y/n", "DebugBboxFull", "BBoxFull", "");
 			this.MenuAdd(debugMenu, "", "", "", "");
 			this.MenuAdd(debugMenu, "", "DebugDirty", "Salir", "F12");
+			this.MenuAdd(debugMenu, "", "", "", "");
+			this.MenuAdd(debugMenu, "manifest:Epsitec.App.DocumentEditor.Images.SelectTotal.icon", "SelectTotal", "Sélection totale requise", "");
+			this.MenuAdd(debugMenu, "manifest:Epsitec.App.DocumentEditor.Images.SelectPartial.icon", "SelectPartial", "Sélection partielle autorisée", "");
 			debugMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = debugMenu;
 #endif
@@ -383,8 +413,6 @@ namespace Epsitec.App.DocumentEditor
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.Deselect.icon", 0, "Deselect", "Désélectionner tout");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.SelectAll.icon", 0, "SelectAll", "Tout sélectionner");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.SelectInvert.icon", 0, "SelectInvert", "Inverser la sélection");
-			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.SelectPartial.icon", 0, "SelectPartial", "Sélection partielle");
-			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.SelectGlobal.icon", 0, "SelectGlobal", "Sélection groupée");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.HideSel.icon", 0, "HideSel", "Cacher la sélection");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.HideRest.icon", 0, "HideRest", "Cacher le reste");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.HideCancel.icon", 0, "HideCancel", "Montrer tout");
@@ -393,9 +421,14 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.type != DocumentType.Pictogram )
 			{
 				this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.ZoomPage.icon", 0, "ZoomPage", "Zoom pleine page");
+				this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.ZoomPageWidth.icon", 0, "ZoomPageWidth", "Zoom largeur page");
 			}
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.ZoomDefault.icon", 0, "ZoomDefault", "Zoom 100%");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.ZoomSel.icon", 0, "ZoomSel", "Zoom sélection");
+			if ( this.type != DocumentType.Pictogram )
+			{
+				this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.ZoomSelWidth.icon", 0, "ZoomSelWidth", "Zoom largeur sélection");
+			}
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.ZoomPrev.icon", 0, "ZoomPrev", "Zoom précédent");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.ZoomSub.icon", 0, "ZoomSub", "Réduction");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.ZoomAdd.icon", 0, "ZoomAdd", "Agrandissement");
@@ -421,9 +454,11 @@ namespace Epsitec.App.DocumentEditor
 			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Rectangle.icon", "SelectTool(this.Name)", "Rectangle", "ObjectRectangle");
 			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Circle.icon", "SelectTool(this.Name)", "Cercle", "ObjectCircle");
 			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Ellipse.icon", "SelectTool(this.Name)", "Ellipse", "ObjectEllipse");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Regular.icon", "SelectTool(this.Name)", "Polygone régulier", "ObjectRegular");
 			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Poly.icon", "SelectTool(this.Name)", "Polygone quelconque", "ObjectPoly");
 			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Bezier.icon", "SelectTool(this.Name)", "Courbes de Bézier", "ObjectBezier");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Regular.icon", "SelectTool(this.Name)", "Polygone régulier", "ObjectRegular");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Surface.icon", "SelectTool(this.Name)", "Surfaces 2d", "ObjectSurface");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Volume.icon", "SelectTool(this.Name)", "Volumes 3d", "ObjectVolume");
 			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.TextLine.icon", "SelectTool(this.Name)", "Ligne de texte", "ObjectTextLine");
 			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.TextBox.icon", "SelectTool(this.Name)", "Pavé de texte", "ObjectTextBox");
 			if ( this.useArray )
@@ -669,13 +704,13 @@ namespace Epsitec.App.DocumentEditor
 			{
 				for ( int i=0 ; i<total ; i++ )
 				{
-					string filename = string.Format("{0} {1}", i+1, this.globalSettings.LastFilenameGetShort(i));
+					string filename = string.Format("{0} {1}", (i+1)%10, this.globalSettings.LastFilenameGetShort(i));
 					this.MenuAdd(lastMenu, "", "LastFile(this.Name)", filename, "", this.globalSettings.LastFilenameGet(i));
 				}
 			}
 
 			lastMenu.AdjustSize();
-			this.fileMenu.Items[9].Submenu = lastMenu;
+			this.fileMenu.Items[10].Submenu = lastMenu;
 		}
 		#endregion
 
@@ -807,13 +842,6 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.Tool = e.CommandArgs[0];
 		}
 
-		[Command ("SelectLook")]
-		void CommandSelectLook(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			Widgets.Adorner.Factory.SetActive(e.CommandArgs[0]);
-			this.UpdateLookCommand();
-		}
-		
 		#region IO
 		// Affiche le dialogue pour demander s'il faut enregistrer le
 		// document modifié, avant de passer à un autre document.
@@ -987,6 +1015,16 @@ namespace Epsitec.App.DocumentEditor
 					this.UseDocument(i);
 					return true;
 				}
+			}
+
+			// Si on a tapé "toto", mais qu'il existe le fichier "Toto",
+			// met le "vrai" nom dans filename.
+			string path = System.IO.Path.GetDirectoryName(filename);
+			string name = System.IO.Path.GetFileName(filename);
+			string[] s = System.IO.Directory.GetFiles(path, name);
+			if ( s.Length == 1 )
+			{
+				filename = s[0];
 			}
 
 			this.CreateDocument();
@@ -1291,6 +1329,30 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.OutsideSelection();
 		}
 
+		[Command ("Combine")]
+		void CommandCombine(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.CombineSelection();
+		}
+
+		[Command ("Uncombine")]
+		void CommandUncombine(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.UncombineSelection();
+		}
+
+		[Command ("ToBezier")]
+		void CommandToBezier(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ToBezierSelection();
+		}
+
+		[Command ("Fragment")]
+		void CommandFragment(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.FragmentSelection();
+		}
+
 		[Command ("Grid")]
 		void CommandGrid(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -1324,26 +1386,58 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.InvertSelection();
 		}
 
-		[Command ("SelectGlobal")]
-		void CommandSelectGlobal(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("SelectTotal")]
+		void CommandSelectTotal(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Tool = "Select";
+//-			this.CurrentDocument.Modifier.Tool = "Select";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
-			viewer.GlobalSelect = !viewer.GlobalSelect;
+			viewer.PartialSelect = false;
 		}
 
 		[Command ("SelectPartial")]
 		void CommandSelectPartial(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Tool = "Select";
+//-			this.CurrentDocument.Modifier.Tool = "Select";
 			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
-			viewer.PartialSelect = !viewer.PartialSelect;
+			viewer.PartialSelect = true;
+		}
+
+		[Command ("SelectorAuto")]
+		void CommandSelectorAuto(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+//-			this.CurrentDocument.Modifier.Tool = "Select";
+			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
+			viewer.SelectorType = SelectorType.Auto;
+		}
+
+		[Command ("SelectorIndividual")]
+		void CommandSelectorIndividual(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+//-			this.CurrentDocument.Modifier.Tool = "Select";
+			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
+			viewer.SelectorType = SelectorType.Individual;
+		}
+
+		[Command ("SelectorZoom")]
+		void CommandSelectorZoom(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+//-			this.CurrentDocument.Modifier.Tool = "Select";
+			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
+			viewer.SelectorType = SelectorType.Zoomer;
+		}
+
+		[Command ("SelectorStretch")]
+		void CommandSelectorStretch(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+//-			this.CurrentDocument.Modifier.Tool = "Select";
+			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
+			viewer.SelectorType = SelectorType.Stretcher;
 		}
 
 		[Command ("HideHalf")]
 		void CommandHideHalf(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Tool = "Select";
+//-			this.CurrentDocument.Modifier.Tool = "Select";
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			context.HideHalfActive = !context.HideHalfActive;
 		}
@@ -1380,6 +1474,14 @@ namespace Epsitec.App.DocumentEditor
 			context.ZoomPageAndCenter();
 		}
 
+		[Command ("ZoomPageWidth")]
+		void CommandZoomPageWidth(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			this.CurrentDocument.Modifier.ZoomMemorize();
+			context.ZoomPageWidthAndCenter();
+		}
+
 		[Command ("ZoomDefault")]
 		void CommandZoomDefault(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -1394,6 +1496,12 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.ZoomSel();
 		}
 
+		[Command ("ZoomSelWidth")]
+		void CommandZoomSelWidth(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ZoomSelWidth();
+		}
+
 		[Command ("ZoomPrev")]
 		void CommandZoomPrev(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -1403,13 +1511,13 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("ZoomSub")]
 		void CommandZoomSub(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.ZoomChange(0.5);
+			this.CurrentDocument.Modifier.ZoomChange(1.0/1.5);
 		}
 
 		[Command ("ZoomAdd")]
 		void CommandZoomAdd(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.ZoomChange(2.0);
+			this.CurrentDocument.Modifier.ZoomChange(1.5);
 		}
 
 		// Exécute une commande locale à un objet.
@@ -1714,16 +1822,17 @@ namespace Epsitec.App.DocumentEditor
 			CommandDispatcher foo = this.CommandDispatcher;
 
 			this.newState = new CommandState("New", this.commandDispatcher);
-			this.openState = new CommandState("Open", this.commandDispatcher);
-			this.saveState = new CommandState("Save", this.commandDispatcher);
+			this.openState = new CommandState("Open", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaO);
+			this.saveState = new CommandState("Save", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaS);
 			this.saveAsState = new CommandState("SaveAs", this.commandDispatcher);
 			this.closeState = new CommandState("Close", this.commandDispatcher);
-			this.printState = new CommandState("Print", this.commandDispatcher);
-			this.deleteState = new CommandState("Delete", this.commandDispatcher);
+			this.closeAllState = new CommandState("CloseAll", this.commandDispatcher);
+			this.printState = new CommandState("Print", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaP);
+			this.deleteState = new CommandState("Delete", this.commandDispatcher, KeyCode.Delete);
 			this.duplicateState = new CommandState("Duplicate", this.commandDispatcher);
-			this.cutState = new CommandState("Cut", this.commandDispatcher);
-			this.copyState = new CommandState("Copy", this.commandDispatcher);
-			this.pasteState = new CommandState("Paste", this.commandDispatcher);
+			this.cutState = new CommandState("Cut", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaX);
+			this.copyState = new CommandState("Copy", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaC);
+			this.pasteState = new CommandState("Paste", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaV);
 			this.orderUpState = new CommandState("OrderUp", this.commandDispatcher);
 			this.orderDownState = new CommandState("OrderDown", this.commandDispatcher);
 			this.rotate90State = new CommandState("Rotate90", this.commandDispatcher);
@@ -1738,12 +1847,20 @@ namespace Epsitec.App.DocumentEditor
 			this.ungroupState = new CommandState("Ungroup", this.commandDispatcher);
 			this.insideState = new CommandState("Inside", this.commandDispatcher);
 			this.outsideState = new CommandState("Outside", this.commandDispatcher);
-			this.undoState = new CommandState("Undo", this.commandDispatcher);
-			this.redoState = new CommandState("Redo", this.commandDispatcher);
+			this.combineState = new CommandState("Combine", this.commandDispatcher);
+			this.uncombineState = new CommandState("Uncombine", this.commandDispatcher);
+			this.toBezierState = new CommandState("ToBezier", this.commandDispatcher);
+			this.fragmentState = new CommandState("Fragment", this.commandDispatcher);
+			this.undoState = new CommandState("Undo", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaZ);
+			this.redoState = new CommandState("Redo", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaY);
 			this.deselectState = new CommandState("Deselect", this.commandDispatcher);
 			this.selectAllState = new CommandState("SelectAll", this.commandDispatcher);
 			this.selectInvertState = new CommandState("SelectInvert", this.commandDispatcher);
-			this.selectGlobalState = new CommandState("SelectGlobal", this.commandDispatcher);
+			this.selectorAutoState = new CommandState("SelectorAuto", this.commandDispatcher);
+			this.selectorIndividualState = new CommandState("SelectorIndividual", this.commandDispatcher);
+			this.selectorZoomState = new CommandState("SelectorZoom", this.commandDispatcher);
+			this.selectorStretchState = new CommandState("SelectorStretch", this.commandDispatcher);
+			this.selectTotalState = new CommandState("SelectTotal", this.commandDispatcher);
 			this.selectPartialState = new CommandState("SelectPartial", this.commandDispatcher);
 			this.hideHalfState = new CommandState("HideHalf", this.commandDispatcher);
 			this.hideSelState = new CommandState("HideSel", this.commandDispatcher);
@@ -1751,8 +1868,10 @@ namespace Epsitec.App.DocumentEditor
 			this.hideCancelState = new CommandState("HideCancel", this.commandDispatcher);
 			this.zoomMinState = new CommandState("ZoomMin", this.commandDispatcher);
 			this.zoomPageState = new CommandState("ZoomPage", this.commandDispatcher);
+			this.zoomPageWidthState = new CommandState("ZoomPageWidth", this.commandDispatcher);
 			this.zoomDefaultState = new CommandState("ZoomDefault", this.commandDispatcher);
 			this.zoomSelState = new CommandState("ZoomSel", this.commandDispatcher);
+			this.zoomSelWidthState = new CommandState("ZoomSelWidth", this.commandDispatcher);
 			this.zoomPrevState = new CommandState("ZoomPrev", this.commandDispatcher);
 			this.zoomSubState = new CommandState("ZoomSub", this.commandDispatcher);
 			this.zoomAddState = new CommandState("ZoomAdd", this.commandDispatcher);
@@ -1838,8 +1957,6 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.IsCurrentDocument )
 			{
 				this.printState.Enabled = true;
-				this.selectPartialState.Enabled = true;
-				this.settingsState.Enabled = true;
 				this.infosState.Enabled = true;
 
 				this.CurrentDocument.Dialogs.UpdateInfos();
@@ -1848,8 +1965,6 @@ namespace Epsitec.App.DocumentEditor
 			else
 			{
 				this.printState.Enabled = false;
-				this.selectPartialState.Enabled = false;
-				this.settingsState.Enabled = false;
 				this.infosState.Enabled = false;
 			}
 
@@ -1876,11 +1991,13 @@ namespace Epsitec.App.DocumentEditor
 			{
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 				this.zoomPageState.Enabled = !context.IsZoomPage;
+				this.zoomPageWidthState.Enabled = !context.IsZoomPageWidth;
 				this.zoomDefaultState.Enabled = !context.IsZoomDefault;
 			}
 			else
 			{
 				this.zoomPageState.Enabled = false;
+				this.zoomPageWidthState.Enabled = false;
 				this.zoomDefaultState.Enabled = false;
 			}
 		}
@@ -1895,6 +2012,7 @@ namespace Epsitec.App.DocumentEditor
 				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 				this.zoomMinState.Enabled = ( context.Zoom > this.CurrentDocument.Modifier.ZoomMin );
 				this.zoomPageState.Enabled = !context.IsZoomPage;
+				this.zoomPageWidthState.Enabled = !context.IsZoomPageWidth;
 				this.zoomDefaultState.Enabled = !context.IsZoomDefault;
 				this.zoomPrevState.Enabled = ( this.CurrentDocument.Modifier.ZoomMemorizeCount > 0 );
 				this.zoomSubState.Enabled = ( context.Zoom > this.CurrentDocument.Modifier.ZoomMin );
@@ -1904,6 +2022,7 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.zoomMinState.Enabled = false;
 				this.zoomPageState.Enabled = false;
+				this.zoomPageWidthState.Enabled = false;
 				this.zoomDefaultState.Enabled = false;
 				this.zoomPrevState.Enabled = false;
 				this.zoomSubState.Enabled = false;
@@ -1975,15 +2094,13 @@ namespace Epsitec.App.DocumentEditor
 				int totalObjects   = this.CurrentDocument.Modifier.TotalObjects;
 				bool isCreating    = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
 				bool isBase        = viewer.DrawingContext.RootStackIsBase;
+				SelectorType sType = viewer.SelectorType;
 				Objects.Abstract one = this.CurrentDocument.Modifier.RetOnlySelectedObject();
 
 				this.newState.Enabled = true;
 				this.openState.Enabled = true;
 				this.deleteState.Enabled = ( totalSelected > 0 || isCreating );
 				this.duplicateState.Enabled = ( totalSelected > 0 && !isCreating );
-				this.cutState.Enabled = ( totalSelected > 0 && !isCreating );
-				this.copyState.Enabled = ( totalSelected > 0 && !isCreating );
-				this.pasteState.Enabled = ( !this.CurrentDocument.Modifier.IsClipboardEmpty() && !isCreating );
 				this.orderUpState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating );
 				this.orderDownState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating );
 				this.rotate90State.Enabled = ( totalSelected > 0 && !isCreating );
@@ -1998,21 +2115,49 @@ namespace Epsitec.App.DocumentEditor
 				this.ungroupState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating );
 				this.insideState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating );
 				this.outsideState.Enabled = ( !isBase && !isCreating );
+				this.combineState.Enabled = ( totalSelected > 1 && !isCreating );
+				this.uncombineState.Enabled = ( totalSelected > 0 && !isCreating );
+				this.toBezierState.Enabled = ( totalSelected > 0 && !isCreating );
+				this.fragmentState.Enabled = ( totalSelected > 0 && !isCreating );
 
 				this.hideSelState.Enabled = ( totalSelected > 0 && !isCreating );
 				this.hideRestState.Enabled = ( totalObjects-totalSelected-totalHide > 0 && !isCreating );
 				this.hideCancelState.Enabled = ( totalPageHide > 0 && !isCreating );
 
 				this.zoomSelState.Enabled = ( totalSelected > 0 );
+				this.zoomSelWidthState.Enabled = ( totalSelected > 0 );
 
 				this.deselectState.Enabled = ( totalSelected > 0 );
 				this.selectAllState.Enabled = ( totalSelected < totalObjects-totalHide );
 				this.selectInvertState.Enabled = ( totalObjects > 0 );
 
-				this.selectGlobalState.Enabled = ( totalSelected > 0 );
-				this.selectGlobalState.ActiveState = ( totalSelected > 0 && viewer.GlobalSelect ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			
-				this.selectPartialState.ActiveState = viewer.PartialSelect ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectorAutoState.Enabled       = true;
+				this.selectorIndividualState.Enabled = true;
+				this.selectorZoomState.Enabled       = true;
+				this.selectorStretchState.Enabled    = true;
+				this.selectorAutoState.ActiveState =       (sType == SelectorType.Auto      ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectorIndividualState.ActiveState = (sType == SelectorType.Individual) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectorZoomState.ActiveState =       (sType == SelectorType.Zoomer    ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectorStretchState.ActiveState =    (sType == SelectorType.Stretcher ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
+				this.selectTotalState.Enabled   = true;
+				this.selectPartialState.Enabled = true;
+				this.selectTotalState.ActiveState   = !viewer.PartialSelect ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectPartialState.ActiveState =  viewer.PartialSelect ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
+				Objects.Abstract edit = this.CurrentDocument.Modifier.RetEditObject();
+				if ( edit == null )
+				{
+					this.cutState.Enabled = ( totalSelected > 0 && !isCreating );
+					this.copyState.Enabled = ( totalSelected > 0 && !isCreating );
+					this.pasteState.Enabled = ( !this.CurrentDocument.Modifier.IsClipboardEmpty() && !isCreating );
+				}
+				else
+				{
+					this.cutState.Enabled = true;
+					this.copyState.Enabled = true;
+					this.pasteState.Enabled = true;
+				}
 
 				this.CurrentDocument.Dialogs.UpdateInfos();
 			}
@@ -2039,20 +2184,34 @@ namespace Epsitec.App.DocumentEditor
 				this.ungroupState.Enabled = false;
 				this.insideState.Enabled = false;
 				this.outsideState.Enabled = false;
+				this.combineState.Enabled = false;
+				this.uncombineState.Enabled = false;
+				this.toBezierState.Enabled = false;
+				this.fragmentState.Enabled = false;
 
 				this.hideSelState.Enabled = false;
 				this.hideRestState.Enabled = false;
 				this.hideCancelState.Enabled = false;
 
 				this.zoomSelState.Enabled = false;
+				this.zoomSelWidthState.Enabled = false;
 
 				this.deselectState.Enabled = false;
 				this.selectAllState.Enabled = false;
 				this.selectInvertState.Enabled = false;
 
-				this.selectGlobalState.Enabled = false;
-				this.selectGlobalState.ActiveState = WidgetState.ActiveNo;
-			
+				this.selectorAutoState.Enabled       = false;
+				this.selectorIndividualState.Enabled = false;
+				this.selectorZoomState.Enabled       = false;
+				this.selectorStretchState.Enabled    = false;
+				this.selectorAutoState.ActiveState       = WidgetState.ActiveNo;
+				this.selectorIndividualState.ActiveState = WidgetState.ActiveNo;
+				this.selectorZoomState.ActiveState       = WidgetState.ActiveNo;
+				this.selectorStretchState.ActiveState    = WidgetState.ActiveNo;
+
+				this.selectTotalState.Enabled   = false;
+				this.selectPartialState.Enabled = false;
+				this.selectTotalState.ActiveState   = WidgetState.ActiveNo;
 				this.selectPartialState.ActiveState = WidgetState.ActiveNo;
 			}
 
@@ -2295,7 +2454,7 @@ namespace Epsitec.App.DocumentEditor
 
 			if ( viewer.DrawingContext.IsActive )
 			{
-				box.Inflate(viewer.DrawingContext.HandleSize/2);
+				box.Inflate(viewer.DrawingContext.HandleSize/2 + 1);
 			}
 
 			box = viewer.InternalToScreen(box);
@@ -2359,18 +2518,6 @@ namespace Epsitec.App.DocumentEditor
 			di.vScroller.Value = (decimal) (-context.OriginY);
 			di.vScroller.SmallChange = (decimal) (10.0/scale.Y);
 			di.vScroller.LargeChange = (decimal) (100.0/scale.Y);
-		}
-
-
-		// Appelé lorsque le look a changé.
-		protected void UpdateLookCommand()
-		{
-			string lookName = Widgets.Adorner.Factory.ActiveName;
-			Widget[] lookWidgets = Widget.FindAllCommandWidgets("SelectLook", this.commandDispatcher);
-			foreach ( Widget widget in lookWidgets )
-			{
-				widget.ActiveState = ( widget.Name == lookName ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			}
 		}
 
 
@@ -2471,48 +2618,146 @@ namespace Epsitec.App.DocumentEditor
 		{
 			if ( this.windowSettings == null )
 			{
+				double dx = 300;
+				double dy = 370;
 				this.windowSettings = new Window();
-				this.windowSettings.ClientSize = new Size(300, 350);
-				this.windowSettings.Text = "Réglages";
 				this.windowSettings.MakeSecondaryWindow();
 				this.windowSettings.MakeFixedSizeWindow();
 				this.windowSettings.MakeToolWindow();
+				if ( this.globalSettings.SettingsLocation.IsEmpty )
+				{
+					Rectangle wrect = this.CurrentBounds;
+					this.windowSettings.ClientSize = new Size(dx, dy);
+					this.windowSettings.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
+				}
+				else
+				{
+					this.windowSettings.ClientSize = this.globalSettings.SettingsSize;
+					this.windowSettings.WindowLocation = this.globalSettings.SettingsLocation;
+				}
+				this.windowSettings.Text = "Réglages";
 				this.windowSettings.PreventAutoClose = true;
 				this.windowSettings.Owner = this.Window;
 				this.windowSettings.WindowCloseClicked += new EventHandler(this.HandleWindowSettingsCloseClicked);
 
-				// Crée les onglets.
-				TabBook book = new TabBook(this.windowSettings.Root);
-				book.Arrows = TabBookArrows.Stretch;
-				book.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-				book.AnchorMargins = new Margins(6, 6, 6, 34);
+				Panel topPart = new Panel(this.windowSettings.Root);
+				topPart.Height = 20;
+				topPart.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+				topPart.AnchorMargins = new Margins(6, 6, 6, 0);
+
+				// Crée les boutons radio.
+				RadioButton radio1 = new RadioButton(topPart);
+				radio1.Name = "RadioGlobal";
+				radio1.Text = "Global";
+				radio1.Width = 80;
+				radio1.Dock = DockStyle.Left;
+				radio1.Clicked += new MessageEventHandler(this.HandleRadioSettingsChanged);
+
+				RadioButton radio2 = new RadioButton(topPart);
+				radio2.Name = "RadioDocument";
+				radio2.Text = "Document";
+				radio2.Width = 80;
+				radio2.Dock = DockStyle.Left;
+				radio2.ActiveState = WidgetState.ActiveYes;
+				radio2.Clicked += new MessageEventHandler(this.HandleRadioSettingsChanged);
+
+				// Crée le panneau "global".
+				Panel global = new Panel(this.windowSettings.Root);
+				global.Name = "BookGlobal";
+				global.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+				global.AnchorMargins = new Margins(6, 6, 6+20, 34);
+				global.SetVisible(false);
+
+				TextFieldCombo combo;
+				TextFieldSlider field;
+				CheckButton check;
+				this.tabIndex = 0;
+
+				Common.Document.Dialogs.CreateTitle(global, "Que faire au démarrage du logiciel ?");
+
+				combo = this.CreateCombo(global, "FirstAction", "Action");
+				for ( int i=0 ; i<GlobalSettings.FirstActionCount ; i++ )
+				{
+					Common.Document.Settings.FirstAction action = GlobalSettings.FirstActionType(i);
+					combo.Items.Add(GlobalSettings.FirstActionString(action));
+				}
+				combo.SelectedIndex = GlobalSettings.FirstActionRank(this.globalSettings.FirstAction);
+
+				check = this.CreateCheck(global, "SplashScreen", "Ecran initial");
+				check.ActiveState = this.globalSettings.SplashScreen ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
+				Common.Document.Dialogs.CreateTitle(global, "Réglages de la souris");
+
+				combo = this.CreateCombo(global, "MouseWheelAction", "Molette");
+				for ( int i=0 ; i<GlobalSettings.MouseWheelActionCount ; i++ )
+				{
+					Common.Document.Settings.MouseWheelAction action = GlobalSettings.MouseWheelActionType(i);
+					combo.Items.Add(GlobalSettings.MouseWheelActionString(action));
+				}
+				combo.SelectedIndex = GlobalSettings.MouseWheelActionRank(this.globalSettings.MouseWheelAction);
+
+				field = this.CreateField(global, "DefaultZoom", "Grossissement");
+				field.MinValue = 1.1M;
+				field.MaxValue = 4.0M;
+				field.Step = 0.1M;
+				field.Resolution = 0.1M;
+				field.Value = (decimal) this.globalSettings.DefaultZoom;
+
+				Common.Document.Dialogs.CreateTitle(global, "Réglages de l'écran");
+
+				combo = this.CreateCombo(global, "Adorner", "Aspect de l'interface");
+				string[] list = Widgets.Adorner.Factory.AdornerNames;
+				int rank = 0;
+				foreach ( string name in list )
+				{
+					combo.Items.Add(name);
+					if ( name == Widgets.Adorner.Factory.ActiveName )
+					{
+						combo.SelectedIndex = rank;
+					}
+					rank++;
+				}
+
+				field = this.CreateField(global, "ScreenDpi", "Résolution (dpi)");
+				field.MinValue = 30.0M;
+				field.MaxValue = 300.0M;
+				field.Step = 1.0M;
+				field.Resolution = 1.0M;
+				field.Value = (decimal) this.globalSettings.ScreenDpi;
+
+				// Crée les onglets "document".
+				TabBook bookDoc = new TabBook(this.windowSettings.Root);
+				bookDoc.Name = "BookDocument";
+				bookDoc.Arrows = TabBookArrows.Stretch;
+				bookDoc.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+				bookDoc.AnchorMargins = new Margins(6, 6, 6+20, 34);
 
 				TabPage bookFormat = new TabPage();
 				bookFormat.Name = "Format";
 				bookFormat.TabTitle = "Format";
-				book.Items.Add(bookFormat);
+				bookDoc.Items.Add(bookFormat);
 
 				TabPage bookGrid = new TabPage();
 				bookGrid.Name = "Grid";
 				bookGrid.TabTitle = "Grille";
-				book.Items.Add(bookGrid);
+				bookDoc.Items.Add(bookGrid);
 
 				TabPage bookGuides = new TabPage();
 				bookGuides.Name = "Guides";
 				bookGuides.TabTitle = "Repères";
-				book.Items.Add(bookGuides);
+				bookDoc.Items.Add(bookGuides);
 
 				TabPage bookPrint = new TabPage();
 				bookPrint.Name = "Print";
 				bookPrint.TabTitle = "Impression";
-				book.Items.Add(bookPrint);
+				bookDoc.Items.Add(bookPrint);
 
 				TabPage bookMisc = new TabPage();
 				bookMisc.Name = "Misc";
 				bookMisc.TabTitle = "Divers";
-				book.Items.Add(bookMisc);
+				bookDoc.Items.Add(bookMisc);
 
-				book.ActivePage = bookFormat;
+				bookDoc.ActivePage = bookFormat;
 
 				// Bouton de fermeture.
 				Button buttonClose = new Button(this.windowSettings.Root);
@@ -2528,7 +2773,143 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 			this.windowSettings.Show();
-			this.CurrentDocument.Dialogs.BuildSettings(this.windowSettings);
+
+			if ( this.IsCurrentDocument )
+			{
+				this.CurrentDocument.Dialogs.BuildSettings(this.windowSettings);
+			}
+		}
+
+		// Crée un widget combo.
+		protected TextFieldCombo CreateCombo(Widget parent, string name, string label)
+		{
+			Panel container = new Panel(parent);
+			container.Height = 22;
+			container.TabIndex = this.tabIndex++;
+			container.Dock = DockStyle.Top;
+			container.DockMargins = new Margins(10, 10, 0, 5);
+
+			StaticText text = new StaticText(container);
+			text.Text = label;
+			text.Width = 100;
+			text.Dock = DockStyle.Left;
+			text.DockMargins = new Margins(0, 0, 0, 0);
+
+			TextFieldCombo field = new TextFieldCombo(container);
+			field.Width = 160;
+			field.IsReadOnly = true;
+			field.Name = name;
+			field.SelectedIndexChanged += new EventHandler(this.HandleComboSettingsChanged);
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			field.Dock = DockStyle.Left;
+			field.DockMargins = new Margins(0, 0, 0, 0);
+			return field;
+		}
+
+		// Crée un widget textfield.
+		protected TextFieldSlider CreateField(Widget parent, string name, string label)
+		{
+			Panel container = new Panel(parent);
+			container.Height = 22;
+			container.TabIndex = this.tabIndex++;
+			container.Dock = DockStyle.Top;
+			container.DockMargins = new Margins(10, 10, 0, 5);
+
+			StaticText text = new StaticText(container);
+			text.Text = label;
+			text.Width = 100;
+			text.Dock = DockStyle.Left;
+			text.DockMargins = new Margins(0, 0, 0, 0);
+
+			TextFieldSlider field = new TextFieldSlider(container);
+			field.Width = 50;
+			field.Name = name;
+			field.ValueChanged += new EventHandler(this.HandleDoubleSettingsChanged);
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			field.Dock = DockStyle.Left;
+			field.DockMargins = new Margins(0, 0, 0, 0);
+			return field;
+		}
+
+		// Crée un widget checkbutton.
+		protected CheckButton CreateCheck(Widget parent, string name, string text)
+		{
+			CheckButton check = new CheckButton(parent);
+			check.Text = text;
+			check.Name = name;
+			check.Clicked +=new MessageEventHandler(this.HandleCheckSettingsClicked);
+			check.TabIndex = this.tabIndex++;
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			check.Dock = DockStyle.Top;
+			check.DockMargins = new Margins(10+100, 0, 0, 5);
+			return check;
+		}
+
+		private void HandleRadioSettingsChanged(object sender, MessageEventArgs e)
+		{
+			RadioButton radio = sender as RadioButton;
+			if ( radio.Name == "RadioGlobal" )
+			{
+				this.windowSettings.Root.FindChild("BookGlobal").SetVisible(true);
+				this.windowSettings.Root.FindChild("BookDocument").SetVisible(false);
+			}
+			else
+			{
+				this.windowSettings.Root.FindChild("BookGlobal").SetVisible(false);
+				this.windowSettings.Root.FindChild("BookDocument").SetVisible(true);
+			}
+		}
+		
+		private void HandleComboSettingsChanged(object sender)
+		{
+			TextFieldCombo combo = sender as TextFieldCombo;
+
+			if ( combo.Name == "FirstAction" )
+			{
+				this.globalSettings.FirstAction = GlobalSettings.FirstActionType(combo.SelectedIndex);
+			}
+
+			if ( combo.Name == "MouseWheelAction" )
+			{
+				this.globalSettings.MouseWheelAction = GlobalSettings.MouseWheelActionType(combo.SelectedIndex);
+			}
+
+			if ( combo.Name == "Adorner" )
+			{
+				this.globalSettings.Adorner = combo.Text;
+				Widgets.Adorner.Factory.SetActive(combo.Text);
+			}
+		}
+
+		private void HandleDoubleSettingsChanged(object sender)
+		{
+			TextFieldSlider field = sender as TextFieldSlider;
+
+			if ( field.Name == "ScreenDpi" )
+			{
+				this.globalSettings.ScreenDpi = (double) field.Value;
+				if ( this.IsCurrentDocument )
+				{
+					this.CurrentDocument.Notifier.NotifyAllChanged();
+				}
+			}
+
+			if ( field.Name == "DefaultZoom" )
+			{
+				this.globalSettings.DefaultZoom = (double) field.Value;
+			}
+		}
+
+		private void HandleCheckSettingsClicked(object sender, MessageEventArgs e)
+		{
+			CheckButton check = sender as CheckButton;
+
+			if ( check.Name == "SplashScreen" )
+			{
+				this.globalSettings.SplashScreen = !this.globalSettings.SplashScreen;
+			}
 		}
 
 		private void HandleWindowSettingsCloseClicked(object sender)
@@ -2553,12 +2934,24 @@ namespace Epsitec.App.DocumentEditor
 		{
 			if ( this.windowInfos == null )
 			{
+				double dx = 300;
+				double dy = 250;
 				this.windowInfos = new Window();
-				this.windowInfos.ClientSize = new Size(300, 250);
-				this.windowInfos.Text = "Informations";
 				//?this.windowInfos.MakeFixedSizeWindow();
 				this.windowInfos.MakeSecondaryWindow();
 				this.windowInfos.PreventAutoClose = true;
+				if ( this.globalSettings.InfosLocation.IsEmpty )
+				{
+					Rectangle wrect = this.CurrentBounds;
+					this.windowInfos.ClientSize = new Size(dx, dy);
+					this.windowInfos.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
+				}
+				else
+				{
+					this.windowInfos.ClientSize = this.globalSettings.InfosSize;
+					this.windowInfos.WindowLocation = this.globalSettings.InfosLocation;
+				}
+				this.windowInfos.Text = "Informations";
 				this.windowInfos.Owner = this.Window;
 				this.windowInfos.WindowCloseClicked += new EventHandler(this.HandleWindowInfosCloseClicked);
 				this.windowInfos.Root.MinSize = new Size(160, 100);
@@ -2608,11 +3001,23 @@ namespace Epsitec.App.DocumentEditor
 		{
 			if ( this.windowAbout == null )
 			{
+				double dx = 300;
+				double dy = 150;
 				this.windowAbout = new Window();
-				this.windowAbout.ClientSize = new Size(300, 150);
-				this.windowAbout.Text = "A propos de...";
 				this.windowAbout.MakeFixedSizeWindow();
 				this.windowAbout.MakeSecondaryWindow();
+				if ( this.globalSettings.AboutLocation.IsEmpty )
+				{
+					Rectangle wrect = this.CurrentBounds;
+					this.windowAbout.ClientSize = new Size(dx, dy);
+					this.windowAbout.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
+				}
+				else
+				{
+					this.windowAbout.ClientSize = this.globalSettings.AboutSize;
+					this.windowAbout.WindowLocation = this.globalSettings.AboutLocation;
+				}
+				this.windowAbout.Text = "A propos de...";
 				this.windowAbout.PreventAutoClose = true;
 				this.windowAbout.Owner = this.Window;
 				this.windowAbout.WindowCloseClicked += new EventHandler(this.HandleWindowAboutCloseClicked);
@@ -2628,8 +3033,8 @@ namespace Epsitec.App.DocumentEditor
 
 				string version = typeof(Document).Assembly.FullName.Split(',')[1].Split('=')[1];
 				Common.Document.Dialogs.CreateLabel(this.windowAbout.Root, "Version", version);
-				Common.Document.Dialogs.CreateLabel(this.windowAbout.Root, "Identificateur", "58421-75001-63244-80751");
 				Common.Document.Dialogs.CreateLabel(this.windowAbout.Root, "Créé par", "EPSITEC SA");
+				Common.Document.Dialogs.CreateLabel(this.windowAbout.Root, "Auteurs", "Daniel Roux, Pierre Arnaud");
 				Common.Document.Dialogs.CreateLabel(this.windowAbout.Root, "Site web", @"<a href=""http://www.epsitec.ch"">www.epsitec.ch</a>");
 				Common.Document.Dialogs.CreateSeparator(this.windowAbout.Root);
 
@@ -2657,6 +3062,92 @@ namespace Epsitec.App.DocumentEditor
 		private void HandleAboutButtonCloseClicked(object sender, MessageEventArgs e)
 		{
 			this.windowAbout.Hide();
+		}
+
+		// Crée la fenêtre "splash screen".
+		protected void CreateWindowSplash()
+		{
+			if ( this.windowSplash == null )
+			{
+				double dx = 400;
+				double dy = 200;
+				Rectangle wrect = this.CurrentBounds;
+
+				this.windowSplash = new Window();
+				this.windowSplash.MakeFramelessWindow();
+				this.windowSplash.MakeTopLevelWindow();
+				this.windowSplash.ClientSize = new Size(dx, dy);
+				this.windowSplash.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
+				this.windowSplash.PreventAutoClose = true;
+				this.windowSplash.Owner = this.Window;
+
+				string res = "manifest:Epsitec.App.DocumentEditor.Images.SplashScreen.png";
+				string text = string.Format("<img src=\"{0}\"/>", res);
+				StaticText image = new StaticText(this.windowSplash.Root);
+				image.Text = text;
+				image.Dock = DockStyle.Fill;
+				image.Clicked += new MessageEventHandler(this.HandleSplashImageClicked);
+
+				string version = typeof(Document).Assembly.FullName.Split(',')[1].Split('=')[1];
+				StaticText sv = new StaticText(this.windowSplash.Root);
+				sv.Text = string.Format("<b>Version {0}</b>    Langue: français", version);
+				sv.Location = new Point(62, 28);
+				sv.Size = new Size(270, 14);
+				sv.SetClientZoom(0.8);
+
+				StaticText ep = new StaticText(this.windowSplash.Root);
+				ep.Text = "(c) 2004-2005 EPSITEC SA, Daniel Roux, Pierre Arnaud";
+				ep.Location = new Point(62, 16);
+				ep.Size = new Size(270, 14);
+				ep.SetClientZoom(0.8);
+
+				this.splashTimer = new Timer();
+				this.splashTimer.TimeElapsed += new EventHandler(this.HandleSplashTimerTimeElapsed);
+				this.splashTimer.Delay = 10.0;
+				this.splashTimer.Start();
+			}
+
+			this.windowSplash.Show();
+		}
+
+		private void HandleSplashImageClicked(object sender, MessageEventArgs e)
+		{
+			this.DeleteWindowSplash();
+		}
+
+		private void HandleSplashTimerTimeElapsed(object sender)
+		{
+			this.DeleteWindowSplash();
+		}
+
+		protected void DeleteWindowSplash()
+		{
+			if ( this.windowSplash == null )  return;
+
+			this.windowSplash.Hide();
+			this.windowSplash.Dispose();
+			this.windowSplash = null;
+
+			this.splashTimer.Stop();
+			this.splashTimer.TimeElapsed -= new EventHandler(this.HandleSplashTimerTimeElapsed);
+			this.splashTimer.Dispose();
+			this.splashTimer = null;
+		}
+
+		// Donne les frontières de l'application.
+		protected Rectangle CurrentBounds
+		{
+			get
+			{
+				if ( this.Window == null )
+				{
+					return new Rectangle(this.globalSettings.WindowLocation, this.globalSettings.WindowSize);
+				}
+				else
+				{
+					return new Rectangle(this.Window.WindowLocation, this.Window.WindowSize);
+				}
+			}
 		}
 		#endregion
 
@@ -2810,6 +3301,7 @@ namespace Epsitec.App.DocumentEditor
 		protected void UpdateCloseCommand()
 		{
 			this.closeState.Enabled = (this.bookDocuments.PageCount > 0);
+			this.closeAllState.Enabled = (this.bookDocuments.PageCount > 0);
 		}
 
 		// Met à jour le nom de l'onglet des documents.
@@ -2900,7 +3392,26 @@ namespace Epsitec.App.DocumentEditor
 			this.globalSettings.IsFullScreen = this.Window.IsFullScreen;
 			this.Window.IsFullScreen = false;
 			this.globalSettings.WindowLocation = this.Window.WindowLocation;
-			this.globalSettings.WindowSize = this.Window.WindowSize;
+			this.globalSettings.WindowSize = this.Window.ClientSize;
+
+			if ( this.windowSettings != null )
+			{
+				this.globalSettings.SettingsLocation = this.windowSettings.WindowLocation;
+				this.globalSettings.SettingsSize = this.windowSettings.ClientSize;
+			}
+
+			if ( this.windowInfos != null )
+			{
+				this.globalSettings.InfosLocation = this.windowInfos.WindowLocation;
+				this.globalSettings.InfosSize = this.windowInfos.ClientSize;
+			}
+
+			if ( this.windowAbout != null )
+			{
+				this.globalSettings.AboutLocation = this.windowAbout.WindowLocation;
+				this.globalSettings.AboutSize = this.windowAbout.ClientSize;
+			}
+
 			this.globalSettings.Adorner = Epsitec.Common.Widgets.Adorner.Factory.ActiveName;
 
 			try
@@ -2957,7 +3468,10 @@ namespace Epsitec.App.DocumentEditor
 		protected double						panelsWidth = 247;
 		protected string						printerName = "";
 		protected bool							ignoreChange;
+		protected int							tabIndex;
+		protected Timer							splashTimer;
 
+		protected Window						windowSplash;
 		protected Window						windowAbout;
 		protected Window						windowInfos;
 		protected Window						windowSettings;
@@ -2967,6 +3481,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					saveState;
 		protected CommandState					saveAsState;
 		protected CommandState					closeState;
+		protected CommandState					closeAllState;
 		protected CommandState					printState;
 		protected CommandState					deleteState;
 		protected CommandState					duplicateState;
@@ -2987,12 +3502,20 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					ungroupState;
 		protected CommandState					insideState;
 		protected CommandState					outsideState;
+		protected CommandState					combineState;
+		protected CommandState					uncombineState;
+		protected CommandState					toBezierState;
+		protected CommandState					fragmentState;
 		protected CommandState					undoState;
 		protected CommandState					redoState;
 		protected CommandState					deselectState;
 		protected CommandState					selectAllState;
 		protected CommandState					selectInvertState;
-		protected CommandState					selectGlobalState;
+		protected CommandState					selectorAutoState;
+		protected CommandState					selectorIndividualState;
+		protected CommandState					selectorZoomState;
+		protected CommandState					selectorStretchState;
+		protected CommandState					selectTotalState;
 		protected CommandState					selectPartialState;
 		protected CommandState					hideHalfState;
 		protected CommandState					hideSelState;
@@ -3000,8 +3523,10 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					hideCancelState;
 		protected CommandState					zoomMinState;
 		protected CommandState					zoomPageState;
+		protected CommandState					zoomPageWidthState;
 		protected CommandState					zoomDefaultState;
 		protected CommandState					zoomSelState;
+		protected CommandState					zoomSelWidthState;
 		protected CommandState					zoomPrevState;
 		protected CommandState					zoomSubState;
 		protected CommandState					zoomAddState;

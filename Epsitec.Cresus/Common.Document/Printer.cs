@@ -14,7 +14,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Imprime le document selon les choix faits dans le dialogue Window (dp)
-		// ainsi que dans le dialogue des réglages (info).
+		// ainsi que dans le dialogue des réglages (PrintInfo).
 		public void Print(Epsitec.Common.Dialogs.Print dp)
 		{
 			PrintEngine printEngine = new PrintEngine();
@@ -194,8 +194,8 @@ namespace Epsitec.Common.Document
 			double dpi = this.PrintInfo.Dpi;
 
 			Graphics gfx = new Graphics();
-			int dx = (int) ((this.document.Size.Width/10)*(dpi/25.4));
-			int dy = (int) ((this.document.Size.Height/10)*(dpi/25.4));
+			int dx = (int) ((this.document.Size.Width/10.0)*(dpi/25.4));
+			int dy = (int) ((this.document.Size.Height/10.0)*(dpi/25.4));
 			gfx.SetPixmapSize(dx, dy);
 			gfx.SolidRenderer.ClearARGB(1,1,1,1);
 			gfx.Rasterizer.Gamma = this.PrintInfo.Gamma;
@@ -209,7 +209,7 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				zoom = (dpi/25.4/10)*this.PrintInfo.Zoom;
+				zoom = (dpi/25.4/10.0)*this.PrintInfo.Zoom;
 			}
 			gfx.TranslateTransform(0, dy);
 			gfx.ScaleTransform(zoom, -zoom, 0, 0);

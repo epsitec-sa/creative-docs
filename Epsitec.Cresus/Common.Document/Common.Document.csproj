@@ -334,12 +334,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Objects\Surface.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Objects\TextBox.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Objects\TextLine.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Objects\Volume.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -434,7 +444,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Panels\Surface.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Panels\TextLine.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Panels\Volume.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -514,7 +534,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\Surface.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Properties\TextLine.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\Volume.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

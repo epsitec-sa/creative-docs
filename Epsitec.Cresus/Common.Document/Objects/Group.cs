@@ -69,31 +69,30 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainSnapPos(ref pos);
 			drawingContext.SnapGrid(ref pos);
 
-			SelectorData initial = new SelectorData();
-			SelectorData final = new SelectorData();
+			Selector selector = new Selector(this.document);
 			if ( rank == 0 )
 			{
-				initial.P1 = this.Handle(1).Position;
-				initial.P2 = this.Handle(0).Position;
+				selector.FixStarting(this.Handle(1).Position);
+				selector.FixEnding(this.Handle(0).Position);
 			}
 			if ( rank == 1 )
 			{
-				initial.P1 = this.Handle(0).Position;
-				initial.P2 = this.Handle(1).Position;
+				selector.FixStarting(this.Handle(0).Position);
+				selector.FixEnding(this.Handle(1).Position);
 			}
 			if ( rank == 2 )
 			{
-				initial.P1 = this.Handle(3).Position;
-				initial.P2 = this.Handle(2).Position;
+				selector.FixStarting(this.Handle(3).Position);
+				selector.FixEnding(this.Handle(2).Position);
 			}
 			if ( rank == 3 )
 			{
-				initial.P1 = this.Handle(2).Position;
-				initial.P2 = this.Handle(3).Position;
+				selector.FixStarting(this.Handle(2).Position);
+				selector.FixEnding(this.Handle(3).Position);
 			}
-			final.P1 = initial.P1;
-			final.P2 = pos;
-			this.MoveHandleSoon(this.objects, initial, final);
+			selector.FinalToInitialData();
+			selector.FixEnding(pos);
+			this.MoveHandleSoon(this.objects, selector);
 
 			if ( Geometry.IsRectangular(this.Handle(0).Position, this.Handle(1).Position, this.Handle(2).Position, this.Handle(3).Position) )
 			{
@@ -131,12 +130,25 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Déplace tous les objets du groupe.
-		protected void MoveHandleSoon(UndoableList objects, SelectorData initial, SelectorData final)
+		protected void MoveHandleSoon(UndoableList objects, Selector selector)
 		{
 			foreach ( Objects.Abstract obj in this.document.Deep(this) )
 			{
 				obj.MoveGlobalStarting();
-				obj.MoveGlobalProcess(initial, final);
+				obj.MoveGlobalProcess(selector);
+			}
+		}
+
+		// Aligne l'objet sur la grille.
+		// On aligne les 4 coins du groupe en stretchant le contenu du groupe.
+		public override void AlignGrid(DrawingContext drawingContext)
+		{
+			for ( int i=0 ; i<4 ; i++ )
+			{
+				Point pos = this.Handle(i).Position;
+				this.MoveHandleStarting(i, pos, drawingContext);
+				drawingContext.SnapGridForce(ref pos);
+				this.MoveHandleProcess(i, pos, drawingContext);
 			}
 		}
 

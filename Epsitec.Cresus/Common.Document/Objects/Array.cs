@@ -489,9 +489,9 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Déplace globalement l'objet.
-		public override void MoveGlobalProcess(SelectorData initial, SelectorData final)
+		public override void MoveGlobalProcess(Selector selector)
 		{
-			base.MoveGlobalProcess(initial, final);
+			base.MoveGlobalProcess(selector);
 			this.UpdateHandle();
 		}
 

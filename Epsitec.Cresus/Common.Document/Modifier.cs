@@ -461,7 +461,7 @@ namespace Epsitec.Common.Document
 			this.document.HotSpot = new Point(0, 0);
 			this.document.Filename = "";
 			this.document.IsDirtySerialize = false;
-			this.ActiveViewer.GlobalSelect = false;
+			this.ActiveViewer.SelectorType = SelectorType.Auto;
 			this.opletCreate = false;
 
 			this.OpletQueueEnable = true;
@@ -806,7 +806,7 @@ namespace Epsitec.Common.Document
 						obj.Deselect();
 					}
 					this.TotalSelected = 0;
-					this.ActiveViewer.GlobalSelect = false;
+					this.ActiveViewer.UpdateSelector();
 				}
 				this.OpletQueueValidateAction();
 			}
@@ -833,7 +833,7 @@ namespace Epsitec.Common.Document
 					}
 				}
 
-				this.ActiveViewer.GlobalSelect = ( this.TotalSelected > 1 );
+				this.ActiveViewer.UpdateSelector();
 				this.OpletQueueValidateAction();
 			}
 		}
@@ -866,7 +866,7 @@ namespace Epsitec.Common.Document
 					}
 				}
 
-				this.ActiveViewer.GlobalSelect = ( this.TotalSelected > 1 );
+				this.ActiveViewer.UpdateSelector();
 				this.OpletQueueValidateAction();
 			}
 		}
@@ -876,6 +876,13 @@ namespace Epsitec.Common.Document
 		#region Delete, Duplicate and Clipboard
 		// Supprime tous les objets sélectionnés.
 		public void DeleteSelection()
+		{
+			this.DeleteSelection(false);
+		}
+
+		// Supprime tous les objets sélectionnés.
+		// Si onlyMark=true, on ne détruit que les objets marqués.
+		public void DeleteSelection(bool onlyMark)
 		{
 			this.document.IsDirtySerialize = true;
 
@@ -895,6 +902,7 @@ namespace Epsitec.Common.Document
 						Objects.Abstract layer = context.RootObject();
 						foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 						{
+							if ( onlyMark && !obj.Mark )  continue;
 							this.document.Modifier.TotalSelected --;
 							this.document.Notifier.NotifyArea(obj.BoundingBox);
 							obj.Dispose();
@@ -905,9 +913,8 @@ namespace Epsitec.Common.Document
 					}
 					while ( bDo );
 
-					this.ActiveViewer.GlobalSelect = false;
+					this.ActiveViewer.UpdateSelector();
 					this.document.Notifier.NotifySelectionChanged();
-
 					this.OpletQueueValidateAction();
 				}
 			}
@@ -944,7 +951,7 @@ namespace Epsitec.Common.Document
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract layer = context.RootObject();
 				Modifier.Duplicate(this.document, this.document, layer.Objects, layer.Objects, true, move, true);
-				this.ActiveViewer.GlobalSelect = ( this.document.Modifier.TotalSelected > 1 );
+				this.ActiveViewer.UpdateSelector();
 
 				this.document.Notifier.NotifySelectionChanged();
 
@@ -955,6 +962,12 @@ namespace Epsitec.Common.Document
 		// Coupe tous les objets sélectionnés dans le bloc-notes.
 		public void CutSelection()
 		{
+			Objects.Abstract editObject = this.RetEditObject();
+			if ( editObject != null )
+			{
+				if ( editObject.EditCut() )  return;
+			}
+
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -966,6 +979,7 @@ namespace Epsitec.Common.Document
 				this.document.Clipboard.Modifier.OpletQueueEnable = false;
 				this.Duplicate(this.document, this.document.Clipboard, new Point(0,0), true);
 				this.DeleteSelection();
+				this.document.Notifier.NotifySelectionChanged();
 
 				this.OpletQueueValidateAction();
 			}
@@ -974,6 +988,12 @@ namespace Epsitec.Common.Document
 		// Copie tous les objets sélectionnés dans le bloc-notes.
 		public void CopySelection()
 		{
+			Objects.Abstract editObject = this.RetEditObject();
+			if ( editObject != null )
+			{
+				if ( editObject.EditCopy() )  return;
+			}
+
 			if ( this.ActiveViewer.IsCreating )  return;
 
 			using ( this.OpletQueueBeginAction() )
@@ -983,6 +1003,7 @@ namespace Epsitec.Common.Document
 				this.document.Clipboard.Modifier.New();
 				this.document.Clipboard.Modifier.OpletQueueEnable = false;
 				this.Duplicate(this.document, this.document.Clipboard, new Point(0,0), true);
+				this.document.Notifier.NotifySelectionChanged();
 
 				this.OpletQueueValidateAction();
 			}
@@ -991,6 +1012,12 @@ namespace Epsitec.Common.Document
 		// Colle le contenu du bloc-notes.
 		public void Paste()
 		{
+			Objects.Abstract editObject = this.RetEditObject();
+			if ( editObject != null )
+			{
+				if ( editObject.EditPaste() )  return;
+			}
+
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
 
@@ -1001,7 +1028,20 @@ namespace Epsitec.Common.Document
 				this.DeselectAll();
 				this.document.Clipboard.Modifier.OpletQueueEnable = false;
 				this.Duplicate(this.document.Clipboard, this.document, new Point(0,0), true);
-				this.ActiveViewer.GlobalSelect = ( this.document.Modifier.TotalSelected > 1 );
+				this.ActiveViewer.UpdateSelector();
+
+				Rectangle box = this.SelectedBbox;
+				if ( !this.ActiveViewer.ScrollRectangle.Contains(box) )
+				{
+					this.ZoomMemorize();
+					context.ZoomAndCenter(context.Zoom, box.Center);
+
+					box = this.SelectedBbox;
+					if ( !this.ActiveViewer.ScrollRectangle.Contains(box) )
+					{
+						this.ZoomSel();
+					}
+				}
 
 				this.document.Notifier.NotifySelectionChanged();
 
@@ -1212,22 +1252,212 @@ namespace Epsitec.Common.Document
 			this.document.IsDirtySerialize = true;
 			this.OpletQueueBeginAction();
 
-			this.operInitialSelector = this.ActiveViewer.GlobalSelect;
-			if ( !this.operInitialSelector )
-			{
-				this.ActiveViewer.GlobalSelect = true;
-			}
+			this.operInitialSelector = this.ActiveViewer.SelectorType;
+			this.ActiveViewer.SelectorType = SelectorType.Zoomer;
 		}
 
 		// Termine l'opération.
 		protected void TerminateOper()
 		{
-			if ( !this.operInitialSelector )
+			this.ActiveViewer.SelectorType = this.operInitialSelector;
+			this.OpletQueueValidateAction();
+		}
+		#endregion
+
+
+		#region Align and Share
+		// Aligne sur la grille tous les objets sélectionnés.
+		public void AlignGridSelection()
+		{
+			this.OpletQueueBeginAction();
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 			{
-				this.ActiveViewer.GlobalSelect = false;
+				obj.AlignGrid(context);
+			}
+			this.OpletQueueValidateAction();
+		}
+
+		// Aligne tous les objets sélectionnés.
+		public void AlignSelection(int dir, bool horizontal)
+		{
+			this.OpletQueueBeginAction();
+			Rectangle globalBox = this.SelectedBbox;
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
+			{
+				Rectangle objBox = obj.BoundingBox;
+				Point move = new Point(0,0);
+				if ( horizontal )
+				{
+					if ( dir <  0 )  move.X = globalBox.Left-objBox.Left;
+					if ( dir == 0 )  move.X = globalBox.Center.X-objBox.Center.X;
+					if ( dir >  0 )  move.X = globalBox.Right-objBox.Right;
+				}
+				else
+				{
+					if ( dir <  0 )  move.Y = globalBox.Bottom-objBox.Bottom;
+					if ( dir == 0 )  move.Y = globalBox.Center.Y-objBox.Center.Y;
+					if ( dir >  0 )  move.Y = globalBox.Top-objBox.Top;
+				}
+				obj.MoveAllStarting();
+				obj.MoveAllProcess(move);
+			}
+			this.OpletQueueValidateAction();
+		}
+
+		// Distribue tous les objets sélectionnés.
+		public void ShareSelection(int dir, bool horizontal)
+		{
+			this.OpletQueueBeginAction();
+
+			System.Collections.ArrayList list = this.ShareSortedList(dir, horizontal);
+			ShareObject first = list[0] as ShareObject;
+			ShareObject last = list[list.Count-1] as ShareObject;
+
+			Rectangle globalBox = this.SelectedBbox;
+			if ( dir < 0 )
+			{
+				globalBox.Right -= last.Object.BoundingBox.Width;
+				globalBox.Top   -= last.Object.BoundingBox.Height;
+			}
+			if ( dir == 0 )
+			{
+				globalBox.Left   += first.Object.BoundingBox.Width/2;
+				globalBox.Bottom += first.Object.BoundingBox.Height/2;
+				globalBox.Right  -= last.Object.BoundingBox.Width/2;
+				globalBox.Top    -= last.Object.BoundingBox.Height/2;
+			}
+			if ( dir > 0 )
+			{
+				globalBox.Left   += first.Object.BoundingBox.Width;
+				globalBox.Bottom += first.Object.BoundingBox.Height;
 			}
 
+			int total = list.Count;
+			for ( int i=1 ; i<total-1 ; i++ )
+			{
+				ShareObject so = list[i] as ShareObject;
+				Objects.Abstract obj = so.Object;
+
+				Rectangle objBox = obj.BoundingBox;
+
+				Point pos = new Point();
+				pos.X = globalBox.Left + globalBox.Width*i/(total-1);
+				pos.Y = globalBox.Bottom + globalBox.Height*i/(total-1);
+
+				Point move = new Point(0,0);
+				if ( horizontal )  move.X = pos.X-so.Position;
+				else               move.Y = pos.Y-so.Position;
+
+				obj.MoveAllStarting();
+				obj.MoveAllProcess(move);
+			}
 			this.OpletQueueValidateAction();
+		}
+
+		// Distribue les espaces entre tous les objets sélectionnés.
+		public void SpaceSelection(bool horizontal)
+		{
+			this.OpletQueueBeginAction();
+
+			System.Collections.ArrayList list = this.ShareSortedList(0, horizontal);
+			ShareObject first = list[0] as ShareObject;
+			int total = list.Count;
+
+			Size space = this.SelectedBbox.Size;
+			foreach ( ShareObject so in list )
+			{
+				space -= so.Object.BoundingBox.Size;
+			}
+			space /= total-1;
+			Point pos = first.Object.BoundingBox.TopRight;
+
+			for ( int i=1 ; i<total-1 ; i++ )
+			{
+				ShareObject so = list[i] as ShareObject;
+				Objects.Abstract obj = so.Object;
+
+				pos += space;
+				pos += obj.BoundingBox.Size/2;  // position souhaitée du centre de l'objet
+
+				Point move = new Point(0,0);
+				if ( horizontal )  move.X = pos.X-so.Position;
+				else               move.Y = pos.Y-so.Position;
+
+				obj.MoveAllStarting();
+				obj.MoveAllProcess(move);
+
+				pos += obj.BoundingBox.Size/2;
+			}
+			this.OpletQueueValidateAction();
+		}
+
+		// Construit la liste triée de tous les objets à distribuer,
+		// de gauche à droite ou de bas en haut.
+		protected System.Collections.ArrayList ShareSortedList(int dir, bool horizontal)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
+			{
+				ShareObject so = new ShareObject(obj, dir, horizontal);
+				list.Add(so);
+			}
+			list.Sort();
+			return list;
+		}
+
+		// Cette classe représente un objet à distribuer, essentiellement
+		// représentée par la position de référence de l'objet. Selon dir et
+		// horizontal, il peut s'agir de la position x ou y d'une extrémité
+		// ou du centre de l'objet.
+		protected class ShareObject : System.IComparable
+		{
+			public ShareObject(Objects.Abstract obj, int dir, bool horizontal)
+			{
+				this.obj = obj;
+				this.dir = dir;
+				this.horizontal = horizontal;
+
+				Rectangle box = this.obj.BoundingBox;
+				if ( this.horizontal )
+				{
+					if ( this.dir <  0 )  this.position = box.Left;
+					if ( this.dir == 0 )  this.position = box.Center.X;
+					if ( this.dir >  0 )  this.position = box.Right;
+				}
+				else
+				{
+					if ( this.dir <  0 )  this.position = box.Bottom;
+					if ( this.dir == 0 )  this.position = box.Center.Y;
+					if ( this.dir >  0 )  this.position = box.Top;
+				}
+			}
+
+			public Objects.Abstract Object
+			{
+				get { return this.obj; }
+			}
+
+			public double Position
+			{
+				get { return this.position; }
+			}
+
+			public int CompareTo(object obj)
+			{
+				ShareObject ao = obj as ShareObject;
+				return this.position.CompareTo(ao.position);
+			}
+
+			protected int					dir;
+			protected bool					horizontal;
+			protected Objects.Abstract		obj;
+			protected double				position;
 		}
 		#endregion
 
@@ -1273,7 +1503,7 @@ namespace Epsitec.Common.Document
 			using ( this.OpletQueueBeginAction() )
 			{
 				this.Ungroup();
-				this.ActiveViewer.GlobalSelect = ( this.TotalSelected > 1 );
+				this.ActiveViewer.UpdateSelector();
 				this.document.Notifier.NotifySelectionChanged();
 
 				this.OpletQueueValidateAction();
@@ -1325,7 +1555,7 @@ namespace Epsitec.Common.Document
 			}
 
 			this.document.Notifier.NotifyArea(group.BoundingBox);
-			this.ActiveViewer.Selector.Visible = false;
+			this.ActiveViewer.UpdateSelector();
 		}
 
 		protected void Ungroup()
@@ -1460,6 +1690,245 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		#region Combine and Fragment
+		// Combine tous les objets sélectionnés.
+		public void CombineSelection()
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.OpletQueueBeginAction();
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			Objects.Bezier bezier = null;
+			int total = layer.Objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
+				if ( !obj.IsSelected )  continue;
+
+				Path path = obj.GetPath();
+				if ( path == null )  continue;
+
+				if ( bezier == null )
+				{
+					bezier = new Objects.Bezier(this.document, obj);
+					layer.Objects.Add(bezier);
+					bezier.Select(true);
+					this.TotalSelected ++;
+				}
+			
+				if ( bezier.CreateFromPath(path, -1) )
+				{
+					obj.Mark = true;  // il faudra le détruire
+				}
+			}
+			bezier.Select(false);
+			bezier.Select(true);  // pour sélectionner toutes les poignées
+			this.document.Notifier.NotifyArea(bezier.BoundingBox);
+
+			this.DeleteSelection(true);  // détruit les objets sélectionnés et marqués
+			this.document.Notifier.NotifySelectionChanged();
+			this.OpletQueueValidateAction();
+		}
+
+		// Sépare tous les objets sélectionnés.
+		public void UncombineSelection()
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.OpletQueueBeginAction();
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			int total = layer.Objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
+				if ( !obj.IsSelected )  continue;
+
+				Path path = obj.GetPath();
+				if ( path == null )  continue;
+
+				for ( int i=0 ; i<100 ; i++ )
+				{
+					Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
+					layer.Objects.Add(bezier);
+					bezier.Select(true);
+					this.TotalSelected ++;
+
+					if ( bezier.CreateFromPath(path, i) )
+					{
+						bezier.Select(false);
+						bezier.Select(true);  // pour sélectionner toutes les poignées
+						this.document.Notifier.NotifyArea(bezier.BoundingBox);
+						obj.Mark = true;  // il faudra le détruire
+					}
+					else
+					{
+						layer.Objects.Remove(bezier);
+						this.TotalSelected --;
+					}
+				}
+			}
+			this.DeleteSelection(true);  // détruit les objets sélectionnés et marqués
+			this.document.Notifier.NotifySelectionChanged();
+			this.OpletQueueValidateAction();
+		}
+
+		// Converti en Bézier tous les objets sélectionnés.
+		public void ToBezierSelection()
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.OpletQueueBeginAction();
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			int total = layer.Objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
+				if ( !obj.IsSelected )  continue;
+
+				Path path = obj.GetPath();
+				if ( path == null )  continue;
+
+				Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
+				layer.Objects.Add(bezier);
+				bezier.Select(true);
+				this.TotalSelected ++;
+
+				if ( bezier.CreateFromPath(path, -1) )
+				{
+					bezier.Select(false);
+					bezier.Select(true);  // pour sélectionner toutes les poignées
+					this.document.Notifier.NotifyArea(bezier.BoundingBox);
+					obj.Mark = true;  // il faudra le détruire
+				}
+				else
+				{
+					layer.Objects.Remove(bezier);
+					this.TotalSelected --;
+				}
+			}
+			this.DeleteSelection(true);  // détruit les objets sélectionnés et marqués
+			this.document.Notifier.NotifySelectionChanged();
+			this.OpletQueueValidateAction();
+		}
+
+		// Fragmente tous les objets sélectionnés.
+		public void FragmentSelection()
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.OpletQueueBeginAction();
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			int total = layer.Objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
+				if ( !obj.IsSelected )  continue;
+
+				if ( this.FragmentObject(obj) )
+				{
+					obj.Mark = true;  // il faudra le détruire
+				}
+			}
+			this.DeleteSelection(true);  // détruit les objets sélectionnés et marqués
+			this.document.Notifier.NotifySelectionChanged();
+			this.OpletQueueValidateAction();
+		}
+
+		// Fragmente un objet.
+		protected bool FragmentObject(Objects.Abstract obj)
+		{
+			Path path = obj.GetPath();
+			if ( path == null )  return false;
+
+			PathElement[] elements;
+			Point[] points;
+			path.GetElements(out elements, out points);
+			if ( elements.Length > 100 )  return false;
+
+			Point start = new Point(0, 0);
+			Point current = new Point(0, 0);
+			Point p1 = new Point(0, 0);
+			Point p2 = new Point(0, 0);
+			Point p3 = new Point(0, 0);
+			int i = 0;
+			while ( i < elements.Length )
+			{
+				switch ( elements[i] & PathElement.MaskCommand )
+				{
+					case PathElement.MoveTo:
+						current = points[i++];
+						start = current;
+						break;
+
+					case PathElement.LineTo:
+						p1 = points[i++];
+						this.FragmentCreateLine(current, p1, obj);
+						current = p1;
+						break;
+
+					case PathElement.Curve3:
+						p1 = points[i++];
+						p2 = points[i++];
+						this.FragmentCreateBezier(current, p1, p1, p2, obj);
+						current = p2;
+						break;
+
+					case PathElement.Curve4:
+						p1 = points[i++];
+						p2 = points[i++];
+						p3 = points[i++];
+						this.FragmentCreateBezier(current, p1, p2, p3, obj);
+						current = p3;
+						break;
+
+					default:
+						if ( (elements[i] & PathElement.FlagClose) != 0 )
+						{
+							this.FragmentCreateLine(current, start, obj);
+						}
+						i ++;
+						break;
+				}
+			}
+			return true;
+		}
+
+		// Crée un fragment de ligne droite.
+		protected bool FragmentCreateLine(Point p1, Point p2, Objects.Abstract model)
+		{
+			if ( p1 == p2 )  return false;
+			Objects.Line line = new Objects.Line(this.document, model);
+			line.CreateFromPoints(p1, p2);
+			line.Select(true);
+			this.TotalSelected ++;
+
+			Objects.Abstract layer = this.ActiveViewer.DrawingContext.RootObject();
+			layer.Objects.Add(line);
+
+			this.document.Notifier.NotifyArea(line.BoundingBox);
+			return true;
+		}
+
+		// Crée un fragment de ligne courbe.
+		protected bool FragmentCreateBezier(Point p1, Point s1, Point s2, Point p2, Objects.Abstract model)
+		{
+			if ( p1 == p2 )  return false;
+			Objects.Bezier bezier = new Objects.Bezier(this.document, model);
+			bezier.CreateFromPoints(p1, s1, s2, p2);
+			bezier.Select(true);
+			this.TotalSelected ++;
+			bezier.PropertyFillGradient.FillType = Properties.GradientFillType.None;
+			bezier.PropertyFillGradient.Color1 = Drawing.Color.FromARGB(0, 1,1,1);
+
+			Objects.Abstract layer = this.ActiveViewer.DrawingContext.RootObject();
+			layer.Objects.Add(bezier);
+
+			this.document.Notifier.NotifyArea(bezier.BoundingBox);
+			return true;
+		}
+		#endregion
+
+
 		#region Hide
 		// Cache tous les objets sélectionnés du calque courant.
 		public void HideSelection()
@@ -1484,7 +1953,7 @@ namespace Epsitec.Common.Document
 						}
 					}
 				}
-				this.ActiveViewer.GlobalSelect = false;
+				this.ActiveViewer.UpdateSelector();
 				this.OpletQueueValidateAction();
 			}
 		}
@@ -2055,8 +2524,31 @@ namespace Epsitec.Common.Document
 		{
 			Rectangle bbox = this.SelectedBbox;
 			if ( bbox.IsEmpty )  return;
-			bbox.Inflate(2);
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				bbox.Inflate(2);
+			}
+			else
+			{
+				bbox.Inflate(20);
+			}
 			this.ZoomChange(bbox.BottomLeft, bbox.TopRight);
+		}
+
+		// Zoom sur la largeur des objets sélectionnés.
+		public void ZoomSelWidth()
+		{
+			Rectangle bbox = this.SelectedBbox;
+			if ( bbox.IsEmpty )  return;
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				bbox.Inflate(2);
+			}
+			else
+			{
+				bbox.Inflate(20);
+			}
+			this.ZoomChangeWidth(bbox.BottomLeft, bbox.TopRight);
 		}
 
 		// Change le zoom d'un certain facteur pour agrandir une zone rectangulaire.
@@ -2069,6 +2561,17 @@ namespace Epsitec.Common.Document
 			double fx = viewer.Width/(System.Math.Abs(p1.X-p2.X)*context.ScaleX);
 			double fy = viewer.Height/(System.Math.Abs(p1.Y-p2.Y)*context.ScaleY);
 			double factor = System.Math.Min(fx, fy);
+			this.ZoomChange(factor, (p1+p2)/2);
+		}
+
+		// Change le zoom d'un certain facteur pour agrandir une zone rectangulaire.
+		public void ZoomChangeWidth(Point p1, Point p2)
+		{
+			Viewer viewer = this.ActiveViewer;
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+
+			if ( p1.X == p2.X )  return;
+			double factor = viewer.Width/(System.Math.Abs(p1.X-p2.X)*context.ScaleX);
 			this.ZoomChange(factor, (p1+p2)/2);
 		}
 
@@ -2694,7 +3197,7 @@ namespace Epsitec.Common.Document
 		protected Objects.Memory				objectMemory;
 		protected Objects.Memory				objectMemoryText;
 		protected Properties.Abstract			menuProperty;
-		protected bool							operInitialSelector;
+		protected SelectorType					operInitialSelector;
 		protected Containers.Abstract			activeContainer;
 		protected bool[]						isPropertiesExtended;
 		protected RealUnitType					realUnitDimension;

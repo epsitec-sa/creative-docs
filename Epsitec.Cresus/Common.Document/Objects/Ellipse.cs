@@ -385,6 +385,13 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Retourne le chemin géométrique de l'objet.
+		public override Path GetPath()
+		{
+			return this.PathBuild(null);
+		}
+
+
 		#region Serialization
 		// Sérialise l'objet.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)

@@ -1,0 +1,649 @@
+using Epsitec.Common.Support;
+using Epsitec.Common.Drawing;
+using System.Runtime.Serialization;
+
+namespace Epsitec.Common.Document.Objects
+{
+	/// <summary>
+	/// La classe Volume est la classe de l'objet graphique volume 3d.
+	/// </summary>
+	[System.Serializable()]
+	public class Volume : Objects.Abstract
+	{
+		public Volume(Document document, Objects.Abstract model) : base(document, model)
+		{
+			if ( this.document == null )  return;  // objet factice ?
+			this.CreateProperties(model, false);
+		}
+
+		protected override bool ExistingProperty(Properties.Type type)
+		{
+			if ( type == Properties.Type.Name )  return true;
+			if ( type == Properties.Type.LineMode )  return true;
+			if ( type == Properties.Type.LineColor )  return true;
+			if ( type == Properties.Type.Volume )  return true;
+			if ( type == Properties.Type.FillGradientVT )  return true;
+			if ( type == Properties.Type.FillGradientVL )  return true;
+			if ( type == Properties.Type.FillGradientVR )  return true;
+			return false;
+		}
+
+		protected override Objects.Abstract CreateNewObject(Document document, Objects.Abstract model)
+		{
+			return new Volume(document, model);
+		}
+
+		public override void Dispose()
+		{
+			base.Dispose();
+		}
+
+
+		// Nom de l'icône.
+		public override string IconName
+		{
+			get { return "manifest:Epsitec.App.DocumentEditor.Images.Volume.icon"; }
+		}
+
+
+		// Détecte si la souris est sur l'objet.
+		public override bool Detect(Point pos)
+		{
+			if ( this.isHide )  return false;
+
+			Drawing.Rectangle bbox = this.BoundingBox;
+			if ( !bbox.Contains(pos) )  return false;
+
+			Paths paths = this.PathBuild(null);
+
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			double width = System.Math.Max(this.PropertyLineMode.Width/2, context.MinimalWidth);
+			for ( int i=0 ; i<paths.Count ; i++ )
+			{
+				Path path = paths.Get(i);
+				if ( path == null )  continue;
+				if ( Geometry.DetectOutline(path, width, pos) )  return true;
+			}
+			
+			for ( int i=0 ; i<paths.Count ; i++ )
+			{
+				Path path = paths.Get(i);
+				if ( path == null )  continue;
+				Properties.Gradient surface = paths.PropertySurface(i);
+				if ( surface == null )  continue;
+				if ( !surface.IsVisible() )  continue;
+				if ( Geometry.DetectSurface(path, pos) )  return true;
+			}
+
+			return false;
+		}
+
+
+		// Déplace une poignée.
+		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
+		{
+			if ( rank >= 4 )  // poignée d'une propriété ?
+			{
+				base.MoveHandleProcess(rank, pos, drawingContext);
+				return;
+			}
+
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+			drawingContext.ConstrainSnapPos(ref pos);
+			drawingContext.SnapGrid(ref pos);
+
+				 if ( rank == 0 )  this.MoveCorner(pos, 0, 2,3, 1);
+			else if ( rank == 1 )  this.MoveCorner(pos, 1, 3,2, 0);
+			else if ( rank == 2 )  this.MoveCorner(pos, 2, 0,1, 3);
+			else if ( rank == 3 )  this.MoveCorner(pos, 3, 1,0, 2);
+			else                   this.Handle(rank).Position = pos;
+
+			this.HandlePropertiesUpdatePosition();
+			this.dirtyBbox = true;
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		// Début de la création d'un objet.
+		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
+		{
+			drawingContext.ConstrainFixStarting(pos);
+			drawingContext.ConstrainFixType(ConstrainType.Square);
+			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
+			this.HandleAdd(pos, HandleType.Primary);  // rang = 1
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		// Déplacement pendant la création d'un objet.
+		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
+		{
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+			drawingContext.SnapGrid(ref pos);
+			drawingContext.ConstrainSnapPos(ref pos);
+			this.Handle(1).Position = pos;
+			this.dirtyBbox = true;
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		// Fin de la création d'un objet.
+		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
+		{
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+
+			drawingContext.SnapGrid(ref pos);
+			drawingContext.ConstrainSnapPos(ref pos);
+			this.Handle(1).Position = pos;
+			drawingContext.ConstrainDelStarting();
+
+			// Crée les 2 autres poignées dans les coins opposés.
+			Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, this.Handle(1).Position);
+			Point p1 = rect.BottomLeft;
+			Point p2 = rect.TopRight;
+			this.Handle(0).Position = p1;
+			this.Handle(1).Position = p2;
+			this.HandleAdd(new Point(p1.X, p2.Y), HandleType.Primary);  // rang = 2
+			this.HandleAdd(new Point(p2.X, p1.Y), HandleType.Primary);  // rang = 3
+
+			this.HandlePropertiesCreate();
+			this.HandlePropertiesUpdatePosition();
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		// Indique si l'objet doit exister. Retourne false si l'objet ne peut
+		// pas exister et doit être détruit.
+		public override bool CreateIsExist(DrawingContext drawingContext)
+		{
+			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
+			return ( len > drawingContext.MinimalSize );
+		}
+
+		
+		// Met à jour le rectangle englobant l'objet.
+		protected override void UpdateBoundingBox()
+		{
+			if ( this.handles.Count < 2 )  return;
+
+			Path all = new Path();
+			Paths paths = this.PathBuild(null);
+			for ( int i=0 ; i<paths.Count ; i++ )
+			{
+				Path path = paths.Get(i);
+				if ( path == null )  continue;
+				all.Append(path);
+			}
+
+			this.bboxThin = Drawing.Rectangle.Empty;
+			this.bboxGeom = Drawing.Rectangle.Empty;
+			this.bboxFull = Drawing.Rectangle.Empty;
+
+			for ( int i=0 ; i<paths.Count ; i++ )
+			{
+				Path path = paths.Get(i);
+				if ( path == null )  continue;
+
+				Path[] ps = new Path[1];
+				ps[0] = all;
+
+				bool[] lineModes = new bool[1];
+				lineModes[0] = true;
+
+				bool[] lineColors = new bool[1];
+				lineColors[0] = true;
+
+				bool[] fillGradients = new bool[1];
+				fillGradients[0] = true;
+
+				Properties.Line     line    = this.PropertyLineMode;
+				Properties.Gradient outline = this.PropertyLineColor;
+				Properties.Gradient surface = paths.PropertySurface(i);
+
+				Drawing.Rectangle iBoxThin = this.bboxThin;
+				Drawing.Rectangle iBoxGeom = this.bboxGeom;
+				Drawing.Rectangle iBoxFull = this.bboxFull;
+
+				this.ComputeBoundingBox(ps, lineModes, lineColors, fillGradients, line, outline, surface);
+
+				this.bboxThin.MergeWith(iBoxThin);
+				this.bboxGeom.MergeWith(iBoxGeom);
+				this.bboxFull.MergeWith(iBoxFull);
+			}
+
+			if ( this.TotalHandle >= 4 )
+			{
+				this.InflateBoundingBox(this.Handle(0).Position, false);
+				this.InflateBoundingBox(this.Handle(1).Position, false);
+				this.InflateBoundingBox(this.Handle(2).Position, false);
+				this.InflateBoundingBox(this.Handle(3).Position, false);
+			}
+		}
+
+		// Crée les chemins de l'objet.
+		protected Paths PathBuild(DrawingContext drawingContext)
+		{
+			Point p1 = this.Handle(0).Position;
+			Point p2 = new Point();
+			Point p3 = this.Handle(1).Position;
+			Point p4 = new Point();
+
+			if ( this.handles.Count < 4 )
+			{
+				Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(p1, p3);
+				p1 = rect.BottomLeft;
+				p2 = rect.TopLeft;
+				p3 = rect.TopRight;
+				p4 = rect.BottomRight;
+			}
+			else
+			{
+				p2 = this.Handle(2).Position;
+				p4 = this.Handle(3).Position;
+			}
+
+			return this.PathVolume(drawingContext, p1, p2, p3, p4);
+		}
+
+		// Crée les chemins d'un volume quelconque.
+		protected Paths PathVolume(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
+		{
+			Paths paths = new Paths(this);
+
+			switch ( this.PropertyVolume.VolumeType )
+			{
+				case Properties.VolumeType.BoxClose:
+					this.PathBox(ref paths, drawingContext, p1, p2, p3, p4);
+					break;
+
+				case Properties.VolumeType.BoxOpen:
+					this.PathBox(ref paths, drawingContext, p1, p2, p3, p4);
+					paths.Top = null;
+					break;
+
+				case Properties.VolumeType.Pyramid:
+					this.PathPyramid(ref paths, drawingContext, p1, p2, p3, p4);
+					break;
+
+				case Properties.VolumeType.Cylinder:
+					this.PathCylinder(ref paths, drawingContext, p1, p2, p3, p4);
+					break;
+			}
+
+			return paths;
+		}
+
+		// Crée les chemins d'une boîte.
+		protected void PathBox(ref Paths paths, DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
+		{
+			Properties.Volume pf = this.PropertyVolume;
+			Point p14 = Point.Scale(p1,p4, pf.Rapport);
+			Point p23 = Point.Scale(p3,p2, pf.Rapport);
+
+			double a = pf.AngleLeft*System.Math.PI/180.0;
+			double b = pf.AngleRight*System.Math.PI/180.0;
+
+			double d114 = Point.Distance(p1,p14);
+			double d414 = Point.Distance(p4,p14);
+			Point p12b = Point.Move(p1,p2, d114*System.Math.Tan(a));
+			Point p34b = Point.Move(p4,p3, d414*System.Math.Tan(b));
+
+			double d223 = Point.Distance(p2,p23);
+			double d323 = Point.Distance(p3,p23);
+			Point p34t = Point.Move(p3,p4, d323*System.Math.Tan(a));
+			Point p12t = Point.Move(p2,p1, d223*System.Math.Tan(b));
+
+			Point v1 = p23-p12t;
+			Point v2 = p34b-p14;
+			Point v = (v1+v2)/2;
+			Point c = p34t-v;
+			Point d = p12b+v;
+
+			paths.Top = new Path();
+			paths.Top.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.Top.MoveTo(p12t);
+			paths.Top.LineTo(p23);
+			paths.Top.LineTo(p34t);
+			paths.Top.LineTo(c);
+			paths.Top.Close();
+
+			paths.Bottom = new Path();
+			paths.Bottom.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.Bottom.MoveTo(p12b);
+			paths.Bottom.LineTo(d);
+			paths.Bottom.LineTo(p34b);
+			paths.Bottom.LineTo(p14);
+			paths.Bottom.Close();
+
+			paths.FrontLeft = new Path();
+			paths.FrontLeft.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.FrontLeft.MoveTo(p12b);
+			paths.FrontLeft.LineTo(p12t);
+			paths.FrontLeft.LineTo(c);
+			paths.FrontLeft.LineTo(p14);
+			paths.FrontLeft.Close();
+
+			paths.BackLeft = new Path();
+			paths.BackLeft.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.BackLeft.MoveTo(d);
+			paths.BackLeft.LineTo(p23);
+			paths.BackLeft.LineTo(p34t);
+			paths.BackLeft.LineTo(p34b);
+			paths.BackLeft.Close();
+
+			paths.FrontRight = new Path();
+			paths.FrontRight.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.FrontRight.MoveTo(p14);
+			paths.FrontRight.LineTo(c);
+			paths.FrontRight.LineTo(p34t);
+			paths.FrontRight.LineTo(p34b);
+			paths.FrontRight.Close();
+
+			paths.BackRight = new Path();
+			paths.BackRight.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.BackRight.MoveTo(p12b);
+			paths.BackRight.LineTo(p12t);
+			paths.BackRight.LineTo(p23);
+			paths.BackRight.LineTo(d);
+			paths.BackRight.Close();
+		}
+
+		// Crée les chemins d'une pyramide.
+		protected void PathPyramid(ref Paths paths, DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
+		{
+			Properties.Volume pf = this.PropertyVolume;
+			Point p14 = Point.Scale(p1,p4, pf.Rapport);
+			Point p23 = Point.Scale(p3,p2, 0.5);
+
+			double a = pf.AngleLeft*System.Math.PI/180.0;
+			double b = pf.AngleRight*System.Math.PI/180.0;
+
+			double d114 = Point.Distance(p1,p14);
+			double d414 = Point.Distance(p4,p14);
+			Point p12b = Point.Move(p1,p2, d114*System.Math.Tan(a));
+			Point p34b = Point.Move(p4,p3, d414*System.Math.Tan(b));
+
+			Point v = p34b-p14;
+			Point d = p12b+v;
+
+			paths.FrontLeft = new Path();
+			paths.FrontLeft.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.FrontLeft.MoveTo(p12b);
+			paths.FrontLeft.LineTo(p23);
+			paths.FrontLeft.LineTo(p14);
+			paths.FrontLeft.Close();
+
+			paths.BackLeft = new Path();
+			paths.BackLeft.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.BackLeft.MoveTo(d);
+			paths.BackLeft.LineTo(p23);
+			paths.BackLeft.LineTo(p34b);
+			paths.BackLeft.Close();
+
+			paths.FrontRight = new Path();
+			paths.FrontRight.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.FrontRight.MoveTo(p14);
+			paths.FrontRight.LineTo(p23);
+			paths.FrontRight.LineTo(p34b);
+			paths.FrontRight.Close();
+
+			paths.BackRight = new Path();
+			paths.BackRight.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.BackRight.MoveTo(p12b);
+			paths.BackRight.LineTo(p23);
+			paths.BackRight.LineTo(d);
+			paths.BackRight.Close();
+
+			paths.Bottom = new Path();
+			paths.Bottom.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.Bottom.MoveTo(p12b);
+			paths.Bottom.LineTo(d);
+			paths.Bottom.LineTo(p34b);
+			paths.Bottom.LineTo(p14);
+			paths.Bottom.Close();
+		}
+
+		// Crée les chemins d'un cylindre.
+		protected void PathCylinder(ref Paths paths, DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
+		{
+			double d12 = Point.Distance(p1, p2);
+			double d23 = Point.Distance(p2, p3);
+			double d34 = Point.Distance(p3, p4);
+			double d41 = Point.Distance(p4, p1);
+			double min = System.Math.Min(d12, d34);
+
+			Properties.Volume pf = this.PropertyVolume;
+			double h = d23*pf.Rapport/2.0;
+			h = System.Math.Min(h, min/2);
+			Point p1b = Point.Move(p1,p2,h);
+			Point p2b = Point.Move(p2,p1,h);
+			Point p3b = Point.Move(p3,p4,h);
+			Point p4b = Point.Move(p4,p3,h);
+			Point p23 = Point.Scale(p2,p3,0.5);
+			Point p14 = Point.Scale(p1,p4,0.5);
+
+			Point p2bb = Point.Move(p2,p1,h*2);
+			Point p3bb = Point.Move(p3,p4,h*2);
+			Point p23b = Point.Scale(p2bb,p3bb,0.5);
+
+			Point p1bb = Point.Move(p1,p2,h*2);
+			Point p4bb = Point.Move(p4,p3,h*2);
+			Point p14b = Point.Scale(p1bb,p4bb,0.5);
+
+			paths.FrontLeft = new Path();
+			paths.FrontLeft.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.FrontLeft.MoveTo(p1b);
+			paths.FrontLeft.LineTo(p2b);
+			this.PathArc(paths.FrontLeft, p2b, p2bb, p23b);
+			this.PathArc(paths.FrontLeft, p23b, p3bb, p3b);
+			paths.FrontLeft.LineTo(p4b);
+			this.PathArc(paths.FrontLeft, p4b, p4, p14);
+			this.PathArc(paths.FrontLeft, p14, p1, p1b);
+			paths.FrontLeft.Close();
+
+			paths.BackRight = new Path();
+			paths.BackRight.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.BackRight.MoveTo(p1b);
+			paths.BackRight.LineTo(p2b);
+			this.PathArc(paths.BackRight, p2b, p2, p23);
+			this.PathArc(paths.BackRight, p23, p3, p3b);
+			paths.BackRight.LineTo(p4b);
+			this.PathArc(paths.BackRight, p4b, p4bb, p14b);
+			this.PathArc(paths.BackRight, p14b, p1bb, p1b);
+			paths.BackRight.Close();
+
+			paths.Top = new Path();
+			paths.Top.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.Top.MoveTo(p2b);
+			this.PathArc(paths.Top, p2b, p2, p23);
+			this.PathArc(paths.Top, p23, p3, p3b);
+			this.PathArc(paths.Top, p3b, p3bb, p23b);
+			this.PathArc(paths.Top, p23b, p2bb, p2b);
+			paths.Top.Close();
+
+			paths.Bottom = new Path();
+			paths.Bottom.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
+			paths.Bottom.MoveTo(p1b);
+			this.PathArc(paths.Bottom, p1b, p1bb, p14b);
+			this.PathArc(paths.Bottom, p14b, p4bb, p4b);
+			this.PathArc(paths.Bottom, p4b, p4, p14);
+			this.PathArc(paths.Bottom, p14, p1, p1b);
+			paths.Bottom.Close();
+		}
+
+		// Ajoute le chemin d'une ellipse.
+		protected void PathEllipse(Path path, Point p1, Point p2, Point p3, Point p4)
+		{
+			Point p12 = Point.Scale(p1,p2, 0.5);
+			Point p23 = Point.Scale(p2,p3, 0.5);
+			Point p34 = Point.Scale(p3,p4, 0.5);
+			Point p41 = Point.Scale(p4,p1, 0.5);
+
+			path.MoveTo(p12);
+			this.PathArc(path, p12, p2, p23);
+			this.PathArc(path, p23, p3, p34);
+			this.PathArc(path, p34, p4, p41);
+			this.PathArc(path, p41, p1, p12);
+			path.Close();
+		}
+
+		// Ajoute le chemin d'un quart d'arc.
+		protected void PathArc(Path path, Point current, Point corner, Point next)
+		{
+			path.CurveTo(Point.Scale(current,corner,0.56), Point.Scale(next,corner,0.56), next);
+		}
+
+		// Dessine l'objet.
+		public override void DrawGeometry(Graphics graphics, DrawingContext drawingContext)
+		{
+			base.DrawGeometry(graphics, drawingContext);
+
+			if ( this.TotalHandle < 2 )  return;
+
+			Paths paths = this.PathBuild(drawingContext);
+
+			for ( int i=0 ; i<paths.Count ; i++ )
+			{
+				Path path = paths.Get(i);
+				if ( path == null )  continue;
+				Properties.Gradient surface = paths.PropertySurface(i);
+				if ( surface == null )  continue;
+				surface.RenderSurface(graphics, drawingContext, path, this.BoundingBoxThin);
+				this.PropertyLineMode.DrawPath(graphics, drawingContext, path, this.PropertyLineColor, this.BoundingBoxGeom);
+			}
+
+			if ( this.IsHilite && drawingContext.IsActive )
+			{
+				for ( int i=0 ; i<paths.Count ; i++ )
+				{
+					Path path = paths.Get(i);
+					if ( path == null )  continue;
+					Properties.Gradient surface = paths.PropertySurface(i);
+					if ( surface == null )  continue;
+					if ( !surface.IsVisible() )  continue;
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(drawingContext.HiliteSurfaceColor);
+				}
+
+				for ( int i=0 ; i<paths.Count ; i++ )
+				{
+					Path path = paths.Get(i);
+					if ( path == null )  continue;
+					this.PropertyLineMode.AddOutline(graphics, path, drawingContext.HiliteSize);
+					graphics.RenderSolid(drawingContext.HiliteOutlineColor);
+				}
+			}
+		}
+
+		// Imprime l'objet.
+		public override void PrintGeometry(Printing.PrintPort port, DrawingContext drawingContext)
+		{
+			base.PrintGeometry(port, drawingContext);
+
+			if ( this.TotalHandle < 2 )  return;
+
+			Paths paths = this.PathBuild(drawingContext);
+
+			for ( int i=0 ; i<paths.Count ; i++ )
+			{
+				Path path = paths.Get(i);
+				if ( path == null )  continue;
+				Properties.Gradient surface = paths.PropertySurface(i);
+				if ( surface == null )  continue;
+
+				if ( surface.PaintColor(port, drawingContext) )
+				{
+					port.PaintSurface(path);
+				}
+			}
+
+			for ( int i=0 ; i<paths.Count ; i++ )
+			{
+				Path path = paths.Get(i);
+				if ( path == null )  continue;
+
+				if ( this.PropertyLineColor.PaintColor(port, drawingContext) )
+				{
+					this.PropertyLineMode.PaintOutline(port, drawingContext, path);
+				}
+			}
+		}
+
+
+		// Retourne le chemin géométrique de l'objet.
+		public override Path GetPath()
+		{
+			Paths paths = this.PathBuild(null);
+			Path path = new Path();
+			for ( int i=0 ; i<paths.Count ; i++ )
+			{
+				Path p = paths.Get(i);
+				if ( p == null )  continue;
+				path.Append(p);
+			}
+			return path;
+		}
+
+
+		#region Serialization
+		// Sérialise l'objet.
+		public override void GetObjectData(SerializationInfo info, StreamingContext context)
+		{
+			base.GetObjectData(info, context);
+		}
+
+		// Constructeur qui désérialise l'objet.
+		protected Volume(SerializationInfo info, StreamingContext context) : base(info, context)
+		{
+		}
+		#endregion
+
+
+		// Gestion des chemins.
+		protected class Paths
+		{
+			public Paths(Objects.Abstract obj)
+			{
+				this.obj = obj;
+			}
+
+			public int Count
+			{
+				get { return 6; }
+			}
+
+			public Path Get(int index)
+			{
+				switch ( index )
+				{
+					case 0:  return this.Bottom;
+					case 1:  return this.BackLeft;
+					case 2:  return this.BackRight;
+					case 3:  return this.Top;
+					case 4:  return this.FrontLeft;
+					case 5:  return this.FrontRight;
+				}
+				return null;
+			}
+
+			public Properties.Gradient PropertySurface(int index)
+			{
+				if ( this.Get(index) == null )  return null;
+				switch ( index )
+				{
+					case 0:  return this.obj.PropertyFillGradientVT;
+					case 1:  return this.obj.PropertyFillGradientVL;
+					case 2:  return this.obj.PropertyFillGradientVR;
+					case 3:  return this.obj.PropertyFillGradientVT;
+					case 4:  return this.obj.PropertyFillGradientVL;
+					case 5:  return this.obj.PropertyFillGradientVR;
+				}
+				return null;
+			}
+
+			public Path						Bottom;
+			public Path						BackLeft;
+			public Path						BackRight;
+			public Path						Top;
+			public Path						FrontLeft;
+			public Path						FrontRight;
+			protected Objects.Abstract		obj;
+		}
+	}
+}

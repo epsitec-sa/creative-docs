@@ -34,9 +34,24 @@ namespace Epsitec.Common.Document.Properties
 				this.color1 = Drawing.Color.FromBrightness(0.0);
 				this.color2 = Drawing.Color.FromBrightness(0.5);
 			}
+			else if ( this.type == Type.FillGradientVT )
+			{
+				this.color1 = Drawing.Color.FromARGB(0.95, 0.8, 0.7, 0.7);
+				this.color2 = Drawing.Color.FromARGB(0.95, 0.6, 0.5, 0.5);
+			}
+			else if ( this.type == Type.FillGradientVL )
+			{
+				this.color1 = Drawing.Color.FromARGB(0.95, 0.7, 0.8, 0.7);
+				this.color2 = Drawing.Color.FromARGB(0.95, 0.5, 0.6, 0.5);
+			}
+			else if ( this.type == Type.FillGradientVR )
+			{
+				this.color1 = Drawing.Color.FromARGB(0.95, 0.7, 0.7, 0.8);
+				this.color2 = Drawing.Color.FromARGB(0.95, 0.5, 0.5, 0.6);
+			}
 			else
 			{
-				this.color1 = Drawing.Color.FromBrightness(1.0);
+				this.color1 = Drawing.Color.FromBrightness(0.95);
 				this.color2 = Drawing.Color.FromBrightness(0.5);
 			}
 			this.angle  = 0.0;

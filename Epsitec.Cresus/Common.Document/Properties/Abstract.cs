@@ -9,23 +9,28 @@ namespace Epsitec.Common.Document.Properties
 	// sous peine de plantée lors de la désérialisation.
 	public enum Type
 	{
-		None         = 0,		// aucune
-		Name         = 1,		// nom de l'objet
-		LineColor    = 2,		// couleur du trait
-		LineMode     = 3,		// mode du trait
-		Arrow        = 4,		// extrémité des segments
-		FillGradient = 5,		// dégradé de remplissage
-		BackColor    = 6,		// texte: couleur de fond
-		Shadow       = 7,		// ombre sous l'objet
-		PolyClose    = 8,		// mode de fermeture des polygones
-		Corner       = 9,		// coins des rectangles
-		Regular      = 10,		// définitions du polygone régulier
-		Arc          = 11,		// arc de cercle ou d'ellipse
-		TextFont     = 12,		// texte: police
-		TextJustif   = 13,		// texte: justification
-		TextLine     = 14,		// texte: justification
-		Image        = 15,		// nom de l'image bitmap
-		ModColor     = 16,		// modification de couleur
+		None           = 0,		// aucune
+		Name           = 1,		// nom de l'objet
+		LineColor      = 2,		// couleur du trait
+		LineMode       = 3,		// mode du trait
+		Arrow          = 4,		// extrémité des segments
+		FillGradient   = 5,		// dégradé de remplissage
+		BackColor      = 6,		// texte: couleur de fond
+		Shadow         = 7,		// ombre sous l'objet
+		PolyClose      = 8,		// mode de fermeture des polygones
+		Corner         = 9,		// coins des rectangles
+		Regular        = 10,	// définitions du polygone régulier
+		Arc            = 11,	// arc de cercle ou d'ellipse
+		TextFont       = 12,	// texte: police
+		TextJustif     = 13,	// texte: justification
+		TextLine       = 14,	// texte: justification
+		Image          = 15,	// nom de l'image bitmap
+		ModColor       = 16,	// modification de couleur
+		Surface        = 17,	// surface 2d
+		Volume         = 18,	// volume 3d
+		FillGradientVT = 19,	// dégradé de remplissage volume top
+		FillGradientVL = 20,	// dégradé de remplissage volume left
+		FillGradientVR = 21,	// dégradé de remplissage volume right
 	}
 
 	/// <summary>
@@ -52,22 +57,27 @@ namespace Epsitec.Common.Document.Properties
 			Abstract property = null;
 			switch ( type )
 			{
-				case Type.Name:          property = new Name(document, type);      break;
-				case Type.LineColor:     property = new Gradient(document, type);  break;
-				case Type.LineMode:      property = new Line(document, type);      break;
-				case Type.Arrow:         property = new Arrow(document, type);     break;
-				case Type.FillGradient:  property = new Gradient(document, type);  break;
-				case Type.BackColor:     property = new Color(document, type);     break;
-				case Type.Shadow:        property = new Shadow(document, type);    break;
-				case Type.PolyClose:     property = new Bool(document, type);      break;
-				case Type.Corner:        property = new Corner(document, type);    break;
-				case Type.Regular:       property = new Regular(document, type);   break;
-				case Type.Arc:           property = new Arc(document, type);       break;
-				case Type.TextFont:      property = new Font(document, type);      break;
-				case Type.TextJustif:    property = new Justif(document, type);    break;
-				case Type.TextLine:      property = new TextLine(document, type);  break;
-				case Type.Image:         property = new Image(document, type);     break;
-				case Type.ModColor:      property = new ModColor(document, type);  break;
+				case Type.Name:           property = new Name(document, type);      break;
+				case Type.LineColor:      property = new Gradient(document, type);  break;
+				case Type.LineMode:       property = new Line(document, type);      break;
+				case Type.Arrow:          property = new Arrow(document, type);     break;
+				case Type.FillGradient:   property = new Gradient(document, type);  break;
+				case Type.FillGradientVT: property = new Gradient(document, type);  break;
+				case Type.FillGradientVL: property = new Gradient(document, type);  break;
+				case Type.FillGradientVR: property = new Gradient(document, type);  break;
+				case Type.BackColor:      property = new Color(document, type);     break;
+				case Type.Shadow:         property = new Shadow(document, type);    break;
+				case Type.PolyClose:      property = new Bool(document, type);      break;
+				case Type.Corner:         property = new Corner(document, type);    break;
+				case Type.Regular:        property = new Regular(document, type);   break;
+				case Type.Arc:            property = new Arc(document, type);       break;
+				case Type.Surface:        property = new Surface(document, type);   break;
+				case Type.Volume:         property = new Volume(document, type);    break;
+				case Type.TextFont:       property = new Font(document, type);      break;
+				case Type.TextJustif:     property = new Justif(document, type);    break;
+				case Type.TextLine:       property = new TextLine(document, type);  break;
+				case Type.Image:          property = new Image(document, type);     break;
+				case Type.ModColor:       property = new ModColor(document, type);  break;
 			}
 			return property;
 		}
@@ -89,24 +99,40 @@ namespace Epsitec.Common.Document.Properties
 		{
 			switch ( type )
 			{
-				case Type.Name:          return 1;
-				case Type.LineMode:      return 2;
-				case Type.Arrow:         return 3;
-				case Type.LineColor:     return 4;
-				case Type.FillGradient:  return 5;
-				case Type.BackColor:     return 6;
-				case Type.Shadow:        return 7;
-				case Type.PolyClose:     return 8;
-				case Type.Corner:        return 9;
-				case Type.Regular:       return 10;
-				case Type.Arc:           return 11;
-				case Type.TextFont:      return 12;
-				case Type.TextJustif:    return 13;
-				case Type.TextLine:      return 14;
-				case Type.Image:         return 15;
-				case Type.ModColor:      return 16;
+				case Type.Name:           return 1;
+				case Type.LineMode:       return 2;
+				case Type.Arrow:          return 3;
+				case Type.LineColor:      return 4;
+				case Type.FillGradient:   return 5;
+				case Type.FillGradientVT: return 6;
+				case Type.FillGradientVL: return 7;
+				case Type.FillGradientVR: return 8;
+				case Type.BackColor:      return 9;
+				case Type.Shadow:         return 10;
+				case Type.PolyClose:      return 11;
+				case Type.Corner:         return 12;
+				case Type.Regular:        return 13;
+				case Type.Arc:            return 14;
+				case Type.Surface:        return 15;
+				case Type.Volume:         return 16;
+				case Type.TextFont:       return 17;
+				case Type.TextJustif:     return 18;
+				case Type.TextLine:       return 19;
+				case Type.Image:          return 20;
+				case Type.ModColor:       return 21;
 			}
 			return 0;
+		}
+
+		// Retourne le tyle selon un numéro d'ordre de tri.
+		static public Type SortOrder(int index)
+		{
+			foreach ( int value in System.Enum.GetValues(typeof(Type)) )
+			{
+				Type type = (Type)value;
+				if ( index == Abstract.SortOrder(type) )  return type;
+			}
+			return Type.None;
 		}
 
 		// Liste des propriétaires. Normalement, un propriétaire est un Objects.Abstract.
@@ -203,22 +229,27 @@ namespace Epsitec.Common.Document.Properties
 		{
 			switch ( type )
 			{
-				case Type.Name:          return 0.70;
-				case Type.LineColor:     return 0.85;
-				case Type.LineMode:      return 0.85;
-				case Type.Arrow:         return 0.85;
-				case Type.FillGradient:  return 0.95;
-				case Type.BackColor:     return 0.95;
-				case Type.Shadow:        return 0.80;
-				case Type.PolyClose:     return 0.90;
-				case Type.Corner:        return 0.90;
-				case Type.Regular:       return 0.90;
-				case Type.Arc:           return 0.90;
-				case Type.TextFont:      return 0.80;
-				case Type.TextJustif:    return 0.80;
-				case Type.TextLine:      return 0.80;
-				case Type.Image:         return 0.90;
-				case Type.ModColor:      return 0.95;
+				case Type.Name:           return 0.70;
+				case Type.LineColor:      return 0.85;
+				case Type.LineMode:       return 0.85;
+				case Type.Arrow:          return 0.85;
+				case Type.FillGradient:   return 0.95;
+				case Type.FillGradientVT: return 0.95;
+				case Type.FillGradientVL: return 0.95;
+				case Type.FillGradientVR: return 0.95;
+				case Type.BackColor:      return 0.95;
+				case Type.Shadow:         return 0.80;
+				case Type.PolyClose:      return 0.90;
+				case Type.Corner:         return 0.90;
+				case Type.Regular:        return 0.90;
+				case Type.Arc:            return 0.90;
+				case Type.Surface:        return 0.90;
+				case Type.Volume:         return 0.90;
+				case Type.TextFont:       return 0.80;
+				case Type.TextJustif:     return 0.80;
+				case Type.TextLine:       return 0.80;
+				case Type.Image:          return 0.90;
+				case Type.ModColor:       return 0.95;
 			}
 			return 0.0;
 		}
@@ -228,22 +259,27 @@ namespace Epsitec.Common.Document.Properties
 		{
 			switch ( type )
 			{
-				case Type.Name:          return "Nom";
-				case Type.LineColor:     return "Couleur trait";
-				case Type.LineMode:      return "Epaisseur trait";
-				case Type.FillGradient:  return "Couleur intérieure";
-				case Type.Shadow:        return "Ombre";
-				case Type.PolyClose:     return "Contour fermé";
-				case Type.Arrow:         return "Extrémités";
-				case Type.Corner:        return "Coins";
-				case Type.Regular:       return "Nombre de côtés";
-				case Type.Arc:           return "Arc";
-				case Type.BackColor:     return "Couleur fond";
-				case Type.TextFont:      return "Police";
-				case Type.TextJustif:    return "Mise en page";
-				case Type.TextLine:      return "Position texte";
-				case Type.Image:         return "Image";
-				case Type.ModColor:      return "Couleur calque";
+				case Type.Name:           return "Nom";
+				case Type.LineColor:      return "Couleur trait";
+				case Type.LineMode:       return "Epaisseur trait";
+				case Type.FillGradient:   return "Couleur intérieure";
+				case Type.FillGradientVT: return "Couleur couvercle";
+				case Type.FillGradientVL: return "Couleur flanc gauche";
+				case Type.FillGradientVR: return "Couleur flanc droit";
+				case Type.Shadow:         return "Ombre";
+				case Type.PolyClose:      return "Contour fermé";
+				case Type.Arrow:          return "Extrémités";
+				case Type.Corner:         return "Coins";
+				case Type.Regular:        return "Nombre de côtés";
+				case Type.Arc:            return "Arc";
+				case Type.Surface:        return "Surface 2d";
+				case Type.Volume:         return "Volume 3d";
+				case Type.BackColor:      return "Couleur fond";
+				case Type.TextFont:       return "Police";
+				case Type.TextJustif:     return "Mise en page";
+				case Type.TextLine:       return "Position texte";
+				case Type.Image:          return "Image";
+				case Type.ModColor:       return "Couleur calque";
 			}
 			return "";
 		}

@@ -3,6 +3,15 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Document
 {
+	public enum SelectorType
+	{
+		None,
+		Auto,			// mode automatique
+		Individual,		// objets individuels
+		Zoomer,			// zoom et rotation
+		Stretcher,		// déformation
+	}
+
 	/// <summary>
 	/// La classe Selector permet de modifier une sélection d'objets.
 	/// </summary>
@@ -12,9 +21,13 @@ namespace Epsitec.Common.Document
 		{
 			this.document = document;
 
-			this.data = new SelectorData();
-			this.data.Visible = false;
-			this.data.Handles = false;
+			this.initialData = new SelectorData();
+			this.initialData.Visible = false;
+			this.initialData.Handles = false;
+
+			this.finalData = new SelectorData();
+			this.finalData.Visible = false;
+			this.finalData.Handles = false;
 
 			this.h1     = new Objects.Handle(this.document);
 			this.h2     = new Objects.Handle(this.document);
@@ -27,33 +40,61 @@ namespace Epsitec.Common.Document
 			this.rotate.Type = Objects.HandleType.Rotate;
 		}
 
-		public SelectorData Data
+		public SelectorType TypeChoice
 		{
-			get { return this.data; }
-			set { this.data = value; }
+			get
+			{
+				return this.finalData.TypeChoice;
+			}
+
+			set
+			{
+				if ( this.finalData.TypeChoice != value )
+				{
+					this.OpletQueueInsert();
+					this.finalData.TypeChoice = value;
+					this.UpdateHandleVisible();
+				}
+			}
 		}
 
-		public SelectorData CloneData()
+		public SelectorType TypeInUse
 		{
-			SelectorData copy = new SelectorData();
-			this.data.CopyTo(copy);
-			return copy;
+			get
+			{
+				return this.finalData.TypeInUse;
+			}
+
+			set
+			{
+				if ( this.finalData.TypeInUse != value )
+				{
+					this.OpletQueueInsert();
+					this.finalData.TypeInUse = value;
+					this.UpdateHandleVisible();
+				}
+			}
+		}
+
+		public void FinalToInitialData()
+		{
+			this.finalData.CopyTo(this.initialData);
 		}
 
 		public bool Visible
 		{
 			get
 			{
-				return this.data.Visible;
+				return this.finalData.Visible;
 			}
 
 			set
 			{
-				if ( this.data.Visible != value )
+				if ( this.finalData.Visible != value )
 				{
 					this.OpletQueueInsert();
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
-					this.data.Visible = value;
+					this.finalData.Visible = value;
 					this.UpdateHandleVisible();
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 				}
@@ -64,16 +105,16 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				return this.data.Handles;
+				return this.finalData.Handles;
 			}
 
 			set
 			{
-				if ( this.data.Handles != value )
+				if ( this.finalData.Handles != value )
 				{
 					this.OpletQueueInsert();
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
-					this.data.Handles = value;
+					this.finalData.Handles = value;
 					this.UpdateHandleVisible();
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 					this.document.Notifier.NotifySelectionChanged();
@@ -81,14 +122,24 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		public Rectangle Rectangle
+		{
+			get
+			{
+				return this.finalData.Rectangle;
+			}
+		}
+
 		// Fixe le départ pour un rectangle de sélection simple (sans poignées).
 		public void FixStarting(Point pos)
 		{
 			this.OpletQueueInsert();
-			this.data.P1 = pos;
-			this.data.P2 = pos;
-			this.data.Center = pos;
-			this.data.Angle = 0.0;
+			this.finalData.P1 = pos;
+			this.finalData.P2 = pos;
+			this.finalData.P3 = pos;
+			this.finalData.P4 = pos;
+			this.finalData.Center = pos;
+			this.finalData.Angle = 0.0;
 			this.UpdateHandlePos();
 			this.Visible = true;
 			this.Handles = false;
@@ -98,9 +149,11 @@ namespace Epsitec.Common.Document
 		public void FixEnding(Point pos)
 		{
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
-			this.data.P2 = pos;
-			this.data.Center = (this.data.P1+this.data.P2)/2;
-			this.data.Angle = 0.0;
+			this.finalData.P2 = pos;
+			this.finalData.P3 = new Point(this.finalData.P1.X, this.finalData.P2.Y);
+			this.finalData.P4 = new Point(this.finalData.P2.X, this.finalData.P1.Y);
+			this.finalData.Center = (this.finalData.P1+this.finalData.P2)/2;
+			this.finalData.Angle = 0.0;
 			this.UpdateHandlePos();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
@@ -109,10 +162,12 @@ namespace Epsitec.Common.Document
 		public void Initialize(Rectangle rect)
 		{
 			this.OpletQueueInsert();
-			this.data.P1 = rect.BottomLeft;
-			this.data.P2 = rect.TopRight;
-			this.data.Center = rect.Center;
-			this.data.Angle = 0.0;
+			this.finalData.P1 = rect.BottomLeft;
+			this.finalData.P2 = rect.TopRight;
+			this.finalData.P3 = rect.TopLeft;
+			this.finalData.P4 = rect.BottomRight;
+			this.finalData.Center = rect.Center;
+			this.finalData.Angle = 0.0;
 			this.UpdateHandlePos();
 			this.Visible = true;
 			this.Handles = true;
@@ -134,10 +189,13 @@ namespace Epsitec.Common.Document
 		// Détecte si la souris est dans le modificateur.
 		public bool Detect(Point mouse, bool global, out int rank)
 		{
-			if ( this.data.Visible )
+			if ( this.finalData.Visible )
 			{
-				if ( this.rotate.Detect(mouse) )  { rank = 6;  return true; }
-				if ( this.center.Detect(mouse) )  { rank = 5;  return true; }
+				if ( this.finalData.TypeInUse == SelectorType.Zoomer )
+				{
+					if ( this.rotate.Detect(mouse) )  { rank = 6;  return true; }
+					if ( this.center.Detect(mouse) )  { rank = 5;  return true; }
+				}
 
 				if ( this.h4.Detect(mouse) )  { rank = 4;  return true; }
 				if ( this.h3.Detect(mouse) )  { rank = 3;  return true; }
@@ -188,10 +246,10 @@ namespace Epsitec.Common.Document
 			else
 			{
 				Point origin = new Point(0, 0);
-				if ( rank == 1 )  origin = this.data.P2;  // inf/gauche ?
-				if ( rank == 2 )  origin = this.data.P1;  // sup/droite ?
-				if ( rank == 3 )  origin = this.data.P4;  // sup/gauche ?
-				if ( rank == 4 )  origin = this.data.P3;  // inf/droite ?
+				if ( rank == 1 )  origin = this.finalData.P2;  // inf/gauche ?
+				if ( rank == 2 )  origin = this.finalData.P1;  // sup/droite ?
+				if ( rank == 3 )  origin = this.finalData.P4;  // sup/gauche ?
+				if ( rank == 4 )  origin = this.finalData.P3;  // inf/droite ?
 				drawingContext.ConstrainFixStarting(origin, this.Position(rank));
 				drawingContext.ConstrainFixType(ConstrainType.Scale);
 			}
@@ -224,39 +282,50 @@ namespace Epsitec.Common.Document
 
 			if ( rank == 0 )  // tout ?
 			{
-				Point dim = this.data.P2-this.data.P1;
-				this.data.P1 = pos;
-				this.data.P2 = pos+dim;
+				if ( this.finalData.TypeInUse == SelectorType.Zoomer )
+				{
+					Point dim = this.finalData.P2-this.finalData.P1;
+					this.finalData.P1 = pos;
+					this.finalData.P2 = pos+dim;
+				}
+				else
+				{
+					Point move = pos-this.finalData.P1;
+					this.finalData.P1 += move;
+					this.finalData.P2 += move;
+					this.finalData.P3 += move;
+					this.finalData.P4 += move;
+				}
 			}
 
 			if ( rank == 1 )  // inf/gauche ?
 			{
-				this.data.P1 = pos;
+				this.finalData.P1 = pos;
 			}
 
 			if ( rank == 2 )  // sup/droite ?
 			{
-				this.data.P2 = pos;
+				this.finalData.P2 = pos;
 			}
 
 			if ( rank == 3 )  // sup/gauche ?
 			{
-				this.data.P3 = pos;
+				this.finalData.P3 = pos;
 			}
 
 			if ( rank == 4 )  // inf/droite ?
 			{
-				this.data.P4 = pos;
+				this.finalData.P4 = pos;
 			}
 
 			if ( rank == 5 )  // center ?
 			{
-				this.data.Center = pos;
+				this.finalData.Center = pos;
 			}
 
 			if ( rank == 6 )  // rotate ?
 			{
-				this.data.Angle = Point.ComputeAngleDeg(this.data.Center, pos)-90;
+				this.finalData.Angle = Point.ComputeAngleDeg(this.finalData.Center, pos)-90;
 			}
 
 			this.UpdateHandlePos();
@@ -270,12 +339,11 @@ namespace Epsitec.Common.Document
 			this.OpletQueueInsert();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Modifier.ActiveViewer.MoveGlobalStarting();
-			SelectorData initial = this.CloneData();
-			Point p3 = this.data.P3;
-			Point p4 = this.data.P4;
-			this.data.P1 = horizontal ? p4 : p3;
-			this.data.P2 = horizontal ? p3 : p4;
-			this.document.Modifier.ActiveViewer.MoveGlobalProcess(initial, this.Data);
+			Point p3 = this.finalData.P3;
+			Point p4 = this.finalData.P4;
+			this.finalData.P1 = horizontal ? p4 : p3;
+			this.finalData.P2 = horizontal ? p3 : p4;
+			this.document.Modifier.ActiveViewer.MoveGlobalProcess(this);
 			this.UpdateHandlePos();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
@@ -286,10 +354,9 @@ namespace Epsitec.Common.Document
 			this.OpletQueueInsert();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Modifier.ActiveViewer.MoveGlobalStarting();
-			SelectorData initial = this.CloneData();
-			this.data.P1 += move;
-			this.data.P2 += move;
-			this.document.Modifier.ActiveViewer.MoveGlobalProcess(initial, this.Data);
+			this.finalData.P1 += move;
+			this.finalData.P2 += move;
+			this.document.Modifier.ActiveViewer.MoveGlobalProcess(this);
 			this.UpdateHandlePos();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
@@ -300,11 +367,10 @@ namespace Epsitec.Common.Document
 			this.OpletQueueInsert();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Modifier.ActiveViewer.MoveGlobalStarting();
-			SelectorData initial = this.CloneData();
-			Point center = this.data.Center;
-			this.data.P1 = Point.Scale(center, this.data.P1, zoom);
-			this.data.P2 = Point.Scale(center, this.data.P2, zoom);
-			this.document.Modifier.ActiveViewer.MoveGlobalProcess(initial, this.Data);
+			Point center = this.finalData.Center;
+			this.finalData.P1 = Point.Scale(center, this.finalData.P1, zoom);
+			this.finalData.P2 = Point.Scale(center, this.finalData.P2, zoom);
+			this.document.Modifier.ActiveViewer.MoveGlobalProcess(this);
 			this.UpdateHandlePos();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
@@ -315,9 +381,8 @@ namespace Epsitec.Common.Document
 			this.OpletQueueInsert();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Modifier.ActiveViewer.MoveGlobalStarting();
-			SelectorData initial = this.CloneData();
-			this.data.Angle += angle;
-			this.document.Modifier.ActiveViewer.MoveGlobalProcess(initial, this.Data);
+			this.finalData.Angle += angle;
+			this.document.Modifier.ActiveViewer.MoveGlobalProcess(this);
 			this.UpdateHandlePos();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
@@ -328,14 +393,14 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				if ( !this.data.Visible )  return Rectangle.Empty;
+				if ( !this.finalData.Visible )  return Rectangle.Empty;
 
-				Rectangle bbox = this.data.Rectangle;
+				Rectangle bbox = this.finalData.Rectangle;
 
-				if ( this.data.Handles )
+				if ( this.finalData.Handles )
 				{
-					Rectangle circle = new Rectangle(this.data.Center, this.data.Center);
-					circle.Inflate(this.data.Radius);
+					Rectangle circle = new Rectangle(this.finalData.Center, this.finalData.Center);
+					circle.Inflate(this.finalData.Radius);
 					bbox.MergeWith(circle);
 				}
 
@@ -347,10 +412,26 @@ namespace Epsitec.Common.Document
 		protected void UpdateHandleVisible()
 		{
 			bool visible = this.Visible && this.Handles;
-			this.h1.IsVisible     = visible;
-			this.h2.IsVisible     = visible;
-			this.h3.IsVisible     = visible;
-			this.h4.IsVisible     = visible;
+			this.h1.IsVisible = visible;
+			this.h2.IsVisible = visible;
+			this.h3.IsVisible = visible;
+			this.h4.IsVisible = visible;
+
+			if ( this.finalData.TypeInUse == SelectorType.Zoomer )
+			{
+				this.h1.ConstrainType = Objects.HandleConstrainType.Simply;
+				this.h2.ConstrainType = Objects.HandleConstrainType.Simply;
+				this.h3.ConstrainType = Objects.HandleConstrainType.Simply;
+				this.h4.ConstrainType = Objects.HandleConstrainType.Simply;
+			}
+			else
+			{
+				this.h1.ConstrainType = Objects.HandleConstrainType.Corner;
+				this.h2.ConstrainType = Objects.HandleConstrainType.Corner;
+				this.h3.ConstrainType = Objects.HandleConstrainType.Corner;
+				this.h4.ConstrainType = Objects.HandleConstrainType.Corner;
+				visible = false;
+			}
 			this.center.IsVisible = visible;
 			this.rotate.IsVisible = visible;
 		}
@@ -358,50 +439,76 @@ namespace Epsitec.Common.Document
 		// Met à jour la position des poignées en fonction des données.
 		protected void UpdateHandlePos()
 		{
-			this.h1.Position = this.data.P1;
-			this.h2.Position = this.data.P2;
-			this.h3.Position = this.data.P3;
-			this.h4.Position = this.data.P4;
+			this.h1.Position = this.finalData.P1;
+			this.h2.Position = this.finalData.P2;
+			this.h3.Position = this.finalData.P3;
+			this.h4.Position = this.finalData.P4;
 
-			this.center.Position = this.data.Center;
+			this.center.Position = this.finalData.Center;
 
-			double radius = this.data.Radius;
-			double angle  = this.data.Angle;
-			this.rotate.Position = this.data.Center + Transform.RotatePointDeg(angle, new Point(0, radius));
+			double radius = this.finalData.Radius;
+			double angle  = this.finalData.Angle;
+			this.rotate.Position = this.finalData.Center + Transform.RotatePointDeg(angle, new Point(0, radius));
 		}
 
 		// Dessine le modificateur.
 		public void Draw(Graphics graphics, DrawingContext drawingContext)
 		{
-			if ( !this.data.Visible )  return;
+			if ( !this.finalData.Visible )  return;
 
-			Rectangle rect = this.data.Rectangle;
-			graphics.LineWidth = 1.0/drawingContext.ScaleX;
-			rect.Deflate(0.5/drawingContext.ScaleX, 0.5/drawingContext.ScaleY);
+			Point p1 = this.finalData.P1;
+			Point p2 = this.finalData.P2;
+			Point p3 = this.finalData.P3;
+			Point p4 = this.finalData.P4;
 
-			if ( !rect.IsSurfaceZero )
+			if ( this.finalData.TypeInUse == SelectorType.Zoomer )
 			{
-				if ( this.data.Handles )
-				{
-					Color filledColor = drawingContext.HiliteOutlineColor;
-					filledColor.A *= 0.2;
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(filledColor);
-				}
-
-				graphics.AddRectangle(rect);
-				graphics.RenderSolid(drawingContext.HiliteOutlineColor);
+				Point adj = new Point(0.5/drawingContext.ScaleX, 0.5/drawingContext.ScaleY);
+				p1 += adj;
+				p2 += adj;
+				p3 += adj;
+				p4 += adj;
 			}
 
-			if ( this.data.Handles )
+			Path path = new Path();
+			path.MoveTo(p1);
+			path.LineTo(p3);
+			path.LineTo(p2);
+			path.LineTo(p4);
+			path.Close();
+
+			if ( this.finalData.Handles )
 			{
-				Point p1 = this.data.Center;
-				Point p2 = this.rotate.Position;
-				this.PaintCircle(graphics, p1, this.data.Radius, this.data.Radius, drawingContext.HiliteOutlineColor);
-				graphics.AddLine(p1, p2);
-				graphics.AddLine(p2, this.ComputeExtremity(p1, p2, 0.4, 0.2, 0));
-				graphics.AddLine(p2, this.ComputeExtremity(p1, p2, 0.4, 0.2, 1));  // flèche
-				graphics.RenderSolid(drawingContext.HiliteOutlineColor);
+				Color filledColor = drawingContext.HiliteOutlineColor;
+				filledColor.A *= 0.2;
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(filledColor);
+			}
+
+			graphics.Rasterizer.AddOutline(path, 1.0/drawingContext.ScaleX);
+			graphics.RenderSolid(drawingContext.HiliteOutlineColor);
+
+			if ( this.finalData.Handles )
+			{
+				if ( this.finalData.TypeInUse == SelectorType.Zoomer )
+				{
+					Point c = this.finalData.Center;
+					Point p = this.rotate.Position;
+					graphics.LineWidth = 1.0/drawingContext.ScaleX;
+					graphics.AddCircle(c, this.finalData.Radius);
+					graphics.AddLine(c, p);
+					graphics.AddLine(p, this.ComputeExtremity(c,p, 0.4, 0.2, 0));
+					graphics.AddLine(p, this.ComputeExtremity(c,p, 0.4, 0.2, 1));  // flèche
+					graphics.RenderSolid(drawingContext.HiliteOutlineColor);
+				}
+
+				if ( this.finalData.TypeInUse == SelectorType.Stretcher )
+				{
+					graphics.LineWidth = 1.0/drawingContext.ScaleX;
+					graphics.AddLine(p1, p2);
+					graphics.AddLine(p3, p4);
+					graphics.RenderSolid(drawingContext.HiliteOutlineColor);
+				}
 
 				h1.Draw(graphics, drawingContext);
 				h2.Draw(graphics, drawingContext);
@@ -410,22 +517,6 @@ namespace Epsitec.Common.Document
 				center.Draw(graphics, drawingContext);
 				rotate.Draw(graphics, drawingContext);
 			}
-		}
-
-		// Dessine un cercle complet.
-		protected void PaintCircle(Graphics graphics,
-								   Point c, double rx, double ry,
-								   Color color)
-		{
-			Path path = new Path();
-			path.MoveTo(c.X-rx, c.Y);
-			path.CurveTo(c.X-rx, c.Y+ry*0.56, c.X-rx*0.56, c.Y+ry, c.X, c.Y+ry);
-			path.CurveTo(c.X+rx*0.56, c.Y+ry, c.X+rx, c.Y+ry*0.56, c.X+rx, c.Y);
-			path.CurveTo(c.X+rx, c.Y-ry*0.56, c.X+rx*0.56, c.Y-ry, c.X, c.Y-ry);
-			path.CurveTo(c.X-rx*0.56, c.Y-ry, c.X-rx, c.Y-ry*0.56, c.X-rx, c.Y);
-			path.Close();
-			graphics.Rasterizer.AddOutline(path, graphics.LineWidth);
-			graphics.RenderSolid(color);
 		}
 
 		// Calcule l'extrémité gauche ou droite de la flèche.
@@ -437,6 +528,43 @@ namespace Epsitec.Common.Document
 			Point p = Point.Move(c, Point.Symmetry(p2, p1), distPerp);
 			double angle = (rank==0) ? 90 : -90;
 			return Transform.RotatePointDeg(c, angle, p);
+		}
+
+
+		// Transforme un point.
+		static public Point DotTransform(Selector selector, Point pos)
+		{
+			double sx=0.5, sy=0.5;
+
+			if ( selector.initialData.P1.X != selector.initialData.P2.X )
+			{
+				sx = (pos.X-selector.initialData.P1.X) / (selector.initialData.P2.X-selector.initialData.P1.X);
+			}
+
+			if ( selector.initialData.P1.Y != selector.initialData.P2.Y )
+			{
+				sy = (pos.Y-selector.initialData.P1.Y) / (selector.initialData.P2.Y-selector.initialData.P1.Y);
+			}
+
+			if ( selector.finalData.TypeInUse == SelectorType.Stretcher )
+			{
+				Point p14 = Point.Scale(selector.finalData.P1, selector.finalData.P4, sx);
+				Point p32 = Point.Scale(selector.finalData.P3, selector.finalData.P2, sx);
+				pos = Point.Scale(p14, p32, sy);
+			}
+			else
+			{
+				pos.X = selector.finalData.P1.X + sx*(selector.finalData.P2.X-selector.finalData.P1.X);
+				pos.Y = selector.finalData.P1.Y + sy*(selector.finalData.P2.Y-selector.finalData.P1.Y);
+
+				double rot = selector.finalData.Angle-selector.initialData.Angle;
+				if ( rot != 0 )
+				{
+					pos = Transform.RotatePointDeg(selector.finalData.Center, rot, pos);
+				}
+			}
+
+			return pos;
 		}
 
 
@@ -453,14 +581,19 @@ namespace Epsitec.Common.Document
 			public OpletSelector(Selector host)
 			{
 				this.host = host;
-				this.data = new SelectorData();
-				this.host.data.CopyTo(this.data);
+
+				this.initialData = new SelectorData();
+				this.host.initialData.CopyTo(this.initialData);
+
+				this.finalData = new SelectorData();
+				this.host.finalData.CopyTo(this.finalData);
 			}
 
 			protected void Swap()
 			{
 				this.host.document.Notifier.NotifyArea(this.host.BoundingBox);
-				this.host.data.Swap(this.data);
+				this.host.initialData.Swap(this.initialData);
+				this.host.finalData.Swap(this.finalData);
 				this.host.UpdateHandleVisible();
 				this.host.UpdateHandlePos();
 				this.host.document.Notifier.NotifyArea(this.host.BoundingBox);
@@ -479,12 +612,229 @@ namespace Epsitec.Common.Document
 			}
 
 			protected Selector				host;
-			protected SelectorData			data;
+			protected SelectorData			initialData;
+			protected SelectorData			finalData;
 		}
 		#endregion
 
+
+		#region SelectorData
+		/// <summary>
+		/// La classe SelectorData contient les définitions du modificateur global.
+		/// </summary>
+		protected class SelectorData
+		{
+			public SelectorData()
+			{
+				this.typeChoice = SelectorType.Auto;
+				this.typeInUse = SelectorType.Zoomer;
+				this.center.X = 0.5;
+				this.center.Y = 0.5;
+				this.angle = 0.0;
+			}
+
+			public SelectorType TypeChoice
+			{
+				get { return this.typeChoice; }
+				set { this.typeChoice = value; }
+			}
+
+			public SelectorType TypeInUse
+			{
+				get { return this.typeInUse; }
+				set { this.typeInUse = value; }
+			}
+
+			public bool Visible
+			{
+				get { return this.visible; }
+				set { this.visible = value; }
+			}
+
+			public bool Handles
+			{
+				get { return this.handles; }
+				set { this.handles = value; }
+			}
+
+			public Rectangle Rectangle
+			{
+				get
+				{
+					Rectangle rect = new Rectangle(this.p1, this.p2);
+					rect.MergeWith(this.p3);
+					rect.MergeWith(this.p4);
+					return rect;
+				}
+			}
+
+			public Point P1
+			{
+				get
+				{
+					return this.p1;
+				}
+
+				set
+				{
+					this.p1 = value;
+
+					if ( this.typeInUse == SelectorType.Zoomer )
+					{
+						this.p3.X = value.X;
+						this.p4.Y = value.Y;
+					}
+				}
+			}
+
+			public Point P2
+			{
+				get
+				{
+					return this.p2;
+				}
+
+				set
+				{
+					this.p2 = value;
+
+					if ( this.typeInUse == SelectorType.Zoomer )
+					{
+						this.p4.X = value.X;
+						this.p3.Y = value.Y;
+					}
+				}
+			}
+
+			public Point P3
+			{
+				get
+				{
+					return this.p3;
+				}
+
+				set
+				{
+					this.p3 = value;
+
+					if ( this.typeInUse == SelectorType.Zoomer )
+					{
+						this.p1.X = value.X;
+						this.p2.Y = value.Y;
+					}
+				}
+			}
+
+			public Point P4
+			{
+				get
+				{
+					return this.p4;
+				}
+
+				set
+				{
+					this.p4 = value;
+
+					if ( this.typeInUse == SelectorType.Zoomer )
+					{
+						this.p2.X = value.X;
+						this.p1.Y = value.Y;
+					}
+				}
+			}
+
+			public Point Center
+			{
+				get
+				{
+					return this.p1+Point.ScaleMul(this.p2-this.p1, this.center);
+				}
+
+				set
+				{
+					//this.center = Point.ScaleDiv(value-this.p1, this.p2-this.p1);
+					Point a = value-this.p1;
+					Point b = this.p2-this.p1;
+
+					if ( b.X == 0 )  this.center.X = this.p1.X;
+					else             this.center.X = a.X / b.X;
+
+					if ( b.Y == 0 )  this.center.Y = this.p1.Y;
+					else             this.center.Y = a.Y / b.Y;
+				}
+			}
+
+			public double Angle
+			{
+				get { return this.angle; }
+				set { this.angle = value; }
+			}
+
+			public double Radius
+			{
+				get
+				{
+					double width = System.Math.Abs(this.p1.X-this.p2.X);
+					double height = System.Math.Abs(this.p1.Y-this.p2.Y);
+					//return System.Math.Max(width, height)/2.0;
+					//return (width+height)/4.0;
+					return System.Math.Min(width, height)*0.4;
+				}
+			}
+
+			public void CopyTo(SelectorData dest)
+			{
+				dest.typeChoice = this.typeChoice;
+				dest.typeInUse  = this.typeInUse;
+				dest.visible    = this.visible;
+				dest.handles    = this.handles;
+				dest.p1         = this.p1;
+				dest.p2         = this.p2;
+				dest.p3         = this.p3;
+				dest.p4         = this.p4;
+				dest.center     = this.center;
+				dest.angle      = this.angle;
+			}
+
+			public void Swap(SelectorData dest)
+			{
+				SelectorType th = dest.typeChoice;
+				dest.typeChoice = this.typeChoice;
+				this.typeChoice = th;
+
+				SelectorType tu = dest.typeInUse;
+				dest.typeInUse = this.typeInUse;
+				this.typeInUse = tu;
+
+				Misc.Swap(ref dest.visible, ref this.visible);
+				Misc.Swap(ref dest.handles, ref this.handles);
+				Misc.Swap(ref dest.p1,      ref this.p1);
+				Misc.Swap(ref dest.p2,      ref this.p2);
+				Misc.Swap(ref dest.p3,      ref this.p3);
+				Misc.Swap(ref dest.p4,      ref this.p4);
+				Misc.Swap(ref dest.center,  ref this.center);
+				Misc.Swap(ref dest.angle,   ref this.angle);
+			}
+
+
+			protected SelectorType			typeChoice;
+			protected SelectorType			typeInUse;
+			protected bool					visible;
+			protected bool					handles;
+			protected Point					p1;			// un coin quelconque
+			protected Point					p2;			// le coin opposé
+			protected Point					p3;			// en mode Stretcher
+			protected Point					p4;			// en mode Stretcher
+			protected Point					center;		// [0..1]
+			protected double				angle;		// en degrés
+		}
+		#endregion
+
+
 		protected Document			document;
-		protected SelectorData		data;
+		protected SelectorData		initialData;
+		protected SelectorData		finalData;
 		protected Objects.Handle	h1;
 		protected Objects.Handle	h2;
 		protected Objects.Handle	h3;
@@ -493,209 +843,5 @@ namespace Epsitec.Common.Document
 		protected Objects.Handle	rotate;
 		protected Point				moveStart;
 		protected Point				moveOffset;
-	}
-
-
-	/// <summary>
-	/// La classe SelectorData contient les définitions du modificateur global.
-	/// </summary>
-	public class SelectorData
-	{
-		public SelectorData()
-		{
-			this.center.X = 0.5;
-			this.center.Y = 0.5;
-			this.angle = 0.0;
-		}
-
-		public bool Visible
-		{
-			get { return this.visible; }
-			set { this.visible = value; }
-		}
-
-		public bool Handles
-		{
-			get { return this.handles; }
-			set { this.handles = value; }
-		}
-
-		public Rectangle Rectangle
-		{
-			get
-			{
-				return new Rectangle(this.p1, this.p2);
-			}
-		}
-
-		public Point P1
-		{
-			get
-			{
-				return new Point(p1.X, p1.Y);
-			}
-
-			set
-			{
-				this.p1.X = value.X;
-				this.p1.Y = value.Y;
-			}
-		}
-
-		public Point P2
-		{
-			get
-			{
-				return new Point(p2.X, p2.Y);
-			}
-
-			set
-			{
-				this.p2.X = value.X;
-				this.p2.Y = value.Y;
-			}
-		}
-
-		public Point P3
-		{
-			get
-			{
-				return new Point(p1.X, p2.Y);
-			}
-
-			set
-			{
-				this.p1.X = value.X;
-				this.p2.Y = value.Y;
-			}
-		}
-
-		public Point P4
-		{
-			get
-			{
-				return new Point(p2.X, p1.Y);
-			}
-
-			set
-			{
-				this.p2.X = value.X;
-				this.p1.Y = value.Y;
-			}
-		}
-
-		public Point Center
-		{
-			get
-			{
-				return this.p1+Point.ScaleMul(this.p2-this.p1, this.center);
-			}
-
-			set
-			{
-				//this.center = Point.ScaleDiv(value-this.p1, this.p2-this.p1);
-				Point a = value-this.p1;
-				Point b = this.p2-this.p1;
-
-				if ( b.X == 0 )  this.center.X = this.p1.X;
-				else             this.center.X = a.X / b.X;
-
-				if ( b.Y == 0 )  this.center.Y = this.p1.Y;
-				else             this.center.Y = a.Y / b.Y;
-			}
-		}
-
-		public double Angle
-		{
-			get { return this.angle; }
-			set { this.angle = value; }
-		}
-
-		public double Radius
-		{
-			get
-			{
-				double width = System.Math.Abs(this.p1.X-this.p2.X);
-				double height = System.Math.Abs(this.p1.Y-this.p2.Y);
-				//return System.Math.Max(width, height)/2.0;
-				//return (width+height)/4.0;
-				return System.Math.Min(width, height)*0.4;
-			}
-		}
-
-		public void CopyTo(SelectorData dest)
-		{
-			dest.visible = this.visible;
-			dest.handles = this.handles;
-			dest.p1      = this.p1;
-			dest.p2      = this.p2;
-			dest.center  = this.center;
-			dest.angle   = this.angle;
-		}
-
-		public void Swap(SelectorData dest)
-		{
-			Misc.Swap(ref dest.visible, ref this.visible);
-			Misc.Swap(ref dest.handles, ref this.handles);
-			Misc.Swap(ref dest.p1,      ref this.p1);
-			Misc.Swap(ref dest.p2,      ref this.p2);
-			Misc.Swap(ref dest.center,  ref this.center);
-			Misc.Swap(ref dest.angle,   ref this.angle);
-		}
-
-		// Transforme un point.
-		static public Point DotTransform(SelectorData initial, SelectorData final, Point pos)
-		{
-			Point f = Point.ScaleDiv(pos-initial.P1, initial.P2-initial.P1);
-			pos = Point.ScaleMul(f, final.P2-final.P1)+final.P1;
-
-			double rot = final.Angle-initial.Angle;
-			if ( rot != 0 )
-			{
-				pos = Transform.RotatePointDeg(final.Center, rot, pos);
-			}
-
-			return pos;
-		}
-
-#if false
-		// Déforme un point dans un quadrillatère quelconque.
-		// s0                       d0         d1
-		//  o----------o             o---------o
-		//  |          |     ---\    |          \
-		//  |          |     ---/    |           \
-		//  o----------o             o------------o
-		//             s2           d3            d2
-		static protected Point Deform(Point s0, Point s2,
-									  Point d0, Point d1, Point d2, Point d3,
-									  Point p)
-		{
-			Point	q = new Point();
-			Point	pp = new Point();
-
-			q.X = p.X - s0.X;
-			q.Y = p.Y - s0.Y;
-
-			pp.X  = d0.X;
-			pp.X += (d3.X-d0.X)/(s2.Y-s0.Y)*q.Y;
-			pp.X += (d1.X-d0.X)/(s2.X-s0.X)*q.X;
-			pp.X += (d2.X-d3.X-d1.X+d0.X)*q.X*q.Y/(s2.X-s0.X)/(s2.Y-s0.Y);
-
-			pp.Y  = d0.Y;
-			pp.Y += (d3.Y-d0.Y)/(s2.Y-s0.Y)*q.Y;
-			pp.Y += (d1.Y-d0.Y)/(s2.X-s0.X)*q.X;
-			pp.Y += (d2.Y-d3.Y-d1.Y+d0.Y)*q.X*q.Y/(s2.X-s0.X)/(s2.Y-s0.Y);
-
-			return pp;
-		}
-#endif
-
-
-		protected bool					visible;
-		protected bool					handles;
-		protected Point					p1;			// un coin quelconque
-		protected Point					p2;			// le coin opposé
-		protected Point					center;		// [0..1]
-		protected double				angle;		// en degrés
 	}
 }

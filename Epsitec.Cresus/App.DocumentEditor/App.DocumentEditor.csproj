@@ -165,6 +165,34 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\AlignBottom.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\AlignCenterX.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\AlignCenterY.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\AlignGrid.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\AlignLeft.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\AlignRight.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\AlignTop.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\ArcClose.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -221,6 +249,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\Combine.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Copy.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -250,6 +282,10 @@
                 />
                 <File
                     RelPath = "Images\Ellipse.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Fragment.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -565,11 +601,67 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\SelectorAuto.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SelectorIndividual.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SelectorStretch.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SelectorZoom.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\SelectPartial.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\SelectTotal.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Settings.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShareBottom.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShareCenterX.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShareCenterY.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShareLeft.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShareRight.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShareSpaceX.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShareSpaceY.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ShareTop.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SplashScreen.png"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -589,6 +681,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\Surface.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\SwapData.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -601,11 +697,19 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\ToBezier.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\ToCurve.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Images\ToLine.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Uncombine.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -618,6 +722,10 @@
                 />
                 <File
                     RelPath = "Images\Up.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Volume.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -645,11 +753,19 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\ZoomPageWidth.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\ZoomPrev.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Images\ZoomSel.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ZoomSelWidth.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

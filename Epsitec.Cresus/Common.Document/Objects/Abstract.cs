@@ -74,9 +74,11 @@ namespace Epsitec.Common.Document.Objects
 				case "ObjectRectangle":  obj = new Rectangle(document, model);  break;
 				case "ObjectCircle":     obj = new Circle(document, model);     break;
 				case "ObjectEllipse":    obj = new Ellipse(document, model);    break;
-				case "ObjectRegular":    obj = new Regular(document, model);    break;
 				case "ObjectPoly":       obj = new Poly(document, model);       break;
 				case "ObjectBezier":     obj = new Bezier(document, model);     break;
+				case "ObjectRegular":    obj = new Regular(document, model);    break;
+				case "ObjectSurface":    obj = new Surface(document, model);    break;
+				case "ObjectVolume":     obj = new Volume(document, model);     break;
 				case "ObjectTextLine":   obj = new TextLine(document, model);   break;
 				case "ObjectTextBox":    obj = new TextBox(document, model);    break;
 				case "ObjectArray":      obj = new Array(document, model);      break;
@@ -371,12 +373,17 @@ namespace Epsitec.Common.Document.Objects
 		public virtual void MoveGlobalStarting()
 		{
 			this.InsertOpletGeometry();
+
+			foreach ( Handle handle in this.handles )
+			{
+				handle.InitialPosition = handle.Position;
+			}
 		}
 
 		// Effectue le déplacement global de l'objet.
 		// Un objet désélectionné est déplacé entièrement, car il s'agit forcément
 		// du fils d'un objet sélectionné.
-		public virtual void MoveGlobalProcess(SelectorData initial, SelectorData final)
+		public virtual void MoveGlobalProcess(Selector selector)
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
@@ -385,7 +392,27 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if ( allHandle || handle.IsVisible )
 				{
-					handle.Position = SelectorData.DotTransform(initial, final, handle.Position);
+					handle.Position = Selector.DotTransform(selector, handle.InitialPosition);
+				}
+			}
+
+			this.dirtyBbox = true;
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		// Aligne l'objet sur la grille.
+		public virtual void AlignGrid(DrawingContext drawingContext)
+		{
+			this.InsertOpletGeometry();
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+
+			foreach ( Handle handle in this.handles )
+			{
+				if ( handle.IsVisible )
+				{
+					Point pos = handle.Position;
+					drawingContext.SnapGridForce(ref pos);
+					handle.Position = pos;
 				}
 			}
 
@@ -403,6 +430,30 @@ namespace Epsitec.Common.Document.Objects
 		// Gestion d'un événement pendant l'édition.
 		public virtual void EditMouseDownMessage(Point pos)
 		{
+		}
+
+		// Coupe le texte sélectionné pendant l'édition.
+		public virtual bool EditCut()
+		{
+			return false;
+		}
+
+		// Copie le texte sélectionné pendant l'édition.
+		public virtual bool EditCopy()
+		{
+			return false;
+		}
+
+		// Colle du texte pendant l'édition.
+		public virtual bool EditPaste()
+		{
+			return false;
+		}
+
+		// Sélectionne tout le texte pendant l'édition.
+		public virtual bool EditSelectAll()
+		{
+			return false;
 		}
 
 		// Détecte la cellule pointée par la souris.
@@ -533,13 +584,21 @@ namespace Epsitec.Common.Document.Objects
 		// Calcule toutes les bbox de l'objet en fonction des propriétés.
 		protected void ComputeBoundingBox(Path[] paths, bool[] lineModes, bool[] lineColors, bool[] fillGradients)
 		{
-			System.Diagnostics.Debug.Assert(paths.Length == lineModes.Length);
-			System.Diagnostics.Debug.Assert(paths.Length == lineColors.Length);
-			System.Diagnostics.Debug.Assert(paths.Length == fillGradients.Length);
-
 			Properties.Line     line    = this.PropertyLineMode;
 			Properties.Gradient outline = this.PropertyLineColor;
 			Properties.Gradient surface = this.PropertyFillGradient;
+			this.ComputeBoundingBox(paths, lineModes, lineColors, fillGradients, line, outline, surface);
+		}
+
+		// Calcule toutes les bbox de l'objet en fonction des propriétés.
+		protected void ComputeBoundingBox(Path[] paths, bool[] lineModes, bool[] lineColors, bool[] fillGradients,
+										  Properties.Line line,
+										  Properties.Gradient outline,
+										  Properties.Gradient surface)
+		{
+			System.Diagnostics.Debug.Assert(paths.Length == lineModes.Length);
+			System.Diagnostics.Debug.Assert(paths.Length == lineColors.Length);
+			System.Diagnostics.Debug.Assert(paths.Length == fillGradients.Length);
 
 			this.bboxThin = Drawing.Rectangle.Empty;
 			this.bboxGeom = Drawing.Rectangle.Empty;
@@ -637,6 +696,13 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Gestion de la marque.
+		public bool Mark
+		{
+			get { return this.mark; }
+			set { this.mark = value; }
+		}
+
 		// Sélectionne toutes les poignées de l'objet.
 		public void Select()
 		{
@@ -732,6 +798,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			this.globalSelected = global;
 			this.HandlePropertiesUpdateVisible();
+			this.HandlePropertiesUpdatePosition();
 
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
@@ -797,7 +864,10 @@ namespace Epsitec.Common.Document.Objects
 			if ( model != null )
 			{
 				Properties.Abstract original = model.Property(type);
-				original.CopyTo(property);
+				if ( original != null )
+				{
+					original.CopyTo(property);
+				}
 			}
 
 			if ( floating )
@@ -887,6 +957,21 @@ namespace Epsitec.Common.Document.Objects
 			get { return this.Property(Properties.Type.FillGradient) as Properties.Gradient; }
 		}
 
+		public Properties.Gradient PropertyFillGradientVT
+		{
+			get { return this.Property(Properties.Type.FillGradientVT) as Properties.Gradient; }
+		}
+
+		public Properties.Gradient PropertyFillGradientVL
+		{
+			get { return this.Property(Properties.Type.FillGradientVL) as Properties.Gradient; }
+		}
+
+		public Properties.Gradient PropertyFillGradientVR
+		{
+			get { return this.Property(Properties.Type.FillGradientVR) as Properties.Gradient; }
+		}
+
 		public Properties.Shadow PropertyShadow
 		{
 			get { return this.Property(Properties.Type.Shadow) as Properties.Shadow; }
@@ -915,6 +1000,16 @@ namespace Epsitec.Common.Document.Objects
 		public Properties.Arc PropertyArc
 		{
 			get { return this.Property(Properties.Type.Arc) as Properties.Arc; }
+		}
+
+		public Properties.Surface PropertySurface
+		{
+			get { return this.Property(Properties.Type.Surface) as Properties.Surface; }
+		}
+
+		public Properties.Volume PropertyVolume
+		{
+			get { return this.Property(Properties.Type.Volume) as Properties.Volume; }
 		}
 
 		public Properties.Color PropertyBackColor
@@ -1348,16 +1443,17 @@ namespace Epsitec.Common.Document.Objects
 				this.handles.Add(newHandle);
 			}
 
-			this.isHide         = src.isHide;
-			this.selected       = src.selected;
-			this.globalSelected = src.globalSelected;
-			this.edited         = src.edited;
-			this.dirtyBbox      = src.dirtyBbox;
-			this.bboxThin       = src.bboxThin;
-			this.bboxGeom       = src.bboxGeom;
-			this.bboxFull       = src.bboxFull;
-			this.name           = src.name;
+			this.isHide              = src.isHide;
+			this.selected            = src.selected;
+			this.globalSelected      = src.globalSelected;
+			this.edited              = src.edited;
+			this.dirtyBbox           = src.dirtyBbox;
+			this.bboxThin            = src.bboxThin;
+			this.bboxGeom            = src.bboxGeom;
+			this.bboxFull            = src.bboxFull;
+			this.name                = src.name;
 			this.totalPropertyHandle = src.totalPropertyHandle;
+			this.mark                = src.mark;
 
 			this.SplitProperties();
 		}
@@ -1443,6 +1539,51 @@ namespace Epsitec.Common.Document.Objects
 		// Imprime la géométrie de l'objet.
 		public virtual void PrintGeometry(Printing.PrintPort port, DrawingContext drawingContext)
 		{
+		}
+
+
+		// Calcule le scroll éventuel nécessaire pour rendre le cursur visible.
+		protected void ComputeAutoScroll(Point c1, Point c2)
+		{
+			if ( !this.autoScrollOneShot )  return;
+			this.autoScrollOneShot = false;
+
+			Drawing.Rectangle view = this.document.Modifier.ActiveViewer.ScrollRectangle;
+			Drawing.Rectangle cursor = new Drawing.Rectangle(c1, c2);
+			if ( view.Contains(cursor) )  return;
+
+			if ( cursor.Width > view.Width || cursor.Height > view.Height )
+			{
+				cursor = new Drawing.Rectangle(cursor.Center, cursor.Center);
+			}
+
+			Point move = new Point(0,0);
+
+			if ( cursor.Right > view.Right )
+			{
+				move.X = cursor.Right-view.Right;
+			}
+			if ( cursor.Left < view.Left )
+			{
+				move.X = cursor.Left-view.Left;
+			}
+			if ( cursor.Top > view.Top )
+			{
+				move.Y = cursor.Top-view.Top;
+			}
+			if ( cursor.Bottom < view.Bottom )
+			{
+				move.Y = cursor.Bottom-view.Bottom;
+			}
+
+			this.document.Modifier.ActiveViewer.AutoScroll(move);
+		}
+
+
+		// Retourne le chemin géométrique de l'objet.
+		public virtual Path GetPath()
+		{
+			return null;
 		}
 
 
@@ -1708,11 +1849,13 @@ namespace Epsitec.Common.Document.Objects
 		protected int							uniqueId;
 		protected bool							isHilite = false;
 		protected bool							isHide = false;
+		protected bool							mark = false;
 		protected bool							selected = false;
 		protected bool							edited = false;
 		protected bool							globalSelected = false;
 		protected bool							isCreating = false;
 		protected bool							dirtyBbox = true;
+		protected bool							autoScrollOneShot = false;
 		protected Drawing.Rectangle				bboxThin = Drawing.Rectangle.Empty;
 		protected Drawing.Rectangle				bboxGeom = Drawing.Rectangle.Empty;
 		protected Drawing.Rectangle				bboxFull = Drawing.Rectangle.Empty;

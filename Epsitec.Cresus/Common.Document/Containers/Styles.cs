@@ -373,9 +373,9 @@ namespace Epsitec.Common.Document.Containers
 		{
 			VMenu menu = new VMenu();
 			double back = -1;
-			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
+			for ( int i=0 ; i<100 ; i++ )
 			{
-				Properties.Type type = (Properties.Type)value;
+				Properties.Type type = Properties.Abstract.SortOrder(i);
 				if ( !Properties.Abstract.StyleAbility(type) )  continue;
 
 				if ( back != -1 && back != Properties.Abstract.BackgroundIntensity(type) )

@@ -56,6 +56,20 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Position initiale de la poignée.
+		public Point InitialPosition
+		{
+			get
+			{
+				return this.initialPosition;
+			}
+
+			set
+			{
+				this.initialPosition = value;
+			}
+		}
+
 		// Type de la poignée.
 		public HandleType Type
 		{
@@ -187,6 +201,7 @@ namespace Epsitec.Common.Document.Objects
 		public void CopyTo(Handle dst)
 		{
 			dst.position         = this.position;
+			dst.initialPosition  = this.initialPosition;
 			dst.type             = this.type;
 			dst.constrainType    = this.constrainType;
 			dst.isVisible        = this.isVisible;
@@ -268,7 +283,9 @@ namespace Epsitec.Common.Document.Objects
 				rect.Top    = pos.Y+handleSize*0.25;
 				graphics.Align(ref rect);
 
-				if ( this.type == HandleType.Primary )
+				if ( this.type == HandleType.Primary  ||
+					 this.type == HandleType.Starting ||
+					 this.type == HandleType.Ending   )
 				{
 					graphics.AddFilledRectangle(rect);
 					graphics.RenderSolid(DrawingContext.ColorHandleGlobal);
@@ -304,7 +321,9 @@ namespace Epsitec.Common.Document.Objects
 					}
 				}
 
-				if ( this.type == HandleType.Primary )
+				if ( this.type == HandleType.Primary  ||
+					 this.type == HandleType.Starting ||
+					 this.type == HandleType.Ending   )
 				{
 					if ( this.constrainType == HandleConstrainType.Smooth )
 					{
@@ -315,7 +334,7 @@ namespace Epsitec.Common.Document.Objects
 					}
 					else if ( this.constrainType == HandleConstrainType.Corner )
 					{
-						rect.Inflate(0.5/scaleX, 0.5/scaleY);
+						rect.Inflate(0.5/scaleX, 0.0);
 						this.PaintTriangle(graphics, rect, DrawingContext.ColorHandleOutline);
 						rect.Deflate(1.0/scaleX, 1.0/scaleY);
 						this.PaintTriangle(graphics, rect, color);
@@ -327,6 +346,11 @@ namespace Epsitec.Common.Document.Objects
 
 						rect.Deflate(0.5/scaleX, 0.5/scaleY);
 						graphics.AddRectangle(rect);
+						if ( this.type == HandleType.Ending )
+						{
+							graphics.AddLine(rect.BottomLeft, rect.TopRight);
+							graphics.AddLine(rect.BottomRight, rect.TopLeft);
+						}
 						graphics.RenderSolid(DrawingContext.ColorHandleOutline);
 					}
 				}
@@ -341,33 +365,6 @@ namespace Epsitec.Common.Document.Objects
 					rect.Deflate(0.5/scaleX, 0.5/scaleY);
 					graphics.AddRectangle(rect);
 					graphics.RenderSolid(DrawingContext.ColorHandleOutline);
-				}
-
-				if ( this.type == HandleType.Starting )
-				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(color);
-
-					rect.Deflate(0.5/scaleX, 0.5/scaleY);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(DrawingContext.ColorHandleOutline);
-				}
-
-				if ( this.type == HandleType.Ending )
-				{
-					graphics.AddFilledRectangle(rect);
-					graphics.RenderSolid(color);
-
-					rect.Deflate(0.5/scaleX, 0.5/scaleY);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(DrawingContext.ColorHandleOutline);
-
-					rect.Inflate(2.0/scaleX, 2.0/scaleY);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(color);
-					rect.Inflate(1.0/scaleX, 1.0/scaleY);
-					graphics.AddRectangle(rect);
-					graphics.RenderSolid(color);
 				}
 
 				if ( this.type == HandleType.Property )
@@ -463,6 +460,7 @@ namespace Epsitec.Common.Document.Objects
 		
 		protected Document					document;
 		protected Point						position = new Point(0, 0);
+		protected Point						initialPosition = new Point(0, 0);
 		protected HandleType				type = HandleType.Primary;
 		protected HandleConstrainType		constrainType = HandleConstrainType.Symmetric;
 		protected bool						isVisible = false;

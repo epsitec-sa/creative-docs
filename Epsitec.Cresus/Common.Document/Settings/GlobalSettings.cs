@@ -12,6 +12,12 @@ namespace Epsitec.Common.Document.Settings
 		OpenLastFiles   = 3,
 	}
 
+	public enum MouseWheelAction
+	{
+		Zoom			= 0,
+		VScroll			= 1,
+	}
+
 	/// <summary>
 	/// La classe GlobalSettings mémorise les paramètres de l'application.
 	/// </summary>
@@ -23,13 +29,26 @@ namespace Epsitec.Common.Document.Settings
 			this.windowLocation = new Drawing.Point(100, 100);
 			this.windowSize = new Drawing.Size(830, 580);
 			this.isFullScreen = false;
+
+			this.settingsLocation = new Drawing.Point(0, 0);
+			this.settingsSize = new Drawing.Size(0, 0);
+			
+			this.infosLocation = new Drawing.Point(0, 0);
+			this.infosSize = new Drawing.Size(0, 0);
+			
+			this.aboutLocation = new Drawing.Point(0, 0);
+			this.aboutSize = new Drawing.Size(0, 0);
+			
 			this.screenDpi = 96.0;
 			this.adorner = "LookMetal";
+			this.defaultZoom = 1.5;
+			this.mouseWheelAction = MouseWheelAction.Zoom;
 			this.splashScreen = true;
 			this.firstAction = FirstAction.OpenNewDocument;
 			this.lastFilename = new System.Collections.ArrayList();
 			this.lastFilenameMax = 10;
 		}
+
 
 		public Drawing.Point WindowLocation
 		{
@@ -57,7 +76,6 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-
 		public bool IsFullScreen
 		{
 			get
@@ -70,6 +88,88 @@ namespace Epsitec.Common.Document.Settings
 				this.isFullScreen = value;
 			}
 		}
+
+
+		public Drawing.Point SettingsLocation
+		{
+			get
+			{
+				return this.settingsLocation;
+			}
+
+			set
+			{
+				this.settingsLocation = value;
+			}
+		}
+
+		public Drawing.Size SettingsSize
+		{
+			get
+			{
+				return this.settingsSize;
+			}
+
+			set
+			{
+				this.settingsSize = value;
+			}
+		}
+
+
+		public Drawing.Point InfosLocation
+		{
+			get
+			{
+				return this.infosLocation;
+			}
+
+			set
+			{
+				this.infosLocation = value;
+			}
+		}
+
+		public Drawing.Size InfosSize
+		{
+			get
+			{
+				return this.infosSize;
+			}
+
+			set
+			{
+				this.infosSize = value;
+			}
+		}
+
+
+		public Drawing.Point AboutLocation
+		{
+			get
+			{
+				return this.aboutLocation;
+			}
+
+			set
+			{
+				this.aboutLocation = value;
+			}
+		}
+
+		public Drawing.Size AboutSize
+		{
+			get
+			{
+				return this.aboutSize;
+			}
+
+			set
+			{
+				this.aboutSize = value;
+			}
+		}
+
 
 		public double ScreenDpi
 		{
@@ -95,6 +195,32 @@ namespace Epsitec.Common.Document.Settings
 			set
 			{
 				this.adorner = value;
+			}
+		}
+
+		public double DefaultZoom
+		{
+			get
+			{
+				return this.defaultZoom;
+			}
+
+			set
+			{
+				this.defaultZoom = value;
+			}
+		}
+
+		public MouseWheelAction MouseWheelAction
+		{
+			get
+			{
+				return this.mouseWheelAction;
+			}
+
+			set
+			{
+				this.mouseWheelAction = value;
 			}
 		}
 
@@ -174,6 +300,83 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
+		#region FirstAction
+		public static int FirstActionCount
+		{
+			get { return 3; }
+		}
+
+		public static string FirstActionString(FirstAction action)
+		{
+			switch ( action )
+			{
+				case FirstAction.Nothing:          return "Rien";
+				case FirstAction.OpenNewDocument:  return "Ouvrir un document vide";
+				case FirstAction.OpenLastFile:     return "Ouvrir le dernier document";
+				case FirstAction.OpenLastFiles:    return "Ouvrir les derniers documents";
+			}
+			return "?";
+		}
+
+		public static FirstAction FirstActionType(int rank)
+		{
+			switch ( rank )
+			{
+				case 0:  return FirstAction.Nothing;
+				case 1:  return FirstAction.OpenNewDocument;
+				case 2:  return FirstAction.OpenLastFile;
+			}
+			return FirstAction.Nothing;
+		}
+
+		public static int FirstActionRank(FirstAction action)
+		{
+			for ( int i=0 ; i<GlobalSettings.FirstActionCount ; i++ )
+			{
+				if ( GlobalSettings.FirstActionType(i) == action )  return i;
+			}
+			return -1;
+		}
+		#endregion
+
+
+		#region MouseWheelAction
+		public static int MouseWheelActionCount
+		{
+			get { return 2; }
+		}
+
+		public static string MouseWheelActionString(MouseWheelAction action)
+		{
+			switch ( action )
+			{
+				case MouseWheelAction.Zoom:     return "Loupe";
+				case MouseWheelAction.VScroll:  return "Défilement vertical";
+			}
+			return "?";
+		}
+
+		public static MouseWheelAction MouseWheelActionType(int rank)
+		{
+			switch ( rank )
+			{
+				case 0:  return MouseWheelAction.Zoom;
+				case 1:  return MouseWheelAction.VScroll;
+			}
+			return MouseWheelAction.Zoom;
+		}
+
+		public static int MouseWheelActionRank(MouseWheelAction action)
+		{
+			for ( int i=0 ; i<GlobalSettings.MouseWheelActionCount ; i++ )
+			{
+				if ( GlobalSettings.MouseWheelActionType(i) == action )  return i;
+			}
+			return -1;
+		}
+		#endregion
+
+
 		#region Serialization
 		// Sérialise les réglages.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -181,8 +384,20 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("WindowLocation", this.windowLocation);
 			info.AddValue("WindowSize", this.windowSize);
 			info.AddValue("IsFullScreen", this.isFullScreen);
+
+			info.AddValue("SettingsLocation", this.settingsLocation);
+			info.AddValue("SettingsSize", this.settingsSize);
+
+			info.AddValue("InfosLocation", this.infosLocation);
+			info.AddValue("InfosSize", this.infosSize);
+
+			info.AddValue("AboutLocation", this.aboutLocation);
+			info.AddValue("AboutSize", this.aboutSize);
+
 			info.AddValue("ScreenDpi", this.screenDpi);
 			info.AddValue("Adorner", this.adorner);
+			info.AddValue("DefaultZoom", this.defaultZoom);
+			info.AddValue("MouseWheelAction", this.mouseWheelAction);
 			info.AddValue("SplashScreen", this.splashScreen);
 			info.AddValue("FirstAction", this.firstAction);
 			info.AddValue("LastFilename", this.lastFilename);
@@ -194,8 +409,20 @@ namespace Epsitec.Common.Document.Settings
 			this.windowLocation = (Drawing.Point) info.GetValue("WindowLocation", typeof(Drawing.Point));
 			this.windowSize = (Drawing.Size) info.GetValue("WindowSize", typeof(Drawing.Size));
 			this.isFullScreen = info.GetBoolean("IsFullScreen");
+
+			this.settingsLocation = (Drawing.Point) info.GetValue("SettingsLocation", typeof(Drawing.Point));
+			this.settingsSize = (Drawing.Size) info.GetValue("SettingsSize", typeof(Drawing.Size));
+
+			this.infosLocation = (Drawing.Point) info.GetValue("InfosLocation", typeof(Drawing.Point));
+			this.infosSize = (Drawing.Size) info.GetValue("InfosSize", typeof(Drawing.Size));
+
+			this.aboutLocation = (Drawing.Point) info.GetValue("AboutLocation", typeof(Drawing.Point));
+			this.aboutSize = (Drawing.Size) info.GetValue("AboutSize", typeof(Drawing.Size));
+
 			this.screenDpi = info.GetDouble("ScreenDpi");
 			this.adorner = info.GetString("Adorner");
+			this.defaultZoom = info.GetDouble("DefaultZoom");
+			this.mouseWheelAction = (MouseWheelAction) info.GetValue("MouseWheelAction", typeof(MouseWheelAction));
 			this.splashScreen = info.GetBoolean("SplashScreen");
 			this.firstAction = (FirstAction) info.GetValue("FirstAction", typeof(FirstAction));
 			this.lastFilename = (System.Collections.ArrayList) info.GetValue("LastFilename", typeof(System.Collections.ArrayList));
@@ -205,9 +432,17 @@ namespace Epsitec.Common.Document.Settings
 
 		protected Drawing.Point					windowLocation;
 		protected Drawing.Size					windowSize;
+		protected Drawing.Point					settingsLocation;
+		protected Drawing.Size					settingsSize;
+		protected Drawing.Point					infosLocation;
+		protected Drawing.Size					infosSize;
+		protected Drawing.Point					aboutLocation;
+		protected Drawing.Size					aboutSize;
 		protected bool							isFullScreen;
 		protected double						screenDpi;
 		protected string						adorner;
+		protected double						defaultZoom;
+		protected MouseWheelAction				mouseWheelAction;
 		protected bool							splashScreen;
 		protected FirstAction					firstAction;
 		protected System.Collections.ArrayList	lastFilename;

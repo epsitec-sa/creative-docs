@@ -188,6 +188,22 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Vérifie si on utilise le zoom pleine page centré.
+		public bool IsZoomPageWidth
+		{
+			get
+			{
+				if ( System.Math.Abs(this.zoom-this.ZoomPageWidth) > 0.00001 )  return false;
+
+				Size cs = this.ContainerSize;
+				Size size = this.document.Size;
+				Point scale = this.ScaleForZoom(this.zoom);
+				double originX = size.Width/2 - (cs.Width/scale.X)/2;
+
+				return ( System.Math.Abs(this.originX+originX) < 0.00001 );
+			}
+		}
+
 		// Retourne le zoom pleine page.
 		public double ZoomPage
 		{
@@ -209,10 +225,35 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Retourne le zoom largeur page.
+		public double ZoomPageWidth
+		{
+			get
+			{
+				if ( this.document.Type == DocumentType.Pictogram )
+				{
+					return 1.0;
+				}
+				else
+				{
+					Size cs = this.ContainerSize;
+					if ( cs.Width <= 0.0 || cs.Height <= 0.0 )  return 1.0;
+					Size size = this.document.Size;
+					return (cs.Width/size.Width)*2.54;
+				}
+			}
+		}
+
 		// Remet le zoom pleine page et le centre par défaut.
 		public void ZoomPageAndCenter()
 		{
 			this.ZoomAndCenter(this.ZoomPage, this.document.Size.Width/2, this.document.Size.Height/2);
+		}
+
+		// Remet le zoom largeur page et le centre par défaut.
+		public void ZoomPageWidthAndCenter()
+		{
+			this.ZoomAndCenter(this.ZoomPageWidth, this.document.Size.Width/2, this.document.Size.Height/2);
 		}
 
 		// Remet le zoom 100% et le centre par défaut.
@@ -546,7 +587,7 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Force un point sur la grille magnétique.
+		// Force un point sur la grille magnétique, si nécessaire.
 		public void SnapGrid(ref Point pos)
 		{
 			bool snapX, snapY;
@@ -557,28 +598,33 @@ namespace Epsitec.Common.Document
 				return;
 			}
 
-			Point offset = new Point(0.0, 0.0);
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				offset = new Point(this.gridStep.X/2, this.gridStep.Y/2);
-			}
-
 			Point guidePos = pos;
 			this.SnapGuides(ref guidePos, out snapX, out snapY);
-
-			pos = Point.GridAlign(pos, offset-this.gridOffset, this.gridStep);
+			this.SnapGridForce(ref pos);
 
 			if ( snapX )  pos.X = guidePos.X;
 			if ( snapY )  pos.Y = guidePos.Y;
 		}
 
-		// Force un point sur la grille magnétique.
+		// Force un point sur la grille magnétique, si nécessaire.
 		public void SnapGrid(Point origin, ref Point pos)
 		{
 			if ( !this.gridActive || this.isAlt )  return;
 			pos -= origin;
 			pos = Point.GridAlign(pos, -this.gridOffset, this.gridStep);
 			pos += origin;
+		}
+
+		// Force un point sur la grille magnétique, toujours.
+		public void SnapGridForce(ref Point pos)
+		{
+			Point offset = new Point(0.0, 0.0);
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				offset = new Point(this.gridStep.X/2, this.gridStep.Y/2);
+			}
+
+			pos = Point.GridAlign(pos, offset-this.gridOffset, this.gridStep);
 		}
 		#endregion
 
@@ -1447,7 +1493,7 @@ namespace Epsitec.Common.Document
 		protected double						minimalWidth = 5;
 		protected double						closeMargin = 10;
 		protected double						guideMargin = 8;
-		protected double						hiliteSize = 6;
+		protected double						hiliteSize = 4;
 		protected double						handleSize = 10;
 		protected bool							isShift = false;
 		protected bool							isCtrl = false;

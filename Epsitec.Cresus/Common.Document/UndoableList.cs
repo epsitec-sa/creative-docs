@@ -193,7 +193,7 @@ namespace Epsitec.Common.Document
 			UndoableListType listType = operation.List.type;
 			System.Collections.ArrayList arrayList = operation.List.arrayList;
 			int index = operation.Index;
-			System.Diagnostics.Debug.WriteLine(string.Format("{0} {1}", operation.Type.ToString(), operation.Object.ToString()));
+			//?System.Diagnostics.Debug.WriteLine(string.Format("{0} {1}", operation.Type.ToString(), operation.Object.ToString()));
 
 			int incSelect = 0;
 			if ( operation.Type == OperationType.Insert )

@@ -394,6 +394,9 @@ namespace Epsitec.Common.Document.Objects
 			this.HandleDelete(rank-1);
 			this.HandleDelete(rank-1);
 
+			// Il doit toujours y avoir une poignée de départ !
+			this.Handle(1).Type = HandleType.Starting;
+
 			int prev = rank-4;
 			if ( prev < 0 )  prev = this.TotalMainHandle-3;
 			int next = rank-1;
@@ -543,7 +546,8 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainSnapPos(ref pos);
 			drawingContext.SnapGrid(ref pos);
 
-			if ( this.Handle(rank).Type == HandleType.Primary )  // principale ?
+			if ( this.Handle(rank).Type == HandleType.Primary  ||  // principale ?
+				 this.Handle(rank).Type == HandleType.Starting )
 			{
 				this.MovePrimary(rank, pos);
 			}
@@ -566,10 +570,35 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Déplace globalement l'objet.
-		public override void MoveGlobalProcess(SelectorData initial, SelectorData final)
+		public override void MoveGlobalProcess(Selector selector)
 		{
-			base.MoveGlobalProcess(initial, final);
+			base.MoveGlobalProcess(selector);
 			this.HandlePropertiesUpdatePosition();
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		// Aligne l'objet sur la grille.
+		public override void AlignGrid(DrawingContext drawingContext)
+		{
+			this.InsertOpletGeometry();
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+
+			int total = this.handles.Count;
+			for ( int i=0 ; i<total ; i+=3 )
+			{
+				if ( this.Handle(i+1).IsVisible )
+				{
+					Point pos = this.Handle(i+1).Position;
+					drawingContext.SnapGridForce(ref pos);
+					Point move = pos-this.Handle(i+1).Position;
+					this.Handle(i+0).Position += move;
+					this.Handle(i+1).Position += move;
+					this.Handle(i+2).Position += move;
+				}
+			}
+
+			this.HandlePropertiesUpdatePosition();
+			this.dirtyBbox = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -703,7 +732,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.lastPoint )
 			{
-				this.Handle(1).Type = HandleType.Primary;
+				this.Handle(1).Type = HandleType.Starting;
 				this.Deselect();
 				this.HandlePropertiesCreate();
 				this.HandlePropertiesUpdatePosition();
@@ -732,7 +761,7 @@ namespace Epsitec.Common.Document.Objects
 			int total = this.TotalHandle;
 			if ( total <= 3 )  return false;
 
-			this.Handle(1).Type = HandleType.Primary;
+			this.Handle(1).Type = HandleType.Starting;
 			this.Deselect();
 			this.HandlePropertiesCreate();
 			this.HandlePropertiesUpdatePosition();
@@ -854,10 +883,22 @@ namespace Epsitec.Common.Document.Objects
 			this.ComputeExtremity(false, out p1, out p2);
 			pp2 = this.PropertyArrow.PathExtremity(pathEnd,   1, w,cap, p1,p2, out outlineEnd,   out surfaceEnd);
 
+			int first = 0;
 			for ( int i=0 ; i<total ; i+=3 )
 			{
 				if ( i == 0 )  // premier point ?
 				{
+					pathLine.MoveTo(pp1);
+				}
+				else if ( this.Handle(i+1).Type == HandleType.Starting )  // premier point ?
+				{
+					if ( this.PropertyPolyClose.BoolValue )  // fermé ?
+					{
+						pathLine.CurveTo(this.Handle(i-1).Position, this.Handle(first).Position, pp1);
+						pathLine.Close();
+					}
+					first = i;
+					pp1 = this.Handle(i+1).Position;
 					pathLine.MoveTo(pp1);
 				}
 				else if ( i < total-3 )  // point intermédiaire ?
@@ -871,7 +912,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 			if ( this.PropertyPolyClose.BoolValue )  // fermé ?
 			{
-				pathLine.CurveTo(this.Handle(total-1).Position, this.Handle(0).Position, pp1);
+				pathLine.CurveTo(this.Handle(total-1).Position, this.Handle(first).Position, pp1);
 				pathLine.Close();
 			}
 		}
@@ -892,7 +933,9 @@ namespace Epsitec.Common.Document.Objects
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
 						   out pathLine);
 
+			graphics.FillMode = FillMode.EvenOdd;
 			this.PropertyFillGradient.RenderSurface(graphics, drawingContext, pathLine, this.BoundingBoxThin);
+			graphics.FillMode = FillMode.NonZero;
 
 			if ( outlineStart )
 			{
@@ -919,7 +962,9 @@ namespace Epsitec.Common.Document.Objects
 				if ( this.PropertyFillGradient.IsVisible() )
 				{
 					graphics.Rasterizer.AddSurface(pathLine);
+					graphics.FillMode = FillMode.EvenOdd;
 					graphics.RenderSolid(drawingContext.HiliteSurfaceColor);
+					graphics.FillMode = FillMode.NonZero;
 				}
 
 				if ( outlineStart )
@@ -1010,6 +1055,229 @@ namespace Epsitec.Common.Document.Objects
 				this.PropertyLineMode.PaintOutline(port, drawingContext, pathLine);
 			}
 		}
+
+
+		#region CreateFromPath
+		// Retourne le chemin géométrique de l'objet.
+		public override Path GetPath()
+		{
+			Path pathStart;  bool outlineStart, surfaceStart;
+			Path pathEnd;    bool outlineEnd,   surfaceEnd;
+			Path pathLine;
+			this.PathBuild(null,
+						   out pathStart, out outlineStart, out surfaceStart,
+						   out pathEnd,   out outlineEnd,   out surfaceEnd,
+						   out pathLine);
+			return pathLine;
+		}
+
+		// Crée une courbe de Bézier à partir d'un chemin quelconque.
+		public bool CreateFromPath(Path path, int subPath)
+		{
+			PathElement[] elements;
+			Point[] points;
+			path.GetElements(out elements, out points);
+			if ( elements.Length > 100 )  return false;
+
+			int firstHandle = this.TotalMainHandle;
+			Point start = new Point(0, 0);
+			Point current = new Point(0, 0);
+			Point p1 = new Point(0, 0);
+			Point p2 = new Point(0, 0);
+			Point p3 = new Point(0, 0);
+			bool close = false;
+			bool bDo = false;
+			int subRank = -1;
+			int i = 0;
+			while ( i < elements.Length )
+			{
+				switch ( elements[i] & PathElement.MaskCommand )
+				{
+					case PathElement.MoveTo:
+						subRank ++;
+						current = points[i++];
+						if ( subPath == -1 || subPath == subRank )
+						{
+							this.HandleAdd(current, HandleType.Bezier);
+							this.HandleAdd(current, HandleType.Starting);
+							this.HandleAdd(current, HandleType.Bezier);
+							bDo = true;
+						}
+						start = current;
+						break;
+
+					case PathElement.LineTo:
+						p1 = points[i++];
+						if ( subPath == -1 || subPath == subRank )
+						{
+							if ( p1 == start )
+							{
+								close = true;
+								this.PathAdjust(firstHandle);
+								firstHandle = this.TotalMainHandle;
+							}
+							else
+							{
+								this.HandleAdd(p1, HandleType.Bezier);
+								this.HandleAdd(p1, HandleType.Primary);
+								this.HandleAdd(p1, HandleType.Bezier);
+								bDo = true;
+							}
+						}
+						current = p1;
+						break;
+
+					case PathElement.Curve3:
+						p1 = points[i++];
+						p2 = points[i++];
+						if ( subPath == -1 || subPath == subRank )
+						{
+							if ( p2 == start )
+							{
+								close = true;
+								this.Handle(this.TotalMainHandle-1).Position = p1;
+								this.Handle(firstHandle).Position = p1;
+								this.PathAdjust(firstHandle);
+								firstHandle = this.TotalMainHandle;
+							}
+							else
+							{
+								this.Handle(this.TotalMainHandle-1).Position = p1;
+								this.HandleAdd(p1, HandleType.Bezier);
+								this.HandleAdd(p2, HandleType.Primary);
+								this.HandleAdd(p2, HandleType.Bezier);
+								bDo = true;
+							}
+						}
+						current = p2;
+						break;
+
+					case PathElement.Curve4:
+						p1 = points[i++];
+						p2 = points[i++];
+						p3 = points[i++];
+						if ( subPath == -1 || subPath == subRank )
+						{
+							if ( p3 == start )
+							{
+								close = true;
+								this.Handle(this.TotalMainHandle-1).Position = p1;
+								this.Handle(firstHandle).Position = p2;
+								this.PathAdjust(firstHandle);
+								firstHandle = this.TotalMainHandle;
+							}
+							else
+							{
+								this.Handle(this.TotalMainHandle-1).Position = p1;
+								this.HandleAdd(p2, HandleType.Bezier);
+								this.HandleAdd(p3, HandleType.Primary);
+								this.HandleAdd(p3, HandleType.Bezier);
+								bDo = true;
+							}
+						}
+						current = p3;
+						break;
+
+					default:
+						if ( (elements[i] & PathElement.FlagClose) != 0 )
+						{
+							close = true;
+							this.PathAdjust(firstHandle);
+						}
+						i ++;
+						break;
+				}
+			}
+			this.PathAdjust(firstHandle);
+			this.PropertyPolyClose.BoolValue = close;
+
+			return bDo;
+		}
+
+		// Ajuste le chemin.
+		protected void PathAdjust(int firstHandle)
+		{
+			// Transforme les courbes en droite si nécessaire.
+			int total = this.TotalMainHandle;
+			for ( int i=firstHandle ; i<total ; i+= 3 )
+			{
+				if ( this.Handle(i+0).Position == this.Handle(i+1).Position )
+				{
+					this.Handle(i+0).Type = HandleType.Hide;
+				}
+
+				if ( this.Handle(i+2).Position == this.Handle(i+1).Position )
+				{
+					this.Handle(i+2).Type = HandleType.Hide;
+				}
+			}
+
+			// Mets les bonnes contraintes aux points principaux.
+			for ( int i=firstHandle ; i<total ; i+= 3 )
+			{
+				this.Handle(i+1).ConstrainType = this.ComputeConstrain(firstHandle, i);
+			}
+		}
+
+		// Devine le type de contrainte.
+		protected HandleConstrainType ComputeConstrain(int firstHandle, int rank)
+		{
+			Point p = this.Handle(rank+1).Position;
+
+			Point s1 = this.Handle(rank+0).Position;
+			if ( this.Handle(rank+0).Type == HandleType.Hide )  // droite ?
+			{
+				int r = rank-2;
+				if ( r < 0 )  r = this.TotalMainHandle-2;
+				s1 = this.Handle(r).Position;
+			}
+
+			Point s2 = this.Handle(rank+2).Position;
+			if ( this.Handle(rank+2).Type == HandleType.Hide )  // droite ?
+			{
+				int r = rank+4;
+				if ( r > this.TotalMainHandle )  r = firstHandle+1;
+				s2 = this.Handle(r).Position;
+			}
+
+			return Bezier.ComputeConstrain(s1, p, s2);
+		}
+
+		// Devine le type de contrainte en fonction d'un point principal et
+		// des 2 points secondaires de part et d'autre.
+		protected static HandleConstrainType ComputeConstrain(Point s1, Point p, Point s2)
+		{
+			double dx = System.Math.Abs((p.X-s1.X)-(s2.X-p.X));
+			double dy = System.Math.Abs((p.Y-s1.Y)-(s2.Y-p.Y));
+			if ( dx < 0.0001 && dy < 0.0001 )
+			{
+				return HandleConstrainType.Symmetric;
+			}
+			
+			double a1 = Point.ComputeAngleDeg(p, s1);
+			double a2 = Point.ComputeAngleDeg(p, s2);
+			if ( System.Math.Abs(System.Math.Abs(a1-a2)-180.0) < 0.1 )
+			{
+				return HandleConstrainType.Smooth;
+			}
+
+			return HandleConstrainType.Corner;
+		}
+
+		// Crée une courbe de Bézier à partir de 4 points.
+		public void CreateFromPoints(Point p1, Point s1, Point s2, Point p2)
+		{
+			this.HandleAdd(p1, HandleType.Hide);
+			this.HandleAdd(p1, HandleType.Starting);
+			this.HandleAdd(s1, HandleType.Bezier);
+
+			this.HandleAdd(s2, HandleType.Bezier);
+			this.HandleAdd(p2, HandleType.Primary);
+			this.HandleAdd(p2, HandleType.Hide);
+
+			this.dirtyBbox = true;
+		}
+		#endregion
 
 
 		#region Serialization

@@ -182,6 +182,109 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonZoom.Clicked += new MessageEventHandler(this.HandleButtonZoom);
 			ToolTip.Default.SetToolTip(this.buttonZoom, "Agrandissement");
 			this.toolBarZoom.Items.Add(this.buttonZoom);
+
+			// Alignement.
+			this.boxAlign = new GroupBox(this);
+			this.boxAlign.Height = 45;
+			this.boxAlign.Text = "Alignements";
+			this.boxAlign.Dock = DockStyle.Top;
+			this.boxAlign.DockMargins = new Margins(0, 0, 0, 10);
+
+			this.toolBarAlign = new HToolBar(this.boxAlign);
+			this.toolBarAlign.Dock = DockStyle.Top;
+			this.toolBarAlign.DockMargins = new Margins(0, 0, 0, 10);
+
+			this.buttonAlignGrid = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.AlignGrid.icon");
+			this.buttonAlignGrid.Clicked += new MessageEventHandler(this.HandleButtonAlignGrid);
+			ToolTip.Default.SetToolTip(this.buttonAlignGrid, "Alignement sur la grille magnétique");
+			this.toolBarAlign.Items.Add(this.buttonAlignGrid);
+
+			this.toolBarAlign.Items.Add(new IconSeparator());
+
+			this.buttonAlignLeft = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.AlignLeft.icon");
+			this.buttonAlignLeft.Clicked += new MessageEventHandler(this.HandleButtonAlignLeft);
+			ToolTip.Default.SetToolTip(this.buttonAlignLeft, "Alignement à gauche");
+			this.toolBarAlign.Items.Add(this.buttonAlignLeft);
+
+			this.buttonAlignCenterX = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.AlignCenterX.icon");
+			this.buttonAlignCenterX.Clicked += new MessageEventHandler(this.HandleButtonAlignCenterX);
+			ToolTip.Default.SetToolTip(this.buttonAlignCenterX, "Alignement centré horizontalement");
+			this.toolBarAlign.Items.Add(this.buttonAlignCenterX);
+
+			this.buttonAlignRight = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.AlignRight.icon");
+			this.buttonAlignRight.Clicked += new MessageEventHandler(this.HandleButtonAlignRight);
+			ToolTip.Default.SetToolTip(this.buttonAlignRight, "Alignement à droite");
+			this.toolBarAlign.Items.Add(this.buttonAlignRight);
+
+			this.toolBarAlign.Items.Add(new IconSeparator());
+
+			this.buttonAlignTop = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.AlignTop.icon");
+			this.buttonAlignTop.Clicked += new MessageEventHandler(this.HandleButtonAlignTop);
+			ToolTip.Default.SetToolTip(this.buttonAlignTop, "Alignement en haut");
+			this.toolBarAlign.Items.Add(this.buttonAlignTop);
+
+			this.buttonAlignCenterY = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.AlignCenterY.icon");
+			this.buttonAlignCenterY.Clicked += new MessageEventHandler(this.HandleButtonAlignCenterY);
+			ToolTip.Default.SetToolTip(this.buttonAlignCenterY, "Alignement centré verticalement");
+			this.toolBarAlign.Items.Add(this.buttonAlignCenterY);
+
+			this.buttonAlignBottom = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.AlignBottom.icon");
+			this.buttonAlignBottom.Clicked += new MessageEventHandler(this.HandleButtonAlignBottom);
+			ToolTip.Default.SetToolTip(this.buttonAlignBottom, "Alignement en bas");
+			this.toolBarAlign.Items.Add(this.buttonAlignBottom);
+
+			// Distribution.
+			this.boxShare = new GroupBox(this);
+			this.boxShare.Height = 45;
+			this.boxShare.Text = "Distributions";
+			this.boxShare.Dock = DockStyle.Top;
+			this.boxShare.DockMargins = new Margins(0, 0, 0, 10);
+
+			this.toolBarShare = new HToolBar(this.boxShare);
+			this.toolBarShare.Dock = DockStyle.Top;
+			this.toolBarShare.DockMargins = new Margins(0, 0, 0, 10);
+
+			this.buttonShareLeft = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareLeft.icon");
+			this.buttonShareLeft.Clicked += new MessageEventHandler(this.HandleButtonShareLeft);
+			ToolTip.Default.SetToolTip(this.buttonShareLeft, "Distribution sur la gauche");
+			this.toolBarShare.Items.Add(this.buttonShareLeft);
+
+			this.buttonShareCenterX = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareCenterX.icon");
+			this.buttonShareCenterX.Clicked += new MessageEventHandler(this.HandleButtonShareCenterX);
+			ToolTip.Default.SetToolTip(this.buttonShareCenterX, "Distribution centrée horizontalement");
+			this.toolBarShare.Items.Add(this.buttonShareCenterX);
+
+			this.buttonShareSpaceX = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareSpaceX.icon");
+			this.buttonShareSpaceX.Clicked += new MessageEventHandler(this.HandleButtonShareSpaceX);
+			ToolTip.Default.SetToolTip(this.buttonShareSpaceX, "Distribution espacée horizontalement");
+			this.toolBarShare.Items.Add(this.buttonShareSpaceX);
+
+			this.buttonShareRight = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareRight.icon");
+			this.buttonShareRight.Clicked += new MessageEventHandler(this.HandleButtonShareRight);
+			ToolTip.Default.SetToolTip(this.buttonShareRight, "Distribution sur la droite");
+			this.toolBarShare.Items.Add(this.buttonShareRight);
+
+			this.toolBarShare.Items.Add(new IconSeparator());
+
+			this.buttonShareTop = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareTop.icon");
+			this.buttonShareTop.Clicked += new MessageEventHandler(this.HandleButtonShareTop);
+			ToolTip.Default.SetToolTip(this.buttonShareTop, "Distribution sur le haut");
+			this.toolBarShare.Items.Add(this.buttonShareTop);
+
+			this.buttonShareCenterY = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareCenterY.icon");
+			this.buttonShareCenterY.Clicked += new MessageEventHandler(this.HandleButtonShareCenterY);
+			ToolTip.Default.SetToolTip(this.buttonShareCenterY, "Distribution centrée verticalement");
+			this.toolBarShare.Items.Add(this.buttonShareCenterY);
+
+			this.buttonShareSpaceY = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareSpaceY.icon");
+			this.buttonShareSpaceY.Clicked += new MessageEventHandler(this.HandleButtonShareSpaceY);
+			ToolTip.Default.SetToolTip(this.buttonShareSpaceY, "Distribution espacée verticalement");
+			this.toolBarShare.Items.Add(this.buttonShareSpaceY);
+
+			this.buttonShareBottom = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareBottom.icon");
+			this.buttonShareBottom.Clicked += new MessageEventHandler(this.HandleButtonShareBottom);
+			ToolTip.Default.SetToolTip(this.buttonShareBottom, "Distribution sur le bas");
+			this.toolBarShare.Items.Add(this.buttonShareBottom);
 		}
 		
 
@@ -189,6 +292,8 @@ namespace Epsitec.Common.Document.Containers
 		protected override void DoUpdateContent()
 		{
 			bool enabled = (this.document.Modifier.TotalSelected > 0);
+			bool enabled2 = (this.document.Modifier.TotalSelected > 1);
+			bool enabled3 = (this.document.Modifier.TotalSelected > 2);
 
 			this.buttonMoveH.SetEnabled(enabled);
 			this.buttonMoveHi.SetEnabled(enabled);
@@ -208,6 +313,23 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonZoomDiv2.SetEnabled(enabled);
 			this.buttonZoom.SetEnabled(enabled);
 			this.buttonZoomi.SetEnabled(enabled);
+
+			this.buttonAlignGrid.SetEnabled(enabled);
+			this.buttonAlignLeft.SetEnabled(enabled2);
+			this.buttonAlignCenterX.SetEnabled(enabled2);
+			this.buttonAlignRight.SetEnabled(enabled2);
+			this.buttonAlignTop.SetEnabled(enabled2);
+			this.buttonAlignCenterY.SetEnabled(enabled2);
+			this.buttonAlignBottom.SetEnabled(enabled2);
+
+			this.buttonShareLeft.SetEnabled(enabled3);
+			this.buttonShareCenterX.SetEnabled(enabled3);
+			this.buttonShareSpaceX.SetEnabled(enabled3);
+			this.buttonShareRight.SetEnabled(enabled3);
+			this.buttonShareTop.SetEnabled(enabled3);
+			this.buttonShareCenterY.SetEnabled(enabled3);
+			this.buttonShareSpaceY.SetEnabled(enabled3);
+			this.buttonShareBottom.SetEnabled(enabled3);
 		}
 
 
@@ -294,6 +416,81 @@ namespace Epsitec.Common.Document.Containers
 			this.document.Modifier.ZoomSelection(1.0/scale);
 		}
 
+		private void HandleButtonAlignGrid(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.AlignGridSelection();
+		}
+
+		private void HandleButtonAlignLeft(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.AlignSelection(-1, true);
+		}
+
+		private void HandleButtonAlignCenterX(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.AlignSelection(0, true);
+		}
+
+		private void HandleButtonAlignRight(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.AlignSelection(1, true);
+		}
+
+		private void HandleButtonAlignTop(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.AlignSelection(1, false);
+		}
+
+		private void HandleButtonAlignCenterY(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.AlignSelection(0, false);
+		}
+
+		private void HandleButtonAlignBottom(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.AlignSelection(-1, false);
+		}
+
+		private void HandleButtonShareLeft(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.ShareSelection(-1, true);
+		}
+
+		private void HandleButtonShareCenterX(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.ShareSelection(0, true);
+		}
+
+		private void HandleButtonShareSpaceX(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.SpaceSelection(true);
+		}
+
+		private void HandleButtonShareRight(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.ShareSelection(1, true);
+		}
+
+		private void HandleButtonShareTop(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.ShareSelection(1, false);
+		}
+
+		private void HandleButtonShareCenterY(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.ShareSelection(0, false);
+		}
+
+		private void HandleButtonShareSpaceY(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.SpaceSelection(false);
+		}
+
+		private void HandleButtonShareBottom(object sender, MessageEventArgs e)
+		{
+			this.document.Modifier.ShareSelection(-1, false);
+		}
+
 
 		protected GroupBox				boxMove;
 		protected HToolBar				toolBarMove;
@@ -325,5 +522,26 @@ namespace Epsitec.Common.Document.Containers
 		protected TextFieldReal			fieldZoom;
 		protected IconButton			buttonZoomi;
 		protected IconButton			buttonZoom;
+		
+		protected GroupBox				boxAlign;
+		protected HToolBar				toolBarAlign;
+		protected IconButton			buttonAlignGrid;
+		protected IconButton			buttonAlignLeft;
+		protected IconButton			buttonAlignCenterX;
+		protected IconButton			buttonAlignRight;
+		protected IconButton			buttonAlignTop;
+		protected IconButton			buttonAlignCenterY;
+		protected IconButton			buttonAlignBottom;
+		
+		protected GroupBox				boxShare;
+		protected HToolBar				toolBarShare;
+		protected IconButton			buttonShareLeft;
+		protected IconButton			buttonShareCenterX;
+		protected IconButton			buttonShareSpaceX;
+		protected IconButton			buttonShareRight;
+		protected IconButton			buttonShareTop;
+		protected IconButton			buttonShareCenterY;
+		protected IconButton			buttonShareSpaceY;
+		protected IconButton			buttonShareBottom;
 	}
 }

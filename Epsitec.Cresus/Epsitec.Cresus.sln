@@ -187,6 +187,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.ServerManager", "App.Se
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Document", "X.Setup.Document\X.Setup.Document.vdproj", "{B2F9D51A-80EA-4DC6-B6DC-728FD54839B8}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -377,6 +381,8 @@ Global
 		{9FB52048-28B5-437B-B9B6-73B35148FAF8}.Debug.Build.0 = Debug|.NET
 		{9FB52048-28B5-437B-B9B6-73B35148FAF8}.Release.ActiveCfg = Release|.NET
 		{9FB52048-28B5-437B-B9B6-73B35148FAF8}.Release.Build.0 = Release|.NET
+		{B2F9D51A-80EA-4DC6-B6DC-728FD54839B8}.Debug.ActiveCfg = Debug
+		{B2F9D51A-80EA-4DC6-B6DC-728FD54839B8}.Release.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info

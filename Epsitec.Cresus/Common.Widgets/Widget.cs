@@ -1757,7 +1757,7 @@ namespace Epsitec.Common.Widgets
 						return this.parent.ResourceManager;
 					}
 					
-					System.Diagnostics.Debug.WriteLine ("Falling back to default resource manager: " + this.ToString ());
+//-					System.Diagnostics.Debug.WriteLine ("Falling back to default resource manager: " + this.ToString ());
 					return Support.Resources.DefaultManager;
 				}
 				

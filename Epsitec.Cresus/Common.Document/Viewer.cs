@@ -46,7 +46,25 @@ namespace Epsitec.Common.Document
 				this.textRuler.AllFonts = false;
 			}
 			this.textRuler.Changed += new EventHandler(this.HandleRulerChanged);
+
+			this.autoScrollTimer = new Timer();
+			this.autoScrollTimer.AutoRepeat = 0.1;
+			this.autoScrollTimer.TimeElapsed += new EventHandler(this.HandleTimeElapsed);
 		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if ( disposing )
+			{
+				this.textRuler.Changed -= new EventHandler(this.HandleRulerChanged);
+				this.autoScrollTimer.TimeElapsed -= new EventHandler(this.HandleTimeElapsed);
+				this.autoScrollTimer.Dispose();
+				this.autoScrollTimer = null;
+			}
+			
+			base.Dispose(disposing);
+		}
+
 
 		public Document Document
 		{
@@ -83,6 +101,99 @@ namespace Epsitec.Common.Document
 		}
 
 
+		#region AutoScroll
+		// Démarre le timer pour l'auto-scroll.
+		protected void AutoScrollTimerStart(Message message)
+		{
+			this.autoScrollTimer.Start();
+		}
+
+		// Stoppe le timer pour l'auto-scroll.
+		protected void AutoScrollTimerStop()
+		{
+			this.autoScrollTimer.Suspend();
+		}
+
+		// Appelé lorsque le timer arrive à échéance.
+		// Effectue éventuellement un scroll si la souris est proche des bords.
+		protected void HandleTimeElapsed(object sender)
+		{
+			Point mouse = this.mousePosWidget;
+
+			Rectangle view = this.Client.Bounds;
+			if ( this.textRuler != null && this.textRuler.IsVisible )
+			{
+				if ( this.textRuler.Top == view.Top )  // règle tout en haut ?
+				{
+					view.Top -= this.textRuler.Height;  // sous la règle
+				}
+			}
+			//?view.Deflate(10);
+			if ( view.Contains(mouse) )  return;
+
+			Point move = new Point(0,0);
+
+			if ( mouse.X > view.Right )
+			{
+				move.X = mouse.X-view.Right;
+			}
+			if ( mouse.X < view.Left )
+			{
+				move.X = mouse.X-view.Left;
+			}
+			if ( mouse.Y > view.Top )
+			{
+				move.Y = mouse.Y-view.Top;
+			}
+			if ( mouse.Y < view.Bottom )
+			{
+				move.Y = mouse.Y-view.Bottom;
+			}
+
+			move.X /= this.drawingContext.ScaleX;
+			move.Y /= this.drawingContext.ScaleY;
+			this.AutoScroll(move);
+
+			mouse = this.ScreenToInternal(mouse);  // position en coordonnées internes
+			this.DispatchDummyMouseMoveEvent();
+			//-this.ProcessMouseMove(this.autoScrollMessage, mouse);
+		}
+
+		// Retourne le rectangle correspondant à la zone visible dans le Viewer
+		// dans laquelle il faut scroller.
+		public Rectangle ScrollRectangle
+		{
+			get
+			{
+				Rectangle rect = this.Client.Bounds;
+				if ( this.textRuler != null && this.textRuler.IsVisible )
+				{
+					if ( this.textRuler.Top == rect.Top )  // règle tout en haut ?
+					{
+						rect.Top -= this.textRuler.Height;  // sous la règle
+					}
+				}
+				rect.Deflate(5);  // ch'tite marge
+				return ScreenToInternal(rect);
+			}
+		}
+
+		// Effectue un scroll automatique.
+		public void AutoScroll(Point move)
+		{
+			if ( move.X == 0.0 && move.Y == 0.0 )  return;
+
+			Point origin = new Point(this.drawingContext.OriginX, this.drawingContext.OriginY);
+			origin -= move;
+			origin.X = -System.Math.Max(-origin.X, this.drawingContext.MinOriginX);
+			origin.X = -System.Math.Min(-origin.X, this.drawingContext.MaxOriginX);
+			origin.Y = -System.Math.Max(-origin.Y, this.drawingContext.MinOriginY);
+			origin.Y = -System.Math.Min(-origin.Y, this.drawingContext.MaxOriginY);
+			this.drawingContext.Origin(origin);
+		}
+		#endregion
+
+
 		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Point pos)
 		{
@@ -92,6 +203,7 @@ namespace Epsitec.Common.Document
 			Modifier modifier = this.document.Modifier;
 			if ( modifier == null )  return;
 
+			this.mousePosWidget = pos;
 			pos = this.ScreenToInternal(pos);  // position en coordonnées internes
 
 			if ( pos.X != this.mousePos.X || pos.Y != this.mousePos.Y )
@@ -108,138 +220,40 @@ namespace Epsitec.Common.Document
 			{
 				case MessageType.MouseDown:
 					this.document.IsDirtySerialize = true;
-
-					if ( message.IsLeftButton )
-					{
-						if ( modifier.Tool == "Select" )
-						{
-							this.SelectMouseDown(pos, message.ButtonDownCount, false);
-						}
-						else if ( modifier.Tool == "Global" )
-						{
-							this.SelectMouseDown(pos, message.ButtonDownCount, true);
-						}
-						else if ( modifier.Tool == "Edit" )
-						{
-							this.EditMouseDown(message, pos, message.ButtonDownCount);
-						}
-						else if ( modifier.Tool == "Zoom" )
-						{
-							this.ZoomMouseDown(pos);
-						}
-						else if ( modifier.Tool == "Hand" )
-						{
-							this.HandMouseDown(pos);
-						}
-						else if ( modifier.Tool == "Picker" )
-						{
-							this.PickerMouseDown(pos);
-						}
-						else if ( modifier.Tool == "HotSpot" )
-						{
-							this.HotSpotMouseDown(pos);
-						}
-						else
-						{
-							this.CreateMouseDown(pos);
-						}
-					}
-					if ( message.IsRightButton )
-					{
-						modifier.Tool = "Select";
-						this.SelectMouseDown(pos, message.ButtonDownCount, false);
-					}
+					this.AutoScrollTimerStart(message);
+					this.ProcessMouseDown(message, pos);
 					this.mouseDown = true;
 					break;
 				
 				case MessageType.MouseMove:
-					this.mousePos = pos;
-
-					if ( modifier.Tool == "Select" )
-					{
-						this.SelectMouseMove(pos, false);
-					}
-					else if ( modifier.Tool == "Global" )
-					{
-						this.SelectMouseMove(pos, true);
-					}
-					else if ( modifier.Tool == "Edit" )
-					{
-						this.EditMouseMove(message, pos);
-					}
-					else if ( modifier.Tool == "Zoom" )
-					{
-						this.ZoomMouseMove(pos);
-					}
-					else if ( modifier.Tool == "Hand" )
-					{
-						this.HandMouseMove(pos);
-					}
-					else if ( modifier.Tool == "Picker" )
-					{
-						this.PickerMouseMove(pos);
-					}
-					else if ( modifier.Tool == "HotSpot" )
-					{
-						this.HotSpotMouseMove(pos);
-					}
-					else
-					{
-						this.CreateMouseMove(pos);
-					}
+					this.ProcessMouseMove(message, pos);
 					break;
 
 				case MessageType.MouseUp:
 					if ( this.mouseDown )
 					{
-						if ( modifier.Tool == "Select" )
-						{
-							this.SelectMouseUp(pos, message.IsRightButton, false);
-						}
-						else if ( modifier.Tool == "Global" )
-						{
-							this.SelectMouseUp(pos, message.IsRightButton, true);
-						}
-						else if ( modifier.Tool == "Edit" )
-						{
-							this.EditMouseUp(message, pos, message.IsRightButton);
-						}
-						else if ( modifier.Tool == "Zoom" )
-						{
-							this.ZoomMouseUp(pos);
-						}
-						else if ( modifier.Tool == "Hand" )
-						{
-							this.HandMouseUp(pos);
-						}
-						else if ( modifier.Tool == "Picker" )
-						{
-							this.PickerMouseUp(pos);
-						}
-						else if ( modifier.Tool == "HotSpot" )
-						{
-							this.HotSpotMouseUp(pos);
-						}
-						else
-						{
-							this.CreateMouseUp(pos);
-						}
+						this.AutoScrollTimerStop();
+						this.ProcessMouseUp(message, pos);
 						this.mouseDown = false;
 					}
 					break;
 
+				case MessageType.MouseLeave:
+					this.Hilite(null);
+					break;
+
 				case MessageType.MouseWheel:
-					double factor = (message.Wheel > 0) ? 1.5 : 1.0/1.5;
-					this.document.Modifier.ZoomChange(factor, pos);
+					this.ProcessMouseWheel(message.Wheel, pos);
 					break;
 
 				case MessageType.KeyDown:
 					this.EditProcessMessage(message, pos);
 
-					if ( message.IsAltPressed )
+					if ( message.IsAltPressed || message.IsCtrlPressed )
 					{
-						// Il ne faut jamais manger les pressions de touches avec ALT, car elles sont
-						// utilisées par les raccourcis clavier globaux.
+						// Il ne faut jamais manger les pressions de touches avec
+						// ALT ou Ctrl, car elles sont utilisées par les raccourcis
+						// clavier globaux.
 						return;
 					}
 					if ( this.createRank != -1 )
@@ -250,12 +264,12 @@ namespace Epsitec.Common.Document
 						}
 					}
 
-					if ( this.document.Modifier.RetEditObject() == null )
+					if ( modifier.RetEditObject() == null )
 					{
 						if ( message.KeyCode == KeyCode.Back   ||
 							 message.KeyCode == KeyCode.Delete )
 						{
-							this.document.Modifier.DeleteSelection();
+							modifier.DeleteSelection();
 						}
 					}
 
@@ -270,12 +284,177 @@ namespace Epsitec.Common.Document
 					break;
 
 				default:
+					if ( message.Type == MessageType.KeyPress )
+					{
+						if ( message.IsAltPressed || message.IsCtrlPressed )
+						{
+							// Il ne faut jamais manger les pressions de touches avec
+							// ALT ou Ctrl, car elles sont utilisées par les raccourcis
+							// clavier globaux.
+							return;
+						}
+					}
 					this.EditProcessMessage(message, pos);
 					break;
 			}
 			
 			this.document.Notifier.GenerateEvents();
 			message.Consumer = this;
+		}
+
+		// Gestion d'un bouton de la souris pressé.
+		protected void ProcessMouseDown(Message message, Point pos)
+		{
+			Modifier modifier = this.document.Modifier;
+
+			if ( message.IsLeftButton )
+			{
+				if ( modifier.Tool == "Select" )
+				{
+					this.SelectMouseDown(pos, message.ButtonDownCount, false);
+				}
+				else if ( modifier.Tool == "Global" )
+				{
+					this.SelectMouseDown(pos, message.ButtonDownCount, true);
+				}
+				else if ( modifier.Tool == "Edit" )
+				{
+					this.EditMouseDown(message, pos, message.ButtonDownCount);
+				}
+				else if ( modifier.Tool == "Zoom" )
+				{
+					this.ZoomMouseDown(pos);
+				}
+				else if ( modifier.Tool == "Hand" )
+				{
+					this.HandMouseDown(pos);
+				}
+				else if ( modifier.Tool == "Picker" )
+				{
+					this.PickerMouseDown(pos);
+				}
+				else if ( modifier.Tool == "HotSpot" )
+				{
+					this.HotSpotMouseDown(pos);
+				}
+				else
+				{
+					this.CreateMouseDown(pos);
+				}
+			}
+
+			if ( message.IsRightButton )
+			{
+				modifier.Tool = "Select";
+				this.SelectMouseDown(pos, message.ButtonDownCount, false);
+			}
+		}
+
+		// Gestion d'un déplacement de la souris pressé.
+		protected void ProcessMouseMove(Message message, Point pos)
+		{
+			Modifier modifier = this.document.Modifier;
+
+			if ( modifier.Tool == "Select" )
+			{
+				this.SelectMouseMove(pos, false);
+			}
+			else if ( modifier.Tool == "Global" )
+			{
+				this.SelectMouseMove(pos, true);
+			}
+			else if ( modifier.Tool == "Edit" )
+			{
+				this.EditMouseMove(message, pos);
+			}
+			else if ( modifier.Tool == "Zoom" )
+			{
+				this.ZoomMouseMove(pos);
+			}
+			else if ( modifier.Tool == "Hand" )
+			{
+				this.HandMouseMove(pos);
+			}
+			else if ( modifier.Tool == "Picker" )
+			{
+				this.PickerMouseMove(pos);
+			}
+			else if ( modifier.Tool == "HotSpot" )
+			{
+				this.HotSpotMouseMove(pos);
+			}
+			else
+			{
+				this.CreateMouseMove(pos);
+			}
+		}
+
+		// Gestion d'un bouton de la souris relâché.
+		protected void ProcessMouseUp(Message message, Point pos)
+		{
+			Modifier modifier = this.document.Modifier;
+
+			if ( modifier.Tool == "Select" )
+			{
+				this.SelectMouseUp(pos, message.IsRightButton, false);
+			}
+			else if ( modifier.Tool == "Global" )
+			{
+				this.SelectMouseUp(pos, message.IsRightButton, true);
+			}
+			else if ( modifier.Tool == "Edit" )
+			{
+				this.EditMouseUp(message, pos, message.IsRightButton);
+			}
+			else if ( modifier.Tool == "Zoom" )
+			{
+				this.ZoomMouseUp(pos);
+			}
+			else if ( modifier.Tool == "Hand" )
+			{
+				this.HandMouseUp(pos);
+			}
+			else if ( modifier.Tool == "Picker" )
+			{
+				this.PickerMouseUp(pos);
+			}
+			else if ( modifier.Tool == "HotSpot" )
+			{
+				this.HotSpotMouseUp(pos);
+			}
+			else
+			{
+				this.CreateMouseUp(pos);
+			}
+		}
+
+		// Action lorsque la molette est actionnée.
+		protected void ProcessMouseWheel(int wheel, Point pos)
+		{
+			if ( this.document.GlobalSettings.MouseWheelAction == Settings.MouseWheelAction.Zoom )
+			{
+				double zoom = this.document.GlobalSettings.DefaultZoom;
+				double factor = (wheel > 0) ? zoom : 1.0/zoom;
+				this.document.Modifier.ZoomChange(factor, pos);
+			}
+
+			if ( this.document.GlobalSettings.MouseWheelAction == Settings.MouseWheelAction.VScroll )
+			{
+				double move = 30.0/this.drawingContext.ScaleX;
+				if ( wheel > 0 )  move = -move;
+
+				Point origin = new Point();
+				origin.X = this.drawingContext.OriginX;
+				origin.Y = this.drawingContext.OriginY + move;
+
+				origin.X = -System.Math.Max(-origin.X, this.drawingContext.MinOriginX);
+				origin.X = -System.Math.Min(-origin.X, this.drawingContext.MaxOriginX);
+
+				origin.Y = -System.Math.Max(-origin.Y, this.drawingContext.MinOriginY);
+				origin.Y = -System.Math.Min(-origin.Y, this.drawingContext.MaxOriginY);
+				
+				this.drawingContext.Origin(origin);
+			}
 		}
 
 
@@ -443,9 +622,8 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.drawingContext.IsCtrl && rank == 0 )
 				{
-					bool gs = this.document.Modifier.ActiveViewer.GlobalSelect;
 					this.document.Modifier.DuplicateSelection(new Point(0,0));
-					this.document.Modifier.ActiveViewer.GlobalSelect = gs;
+					this.document.Modifier.ActiveViewer.UpdateSelector();
 				}
 				this.moveGlobal = rank;
 				this.selector.MoveStarting(this.moveGlobal, mouse, this.drawingContext);
@@ -458,10 +636,9 @@ namespace Epsitec.Common.Document
 				{
 					this.selector.Visible = false;
 					this.Select(null, false, false);
-					this.globalSelect = false;
 				}
 
-				if ( !global && this.DetectHandle(mouse, out obj, out rank) )
+				if ( this.DetectHandle(mouse, out obj, out rank) )
 				{
 					this.moveObject = obj;
 					this.moveHandle = rank;
@@ -473,7 +650,7 @@ namespace Epsitec.Common.Document
 				else
 				{
 					obj = this.Detect(mouse);
-					if ( obj == null || global )
+					if ( obj == null )
 					{
 						this.selector.FixStarting(mouse);
 					}
@@ -481,12 +658,19 @@ namespace Epsitec.Common.Document
 					{
 						if ( !obj.IsSelected )
 						{
-							this.Select(obj, false, this.drawingContext.IsShift);
-
-							if ( this.selector.Visible && this.drawingContext.IsShift )
+							if ( global )
 							{
-								obj.GlobalSelect(true);
-								this.selector.Initialize(this.document.Modifier.SelectedBbox);
+								this.selector.FixStarting(mouse);
+							}
+							else
+							{
+								this.Select(obj, false, this.drawingContext.IsShift);
+
+								if ( this.selector.Visible && this.drawingContext.IsShift )
+								{
+									obj.GlobalSelect(true);
+									this.selector.Initialize(this.document.Modifier.SelectedBbox);
+								}
 							}
 						}
 						else
@@ -500,9 +684,8 @@ namespace Epsitec.Common.Document
 
 						if ( this.drawingContext.IsCtrl && obj.IsSelected )
 						{
-							bool gs = this.document.Modifier.ActiveViewer.GlobalSelect;
 							this.document.Modifier.DuplicateSelection(new Point(0,0));
-							this.document.Modifier.ActiveViewer.GlobalSelect = gs;
+							this.document.Modifier.ActiveViewer.UpdateSelector();
 						}
 
 						this.moveObject = obj;
@@ -528,10 +711,9 @@ namespace Epsitec.Common.Document
 				}
 				else if ( this.moveGlobal != -1 )  // déplace le modificateur global ?
 				{
-					SelectorData initial = this.selector.CloneData();
 					this.selector.MoveProcess(this.moveGlobal, mouse, this.drawingContext);
 					this.selector.HiliteHandle(this.moveGlobal);
-					this.MoveGlobalProcess(initial, this.selector.Data);
+					this.MoveGlobalProcess(this.selector);
 				}
 				else if ( this.moveObject != null )
 				{
@@ -572,47 +754,43 @@ namespace Epsitec.Common.Document
 			}
 			else	// bouton souris relâché ?
 			{
-				if ( global )
+				Objects.Abstract hiliteObj = this.Detect(mouse);
+				this.document.Modifier.ContainerHilite(hiliteObj);
+
+				Objects.Abstract obj;
+				int rank;
+				if ( this.selector.Detect(mouse, !this.drawingContext.IsShift, out rank) )
 				{
-					this.ChangeMouseCursor(MouseCursorType.Arrow);
+					this.Hilite(null);
+					this.selector.HiliteHandle(rank);
+					this.ChangeMouseCursor(MouseCursorType.Finger);
+				}
+				else if ( this.DetectHandle(mouse, out obj, out rank) )
+				{
+					this.Hilite(null);
+					this.HiliteHandle(obj, rank);
+					this.ChangeMouseCursor(MouseCursorType.Finger);
 				}
 				else
 				{
-					Objects.Abstract hiliteObj = this.Detect(mouse);
-					this.document.Modifier.ContainerHilite(hiliteObj);
-
-					Objects.Abstract obj;
-					int rank;
-					if ( this.selector.Detect(mouse, !this.drawingContext.IsShift, out rank) )
+					obj = hiliteObj;
+					if ( !global )
 					{
-						this.Hilite(null);
-						this.selector.HiliteHandle(rank);
-						this.ChangeMouseCursor(MouseCursorType.Finger);
+						this.Hilite(obj);
 					}
-					else if ( this.DetectHandle(mouse, out obj, out rank) )
+					if ( obj == null )
 					{
-						this.Hilite(null);
-						this.HiliteHandle(obj, rank);
-						this.ChangeMouseCursor(MouseCursorType.Finger);
+						this.ChangeMouseCursor(MouseCursorType.Arrow);
 					}
 					else
 					{
-						obj = hiliteObj;
-						this.Hilite(obj);
-						if ( obj == null )
+						if ( obj.IsSelected )
 						{
-							this.ChangeMouseCursor(MouseCursorType.Arrow);
+							this.ChangeMouseCursor(MouseCursorType.Finger);
 						}
 						else
 						{
-							if ( obj.IsSelected )
-							{
-								this.ChangeMouseCursor(MouseCursorType.Finger);
-							}
-							else
-							{
-								this.ChangeMouseCursor(MouseCursorType.Arrow);
-							}
+							this.ChangeMouseCursor(MouseCursorType.Arrow);
 						}
 					}
 				}
@@ -635,7 +813,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					Rectangle rSelect = this.selector.Data.Rectangle;
+					Rectangle rSelect = this.selector.Rectangle;
 					this.Select(rSelect, this.drawingContext.IsShift, this.partialSelect);
 				}
 			}
@@ -643,6 +821,7 @@ namespace Epsitec.Common.Document
 			{
 				this.document.Modifier.GroupUpdateChildrens();
 				this.document.Modifier.GroupUpdateParents();
+				this.MoveGlobalEnding();
 			}
 			else if ( this.moveObject != null )
 			{
@@ -651,6 +830,7 @@ namespace Epsitec.Common.Document
 
 				this.moveObject = null;
 				this.moveHandle = -1;
+				//?this.UpdateSelector();
 			}
 			else if ( this.cellObject != null )
 			{
@@ -741,7 +921,7 @@ namespace Epsitec.Common.Document
 		protected void ZoomMouseUp(Point mouse)
 		{
 			this.zoomer.Visible = false;
-			Rectangle rect = this.zoomer.Data.Rectangle;
+			Rectangle rect = this.zoomer.Rectangle;
 
 			if ( this.drawingContext.IsShift || this.drawingContext.IsCtrl )
 			{
@@ -960,6 +1140,26 @@ namespace Epsitec.Common.Document
 			obj.MoveHandleProcess(rank, pos, this.drawingContext);
 		}
 
+		// Mode de sélection.
+		public SelectorType SelectorType
+		{
+			get
+			{
+				return this.selector.TypeChoice;
+			}
+
+			set
+			{
+				using ( this.document.Modifier.OpletQueueBeginAction() )
+				{
+					this.selector.TypeChoice = value;
+					this.UpdateSelector();
+					this.document.Notifier.NotifySelectionChanged();
+					this.document.Modifier.OpletQueueValidateAction();
+				}
+			}
+		}
+
 		// Mode de sélection partiel (objets élastiques).
 		public bool PartialSelect
 		{
@@ -978,37 +1178,45 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Mode de sélelection global (avec le Selector).
-		public bool GlobalSelect
+		// Met à jour le selector en fonction des objets sélectionnés.
+		public void UpdateSelector()
 		{
-			get
+			this.UpdateSelector(this.document.Modifier.SelectedBbox);
+		}
+
+		public void UpdateSelector(Rectangle rect)
+		{
+			if ( this.document.Modifier.TotalSelected == 0 )
 			{
-				return this.globalSelect;
+				this.selector.Visible = false;
+				this.selector.Handles = false;
 			}
-
-			set
+			else
 			{
-				using ( this.document.Modifier.OpletQueueBeginAction() )
+				SelectorType st = this.selector.TypeChoice;
+				if ( st == SelectorType.Auto )
 				{
-					this.globalSelect = value;
-
-					if ( this.globalSelect )
+					if ( this.document.Modifier.TotalSelected == 1 )
 					{
-						this.selector.Initialize(this.document.Modifier.SelectedBbox);
+						st = SelectorType.Individual;
 					}
 					else
 					{
-						this.selector.Visible = false;
-						this.selector.Handles = false;
+						st = SelectorType.Zoomer;
 					}
+				}
 
-					if ( this.document.Modifier.TotalSelected > 0 )
-					{
-						this.GlobalSelectUpdate(this.globalSelect);
-					}
-
-					this.document.Notifier.NotifySelectionChanged();
-					this.document.Modifier.OpletQueueValidateAction();
+				if ( st == SelectorType.Individual )
+				{
+					this.selector.Visible = false;
+					this.selector.Handles = false;
+					this.GlobalSelectUpdate(false);
+				}
+				else
+				{
+					this.selector.TypeInUse = st;
+					this.selector.Initialize(rect);
+					this.GlobalSelectUpdate(true);
 				}
 			}
 		}
@@ -1082,21 +1290,17 @@ namespace Epsitec.Common.Document
 
 			if ( this.document.Modifier.TotalSelected == 0 )
 			{
-				this.globalSelect = false;
 				this.selector.Visible = false;
 				this.selector.Handles = false;
 			}
 			else
 			{
 				Rectangle bbox = this.document.Modifier.SelectedBbox;
-				if ( !rect.Contains(bbox) )
+				if ( !rect.Contains(bbox) && !partial )
 				{
 					rect.MergeWith(bbox);
 				}
-
-				this.globalSelect = true;
-				this.selector.Initialize(rect);
-				this.GlobalSelectUpdate(true);
+				this.UpdateSelector(rect);
 			}
 		}
 
@@ -1123,6 +1327,8 @@ namespace Epsitec.Common.Document
 		// Début du déplacement global de tous les objets sélectionnés.
 		public void MoveGlobalStarting()
 		{
+			this.selector.FinalToInitialData();
+
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
 			{
@@ -1131,13 +1337,23 @@ namespace Epsitec.Common.Document
 		}
 
 		// Effectue le déplacement global de tous les objets sélectionnés.
-		public void MoveGlobalProcess(SelectorData initial, SelectorData final)
+		public void MoveGlobalProcess(Selector selector)
 		{
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Deep(layer, true) )
 			{
-				obj.MoveGlobalProcess(initial, final);
+				obj.MoveGlobalProcess(selector);
 			}
+		}
+
+		// Termine le déplacement global de tous les objets sélectionnés.
+		public void MoveGlobalEnding()
+		{
+			if ( this.selector.TypeInUse != SelectorType.Stretcher )  return;
+
+			this.document.Notifier.NotifyArea(this.selector.Rectangle);
+			this.selector.Initialize(this.document.Modifier.SelectedBbox);
+			this.document.Notifier.NotifyArea(this.selector.Rectangle);
 		}
 
 		// Dessine les poignées de tous les objets.
@@ -1180,7 +1396,6 @@ namespace Epsitec.Common.Document
 				this.MenuAddItem(list, "Deselect",     "manifest:Epsitec.App.DocumentEditor.Images.Deselect.icon",     "Désélectionner tout");
 				this.MenuAddItem(list, "SelectAll",    "manifest:Epsitec.App.DocumentEditor.Images.SelectAll.icon",    "Tout sélectionner");
 				this.MenuAddItem(list, "SelectInvert", "manifest:Epsitec.App.DocumentEditor.Images.SelectInvert.icon", "Inverser la sélection");
-				this.MenuAddItem(list, "SelectGlobal", "manifest:Epsitec.App.DocumentEditor.Images.SelectGlobal.icon", "Changer le mode de sélection");
 				this.MenuAddSep(list);
 				this.MenuAddItem(list, "HideSel",      "manifest:Epsitec.App.DocumentEditor.Images.HideSel.icon",      "Cacher la sélection");
 				this.MenuAddItem(list, "HideRest",     "manifest:Epsitec.App.DocumentEditor.Images.HideRest.icon",     "Cacher le reste");
@@ -1207,22 +1422,30 @@ namespace Epsitec.Common.Document
 					this.contextMenuRank = -1;
 				}
 
-				this.MenuAddItem(list, "Delete",       "manifest:Epsitec.App.DocumentEditor.Images.Delete.icon",       "Supprimer");
-				this.MenuAddItem(list, "Duplicate",    "manifest:Epsitec.App.DocumentEditor.Images.Duplicate.icon",    "Dupliquer");
-				this.MenuAddItem(list, "OrderUp",      "manifest:Epsitec.App.DocumentEditor.Images.OrderUp.icon",      "Dessus");
-				this.MenuAddItem(list, "OrderDown",    "manifest:Epsitec.App.DocumentEditor.Images.OrderDown.icon",    "Dessous");
-				this.MenuAddItem(list, "Merge",        "manifest:Epsitec.App.DocumentEditor.Images.Merge.icon",        "Fusionner");
-				this.MenuAddItem(list, "Group",        "manifest:Epsitec.App.DocumentEditor.Images.Group.icon",        "Associer");
-				this.MenuAddItem(list, "Ungroup",      "manifest:Epsitec.App.DocumentEditor.Images.Ungroup.icon",      "Dissocier");
-				this.MenuAddItem(list, "Inside",       "manifest:Epsitec.App.DocumentEditor.Images.Inside.icon",       "Entrer dans groupe");
-				this.MenuAddItem(list, "Outside",      "manifest:Epsitec.App.DocumentEditor.Images.Outside.icon",      "Sortir du groupe");
+				this.MenuAddItem(list, "Delete",    "manifest:Epsitec.App.DocumentEditor.Images.Delete.icon",    "Supprimer");
+				this.MenuAddItem(list, "Duplicate", "manifest:Epsitec.App.DocumentEditor.Images.Duplicate.icon", "Dupliquer");
+				this.MenuAddItem(list, "OrderUp",   "manifest:Epsitec.App.DocumentEditor.Images.OrderUp.icon",   "Dessus");
+				this.MenuAddItem(list, "OrderDown", "manifest:Epsitec.App.DocumentEditor.Images.OrderDown.icon", "Dessous");
+				this.MenuAddItem(list, "Merge",     "manifest:Epsitec.App.DocumentEditor.Images.Merge.icon",     "Fusionner");
+				this.MenuAddItem(list, "Group",     "manifest:Epsitec.App.DocumentEditor.Images.Group.icon",     "Associer");
+				this.MenuAddItem(list, "Ungroup",   "manifest:Epsitec.App.DocumentEditor.Images.Ungroup.icon",   "Dissocier");
+				this.MenuAddItem(list, "Inside",    "manifest:Epsitec.App.DocumentEditor.Images.Inside.icon",    "Entrer dans groupe");
+				this.MenuAddItem(list, "Outside",   "manifest:Epsitec.App.DocumentEditor.Images.Outside.icon",   "Sortir du groupe");
 				this.MenuAddSep(list);
-				this.MenuAddItem(list, "SelectGlobal", "manifest:Epsitec.App.DocumentEditor.Images.SelectGlobal.icon", "Changer le mode de sélection");
-				this.MenuAddItem(list, "ZoomSel",      "manifest:Epsitec.App.DocumentEditor.Images.ZoomSel.icon",      "Zoom sélection");
+				this.MenuAddItem(list, "ZoomSel",   "manifest:Epsitec.App.DocumentEditor.Images.ZoomSel.icon",   "Zoom sélection");
+				if ( this.document.Type != DocumentType.Pictogram )
+				{
+					this.MenuAddItem(list, "ZoomSelWidth", "manifest:Epsitec.App.DocumentEditor.Images.ZoomSelWidth.icon", "Zoom largeur sélection");
+				}
 				this.MenuAddSep(list);
-				this.MenuAddItem(list, "HideSel",      "manifest:Epsitec.App.DocumentEditor.Images.HideSel.icon",      "Cacher la sélection");
-				this.MenuAddItem(list, "HideRest",     "manifest:Epsitec.App.DocumentEditor.Images.HideRest.icon",     "Cacher le reste");
-				this.MenuAddItem(list, "HideCancel",   "manifest:Epsitec.App.DocumentEditor.Images.HideCancel.icon",   "Montrer tout");
+				this.MenuAddItem(list, "HideSel",    "manifest:Epsitec.App.DocumentEditor.Images.HideSel.icon",    "Cacher la sélection");
+				this.MenuAddItem(list, "HideRest",   "manifest:Epsitec.App.DocumentEditor.Images.HideRest.icon",   "Cacher le reste");
+				this.MenuAddItem(list, "HideCancel", "manifest:Epsitec.App.DocumentEditor.Images.HideCancel.icon", "Montrer tout");
+				this.MenuAddSep(list);
+				this.MenuAddItem(list, "Combine",   "manifest:Epsitec.App.DocumentEditor.Images.Combine.icon",   "Combiner");
+				this.MenuAddItem(list, "Uncombine", "manifest:Epsitec.App.DocumentEditor.Images.Uncombine.icon", "Scinder");
+				this.MenuAddItem(list, "ToBezier",  "manifest:Epsitec.App.DocumentEditor.Images.ToBezier.icon",  "Convertir en courbes");
+				this.MenuAddItem(list, "Fragment",  "manifest:Epsitec.App.DocumentEditor.Images.Fragment.icon",  "Fragmenter");
 
 				if ( nbSel == 1 && this.contextMenuObject != null )
 				{
@@ -1344,6 +1567,10 @@ namespace Epsitec.Common.Document
 					rulerRect.Width = System.Math.Max(p2.X-p1.X, this.textRuler.MinimalWidth);
 					rulerRect.Height = this.textRuler.DefaultHeight;
 					rulerRect.RoundFloor();
+					if ( rulerRect.Top > this.Height )
+					{
+						rulerRect.Offset(0, this.Height-rulerRect.Top);
+					}
 					this.textRuler.Bounds = rulerRect;
 
 					if ( p2.X-p1.X < this.textRuler.MinimalWidth )
@@ -1646,6 +1873,11 @@ namespace Epsitec.Common.Document
 					graphics.RenderSolid(this.BackColor);
 				}
 			}
+			else
+			{
+				graphics.AddFilledRectangle(clipRect);
+				graphics.RenderSolid(Color.FromBrightness(0.95));
+			}
 
 			double initialWidth = graphics.LineWidth;
 			Transform save = graphics.Transform;
@@ -1777,9 +2009,9 @@ namespace Epsitec.Common.Document
 		protected DrawingContext				drawingContext;
 		protected Selector						selector;
 		protected Selector						zoomer;
-		protected bool							globalSelect;
 		protected bool							partialSelect;
 		protected Rectangle						redrawArea;
+		protected Point							mousePosWidget;
 		protected Point							mousePos;
 		protected bool							mouseDown;
 		protected Point							handMouseStart;
@@ -1796,6 +2028,7 @@ namespace Epsitec.Common.Document
 		protected int							createRank = -1;
 		protected bool							debugDirty;
 		protected TextRuler						textRuler;
+		protected Timer							autoScrollTimer;
 
 		protected VMenu							contextMenu;
 		protected Objects.Abstract				contextMenuObject;

@@ -12,6 +12,8 @@ namespace Epsitec.Common.Document.Containers
 	{
 		public Principal(Document document) : base(document)
 		{
+			this.CreateSelectorToolBar();
+
 			this.detailButton = new CheckButton();
 			this.detailButton.Text = "Détails";
 			this.detailButton.Dock = DockStyle.Top;
@@ -40,6 +42,46 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.Parent = this;
 		}
 		
+		// Crée la toolbar pour les sélections.
+		protected void CreateSelectorToolBar()
+		{
+			this.selectorToolBar = new HToolBar(this);
+			this.selectorToolBar.Dock = DockStyle.Top;
+			this.selectorToolBar.DockMargins = new Margins(0, 0, 0, 5);
+
+			this.selectorAuto = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorAuto.icon");
+			this.selectorAuto.Command = "SelectorAuto";
+			this.selectorToolBar.Items.Add(this.selectorAuto);
+			ToolTip.Default.SetToolTip(this.selectorAuto, "Sélection automatique");
+			
+			this.selectorIndividual = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorIndividual.icon");
+			this.selectorIndividual.Command = "SelectorIndividual";
+			this.selectorToolBar.Items.Add(this.selectorIndividual);
+			ToolTip.Default.SetToolTip(this.selectorIndividual, "Sélectionne les objets individuellement");
+			
+			this.selectorZoom = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorZoom.icon");
+			this.selectorZoom.Command = "SelectorZoom";
+			this.selectorToolBar.Items.Add(this.selectorZoom);
+			ToolTip.Default.SetToolTip(this.selectorZoom, "Déplacement, zoom et rotation");
+			
+			this.selectorStretch = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorStretch.icon");
+			this.selectorStretch.Command = "SelectorStretch";
+			this.selectorToolBar.Items.Add(this.selectorStretch);
+			ToolTip.Default.SetToolTip(this.selectorStretch, "Déformation");
+
+			this.selectorToolBar.Items.Add(new IconSeparator());
+			
+			this.selectorTotal = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectTotal.icon");
+			this.selectorTotal.Command = "SelectTotal";
+			this.selectorToolBar.Items.Add(this.selectorTotal);
+			ToolTip.Default.SetToolTip(this.selectorTotal, "Sélection totale requise");
+			
+			this.selectorPartial = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectPartial.icon");
+			this.selectorPartial.Command = "SelectPartial";
+			this.selectorToolBar.Items.Add(this.selectorPartial);
+			ToolTip.Default.SetToolTip(this.selectorPartial, "Sélection partielle autorisée");
+		}
+
 
 		// Met en évidence l'objet survolé par la souris.
 		public override void Hilite(Objects.Abstract hiliteObject)
@@ -71,6 +113,27 @@ namespace Epsitec.Common.Document.Containers
 		{
 			Viewer viewer = this.document.Modifier.ActiveViewer;
 			DrawingContext context = viewer.DrawingContext;
+
+			if ( this.document.Modifier.Tool == "Select" ||
+				 this.document.Modifier.Tool == "Global" )
+			{
+				this.selectorToolBar.Show();
+
+#if false
+				SelectorType sType = viewer.SelectorType;
+				this.selectorAuto.ActiveState =       (sType == SelectorType.Auto      ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectorIndividual.ActiveState = (sType == SelectorType.Individual) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectorZoom.ActiveState =       (sType == SelectorType.Zoomer    ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectorStretch.ActiveState =    (sType == SelectorType.Stretcher ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
+				this.selectorTotal.ActiveState   = !viewer.PartialSelect ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectorPartial.ActiveState =  viewer.PartialSelect ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+#endif
+			}
+			else
+			{
+				this.selectorToolBar.Hide();
+			}
 
 			this.detailButton.Parent = null;
 
@@ -265,6 +328,13 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
+		protected HToolBar					selectorToolBar;
+		protected IconButton				selectorAuto;
+		protected IconButton				selectorIndividual;
+		protected IconButton				selectorZoom;
+		protected IconButton				selectorStretch;
+		protected IconButton				selectorTotal;
+		protected IconButton				selectorPartial;
 		protected CheckButton				detailButton;
 		protected Scrollable				scrollable;
 		protected ColorSelector				colorSelector;

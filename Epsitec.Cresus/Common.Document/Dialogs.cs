@@ -50,9 +50,10 @@ namespace Epsitec.Common.Document
 				this.windowSettings = window;
 
 				Widget parent, container;
+				Widget book = this.windowSettings.Root.FindChild("BookDocument");
 
 				// Onglet Format:
-				parent = this.windowSettings.Root.FindChild("Format");
+				parent = book.FindChild("Format");
 				container = new Widget(parent);
 				container.Name = "Container";
 				container.Dock = DockStyle.Fill;
@@ -73,7 +74,7 @@ namespace Epsitec.Common.Document
 				}
 
 				// Onglet Grid:
-				parent = this.windowSettings.Root.FindChild("Grid");
+				parent = book.FindChild("Grid");
 				container = new Widget(parent);
 				container.Name = "Container";
 				container.Dock = DockStyle.Fill;
@@ -88,7 +89,7 @@ namespace Epsitec.Common.Document
 				this.CreatePoint(container, "GridOffset");
 
 				// Onglet Guides:
-				parent = this.windowSettings.Root.FindChild("Guides");
+				parent = book.FindChild("Guides");
 				container = new Widget(parent);
 				container.Name = "Container";
 				container.Dock = DockStyle.Fill;
@@ -105,7 +106,7 @@ namespace Epsitec.Common.Document
 				this.containerGuides.Parent = container;
 
 				// Onglet Print:
-				parent = this.windowSettings.Root.FindChild("Print");
+				parent = book.FindChild("Print");
 				container = new Widget(parent);
 				container.Name = "Container";
 				container.Dock = DockStyle.Fill;
@@ -119,7 +120,7 @@ namespace Epsitec.Common.Document
 				this.CreateDouble(container, "PrintDpi");
 
 				// Onglet Misc:
-				parent = this.windowSettings.Root.FindChild("Misc");
+				parent = book.FindChild("Misc");
 				container = new Widget(parent);
 				container.Name = "Container";
 				container.Dock = DockStyle.Fill;
@@ -842,7 +843,8 @@ namespace Epsitec.Common.Document
 
 		protected void DeleteContainer(string name)
 		{
-			Widget container = this.windowSettings.Root.FindChild(name);
+			Widget parent = this.windowSettings.Root.FindChild("BookDocument");
+			Widget container = parent.FindChild(name);
 			if ( container != null )
 			{
 				Widget page = container.FindChild("Container");

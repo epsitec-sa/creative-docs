@@ -21,7 +21,7 @@ namespace Epsitec.Common.Document.Settings
 			switch ( this.name )
 			{
 				case "PrintDpi":
-					this.text = "Résolution";
+					this.text = "Résolution (dpi)";
 					this.integer = true;
 					this.factorMinValue = 150.0;
 					this.factorMaxValue = 600.0;

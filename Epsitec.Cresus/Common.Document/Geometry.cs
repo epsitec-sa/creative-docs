@@ -223,7 +223,7 @@ namespace Epsitec.Common.Document
 			return bbox;
 		}
 
-		// Ajoute un courbe de Bézier dans la bbox.
+		// Ajoute une courbe de Bézier dans la bbox.
 		protected static void BoundingBoxAddBezier(ref Rectangle bbox, Point p1, Point s1, Point s2, Point p2)
 		{
 			double step = 1.0/10.0;  // nombre arbitraire de 10 subdivisions

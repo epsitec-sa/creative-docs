@@ -102,9 +102,9 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Déplace globalement l'objet.
-		public override void MoveGlobalProcess(SelectorData initial, SelectorData final)
+		public override void MoveGlobalProcess(Selector selector)
 		{
-			base.MoveGlobalProcess(initial, final);
+			base.MoveGlobalProcess(selector);
 			this.HandlePropertiesUpdatePosition();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -327,6 +327,39 @@ namespace Epsitec.Common.Document.Objects
 
 				this.PropertyLineMode.PaintOutline(port, drawingContext, pathLine);
 			}
+		}
+
+
+		// Retourne le chemin géométrique de l'objet.
+		public override Path GetPath()
+		{
+			Path pathStart;  bool outlineStart, surfaceStart;
+			Path pathEnd;    bool outlineEnd,   surfaceEnd;
+			Path pathLine;
+			this.PathBuild(null,
+						   out pathStart, out outlineStart, out surfaceStart,
+						   out pathEnd,   out outlineEnd,   out surfaceEnd,
+						   out pathLine);
+
+			if ( outlineStart || surfaceStart )
+			{
+				pathLine.Append(pathStart);
+			}
+
+			if ( outlineEnd || surfaceEnd )
+			{
+				pathLine.Append(pathEnd);
+			}
+
+			return pathLine;
+		}
+
+		// Crée une ligne à partir de 2 points.
+		public void CreateFromPoints(Point p1, Point p2)
+		{
+			this.HandleAdd(p1, HandleType.Primary);
+			this.HandleAdd(p2, HandleType.Primary);
+			this.dirtyBbox = true;
 		}
 
 
