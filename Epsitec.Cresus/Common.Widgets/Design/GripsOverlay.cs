@@ -319,16 +319,16 @@ namespace Epsitec.Common.Widgets.Design
 				
 				this.CreateGrips ();
 				
-				this.target_widget.PreparePaint  += new EventHandler (this.HandleTargetPreparePaint);
-				this.target_widget.LayoutChanged += new EventHandler (this.HandleTargetLayoutChanged);
+				this.target_widget.PreparePaint  += new Support.EventHandler (this.HandleTargetPreparePaint);
+				this.target_widget.LayoutChanged += new Support.EventHandler (this.HandleTargetLayoutChanged);
 			}
 			
 			public void Dispose()
 			{
 				this.DestroyGrips ();
 				
-				this.target_widget.LayoutChanged -= new EventHandler (this.HandleTargetLayoutChanged);
-				this.target_widget.PreparePaint  -= new EventHandler (this.HandleTargetPreparePaint);
+				this.target_widget.LayoutChanged -= new Support.EventHandler (this.HandleTargetLayoutChanged);
+				this.target_widget.PreparePaint  -= new Support.EventHandler (this.HandleTargetPreparePaint);
 			}
 			
 			
@@ -402,8 +402,8 @@ namespace Epsitec.Common.Widgets.Design
 					grip.GripType   = GripsOverlay.grip_map[i].type;
 					grip.Index      = i;
 					grip.Dragging  += new DragEventHandler (this.HandleGripsDragging);
-					grip.DragBegin += new EventHandler (this.HandleGripsDragBegin);
-					grip.DragEnd   += new EventHandler (this.HandleGripsDragEnd);
+					grip.DragBegin += new Support.EventHandler (this.HandleGripsDragBegin);
+					grip.DragEnd   += new Support.EventHandler (this.HandleGripsDragEnd);
 					grip.Widget     = this.target_widget;
 				
 					this.grips[i] = grip;
@@ -421,8 +421,8 @@ namespace Epsitec.Common.Widgets.Design
 					System.Diagnostics.Debug.Assert (grip.Widget == this.target_widget);
 					
 					grip.Dragging  -= new DragEventHandler (this.HandleGripsDragging);
-					grip.DragBegin -= new EventHandler (this.HandleGripsDragBegin);
-					grip.DragEnd   -= new EventHandler (this.HandleGripsDragEnd);
+					grip.DragBegin -= new Support.EventHandler (this.HandleGripsDragBegin);
+					grip.DragEnd   -= new Support.EventHandler (this.HandleGripsDragEnd);
 					grip.Dispose ();
 				}
 			}
@@ -677,8 +677,8 @@ namespace Epsitec.Common.Widgets.Design
 		public event SelectionEventHandler		DeselectingTarget;
 		public event SelectionEventHandler		DeselectedTarget;
 		
-		public event EventHandler				DragBegin;
-		public event EventHandler				DragEnd;
+		public event Support.EventHandler		DragBegin;
+		public event Support.EventHandler		DragEnd;
 		public event DragEventHandler			Dragging;
 		
 		protected static GripMap[]				grip_map;
