@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.UserInterface
 			
 			if (data_record == null)
 			{
-				throw new BinderException (string.Format ("Cannot bind object {0} to data {1}", obj.GetType ().Name, binding));
+				throw new BinderException (string.Format ("Cannot bind object {0} to data '{1}'", obj.GetType ().Name, binding));
 			}
 			
 			DataLayer.DataType data_type = data_record.DataType;
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.UserInterface
 			
 			if (binder == null)
 			{
-				throw new BinderException (string.Format ("No binder for data {1} on object {0}", obj.GetType ().Name, binding));
+				throw new BinderException (string.Format ("No binder for data '{1}' on object {0}", obj.GetType ().Name, binding));
 			}
 			
 			//	TODO: créer le lien au moyen du binder

@@ -12,6 +12,7 @@
    <field name='cmd'>on</field>
    <field name='size'>200;*</field>
    <field name='pos'>10;210</field>
+   <field name='binding'>a</field>
   </bundle>
   <bundle>
    <field name='class'>Button</field>

@@ -5,6 +5,5 @@ namespace Epsitec.Cresus.UserInterface
 {
 	public interface IBinder
 	{
-		string Name { get; }
 	}
 }

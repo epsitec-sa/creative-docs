@@ -25,7 +25,6 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			Assertion.AssertEquals (false, test.IsTable);
 			
 			Assertion.AssertNotNull (test.DataType);
-			Assertion.AssertEquals (DataClass.Complex, test.DataType.DataClass);
 		}
 		
 		[Test] public void CheckDataTable()
@@ -37,16 +36,15 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			Assertion.AssertEquals (true,  test.IsTable);
 			
 			Assertion.AssertNotNull (test.DataType);
-			Assertion.AssertEquals (DataClass.Complex, test.DataType.DataClass);
 		}
 		
 		[Test] public void CheckCreateSet()
 		{
 			DataSet test = new DataSet ();
 			
-			test.AddData ("a", 1);
-			test.AddData ("b", "hello");
-			test.AddData ("c", 10.5);
+			test.AddData ("a", 1,		new DataType ("numeric"));
+			test.AddData ("b", "hello", new DataType ("text"));
+			test.AddData ("c", 10.5,	new DataType ("numeric"));
 			
 			Assertion.AssertNotNull (test.FindRecord ("a"));
 			Assertion.AssertNotNull (test.FindRecord ("b"));
@@ -63,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			test.RemoveData ("b");
 			test.RemoveData ("c");
 			
-			test.AddData ("b", "bye");
+			test.AddData ("b", "bye", new DataType ("text"));
 			
 			Assertion.AssertNotNull (test.FindRecord ("b"));
 			Assertion.AssertNull (test.FindRecord ("c"));
@@ -76,9 +74,9 @@ namespace Epsitec.Cresus.DataLayer.Tests
 		{
 			DataSet test = new DataSet ();
 			
-			test.AddData ("a", 1);
-			test.AddData ("b", "hello");
-			test.AddData ("c", 10.5);
+			test.AddData ("a", 1,		new DataType ("numeric"));
+			test.AddData ("b", "hello", new DataType ("text"));
+			test.AddData ("c", 10.5,	new DataType ("numeric"));
 			
 			test.ValidateChanges ();
 			
@@ -97,8 +95,8 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			test.RemoveData ("b");
 			test.RemoveData ("c");
 			
-			test.AddData ("b", "bye");
-			test.AddData ("d", true);
+			test.AddData ("b", "bye", new DataType ("text"));
+			test.AddData ("d", true,  new DataType ("boolean"));
 			
 			Assertion.AssertNotNull (test.FindRecord ("b"));
 			Assertion.AssertNull (test.FindRecord ("c"));
@@ -120,9 +118,9 @@ namespace Epsitec.Cresus.DataLayer.Tests
 		{
 			DataSet test = new DataSet ();
 			
-			test.AddData ("a", 1);
-			test.AddData ("b", "hello");
-			test.AddData ("c", 10.5);
+			test.AddData ("a", 1,		new DataType ("numeric"));
+			test.AddData ("b", "hello", new DataType ("text"));
+			test.AddData ("c", 10.5,	new DataType ("numeric"));
 			
 			test.ValidateChanges ();
 			

@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.UserInterface
 		
 		protected static void Initialise()
 		{
-			System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadWithPartialName ("Common.Support.Implementation");
+			System.Reflection.Assembly assembly = typeof (BinderFactory).Assembly;
 			System.Type[] types_in_assembly = assembly.GetTypes ();
 			
 			foreach (System.Type type in types_in_assembly)
@@ -36,18 +36,18 @@ namespace Epsitec.Cresus.UserInterface
 		}
 		
 		
-		public static void RegisterBinder(IBinder binder)
+		public static void RegisterBinder(string name, IBinder binder)
 		{
 			System.Diagnostics.Debug.Assert (binder != null);
-			System.Diagnostics.Debug.Assert (binder.Name != null);
-			System.Diagnostics.Debug.Assert (BinderFactory.binders.ContainsKey (binder.Name) == false);
+			System.Diagnostics.Debug.Assert (name != null);
 			
-			BinderFactory.binders[binder.Name] = binder;
+			BinderFactory.binders[name] = binder;
 		}
 		
 		
 		public static IBinder FindBinder(string name)
 		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("Searching a binder for {0}...", name));
 			System.Diagnostics.Debug.Assert (name != null);
 			return BinderFactory.binders[name] as IBinder;
 		}
