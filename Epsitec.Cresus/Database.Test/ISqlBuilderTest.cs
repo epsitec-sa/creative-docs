@@ -159,8 +159,8 @@ namespace Epsitec.Cresus.Database
 	
 			SqlColumn sql_col_1 = new SqlColumn ("Cr_ID2", DbRawType.Int32);
 			SqlColumn sql_col_2 = new SqlColumn ("Cr_REV2", DbRawType.Int32);
-			SqlColumn sql_col_3 = new SqlColumn ("StringDynamic", DbRawType.String, 100, true, Nullable.Yes);
-			SqlColumn sql_col_4 = new SqlColumn ("StringFixed",   DbRawType.String,  50, false, Nullable.Yes);
+			SqlColumn sql_col_3 = new SqlColumn ("StringDynamic2", DbRawType.String, 100, true, Nullable.Yes);
+			SqlColumn sql_col_4 = new SqlColumn ("StringFixed2",   DbRawType.String,  50, false, Nullable.Yes);
 			
 			SqlColumn[] columns = { sql_col_1, sql_col_2, sql_col_3, sql_col_4 };
 			sql_builder.RemoveTableColumns ("FbTestTable", columns);

@@ -44,6 +44,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					System.Diagnostics.Debug.Assert (field.Type == SqlFieldType.Constant);
 					
 					fb_param.Value = field.AsConstant;
+					fb_param.SourceColumn = field.Alias;
 					
 					this.command_cache.Parameters.Add (fb_param);
 				}
