@@ -6,13 +6,14 @@ namespace Epsitec.Common.Document
 	/// <summary>
 	/// La classe Printer implémente l'impression d'un document.
 	/// </summary>
+	/// 
 	public class Printer
 	{
 		public Printer(Document document)
 		{
 			this.document = document;
 
-			this.ImageFormat = ImageFormat.Unknown;
+			this.imageFormat = ImageFormat.Unknown;
 			this.imageDpi = 100;
 			this.imageCompression = ImageCompression.None;
 			this.imageDepth = 24;
@@ -240,44 +241,83 @@ namespace Epsitec.Common.Document
 			System.Diagnostics.Debug.Assert(pageNumber >= 0);
 			System.Diagnostics.Debug.Assert(pageNumber < this.document.GetObjects.Count);
 
+			Point offset = new Point(0, 0);
+			if ( !this.PrintInfo.AutoZoom )
+			{
+				Size paperSize = port.PageSettings.PaperSize.Size;
+				double pw = paperSize.Width*10.0;
+				double ph = paperSize.Height*10.0;
+				if ( port.PageSettings.Landscape )
+				{
+					Misc.Swap(ref pw, ref ph);
+				}
+
+				if ( this.PrintInfo.Centring == Settings.PrintCentring.BottomLeft ||
+					 this.PrintInfo.Centring == Settings.PrintCentring.MiddleLeft ||
+					 this.PrintInfo.Centring == Settings.PrintCentring.TopLeft    )
+				{
+					offset.X = this.PrintInfo.Margins;
+				}
+
+				if ( this.PrintInfo.Centring == Settings.PrintCentring.BottomCenter ||
+					 this.PrintInfo.Centring == Settings.PrintCentring.MiddleCenter ||
+					 this.PrintInfo.Centring == Settings.PrintCentring.TopCenter    )
+				{
+					offset.X = (pw-this.document.Size.Width)/2.0;
+				}
+
+				if ( this.PrintInfo.Centring == Settings.PrintCentring.BottomRight ||
+					 this.PrintInfo.Centring == Settings.PrintCentring.MiddleRight ||
+					 this.PrintInfo.Centring == Settings.PrintCentring.TopRight    )
+				{
+					offset.X = pw-this.document.Size.Width-this.PrintInfo.Margins;
+				}
+
+				if ( this.PrintInfo.Centring == Settings.PrintCentring.BottomLeft   ||
+					 this.PrintInfo.Centring == Settings.PrintCentring.BottomCenter ||
+					 this.PrintInfo.Centring == Settings.PrintCentring.BottomRight  )
+				{
+					offset.Y = this.PrintInfo.Margins;
+				}
+
+				if ( this.PrintInfo.Centring == Settings.PrintCentring.MiddleLeft   ||
+					 this.PrintInfo.Centring == Settings.PrintCentring.MiddleCenter ||
+					 this.PrintInfo.Centring == Settings.PrintCentring.MiddleRight  )
+				{
+					offset.Y = (ph-this.document.Size.Height)/2.0;
+				}
+
+				if ( this.PrintInfo.Centring == Settings.PrintCentring.TopLeft   ||
+					 this.PrintInfo.Centring == Settings.PrintCentring.TopCenter ||
+					 this.PrintInfo.Centring == Settings.PrintCentring.TopRight  )
+				{
+					offset.Y = ph-this.document.Size.Height-this.PrintInfo.Margins;
+				}
+			}
+
 			if ( this.PrintInfo.ForceSimply )
 			{
-				this.PrintSimplyGeometry(port, drawingContext, pageNumber, false);
+				this.PrintSimplyGeometry(port, drawingContext, pageNumber, offset);
 			}
 			else if ( this.PrintInfo.ForceComplex )
 			{
 				Rectangle clipRect = new Rectangle(0, 0, this.document.Size.Width, this.document.Size.Height);
-				this.PrintComplexGeometry(port, drawingContext, pageNumber, clipRect);
+				this.PrintBitmapGeometry(port, drawingContext, pageNumber, offset, clipRect, null);
 			}
 			else
 			{
-#if true
-				this.PrintSimplyGeometry(port, drawingContext, pageNumber, true);
-
 				System.Collections.ArrayList areas = this.ComputeAreas(pageNumber);
-				foreach ( PrintingArea area in areas )
-				{
-					if ( area.IsComplex )
-					{
-						this.PrintComplexGeometry(port, drawingContext, pageNumber, area.Area);
-					}
-				}
+				this.PrintMixGeometry(port, drawingContext, pageNumber, offset, areas);
 
 				if ( this.PrintInfo.DebugArea )
 				{
-					this.PrintAreas(port, drawingContext, areas);
+					this.PrintAreas(port, drawingContext, areas, offset);
 				}
-#else
-				if ( this.IsComplexPrinting(pageNumber) )
-				{
-					Rectangle clipRect = new Rectangle(0, 0, this.document.Size.Width, this.document.Size.Height);
-					this.PrintComplexGeometry(port, drawingContext, pageNumber, clipRect);
-				}
-				else
-				{
-					this.PrintSimplyGeometry(port, drawingContext, pageNumber, false);
-				}
-#endif
+			}
+
+			if ( this.PrintInfo.Target )
+			{
+				this.PrintTarget(port, drawingContext, offset);
 			}
 		}
 
@@ -286,6 +326,7 @@ namespace Epsitec.Common.Document
 		protected System.Collections.ArrayList ComputeAreas(int pageNumber)
 		{
 			System.Collections.ArrayList areas = new System.Collections.ArrayList();
+			int rank = 0;
 			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
 			foreach ( Objects.Layer layer in this.document.Flat(page) )
 			{
@@ -295,20 +336,23 @@ namespace Epsitec.Common.Document
 				{
 					if ( obj.IsHide )  continue;  // objet caché ?
 					if ( !this.PrintInfo.PerfectJoin && !obj.IsComplexPrinting )  continue;
+					rank ++;
+
 					int i = PrintingArea.Intersect(areas, obj.BoundingBox);
 					if ( i == -1 )
 					{
-						PrintingArea area = new PrintingArea(obj);
+						PrintingArea area = new PrintingArea(obj, rank);
 						areas.Add(area);
 					}
 					else
 					{
 						PrintingArea area = areas[i] as PrintingArea;
-						area.Append(obj);
+						area.Append(obj, rank);
 					}
 				}
 			}
 
+			// Fusionne toutes les zones qui se chevauchent.
 			for ( int i=0 ; i<areas.Count ; i++ )
 			{
 				PrintingArea area1 = areas[i] as PrintingArea;
@@ -332,30 +376,57 @@ namespace Epsitec.Common.Document
 				while ( merge );
 			}
 
+			// Supprime toutes les zones ne contenant que des objets simples.
+			if ( this.PrintInfo.PerfectJoin )
+			{
+				for ( int i=0 ; i<areas.Count ; i++ )
+				{
+					PrintingArea area = areas[i] as PrintingArea;
+					if ( !area.IsComplex )
+					{
+						areas.RemoveAt(i);
+						i --;
+					}
+				}
+			}
+
 			return areas;
 		}
 
 		// PrintingArea représente une zone rectangulaire contenant un ou plusieurs
-		// objets. Si un seul objet de la zone nécessite le mode complexe, toute la
-		// zone est considérée comme complexe.
+		// objets complexes.
 		protected class PrintingArea
 		{
-			public PrintingArea(Objects.Abstract obj)
+			public PrintingArea(Objects.Abstract obj, int rank)
 			{
 				this.area = obj.BoundingBox;
 				this.isComplex = obj.IsComplexPrinting;
+				this.topObject = obj;
+				this.topRank = rank;
 			}
 
-			public void Append(Objects.Abstract obj)
+			public void Append(Objects.Abstract obj, int rank)
 			{
 				this.area.MergeWith(obj.BoundingBox);
 				this.isComplex |= obj.IsComplexPrinting;
+
+				if ( rank > this.topRank )
+				{
+					this.topObject = obj;
+					this.topRank = rank;
+				}
 			}
 
 			public void Append(PrintingArea area)
 			{
-				this.area.MergeWith(area.Area);
-				this.isComplex |= area.IsComplex;
+				this.area.MergeWith(area.area);
+				this.isComplex |= area.isComplex;
+
+				if ( area.topRank > this.topRank )
+				{
+					this.topObject = area.topObject;
+					this.topRank = area.topRank;
+				}
 			}
 
 			public Rectangle Area
@@ -368,6 +439,11 @@ namespace Epsitec.Common.Document
 				get { return this.isComplex; }
 			}
 
+			public Objects.Abstract TopObject
+			{
+				get { return this.topObject; }
+			}
+
 			public static int Intersect(System.Collections.ArrayList areas, Rectangle bbox)
 			{
 				for ( int i=0 ; i<areas.Count ; i++ )
@@ -378,8 +454,20 @@ namespace Epsitec.Common.Document
 				return -1;
 			}
 
-			protected Rectangle		area;
-			protected bool			isComplex;
+			public static int SearchTopObject(System.Collections.ArrayList areas, Objects.Abstract topObject)
+			{
+				for ( int i=0 ; i<areas.Count ; i++ )
+				{
+					PrintingArea area = areas[i] as PrintingArea;
+					if ( area.topObject == topObject )  return i;
+				}
+				return -1;
+			}
+
+			protected Rectangle			area;
+			protected bool				isComplex;
+			protected Objects.Abstract	topObject;
+			protected int				topRank;
 		}
 
 		// Indique si une impression complexe est nécessaire.
@@ -404,30 +492,11 @@ namespace Epsitec.Common.Document
 		protected void PrintSimplyGeometry(Printing.PrintPort port,
 										   DrawingContext drawingContext,
 										   int pageNumber,
-										   bool onlySimply)
+										   Point offset)
 		{
 			Transform initialTransform = port.Transform;
+			this.InitSimplyPort(port, offset);
 
-			double zoom = 1.0;
-			if ( this.PrintInfo.AutoZoom )
-			{
-				Size paperSize = port.PageSettings.PaperSize.Size;
-				double pw = paperSize.Width;
-				double ph = paperSize.Height;
-				if ( port.PageSettings.Landscape )
-				{
-					Misc.Swap(ref pw, ref ph);
-				}
-				double zoomH = pw / this.document.Size.Width;
-				double zoomV = ph / this.document.Size.Height;
-				zoom = System.Math.Min(zoomH, zoomV);
-			}
-			else
-			{
-				zoom = 0.1*this.PrintInfo.Zoom;
-			}
-			port.ScaleTransform(zoom, zoom, 0, 0);
-			
 			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
 			foreach ( Objects.Layer layer in this.document.Flat(page) )
 			{
@@ -440,8 +509,71 @@ namespace Epsitec.Common.Document
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
 					if ( obj.IsHide )  continue;  // objet caché ?
-					if ( onlySimply && obj.IsComplexPrinting )  continue;
 					obj.PrintGeometry(port, drawingContext);
+				}
+			}
+
+			port.Transform = initialTransform;
+		}
+
+		// Imprime la géométrie composée d'objets simples et de zones complexes.
+		protected void PrintMixGeometry(Printing.PrintPort port,
+										DrawingContext drawingContext,
+										int pageNumber,
+										Point offset,
+										System.Collections.ArrayList areas)
+		{
+			Transform initialTransform = port.Transform;
+			this.InitSimplyPort(port, offset);
+
+			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
+			foreach ( Objects.Layer layer in this.document.Flat(page) )
+			{
+				if ( layer.Print == Objects.LayerPrint.Hide )  continue;
+
+				Properties.ModColor modColor = layer.PropertyModColor;
+				drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
+				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
+
+				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
+				{
+					if ( obj.IsHide )  continue;  // objet caché ?
+
+					if ( this.PrintInfo.PerfectJoin )
+					{
+						int i = PrintingArea.SearchTopObject(areas, obj);
+						if ( i != -1 )
+						{
+							PrintingArea area = areas[i] as PrintingArea;
+
+							Transform saveTransform = port.Transform;
+							port.Transform = initialTransform;
+							this.PrintBitmapGeometry(port, drawingContext, pageNumber, offset, area.Area, area.TopObject);
+							port.Transform = saveTransform;
+						}
+						else
+						{
+							obj.PrintGeometry(port, drawingContext);
+						}
+					}
+					else
+					{
+						if ( obj.IsComplexPrinting )
+						{
+							int i = PrintingArea.SearchTopObject(areas, obj);
+							if ( i == -1 )  continue;
+							PrintingArea area = areas[i] as PrintingArea;
+
+							Transform saveTransform = port.Transform;
+							port.Transform = initialTransform;
+							this.PrintBitmapGeometry(port, drawingContext, pageNumber, offset, area.Area, area.TopObject);
+							port.Transform = saveTransform;
+						}
+						else
+						{
+							obj.PrintGeometry(port, drawingContext);
+						}
+					}
 				}
 			}
 
@@ -450,10 +582,12 @@ namespace Epsitec.Common.Document
 
 		// Imprime la géométrie complexe de tous les objets, en utilisant
 		// un bitmap intermédiaire.
-		protected void PrintComplexGeometry(Printing.PrintPort port,
-											DrawingContext drawingContext,
-											int pageNumber,
-											Rectangle clipRect)
+		protected void PrintBitmapGeometry(Printing.PrintPort port,
+										   DrawingContext drawingContext,
+										   int pageNumber,
+										   Point offset,
+										   Rectangle clipRect,
+										   Objects.Abstract topObject)
 		{
 			Transform initialTransform = port.Transform;
 
@@ -481,9 +615,10 @@ namespace Epsitec.Common.Document
 			gfx.SolidRenderer.ClearARGB(1,1,1,1);
 			gfx.Rasterizer.Gamma = this.PrintInfo.Gamma;
 
-			double zoom = dx/clipRect.Width;
+			double zoomX = dx/clipRect.Width;
+			double zoomY = dy/clipRect.Height;
 			gfx.TranslateTransform(0, dy);
-			gfx.ScaleTransform(zoom, -zoom, 0, 0);
+			gfx.ScaleTransform(zoomX, -zoomY, 0, 0);
 			gfx.TranslateTransform(-clipRect.Left, -clipRect.Bottom);
 
 			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
@@ -500,12 +635,15 @@ namespace Epsitec.Common.Document
 					if ( obj.IsHide )  continue;  // objet caché ?
 					if ( !clipRect.IntersectsWith(obj.BoundingBox) )  continue;
 					obj.DrawGeometry(gfx, drawingContext);
+					if ( obj == topObject )  goto stop;
 				}
 			}
 
+			stop:
 			port.ScaleTransform(0.1, 0.1, 0, 0);
 			Image bitmap = Bitmap.FromPixmap(gfx.Pixmap);
 			Rectangle rect = clipRect;
+			rect.Offset(offset);
 			rect.Scale(autoZoom);
 			port.PaintImage(bitmap, rect);
 
@@ -515,10 +653,124 @@ namespace Epsitec.Common.Document
 		// Imprime les zones rectangulaires (pour le debug).
 		protected void PrintAreas(Printing.PrintPort port,
 								  DrawingContext drawingContext,
-								  System.Collections.ArrayList areas)
+								  System.Collections.ArrayList areas,
+								  Point offset)
 		{
 			Transform initialTransform = port.Transform;
+			this.InitSimplyPort(port, offset);
 
+			port.LineWidth = 0.1;
+			port.Color = Color.FromRGB(1,0,0);  // rouge
+
+			foreach ( PrintingArea area in areas )
+			{
+				Path path = new Path();
+				path.AppendRectangle(area.Area);
+				port.PaintOutline(path);
+			}
+
+			port.Transform = initialTransform;
+		}
+
+		// Imprime les traits de coupe.
+		protected void PrintTarget(Printing.PrintPort port,
+								   DrawingContext drawingContext,
+								   Point offset)
+		{
+			Transform initialTransform = port.Transform;
+			this.InitSimplyPort(port, offset);
+			this.PaintTarget(port, drawingContext);
+			port.Transform = initialTransform;
+		}
+
+		// Dessine les traits de coupe.
+		public void PaintTarget(Drawing.IPaintPort port, DrawingContext drawingContext)
+		{
+			if ( port is Printing.PrintPort )
+			{
+				port.LineWidth = 0.1;
+			}
+			else
+			{
+				port.LineWidth = 1.0/drawingContext.ScaleX;
+			}
+
+			port.Color = Color.FromBrightness(0);  // noir
+
+			Size ds = this.document.Size;
+			double db = this.PrintInfo.Debord;
+			double len = 50.0;  // longueur des traits de coupe = 5mm
+
+			Path path = new Path();
+			path.MoveTo(-db, 0);  path.LineTo(-db-len, 0);
+			path.MoveTo(-db, ds.Height);  path.LineTo(-db-len, ds.Height);
+			path.MoveTo(ds.Width+db, 0);  path.LineTo(ds.Width+db+len, 0);
+			path.MoveTo(ds.Width+db, ds.Height);  path.LineTo(ds.Width+db+len, ds.Height);
+			path.MoveTo(0, -db);  path.LineTo(0, -db-len);
+			path.MoveTo(ds.Width, -db);  path.LineTo(ds.Width, -db-len);
+			path.MoveTo(0, ds.Height+db);  path.LineTo(0, ds.Height+db+len);
+			path.MoveTo(ds.Width, ds.Height+db);  path.LineTo(ds.Width, ds.Height+db+len);
+			port.PaintOutline(path);
+
+			len = 60.0;  // échantillons carrés de 6mm de côté
+			Drawing.Rectangle rect = new Rectangle();
+			rect.Left = len;
+			rect.Bottom = ds.Height+db+len/2.0;
+			rect.Width = len;
+			rect.Height = len;
+
+			if ( port is Graphics )
+			{
+				Graphics graphics = port as Graphics;
+				graphics.Align(ref rect);
+				rect.Offset(0.5/drawingContext.ScaleX, 0.5/drawingContext.ScaleX);
+			}
+
+			this.PaintColorSample(port, rect, Color.FromBrightness(1.0));  // blanc
+			rect.Offset(rect.Width, 0.0);
+			this.PaintColorSample(port, rect, Color.FromBrightness(0.9));
+			rect.Offset(rect.Width, 0.0);
+			this.PaintColorSample(port, rect, Color.FromBrightness(0.8));
+			rect.Offset(rect.Width, 0.0);
+			this.PaintColorSample(port, rect, Color.FromBrightness(0.7));
+			rect.Offset(rect.Width, 0.0);
+			this.PaintColorSample(port, rect, Color.FromBrightness(0.6));
+			rect.Offset(rect.Width, 0.0);
+			this.PaintColorSample(port, rect, Color.FromBrightness(0.5));
+			rect.Offset(rect.Width, 0.0);
+			this.PaintColorSample(port, rect, Color.FromBrightness(0.4));
+			rect.Offset(rect.Width, 0.0);
+			this.PaintColorSample(port, rect, Color.FromBrightness(0.3));
+			rect.Offset(rect.Width, 0.0);
+			this.PaintColorSample(port, rect, Color.FromBrightness(0.2));
+			rect.Offset(rect.Width, 0.0);
+			this.PaintColorSample(port, rect, Color.FromBrightness(0.1));
+			rect.Offset(rect.Width, 0.0);
+			this.PaintColorSample(port, rect, Color.FromBrightness(0.0));  // noir
+			rect.Offset(rect.Width+len/2.0, 0.0);
+			this.PaintColorSample(port, rect, Color.FromRGB(0,1,1));  // cyan
+			rect.Offset(rect.Width, 0.0);
+			this.PaintColorSample(port, rect, Color.FromRGB(1,0,1));  // magenta
+			rect.Offset(rect.Width, 0.0);
+			this.PaintColorSample(port, rect, Color.FromRGB(1,1,0));  // jaune
+		}
+
+		// Dessine un échantillon de couleur.
+		protected void PaintColorSample(Drawing.IPaintPort port, Rectangle rect, Color color)
+		{
+			Path path = new Path();
+			path.AppendRectangle(rect);
+
+			port.Color = color;
+			port.PaintSurface(path);
+
+			port.Color = Color.FromBrightness(0);
+			port.PaintOutline(path);
+		}
+
+		// Initialise le port pour une impression simplifiée.
+		protected void InitSimplyPort(Printing.PrintPort port, Point offset)
+		{
 			double zoom = 1.0;
 			if ( this.PrintInfo.AutoZoom )
 			{
@@ -538,17 +790,9 @@ namespace Epsitec.Common.Document
 				zoom = 0.1*this.PrintInfo.Zoom;
 			}
 			port.ScaleTransform(zoom, zoom, 0, 0);
-			
-			port.LineWidth = 0.1;
-			foreach ( PrintingArea area in areas )
-			{
-				Path path = new Path();
-				path.AppendRectangle(area.Area);
-				port.PaintOutline(path);
-			}
-
-			port.Transform = initialTransform;
+			port.TranslateTransform(offset.X, offset.Y);
 		}
+
 
 		// Exporte la géométrie complexe de tous les objets, en utilisant
 		// un bitmap intermédiaire.

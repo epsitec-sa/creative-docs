@@ -674,11 +674,11 @@ namespace Epsitec.Common.Document
 			this.HiliteHandle(null, -1);
 			this.moveGlobal = -1;
 			this.moveObject = null;
-			this.selectChangeObject = null;
 			this.guideInteractive = -1;
 			this.guideCreate = false;
 			this.ctrlDown = this.drawingContext.IsCtrl;
 			this.ctrlDuplicate = false;
+			this.moveReclick = false;
 
 			Objects.Abstract obj;
 			int rank;
@@ -736,7 +736,6 @@ namespace Epsitec.Common.Document
 								{
 									obj.GlobalSelect(true);
 									this.SelectorInitialize(this.document.Modifier.SelectedBbox);
-									this.selectChangeObject = obj;
 								}
 							}
 							this.document.Modifier.FlushMoveAfterDuplicate();
@@ -747,8 +746,11 @@ namespace Epsitec.Common.Document
 							{
 								obj.Deselect();
 								this.document.Modifier.TotalSelected --;
-								this.selectChangeObject = obj;
 								this.document.Modifier.FlushMoveAfterDuplicate();
+							}
+							else
+							{
+								this.moveReclick = true;
 							}
 						}
 
@@ -921,12 +923,19 @@ namespace Epsitec.Common.Document
 			}
 			else if ( this.moveObject != null )
 			{
-				this.document.Modifier.GroupUpdateChildrens();
-				this.document.Modifier.GroupUpdateParents();
+				if ( this.moveReclick && !this.moveAccept )
+				{
+					this.SelectOther(mouse, this.moveObject);
+				}
+				else
+				{
+					this.document.Modifier.GroupUpdateChildrens();
+					this.document.Modifier.GroupUpdateParents();
 
-				this.moveObject = null;
-				this.moveHandle = -1;
-				this.UpdateSelector();
+					this.moveObject = null;
+					this.moveHandle = -1;
+					this.UpdateSelector();
+				}
 			}
 
 			this.drawingContext.ConstrainDelStarting();
@@ -1093,6 +1102,7 @@ namespace Epsitec.Common.Document
 				{
 					this.document.Modifier.ObjectMemory.PickerProperties(model);
 					this.document.Modifier.ObjectMemoryText.PickerProperties(model);
+					this.document.Notifier.NotifySelectionChanged();
 				}
 				else
 				{
@@ -1161,6 +1171,15 @@ namespace Epsitec.Common.Document
 		// Détecte l'objet pointé par la souris.
 		protected Objects.Abstract Detect(Point mouse, bool selectFirst)
 		{
+			System.Collections.ArrayList list = this.Detects(mouse, selectFirst);
+			if ( list.Count == 0 )  return null;
+			return list[0] as Objects.Abstract;
+		}
+
+		// Détecte les objets pointés par la souris.
+		protected System.Collections.ArrayList Detects(Point mouse, bool selectFirst)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			Objects.Abstract layer = this.drawingContext.RootObject();
 
 			if ( selectFirst )
@@ -1168,15 +1187,16 @@ namespace Epsitec.Common.Document
 				foreach ( Objects.Abstract obj in this.document.FlatReverse(layer) )
 				{
 					if ( !obj.IsSelected )  continue;
-					if ( obj.Detect(mouse) )  return obj;
+					if ( obj.Detect(mouse) )  list.Add(obj);
 				}
 			}
 
 			foreach ( Objects.Abstract obj in this.document.FlatReverse(layer) )
 			{
-				if ( obj.Detect(mouse) )  return obj;
+				if ( obj.Detect(mouse) )  list.Add(obj);
 			}
-			return null;
+
+			return list;
 		}
 
 		// Détecte l'objet éditable pointé par la souris.
@@ -1341,6 +1361,22 @@ namespace Epsitec.Common.Document
 			{
 				obj.GlobalSelect(global);
 			}
+		}
+
+		// Sélectionne l'objet directement dessous l'objet déjà sélectionné.
+		protected void SelectOther(Point mouse, Objects.Abstract actual)
+		{
+			System.Collections.ArrayList list = this.Detects(mouse, false);
+			if ( list.Count == 0 )  return;
+
+			int i = list.IndexOf(actual);
+			if ( i == -1 )  return;
+
+			i ++;  // l'objet directement dessous
+			if ( i >= list.Count )  i = 0;
+			Objects.Abstract obj = list[i] as Objects.Abstract;
+
+			this.Select(obj, false, false);
 		}
 
 		// Sélectionne un objet et désélectionne tous les autres.
@@ -1534,10 +1570,17 @@ namespace Epsitec.Common.Document
 				ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ZoomDiv2",  "manifest:Epsitec.App.DocumentEditor.Images.OperZoomDiv2.icon", "Réduction /2");
 				ContextMenuItem.MenuAddItem(listOper, this.CommandDispatcher, "ZoomMul2",  "manifest:Epsitec.App.DocumentEditor.Images.OperZoomMul2.icon", "Agrandissement x2");
 
-				this.contextMenuOper = new VMenu();
-				this.contextMenuOper.Host = this;
-				ContextMenuItem.MenuCreate(this.contextMenuOper, listOper);
-				this.contextMenuOper.AdjustSize();
+				if ( ContextMenuItem.IsMenuActive(listOper) )
+				{
+					this.contextMenuOper = new VMenu();
+					this.contextMenuOper.Host = this;
+					ContextMenuItem.MenuCreate(this.contextMenuOper, listOper);
+					this.contextMenuOper.AdjustSize();
+				}
+				else
+				{
+					this.contextMenuOper = null;
+				}
 			}
 
 			// Construit le sous-menu "géométrie".
@@ -1554,10 +1597,44 @@ namespace Epsitec.Common.Document
 				ContextMenuItem.MenuAddItem(listGeom, this.CommandDispatcher, "ToPoly",    "manifest:Epsitec.App.DocumentEditor.Images.ToPoly.icon",    "Convertir en droites");
 				ContextMenuItem.MenuAddItem(listGeom, this.CommandDispatcher, "Fragment",  "manifest:Epsitec.App.DocumentEditor.Images.Fragment.icon",  "Fragmenter");
 
-				this.contextMenuGeom = new VMenu();
-				this.contextMenuGeom.Host = this;
-				ContextMenuItem.MenuCreate(this.contextMenuGeom, listGeom);
-				this.contextMenuGeom.AdjustSize();
+				if ( ContextMenuItem.IsMenuActive(listGeom) )
+				{
+					this.contextMenuGeom = new VMenu();
+					this.contextMenuGeom.Host = this;
+					ContextMenuItem.MenuCreate(this.contextMenuGeom, listGeom);
+					this.contextMenuGeom.AdjustSize();
+				}
+				else
+				{
+					this.contextMenuGeom = null;
+				}
+			}
+
+			// Construit le sous-menu "booléen".
+			if ( globalMenu || nbSel == 0 )
+			{
+				this.contextMenuBool = null;
+			}
+			else
+			{
+				System.Collections.ArrayList listBool = new System.Collections.ArrayList();
+				ContextMenuItem.MenuAddItem(listBool, this.CommandDispatcher, "BooleanOr",         "manifest:Epsitec.App.DocumentEditor.Images.BooleanOr.icon",         "Union");
+				ContextMenuItem.MenuAddItem(listBool, this.CommandDispatcher, "BooleanAnd",        "manifest:Epsitec.App.DocumentEditor.Images.BooleanAnd.icon",        "Intersection");
+				ContextMenuItem.MenuAddItem(listBool, this.CommandDispatcher, "BooleanXor",        "manifest:Epsitec.App.DocumentEditor.Images.BooleanXor.icon",        "Exclusion");
+				ContextMenuItem.MenuAddItem(listBool, this.CommandDispatcher, "BooleanFrontMinus", "manifest:Epsitec.App.DocumentEditor.Images.BooleanFrontMinus.icon", "Avant moins arrières");
+				ContextMenuItem.MenuAddItem(listBool, this.CommandDispatcher, "BooleanBackMinus",  "manifest:Epsitec.App.DocumentEditor.Images.BooleanBackMinus.icon",  "Arrière moins avants");
+
+				if ( ContextMenuItem.IsMenuActive(listBool) )
+				{
+					this.contextMenuBool = new VMenu();
+					this.contextMenuBool.Host = this;
+					ContextMenuItem.MenuCreate(this.contextMenuBool, listBool);
+					this.contextMenuBool.AdjustSize();
+				}
+				else
+				{
+					this.contextMenuBool = null;
+				}
 			}
 
 			// Construit le menu principal.
@@ -1622,7 +1699,8 @@ namespace Epsitec.Common.Document
 				ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "HideCancel", "manifest:Epsitec.App.DocumentEditor.Images.HideCancel.icon", "Montrer tout");
 				ContextMenuItem.MenuAddSep(list);
 				ContextMenuItem.MenuAddSubmenu(list, this.contextMenuOper, "manifest:Epsitec.App.DocumentEditor.Images.OperMoveH.icon", "Opérations");
-				ContextMenuItem.MenuAddSubmenu(list, this.contextMenuGeom, "manifest:Epsitec.App.DocumentEditor.Images.Combine.icon", "Géométrie");
+				ContextMenuItem.MenuAddSubmenu(list, this.contextMenuGeom, "manifest:Epsitec.App.DocumentEditor.Images.Combine.icon",   "Géométrie");
+				ContextMenuItem.MenuAddSubmenu(list, this.contextMenuBool, "manifest:Epsitec.App.DocumentEditor.Images.BooleanOr.icon", "Booléen");
 
 				if ( nbSel == 1 && this.contextMenuObject != null )
 				{
@@ -1794,7 +1872,7 @@ namespace Epsitec.Common.Document
 		protected void ChangeMouseCursor(MouseCursorType cursor)
 		{
 			this.mouseCursorType = cursor;
-			this.UseMouseCursor();  // ajouté pour planter plus souvent !!!
+			//?this.UseMouseCursor();  // ajouté pour planter plus souvent !!!
 		}
 
 		// Utilise le bon sprite pour la souris.
@@ -2112,6 +2190,12 @@ namespace Epsitec.Common.Document
 
 					graphics.AddRectangle(rect);
 					graphics.RenderSolid(Color.FromBrightness(0));
+
+					if ( this.document.Settings.PrintInfo.Target   &&
+						!this.document.Settings.PrintInfo.AutoZoom )
+					{
+						this.document.Printer.PaintTarget(graphics, this.drawingContext);
+					}
 				}
 			}
 			else
@@ -2483,10 +2567,10 @@ namespace Epsitec.Common.Document
 		protected Point							moveStart;
 		protected Point							moveOffset;
 		protected bool							moveAccept;
+		protected bool							moveReclick;
 		protected int							moveHandle = -1;
 		protected int							moveGlobal = -1;
 		protected Objects.Abstract				moveObject;
-		protected Objects.Abstract				selectChangeObject;
 		protected Objects.Abstract				hiliteHandleObject;
 		protected int							hiliteHandleRank = -1;
 		protected int							createRank = -1;
@@ -2501,6 +2585,7 @@ namespace Epsitec.Common.Document
 		protected VMenu							contextMenu;
 		protected VMenu							contextMenuOper;
 		protected VMenu							contextMenuGeom;
+		protected VMenu							contextMenuBool;
 		protected Objects.Abstract				contextMenuObject;
 		protected Point							contextMenuPos;
 		protected int							contextMenuRank;

@@ -92,7 +92,7 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				// Pas utile ici:
-				return new Drawing.Point (0, 0);
+				return new Drawing.Point(0, 0);
 			}
 		}
 
@@ -112,12 +112,13 @@ namespace Epsitec.Common.Widgets
 			// gaspillage de mémoire d'avoir cette variable inutilisée pour
 			// tous les ColorSample. Alors on utilise une "propriété" :
 			
-			widget.SetProperty ("DragHost", this);
+			widget.SetProperty("DragHost", this);
 			
 			this.dragTarget = null;
-			this.dragOrigin = this.MapClientToScreen(new Drawing.Point (-3, -3));
+			this.dragOrigin = this.MapClientToScreen(new Drawing.Point(-5, -5));
 			this.dragWindow = new DragWindow();
-			this.dragWindow.DefineWidget(widget, new Drawing.Size(7, 7), Drawing.Margins.Zero);
+			this.dragWindow.Alpha = 1.0;
+			this.dragWindow.DefineWidget(widget, new Drawing.Size(11, 11), Drawing.Margins.Zero);
 			this.dragWindow.WindowLocation = this.dragOrigin + cursor;
 			this.dragWindow.Owner = this.Window;
 			this.dragWindow.FocusedWidget = widget;
@@ -187,14 +188,13 @@ namespace Epsitec.Common.Widgets
 		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			ColorSample dragHost = this.GetProperty ("DragHost") as ColorSample;
+			ColorSample dragHost = this.GetProperty("DragHost") as ColorSample;
 			
 			// Est-ce que l'événement clavier est reçu dans un échantillon en
 			// cours de drag dans un DragWindow ? C'est possible, car le focus
 			// clavier change quand on montre le DragWindow.
 			
-			if ( dragHost != null &&
-				 message.IsKeyType )
+			if ( dragHost != null && message.IsKeyType )
 			{
 				// Signalons l'événement clavier à l'auteur du drag :
 				
@@ -356,9 +356,9 @@ namespace Epsitec.Common.Widgets
 
 		
 		private Helpers.DragBehavior			dragBehavior;
-		private DragWindow					dragWindow;
+		private DragWindow						dragWindow;
 		private Drawing.Point					dragOrigin;
-		private ColorSample					dragTarget;
+		private ColorSample						dragTarget;
 		private Drawing.Color					dragColor = Drawing.Color.Empty;
 		
 		protected Drawing.ColorCollection		collectionList;

@@ -251,7 +251,9 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.ChangePropertyPolyClose(false);
 				this.HandleAdd(pos, HandleType.Starting);
+				this.HandleAdd(pos, HandleType.Primary);
 				this.Handle(0).IsVisible = true;
+				this.Handle(1).IsVisible = true;
 			}
 			else
 			{
@@ -299,6 +301,15 @@ namespace Epsitec.Common.Document.Objects
 		// Fin de la création d'un objet.
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
+			if ( this.TotalHandle == 2 )
+			{
+				double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
+				if ( len < drawingContext.MinimalSize )
+				{
+					this.HandleDelete(1);
+				}
+			}
+
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 			drawingContext.SnapGrid(ref pos);
 			drawingContext.ConstrainSnapPos(ref pos);

@@ -13,6 +13,9 @@ namespace Epsitec.Common.Document.Properties
 		Circle  = 2,
 		Diamond = 3,
 		Conic   = 4,
+		Hatch   = 5,
+		Dots    = 6,
+		Squares = 7,
 	}
 
 	/// <summary>
@@ -62,6 +65,28 @@ namespace Epsitec.Common.Document.Properties
 			this.repeat = 1;
 			this.middle = 0.0;
 			this.smooth = 0.0;
+
+			this.hatchAngle    = new double[Gradient.HatchMax];
+			this.hatchWidth    = new double[Gradient.HatchMax];
+			this.hatchDistance = new double[Gradient.HatchMax];
+
+			this.hatchAngle[0] = 45.0;
+			this.hatchAngle[1] =  0.0;
+
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				this.hatchWidth[0]    = 1.0;
+				this.hatchDistance[0] = 5.0;
+				this.hatchDistance[1] = 5.0;
+			}
+			else
+			{
+				this.hatchWidth[0]    =  5.0;  // 0.5mm
+				this.hatchDistance[0] = 50.0;  // 5.0mm
+				this.hatchDistance[1] = 50.0;  // 5.0mm
+			}
+
+			this.hatchWidth[1] = 0.0;
 		}
 
 		// Mode de remplissage du dégradé.
@@ -284,6 +309,163 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		// Angle des hachures.
+		public double HatchAngle1
+		{
+			get
+			{
+				return this.hatchAngle[0];
+			}
+
+			set
+			{
+				if ( this.hatchAngle[0] != value )
+				{
+					this.NotifyBefore();
+					this.hatchAngle[0] = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
+		public double HatchAngle2
+		{
+			get
+			{
+				return this.hatchAngle[1];
+			}
+
+			set
+			{
+				if ( this.hatchAngle[1] != value )
+				{
+					this.NotifyBefore();
+					this.hatchAngle[1] = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
+		// Epaisseur des hachures.
+		public double HatchWidth1
+		{
+			get
+			{
+				return this.hatchWidth[0];
+			}
+
+			set
+			{
+				if ( this.hatchWidth[0] != value )
+				{
+					this.NotifyBefore();
+					this.hatchWidth[0] = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
+		public double HatchWidth2
+		{
+			get
+			{
+				return this.hatchWidth[1];
+			}
+
+			set
+			{
+				if ( this.hatchWidth[1] != value )
+				{
+					this.NotifyBefore();
+					this.hatchWidth[1] = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
+		// Distance des hachures.
+		public double HatchDistance1
+		{
+			get
+			{
+				return this.hatchDistance[0];
+			}
+
+			set
+			{
+				if ( this.hatchDistance[0] != value )
+				{
+					this.NotifyBefore();
+					this.hatchDistance[0] = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
+		public double HatchDistance2
+		{
+			get
+			{
+				return this.hatchDistance[1];
+			}
+
+			set
+			{
+				if ( this.hatchDistance[1] != value )
+				{
+					this.NotifyBefore();
+					this.hatchDistance[1] = value;
+					this.NotifyAfter();
+				}
+			}
+		}
+
+		public double GetHatchAngle(int rank)
+		{
+			return this.hatchAngle[rank];
+		}
+
+		public void SetHatchAngle(int rank, double value)
+		{
+			if ( this.hatchAngle[rank] != value )
+			{
+				this.NotifyBefore();
+				this.hatchAngle[rank] = value;
+				this.NotifyAfter();
+			}
+		}
+
+		public double GetHatchWidth(int rank)
+		{
+			return this.hatchWidth[rank];
+		}
+
+		public void SetHatchWidth(int rank, double value)
+		{
+			if ( this.hatchWidth[rank] != value )
+			{
+				this.NotifyBefore();
+				this.hatchWidth[rank] = value;
+				this.NotifyAfter();
+			}
+		}
+
+		public double GetHatchDistance(int rank)
+		{
+			return this.hatchDistance[rank];
+		}
+
+		public void SetHatchDistance(int rank, double value)
+		{
+			if ( this.hatchDistance[rank] != value )
+			{
+				this.NotifyBefore();
+				this.hatchDistance[rank] = value;
+				this.NotifyAfter();
+			}
+		}
+
+
 		// Indique si une impression complexe est nécessaire.
 		public override bool IsComplexPrinting
 		{
@@ -332,6 +514,13 @@ namespace Epsitec.Common.Document.Properties
 			p.repeat   = this.repeat;
 			p.middle   = this.middle;
 			p.smooth   = this.smooth;
+
+			for ( int i=0 ; i<Gradient.HatchMax ; i++ )
+			{
+				p.hatchAngle[i]    = this.hatchAngle[i];
+				p.hatchWidth[i]    = this.hatchWidth[i];
+				p.hatchDistance[i] = this.hatchDistance[i];
+			}
 		}
 
 		// Compare deux propriétés.
@@ -351,6 +540,14 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.repeat   != this.repeat   )  return false;
 			if ( p.middle   != this.middle   )  return false;
 			if ( p.smooth   != this.smooth   )  return false;
+
+
+			for ( int i=0 ; i<Gradient.HatchMax ; i++ )
+			{
+				if ( p.hatchAngle[i]    != this.hatchAngle[i]    )  return false;
+				if ( p.hatchWidth[i]    != this.hatchWidth[i]    )  return false;
+				if ( p.hatchDistance[i] != this.hatchDistance[i] )  return false;
+			}
 
 			return true;
 		}
@@ -398,6 +595,22 @@ namespace Epsitec.Common.Document.Properties
 								  double limit, Rectangle bbox)
 		{
 			if ( bbox.IsSurfaceZero )  return;
+
+			if ( this.fillType == GradientFillType.Hatch )
+			{
+				this.RenderHatch(graphics, drawingContext, path, bbox);
+				return;
+			}
+			if ( this.fillType == GradientFillType.Dots )
+			{
+				this.RenderDots(graphics, drawingContext, path, bbox);
+				return;
+			}
+			if ( this.fillType == GradientFillType.Squares )
+			{
+				this.RenderSquares(graphics, drawingContext, path, bbox);
+				return;
+			}
 
 			Graphics mask = null;
 
@@ -562,6 +775,172 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		// Effectue le rendu d'une zone quelconque hachurée.
+		public void RenderHatch(Graphics graphics, DrawingContext drawingContext, Path path, Rectangle bbox)
+		{
+			Drawing.Color initialColor = graphics.Color;
+
+			graphics.Color = this.color1;
+			graphics.PaintSurface(path);  // dessine le fond
+
+			double max = System.Math.Max(bbox.Width, bbox.Height);
+			Point diag = new Point(max/2*1.5, max/2*1.5);
+			Rectangle rect = new Rectangle(bbox.Center-diag, bbox.Center+diag);
+
+			for ( int i=0 ; i<Gradient.HatchMax ; i++ )
+			{
+				if ( this.hatchWidth[i] == 0.0 || this.hatchDistance[i] == 0.0 )  continue;
+
+				double width = System.Math.Min(this.hatchWidth[i], this.hatchDistance[i]);
+
+				Point p1 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.BottomLeft);
+				Point p2 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.BottomRight);
+				Point p3 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.TopLeft);
+				Point p4 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.TopRight);
+
+				Path pathLines = new Path();
+				double len = Point.Distance(p1, p2);
+				double pos = 0.0;
+				while ( pos < len )
+				{
+					Point pp1 = Point.Move(p1, p2, pos);
+					Point pp2 = Point.Move(p1, p2, pos+width);
+					Point pp3 = Point.Move(p3, p4, pos);
+					Point pp4 = Point.Move(p3, p4, pos+width);
+
+					pathLines.MoveTo(pp1);
+					pathLines.LineTo(pp2);
+					pathLines.LineTo(pp4);
+					pathLines.LineTo(pp3);
+					pathLines.Close();
+
+					pos += this.hatchDistance[i];
+				}
+
+				pathLines = Path.Combine(pathLines, path, PathOperation.And);
+
+				graphics.Color = this.color2;
+				graphics.PaintSurface(pathLines);
+			}
+
+			graphics.Color = initialColor;
+		}
+
+		// Effectue le rendu d'une zone quelconque de points.
+		public void RenderDots(Graphics graphics, DrawingContext drawingContext, Path path, Rectangle bbox)
+		{
+			Drawing.Color initialColor = graphics.Color;
+
+			graphics.Color = this.color1;
+			graphics.PaintSurface(path);  // dessine le fond
+
+			double max = System.Math.Max(bbox.Width, bbox.Height);
+			Point diag = new Point(max/2*1.5, max/2*1.5);
+			Rectangle rect = new Rectangle(bbox.Center-diag, bbox.Center+diag);
+
+			for ( int i=0 ; i<Gradient.HatchMax ; i++ )
+			{
+				if ( this.hatchWidth[i] == 0.0 || this.hatchDistance[i] == 0.0 )  continue;
+
+				double width = System.Math.Min(this.hatchWidth[i], this.hatchDistance[i]/2);
+
+				Point p1 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.BottomLeft);
+				Point p2 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.BottomRight);
+				Point p3 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.TopLeft);
+				Point p4 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.TopRight);
+
+				Path pathLines = new Path();
+				double lenh = Point.Distance(p1, p2);
+				double posh = 0.0;
+				while ( posh < lenh )
+				{
+					Point pp1 = Point.Move(p1, p2, posh);
+					Point pp3 = Point.Move(p3, p4, posh);
+
+					double lenv = Point.Distance(p1, p3);
+					double posv = 0.0;
+					while ( posv < lenv )
+					{
+						Point center = Point.Move(pp1, pp3, posv);
+						pathLines.AppendCircle(center, width);
+
+						posv += this.hatchDistance[i];
+					}
+
+					posh += this.hatchDistance[i];
+				}
+
+				if ( !drawingContext.PreviewActive )
+				{
+					Path pathApprox = new Path();
+					pathApprox.Append(pathLines, 0.01, 0.0);
+					pathLines = pathApprox;
+				}
+
+				pathLines = Path.Combine(pathLines, path, PathOperation.And);
+
+				graphics.Color = this.color2;
+				graphics.PaintSurface(pathLines);
+			}
+
+			graphics.Color = initialColor;
+		}
+
+		// Effectue le rendu d'une zone quelconque de carrés.
+		public void RenderSquares(Graphics graphics, DrawingContext drawingContext, Path path, Rectangle bbox)
+		{
+			Drawing.Color initialColor = graphics.Color;
+
+			graphics.Color = this.color1;
+			graphics.PaintSurface(path);  // dessine le fond
+
+			double max = System.Math.Max(bbox.Width, bbox.Height);
+			Point diag = new Point(max/2*1.5, max/2*1.5);
+			Rectangle rect = new Rectangle(bbox.Center-diag, bbox.Center+diag);
+
+			for ( int i=0 ; i<Gradient.HatchMax ; i++ )
+			{
+				if ( this.hatchWidth[i] == 0.0 || this.hatchDistance[i] == 0.0 )  continue;
+
+				double width = System.Math.Min(this.hatchWidth[i], this.hatchDistance[i]/2);
+
+				Point p1 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.BottomLeft);
+				Point p2 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.BottomRight);
+				Point p3 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.TopLeft);
+				Point p4 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.TopRight);
+
+				Path pathLines = new Path();
+				double lenh = Point.Distance(p1, p2);
+				double posh = 0.0;
+				while ( posh < lenh )
+				{
+					Point pp1 = Point.Move(p1, p2, posh);
+					Point pp3 = Point.Move(p3, p4, posh);
+
+					double lenv = Point.Distance(p1, p3);
+					double posv = 0.0;
+					while ( posv < lenv )
+					{
+						Point center = Point.Move(pp1, pp3, posv);
+						center.X -= width;
+						center.Y -= width;
+						pathLines.AppendRectangle(center, new Size(width*2, width*2));
+
+						posv += this.hatchDistance[i];
+					}
+
+					posh += this.hatchDistance[i];
+				}
+
+				pathLines = Path.Combine(pathLines, path, PathOperation.And);
+
+				graphics.Color = this.color2;
+				graphics.PaintSurface(pathLines);
+			}
+
+			graphics.Color = initialColor;
+		}
+
 
 		// Calcule la bbox pour la représentation du dégradé.
 		public Rectangle BoundingBoxGeom(Rectangle bbox)
@@ -628,6 +1007,12 @@ namespace Epsitec.Common.Document.Properties
 			{
 				return (rank < 3);
 			}
+			else if ( this.fillType == GradientFillType.Hatch   ||
+					  this.fillType == GradientFillType.Dots    ||
+					  this.fillType == GradientFillType.Squares )
+			{
+				return (rank < 3);
+			}
 			else
 			{
 				return (rank < 2);
@@ -656,20 +1041,45 @@ namespace Epsitec.Common.Document.Properties
 			corner.X = center.X+bbox.Width*this.sx;
 			corner.Y = center.Y+bbox.Height*this.sy;
 
-			if ( rank == 0 )  // centre ?
+			if ( this.fillType == GradientFillType.Hatch   ||
+				 this.fillType == GradientFillType.Dots    ||
+				 this.fillType == GradientFillType.Squares )
 			{
-				pos = center;
-			}
+				if ( rank == 0 )  // angle ?
+				{
+					double radius = System.Math.Min(bbox.Width, bbox.Height)*0.45;
+					pos = bbox.Center+Transform.RotatePointDeg(this.hatchAngle[0], new Point(0, radius));
+				}
 
-			if ( rank == 1 )  // coin ?
-			{
-				pos = corner;
-			}
+				if ( rank == 1 )  // épaisseur ?
+				{
+					double radius = this.hatchWidth[0];
+					pos = bbox.Center+Transform.RotatePointDeg(this.hatchAngle[0]-90, new Point(0, radius));
+				}
 
-			if ( rank == 2 )  // angle ?
+				if ( rank == 2 )  // distance ?
+				{
+					double radius = this.hatchDistance[0];
+					pos = bbox.Center+Transform.RotatePointDeg(this.hatchAngle[0]-90, new Point(0, radius));
+				}
+			}
+			else
 			{
-				double radius = System.Math.Min(System.Math.Abs(this.sx*bbox.Width), System.Math.Abs(this.sy*bbox.Height));
-				pos = center+Transform.RotatePointDeg(this.angle, new Point(0, radius));
+				if ( rank == 0 )  // centre ?
+				{
+					pos = center;
+				}
+
+				if ( rank == 1 )  // coin ?
+				{
+					pos = corner;
+				}
+
+				if ( rank == 2 )  // angle ?
+				{
+					double radius = System.Math.Min(System.Math.Abs(this.sx*bbox.Width), System.Math.Abs(this.sy*bbox.Height));
+					pos = center+Transform.RotatePointDeg(this.angle, new Point(0, radius));
+				}
 			}
 
 			return pos;
@@ -680,24 +1090,46 @@ namespace Epsitec.Common.Document.Properties
 		{
 			Rectangle bbox = this.BoundingBoxHandlesGradient(obj);
 
-			if ( rank == 0 )  // centre ?
+			if ( this.fillType == GradientFillType.Hatch   ||
+				 this.fillType == GradientFillType.Dots    ||
+				 this.fillType == GradientFillType.Squares )
 			{
-				this.Cx = (pos.X-bbox.Left)/bbox.Width;
-				this.Cy = (pos.Y-bbox.Bottom)/bbox.Height;
-			}
+				if ( rank == 0 )  // angle ?
+				{
+					this.HatchAngle1 = Point.ComputeAngleDeg(bbox.Center, pos)-90;
+				}
 
-			if ( rank == 1 )  // coin ?
-			{
-				this.Sx = (pos.X-bbox.Left-bbox.Width*this.cx)/bbox.Width;
-				this.Sy = (pos.Y-bbox.Bottom-bbox.Height*this.cy)/bbox.Height;
-			}
+				if ( rank == 1 )  // épaisseur ?
+				{
+					this.HatchWidth1 = Point.Distance(bbox.Center, pos);
+				}
 
-			if ( rank == 2 )  // angle ?
+				if ( rank == 2 )  // distance ?
+				{
+					this.HatchDistance1 = Point.Distance(bbox.Center, pos);
+				}
+			}
+			else
 			{
-				Point center = new Point();
-				center.X = bbox.Left+bbox.Width*this.cx;
-				center.Y = bbox.Bottom+bbox.Height*this.cy;
-				this.Angle = Point.ComputeAngleDeg(center, pos)-90;
+				if ( rank == 0 )  // centre ?
+				{
+					this.Cx = (pos.X-bbox.Left)/bbox.Width;
+					this.Cy = (pos.Y-bbox.Bottom)/bbox.Height;
+				}
+
+				if ( rank == 1 )  // coin ?
+				{
+					this.Sx = (pos.X-bbox.Left-bbox.Width*this.cx)/bbox.Width;
+					this.Sy = (pos.Y-bbox.Bottom-bbox.Height*this.cy)/bbox.Height;
+				}
+
+				if ( rank == 2 )  // angle ?
+				{
+					Point center = new Point();
+					center.X = bbox.Left+bbox.Width*this.cx;
+					center.Y = bbox.Bottom+bbox.Height*this.cy;
+					this.Angle = Point.ComputeAngleDeg(center, pos)-90;
+				}
 			}
 
 			base.SetHandlePosition(obj, rank, pos);
@@ -741,6 +1173,21 @@ namespace Epsitec.Common.Document.Properties
 
 				graphics.AddLine(this.ComputeExtremity(p3, p1, 0.0, 0.2, 0), this.ComputeExtremity(p3, p1, 0.0, 0.2, 1));
 				graphics.AddLine(this.ComputeExtremity(p1, p3, 0.0, 0.2, 0), this.ComputeExtremity(p1, p3, 0.0, 0.2, 1));
+			}
+			else if ( this.fillType == GradientFillType.Hatch   ||
+					  this.fillType == GradientFillType.Dots    ||
+					  this.fillType == GradientFillType.Squares )
+			{
+				center = bbox.Center;
+				double radius = System.Math.Min(bbox.Width, bbox.Height)*0.5;
+				Point pa = center+Transform.RotatePointDeg(this.hatchAngle[0], new Point(0, radius*0.9));
+				graphics.AddLine(pa, this.ComputeExtremity(center, pa, 0.4, 0.2, 0));
+				graphics.AddLine(pa, this.ComputeExtremity(center, pa, 0.4, 0.2, 1));  // flèche
+				graphics.AddLine(center, pa);
+
+				Point pb = center+Transform.RotatePointDeg(this.hatchAngle[0]+90, new Point(0, radius));
+				Point pc = center+Transform.RotatePointDeg(this.hatchAngle[0]-90, new Point(0, radius));
+				graphics.AddLine(pb, pc);
 			}
 			else
 			{
@@ -805,6 +1252,12 @@ namespace Epsitec.Common.Document.Properties
 				info.AddValue("Repeat", this.repeat);
 				info.AddValue("Middle", this.middle);
 			}
+			if ( this.fillType == GradientFillType.Hatch )
+			{
+				info.AddValue("HatchAngle", this.hatchAngle);
+				info.AddValue("HatchWidth", this.hatchWidth);
+				info.AddValue("HatchDistance", this.hatchDistance);
+			}
 			info.AddValue("Smooth", this.smooth);
 		}
 
@@ -824,6 +1277,12 @@ namespace Epsitec.Common.Document.Properties
 				this.repeat = info.GetInt32("Repeat");
 				this.middle = info.GetDouble("Middle");
 			}
+			if ( this.fillType == GradientFillType.Hatch )
+			{
+				this.hatchAngle    = (double[]) info.GetValue("HatchAngle",    typeof(double[]));
+				this.hatchWidth    = (double[]) info.GetValue("HatchWidth",    typeof(double[]));
+				this.hatchDistance = (double[]) info.GetValue("HatchDistance", typeof(double[]));
+			}
 			this.smooth = info.GetDouble("Smooth");
 		}
 		#endregion
@@ -840,5 +1299,9 @@ namespace Epsitec.Common.Document.Properties
 		protected int					repeat;
 		protected double				middle;
 		protected double				smooth;
+		protected double[]				hatchAngle;
+		protected double[]				hatchWidth;
+		protected double[]				hatchDistance;
+		public static readonly int		HatchMax = 2;
 	}
 }

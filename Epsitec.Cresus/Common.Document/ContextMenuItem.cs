@@ -90,6 +90,7 @@ namespace Epsitec.Common.Document
 		// Ajoute un sous-menu dans le menu.
 		public static void MenuAddSubmenu(System.Collections.ArrayList list, AbstractMenu submenu, string icon, string text)
 		{
+			if ( submenu == null )  return;
 			ContextMenuItem item = new ContextMenuItem();
 			item.submenu = submenu;
 			item.Icon = @icon;
@@ -104,22 +105,42 @@ namespace Epsitec.Common.Document
 			list.Add(item);  // séparateur
 		}
 
+		// Indique si un futur menu sera actif.
+		public static bool IsMenuActive(System.Collections.ArrayList list)
+		{
+			foreach ( ContextMenuItem cmi in list )
+			{
+				if ( cmi.submenu != null )  // sous-menu ?
+				{
+					return true;
+				}
+				else if ( cmi.Name == "" )  // séparateur ?
+				{
+				}
+				else	// case normale ?
+				{
+					return true;
+				}
+			}
+			return false;
+		}
+
 		// Crée le menu.
 		public static void MenuCreate(VMenu menu, System.Collections.ArrayList list)
 		{
 			foreach ( ContextMenuItem cmi in list )
 			{
-				if ( cmi.submenu != null )
+				if ( cmi.submenu != null )  // sous-menu ?
 				{
 					MenuItem mi = new MenuItem(cmi.Command, cmi.Icon, cmi.Text, "", cmi.Name);
 					mi.Submenu = cmi.submenu;
 					menu.Items.Add(mi);
 				}
-				else if ( cmi.Name == "" )
+				else if ( cmi.Name == "" )  // séparateur ?
 				{
 					menu.Items.Add(new MenuSeparator());
 				}
-				else
+				else	// case normale ?
 				{
 					MenuItem mi = new MenuItem(cmi.Command, cmi.Icon, cmi.Text, "", cmi.Name);
 					mi.IconNameActiveNo = cmi.IconActiveNo;

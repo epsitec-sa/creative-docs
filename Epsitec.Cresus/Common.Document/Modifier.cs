@@ -1061,6 +1061,7 @@ namespace Epsitec.Common.Document
 							if ( onlyMark && !obj.Mark )  continue;
 							this.document.Modifier.TotalSelected --;
 							this.document.Notifier.NotifyArea(obj.BoundingBox);
+							this.DeleteGroup(obj);
 							obj.Dispose();
 							layer.Objects.Remove(obj);
 							bDo = true;
@@ -1073,6 +1074,39 @@ namespace Epsitec.Common.Document
 					this.document.Notifier.NotifySelectionChanged();
 					this.OpletQueueValidateAction();
 				}
+			}
+		}
+
+		// Détruit les objets fils éventuels.
+		protected void DeleteGroup(Objects.Abstract group)
+		{
+			if ( group.Objects != null )
+			{
+				bool bDo = false;
+				do
+				{
+					bDo = false;
+					foreach ( Objects.Abstract obj in this.document.Flat(group) )
+					{
+						this.DeleteGroup(obj);
+						obj.Dispose();
+						group.Objects.Remove(obj);
+						bDo = true;
+						break;
+					}
+				}
+				while ( bDo );
+			}
+		}
+
+		// Supprime toutes les marques des objets sélectionnés.
+		protected void ClearMarks()
+		{
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
+			{
+				obj.Mark = false;
 			}
 		}
 
@@ -1359,6 +1393,33 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.document.Clipboard == null )  return true;
 			return ( this.document.Clipboard.Modifier.TotalObjects == 0 );
+		}
+		#endregion
+
+
+		#region TextFormat
+		// Met le texte en gras.
+		public void TextBold()
+		{
+			Objects.Abstract editObject = this.RetEditObject();
+			if ( editObject == null )  return;
+			editObject.EditBold();
+		}
+		
+		// Met le texte en italique.
+		public void TextItalic()
+		{
+			Objects.Abstract editObject = this.RetEditObject();
+			if ( editObject == null )  return;
+			editObject.EditItalic();
+		}
+
+		// Met le texte en souligné.
+		public void TextUnderlined()
+		{
+			Objects.Abstract editObject = this.RetEditObject();
+			if ( editObject == null )  return;
+			editObject.EditUnderlined();
 		}
 		#endregion
 
@@ -2422,6 +2483,92 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		#region Booolean
+		// Opérations booléenne sur tous les objets sélectionnés.
+		public void BooleanSelection(Drawing.PathOperation op, double precision)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.OpletQueueBeginAction();
+			bool error = false;
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Path pathResult = new Path();
+			Objects.Abstract model = null;
+			Objects.Abstract layer = context.RootObject();
+			int total = layer.Objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				int ii = index;
+				Drawing.PathOperation oper = op;
+				if ( op == Drawing.PathOperation.AMinusB )
+				{
+					ii = total-index-1;
+				}
+				else if ( op == Drawing.PathOperation.BMinusA )
+				{
+					oper = Drawing.PathOperation.AMinusB;
+				}
+
+				Objects.Abstract obj = layer.Objects[ii] as Objects.Abstract;
+				if ( !obj.IsSelected )  continue;
+
+				for ( int rank=0 ; rank<100 ; rank++ )
+				{
+					Path path = obj.GetPath(rank);
+					if ( path == null )
+					{
+						if ( rank == 0 )  error = true;
+						break;
+					}
+
+					if ( model == null )
+					{
+						model = obj;
+						pathResult.Append(path, precision, 0.0);
+					}
+					else
+					{
+						Path pathLight = new Path();
+						pathLight.Append(path, precision, 0.0);
+						pathResult = Drawing.Path.Combine(pathResult, pathLight, oper);
+					}
+
+					obj.Mark = true;  // il faudra le détruire
+				}
+			}
+
+			Objects.Bezier bezier = new Objects.Bezier(this.document, model);
+			layer.Objects.Add(bezier);
+			bezier.Select(true);
+			this.XferProperties(bezier, model);
+			this.TotalSelected ++;
+
+			if ( bezier.CreateFromPath(pathResult, -1) )
+			{
+				bezier.CreateFinalise();
+				this.Simplify(bezier);
+				this.document.Notifier.NotifyArea(bezier.BoundingBox);
+				this.DeleteSelection(true);  // détruit les objets sélectionnés et marqués
+			}
+			else
+			{
+				layer.Objects.Remove(bezier);
+				this.TotalSelected --;
+				this.ClearMarks();
+				error = true;
+			}
+
+			this.document.Notifier.NotifySelectionChanged();
+			this.OpletQueueValidateAction();
+
+			if ( error )
+			{
+				string message = "Opération impossible.";
+				this.ActiveViewer.DialogError(message);
+			}
+		}
+		#endregion
+
+
 		#region Hide
 		// Cache tous les objets sélectionnés du calque courant.
 		public void HideSelection()
@@ -2945,7 +3092,11 @@ namespace Epsitec.Common.Document
 			this.document.Modifier.OpletQueueEnable = false;
 			list.Clear();
 
-			if ( this.IsTool )  // outil select, edit, loupe, etc. ?
+			if ( this.tool == "Picker" && this.TotalSelected == 0 )  // pipette ?
+			{
+				this.ObjectMemoryTool.PropertiesList(list, null);
+			}
+			else if ( this.IsTool )  // outil select, edit, loupe, etc. ?
 			{
 				DrawingContext context = this.ActiveViewer.DrawingContext;
 				Objects.Abstract layer = context.RootObject();

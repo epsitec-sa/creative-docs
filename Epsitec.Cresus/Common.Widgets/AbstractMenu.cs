@@ -86,9 +86,9 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				Support.ICommandDispatcherHost host = this.GetHost ();
+				Support.ICommandDispatcherHost host = this.GetHost();
 				
-				if (host != null)
+				if ( host != null )
 				{
 					return host.CommandDispatcher;
 				}
@@ -297,15 +297,15 @@ namespace Epsitec.Common.Widgets
 		#region Interface IBundleSupport
 		public override void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
-			base.RestoreFromBundle (bundler, bundle);
-			this.items.RestoreFromBundle ("items", bundler, bundle);
-			this.AdjustSize ();
+			base.RestoreFromBundle(bundler, bundle);
+			this.items.RestoreFromBundle("items", bundler, bundle);
+			this.AdjustSize();
 		}
 		
 		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
-			base.SerializeToBundle (bundler, bundle);
-			this.items.SerializeToBundle ("items", bundler, bundle);
+			base.SerializeToBundle(bundler, bundle);
+			this.items.SerializeToBundle("items", bundler, bundle);
 		}
 		#endregion
 		
@@ -330,15 +330,15 @@ namespace Epsitec.Common.Widgets
 
 		protected Support.ICommandDispatcherHost GetHost()
 		{
-			if (this.host != null)
+			if ( this.host != null )
 			{
 				return this.host;
 			}
-			if (this.parentMenu != null)
+			if ( this.parentMenu != null )
 			{
-				this.parentMenu.GetHost ();
+				this.parentMenu.GetHost();
 			}
-			if (this.Window != null)
+			if ( this.Window != null )
 			{
 				return this.Window;
 			}
@@ -349,23 +349,23 @@ namespace Epsitec.Common.Widgets
 		
 		public override void Invalidate(Drawing.Rectangle rect)
 		{
-			if (this.IsHorizontal && this.IsVisible)
+			if ( this.IsHorizontal && this.IsVisible )
 			{
-				if (this.Parent != null)
+				if ( this.Parent != null )
 				{
 					Window window = this.Window;
 					
-					if (window != null)
+					if ( window != null )
 					{
-						window.SynchronousRepaint ();
-						this.Parent.Invalidate (this.MapClientToParent (rect));
-						window.SynchronousRepaint ();
+						window.SynchronousRepaint();
+						this.Parent.Invalidate(this.MapClientToParent(rect));
+						window.SynchronousRepaint();
 						return;
 					}
 				}
 			}
 			
-			base.Invalidate (rect);
+			base.Invalidate(rect);
 		}
 		
 		
@@ -379,7 +379,7 @@ namespace Epsitec.Common.Widgets
 				
 				foreach ( MenuItem item in items )
 				{
-					item.Dispose ();
+					item.Dispose();
 				}
 				
 				this.timer.TimeElapsed -= new Support.EventHandler(this.HandleTimerTimeElapsed);
@@ -536,7 +536,7 @@ namespace Epsitec.Common.Widgets
 				default:
 					IFeel feel = Feel.Factory.Active;
 					
-					if ( feel.TestSelectItemKey (message) )
+					if ( feel.TestSelectItemKey(message) )
 					{
 						int sel = this.SelectedIndex;
 						
@@ -547,7 +547,7 @@ namespace Epsitec.Common.Widgets
 						break;
 					}
 					
-					if ( feel.TestCancelKey (message) )
+					if ( feel.TestCancelKey(message) )
 					{
 						AbstractMenu.Reject();
 						break;
@@ -611,7 +611,6 @@ namespace Epsitec.Common.Widgets
 		protected static void ValidateAndExecuteCommand()
 		{
 			AbstractMenu menu = AbstractMenu.menuLastLeaf;
-			
 			if ( menu == null )  menu = AbstractMenu.RootMenu;
 			
 			MenuEventArgs e = new MenuEventArgs();
@@ -628,7 +627,7 @@ namespace Epsitec.Common.Widgets
 				e.MenuItem = item;
 				
 				menu.OnAccepted(e);
-				item.ExecuteCommand ();
+				item.ExecuteCommand();
 			}
 			
 			AbstractMenu.CloseAll();
@@ -783,7 +782,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.submenu != null )
 			{
-				if (AbstractMenu.menuRoot == this.submenu)
+				if ( AbstractMenu.menuRoot == this.submenu )
 				{
 					AbstractMenu.menuRoot = null;
 				}
@@ -804,16 +803,19 @@ namespace Epsitec.Common.Widgets
 				{
 					this.Window.MakeActive();
 				}
-			
-				// Ce menu devient la dernière feuille de l'arbre des menus...
-				AbstractMenu.menuLastLeaf = this;
-			
-				this.isActive = true;
-				this.SelectedIndex = this.SelectedIndex;
 			}
-			
+
 			this.window.Dispose();
 			this.window = null;
+			
+			if ( this.parentMenu != null )
+			{
+				// Le menu parent devient la dernière feuille de l'arbre des menus.
+				AbstractMenu.menuLastLeaf = this.parentMenu;
+			
+				this.isActive = true;
+				this.parentMenu.SelectedIndex = this.parentMenu.SelectedIndex;
+			}
 			
 			return true;
 		}
@@ -858,7 +860,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( !AbstractMenu.menuDeveloped )
 			{
-				System.Diagnostics.Debug.Assert ( AbstractMenu.menuDeveloped );
+				System.Diagnostics.Debug.Assert(AbstractMenu.menuDeveloped);
 			}
 			
 			Window window = sender as Window;
@@ -939,7 +941,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					MenuItem item = (MenuItem)sender;
+					MenuItem item = (MenuItem) sender;
 					this.OpenSubmenu(item, false);
 				}
 			}
@@ -969,7 +971,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleCellEntered(object sender, MessageEventArgs e)
 		{
-			MenuItem item = (MenuItem)sender;
+			MenuItem item = (MenuItem) sender;
 			this.SelectedIndex = item.Index;
 			int sel = this.SelectedIndex;
 
@@ -1018,7 +1020,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleCellExited(object sender, MessageEventArgs e)
 		{
-			MenuItem item = (MenuItem)sender;
+			MenuItem item = (MenuItem) sender;
 			this.delayedMenuItem = null;
 			
 			if ( this.isActive )
@@ -1050,7 +1052,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			System.Diagnostics.Debug.Assert (this.GetHost () != null, "No Host defined for menu.",
+			System.Diagnostics.Debug.Assert (this.GetHost() != null, "No Host defined for menu.",
 				/**/						 "The menu you are trying to display has no associated command dispatcher host.\n"+
 				/**/						 "Use AbstractMenu.Host to define it when you setup the menu.");
 			
@@ -1130,10 +1132,10 @@ namespace Epsitec.Common.Widgets
 		{
 			MenuItem item = widget as MenuItem;
 			
-			this.Children.Add (item);
+			this.Children.Add(item);
 			this.isDirty = true;
 			
-			item.SetMenuType (this.type);
+			item.SetMenuType(this.type);
 			
 			item.Pressed += new MessageEventHandler(this.HandleCellPressed);
 			item.Entered += new MessageEventHandler(this.HandleCellEntered);
@@ -1144,13 +1146,13 @@ namespace Epsitec.Common.Widgets
 		{
 			MenuItem item = widget as MenuItem;
 			
-			item.SetMenuType (MenuType.Invalid);
+			item.SetMenuType(MenuType.Invalid);
 			
 			item.Pressed -= new MessageEventHandler(this.HandleCellPressed);
 			item.Entered -= new MessageEventHandler(this.HandleCellEntered);
 			item.Exited  -= new MessageEventHandler(this.HandleCellExited);
 			
-			this.Children.Remove (item);
+			this.Children.Remove(item);
 			this.isDirty = true;
 		}
 		

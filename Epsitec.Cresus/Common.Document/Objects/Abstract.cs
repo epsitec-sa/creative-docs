@@ -435,6 +435,24 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
+		// Met en gras pendant l'édition.
+		public virtual bool EditBold()
+		{
+			return false;
+		}
+
+		// Met en italique pendant l'édition.
+		public virtual bool EditItalic()
+		{
+			return false;
+		}
+
+		// Souligne pendant l'édition.
+		public virtual bool EditUnderlined()
+		{
+			return false;
+		}
+
 		// Colle du texte pendant l'édition.
 		public virtual bool EditPaste()
 		{
@@ -1201,7 +1219,14 @@ namespace Epsitec.Common.Document.Objects
 			{
 				foreach ( Properties.Abstract mp in model.properties )
 				{
-					this.UseProperty(mp);
+					if ( model.IsSelected )
+					{
+						this.UseProperty(mp);
+					}
+					else
+					{
+						this.PickerProperty(mp);
+					}
 				}
 				this.dirtyBbox = true;
 			}
@@ -1256,6 +1281,20 @@ namespace Epsitec.Common.Document.Objects
 			if ( actual == null )  return;
 
 			this.MergeProperty(style, actual);
+			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		// Prend une propriété à un objet désélectionné.
+		protected void PickerProperty(Properties.Abstract property)
+		{
+			Properties.Abstract src = this.Property(property.Type);
+			if ( src == null )  return;
+
+			Properties.Abstract dst = Properties.Abstract.NewProperty(this.document, property.Type);
+			property.CopyTo(dst);
+			dst.IsSelected = true;  // nouvel état
+			this.document.Modifier.PropertyAdd(dst);
+			this.MergeProperty(dst, src);
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 

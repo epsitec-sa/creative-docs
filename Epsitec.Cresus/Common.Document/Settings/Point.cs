@@ -18,6 +18,9 @@ namespace Epsitec.Common.Document.Settings
 
 		protected void Initialise()
 		{
+			this.conditionName = "";
+			this.conditionState = false;
+
 			switch ( this.name )
 			{
 				case "PageSize":

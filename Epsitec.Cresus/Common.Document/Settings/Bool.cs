@@ -18,6 +18,9 @@ namespace Epsitec.Common.Document.Settings
 
 		protected void Initialise()
 		{
+			this.conditionName = "";
+			this.conditionState = false;
+
 			switch ( this.name )
 			{
 				case "GridActive":
@@ -70,10 +73,20 @@ namespace Epsitec.Common.Document.Settings
 
 				case "PrintPerfectJoin":
 					this.text = "Jointures parfaites (entre les zones d'une page)";
+					this.conditionName = "PrintDraft";
+					this.conditionState = true;
+					break;
+
+				case "PrintTarget":
+					this.text = "Traits de coupe (hors de la page)";
+					this.conditionName = "PrintAutoZoom";
+					this.conditionState = true;
 					break;
 
 				case "PrintDebugArea":
 					this.text = "Imprime les zones détectées (debug)";
+					this.conditionName = "PrintDraft";
+					this.conditionState = true;
 					break;
 
 				case "RepeatDuplicateMove":
@@ -126,6 +139,9 @@ namespace Epsitec.Common.Document.Settings
 
 					case "PrintPerfectJoin":
 						return this.document.Settings.PrintInfo.PerfectJoin;
+
+					case "PrintTarget":
+						return this.document.Settings.PrintInfo.Target;
 
 					case "PrintDebugArea":
 						return this.document.Settings.PrintInfo.DebugArea;
@@ -191,6 +207,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "PrintPerfectJoin":
 						this.document.Settings.PrintInfo.PerfectJoin = value;
+						break;
+
+					case "PrintTarget":
+						this.document.Settings.PrintInfo.Target = value;
 						break;
 
 					case "PrintDebugArea":

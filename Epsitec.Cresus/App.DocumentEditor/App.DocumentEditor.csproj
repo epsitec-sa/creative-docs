@@ -244,6 +244,26 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\BooleanAnd.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\BooleanBackMinus.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\BooleanFrontMinus.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\BooleanOr.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\BooleanXor.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\CapButt.icon"
                     BuildAction = "EmbeddedResource"
                 />

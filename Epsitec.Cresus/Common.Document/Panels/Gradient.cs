@@ -45,6 +45,9 @@ namespace Epsitec.Common.Document.Panels
 			this.listFill.Items.Add("Circulaire");
 			this.listFill.Items.Add("Diamant");
 			this.listFill.Items.Add("Cônique");
+			this.listFill.Items.Add("Hachures");
+			this.listFill.Items.Add("Points");
+			this.listFill.Items.Add("Carrés");
 			this.listFill.SelectedIndexChanged += new EventHandler(this.HandleListChanged);
 			this.listFill.TabIndex = 4;
 			this.listFill.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -66,12 +69,25 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldAngle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldAngle, "Angle");
 
+			this.radioHatchRank = new RadioButton[Properties.Gradient.HatchMax];
+			for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
+			{
+				this.radioHatchRank[i] = new RadioButton(this);
+				this.radioHatchRank[i].ActiveStateChanged += new EventHandler(this.HandleHatchRankChanged);
+				this.radioHatchRank[i].TabIndex = 10+i;
+				this.radioHatchRank[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			}
+			this.radioHatchRank[Properties.Gradient.HatchMax-1].Text = ":";
+			ToolTip.Default.SetToolTip(this.radioHatchRank[0], "1er trait");
+			ToolTip.Default.SetToolTip(this.radioHatchRank[1], "2ème trait");
+			this.RadioSelected = 0;
+
 			this.fieldRepeat = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldRepeat);
 			this.fieldRepeat.InternalMinValue = 1;
 			this.fieldRepeat.InternalMaxValue = 8;
 			this.fieldRepeat.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.fieldRepeat.TabIndex = 7;
+			this.fieldRepeat.TabIndex = 20;
 			this.fieldRepeat.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRepeat, "Nombre de répétitions");
 
@@ -81,7 +97,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldMiddle.InternalMaxValue =  500;
 			this.fieldMiddle.Step = 10;
 			this.fieldMiddle.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.fieldMiddle.TabIndex = 8;
+			this.fieldMiddle.TabIndex = 21;
 			this.fieldMiddle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMiddle, "Couleur médiane");
 
@@ -91,10 +107,39 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldSmooth.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldSmooth);
 			this.fieldSmooth.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.fieldSmooth.TabIndex = 9;
+			this.fieldSmooth.TabIndex = 22;
 			this.fieldSmooth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldSmooth, "Flou");
 
+			this.fieldHatchAngle = new TextFieldReal(this);
+			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldHatchAngle);
+			this.fieldHatchAngle.InternalMinValue = -360.0M;
+			this.fieldHatchAngle.InternalMaxValue =  360.0M;
+			this.fieldHatchAngle.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldHatchAngle.TabIndex = 23;
+			this.fieldHatchAngle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldHatchAngle, "Angle");
+
+			this.fieldHatchWidth = new TextFieldReal(this);
+			this.fieldHatchWidth.FactorMinRange = 0.0M;
+			this.fieldHatchWidth.FactorMaxRange = 0.1M;
+			this.fieldHatchWidth.FactorStep = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldHatchWidth);
+			this.fieldHatchWidth.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldHatchWidth.TabIndex = 24;
+			this.fieldHatchWidth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldHatchWidth, "Epaisseur");
+
+			this.fieldHatchDistance = new TextFieldReal(this);
+			this.fieldHatchDistance.FactorMinRange = 0.0M;
+			this.fieldHatchDistance.FactorMaxRange = 0.1M;
+			this.fieldHatchDistance.FactorStep = 1.0M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldHatchDistance);
+			this.fieldHatchDistance.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldHatchDistance.TabIndex = 25;
+			this.fieldHatchDistance.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldHatchDistance, "Distance");
+			
 			this.labelAngle = new StaticText(this);
 			this.labelAngle.Text = "a";
 			this.labelAngle.Alignment = ContentAlignment.MiddleCenter;
@@ -110,6 +155,18 @@ namespace Epsitec.Common.Document.Panels
 			this.labelSmooth = new StaticText(this);
 			this.labelSmooth.Text = "F";
 			this.labelSmooth.Alignment = ContentAlignment.MiddleCenter;
+
+			this.labelHatchAngle = new StaticText(this);
+			this.labelHatchAngle.Text = "a";
+			this.labelHatchAngle.Alignment = ContentAlignment.MiddleCenter;
+
+			this.labelHatchWidth = new StaticText(this);
+			this.labelHatchWidth.Text = "e";
+			this.labelHatchWidth.Alignment = ContentAlignment.MiddleCenter;
+
+			this.labelHatchDistance = new StaticText(this);
+			this.labelHatchDistance.Text = "d";
+			this.labelHatchDistance.Alignment = ContentAlignment.MiddleCenter;
 
 			this.swapColor = new IconButton(this);
 			this.swapColor.IconName = "manifest:Epsitec.App.DocumentEditor.Images.SwapDataV.icon";
@@ -135,6 +192,12 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldMiddle.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.fieldSmooth.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.swapColor.Clicked -= new MessageEventHandler(this.HandleSwapColorClicked);
+
+				for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
+				{
+					this.radioHatchRank[i].ActiveStateChanged -= new EventHandler(this.HandleHatchRankChanged);
+					this.radioHatchRank[i] = null;
+				}
 
 				this.label = null;
 				this.listFill = null;
@@ -187,6 +250,9 @@ namespace Epsitec.Common.Document.Panels
 				case Properties.GradientFillType.Circle:   sel = 2;  break;
 				case Properties.GradientFillType.Diamond:  sel = 3;  break;
 				case Properties.GradientFillType.Conic:    sel = 4;  break;
+				case Properties.GradientFillType.Hatch:    sel = 5;  break;
+				case Properties.GradientFillType.Dots:     sel = 6;  break;
+				case Properties.GradientFillType.Squares:  sel = 7;  break;
 			}
 			this.listFill.SelectedIndex = sel;
 
@@ -196,6 +262,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldRepeat.InternalValue = (decimal) p.Repeat;
 			this.fieldMiddle.InternalValue = (decimal) p.Middle*100;
 			this.fieldSmooth.InternalValue = (decimal) p.Smooth;
+			this.HatchToWidget();
 
 			this.cx = p.Cx;
 			this.cy = p.Cy;
@@ -220,6 +287,9 @@ namespace Epsitec.Common.Document.Panels
 				case 2:  p.FillType = Properties.GradientFillType.Circle;   break;
 				case 3:  p.FillType = Properties.GradientFillType.Diamond;  break;
 				case 4:  p.FillType = Properties.GradientFillType.Conic;    break;
+				case 5:  p.FillType = Properties.GradientFillType.Hatch;    break;
+				case 6:  p.FillType = Properties.GradientFillType.Dots;     break;
+				case 7:  p.FillType = Properties.GradientFillType.Squares;  break;
 			}
 
 			p.Color1 = this.fieldColor1.Color;
@@ -228,11 +298,57 @@ namespace Epsitec.Common.Document.Panels
 			p.Repeat = (int)    this.fieldRepeat.InternalValue;
 			p.Middle = (double) this.fieldMiddle.InternalValue/100;
 			p.Smooth = (double) this.fieldSmooth.InternalValue;
+			this.WidgetToHatch();
 
 			p.Cx = this.cx;
 			p.Cy = this.cy;
 			p.Sx = this.sx;
 			p.Sy = this.sy;
+		}
+
+		protected void HatchToWidget()
+		{
+			Properties.Gradient p = this.property as Properties.Gradient;
+			if ( p == null )  return;
+
+			int i = this.RadioSelected;
+			this.fieldHatchAngle.InternalValue = (decimal) p.GetHatchAngle(i);
+			this.fieldHatchWidth.InternalValue = (decimal) p.GetHatchWidth(i);
+			this.fieldHatchDistance.InternalValue = (decimal) p.GetHatchDistance(i);
+		}
+
+		protected void WidgetToHatch()
+		{
+			Properties.Gradient p = this.property as Properties.Gradient;
+			if ( p == null )  return;
+
+			int i = this.RadioSelected;
+			p.SetHatchAngle(i, (double) this.fieldHatchAngle.InternalValue);
+			p.SetHatchWidth(i, (double) this.fieldHatchWidth.InternalValue);
+			p.SetHatchDistance(i, (double) this.fieldHatchDistance.InternalValue);
+		}
+
+		protected int RadioSelected
+		{
+			get
+			{
+				for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
+				{
+					if ( this.radioHatchRank[i].ActiveState == WidgetState.ActiveYes )
+					{
+						return i;
+					}
+				}
+				return 0;
+			}
+
+			set
+			{
+				for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
+				{
+					this.radioHatchRank[i].ActiveState = (i==value) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				}
+			}
 		}
 
 		// Donne l'angle.
@@ -274,6 +390,7 @@ namespace Epsitec.Common.Document.Panels
 		protected void EnableWidgets()
 		{
 			int sel = this.listFill.SelectedIndex;
+			bool hatch = (sel == 5 || sel == 6 || sel == 7);  // hachures, points ou carrés ?
 
 			this.label.SetVisible(true);
 			this.nothingButton.SetVisible(true);
@@ -281,15 +398,27 @@ namespace Epsitec.Common.Document.Panels
 			this.reset.SetVisible(this.isExtendedSize);
 			this.fieldColor1.SetVisible(true);
 			this.fieldColor2.SetVisible(sel > 0);
-			this.fieldAngle.SetVisible(this.isExtendedSize);
-			this.fieldRepeat.SetVisible(this.isExtendedSize);
-			this.fieldMiddle.SetVisible(this.isExtendedSize);
-			this.fieldSmooth.SetVisible(this.isExtendedSize);
-			this.labelAngle.SetVisible(this.isExtendedSize);
-			this.labelRepeat.SetVisible(this.isExtendedSize);
-			this.labelMiddle.SetVisible(this.isExtendedSize);
-			this.labelSmooth.SetVisible(this.isExtendedSize);
+			this.fieldAngle.SetVisible(this.isExtendedSize && !hatch);
+			this.fieldRepeat.SetVisible(this.isExtendedSize && !hatch);
+			this.fieldMiddle.SetVisible(this.isExtendedSize && !hatch);
+			this.fieldSmooth.SetVisible(this.isExtendedSize && !hatch);
+			this.fieldHatchAngle.SetVisible(this.isExtendedSize && hatch);
+			this.fieldHatchWidth.SetVisible(this.isExtendedSize && hatch);
+			this.fieldHatchDistance.SetVisible(this.isExtendedSize && hatch);
+			this.labelAngle.SetVisible(this.isExtendedSize && !hatch);
+			this.labelRepeat.SetVisible(this.isExtendedSize && !hatch);
+			this.labelMiddle.SetVisible(this.isExtendedSize && !hatch);
+			this.labelSmooth.SetVisible(this.isExtendedSize && !hatch);
+			this.labelHatchAngle.SetVisible(this.isExtendedSize && hatch);
+			this.labelHatchWidth.SetVisible(this.isExtendedSize && hatch);
+			this.labelHatchDistance.SetVisible(this.isExtendedSize && hatch);
 			this.swapColor.SetVisible(sel > 0);
+
+			for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
+			{
+				this.radioHatchRank[i].SetVisible(this.isExtendedSize && hatch);
+				this.radioHatchRank[i].SetEnabled(hatch);
+			}
 
 			if ( sel > 0 )
 			{
@@ -311,6 +440,19 @@ namespace Epsitec.Common.Document.Panels
 			else
 			{
 				this.fieldAngle.SetEnabled(false);
+			}
+
+			if ( hatch )  // hachures ?
+			{
+				this.fieldHatchAngle.SetEnabled(this.isExtendedSize);
+				this.fieldHatchWidth.SetEnabled(this.isExtendedSize);
+				this.fieldHatchDistance.SetEnabled(this.isExtendedSize);
+			}
+			else
+			{
+				this.fieldHatchAngle.SetEnabled(false);
+				this.fieldHatchWidth.SetEnabled(false);
+				this.fieldHatchDistance.SetEnabled(false);
 			}
 
 			this.fieldSmooth.SetEnabled(this.isExtendedSize);
@@ -427,27 +569,41 @@ namespace Epsitec.Common.Document.Panels
 				r.Width = 50;
 				this.fieldAngle.Bounds = r;
 
+				r.Width = 16;
+				for ( int i=0 ; i<Properties.Gradient.HatchMax ; i++ )
+				{
+					if ( i == Properties.Gradient.HatchMax-1 )  r.Width = 32;
+					this.radioHatchRank[i].Bounds = r;
+					r.Offset(r.Width, 0);
+				}
+
 				rect.Offset(0, -25);
 				r = rect;
 
 				r.Left = rect.Left;
 				r.Width = 12;
 				this.labelRepeat.Bounds = r;
+				this.labelHatchAngle.Bounds = r;
 				r.Left = r.Right;
 				r.Width = 44;
 				this.fieldRepeat.Bounds = r;
+				this.fieldHatchAngle.Bounds = r;
 				r.Left = r.Right;
 				r.Width = 12;
 				this.labelMiddle.Bounds = r;
+				this.labelHatchWidth.Bounds = r;
 				r.Left = r.Right;
 				r.Width = 45;
 				this.fieldMiddle.Bounds = r;
+				this.fieldHatchWidth.Bounds = r;
 				r.Left = r.Right;
 				r.Width = 12;
 				this.labelSmooth.Bounds = r;
+				this.labelHatchDistance.Bounds = r;
 				r.Left = r.Right;
 				r.Width = 50;
 				this.fieldSmooth.Bounds = r;
+				this.fieldHatchDistance.Bounds = r;
 			}
 		}
 		
@@ -543,6 +699,15 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
+		// Le rang a été changé.
+		private void HandleHatchRankChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			this.ignoreChanged = true;
+			this.HatchToWidget();
+			this.ignoreChanged = false;
+		}
+
 
 		protected StaticText				label;
 		protected IconButton				nothingButton;
@@ -555,10 +720,17 @@ namespace Epsitec.Common.Document.Panels
 		protected TextFieldReal				fieldRepeat;
 		protected TextFieldReal				fieldMiddle;
 		protected TextFieldReal				fieldSmooth;
+		protected TextFieldReal				fieldHatchAngle;
+		protected TextFieldReal				fieldHatchWidth;
+		protected TextFieldReal				fieldHatchDistance;
+		protected RadioButton[]				radioHatchRank;
 		protected StaticText				labelAngle;
 		protected StaticText				labelRepeat;
 		protected StaticText				labelMiddle;
 		protected StaticText				labelSmooth;
+		protected StaticText				labelHatchAngle;
+		protected StaticText				labelHatchWidth;
+		protected StaticText				labelHatchDistance;
 		protected ColorSample				originFieldColor;
 		protected int						originFieldRank = -1;
 		protected double					cx, cy;

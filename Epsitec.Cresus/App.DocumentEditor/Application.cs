@@ -68,11 +68,10 @@ namespace Epsitec.App.DocumentEditor
 				}
 				this.editor.GlobalSettings.WindowLocation = wa.Center-this.editor.GlobalSettings.WindowSize/2;
 			}
-			
 			this.mainWindow.WindowLocation = this.editor.GlobalSettings.WindowLocation;
 			this.mainWindow.WindowSize     = this.editor.GlobalSettings.WindowSize;
 			this.mainWindow.IsFullScreen   = this.editor.GlobalSettings.IsFullScreen;
-			
+
 			switch ( type )
 			{
 				case DocumentType.Graphic:
@@ -93,9 +92,8 @@ namespace Epsitec.App.DocumentEditor
 			}
 			
 			this.menu = this.editor.GetMenu();
-
-			this.menu.Dock     = DockStyle.Top;
-			this.menu.Parent   = this.mainWindow.Root;
+			this.menu.Dock   = DockStyle.Top;
+			this.menu.Parent = this.mainWindow.Root;
 			
 			this.editor.Size   = this.mainWindow.ClientSize;
 			this.editor.Dock   = DockStyle.Fill;
@@ -136,7 +134,8 @@ namespace Epsitec.App.DocumentEditor
 			{
 				foreach ( string file in files )
 				{
-					if ( !file.ToLower().EndsWith(this.DefaultExtension) )
+					if ( !file.ToLower().EndsWith(this.DefaultExtension) &&
+						 !file.ToLower().EndsWith(this.ColorsExtension) )
 					{
 						return;
 					}
@@ -155,7 +154,8 @@ namespace Epsitec.App.DocumentEditor
 			{
 				foreach ( string file in files )
 				{
-					if ( !file.ToLower().EndsWith(this.DefaultExtension) )
+					if ( !file.ToLower().EndsWith(this.DefaultExtension) &&
+						 !file.ToLower().EndsWith(this.ColorsExtension) )
 					{
 						return;
 					}
@@ -182,6 +182,14 @@ namespace Epsitec.App.DocumentEditor
 				{
 					return ".crdoc";
 				}
+			}
+		}
+
+		protected string ColorsExtension
+		{
+			get
+			{
+				return ".crcolors";
 			}
 		}
 

@@ -940,7 +940,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					if ( this.PropertyPolyClose.BoolValue )  // fermé ?
 					{
-						pathLine.CurveTo(this.Handle(i-1).Position, this.Handle(first).Position, pp1);
+						this.PathPutSegment(pathLine, i-1, first, pp1);
 						pathLine.Close();
 					}
 					first = i;
@@ -949,17 +949,31 @@ namespace Epsitec.Common.Document.Objects
 				}
 				else if ( i < total-3 )  // point intermédiaire ?
 				{
-					pathLine.CurveTo(this.Handle(i-1).Position, this.Handle(i).Position, this.Handle(i+1).Position);
+					this.PathPutSegment(pathLine, i-1, i, this.Handle(i+1).Position);
 				}
 				else	// dernier point ?
 				{
-					pathLine.CurveTo(this.Handle(i-1).Position, this.Handle(i).Position, pp2);
+					this.PathPutSegment(pathLine, i-1, i, pp2);
 				}
 			}
 			if ( this.PropertyPolyClose.BoolValue )  // fermé ?
 			{
-				pathLine.CurveTo(this.Handle(total-1).Position, this.Handle(first).Position, pp1);
+				this.PathPutSegment(pathLine, total-1, first, pp1);
 				pathLine.Close();
+			}
+		}
+
+		// Ajoute un segment de courbe ou de droite dans le chemin.
+		protected void PathPutSegment(Path path, int rankS1, int rankS2, Point p2)
+		{
+			if ( this.Handle(rankS1).Type == HandleType.Hide &&
+				 this.Handle(rankS2).Type == HandleType.Hide )
+			{
+				path.LineTo(p2);
+			}
+			else
+			{
+				path.CurveTo(this.Handle(rankS1).Position, this.Handle(rankS2).Position, p2);
 			}
 		}
 

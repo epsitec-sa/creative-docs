@@ -54,7 +54,16 @@ namespace Epsitec.App.DocumentEditor
 			if ( args.Length >= 2 )
 			{
 				this.CreateDocument();
-				string err = this.CurrentDocument.Read(args[1]);
+				string filename = args[1];
+				string err = "";
+				if ( filename.ToLower().EndsWith(".crcolors") )
+				{
+					err = this.PaletteRead(filename);
+				}
+				else
+				{
+					err = this.CurrentDocument.Read(filename);
+				}
 				this.UpdateRulers();
 				if ( err == "" )
 				{
@@ -222,6 +231,7 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.OperMoveH.icon", "", "Opérations", "");
 			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.GroupEmpty.icon", "", "Groupe", "");
 			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.Combine.icon", "", "Géométrie", "");
+			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.BooleanOr.icon", "", "Booléen", "");
 			objMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = objMenu;
 
@@ -263,6 +273,17 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(geomMenu, "manifest:Epsitec.App.DocumentEditor.Images.Fragment.icon", "Fragment", "Fragmenter", "");
 			geomMenu.AdjustSize();
 			objMenu.Items[14].Submenu = geomMenu;
+
+			VMenu boolMenu = new VMenu();
+			boolMenu.Name = "Bool";
+			boolMenu.Host = this;
+			this.MenuAdd(boolMenu, "manifest:Epsitec.App.DocumentEditor.Images.BooleanOr.icon", "BooleanOr", "Union", "");
+			this.MenuAdd(boolMenu, "manifest:Epsitec.App.DocumentEditor.Images.BooleanAnd.icon", "BooleanAnd", "Intersection", "");
+			this.MenuAdd(boolMenu, "manifest:Epsitec.App.DocumentEditor.Images.BooleanXor.icon", "BooleanXor", "Exclusion", "");
+			this.MenuAdd(boolMenu, "manifest:Epsitec.App.DocumentEditor.Images.BooleanFrontMinus.icon", "BooleanFrontMinus", "Avant moins arrières", "");
+			this.MenuAdd(boolMenu, "manifest:Epsitec.App.DocumentEditor.Images.BooleanBackMinus.icon", "BooleanBackMinus", "Arrière moins avants", "");
+			boolMenu.AdjustSize();
+			objMenu.Items[15].Submenu = boolMenu;
 
 			VMenu showMenu = new VMenu();
 			showMenu.Name = "Show";
@@ -382,7 +403,6 @@ namespace Epsitec.App.DocumentEditor
 			this.menu.Items[i++].Submenu = helpMenu;
 
 			this.hToolBar = new HToolBar(this);
-			//?this.hToolBar.SetSyncPaint(true);
 			this.hToolBar.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.New.icon", "New", "Nouveau");
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Open.icon", "Open", "Ouvrir");
@@ -425,7 +445,6 @@ namespace Epsitec.App.DocumentEditor
 			}
 
 			this.info = new StatusBar(this);
-			//?this.info.SetSyncPaint(true);
 			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
 			this.InfoAdd("", 120, "StatusDocument", "");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.Deselect.icon", 0, "Deselect", "Désélectionner tout");
@@ -455,7 +474,6 @@ namespace Epsitec.App.DocumentEditor
 			StatusField infoField = this.info.Items["StatusMouse"] as StatusField;
 
 			this.vToolBar = new VToolBar(this);
-			//?this.vToolBar.SetSyncPaint(true);
 			this.vToolBar.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
 			this.vToolBar.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, this.info.Height);
 			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Select.icon", "SelectTool(this.Name)", "Sélectionner", "Select");
@@ -536,7 +554,6 @@ namespace Epsitec.App.DocumentEditor
 				viewer.Parent = mainViewParent;
 				viewer.Anchor = AnchorStyles.All;
 				viewer.AnchorMargins = new Margins(wm, wm+sw+1, 6+wm, wm+sw+1);
-				//?viewer.SetSyncPaint(true);
 				document.Modifier.ActiveViewer = viewer;
 				document.Modifier.AttachViewer(viewer);
 
@@ -545,7 +562,6 @@ namespace Epsitec.App.DocumentEditor
 				frame1.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 				frame1.AnchorMargins = new Margins(wm, wm, 6+wm, wm);
 				frame1.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
-				//?frame1.SetSyncPaint(true);
 				document.Modifier.AttachViewer(frame1);
 
 				Viewer frame2 = new Viewer(document);
@@ -553,7 +569,6 @@ namespace Epsitec.App.DocumentEditor
 				frame2.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 				frame2.AnchorMargins = new Margins(wm, wm, 6+wm+30, wm);
 				frame2.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
-				//?frame2.SetSyncPaint(true);
 				document.Modifier.AttachViewer(frame2);
 			}
 			else
@@ -566,7 +581,6 @@ namespace Epsitec.App.DocumentEditor
 				viewer.Parent = mainViewParent;
 				viewer.Anchor = AnchorStyles.All;
 				viewer.AnchorMargins = new Margins(wm+lm, wm+sw+1, 6+wm+tm, wm+sw+1);
-				//?viewer.SetSyncPaint(true);
 				document.Modifier.ActiveViewer = viewer;
 				document.Modifier.AttachViewer(viewer);
 
@@ -576,7 +590,6 @@ namespace Epsitec.App.DocumentEditor
 				di.hRuler.Released += new MessageEventHandler(this.HandleHRulerReleased);
 				di.hRuler.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 				di.hRuler.AnchorMargins = new Margins(wm+lm, wm+sw+1, 6+wm, 0);
-				di.hRuler.SetSyncPaint(true);
 				ToolTip.Default.SetToolTip(di.hRuler, "Tirer avec la souris pour créer un repère");
 
 				di.vRuler = new VRuler(mainViewParent);
@@ -585,7 +598,6 @@ namespace Epsitec.App.DocumentEditor
 				di.vRuler.Released += new MessageEventHandler(this.HandleHRulerReleased);
 				di.vRuler.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
 				di.vRuler.AnchorMargins = new Margins(wm, 0, 6+wm+tm, wm+sw+1);
-				di.vRuler.SetSyncPaint(true);
 				ToolTip.Default.SetToolTip(di.vRuler, "Tirer avec la souris pour créer un repère");
 			}
 
@@ -623,7 +635,6 @@ namespace Epsitec.App.DocumentEditor
 			di.hScroller.ValueChanged += new EventHandler(this.HandleHScrollerValueChanged);
 			di.hScroller.Dock = DockStyle.Fill;
 			di.hScroller.DockMargins = new Margins(2, 0, 0, 0);
-			di.hScroller.SetSyncPaint(true);
 
 			// Bande verticale qui contient les boutons des calques et l'ascenseur.
 			Widget vBand = new Widget(mainViewParent);
@@ -659,7 +670,6 @@ namespace Epsitec.App.DocumentEditor
 			di.vScroller.ValueChanged += new EventHandler(this.HandleVScrollerValueChanged);
 			di.vScroller.Dock = DockStyle.Fill;
 			di.vScroller.DockMargins = new Margins(0, 0, 2, 0);
-			di.vScroller.SetSyncPaint(true);
 
 			di.bookPanels = new TabBook(this);
 			di.bookPanels.Width = this.panelsWidth;
@@ -994,7 +1004,7 @@ namespace Epsitec.App.DocumentEditor
 		// Affiche le dialogue pour signaler la liste de tous les problèmes.
 		protected Dialogs.DialogResult DialogWarnings(CommandDispatcher dispatcher, System.Collections.ArrayList warnings)
 		{
-			if ( warnings.Count == 0 )  return Dialogs.DialogResult.None;
+			if ( warnings == null || warnings.Count == 0 )  return Dialogs.DialogResult.None;
 			warnings.Sort();
 
 			string title = "Crésus";
@@ -1099,29 +1109,41 @@ namespace Epsitec.App.DocumentEditor
 		// Retourne false si le fichier n'a pas été ouvert.
 		public bool Open(string filename)
 		{
-			// Cherche si ce nom de fichier est déjà ouvert ?
-			int total = this.bookDocuments.PageCount;
-			for ( int i=0 ; i<total ; i++ )
+			string err = "";
+			if ( filename.ToLower().EndsWith("crcolors") )
 			{
-				DocumentInfo di = this.documents[i] as DocumentInfo;
-				if ( di.document.Filename == filename )
+				if ( !this.IsCurrentDocument )
 				{
-					this.globalSettings.LastFilenameAdd(filename);
-					this.BuildLastFilenamesMenu();
-					this.UseDocument(i);
-					return true;
+					this.CreateDocument();
 				}
+				err = this.PaletteRead(filename);
 			}
-
-			filename = DocumentEditor.AdjustFilename(filename);
-
-			this.CreateDocument();
-			string err = this.CurrentDocument.Read(filename);
-			this.UpdateRulers();
-			if ( err == "" )
+			else
 			{
-				this.UpdateBookDocuments();
-				this.DialogWarnings(this.commandDispatcher, this.CurrentDocument.ReadWarnings);
+				// Cherche si ce nom de fichier est déjà ouvert ?
+				int total = this.bookDocuments.PageCount;
+				for ( int i=0 ; i<total ; i++ )
+				{
+					DocumentInfo di = this.documents[i] as DocumentInfo;
+					if ( di.document.Filename == filename )
+					{
+						this.globalSettings.LastFilenameAdd(filename);
+						this.BuildLastFilenamesMenu();
+						this.UseDocument(i);
+						return true;
+					}
+				}
+
+				filename = DocumentEditor.AdjustFilename(filename);
+
+				this.CreateDocument();
+				err = this.CurrentDocument.Read(filename);
+				this.UpdateRulers();
+				if ( err == "" )
+				{
+					this.UpdateBookDocuments();
+					this.DialogWarnings(this.commandDispatcher, this.CurrentDocument.ReadWarnings);
+				}
 			}
 			this.DialogError(this.commandDispatcher, err);
 			return (err == "");
@@ -1498,6 +1520,24 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.Paste();
 		}
 
+		[Command ("TextBold")]
+		void CommandTextBold(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.TextBold();
+		}
+
+		[Command ("TextItalic")]
+		void CommandTextItalic(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.TextItalic();
+		}
+
+		[Command ("TextUnderlined")]
+		void CommandTextUnderlined(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.TextUnderlined();
+		}
+
 		[Command ("Undo")]
 		void CommandUndo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -1622,6 +1662,36 @@ namespace Epsitec.App.DocumentEditor
 		void CommandFragment(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.FragmentSelection();
+		}
+
+		[Command ("BooleanAnd")]
+		void CommandBooleanAnd(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.And, 0.03);
+		}
+
+		[Command ("BooleanOr")]
+		void CommandBooleanOr(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.Or, 0.03);
+		}
+
+		[Command ("BooleanXor")]
+		void CommandBooleanXor(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.Xor, 0.03);
+		}
+
+		[Command ("BooleanFrontMinus")]
+		void CommandBooleanFrontMinus(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.AMinusB, 0.03);
+		}
+
+		[Command ("BooleanBackMinus")]
+		void CommandBooleanBackMinus(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.BooleanSelection(Drawing.PathOperation.BMinusA, 0.03);
 		}
 
 		[Command ("Grid")]
@@ -2193,6 +2263,9 @@ namespace Epsitec.App.DocumentEditor
 			this.cutState = new CommandState("Cut", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaX);
 			this.copyState = new CommandState("Copy", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaC);
 			this.pasteState = new CommandState("Paste", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaV);
+			this.textBoldState = new CommandState("TextBold", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaB);
+			this.textItalicState = new CommandState("TextItalic", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaI);
+			this.textUnderlinedState = new CommandState("TextUnderlined", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaU);
 			this.orderUpState = new CommandState("OrderUp", this.commandDispatcher);
 			this.orderDownState = new CommandState("OrderDown", this.commandDispatcher);
 			this.rotate90State = new CommandState("Rotate90", this.commandDispatcher);
@@ -2212,6 +2285,11 @@ namespace Epsitec.App.DocumentEditor
 			this.toBezierState = new CommandState("ToBezier", this.commandDispatcher);
 			this.toPolyState = new CommandState("ToPoly", this.commandDispatcher);
 			this.fragmentState = new CommandState("Fragment", this.commandDispatcher);
+			this.booleanAndState = new CommandState("BooleanAnd", this.commandDispatcher);
+			this.booleanOrState = new CommandState("BooleanOr", this.commandDispatcher);
+			this.booleanXorState = new CommandState("BooleanXor", this.commandDispatcher);
+			this.booleanFrontMinusState = new CommandState("BooleanFrontMinus", this.commandDispatcher);
+			this.booleanBackMinusState = new CommandState("BooleanBackMinus", this.commandDispatcher);
 			this.undoState = new CommandState("Undo", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaZ);
 			this.redoState = new CommandState("Redo", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaY);
 			this.deselectState = new CommandState("Deselect", this.commandDispatcher, KeyCode.Escape);
@@ -2368,25 +2446,16 @@ namespace Epsitec.App.DocumentEditor
 					Point mouse;
 					if ( this.CurrentDocument.Modifier.ActiveViewer.MousePos(out mouse) )
 					{
-						//?di.hRuler.SetSyncPaint(true);
 						di.hRuler.MarkerVisible = true;
 						di.hRuler.Marker = mouse.X;
-						//?di.hRuler.SetSyncPaint(false);
 
-						//?di.vRuler.SetSyncPaint(true);
 						di.vRuler.MarkerVisible = true;
 						di.vRuler.Marker = mouse.Y;
-						//?di.vRuler.SetSyncPaint(false);
 					}
 					else
 					{
-						//?di.hRuler.SetSyncPaint(true);
 						di.hRuler.MarkerVisible = false;
-						//?di.hRuler.SetSyncPaint(false);
-
-						//?di.vRuler.SetSyncPaint(true);
 						di.vRuler.MarkerVisible = false;
-						//?di.vRuler.SetSyncPaint(false);
 					}
 				}
 			}
@@ -2530,6 +2599,11 @@ namespace Epsitec.App.DocumentEditor
 				this.toBezierState.Enabled = ( totalSelected > 0 && !isCreating );
 				this.toPolyState.Enabled = ( totalSelected > 0 && !isCreating );
 				this.fragmentState.Enabled = ( totalSelected > 0 && !isCreating );
+				this.booleanAndState.Enabled = ( totalSelected > 1 && !isCreating );
+				this.booleanOrState.Enabled = ( totalSelected > 1 && !isCreating );
+				this.booleanXorState.Enabled = ( totalSelected > 1 && !isCreating );
+				this.booleanFrontMinusState.Enabled = ( totalSelected > 1 && !isCreating );
+				this.booleanBackMinusState.Enabled = ( totalSelected > 1 && !isCreating );
 
 				this.hideSelState.Enabled = ( totalSelected > 0 && !isCreating );
 				this.hideRestState.Enabled = ( totalObjects-totalSelected-totalHide > 0 && !isCreating );
@@ -2562,12 +2636,18 @@ namespace Epsitec.App.DocumentEditor
 					this.cutState.Enabled = ( totalSelected > 0 && !isCreating );
 					this.copyState.Enabled = ( totalSelected > 0 && !isCreating );
 					this.pasteState.Enabled = ( !this.CurrentDocument.Modifier.IsClipboardEmpty() && !isCreating );
+					this.textBoldState.Enabled = false;
+					this.textItalicState.Enabled = false;
+					this.textUnderlinedState.Enabled = false;
 				}
 				else
 				{
 					this.cutState.Enabled = true;
 					this.copyState.Enabled = true;
 					this.pasteState.Enabled = true;
+					this.textBoldState.Enabled = true;
+					this.textItalicState.Enabled = true;
+					this.textUnderlinedState.Enabled = true;
 				}
 
 				this.CurrentDocument.Dialogs.UpdateInfos();
@@ -2581,6 +2661,9 @@ namespace Epsitec.App.DocumentEditor
 				this.cutState.Enabled = false;
 				this.copyState.Enabled = false;
 				this.pasteState.Enabled = false;
+				this.textBoldState.Enabled = false;
+				this.textItalicState.Enabled = false;
+				this.textUnderlinedState.Enabled = false;
 				this.orderUpState.Enabled = false;
 				this.orderDownState.Enabled = false;
 				this.rotate90State.Enabled = false;
@@ -2600,6 +2683,11 @@ namespace Epsitec.App.DocumentEditor
 				this.toBezierState.Enabled = false;
 				this.toPolyState.Enabled = false;
 				this.fragmentState.Enabled = false;
+				this.booleanAndState.Enabled = false;
+				this.booleanOrState.Enabled = false;
+				this.booleanXorState.Enabled = false;
+				this.booleanFrontMinusState.Enabled = false;
+				this.booleanBackMinusState.Enabled = false;
 
 				this.hideSelState.Enabled = false;
 				this.hideRestState.Enabled = false;
@@ -2932,26 +3020,22 @@ namespace Epsitec.App.DocumentEditor
 			min = context.MinOriginX;
 			max = context.MaxOriginX;
 			max = System.Math.Max(min, max);
-			//?di.hScroller.SetSyncPaint(true);
 			di.hScroller.MinValue = (decimal) min;
 			di.hScroller.MaxValue = (decimal) max;
 			di.hScroller.VisibleRangeRatio = (decimal) ratioH;
 			di.hScroller.Value = (decimal) (-context.OriginX);
 			di.hScroller.SmallChange = (decimal) ((cs.Width*0.1)/scale.X);
 			di.hScroller.LargeChange = (decimal) ((cs.Width*0.9)/scale.X);
-			//?di.hScroller.SetSyncPaint(false);
 
 			min = context.MinOriginY;
 			max = context.MaxOriginY;
 			max = System.Math.Max(min, max);
-			//?di.vScroller.SetSyncPaint(true);
 			di.vScroller.MinValue = (decimal) min;
 			di.vScroller.MaxValue = (decimal) max;
 			di.vScroller.VisibleRangeRatio = (decimal) ratioV;
 			di.vScroller.Value = (decimal) (-context.OriginY);
 			di.vScroller.SmallChange = (decimal) ((cs.Height*0.1)/scale.Y);
 			di.vScroller.LargeChange = (decimal) ((cs.Height*0.9)/scale.Y);
-			//?di.vScroller.SetSyncPaint(false);
 
 			if ( di.hRuler != null && di.hRuler.IsVisible )
 			{
@@ -2960,15 +3044,11 @@ namespace Epsitec.App.DocumentEditor
 
 				Rectangle rect = this.CurrentDocument.Modifier.ActiveViewer.RectangleDisplayed;
 
-				//?di.hRuler.SetSyncPaint(true);
 				di.hRuler.Starting = rect.Left;
 				di.hRuler.Ending   = rect.Right;
-				//?di.hRuler.SetSyncPaint(false);
 
-				//?di.vRuler.SetSyncPaint(true);
 				di.vRuler.Starting = rect.Bottom;
 				di.vRuler.Ending   = rect.Top;
-				//?di.vRuler.SetSyncPaint(false);
 			}
 		}
 
@@ -3104,7 +3184,7 @@ namespace Epsitec.App.DocumentEditor
 			if ( this.windowSettings == null )
 			{
 				double dx = 300;
-				double dy = 372;
+				double dy = 412;
 				this.windowSettings = new Window();
 				this.windowSettings.MakeSecondaryWindow();
 				this.windowSettings.MakeFixedSizeWindow();
@@ -3607,6 +3687,10 @@ namespace Epsitec.App.DocumentEditor
 			image.Size = new Size(400, 200);
 
 			string version = typeof(Document).Assembly.FullName.Split(',')[1].Split('=')[1];
+			if ( version.EndsWith(".0") )
+			{
+				version = version.Substring(0, version.Length-2);
+			}
 			StaticText sv = new StaticText(parent);
 			sv.Text = string.Format("<b>Version {0}</b>    Langue: français", version);
 			sv.Location = new Point(22, y+22);
@@ -4115,6 +4199,9 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					cutState;
 		protected CommandState					copyState;
 		protected CommandState					pasteState;
+		protected CommandState					textBoldState;
+		protected CommandState					textItalicState;
+		protected CommandState					textUnderlinedState;
 		protected CommandState					orderUpState;
 		protected CommandState					orderDownState;
 		protected CommandState					rotate90State;
@@ -4134,6 +4221,11 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					toBezierState;
 		protected CommandState					toPolyState;
 		protected CommandState					fragmentState;
+		protected CommandState					booleanAndState;
+		protected CommandState					booleanOrState;
+		protected CommandState					booleanXorState;
+		protected CommandState					booleanFrontMinusState;
+		protected CommandState					booleanBackMinusState;
 		protected CommandState					undoState;
 		protected CommandState					redoState;
 		protected CommandState					deselectState;

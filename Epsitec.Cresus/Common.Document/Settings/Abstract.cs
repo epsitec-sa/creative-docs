@@ -15,6 +15,8 @@ namespace Epsitec.Common.Document.Settings
 		{
 			this.document = document;
 			this.name = name;
+			this.conditionName = "";
+			this.conditionState = false;
 		}
 
 		// Nom logique.
@@ -32,6 +34,24 @@ namespace Epsitec.Common.Document.Settings
 			get
 			{
 				return this.text;
+			}
+		}
+
+		// Nom de la condition.
+		public string ConditionName
+		{
+			get
+			{
+				return this.conditionName;
+			}
+		}
+
+		// Etat de la condition.
+		public bool ConditionState
+		{
+			get
+			{
+				return this.conditionState;
 			}
 		}
 
@@ -55,5 +75,7 @@ namespace Epsitec.Common.Document.Settings
 		protected Document						document;
 		protected string						name;
 		protected string						text;
+		protected string						conditionName;
+		protected bool							conditionState;
 	}
 }

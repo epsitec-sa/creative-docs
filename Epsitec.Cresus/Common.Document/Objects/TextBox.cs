@@ -286,6 +286,9 @@ namespace Epsitec.Common.Document.Objects
 					case KeyCode.AlphaX:  return this.EditCut();
 					case KeyCode.AlphaC:  return this.EditCopy();
 					case KeyCode.AlphaV:  return this.EditPaste();
+					case KeyCode.AlphaB:  return this.EditBold();
+					case KeyCode.AlphaI:  return this.EditItalic();
+					case KeyCode.AlphaU:  return this.EditUnderlined();
 					case KeyCode.AlphaA:  return this.EditSelectAll();
 				}
 			}
@@ -336,6 +339,29 @@ namespace Epsitec.Common.Document.Objects
 		public override bool EditSelectAll()
 		{
 			this.textLayout.SelectAll(this.textNavigator.Context);
+			return true;
+		}
+		#endregion
+
+		#region TextFormat
+		// Met en gras pendant l'édition.
+		public override bool EditBold()
+		{
+			this.textNavigator.SelectionBold = !this.textNavigator.SelectionBold;
+			return true;
+		}
+
+		// Met en italique pendant l'édition.
+		public override bool EditItalic()
+		{
+			this.textNavigator.SelectionItalic = !this.textNavigator.SelectionItalic;
+			return true;
+		}
+
+		// Souligne pendant l'édition.
+		public override bool EditUnderlined()
+		{
+			this.textNavigator.SelectionUnderlined = !this.textNavigator.SelectionUnderlined;
 			return true;
 		}
 		#endregion

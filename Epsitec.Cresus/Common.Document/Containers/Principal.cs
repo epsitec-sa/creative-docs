@@ -162,6 +162,7 @@ namespace Epsitec.Common.Document.Containers
 		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
+			//?System.Diagnostics.Debug.WriteLine(string.Format("A: DebugAliveWidgetsCount = {0}", Widget.DebugAliveWidgetsCount));
 			Viewer viewer = this.document.Modifier.ActiveViewer;
 			DrawingContext context = viewer.DrawingContext;
 
@@ -201,7 +202,7 @@ namespace Epsitec.Common.Document.Containers
 					panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
 				}
 
-				widget.Parent = null; // retire de son parent
+				widget.Dispose();
 			}
 
 			Widget originColorLastPanel = null;
@@ -274,6 +275,7 @@ namespace Epsitec.Common.Document.Containers
 
 			this.scrollable.Panel.ResumeLayout();
 			this.HandleOriginColorChanged(originColorLastPanel, true);
+			//?System.Diagnostics.Debug.WriteLine(string.Format("B: DebugAliveWidgetsCount = {0}", Widget.DebugAliveWidgetsCount));
 		}
 
 		// Effectue la mise à jour des propriétés.

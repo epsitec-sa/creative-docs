@@ -18,14 +18,39 @@ namespace Epsitec.Common.Document.Settings
 
 		protected void Initialise()
 		{
+			this.conditionName = "";
+			this.conditionState = false;
+
 			switch ( this.name )
 			{
 				case "PrintDpi":
 					this.text = "Résolution (dpi)";
+					this.conditionName = "PrintDraft";
+					this.conditionState = true;
 					this.integer = true;
 					this.factorMinValue = 150.0;
 					this.factorMaxValue = 600.0;
 					this.factorStep = 50.0;
+					break;
+
+				case "PrintMargins":
+					this.text = "Marges de centrage";
+					this.conditionName = "PrintAutoZoom";
+					this.conditionState = true;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 0.1;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
+					break;
+
+				case "PrintDebord":
+					this.text = "Débord";
+					this.conditionName = "PrintAutoZoom";
+					this.conditionState = true;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 0.1;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
 					break;
 
 				case "ImageDpi":
@@ -85,6 +110,12 @@ namespace Epsitec.Common.Document.Settings
 					case "PrintDpi":
 						return this.document.Settings.PrintInfo.Dpi;
 
+					case "PrintMargins":
+						return this.document.Settings.PrintInfo.Margins;
+
+					case "PrintDebord":
+						return this.document.Settings.PrintInfo.Debord;
+
 					case "ImageDpi":
 						return this.document.Printer.ImageDpi;
 
@@ -110,6 +141,14 @@ namespace Epsitec.Common.Document.Settings
 				{
 					case "PrintDpi":
 						this.document.Settings.PrintInfo.Dpi = value;
+						break;
+
+					case "PrintMargins":
+						this.document.Settings.PrintInfo.Margins = value;
+						break;
+
+					case "PrintDebord":
+						this.document.Settings.PrintInfo.Debord = value;
 						break;
 
 					case "ImageDpi":

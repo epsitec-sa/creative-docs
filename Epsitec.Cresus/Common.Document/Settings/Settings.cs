@@ -19,7 +19,7 @@ namespace Epsitec.Common.Document.Settings
 
 			this.guides = new UndoableList(this.document, UndoableListType.Guides);
 
-			this.printInfo = new PrintInfo();
+			this.printInfo = new PrintInfo(document);
 		}
 
 		// Crée tous les réglages par défaut, si nécessaire.
@@ -57,6 +57,10 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultBool("PrintPerfectJoin");
 			this.CreateDefaultBool("PrintDebugArea");
 			this.CreateDefaultDouble("PrintDpi");
+			this.CreateDefaultInteger("PrintCentring");
+			this.CreateDefaultDouble("PrintMargins");
+			this.CreateDefaultDouble("PrintDebord");
+			this.CreateDefaultBool("PrintTarget");
 
 			this.CreateDefaultDouble("ImageDpi");
 			this.CreateDefaultInteger("ImageDepth");

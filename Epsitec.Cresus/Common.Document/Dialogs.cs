@@ -115,14 +115,20 @@ namespace Epsitec.Common.Document
 				this.tabIndex = 0;
 				Dialogs.CreateTitle(container, "Paramètres pour l'impression");
 				this.CreateBool(container, "PrintAutoLandscape");
-				this.CreateBool(container, "PrintAutoZoom");
 				this.CreateBool(container, "PrintDraft");
 				this.CreateBool(container, "PrintPerfectJoin");
 #if DEBUG
 				this.CreateBool(container, "PrintDebugArea");
 #endif
-				this.CreateBool(container, "PrintAA");
 				this.CreateDouble(container, "PrintDpi");
+				this.CreateBool(container, "PrintAA");
+
+				Dialogs.CreateTitle(container, "Pré-presse");
+				this.CreateBool(container, "PrintAutoZoom");
+				this.CreateCombo(container, "PrintCentring");
+				this.CreateDouble(container, "PrintMargins");
+				this.CreateDouble(container, "PrintDebord");
+				this.CreateBool(container, "PrintTarget");
 
 				// Onglet Misc:
 				parent = book.FindChild("Misc");
@@ -215,6 +221,15 @@ namespace Epsitec.Common.Document
 						this.UpdatePaper();
 					}
 				}
+			}
+
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Settings.Abstract setting = this.document.Settings.Get(i);
+				if ( setting.ConditionName == "" )  continue;
+				Settings.Bool sBool = this.document.Settings.Get(setting.ConditionName) as Settings.Bool;
+				if ( sBool == null )  continue;
+				this.EnableWidget(setting.Name, sBool.Value^setting.ConditionState);
 			}
 		}
 
@@ -356,6 +371,18 @@ namespace Epsitec.Common.Document
 			if ( sBool == null )  return;
 
 			sBool.Value = ( check.ActiveState == WidgetState.ActiveYes );
+
+			int total = this.document.Settings.Count;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Settings.Abstract setting = this.document.Settings.Get(i);
+				if ( setting.ConditionName == "" )  continue;
+
+				if ( setting.ConditionName == sBool.Name )
+				{
+					this.EnableWidget(setting.Name, sBool.Value^setting.ConditionState);
+				}
+			}
 		}
 		#endregion
 
@@ -1101,6 +1128,14 @@ namespace Epsitec.Common.Document
 					page.Dispose();
 				}
 			}
+		}
+
+		// Modifie l'état d'un widget.
+		protected void EnableWidget(string name, bool enabled)
+		{
+			Widget widget = this.WidgetsTableSearch(name, "");
+			if ( widget == null )  return;
+			widget.SetEnabled(enabled);
 		}
 
 		// Ajoute un widget dans la table.

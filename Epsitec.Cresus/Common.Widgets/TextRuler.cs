@@ -504,6 +504,7 @@ namespace Epsitec.Common.Widgets
 				this.textNavigator.CursorChanged -= new Epsitec.Common.Support.EventHandler(this.HandleCursorChanged);
 				this.textNavigator.TextInserted -= new Epsitec.Common.Support.EventHandler(this.HandleCursorChanged);
 				this.textNavigator.TextDeleted -= new Epsitec.Common.Support.EventHandler(this.HandleCursorChanged);
+				this.textNavigator.StyleChanged -= new Epsitec.Common.Support.EventHandler(this.HandleCursorChanged);
 			}
 
 			this.textNavigator = textNavigator;
@@ -513,6 +514,7 @@ namespace Epsitec.Common.Widgets
 				this.textNavigator.CursorChanged += new Epsitec.Common.Support.EventHandler(this.HandleCursorChanged);
 				this.textNavigator.TextInserted += new Epsitec.Common.Support.EventHandler(this.HandleCursorChanged);
 				this.textNavigator.TextDeleted += new Epsitec.Common.Support.EventHandler(this.HandleCursorChanged);
+				this.textNavigator.StyleChanged += new Epsitec.Common.Support.EventHandler(this.HandleCursorChanged);
 				this.HandleCursorChanged(null);
 				this.Invalidate();
 			}

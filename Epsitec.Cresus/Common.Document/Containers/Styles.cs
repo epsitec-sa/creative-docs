@@ -140,9 +140,9 @@ namespace Epsitec.Common.Document.Containers
 			if ( initialColumns == 0 )
 			{
 				this.table.SetWidthColumn(0, 12);
-				this.table.SetWidthColumn(1, 94);
-				this.table.SetWidthColumn(2, 84);
-				this.table.SetWidthColumn(3, 22);
+				this.table.SetWidthColumn(1, 91);
+				this.table.SetWidthColumn(2, 81);
+				this.table.SetWidthColumn(3, 28);
 			}
 
 			this.table.SetHeaderTextH(0, "");

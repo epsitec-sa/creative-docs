@@ -18,10 +18,22 @@ namespace Epsitec.Common.Document.Settings
 
 		protected void Initialise()
 		{
+			this.conditionName = "";
+			this.conditionState = false;
+
 			switch ( this.name )
 			{
 				case "DefaultUnit":
 					this.text = "Unité de travail";
+					this.minValue = 0;
+					this.maxValue = 100;
+					this.step = 1;
+					break;
+
+				case "PrintCentring":
+					this.text = "Position dans la page";
+					this.conditionName = "PrintAutoZoom";
+					this.conditionState = true;
 					this.minValue = 0;
 					this.maxValue = 100;
 					this.step = 1;
@@ -52,6 +64,9 @@ namespace Epsitec.Common.Document.Settings
 					case "DefaultUnit":
 						return (int) this.document.Modifier.RealUnitDimension;
 
+					case "PrintCentring":
+						return (int) this.document.Settings.PrintInfo.Centring;
+
 					case "ImageDepth":
 						return this.document.Printer.ImageDepth;
 
@@ -68,6 +83,10 @@ namespace Epsitec.Common.Document.Settings
 				{
 					case "DefaultUnit":
 						this.document.Modifier.RealUnitDimension = (RealUnitType) value;
+						break;
+
+					case "PrintCentring":
+						this.document.Settings.PrintInfo.Centring = (PrintCentring) value;
 						break;
 
 					case "ImageDepth":
@@ -146,6 +165,19 @@ namespace Epsitec.Common.Document.Settings
 					if ( unit == RealUnitType.DimensionInch       )  return "Pouces";
 					break;
 
+				case "PrintCentring":
+					PrintCentring pc = (PrintCentring) type;
+					if ( pc == PrintCentring.BottomLeft   )  return "Calé en bas à gauche";
+					if ( pc == PrintCentring.BottomCenter )  return "Centré en bas";
+					if ( pc == PrintCentring.BottomRight  )  return "Calé en bas à droite";
+					if ( pc == PrintCentring.MiddleLeft   )  return "Centré à gauche";
+					if ( pc == PrintCentring.MiddleCenter )  return "Centré";
+					if ( pc == PrintCentring.MiddleRight  )  return "Centré à droite";
+					if ( pc == PrintCentring.TopLeft      )  return "Calé en haut à gauche";
+					if ( pc == PrintCentring.TopCenter    )  return "Centré en haut";
+					if ( pc == PrintCentring.TopRight     )  return "Calé en haut à droite";
+					break;
+
 				case "ImageDepth":
 					if ( type ==  2 )  return "Noir et blanc (1 bit)";
 					if ( type ==  8 )  return "256 (8 bits)";
@@ -183,6 +215,18 @@ namespace Epsitec.Common.Document.Settings
 					if ( rank == 0 )  return (int) RealUnitType.DimensionMillimeter;
 					if ( rank == 1 )  return (int) RealUnitType.DimensionCentimeter;
 					if ( rank == 2 )  return (int) RealUnitType.DimensionInch;
+					return -1;
+
+				case "PrintCentring":
+					if ( rank == 0 )  return (int) PrintCentring.BottomLeft;
+					if ( rank == 1 )  return (int) PrintCentring.BottomCenter;
+					if ( rank == 2 )  return (int) PrintCentring.BottomRight;
+					if ( rank == 3 )  return (int) PrintCentring.MiddleLeft;
+					if ( rank == 4 )  return (int) PrintCentring.MiddleCenter;
+					if ( rank == 5 )  return (int) PrintCentring.MiddleRight;
+					if ( rank == 6 )  return (int) PrintCentring.TopLeft;
+					if ( rank == 7 )  return (int) PrintCentring.TopCenter;
+					if ( rank == 8 )  return (int) PrintCentring.TopRight;
 					return -1;
 
 				case "ImageDepth":
