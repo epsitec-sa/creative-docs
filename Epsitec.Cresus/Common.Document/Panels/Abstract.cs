@@ -284,7 +284,8 @@ namespace Epsitec.Common.Document.Panels
 			if ( this.ignoreChanged )  return;
 
 			int id = (int) this.property.Type;
-			this.document.Modifier.OpletQueueBeginAction("ChangeProperty", id);
+			string name = string.Format("Changement de l'attribut \"{0}\"", Properties.Abstract.Text(this.property.Type));
+			this.document.Modifier.OpletQueueBeginAction(name, "ChangeProperty", id);
 			this.WidgetsToProperty();
 			this.document.Modifier.OpletQueueValidateAction();
 

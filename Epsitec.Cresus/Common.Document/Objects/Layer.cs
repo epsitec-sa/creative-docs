@@ -172,6 +172,7 @@ namespace Epsitec.Common.Document.Objects
 				if ( ii == currentLayer )
 				{
 					icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
+					name = Misc.Bold(name);
 				}
 
 				MenuItem item = new MenuItem("LayerSelect(this.Name)", icon, name, "", ii.ToString());

@@ -7,6 +7,18 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class Misc
 	{
+		// Retourne le texte en gras.
+		static public string Bold(string text)
+		{
+			return string.Format("<b>{0}</b>", text);
+		}
+
+		// Retourne le texte en italique.
+		static public string Italic(string text)
+		{
+			return string.Format("<i>{0}</i>", text);
+		}
+
 		// Donne le nom complet du fichier.
 		// Si le nom n'existe pas, donne "sans titre".
 		// Si le fichier doit être sérialisé, donne le nom en gras.

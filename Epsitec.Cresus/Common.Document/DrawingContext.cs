@@ -1176,7 +1176,6 @@ namespace Epsitec.Common.Document
 				{
 					this.isCtrl = value;
 					this.ConstrainUpdateCtrl();
-					//?this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 				}
 			}
 		}
@@ -1898,7 +1897,7 @@ namespace Epsitec.Common.Document
 					}
 					else
 					{
-						this.document.Modifier.OpletQueueBeginAction();
+						this.document.Modifier.OpletQueueBeginAction("Changer de page");
 						this.document.Modifier.InitiateChangingPage();
 						this.document.Modifier.TerminateChangingPage(newPage);
 						this.document.Modifier.OpletQueueValidateAction();
@@ -1938,7 +1937,7 @@ namespace Epsitec.Common.Document
 					}
 					else
 					{
-						this.document.Modifier.OpletQueueBeginAction();
+						this.document.Modifier.OpletQueueBeginAction("Changer de calque");
 						this.document.Modifier.InitiateChangingLayer();
 						this.document.Modifier.TerminateChangingLayer(newLayer);
 						this.document.Modifier.OpletQueueValidateAction();

@@ -254,6 +254,27 @@ namespace Epsitec.Common.Document
 			this.rotate.IsHilited = (rank==6);
 		}
 
+		// Nomme l'action pour les undo/redo.
+		public void MoveNameAction(int rank)
+		{
+			if ( rank == 0 )  // global ?
+			{
+				this.document.Modifier.OpletQueueNameAction("Déplacement global");
+			}
+			else if ( rank == 5 )  // center ?
+			{
+				this.document.Modifier.OpletQueueNameAction("Déplacement du centre de rotation global");
+			}
+			else if ( rank == 6 )  // rotate ?
+			{
+				this.document.Modifier.OpletQueueNameAction("Rotation globale");
+			}
+			else
+			{
+				this.document.Modifier.OpletQueueNameAction("Zoom global");
+			}
+		}
+
 		// Une poignée du modificateur sera déplacée.
 		public void MoveStarting(int rank, Point pos, DrawingContext drawingContext)
 		{
@@ -417,7 +438,7 @@ namespace Epsitec.Common.Document
 			{
 				double a = this.finalData.Angle;
 				if ( a < 0.0 )  a += 360.0;
-				text = string.Format("angle={0}\u00B0", this.document.Modifier.AngleToString(a));
+				text = string.Format("angle={0}", this.document.Modifier.AngleToString(a));
 			}
 
 			this.document.Modifier.TextInfoModif = text;

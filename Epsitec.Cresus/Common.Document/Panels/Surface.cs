@@ -267,7 +267,7 @@ namespace Epsitec.Common.Document.Panels
 		// Le bouton "reset" a été cliqué.
 		private void HandleResetButton(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.OpletQueueBeginAction();
+			this.document.Modifier.OpletQueueBeginAction("Réinitialisation de la surface");
 			Properties.Surface p = this.property as Properties.Surface;
 			p.Reset();
 			this.document.Modifier.OpletQueueValidateAction();

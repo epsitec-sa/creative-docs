@@ -539,7 +539,8 @@ namespace Epsitec.Common.Document
 					this.document.Modifier.DeselectAll();
 				}
 
-				this.document.Modifier.OpletQueueBeginAction("Create");
+				string name = string.Format("Création d'un objet \"{0}\"", this.document.Modifier.ToolName(this.document.Modifier.Tool));
+				this.document.Modifier.OpletQueueBeginAction(name, "Create");
 				Objects.Abstract obj = Objects.Abstract.CreateObject(this.document, this.document.Modifier.Tool, this.document.Modifier.ObjectMemoryTool);
 
 				this.document.Modifier.OpletQueueEnable = false;
@@ -675,9 +676,10 @@ namespace Epsitec.Common.Document
 		#region SelectMouse
 		protected void SelectMouseDown(Point mouse, int downCount, bool isRight, bool global)
 		{
-			this.document.Modifier.OpletQueueBeginAction();
+			this.document.Modifier.OpletQueueBeginAction("Sélection");
 			this.moveStart = mouse;
 			this.moveAccept = false;
+			this.moveInitialSel = false;
 			this.drawingContext.ConstrainFlush();
 			this.drawingContext.ConstrainAddHV(mouse);
 			this.Hilite(null);
@@ -696,6 +698,7 @@ namespace Epsitec.Common.Document
 			if ( this.selector.Detect(mouse, !this.drawingContext.IsShift, out rank) )
 			{
 				this.moveGlobal = rank;
+				this.selector.MoveNameAction(rank);
 				this.selector.MoveStarting(this.moveGlobal, mouse, this.drawingContext);
 				this.selector.HiliteHandle(this.moveGlobal);
 				this.MoveGlobalStarting();
@@ -710,6 +713,7 @@ namespace Epsitec.Common.Document
 
 				if ( this.DetectHandle(mouse, out obj, out rank) )
 				{
+					this.document.Modifier.OpletQueueNameAction("Déplacement d'une poignée");
 					this.moveObject = obj;
 					this.moveHandle = rank;
 					this.moveOffset = mouse-obj.GetHandlePosition(rank);
@@ -724,11 +728,13 @@ namespace Epsitec.Common.Document
 					{
 						if ( this.GuideDetect(mouse, out rank) )
 						{
+							this.document.Modifier.OpletQueueNameAction("Déplacement d'un repère");
 							this.guideInteractive = rank;
 							this.document.Dialogs.SelectGuide(this.guideInteractive);
 						}
 						else
 						{
+							this.document.Modifier.OpletQueueNameAction("Sélection rectangulaire");
 							this.selector.FixStarting(mouse);
 							this.document.Modifier.FlushMoveAfterDuplicate();
 						}
@@ -737,6 +743,7 @@ namespace Epsitec.Common.Document
 					{
 						if ( !obj.IsSelected )
 						{
+							this.document.Modifier.OpletQueueNameAction("Sélection d'un objet");
 							if ( global )
 							{
 								this.selector.FixStarting(mouse);
@@ -755,6 +762,8 @@ namespace Epsitec.Common.Document
 						}
 						else
 						{
+							this.moveInitialSel = true;
+
 							if ( this.drawingContext.IsShift )
 							{
 								obj.Deselect();
@@ -763,6 +772,7 @@ namespace Epsitec.Common.Document
 							}
 							else
 							{
+								this.document.Modifier.OpletQueueNameAction("Déplacement d'un objet");
 								this.moveReclick = true;
 							}
 						}
@@ -791,6 +801,8 @@ namespace Epsitec.Common.Document
 					double len = Point.Distance(mouse, this.moveStart);
 					if ( len > this.drawingContext.MinimalSize )
 					{
+						this.document.Modifier.OpletQueueNameAction("Dupliquer puis déplacer");
+
 						// Remet la sélection à la position de départ:
 						if ( this.moveGlobal != -1 )  // déplace le modificateur global ?
 						{
@@ -835,6 +847,11 @@ namespace Epsitec.Common.Document
 					else	// déplace tout l'objet ?
 					{
 						this.drawingContext.ConstrainSnapPos(ref mouse);
+
+						if ( !this.moveInitialSel && this.moveAccept )
+						{
+							this.document.Modifier.OpletQueueNameAction("Sélection puis déplacement d'un objet");
+						}
 
 						if ( !this.moveAccept )
 						{
@@ -928,6 +945,14 @@ namespace Epsitec.Common.Document
 					this.Select(rSelect, this.drawingContext.IsShift, this.partialSelect);
 					this.UpdateSelector();
 				}
+				if ( this.document.Modifier.TotalSelected == 0 )
+				{
+					this.document.Modifier.OpletQueueNameAction("Tout désélectionner");
+				}
+				else if ( this.drawingContext.IsShift )
+				{
+					this.document.Modifier.OpletQueueNameAction("Ajout d'une sélection rectangulaire");
+				}
 			}
 			else if ( this.moveGlobal != -1 )  // déplace le modificateur global ?
 			{
@@ -941,6 +966,18 @@ namespace Epsitec.Common.Document
 				if ( this.moveHandle != -1 )  // déplace une poignée ?
 				{
 					this.moveObject.MoveHandleEnding(this.moveHandle, mouse, this.drawingContext);
+				}
+
+				if ( this.drawingContext.IsShift )
+				{
+					if ( this.moveObject.IsSelected )
+					{
+						this.document.Modifier.OpletQueueNameAction("Objet ajouté à la sélection");
+					}
+					else
+					{
+						this.document.Modifier.OpletQueueNameAction("Objet enlevé à la sélection");
+					}
 				}
 
 				if ( this.moveReclick && !this.moveAccept && !isRight && !this.drawingContext.IsShift )
@@ -978,7 +1015,7 @@ namespace Epsitec.Common.Document
 
 			if ( obj != this.document.Modifier.RetEditObject() )
 			{
-				this.document.Modifier.OpletQueueBeginAction();
+				this.document.Modifier.OpletQueueBeginAction("Edition");
 				this.Select(obj, true, false);
 				this.document.Modifier.OpletQueueValidateAction();
 			}
@@ -1175,7 +1212,7 @@ namespace Epsitec.Common.Document
 				}
 				else
 				{
-					using ( this.document.Modifier.OpletQueueBeginAction() )
+					using ( this.document.Modifier.OpletQueueBeginAction("Pipette") )
 					{
 						Objects.Abstract layer = this.drawingContext.RootObject();
 						foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
@@ -1361,7 +1398,7 @@ namespace Epsitec.Common.Document
 
 			set
 			{
-				using ( this.document.Modifier.OpletQueueBeginAction() )
+				using ( this.document.Modifier.OpletQueueBeginAction("Mode de sélection") )
 				{
 					this.selector.TypeChoice = value;
 					this.UpdateSelector();
@@ -1768,7 +1805,7 @@ namespace Epsitec.Common.Document
 			if ( globalMenu || nbSel == 0 )
 			{
 				exist = false;
-				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Deselect",     "manifest:Epsitec.App.DocumentEditor.Images.Deselect.icon",     "Désélectionner tout");
+				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "Deselect",     "manifest:Epsitec.App.DocumentEditor.Images.Deselect.icon",     "Tout désélectionner");
 				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "SelectAll",    "manifest:Epsitec.App.DocumentEditor.Images.SelectAll.icon",    "Tout sélectionner");
 				exist |= ContextMenuItem.MenuAddItem(list, this.CommandDispatcher, "SelectInvert", "manifest:Epsitec.App.DocumentEditor.Images.SelectInvert.icon", "Inverser la sélection");
 				if ( exist )  ContextMenuItem.MenuAddSep(list);
@@ -2225,7 +2262,7 @@ namespace Epsitec.Common.Document
 		// Début de l'insertion interactive d'un guide (drag depuis une règle).
 		public void GuideInteractiveStart(bool horizontal)
 		{
-			this.document.Modifier.OpletQueueBeginAction();
+			this.document.Modifier.OpletQueueBeginAction("Création puis déplacement d'un repère");
 			this.drawingContext.GuidesShow = true;
 			this.drawingContext.GuidesMouse = true;
 
@@ -2860,6 +2897,7 @@ namespace Epsitec.Common.Document
 		protected Point							moveStart;
 		protected Point							moveOffset;
 		protected bool							moveAccept;
+		protected bool							moveInitialSel;
 		protected bool							moveReclick;
 		protected int							moveHandle = -1;
 		protected int							moveGlobal = -1;

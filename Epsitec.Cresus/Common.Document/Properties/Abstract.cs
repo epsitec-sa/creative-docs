@@ -155,7 +155,7 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Type de la propriété.
+		// Nom du style de la propriété.
 		public string StyleName
 		{
 			get

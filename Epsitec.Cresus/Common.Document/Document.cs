@@ -215,7 +215,7 @@ namespace Epsitec.Common.Document
 				{
 					if ( this.modifier != null && this.notifier != null )
 					{
-						this.modifier.OpletQueueBeginAction("ChangeDocSize");
+						this.modifier.OpletQueueBeginAction("Taille du document", "ChangeDocSize");
 						this.modifier.InsertOpletSize();
 						this.size = value;
 						this.IsDirtySerialize = true;

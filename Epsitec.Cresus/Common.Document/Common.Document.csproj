@@ -219,6 +219,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ZoomMenu.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Containers\Abstract.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

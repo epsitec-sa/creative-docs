@@ -148,19 +148,22 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.dragTarget != null )
 			{
-				if ( Message.State.IsShiftPressed || Message.State.IsCtrlPressed )
+				if ( this.dragTarget != this )
 				{
-					Drawing.Color temp = this.Color;
-					this.Color = this.dragTarget.Color;
-					this.dragTarget.Color = temp;
+					if ( Message.State.IsShiftPressed || Message.State.IsCtrlPressed )
+					{
+						Drawing.Color temp = this.Color;
+						this.Color = this.dragTarget.Color;
+						this.dragTarget.Color = temp;
 
-					this.OnChanged();
-					this.dragTarget.OnChanged();
-				}
-				else
-				{
-					this.dragTarget.Color = this.Color;
-					this.dragTarget.OnChanged();
+						this.OnChanged();
+						this.dragTarget.OnChanged();
+					}
+					else
+					{
+						this.dragTarget.Color = this.Color;
+						this.dragTarget.OnChanged();
+					}
 				}
 				
 				this.dragWindow.Hide();

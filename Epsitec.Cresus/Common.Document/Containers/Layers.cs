@@ -338,7 +338,7 @@ namespace Epsitec.Common.Document.Containers
 			Objects.Page page = context.RootObject(1) as Objects.Page;
 			Objects.Layer layer = page.Objects[sel] as Objects.Layer;
 
-			using ( this.document.Modifier.OpletQueueBeginAction() )
+			using ( this.document.Modifier.OpletQueueBeginAction("Changer la visibilité du calque") )
 			{
 				Objects.LayerType type = Objects.LayerType.None;
 				if ( bt.ActiveState == WidgetState.ActiveYes   )  type = Objects.LayerType.Show;
@@ -373,7 +373,7 @@ namespace Epsitec.Common.Document.Containers
 		// Un bouton radio a été cliqué.
 		private void HandleRadioPrintClicked(object sender, MessageEventArgs e)
 		{
-			using ( this.document.Modifier.OpletQueueBeginAction() )
+			using ( this.document.Modifier.OpletQueueBeginAction("Changer le mode d'impression du calque") )
 			{
 				DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 				Objects.LayerPrint print = Objects.LayerPrint.None;
@@ -410,7 +410,7 @@ namespace Epsitec.Common.Document.Containers
 		// Un bouton a été cliqué.
 		private void HandleButtonClicked(object sender, MessageEventArgs e)
 		{
-			using ( this.document.Modifier.OpletQueueBeginAction() )
+			using ( this.document.Modifier.OpletQueueBeginAction("Changer la visibilité des calques") )
 			{
 				DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 				Objects.LayerType type = Objects.LayerType.None;
@@ -435,7 +435,7 @@ namespace Epsitec.Common.Document.Containers
 		// Le bouton "magnétique" a été cliqué.
 		private void HandleCheckMagnetClicked(object sender, MessageEventArgs e)
 		{
-			using ( this.document.Modifier.OpletQueueBeginAction() )
+			using ( this.document.Modifier.OpletQueueBeginAction("Changer l'état du calque") )
 			{
 				DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 				int sel = context.CurrentLayer;

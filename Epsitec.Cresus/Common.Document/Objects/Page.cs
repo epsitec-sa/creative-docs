@@ -302,6 +302,7 @@ namespace Epsitec.Common.Document.Objects
 				if ( i == currentPage )
 				{
 					icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveYes.icon";
+					name = Misc.Bold(name);
 				}
 
 				MenuItem item = new MenuItem("PageSelect(this.Name)", icon, name, "", i.ToString());

@@ -427,7 +427,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			double len = Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			double angle = Point.ComputeAngleDeg(this.Handle(0).Position, this.Handle(1).Position);
-			string text = string.Format("lg={0} a={1}\u00B0", this.document.Modifier.RealToString(len), this.document.Modifier.AngleToString(angle));
+			string text = string.Format("lg={0} a={1}", this.document.Modifier.RealToString(len), this.document.Modifier.AngleToString(angle));
 			this.document.Modifier.TextInfoModif = text;
 		}
 

@@ -68,7 +68,7 @@ namespace Epsitec.Common.Widgets
 				int to   = this.textLayout.FindOffsetFromIndex(cursorTo, true);
 				
 				string text = this.textLayout.Text;
-				return text.Substring(from, to-from);
+				return TextLayout.SubstringComplete(text, from, to);
 			}
 
 			set
@@ -722,7 +722,17 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			using ( this.undoQueue.BeginAction() )
+			string name = "Modification du texte";
+			switch ( type )
+			{
+				case UndoType.Insert:           name = "Insertion de caractères";  break;
+				case UndoType.Delete:           name = "Suppression de caractères";  break;
+				case UndoType.AutonomusStyle:
+				case UndoType.CascadableStyle:  name = "Changement de style du texte";  break;
+				case UndoType.Tab:              name = "Modification d'un tabulateur";  break;
+			}
+
+			using ( this.undoQueue.BeginAction(name) )
 			{
 				TextOplet oplet = new TextOplet(this, type);
 				this.undoQueue.Insert(oplet);

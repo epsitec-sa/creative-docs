@@ -383,7 +383,7 @@ namespace Epsitec.Common.Document.Containers
 		// Un bouton radio a été cliqué.
 		private void HandleRadioClicked(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.OpletQueueBeginAction();
+			this.document.Modifier.OpletQueueBeginAction("Changer l'état de la page");
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
@@ -435,7 +435,7 @@ namespace Epsitec.Common.Document.Containers
 		// Un bouton à cocher a été cliqué.
 		private void HandleCheckClicked(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.OpletQueueBeginAction();
+			this.document.Modifier.OpletQueueBeginAction("Changer l'état de la page");
 
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
@@ -494,7 +494,7 @@ namespace Epsitec.Common.Document.Containers
 				Objects.Page page = doc[i] as Objects.Page;
 				if ( page.ShortName == field.Text )
 				{
-					this.document.Modifier.OpletQueueBeginAction();
+					this.document.Modifier.OpletQueueBeginAction("Changer l'état de la page");
 					Objects.Page currentPage = context.RootObject(1) as Objects.Page;
 					currentPage.MasterPageToUse = page;
 					this.document.Notifier.NotifyPagesChanged();

@@ -294,7 +294,7 @@ namespace Epsitec.App.DocumentEditor
 			VMenu objMenu = new VMenu();
 			objMenu.Name = "Obj";
 			objMenu.Host = this;
-			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.Deselect.icon", "Deselect", "Désélectionner tout", "Esc");
+			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.Deselect.icon", "Deselect", "Tout désélectionner", "Esc");
 			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.SelectAll.icon", "SelectAll", "Tout sélectionner", "Ctrl+A");
 			this.MenuAdd(objMenu, "manifest:Epsitec.App.DocumentEditor.Images.SelectInvert.icon", "SelectInvert", "Inverser la sélection", "");
 			this.MenuAdd(objMenu, "", "", "", "");
@@ -314,10 +314,10 @@ namespace Epsitec.App.DocumentEditor
 			VMenu orderMenu = new VMenu();
 			orderMenu.Name = "Order";
 			orderMenu.Host = this;
-			this.MenuAdd(orderMenu, "manifest:Epsitec.App.DocumentEditor.Images.OrderUpAll.icon", "OrderUpAll", "Premier plan", "");
-			this.MenuAdd(orderMenu, "manifest:Epsitec.App.DocumentEditor.Images.OrderUpOne.icon", "OrderUpOne", "En avant", "");
-			this.MenuAdd(orderMenu, "manifest:Epsitec.App.DocumentEditor.Images.OrderDownOne.icon", "OrderDownOne", "En arrière", "");
-			this.MenuAdd(orderMenu, "manifest:Epsitec.App.DocumentEditor.Images.OrderDownAll.icon", "OrderDownAll", "Arrière-plan", "");
+			this.MenuAdd(orderMenu, "manifest:Epsitec.App.DocumentEditor.Images.OrderUpAll.icon", "OrderUpAll", "Premier plan", "Shift+PageUp");
+			this.MenuAdd(orderMenu, "manifest:Epsitec.App.DocumentEditor.Images.OrderUpOne.icon", "OrderUpOne", "En avant", "Ctrl+PageUp");
+			this.MenuAdd(orderMenu, "manifest:Epsitec.App.DocumentEditor.Images.OrderDownOne.icon", "OrderDownOne", "En arrière", "Ctrl+PageDown");
+			this.MenuAdd(orderMenu, "manifest:Epsitec.App.DocumentEditor.Images.OrderDownAll.icon", "OrderDownAll", "Arrière-plan", "Shift+PageDown");
 			orderMenu.AdjustSize();
 			objMenu.Items[9].Submenu = orderMenu;
 
@@ -514,8 +514,21 @@ namespace Epsitec.App.DocumentEditor
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Copy.icon", "Copy", "Copier");
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Paste.icon", "Paste", "Coller");
 			this.HToolBarAdd("", "", "");
+
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Undo.icon", "Undo", "Annuler");
-			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Redo.icon", "Redo", "Refaire");
+
+			GlyphButton undoRedoList = new GlyphButton("UndoRedoList");
+			undoRedoList.Name = "UndoRedoList";
+			undoRedoList.GlyphShape = GlyphShape.ArrowDown;
+			undoRedoList.ButtonStyle = ButtonStyle.ToolItem;
+			undoRedoList.Width = 14;
+			undoRedoList.DockMargins = new Margins(-1, 0, 0, 0);
+			ToolTip.Default.SetToolTip(undoRedoList, "Annuler ou refaire plusieurs actions");
+			this.hToolBar.Items.Add(undoRedoList);
+
+			Widget buttonRedo = this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Redo.icon", "Redo", "Refaire");
+			buttonRedo.DockMargins = new Margins(-1, 0, 0, 0);
+
 			this.HToolBarAdd("", "", "");
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.OrderDownAll.icon", "OrderDownAll", "Arrière-plan");
 			this.HToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.OrderDownOne.icon", "OrderDownOne", "En arrière");
@@ -547,7 +560,7 @@ namespace Epsitec.App.DocumentEditor
 			this.info = new StatusBar(this);
 			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
 			this.InfoAdd("", 120, "StatusDocument", "");
-			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.Deselect.icon", 0, "Deselect", "Désélectionner tout");
+			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.Deselect.icon", 0, "Deselect", "Tout désélectionner");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.SelectAll.icon", 0, "SelectAll", "Tout sélectionner");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.SelectInvert.icon", 0, "SelectInvert", "Inverser la sélection");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.HideSel.icon", 0, "HideSel", "Cacher la sélection");
@@ -569,40 +582,43 @@ namespace Epsitec.App.DocumentEditor
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.ZoomPrev.icon", 0, "ZoomPrev", "Zoom précédent");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.ZoomSub.icon", 0, "ZoomSub", "Réduction");
 			this.InfoAdd("manifest:Epsitec.App.DocumentEditor.Images.ZoomAdd.icon", 0, "ZoomAdd", "Agrandissement");
-			this.InfoAdd("", 90, "StatusZoom", "");
+
+			StatusField sf = this.InfoAdd("", 90, "StatusZoom", "") as StatusField;
+			sf.Clicked += new MessageEventHandler(this.HandleStatusZoomClicked);
+
 			this.InfoAdd("", 110, "StatusMouse", "");
 			this.InfoAdd("", 250, "StatusModif", "");
 
 			this.vToolBar = new VToolBar(this);
 			this.vToolBar.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
 			this.vToolBar.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, this.info.Height);
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Select.icon", "SelectTool(this.Name)", "Sélectionner", "Select");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Global.icon", "SelectTool(this.Name)", "Rectangle de sélection", "Global");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Edit.icon", "SelectTool(this.Name)", "Editer", "Edit");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Zoom.icon", "SelectTool(this.Name)", "Agrandir", "Zoom");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Hand.icon", "SelectTool(this.Name)", "Déplacer", "Hand");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Picker.icon", "SelectTool(this.Name)", "Pipette", "Picker");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Select.icon", "ToolSelect", "Sélectionner (S)", "Select");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Global.icon", "ToolGlobal", "Rectangle de sélection (G)", "Global");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Edit.icon", "ToolEdit", "Editer (E)", "Edit");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Zoom.icon", "ToolZoom", "Agrandir (Z)", "Zoom");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Hand.icon", "ToolHand", "Déplacer (H)", "Hand");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Picker.icon", "ToolPicker", "Pipette (I)", "Picker");
 			if ( this.type == DocumentType.Pictogram )
 			{
-				this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.HotSpot.icon", "SelectTool(this.Name)", "Point chaud", "HotSpot");
+				this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.HotSpot.icon", "ToolHotSpot", "Point chaud", "HotSpot");
 			}
 			this.VToolBarAdd("", "", "");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Line.icon", "SelectTool(this.Name)", "Segment de ligne", "ObjectLine");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Rectangle.icon", "SelectTool(this.Name)", "Rectangle", "ObjectRectangle");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Circle.icon", "SelectTool(this.Name)", "Cercle", "ObjectCircle");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Ellipse.icon", "SelectTool(this.Name)", "Ellipse", "ObjectEllipse");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Poly.icon", "SelectTool(this.Name)", "Polygone quelconque", "ObjectPoly");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Bezier.icon", "SelectTool(this.Name)", "Courbes de Bézier", "ObjectBezier");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Regular.icon", "SelectTool(this.Name)", "Polygone régulier", "ObjectRegular");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Surface.icon", "SelectTool(this.Name)", "Surfaces 2d", "ObjectSurface");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Volume.icon", "SelectTool(this.Name)", "Volumes 3d", "ObjectVolume");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.TextLine.icon", "SelectTool(this.Name)", "Ligne de texte", "ObjectTextLine");
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.TextBox.icon", "SelectTool(this.Name)", "Pavé de texte", "ObjectTextBox");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Line.icon", "ToolLine", "Segment de ligne (L)", "ObjectLine");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Rectangle.icon", "ToolRectangle", "Rectangle (R)", "ObjectRectangle");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Circle.icon", "ToolCircle", "Cercle (C)", "ObjectCircle");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Ellipse.icon", "ToolEllipse", "Ellipse", "ObjectEllipse");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Poly.icon", "ToolPoly", "Polygone quelconque (P)", "ObjectPoly");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Bezier.icon", "ToolBezier", "Courbes de Bézier (B)", "ObjectBezier");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Regular.icon", "ToolRegular", "Polygone régulier", "ObjectRegular");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Surface.icon", "ToolSurface", "Surfaces 2d", "ObjectSurface");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Volume.icon", "ToolVolume", "Volumes 3d", "ObjectVolume");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.TextLine.icon", "ToolTextLine", "Ligne de texte", "ObjectTextLine");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.TextBox.icon", "ToolTextBox", "Pavé de texte (T)", "ObjectTextBox");
 			if ( this.useArray )
 			{
-				this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Array.icon", "SelectTool(this.Name)", "Tableau", "ObjectArray");
+				this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Array.icon", "ToolArray", "Tableau", "ObjectArray");
 			}
-			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Image.icon", "SelectTool(this.Name)", "Image bitmap", "ObjectImage");
+			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Image.icon", "ToolImage", "Image bitmap", "ObjectImage");
 			this.VToolBarAdd("", "", "");
 
 			this.bookDocuments = new TabBook(this);
@@ -731,6 +747,15 @@ namespace Epsitec.App.DocumentEditor
 			quickPageNext.Dock = DockStyle.Left;
 			ToolTip.Default.SetToolTip(quickPageNext, "Page suivante");
 
+			Button quickPageNew = new Button(hBand);
+			quickPageNew.Command = "PageNew";
+			quickPageNew.Text = "<b>+</b>";
+			quickPageNew.Width = sw;
+			quickPageNew.Height = sw;
+			quickPageNew.Dock = DockStyle.Left;
+			quickPageNew.DockMargins = new Margins(2, 0, 0, 0);
+			ToolTip.Default.SetToolTip(quickPageNew, "Nouvelle page");
+
 			di.hScroller = new HScroller(hBand);
 			di.hScroller.ValueChanged += new EventHandler(this.HandleHScrollerValueChanged);
 			di.hScroller.Dock = DockStyle.Fill;
@@ -741,6 +766,15 @@ namespace Epsitec.App.DocumentEditor
 			vBand.Width = sw;
 			vBand.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
 			vBand.AnchorMargins = new Margins(0, wm, 6+wm+tm, wm+sw+1);
+
+			Button quickLayerNew = new Button(vBand);
+			quickLayerNew.Command = "LayerNew";
+			quickLayerNew.Text = "<b>+</b>";
+			quickLayerNew.Width = sw;
+			quickLayerNew.Height = sw;
+			quickLayerNew.Dock = DockStyle.Top;
+			quickLayerNew.DockMargins = new Margins(0, 0, 0, 2);
+			ToolTip.Default.SetToolTip(quickLayerNew, "Nouveau calque");
 
 			GlyphButton quickLayerNext = new GlyphButton("LayerNext");
 			quickLayerNext.Parent = vBand;
@@ -923,19 +957,21 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		// Ajoute une icône.
-		protected void HToolBarAdd(string icon, string command, string tooltip)
+		protected Widget HToolBarAdd(string icon, string command, string tooltip)
 		{
 			if ( icon == "" )
 			{
 				IconSeparator sep = new IconSeparator();
 				sep.IsHorizontal = true;
 				this.hToolBar.Items.Add(sep);
+				return sep;
 			}
 			else
 			{
 				IconButton button = new IconButton(command, icon, command);
 				this.hToolBar.Items.Add(button);
 				ToolTip.Default.SetToolTip(button, tooltip);
+				return button;
 			}
 		}
 
@@ -962,12 +998,12 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		// Ajoute une icône.
-		protected void InfoAdd(string icon, double width, string command, string tooltip)
+		protected Widget InfoAdd(string icon, double width, string command, string tooltip)
 		{
-			this.InfoAdd(icon, width, command, tooltip, command);
+			return this.InfoAdd(icon, width, command, tooltip, command);
 		}
 		
-		protected void InfoAdd(string icon, double width, string command, string tooltip, string name)
+		protected Widget InfoAdd(string icon, double width, string command, string tooltip, string name)
 		{
 			if ( icon == "" )
 			{
@@ -977,6 +1013,7 @@ namespace Epsitec.App.DocumentEditor
 
 				int i = this.info.Children.Count-1;
 				this.info.Items[i].Name = name;
+				return field;
 			}
 			else
 			{
@@ -985,6 +1022,7 @@ namespace Epsitec.App.DocumentEditor
 				button.Size = new Size(h, h);
 				this.info.Items.Add(button);
 				ToolTip.Default.SetToolTip(button, tooltip);
+				return button;
 			}
 		}
 
@@ -1049,6 +1087,19 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.TabBookChanged(page.Name);
 		}
 
+		private void HandleStatusZoomClicked(object sender, MessageEventArgs e)
+		{
+			if ( !this.IsCurrentDocument )  return;
+			StatusField sf = sender as StatusField;
+			if ( sf == null )  return;
+			Point pos = sf.MapClientToScreen(new Point(0, sf.Height));
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			VMenu menu = ZoomMenu.CreateZoomMenu(context.Zoom, context.ZoomPage, null);
+			menu.Host = this;
+			pos.Y += menu.Height;
+			menu.ShowAsContextMenu(this.Window, pos);  // -> commandes "ZoomChange"
+		}
+
 
 		protected override void UpdateClientGeometry()
 		{
@@ -1056,12 +1107,148 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 
-		[Command ("SelectTool")]
-		void CommandActivateTool(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("ToolSelect")]
+		void CommandToolSelect(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Tool = e.CommandArgs[0];
+			this.CurrentDocument.Modifier.Tool = "Select";
+			this.DispatchDummyMouseMoveEvent();
 		}
 
+		[Command ("ToolGlobal")]
+		void CommandToolGlobal(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "Global";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolEdit")]
+		void CommandToolEdit(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "Edit";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolZoom")]
+		void CommandToolZoom(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "Zoom";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolHand")]
+		void CommandToolHand(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "Hand";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolPicker")]
+		void CommandToolPicker(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "Picker";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolHotSpot")]
+		void CommandToolHotSpot(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "HotSpot";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolLine")]
+		void CommandToolLine(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectLine";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolRectangle")]
+		void CommandToolRectangle(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectRectangle";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolCircle")]
+		void CommandToolCircle(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectCircle";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolEllipse")]
+		void CommandToolEllipse(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectEllipse";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolPoly")]
+		void CommandToolPoly(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectPoly";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolBezier")]
+		void CommandToolBezier(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectBezier";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolRegular")]
+		void CommandToolRegular(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectRegular";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolSurface")]
+		void CommandToolSurface(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectSurface";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolVolume")]
+		void CommandToolVolume(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectVolume";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolTextLine")]
+		void CommandToolTextLine(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectTextLine";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolTextBox")]
+		void CommandToolTextBox(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectTextBox";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolArray")]
+		void CommandToolArray(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectArray";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolImage")]
+		void CommandToolImage(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectImage";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+
+		
 		#region IO
 		// Affiche le dialogue pour demander s'il faut enregistrer le
 		// document modifié, avant de passer à un autre document.
@@ -1780,17 +1967,71 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.TextUnderlined();
 		}
 
+
 		[Command ("Undo")]
 		void CommandUndo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Undo();
+			this.CurrentDocument.Modifier.Undo(1);
 		}
 
 		[Command ("Redo")]
 		void CommandRedo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.CurrentDocument.Modifier.Redo();
+			this.CurrentDocument.Modifier.Redo(1);
 		}
+
+		[Command ("UndoRedoList")]
+		void CommandUndoRedoList(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			Widget button = this.hToolBar.FindChild("Undo");
+			if ( button == null )  return;
+			Point pos = button.MapClientToScreen(new Point(0, 1));
+			VMenu menu = this.CurrentDocument.Modifier.CreateUndoRedoMenu(null);
+			menu.Host = this;
+			menu.Accepted += new MenuEventHandler(this.HandleUndoRedoMenuAccepted);
+			menu.Rejected += new EventHandler(this.HandleUndoRedoMenuRejected);
+			menu.ShowAsContextMenu(this.Window, pos);
+			this.WidgetUndoRedoMenuEngaged(true);
+		}
+
+		private void HandleUndoRedoMenuAccepted(object sender, MenuEventArgs e)
+		{
+			this.WidgetUndoRedoMenuEngaged(false);
+		}
+
+		private void HandleUndoRedoMenuRejected(object sender)
+		{
+			this.WidgetUndoRedoMenuEngaged(false);
+		}
+
+		protected void WidgetUndoRedoMenuEngaged(bool engaged)
+		{
+			Widget button;
+
+			button = this.hToolBar.FindChild("Undo");
+			if ( button != null )  button.ActiveState = engaged ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			
+			button = this.hToolBar.FindChild("UndoRedoList");
+			if ( button != null )  button.ActiveState = engaged ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			
+			button = this.hToolBar.FindChild("Redo");
+			if ( button != null )  button.ActiveState = engaged ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+		}
+
+		[Command ("UndoRedoListDo")]
+		void CommandUndoRedoListDo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			int nb = System.Convert.ToInt32(e.CommandArgs[0]);
+			if ( nb > 0 )
+			{
+				this.CurrentDocument.Modifier.Undo(nb);
+			}
+			else
+			{
+				this.CurrentDocument.Modifier.Redo(-nb);
+			}
+		}
+
 
 		[Command ("OrderUpOne")]
 		void CommandOrderUpOne(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -2147,6 +2388,13 @@ namespace Epsitec.App.DocumentEditor
 		void CommandZoomAdd(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.ZoomChange(1.2);
+		}
+
+		[Command ("ZoomChange")]
+		void CommandZoomChange(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			double zoom = System.Convert.ToDouble(e.CommandArgs[0]);
+			this.CurrentDocument.Modifier.ZoomValue(zoom);
 		}
 
 		// Exécute une commande locale à un objet.
@@ -2572,6 +2820,27 @@ namespace Epsitec.App.DocumentEditor
 		{
 			CommandDispatcher foo = this.CommandDispatcher;
 
+			this.toolSelectState = new CommandState("ToolSelect", this.commandDispatcher, KeyCode.AlphaS);
+			this.toolGlobalState = new CommandState("ToolGlobal", this.commandDispatcher, KeyCode.AlphaG);
+			this.toolEditState = new CommandState("ToolEdit", this.commandDispatcher, KeyCode.AlphaE);
+			this.toolZoomState = new CommandState("ToolZoom", this.commandDispatcher, KeyCode.AlphaZ);
+			this.toolHandState = new CommandState("ToolHand", this.commandDispatcher, KeyCode.AlphaH);
+			this.toolPickerState = new CommandState("ToolPicker", this.commandDispatcher, KeyCode.AlphaI);
+			this.toolHotSpotState = new CommandState("ToolHotSpot", this.commandDispatcher);
+			this.toolLineState = new CommandState("ToolLine", this.commandDispatcher, KeyCode.AlphaL);
+			this.toolRectangleState = new CommandState("ToolRectangle", this.commandDispatcher, KeyCode.AlphaR);
+			this.toolCircleState = new CommandState("ToolCircle", this.commandDispatcher, KeyCode.AlphaC);
+			this.toolEllipseState = new CommandState("ToolEllipse", this.commandDispatcher);
+			this.toolPolyState = new CommandState("ToolPoly", this.commandDispatcher, KeyCode.AlphaP);
+			this.toolBezierState = new CommandState("ToolBezier", this.commandDispatcher, KeyCode.AlphaB);
+			this.toolRegularState = new CommandState("ToolRegular", this.commandDispatcher);
+			this.toolSurfaceState = new CommandState("ToolSurface", this.commandDispatcher);
+			this.toolVolumeState = new CommandState("ToolVolume", this.commandDispatcher);
+			this.toolTextLineState = new CommandState("ToolTextLine", this.commandDispatcher);
+			this.toolTextBoxState = new CommandState("ToolTextBox", this.commandDispatcher, KeyCode.AlphaT);
+			this.toolArrayState = new CommandState("ToolArray", this.commandDispatcher);
+			this.toolImageState = new CommandState("ToolImage", this.commandDispatcher);
+
 			this.newState = new CommandState("New", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaN);
 			this.openState = new CommandState("Open", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaO);
 			this.openModelState = new CommandState("OpenModel", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaO);
@@ -2590,10 +2859,10 @@ namespace Epsitec.App.DocumentEditor
 			this.textBoldState = new CommandState("TextBold", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaB);
 			this.textItalicState = new CommandState("TextItalic", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaI);
 			this.textUnderlinedState = new CommandState("TextUnderlined", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaU);
-			this.orderUpOneState = new CommandState("OrderUpOne", this.commandDispatcher);
-			this.orderDownOneState = new CommandState("OrderDownOne", this.commandDispatcher);
-			this.orderUpAllState = new CommandState("OrderUpAll", this.commandDispatcher);
-			this.orderDownAllState = new CommandState("OrderDownAll", this.commandDispatcher);
+			this.orderUpOneState = new CommandState("OrderUpOne", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.PageUp);
+			this.orderDownOneState = new CommandState("OrderDownOne", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.PageDown);
+			this.orderUpAllState = new CommandState("OrderUpAll", this.commandDispatcher, KeyCode.ModifierShift|KeyCode.PageUp);
+			this.orderDownAllState = new CommandState("OrderDownAll", this.commandDispatcher, KeyCode.ModifierShift|KeyCode.PageDown);
 			this.rotate90State = new CommandState("Rotate90", this.commandDispatcher);
 			this.rotate180State = new CommandState("Rotate180", this.commandDispatcher);
 			this.rotate270State = new CommandState("Rotate270", this.commandDispatcher);
@@ -2619,6 +2888,7 @@ namespace Epsitec.App.DocumentEditor
 			this.booleanBackMinusState = new CommandState("BooleanBackMinus", this.commandDispatcher);
 			this.undoState = new CommandState("Undo", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaZ);
 			this.redoState = new CommandState("Redo", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaY);
+			this.undoRedoListState = new CommandState("UndoRedoList", this.commandDispatcher);
 			this.deselectState = new CommandState("Deselect", this.commandDispatcher, KeyCode.Escape);
 			this.selectAllState = new CommandState("SelectAll", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaA);
 			this.selectInvertState = new CommandState("SelectInvert", this.commandDispatcher);
@@ -2633,7 +2903,7 @@ namespace Epsitec.App.DocumentEditor
 			this.hideRestState = new CommandState("HideRest", this.commandDispatcher);
 			this.hideCancelState = new CommandState("HideCancel", this.commandDispatcher);
 			this.zoomMinState = new CommandState("ZoomMin", this.commandDispatcher);
-			this.zoomPageState = new CommandState("ZoomPage", this.commandDispatcher);
+			this.zoomPageState = new CommandState("ZoomPage", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.Digit0);
 			this.zoomPageWidthState = new CommandState("ZoomPageWidth", this.commandDispatcher);
 			this.zoomDefaultState = new CommandState("ZoomDefault", this.commandDispatcher);
 			this.zoomSelState = new CommandState("ZoomSel", this.commandDispatcher);
@@ -2864,29 +3134,55 @@ namespace Epsitec.App.DocumentEditor
 			field.Invalidate();
 		}
 
-		// Appelé par le document lorsque l'outil a changé.
-		private void HandleToolChanged()
+		// Met à jour une commande d'outil.
+		protected void UpdateTool(CommandState cmd, string tool, string currentTool, bool isCreating, bool enabled)
 		{
-			if ( this.IsCurrentDocument )
+			if ( enabled )
 			{
-				bool isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
-				string tool = this.CurrentDocument.Modifier.Tool;
-				Widget[] toolWidgets = Widget.FindAllCommandWidgets("SelectTool", this.commandDispatcher);
-				foreach ( Widget widget in toolWidgets )
-				{
-					widget.ActiveState = ( widget.Name == tool ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-					widget.SetEnabled(widget.Name == tool || widget.Name == "Select" || !isCreating);
-				}
+				cmd.ActiveState = (tool == currentTool) ? WidgetState.ActiveYes : WidgetState.ActiveNo;;
+				cmd.Enabled = (tool == currentTool || tool == "Select" || !isCreating);
 			}
 			else
 			{
-				Widget[] toolWidgets = Widget.FindAllCommandWidgets("SelectTool", this.commandDispatcher);
-				foreach ( Widget widget in toolWidgets )
-				{
-					widget.ActiveState = WidgetState.ActiveNo;
-					widget.SetEnabled(false);
-				}
+				cmd.ActiveState = WidgetState.ActiveNo;
+				cmd.Enabled = false;
 			}
+		}
+
+		// Appelé par le document lorsque l'outil a changé.
+		private void HandleToolChanged()
+		{
+			string tool = "";
+			bool isCreating = false;
+			bool enabled = false;
+
+			if ( this.IsCurrentDocument )
+			{
+				tool = this.CurrentDocument.Modifier.Tool;
+				isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
+				enabled = true;
+			}
+
+			this.UpdateTool(this.toolSelectState, "Select", tool, isCreating, enabled);
+			this.UpdateTool(this.toolGlobalState, "Global", tool, isCreating, enabled);
+			this.UpdateTool(this.toolEditState, "Edit", tool, isCreating, enabled);
+			this.UpdateTool(this.toolZoomState, "Zoom", tool, isCreating, enabled);
+			this.UpdateTool(this.toolHandState, "Hand", tool, isCreating, enabled);
+			this.UpdateTool(this.toolPickerState, "Picker", tool, isCreating, enabled);
+			this.UpdateTool(this.toolHotSpotState, "HotSpot", tool, isCreating, enabled);
+			this.UpdateTool(this.toolLineState, "ObjectLine", tool, isCreating, enabled);
+			this.UpdateTool(this.toolRectangleState, "ObjectRectangle", tool, isCreating, enabled);
+			this.UpdateTool(this.toolCircleState, "ObjectCircle", tool, isCreating, enabled);
+			this.UpdateTool(this.toolEllipseState, "ObjectEllipse", tool, isCreating, enabled);
+			this.UpdateTool(this.toolPolyState, "ObjectPoly", tool, isCreating, enabled);
+			this.UpdateTool(this.toolBezierState, "ObjectBezier", tool, isCreating, enabled);
+			this.UpdateTool(this.toolRegularState, "ObjectRegular", tool, isCreating, enabled);
+			this.UpdateTool(this.toolSurfaceState, "ObjectSurface", tool, isCreating, enabled);
+			this.UpdateTool(this.toolVolumeState, "ObjectVolume", tool, isCreating, enabled);
+			this.UpdateTool(this.toolTextLineState, "ObjectTextLine", tool, isCreating, enabled);
+			this.UpdateTool(this.toolTextBoxState, "ObjectTextBox", tool, isCreating, enabled);
+			this.UpdateTool(this.toolArrayState, "ObjectArray", tool, isCreating, enabled);
+			this.UpdateTool(this.toolImageState, "ObjectImage", tool, isCreating, enabled);
 		}
 
 		// Appelé par le document lorsque l'état "enregistrer" a changé.
@@ -3219,11 +3515,13 @@ namespace Epsitec.App.DocumentEditor
 				bool isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
 				this.undoState.Enabled = ( this.CurrentDocument.Modifier.OpletQueue.CanUndo && !isCreating );
 				this.redoState.Enabled = ( this.CurrentDocument.Modifier.OpletQueue.CanRedo && !isCreating );
+				this.undoRedoListState.Enabled = this.undoState.Enabled|this.redoState.Enabled;
 			}
 			else
 			{
 				this.undoState.Enabled = false;
 				this.redoState.Enabled = false;
+				this.undoRedoListState.Enabled = false;
 			}
 		}
 
@@ -3976,6 +4274,26 @@ namespace Epsitec.App.DocumentEditor
 		protected Dialogs.Splash				dlgSplash;
 		protected Dialogs.Update				dlgUpdate;
 
+		protected CommandState					toolSelectState;
+		protected CommandState					toolGlobalState;
+		protected CommandState					toolEditState;
+		protected CommandState					toolZoomState;
+		protected CommandState					toolHandState;
+		protected CommandState					toolPickerState;
+		protected CommandState					toolHotSpotState;
+		protected CommandState					toolLineState;
+		protected CommandState					toolRectangleState;
+		protected CommandState					toolCircleState;
+		protected CommandState					toolEllipseState;
+		protected CommandState					toolPolyState;
+		protected CommandState					toolBezierState;
+		protected CommandState					toolRegularState;
+		protected CommandState					toolSurfaceState;
+		protected CommandState					toolVolumeState;
+		protected CommandState					toolTextLineState;
+		protected CommandState					toolTextBoxState;
+		protected CommandState					toolArrayState;
+		protected CommandState					toolImageState;
 		protected CommandState					newState;
 		protected CommandState					openState;
 		protected CommandState					openModelState;
@@ -4023,6 +4341,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					booleanBackMinusState;
 		protected CommandState					undoState;
 		protected CommandState					redoState;
+		protected CommandState					undoRedoListState;
 		protected CommandState					deselectState;
 		protected CommandState					selectAllState;
 		protected CommandState					selectInvertState;

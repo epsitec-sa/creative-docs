@@ -278,7 +278,7 @@ namespace Epsitec.Common.Document.Containers
 		protected void CreateGuide(Settings.GuideType type)
 		{
 			int sel = this.document.Settings.GuidesSelected+1;
-			this.document.Modifier.OpletQueueBeginAction("ChangeGuide", sel);
+			this.document.Modifier.OpletQueueBeginAction("Nouveau repère", "ChangeGuide", sel);
 			Settings.Guide guide = new Settings.Guide(this.document);
 			guide.Type = type;
 			guide.Position = 0.0;
@@ -305,7 +305,7 @@ namespace Epsitec.Common.Document.Containers
 		// Duplique un repère.
 		private void HandleButtonDuplicate(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.OpletQueueBeginAction();
+			this.document.Modifier.OpletQueueBeginAction("Dupliquer un repère");
 			int sel = this.document.Settings.GuidesSelected;
 			Settings.Guide guide = new Settings.Guide(this.document);
 			this.document.Settings.GuidesGet(sel).CopyTo(guide);
@@ -320,7 +320,7 @@ namespace Epsitec.Common.Document.Containers
 		// Transfère un repère (global <-> local).
 		private void HandleButtonXfer(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.OpletQueueBeginAction();
+			this.document.Modifier.OpletQueueBeginAction("Repère global &lt;-&gt; page courante");
 			int sel = this.document.Settings.GuidesSelected;
 
 			Settings.Guide guide = new Settings.Guide(this.document);
@@ -344,7 +344,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			int sel = this.document.Settings.GuidesSelected;
 			if ( sel < 1 )  return;
-			this.document.Modifier.OpletQueueBeginAction();
+			this.document.Modifier.OpletQueueBeginAction("Repère avant");
 			Settings.Guide guide = this.document.Settings.GuidesGet(sel);
 			this.document.Settings.GuidesRemoveAt(sel);
 			sel --;
@@ -361,7 +361,7 @@ namespace Epsitec.Common.Document.Containers
 		{
 			int sel = this.document.Settings.GuidesSelected;
 			if ( sel > this.document.Settings.GuidesCount-2 )  return;
-			this.document.Modifier.OpletQueueBeginAction();
+			this.document.Modifier.OpletQueueBeginAction("Repère après");
 			Settings.Guide guide = this.document.Settings.GuidesGet(sel);
 			this.document.Settings.GuidesRemoveAt(sel);
 			sel ++;
@@ -376,7 +376,7 @@ namespace Epsitec.Common.Document.Containers
 		// Supprime le repère sélectionné.
 		private void HandleButtonDelete(object sender, MessageEventArgs e)
 		{
-			this.document.Modifier.OpletQueueBeginAction();
+			this.document.Modifier.OpletQueueBeginAction("Supprimer un repère");
 			int sel = this.document.Settings.GuidesSelected;
 			this.document.Settings.GuidesRemoveAt(sel);
 			if ( sel >= this.document.Settings.GuidesCount )
@@ -392,7 +392,7 @@ namespace Epsitec.Common.Document.Containers
 		// Liste cliquée.
 		private void HandleTableSelectionChanged(object sender)
 		{
-			this.document.Modifier.OpletQueueBeginAction();
+			this.document.Modifier.OpletQueueBeginAction("Sélectionner un repère");
 			this.document.Settings.GuidesSelected = this.table.SelectedRow;
 			this.document.Modifier.OpletQueueValidateAction();
 			this.UpdateEdits();
@@ -419,7 +419,7 @@ namespace Epsitec.Common.Document.Containers
 			Settings.Guide guide = this.document.Settings.GuidesGet(sel);
 
 			this.ignoreChanged = true;
-			this.document.Modifier.OpletQueueBeginAction("ChangeGuide", sel);
+			this.document.Modifier.OpletQueueBeginAction("Changer le type d'un repère", "ChangeGuide", sel);
 			guide.Type = Settings.Guide.StringToType(this.editType.Text);
 			this.document.Modifier.OpletQueueValidateAction();
 			this.UpdateTable();
@@ -434,7 +434,7 @@ namespace Epsitec.Common.Document.Containers
 			Settings.Guide guide = this.document.Settings.GuidesGet(sel);
 
 			this.ignoreChanged = true;
-			this.document.Modifier.OpletQueueBeginAction("ChangeGuide", sel);
+			this.document.Modifier.OpletQueueBeginAction("Changer la position d'un repère", "ChangeGuide", sel);
 			guide.Position = (double) this.editPosition.InternalValue;
 			this.document.Modifier.OpletQueueValidateAction();
 			this.UpdateTable();
