@@ -238,6 +238,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DbTypeByteArray.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DbTypeCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
