@@ -54,6 +54,8 @@ namespace Epsitec.Common.Widgets
 			this.MarkForRepaint ();
 			this.RefreshGraphics ();
 			
+			Animator animator;
+			
 			switch (animation)
 			{
 				case Animation.None:
@@ -93,11 +95,22 @@ namespace Epsitec.Common.Widgets
 					this.IsLayered = true;
 					this.Alpha = 0.0;
 					
-					Animator animator = new Animator (0.5);
+					animator = new Animator (0.5);
 					animator.SetCallback (new DoubleCallback (this.AnimateAlpha), new AnimatorCallback (this.AnimateCleanup));
 					animator.SetValue (0.0, 1.0);
 					animator.Start ();
 					this.Show ();
+					return;
+				
+				case Animation.FadeOut:
+					this.is_frozen = true;
+					this.IsLayered = true;
+					this.Alpha = 1.0;
+					
+					animator = new Animator (0.5);
+					animator.SetCallback (new DoubleCallback (this.AnimateAlpha), new AnimatorCallback (this.AnimateCleanup));
+					animator.SetValue (1.0, 0.0);
+					animator.Start ();
 					return;
 				
 				default:
@@ -114,7 +127,7 @@ namespace Epsitec.Common.Widgets
 					this.is_frozen = true;
 					this.WindowBounds = b1;
 					
-					Animator animator = new Animator (bounds.Height * 0.0025);
+					animator = new Animator (bounds.Height * 0.0025);
 					animator.SetCallback (new BoundsOffsetCallback (this.AnimateWindowBounds), new AnimatorCallback (this.AnimateCleanup));
 					animator.SetValue (0, b1, b2);
 					animator.SetValue (1, o1, o2);
@@ -157,6 +170,11 @@ namespace Epsitec.Common.Widgets
 			
 			this.is_frozen = false;
 			this.Invalidate ();
+			
+			if (this.WindowAnimationEnded != null)
+			{
+				this.WindowAnimationEnded (this);
+			}
 		}
 		
 		public WindowRoot				Root
@@ -1074,6 +1092,7 @@ namespace Epsitec.Common.Widgets
 		
 		public event System.EventHandler		WindowActivated;
 		public event System.EventHandler		WindowDeactivated;
+		public event EventHandler				WindowAnimationEnded;
 		
 		public static event MessageHandler		MessageFilter;
 		
