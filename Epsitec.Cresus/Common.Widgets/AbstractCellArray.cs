@@ -1,6 +1,6 @@
 namespace Epsitec.Common.Widgets
 {
-	[System.Flags] public enum AbstractCellArrayStyle
+	[System.Flags] public enum CellArrayStyle
 	{
 		None			= 0x00000000,		// neutre
 		ScrollNorm		= 0x00000001,		// défilement avec un ascenseur
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Widgets
 
 
 		// Sytle pour l'en-tête supérieure et l'ascenseur horizontal.
-		public AbstractCellArrayStyle StyleH
+		public CellArrayStyle StyleH
 		{
 			get
 			{
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		// Sytle pour l'en-tête gauche et l'ascenseur vertical.
-		public AbstractCellArrayStyle StyleV
+		public CellArrayStyle StyleV
 		{
 			get
 			{
@@ -354,7 +354,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			width = System.Math.Max(width, this.minWidth);
-			if ( (this.styleH & AbstractCellArrayStyle.Stretch) == 0 )
+			if ( (this.styleH & CellArrayStyle.Stretch) == 0 )
 			{
 				this.widthColumns[rank] = width;
 			}
@@ -426,7 +426,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			height = System.Math.Max(height, this.minHeight);
-			if ( (this.styleV & AbstractCellArrayStyle.Stretch) == 0 )
+			if ( (this.styleV & CellArrayStyle.Stretch) == 0 )
 			{
 				this.heightRows[rank] = height;
 			}
@@ -629,7 +629,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( button.HeaderButtonStyle == HeaderButtonStyle.Left )
 			{
-				if ( (this.styleV & AbstractCellArrayStyle.Sort) == 0 )  return;
+				if ( (this.styleV & CellArrayStyle.Sort) == 0 )  return;
 
 				int row = button.Rank;
 				int mode = button.SortMode;
@@ -645,7 +645,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( button.HeaderButtonStyle == HeaderButtonStyle.Top )
 			{
-				if ( (this.styleH & AbstractCellArrayStyle.Sort) == 0 )  return;
+				if ( (this.styleH & CellArrayStyle.Sort) == 0 )  return;
 
 				int column = button.Rank;
 				int mode = button.SortMode;
@@ -814,11 +814,11 @@ namespace Epsitec.Common.Widgets
 		// Sélectionne une cellule.
 		protected void ProcessMouse(Drawing.Point pos, bool isShiftPressed, bool isCtrlPressed)
 		{
-			AbstractCellArrayStyle style = this.styleV | this.styleH;
-			if ( (style & AbstractCellArrayStyle.SelectCell) == 0 &&
-				 (style & AbstractCellArrayStyle.SelectLine) == 0 )  return;
+			CellArrayStyle style = this.styleV | this.styleH;
+			if ( (style & CellArrayStyle.SelectCell) == 0 &&
+				 (style & CellArrayStyle.SelectLine) == 0 )  return;
 
-			if ( (style & AbstractCellArrayStyle.SelectMulti) == 0 || !isCtrlPressed )
+			if ( (style & CellArrayStyle.SelectMulti) == 0 || !isCtrlPressed )
 			{
 				this.DeselectAll();
 			}
@@ -832,7 +832,7 @@ namespace Epsitec.Common.Widgets
 				}
 				bool state = this.mouseState;
 
-				if ( (style & AbstractCellArrayStyle.SelectMulti) != 0 && isShiftPressed )
+				if ( (style & CellArrayStyle.SelectMulti) != 0 && isShiftPressed )
 				{
 					this.SelectZone(column, row, this.selectedColumn, this.selectedRow, state);
 				}
@@ -844,12 +844,12 @@ namespace Epsitec.Common.Widgets
 				}
 				this.OnSelectionChanged();
 
-				if ( (this.styleV & AbstractCellArrayStyle.SelectLine) != 0 )
+				if ( (this.styleV & CellArrayStyle.SelectLine) != 0 )
 				{
 					this.SelectRow(row, state);
 				}
 
-				if ( (this.styleH & AbstractCellArrayStyle.SelectLine) != 0 )
+				if ( (this.styleH & CellArrayStyle.SelectLine) != 0 )
 				{
 					this.SelectColumn(column, state);
 				}
@@ -912,12 +912,12 @@ namespace Epsitec.Common.Widgets
 			this.selectedRow = row;
 			this.OnSelectionChanged();
 
-			if ( (this.styleV & AbstractCellArrayStyle.SelectLine) != 0 )
+			if ( (this.styleV & CellArrayStyle.SelectLine) != 0 )
 			{
 				this.SelectRow(row, true);
 			}
 
-			if ( (this.styleH & AbstractCellArrayStyle.SelectLine) != 0 )
+			if ( (this.styleH & CellArrayStyle.SelectLine) != 0 )
 			{
 				this.SelectColumn(column, true);
 			}
@@ -1038,8 +1038,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Rectangle rect = this.Inside;
 
-			if ( (this.styleV & AbstractCellArrayStyle.Stretch) == 0 &&
-				 (this.styleH & AbstractCellArrayStyle.SelectLine) == 0 &&
+			if ( (this.styleV & CellArrayStyle.Stretch) == 0 &&
+				 (this.styleH & CellArrayStyle.SelectLine) == 0 &&
 				 this.selectedRow != -1 )
 			{
 				double start, end;
@@ -1060,8 +1060,8 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			if ( (this.styleH & AbstractCellArrayStyle.Stretch) == 0 &&
-				 (this.styleV & AbstractCellArrayStyle.SelectLine) == 0 &&
+			if ( (this.styleH & CellArrayStyle.Stretch) == 0 &&
+				 (this.styleV & CellArrayStyle.SelectLine) == 0 &&
 				 this.selectedColumn != -1 )
 			{
 				double start, end;
@@ -1102,13 +1102,13 @@ namespace Epsitec.Common.Widgets
 
 			this.showScrollerV = false;
 			this.showScrollerH = false;
-			if ( (this.styleV & AbstractCellArrayStyle.ScrollNorm) != 0 )  this.showScrollerV = true;
-			if ( (this.styleH & AbstractCellArrayStyle.ScrollNorm) != 0 )  this.showScrollerH = true;
+			if ( (this.styleV & CellArrayStyle.ScrollNorm) != 0 )  this.showScrollerV = true;
+			if ( (this.styleH & CellArrayStyle.ScrollNorm) != 0 )  this.showScrollerH = true;
 
 			this.leftMargin = 0;
 			this.topMargin  = 0;
-			if ( (this.styleV & AbstractCellArrayStyle.Header) != 0 )  this.leftMargin = this.headerWidth;
-			if ( (this.styleH & AbstractCellArrayStyle.Header) != 0 )  this.topMargin  = this.headerHeight;
+			if ( (this.styleV & CellArrayStyle.Header) != 0 )  this.leftMargin = this.headerWidth;
+			if ( (this.styleH & CellArrayStyle.Header) != 0 )  this.topMargin  = this.headerHeight;
 
 			Drawing.Rectangle rect = this.Bounds;
 			Drawing.Rectangle iRect = new Drawing.Rectangle(this.margin, this.margin, rect.Width-this.margin*2, rect.Height-this.margin*2);
@@ -1121,11 +1121,11 @@ namespace Epsitec.Common.Widgets
 			iRect.Bottom += this.bottomMargin;
 			iRect.Top    -= this.topMargin;
 
-			if ( (this.styleH & AbstractCellArrayStyle.Stretch) != 0 )
+			if ( (this.styleH & CellArrayStyle.Stretch) != 0 )
 			{
 				this.StretchColumns();
 			}
-			if ( (this.styleV & AbstractCellArrayStyle.Stretch) != 0 )
+			if ( (this.styleV & CellArrayStyle.Stretch) != 0 )
 			{
 				this.StretchRows();
 			}
@@ -1166,7 +1166,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			// Positionne les boutons de l'en-tête verticale.
-			if ( (this.styleV & AbstractCellArrayStyle.Header) == 0 )
+			if ( (this.styleV & CellArrayStyle.Header) == 0 )
 			{
 				this.containerV.Hide();
 			}
@@ -1190,7 +1190,7 @@ namespace Epsitec.Common.Widgets
 					HeaderButton button = this.FindButtonV(i);
 					button.Show();
 					button.Bounds = hRect;
-					button.Dynamic = ( (this.styleV & AbstractCellArrayStyle.Sort) != 0 );
+					button.Dynamic = ( (this.styleV & CellArrayStyle.Sort) != 0 );
 					this.containerV.Children.Add(button);
 					hRect.Top = hRect.Bottom;
 				}
@@ -1202,8 +1202,8 @@ namespace Epsitec.Common.Widgets
 				{
 					hRect.Bottom = hRect.Top-this.RetHeightRow(i);
 					HeaderSlider slider = this.FindSliderV(i);
-					if ( (this.styleV & AbstractCellArrayStyle.Mobile) == 0 ||
-						 ((this.styleV & AbstractCellArrayStyle.Stretch) != 0 && i == this.maxRows-1) )
+					if ( (this.styleV & CellArrayStyle.Mobile) == 0 ||
+						 ((this.styleV & CellArrayStyle.Stretch) != 0 && i == this.maxRows-1) )
 					{
 						slider.Hide();
 					}
@@ -1223,7 +1223,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			// Positionne les boutons de l'en-tête horizontale.
-			if ( (this.styleH & AbstractCellArrayStyle.Header) == 0 )
+			if ( (this.styleH & CellArrayStyle.Header) == 0 )
 			{
 				this.containerH.Hide();
 			}
@@ -1247,7 +1247,7 @@ namespace Epsitec.Common.Widgets
 					HeaderButton button = this.FindButtonH(i);
 					button.Show();
 					button.Bounds = hRect;
-					button.Dynamic = ( (this.styleH & AbstractCellArrayStyle.Sort) != 0 );
+					button.Dynamic = ( (this.styleH & CellArrayStyle.Sort) != 0 );
 					this.containerH.Children.Add(button);
 					hRect.Left = hRect.Right;
 				}
@@ -1259,8 +1259,8 @@ namespace Epsitec.Common.Widgets
 				{
 					hRect.Right = hRect.Left+this.RetWidthColumn(i);
 					HeaderSlider slider = this.FindSliderH(i);
-					if ( (this.styleH & AbstractCellArrayStyle.Mobile) == 0 ||
-						 ((this.styleH & AbstractCellArrayStyle.Stretch) != 0 && i == this.maxColumns-1) )
+					if ( (this.styleH & CellArrayStyle.Mobile) == 0 ||
+						 ((this.styleH & CellArrayStyle.Stretch) != 0 && i == this.maxColumns-1) )
 					{
 						slider.Hide();
 					}
@@ -1611,7 +1611,7 @@ namespace Epsitec.Common.Widgets
 			graphics.RenderSolid(color);
 
 			// Dessine les lignes de séparation horizontales.
-			if ( (this.styleV & AbstractCellArrayStyle.Separator) != 0 )
+			if ( (this.styleV & CellArrayStyle.Separator) != 0 )
 			{
 				double limit = 0;
 				for ( int i=0 ; i<this.maxColumns ; i++ )
@@ -1632,7 +1632,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			// Dessine les lignes de séparation verticales.
-			if ( (this.styleH & AbstractCellArrayStyle.Separator) != 0 )
+			if ( (this.styleH & CellArrayStyle.Separator) != 0 )
 			{
 				double limit = 0;
 				for ( int i=0 ; i<this.maxRows ; i++ )
@@ -1660,8 +1660,8 @@ namespace Epsitec.Common.Widgets
 		protected bool							isDirty;
 		protected bool							mouseDown = false;
 		protected bool							mouseState;
-		protected AbstractCellArrayStyle		styleH;
-		protected AbstractCellArrayStyle		styleV;
+		protected CellArrayStyle				styleH;
+		protected CellArrayStyle				styleV;
 		protected int							maxColumns;		// nb total de colonnes
 		protected int							maxRows;		// nb total de lignes
 		protected int							visibleColumns;	// nb de colonnes visibles
