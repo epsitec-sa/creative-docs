@@ -1090,7 +1090,14 @@ namespace Epsitec.Common.Widgets.Platform
 			{
 				if (this.wnd_proc_depth == 0)
 				{
-					this.widget_window.DispatchQueuedCommands ();
+					try
+					{
+						this.widget_window.DispatchQueuedCommands ();
+					}
+					catch (System.Exception ex)
+					{
+						Window.ProcessException (ex, "WndProc/A");
+					}
 				}
 				else
 				{
@@ -1168,7 +1175,10 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				base.WndProc (ref msg);
 			}
-			
+			catch (System.Exception ex)
+			{
+				Window.ProcessException (ex, "WndProc/B");
+			}
 			finally
 			{
 				System.Diagnostics.Debug.Assert (this.IsDisposed == false);
@@ -1543,6 +1553,62 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 			
 			return paint_needed;
+		}
+		
+		
+		
+		internal static void ProcessException(System.Exception ex, string tag)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append ("------------------------------------------------------------");
+			buffer.Append ("\r\n");
+			buffer.Append (tag);
+			buffer.Append ("\r\n");
+			buffer.Append (System.Diagnostics.Process.GetCurrentProcess ().MainModule.FileVersionInfo.ToString ());
+			buffer.Append ("\r\n");
+			buffer.Append ("Window: ");
+			buffer.Append (System.Diagnostics.Process.GetCurrentProcess ().MainWindowTitle);
+			buffer.Append ("\r\n");
+			buffer.Append ("Thread: ");
+			buffer.Append (System.Threading.Thread.CurrentThread.Name);
+			buffer.Append ("\r\n");
+			buffer.Append ("\r\n");
+			
+			while (ex != null)
+			{
+				buffer.Append ("Exception type: ");
+				buffer.Append (ex.GetType ().Name);
+				buffer.Append ("\r\n");
+				buffer.Append ("Message:        ");
+				buffer.Append (ex.Message);
+				buffer.Append ("\r\n");
+				buffer.Append ("Stack:\r\n");
+				buffer.Append (ex.StackTrace);
+				
+				ex = ex.InnerException;
+				
+				if (ex != null)
+				{
+					buffer.Append ("\r\nInner Exception found.\r\n\r\n");
+				}
+			}
+			
+			buffer.Append ("\r\n");
+			buffer.Append ("------------------------------------------------------------");
+			buffer.Append ("\r\n");
+
+			Support.Clipboard.WriteData data = new Epsitec.Common.Support.Clipboard.WriteData ();
+			data.WriteText (buffer.ToString ());
+			Support.Clipboard.SetData (data);
+			
+			string message = "Une erreur interne s'est produite. Veuillez SVP envoyer un mail avec la\n" +
+							 "description de ce que vous étiez en train de faire au moment où ce message\n" + 
+							 "est apparu et collez y (CTRL+V) le contenu du presse-papiers.\n\n" +
+							 "Envoyez s'il-vous-plaît ces informations à bugs@opac.ch\n\n" +
+							 "Merci pour votre aide.";
+			
+			System.Windows.Forms.MessageBox.Show (null, message, "Erreur interne");
 		}
 		
 		
