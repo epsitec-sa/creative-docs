@@ -13,7 +13,7 @@ namespace Epsitec.Cresus.Database
 	/// laquelle comprend un nom et les représentations pour l'utilisateur dans
 	/// les diverses langues, avec éventuellement une explication.
 	/// </summary>
-	public class DbEnumValue : IDbAttributesHost, System.ICloneable
+	public class DbEnumValue : IDbAttributesHost, System.ICloneable, Epsitec.Common.Support.INameCaption
 	{
 		public DbEnumValue()
 		{
@@ -299,6 +299,5 @@ namespace Epsitec.Cresus.Database
 		
 		protected DbAttributes					attributes = new DbAttributes ();
 		protected int							rank = -2;
-		protected DbKey							internal_key = null;
-	}
+		protected DbKey							internal_key = null;}
 }

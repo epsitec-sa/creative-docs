@@ -66,9 +66,9 @@ namespace Epsitec.Cresus.Database
 			string full_xml = DbTypeFactory.SerializeToXml (e_type, true);
 			System.Console.Out.WriteLine ("XML: {0}", full_xml);
 			
-			DbEnumValue ev_1x = DbEnumValue.NewEnumValue (DbEnumValue.SerializeToXml (ev_1, true));
-			DbEnumValue ev_2x = DbEnumValue.NewEnumValue (DbEnumValue.SerializeToXml (ev_2, true));
-			DbEnumValue ev_3x = DbEnumValue.NewEnumValue (DbEnumValue.SerializeToXml (ev_3, true));
+			DbEnumValue ev_1x = DbEnumValue.CreateEnumValue (DbEnumValue.SerializeToXml (ev_1, true));
+			DbEnumValue ev_2x = DbEnumValue.CreateEnumValue (DbEnumValue.SerializeToXml (ev_2, true));
+			DbEnumValue ev_3x = DbEnumValue.CreateEnumValue (DbEnumValue.SerializeToXml (ev_3, true));
 			
 			Assertion.AssertEquals (ev_1.Name,    ev_1x.Name);
 			Assertion.AssertEquals (ev_1.Caption, ev_1x.Caption);
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (ev_3.Caption, ev_3x.Caption);
 			Assertion.AssertEquals (ev_3.Rank,    ev_3x.Rank);
 			
-			DbTypeEnum copy = DbTypeFactory.NewType (full_xml) as DbTypeEnum;
+			DbTypeEnum copy = DbTypeFactory.CreateType (full_xml) as DbTypeEnum;
 			
 			Assertion.AssertNotNull (copy);
 			Assertion.AssertEquals (3, copy.Count);

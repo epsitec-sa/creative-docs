@@ -123,16 +123,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DbColumnCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DbCommandCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "DbCommandType.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -218,11 +208,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DbTableCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "DbTools.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -239,11 +224,6 @@
                 />
                 <File
                     RelPath = "DbTypeByteArray.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DbTypeCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -283,16 +263,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "InternalCollectionBase.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "InternalCollectionList.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "IRawTypeConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -328,17 +298,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "SqlColumnCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "SqlField.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SqlFieldCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -363,6 +323,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Tags.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TODO.txt"
                     BuildAction = "Content"
                 />
@@ -378,6 +343,46 @@
                 />
                 <File
                     RelPath = "Cache\DbTypes.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Collections\AbstractBase.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Collections\AbstractlList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Collections\DbColumns.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Collections\DbCommands.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Collections\DbTables.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Collections\DbTypes.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Collections\SqlColumns.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Collections\SqlFields.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -272,7 +272,7 @@ namespace Epsitec.Cresus.Database
 			sql_join = new SqlJoin (SqlJoinType.Inner, 
 				SqlField.CreateName ("A1", "PROJ_ID"), 
 				SqlField.CreateName ("A3", "PROJ_ID"));
-			sql_select.Joins.Add (SqlField.CreateJoin(sql_join));
+			sql_select.Joins.Add (sql_join);
 
 			//	construit la commande d'extraction
 			sql_builder.SelectData (sql_select);

@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Database
 	{
 		[Test] public void CheckNewTypeBase()
 		{
-			DbType type = DbTypeFactory.NewType ("<type class='base'/>");
+			DbType type = DbTypeFactory.CreateType ("<type class='base'/>");
 			
 			Assertion.Assert (type.GetType () == typeof (DbType));
 		}
@@ -16,12 +16,12 @@ namespace Epsitec.Cresus.Database
 		{
 			DbTypeNum type;
 			
-			type = DbTypeFactory.NewType ("<type class='num' type='Int16'/>") as DbTypeNum;
+			type = DbTypeFactory.CreateType ("<type class='num' type='Int16'/>") as DbTypeNum;
 			
 			Assertion.Assert (type.GetType () == typeof (DbTypeNum));
 			Assertion.AssertEquals (DbRawType.Int16, type.NumDef.InternalRawType);
 			
-			type = DbTypeFactory.NewType ("<type class='num' digits='5' shift='2' min='0.00' max='200.00'/>") as DbTypeNum;
+			type = DbTypeFactory.CreateType ("<type class='num' digits='5' shift='2' min='0.00' max='200.00'/>") as DbTypeNum;
 			Assertion.Assert (type.GetType () == typeof (DbTypeNum));
 			Assertion.AssertEquals (DbRawType.Unsupported, type.NumDef.InternalRawType);
 			Assertion.AssertEquals (5, type.NumDef.DigitPrecision);
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Database
 		{
 			DbTypeEnum type;
 			
-			type = DbTypeFactory.NewType ("<type class='enum' nmlen='5'/>") as DbTypeEnum;
+			type = DbTypeFactory.CreateType ("<type class='enum' nmlen='5'/>") as DbTypeEnum;
 			
 			Assertion.Assert (type.GetType () == typeof (DbTypeEnum));
 			Assertion.AssertEquals (5, type.MaxNameLength);
@@ -44,26 +44,26 @@ namespace Epsitec.Cresus.Database
 		{
 			DbTypeString type;
 			
-			type = DbTypeFactory.NewType ("<type class='str' length='100'/>") as DbTypeString;
+			type = DbTypeFactory.CreateType ("<type class='str' length='100'/>") as DbTypeString;
 			Assertion.Assert (type.GetType () == typeof (DbTypeString));
 			Assertion.AssertEquals (100, type.Length);
 			Assertion.AssertEquals (false, type.IsFixedLength);
 			
-			type = DbTypeFactory.NewType ("<type class='str' length='100' fixed='0'/>") as DbTypeString;
+			type = DbTypeFactory.CreateType ("<type class='str' length='100' fixed='0'/>") as DbTypeString;
 			Assertion.AssertEquals (false, type.IsFixedLength);
 			
-			type = DbTypeFactory.NewType ("<type class='str' length='100' fixed='1'/>") as DbTypeString;
+			type = DbTypeFactory.CreateType ("<type class='str' length='100' fixed='1'/>") as DbTypeString;
 			Assertion.AssertEquals (true, type.IsFixedLength);
 		}
 		
 		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckNewTypeXmlEx1()
 		{
-			DbType type = DbTypeFactory.NewType ("<foo><bar>x</bar></foo>");
+			DbType type = DbTypeFactory.CreateType ("<foo><bar>x</bar></foo>");
 		}
 		
 		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckNewTypeXmlEx2()
 		{
-			DbType type = DbTypeFactory.NewType ("<type x='a'></type>");
+			DbType type = DbTypeFactory.CreateType ("<type x='a'></type>");
 		}
 		
 		[Test] public void CheckSerializeToXml()
@@ -74,28 +74,28 @@ namespace Epsitec.Cresus.Database
 			
 			type = new DbType (DbSimpleType.Guid);
 			xml  = DbTypeFactory.SerializeToXml (type, true);
-			temp = DbTypeFactory.NewType (xml);
+			temp = DbTypeFactory.CreateType (xml);
 			
 			System.Console.Out.WriteLine ("XML: {0}", xml);
 			Assertion.Assert (temp.GetType () == type.GetType ());
 			
 			type = new DbTypeEnum ();
 			xml  = DbTypeFactory.SerializeToXml (type, true);
-			temp = DbTypeFactory.NewType (xml);
+			temp = DbTypeFactory.CreateType (xml);
 			
 			System.Console.Out.WriteLine ("XML: {0}", xml);
 			Assertion.Assert (temp.GetType () == type.GetType ());
 			
 			type = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int16));
 			xml  = DbTypeFactory.SerializeToXml (type, true);
-			temp = DbTypeFactory.NewType (xml);
+			temp = DbTypeFactory.CreateType (xml);
 			
 			System.Console.Out.WriteLine ("XML: {0}", xml);
 			Assertion.Assert (temp.GetType () == type.GetType ());
 			
 			type = new DbTypeString (100);
 			xml  = DbTypeFactory.SerializeToXml (type, true);
-			temp = DbTypeFactory.NewType (xml);
+			temp = DbTypeFactory.CreateType (xml);
 			
 			System.Console.Out.WriteLine ("XML: {0}", xml);
 			Assertion.Assert (temp.GetType () == type.GetType ());

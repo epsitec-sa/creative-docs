@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertNotNull (table);
 			Assertion.AssertEquals ("Test", table.Name);
 			Assertion.AssertEquals (DbElementCat.Unknown, table.Category);
-			Assertion.AssertEquals (false, table.HasPrimaryKeys);
+			Assertion.AssertEquals (false, table.HasPrimaryKey);
 			Assertion.AssertEquals (0, table.PrimaryKeys.Count);
 			Assertion.AssertEquals (0, table.Columns.Count);
 			
@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Database
 			
 			System.Console.Out.WriteLine ("XML: {0}", xml);
 			
-			DbTable test = DbTable.NewTable (xml);
+			DbTable test = DbTable.CreateTable (xml);
 		}
 		
 		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckNewDbTableEx1()
