@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public long								Id
+		public DbId								Id
 		{
 			get { return this.id; }
 		}
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.Database
 		
 		public override string ToString()
 		{
-			return string.Format ("[{0}]", this.id);
+			return string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", this.id);
 		}
 		#endregion
 		

@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Database
 		KeyId				= 1,		//	définit une clef (ID)
 		KeyStatus			= 2,		//	définit un statut
 		RefId				= 3,		//	définit une référence à une clef (ID)
+		RefInternal			= 4,		//	définit une référence interne (pas véritable Foreign Key)
 	}
 	
 	/// <summary>

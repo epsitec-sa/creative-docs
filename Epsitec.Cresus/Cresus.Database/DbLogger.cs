@@ -18,10 +18,10 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				if ((this.client_id >= 0) &&
-					(this.log_id >= 0))
+				if ((this.client_id != -1) &&
+					(this.next_id != -1))
 				{
-					return DbId.CreateId (this.log_id, this.client_id);
+					return this.current_id;
 				}
 				
 				throw new System.InvalidOperationException ("DbLogger not initialised.");
@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Database
 		internal void DefineClientId(int client_id)
 		{
 			System.Diagnostics.Debug.Assert (this.client_id == -1);
+			System.Diagnostics.Debug.Assert (this.next_id == -1);
 			System.Diagnostics.Debug.Assert (this.infrastructure == null);
 			
 			this.client_id = client_id;
@@ -39,36 +40,49 @@ namespace Epsitec.Cresus.Database
 		
 		internal void DefineLogId(long log_id)
 		{
-			System.Diagnostics.Debug.Assert (this.log_id == -1);
+			System.Diagnostics.Debug.Assert (this.client_id != -1);
+			System.Diagnostics.Debug.Assert (this.next_id == -1);
 			System.Diagnostics.Debug.Assert (this.infrastructure == null);
+			System.Diagnostics.Debug.Assert (log_id > 0);
+			System.Diagnostics.Debug.Assert (log_id < DbId.LocalRange);
 			
-			this.log_id = log_id;
+			this.current_id = DbId.CreateId (log_id, this.client_id);
+			this.next_id    = log_id + 1;
 		}
 		
 		
-		internal void FindCurrentLogId(DbTransaction transaction)
+		internal void ResetCurrentLogId(DbTransaction transaction)
 		{
-			System.Diagnostics.Debug.Assert (this.client_id >= 0);
+			System.Diagnostics.Debug.Assert (this.client_id != -1);
+			System.Diagnostics.Debug.Assert (this.next_id == -1);
 			System.Diagnostics.Debug.Assert (this.infrastructure != null);
 			System.Diagnostics.Debug.Assert (this.table != null);
 			
-			this.log_id = this.infrastructure.NextRowIdInTable (transaction, this.table_key) - 1;
+			//	L'identificateur local stocké dans la base correspond toujours à celui de la
+			//	prochaine ligne à créer, mais l'identificateur de client correspond au dernier
+			//	enregistré dans le LOG. Ainsi, id.ClientId n'est pas nécessairement égal à
+			//	l'identificateur de client actif.
 			
-			System.Diagnostics.Debug.Assert (this.log_id > 0);
-			System.Diagnostics.Debug.Assert (this.log_id < DbId.LocalRange);
+			DbId id = this.infrastructure.NextRowIdInTable (transaction, this.table_key);
+			
+			this.next_id    = id.LocalId;
+			this.current_id = DbId.CreateId (this.next_id - 1, id.ClientId);
+			
+			System.Diagnostics.Debug.Assert (this.next_id > 0);
+			System.Diagnostics.Debug.Assert (this.next_id < DbId.LocalRange);
 		}
 		
 		
 		public void CreatePermanentEntry(DbTransaction transaction)
 		{
-			Entry entry = new Entry (this.log_id + 1, this.client_id);
+			Entry entry = new Entry (this.next_id, this.client_id);
 			
 			this.Insert (transaction, entry);
 		}
 		
 		public void CreateTemporaryEntry(DbTransaction transaction)
 		{
-			Entry entry = new Entry (this.log_id + 1, DbId.TempClientId);
+			Entry entry = new Entry (this.next_id, DbId.TempClientId);
 			
 			this.Insert (transaction, entry);
 		}
@@ -81,13 +95,18 @@ namespace Epsitec.Cresus.Database
 			fields.Add (this.table.Columns[Tags.ColumnId].CreateSqlField (this.infrastructure.TypeConverter, entry.Id));
 			fields.Add (this.table.Columns[Tags.ColumnDateTime].CreateSqlField (this.infrastructure.TypeConverter, entry.DateTime));
 			
-			long log_id = entry.Id.LocalId;
+			long next_id = entry.Id.LocalId + 1;
 			
 			this.infrastructure.SqlBuilder.InsertData (this.table_sql_name, fields);
 			this.infrastructure.ExecuteSilent (transaction);
-			this.infrastructure.UpdateTableNextId (transaction, this.table_key, log_id + 1);
 			
-			this.log_id = log_id;
+			//	Enregistre dans la base le prochain ID à utiliser, en prenant note du
+			//	ClientId appliqué à l'élément que l'on vient d'enregistrer dans le LOG :
+			
+			this.infrastructure.UpdateTableNextId (transaction, this.table_key, DbId.CreateId (next_id, entry.Id.ClientId));
+			
+			this.next_id    = next_id;
+			this.current_id = entry.Id;
 		}
 		
 		public bool Remove(DbTransaction transaction, DbId id)
@@ -233,7 +252,8 @@ namespace Epsitec.Cresus.Database
 		private DbKey							table_key;
 		private string							table_sql_name;
 		
-		private int								client_id = -1;
-		private long							log_id    = -1;
+		private int								client_id  = -1;
+		private long							next_id    = -1;
+		private DbId							current_id;
 	}
 }

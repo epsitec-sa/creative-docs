@@ -29,19 +29,19 @@ namespace Epsitec.Cresus.Database
 				table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
 				
 				Assert.IsNotNull (table);
-				Assert.AreEqual (1L, table.InternalKey.Id);
+				Assert.AreEqual (1000000000001L, table.InternalKey.Id);
 				Assert.AreEqual (8,  table.Columns.Count);
 				
 				table = infrastructure.ResolveDbTable (null, "CR_COLUMN_DEF");
 				
 				Assert.IsNotNull (table);
-				Assert.AreEqual (2L, table.InternalKey.Id);
+				Assert.AreEqual (1000000000002L, table.InternalKey.Id);
 				Assert.AreEqual (10, table.Columns.Count);
 				
 				table = infrastructure.ResolveDbTable (null, "CR_TYPE_DEF");
 				
 				Assert.IsNotNull (table);
-				Assert.AreEqual (3L, table.InternalKey.Id);
+				Assert.AreEqual (1000000000003L, table.InternalKey.Id);
 				Assert.AreEqual (7,  table.Columns.Count);
 				
 				Assert.AreEqual (0, infrastructure.CountMatchingRows (null, "CR_COLUMN_DEF", "CR_NAME", DbSqlStandard.MakeSimpleSqlName ("MyColumn")));
@@ -52,9 +52,9 @@ namespace Epsitec.Cresus.Database
 				
 				table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
 				
-				Assert.AreEqual (6L, infrastructure.NewRowIdInTable (null, table.InternalKey, 2));
-				Assert.AreEqual (8L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
-				Assert.AreEqual (8L, infrastructure.NewRowIdInTable (null, table.InternalKey, 1));
+				Assert.AreEqual (1000000000006L, infrastructure.NewRowIdInTable (null, table.InternalKey, 2));
+				Assert.AreEqual (1000000000008L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
+				Assert.AreEqual (1000000000008L, infrastructure.NewRowIdInTable (null, table.InternalKey, 1));
 			}
 		}
 		
@@ -115,6 +115,8 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual ("Nom",   db_type_1.Name);
 				Assert.AreEqual ("NUPO",  db_type_2.Name);
 				Assert.AreEqual ("Titre", db_type_3.Name);
+				
+				infrastructure.Logger.CreateTemporaryEntry (null);
 				
 				infrastructure.UnregisterDbType (null, db_type_1);
 				infrastructure.UnregisterDbType (null, db_type_2);
@@ -196,7 +198,7 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual (db_table1.PrimaryKeys.Count,	db_table2.PrimaryKeys.Count);
 				Assert.AreEqual (db_table1.PrimaryKeys[0].Name,	db_table2.PrimaryKeys[0].Name);
 				Assert.AreEqual (db_table1.Columns.Count,		db_table2.Columns.Count);
-				Assert.AreEqual (9L, db_table2.InternalKey.Id);
+				Assert.AreEqual (1000000000009L, db_table2.InternalKey.Id);
 			}
 		}
 		
@@ -274,6 +276,8 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
+				infrastructure.Logger.CreateTemporaryEntry (null);
+				
 				DbTable db_table1 = infrastructure.ResolveDbTable (null, "SimpleTest");
 				
 				Assert.IsNotNull (db_table1);
@@ -296,7 +300,7 @@ namespace Epsitec.Cresus.Database
 				infrastructure.RegisterNewDbTable (null, db_table);
 				
 				Assert.IsNotNull (infrastructure.ResolveDbTable (null, db_table.Name));
-				Assert.AreEqual (10L, db_table.InternalKey.Id);
+				Assert.AreEqual (1000000000010L, db_table.InternalKey.Id);
 				Assert.AreEqual (DbRowStatus.Live, db_table.InternalKey.Status);
 			}
 		}
@@ -334,12 +338,19 @@ namespace Epsitec.Cresus.Database
 		{
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
-				Assertion.Assert (infrastructure.Logger.Remove (null, DbId.MinimumTemp + 2));
+				Assertion.AssertEquals (DbId.TempClientId, infrastructure.Logger.CurrentId.ClientId);
+				Assertion.AssertEquals (6L, infrastructure.Logger.CurrentId.LocalId);
 				
-				infrastructure.Logger.RemoveRange (null, DbId.MinimumTemp, DbId.MinimumTemp + 3);
+				infrastructure.Logger.CreateTemporaryEntry (null);
+				infrastructure.Logger.CreateTemporaryEntry (null);
+				infrastructure.Logger.CreateTemporaryEntry (null);
 				
-				Assertion.Assert (! infrastructure.Logger.Remove (null, DbId.MinimumTemp + 3));
-				Assertion.Assert (infrastructure.Logger.Remove (null, DbId.MinimumTemp + 4));
+				Assertion.Assert (infrastructure.Logger.Remove (null, DbId.MinimumTemp + 7));
+				
+				infrastructure.Logger.RemoveRange (null, DbId.MinimumTemp + 7, DbId.MinimumTemp + 8);
+				
+				Assertion.Assert (! infrastructure.Logger.Remove (null, DbId.MinimumTemp + 8));
+				Assertion.Assert (infrastructure.Logger.Remove (null, DbId.MinimumTemp + 9));
 			}
 		}
 		

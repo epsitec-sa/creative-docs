@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Database
 			
 			DbSqlStandard.CreateSimpleSqlName (name, buffer);
 			
-			buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "_{0}", key.Id);
+			buffer.AppendFormat (System.Globalization.CultureInfo.InvariantCulture, "_{0}", key.Id.Value);
 			
 			return buffer.ToString ();
 		}

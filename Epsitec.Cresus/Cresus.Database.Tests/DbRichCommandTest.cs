@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Database
 			db_table_b.Columns.Add (infrastructure.CreateColumn ("Ville", db_type_name));
 			db_table_b.Columns.Add (infrastructure.CreateColumn ("NPA", db_type_npa, Nullable.No));
 			
-			Assertion.AssertEquals ("Personnes", db_table_b.Columns[2].ParentTableName);
+			Assertion.AssertEquals ("Personnes", db_table_b.Columns[3].ParentTableName);
 			
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_a.Name, db_table_a.Columns.Count);
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_b.Name, db_table_b.Columns.Count);

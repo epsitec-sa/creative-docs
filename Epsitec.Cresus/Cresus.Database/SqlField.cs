@@ -311,6 +311,14 @@ namespace Epsitec.Cresus.Database
 			
 			SqlField field	= new SqlField ();
 			
+			//	Si on a reçu en entrée un DbId, on remplace silencieusement celui-
+			//	ci par un long :
+			
+			if (raw_value is DbId)
+			{
+				raw_value = ((DbId) raw_value).Value;
+			}
+			
 			field.type		= SqlFieldType.Constant;
 			field.raw_type	= raw_type;
 			field.value		= raw_value;
