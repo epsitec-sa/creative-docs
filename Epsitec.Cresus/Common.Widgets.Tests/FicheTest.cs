@@ -26,7 +26,7 @@ namespace Epsitec.Common.Tests
 
 			this.CreateLayout();
 
-			window.Show();
+			this.window.Show();
 		}
 
 		private void HandleWindowClosed(object sender)
