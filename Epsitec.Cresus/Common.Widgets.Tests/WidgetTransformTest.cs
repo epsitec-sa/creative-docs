@@ -35,11 +35,11 @@ namespace Epsitec.Common.Widgets
 	{
 		public TransformWidget()
 		{
-			this.internalState |= InternalState.AutoFocus;
-			this.internalState |= InternalState.AutoEngage;
-			this.internalState |= InternalState.Focusable;
-			this.internalState |= InternalState.Engageable;
-			this.internalState |= InternalState.AutoToggle;
+			this.InternalState |= InternalState.AutoFocus;
+			this.InternalState |= InternalState.AutoEngage;
+			this.InternalState |= InternalState.Focusable;
+			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= InternalState.AutoToggle;
 		}
 		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)

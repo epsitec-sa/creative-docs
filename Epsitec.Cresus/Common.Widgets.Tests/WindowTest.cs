@@ -142,7 +142,7 @@ namespace Epsitec.Common.Widgets
 			scroller.SmallChange = 0.01;
 			scroller.LargeChange = 0.10;
 			scroller.Parent = back;
-			scroller.Moved += new EventHandler(scroller_Moved);
+			scroller.ValueChanged += new EventHandler(scroller_ValueChanged);
 			
 			window.Show ();
 			window.Root.Invalidate ();
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.WriteLine (string.Format ("Window {0}: message={1}", window.Name, message.ToString ()));
 		}
 
-		private void scroller_Moved(object sender)
+		private void scroller_ValueChanged(object sender)
 		{
 			VScroller scroller = sender as VScroller;
 			Window window = scroller.Window;
