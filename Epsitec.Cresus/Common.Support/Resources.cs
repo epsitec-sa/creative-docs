@@ -114,6 +114,11 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public static string					DefaultSuffix
+		{
+			get { return "00"; }
+		}
+		
 		public static string					LocalisedSuffix
 		{
 			get { return Resources.culture.TwoLetterISOLanguageName; }
@@ -121,7 +126,7 @@ namespace Epsitec.Common.Support
 		
 		public static string					CustomisedSuffix
 		{
-			get { return "00"; }
+			get { return "99"; }
 		}
 		
 		
@@ -166,6 +171,35 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public static string[] GetBundleIds(string filter)
+		{
+			return Resources.GetBundleIds (filter, ResourceLevel.Default);
+		}
+		
+		public static string[] GetBundleIds(string filter, ResourceLevel level)
+		{
+			switch (level)
+			{
+				case ResourceLevel.Default:
+				case ResourceLevel.Customised:
+				case ResourceLevel.Localised:
+					break;
+				default:
+					throw new ResourceException (string.Format ("Invalid level {0} specified in GetBundleIds.", level));
+			}
+			
+			string resource_id;
+			
+			IResourceProvider provider = Resources.FindProvider (filter, out resource_id);
+			
+			if (provider != null)
+			{
+				return provider.GetIds (resource_id, level);
+			}
+			
+			return null;
+		}
+		
 		public static ResourceBundle GetBundle(string id)
 		{
 			return Resources.GetBundle (id, ResourceLevel.Merged, 0);
@@ -185,10 +219,11 @@ namespace Epsitec.Common.Support
 			
 			IResourceProvider provider = Resources.FindProvider (id, out resource_id);
 			ResourceBundle    bundle   = null;
-			string            prefix   = provider.Prefix;
 			
 			if (provider != null)
 			{
+				string prefix = provider.Prefix;
+				
 				switch (level)
 				{
 					case ResourceLevel.Merged:

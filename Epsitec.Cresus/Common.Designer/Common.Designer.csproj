@@ -138,6 +138,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Dialogs\OpenExistingBundle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Panels\AbstractPanel.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
