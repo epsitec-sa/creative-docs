@@ -177,6 +177,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public override Drawing.Size			MinSize
+		{
+			get
+			{
+				Drawing.Size min = base.MinSize;
+				
+				double width  = 20;
+				double height = this.DefaultHeight;
+				
+				return new Drawing.Size (System.Math.Max (min.Width, width), System.Math.Max (min.Height, height));
+			}
+			set
+			{
+				base.MinSize = value;
+			}
+		}
+
 		
 		public int								MaxChar
 		{
