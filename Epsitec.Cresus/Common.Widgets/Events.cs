@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe PaintEventArgs décrit les arguments pour une opération de dessin, ce qui
 	/// comprend un contexte graphique et un rectangle de clipping.
 	/// </summary>
-	public class PaintEventArgs : System.EventArgs, System.IDisposable
+	public class PaintEventArgs : Support.EventArgs, System.IDisposable
 	{
 		public PaintEventArgs(Graphics graphics, Drawing.Rectangle clip_rect)
 		{
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe MessageEventArgs décrit un événement produit par l'utilisateur.
 	/// </summary>
-	public class MessageEventArgs : System.EventArgs
+	public class MessageEventArgs : Support.EventArgs
 	{
 		public MessageEventArgs(Message message, Drawing.Point point)
 		{
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe DragEventArgs décrit un déplacement (drag) produit par l'utilisateur.
 	/// </summary>
-	public class DragEventArgs : System.EventArgs
+	public class DragEventArgs : Support.EventArgs
 	{
 		public DragEventArgs(Drawing.Point p1, Drawing.Point p2)
 		{
