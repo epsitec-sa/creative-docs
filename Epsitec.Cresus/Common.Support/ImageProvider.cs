@@ -33,11 +33,13 @@ namespace Epsitec.Common.Support
 			}
 			
 			ImageProvider.default_provider = new ImageProvider ();
-			ImageProvider.default_paths    = new string[3];
+			ImageProvider.default_paths    = new string[4];
 			ImageProvider.default_paths[0] = System.Windows.Forms.Application.StartupPath;
 			ImageProvider.default_paths[1] = path;
 			ImageProvider.default_paths[2] = other;
+			ImageProvider.default_paths[3] = "";
 		}
+		
 		
 		public static void Initialise()
 		{
@@ -45,9 +47,22 @@ namespace Epsitec.Common.Support
 			//	statique de ImageProvider a bien été exécuté.
 		}
 		
+		
 		public static ImageProvider		Default
 		{
 			get { return ImageProvider.default_provider; }
+		}
+		
+		public bool						CheckFilePath
+		{
+			get
+			{
+				return this.check_path;
+			}
+			set
+			{
+				this.check_path = value;
+			}
 		}
 		
 		
@@ -84,7 +99,10 @@ namespace Epsitec.Common.Support
 				if ((base_name.StartsWith ("/")) ||
 					(! RegexFactory.PathName.IsMatch (base_name)))
 				{
-					throw new System.ArgumentException (string.Format ("Illegal file name for image ({0}).", base_name));
+					if (this.CheckFilePath)
+					{
+						throw new System.ArgumentException (string.Format ("Illegal file name for image ({0}).", base_name));
+					}
 				}
 				
 				for (int i = 0; i < ImageProvider.default_paths.Length; i++)
@@ -100,7 +118,16 @@ namespace Epsitec.Common.Support
 					
 					//	Nom du chemin complet.
 					
-					string file_name = path + System.IO.Path.DirectorySeparatorChar + base_name;
+					string file_name;
+					
+					if (path.Length > 0)
+					{
+						file_name = path + System.IO.Path.DirectorySeparatorChar + base_name;
+					}
+					else
+					{
+						file_name = base_name;
+					}
 					
 					try
 					{
@@ -315,6 +342,7 @@ namespace Epsitec.Common.Support
 		protected Hashtable				images = new Hashtable ();
 		protected Hashtable				bundle_hash = new Hashtable ();
 		protected string				default_resource_provider = "file:";
+		protected bool					check_path = true;
 		
 		protected static ImageProvider	default_provider;
 		protected static string[]		default_paths;

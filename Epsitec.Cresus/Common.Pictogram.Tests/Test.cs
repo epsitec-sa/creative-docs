@@ -10,10 +10,14 @@ namespace Epsitec.Common.Pictogram
 	[TestFixture]
 	public class PictogramTest
 	{
-		[Test] public void CheckApplication()
+		[SetUp] public void Initialise()
 		{
 			Engine.Initialise();
-
+			Widget.Initialise();
+		}
+		
+		[Test] public void CheckApplication()
+		{
 			Window window = new Window();
 			window.ClientSize = new Drawing.Size(500, 400);
 			window.Text = "CheckApplication";
@@ -216,6 +220,17 @@ namespace Epsitec.Common.Pictogram
 			window.Show();
 		}
 
+		[Test] public void CheckIconZoom()
+		{
+			Window window = new Window ();
+			IconButton icon = new IconButton ("file:images/new.icon");
+			icon.Dock = DockStyle.Fill;
+			icon.InnerZoom = 4;
+			icon.Parent = window.Root;
+			window.Text = "CheckIconZoom";
+			window.Show ();
+		}
+		
 		protected Widget			root;
 		protected HToolBar			toolbar;
 

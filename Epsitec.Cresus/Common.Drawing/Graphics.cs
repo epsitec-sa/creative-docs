@@ -245,6 +245,11 @@ namespace Epsitec.Common.Drawing
 			double sx = (ix2-ix1 <= 1) ? (Graphics.AlmostInfinite) : ((fill_width > 1)  ? (fill_width-1/fix_x)  / (ix2-ix1-1) : 1.0);
 			double sy = (iy2-iy1 <= 1) ? (Graphics.AlmostInfinite) : ((fill_height > 1) ? (fill_height-1/fix_y) / (iy2-iy1-1) : 1.0);
 			
+			Drawing.Bitmap bmi = bitmap.BitmapImage;
+			
+			sx *= bitmap.Width  / bmi.PixelWidth;
+			sy *= bitmap.Height / bmi.PixelHeight;
+			
 			transform.Translate (-ix1, -iy1);
 			transform.Scale (sx, sy);
 			transform.Translate (fill_x, fill_y);

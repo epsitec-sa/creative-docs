@@ -81,6 +81,26 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public double					InnerZoom
+		{
+			get
+			{
+				return this.innerZoom;
+			}
+			set
+			{
+				if (this.innerZoom != value)
+				{
+					if (value < 0.01)
+					{
+						value = 1.0;
+					}
+					
+					this.innerZoom = value;
+					this.Invalidate ();
+				}
+			}
+		}
 		
 		protected override void OnShortcutChanged()
 		{
@@ -107,7 +127,7 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetState       state = this.PaintState;
-			Drawing.Point     pos   = new Drawing.Point ();
+			Drawing.Point     pos   = new Drawing.Point (0, 0);
 			
 			if ( (state & WidgetState.Enabled) == 0 )
 			{
@@ -129,10 +149,21 @@ namespace Epsitec.Common.Widgets
 				adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
 			}
 			
-			adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
+			if ( this.innerZoom != 1.0 )
+			{
+				Drawing.Transform transform = graphics.SaveTransform();
+				graphics.ScaleTransform(this.innerZoom, this.innerZoom, this.Client.Width / 2, this.Client.Height / 2);
+				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
+				graphics.RestoreTransform(transform);
+			}
+			else
+			{
+				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
+			}
 		}
 		
 		
 		protected ButtonStyle			buttonStyle;
+		protected double				innerZoom = 1.0;
 	}
 }

@@ -55,6 +55,7 @@ namespace Epsitec.Common.Pictogram
 					context.UniqueColor = color;
 					context.ScaleX = size.Width / icon.Size.Width;
 					context.ScaleY = size.Height / icon.Size.Height;
+					context.PreviewActive = true;
 					graphics.ScaleTransform(context.ScaleX, context.ScaleY, 0, 0);
 					
 					icon.DrawGeometry(graphics, context, icon, adorner_object, Drawing.Rectangle.Infinite, true);
