@@ -232,16 +232,23 @@ namespace Epsitec.Common.Widgets.Design
 			System.Diagnostics.Debug.Assert (this.active_editor != null);
 			System.Diagnostics.Debug.Assert (this.active_editor.SelectedWidgets.Count > 0);
 			
-			foreach (Widget widget in this.active_editor.SelectedWidgets)
+			Widget[] widgets = new Widget[this.active_editor.SelectedWidgets.Count];
+			this.active_editor.SelectedWidgets.CopyTo (widgets, 0);
+			
+			this.CommandDeselectAll ();
+			
+			for (int i = 0; i < widgets.Length; i++)
 			{
-				//	TODO: effacer le widget
-				System.Diagnostics.Debug.WriteLine ("Delete " + widget.ToString ());
+				widgets[i].Dispose ();
 			}
 		}
 		
 		[Command ("DeselectAll")]				void CommandDeselectAll()
 		{
+			System.Diagnostics.Debug.Assert (this.active_editor != null);
+			System.Diagnostics.Debug.Assert (this.active_editor.SelectedWidgets.Count > 0);
 			
+			this.active_editor.SelectedWidgets.Clear ();
 		}
 		
 		protected Support.CommandDispatcher		dispatcher;

@@ -108,6 +108,10 @@ namespace Epsitec.Common.Widgets
 		{
 			this.Children.Remove (widget);
 		}
+		
+		public void NotifyPostRemoval(Widget widget)
+		{
+		}
 		#endregion
 		
 		protected Helpers.WidgetCollection	items;

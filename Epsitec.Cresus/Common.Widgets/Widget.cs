@@ -1824,7 +1824,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Widget candidate = Widget.entered_widgets[i] as Widget;
 				
-				if (widget.IsAncestor (candidate) == false)
+				if (widget.IsAncestorWidget (candidate) == false)
 				{
 					//	Ce candidat n'est pas un ancêtre (parent direct ou indirect) du widget
 					//	considéré; il faut donc changer son état Entered pour refléter le fait
@@ -2473,7 +2473,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool IsAncestor(Widget widget)
+		public bool IsAncestorWidget(Widget widget)
 		{
 			if (this.parent == widget)
 			{
@@ -2484,17 +2484,17 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 			
-			return this.parent.IsAncestor (widget);
+			return this.parent.IsAncestorWidget (widget);
 		}
 		
-		public bool IsDescendant(Widget widget)
+		public bool IsDescendantWidget(Widget widget)
 		{
 			if (widget == null)
 			{
 				return false;
 			}
 			
-			return widget.IsAncestor (this);
+			return widget.IsAncestorWidget (this);
 		}
 		
 		

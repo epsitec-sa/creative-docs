@@ -549,6 +549,10 @@ namespace Epsitec.Common.Widgets
 			this.Children.Remove(item);
 			this.isGrimy = true;
 		}
+		
+		public void NotifyPostRemoval(Widget widget)
+		{
+		}
 		#endregion
 
 		#region TabPageCollection Class

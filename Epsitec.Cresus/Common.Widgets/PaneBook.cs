@@ -830,6 +830,10 @@ namespace Epsitec.Common.Widgets
 
 			this.UpdatePaneButtons();
 		}
+		
+		public void NotifyPostRemoval(Widget widget)
+		{
+		}
 		#endregion
 
 		#region PanePageCollection Class
