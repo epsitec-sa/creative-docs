@@ -14,8 +14,9 @@ namespace Epsitec.Common.Designer
 	{
 		public DialogDesigner(Application application, Common.UI.InterfaceType type)
 		{
-			this.application    = application;
-			this.interface_type = type;
+			this.application            = application;
+			this.interface_type         = type;
+			this.is_edit_only_interface = false;
 		}
 		
 		
@@ -32,6 +33,18 @@ namespace Epsitec.Common.Designer
 			get
 			{
 				return this.interface_type;
+			}
+		}
+		
+		public bool								IsEditOnlyInterface
+		{
+			get
+			{
+				return this.is_edit_only_interface;
+			}
+			set
+			{
+				this.is_edit_only_interface = value;
 			}
 		}
 		
@@ -216,7 +229,10 @@ namespace Epsitec.Common.Designer
 		public event Support.EventHandler		Disposed;
 		
 		private Application						application;
+		
 		private Common.UI.InterfaceType			interface_type;
+		private bool							is_edit_only_interface;
+		
 		private Types.IDataGraph				dialog_data;
 		private Window							dialog_window;
 		private Support.CommandDispatcher		dialog_commands;

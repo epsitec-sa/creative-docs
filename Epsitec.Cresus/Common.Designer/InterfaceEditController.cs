@@ -90,20 +90,33 @@ namespace Epsitec.Common.Designer
 		
 		public override void FillToolBar(AbstractToolBar tool_bar)
 		{
+			IDialogDesigner designer = null;
 			Common.UI.InterfaceType type = Common.UI.InterfaceType.Any;
 
 			if ((this.active_editor != null) &&
 				(this.active_editor.DialogDesigner != null))
 			{
-				type = this.active_editor.DialogDesigner.InterfaceType;
+				designer = this.active_editor.DialogDesigner;
+			}
+			
+			if (designer != null)
+			{
+				type = designer.InterfaceType;
 			}
 
-			tool_bar.Items.Add (IconButton.CreateSimple (Command.CreateNewInterface, "manifest:Epsitec.Common.Designer.Images.New.icon"));
-			
+			if ((designer == null) ||
+				(designer.IsEditOnlyInterface == false))
+			{
+				//	Un designer peut demander qu'une interface graphique ne puisse être qu'éditée, auquel
+				//	cas les commandes pour créer une nouvelle interface ou en charger une sont caduques.
+
+				tool_bar.Items.Add (IconButton.CreateSimple (Command.CreateNewInterface, "manifest:Epsitec.Common.Designer.Images.New.icon"));
+				tool_bar.Items.Add (IconButton.CreateSimple (Command.OpenLoadInterface, "manifest:Epsitec.Common.Designer.Images.Open.icon"));
+			}
+
 			switch (type)
 			{
 				case Common.UI.InterfaceType.Any:
-					tool_bar.Items.Add (IconButton.CreateSimple (Command.OpenLoadInterface, "manifest:Epsitec.Common.Designer.Images.Open.icon"));
 					tool_bar.Items.Add (IconButton.CreateSimple (Command.SaveActiveInterface, "manifest:Epsitec.Common.Designer.Images.Save.icon"));
 					break;
 				

@@ -369,7 +369,11 @@ namespace Epsitec.Common.Dialogs
 			
 			if (factory != null)
 			{
-				return factory.CreateDialogDesigner (UI.InterfaceType.DialogWindow);
+				IDialogDesigner designer = factory.CreateDialogDesigner (UI.InterfaceType.DialogWindow);
+				
+				designer.IsEditOnlyInterface = true;
+				
+				return designer;
 			}
 			
 			return null;
