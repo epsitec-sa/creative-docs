@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets.Helpers
 {
 	/// <summary>
@@ -8,7 +11,7 @@ namespace Epsitec.Common.Widgets.Helpers
 	{
 		Drawing.Point	DragLocation		{ get; }
 		
-		void OnDragBegin(Drawing.Point cursor);
+		bool OnDragBegin(Drawing.Point cursor);
 		void OnDragging(DragEventArgs e);
 		void OnDragEnd();
 	}
