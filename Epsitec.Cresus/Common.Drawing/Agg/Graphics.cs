@@ -55,7 +55,7 @@ namespace Epsitec.Common.Drawing.Agg
 			Agg.Graphics mask = new Agg.Graphics ();
 			
 			mask.SetPixmapSize (this.pixmap.Size.Width, this.pixmap.Size.Height);
-			mask.SolidRenderer.Clear (0, 0, 0, 0);
+			mask.SolidRenderer.ClearARGB (0, 0, 0, 0);
 			mask.RestoreTransform (this.SaveTransform ());
 			
 			return mask;

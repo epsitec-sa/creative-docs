@@ -343,7 +343,7 @@ namespace Epsitec.Common.Drawing
 			WindowRoot root = sender as WindowRoot;
 			
 			Agg.Graphics gfx = new Agg.Graphics ();
-			gfx.Pixmap.Size  = new System.Drawing.Size (40, 40);
+			gfx.SetPixmapSize (40, 40)	;
 			gfx.SolidRenderer.Color = Color.FromRGB (1, 0.2, 0);
 			gfx.PaintText (2, 8, "@", Font.DefaultFont, 40);
 			
@@ -839,6 +839,38 @@ namespace Epsitec.Common.Drawing
 				
 				x += width;
 			}
+			
+			e.Graphics.Color = Color.FromRGB (1.0, 1.0, 1.0);
+			e.Graphics.PaintSurface (Path.FromRectangle (cx-120, cy+20, 120, 40));
+			e.Graphics.Color = Color.FromRGB (0.5, 0.5, 0.5);
+			e.Graphics.PaintSurface (Path.FromRectangle (cx+0, cy+20, 120, 40));
+			
+			Graphics draft_graphics = new Agg.Graphics ();
+			
+			draft_graphics.SetPixmapSize (40, 40);
+			
+			Pixmap draft_pixmap = draft_graphics.Pixmap;
+			Image  draft_bitmap = Bitmap.FromPixmap (draft_pixmap);
+			
+			draft_graphics.SolidRenderer.ClearARGB (0.0, 1.0, 1.0, 1.0);
+			draft_graphics.Color     = Color.FromRGB (0, 0, 0.6);
+			draft_graphics.LineWidth = 3.0;
+			draft_graphics.PaintOutline (Path.FromCircle (20, 20, 15, 10));
+			
+			e.Graphics.PaintImage (draft_bitmap, cx-120, cy+20, 40, 40, 0, 0, 40, 40);
+			e.Graphics.PaintImage (draft_bitmap, cx+0,  cy+20, 40, 40, 0, 0, 40, 40);
+			
+			draft_graphics.Color     = Color.FromRGB (1.0, 1.0, 1.0);
+			draft_graphics.PaintSurface (Path.FromCircle (20, 20, 5, 5));
+			
+			e.Graphics.PaintImage (draft_bitmap, cx-80, cy+20, 40, 40, 0, 0, 40, 40);
+			e.Graphics.PaintImage (draft_bitmap, cx+40, cy+20, 40, 40, 0, 0, 40, 40);
+			
+			draft_graphics.Color     = Color.FromARGB (0.5, 1.0, 0, 0);
+			draft_graphics.PaintSurface (Path.FromCircle (20, 20, 10, 15));
+			
+			e.Graphics.PaintImage (draft_bitmap, cx-40, cy+20, 40, 40, 0, 0, 40, 40);
+			e.Graphics.PaintImage (draft_bitmap, cx+80, cy+20, 40, 40, 0, 0, 40, 40);
 		}
 		
 		private void ImageRect_PaintForeground(object sender, PaintEventArgs e)
