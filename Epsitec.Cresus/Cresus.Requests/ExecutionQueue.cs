@@ -154,6 +154,17 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
+		public bool								HasConflictingOnServer
+		{
+			get
+			{
+				lock (this)
+				{
+					return this.state_count[(int) ExecutionState.ConflictingOnServer] > 0;
+				}
+			}
+		}
+		
 		
 		public void Enqueue(AbstractRequest request)
 		{

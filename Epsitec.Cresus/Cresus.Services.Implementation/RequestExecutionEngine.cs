@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Services
 			this.InternalQueryRequestStates (client, out states);
 		}
 		
-		void IRequestExecutionService.ClearRequestStates(ClientIdentity client, RequestState[] states)
+		void IRequestExecutionService.RemoveRequestStates(ClientIdentity client, RequestState[] states)
 		{
 			//	Supprime de la queue les requêtes dont l'état correspond à celui
 			//	décrit.
@@ -104,9 +104,18 @@ namespace Epsitec.Cresus.Services
 					Database.DbKey row_key   = new Database.DbKey (rows[i]);
 					ExecutionState row_state = this.execution_queue.GetRequestExecutionState (rows[i]);
 						
-					if (row_state == Requests.ExecutionState.ExecutedByClient)
+					//	Comme l'exécution est faite sur le serveur, il faut ajuster l'état d'exécution
+					//	de manière à refléter la réalité :
+					
+					switch (row_state)
 					{
-						row_state = Requests.ExecutionState.ExecutedByServer;
+						case Requests.ExecutionState.ExecutedByClient:
+							row_state = Requests.ExecutionState.ExecutedByServer;
+							break;
+						
+						case Requests.ExecutionState.Conflicting:
+							row_state = Requests.ExecutionState.ConflictingOnServer;
+							break;
 					}
 					
 					for (int j = 0; j < states.Length; j++)
@@ -145,6 +154,11 @@ namespace Epsitec.Cresus.Services
 				}
 			}
 		}
+		
+		void IRequestExecutionService.RemoveAllRequestStates(ClientIdentity client)
+		{
+			//	TODO: supprimer toutes les requêtes de ce client
+		}
 		#endregion
 		
 		private void InternalQueryRequestStates(Remoting.ClientIdentity client, out RequestState[] states)
@@ -169,9 +183,15 @@ namespace Epsitec.Cresus.Services
 						//	Comme l'exécution a été faite sur le serveur, il faut ajuster l'état d'exécution
 						//	de manière à refléter la réalité :
 						
-						if (state == Requests.ExecutionState.ExecutedByClient)
+						switch (state)
 						{
-							state = Requests.ExecutionState.ExecutedByServer;
+							case Requests.ExecutionState.ExecutedByClient:
+								state = Requests.ExecutionState.ExecutedByServer;
+								break;
+							
+							case Requests.ExecutionState.Conflicting:
+								state = Requests.ExecutionState.ConflictingOnServer;
+								break;
 						}
 						
 						list.Add (new RequestState (row_key.Id.Value, (int) state));

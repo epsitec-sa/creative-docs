@@ -13,6 +13,8 @@ namespace Epsitec.Cresus.Remoting
 		
 		void QueryRequestStates(ClientIdentity client, out RequestState[] states);
 		void QueryRequestStates(ClientIdentity client, ref int change_id, System.TimeSpan timeout, out RequestState[] states);
-		void ClearRequestStates(ClientIdentity client, RequestState[] states);
+		
+		void RemoveRequestStates(ClientIdentity client, RequestState[] states);
+		void RemoveAllRequestStates(ClientIdentity client);
 	}
 }

@@ -641,7 +641,7 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
 			}
 			
-			service.ClearRequestStates (client, new Remoting.RequestState[] { states[0] });
+			service.RemoveRequestStates (client, new Remoting.RequestState[] { states[0] });
 			service.QueryRequestStates (client, ref change_id, System.TimeSpan.FromSeconds (1.0), out states);
 			System.Diagnostics.Debug.WriteLine ("3/ After clearing first state, got " + states.Length + " states back from server (change ID=" + change_id + ") :");
 			

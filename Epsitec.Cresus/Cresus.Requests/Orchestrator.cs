@@ -185,6 +185,7 @@ namespace Epsitec.Cresus.Requests
 						//	L'état des requêtes dans la queue du serveur a changé. Il faut
 						//	traiter ces modifications :
 						
+						this.ChangeToState (OrchestratorState.Processing);
 						this.ProcessServerChanges ();
 					}
 					
@@ -336,12 +337,10 @@ namespace Epsitec.Cresus.Requests
 		protected void ProcessDetectedConflict(System.Data.DataRow row, AbstractRequest request)
 		{
 			//	Un conflit a été détecté lors de la tentative de mise à jour de la
-			//	requête. Note que la requête est en "conflit" sans pour autant mettre
-			//	à jour la base de données; en effet, si on perd maintenant l'information
-			//	qui nous indique le conflit, on risque tout au plus de re-exécuter la
-			//	requête (la dernière exécution n'a eu aucun effet de bord).
+			//	requête. Passe l'état à 'Conflicting' et persiste la queue dans la
+			//	base de données.
 			
-			this.execution_queue.SetRequestExecutionState (row, ExecutionState.Conflicting);
+			this.SwitchToConflictingLocally (row);
 		}
 		
 		protected void ProcessSendToServer()
@@ -411,7 +410,7 @@ namespace Epsitec.Cresus.Requests
 		protected void ProcessServerChanges()
 		{
 			//	Met à jour la queue locale en fonction de l'état des requêtes dans la
-			//	queue du serveur.
+			//	queue du serveur (dont nous avons une copie, grâce à WaiterThread).
 			
 			RequestState[] states;
 			
@@ -432,6 +431,8 @@ namespace Epsitec.Cresus.Requests
 					//	La requête n'existe plus dans la queue locale; ceci implique que
 					//	celle stockée sur le serveur est caduque et peut être supprimée :
 					
+					System.Diagnostics.Debug.WriteLine (string.Format ("Warning: server still knows request {0} !", states[i].Identifier));
+					
 					list.Add (states[i]);
 					continue;
 				}
@@ -442,7 +443,32 @@ namespace Epsitec.Cresus.Requests
 				ExecutionState remote_state = ExecutionQueue.ConvertToExecutionState (states[i].State);
 				ExecutionState local_state  = this.execution_queue.GetRequestExecutionState (row);
 				
-				System.Diagnostics.Debug.Assert (local_state == ExecutionState.SentToServer);
+				if (local_state == ExecutionState.ExecutedByClient)
+				{
+					//	La requête ne "peut" pas encore avoir été envoyée au serveur (en fait,
+					//	elle a certainement été envoyée juste avant un crash du client); il
+					//	faut donc ignorer celle-ci en attendant qu'elle passe à l'état "envoyée".
+					
+					continue;
+				}
+				
+				if ((local_state != ExecutionState.SentToServer) &&
+					(local_state != ExecutionState.ExecutedByServer) &&
+					(local_state != ExecutionState.ConflictingOnServer))
+				{
+					//	La requête doit être dans l'un des états suivants :
+					//
+					//	(1) SentToServeur, cas normal d'une requête envoyée au serveur.
+					//
+					//	(2) ExecutedByServer, au cas où le client aurait redémarré avant la
+					//		suppression de la requête des queues du serveur et du client.
+					//
+					//	(3) ConflictingOnServer, au cas où le client aurait redémarré avant
+					//		la suppression de la requête de la queue du serveur et son
+					//		passage en local à l'état Conflicting.
+					
+					System.Diagnostics.Debug.WriteLine (string.Format ("Warning: request {0} local state is {1}; should be SentToServer.", states[i].Identifier, local_state));
+				}
 				
 				switch (remote_state)
 				{
@@ -450,12 +476,19 @@ namespace Epsitec.Cresus.Requests
 						break;
 					
 					case ExecutionState.ExecutedByServer:
-					case ExecutionState.Conflicting:
 						
 						//	La requête a été exécutée sur le serveur. Il faut mettre à jour
 						//	l'état dans la queue locale :
 						
-						this.execution_queue.SetRequestExecutionState (row, remote_state);
+						this.SwitchToExecutedByServer (states[i], row);
+						break;
+					
+					case ExecutionState.ConflictingOnServer:
+						
+						//	La requête a été rejetée par le serveur (elle génère un conflit).
+						//	Il faut mettre à jour l'état dans la queue locale :
+						
+						this.SwitchToConflictingOnServer (row);
 						break;
 					
 					default:
@@ -470,7 +503,31 @@ namespace Epsitec.Cresus.Requests
 				
 				states = new RequestState[list.Count];
 				list.CopyTo (states);
-				this.service.ClearRequestStates (this.client, states);
+				this.service.RemoveRequestStates (this.client, states);
+			}
+			
+			if (this.execution_queue.HasConflictingOnServer)
+			{
+				//	La queue locale contient des requêtes marquées comme étant en
+				//	conflit sur le serveur; ceci n'est pas possible dans un fonc-
+				//	tionnement normal.
+				//
+				//	C'est un état transitoire possible ici uniquement si la méthode
+				//	SwitchToConflictingOnServer a été quittée prématurément par une
+				//	exception, causée par une perte de connexion avec le serveur,
+				//	par exemple.
+				
+				System.Diagnostics.Debug.WriteLine ("Warning: found requests said to be conflicting on server, but there are none.");
+				
+				foreach (System.Data.DataRow row in rows)
+				{
+					if (this.execution_queue.GetRequestExecutionState (row) == ExecutionState.ConflictingOnServer)
+					{
+						this.SwitchToConflictingOnServer (row);
+					}
+				}
+				
+				System.Diagnostics.Debug.Assert (this.execution_queue.HasConflictingOnServer == false);
 			}
 		}
 		
@@ -484,6 +541,62 @@ namespace Epsitec.Cresus.Requests
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
 			{
+				this.execution_queue.SerializeToBase (transaction);
+				transaction.Commit ();
+			}
+		}
+		
+		
+		protected void SwitchToExecutedByServer(RequestState server_state, System.Data.DataRow row)
+		{
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
+			{
+				this.execution_queue.SetRequestExecutionState (row, ExecutionState.ExecutedByServer);
+				this.execution_queue.SerializeToBase (transaction);
+				transaction.Commit ();
+			}
+			
+			//	Supprime la requête de la queue du serveur. En cas de perte de connexion
+			//	ici, ce n'est pas autrement catastrophique : la requête locale est dans
+			//	l'état ExecutedByServer et on va recevoir une nouvelle notification de
+			//	la part du serveur (-> ExecutedByServer) et repasser par ici...
+			
+			RequestState[] states = new RequestState[] { server_state };
+			
+			this.service.RemoveRequestStates (this.client, states);
+		}
+		
+		protected void SwitchToConflictingOnServer(System.Data.DataRow row)
+		{
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
+			{
+				this.execution_queue.SetRequestExecutionState (row, ExecutionState.ConflictingOnServer);
+				this.execution_queue.SerializeToBase (transaction);
+				transaction.Commit ();
+			}
+			
+			//	Supprime la requête de la queue du serveur. En cas de perte de connexion
+			//	ici, ce n'est pas autrement catastrophique : la requête locale est dans
+			//	l'état ConflictingOnServer et on va recevoir une nouvelle notification
+			//	de la part du serveur (-> ConflictingOnServer) et repasser par ici...
+			
+			this.service.RemoveAllRequestStates (this.client);
+			
+			//	Maintenant que le serveur n'a plus aucune trace de nos requêtes, on peut
+			//	marquer la requête actuelle comme Conflicting.
+			//
+			//	Si cette opération échoue, on se retrouve avec une requête dans l'état
+			//	ConflictingOnServer et aucune requêtes sur le serveur; ça peut être
+			//	une indication qu'il faut passer à Conflicting.
+			
+			this.SwitchToConflictingLocally (row);
+		}
+		
+		protected void SwitchToConflictingLocally(System.Data.DataRow row)
+		{
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
+			{
+				this.execution_queue.SetRequestExecutionState (row, ExecutionState.Conflicting);
 				this.execution_queue.SerializeToBase (transaction);
 				transaction.Commit ();
 			}

@@ -17,6 +17,8 @@ namespace Epsitec.Cresus.Requests
 		SentToServer		= 4,				//	envoi au serveur OK
 		ExecutedByServer	= 5,				//	exécution par le serveur OK
 		
+		ConflictingOnServer	= 6,				//	transitoire, conflit sur le serveur
+		
 		Count
 	}
 	
@@ -24,5 +26,5 @@ namespace Epsitec.Cresus.Requests
 	//
 	//		Pending ----------> | -> ExecutedByClient -> SentToServer -> | -> ExecutedByServer
 	//		                    |                                        |
-	//		ConflictResolved -> | -> Conflicting -> ConflictResolved     | -> Conflicting -> ConflictResolved
+	//		ConflictResolved -> | -> Conflicting -> ConflictResolved     | -> ConflictingOnServer -> Conflicting -> ConflictResolved
 }
