@@ -34,6 +34,8 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
+		//	TODO: à compléter...
+		
 		#region ISerializable Members
 		protected UpdateDynamicData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{

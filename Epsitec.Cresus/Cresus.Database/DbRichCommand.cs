@@ -387,6 +387,11 @@ namespace Epsitec.Cresus.Database
 			table.Rows.Add (data_row);
 		}
 		
+		public void AcceptChanges()
+		{
+			this.data_set.AcceptChanges ();
+		}
+		
 		
 		protected void CreateDataRelations ()
 		{

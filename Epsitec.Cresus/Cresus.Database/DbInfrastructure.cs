@@ -123,6 +123,7 @@ namespace Epsitec.Cresus.Database
 				helper.CreateTableTypeDef ();
 				helper.CreateTableEnumValDef ();
 				helper.CreateTableLog ();
+				helper.CreateTableRequestQueue ();
 				
 				//	Valide la création de toutes ces tables avant de commencer à peupler
 				//	les tables. Firebird requiert ce mode de fonctionnement.
@@ -1959,6 +1960,21 @@ namespace Epsitec.Cresus.Database
 				this.CreateTable (table, columns);
 			}
 			
+			public void CreateTableRequestQueue()
+			{
+				TypeHelper types   = this.infrastructure.types;
+				DbTable    table   = new DbTable (Tags.TableRequestQueue);
+				DbColumn[] columns = new DbColumn[]
+					{
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
+						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
+						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefInternal),
+						new DbColumn (Tags.ColumnQueueData,	  types.RawData,	 Nullable.No,  DbColumnClass.Data)
+					};
+				
+				this.CreateTable (table, columns);
+			}
+			
 			
 			private void CreateTable(DbTable table, DbColumn[] columns)
 			{
@@ -2013,6 +2029,7 @@ namespace Epsitec.Cresus.Database
 				this.str_type_dict_value  = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictValue) as DbTypeString;
 				
 				this.d_t_type_datetime    = this.infrastructure.ResolveDbType (transaction, Tags.TypeDateTime) as DbTypeDateTime;
+				this.bin_type_raw_data    = this.infrastructure.ResolveDbType (transaction, Tags.TypeRawData) as DbTypeByteArray;
 				
 				this.infrastructure.internal_types.Add (this.num_type_key_id);
 				this.infrastructure.internal_types.Add (this.num_type_key_status);
@@ -2025,6 +2042,7 @@ namespace Epsitec.Cresus.Database
 				this.infrastructure.internal_types.Add (this.str_type_dict_value);
 				
 				this.infrastructure.internal_types.Add (this.d_t_type_datetime);
+				this.infrastructure.internal_types.Add (this.bin_type_raw_data);
 				
 				this.AssertAllTypesReady ();
 			}
@@ -2042,8 +2060,10 @@ namespace Epsitec.Cresus.Database
 			void InitialiseOtherTypes()
 			{
 				this.d_t_type_datetime   = new DbTypeDateTime (Tags.Name + "=" + Tags.TypeDateTime);
+				this.bin_type_raw_data   = new DbTypeByteArray (Tags.Name + "=" + Tags.TypeRawData);
 			
 				this.infrastructure.internal_types.Add (this.d_t_type_datetime);
+				this.infrastructure.internal_types.Add (this.bin_type_raw_data);
 			}
 			
 			void InitialiseStrTypes()
@@ -2077,6 +2097,7 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.Assert (this.str_type_dict_value != null);
 				
 				System.Diagnostics.Debug.Assert (this.d_t_type_datetime != null);
+				System.Diagnostics.Debug.Assert (this.bin_type_raw_data != null);
 			}
 			
 			
@@ -2101,6 +2122,14 @@ namespace Epsitec.Cresus.Database
 				get
 				{
 					return this.d_t_type_datetime;
+				}
+			}
+			
+			public DbTypeByteArray				RawData
+			{
+				get
+				{
+					return this.bin_type_raw_data;
 				}
 			}
 			
@@ -2159,6 +2188,7 @@ namespace Epsitec.Cresus.Database
 			protected DbTypeNum					num_type_key_status;
 			
 			protected DbTypeDateTime			d_t_type_datetime;
+			protected DbTypeByteArray			bin_type_raw_data;
 			
 			protected DbTypeString				str_type_name;
 			protected DbTypeString				str_type_caption;

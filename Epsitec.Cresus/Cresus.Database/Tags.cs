@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.Database
 		public const string	TypeDescription		= "CR_DescriptionType";
 		public const string	TypeInfoXml			= "CR_InfoXmlType";
 		public const string	TypeDateTime		= "CR_DateTimeType";
+		public const string TypeRawData			= "CR_RawDataType";
 		public const string TypeDictKey			= "CR_DictKeyType";
 		public const string TypeDictValue		= "CR_DictKeyValue";
 		
@@ -31,6 +32,8 @@ namespace Epsitec.Cresus.Database
 		public const string ColumnDictKey		= "CR_DICT_KEY";
 		public const string ColumnDictValue		= "CR_DICT_VALUE";
 		
+		public const string ColumnQueueData		= "CR_QUEUE_DATA";
+		
 		public const string	ColumnRefTable		= "CREF_TABLE";
 		public const string	ColumnRefType		= "CREF_TYPE";
 		public const string	ColumnRefColumn		= "CREF_COLUMN";
@@ -44,5 +47,6 @@ namespace Epsitec.Cresus.Database
 		public const string	TableTypeDef		= "CR_TYPE_DEF";
 		public const string	TableEnumValDef		= "CR_ENUMVAL_DEF";
 		public const string TableLog			= "CR_LOG";
+		public const string TableRequestQueue	= "CR_RQ_QUEUE";
 	}
 }

@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Requests
 	/// </summary>
 	public enum UpdateMode
 	{
-		Full,						//	mise à jour de toutes les colonnes
-		Changed						//	mise à jour uniquement des colonnes modifiées
+		Full,						//	met à jour toutes les colonnes
+		Changed						//	met à jour uniquement les colonnes modifiées
 	}
 }

@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.Requests
 			this.table_name = table_name;
 		}
 		
+		
 		#region ISerializable Members
 		protected AbstractData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
 		{

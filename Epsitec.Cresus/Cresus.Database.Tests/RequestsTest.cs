@@ -171,6 +171,52 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (1994, req_3.ColumnValues[2]);
 		}
 		
+		[Test] public void Check07ExecutionQueue()
+		{
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
+			{
+				Assert.IsNotNull (infrastructure);
+				
+				Requests.ExecutionQueue queue = new Requests.ExecutionQueue (infrastructure);
+				
+				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					System.Data.DataTable table = RequestsTest.CreateSampleTable ();
+					
+					Requests.Group group = new Requests.Group ();
+					
+					Requests.InsertStaticData req_1 = new Requests.InsertStaticData (table.Rows[0]);
+					Requests.InsertStaticData req_2 = new Requests.InsertStaticData (table.Rows[1]);
+					
+					table.Rows[0].BeginEdit ();
+					table.Rows[0][1] = "Pierre Arnaud-Bühlmann";
+					table.Rows[0].EndEdit ();
+					
+					Requests.UpdateStaticData req_3 = new Requests.UpdateStaticData (table.Rows[0], Requests.UpdateMode.Changed);
+					
+					group.Add (req_1);
+					group.Add (req_2);
+					group.Add (req_3);
+					
+					queue.Add (group);
+					queue.SerializeToBase (transaction);
+					
+					transaction.Commit ();
+				}
+				
+				queue.Detach ();
+				
+				queue = new Requests.ExecutionQueue (infrastructure);
+				
+				System.Data.DataRowCollection rows = queue.Rows;
+				
+				foreach (System.Data.DataRow row in rows)
+				{
+					System.Diagnostics.Debug.WriteLine ("Row " + row[0] + " contains " + ((byte[])row[3]).Length + " bytes.");
+				}
+			}
+		}
+		
 		public static System.Data.DataTable CreateSampleTable()
 		{
 			System.Data.DataSet   set   = new System.Data.DataSet ();
