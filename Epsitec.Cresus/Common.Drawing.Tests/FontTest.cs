@@ -18,7 +18,7 @@ namespace Epsitec.Common.Drawing
 			for (int i = 0; i < n; i++)
 			{
 				Font font = Font.GetFont (i);
-				Assertion.AssertNotNull (font);
+				Assert.IsNotNull (font);
 				
 				if (font.GetGlyphIndex ('e') == 0)
 				{
@@ -31,11 +31,11 @@ namespace Epsitec.Common.Drawing
 				}
 				Font find = Font.GetFont (font.FaceName, font.StyleName, font.OpticalName);
 				
-				Assertion.AssertNotNull (find);
-				Assertion.AssertEquals (font.Handle, find.Handle);
+				Assert.IsNotNull (find);
+				Assert.AreEqual (font.Handle, find.Handle);
 			}
 			
-			Assertion.AssertNull (Font.GetFont (n+1));
+			Assert.IsNull (Font.GetFont (n+1));
 		}
 
 		[Test] public void CheckAllFontComposites()
@@ -55,7 +55,7 @@ namespace Epsitec.Common.Drawing
 				if (i > FontTest.last_font_chunk) break;
 				
 				Font font = Font.GetFont (i);
-				Assertion.AssertNotNull (font);
+				Assert.IsNotNull (font);
 				
 //				if ((font.FullName == "Haettenschweiler Regular")/* ||
 //					(font.FullName == "Century Gothic Bold") ||
@@ -103,41 +103,41 @@ namespace Epsitec.Common.Drawing
 		{
 			Font font = Font.GetFont ("Tahoma", "Italic");
 			
-			Assertion.AssertNotNull (font);
-			Assertion.AssertEquals ("Oblique", font.StyleName);
-			Assertion.AssertEquals (true, font.IsSynthetic);
-			Assertion.AssertEquals (font, Font.GetFont ("Tahoma", "Italic"));
-			Assertion.AssertEquals (font, Font.GetFont ("Tahoma", "Oblique"));
+			Assert.IsNotNull (font);
+			Assert.AreEqual ("Oblique", font.StyleName);
+			Assert.AreEqual (true, font.IsSynthetic);
+			Assert.AreEqual (font, Font.GetFont ("Tahoma", "Italic"));
+			Assert.AreEqual (font, Font.GetFont ("Tahoma", "Oblique"));
 			
 			font = Font.GetFont ("Tahoma", "Bold Italic");
 			
-			Assertion.AssertNotNull (font);
-			Assertion.AssertEquals ("Bold Oblique", font.StyleName);
-			Assertion.AssertEquals (true, font.IsSynthetic);
-			Assertion.AssertEquals (font, Font.GetFont ("Tahoma", "Bold Italic"));
-			Assertion.AssertEquals (font, Font.GetFont ("Tahoma", "Bold Oblique"));
+			Assert.IsNotNull (font);
+			Assert.AreEqual ("Bold Oblique", font.StyleName);
+			Assert.AreEqual (true, font.IsSynthetic);
+			Assert.AreEqual (font, Font.GetFont ("Tahoma", "Bold Italic"));
+			Assert.AreEqual (font, Font.GetFont ("Tahoma", "Bold Oblique"));
 		}
 		
 		[Test] public void CheckFontGeometry()
 		{
 			Font font = Font.GetFont ("Tahoma", "Regular");
 			
-			Assertion.AssertNotNull (font);
+			Assert.IsNotNull (font);
 			
 			double ascender  = font.Ascender;
 			double descender = font.Descender;
 			double height    = font.LineHeight;
 			
-			Assertion.Assert (ascender > 0);
-			Assertion.Assert (descender < 0);
-			Assertion.Assert (height >= ascender-descender);
+			Assert.IsTrue (ascender > 0);
+			Assert.IsTrue (descender < 0);
+			Assert.IsTrue (height >= ascender-descender);
 		}
 		
 		[Test] public void CheckFontTextCharEndX()
 		{
 			Font font = Font.GetFont ("Tahoma", "Regular");
 			
-			Assertion.AssertNotNull (font);
+			Assert.IsNotNull (font);
 			
 			string   text  = "Hello";
 			double[] end_x;
@@ -145,8 +145,8 @@ namespace Epsitec.Common.Drawing
 			
 			font.GetTextCharEndX (text, out end_x);
 			
-			Assertion.Assert (end_x.Length == text.Length);
-			Assertion.Assert (end_x[end_x.Length-1] == width);
+			Assert.IsTrue (end_x.Length == text.Length);
+			Assert.IsTrue (end_x[end_x.Length-1] == width);
 		}
 		
 		[Test] public void CheckTextBreak()
@@ -165,60 +165,60 @@ namespace Epsitec.Common.Drawing
 			
 			while (tb.GetNextBreak (width, out break_text, out break_width, out n_char))
 			{
-				Assertion.Assert (break_width <= width);
-				Assertion.Assert (break_text.Length > 0);
-				Assertion.Assert (n_char > 0);
-				Assertion.Assert (! break_text.StartsWith (" "));
-				Assertion.Assert (! break_text.EndsWith (" "));
+				Assert.IsTrue (break_width <= width);
+				Assert.IsTrue (break_text.Length > 0);
+				Assert.IsTrue (n_char > 0);
+				Assert.IsTrue (! break_text.StartsWith (" "));
+				Assert.IsTrue (! break_text.EndsWith (" "));
 				
 				chunk[line_count++] = break_text;
 				
-				Assertion.AssertEquals (break_width, font.GetTextAdvance (break_text)*12.0);
-				Assertion.AssertEquals ((line_count < 6), tb.MoreText);
+				Assert.AreEqual (break_width, font.GetTextAdvance (break_text)*12.0);
+				Assert.AreEqual ((line_count < 6), tb.MoreText);
 			}
 			
-			Assertion.AssertEquals (6, line_count);
-			Assertion.AssertEquals ("", break_text);
-			Assertion.AssertEquals (0, break_width);
-			Assertion.AssertEquals (0, n_char);
+			Assert.AreEqual (6, line_count);
+			Assert.AreEqual ("", break_text);
+			Assert.AreEqual (0, break_width);
+			Assert.AreEqual (0, n_char);
 			
-			Assertion.AssertEquals ("apart.", chunk[5]);
+			Assert.AreEqual ("apart.", chunk[5]);
 			
-			Assertion.AssertEquals (false, tb.GetNextBreak (width, out break_text, out break_width, out n_char));
+			Assert.AreEqual (false, tb.GetNextBreak (width, out break_text, out break_width, out n_char));
 			
 			tb.Dispose ();
 			
 			tb = new TextBreak (font, "absolutely   ", 12.0, TextBreakMode.None);
-			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
-			Assertion.AssertEquals ("", break_text);
-			Assertion.AssertEquals (0.0, break_width);
-			Assertion.AssertEquals (true, tb.GetNextBreak (55.0, out break_text, out break_width, out n_char));
-			Assertion.AssertEquals ("absolutely", break_text);
-			Assertion.AssertEquals (false, tb.GetNextBreak (55.0, out break_text, out break_width, out n_char));
+			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
+			Assert.AreEqual ("", break_text);
+			Assert.AreEqual (0.0, break_width);
+			Assert.AreEqual (true, tb.GetNextBreak (55.0, out break_text, out break_width, out n_char));
+			Assert.AreEqual ("absolutely", break_text);
+			Assert.AreEqual (false, tb.GetNextBreak (55.0, out break_text, out break_width, out n_char));
 			tb.Dispose ();
 			
 			tb = new TextBreak (font, "absolutely   ", 12.0, TextBreakMode.None);
-			Assertion.AssertEquals (true, tb.GetNextBreak (60.0, out break_text, out break_width, out n_char));
-			Assertion.AssertEquals ("absolutely   ", break_text);
-			Assertion.AssertEquals (false, tb.GetNextBreak (60.0, out break_text, out break_width, out n_char));
+			Assert.AreEqual (true, tb.GetNextBreak (60.0, out break_text, out break_width, out n_char));
+			Assert.AreEqual ("absolutely   ", break_text);
+			Assert.AreEqual (false, tb.GetNextBreak (60.0, out break_text, out break_width, out n_char));
 			tb.Dispose ();
 			
 			tb = new TextBreak (font, "absolutely, really", 12.0, TextBreakMode.Split);
-			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
-			Assertion.AssertEquals ("absolute", break_text);
-			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
-			Assertion.AssertEquals ("ly,", break_text);
-			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
-			Assertion.AssertEquals ("really", break_text);
-			Assertion.AssertEquals (false, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
+			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
+			Assert.AreEqual ("absolute", break_text);
+			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
+			Assert.AreEqual ("ly,", break_text);
+			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
+			Assert.AreEqual ("really", break_text);
+			Assert.AreEqual (false, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			tb.Dispose ();
 			
 			tb = new TextBreak (font, "absolutely, really", 12.0, TextBreakMode.Ellipsis);
-			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
-			Assertion.AssertEquals ("absol\u2026", break_text);
-			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
-			Assertion.AssertEquals ("really", break_text);
-			Assertion.AssertEquals (false, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
+			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
+			Assert.AreEqual ("absol\u2026", break_text);
+			Assert.AreEqual (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
+			Assert.AreEqual ("really", break_text);
+			Assert.AreEqual (false, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			tb.Dispose ();
 		}
 		
@@ -400,8 +400,8 @@ namespace Epsitec.Common.Drawing
 			Font   font = Font.DefaultFont;
 			double size = Font.DefaultFontSize;
 			
-			Assertion.AssertNotNull (font);
-			Assertion.Assert (size > 0);
+			Assert.IsNotNull (font);
+			Assert.IsTrue (size > 0);
 		}
 
 		[Test] public void CheckGlyphDynamicBold()

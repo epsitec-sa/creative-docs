@@ -39,7 +39,7 @@ namespace Epsitec.Common.Drawing
 			Path p = new Path ();
 			
 			p.Append (p1);
-			Assertion.AssertEquals (r1, p.ComputeBounds ());
+			Assert.AreEqual (r1, p.ComputeBounds ());
 			
 			System.Console.Out.WriteLine ("Path: p1");
 			System.Console.Out.WriteLine (p.ToString ());
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Drawing
 			System.Console.Out.WriteLine ("Path: p1 UNION p2");
 			System.Console.Out.WriteLine (p.ToString ());
 			
-			Assertion.AssertEquals (r, p.ComputeBounds ());
+			Assert.AreEqual (r, p.ComputeBounds ());
 			
 			Path pp1 = new Path();
 			Path pp2 = new Path();
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Drawing
 			
 			rf.Scale (12.0);
 			
-			Assertion.AssertEquals (rp, rf);
+			Assert.AreEqual (rp, rf);
 		}
 		
 		[Test] public void CheckGlyphPathToStringTimes()
@@ -119,10 +119,10 @@ namespace Epsitec.Common.Drawing
 			path.Close ();
 			
 			bounds = path.ComputeBounds ();
-			Assertion.AssertEquals (110, bounds.Left);
-			Assertion.AssertEquals (110, bounds.Bottom);
-			Assertion.AssertEquals (210, bounds.Right);
-			Assertion.AssertEquals (210, bounds.Top);
+			Assert.AreEqual (110, bounds.Left);
+			Assert.AreEqual (110, bounds.Bottom);
+			Assert.AreEqual (210, bounds.Right);
+			Assert.AreEqual (210, bounds.Top);
 			
 			path.MoveTo (120, 125);
 			path.LineTo (195, 160);
@@ -130,10 +130,10 @@ namespace Epsitec.Common.Drawing
 			path.Close ();
 			
 			bounds = path.ComputeBounds ();
-			Assertion.AssertEquals (110, bounds.Left);
-			Assertion.AssertEquals (110, bounds.Bottom);
-			Assertion.AssertEquals (210, bounds.Right);
-			Assertion.AssertEquals (210, bounds.Top);
+			Assert.AreEqual (110, bounds.Left);
+			Assert.AreEqual (110, bounds.Bottom);
+			Assert.AreEqual (210, bounds.Right);
+			Assert.AreEqual (210, bounds.Top);
 		}
 		
 		[Test] public void CheckSystemInterop()
