@@ -84,14 +84,16 @@ numéro de version (CR_ID+CR_REV). Dans ce dernier cas, CR_STAT
 est ajouté, pour indiquer le statut de la ligne. Pour le moment,
 les statuts suivants sont supportés :
 
-    o CR_REV=0, CR_STAT=n, où 'n' est équivalent à MAX(CR_REV)
-      pour ce CR_ID, permet de déduire simplement le prochain
-      CR_REV sans devoir faire un SELECT avec aggrégat MAX().
+    o DbRowStatus.Live, ligne normale, prochaine révision peut
+      être déduite de MAX(CR_REV)+1.
 
-    o CR_REV=n, CR_STAT=n, ligne valide, en vie.
+    o DbRowStatus.Clean, ligne copiée et non encore modifiée; ne
+      s'applique qu'à CR_REV=0; la copie est MAX(CR_REV).
 
-    o CR_REV=n, CR_STAT=-1, ligne "effacée". C'est utilisé par
+    o DbRowStatus.Deleted, ligne effacée; utilisé notamment par
       CR_TABLE_DEF pour indiquer qu'une table a été effacée.
+      
+    o DbRowStatus.Temp..., ligne temporaire (pour synchro).
 
 -----------------------------------------------------------------
 LOCALISATION DE L'INFORMATION

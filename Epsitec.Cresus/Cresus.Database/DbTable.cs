@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.Database
 						int  rev  = (int)  row[Tags.ColumnRevision];
 						int  stat = (int)  row[Tags.ColumnStatus];
 						
-						key = new DbKey (id, rev, stat);
+						key = new DbKey (id, rev, DbKey.ConvertFromIntStatus (stat));
 					}
 					break;
 				

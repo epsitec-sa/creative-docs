@@ -13,15 +13,15 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
-		public DbKey(long id) : this (id, 0, 0)
+		public DbKey(long id) : this (id, 0, DbRowStatus.Clean)
 		{
 		}
 		
-		public DbKey(long id, int revision, int raw_status)
+		public DbKey(long id, int revision, DbRowStatus status)
 		{
 			this.id         = id;
 			this.revision   = revision;
-			this.raw_status = raw_status;
+			this.int_status = (short) status;
 		}
 		
 		
@@ -35,11 +35,27 @@ namespace Epsitec.Cresus.Database
 			get { return this.revision; }
 		}
 		
-		public int								RawStatus
+		public DbRowStatus						Status
 		{
-			get { return this.raw_status; }
+			get
+			{
+				return DbKey.ConvertFromIntStatus (this.int_status);
+			}
 		}
 		
+		public short							IntStatus
+		{
+			get
+			{
+				return this.int_status;
+			}
+		}
+		
+		
+		public static DbRowStatus ConvertFromIntStatus(int status)
+		{
+			return (DbRowStatus) status;
+		}
 		
 		public static void SerializeToXmlAttributes(System.Text.StringBuilder buffer, DbKey key)
 		{
@@ -67,7 +83,7 @@ namespace Epsitec.Cresus.Database
 			
 			long id         = 0;
 			int  revision   = 0;
-			int  raw_status = 0;
+			int  int_status = 0;
 			
 			if (arg_id.Length > 0)
 			{
@@ -81,10 +97,10 @@ namespace Epsitec.Cresus.Database
 			
 			if (arg_stat.Length > 0)
 			{
-				raw_status = System.Int32.Parse (arg_stat, System.Globalization.CultureInfo.InvariantCulture);
+				int_status = System.Int32.Parse (arg_stat, System.Globalization.CultureInfo.InvariantCulture);
 			}
 			
-			return new DbKey (id, revision, raw_status);
+			return new DbKey (id, revision, DbKey.ConvertFromIntStatus (int_status));
 		}
 		
 		
@@ -106,7 +122,7 @@ namespace Epsitec.Cresus.Database
 			
 			that.id         = this.id;
 			that.revision   = this.revision;
-			that.raw_status = this.raw_status;
+			that.int_status = this.int_status;
 			
 			return that;
 		}
@@ -171,20 +187,22 @@ namespace Epsitec.Cresus.Database
 				buffer.Append (@"""");
 			}
 			
-			if (this.raw_status != 0)
+			if (this.int_status != 0)
 			{
 				buffer.Append (@" key.stat=""");
-				buffer.Append (this.raw_status.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (this.int_status.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				buffer.Append (@"""");
 			}
 		}
 		
 		
-		public const int						RawStatusDeleted = -1;		//	signale que l'objet a été effacé
+		public const DbRawType					RawTypeForId		= DbRawType.Int64;
+		public const DbRawType					RawTypeForRevision	= DbRawType.Int32;
+		public const DbRawType					RawTypeForStatus	= DbRawType.Int16;
 		
 		protected long							id;
 		protected int							revision;
-		protected int							raw_status;
+		protected short							int_status;
 	}
 	
 	public enum DbKeyMatchMode

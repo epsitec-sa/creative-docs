@@ -238,7 +238,7 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (revision > 0);
 			
 			DbKey old_key = table.InternalKey;
-			DbKey new_key = new DbKey (old_key.Id, revision, DbKey.RawStatusDeleted);
+			DbKey new_key = new DbKey (old_key.Id, revision, DbRowStatus.Deleted);
 			
 			this.UpdateKeyInRow (transaction, Tags.TableTableDef, old_key, new_key);
 		}
@@ -544,7 +544,7 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (revision > 0);
 			
 			DbKey old_key = type.InternalKey;
-			DbKey new_key = new DbKey (old_key.Id, revision, revision);
+			DbKey new_key = new DbKey (old_key.Id, revision, DbRowStatus.Deleted);
 			
 			this.UpdateKeyInRow (transaction, Tags.TableTypeDef, old_key, new_key);
 		}
@@ -942,7 +942,7 @@ namespace Epsitec.Cresus.Database
 				Converter.Convert (row["T_REV"],  out revision);
 				Converter.Convert (row["T_STAT"], out status);
 				
-				keys[i] = new DbKey (id, revision, status);
+				keys[i] = new DbKey (id, revision, DbKey.ConvertFromIntStatus (status));
 			}
 			
 			return keys;
@@ -1004,9 +1004,9 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			Collections.SqlFields conds  = new Collections.SqlFields ();
 			
-			fields.Add (Tags.ColumnId,       SqlField.CreateConstant (new_key.Id,        DbRawType.Int64));
-			fields.Add (Tags.ColumnRevision, SqlField.CreateConstant (new_key.Revision,  DbRawType.Int32));
-			fields.Add (Tags.ColumnStatus,   SqlField.CreateConstant (new_key.RawStatus, DbRawType.Int32));
+			fields.Add (Tags.ColumnId,       SqlField.CreateConstant (new_key.Id,        DbKey.RawTypeForId));
+			fields.Add (Tags.ColumnRevision, SqlField.CreateConstant (new_key.Revision,  DbKey.RawTypeForRevision));
+			fields.Add (Tags.ColumnStatus,   SqlField.CreateConstant (new_key.IntStatus, DbKey.RawTypeForStatus));
 			
 			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnId),       SqlField.CreateConstant (old_key.Id,       DbRawType.Int64)));
 			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnRevision), SqlField.CreateConstant (old_key.Revision, DbRawType.Int32)));
@@ -1483,14 +1483,14 @@ namespace Epsitec.Cresus.Database
 			DbTable    table   = new DbTable (Tags.TableTableDef);
 			DbColumn[] columns = new DbColumn[8];
 			
-			columns[0] = new DbColumn (Tags.ColumnId,				this.num_type_id);
+			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
 			columns[1] = new DbColumn (Tags.ColumnRevision,		this.num_type_revision);
-			columns[2] = new DbColumn (Tags.ColumnStatus,			this.num_type_status);
+			columns[2] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
 			columns[3] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
 			columns[4] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
 			columns[5] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
 			columns[6] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
-			columns[7] = new DbColumn (Tags.ColumnNextId,			this.num_type_id);
+			columns[7] = new DbColumn (Tags.ColumnNextId,		this.num_type_id);
 			
 			columns[0].DefineColumnClass (DbColumnClass.KeyId);
 			columns[1].DefineColumnClass (DbColumnClass.KeyRevision);
@@ -1558,9 +1558,9 @@ namespace Epsitec.Cresus.Database
 			DbTable    table   = new DbTable (Tags.TableTypeDef);
 			DbColumn[] columns = new DbColumn[7];
 			
-			columns[0] = new DbColumn (Tags.ColumnId,				this.num_type_id);
+			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
 			columns[1] = new DbColumn (Tags.ColumnRevision,		this.num_type_revision);
-			columns[2] = new DbColumn (Tags.ColumnStatus,			this.num_type_status);
+			columns[2] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
 			columns[3] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
 			columns[4] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
 			columns[5] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
@@ -1592,9 +1592,9 @@ namespace Epsitec.Cresus.Database
 			DbTable    table   = new DbTable (Tags.TableEnumValDef);
 			DbColumn[] columns = new DbColumn[8];
 			
-			columns[0] = new DbColumn (Tags.ColumnId,				this.num_type_id);
+			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
 			columns[1] = new DbColumn (Tags.ColumnRevision,		this.num_type_revision);
-			columns[2] = new DbColumn (Tags.ColumnStatus,			this.num_type_status);
+			columns[2] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
 			columns[3] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
 			columns[4] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
 			columns[5] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
@@ -1635,7 +1635,7 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (type_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, type.InternalKey.Id));
 			fields.Add (type_def.Columns[Tags.ColumnRevision].CreateSqlField (this.type_converter, type.InternalKey.Revision));
-			fields.Add (type_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, type.InternalKey.RawStatus));
+			fields.Add (type_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, type.InternalKey.IntStatus));
 			fields.Add (type_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, type.Name));
 			fields.Add (type_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTypeFactory.SerializeToXml (type, false)));
 			
@@ -1654,7 +1654,7 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (enum_def.Columns[Tags.ColumnId]	     .CreateSqlField (this.type_converter, value.InternalKey.Id));
 			fields.Add (enum_def.Columns[Tags.ColumnRevision].CreateSqlField (this.type_converter, value.InternalKey.Revision));
-			fields.Add (enum_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, value.InternalKey.RawStatus));
+			fields.Add (enum_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, value.InternalKey.IntStatus));
 			fields.Add (enum_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, value.Name));
 			fields.Add (enum_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbEnumValue.SerializeToXml (value, false)));
 			fields.Add (enum_def.Columns[Tags.ColumnRefType] .CreateSqlField (this.type_converter, type.InternalKey.Id));
@@ -1674,7 +1674,7 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (table_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, table.InternalKey.Id));
 			fields.Add (table_def.Columns[Tags.ColumnRevision].CreateSqlField (this.type_converter, table.InternalKey.Revision));
-			fields.Add (table_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, table.InternalKey.RawStatus));
+			fields.Add (table_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, table.InternalKey.IntStatus));
 			fields.Add (table_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, table.Name));
 			fields.Add (table_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTable.SerializeToXml (table, false)));
 			fields.Add (table_def.Columns[Tags.ColumnNextId]  .CreateSqlField (this.type_converter, 0));
@@ -1710,7 +1710,7 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (column_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, column.InternalKey.Id));
 			fields.Add (column_def.Columns[Tags.ColumnRevision].CreateSqlField (this.type_converter, column.InternalKey.Revision));
-			fields.Add (column_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, column.InternalKey.RawStatus));
+			fields.Add (column_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, column.InternalKey.IntStatus));
 			fields.Add (column_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, column.Name));
 			fields.Add (column_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbColumn.SerializeToXml (column, false)));
 			fields.Add (column_def.Columns[Tags.ColumnRefTable].CreateSqlField (this.type_converter, table.InternalKey.Id));
@@ -1817,11 +1817,9 @@ namespace Epsitec.Cresus.Database
 		
 		protected void InitialiseNumDefs()
 		{
-			//	Faut-il plutôt utiliser Int64 pour l'ID ???
-			
-			this.num_type_id       = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int32), Tags.Name + "=" + Tags.TypeKeyId);
-			this.num_type_revision = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int32), Tags.Name + "=" + Tags.TypeKeyRevision);
-			this.num_type_status   = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int32), Tags.Name + "=" + Tags.TypeKeyStatus);
+			this.num_type_id       = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId),       Tags.Name + "=" + Tags.TypeKeyId);
+			this.num_type_revision = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForRevision), Tags.Name + "=" + Tags.TypeKeyRevision);
+			this.num_type_status   = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForStatus),   Tags.Name + "=" + Tags.TypeKeyStatus);
 			
 			this.internal_types.Add (this.num_type_id);
 			this.internal_types.Add (this.num_type_revision);
