@@ -275,13 +275,71 @@ namespace Epsitec.Common.Text
 		
 		public enum StretchClass : byte
 		{
-			No,
-			Character,
-			Space,
-			CharacterSpace,
-			Kashida,
+			No					= 0,
+			Character			= 1,
+			Space				= 2,
+			CharacterSpace		= 3,
+			Kashida				= 4,
 		}
 		#endregion
+		
+		public struct StretchProfile
+		{
+			public StretchProfile(StretchProfile profile)
+			{
+				this.CountNo        = profile.CountNo;
+				this.CountCharacter = profile.CountCharacter;
+				this.CountSpace     = profile.CountSpace;
+				this.CountKashida   = profile.CountKashida;
+				
+				this.WidthNo        = profile.WidthNo;
+				this.WidthCharacter = profile.WidthCharacter;
+				this.WidthSpace     = profile.WidthSpace;
+				this.WidthKashida   = profile.WidthKashida;
+			}
+			
+			
+			public void Add(Unicode.StretchClass stretch, double width)
+			{
+				switch (stretch)
+				{
+					case StretchClass.No:
+						this.CountNo += 1;
+						this.WidthNo += width;
+						break;
+					
+					case StretchClass.Character:
+					case StretchClass.CharacterSpace:
+						this.CountCharacter += 1;
+						this.WidthCharacter += width;
+						break;
+					
+					case StretchClass.Space:
+						this.CountSpace += 1;
+						this.WidthSpace += width;
+						break;
+					
+					case StretchClass.Kashida:
+						this.CountKashida += 1;
+						this.WidthKashida += width;
+						break;
+					
+					default:
+						throw new System.ArgumentOutOfRangeException ("stretch", stretch, "Invalid StretchClass provided.");
+				}
+			}
+			
+			
+			public short		CountNo;
+			public short		CountCharacter;
+			public short		CountSpace;
+			public short		CountKashida;
+			
+			public double		WidthNo;
+			public double		WidthCharacter;
+			public double		WidthSpace;
+			public double		WidthKashida;
+		}
 		
 		public static BreakAnalyzer				DefaultBreakAnalyzer
 		{

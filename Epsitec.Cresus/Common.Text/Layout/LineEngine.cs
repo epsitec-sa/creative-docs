@@ -69,7 +69,7 @@ namespace Epsitec.Common.Text.Layout
 						context.RecordAscender (scratch.Font.GetAscender (scratch.FontSize));
 						context.RecordDescender (scratch.Font.GetDescender (scratch.FontSize));
 						
-						if (this.FitAnalyseRun (ref scratch, ref result))
+						if (this.FitAnalyseRun (context, ref scratch, ref result))
 						{
 							goto stop; // --------------------------------------------------------------------------.
 						}              //																			|
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Text.Layout
 			
 			//	Le texte se termine par une fin forcée avant d'arriver dans la marge droite.						:
 			
-			result.Add (new Layout.Break (scratch.Offset, scratch.Advance));
+			result.Add (new Layout.Break (scratch.Offset, scratch.Advance, 0));
 			
 			return Layout.Status.OkFitEnded;
 			
@@ -116,7 +116,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			{
 				if (scratch.LastBreakOffset > 0)
 				{
-					result.Add (new Layout.Break (scratch.LastBreakOffset, scratch.LastBreakAdvance));
+					result.Add (new Layout.Break (scratch.LastBreakOffset, scratch.LastBreakAdvance, scratch.LastBreakPenalty));
 				}
 				else
 				{
@@ -128,7 +128,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 		}
 		
 		
-		private bool FitAnalyseRun(ref FitScratch scratch, ref Layout.BreakCollection result)
+		private bool FitAnalyseRun(Layout.Context context, ref FitScratch scratch, ref Layout.BreakCollection result)
 		{
 			//	Analyse le texte constituté de caractères de style identique (même
 			//	fonte, même layout). Si une césure est requise, procède par petites
@@ -152,6 +152,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				
 				ushort[] glyphs;
 				bool     can_break;
+				int      penalty;
 				
 				if (frag_length < scratch.RunLength)
 				{
@@ -164,6 +165,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					
 					glyphs    = scratch.Font.GenerateGlyphs (scratch.Text, scratch.TextStart, frag_length+1);
 					can_break = true;
+					penalty   = -1;
 					
 					scratch.Text[frag_length] = save;
 				}
@@ -172,6 +174,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					glyphs    = scratch.Font.GenerateGlyphs (scratch.Text, scratch.TextStart, frag_length);
 					can_break = (scratch.RunLength == scratch.TextLength);
 					hyphenate = hyphenate && (scratch.WordBreakInfo == Unicode.BreakInfo.Optional);
+					penalty   = 1;
 				}
 				
 				scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize);
@@ -186,12 +189,42 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				
 				if (can_break)
 				{
+					double total_width = context.RightMargin - context.LeftMargin;
+					double text_width  = scratch.Advance + scratch.TextWidth - context.LeftMargin;
+					
+					Debug.Assert.IsTrue (total_width > 0);
+					Debug.Assert.IsTrue (text_width > 0);
+					
+					double badness;
+					
+					//	Si le texte est plus large que l'espace disponible, c'est pire du
+					//	point de vue qualitatif que s'il occupe trop peu de place (il est
+					//	plus facile d'étendre des espaces que de les compresser).
+					
+					//	TODO: idéalement, le calcul de la "badness" devrait dépendre de
+					//	l'élasticité du texte contenu dans cette ligne...
+					
+					if (text_width > total_width)
+					{
+						badness = 10 * (text_width - total_width) / total_width;
+					}
+					else
+					{
+						badness = (total_width - text_width) / total_width;
+					}
+					
+					Debug.Assert.IsTrue (badness >=  0.0);
+					Debug.Assert.IsTrue (badness <= 10.0);
+					
+					penalty = penalty * (int)(100 * badness);
+					
 					scratch.LastBreakOffset  = scratch.Offset + frag_length;
 					scratch.LastBreakAdvance = scratch.Advance + scratch.TextWidth;
+					scratch.LastBreakPenalty = penalty;
 					
 					if (hyphenate)
 					{
-						result.Add (new Layout.Break (scratch.LastBreakOffset, scratch.LastBreakAdvance));
+						result.Add (new Layout.Break (scratch.LastBreakOffset, scratch.LastBreakAdvance, scratch.LastBreakPenalty));
 					}
 				}
 			}
@@ -206,6 +239,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			public double						Advance;
 			public int							LastBreakOffset;
 			public double						LastBreakAdvance;
+			public int							LastBreakPenalty;
 			public bool							Hyphenate;
 			
 			public ulong[]						Text;

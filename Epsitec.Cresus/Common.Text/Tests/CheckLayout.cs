@@ -200,7 +200,7 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[0].Offset == 42);
 			
 			System.Diagnostics.Trace.WriteLine ("Starting layout.");
-			for (int i = 0; i < 1000; i++)
+			for (int i = 0; i < 1000000; i++)
 			{
 				context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
 				status  = context.Fit (layout, ref breaks);

@@ -4,14 +4,16 @@
 namespace Epsitec.Common.Text.Layout
 {
 	/// <summary>
-	/// Summary description for Break.
+	/// La classe Break stocke des informations sur un point de découpe dans la
+	/// ligne.
 	/// </summary>
 	public class Break
 	{
-		public Break(int offset, double advance)
+		public Break(int offset, double advance, int penalty)
 		{
 			this.offset  = offset;
 			this.advance = advance;
+			this.penalty = penalty;
 		}
 		
 		
@@ -31,8 +33,17 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public int								Penalty
+		{
+			get
+			{
+				return this.penalty;
+			}
+		}
+		
 		
 		private int								offset;
 		private double							advance;
+		private int								penalty;
 	}
 }
