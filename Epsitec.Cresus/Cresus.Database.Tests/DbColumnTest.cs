@@ -10,11 +10,12 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_a = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
 			DbColumn column_b = new DbColumn ("B", DbSimpleType.Guid);
 			DbColumn column_c = new DbColumn ("C", DbSimpleType.String, 100, true);
-			DbColumn column_x = DbColumn.NewColumn ("<col null='1' index='1' unique='0'/>");
+			DbColumn column_x = DbColumn.NewColumn ("<col null='1' index='1' unique='0' cat='internal'/>");
 			
 			Assertion.AssertEquals ("A", column_a.Name);
 			Assertion.AssertEquals (DbSimpleType.Decimal, column_a.SimpleType);
 			Assertion.AssertEquals (true, column_a.IsNullAllowed);
+			Assertion.AssertEquals (DbElementCat.Unknown, column_a.Category);
 			
 			Assertion.AssertEquals ("B", column_b.Name);
 			Assertion.AssertEquals (DbSimpleType.Guid, column_b.SimpleType);
@@ -28,15 +29,13 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (true,  column_x.IsNullAllowed);
 			Assertion.AssertEquals (true,  column_x.IsIndexed);
 			Assertion.AssertEquals (false, column_x.IsUnique);
-		}
-		
-		[Test] public void CheckConvertColumnToXml()
-		{
-			DbColumn column = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
+			Assertion.AssertEquals (DbElementCat.Internal, column_x.Category);
 			
-			column.IsIndexed = true;
+			column_a.DefineCategory (DbElementCat.Internal);
 			
-			System.Console.Out.WriteLine ("XML: " + DbColumn.ConvertColumnToXml (column));
+			Assertion.AssertEquals (DbElementCat.Internal, column_a.Category);
+			
+			column_a.DefineCategory (DbElementCat.Internal);
 		}
 		
 		[Test] [Ignore ("Not implemented")] public void CheckNewDbColumnByteArray()
@@ -46,6 +45,24 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (DbSimpleType.ByteArray, column_d.SimpleType);
 			Assertion.AssertEquals (10, column_d.Length);
 			Assertion.AssertEquals (false, column_d.IsFixedLength);
+		}
+		
+		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckNewDbColumnEx1()
+		{
+			DbColumn column = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
+			
+			column.DefineCategory (DbElementCat.Internal);
+			column.DefineCategory (DbElementCat.UserDataManaged);
+		}
+		
+		[Test] public void CheckConvertColumnToXml()
+		{
+			DbColumn column = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
+			
+			column.IsIndexed = true;
+			column.DefineCategory (DbElementCat.UserDataManaged);
+			
+			System.Console.Out.WriteLine ("XML: " + DbColumn.ConvertColumnToXml (column));
 		}
 		
 		[Test] public void CheckTypes()
