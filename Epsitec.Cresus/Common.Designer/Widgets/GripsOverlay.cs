@@ -518,10 +518,17 @@ namespace Epsitec.Common.Designer.Widgets
 					
 					if (this.overlay.drop_behavior.ValidateWidgetDragging ())
 					{
-						//	C'est en ordre; le widget a été déposé dans son nouveau parent (ou dans
-						//	le même, auquel cas on veut préserver l'ordre parmi les frères et soeurs).
-						
-						this.target_parent = this.target_widget.Parent;
+						if (this.target_parent.Window != this.target_widget.Window)
+						{
+							//	Le widget a été déposé dans une autre fenêtre.
+							
+							this.target_parent = null;
+							this.overlay.host.CommandDispatcher.Dispatch ("ReselectActiveSelection", this.overlay);
+						}
+						else
+						{
+							this.target_parent = this.target_widget.Parent;
+						}
 						
 						if (this.target_parent == this.target_z_parent)
 						{

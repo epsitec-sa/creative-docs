@@ -524,7 +524,13 @@ namespace Epsitec.Common.Designer
 		
 		protected void ReselectWidgets(Widget[] widgets)
 		{
-			this.active_editor.SelectedWidgets.AddRange (widgets);
+			for (int i = 0; i < widgets.Length; i++)
+			{
+				Widget               widget = widgets[i];
+				Editors.WidgetEditor editor = Editors.WidgetEditor.FromWidget (widget);
+				
+				editor.SelectedWidgets.Add (widget);
+			}
 		}
 		
 		protected void ChangeZOrder(Widget[] widgets, int delta)
@@ -691,6 +697,17 @@ namespace Epsitec.Common.Designer
 			this.DeselectAllWidgets ();
 		}
 		
+		[Command ("ReselectActiveSelection")]	void CommandReselectActiveSelection()
+		{
+			System.Diagnostics.Debug.Assert (this.active_editor != null);
+			System.Diagnostics.Debug.Assert (this.active_editor.SelectedWidgets.Count > 0);
+			
+			Widget[] selected = this.GetSelectedWidgets ();
+			
+			this.DeselectAllWidgets ();
+			
+			this.ReselectWidgets (selected);
+		}
 		
 		[Command ("TabIndexSetter")]			void CommandTabIndexSetter(CommandDispatcher d, CommandEventArgs e)
 		{
