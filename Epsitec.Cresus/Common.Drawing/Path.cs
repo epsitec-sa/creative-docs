@@ -230,6 +230,25 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public void AppendRectangle(double x, double y, double width, double height)
+		{
+			this.MoveTo (x, y);
+			this.LineTo (x+width, y);
+			this.LineTo (x+width, y+height);
+			this.LineTo (x, y+height);
+			this.Close ();
+		}
+		
+		public void AppendRectangle(Rectangle rect)
+		{
+			this.AppendRectangle (rect.X, rect.Y, rect.Width, rect.Height);
+		}
+		
+		public void AppendRectangle(Point p, Size s)
+		{
+			this.AppendRectangle (p.X, p.Y, s.Width, s.Height);
+		}
+		
 		public void AppendCircle(Point c, double r)
 		{
 			this.AppendCircle (c.X, c.Y, r, r);
@@ -497,11 +516,7 @@ namespace Epsitec.Common.Drawing
 		public static Path FromRectangle(double x, double y, double width, double height)
 		{
 			Path path = new Path ();
-			path.MoveTo (x, y);
-			path.LineTo (x+width, y);
-			path.LineTo (x+width, y+height);
-			path.LineTo (x, y+height);
-			path.Close ();
+			path.AppendRectangle (x, y, width, height);
 			return path;
 		}
 		
