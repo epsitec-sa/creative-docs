@@ -9,42 +9,34 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class Tag : IconButton
 	{
-		public Tag()
+		public Tag() : this (null, null)
 		{
-			this.ButtonStyle = ButtonStyle.Flat;
-			this.ResetDefaultColors();
 		}
 		
 		public Tag(Widget embedder) : this ()
 		{
-			this.SetEmbedder(embedder);
+			this.SetEmbedder (embedder);
 		}
 		
-		public Tag(string command) : base (command, null)
+		public Tag(string command) : this (command, null)
 		{
-			this.ResetDefaultColors();
 		}
 		
 		public Tag(string command, string name) : base (command, null, name)
 		{
-			this.ResetDefaultColors();
+			this.ButtonStyle = ButtonStyle.Flat;
+			this.ResetDefaultColors ();
 		}
 		
-		public override double DefaultWidth
+		
+		public override double					DefaultWidth
 		{
 			get { return 18; }
 		}
 
-		public override double DefaultHeight
+		public override double					DefaultHeight
 		{
 			get { return 18; }
-		}
-
-		
-		public void ResetDefaultColors()
-		{
-			this.BackColor = Drawing.Color.Empty;
-			this.Color     = Drawing.Color.Empty;
 		}
 		
 		
@@ -56,24 +48,33 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				if ( this.color != value )
+				if (this.color != value)
 				{
 					this.color = value;
-					this.Invalidate();
+					this.Invalidate ();
 				}
 			}
 		}
 		
 		
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
+		public void ResetDefaultColors()
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			WidgetState state = this.PaintState;
-			adorner.PaintTagBackground(graphics, rect, state, this.Color);
+			this.BackColor = Drawing.Color.Empty;
+			this.Color     = Drawing.Color.Empty;
 		}
 		
 		
-		protected Drawing.Color					color;
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
+		{
+			IAdorner          adorner = Widgets.Adorner.Factory.Active;
+			Drawing.Rectangle rect    = this.Client.Bounds;
+			WidgetState       state   = this.PaintState;
+			Drawing.Color     color   = this.Color;
+			
+			adorner.PaintTagBackground (graphics, rect, state, color);
+		}
+		
+		
+		private Drawing.Color					color;
 	}
 }

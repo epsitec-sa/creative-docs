@@ -351,6 +351,58 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Widget							TitleWidget
+		{
+			get
+			{
+				return this.title_widget;
+			}
+			set
+			{
+				if (this.title_widget != value)
+				{
+					if (this.title_widget != null)
+					{
+						this.title_widget.Parent = null;
+					}
+					
+					this.title_widget = value;
+					
+					if (this.title_widget != null)
+					{
+						this.title_widget.SetEmbedder (this);
+						this.UpdateTitleWidget ();
+					}
+				}
+			}
+		}
+		
+		
+		public Tag								TagWidget
+		{
+			get
+			{
+				return this.tag_widget;
+			}
+			set
+			{
+				if (this.tag_widget != value)
+				{
+					if (this.tag_widget != null)
+					{
+						this.tag_widget.Parent = null;
+					}
+					
+					this.tag_widget = value;
+					
+					if (this.tag_widget != null)
+					{
+						this.tag_widget.SetEmbedder (this);
+						this.UpdateTagWidget ();
+					}
+				}
+			}
+		}
 		
 		public double							InnerTopMargin
 		{
@@ -1264,6 +1316,7 @@ invalid:	row    = -1;
 			}
 		}
 		
+		
 		private void HandleVScrollerChanged(object sender)
 		{
 			int virtual_row = (int) System.Math.Floor (this.v_scroller.DoubleValue + 0.5);
@@ -1485,6 +1538,8 @@ invalid:	row    = -1;
 			this.UpdateHeaderGeometry ();
 			this.UpdateScrollerGeometry ();
 			this.UpdateScrollers ();
+			this.UpdateTitleWidget ();
+			this.UpdateTagWidget ();
 		}
 		
 		protected virtual void UpdateColumnCount()
@@ -1798,6 +1853,35 @@ invalid:	row    = -1;
 			}
 		}
 
+		protected virtual void UpdateTitleWidget()
+		{
+			if (this.title_widget != null)
+			{
+				this.title_widget.Bounds = this.TitleBounds;
+			}
+		}
+		
+		protected virtual void UpdateTagWidget()
+		{
+			if (this.tag_widget != null)
+			{
+				Drawing.Rectangle bounds = this.GetRowBounds (this.SelectedIndex);
+				
+				if (bounds.IsEmpty)
+				{
+					this.tag_widget.SetVisible (false);
+				}
+				else
+				{
+					double dx = this.row_height;
+					double dy = this.row_height;
+					
+					this.tag_widget.Bounds = new Drawing.Rectangle (bounds.Right - dx, bounds.Bottom + (bounds.Height - dy) / 2, dx, dy);
+					this.tag_widget.SetVisible (true);
+				}
+			}
+		}
+		
 		
 		protected override void OnAdornerChanged()
 		{
@@ -2143,8 +2227,11 @@ invalid:	row    = -1;
 		protected double						text_margin			= 2;
 		protected double						row_height			= 16;
 		protected double						title_height		= 0;
+		protected Widget						title_widget;
 		protected Drawing.Margins				inner_margins;
 		protected double						slider_dim			= 6;
+		
+		protected Tag							tag_widget;
 		
 		protected Drawing.Rectangle				table_bounds;
 		protected Drawing.Rectangle				inner_bounds;

@@ -80,6 +80,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		public void StartEdition(int row, int column)
 		{
 			this.EditionIndex  = row;
