@@ -4,6 +4,7 @@ namespace Epsitec.Common.Widgets.Helpers
 	{
 		void NotifyInsertion(Widget widget);
 		void NotifyRemoval(Widget widget);
+		void NotifyPostRemoval(Widget widget);
 		
 		Helpers.WidgetCollection GetWidgetCollection();
 	}

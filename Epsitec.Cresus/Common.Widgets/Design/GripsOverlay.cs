@@ -294,6 +294,14 @@ namespace Epsitec.Common.Widgets.Design
 			this.Invalidate ();
 		}
 		
+		public void NotifyPostRemoval(Widget widget)
+		{
+			if (this.DeselectedTarget != null)
+			{
+				this.DeselectedTarget (this, widget);
+			}
+		}
+		
 		public Epsitec.Common.Widgets.Helpers.WidgetCollection GetWidgetCollection()
 		{
 			return this.SelectedWidgets;
@@ -509,7 +517,7 @@ namespace Epsitec.Common.Widgets.Design
 				GripMap map   = GripsOverlay.grip_map[index];
 				
 				Drawing.Rectangle bounds  = this.target_bounds;
-				Drawing.Point     old_pos = bounds.GetGrip (map.id);
+				Drawing.Point     old_pos = this.target_parent.MapRootToClient (bounds.GetGrip (map.id));
 				
 				bounds.OffsetGrip (map.id, e.Offset);
 				bounds = this.target_parent.MapRootToClient (bounds);
@@ -667,6 +675,7 @@ namespace Epsitec.Common.Widgets.Design
 		
 		public event SelectionEventHandler		SelectedTarget;
 		public event SelectionEventHandler		DeselectingTarget;
+		public event SelectionEventHandler		DeselectedTarget;
 		
 		public event EventHandler				DragBegin;
 		public event EventHandler				DragEnd;

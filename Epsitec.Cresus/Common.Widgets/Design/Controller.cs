@@ -10,9 +10,8 @@ namespace Epsitec.Common.Widgets.Design
 	{
 		public Controller()
 		{
-			this.dispatcher       = new Support.CommandDispatcher ("design dispatcher");
+			this.dispatcher       = new Support.CommandDispatcher ("InterfaceDesigner");
 			this.edit_window_list = new System.Collections.ArrayList ();
-			this.edit_selected    = new System.Collections.ArrayList ();
 		}
 		
 		
@@ -27,12 +26,16 @@ namespace Epsitec.Common.Widgets.Design
 			
 			this.CreateCreationWindow ();
 			
-			this.state_delete_selection = new CommandState ("*.delete selection", this.dispatcher);
+			this.state_delete_selection = new CommandState ("DeleteActiveSelection", this.dispatcher);
 			
 			//	Enregistre cette classe comme un contrôleur sachant exécuter des commandes
 			//	interactives :
 			
 			this.dispatcher.RegisterController (this);
+			
+			//	Définit l'état initial des commandes :
+			
+			this.StateDeleteActiveSelection.Enabled = false;
 			
 			this.is_initialised = true;
 		}
@@ -49,7 +52,7 @@ namespace Epsitec.Common.Widgets.Design
 		}
 		
 		
-		public CommandState						StateDeleteSelection
+		public CommandState						StateDeleteActiveSelection
 		{
 			get
 			{
@@ -125,13 +128,19 @@ namespace Epsitec.Common.Widgets.Design
 		}
 		
 		
+		protected AbstractWidgetEdit FindEditor(Window window)
+		{
+			return window == null ? null : window.GetProperty ("$editor") as AbstractWidgetEdit;
+		}
+		
+		
 		private void HandleSourceDragBegin(object sender)
 		{
 			System.Diagnostics.Debug.Assert (this.widget_palette == sender);
 			
 			foreach (Window window in this.edit_window_list)
 			{
-				AbstractWidgetEdit editor = window.GetProperty ("editor") as AbstractWidgetEdit;
+				AbstractWidgetEdit editor = this.FindEditor (window);
 				
 				editor.SelectedWidgets.Clear ();
 			}
@@ -145,38 +154,57 @@ namespace Epsitec.Common.Widgets.Design
 			System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Count > 0);
 			System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Contains (o));
 			
-			this.edit_selected.Add (o);
-			
-			//	Du coup, on désélectionne tous les autres widgets dans toutes les autres fenêtres.
-			
-			foreach (Window window in this.edit_window_list)
-			{
-				AbstractWidgetEdit other = window.GetProperty ("editor") as AbstractWidgetEdit;
-				
-				if (other != editor)
-				{
-					other.SelectedWidgets.Clear ();
-				}
-			}
-			
-			this.StateDeleteSelection.Enabled = this.edit_selected.Count > 0;
+			this.SetActiveEditor (editor);
+			this.UpdateSelectionState ();
 		}
 		
-		private void HandleEditorDeselecting(object sender, object o)
+		private void HandleEditorDeselected(object sender, object o)
 		{
 			AbstractWidgetEdit editor = sender as AbstractWidgetEdit;
 			
 			System.Diagnostics.Debug.Assert (editor != null);
-			System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Count > 0);
-			System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Contains (o));
 			
-			this.edit_selected.Remove (o);
-			
-			this.StateDeleteSelection.Enabled = this.edit_selected.Count > 0;
+			this.UpdateSelectionState ();
 		}
 		
 		
-		[Command ("*.new window")] void CommandNewWindow()
+		protected void UpdateSelectionState()
+		{
+			bool has_selection = false;
+			
+			if (this.active_editor != null)
+			{
+				if (this.active_editor.SelectedWidgets.Count > 0)
+				{
+					has_selection = true;
+				}
+			}
+			
+			this.StateDeleteActiveSelection.Enabled = has_selection;
+		}
+		
+		protected void SetActiveEditor(AbstractWidgetEdit editor)
+		{
+			if (this.active_editor != editor)
+			{
+				this.active_editor = editor;
+				
+				foreach (Window window in this.edit_window_list)
+				{
+					editor = this.FindEditor (window);
+					
+					if (editor != this.active_editor)
+					{
+						editor.SelectedWidgets.Clear ();
+					}
+				}
+			}
+		}
+		
+		
+		
+		
+		[Command ("CreateNewWindow")]			void CommandCreateNewWindow()
 		{
 			Window          window  = new Window ();
 			ScrollablePanel surface = new ScrollablePanel ();
@@ -192,22 +220,29 @@ namespace Epsitec.Common.Widgets.Design
 			Design.AbsPosWidgetEdit editor = new AbsPosWidgetEdit ();
 			
 			editor.Panel = surface.Panel;
-			editor.Selected    += new SelectionEventHandler(this.HandleEditorSelected);
-			editor.Deselecting += new SelectionEventHandler(this.HandleEditorDeselecting);
+			editor.Selected   += new SelectionEventHandler(this.HandleEditorSelected);
+			editor.Deselected += new SelectionEventHandler(this.HandleEditorDeselected);
 			
-			window.SetProperty ("editor", editor);
+			window.SetProperty ("$editor", editor);
 			window.Show ();
 		}
 		
-		[Command ("*.delete selection")] void CommandDeleteSelection()
+		[Command ("DeleteActiveSelection")]		void CommandDeleteActiveSelection()
 		{
-			foreach (Widget widget in this.edit_selected)
+			System.Diagnostics.Debug.Assert (this.active_editor != null);
+			System.Diagnostics.Debug.Assert (this.active_editor.SelectedWidgets.Count > 0);
+			
+			foreach (Widget widget in this.active_editor.SelectedWidgets)
 			{
 				//	TODO: effacer le widget
 				System.Diagnostics.Debug.WriteLine ("Delete " + widget.ToString ());
 			}
 		}
 		
+		[Command ("DeselectAll")]				void CommandDeselectAll()
+		{
+			
+		}
 		
 		protected Support.CommandDispatcher		dispatcher;
 		protected bool							is_initialised;
@@ -217,7 +252,8 @@ namespace Epsitec.Common.Widgets.Design
 		
 		protected Window						creation_window;
 		protected System.Collections.ArrayList	edit_window_list;
-		protected System.Collections.ArrayList	edit_selected;
+		
+		protected AbstractWidgetEdit			active_editor;
 		
 		protected CommandState					state_delete_selection;
 	}

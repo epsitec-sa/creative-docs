@@ -31,7 +31,8 @@ namespace Epsitec.Common.Support
 			int      command_length   = command_elements.Length;
 			
 			System.Diagnostics.Debug.Assert (command_length == 1);
-			System.Diagnostics.Debug.Assert (command.IndexOf ("*") < 0);
+			System.Diagnostics.Debug.Assert (command.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + command + "' may not contain a '*' in its name.\nPlease fix the command name definition source code.");
+			System.Diagnostics.Debug.Assert (command.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + command + "' may not contain a '.' in its name.\nPlease fix the command name definition source code.");
 			
 			
 			EventSlot slot = this.event_handlers[command] as EventSlot;
@@ -42,7 +43,7 @@ namespace Epsitec.Common.Support
 			}
 			else
 			{
-				System.Diagnostics.Debug.WriteLine ("Command " + command + " not handled.");
+				System.Diagnostics.Debug.WriteLine ("Command '" + command + "' not handled.");
 			}
 		}
 		
@@ -83,6 +84,9 @@ namespace Epsitec.Common.Support
 		
 		public void Register(string command, CommandEventHandler handler)
 		{
+			System.Diagnostics.Debug.Assert (command.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + command + "' may not contain a '*' in its name.\nPlease fix the registration source code.");
+			System.Diagnostics.Debug.Assert (command.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + command + "' may not contain a '.' in its name.\nPlease fix the registration source code.");
+			
 			EventSlot slot;
 			
 			if (this.event_handlers.Contains (command))
@@ -129,7 +133,10 @@ namespace Epsitec.Common.Support
 		
 		protected void RegisterMethod(object controller, System.Reflection.MethodInfo method_info, CommandAttribute attribute)
 		{
-			System.Diagnostics.Debug.WriteLine ("Method: " + method_info.Name + " in " + method_info.DeclaringType.Name + " is a command called " + attribute.CommandName + ", " + method_info.ToString ());
+			System.Diagnostics.Debug.WriteLine ("Command '" + attribute.CommandName + "' implemented by method " + method_info.Name + " in class " + method_info.DeclaringType.Name + ", prototype: " + method_info.ToString ());
+			
+			System.Diagnostics.Debug.Assert (attribute.CommandName.IndexOf ("*") < 0, "Found '*' in command name.", "The method handling command '" + attribute.CommandName + "' may not contain specify '*' in the command name.\nPlease fix the source code for " + method_info.Name + " in class " + method_info.DeclaringType.Name + ".");
+			System.Diagnostics.Debug.Assert (attribute.CommandName.IndexOf (".") < 0, "Found '.' in command name.", "The method handling command '" + attribute.CommandName + "' may not contain specify '.' in the command name.\nPlease fix the source code for " + method_info.Name + " in class " + method_info.DeclaringType.Name + ".");
 			
 			System.Reflection.ParameterInfo[] param_info = method_info.GetParameters ();
 			

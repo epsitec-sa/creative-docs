@@ -902,6 +902,10 @@ namespace Epsitec.Common.Widgets
 			this.Children.Remove (item);
 			this.isDirty = true;
 		}
+		
+		public void NotifyPostRemoval(Widget widget)
+		{
+		}
 		#endregion
 		
 		

@@ -15,6 +15,7 @@ namespace Epsitec.Common.Widgets.Design
 			
 			this.grips_overlay.SelectedTarget    += new SelectionEventHandler (this.HandleSelectedTarget);
 			this.grips_overlay.DeselectingTarget += new SelectionEventHandler (this.HandleDeselectingTarget);
+			this.grips_overlay.DeselectedTarget  += new SelectionEventHandler (this.HandleDeselectedTarget);
 		}
 
 		//	TODO: Dispose
@@ -92,6 +93,25 @@ namespace Epsitec.Common.Widgets.Design
 					hot = this.panel.FindChild (pos, mode);
 				}
 				
+				if (hot != null)
+				{
+					if ((e.Message.ModifierKeys & ModifierKeys.Shift) != 0)
+					{
+						//	Evite que l'on puisse sélectionner simultanément un widget qui serait un
+						//	descendant d'un autre widget sélectionné. Si on est sur un enfant d'un
+						//	widget sélectionné, on retourne le widget sélectionné en lieu et place.
+						
+						foreach (Widget sel in this.SelectedWidgets)
+						{
+							if (hot.IsAncestorWidget (sel))
+							{
+								hot = sel;
+								break;
+							}
+						}
+					}
+				}
+				
 				this.hot_widget = null;
 				
 				if ((Message.State.Buttons == MouseButtons.None) &&
@@ -132,18 +152,45 @@ namespace Epsitec.Common.Widgets.Design
 			{
 				if (this.SelectedWidgets.Contains (hot))
 				{
-					return;
+					if ((message.ModifierKeys & ModifierKeys.Shift) == 0)
+					{
+						this.SelectedWidgets.Clear ();
+					}
+					else
+					{
+						this.SelectedWidgets.Remove (hot);
+					}
 				}
-				
-				if ((message.ModifierKeys & ModifierKeys.Shift) == 0)
+				else
 				{
-					this.SelectedWidgets.Clear ();
-				}
-				
-				if (hot != null)
-				{
-					this.SelectedWidgets.Add (hot);
-					System.Diagnostics.Debug.WriteLine ("Click on " + hot.Name + " (" + hot.GetType ().Name + ")");
+					if ((message.ModifierKeys & ModifierKeys.Shift) == 0)
+					{
+						this.SelectedWidgets.Clear ();
+					}
+					if (hot != null)
+					{
+						//	Vérifie si ce widget n'est pas le parent d'un des widgets déjà
+						//	sélectionnés. Si c'est le cas, on retire les enfants trouvés de
+						//	la liste :
+						
+						if (this.SelectedWidgets.Count > 0)
+						{
+							Widget[] sel = new Widget[this.SelectedWidgets.Count];
+							this.SelectedWidgets.CopyTo (sel, 0);
+							
+							for (int i = 0; i < sel.Length; i++)
+							{
+								//	Le widget 'hot' est-il un ancêtre du widget sélectionné ?
+								
+								if (sel[i].IsAncestorWidget (hot))
+								{
+									this.SelectedWidgets.Remove (sel[i]);
+								}
+							}
+						}
+						
+						this.SelectedWidgets.Add (hot);
+					}
 				}
 			}
 		}
@@ -166,9 +213,18 @@ namespace Epsitec.Common.Widgets.Design
 			}
 		}
 		
+		protected virtual void HandleDeselectedTarget(object sender, object o)
+		{
+			if (this.Deselected != null)
+			{
+				this.Deselected (this, o);
+			}
+		}
+		
 		
 		public event SelectionEventHandler	Selected;
 		public event SelectionEventHandler	Deselecting;
+		public event SelectionEventHandler	Deselected;
 		
 		protected Panel						panel;
 		protected Widget					hot_widget;
