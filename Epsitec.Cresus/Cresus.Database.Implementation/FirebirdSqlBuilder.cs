@@ -997,10 +997,33 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			this.PrepareCommand ();
 			this.command_type = DbCommandType.NonQuery;
-//			this.command_count++;
+			this.command_count++;
 			
-			// TODO-DD:  Add FirebirdSqlBuilder.RemoveData implementation
-			//			 supprime tous les champs pour les fiches remplissant les conditions
+			this.Append ("DELETE FROM ");
+			this.Append (table_name);
+			bool first_field = true;
+
+			foreach (SqlField field in conditions)
+			{
+				if (first_field)
+				{
+					this.Append (" WHERE ");
+					first_field = false;
+				}
+				else
+				{
+					this.Append (" AND ");
+				}
+
+				if (field.Type != SqlFieldType.Function)
+				{
+					this.ThrowError (string.Format ("Invalid field {0} in UPDATE ... WHERE.", field.AsName));
+					break;
+				}
+
+				this.Append (field.AsFunction);
+			}
+			this.Append (";\n");
 		}
 
 		
