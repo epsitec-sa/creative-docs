@@ -97,13 +97,17 @@ namespace Epsitec.Common.Designer.UI
 			}
 			
 			Support.CommandDispatcher commands = designer.DialogCommands;
+			Script.ScriptWrapper      scripts  = designer.DialogScript;
 			
-			if (commands == null)
+			if (commands != null)
 			{
-				return;
+				this.combo_cmd.Items.AddRange (commands.FindCommandNames ());
 			}
 			
-			this.combo_cmd.Items.AddRange (commands.FindCommandNames ());
+			if (scripts != null)
+			{
+				this.combo_cmd.Items.AddRange (scripts.GetMethodNames ());
+			}
 		}
 		
 		
