@@ -189,6 +189,21 @@ namespace Epsitec.Common.Widgets
 				this.OnCursorChanged(true);
 			}
 		}
+
+		public void ValidateCursors()
+		{
+			int max = this.textLayout.MaxTextIndex;
+
+			if ( this.context.CursorFrom > max )
+			{
+				this.context.CursorFrom = max;
+			}
+
+			if ( this.context.CursorTo > max )
+			{
+				this.context.CursorTo = max;
+			}
+		}
 		
 		
 		public bool								SelectionBold
