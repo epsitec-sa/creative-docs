@@ -23,6 +23,24 @@ namespace Epsitec.Common.Widgets
 			window.Show ();
 		}
 
+		[Test] public void CheckDragSource()
+		{
+			Window window = new Window ();
+			
+			DragSource  source = new DragSource ();
+			CheckButton button = new CheckButton ();
+			
+			button.Text = "choix";
+			button.Size = new Drawing.Size (80, 24);
+			
+			source.Bounds = new Drawing.Rectangle (10, 10, 100, 30);
+			source.Parent = window.Root;
+			source.Widget = button;
+			
+			window.Text = "CheckDragSource";
+			window.Show ();
+		}
+
 		[Test] public void CheckBounds()
 		{
 			Window window = new Window ();
@@ -114,7 +132,7 @@ namespace Epsitec.Common.Widgets
 			double zoom = 2.0;
 			
 			Window window = new Window ();
-			window.Root.BackColor = new Color (0, 0, 0, 0);
+			window.Root.BackColor = Color.Transparent;
 			window.MakeFramelessWindow ();
 			window.MakeLayeredWindow ();
 			window.Alpha = 0.5;
@@ -125,7 +143,7 @@ namespace Epsitec.Common.Widgets
 			back.Parent = window.Root;
 			back.SetClientZoom (zoom);
 			
-			Button button = new Button ();
+			CheckButton button = new CheckButton ();
 			VScroller scroller = new VScroller ();
 			
 			button.Location = new Point (10, 10);
