@@ -717,13 +717,21 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (((this.internal_state & InternalState.Visible) == 0) ||
+				if ((this.IsVisibleFlagSet == false) ||
 					(this.parent == null))
 				{
 					return false;
 				}
 				
 				return this.parent.IsVisible;
+			}
+		}
+		
+		public virtual bool							IsVisibleFlagSet
+		{
+			get
+			{
+				return (this.internal_state & InternalState.Visible) != 0;
 			}
 		}
 
@@ -1174,13 +1182,22 @@ namespace Epsitec.Common.Widgets
 			{
 				if (value != this.parent)
 				{
+					Widget parent;
+					
 					if (value == null)
 					{
+						parent = this.parent;
 						this.parent.Children.Remove (this);
 					}
 					else
 					{
+						parent = value;
 						value.Children.Add (this);
+					}
+					
+					if (this.Dock != DockStyle.None)
+					{
+						parent.UpdateChildrenLayout ();
 					}
 				}
 			}
@@ -2794,7 +2811,7 @@ namespace Epsitec.Common.Widgets
 					}
 					if ((mode & ChildFindMode.SkipHidden) != 0)
 					{
-						if (widget.IsVisible == false)
+						if (widget.IsVisibleFlagSet == false)
 						{
 							continue;
 						}
@@ -2876,7 +2893,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else if ((mode & ChildFindMode.SkipHidden) != 0)
 					{
-						if (widget.IsVisible == false)
+						if (widget.IsVisibleFlagSet == false)
 						{
 							continue;
 						}
@@ -3530,7 +3547,7 @@ namespace Epsitec.Common.Widgets
 				{
 					if (((siblings[i].TabNavigation & mode) != 0) &&
 						(siblings[i].IsEnabled) &&
-						(siblings[i].IsVisible))
+						(siblings[i].IsVisibleFlagSet))
 					{
 						list.Add (siblings[i]);
 					}
@@ -3945,7 +3962,7 @@ namespace Epsitec.Common.Widgets
 					continue;
 				}
 				
-				if (child.IsVisible == false)
+				if (child.IsVisibleFlagSet == false)
 				{
 					continue;
 				}
@@ -4050,7 +4067,7 @@ namespace Epsitec.Common.Widgets
 					continue;
 				}
 				
-				if (child.IsVisible == false)
+				if (child.IsVisibleFlagSet == false)
 				{
 					continue;
 				}
@@ -4186,7 +4203,7 @@ namespace Epsitec.Common.Widgets
 						
 							System.Diagnostics.Debug.Assert (widget != null);
 						
-							if (widget.IsVisible)
+							if (widget.IsVisibleFlagSet)
 							{
 								widget.PaintHandler (graphics, repaint);
 							}
@@ -4284,7 +4301,7 @@ namespace Epsitec.Common.Widgets
 					bool   contains_focus = widget.ContainsFocus;
 					
 					if ((widget.IsFrozen == false) &&
-						((widget.IsVisible) || (contains_focus && message.IsKeyType)) &&
+						((widget.IsVisibleFlagSet) || (contains_focus && message.IsKeyType)) &&
 						((message.FilterOnlyFocused == false) || (contains_focus)) &&
 						((message.FilterOnlyOnHit == false) || (widget.HitTest (client_pos))))
 					{
@@ -4337,7 +4354,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void DispatchMessage(Message message, Drawing.Point pos)
 		{
-			if (this.IsVisible || message.IsKeyType)
+			if (this.IsVisibleFlagSet || message.IsKeyType)
 			{
 				bool is_entered = this.IsEntered;
 				
@@ -4505,7 +4522,7 @@ namespace Epsitec.Common.Widgets
 				
 				if ((widget.IsEnabled) &&
 					(widget.IsFrozen == false) &&
-					(widget.IsVisible))
+					(widget.IsVisibleFlagSet))
 				{
 					if (widget.ShortcutHandler (shortcut, false))
 					{

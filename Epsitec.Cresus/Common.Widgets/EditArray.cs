@@ -859,12 +859,14 @@ namespace Epsitec.Common.Widgets
 						{
 							this.caption.Text = "";
 							this.caption.Hide ();
+							this.is_caption_ok = false;
 						}
 						else
 						{
 							this.caption.Text = value;
 							this.caption_height = System.Math.Floor (this.caption.TextLayout.SingleLineSize.Height * 1.2);
 							this.caption.Show ();
+							this.is_caption_ok = true;
 						}
 						
 						this.UpdateHeaderHeight ();
@@ -885,11 +887,11 @@ namespace Epsitec.Common.Widgets
 			{
 				double height = 0;
 				
-				if (this.toolbar.IsVisible)
+				if (this.is_toolbar_ok)
 				{
 					height += this.toolbar.Height;
 				}
-				if (this.caption.IsVisible)
+				if (this.is_caption_ok)
 				{
 					height += this.caption_height;
 				}
@@ -907,16 +909,18 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.toolbar.Items.Count == 0)
 				{
-					if (this.toolbar.IsVisible)
+					if (this.is_toolbar_ok == true)
 					{
+						this.is_toolbar_ok = false;
 						this.toolbar.Hide ();
 						this.UpdateHeaderHeight ();
 					}
 				}
 				else
 				{
-					if (this.toolbar.IsVisible == false)
+					if (this.is_toolbar_ok == false)
 					{
+						this.is_toolbar_ok = true;
 						this.toolbar.Show ();
 						this.UpdateHeaderHeight ();
 					}
@@ -928,6 +932,8 @@ namespace Epsitec.Common.Widgets
 			protected StaticText				caption;
 			protected double					caption_height;
 			protected HToolBar					toolbar;
+			protected bool						is_toolbar_ok;
+			protected bool						is_caption_ok;
 		}
 		#endregion
 		

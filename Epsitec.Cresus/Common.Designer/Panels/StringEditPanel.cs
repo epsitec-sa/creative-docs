@@ -44,17 +44,31 @@ namespace Epsitec.Common.Designer.Panels
 			double dy = parent.Client.Height;
 			
 			this.edit_array = new EditArray (parent);
-			this.edit_array.Bounds = new Drawing.Rectangle (5, 5, dx - 10, dy - 10);
-			this.edit_array.Anchor = AnchorStyles.All;
-			this.edit_array.ColumnCount = 2;
-			this.edit_array.RowCount = 0;
+			
+			EditArray.Header     title = new EditArray.Header (this.edit_array);
+			EditArray.Controller ctrl  = new EditArray.Controller (this.edit_array, "Table");
+			
+			this.edit_array.CommandDispatcher = new Support.CommandDispatcher ("StringEditTable", true);
+			this.edit_array.Bounds            = new Drawing.Rectangle (5, 5, dx - 10, dy - 10);
+			this.edit_array.Anchor            = AnchorStyles.All;
+			this.edit_array.ColumnCount       = 2;
+			this.edit_array.RowCount          = 0;
+			
 			this.edit_array.SetColumnWidth (0, 160);
 			this.edit_array.SetColumnWidth (1, this.edit_array.GetColumnWidth (1) + this.edit_array.FreeTableWidth);
-			this.edit_array.SetHeaderText (0, "Key");
-			this.edit_array.SetHeaderText (1, "Value");
+			this.edit_array.SetHeaderText (0, "Clef");
+			this.edit_array.SetHeaderText (1, "Valeur");
 			this.edit_array.TextArrayStore = this.store;
+			this.edit_array.TitleWidget = title;
+			this.edit_array.SearchCaption = @"<b>Recherche. </b><font size=""90%"">Tapez le texte à chercher ci-dessous&#160;:</font>";
 			
 			this.edit_array.DoubleClicked += new MessageEventHandler (this.HandleEditArrayDoubleClicked);
+			
+			title.Caption = @"<font size=""120%"">Bundle.</font> Édition des données contenues dans la ressource.";
+			
+			ctrl.CreateCommands ();
+			ctrl.CreateToolBarButtons ();
+			ctrl.StartReadOnly ();
 		}
 		
 		private void HandleEditArrayDoubleClicked(object sender, MessageEventArgs e)

@@ -101,10 +101,15 @@ namespace Epsitec.Common.Designer
 			{
 				if (this.changing == 0)
 				{
-					if (this.StoreChanged != null)
-					{
-						this.StoreChanged (this);
-					}
+					this.OnStoreChanged ();
+				}
+			}
+			
+			protected virtual void OnStoreChanged()
+			{
+				if (this.StoreChanged != null)
+				{
+					this.StoreChanged (this);
 				}
 			}
 			
@@ -125,6 +130,25 @@ namespace Epsitec.Common.Designer
 			
 			public void MoveRow(int row, int distance)
 			{
+				this.changing++;
+				
+				int row_a = row;
+				int row_b = row + distance;
+				
+				int n = this.GetColumnCount ();
+				
+				for (int i = 0; i < n; i++)
+				{
+					string a = this.GetCellText (row_a, i);
+					string b = this.GetCellText (row_b, i);
+					
+					this.SetCellText (row_a, i, b);
+					this.SetCellText (row_b, i, a);
+				}
+				
+				this.changing--;
+				
+				this.OnStoreChanged ();
 			}
 			
 			public string GetCellText(int row, int column)
@@ -217,9 +241,11 @@ namespace Epsitec.Common.Designer
 
 			public bool CheckMoveRow(int row, int distance)
 			{
-				return false;
+				int max = this.GetRowCount ();
+				return (row >= 0) && (row < max) && (row + distance >= 0) && (row + distance < max);
 			}
-		
+			
+			
 			public event Support.EventHandler	StoreChanged;
 			#endregion
 			
