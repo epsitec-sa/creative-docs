@@ -508,7 +508,7 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Point c = Drawing.Point.Move(p1, p2, distPara);
 			Drawing.Point p = Drawing.Point.Move(c, p2, System.Math.Abs(distPerp));
 			double angle = (distPerp > 0) ? System.Math.PI/2 : -System.Math.PI/2;
-			return Drawing.Transform.RotatePoint(c, angle, p);
+			return Drawing.Transform.RotatePointRad(c, angle, p);
 		}
 
 
