@@ -84,6 +84,16 @@
                     Project = "{AF58270B-4B5C-49F7-81D8-723CFF122F2C}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "ICSharpCode.SharpZipLib"
+                    AssemblyName = "ICSharpCode.SharpZipLib"
+                    HintPath = "..\..\..\..\..\Epsitec.Cresus\Common.IO\bin\Debug\ICSharpCode.SharpZipLib.dll"
+                />
+                <Reference
+                    Name = "Common.IO"
+                    AssemblyName = "Common.IO"
+                    HintPath = "..\..\..\..\..\Epsitec.Cresus\Common.IO\bin\Debug\Common.IO.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -160,6 +170,11 @@
                 />
                 <File
                     RelPath = "Tests\CheckTextConverter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Tests\CheckTextStory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

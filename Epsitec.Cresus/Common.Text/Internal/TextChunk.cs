@@ -46,7 +46,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public void InsertText(int position, uint[] text)
+		public void InsertText(int position, ulong[] text)
 		{
 			int length = text.Length;
 			
@@ -101,7 +101,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public void CopyTextToBuffer(int position, int length, uint[] buffer)
+		public void CopyTextToBuffer(int position, int length, ulong[] buffer)
 		{
 			Debug.Assert.IsTrue (position >= 0);
 			Debug.Assert.IsTrue (length >= 0);
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Text.Internal
 			System.Buffer.BlockCopy (this.text, 8*position, buffer, 0, 8*length);
 		}
 		
-		public void CopyTextToBuffer(int position, int length, uint[] buffer, int offset)
+		public void CopyTextToBuffer(int position, int length, ulong[] buffer, int offset)
 		{
 			Debug.Assert.IsTrue (position >= 0);
 			Debug.Assert.IsTrue (length >= 0);
@@ -120,6 +120,26 @@ namespace Epsitec.Common.Text.Internal
 			Debug.Assert.IsTrue (offset + length <= buffer.Length);
 			
 			System.Buffer.BlockCopy (this.text, 8*position, buffer, 8*offset, 8*length);
+		}
+		
+		
+		public void SaveRawText(byte[] buffer, out int length)
+		{
+			int count = 8*this.length;
+			
+			Debug.Assert.IsTrue (buffer.Length >= count);
+			
+			System.Buffer.BlockCopy (this.text, 0, buffer, 0, count);
+			
+			length = this.length;
+		}
+		
+		public void LoadRawText(byte[] data, int length)
+		{
+			this.text   = new ulong[length];
+			this.length = length;
+			
+			System.Buffer.BlockCopy (data, 0, this.text, 0, 8*length);
 		}
 		
 		
@@ -147,8 +167,11 @@ namespace Epsitec.Common.Text.Internal
 				b.GrowTextBuffer (b.length + length);
 			}
 			
-			System.Buffer.BlockCopy (b.text, 0, b.text, 8*length, 8*(b.length - length));
+			System.Buffer.BlockCopy (b.text, 0, b.text, 8*length, 8*b.length);
 			System.Buffer.BlockCopy (a.text, 8*offset, b.text, 0, 8*length);
+			
+			a.length  = offset;
+			b.length += length;
 			
 			//	Déplace aussi les curseurs. Commence par ajuster la position du
 			//	premier curseur dans 'b' (s'il y en a un) :

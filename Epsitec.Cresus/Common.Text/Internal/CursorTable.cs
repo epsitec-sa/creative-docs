@@ -8,11 +8,12 @@ namespace Epsitec.Common.Text.Internal
 	/// Ces curseurs sont accessibles indirectement au moyen d'un CursorId;
 	/// il n'est pas possible de les modifier directement.
 	/// </summary>
-	internal class CursorTable
+	internal class CursorTable : System.Collections.IEnumerable
 	{
 		public CursorTable()
 		{
 			this.cursors = new Internal.Cursor[2];
+			this.gen_id  = 1;
 			
 			this.free_cursor_id    = 1;
 			this.free_cursor_count = 1;
@@ -43,13 +44,13 @@ namespace Epsitec.Common.Text.Internal
 		{
 			Debug.Assert.IsInBounds (id, 1, this.cursors.Length-1);
 			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
+			Debug.Assert.IsTrue (this.cursors[id].FreeListLink == 0);
+			Debug.Assert.IsTrue (cursor.FreeListLink == 0);
 			
 			//	Copie les champs individuellement; on n'utilise pas l'assignation car cela
 			//	écraserait notre indicateur interne d'état du curseur :
 			
-			this.cursors[id].NextCursorId    = cursor.NextCursorId;
-			this.cursors[id].PrevCursorId    = cursor.PrevCursorId;
-			this.cursors[id].TextChunkId     = cursor.TextChunkId;
+			this.cursors[id].TextChunkId = cursor.TextChunkId;
 		}
 		
 		
@@ -86,14 +87,14 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			CursorId free = this.free_cursor_id;
-			CursorId next = this.cursors[free].NextCursorId;
+			CursorId next = this.cursors[free].FreeListLink;
 			
 			Debug.Assert.IsTrue (this.cursors[free].CursorState == Internal.CursorState.Free);
 			
 			this.free_cursor_id = next;
 			this.free_cursor_count--;
 			
-			this.cursors[free].NextCursorId = 0;
+			this.cursors[free].FreeListLink = 0;
 			this.cursors[free].DefineCursorState (Internal.CursorState.Allocated);
 			
 			Debug.Assert.IsTrue (this.ReadCursor (free) == Internal.Cursor.Empty);
@@ -105,9 +106,8 @@ namespace Epsitec.Common.Text.Internal
 		{
 			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
 			
-			this.cursors[id].NextCursorId    = this.free_cursor_id;
-			this.cursors[id].PrevCursorId    = 0;
-			this.cursors[id].TextChunkId     = 0;
+			this.cursors[id].FreeListLink = this.free_cursor_id;
+			this.cursors[id].TextChunkId  = 0;
 			this.cursors[id].DefineCursorState (Internal.CursorState.Free);
 			
 			this.free_cursor_id = id;
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			for (int i = old_length; i < new_length-1; i++)
 			{
-				new_data[i].NextCursorId = i+1;
+				new_data[i].FreeListLink = i+1;
 				new_data[i].DefineCursorState (Internal.CursorState.Free);
 			}
 			
@@ -143,8 +143,87 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		#region IEnumerable Members
+		public System.Collections.IEnumerator GetEnumerator()
+		{
+			return new Enumerator (this);
+		}
+		#endregion
+		
+		private class Enumerator : System.Collections.IEnumerator
+		{
+			public Enumerator(CursorTable table)
+			{
+				this.cursors      = table.cursors;
+				this.table        = table;
+				this.table_gen_id = table.gen_id;
+				this.index        = -1;
+			}
+			
+			
+			#region IEnumerator Members
+			public void Reset()
+			{
+				if (this.table_gen_id != this.table.gen_id)
+				{
+					throw new System.InvalidOperationException ("CursorTable was modified.");
+				}
+				
+				this.index = -1;
+			}
+			
+			public object						Current
+			{
+				get
+				{
+					if ((this.table_gen_id != this.table.gen_id) ||
+						(this.index < 0) ||
+						(this.index >= this.table.cursors.Length))
+					{
+						throw new System.InvalidOperationException ("CursorTable was modified.");
+					}
+					
+					return new Internal.CursorId (this.index);
+				}
+			}
+			
+			public bool MoveNext()
+			{
+				if (this.table_gen_id != this.table.gen_id)
+				{
+					throw new System.InvalidOperationException ("CursorTable was modified.");
+				}
+				
+				while (this.index < this.table.cursors.Length)
+				{
+					this.index++;
+					
+					if (this.index == this.table.cursors.Length)
+					{
+						break;
+					}
+					
+					if (this.table.cursors[this.index].CursorState == Internal.CursorState.Allocated)
+					{
+						return true;
+					}
+				}
+				
+				return false;
+			}
+			#endregion
+			
+			
+			private Internal.Cursor[]			cursors;
+			private CursorTable					table;
+			private int							table_gen_id;
+			private int							index;
+		}
+
+		
 		private Internal.Cursor[]				cursors;
 		private Internal.CursorId				free_cursor_id;
 		private int								free_cursor_count;
+		private int								gen_id;
 	}
 }

@@ -31,6 +31,24 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Expect.Exception (new Debug.Method (Ex4), typeof (Debug.AssertFailedException));
 			Debug.Expect.Exception (new Debug.Method (Ex5), typeof (Debug.AssertFailedException));
+			
+			Internal.CursorId id3 = table.NewCursor ();
+			Internal.CursorId id4 = table.NewCursor ();
+			Internal.CursorId id5 = table.NewCursor ();
+			
+			table.RecycleCursor (id3);
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (Internal.CursorId id in table)
+			{
+				list.Add (id);
+			}
+			
+			Debug.Assert.IsTrue (list.Count == 3);
+			Debug.Assert.IsTrue ((Internal.CursorId)list[0] == id2);
+			Debug.Assert.IsTrue ((Internal.CursorId)list[1] == id4);
+			Debug.Assert.IsTrue ((Internal.CursorId)list[2] == id5);
 		}
 		
 		
