@@ -36,6 +36,46 @@ namespace Epsitec.Cresus.Database
 			DbSqlStandard.regex_number = new Regex (@"^-?[0-9]+(\.[0-9]+)?$", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 		}
 		
+		public static string ConcatNames(string a, string b)
+		{
+			if (DbSqlStandard.ValidateName (a) &&
+				DbSqlStandard.ValidateName (b))
+			{
+				bool force_quotes = false;
+				
+				if (a.StartsWith (@""""))
+				{
+					force_quotes = true;
+					a = a.Substring (1, a.Length-2);
+				}
+				if (b.StartsWith (@""""))
+				{
+					force_quotes = true;
+					b = b.Substring (1, b.Length-2);
+				}
+				
+				if (force_quotes)
+				{
+					return @"""" + a + b + @"""";
+				}
+				
+				return a + b;
+			}
+			
+			throw new DbFormatException (string.Format ("Expected two names: {0} and {1}", a, b));
+		}
+		
+		public static string ConcatStrings(string a, string b)
+		{
+			if (DbSqlStandard.ValidateString (a) &&
+				DbSqlStandard.ValidateString (b))
+			{
+				return "'" + a.Substring (1, a.Length-2) + b.Substring (1, b.Length-2) + "'";
+			}
+			
+			throw new DbFormatException (string.Format ("Expected two strings: {0} and {1}", a, b));
+		}
+		
 		
 		public static bool ValidateName(string value)
 		{

@@ -72,8 +72,13 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 			
 			#region IRawTypeConverter Members
-
-			public DbRawType					MatchingType
+			
+			public DbRawType					ExternalType
+			{
+				get { return DbRawType.Boolean; }
+			}
+			
+			public DbRawType					InternalType
 			{
 				get { return DbRawType.Int16; }
 			}
@@ -82,7 +87,11 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				get { return 1; }
 			}
-
+			
+			public bool							IsFixedLength
+			{
+				get { return true; }
+			}
 			
 			public object ConvertFromInternalType(object value)
 			{
@@ -125,16 +134,26 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			#region IRawTypeConverter Members
 
-			public DbRawType					MatchingType
+			public DbRawType					ExternalType
+			{
+				get { return DbRawType.Guid; }
+			}
+			
+			public DbRawType					InternalType
 			{
 				get { return DbRawType.String; }
 			}
-
+			
 			public int							Length
 			{
 				get { return 32; }
 			}
-
+			
+			public bool							IsFixedLength
+			{
+				get { return true; }
+			}
+			
 			
 			public object ConvertFromInternalType(object value)
 			{

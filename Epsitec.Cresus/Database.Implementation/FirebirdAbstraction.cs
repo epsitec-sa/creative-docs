@@ -55,6 +55,11 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.Dispose (false);
 		}
 		
+
+		public DbAccess								DbAccess
+		{
+			get { return this.db_access; }
+		}
 		
 		
 		protected virtual void Dispose(bool disposing)

@@ -10,6 +10,12 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
+		
+		public bool Validate(ISqlValidator validator)
+		{
+			return validator.ValidateName (this.name);
+		}
+		
 
 		public string					Name
 		{
@@ -65,7 +71,7 @@ namespace Epsitec.Cresus.Database
 		public void SetRawConverter(IRawTypeConverter raw_converter)
 		{
 			this.raw_converter = raw_converter;
-			this.SetType (raw_converter.MatchingType, raw_converter.Length, true);
+			this.SetType (raw_converter.InternalType, raw_converter.Length, raw_converter.IsFixedLength);
 		}
 		
 		public void SetType(DbRawType type)

@@ -10,6 +10,10 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
+		public bool Validate(ISqlValidator validator)
+		{
+			return validator.ValidateName (this.name);
+		}
 		
 		public string							Name
 		{
@@ -20,6 +24,11 @@ namespace Epsitec.Cresus.Database
 		public SqlColumnCollection				Columns
 		{
 			get { return this.columns; }
+		}
+		
+		public bool								HasPrimaryKeys
+		{
+			get { return (this.primary_key != null) && (this.primary_key.Count > 0); }
 		}
 		
 		public SqlColumn[]						PrimaryKey

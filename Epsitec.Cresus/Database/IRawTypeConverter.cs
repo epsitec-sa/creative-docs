@@ -6,8 +6,10 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public interface IRawTypeConverter
 	{
-		DbRawType	MatchingType		{ get; }
+		DbRawType	ExternalType		{ get; }
+		DbRawType	InternalType		{ get; }
 		int			Length				{ get; }
+		bool		IsFixedLength		{ get; }
 
 		object ConvertToInternalType(object value);
 		object ConvertFromInternalType(object value);
