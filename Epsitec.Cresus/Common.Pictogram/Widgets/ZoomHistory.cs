@@ -1,8 +1,13 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Pictogram.Widgets
 {
 	/// <summary>
 	/// La classe ZoomHistory permet de mémoriser l'historique des zooms.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class ZoomHistory : Epsitec.Common.Widgets.Widget
 	{
 		public class ZoomElement
