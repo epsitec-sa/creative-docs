@@ -183,15 +183,15 @@ namespace Epsitec.Common.Designer
 			
 			//	Initialisation de la barre d'outils pour l'édition :
 			
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("CreateNewWindow",  "file:images/new.icon"));
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("OpenLoadWindow",   "file:images/open.icon"));
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("SaveActiveWindow", "file:images/save.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("CreateNewWindow",  "manifest:Epsitec.Common.Designer.Images.New.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("OpenLoadWindow",   "manifest:Epsitec.Common.Designer.Images.Open.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("SaveActiveWindow", "manifest:Epsitec.Common.Designer.Images.Save.icon"));
 			this.tool_bar.Items.Add (new IconSeparator ());
-			this.tool_bar.Items.Add (IconButton.CreateToggle ("TabIndexSetter(this.IsActive)",	"file:images/numtabindex.icon"));
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("TabIndexResetSeq",				"file:images/numone.icon"));
-			this.tool_bar.Items.Add (IconButton.CreateToggle ("TabIndexPicker(this.IsActive)",	"file:images/numpicker.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateToggle ("TabIndexSetter(this.IsActive)",	"manifest:Epsitec.Common.Designer.Images.NumTabIndex.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("TabIndexResetSeq",				"manifest:Epsitec.Common.Designer.Images.NumOne.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateToggle ("TabIndexPicker(this.IsActive)",	"manifest:Epsitec.Common.Designer.Images.NumPicker.icon"));
 			this.tool_bar.Items.Add (new IconSeparator ());
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("DeleteActiveSelection", "file:images/delete.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("DeleteActiveSelection", "manifest:Epsitec.Common.Designer.Images.Delete.icon"));
 			
 			this.tool_bar.Size   = new Drawing.Size (dx, this.tool_bar.DefaultHeight);
 			this.tool_bar.Parent = root;
@@ -477,7 +477,7 @@ namespace Epsitec.Common.Designer
 			Widget root = this.active_editor.Root;
 			
 			Support.ObjectBundler  bundler = new Support.ObjectBundler ();
-			Support.ResourceBundle bundle  = Support.ResourceBundle.Create (root.Name, "file", ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
+			Support.ResourceBundle bundle  = Support.ResourceBundle.Create ("file", root.Name, ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
 			
 			bundler.SetupPrefix ("file");
 			bundler.FillBundleFromObject (bundle, root);

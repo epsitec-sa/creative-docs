@@ -85,7 +85,22 @@ namespace Epsitec.Common.Designer.Dialogs
 		
 		public double							ExtraHeight
 		{
-			get { return 45; }
+			get
+			{
+				return this.detailed_choice ? 45 : 0;
+			}
+		}
+		
+		public bool								DetailedChoice
+		{
+			get
+			{
+				return this.detailed_choice;
+			}
+			set
+			{
+				this.detailed_choice = value;
+			}
 		}
 		
 		
@@ -95,6 +110,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			System.Diagnostics.Debug.Assert (container != null);
 			
 			this.container = container;
+			
+			if (this.detailed_choice == false)
+			{
+				return;
+			}
 			
 			RadioButton radio;
 			
@@ -187,6 +207,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		protected Widget						container;
 		protected TextFieldCombo				lang_id;
 		
+		protected bool							detailed_choice = false;
 		protected string						type_filter;
 		protected string						prefix = "file";
 		protected CultureInfo					culture;

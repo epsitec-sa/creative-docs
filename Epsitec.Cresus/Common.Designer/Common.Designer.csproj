@@ -203,6 +203,38 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Images\Delete.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\New.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\NumOne.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\NumPicker.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\NumTabIndex.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Open.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Save.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SwapLang.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Panels\AbstractPalette.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
