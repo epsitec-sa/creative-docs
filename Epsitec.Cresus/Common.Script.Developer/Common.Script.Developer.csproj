@@ -138,6 +138,11 @@
                     Project = "{10453A3B-CA2A-4D36-B634-78BA87AAAB26}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Common.Support.Events"
+                    Project = "{EAF258A4-E107-4466-A3E1-9FC072557940}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
@@ -146,6 +151,15 @@
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "EditionController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Images\Save.icon"
+                    BuildAction = "EmbeddedResource"
                 />
                 <File
                     RelPath = "Panels\AbstractPanel.cs"
