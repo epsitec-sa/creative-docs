@@ -223,6 +223,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Controllers\WidgetNamedSelController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Controllers\WidgetStateController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -247,7 +252,6 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
-                <Folder RelPath = "Mappers\" />
                 <File
                     RelPath = "Widgets\PropPane.cs"
                     SubType = "Code"

@@ -63,14 +63,19 @@ namespace Epsitec.Common.UI
 			RadioButton     radio_3 = new RadioButton (parent, "Group A", 3);
 			
 			RadioButton     radio_4 = new RadioButton (parent, "Group B", (int) Quality.Default);
-			RadioButton     radio_5 = new RadioButton (parent, "Group B", (int) Quality.Fast);
-			RadioButton     radio_6 = new RadioButton (parent, "Group B", (int) Quality.Smooth);
+			RadioButton     radio_5 = new RadioButton (parent, "Group B", (int) Quality.Smooth);
+			RadioButton     radio_6 = new RadioButton (parent, "Group B", (int) Quality.Fast);
+			
+			TextFieldCombo  combo_r = new TextFieldCombo (parent);
+			
+			Assert.IsNotNull (combo_r.GetType ().GetInterface ("IReadOnly"), "TextFieldCombo does not implement IReadOnly.");
 			
 			Engine.BindWidget (record, text,    @"<bind path=""FontName"" />");
 			Engine.BindWidget (record, up_down, @"<bind path=""FontSize"" />");
 			Engine.BindWidget (record, check_b, @"<bind path=""UseHyphen"" />");
 			Engine.BindWidget (record, radio_1, @"<bind path=""FontStyle"" />");
 			Engine.BindWidget (record, radio_4, @"<bind path=""Quality"" />");
+			Engine.BindWidget (record, combo_r, @"<bind path=""Quality"" />");
 			
 			Assert.AreEqual ("Times", text.Text);
 			
@@ -89,6 +94,16 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (false, radio_5.IsActive);
 			Assert.AreEqual (false, radio_6.IsActive);
 			
+			Assert.AreEqual (3, combo_r.Items.Count);
+			Assert.AreEqual ("Default", combo_r.Items.GetName (0));
+			Assert.AreEqual ("Smooth",  combo_r.Items.GetName (1));
+			Assert.AreEqual ("Fast",    combo_r.Items.GetName (2));
+			Assert.AreEqual (0, combo_r.Items.FindNameIndex ("Default"));
+			Assert.AreEqual (1, combo_r.Items.FindNameIndex ("Smooth"));
+			Assert.AreEqual (2, combo_r.Items.FindNameIndex ("Fast"));
+			Assert.AreEqual (0, combo_r.SelectedIndex);
+			Assert.AreEqual ("Default", combo_r.SelectedName);
+			
 			text.Text           = "Helvetica";
 			up_down.Value       = 14M;
 			check_b.ActiveState = WidgetState.ActiveYes;
@@ -103,17 +118,20 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (true,  radio_5.IsActive);
 			Assert.AreEqual (false, radio_6.IsActive);
 			
+			Assert.AreEqual (1, combo_r.SelectedIndex);
+			Assert.AreEqual ("Smooth", combo_r.SelectedName);
+			
 			Assert.AreEqual ("Helvetica",             record["FontName"].ReadValue ());
 			Assert.AreEqual (14.0, (double) (decimal) record["FontSize"].ReadValue ());
 			Assert.AreEqual (true,                    record["UseHyphen"].ReadValue ());
 			Assert.AreEqual (2,                 (int) record["FontStyle"].ReadValue ());
-			Assert.AreEqual (Quality.Fast,            record["Quality"].ReadValue ());
+			Assert.AreEqual (Quality.Smooth,          record["Quality"].ReadValue ());
 			
 			record["FontName"].WriteValue ("Courier");
 			record["FontSize"].WriteValue (10M);
 			record["UseHyphen"].WriteValue (false);
 			record["FontStyle"].WriteValue (3);
-			record["Quality"].WriteValue (Quality.Smooth);
+			record["Quality"].WriteValue (Quality.Fast);
 			
 			Assert.AreEqual ("Courier", text.Text);
 			Assert.AreEqual (10.0, (double) up_down.Value);
@@ -126,6 +144,25 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (false, radio_4.IsActive);
 			Assert.AreEqual (false, radio_5.IsActive);
 			Assert.AreEqual (true,  radio_6.IsActive);
+			
+			Assert.AreEqual (2, combo_r.SelectedIndex);
+			Assert.AreEqual ("Fast", combo_r.SelectedName);
+			 
+			combo_r.SelectedName = "Smooth";
+			
+			Assert.AreEqual (Quality.Smooth, record["Quality"].ReadValue ());
+			
+			Assert.AreEqual (false, radio_4.IsActive);
+			Assert.AreEqual (true,  radio_5.IsActive);
+			Assert.AreEqual (false, radio_6.IsActive);
+			
+			combo_r.SelectedItem = "Default";
+			
+			Assert.AreEqual (Quality.Default, record["Quality"].ReadValue ());
+			
+			combo_r.SelectedItem = "Xyz";
+			
+			Assert.AreEqual (Quality.Default, record["Quality"].ReadValue ());
 		}
 		
 		[Test] public void CheckConstraint()
