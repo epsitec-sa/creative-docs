@@ -32,6 +32,12 @@ namespace Epsitec.Common.Widgets.Platform
 			WindowList.Insert (this);
 		}
 		
+		internal void MakeTopLevelWindow()
+		{
+			this.TopLevel = true;
+			this.TopMost  = true;
+		}
+		
 		internal void MakeFramelessWindow()
 		{
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
