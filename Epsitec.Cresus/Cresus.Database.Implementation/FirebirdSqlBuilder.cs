@@ -132,6 +132,11 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		protected void Append(SqlField field)
 		{
+			Append(field, false);
+		}
+		
+		protected void Append(SqlField field, bool only_qualified)
+		{
 			//	Ajoute au buffer un champ, quel que soit son type
 
 			switch(field.Type)
@@ -149,6 +154,10 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.Append (this.AddFieldAsParam (field));
 					return;
 				case SqlFieldType.Name:
+					if (only_qualified)
+					{
+						this.ThrowError (string.Format ("Not qualified name {0} in multiple tables SQL command.", field.AsName));
+					}
 					this.Append (field.AsName);
 					return;
 				case SqlFieldType.QualifiedName:
@@ -158,7 +167,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.Append (field.AsAggregate);
 					return;
 				case SqlFieldType.Function:
-					this.Append (field.AsFunction);
+					this.Append (field.AsFunction, only_qualified);
 					return;
 				case SqlFieldType.Procedure:
 					this.Append (field.AsProcedure);
@@ -201,13 +210,18 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		protected void Append(SqlFunction sql_function)
 		{
+			Append (sql_function, false);
+		}
+		
+		protected void Append(SqlFunction sql_function, bool only_qualified)
+		{
 			System.Diagnostics.Debug.Assert (sql_function != null);
 
 			//	Converti la fonction en chaîne de caractère SQL
 			switch (sql_function.ArgumentCount)
 			{
 				case 2:
-					this.Append (sql_function.A);
+					this.Append (sql_function.A, only_qualified);
 					switch (sql_function.Type)
 					{
 						case SqlFunctionType.MathAdd:
@@ -245,7 +259,7 @@ namespace Epsitec.Cresus.Database.Implementation
 						default:
 							System.Diagnostics.Debug.Assert (false); break;
 					}
-					this.Append (sql_function.B);
+					this.Append (sql_function.B, only_qualified);
 					return;
 				
 				case 1:
@@ -253,28 +267,28 @@ namespace Epsitec.Cresus.Database.Implementation
 					{
 						case SqlFunctionType.LogicNot:
 							this.Append ("NOT ");
-							this.Append (sql_function.A);
+							this.Append (sql_function.A, only_qualified);
 							return;
 						case SqlFunctionType.CompareIsNull:
-							this.Append (sql_function.A);
+							this.Append (sql_function.A, only_qualified);
 							this.Append (" IS NULL");
 							return;
 						case SqlFunctionType.CompareIsNotNull:
-							this.Append (sql_function.A);
+							this.Append (sql_function.A, only_qualified);
 							this.Append (" IS NOT NULL");
 							return;
 						case SqlFunctionType.SetExists:
-							this.Append (sql_function.A);
+							this.Append (sql_function.A, only_qualified);
 							this.Append (" EXISTS");
 							return;
 
 						case SqlFunctionType.SetNotExists:
-							this.Append (sql_function.A);
+							this.Append (sql_function.A, only_qualified);
 							this.Append (" NOT EXISTS");
 							return;
 						case SqlFunctionType.Upper:
 							this.Append ("UPPER(");
-							this.Append (sql_function.A);
+							this.Append (sql_function.A, only_qualified);
 							this.Append (")");
 							return;
 						default:
@@ -286,34 +300,34 @@ namespace Epsitec.Cresus.Database.Implementation
 					if (sql_function.Type == SqlFunctionType.Substring)
 					{
 						this.Append ("SUBSTRING(");
-						this.Append (sql_function.A);
+						this.Append (sql_function.A, only_qualified);
 						this.Append (" FROM ");
-						this.Append (sql_function.B);
+						this.Append (sql_function.B, only_qualified);
 						this.Append (" FOR ");
-						this.Append (sql_function.C);
+						this.Append (sql_function.C, only_qualified);
 						this.Append (")");
 						return;
 					}
 
-					this.Append (sql_function.A);
+					this.Append (sql_function.A, only_qualified);
 					switch (sql_function.Type)
 					{
 						case SqlFunctionType.SetBetween:
 							this.Append (" BETWEEN ");
-							this.Append (sql_function.B);
+							this.Append (sql_function.B, only_qualified);
 							this.Append (" AND ");
 							break;
 
 						case SqlFunctionType.SetNotBetween:
 							this.Append (" NOT BETWEEN ");
-							this.Append (sql_function.B);
+							this.Append (sql_function.B, only_qualified);
 							this.Append (" AND ");
 							break;
 						default:
 							System.Diagnostics.Debug.Assert (false);
 							break;
 					}
-					this.Append (sql_function.C);
+					this.Append (sql_function.C, only_qualified);
 					return;
 
 				default:
@@ -332,62 +346,67 @@ namespace Epsitec.Cresus.Database.Implementation
 			if (row == 1)
 			{
 				this.Append (sql_tables[0]);
-				this.AppendAlias (sql_tables[0]);
+				if ( !this.AppendAlias (sql_tables[0]) )
+				{
+					this.ThrowError (string.Format ("Unqualified table {0} in JOIN.", sql_tables[0].AsName));
+				}
 			}
 
-//			switch (sql_join.ArgumentCount)
+			if (sql_join.Type == SqlJoinType.Inner)
 			{
-//				case 2:
-					if (sql_join.Type == SqlJoinType.Inner)
-					{
-						//this.Append (sql_tables[sql_join.A.AsQualifier]);	// va pas si le qualifier n'est pas l'alias
-						this.Append (" INNER JOIN ");
-						this.Append (sql_tables[row]);
-						this.AppendAlias (sql_tables[row]);
-						this.Append (" ON ");
-						this.Append (sql_join.A.AsQualifiedName);
-						this.Append (" = ");
-						this.Append (sql_join.B.AsQualifiedName);
-						return;
-					}
-
-				if (sql_join.Type == SqlJoinType.OuterLeft)
+				this.Append (" INNER JOIN ");
+				this.Append (sql_tables[row]);
+				if ( !this.AppendAlias (sql_tables[row]) )
 				{
-					//this.Append (sql_tables[sql_join.A.AsQualifier]);	// va pas si le qualifier n'est pas l'alias
-					this.Append (" LEFT OUTER JOIN ");
-					this.Append (sql_tables[row]);
-					this.AppendAlias (sql_tables[row]);
-					this.Append (" ON ");
-					this.Append (sql_join.A.AsQualifiedName);
-					this.Append (" = ");
-					this.Append (sql_join.B.AsQualifiedName);
-					return;
+					this.ThrowError (string.Format ("Unqualified table {0} in JOIN.", sql_tables[row].AsName));
 				}
+				this.Append (" ON ");
+				this.Append (sql_join.A.AsQualifiedName);
+				this.Append (" = ");
+				this.Append (sql_join.B.AsQualifiedName);
+				return;
+			}
+
+			if (sql_join.Type == SqlJoinType.OuterLeft)
+			{
+				this.Append (" LEFT OUTER JOIN ");
+				this.Append (sql_tables[row]);
+				if ( !this.AppendAlias (sql_tables[row]) )
+				{
+					this.ThrowError (string.Format ("Unqualified table {0} in JOIN.", sql_tables[row].AsName));
+				}
+				this.Append (" ON ");
+				this.Append (sql_join.A.AsQualifiedName);
+				this.Append (" = ");
+				this.Append (sql_join.B.AsQualifiedName);
+				return;
+			}
 				
-				if (sql_join.Type == SqlJoinType.OuterRight)
+			if (sql_join.Type == SqlJoinType.OuterRight)
+			{
+				this.Append (" RIGHT OUTER JOIN ");
+				this.Append (sql_tables[row]);
+				if ( !this.AppendAlias (sql_tables[row]) )
 				{
-					//this.Append (sql_tables[sql_join.A.AsQualifier]);	// va pas si le qualifier n'est pas l'alias
-					this.Append (" RIGHT OUTER JOIN ");
-					this.Append (sql_tables[row]);
-					this.AppendAlias (sql_tables[row]);
-					this.Append (" ON ");
-					this.Append (sql_join.A.AsQualifiedName);
-					this.Append (" = ");
-					this.Append (sql_join.B.AsQualifiedName);
-					return;
+					this.ThrowError (string.Format ("Unqualified table {0} in JOIN.", sql_tables[row].AsName));
 				}
+				this.Append (" ON ");
+				this.Append (sql_join.A.AsQualifiedName);
+				this.Append (" = ");
+				this.Append (sql_join.B.AsQualifiedName);
+				return;
+			}
 
-				System.Diagnostics.Debug.Assert (false);
-/*					break;
-
-				default:
-					System.Diagnostics.Debug.Assert (false);
-					return;*/
-			}			
+			System.Diagnostics.Debug.Assert (false);
 		}
 		
 		protected void Append(SqlSelect sql_query)
 		{
+			int		nb_aggregate = 0;
+			int		nb_not_aggr  = 0;
+
+			bool	only_qualified = (sql_query.Tables.Count + sql_query.Joins.Count) > 1;
+
 			this.Append ("SELECT ");
 			bool first_field = true;
 
@@ -413,18 +432,25 @@ namespace Epsitec.Cresus.Database.Implementation
 						this.Append ("*");
 						break;
 					case SqlFieldType.Name:
-						//	TODO?	s'il y a plusieures tables dans sql_query.Tables
-						//			on devrait refuser les noms non qualifiés
+/*						//	s'il y a plusieures tables dans sql_query.Tables
+						//	refuse les noms non qualifiés
+						if (only_qualified)
+						{
+							this.ThrowError (string.Format ("Not qualified name {0} in SELECT with multiple tables.", field.AsName));
+						} */
 						this.Append (field.AsName);
 						this.AppendAlias (field);
+						nb_not_aggr++;
 						break;
 					case SqlFieldType.QualifiedName:
 						this.Append (field.AsQualifiedName);
 						this.AppendAlias (field);
+						nb_not_aggr++;
 						break;
 					case SqlFieldType.Aggregate:
 						this.Append (field.AsAggregate);
 						this.AppendAlias (field);
+						nb_aggregate++;
 						break;
 					default:
 						this.ThrowError (string.Format ("Unsupported field {0} in SELECT.", field.AsName));
@@ -467,7 +493,6 @@ namespace Epsitec.Cresus.Database.Implementation
 					case SqlFieldType.Name:
 						this.Append (field.AsName);
 						this.AppendAlias (field);
-						this.Append (' ');
 						break;
 					default:
 						this.ThrowError (string.Format ("Unsupported field {0} in SELECT FROM.", field.AsName));
@@ -481,13 +506,55 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.ThrowError (string.Format ("No table specified in SELECT."));
 			}
 
+			if (nb_aggregate > 0 && nb_not_aggr > 0)
+			{
+				// ajoute une condition GROUP BY sur les champs non aggregate
+				this.Append (" GROUP BY ");
+				first_field = true;
+
+				foreach (SqlField field in sql_query.Fields)
+				{
+					switch (field.Type)
+					{
+						case SqlFieldType.All:
+						case SqlFieldType.Aggregate:
+							continue;
+					}
+
+					if (first_field)
+					{
+						first_field = false;
+					}
+					else
+					{
+						this.Append (", ");
+					}
+
+					switch (field.Type)
+					{
+						case SqlFieldType.Name:
+							this.Append (field.AsName);
+							this.AppendAlias (field);
+							break;
+						case SqlFieldType.QualifiedName:
+							this.Append (field.AsQualifiedName);
+							this.AppendAlias (field);
+							break;
+					}
+				}
+            }
+
 			first_field = true;
 
 			foreach (SqlField field in sql_query.Conditions)
 			{
 				if (first_field)
 				{
-					this.Append ("WHERE ");
+					if (nb_aggregate > 0 && nb_not_aggr > 0)
+						this.Append (" HAVING ");
+					else
+						this.Append (" WHERE ");
+
 					first_field = false;
 				}
 				else
@@ -501,10 +568,10 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 				}
 
-				//	TODO?	s'il y a plusieures tables dans sql_query.Tables
-				//			on devrait refuser les noms non qualifiés
-				//			n'importe où dans la fonction donnée
-				this.Append (field.AsFunction);
+				//	s'il y a plusieures tables dans sql_query.Tables
+				//	on va refuser les noms non qualifiés
+				//	n'importe où dans la fonction donnée
+				this.Append (field.AsFunction, only_qualified);
 			}
 
 			first_field = true;
@@ -515,17 +582,16 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 				if (first_field)
 				{
-					this.Append ("ORDER BY ");
+					this.Append (" ORDER BY ");
 				}
 
 				//	TODO?	si un alias existe on devrait l'utiliser à la place du nom
 				//	TODO?	sinon faut-il utiliser le nom qualifié de préférence ?
 				this.Append (field.AsName);
-				this.Append (' ');
 
 				if (field.Order == SqlFieldOrder.Inverse)
 				{
-					this.Append ("DESC");
+					this.Append (" DESC");
 				}
 
 				if (first_field)
@@ -537,11 +603,39 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.Append (", ");
 				}
 			}
+
+			// traite encore les UNION s'il y a lieu
+			if (sql_query.SelectSetQuery != null)
+			{
+				switch (sql_query.SelectSetOp)
+				{
+					case SqlSelectSetOp.Union:
+						this.Append (" UNION ");
+						break;
+					case SqlSelectSetOp.Except:
+						this.Append (" EXCEPT ");
+						break;
+					case SqlSelectSetOp.Intersect:
+						this.Append (" INTERSECT ");
+						break;
+					default:
+						this.ThrowError (string.Format ("Invalid union of 2 SELECT."));
+						break;
+				}
+
+				if (sql_query.SelectSetQuery.Predicate == SqlSelectPredicate.All)
+				{
+					this.Append ( "ALL ");
+				}
+
+				this.Append (sql_query.SelectSetQuery);
+			}
 		}
 
-		protected void AppendAlias(SqlField field)
+		protected bool AppendAlias(SqlField field)
 		{
 			//	Si un alias existe, ajoute celui-ci dans le buffer.
+			//	Retourne FALSE s'il n'y a pas de nom d'alias
 			
 			string alias = field.Alias;
 			
@@ -549,7 +643,9 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				this.buffer.Append (' ');
 				this.buffer.Append (alias);
+				return true;
 			}
+			return false;
 		}
 
 		protected void AppendAliasOrName(SqlField field)

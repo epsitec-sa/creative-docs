@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Database
 			return db_access;
 		}
 
-		[Test] public void Check01SqlSelectExecute()
+		[Test] public void Check01SqlSelectAll()
 		{
 			//	fait un test de sélection de données.
 			//	utilise une base de données existante
@@ -83,17 +83,27 @@ namespace Epsitec.Cresus.Database
 		int DumpDataSet(DataSet data_set)
 		{
 			int		nb = 0;
-			// For each table in the DataSet, print the row values.
+
+			//	Pour chaque table dans DataSet, imprime les valeurs.
 			foreach (DataTable myTable in data_set.Tables)
 			{
 				System.Console.Out.WriteLine ("TableName = " + myTable.TableName.ToString ());
+				
+				//	Affiche le nom des colonnes
+				foreach (DataColumn myColumn in data_set.Tables[0].Columns)
+				{
+					System.Console.Out.Write (myColumn.ColumnName);
+					System.Console.Out.Write (", ");
+				}
+				System.Console.Out.WriteLine ();
+
 				foreach (DataRow myRow in myTable.Rows)
 				{
 					nb++;
 					foreach (DataColumn myColumn in myTable.Columns)
 					{
 						System.Console.Out.Write (myRow[myColumn]);
-						System.Console.Out.Write (" ");
+						System.Console.Out.Write (", ");
 					}
 					System.Console.Out.WriteLine ();
 				}
@@ -136,7 +146,7 @@ namespace Epsitec.Cresus.Database
 			int n = this.DumpDataSet (data_set);
 		}
 
-		[Test] public void Check03SqlSelectExecute3()
+		[Test] public void Check03SqlSelectWhere()
 		{
 			//	Test pour la clause WHERE
 			//	C:\Program Files\firebird15\Data\Epsitec\Employee.Firebird
@@ -186,7 +196,7 @@ namespace Epsitec.Cresus.Database
 			int n = this.DumpDataSet (data_set);
 		}
 
-		[Test] public void Check04SqlSelectExecute4()
+		[Test] public void Check04SqlSelectWhereMax()
 		{
 			//	Test avec une sous-requête, dans
 			//	C:\Program Files\firebird15\Data\Epsitec\Employee.Firebird
@@ -287,5 +297,182 @@ namespace Epsitec.Cresus.Database
 
 			int n = this.DumpDataSet (data_set);
 		}
+
+		[Test] public void Check06SqlSelectOrderBy()
+		{
+			//	Test avec aggrégat nécessitant un ORDER BY automatique, dans
+			//	C:\Program Files\firebird15\Data\Epsitec\Employee.Firebird
+			//	pour lister les employés et leurs projets
+			//	SELECT job_country, sum( salary ), last_name FROM EMPLOYEE group by job_country, last_name;
+
+			DbAccess db_access = SqlSelectTest.CreateDbAccess ();
+
+			IDbAbstraction db_abstraction = null;
+			db_abstraction = DbFactory.FindDbAbstraction (db_access);
+
+			ISqlEngine     sql_engine    = db_abstraction.SqlEngine;
+			ISqlBuilder    sql_builder   = db_abstraction.SqlBuilder;
+
+			SqlSelect sql_select = new SqlSelect ();
+
+			sql_select.Fields.Add (SqlField.CreateName ("JOB_COUNTRY"));
+			sql_select.Fields.Add (SqlField.CreateAggregate (SqlAggregateType.Sum, SqlField.CreateName ("SALARY")));
+			sql_select.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+
+			SqlField table = SqlField.CreateName ("EMPLOYEE");
+			table.Alias = "EMPL";
+			sql_select.Tables.Add (table);
+
+			//	ajoute une condition HAVING... sur la somme
+			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareGreaterThan, 
+				SqlField.CreateAggregate (SqlAggregateType.Sum, SqlField.CreateName ("SALARY")),
+				SqlField.CreateConstant (50000, DbRawType.Int16));
+			sql_select.Conditions.Add (SqlField.CreateFunction(sql_func));
+
+			//	ainsi qu'une condition sur le pays
+			sql_func = new SqlFunction (SqlFunctionType.CompareNotEqual, 
+				SqlField.CreateName("JOB_COUNTRY"),
+				SqlField.CreateConstant("England", DbRawType.String));
+			sql_select.Conditions.Add (SqlField.CreateFunction(sql_func));
+
+			//	construit la commande d'extraction
+			sql_builder.SelectData (sql_select);
+
+			System.Data.IDbCommand command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			//	lecture des résultats
+			DataSet data_set = new DataSet();
+			command.Transaction = db_abstraction.BeginTransaction ();
+			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
+
+			int n = this.DumpDataSet (data_set);
+		}
+
+		[Test] public void Check07SqlSelectUnion()
+		{
+			//	Test avec UNION, dans
+			//	C:\Program Files\firebird15\Data\Epsitec\Employee.Firebird
+			
+			DbAccess db_access = SqlSelectTest.CreateDbAccess ();
+
+			IDbAbstraction db_abstraction = null;
+			db_abstraction = DbFactory.FindDbAbstraction (db_access);
+
+			ISqlEngine     sql_engine    = db_abstraction.SqlEngine;
+			ISqlBuilder    sql_builder   = db_abstraction.SqlBuilder;
+
+			SqlSelect sql_select1 = new SqlSelect ();
+
+			sql_select1.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+			sql_select1.Fields.Add (SqlField.CreateName ("JOB_COUNTRY"));
+			sql_select1.Fields.Add (SqlField.CreateName ("JOB_CODE"));
+			sql_select1.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
+
+			//	défini la fonction JOB_COUNTRY == 'England'
+			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+				SqlField.CreateName("JOB_COUNTRY"),
+				SqlField.CreateConstant("England", DbRawType.String));
+
+			sql_select1.Conditions.Add (SqlField.CreateFunction(sql_func));
+
+			//	crée une seconde instance, pour faire un UNION
+			SqlSelect sql_select2 = new SqlSelect ();
+			sql_select2.Predicate = SqlSelectPredicate.All;
+
+			sql_select2.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+			sql_select2.Fields.Add (SqlField.CreateName ("JOB_COUNTRY"));
+			sql_select2.Fields.Add (SqlField.CreateName ("JOB_CODE"));
+			sql_select2.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
+
+			//	défini la fonction JOB_COUNTRY == 'Canada'
+			sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+				SqlField.CreateName("JOB_CODE"),
+				SqlField.CreateConstant("Admin", DbRawType.String));
+
+			sql_select2.Conditions.Add (SqlField.CreateFunction(sql_func));
+
+			//	combine les 2 clauses
+			sql_select1.Add (sql_select2, SqlSelectSetOp.Union);
+
+			//	construit la commande d'extraction
+			sql_builder.SelectData (sql_select1);
+
+			System.Data.IDbCommand command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			//	lecture des résultats
+			DataSet data_set = new DataSet();
+			command.Transaction = db_abstraction.BeginTransaction ();
+			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
+
+			int n = this.DumpDataSet (data_set);
+
+			//	note: je n'ai pas trouvé comment mettre des ORDER BY dans cette commande UNION,
+			//		  me semble que ce n'est pas possible du tout ??
+		}
+
+		/* la commande INTERSECT n'est pas connue par Firebird,
+		 * pas trouvé autre chose d'équivalent
+		 
+		[Test] public void Check08SqlSelectIntersect()
+		{
+			//	Test avec INTERSECT, dans
+			//	C:\Program Files\firebird15\Data\Epsitec\Employee.Firebird
+			
+			DbAccess db_access = SqlSelectTest.CreateDbAccess ();
+
+			IDbAbstraction db_abstraction = null;
+			db_abstraction = DbFactory.FindDbAbstraction (db_access);
+
+			ISqlEngine     sql_engine    = db_abstraction.SqlEngine;
+			ISqlBuilder    sql_builder   = db_abstraction.SqlBuilder;
+
+			SqlSelect sql_select1 = new SqlSelect ();
+
+			sql_select1.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+			sql_select1.Fields.Add (SqlField.CreateName ("JOB_COUNTRY"));
+			sql_select1.Fields.Add (SqlField.CreateName ("JOB_CODE"));
+			sql_select1.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
+
+			//	défini la fonction JOB_COUNTRY == 'England'
+			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+				SqlField.CreateName("JOB_COUNTRY"),
+				SqlField.CreateConstant("England", DbRawType.String));
+
+			sql_select1.Conditions.Add (SqlField.CreateFunction(sql_func));
+
+			//	crée une seconde instance, pour faire un UNION
+			SqlSelect sql_select2 = new SqlSelect ();
+			sql_select2.Predicate = SqlSelectPredicate.All;
+
+			sql_select2.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+			sql_select2.Fields.Add (SqlField.CreateName ("JOB_COUNTRY"));
+			sql_select2.Fields.Add (SqlField.CreateName ("JOB_CODE"));
+			sql_select2.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
+
+			//	défini la fonction JOB_COUNTRY == 'Canada'
+			sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+				SqlField.CreateName("JOB_CODE"),
+				SqlField.CreateConstant("Admin", DbRawType.String));
+
+			sql_select2.Conditions.Add (SqlField.CreateFunction(sql_func));
+
+			//	combine les 2 clauses
+			sql_select1.Add (sql_select2, SqlSelectSetOp.Intersect);
+
+			//	construit la commande d'extraction
+			sql_builder.SelectData (sql_select1);
+
+			System.Data.IDbCommand command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			//	lecture des résultats
+			DataSet data_set = new DataSet();
+			command.Transaction = db_abstraction.BeginTransaction ();
+			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
+
+			int n = this.DumpDataSet (data_set);
+		}*/
 	}
 }
