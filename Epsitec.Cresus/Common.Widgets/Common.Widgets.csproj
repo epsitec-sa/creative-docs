@@ -727,6 +727,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Tools\Magnifier.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Validators\AbstractTextValidator.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
