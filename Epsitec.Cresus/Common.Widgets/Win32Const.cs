@@ -69,5 +69,10 @@ namespace Epsitec.Common.Widgets
 		public const int MA_ACTIVATEANDEAT	= 2;
 		public const int MA_NOACTIVATE		= 3;
 		public const int MA_NOACTIVATEANDEAT= 4;
+		
+		public const int GW_HWNDFIRST		= 0;
+		public const int GW_HWNDLAST		= 1;
+		public const int GW_HWNDNEXT		= 2;
+		public const int GW_HWNDPREV		= 3;
 	}
 }
