@@ -10,16 +10,18 @@ namespace Epsitec.Common.Text.Driver
 	{
 		[System.STAThread] static void Main(string[] args)
 		{
+			Tests.CheckLayout.RunTests ();
+			
+			OpenType.Tests.CheckTables.RunTests ();
+			
 			Tests.CheckUnicode.RunTests ();
-#if false
 			Tests.CheckProperties.RunTests ();
 			Tests.CheckInternalCursor.RunTests ();
 			Tests.CheckInternalCursorTable.RunTests ();
 			Tests.CheckInternalCursorIdArray.RunTests ();
 			Tests.CheckTextConverter.RunTests ();
-			Tests.CheckTextTable.RunTests ();
+//			Tests.CheckTextTable.RunTests ();
 			Tests.CheckTextStory.RunTests ();
-#endif
 			
 //			CheckPerformance.RunTests (100*1000, 1000);
 			
