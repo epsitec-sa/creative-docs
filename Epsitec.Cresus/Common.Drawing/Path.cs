@@ -1,3 +1,6 @@
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Drawing
 {
 	public class Path : System.IDisposable
@@ -574,6 +577,24 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public static Path Combine(Path a, Path b, PathOperation operation)
+		{
+			Path result = new Path ();
+			
+			a.CreateOnTheFly ();
+			b.CreateOnTheFly ();
+			
+			result.CreateOnTheFly ();
+			
+			AntiGrain.Path.CombinePathsUsingGpc (a.agg_path, b.agg_path, result.agg_path, (int) operation);
+			
+			result.has_curve = false;
+			result.is_empty  = false;
+			
+			return result;
+		}
+		
+		
 		public static Path FromLine(double x1, double y1, double x2, double y2)
 		{
 			Path path = new Path ();
@@ -869,5 +890,10 @@ namespace Epsitec.Common.Drawing
 		FlagCCW		= 0x10,
 		FlagCW		= 0x20,
 		FlagClose	= 0x40,
+	}
+	
+	public enum PathOperation
+	{
+		Or = 0, And = 1, Xor = 2, AMinusB = 3, BMinusA = 4
 	}
 }

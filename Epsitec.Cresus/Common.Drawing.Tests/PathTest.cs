@@ -64,6 +64,64 @@ namespace Epsitec.Common.Drawing
 			System.Console.Out.WriteLine (pp2.ToString ());
 		}
 		
+		[Test] public void CheckCombinePaths()
+		{
+			Path p1  = new Path ();
+			Path p1r = new Path ();
+			Path p2  = new Path ();
+			
+			p1.MoveTo (10, 10);
+			p1.LineTo (50, 10);
+			p1.LineTo (30, 60);
+			p1.Close ();
+			
+			p1r.MoveTo (10, 10);
+			p1r.LineTo (30, 60);
+			p1r.LineTo (50, 10);
+			p1r.Close ();
+			
+			p2.MoveTo (20, 5);
+			p2.LineTo (60, 0);
+			p2.LineTo (15, 40);
+			p2.Close ();
+			
+			Rectangle r1 = p1.ComputeBounds ();
+			Rectangle r2 = p2.ComputeBounds ();
+			Rectangle r  = Rectangle.Union (r1, r2);
+			
+			System.Console.Out.WriteLine ("Path1:");
+			System.Console.Out.WriteLine (p1.ToString ());
+			System.Console.Out.WriteLine ("Path2:");
+			System.Console.Out.WriteLine (p2.ToString ());
+			
+			Path p = Path.Combine (p1, p2, PathOperation.Or);
+			
+			System.Console.Out.WriteLine ("Path: p1 OR p2");
+			System.Console.Out.WriteLine (p.ToString ());
+			
+			Assert.AreEqual (r, p.ComputeBounds ());
+			
+			p = Path.Combine (p1, p2, PathOperation.And);
+			
+			System.Console.Out.WriteLine ("Path: p1 AND p2");
+			System.Console.Out.WriteLine (p.ToString ());
+			
+			p = Path.Combine (p1, p2, PathOperation.AMinusB);
+			
+			System.Console.Out.WriteLine ("Path: p1 MINUS p2");
+			System.Console.Out.WriteLine (p.ToString ());
+			
+			p = Path.Combine (p1, p2, PathOperation.BMinusA);
+			
+			System.Console.Out.WriteLine ("Path: p2 MINUS p1");
+			System.Console.Out.WriteLine (p.ToString ());
+			
+			p = Path.Combine (p1, p2, PathOperation.Xor);
+			
+			System.Console.Out.WriteLine ("Path: p1 XOR p2");
+			System.Console.Out.WriteLine (p.ToString ());
+		}
+		
 		[Test] public void CheckAppendGlyph()
 		{
 			Font font = Font.GetFont ("Times New Roman", "Italic");
