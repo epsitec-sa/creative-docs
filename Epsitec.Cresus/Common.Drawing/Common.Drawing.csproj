@@ -98,6 +98,11 @@
                     Project = "{E8944309-DFF8-44E6-A5C0-F491BA97B9B5}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "System.Data"
+                    AssemblyName = "System.Data"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -254,6 +259,11 @@
                 />
                 <File
                     RelPath = "Renderers\ITransformProvider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Renderers\Smooth.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

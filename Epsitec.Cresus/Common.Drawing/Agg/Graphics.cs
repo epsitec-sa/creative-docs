@@ -19,6 +19,7 @@ namespace Epsitec.Common.Drawing.Agg
 			this.solid_renderer    = new Common.Drawing.Agg.SolidRenderer ();
 			this.image_renderer    = new Common.Drawing.Renderers.Image ();
 			this.gradient_renderer = new Common.Drawing.Renderers.Gradient ();
+			this.smooth_renderer   = new Common.Drawing.Renderers.Smooth (this);
 			
 			this.image_renderer.TransformUpdating    += new System.EventHandler (HandleTransformUpdating);
 			this.gradient_renderer.TransformUpdating += new System.EventHandler (HandleTransformUpdating);
@@ -340,6 +341,11 @@ namespace Epsitec.Common.Drawing.Agg
 			get { return this.gradient_renderer; }
 		}
 		
+		public override Renderers.Smooth	SmoothRenderer
+		{
+			get { return this.smooth_renderer; }
+		}
+		
 		
 		public override bool SetPixmapSize(int width, int height)
 		{
@@ -354,10 +360,12 @@ namespace Epsitec.Common.Drawing.Agg
 			this.solid_renderer.Pixmap    = null;
 			this.image_renderer.Pixmap	  = null;
 			this.gradient_renderer.Pixmap = null;
+			this.smooth_renderer.Pixmap   = null;
 			
 			this.solid_renderer.Pixmap    = this.pixmap;
 			this.image_renderer.Pixmap    = this.pixmap;
 			this.gradient_renderer.Pixmap = this.pixmap;
+			this.smooth_renderer.Pixmap   = this.pixmap;
 			
 			return true;
 		}
@@ -377,17 +385,31 @@ namespace Epsitec.Common.Drawing.Agg
 				}
 				if (this.solid_renderer != null)
 				{
+					this.solid_renderer.Pixmap = null;
 					this.solid_renderer.Dispose ();
+				}
+				if (this.image_renderer != null)
+				{
+					this.image_renderer.Pixmap = null;
+					this.image_renderer.Dispose ();
 				}
 				if (this.gradient_renderer != null)
 				{
+					this.gradient_renderer.Pixmap = null;
 					this.gradient_renderer.Dispose ();
+				}
+				if (this.smooth_renderer != null)
+				{
+					this.smooth_renderer.Pixmap = null;
+					this.smooth_renderer.Dispose ();
 				}
 				
 				this.pixmap            = null;
 				this.rasterizer        = null;
 				this.solid_renderer    = null;
+				this.image_renderer    = null;
 				this.gradient_renderer = null;
+				this.smooth_renderer   = null;
 			}
 		}
 		
@@ -401,6 +423,7 @@ namespace Epsitec.Common.Drawing.Agg
 		private Renderers.Solid			solid_renderer;
 		private Renderers.Image			image_renderer;
 		private Renderers.Gradient		gradient_renderer;
+		private Renderers.Smooth		smooth_renderer;
 		
 		private double					clip_x1, clip_y1, clip_x2, clip_y2;
 		private bool					has_clip_rect;

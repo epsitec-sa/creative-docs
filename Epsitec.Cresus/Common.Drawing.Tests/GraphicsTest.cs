@@ -28,6 +28,26 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 		
+		[Test] public void CheckSmooth()
+		{
+			Window window = new Window ();
+			
+			window.Text = "CheckSmooth";
+			window.Root.PaintForeground += new PaintEventHandler(Smooth_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+		
+		[Test] public void CheckCurve()
+		{
+			Window window = new Window ();
+			
+			window.Text = "CheckCurve";
+			window.Root.PaintForeground += new PaintEventHandler(Curve_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+		
 		[Test] public void CheckEvenOddFill()
 		{
 			Window window = new Window ();
@@ -220,6 +240,74 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
 			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
+		}
+		
+		private void Smooth_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double cx = root.Client.Width / 2;
+			double cy = root.Client.Height / 2;
+			
+			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
+			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
+			e.Graphics.RenderSolid (Color.FromBrightness (0));
+			e.Graphics.ScaleTransform (10, 10, 0, 0);
+			
+			Path path1 = new Path ();
+			Path path2 = new Path ();
+			
+			path1.MoveTo (1, 1);
+			path1.LineTo (1, 11);
+			path1.LineTo (11, 6);
+			path1.Close ();
+			
+			path2.MoveTo (5, 5);
+			path2.LineTo (20, 5);
+			path2.LineTo (20, 15);
+			path2.CurveTo (20, 20, 5, 20, 5, 15);
+			
+			e.Graphics.SmoothRenderer.Color = Color.FromRGB (0, 0, 1);
+			e.Graphics.SmoothRenderer.SetParameters (9, 9);
+			e.Graphics.SmoothRenderer.AddPath (path1);
+			e.Graphics.SmoothRenderer.AddPath (path2);
+			
+			e.Graphics.RotateTransform (15, cx/10, cy/10);
+			e.Graphics.TranslateTransform (5, 2);
+			
+			e.Graphics.SmoothRenderer.Color = Color.FromARGB (0.5, 0, 0, 1);
+			e.Graphics.SmoothRenderer.SetParameters (9, 9);
+			e.Graphics.SmoothRenderer.AddPath (path1);
+			e.Graphics.SmoothRenderer.AddPath (path2);
+		}
+		
+		private void Curve_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double cx = root.Client.Width / 2;
+			double cy = root.Client.Height / 2;
+			
+			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
+			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
+			e.Graphics.RenderSolid (Color.FromBrightness (0));
+			e.Graphics.ScaleTransform (10, 10, 0, 0);
+			
+			Path path2 = new Path ();
+			
+			path2.MoveTo (5, 5);
+			path2.LineTo (20, 5);
+			path2.LineTo (20, 15);
+			path2.CurveTo (20, 20, 5, 20, 5, 15);
+			
+			e.Graphics.RotateTransform (15, cx/10, cy/10);
+			
+			e.Graphics.Rasterizer.AddOutline (path2, 1.8, CapStyle.Round, JoinStyle.Miter, 5.0);
+			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
+			
+			e.Graphics.TranslateTransform (20, 2);
+			e.Graphics.Rasterizer.AddSurface (path2);
+			e.Graphics.RenderSolid (Color.FromRGB (1, 1, 0));
 		}
 		
 		private void NonZeroFill_PaintForeground(object sender, PaintEventArgs e)

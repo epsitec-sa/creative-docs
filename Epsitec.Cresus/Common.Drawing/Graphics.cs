@@ -78,12 +78,18 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		internal Transform					InternalTransform
+		{
+			get { return this.SaveTransform (); }
+		}
+		
 		public abstract Rasterizer			Rasterizer		{ get; }
 		public abstract Transform			Transform		{ set; }
 		public abstract Pixmap				Pixmap			{ get; }
 		public abstract Renderers.Solid		SolidRenderer	{ get; }
 		public abstract Renderers.Image		ImageRenderer	{ get; }
 		public abstract Renderers.Gradient	GradientRenderer{ get; }
+		public abstract Renderers.Smooth	SmoothRenderer	{ get; }
 		
 		public abstract double PaintText(double x, double y, string text, Font font, double size, Color color);
 		

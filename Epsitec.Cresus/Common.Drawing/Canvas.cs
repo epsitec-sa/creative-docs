@@ -24,8 +24,11 @@ namespace Epsitec.Common.Drawing
 		
 		public override void DefineZoom(double zoom)
 		{
-			this.zoom = zoom;
-			this.InvalidateCache ();
+			if (this.zoom != zoom)
+			{
+				this.zoom = zoom;
+				this.InvalidateCache ();
+			}
 		}
 		
 		public override Image GetDisabled()

@@ -144,6 +144,10 @@ namespace Epsitec.Common.Drawing.Null
 			get { return this.solid_renderer; }
 		}
 		
+		public override Renderers.Smooth	SmoothRenderer
+		{
+			get { return null; }
+		}
 		
 		public override bool SetPixmapSize(int width, int height)
 		{

@@ -57,6 +57,11 @@ namespace Epsitec.Common.Drawing
 			return new Point (Point.GridAlign (this.X, step), Point.GridAlign (this.Y, step));
 		}
 		
+		public Point GridAlign(Point step)
+		{
+			return new Point (Point.GridAlign (this.X, step.X), Point.GridAlign (this.Y, step.Y));
+		}
+		
 		
 		internal static double GridAlign(double value, double step)
 		{

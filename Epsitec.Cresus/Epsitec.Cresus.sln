@@ -95,9 +95,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Pictogram.Tests", "C
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Converters", "Common.Converters\Common.Converters.csproj", "{E8944309-DFF8-44E6-A5C0-F491BA97B9B5}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 25
+		SccNumberOfProjects = 26
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -197,6 +201,10 @@ Global
 		SccLocalPath24 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection24 = Common.Pictogram.Tests\\
+		SccProjectUniqueName25 = Common.Converters\\Common.Converters.csproj
+		SccLocalPath25 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection25 = Common.Converters\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -297,6 +305,10 @@ Global
 		{01477BAD-9EB1-4FF1-8793-3B9300BD9340}.Debug.Build.0 = Debug|.NET
 		{01477BAD-9EB1-4FF1-8793-3B9300BD9340}.Release.ActiveCfg = Release|.NET
 		{01477BAD-9EB1-4FF1-8793-3B9300BD9340}.Release.Build.0 = Release|.NET
+		{E8944309-DFF8-44E6-A5C0-F491BA97B9B5}.Debug.ActiveCfg = Debug|.NET
+		{E8944309-DFF8-44E6-A5C0-F491BA97B9B5}.Debug.Build.0 = Debug|.NET
+		{E8944309-DFF8-44E6-A5C0-F491BA97B9B5}.Release.ActiveCfg = Release|.NET
+		{E8944309-DFF8-44E6-A5C0-F491BA97B9B5}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info
