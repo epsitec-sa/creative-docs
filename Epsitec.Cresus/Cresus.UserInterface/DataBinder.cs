@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Statut : OK/PA, 12/11/2003
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.UserInterface
 			{
 				case "data":	this.CreateDataBinding (obj, data_record, binding);			break;
 				case "label":	this.CreateLabelBinding (obj, data_record, binding);		break;
-				case "desc":	this.CreateDescriptionBinding (obj, data_record, binding);	break;
+				case "descr":	this.CreateDescriptionBinding (obj, data_record, binding);	break;
 				
 				default:
 					throw new BinderException (string.Format ("Unknown bind tag '{0}' used with data '{1}'", bind_tag, binding));
@@ -215,6 +215,8 @@ namespace Epsitec.Cresus.UserInterface
 					
 					foreach (string bind_arg in bind_args)
 					{
+						bind_arg = bind_arg.Trim ();
+						
 						if (this.CheckBindingName (bind_arg))
 						{
 							if (this.root_data_set != null)
