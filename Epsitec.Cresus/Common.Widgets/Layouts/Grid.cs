@@ -1031,7 +1031,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			int pos_new = (find == null) ? 0 : (this.root.Children.IndexOf (find) + 1);
 			int pos_old = this.root.Children.IndexOf (this.designer.Widget);
 			
-			return (find == this.designer.WidgetOriginalSurface) ? pos_old : pos_new;
+			return (find == this.designer.Widget) ? pos_old : pos_new;
 		}
 		
 		protected int  FindWidgetLineIndex(Widget widget)
