@@ -81,7 +81,7 @@ namespace Epsitec.Common.Drawing
 		
 		public bool						IsTransparent
 		{
-			get { return this.a == 0.0; }
+			get { return !this.is_empty && (this.a == 0.0); }
 		}
 		
 		public bool						IsVisible
