@@ -32,9 +32,37 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public int								UndoActionCount
+		{
+			get
+			{
+				return this.live_fence;
+			}
+		}
+		
+		public int								RedoActionCount
+		{
+			get
+			{
+				return this.fence_count - this.live_fence;
+			}
+		}
+		
 		
 		public System.IDisposable BeginAction()
 		{
+			if (this.is_undo_redo_in_progress)
+			{
+				throw new System.InvalidOperationException ("Undo/redo in progress.");
+			}
+			
+			if (this.action == null)
+			{
+				this.PurgeRedo ();
+			}
+			
+			System.Diagnostics.Debug.Assert (this.CanRedo == false);
+			
 			return new AutoActionCleanup (this);
 		}
 		
@@ -58,7 +86,6 @@ namespace Epsitec.Common.Support
 			}
 			
 			this.action.Release ();
-			this.temp_queue.Add (new Fence ());
 			
 			if (this.fence_id == 0)
 			{
@@ -69,6 +96,7 @@ namespace Epsitec.Common.Support
 				
 				this.PurgeRedo ();
 				this.queue.AddRange (this.temp_queue);
+				this.queue.Add (new Fence ());
 				this.temp_queue.Clear ();
 				
 				this.fence_count++;
@@ -86,12 +114,12 @@ namespace Epsitec.Common.Support
 				throw new System.InvalidOperationException ("BeginAction/CancelAction mismatch.");
 			}
 			
-			int i = this.action.Depth;
+			int i = this.temp_queue.Count;
 			
 			//	Il faut retirer tous les oplets faisant partie de l'action, de la liste
 			//	temporaire, et les supprimer proprement :
 			
-			while (i < this.temp_queue.Count)
+			while (i-- > this.action.Depth)
 			{
 				IOplet oplet = this.temp_queue[i] as IOplet;
 				
@@ -115,72 +143,121 @@ namespace Epsitec.Common.Support
 		
 		public bool UndoAction()
 		{
-			if (this.live_fence > 0)
+			if (this.is_undo_redo_in_progress)
 			{
-				System.Diagnostics.Debug.Assert (this.live_index > 0);
-				System.Diagnostics.Debug.Assert (this.queue.Count > 0);
-				
-				int i = this.live_index - 1;
-				
-				IOplet oplet = this.queue[i] as IOplet;
-				
-				System.Diagnostics.Debug.Assert (oplet.IsFence);
-				
-				for (;;)
-				{
-					oplet = this.queue[--i] as IOplet;
-					
-					if (oplet.IsFence)
-					{
-						this.live_index = i + 1;
-						this.live_fence--;
-						break;
-					}
-					
-					this.queue[i] = oplet.Undo ();
-				}
-				
-				return true;
+				throw new System.InvalidOperationException ("Undo/redo in progress.");
+			}
+			if (this.action != null)
+			{
+				throw new System.InvalidOperationException ("Action definition in progress.");
 			}
 			
-			return false;
+			try
+			{
+				this.is_undo_redo_in_progress = true;
+				
+				if (this.live_fence > 0)
+				{
+					System.Diagnostics.Debug.Assert (this.live_index > 0);
+					System.Diagnostics.Debug.Assert (this.queue.Count > 0);
+					
+					int i = this.live_index - 1;
+					
+					IOplet oplet = this.queue[i] as IOplet;
+					this.live_fence--;
+					
+					System.Diagnostics.Debug.Assert (oplet.IsFence);
+					
+					while (i > 0)
+					{
+						oplet = this.queue[--i] as IOplet;
+						
+						if (oplet.IsFence)
+						{
+							i++;
+							break;
+						}
+						
+						this.queue[i] = oplet.Undo ();
+					}
+					
+					this.live_index = i;
+					
+					return true;
+				}
+				
+				return false;
+			}
+			finally
+			{
+				this.is_undo_redo_in_progress = false;
+			}
 		}
 		
 		public bool RedoAction()
 		{
-			if (this.live_fence < this.fence_count)
+			if (this.is_undo_redo_in_progress)
 			{
-				System.Diagnostics.Debug.Assert (this.live_index < this.queue.Count);
-				System.Diagnostics.Debug.Assert (this.queue.Count > 0);
-				
-				int i = this.live_index - 1;
-				
-				for (;;)
-				{
-					IOplet oplet = this.queue[++i] as IOplet;
-					
-					if (oplet.IsFence)
-					{
-						this.live_index = i + 1;
-						this.live_fence++;
-						break;
-					}
-					
-					this.queue[i] = oplet.Redo ();
-				}
-				
-				return true;
+				throw new System.InvalidOperationException ("Undo/redo in progress.");
+			}
+			if (this.action != null)
+			{
+				throw new System.InvalidOperationException ("Action definition in progress.");
 			}
 			
-			return false;
+			this.is_undo_redo_in_progress = true;
+			
+			try
+			{
+				if (this.live_fence < this.fence_count)
+				{
+					System.Diagnostics.Debug.Assert (this.live_index < this.queue.Count);
+					System.Diagnostics.Debug.Assert (this.queue.Count > 0);
+					
+					int i = this.live_index - 1;
+					
+					for (;;)
+					{
+						IOplet oplet = this.queue[++i] as IOplet;
+						
+						if (oplet.IsFence)
+						{
+							this.live_index = i + 1;
+							this.live_fence++;
+							break;
+						}
+						
+						this.queue[i] = oplet.Redo ();
+					}
+					
+					return true;
+				}
+				
+				return false;
+			}
+			finally
+			{
+				this.is_undo_redo_in_progress = false;
+			}
 		}
 		
 		public void PurgeUndo()
 		{
+			if (this.is_undo_redo_in_progress)
+			{
+				throw new System.InvalidOperationException ("Undo/redo in progress.");
+			}
+			if (this.action != null)
+			{
+				throw new System.InvalidOperationException ("Action definition in progress.");
+			}
+			
 			int i = this.live_index;
 			
-			while (i-- > 0)
+			while (i > 0)
 			{
+				i--;
+				
 				IOplet oplet = this.queue[i] as IOplet;
 				
 				if (oplet.IsFence)
@@ -200,6 +277,15 @@ namespace Epsitec.Common.Support
 		
 		public void PurgeRedo()
 		{
+			if (this.is_undo_redo_in_progress)
+			{
+				throw new System.InvalidOperationException ("Undo/redo in progress.");
+			}
+			if (this.action != null)
+			{
+				throw new System.InvalidOperationException ("Action definition in progress.");
+			}
+			
 			int i = this.live_index;
 			
 			while (i < this.queue.Count)
@@ -327,5 +413,7 @@ namespace Epsitec.Common.Support
 		protected int							live_fence;
 		protected int							fence_count;
 		protected int							fence_id;
+		
+		protected bool							is_undo_redo_in_progress;
 	}
 }
