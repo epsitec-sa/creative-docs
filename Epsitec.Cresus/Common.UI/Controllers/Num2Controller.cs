@@ -47,12 +47,14 @@ namespace Epsitec.Common.UI.Controllers
 			this.text_field_1.MaxValue    = 9999;
 			this.text_field_1.Resolution  = 1;
 			this.text_field_1.TabIndex    = 1;
+			this.text_field_1.Name        = "Value_1";
 			this.text_field_2.Dock        = DockStyle.Fill;
 			this.text_field_2.DockMargins = new Drawing.Margins (2, 0, 0, 0);
 			this.text_field_2.MinValue    = 0;
 			this.text_field_2.MaxValue    = 9999;
 			this.text_field_2.Resolution  = 1;
 			this.text_field_2.TabIndex    = 2;
+			this.text_field_2.Name        = "Value_2";
 			
 			this.text_field_1.TextChanged += new EventHandler (this.HandleTextFieldTextChanged);
 			this.text_field_2.TextChanged += new EventHandler (this.HandleTextFieldTextChanged);
@@ -90,6 +92,13 @@ namespace Epsitec.Common.UI.Controllers
 				{
 					this.text_field_1.Text = "";
 					this.text_field_2.Text = "";
+				}
+				
+				if ((reason == Common.UI.SyncReason.SourceChanged) ||
+					(reason == Common.UI.SyncReason.Initialisation))
+				{
+					this.text_field_1.SelectAll ();
+					this.text_field_2.SelectAll ();
 				}
 			}
 			

@@ -38,6 +38,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.radio_manual.Index          = (int) ShowMode.Manual;
 			this.radio_manual.TabIndex       = 10;
 			this.radio_manual.ActiveStateChanged += new EventHandler (this.HandleRadioActiveStateChanged);
+			this.radio_manual.Name           = "Value";
 			
 			this.radio_anchor.Text           = "anchor";
 			this.radio_anchor.Width          = this.caption_label.Width;
@@ -47,6 +48,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.radio_anchor.Index          = (int) ShowMode.Anchor;
 			this.radio_anchor.TabIndex       = 10;
 			this.radio_anchor.ActiveStateChanged += new EventHandler (this.HandleRadioActiveStateChanged);
+			this.radio_anchor.Name           = "Value";
 			
 			this.radio_dock.Text             = "dock";
 			this.radio_dock.Width            = this.caption_label.Width;
@@ -56,6 +58,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.radio_dock.Index            = (int) ShowMode.Dock;
 			this.radio_dock.TabIndex         = 10;
 			this.radio_dock.ActiveStateChanged += new EventHandler (this.HandleRadioActiveStateChanged);
+			this.radio_dock.Name             = "Value";
 			
 			this.edge_select.Anchor          = AnchorStyles.All;
 			this.edge_select.AnchorMargins   = new Drawing.Margins (80, 0, 4, 4);

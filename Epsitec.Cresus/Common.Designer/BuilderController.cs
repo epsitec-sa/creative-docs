@@ -127,6 +127,17 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
+		public void ActivateEditor(Widget widget, bool restart_edition)
+		{
+			if (widget == null)
+			{
+				widget = this.active_editor.Root;
+			}
+			
+			this.attribute_palette.ActivateEditor (widget, restart_edition);
+		}
+		
+		
 		protected void CreateCreationWindow()
 		{
 			//	Crée la fenêtre contenant la palette des widgets qui peuvent être utilisés
@@ -246,6 +257,8 @@ namespace Epsitec.Common.Designer
 				System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Count == 0);
 				
 				editor.SelectedWidgets.Add (widget);
+				
+				this.ActivateEditor (widget, true);
 			}
 		}
 		
@@ -361,6 +374,11 @@ namespace Epsitec.Common.Designer
 			
 			if (this.active_editor != editor)
 			{
+				if (this.active_editor != null)
+				{
+					this.active_editor.IsActiveEditor = false;
+				}
+				
 				this.active_editor = editor;
 				
 				foreach (Window window in this.edit_window_list)
@@ -380,6 +398,7 @@ namespace Epsitec.Common.Designer
 					
 					this.active_editor.SetTabIndexSetterMode (this.tool_tab_setter_active);
 					this.active_editor.SetTabIndexPickerMode (this.tool_tab_picker_active);
+					this.active_editor.IsActiveEditor = true;
 				}
 				else
 				{
@@ -466,6 +485,7 @@ namespace Epsitec.Common.Designer
 			this.active_editor.SelectedWidgets.AddRange (widgets);
 		}
 		
+		
 		[Command ("CreateNewWindow")]			void CommandCreateNewWindow()
 		{
 			Window window = new Window ();
@@ -475,7 +495,7 @@ namespace Epsitec.Common.Designer
 			
 			this.edit_window_list.Add (window);
 			
-			Editors.WidgetEditor editor = new Editors.WidgetEditor ();
+			Editors.WidgetEditor editor = new Editors.WidgetEditor (this);
 			
 			editor.Root  = window.Root;
 			
@@ -523,7 +543,7 @@ namespace Epsitec.Common.Designer
 			
 			this.edit_window_list.Add (window);
 			
-			Editors.WidgetEditor editor = new Editors.WidgetEditor ();
+			Editors.WidgetEditor editor = new Editors.WidgetEditor (this);
 			
 			editor.Root  = window.Root;
 			

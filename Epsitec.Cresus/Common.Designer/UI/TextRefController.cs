@@ -38,6 +38,7 @@ namespace Epsitec.Common.Designer.UI
 			this.combo_text.OpeningCombo    += new CancelEventHandler (this.HandleComboTextOpeningCombo);
 			this.combo_text.ButtonGlyphShape = GlyphShape.Dots;
 			this.combo_text.TabIndex         = 10;
+			this.combo_text.Name             = "Value_1";
 			
 			this.label_bundle.Width          = this.caption_label.Width;
 			this.label_bundle.Anchor         = this.caption_label.Anchor;
@@ -48,6 +49,7 @@ namespace Epsitec.Common.Designer.UI
 			this.combo_bundle.AnchorMargins  = new Drawing.Margins (this.caption_label.Right, 0, 4+20+8, 0);
 			this.combo_bundle.IsReadOnly     = true;
 			this.combo_bundle.TabIndex       = 11;
+			this.combo_bundle.Name           = "Value_2";
 			
 			this.label_field.Width           = this.caption_label.Width;
 			this.label_field.Anchor          = this.caption_label.Anchor;
@@ -59,6 +61,8 @@ namespace Epsitec.Common.Designer.UI
 			this.combo_field.IsReadOnly      = true;
 			this.combo_field.PlaceHolder     = "<b>&lt;create new field&gt;</b>";
 			this.combo_field.TabIndex        = 12;
+			this.combo_field.Name            = "Value_3";
+			this.combo_field.DefocusAction   = DefocusAction.AutoAcceptOrRejectEdition;
 			
 			IValidator field_validator_1 = new Common.Widgets.Validators.RegexValidator (this.combo_field, RegexFactory.ResourceName, false);
 			IValidator field_validator_2 = new CustomFieldValidator (this.combo_field, this);
@@ -80,7 +84,8 @@ namespace Epsitec.Common.Designer.UI
 			
 			this.sync_level++;
 			
-			if (reason == Common.UI.SyncReason.SourceChanged)
+			if ((reason == Common.UI.SyncReason.SourceChanged) ||
+				(reason == Common.UI.SyncReason.Initialisation))
 			{
 				this.State = InternalState.Passive;
 			}
@@ -117,6 +122,12 @@ namespace Epsitec.Common.Designer.UI
 				}
 				
 				if (reason != Common.UI.SyncReason.ValueChanged)
+				{
+					this.combo_text.SelectAll ();
+				}
+				
+				if ((reason == Common.UI.SyncReason.SourceChanged) ||
+					(reason == Common.UI.SyncReason.Initialisation))
 				{
 					this.combo_text.SelectAll ();
 				}

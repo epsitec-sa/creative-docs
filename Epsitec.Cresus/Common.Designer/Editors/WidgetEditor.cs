@@ -13,8 +13,10 @@ namespace Epsitec.Common.Designer.Editors
 	/// </summary>
 	public class WidgetEditor : Support.ICommandDispatcherHost
 	{
-		public WidgetEditor()
+		public WidgetEditor(BuilderController builder_controller)
 		{
+			this.builder_controller = builder_controller;
+			
 			this.hilite_adorner = new HiliteWidgetAdorner ();
 			this.grips_overlay  = new Widgets.GripsOverlay ();
 			this.tab_o_overlay  = new Widgets.TabOrderOverlay ();
@@ -56,6 +58,29 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
+		public bool								IsActiveEditor
+		{
+			get
+			{
+				return this.is_active_editor;
+			}
+			set
+			{
+				if (this.is_active_editor != value)
+				{
+					this.is_active_editor = value;
+					this.OnActiveEditorChanged ();
+				}
+			}
+		}
+		
+		public BuilderController				BuilderController
+		{
+			get
+			{
+				return this.builder_controller;
+			}
+		}
 		
 		
 		#region ICommandDispatcherHost Members
@@ -139,6 +164,7 @@ namespace Epsitec.Common.Designer.Editors
 			if (root != null)
 			{
 				root.PreProcessing += new MessageEventHandler (this.HandleRootPreProcessing);
+				root.TextChanged   += new EventHandler (this.HandleRootTextChanged);
 			}
 		}
 		
@@ -147,6 +173,7 @@ namespace Epsitec.Common.Designer.Editors
 			if (root != null)
 			{
 				root.PreProcessing -= new MessageEventHandler (this.HandleRootPreProcessing);
+				root.TextChanged   -= new EventHandler (this.HandleRootTextChanged);
 				
 				this.hot_widget = null;
 				this.hilite_adorner.Widget = null;
@@ -174,6 +201,8 @@ namespace Epsitec.Common.Designer.Editors
 		
 		private void HandleRootPreProcessing(object sender, MessageEventArgs e)
 		{
+			System.Diagnostics.Debug.Assert (this.root == sender);
+			
 			if ((this.tab_o_overlay != null) &&
 				(this.tab_o_overlay.RootWidget != null))
 			{
@@ -260,6 +289,13 @@ namespace Epsitec.Common.Designer.Editors
 			e.Suppress = true;
 		}
 		
+		private void HandleRootTextChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.root == sender);
+			
+			this.UpdateWindowTitle ();
+		}
+		
 		private void HandleMouseDown(Message message, Drawing.Point pos, Widget hot)
 		{
 			if (message.Button == MouseButtons.Left)
@@ -305,11 +341,24 @@ namespace Epsitec.Common.Designer.Editors
 						
 						this.SelectedWidgets.Add (hot);
 					}
+					
+					this.builder_controller.ActivateEditor (hot, false);
 				}
 			}
 		}
 		
 		
+		protected virtual void UpdateWindowTitle()
+		{
+			if (this.IsActiveEditor)
+			{
+				this.window.Text = string.Format ("[ {0} ]", this.root.Text);
+			}
+			else
+			{
+				this.window.Text = this.root.Text;
+			}
+		}
 		
 		protected virtual void HandleSelectedTarget(object sender, object o)
 		{
@@ -344,17 +393,35 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
+		protected virtual void OnActiveEditorChanged()
+		{
+			if ((this.window != null) &&
+				(this.root != null))
+			{
+				this.UpdateWindowTitle ();
+			}
+			
+			if (this.ActiveEditorChanged != null)
+			{
+				this.ActiveEditorChanged (this);
+			}
+		}
+		
 		
 		public event SelectionEventHandler		Selected;
 		public event SelectionEventHandler		Deselecting;
 		public event SelectionEventHandler		Deselected;
+		public event Support.EventHandler		ActiveEditorChanged;
 		
 		
 		protected Support.CommandDispatcher		dispatcher;
+		protected BuilderController				builder_controller;
 		
 		protected Widget						hot_widget;
 		protected Widget						root;
 		protected Window						window;
+		
+		protected bool							is_active_editor;
 		
 		protected HiliteWidgetAdorner			hilite_adorner;
 		protected Widgets.GripsOverlay			grips_overlay;

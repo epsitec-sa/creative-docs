@@ -149,6 +149,7 @@ namespace Epsitec.Common.UI.Widgets
 				list.Add (view);
 				
 				view.TabIndex      = i+1;
+				view.Name          = string.Format (System.Globalization.CultureInfo.InvariantCulture, "View_{0}", i);
 				view.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			}
 		}

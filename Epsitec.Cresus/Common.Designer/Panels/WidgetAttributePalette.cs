@@ -38,6 +38,34 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		
 		
+		public void ActivateEditor(Widget widget, bool restart_edition)
+		{
+			System.Diagnostics.Debug.Assert (this.active == widget);
+			System.Diagnostics.Debug.WriteLine ("Activated widget " + widget.ToString ());
+			
+			if (this.widget != null)
+			{
+				Window window = this.widget.Window;
+				
+				if (window != null)
+				{
+					this.widget.Window.MakeActive ();
+					
+					if (restart_edition)
+					{
+						if (this.book != null)
+						{
+							if (this.book.ActivePage != null)
+							{
+								this.book.ActivePage.SetFocusOnTabWidget ();
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		
 		protected override void CreateWidgets(Widget parent)
 		{
 			System.Diagnostics.Debug.Assert (this.widget == parent);
@@ -125,6 +153,19 @@ namespace Epsitec.Common.Designer.Panels
 			this.props.Clear ();
 			this.props.AddRange (props);
 			
+			string focused_property_name = null;
+			
+			if (this.book.ActivePage != null)
+			{
+				Widget focused = this.book.ActivePage.FindFocusedChild ();
+				
+				if (focused != null)
+				{
+					focused_property_name = focused.FullPathName;
+				}
+			}
+			
+			
 			this.book.Items.Clear ();
 			
 			active_index = -1;
@@ -149,6 +190,22 @@ namespace Epsitec.Common.Designer.Panels
 			}
 			
 			this.book.ActivePageIndex = active_index;
+			
+			//	Lors du changement du contenu des onglets, on aimerait conserver le focus clavier
+			//	sur le widget précédent, si cela est possible. Pour ce faire, on a pris note plus
+			//	haut du chemin d'accès au widget qui avait le focus, et on tente de trouver quelque
+			//	chose de correspondant ici :
+			
+			if ((focused_property_name != null) &&
+				(this.book.ActivePage != null))
+			{
+				Widget to_be_focused = this.book.RootParent.FindChildByPath (focused_property_name);
+				
+				if (to_be_focused != null)
+				{
+					to_be_focused.Focus ();
+				}
+			}
 		}
 		
 		protected void SelectMatchingProps()

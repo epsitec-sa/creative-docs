@@ -37,6 +37,7 @@ namespace Epsitec.Common.UI.Controllers
 			this.text_field.AnchorMargins    = new Drawing.Margins (this.caption_label.Right, 0, h_pane - y - h_line, 0);
 			this.text_field.TextChanged     += new EventHandler (this.HandleTextFieldTextChanged);
 			this.text_field.TabIndex         = 10;
+			this.text_field.Name             = "Value";
 			
 			this.OnCaptionChanged ();
 			
@@ -51,6 +52,12 @@ namespace Epsitec.Common.UI.Controllers
 				(this.text_field != null))
 			{
 				this.text_field.Text = adapter.Value;
+				
+				if ((reason == Common.UI.SyncReason.SourceChanged) ||
+					(reason == Common.UI.SyncReason.Initialisation))
+				{
+					this.text_field.SelectAll ();
+				}
 			}
 		}
 		
