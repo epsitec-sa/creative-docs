@@ -210,12 +210,6 @@ namespace Epsitec.Common.Printing
 		{
 		}
 		
-		protected void ResetTransform()
-		{
-			this.graphics.ResetTransform ();
-			this.graphics.TranslateTransform (this.offset_x, this.offset_y);
-			this.graphics.ScaleTransform (this.scale, -this.scale);
-		}
 		
 		public Drawing.Transform SaveTransform()
 		{
@@ -279,6 +273,15 @@ namespace Epsitec.Common.Printing
 			transform.MultiplyByPostfix (Drawing.Transform.FromTranslation (ox, oy));
 			
 			this.RestoreTransform (transform);
+		}
+		
+		public void MergeTransform(Drawing.Transform transform)
+		{
+			Drawing.Transform current_transform = new Drawing.Transform (this.transform);
+			
+			transform.MultiplyByPostfix (current_transform);
+			
+			this.RestoreTransform (current_transform);
 		}
 		
 		
@@ -476,6 +479,14 @@ namespace Epsitec.Common.Printing
 			this.graphics.DrawImage (bitmap.BitmapImage.NativeBitmap, dst, src, System.Drawing.GraphicsUnit.Pixel);
 			this.graphics.ScaleTransform (1, -1);
 			this.graphics.TranslateTransform (-tx, -ty);
+		}
+		
+		
+		protected void ResetTransform()
+		{
+			this.graphics.ResetTransform ();
+			this.graphics.TranslateTransform (this.offset_x, this.offset_y);
+			this.graphics.ScaleTransform (this.scale, -this.scale);
 		}
 		
 		
