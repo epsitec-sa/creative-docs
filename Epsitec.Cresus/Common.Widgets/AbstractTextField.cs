@@ -161,7 +161,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		internal override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
+		public override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
 			if ( mode != TabNavigationMode.Passive )
 			{
