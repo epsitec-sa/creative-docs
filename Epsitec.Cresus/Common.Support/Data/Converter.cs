@@ -13,6 +13,16 @@ namespace Epsitec.Common.Support.Data
 		{
 		}
 		
+		public static bool IsNull(object obj)
+		{
+			return (obj == null) || (obj is System.DBNull);
+		}
+		
+		public static bool IsNotNull(object obj)
+		{
+			return (obj != null) && !(obj is System.DBNull);
+		}
+		
 		
 		public static string ToString(object obj)
 		{
@@ -80,7 +90,7 @@ namespace Epsitec.Common.Support.Data
 			//	de ses variantes, false sinon. Si le type n'est pas reconnu ou
 			//	que la syntaxe n'est pas correcte, une exception est levée.
 			
-			if (obj == null)
+			if ((obj == null) || (obj is System.DBNull))
 			{
 				value = 0;
 				return false;
