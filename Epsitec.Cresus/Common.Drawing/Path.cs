@@ -532,6 +532,7 @@ namespace Epsitec.Common.Drawing
 					case PathElement.MoveTo:
 						ox = (float) points[i].X;
 						oy = (float) points[i].Y;
+						gp.StartFigure ();
 						break;
 					
 					case PathElement.LineTo:
