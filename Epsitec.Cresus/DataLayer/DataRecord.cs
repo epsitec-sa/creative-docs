@@ -98,6 +98,10 @@ namespace Epsitec.Cresus.DataLayer
 			return null;
 		}
 		
+		public virtual void ValidateChanges()
+		{
+		}
+		
 		
 		internal virtual void SetDataState(DataState state)
 		{
@@ -107,6 +111,46 @@ namespace Epsitec.Cresus.DataLayer
 		internal virtual void SetParent(DataRecord parent)
 		{
 			this.parent = parent;
+		}
+		
+		internal virtual void MarkAsModified()
+		{
+			switch (this.data_state)
+			{
+				case DataState.Unchanged:
+					this.data_state = DataState.Modified;
+					break;
+				
+				case DataState.Added:
+				case DataState.Modified:
+					break;
+				
+				default:
+					throw new DataException (string.Format ("Illegal state {0}", this.data_state.ToString ()));
+			}
+		}
+		
+		internal virtual void MarkAsUnchanged()
+		{
+			switch (this.data_state)
+			{
+				case DataState.Unchanged:
+					break;
+				
+				case DataState.Added:
+				case DataState.Modified:
+					this.data_state = DataState.Unchanged;
+					break;
+				
+				case DataState.Invalid:
+				case DataState.Removed:
+				default:
+					
+					//	Ni le data set non initialisé, ni le data set supprimé ne peuvent
+					//	être "validés"...
+				
+					throw new DataException (string.Format ("Illegal state {0}", this.data_state.ToString ()));
+			}
 		}
 		
 		
@@ -125,7 +169,6 @@ namespace Epsitec.Cresus.DataLayer
 			path_remaining = path.Substring (pos+1);
 			return path.Substring (0, pos);
 		}
-		
 		
 		
 		protected DataType						data_type;

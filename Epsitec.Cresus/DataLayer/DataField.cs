@@ -28,6 +28,28 @@ namespace Epsitec.Cresus.DataLayer
 			return null;
 		}
 		
+		public override void ValidateChanges()
+		{
+			switch (this.data_state)
+			{
+				case DataState.Unchanged:
+					break;
+				
+				case DataState.Added:
+				case DataState.Modified:
+					this.org_data = this.new_data;
+					this.new_data = null;
+					break;
+				
+				default:
+					this.org_data = null;
+					this.new_data = null;
+					break;
+			}
+			
+			this.MarkAsUnchanged ();
+		}
+		
 		
 		public object GetData()
 		{
@@ -36,26 +58,33 @@ namespace Epsitec.Cresus.DataLayer
 		
 		public object GetData(DataVersion version)
 		{
+			object data = null;
+			
 			switch (version)
 			{
 				case DataVersion.Original:
 					if (this.data_state != DataState.Added)
 					{
-						object data = this.org_data;
-						return DataCopier.Copy (data);
+						data = this.org_data;
+						data = DataCopier.Copy (data);
 					}
 					break;
 				
 				case DataVersion.Active:
 					if (this.data_state != DataState.Removed)
 					{
-						object data = (this.data_state == DataState.Unchanged) ? this.org_data : this.new_data;
-						return DataCopier.Copy (data);
+						data = (this.data_state == DataState.Unchanged) ? this.org_data : this.new_data;
+						data = DataCopier.Copy (data);
 					}
+					break;
+				
+				case DataVersion.ActiveOrDead:
+					data = (this.data_state == DataState.Unchanged) ? this.org_data : this.new_data;
+					data = DataCopier.Copy (data);
 					break;
 			}
 			
-			return null;
+			return data;
 		}
 		
 		public void SetData(object data)
@@ -72,6 +101,7 @@ namespace Epsitec.Cresus.DataLayer
 					return;
 				
 				case DataVersion.Active:
+				case DataVersion.ActiveOrDead:
 					
 					//	Modifie la version active...
 					
@@ -88,7 +118,9 @@ namespace Epsitec.Cresus.DataLayer
 							return;
 						
 						case DataState.Removed:
-							throw new DataException ("Cannot set data (removed)");
+							this.data_state = DataState.Modified;
+							this.new_data   = DataCopier.Copy (data);
+							return;
 						
 						case DataState.Invalid:
 							this.data_state = DataState.Added;
@@ -130,6 +162,7 @@ namespace Epsitec.Cresus.DataLayer
 					this.org_data = data;
 					break;
 				case DataVersion.Active:
+				case DataVersion.ActiveOrDead:
 					this.new_data = data;
 					break;
 			}
@@ -142,6 +175,7 @@ namespace Epsitec.Cresus.DataLayer
 				case DataVersion.Original:
 					return this.org_data;
 				case DataVersion.Active:
+				case DataVersion.ActiveOrDead:
 					return this.new_data;
 			}
 			

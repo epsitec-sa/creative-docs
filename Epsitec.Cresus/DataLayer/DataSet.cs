@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			this.data_type = new DataType ();
 			this.data_type.Initialise (DataClass.Complex, null);
+			this.data_state = DataState.Added;
 		}
 		
 		
@@ -37,6 +38,8 @@ namespace Epsitec.Cresus.DataLayer
 				
 				this.data.Add (name, record);
 			}
+			
+			this.MarkAsModified ();
 		}
 		
 		public void Remove(string name)
@@ -60,6 +63,7 @@ namespace Epsitec.Cresus.DataLayer
 						break;
 				}
 				
+				this.MarkAsModified ();
 				return;
 			}
 			
@@ -117,15 +121,54 @@ namespace Epsitec.Cresus.DataLayer
 						//	a été supprimé. Dans tous les autres cas, le record est à
 						//	prendre en considération.
 						
-						if (record.DataState != DataState.Removed)
+						if ((record.DataState != DataState.Removed) &&
+							(record.DataState != DataState.Invalid))
 						{
 							return record.FindRecord (remaining, version);
 						}
 						break;
+					
+					case DataVersion.ActiveOrDead:
+						return record.FindRecord (remaining, version);
 				}
 			}
 			
 			return null;
+		}
+		
+		public override void ValidateChanges()
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (System.Collections.DictionaryEntry entry in this.data)
+			{
+				string     name   = entry.Key as string;
+				DataRecord record = entry.Value as DataRecord;
+				
+				switch (record.DataState)
+				{
+					case DataState.Removed:
+					case DataState.Invalid:
+						
+						//	Les records qui ont été supprimés sont retirés définitivement de
+						//	la table, ceux qui n'ont jamais existé aussi.
+						
+						list.Add (name);
+						break;
+					
+					default:
+						record.ValidateChanges ();
+						break;
+				}
+			}
+			
+			if (list.Count > 0)
+			{
+				foreach (string name in list)
+				{
+					this.data.Remove (name);
+				}
+			}
 		}
 		
 		

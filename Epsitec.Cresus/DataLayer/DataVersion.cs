@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.DataLayer
 	public enum DataVersion
 	{
 		Original,
-		Active
+		Active,
+		ActiveOrDead
 	}
 }
