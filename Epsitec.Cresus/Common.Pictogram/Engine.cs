@@ -57,7 +57,7 @@ namespace Epsitec.Common.Pictogram
 					context.ScaleY = size.Height / icon.Size.Height;
 					graphics.ScaleTransform(context.ScaleX, context.ScaleY, 0, 0);
 					
-					icon.DrawGeometry(graphics, context, adorner_object);
+					icon.DrawGeometry(graphics, context, adorner_object, Drawing.Rectangle.Infinite, true);
 				}
 			}
 		}
