@@ -16,33 +16,35 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 
-		// Retourne la hauteur standard.
+		
 		public override double DefaultHeight
 		{
+			// Retourne la hauteur standard.
 			get
 			{
 				return this.DefaultFontHeight;
 			}
 		}
 
-		// Retourne l'alignement par défaut d'un bouton.
 		public override Drawing.ContentAlignment DefaultAlignment
 		{
+			// Retourne l'alignement par défaut d'un bouton.
 			get
 			{
 				return Drawing.ContentAlignment.MiddleLeft;
 			}
 		}
 
-		// Retourne les dimensions minimales pour représenter le texte.
+		
 		public Drawing.Size RetRequiredSize()
 		{
+			// Retourne les dimensions minimales pour représenter le texte.
 			return this.textLayout.SingleLineSize();
 		}
 
-		// Dessine le texte.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			// Dessine le texte.
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
