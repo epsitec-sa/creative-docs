@@ -27,7 +27,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[Bundle ("group")]	public string		Group
+		[Bundle]	public string				Group
 		{
 			get
 			{
