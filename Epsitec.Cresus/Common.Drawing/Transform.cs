@@ -59,7 +59,7 @@ namespace Epsitec.Common.Drawing
 				if (this.xx != value)
 				{
 					this.xx = value;
-					this.OnChanged (System.EventArgs.Empty);
+					this.OnChanged ();
 				}
 			}
 		}
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Drawing
 				if (this.xy != value)
 				{
 					this.xy = value;
-					this.OnChanged (System.EventArgs.Empty);
+					this.OnChanged ();
 				}
 			}
 		}
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Drawing
 				if (this.yx != value)
 				{
 					this.yx = value;
-					this.OnChanged (System.EventArgs.Empty);
+					this.OnChanged ();
 				}
 			}
 		}
@@ -98,7 +98,7 @@ namespace Epsitec.Common.Drawing
 				if (this.yy != value)
 				{
 					this.yy = value;
-					this.OnChanged (System.EventArgs.Empty);
+					this.OnChanged ();
 				}
 			}
 		}
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Drawing
 				if (this.tx != value)
 				{
 					this.tx = value;
-					this.OnChanged (System.EventArgs.Empty);
+					this.OnChanged ();
 				}
 			}
 		}
@@ -124,7 +124,7 @@ namespace Epsitec.Common.Drawing
 				if (this.ty != value)
 				{
 					this.ty = value;
-					this.OnChanged (System.EventArgs.Empty);
+					this.OnChanged ();
 				}
 			}
 		}
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Drawing
 			this.yx = 0;
 			this.yy = 1;
 			this.ty = 0;
-			this.OnChanged (System.EventArgs.Empty);
+			this.OnChanged ();
 		}
 		
 		public void Reset(Transform model)
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Drawing
 			this.yx = model.yx;
 			this.yy = model.yy;
 			this.ty = model.ty;
-			this.OnChanged (System.EventArgs.Empty);
+			this.OnChanged ();
 		}
 		
 		public void MultiplyBy(Transform t)
@@ -227,7 +227,7 @@ namespace Epsitec.Common.Drawing
 				this.yy = c.yy;
 				this.ty = c.ty;
 				
-				this.OnChanged (System.EventArgs.Empty);
+				this.OnChanged ();
 			}
 		}
 		
@@ -244,7 +244,7 @@ namespace Epsitec.Common.Drawing
 				this.yy = c.yy;
 				this.ty = c.ty;
 				
-				this.OnChanged (System.EventArgs.Empty);
+				this.OnChanged ();
 			}
 		}
 		
@@ -257,7 +257,7 @@ namespace Epsitec.Common.Drawing
 			Round (ref this.tx);
 			Round (ref this.ty);
 			
-			this.OnChanged (System.EventArgs.Empty);
+			this.OnChanged ();
 		}
 		
 		public void Translate(double tx, double ty)
@@ -265,7 +265,7 @@ namespace Epsitec.Common.Drawing
 			this.tx += tx;
 			this.ty += ty;
 			
-			this.OnChanged (System.EventArgs.Empty);
+			this.OnChanged ();
 		}
 		
 		public void Translate(Point offset)
@@ -273,7 +273,7 @@ namespace Epsitec.Common.Drawing
 			this.tx += offset.X;
 			this.ty += offset.Y;
 			
-			this.OnChanged (System.EventArgs.Empty);
+			this.OnChanged ();
 		}
 		
 		public void RotateDeg(double angle)
@@ -341,7 +341,7 @@ namespace Epsitec.Common.Drawing
 			this.tx *= sx;
 			this.ty *= sy;
 			
-			this.OnChanged (System.EventArgs.Empty);
+			this.OnChanged ();
 		}
 		
 		public void Scale(double sx, double sy, double cx, double cy)
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Drawing
 			this.Scale (sx, sy);
 			this.Translate (cx, cy);
 			
-			this.OnChanged (System.EventArgs.Empty);
+			this.OnChanged ();
 		}
 		
 		
@@ -730,18 +730,18 @@ namespace Epsitec.Common.Drawing
 			return buffer.ToString ();
 		}
 					
-		protected virtual void OnChanged(System.EventArgs e)
+		protected virtual void OnChanged()
 		{
 			if (this.Changed != null)
 			{
-				this.Changed (this, e);
+				this.Changed (this);
 			}
 		}
 
 		
-		public event System.EventHandler	Changed;
+		public event Support.EventHandler	Changed;
 		
-		private double				xx, xy, yx, yy;
-		private double				tx, ty;
+		private double						xx, xy, yx, yy;
+		private double						tx, ty;
 	}
 }

@@ -824,7 +824,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 						panel.ExtendedChanged -= new EventHandler(this.HandleExtendedChanged);
 						panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
 					}
-					this.panel.Children.RemoveAt(i);
+					this.panel.Children[i].Dispose();
 				}
 			}
 
