@@ -116,7 +116,7 @@ namespace Epsitec.Common.Widgets
 				{
 					cell = new Cell();
 					ib = new IconButton();
-					ib.StaticWidget();
+					ib.SetFrozen(true);
 					ib.Dock = Widgets.DockStyle.Fill;
 					cell.Children.Add(ib);
 					this.table[1, index] = cell;
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Widgets
 						{
 							cell = new Cell();
 							cs = new ColorSample();
-							cs.StaticWidget();
+							cs.SetFrozen(true);
 							cs.Dock = Widgets.DockStyle.Fill;
 							cell.Children.Add(cs);
 							this.table[p+2, index] = cell;
@@ -226,7 +226,7 @@ namespace Epsitec.Common.Widgets
 						{
 							cell = new Cell();
 							gs = new GradientSample();
-							gs.StaticWidget();
+							gs.SetFrozen(true);
 							gs.Dock = Widgets.DockStyle.Fill;
 							cell.Children.Add(gs);
 							this.table[p+2, index] = cell;
