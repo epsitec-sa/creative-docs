@@ -92,8 +92,6 @@ namespace Epsitec.Common.Widgets
 			source7.Parent = window.Root;
 			source7.Widget = textfud;
 			
-			window.Root.IsEditionDisabled = true;
-			
 			window.Text = "CheckDragSource";
 			window.Show ();
 		}
