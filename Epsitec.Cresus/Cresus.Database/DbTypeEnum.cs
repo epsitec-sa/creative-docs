@@ -22,31 +22,31 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		internal override void SerialiseXmlAttributes(System.Text.StringBuilder buffer, bool full)
+		internal override void SerializeXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{
 			buffer.Append (@" nmlen=""");
 			buffer.Append (this.max_name_length.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append (@"""");
 			
-			base.SerialiseXmlAttributes (buffer, full);
+			base.SerializeXmlAttributes (buffer, full);
 		}
 		
-		internal override void SerialiseXmlElements(System.Text.StringBuilder buffer, bool full)
+		internal override void SerializeXmlElements(System.Text.StringBuilder buffer, bool full)
 		{
-			base.SerialiseXmlElements (buffer, full);
+			base.SerializeXmlElements (buffer, full);
 			
 			if (this.values != null)
 			{
 				for (int i = 0; i < this.values.Length; i++)
 				{
-					DbEnumValue.SerialiseToXml (buffer, this.values[i], full);
+					DbEnumValue.SerializeToXml (buffer, this.values[i], full);
 				}
 			}
 		}
 		
-		internal override void DeserialiseXmlAttributes(System.Xml.XmlElement xml)
+		internal override void DeserializeXmlAttributes(System.Xml.XmlElement xml)
 		{
-			base.DeserialiseXmlAttributes (xml);
+			base.DeserializeXmlAttributes (xml);
 			
 			string arg_nmlen = xml.GetAttribute ("nmlen");
 			
@@ -56,9 +56,9 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		internal override void DeserialiseXmlElements(System.Xml.XmlNodeList nodes, ref int index)
+		internal override void DeserializeXmlElements(System.Xml.XmlNodeList nodes, ref int index)
 		{
-			base.DeserialiseXmlElements (nodes, ref index);
+			base.DeserializeXmlElements (nodes, ref index);
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			

@@ -54,20 +54,20 @@ namespace Epsitec.Cresus.Database
 			
 			int index = 0;
 			
-			type.DeserialiseXmlAttributes (xml);
-			type.DeserialiseXmlElements (xml.ChildNodes, ref index);
+			type.DeserializeXmlAttributes (xml);
+			type.DeserializeXmlElements (xml.ChildNodes, ref index);
 			
 			return type;
 		}
 		
-		public static string SerialiseToXml(DbType type, bool full)
+		public static string SerializeToXml(DbType type, bool full)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			DbTypeFactory.SerialiseToXml (buffer, type, full);
+			DbTypeFactory.SerializeToXml (buffer, type, full);
 			return buffer.ToString ();
 		}
 		
-		public static void SerialiseToXml(System.Text.StringBuilder buffer, DbType type, bool full)
+		public static void SerializeToXml(System.Text.StringBuilder buffer, DbType type, bool full)
 		{
 			if (type != null)
 			{
@@ -101,12 +101,12 @@ namespace Epsitec.Cresus.Database
 				
 				//	Ajoute ce qui est propre à chaque classe...
 				
-				type.SerialiseXmlAttributes (buffer, full);
+				type.SerializeXmlAttributes (buffer, full);
 				
 				if (full)
 				{
 					buffer.Append (@">");
-					type.SerialiseXmlElements (buffer, true);
+					type.SerializeXmlElements (buffer, true);
 					buffer.Append (@"</type>");
 				}
 				else
