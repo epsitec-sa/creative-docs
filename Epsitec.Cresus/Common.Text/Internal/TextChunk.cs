@@ -12,6 +12,9 @@ namespace Epsitec.Common.Text.Internal
 		{
 			this.cursors = new CursorIdArray ();
 			this.text    = new ulong[0];
+			
+			this.acc_markers       = 0;
+			this.acc_markers_valid = true;
 		}
 		
 		
@@ -45,6 +48,23 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
+		public ulong						AccumulatedCharMarkers
+		{
+			get
+			{
+				//	Retourne l'union de tous les marqueurs de caractères (cf.
+				//	la classe CharMarker) contenus dans ce morceau de texte.
+				
+				if (this.acc_markers_valid == false)
+				{
+					this.acc_markers_valid = true;
+					this.acc_markers = Internal.CharMarker.Accumulate (this.text, 0, this.length);
+				}
+				
+				return this.acc_markers;
+			}
+		}
+		
 		
 		public void InsertText(int position, ulong[] text)
 		{
@@ -56,6 +76,11 @@ namespace Epsitec.Common.Text.Internal
 				//	agrandir celui-ci.
 				
 				this.GrowTextBuffer (this.length + length);
+			}
+			
+			if (this.acc_markers_valid)
+			{
+				this.acc_markers |= Internal.CharMarker.Accumulate (text, 0, text.Length);
 			}
 			
 			int offset_1 = position;
@@ -98,6 +123,11 @@ namespace Epsitec.Common.Text.Internal
 			//	TODO: support pour le undo
 			
 			this.cursors.ProcessRemoval (position, length);
+			
+			if (this.acc_markers != 0)
+			{
+				this.acc_markers_valid = false;
+			}
 		}
 		
 		
@@ -123,6 +153,35 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public bool ChangeMarkers(ulong marker, int position, int length, bool set)
+		{
+			//	Change les marqueurs pour le fragment de texte considéré.
+			//	Retourne 'true' si un changement a eu lieu.
+			
+			bool changed = false;
+			
+			if (set)
+			{
+				changed = Internal.CharMarker.SetMarkers (marker, this.text, position, length);
+				
+				if (this.acc_markers_valid)
+				{
+					this.acc_markers |= marker;
+				}
+			}
+			else
+			{
+				if (Internal.CharMarker.ClearMarkers (marker, this.text, position, length))
+				{
+					changed = true;
+					this.acc_markers_valid = false;
+				}
+			}
+			
+			return changed;
+		}
+		
+		
 		public void SaveRawText(byte[] buffer, out int length)
 		{
 			int count = 8*this.length;
@@ -140,6 +199,9 @@ namespace Epsitec.Common.Text.Internal
 			this.length = length;
 			
 			System.Buffer.BlockCopy (data, 0, this.text, 0, 8*length);
+			
+			this.acc_markers       = 0;
+			this.acc_markers_valid = false;
 		}
 		
 		
@@ -182,6 +244,12 @@ namespace Epsitec.Common.Text.Internal
 			//	vers 'b' :
 			
 			a.cursors.ProcessMigration (offset, b.cursors);
+			
+			if (a.acc_markers != 0)
+			{
+				a.acc_markers_valid = false;
+				b.acc_markers_valid = false;
+			}
 		}
 		
 		
@@ -216,5 +284,8 @@ namespace Epsitec.Common.Text.Internal
 		private CursorIdArray				cursors;
 		private System.UInt64[]				text;
 		private int							length;
+		
+		private ulong						acc_markers;
+		private bool						acc_markers_valid;
 	}
 }

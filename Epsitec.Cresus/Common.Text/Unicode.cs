@@ -20,7 +20,7 @@ namespace Epsitec.Common.Text
 			public const ulong	CodeMask		= 0x001FFFFF;
 			public const ulong	CombiningFlag	= 0x00200000;
 			public const ulong	ReorderingFlag	= 0x00400000;
-			public const ulong	ReservedFlag	= 0x00800000;
+			public const ulong	ReadOnlyFlag	= 0x00800000;
 			
 			
 			public static int  GetCode(ulong value)
@@ -71,6 +71,24 @@ namespace Epsitec.Common.Text
 				else
 				{
 					value = value & ~Bits.ReorderingFlag;
+				}
+			}
+			
+			
+			public static bool GetReadOnlyFlag(ulong value)
+			{
+				return (value & Bits.ReadOnlyFlag) != 0;
+			}
+			
+			public static void SetReadOnlyFlag(ref ulong value, bool flag)
+			{
+				if (flag)
+				{
+					value = value | Bits.ReadOnlyFlag;
+				}
+				else
+				{
+					value = value & ~Bits.ReadOnlyFlag;
 				}
 			}
 		}

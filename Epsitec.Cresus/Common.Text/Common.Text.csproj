@@ -119,6 +119,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Internal\CharMarker.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Internal\Cursor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -140,6 +145,11 @@
                 />
                 <File
                     RelPath = "Internal\CursorTable.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Internal\StyleTable.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

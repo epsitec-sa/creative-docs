@@ -65,7 +65,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		public void WriteRawText(System.IO.Stream stream)
+		internal void WriteRawText(System.IO.Stream stream)
 		{
 			byte[] header = new byte[8];
 			
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		public void ReadRawText(System.IO.Stream stream)
+		internal void ReadRawText(System.IO.Stream stream)
 		{
 			if ((this.text_length > 0) ||
 				(this.text_chunks.Length > 1) ||
