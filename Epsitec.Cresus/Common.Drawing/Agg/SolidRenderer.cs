@@ -40,13 +40,13 @@ namespace Epsitec.Common.Drawing.Agg
 		
 		
 		
-		public override void Clear(double r, double g, double b, double a)
+		public override void ClearARGB(double a, double r, double g, double b)
 		{
 			this.AssertAttached ();
 			AntiGrain.Renderer.Solid.Clear (this.agg_ren, r, g, b, a);
 		}
 		
-		public override void SetColor(double r, double g, double b, double a)
+		public override void SetColorARGB(double a, double r, double g, double b)
 		{
 			this.AssertAttached ();
 			AntiGrain.Renderer.Solid.Color (this.agg_ren, r, g, b, a);
