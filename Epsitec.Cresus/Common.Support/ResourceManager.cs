@@ -646,7 +646,7 @@ namespace Epsitec.Common.Support
 		private void InternalInitialise()
 		{
 			System.Collections.ArrayList providers = new System.Collections.ArrayList ();
-			System.Reflection.Assembly   assembly  = System.Reflection.Assembly.LoadWithPartialName ("Common.Support.Implementation");
+			System.Reflection.Assembly   assembly  = AssemblyLoader.Load ("Common.Support.Implementation");
 			
 			System.Type[] types_in_assembly = assembly.GetTypes ();
 			

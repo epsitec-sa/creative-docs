@@ -348,7 +348,7 @@ namespace Epsitec.Common.Dialogs
 				return true;
 			}
 			
-			System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadWithPartialName ("Common.Designer");
+			System.Reflection.Assembly assembly = Support.AssemblyLoader.Load ("Common.Designer");
 			
 			if (assembly != null)
 			{
