@@ -108,7 +108,6 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 
 			if ( !this.dynamic )
@@ -117,27 +116,27 @@ namespace Epsitec.Common.Widgets
 				state &= ~WidgetState.Entered;
 			}
 			
-			Direction type = Direction.None;
+			Direction dir = Direction.None;
 			if ( this.headerButtonStyle == HeaderButtonStyle.Top )
 			{
-				type = Direction.Up;
+				dir = Direction.Up;
 			}
 			if ( this.headerButtonStyle == HeaderButtonStyle.Left )
 			{
-				type = Direction.Left;
+				dir = Direction.Left;
 			}
-			adorner.PaintHeaderBackground(graphics, rect, state, dir, type);
+			adorner.PaintHeaderBackground(graphics, rect, state, dir);
 
 			if ( this.textLayout != null )
 			{
 				pos.X += HeaderButton.Margin;
 				this.textLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
-				adorner.PaintButtonTextLayout(graphics, pos, this.textLayout, state, dir, ButtonStyle.Flat);
+				adorner.PaintButtonTextLayout(graphics, pos, this.textLayout, state, ButtonStyle.Flat);
 			}
 
 			if ( this.sortMode != 0 )  // triangle ?
 			{
-				type = Direction.None;
+				dir = Direction.None;
 
 				if ( this.headerButtonStyle == HeaderButtonStyle.Top )
 				{
@@ -147,11 +146,11 @@ namespace Epsitec.Common.Widgets
 
 					if ( this.sortMode > 0 )
 					{
-						type = Direction.Down;
+						dir = Direction.Down;
 					}
 					else
 					{
-						type = Direction.Up;
+						dir = Direction.Up;
 						rect.Offset(0, rect.Height/3);
 					}
 				}
@@ -164,14 +163,14 @@ namespace Epsitec.Common.Widgets
 
 					if ( this.sortMode > 0 )
 					{
-						type = Direction.Right;
+						dir = Direction.Right;
 					}
 					else
 					{
-						type = Direction.Left;
+						dir = Direction.Left;
 					}
 				}
-				adorner.PaintArrow(graphics, rect, state, dir, type);
+				adorner.PaintArrow(graphics, rect, state, dir);
 			}
 		}
 		
