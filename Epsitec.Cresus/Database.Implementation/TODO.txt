@@ -85,11 +85,6 @@ de la base de données.
 
 - Ecrire les tests pour SqlTable, SqlColumn, SqlColumnCollection.
 
-- Implémenter FirebirdAbstraction.QueryTableNames et QueryTableSchema;
-  ces méthodes sont étroitement liées à une implémentation de ISqlBuilder
-  et il faudra voir si la classe FirebirdAbstraction implémente elle-
-  même ISqlBuilder, ou si elle délègue cette tâche à une classe annexe.
-
 - Compléter la classe SqlField.
 
 - Ecrire les tests pour SqlField, SqlFunction, SqlSelect, si c'est

@@ -17,8 +17,8 @@ namespace Epsitec.Common.Drawing.Agg
 		
 		[DllImport ("AGG-Wrapper.dll")] internal extern static bool		AggInitialise();
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggShutDown();
-		[DllImport ("AGG-Wrapper.dll")] internal extern static string	AggGetVersion();
-		[DllImport ("AGG-Wrapper.dll")] internal extern static string	AggGetProductName();
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggGetVersion();
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggGetProductName();
 		
 		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggBufferNew(int dx, int dy, int bpp);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggBufferResize(IntPtr buffer, int dx, int dy, int bpp);
@@ -57,6 +57,8 @@ namespace Epsitec.Common.Drawing.Agg
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerResetClipBox(System.IntPtr rasterizer);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerAddPath(System.IntPtr rasterizer, System.IntPtr path, bool curves);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerAddGlyph(System.IntPtr rasterizer, System.IntPtr face, int glyph, double x, double y, double scale);
+		[DllImport ("AGG-Wrapper.dll", CharSet=CharSet.Unicode)]
+										internal extern static double	AggRasterizerAddText(System.IntPtr rasterizer, System.IntPtr face, string text, int mode, double xx, double xy, double yx, double yy, double tx, double ty);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerAddPathStroke1(System.IntPtr rasterizer, System.IntPtr path, double width, bool curves);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerAddPathStroke2(System.IntPtr rasterizer, System.IntPtr path, double width, int cap, int join, double miter_limit, bool curves);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerRenderSolid(System.IntPtr rasterizer, System.IntPtr renderer);
@@ -100,8 +102,7 @@ namespace Epsitec.Common.Drawing.Agg
 										internal extern static int		AggFontFaceGetTextCharEndXArray(System.IntPtr face, string text, int mode, double[] x_array);
 		[DllImport ("AGG-Wrapper.dll", CharSet=CharSet.Unicode)]
 										internal extern static IntPtr	AggFontFaceBreakNew(System.IntPtr face, string text, int mode);
-		[DllImport ("AGG-Wrapper.dll", CharSet=CharSet.Unicode)]
-										internal extern static string	AggFontFaceBreakIter(System.IntPtr context, ref double width);
+		[DllImport ("AGG-Wrapper.dll")]	internal extern static IntPtr	AggFontFaceBreakIter(System.IntPtr context, ref double width);
 		[DllImport ("AGG-Wrapper.dll")]	internal extern static void		AggFontFaceBreakDelete(System.IntPtr context);
 		[DllImport ("AGG-Wrapper.dll")]	internal extern static bool		AggFontFaceBreakHasMore(System.IntPtr context);
 		
@@ -137,12 +138,34 @@ namespace Epsitec.Common.Drawing.Agg
 		
 		public string				ProductName
 		{
-			get { return Library.AggGetProductName (); }
+			get
+			{
+				string text;
+				
+				unsafe
+				{
+					System.IntPtr ptr = Library.AggGetProductName ();
+					text = new string ((sbyte*) ptr);
+				}
+				
+				return text;
+			}
 		}
 		
 		public string				Version
 		{
-			get { return Library.AggGetVersion (); }
+			get
+			{
+				string text;
+				
+				unsafe
+				{
+					System.IntPtr ptr = Library.AggGetVersion ();
+					text = new string ((sbyte*) ptr);
+				}
+				
+				return text;
+			}
 		}
 		
 		

@@ -12,8 +12,5 @@ namespace Epsitec.Cresus.Database
 		
 		System.Data.IDbCommand NewDbCommand();
 		System.Data.IDataAdapter NewDataAdapter(System.Data.IDbCommand command);
-		
-		string[] QueryTableNames();
-		SqlTable QueryTableSchema(string table_name);
 	}
 }

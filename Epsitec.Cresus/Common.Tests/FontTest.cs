@@ -314,6 +314,15 @@ namespace Epsitec.Common.Tests
 			form.Show ();
 		}
 
+		[Test] public void CheckDefaultFont()
+		{
+			Font   font = Font.DefaultFont;
+			double size = Font.DefaultFontSize;
+			
+			Assertion.AssertNotNull (font);
+			Assertion.Assert (size > 0);
+		}
+
 		[Test] public void CheckGlyphDynamicBold()
 		{
 			System.Windows.Forms.Form form = new System.Windows.Forms.Form ();
@@ -399,7 +408,7 @@ namespace Epsitec.Common.Tests
 				c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
 				gra.AddText (10, 200, text, font, size);
 				gra.RenderSolid ();
-				c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0 * (1 + text.Length * 3);
+				c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
 				
 				tot += c2;
 			}

@@ -11,6 +11,7 @@ namespace Epsitec.Cresus.Database
 		
 		Decimal,						//	tout ce qui est numérique (booléen, entier, réel, temps, ...)
 		String,							//	texte (Unicode)
+		DateTime,						//	date et heure
 		ByteArray,						//	tableau de bytes
 		Guid,							//	identificateur globalement unique, 128 bits
 	}

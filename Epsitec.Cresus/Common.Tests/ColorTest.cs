@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Tests
@@ -69,6 +70,56 @@ namespace Epsitec.Common.Tests
 			Assertion.AssertEquals (color_1, color_2);
 			Assertion.AssertEquals (color_1, color_3);
 			Assertion.AssertEquals (Color.Empty, color_4);
+		}
+		
+		
+		[Test] public void CheckNamedColors()
+		{
+			WindowFrame window = new WindowFrame ();
+			
+			window.ClientSize = new System.Drawing.Size (870, 360);
+			window.Text = "CheckNamedColors";
+			window.Root.PaintForeground += new PaintEventHandler(NamedColors_PaintForeground);
+			window.Show ();
+		}
+
+		private void NamedColors_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double dx = root.Client.Width;
+			double dy = root.Client.Height;
+			
+			Font     font     = Font.GetFont ("Tahoma", "Regular");
+			double   size     = 9.0;
+			Color    black    = Color.FromBrightness (0);
+			Graphics graphics = e.Graphics;
+			string[] colors   = System.Enum.GetNames (typeof (System.Drawing.KnownColor));
+			
+			System.Array.Sort (colors);
+			
+			int n = 0;
+			
+			for (int i = 0; i < 35; i++)
+			{
+				for (int j = 0; j < 5; j++)
+				{
+					if (n < colors.Length)
+					{
+						string color_name = colors[n++];
+						
+						double x = 5 + j * 20 * size;
+						double y = dy - 15 - i * (size + 1);
+						
+						graphics.AddText (x+50, y, color_name, font, size);
+						graphics.AddRectangle (x, y - 2, 45, size);
+						graphics.RenderSolid (black);
+						
+						graphics.AddFilledRectangle (x, y - 2, 45, size);
+						graphics.RenderSolid (Color.FromName (color_name));
+					}
+				}
+			}
 		}
 	}
 }

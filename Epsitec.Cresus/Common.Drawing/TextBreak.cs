@@ -41,8 +41,13 @@ namespace Epsitec.Common.Drawing
 				return false;
 			}
 			
-			width = max_width / this.size;
-			text  = Agg.Library.AggFontFaceBreakIter (this.handle, ref width);
+			unsafe
+			{
+				width = max_width / this.size;
+				System.IntPtr ptr = Agg.Library.AggFontFaceBreakIter (this.handle, ref width);
+				
+				text  = (ptr == System.IntPtr.Zero) ? null : new string ((char*) ptr);
+			}
 			
 			width *= this.size;
 			

@@ -28,6 +28,7 @@ namespace Epsitec.Common.Widgets
 		Entered			= 0x00040000,		//	=> contient la souris
 		Selected		= 0x00080000,		//	=> sélectionné
 		Engaged			= 0x00100000,		//	=> pression en cours
+		Error			= 0x00200000,		//	=> signale une erreur
 	}
 	
 	
@@ -310,6 +311,27 @@ namespace Epsitec.Common.Widgets
 			get { return (this.widget_state & WidgetState.Engaged) != 0; }
 		}
 		
+		public bool							IsError
+		{
+			get { return (this.widget_state & WidgetState.Error) != 0; }
+			set
+			{
+				if (this.IsError != value)
+				{
+					if (value)
+					{
+						this.widget_state |= WidgetState.Error;
+					}
+					else
+					{
+						this.widget_state &= ~WidgetState.Error;
+					}
+					
+					this.Invalidate ();
+				}
+			}
+		}
+		
 		public bool							AutoCapture
 		{
 			get { return (this.internal_state & InternalState.AutoCapture) != 0; }
@@ -379,6 +401,7 @@ namespace Epsitec.Common.Widgets
 			get { return (this.internal_state & InternalState.AutoMnemonic) != 0; }
 		}
 		
+		
 		public virtual WidgetState			State
 		{
 			get { return this.widget_state; }
@@ -399,6 +422,30 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		public virtual WidgetState			PaintState
+		{
+			get
+			{
+				WidgetState mask  = WidgetState.ActiveMask |
+									WidgetState.Focused |
+									WidgetState.Entered |
+									WidgetState.Engaged |
+									WidgetState.Selected |
+									WidgetState.Error;
+				
+				WidgetState state = this.widget_state & mask;
+				
+				if (this.IsEnabled)
+				{
+					state |= WidgetState.Enabled;
+				}
+				
+				return state;
+			}
+		}
+		
+		
 		public bool							ContainsFocus
 		{
 			get

@@ -72,23 +72,6 @@ namespace Epsitec.Cresus.Database.Implementation
 			//	TODO: implémenter new DataAdapter(command)
 			return null;
 		}
-		
-		public string[] QueryTableNames()
-		{
-			//	TODO: rechercher les noms des tables connues (en filtrant éventuellement les
-			//	noms qui ne correspondent pas à des tables créées par Crésus, par exemple si
-			//	la base a des tables internes pour l'administration).
-			
-			return new string[0];
-		}
-		
-		public SqlTable QueryTableSchema(string table_name)
-		{
-			//	TODO: trouver le schéma de la table (si elle existe). Si la table ne peut pas
-			//	être trouvée, on retourne simplement null.
-			
-			return null;
-		}
 		#endregion
 		
 		#region IDisposable Members

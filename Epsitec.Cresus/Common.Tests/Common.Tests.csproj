@@ -113,6 +113,11 @@
         <Files>
             <Include>
                 <File
+                    RelPath = "AdornerFactoryTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -143,6 +148,11 @@
                 />
                 <File
                     RelPath = "GraphicsTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "LibraryTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

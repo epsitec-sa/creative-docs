@@ -124,16 +124,11 @@ namespace Epsitec.Common.Drawing
 				switch (this.synthetic_mode)
 				{
 					case SyntheticFontMode.Oblique:
-						return new Transform (1, System.Math.Sin (Font.ObliqueAngle * System.Math.PI / 180.0), 0, 1, 0, 0);
+						return new Transform (1, System.Math.Sin (Font.DefaultObliqueAngle * System.Math.PI / 180.0), 0, 1, 0, 0);
 					default:
 						return new Transform ();
 				}
 			}
-		}
-		
-		public static double			ObliqueAngle
-		{
-			get { return 20.0; }
 		}
 		
 		
@@ -291,6 +286,33 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public static Font				DefaultFont
+		{
+			get
+			{
+				if (Font.default_font == null)
+				{
+					Font.default_font = Font.GetFont ("Tahoma", "Regular");
+				}
+				
+				return Font.default_font;
+			}
+		}
+		
+		public static double			DefaultFontSize
+		{
+			get
+			{
+				return 10.6;
+			}
+		}
+		
+		public static double			DefaultObliqueAngle
+		{
+			get { return 20.0; }
+		}
+		
+		
 		public static Font GetFont(int rank)
 		{
 			Font.SetupFonts ();
@@ -399,6 +421,7 @@ namespace Epsitec.Common.Drawing
 		protected static Font[]							array;
 		protected static System.Collections.Hashtable	hash;
 		protected static int							count;
+		protected static Font							default_font;
 		
 		protected enum NameID
 		{

@@ -10,18 +10,6 @@ namespace Epsitec.Common.Tests
 		{
 		}
 		
-		[Test] public void CheckVersion()
-		{
-			string version = Common.Drawing.Agg.Library.Current.Version;
-			string product = Common.Drawing.Agg.Library.Current.ProductName;
-			
-			Assertion.AssertNotNull (version);
-			Assertion.AssertNotNull (product);
-			
-			System.Console.Out.WriteLine ("Version: " + version);
-			System.Console.Out.WriteLine ("Product: " + product);
-		}
-
 		[Test] public void CheckPixmap()
 		{
 			Pixmap pixmap = new Pixmap ();

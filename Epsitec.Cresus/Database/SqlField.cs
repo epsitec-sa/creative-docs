@@ -101,13 +101,13 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public object					AsFunction
+		public SqlFunction				AsFunction
 		{
 			get
 			{
 				if (this.type == SqlFieldType.Function)
 				{
-					return this.value;
+					return this.value as SqlFunction;
 				}
 				
 				return null;

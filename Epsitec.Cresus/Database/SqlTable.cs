@@ -22,22 +22,22 @@ namespace Epsitec.Cresus.Database
 			get { return this.columns; }
 		}
 		
-		public SqlColumn[]						PrimaryKeys
+		public SqlColumn[]						PrimaryKey
 		{
 			get
 			{
 				//	NB: les clefs primaires spécifiées par PrimaryKey sont utilisées
 				//	pour former un 'tuple' (par exemple une paire de clef). Déclarer
-				//	une série de colonnes comme PrimaryKeys implique que les tuples
+				//	une série de colonnes comme PrimaryKey implique que les tuples
 				//	doivent être uniques !
 				
-				if (this.primary_keys == null)
+				if (this.primary_key == null)
 				{
 					return new SqlColumn[0];
 				}
 				
-				SqlColumn[] columns = new SqlColumn[this.primary_keys.Count];
-				this.primary_keys.CopyTo (columns, 0);
+				SqlColumn[] columns = new SqlColumn[this.primary_key.Count];
+				this.primary_key.CopyTo (columns, 0);
 				return columns;
 			}
 			set
@@ -49,18 +49,18 @@ namespace Epsitec.Cresus.Database
 				//	selon le tuple des clefs primaires, et l'indexage de chaque clef
 				//	individuellement.
 				
-				if (this.primary_keys == null)
+				if (this.primary_key == null)
 				{
 					if (value == null)
 					{
 						return;
 					}
 					
-					this.primary_keys = new SqlColumnCollection ();
+					this.primary_key = new SqlColumnCollection ();
 				}
 				
-				this.primary_keys.Clear ();
-				this.primary_keys.AddRange (value);
+				this.primary_key.Clear ();
+				this.primary_key.AddRange (value);
 			}
 		}
 		
@@ -68,6 +68,6 @@ namespace Epsitec.Cresus.Database
 		
 		protected string						name;
 		protected SqlColumnCollection			columns = new SqlColumnCollection ();
-		protected SqlColumnCollection			primary_keys = null;
+		protected SqlColumnCollection			primary_key = null;
 	}
 }

@@ -124,8 +124,8 @@ namespace Epsitec.Cresus.Database
 		CompareEqual,					//	a = b
 		CompareNotEqual,				//	a <> b
 		CompareLessThan,				//	a < b
-		CompareLessThanOrEqual,			//	a > b
-		CompareGreaterThan,				//	a >= b
+		CompareLessThanOrEqual,			//	a <= b
+		CompareGreaterThan,				//	a > b
 		CompareGreaterThanOrEqual,		//	a <= b
 		CompareIsNull,					//	a IS NULL
 		CompareIsNotNull,				//	a NOT IS NULL

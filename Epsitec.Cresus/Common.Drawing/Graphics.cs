@@ -136,17 +136,12 @@ namespace Epsitec.Common.Drawing
 			this.AddRectangle (rect.X, rect.Y, rect.Width, rect.Height);
 		}
 		
-		public void AddText(double x, double y, string text, Font font, double size)
+		public double AddText(double x, double y, string text, Font font, double size)
 		{
-			foreach (char c in text)
-			{
-				int    glyph = font.GetGlyphIndex (c);
-				double width = font.GetGlyphAdvance (glyph);
-				
-				this.rasterizer.AddGlyph (font, glyph, x, y, size);
-				
-				x += width * size;
-			}
+			double width = this.rasterizer.AddText (font, text, x, y, size);
+			System.Diagnostics.Debug.WriteLine (">"+text+"< width="+width.ToString ());
+			
+			return width;
 		}
 		
 		public void AddFilledRectangle(double x, double y, double width, double height)

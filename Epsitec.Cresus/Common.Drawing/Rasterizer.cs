@@ -155,6 +155,32 @@ namespace Epsitec.Common.Drawing
 			Agg.Library.AggRasterizerAddGlyph(this.agg_ras, font.Handle, glyph, x, y, scale);
 		}
 		
+		public double AddText(Font font, string text, double x, double y, double scale)
+		{
+			this.CreateOnTheFly ();
+			
+			if (font.IsSynthetic)
+			{
+				Transform font_transform = font.SyntheticTransform;
+				
+				font_transform.Scale (scale);
+				
+				font_transform.TX = x;
+				font_transform.TY = y;
+				
+				switch (font.SyntheticFontMode)
+				{
+					case SyntheticFontMode.Oblique:
+						return Agg.Library.AggRasterizerAddText (this.agg_ras, font.Handle, text, 0, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
+					
+					default:
+						break;
+				}
+			}
+			
+			return Agg.Library.AggRasterizerAddText (this.agg_ras, font.Handle, text, 0, scale, 0, 0, scale, x, y);
+		}
+		
 		
 		public void Render(Renderer.Solid renderer)
 		{
