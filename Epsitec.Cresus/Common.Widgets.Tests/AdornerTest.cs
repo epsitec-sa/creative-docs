@@ -111,7 +111,7 @@ namespace Epsitec.Common.Widgets
 			RadioButton radio1 = new RadioButton();
 			radio1.Location = new Point(10, 40);
 			radio1.Width = 80;
-			radio1.Text = "<m>R</m>ouge";
+			radio1.Text = "<font color=\"#ff0000\"><m>R</m>ouge</font>";
 			radio1.ActiveState = WidgetState.ActiveYes;
 			radio1.Group = "RGB";
 			radio1.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Widgets
 			RadioButton radio2 = new RadioButton();
 			radio2.Location = new Point(10, 25);
 			radio2.Width = 80;
-			radio2.Text = "<m>V</m>ert";
+			radio2.Text = "<font color=\"#00ff00\"><m>V</m>ert</font>";
 			radio2.Group = "RGB";
 			radio2.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			radio2.Clicked += new MessageEventHandler(this.HandleRadio);
@@ -132,7 +132,7 @@ namespace Epsitec.Common.Widgets
 			RadioButton radio3 = new RadioButton();
 			radio3.Location = new Point(10, 10);
 			radio3.Width = 80;
-			radio3.Text = "<m>B</m>leu";
+			radio3.Text = "<font color=\"#0000ff\"><m>B</m>leu</font>";
 			radio3.Group = "RGB";
 			radio3.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			radio3.Clicked += new MessageEventHandler(this.HandleRadio);
@@ -268,7 +268,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(combofix);
 
 
-			ToolBar tb = new ToolBar();
+			HToolBar tb = new HToolBar();
 			tb.Location = new Point(160, 260);
 			tb.Width = 300;
 			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Widgets
 			sl.SetEnabled(false);
 			window.Root.Children.Add(sl);
 
-			ToolBar tb = new ToolBar();
+			HToolBar tb = new HToolBar();
 			tb.Location = new Point(160, 220);
 			tb.Width = 300;
 			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
