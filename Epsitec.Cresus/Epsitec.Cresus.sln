@@ -75,7 +75,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.Implementat
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.NiceIcon", "Common.NiceIcon\Common.NiceIcon.csproj", "{1922B387-70D5-407A-9718-B991404D436C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Pictogram", "Common.Pictogram\Common.Pictogram.csproj", "{1922B387-70D5-407A-9718-B991404D436C}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -91,9 +91,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Dialogs.Tests", "Com
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Pictogram.Tests", "Common.Pictogram.Tests\Common.Pictogram.Tests.csproj", "{01477BAD-9EB1-4FF1-8793-3B9300BD9340}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 24
+		SccNumberOfProjects = 25
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -173,22 +177,26 @@ Global
 		SccProjectName19 = \u0022$/Epsitec.Cresus/Cresus.Database.Implementation\u0022,\u0020LROAAAAA
 		SccLocalPath19 = Cresus.Database.Implementation
 		CanCheckoutShared = false
-		SccProjectUniqueName20 = Common.NiceIcon\\Common.NiceIcon.csproj
+		SccProjectUniqueName20 = App.IconEditor\\App.Icons.csproj
 		SccLocalPath20 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection20 = Common.NiceIcon\\
-		SccProjectUniqueName21 = App.IconEditor\\App.Icons.csproj
+		SccProjectFilePathRelativizedFromConnection20 = App.IconEditor\\
+		SccProjectUniqueName21 = Common.Dialogs\\Common.Dialogs.csproj
 		SccLocalPath21 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection21 = App.IconEditor\\
-		SccProjectUniqueName22 = Common.Dialogs\\Common.Dialogs.csproj
+		SccProjectFilePathRelativizedFromConnection21 = Common.Dialogs\\
+		SccProjectUniqueName22 = Common.Dialogs.Tests\\Common.Dialogs.Tests.csproj
 		SccLocalPath22 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection22 = Common.Dialogs\\
-		SccProjectUniqueName23 = Common.Dialogs.Tests\\Common.Dialogs.Tests.csproj
+		SccProjectFilePathRelativizedFromConnection22 = Common.Dialogs.Tests\\
+		SccProjectUniqueName23 = Common.Pictogram\\Common.Pictogram.csproj
 		SccLocalPath23 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection23 = Common.Dialogs.Tests\\
+		SccProjectFilePathRelativizedFromConnection23 = Common.Pictogram\\
+		SccProjectUniqueName24 = Common.Pictogram.Tests\\Common.Pictogram.Tests.csproj
+		SccLocalPath24 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection24 = Common.Pictogram.Tests\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -285,6 +293,10 @@ Global
 		{867C60BD-6537-489D-8FE5-57D171496008}.Debug.Build.0 = Debug|.NET
 		{867C60BD-6537-489D-8FE5-57D171496008}.Release.ActiveCfg = Release|.NET
 		{867C60BD-6537-489D-8FE5-57D171496008}.Release.Build.0 = Release|.NET
+		{01477BAD-9EB1-4FF1-8793-3B9300BD9340}.Debug.ActiveCfg = Debug|.NET
+		{01477BAD-9EB1-4FF1-8793-3B9300BD9340}.Debug.Build.0 = Debug|.NET
+		{01477BAD-9EB1-4FF1-8793-3B9300BD9340}.Release.ActiveCfg = Release|.NET
+		{01477BAD-9EB1-4FF1-8793-3B9300BD9340}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info

@@ -1465,6 +1465,12 @@ namespace Epsitec.Common.Widgets
 							{
 								string imageName = parameters["src"] as string;
 								Drawing.Image image = this.imageProvider.GetImage(imageName);
+								
+								if (image == null)
+								{
+									throw new System.FormatException(string.Format("<img> tag references unknown image '{0}'.", imageName));
+								}
+								
 								double dx = image.Width;
 								double dy = image.Height;
 

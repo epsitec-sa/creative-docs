@@ -1,6 +1,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Pictogram.Widgets;
  
 namespace Epsitec.Icons
 {

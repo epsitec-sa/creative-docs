@@ -74,6 +74,7 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlArrayItem("Polyline",  Type=typeof(ObjectPoly))]
 		[XmlArrayItem("Rectangle", Type=typeof(ObjectRectangle))]
 		[XmlArrayItem("Polygon",   Type=typeof(ObjectRegular))]
+		[XmlArrayItem("Text",      Type=typeof(ObjectText))]
 		public System.Collections.ArrayList Objects
 		{
 			get
