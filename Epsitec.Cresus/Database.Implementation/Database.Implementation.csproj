@@ -92,7 +92,7 @@
                     Name = "FirebirdSql.Data.Firebird"
                     AssemblyName = "FirebirdSql.Data.Firebird"
                     HintPath = "..\External\FirebirdSql.Data.Firebird.dll"
-                    Private = "False"
+                    Private = "True"
                 />
             </References>
         </Build>
