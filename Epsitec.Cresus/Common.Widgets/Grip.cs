@@ -15,12 +15,14 @@ namespace Epsitec.Common.Widgets
 	/// dessin et une aide pour le dragging de celle-ci (génère un DragEvent qui
 	/// décrit le déplacement désiré).
 	/// </summary>
-	public class Grip : Widget
+	public class Grip : Widget, Helpers.IDragBehaviorHost
 	{
 		public Grip()
 		{
 			this.grip_type  = GripType.None;
 			this.grip_color = Drawing.Color.FromRGB (1.0, 0.0, 0.0);
+			
+			this.drag_behavior = new Helpers.DragBehavior (this);
 			
 			//	Une poignée ne peut jamais obtenir le focus clavier.
 			
@@ -86,6 +88,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public Drawing.Point				DragLocation
+		{
+			get { return this.GripLocation; }
+		}
+		
+		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
 			switch (this.grip_type)
@@ -110,72 +118,18 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			base.ProcessMessage (message, pos);
-			
-			if (this.IsEnabled)
+			if (this.drag_behavior.ProcessMessage (message, pos))
 			{
-				switch (message.Type)
-				{
-					case MessageType.MouseDown:
-						if ((message.Button == MouseButtons.Left) &&
-							(message.ButtonDownCount == 1))
-						{
-							this.StartDragging (message, pos);
-						}
-						break;
-					
-					case MessageType.MouseUp:
-						if (message.Button == MouseButtons.Left)
-						{
-							this.StopDragging (message, pos);
-						}
-						break;
-					
-					case MessageType.MouseMove:
-						if (Message.State.Buttons == MouseButtons.Left)
-						{
-							this.HandleDragging (message, pos);
-						}
-						break;
-				}
+				base.ProcessMessage (message, pos);
 			}
 		}
 		
 		
-		protected virtual void StartDragging(Message message, Drawing.Point pos)
+		void Helpers.IDragBehaviorHost.OnDragBegin()
 		{
-			message.Consumer = this;
-			this.is_dragging = true;
-			
-			this.drag_mouse_offset = message.Cursor - this.GripLocation;
 		}
 		
-		protected virtual void StopDragging(Message message, Drawing.Point pos)
-		{
-			if (this.is_dragging)
-			{
-				message.Consumer = this;
-				this.is_dragging = false;
-			}
-		}
-		
-		protected virtual void HandleDragging(Message message, Drawing.Point pos)
-		{
-			if (this.is_dragging)
-			{
-				System.Diagnostics.Debug.WriteLine ("Pos: " + pos.ToString () + ", message.Cursor: " + message.Cursor.ToString ());
-				
-				message.Consumer = this;
-				
-				Drawing.Point old_pos = this.GripLocation;
-				Drawing.Point new_pos = message.Cursor - drag_mouse_offset;
-				
-				this.OnDragging (new DragEventArgs (old_pos, new_pos));
-			}
-		}
-		
-		
-		protected virtual void OnDragging(DragEventArgs e)
+		void Helpers.IDragBehaviorHost.OnDragging(DragEventArgs e)
 		{
 			if (this.Dragging != null)
 			{
@@ -183,13 +137,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		void Helpers.IDragBehaviorHost.OnDragEnd()
+		{
+		}
+		
 		
 		public event DragEventHandler		Dragging;
 		
 		protected GripType					grip_type;
 		protected Drawing.Color				grip_color;
-		
-		protected bool						is_dragging;
-		protected Drawing.Point				drag_mouse_offset;
+		protected Helpers.DragBehavior		drag_behavior;
 	}
 }
