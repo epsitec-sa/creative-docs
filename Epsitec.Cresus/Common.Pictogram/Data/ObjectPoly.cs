@@ -107,7 +107,7 @@ namespace Epsitec.Common.Pictogram.Data
 				list.Add(item);  // séparateur
 
 				item = new ContextMenuItem();
-				item.Name = "-HandleAdd";
+				item.Name = "Object.HandleAdd";
 				item.Icon = @"file:images/add1.icon";
 				item.Text = "Ajouter un point";
 				list.Add(item);
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Pictogram.Data
 					list.Add(item);  // séparateur
 
 					item = new ContextMenuItem();
-					item.Name = "-HandleDelete";
+					item.Name = "Object.HandleDelete";
 					item.Icon = @"file:images/sub1.icon";
 					item.Text = "Enlever le point";
 					list.Add(item);
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Exécute une commande du menu contextuel.
 		public override void ContextCommand(string cmd, Drawing.Point pos, int handleRank)
 		{
-			if ( cmd == "-HandleAdd" )
+			if ( cmd == "Object.HandleAdd" )
 			{
 				int rank = this.DetectOutline(pos);
 				if ( rank == -1 )  return;
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Pictogram.Data
 				this.HandleInsert(rank+1, handle);
 			}
 
-			if ( cmd == "-HandleDelete" )
+			if ( cmd == "Object.HandleDelete" )
 			{
 				this.HandleDelete(handleRank);
 			}
