@@ -236,6 +236,19 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public void Normalise()
+		{
+			double x1 = System.Math.Min (this.x1, this.x2);
+			double x2 = System.Math.Max (this.x1, this.x2);
+			double y1 = System.Math.Min (this.y1, this.y2);
+			double y2 = System.Math.Max (this.y1, this.y2);
+			
+			this.x1 = x1;
+			this.x2 = x2;
+			this.y1 = y1;
+			this.y2 = y2;
+		}
+		
 		
 		public static Rectangle FromCorners(double x1, double y1, double x2, double y2)
 		{
