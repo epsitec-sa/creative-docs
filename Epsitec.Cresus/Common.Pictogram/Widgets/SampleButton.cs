@@ -82,7 +82,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				}
 
 				double initialWidth = graphics.LineWidth;
-				Drawing.Transform save = graphics.SaveTransform();
+				Drawing.Transform save = graphics.Transform;
 				this.iconContext.ScaleX = (this.Client.Width-2)/this.iconObjects.Size.Width;
 				this.iconContext.ScaleY = (this.Client.Height-2)/this.iconObjects.Size.Height;
 				graphics.TranslateTransform(1, 1);
