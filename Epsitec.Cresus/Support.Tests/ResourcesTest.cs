@@ -93,6 +93,10 @@ namespace Epsitec.Common.Support.Tests
 			Assertion.AssertEquals ("CheckButton", bundle.GetFieldBundleListItem ("widgets", 0)["class"]);
 			Assertion.AssertEquals ("RadioButton", bundle.GetFieldBundleListItem ("widgets", 1)["class"]);
 			Assertion.AssertEquals ("Button", bundle.GetFieldBundleListItem ("widgets", 2)["class"]);
+			Assertion.AssertEquals ("file:complex", bundle.Name);
+			Assertion.AssertEquals ("file:complex#widgets[0]", bundle.GetFieldBundleListItem ("widgets", 0).Name);
+			Assertion.AssertEquals ("file:complex#widgets[1]", bundle.GetFieldBundleListItem ("widgets", 1).Name);
+			Assertion.AssertEquals ("file:button.cancel", bundle.GetFieldBundleListItem ("widgets", 2).Name);
 		}
 	}
 }

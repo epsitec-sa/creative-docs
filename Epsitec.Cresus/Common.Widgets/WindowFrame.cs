@@ -1,8 +1,10 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 09/10/2003
+//	Statut : OK/PA, 10/10/2003
 
 namespace Epsitec.Common.Widgets
 {
+	using BundleAttribute  = Epsitec.Common.Support.BundleAttribute;
+	
 	/// <summary>
 	/// La classe WindowFrame fait le lien avec les WinForms.
 	/// </summary>
@@ -39,6 +41,11 @@ namespace Epsitec.Common.Widgets
 		{
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.ShowInTaskbar   = false;
+		}
+		
+		public new void Show()
+		{
+			base.Show ();
 		}
 		
 		public void AnimateShow(Animation animation)
@@ -179,6 +186,7 @@ namespace Epsitec.Common.Widgets
 				this.WindowAnimationEnded (this);
 			}
 		}
+		
 		
 		public WindowRoot				Root
 		{
@@ -334,7 +342,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Drawing.Point			WindowLocation
+		
+		[Bundle ("pos")]	public Drawing.Point	WindowLocation
 		{
 			get
 			{
@@ -346,7 +355,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Drawing.Size				WindowSize
+		[Bundle ("size")]	public Drawing.Size		WindowSize
 		{
 			get
 			{
@@ -358,15 +367,27 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		[Bundle ("text")]	public new string		Text
+		{
+			get { return TextLayout.ConvertToTaggedText (base.Text); }
+			set { base.Text = TextLayout.ConvertToSimpleText (value); }
+		}
+		
 		
 		#region Interface IBundleSupport
 		public virtual string				PublicClassName
 		{
-			get { return this.GetType ().Name; }
+			get { return "Window"; }
 		}
 		
-		public virtual void RestoreFromBundle(Epsitec.Common.Support.ResourceBundle bundle)
+		public virtual void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
 		{
+			//	Il faut tricher un petit peu ici, car la classe WindowFrame ne fait pas
+			//	partie de la hiérarchie dérivée de Widget. Cependant, l'utilisateur ne
+			//	doit pas en avoir conscience. On laisse simplement "Root" gérer toute
+			//	l'initialisation.
+			
+			this.Root.RestoreFromBundle (bundler, bundle);
 		}
 		#endregion
 		

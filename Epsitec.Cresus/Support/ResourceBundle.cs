@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Statut : en chantier
 
 namespace Epsitec.Common.Support
 {
@@ -11,10 +11,16 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public class ResourceBundle
 	{
-		public ResourceBundle()
+		public ResourceBundle(string name)
 		{
+			this.name = name;
 		}
 		
+		
+		public string					Name
+		{
+			get { return this.name; }
+		}
 		
 		public bool						IsEmpty
 		{
@@ -92,6 +98,11 @@ namespace Epsitec.Common.Support
 		public ResourceBundle GetFieldBundle(string field)
 		{
 			return this[field] as ResourceBundle;
+		}
+		
+		public System.Collections.IList GetFieldBundleList(string field)
+		{
+			return this[field] as System.Collections.IList;
 		}
 		
 		public int GetFieldBundleListLength(string field)
@@ -227,7 +238,9 @@ namespace Epsitec.Common.Support
 									//	le tag <bundle> a déjà été lu, le parser n'a pas besoin de valider le
 									//	bundle comme tel (reader_depth = 1).
 									
-									ResourceBundle child_bundle = new ResourceBundle ();
+									System.Diagnostics.Debug.Assert (element_name != null);
+									
+									ResourceBundle child_bundle = new ResourceBundle (string.Format ("{0}#{1}", this.name, element_name));
 									child_bundle.ParseXml (reader, default_prefix, level, 1, recursion+1);
 									this.AddChildBundle (element_name, child_bundle);
 									
@@ -332,6 +345,7 @@ namespace Epsitec.Common.Support
 				throw new ResourceException (string.Format ("Found list at depth {0}.", reader_depth));
 			}
 			
+			System.Diagnostics.Debug.Assert (element_name != null);
 			System.Collections.ArrayList list = new System.Collections.ArrayList (); 
 			
 			bool stop_loop = false;
@@ -345,7 +359,7 @@ namespace Epsitec.Common.Support
 					case System.Xml.XmlNodeType.Element:
 						if (name == "bundle")
 						{
-							ResourceBundle child_bundle = new ResourceBundle ();
+							ResourceBundle child_bundle = new ResourceBundle (string.Format ("{0}#{1}[{2}]", this.name, element_name, list.Count));
 							child_bundle.ParseXml (reader, default_prefix, level, 1, recursion+1);
 							list.Add (child_bundle);
 						}
@@ -504,7 +518,7 @@ namespace Epsitec.Common.Support
 			}
 			else
 			{
-				current_bundle = new ResourceBundle ();
+				current_bundle = new ResourceBundle (string.Format ("{0}#{1}", this.name, element_name));
 				this.fields[element_name] = current_bundle;
 			}
 			
@@ -559,6 +573,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		protected string				name;
 		protected Hashtable				fields;
 		
 		protected const int				max_recursion = 50;

@@ -91,8 +91,31 @@ namespace Epsitec.Common.Widgets
 			get { return this.GetType ().Name; }
 		}
 		
-		public virtual void RestoreFromBundle(Epsitec.Common.Support.ResourceBundle bundle)
+		public virtual void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
 		{
+			this.SuspendLayout ();
+			
+			//	L'ObjectBundler sait initialiser la plupart des propriétés simples (celles
+			//	qui sont marquées par l'attribut [Bundle]), mais il ne sait pas comment
+			//	restitue les enfants du widget :
+			
+			System.Collections.IList widget_list = bundle.GetFieldBundleList ("widgets");
+			
+			if (widget_list != null)
+			{
+				//	Notre bundle contient une liste de sous-bundles contenant les descriptions des
+				//	widgets enfants. On les restitue nous-même et on les ajoute dans la liste des
+				//	enfants.
+				
+				foreach (Support.ResourceBundle widget_bundle in widget_list)
+				{
+					Widget widget = bundler.CreateFromBundle (widget_bundle) as Widget;
+					
+					this.Children.Add (widget);
+				}
+			}
+			
+			this.ResumeLayout ();
 		}
 		#endregion
 		
@@ -158,15 +181,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		[Bundle ("anchor")]	public AnchorStyles					Anchor
+		[Bundle ("anchor")]	public AnchorStyles		Anchor
 		{
 			get { return this.anchor; }
 			set { this.anchor = value; }
 		}
 		
-		public DockStyle					Dock
+		[Bundle ("dock")]	public DockStyle		Dock
 		{
-			get { return this.dock; }
+			get{ return this.dock; }
 			set
 			{
 				if (this.dock != value)
@@ -179,6 +202,44 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		[Bundle ("dock_m")] public Drawing.Margins	DockMargins
+		{
+			get { return this.dockMargins; }
+			set
+			{
+				if (this.dockMargins != value)
+				{
+					this.dockMargins = value;
+					if (this.parent != null)
+					{
+						this.parent.UpdateChildrenLayout ();
+					}
+				}
+			}
+		}
+		
+		[Bundle ("dock_h")]	public bool				PreferHorizontalDockLayout
+		{
+			get { return (this.internalState & InternalState.PreferXLayout) != 0; }
+			set
+			{
+				if (value != this.PreferHorizontalDockLayout)
+				{
+					if (value)
+					{
+						this.internalState |= InternalState.PreferXLayout;
+					}
+					else
+					{
+						this.internalState &= ~ InternalState.PreferXLayout;
+					}
+					
+					this.UpdateDockedChildrenLayout ();
+				}
+			}
+		}
+		
 		
 		public MouseCursor					MouseCursor
 		{
@@ -243,17 +304,19 @@ namespace Epsitec.Common.Widgets
 			set { this.SetBounds (value.X, value.Y, value.X + value.Width, value.Y + value.Height); }
 		}
 		
-		public Drawing.Point				Location
+		
+		[Bundle ("pos")]	public Drawing.Point	Location
 		{
 			get { return new Drawing.Point (this.x1, this.y1); }
 			set { this.SetBounds (value.X, value.Y, value.X + this.x2 - this.x1, value.Y + this.y2 - this.y1); }
 		}
 		
-		public Drawing.Size					Size
+		[Bundle ("size")]	public Drawing.Size		Size
 		{
 			get { return new Drawing.Size (this.x2 - this.x1, this.y2 - this.y1); }
 			set { this.SetBounds (this.x1, this.y1, this.x1 + value.Width, this.y1 + value.Height); }
 		}
+		
 		
 		public double						Width
 		{
@@ -444,27 +507,6 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					this.internalState &= ~ InternalState.DebugActive;
-				}
-			}
-		}
-		
-		public bool							PreferHorizontalDockLayout
-		{
-			get { return (this.internalState & InternalState.PreferXLayout) != 0; }
-			set
-			{
-				if (value != this.PreferHorizontalDockLayout)
-				{
-					if (value)
-					{
-						this.internalState |= InternalState.PreferXLayout;
-					}
-					else
-					{
-						this.internalState &= ~ InternalState.PreferXLayout;
-					}
-					
-					this.UpdateDockedChildrenLayout ();
 				}
 			}
 		}
@@ -881,7 +923,8 @@ namespace Epsitec.Common.Widgets
 			get { return this.parent != null; }
 		}
 		
-		[Bundle ("name")]	public string						Name
+		
+		[Bundle ("name")]	public string			Name
 		{
 			get
 			{
@@ -906,7 +949,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		[Bundle ("text")]	public virtual string				Text
+		[Bundle ("text")]	public virtual string	Text
 		{
 			get
 			{
@@ -940,6 +983,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
 		
 		public char							Mnemonic
 		{
@@ -1901,6 +1945,14 @@ namespace Epsitec.Common.Widgets
 			this.MaxSize = this.MapClientToParent (new Drawing.Size (max_width, max_height));
 		}
 		
+		protected virtual void AdjustDockBounds(ref Drawing.Rectangle bounds)
+		{
+			bounds.Left   += this.DockMargins.Left;
+			bounds.Right  -= this.DockMargins.Right;
+			bounds.Top    -= this.DockMargins.Top;
+			bounds.Bottom += this.DockMargins.Bottom;
+		}
+		
 		protected virtual void UpdateDockedChildrenLayout()
 		{
 			if ((this.internalState & InternalState.AutoMinMax) != 0)
@@ -1918,6 +1970,8 @@ namespace Epsitec.Common.Widgets
 			
 			System.Collections.Queue fill_queue = null;
 			Drawing.Rectangle client_rect = this.clientInfo.Bounds;
+			
+			this.AdjustDockBounds (ref client_rect);
 			
 			foreach (Widget child in this.Children)
 			{
@@ -2937,6 +2991,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected AnchorStyles				anchor;
 		protected DockStyle					dock;
+		protected Drawing.Margins			dockMargins;
 		protected Drawing.Color				backColor;
 		protected Drawing.Color				foreColor;
 		protected double					x1, y1, x2, y2;

@@ -64,8 +64,46 @@ namespace Epsitec.Common.Drawing
 		
 		public override string ToString()
 		{
-			return System.String.Format ("{{Width={0}, Height={1}}}", this.width, this.height);
+			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1}", this.width, this.height);
 		}
+		
+		
+		public static Size Parse(string value)
+		{
+			string[] args = value.Split (new char[] { ';', ':' });
+			
+			if (args.Length != 2)
+			{
+				throw new System.ArgumentException (string.Format ("Invalid size specification ({0})", value));
+			}
+			
+			string arg_x = args[0].Trim ();
+			string arg_y = args[1].Trim ();
+			
+			double x = System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
+			double y = System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
+			
+			return new Size (x, y);
+		}
+		
+		public static Size Parse(string value, Size default_value)
+		{
+			string[] args = value.Split (new char[] { ';', ':' });
+			
+			if (args.Length != 2)
+			{
+				throw new System.ArgumentException (string.Format ("Invalid size specification ({0})", value));
+			}
+			
+			string arg_x = args[0].Trim ();
+			string arg_y = args[1].Trim ();
+			
+			if (arg_x != "*") default_value.Width  = System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
+			if (arg_y != "*") default_value.Height = System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
+			
+			return default_value;
+		}
+		
 		
 		public static Size operator +(Size a, Size b)
 		{

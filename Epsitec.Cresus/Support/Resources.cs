@@ -157,7 +157,7 @@ namespace Epsitec.Common.Support
 				switch (level)
 				{
 					case ResourceLevel.Merged:
-						bundle = new ResourceBundle ();
+						bundle = new ResourceBundle (id);
 						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Default), prefix, level, recursion);
 						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Localised), prefix, level, recursion);
 						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Customised), prefix, level, recursion);
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Support
 					case ResourceLevel.Default:
 					case ResourceLevel.Localised:
 					case ResourceLevel.Customised:
-						bundle = new ResourceBundle ();
+						bundle = new ResourceBundle (id);
 						bundle.Compile (provider.GetDataStream (resource_id, level), prefix, level, recursion);
 						break;
 					

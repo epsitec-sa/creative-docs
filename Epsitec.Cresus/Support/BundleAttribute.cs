@@ -1,3 +1,6 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 10/10/2003
+
 namespace Epsitec.Common.Support
 {
 	/// <summary>
@@ -21,6 +24,12 @@ namespace Epsitec.Common.Support
 		{
 			get { return this.default_value; }
 			set { this.default_value = value; }
+		}
+		
+		public string					PropertyName
+		{
+			get { return this.prop_name; }
+			set { this.prop_name = value; }
 		}
 		
 		

@@ -7,7 +7,7 @@ namespace Epsitec.Common.Support.Tests
 	{
 		[Test] public void CheckCompile()
 		{
-			ResourceBundle bundle = new ResourceBundle ();
+			ResourceBundle bundle = new ResourceBundle ("test");
 			string test_string = "<bundle><a>A</a><b>B</b></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Support.Tests
 		
 		[Test] public void CheckCompileRefBundle()
 		{
-			ResourceBundle bundle = new ResourceBundle ();
+			ResourceBundle bundle = new ResourceBundle ("test");
 			string test_string = "<bundle><a>A</a><b><ref t='file:button.cancel'/></b></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -45,7 +45,7 @@ namespace Epsitec.Common.Support.Tests
 		
 		[Test] public void CheckCompileSubBundle()
 		{
-			ResourceBundle bundle = new ResourceBundle ();
+			ResourceBundle bundle = new ResourceBundle ("test");
 			string test_string = "<bundle><a>A0</a><b><bundle><a>A1</a><b>B1</b></bundle></b></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -64,11 +64,13 @@ namespace Epsitec.Common.Support.Tests
 			Assertion.AssertEquals (2, bundle.GetFieldBundle ("b").CountFields);
 			Assertion.AssertEquals ("A1", bundle.GetFieldBundle ("b")["a"]);
 			Assertion.AssertEquals ("B1", bundle.GetFieldBundle ("b")["b"]);
+			Assertion.AssertEquals ("test", bundle.Name);
+			Assertion.AssertEquals ("test#b", bundle.GetFieldBundle ("b").Name);
 		}
 		
 		[Test] public void CheckCompileCDATA()
 		{
-			ResourceBundle bundle = new ResourceBundle ();
+			ResourceBundle bundle = new ResourceBundle ("test");
 			string test_string = "<bundle><text><![CDATA[Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.]]></text></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -84,7 +86,7 @@ namespace Epsitec.Common.Support.Tests
 		
 		[Test] public void CheckCompileEscapes()
 		{
-			ResourceBundle bundle = new ResourceBundle ();
+			ResourceBundle bundle = new ResourceBundle ("test");
 			string test_string = "<bundle><text>&lt;&amp;&gt;</text></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -100,7 +102,7 @@ namespace Epsitec.Common.Support.Tests
 		
 		[Test] public void CheckCompileAndMerge()
 		{
-			ResourceBundle bundle = new ResourceBundle ();
+			ResourceBundle bundle = new ResourceBundle ("test");
 			string test_string_1 = "<bundle><a>A</a><b>B</b></bundle>";
 			string test_string_2 = "<bundle><a>X</a><c>C</c></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
@@ -127,7 +129,7 @@ namespace Epsitec.Common.Support.Tests
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileEx1()
 		{
-			ResourceBundle bundle = new ResourceBundle ();
+			ResourceBundle bundle = new ResourceBundle ("test");
 			string test_string = "<a>A</a><b>B</b>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -137,7 +139,7 @@ namespace Epsitec.Common.Support.Tests
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileEx2()
 		{
-			ResourceBundle bundle = new ResourceBundle ();
+			ResourceBundle bundle = new ResourceBundle ("test");
 			string test_string = "<bundle><a>A<b>B</b></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -147,7 +149,7 @@ namespace Epsitec.Common.Support.Tests
 		
 		[Test] public void CheckCompileRefLevel1()
 		{
-			ResourceBundle bundle = new ResourceBundle ();
+			ResourceBundle bundle = new ResourceBundle ("test");
 			string test_string = "<bundle><a>A</a><ref t='file:button.cancel'/></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -158,17 +160,18 @@ namespace Epsitec.Common.Support.Tests
 			
 			System.Array.Sort (names);
 			
-			Assertion.AssertEquals (5, bundle.CountFields);
-			Assertion.AssertEquals ("a", names[0]);
-			Assertion.AssertEquals ("class", names[1]);
-			Assertion.AssertEquals ("name", names[2]);
-			Assertion.AssertEquals ("size", names[3]);
-			Assertion.AssertEquals ("text", names[4]);
+			Assertion.AssertEquals (6, bundle.CountFields);
+			Assertion.AssertEquals ("a",      names[0]);
+			Assertion.AssertEquals ("anchor", names[1]);
+			Assertion.AssertEquals ("class",  names[2]);
+			Assertion.AssertEquals ("name",   names[3]);
+			Assertion.AssertEquals ("size",   names[4]);
+			Assertion.AssertEquals ("text",   names[5]);
 		}
 		
 		[Test] public void CheckCompileRefLevel2()
 		{
-			ResourceBundle bundle = new ResourceBundle ();
+			ResourceBundle bundle = new ResourceBundle ("test");
 			string test_string = "<bundle><a>A</a><b><ref t='file:strings#label.Hello'/></b><c><ref t='file:strings#title.MainWindow'/></c></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -190,7 +193,7 @@ namespace Epsitec.Common.Support.Tests
 		
 		[Test] public void CheckCompileRefLevel2AutoPrefix()
 		{
-			ResourceBundle bundle = new ResourceBundle ();
+			ResourceBundle bundle = new ResourceBundle ("test");
 			string test_string = "<bundle><a>A</a><b><ref t='button.cancel#text'/></b></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -209,7 +212,7 @@ namespace Epsitec.Common.Support.Tests
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx1()
 		{
-			ResourceBundle bundle = new ResourceBundle ();
+			ResourceBundle bundle = new ResourceBundle ("test");
 			string test_string = "<bundle><a>A</a><b><ref t='button.cancel#text'/></b></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -219,7 +222,7 @@ namespace Epsitec.Common.Support.Tests
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx2()
 		{
-			ResourceBundle bundle = new ResourceBundle ();
+			ResourceBundle bundle = new ResourceBundle ("test");
 			string test_string = "<bundle><a>A</a><b><ref t='file:does-not-exist#text'/></b></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -229,7 +232,7 @@ namespace Epsitec.Common.Support.Tests
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx3()
 		{
-			ResourceBundle bundle = new ResourceBundle ();
+			ResourceBundle bundle = new ResourceBundle ("test");
 			string test_string = "<bundle><a>A</a><b><ref t='file:button.cancel#does-not-exist'/></b></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);

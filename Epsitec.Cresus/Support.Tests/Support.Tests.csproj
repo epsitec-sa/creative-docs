@@ -98,12 +98,31 @@
                     Project = "{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Common.Widgets"
+                    Project = "{C84C2E19-04B7-4244-86F6-E4CAFA3FDA7B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "System.Windows.Forms"
+                    AssemblyName = "System.Windows.Forms"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
+                />
             </References>
         </Build>
         <Files>
             <Include>
                 <File
                     RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "copy.info"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "ObjectBundlerTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -17,6 +17,14 @@ namespace Epsitec.Common.Widgets
 				return Drawing.ContentAlignment.TopLeft;
 			}
 		}
+		
+		protected override void AdjustDockBounds(ref Drawing.Rectangle bounds)
+		{
+			base.AdjustDockBounds (ref bounds);
+			
+			//	TODO: augmenter les marges gauche, droite, haute et basse pour que le
+			//	contenu n'empiète pas sur le titre, ni sur le cadre...
+		}
 
 		// Dessine le texte.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)

@@ -52,9 +52,46 @@ namespace Epsitec.Common.Drawing
 		
 		public override string ToString()
 		{
-			return System.String.Format ("{{X={0}, Y={1}}}", this.x, this.y);
+			return System.String.Format (System.Globalization.CultureInfo.InvariantCulture, "{0};{1}", this.x, this.y);
 		}
-
+		
+		
+		public static Point Parse(string value)
+		{
+			string[] args = value.Split (new char[] { ';', ':' });
+			
+			if (args.Length != 2)
+			{
+				throw new System.ArgumentException (string.Format ("Invalid point specification ({0})", value));
+			}
+			
+			string arg_x = args[0].Trim ();
+			string arg_y = args[1].Trim ();
+			
+			double x = System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
+			double y = System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
+			
+			return new Point (x, y);
+		}
+		
+		public static Point Parse(string value, Point default_value)
+		{
+			string[] args = value.Split (new char[] { ';', ':' });
+			
+			if (args.Length != 2)
+			{
+				throw new System.ArgumentException (string.Format ("Invalid point specification ({0})", value));
+			}
+			
+			string arg_x = args[0].Trim ();
+			string arg_y = args[1].Trim ();
+			
+			if (arg_x != "*") default_value.X = System.Double.Parse (arg_x, System.Globalization.CultureInfo.InvariantCulture);
+			if (arg_y != "*") default_value.Y = System.Double.Parse (arg_y, System.Globalization.CultureInfo.InvariantCulture);
+			
+			return default_value;
+		}
+		
 		
 		public static Point operator +(Point a, Point b)
 		{

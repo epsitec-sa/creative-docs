@@ -6,3 +6,8 @@ Ce qu'il reste à faire dans "Support"
 	La méthode Merge ne marche correctement que pour les
 	strings.
 
+-	La classe ObjectBundler ne contient pas encore le code qui
+	énumère toutes les assemblies chargées et les analyse
+	dynamiquement pour enregistrer tous les types qui implémentent
+	l'interface IBundleSupport.
+

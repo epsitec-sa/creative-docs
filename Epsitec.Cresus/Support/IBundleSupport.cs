@@ -11,6 +11,6 @@ namespace Epsitec.Common.Support
 	{
 		string			PublicClassName		{ get; }
 		
-		void RestoreFromBundle(Epsitec.Common.Support.ResourceBundle bundle);
+		void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle);
 	}
 }
