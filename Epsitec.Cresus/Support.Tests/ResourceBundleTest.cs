@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Support.Tests
 		[Test] public void CheckCompileCDATA()
 		{
 			ResourceBundle bundle = new ResourceBundle ();
-			string test_string = "<bundle><txt><![CDATA[Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.]]></txt></bundle>";
+			string test_string = "<bundle><text><![CDATA[Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.]]></text></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
@@ -78,14 +78,14 @@ namespace Epsitec.Cresus.Support.Tests
 			string[] names = bundle.FieldNames;
 			
 			Assertion.AssertEquals (1, bundle.CountFields);
-			Assertion.AssertEquals ("txt", names[0]);
-			Assertion.AssertEquals ("Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.", bundle["txt"]);
+			Assertion.AssertEquals ("text", names[0]);
+			Assertion.AssertEquals ("Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.", bundle["text"]);
 		}
 		
 		[Test] public void CheckCompileEscapes()
 		{
 			ResourceBundle bundle = new ResourceBundle ();
-			string test_string = "<bundle><txt>&lt;&amp;&gt;</txt></bundle>";
+			string test_string = "<bundle><text>&lt;&amp;&gt;</text></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
@@ -94,8 +94,8 @@ namespace Epsitec.Cresus.Support.Tests
 			string[] names = bundle.FieldNames;
 			
 			Assertion.AssertEquals (1, bundle.CountFields);
-			Assertion.AssertEquals ("txt", names[0]);
-			Assertion.AssertEquals ("<&>", bundle["txt"]);
+			Assertion.AssertEquals ("text", names[0]);
+			Assertion.AssertEquals ("<&>", bundle["text"]);
 		}
 		
 		[Test] public void CheckCompileAndMerge()
@@ -160,10 +160,10 @@ namespace Epsitec.Cresus.Support.Tests
 			
 			Assertion.AssertEquals (5, bundle.CountFields);
 			Assertion.AssertEquals ("a", names[0]);
-			Assertion.AssertEquals ("cls", names[1]);
-			Assertion.AssertEquals ("nam", names[2]);
-			Assertion.AssertEquals ("siz", names[3]);
-			Assertion.AssertEquals ("txt", names[4]);
+			Assertion.AssertEquals ("class", names[1]);
+			Assertion.AssertEquals ("name", names[2]);
+			Assertion.AssertEquals ("size", names[3]);
+			Assertion.AssertEquals ("text", names[4]);
 		}
 		
 		[Test] public void CheckCompileRefLevel2()
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Support.Tests
 		[Test] public void CheckCompileRefLevel2AutoPrefix()
 		{
 			ResourceBundle bundle = new ResourceBundle ();
-			string test_string = "<bundle><a>A</a><b><ref t='button.cancel#txt'/></b></bundle>";
+			string test_string = "<bundle><a>A</a><b><ref t='button.cancel#text'/></b></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Support.Tests
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx1()
 		{
 			ResourceBundle bundle = new ResourceBundle ();
-			string test_string = "<bundle><a>A</a><b><ref t='button.cancel#txt'/></b></bundle>";
+			string test_string = "<bundle><a>A</a><b><ref t='button.cancel#text'/></b></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Support.Tests
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx2()
 		{
 			ResourceBundle bundle = new ResourceBundle ();
-			string test_string = "<bundle><a>A</a><b><ref t='file:does-not-exist#txt'/></b></bundle>";
+			string test_string = "<bundle><a>A</a><b><ref t='file:does-not-exist#text'/></b></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);

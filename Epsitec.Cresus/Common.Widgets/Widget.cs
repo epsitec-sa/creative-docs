@@ -1,6 +1,11 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 09/10/2003
+
 namespace Epsitec.Common.Widgets
 {
 	using ContentAlignment = Drawing.ContentAlignment;
+	using BundleAttribute  = Epsitec.Common.Support.BundleAttribute;
+	
 	
 	[System.Flags] public enum AnchorStyles
 	{
@@ -43,9 +48,10 @@ namespace Epsitec.Common.Widgets
 	
 	
 	/// <summary>
-	/// 
+	/// La classe Widget implémente la classe de base dont dérivent tous les
+	/// widgets de l'interface graphique ("controls" dans l'appellation Windows).
 	/// </summary>
-	public class Widget : System.IDisposable
+	public class Widget : System.IDisposable, Epsitec.Common.Support.IBundleSupport
 	{
 		public Widget()
 		{
@@ -70,11 +76,25 @@ namespace Epsitec.Common.Widgets
 			Widget.aliveWidgets.Add (new System.WeakReference (this));
 		}
 		
+		
+		#region Interface IDisposable
 		public void Dispose()
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
 		}
+		#endregion
+		
+		#region Interface IBundleSupport
+		public virtual string				PublicClassName
+		{
+			get { return this.GetType ().Name; }
+		}
+		
+		public virtual void RestoreFromBundle(Epsitec.Common.Support.ResourceBundle bundle)
+		{
+		}
+		#endregion
 		
 		protected virtual void Dispose(bool disposing)
 		{
@@ -138,7 +158,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public AnchorStyles					Anchor
+		[Bundle ("anchor")]	public AnchorStyles					Anchor
 		{
 			get { return this.anchor; }
 			set { this.anchor = value; }
@@ -403,6 +423,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return new Drawing.Size (1000000, 1000000); }
 		}
+		
 		
 #if false
 		public bool							CausesValidation
@@ -860,7 +881,7 @@ namespace Epsitec.Common.Widgets
 			get { return this.parent != null; }
 		}
 		
-		public string						Name
+		[Bundle ("name")]	public string						Name
 		{
 			get
 			{
@@ -885,7 +906,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public virtual string				Text
+		[Bundle ("text")]	public virtual string				Text
 		{
 			get
 			{
@@ -986,7 +1007,6 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler			MaxSizeChanged;
 		
 		
-		//	Cursor
 		//	FindNextWidget/FindPrevWidget
 		
 		public virtual void Hide()

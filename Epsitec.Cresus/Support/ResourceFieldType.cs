@@ -8,6 +8,7 @@ namespace Epsitec.Cresus.Support
 	{
 		None,							//	champ n'existe pas
 		String,							//	champ contient du texte
-		Bundle							//	champ contient un bundle
+		Bundle,							//	champ contient un bundle
+		BundleList						//	champ contient une liste de bundles
 	}
 }

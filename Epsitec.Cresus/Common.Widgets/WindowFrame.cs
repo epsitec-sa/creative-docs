@@ -1,9 +1,12 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 09/10/2003
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe WindowFrame fait le lien avec les WinForms.
 	/// </summary>
-	public class WindowFrame : System.Windows.Forms.Form
+	public class WindowFrame : System.Windows.Forms.Form, Epsitec.Common.Support.IBundleSupport
 	{
 		protected delegate void BoundsOffsetCallback(Drawing.Rectangle bounds, Drawing.Point offset);
 		protected delegate void AnimatorCallback(Animator animator);
@@ -354,6 +357,18 @@ namespace Epsitec.Common.Widgets
 				this.WindowBounds = new Drawing.Rectangle (this.WindowLocation, value);
 			}
 		}
+		
+		
+		#region Interface IBundleSupport
+		public virtual string				PublicClassName
+		{
+			get { return this.GetType ().Name; }
+		}
+		
+		public virtual void RestoreFromBundle(Epsitec.Common.Support.ResourceBundle bundle)
+		{
+		}
+		#endregion
 		
 		
 		protected override void Dispose(bool disposing)

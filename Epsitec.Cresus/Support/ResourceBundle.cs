@@ -50,6 +50,16 @@ namespace Epsitec.Cresus.Support
 		}
 		
 		
+		public bool Contains(string field)
+		{
+			if (this.fields != null)
+			{
+				return this.fields.Contains (field);
+			}
+			
+			return false;
+		}
+		
 		public ResourceFieldType GetFieldType(string field)
 		{
 			object data = this[field];
@@ -66,6 +76,10 @@ namespace Epsitec.Cresus.Support
 			{
 				return ResourceFieldType.Bundle;
 			}
+			if (data is System.Collections.IList)
+			{
+				return ResourceFieldType.BundleList;
+			}
 			
 			throw new ResourceException ("Invalid field type in bundle");
 		}
@@ -80,15 +94,16 @@ namespace Epsitec.Cresus.Support
 			return this[field] as ResourceBundle;
 		}
 		
-		
-		public bool Contains(string field)
+		public int GetFieldBundleListLength(string field)
 		{
-			if (this.fields != null)
-			{
-				return this.fields.Contains (field);
-			}
-			
-			return false;
+			System.Collections.IList list = this[field] as System.Collections.IList;
+			return (list == null) ? 0 : list.Count;
+		}
+		
+		public ResourceBundle GetFieldBundleListItem(string field, int index)
+		{
+			System.Collections.IList list = this[field] as System.Collections.IList;
+			return (list == null) ? null : list[index] as ResourceBundle;
 		}
 		
 		
@@ -133,6 +148,8 @@ namespace Epsitec.Cresus.Support
 		
 		protected void ParseXml(System.Xml.XmlTextReader reader, string default_prefix, ResourceLevel level, int reader_depth, int recursion)
 		{
+			//	Analyse un fragment de XML.
+			
 			if (recursion > ResourceBundle.max_recursion)
 			{
 				throw new ResourceException ("Bundle is too complex, giving up");
@@ -156,116 +173,39 @@ namespace Epsitec.Cresus.Support
 					case System.Xml.XmlNodeType.Element:
 						
 						//	Un élément peut être soit un élément racine <bundle>, soit un élément signalant
-						//	une référence <ref t='target'/>, soit un élément définissant un champ du bundle.
+						//	une référence <ref t='target'/>, soit un élément commençant une liste, soit
+						//	un élément <bundle> commençant un sous-bundle, soit un élément définissant un
+						//	champ 'string' du bundle.
 						
 						if (name == "ref")
 						{
-							//	On vient de trouver une référence à une autre ressource. En fonction du
-							//	niveau auquel on se trouve, cette référence va soit réaliser une fusion
-							//	avec un autre bundle (niveau 1), soit simplement insérer les données dans
-							//	le buffer courant (niveau 2).
+							ResourceBundle new_bundle;
 							
-							string target = reader.GetAttribute ("t");
+							this.ParseXmlRef (reader, default_prefix, level, reader_depth, recursion, element_name, buffer, out new_bundle);
 							
-							if (target == null)
+							if (new_bundle != null)
 							{
-								throw new ResourceException ("Reference has no target");
-							}
-							
-							if (Resources.ExtractPrefix (target) == null)
-							{
-								if (default_prefix == null)
-								{
-									throw new ResourceException (string.Format ("No default prefix specified, target '{0}' cannot be resolved", target));
-								}
-								
-								target = default_prefix + ":" + target;
-							}
-							
-							//	La cible peut être composée de deux parties: un nom de bundle et un nom de champ;
-							//	le séparateur est le "#", donc target = "bundle#field" ou target = "bundle".
-							
-							int pos = target.IndexOf ("#");
-							
-							string target_bundle = target;
-							string target_field  = null;
-							
-							if (pos >= 0)
-							{
-								target_bundle = target.Substring (0, pos);
-								target_field  = target.Substring (pos+1);
-							}
-							
-							ResourceBundle bundle = Resources.GetBundle (target_bundle, level, recursion+1);
-							
-							if (bundle == null)
-							{
-								throw new ResourceException (string.Format ("Reference to target '{0}' cannot be resolved", target));
-							}
-							
-							if (reader_depth == 1)
-							{
-								System.Diagnostics.Debug.Assert (element_name == null);
-								
 								//	Gère la référence à un bundle externe : transfère le contenu du
 								//	bundle externe dans notre propre bundle.
 								
-								this.Merge (bundle);
-							}
-							else if (reader_depth == 2)
-							{
-								System.Diagnostics.Debug.Assert (element_name != null);
-								
-								//	Gère la référence à un champ d'un bundle externe. Il faut distinguer ici deux
-								//	cas différents:
-								//
-								//	1) La référence pointe sur un champ de type texte. Il faut alors simplement
-								//	   ajouter le texte dans le buffer courant.
-								//
-								//	2) La référence pointe sur un autre bundle. Il faut alors fusionner le bundle
-								//	   avec le bundle courant.
-								
-								ResourceBundle child_bundle = null;
-								
-								if (target_field != null)
-								{
-									if (!bundle.Contains (target_field))
-									{
-										throw new ResourceException (string.Format ("Target bundle '{0}' does not contain field '{1}'", target_bundle, target_field));
-									}
-									
-									object field_data = bundle[target_field];
-									
-									if (field_data is string)
-									{
-										buffer.Append (field_data);
-									}
-									else
-									{
-										child_bundle = field_data as ResourceBundle;
-									}
-								}
-								else
-								{
-									child_bundle = bundle;
-								}
-								
-								if (child_bundle != null)
-								{
-									this.AddChildBundle (element_name, child_bundle);
-								}
-							}
-							else
-							{
-								throw new ResourceException (string.Format ("Illegal reference to '{0}' at level {1}", target, reader_depth));
+								this.Merge (new_bundle);
 							}
 							
 							//	On ne change pas la profondeur (reader_depth) ici, car c'est un
-							//	 tag <ref ../> qui ne contient aucune donnée :
+							//	tag <ref ../> qui ne contient aucune donnée :
 							
 							continue;
 						}
 						
+						if (name == "list")
+						{
+							this.ParseXmlList (reader, default_prefix, level, reader_depth, recursion, element_name, buffer);
+							
+							//	On ne change pas la profondeur (reader_depth) ici, car on a terminé
+							//	sur un tag </list>.
+							
+							continue;
+						}
 						
 						if (name == "bundle")
 						{
@@ -320,6 +260,8 @@ namespace Epsitec.Cresus.Support
 						reader_depth++;
 						break;
 					
+					
+					
 					case System.Xml.XmlNodeType.EndElement:
 						
 						System.Diagnostics.Debug.Assert (reader_depth > 0);
@@ -328,6 +270,10 @@ namespace Epsitec.Cresus.Support
 						
 						if (reader_depth == 0)
 						{
+							//	Dès que le niveau d'imbrication retombe à zéro, on arrête l'analyse,
+							//	parce que dans le cas d'un fragment, il ne faut pas lire au-delà de
+							//	sa fin (ça consommerait des éléments utiles à l'appelant).
+							
 							return;
 						}
 						
@@ -339,7 +285,9 @@ namespace Epsitec.Cresus.Support
 						
 						if (reader_depth == 1)
 						{
-							if (this.fields.Contains (element_name) && (this.fields[element_name] is ResourceBundle))
+							if ((this.fields.Contains (element_name)) &&
+								((this.fields[element_name] is ResourceBundle) ||
+								 (this.fields[element_name] is System.Collections.IList)))
 							{
 								System.Diagnostics.Debug.Assert (buffer.Length == 0);
 							}
@@ -353,15 +301,198 @@ namespace Epsitec.Cresus.Support
 						}
 						break;
 					
+					
+					
 					case System.Xml.XmlNodeType.Text:
 					case System.Xml.XmlNodeType.CDATA:
 						System.Diagnostics.Debug.Assert (reader_depth == 2);
 						System.Diagnostics.Debug.Assert (element_name != null);
 						buffer.Append (reader.Value);
 						break;
+					
+					
+					
+					default:
+						break;
 				}
 			}
 		}
+		
+		protected void ParseXmlList(System.Xml.XmlTextReader reader, string default_prefix, ResourceLevel level, int reader_depth, int recursion, string element_name, System.Text.StringBuilder buffer)
+		{
+			//	Une liste est identifée par <list>...</list> et peut contenir exclusivement :
+			//
+			//	- des bundles ou
+			//	- des références à des bundles
+			//
+			//	On ne peut pas (encore) faire des listes de listes, ou des listes de textes.
+			
+			if (reader_depth != 2)
+			{
+				throw new ResourceException (string.Format ("Found list at depth {0}.", reader_depth));
+			}
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList (); 
+			
+			bool stop_loop = false;
+			
+			while (reader.Read ())
+			{
+				string name = reader.Name;
+				
+				switch (reader.NodeType)
+				{
+					case System.Xml.XmlNodeType.Element:
+						if (name == "bundle")
+						{
+							ResourceBundle child_bundle = new ResourceBundle ();
+							child_bundle.ParseXml (reader, default_prefix, level, 1, recursion+1);
+							list.Add (child_bundle);
+						}
+						else if (name == "ref")
+						{
+							ResourceBundle child_bundle;
+							this.ParseXmlRef (reader, default_prefix, level, 1, recursion, null, null, out child_bundle);
+							
+							if (child_bundle == null)
+							{
+								throw new ResourceException ("Illegal reference in list");
+							}
+							
+							list.Add (child_bundle);
+						}
+						else
+						{
+							throw new ResourceException (string.Format ("Found tag <{0}> in list.", name));
+						}
+						break;
+					
+					case System.Xml.XmlNodeType.EndElement:
+						if (name == "list")
+						{
+							stop_loop = true;
+						}
+						else
+						{
+							throw new ResourceException (string.Format ("Found end tag </{0}> in list.", name));
+						}
+						break;
+					
+					default:
+						break;
+				}
+				
+				if (stop_loop)
+				{
+					break;
+				}
+			}
+			
+			this.AddChildList (element_name, list);
+		}
+		
+		protected void ParseXmlRef(System.Xml.XmlTextReader reader, string default_prefix, ResourceLevel level, int reader_depth, int recursion, string element_name, System.Text.StringBuilder buffer, out ResourceBundle new_bundle)
+		{
+			new_bundle = null;
+			
+			//	On vient de trouver une référence à une autre ressource. En fonction du
+			//	niveau auquel on se trouve, cette référence va soit retourner le bundle
+			//	trouvé (niveau 1), soit simplement insérer les données dans le buffer
+			//	courant (niveau 2).
+			
+			string target = reader.GetAttribute ("t");
+			
+			if (target == null)
+			{
+				throw new ResourceException ("Reference has no target");
+			}
+			
+			if (Resources.ExtractPrefix (target) == null)
+			{
+				if (default_prefix == null)
+				{
+					throw new ResourceException (string.Format ("No default prefix specified, target '{0}' cannot be resolved", target));
+				}
+				
+				target = default_prefix + ":" + target;
+			}
+			
+			//	La cible peut être composée de deux parties: un nom de bundle et un nom de champ;
+			//	le séparateur est le "#", donc target = "bundle#field" ou target = "bundle".
+			
+			int pos = target.IndexOf ("#");
+			
+			string target_bundle = target;
+			string target_field  = null;
+			
+			if (pos >= 0)
+			{
+				target_bundle = target.Substring (0, pos);
+				target_field  = target.Substring (pos+1);
+			}
+			
+			ResourceBundle bundle = Resources.GetBundle (target_bundle, level, recursion+1);
+			
+			if (bundle == null)
+			{
+				throw new ResourceException (string.Format ("Reference to target '{0}' cannot be resolved", target));
+			}
+			
+			if (reader_depth == 1)
+			{
+				System.Diagnostics.Debug.Assert (element_name == null);
+				
+				new_bundle = bundle;
+			}
+			else if (reader_depth == 2)
+			{
+				System.Diagnostics.Debug.Assert (element_name != null);
+				
+				//	Gère la référence à un champ d'un bundle externe. Il faut distinguer ici deux
+				//	cas différents:
+				//
+				//	1) La référence pointe sur un champ de type texte. Il faut alors simplement
+				//	   ajouter le texte dans le buffer courant.
+				//
+				//	2) La référence pointe sur un autre bundle. Il faut alors fusionner le bundle
+				//	   avec le bundle courant.
+				
+				ResourceBundle child_bundle = null;
+				
+				if (target_field != null)
+				{
+					if (!bundle.Contains (target_field))
+					{
+						throw new ResourceException (string.Format ("Target bundle '{0}' does not contain field '{1}'", target_bundle, target_field));
+					}
+					
+					object field_data = bundle[target_field];
+					
+					if (field_data is string)
+					{
+						buffer.Append (field_data);
+					}
+					else
+					{
+						child_bundle = field_data as ResourceBundle;
+					}
+				}
+				else
+				{
+					child_bundle = bundle;
+				}
+				
+				if (child_bundle != null)
+				{
+					this.AddChildBundle (element_name, child_bundle);
+				}
+			}
+			else
+			{
+				throw new ResourceException (string.Format ("Illegal reference to '{0}' at level {1}", target, reader_depth));
+			}
+		}
+		
 		
 		protected void AddChildBundle(string element_name, ResourceBundle child_bundle)
 		{
@@ -382,8 +513,30 @@ namespace Epsitec.Cresus.Support
 			current_bundle.Merge (child_bundle);
 		}
 		
+		protected void AddChildList(string element_name, System.Collections.ArrayList child_list)
+		{
+			System.Collections.ArrayList current_list;
+			
+			if (this.fields.Contains (element_name))
+			{
+				current_list = this.fields[element_name] as System.Collections.ArrayList;
+			}
+			else
+			{
+				current_list = new System.Collections.ArrayList ();
+				this.fields[element_name] = current_list;
+			}
+			
+			System.Diagnostics.Debug.Assert (current_list != null);
+			
+			current_list.AddRange (child_list);
+		}
+		
+		
 		protected void Merge(ResourceBundle bundle)
 		{
+			//	Fusionne le bundle passé en entrée avec le bundle actuel.
+			
 			if ((bundle == null) ||
 				(bundle.CountFields == 0))
 			{
@@ -397,6 +550,10 @@ namespace Epsitec.Cresus.Support
 			
 			foreach (System.Collections.DictionaryEntry entry in bundle.fields)
 			{
+				//	TODO: ajouter le support pour copier les champs qui sont différents
+				//	du type string. En particulier, il faut fusionner les sous-bundles
+				//	avec ceux déjà existants (récursivement); idem pour les listes.
+				
 				this.fields[entry.Key] = entry.Value;
 			}
 		}

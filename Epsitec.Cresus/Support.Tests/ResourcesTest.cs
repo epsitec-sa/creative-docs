@@ -79,5 +79,20 @@ namespace Epsitec.Cresus.Support.Tests
 		{
 			ResourceBundle bundle = Resources.GetBundle ("file:recursive");
 		}
+		
+		[Test] public void CheckGetComplexBundle()
+		{
+			ResourceBundle bundle;
+			
+			bundle = Resources.GetBundle ("file:complex");
+			
+			Assertion.AssertNotNull (bundle);
+			Assertion.AssertEquals (ResourceFieldType.String, bundle.GetFieldType ("class"));
+			Assertion.AssertEquals (ResourceFieldType.BundleList, bundle.GetFieldType ("widgets"));
+			Assertion.AssertEquals (3, bundle.GetFieldBundleListLength ("widgets"));
+			Assertion.AssertEquals ("CheckButton", bundle.GetFieldBundleListItem ("widgets", 0)["class"]);
+			Assertion.AssertEquals ("RadioButton", bundle.GetFieldBundleListItem ("widgets", 1)["class"]);
+			Assertion.AssertEquals ("Button", bundle.GetFieldBundleListItem ("widgets", 2)["class"]);
+		}
 	}
 }

@@ -122,6 +122,10 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
+                <File
+                    RelPath = "TODO.txt"
+                    BuildAction = "Content"
+                />
             </Include>
         </Files>
     </CSHARP>

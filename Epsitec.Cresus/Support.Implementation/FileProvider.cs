@@ -1,7 +1,7 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier/PA
 
-namespace Epsitec.Cresus.Support.Implementation
+namespace Epsitec.Common.Support.Implementation
 {
 	using System.Globalization;
 	using System.Text.RegularExpressions;
@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Support.Implementation
 	/// La classe FileProvider donne accès aux ressources stockées dans des
 	/// fichiers.
 	/// </summary>
-	public class FileProvider : Epsitec.Cresus.Support.IResourceProvider
+	public class FileProvider : Epsitec.Common.Support.IResourceProvider
 	{
 		public FileProvider()
 		{
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Support.Implementation
 			return false;
 		}
 		
-		public byte[] GetData(string id, Epsitec.Cresus.Support.ResourceLevel level)
+		public byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level)
 		{
 			string path = this.GetPathFromId (id, level);
 			
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Support.Implementation
 			return null;
 		}
 		
-		public System.IO.Stream GetDataStream(string id, Epsitec.Cresus.Support.ResourceLevel level)
+		public System.IO.Stream GetDataStream(string id, Epsitec.Common.Support.ResourceLevel level)
 		{
 			string path = this.GetPathFromId (id, level);
 			
@@ -151,19 +151,19 @@ namespace Epsitec.Cresus.Support.Implementation
 			return null;
 		}
 		
-		public void Create(string id, Epsitec.Cresus.Support.ResourceLevel level)
+		public void Create(string id, Epsitec.Common.Support.ResourceLevel level)
 		{
 			// TODO:  Add FileProvider.Create implementation
 			throw new ResourceException ("Not implemented");
 		}
 		
-		public void Update(string id, Epsitec.Cresus.Support.ResourceLevel level, byte[] data)
+		public void Update(string id, Epsitec.Common.Support.ResourceLevel level, byte[] data)
 		{
 			// TODO:  Add FileProvider.Update implementation
 			throw new ResourceException ("Not implemented");
 		}
 		
-		public void Remove(string id, Epsitec.Cresus.Support.ResourceLevel level)
+		public void Remove(string id, Epsitec.Common.Support.ResourceLevel level)
 		{
 			// TODO:  Add FileProvider.Remove implementation
 			throw new ResourceException ("Not implemented");
