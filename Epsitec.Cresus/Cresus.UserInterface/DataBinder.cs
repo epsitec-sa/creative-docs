@@ -146,9 +146,9 @@ namespace Epsitec.Cresus.UserInterface
 			
 			switch (bind_tag)
 			{
-				case "data":	this.CreateDataBinding (obj, data_record, binding);			break;
-				case "label":	this.CreateLabelBinding (obj, data_record, binding);		break;
-				case "descr":	this.CreateDescriptionBinding (obj, data_record, binding);	break;
+				case DataLayer.DataAttributes.TagData:			this.CreateDataBinding (obj, data_record, binding);			break;
+				case DataLayer.DataAttributes.TagLabel:			this.CreateLabelBinding (obj, data_record, binding);		break;
+				case DataLayer.DataAttributes.TagDescription:	this.CreateDescriptionBinding (obj, data_record, binding);	break;
 				
 				default:
 					throw new BinderException (string.Format ("Unknown bind tag '{0}' used with data '{1}'", bind_tag, binding));
@@ -157,8 +157,7 @@ namespace Epsitec.Cresus.UserInterface
 		
 		protected virtual void CreateDataBinding(object obj, DataLayer.DataRecord data_record, string binding_path)
 		{
-			DataLayer.DataType data_type = data_record.DataType;
-			IBinder binder = BinderFactory.FindBinder (data_type);
+			IBinder binder = BinderFactory.FindBinderForType (data_record.DataType);
 			
 			if (binder == null)
 			{

@@ -22,26 +22,17 @@ namespace Epsitec.Cresus.DataLayer
 		
 		public string							Name
 		{
-			get { return this.Attributes.GetAttribute ("name"); }
-		}
-		
-		public string							BinderEngine
-		{
-			get
-			{
-				string binder = this.Attributes.GetAttribute ("binder");
-				return (binder == null) ? this.Name : binder;
-			}
+			get { return this.Attributes.GetAttribute (DataAttributes.TagName, ResourceLevel.Default); }
 		}
 		
 		public string							UserLabel
 		{
-			get { return this.Attributes.GetAttribute ("label"); }
+			get { return this.Attributes.GetAttribute (DataAttributes.TagLabel); }
 		}
 		
 		public string							UserDescription
 		{
-			get { return this.Attributes.GetAttribute ("descr"); }
+			get { return this.Attributes.GetAttribute (DataAttributes.TagDescription); }
 		}
 		
 		

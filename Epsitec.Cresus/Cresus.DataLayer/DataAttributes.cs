@@ -133,6 +133,11 @@ namespace Epsitec.Cresus.DataLayer
 		
 		
 		
+		public const string						TagName			= "name";
+		public const string						TagData			= "data";
+		public const string						TagLabel		= "label";
+		public const string						TagDescription	= "descr";
+		
 		protected System.Collections.Hashtable	attributes;
 	}
 }

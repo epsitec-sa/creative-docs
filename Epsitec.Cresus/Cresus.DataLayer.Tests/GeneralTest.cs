@@ -40,19 +40,16 @@ namespace Epsitec.Cresus.DataLayer.Tests
 		
 		[Test] public void CheckDataType()
 		{
-			DataType test1 = new DataType ("name=a", "binder=b", "label=c", "descr=d", "extra=e");
+			DataType test1 = new DataType ("name=a", "label=c", "descr=d", "extra=e");
 			DataType test2 = new DataType ("name=a", "label=c2", "descr=d2", "extra=e2");
 			DataType test3 = new DataType ("name=x");
 			
 			Assertion.AssertEquals ("a", test1.Name);
-			Assertion.AssertEquals ("b", test1.BinderEngine);
 			Assertion.AssertEquals ("c", test1.UserLabel);
 			Assertion.AssertEquals ("d", test1.UserDescription);
 			Assertion.AssertEquals ("e", test1.Attributes.GetAttribute ("extra"));
 			
 			Assertion.AssertEquals ("a", test2.Name);
-			Assertion.AssertEquals ("a", test2.BinderEngine);
-			
 			Assertion.AssertEquals ("x", test3.Name);
 			
 			Assertion.Assert (test1.Equals (test2));

@@ -36,27 +36,27 @@ namespace Epsitec.Cresus.UserInterface
 		}
 		
 		
-		public static void RegisterBinder(string name, IBinder binder)
+		public static void RegisterBinder(string data_type_name, IBinder binder)
 		{
 			System.Diagnostics.Debug.Assert (binder != null);
-			System.Diagnostics.Debug.Assert (name != null);
+			System.Diagnostics.Debug.Assert (data_type_name != null);
 			
-			BinderFactory.binders[name] = binder;
+			BinderFactory.binders[data_type_name] = binder;
 		}
 		
 		
-		public static IBinder FindBinder(string name)
+		public static IBinder FindBinderForType(string name)
 		{
 			System.Diagnostics.Debug.WriteLine (string.Format ("Searching a binder for {0}...", name));
 			System.Diagnostics.Debug.Assert (name != null);
 			return BinderFactory.binders[name] as IBinder;
 		}
 		
-		public static IBinder FindBinder(DataLayer.DataType type)
+		public static IBinder FindBinderForType(DataLayer.DataType type)
 		{
 			if (type != null)
 			{
-				return BinderFactory.FindBinder (type.BinderEngine);
+				return BinderFactory.FindBinderForType (type.Name);
 			}
 			
 			return null;
