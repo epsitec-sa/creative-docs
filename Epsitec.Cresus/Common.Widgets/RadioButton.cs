@@ -161,9 +161,9 @@ namespace Epsitec.Common.Widgets
 			rect.Right  = RadioButton.radioHeight;
 			rect.Bottom = (this.Client.Height-RadioButton.radioHeight)/2;
 			rect.Top    = rect.Bottom+RadioButton.radioHeight;
-			adorner.PaintRadio(graphics, rect, this.PaintState, this.RootDirection);
+			adorner.PaintRadio(graphics, rect, this.PaintState);
 
-			adorner.PaintGeneralTextLayout(graphics, this.LabelOffset, this.textLayout, this.PaintState, this.RootDirection);
+			adorner.PaintGeneralTextLayout(graphics, this.LabelOffset, this.textLayout, this.PaintState);
 		}
 		
 		protected Drawing.Point LabelOffset
