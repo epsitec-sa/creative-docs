@@ -163,16 +163,11 @@ namespace Epsitec.Common.Designer.Widgets
 			
 			widget.SetProperty ("Selected by " + this.Name, sel);
 			
-			if (this.Parent == null)
-			{
-				this.SetEmbedder (widget.Window.Root);
-				this.Anchor        = AnchorStyles.All;
-				this.AnchorMargins = new Drawing.Margins (0, 0, 0, 0);
-			}
-			else
-			{
-				System.Diagnostics.Debug.Assert (this.Parent == widget.Window.Root);
-			}
+			this.Parent = null;
+			
+			this.SetEmbedder (widget.Window.Root);
+			this.Anchor        = AnchorStyles.All;
+			this.AnchorMargins = new Drawing.Margins (0, 0, 0, 0);
 			
 			this.selections.Add (sel);
 			this.UpdateGeometry ();
@@ -217,8 +212,6 @@ namespace Epsitec.Common.Designer.Widgets
 		}
 		
 		
-		
-		
 		protected virtual void UpdateGeometry()
 		{
 			if ((this.selections != null) &&
@@ -245,15 +238,7 @@ namespace Epsitec.Common.Designer.Widgets
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
 			base.PaintBackgroundImplementation (graphics, clip_rect);
-#if false			
-			graphics.SetClippingRectangle (this.target_clip);
-			graphics.AddRectangle (Drawing.Rectangle.Deflate (this.target_bounds, 0.5, 0.5));
-			graphics.RenderSolid (HiliteWidgetAdorner.FrameColor);
-#endif
 		}
-		
-		
-		
 		
 		
 		protected struct GripMap
