@@ -61,6 +61,7 @@ namespace Epsitec.Common.Text.Internal
 			//	écraserait notre indicateur interne d'état du curseur :
 			
 			this.cursors[id].TextChunkId    = cursor.TextChunkId;
+			this.cursors[id].CursorInstance = cursor.CursorInstance;
 			this.cursors[id].CachedPosition = cursor.CachedPosition;
 			
 			if (this.cursors[id].CachedPosition == -1)
@@ -71,6 +72,21 @@ namespace Epsitec.Common.Text.Internal
 			{
 				this.ValidateCache (id);
 			}
+			
+			if (this.cursors[id].CursorInstance != null)
+			{
+				this.cursors[id].CursorInstance.CursorId = id;
+			}
+		}
+		
+		
+		public ICursor GetCursorInstance(Internal.CursorId id)
+		{
+			Debug.Assert.IsTrue (id.IsValid);
+			Debug.Assert.IsInBounds (id, 0, this.cursors.Length-1);
+			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
+			
+			return this.cursors[id].CursorInstance;
 		}
 		
 		
@@ -137,8 +153,14 @@ namespace Epsitec.Common.Text.Internal
 			
 			this.version++;
 			
+			if (this.cursors[id].CursorInstance != null)
+			{
+				this.cursors[id].CursorInstance.CursorId = 0;
+			}
+			
 			this.cursors[id].FreeListLink   = this.free_cursor_id;
 			this.cursors[id].TextChunkId    = 0;
+			this.cursors[id].CursorInstance = null;
 			this.cursors[id].CachedPosition = -1;
 			this.cursors[id].DefineCursorState (Internal.CursorState.Free);
 			

@@ -14,6 +14,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			this.chunk_id   = cursor.chunk_id;
 			this.cached_pos = cursor.cached_pos;
+			this.instance   = cursor.instance;
 			
 			this.free_link  = cursor.free_link;
 			
@@ -34,6 +35,18 @@ namespace Epsitec.Common.Text.Internal
 			set
 			{
 				this.chunk_id = value;
+			}
+		}
+		
+		public ICursor						CursorInstance
+		{
+			get
+			{
+				return this.instance;
+			}
+			set
+			{
+				this.instance = value;
 			}
 		}
 		
@@ -69,6 +82,21 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
+		public CursorAttachment				Attachment
+		{
+			get
+			{
+				if (this.instance == null)
+				{
+					return CursorAttachment.Floating;
+				}
+				else
+				{
+					return this.instance.Attachment;
+				}
+			}
+		}
+		
 		
 		public override bool Equals(object obj)
 		{
@@ -84,7 +112,8 @@ namespace Epsitec.Common.Text.Internal
 		public override int GetHashCode()
 		{
 			return this.free_link
-				 ^ this.chunk_id;
+				 ^ this.chunk_id
+				 ^ (this.instance == null ? 0 : this.instance.GetHashCode ());
 		}
 
 		
@@ -97,13 +126,15 @@ namespace Epsitec.Common.Text.Internal
 		public static bool operator ==(Cursor a, Cursor b)
 		{
 			return (a.free_link == b.free_link)
-				&& (a.chunk_id == b.chunk_id);
+				&& (a.chunk_id == b.chunk_id)
+				&& (a.instance == b.instance);
 		}
 		
 		public static bool operator !=(Cursor a, Cursor b)
 		{
 			return (a.free_link != b.free_link)
-				|| (a.chunk_id != b.chunk_id);
+				|| (a.chunk_id != b.chunk_id)
+				|| (a.instance != b.instance);
 		}
 		
 		
@@ -119,6 +150,7 @@ namespace Epsitec.Common.Text.Internal
 		//
 		
 		private Internal.TextChunkId		chunk_id;
+		private ICursor						instance;
 		private int							cached_pos;
 		
 		private Internal.CursorId			free_link;

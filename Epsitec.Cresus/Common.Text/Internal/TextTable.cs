@@ -42,38 +42,39 @@ namespace Epsitec.Common.Text.Internal
 		
 		
 		
-		public Internal.CursorId NewCursor()
+		public Internal.CursorId NewCursor(ICursor cursor)
 		{
 			Internal.CursorId id     = this.cursors.NewCursor ();
-			Internal.Cursor   cursor = this.cursors.ReadCursor (id);
+			Internal.Cursor   record = this.cursors.ReadCursor (id);
 			
 			//	Place (arbitrairement) le curseur au début du texte, donc dans le
 			//	morceau de texte numéro 1, à la position 0 :
 			
-			cursor.TextChunkId = 1;
+			record.TextChunkId    = 1;
+			record.CursorInstance = cursor;
 			
-			this.cursors.WriteCursor (id, cursor);
+			this.cursors.WriteCursor (id, record);
 			
-			this.text_chunks[0].AddCursor (id, 0);
+			this.text_chunks[0].AddCursor (id, 0, record.Attachment);
 			
 			return id;
 		}
 		
 		public void DeleteCursor(Internal.CursorId id)
 		{
-			Internal.Cursor cursor = this.cursors.ReadCursor (id);
+			Internal.Cursor record = this.cursors.ReadCursor (id);
 			
-			this.text_chunks[cursor.TextChunkId-1].RemoveCursor (id);
+			this.text_chunks[record.TextChunkId-1].RemoveCursor (id);
 			this.cursors.RecycleCursor (id);
 		}
 		
 		public int MoveCursor(Internal.CursorId id, int distance)
 		{
-			Internal.Cursor cursor = this.cursors.ReadCursor (id);
+			Internal.Cursor record = this.cursors.ReadCursor (id);
 			
 			if (distance > 0)
 			{
-				int index = cursor.TextChunkId - 1;
+				int index = record.TextChunkId - 1;
 				int moved = 0;
 				int pos   = this.text_chunks[index].GetCursorPosition (id);
 				
@@ -99,9 +100,9 @@ namespace Epsitec.Common.Text.Internal
 						moved   += distance;
 						distance = 0;
 						
-						cursor.CachedPosition = -1;
+						record.CachedPosition = -1;
 						
-						this.cursors.WriteCursor (id, cursor);
+						this.cursors.WriteCursor (id, record);
 						
 						break;
 					}
@@ -110,12 +111,12 @@ namespace Epsitec.Common.Text.Internal
 					//	dans le morceau suivant :
 					
 					this.text_chunks[index+0].RemoveCursor (id);
-					this.text_chunks[index+1].AddCursor (id, 0);
+					this.text_chunks[index+1].AddCursor (id, 0, record.Attachment);
 					
-					cursor.TextChunkId = index+1 + 1;
-					cursor.CachedPosition = -1;
+					record.TextChunkId = index+1 + 1;
+					record.CachedPosition = -1;
 					
-					this.cursors.WriteCursor (id, cursor);
+					this.cursors.WriteCursor (id, record);
 					
 					moved    += room;
 					distance -= room;
@@ -129,7 +130,7 @@ namespace Epsitec.Common.Text.Internal
 			{
 				distance = - distance;
 				
-				int index = cursor.TextChunkId - 1;
+				int index = record.TextChunkId - 1;
 				int moved = 0;
 				int pos   = this.text_chunks[index].GetCursorPosition (id);
 				
@@ -153,9 +154,9 @@ namespace Epsitec.Common.Text.Internal
 						moved   += distance;
 						distance = 0;
 						
-						cursor.CachedPosition = -1;
+						record.CachedPosition = -1;
 						
-						this.cursors.WriteCursor (id, cursor);
+						this.cursors.WriteCursor (id, record);
 						
 						break;
 					}
@@ -164,12 +165,12 @@ namespace Epsitec.Common.Text.Internal
 					//	dans le morceau précédent :
 					
 					this.text_chunks[index+0].RemoveCursor (id);
-					this.text_chunks[index-1].AddCursor (id, this.text_chunks[index-1].TextLength);
+					this.text_chunks[index-1].AddCursor (id, this.text_chunks[index-1].TextLength, record.Attachment);
 					
-					cursor.TextChunkId = index-1 + 1;
-					cursor.CachedPosition = -1;
+					record.TextChunkId = index-1 + 1;
+					record.CachedPosition = -1;
 					
-					this.cursors.WriteCursor (id, cursor);
+					this.cursors.WriteCursor (id, record);
 					
 					moved    += pos;
 					distance -= pos;
@@ -188,7 +189,13 @@ namespace Epsitec.Common.Text.Internal
 			this.MoveCursor (id, position - this.GetCursorPosition (id));
 		}
 		
+		
 		public CursorInfo[] FindCursors(int position, int length)
+		{
+			return this.FindCursors (position, length, null);
+		}
+		
+		public CursorInfo[] FindCursors(int position, int length, CursorInfo.Filter filter)
 		{
 			//	Trouve tous les curseurs compris dans la plage indiquée.
 			
@@ -226,7 +233,20 @@ namespace Epsitec.Common.Text.Internal
 					
 					if (j >= i)
 					{
-						i_num++;
+						if (filter != null)
+						{
+							Internal.CursorId cursor_id = chunk.GetNthCursorId (j);
+							ICursor cursor_instance = this.cursors.GetCursorInstance (cursor_id);
+							
+							if (filter (cursor_instance, i_pos))
+							{
+								i_num++;
+							}
+						}
+						else
+						{
+							i_num++;
+						}
 					}
 					
 					j++;
@@ -277,8 +297,22 @@ namespace Epsitec.Common.Text.Internal
 					
 					if (j >= i)
 					{
-						infos[i_num] = new CursorInfo (chunk.GetNthCursorId (j), i_pos);
-						i_num++;
+						if (filter != null)
+						{
+							Internal.CursorId cursor_id = chunk.GetNthCursorId (j);
+							ICursor cursor_instance = this.cursors.GetCursorInstance (cursor_id);
+							
+							if (filter (cursor_instance, i_pos))
+							{
+								infos[i_num] = new CursorInfo (cursor_id, i_pos);
+								i_num++;
+							}
+						}
+						else
+						{
+							infos[i_num] = new CursorInfo (chunk.GetNthCursorId (j), i_pos);
+							i_num++;
+						}
 					}
 					
 					j++;
@@ -307,25 +341,57 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public CursorInfo[] FilterCursors(CursorInfo[] array, CursorInfo.Filter filter)
+		{
+			bool[] keep = new bool[array.Length];
+			int    num  = 0;
+			
+			for (int i = 0; i < array.Length; i++)
+			{
+				ICursor cursor   = this.cursors.GetCursorInstance (array[i].CursorId);
+				int     position = array[i].Position;
+				
+				if (filter (cursor, position))
+				{
+					keep[i] = true;
+					num++;
+				}
+			}
+			
+			CursorInfo[] copy  = new CursorInfo[num];
+			int          index = 0;
+			
+			for (int i = 0; i < array.Length; i++)
+			{
+				if (keep[i])
+				{
+					copy[index++] = array[i];
+				}
+			}
+			
+			return copy;
+		}
+		
+		
 		public int GetCursorPosition(Internal.CursorId id)
 		{
-			Internal.Cursor cursor = this.cursors.ReadCursor (id);
+			Internal.Cursor record = this.cursors.ReadCursor (id);
 			
 			if (this.cursors.IsPositionCacheValid (id))
 			{
-				return cursor.CachedPosition;
+				return record.CachedPosition;
 			}
 			
-			int offset = this.text_chunks[cursor.TextChunkId-1].GetCursorPosition (id);
-			int start  = this.FindTextChunkPosition (cursor.TextChunkId);
+			int offset = this.text_chunks[record.TextChunkId-1].GetCursorPosition (id);
+			int start  = this.FindTextChunkPosition (record.TextChunkId);
 			int pos    = start + offset;
 			
 			//	Puisque nous venons de recalculer la position du curseur, c'est
 			//	le bon moment pour en prendre note, afin de pouvoir en bénéficier
 			//	la prochaine fois :
 			
-			cursor.CachedPosition = pos;
-			this.cursors.WriteCursor (id, cursor);
+			record.CachedPosition = pos;
+			this.cursors.WriteCursor (id, record);
 			
 			return pos;
 		}
@@ -344,11 +410,11 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void InsertText(Internal.CursorId cursor_id, ulong[] text)
 		{
-			Internal.Cursor cursor = this.cursors.ReadCursor (cursor_id);
+			Internal.Cursor record = this.cursors.ReadCursor (cursor_id);
 			
-			Debug.Assert.IsTrue (cursor.TextChunkId.IsValid);
+			Debug.Assert.IsTrue (record.TextChunkId.IsValid);
 			
-			Internal.TextChunkId chunk_id = cursor.TextChunkId;
+			Internal.TextChunkId chunk_id = record.TextChunkId;
 			Internal.TextChunk   chunk    = this.text_chunks[chunk_id-1];
 			
 			int cursor_position = chunk.GetCursorPosition (cursor_id);
@@ -372,16 +438,16 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void DeleteText(Internal.CursorId cursor_id, int length, out CursorInfo[] infos)
 		{
-			Internal.Cursor cursor = this.cursors.ReadCursor (cursor_id);
+			Internal.Cursor record = this.cursors.ReadCursor (cursor_id);
 			
-			Debug.Assert.IsTrue (cursor.TextChunkId.IsValid);
+			Debug.Assert.IsTrue (record.TextChunkId.IsValid);
 			Debug.Assert.IsTrue (this.GetCursorPosition (cursor_id) + length <= this.text_length);
 			
 			System.Collections.ArrayList list = null;
 			
-			int index  = cursor.TextChunkId - 1;
+			int index  = record.TextChunkId - 1;
 			int offset = this.text_chunks[index].GetCursorPosition (cursor_id);
-			int start  = this.FindTextChunkPosition (cursor.TextChunkId);
+			int start  = this.FindTextChunkPosition (record.TextChunkId);
 			int count  = 0;
 			
 			bool removal_continuation = false;

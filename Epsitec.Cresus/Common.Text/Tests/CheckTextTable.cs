@@ -12,12 +12,12 @@ namespace Epsitec.Common.Text.Tests
 		{
 			Internal.TextTable table = new Internal.TextTable ();
 			
-			int cursor_1 = table.NewCursor ();
-			int cursor_2 = table.NewCursor ();
+			int cursor_1 = table.NewCursor (null);
+			int cursor_2 = table.NewCursor (null);
 			
 			table.InsertText (cursor_1, new ulong[] { 65ul, 66ul, 67ul });
 			
-			int cursor_3 = table.NewCursor ();
+			int cursor_3 = table.NewCursor (null);
 			
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 3);
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 3);
@@ -97,9 +97,10 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_3) == 3);
 			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 3);
 			Debug.Assert.IsTrue (table.TextLength == 3);
-			Debug.Assert.IsNotNull (c_infos_1);
-			Debug.Assert.IsTrue (c_infos_1.Length == 1);
-			Debug.Assert.IsTrue (c_infos_1[0].CursorId == cursor_1);
+			Debug.Assert.IsNull (c_infos_1);
+//			Debug.Assert.IsNotNull (c_infos_1);
+//			Debug.Assert.IsTrue (c_infos_1.Length == 1);
+//			Debug.Assert.IsTrue (c_infos_1[0].CursorId == cursor_1);
 			
 			table.DeleteText (cursor_2, 1, out c_infos_2);
 			
@@ -130,7 +131,7 @@ namespace Epsitec.Common.Text.Tests
 			Internal.TextTable table2 = new Internal.TextTable ();
 			Internal.TextTable table3 = new Internal.TextTable ();
 			
-			int cursor_id = table1.NewCursor ();
+			int cursor_id = table1.NewCursor (null);
 			
 			string  sample = "ceci est un bref exemple de texte français permettant de générer des fréquences " +
 				/**/         "correctes au niveau de l'utilisation des divers caractères (si l'on fait, bien " +
@@ -206,8 +207,8 @@ namespace Epsitec.Common.Text.Tests
 			 *	Traversée <-- 750ns / caractère
 			 */
 			
-			Internal.CursorId cursor_3_1 = table3.NewCursor ();
-			Internal.CursorId cursor_3_2 = table3.NewCursor ();
+			Internal.CursorId cursor_3_1 = table3.NewCursor (null);
+			Internal.CursorId cursor_3_2 = table3.NewCursor (null);
 			
 			System.Diagnostics.Trace.WriteLine ("Starting traversal, 1 char. at a time -->");
 			while (table3.MoveCursor (cursor_3_1, 1) > 0)

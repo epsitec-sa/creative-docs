@@ -38,6 +38,8 @@ namespace Epsitec.Common.Text
 		public static readonly IComparer	PositionComparer = new PrivatePositionComparer ();
 		public static readonly IComparer	CursorIdComparer = new PrivateCursorIdComparer ();
 		
+		public delegate bool Filter(ICursor cursor, int position);
+		
 		#region Private Comparer Classes
 		private class PrivatePositionComparer : System.Collections.IComparer
 		{

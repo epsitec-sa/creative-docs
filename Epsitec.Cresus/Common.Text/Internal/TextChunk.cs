@@ -288,9 +288,9 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public void AddCursor(Internal.CursorId id, int position)
+		public void AddCursor(Internal.CursorId id, int position, CursorAttachment attachment)
 		{
-			this.cursors.Add (id, position);
+			this.cursors.Add (id, position, attachment);
 		}
 		
 		public void RemoveCursor(Internal.CursorId id)

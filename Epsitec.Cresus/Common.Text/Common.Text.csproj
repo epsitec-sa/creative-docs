@@ -109,12 +109,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "CursorAttachment.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "CursorInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "IContentsSignature.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ICursor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -134,17 +144,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Cursors\SimpleCursor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Cursors\TempCursor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Internal\CharMarker.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Internal\Cursor.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Internal\CursorAttachment.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

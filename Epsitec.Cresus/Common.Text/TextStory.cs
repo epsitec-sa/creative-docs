@@ -16,9 +16,10 @@ namespace Epsitec.Common.Text
 			this.text_length = 0;
 			this.undo_length = 0;
 			
-			this.temp_cursor_id = this.text.NewCursor ();
+			this.temp_cursor = new Cursors.TempCursor ();
 			
-			this.text.InsertText (this.temp_cursor_id, new ulong[] { 0ul });
+			this.text.NewCursor (this.temp_cursor);
+			this.text.InsertText (this.temp_cursor.CursorId, new ulong[] { 0ul });
 			
 			this.oplet_queue = new Support.OpletQueue ();
 		}
@@ -48,55 +49,116 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		
-		public int NewCursor()
+		public bool								DebugDisableOpletQueue
 		{
-			return this.text.NewCursor ();
-		}
-		
-		public void MoveCursor(int cursor_id, int distance)
-		{
-			this.text.MoveCursor (cursor_id, distance);
-		}
-		
-		public int GetCursorPosition(int cursor_id)
-		{
-			return this.text.GetCursorPosition (cursor_id);
-		}
-		
-		
-		public void InsertText(int cursor_id, ulong[] text)
-		{
-			int position = this.text.GetCursorPosition (cursor_id);
-			int length   = text.Length;
-			
-			this.text.InsertText (cursor_id, text);
-			this.text_length += length;
-			
-			using (this.oplet_queue.BeginAction ())
+			get
 			{
-				this.oplet_queue.Insert (new TextInsertOplet (this, position, length));
-				this.oplet_queue.ValidateAction ();
+				return this.debug_disable_oplet;
+			}
+			set
+			{
+				this.debug_disable_oplet = value;
 			}
 		}
 		
-		public void DeleteText(int cursor_id, int length)
+		
+		public void NewCursor(ICursor cursor)
 		{
-			int position = this.text.GetCursorPosition (cursor_id);
+			this.text.NewCursor (cursor);
 			
-			//	TODO: implémenter
+			this.InternalAddOplet (new CursorMoveOplet (this, cursor, 0));
+		}
+		
+		public void MoveCursor(ICursor cursor, int distance)
+		{
+			int old_pos = this.GetCursorPosition (cursor);
+			
+			this.text.MoveCursor (cursor.CursorId, distance);
+			
+			int new_pos = this.GetCursorPosition (cursor);
+			
+			if (old_pos != new_pos)
+			{
+				this.InternalAddOplet (new CursorMoveOplet (this, cursor, old_pos));
+			}
+		}
+		
+		
+		private void InternalAddOplet(Support.IOplet oplet)
+		{
+			if (this.debug_disable_oplet == false)
+			{
+				//	TODO: gérer la fusion d'oplets identiques
+				
+				using (this.oplet_queue.BeginAction ())
+				{
+					this.oplet_queue.Insert (oplet);
+					this.oplet_queue.ValidateAction ();
+				}
+			}
+		}
+		
+		
+		public int GetCursorPosition(ICursor cursor)
+		{
+			return this.text.GetCursorPosition (cursor.CursorId);
+		}
+		
+		public void SetCursorPosition(ICursor cursor, int position)
+		{
+			int old_pos = this.GetCursorPosition (cursor);
+			
+			this.text.SetCursorPosition (cursor.CursorId, position);
+			
+			int new_pos = this.GetCursorPosition (cursor);
+			
+			if (old_pos != new_pos)
+			{
+				this.InternalAddOplet (new CursorMoveOplet (this, cursor, old_pos));
+			}
+		}
+		
+		
+		public void InsertText(ICursor cursor, ulong[] text)
+		{
+			int position = this.text.GetCursorPosition (cursor.CursorId);
+			int length   = text.Length;
+			
+			this.text.InsertText (cursor.CursorId, text);
+			this.text_length += length;
+			
+			this.InternalAddOplet (new TextInsertOplet (this, position, length));
+		}
+		
+		public void DeleteText(ICursor cursor, int length)
+		{
+			int position = this.text.GetCursorPosition (cursor.CursorId);
+			
+			CursorInfo[] cursors;
+			
+			this.InternalSaveCursorPositions (position, length, out cursors);
+			
+			int undo_start = this.text_length + 1;
+			int undo_end   = undo_start + this.undo_length;
+				
+			this.InternalMoveText (position, undo_end - length, length);
+				
+			this.text_length -= length;
+			this.undo_length += length;
+			
+			this.InternalAddOplet (new TextDeleteOplet (this, position, length, cursors));
 		}
 		
 		
 		public string GetDebugText()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			this.text.SetCursorPosition (this.temp_cursor_id, 0);
+			this.text.SetCursorPosition (this.temp_cursor.CursorId, 0);
 			
 			for (int i = 0; i < this.text_length; i++)
 			{
-				ulong code = this.text[this.temp_cursor_id];
-				this.text.MoveCursor (this.temp_cursor_id, 1);
+				ulong code = this.text[this.temp_cursor.CursorId];
+				this.text.MoveCursor (this.temp_cursor.CursorId, 1);
 				
 				buffer.Append ((char) Unicode.Bits.GetCode (code));
 			}
@@ -107,12 +169,12 @@ namespace Epsitec.Common.Text
 		public string GetDebugUndo()
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			this.text.SetCursorPosition (this.temp_cursor_id, this.text_length + 1);
+			this.text.SetCursorPosition (this.temp_cursor.CursorId, this.text_length + 1);
 			
 			for (int i = 0; i < this.undo_length; i++)
 			{
-				ulong code = this.text[this.temp_cursor_id];
-				this.text.MoveCursor (this.temp_cursor_id, 1);
+				ulong code = this.text[this.temp_cursor.CursorId];
+				this.text.MoveCursor (this.temp_cursor.CursorId, 1);
 				
 				buffer.Append ((char) Unicode.Bits.GetCode (code));
 			}
@@ -123,14 +185,14 @@ namespace Epsitec.Common.Text
 		
 		protected void InternalInsertText(int position, ulong[] text)
 		{
-			this.text.SetCursorPosition (this.temp_cursor_id, position);
-			this.text.InsertText (this.temp_cursor_id, text);
+			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
+			this.text.InsertText (this.temp_cursor.CursorId, text);
 		}
 		
 		protected void InternalDeleteText(int position, int length, out CursorInfo[] infos)
 		{
-			this.text.SetCursorPosition (this.temp_cursor_id, position);
-			this.text.DeleteText (this.temp_cursor_id, length, out infos);
+			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
+			this.text.DeleteText (this.temp_cursor.CursorId, length, out infos);
 		}
 		
 		protected void InternalMoveText(int from_pos, int to_pos, int length)
@@ -142,10 +204,10 @@ namespace Epsitec.Common.Text
 			//	L'appelant fournit une position de destination qui est valide
 			//	seulement après la suppression (temporaire) du texte.
 			
-			this.text.SetCursorPosition (this.temp_cursor_id, from_pos);
+			this.text.SetCursorPosition (this.temp_cursor.CursorId, from_pos);
 			
 			ulong[] data = new ulong[length];
-			int     read = this.text.ReadText (this.temp_cursor_id, length, data, 0);
+			int     read = this.text.ReadText (this.temp_cursor.CursorId, length, data, 0);
 			
 			Debug.Assert.IsTrue (read == length);
 			
@@ -153,22 +215,45 @@ namespace Epsitec.Common.Text
 			
 			this.InternalDeleteText (from_pos, length, out infos);
 			this.InternalInsertText (to_pos, data);
+			
+			if ((infos != null) &&
+				(infos.Length > 0))
+			{
+				//	La liste des curseurs affectés contient peut-être des curseurs
+				//	temporaires; on commence par les filtrer, puis on déplace tous
+				//	les curseurs restants à la nouvelle position :
+				
+				infos = this.text.FilterCursors (infos, new CursorInfo.Filter (this.FilterSaveCursors));
+				
+				this.InternalRestoreCursorPositions (infos, to_pos - from_pos);
+			}
 		}
 		
 		protected void InternalSaveCursorPositions(int position, int length, out CursorInfo[] infos)
 		{
-			infos = this.text.FindCursors (position, length);
+			infos = this.text.FindCursors (position, length, new CursorInfo.Filter (this.FilterSaveCursors));
 		}
 		
-		protected void InternalRestoreCursorPositions(CursorInfo[] infos)
+		protected void InternalRestoreCursorPositions(CursorInfo[] infos, int offset)
 		{
-			for (int i = 0; i < infos.Length; i++)
+			if ((infos != null) &&
+				(infos.Length > 0))
 			{
-				this.text.SetCursorPosition (infos[i].CursorId, infos[i].Position);
+				for (int i = 0; i < infos.Length; i++)
+				{
+					this.text.SetCursorPosition (infos[i].CursorId, infos[i].Position + offset);
+				}
 			}
 		}
 		
 		
+		protected bool FilterSaveCursors(ICursor cursor, int position)
+		{
+			return (cursor != null) && (cursor.Attachment != CursorAttachment.Temporary);
+		}
+		
+		
+		#region Abstract BaseOplet Class
 		protected abstract class BaseOplet : Support.AbstractOplet
 		{
 			protected BaseOplet(TextStory story)
@@ -179,7 +264,9 @@ namespace Epsitec.Common.Text
 			
 			protected readonly TextStory		story;
 		}
+		#endregion
 		
+		#region TextInsertOplet Class
 		protected class TextInsertOplet : BaseOplet
 		{
 			public TextInsertOplet(TextStory story, int position, int length) : base (story)
@@ -216,7 +303,7 @@ namespace Epsitec.Common.Text
 				this.story.text_length += this.length;
 				this.story.undo_length -= this.length;
 				
-				this.story.InternalRestoreCursorPositions (this.cursors);
+				this.story.InternalRestoreCursorPositions (this.cursors, 0);
 				
 				this.cursors = null;
 				
@@ -237,11 +324,12 @@ namespace Epsitec.Common.Text
 				{
 					int undo_start = this.story.text_length + 1;
 					int undo_end   = undo_start + this.story.undo_length;
-				
+					
 					CursorInfo[] infos;
 					this.story.InternalDeleteText (undo_end - this.length, this.length, out infos);
 					
 					//	TODO: gérer la suppression des curseurs...
+					//	TODO: gérer la suppression des styles...
 					
 					this.story.undo_length -= this.length;
 					this.cursors = null;
@@ -253,19 +341,139 @@ namespace Epsitec.Common.Text
 			}
 			
 			
+			private int							position;
+			private int							length;
+			private CursorInfo[]				cursors;
+		}
+		#endregion
+		
+		#region TextDeleteOplet Class
+		protected class TextDeleteOplet : BaseOplet
+		{
+			public TextDeleteOplet(TextStory story, int position, int length, CursorInfo[] cursors) : base (story)
+			{
+				this.position = position;
+				this.length   = length;
+				this.cursors  = cursors;
+			}
 			
+			
+			public override Support.IOplet Undo()
+			{
+				int undo_start = this.story.text_length + 1;
+				int undo_end   = undo_start + this.story.undo_length;
+				
+				this.story.InternalMoveText (undo_end - this.length, this.position, this.length);
+				
+				this.story.text_length += this.length;
+				this.story.undo_length -= this.length;
+				
+				this.story.InternalRestoreCursorPositions (this.cursors, 0);
+				
+				this.cursors = null;
+				
+				return this;
+			}
+			
+			public override Support.IOplet Redo()
+			{
+				this.story.InternalSaveCursorPositions (this.position, this.length, out this.cursors);
+				
+				Debug.Assert.IsNotNull (this.cursors);
+				
+				int undo_start = this.story.text_length + 1;
+				int undo_end   = undo_start + this.story.undo_length;
+				
+				this.story.InternalMoveText (this.position, undo_end - this.length, this.length);
+				
+				this.story.text_length -= this.length;
+				this.story.undo_length += this.length;
+				
+				return this;
+			}
+			
+			
+			public override void Dispose()
+			{
+				//	Lorsque l'on supprime une information permettant de refaire
+				//	une destruction, il n'y a rien à faire. Par contre, si l'oplet
+				//	est dans l'état "undoable", il faudra supprimer le texte de
+				//	la "undo area".
+				
+				Debug.Assert.IsTrue (this.length > 0);
+				
+				if (this.cursors != null)
+				{
+					int undo_start = this.story.text_length + 1;
+					int undo_end   = undo_start + this.story.undo_length;
+					
+					CursorInfo[] infos;
+					this.story.InternalDeleteText (undo_end - this.length, this.length, out infos);
+					
+					//	TODO: gérer la suppression des curseurs...
+					//	TODO: gérer la suppression des styles...
+					
+					this.story.undo_length -= this.length;
+					this.cursors = null;
+				}
+				
+				this.length   = 0;
+				
+				base.Dispose ();
+			}
 			
 			
 			private int							position;
 			private int							length;
 			private CursorInfo[]				cursors;
 		}
+		#endregion
+		
+		#region CursorMoveOplet Class
+		protected class CursorMoveOplet : BaseOplet
+		{
+			public CursorMoveOplet(TextStory story, ICursor cursor, int position) : base (story)
+			{
+				this.cursor   = cursor;
+				this.position = position;
+			}
+			
+			
+			public override Support.IOplet Undo()
+			{
+				return this.Swap ();
+			}
+			
+			public override Support.IOplet Redo()
+			{
+				return this.Swap ();
+			}
+			
+			
+			private Support.IOplet Swap()
+			{
+				int old_pos = this.position;
+				int new_pos = this.story.text.GetCursorPosition (this.cursor.CursorId);
+				
+				this.story.text.SetCursorPosition (this.cursor.CursorId, old_pos);
+				
+				this.position = new_pos;
+				
+				return this;
+			}
+
+			
+			private int							position;
+			private ICursor						cursor;
+		}
+		#endregion
 		
 		
 		private Internal.TextTable				text;
 		private int								text_length;
 		private int								undo_length;
-		private Internal.CursorId				temp_cursor_id;
+		private ICursor							temp_cursor;
 		private Support.OpletQueue				oplet_queue;
+		private bool							debug_disable_oplet;
 	}
 }

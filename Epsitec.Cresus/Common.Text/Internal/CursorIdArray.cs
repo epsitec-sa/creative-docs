@@ -20,6 +20,11 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void Add(Internal.CursorId id, int position)
 		{
+			this.Add (id, position, CursorAttachment.Floating);
+		}
+		
+		public void Add(Internal.CursorId id, int position, CursorAttachment attachment)
+		{
 			//	Insère un élément pour représenter le curseur à la position
 			//	donnée.
 			
@@ -35,7 +40,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			Debug.Assert.IsInBounds (index, 0, this.length);
 			
-			this.InsertElement (index, new Element (id, offset, Internal.CursorAttachment.Floating));
+			this.InsertElement (index, new Element (id, offset, attachment));
 		}
 		
 		public void Move(Internal.CursorId id, int position)
@@ -129,7 +134,7 @@ namespace Epsitec.Common.Text.Internal
 			return this.elements[element].offset;
 		}
 		
-		public Internal.CursorAttachment GetElementCursorAttachment(int element)
+		public CursorAttachment GetElementCursorAttachment(int element)
 		{
 			Debug.Assert.IsInBounds (element, 0, this.elements.Length-1);
 			
@@ -198,10 +203,10 @@ namespace Epsitec.Common.Text.Internal
 				//	Si le curseur est entièrement compris dans la zone à considérer
 				//	il est directement affecté par la destruction :
 				
-				Internal.CursorAttachment attachment = this.elements[index_at].attachment;
+				CursorAttachment attachment = this.elements[index_at].attachment;
 				
-				if (((length >= 1) && (attachment == Internal.CursorAttachment.ToNext)) ||
-					((removal_continuation) && (attachment == Internal.CursorAttachment.ToPrevious)))
+				if (((length >= 1) && (attachment == CursorAttachment.ToNext)) ||
+					((removal_continuation) && (attachment == CursorAttachment.ToPrevious)))
 				{
 					if (list == null)
 					{
@@ -534,7 +539,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		private struct Element
 		{
-			public Element(Internal.CursorId id, int offset, Internal.CursorAttachment attachment)
+			public Element(Internal.CursorId id, int offset, CursorAttachment attachment)
 			{
 				this.id         = id;
 				this.offset     = offset;
@@ -544,7 +549,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			public Internal.CursorId			id;
 			public int							offset;
-			public Internal.CursorAttachment	attachment;
+			public CursorAttachment				attachment;
 		}
 		
 		
