@@ -327,8 +327,9 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				rect.Right += 1;
 
-				if ( (state&WidgetState.Entered) != 0 ||  // bouton survolé ?
-					 (state&WidgetState.Engaged) != 0 )   // bouton pressé ?
+				if ( (state&WidgetState.Entered)   != 0 ||  // bouton survolé ?
+					 (state&WidgetState.Engaged)   != 0 ||  // bouton pressé ?
+					 (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
 				{
 					double radius = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
 					Drawing.Path path = PathRoundRectangle(rect, radius);
@@ -1035,6 +1036,22 @@ namespace Epsitec.Common.Widgets.Adorner
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(color);
+		}
+
+
+		public Drawing.Color GetColorCaption()
+		{
+			return this.colorCaption;
+		}
+
+		public Drawing.Color GetColorControl()
+		{
+			return this.colorControl;
+		}
+
+		public Drawing.Color GetColorWindow()
+		{
+			return this.colorWindow;
 		}
 
 
