@@ -168,6 +168,51 @@ namespace Epsitec.Common.Converters
 			throw new System.NotSupportedException (string.Format ("Type {0}: conversion not supported.", obj.GetType ().Name));
 		}
 		
+		public static bool Convert(object obj, System.Type type, out System.Enum value)
+		{
+			if ((obj == null) || (obj is System.DBNull))
+			{
+				value = null;
+				return false;
+			}
+			
+			if (obj.GetType () == type)
+			{
+				value = (System.Enum) obj;
+				return true;
+			}
+			
+			string text = obj as string;
+			
+			if (text != null)
+			{
+				try
+				{
+					value = (System.Enum) System.Enum.Parse (type, text);
+					
+					if (System.Enum.IsDefined (type, value))
+					{
+						return true;
+					}
+				}
+				catch
+				{
+				}
+			}
+			
+			int index;
+			
+			if ((Converter.Convert (obj, out index)) &&
+				(System.Enum.IsDefined (type, index)))
+			{
+				value = (System.Enum) System.Enum.Parse (type, index.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				return true;
+			}
+			
+			value = null;
+			return false;
+		}
+		
 		public static bool Convert(object obj, System.Type type, out object value)
 		{
 			if (obj == null)
@@ -229,6 +274,15 @@ namespace Epsitec.Common.Converters
 					decimal result;
 					
 					if (Converter.Convert (obj, out result))
+					{
+						value = result;
+						return true;
+					}
+				}
+				else if (type.IsEnum)
+				{
+					System.Enum result;
+					if (Converter.Convert (obj, type, out result))
 					{
 						value = result;
 						return true;
