@@ -101,6 +101,15 @@ namespace Epsitec.Common.Widgets
 	}
 	#endregion
 	
+	#region ContainerLayoutMode enum
+	public enum ContainerLayoutMode : byte
+	{
+		None				= 0,				//	pas de préférence					
+		HorizontalFlow		= 1,				//	remplit horizontalement
+		VerticalFlow		= 2					//	remplit verticalement
+	}
+	#endregion
+	
 	#region LayoutStyles enum
 	[System.Flags] public enum LayoutStyles : byte
 	{
@@ -662,20 +671,31 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle ("DockH")]	public bool				PreferHorizontalDockLayout
+		[Bundle] public ContainerLayoutMode			ContainerLayoutMode
 		{
-			get { return (this.internal_state & InternalState.PreferXLayout) != 0; }
+			get
+			{
+				if ((this.internal_state & InternalState.PreferXLayout) != 0)
+				{
+					return ContainerLayoutMode.HorizontalFlow;
+				}
+				else
+				{
+					return ContainerLayoutMode.VerticalFlow;
+				}
+			}
 			set
 			{
-				if (value != this.PreferHorizontalDockLayout)
+				if (this.ContainerLayoutMode != value)
 				{
-					if (value)
+					switch (value)
 					{
-						this.internal_state |= InternalState.PreferXLayout;
-					}
-					else
-					{
-						this.internal_state &= ~ InternalState.PreferXLayout;
+						case ContainerLayoutMode.HorizontalFlow:
+							this.internal_state |= InternalState.PreferXLayout;
+							break;
+						case ContainerLayoutMode.VerticalFlow:
+							this.internal_state &= ~ InternalState.PreferXLayout;
+							break;
 					}
 					
 					this.UpdateChildrenLayout ();
@@ -4681,13 +4701,14 @@ namespace Epsitec.Common.Widgets
 			double fill_max_dx = 0;
 			double fill_max_dy = 0;
 			
-			if (this.PreferHorizontalDockLayout)
+			switch (this.ContainerLayoutMode)
 			{
-				fill_max_dy = max_dy;
-			}
-			else
-			{
-				fill_max_dx = max_dx;
+				case ContainerLayoutMode.HorizontalFlow:
+					fill_max_dy = max_dy;
+					break;
+				case ContainerLayoutMode.VerticalFlow:
+					fill_max_dx = max_dx;
+					break;
 			}
 			
 			for (int i = 0; i < children.Length; i++)
@@ -4750,19 +4771,20 @@ namespace Epsitec.Common.Widgets
 						break;
 					
 					case DockStyle.Fill:
-						if (this.PreferHorizontalDockLayout)
+						switch (this.ContainerLayoutMode)
 						{
-							fill_min_dx += min.Width;
-							fill_min_dy  = System.Math.Max (fill_min_dy, min.Height);
-							fill_max_dx += max.Width;
-							fill_max_dy  = System.Math.Min (fill_max_dy, max.Height);
-						}
-						else
-						{
-							fill_min_dx  = System.Math.Max (fill_min_dx, min.Width);
-							fill_min_dy += min.Height;
-							fill_max_dx  = System.Math.Min (fill_max_dx, max.Width);
-							fill_max_dy += max.Height;
+							case ContainerLayoutMode.HorizontalFlow:
+								fill_min_dx += min.Width;
+								fill_min_dy  = System.Math.Max (fill_min_dy, min.Height);
+								fill_max_dx += max.Width;
+								fill_max_dy  = System.Math.Min (fill_max_dy, max.Height);
+								break;
+							case ContainerLayoutMode.VerticalFlow:
+								fill_min_dx  = System.Math.Max (fill_min_dx, min.Width);
+								fill_min_dy += min.Height;
+								fill_max_dx  = System.Math.Min (fill_max_dx, max.Width);
+								fill_max_dy += max.Height;
+								break;
 						}
 						break;
 				}
@@ -4874,33 +4896,34 @@ namespace Epsitec.Common.Widgets
 			
 			if (fill_queue != null)
 			{
-				if (this.PreferHorizontalDockLayout)
+				int n = fill_queue.Count;
+				
+				double fill_dx = client_rect.Width;
+				double fill_dy = client_rect.Height;
+				
+				switch (this.ContainerLayoutMode)
 				{
-					int n = fill_queue.Count;
-					double fill_dx = client_rect.Width;
-					
-					foreach (Widget child in fill_queue)
-					{
-						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, fill_dx / n, client_rect.Height);
-						bounds.Deflate (child.DockMargins);
+					case ContainerLayoutMode.HorizontalFlow:
+						foreach (Widget child in fill_queue)
+						{
+							bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Bottom, fill_dx / n, client_rect.Height);
+							bounds.Deflate (child.DockMargins);
 						
-						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
-						client_rect.Left += fill_dx / n;
-					}
-				}
-				else
-				{
-					int n = fill_queue.Count;
-					double fill_dy = client_rect.Height;
+							child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+							client_rect.Left += fill_dx / n;
+						}
+						break;
 					
-					foreach (Widget child in fill_queue)
-					{
-						bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Top - fill_dy / n, client_rect.Width, fill_dy / n);
-						bounds.Deflate (child.DockMargins);
+					case ContainerLayoutMode.VerticalFlow:
+						foreach (Widget child in fill_queue)
+						{
+							bounds = new Drawing.Rectangle (client_rect.Left, client_rect.Top - fill_dy / n, client_rect.Width, fill_dy / n);
+							bounds.Deflate (child.DockMargins);
 						
-						child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
-						client_rect.Top -= fill_dy / n;
-					}
+							child.SetBounds (bounds.Left, bounds.Bottom, bounds.Right, bounds.Top);
+							client_rect.Top -= fill_dy / n;
+						}
+						break;
 				}
 			}
 		}

@@ -165,7 +165,7 @@ namespace Epsitec.Common.Designer.Editors
 		{
 			this.page = new TabPage ();
 			this.page.DockPadding = new Drawing.Margins (5, 5, 5, 5);
-			this.page.PreferHorizontalDockLayout = false;
+			this.page.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 			
 			this.FillTabPage ();
 			this.UpdateContents ();
