@@ -129,6 +129,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DbCompare.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DbElementCat.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -205,6 +210,11 @@
                 />
                 <File
                     RelPath = "DbSelectCondition.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DbSelectRevision.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -99,6 +99,11 @@ namespace Epsitec.Cresus.Database.Collections
 			this.InternalAddRange (fields);
 		}
 		
+		public virtual void AddRange(SqlFields fields)
+		{
+			this.InternalAddRange (fields);
+		}
+		
 		public virtual void Remove(SqlField field)
 		{
 			this.InternalRemove (field);

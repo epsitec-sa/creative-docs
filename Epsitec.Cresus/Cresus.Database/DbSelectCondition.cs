@@ -13,6 +13,20 @@ namespace Epsitec.Cresus.Database
 		{
 			this.type_converter = type_converter;
 			this.sql_fields     = new Collections.SqlFields ();
+			this.revision       = DbSelectRevision.All;
+		}
+		
+		
+		public DbSelectRevision					Revision
+		{
+			get
+			{
+				return this.revision;
+			}
+			set
+			{
+				this.revision = value;
+			}
 		}
 		
 		
@@ -75,6 +89,30 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		internal void CreateConditions(DbTable main_table, Collections.SqlFields fields)
+		{
+			switch (this.revision)
+			{
+				case DbSelectRevision.LiveAll:
+					this.AddCondition (main_table.Columns[Tags.ColumnStatus], DbCompare.Equal, DbKey.ConvertToIntStatus (DbRowStatus.Live));
+					break;
+				
+				case DbSelectRevision.LiveCurrent:
+					this.AddCondition (main_table.Columns[Tags.ColumnStatus], DbCompare.Equal, DbKey.ConvertToIntStatus (DbRowStatus.Live));
+					this.AddCondition (main_table.Columns[Tags.ColumnRevision], DbCompare.Equal, 0);
+					break;
+				
+				case DbSelectRevision.All:
+					break;
+				
+				default:
+					throw new System.NotSupportedException (string.Format ("DbSelectRevision.{0} not supported", this.revision));
+			}
+			
+			fields.AddRange (this.sql_fields);
+		}
+		
+		
 		protected void AddConditionWithRawValue(DbColumn a, DbCompare comparison, object raw_value, DbRawType raw_type)
 		{
 			string      table    = a.Table.CreateSqlName ();
@@ -104,19 +142,9 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		
 		private ITypeConverter					type_converter;
 		private Collections.SqlFields			sql_fields;
-	}
-	
-	public enum DbCompare
-	{
-		Equal,
-		NotEqual,
-		LessThan,
-		LessThanOrEqual,
-		GreaterThan,
-		GreaterThanOrEqual,
-		Like,
-		NotLike
+		private DbSelectRevision				revision;
 	}
 }

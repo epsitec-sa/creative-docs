@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Database
 		{
 			this.id         = id;
 			this.revision   = revision;
-			this.int_status = (short) status;
+			this.int_status = DbKey.ConvertToIntStatus (status);
 		}
 		
 		public DbKey(System.Data.DataRow data_row)
@@ -106,6 +106,11 @@ namespace Epsitec.Cresus.Database
 			return false;
 		}
 		
+		
+		public static short ConvertToIntStatus(DbRowStatus status)
+		{
+			return (short) status;
+		}
 		
 		public static DbRowStatus ConvertFromIntStatus(int status)
 		{

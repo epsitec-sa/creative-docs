@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Database
 				}
 				else
 				{
-					//	TODO: ...tenir compte de la condition de sélection...
+					condition.CreateConditions (table, select.Conditions);
 				}
 				
 				builder.SelectData (select);

@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Database.Collections
 			this.OnChanged ();
 		}
 		
-		protected void InternalAddRange(object[] elements)
+		protected void InternalAddRange(System.Collections.ICollection elements)
 		{
 			if (elements == null)
 			{
@@ -75,10 +75,12 @@ namespace Epsitec.Cresus.Database.Collections
 			}
 			
 			this.list.AddRange (elements);
+			
 			foreach (object element in elements)
 			{
 				this.OnInserted (element);
 			}
+			
 			this.OnChanged ();
 		}
 		
