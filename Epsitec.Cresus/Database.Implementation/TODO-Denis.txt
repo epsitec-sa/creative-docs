@@ -85,3 +85,5 @@ A FAIRE
 
 -	Compléter les tests de DbTable (si besoin).
 
+-	Finir FirebirdSqlBuilder (pour SELECT, INSERT, REMOVE, UPDATE en
+	particulier), puis tester.
