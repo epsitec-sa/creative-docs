@@ -58,6 +58,9 @@ namespace Epsitec.Common.Drawing
 			get { return new Size (this.Width, this.Height); }
 		}
 		
+		
+		public static readonly Margins	Zero = new Margins(0, 0, 0, 0);
+		
 		public override bool Equals(object obj)
 		{
 			if ((obj == null) &&
