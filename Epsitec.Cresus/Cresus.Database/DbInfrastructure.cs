@@ -101,6 +101,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		
 		public CallbackDisplayDataSet		DisplayDataSet
 		{
 			get { return this.display_data_set; }
@@ -125,31 +126,14 @@ namespace Epsitec.Cresus.Database
 		
 		public DbTransaction BeginTransaction()
 		{
+			//	Débute une nouvelle transaction. Ceci n'est possible que si aucune
+			//	autre transaction n'est actuellement en cours sur cette connexion.
+			
 			return new DbTransaction (this.db_abstraction.BeginTransaction (), this);
 		}
 		
-		internal void NotifyBeginTransaction(DbTransaction transaction)
-		{
-			if (this.live_transaction != null)
-			{
-				throw new DbException (this.db_access, string.Format ("Nested transactions not supported."));
-			}
-			
-			this.live_transaction = transaction;
-		}
 		
-		internal void NotifyEndTransaction(DbTransaction transaction)
-		{
-			if (this.live_transaction != transaction)
-			{
-				throw new DbException (this.db_access, string.Format ("Ending wrong transaction."));
-			}
-			
-			this.live_transaction = null;
-		}
-		
-		
-		public DbTable CreateDbTable(string name, DbElementCat category)
+		public DbTable   CreateDbTable(string name, DbElementCat category)
 		{
 			//	Crée la description d'une table qui ne contient que le strict minimum nécessaire au fonctionnement
 			//	de Crésus (tuple pour la clef primaire, statut). Il faudra compléter les colonnes en fonction des
@@ -168,7 +152,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public void RegisterNewDbTable(DbTransaction transaction, DbTable table)
+		public void      RegisterNewDbTable(DbTransaction transaction, DbTable table)
 		{
 			//	Enregistre une nouvelle table dans la base de données. Ceci va attribuer à
 			//	la table une clef DbKey et vérifier qu'il n'y a pas de collision avec une
@@ -214,7 +198,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (transaction);
 		}
 		
-		public void UnregisterDbTable(DbTransaction transaction, DbTable table)
+		public void      UnregisterDbTable(DbTransaction transaction, DbTable table)
 		{
 			//	Supprime la description de la table de la base. Pour des raisons de sécurité,
 			//	la table SQL n'est pas réellement supprimée.
@@ -241,14 +225,13 @@ namespace Epsitec.Cresus.Database
 			this.UpdateKeyInRow (transaction, DbTable.TagTableDef, old_key, new_key);
 		}
 		
-		
-		public DbTable ResolveDbTable(DbTransaction transaction, string table_name)
+		public DbTable   ResolveDbTable(DbTransaction transaction, string table_name)
 		{
 			DbKey key = this.FindDbTableKey (transaction, table_name);
 			return this.ResolveDbTable (transaction, key);
 		}
 		
-		public DbTable ResolveDbTable(DbTransaction transaction, DbKey key)
+		public DbTable   ResolveDbTable(DbTransaction transaction, DbKey key)
 		{
 			if (key == null)
 			{
@@ -261,11 +244,14 @@ namespace Epsitec.Cresus.Database
 				
 				if (table == null)
 				{
-					table = this.LoadDbTable (transaction, key);
+					System.Collections.ArrayList tables = this.LoadDbTable (transaction, key);
 					
-					if (table != null)
+					if (tables.Count > 0)
 					{
+						table = tables[0] as DbTable;
+						
 						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", table.GetType ().Name, table.Name));
+						System.Diagnostics.Debug.Assert (tables.Count == 1);
 						
 						this.cache_db_tables[key] = table;
 					}
@@ -275,13 +261,43 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public DbType  ResolveDbType(DbTransaction transaction, string type_name)
+		public DbTable[] FindDbTables(DbTransaction transaction, DbElementCat category)
+		{
+			//	Liste toutes les tables appartenant à la catégorie spécifiée.
+			
+			System.Collections.ArrayList list = this.LoadDbTable (transaction, null);
+			
+			if (category != DbElementCat.Any)
+			{
+				for (int i = 0; i < list.Count; )
+				{
+					DbTable table = list[i] as DbTable;
+					
+					if (table.Category != category)
+					{
+						list.RemoveAt (i);
+					}
+					else
+					{
+						i++;
+					}
+				}
+			}
+			
+			DbTable[] tables = new DbTable[list.Count];
+			list.CopyTo (tables, 0);
+			
+			return tables;
+		}
+		
+		
+		public DbType    ResolveDbType(DbTransaction transaction, string type_name)
 		{
 			DbKey key = this.FindDbTypeKey (transaction, type_name);
 			return this.ResolveDbType (transaction, key);
 		}
 		
-		public DbType  ResolveDbType(DbTransaction transaction, DbKey key)
+		public DbType    ResolveDbType(DbTransaction transaction, DbKey key)
 		{
 			if (key == null)
 			{
@@ -296,11 +312,14 @@ namespace Epsitec.Cresus.Database
 				
 				if (type == null)
 				{
-					type = this.LoadDbType (transaction, key);
+					System.Collections.ArrayList types = this.LoadDbType (transaction, key);
 					
-					if (type != null)
+					if (types.Count > 0)
 					{
+						type = types[0] as DbType;
+						
 						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", type.GetType ().Name, type.Name));
+						System.Diagnostics.Debug.Assert (types.Count == 1);
 						
 						this.cache_db_types[key] = type;
 					}
@@ -309,6 +328,19 @@ namespace Epsitec.Cresus.Database
 				return type;
 			}
 		}
+		
+		public DbType[]  FindDbTypes(DbTransaction transaction)
+		{
+			//	Liste tous les types.
+			
+			System.Collections.ArrayList list = this.LoadDbType (transaction, null);
+			
+			DbType[] types = new DbType[list.Count];
+			list.CopyTo (types, 0);
+			
+			return types;
+		}
+		
 		
 		
 		internal DbTable CreateUserTable(string name)
@@ -399,6 +431,26 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		
+		internal void NotifyBeginTransaction(DbTransaction transaction)
+		{
+			if (this.live_transaction != null)
+			{
+				throw new DbException (this.db_access, string.Format ("Nested transactions not supported."));
+			}
+			
+			this.live_transaction = transaction;
+		}
+		
+		internal void NotifyEndTransaction(DbTransaction transaction)
+		{
+			if (this.live_transaction != transaction)
+			{
+				throw new DbException (this.db_access, string.Format ("Ending wrong transaction."));
+			}
+			
+			this.live_transaction = null;
+		}
 		
 		
 		
@@ -686,7 +738,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public DbTable LoadDbTable(DbTransaction transaction, DbKey key)
+		public System.Collections.ArrayList LoadDbTable(DbTransaction transaction, DbKey key)
 		{
 			//	Charge les définitions pour la table au moyen d'une requête unique qui va
 			//	aussi retourner les diverses définitions de colonnes.
@@ -695,6 +747,7 @@ namespace Epsitec.Cresus.Database
 			
 			//	Ce qui est propre à la table :
 			
+			query.Fields.Add ("T_ID",   SqlField.CreateName ("T_TABLE", DbColumn.TagId));
 			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TABLE", DbColumn.TagName));
 			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TABLE", DbColumn.TagInfoXml));
 			
@@ -716,11 +769,26 @@ namespace Epsitec.Cresus.Database
 			query.Tables.Add ("T_TABLE",  SqlField.CreateName (DbTable.TagTableDef));
 			query.Tables.Add ("T_COLUMN", SqlField.CreateName (DbTable.TagColumnDef));
 			
-			//	On extrait toutes les lignes de T_TABLE qui ont un CR_ID = key, ainsi que
-			//	les lignes correspondantes de T_COLUMN qui ont un CREF_TABLE = key.
-			
-			this.AddKeyExtraction (query, key, "T_TABLE", DbKeyMatchMode.ExactRevisionId);
-			this.AddKeyExtraction (query, "T_COLUMN", DbColumn.TagRefTable, key);
+			if (key == null)
+			{
+				//	On extrait toutes les définitions de tables qui correspondent à la version
+				//	'active' (CR_REV = 0). Extrait aussi les colonnes correspondantes.
+				
+				SqlField table_rev_name = SqlField.CreateName ("T_TABLE", DbColumn.TagRevision);
+				SqlField table_rev_zero = SqlField.CreateConstant (0, DbRawType.Int32);
+				
+				query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, table_rev_name, table_rev_zero));
+				
+				this.AddKeyExtraction (query, "T_COLUMN", DbColumn.TagRefTable, "T_TABLE");
+			}
+			else
+			{
+				//	On extrait toutes les lignes de T_TABLE qui ont un CR_ID = key, ainsi que
+				//	les lignes correspondantes de T_COLUMN qui ont un CREF_TABLE = key.
+				
+				this.AddKeyExtraction (query, key, "T_TABLE", DbKeyMatchMode.ExactRevisionId);
+				this.AddKeyExtraction (query, "T_COLUMN", DbColumn.TagRefTable, key);
+			}
 			
 			System.Data.DataTable data_table = this.ExecuteSqlSelect (transaction, query, 1);
 			
@@ -729,18 +797,34 @@ namespace Epsitec.Cresus.Database
 				this.display_data_set (this, string.Format ("DbTable.{0}", key), data_table);
 			}
 			
-			System.Data.DataRow row_zero = data_table.Rows[0];
+			System.Data.DataRowCollection rows     = data_table.Rows;
+			long                          row_id   = -1;
+			System.Collections.ArrayList  tables   = new System.Collections.ArrayList ();
+			DbTable						  db_table = null;
 			
-			DbTable db_table = DbTable.NewTable (Converter.ToString (row_zero["T_INFO"]));
-			
-			db_table.Attributes.SetAttribute (Tags.Name, Converter.ToString (row_zero["T_NAME"]));
-			db_table.DefineInternalKey (key);
-			
-			this.DefineLocalisedAttributes (row_zero, "TABLE_CAPTION", DbColumn.TagCaption, db_table.Attributes, Tags.Caption);
-			this.DefineLocalisedAttributes (row_zero, "TABLE_DESCRIPTION", DbColumn.TagDescription, db_table.Attributes, Tags.Description);
-			
-			foreach (System.Data.DataRow data_row in data_table.Rows)
+			for (int i = 0; i < rows.Count; i++)
 			{
+				long current_row_id;
+				System.Data.DataRow data_row = rows[i];
+				
+				Converter.Convert (data_row["T_ID"], out current_row_id);
+				
+				if (row_id != current_row_id)
+				{
+					row_id   = current_row_id;
+					db_table = DbTable.NewTable (Converter.ToString (data_row["T_INFO"]));
+					
+					db_table.Attributes.SetAttribute (Tags.Name, Converter.ToString (data_row["T_NAME"]));
+					db_table.DefineInternalKey (key);
+					
+					this.DefineLocalisedAttributes (data_row, "TABLE_CAPTION", DbColumn.TagCaption, db_table.Attributes, Tags.Caption);
+					this.DefineLocalisedAttributes (data_row, "TABLE_DESCRIPTION", DbColumn.TagDescription, db_table.Attributes, Tags.Description);
+					
+					tables.Add (db_table);
+				}
+				
+				//	Chaque ligne contient une définition de colonne.
+				
 				long type_ref_id;
 				long column_id;
 				
@@ -771,13 +855,14 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			return db_table;
+			return tables;
 		}
 		
-		public DbType  LoadDbType(DbTransaction transaction, DbKey key)
+		public System.Collections.ArrayList LoadDbType(DbTransaction transaction, DbKey key)
 		{
 			SqlSelect query = new SqlSelect ();
 			
+			query.Fields.Add ("T_ID",   SqlField.CreateName ("T_TYPE", DbColumn.TagId));
 			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TYPE", DbColumn.TagName));
 			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TYPE", DbColumn.TagInfoXml));
 			
@@ -786,37 +871,59 @@ namespace Epsitec.Cresus.Database
 			
 			query.Tables.Add ("T_TYPE", SqlField.CreateName (DbTable.TagTypeDef));
 			
-			//	Cherche la ligne de la table dont 'CR_ID = key' en ne considérant que
-			//	l'ID et dont la révision = 0.
-			
-			this.AddKeyExtraction (query, key, "T_TYPE", DbKeyMatchMode.LiveId);
-			
-			System.Data.DataTable data_table = this.ExecuteSqlSelect (transaction, query, 1);
-			System.Data.DataRow   data_row   = data_table.Rows[0];
-			
-			string type_name = data_row["T_NAME"] as string;
-			string type_info = data_row["T_INFO"] as string;
-			
-			//	A partir de l'information trouvée dans la base, génère l'objet DbType
-			//	qui correspond.
-			
-			DbType type = DbTypeFactory.NewType (type_info);
-			
-			type.DefineName (type_name);
-			type.DefineInternalKey (key);
-			
-			this.DefineLocalisedAttributes (data_row, "TYPE_CAPTION", DbColumn.TagCaption, type.Attributes, Tags.Caption);
-			this.DefineLocalisedAttributes (data_row, "TYPE_DESCRIPTION", DbColumn.TagDescription, type.Attributes, Tags.Description);
-			
-			if (type is DbTypeEnum)
+			if (key == null)
 			{
-				DbTypeEnum type_enum = type as DbTypeEnum;
-				DbEnumValue[] values = this.LoadEnumValues (transaction, type_enum);
+				//	On extrait toutes les définitions de types qui correspondent à la version
+				//	'active' (CR_REV = 0).
 				
-				type_enum.Initialise (values);
+				SqlField type_rev_name = SqlField.CreateName ("T_TYPE", DbColumn.TagRevision);
+				SqlField type_rev_zero = SqlField.CreateConstant (0, DbRawType.Int32);
+				
+				query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, type_rev_name, type_rev_zero));
+			}
+			else
+			{
+				//	Cherche la ligne de la table dont 'CR_ID = key' en ne considérant que
+				//	l'ID et dont la révision = 0.
+				
+				this.AddKeyExtraction (query, key, "T_TYPE", DbKeyMatchMode.LiveId);
 			}
 			
-			return type;
+			System.Data.DataTable        data_table = this.ExecuteSqlSelect (transaction, query, 1);
+			System.Collections.ArrayList types      = new System.Collections.ArrayList ();
+			
+			foreach (System.Data.DataRow data_row in data_table.Rows)
+			{
+				long type_id;
+				
+				Converter.Convert (data_row["T_ID"], out type_id);
+				
+				string type_name = data_row["T_NAME"] as string;
+				string type_info = data_row["T_INFO"] as string;
+				
+				//	A partir de l'information trouvée dans la base, génère l'objet DbType
+				//	qui correspond.
+				
+				DbType type = DbTypeFactory.NewType (type_info);
+				
+				type.DefineName (type_name);
+				type.DefineInternalKey (new DbKey (type_id));
+				
+				this.DefineLocalisedAttributes (data_row, "TYPE_CAPTION", DbColumn.TagCaption, type.Attributes, Tags.Caption);
+				this.DefineLocalisedAttributes (data_row, "TYPE_DESCRIPTION", DbColumn.TagDescription, type.Attributes, Tags.Description);
+				
+				if (type is DbTypeEnum)
+				{
+					DbTypeEnum type_enum = type as DbTypeEnum;
+					DbEnumValue[] values = this.LoadEnumValues (transaction, type_enum);
+					
+					type_enum.Initialise (values);
+				}
+				
+				types.Add (type);
+			}
+			
+			return types;
 		}
 		
 		

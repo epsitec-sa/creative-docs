@@ -1,10 +1,13 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Statut : OK/PA, 01/12/2003
 
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// Summary description for DbTransaction.
+	/// La classe DbTransaction encapsule les véritables transactions afin de
+	/// permettre un meilleur contrôle sur leur création et leur durée de vie.
+	/// Cela permet par exemple à DbInfrastructure de vérifier que l'appelant
+	/// ne crée pas de transactions imbriquées.
 	/// </summary>
 	public class DbTransaction : System.IDisposable, System.Data.IDbTransaction
 	{
