@@ -1118,7 +1118,7 @@ namespace Epsitec.Common.Widgets
 
 
 		// Met à jour la géométrie du tableau.
-		protected void Update()
+		public void Update()
 		{
 			if ( !this.isDirty )  return;
 			this.UpdateClientGeometry();
@@ -1198,7 +1198,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.container != null )
 			{
 				this.container.Bounds = iRect;
-				UpdateArrayGeometry();
+				this.UpdateArrayGeometry();
 			}
 
 			// Positionne les boutons de l'en-tête verticale.

@@ -372,7 +372,7 @@ namespace Epsitec.Common.Widgets
 		// Allume le curseur au prochain affichage.
 		protected void ResetCursor()
 		{
-			if ( this.IsFocused && this.Window.IsFocused && TextField.flashTimer != null )
+			if ( this.IsFocused && TextField.flashTimer != null )
 			{
 				double delay = SystemInformation.CursorBlinkDelay;
 				TextField.flashTimer.Delay = delay;
@@ -788,7 +788,18 @@ namespace Epsitec.Common.Widgets
 		protected override void OnDefocused()
 		{
 			TextField.blinking = null;
-			this.SelectAll(true);
+			
+			if ( this.IsFocusedOrPassive )
+			{
+				//	On a perdu le focus visible, mais pas le focus réel, vraisemblablement
+				//	parce que la fenêtre a perdu le focus. On ne doit pas toucher à la
+				//	sélection actuelle...
+			}
+			else
+			{
+				this.SelectAll(true);
+			}
+			
 			base.OnDefocused();
 		}
 
@@ -903,7 +914,19 @@ namespace Epsitec.Common.Widgets
 				rFill.Deflate(1, 1);
 			}
 			
-			adorner.PaintTextFieldBackground(graphics, rFill, state, this.textStyle, this.isReadOnly);
+			if ( this.BackColor.IsTransparent )
+			{
+				//	Ne peint pas le fond de la ligne éditable si celle-ci a un fond explicitement
+				//	défini comme "transparent".
+			}
+			else
+			{
+				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond de la ligne
+				//	éditable.
+				
+				state &= ~WidgetState.Selected;
+				adorner.PaintTextFieldBackground(graphics, rFill, state, this.textStyle, this.isReadOnly);
+			}
 			
 //			graphics.AddFilledRectangle(rText);
 //			graphics.RenderSolid(Drawing.Color.FromARGB(0.6, 1, 0, 0));

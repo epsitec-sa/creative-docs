@@ -777,6 +777,29 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		internal void OnWindowFocused()
+		{
+			if (this.WindowFocused != null)
+			{
+				this.WindowFocused (this);
+			}
+			if (this.focused_widget != null)
+			{
+				this.focused_widget.GeneratedFocused ();
+			}
+		}
+		
+		internal void OnWindowDefocused()
+		{
+			if (this.WindowDefocused != null)
+			{
+				this.WindowDefocused (this);
+			}
+			if (this.focused_widget != null)
+			{
+				this.focused_widget.GeneratedDefocused ();
+			}
+		}
 		
 		internal bool FilterMessage(Message message)
 		{
@@ -1277,6 +1300,8 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				WindowHidden;
 		public event EventHandler				WindowClosed;
 		public event EventHandler				WindowAnimationEnded;
+		public event EventHandler				WindowFocused;
+		public event EventHandler				WindowDefocused;
 		
 		public static event MessageHandler		MessageFilter;
 		public static event EventHandler		ApplicationActivated;

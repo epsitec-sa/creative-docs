@@ -483,6 +483,20 @@ namespace Epsitec.Common.Widgets.Platform
 			base.OnClosed (e);
 		}
 		
+		protected override void OnGotFocus(System.EventArgs e)
+		{
+			base.OnGotFocus (e);
+			this.widget_window.OnWindowFocused ();
+		}
+		
+		protected override void OnLostFocus(System.EventArgs e)
+		{
+			base.OnLostFocus (e);
+			this.widget_window.OnWindowDefocused ();
+		}
+
+
+		
 		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
 		{
 			base.OnClosing (e);

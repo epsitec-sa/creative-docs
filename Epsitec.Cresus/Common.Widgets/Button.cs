@@ -128,7 +128,20 @@ namespace Epsitec.Common.Widgets
 				state &= ~WidgetState.Entered;
 				state &= ~WidgetState.Engaged;
 			}
-			adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
+			
+			if ( this.BackColor.IsTransparent )
+			{
+				//	Ne peint pas le fond du bouton si celui-ci a un fond explicitement défini
+				//	comme "transparent".
+			}
+			else
+			{
+				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond du bouton.
+				
+				state &= ~WidgetState.Selected;
+				adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
+			}
+			
 			adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, this.buttonStyle);
 		}
 		

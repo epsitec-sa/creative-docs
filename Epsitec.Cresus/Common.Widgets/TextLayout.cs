@@ -450,13 +450,14 @@ namespace Epsitec.Common.Widgets
 		// position indiquée. Retourne -1 en cas d'échec.
 		public int DetectIndex(Drawing.Point pos)
 		{
-			if ( pos.X < 0                      ||
-				 pos.X > this.layoutSize.Width  ||
-				 pos.Y < 0                      ||
+			if ( pos.Y < 0                      ||
 				 pos.Y > this.layoutSize.Height )  return -1;
 
 			this.UpdateLayout();
 
+			pos.X = System.Math.Max (pos.X, 0);
+			pos.X = System.Math.Min (pos.X, this.layoutSize.Width);
+			
 			foreach ( JustifLine line in this.lines )
 			{
 				if ( !line.visible )  continue;
@@ -516,10 +517,10 @@ namespace Epsitec.Common.Widgets
 		// position indiquée. Retourne -1 en cas d'échec.
 		public int DetectIndex(double posx, int posLine)
 		{
-			if ( posx < 0                     ||
-				 posx > this.layoutSize.Width )  return -1;
-
 			this.UpdateLayout();
+			
+			posx = System.Math.Max (posx, 0);
+			posx = System.Math.Min (posx, this.layoutSize.Width);
 
 			foreach ( JustifLine line in this.lines )
 			{

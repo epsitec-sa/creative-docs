@@ -728,7 +728,30 @@ namespace Epsitec.Common.Widgets
 
 		public bool									IsFocused
 		{
-			get { return (this.widget_state & WidgetState.Focused) != 0; }
+			get
+			{
+				if (this.IsFocusedOrPassive)
+				{
+					Window window = this.Window;
+				
+					if (window == null)
+					{
+						return false;
+					}
+				
+					return window.IsFocused;
+				}
+				
+				return false;
+			}
+		}
+		
+		public bool									IsFocusedOrPassive
+		{
+			get
+			{
+				return (this.widget_state & WidgetState.Focused) != 0;
+			}
 		}
 		
 		public bool									IsEntered
@@ -1754,14 +1777,18 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			if ((this.widget_state & WidgetState.Focused) == 0)
+			if (! this.IsFocusedOrPassive)
 			{
 				if (focused)
 				{
 					this.widget_state |= WidgetState.Focused;
 					window.FocusedWidget = this;
-					this.OnFocused ();
-					this.Invalidate ();
+					
+					if (this.IsFocused)
+					{
+						this.OnFocused ();
+						this.Invalidate ();
+					}
 				}
 			}
 			else
@@ -4839,6 +4866,20 @@ namespace Epsitec.Common.Widgets
 				this.TextChanged (this);
 			}
 		}
+		
+		
+		internal void GeneratedFocused()
+		{
+			this.OnFocused ();
+			this.Invalidate ();
+		}
+		
+		internal void GeneratedDefocused()
+		{
+			this.OnDefocused ();
+			this.Invalidate ();
+		}
+		
 		
 		protected virtual void OnFocused()
 		{
