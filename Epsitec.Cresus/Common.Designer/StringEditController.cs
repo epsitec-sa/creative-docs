@@ -19,8 +19,11 @@ namespace Epsitec.Common.Designer
 			this.bundles    = new System.Collections.Hashtable ();
 			this.panels     = new System.Collections.ArrayList ();
 			this.dispatcher = dispatcher;
+			this.provider   = new BundleStringProvider (this);
 			
 			this.dispatcher.RegisterController (this);
+			
+			Support.Globals.Properties.SetProperty ("$resources$string data provider", this.DataProvider);
 		}
 		
 		
@@ -28,7 +31,7 @@ namespace Epsitec.Common.Designer
 		{
 			string full_name = Resources.MakeFullName (prefix, name);
 			
-			if (this.ActivateExistingBundle (full_name))
+			if (this.ActivateExistingBundle (name))
 			{
 				return;
 			}
@@ -41,7 +44,7 @@ namespace Epsitec.Common.Designer
 			
 			this.CreateMissingBundles (bundles, prefix, name);
 			
-			this.bundles.Add (full_name, bundles);
+			this.bundles.Add (name, bundles);
 			this.panels.Add (this.CreatePanel (full_name, bundles));
 			
 			this.ActivateTabBookPage ();
@@ -51,7 +54,7 @@ namespace Epsitec.Common.Designer
 		{
 			string full_name = Resources.MakeFullName (prefix, name);
 			
-			if (this.ActivateExistingBundle (full_name))
+			if (this.ActivateExistingBundle (name))
 			{
 				return;
 			}
@@ -61,7 +64,7 @@ namespace Epsitec.Common.Designer
 			
 			this.CreateMissingBundles (bundles, prefix, name);
 			
-			this.bundles.Add (full_name, bundles);
+			this.bundles.Add (name, bundles);
 			this.panels.Add (this.CreatePanel (full_name, bundles));
 			
 			this.ActivateTabBookPage ();
@@ -78,22 +81,22 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		protected bool ActivateExistingBundle(string full_name)
+		protected bool ActivateExistingBundle(string name)
 		{
-			if (this.bundles.ContainsKey (full_name))
+			if (this.bundles.ContainsKey (name))
 			{
 				for (int i = 0; i < this.panels.Count; i++)
 				{
 					Panels.StringEditPanel panel = this.panels[i] as Panels.StringEditPanel;
 					
-					if (panel.Store.FullName == full_name)
+					if (panel.Store.Name == name)
 					{
 						this.tab_book.ActivePageIndex = i;
 						return true;
 					}
 				}
 				
-				throw new System.InvalidOperationException (string.Format ("Bundle '{0}' cannot be recycled.", full_name));
+				throw new System.InvalidOperationException (string.Format ("Bundle '{0}' cannot be recycled.", name));
 			}
 			
 			return false;
@@ -140,6 +143,14 @@ namespace Epsitec.Common.Designer
 				}
 				
 				return this.window;
+			}
+		}
+		
+		public Support.Data.IPropertyProvider	DataProvider
+		{
+			get
+			{
+				return this.provider;
 			}
 		}
 		
@@ -432,6 +443,14 @@ namespace Epsitec.Common.Designer
 				}
 			}
 			
+			public string						Name
+			{
+				get
+				{
+					return Resources.ExtractName (this.full_name);
+				}
+			}
+			
 			public string						FullName
 			{
 				get
@@ -634,9 +653,9 @@ namespace Epsitec.Common.Designer
 				//	Ferme la page active.
 				
 				Panels.StringEditPanel panel = this.panels[index] as Panels.StringEditPanel;
-				string full_name = panel.Store.FullName;
+				string name = panel.Store.Name;
 				
-				this.bundles.Remove (full_name);
+				this.bundles.Remove (name);
 				this.panels.RemoveAt (index);
 				this.tab_book.Items.RemoveAt (index);
 			}
@@ -648,8 +667,79 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
+		private class BundleStringProvider : Support.Data.IPropertyProvider
+		{
+			public BundleStringProvider(StringEditController host)
+			{
+				this.host = host;
+			}
+			
+			
+			#region IPropertyProvider Members
+			public object GetProperty(string key)
+			{
+				string bundle_name;
+				string field_name;
+				
+				ResourceBundle.SplitTarget (key, out bundle_name, out field_name);
+				
+				ResourceBundleCollection bundles = this.host.bundles[bundle_name] as ResourceBundleCollection;
+				
+				if (bundles != null)
+				{
+					ResourceBundle.Field field = bundles[this.level][field_name];
+					
+					if (field.IsValid)
+					{
+						return field.AsString;
+					}
+				}
+				
+				return null;
+			}
+
+			public bool IsPropertyDefined(string key)
+			{
+				string bundle_name;
+				string field_name;
+				
+				ResourceBundle.SplitTarget (key, out bundle_name, out field_name);
+				
+				ResourceBundleCollection bundles = this.host.bundles[bundle_name] as ResourceBundleCollection;
+				
+				if (bundles != null)
+				{
+					ResourceBundle.Field field = bundles[this.level][field_name];
+					
+					if (field.IsValid)
+					{
+						return true;
+					}
+				}
+				
+				return false;
+			}
+
+			public void ClearProperty(string key)
+			{
+				// TODO:  Add Resource.ClearProperty implementation
+			}
+
+			public void SetProperty(string key, object value)
+			{
+				// TODO:  Add Resource.SetProperty implementation
+			}
+			#endregion
+			
+			private ResourceLevel				level = ResourceLevel.Default;
+			private StringEditController		host;
+		}
+		
 		protected System.Collections.Hashtable	bundles;
 		protected System.Collections.ArrayList	panels;
+		
+		private BundleStringProvider			provider;
+		
 		protected Window						window;
 		protected AbstractToolBar				tool_bar;
 		protected TabBook						tab_book;
