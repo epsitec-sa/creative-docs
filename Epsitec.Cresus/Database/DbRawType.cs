@@ -19,7 +19,9 @@ namespace Epsitec.Cresus.Database
 		SmallDecimal,					//	nombre à virgule à haute résolution (9 chiffres après la virgule)
 		LargeDecimal,					//	nombre à virgule de grande taille (mais seulement 3 chiffres après la virgule)
 		
-		DateTime,						//	date et heure, 64 bits (pas de 100ns, résolution <= 1s)
+		Date,							//	date, uniquement
+		Time,							//	heure, uniquement
+		DateTime,						//	date et heure, 64 bits (résolution de 1ms ou mieux)
 		
 		String,							//	texte (Unicode)
 		ByteArray,						//	tableau de bytes
