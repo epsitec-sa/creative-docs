@@ -413,7 +413,7 @@ namespace Epsitec.Cresus.Database
 					{
 						table = tables[0] as DbTable;
 						
-						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", table.GetType ().Name, table.Name));
+//-						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", table.GetType ().Name, table.Name));
 						System.Diagnostics.Debug.Assert (tables.Count == 1);
 					}
 				}
@@ -688,7 +688,7 @@ namespace Epsitec.Cresus.Database
 					{
 						type = types[0] as DbType;
 						
-						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", type.GetType ().Name, type.Name));
+//-						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", type.GetType ().Name, type.Name));
 						System.Diagnostics.Debug.Assert (types.Count == 1);
 						
 						this.cache_db_types[key] = type;

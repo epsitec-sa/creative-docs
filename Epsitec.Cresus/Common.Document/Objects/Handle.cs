@@ -3,25 +3,27 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Objects
 {
+	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	// sous peine de plantée lors de la désérialisation.
 	public enum HandleType
 	{
-		Primary,		// poignée principale
-		Secondary,		// poignée secondaire
-		Bezier,			// poignée secondaire pour courbe de Bézier
-		Starting,		// poignée de départ
-		Ending,			// poignée d'arrivée
-		Hide,			// poignée invisible
-		Property,		// poignée d'une propriété
-		Center,			// poignée du centre de rotation
-		Rotate,			// poignée de l'angle de rotation
+		Primary   = 0,		// poignée principale
+		Secondary = 1,		// poignée secondaire
+		Bezier    = 2,		// poignée secondaire pour courbe de Bézier
+		Starting  = 3,		// poignée de départ
+		Ending    = 4,		// poignée d'arrivée
+		Hide      = 5,		// poignée invisible
+		Property  = 6,		// poignée d'une propriété
+		Center    = 7,		// poignée du centre de rotation
+		Rotate    = 8,		// poignée de l'angle de rotation
 	}
 
 	public enum HandleConstrainType
 	{
-		Symmetric,		// symétrique
-		Smooth,			// lisse
-		Corner,			// anguleux
-		Simply,			// simple (sans coin fantaisie)
+		Symmetric = 0,		// symétrique
+		Smooth    = 1,		// lisse
+		Corner    = 2,		// anguleux
+		Simply    = 3,		// simple (sans coin fantaisie)
 	}
 
 	/// <summary>
@@ -446,8 +448,6 @@ namespace Epsitec.Common.Document.Objects
 			info.AddValue("Position", this.position);
 			info.AddValue("Type", this.type);
 			info.AddValue("ConstrainType", this.constrainType);
-			info.AddValue("PropertyType", this.propertyType);
-			info.AddValue("PropertyRank", this.propertyRank);
 		}
 
 		// Constructeur qui désérialise la poignée.
@@ -457,8 +457,6 @@ namespace Epsitec.Common.Document.Objects
 			this.position = (Point) info.GetValue("Position", typeof(Point));
 			this.type = (HandleType) info.GetValue("Type", typeof(HandleType));
 			this.constrainType = (HandleConstrainType) info.GetValue("ConstrainType", typeof(HandleConstrainType));
-			this.propertyType = (Properties.Type) info.GetValue("PropertyType", typeof(Properties.Type));
-			this.propertyRank = info.GetInt32("PropertyRank");
 		}
 		#endregion
 

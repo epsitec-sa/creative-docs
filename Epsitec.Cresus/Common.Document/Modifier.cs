@@ -18,6 +18,7 @@ namespace Epsitec.Common.Document
 			this.zoomHistory = new ZoomHistory();
 			this.opletQueue = new OpletQueue();
 			this.objectMemory = new Objects.Memory(this.document, null);
+			this.duplicateMove = new Point(1, 1);
 
 			int total = 0;
 			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
@@ -44,6 +45,11 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.tool != value )
 				{
+					if ( this.ActiveViewer.IsCreating )
+					{
+						this.ActiveViewer.CreateEnding(false);
+					}
+
 					bool isCreate = this.opletCreate;
 					this.OpletQueueBeginAction();
 					this.InsertOpletTool();
@@ -592,6 +598,24 @@ namespace Epsitec.Common.Document
 					this.document.Notifier.NotifySelectionChanged();
 
 					this.OpletQueueValidateAction();
+				}
+			}
+		}
+
+		// Choix du déplacement des objets dupliqués.
+		public Point DuplicateMove
+		{
+			get
+			{
+				return this.duplicateMove;
+			}
+			
+			set
+			{
+				if ( this.duplicateMove != value )
+				{
+					this.duplicateMove = value;
+					this.document.Notifier.NotifySettingsChanged();
 				}
 			}
 		}
@@ -2354,5 +2378,6 @@ namespace Epsitec.Common.Document
 		protected bool							operInitialSelector;
 		protected Containers.Abstract			activeContainer;
 		protected bool[]						isPropertiesExtended;
+		protected Point							duplicateMove;
 	}
 }

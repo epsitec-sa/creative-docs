@@ -5,28 +5,27 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
-	// ATTENSION: Ne jamais permuter ou insérer des types au milieu de cette
-	// liste, sous peine de plantée lors de la désérialisation. La seule
-	// chose possible est l'ajout de nouveaux types à la fin de la liste !
+	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	// sous peine de plantée lors de la désérialisation.
 	public enum Type
 	{
-		None,				// aucune
-		Name,				// nom de l'objet
-		LineColor,			// couleur du trait
-		LineMode,			// mode du trait
-		Arrow,				// extrémité des segments
-		FillGradient,		// dégradé de remplissage
-		BackColor,			// texte: couleur de fond
-		Shadow,				// ombre sous l'objet
-		PolyClose,			// mode de fermeture des polygones
-		Corner,				// coins des rectangles
-		Regular,			// définitions du polygone régulier
-		Arc,				// arc de cercle ou d'ellipse
-		TextFont,			// texte: police
-		TextJustif,			// texte: justification
-		TextLine,			// texte: justification
-		Image,				// nom de l'image bitmap
-		ModColor,			// modification de couleur
+		None         = 0,		// aucune
+		Name         = 1,		// nom de l'objet
+		LineColor    = 2,		// couleur du trait
+		LineMode     = 3,		// mode du trait
+		Arrow        = 4,		// extrémité des segments
+		FillGradient = 5,		// dégradé de remplissage
+		BackColor    = 6,		// texte: couleur de fond
+		Shadow       = 7,		// ombre sous l'objet
+		PolyClose    = 8,		// mode de fermeture des polygones
+		Corner       = 9,		// coins des rectangles
+		Regular      = 10,		// définitions du polygone régulier
+		Arc          = 11,		// arc de cercle ou d'ellipse
+		TextFont     = 12,		// texte: police
+		TextJustif   = 13,		// texte: justification
+		TextLine     = 14,		// texte: justification
+		Image        = 15,		// nom de l'image bitmap
+		ModColor     = 16,		// modification de couleur
 	}
 
 	/// <summary>

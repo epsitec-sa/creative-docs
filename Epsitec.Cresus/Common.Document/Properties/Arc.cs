@@ -4,12 +4,14 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
+	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	// sous peine de plantée lors de la désérialisation.
 	public enum ArcType
 	{
-		Full,
-		Open,
-		Close,
-		Pie,
+		Full  = 0,
+		Open  = 1,
+		Close = 2,
+		Pie   = 3,
 	}
 
 	/// <summary>

@@ -82,16 +82,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Indique si l'objet est sélectionné.
-		public override bool IsSelected
-		{
-			get
-			{
-				return ( this.selected || this.isCreating );
-			}
-		}
-
-
 		// Déplace une poignée.
 		public override void MoveHandleProcess(int rank, Point pos, DrawingContext drawingContext)
 		{
@@ -255,7 +245,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.TotalHandle == 0 )
 			{
-				this.PropertyPolyClose.BoolValue = false;
+				this.ChangePropertyPolyClose(false);
 				this.HandleAdd(pos, HandleType.Starting);
 				this.Handle(0).IsVisible = true;
 			}
@@ -328,7 +318,7 @@ namespace Epsitec.Common.Document.Objects
 
 			this.isCreating = false;
 			this.HandleDelete(rank);
-			this.PropertyPolyClose.BoolValue = true;
+			this.ChangePropertyPolyClose(true);
 
 			this.TempDelete();
 			this.Handle(0).Type = HandleType.Primary;
@@ -747,6 +737,5 @@ namespace Epsitec.Common.Document.Objects
 		
 		protected bool				mouseDown = false;
 		protected Objects.Line		tempLine;
-		protected bool				isCreating;
 	}
 }

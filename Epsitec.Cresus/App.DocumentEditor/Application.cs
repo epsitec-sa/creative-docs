@@ -51,7 +51,7 @@ namespace Epsitec.App.DocumentEditor
 			switch ( type )
 			{
 				case DocumentType.Graphic:
-					this.mainWindow.Text = "Crésus dessin";
+					this.mainWindow.Text = "Crésus document";
 					break;
 
 				case DocumentType.Pictogram:

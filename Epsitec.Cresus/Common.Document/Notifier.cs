@@ -47,6 +47,8 @@ namespace Epsitec.Common.Document
 			this.undoRedoChanged = true;
 			this.gridChanged = true;
 			this.previewChanged = true;
+			this.settingsChanged = true;
+			this.guidesChanged = true;
 			this.hideHalfChanged = true;
 			this.debugChanged = true;
 			this.NotifyArea();
@@ -179,6 +181,22 @@ namespace Epsitec.Common.Document
 		{
 			if ( !this.enable )  return;
 			this.previewChanged = true;
+			this.NotifyAsync();
+		}
+
+		// Indique que les réglages ont changé.
+		public void NotifySettingsChanged()
+		{
+			if ( !this.enable )  return;
+			this.settingsChanged = true;
+			this.NotifyAsync();
+		}
+
+		// Indique que les réglages ont changé.
+		public void NotifyGuidesChanged()
+		{
+			if ( !this.enable )  return;
+			this.guidesChanged = true;
 			this.NotifyAsync();
 		}
 
@@ -357,6 +375,18 @@ namespace Epsitec.Common.Document
 				this.previewChanged = false;
 			}
 
+			if ( this.settingsChanged )
+			{
+				this.OnSettingsChanged();
+				this.settingsChanged = false;
+			}
+
+			if ( this.guidesChanged )
+			{
+				this.OnGuidesChanged();
+				this.guidesChanged = false;
+			}
+
 			if ( this.hideHalfChanged )
 			{
 				this.OnHideHalfChanged();
@@ -518,6 +548,22 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		protected void OnSettingsChanged()
+		{
+			if ( this.SettingsChanged != null )  // qq'un écoute ?
+			{
+				this.SettingsChanged();
+			}
+		}
+
+		protected void OnGuidesChanged()
+		{
+			if ( this.GuidesChanged != null )  // qq'un écoute ?
+			{
+				this.GuidesChanged();
+			}
+		}
+
 		protected void OnHideHalfChanged()
 		{
 			if ( this.HideHalfChanged != null )  // qq'un écoute ?
@@ -567,6 +613,8 @@ namespace Epsitec.Common.Document
 		public event SimpleEventHandler			UndoRedoChanged;
 		public event SimpleEventHandler			GridChanged;
 		public event SimpleEventHandler			PreviewChanged;
+		public event SimpleEventHandler			SettingsChanged;
+		public event SimpleEventHandler			GuidesChanged;
 		public event SimpleEventHandler			HideHalfChanged;
 		public event SimpleEventHandler			DebugChanged;
 		public event PropertyEventHandler		PropertyChanged;
@@ -585,11 +633,13 @@ namespace Epsitec.Common.Document
 		protected bool							styleChanged;
 		protected bool							pagesChanged;
 		protected bool							layersChanged;
-		protected Objects.Abstract		pageObject;
-		protected Objects.Abstract		layerObject;
+		protected Objects.Abstract				pageObject;
+		protected Objects.Abstract				layerObject;
 		protected bool							undoRedoChanged;
 		protected bool							gridChanged;
 		protected bool							previewChanged;
+		protected bool							settingsChanged;
+		protected bool							guidesChanged;
 		protected bool							hideHalfChanged;
 		protected bool							debugChanged;
 		protected System.Collections.ArrayList	propertyList = new System.Collections.ArrayList();

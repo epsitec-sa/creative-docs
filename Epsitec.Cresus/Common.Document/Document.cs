@@ -60,6 +60,8 @@ namespace Epsitec.Common.Document
 			{
 				this.modifier = new Modifier(this);
 				this.notifier = new Notifier(this);
+				this.dialogs  = new Dialogs(this);
+				this.settings = new Settings.Settings(this);
 			}
 
 			if ( this.mode == DocumentMode.Clipboard )
@@ -126,6 +128,12 @@ namespace Epsitec.Common.Document
 		}
 
 
+		// Réglages de ce document.
+		public Settings.Settings Settings
+		{
+			get { return this.settings; }
+		}
+
 		// Modificateur éventuel pour ce document.
 		public Modifier Modifier
 		{
@@ -136,6 +144,12 @@ namespace Epsitec.Common.Document
 		public Notifier Notifier
 		{
 			get { return this.notifier; }
+		}
+
+		// Dialogues éventuels pour ce document.
+		public Dialogs Dialogs
+		{
+			get { return this.dialogs; }
 		}
 
 
@@ -153,6 +167,11 @@ namespace Epsitec.Common.Document
 				{
 					this.size = value;
 					this.IsDirtySerialize = true;
+
+					if ( this.notifier != null )
+					{
+						this.Notifier.NotifyAllChanged();
+					}
 				}
 			}
 		}
@@ -382,6 +401,11 @@ namespace Epsitec.Common.Document
 		{
 			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 			this.Modifier.DeselectAll();
+
+			if ( File.Exists(filename) )
+			{
+				File.Delete(filename);
+			}
 
 			try
 			{
@@ -1052,8 +1076,10 @@ namespace Epsitec.Common.Document
 		protected UndoableList					propertiesAuto;
 		protected UndoableList					propertiesSel;
 		protected UndoableList					propertiesStyle;
+		protected Settings.Settings				settings;
 		protected Modifier						modifier;
 		protected Notifier						notifier;
+		protected Dialogs						dialogs;
 		protected int							readRevision;
 		protected int							readVersion;
 		protected IOType						ioType;

@@ -698,5 +698,4 @@ namespace Epsitec.Common.Document
 		protected Point					center;		// [0..1]
 		protected double				angle;		// en degrés
 	}
-
 }

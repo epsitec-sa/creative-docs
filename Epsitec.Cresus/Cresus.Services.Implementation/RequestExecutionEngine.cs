@@ -67,9 +67,14 @@ namespace Epsitec.Cresus.Services
 			
 			for (int i = 0; i < rows.Length; i++)
 			{
-				Database.DbKey key = new Database.DbKey (rows[i]);
+				if (rows[i].RowState == System.Data.DataRowState.Deleted)
+				{
+					continue;
+				}
 				
-				if (key.Id.ClientId == client.ClientId)
+				Database.DbKey row_key = new Database.DbKey (rows[i]);
+				
+				if (row_key.Id.ClientId == client.ClientId)
 				{
 					Requests.ExecutionState state = this.execution_queue.GetRequestExecutionState (rows[i]);
 					
@@ -81,7 +86,7 @@ namespace Epsitec.Cresus.Services
 						state = Requests.ExecutionState.ExecutedByServer;
 					}
 					
-					list.Add (new RequestState (key.Id.Value, (int) state));
+					list.Add (new RequestState (row_key.Id.Value, (int) state));
 				}
 			}
 			
@@ -99,12 +104,23 @@ namespace Epsitec.Cresus.Services
 			
 			for (int i = 0; i < rows.Length; i++)
 			{
-				Database.DbKey key = new Database.DbKey (rows[i]);
+				if (rows[i].RowState == System.Data.DataRowState.Deleted)
+				{
+					continue;
+				}
+				
+				Database.DbKey row_key   = new Database.DbKey (rows[i]);
+				ExecutionState row_state = this.execution_queue.GetRequestExecutionState (rows[i]);
+					
+				if (row_state == Requests.ExecutionState.ExecutedByClient)
+				{
+					row_state = Requests.ExecutionState.ExecutedByServer;
+				}
 				
 				for (int j = 0; j < states.Length; j++)
 				{
-					if ((states[j].Identifier == key.Id.Value) &&
-						(states[j].State == (int)this.execution_queue.GetRequestExecutionState (rows[i])))
+					if ((states[j].Identifier == row_key.Id.Value) &&
+						(states[j].State == (int)row_state))
 					{
 						Database.DbRichCommand.KillRow (rows[i]);
 						

@@ -333,6 +333,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
+						this.window.Owner = null;
 						this.window.Owner = this.owner.window;
 					}
 				}

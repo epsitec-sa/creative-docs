@@ -378,6 +378,7 @@ namespace Epsitec.Common.Document
 			Objects.Abstract layer = this.drawingContext.RootObject();
 			Objects.Abstract obj = layer.Objects[this.createRank] as Objects.Abstract;
 
+			this.document.Notifier.NotifyArea(obj.BoundingBox);
 			if ( obj.CreateEnding(this.drawingContext) && !delete )
 			{
 				layer.Objects.RemoveAt(this.createRank);
@@ -389,7 +390,6 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				this.document.Notifier.NotifyArea(obj.BoundingBox);
 				layer.Objects.RemoveAt(this.createRank);
 
 				this.document.Modifier.OpletQueueEnable = true;
@@ -1454,10 +1454,13 @@ namespace Epsitec.Common.Document
 			double ix = 0.5/this.drawingContext.ScaleX;
 			double iy = 0.5/this.drawingContext.ScaleY;
 
-			if ( this.drawingContext.GridActive )
+			if ( this.drawingContext.GridShow )
 			{
+				Point origin = this.document.Modifier.OriginArea;
+				origin = Point.GridAlign(origin, -this.drawingContext.GridOffset, this.drawingContext.GridStep);
+				// Dessine les traits verticaux.
 				double step = this.drawingContext.GridStep.X;
-				for ( double pos=this.document.Modifier.OriginArea.X ; pos<=this.document.Modifier.SizeArea.Width ; pos+=step )
+				for ( double pos=origin.X ; pos<=this.document.Modifier.SizeArea.Width ; pos+=step )
 				{
 					double x = pos;
 					double y = this.document.Modifier.OriginArea.Y;
@@ -1466,8 +1469,9 @@ namespace Epsitec.Common.Document
 					y += iy;
 					graphics.AddLine(x, y, x, this.document.Modifier.SizeArea.Height);
 				}
+				// Dessine les traits horizontaux.
 				step = this.drawingContext.GridStep.Y;
-				for ( double pos=this.document.Modifier.OriginArea.Y ; pos<=this.document.Modifier.SizeArea.Height ; pos+=step )
+				for ( double pos=origin.Y ; pos<=this.document.Modifier.SizeArea.Height ; pos+=step )
 				{
 					double x = this.document.Modifier.OriginArea.X;
 					double y = pos;
@@ -1476,7 +1480,44 @@ namespace Epsitec.Common.Document
 					y += iy;
 					graphics.AddLine(x, y, this.document.Modifier.SizeArea.Width, y);
 				}
-				graphics.RenderSolid(Color.FromARGB(0.3, 0.6,0.6,0.6));
+				graphics.RenderSolid(Color.FromARGB(0.3, 0.6,0.6,0.6));  // gris
+			}
+
+			if ( this.drawingContext.GuidesShow )
+			{
+				int total = this.document.Settings.GuidesCount;
+				for ( int i=0 ; i<total ; i++ )
+				{
+					Settings.Guide guide = this.document.Settings.GuidesGet(i);
+
+					if ( guide.IsHorizontal )  // repère horizontal ?
+					{
+						double x = this.document.Modifier.OriginArea.X;
+						double y = guide.AbsolutePosition;
+						graphics.Align(ref x, ref y);
+						x += ix;
+						y += iy;
+						graphics.AddLine(x, y, this.document.Modifier.SizeArea.Width, y);
+					}
+					else	// repère vertical ?
+					{
+						double x = guide.AbsolutePosition;
+						double y = this.document.Modifier.OriginArea.Y;
+						graphics.Align(ref x, ref y);
+						x += ix;
+						y += iy;
+						graphics.AddLine(x, y, x, this.document.Modifier.SizeArea.Height);
+					}
+
+					if ( guide.Hilite )
+					{
+						graphics.RenderSolid(Color.FromARGB(0.5, 0.8,0.0,0.0));  // rouge
+					}
+					else
+					{
+						graphics.RenderSolid(Color.FromARGB(0.5, 0.0,0.0,0.8));  // bleuté
+					}
+				}
 			}
 
 			if ( this.IsActiveViewer )

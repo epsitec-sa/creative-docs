@@ -517,6 +517,17 @@ namespace Epsitec.Cresus.Database
 			{
 				System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
 			}
+			
+			service.ClearRequestStates (new Remoting.RequestState[] { states[0] });
+			service.QueryRequestStates (new Remoting.ClientIdentity ("NUnit Test Client"), out states);
+			
+			System.Diagnostics.Debug.WriteLine ("3/ After clearing first state, got " + states.Length + " states back from server :");
+			
+			for (int i = 0; i < states.Length; i++)
+			{
+				System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
+			}
+			
 		}
 		
 		

@@ -41,6 +41,7 @@ namespace Epsitec.Common.Document
 			{
 				this.gridStep = new Point(50.0, 50.0);  // 5mm
 			}
+			this.gridOffset = new Point(0.0, 0.0);
 		}
 
 		public Viewer Viewer
@@ -336,8 +337,32 @@ namespace Epsitec.Common.Document
 
 					if ( this.document.Notifier != null )
 					{
+						this.document.Notifier.NotifyGridChanged();
+						this.document.Notifier.NotifySettingsChanged();
+					}
+				}
+			}
+		}
+
+		// Présence de la grille magnétique.
+		public bool GridShow
+		{
+			get
+			{
+				return this.gridShow;
+			}
+
+			set
+			{
+				if ( this.gridShow != value )
+				{
+					this.gridShow = value;
+
+					if ( this.document.Notifier != null )
+					{
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
+						this.document.Notifier.NotifySettingsChanged();
 					}
 				}
 			}
@@ -361,6 +386,31 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
+						this.document.Notifier.NotifySettingsChanged();
+					}
+				}
+			}
+		}
+
+		// Pas de la grille magnétique.
+		public Point GridOffset
+		{
+			get
+			{
+				return this.gridOffset;
+			}
+
+			set
+			{
+				if ( this.gridOffset != value )
+				{
+					this.gridOffset = value;
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifyArea(this.viewer);
+						this.document.Notifier.NotifyGridChanged();
+						this.document.Notifier.NotifySettingsChanged();
 					}
 				}
 			}
@@ -369,14 +419,27 @@ namespace Epsitec.Common.Document
 		// Force un point sur la grille magnétique.
 		public void SnapGrid(ref Point pos)
 		{
-			if ( !this.gridActive ^ this.isAlt )  return;
+			bool snapX, snapY;
+
+			if ( !this.gridActive ^ this.isAlt )
+			{
+				this.SnapGuides(ref pos, out snapX, out snapY);
+				return;
+			}
 
 			Point offset = new Point(0.0, 0.0);
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
 				offset = new Point(this.gridStep.X/2, this.gridStep.Y/2);
 			}
-			pos = Point.GridAlign(pos, offset, this.gridStep);
+
+			Point guidePos = pos;
+			this.SnapGuides(ref guidePos, out snapX, out snapY);
+
+			pos = Point.GridAlign(pos, offset-this.gridOffset, this.gridStep);
+
+			if ( snapX )  pos.X = guidePos.X;
+			if ( snapY )  pos.Y = guidePos.Y;
 		}
 
 		// Force un point sur la grille magnétique.
@@ -384,8 +447,89 @@ namespace Epsitec.Common.Document
 		{
 			if ( !this.gridActive || this.isAlt )  return;
 			pos -= origin;
-			pos = Point.GridAlign(pos, new Point(0, 0), this.gridStep);
+			pos = Point.GridAlign(pos, -this.gridOffset, this.gridStep);
 			pos += origin;
+		}
+		#endregion
+
+
+		#region Guides
+		// Présence de la grille magnétique.
+		public bool GuidesActive
+		{
+			get
+			{
+				return this.guidesActive;
+			}
+
+			set
+			{
+				if ( this.guidesActive != value )
+				{
+					this.guidesActive = value;
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifySettingsChanged();
+					}
+				}
+			}
+		}
+
+		// Présence de la grille magnétique.
+		public bool GuidesShow
+		{
+			get
+			{
+				return this.guidesShow;
+			}
+
+			set
+			{
+				if ( this.guidesShow != value )
+				{
+					this.guidesShow = value;
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifyArea(this.viewer);
+						this.document.Notifier.NotifySettingsChanged();
+					}
+				}
+			}
+		}
+
+		// Force un point sur un repère.
+		protected void SnapGuides(ref Point pos, out bool snapX, out bool snapY)
+		{
+			snapX = false;
+			snapY = false;
+			if ( !this.guidesActive ^ this.isAlt )  return;
+
+			int total = this.document.Settings.GuidesCount;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Settings.Guide guide = this.document.Settings.GuidesGet(i);
+
+				if ( guide.IsHorizontal )  // repère horizontal ?
+				{
+					double len = System.Math.Abs(pos.Y - guide.AbsolutePosition);
+					if ( len <= this.GuideMargin )
+					{
+						pos.Y = guide.AbsolutePosition;
+						snapY = true;
+					}
+				}
+				else	// repère vertical ?
+				{
+					double len = System.Math.Abs(pos.X - guide.AbsolutePosition);
+					if ( len <= this.GuideMargin )
+					{
+						pos.X = guide.AbsolutePosition;
+						snapX = true;
+					}
+				}
+			}
 		}
 		#endregion
 
@@ -532,6 +676,12 @@ namespace Epsitec.Common.Document
 		public double CloseMargin
 		{
 			get { return this.closeMargin/this.ScaleX; }
+		}
+
+		// Marge magnétique d'un repère.
+		public double GuideMargin
+		{
+			get { return this.guideMargin/this.ScaleX; }
 		}
 
 		// Taille supplémentaire lorsqu'un objet est survolé par la souris.
@@ -1150,7 +1300,11 @@ namespace Epsitec.Common.Document
 		protected LayerDrawingMode				layerDrawingMode = LayerDrawingMode.DimmedInactive;
 		protected bool							previewActive = false;
 		protected bool							gridActive = false;
+		protected bool							gridShow = false;
 		protected Point							gridStep = new Point(1, 1);
+		protected Point							gridOffset = new Point(0, 0);
+		protected bool							guidesActive = true;
+		protected bool							guidesShow = true;
 		protected bool							hideHalfActive = true;
 		protected bool							isDimmed = false;
 		protected bool							isDrawBoxThin = false;
@@ -1159,6 +1313,7 @@ namespace Epsitec.Common.Document
 		protected double						minimalSize = 3;
 		protected double						minimalWidth = 5;
 		protected double						closeMargin = 10;
+		protected double						guideMargin = 8;
 		protected double						hiliteSize = 6;
 		protected double						handleSize = 10;
 		protected bool							isShift = false;

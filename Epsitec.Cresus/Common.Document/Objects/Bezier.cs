@@ -149,15 +149,6 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifySelectionChanged();
 		}
 
-		// Indique si l'objet est sélectionné.
-		public override bool IsSelected
-		{
-			get
-			{
-				return ( this.selected || this.isCreating );
-			}
-		}
-
 
 		// Donne le contenu du menu contextuel.
 		public override void ContextMenu(System.Collections.ArrayList list, Point pos, int handleRank)
@@ -594,7 +585,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( this.TotalHandle == 0 )
 			{
 				this.lastPoint = false;
-				this.PropertyPolyClose.BoolValue = false;
+				this.ChangePropertyPolyClose(false);
 			}
 			else
 			{
@@ -603,7 +594,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					pos = this.Handle(1).Position;
 					this.lastPoint = true;
-					this.PropertyPolyClose.BoolValue = true;
+					this.ChangePropertyPolyClose(true);
 				}
 			}
 
@@ -952,7 +943,9 @@ namespace Epsitec.Common.Document.Objects
 				graphics.RenderSolid(drawingContext.HiliteOutlineColor);
 			}
 
-			if ( this.IsSelected && drawingContext.IsActive && !this.IsGlobalSelected )
+			if ( (this.IsSelected || this.isCreating) &&
+				 drawingContext.IsActive &&
+				 !this.IsGlobalSelected )
 			{
 				double initialWidth = graphics.LineWidth;
 				graphics.LineWidth = 1.0/drawingContext.ScaleX;
@@ -1030,6 +1023,5 @@ namespace Epsitec.Common.Document.Objects
 		
 		protected bool				mouseDown = false;
 		protected bool				lastPoint;
-		protected bool				isCreating;
 	}
 }

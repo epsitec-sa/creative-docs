@@ -4,13 +4,15 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
+	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	// sous peine de plantée lors de la désérialisation.
 	public enum GradientFillType
 	{
-		None,
-		Linear,
-		Circle,
-		Diamond,
-		Conic,
+		None    = 0,
+		Linear  = 1,
+		Circle  = 2,
+		Diamond = 3,
+		Conic   = 4,
 	}
 
 	/// <summary>

@@ -435,8 +435,14 @@ namespace Epsitec.Common.Document.Objects
 		{
 			get
 			{
-				if ( this.IsSelected )  return this.BoundingBoxFull;
-				else                    return this.BoundingBoxGeom;
+				if ( this.IsSelected || this.isCreating )
+				{
+					return this.BoundingBoxFull;
+				}
+				else
+				{
+					return this.BoundingBoxGeom;
+				}
 			}
 		}
 
@@ -736,7 +742,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Indique si l'objet est sélectionné.
-		public virtual bool IsSelected
+		public bool IsSelected
 		{
 			get { return this.selected; }
 		}
@@ -1055,6 +1061,39 @@ namespace Epsitec.Common.Document.Objects
 				}
 				this.dirtyBbox = true;
 			}
+		}
+
+		// Modifie la propriété PolyClose de l'objet en cours de création.
+		// Rappel: un objet en cours de création n'est pas sélectionné.
+		public void ChangePropertyPolyClose(bool close)
+		{
+			Properties.Bool pb = this.PropertyPolyClose;
+			if ( pb == null )  return;
+			if ( pb.BoolValue == close )  return;  // on ne veut rien changer
+
+			UndoableList properties = this.document.PropertiesAuto;
+			foreach ( Properties.Abstract property in properties )
+			{
+				Properties.Bool existing = property as Properties.Bool;
+				if ( existing == null )  continue;
+				if ( existing == pb )  continue;  // soi-même ?
+
+				if ( existing.BoolValue == close )
+				{
+					this.ChangeProperty(existing);
+					this.MergeProperty(existing, pb);
+					return;
+				}
+			}
+
+			Properties.Abstract dst = Properties.Abstract.NewProperty(this.document, pb.Type);
+			pb.CopyTo(dst);
+			Properties.Bool npb = dst as Properties.Bool;
+			npb.BoolValue = close;
+			this.document.Modifier.PropertyAdd(dst);
+
+			this.ChangeProperty(npb);
+			this.MergeProperty(npb, pb);
 		}
 
 		// Utilise un style donné.
@@ -1578,8 +1617,15 @@ namespace Epsitec.Common.Document.Objects
 			info.AddValue("UniqueId", this.uniqueId);
 			info.AddValue("Name", this.name);
 			info.AddValue("Properties", this.properties);
-			info.AddValue("Handles", this.handles);
-			info.AddValue("TotalPropertyHandle", this.totalPropertyHandle);
+
+			// Ne sérialise que les poignées des objets, sans celles des propriétés.
+			System.Collections.ArrayList objHandles = new System.Collections.ArrayList();
+			for ( int i=0 ; i<this.TotalMainHandle ; i++ )
+			{
+				objHandles.Add(this.handles[i]);
+			}
+			info.AddValue("Handles", objHandles);
+
 			info.AddValue("Objects", this.objects);
 		}
 
@@ -1590,8 +1636,10 @@ namespace Epsitec.Common.Document.Objects
 			this.uniqueId = info.GetInt32("UniqueId");
 			this.name = info.GetString("Name");
 			this.properties = (UndoableList) info.GetValue("Properties", typeof(UndoableList));
+
 			this.handles = (System.Collections.ArrayList) info.GetValue("Handles", typeof(System.Collections.ArrayList));
-			this.totalPropertyHandle = info.GetInt32("TotalPropertyHandle");
+			this.HandlePropertiesCreate();  // crée les poignées des propriétés
+
 			this.objects = (UndoableList) info.GetValue("Objects", typeof(UndoableList));
 		}
 
@@ -1613,6 +1661,7 @@ namespace Epsitec.Common.Document.Objects
 		protected bool							selected = false;
 		protected bool							edited = false;
 		protected bool							globalSelected = false;
+		protected bool							isCreating = false;
 		protected bool							dirtyBbox = true;
 		protected Drawing.Rectangle				bboxThin = Drawing.Rectangle.Empty;
 		protected Drawing.Rectangle				bboxGeom = Drawing.Rectangle.Empty;

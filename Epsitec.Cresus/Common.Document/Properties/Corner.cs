@@ -4,24 +4,26 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
+	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	// sous peine de plantée lors de la désérialisation.
 	public enum CornerType
 	{
-		None,
-		Right,
-		Round,
-		Bevel,
-		Line31,
-		Line41,
-		Line42,
-		Line51,
-		Line61,
-		Line62,
-		Curve21,
-		Curve22,
-		Curve31,
-		Fantasy51,
-		Fantasy61,
-		Fantasy62,
+		None      = 0,
+		Right     = 1,
+		Round     = 2,
+		Bevel     = 3,
+		Line31    = 4,
+		Line41    = 5,
+		Line42    = 6,
+		Line51    = 7,
+		Line61    = 8,
+		Line62    = 9,
+		Curve21   = 10,
+		Curve22   = 11,
+		Curve31   = 12,
+		Fantasy51 = 13,
+		Fantasy61 = 14,
+		Fantasy62 = 15,
 	}
 
 	/// <summary>

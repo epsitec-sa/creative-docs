@@ -4,19 +4,21 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
+	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	// sous peine de plantée lors de la désérialisation.
 	public enum ArrowType
 	{
-		None,
-		Right,
-		ArrowSimply,
-		ArrowFantasy1,
-		ArrowCurve1,
-		ArrowCurve2,
-		ArrowOutline,
-		Slash,
-		Dot,
-		Square,
-		Diamond,
+		None          = 0,
+		Right         = 1,
+		ArrowSimply   = 2,
+		ArrowFantasy1 = 3,
+		ArrowCurve1   = 4,
+		ArrowCurve2   = 5,
+		ArrowOutline  = 6,
+		Slash         = 7,
+		Dot           = 8,
+		Square        = 9,
+		Diamond       = 10,
 	}
 
 	/// <summary>

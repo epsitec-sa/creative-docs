@@ -2,19 +2,23 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Document;
-using Epsitec.Common.Document.Containers;
-using Epsitec.Common.Document.Objects;
 using System.IO;
 
 namespace Epsitec.App.DocumentEditor
 {
+	using Drawing    = Common.Drawing;
+	using Widgets    = Common.Widgets;
+	using Dialogs    = Common.Dialogs;
+	using Containers = Common.Document.Containers;
+	using Objects    = Common.Document.Objects;
+
 	/// <summary>
 	/// La classe DocumentEditor représente l'éditeur de document complet.
 	/// </summary>
 	
 	[SuppressBundleSupport]
 	
-	public class DocumentEditor : Epsitec.Common.Widgets.Widget
+	public class DocumentEditor : Widgets.Widget
 	{
 		public DocumentEditor(DocumentType type)
 		{
@@ -31,6 +35,14 @@ namespace Epsitec.App.DocumentEditor
 			this.InitCommands();
 			this.ConnectEvents();
 			this.document.Modifier.New();
+
+			string[] args = System.Environment.GetCommandLineArgs();
+			if ( args.Length >= 2 )
+			{
+				string err = this.document.Read(args[1]);
+				this.DialogError(this.commandDispatcher, err);
+			}
+
 			this.document.Notifier.NotifyAllChanged();
 			this.document.Notifier.GenerateEvents();
 		}
@@ -203,7 +215,7 @@ namespace Epsitec.App.DocumentEditor
 			VMenu lookMenu = new VMenu();
 			lookMenu.Name = "Look";
 			lookMenu.Host = this;
-			string[] list = Epsitec.Common.Widgets.Adorner.Factory.AdornerNames;
+			string[] list = Widgets.Adorner.Factory.AdornerNames;
 			foreach ( string name in list )
 			{
 				this.MenuAdd(lookMenu, @"y/n", "SelectLook(this.Name)", name, "", name);
@@ -242,7 +254,7 @@ namespace Epsitec.App.DocumentEditor
 			for ( int j=0 ; j<100 ; j++ )
 			{
 				string text, name;
-				if ( !Array.CommandLook(j, out text, out name) )  break;
+				if ( !Objects.Array.CommandLook(j, out text, out name) )  break;
 				if ( name == "" )
 				{
 					this.MenuAdd(arrayLookMenu, @"", "", "", "");
@@ -258,15 +270,17 @@ namespace Epsitec.App.DocumentEditor
 			VMenu docMenu = new VMenu();
 			docMenu.Name = "Document";
 			docMenu.Host = this;
-			this.MenuAdd(docMenu, @"", "PageCreate", "Nouvelle page", "");
-			this.MenuAdd(docMenu, @"", "PageDelete", "Supprimer la page", "");
-			this.MenuAdd(docMenu, @"", "PageUp", "Reculer la page", "");
-			this.MenuAdd(docMenu, @"", "PageDown", "Avancer la page", "");
+			this.MenuAdd(docMenu, @"file:images/settings.icon", "Settings", "Réglages...", "");
 			this.MenuAdd(docMenu, @"", "", "", "");
-			this.MenuAdd(docMenu, @"", "LayerCreate", "Nouveau calque", "");
-			this.MenuAdd(docMenu, @"", "LayerDelete", "Supprimer le calque", "");
-			this.MenuAdd(docMenu, @"", "LayerDown", "Monter le calque", "");
-			this.MenuAdd(docMenu, @"", "LayerUp", "Descendre le calque", "");
+			this.MenuAdd(docMenu, @"file:images/pagenew.icon", "PageCreate", "Nouvelle page", "");
+			this.MenuAdd(docMenu, @"file:images/delete.icon", "PageDelete", "Supprimer la page", "");
+			this.MenuAdd(docMenu, @"file:images/up.icon", "PageUp", "Reculer la page", "");
+			this.MenuAdd(docMenu, @"file:images/down.icon", "PageDown", "Avancer la page", "");
+			this.MenuAdd(docMenu, @"", "", "", "");
+			this.MenuAdd(docMenu, @"file:images/layernew.icon", "LayerCreate", "Nouveau calque", "");
+			this.MenuAdd(docMenu, @"file:images/delete.icon", "LayerDelete", "Supprimer le calque", "");
+			this.MenuAdd(docMenu, @"file:images/up.icon", "LayerDown", "Monter le calque", "");
+			this.MenuAdd(docMenu, @"file:images/down.icon", "LayerUp", "Descendre le calque", "");
 			docMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = docMenu;
 
@@ -411,39 +425,39 @@ namespace Epsitec.App.DocumentEditor
 
 			this.book.ActivePage = this.bookPrincipal;
 
-			this.containerPrincipal = new Principal(this.document);
+			this.containerPrincipal = new Containers.Principal(this.document);
 			this.containerPrincipal.Dock = DockStyle.Fill;
 			this.containerPrincipal.DockMargins = new Margins(4, 4, 10, 4);
 			this.containerPrincipal.Parent = this.bookPrincipal;
 			this.document.Modifier.AttachContainer(this.containerPrincipal);
 
-			this.containerStyles = new Styles(this.document);
+			this.containerStyles = new Containers.Styles(this.document);
 			this.containerStyles.Dock = DockStyle.Fill;
 			this.containerStyles.DockMargins = new Margins(4, 4, 10, 4);
 			this.containerStyles.Parent = this.bookStyles;
 			this.document.Modifier.AttachContainer(this.containerStyles);
 
 #if DEBUG
-			this.containerAutos = new Autos(this.document);
+			this.containerAutos = new Containers.Autos(this.document);
 			this.containerAutos.Dock = DockStyle.Fill;
 			this.containerAutos.DockMargins = new Margins(4, 4, 10, 4);
 			this.containerAutos.Parent = this.bookAutos;
 			this.document.Modifier.AttachContainer(this.containerAutos);
 #endif
 
-			this.containerPages = new Pages(this.document);
+			this.containerPages = new Containers.Pages(this.document);
 			this.containerPages.Dock = DockStyle.Fill;
 			this.containerPages.DockMargins = new Margins(4, 4, 10, 4);
 			this.containerPages.Parent = this.bookPages;
 			this.document.Modifier.AttachContainer(this.containerPages);
 
-			this.containerLayers = new Layers(this.document);
+			this.containerLayers = new Containers.Layers(this.document);
 			this.containerLayers.Dock = DockStyle.Fill;
 			this.containerLayers.DockMargins = new Margins(4, 4, 10, 4);
 			this.containerLayers.Parent = this.bookLayers;
 			this.document.Modifier.AttachContainer(this.containerLayers);
 
-			this.containerOperations = new Operations(this.document);
+			this.containerOperations = new Containers.Operations(this.document);
 			this.containerOperations.Dock = DockStyle.Fill;
 			this.containerOperations.DockMargins = new Margins(4, 4, 10, 4);
 			this.containerOperations.Parent = this.bookOper;
@@ -671,7 +685,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			if ( !this.allWidgets )  return;
 
-			Common.Drawing.Rectangle rect = new Common.Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 
 			this.hToolBar.Location = new Point(0, rect.Height-this.hToolBar.DefaultHeight);
 			this.hToolBar.Size = new Size(rect.Width, this.hToolBar.DefaultHeight);
@@ -686,7 +700,7 @@ namespace Epsitec.App.DocumentEditor
 
 			this.book.Location = new Point(rect.Right-pw, this.info.Height+1);
 			this.book.Size = new Size(pw-1, rect.Height-this.info.Height-this.hToolBar.DefaultHeight-2);
-			Common.Drawing.Rectangle inside = this.book.InnerBounds;
+			Drawing.Rectangle inside = this.book.InnerBounds;
 			this.bookPrincipal.Bounds = inside;
 			this.bookStyles.Bounds = inside;
 #if DEBUG
@@ -803,19 +817,19 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SelectLook")]
 		void CommandSelectLook(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			Epsitec.Common.Widgets.Adorner.Factory.SetActive(e.CommandArgs[0]);
+			Widgets.Adorner.Factory.SetActive(e.CommandArgs[0]);
 			this.UpdateLookCommand();
 		}
 		
 		#region IO
 		// Affiche le dialogue pour demander s'il faut enregistrer le
 		// document modifié, avant de passer à un autre document.
-		protected Common.Dialogs.DialogResult DialogSave(CommandDispatcher dispatcher)
+		protected Dialogs.DialogResult DialogSave(CommandDispatcher dispatcher)
 		{
 			if ( !this.document.IsDirtySerialize ||
 				 this.document.Modifier.StatisticTotalObjects() == 0 )
 			{
-				return Common.Dialogs.DialogResult.None;
+				return Dialogs.DialogResult.None;
 			}
 
 			string title = "Crésus";
@@ -829,7 +843,7 @@ namespace Epsitec.App.DocumentEditor
 
 			string statistic = string.Format("<font size=\"80%\">{0}</font><br/>", this.document.Modifier.Statistic());
 			string message = string.Format("<font size=\"100%\">Le fichier {0} a été modifié.</font><br/><br/>{1}Voulez-vous enregistrer les modifications ?", shortFilename, statistic);
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel(title, icon, message, "", "", dispatcher);
+			Dialogs.IDialog dialog = Dialogs.Message.CreateYesNoCancel(title, icon, message, "", "", dispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -877,7 +891,7 @@ namespace Epsitec.App.DocumentEditor
 
 		// Affiche le dialogue pour demander s'il faut effacer le
 		// fichier existant.
-		protected Common.Dialogs.DialogResult DialogDelete(CommandDispatcher dispatcher, string filename)
+		protected Dialogs.DialogResult DialogDelete(CommandDispatcher dispatcher, string filename)
 		{
 			string title = "Crésus";
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
@@ -886,22 +900,22 @@ namespace Epsitec.App.DocumentEditor
 			string statistic = string.Format("<font size=\"80%\">{0}</font><br/>", DocumentEditor.StatisticFilename(filename));
 			string message = string.Format("<font size=\"100%\">Le fichier {0} existe déjà.</font><br/><br/>{1}Voulez-vous le remplacer ?", shortFilename, statistic);
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNo(title, icon, message, "", "", dispatcher);
+			Dialogs.IDialog dialog = Dialogs.Message.CreateYesNo(title, icon, message, "", "", dispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
 		}
 
 		// Affiche le dialogue pour signaler une erreur.
-		protected Common.Dialogs.DialogResult DialogError(CommandDispatcher dispatcher, string error)
+		protected Dialogs.DialogResult DialogError(CommandDispatcher dispatcher, string error)
 		{
-			if ( error == "" )  return Common.Dialogs.DialogResult.None;
+			if ( error == "" )  return Dialogs.DialogResult.None;
 
 			string title = "Crésus";
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 			string message = error;
 
-			Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateOk(title, icon, message, "", dispatcher);
+			Dialogs.IDialog dialog = Dialogs.Message.CreateOk(title, icon, message, "", dispatcher);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			return dialog.Result;
@@ -912,7 +926,7 @@ namespace Epsitec.App.DocumentEditor
 		// Retourne false si le fichier n'a pas été ouvert.
 		protected bool Open(CommandDispatcher dispatcher)
 		{
-			Common.Dialogs.FileOpen dialog = new Common.Dialogs.FileOpen();
+			Dialogs.FileOpen dialog = new Dialogs.FileOpen();
 		
 			dialog.FileName = "";
 			if ( this.document.Type == DocumentType.Graphic )
@@ -927,7 +941,7 @@ namespace Epsitec.App.DocumentEditor
 			}
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
-			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return false;
+			if ( dialog.Result != Dialogs.DialogResult.Accept )  return false;
 
 			string err = this.document.Read(dialog.FileName);
 			this.DialogError(dispatcher, err);
@@ -945,7 +959,7 @@ namespace Epsitec.App.DocumentEditor
 
 			if ( this.document.Filename == "" || ask )
 			{
-				Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
+				Dialogs.FileSave dialog = new Dialogs.FileSave();
 			
 				dialog.FileName = this.document.Filename;
 				if ( this.document.Type == DocumentType.Graphic )
@@ -961,7 +975,7 @@ namespace Epsitec.App.DocumentEditor
 				dialog.PromptForOverwriting = true;
 				dialog.Owner = this.Window;
 				dialog.OpenDialog();
-				if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return false;
+				if ( dialog.Result != Dialogs.DialogResult.Accept )  return false;
 				filename = dialog.FileName;
 			}
 			else
@@ -979,12 +993,12 @@ namespace Epsitec.App.DocumentEditor
 		// Retourne false si on ne peut pas continuer.
 		protected bool AutoSave(CommandDispatcher dispatcher)
 		{
-			Common.Dialogs.DialogResult result = this.DialogSave(dispatcher);
-			if ( result == Common.Dialogs.DialogResult.Yes )
+			Dialogs.DialogResult result = this.DialogSave(dispatcher);
+			if ( result == Dialogs.DialogResult.Yes )
 			{
 				return this.Save(dispatcher, false);
 			}
-			if ( result == Common.Dialogs.DialogResult.Cancel )
+			if ( result == Dialogs.DialogResult.Cancel )
 			{
 				return false;
 			}
@@ -1028,7 +1042,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("Print")]
 		void CommandPrint(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			Common.Dialogs.Print dialog = new Common.Dialogs.Print();
+			Dialogs.Print dialog = new Dialogs.Print();
 			
 			dialog.AllowFromPageToPage = false;
 			dialog.AllowSelectedPages  = false;
@@ -1043,7 +1057,7 @@ namespace Epsitec.App.DocumentEditor
 			dialog.Document.PrinterSettings.Collate = false;
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
-			if ( dialog.Result != Common.Dialogs.DialogResult.Accept )  return;
+			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
 
 			this.document.Print(dialog);
 		}
@@ -1058,7 +1072,8 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("Duplicate")]
 		void CommandDuplicate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.DuplicateSelection(new Point(1,1));
+			Point move = this.document.Modifier.DuplicateMove;
+			this.document.Modifier.DuplicateSelection(move);
 		}
 
 		[Command ("Cut")]
@@ -1180,6 +1195,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			context.GridActive = !context.GridActive;
+			context.GridShow = context.GridActive;
 		}
 
 		[Command ("Preview")]
@@ -1313,6 +1329,12 @@ namespace Epsitec.App.DocumentEditor
 		{
 		}
 
+
+		[Command ("Settings")]
+		void CommandSettings(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.document.Dialogs.ShowSettings();
+		}
 
 		[Command ("PagePrev")]
 		void CommandPagePrev(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -1508,7 +1530,7 @@ namespace Epsitec.App.DocumentEditor
 			VMenu menu = new VMenu();
 			for ( int i=0 ; i<total ; i++ )
 			{
-				Page page = pages[i] as Page;
+				Objects.Page page = pages[i] as Objects.Page;
 
 				string name = string.Format("{0}: {1}", (i+1).ToString(), page.Name);
 
@@ -1529,19 +1551,19 @@ namespace Epsitec.App.DocumentEditor
 		public VMenu CreateLayersMenu()
 		{
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			Common.Document.Objects.Abstract page = context.RootObject(1);
+			Objects.Abstract page = context.RootObject(1);
 			UndoableList layers = page.Objects;  // liste des calques
 			int total = layers.Count;
 			VMenu menu = new VMenu();
 			for ( int i=0 ; i<total ; i++ )
 			{
 				int ii = total-i-1;
-				Layer layer = layers[i] as Layer;
+				Objects.Layer layer = layers[i] as Objects.Layer;
 
 				string name = "";
 				if ( layer.Name == "" )
 				{
-					name = string.Format("{0}: {1}", ((char)('A'+ii)).ToString(), Layer.LayerPositionName(ii, total));
+					name = string.Format("{0}: {1}", ((char)('A'+ii)).ToString(), Objects.Layer.LayerPositionName(ii, total));
 				}
 				else
 				{
@@ -1668,6 +1690,8 @@ namespace Epsitec.App.DocumentEditor
 			this.document.Notifier.UndoRedoChanged  += new SimpleEventHandler(this.HandleUndoRedoChanged);
 			this.document.Notifier.GridChanged      += new SimpleEventHandler(this.HandleGridChanged);
 			this.document.Notifier.PreviewChanged   += new SimpleEventHandler(this.HandlePreviewChanged);
+			this.document.Notifier.SettingsChanged  += new SimpleEventHandler(this.HandleSettingsChanged);
+			this.document.Notifier.GuidesChanged    += new SimpleEventHandler(this.HandleGuidesChanged);
 			this.document.Notifier.HideHalfChanged  += new SimpleEventHandler(this.HandleHideHalfChanged);
 			this.document.Notifier.DebugChanged     += new SimpleEventHandler(this.HandleDebugChanged);
 			this.document.Notifier.PropertyChanged  += new PropertyEventHandler(this.HandlePropertyChanged);
@@ -1728,7 +1752,7 @@ namespace Epsitec.App.DocumentEditor
 			foreach ( Widget widget in toolWidgets )
 			{
 				widget.ActiveState = ( widget.Name == tool ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				widget.SetEnabled(widget.Name == tool || !isCreating);
+				widget.SetEnabled(widget.Name == tool || widget.Name == "Select" || !isCreating);
 			}
 		}
 
@@ -1756,7 +1780,7 @@ namespace Epsitec.App.DocumentEditor
 			int totalObjects   = this.document.Modifier.TotalObjects;
 			bool isCreating    = this.document.Modifier.ActiveViewer.IsCreating;
 			bool isBase        = viewer.DrawingContext.RootStackIsBase;
-			Common.Document.Objects.Abstract one = this.document.Modifier.RetOnlySelectedObject();
+			Objects.Abstract one = this.document.Modifier.RetOnlySelectedObject();
 
 			this.newState.Enabled = true;
 			this.openState.Enabled = true;
@@ -1776,8 +1800,8 @@ namespace Epsitec.App.DocumentEditor
 			this.zoomDiv2State.Enabled = ( totalSelected > 0 && !isCreating );
 			this.mergeState.Enabled = ( totalSelected > 1 && !isCreating );
 			this.groupState.Enabled = ( totalSelected > 0 && !isCreating );
-			this.ungroupState.Enabled = ( totalSelected == 1 && one is Group && !isCreating );
-			this.insideState.Enabled = ( totalSelected == 1 && one is Group && !isCreating );
+			this.ungroupState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating );
+			this.insideState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating );
 			this.outsideState.Enabled = ( !isBase && !isCreating );
 
 			this.hideSelState.Enabled = ( totalSelected > 0 && !isCreating );
@@ -1861,13 +1885,13 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		// Appelé par le document lorsqu'un nom de page a changé.
-		private void HandlePageChanged(Common.Document.Objects.Abstract page)
+		private void HandlePageChanged(Objects.Abstract page)
 		{
 			this.containerPages.SetDirtyObject(page);
 		}
 
 		// Appelé par le document lorsqu'un nom de calque a changé.
-		private void HandleLayerChanged(Common.Document.Objects.Abstract layer)
+		private void HandleLayerChanged(Objects.Abstract layer)
 		{
 			this.containerLayers.SetDirtyObject(layer);
 		}
@@ -1894,6 +1918,18 @@ namespace Epsitec.App.DocumentEditor
 			this.previewState.ActiveState = context.PreviewActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 		}
 
+		// Appelé par le document lorsque les réglages ont changé.
+		private void HandleSettingsChanged()
+		{
+			this.document.Dialogs.UpdateSettings();
+		}
+
+		// Appelé par le document lorsque les repères ont changé.
+		private void HandleGuidesChanged()
+		{
+			this.document.Dialogs.UpdateGuides();
+		}
+
 		// Appelé par le document lorsque l'état de la commande "hide half" a changé.
 		private void HandleHideHalfChanged()
 		{
@@ -1918,9 +1954,9 @@ namespace Epsitec.App.DocumentEditor
 		}
 
 		// Appelé par le document lorsque le dessin a changé.
-		private void HandleDrawChanged(Viewer viewer, Common.Drawing.Rectangle rect)
+		private void HandleDrawChanged(Viewer viewer, Drawing.Rectangle rect)
 		{
-			Common.Drawing.Rectangle box = rect;
+			Drawing.Rectangle box = rect;
 
 			if ( viewer.DrawingContext.IsActive )
 			{
@@ -1933,7 +1969,7 @@ namespace Epsitec.App.DocumentEditor
 
 
 		// Invalide une partie de la zone de dessin d'un visualisateur.
-		protected void InvalidateDraw(Viewer viewer, Common.Drawing.Rectangle bbox)
+		protected void InvalidateDraw(Viewer viewer, Drawing.Rectangle bbox)
 		{
 			if ( bbox.IsEmpty )  return;
 
@@ -1983,7 +2019,7 @@ namespace Epsitec.App.DocumentEditor
 		// Appelé lorsque le look a changé.
 		protected void UpdateLookCommand()
 		{
-			string lookName = Epsitec.Common.Widgets.Adorner.Factory.ActiveName;
+			string lookName = Widgets.Adorner.Factory.ActiveName;
 			Widget[] lookWidgets = Widget.FindAllCommandWidgets("SelectLook", this.commandDispatcher);
 			foreach ( Widget widget in lookWidgets )
 			{
@@ -2073,12 +2109,12 @@ namespace Epsitec.App.DocumentEditor
 		protected TabPage				bookPages;
 		protected TabPage				bookLayers;
 		protected TabPage				bookOper;
-		protected Principal				containerPrincipal;
-		protected Styles				containerStyles;
-		protected Autos					containerAutos;
-		protected Pages					containerPages;
-		protected Layers				containerLayers;
-		protected Operations			containerOperations;
+		protected Containers.Principal	containerPrincipal;
+		protected Containers.Styles		containerStyles;
+		protected Containers.Autos		containerAutos;
+		protected Containers.Pages		containerPages;
+		protected Containers.Layers		containerLayers;
+		protected Containers.Operations	containerOperations;
 		protected Viewer				viewer;
 		protected Viewer				frame1;
 		protected Viewer				frame2;

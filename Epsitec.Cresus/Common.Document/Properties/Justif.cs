@@ -4,32 +4,34 @@ using System.Runtime.Serialization;
 
 namespace Epsitec.Common.Document.Properties
 {
+	// ATTENTION: Ne jamais modifier les valeurs existantes de cette liste,
+	// sous peine de plantée lors de la désérialisation.
 	public enum JustifHorizontal
 	{
-		None,
-		Left,				// |abc  |
-		Center,				// | abc |
-		Right,				// |  abc|
-		Justif,				// |a b c| sauf la dernière ligne
-		All,				// |a b c| avec la dernière ligne
-		Stretch,			// |abc| étendu pour ObjectTextLine
+		None    = 0,
+		Left    = 1,			// |abc  |
+		Center  = 2,			// | abc |
+		Right   = 3,			// |  abc|
+		Justif  = 4,			// |a b c| sauf la dernière ligne
+		All     = 5,			// |a b c| avec la dernière ligne
+		Stretch = 6,			// |abc| étendu pour ObjectTextLine
 	}
 
 	public enum JustifVertical
 	{
-		None,
-		Top,				// en haut
-		Center,				// au milieu
-		Bottom,				// en bas
+		None   = 0,
+		Top    = 1,				// en haut
+		Center = 2,				// au milieu
+		Bottom = 3,				// en bas
 	}
 
 	public enum JustifOrientation
 	{
-		None,
-		LeftToRight,		// -> (normal)
-		BottomToTop,		// ^
-		RightToLeft,		// <-
-		TopToBottom,		// v
+		None        = 0,
+		LeftToRight = 1,		// -> (normal)
+		BottomToTop = 2,		// ^
+		RightToLeft = 3,		// <-
+		TopToBottom = 4,		// v
 	}
 
 	/// <summary>
