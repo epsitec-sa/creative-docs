@@ -59,7 +59,7 @@
     </bundle>
     <bundle>
      <data name='class'>TextFieldCombo</data>
-     <data name='ro'>true</data>
+     <data name='IsReadOnly'>true</data>
      <data name='Size'>80;*</data>
      <bundle name='items'>
       <data name='00/Red'>Rouge</data>
@@ -118,7 +118,7 @@
     </bundle>
     <bundle>
      <data name='class'>TextFieldCombo</data>
-     <data name='ro'>true</data>
+     <data name='IsReadOnly'>true</data>
      <data name='Size'>80;*</data>
      <data name='Location'>100;170</data>
      <bundle name='items'>
