@@ -1,5 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
+	using BundleAttribute  = Support.BundleAttribute;
+	
 	/// <summary>
 	/// La classe RadioButton réalise un bouton radio.
 	/// </summary>
@@ -17,7 +19,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		// Retourne la hauteur standard.
-		public override double DefaultHeight
+		public override double					DefaultHeight
 		{
 			get
 			{
@@ -25,7 +27,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public string Group
+		[Bundle ("group")]	public string		Group
 		{
 			get
 			{
@@ -276,7 +278,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			protected int					dir;
+			protected int						dir;
 		}
 		
 
@@ -330,8 +332,8 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected static readonly double	radioHeight = 13;
-		protected static readonly double	radioWidth = 20;
-		protected string					group;
+		protected static readonly double		radioHeight = 13;
+		protected static readonly double		radioWidth = 20;
+		protected string						group;
 	}
 }
