@@ -48,6 +48,16 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 		
+		[Test] public void CheckAlphaMask()
+		{
+			Window window = new Window ();
+			
+			window.Text = "CheckAlphaMask";
+			window.Root.PaintForeground += new PaintEventHandler(AlphaMask_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+		
 		[Test] public void CheckEvenOddFill()
 		{
 			Window window = new Window ();
@@ -279,6 +289,47 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.SmoothRenderer.SetParameters (9, 9);
 			e.Graphics.SmoothRenderer.AddPath (path1);
 			e.Graphics.SmoothRenderer.AddPath (path2);
+		}
+		
+		private void AlphaMask_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double cx = root.Client.Width / 2;
+			double cy = root.Client.Height / 2;
+			
+			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
+			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
+			e.Graphics.RenderSolid (Color.FromBrightness (0));
+			
+			Graphics mask_graphics = new Agg.Graphics ();
+			mask_graphics.SetPixmapSize ((int)root.Client.Width, (int)root.Client.Height);
+			
+			for (int i = 0; i <= 200; i++)
+			{
+				Path path = new Path ();
+				
+				path.MoveTo ( 10, 10+i);
+				path.LineTo (300, 10+i);
+				path.LineTo (300, 11+i);
+				path.LineTo ( 10, 11+i);
+				path.Close ();
+				
+				mask_graphics.Rasterizer.AddSurface (path);
+				mask_graphics.RenderSolid (Color.FromRGB (i/200.0, 0, 0));
+			}
+			
+			e.Graphics.AddText (10, 10, "AAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
+			e.Graphics.AddText (10, 50, "AAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
+			e.Graphics.AddText (10, 90, "AAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
+			e.Graphics.AddText (10,130, "AAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
+			e.Graphics.AddText (10,170, "AAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
+			e.Graphics.AddText (10,210, "AAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
+			e.Graphics.RenderSolid (Color.FromRGB (1, 0.5, 0));
+			e.Graphics.SolidRenderer.SetAlphaMask (mask_graphics.Pixmap, MaskComponent.R);
+			e.Graphics.AddText (30, 30, "A!", Font.GetFont ("Tahoma", "Regular"), 250);
+			e.Graphics.RenderSolid (Color.FromARGB (1.0, 0, 0, 1));
+			e.Graphics.SolidRenderer.SetAlphaMask (null, MaskComponent.None);
 		}
 		
 		private void Curve_PaintForeground(object sender, PaintEventArgs e)
