@@ -17,7 +17,7 @@ namespace Epsitec.Common.Drawing
 		{
 			Transform t1 = new Transform ();
 			Transform t2 = Transform.FromTranslation (20, 10);
-			Transform t3 = Transform.FromRotation (60);
+			Transform t3 = Transform.FromRotationDeg (60);
 			
 			Assert.IsTrue ((t1.XX == 1) && (t1.XY == 0) && (t1.YX == 0) && (t1.YY == 1) && (t1.TX == 0)  && (t1.TY == 0));
 			Assert.IsTrue ((t2.XX == 1) && (t2.XY == 0) && (t2.YX == 0) && (t2.YY == 1) && (t2.TX == 20) && (t2.TY == 10));
@@ -37,14 +37,14 @@ namespace Epsitec.Common.Drawing
 			Assert.AreEqual ((t1 == null), false);
 			Assert.AreEqual ((t1 != null), true);
 			
-			t2.Rotate (10);
+			t2.RotateDeg (10);
 			
 			Assert.IsTrue (t1 != t2);
 			Assert.AreEqual (t1.Equals (t2), false);
 			Assert.AreEqual (t1.EqualsStrictly (t2), false);
 			Assert.AreEqual (t1.EqualsStrictly (null), false);
 			
-			t2.Rotate (-10);
+			t2.RotateDeg (-10);
 			
 			Assert.IsTrue (t1 == t2);
 			Assert.AreEqual (t1.Equals (t2), true);
@@ -56,10 +56,10 @@ namespace Epsitec.Common.Drawing
 			
 			Transform t1 = Transform.FromTranslation (20, 10);
 			Transform t2 = Transform.FromTranslation (-20, -10);
-			Transform t3 = Transform.FromRotation (60);
-			Transform t4 = Transform.FromRotation (60, new Point (20, 10));
-			Transform t5 = Transform.FromRotation (- 60);
-			Transform t6 = Transform.FromRotation (- 60, new Point (20, 10));
+			Transform t3 = Transform.FromRotationDeg (60);
+			Transform t4 = Transform.FromRotationDeg (60, new Point (20, 10));
+			Transform t5 = Transform.FromRotationDeg (- 60);
+			Transform t6 = Transform.FromRotationDeg (- 60, new Point (20, 10));
 			
 			Transform t;
 			
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Drawing
 			t.Round ();
 			Assert.IsTrue (t.EqualsStrictly (identity));
 			
-			t3 = Transform.FromRotation (-30);
+			t3 = Transform.FromRotationDeg (-30);
 			Point pt = t3.TransformDirect (new Point (1, 3));
 			
 			Assert.IsTrue (Transform.Equal (pt, new Point (2.366025f, 2.098076f)));
@@ -101,10 +101,10 @@ namespace Epsitec.Common.Drawing
 			
 			Transform t1 = Transform.FromTranslation (20, 10);
 			Transform t2 = Transform.FromTranslation (-20, -10);
-			Transform t3 = Transform.FromRotation (60);
-			Transform t4 = Transform.FromRotation (60, new Point (20, 10));
-			Transform t5 = Transform.FromRotation (- 60);
-			Transform t6 = Transform.FromRotation (- 60, new Point (20, 10));
+			Transform t3 = Transform.FromRotationDeg (60);
+			Transform t4 = Transform.FromRotationDeg (60, new Point (20, 10));
+			Transform t5 = Transform.FromRotationDeg (- 60);
+			Transform t6 = Transform.FromRotationDeg (- 60, new Point (20, 10));
 			
 			Transform t;
 			
@@ -128,10 +128,10 @@ namespace Epsitec.Common.Drawing
 			
 			Transform t1 = Transform.FromTranslation (20, 10);
 			Transform t2 = Transform.FromTranslation (-20, -10);
-			Transform t3 = Transform.FromRotation (60);
-			Transform t4 = Transform.FromRotation (60, new Point (20, 10));
-			Transform t5 = Transform.FromRotation (- 60);
-			Transform t6 = Transform.FromRotation (- 60, new Point (20, 10));
+			Transform t3 = Transform.FromRotationDeg (60);
+			Transform t4 = Transform.FromRotationDeg (60, new Point (20, 10));
+			Transform t5 = Transform.FromRotationDeg (- 60);
+			Transform t6 = Transform.FromRotationDeg (- 60, new Point (20, 10));
 			
 			Point result;
 			
@@ -170,8 +170,8 @@ namespace Epsitec.Common.Drawing
 		{
 			Transform t1 = Transform.FromTranslation (20, 10);
 			Transform t2 = Transform.FromTranslation (-20, -10);
-			Transform t3 = Transform.FromRotation (60);
-			Transform t4 = Transform.FromRotation (60, new Point (20, 10));
+			Transform t3 = Transform.FromRotationDeg (60);
+			Transform t4 = Transform.FromRotationDeg (60, new Point (20, 10));
 			
 			Transform t = new Transform ();
 			
@@ -183,12 +183,12 @@ namespace Epsitec.Common.Drawing
 			Assert.IsTrue (t.Equals (t2));
 			
 			t.Reset ();
-			t.Rotate (60);
+			t.RotateDeg (60);
 			Assert.IsTrue (t.Equals (t3));
 			
 			t.Reset ();
 			t.Translate (-20, -10);
-			t.Rotate (60);
+			t.RotateDeg (60);
 			t.Translate (20, 10);
 			Assert.IsTrue (t.Equals (t4));
 		}	

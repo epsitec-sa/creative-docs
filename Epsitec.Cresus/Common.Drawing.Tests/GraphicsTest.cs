@@ -344,23 +344,23 @@ namespace Epsitec.Common.Drawing
 			//	Jouons un peu avec les arcs d'ellipse... D'abord les non jointifs.
 			
 			path1.MoveTo (50, 200);
-			path1.Arc (50, 200, 30, 20, 30 * 3.141592 / 180.0, 135 * 3.141592 / 180.0, true);
+			path1.ArcDeg (50, 200, 30, 20, 30, 135, true);
 			
 			Point pend = path1.CurrentPoint;
-			path1.Arc (pend, 3, 3, 0, 2*3.1415926, true);
+			path1.ArcDeg (pend, 3, 3, 0, 360, true);
 			path1.Close ();
 			
 			path1.MoveTo (50, 190);
-			path1.Arc (50, 190, 30, 20, 30 * 3.141592 / 180.0, 135 * 3.141592 / 180.0, false);
+			path1.ArcDeg (50, 190, 30, 20, 30, 135, false);
 			
 			//	...et maintenant les arcs jointifs.
 			
 			path1.MoveTo (90, 180);
-			path1.ArcTo (90, 180, 30, 30, 30 * 3.141592 / 180.0, 135 * 3.141592 / 180.0, true);
+			path1.ArcToDeg (90, 180, 30, 30, 30, 135, true);
 			path1.Close ();
 			
 			path1.MoveTo (90, 180);
-			path1.ArcTo (90, 180, 30, 30, 145 * 3.141592 / 180.0, 20 * 3.141592 / 180.0, true);
+			path1.ArcToDeg (90, 180, 30, 30, 145, 20, true);
 			path1.Close ();
 			
 			
@@ -464,7 +464,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.RenderSolid (Color.FromRGB (0, 1, 0));
 			
 			
-			e.Graphics.RotateTransform (15, cx/10, cy/10);
+			e.Graphics.RotateTransformDeg (15, cx/10, cy/10);
 			e.Graphics.TranslateTransform (5, 2);
 			
 			e.Graphics.SmoothRenderer.Color = Color.FromARGB (0.5, 1, 0, 0);
@@ -540,7 +540,7 @@ namespace Epsitec.Common.Drawing
 			path2.LineTo (20, 15);
 			path2.CurveTo (20, 20, 5, 20, 5, 15);
 			
-			e.Graphics.RotateTransform (15, cx/10, cy/10);
+			e.Graphics.RotateTransformDeg (15, cx/10, cy/10);
 			
 			e.Graphics.Rasterizer.AddOutline (path2, 1.8, CapStyle.Round, JoinStyle.Miter, 5.0);
 			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
@@ -633,7 +633,7 @@ namespace Epsitec.Common.Drawing
 			
 			Transform t = e.Graphics.SaveTransform ();
 			
-			e.Graphics.RotateTransform (15, cx, cy);
+			e.Graphics.RotateTransformDeg (15, cx, cy);
 			e.Graphics.ScaleTransform (1.2, 1.2, 0, 0);
 			
 			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
@@ -694,7 +694,7 @@ namespace Epsitec.Common.Drawing
 			double cx = root.Client.Width / 2;
 			double cy = root.Client.Height / 2;
 			
-			e.Graphics.RotateTransform (15, cx, cy);
+			e.Graphics.RotateTransformDeg (15, cx, cy);
 			e.Graphics.ScaleTransform (1.2, 1.2, 0, 0);
 			
 			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
@@ -741,7 +741,7 @@ namespace Epsitec.Common.Drawing
 			double cx = root.Client.Width / 2;
 			double cy = root.Client.Height / 2;
 			
-			e.Graphics.RotateTransform (0, cx, cy);
+			e.Graphics.RotateTransformDeg (0, cx, cy);
 			e.Graphics.ScaleTransform (0.8, 0.8, cx, cy);
 			
 			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
@@ -805,7 +805,7 @@ namespace Epsitec.Common.Drawing
 			
 			Transform t = new Transform ();
 			t.Translate (-50, 0);
-			t.Rotate (45, 0, 0);
+			t.RotateDeg (45, 0, 0);
 			t.Translate (cx, cy);
 			e.Graphics.GradientRenderer.Transform = t;
 			
@@ -888,7 +888,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.GradientRenderer.SetParameters(-100, 100);
 			t.Scale(rect.Width/100/2, rect.Height/100/2);
 			t.Translate(center);
-			t.Rotate(0, center);
+			t.RotateDeg(0, center);
 
 			e.Graphics.GradientRenderer.Transform = t;
 			e.Graphics.RenderGradient();
@@ -902,7 +902,7 @@ namespace Epsitec.Common.Drawing
 			double cx = root.Client.Width / 2;
 			double cy = root.Client.Height / 2;
 			
-			e.Graphics.RotateTransform (-30, cx, cy);
+			e.Graphics.RotateTransformDeg (-30, cx, cy);
 			
 			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
@@ -983,7 +983,7 @@ namespace Epsitec.Common.Drawing
 			double cx = root.Client.Width / 2;
 			double cy = root.Client.Height / 2;
 			
-			e.Graphics.RotateTransform (0, cx, cy);
+			e.Graphics.RotateTransformDeg (0, cx, cy);
 			
 			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
@@ -1013,7 +1013,7 @@ namespace Epsitec.Common.Drawing
 			double cy = root.Client.Height / 2;
 			
 			e.Graphics.ScaleTransform (2, 2, 0, 0);
-			e.Graphics.RotateTransform (0, cx, cy);
+			e.Graphics.RotateTransformDeg (0, cx, cy);
 			
 			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
