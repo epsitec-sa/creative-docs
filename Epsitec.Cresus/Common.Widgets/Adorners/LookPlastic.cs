@@ -1220,7 +1220,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			if ( text == null )  return;
 
-			TextLayout.DefaultColor = this.colorBlack;
+			Drawing.TextStyle.DefineDefaultColor(this.colorBlack);
 
 			if ( (state&WidgetState.Enabled) != 0 )
 			{

@@ -1415,7 +1415,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			if ( text == null )  return;
 
-			TextLayout.DefaultColor = this.colorWhite;
+			Drawing.TextStyle.DefineDefaultColor(this.colorWhite);
 
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
