@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
@@ -14,14 +14,11 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class StringEditController : AbstractController
 	{
-		public StringEditController(CommandDispatcher dispatcher)
+		public StringEditController(Application application) : base (application)
 		{
 			this.bundles    = new System.Collections.Hashtable ();
 			this.panels     = new System.Collections.ArrayList ();
-			this.dispatcher = dispatcher;
 			this.provider   = new BundleStringProvider (this);
-			
-			this.dispatcher.RegisterController (this);
 			
 			Support.Globals.Properties.SetProperty ("$resources$string controller", this);
 			
@@ -1083,7 +1080,6 @@ namespace Epsitec.Common.Designer
 		protected Window						window;
 		protected AbstractToolBar				tool_bar;
 		protected TabBook						tab_book;
-		protected Support.CommandDispatcher		dispatcher;
 		protected CommandState					save_command_state;
 	}
 }
