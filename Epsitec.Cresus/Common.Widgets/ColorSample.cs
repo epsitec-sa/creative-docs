@@ -19,7 +19,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		// Lie l'échantillon à une couleur dans une liste.
-		public void LinkWithColorsCollection(Drawing.ColorsCollection list, int index)
+		public void LinkWithColorCollection(Drawing.ColorCollection list, int index)
 		{
 			this.collectionList = list;
 			this.collectionIndex = index;
@@ -271,7 +271,7 @@ namespace Epsitec.Common.Widgets
 		
 		public event Support.EventHandler		Changed;
 
-		protected Drawing.ColorsCollection		collectionList;
+		protected Drawing.ColorCollection		collectionList;
 		protected int							collectionIndex;
 		protected Drawing.Color					color;
 		protected bool							possibleOrigin = false;

@@ -169,38 +169,38 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Donne la liste de couleurs à lier avec la palette.
-		public Drawing.ColorsCollection			ColorsCollection
+		public Drawing.ColorCollection			ColorCollection
 		{
 			get
 			{
-				return this.colorsCollection;
+				return this.colorCollection;
 			}
 
 			set
 			{
-				if ( this.colorsCollection != value )
+				if ( this.colorCollection != value )
 				{
-					if ( this.colorsCollection != null )
+					if ( this.colorCollection != null )
 					{
-						this.colorsCollection.Changed -= new Support.EventHandler(this.HandleColorsCollectionChanged);
+						this.colorCollection.Changed -= new Support.EventHandler(this.HandleColorCollectionChanged);
 					}
 
-					this.colorsCollection = value;
+					this.colorCollection = value;
 
-					if ( this.colorsCollection != null )
+					if ( this.colorCollection != null )
 					{
-						this.colorsCollection.Changed += new Support.EventHandler(this.HandleColorsCollectionChanged);
+						this.colorCollection.Changed += new Support.EventHandler(this.HandleColorCollectionChanged);
 					}
 
 					for ( int i=0 ; i<this.nbTotal ; i++ )
 					{
-						if ( this.colorsCollection == null )
+						if ( this.colorCollection == null )
 						{
 							this.palette[i].LinkClear();
 						}
 						else
 						{
-							this.palette[i].LinkWithColorsCollection(this.colorsCollection, i);
+							this.palette[i].LinkWithColorCollection(this.colorCollection, i);
 						}
 					}
 				}
@@ -308,7 +308,7 @@ namespace Epsitec.Common.Widgets
 
 		
 		// La collection de couleurs a changé.
-		private void HandleColorsCollectionChanged(object sender)
+		private void HandleColorCollectionChanged(object sender)
 		{
 			this.Invalidate();
 		}
@@ -342,6 +342,6 @@ namespace Epsitec.Common.Widgets
 		protected int							selected;
 		protected bool							hasOptionButton = false;
 		protected GlyphButton					buttonOption;
-		protected Drawing.ColorsCollection		colorsCollection;
+		protected Drawing.ColorCollection		colorCollection;
 	}
 }

@@ -134,7 +134,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ColorsCollection.cs"
+                    RelPath = "ColorCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

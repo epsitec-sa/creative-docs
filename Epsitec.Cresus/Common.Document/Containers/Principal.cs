@@ -33,7 +33,7 @@ namespace Epsitec.Common.Document.Containers
 			this.scrollable.Parent = this;
 
 			this.colorSelector = new ColorSelector();
-			this.colorSelector.ColorPalette.ColorsCollection = this.document.GlobalSettings.ColorsCollection;
+			this.colorSelector.ColorPalette.ColorCollection = this.document.GlobalSettings.ColorCollection;
 			this.colorSelector.HasCloseButton = true;
 			this.colorSelector.Dock = DockStyle.Bottom;
 			this.colorSelector.DockMargins = new Margins(0, 0, 10, 0);

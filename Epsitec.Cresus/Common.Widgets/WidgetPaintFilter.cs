@@ -46,6 +46,7 @@ namespace Epsitec.Common.Widgets
 			}
 			return this.allowed.Contains (widget) ? false : true;
 		}
+		
 		public void EnableChildren()
 		{
 			this.enable_children++;

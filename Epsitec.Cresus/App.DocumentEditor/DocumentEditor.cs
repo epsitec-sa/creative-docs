@@ -1350,31 +1350,31 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("NewPaletteDefault")]
 		void CommandNewPaletteDefault()
 		{
-			this.CurrentDocument.GlobalSettings.ColorsCollection.Initialise(ColorsCollectionType.Default);
+			this.CurrentDocument.GlobalSettings.ColorCollection.Initialise(ColorCollectionType.Default);
 		}
 
 		[Command ("NewPaletteRainbow")]
 		void NewPaletteRainbow()
 		{
-			this.CurrentDocument.GlobalSettings.ColorsCollection.Initialise(ColorsCollectionType.Rainbow);
+			this.CurrentDocument.GlobalSettings.ColorCollection.Initialise(ColorCollectionType.Rainbow);
 		}
 
 		[Command ("NewPaletteLight")]
 		void NewPaletteLight()
 		{
-			this.CurrentDocument.GlobalSettings.ColorsCollection.Initialise(ColorsCollectionType.Light);
+			this.CurrentDocument.GlobalSettings.ColorCollection.Initialise(ColorCollectionType.Light);
 		}
 
 		[Command ("NewPaletteDark")]
 		void NewPaletteDark()
 		{
-			this.CurrentDocument.GlobalSettings.ColorsCollection.Initialise(ColorsCollectionType.Dark);
+			this.CurrentDocument.GlobalSettings.ColorCollection.Initialise(ColorCollectionType.Dark);
 		}
 
 		[Command ("NewPaletteGray")]
 		void CommandNewPaletteGray()
 		{
-			this.CurrentDocument.GlobalSettings.ColorsCollection.Initialise(ColorsCollectionType.Gray);
+			this.CurrentDocument.GlobalSettings.ColorCollection.Initialise(ColorCollectionType.Gray);
 		}
 
 		[Command ("OpenPalette")]
@@ -1382,8 +1382,8 @@ namespace Epsitec.App.DocumentEditor
 		{
 			Dialogs.FileOpen dialog = new Dialogs.FileOpen();
 			
-			dialog.InitialDirectory = this.CurrentDocument.GlobalSettings.ColorsCollectionDirectory;
-			dialog.FileName = this.CurrentDocument.GlobalSettings.ColorsCollectionFilename;
+			dialog.InitialDirectory = this.CurrentDocument.GlobalSettings.ColorCollectionDirectory;
+			dialog.FileName = this.CurrentDocument.GlobalSettings.ColorCollectionFilename;
 			dialog.Title = "Ouvrir une palette de couleurs";
 			dialog.Filters.Add("crcolors", "Palette de couleurs", "*.crcolors");
 			dialog.FilterIndex = this.CurrentDocument.ExportFilter;
@@ -1391,8 +1391,8 @@ namespace Epsitec.App.DocumentEditor
 			dialog.OpenDialog();
 			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
 
-			this.CurrentDocument.GlobalSettings.ColorsCollectionDirectory = System.IO.Path.GetDirectoryName(dialog.FileName);
-			this.CurrentDocument.GlobalSettings.ColorsCollectionFilename = System.IO.Path.GetFileName(dialog.FileName);
+			this.CurrentDocument.GlobalSettings.ColorCollectionDirectory = System.IO.Path.GetDirectoryName(dialog.FileName);
+			this.CurrentDocument.GlobalSettings.ColorCollectionFilename = System.IO.Path.GetFileName(dialog.FileName);
 
 			string err = this.PaletteRead(dialog.FileName);
 			this.DialogError(this.commandDispatcher, err);
@@ -1403,8 +1403,8 @@ namespace Epsitec.App.DocumentEditor
 		{
 			Dialogs.FileSave dialog = new Dialogs.FileSave();
 			
-			dialog.InitialDirectory = this.CurrentDocument.GlobalSettings.ColorsCollectionDirectory;
-			dialog.FileName = this.CurrentDocument.GlobalSettings.ColorsCollectionFilename;
+			dialog.InitialDirectory = this.CurrentDocument.GlobalSettings.ColorCollectionDirectory;
+			dialog.FileName = this.CurrentDocument.GlobalSettings.ColorCollectionFilename;
 			dialog.Title = "Enregistrer la palette de couleurs";
 			dialog.Filters.Add("crcolors", "Palette de couleurs", "*.crcolors");
 			dialog.FilterIndex = this.CurrentDocument.ExportFilter;
@@ -1413,8 +1413,8 @@ namespace Epsitec.App.DocumentEditor
 			dialog.OpenDialog();
 			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
 
-			this.CurrentDocument.GlobalSettings.ColorsCollectionDirectory = System.IO.Path.GetDirectoryName(dialog.FileName);
-			this.CurrentDocument.GlobalSettings.ColorsCollectionFilename = System.IO.Path.GetFileName(dialog.FileName);
+			this.CurrentDocument.GlobalSettings.ColorCollectionDirectory = System.IO.Path.GetDirectoryName(dialog.FileName);
+			this.CurrentDocument.GlobalSettings.ColorCollectionFilename = System.IO.Path.GetFileName(dialog.FileName);
 
 			string err = this.PaletteWrite(dialog.FileName);
 			this.DialogError(this.commandDispatcher, err);
@@ -1428,8 +1428,8 @@ namespace Epsitec.App.DocumentEditor
 				using ( Stream stream = File.OpenRead(filename) )
 				{
 					SoapFormatter formatter = new SoapFormatter();
-					ColorsCollection cc = (ColorsCollection) formatter.Deserialize(stream);
-					cc.CopyTo(this.CurrentDocument.GlobalSettings.ColorsCollection);
+					ColorCollection cc = (ColorCollection) formatter.Deserialize(stream);
+					cc.CopyTo(this.CurrentDocument.GlobalSettings.ColorCollection);
 				}
 			}
 			catch ( System.Exception e )
@@ -1453,7 +1453,7 @@ namespace Epsitec.App.DocumentEditor
 				using ( Stream stream = File.OpenWrite(filename) )
 				{
 					SoapFormatter formatter = new SoapFormatter();
-					formatter.Serialize(stream, this.CurrentDocument.GlobalSettings.ColorsCollection);
+					formatter.Serialize(stream, this.CurrentDocument.GlobalSettings.ColorCollection);
 				}
 			}
 			catch ( System.Exception e )

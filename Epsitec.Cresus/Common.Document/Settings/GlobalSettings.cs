@@ -57,9 +57,9 @@ namespace Epsitec.Common.Document.Settings
 			string dir = Support.Globals.Directories.Executable;
 			this.initialDirectory = dir + @"\Samples";
 
-			this.colorsCollection = new ColorsCollection();
-			this.colorsCollectionDirectory = "";
-			this.colorsCollectionFilename = "";
+			this.colorCollection = new ColorCollection();
+			this.colorCollectionDirectory = "";
+			this.colorCollectionFilename = "";
 		}
 
 		// Met tous les fichiers d'exemples dans la liste des 10 premiers
@@ -394,42 +394,42 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
-		public Drawing.ColorsCollection ColorsCollection
+		public Drawing.ColorCollection ColorCollection
 		{
 			get
 			{
-				return this.colorsCollection;
+				return this.colorCollection;
 			}
 
 			set
 			{
-				this.colorsCollection = value;
+				this.colorCollection = value;
 			}
 		}
 
-		public string ColorsCollectionDirectory
+		public string ColorCollectionDirectory
 		{
 			get
 			{
-				return this.colorsCollectionDirectory;
+				return this.colorCollectionDirectory;
 			}
 
 			set
 			{
-				this.colorsCollectionDirectory = value;
+				this.colorCollectionDirectory = value;
 			}
 		}
 
-		public string ColorsCollectionFilename
+		public string ColorCollectionFilename
 		{
 			get
 			{
-				return this.colorsCollectionFilename;
+				return this.colorCollectionFilename;
 			}
 
 			set
 			{
-				this.colorsCollectionFilename = value;
+				this.colorCollectionFilename = value;
 			}
 		}
 
@@ -541,9 +541,9 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("LastFilename", this.lastFilename);
 			info.AddValue("InitialDirectory", this.initialDirectory);
 
-			info.AddValue("ColorsCollection", this.colorsCollection);
-			info.AddValue("ColorsCollectionDirectory", this.colorsCollectionDirectory);
-			info.AddValue("ColorsCollectionFilename", this.colorsCollectionFilename);
+			info.AddValue("ColorCollection", this.colorCollection);
+			info.AddValue("ColorCollectionDirectory", this.colorCollectionDirectory);
+			info.AddValue("ColorCollectionFilename", this.colorCollectionFilename);
 		}
 
 		// Constructeur qui désérialise les réglages.
@@ -575,9 +575,9 @@ namespace Epsitec.Common.Document.Settings
 			this.lastFilename = (System.Collections.ArrayList) info.GetValue("LastFilename", typeof(System.Collections.ArrayList));
 			this.initialDirectory = info.GetString("InitialDirectory");
 
-			this.colorsCollection = (ColorsCollection) info.GetValue("ColorsCollection", typeof(ColorsCollection));
-			this.colorsCollectionDirectory = info.GetString("ColorsCollectionDirectory");
-			this.colorsCollectionFilename = info.GetString("ColorsCollectionFilename");
+			this.colorCollection = (ColorCollection) info.GetValue("ColorCollection", typeof(ColorCollection));
+			this.colorCollectionDirectory = info.GetString("ColorCollectionDirectory");
+			this.colorCollectionFilename = info.GetString("ColorCollectionFilename");
 		}
 		#endregion
 
@@ -603,8 +603,8 @@ namespace Epsitec.Common.Document.Settings
 		protected System.Collections.ArrayList	lastFilename;
 		protected int							lastFilenameMax;
 		protected string						initialDirectory;
-		protected Drawing.ColorsCollection		colorsCollection;
-		protected string						colorsCollectionDirectory;
-		protected string						colorsCollectionFilename;
+		protected Drawing.ColorCollection		colorCollection;
+		protected string						colorCollectionDirectory;
+		protected string						colorCollectionFilename;
 	}
 }
