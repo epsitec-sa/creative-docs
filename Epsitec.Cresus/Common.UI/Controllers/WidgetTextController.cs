@@ -72,7 +72,7 @@ namespace Epsitec.Common.UI.Controllers
 		
 		private void HandleWidgetTextChanged(object sender)
 		{
-			this.SyncFromUI ();
+			this.OnUIDataChanged ();
 		}
 		
 		

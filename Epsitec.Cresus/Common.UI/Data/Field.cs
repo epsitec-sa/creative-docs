@@ -52,8 +52,9 @@ namespace Epsitec.Common.UI.Data
 		{
 			if (value is string)
 			{
-				this.value = value;
-				this.type  = new Types.StringType ();
+				this.value          = value;
+				this.is_value_valid = true;
+				this.type           = new Types.StringType ();
 				
 				return;
 			}
@@ -63,29 +64,33 @@ namespace Epsitec.Common.UI.Data
 				decimal small = 1M / large;
 				decimal max   = large - small;
 				
-				this.value = value;
-				this.type  = new Types.DecimalType (-max, max, small);
+				this.value          = value;
+				this.is_value_valid = true;
+				this.type           = new Types.DecimalType (-max, max, small);
 				
 				return;
 			}
 			if (value is bool)
 			{
-				this.value = value;
-				this.type  = new Types.BooleanType ();
+				this.value          = value;
+				this.is_value_valid = true;
+				this.type           = new Types.BooleanType ();
 				
 				return;
 			}
 			if (value is int)
 			{
-				this.value = value;
-				this.type  = new Types.IntegerType ();
+				this.value          = value;
+				this.is_value_valid = true;
+				this.type           = new Types.IntegerType ();
 				
 				return;
 			}
 			if (value is System.Enum)
 			{
-				this.value = value;
-				this.type  = new Types.EnumType (value.GetType ());
+				this.value          = value;
+				this.is_value_valid = true;
+				this.type           = new Types.EnumType (value.GetType ());
 				
 				return;
 			}
@@ -95,8 +100,9 @@ namespace Epsitec.Common.UI.Data
 		
 		public void DefineValue(object value, Types.INamedType type)
 		{
-			this.value = value;
-			this.type  = type;
+			this.value          = value;
+			this.is_value_valid = true;
+			this.type           = type;
 		}
 		
 		public void DefineConstraint(Types.IDataConstraint constraint)
@@ -119,18 +125,6 @@ namespace Epsitec.Common.UI.Data
 		{
 			get
 			{
-//				if (this.type != null)
-//				{
-//					object value;
-//					
-//					if (Common.Types.Converter.Convert (this.value, this.type.SystemType, out value))
-//					{
-//						return value;
-//					}
-//					
-//					throw new System.InvalidOperationException ("Value cannot be mapped to required type.");
-//				}
-				
 				return this.value;
 			}
 			set
@@ -142,9 +136,18 @@ namespace Epsitec.Common.UI.Data
 						throw new System.InvalidOperationException ("Value cannot be changed; no type is defined.");
 					}
 					
-					this.value = value;
+					this.value          = value;
+					this.is_value_valid = true;
 					this.OnChanged ();
 				}
+			}
+		}
+		
+		public bool								IsValueValid
+		{
+			get
+			{
+				return this.is_value_valid;
 			}
 		}
 		
@@ -205,6 +208,14 @@ namespace Epsitec.Common.UI.Data
 			{
 				this.Value = value;
 			}
+		}
+		
+		public void NotifyInvalidData()
+		{
+			//	Donnée pas valide...
+			
+			this.is_value_valid = false;
+			this.OnChanged ();
 		}
 		#endregion
 
@@ -276,5 +287,6 @@ namespace Epsitec.Common.UI.Data
 		private Types.IDataConstraint			constraint;
 		
 		private object							value;
+		private bool							is_value_valid;
 	}
 }

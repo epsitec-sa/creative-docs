@@ -815,6 +815,13 @@ namespace Epsitec.Common.Widgets
 			this.UpdateClientGeometry();
 		}
 		
+		protected override void OnCultureChanged()
+		{
+			base.OnCultureChanged ();
+			this.SelectAll ();
+		}
+
+		
 		protected void OnTextDeleted()
 		{
 			this.OnTextChanged();
@@ -843,6 +850,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
 		protected virtual void OnCursorChanged(bool silent)
 		{
 			this.ResetCursor();

@@ -98,20 +98,51 @@ namespace Epsitec.Common.UI.Controllers
 		
 		protected virtual void OnUIDataChanged()
 		{
-			this.SyncFromUI ();
+			if (this.counter > 0)
+			{
+				return;
+			}
+			
+			try
+			{
+				System.Diagnostics.Debug.WriteLine ("UI>");
+				this.counter++;
+				this.SyncFromUI ();
+			}
+			finally
+			{
+				this.counter--;
+				System.Diagnostics.Debug.WriteLine ("UI<");
+			}
 		}
 		
 		
 		private void HandleAdapterValueChanged(object sender)
 		{
+			if (this.counter > 0)
+			{
+				return;
+			}
+			
 			Adapters.IAdapter adapter = sender as Adapters.IAdapter;
 			
-			this.SyncFromAdapter (adapter.SyncReason);
+			try
+			{
+				System.Diagnostics.Debug.WriteLine ("Adapter>");
+				this.counter++;
+				this.SyncFromAdapter (adapter.SyncReason);
+			}
+			finally
+			{
+				this.counter--;
+				System.Diagnostics.Debug.WriteLine ("Adapter<");
+			}
 		}
 		
 		
 		private Adapters.IAdapter				adapter;
 		protected string						caption;
 		protected StaticText					caption_label;
+		protected int							counter;
 	}
 }

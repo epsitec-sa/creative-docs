@@ -83,6 +83,11 @@ namespace Epsitec.Common.UI.Binders
 			return false;
 		}
 		
+		public virtual bool NotifyInvalidData()
+		{
+			return false;
+		}
+		
 		
 		protected virtual void OnAdapterChanged()
 		{

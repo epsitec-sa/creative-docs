@@ -109,7 +109,7 @@ namespace Epsitec.Common.Designer.UI
 		
 		private void HandleComboCommandTextChanged(object sender)
 		{
-			this.SyncFromUI ();
+			this.OnUIDataChanged ();
 		}
 		
 		

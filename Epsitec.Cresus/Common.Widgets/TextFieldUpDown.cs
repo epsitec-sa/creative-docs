@@ -10,7 +10,8 @@ namespace Epsitec.Common.Widgets
 			this.textFieldStyle = TextFieldStyle.UpDown;
 			this.TextNavigator.IsNumeric = true;
 			this.range = new Types.DecimalRange(0, 100, 1);
-
+			this.range.Changed += new System.EventHandler(this.HandleDecimalRangeChanged);
+			
 			this.arrowUp = new GlyphButton(this);
 			this.arrowDown = new GlyphButton(this);
 			this.arrowUp.Name = "Up";
@@ -25,6 +26,8 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown.StillEngaged += new Support.EventHandler(this.HandleButton);
 			this.arrowUp.AutoRepeatEngaged = true;
 			this.arrowDown.AutoRepeatEngaged = true;
+			
+			this.UpdateValidator();
 		}
 		
 		public TextFieldUpDown(Widget embedder) : this()
@@ -34,7 +37,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		#region INumValue Members
-		public virtual decimal				Value
+		public virtual decimal					Value
 		{
 			get
 			{
@@ -67,7 +70,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public decimal						MinValue
+		public decimal							MinValue
 		{
 			get
 			{
@@ -75,11 +78,14 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.range.Minimum = value;
+				if ( this.range.Minimum != value )
+				{
+					this.range.Minimum = value;
+				}
 			}
 		}
 		
-		public decimal						MaxValue
+		public decimal							MaxValue
 		{
 			get
 			{
@@ -87,11 +93,14 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.range.Maximum = value;
+				if ( this.range.Maximum != value )
+				{
+					this.range.Maximum = value;
+				}
 			}
 		}
 
-		public decimal						Resolution
+		public decimal							Resolution
 		{
 			get
 			{
@@ -222,6 +231,19 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 		
+		protected override bool ShouldSerializeValidator(Support.IValidator validator)
+		{
+			if (this.validator == validator)
+			{
+				//	On ne sérialise pas le validateur interne qui est là juste pour
+				//	s'assurer que la valeur est bien un nombre.
+				
+				return false;
+			}
+			
+			return base.ShouldSerializeValidator (validator);
+		}
+
 		
 		protected override void OnAdornerChanged()
 		{
@@ -240,6 +262,14 @@ namespace Epsitec.Common.Widgets
 			if ( this.ValueChanged != null )  // qq'un écoute ?
 			{
 				this.ValueChanged(this);
+			}
+		}
+		
+		protected virtual  void OnDecimalRangeChanged()
+		{
+			if ( this.DecimalRangeChanged != null )
+			{
+				this.DecimalRangeChanged(this);
 			}
 		}
 		
@@ -279,6 +309,11 @@ namespace Epsitec.Common.Widgets
 			this.Value = roundValue;
 		}
 		
+		protected virtual void UpdateValidator()
+		{
+			//	TODO: met à jour le validateur
+		}
+		
 		
 		private void HandleButton(object sender)
 		{
@@ -292,12 +327,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		private void HandleDecimalRangeChanged(object sender, System.EventArgs e)
+		{
+			this.UpdateValidator();
+			this.OnDecimalRangeChanged();
+		}
+		
 		
 		protected Types.DecimalRange			range;
+		
+		public event Support.EventHandler		DecimalRangeChanged;
 		
 		protected GlyphButton					arrowUp;
 		protected GlyphButton					arrowDown;
 		protected decimal						defaultValue = 0;
 		protected decimal						step = 1;
+		protected Support.IValidator			validator;
 	}
 }

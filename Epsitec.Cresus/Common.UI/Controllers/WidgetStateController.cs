@@ -149,13 +149,13 @@ namespace Epsitec.Common.UI.Controllers
 		private void HandleStateChanged(object sender)
 		{
 			System.Diagnostics.Debug.Assert (sender == this.widget);
-			this.SyncFromUI ();
+			this.OnUIDataChanged ();
 		}
 		
 		private void HandleGroupChanged(object sender)
 		{
 			System.Diagnostics.Debug.Assert (sender == this.group);
-			this.SyncFromUI ();
+			this.OnUIDataChanged ();
 		}
 		
 		

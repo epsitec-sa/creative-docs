@@ -259,6 +259,10 @@ namespace Epsitec.Common.Types
 			public void WriteValue(object value)
 			{
 			}
+			
+			public void NotifyInvalidData()
+			{
+			}
 			#endregion
 
 			#region IDataItem Members

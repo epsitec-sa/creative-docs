@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 07/03/2004
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support.Data
 {
@@ -14,6 +14,7 @@ namespace Epsitec.Common.Support.Data
 		decimal						MaxValue		{ get; set; }
 		decimal						Resolution		{ get; set; }
 		decimal						Range			{ get; }
+		bool						IsValid			{ get; }
 		
 		event Support.EventHandler	ValueChanged;
 	}

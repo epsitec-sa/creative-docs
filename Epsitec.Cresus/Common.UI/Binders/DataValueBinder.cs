@@ -86,6 +86,18 @@ namespace Epsitec.Common.UI.Binders
 			return false;
 		}
 		
+		public override bool NotifyInvalidData()
+		{
+			if (this.IsValid)
+			{
+				this.source.NotifyInvalidData ();
+				return true;
+			}
+			
+			return false;
+		}
+
+		
 		
 		protected void Attach()
 		{

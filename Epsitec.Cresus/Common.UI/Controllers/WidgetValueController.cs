@@ -93,9 +93,15 @@ namespace Epsitec.Common.UI.Controllers
 			{
 				decimal value = this.num_value.Value;
 				
-				if (this.CheckConstraint (value))
+				if ((this.num_value.IsValid) &&
+					(this.CheckConstraint (value)))
 				{
-					adapter.Value = value;
+					adapter.Value    = value;
+					adapter.Validity = true;
+				}
+				else
+				{
+					adapter.Validity = false;
 				}
 			}
 		}
@@ -103,7 +109,7 @@ namespace Epsitec.Common.UI.Controllers
 		
 		private void HandleWidgetValueChanged(object sender)
 		{
-			this.SyncFromUI ();
+			this.OnUIDataChanged ();
 		}
 		
 		

@@ -40,6 +40,21 @@ namespace Epsitec.Common.UI.Adapters
 			}
 		}
 		
+		public bool								Validity
+		{
+			get
+			{
+				return this.validity;
+			}
+			set
+			{
+				if (this.validity != value)
+				{
+					this.validity = value;
+					this.OnValidityChanged ();
+				}
+			}
+		}
 		
 		public void SyncFromBinder(SyncReason reason)
 		{
@@ -49,6 +64,8 @@ namespace Epsitec.Common.UI.Adapters
 			
 			this.sync_reason = SyncReason.None;
 		}
+		
+		
 		
 		protected virtual void OnBinderChanged()
 		{
@@ -61,7 +78,16 @@ namespace Epsitec.Common.UI.Adapters
 		protected virtual void OnValueChanged()
 		{
 			this.WriteToBinder ();
-			
+			this.OnChanged ();
+		}
+		
+		protected virtual void OnValidityChanged()
+		{
+			this.OnChanged ();
+		}
+		
+		protected virtual void OnChanged()
+		{
 			SyncReason old_reason = this.sync_reason;
 			SyncReason new_reason = this.sync_reason == SyncReason.None ? SyncReason.ValueChanged : old_reason;
 			
@@ -138,5 +164,6 @@ namespace Epsitec.Common.UI.Adapters
 		protected Binders.IBinder				binder;
 		protected SyncReason					sync_reason;
 		protected bool							job_in_progress;
+		protected bool							validity = true;
 	}
 }

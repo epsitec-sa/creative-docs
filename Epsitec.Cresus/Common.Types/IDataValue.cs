@@ -13,6 +13,8 @@ namespace Epsitec.Common.Types
 		
 		object ReadValue();
 		void WriteValue(object value);
+		
+		void NotifyInvalidData();
 	}
 }
 

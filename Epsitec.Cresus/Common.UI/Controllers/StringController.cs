@@ -75,7 +75,7 @@ namespace Epsitec.Common.UI.Controllers
 		
 		private void HandleTextFieldTextChanged(object sender)
 		{
-			this.SyncFromUI ();
+			this.OnUIDataChanged ();
 		}
 		
 		

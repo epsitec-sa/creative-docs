@@ -84,7 +84,7 @@ namespace Epsitec.Common.UI.Controllers
 		
 		private void HandleDataSourceChanged(object sender)
 		{
-			this.SyncFromUI ();
+			this.OnUIDataChanged ();
 		}
 		
 		

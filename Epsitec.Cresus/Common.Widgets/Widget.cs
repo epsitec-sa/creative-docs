@@ -287,7 +287,12 @@ namespace Epsitec.Common.Widgets
 				
 				for (int i = 0; i < validators.Length; i++)
 				{
-					if (validators[i] is Support.IBundleSupport)
+					if (this.ShouldSerializeValidator (validators[i]) == false)
+					{
+						//	La classe ne veut pas que ce validateur soit sérialisé. On le saute donc tout
+						//	simplement.
+					}
+					else if (validators[i] is Support.IBundleSupport)
 					{
 						Support.ResourceBundle validator_bundle = bundler.CreateEmptyBundle (string.Format (System.Globalization.CultureInfo.InvariantCulture, "v{0}", i));
 						
@@ -2202,6 +2207,11 @@ namespace Epsitec.Common.Widgets
 				
 				this.OnValidatorChanged ();
 			}
+		}
+		
+		protected virtual bool ShouldSerializeValidator(Support.IValidator validator)
+		{
+			return true;
 		}
 		
 		

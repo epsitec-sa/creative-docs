@@ -106,7 +106,7 @@ namespace Epsitec.Common.UI.Controllers
 		
 		private void HandleComboValueSelectedIndexChanged(object sender)
 		{
-			this.SyncFromUI ();
+			this.OnUIDataChanged ();
 		}
 		
 		

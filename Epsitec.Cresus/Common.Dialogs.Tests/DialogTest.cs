@@ -103,7 +103,7 @@ namespace Epsitec.Common.Dialogs
 		private void HandleFieldChanged(object sender)
 		{
 			Field field = sender as Field;
-			System.Diagnostics.Debug.WriteLine ("Field " + field.Name + " changed to " + field.Value.ToString ());
+			System.Diagnostics.Debug.WriteLine ("Field " + field.Name + " changed to " + field.Value.ToString () + (field.IsValueValid ? "" : "(invalid)"));
 		}
 	}
 }

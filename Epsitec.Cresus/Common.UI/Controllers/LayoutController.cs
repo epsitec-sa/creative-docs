@@ -131,7 +131,7 @@ namespace Epsitec.Common.UI.Controllers
 				if (this.show_mode == ShowMode.Manual)
 				{
 					this.layout = LayoutStyles.Manual;
-					this.SyncFromUI ();
+					this.OnUIDataChanged ();
 				}
 			}
 		}

@@ -234,12 +234,12 @@ namespace Epsitec.Common.UI.Controllers
 		
 		private void HandleSelectedIndexChanged(object sender)
 		{
-			this.SyncFromUI ();
+			this.OnUIDataChanged ();
 		}
 		
 		private void HandleTextChanged(object sender)
 		{
-			this.SyncFromUI ();
+			this.OnUIDataChanged ();
 		}
 		
 		

@@ -206,7 +206,7 @@ namespace Epsitec.Common.Designer.UI
 				return;
 			}
 			
-			this.SyncFromUI ();
+			this.OnUIDataChanged ();
 		}
 		
 		private void HandleComboTextTextEdited(object sender)
@@ -216,7 +216,7 @@ namespace Epsitec.Common.Designer.UI
 				return;
 			}
 			
-			this.SyncFromUI ();
+			this.OnUIDataChanged ();
 			
 			this.State = InternalState.UsingCustomText;
 		}
@@ -304,7 +304,7 @@ namespace Epsitec.Common.Designer.UI
 			{
 				adapter.Value = Resources.MakeTextRef (ResourceBundle.MakeTarget (bundle, field));
 				
-				this.SyncFromAdapter (Common.UI.SyncReason.AdapterChanged);
+				this.OnAdapterDataChanged ();
 				this.State = InternalState.UsingExistingText;
 			}
 			else
@@ -337,7 +337,7 @@ namespace Epsitec.Common.Designer.UI
 				
 				adapter.Value = Resources.MakeTextRef (ResourceBundle.MakeTarget (bundle, field));
 				
-				this.SyncFromAdapter (Common.UI.SyncReason.AdapterChanged);
+				this.OnAdapterDataChanged ();
 				this.State = InternalState.UsingExistingText;
 			}
 		}
