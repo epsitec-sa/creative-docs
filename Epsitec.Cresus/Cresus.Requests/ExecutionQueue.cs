@@ -351,6 +351,8 @@ namespace Epsitec.Cresus.Requests
 					throw new System.InvalidOperationException (string.Format ("Cannot change from state {0} to {1}.", old_state, new_state));
 				}
 				
+				System.Diagnostics.Debug.WriteLine (string.Format ("Request {0} changed from {1} to {2}.", row[0], old_state, new_state));
+				
 				row[Tags.ColumnReqExState] = ExecutionQueue.ConvertFromExecutionState (new_state);
 				
 				this.state_count[(int) old_state]--;

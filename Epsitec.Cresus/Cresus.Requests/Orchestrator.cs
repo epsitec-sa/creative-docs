@@ -139,6 +139,9 @@ namespace Epsitec.Cresus.Requests
 					this.server_event.Set ();
 				}
 			}
+			catch (System.Threading.ThreadInterruptedException)
+			{
+			}
 			catch (System.Exception exception)
 			{
 				System.Diagnostics.Debug.WriteLine (exception.Message);

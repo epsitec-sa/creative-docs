@@ -654,6 +654,25 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public static void DebugDumpRow(System.Data.DataRow row)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			foreach (object o in row.ItemArray)
+			{
+				if (buffer.Length > 0)
+				{
+					buffer.Append (", ");
+				}
+				
+				buffer.Append ("'");
+				buffer.Append (o.ToString ());
+				buffer.Append ("'");
+			}
+			
+			System.Diagnostics.Debug.WriteLine (buffer.ToString ());
+		}
+		
 		
 		protected void CreateDataRelations ()
 		{

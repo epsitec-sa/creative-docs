@@ -689,6 +689,58 @@ namespace Epsitec.Cresus.Database
 			Services.RoamingClientTool.CreateDatabase (service, operation, "roaming");
 		}
 		
+		[Test] /*[Ignore ("Temporary")]*/ public void Check19ReplicationAndSynchronisation()
+		{
+			Remoting.IRequestExecutionService service = Services.Engine.GetRemoteRequestExecutionService ("localhost", 1234);
+			
+			Assert.IsNotNull (service);
+			
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("roaming", false))
+			{
+				Remoting.ClientIdentity client = new Remoting.ClientIdentity ("NUnit Test Client", infrastructure.LocalSettings.ClientId);
+				Requests.Orchestrator orchestrator = new Requests.Orchestrator (infrastructure);
+				
+				orchestrator.DefineRemotingService (service, client);
+				
+				DbTable       db_table = infrastructure.ResolveDbTable (null, "ServiceTest");
+				DbRichCommand command  = DbRichCommand.CreateFromTable (infrastructure, null, db_table, DbSelectRevision.LiveActive);
+				
+				System.Data.DataTable    table   = command.DataSet.Tables[0];
+				DataLayer.RequestFactory factory = new DataLayer.RequestFactory ();
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} rows in table {1}.", table.Rows.Count, table.TableName));
+				
+				System.Data.DataRow data_row;
+				command.CreateNewRow ("ServiceTest", out data_row);
+				
+				data_row.BeginEdit ();
+				data_row[3] = "Albert Einstein";
+				data_row[4] = new System.DateTime (1905, 2, 11);
+				data_row.EndEdit ();
+				
+				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
+				{
+					command.UpdateRealIds (transaction);
+					transaction.Commit ();
+				}
+				
+				factory.GenerateRequests (table);
+				
+				System.Diagnostics.Debug.WriteLine ("Enqueue request.");
+				
+				lock (orchestrator.ExecutionQueue)
+				{
+					orchestrator.ExecutionQueue.Enqueue (factory.CreateGroup ());
+				}
+				
+				System.Diagnostics.Debug.WriteLine ("Waiting for requests to be executed.");
+				
+				System.Threading.Thread.Sleep (5000);
+				
+				orchestrator.Dispose ();
+			}
+		}
+		
 		[Test] public void Check20ServiceServer_Kill()
 		{
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
