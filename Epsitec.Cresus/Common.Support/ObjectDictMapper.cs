@@ -71,6 +71,10 @@ namespace Epsitec.Common.Support
 		
 		public static void UpdateToDict(object data, Types.IStringDict dict)
 		{
+			//	Comme CopyToDict, mais ne crée pas de nouvelles entrées dans le
+			//	dictionnaire (on met uniquement à jour des valeurs qui existaient
+			//	déjà).
+			
 			System.Type type = data.GetType ();
 			System.Reflection.PropertyInfo[] props = type.GetProperties (System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
 			

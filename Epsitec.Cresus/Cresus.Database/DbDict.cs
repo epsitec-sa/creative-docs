@@ -60,6 +60,29 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public int								Count
+		{
+			get
+			{
+				System.Data.DataRowCollection rows = this.data_table.Rows;
+				
+				//	Compte les lignes réellement présentes (ne compte pas ce qui a été effacé).
+				
+				int n = 0;
+				
+				for (int i = 0; i < rows.Count; i++)
+				{
+					DbKey row_key_id = new DbKey (rows[i]);
+					
+					if (row_key_id.Status != DbRowStatus.Deleted)
+					{
+						n++;
+					}
+				}
+				
+				return n;
+			}
+		}
 		
 		public void Add(string key, string value)
 		{
@@ -139,7 +162,7 @@ namespace Epsitec.Cresus.Database
 		
 		public void RestoreFromBase(DbTransaction transaction)
 		{
-			this.command    = DbRichCommand.CreateFromTable (this.infrastructure, transaction, this.table);
+			this.command    = DbRichCommand.CreateFromTable (this.infrastructure, transaction, this.table, DbSelectRevision.LiveActive);
 			this.data_set   = this.command.DataSet;
 			this.data_table = this.data_set.Tables[0];
 		}

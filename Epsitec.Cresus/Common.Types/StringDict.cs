@@ -99,14 +99,6 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public int								Count
-		{
-			get
-			{
-				return this.hash.Count;
-			}
-		}
-		
 		public void CopyTo(System.Array array, int index)
 		{
 			this.hash.CopyTo (array, index);
@@ -158,6 +150,15 @@ namespace Epsitec.Common.Types
 			return this.hash.Contains (key);
 		}
 		#endregion
+		
+		public int								Count
+		{
+			get
+			{
+				return this.hash.Count;
+			}
+		}
+		
 		
 		public void Clear()
 		{

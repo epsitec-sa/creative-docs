@@ -11,6 +11,7 @@ namespace Epsitec.Common.Types
 	{
 		string[]	Keys				{ get; }
 		string		this[string key]	{ get; set; }
+		int			Count				{ get; }
 		
 		void Add(string key, string value);
 		void Remove(string key);

@@ -57,6 +57,13 @@ namespace Epsitec.Cresus.Database
 			return DbRichCommand.CreateFromTables (infrastructure, transaction, new DbTable[] { table }, new DbSelectCondition[] { null });
 		}
 		
+		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table, DbSelectRevision select_revision)
+		{
+			DbSelectCondition condition = new DbSelectCondition (infrastructure.TypeConverter);
+			condition.Revision = select_revision;
+			return DbRichCommand.CreateFromTable (infrastructure, transaction, table, condition);
+		}
+		
 		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table, DbSelectCondition condition)
 		{
 			return DbRichCommand.CreateFromTables (infrastructure, transaction, new DbTable[] { table }, new DbSelectCondition[] { condition });
