@@ -604,6 +604,16 @@ namespace Epsitec.Common.Widgets
 			TabPage page3 = new TabPage();
 			page3.Bounds = inside;
 			page3.TabTitle = "<m>T</m>roisième";
+			
+			TextFieldEx text_ex_1 = new TextFieldEx();
+			text_ex_1.Parent = page3;
+			text_ex_1.Bounds = new Drawing.Rectangle(10, page3.Height-30, 80, text_ex_1.Height);
+			
+			TextFieldEx text_ex_2 = new TextFieldEx();
+			text_ex_2.Parent = page3;
+			text_ex_2.Bounds = new Drawing.Rectangle(10, page3.Height-58, 80, text_ex_2.Height);
+			text_ex_2.SetEnabled(false);
+			
 			page3.TabIndex = 3;
 			page3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page3);
