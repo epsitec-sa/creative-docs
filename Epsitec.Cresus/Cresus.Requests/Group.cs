@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Requests
 		{
 		}
 		
-
+		
 		public AbstractRequest					this[int index]
 		{
 			get

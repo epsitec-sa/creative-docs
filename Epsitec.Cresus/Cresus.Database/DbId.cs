@@ -148,6 +148,8 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion
 		
+		public static readonly DbId				Zero = new DbId (0);
+		
 		public const long						LocalRange		= 1000000000000;	//	10^12
 		public const int						ClientRange		= 1000000;			//	10^6
 		

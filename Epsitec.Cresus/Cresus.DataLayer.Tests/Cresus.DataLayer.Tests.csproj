@@ -104,6 +104,11 @@
                     Project = "{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Cresus.Requests"
+                    Project = "{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

@@ -217,6 +217,60 @@ namespace Epsitec.Cresus.Database
 			command.Dispose ();
 		}
 
+		[Test] public void Check07InsertDataMore()
+		{
+			// doit être fait après CheckRemoveTableColumns
+			// pour que la table existe dans le bon état
+
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
+			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
+			ISqlEngine		sql_engine     = db_abstraction.SqlEngine;
+
+			Collections.SqlFields fields = new Collections.SqlFields ();
+
+			SqlField field;
+			
+			field = SqlField.CreateConstant (200, DbRawType.Int32);
+			field.Alias = "Cr_ID";
+			fields.Add (field);
+			
+			field = SqlField.CreateConstant (0, DbRawType.Int32);
+			field.Alias = "Cr_REV";
+			fields.Add (field);
+			
+			field = SqlField.CreateConstant ("First line...", DbRawType.String);
+			field.Alias = "StringDynamic";
+			fields.Add (field);
+
+			sql_builder.InsertData ("FbTestTable", fields);
+			sql_builder.AppendMore ();
+			
+			fields.Clear ();
+			field = SqlField.CreateConstant (201, DbRawType.Int32);
+			field.Alias = "Cr_ID";
+			fields.Add (field);
+			
+			field = SqlField.CreateConstant (0, DbRawType.Int32);
+			field.Alias = "Cr_REV";
+			fields.Add (field);
+			
+			field = SqlField.CreateConstant ("Second line...", DbRawType.String);
+			field.Alias = "StringDynamic";
+			fields.Add (field);
+			
+			sql_builder.InsertData ("FbTestTable", fields);
+			
+			System.Data.IDbCommand command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
+			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
+			
+			command.Transaction.Commit ();
+			//command.Transaction.Dispose ();
+			command.Dispose ();
+		}
+
 		[Test] public void Check08RemoveData()
 		{
 			// doit être fait après CheckInsertData

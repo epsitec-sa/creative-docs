@@ -17,6 +17,20 @@ namespace Epsitec.Cresus.DataLayer
 		}
 		
 		
+		public System.Collections.ArrayList		PendingRequests
+		{
+			get
+			{
+				return this.requests;
+			}
+		}
+		
+		
+		public void Clear()
+		{
+			this.requests.Clear ();
+		}
+		
 		public void GenerateRequests(System.Data.DataSet data_set)
 		{
 			foreach (System.Data.DataTable data_table in data_set.Tables)
