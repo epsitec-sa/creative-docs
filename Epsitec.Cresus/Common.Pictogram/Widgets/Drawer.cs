@@ -1599,6 +1599,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected void InvalidateAll(Drawing.Rectangle bbox)
 		{
 			this.InvalidateAll();
+#if false
 			return;
 			//TODO: enlever ces 2 lignes !
 
@@ -1625,6 +1626,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				
 				widget.Invalidate();
 			}
+#endif
 		}
 
 		// Invalide la zone ainsi que celles des clones.
