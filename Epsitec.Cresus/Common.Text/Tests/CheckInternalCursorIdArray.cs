@@ -73,7 +73,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (array.GetCursorPosition (id2) == 2);
 			Debug.Assert.IsTrue (array.GetCursorPosition (id3) == 3);
-			Debug.Assert.IsTrue (array.GetElementCount () == 2);
+			Debug.Assert.IsTrue (array.ElementCount == 2);
 			
 			array.Add (id1, 1);
 			
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (array.GetCursorPosition (id1) == 1);
 			Debug.Assert.IsTrue (array.GetCursorPosition (id3) == 3);
-			Debug.Assert.IsTrue (array.GetElementCount () == 2);
+			Debug.Assert.IsTrue (array.ElementCount == 2);
 			
 			array.Add (id2, 2);
 			
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (array.GetCursorPosition (id1) == 1);
 			Debug.Assert.IsTrue (array.GetCursorPosition (id2) == 2);
-			Debug.Assert.IsTrue (array.GetElementCount () == 2);
+			Debug.Assert.IsTrue (array.ElementCount == 2);
 			
 			array.Add (id3, 3);
 			
@@ -109,11 +109,11 @@ namespace Epsitec.Common.Text.Tests
 			array.Remove (id1);
 			
 			Debug.Assert.IsTrue (array.GetCursorPosition (id2) == 2);
-			Debug.Assert.IsTrue (array.GetElementCount () == 1);
+			Debug.Assert.IsTrue (array.ElementCount == 1);
 			
 			array.Remove (id2);
 			
-			Debug.Assert.IsTrue (array.GetElementCount () == 0);
+			Debug.Assert.IsTrue (array.ElementCount == 0);
 			
 			Internal.CursorIdArray a = new Internal.CursorIdArray ();
 			Internal.CursorIdArray b = new Internal.CursorIdArray ();
@@ -124,8 +124,8 @@ namespace Epsitec.Common.Text.Tests
 			
 			a.ProcessMigration (25, b);
 			
-			Debug.Assert.IsTrue (a.GetElementCount () == 2);
-			Debug.Assert.IsTrue (b.GetElementCount () == 1);
+			Debug.Assert.IsTrue (a.ElementCount == 2);
+			Debug.Assert.IsTrue (b.ElementCount == 1);
 			
 			Debug.Assert.IsTrue (a.GetCursorPosition (id1) == 10);
 			Debug.Assert.IsTrue (a.GetCursorPosition (id2) == 20);
@@ -133,8 +133,8 @@ namespace Epsitec.Common.Text.Tests
 			
 			a.ProcessMigration (20, b);
 			
-			Debug.Assert.IsTrue (a.GetElementCount () == 2);
-			Debug.Assert.IsTrue (b.GetElementCount () == 1);
+			Debug.Assert.IsTrue (a.ElementCount == 2);
+			Debug.Assert.IsTrue (b.ElementCount == 1);
 			
 			Debug.Assert.IsTrue (a.GetCursorPosition (id1) == 10);
 			Debug.Assert.IsTrue (a.GetCursorPosition (id2) == 20);
@@ -142,8 +142,8 @@ namespace Epsitec.Common.Text.Tests
 			
 			a.ProcessMigration (18, b);
 			
-			Debug.Assert.IsTrue (a.GetElementCount () == 1);
-			Debug.Assert.IsTrue (b.GetElementCount () == 2);
+			Debug.Assert.IsTrue (a.ElementCount == 1);
+			Debug.Assert.IsTrue (b.ElementCount == 2);
 			
 			Debug.Assert.IsTrue (a.GetCursorPosition (id1) == 10);
 			Debug.Assert.IsTrue (b.GetCursorPosition (id2) == 2);
@@ -157,8 +157,8 @@ namespace Epsitec.Common.Text.Tests
 			
 			a.ProcessMigration (5, b);
 			
-			Debug.Assert.IsTrue (a.GetElementCount () == 0);
-			Debug.Assert.IsTrue (b.GetElementCount () == 3);
+			Debug.Assert.IsTrue (a.ElementCount == 0);
+			Debug.Assert.IsTrue (b.ElementCount == 3);
 			
 			Debug.Assert.IsTrue (b.GetCursorPosition (id1) == 5);
 			Debug.Assert.IsTrue (b.GetCursorPosition (id2) == 15);

@@ -10,8 +10,8 @@ namespace Epsitec.Common.Text.Internal
 	{
 		public StyleTable()
 		{
-			this.font_styles = null;
-			this.rich_styles = null;
+			this.simple_styles = null;
+			this.rich_styles   = null;
 		}
 		
 		
@@ -188,19 +188,19 @@ namespace Epsitec.Common.Text.Internal
 			}
 			else
 			{
-				return this.FindFontStyle (style, matcher);
+				return this.FindSimpleStyle (style, matcher);
 			}
 		}
 		
-		private Styles.FontStyle FindFontStyle(Styles.BaseStyle style, StyleMatcher matcher)
+		private Styles.SimpleStyle FindSimpleStyle(Styles.BaseStyle style, StyleMatcher matcher)
 		{
-			if ((this.font_styles == null) ||
-				(this.font_styles.Count == 0))
+			if ((this.simple_styles == null) ||
+				(this.simple_styles.Count == 0))
 			{
 				return null;
 			}
 			
-			foreach (Styles.FontStyle find in this.font_styles)
+			foreach (Styles.SimpleStyle find in this.simple_styles)
 			{
 				if (Styles.BaseStyle.CompareEqual (find, style))
 				{
@@ -266,17 +266,17 @@ namespace Epsitec.Common.Text.Internal
 				Debug.Assert.IsTrue (style.StyleIndex == 0);
 				Debug.Assert.IsTrue (style.CountUsers == 0);
 				
-				for (int i = 0; i < font_styles.Count; i++)
+				for (int i = 0; i < simple_styles.Count; i++)
 				{
-					if (this.font_styles[i] == null)
+					if (this.simple_styles[i] == null)
 					{
-						this.font_styles[i] = style;
+						this.simple_styles[i] = style;
 						style.StyleIndex = i+1;
 						return;
 					}
 				}
 				
-				style.StyleIndex = this.font_styles.Add (style) + 1;
+				style.StyleIndex = this.simple_styles.Add (style) + 1;
 			}
 		}
 		
@@ -300,12 +300,12 @@ namespace Epsitec.Common.Text.Internal
 			else
 			{
 				Debug.Assert.IsTrue (style.StyleIndex != 0);
-				Debug.Assert.IsTrue (this.font_styles[style.StyleIndex-1] == style);
+				Debug.Assert.IsTrue (this.simple_styles[style.StyleIndex-1] == style);
 
 				//	Retire de la liste, sans pour autant réorganiser la liste
 				//	elle-même :
 				
-				this.font_styles[style.StyleIndex-1] = null;
+				this.simple_styles[style.StyleIndex-1] = null;
 				
 				style.StyleIndex = 0;
 			}
@@ -320,7 +320,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		private delegate bool StyleMatcher(Styles.BaseStyle style);
 		
-		private System.Collections.ArrayList	font_styles;
+		private System.Collections.ArrayList	simple_styles;
 		private System.Collections.ArrayList	rich_styles;
 	}
 }

@@ -12,8 +12,8 @@ namespace Epsitec.Common.Text.Internal
 	{
 		public Cursor(Internal.Cursor cursor)
 		{
-			this.free_list_link = cursor.free_list_link;
-			this.chunk_id       = cursor.chunk_id;
+			this.free_link = cursor.free_link;
+			this.chunk_id  = cursor.chunk_id;
 			
 			//	Indique explicitement que ceci est une copie :
 			
@@ -27,11 +27,11 @@ namespace Epsitec.Common.Text.Internal
 		{
 			get
 			{
-				return this.free_list_link;
+				return this.free_link;
 			}
 			set
 			{
-				this.free_list_link = value;
+				this.free_link = value;
 			}
 		}
 		
@@ -69,7 +69,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public override int GetHashCode()
 		{
-			return this.free_list_link
+			return this.free_link
 				 ^ this.chunk_id;
 		}
 
@@ -82,13 +82,13 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool operator ==(Cursor a, Cursor b)
 		{
-			return (a.free_list_link == b.free_list_link)
+			return (a.free_link == b.free_link)
 				&& (a.chunk_id == b.chunk_id);
 		}
 		
 		public static bool operator !=(Cursor a, Cursor b)
 		{
-			return (a.free_list_link != b.free_list_link)
+			return (a.free_link != b.free_link)
 				|| (a.chunk_id != b.chunk_id);
 		}
 		
@@ -104,10 +104,9 @@ namespace Epsitec.Common.Text.Internal
 		//	- CursorTable.RecycleCursor
 		//
 		
-		private Internal.CursorId			free_list_link;
-		
 		private Internal.TextChunkId		chunk_id;
 		
+		private Internal.CursorId			free_link;
 		private Internal.CursorState		cursor_state;
 	}
 }

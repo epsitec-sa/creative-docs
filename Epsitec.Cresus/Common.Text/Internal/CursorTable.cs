@@ -18,7 +18,7 @@ namespace Epsitec.Common.Text.Internal
 			this.free_cursor_id    = 1;
 			this.free_cursor_count = 1;
 			
-			this.cursors[0].DefineCursorState (Internal.CursorState.Fence);
+			this.cursors[0].DefineCursorState (Internal.CursorState.Invalid);
 			this.cursors[1].DefineCursorState (Internal.CursorState.Free);
 		}
 		
@@ -34,7 +34,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public Internal.Cursor ReadCursor(Internal.CursorId id)
 		{
-			Debug.Assert.IsInBounds (id, 1, this.cursors.Length-1);
+			Debug.Assert.IsTrue (id.IsValid);
+			Debug.Assert.IsInBounds (id, 0, this.cursors.Length-1);
 			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
 			
 			return new Internal.Cursor (this.cursors[id]);
@@ -42,7 +43,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void WriteCursor(Internal.CursorId id, Internal.Cursor cursor)
 		{
-			Debug.Assert.IsInBounds (id, 1, this.cursors.Length-1);
+			Debug.Assert.IsTrue (id.IsValid);
+			Debug.Assert.IsInBounds (id, 0, this.cursors.Length-1);
 			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
 			Debug.Assert.IsTrue (this.cursors[id].FreeListLink == 0);
 			Debug.Assert.IsTrue (cursor.FreeListLink == 0);
@@ -56,7 +58,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public Internal.TextChunkId GetCursorTextChunkId(Internal.CursorId id)
 		{
-			Debug.Assert.IsInBounds (id, 1, this.cursors.Length-1);
+			Debug.Assert.IsTrue (id.IsValid);
+			Debug.Assert.IsInBounds (id, 0, this.cursors.Length-1);
 			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
 			
 			return this.cursors[id].TextChunkId;
@@ -64,7 +67,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void SetCursorTextChunkId(Internal.CursorId id, Internal.TextChunkId text_chunk_id)
 		{
-			Debug.Assert.IsInBounds (id, 1, this.cursors.Length-1);
+			Debug.Assert.IsTrue (id.IsValid);
+			Debug.Assert.IsInBounds (id, 0, this.cursors.Length-1);
 			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
 			
 			this.cursors[id].TextChunkId = text_chunk_id;
@@ -72,7 +76,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void ModifyCursorTextChunkId(Internal.CursorId id, int delta)
 		{
-			Debug.Assert.IsInBounds (id, 1, this.cursors.Length-1);
+			Debug.Assert.IsTrue (id.IsValid);
+			Debug.Assert.IsInBounds (id, 0, this.cursors.Length-1);
 			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
 			
 			this.cursors[id].TextChunkId += delta;
@@ -89,6 +94,7 @@ namespace Epsitec.Common.Text.Internal
 			CursorId free = this.free_cursor_id;
 			CursorId next = this.cursors[free].FreeListLink;
 			
+			Debug.Assert.IsTrue (free.IsValid);
 			Debug.Assert.IsTrue (this.cursors[free].CursorState == Internal.CursorState.Free);
 			
 			this.free_cursor_id = next;
@@ -221,7 +227,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 
 		
-		private Internal.Cursor[]				cursors;
+		private Internal.Cursor[]				cursors;			//	1..n; prendre index tel quel (zéro = invalide)
 		private Internal.CursorId				free_cursor_id;
 		private int								free_cursor_count;
 		private int								gen_id;

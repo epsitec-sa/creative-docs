@@ -16,19 +16,30 @@ namespace Epsitec.Common.Text.Tests
 			
 			int cursor_id = story1.NewCursor ();
 			
-			ulong[] text = new ulong[6000];
+			ulong[] text   = new ulong[6000];
+			string  sample = "ceci est un bref exemple de texte français permettant de générer des fréquences " +
+				/**/         "correctes au niveau de l'utilisation des divers caractères (si l'on fait, bien " +
+				/**/		 "sûr abstraction de l'ordre dans lequel les lettres apparaissent, et que l'on " +
+				/**/		 "oublie les lettres majuscules).";
 			
-			for (int i = 0; i < text.Length; i += 4)
-			{
-				text[i+0] = 'A';
-				text[i+1] = 'b';
-				text[i+2] = 'c';
-				text[i+3] = ' ';
-			}
+			int size = 1*1024*1024/8;
 			
-			System.Diagnostics.Trace.WriteLine ("Generating 8MB of text.");
-			while (story1.TextLength < 1*1000*1000)
+			System.Random random = new System.Random (1);
+			
+			System.Diagnostics.Trace.WriteLine (string.Format ("Generating {0}MB of text.", 8*size / (1024*1024)));
+			
+			while (story1.TextLength < size)
 			{
+				for (int i = 0; i < text.Length; i += 4)
+				{
+					int p = random.Next (0, sample.Length-4);
+					
+					text[i+0] = sample[p+0];
+					text[i+1] = sample[p+1];
+					text[i+2] = sample[p+2];
+					text[i+3] = sample[p+3];
+				}
+			
 				story1.InsertText (cursor_id, text);
 			}
 			
@@ -53,7 +64,7 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Trace.WriteLine ("Saving compressed file.");
 			using (System.IO.FileStream file = new System.IO.FileStream (@"c:\test.compressed", System.IO.FileMode.OpenOrCreate, System.IO.FileAccess.Write))
 			{
-				using (System.IO.Stream stream = Common.IO.Compression.CreateDeflateStream (file, 1))
+				using (System.IO.Stream stream = Common.IO.Compression.CreateDeflateStream (file, 3))
 				{
 					story1.WriteRawText (stream);
 					stream.Flush ();

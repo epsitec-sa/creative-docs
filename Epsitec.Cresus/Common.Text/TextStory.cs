@@ -4,18 +4,24 @@
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// Summary description for TextStory.
+	/// La classe TextStory représente un texte complet, avec tous ses attributs
+	/// typographiques.
 	/// </summary>
 	public class TextStory
 	{
 		public TextStory()
 		{
-			this.text_chunks = new Internal.TextChunk[1];
+			this.text_chunks = new Internal.TextChunk[2];
 			this.text_length = 0;
 			
 			this.cursors = new Internal.CursorTable ();
 			
-			this.text_chunks[0] = new Internal.TextChunk ();
+			//	Le tableau des morceaux de texte utilise les TextChunkId comme
+			//	index; comme TextChunkId = 0 n'est pas valide, il faut décaler
+			//	le contenu d'un cran :
+			
+			this.text_chunks[0] = null;
+			this.text_chunks[1] = new Internal.TextChunk ();
 		}
 		
 		
@@ -33,11 +39,11 @@ namespace Epsitec.Common.Text
 			Internal.CursorId id     = this.cursors.NewCursor ();
 			Internal.Cursor   cursor = this.cursors.ReadCursor (id);
 			
-			cursor.TextChunkId = 0;
+			cursor.TextChunkId = 1;
 			
 			this.cursors.WriteCursor (id, cursor);
 			
-			this.text_chunks[0].Cursors.Add (id, 0);
+			this.text_chunks[1].Cursors.Add (id, 0);
 			
 			return id;
 		}
@@ -45,7 +51,10 @@ namespace Epsitec.Common.Text
 		
 		public void InsertText(int cursor_id, ulong[] text)
 		{
-			Internal.Cursor      cursor   = this.cursors.ReadCursor (cursor_id);
+			Internal.Cursor cursor = this.cursors.ReadCursor (cursor_id);
+			
+			Debug.Assert.IsTrue (cursor.TextChunkId.IsValid);
+			
 			Internal.TextChunkId chunk_id = cursor.TextChunkId;
 			Internal.TextChunk   chunk    = this.text_chunks[chunk_id];
 			
@@ -53,12 +62,13 @@ namespace Epsitec.Common.Text
 			
 			chunk.InsertText (cursor_position, text);
 			
-			//	Si l'insertion génère un morceau de texte trop gros, on le découpe en
-			//	deux parts égales :
+			//	Si l'insertion génère un morceau de texte trop gros, on le découpe
+			//	en deux parts égales :
 			
 			if (chunk.TextLength > TextStory.TextChunkSplitSize)
 			{
 				this.SplitTextChunk (chunk_id, chunk.TextLength / 2);
+				this.OptimizeTextChunk (chunk_id);
 			}
 			
 			this.text_length += text.Length;
@@ -80,27 +90,31 @@ namespace Epsitec.Common.Text
 			
 			stream.Write (header, 0, header.Length);
 			
+			//	Commence par déterminer la place qui sera nécessaire pour stocker
+			//	le plus gros morceau de texte :
+			
 			int max_size = 0;
 			
-			for (int i = 0; i < this.text_chunks.Length; i++)
+			for (int i = 1; i < this.text_chunks.Length; i++)
 			{
 				max_size = System.Math.Max (max_size, this.text_chunks[i].TextLength);
 			}
 			
 			byte[] buffer = new byte[8*max_size];
 			
-			for (int i = 0; i < this.text_chunks.Length; i++)
+			//	Extrait les données pour les envoyer vers le stream :
+			
+			for (int i = 1; i < this.text_chunks.Length; i++)
 			{
-				int length;
-				this.text_chunks[i].SaveRawText (buffer, out length);
-				stream.Write (buffer, 0, 8*length);
+				int count = this.text_chunks[i].GetRawText (buffer);
+				stream.Write (buffer, 0, count);
 			}
 		}
 		
 		internal void ReadRawText(System.IO.Stream stream)
 		{
 			if ((this.text_length > 0) ||
-				(this.text_chunks.Length > 1) ||
+				(this.text_chunks.Length > 2) ||
 				(this.cursors.CursorCount > 0))
 			{
 				throw new System.InvalidOperationException ("TextStory must be empty.");
@@ -121,7 +135,7 @@ namespace Epsitec.Common.Text
 				{
 					int n = (length + TextStory.TextChunkIdealSize - 1) / TextStory.TextChunkIdealSize;
 					
-					this.text_chunks = new Internal.TextChunk[n];
+					this.text_chunks = new Internal.TextChunk[n+1];
 					this.text_length = length;
 					
 					int    count  = 8*TextStory.TextChunkIdealSize;
@@ -134,9 +148,12 @@ namespace Epsitec.Common.Text
 					again:
 						if (read < count)
 						{
-							//	Il se peut que le Read n'ait pas retourné tout ce qui lui a été
-							//	demandé (en cas de décompression, par exemple). Dans ce cas, il
-							//	faut tenter de lire la suite par petits morceaux :
+							//	Il se peut que le Read n'ait pas retourné tout ce
+							//	qui lui a été demandé, sans pour autant que la fin
+							//	ait été atteinte (par ex. lors de décompression).
+
+							//	Dans ce cas, il faut tenter de lire la suite par
+							//	petits morceaux :
 							
 							int more = stream.Read (buffer, read, count-read);
 							
@@ -153,8 +170,11 @@ namespace Epsitec.Common.Text
 							}
 						}
 						
-						this.text_chunks[i] = new Internal.TextChunk ();
-						this.text_chunks[i].LoadRawText (buffer, read/8);
+						//	On décale l'index des morceaux de 1 cran (à cause du
+						//	TextChunkId = 0 qui n'est pas valide).
+						
+						this.text_chunks[i+1] = new Internal.TextChunk ();
+						this.text_chunks[i+1].SetRawText (buffer, 0, read);
 					}
 					
 					return;
@@ -173,7 +193,7 @@ namespace Epsitec.Common.Text
 			
 			Debug.Assert.IsInBounds (position, 0, this.text_length);
 			
-			for (int i = 0; i < this.text_chunks.Length; i++)
+			for (int i = 1; i < this.text_chunks.Length; i++)
 			{
 				position -= this.text_chunks[i].TextLength;
 				
@@ -193,11 +213,12 @@ namespace Epsitec.Common.Text
 		{
 			//	Détermine la position du début du morceau spécifié.
 			
+			Debug.Assert.IsTrue (id.IsValid);
 			Debug.Assert.IsInBounds (id, 0, this.text_chunks.Length-1);
 			
 			int position = 0;
 			
-			for (int i = 0; i < id; i++)
+			for (int i = 1; i < id; i++)
 			{
 				position += this.text_chunks[i].TextLength;
 			}
@@ -206,12 +227,23 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		private void OptimizeTextChunk(Internal.TextChunkId id)
+		{
+			//	Optimise l'utilisation de la mémoire du morceau de texte.
+			
+			Debug.Assert.IsTrue (id.IsValid);
+			Debug.Assert.IsInBounds (id, 0, this.text_chunks.Length-1);
+			
+			
+		}
+		
 		private void SplitTextChunk(Internal.TextChunkId id, int offset)
 		{
 			//	Partage un morceau de texte devenu trop grand en deux morceaux
 			//	distincts. Les curseurs dans la table globale doivent tous être
 			//	vérifiés et éventuellement ajustés.
 			
+			Debug.Assert.IsTrue (id.IsValid);
 			Debug.Assert.IsInBounds (id, 0, this.text_chunks.Length-1);
 			Debug.Assert.IsInBounds (offset, 0, this.text_chunks[id].TextLength);
 			
@@ -255,12 +287,12 @@ namespace Epsitec.Common.Text
 			//	fraîchement créé (ils n'ont pas été affectés par la mise à jour qui
 			//	vient juste d'être faite) :
 			
-			Internal.CursorIdArray curs_2 = this.text_chunks[id_2].Cursors;
-			int                    count  = curs_2.GetElementCount ();
+			Internal.CursorIdArray fresh = this.text_chunks[id_2].Cursors;
+			int                    count = fresh.ElementCount;
 			
 			for (int i = 0; i < count; i++)
 			{
-				this.cursors.ModifyCursorTextChunkId (curs_2.GetElementCursorId (i), 1);
+				this.cursors.ModifyCursorTextChunkId (fresh.GetElementCursorId (i), 1);
 			}
 		}
 		
@@ -269,7 +301,7 @@ namespace Epsitec.Common.Text
 		protected const int						TextChunkSplitSize = 15000;
 		protected const int						TextChunkMergeSize =  8000;
 		
-		private Internal.TextChunk[]			text_chunks;
+		private Internal.TextChunk[]			text_chunks;		//	1..n; prendre index tel quel (zéro = invalide)
 		private int								text_length;
 		private Internal.CursorTable			cursors;
 	}

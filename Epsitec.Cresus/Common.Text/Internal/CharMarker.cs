@@ -29,16 +29,16 @@ namespace Epsitec.Common.Text.Internal
 		 *	[a][bbb bbbb]:[cccc ccc][d:dddd dddd:dddd dddd]:[mmmm mmmm]:[xxx][y yyyy:yyyy yyyy:yyyy yyyy]
 		 *
 		 *	- bit 63 : a,  1-bit, "rich style flag"
-		 *	- 62..56 : b,  7-bit, "extra index"
-		 *	- 55..49 : c,  7-bit, "local index"
-		 *	- 48..32 : d, 17-bit, "style index"
+		 *	- 62..56 : b,  7-bit, "extra index"			1..100
+		 *	- 55..49 : c,  7-bit, "local index"			1..100
+		 *	- 48..32 : d, 17-bit, "style index"			1..100'000
 		 *	- 31..24 : m,  8-bit, "markers"
 		 *  - 23..21 : x,  3-bit, "unicode flags"
 		 *	- 20...0 : y, 21-bit, "unicode code"
 		 *
 		 *	- Le "rich style flag" indique si le "style index" pointe vers une
-		 *	  description de fonte (false => Styles.FontStyle) ou vers une des-
-		 *	  cription de style riche (true => Styles.RichStyle).
+		 *	  description de style simple (false => Styles.SimpleStyle) ou vers
+		 *	  une description de style riche (true => Styles.RichStyle).
 		 *
 		 *	- Le "extra index" pointe (au sein du style) sur un descripteur qui
 		 *	  définit des propriétés non typographiques (couleur, langue, etc.)

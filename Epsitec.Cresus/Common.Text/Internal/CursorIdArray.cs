@@ -22,7 +22,7 @@ namespace Epsitec.Common.Text.Internal
 			//	donnée.
 			
 			Debug.Assert.IsFalse (this.Contains (id));
-			Debug.Assert.IsTrue (position >= 0);
+			Debug.Assert.IsInBounds (position, 0, 1000000-1);
 			
 			//	Ici, il n'y a aucun moyen de savoir si la position spécifiée est
 			//	valide par rapport au TextChunk, car il n'y a pas de lien direct
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Text.Internal
 			//	Déplace le curseur spécifié à la nouvelle position donnée.
 			
 			Debug.Assert.IsTrue (this.Contains (id));
-			Debug.Assert.IsTrue (position >= 0);
+			Debug.Assert.IsInBounds (position, 0, 1000000-1);
 			
 			int offset;
 			int from_index = this.FindElement (id);
@@ -103,10 +103,14 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public int               GetElementCount()
+		public int								ElementCount
 		{
-			return this.length;
+			get
+			{
+				return this.length;
+			}
 		}
+		
 		
 		public Internal.CursorId GetElementCursorId(int element)
 		{
@@ -207,6 +211,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		private int FindElement(Internal.CursorId id)
 		{
+			Debug.Assert.IsTrue (id.IsValid);
+			
 			//	Trouve l'élément qui décrit le curseur spécifié et retourne
 			//	son index.
 			

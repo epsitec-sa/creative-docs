@@ -4,7 +4,8 @@
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
-	/// Summary description for TextChunk.
+	/// La classe TextChunk stocke un morceau de texte sous la forme d'un
+	/// tableau de mots de 64 bits.
 	/// </summary>
 	internal sealed class TextChunk
 	{
@@ -34,7 +35,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		public ulong						this[Internal.TextChunkId position]
+		public ulong						this[int position]
 		{
 			get
 			{
@@ -182,23 +183,30 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public void SaveRawText(byte[] buffer, out int length)
+		public int GetRawText(byte[] buffer)
 		{
 			int count = 8*this.length;
 			
+			Debug.Assert.IsNotNull (buffer);
 			Debug.Assert.IsTrue (buffer.Length >= count);
 			
 			System.Buffer.BlockCopy (this.text, 0, buffer, 0, count);
 			
-			length = this.length;
+			return count;
 		}
 		
-		public void LoadRawText(byte[] data, int length)
+		public void SetRawText(byte[] data, int offset, int count)
 		{
+			Debug.Assert.IsNotNull (data);
+			Debug.Assert.IsTrue (offset >= 0);
+			Debug.Assert.IsTrue ((count % 8) == 0);
+			
+			int length = count/8;
+			
 			this.text   = new ulong[length];
 			this.length = length;
 			
-			System.Buffer.BlockCopy (data, 0, this.text, 0, 8*length);
+			System.Buffer.BlockCopy (data, offset, this.text, 0, count);
 			
 			this.acc_markers       = 0;
 			this.acc_markers_valid = false;
@@ -267,7 +275,11 @@ namespace Epsitec.Common.Text.Internal
 		
 		private void OptimizeTextBuffer()
 		{
-			if (this.text.Length > this.length)
+			int delta = this.text.Length - this.length;
+			
+			Debug.Assert.IsTrue (delta >= 0);
+			
+			if (delta > 4)
 			{
 				ulong[] old_text = this.text;
 				ulong[] new_text = new ulong[this.length];
@@ -276,8 +288,6 @@ namespace Epsitec.Common.Text.Internal
 				
 				this.text = new_text;
 			}
-			
-			Debug.Assert.IsTrue (this.text.Length == this.length);
 		}
 		
 		

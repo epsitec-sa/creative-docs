@@ -4,14 +4,28 @@
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
-	/// La structure CursorId encapsule un identificateur pointant sur
-	/// une structure Cursor.
+	/// La structure CursorId encapsule un identificateur lié à une structure
+	/// de type Internal.Cursor.
 	/// </summary>
 	internal struct CursorId
 	{
 		public CursorId(int id)
 		{
 			this.value = id;
+		}
+		
+		
+		public bool								IsValid
+		{
+			//	Un curseur est déclaré comme étant valide s'il a un identificateur
+			//	strictement positif.
+			
+			//	CursorId = 0 n'est donc pas valide.
+			
+			get
+			{
+				return this.value > 0;
+			}
 		}
 		
 		
@@ -26,6 +40,6 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		private int			value;
+		private int								value;
 	}
 }

@@ -12,6 +12,6 @@ namespace Epsitec.Common.Text.Internal
 		
 		Allocated	= 1,	//	pour CursorTable: curseur alloué
 		Free		= 2,	//	pour CursorTable: curseur libre
-		Fence		= 3,	//	pour CursorTable: curseur "frontière"
+		Invalid		= 3,	//	pour CursorTable: curseur non valide (id = 0)
 	}
 }
