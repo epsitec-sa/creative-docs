@@ -4,7 +4,9 @@
 namespace Epsitec.Common.Text.Internal
 {
 	/// <summary>
-	/// Summary description for StyleTable.
+	/// La classe StyleTable permet d'accéder aux styles et aux réglages d'après
+	/// le code d'un caractère. De manière interne, StyleTable gère deux listes
+	/// avec les styles simples et les styles riches.
 	/// </summary>
 	internal sealed class StyleTable
 	{

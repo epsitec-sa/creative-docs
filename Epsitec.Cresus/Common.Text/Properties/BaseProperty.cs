@@ -30,7 +30,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		public void UpdateVersion()
 		{
-			this.version = TextStyle.CurrentVersion;
+			this.version = StyleVersion.Current;
 		}
 		
 		
