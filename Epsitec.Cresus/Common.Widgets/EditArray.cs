@@ -551,8 +551,11 @@ namespace Epsitec.Common.Widgets
 					
 					for (int i = 0; i < this.edit_widgets.Length; i++)
 					{
+						bool read_only = this.host.Columns[i].IsReadOnly;
+						
 						this.edit_widgets[i].Text = value[i];
-						this.edit_widgets[i].IsReadOnly = this.host.Columns[i].IsReadOnly;
+						this.edit_widgets[i].IsReadOnly = read_only;
+						this.edit_widgets[i].SetEnabled (!read_only);
 					}
 					
 					this.setting_values = false;

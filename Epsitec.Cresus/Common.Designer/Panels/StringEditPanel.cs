@@ -6,6 +6,8 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Designer.Panels
 {
+	using CultureInfo = System.Globalization.CultureInfo;
+	
 	/// <summary>
 	/// La classe StringEditPanel réalise un panneau pour l'édition de
 	/// textes contenus dans un bundle.
@@ -87,6 +89,7 @@ namespace Epsitec.Common.Designer.Panels
 			
 			this.lang_combo.Width = 80;
 			this.lang_combo.Dock  = this.edit_array.ArrayToolBar.OppositeIconDockStyle;
+			this.lang_combo.SelectedIndexChanged += new EventHandler (this.HandleLanguageComboSelectedIndexChanged);
 			
 			this.edit_array.ArrayToolBar.Items.Add (this.lang_combo);
 			
@@ -178,6 +181,22 @@ namespace Epsitec.Common.Designer.Panels
 			
 			this.edit_array.HitTestTable (e.Point, out row, out column);
 			this.edit_array.StartEdition (row, column);
+		}
+		
+		private void HandleLanguageComboSelectedIndexChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.lang_combo == sender);
+			
+			string suffix = this.lang_combo.SelectedName;
+			
+			ResourceLevel level;
+			CultureInfo   culture;
+			
+			Resources.MapFromSuffix (suffix, out level, out culture);
+			
+			this.edit_array.ValidateEdition (true);
+			this.store.SetActive (level, culture);
+			this.edit_array.InvalidateContents ();
 		}
 		
 		

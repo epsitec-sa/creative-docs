@@ -295,6 +295,27 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public static string GetLevelCaption(ResourceLevel level, CultureInfo culture)
+		{
+			if (culture == null)
+			{
+				culture = Resources.Culture;
+			}
+			
+			switch (level)
+			{
+				case ResourceLevel.Default:
+					return "*";
+				case ResourceLevel.Localised:
+					return culture.DisplayName;
+				case ResourceLevel.Customised:
+					return string.Concat ("Perso. ", culture.DisplayName);
+			}
+			
+			throw new ResourceException (string.Format ("Invalid level {0} specified in GetLevelCaption.", level));
+		}
+		
+		
 		public static string[] GetBundleIds(string name_filter)
 		{
 			return Resources.GetBundleIds (name_filter, null, ResourceLevel.Default, Resources.Culture);

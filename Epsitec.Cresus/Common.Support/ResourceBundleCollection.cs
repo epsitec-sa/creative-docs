@@ -50,8 +50,7 @@ namespace Epsitec.Common.Support
 			{
 				foreach (ResourceBundle bundle in this.list)
 				{
-					if ((bundle.ResourceLevel == level) &&
-						((bundle.Culture == culture) || (level == ResourceLevel.Default)))
+					if (Resources.EqualCultures (bundle.ResourceLevel, bundle.Culture, level, culture))
 					{
 						return bundle;
 					}

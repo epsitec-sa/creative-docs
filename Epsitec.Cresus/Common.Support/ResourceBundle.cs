@@ -263,6 +263,11 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public void Insert(Field field)
+		{
+			this.Insert (this.fields.Length, field);
+		}
+		
 		public void Insert(int index, Field field)
 		{
 			int len = this.fields.Length;

@@ -3,10 +3,11 @@
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
-using System.Globalization;
 
 namespace Epsitec.Common.Designer
 {
+	using CultureInfo = System.Globalization.CultureInfo;
+	
 	/// <summary>
 	/// La classe StringEditController gère l'édition d'un bundle de ressources
 	/// textuelles.
@@ -105,6 +106,8 @@ namespace Epsitec.Common.Designer
 				this.controller = controller;
 				
 				this.bundles.FieldsChanged += new Epsitec.Common.Support.EventHandler (this.HandleBundleFieldsChanged);
+				
+				this.SetActive (ResourceLevel.Default, null);
 			}
 			
 			
@@ -166,13 +169,23 @@ namespace Epsitec.Common.Designer
 			
 			public string GetCellText(int row, int column)
 			{
-				ResourceBundle.Field field = this.DefaultBundle[row];
+				ResourceBundle.Field field;
+				string name;
 				
 				switch (column)
 				{
 					case 0:
+						field = this.DefaultBundle[row];
 						return TextLayout.ConvertToTaggedText (field.Name);
 					case 1:
+						name  = this.DefaultBundle[row].Name;
+						field = this.ActiveBundle[name];
+						
+						if (field == null)
+						{
+							return this.DefaultBundle[row].AsString;
+						}
+						
 						return field.AsString;
 				}
 				
@@ -183,15 +196,30 @@ namespace Epsitec.Common.Designer
 			{
 				this.changing++;
 				
-				ResourceBundle.Field field = this.DefaultBundle[row];
+				ResourceBundle.Field field;
+				string name;
 				
 				switch (column)
 				{
 					case 0:
+						field = this.DefaultBundle[row];
 						field.SetName (TextLayout.ConvertToSimpleText (value));
 						break;
 					case 1:
-						field.SetStringValue (value);
+						name  = this.DefaultBundle[row].Name;
+						field = this.ActiveBundle[name];
+						
+						if (field == null)
+						{
+							field = this.ActiveBundle.CreateField (ResourceFieldType.Data);
+							field.SetName (name);
+							field.SetStringValue (value);
+							this.ActiveBundle.Insert (field);
+						}
+						else
+						{
+							field.SetStringValue (value);
+						}
 						break;
 				}
 				
@@ -234,6 +262,14 @@ namespace Epsitec.Common.Designer
 			public event Support.EventHandler	StoreChanged;
 			#endregion
 			
+			public ResourceBundle				ActiveBundle
+			{
+				get
+				{
+					return this.active_bundle;
+				}
+			}
+			
 			public ResourceBundle				DefaultBundle
 			{
 				get
@@ -264,6 +300,10 @@ namespace Epsitec.Common.Designer
 			}
 			
 			
+			public void SetActive(ResourceLevel level, CultureInfo culture)
+			{
+				this.active_bundle = this.bundles[level, culture];
+			}
 			
 			public void GetLevelNamesAndCaptions(out string[] names, out string[] captions)
 			{
@@ -301,6 +341,7 @@ namespace Epsitec.Common.Designer
 			
 			
 			private ResourceBundleCollection	bundles;
+			private ResourceBundle				active_bundle;
 			private StringEditController		controller;
 			private int							changing;
 		}
