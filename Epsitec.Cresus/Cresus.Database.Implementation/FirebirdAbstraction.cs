@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			this.db_access  = db_access;
 			this.db_factory = db_factory;
-			this.db_connection_string = this.CreateConnectionString (db_access);
+			this.db_connection_string = this.MakeConnectionString (db_access);
 			
 			if (db_access.Create)
 			{
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			FirebirdAbstraction.ValidateName (db_access, db_access.Server);
 			
 			//	L'appel FbConnection.CreateDatabase ne sait pas créer le dossier si nécessaire
-			string filename = this.CreateDbFileName (db_access);
+			string filename = this.MakeDbFileName (db_access);
 			System.IO.Directory.CreateDirectory (Path.GetDirectoryName (filename));
 			
 			System.Collections.Hashtable values = new System.Collections.Hashtable ();
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 		
 		
-		protected virtual string CreateConnectionString(DbAccess db_access)
+		protected virtual string MakeConnectionString(DbAccess db_access)
 		{
 			FirebirdAbstraction.ValidateName (db_access, db_access.LoginName);
 			FirebirdAbstraction.ValidateName (db_access, db_access.LoginPassword);
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			buffer.AppendFormat ("User={0};", db_access.LoginName);
 			buffer.AppendFormat ("Password={0};", db_access.LoginPassword);
 			buffer.AppendFormat ("DataSource={0};", db_access.Server);
-			buffer.AppendFormat ("Database={0};", this.CreateDbFileName (db_access));
+			buffer.AppendFormat ("Database={0};", this.MakeDbFileName (db_access));
 			buffer.AppendFormat ("Port={0};", FirebirdAbstraction.fb_port);
 			buffer.AppendFormat ("Dialect={0};", FirebirdAbstraction.fb_dialect);
 			buffer.AppendFormat ("Packet Size={0};", FirebirdAbstraction.fb_page_size);
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			return buffer.ToString ();
 		}
 		
-		protected virtual string CreateDbFileName(DbAccess db_access)
+		protected virtual string MakeDbFileName(DbAccess db_access)
 		{
 			FirebirdAbstraction.ValidateName (db_access, db_access.Database);
 			
