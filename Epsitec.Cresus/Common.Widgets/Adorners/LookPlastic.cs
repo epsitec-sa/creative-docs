@@ -31,11 +31,6 @@ namespace Epsitec.Common.Widgets.Adorner
 			b = 1-(1-this.colorControlLight.B)*0.5;
 			this.colorScrollerBack = Drawing.Color.FromRGB(r,g,b);
 
-			r = 1-(1-this.colorCaption.R)*0.25;
-			g = 1-(1-this.colorCaption.G)*0.25;
-			b = 1-(1-this.colorCaption.B)*0.25;
-			this.colorCaptionLight = Drawing.Color.FromRGB(r,g,b);
-
 			r = 1-(1-this.colorControlLight.R)*0.7;
 			g = 1-(1-this.colorControlLight.G)*0.7;
 			b = 1-(1-this.colorControlLight.B)*0.7;
@@ -354,6 +349,15 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				this.PaintImageButton(graphics, rect, 0);
 			}
+			
+			if ( (state&WidgetState.Focused) != 0 )
+			{
+				rInside = rect;
+				rInside.Inflate(-2.5, -2.5);
+				Drawing.Path pInside = this.PathRoundRectangle(rInside, this.RetRadiusFrame(rect));
+				graphics.Rasterizer.AddOutline(pInside, 1);
+				graphics.RenderSolid(this.colorControlDark);
+			}
 		}
 
 		// Dessine le texte d'un bouton.
@@ -397,7 +401,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 
 				double radius = this.RetRadiusFrame(rect);
-				Drawing.Path path = PathRoundRectangle(rect, radius);
+				Drawing.Path path = this.PathRoundRectangle(rect, radius);
 				graphics.Rasterizer.AddOutline(path, 1);
 				graphics.RenderSolid(this.colorBorder);
 			}
@@ -413,7 +417,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 
 				double radius = this.RetRadiusFrame(rect);
-				Drawing.Path path = PathRoundRectangle(rect, radius);
+				Drawing.Path path = this.PathRoundRectangle(rect, radius);
 				graphics.Rasterizer.AddOutline(path, 1);
 				graphics.RenderSolid(this.colorBorder);
 			}
@@ -540,7 +544,7 @@ namespace Epsitec.Common.Widgets.Adorner
 								  Widgets.WidgetState state)
 		{
 			double radius = this.RetRadiusFrame(frameRect);
-			Drawing.Path path = PathRoundRectangle(frameRect, radius);
+			Drawing.Path path = this.PathRoundRectangle(frameRect, radius);
 			graphics.Rasterizer.AddOutline(path, 1);
 			graphics.RenderSolid(this.colorBorder);
 
@@ -684,7 +688,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 
 			double radius = this.RetRadiusFrame(rect);
-			Drawing.Path path = PathRoundRectangle(rect, radius);
+			Drawing.Path path = this.PathRoundRectangle(rect, radius);
 			graphics.Rasterizer.AddOutline(path, 1);
 			graphics.RenderSolid(this.colorBorder);
 		}
@@ -702,7 +706,14 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			if ( (state&WidgetState.Selected) != 0 )
 			{
-				this.PaintImageButton(graphics, rect, 33);
+				if ( (state&WidgetState.Focused) != 0 )
+				{
+					this.PaintImageButton(graphics, rect, 33);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, rect, 38);
+				}
 			}
 		}
 
@@ -986,7 +997,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			rect.Width -= 1;
 			double radius = this.RetRadiusFrame(rect);
-			Drawing.Path pInside = PathRoundRectangle(rect, radius);
+			Drawing.Path pInside = this.PathRoundRectangle(rect, radius);
 			graphics.Rasterizer.AddOutline(pInside);
 			graphics.RenderSolid(this.colorBorder);
 		}
@@ -994,6 +1005,56 @@ namespace Epsitec.Common.Widgets.Adorner
 		public void PaintStatusItemForeground(Drawing.Graphics graphics,
 											  Drawing.Rectangle rect,
 											  WidgetState state)
+		{
+		}
+
+		// Dessine un tag.
+		public void PaintTagBackground(Drawing.Graphics graphics,
+									   Drawing.Rectangle rect,
+									   WidgetState state,
+									   Drawing.Color color)
+		{
+			Drawing.Path path;
+			
+			path = new Drawing.Path();
+			path.AppendCircle(rect.Center, rect.Width/2, rect.Height/2);
+			graphics.Rasterizer.AddSurface(path);
+			if ( color.IsEmpty || (state&WidgetState.Enabled) == 0 )
+			{
+				graphics.RenderSolid(this.colorControl);
+			}
+			else
+			{
+				color.A = 0.5;
+				graphics.RenderSolid(color);
+			}
+
+			Drawing.Rectangle rInside;
+
+			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+			{
+				rInside = rect;
+				rInside.Inflate(-1.5, -1.5);
+				path = new Drawing.Path();
+				path.AppendCircle(rInside.Center, rInside.Width/2, rInside.Height/2);
+				graphics.Rasterizer.AddOutline(path, 2);
+				graphics.RenderSolid(this.colorHilite);
+			}
+
+			rInside = rect;
+			rInside.Inflate(-0.5, -0.5);
+			path = new Drawing.Path();
+			path.AppendCircle(rInside.Center, rInside.Width/2, rInside.Height/2);
+			graphics.Rasterizer.AddOutline(path, 1);
+			graphics.RenderSolid(this.colorBorder);
+
+			this.PaintArrow(graphics, rect, state, Direction.Down, PaintTextStyle.Button);
+		}
+
+		public void PaintTagForeground(Drawing.Graphics graphics,
+									   Drawing.Rectangle rect,
+									   WidgetState state,
+									   Drawing.Color color)
 		{
 		}
 
@@ -1023,7 +1084,7 @@ namespace Epsitec.Common.Widgets.Adorner
 								  Drawing.Rectangle rect)
 		{
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorControlDark);
+			graphics.RenderSolid(this.colorControlLightLight);
 		}
 
 		// Dessine le curseur du texte.
@@ -1040,16 +1101,25 @@ namespace Epsitec.Common.Widgets.Adorner
 		
 		// Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 		public void PaintTextSelectionBackground(Drawing.Graphics graphics,
-												 Drawing.Rectangle[] rects)
+												 Drawing.Rectangle[] rects,
+												 WidgetState state)
 		{
 			for (int i = 0; i < rects.Length; i++)
 			{
-				this.PaintImageButton(graphics, rects[i], 33);
+				if ( (state&WidgetState.Focused) != 0 )
+				{
+					this.PaintImageButton(graphics, rects[i], 33);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, rects[i], 38);
+				}
 			}
 		}
 
 		public void PaintTextSelectionForeground(Drawing.Graphics graphics,
-												 Drawing.Rectangle[] rects)
+												 Drawing.Rectangle[] rects,
+												 WidgetState state)
 		{
 		}
 
@@ -1085,7 +1155,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				rFocus.Offset(pos);
 				graphics.Align(ref rFocus);
 				rFocus.Inflate(2.5, -0.5);
-				PaintFocusBox(graphics, rFocus);
+				this.PaintFocusBox(graphics, rFocus);
 			}
 		}
 
@@ -1388,7 +1458,6 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorScrollerBack;
 		protected Drawing.Color		colorCaption;
 		protected Drawing.Color		colorCaptionText;
-		protected Drawing.Color		colorCaptionLight;
 		protected Drawing.Color		colorInfo;
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;
