@@ -47,7 +47,7 @@ namespace Epsitec.Common.Designer.Behaviors
 		
 		public void Add (double coord, double model_coord, double x1, double y1, double x2, double y2, Priority priority, AnchorStyles anchor)
 		{
-			this.Add (coord, model_coord, x1, y1, x2, y2, priority, new Hint (anchor));
+			this.Add (coord, model_coord, x1, y1, x2, y2, priority, anchor == AnchorStyles.None ? null : new Hint (anchor));
 		}
 		
 		public void Add (double coord, double model_coord, double x1, double y1, double x2, double y2, Priority priority, Hint hint)
@@ -197,6 +197,12 @@ namespace Epsitec.Common.Designer.Behaviors
 			that.segments = new Drawing.Segment[this.segments.Length];
 			
 			this.segments.CopyTo (that.segments, 0);
+			
+			for (int i = 0; i < this.hints.Count; i++)
+			{
+				Hint hint = this.hints[i] as Hint;
+				that.hints.Add (hint.Clone ());
+			}
 			
 			return that;
 		}

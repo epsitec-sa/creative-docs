@@ -249,6 +249,7 @@ namespace Epsitec.Common.Designer.Behaviors
 				/**/                                         host_bounds.Top - drop_bounds.Top,
 				/**/                                         drop_bounds.Bottom - host_bounds.Bottom);
 			
+			this.widget.Anchor = anchor;
 			this.widget.Parent = drop_target;
 			
 			this.StopWidgetDragging ();
