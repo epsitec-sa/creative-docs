@@ -92,7 +92,30 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		public int								VisibleRowCount
+		{
+			get
+			{
+				return this.visibleLines;
+			}
+		}
 
+		public int								FullyVisibleRowCount
+		{
+			get
+			{
+				return this.visibleLines;
+			}
+		}
+
+		public int								RowCount
+		{
+			get
+			{
+				return this.Items.Count;
+			}
+		}
 		
 		public void ShowSelected(ScrollShowMode mode)
 		{
@@ -202,7 +225,6 @@ namespace Epsitec.Common.Widgets
 					if ( this.mouseDown )
 					{
 						this.MouseSelect(pos);
-						this.OnSelectedIndexChanged();
 						this.OnSelectionActivated();
 						this.mouseDown = false;
 					}
@@ -214,7 +236,7 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.KeyDown:
-					if ( !this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed) )
+					if (!this.ProcessKeyEvent (message))
 					{
 						return;
 					}
@@ -227,7 +249,7 @@ namespace Epsitec.Common.Widgets
 			message.Consumer = this;
 		}
 
-		protected bool MouseSelect(Drawing.Point pos)
+		protected virtual  bool MouseSelect(Drawing.Point pos)
 		{
 			// Sélectionne la ligne selon la souris.
 			
@@ -248,38 +270,41 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		protected bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
+		protected virtual bool ProcessKeyEvent(Message message)
 		{
+			if ((message.IsAltPressed) ||
+				(message.IsShiftPressed) ||
+				(message.IsCtrlPressed))
+			{
+				return false;
+			}
+			
 			// Gestion d'une touche pressée avec KeyDown dans la liste.
 			
-			int sel;
-			switch ( key )
+			int sel = this.SelectedIndex;
+			
+			switch (message.KeyCode)
 			{
-				case KeyCode.ArrowUp:
-					sel = this.SelectedIndex-1;
-					if ( sel >= 0 )
-					{
-						this.SelectedIndex = sel;
-						this.ShowSelected(ScrollShowMode.Extremity);
-					}
-					break;
-
-				case KeyCode.ArrowDown:
-					sel = this.SelectedIndex+1;
-					if ( sel < this.items.Count )
-					{
-						this.SelectedIndex = sel;
-						this.ShowSelected(ScrollShowMode.Extremity);
-					}
-					break;
-
+				case KeyCode.ArrowUp:	sel--;								break;
+				case KeyCode.ArrowDown:	sel++;								break;
+				case KeyCode.PageUp:	sel -= this.FullyVisibleRowCount-1;	break;
+				case KeyCode.PageDown:	sel += this.FullyVisibleRowCount-1;	break;
+				
 				case KeyCode.Return:
 				case KeyCode.Space:
 					this.OnSelectionActivated();
-					break;
-
+					return true;
+				
 				default:
 					return false;
+			}
+			
+			if (this.SelectedIndex != sel)
+			{
+				sel = System.Math.Max(sel, 0);
+				sel = System.Math.Min(sel, this.RowCount-1);
+				this.SelectedIndex = sel;
+				this.ShowSelected(ScrollShowMode.Extremity);
 			}
 			
 			return true;
@@ -526,6 +551,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.selectedLine = value;
 					this.SetDirty();
+					this.OnSelectedIndexChanged();
 				}
 			}
 		}

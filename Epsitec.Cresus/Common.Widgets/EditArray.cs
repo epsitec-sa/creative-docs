@@ -34,9 +34,7 @@ namespace Epsitec.Common.Widgets
 					
 					if (this.mode == EditArrayMode.Search)
 					{
-						double height = System.Math.Floor (this.EditionZoneHeight * this.row_height + 2);
-						
-						this.InnerTopMargin = height;
+						this.InnerTopMargin = this.edit_line.DesiredHeight;
 						this.edit_line.DetachEditWidgets ();
 						this.edit_line.ColumnCount = this.max_columns;
 					}
@@ -65,6 +63,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public string							SearchCaption
+		{
+			get
+			{
+				return this.search_caption;
+			}
+			set
+			{
+				if (this.search_caption != value)
+				{
+					this.search_caption = value;
+					this.edit_line.UpdateCaption ();
+					this.OnSearchCaptionChanged ();
+				}
+			}
+		}
 		
 		public void StartEdition(int row, int column)
 		{
@@ -180,29 +194,15 @@ namespace Epsitec.Common.Widgets
 					
 					this.edit_line.Bounds = bounds;
 					this.edit_line.SetVisible (true);
-					
-					double max_x = bounds.Width;
-					
-					for (int i = 0; i < this.max_columns; i++)
-					{
-						Drawing.Rectangle cell = this.GetEditCellBounds (i);
-						
-						if (cell.IsValid)
-						{
-							cell.Offset (- this.edit_bounds.X, - this.edit_bounds.Y);
-							cell.Inflate (new Drawing.Margins (1, 0, 1, 0));
-							
-							this.edit_line[i].Bounds = cell;
-							this.edit_line[i].SetVisible (true);
-						}
-						else
-						{
-							this.edit_line[i].SetVisible (false);
-						}
-					}
+					this.edit_line.UpdateGeometry ();
 				}
 				else if (this.edit_line.IsVisible)
 				{
+					if (this.edit_line.ContainsFocus)
+					{
+						this.SetFocused (true);
+					}
+					
 					this.edit_line.SetVisible (false);
 				}
 			}
@@ -229,21 +229,24 @@ namespace Epsitec.Common.Widgets
 			double x1;
 			double x2;
 			
+			Drawing.Rectangle cell = Drawing.Rectangle.Empty;
+			
 			switch (this.mode)
 			{
 				case EditArrayMode.Standard:
 					break;
 				case EditArrayMode.Edition:
-					return this.GetUnclippedCellBounds (this.EditionIndex, column);
+					cell = this.GetUnclippedCellBounds (this.EditionIndex, column);
+					break;
 				case EditArrayMode.Search:
 					if (this.GetUnclippedCellX (column, out x1, out x2))
 					{
-						return new Drawing.Rectangle (x1, this.inner_bounds.Top, x2 - x1, this.table_bounds.Height - this.inner_bounds.Height);
+						cell = new Drawing.Rectangle (x1, this.inner_bounds.Top, x2-x1, this.table_bounds.Top - this.inner_bounds.Top);
 					}
 					break;
 			}
 			
-			return Drawing.Rectangle.Empty;
+			return cell;
 		}
 		
 
@@ -277,6 +280,10 @@ namespace Epsitec.Common.Widgets
 			{
 				this.EditTextChanged (this);
 			}
+		}
+		
+		protected virtual  void OnSearchCaptionChanged()
+		{
 		}
 		
 		
@@ -389,6 +396,40 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
+			public double						DesiredHeight
+			{
+				get
+				{
+					if (this.caption == null)
+					{
+						return this.LineHeight;
+					}
+					else
+					{
+						return 4 + this.LineHeight + this.caption.Height;
+					}
+				}
+			}
+			
+			public double						LineHeight
+			{
+				get
+				{
+					return System.Math.Floor (this.host.EditionZoneHeight * this.host.row_height + 2);
+				}
+			}
+			
+			
+			protected override void Dispose(bool disposing)
+			{
+				if (disposing)
+				{
+					this.caption = null;
+				}
+				
+				base.Dispose (disposing);
+			}
+
 			protected override bool ProcessTabChildrenExit(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 			{
 				if (this.host.mode == EditArrayMode.Search)
@@ -440,7 +481,10 @@ namespace Epsitec.Common.Widgets
 			
 			protected override void ProcessMessage(Message message, Drawing.Point pos)
 			{
-				if (message.Type == MessageType.KeyPress)
+				if ((message.Type == MessageType.KeyPress) &&
+					(message.IsCtrlPressed == false) &&
+					(message.IsShiftPressed == false) &&
+					(message.IsAltPressed == false))
 				{
 					if (this.host.mode == EditArrayMode.Search)
 					{
@@ -451,25 +495,21 @@ namespace Epsitec.Common.Widgets
 								this.host.SetFocused (true);
 								break;
 							
-							case KeyCode.ArrowUp:
-								if (this.host.SelectedIndex > 0)
-								{
-									this.host.SelectedIndex--;
-									this.host.ShowSelected (ScrollShowMode.Extremity);
-								}
-								break;
-							
-							case KeyCode.ArrowDown:
-								if (this.host.SelectedIndex+1 < this.host.RowCount)
-								{
-									this.host.SelectedIndex++;
-									this.host.ShowSelected (ScrollShowMode.Extremity);
-								}
+							case KeyCode.Return:
+								this.host.OnEditTextChanged ();
 								break;
 							
 							default:
-								base.ProcessMessage (message, pos);
-								return;
+								if (this.host.ProcessKeyEvent (message))
+								{
+									//	L'événement a été traité par la liste; on va donc le consommer.
+								}
+								else
+								{
+									base.ProcessMessage (message, pos);
+									return;
+								}
+								break;
 						}
 						
 						message.Consumer = this;
@@ -532,6 +572,75 @@ namespace Epsitec.Common.Widgets
 				this.ColumnCount = 0;
 			}
 			
+			public void UpdateGeometry()
+			{
+				double height = this.LineHeight;
+				double ox = -this.Bounds.X;
+				double oy = -this.Bounds.Y;
+				
+				if (this.caption != null)
+				{
+					double dy = this.caption.Height;
+					double yy = 4;
+					
+					this.caption.Bounds = new Drawing.Rectangle (2, yy + height, this.Client.Width - 4, dy);
+					
+					oy += yy;
+				}
+				
+				for (int i = 0; i < this.edit_widgets.Length; i++)
+				{
+					Drawing.Rectangle cell = this.host.GetEditCellBounds (i);
+						
+					if (cell.IsValid)
+					{
+						cell.Offset (ox, oy);
+						cell.Inflate (0, 1, 0, 1);
+						cell.Height = height;
+						
+						this.edit_widgets[i].Bounds = cell;
+						this.edit_widgets[i].SetVisible (true);
+					}
+					else
+					{
+						this.edit_widgets[i].SetVisible (false);
+					}
+				}
+			}
+			
+			public void UpdateCaption()
+			{
+				string caption = null;
+				
+				if (this.host.mode == EditArrayMode.Search)
+				{
+					caption = this.host.search_caption;
+				}
+				
+				if (caption == null)
+				{
+					if (this.caption != null)
+					{
+						this.caption.Parent = null;
+						this.caption.Dispose ();
+						this.caption = null;
+						this.host.InnerTopMargin = this.LineHeight;
+					}
+				}
+				else
+				{
+					if (this.caption == null)
+					{
+						this.caption = new StaticText (this);
+					}
+					
+					this.caption.Text   = caption;
+					this.caption.Height = System.Math.Floor (this.caption.TextLayout.SingleLineSize.Height * 1.2);
+					
+					this.host.InnerTopMargin = this.DesiredHeight;
+				}
+			}
+			
 			
 			protected void Attach(AbstractTextField widget, int i)
 			{
@@ -582,6 +691,7 @@ namespace Epsitec.Common.Widgets
 			protected int						text_change_count;
 			protected EditArray					host;
 			protected AbstractTextField[]		edit_widgets = new AbstractTextField[0];
+			protected StaticText				caption;
 
 		}
 		#endregion
@@ -597,6 +707,7 @@ namespace Epsitec.Common.Widgets
 		protected double						edit_width   = 0;
 		
 		protected EditArrayMode					mode = EditArrayMode.Standard;
+		protected string						search_caption;
 	}
 	
 	public enum EditArrayMode

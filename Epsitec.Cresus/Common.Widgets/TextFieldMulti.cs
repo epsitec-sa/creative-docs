@@ -133,6 +133,10 @@ namespace Epsitec.Common.Widgets
 					this.MoveLine(1, isShiftPressed, isCtrlPressed);
 					break;
 				
+				case KeyCode.PageUp:
+				case KeyCode.PageDown:
+					//	TODO: gérer PageUp et PageDown...
+				
 				default:
 					return base.ProcessKeyDown(key, isShiftPressed, isCtrlPressed);
 			}

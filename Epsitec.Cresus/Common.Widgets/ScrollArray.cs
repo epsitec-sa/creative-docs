@@ -279,7 +279,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public double							Offset
+		public double							HorizontalOffset
 		{
 			// Offset horizontal.
 			get
@@ -317,6 +317,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		public double							TitleHeight
 		{
 			get
@@ -332,6 +333,24 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		public Drawing.Rectangle				TitleBounds
+		{
+			get
+			{
+				this.Update ();
+				
+				Drawing.Rectangle bounds = new Drawing.Rectangle ();
+				
+				bounds.Left   = this.table_bounds.Left;
+				bounds.Bottom = this.header.Top;
+				bounds.Height = this.title_height;
+				bounds.Right  = this.v_scroller.Right;
+				
+				return bounds;
+			}
+		}
+		
 		
 		public double							InnerTopMargin
 		{
@@ -365,22 +384,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Drawing.Rectangle				TitleBounds
-		{
-			get
-			{
-				this.Update ();
-				
-				Drawing.Rectangle bounds = new Drawing.Rectangle ();
-				
-				bounds.Left   = this.table_bounds.Left;
-				bounds.Bottom = this.header.Top;
-				bounds.Height = this.title_height;
-				bounds.Right  = this.v_scroller.Right;
-				
-				return bounds;
-			}
-		}
 		
 		public double							FreeTableWidth
 		{
@@ -1270,7 +1273,7 @@ invalid:	row    = -1;
 
 		private void HandleHScrollerChanged(object sender)
 		{
-			this.Offset = System.Math.Floor (this.h_scroller.DoubleValue);
+			this.HorizontalOffset = System.Math.Floor (this.h_scroller.DoubleValue);
 			this.UpdateScrollView ();
 		}
 
@@ -1380,7 +1383,7 @@ invalid:	row    = -1;
 					break;
 
 				case MessageType.KeyDown:
-					if (this.ProcessKeyDown (message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed))
+					if (this.ProcessKeyEvent (message))
 					{
 						message.Consumer = this;
 					}
@@ -1398,43 +1401,34 @@ invalid:	row    = -1;
 			}
 		}
 
-		protected virtual  bool ProcessKeyDown(KeyCode key, bool is_shift_pressed, bool is_ctrl_pressed)
+		protected virtual  bool ProcessKeyEvent(Message message)
 		{
+			if ((message.IsAltPressed) ||
+				(message.IsShiftPressed) ||
+				(message.IsCtrlPressed))
+			{
+				return false;
+			}
+			
 			int sel = this.SelectedIndex;
 			
-			switch (key)
+			switch (message.KeyCode)
 			{
-				case KeyCode.ArrowUp:
-					sel -= 1;
-					break;
-				
-				case KeyCode.ArrowDown:
-					sel += 1;
-					break;
-				
-				case KeyCode.PageUp:
-					sel -= this.n_fully_visible_rows - 1;
-					break;
-				
-				case KeyCode.PageDown:
-					sel += this.n_fully_visible_rows - 1;
-					break;
+				case KeyCode.ArrowUp:	sel--;								break;
+				case KeyCode.ArrowDown:	sel++;								break;
+				case KeyCode.PageUp:	sel -= this.FullyVisibleRowCount-1;	break;
+				case KeyCode.PageDown:	sel += this.FullyVisibleRowCount-1;	break;
 				
 				default:
 					return false;
 			}
 			
-			sel = System.Math.Max (0, sel);
-			sel = System.Math.Min (sel, this.max_rows-1);
-			
 			if (this.SelectedIndex != sel)
 			{
+				sel = System.Math.Max(sel, 0);
+				sel = System.Math.Min(sel, this.RowCount-1);
 				this.SelectedIndex = sel;
-				
-				if (!this.IsSelectedVisible)
-				{
-					this.ShowSelected (ScrollShowMode.Extremity);
-				}
+				this.ShowSelected(ScrollShowMode.Extremity);
 			}
 			
 			return true;

@@ -112,19 +112,16 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				switch ( key )
+				switch (key)
 				{
-					case KeyCode.ArrowUp:
-						this.Navigate(-1);
-						return true;
-
-					case KeyCode.ArrowDown:
-						this.Navigate(1);
-						return true;
-
+					case KeyCode.ArrowUp:	this.Navigate (-1);	break;
+					case KeyCode.ArrowDown:	this.Navigate (1);	break;
+					
 					default:
 						return base.ProcessKeyDown(key, isShiftPressed, isCtrlPressed);
 				}
+				
+				return true;
 			}
 			
 			return false;

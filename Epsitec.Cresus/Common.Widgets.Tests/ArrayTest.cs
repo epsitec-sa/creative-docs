@@ -126,13 +126,13 @@ namespace Epsitec.Common.Widgets
 			table.ColumnCount       = 5;
 			table.RowCount          = 100;
 			table.SelectedIndex     = 0;
-			table.EditionIndex      = 1;
-			table.EditionZoneHeight = 2;
 			table.TitleHeight       = 32;
 			table.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
 			table.Clicked              += new MessageEventHandler(this.HandleClicked);
 			table.DoubleClicked        += new MessageEventHandler(this.HandleDoubleClicked);
 			table.PaintForeground      += new PaintEventHandler(this.HandlePaintForeground);
+			table.TitleWidget       = new StaticText (@"<font size=""160%"">ScrollArray test.</font> Double-click to start edition.");
+			table.TagWidget			= new Tag ();
 			
 			for (int x = 0 ; x < table.ColumnCount; x++)
 			{
@@ -146,12 +146,6 @@ namespace Epsitec.Common.Widgets
 					table[y,x] = string.Format ("Val {0}.{1}", y, x);
 				}
 			}
-			
-			StaticText title = new StaticText (@"<font size=""160%"">ScrollArray test.</font> Double-click to start edition.");
-			
-			title.Parent = table;
-			title.Bounds = table.TitleBounds;
-			title.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			
 			window.Show();
 		}
@@ -175,6 +169,7 @@ namespace Epsitec.Common.Widgets
 			table.EditionZoneHeight = 1;
 			table.TitleHeight       = 32;
 			table.DoubleClicked    += new MessageEventHandler(this.HandleEditDoubleClicked);
+			table.TitleWidget       = new StaticText (@"<font size=""160%"">EditArray test.</font> Double-click to start edition (h x 1).");
 			
 			for (int x = 0 ; x < table.ColumnCount; x++)
 			{
@@ -188,12 +183,6 @@ namespace Epsitec.Common.Widgets
 					table[y,x] = string.Format ("Val {0}.{1}", y, x);
 				}
 			}
-			
-			StaticText title = new StaticText (@"<font size=""160%"">EditArray test.</font> Double-click to start edition.");
-			
-			title.Parent = table;
-			title.Bounds = table.TitleBounds;
-			title.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			
 			window.Show();
 		}
@@ -217,12 +206,7 @@ namespace Epsitec.Common.Widgets
 			table.TitleHeight       = 32;
 			table.DoubleClicked    += new MessageEventHandler(this.HandleEditDoubleClicked);
 			table.TextArrayStore    = store;
-			
-			StaticText title = new StaticText (@"<font size=""160%"">EditArray test.</font> Double-click to start edition.");
-			
-			title.Parent = table;
-			title.Bounds = table.TitleBounds;
-			title.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			table.TitleWidget       = new StaticText (@"<font size=""160%"">EditArray test.</font> Double-click to start edition (h x 4).");
 			
 			window.Show();
 		}
@@ -247,58 +231,11 @@ namespace Epsitec.Common.Widgets
 			table.TitleHeight       = 32;
 			table.DoubleClicked    += new MessageEventHandler(this.HandleEditDoubleClicked);
 			table.TextArrayStore    = store;
-			
-			StaticText title = new StaticText (@"<font size=""160%"">EditArray test.</font> Double-click to start edition.");
-			
-			title.Parent = table;
-			title.Bounds = table.TitleBounds;
-			title.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			table.TitleWidget       = new StaticText (@"<font size=""160%"">EditArray test.</font> Double-click to start bundle edition.");
 			
 			window.Show();
 		}
 		
-		
-		[Test] public void CheckScrollArraySearch()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Drawing.Size(400, 300);
-			window.Text = "CheckScrollArraySearch";
-			window.Root.DockMargins = new Drawing.Margins (5, 5, 5, 5);
-			
-			ScrollArray table = new ScrollArray();
-			
-			table.Parent            = window.Root;
-			table.Dock              = DockStyle.Fill;
-			table.ColumnCount       = 5;
-			table.RowCount          = 100;
-			table.SelectedIndex     = 0;
-			table.InnerTopMargin    = 20;
-			table.InnerBottomMargin = 10;
-			
-			for (int x = 0 ; x < table.ColumnCount; x++)
-			{
-				table.SetHeaderText (x, string.Format ("C{0}", x));
-				table.SetColumnWidth (x, 80);
-			}
-			for (int y = 0; y < 100; y++)
-			{
-				table[y,0] = string.Format ("Val {0}.{1}", y/5, 0);
-				table[y,1] = string.Format ("Val {0}.{1}", y/5, y%5);
-				table[y,2] = string.Format ("Val {0}.{1}", y/5, "A");
-				table[y,3] = string.Format ("Val {0}.{1}", y/5, "B");
-				table[y,4] = string.Format ("Val {0}.{1}", y/5, "C");
-			}
-			
-			TextField field = new TextField ();
-			
-			field.Parent       = window.Root;
-			field.Dock         = DockStyle.Bottom;
-			field.TextChanged += new EventHandler (this.HandleCheckScrollArraySearchTextChanged);
-			field.SetProperty ("table", table);
-			
-			window.Show();
-		}
 		
 		[Test] public void CheckEditArraySearch()
 		{
@@ -354,6 +291,8 @@ namespace Epsitec.Common.Widgets
 			table.SelectedIndex     = 0;
 			table.EditionZoneHeight = 1;
 			table.EditArrayMode     = EditArrayMode.Search;
+			table.TitleHeight       = 32;
+			table.TitleWidget       = new StaticText (@"<font size=""120%"">Search Test.</font>");
 			table.SearchCaption     = @"<b>Search. </b><font size=""90%"">Type in some text below to search for it in the table.</font>";
 			
 			for (int x = 0 ; x < table.ColumnCount; x++)
@@ -416,13 +355,6 @@ namespace Epsitec.Common.Widgets
 			public event Support.EventHandler	StoreChanged;
 		}
 		
-		
-		private void HandleCheckScrollArraySearchTextChanged(object sender)
-		{
-			TextField   field = sender as TextField;
-			ScrollArray table = field.GetProperty ("table") as ScrollArray;
-			table.SelectedItem = field.Text;
-		}
 		
 		private void HandleSelectedIndexChanged(object sender)
 		{
