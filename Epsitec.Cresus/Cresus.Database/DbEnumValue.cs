@@ -167,17 +167,28 @@ namespace Epsitec.Cresus.Database
 
 		
 		#region ICloneable Members
-		public virtual object Clone()
+		public object Clone()
 		{
-			DbEnumValue value = System.Activator.CreateInstance (this.GetType ()) as DbEnumValue;
-			
-			value.rank         = this.rank;
-			value.internal_key = (this.internal_key == null) ? null : this.internal_key.Clone () as DbKey; 
-			value.attributes   = (this.attributes == null) ? null : this.attributes.Clone () as DbAttributes;
-			
-			return value;
+			return this.CloneCopyToNewObject (this.CloneNewObject ());
 		}
 		#endregion
+		
+		protected virtual object CloneNewObject()
+		{
+			return new DbEnumValue ();
+		}
+		
+		protected virtual object CloneCopyToNewObject(object o)
+		{
+			DbEnumValue that = o as DbEnumValue;
+			
+			that.rank         = this.rank;
+			that.internal_key = (this.internal_key == null) ? null : this.internal_key.Clone () as DbKey; 
+			that.attributes   = (this.attributes == null) ? null : this.attributes.Clone () as DbAttributes;
+			
+			return that;
+		}
+		
 		
 		#region IDbAttributesHost Members
 		public DbAttributes					Attributes

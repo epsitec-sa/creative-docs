@@ -42,17 +42,28 @@ namespace Epsitec.Cresus.Database
 		
 		
 		#region ICloneable Members
-		public virtual object Clone()
+		public object Clone()
 		{
-			DbKey key = System.Activator.CreateInstance (this.GetType ()) as DbKey;
-			
-			key.id = this.id;
-			key.revision = this.revision;
-			key.raw_status = this.raw_status;
-			
-			return key;
+			return this.CloneCopyToNewObject (this.CloneNewObject ());
 		}
 		#endregion
+		
+		protected virtual object CloneNewObject()
+		{
+			return new DbKey ();
+		}
+		
+		protected virtual object CloneCopyToNewObject(object o)
+		{
+			DbKey that = o as DbKey;
+			
+			that.id         = this.id;
+			that.revision   = this.revision;
+			that.raw_status = this.raw_status;
+			
+			return that;
+		}
+		
 		
 		#region IComparable Members
 		public int CompareTo(object obj)
