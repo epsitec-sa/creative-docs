@@ -384,7 +384,7 @@ namespace Epsitec.Common.Widgets
 			helpMenu.AdjustSize();
 			this.menu.Items[4].Submenu = helpMenu;
 
-			this.toolBar = new ToolBar();
+			this.toolBar = new HToolBar();
 			this.toolBar.Location = new Point(0, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
 			this.toolBar.Size = new Size(rect.Width, this.toolBar.DefaultHeight);
 			this.toolBar.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
@@ -1050,7 +1050,7 @@ namespace Epsitec.Common.Widgets
 		protected Window						window;
 		protected ToolTip						tip;
 		protected HMenu							menu;
-		protected ToolBar						toolBar;
+		protected HToolBar						toolBar;
 		protected PaneBook						pane;
 		protected PaneBook						subPane;
 		protected PanePage						leftPane;
