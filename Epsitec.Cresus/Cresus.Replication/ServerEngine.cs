@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Replication
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("Table {0} contains {1} rows to replicate.", data_table.TableName, data_table.Rows.Count));
 				
-				data.Add (PackedTableData.CreateFromTable (data_table));
+				data.Add (PackedTableData.CreateFromTable (table, data_table));
 			}
 		}
 		

@@ -27,6 +27,14 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
+		public DbId								Key
+		{
+			get
+			{
+				return this.table_key;
+			}
+		}
+		
 		public int								RowCount
 		{
 			get
@@ -119,15 +127,16 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
-		public static PackedTableData CreateFromTable(System.Data.DataTable table)
+		public static PackedTableData CreateFromTable(DbTable table, System.Data.DataTable data_table)
 		{
 			PackedTableData data = new PackedTableData ();
 			
-			int r = table.Rows.Count;
-			int n = table.Columns.Count;
+			int r = data_table.Rows.Count;
+			int n = data_table.Columns.Count;
 			
 			data.row_count  = r;
-			data.table_name = table.TableName;
+			data.table_name = table.Name;
+			data.table_key  = table.InternalKey.Id;
 			
 			for (int i = 0; i < n; i++)
 			{
@@ -136,7 +145,7 @@ namespace Epsitec.Cresus.Replication
 				bool[] null_flags;
 				int    null_count;
 				
-				DataCruncher.PackColumnToArray (table, i, out array, out null_flags, out null_count);
+				DataCruncher.PackColumnToArray (data_table, i, out array, out null_flags, out null_count);
 				
 				if (null_count == 0)
 				{
@@ -174,6 +183,7 @@ namespace Epsitec.Cresus.Replication
 			}
 			
 			this.table_name = info.GetString ("Name");
+			this.table_key  = info.GetInt64 ("Id");
 			this.row_count = r;
 			this.is_null_flags_array_packed = true;
 		}
@@ -213,6 +223,7 @@ namespace Epsitec.Cresus.Replication
 			}
 			
 			info.AddValue ("Name", this.table_name);
+			info.AddValue ("Id", this.table_key.Value);
 		}
 		#endregion
 		
@@ -267,6 +278,7 @@ namespace Epsitec.Cresus.Replication
 		
 		
 		private string							table_name;
+		private DbId							table_key;
 		private int								row_count;
 		private System.Collections.ArrayList	column_data_rows  = new System.Collections.ArrayList ();
 		private System.Collections.ArrayList	column_null_flags = new System.Collections.ArrayList ();

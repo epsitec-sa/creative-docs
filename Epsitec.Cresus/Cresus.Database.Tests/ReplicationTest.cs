@@ -191,7 +191,9 @@ namespace Epsitec.Cresus.Database
 			table_a.Rows.Add (new object[] { 7, System.DBNull.Value, 30.0M, System.DBNull.Value });
 			table_a.Rows.Add (new object[] { 8, "J", System.DBNull.Value, System.DBNull.Value });
 			
-			Replication.PackedTableData packed = Replication.PackedTableData.CreateFromTable (table_a);
+			DbTable db_table = new DbTable ("A");
+			
+			Replication.PackedTableData packed = Replication.PackedTableData.CreateFromTable (db_table, table_a);
 			
 			Assert.IsFalse (packed.HasNullValues (0));
 			Assert.IsTrue (packed.HasNullValues (1));

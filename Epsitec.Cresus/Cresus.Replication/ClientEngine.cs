@@ -115,9 +115,7 @@ namespace Epsitec.Cresus.Replication
 			//	on remplit une table avec les lignes à répliquer et on utiliser un 'REPLACE'
 			//	de toutes celles-ci :
 			
-			//	TODO: utiliser une clef pour la table.
-			
-			DbTable table = this.infrastructure.ResolveDbTable (transaction, data.Name);
+			DbTable table = this.infrastructure.ResolveDbTable (transaction, new DbKey (data.Key));
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table))
 			{
