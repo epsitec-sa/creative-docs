@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				throw new System.ArgumentNullException ("Row is null.");
 			}
-			if (row.RowState == System.Data.DataRowState.Deleted)
+			if (DbRichCommand.IsRowDeleted (row))
 			{
 				throw new System.ArgumentException ("Row has been deleted.");
 			}

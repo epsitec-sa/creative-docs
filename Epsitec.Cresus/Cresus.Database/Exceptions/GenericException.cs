@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Database.Exceptions
 	
 	[System.Serializable]
 	
-	public class GenericException : System.ApplicationException, System.Runtime.Serialization.ISerializable
+	public class GenericException : System.ApplicationException
 	{
 		public GenericException(DbAccess db_access)
 		{

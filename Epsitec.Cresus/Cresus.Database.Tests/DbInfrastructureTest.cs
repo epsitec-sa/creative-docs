@@ -64,9 +64,9 @@ namespace Epsitec.Cresus.Database
 				
 				table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
 				
-				Assert.AreEqual (1000000000009L, infrastructure.NewRowIdInTable (null, table.InternalKey, 2));
-				Assert.AreEqual (1000000000011L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
-				Assert.AreEqual (1000000000011L, infrastructure.NewRowIdInTable (null, table.InternalKey, 1));
+				Assert.AreEqual (1000000000010L, infrastructure.NewRowIdInTable (null, table.InternalKey, 2));
+				Assert.AreEqual (1000000000012L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
+				Assert.AreEqual (1000000000012L, infrastructure.NewRowIdInTable (null, table.InternalKey, 1));
 			}
 		}
 		
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual (db_table1.PrimaryKeys.Count,	db_table2.PrimaryKeys.Count);
 				Assert.AreEqual (db_table1.PrimaryKeys[0].Name,	db_table2.PrimaryKeys[0].Name);
 				Assert.AreEqual (db_table1.Columns.Count,		db_table2.Columns.Count);
-				Assert.AreEqual (1000000000012L, db_table2.InternalKey.Id);
+				Assert.AreEqual (1000000000013L, db_table2.InternalKey.Id);
 			}
 		}
 		
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.Database
 				infrastructure.RegisterNewDbTable (null, db_table);
 				
 				Assert.IsNotNull (infrastructure.ResolveDbTable (null, db_table.Name));
-				Assert.AreEqual (1000000000013L, db_table.InternalKey.Id);
+				Assert.AreEqual (1000000000014L, db_table.InternalKey.Id);
 				Assert.AreEqual (DbRowStatus.Live, db_table.InternalKey.Status);
 			}
 		}
@@ -402,6 +402,88 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		[Test] public void Check15ClientManager()
+		{
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
+			{
+				infrastructure.LocalSettings.IsServer = true;
+				DbClientManager cm = infrastructure.ClientManager;
+				infrastructure.LocalSettings.IsServer = false;
+				
+				Assert.IsNotNull (cm);
+				Assert.AreEqual (0, cm.FindAllClients ().Length);
+				
+				DbClientManager.Entry entry_1;
+				DbClientManager.Entry entry_2;
+				DbClientManager.Entry entry_3;
+				
+				entry_1 = cm.CreateNewClient ();
+				entry_2 = cm.CreateNewClient ();
+				
+				Assert.AreEqual (DbClientManager.MinClientId, entry_1.ClientId);
+				Assert.AreEqual (DbClientManager.MinClientId, entry_2.ClientId);
+				Assert.AreEqual (entry_1.CreationDateTime, entry_1.ConnectionDateTime);
+				Assert.AreEqual (entry_2.CreationDateTime, entry_2.ConnectionDateTime);
+				
+				entry_1 = cm.CreateAndInsertNewClient ();
+				entry_2 = cm.CreateAndInsertNewClient ();
+				entry_3 = cm.CreateAndInsertNewClient ();
+				
+				Assert.AreEqual (DbClientManager.MinClientId + 0, entry_1.ClientId);
+				Assert.AreEqual (DbClientManager.MinClientId + 1, entry_2.ClientId);
+				Assert.AreEqual (DbClientManager.MinClientId + 2, entry_3.ClientId);
+				
+				cm.Remove (entry_2.ClientId);
+				
+				entry_2 = cm.CreateNewClient ();
+				
+				Assert.AreEqual (DbClientManager.MinClientId + 1, entry_2.ClientId);
+				
+				cm.Insert (entry_2);
+				
+				using (DbTransaction transaction = infrastructure.BeginTransaction ())
+				{
+					cm.SerializeToBase (transaction);
+					transaction.Commit ();
+				}
+				
+				cm.Remove (entry_2.ClientId);
+				
+				entry_2 = cm.CreateNewClient ();
+				
+				Assert.AreEqual (DbClientManager.MinClientId + 1, entry_2.ClientId);
+				
+				cm.Insert (entry_2);
+				cm.Remove (entry_1.ClientId);
+				cm.Remove (entry_2.ClientId);
+				cm.Remove (entry_3.ClientId);
+
+				using (DbTransaction transaction = infrastructure.BeginTransaction ())
+				{
+					cm.SerializeToBase (transaction);
+					transaction.Commit ();
+				}
+			}
+		}
+		
+		[Test] [ExpectedException (typeof (Exceptions.ExistsException))] public void Check16ClientManagerEx()
+		{
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
+			{
+				infrastructure.LocalSettings.IsServer = true;
+				DbClientManager cm = infrastructure.ClientManager;
+				infrastructure.LocalSettings.IsServer = false;
+				
+				DbClientManager.Entry entry_1;
+				DbClientManager.Entry entry_2;
+				
+				entry_1 = cm.CreateNewClient ();
+				entry_2 = cm.CreateNewClient ();
+				
+				cm.Insert (entry_1);
+				cm.Insert (entry_2);
+			}
+		}
 		
 		
 		#region Support Code

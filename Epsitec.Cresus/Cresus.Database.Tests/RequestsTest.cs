@@ -429,7 +429,8 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		
+
+#if false
 		[Test] [Ignore ("Temporary")] public void Check12ServiceServer()
 		{
 			DbInfrastructure      infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
@@ -453,7 +454,7 @@ namespace Epsitec.Cresus.Database
 			Common.Support.Globals.SignalAbort ();
 		}
 		
-		[Test] public void Check12ServiceServer_Create()
+		[Test] /*[Ignore ("Temporary")]*/ public void Check12ServiceServer_Create()
 		{
 			//	Le service doit tourner (installer & lancer avec "installutil Cresus.Server.exe" depuis
 			//	le dossier "App.Server/bin/Debug"). Ou alors, utiliser l'installateur X.Setup.Server.
@@ -657,6 +658,7 @@ namespace Epsitec.Cresus.Database
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			RequestsTest.DeleteTestTable (infrastructure, "ServiceTest");
 		}
+#endif
 		
 		
 		private static void CreateTestTable(DbInfrastructure infrastructure, string name)

@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Database
 	/// n'en faire qu'une qui peut ensuite être exécutée au moyen de ISqlEngine,
 	/// avec récupération des données dans les tables ad hoc.
 	/// </summary>
-	public class DbRichCommand
+	public class DbRichCommand : System.IDisposable
 	{
 		public DbRichCommand(DbInfrastructure infrastructure)
 		{
@@ -294,6 +294,23 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		
+		public static bool IsRowDeleted(System.Data.DataRow row)
+		{
+			if (row.RowState == System.Data.DataRowState.Deleted)
+			{
+				return true;
+			}
+			
+			DbKey key = new DbKey (row);
+			
+			if (key.Status == DbRowStatus.Deleted)
+			{
+				return true;
+			}
+			
+			return false;
+		}
 		
 		public static void CheckRowIds(System.Data.DataTable table)
 		{
@@ -621,6 +638,32 @@ namespace Epsitec.Cresus.Database
 			this.CreateDataRelations ();
 		}
 		
+		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+		}
+		#endregion
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.data_set != null)
+				{
+					this.data_set.Dispose ();
+					this.data_set = null;
+				}
+				
+				System.Data.IDbCommand[] commands = this.commands.ToArray ();
+				
+				for (int i = 0; i < commands.Length; i++)
+				{
+					commands[i].Dispose ();
+				}
+			}
+		}
 		
 		
 		protected DbInfrastructure				infrastructure;

@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Requests
 			{
 				System.Data.DataRow row = rows[i];
 				
-				if (row.RowState == System.Data.DataRowState.Deleted)
+				if (DbRichCommand.IsRowDeleted (row))
 				{
 					continue;
 				}

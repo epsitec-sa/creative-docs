@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Database.Exceptions
 	
 	[System.Serializable]
 	
-	public class InvalidIdException : GenericException, System.Runtime.Serialization.ISerializable
+	public class InvalidIdException : GenericException
 	{
 		public InvalidIdException() : base (DbAccess.Empty)
 		{

@@ -455,6 +455,19 @@ namespace Epsitec.Common.Widgets
 			window.Show ();
 		}
 		
+		[Test] public void CheckMinSize()
+		{
+			Window window;
+			
+			window = new Window();
+			window.ClientSize = new Size(300, 250);
+			window.Text = "Informations";
+			window.MakeSecondaryWindow();
+			window.MakeButtonlessWindow ();
+			window.Root.MinSize = new Size(200, 100);
+			
+			window.Show ();
+		}
 		
 		private void Root_Clicked(object sender, MessageEventArgs e)
 		{

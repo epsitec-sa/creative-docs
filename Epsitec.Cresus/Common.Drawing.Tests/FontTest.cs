@@ -695,6 +695,29 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		[Test] public void CheckFontFaceBalloon()
+		{
+			int n = Font.Count;
+			
+			for (int i = 0; i < n; i++)
+			{
+				Font font = Font.GetFont (i);
+				
+				if (font.FaceName.StartsWith ("Bal"))
+				{
+					System.Console.Out.WriteLine (font.FaceName + " / " + font.StyleName + " / " + font.OpticalName);
+					System.Console.Out.WriteLine ("  " + font.FullName + " (" + font.LocalStyleName + ") / e=" + font.GetGlyphIndex ('e').ToString ());
+					System.Console.Out.WriteLine ("  A=" + font.Ascender + " D=" + font.Descender + " H=" + (font.LineHeight-font.Ascender+font.Descender) + " w=" + font.GetCharAdvance ('e'));
+					
+					Font find = Font.GetFont (font.FaceName, font.StyleName, font.OpticalName);
+					
+					Assert.IsNotNull (find);
+					Assert.AreEqual (font.Handle, find.Handle);
+				}
+			}
+		}
+
+		
 		private void form_Paint1(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
 			this.global_pixmap_1.Paint (e.Graphics, e.ClipRectangle);

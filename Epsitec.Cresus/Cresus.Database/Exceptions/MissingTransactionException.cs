@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Database.Exceptions
 	
 	[System.Serializable]
 	
-	public class MissingTransactionException : GenericException, System.Runtime.Serialization.ISerializable
+	public class MissingTransactionException : GenericException
 	{
 		public MissingTransactionException(DbAccess db_access) : base (db_access)
 		{

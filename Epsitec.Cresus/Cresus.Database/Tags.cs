@@ -42,6 +42,11 @@ namespace Epsitec.Cresus.Database
 		public const string	ColumnRefParent		= "CREF_PARENT_TABLE";
 		public const string ColumnRefLog		= "CREF_LOG";
 		
+		public const string ColumnClientId		= "CR_CLIENT_ID";
+		public const string ColumnClientSync	= "CR_CLIENT_SYNC";
+		public const string ColumnClientCreDate	= "CR_CLIENT_CRE_DATE";
+		public const string ColumnClientConDate	= "CR_CLIENT_CON_DATE";
+		
 		//	Noms des tables "Crésus" fondamentales :
 		
 		public const string	TableTableDef		= "CR_TABLE_DEF";
@@ -50,5 +55,6 @@ namespace Epsitec.Cresus.Database
 		public const string	TableEnumValDef		= "CR_ENUMVAL_DEF";
 		public const string TableLog			= "CR_LOG";
 		public const string TableRequestQueue	= "CR_RQ_QUEUE";
+		public const string TableClientDef      = "CR_CLIENT_DEF";
 	}
 }

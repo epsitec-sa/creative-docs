@@ -1,3 +1,6 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 using System.Runtime.InteropServices;
 
 namespace Epsitec.Common.Widgets
@@ -62,6 +65,16 @@ namespace Epsitec.Common.Widgets
 			public System.IntPtr BitmapColor;
 		}
 		
+		
+		internal static int GetWindowStyle(System.IntPtr handle)
+		{
+			return Win32Api.GetWindowLong (handle, Win32Const.GWL_STYLE);
+		}
+		
+		internal static int SetWindowStyle(System.IntPtr handle, int style)
+		{
+			return Win32Api.SetWindowLong (handle, Win32Const.GWL_STYLE, style);
+		}
 		
 		internal static int GetWindowExStyle(System.IntPtr handle)
 		{

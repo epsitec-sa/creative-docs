@@ -75,7 +75,6 @@ namespace Epsitec.Cresus.Services
 					
 					this.Step1_CopyDatabase ();				this.InterruptIfCancelRequested ();
 					this.Step2_CompressDatabase ();			this.InterruptIfCancelRequested ();
-					this.Step2_CompressDatabaseDeflate ();	this.InterruptIfCancelRequested ();
 					this.Step3_Finished ();
 				}
 				catch (Remoting.Exceptions.InterruptedException)
@@ -90,7 +89,7 @@ namespace Epsitec.Cresus.Services
 				{
 					if (this.temp != null)
 					{
-						this.temp.Dispose ();
+						this.temp.Delete ();
 						this.temp = null;
 					}
 					
@@ -120,9 +119,9 @@ namespace Epsitec.Cresus.Services
 				
 				this.SetCurrentStep (2);
 				
-				System.IO.FileStream   source = System.IO.File.OpenRead (this.temp.Path);
-				System.IO.MemoryStream memory = new System.IO.MemoryStream ();
-				System.IO.Stream compressed = Common.IO.Compression.CreateBZip2Stream (memory);
+				System.IO.FileStream   source     = System.IO.File.OpenRead (this.temp.Path);
+				System.IO.MemoryStream memory     = new System.IO.MemoryStream ();
+				System.IO.Stream       compressed = Common.IO.Compression.CreateDeflateStream (memory, 9);
 				
 				int total_read = 0;
 				
@@ -143,41 +142,6 @@ namespace Epsitec.Cresus.Services
 				compressed.Close ();
 				source.Close ();
 				memory.Close ();
-				
-				System.Diagnostics.Debug.WriteLine ("Compressed database from " + total_read + " to " + memory.ToArray ().Length + " bytes (BZIP2).");
-			}
-			
-			private void Step2_CompressDatabaseDeflate()
-			{
-				System.Diagnostics.Debug.WriteLine ("Compressing...");
-				
-				this.SetCurrentStep (2);
-				
-				System.IO.FileStream   source = System.IO.File.OpenRead (this.temp.Path);
-				System.IO.MemoryStream memory = new System.IO.MemoryStream ();
-				System.IO.Stream compressed = Common.IO.Compression.CreateDeflateStream (memory, 9);
-				
-				int total_read = 0;
-				
-				for (;;)
-				{
-					byte[] buffer = new byte[1000];
-					int read = source.Read (buffer, 0, buffer.Length);
-					
-					if (read == 0)
-					{
-						break;
-					}
-					
-					compressed.Write (buffer, 0, read);
-					total_read += read;
-				}
-				
-				compressed.Close ();
-				source.Close ();
-				memory.Close ();
-				
-				System.Diagnostics.Debug.WriteLine ("Compressed database from " + total_read + " to " + memory.ToArray ().Length + " bytes (deflate).");
 				
 				this.data = memory.ToArray ();
 			}
@@ -261,6 +225,22 @@ namespace Epsitec.Cresus.Services
 			}
 			
 			
+			public void Delete()
+			{
+				//	Tente de supprimer le fichier tout de suite. Si on n'y réussit pas,
+				//	ce sera le 'finalizer' qui s'en chargera...
+				
+				this.RemoveFile ();
+				
+				if (this.name == null)
+				{
+					//	Fichier détruit, plus besoin d'exécuter le 'finalizer'.
+					
+					System.GC.SuppressFinalize (this);
+				}
+			}
+			
+			
 			#region IDisposable Members
 			public void Dispose()
 			{
@@ -288,14 +268,13 @@ namespace Epsitec.Cresus.Services
 						if (System.IO.File.Exists (this.name))
 						{
 							System.IO.File.Delete (this.name);
+							this.name = null;
 						}
 					}
 					catch (System.Exception ex)
 					{
 						System.Diagnostics.Debug.WriteLine ("Could not remove file " + this.name + ";\n" + ex.ToString ());
 					}
-					
-					this.name = null;
 				}
 			}
 			

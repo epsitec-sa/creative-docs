@@ -47,6 +47,8 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.mainWindow.ClientSize = new Size(830, 580);
 			}
+			
+			this.mainWindow.Root.MinSize = new Size(500, 400);
 
 			switch ( type )
 			{

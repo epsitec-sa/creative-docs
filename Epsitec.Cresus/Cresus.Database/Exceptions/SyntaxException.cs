@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 07/10/2003
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Exceptions
 {
@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Database.Exceptions
 	
 	[System.Serializable]
 	
-	public class SyntaxException : GenericException, System.Runtime.Serialization.ISerializable
+	public class SyntaxException : GenericException
 	{
 		public SyntaxException(DbAccess db_access) : base (db_access)
 		{

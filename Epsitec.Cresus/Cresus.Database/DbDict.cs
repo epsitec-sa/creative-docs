@@ -88,9 +88,7 @@ namespace Epsitec.Cresus.Database
 				
 				for (int i = 0; i < rows.Count; i++)
 				{
-					DbKey row_key_id = new DbKey (rows[i]);
-					
-					if (row_key_id.Status != DbRowStatus.Deleted)
+					if (! DbRichCommand.IsRowDeleted (rows[i]))
 					{
 						n++;
 					}
@@ -242,9 +240,8 @@ namespace Epsitec.Cresus.Database
 			for (int i = 0; i < rows.Count; i++)
 			{
 				string row_key_name = rows[i][Tags.ColumnDictKey] as string;
-				DbKey  row_key_id   = new DbKey (rows[i]);
 					
-				if ((row_key_id.Status != DbRowStatus.Deleted) &&
+				if ((! DbRichCommand.IsRowDeleted (rows[i])) &&
 					(row_key_name == key))
 				{
 					return rows[i];

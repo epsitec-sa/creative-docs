@@ -1,3 +1,6 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -55,6 +58,7 @@ namespace Epsitec.Common.Widgets
 		public const int MK_XBUTTON1		= 0x20;
 		public const int MK_XBUTTON2		= 0x40;
 
+		public const int GWL_STYLE			= -16;
 		public const int GWL_EXSTYLE		= -20;
 		
 		public const int GCL_STYLE			= -26;

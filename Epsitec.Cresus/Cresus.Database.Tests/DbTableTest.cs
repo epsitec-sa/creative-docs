@@ -116,6 +116,7 @@ namespace Epsitec.Cresus.Database
 			
 			db_table.DefineInternalKey (new DbKey (9));
 			db_table.DefineCategory (DbElementCat.UserDataManaged);
+			db_table.DefineReplicationMode (DbReplicationMode.Shared);
 			column_a.DefineCategory (DbElementCat.UserDataManaged);
 			column_b.DefineCategory (DbElementCat.UserDataManaged);
 			column_c.DefineCategory (DbElementCat.UserDataManaged);
@@ -150,6 +151,7 @@ namespace Epsitec.Cresus.Database
 			
 			db_table.DefineInternalKey (new DbKey (0));
 			db_table.DefineCategory (DbElementCat.UserDataManaged);
+			db_table.DefineReplicationMode (DbReplicationMode.Shared);
 			column_a.DefineCategory (DbElementCat.UserDataManaged);
 			column_b.DefineCategory (DbElementCat.UserDataManaged);
 			column_c.DefineCategory (DbElementCat.UserDataManaged);
@@ -179,6 +181,7 @@ namespace Epsitec.Cresus.Database
 			
 			db_table.DefineInternalKey (new DbKey (0));
 			db_table.DefineCategory (DbElementCat.UserDataManaged);
+			db_table.DefineReplicationMode (DbReplicationMode.Shared);
 			column_a.DefineCategory (DbElementCat.UserDataManaged);
 			column_b.DefineCategory (DbElementCat.UserDataManaged);
 			column_c.DefineCategory (DbElementCat.UserDataManaged);
@@ -206,6 +209,7 @@ namespace Epsitec.Cresus.Database
 			
 			db_table.DefineInternalKey (new DbKey (0));
 			db_table.DefineCategory (DbElementCat.UserDataManaged);
+			db_table.DefineReplicationMode (DbReplicationMode.Shared);
 			column_a.DefineCategory (DbElementCat.UserDataManaged);
 			column_b1.DefineCategory (DbElementCat.UserDataManaged);
 			column_b2.DefineCategory (DbElementCat.UserDataManaged);

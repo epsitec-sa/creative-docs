@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Database.Exceptions
 	
 	[System.Serializable]
 	
-	public class ReadOnlyException : GenericException, System.Runtime.Serialization.ISerializable
+	public class ReadOnlyException : GenericException
 	{
 		public ReadOnlyException(DbAccess db_access) : base (db_access)
 		{

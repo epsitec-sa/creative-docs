@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Services
 			
 			for (int i = 0; i < rows.Length; i++)
 			{
-				if (rows[i].RowState == System.Data.DataRowState.Deleted)
+				if (Database.DbRichCommand.IsRowDeleted (rows[i]))
 				{
 					continue;
 				}
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Services
 			
 			for (int i = 0; i < rows.Length; i++)
 			{
-				if (rows[i].RowState == System.Data.DataRowState.Deleted)
+				if (Database.DbRichCommand.IsRowDeleted (rows[i]))
 				{
 					continue;
 				}

@@ -87,6 +87,29 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public DbClientManager					ClientManager
+		{
+			get
+			{
+				if (this.client_manager == null)
+				{
+					if (this.LocalSettings.IsServer)
+					{
+						this.client_manager = new DbClientManager ();
+						
+						using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+						{
+							this.client_manager.Attach (this, this.ResolveDbTable (transaction, Tags.TableClientDef));
+							this.client_manager.RestoreFromBase (transaction);
+							transaction.Commit ();
+						}
+					}
+				}
+				
+				return this.client_manager;
+			}
+		}
+		
 		
 		public Settings.Globals					GlobalSettings
 		{
@@ -139,6 +162,7 @@ namespace Epsitec.Cresus.Database
 				helper.CreateTableEnumValDef ();
 				helper.CreateTableLog ();
 				helper.CreateTableRequestQueue ();
+				helper.CreateTableClientDef ();
 				
 				//	Valide la création de toutes ces tables avant de commencer à peupler
 				//	les tables. Firebird requiert ce mode de fonctionnement.
@@ -210,6 +234,7 @@ namespace Epsitec.Cresus.Database
 				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableColumnDef));
 				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
 				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableEnumValDef));
+				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableClientDef));
 				
 				this.types.ResolveTypes (transaction);
 				
@@ -1683,6 +1708,7 @@ namespace Epsitec.Cresus.Database
 			long table_key_id    = DbId.CreateId (1, this.client_id);
 			long column_key_id   = DbId.CreateId (1, this.client_id);
 			long enum_val_key_id = DbId.CreateId (1, this.client_id);
+			long client_key_id   = DbId.CreateId (1, this.client_id);
 			
 			//	Initialisation partielle de DbLogger (juste ce qu'il faut pour pouvoir
 			//	accéder à this.logger.CurrentId) :
@@ -1741,6 +1767,7 @@ namespace Epsitec.Cresus.Database
 			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableColumnDef].InternalKey, column_key_id);
 			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableTypeDef].InternalKey, type_key_id);
 			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableEnumValDef].InternalKey, enum_val_key_id);
+			this.UpdateTableNextId (transaction, this.internal_tables[Tags.TableClientDef].InternalKey, client_key_id);
 			
 			//	On ne peut attacher le DbLogger qu'ici, car avant, les tables et les clefs
 			//	indispensables ne sont pas encore utilisables :
@@ -2065,6 +2092,24 @@ namespace Epsitec.Cresus.Database
 				this.CreateTable (table, columns, DbReplicationMode.Private);
 			}
 			
+			public void CreateTableClientDef()
+			{
+				TypeHelper types   = this.infrastructure.types;
+				DbTable    table   = new DbTable (Tags.TableClientDef);
+				DbColumn[] columns = new DbColumn[]
+					{
+						new DbColumn (Tags.ColumnId,			types.KeyId,	 Nullable.No,  DbColumnClass.KeyId),
+						new DbColumn (Tags.ColumnStatus,		types.KeyStatus, Nullable.No,  DbColumnClass.KeyStatus),
+						new DbColumn (Tags.ColumnRefLog,		types.KeyId,	 Nullable.No,  DbColumnClass.RefInternal),
+						new DbColumn (Tags.ColumnClientId,		types.KeyId,	 Nullable.No,  DbColumnClass.Data),
+						new DbColumn (Tags.ColumnClientSync,	types.KeyId,	 Nullable.No,  DbColumnClass.Data),
+						new DbColumn (Tags.ColumnClientCreDate,	types.DateTime,  Nullable.No,  DbColumnClass.Data),
+						new DbColumn (Tags.ColumnClientConDate,	types.DateTime,  Nullable.No,  DbColumnClass.Data)
+					};
+				
+				this.CreateTable (table, columns, DbReplicationMode.Private);
+			}
+			
 			
 			private void CreateTable(DbTable table, DbColumn[] columns, DbReplicationMode replication_mode)
 			{
@@ -2313,6 +2358,7 @@ namespace Epsitec.Cresus.Database
 		
 		private TypeHelper						types;
 		private DbLogger						logger;
+		private DbClientManager					client_manager;
 		
 		private Settings.Globals				globals;
 		private Settings.Locals					locals;

@@ -1,16 +1,25 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 07/10/2003
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Exceptions
 {
 	/// <summary>
-	/// Exception signalant que la base de données existe déjà.
+	/// Exception signalant que la base de données existe déjà (ou toute
+	/// autre structure).
 	/// </summary>
 	
 	[System.Serializable]
 	
-	public class ExistsException : GenericException, System.Runtime.Serialization.ISerializable
+	public class ExistsException : GenericException
 	{
+		public ExistsException() : base (DbAccess.Empty)
+		{
+		}
+		
+		public ExistsException(string message) : base (DbAccess.Empty, message)
+		{
+		}
+		
 		public ExistsException(DbAccess db_access) : base (db_access)
 		{
 		}

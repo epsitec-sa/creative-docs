@@ -50,5 +50,13 @@ namespace Epsitec.Cresus.Database.Collections
 			return this.List.IndexOf (command);
 		}
 		
+		
+		public virtual System.Data.IDbCommand[] ToArray()
+		{
+			int n = this.list.Count;
+			System.Data.IDbCommand[] commands = new System.Data.IDbCommand[n];
+			this.list.CopyTo (commands);
+			return commands;
+		}
 	}
 }
