@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Database
 		IDbAbstractionFactory		Factory				{ get; }
 		System.Data.IDbConnection	Connection			{ get; }
 		ISqlBuilder					SqlBuilder			{ get; }
+		ISqlEngine					SqlEngine			{ get; }
 		
 		bool						IsConnectionOpen	{ get; }
 		bool						IsConnectionAlive	{ get; }

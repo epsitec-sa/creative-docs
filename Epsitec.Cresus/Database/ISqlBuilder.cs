@@ -13,10 +13,12 @@ namespace Epsitec.Cresus.Database
 		//	plusieurs commandes SQL. Le buffer interne est vraisemblablement
 		//	implémenté au moyen d'une instance de System.Text.StringBuilder.
 		//
-		//	Si AutoClear = true, la lecture de la propriété Command fera aussi
-		//	automatiquement un Clear.
+		//	Si AutoClear = true, l'insertion d'une commande écrase automatique-
+		//	ment la précédente. Dans le cas contraire, il faut appeler Clear
+		//	explicitement, ou une exception est générée.
 		
 		bool					AutoClear		{ get; set; }
+		DbCommandType			CommandType		{ get; }
 		System.Data.IDbCommand	Command			{ get; }
 		
 		void Clear();

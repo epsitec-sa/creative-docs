@@ -113,6 +113,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DbCommandType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DbException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -194,6 +199,11 @@
                 />
                 <File
                     RelPath = "ISqlBuilder.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ISqlEngine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand command = sql_builder.Command;
 		}
 		
-		[Test] [Ignore ("Bug in Firebird .NET Provider 1.5")] public void CheckInsertTableBug()
+		[Test] public void CheckInsertTableFbProblem()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Database
 			for (;;)
 			{
 				System.Console.Out.WriteLine ("Result {0}", result++);
-				while (reader.Read ())
+				while (reader.Read ())	//	<-- ça plantait avec Firebird.NET 1.5 Beta 1
 				{
 					System.Console.Out.WriteLine ("{0} columns found.", reader.FieldCount);
 				}
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Database
 			}
 			reader.Close ();
 			
-			command.Transaction.Commit ();
+			command.Transaction.Rollback ();
 			command.Transaction.Dispose ();
 			command.Dispose ();
 		}
@@ -109,16 +109,14 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
-			System.Data.IDataReader reader;
 			command.Transaction = db_abstraction.BeginTransaction ();
-			reader = command.ExecuteReader ();
-			int n = 1;
-			while (reader.NextResult ())
+			
+			using (System.Data.IDataReader reader = command.ExecuteReader ())
 			{
-				n++;
+				int n = 1;
+				while (reader.NextResult ()) n++;
+				System.Console.Out.WriteLine ("Executed {0} commands", n);
 			}
-			System.Console.Out.WriteLine ("Executed {0} commands", n);
-			reader.Close ();
 			
 			command.Transaction.Commit ();
 			command.Transaction.Dispose ();
@@ -137,6 +135,63 @@ namespace Epsitec.Cresus.Database
 			
 			command.Transaction = db_abstraction.BeginTransaction ();
 			command.ExecuteNonQuery ();
+			command.Transaction.Commit ();
+			command.Transaction.Dispose ();
+			command.Dispose ();
+		}
+
+		[Test] public void CheckInsertTableWithSqlEngine()
+		{
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
+			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
+			ISqlEngine		sql_engine     = db_abstraction.SqlEngine;
+			
+			SqlTable  sql_table = new SqlTable ();
+			
+			SqlColumn sql_col_1 = new SqlColumn ("Cr_ID", DbRawType.Int32);
+			SqlColumn sql_col_2 = new SqlColumn ("Cr_REV", DbRawType.Int32);
+			SqlColumn sql_col_3 = new SqlColumn ("StringDynamic", DbRawType.String, 100, false, Nullable.Yes);
+			SqlColumn sql_col_4 = new SqlColumn ("StringFixed",   DbRawType.String,  50, false, Nullable.Yes);
+			
+			sql_table.Name = "FbTestTable";
+			sql_table.Columns.AddRange (new SqlColumn[] { sql_col_1, sql_col_2, sql_col_3, sql_col_4 });
+			sql_table.PrimaryKey = new SqlColumn[] { sql_col_1, sql_col_2 };
+			
+			sql_builder.InsertTable (sql_table);
+			
+			System.Data.IDbCommand command      = sql_builder.Command;
+			DbCommandType          command_type = sql_builder.CommandType;
+			
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			System.Console.Out.WriteLine ("SQL Command Type: {0}", command_type.ToString ());
+			
+			command.Transaction = db_abstraction.BeginTransaction ();
+			
+			sql_engine.Execute (command, command_type);
+			
+			command.Transaction.Commit ();
+			command.Transaction.Dispose ();
+			command.Dispose ();
+		}
+		
+		[Test] public void CheckRemoveTableWithSqlEngine()
+		{
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
+			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
+			ISqlEngine		sql_engine     = db_abstraction.SqlEngine;
+			
+			sql_builder.RemoveTable ("FbTestTable");
+			
+			System.Data.IDbCommand command      = sql_builder.Command;
+			DbCommandType          command_type = sql_builder.CommandType;
+			
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			System.Console.Out.WriteLine ("SQL Command Type: {0}", command_type.ToString ());
+			
+			command.Transaction = db_abstraction.BeginTransaction ();
+			
+			sql_engine.Execute (command, command_type);
+			
 			command.Transaction.Commit ();
 			command.Transaction.Dispose ();
 			command.Dispose ();

@@ -155,6 +155,19 @@ namespace Epsitec.Cresus.Database.Implementation
 			throw null;
 		}
 		
+		protected void PrepareCommand()
+		{
+			if (this.auto_clear)
+			{
+				this.Clear ();
+			}
+			
+			if (this.command_type != DbCommandType.None)
+			{
+				throw new DbException (this.fb.DbAccess, "Previous command not cleared");
+			}
+		}
+		
 		
 		#region ISqlBuilder Members
 		public bool								AutoClear
@@ -162,24 +175,18 @@ namespace Epsitec.Cresus.Database.Implementation
 			get { return this.auto_clear; }
 			set { this.auto_clear = value; }
 		}
+		
+		public DbCommandType					CommandType
+		{
+			get { return this.command_type; }
+		}
 
 		public System.Data.IDbCommand			Command
 		{
 			get
 			{
 				this.UpdateCommand ();
-				
-				FbCommand command = this.command_cache;
-				
-				if (this.auto_clear)
-				{
-					//	Chaque accès à 'Command' purge la commande précédente et force la reconstruction
-					//	d'un nouvel objet commande lors du prochain accès.
-					
-					this.Clear ();
-				}
-				
-				return command;
+				return this.command_cache;
 			}
 		}
 
@@ -190,6 +197,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			//	être utilisé par un appelant. C'est le cas lorsque l'on est en mode AutoClear.
 			
 			this.command_cache = null;
+			this.command_type  = DbCommandType.None;
 			this.buffer = new System.Text.StringBuilder ();
 			this.command_params.Clear ();
 		}
@@ -229,6 +237,9 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.ThrowError (string.Format ("Invalid table {0}.", table.Name));
 			}
 			
+			this.PrepareCommand ();
+			this.command_type = DbCommandType.Silent;
+			
 			this.buffer.Append ("CREATE TABLE ");
 			this.buffer.Append (table.Name);
 			this.buffer.Append ("(");
@@ -261,6 +272,8 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			if (table.HasPrimaryKeys)
 			{
+				this.command_type |= DbCommandType.FlagMultiple;
+				
 				this.buffer.Append ("ALTER TABLE ");
 				this.buffer.Append (table.Name);
 				this.buffer.Append (" ADD CONSTRAINT ");
@@ -300,6 +313,9 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.ThrowError (string.Format ("Invalid table {0}.", table_name));
 			}
 			
+			this.PrepareCommand ();
+			this.command_type = DbCommandType.Silent;
+			
 			this.buffer.Append ("DROP TABLE ");
 			this.buffer.Append (table_name);
 			this.buffer.Append (";\n");
@@ -312,6 +328,9 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				this.ThrowError (string.Format ("Invalid table {0}.", table_name));
 			}
+			
+			this.PrepareCommand ();
+			this.command_type = DbCommandType.Silent;
 			
 			foreach (SqlColumn column in columns)
 			{
@@ -329,10 +348,18 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.buffer.Append (this.GetSqlColumnAttributes (column));
 				this.buffer.Append (";\n");
 			}
+			
+			if (columns.Length > 1)
+			{
+				this.command_type |= DbCommandType.FlagMultiple;
+			}
 		}
 
 		public void UpdateTableColumns(string table_name, SqlColumn[] columns)
 		{
+			this.PrepareCommand ();
+			this.command_type = DbCommandType.Silent;
+			
 			this.ThrowError (string.Format ("Cannot update table {0}. Not supported.", table_name));
 		}
 
@@ -342,6 +369,9 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				this.ThrowError (string.Format ("Invalid table {0}.", table_name));
 			}
+			
+			this.PrepareCommand ();
+			this.command_type = DbCommandType.Silent;
 			
 			foreach (SqlColumn column in columns)
 			{
@@ -356,11 +386,19 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.buffer.Append (column.Name);
 				this.buffer.Append (";\n");
 			}
+			
+			if (columns.Length > 1)
+			{
+				this.command_type |= DbCommandType.FlagMultiple;
+			}
 		}
 
 		
 		public void SelectData(SqlSelect query)
 		{
+			this.PrepareCommand ();
+			this.command_type = DbCommandType.ReturningData;
+			
 			// TODO:  Add FirebirdSqlBuilder.SelectData implementation
 		}
 
@@ -375,6 +413,9 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				return;
 			}
+			
+			this.PrepareCommand ();
+			this.command_type = DbCommandType.NonQuery;
 			
 			this.buffer.Append ("INSERT INTO ");
 			this.buffer.Append (table_name);
@@ -437,17 +478,26 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		public void UpdateData(string table_name, SqlFieldCollection fields, SqlFieldCollection conditions)
 		{
+			this.PrepareCommand ();
+			this.command_type = DbCommandType.NonQuery;
+			
 			// TODO:  Add FirebirdSqlBuilder.UpdateData implementation
 		}
 
 		public void RemoveData(string table_name, SqlFieldCollection conditions)
 		{
+			this.PrepareCommand ();
+			this.command_type = DbCommandType.NonQuery;
+			
 			// TODO:  Add FirebirdSqlBuilder.RemoveData implementation
 		}
 
 		
 		public void ExecuteProcedure(string procedure_name, SqlFieldCollection fields)
 		{
+			this.PrepareCommand ();
+//?			this.command_type = DbCommandType.NonQuery;
+			
 			// TODO:  Add FirebirdSqlBuilder.ExecuteProcedure implementation
 		}
 
@@ -493,5 +543,6 @@ namespace Epsitec.Cresus.Database.Implementation
 		private FbCommand						command_cache;
 		private System.Text.StringBuilder		buffer;
 		private System.Collections.ArrayList	command_params;
+		private DbCommandType					command_type;
 	}
 }

@@ -13,7 +13,43 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
-
+		public DbColumn(string name)
+		{
+			this.name = name;
+		}
+		
+		public DbColumn(string name, DbSimpleType type) : this (name, type, 1, true, null, Nullable.Undefined)
+		{
+		}
+		
+		public DbColumn(string name, DbSimpleType type, Nullable nullable) : this (name, type, 1, true, null, nullable)
+		{
+		}
+		
+		public DbColumn(string name, DbSimpleType type, int length, bool is_fixed_length) : this (name, type, length, is_fixed_length, null, Nullable.Undefined)
+		{
+		}
+		
+		public DbColumn(string name, DbSimpleType type, int length, bool is_fixed_length, Nullable nullable) : this (name, type, length, is_fixed_length, null, nullable)
+		{
+		}
+		
+		public DbColumn(string name, DbNumDef num_def) : this (name, DbSimpleType.Decimal, 1, true, num_def, Nullable.Undefined)
+		{
+		}
+		
+		public DbColumn(string name, DbNumDef num_def, Nullable nullable) : this (name, DbSimpleType.Decimal, 1, true, num_def, nullable)
+		{
+		}
+		
+		public DbColumn(string name, DbSimpleType type, int length, bool is_fixed_length, DbNumDef num_def, Nullable nullable)
+		{
+			this.name = name;
+			this.SetTypeAndLength (type, length, is_fixed_length, num_def);
+			this.IsNullAllowed = (nullable == Nullable.Yes);
+		}
+		
+		
 		public string					Name
 		{
 			get { return this.name; }

@@ -50,6 +50,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 			
 			this.sql_builder = new FirebirdSqlBuilder (this);
+			this.sql_engine  = new FirebirdSqlEngine (this);
 		}
 
 		~FirebirdAbstraction()
@@ -218,6 +219,11 @@ namespace Epsitec.Cresus.Database.Implementation
 			get { return this.sql_builder; }
 		}
 
+		public ISqlEngine							SqlEngine
+		{
+			get { return this.sql_engine; }
+		}
+
 		
 		public bool									IsConnectionOpen
 		{
@@ -316,6 +322,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		private FbConnection			db_connection;
 		private string					db_connection_string;
 		private FirebirdSqlBuilder		sql_builder;
+		private FirebirdSqlEngine		sql_engine;
 		
 		protected static int			fb_port				= 3050;
 		protected static byte			fb_dialect			= 3;

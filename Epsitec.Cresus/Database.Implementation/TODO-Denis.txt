@@ -83,3 +83,5 @@ A FAIRE
 
 -	Terminer DbNumDef.
 
+-	Compléter les tests de DbTable (si besoin).
+
