@@ -55,7 +55,7 @@ namespace Epsitec.Common.Pictogram
 					string name = texts[i] + "1";
 					IconObjects objects = new IconObjects();
 					objects.Read("..\\..\\images\\" + name + ".icon");
-					ButtonGraphics button = new ButtonGraphics();
+					SampleButton button = new SampleButton();
 					button.Size = new Drawing.Size(22, 22);
 					button.ButtonStyle = ButtonStyle.ToolItem;
 					button.IconObjects = objects;
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Pictogram
 			RadioButton radio = sender as RadioButton;
 			foreach ( Widget widget in this.toolbar.Children )
 			{
-				ButtonGraphics button = widget as ButtonGraphics;
+				SampleButton button = widget as SampleButton;
 				if ( button == null )  continue;
 				string name = button.Name;
 				name = name.Remove(name.Length-1, 1);
