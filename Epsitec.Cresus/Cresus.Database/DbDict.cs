@@ -15,6 +15,15 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public int								ChangeCount
+		{
+			get
+			{
+				return this.change_count;
+			}
+		}
+		
+		
 		#region IStringDict Members
 		public string							this[string key]
 		{
@@ -38,9 +47,16 @@ namespace Epsitec.Cresus.Database
 					throw new System.ArgumentOutOfRangeException ("key", key, "Unknown key in DbDict.");
 				}
 				
-				row.BeginEdit ();
-				row[Tags.ColumnDictValue] = value;
-				row.EndEdit ();
+				string current_value = row[Tags.ColumnDictValue] as string;
+				
+				if (current_value != value)
+				{
+					row.BeginEdit ();
+					row[Tags.ColumnDictValue] = value;
+					row.EndEdit ();
+					
+					this.NotifyChanged ();
+				}
 			}
 		}
 		
@@ -103,6 +119,8 @@ namespace Epsitec.Cresus.Database
 			row.EndEdit ();
 			
 			System.Diagnostics.Debug.Assert (this[key] == value);
+			
+			this.NotifyChanged ();
 		}
 		
 		public void Remove(string key)
@@ -117,11 +135,17 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.command.DeleteRow (row);
+			
+			this.NotifyChanged ();
 		}
 		
 		public void Clear()
 		{
-			this.data_table.Rows.Clear ();
+			if (this.data_table.Rows.Count > 0)
+			{
+				this.data_table.Rows.Clear ();
+				this.NotifyChanged ();
+			}
 		}
 		
 		public bool Contains(string key)
@@ -231,10 +255,17 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		protected virtual void NotifyChanged()
+		{
+			this.change_count++;
+		}
+		
+		
 		private DbInfrastructure				infrastructure;
 		private DbTable							table;
 		private DbRichCommand					command;
 		private System.Data.DataSet				data_set;
 		private System.Data.DataTable			data_table;
+		private int								change_count;
 	}
 }

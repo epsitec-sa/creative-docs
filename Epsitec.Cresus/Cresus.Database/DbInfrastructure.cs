@@ -2124,6 +2124,9 @@ namespace Epsitec.Cresus.Database
 		private TypeHelper						types;
 		private DbLogger						logger;
 		
+		private DbDict							global_dict;
+		private DbDict							local_dict;
+		
 		protected Collections.DbTables			internal_tables = new Collections.DbTables ();
 		protected Collections.DbTypes			internal_types  = new Collections.DbTypes ();
 		

@@ -13,6 +13,11 @@ namespace Epsitec.Common.Types
 		{
 		}
 		
+		public StringDict(Types.IStringDict model) : this ()
+		{
+			StringDict.Copy (model, this);
+		}
+		
 		
 		#region IDictionary Members
 		public bool								IsReadOnly
@@ -163,6 +168,17 @@ namespace Epsitec.Common.Types
 		public void Clear()
 		{
 			this.hash.Clear ();
+		}
+		
+		
+		public static void Copy(Types.IStringDict model, Types.IStringDict target)
+		{
+			string[] keys = model.Keys;
+			
+			for (int i = 0; i < keys.Length; i++)
+			{
+				target.Add (keys[i], model[keys[i]]);
+			}
 		}
 		
 		
