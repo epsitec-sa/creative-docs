@@ -11,7 +11,7 @@ namespace Epsitec.Common.Designer
 	/// La classe InterfaceEditController implémente la logique de l'application de design des
 	/// interfaces graphiques.
 	/// </summary>
-	public class InterfaceEditController : AbstractController
+	public class InterfaceEditController : AbstractMainPanelController
 	{
 		public InterfaceEditController(Application application) : base (application)
 		{
@@ -24,14 +24,6 @@ namespace Epsitec.Common.Designer
 			{
 				this.UpdateEditorArray ();
 				return this.editors;
-			}
-		}
-		
-		public Widget							MainPanel
-		{
-			get
-			{
-				return this.main_panel;
 			}
 		}
 		
@@ -212,7 +204,6 @@ namespace Epsitec.Common.Designer
 				this.creation_book     = null;
 				
 				this.attribute_panel   = null;
-				this.main_panel        = null;
 				this.creation_panel    = null;
 			}
 			
@@ -241,7 +232,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		protected void CreateMainPanel()
+		protected override void CreateMainPanel()
 		{
 			this.main_panel = new Widget ();
 		}
@@ -926,7 +917,6 @@ namespace Epsitec.Common.Designer
 		private const string					PropertySavedWindowParams = "$designer$saved window params$";
 		
 		private bool							is_initialised;
-		private Widget							main_panel;
 		
 		protected Widget						creation_panel;
 		protected TabBook						creation_book;

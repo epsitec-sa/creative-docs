@@ -70,6 +70,17 @@ namespace Epsitec.Common.Designer.Widgets
 			}
 		}
 		
+		public Support.EventHandler				AcceptHandler
+		{
+			get
+			{
+				return this.accept_handler;
+			}
+			set
+			{
+				this.accept_handler = value;
+			}
+		}
 		
 		public bool								IsAcceptEnabled
 		{
@@ -346,5 +357,6 @@ namespace Epsitec.Common.Designer.Widgets
 		
 		private SwitcherMode					mode;
 		private StringCollection				items;
+		private Support.EventHandler			accept_handler;
 	}
 }

@@ -10,7 +10,8 @@ namespace Epsitec.Common.Designer
 	
 	/// <summary>
 	/// La classe Application initialise tout ce qui est en relation avec le
-	/// "designer".
+	/// "designer". Elle crée la fenêtre principale et les contrôleurs qui
+	/// l'habitent.
 	/// </summary>
 	public class Application : Support.ICommandDispatcherHost
 	{
@@ -24,7 +25,7 @@ namespace Epsitec.Common.Designer
 		
 		public Application()
 		{
-			this.name = "Designer";
+			this.name = "Designer";				//	TODO: L10N
 			this.Initialise ();
 		}
 		
@@ -86,10 +87,9 @@ namespace Epsitec.Common.Designer
 		{
 			Context.Save (this);
 			
-			this.switcher.Mode         = Widgets.SwitcherMode.AcceptReject;
-			this.switcher.SelectedName = PanelName.StringEdit.ToString ();
-			
-			this.switcher_accept_handler = accept_handler;
+			this.switcher.Mode          = Widgets.SwitcherMode.AcceptReject;
+			this.switcher.SelectedName  = PanelName.StringEdit.ToString ();
+			this.switcher.AcceptHandler = accept_handler;
 			
 			this.StringEditController.SelectBundleField (bundle, field);
 		}
@@ -166,8 +166,8 @@ namespace Epsitec.Common.Designer
 		{
 			this.switcher = new Widgets.Switcher (this.main_window.Root);
 			
-			this.switcher.Items.Add (PanelName.InterfaceEdit.ToString (), "Interface utilisateur");
-			this.switcher.Items.Add (PanelName.StringEdit.ToString (),    "Ressources (textes)");
+			this.switcher.Items.Add (PanelName.InterfaceEdit.ToString (), "Interface utilisateur");	//	TODO: L10N
+			this.switcher.Items.Add (PanelName.StringEdit.ToString (),    "Ressources (textes)");	//	TODO: L10N
 			
 			this.switcher.Dock   = DockStyle.Top;
 			this.switcher.Mode   = Widgets.SwitcherMode.Select;
@@ -311,13 +311,13 @@ namespace Epsitec.Common.Designer
 		{
 			System.Diagnostics.Debug.Assert (this.switcher == sender);
 			
-			Support.EventHandler accept_handler = this.switcher_accept_handler;
+			Support.EventHandler handler = this.switcher.AcceptHandler;
 			
 			Context.Restore (this);
 			
-			if (accept_handler != null)
+			if (handler != null)
 			{
-				accept_handler (this);
+				handler (this);
 			}
 		}
 		
@@ -383,10 +383,9 @@ namespace Epsitec.Common.Designer
 		{
 			private Context(Application app)
 			{
-				this.switcher_mode = app.switcher.Mode;
-				this.switcher_sel  = app.switcher.SelectedName;
-				
-				this.switcher_accept_handler = app.switcher_accept_handler;
+				this.switcher_mode    = app.switcher.Mode;
+				this.switcher_sel     = app.switcher.SelectedName;
+				this.switcher_handler = app.switcher.AcceptHandler;
 			}
 			
 			
@@ -399,40 +398,38 @@ namespace Epsitec.Common.Designer
 			{
 				Context context = app.context_stack.Pop () as Context;
 				
-				app.switcher.Mode           = context.switcher_mode;
-				app.switcher.SelectedName   = context.switcher_sel;
-				app.switcher_accept_handler = context.switcher_accept_handler;
+				app.switcher.Mode          = context.switcher_mode;
+				app.switcher.SelectedName  = context.switcher_sel;
+				app.switcher.AcceptHandler = context.switcher_handler;
 			}
 			
 			
 			private Widgets.SwitcherMode		switcher_mode;
 			private string						switcher_sel;
-			private Support.EventHandler		switcher_accept_handler;
+			private Support.EventHandler		switcher_handler;
 		}
 		
 		
-		protected bool							is_initialised;
-		protected bool							is_initialising;
+		private bool							is_initialised;
+		private bool							is_initialising;
 		
-		protected Window						main_window;
-		protected Support.CommandDispatcher		dispatcher;
+		private Window							main_window;
+		private Support.CommandDispatcher		dispatcher;
 		
-		protected StringEditController			string_edit_controller;
-		protected InterfaceEditController		interf_edit_controller;
+		private StringEditController			string_edit_controller;
+		private InterfaceEditController			interf_edit_controller;
 		
-		protected string						name;
+		private string							name;
 		
-		protected AbstractToolBar				tool_bar;
+		private AbstractToolBar					tool_bar;					//	barre d'outils principale
 		
-		protected IconSeparator					lang_sep;
-		protected IconButton					lang_swap;
-		protected TextFieldCombo				lang_combo;
-		protected string						lang_suffix_1;
-		protected string						lang_suffix_2;
+		private IconSeparator					lang_sep;					//	pour tool_bar, séparation à droite, avant choix de la langue
+		private IconButton						lang_swap;					//	pour tool_bar, bouton pour permuter les langues actives
+		private TextFieldCombo					lang_combo;					//	pour tool_bar, combo pour sélectionner la langue active
+		private string							lang_suffix_1;				//	historique: langue active à t-1
+		private string							lang_suffix_2;				//	historique: langue active à t-2
 		
-		protected Widgets.Switcher				switcher;
-		protected Support.EventHandler			switcher_accept_handler;
-		
-		private System.Collections.Stack		context_stack;
+		private Widgets.Switcher				switcher;					//	choix de l'éditeur et/ou sélection d'une string et validation
+		private System.Collections.Stack		context_stack;				//	historique du widget 'switcher', pour sélectionner des strings, par ex.
 	}
 }

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer
 	/// La classe StringEditController gère l'édition d'un bundle de ressources
 	/// textuelles.
 	/// </summary>
-	public class StringEditController : AbstractController, Support.IBundleProvider
+	public class StringEditController : AbstractMainPanelController, Support.IBundleProvider
 	{
 		public StringEditController(Application application) : base (application)
 		{
@@ -363,13 +363,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		public Widget							MainPanel
-		{
-			get
-			{
-				return this.main_panel;
-			}
-		}
 		
 		public Support.Data.IPropertyProvider	Provider
 		{
@@ -973,7 +966,7 @@ namespace Epsitec.Common.Designer
 			return panel;
 		}
 		
-		protected void CreateMainPanel()
+		protected override void CreateMainPanel()
 		{
 			Drawing.Size size = Panels.StringEditPanel.DefaultSize;
 			
@@ -1203,7 +1196,6 @@ namespace Epsitec.Common.Designer
 		private BundleStringProvider			provider;
 		
 		protected string						default_prefix = "file";
-		protected Widget						main_panel;
 		protected TabBook						tab_book;
 		protected CommandState					save_command_state;
 	}

@@ -37,13 +37,6 @@ namespace Epsitec.Common.Designer
 			{
 				return this.dispatcher;
 			}
-			set
-			{
-				if (this.dispatcher != value)
-				{
-					throw new System.InvalidOperationException ("CommandDispatcher may not be changed.");
-				}
-			}
 		}
 		
 		
@@ -55,6 +48,23 @@ namespace Epsitec.Common.Designer
 		{
 		}
 		
+		
+		#region ICommandDispatcherHost Members
+		Support.CommandDispatcher				Support.ICommandDispatcherHost.CommandDispatcher
+		{
+			get
+			{
+				return this.CommandDispatcher;
+			}
+			set
+			{
+				if (this.dispatcher != value)
+				{
+					throw new System.InvalidOperationException ("CommandDispatcher may not be changed.");
+				}
+			}
+		}
+		#endregion
 		
 		#region IDisposable Members
 		public void Dispose()
