@@ -3,7 +3,8 @@ namespace Epsitec.Common.Drawing.Null
 	using Epsitec.Common.Drawing;
 	
 	/// <summary>
-	/// Implémentation de la classe Graphics, sans effet.
+	/// Implémentation de la classe Graphics, sans effet (utilisée pour des mesures
+	/// de performance seulement).
 	/// </summary>
 	public class Graphics : Epsitec.Common.Drawing.Graphics
 	{

@@ -316,6 +316,19 @@ namespace Epsitec.Common.Drawing
 		public abstract void AddFilledRectangle(double x, double y, double width, double height);
 		public abstract void Align(ref double x, ref double y);
 		public abstract void Align(ref Drawing.Rectangle rect);
+		
+		public void Align(ref Drawing.Point p)
+		{
+			double x = p.X;
+			double y = p.Y;
+			
+			this.Align (ref x, ref y);
+			
+			p.X = x;
+			p.Y = y;
+		}
+		
+		
 		public abstract Transform SaveTransform();
 		public abstract void RestoreTransform(Transform transform);
 		public abstract void ScaleTransform(double sx, double sy, double cx, double cy);

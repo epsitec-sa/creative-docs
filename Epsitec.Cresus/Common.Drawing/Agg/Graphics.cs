@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Drawing.Agg
 {
 	/// <summary>
-	/// Implémentation de la classe Graphics basée sur AGG.
+	/// Implémentation de la classe Graphics basée sur AGG (Anti-Grain Graphics).
 	/// </summary>
 	public class Graphics : Epsitec.Common.Drawing.Graphics
 	{
