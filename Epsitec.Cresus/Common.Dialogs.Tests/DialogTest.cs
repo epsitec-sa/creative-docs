@@ -69,6 +69,10 @@ namespace Epsitec.Common.Dialogs
 			field_b.DefineCaption ("[res:file:strings#data.ValueB]");
 			field_c.DefineCaption ("[res:file:strings#data.ValueC]");
 			
+			field_a.Changed += new Support.EventHandler (this.HandleFieldChanged);
+			field_b.Changed += new Support.EventHandler (this.HandleFieldChanged);
+			field_c.Changed += new Support.EventHandler (this.HandleFieldChanged);
+			
 			record.Add (field_a);
 			record.Add (field_b);
 			record.Add (field_c);
@@ -94,6 +98,12 @@ namespace Epsitec.Common.Dialogs
 		[Support.Command ("Apply")] private void CommandApply()
 		{
 			System.Diagnostics.Debug.WriteLine ("Apply executed.");
+		}
+		
+		private void HandleFieldChanged(object sender)
+		{
+			Field field = sender as Field;
+			System.Diagnostics.Debug.WriteLine ("Field " + field.Name + " changed to " + field.Value.ToString ());
 		}
 	}
 }
