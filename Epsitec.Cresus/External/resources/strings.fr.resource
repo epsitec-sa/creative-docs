@@ -1,3 +1,3 @@
 <bundle name="strings" type="String">
-  <data name="title.SettingsWindow" about="Version traduite.">Réglages</data>
+  <data name="title.SettingsWindow">Réglages</data>
 </bundle>
