@@ -562,7 +562,7 @@ namespace Epsitec.Common.Widgets.Tools
 				}
 			}
 
-			public void OnDragBegin(Drawing.Point cursor)
+			public bool OnDragBegin(Drawing.Point cursor)
 			{
 				if (this.magnifier == null)
 				{
@@ -578,6 +578,8 @@ namespace Epsitec.Common.Widgets.Tools
 				this.magnifier.Show ();
 				
 				this.is_sampling = true;
+				
+				return true;
 			}
 
 			public void OnDragging(DragEventArgs e)
