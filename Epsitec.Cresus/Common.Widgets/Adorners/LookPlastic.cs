@@ -246,7 +246,14 @@ namespace Epsitec.Common.Widgets.Adorner
 					}
 					else
 					{
-						this.PaintImageButton(graphics, rect, 0);
+						if ( style == ButtonStyle.DefaultActive )
+						{
+							this.PaintImageButton(graphics, rect, 2);
+						}
+						else
+						{
+							this.PaintImageButton(graphics, rect, 0);
+						}
 					}
 				}
 				else
@@ -276,7 +283,8 @@ namespace Epsitec.Common.Widgets.Adorner
 					this.PaintImageButton(graphics, rInside, 3);
 				}
 			}
-			else if ( style == ButtonStyle.Combo )
+			else if ( style == ButtonStyle.Combo ||
+					  style == ButtonStyle.Icon  )
 			{
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
@@ -865,6 +873,58 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 		}
 
+		// Dessine un bouton séparateur de panneaux.
+		public void PaintPaneButtonBackground(Drawing.Graphics graphics,
+											  Drawing.Rectangle rect,
+											  WidgetState state,
+											  Direction dir)
+		{
+			double x, y;
+			if ( dir == Direction.Down || dir == Direction.Up )
+			{
+				x = rect.Left+0.5;
+				graphics.AddLine(x, rect.Bottom, x, rect.Top);
+				graphics.RenderSolid(this.colorControlLightLight);
+
+				x = rect.Left+1.5;
+				graphics.AddLine(x, rect.Bottom, x, rect.Top);
+				graphics.RenderSolid(this.colorControlLight);
+
+				x = rect.Right-1.5;
+				graphics.AddLine(x, rect.Bottom, x, rect.Top);
+				graphics.RenderSolid(this.colorControlDark);
+
+				x = rect.Right-0.5;
+				graphics.AddLine(x, rect.Bottom, x, rect.Top);
+				graphics.RenderSolid(this.colorControlDarkDark);
+			}
+			else
+			{
+				y = rect.Top-0.5;
+				graphics.AddLine(rect.Left, y, rect.Right, y);
+				graphics.RenderSolid(this.colorControlLightLight);
+
+				y = rect.Top-1.5;
+				graphics.AddLine(rect.Left, y, rect.Right, y);
+				graphics.RenderSolid(this.colorControlLight);
+
+				y = rect.Bottom+1.5;
+				graphics.AddLine(rect.Left, y, rect.Right, y);
+				graphics.RenderSolid(this.colorControlDark);
+
+				y = rect.Bottom+0.5;
+				graphics.AddLine(rect.Left, y, rect.Right, y);
+				graphics.RenderSolid(this.colorControlDarkDark);
+			}
+		}
+
+		public void PaintPaneButtonForeground(Drawing.Graphics graphics,
+											  Drawing.Rectangle rect,
+											  WidgetState state,
+											  Direction dir)
+		{
+		}
+
 		// Dessine une ligne de statuts.
 		public void PaintStatusBackground(Drawing.Graphics graphics,
 										  Drawing.Rectangle rect,
@@ -1236,6 +1296,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			get { return this.colorBorder; }
 		}
 
+		public Drawing.Color ColorDisabled
+		{
+			get { return Drawing.Color.Empty; }
+		}
+
+		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(2,2,2,2); } }
+		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
+		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public double GeometryComboRightMargin { get { return 2; } }
 		public double GeometryComboBottomMargin { get { return 2; } }
 		public double GeometryComboTopMargin { get { return 2; } }
@@ -1245,6 +1313,10 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double GeometryScrollerRightMargin { get { return 2; } }
 		public double GeometryScrollerBottomMargin { get { return 2; } }
 		public double GeometryScrollerTopMargin { get { return 2; } }
+		public double GeometryScrollListLeftMargin { get { return 0; } }
+		public double GeometryScrollListRightMargin { get { return 0; } }
+		public double GeometrySliderLeftMargin { get { return 3; } }
+		public double GeometrySliderRightMargin { get { return 0; } }
 
 
 		protected Drawing.Image		bitmap;
