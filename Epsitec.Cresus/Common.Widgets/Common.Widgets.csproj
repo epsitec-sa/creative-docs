@@ -666,6 +666,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Design\Tools\TextBundleArrayStore.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Helpers\AbsPosLayoutEngine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

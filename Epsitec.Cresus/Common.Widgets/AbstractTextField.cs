@@ -29,8 +29,6 @@ namespace Epsitec.Common.Widgets
 		
 		public AbstractTextField()
 		{
-			this.DockMargins = new Drawing.Margins(AbstractTextField.FrameMargin, AbstractTextField.FrameMargin, AbstractTextField.FrameMargin, AbstractTextField.FrameMargin);
-
 			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.AutoEngage;
 			this.InternalState |= InternalState.Focusable;
@@ -87,7 +85,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.DefaultFontHeight + 2*AbstractTextField.Margin;
+				return this.DefaultFontHeight + 2*(AbstractTextField.TextMargin+AbstractTextField.FrameMargin);
 			}
 		}
 
@@ -98,31 +96,15 @@ namespace Epsitec.Common.Widgets
 				if (this.TextLayout != null)
 				{
 					Drawing.Point pos   = this.TextLayout.GetLineOrigin (0);
-					Drawing.Point shift = this.InnerTextOffset;
+					Drawing.Point shift = this.InnerTextBounds.Location;
 					
 					double y_from_top = this.TextLayout.LayoutSize.Height - pos.Y;
-					double y_from_bot = this.realSize.Height - y_from_top + shift.Y;
+					double y_from_bot = this.realSize.Height - y_from_top + shift.Y + 1;
 					
-					return new Drawing.Point (shift.X, y_from_bot);
+					return new Drawing.Point(shift.X, y_from_bot);
 				}
 				
 				return base.BaseLine;
-			}
-		}
-		
-		public virtual Drawing.Point InnerTextOffset
-		{
-			get
-			{
-				Drawing.Point     pos  = new Drawing.Point(AbstractTextField.Margin, AbstractTextField.Margin);
-				Drawing.Rectangle rect = this.InnerBounds;
-				
-				if ( rect.Height < 18 )	//	TODO: remplacer cette constante par qqch de plus adéquat...
-				{
-					pos.Y += 18-rect.Height;  // remonte le texte si la hauteur est très petite
-				}
-				
-				return pos;
 			}
 		}
 		
@@ -133,7 +115,22 @@ namespace Epsitec.Common.Widgets
 				Drawing.Rectangle rect = this.Client.Bounds;
 				
 				rect.Deflate(this.margins);
-				rect.Deflate(AbstractTextField.FrameMargin, AbstractTextField.FrameMargin);
+				
+				if ( this.textStyle != TextFieldStyle.Flat )
+				{
+					rect.Deflate(AbstractTextField.FrameMargin, AbstractTextField.FrameMargin);
+				}
+				
+				return rect;
+			}
+		}
+		
+		public virtual Drawing.Rectangle InnerTextBounds
+		{
+			get
+			{
+				Drawing.Rectangle rect = this.InnerBounds;
+				rect.Deflate(AbstractTextField.TextMargin, AbstractTextField.TextMargin);
 				
 				return rect;
 			}
@@ -304,17 +301,20 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.TextLayout != null )
 			{
-				double dx = this.Client.Width - AbstractTextField.Margin*2 - this.margins.Width;
-				double dy = this.Client.Height - AbstractTextField.Margin*2 - this.margins.Height;
-				this.realSize = new Drawing.Size(dx, dy);
-				this.TextLayout.Alignment = this.Alignment;
-				this.TextLayout.LayoutSize = new Drawing.Size(AbstractTextField.Infinity, dy);
-
+				this.realSize = this.InnerTextBounds.Size;
+				this.TextLayout.Alignment  = this.Alignment;
+				this.TextLayout.LayoutSize = this.GetTextLayoutSize();
+				
 				if ( this.TextLayout.Text != null )
 				{
 					this.CursorScroll();
 				}
 			}
+		}
+		
+		protected virtual Drawing.Size GetTextLayoutSize()
+		{
+			return new Drawing.Size(AbstractTextField.Infinity, this.realSize.Height);
 		}
 
 		// Retourne l'alignement par défaut d'un bouton.
@@ -363,8 +363,8 @@ namespace Epsitec.Common.Widgets
 		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			pos.X -= AbstractTextField.Margin;
-			pos.Y -= AbstractTextField.Margin;
+			pos.X -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
+			pos.Y -= AbstractTextField.TextMargin + AbstractTextField.FrameMargin;
 			pos += this.scrollOffset;
 
 			switch ( message.Type )
@@ -827,19 +827,29 @@ namespace Epsitec.Common.Widgets
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			// Dessine le texte en cours d'édition.
+			//	Dessine le texte en cours d'édition :
+			
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
-			WidgetState   state = this.PaintState;
-			Drawing.Point pos   = this.InnerTextOffset - this.scrollOffset;
-			
-			adorner.PaintTextFieldBackground(graphics, this.Client.Bounds, state, this.textStyle, this.isReadOnly);
-			
-			Drawing.Rectangle rInside = this.InnerBounds;
+			WidgetState       state     = this.PaintState;
+			Drawing.Point     pos       = this.InnerTextBounds.Location - this.scrollOffset + new Drawing.Point(0, 1);
+			Drawing.Rectangle rText     = this.InnerTextBounds;
+			Drawing.Rectangle rInside   = this.InnerBounds;
 			Drawing.Rectangle rSaveClip = graphics.SaveClippingRectangle();
-			Drawing.Rectangle rClip = rInside;
+			Drawing.Rectangle rClip     = rInside;
+			Drawing.Rectangle rFill     = this.Client.Bounds;
+			
+			if ( this.textStyle == TextFieldStyle.Flat )
+			{
+				rFill.Deflate(1, 1);
+			}
+			
+			adorner.PaintTextFieldBackground(graphics, rFill, state, this.textStyle, this.isReadOnly);
+			
+//			graphics.AddFilledRectangle (rText);
+//			graphics.RenderSolid (Drawing.Color.FromARGB (0.6, 1, 0, 0));
 			
 			rClip = this.MapClientToRoot(rClip);
 			graphics.SetClippingRectangle(rClip);
@@ -867,13 +877,21 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
+					//	Un morceau de texte a été sélectionné. Peint en plusieurs étapes :
+					//
+					//	- Peint tout le texte normalement
+					//	- Peint les rectangles de sélection
+					//	- Peint tout le texte en mode sélectionné, avec clipping
+					
 					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state&~(WidgetState.Focused|WidgetState.Selected), PaintTextStyle.TextField, this.BackColor);
-
+					
 					Drawing.Rectangle[] rects = this.TextLayout.FindTextRange(pos, from, to);
+					
 					for ( int i=0 ; i<rects.Length ; i++ )
 					{
 						graphics.Align(ref rects[i]);
 					}
+					
 					adorner.PaintTextSelectionBackground(graphics, rects);
 					
 					for ( int i=0 ; i<rects.Length ; i++ )
@@ -884,20 +902,20 @@ namespace Epsitec.Common.Widgets
 
 					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.BackColor);
 				}
-
-
-				// Dessine le curseur.
+				
 				if ( !this.isReadOnly )
 				{
-					Drawing.Rectangle rCursor = this.TextLayout.FindTextCursor(this.cursorTo, out this.cursorLine);
-					this.cursorPosX = (rCursor.Left+rCursor.Right)/2;
-					double x = rCursor.Left;
-					double y = rCursor.Bottom;
+					//	Dessine le curseur :
+					
+					Drawing.Rectangle cursor = this.TextLayout.FindTextCursor(this.cursorTo, out this.cursorLine);
+					this.cursorPosX = (cursor.Left + cursor.Right)/2;
+					double x = cursor.Left;
+					double y = cursor.Bottom;
 					graphics.Align(ref x, ref y);
-					rCursor.Left = x;
-					rCursor.Right = x+1;
-					rCursor.Offset(pos);
-					adorner.PaintTextCursor(graphics, rCursor, visibleCursor);
+					cursor.Left = x;
+					cursor.Right = x+1;
+					cursor.Offset(pos);
+					adorner.PaintTextCursor(graphics, cursor, visibleCursor);
 				}
 			}
 			else
@@ -922,7 +940,7 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler TextDeleted;
 		
 		
-		internal static readonly double			Margin = 4;
+		internal static readonly double			TextMargin = 2;
 		internal static readonly double			FrameMargin = 2;
 		internal static readonly double			Infinity = 1000000;
 		
