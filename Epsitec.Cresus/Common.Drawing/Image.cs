@@ -24,8 +24,13 @@ namespace Epsitec.Common.Drawing
 			//	(changement d'échelle pour que la taille logique soit respectée).
 		}
 		
-		public virtual Image GetDisabled()
+		public virtual Image GetImageForPaintStyle(GlyphPaintStyle style)
 		{
+			if (style == GlyphPaintStyle.Normal)
+			{
+				return this;
+			}
+			
 			return null;
 		}
 		
@@ -61,11 +66,6 @@ namespace Epsitec.Common.Drawing
 			get { return this.Size.IsEmpty; }
 		}
 		
-		public virtual bool				IsDisabledDefined
-		{
-			get { return false; }
-		}
-		
 		public abstract Bitmap			BitmapImage
 		{
 			get;
@@ -96,6 +96,11 @@ namespace Epsitec.Common.Drawing
 		{
 		}
 		
+		
+		public virtual bool IsPaintStyleDefined(GlyphPaintStyle style)
+		{
+			return this.GetImageForPaintStyle (style) != null;
+		}
 		
 		public virtual void RemoveFromCache()
 		{
