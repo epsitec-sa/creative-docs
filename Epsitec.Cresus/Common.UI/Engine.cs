@@ -94,7 +94,14 @@ namespace Epsitec.Common.UI
 				Binders.DataValueBinder binder     = new Binders.DataValueBinder (source);
 				Adapters.DecimalAdapter adapter    = new Adapters.DecimalAdapter (binder);
 				
-				new Controllers.WidgetStateController (adapter, widget, enum_type);
+				if (widget is Support.Data.INamedStringSelection)
+				{
+					new Controllers.WidgetNamedSelController (adapter, widget, null, enum_type);
+				}
+				else
+				{
+					new Controllers.WidgetStateController (adapter, widget, enum_type);
+				}
 				
 				return;
 			}
