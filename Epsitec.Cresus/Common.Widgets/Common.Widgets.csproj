@@ -267,12 +267,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "PaneBook.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "PaneButton.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Panel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "PanePage.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
