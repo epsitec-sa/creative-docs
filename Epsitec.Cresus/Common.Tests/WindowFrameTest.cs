@@ -82,6 +82,35 @@ namespace Epsitec.Common.Tests
 			window.Show ();
 		}
 
+		[Test] public void CheckWindowParentChildRelationship()
+		{
+			WindowFrame w1 = new WindowFrame ();
+			WindowFrame w2 = new WindowFrame ();
+			WindowFrame w3 = new WindowFrame ();
+			
+			w1.Name = "W1";
+			w1.Text = "CheckWindowParentChildRelationship: W1";
+			w1.WindowSize = new Size (400, 150);
+			w1.WindowLocation = new Point (100, 600);
+			w1.Show ();
+			
+			w2.Owner = w1;
+			w2.Name = "W2";
+			w2.Text = "CheckWindowParentChildRelationship: W2";
+			w2.WindowSize = new Size (400, 150);
+			w2.WindowLocation = new Point (150, 550);
+			w2.Show ();
+			
+			w3.Owner = w2;
+			w3.Name = "W3";
+			w3.Text = "CheckWindowParentChildRelationship: W3";
+			w3.WindowSize = new Size (400, 150);
+			w3.WindowLocation = new Point (200, 500);
+			w3.Show ();
+			
+			WindowFrame.MessageFilter += new MessageHandler (WindowFrame_MessageFilter);
+		}
+
 		private void Root_Clicked(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine ("Root Clicked");
@@ -111,6 +140,12 @@ namespace Epsitec.Common.Tests
 		private void window_Deactivated(object sender, System.EventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine ("Deactivated window");
+		}
+
+		private void WindowFrame_MessageFilter(object sender, Message message)
+		{
+			WindowFrame window = sender as WindowFrame;
+			System.Diagnostics.Debug.WriteLine (string.Format ("Window {0}: message={1}", window.Name, message.ToString ()));
 		}
 	}
 }

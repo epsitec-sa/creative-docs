@@ -19,6 +19,9 @@ namespace Epsitec.Common.Tests
 			CustomWidget a = new CustomWidget ();
 			CustomWidget b = new CustomWidget ();
 			
+			a.MouseCursor = MouseCursor.AsHand;
+			b.MouseCursor = MouseCursor.AsIBeam;
+			
 			window.Root.Children.Add (a);
 			window.Root.Children.Add (b);
 			

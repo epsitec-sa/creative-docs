@@ -447,6 +447,7 @@ namespace Epsitec.Common.Tests
 						CheckButton widget = new CheckButton ();
 						widget.Text = "surprise";
 						widget.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+						widget.MouseCursor = MouseCursor.AsHand;
 						table[x,y].Insert (widget);
 					}
 					else if ( x != 1 || y != 1 )

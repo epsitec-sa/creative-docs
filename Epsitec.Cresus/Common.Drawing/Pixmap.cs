@@ -60,11 +60,57 @@ namespace Epsitec.Common.Drawing
 				graphics.ReleaseHdc (hdc);
 			}
 		}
-
+		
+		public void Paint(System.Drawing.Graphics graphics, System.Drawing.Point offset, System.Drawing.Rectangle clip)
+		{
+			System.IntPtr hdc = graphics.GetHdc ();
+			
+			try
+			{
+				this.Paint (hdc, offset, clip);
+			}
+			finally
+			{
+				graphics.ReleaseHdc (hdc);
+			}
+		}
+		
+		public void Blend(System.Drawing.Graphics graphics, System.Drawing.Point offset, System.Drawing.Rectangle clip)
+		{
+			System.IntPtr hdc = graphics.GetHdc ();
+			
+			try
+			{
+				this.Blend (hdc, offset, clip);
+			}
+			finally
+			{
+				graphics.ReleaseHdc (hdc);
+			}
+		}
+		
 		public void Paint(System.IntPtr hdc, System.Drawing.Rectangle clip)
 		{
 			Agg.Library.AggBufferPaint (this.agg_buffer, hdc, clip.Left, clip.Bottom, clip.Right, clip.Top);
 		}
+		
+		public void Paint(System.IntPtr hdc, System.Drawing.Point offset, System.Drawing.Rectangle clip)
+		{
+			Agg.Library.AggBufferPaintOffset (this.agg_buffer, hdc, offset.X, offset.Y, clip.Left, clip.Bottom, clip.Right, clip.Top);
+		}
+		
+		public void Blend(System.IntPtr hdc, System.Drawing.Point offset, System.Drawing.Rectangle clip)
+		{
+			Agg.Library.AggBufferBlendOffset (this.agg_buffer, hdc, offset.X, offset.Y, clip.Left, clip.Bottom, clip.Right, clip.Top);
+		}
+		
+		
+		public void Erase(System.Drawing.Rectangle clip)
+		{
+			Agg.Library.AggBufferClearRect (this.agg_buffer, clip.Left, clip.Top, clip.Right, clip.Bottom);
+		}
+		
+		
 
 
 		public void Dispose()

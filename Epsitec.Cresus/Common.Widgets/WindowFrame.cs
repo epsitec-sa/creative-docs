@@ -188,6 +188,20 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void OnClosed(System.EventArgs e)
 		{
+			if (this.Focused)
+			{
+				//	Si la fenêtre avait le focus et qu'on la ferme, on aimerait bien que
+				//	si elle avait une fenêtre "parent", alors ce soit le parent qui reçoive
+				//	le focus à son tour. Ca paraît logique.
+				
+				System.Windows.Forms.Form form = this.Owner;
+				
+				if (form != null)
+				{
+					form.Activate ();
+				}
+			}
+			
 			base.OnClosed (e);
 		}
 		
@@ -236,30 +250,12 @@ namespace Epsitec.Common.Widgets
 			e.Handled = message.Handled;
 		}
 
-		protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
-		{
-			base.OnMouseDown (e);
-			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseDown, this, e));
-		}
-
-		protected override void OnMouseUp(System.Windows.Forms.MouseEventArgs e)
-		{
-			base.OnMouseUp (e);
-			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseUp, this, e));
-		}
-
-		protected override void OnMouseMove(System.Windows.Forms.MouseEventArgs e)
-		{
-			base.OnMouseMove (e);
-			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseMove, this, e));
-		}
-
 		protected override void OnMouseWheel(System.Windows.Forms.MouseEventArgs e)
 		{
 			base.OnMouseWheel (e);
 			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseWheel, this, e));
 		}
-
+		
 		protected override void OnMouseEnter(System.EventArgs e)
 		{
 			base.OnMouseEnter (e);
@@ -469,20 +465,13 @@ namespace Epsitec.Common.Widgets
 			this.winforms_timer.Enabled = false;
 		}
 		
+		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
 		{
-			const int WM_KEYDOWN	= 0x0100;	const int WM_SYSKEYDOWN		= 0x0104;
-			const int WM_KEYUP		= 0x0101;	const int WM_SYSKEYUP		= 0x0105;
-			const int WM_CHAR		= 0x0102;	const int WM_SYSCHAR		= 0x0106;
-			const int WM_DEADCHAR	= 0x0103;	const int WM_SYSDEADCHAR	= 0x0107;
-			
-//-			const int WM_NCCALCSIZE    = 0x0083;
-//-			const int WM_CHANGEUISTATE = 0x0127;
-			
-			const int VK_SHIFT		= 0x0010;
-			const int VK_CONTROL	= 0x0011;
-			const int VK_MENU		= 0x0012;
-			const int VK_SPACE		= 0x0020;
+			if (this.WndProcActivation (ref msg))
+			{
+				return;
+			}
 			
 			//	Tente d'unifier tous les événements qui touchent au clavier, sans faire de traitement
 			//	spécial pour les touches pressées en même temps que ALT. Mais si l'on veut que le menu
@@ -492,28 +481,28 @@ namespace Epsitec.Common.Widgets
 			int w_param = (int) msg.WParam;
 			int l_param = (int) msg.LParam;
 			
-			if ((w_param != VK_SPACE) && (w_param != VK_MENU))
+			if ((w_param != Win32Const.VK_SPACE) && (w_param != Win32Const.VK_MENU))
 			{
 				switch (msg.Msg)
 				{
-					case WM_SYSKEYDOWN:		msg.Msg = WM_KEYDOWN;	break;
-					case WM_SYSKEYUP:		msg.Msg = WM_KEYUP;		break;
-					case WM_SYSCHAR:		msg.Msg = WM_CHAR;		break;
-					case WM_SYSDEADCHAR:	msg.Msg = WM_DEADCHAR;	break;
+					case Win32Const.WM_SYSKEYDOWN:	msg.Msg = Win32Const.WM_KEYDOWN;	break;
+					case Win32Const.WM_SYSKEYUP:	msg.Msg = Win32Const.WM_KEYUP;		break;
+					case Win32Const.WM_SYSCHAR:		msg.Msg = Win32Const.WM_CHAR;		break;
+					case Win32Const.WM_SYSDEADCHAR:	msg.Msg = Win32Const.WM_DEADCHAR;	break;
 				}
 			}
 			
 			//	Filtre les répétitions clavier des touches super-shift. Cela n'a, à mon avis, aucun
 			//	sens, puisqu'une touche super-shift est soit enfoncée, soit non enfoncée...
 			
-			if ((msg.Msg == WM_KEYDOWN) ||
-				(msg.Msg == WM_SYSKEYDOWN))
+			if ((msg.Msg == Win32Const.WM_KEYDOWN) ||
+				(msg.Msg == Win32Const.WM_SYSKEYDOWN))
 			{
 				switch (w_param)
 				{
-					case VK_SHIFT:
-					case VK_CONTROL:
-					case VK_MENU:
+					case Win32Const.VK_SHIFT:
+					case Win32Const.VK_CONTROL:
+					case Win32Const.VK_MENU:
 						if ((l_param & 0x40000000) != 0)
 						{
 							return;
@@ -522,7 +511,91 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
+			if (this.WndProcFiltering (ref msg))
+			{
+				return;
+			}
+			
 			base.WndProc (ref msg);
+		}
+		
+		protected virtual bool WndProcActivation(ref System.Windows.Forms.Message msg)
+		{
+			System.Windows.Forms.Message message;
+			
+			//	Top Level forms should keep their 'active' visual style as long as any top level
+			//	form is active. This is implemented by faking WM_NCACTIVATE messages with the
+			//	proper settings.
+			
+			//	The condition for a top level form to be represented with the 'inactive' visual
+			//	style is that a modal dialog is being shown; and class CommonDialogs keeps track
+			//	of this, which makes it the ideal fake Message provider.
+			
+			switch (msg.Msg)
+			{
+				case Win32Const.WM_ACTIVATE:
+					break;
+				
+				case Win32Const.WM_ACTIVATEAPP:
+					message = WindowFrame.CreateNCActivate (this, ((int) msg.WParam) != 0);
+					base.WndProc (ref message);
+					break;
+				
+				case Win32Const.WM_NCACTIVATE:
+					if ((int)msg.WParam != 1)
+					{
+						message = WindowFrame.CreateNCActivate (this, true);
+						base.WndProc (ref message);
+						msg.Result = message.Result;
+						return true;
+					}
+					break;
+			}
+			
+			return false;
+		}
+
+		protected virtual bool WndProcFiltering(ref System.Windows.Forms.Message msg)
+		{
+			Message message = Message.FromWndProcMessage (this, ref msg);
+			
+			if (message != null)
+			{
+				if (WindowFrame.MessageFilter != null)
+				{
+					WindowFrame.MessageFilter (this, message);
+					
+					//	Si le message a été "absorbé" par le filtre, il ne faut en aucun
+					//	cas le transmettre plus loin.
+					
+					if (message.Handled)
+					{
+						return true;
+					}
+				}
+				
+				this.DispatchMessage (message);
+				
+				return false;
+			}
+			
+			return false;
+		}
+		
+		
+		protected static System.Windows.Forms.Message CreateNCActivate(System.Windows.Forms.Form form, bool activate)
+		{
+			System.Windows.Forms.Message msg;
+			msg = System.Windows.Forms.Message.Create (form.Handle, Win32Const.WM_NCACTIVATE, System.IntPtr.Zero, System.IntPtr.Zero);
+			
+			//	TODO: gère le cas où des fenêtres modales sont ouvertes... Cf. VirtualPen
+			
+			if (activate)
+			{
+				msg.WParam = (System.IntPtr)(1);
+			}
+			
+			return msg;
 		}
 		
 		
@@ -754,8 +827,11 @@ namespace Epsitec.Common.Widgets
 		public event System.EventHandler		WindowActivated;
 		public event System.EventHandler		WindowDeactivated;
 		
+		public static event MessageHandler		MessageFilter;
+		
 		public new event System.EventHandler	Resize;
 		public new event System.EventHandler	SizeChanged;
+		
 		
 		protected WindowRoot					root;
 		protected Drawing.Graphics				graphics;

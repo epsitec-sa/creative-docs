@@ -102,6 +102,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public MouseCursor					MouseCursor
+		{
+			get { return this.mouseCursor == null ? MouseCursor.Default : this.mouseCursor; }
+			set { this.mouseCursor = value; }
+		}
+		
 		public Drawing.Color				BackColor
 		{
 			get { return this.backColor; }
@@ -864,6 +870,8 @@ namespace Epsitec.Common.Widgets
 		public event MessageEventHandler	Released;
 		public event MessageEventHandler	Clicked;
 		public event MessageEventHandler	DoubleClicked;
+		public event MessageEventHandler	Entered;
+		public event MessageEventHandler	Exited;
 		public event EventHandler			ShortcutPressed;
 		
 		public event EventHandler			Focused;
@@ -1107,6 +1115,8 @@ namespace Epsitec.Common.Widgets
 					this.widgetState |= WidgetState.Entered;
 					
 					message = Message.FromMouseEvent (MessageType.MouseEnter, null, null);
+					
+					this.OnEntered (new MessageEventArgs (message, Message.State.LastPosition));
 				}
 				else
 				{
@@ -1114,6 +1124,8 @@ namespace Epsitec.Common.Widgets
 					this.widgetState &= ~ WidgetState.Entered;
 					
 					message = Message.FromMouseEvent (MessageType.MouseLeave, null, null);
+					
+					this.OnExited (new MessageEventArgs (message, Message.State.LastPosition));
 				}
 				
 				this.MessageHandler (message);
@@ -2142,6 +2154,42 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnEntered(MessageEventArgs e)
+		{
+			if (this.mouseCursor != null)
+			{
+				this.mouseCursor.SetWindowCursor (this.WindowFrame);
+			}
+			
+			if (this.Entered != null)
+			{
+				if (e != null)
+				{
+					e.Message.Consumer = this;
+				}
+				
+				this.Entered (this, e);
+			}
+		}
+		
+		protected virtual void OnExited(MessageEventArgs e)
+		{
+			if (this.parent != null)
+			{
+				this.parent.MouseCursor.SetWindowCursor (this.WindowFrame);
+			}
+			
+			if (this.Exited != null)
+			{
+				if (e != null)
+				{
+					e.Message.Consumer = this;
+				}
+				
+				this.Exited (this, e);
+			}
+		}
+		
 		protected virtual void OnShortcutPressed()
 		{
 			if (this.ShortcutPressed != null)
@@ -2565,6 +2613,7 @@ namespace Epsitec.Common.Widgets
 		protected TabNavigationMode			tabNavigationMode;
 		protected Shortcut					shortcut;
 		protected double					defaultFontHeight;
+		protected MouseCursor				mouseCursor;
 		
 		static System.Collections.ArrayList	enteredWidgets = new System.Collections.ArrayList ();
 	}

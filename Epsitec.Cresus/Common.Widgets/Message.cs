@@ -1,5 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
+	public delegate void MessageHandler(object sender, Message message);
+	
 	/// <summary>
 	/// Summary description for Message.
 	/// </summary>
@@ -205,6 +207,140 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		
+		internal static System.Windows.Forms.MouseButtons ButtonsFromWParam(System.IntPtr w_param)
+		{
+			System.Windows.Forms.MouseButtons buttons = System.Windows.Forms.MouseButtons.None;
+			int wp = (int) w_param;
+			
+			if ((wp & Win32Const.MK_LBUTTON) != 0)
+			{
+				buttons |= System.Windows.Forms.MouseButtons.Left;
+			}
+			if ((wp & Win32Const.MK_RBUTTON) != 0)
+			{
+				buttons |= System.Windows.Forms.MouseButtons.Right;
+			}
+			if ((wp & Win32Const.MK_MBUTTON) != 0)
+			{
+				buttons |= System.Windows.Forms.MouseButtons.Middle;
+			}
+			if ((wp & Win32Const.MK_XBUTTON1) != 0)
+			{
+				buttons |= System.Windows.Forms.MouseButtons.XButton1;
+			}
+			if ((wp & Win32Const.MK_XBUTTON2) != 0)
+			{
+				buttons |= System.Windows.Forms.MouseButtons.XButton2;
+			}
+			
+			return buttons;
+		}
+		
+		internal static int WheelDeltaFromWParam(System.IntPtr w_param)
+		{
+			int wp = (int) w_param;
+			return (short)((wp >> 16) & 0x0000ffff);
+		}
+		
+		internal static void XYFromLParam(System.IntPtr l_param, out int x, out int y)
+		{
+			x = (short)((((int)l_param) >>  0) & 0x0000ffff);
+			y = (short)((((int)l_param) >> 16) & 0x0000ffff);
+		}
+		
+		internal static System.Windows.Forms.MouseButtons ButtonFromMsg(System.Windows.Forms.Message msg)
+		{
+			switch (msg.Msg)
+			{
+				case Win32Const.WM_LBUTTONDOWN:
+				case Win32Const.WM_LBUTTONDBLCLK:
+				case Win32Const.WM_LBUTTONUP:
+					return System.Windows.Forms.MouseButtons.Left;
+				
+				case Win32Const.WM_RBUTTONDOWN:
+				case Win32Const.WM_RBUTTONDBLCLK:
+				case Win32Const.WM_RBUTTONUP:
+					return System.Windows.Forms.MouseButtons.Right;
+				
+				case Win32Const.WM_MBUTTONDOWN:
+				case Win32Const.WM_MBUTTONDBLCLK:
+				case Win32Const.WM_MBUTTONUP:
+					return System.Windows.Forms.MouseButtons.Middle;
+				
+				case Win32Const.WM_XBUTTONDOWN:
+				case Win32Const.WM_XBUTTONDBLCLK:
+				case Win32Const.WM_XBUTTONUP:
+					int w_param = (int) msg.WParam;
+					switch (w_param & 0x00ff0000)
+					{
+						case 1:	return System.Windows.Forms.MouseButtons.XButton1;
+						case 2:	return System.Windows.Forms.MouseButtons.XButton2;
+					}
+					break;
+			}
+			
+			return System.Windows.Forms.MouseButtons.None;
+		}
+		
+		internal static Message FromWndProcMessage(System.Windows.Forms.Form form, ref System.Windows.Forms.Message msg)
+		{
+			Message message = null;
+			System.Windows.Forms.MouseButtons buttons;
+			
+			int x;
+			int y;
+			int wheel;
+			
+			switch (msg.Msg)
+			{
+				case Win32Const.WM_KEYDOWN:
+				case Win32Const.WM_KEYUP:
+				case Win32Const.WM_CHAR:
+					//	TODO: génère le message clavier
+					break;
+				
+				case Win32Const.WM_MOUSEMOVE:
+					Message.XYFromLParam (msg.LParam, out x, out y);
+					buttons = Message.ButtonsFromWParam (msg.WParam);
+					message = Message.FromMouseEvent (MessageType.MouseMove, form, new System.Windows.Forms.MouseEventArgs (buttons, 0, x, y, 0));
+					break;
+				
+				case Win32Const.WM_LBUTTONDOWN:
+				case Win32Const.WM_RBUTTONDOWN:
+				case Win32Const.WM_MBUTTONDOWN:
+				case Win32Const.WM_XBUTTONDOWN:
+				case Win32Const.WM_LBUTTONDBLCLK:
+				case Win32Const.WM_RBUTTONDBLCLK:
+				case Win32Const.WM_MBUTTONDBLCLK:
+				case Win32Const.WM_XBUTTONDBLCLK:
+					Message.XYFromLParam (msg.LParam, out x, out y);
+					buttons = Message.ButtonFromMsg (msg);
+					message = Message.FromMouseEvent (MessageType.MouseDown, form, new System.Windows.Forms.MouseEventArgs (buttons, 0, x, y, 0));
+					break;
+				
+				case Win32Const.WM_LBUTTONUP:
+				case Win32Const.WM_RBUTTONUP:
+				case Win32Const.WM_MBUTTONUP:
+				case Win32Const.WM_XBUTTONUP:
+					Message.XYFromLParam (msg.LParam, out x, out y);
+					buttons = Message.ButtonFromMsg (msg);
+					message = Message.FromMouseEvent (MessageType.MouseUp, form, new System.Windows.Forms.MouseEventArgs (buttons, 0, x, y, 0));
+					break;
+				
+				case Win32Const.WM_MOUSEWHEEL:
+					System.Drawing.Point point = form.PointToClient (System.Windows.Forms.Control.MousePosition);
+					x = point.X;
+					y = point.Y;
+					buttons = Message.ButtonsFromWParam (msg.WParam);
+					wheel   = Message.WheelDeltaFromWParam (msg.WParam);
+					message = Message.FromMouseEvent (MessageType.MouseWheel, form, new System.Windows.Forms.MouseEventArgs (buttons, 0, x, y, wheel));
+					break;
+			}
+			
+			return message;
+		}
+		
 		internal static Message FromMouseEvent(MessageType type, System.Windows.Forms.Form form, System.Windows.Forms.MouseEventArgs e)
 		{
 			Message message = new Message ();
@@ -363,6 +499,12 @@ namespace Epsitec.Common.Widgets
 				buffer.Append ("'");
 			}
 			
+			if (this.wheel != 0)
+			{
+				buffer.Append (" wheel=");
+				buffer.Append (this.wheel.ToString ());
+			}
+			
 			buffer.Append ("}");
 			return buffer.ToString ();
 		}
@@ -441,6 +583,11 @@ namespace Epsitec.Common.Widgets
 		public bool							IsAltPressed
 		{
 			get { return (this.modifiers & ModifierKeys.Alt) != 0; }
+		}
+		
+		public Drawing.Point				LastPosition
+		{
+			get { return this.cursor; }
 		}
 		
 		

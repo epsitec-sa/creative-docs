@@ -197,6 +197,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "MouseCursor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Pane.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -298,6 +303,11 @@
                 />
                 <File
                     RelPath = "Widget.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Win32Const.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
