@@ -49,6 +49,21 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 		
 		
+		protected override Widget CreateBodyWidget()
+		{
+			Widget widget = base.CreateBodyWidget ();
+			
+			Support.ValidationRule rule = new ValidationRule ("name");
+			
+			rule.Validators.Add (new Widgets.Validators.SelectionValidator (this.list));
+			rule.CommandStates.Add ("ValidateDialog");
+			
+			this.private_dispatcher.Validators.Add (rule);
+			
+			return widget;
+		}
+
+		
 		protected override void AddExtraWidgets(Widget body)
 		{
 			this.bundle_spec.AddExtraWidgets (body);
