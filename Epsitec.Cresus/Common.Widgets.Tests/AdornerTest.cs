@@ -768,12 +768,12 @@ namespace Epsitec.Common.Tests
 			window.Root.Children.Add(title);
 
 			CellTable table = new CellTable();
-			table.StyleH  = AbstractCellArrayStyle.ScrollNorm;
-			table.StyleH |= AbstractCellArrayStyle.Separator;
-			table.StyleH |= AbstractCellArrayStyle.SelectCell;
-			table.StyleH |= AbstractCellArrayStyle.SelectMulti;
-			table.StyleV  = AbstractCellArrayStyle.ScrollNorm;
-			table.StyleV |= AbstractCellArrayStyle.Separator;
+			table.StyleH  = CellArrayStyle.ScrollNorm;
+			table.StyleH |= CellArrayStyle.Separator;
+			table.StyleH |= CellArrayStyle.SelectCell;
+			table.StyleH |= CellArrayStyle.SelectMulti;
+			table.StyleV  = CellArrayStyle.ScrollNorm;
+			table.StyleV |= CellArrayStyle.Separator;
 			table.Name = "Table";
 			table.Location = new Point(10, 20);
 			table.Size = new Size(380, 200);
@@ -832,12 +832,12 @@ namespace Epsitec.Common.Tests
 			window.Root.Children.Add(title);
 
 			CellTable table = new CellTable();
-			table.StyleH  = AbstractCellArrayStyle.Stretch;
-			table.StyleH |= AbstractCellArrayStyle.Header;
-			table.StyleH |= AbstractCellArrayStyle.Separator;
-			table.StyleH |= AbstractCellArrayStyle.Mobile;
-			table.StyleV  = AbstractCellArrayStyle.ScrollNorm;
-			table.StyleV |= AbstractCellArrayStyle.Separator;
+			table.StyleH  = CellArrayStyle.Stretch;
+			table.StyleH |= CellArrayStyle.Header;
+			table.StyleH |= CellArrayStyle.Separator;
+			table.StyleH |= CellArrayStyle.Mobile;
+			table.StyleV  = CellArrayStyle.ScrollNorm;
+			table.StyleV |= CellArrayStyle.Separator;
 			table.DefHeight = 20;
 			table.Name = "Table";
 			table.Location = new Point(10, 20);
@@ -906,17 +906,17 @@ namespace Epsitec.Common.Tests
 			window.Root.Children.Add(title);
 
 			CellTable table = new CellTable();
-			table.StyleH  = AbstractCellArrayStyle.ScrollNorm;
-			table.StyleH |= AbstractCellArrayStyle.Header;
-			table.StyleH |= AbstractCellArrayStyle.Separator;
-			table.StyleH |= AbstractCellArrayStyle.Mobile;
-			table.StyleH |= AbstractCellArrayStyle.Sort;
-			table.StyleV  = AbstractCellArrayStyle.ScrollNorm;
-			table.StyleV |= AbstractCellArrayStyle.Header;
-			table.StyleV |= AbstractCellArrayStyle.Separator;
-			table.StyleV |= AbstractCellArrayStyle.SelectLine;
-			table.StyleV |= AbstractCellArrayStyle.Mobile;
-			table.StyleV |= AbstractCellArrayStyle.Sort;
+			table.StyleH  = CellArrayStyle.ScrollNorm;
+			table.StyleH |= CellArrayStyle.Header;
+			table.StyleH |= CellArrayStyle.Separator;
+			table.StyleH |= CellArrayStyle.Mobile;
+			table.StyleH |= CellArrayStyle.Sort;
+			table.StyleV  = CellArrayStyle.ScrollNorm;
+			table.StyleV |= CellArrayStyle.Header;
+			table.StyleV |= CellArrayStyle.Separator;
+			table.StyleV |= CellArrayStyle.SelectLine;
+			table.StyleV |= CellArrayStyle.Mobile;
+			table.StyleV |= CellArrayStyle.Sort;
 			table.Name = "Table";
 			table.Location = new Point(10, 20);
 			table.Size = new Size(380, 200);
@@ -1122,24 +1122,24 @@ namespace Epsitec.Common.Tests
 
 			CellTable table = new CellTable();
 #if true
-			table.StyleH  = AbstractCellArrayStyle.ScrollNorm;
-			table.StyleH |= AbstractCellArrayStyle.Separator;
-			table.StyleH |= AbstractCellArrayStyle.SelectCell;
-			table.StyleH |= AbstractCellArrayStyle.SelectMulti;
-			table.StyleV  = AbstractCellArrayStyle.ScrollNorm;
-			table.StyleV |= AbstractCellArrayStyle.Separator;
+			table.StyleH  = CellArrayStyle.ScrollNorm;
+			table.StyleH |= CellArrayStyle.Separator;
+			table.StyleH |= CellArrayStyle.SelectCell;
+			table.StyleH |= CellArrayStyle.SelectMulti;
+			table.StyleV  = CellArrayStyle.ScrollNorm;
+			table.StyleV |= CellArrayStyle.Separator;
 #else
-			table.StyleH  = AbstractCellArrayStyle.ScrollNorm;
-			table.StyleH |= AbstractCellArrayStyle.Header;
-			table.StyleH |= AbstractCellArrayStyle.Separator;
-			table.StyleH |= AbstractCellArrayStyle.Mobile;
-			table.StyleH |= AbstractCellArrayStyle.Sort;
-			table.StyleV  = AbstractCellArrayStyle.ScrollNorm;
-			table.StyleV |= AbstractCellArrayStyle.Header;
-			table.StyleV |= AbstractCellArrayStyle.Separator;
-			table.StyleV |= AbstractCellArrayStyle.SelectLine;
-			table.StyleV |= AbstractCellArrayStyle.Mobile;
-			table.StyleV |= AbstractCellArrayStyle.Sort;
+			table.StyleH  = CellArrayStyle.ScrollNorm;
+			table.StyleH |= CellArrayStyle.Header;
+			table.StyleH |= CellArrayStyle.Separator;
+			table.StyleH |= CellArrayStyle.Mobile;
+			table.StyleH |= CellArrayStyle.Sort;
+			table.StyleV  = CellArrayStyle.ScrollNorm;
+			table.StyleV |= CellArrayStyle.Header;
+			table.StyleV |= CellArrayStyle.Separator;
+			table.StyleV |= CellArrayStyle.SelectLine;
+			table.StyleV |= CellArrayStyle.Mobile;
+			table.StyleV |= CellArrayStyle.Sort;
 #endif
 			table.Name = "Table";
 			table.Location = new Point(10, 20);
