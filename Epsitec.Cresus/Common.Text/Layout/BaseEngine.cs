@@ -67,7 +67,7 @@ namespace Epsitec.Common.Text.Layout
 			return length;
 		}
 		
-		public int GetNextFragmentLength(ulong[] text, int start, int length, int fragment_length)
+		public int GetNextFragmentLength(ulong[] text, int start, int length, int fragment_length, out double break_penalty)
 		{
 			//	Détermine la taille d'un fragment de texte (prochaine césure) à
 			//	partir d'une longueur de départ.
@@ -76,14 +76,21 @@ namespace Epsitec.Common.Text.Layout
 			{
 				Unicode.BreakInfo info = Unicode.Bits.GetBreakInfo (text[start+i]);
 				
-				if ((info == Unicode.BreakInfo.HyphenatePoorChoice) ||
-					(info == Unicode.BreakInfo.HyphenateGoodChoice))
+				if (info == Unicode.BreakInfo.HyphenatePoorChoice)
 				{
+					break_penalty = 10.0;
+					return i+1;
+				}
+				else if (info == Unicode.BreakInfo.HyphenateGoodChoice)
+				{
+					break_penalty = 5.0;
 					return i+1;
 				}
 				
 				Debug.Assert.IsTrue ((info == Unicode.BreakInfo.No) || (info == Unicode.BreakInfo.NoAlpha) || (i+1 == length));
 			}
+			
+			break_penalty = 0;
 			
 			return length;
 		}

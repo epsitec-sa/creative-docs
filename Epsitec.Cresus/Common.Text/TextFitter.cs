@@ -304,9 +304,11 @@ namespace Epsitec.Common.Text
 					
 					for (int i = 0; i < n_breaks; i++)
 					{
-						if (result[i].Penalty < penalty)
+						double computed_penalty = this.ComputePenalty (result[i].SpacePenalty, result[i].BreakPenalty);
+						
+						if (computed_penalty < penalty)
 						{
-							penalty = result[i].Penalty;
+							penalty = computed_penalty;
 							p_index = i;
 						}
 					}
@@ -369,6 +371,12 @@ namespace Epsitec.Common.Text
 					return;
 				}
 			}
+		}
+		
+		
+		protected double ComputePenalty(double space_penalty, double break_penalty)
+		{
+			return space_penalty + break_penalty;
 		}
 		
 		
