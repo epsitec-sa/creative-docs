@@ -335,7 +335,7 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		private static bool ParseEnum(System.Type type, string name, out System.Enum value)
+		internal static bool ParseEnum(System.Type type, string name, out System.Enum value)
 		{
 			//	Tente une conversion du nom donné en entrée en une valeur de
 			//	l'énumération; gère aussi les énumérations avec valeurs multiples.
@@ -354,7 +354,7 @@ namespace Epsitec.Common.Types
 			return false;
 		}
 		
-		private static bool CheckEnumValue(System.Type type, System.Enum value)
+		internal static bool CheckEnumValue(System.Type type, System.Enum value)
 		{
 			string[] values = Converter.GetSplitEnumValues (type, value);
 			

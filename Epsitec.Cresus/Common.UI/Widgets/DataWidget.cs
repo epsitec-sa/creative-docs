@@ -35,6 +35,7 @@ namespace Epsitec.Common.UI.Widgets
 				{
 					this.source = value;
 					this.CreateUI ();
+					System.Diagnostics.Debug.WriteLine ("DataSource set to " + value);
 				}
 			}
 		}
@@ -71,6 +72,23 @@ namespace Epsitec.Common.UI.Widgets
 				}
 			}
 		}
+		
+		[Bundle] public double					CaptionWidth
+		{
+			get
+			{
+				return this.caption_width;
+			}
+			set
+			{
+				if (this.caption_width != value)
+				{
+					this.caption_width = value;
+					this.CreateUI ();
+				}
+			}
+		}
+		
 		
 		public static bool CheckCompatibility(Types.IDataValue data, Data.Representation representation)
 		{
@@ -202,43 +220,49 @@ namespace Epsitec.Common.UI.Widgets
 		
 		protected virtual void CreateUITextField()
 		{
-			this.widget_container = this;
+			this.widget_layout_mode = LayoutMode.None;
+			this.widget_container   = this;
+			
+			TextField  text_field = new TextField (this.widget_container);
+			StaticText caption    = null;
 			
 			if (this.has_caption)
 			{
-				StaticText caption = new StaticText (this.widget_container, this.source.Caption);
+				caption = new StaticText (this.widget_container, this.source.Caption);
 				
 				caption.Text          = this.source.Caption;
-				caption.Anchor        = AnchorStyles.TopAndBottom | AnchorStyles.Left;
+				caption.Anchor        = AnchorStyles.TopLeft;
 				caption.Width         = this.caption_width;
 				caption.AnchorMargins = new Drawing.Margins (0, 0, 0, 0);
 			}
-			
-			TextField  text_field = new TextField (this.widget_container);
 			
 			text_field.TabIndex      = 1;
 			text_field.Anchor        = AnchorStyles.Top | AnchorStyles.LeftAndRight;
 			text_field.AnchorMargins = new Drawing.Margins (this.has_caption ? this.caption_width : 0, 0, 0, 0);
 			
-			this.best_fit_size = new Drawing.Size (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinSize.Height);
-			this.Size          = this.best_fit_size;
-			this.MinSize       = new Drawing.Size (this.caption_width + text_field.MinSize.Width, text_field.MinSize.Height);
+			Widget.BaseLineAlign (text_field, caption);
+			
+			this.DefineBestFitSize (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinSize.Height);
+			
+			this.MinSize = new Drawing.Size (this.caption_width + text_field.MinSize.Width, text_field.MinSize.Height);
 			
 			Engine.BindWidget (this.source, text_field);
 		}
 		
 		protected virtual void CreateUINumericUpDown()
 		{
-			this.widget_container = this;
+			this.widget_layout_mode = LayoutMode.None;
+			this.widget_container   = this;
 			
-			TextFieldUpDown  text_field = new TextFieldUpDown (this.widget_container);
+			TextFieldUpDown text_field = new TextFieldUpDown (this.widget_container);
+			StaticText      caption    = null;
 			
 			if (this.has_caption)
 			{
-				StaticText caption = new StaticText (this.widget_container, this.source.Caption);
+				caption = new StaticText (this.widget_container, this.source.Caption);
 				
 				caption.Text          = this.source.Caption;
-				caption.Anchor        = AnchorStyles.TopAndBottom | AnchorStyles.Left;
+				caption.Anchor        = AnchorStyles.TopLeft;
 				caption.Width         = this.caption_width;
 				caption.AnchorMargins = new Drawing.Margins (0, 0, 0, 0);
 			}
@@ -247,9 +271,11 @@ namespace Epsitec.Common.UI.Widgets
 			text_field.Anchor        = AnchorStyles.Top | AnchorStyles.LeftAndRight;
 			text_field.AnchorMargins = new Drawing.Margins (this.has_caption ? this.caption_width : 0, 0, 0, 0);
 			
-			this.best_fit_size = new Drawing.Size (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinSize.Height);
-			this.Size          = this.best_fit_size;
-			this.MinSize       = new Drawing.Size (this.caption_width + text_field.MinSize.Width, text_field.MinSize.Height);
+			Widget.BaseLineAlign (text_field, caption);
+			
+			this.DefineBestFitSize (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinSize.Height);
+			
+			this.MinSize = new Drawing.Size (this.caption_width + text_field.MinSize.Width, text_field.MinSize.Height);
 			
 			Engine.BindWidget (this.source, text_field);
 		}
@@ -427,9 +453,9 @@ namespace Epsitec.Common.UI.Widgets
 			double frame_width  = this.widget_container.Client.Width  - (this.widget_container.InnerBounds.Width  - this.widget_container.DockPadding.Width);
 			double frame_height = this.widget_container.Client.Height - (this.widget_container.InnerBounds.Height - this.widget_container.DockPadding.Height);
 			
-			this.best_fit_size = new Drawing.Size (table_width + frame_width, table_height + frame_height);
-			this.Size          = this.best_fit_size;
-			this.MinSize       = new Drawing.Size (frame_width + cell_size.Width, frame_height + cell_size.Height);
+			this.DefineBestFitSize (table_width + frame_width, table_height + frame_height);
+			
+			this.MinSize = new Drawing.Size (frame_width + cell_size.Width, frame_height + cell_size.Height);
 			
 			this.UpdateInternalLayout ();
 		}
@@ -444,6 +470,8 @@ namespace Epsitec.Common.UI.Widgets
 				}
 				
 				this.widget_container = null;
+				
+				this.Children.Clear ();
 			}
 		}
 		
@@ -557,12 +585,31 @@ namespace Epsitec.Common.UI.Widgets
 			}
 		}
 		
+		protected virtual void DefineBestFitSize(double dx, double dy)
+		{
+			Drawing.Size size = new Drawing.Size (dx, dy);
+			
+			if (this.best_fit_size.IsEmpty)
+			{
+				this.Size = size;
+			}
+			
+			this.best_fit_size = size;
+		}
+		
 		
 		protected override void OnLayoutChanged()
 		{
 			this.UpdateInternalLayout ();
 			base.OnLayoutChanged ();
 		}
+		
+		protected override void OnBindingInfoChanged()
+		{
+			base.OnBindingInfoChanged ();
+			System.Diagnostics.Debug.WriteLine ("Binding info set to " + this.BindingInfo);
+		}
+
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{

@@ -133,10 +133,7 @@ namespace Epsitec.Common.Types
 			{
 				System.Enum enum_value = (System.Enum) System.Enum.Parse (this.enum_type, value.ToString ());
 				
-				if (System.Enum.IsDefined (this.enum_type, enum_value))
-				{
-					return true;
-				}
+				return Converter.CheckEnumValue (this.enum_type, enum_value);
 			}
 			catch
 			{
@@ -161,6 +158,22 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
+				return false;
+			}
+		}
+		
+		public virtual bool						IsFlags
+		{
+			get
+			{
+				if (this.enum_type != null)
+				{
+					if (this.enum_type.GetCustomAttributes (typeof (System.FlagsAttribute), false).Length > 0)
+					{
+						return true;
+					}
+				}
+				
 				return false;
 			}
 		}

@@ -83,6 +83,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		bool									IEnum.IsFlags
+		{
+			get
+			{
+				return false;
+			}
+		}
+		
 		IEnumValue[]							IEnum.Values
 		{
 			get

@@ -9,7 +9,7 @@ namespace Epsitec.Common.Support
 	/// <summary>
 	/// La classe Resources permet de gérer les ressources de l'application.
 	/// </summary>
-	public class Resources
+	public sealed class Resources
 	{
 		private Resources()
 		{
@@ -122,6 +122,8 @@ namespace Epsitec.Common.Support
 			{
 				throw new System.InvalidOperationException ("Resource Providers may not be setup more than once.");
 			}
+			
+			Resources.application_name = application_name;
 			
 			for (int i = 0; i < Resources.resource_providers.Length; i++)
 			{
@@ -735,7 +737,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		protected static void InternalInitialise()
+		private static void InternalInitialise()
 		{
 			System.Collections.ArrayList providers = new System.Collections.ArrayList ();
 			System.Reflection.Assembly   assembly  = System.Reflection.Assembly.LoadWithPartialName ("Common.Support.Implementation");
@@ -768,7 +770,7 @@ namespace Epsitec.Common.Support
 			providers.CopyTo (Resources.resource_providers);
 		}
 		
-		protected static void InternalDefineCultures(string[] names)
+		private static void InternalDefineCultures(string[] names)
 		{
 			int n = names.Length;
 			
@@ -781,7 +783,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		protected static void SelectLocale(CultureInfo culture)
+		private static void SelectLocale(CultureInfo culture)
 		{
 			Resources.culture = culture;
 			
@@ -791,7 +793,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		protected static IResourceProvider FindProvider(string full_id, out string local_id)
+		private static IResourceProvider FindProvider(string full_id, out string local_id)
 		{
 			if (full_id != null)
 			{
@@ -828,12 +830,12 @@ namespace Epsitec.Common.Support
 		
 		
 		
-		protected static CultureInfo			culture;
-		protected static CultureInfo[]			cultures;
-		protected static IResourceProvider[]	resource_providers;
-		protected static Hashtable				resource_provider_hash;
-		protected static string					application_name;
-		protected static string					default_prefix = "file";
-		protected static IBundleProvider[]		bundle_providers;
+		private static CultureInfo				culture;
+		private static CultureInfo[]			cultures;
+		private static IResourceProvider[]		resource_providers;
+		private static Hashtable				resource_provider_hash;
+		private static string					application_name;
+		private static string					default_prefix = "file";
+		private static IBundleProvider[]		bundle_providers;
 	}
 }

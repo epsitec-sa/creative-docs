@@ -3276,6 +3276,23 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public static void BaseLineAlign(Widget model, Widget widget)
+		{
+			if ((model == null) ||
+				(widget == null))
+			{
+				return;
+			}
+			
+			double model_offset  = model.BaseLine.Y;
+			double widget_offset = widget.BaseLine.Y;
+			
+			double y_bottom = model.Bottom + model_offset - widget_offset;
+			
+			widget.Bounds = new Drawing.Rectangle (widget.Left, y_bottom, widget.Width, widget.Height);
+		}
+		
+		
 		public Widget			FindChild(Drawing.Point point)
 		{
 			return this.FindChild (point, ChildFindMode.SkipHidden);

@@ -14,5 +14,6 @@ namespace Epsitec.Common.Types
 		IEnumValue		this[int rank]		{ get; }
 		
 		bool			IsCustomizable		{ get; }
+		bool			IsFlags				{ get; }
 	}
 }
