@@ -86,7 +86,7 @@ class CopyProject:
         return 0
 
     def check_no_copy(self, name):
-        for ext in ['.dll','.pdb','.scc','.user','.exe','.vspscc','.vssscc','.projdata','.suo']:
+        for ext in ['.dll','.pdb','.scc','.user','.exe','.vspscc','.vssscc','.projdata','.suo','.projdata1','.mgb']:
             if name.endswith(ext):
                 return 1
 

@@ -1515,7 +1515,9 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void MessageHandler(Message message, Drawing.Point pos)
 		{
-			this.PreProcessMessage (message, pos);
+			Drawing.Point client_pos = this.MapParentToClient (pos);
+			
+			this.PreProcessMessage (message, client_pos);
 			
 			//	En premier lieu, si le message peut être transmis aux descendants de ce widget, passe
 			//	en revue ceux-ci dans l'ordre inverse de leur affichage (commence par le widget qui est
@@ -1525,8 +1527,6 @@ namespace Epsitec.Common.Widgets
 				(message.Handled == false) &&
 				(this.Children.Count > 0))
 			{
-				Drawing.Point client_pos = this.MapParentToClient (pos);
-				
 				Widget[] children = this.Children.Widgets;
 				int  children_num = children.Length;
 				
@@ -1572,10 +1572,10 @@ namespace Epsitec.Common.Widgets
 			
 			if (message.Handled == false)
 			{
-				this.DispatchMessage (message, pos);
+				this.DispatchMessage (message, client_pos);
 			}
 			
-			this.PostProcessMessage (message, pos);
+			this.PostProcessMessage (message, client_pos);
 		}
 		
 		protected virtual void DispatchMessage(Message message, Drawing.Point pos)

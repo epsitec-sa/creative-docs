@@ -18,9 +18,13 @@ namespace Epsitec.Common.Tests
 			WindowFrame window = new WindowFrame ();
 			window.Text = "CheckWidgetTransform";
 			
-			TransformWidget a = new TransformWidget ();	a.Text = "A"; a.Bounds = new Rectangle (10, 10, 200, 200); a.SetClientZoom (1);
-			TransformWidget b = new TransformWidget (); b.Text = "B"; b.Bounds = new Rectangle (10, 10, 160, 120); b.SetClientAngle (90);
-			TransformWidget c = new TransformWidget (); c.Text = "C"; c.Bounds = new Rectangle (10, 10,  60,  40);
+			TransformWidget a = new TransformWidget ();	a.Text = "A"; a.Bounds = new Rectangle (10, 10, 270, 200);
+			TransformWidget b = new TransformWidget (); b.Text = "B"; b.Bounds = new Rectangle (20, 20, 230, 160); b.SetClientAngle (90);
+			TransformWidget c = new TransformWidget (); c.Text = "C"; c.Bounds = new Rectangle (20, 20, 120,  60); c.SetClientAngle (-90);
+			
+			a.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+			b.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+			c.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
 			
 			window.Root.Children.Add (a);
 			a.Children.Add (b);
@@ -55,15 +59,24 @@ namespace Epsitec.Common.Tests
 			graphics.RenderSolid (Color.FromRGB (0, 0, 0.6));
 			
 			Font   font = Font.GetFont ("Tahoma", "Regular");
-			double size = 15;
+			double size = 12;
 			
-			graphics.AddText (5, 5, this.Text, font, size);
+			switch (this.RootAngle)
+			{
+				case 0:
+				case 90:
+				case 180:
+				case 270:
+					break;
+			}
+			
+			graphics.AddText (5, 5, this.Text + " " + this.RootAngle.ToString () + "°", font, size);
 			graphics.RenderSolid (color_text);
 		}
 		
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			System.Diagnostics.Debug.WriteLine ("Message " + message.ToString () + " in " + this.Text);
+			System.Diagnostics.Debug.WriteLine ("Message " + message.ToString () + " in " + this.Text + " at " + pos.ToString ());
 			message.Consumer = this;
 		}
 	}
