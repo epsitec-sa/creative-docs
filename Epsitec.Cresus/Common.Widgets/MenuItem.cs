@@ -190,18 +190,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		internal int Index
-		{
-			get
-			{
-				return this.index;
-			}
-			set
-			{
-				this.index = value;
-			}
-		}
-		
 		// Ajuste des dimensions d'un TextLayout.
 		protected void AdjustSize(ref Drawing.Size size)
 		{
@@ -346,7 +334,6 @@ namespace Epsitec.Common.Widgets
 
 		protected bool				onlyText = false;
 		protected bool				separator = false;
-		protected int				index;
 		protected MenuType			type = MenuType.Invalid;
 		protected MenuItemType		itemType = MenuItemType.Deselect;
 		protected double			marginHeader = 6;

@@ -11,12 +11,12 @@ namespace Epsitec.Common.Widgets
 	/// La classe Menu représente un menu horizontal ou vertical.
 	/// </summary>
 	[Support.SuppressBundleSupport]
-	public abstract class AbstractMenu : Widget
+	public abstract class AbstractMenu : Widget, Helpers.IWidgetCollectionHost
 	{
 		protected AbstractMenu(MenuType type)
 		{
 			this.type  = type;
-			this.items = new MenuItemCollection (this);
+			this.items = new MenuItemCollection(this);
 			this.timer = new Timer();
 			this.timer.TimeElapsed += new EventHandler(this.HandleTimerTimeElapsed);
 		}
@@ -703,224 +703,77 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		#region MenuItemCollection Class
-		public class MenuItemCollection : System.Collections.IList, System.IDisposable
+		#region IWidgetCollectionHost Members
+		public void NotifyInsertion(Widget widget)
 		{
-			public MenuItemCollection(AbstractMenu menu)
+			MenuItem item = widget as MenuItem;
+			
+			this.Children.Add (item);
+			this.isDirty = true;
+			
+			item.SetMenuType (this.type);
+			
+			item.Pressed += new MessageEventHandler(this.HandleCellPressed);
+			item.Entered += new MessageEventHandler(this.HandleCellEntered);
+			item.Exited  += new MessageEventHandler(this.HandleCellExited);
+		}
+
+		public void NotifyRemoval(Widget widget)
+		{
+			MenuItem item = widget as MenuItem;
+			
+			item.SetMenuType (MenuType.Invalid);
+			
+			item.Pressed -= new MessageEventHandler(this.HandleCellPressed);
+			item.Entered -= new MessageEventHandler(this.HandleCellEntered);
+			item.Exited  -= new MessageEventHandler(this.HandleCellExited);
+			
+			this.Children.Remove (item);
+			this.isDirty = true;
+		}
+		#endregion
+		
+		
+		#region MenuItemCollection Class
+		public class MenuItemCollection : Helpers.WidgetCollection
+		{
+			public MenuItemCollection(AbstractMenu menu) : base(menu)
 			{
-				this.menu = menu;
-				this.list = new System.Collections.ArrayList ();
 			}
 			
-			public MenuItem this[int index]
+			public new MenuItem this[int index]
 			{
 				get
 				{
-					return this.list[index] as MenuItem;
+					return base[index] as MenuItem;
 				}
 			}
 			
-			public MenuItem this[string name]
+			public new MenuItem this[string name]
 			{
 				get
 				{
-					foreach (MenuItem item in this.list)
-					{
-						if (item.Name == name)
-						{
-							return item;
-						}
-					}
-					return null;
+					return base[name] as MenuItem;
 				}
 			}
-			
-			public void Dispose()
-			{
-				System.Diagnostics.Debug.Assert (this.list.Count == 0);
-				
-				this.menu = null;
-				this.list = null;
-			}
-			
-			
-			#region IList Members
-			public bool IsReadOnly
-			{
-				get
-				{
-					return false;
-				}
-			}
-
-			object System.Collections.IList.this[int index]
-			{
-				get
-				{
-					return this.list[index];
-				}
-				set
-				{
-					this.list[index] = value;
-				}
-			}
-
-			public void RemoveAt(int index)
-			{
-				MenuItem item = this.list[index] as MenuItem;
-				this.HandleRemove (item);
-				this.list.RemoveAt (index);
-				this.RenumberItems ();
-			}
-
-			public void Insert(int index, object value)
-			{
-				this.list.Insert (index, value);
-				this.HandleInsert (value as MenuItem);
-				this.RenumberItems ();
-			}
-
-			public void Remove(object value)
-			{
-				this.HandleRemove (value as MenuItem);
-				this.list.Remove (value);
-				this.RenumberItems ();
-			}
-
-			public bool Contains(object value)
-			{
-				return this.Contains (value);
-			}
-
-			public void Clear()
-			{
-				foreach (MenuItem item in this.list)
-				{
-					this.HandleRemove (item);
-				}
-				this.list.Clear ();
-			}
-
-			public int IndexOf(object value)
-			{
-				return this.list.IndexOf (value);
-			}
-
-			public int Add(object value)
-			{
-				if (value is MenuItem)
-				{
-					int index = this.list.Add (value);
-					this.HandleInsert (value as MenuItem);
-					this.RenumberItems ();
-					return index;
-				}
-				
-				throw new System.ArgumentException ("Expecting MenuItem, got " + value.GetType ().Name);
-			}
-
-			public bool IsFixedSize
-			{
-				get
-				{
-					return this.list.IsFixedSize;
-				}
-			}
-			#endregion
-			
-			#region ICollection Members
-			public bool IsSynchronized
-			{
-				get
-				{
-					return this.list.IsSynchronized;
-				}
-			}
-
-			public int Count
-			{
-				get
-				{
-					return this.list.Count;
-				}
-			}
-
-			public void CopyTo(System.Array array, int index)
-			{
-				this.list.CopyTo (array, index);
-			}
-
-			public object SyncRoot
-			{
-				get
-				{
-					return this.list.SyncRoot;
-				}
-			}
-
-			#endregion
-			
-			#region IEnumerable Members
-			public System.Collections.IEnumerator GetEnumerator()
-			{
-				return this.list.GetEnumerator ();
-			}
-			#endregion
-			
-			protected void HandleInsert(MenuItem item)
-			{
-				this.menu.Children.Add (item);
-				this.menu.isDirty = true;
-				
-				item.SetMenuType (this.menu.type);
-				
-				item.Pressed += new MessageEventHandler(this.menu.HandleCellPressed);
-				item.Entered += new MessageEventHandler(this.menu.HandleCellEntered);
-				item.Exited  += new MessageEventHandler(this.menu.HandleCellExited);
-			}
-			
-			protected void HandleRemove(MenuItem item)
-			{
-				item.SetMenuType (MenuType.Invalid);
-				
-				item.Pressed -= new MessageEventHandler(this.menu.HandleCellPressed);
-				item.Entered -= new MessageEventHandler(this.menu.HandleCellEntered);
-				item.Exited  -= new MessageEventHandler(this.menu.HandleCellExited);
-				
-				this.menu.Children.Remove (item);
-				this.menu.isDirty = true;
-			}
-			
-			protected void RenumberItems()
-			{
-				for (int i = 0; i < this.list.Count; i++)
-				{
-					MenuItem item = this.list[i] as MenuItem;
-					item.Index = i;
-				}
-			}
-			
-			
-			private System.Collections.ArrayList	list;
-			private AbstractMenu					menu;
 		}
 
 		#endregion
 		
-		protected MenuType				type;
-		protected bool					isDirty;
-		protected bool					isActive = true;  // dernier menu (feuille)
-		protected double				margin = 2;
-		protected MenuItemCollection	items;
-		protected Window				window;
-		protected Timer					timer;
-		protected AbstractMenu			submenu;
-		protected AbstractMenu			parentMenu;
-		protected MenuItem				parentItem;
-		protected double				iconWidth;
-		protected Drawing.Rectangle		parentRect;
-		protected MenuItem				delayedMenuItem;
+		protected MenuType					type;
+		protected bool						isDirty;
+		protected bool						isActive = true;  // dernier menu (feuille)
+		protected double					margin = 2;
+		protected MenuItemCollection		items;
+		protected Window					window;
+		protected Timer						timer;
+		protected AbstractMenu				submenu;
+		protected AbstractMenu				parentMenu;
+		protected MenuItem					parentItem;
+		protected double					iconWidth;
+		protected Drawing.Rectangle			parentRect;
+		protected MenuItem					delayedMenuItem;
 		
-		protected static bool			menuDeveloped;
+		protected static bool				menuDeveloped;
 	}
 }

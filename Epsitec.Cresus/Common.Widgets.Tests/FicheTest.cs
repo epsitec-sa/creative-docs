@@ -387,12 +387,12 @@ namespace Epsitec.Common.Tests
 			this.toolBar.Location = new Point(0, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
 			this.toolBar.Size = new Size(rect.Width, this.toolBar.DefaultHeight);
 			this.toolBar.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
-			this.toolBar.InsertIconButton(@"file:images\open.png");
-			this.toolBar.InsertIconButton(@"file:images\save.png");
-			this.toolBar.InsertSep(5);
-			this.toolBar.InsertIconButton(@"file:images\cut.png");
-			this.toolBar.InsertIconButton(@"file:images\copy.png");
-			this.toolBar.InsertIconButton(@"file:images\paste.png");
+			this.toolBar.Items.Add (new IconButton (@"file:images\open.png"));
+			this.toolBar.Items.Add (new IconButton (@"file:images\save.png"));
+			this.toolBar.Items.Add (new IconSeparator());
+			this.toolBar.Items.Add (new IconButton (@"file:images\cut.png"));
+			this.toolBar.Items.Add (new IconButton (@"file:images\copy.png"));
+			this.toolBar.Items.Add (new IconButton (@"file:images\paste.png"));
 			this.toolBar.Parent = this.window.Root;
 
 			Widget root = new Widget();

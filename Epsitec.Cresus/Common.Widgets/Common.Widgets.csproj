@@ -99,7 +99,7 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
             </References>
@@ -228,6 +228,11 @@
                 />
                 <File
                     RelPath = "IconButton.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IconSeparator.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -474,7 +479,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Helpers\IWidgetCollectionHost.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Helpers\StringCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Helpers\WidgetCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

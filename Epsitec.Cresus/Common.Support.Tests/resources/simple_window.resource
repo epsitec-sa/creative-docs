@@ -5,7 +5,7 @@
  <field name='size'>240;280</field>
  <field name='icon'>file:icon</field>
  <list name='widgets'>
-  <bundle>
+  <bundle>									<!-- Définition du menu -->
    <field name='class'>HMenu</field>
    <field name='dock'>Top</field>
    <list name='items'>
@@ -37,6 +37,50 @@
     </bundle>
    </list>
   </bundle>
+  
+  <bundle>									<!-- Définition de la barre d'icônes -->
+   <field name='class'>ToolBar</field>
+   <field name='dock'>Top</field>
+   <list name='items'>
+    <bundle>
+     <field name='class'>IconButton</field>
+     <field name='icon'>file:images/open.png</field>
+    </bundle>
+    <bundle>
+     <field name='class'>IconButton</field>
+     <field name='icon'>file:images/save.png</field>
+    </bundle>
+    <bundle>
+     <field name='class'>IconSeparator</field>
+    </bundle>
+    <bundle>
+     <field name='class'>TextFieldCombo</field>
+     <field name='ro'>true</field>
+     <field name='size'>80;*</field>
+     <bundle name='items'>
+      <field name='00/Red'>Rouge</field>
+      <field name='01/Green'>Vert</field>
+      <field name='02/Blue'>Bleu</field>
+     </bundle>
+    </bundle>
+    <bundle>
+     <field name='class'>IconSeparator</field>
+    </bundle>
+    <bundle>
+     <field name='class'>IconButton</field>
+     <field name='icon'>file:images/cut.png</field>
+    </bundle>
+    <bundle>
+     <field name='class'>IconButton</field>
+     <field name='icon'>file:images/copy.png</field>
+    </bundle>
+    <bundle>
+     <field name='class'>IconButton</field>
+     <field name='icon'>file:images/paste.png</field>
+    </bundle>
+   </list>
+  </bundle>
+  
   <bundle>
    <field name='class'>Widget</field>
    <field name='dock'>Fill</field>

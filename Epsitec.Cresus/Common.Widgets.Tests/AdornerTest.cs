@@ -242,10 +242,9 @@ namespace Epsitec.Common.Tests
 			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(tb);
 
-			tb.SetSize(20);
-			tb.InsertIconButton(@"file:images\open.png");
-			tb.InsertIconButton(@"file:images\save.png");
-			tb.InsertSep(5);
+			tb.Items.Add (new IconButton (@"file:images\open.png"));
+			tb.Items.Add (new IconButton (@"file:images\save.png"));
+			tb.Items.Add (new IconSeparator());
 
 			TextFieldCombo t1 = new TextFieldCombo();
 			t1.Width = 70;
@@ -254,11 +253,11 @@ namespace Epsitec.Common.Tests
 			t1.Items.Add("green", "Vert");
 			t1.Items.Add("blue",  "Bleu");
 
-			tb.Insert(t1);
-			tb.InsertSep(5);
-			tb.InsertIconButton(@"file:images\cut.png");
-			tb.InsertIconButton(@"file:images\copy.png");
-			tb.InsertIconButton(@"file:images\paste.png");
+			tb.Items.Add(t1);
+			tb.Items.Add (new IconSeparator());
+			tb.Items.Add (new IconButton (@"file:images\cut.png"));
+			tb.Items.Add (new IconButton (@"file:images\copy.png"));
+			tb.Items.Add (new IconButton (@"file:images\paste.png"));
 
 #if true
 			VMenu fileMenu = new VMenu();
@@ -334,6 +333,175 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 
+		[Test] public void CheckAdornerDisabled()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Size(600, 300);
+			window.Text = "CheckAdornerDisabled";
+
+			StaticText st = new StaticText();
+			st.SetClientZoom(2.0);
+			st.Location = new Point(10, 260);
+			st.Width = 500;
+			st.Height = 30;
+			st.Text = "Teste tous les widgets dans l'etat disabled !";
+			st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			st.SetEnabled(false);
+			window.Root.Children.Add(st);
+
+			CreateListLook(window.Root.Children, new Point(10, 180), null);
+
+			Button a = new Button();
+			a.Location = new Point(10, 10);
+			a.Width = 75;
+			a.Text = "O<m>K</m>";
+			a.SetEnabled(false);
+			window.Root.Children.Add(a);
+
+			CheckButton check = new CheckButton();
+			check.Location = new Point(10, 50);
+			check.Width = 100;
+			check.Text = "<m>C</m>ochez ici";
+			check.ActiveState = WidgetState.ActiveYes;
+			check.SetEnabled(false);
+			window.Root.Children.Add(check);
+
+			GroupBox box = new GroupBox();
+			box.Location = new Point(10, 80);
+			box.Size = new Size(100, 75);
+			box.Text = "Couleur";
+			box.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			box.SetEnabled(false);
+			window.Root.Children.Add(box);
+
+			RadioButton radio1 = new RadioButton();
+			radio1.Location = new Point(10, 40);
+			radio1.Width = 80;
+			radio1.Text = "<m>R</m>ouge";
+			radio1.ActiveState = WidgetState.ActiveYes;
+			radio1.Group = "RGB";
+			radio1.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			radio1.Clicked += new MessageEventHandler(this.HandleRadio);
+			box.Children.Add(radio1);
+
+			RadioButton radio2 = new RadioButton();
+			radio2.Location = new Point(10, 25);
+			radio2.Width = 80;
+			radio2.Text = "<m>V</m>ert";
+			radio2.Group = "RGB";
+			radio2.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			radio2.Clicked += new MessageEventHandler(this.HandleRadio);
+			box.Children.Add(radio2);
+
+			RadioButton radio3 = new RadioButton();
+			radio3.Location = new Point(10, 10);
+			radio3.Width = 80;
+			radio3.Text = "<m>B</m>leu";
+			radio3.Group = "RGB";
+			radio3.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			radio3.Clicked += new MessageEventHandler(this.HandleRadio);
+			box.Children.Add(radio3);
+
+			TextFieldCombo combo = new TextFieldCombo();
+			combo.Location = new Point(160, 180);
+			combo.Width = 100;
+			combo.Text = "Janvier";
+			combo.Cursor = combo.Text.Length;
+			combo.Items.Add("Janvier");
+			combo.Items.Add("Fevrier");
+			combo.Items.Add("Mars");
+			combo.Items.Add("Avril");
+			combo.Items.Add("Mai");
+			combo.Items.Add("Juin");
+			combo.Items.Add("Juillet");
+			combo.Items.Add("Aout");
+			combo.Items.Add("Septembre");
+			combo.Items.Add("Octobre");
+			combo.Items.Add("Novembre");
+			combo.Items.Add("Decembre");
+			combo.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			combo.SetEnabled(false);
+			window.Root.Children.Add(combo);
+
+			TextField text = new TextField();
+			text.Location = new Point(160, 150);
+			text.Width = 100;
+			text.Text = "Bonjour";
+			text.Cursor = text.Text.Length;
+			text.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			text.SetEnabled(false);
+			window.Root.Children.Add(text);
+
+			TextFieldUpDown tud = new TextFieldUpDown();
+			tud.Location = new Point(160, 125);
+			tud.Width = 50;
+			tud.Value = 50;
+			tud.MinRange = -100;
+			tud.MaxRange = 100;
+			tud.Step = 10;
+			tud.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			tud.SetEnabled(false);
+			window.Root.Children.Add(tud);
+
+			TextFieldMulti multi = new TextFieldMulti();
+			multi.Location = new Point(160, 70);
+			multi.Size = new Size(100, 50);
+			multi.Text = "Ceci est une petite phrase ridicule.<br/>Mais elle est assez longue pour faire des essais.";
+			multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			multi.SetEnabled(false);
+			window.Root.Children.Add(multi);
+
+			ScrollList sl = new ScrollList();
+			sl.Location = new Point(270, 70);
+			sl.Size = new Size(90, 100);
+			sl.AdjustHeight(ScrollListAdjust.MoveDown);
+			sl.Items.Add("Janvier");
+			sl.Items.Add("Fevrier");
+			sl.Items.Add("Mars <i>(A)</i>");
+			sl.Items.Add("Avril");
+			sl.Items.Add("Mai");
+			sl.Items.Add("Juin");
+			sl.Items.Add("Juillet <b>(B)</b>");
+			sl.Items.Add("Aout");
+			sl.Items.Add("Septembre");
+			sl.Items.Add("Octobre");
+			sl.Items.Add("Novembre");
+			sl.Items.Add("Decembre");
+			sl.SelectedIndex = 5;  // sélectionne juin
+			sl.ShowSelectedLine(ScrollListShow.Middle);
+			sl.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			sl.SetEnabled(false);
+			window.Root.Children.Add(sl);
+
+			ToolBar tb = new ToolBar();
+			tb.Location = new Point(160, 220);
+			tb.Width = 300;
+			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			window.Root.Children.Add(tb);
+
+			tb.Items.Add (new IconButton (@"file:images\open.png"));
+			tb.Items.Add (new IconButton (@"file:images\save.png"));
+			tb.Items.Add (new IconSeparator());
+			tb.Items.Add (new IconButton (@"file:images\cut.png"));
+			tb.Items.Add (new IconButton (@"file:images\copy.png"));
+			tb.Items.Add (new IconButton (@"file:images\paste.png"));
+			tb.Items[1].SetEnabled(false);
+
+			VMenu fileMenu = new VMenu();
+			fileMenu.Items.Add(new MenuItem ("open", @"file:images\open.png", "Ouvrir...", "Ctrl+O"));
+			fileMenu.Items.Add(new MenuItem ("save", @"file:images\save.png", "Enregistrer...", "Ctrl+S"));
+			fileMenu.Items.Add (new MenuSeparator ());
+			fileMenu.Items.Add(new MenuItem ("quit", "", "Quitter", ""));
+			fileMenu.AdjustSize();
+			fileMenu.Location = new Point(370, 70);
+			fileMenu.Items[1].SetEnabled(false);
+			window.Root.Children.Add(fileMenu);
+
+			window.Show();
+		}
+
+		
 		private void HandleCheck(object sender, MessageEventArgs e)
 		{
 			CheckButton button = sender as CheckButton;
@@ -1091,175 +1259,6 @@ namespace Epsitec.Common.Tests
 			button4.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			button4.Name = "B4";
 			button4.Parent = button3;
-
-			window.Show();
-		}
-
-		[Test] public void CheckAdornerDisabled()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(600, 300);
-			window.Text = "CheckAdornerDisabled";
-
-			StaticText st = new StaticText();
-			st.SetClientZoom(2.0);
-			st.Location = new Point(10, 260);
-			st.Width = 500;
-			st.Height = 30;
-			st.Text = "Teste tous les widgets dans l'etat disabled !";
-			st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
-			st.SetEnabled(false);
-			window.Root.Children.Add(st);
-
-			CreateListLook(window.Root.Children, new Point(10, 180), null);
-
-			Button a = new Button();
-			a.Location = new Point(10, 10);
-			a.Width = 75;
-			a.Text = "O<m>K</m>";
-			a.SetEnabled(false);
-			window.Root.Children.Add(a);
-
-			CheckButton check = new CheckButton();
-			check.Location = new Point(10, 50);
-			check.Width = 100;
-			check.Text = "<m>C</m>ochez ici";
-			check.ActiveState = WidgetState.ActiveYes;
-			check.SetEnabled(false);
-			window.Root.Children.Add(check);
-
-			GroupBox box = new GroupBox();
-			box.Location = new Point(10, 80);
-			box.Size = new Size(100, 75);
-			box.Text = "Couleur";
-			box.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			box.SetEnabled(false);
-			window.Root.Children.Add(box);
-
-			RadioButton radio1 = new RadioButton();
-			radio1.Location = new Point(10, 40);
-			radio1.Width = 80;
-			radio1.Text = "<m>R</m>ouge";
-			radio1.ActiveState = WidgetState.ActiveYes;
-			radio1.Group = "RGB";
-			radio1.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			radio1.Clicked += new MessageEventHandler(this.HandleRadio);
-			box.Children.Add(radio1);
-
-			RadioButton radio2 = new RadioButton();
-			radio2.Location = new Point(10, 25);
-			radio2.Width = 80;
-			radio2.Text = "<m>V</m>ert";
-			radio2.Group = "RGB";
-			radio2.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			radio2.Clicked += new MessageEventHandler(this.HandleRadio);
-			box.Children.Add(radio2);
-
-			RadioButton radio3 = new RadioButton();
-			radio3.Location = new Point(10, 10);
-			radio3.Width = 80;
-			radio3.Text = "<m>B</m>leu";
-			radio3.Group = "RGB";
-			radio3.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			radio3.Clicked += new MessageEventHandler(this.HandleRadio);
-			box.Children.Add(radio3);
-
-			TextFieldCombo combo = new TextFieldCombo();
-			combo.Location = new Point(160, 180);
-			combo.Width = 100;
-			combo.Text = "Janvier";
-			combo.Cursor = combo.Text.Length;
-			combo.Items.Add("Janvier");
-			combo.Items.Add("Fevrier");
-			combo.Items.Add("Mars");
-			combo.Items.Add("Avril");
-			combo.Items.Add("Mai");
-			combo.Items.Add("Juin");
-			combo.Items.Add("Juillet");
-			combo.Items.Add("Aout");
-			combo.Items.Add("Septembre");
-			combo.Items.Add("Octobre");
-			combo.Items.Add("Novembre");
-			combo.Items.Add("Decembre");
-			combo.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			combo.SetEnabled(false);
-			window.Root.Children.Add(combo);
-
-			TextField text = new TextField();
-			text.Location = new Point(160, 150);
-			text.Width = 100;
-			text.Text = "Bonjour";
-			text.Cursor = text.Text.Length;
-			text.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			text.SetEnabled(false);
-			window.Root.Children.Add(text);
-
-			TextFieldUpDown tud = new TextFieldUpDown();
-			tud.Location = new Point(160, 125);
-			tud.Width = 50;
-			tud.Value = 50;
-			tud.MinRange = -100;
-			tud.MaxRange = 100;
-			tud.Step = 10;
-			tud.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			tud.SetEnabled(false);
-			window.Root.Children.Add(tud);
-
-			TextFieldMulti multi = new TextFieldMulti();
-			multi.Location = new Point(160, 70);
-			multi.Size = new Size(100, 50);
-			multi.Text = "Ceci est une petite phrase ridicule.<br/>Mais elle est assez longue pour faire des essais.";
-			multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			multi.SetEnabled(false);
-			window.Root.Children.Add(multi);
-
-			ScrollList sl = new ScrollList();
-			sl.Location = new Point(270, 70);
-			sl.Size = new Size(90, 100);
-			sl.AdjustHeight(ScrollListAdjust.MoveDown);
-			sl.Items.Add("Janvier");
-			sl.Items.Add("Fevrier");
-			sl.Items.Add("Mars <i>(A)</i>");
-			sl.Items.Add("Avril");
-			sl.Items.Add("Mai");
-			sl.Items.Add("Juin");
-			sl.Items.Add("Juillet <b>(B)</b>");
-			sl.Items.Add("Aout");
-			sl.Items.Add("Septembre");
-			sl.Items.Add("Octobre");
-			sl.Items.Add("Novembre");
-			sl.Items.Add("Decembre");
-			sl.SelectedIndex = 5;  // sélectionne juin
-			sl.ShowSelectedLine(ScrollListShow.Middle);
-			sl.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			sl.SetEnabled(false);
-			window.Root.Children.Add(sl);
-
-			ToolBar tb = new ToolBar();
-			tb.Location = new Point(160, 220);
-			tb.Width = 300;
-			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			window.Root.Children.Add(tb);
-
-			tb.SetSize(20);
-			tb.InsertIconButton(@"file:images\open.png");
-			tb.InsertIconButton(@"file:images\save.png");
-			tb.InsertSep(5);
-			tb.InsertIconButton(@"file:images\cut.png");
-			tb.InsertIconButton(@"file:images\copy.png");
-			tb.InsertIconButton(@"file:images\paste.png");
-			tb[1].SetEnabled(false);
-
-			VMenu fileMenu = new VMenu();
-			fileMenu.Items.Add(new MenuItem ("open", @"file:images\open.png", "Ouvrir...", "Ctrl+O"));
-			fileMenu.Items.Add(new MenuItem ("save", @"file:images\save.png", "Enregistrer...", "Ctrl+S"));
-			fileMenu.Items.Add (new MenuSeparator ());
-			fileMenu.Items.Add(new MenuItem ("quit", "", "Quitter", ""));
-			fileMenu.AdjustSize();
-			fileMenu.Location = new Point(370, 70);
-			fileMenu.Items[1].SetEnabled(false);
-			window.Root.Children.Add(fileMenu);
 
 			window.Show();
 		}

@@ -3,150 +3,66 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe ToolBar permet de réaliser des tool bars.
 	/// </summary>
-	public class ToolBar : Widget
+	public class ToolBar : Widget, Helpers.IWidgetCollectionHost
 	{
 		public ToolBar()
 		{
+			this.items = new Helpers.WidgetCollection(this);
+			
 			IconButton button = new IconButton();
 			this.defaultButtonWidth = button.DefaultWidth;
 			this.defaultButtonHeight = button.DefaultHeight;
 			button.Dispose();
 
+			double m = (this.DefaultHeight - this.defaultButtonHeight) / 2;
+			
+			this.DockMargins = new Drawing.Margins(m, m, m, m);
+			
 			this.colorControlLight      = Drawing.Color.FromName("ControlLight");
 			this.colorControlLightLight = Drawing.Color.FromName("ControlLightLight");
 			this.colorControlDark       = Drawing.Color.FromName("ControlDark");
 			this.colorControlDarkDark   = Drawing.Color.FromName("ControlDarkDark");
 		}
 
-		protected override void Dispose(bool disposing)
-		{
-			if ( disposing )
-			{
-				this.array = null;
-			}
-			
-			base.Dispose(disposing);
-		}
 
-
-		// Retourne la hauteur standard d'une barre.
-		public override double DefaultHeight
+		public override double				DefaultHeight
 		{
+			// Retourne la hauteur standard d'une barre.
 			get
 			{
 				return 28;
 			}
 		}
 
-		// Ajoute une cellule IconButton.
-		public int InsertIconButton(string name)
+		public Helpers.WidgetCollection		Items
 		{
-			IconButton button = new IconButton();
-			button.IconName = name;
-			return this.Insert(button);
+			get { return this.items; }
 		}
 
-		// Ajoute un séparateur.
-		public int InsertSep(double width)
+		
+		protected override void Dispose(bool disposing)
 		{
-			Widget sep = new Widget();
-			sep.Size = new Drawing.Size(width, this.defaultButtonHeight);
-			return this.Insert(sep);
-		}
-
-		// Ajoute une cellule.
-		public int Insert(Widget cell)
-		{
-			int rank = this.totalUsed;
-			this.AllocateArray(rank+1);
-			this.array[rank].Dispose();
-			this.array[rank] = cell;
-			this.Justif();
-			this.Children.Add(cell);
-			this.totalUsed ++;
-			return rank;
-		}
-
-		// Modifie une cellule.
-		public void Modify(int rank, Widget cell)
-		{
-			this.AllocateArray(rank+1);
-			this.array[rank].Dispose();
-			this.array[rank] = cell;
-			this.Justif();
-			this.Children.Add(cell);
-		}
-
-		// Objet occupant une case.		
-		public Widget this[int rank]
-		{
-			get
+			if ( disposing )
 			{
-				System.Diagnostics.Debug.Assert(this.array[rank] != null);
-				return this.array[rank];
+				Widget[] items = new Widget[this.items.Count];
+				this.items.CopyTo (items, 0);
+				this.items.Clear ();
+				
+				foreach (Widget item in items)
+				{
+					item.Dispose ();
+				}
+				
+				this.items.Dispose();
+				this.items = null;
 			}
 			
-			set
-			{
-				System.Diagnostics.Debug.Assert(this.array[rank] != null);
-				if ( value == null )  value = new Widget();
-				
-				this.array[rank] = value;
-			}
+			base.Dispose(disposing);
 		}
 
-		// Spécifie le nombre de cellules qui seront contenues dans la barre.
-		// Cet appel est facultatif.
-		public void SetSize(int max)
-		{
-			this.AllocateArray(max);
-		}
-
-		// Dimensionne le tableau des cellules si nécessaire.
-		protected void AllocateArray(int max)
-		{
-			if ( this.array == null )
-			{
-				this.array = new Widget[0];  // alloue un tableau vide
-			}
-
-			if ( max <= this.array.Length )  return;  // déjà assez grand ?
-
-			Widget[] newArray = new Widget[max];  // nouveau tableau
-			for ( int i=0 ; i<max ; i++ )
-			{
-				if ( i < this.array.Length )
-				{
-					newArray[i] = this.array[i];
-				}
-				else
-				{
-					newArray[i] = new Widget();
-					newArray[i].Size = new Drawing.Size(this.defaultButtonWidth, this.defaultButtonHeight);
-				}
-			}
-			this.array = newArray;
-		}
-
-		// Positionne toutes les cellules, de gauche à droite.
-		protected void Justif()
-		{
-			double x = (this.DefaultHeight-this.defaultButtonHeight)/2;
-			foreach ( Widget cell in this.array )
-			{
-				Drawing.Size dim = cell.Size;
-				Drawing.Point pos = new Drawing.Point();
-				pos.X = x;
-				pos.Y = System.Math.Floor((this.Height-dim.Height)/2);  // centré verticalement
-				cell.Location = pos;
-
-				x += dim.Width;
-			}
-		}
-
-		// Dessine la barre.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			// Dessine la barre.
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
@@ -154,13 +70,27 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected double			defaultButtonWidth;
-		protected double			defaultButtonHeight;
-		protected Widget[]			array;  // tableau des cellules
-		protected int				totalUsed;
-		protected Drawing.Color		colorControlLight;
-		protected Drawing.Color		colorControlLightLight;
-		protected Drawing.Color		colorControlDark;
-		protected Drawing.Color		colorControlDarkDark;
+		#region IWidgetCollectionHost Members
+		public void NotifyInsertion(Widget widget)
+		{
+			this.Children.Add (widget);
+			widget.Dock = DockStyle.Left;
+		}
+
+		public void NotifyRemoval(Widget widget)
+		{
+			this.Children.Remove (widget);
+		}
+		#endregion
+		
+		protected Helpers.WidgetCollection	items;
+		
+		protected double					defaultButtonWidth;
+		protected double					defaultButtonHeight;
+		
+		protected Drawing.Color				colorControlLight;
+		protected Drawing.Color				colorControlLightLight;
+		protected Drawing.Color				colorControlDark;
+		protected Drawing.Color				colorControlDarkDark;
 	}
 }

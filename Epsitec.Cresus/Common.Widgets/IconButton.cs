@@ -1,7 +1,8 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe IconButton permet de dessiner de petits pictogrammes.
+	/// La classe IconButton permet de dessiner de petits pictogrammes, en
+	/// particulier pour remplir une ToolBar.
 	/// </summary>
 	public class IconButton : Button
 	{
@@ -10,24 +11,31 @@ namespace Epsitec.Common.Widgets
 			this.ButtonStyle = ButtonStyle.ToolItem;
 		}
 		
-		// Retourne la largeur standard d'une icône.
+		public IconButton(string name) : this()
+		{
+			this.IconName = name;
+		}
+		
+		
 		public override double DefaultWidth
 		{
+			// Retourne la largeur standard d'une icône.
 			get
 			{
 				return 22;
 			}
 		}
 
-		// Retourne la hauteur standard d'une icône.
 		public override double DefaultHeight
 		{
+			// Retourne la hauteur standard d'une icône.
 			get
 			{
 				return 22;
 			}
 		}
 
+		
 		public string IconName
 		{
 			get
@@ -44,6 +52,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
 		
 		public override Drawing.Rectangle GetPaintBounds()
 		{

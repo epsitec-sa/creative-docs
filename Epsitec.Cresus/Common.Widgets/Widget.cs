@@ -977,6 +977,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public int							Index
+		{
+			get
+			{
+				return this.index;
+			}
+			set
+			{
+				this.index = value;
+			}
+		}
+		
 		
 		[Bundle ("name")]	public string			Name
 		{
@@ -3528,6 +3540,7 @@ namespace Epsitec.Common.Widgets
 		protected WidgetCollection				children;
 		protected Widget						parent;
 		protected string						name;
+		protected int							index;
 		protected TextLayout					textLayout;
 		protected ContentAlignment				alignment;
 		protected LayoutInfo					layoutInfo;
