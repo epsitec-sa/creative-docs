@@ -104,6 +104,16 @@ namespace Epsitec.Common.Drawing
 			return default_value;
 		}
 		
+		public static bool operator ==(Margins a, Margins b)
+		{
+			return a.Equals (b);
+		}
+		
+		public static bool operator !=(Margins a, Margins b)
+		{
+			return !a.Equals (b);
+		}
+		
 		
 		private double					left;
 		private double					right;

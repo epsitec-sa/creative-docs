@@ -27,6 +27,10 @@ namespace Epsitec.Common.Widgets
 			TextField.flashTimer.Tick += new System.EventHandler(TextField.HandleFlashTimer);
 		}
 		
+		public TextField() : this(TextFieldType.SingleLine)
+		{
+		}
+		
 		// Crée une ligne éditable d'un type quelconque.
 		public TextField(TextFieldType type)
 		{

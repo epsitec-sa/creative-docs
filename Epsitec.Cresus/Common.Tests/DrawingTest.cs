@@ -19,7 +19,36 @@ namespace Epsitec.Common.Tests
 			
 			pixmap.Dispose ();
 		}
-
+		
+		[Test] public void CheckPointToStringParse()
+		{
+			Point pt1 = new Point (10, 20);
+			Point pt2 = Point.Parse ("10;20");
+			Point pt3 = Point.Parse ("*;30", pt1);
+			Point pt4 = Point.Parse ("40;*", pt1);
+			Point pt5 = Point.Parse (pt1.ToString ());
+			
+			Assertion.AssertEquals (pt1, pt2);
+			Assertion.AssertEquals (new Point (10, 30), pt3);
+			Assertion.AssertEquals (new Point (40, 20), pt4);
+			Assertion.AssertEquals (pt1, pt5);
+			Assertion.AssertEquals ("10;20", pt1.ToString ());
+		}
+		
+		[Test] public void CheckSizeToStringParse()
+		{
+			Size sz1 = new Size (10, 20);
+			Size sz2 = Size.Parse ("10;20");
+			Size sz3 = Size.Parse ("*;30", sz1);
+			Size sz4 = Size.Parse ("40;*", sz1);
+			Size sz5 = Size.Parse (sz1.ToString ());
+			
+			Assertion.AssertEquals (sz1, sz2);
+			Assertion.AssertEquals (new Size (10, 30), sz3);
+			Assertion.AssertEquals (new Size (40, 20), sz4);
+			Assertion.AssertEquals (sz1, sz5);
+			Assertion.AssertEquals ("10;20", sz1.ToString ());
+		}
 		
 		[Test] [ExpectedException (typeof (System.NullReferenceException))]
 		public void CheckRendererGradientEx1()

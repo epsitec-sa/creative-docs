@@ -8,6 +8,8 @@
    <bundle>
     <class>CheckButton</class>
     <text>Bouton A</text>
+    <name>checkA</name>
+    <cmd>on</cmd>
     <size>200;*</size>
     <pos>10;210</pos>
    </bundle>
@@ -41,6 +43,7 @@
    </bundle>
    <bundle>
     <ref t='button.cancel'/>
+    <cmd>on</cmd>
     <pos>10;10</pos>
    </bundle>
   </list>

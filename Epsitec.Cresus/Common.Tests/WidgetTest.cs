@@ -613,5 +613,48 @@ namespace Epsitec.Common.Tests
 			button = null;
 			System.GC.Collect ();
 		}
+		
+		[Test] public void CheckCommandName()
+		{
+			Widget w1 = new Widget ();	w1.Name = "a";
+			Widget w2 = new Widget ();	w2.Name = "b";	w2.Parent = w1;
+			Widget w3 = new Widget ();	w3.Name = "c";	w3.Parent = w2;
+			
+			Assertion.AssertEquals ("a", w1.CommandName);
+			Assertion.AssertEquals ("a.b", w2.CommandName);
+			Assertion.AssertEquals ("a.b.c", w3.CommandName);
+		}
+		
+		[Test] public void CheckFindChildBasedOnName()
+		{
+			Widget root = new Widget ();
+			Widget w1 = new Widget ();	w1.Name = "a";	w1.Parent = root;
+			Widget w2 = new Widget ();					w2.Parent = root;
+			Widget w3 = new Widget ();	w3.Name = "b";	w3.Parent = w2;
+			
+			Assertion.AssertEquals (w1, root.FindChild ("a"));
+			Assertion.AssertEquals (w3, root.FindChild ("b"));
+		}
+		
+		[Test] public void CheckFindChildBasedOnCommandName()
+		{
+			Widget root = new Widget ();
+			Widget w1 = new Widget ();	w1.Name = "a";	w1.Parent = root;
+			Widget w2 = new Widget ();					w2.Parent = root;
+			Widget w3 = new Widget ();	w3.Name = "b";	w3.Parent = w2;	w3.IsCommand = true;
+			Widget w4 = new Widget ();	w4.Name = "c";	w4.Parent = w2;
+			Widget w5 = new Widget ();	w5.Name = "d";	w5.Parent = w4;	w5.IsCommand = true;
+			Widget w6 = new Widget ();	w6.Name = "e";	w6.Parent = w1;	w6.IsCommand = true;
+			
+			Assertion.AssertEquals (w1, root.FindCommandWidget ("a"));
+			Assertion.AssertEquals (w3, root.FindCommandWidget ("b"));
+			Assertion.AssertEquals (w4, root.FindCommandWidget ("c"));
+			Assertion.AssertEquals (w5, root.FindCommandWidget ("c.d"));
+			Assertion.AssertEquals (w6, root.FindCommandWidget ("a.e"));
+			
+			Widget[] command_widgets = root.FindCommandWidgets ();
+			
+			Assertion.AssertEquals (3, command_widgets.Length);
+		}
 	}
 }

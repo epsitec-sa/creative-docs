@@ -63,5 +63,18 @@ namespace Epsitec.Common.Support.Tests
 			
 			window.Show ();
 		}
+		
+		[Test] public void CheckCommandDispatcher()
+		{
+			CommandDispatcher.Default.Register ("my_window.cancel", new CommandEventHandler (this.HandleCommandCancel));
+		}
+		
+		private void HandleCommandCancel(object sender, CommandEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine ("User clicked cancel button -> close window");
+			
+			Widgets.Widget widget = sender as Widgets.Widget;
+			widget.WindowFrame.Dispose ();
+		}
 	}
 }

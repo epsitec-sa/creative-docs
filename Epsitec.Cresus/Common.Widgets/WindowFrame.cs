@@ -16,6 +16,8 @@ namespace Epsitec.Common.Widgets
 		
 		public WindowFrame()
 		{
+			this.cmd_dispatcher = Support.CommandDispatcher.Default;
+			
 			this.SetStyle (System.Windows.Forms.ControlStyles.AllPaintingInWmPaint, true);
 			this.SetStyle (System.Windows.Forms.ControlStyles.Opaque, true);
 			this.SetStyle (System.Windows.Forms.ControlStyles.ResizeRedraw, true);
@@ -188,17 +190,23 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public WindowRoot				Root
+		public WindowRoot					Root
 		{
 			get { return this.root; }
 		}
 		
-		public Widget					CapturingWidget
+		public Support.CommandDispatcher	CommandDispatcher
+		{
+			get { return this.cmd_dispatcher; }
+			set { this.cmd_dispatcher = value; }
+		}
+		
+		public Widget						CapturingWidget
 		{
 			get { return this.capturing_widget; }
 		}
 		
-		public Widget					FocusedWidget
+		public Widget						FocusedWidget
 		{
 			get { return this.focused_widget; }
 			set
@@ -225,7 +233,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Widget					EngagedWidget
+		public Widget						EngagedWidget
 		{
 			get { return this.engaged_widget; }
 			set
@@ -260,13 +268,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool						PreventAutoClose
+		public bool							PreventAutoClose
 		{
 			get { return this.prevent_close; }
 			set { this.prevent_close = value; }
 		}
 		
-		public bool						IsLayered
+		public bool							IsLayered
 		{
 			get
 			{
@@ -292,12 +300,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public bool						IsFrozen
+		public bool							IsFrozen
 		{
 			get { return this.is_frozen; }
 		}
 		
-		public double					Alpha
+		public double						Alpha
 		{
 			get { return this.alpha; }
 			set
@@ -310,8 +318,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
-		public Drawing.Rectangle		WindowBounds
+									
+		public Drawing.Rectangle			WindowBounds
 		{
 			get
 			{
@@ -373,6 +381,12 @@ namespace Epsitec.Common.Widgets
 			set { base.Text = TextLayout.ConvertToSimpleText (value); }
 		}
 		
+		[Bundle ("name")]	public new string		Name
+		{
+			get { return base.Name; }
+			set { base.Name = value; }
+		}
+		
 		
 		#region Interface IBundleSupport
 		public virtual string				PublicClassName
@@ -387,6 +401,7 @@ namespace Epsitec.Common.Widgets
 			//	doit pas en avoir conscience. On laisse simplement "Root" gérer toute
 			//	l'initialisation.
 			
+			this.Root.Name = this.Name;
 			this.Root.RestoreFromBundle (bundler, bundle);
 		}
 		#endregion
@@ -691,6 +706,27 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public virtual void QueueCommand(Widget source)
+		{
+			this.command_queue.Enqueue (source);
+			
+			if (this.command_queue.Count == 1)
+			{
+				Win32Api.PostMessage (this.Handle, Win32Const.WM_APP_EXEC_CMD, System.IntPtr.Zero, System.IntPtr.Zero);
+			}
+		}
+		
+		protected virtual void DispatchCommands()
+		{
+			while (this.command_queue.Count > 0)
+			{
+				Widget widget = this.command_queue.Dequeue () as Widget;
+				string name   = widget.CommandName;
+				
+				this.cmd_dispatcher.Dispatch (name, widget);
+			}
+		}
+		
 		protected virtual void HandleWinFormsTimerTick(object sender, System.EventArgs e)
 		{
 			if (this.engaged_widget != null)
@@ -741,6 +777,13 @@ namespace Epsitec.Common.Widgets
 				//	à nous détruire réellement.
 				
 				this.Dispose ();
+				return;
+			}
+			
+			if (msg.Msg == Win32Const.WM_APP_EXEC_CMD)
+			{
+				System.Diagnostics.Debug.Assert (this.wnd_proc_depth == 0);
+				this.DispatchCommands ();
 				return;
 			}
 			
@@ -1174,6 +1217,7 @@ namespace Epsitec.Common.Widgets
 		public new event System.EventHandler	SizeChanged;
 		
 		
+		protected Support.CommandDispatcher		cmd_dispatcher;
 		protected WindowRoot					root;
 		protected Drawing.Graphics				graphics;
 		protected Drawing.Rectangle				dirty_rectangle;
@@ -1196,5 +1240,6 @@ namespace Epsitec.Common.Widgets
 		protected int							wnd_proc_depth;
 		
 		protected static bool					is_app_active;
+		protected System.Collections.Queue		command_queue = new System.Collections.Queue ();
 	}
 }

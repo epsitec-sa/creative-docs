@@ -136,6 +136,30 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
+                <File
+                    RelPath = "resources\button.cancel.fr.resource"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "resources\button.cancel.resource"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "resources\complex.resource"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "resources\recursive.resource"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "resources\simple_window.resource"
+                    BuildAction = "None"
+                />
+                <File
+                    RelPath = "resources\strings.resource"
+                    BuildAction = "None"
+                />
             </Include>
         </Files>
     </CSHARP>

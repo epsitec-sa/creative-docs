@@ -7,6 +7,8 @@ namespace Epsitec.Common.Widgets
 	using BundleAttribute  = Epsitec.Common.Support.BundleAttribute;
 	
 	
+	public delegate bool WalkWidgetCallback(Widget widget);
+	
 	[System.Flags] public enum AnchorStyles
 	{
 		None			= 0,
@@ -511,6 +513,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
+		[Bundle ("cmd")] public bool		IsCommand
+		{
+			get { return (this.internalState & InternalState.Command) != 0; }
+			set
+			{
+				if (value)
+				{
+					this.internalState |= InternalState.Command;
+				}
+				else
+				{
+					this.internalState &= ~ InternalState.Command;
+				}
+			}
+		}
+		
+		
 		public virtual bool					IsEnabled
 		{
 			get
@@ -847,6 +867,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Support.CommandDispatcher	CommandDispatcher
+		{
+			get
+			{
+				WindowFrame frame = this.WindowFrame;
+				return (frame == null) ? null : frame.CommandDispatcher;
+			}
+		}
+		
 		public virtual Widget				RootParent
 		{
 			get
@@ -921,6 +950,19 @@ namespace Epsitec.Common.Widgets
 		public bool							HasParent
 		{
 			get { return this.parent != null; }
+		}
+		
+		
+		public string						CommandName
+		{
+			get
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				this.BuildCommandName (buffer);
+				
+				return buffer.ToString ();
+			}
 		}
 		
 		
@@ -1688,12 +1730,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Widget FindChild(Drawing.Point point)
+		public Widget			FindChild(Drawing.Point point)
 		{
 			return this.FindChild (point, ChildFindMode.SkipHidden);
 		}
 		
-		public virtual Widget FindChild(Drawing.Point point, ChildFindMode mode)
+		public virtual Widget	FindChild(Drawing.Point point, ChildFindMode mode)
 		{
 			if (this.HasChildren == false)
 			{
@@ -1739,6 +1781,187 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			return null;
+		}
+		
+		public Widget			FindChild(string name)
+		{
+			return this.FindChild (name, ChildFindMode.All);
+		}
+		
+		public virtual Widget	FindChild(string name, ChildFindMode mode)
+		{
+			if (this.HasChildren == false)
+			{
+				return null;
+			}
+			
+			Widget[] children = this.Children.Widgets;
+			int  children_num = children.Length;
+			
+			for (int i = 0; i < children_num; i++)
+			{
+				Widget widget = children[i];
+				
+				System.Diagnostics.Debug.Assert (widget != null);
+				
+				if (mode != ChildFindMode.All)
+				{
+					if ((mode & ChildFindMode.SkipDisabled) != 0)
+					{
+						if (widget.IsEnabled == false)
+						{
+							continue;
+						}
+					}
+					else if ((mode & ChildFindMode.SkipHidden) != 0)
+					{
+						if (widget.IsVisible == false)
+						{
+							continue;
+						}
+					}
+				}
+				
+				if (widget.Name == "")
+				{
+					Widget child = widget.FindChild (name, mode);
+					
+					if (child != null)
+					{
+						return child;
+					}
+				}
+				else if (widget.Name == name)
+				{
+					return widget;
+				}
+			}
+			
+			return null;
+		}
+		
+		public virtual Widget	FindChild(string[] names, int offset)
+		{
+			if (offset >= names.Length)
+			{
+				return this;
+			}
+			
+			if (this.HasChildren == false)
+			{
+				return null;
+			}
+			
+			Widget[] children = this.Children.Widgets;
+			int  children_num = children.Length;
+			
+			for (int i = 0; i < children_num; i++)
+			{
+				Widget widget = children[i];
+				
+				System.Diagnostics.Debug.Assert (widget != null);
+				
+				if (widget.Name == "")
+				{
+					Widget child = widget.FindChild (names, offset);
+					
+					if (child != null)
+					{
+						return child;
+					}
+				}
+				else if (widget.Name == names[offset])
+				{
+					return widget.FindChild (names, offset+1);
+				}
+			}
+			
+			return null;
+		}
+		
+		public Widget			FindCommandWidget(string command_name)
+		{
+			string[] names = command_name.Split (new char[] { '.' });
+			
+			if (this.Name == "")
+			{
+				return this.FindChild (names, 0);
+			}
+			if (this.Name == names[0])
+			{
+				return this.FindChild (names, 1);
+			}
+			
+			return null;
+		}
+		
+		
+		public Widget[] FindCommandWidgets()
+		{
+			//	Passe en revue tous les widgets de la descendance et accumule
+			//	ceux qui sont des widgets de commande.
+			
+			CommandWidgetFinder finder = new CommandWidgetFinder ();
+			
+			this.WalkChildren (new WalkWidgetCallback (finder.Analyse));
+			
+			return finder.Widgets;
+		}
+		
+		
+		protected class CommandWidgetFinder
+		{
+			public CommandWidgetFinder()
+			{
+			}
+			
+			public bool Analyse(Widget widget)
+			{
+				if (widget.IsCommand)
+				{
+					this.list.Add (widget);
+				}
+				
+				return true;
+			}
+			
+			public Widget[]					Widgets
+			{
+				get
+				{
+					Widget[] widgets = new Widget[this.list.Count];
+					this.list.CopyTo (widgets);
+					return widgets;
+				}
+			}
+			
+			System.Collections.ArrayList	list = new System.Collections.ArrayList ();
+		}
+		
+		
+		public bool WalkChildren(WalkWidgetCallback callback)
+		{
+			if (this.HasChildren == false)
+			{
+				return true;
+			}
+			
+			Widget[] children = this.Children.Widgets;
+			int  children_num = children.Length;
+			
+			for (int i = 0; i < children_num; i++)
+			{
+				Widget widget = children[i];
+				
+				if (!callback (widget))
+				{
+					return false;
+				}
+				
+				widget.WalkChildren (callback);
+			}
+			
+			return true;
 		}
 		
 		
@@ -2410,6 +2633,24 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected virtual void BuildCommandName(System.Text.StringBuilder buffer)
+		{
+			if (this.parent != null)
+			{
+				this.parent.BuildCommandName (buffer);
+			}
+			int length = buffer.Length;
+			
+			if ((length > 0) &&
+				(buffer[length-1] != '.'))
+			{
+				buffer.Append (".");
+			}
+			
+			buffer.Append (this.Name);
+		}
+		
+		
 		protected virtual void CreateWidgetCollection()
 		{
 			this.children = new WidgetCollection (this);
@@ -2524,6 +2765,16 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				this.Clicked (this, e);
+			}
+			
+			if (this.IsCommand)
+			{
+				WindowFrame window = this.WindowFrame;
+				
+				if (window != null)
+				{
+					window.QueueCommand (this);
+				}
 			}
 		}
 		
@@ -2682,6 +2933,7 @@ namespace Epsitec.Common.Widgets
 			AutoMnemonic		= 0x00100000,
 			AutoRepeatEngaged	= 0x00200000,
 			
+			Command				= 0x20000000,		//	widget génère des commandes
 			DebugActive			= 0x40000000		//	widget marqué pour le debug
 		}
 		
