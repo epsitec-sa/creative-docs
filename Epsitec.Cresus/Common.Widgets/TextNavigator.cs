@@ -351,21 +351,24 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public int AddTab(Drawing.TextStyle.Tab tab)
+		public int TabInsert(Drawing.TextStyle.Tab tab)
 		{
-			int rank = this.textLayout.Style.AddTab(tab);
+			int rank = this.textLayout.Style.TabInsert(tab);
 			this.OnStyleChanged();
 			return rank;
 		}
 
-		public int TotalTab()
+		public int TabCount
 		{
-			return this.textLayout.Style.TotalTab();
+			get
+			{
+				return this.textLayout.Style.TabCount;
+			}
 		}
 
-		public void DeleteTab(int rank)
+		public void TabRemoveAt(int rank)
 		{
-			this.textLayout.Style.DeleteTab(rank);
+			this.textLayout.Style.TabRemoveAt(rank);
 			this.OnStyleChanged();
 		}
 
@@ -374,9 +377,9 @@ namespace Epsitec.Common.Widgets
 			return this.textLayout.Style.GetTab(rank);
 		}
 
-		public void MoveTab(int rank, double pos)
+		public void SetTabPosition(int rank, double pos)
 		{
-			this.textLayout.MoveTab(rank, pos);
+			this.textLayout.SetTabPosition(rank, pos);
 			this.OnStyleChanged();
 		}
 

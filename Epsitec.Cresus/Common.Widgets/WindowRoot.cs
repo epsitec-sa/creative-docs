@@ -206,6 +206,16 @@ namespace Epsitec.Common.Widgets
 				return true;
 			}
 			
+			if (this.InternalShortcutHandler (shortcut, execute_focused))
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		
+		protected virtual bool InternalShortcutHandler(Shortcut shortcut, bool execute_focused)
+		{
 			if (this.window != null)
 			{
 				//	Le raccourci clavier n'a pas été consommé. Il faut voir si le raccourci clavier
@@ -220,6 +230,26 @@ namespace Epsitec.Common.Widgets
 					if (shortcut.KeyCodeOnly == KeyCode.FuncF4)
 					{
 						this.Window.QueueCommand (this, "Quit" + this.Window.Name);
+					}
+				}
+				
+				CommandDispatcher                dispatcher = this.CommandDispatcher;
+				CommandDispatcher.CommandState[] states     = dispatcher.CommandStates;
+				
+				foreach (CommandDispatcher.CommandState state in states)
+				{
+					CommandState command = state as CommandState;
+					
+					if (command != null)
+					{
+						if ((command.Shortcut != null) &&
+							(command.Shortcut.Match (shortcut)))
+						{
+							//	Exécute la commande.
+							
+							dispatcher.Dispatch (command.Name, this);
+							return true;
+						}
 					}
 				}
 				

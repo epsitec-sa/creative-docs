@@ -383,7 +383,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public int AddTab(Tab tab)					//	##TabInsert
+		public int TabInsert(Tab tab)
 		{
 			this.CheckForDefaultStyle ();
 			int rank = this.tabs.Add (tab);
@@ -391,12 +391,21 @@ namespace Epsitec.Common.Drawing
 			return rank;
 		}
 		
-		public int TotalTab()						// ##TabCount
+		public int TabCount
 		{
-			return this.tabs.Count;
+			get
+			{
+				return this.tabs.Count;
+			}
 		}
 		
-		public void DeleteTab(int rank)				//	##TabRemoveAt
+		public void TabRemove(Tab tab)
+		{
+			this.tabs.Remove (tab);
+			this.OnChanged ();
+		}
+		
+		public void TabRemoveAt(int rank)
 		{
 			System.Diagnostics.Debug.Assert (rank >= 0);
 			System.Diagnostics.Debug.Assert (rank < this.tabs.Count);
@@ -412,7 +421,12 @@ namespace Epsitec.Common.Drawing
 			return new Tab (this.tabs[rank] as Tab);
 		}
 
-		public void MoveTab(int rank, double pos)
+		public Tab[] GetTabArray()
+		{
+			return (Tab[]) this.tabs.ToArray (typeof (Tab));
+		}
+		
+		public void SetTabPosition(int rank, double pos)
 		{
 			System.Diagnostics.Debug.Assert (rank >= 0);
 			System.Diagnostics.Debug.Assert (rank < this.tabs.Count);
@@ -421,7 +435,7 @@ namespace Epsitec.Common.Drawing
 			this.OnChanged ();
 		}
 
-		public Tab NextTab(double pos)				//	##
+		public Tab FindTabAfterPosition(double pos)
 		{
 			// Cherche la position du prochain tabulateur après une position donnée.
 			double lastPos = 0.0;
@@ -653,6 +667,7 @@ namespace Epsitec.Common.Drawing
 		}
 
 
+		[System.Serializable]
 		public class Tab
 		{
 			public Tab()

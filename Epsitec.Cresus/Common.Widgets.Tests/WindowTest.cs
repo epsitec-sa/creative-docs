@@ -203,6 +203,19 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Drawing.Size (450, 230);
 			window.MakeFixedSizeWindow ();
 			
+			Assert.IsNotNull (window.CommandDispatcher);
+			Assert.IsNotNull (window.Root.CommandDispatcher);
+			
+			CommandDispatcher dispatcher = window.CommandDispatcher;
+			
+			dispatcher.RegisterController (new MyController ());
+			
+			Assert.AreSame (dispatcher, window.Root.CommandDispatcher);
+			
+			CommandState command_open = new CommandState ("Open", dispatcher, KeyCode.ModifierControl | KeyCode.AlphaO);
+			CommandState command_save = new CommandState ("Save", dispatcher, KeyCode.ModifierAlt | KeyCode.AlphaS);
+			CommandState command_cut  = new CommandState ("ClipCut", dispatcher, KeyCode.ModifierControl | KeyCode.AlphaX);
+			
 			Button      button;
 			GroupBox    group;
 			Widget      widget;
@@ -455,6 +468,22 @@ namespace Epsitec.Common.Widgets
 			window.Show ();
 		}
 		
+		private class MyController
+		{
+			[Command ("Open")]		public void CommandOpen()
+			{
+				System.Diagnostics.Debug.WriteLine ("Open executed.");
+			}
+			[Command ("Save")]		public void CommandSave()
+			{
+				System.Diagnostics.Debug.WriteLine ("Save executed.");
+			}
+			[Command ("ClipCut")]	public void CommandCut()
+			{
+				System.Diagnostics.Debug.WriteLine ("Clipboard Cut executed.");
+			}
+		}
+		
 		[Test] public void CheckMinSize()
 		{
 			Window window;
@@ -468,6 +497,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.Show ();
 		}
+		
 		
 		private void Root_Clicked(object sender, MessageEventArgs e)
 		{
@@ -524,6 +554,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (Window.IsApplicationActive == false);
 			System.Diagnostics.Debug.WriteLine ("Application deactivated");
 		}
+		
 		
 //		[Test] public void Zzz()
 //		{

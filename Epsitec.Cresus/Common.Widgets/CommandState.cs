@@ -24,6 +24,11 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		public CommandState(string name, Support.CommandDispatcher dispatcher, Shortcut shortcut) : base (name, dispatcher)
+		{
+			this.Shortcut = shortcut;
+		}
+		
 		
 		public override bool				Enabled
 		{
@@ -77,6 +82,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Shortcut						Shortcut
+		{
+			get
+			{
+				return this.shortcut;
+			}
+			set
+			{
+				this.shortcut = value;
+			}
+		}
 		
 		public Widget[] FindWidgets()
 		{
@@ -127,6 +143,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected WidgetState				state = WidgetState.Enabled | WidgetState.ActiveNo;
+		protected WidgetState				state		= WidgetState.Enabled | WidgetState.ActiveNo;
+		protected Shortcut					shortcut	= null;
 	}
 }

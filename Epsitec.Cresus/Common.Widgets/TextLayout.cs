@@ -350,21 +350,24 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		public int AddTab(Drawing.TextStyle.Tab tab)
+		public int TabInsert(Drawing.TextStyle.Tab tab)
 		{
 			this.CloneStyleIfDefaultStyleInUse();
-			return this.style.AddTab(tab);
+			return this.style.TabInsert(tab);
 		}
 
-		public int TotalTab()
+		public int TabCount
 		{
-			return this.style.TotalTab();
+			get
+			{
+				return this.style.TabCount;
+			}
 		}
 
-		public void DeleteTab(int rank)
+		public void TabRemoveAt(int rank)
 		{
 			this.CloneStyleIfDefaultStyleInUse();
-			this.style.DeleteTab(rank);
+			this.style.TabRemoveAt(rank);
 		}
 
 		public Drawing.TextStyle.Tab GetTab(int rank)
@@ -372,10 +375,10 @@ namespace Epsitec.Common.Widgets
 			return this.style.GetTab(rank);
 		}
 
-		public void MoveTab(int rank, double pos)
+		public void SetTabPosition(int rank, double pos)
 		{
 			this.CloneStyleIfDefaultStyleInUse();
-			this.style.MoveTab(rank, pos);
+			this.style.SetTabPosition(rank, pos);
 		}
 
 		
@@ -3620,7 +3623,7 @@ noText:
 					}
 					else
 					{
-						tab = this.style.NextTab(pos);
+						tab = this.style.FindTabAfterPosition(pos);
 					}
 					tabType = tab.Type;
 
@@ -3628,7 +3631,7 @@ noText:
 					{
 						pos = indent;
 						lineBreak = true;
-						tab = this.style.NextTab(pos);
+						tab = this.style.FindTabAfterPosition(pos);
 						if ( tab.Pos > this.layoutSize.Width )
 						{
 							textLength = 0;

@@ -167,6 +167,15 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public CommandDispatcher.CommandState[]	CommandStates
+		{
+			get
+			{
+				CommandState[] states = new CommandState[this.command_states.Count];
+				this.command_states.CopyTo (states);
+				return states;
+			}
+		}
 		
 		
 		public void AddValidator(IValidator validator)

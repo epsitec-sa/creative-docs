@@ -564,7 +564,7 @@ namespace Epsitec.Common.Widgets
 				tab.Pos  = this.ScreenToTab(pos.X);
 				tab.Type = this.GlyphType(this.buttonTab);
 				tab.Line = Drawing.TextTabLine.None;
-				this.mouseTabRank = this.textNavigator.AddTab(tab);
+				this.mouseTabRank = this.textNavigator.TabInsert(tab);
 				this.mouseMove = false;
 			}
 			else	// déplace un tabulateur existant ?
@@ -588,11 +588,11 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.DetectTabZone(pos) )
 			{
-				this.textNavigator.MoveTab(this.mouseTabRank, this.ScreenToTab(pos.X));
+				this.textNavigator.SetTabPosition(this.mouseTabRank, this.ScreenToTab(pos.X));
 			}
 			else
 			{
-				this.textNavigator.MoveTab(this.mouseTabRank, -1.0);  // pseudo-destruction
+				this.textNavigator.SetTabPosition(this.mouseTabRank, -1.0);  // pseudo-destruction
 			}
 
 			this.VerticalMarkShow(pos);
@@ -610,7 +610,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.TextStyle.Tab tab = this.textNavigator.GetTab(this.mouseTabRank);
 			if ( tab.Pos < 0.0 )  // supprime définitivement le tabulateur ?
 			{
-				this.textNavigator.DeleteTab(this.mouseTabRank);
+				this.textNavigator.TabRemoveAt(this.mouseTabRank);
 				this.TabChanged();
 			}
 
@@ -704,7 +704,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Height = TextRuler.zoneInfHeight;
 
-			int total = this.textNavigator.TotalTab();
+			int total = this.textNavigator.TabCount;
 			for ( int i=0 ; i<total ; i++ )
 			{
 				Drawing.TextStyle.Tab tab = this.textNavigator.GetTab(i);
@@ -1127,7 +1127,7 @@ namespace Epsitec.Common.Widgets
 			graphics.Align(ref rect);
 			rect.Offset(0, 0.5);
 
-			int total = this.textNavigator.TotalTab();
+			int total = this.textNavigator.TabCount;
 			for ( int i=0 ; i<total ; i++ )
 			{
 				Drawing.TextStyle.Tab tab = this.textNavigator.GetTab(i);

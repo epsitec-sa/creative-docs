@@ -147,7 +147,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.is_auto_fitting)
 			{
-				this.SurfaceSize = this.MinSize;
+				this.SurfaceSize = this.RealMinSize;
 			}
 		}
 

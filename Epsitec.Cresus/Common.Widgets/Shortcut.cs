@@ -15,6 +15,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public static implicit operator Shortcut(KeyCode code)
+		{
+			return new Shortcut (code);
+		}
+		
+		public static implicit operator Shortcut(Message message)
+		{
+			return Shortcut.FromMessage (message);
+		}
+		
+		
 		public static Shortcut FromMessage(Message message)
 		{
 			KeyCode key_code = message.KeyCodeOnly;
