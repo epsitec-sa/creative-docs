@@ -341,10 +341,14 @@ namespace Epsitec.Common.Widgets
 				if ( block.image )
 				{
 					Drawing.Image image = this.imageProvider.GetImage(block.text);
+					
 					if ( !uniqueColor.IsEmpty )
 					{
 						image = Drawing.Bitmap.FromImageDisabled(image, uniqueColor);
 					}
+					
+					image.DefineZoom (graphics.GetTransformZoom ());
+					
 					double dx = image.Width;
 					double dy = image.Height;
 					double ix = pos.X+block.pos.X;
@@ -357,10 +361,15 @@ namespace Epsitec.Common.Widgets
 					
 					graphics.Align(ref ix, ref iy);
 					graphics.AddFilledRectangle(ix, iy, dx, dy);
+					
 					Drawing.Transform t = new Drawing.Transform();
+					Drawing.Bitmap    b = image.BitmapImage;
+					
 					t.Translate(ix, iy);
+					b.MergeTransform (t);
+					
+					graphics.ImageRenderer.BitmapImage = b;
 					graphics.ImageRenderer.Transform = t;
-					graphics.ImageRenderer.Bitmap = image.BitmapImage;
 					graphics.RenderImage();
 					continue;
 				}
