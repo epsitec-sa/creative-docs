@@ -29,3 +29,7 @@ ib_util.dll
 aliases.conf
 firebird.conf
 firebird.msg
+
+# Copy Adobe related wrapper
+
+Adobe.AcrobatDistiller.dll
