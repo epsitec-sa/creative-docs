@@ -49,6 +49,7 @@ namespace Epsitec.Common.Drawing.Agg
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererGradientMatrix(System.IntPtr renderer, double xx, double xy, double yx, double yy, double tx, double ty);
 		
 		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggRasterizerNew();
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerClear(System.IntPtr rasterizer);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerFillingRule(System.IntPtr rasterizer, int mode);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerGamma(System.IntPtr rasterizer, double gamma);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerSetTransform(System.IntPtr rasterizer, double xx, double xy, double yx, double yy, double tx, double ty);

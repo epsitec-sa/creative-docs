@@ -138,18 +138,21 @@ namespace Epsitec.Common.Drawing
 		{
 			this.CreateOnTheFly ();
 			Agg.Library.AggRasterizerRenderSolid (this.agg_ras, renderer.Handle);
+			Agg.Library.AggRasterizerClear (this.agg_ras);
 		}
 		
 		public void Render(Renderer.Image renderer)
 		{
 			this.CreateOnTheFly ();
 			Agg.Library.AggRasterizerRenderImage (this.agg_ras, renderer.Handle);
+			Agg.Library.AggRasterizerClear (this.agg_ras);
 		}
 		
 		public void Render(Renderer.Gradient renderer)
 		{
 			this.CreateOnTheFly ();
 			Agg.Library.AggRasterizerRenderGradient (this.agg_ras, renderer.Handle);
+			Agg.Library.AggRasterizerClear (this.agg_ras);
 		}
 		
 		

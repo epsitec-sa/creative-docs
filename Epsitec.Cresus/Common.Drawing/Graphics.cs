@@ -236,8 +236,22 @@ namespace Epsitec.Common.Drawing
 			double x2 = x + width;
 			double y2 = y + height;
 			
-			this.transform.TransformInverse (ref x1, ref y1);
-			this.transform.TransformInverse (ref x2, ref y2);
+			if (this.has_clip_rect)
+			{
+				x1 = System.Math.Max (x1, this.clip_x1);
+				x2 = System.Math.Min (x2, this.clip_x2);
+				y1 = System.Math.Max (y1, this.clip_y1);
+				y2 = System.Math.Max (y2, this.clip_y2);
+			}
+			else
+			{
+				this.has_clip_rect = true;
+			}
+			
+			this.clip_x1 = x1;
+			this.clip_y1 = y1;
+			this.clip_x2 = x2;
+			this.clip_y2 = y2;
 			
 			this.rasterizer.SetClipBox (x1, y1, x2, y2);
 		}
@@ -255,6 +269,7 @@ namespace Epsitec.Common.Drawing
 		public void ResetClippingRectangle()
 		{
 			this.rasterizer.ResetClipBox ();
+			this.has_clip_rect = false;
 		}
 		
 		
@@ -382,5 +397,8 @@ namespace Epsitec.Common.Drawing
 		private JoinStyle				line_join;
 		private CapStyle				line_cap;
 		private double					line_miter_limit;
+		
+		private double					clip_x1, clip_y1, clip_x2, clip_y2;
+		private bool					has_clip_rect;
 	}
 }
