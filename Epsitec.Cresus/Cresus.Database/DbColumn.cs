@@ -51,20 +51,95 @@ namespace Epsitec.Cresus.Database
 			this.IsNullAllowed = (nullable == Nullable.Yes);
 		}
 		
+		public DbColumn(string name, DbType type) : this (name, type, Nullable.Undefined)
+		{
+		}
 		
-		public DbColumn(string name, DbType type) : this (name)
+		public DbColumn(string name, DbType type, Nullable nullable) : this (name)
 		{
 			this.type = type;
+			this.IsNullAllowed = (nullable == Nullable.Yes);
+		}
+		
+		public DbColumn(System.Xml.XmlElement xml)
+		{
+			this.ProcessXmlDefinition (xml);
 		}
 		
 		
-		//	TODO: add missing constructors...
+		public static DbColumn NewColumn(string xml)
+		{
+			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+			
+			doc.LoadXml (xml);
+			
+			return DbColumn.NewColumn (doc.DocumentElement);
+		}
+		
+		public static DbColumn NewColumn(System.Xml.XmlElement xml)
+		{
+			return new DbColumn (xml);
+		}
+
+		
+		public static string ConvertColumnToXml(DbColumn column)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			DbColumn.ConvertColumnToXml (buffer, column);
+			
+			return buffer.ToString ();
+		}
+		
+		public static void ConvertColumnToXml(System.Text.StringBuilder buffer, DbColumn column)
+		{
+			column.SerialiseXmlDefinition (buffer);
+		}
+		
 		
 		public void DefineAttributes(params string[] attributes)
 		{
 			this.attributes.SetFromInitialisationList (attributes);
 		}
 		
+		
+		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer)
+		{
+			buffer.Append (@"<col");
+			
+			if (this.IsNullAllowed)
+			{
+				buffer.Append (@" null=""1""");
+			}
+			
+			if (this.IsUnique)
+			{
+				buffer.Append (@" unique=""1""");
+			}
+			
+			if (this.IsIndexed)
+			{
+				buffer.Append (@" index=""1""");
+			}
+			
+			buffer.Append (@"/>");
+		}
+		
+		protected void ProcessXmlDefinition(System.Xml.XmlElement xml)
+		{
+			if (xml.Name != "col")
+			{
+				throw new System.ArgumentException (string.Format ("Expected root element named <col>, but found <{0}>.", xml.Name));
+			}
+			
+			string arg_null   = xml.GetAttribute ("null");
+			string arg_unique = xml.GetAttribute ("unique");
+			string arg_index  = xml.GetAttribute ("index");
+			
+			this.is_null_allowed = (arg_null == "1");
+			this.is_unique       = (arg_unique == "1");
+			this.is_indexed      = (arg_index == "1");
+		}
 		
 		#region IDbAttributesHost Members
 		public DbAttributes				Attributes
@@ -218,6 +293,11 @@ namespace Epsitec.Cresus.Database
 		
 		internal void SetTypeAndLength(DbSimpleType type, int length, bool is_fixed_length, DbNumDef num_def)
 		{
+			if (this.type != null)
+			{
+				throw new System.InvalidOperationException ("Cannot reinitialise type of column.");
+			}
+			
 			if (length < 1)
 			{
 				throw new System.ArgumentOutOfRangeException ("length", length, "Invalid length");
@@ -260,6 +340,16 @@ namespace Epsitec.Cresus.Database
 					this.type = new DbType (type);
 					break;
 			}
+		}
+		
+		internal void SetType(DbType type)
+		{
+			if (this.type != null)
+			{
+				throw new System.InvalidOperationException ("Cannot reinitialise type of column.");
+			}
+			
+			this.type = type;
 		}
 		
 		

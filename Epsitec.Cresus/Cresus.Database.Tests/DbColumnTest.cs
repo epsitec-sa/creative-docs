@@ -10,6 +10,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_a = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
 			DbColumn column_b = new DbColumn ("B", DbSimpleType.Guid);
 			DbColumn column_c = new DbColumn ("C", DbSimpleType.String, 100, true);
+			DbColumn column_x = DbColumn.NewColumn ("<col null='1' index='1' unique='0'/>");
 			
 			Assertion.AssertEquals ("A", column_a.Name);
 			Assertion.AssertEquals (DbSimpleType.Decimal, column_a.SimpleType);
@@ -22,6 +23,20 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (DbSimpleType.String, column_c.SimpleType);
 			Assertion.AssertEquals (100, column_c.Length);
 			Assertion.AssertEquals (true, column_c.IsFixedLength);
+			
+			Assertion.AssertNotNull (column_x);
+			Assertion.AssertEquals (true,  column_x.IsNullAllowed);
+			Assertion.AssertEquals (true,  column_x.IsIndexed);
+			Assertion.AssertEquals (false, column_x.IsUnique);
+		}
+		
+		[Test] public void CheckConvertColumnToXml()
+		{
+			DbColumn column = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
+			
+			column.IsIndexed = true;
+			
+			System.Console.Out.WriteLine ("XML: " + DbColumn.ConvertColumnToXml (column));
 		}
 		
 		[Test] [Ignore ("Not implemented")] public void CheckNewDbColumnByteArray()

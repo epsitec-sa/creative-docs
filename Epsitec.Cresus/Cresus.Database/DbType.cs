@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Database
 		{
 			if (this.simple_type != DbSimpleType.Unsupported)
 			{
-				throw new System.InvalidOperationException ("Cannot reinitialise type");
+				throw new System.InvalidOperationException ("Cannot reinitialise type.");
 			}
 		}
 		
