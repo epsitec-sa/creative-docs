@@ -1764,8 +1764,8 @@ namespace Epsitec.Common.Widgets
 					//	aussi s'assurer que le widget n'est plus "Entered".
 					
 					this.SetEntered (false);
-					this.internal_state &= ~ InternalState.Visible;
 					this.Invalidate ();
+					this.internal_state &= ~ InternalState.Visible;
 					
 					if (this.dock != DockStyle.None)
 					{
