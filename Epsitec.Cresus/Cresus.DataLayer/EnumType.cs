@@ -16,26 +16,15 @@ namespace Epsitec.Cresus.DataLayer
 		{
 		}
 		
-		
-		public override object Clone()
+		public EnumType(System.Collections.ICollection values, params string[] attributes) : this (attributes)
 		{
-			EnumType def = base.Clone () as EnumType;
-			
-			if (this.values != null)
-			{
-				def.CopyValues (this.values);
-			}
-			
-			return def;
+			this.Initialise (values);
 		}
 		
 		
-		public void DefineValues(System.Collections.ICollection values)
+		public void Initialise(System.Collections.ICollection values)
 		{
-			if (this.values != null)
-			{
-				throw new System.InvalidOperationException ("Cannot redefine values");
-			}
+			this.EnsureTypeIsNotInitialised ();
 			
 			EnumValue[] temp = new EnumValue[values.Count];
 			values.CopyTo (temp, 0);
@@ -48,16 +37,6 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			
 			this.CopyValues (temp);
-		}
-		
-		protected void CopyValues(EnumValue[] values)
-		{
-			this.values = new EnumValue[values.Length];
-			
-			for (int i = 0; i < values.Length; i++)
-			{
-				this.values[i] = values[i].Clone () as EnumValue;
-			}
 		}
 		
 		
@@ -82,6 +61,41 @@ namespace Epsitec.Cresus.DataLayer
 				}
 				
 				return null;
+			}
+		}
+		
+		
+		
+		public override object Clone()
+		{
+			EnumType def = base.Clone () as EnumType;
+			
+			if (this.values != null)
+			{
+				def.CopyValues (this.values);
+			}
+			
+			return def;
+		}
+		
+		
+		protected void CopyValues(EnumValue[] values)
+		{
+			this.values = new EnumValue[values.Length];
+			
+			for (int i = 0; i < values.Length; i++)
+			{
+				this.values[i] = values[i].Clone () as EnumValue;
+			}
+		}
+		
+		protected override void EnsureTypeIsNotInitialised()
+		{
+			base.EnsureTypeIsNotInitialised ();
+			
+			if (this.values != null)
+			{
+				throw new System.InvalidOperationException ("Cannot reinitialise type");
 			}
 		}
 		

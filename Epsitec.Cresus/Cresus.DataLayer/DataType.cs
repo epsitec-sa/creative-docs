@@ -19,6 +19,33 @@ namespace Epsitec.Cresus.DataLayer
 			this.Attributes.SetFromInitialisationList (attributes);
 		}
 		
+		public DataType(Database.DbSimpleType type, params string[] attributes) : this (attributes)
+		{
+			this.Initialise (type);
+		}
+		
+		public DataType(Database.DbNumDef num_def, params string[] attributes) : this (attributes)
+		{
+			this.Initialise (num_def);
+		}
+		
+		
+		public void Initialise(Database.DbNumDef num_def)
+		{
+			this.EnsureTypeIsNotInitialised();
+			
+			this.db_simple_type = Database.DbSimpleType.Decimal;
+			this.db_num_def     = num_def;
+		}
+		
+		public void Initialise(Database.DbSimpleType type)
+		{
+			this.EnsureTypeIsNotInitialised();
+			
+			this.db_simple_type = type;
+			this.db_num_def     = null;
+		}
+		
 		
 		public string						Name
 		{
@@ -33,6 +60,17 @@ namespace Epsitec.Cresus.DataLayer
 		public string						UserDescription
 		{
 			get { return this.Attributes.GetAttribute (Tags.Description); }
+		}
+		
+		
+		public Database.DbNumDef			DbNumDef
+		{
+			get { return this.db_num_def; }
+		}
+		
+		public Database.DbSimpleType		DbSimpleType
+		{
+			get { return this.db_simple_type; }
 		}
 		
 		
@@ -85,6 +123,16 @@ namespace Epsitec.Cresus.DataLayer
 			return (name == null) ? 0 : name.GetHashCode ();
 		}
 
+		
+		protected virtual void EnsureTypeIsNotInitialised()
+		{
+			if (this.db_simple_type != Database.DbSimpleType.Unsupported)
+			{
+				throw new System.InvalidOperationException ("Cannot reinitialise type");
+			}
+		}
+		
+		
 		
 		
 		protected DataAttributes			attributes;

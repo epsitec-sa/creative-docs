@@ -315,7 +315,10 @@ namespace Epsitec.Cresus.Database
 		
 		public static SqlField CreateAll()
 		{
+			//	crée un champs pour représenter une sélection de tout ( * )
 			SqlField field	= new SqlField ();
+
+			field.type = SqlFieldType.All;
 
 			return field;
 		}

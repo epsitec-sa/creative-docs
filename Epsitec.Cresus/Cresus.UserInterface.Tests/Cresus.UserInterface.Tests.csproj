@@ -118,6 +118,11 @@
                     Project = "{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Cresus.Database"
+                    Project = "{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

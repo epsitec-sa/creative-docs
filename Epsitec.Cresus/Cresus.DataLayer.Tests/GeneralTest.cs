@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			list.Add (new EnumValue ("id=3", "name=MLLE", "label=Mademoiselle"));
 			list.Add (new EnumValue ("id=1", "name=M", "label=Monsieur"));
 			
-			e_type.DefineValues (list);
+			e_type.Initialise (list);
 			
 			EnumType e_copy = e_type.Clone () as EnumType;
 			
@@ -101,8 +101,8 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			list.Add (new EnumValue ("id=3", "name=MLLE", "label=Mademoiselle"));
 			list.Add (new EnumValue ("id=1", "name=M", "label=Monsieur"));
 			
-			e_type.DefineValues (list);
-			e_type.DefineValues (list);
+			e_type.Initialise (list);
+			e_type.Initialise (list);
 		}
 		
 		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckEnumTypeEx2()
@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			list.Add (new EnumValue ("id=3", "name=B"));
 			list.Add (new EnumValue ("id=1", "name=A"));
 			
-			e_type.DefineValues (list);
+			e_type.Initialise (list);
 		}
 		
 		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckEnumTypeEx3()
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			list.Add (new EnumValue ("id=2", "name=B"));
 			list.Add (new EnumValue ("id=1", "name=C"));
 			
-			e_type.DefineValues (list);
+			e_type.Initialise (list);
 		}
 		
 		[Test] public void CheckCreateSet()

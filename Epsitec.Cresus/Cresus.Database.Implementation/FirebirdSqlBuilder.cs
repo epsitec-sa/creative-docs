@@ -403,7 +403,67 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.PrepareCommand ();
 			this.command_type = DbCommandType.ReturningData;
 			
-			// TODO:  Add FirebirdSqlBuilder.SelectData implementation
+			//	TODO-DD:  Add FirebirdSqlBuilder.SelectData implementation
+
+			//	Cela consiste à créer la commande "SELECT * FROM ..."
+			//	dans toutes ses variantes...
+			
+			this.buffer.Append ("SELECT ");
+			bool first_field = true;
+			
+			foreach (SqlField field in query.Fields)
+			{
+				switch ( field.Type )
+				{
+					case SqlFieldType.All:
+						this.buffer.Append ("* ");
+						break;
+					case SqlFieldType.Name:
+						this.buffer.Append (field.AsName);
+						this.buffer.Append (' ');
+						break;
+					default:
+						this.ThrowError (string.Format ("Unsupported field {0} in SELECT.", field.AsName));
+						break;
+				}
+				
+				if (first_field)
+				{
+					first_field = false;
+				}
+				else
+				{
+					this.buffer.Append (", ");
+				}
+			}
+
+			this.buffer.Append ("FROM ");
+			first_field = true;
+
+			foreach (SqlField field in query.Tables)
+			{
+				switch ( field.Type )
+				{
+					case SqlFieldType.Name:
+						this.buffer.Append (field.AsName);
+						this.buffer.Append (' ');
+						break;
+					default:
+						this.ThrowError (string.Format ("Unsupported field {0} in SELECT FROM.", field.AsName));
+						break;
+				}
+				
+				if (first_field)
+				{
+					first_field = false;
+				}
+				else
+				{
+					this.buffer.Append (", ");
+				}
+			}
+			
+			this.buffer.Append (";\n");
 		}
 
 		public void InsertData(string table_name, SqlFieldCollection fields)

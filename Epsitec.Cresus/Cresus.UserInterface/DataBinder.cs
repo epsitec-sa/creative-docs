@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.UserInterface
 				{
 					ResourceBundle bundle = this.object_bundler.FindBundleFromObject (obj);
 					
-					this.CreateBinding (obj, bundle.GetFieldString ("binding"));
+					this.CreateBinding (obj, bundle.GetFieldString (DataLayer.Tags.Binding));
 				}
 				
 				this.object_list.Clear ();
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.UserInterface
 			//	contenue dans 'full_binding'.
 			
 			string binding  = full_binding;
-			string bind_tag = "data";
+			string bind_tag = DataLayer.Tags.Data;
 			int    pos_sep  = binding.IndexOf ('#');
 			
 			if (pos_sep >= 0)
@@ -146,9 +146,9 @@ namespace Epsitec.Cresus.UserInterface
 			
 			switch (bind_tag)
 			{
-				case DataLayer.DataAttributes.TagData:			this.CreateDataBinding (obj, data_record, binding);			break;
-				case DataLayer.DataAttributes.TagLabel:			this.CreateLabelBinding (obj, data_record, binding);		break;
-				case DataLayer.DataAttributes.TagDescription:	this.CreateDescriptionBinding (obj, data_record, binding);	break;
+				case DataLayer.Tags.Data:			this.CreateDataBinding (obj, data_record, binding);			break;
+				case DataLayer.Tags.Label:			this.CreateLabelBinding (obj, data_record, binding);		break;
+				case DataLayer.Tags.Description:	this.CreateDescriptionBinding (obj, data_record, binding);	break;
 				
 				default:
 					throw new BinderException (string.Format ("Unknown bind tag '{0}' used with data '{1}'", bind_tag, binding));
@@ -204,9 +204,9 @@ namespace Epsitec.Cresus.UserInterface
 			//	binding pour les données. Si c'est le cas, on en prend note pour un traitement
 			//	ultérieur (si aucun data set n'est attaché), ou on le traite tout de suite.
 			
-			if (bundle.Contains ("binding"))
+			if (bundle.Contains (DataLayer.Tags.Binding))
 			{
-				string binding = bundle.GetFieldString ("binding");
+				string binding = bundle.GetFieldString (DataLayer.Tags.Binding);
 				
 				if (binding != null)
 				{

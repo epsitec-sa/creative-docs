@@ -97,7 +97,7 @@
      <field name='cmd'>on</field>
      <field name='size'>200;*</field>
      <field name='pos'>10;215</field>
-     <field name='binding'>a;a#label</field>
+     <field name='bind'>a;a#label</field>
     </bundle>
     <bundle>
      <field name='class'>Button</field>
@@ -135,7 +135,7 @@
      <field name='cmd'>on</field>
      <field name='size'>200;*</field>
      <field name='pos'>10;140</field>
-     <field name='binding'>b;b#label</field>
+     <field name='bind'>b;b#label</field>
     </bundle>
     <bundle>
      <field name='class'>GroupBox</field>
@@ -166,7 +166,7 @@
     <bundle>
      <field name='class'>Button</field>
      <field name='text'>Annule</field>
-     <field name='size'>200;*</field>
+     <field name='size'>80;*</field>
      <field name='cmd'>on</field>
      <field name='pos'>10;10</field>
     </bundle>
