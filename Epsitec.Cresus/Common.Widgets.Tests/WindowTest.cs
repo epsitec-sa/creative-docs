@@ -163,6 +163,14 @@ namespace Epsitec.Common.Widgets
 			window.Owner = owner;
 			window.ClientSize = new Size (300, 50);
 			window.Root.BackColor = Color.FromRGB (1, 1, 1);
+			
+			Button button = new Button (window.Root);
+			button.Bounds = new Drawing.Rectangle (250, 10, 40, 20);
+			button.Text   = "?";
+			
+			TextField text = new TextField (window.Root);
+			text.Bounds = new Drawing.Rectangle (150, 10, 95, 20);
+			
 			window.Show ();
 		}
 		

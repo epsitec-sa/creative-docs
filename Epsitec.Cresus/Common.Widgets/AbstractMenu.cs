@@ -502,7 +502,7 @@ namespace Epsitec.Common.Widgets
 
 			this.window = new Window();
 			this.window.MakeFramelessWindow();
-			this.window.MakeToolWindow();
+			this.window.MakeFloatingWindow();
 			this.window.Owner = owner;
 			this.window.CommandDispatcher = owner.CommandDispatcher;
 			this.window.Name = "ContextMenu";
@@ -584,7 +584,7 @@ namespace Epsitec.Common.Widgets
 
 			this.window = new Window();
 			this.window.MakeFramelessWindow();
-			this.window.MakeToolWindow();
+			this.window.MakeFloatingWindow();
 			this.window.Owner = item.Window;
 			this.window.CommandDispatcher = item.Window.CommandDispatcher;
 			this.window.Name = "Menu";
