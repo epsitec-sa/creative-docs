@@ -95,7 +95,7 @@ namespace Epsitec.Common.Designer.Panels
 			column_0_edit_model.DefocusAction       = DefocusAction.Modal;
 			
 			new Common.Widgets.Validators.RegexValidator (column_0_edit_model, Support.RegexFactory.ResourceName, false);
-			new UniqueNameValidator (column_0_edit_model);
+			new Common.Widgets.EditArray.UniqueValueValidator (column_0_edit_model, 0);
 			
 			this.edit_array.Columns[0].HeaderText = "Clef";
 			this.edit_array.Columns[0].IsReadOnly = true;
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Designer.Panels
 			this.edit_array.SetColumnWidth (0, 110);
 			this.edit_array.SetColumnWidth (1, this.edit_array.GetColumnWidth (1) + this.edit_array.FreeTableWidth);
 			this.edit_array.TextArrayStore = this.store;
-			this.edit_array.TitleWidget = title;
+//			this.edit_array.TitleWidget = title;
 			this.edit_array.SearchCaption = @"<b>Recherche. </b><font size=""90%"">Tapez le texte à chercher ci-dessous&#160;:</font>";
 			
 			this.edit_array.SelectedIndexChanged    += new EventHandler(this.HandleEditArraySelectedIndexChanged);
@@ -291,54 +291,6 @@ namespace Epsitec.Common.Designer.Panels
 		
 		
 		
-		private class UniqueNameValidator : Common.Widgets.Validators.AbstractTextValidator
-		{
-			public UniqueNameValidator() : base (null)
-			{
-			}
-			
-			public UniqueNameValidator(Widget widget) : base (widget)
-			{
-			}
-			
-			
-			protected override void ValidateText(string text)
-			{
-				Widget iter = this.widget;
-				
-				this.state = Support.ValidationState.Ok;
-				
-				while (iter != null)
-				{
-					EditArray edit_array = iter as EditArray;
-					
-					if ((edit_array != null) &&
-						(edit_array.InteractionMode == ScrollInteractionMode.Edition))
-					{
-						int                        index = edit_array.SelectedIndex;
-						StringEditController.Store store = edit_array.TextArrayStore as StringEditController.Store;
-						
-						int max_rows = store.GetRowCount ();
-						
-						for (int i = 0; i < max_rows; i++)
-						{
-							if (i != index)
-							{
-								if (store.GetCellText (i, 0) == text)
-								{
-									this.state = Support.ValidationState.Error;
-									return;
-								}
-							}
-						}
-						
-						break;
-					}
-					
-					iter = iter.Parent;
-				}
-			}
-		}
 		
 		
 		protected EditArray						edit_array;
