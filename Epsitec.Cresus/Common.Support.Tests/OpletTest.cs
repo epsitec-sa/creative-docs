@@ -20,19 +20,19 @@ namespace Epsitec.Common.Support
 			
 			System.Diagnostics.Debug.WriteLine ("Action A created");
 			
-			Assertion.Assert (queue.CanUndo == true);
-			Assertion.Assert (queue.CanRedo == false);
-			Assertion.AssertEquals (1, queue.UndoActionCount);
-			Assertion.AssertEquals (0, queue.RedoActionCount);
+			Assert.IsTrue (queue.CanUndo == true);
+			Assert.IsTrue (queue.CanRedo == false);
+			Assert.AreEqual (1, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
 			
 			//	Accède aux éléments de l'action en cours :
 			
 			oplets = queue.LastActionOplets;
 			
-			Assertion.AssertNotNull (oplets);
-			Assertion.AssertEquals (2, oplets.Length);
-			Assertion.AssertEquals ("A1", (oplets[0] as NamedOplet).Name);
-			Assertion.AssertEquals ("A2", (oplets[1] as NamedOplet).Name);
+			Assert.IsNotNull (oplets);
+			Assert.AreEqual (2, oplets.Length);
+			Assert.AreEqual ("A1", (oplets[0] as NamedOplet).Name);
+			Assert.AreEqual ("A2", (oplets[1] as NamedOplet).Name);
 			
 			//	Défait l'action.
 			
@@ -40,10 +40,10 @@ namespace Epsitec.Common.Support
 			
 			System.Diagnostics.Debug.WriteLine ("Action A undone");
 			
-			Assertion.Assert (queue.CanUndo == false);
-			Assertion.Assert (queue.CanRedo == true);
-			Assertion.AssertEquals (0, queue.UndoActionCount);
-			Assertion.AssertEquals (1, queue.RedoActionCount);
+			Assert.IsTrue (queue.CanUndo == false);
+			Assert.IsTrue (queue.CanRedo == true);
+			Assert.AreEqual (0, queue.UndoActionCount);
+			Assert.AreEqual (1, queue.RedoActionCount);
 			
 			//	Refait l'action.
 			
@@ -51,10 +51,10 @@ namespace Epsitec.Common.Support
 			
 			System.Diagnostics.Debug.WriteLine ("Action A redone");
 			
-			Assertion.Assert (queue.CanUndo == true);
-			Assertion.Assert (queue.CanRedo == false);
-			Assertion.AssertEquals (1, queue.UndoActionCount);
-			Assertion.AssertEquals (0, queue.RedoActionCount);
+			Assert.IsTrue (queue.CanUndo == true);
+			Assert.IsTrue (queue.CanRedo == false);
+			Assert.AreEqual (1, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
 			
 			//	Commence la création d'une action avec abandon en cours de
 			//	route :
@@ -73,8 +73,8 @@ namespace Epsitec.Common.Support
 			
 			System.Diagnostics.Debug.WriteLine ("Action B cancelled automatically");
 			
-			Assertion.AssertEquals (1, queue.UndoActionCount);
-			Assertion.AssertEquals (0, queue.RedoActionCount);
+			Assert.AreEqual (1, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
 			
 			//	Commence la création d'une action avec abandon explicite :
 			
@@ -86,8 +86,8 @@ namespace Epsitec.Common.Support
 			
 			System.Diagnostics.Debug.WriteLine ("Action B' cancelled manually");
 			
-			Assertion.AssertEquals (1, queue.UndoActionCount);
-			Assertion.AssertEquals (0, queue.RedoActionCount);
+			Assert.AreEqual (1, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
 			
 			//	Crée une action avec une sous-action qui est abandonnée :
 			
@@ -105,8 +105,8 @@ namespace Epsitec.Common.Support
 			
 			System.Diagnostics.Debug.WriteLine ("Action C inserted / C1 cancelled");
 			
-			Assertion.AssertEquals (2, queue.UndoActionCount);
-			Assertion.AssertEquals (0, queue.RedoActionCount);
+			Assert.AreEqual (2, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
 			
 			//	Crée une action avec une sous-action qui est validée :
 			
@@ -125,61 +125,61 @@ namespace Epsitec.Common.Support
 			
 			System.Diagnostics.Debug.WriteLine ("Action D inserted / D1 validated");
 			
-			Assertion.AssertEquals (3, queue.UndoActionCount);
-			Assertion.AssertEquals (0, queue.RedoActionCount);
+			Assert.AreEqual (3, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
 			
 			//	Accède aux éléments de l'action en cours :
 			
 			oplets = queue.LastActionOplets;
 			
-			Assertion.AssertNotNull (oplets);
-			Assertion.AssertEquals (4, oplets.Length);
-			Assertion.AssertEquals ("D1",   (oplets[0] as NamedOplet).Name);
-			Assertion.AssertEquals ("D1-1", (oplets[1] as NamedOplet).Name);
-			Assertion.AssertEquals ("D1-2", (oplets[2] as NamedOplet).Name);
-			Assertion.AssertEquals ("D2",   (oplets[3] as NamedOplet).Name);
+			Assert.IsNotNull (oplets);
+			Assert.AreEqual (4, oplets.Length);
+			Assert.AreEqual ("D1",   (oplets[0] as NamedOplet).Name);
+			Assert.AreEqual ("D1-1", (oplets[1] as NamedOplet).Name);
+			Assert.AreEqual ("D1-2", (oplets[2] as NamedOplet).Name);
+			Assert.AreEqual ("D2",   (oplets[3] as NamedOplet).Name);
 			
 			queue.UndoAction ();
 			queue.UndoAction ();
 			
 			System.Diagnostics.Debug.WriteLine ("Undone twice");
 			
-			Assertion.AssertEquals (1, queue.UndoActionCount);
-			Assertion.AssertEquals (2, queue.RedoActionCount);
+			Assert.AreEqual (1, queue.UndoActionCount);
+			Assert.AreEqual (2, queue.RedoActionCount);
 			
 			oplets = queue.LastActionOplets;
 			
-			Assertion.AssertNotNull (oplets);
-			Assertion.AssertEquals (2, oplets.Length);
-			Assertion.AssertEquals ("A1", (oplets[0] as NamedOplet).Name);
-			Assertion.AssertEquals ("A2", (oplets[1] as NamedOplet).Name);
+			Assert.IsNotNull (oplets);
+			Assert.AreEqual (2, oplets.Length);
+			Assert.AreEqual ("A1", (oplets[0] as NamedOplet).Name);
+			Assert.AreEqual ("A2", (oplets[1] as NamedOplet).Name);
 			
 			queue.PurgeRedo ();
 			
 			System.Diagnostics.Debug.WriteLine ("Purged redo");
 			
-			Assertion.AssertEquals (1, queue.UndoActionCount);
-			Assertion.AssertEquals (0, queue.RedoActionCount);
+			Assert.AreEqual (1, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
 			
 			queue.PurgeUndo ();
 			
 			System.Diagnostics.Debug.WriteLine ("Purged undo");
 			
-			Assertion.AssertEquals (0, queue.UndoActionCount);
-			Assertion.AssertEquals (0, queue.RedoActionCount);
+			Assert.AreEqual (0, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
 		}
 		
 		
 		[Test] public void CheckFailUndo()
 		{
 			OpletQueue queue = new OpletQueue ();
-			Assertion.Assert (! queue.UndoAction ());
+			Assert.IsTrue (! queue.UndoAction ());
 		}
 		
 		[Test] public void CheckFailRedo()
 		{
 			OpletQueue queue = new OpletQueue ();
-			Assertion.Assert (! queue.RedoAction ());
+			Assert.IsTrue (! queue.RedoAction ());
 		}
 		
 		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckInsertUndoRedoEx1()

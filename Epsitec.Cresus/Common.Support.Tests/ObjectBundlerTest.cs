@@ -21,18 +21,18 @@ namespace Epsitec.Common.Support
 			ResourceBundle bundle = Resources.GetBundle ("file:button.cancel");
 			ObjectBundler bundler = new ObjectBundler ();
 			
-			Assertion.AssertNotNull (bundle);
+			Assert.IsNotNull (bundle);
 			
 			object         obj    = bundler.CreateFromBundle (bundle);
 			Widgets.Button button = obj as Widgets.Button;
 			
-			Assertion.AssertNotNull (obj);
-			Assertion.AssertNotNull (button);
-			Assertion.AssertEquals ("cancel", button.Name);
-			Assertion.Assert (button.Text.Length > 0);
-			Assertion.AssertEquals (Widgets.AnchorStyles.None, button.Anchor);
-			Assertion.AssertEquals (100, button.Width);
-			Assertion.AssertEquals (new Widgets.Button ().Height, button.Height);
+			Assert.IsNotNull (obj);
+			Assert.IsNotNull (button);
+			Assert.AreEqual ("cancel", button.Name);
+			Assert.IsTrue (button.Text.Length > 0);
+			Assert.AreEqual (Widgets.AnchorStyles.None, button.Anchor);
+			Assert.AreEqual (100, button.Width);
+			Assert.AreEqual (new Widgets.Button ().Height, button.Height);
 		}
 		
 		[Test] public void CheckCreateABFromBundle()
@@ -40,19 +40,19 @@ namespace Epsitec.Common.Support
 			ResourceBundle bundle = Resources.GetBundle ("file:ab");
 			ObjectBundler bundler = new ObjectBundler ();
 			
-			Assertion.AssertNotNull (bundle);
+			Assert.IsNotNull (bundle);
 			
 			object obj = bundler.CreateFromBundle (bundle);
 			
 			A obj_a = obj as A;
 			B obj_b = obj as B;
 			
-			Assertion.AssertNotNull (obj);
-			Assertion.AssertNotNull (obj_a);
-			Assertion.AssertNotNull (obj_b);
+			Assert.IsNotNull (obj);
+			Assert.IsNotNull (obj_a);
+			Assert.IsNotNull (obj_b);
 			
-			Assertion.AssertEquals ("hello world !", obj_a.Value);
-			Assertion.AssertEquals ("hello world !", obj_b.Value);
+			Assert.AreEqual ("hello world !", obj_a.Value);
+			Assert.AreEqual ("hello world !", obj_b.Value);
 		}
 		
 		[Test] public void CheckFillBundleFromObject()
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Support
 			ResourceBundle bundle = Resources.GetBundle ("file:button.cancel");
 			ObjectBundler bundler = new ObjectBundler ();
 			
-			Assertion.AssertNotNull (bundle);
+			Assert.IsNotNull (bundle);
 			
 			object         obj    = bundler.CreateFromBundle (bundle);
 			Widgets.Button button = obj as Widgets.Button;
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Support
 			
 			string xml = bundle.CreateXmlDocument (false).InnerXml;
 			
-			Assertion.AssertEquals (@"<bundle name=""a_soft""><data name=""class"">A</data><data name=""Value"">Hello World !</data></bundle>", xml);
+			Assert.AreEqual (@"<bundle name=""a_soft""><data name=""class"">A</data><data name=""Value"">Hello World !</data></bundle>", xml);
 		}
 		
 		[Test] public void CheckFillBundleFromB()
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Support
 			
 			string xml = bundle.CreateXmlDocument (false).InnerXml;
 			
-			Assertion.AssertEquals (@"<bundle name=""b_soft""><data name=""class"">B</data><data name=""Value"">hello world !</data></bundle>", xml);
+			Assert.AreEqual (@"<bundle name=""b_soft""><data name=""class"">B</data><data name=""Value"">hello world !</data></bundle>", xml);
 		}
 		
 		[Test] public void CheckFindPropertyInfo()
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Support
 			ObjectBundler bundler = new ObjectBundler ();
 			Widgets.Button button = new Widgets.Button ();
 			
-			Assertion.AssertNotNull (bundler.FindPropertyInfo (button, "Text"));
+			Assert.IsNotNull (bundler.FindPropertyInfo (button, "Text"));
 		}
 		
 		[Test] public void CheckIsPropertyEqual()
@@ -120,8 +120,8 @@ namespace Epsitec.Common.Support
 			
 			button.Text = "Hello";
 			
-			Assertion.Assert (bundler.IsPropertyEqual (button, "Text", "Hello"));
-			Assertion.Assert (bundler.IsPropertyEqual (button, "Anchor", button.Anchor.ToString ()));
+			Assert.IsTrue (bundler.IsPropertyEqual (button, "Text", "Hello"));
+			Assert.IsTrue (bundler.IsPropertyEqual (button, "Anchor", button.Anchor.ToString ()));
 		}
 		
 		[Test] public void CheckSimpleWindow()
@@ -129,15 +129,15 @@ namespace Epsitec.Common.Support
 			ResourceBundle bundle = Resources.GetBundle ("file:simple_window");
 			ObjectBundler bundler = new ObjectBundler ();
 			
-			Assertion.AssertNotNull (bundle);
+			Assert.IsNotNull (bundle);
 			
 			bundler.EnableMapping ();
 			
 			object             obj  = bundler.CreateFromBundle (bundle);
 			Widgets.WindowRoot root = obj as Widgets.WindowRoot;
 			
-			Assertion.AssertNotNull (obj);
-			Assertion.AssertNotNull (root);
+			Assert.IsNotNull (obj);
+			Assert.IsNotNull (root);
 			
 			this.test_window = root.Window;
 			
@@ -151,15 +151,15 @@ namespace Epsitec.Common.Support
 			ResourceBundle bundle = Resources.GetBundle ("file:simple_window");
 			ObjectBundler bundler = new ObjectBundler ();
 			
-			Assertion.AssertNotNull (bundle);
+			Assert.IsNotNull (bundle);
 			
 			bundler.EnableMapping ();
 			
 			object             obj  = bundler.CreateFromBundle (bundle);
 			Widgets.WindowRoot root = obj as Widgets.WindowRoot;
 			
-			Assertion.AssertNotNull (obj);
-			Assertion.AssertNotNull (root);
+			Assert.IsNotNull (obj);
+			Assert.IsNotNull (root);
 			
 			Types.Time time_2 = Types.Time.Now;
 			
@@ -186,15 +186,15 @@ namespace Epsitec.Common.Support
 			ResourceBundle bundle = Resources.GetBundle ("file:simple_window");
 			ObjectBundler bundler = new ObjectBundler ();
 			
-			Assertion.AssertNotNull (bundle);
+			Assert.IsNotNull (bundle);
 			
 			bundler.EnableMapping ();
 			
 			object             obj  = bundler.CreateFromBundle (bundle);
 			Widgets.WindowRoot root = obj as Widgets.WindowRoot;
 			
-			Assertion.AssertNotNull (obj);
-			Assertion.AssertNotNull (root);
+			Assert.IsNotNull (obj);
+			Assert.IsNotNull (root);
 			
 			bundler = new ObjectBundler ();
 			bundle  = ResourceBundle.Create ("cloned_simple_window", "file", ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
@@ -207,8 +207,8 @@ namespace Epsitec.Common.Support
 			obj  = bundler.CreateFromBundle (bundle);
 			root = obj as Widgets.WindowRoot;
 			
-			Assertion.AssertNotNull (obj);
-			Assertion.AssertNotNull (root);
+			Assert.IsNotNull (obj);
+			Assert.IsNotNull (root);
 			
 			root.Window.Show ();
 		}
