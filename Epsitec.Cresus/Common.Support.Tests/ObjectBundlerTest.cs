@@ -12,7 +12,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckRegisterAssembly()
 		{
-			ObjectBundler.RegisterAssembly (typeof (Widgets.Widget).Assembly);
+			ObjectBundler.Initialise ();
 		}
 		
 		[Test] public void CheckCreateFromBundle()
