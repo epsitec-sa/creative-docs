@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelTextLine : AbstractPanel
 	{
-		public PanelTextLine()
+		public PanelTextLine(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -30,6 +30,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.buttons[1].IconName = @"file:images/justifhcenter.icon";
 			this.buttons[2].IconName = @"file:images/justifhright.icon";
 			this.buttons[3].IconName = @"file:images/justifhstretch.icon";
+			ToolTip.Default.SetToolTip(this.buttons[0], "Justification à gauche");
+			ToolTip.Default.SetToolTip(this.buttons[1], "Justification centrée");
+			ToolTip.Default.SetToolTip(this.buttons[2], "Justification à droite");
+			ToolTip.Default.SetToolTip(this.buttons[3], "Justification alignée");
 
 			this.fieldOffset = new TextFieldSlider(this);
 			this.fieldOffset.MinValue =  0;
@@ -37,8 +41,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldOffset.Step = 5;
 			this.fieldOffset.Resolution = 1;
 			this.fieldOffset.TextChanged += new EventHandler(this.HandleFieldChanged);
-			this.fieldOffset.TabIndex = 22;
+			this.fieldOffset.TabIndex = 20;
 			this.fieldOffset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldOffset, "Offset perpendiculaire");
 
 			this.fieldAdd = new TextFieldSlider(this);
 			this.fieldAdd.MinValue = -20;
@@ -46,8 +51,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldAdd.Step = 1.0M;
 			this.fieldAdd.Resolution = 1.0M;
 			this.fieldAdd.TextChanged += new EventHandler(this.HandleFieldChanged);
-			this.fieldAdd.TabIndex = 20;
+			this.fieldAdd.TabIndex = 21;
 			this.fieldAdd.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldAdd, "Espace intercaractère");
 
 			this.labelOffset = new StaticText(this);
 			this.labelOffset.Text = "Oy";
@@ -58,11 +64,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.labelAdd.Alignment = Drawing.ContentAlignment.MiddleCenter;
 
 			this.isNormalAndExtended = true;
-		}
-		
-		public PanelTextLine(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)
