@@ -28,8 +28,19 @@ namespace Epsitec.Common.Support
 		
 		//	Méthodes d'accès en écriture/modification :
 		
-		bool Create(string id, ResourceLevel level, System.Globalization.CultureInfo culture);
-		bool Update(string id, ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data);
+		bool SetData(string id, ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, ResourceSetMode mode);
 		bool Remove(string id, ResourceLevel level, System.Globalization.CultureInfo culture);
+	}
+	
+	/// <summary>
+	/// Le mode d'écriture détermine comment sont gérés les cas où la ressource existe
+	/// déjà (ou n'existe pas encore).
+	/// </summary>
+	public enum ResourceSetMode
+	{
+		None,
+		CreateOnly,						//	crée si n'existe pas, erreur si existe
+		UpdateOnly,						//	met à jour si existe, erreur si n'existe pas
+		Write							//	crée ou met à jour la ressource
 	}
 }

@@ -186,13 +186,8 @@ namespace Epsitec.Common.Support.Implementation
 		}
 
 		
-		public override bool Create(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture)
-		{
-			// TODO:  Add FileProvider.Create implementation
-			throw new ResourceException ("Not implemented");
-		}
 		
-		public override bool Update(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data)
+		public override bool SetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, ResourceSetMode mode)
 		{
 			if (this.culture != culture)
 			{
@@ -203,19 +198,30 @@ namespace Epsitec.Common.Support.Implementation
 			
 			if (path != null)
 			{
-				try
+				System.IO.FileMode file_mode = System.IO.FileMode.Open;
+				
+				switch (mode)
 				{
-					using (System.IO.FileStream stream = new System.IO.FileStream (path, System.IO.FileMode.Open, System.IO.FileAccess.Write))
-					{
-						stream.Write (data, 0, data.Length);
-						stream.SetLength (data.Length);
-						stream.Flush ();
-						
-						return true;
-					}
+					case ResourceSetMode.CreateOnly:
+						file_mode = System.IO.FileMode.CreateNew;
+						break;
+					case ResourceSetMode.UpdateOnly:
+						file_mode = System.IO.FileMode.Open;
+						break;
+					case ResourceSetMode.Write:
+						file_mode = System.IO.FileMode.OpenOrCreate;
+						break;
+					default:
+						throw new System.ArgumentException (string.Format ("Mode {0} not supported.", mode), "mode");
 				}
-				catch
+				
+				using (System.IO.FileStream stream = new System.IO.FileStream (path, file_mode, System.IO.FileAccess.Write))
 				{
+					stream.Write (data, 0, data.Length);
+					stream.SetLength (data.Length);
+					stream.Flush ();
+					
+					return true;
 				}
 			}
 			

@@ -363,11 +363,16 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public static void UpdateBundle(ResourceBundle bundle)
+		public static void SetBundle(ResourceBundle bundle, ResourceSetMode mode)
 		{
 			ResourceLevel level   = bundle.ResourceLevel;
 			CultureInfo   culture = bundle.Culture;
 			string        id      = bundle.Name;
+			
+			if (culture == null)
+			{
+				culture = Resources.Culture;
+			}
 			
 			switch (level)
 			{
@@ -387,7 +392,7 @@ namespace Epsitec.Common.Support
 			
 			if (provider != null)
 			{
-				provider.Update (resource_id, level, culture, data);
+				provider.SetData (resource_id, level, culture, data, mode);
 			}
 		}
 		

@@ -1316,6 +1316,14 @@ namespace Epsitec.Common.Widgets
 				return Support.CommandDispatcher.ExtractCommandName (this.command);
 			}
 		}
+		
+		public CommandState							CommandState
+		{
+			get
+			{
+				return this.CreateCommandState ();
+			}
+		}
 
 		public string								FullPathName
 		{
@@ -1809,6 +1817,17 @@ namespace Epsitec.Common.Widgets
 			{
 				this.internal_state &= ~InternalState.SyncPaint;
 			}
+		}
+		
+		
+		public virtual CommandState CreateCommandState()
+		{
+			if (this.command == null)
+			{
+				return null;
+			}
+			
+			return CommandState.Find (this.CommandName, this.CommandDispatcher);
 		}
 		
 		

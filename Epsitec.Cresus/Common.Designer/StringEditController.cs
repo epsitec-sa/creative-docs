@@ -324,7 +324,7 @@ namespace Epsitec.Common.Designer
 			
 			if (bundle != null)
 			{
-				Resources.UpdateBundle (bundle);
+				Resources.SetBundle (bundle, ResourceSetMode.Write);
 			}
 		}
 		

@@ -40,8 +40,7 @@ namespace Epsitec.Common.Support.Implementation
 		public abstract byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture);
 		public abstract string[] GetIds(string filter, ResourceLevel level, System.Globalization.CultureInfo culture);
 		
-		public abstract bool Create(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture);
-		public abstract bool Update(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data);
+		public abstract bool SetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data, Epsitec.Common.Support.ResourceSetMode mode);
 		public abstract bool Remove(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture);
 		#endregion
 		
