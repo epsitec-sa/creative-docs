@@ -102,7 +102,12 @@ namespace Epsitec.Common.Drawing
 			get { return this.y2; }
 			set { this.y2 = value; }
 		}
-
+		
+		
+		public Point					Center
+		{
+			get { return new Point ((this.x1 + this.x2) / 2, (this.y1 + this.y2) / 2); }
+		}
 		
 		
 		public bool Contains(Point p)
