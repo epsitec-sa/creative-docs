@@ -50,17 +50,21 @@ namespace Epsitec.Cresus.Database
 			DbTransaction transaction;
 			DbRichCommand command = new DbRichCommand ();
 			
+			sql_builder.SelectData (select_a);
+			System.Data.IDbCommand command_a = sql_builder.Command;
+			
+			sql_builder.SelectData (select_b);
+			System.Data.IDbCommand command_b = sql_builder.Command;
+			
+			command.Commands.Add (command_a);
+			command.Commands.Add (command_b);
+			
+			command.Tables.Add (db_table_a);
+			command.Tables.Add (db_table_b);
+			
 			using (transaction = infrastructure.BeginTransaction ())
 			{
-				sql_builder.SelectData (select_a);
-				command.Commands.Add (sql_builder.Command);
-				
-				sql_builder.SelectData (select_b);
-				command.Commands.Add (sql_builder.Command);
-				
 				command.Transaction = transaction.Transaction;
-				command.Tables.Add (db_table_a);
-				command.Tables.Add (db_table_b);
 				
 				sql_engine.Execute (command);
 				transaction.Commit ();
@@ -158,10 +162,6 @@ namespace Epsitec.Cresus.Database
 			
 			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
 			DbTable db_table_b = infrastructure.ResolveDbTable (null, "Domiciles");
-			
-			DbType db_type_name = infrastructure.ResolveDbType (null, "CR_NameType");
-			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR_KeyIdType");
-			DbType db_type_rev  = infrastructure.ResolveDbType (null, "CR_KeyRevisionType");
 			
 			DbRichCommand command = new DbRichCommand ();
 			

@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Database
 			{
 				return this.transaction;
 			}
-			set 
+			set
 			{
 				if (this.transaction != value)
 				{
@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Database
 		
 		protected void SetCommandTransaction()
 		{
-			for  (int i = 0; i < this.commands.Count; i++)
+			for (int i = 0; i < this.commands.Count; i++)
 			{
 				this.commands[i].Transaction = this.transaction;
 			}
