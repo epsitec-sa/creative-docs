@@ -319,7 +319,8 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert (this.panel == sender);
 			
-			this.UpdatePanelLocation ();
+			this.UpdateGeometry ();
+//?			this.UpdatePanelLocation ();
 		}
 		
 		
