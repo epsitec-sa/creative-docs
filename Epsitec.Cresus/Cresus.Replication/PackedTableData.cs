@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Replication
 				System.Array data = this.column_data_rows[i] as System.Array;
 				bool[] null_flags = this.column_null_flags[i] as bool[];
 				
-				DataCruncher.UnpackColumnFromArray (values, i, n, data, null_flags);
+				DataCruncher.UnpackColumnFromNativeArray (values, i, n, data, null_flags);
 			}
 			
 			return values;
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Replication
 				System.Array data = this.column_data_rows[i] as System.Array;
 				bool[] null_flags = this.column_null_flags[i] as bool[];
 				
-				values[i] = DataCruncher.UnpackValueFromArray (row, data, null_flags);
+				DataCruncher.UnpackValueFromNativeArray (row, data, null_flags, out values[i]);
 			}
 			
 			return values;
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Replication
 				bool[] null_flags;
 				int    null_count;
 				
-				DataCruncher.PackColumnToArray (data_table, i, out array, out null_flags, out null_count);
+				DataCruncher.PackColumnToNativeArray (data_table, i, out array, out null_flags, out null_count);
 				
 				if (null_count == 0)
 				{

@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] public void Check02DataCruncherPackColumnToArray()
+		[Test] public void Check02DataCruncherPackColumnToNativeArray()
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
@@ -85,14 +85,14 @@ namespace Epsitec.Cresus.Database
 					bool[] null_array;
 					int    null_count;
 					
-					Replication.DataCruncher.PackColumnToArray (data, i, out array, out null_array, out null_count);
+					Replication.DataCruncher.PackColumnToNativeArray (data, i, out array, out null_array, out null_count);
 					
 					System.Console.WriteLine ("Column {0}: type {1}, {2} rows, {3} are null.", i, array.GetType (), array.Length, null_count);
 				}			
 			}
 		}
 		
-		[Test] public void Check03DataCruncherUnpackColumnFromArray()
+		[Test] public void Check03DataCruncherUnpackColumnFromNativeArray()
 		{
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
@@ -109,8 +109,8 @@ namespace Epsitec.Cresus.Database
 					bool[] null_array;
 					int    null_count;
 					
-					Replication.DataCruncher.PackColumnToArray (data, i, out array, out null_array, out null_count);
-					Replication.DataCruncher.UnpackColumnFromArray (store, i, data.Columns.Count, array, (null_count == 0) ? null : null_array);
+					Replication.DataCruncher.PackColumnToNativeArray (data, i, out array, out null_array, out null_count);
+					Replication.DataCruncher.UnpackColumnFromNativeArray (store, i, data.Columns.Count, array, (null_count == 0) ? null : null_array);
 				}
 				
 				for (int r = 0; r < data.Rows.Count; r++)
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Database
 			
 			int count;
 			
-			Replication.DataCruncher.PackColumnToArray (table_a, 0, out a_0, out n_0, out count);
+			Replication.DataCruncher.PackColumnToNativeArray (table_a, 0, out a_0, out n_0, out count);
 			
 			Assert.AreEqual (0, count);
 			Assert.AreEqual (4, n_0.Length);
@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (false, n_0[2]);
 			Assert.AreEqual (false, n_0[3]);
 			
-			Replication.DataCruncher.PackColumnToArray (table_a, 1, out a_1, out n_1, out count);
+			Replication.DataCruncher.PackColumnToNativeArray (table_a, 1, out a_1, out n_1, out count);
 			
 			Assert.AreEqual (1, count);
 			Assert.AreEqual (4, n_1.Length);
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (true,  n_1[2]);
 			Assert.AreEqual (false, n_1[3]);
 			
-			Replication.DataCruncher.PackColumnToArray (table_a, 2, out a_2, out n_2, out count);
+			Replication.DataCruncher.PackColumnToNativeArray (table_a, 2, out a_2, out n_2, out count);
 			
 			Assert.AreEqual (1, count);
 			Assert.AreEqual (4, n_2.Length);
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual (false, n_2[2]);
 			Assert.AreEqual (true,  n_2[3]);
 			
-			Replication.DataCruncher.PackColumnToArray (table_a, 3, out a_3, out n_3, out count);
+			Replication.DataCruncher.PackColumnToNativeArray (table_a, 3, out a_3, out n_3, out count);
 			
 			Assert.AreEqual (4, count);
 			Assert.AreEqual (4, n_3.Length);
@@ -222,11 +222,11 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			byte[] packed_bytes = Replication.DataCruncher.SerializeAndCompressToMemory (packed);
+			byte[] packed_bytes = Common.IO.Serialization.SerializeAndCompressToMemory (packed, Common.IO.Compressor.DeflateCompact);
 			
 			System.Console.WriteLine ("Packed table has {0} bytes.", packed_bytes.Length);
 			
-			packed = Replication.DataCruncher.DeserializeAndDecompressFromMemory (packed_bytes) as Replication.PackedTableData;
+			packed = Common.IO.Serialization.DeserializeAndDecompressFromMemory (packed_bytes) as Replication.PackedTableData;
 			
 			table_b = table_a.Clone ();
 			
@@ -265,7 +265,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (buffer != null)
 			{
-				Replication.ReplicationData data = Replication.DataCruncher.DeserializeAndDecompressFromMemory (buffer) as Replication.ReplicationData;
+				Replication.ReplicationData data = Common.IO.Serialization.DeserializeAndDecompressFromMemory (buffer) as Replication.ReplicationData;
 				
 				foreach (Replication.PackedTableData packed_table in data.TableData)
 				{

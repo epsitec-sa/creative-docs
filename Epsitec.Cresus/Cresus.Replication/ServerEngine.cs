@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Replication
 				//	ProcessTable. On va faire transiter sur le réseau un nombre minimal de
 				//	données :
 				
-				job.Data = DataCruncher.SerializeAndCompressToMemory (data);
+				job.Data = Common.IO.Serialization.SerializeAndCompressToMemory (data, Common.IO.Compressor.DeflateCompact);
 				
 				transaction.Commit ();
 			}

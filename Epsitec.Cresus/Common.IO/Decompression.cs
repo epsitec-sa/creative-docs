@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 15/04/2004
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
 {
@@ -48,6 +48,15 @@ namespace Epsitec.Common.IO
 				(header[6] == 13) &&
 				(header[7] == 10))
 			{
+				if ((header[1] == 'N') &&
+					(header[2] == 'O') &&
+					(header[3] == 'N') &&
+					(header[4] == 'E') &&
+					(header[5] == 32))
+				{
+					return stream;
+				}
+				
 				if ((header[1] == 'B') &&
 					(header[2] == 'Z') &&
 					(header[3] == 'I') &&

@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Replication
 		
 		public void ApplyChanges(IDbAbstraction database, byte[] compressed_data)
 		{
-			this.ApplyChanges (database, DataCruncher.DeserializeAndDecompressFromMemory (compressed_data) as ReplicationData);
+			this.ApplyChanges (database, Common.IO.Serialization.DeserializeAndDecompressFromMemory (compressed_data) as ReplicationData);
 		}
 		
 		public void ApplyChanges(IDbAbstraction database, ReplicationData data)

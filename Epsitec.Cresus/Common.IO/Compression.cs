@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 15/04/2004
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
 {
@@ -51,6 +51,14 @@ namespace Epsitec.Common.IO
 		}
 		
 		
+		public static System.IO.Stream CreateTransparentStream(System.IO.Stream stream)
+		{
+			byte[] header = new byte[] { (byte)'$', (byte)'N', (byte)'O', (byte)'N', (byte)'E', 32, 13, 10 };
+			stream.Write (header, 0, 8);
+			
+			return stream;
+		}
+		
 		public static System.IO.Stream CreateBZip2Stream(System.IO.Stream stream)
 		{
 			byte[] header = new byte[] { (byte)'$', (byte)'B', (byte)'Z', (byte)'I', (byte)'P', (byte)'2', 13, 10 };
@@ -94,6 +102,22 @@ namespace Epsitec.Common.IO
 			ICSharpCode.SharpZipLib.GZip.GZipOutputStream compressor = new ICSharpCode.SharpZipLib.GZip.GZipOutputStream (stream);
 			
 			return new Compression (compressor);
+		}
+		
+		
+		public static System.IO.Stream CreateStream(System.IO.Stream stream, Compressor compressor)
+		{
+			switch (compressor)
+			{
+				case Compressor.None:			return Compression.CreateTransparentStream (stream);
+				case Compressor.BZip2:			return Compression.CreateBZip2Stream (stream);
+				case Compressor.Zip:			return Compression.CreateZipStream (stream, "stream");
+				case Compressor.DeflateQuick:	return Compression.CreateDeflateStream (stream, 0);
+				case Compressor.DeflateCompact:	return Compression.CreateDeflateStream (stream, 9);
+				case Compressor.GZip:			return Compression.CreateGZipStream (stream);
+			}
+			
+			throw new System.ArgumentException (string.Format ("Compressor {0} not recognized.", compressor), "compressor");
 		}
 	}
 }
