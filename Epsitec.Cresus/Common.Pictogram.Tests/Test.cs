@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Common.Pictogram;
 using Epsitec.Common.Pictogram.Data;
 using Epsitec.Common.Pictogram.Widgets;

@@ -1,4 +1,5 @@
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Common.Pictogram.Data;
 
 namespace Epsitec.Common.Pictogram.Widgets
