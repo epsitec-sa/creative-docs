@@ -127,6 +127,21 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
+                <File
+                    RelPath = "StringEditController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Panels\AbstractPanel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Panels\StringEditPanel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
             </Include>
         </Files>
     </CSHARP>

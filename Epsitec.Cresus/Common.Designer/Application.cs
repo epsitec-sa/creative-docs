@@ -4,14 +4,14 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.Designer
 {
 	/// <summary>
-	/// Summary description for Application.
+	/// La classe Application initialise tout ce qui est en relation avec le
+	/// "designer".
 	/// </summary>
-	public class Application
+	public class Application : Support.ICommandDispatcherHost
 	{
 		public Application()
 		{
-			Widgets.Widget.Initialise ();
-			Pictogram.Engine.Initialise ();
+			this.Initialise ();
 		}
 		
 		
@@ -21,12 +21,60 @@ namespace Epsitec.Common.Designer
 			{
 				if (this.main_window == null)
 				{
-					this.CreateMainWindow ();
+					this.Initialise ();
 				}
 				
 				return this.main_window;
 			}
 		}
+		
+		public CommandDispatcher		CommandDispatcher
+		{
+			get
+			{
+				if (this.dispatcher == null)
+				{
+					this.Initialise ();
+				}
+				
+				return this.dispatcher;
+			}
+		}
+		
+		
+		public StringEditController		StringEditController
+		{
+			get
+			{
+				if (this.string_edit_controller == null)
+				{
+					this.string_edit_controller = new StringEditController (this.CommandDispatcher);
+				}
+				
+				return this.string_edit_controller;
+			}
+		}
+		
+		protected void Initialise()
+		{
+			if ((this.is_initialised) ||
+				(this.is_initialising))
+			{
+				return;
+			}
+			
+			this.is_initialising = true;
+			
+			Widgets.Widget.Initialise ();
+			Pictogram.Engine.Initialise ();
+			
+			this.CreateMainWindow ();
+			this.RegisterCommands ();
+			
+			this.is_initialised  = true;
+			this.is_initialising = false;
+		}
+		
 		
 		private void CreateMainWindow()
 		{
@@ -34,12 +82,10 @@ namespace Epsitec.Common.Designer
 			
 			this.main_window = new Window ();
 			this.main_window.CommandDispatcher = this.dispatcher;
-			this.main_window.Text = "Designer";
+			this.main_window.Text = "Interface Designer";
 			this.main_window.Name = "Designer";
 			this.main_window.ClientSize = new Drawing.Size (400, 300);
 			this.main_window.PreventAutoClose = true;
-			
-			this.RegisterCommands ();
 		}
 		
 		private void RegisterCommands()
@@ -48,7 +94,13 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		protected Window				main_window;
-		protected CommandDispatcher		dispatcher;
+		
+		
+		protected bool							is_initialised;
+		protected bool							is_initialising;
+		
+		protected Window						main_window;
+		protected Support.CommandDispatcher		dispatcher;
+		protected StringEditController			string_edit_controller;
 	}
 }

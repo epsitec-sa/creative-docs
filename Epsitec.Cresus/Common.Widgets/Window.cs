@@ -641,16 +641,29 @@ namespace Epsitec.Common.Widgets
 		#region QueueItem class
 		protected class QueueItem
 		{
+			public QueueItem(object source, string command, Support.CommandDispatcher dispatcher)
+			{
+				this.source     = source;
+				this.command    = command;
+				this.dispatcher = dispatcher;
+			}
+			
 			public QueueItem(Widget source)
 			{
 				this.source     = source;
+				this.command    = source.Command;
 				this.dispatcher = source.CommandDispatcher;
 			}
 			
 			
-			public Widget						Source
+			public object						Source
 			{
 				get { return this.source; }
+			}
+			
+			public string						Command
+			{
+				get { return this.command; }
 			}
 			
 			public Support.CommandDispatcher	CommandDispatcher
@@ -659,17 +672,29 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			protected Widget					source;
+			protected object					source;
+			protected string					command;
 			protected Support.CommandDispatcher	dispatcher;
 		}
 		#endregion
 		
 		internal void QueueCommand(Widget source)
 		{
-			System.Diagnostics.Debug.Assert (this.cmd_names.Contains (source) == false, "Cannot queue same command twice");
+			QueueItem item = new QueueItem (source);
 			
-			this.cmd_queue.Enqueue (new QueueItem (source));
-			this.cmd_names[source] = source.Command;
+			this.cmd_queue.Enqueue (item);
+			
+			if (this.cmd_queue.Count == 1)
+			{
+				this.window.SendQueueCommand ();
+			}
+		}
+		
+		internal void QueueCommand(object source, string command)
+		{
+			QueueItem item = new QueueItem (source, command, this.CommandDispatcher);
+			
+			this.cmd_queue.Enqueue (item);
 			
 			if (this.cmd_queue.Count == 1)
 			{
@@ -681,21 +706,18 @@ namespace Epsitec.Common.Widgets
 		{
 			while (this.cmd_queue.Count > 0)
 			{
-				QueueItem item   = this.cmd_queue.Dequeue () as QueueItem;
-				Widget    widget = item.Source;
-				string    name   = this.cmd_names[widget] as string;
-				
-				this.cmd_names.Remove (widget);
+				QueueItem item    = this.cmd_queue.Dequeue () as QueueItem;
+				object    source  = item.Source;
+				string    command = item.Command;
 				
 				Support.CommandDispatcher dispatcher = item.CommandDispatcher;
 				
 				if (dispatcher == null)
 				{
-					System.Diagnostics.Debug.WriteLine ("DispatchQueuedCommands: " + widget + " had no dispatcher for command " + widget.CommandName + ".");
 					dispatcher = this.CommandDispatcher;
 				}
 				
-				dispatcher.Dispatch (name, widget);
+				dispatcher.Dispatch (command, source);
 			}
 		}
 		
@@ -1074,7 +1096,6 @@ namespace Epsitec.Common.Widgets
 		
 		private Support.CommandDispatcher		cmd_dispatcher;
 		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();
-		private System.Collections.Hashtable	cmd_names = new System.Collections.Hashtable ();
 		
 		private System.Collections.Queue		post_paint_queue = new System.Collections.Queue ();
 		private System.Collections.Hashtable	property_hash;

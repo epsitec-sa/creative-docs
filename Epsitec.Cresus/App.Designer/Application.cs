@@ -1,4 +1,5 @@
 using Epsitec.Common.Designer;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Widgets;
 
@@ -11,6 +12,13 @@ namespace Epsitec.Designer
 	{
 		public Application()
 		{
+			Button button  = new Button ("New bundle");
+			button.Bounds  = new Rectangle (10, 10, 80, 24);
+			button.Command = "CreateStringBundle ('NewBundle')";
+			button.Parent  = this.MainWindow.Root;
+			button.Anchor  = AnchorStyles.BottomLeft;
+			
+			this.StringEditController.Window.Show ();
 		}
 		
 		#region Application Commands

@@ -108,7 +108,17 @@ namespace Epsitec.Common.Widgets
 				//	Le raccourci clavier n'a pas été consommé. Il faut voir si le raccourci clavier
 				//	est attaché à une commande globale.
 				
-				//	TODO: gère les commandes globales
+				System.Diagnostics.Debug.WriteLine (shortcut.ToString ());
+				
+				if (shortcut.IsAltPressed)
+				{
+					//	TODO: gère les commandes globales
+					
+					if (shortcut.KeyCodeOnly == KeyCode.FuncF4)
+					{
+						this.Window.QueueCommand (this, "Quit" + this.Window.Name);
+					}
+				}
 				
 				Widget focused = this.window.FocusedWidget;
 				
@@ -120,7 +130,7 @@ namespace Epsitec.Common.Widgets
 				TabNavigationMode mode = TabNavigationMode.Passive;
 				TabNavigationDir  dir  = TabNavigationDir.None;
 				
-				switch (shortcut.KeyCode)
+				switch (shortcut.KeyCodeOnly)
 				{
 					case KeyCode.Tab:
 						mode = TabNavigationMode.ActivateOnTab;
