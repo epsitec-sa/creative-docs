@@ -1,5 +1,5 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 15/04/2004
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
 {
@@ -16,5 +16,11 @@ namespace Epsitec.Common.IO
 		void Update(int byte_value);
 		void Update(byte[] buffer);
 		void Update(byte[] buffer, int offset, int length);
+		
+		void UpdateValue(string value);
+		void UpdateValue(int value);
+		void UpdateValue(short value);
+		void UpdateValue(double value);
+		void UpdateValue(bool value);
 	}
 }
