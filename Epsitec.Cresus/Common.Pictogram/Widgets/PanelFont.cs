@@ -26,16 +26,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fontName.SelectedIndexChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontName.TabIndex = 1;
 			this.fontName.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.fontOptical = new TextFieldCombo(this);
-			this.fontOptical.IsReadOnly = true;
-			this.fontOptical.Items.Add("Regular");
-			this.fontOptical.Items.Add("Bold");
-			this.fontOptical.Items.Add("Italic");
-			this.fontOptical.Items.Add("Bold Italic");
-			this.fontOptical.SelectedIndexChanged += new EventHandler(this.HandleFieldChanged);
-			this.fontOptical.TabIndex = 2;
-			this.fontOptical.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fontName, "Police du texte par défaut");
 
 			this.fontSize = new TextFieldSlider(this);
 			this.fontSize.MinValue =  0.1M;
@@ -45,16 +36,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fontSize.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontSize.TabIndex = 3;
 			this.fontSize.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fontSize, "Taille du texte par défaut");
 
 			this.fontColor = new ColorSample(this);
 			this.fontColor.PossibleOrigin = true;
 			this.fontColor.Clicked += new MessageEventHandler(this.HandleColorClicked);
 			this.fontColor.TabIndex = 4;
 			this.fontColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.labelOptical = new StaticText(this);
-			this.labelOptical.Text = "Variation";
-			this.labelOptical.Alignment = Drawing.ContentAlignment.MiddleLeft;
+			ToolTip.Default.SetToolTip(this.fontColor, "Couleur du texte par défaut");
 
 			this.labelSize = new StaticText(this);
 			this.labelSize.Text = "Taille";
@@ -72,16 +61,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( disposing )
 			{
 				this.fontName.SelectedIndexChanged -= new EventHandler(this.HandleFieldChanged);
-				this.fontOptical.SelectedIndexChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontSize.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleColorClicked);
 
 				this.label = null;
-				this.labelOptical = null;
 				this.labelSize = null;
 				this.labelColor = null;
 				this.fontName = null;
-				this.fontOptical = null;
 				this.fontSize = null;
 				this.fontColor = null;
 			}
@@ -95,7 +81,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			get
 			{
-				return ( this.extendedSize ? 105 : 30 );
+				return ( this.extendedSize ? 80 : 30 );
 			}
 		}
 
@@ -109,9 +95,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( p == null )  return;
 
 			//?this.fontName.SelectedName = p.FontName;
-			//?this.fontOptical.SelectedName = p.FontOptical;
 			this.ComboSelectedName(this.fontName, p.FontName);
-			this.ComboSelectedName(this.fontOptical, p.FontOptical);
 			this.fontSize.Value = (decimal) p.FontSize;
 			this.fontColor.Color = p.FontColor;
 		}
@@ -126,11 +110,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			string name = this.ComboSelectedName(this.fontName);
 			if ( name == null )  p.FontName = "";
 			else                 p.FontName = name;
-
-			//?string optical = this.fontOptical.SelectedName;
-			string optical = this.ComboSelectedName(this.fontOptical);
-			if ( optical == null )  p.FontOptical = "";
-			else                    p.FontOptical = optical;
 
 			p.FontSize = (double) this.fontSize.Value;
 			p.FontColor = this.fontColor.Color;
@@ -209,16 +188,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			r.Offset(0, -25);
 			r.Left = rect.Left;
-			r.Right = rect.Right-110;
-			this.labelOptical.Bounds = r;
-			this.labelOptical.SetVisible(this.extendedSize);
-			r.Left = rect.Right-110;
-			r.Right = rect.Right;
-			this.fontOptical.Bounds = r;
-			this.fontOptical.SetVisible(this.extendedSize);
-
-			r.Offset(0, -25);
-			r.Left = rect.Left;
 			r.Right = rect.Right-50;
 			this.labelSize.Bounds = r;
 			this.labelSize.SetVisible(this.extendedSize);
@@ -252,11 +221,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 
 		protected StaticText				label;
-		protected StaticText				labelOptical;
 		protected StaticText				labelSize;
 		protected StaticText				labelColor;
 		protected TextFieldCombo			fontName;
-		protected TextFieldCombo			fontOptical;
 		protected TextFieldSlider			fontSize;
 		protected ColorSample				fontColor;
 	}
