@@ -51,21 +51,33 @@ namespace Epsitec.Common.Widgets
 			base.UpdateClientGeometry();
 			
 			Drawing.Rectangle rect = this.Bounds;
-			//this.rightMargin = System.Math.Floor(rect.Height/2+1);
 			this.rightMargin = System.Math.Floor(rect.Height*0.6);
 
-			if ( this.arrowUp != null )
+			if ( this.arrowUp   != null &&
+				 this.arrowDown != null )
 			{
-				Drawing.Rectangle aRect = new Drawing.Rectangle(rect.Width-this.rightMargin, rect.Height/2, this.rightMargin, rect.Height/2);
-				this.arrowUp.Bounds = aRect;
-			}
-			if ( this.arrowDown != null )
-			{
-				Drawing.Rectangle aRect = new Drawing.Rectangle(rect.Width-this.rightMargin, 0, this.rightMargin, rect.Height/2);
+				Drawing.Rectangle aRect = new Drawing.Rectangle();
+
+				aRect.Left   = rect.Width-this.rightMargin;
+				aRect.Width  = this.rightMargin;
+
+				aRect.Bottom = 0;
+				aRect.Height = System.Math.Floor(rect.Height/2)+1;
 				this.arrowDown.Bounds = aRect;
+
+				aRect.Bottom += aRect.Height-1;
+				aRect.Top    = rect.Height;
+				this.arrowUp.Bounds = aRect;
 			}
 		}
 
+		protected override void HandleAdornerChanged()
+		{
+			this.UpdateClientGeometry();
+			base.HandleAdornerChanged();
+		}
+
+		
 		private void HandleButton(object sender)
 		{
 			ArrowButton button = sender as ArrowButton;

@@ -50,6 +50,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void HandleAdornerChanged()
+		{
+			this.UpdateClientGeometry();
+			base.HandleAdornerChanged();
+		}
+
 		protected override void CursorScrollTextEnd(Drawing.Point end, Drawing.Rectangle cursor)
 		{
 			double offset = cursor.Bottom;

@@ -473,6 +473,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void HandleAdornerChanged()
+		{
+			this.UpdateClientGeometry();
+			base.HandleAdornerChanged();
+		}
+
 
 		protected virtual void OnSelectedIndexChanged()
 		{
@@ -516,11 +522,13 @@ namespace Epsitec.Common.Widgets
 				Drawing.Color color = Drawing.Color.Empty;
 
 				if ( i+this.firstLine == this.selectedLine &&
-					(state&WidgetState.Enabled) != 0 )
+					 (state&WidgetState.Enabled) != 0 )
 				{
 					Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
 					rects[0].Left   = ScrollList.Margin;
 					rects[0].Width  = this.Client.Width-2*ScrollList.Margin-this.rightMargin;
+					rects[0].Left  += adorner.GeometryScrollListLeftMargin;
+					rects[0].Right += adorner.GeometryScrollListRightMargin+(2-adorner.GeometryScrollerRightMargin);
 					rects[0].Bottom = pos.Y;
 					rects[0].Height = this.lineHeight;
 					adorner.PaintTextSelectionBackground(graphics, rects);

@@ -149,8 +149,12 @@ namespace Epsitec.Common.Widgets
 
 		protected double Detect(Drawing.Point pos)
 		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			rect.Left  += adorner.GeometrySliderLeftMargin;
+			rect.Right += adorner.GeometrySliderRightMargin;
 			rect.Inflate(-this.margin, -this.margin);
+
 			double val = this.minRange+(pos.X-rect.Left)*(this.maxRange-this.minRange)/rect.Width;
 			val = System.Math.Max(val, this.minRange);
 			val = System.Math.Min(val, this.maxRange);
@@ -170,12 +174,22 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler ValueChanged;
 
 
+		protected override void HandleAdornerChanged()
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			this.color = adorner.ColorCaption;
+			base.HandleAdornerChanged();
+		}
+
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
-			Drawing.Rectangle rect   = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-			WidgetState       state  = this.PaintState;
+			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			WidgetState       state = this.PaintState;
+
+			rect.Left  += adorner.GeometrySliderLeftMargin;
+			rect.Right += adorner.GeometrySliderRightMargin;
 			
 			adorner.PaintTextFieldBackground(graphics, rect, state, TextFieldStyle.Simple, false);
 

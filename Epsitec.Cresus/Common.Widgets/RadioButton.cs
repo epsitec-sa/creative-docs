@@ -137,13 +137,14 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			Drawing.Rectangle rect = base.GetShapeBounds ();
+			Drawing.Rectangle rect = base.GetShapeBounds();
 			
 			if ( this.textLayout != null )
 			{
 				Drawing.Rectangle text = this.textLayout.StandardRectangle;
 				text.Offset(this.LabelOffset);
 				text.Inflate(1, 1);
+				text.Inflate(Widgets.Adorner.Factory.Active.GeometryRadioShapeBounds);
 				rect.MergeWith(text);
 			}
 			

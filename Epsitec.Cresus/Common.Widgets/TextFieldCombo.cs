@@ -17,6 +17,8 @@ namespace Epsitec.Common.Widgets
 			this.button.ButtonStyle = ButtonStyle.Combo;
 			this.button.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			//this.button.Dock = DockStyle.Right;
+
+			this.rightMargin = this.button.Width;
 		}
 		
 		public TextFieldCombo(Widget embedder) : this()
@@ -100,9 +102,6 @@ namespace Epsitec.Common.Widgets
 			if ( this.button != null )
 			{
 				IAdorner adorner = Widgets.Adorner.Factory.Active;
-
-				this.rightMargin = this.button.Width+2-adorner.GeometryComboRightMargin;
-
 				Drawing.Rectangle rect = new Drawing.Rectangle();
 				rect.Left   = this.Bounds.Width-this.rightMargin-adorner.GeometryComboRightMargin;
 				rect.Right  = this.Bounds.Width-adorner.GeometryComboRightMargin;
@@ -110,6 +109,12 @@ namespace Epsitec.Common.Widgets
 				rect.Top    = this.Bounds.Height-adorner.GeometryComboTopMargin;
 				this.button.Bounds = rect;
 			}
+		}
+
+		protected override void HandleAdornerChanged()
+		{
+			this.UpdateClientGeometry();
+			base.HandleAdornerChanged();
 		}
 
 		protected override void ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
