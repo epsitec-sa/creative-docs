@@ -5,6 +5,11 @@ namespace Epsitec.Common.Support.Tests
 	[TestFixture]
 	public class ResourceBundleTest
 	{
+		[SetUp] public void SetUp()
+		{
+			Resources.SetupProviders ("test");
+		}
+		
 		[Test] public void CheckCompile()
 		{
 			ResourceBundle bundle = new ResourceBundle ("test");
