@@ -138,19 +138,19 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "resources\bitmap.resource"
+                    RelPath = "resources\bitmap.00.resource"
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "resources\icon.resource"
+                    RelPath = "resources\icon.00.resource"
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "resources\image.resource"
+                    RelPath = "resources\image.00.resource"
                     BuildAction = "None"
                 />
                 <File
-                    RelPath = "resources\simple_window.resource"
+                    RelPath = "resources\simple_window.00.resource"
                     BuildAction = "None"
                 />
             </Include>
