@@ -106,6 +106,11 @@ namespace Epsitec.Common.Support.Data
 			return false;
 		}
 		
+		public bool CheckEnabledCell(int row, int column)
+		{
+			return true;
+		}
+		
 		
 		public event Epsitec.Common.Support.EventHandler StoreChanged;
 		#endregion
