@@ -977,12 +977,12 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 
-		[Test] public void CheckAdornerTestParents()
+		[Test] public void CheckAdornerTestParents1()
 		{
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(400, 300);
-			window.Text = "CheckAdornerTestParents";
+			window.Text = "CheckAdornerTestParents1";
 
 			Button button1 = new Button();
 			button1.Text = "Pere";
@@ -1001,36 +1001,40 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 
-		[Test] public void CheckAdornerPaintImage()
+		[Test] public void CheckAdornerTestParents2()
 		{
 			WindowFrame window = new WindowFrame();
 			
 			window.ClientSize = new System.Drawing.Size(300, 300);
-			window.Text = "CheckAdornerTestParents";
+			window.Text = "CheckAdornerTestParents1";
 
 			Button button1 = new Button();
 			button1.Location = new Point(50, 50);
 			button1.Size = new Size(200, 200);
 			button1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			window.Root.Children.Add(button1);
-
+			button1.Name = "B1";
+			button1.Parent = window.Root;
+			
 			Button button2 = new Button();
-			button2.Location = new Point(100, 100);
+			button2.Location = new Point(50, 50);
 			button2.Size = new Size(100, 100);
 			button2.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			window.Root.Children.Add(button2);
+			button2.Name = "B2";
+			button2.Parent = button1;
 
 			Button button3 = new Button();
-			button3.Location = new Point(120, 120);
+			button3.Location = new Point(20, 20);
 			button3.Size = new Size(60, 60);
 			button3.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			window.Root.Children.Add(button3);
+			button3.Name = "B3";
+			button3.Parent = button2;
 
 			Button button4 = new Button();
-			button4.Location = new Point(140, 140);
+			button4.Location = new Point(20, 20);
 			button4.Size = new Size(20, 20);
 			button4.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			window.Root.Children.Add(button4);
+			button4.Name = "B4";
+			button4.Parent = button3;
 
 			window.Show();
 		}

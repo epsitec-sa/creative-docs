@@ -51,7 +51,7 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case TextFieldType.MultiLine:
-					this.scroller = new Scroller();
+					this.scroller = new VScroller();
 					this.scroller.SetEnabled(false);
 					this.scroller.Moved += new EventHandler(this.HandleScroller);
 					this.Children.Add(this.scroller);
@@ -383,7 +383,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.type == TextFieldType.MultiLine )
 			{
 				Drawing.Rectangle rect = this.Bounds;
-				this.rightMargin = Scroller.StandardWidth;
+				this.rightMargin = this.scroller.Width;
 				double m = TextField.margin-1;
 				rect.Inflate(-m, -m);
 

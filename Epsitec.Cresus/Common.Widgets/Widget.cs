@@ -65,9 +65,8 @@ namespace Epsitec.Common.Widgets
 			
 			this.defaultFontHeight = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
 			this.alignment = this.DefaultAlignment;
-			this.Width     = this.DefaultWidth;
-			this.Height    = this.DefaultHeight;
 			this.anchor    = this.DefaultAnchor;
+			this.Size      = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
 			
 			this.backColor = Drawing.Color.FromName ("Control");
 			this.foreColor = Drawing.Color.FromName ("ControlText");
@@ -403,6 +402,12 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.suspendCounter == 0)
 				{
+					if (this.layoutInfo != null)
+					{
+						this.UpdateChildrenLayout ();
+						this.OnLayoutChanged ();
+						this.layoutInfo = null;
+					}
 					if ((this.internalState & InternalState.ChildrenChanged) != 0)
 					{
 						this.internalState -= InternalState.ChildrenChanged;
@@ -1999,8 +2004,6 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
-			this.Invalidate ();
-			
 			this.x1 = x1;
 			this.y1 = y1;
 			this.x2 = x2;
@@ -2025,9 +2028,10 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateClientGeometry()
 		{
-			System.Diagnostics.Debug.Assert (this.layoutInfo == null);
-			
-			this.layoutInfo = new LayoutInfo (this.clientInfo.width, this.clientInfo.height);
+			if (this.layoutInfo == null)
+			{
+				this.layoutInfo = new LayoutInfo (this.clientInfo.width, this.clientInfo.height);
+			}
 			
 			try
 			{
@@ -2056,12 +2060,18 @@ namespace Epsitec.Common.Widgets
 						break;
 				}
 				
-				this.UpdateChildrenLayout ();
-				this.OnLayoutChanged ();
+				if (this.suspendCounter == 0)
+				{
+					this.UpdateChildrenLayout ();
+					this.OnLayoutChanged ();
+				}
 			}
 			finally
 			{
-				this.layoutInfo = null;
+				if (this.suspendCounter == 0)
+				{
+					this.layoutInfo = null;
+				}
 			}
 		}
 		

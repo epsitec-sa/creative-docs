@@ -1143,11 +1143,21 @@ namespace Epsitec.Common.Widgets
 		{
 			if (message.IsMouseType)
 			{
-				//	C'est un message souris. Nous allons commencer par vérifier si tous les widgets
-				//	encore marqués comme IsEntered contiennent effectivement encore la souris. Si non,
-				//	on les retire de la liste en leur signalant qu'ils viennent de perdre la souris.
-				
-				Widget.UpdateEntered (this, message);
+				if (this.capturing_widget == null)
+				{
+					//	C'est un message souris. Nous allons commencer par vérifier si tous les widgets
+					//	encore marqués comme IsEntered contiennent effectivement encore la souris. Si non,
+					//	on les retire de la liste en leur signalant qu'ils viennent de perdre la souris.
+					
+					Widget.UpdateEntered (this, message);
+				}
+				else
+				{
+					//	Un widget a capturé les événements souris. Il ne faut donc gérer l'état Entered
+					//	uniquement pour ce widget-là.
+					
+					Widget.UpdateEntered (this, this.capturing_widget, message);
+				}
 				
 				this.last_in_widget = this.DetectWidget (message.Cursor);
 			}

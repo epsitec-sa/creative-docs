@@ -254,20 +254,20 @@ namespace Epsitec.Common.Widgets
 			{
 				case MessageType.MouseDown:
 					this.mouseDown = true;
-					this.MouseSelect(pos.Y);
+					this.MouseSelect(pos);
 					break;
 				
 				case MessageType.MouseMove:
 					if ( this.mouseDown || this.isComboList )
 					{
-						this.MouseSelect(pos.Y);
+						this.MouseSelect(pos);
 					}
 					break;
 
 				case MessageType.MouseUp:
 					if ( this.mouseDown )
 					{
-						this.MouseSelect(pos.Y);
+						this.MouseSelect(pos);
 						if ( this.isComboList )
 						{
 							this.OnSelectedIndexChanged();
@@ -286,11 +286,21 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Sélectionne la ligne selon la souris.
-		protected bool MouseSelect(double pos)
+		protected bool MouseSelect(Drawing.Point pos)
 		{
-			pos = this.Client.Height-pos;
-			int line = (int)((pos-this.margin)/this.lineHeight);
-			if ( line < 0 || line >= this.visibleLines )  return false;
+			double y = this.Client.Height-pos.Y-1-this.margin;
+			double x = pos.X-this.margin;
+			
+			if (y < 0) return false;
+			if (y >= this.visibleLines*this.lineHeight) return false;
+			if (x < 0) return false;
+			if (x >= this.Client.Width-this.margin*2-this.rightMargin) return false;
+			
+			int line = (int)(y/this.lineHeight);
+			
+			System.Diagnostics.Debug.Assert(line >= 0.0);
+			System.Diagnostics.Debug.Assert(line < this.visibleLines);
+			
 			this.SelectedIndex = this.firstLine+line;
 			return true;
 		}
@@ -370,7 +380,7 @@ namespace Epsitec.Common.Widgets
 				this.textLayouts[i].Text = (string)this.list[i+this.firstLine];
 				this.textLayouts[i].Font = this.DefaultFont;
 				this.textLayouts[i].FontSize = this.DefaultFontSize;
-				this.textLayouts[i].LayoutSize = new Drawing.Size(this.Width-this.margin*2-this.rightMargin, this.lineHeight);
+				this.textLayouts[i].LayoutSize = new Drawing.Size(this.Client.Width-this.margin*2-this.rightMargin, this.lineHeight);
 			}
 		}
 
@@ -392,18 +402,21 @@ namespace Epsitec.Common.Widgets
 			if ( this.scroller == null )
 			{
 				this.rightMargin = 0;
+				this.extraMargin = 0;
 			}
 			else
 			{
 				if ( this.scroller.IsVisible )
 				{
 					this.rightMargin = this.scroller.Width;
+					this.extraMargin = 2;
 					Drawing.Rectangle aRect = new Drawing.Rectangle(this.margin+rect.Width-this.rightMargin, this.margin, this.rightMargin, rect.Height);
 					this.scroller.Bounds = aRect;
 				}
 				else
 				{
 					this.rightMargin = 0;
+					this.extraMargin = 0;
 				}
 			}
 
@@ -452,7 +465,7 @@ namespace Epsitec.Common.Widgets
 				{
 					Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
 					rects[0].Left   = this.margin;
-					rects[0].Right  = this.Client.Width-this.margin-this.rightMargin-(this.scroller.IsVisible?2:0);
+					rects[0].Right  = this.Client.Width-this.margin-this.rightMargin-this.extraMargin;
 					rects[0].Bottom = pos.Y;
 					rects[0].Top    = pos.Y+this.lineHeight;
 					adorner.PaintTextSelectionBackground(graphics, new Drawing.Point(0,0), rects);
@@ -482,6 +495,7 @@ namespace Epsitec.Common.Widgets
 		protected TextLayout[]					textLayouts;
 		protected double						margin;
 		protected double						rightMargin;
+		protected double						extraMargin;
 		protected double						lineHeight;
 		protected Scroller						scroller;
 		protected int							visibleLines;
