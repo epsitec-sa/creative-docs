@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Statut : OK/PA, 03/11/2003
 
 namespace Epsitec.Cresus.DataLayer
 {
@@ -42,7 +42,53 @@ namespace Epsitec.Cresus.DataLayer
 			this.MarkAsModified ();
 		}
 		
-		public void Remove(string name)
+		public void UpdateData(string name, object data)
+		{
+			DataField record = this.FindRecord (name) as DataField;
+			
+			if (record == null)
+			{
+				throw new DataException (string.Format ("Invalid update for '{0}' in data set", name));
+			}
+			
+			record.SetData (data);
+			this.MarkAsModified ();
+		}
+		
+		public void ResetData(string name)
+		{
+			DataField record = this.FindRecord (name, DataVersion.ActiveOrDead) as DataField;
+			
+			if (record == null)
+			{
+				throw new DataException (string.Format ("Invalid reset for '{0}' in data set", name));
+			}
+			
+			record.ResetData ();
+		}
+		
+		public void RemoveData(string name)
+		{
+			DataField record = this.FindRecord (name, DataVersion.ActiveOrDead) as DataField;
+			
+			if (record == null)
+			{
+				throw new DataException (string.Format ("Invalid remove for '{0}' in data set", name));
+			}
+			
+			this.Remove (name);
+		}
+		
+		
+		public object GetData(string name)
+		{
+			DataField record = this.FindRecord (name) as DataField;
+			return (record == null) ? null : record.GetData ();
+		}
+		
+		
+		
+		protected void Remove(string name)
 		{
 			if (this.data.Contains (name))
 			{
@@ -69,7 +115,6 @@ namespace Epsitec.Cresus.DataLayer
 			
 			throw new DataException (string.Format ("Cannot find '{0}' in data set", name));
 		}
-		
 		
 		
 		public override bool					IsSet

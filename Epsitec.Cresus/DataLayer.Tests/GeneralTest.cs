@@ -60,8 +60,8 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			Assertion.AssertEquals (DataState.Added, test.FindRecord ("b").DataState);
 			Assertion.AssertEquals (DataState.Added, test.FindRecord ("c").DataState);
 			
-			test.Remove ("b");
-			test.Remove ("c");
+			test.RemoveData ("b");
+			test.RemoveData ("c");
 			
 			test.AddData ("b", "bye");
 			
@@ -94,8 +94,8 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("b").DataState);
 			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("c").DataState);
 			
-			test.Remove ("b");
-			test.Remove ("c");
+			test.RemoveData ("b");
+			test.RemoveData ("c");
 			
 			test.AddData ("b", "bye");
 			test.AddData ("d", true);
@@ -114,6 +114,36 @@ namespace Epsitec.Cresus.DataLayer.Tests
 			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("b").DataState);
 			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("d").DataState);
 			Assertion.AssertNull (test.FindRecord ("c", DataVersion.ActiveOrDead));
+		}
+		
+		[Test] public void CheckResetDataField()
+		{
+			DataSet test = new DataSet ();
+			
+			test.AddData ("a", 1);
+			test.AddData ("b", "hello");
+			test.AddData ("c", 10.5);
+			
+			test.ValidateChanges ();
+			
+			test.UpdateData ("a", 2);
+			test.UpdateData ("b", "bye");
+			
+			Assertion.AssertEquals (DataState.Modified, test.FindRecord ("a").DataState);
+			Assertion.AssertEquals (DataState.Modified, test.FindRecord ("b").DataState);
+			Assertion.AssertEquals (2,     test.GetData ("a"));
+			Assertion.AssertEquals ("bye", test.GetData ("b"));
+			
+			test.ResetData ("b");
+			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("b").DataState);
+			Assertion.AssertEquals ("hello", test.GetData ("b"));
+			
+			test.RemoveData ("b");
+			Assertion.AssertEquals (DataState.Removed, test.FindRecord ("b", DataVersion.ActiveOrDead).DataState);
+			
+			test.ResetData ("b");
+			Assertion.AssertEquals (DataState.Unchanged, test.FindRecord ("b").DataState);
+			Assertion.AssertEquals ("hello", test.GetData ("b"));
 		}
 	}
 }
