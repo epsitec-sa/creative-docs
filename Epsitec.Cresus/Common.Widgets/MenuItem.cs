@@ -1,12 +1,21 @@
 namespace Epsitec.Common.Widgets
 {
+	public enum MenuItemType
+	{
+		Deselect,					// case désélectionnée
+		Select,						// case sélectionnée
+		Parent,						// case sélectionnée comme parent
+	}
+
 	/// <summary>
 	/// La classe MenuItem représente une case dans un menu.
 	/// </summary>
 	public class MenuItem : AbstractButton
 	{
-		public MenuItem()
+		public MenuItem(MenuType type)
 		{
+			this.type = type;
+
 			this.internalState &= ~InternalState.AutoCapture;
 			this.internalState &= ~InternalState.AutoFocus;
 			this.internalState &= ~InternalState.AutoEngage;
@@ -22,6 +31,24 @@ namespace Epsitec.Common.Widgets
 
 			this.subIndicatorWidth = this.DefaultFontHeight;
 			this.colorControlDark = Drawing.Color.FromName("ControlDark");
+		}
+
+		// Type de la case.
+		public MenuItemType ItemType
+		{
+			get
+			{
+				return this.itemType;
+			}
+
+			set
+			{
+				if ( this.itemType != value )
+				{
+					this.itemType = value;
+					this.Invalidate();
+				}
+			}
 		}
 
 		// Indique s'il s'agit d'une case d'un menu horizontal avec un texte seul.
@@ -122,6 +149,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+
 		// Ajuste des dimensions d'un TextLayout.
 		protected void AdjustSize(ref Drawing.Size size)
 		{
@@ -211,38 +239,21 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
+			MenuItemType      iType = this.itemType;
 			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 
-			ButtonStyle bs = ButtonStyle.Normal;
-			if ( this.onlyText )
+			if ( (state & WidgetState.Enabled) == 0 || this.separator )
 			{
-				bs = ButtonStyle.MenuItemH;
+				iType = MenuItemType.Deselect;
 			}
-			else
-			{
-				bs = ButtonStyle.MenuItemV;
-			}
-
-			if ( (state & WidgetState.Enabled) == 0 )
-			{
-				state &= ~WidgetState.Focused;
-				state &= ~WidgetState.Entered;
-				state &= ~WidgetState.Engaged;
-			}
-			if ( this.separator )
-			{
-				state &= ~WidgetState.Focused;
-				state &= ~WidgetState.Entered;
-				state &= ~WidgetState.Engaged;
-			}
-			adorner.PaintButtonBackground(graphics, rect, state, dir, bs);
+			adorner.PaintMenuItemBackground(graphics, rect, state, dir, this.type, iType);
 
 			if ( this.onlyText )
 			{
 				pos.X = (rect.Width-this.mainTextSize.Width)/2;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
-				adorner.PaintMenuTextLayout(graphics, pos, this.mainText, state, dir, bs);
+				adorner.PaintMenuItemTextLayout(graphics, pos, this.mainText, state, dir, this.type, iType);
 			}
 			else if ( this.separator )
 			{
@@ -258,16 +269,16 @@ namespace Epsitec.Common.Widgets
 				{
 					pos.X = this.marginItem;
 					pos.Y = (rect.Height-this.iconSize.Height)/2;
-					adorner.PaintMenuTextLayout(graphics, pos, this.icon, state, dir, bs);
+					adorner.PaintMenuItemTextLayout(graphics, pos, this.icon, state, dir, this.type, iType);
 				}
 
 				pos.X = this.marginItem*2+this.iconSize.Width;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
-				adorner.PaintMenuTextLayout(graphics, pos, this.mainText, state, dir, bs);
+				adorner.PaintMenuItemTextLayout(graphics, pos, this.mainText, state, dir, this.type, iType);
 
 				pos.X = rect.Width-this.subIndicatorWidth-this.shortKeySize.Width+this.marginItem;
 				pos.Y = (rect.Height-this.shortKeySize.Height)/2;
-				adorner.PaintMenuTextLayout(graphics, pos, this.shortKey, state, dir, bs);
+				adorner.PaintMenuItemTextLayout(graphics, pos, this.shortKey, state, dir, this.type, iType);
 
 				if ( this.submenu != null )  // triangle ">" ?
 				{
@@ -283,6 +294,8 @@ namespace Epsitec.Common.Widgets
 
 		protected bool				onlyText = false;
 		protected bool				separator = false;
+		protected MenuType			type;
+		protected MenuItemType		itemType = MenuItemType.Deselect;
 		protected double			marginHeader = 6;
 		protected double			marginItem = 2;
 		protected double			marginSpace = 8;

@@ -10,12 +10,33 @@ namespace Epsitec.Common.Widgets
 			IconButton button = new IconButton();
 			this.defaultButtonWidth = button.DefaultWidth;
 			this.defaultButtonHeight = button.DefaultHeight;
+			button.Dispose();
 
 			this.colorControlLight      = Drawing.Color.FromName("ControlLight");
 			this.colorControlLightLight = Drawing.Color.FromName("ControlLightLight");
 			this.colorControlDark       = Drawing.Color.FromName("ControlDark");
 			this.colorControlDarkDark   = Drawing.Color.FromName("ControlDarkDark");
 		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if ( disposing )
+			{
+				System.Diagnostics.Debug.WriteLine("Dispose ToolBar " + this.Text);
+				
+#if false  // TODO: utile ?
+				for ( int i=0 ; i<this.array.Length ; i++ )
+				{
+					this.array[i].Dispose();
+					this.array[i] = null;
+				}
+				this.array = null;
+#endif
+			}
+			
+			base.Dispose(disposing);
+		}
+
 
 		// Retourne la hauteur standard d'une barre.
 		public override double DefaultHeight
@@ -47,6 +68,7 @@ namespace Epsitec.Common.Widgets
 		{
 			int rank = this.totalUsed;
 			this.AllocateArray(rank+1);
+			this.array[rank].Dispose();
 			this.array[rank] = cell;
 			this.Justif();
 			this.Children.Add(cell);
@@ -58,16 +80,28 @@ namespace Epsitec.Common.Widgets
 		public void Modify(int rank, Widget cell)
 		{
 			this.AllocateArray(rank+1);
+			this.array[rank].Dispose();
 			this.array[rank] = cell;
 			this.Justif();
 			this.Children.Add(cell);
 		}
 
-		// Retourne le widget d'une cellule.
-		public Widget GetWidget(int rank)
+		// Objet occupant une case.		
+		public Widget this[int rank]
 		{
-			if ( rank >= this.array.Length )  return null;
-			return this.array[rank];
+			get
+			{
+				System.Diagnostics.Debug.Assert(this.array[rank] != null);
+				return this.array[rank];
+			}
+			
+			set
+			{
+				System.Diagnostics.Debug.Assert(this.array[rank] != null);
+				if ( value == null )  value = new Widget();
+				
+				this.array[rank] = value;
+			}
 		}
 
 		// Spécifie le nombre de cellules qui seront contenues dans la barre.

@@ -310,11 +310,15 @@ namespace Epsitec.Common.Widgets
 				if ( block.image )
 				{
 					Drawing.Image image = this.imageProvider.GetImage(block.text);
+					if ( !uniqueColor.IsEmpty )
+					{
+						image = Drawing.Bitmap.FromImageDisabled(image, uniqueColor);
+					}
 					double dx = image.Width;
 					double dy = image.Height;
 					double ix = pos.X+block.pos.X;
 					double iy = pos.Y+block.pos.Y+block.imageDescender;
-					graphics.Align (ref ix, ref iy);
+					graphics.Align(ref ix, ref iy);
 					graphics.AddFilledRectangle(ix, iy, dx, dy);
 					Drawing.Transform t = new Drawing.Transform();
 					t.Translate(ix, iy);

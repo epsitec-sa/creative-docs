@@ -32,6 +32,24 @@ namespace Epsitec.Common.Widgets
 			this.Children.Add(this.arrowRight);
 		}
 		
+		protected override void Dispose(bool disposing)
+		{
+			if ( disposing )
+			{
+				this.arrowLeft.Engaged -= new EventHandler(this.HandleScrollButton);
+				this.arrowRight.Engaged -= new EventHandler(this.HandleScrollButton);
+				this.arrowLeft.StillEngaged -= new EventHandler(this.HandleScrollButton);
+				this.arrowRight.StillEngaged -= new EventHandler(this.HandleScrollButton);
+				this.arrowLeft = null;
+				this.arrowRight = null;
+
+				this.Clear();
+			}
+			
+			base.Dispose(disposing);
+		}
+
+
 		public override Drawing.Rectangle Inside
 		{
 			get

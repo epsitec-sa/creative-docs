@@ -292,18 +292,13 @@ namespace Epsitec.Common.Widgets.Adorner
 
 				state &= ~WidgetState.Focused;
 			}
-			else if ( style == ButtonStyle.MenuItemH ||
-					  style == ButtonStyle.MenuItemV )
+			else if ( style == ButtonStyle.ListItem )
 			{
-				if ( (state&WidgetState.Entered)  != 0 ||  // bouton survolé ?
-					 (state&WidgetState.Engaged)  != 0 ||  // bouton pressé ?
-					 (state&WidgetState.Selected) != 0 )   // bouton sélectionné ?
+				if ( (state&WidgetState.Selected) != 0 )
 				{
 					graphics.AddFilledRectangle(rect);
 					graphics.RenderSolid(this.colorCaption);
 				}
-
-				state &= ~WidgetState.Focused;
 			}
 			else
 			{
@@ -674,26 +669,59 @@ namespace Epsitec.Common.Widgets.Adorner
 #endif
 		}
 
-		// Dessine le texte d'un menu.
-		public void PaintMenuTextLayout(Drawing.Graphics graphics,
-										Drawing.Point pos,
-										TextLayout text,
-										WidgetState state,
-										Direction shadow,
-										ButtonStyle style)
-		{
-			if ( text == null )  return;
-			state &= ~WidgetState.Focused;
-			if ( (state&WidgetState.Entered) != 0 )  state |= WidgetState.Selected;
-			this.PaintGeneralTextLayout(graphics, pos, text, state, shadow);
-		}
-
 		public void PaintMenuForeground(Drawing.Graphics graphics,
 										Drawing.Rectangle rect,
 										WidgetState state,
 										Direction shadow,
 										Drawing.Rectangle parentRect,
 										double iconWidth)
+		{
+		}
+
+		// Dessine le fond d'une case de menu.
+		public void PaintMenuItemBackground(Drawing.Graphics graphics,
+											Drawing.Rectangle rect,
+											WidgetState state,
+											Direction shadow,
+											MenuType type,
+											MenuItemType itemType)
+		{
+			if ( itemType != MenuItemType.Deselect )
+			{
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.colorCaption);
+			}
+		}
+
+		// Dessine le texte d'un menu.
+		public void PaintMenuItemTextLayout(Drawing.Graphics graphics,
+											Drawing.Point pos,
+											TextLayout text,
+											WidgetState state,
+											Direction shadow,
+											MenuType type,
+											MenuItemType itemType)
+		{
+			if ( text == null )  return;
+			state &= ~WidgetState.Focused;
+			if ( itemType == MenuItemType.Deselect )
+			{
+				state &= ~WidgetState.Selected;
+			}
+			else
+			{
+				state |= WidgetState.Selected;
+			}
+			this.PaintGeneralTextLayout(graphics, pos, text, state, shadow);
+		}
+
+		// Dessine le devant d'une case de menu.
+		public void PaintMenuItemForeground(Drawing.Graphics graphics,
+											Drawing.Rectangle rect,
+											WidgetState state,
+											Direction shadow,
+											MenuType type,
+											MenuItemType itemType)
 		{
 		}
 

@@ -56,7 +56,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.SetArraySize(0, 0);
+				this.scrollerV.Moved -= new EventHandler(this.HandleScrollerV);
+				this.scrollerH.Moved -= new EventHandler(this.HandleScrollerH);
 			}
 			
 			base.Dispose(disposing);

@@ -589,7 +589,9 @@ namespace Epsitec.Common.Tests
 		
 		[Test] public void CheckAliveWidgets()
 		{
-			System.Console.Out.WriteLine ("{0} widgets alive", Widget.DebugAliveWidgetsCount);
+			System.Console.Out.WriteLine ("{0} widgets alive before GC.Collect", Widget.DebugAliveWidgetsCount);
+			System.GC.Collect ();
+			System.Console.Out.WriteLine ("{0} widgets alive after GC.Collect", Widget.DebugAliveWidgetsCount);
 			foreach (Widget widget in Widget.DebugAliveWidgets)
 			{
 				System.Console.Out.WriteLine ("{0}: Name='{1}', Text='{2}', Parent={3}", widget.GetType ().Name, widget.Name, widget.Text, (widget.Parent == null) ? "<null>" : (widget.Parent.GetType ().Name));

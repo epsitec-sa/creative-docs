@@ -28,6 +28,22 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		protected override void Dispose(bool disposing)
+		{
+			if ( disposing )
+			{
+				System.Diagnostics.Debug.WriteLine("Dispose Scroller " + this.Text);
+				
+				this.arrowUp.Engaged -= new EventHandler(this.HandleButton);
+				this.arrowDown.Engaged -= new EventHandler(this.HandleButton);
+				this.arrowUp.StillEngaged -= new EventHandler(this.HandleButton);
+				this.arrowDown.StillEngaged -= new EventHandler(this.HandleButton);
+			}
+			
+			base.Dispose(disposing);
+		}
+
+
 		// Retourne la largeur standard d'un ascenseur.
 		public static double StandardWidth
 		{

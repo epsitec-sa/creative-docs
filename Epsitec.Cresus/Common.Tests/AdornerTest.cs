@@ -230,58 +230,58 @@ namespace Epsitec.Common.Tests
 			window.Root.Children.Add(fileMenu);
 
 			Menu optMenu1 = new Menu(MenuType.Vertical);
-			optMenu1.Name = "1";
+			optMenu1.Name = "1a";
 			optMenu1.InsertItem("", "Reglages 1.A", "");
 			optMenu1.InsertItem("", "Reglages 1.B", "");
 			optMenu1.InsertItem("print", "Impression...", "");
 			optMenu1.InsertItem("open", "Fichiers...", "");
 			optMenu1.AdjustSize();
-			fileMenu.GetWidget(3).Submenu = optMenu1;
+			fileMenu[3].Submenu = optMenu1;
 
 			Menu optMenu2 = new Menu(MenuType.Vertical);
-			optMenu2.Name = "1";
+			optMenu2.Name = "1b";
 			optMenu2.InsertItem("", "Reglages 2.A", "");
 			optMenu2.InsertItem("", "Reglages 2.B", "");
 			optMenu2.InsertItem("print", "Impression...", "");
 			optMenu2.InsertItem("open", "Fichiers...", "");
 			optMenu2.AdjustSize();
-			fileMenu.GetWidget(4).Submenu = optMenu2;
+			fileMenu[4].Submenu = optMenu2;
 
 			Menu setupMenu1A = new Menu(MenuType.Vertical);
-			setupMenu1A.Name = "2";
+			setupMenu1A.Name = "2a";
 			setupMenu1A.InsertItem("", "Reglage 1.A.a", "");
 			setupMenu1A.InsertItem("", "Reglage 1.A.b", "");
 			setupMenu1A.InsertItem("", "Reglage 1.A.c", "");
 			setupMenu1A.InsertItem("", "Reglage 1.A.d", "");
 			setupMenu1A.AdjustSize();
-			optMenu1.GetWidget(0).Submenu = setupMenu1A;
+			optMenu1[0].Submenu = setupMenu1A;
 
 			Menu setupMenu1B = new Menu(MenuType.Vertical);
-			setupMenu1B.Name = "2";
+			setupMenu1B.Name = "2b";
 			setupMenu1B.InsertItem("", "Reglage 1.B.a", "");
 			setupMenu1B.InsertItem("", "Reglage 1.B.b", "");
 			setupMenu1B.InsertItem("", "Reglage 1.B.c", "");
 			setupMenu1B.InsertItem("", "Reglage 1.B.d", "");
 			setupMenu1B.AdjustSize();
-			optMenu1.GetWidget(1).Submenu = setupMenu1B;
+			optMenu1[1].Submenu = setupMenu1B;
 
 			Menu setupMenu2A = new Menu(MenuType.Vertical);
-			setupMenu2A.Name = "2";
+			setupMenu2A.Name = "2c";
 			setupMenu2A.InsertItem("", "Reglage 2.A.a", "");
 			setupMenu2A.InsertItem("", "Reglage 2.A.b", "");
 			setupMenu2A.InsertItem("", "Reglage 2.A.c", "");
 			setupMenu2A.InsertItem("", "Reglage 2.A.d", "");
 			setupMenu2A.AdjustSize();
-			optMenu2.GetWidget(0).Submenu = setupMenu2A;
+			optMenu2[0].Submenu = setupMenu2A;
 
 			Menu setupMenu2B = new Menu(MenuType.Vertical);
-			setupMenu2B.Name = "2";
+			setupMenu2B.Name = "2d";
 			setupMenu2B.InsertItem("", "Reglage 2.B.a", "");
 			setupMenu2B.InsertItem("", "Reglage 2.B.b", "");
 			setupMenu2B.InsertItem("", "Reglage 2.B.c", "");
 			setupMenu2B.InsertItem("", "Reglage 2.B.d", "");
 			setupMenu2B.AdjustSize();
-			optMenu2.GetWidget(1).Submenu = setupMenu2B;
+			optMenu2[1].Submenu = setupMenu2B;
 #endif
 
 			window.FocusedWidget = a;
@@ -339,6 +339,7 @@ namespace Epsitec.Common.Tests
 			
 			window.ClientSize = new System.Drawing.Size(400, 300);
 			window.Text = "CheckAdornerTab";
+			window.Closed += new System.EventHandler(this.HandleWindowClosed);
 
 			TabBook tb = new TabBook(TabBookStyle.Normal);
 			//TabBook tb = new TabBook(TabBookStyle.Right);
@@ -350,7 +351,7 @@ namespace Epsitec.Common.Tests
 			tb.Text = "";
 			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(tb);
-			this.tabBook = tb;
+			this.tabBook = tb;  // TODO: fait qu'il reste TabBook dans la liste "alive" !
 
 			Rectangle inside = tb.Inside;
 
@@ -482,6 +483,11 @@ namespace Epsitec.Common.Tests
 			window.FocusedWidget = tb;
 
 			window.Show();
+		}
+
+		private void HandleWindowClosed(object sender, System.EventArgs e)
+		{
+			this.tabBook = null;
 		}
 
 		private void HandleAdd(object sender, MessageEventArgs e)
@@ -846,6 +852,143 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 
+		[Test] public void CheckAdornerBugAlive1()
+		{
+			WindowFrame window = new WindowFrame();
+			
+			window.ClientSize = new System.Drawing.Size(600, 300);
+			window.Text = "CheckAdornerBugAlive1";
+
+			Button a = new Button();
+			a.Location = new Point(10, 10);
+			a.Width = 75;
+			a.Text = "OK";
+			window.Root.Children.Add(a);
+
+			window.Show();
+		}
+
+		[Test] public void CheckAdornerBugAlive2()
+		{
+			WindowFrame window = new WindowFrame();
+			
+			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.Text = "CheckAdornerBugAlive2";
+
+			CellTable table = new CellTable();
+#if true
+			table.StyleH  = AbstractCellArrayStyle.ScrollNorm;
+			table.StyleH |= AbstractCellArrayStyle.Separator;
+			table.StyleH |= AbstractCellArrayStyle.SelectCell;
+			table.StyleH |= AbstractCellArrayStyle.SelectMulti;
+			table.StyleV  = AbstractCellArrayStyle.ScrollNorm;
+			table.StyleV |= AbstractCellArrayStyle.Separator;
+#else
+			table.StyleH  = AbstractCellArrayStyle.ScrollNorm;
+			table.StyleH |= AbstractCellArrayStyle.Header;
+			table.StyleH |= AbstractCellArrayStyle.Separator;
+			table.StyleH |= AbstractCellArrayStyle.Mobile;
+			table.StyleH |= AbstractCellArrayStyle.Sort;
+			table.StyleV  = AbstractCellArrayStyle.ScrollNorm;
+			table.StyleV |= AbstractCellArrayStyle.Header;
+			table.StyleV |= AbstractCellArrayStyle.Separator;
+			table.StyleV |= AbstractCellArrayStyle.SelectLine;
+			table.StyleV |= AbstractCellArrayStyle.Mobile;
+			table.StyleV |= AbstractCellArrayStyle.Sort;
+#endif
+			table.Name = "Table";
+			table.Location = new Point(10, 20);
+			table.Size = new Size(380, 200);
+			table.SetArraySize(2, 2);
+			for ( int y=0 ; y<2 ; y++ )
+			{
+				for ( int x=0 ; x<2 ; x++ )
+				{
+#if true
+					TextField text = new TextField(TextFieldType.SingleLine);
+					text.TextFieldStyle = TextFieldStyle.Flat;
+					text.Text = "abc";
+					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+					table[x,y].Insert(text);
+#else
+					Cell cell = new Cell();
+					TextField text = new TextField(TextFieldType.SingleLine);
+					text.TextFieldStyle = TextFieldStyle.Flat;
+					text.Text = "abc";
+					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+					cell.Children.Add(text);
+					table[x,y] = cell;
+#endif
+				}
+			}
+			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(table);
+
+			window.Show();
+		}
+
+		[Test] public void CheckAdornerBugAlive3()
+		{
+			WindowFrame window = new WindowFrame();
+			
+			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.Text = "CheckAdornerTab";
+
+			TabBook tb = new TabBook(TabBookStyle.Normal);
+			//TabBook tb = new TabBook(TabBookStyle.Right);
+			tb.Name = "TabBook";
+			tb.Location = new Point(10, 10);
+			tb.Size = new Size(380, 280);
+			tb.Text = "";
+			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			window.Root.Children.Add(tb);
+			//this.tabBook = tb;
+
+			Rectangle inside = tb.Inside;
+
+			// Crée l'onglet 1.
+			TabPage page1 = new TabPage();
+			page1.Name = "p1";
+			page1.Bounds = inside;
+			page1.TabTitle = "<m>P</m>remier";
+			tb.Add(page1);
+
+#if true
+			Button a = new Button();
+			a.Name = "A";
+			a.Location = new Point(10, 10);
+			a.Size = new Size(75, 24);
+			a.Text = "O<m>K</m>";
+			a.ButtonStyle = ButtonStyle.DefaultActive;
+			page1.Children.Add(a);
+#endif
+
+			// Crée l'onglet 2.
+			TabPage page2 = new TabPage();
+			page2.Name = "p2";
+			page2.Bounds = inside;
+			page2.TabTitle = "<m>D</m>euxieme";
+			tb.Add(page2);
+
+#if true
+			Scroller scrollv = new Scroller();
+			scrollv.Name = "Scroller";
+			scrollv.Location = new Point(10, 10);
+			scrollv.Size = new Size(15, inside.Height-20);
+			scrollv.Range = 10;
+			scrollv.Display = 3;
+			scrollv.Position = 1;
+			scrollv.ButtonStep = 1;
+			scrollv.PageStep = 2;
+			page2.Children.Add(scrollv);
+#endif
+
+			tb.ActivePage = page1;
+			window.FocusedWidget = tb;
+
+			window.Show();
+		}
+
 		[Test] public void CheckAdornerTestParents()
 		{
 			WindowFrame window = new WindowFrame();
@@ -1024,7 +1167,7 @@ namespace Epsitec.Common.Tests
 			tb.InsertIconButton("cut");
 			tb.InsertIconButton("copy");
 			tb.InsertIconButton("paste");
-			tb.GetWidget(1).SetEnabled(false);
+			tb[1].SetEnabled(false);
 
 			Menu fileMenu = new Menu(MenuType.Vertical);
 			fileMenu.InsertItem("open", "Ouvrir...", "Ctrl+O");
@@ -1033,7 +1176,7 @@ namespace Epsitec.Common.Tests
 			fileMenu.InsertItem("", "Quitter", "");
 			fileMenu.AdjustSize();
 			fileMenu.Location = new Point(370, 70);
-			fileMenu.GetWidget(1).SetEnabled(false);
+			fileMenu[1].SetEnabled(false);
 			window.Root.Children.Add(fileMenu);
 
 			window.Show();

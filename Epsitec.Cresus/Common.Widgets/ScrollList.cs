@@ -37,6 +37,19 @@ namespace Epsitec.Common.Widgets
 			this.Children.Add(this.scroller);
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			if ( disposing )
+			{
+				System.Diagnostics.Debug.WriteLine("Dispose ScrollList " + this.Text);
+				
+				this.scroller.Moved -= new EventHandler(this.HandleScroller);
+			}
+			
+			base.Dispose(disposing);
+		}
+
+
 		public ScrollListStyle ScrollListStyle
 		{
 			get
@@ -428,7 +441,7 @@ namespace Epsitec.Common.Widgets
 				Drawing.Color color = Drawing.Color.Empty;
 
 				if ( i+this.firstLine == this.selectedLine &&
-					 (state&WidgetState.Enabled) != 0 )
+					(state&WidgetState.Enabled) != 0 )
 				{
 					Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
 					rects[0].Left   = this.margin;
@@ -438,10 +451,15 @@ namespace Epsitec.Common.Widgets
 					adorner.PaintTextSelectionBackground(graphics, new Drawing.Point(0,0), rects);
 
 					color = Drawing.Color.FromName("ActiveCaptionText");
+					state |= WidgetState.Selected;
+				}
+				else
+				{
+					state &= ~WidgetState.Selected;
 				}
 
 				//this.textLayouts[i].Paint(pos, graphics, Drawing.Rectangle.Empty, color);
-				adorner.PaintButtonTextLayout(graphics, pos, this.textLayouts[i], state, dir, ButtonStyle.MenuItemV);
+				adorner.PaintButtonTextLayout(graphics, pos, this.textLayouts[i], state, dir, ButtonStyle.ListItem);
 				pos.Y -= this.lineHeight;
 			}
 		}

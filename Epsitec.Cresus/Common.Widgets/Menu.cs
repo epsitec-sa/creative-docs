@@ -23,6 +23,30 @@ namespace Epsitec.Common.Widgets
 			this.type = type;
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			if ( disposing )
+			{
+				System.Diagnostics.Debug.WriteLine("Dispose Menu " + this.Text);
+				
+				for ( int i=0 ; i<this.array.Length ; i++ )
+				{
+					Widget widget = this.array[i];
+					MenuItem item = widget as MenuItem;
+					if ( item != null && item.Submenu != null )
+					{
+						item.Submenu.Dispose();
+					}
+					this.array[i].Dispose();
+					this.array[i] = null;
+				}
+				this.array = null;
+			}
+			
+			base.Dispose(disposing);
+		}
+
+
 		// Retourne la hauteur standard d'un menu.
 		public override double DefaultHeight
 		{
@@ -63,7 +87,7 @@ namespace Epsitec.Common.Widgets
 		// Ajoute une case.
 		public int InsertItem(string iconName, string mainText, string shortKey)
 		{
-			MenuItem item = new MenuItem();
+			MenuItem item = new MenuItem(this.type);
 			item.OnlyText = false;
 			item.IconName = iconName;
 			item.MainText = mainText;
@@ -74,7 +98,7 @@ namespace Epsitec.Common.Widgets
 		// Ajoute une case.
 		public int InsertItem(string name)
 		{
-			MenuItem item = new MenuItem();
+			MenuItem item = new MenuItem(this.type);
 			item.OnlyText = true;
 			item.MainText = name;
 			return this.Insert(item);
@@ -83,7 +107,7 @@ namespace Epsitec.Common.Widgets
 		// Ajoute un séparateur -----.
 		public int InsertSep()
 		{
-			MenuItem item = new MenuItem();
+			MenuItem item = new MenuItem(this.type);
 			item.Separator = true;
 			return this.Insert(item);
 		}
@@ -93,6 +117,7 @@ namespace Epsitec.Common.Widgets
 		{
 			int rank = this.totalUsed;
 			this.AllocateArray(rank+1);
+			this.array[rank].Dispose();
 			this.array[rank] = cell;
 			this.Children.Add(cell);
 			this.totalUsed ++;
@@ -102,8 +127,6 @@ namespace Epsitec.Common.Widgets
 			cell.Entered += new MessageEventHandler(this.HandleCellEntered);
 			cell.Exited  += new MessageEventHandler(this.HandleCellExited);
 
-			// debug !
-			cell.Name = this.Name+":"+this.totalUsed;
 			return rank;
 		}
 
@@ -111,16 +134,28 @@ namespace Epsitec.Common.Widgets
 		public void Modify(int rank, MenuItem cell)
 		{
 			this.AllocateArray(rank+1);
+			this.array[rank].Dispose();
 			this.array[rank] = cell;
 			this.Children.Add(cell);
 			this.isDirty = true;
 		}
 
-		// Retourne le widget d'une case.
-		public MenuItem GetWidget(int rank)
+		// Objet occupant une case.		
+		public MenuItem this[int rank]
 		{
-			if ( rank >= this.array.Length )  return null;
-			return this.array[rank];
+			get
+			{
+				System.Diagnostics.Debug.Assert(this.array[rank] != null);
+				return this.array[rank];
+			}
+			
+			set
+			{
+				System.Diagnostics.Debug.Assert(this.array[rank] != null);
+				if ( value == null )  value = new MenuItem(this.type);
+				
+				this.array[rank] = value;
+			}
 		}
 
 		// Spécifie le nombre de cases qui seront contenues dans la barre.
@@ -149,7 +184,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					newArray[i] = new MenuItem();
+					newArray[i] = new MenuItem(this.type);
 					newArray[i].Size = new Drawing.Size(0, 0);
 				}
 			}
@@ -242,25 +277,225 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		// Gestion d'un événement.
+		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		{
+			switch ( message.Type )
+			{
+				case MessageType.KeyDown:
+					ProcessKeyDown(message.KeyCode);
+					break;
+			}
+			
+			message.Consumer = this;
+		}
+
+		// Gestion d'une touche pressée avec KeyDown dans le menu.
+		protected void ProcessKeyDown(int key)
+		{
+			Menu parent = this.parentMenu;
+
+			switch ( key )
+			{
+				case (int)System.Windows.Forms.Keys.Up:
+					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Up "+this.Name);
+					this.OtherMenuItem(-1);
+					break;
+
+				case (int)System.Windows.Forms.Keys.Down:
+					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Down "+this.Name);
+					this.OtherMenuItem(1);
+					break;
+
+				case (int)System.Windows.Forms.Keys.Left:
+					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Left "+this.Name);
+					if ( parent != null )
+					{
+						if ( parent.type == MenuType.Horizontal )
+						{
+							parent.CloseSubmenu();
+							parent.OtherMenuItem(-1);
+							MenuItem item = parent[parent.RetSelectMenuItem()];
+							if ( parent.OpenSubmenu(item, true) )
+							{
+								parent.submenu.SelectMenuItem(0);
+							}
+						}
+						else
+						{
+							if ( !this.CloseMenuItem() )
+							{
+								parent.CloseSubmenu();
+							}
+						}
+					}
+					break;
+
+				case (int)System.Windows.Forms.Keys.Right:
+					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Right "+this.Name);
+					if ( parent == null )
+					{
+						this.OpenMenuItem();
+					}
+					else
+					{
+						int sel = this.RetSelectMenuItem();
+						if ( sel == -1 || this[sel].Submenu == null )
+						{
+							while ( parent.parentMenu != null )  parent = parent.parentMenu;
+							if ( parent.type == MenuType.Horizontal )
+							{
+								parent.CloseSubmenu();
+								parent.OtherMenuItem(1);
+								MenuItem item = parent[parent.RetSelectMenuItem()];
+								if ( parent.OpenSubmenu(item, true) )
+								{
+									parent.submenu.SelectMenuItem(0);
+								}
+							}
+						}
+						else
+						{
+							if ( !this.OpenMenuItem() )
+							{
+								parent.CloseSubmenu();
+								parent.OtherMenuItem(1);
+							}
+						}
+					}
+					break;
+
+				case (int)System.Windows.Forms.Keys.Return:
+				case (int)System.Windows.Forms.Keys.Space:
+					break;
+
+				case (int)System.Windows.Forms.Keys.Escape:
+					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Escape "+this.Name);
+					this.CloseAll();  // TODO: pourquoi ça plante avec Esc ?
+					break;
+			}
+		}
+
+		// Sélectionne la case suivante ou précédente.
+		protected void OtherMenuItem(int dir)
+		{
+			int sel = this.RetSelectMenuItem();
+			if ( sel == -1 )
+			{
+				sel = 0;
+			}
+			else
+			{
+				for ( int i=0 ; i<this.totalUsed ; i++ )
+				{
+					sel += dir;
+					if ( sel >= this.totalUsed )
+					{
+						sel = 0;
+					}
+					if ( sel < 0 )
+					{
+						sel = this.totalUsed-1;
+					}
+					if ( !this[sel].Separator )  break;
+				}
+			}
+			this.SelectMenuItem(sel);
+		}
+
+		// Ouvre le sous-menu correspondant à la case sélectionnée.
+		protected bool OpenMenuItem()
+		{
+			int sel = this.RetSelectMenuItem();
+			if ( sel == -1 )  return false;
+			if ( !this.OpenSubmenu(this[sel], true) )  return false;
+			this.submenu.SelectMenuItem(0);
+			return true;
+		}
+
+		// Ferme le sous-menu contenant la case sélectionnée.
+		protected bool CloseMenuItem()
+		{
+			if ( this.parentMenu == null )  return false;
+			return this.parentMenu.CloseSubmenu();
+		}
+
+		// Retourne la case sélectionnée dans un menu.
+		protected int RetSelectMenuItem()
+		{
+			int max = this.totalUsed;
+			for ( int i=0 ; i<max ; i++ )
+			{
+				MenuItem mi = this[i];
+				if ( mi.ItemType != MenuItemType.Deselect )  return i;
+			}
+			return -1;
+		}
+
+		// Sélectionne une (et une seule) case dans un menu.
+		protected void SelectMenuItem(int rank)
+		{
+			int max = this.totalUsed;
+			for ( int i=0 ; i<max ; i++ )
+			{
+				MenuItem mi = this[i];
+				if ( i == rank )  // case sélectionnée ?
+				{
+					mi.ItemType = this.isActivated ? MenuItemType.Select : MenuItemType.Parent;
+				}
+				else
+				{
+					mi.ItemType = MenuItemType.Deselect;
+				}
+			}
+		}
+
+		// Sélectionne une (et une seule) case dans un menu.
+		protected void SelectMenuItem(MenuItem item)
+		{
+			int max = this.totalUsed;
+			for ( int i=0 ; i<max ; i++ )
+			{
+				MenuItem mi = this[i];
+				if ( mi == item )  // case sélectionnée ?
+				{
+					mi.ItemType = this.isActivated ? MenuItemType.Select : MenuItemType.Parent;
+				}
+				else
+				{
+					mi.ItemType = MenuItemType.Deselect;
+				}
+			}
+		}
+
+		// Ferme complètement le menu et tous les sous-menus.
+		protected void CloseAll()
+		{
+			Menu root = this;
+			while ( root.parentMenu != null )  root = root.parentMenu;
+			System.Diagnostics.Debug.WriteLine("CloseAll "+root.Name+" "+this.Name);
+
+			root.CloseSubmenu();
+			root.SelectMenuItem(null);
+			root.menuDeveloped = TypeDeveloped.Close;
+		}
+
 		// Ouvre le sous-menu correspondant à un item.
-		protected bool OpenSubmenu(MenuItem item)
+		protected bool OpenSubmenu(MenuItem item, bool forceQuick)
 		{
 			if ( this.submenu == item.Submenu )  return false;
-			this.CloseSubmenu();
+			bool closed = this.CloseSubmenu();
 			this.submenu = item.Submenu;
 			if ( this.submenu == null )  return false;
 			System.Diagnostics.Debug.WriteLine("OpenSubmenu "+this.submenu.Name);
 
-			int max = this.submenu.totalUsed;
-			for ( int i=0 ; i<max ; i++ )
-			{
-				MenuItem mi = this.submenu.GetWidget(i);
-				mi.SetSelected(false);
-			}
+			this.isActivated = false;
+			this.SelectMenuItem(item);  // sélectionne la case parent
 
-			this.itemParent = item;
-			this.itemParent.SetSelected(true);
+			this.submenu.isActivated = true;
+			this.submenu.SelectMenuItem(null);  // désélectionne tout
 			this.submenu.MenuDeveloped = TypeDeveloped.Delay;
+			this.submenu.parentMenu = this;
 
 			Drawing.Point pos = new Drawing.Point(0, 0);
 
@@ -278,17 +513,27 @@ namespace Epsitec.Common.Widgets
 			{
 				this.submenu.ParentRect = Drawing.Rectangle.Empty;
 
-				pos = item.MapClientToRoot(new Drawing.Point(item.Width, item.Height-this.submenu.Height));
+				pos = item.MapClientToRoot(new Drawing.Point(item.Width, item.Height-this.submenu.Height+1));
+#if false
+				// TODO: Pourquoi la première case est mal positionnée verticalement ?
+				// TODO: c'est MapWindowToScreen aui foire !
+				Drawing.Point pp = item.WindowFrame.MapWindowToScreen(pos);
+				System.Diagnostics.Debug.WriteLine("pos: "+item.Height+" "+this.submenu.Height+" "+item.Bottom+" "+pp.Y);
+#endif
 			}
 
 			this.window = new WindowFrame();
 			this.window.MakeFramelessWindow();
-//			this.window.Owner = this.WindowFrame;
+			//this.window.Owner = this.WindowFrame;
 			pos = item.WindowFrame.MapWindowToScreen(pos);
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
-			this.window.WindowDeactivated += new System.EventHandler(this.HandleWindowDeactivated);
+			WindowFrame.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
 			this.window.Root.Children.Add(this.submenu);
-			this.window.AnimateShow(Animation.FadeIn);
+
+			Animation anim = Animation.None;
+			if ( this.type == MenuType.Vertical || !closed )  anim = Animation.FadeIn;
+			if ( forceQuick )  anim = Animation.None;
+			this.window.AnimateShow(anim);
 			this.submenu.SetFocused(true);
 			return true;
 		}
@@ -301,27 +546,48 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.WriteLine("CloseSubmenu "+this.submenu.Name);
 			System.Diagnostics.Debug.Assert(this.window.Root.HasChildren);
 			
-			// Commence par fermer immédiatement les sous-menus du sous-menu actuel.
-			Widget[] widgets = this.window.Root.Children.Widgets;
-			foreach ( Widget widget in widgets )
-			{
-				Menu submenu = widget as Menu;
-				
-				// Est-ce que le widget trouvé est un menu ?
-				// Si oui, on le ferme. Si non, on le saute simplement.
-				if ( submenu != null )
-				{
-					submenu.CloseSubmenu();
-				}
-			}
+			this.submenu.isActivated = false;
+			this.submenu.CloseSubmenu();  // ferme les sous-menus (reccursif)
+			this.submenu.SelectMenuItem(null);
 			
-			this.itemParent.SetSelected(false);
-			this.window.WindowDeactivated -= new System.EventHandler(this.HandleWindowDeactivated);
+			WindowFrame.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
 			this.window.Root.Children.Clear();
 			this.window.Dispose();
 			this.window = null;
 			this.submenu = null;
+
+			this.isActivated = true;
+			this.SelectMenuItem(this.RetSelectMenuItem());
 			return true;
+		}
+
+		// Conversion d'une coordonnée écran -> parent du widget.
+		protected Drawing.Point MapScreenToClient(Widget widget, Drawing.Point pos)
+		{
+			pos = widget.WindowFrame.MapScreenToWindow(pos);
+			pos = widget.MapRootToClient(pos);
+			pos = widget.MapClientToParent(pos);
+			return pos;
+		}
+
+		// Cherche dans quel menu ou sous-menu est la souris.
+		protected Menu SearchMenu(Drawing.Point mouse)
+		{
+			Drawing.Point pos;
+			pos = this.MapScreenToClient(this, mouse);
+			if ( this.HitTest(pos) )  return this;
+
+			Menu sub = this;
+			while ( true )
+			{
+				sub = sub.submenu;
+				if ( sub == null )  break;
+
+				pos = this.MapScreenToClient(sub, mouse);
+				if ( sub.HitTest(pos) )  return sub;
+			}
+
+			return null;
 		}
 
 		// Case du menu cliquée.
@@ -330,54 +596,79 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.WriteLine("HandleCellPressed "+this.menuDeveloped);
 			if ( this.menuDeveloped != TypeDeveloped.Close )
 			{
-				//WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
-				this.menuDeveloped = TypeDeveloped.Close;
-				this.CloseSubmenu();
+				if ( this.parentMenu == null )
+				{
+					WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
+					this.menuDeveloped = TypeDeveloped.Close;
+					this.CloseSubmenu();
+				}
 			}
 			else
 			{
-				//WindowFrame.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
+				WindowFrame.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
 				this.menuDeveloped = TypeDeveloped.Quick;
 				MenuItem item = (MenuItem)sender;
-				this.OpenSubmenu(item);
+				this.parentMenu = null;
+				this.SetFocused(true);
+				this.OpenSubmenu(item, false);
 			}
 		}
 
 		private void HandlerMessageFilter(object sender, Message message)
 		{
+			if ( this.menuDeveloped == TypeDeveloped.Close )  return;
 			WindowFrame window = sender as WindowFrame;
 
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
-					break;
-				
-				case MessageType.MouseMove:
-					break;
-
-				case MessageType.MouseUp:
+					Drawing.Point mouse = window.MapWindowToScreen(message.Cursor);
+					Menu menu = this.SearchMenu(mouse);
+					if ( menu == null )
+					{
+						this.CloseAll();
+						message.Consumer = this;  // TODO: comment bouffer aussi le MouseUp ?
+					}
+					else
+					{
+						if ( menu.parentMenu != null )
+						{
+							Menu sub = this;
+							while ( sub.submenu != null )  sub = sub.submenu;
+							sub.SetFocused(true);  // TODO: il faudrait pouvoir ignorer ce clic !!!
+							message.Consumer = this;
+						}
+					}
 					break;
 			}
-			//message.Consumer = this;
 		}
 
 		private void HandleCellEntered(object sender, MessageEventArgs e)
 		{
-			if ( this.menuDeveloped == TypeDeveloped.Close )  return;
 			MenuItem item = (MenuItem)sender;
-			System.Diagnostics.Debug.WriteLine("HandleCellEntered "+item.MainText);
-			this.OpenSubmenu(item);
+			this.SelectMenuItem(item);
+			int sel = this.RetSelectMenuItem();
+
+			if ( this.menuDeveloped != TypeDeveloped.Close )
+			{
+				System.Diagnostics.Debug.WriteLine("HandleCellEntered "+this.Name+":"+item.MainText);
+				this.OpenSubmenu(item, false);
+			}
 		}
 		
 		private void HandleCellExited(object sender, MessageEventArgs e)
 		{
-			if ( this.menuDeveloped == TypeDeveloped.Close )  return;
+			if ( this.isActivated )
+			{
+				this.SelectMenuItem(null);
+			}
 		}
 		
-		// Appelé lorsque la fenêtre du sous-menu est désactivée.
-		private void HandleWindowDeactivated(object sender, System.EventArgs e)
+		private void HandleApplicationDeactivated(object sender)
 		{
-			//this.CloseSubmenu();
+			// TODO: pourquoi ce n'est pas toujours appelé ?
+			System.Diagnostics.Debug.WriteLine("HandleApplicationDeactivated");
+			this.CloseAll();
 		}
 
 
@@ -406,13 +697,14 @@ namespace Epsitec.Common.Widgets
 
 		protected MenuType				type;
 		protected bool					isDirty;
+		protected bool					isActivated = true;  // dernier menu (feuille)
 		protected double				margin = 2;
 		protected MenuItem[]			array;			// tableau des cases
 		protected int					totalUsed;
 		protected TypeDeveloped			menuDeveloped = TypeDeveloped.Close;
 		protected WindowFrame			window;
 		protected Menu					submenu;
-		protected MenuItem				itemParent;
+		protected Menu					parentMenu;
 		protected double				iconWidth;
 		protected Drawing.Rectangle		parentRect;
 	}

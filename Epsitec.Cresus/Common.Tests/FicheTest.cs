@@ -16,6 +16,7 @@ namespace Epsitec.Common.Tests
 
 			this.window.ClientSize = new System.Drawing.Size(1024, 768);
 			this.window.Text = "Crésus-fiche";
+			this.window.Closed += new System.EventHandler(this.HandleWindowClosed);
 
 			this.db = new TinyDataBase();
 			this.db.Title = "Adresses";
@@ -26,6 +27,33 @@ namespace Epsitec.Common.Tests
 			this.CreateLayout();
 
 			window.Show();
+		}
+
+		private void HandleWindowClosed(object sender, System.EventArgs e)
+		{
+			this.window = null;
+			this.menu = null;
+			this.toolBar = null;
+			this.pane= null;
+			this.subPane = null;
+			this.leftPane = null;
+			this.rightPane = null;
+			this.topPane = null;
+			this.bottomPane = null;
+			this.title = null;
+			this.editCrit = null;
+			this.buttonSearch = null;
+			this.listCrit = null;
+			this.table = null;
+
+			this.buttonCreate = null;
+			this.buttonDuplicate = null;
+			this.buttonDelete = null;
+			this.buttonValidate = null;
+			this.buttonCancel = null;
+
+			this.staticTexts = null;
+			this.textFields = null;
 		}
 
 		// Crée les rubriques dans la base.
@@ -252,6 +280,7 @@ namespace Epsitec.Common.Tests
 			this.menu.InsertItem("Fichier");
 			this.menu.InsertItem("Edition");
 			this.menu.InsertItem("Affichage");
+			this.menu.InsertItem("Debug");
 			this.menu.InsertItem("Aide");
 			this.menu.Parent = this.window.Root;
 
@@ -270,7 +299,7 @@ namespace Epsitec.Common.Tests
 			fileMenu.InsertSep();
 			fileMenu.InsertItem("", "Quitter", "");
 			fileMenu.AdjustSize();
-			this.menu.GetWidget(0).Submenu = fileMenu;
+			this.menu[0].Submenu = fileMenu;
 
 			Menu editMenu = new Menu(MenuType.Vertical);
 			editMenu.Name = "editMenu";
@@ -280,7 +309,7 @@ namespace Epsitec.Common.Tests
 			editMenu.InsertItem("copy", "Copier", "Ctrl+C");
 			editMenu.InsertItem("paste", "Coller", "Ctrl+V");
 			editMenu.AdjustSize();
-			this.menu.GetWidget(1).Submenu = editMenu;
+			this.menu[1].Submenu = editMenu;
 
 			Menu showMenu = new Menu(MenuType.Vertical);
 			showMenu.Name = "showMenu";
@@ -290,7 +319,7 @@ namespace Epsitec.Common.Tests
 			showMenu.InsertItem("", "Options", "");
 			showMenu.InsertItem("", "Reglages", "");
 			showMenu.AdjustSize();
-			this.menu.GetWidget(2).Submenu = showMenu;
+			this.menu[2].Submenu = showMenu;
 
 			Menu optMenu = new Menu(MenuType.Vertical);
 			optMenu.Name = "optMenu";
@@ -298,7 +327,7 @@ namespace Epsitec.Common.Tests
 			optMenu.InsertItem("print", "Impression...", "");
 			optMenu.InsertItem("open", "Fichiers...", "");
 			optMenu.AdjustSize();
-			showMenu.GetWidget(3).Submenu = optMenu;
+			showMenu[3].Submenu = optMenu;
 
 			Menu setupMenu = new Menu(MenuType.Vertical);
 			setupMenu.Name = "setupMenu";
@@ -308,7 +337,39 @@ namespace Epsitec.Common.Tests
 			setupMenu.InsertItem("", "Edition...", "");
 			setupMenu.InsertItem("", "Langue...", "");
 			setupMenu.AdjustSize();
-			showMenu.GetWidget(4).Submenu = setupMenu;
+			showMenu[4].Submenu = setupMenu;
+
+			Menu debugMenu = new Menu(MenuType.Vertical);
+			debugMenu.Name = "debugMenu";
+			debugMenu.InsertItem("", "Couleur A", "");
+			debugMenu.InsertItem("", "Couleur B", "");
+			debugMenu.InsertItem("", "Couleur C", "");
+			debugMenu.AdjustSize();
+			this.menu[3].Submenu = debugMenu;
+
+			Menu debugMenu1 = new Menu(MenuType.Vertical);
+			debugMenu1.Name = "debugMenu1";
+			debugMenu1.InsertItem("", "Rouge", "");
+			debugMenu1.InsertItem("", "Vert", "");
+			debugMenu1.InsertItem("", "Bleu", "");
+			debugMenu1.AdjustSize();
+			debugMenu[0].Submenu = debugMenu1;
+
+			Menu debugMenu2 = new Menu(MenuType.Vertical);
+			debugMenu2.Name = "debugMenu2";
+			debugMenu2.InsertItem("", "Rouge", "");
+			debugMenu2.InsertItem("", "Vert", "");
+			debugMenu2.InsertItem("", "Bleu", "");
+			debugMenu2.AdjustSize();
+			debugMenu[1].Submenu = debugMenu2;
+
+			Menu debugMenu3 = new Menu(MenuType.Vertical);
+			debugMenu3.Name = "debugMenu3";
+			debugMenu3.InsertItem("", "Rouge", "");
+			debugMenu3.InsertItem("", "Vert", "");
+			debugMenu3.InsertItem("", "Bleu", "");
+			debugMenu3.AdjustSize();
+			debugMenu[2].Submenu = debugMenu3;
 
 			Menu helpMenu = new Menu(MenuType.Vertical);
 			helpMenu.Name = "helpMenu";
@@ -316,7 +377,7 @@ namespace Epsitec.Common.Tests
 			helpMenu.InsertItem("help", "Aide contextuelle", "");
 			helpMenu.InsertItem("", "A propos de...", "");
 			helpMenu.AdjustSize();
-			this.menu.GetWidget(3).Submenu = helpMenu;
+			this.menu[4].Submenu = helpMenu;
 
 			this.toolBar = new ToolBar();
 			this.toolBar.Location = new Point(0, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);
@@ -406,6 +467,8 @@ namespace Epsitec.Common.Tests
 			this.buttonDelete.Clicked += new MessageEventHandler(this.buttonDelete_Clicked);
 			this.rightPane.Children.Add(this.buttonDelete);
 
+			this.staticTexts = new System.Collections.ArrayList();
+			this.textFields = new System.Collections.ArrayList();
 			this.listCrit.AddText("<i><b>Partout</b></i>");
 			this.listCrit.Select = 0;
 			this.staticTexts.Clear();
@@ -957,7 +1020,7 @@ namespace Epsitec.Common.Tests
 		protected Button						buttonDelete;
 		protected Button						buttonValidate;
 		protected Button						buttonCancel;
-		protected System.Collections.ArrayList	staticTexts = new System.Collections.ArrayList();
-		protected System.Collections.ArrayList	textFields = new System.Collections.ArrayList();
+		protected System.Collections.ArrayList	staticTexts;
+		protected System.Collections.ArrayList	textFields;
 	}
 }

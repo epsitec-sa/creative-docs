@@ -42,6 +42,30 @@ namespace Epsitec.Common.Widgets
 			SetDimension(0, this.Client.Width/2);
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			if ( disposing )
+			{
+				this.slider.DragStarted -= new MessageEventHandler(this.HandleSliderDragStarted);
+				this.slider.DragMoved   -= new MessageEventHandler(this.HandleSliderDragMoved);
+				this.slider.DragEnded   -= new MessageEventHandler(this.HandleSliderDragEnded);
+
+				this.button.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
+
+#if false  // TODO: utile ?
+				for ( int i=0 ; i<this.panes.Length ; i++ )
+				{
+					this.panes[i].Dispose();
+					this.panes[i] = null;
+				}
+				this.panes = null;
+#endif
+			}
+			
+			base.Dispose(disposing);
+		}
+
+		
 		// Disposition des panneaux.
 		public PaneStyle PaneStyle
 		{
