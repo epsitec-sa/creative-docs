@@ -406,7 +406,14 @@ namespace Epsitec.Common.Pictogram.Data
 		public void SetProperty(AbstractProperty property)
 		{
 			AbstractProperty actual = this.SearchProperty(property.Type);
-			if ( actual == null )  return;
+			if ( actual == null )
+			{
+				if ( this is ObjectGroup )
+				{
+					this.dirtyBbox = true;
+				}
+				return;
+			}
 
 			property.CopyTo(actual);
 

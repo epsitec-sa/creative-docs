@@ -220,7 +220,7 @@ namespace Epsitec.Common.Pictogram.Data
 					}
 				}
 
-				if ( obj.Objects != null )
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
 					this.PropertiesList(obj.Objects, list, objectMemory, true);
 				}
@@ -243,7 +243,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 				obj.SetPropertyExtended(property);
 
-				if ( obj.Objects != null )
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
 					this.SetPropertyExtended(obj.Objects, property, true);
 				}
@@ -266,12 +266,19 @@ namespace Epsitec.Common.Pictogram.Data
 				AbstractObject obj = objects[index] as AbstractObject;
 				if ( !all && !obj.IsSelected() )  continue;
 
+				bbox.MergeWith(obj.BoundingBox);
 				obj.SetProperty(property);
 				bbox.MergeWith(obj.BoundingBox);
 
-				if ( obj.Objects != null )
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
 					this.SetProperty(obj.Objects, property, ref bbox, true);
+
+					Drawing.Rectangle gbox = this.RetBbox(obj.Objects);
+					obj.Handle(0).Position = gbox.BottomLeft;
+					obj.Handle(1).Position = gbox.TopRight;
+					obj.UpdateBoundingBox();
+					bbox.MergeWith(gbox);
 				}
 			}
 		}
@@ -298,7 +305,7 @@ namespace Epsitec.Common.Pictogram.Data
 					return property;
 				}
 
-				if ( obj.Objects != null )
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
 					AbstractProperty p = this.GetProperty(obj.Objects, type, objectMemory, true);
 					if ( p != null )  return p;
@@ -382,7 +389,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 				if ( obj is ObjectGroup )
 				{
-					if ( obj.Objects != null )
+					if ( obj.Objects != null && obj.Objects.Count > 0 )
 					{
 						AbstractObject item = this.DeepDetect(obj.Objects, mouse);
 						if ( item != null )  return item;
@@ -455,7 +462,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 				obj.IsHilite = (obj == item);
 
-				if ( obj.Objects != null )
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
 					this.DeepHilite(obj.Objects, item);
 				}
@@ -477,7 +484,7 @@ namespace Epsitec.Common.Pictogram.Data
 				AbstractObject obj = objects[index] as AbstractObject;
 				if ( obj.IsSelected() )  return obj;
 
-				if ( obj.Objects != null )
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
 					AbstractObject item = this.RetFirstSelected(obj.Objects);
 					if ( item != null )  return item;
@@ -611,7 +618,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 				obj.Deselect();
 
-				if ( obj.Objects != null )
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
 					this.DuplicateSelection(obj.Objects, newObject.Objects, move, true);
 				}
@@ -774,7 +781,7 @@ namespace Epsitec.Common.Pictogram.Data
 				obj.MoveAll(move);
 				bbox.MergeWith(obj.BoundingBox);
 
-				if ( obj.Objects != null )
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
 					this.MoveSelection(obj.Objects, move, ref bbox, true);
 				}
@@ -805,7 +812,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				AbstractObject obj = objects[index] as AbstractObject;
 
-				if ( obj.Objects != null )
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
 					this.DrawGeometry(obj.Objects, graphics, iconContext, adorner, dimmed);
 				}
@@ -834,7 +841,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				AbstractObject obj = objects[index] as AbstractObject;
 
-				if ( obj.Objects != null )
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
 					this.DrawHandle(obj.Objects, graphics, iconContext);
 				}
@@ -859,7 +866,7 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( !obj.DuplicateObject(ref newObject) )  continue;
 				dst.Add(newObject);
 
-				if ( obj.Objects != null && obj.Objects.Count != 0 )
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
 					this.CopyTo(obj.Objects, newObject.Objects);
 				}
@@ -915,7 +922,7 @@ namespace Epsitec.Common.Pictogram.Data
 			for ( int i=this.roots.Count-1 ; i>=0 ; i-- )
 			{
 				AbstractObject group = this.roots[i] as AbstractObject;
-				if ( group.Objects == null )  continue;
+				if ( group.Objects == null || group.Objects.Count == 0 )  continue;
 
 				Drawing.Rectangle actualBbox = group.BoundingBox;
 				Drawing.Rectangle newBbox = this.RetBbox(group.Objects);

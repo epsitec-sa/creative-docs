@@ -13,6 +13,7 @@ namespace Epsitec.Common.Support
 		{
 		}
 		
+		
 		public void Dispatch(string command, object source)
 		{
 			//	Transmet la commande à ceux qui sont intéressés
@@ -47,7 +48,40 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public void RegisterMethod(object controller, System.Reflection.MethodInfo info)
+		public void Register(string command, CommandEventHandler handler)
+		{
+			EventSlot slot;
+			
+			if (this.event_handlers.Contains (command))
+			{
+				slot = this.event_handlers[command] as EventSlot;
+			}
+			else
+			{
+				slot = new EventSlot (command);
+				this.event_handlers[command] = slot;
+			}
+			
+			slot.Register (handler);
+		}
+		
+		public void Unregister(string command, CommandEventHandler handler)
+		{
+			if (this.event_handlers.Contains (command))
+			{
+				EventSlot slot = this.event_handlers[command] as EventSlot;
+				
+				slot.Unregister (handler);
+				
+				if (slot.Count == 0)
+				{
+					this.event_handlers.Remove (command);
+				}
+			}
+		}
+		
+		
+		protected void RegisterMethod(object controller, System.Reflection.MethodInfo info)
 		{
 			//	Ne parcourt que les attributs au niveau d'implémentation actuel (pas les classes dérivées,
 			//	ni les classes parent). Le parcours des parent est assuré par l'appelant.
@@ -59,35 +93,6 @@ namespace Epsitec.Common.Support
 				this.RegisterMethod (controller, info, attribute);
 			}
 		}
-		
-		public void Register(string command, CommandEventHandler handler)
-		{
-			EventSlot slot;
-			
-			if (this.event_handlers.Contains (command))
-			{
-				slot = this.event_handlers[command] as EventSlot;
-			}
-			else
-			{
-				slot = new EventSlot ();
-				this.event_handlers[command] = slot;
-			}
-			
-			slot.Command += handler;
-		}
-		
-		public void Unregister(string command, CommandEventHandler handler)
-		{
-			if (this.event_handlers.Contains (command))
-			{
-				EventSlot slot = this.event_handlers[command] as EventSlot;
-				
-				slot.Command -= handler;
-			}
-		}
-		
-		
 		
 		protected void RegisterMethod(object controller, System.Reflection.MethodInfo method_info, CommandAttribute attribute)
 		{
@@ -101,12 +106,17 @@ namespace Epsitec.Common.Support
 			switch (param_info.Length)
 			{
 				case 0:
-					//	Cas simple: c'est une méthode sans aucun argument.
+					//	La méthode n'a aucun argument :
 					
 					handler = new CommandEventHandler (relay.InvokeWithoutArgument);
 					break;
 				
 				case 1:
+					//	La méthode a un unique argument. Ce n'est acceptable que si cet argument est
+					//	de type CommandDispatcher, soit :
+					//
+					//		void Method(CommandDispatcher)
+					
 					if (param_info[0].ParameterType == typeof (CommandDispatcher))
 					{
 						handler = new CommandEventHandler (relay.InvokeWithCommandDispatcher);
@@ -114,6 +124,11 @@ namespace Epsitec.Common.Support
 					break;
 				
 				case 2:
+					//	La méthode a deux arguments. Ce n'est acceptable que si le premier est de type
+					//	CommandDispatcher et le second de type CommandEventArgs, soit :
+					//
+					//		void Method(CommandDispatcher, CommandEventArgs)
+					
 					if ((param_info[0].ParameterType == typeof (CommandDispatcher)) &&
 						(param_info[1].ParameterType == typeof (CommandEventArgs)))
 					{
@@ -131,13 +146,25 @@ namespace Epsitec.Common.Support
 			
 		}
 		
+		
 		protected class EventRelay
 		{
 			public EventRelay(object controller, System.Reflection.MethodInfo method_info)
 			{
+				//	Cette classe réalise un relais entre le delegate CommandEventHandler et les
+				//	diverses implémentations possibles au niveau des gestionnaires de commandes.
+				//	Ainsi, les méthodes :
+				//
+				//		void Method()
+				//		void Method(CommandDispatcher)
+				//		void Method(CommandDispatcher, CommandEventArgs)
+				//
+				//	sont toutes appelables via CommandEventHandler.
+				
 				this.controller  = controller;
 				this.method_info = method_info;
 			}
+			
 			
 			public void InvokeWithoutArgument(CommandDispatcher sender, CommandEventArgs e)
 			{
@@ -159,21 +186,55 @@ namespace Epsitec.Common.Support
 				this.method_info.Invoke (this.controller, p);
 			}
 			
+			
 			protected object						controller;
 			protected System.Reflection.MethodInfo	method_info;
 		}
 		
 		protected class EventSlot
 		{
+			public EventSlot(string name)
+			{
+				this.name = name;
+			}
+			
+			
+			public void Register(CommandEventHandler handler)
+			{
+				this.command += handler;
+				this.count++;
+			}
+			
+			public void Unregister(CommandEventHandler handler)
+			{
+				this.command -= handler;
+				this.count--;
+			}
+			
+			
 			public void Fire(CommandDispatcher sender, CommandEventArgs e)
 			{
-				if (this.Command != null)
+				if (this.command != null)
 				{
-					this.Command (sender, e);
+					this.command (sender, e);
 				}
 			}
 			
-			public event CommandEventHandler	Command;
+			
+			public int							Count
+			{
+				get { return this.count; }
+			}
+			
+			public string						Name
+			{
+				get { return this.name; }
+			}
+			
+			
+			protected string					name;
+			protected event CommandEventHandler	command;
+			protected int						count;
 		}
 		
 		
