@@ -333,6 +333,11 @@ namespace Epsitec.Common.Support
 				return this.Read (format) as string;
 			}
 			
+			public string ReadText()
+			{
+				return this.data.GetData (typeof (string)) as string;
+			}
+			
 			public string ReadHtmlFragment()
 			{
 				string raw_html = this.ReadAsString ("HTML Format");
@@ -475,10 +480,16 @@ namespace Epsitec.Common.Support
 				//	Quand on place un texte HTML dans le presse-papier, il faut aussi en placer une
 				//	version textuelle :
 				
-				this.WriteText (System.Utilities.XmlToText (value).Replace ("<br/>", "\r\n"));
+				string text = value.Replace ("<br />", "\r\n");
+				this.WriteText (System.Utilities.XmlToText (text));
 				
 				System.Text.StringBuilder html = new System.Text.StringBuilder ();
-				string                    utf8 = Clipboard.ConvertStringToBrokenUtf8 (Clipboard.ConvertSimpleXmlToHtml (value));
+				
+				//	Le malheur, c'est que ni FrontPage 2000, ni Word 2000 ne comprennent l'entité &apos;
+				//	et du coup, on ne peut pas l'utiliser !
+				
+				string source = value.Replace ("&apos;", "&#39;");
+				string utf8   = Clipboard.ConvertStringToBrokenUtf8 (Clipboard.ConvertSimpleXmlToHtml (source));
 				
 				html.Append ("Version:1.0\n");
 				html.Append ("StartHTML:00000000\n");		int idx_start_html = html.Length - 9;
