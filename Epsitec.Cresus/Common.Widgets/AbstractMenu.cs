@@ -347,6 +347,28 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public override void Invalidate(Drawing.Rectangle rect)
+		{
+			if (this.IsHorizontal && this.IsVisible)
+			{
+				if (this.Parent != null)
+				{
+					Window window = this.Window;
+					
+					if (window != null)
+					{
+						window.SynchronousRepaint ();
+						this.Parent.Invalidate (this.MapClientToParent (rect));
+						window.SynchronousRepaint ();
+						return;
+					}
+				}
+			}
+			
+			base.Invalidate (rect);
+		}
+		
+		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
@@ -792,6 +814,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.window.Dispose();
 			this.window = null;
+			
 			return true;
 		}
 
