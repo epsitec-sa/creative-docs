@@ -901,7 +901,7 @@ namespace Epsitec.Common.Widgets
 			get { return this.Client.Bounds; }
 		}
 		
-		public virtual Drawing.Size					MinSize
+		[Bundle] public virtual Drawing.Size		MinSize
 		{
 			get
 			{
@@ -917,7 +917,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual Drawing.Size					MaxSize
+		[Bundle] public virtual Drawing.Size		MaxSize
 		{
 			get
 			{
@@ -930,6 +930,60 @@ namespace Epsitec.Common.Widgets
 					this.max_size = value;
 					this.OnMaxSizeChanged ();
 				}
+			}
+		}
+		
+		public virtual Drawing.Size					AutoMinSize
+		{
+			get
+			{
+				return this.auto_min_size;
+			}
+			set
+			{
+				if (this.auto_min_size != value)
+				{
+					this.auto_min_size = value;
+					this.OnMinSizeChanged ();
+				}
+			}
+		}
+		
+		public virtual Drawing.Size					AutoMaxSize
+		{
+			get
+			{
+				return this.auto_max_size;
+			}
+			set
+			{
+				if (this.auto_max_size != value)
+				{
+					this.auto_max_size = value;
+					this.OnMaxSizeChanged ();
+				}
+			}
+		}
+		
+		public Drawing.Size							RealMinSize
+		{
+			get
+			{
+				double width  = System.Math.Max (this.min_size.Width, this.auto_min_size.Width);
+				double height = System.Math.Max (this.min_size.Height, this.auto_min_size.Height);
+				
+				return new Drawing.Size (width, height);
+			}
+		}
+		
+		public Drawing.Size							RealMaxSize
+		{
+			get
+			{
+				double width  = System.Math.Min (this.max_size.Width, this.auto_max_size.Width);
+				double height = System.Math.Min (this.max_size.Height, this.auto_max_size.Height);
+				
+				return new Drawing.Size (width, height);
 			}
 		}
 		
@@ -4729,8 +4783,8 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				Drawing.Size margins = child.DockMargins.Size;
-				Drawing.Size min = child.MinSize + margins;
-				Drawing.Size max = child.MaxSize + margins;
+				Drawing.Size min = child.RealMinSize + margins;
+				Drawing.Size max = child.RealMaxSize + margins;
 				
 				switch (child.Dock)
 				{
@@ -4811,8 +4865,8 @@ namespace Epsitec.Common.Widgets
 			//	Tous les calculs ont été faits en coordonnées client, il faut donc encore transformer
 			//	ces dimensions en coordonnées parents.
 			
-			this.MinSize = this.MapClientToParent (new Drawing.Size (min_width, min_height));
-			this.MaxSize = this.MapClientToParent (new Drawing.Size (max_width, max_height));
+			this.AutoMinSize = this.MapClientToParent (new Drawing.Size (min_width, min_height));
+			this.AutoMaxSize = this.MapClientToParent (new Drawing.Size (max_width, max_height));
 		}
 		
 		protected void UpdateDockedChildrenLayout(Widget[] children)
@@ -6585,6 +6639,8 @@ namespace Epsitec.Common.Widgets
 		private double							x1, y1, x2, y2;
 		private Drawing.Size					min_size;
 		private Drawing.Size					max_size;
+		private Drawing.Size					auto_min_size	= new Drawing.Size (0, 0);
+		private Drawing.Size					auto_max_size	= new Drawing.Size (1000000, 1000000);
 		private System.Collections.ArrayList	hypertext_list;
 		private HypertextInfo					hypertext;
 		

@@ -37,18 +37,21 @@ namespace Epsitec.App.DocumentEditor
 
 			this.mainWindow.Name = "Application";  // utilisé pour générer "QuitApplication" !
 			this.mainWindow.PreventAutoClose = true;
+			this.mainWindow.IsValidDropTarget = true;
 			this.mainWindow.AsyncNotification += new EventHandler(this.HandleWindowAsyncNotification);
+			this.mainWindow.WindowDragEntered += new WindowDragEventHandler(this.HandleMainWindowWindowDragEntered);
+			this.mainWindow.WindowDragDropped += new WindowDragEventHandler(this.HandleMainWindowWindowDragDropped);
 			
 			if ( type == DocumentType.Graphic )
 			{
+				this.mainWindow.Root.MinSize = new Size(300, 200);
 				this.mainWindow.ClientSize = new Size(830, 580);
 			}
 			else
 			{
+				this.mainWindow.Root.MinSize = new Size(300, 200);
 				this.mainWindow.ClientSize = new Size(830, 580);
 			}
-			
-			this.mainWindow.Root.MinSize = new Size(500, 400);
 
 			switch ( type )
 			{
@@ -110,5 +113,51 @@ namespace Epsitec.App.DocumentEditor
 		private Window					mainWindow;
 		private HMenu					menu;
 		private DocumentEditor			editor;
+
+		private void HandleMainWindowWindowDragEntered(object sender, WindowDragEventArgs e)
+		{
+			string[] files = e.Data.ReadAsStringArray("FileDrop");
+			
+			e.AcceptDrop = false;
+			
+			if ( files.Length > 0 )
+			{
+				foreach ( string file in files )
+				{
+					if ( ! file.ToLower().EndsWith(".crdoc") )
+					{
+						return;
+					}
+				}
+				
+				e.AcceptDrop = true;
+			}
+		}
+
+		private void HandleMainWindowWindowDragDropped(object sender, WindowDragEventArgs e)
+		{
+			string[] files = e.Data.ReadAsStringArray("FileDrop");
+			
+			e.AcceptDrop = false;
+			
+			if ( files.Length > 0 )
+			{
+				foreach ( string file in files )
+				{
+					if ( ! file.ToLower().EndsWith(".crdoc") )
+					{
+						return;
+					}
+				}
+				
+				e.AcceptDrop = true;
+				
+				foreach ( string file in files )
+				{
+					this.editor.CreateDocument();
+					this.editor.CurrentDocument.Read(file);
+				}
+			}
+		}
 	}
 }

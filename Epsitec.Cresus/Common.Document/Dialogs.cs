@@ -16,14 +16,115 @@ namespace Epsitec.Common.Document
 		}
 
 
-		// Affiche le dialogue des réglages.
-		public void ShowSettings()
+		#region Infos
+		// Peuple le dialogue des informations.
+		public void BuildInfos(Window window)
 		{
-			if ( this.windowSettings == null )
+			if ( this.windowInfos != null )  return;
+			this.windowInfos = window;
+
+			this.UpdateInfos();
+		}
+
+		// Met à jour le dialogue des informations.
+		public void UpdateInfos()
+		{
+			if ( this.windowInfos != null && this.windowInfos.IsVisible )
 			{
-				this.CreateSettings();
+				TextFieldMulti multi = this.windowInfos.Root.FindChild("Infos") as TextFieldMulti;
+				if ( multi != null )
+				{
+					multi.Text = this.document.Modifier.Statistic(true, true);
+				}
 			}
-			this.windowSettings.Show();
+		}
+		#endregion
+
+		#region Settings
+		// Peuple le dialogue des réglages.
+		public void BuildSettings(Window window)
+		{
+			if ( this.windowSettings != null )  return;
+			this.windowSettings = window;
+
+			Widget parent, container;
+
+			// Onglet Format:
+			parent = this.windowSettings.Root.FindChild("Format");
+			container = new Widget(parent);
+			container.Name = "Container";
+			container.Dock = DockStyle.Fill;
+
+			this.tabIndex = 0;
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				Dialogs.CreateTitle(container, "Dimensions d'un pictogramme");
+				this.CreatePoint(container, "PageSize");
+			}
+			else
+			{
+				Dialogs.CreateTitle(container, "Dimensions d'une page");
+				this.CreatePaper(container);
+				this.CreatePoint(container, "PageSize");
+				Dialogs.CreateSeparator(container);
+				this.CreateCombo(container, "DefaultUnit");
+			}
+
+			// Onglet Grid:
+			parent = this.windowSettings.Root.FindChild("Grid");
+			container = new Widget(parent);
+			container.Name = "Container";
+			container.Dock = DockStyle.Fill;
+
+			this.tabIndex = 0;
+			Dialogs.CreateTitle(container, "Grille magnétique");
+			this.CreateBool(container, "GridActive");
+			this.CreateBool(container, "GridShow");
+			Dialogs.CreateSeparator(container);
+			this.CreatePoint(container, "GridStep");
+			this.CreatePoint(container, "GridSubdiv");
+			this.CreatePoint(container, "GridOffset");
+
+			// Onglet Guides:
+			parent = this.windowSettings.Root.FindChild("Guides");
+			container = new Widget(parent);
+			container.Name = "Container";
+			container.Dock = DockStyle.Fill;
+
+			this.tabIndex = 0;
+			Dialogs.CreateTitle(container, "Repères magnétiques");
+			this.CreateBool(container, "GuidesActive");
+			this.CreateBool(container, "GuidesShow");
+			Dialogs.CreateSeparator(container);
+
+			this.containerGuides = new Containers.Guides(this.document);
+			this.containerGuides.Dock = DockStyle.Fill;
+			this.containerGuides.DockMargins = new Margins(10, 10, 4, 10);
+			this.containerGuides.Parent = container;
+
+			// Onglet Print:
+			parent = this.windowSettings.Root.FindChild("Print");
+			container = new Widget(parent);
+			container.Name = "Container";
+			container.Dock = DockStyle.Fill;
+
+			this.tabIndex = 0;
+			Dialogs.CreateTitle(container, "Paramètres pour l'impression");
+			this.CreateBool(container, "PrintAutoLandscape");
+			this.CreateBool(container, "PrintAutoZoom");
+			this.CreateBool(container, "PrintDraft");
+			this.CreateBool(container, "PrintAA");
+			this.CreateDouble(container, "PrintDpi");
+
+			// Onglet Misc:
+			parent = this.windowSettings.Root.FindChild("Misc");
+			container = new Widget(parent);
+			container.Name = "Container";
+			container.Dock = DockStyle.Fill;
+
+			this.tabIndex = 0;
+			Dialogs.CreateTitle(container, "Déplacement lorsqu'un objet est dupliqué");
+			this.CreatePoint(container, "DuplicateMove");
 		}
 
 		// Appelé lorsque les réglages ont changé.
@@ -106,117 +207,12 @@ namespace Epsitec.Common.Document
 			if ( this.containerGuides == null )  return;
 			this.containerGuides.SetDirtyContent();
 		}
-
-		// Crée le dialogue des réglages.
-		protected void CreateSettings()
-		{
-			this.windowSettings = new Window();
-			
-			this.windowSettings.ClientSize = new Size(300, 350);
-			this.windowSettings.Text = "Réglages";
-			this.windowSettings.MakeSecondaryWindow();
-			this.windowSettings.MakeFixedSizeWindow();
-			this.windowSettings.MakeToolWindow();
-			this.windowSettings.PreventAutoClose = true;
-			this.windowSettings.Owner = this.document.Modifier.ActiveViewer.Window;
-			this.windowSettings.WindowCloseClicked += new EventHandler(this.HandleWindowSettingsCloseClicked);
-
-			// Crée les onglets.
-			TabBook book = new TabBook();
-			book.Arrows = TabBookArrows.Stretch;
-			book.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-			book.AnchorMargins = new Margins(6, 6, 6, 34);
-			this.windowSettings.Root.Children.Add(book);
-
-			TabPage bookFormat = new TabPage();
-			bookFormat.TabTitle = "Format";
-			book.Items.Add(bookFormat);
-
-			TabPage bookGrid = new TabPage();
-			bookGrid.TabTitle = "Grille";
-			book.Items.Add(bookGrid);
-
-			TabPage bookGuides = new TabPage();
-			bookGuides.TabTitle = "Repères";
-			book.Items.Add(bookGuides);
-
-			TabPage bookMisc = new TabPage();
-			bookMisc.TabTitle = "Divers";
-			book.Items.Add(bookMisc);
-
-			book.ActivePage = bookFormat;
-
-			// Onglet bookFormat:
-			this.tabIndex = 0;
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.CreateTitle(bookFormat, "Dimensions d'un pictogramme");
-				this.CreatePoint(bookFormat, "PageSize");
-			}
-			else
-			{
-				this.CreateTitle(bookFormat, "Dimensions d'une page");
-				this.CreatePaper(bookFormat);
-				this.CreatePoint(bookFormat, "PageSize");
-				this.CreateSeparator(bookFormat);
-				this.CreateCombo(bookFormat, "DefaultUnit");
-			}
-
-			// Onglet bookGrid:
-			this.tabIndex = 0;
-			this.CreateTitle(bookGrid, "Grille magnétique");
-			this.CreateBool(bookGrid, "GridActive");
-			this.CreateBool(bookGrid, "GridShow");
-			this.CreateSeparator(bookGrid);
-			this.CreatePoint(bookGrid, "GridStep");
-			this.CreatePoint(bookGrid, "GridSubdiv");
-			this.CreatePoint(bookGrid, "GridOffset");
-
-			// Onglet bookGuides:
-			this.tabIndex = 0;
-			this.CreateTitle(bookGuides, "Repères magnétiques");
-			this.CreateBool(bookGuides, "GuidesActive");
-			this.CreateBool(bookGuides, "GuidesShow");
-			this.CreateSeparator(bookGuides);
-
-			this.containerGuides = new Containers.Guides(this.document);
-			this.containerGuides.Dock = DockStyle.Fill;
-			this.containerGuides.DockMargins = new Margins(10, 10, 4, 10);
-			this.containerGuides.Parent = bookGuides;
-
-			// Onglet bookMisc:
-			this.tabIndex = 0;
-			this.CreateTitle(bookMisc, "Déplacement lorsqu'un objet est dupliqué");
-			this.CreatePoint(bookMisc, "DuplicateMove");
-
-			// Bouton de fermeture.
-			Button buttonClose = new Button();
-			buttonClose.Width = 75;
-			buttonClose.Text = "Fermer";
-			buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
-			buttonClose.Anchor = AnchorStyles.BottomLeft;
-			buttonClose.AnchorMargins = new Margins(6, 0, 0, 6);
-			buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
-			buttonClose.TabIndex = 1000;
-			buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.windowSettings.Root.Children.Add(buttonClose);
-			ToolTip.Default.SetToolTip(buttonClose, "Fermer les réglages");
-		}
-
-		private void HandleWindowSettingsCloseClicked(object sender)
-		{
-			this.windowSettings.Hide();
-		}
-
-		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
-		{
-			this.windowSettings.Hide();
-		}
+		#endregion
 
 
 		#region WidgetTitle
 		// Crée un widget de titre pour un onglet.
-		protected void CreateTitle(Widget parent, string labelText)
+		public static void CreateTitle(Widget parent, string labelText)
 		{
 			StaticText text = new StaticText(parent);
 			text.Text = string.Format("<b>{0}</b>", labelText);
@@ -231,7 +227,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Crée un séparateur pour un onglet.
-		protected void CreateSeparator(Widget parent)
+		public static void CreateSeparator(Widget parent)
 		{
 			Separator sep = new Separator(parent);
 			sep.Width = parent.Width;
@@ -241,6 +237,28 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
+		#region WidgetLabel
+		// Crée des widgets pour afficher un texte fixe.
+		public static void CreateLabel(Widget parent, string label, string info)
+		{
+			Panel container = new Panel(parent);
+			container.Height = 18;
+			container.Dock = DockStyle.Top;
+			container.DockMargins = new Margins(10, 10, 0, 0);
+
+			StaticText text = new StaticText(container);
+			text.Text = label;
+			text.Width = 120;
+			text.Dock = DockStyle.Left;
+			text.DockMargins = new Margins(0, 0, 0, 0);
+
+			text = new StaticText(container);
+			text.Text = info;
+			text.Width = 150;
+			text.Dock = DockStyle.Left;
+			text.DockMargins = new Margins(0, 0, 0, 0);
+		}
+		#endregion
 
 		#region WidgetBool
 		// Crée un widget pour éditer un réglage de type Bool.
@@ -279,7 +297,6 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
-
 		#region WidgetDouble
 		// Crée des widgets pour éditer un réglage de type Double.
 		protected void CreateDouble(Widget parent, string name)
@@ -304,10 +321,20 @@ namespace Epsitec.Common.Document
 			TextFieldReal field = new TextFieldReal(container);
 			field.Width = 60;
 			field.Name = sDouble.Name;
-			field.FactorMinRange = (decimal) sDouble.FactorMinValue;
-			field.FactorMaxRange = (decimal) sDouble.FactorMaxValue;
-			field.FactorStep = (decimal) sDouble.FactorStep;
-			this.document.Modifier.AdaptTextFieldRealDimension(field);
+			if ( sDouble.Integer )
+			{
+				this.document.Modifier.AdaptTextFieldRealScalar(field);
+				field.MinValue = (decimal) sDouble.FactorMinValue;
+				field.MaxValue = (decimal) sDouble.FactorMaxValue;
+				field.Step = (decimal) sDouble.FactorStep;
+			}
+			else
+			{
+				field.FactorMinRange = (decimal) sDouble.FactorMinValue;
+				field.FactorMaxRange = (decimal) sDouble.FactorMaxValue;
+				field.FactorStep = (decimal) sDouble.FactorStep;
+				this.document.Modifier.AdaptTextFieldRealDimension(field);
+			}
 			field.InternalValue = (decimal) sDouble.Value;
 			field.ValueChanged += new EventHandler(this.HandleFieldDoubleChanged);
 			field.TabIndex = this.tabIndex++;
@@ -331,7 +358,6 @@ namespace Epsitec.Common.Document
 			sDouble.Value = (double) field.InternalValue;
 		}
 		#endregion
-
 
 		#region WidgetPoint
 		// Crée des widgets pour éditer un réglage de type Point.
@@ -379,6 +405,7 @@ namespace Epsitec.Common.Document
 				this.document.Modifier.AdaptTextFieldRealScalar(field);
 				field.MinValue = (decimal) sPoint.FactorMinValue;
 				field.MaxValue = (decimal) sPoint.FactorMaxValue;
+				field.Step = (decimal) sPoint.FactorStep;
 			}
 			else
 			{
@@ -416,6 +443,7 @@ namespace Epsitec.Common.Document
 				this.document.Modifier.AdaptTextFieldRealScalar(field);
 				field.MinValue = (decimal) sPoint.FactorMinValue;
 				field.MaxValue = (decimal) sPoint.FactorMaxValue;
+				field.Step = (decimal) sPoint.FactorStep;
 			}
 			else
 			{
@@ -506,7 +534,6 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
-
 		#region WidgetCombo
 		// Crée un widget combo pour éditer un réglage de type Integer.
 		protected void CreateCombo(Widget parent, string name)
@@ -555,7 +582,6 @@ namespace Epsitec.Common.Document
 			this.document.Modifier.RealUnitDimension = Settings.Integer.IntToType(field.SelectedIndex);
 		}
 		#endregion
-
 
 		#region WidgetPaper
 		// Crée un widget combo pour éditer le format d'une page.
@@ -783,6 +809,45 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		// Supprime tous les widgets de tous les dialogues.
+		public void FlushAll()
+		{
+			if ( this.windowInfos != null )
+			{
+				TextFieldMulti multi = this.windowInfos.Root.FindChild("Infos") as TextFieldMulti;
+				if ( multi != null )
+				{
+					multi.Text = "";
+				}
+				this.windowInfos = null;
+			}
+
+			if ( this.windowSettings != null )
+			{
+				this.DeleteContainer("Format");
+				this.DeleteContainer("Grid");
+				this.DeleteContainer("Guides");
+				this.DeleteContainer("Print");
+				this.DeleteContainer("Misc");
+				this.windowSettings = null;
+			}
+
+			this.widgetsTable.Clear();
+		}
+
+		protected void DeleteContainer(string name)
+		{
+			Widget container = this.windowSettings.Root.FindChild(name);
+			if ( container != null )
+			{
+				Widget page = container.FindChild("Container");
+				if ( page != null )
+				{
+					page.Dispose();
+				}
+			}
+		}
+
 		// Ajoute un widget dans la table.
 		protected void WidgetsTableAdd(Widget widget, string option)
 		{
@@ -797,6 +862,7 @@ namespace Epsitec.Common.Document
 
 
 		protected Document						document;
+		protected Window						windowInfos;
 		protected Window						windowSettings;
 		protected Containers.Guides				containerGuides;
 		protected System.Collections.Hashtable	widgetsTable;

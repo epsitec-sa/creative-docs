@@ -1024,6 +1024,19 @@ namespace Epsitec.Common.Document.Objects
 			return this.properties.Contains(search);
 		}
 
+		// Indique si une impression complexe est nécessaire.
+		public bool IsComplexPrinting
+		{
+			get
+			{
+				foreach ( Properties.Abstract property in this.properties )
+				{
+					if ( property.IsComplexPrinting )  return true;
+				}
+				return false;
+			}
+		}
+
 		// Reprend toutes les propriétés d'un objet source.
 		public void PickerProperties(Objects.Abstract model)
 		{
@@ -1302,6 +1315,12 @@ namespace Epsitec.Common.Document.Objects
 		public virtual bool EditAfterCreation()
 		{
 			return false;
+		}
+
+
+		// Ajoute toutes les fontes utilisées par l'objet dans une liste.
+		public virtual void FillFontFaceList(System.Collections.ArrayList list)
+		{
 		}
 
 

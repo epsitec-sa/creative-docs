@@ -3512,7 +3512,9 @@ namespace Epsitec.Common.Widgets
 								Drawing.Image image = this.ResourceManager.GetImage(imageName);
 								if ( image == null )
 								{
-									throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
+									image = this.ResourceManager.GetImage("file:images/missing.icon");
+									System.Diagnostics.Debug.WriteLine (string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
+//-									throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
 								}
 							
 								buffer.Append(TextLayout.CodeObject);

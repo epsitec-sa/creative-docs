@@ -248,45 +248,49 @@ namespace Epsitec.Common.Printing
 		
 		public void ScaleTransform(double sx, double sy, double cx, double cy)
 		{
-			Drawing.Transform transform = new Drawing.Transform (this.transform);
+			Drawing.Transform current = new Drawing.Transform (this.transform);
+			Drawing.Transform scale   = Drawing.Transform.FromScale (sx, sy, cx, cy);
 			
-			transform.MultiplyBy (Drawing.Transform.FromScale (sx, sy, cx, cy));
+			scale.MultiplyBy (current);
 			
-			this.Transform = transform;
+			this.Transform = scale;
 		}
 		
 		public void RotateTransformDeg(double angle, double cx, double cy)
 		{
-			Drawing.Transform transform = new Drawing.Transform (this.transform);
+			Drawing.Transform current  = new Drawing.Transform (this.transform);
+			Drawing.Transform rotation = Drawing.Transform.FromRotationDeg (angle, cx, cy);
 			
-			transform.MultiplyBy (Drawing.Transform.FromRotationDeg (angle, cx, cy));
+			rotation.MultiplyBy (current);
 			
-			this.Transform = transform;
+			this.Transform = rotation;
 		}
 		
 		public void RotateTransformRad(double angle, double cx, double cy)
 		{
-			Drawing.Transform transform = new Drawing.Transform (this.transform);
+			Drawing.Transform current  = new Drawing.Transform (this.transform);
+			Drawing.Transform rotation = Drawing.Transform.FromRotationRad (angle, cx, cy);
 			
-			transform.MultiplyBy (Drawing.Transform.FromRotationRad (angle, cx, cy));
+			rotation.MultiplyBy (current);
 			
-			this.Transform = transform;
+			this.Transform = rotation;
 		}
 		
 		public void TranslateTransform(double ox, double oy)
 		{
-			Drawing.Transform transform = new Drawing.Transform (this.transform);
+			Drawing.Transform current     = new Drawing.Transform (this.transform);
+			Drawing.Transform translation = Drawing.Transform.FromTranslation (ox, oy);
 			
-			transform.MultiplyBy (Drawing.Transform.FromTranslation (ox, oy));
+			translation.MultiplyBy (current);
 			
-			this.Transform = transform;
+			this.Transform = translation;
 		}
 		
 		public void MergeTransform(Drawing.Transform transform)
 		{
-			Drawing.Transform current_transform = new Drawing.Transform (this.transform);
+			Drawing.Transform current = new Drawing.Transform (this.transform);
 			
-			transform.MultiplyBy (current_transform);
+			transform.MultiplyBy (current);
 			
 			this.Transform = transform;
 		}
@@ -294,7 +298,8 @@ namespace Epsitec.Common.Printing
 		
 		public void PaintOutline(Drawing.Path path)
 		{
-			if (path != null)
+			if ((path != null) &&
+				(this.line_width > 0))
 			{
 				this.UpdatePen ();
 				this.graphics.DrawPath (this.pen, path.CreateSystemPath ());
@@ -346,7 +351,9 @@ namespace Epsitec.Common.Printing
 			
 			double width = 0;
 			
-			if (os_font == null)
+			if ((os_font == null) ||
+				(graphics.Transform.Elements[1] != 0) ||
+				(graphics.Transform.Elements[2] != 0))
 			{
 				Drawing.Path path = new Drawing.Path ();
 				double       ox   = 0;

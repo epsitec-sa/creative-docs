@@ -35,6 +35,22 @@ namespace Epsitec.Common.Document.Settings
 				case "GuidesShow":
 					this.text = "Repères visibles";
 					break;
+
+				case "PrintDraft":
+					this.text = "Brouillon (pas de dégradé ni de transparence)";
+					break;
+
+				case "PrintAutoLandscape":
+					this.text = "Portrait/paysage automatique";
+					break;
+
+				case "PrintAutoZoom":
+					this.text = "Toujours forcer une impression pleine page";
+					break;
+
+				case "PrintAA":
+					this.text = "Anti-crénelage (pour imprimante couleur)";
+					break;
 			}
 		}
 
@@ -55,6 +71,18 @@ namespace Epsitec.Common.Document.Settings
 
 					case "GuidesShow":
 						return this.document.Modifier.ActiveViewer.DrawingContext.GuidesShow;
+
+					case "PrintDraft":
+						return this.document.Settings.PrintInfo.ForceSimply;
+
+					case "PrintAutoLandscape":
+						return this.document.Settings.PrintInfo.AutoLandscape;
+
+					case "PrintAutoZoom":
+						return this.document.Settings.PrintInfo.AutoZoom;
+
+					case "PrintAA":
+						return (this.document.Settings.PrintInfo.Gamma != 0.0);
 				}
 
 				return false;
@@ -78,6 +106,22 @@ namespace Epsitec.Common.Document.Settings
 
 					case "GuidesShow":
 						this.document.Modifier.ActiveViewer.DrawingContext.GuidesShow = value;
+						break;
+
+					case "PrintDraft":
+						this.document.Settings.PrintInfo.ForceSimply = value;
+						break;
+
+					case "PrintAutoLandscape":
+						this.document.Settings.PrintInfo.AutoLandscape = value;
+						break;
+
+					case "PrintAutoZoom":
+						this.document.Settings.PrintInfo.AutoZoom = value;
+						break;
+
+					case "PrintAA":
+						this.document.Settings.PrintInfo.Gamma = value ? 1.0 : 0.0;
 						break;
 				}
 			}

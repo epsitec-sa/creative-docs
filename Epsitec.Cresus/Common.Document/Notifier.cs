@@ -269,6 +269,7 @@ namespace Epsitec.Common.Document
 		// aura le temps.
 		protected void NotifyAsync()
 		{
+			if ( this.document.Modifier.ActiveViewer == null )  return;
 			Window window = this.document.Modifier.ActiveViewer.Window;
 			if ( window == null )  return;
 			window.AsyncNotify();

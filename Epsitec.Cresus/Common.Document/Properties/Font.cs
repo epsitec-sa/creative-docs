@@ -19,11 +19,11 @@ namespace Epsitec.Common.Document.Properties
 			this.fontName  = "Arial";
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
-				this.fontSize  = 1.0;
+				this.fontSize  = 2.0;
 			}
 			else
 			{
-				this.fontSize  = 50.0;  // 5mm
+				this.fontSize  = 12.0*Modifier.fontSizeScale;  // corps 12
 			}
 			this.fontColor = Drawing.Color.FromBrightness(0);
 		}
@@ -86,6 +86,16 @@ namespace Epsitec.Common.Document.Properties
 		public string GetListName()
 		{
 			return this.fontName;
+		}
+
+		// Indique si une impression complexe est nécessaire.
+		public override bool IsComplexPrinting
+		{
+			get
+			{
+				if ( this.fontColor.A < 1.0 )  return true;
+				return false;
+			}
 		}
 
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.

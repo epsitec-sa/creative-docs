@@ -54,7 +54,6 @@ namespace Epsitec.Common.Document
 			this.propertiesAuto = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
 			this.propertiesSel = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
 			this.propertiesStyle = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
-			this.printerName = "";
 
 			if ( this.mode == DocumentMode.Modify    ||
 				 this.mode == DocumentMode.Clipboard )
@@ -154,6 +153,13 @@ namespace Epsitec.Common.Document
 			get { return this.dialogs; }
 		}
 
+		// Imprimeur pour ce document.
+		public Printer Printer
+		{
+			get { return this.printer; }
+			set { this.printer = value; }
+		}
+
 
 		// Taille du document.
 		public Size Size
@@ -169,6 +175,11 @@ namespace Epsitec.Common.Document
 				{
 					this.size = value;
 					this.IsDirtySerialize = true;
+
+					if ( this.Modifier != null )
+					{
+						this.Modifier.ActiveViewer.DrawingContext.ZoomAndCenter();
+					}
 
 					if ( this.notifier != null )
 					{
@@ -214,24 +225,6 @@ namespace Epsitec.Common.Document
 					{
 						this.Notifier.NotifyDocumentChanged();
 					}
-				}
-			}
-		}
-
-		// Nom du pilote d'impression.
-		public string PrinterName
-		{
-			get
-			{
-				return this.printerName;
-			}
-
-			set
-			{
-				if ( this.printerName != value )
-				{
-					this.printerName = value;
-					this.IsDirtySerialize = true;
 				}
 			}
 		}
@@ -1124,7 +1117,6 @@ namespace Epsitec.Common.Document
 		protected Size							size;
 		protected Point							hotSpot;
 		protected string						filename;
-		protected string						printerName;
 		protected bool							isDirtySerialize;
 		protected UndoableList					objects;
 		protected UndoableList					propertiesAuto;

@@ -17,10 +17,17 @@ namespace Epsitec.Common.Document.Panels
 
 			this.fontName = new TextFieldCombo(this);
 			this.fontName.IsReadOnly = true;
-			this.fontName.Items.Add("Tahoma");
-			this.fontName.Items.Add("Arial");
-			this.fontName.Items.Add("Courier New");
-			this.fontName.Items.Add("Times New Roman");
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				this.fontName.Items.Add("Tahoma");
+				this.fontName.Items.Add("Arial");
+				this.fontName.Items.Add("Courier New");
+				this.fontName.Items.Add("Times New Roman");
+			}
+			else
+			{
+				Font.AddFontList(this.fontName);
+			}
 			//?this.fontName.SelectedIndexChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontName.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontName.TabIndex = 1;
@@ -28,21 +35,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.fontName, "Police du texte par défaut");
 
 			this.fontSize = new TextFieldReal(this);
-			this.document.Modifier.AdaptTextFieldRealScalar(this.fontSize);
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.fontSize.InternalMinValue =  0.1M;
-				this.fontSize.InternalMaxValue = 20.0M;
-				this.fontSize.Step = 0.1M;
-				this.fontSize.Resolution = 0.01M;
-			}
-			else
-			{
-				this.fontSize.InternalMinValue =  1.0M;
-				this.fontSize.InternalMaxValue = 200.0M;
-				this.fontSize.Step = 5.0M;
-				this.fontSize.Resolution = 0.1M;
-			}
+			this.document.Modifier.AdaptTextFieldRealFontSize(this.fontSize);
 			this.fontSize.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fontSize.TabIndex = 3;
 			this.fontSize.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -92,7 +85,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return ( this.isExtendedSize ? 80 : 30 );
+				return ( this.isExtendedSize ? 80 : 55 );
 			}
 		}
 
@@ -170,7 +163,11 @@ namespace Epsitec.Common.Document.Panels
 		// Modifie la couleur d'origine.
 		public override void OriginColorChange(Drawing.Color color)
 		{
-			this.fontColor.Color = color;
+			if ( this.fontColor.Color != color )
+			{
+				this.fontColor.Color = color;
+				this.OnChanged();
+			}
 		}
 
 		// Donne la couleur d'origine.
@@ -204,11 +201,9 @@ namespace Epsitec.Common.Document.Panels
 			r.Left = rect.Left;
 			r.Right = rect.Right-50;
 			this.labelSize.Bounds = r;
-			this.labelSize.SetVisible(this.isExtendedSize);
 			r.Left = rect.Right-50;
 			r.Right = rect.Right;
 			this.fontSize.Bounds = r;
-			this.fontSize.SetVisible(this.isExtendedSize);
 
 			r.Offset(0, -25);
 			r.Left = rect.Left;
@@ -232,6 +227,29 @@ namespace Epsitec.Common.Document.Panels
 		private void HandleColorClicked(object sender, MessageEventArgs e)
 		{
 			this.OnOriginColorChanged();
+		}
+
+
+		protected static void AddFontList(TextFieldCombo combo)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			int total = Drawing.Font.Count;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Drawing.Font f = Drawing.Font.GetFont(i);
+				//?string s = f.FaceName + " " + f.StyleName;
+				string s = f.FaceName;
+				if ( !list.Contains(s) )
+				{
+					list.Add(s);
+				}
+			}
+			list.Sort();
+
+			foreach ( string s in list )
+			{
+				combo.Items.Add(s);
+			}
 		}
 
 

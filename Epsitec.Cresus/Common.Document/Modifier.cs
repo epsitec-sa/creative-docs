@@ -286,6 +286,29 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Adapte un TextFieldReal pour éditer une taille de fonte.
+		public void AdaptTextFieldRealFontSize(TextFieldReal field)
+		{
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				field.UnitType = RealUnitType.Scalar;
+				field.Scale = 1.0M;
+				field.InternalMinValue = 0.1M;
+				field.InternalMaxValue = 50.0M;
+				field.Step = 1.0M;
+				field.Resolution = 0.1M;
+			}
+			else
+			{
+				field.UnitType = RealUnitType.DimensionMillimeter;
+				field.Scale = (decimal) Modifier.fontSizeScale;
+				field.InternalMinValue = 1.0M;
+				field.InternalMaxValue = (decimal) (200.0*Modifier.fontSizeScale);
+				field.Step = 1.0M;
+				field.Resolution = 0.1M;
+			}
+		}
+
 		// Adapte un TextFieldReal pour éditer un angle.
 		public void AdaptTextFieldRealAngle(TextFieldReal field)
 		{
@@ -296,7 +319,8 @@ namespace Epsitec.Common.Document
 			field.Resolution = 0.1M;
 		}
 
-		// 
+		// Modifie tous les widgets de l'application reflétant des dimensions
+		// pour utiliser une autre unité.
 		protected void AdaptAllTextFieldReal()
 		{
 			foreach ( Window window in Window.DebugAliveWindows )
@@ -408,7 +432,7 @@ namespace Epsitec.Common.Document
 			{
 				DrawingContext context = viewer.DrawingContext;
 				context.InternalPageLayer(0, 0);
-				context.ZoomAndOrigin(1, new Point(0,0));
+				context.ZoomAndCenter();
 			}
 
 			this.document.Settings.Reset();
@@ -522,21 +546,117 @@ namespace Epsitec.Common.Document
 
 		#region Statistic
 		// Retourne un texte multi-lignes de statistiques sur le document.
-		public string Statistic()
+		public string Statistic(bool fonts, bool images)
 		{
+			string t1 = "<font size=\"120%\"><b>";
+			string t2 = " :</b></font><br/><br/>";
 			string chip = "<list type=\"fix\" width=\"1.5\"/>";
-			string info1 = string.Format("{0}Nom complet: {1}<br/>", chip, this.document.Filename);
-			string info2 = string.Format("{0}Dimensions: {1}x{2}<br/>", chip, this.document.Size.Width/this.document.Modifier.RealScale, this.document.Size.Height/this.document.Modifier.RealScale);
-			string info3 = string.Format("{0}Nombre de pages: {1}<br/>", chip, this.StatisticTotalPages());
-			string info4 = string.Format("{0}Nombre de calques: {1}<br/>", chip, this.StatisticTotalLayers());
-			string info5 = string.Format("{0}Nombre d'objets: {1}<br/>", chip, this.StatisticTotalObjects());
-			
-			if ( this.document.Filename == "" )
+			string info;
+
+			System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+			if ( fonts || images )
 			{
-				info1 = "";
+				builder.Append(string.Format("{0}Résumé{1}", t1, t2));
 			}
 
-			return string.Format("{0}{1}{2}{3}{4}", info1, info2, info3, info4, info5);
+			info = string.Format("{0}Nom complet: {1}<br/>", chip, Misc.FullName(this.document.Filename, this.document.IsDirtySerialize));
+			builder.Append(info);
+			
+			info = string.Format("{0}Dimensions: {1}x{2}<br/>", chip, this.document.Size.Width/this.document.Modifier.RealScale, this.document.Size.Height/this.document.Modifier.RealScale);
+			builder.Append(info);
+			
+			info = string.Format("{0}Nombre de pages: {1}<br/>", chip, this.StatisticTotalPages());
+			builder.Append(info);
+			
+			info = string.Format("{0}Nombre de calques: {1}<br/>", chip, this.StatisticTotalLayers());
+			builder.Append(info);
+			
+			info = string.Format("{0}Nombre d'objets: {1}<br/>", chip, this.StatisticTotalObjects());
+			builder.Append(info);
+
+			info = string.Format("{0}Objets dégradés ou transparents: {1}<br/>", chip, this.StatisticTotalComplex());
+			builder.Append(info);
+
+			if ( fonts )
+			{
+				builder.Append(string.Format("<br/>{0}Polices utilisées{1}", t1, t2));
+				System.Collections.ArrayList list = this.StatisticFonts();
+				if ( list.Count == 0 )
+				{
+					info = string.Format("{0}{1}<br/>", chip, "<i>Aucune</i>");
+					builder.Append(info);
+				}
+				else
+				{
+					foreach ( string s in list )
+					{
+						info = string.Format("{0}{1}<br/>", chip, s);
+						builder.Append(info);
+					}
+				}
+			}
+
+			if ( images )
+			{
+				builder.Append(string.Format("<br/>{0}Images utilisées{1}", t1, t2));
+				System.Collections.ArrayList list = this.StatisticImages();
+				if ( list.Count == 0 )
+				{
+					info = string.Format("{0}{1}<br/>", chip, "<i>Aucune</i>");
+					builder.Append(info);
+				}
+				else
+				{
+					foreach ( string s in list )
+					{
+						info = string.Format("{0}{1}<br/>", chip, s);
+						builder.Append(info);
+					}
+				}
+			}
+
+			return builder.ToString();
+		}
+
+		// Construit la liste de toutes les fontes utilisées.
+		protected System.Collections.ArrayList StatisticFonts()
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			foreach ( Objects.Abstract obj in this.document.Deep(null) )
+			{
+				Properties.Font font = obj.PropertyTextFont;
+				if ( font != null )
+				{
+					if ( !list.Contains(font.FontName) )
+					{
+						list.Add(font.FontName);
+					}
+				}
+
+				obj.FillFontFaceList(list);
+			}
+			list.Sort();
+			return list;
+		}
+
+		// Construit la liste de toutes les images utilisées.
+		protected System.Collections.ArrayList StatisticImages()
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
+			foreach ( Objects.Abstract obj in this.document.Deep(null) )
+			{
+				Properties.Image image = obj.PropertyImage;
+				if ( image != null )
+				{
+					if ( !list.Contains(image.Filename) )
+					{
+						list.Add(image.Filename);
+					}
+				}
+			}
+			list.Sort();
+			return list;
 		}
 
 		// Retourne le nombre total de pages.
@@ -567,6 +687,17 @@ namespace Epsitec.Common.Document
 				if ( obj is Objects.Layer )  continue;
 				if ( obj is Objects.Group )  continue;
 				total ++;
+			}
+			return total;
+		}
+
+		// Retourne le nombre total d'objets complexes (dégradés ou transparents).
+		public int StatisticTotalComplex()
+		{
+			int total = 0;
+			foreach ( Objects.Abstract obj in this.document.Deep(null) )
+			{
+				if ( obj.IsComplexPrinting )  total ++;
 			}
 			return total;
 		}
@@ -1915,11 +2046,7 @@ namespace Epsitec.Common.Document
 		public void ZoomChange(double factor)
 		{
 			DrawingContext context = this.ActiveViewer.DrawingContext;
-
-			Point center = new Point();
-			center.X = -context.OriginX+(this.document.Size.Width/context.Zoom)/2;
-			center.Y = -context.OriginY+(this.document.Size.Height/context.Zoom)/2;
-			this.ZoomChange(factor, center);
+			this.ZoomChange(factor, context.Center);
 		}
 
 		// Change le zoom d'un certain facteur, avec centrage quelconque.
@@ -1933,10 +2060,7 @@ namespace Epsitec.Common.Document
 			if ( newZoom == context.Zoom )  return;
 
 			this.ZoomMemorize();
-			Point origin = new Point();
-			origin.X = center.X-(this.document.Size.Width/newZoom)/2;
-			origin.Y = center.Y-(this.document.Size.Height/newZoom)/2;
-			context.ZoomAndOrigin(newZoom, -origin);
+			context.ZoomAndCenter(newZoom, center);
 		}
 
 		// Retourne le nombre de zoom mémorisés.
@@ -1952,8 +2076,7 @@ namespace Epsitec.Common.Document
 
 			ZoomHistory.ZoomElement item = new ZoomHistory.ZoomElement();
 			item.Zoom = context.Zoom;
-			item.Ox   = context.OriginX;
-			item.Oy   = context.OriginY;
+			item.Center = context.Center;
 			this.zoomHistory.Add(item);
 		}
 
@@ -1964,7 +2087,7 @@ namespace Epsitec.Common.Document
 
 			ZoomHistory.ZoomElement item = this.zoomHistory.Remove();
 			if ( item == null )  return;
-			context.ZoomAndOrigin(item.Zoom, item.Ox, item.Oy);
+			context.ZoomAndCenter(item.Zoom, item.Center);
 		}
 
 		// Retourne le zoom minimal.
@@ -1983,7 +2106,14 @@ namespace Epsitec.Common.Document
 		{
 			get
 			{
-				return 8.0;
+				if ( this.document.Type == DocumentType.Pictogram )
+				{
+					return 8.0;  // 800%
+				}
+				else
+				{
+					return 32.0;  // 3200%
+				}
 			}
 		}
 		#endregion
@@ -2532,5 +2662,7 @@ namespace Epsitec.Common.Document
 		protected RealUnitType					realUnitDimension;
 		protected double						realScale;
 		protected Point							duplicateMove;
+
+		public static readonly double			fontSizeScale = 3.5;  // empyrique !
 	}
 }

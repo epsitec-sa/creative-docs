@@ -1,6 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
-//	Statut : en chantier
 
 namespace Epsitec.Common.Support
 {
@@ -298,6 +297,12 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public static ReadData CreateReadDataFromIDataObject(IDataObject data)
+		{
+			return new ReadData (data);
+		}
+		
+		
 		#region ReadData class
 		public class ReadData
 		{
@@ -332,6 +337,11 @@ namespace Epsitec.Common.Support
 			public string ReadAsString(string format)
 			{
 				return this.Read (format) as string;
+			}
+			
+			public string[] ReadAsStringArray(string format)
+			{
+				return this.Read (format) as string[];
 			}
 			
 			public string ReadText()

@@ -576,6 +576,19 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public bool								IsValidDropTarget
+		{
+			get
+			{
+				return this.window.AllowDrop;
+			}
+			set
+			{
+				this.window.AllowDrop = value;
+			}
+		}
+		
+		
 		public static bool						IsApplicationActive
 		{
 			get { return Platform.Window.IsApplicationActive; }
@@ -1008,6 +1021,31 @@ namespace Epsitec.Common.Widgets
 				this.focused_widget.SimulateDefocused ();
 			}
 		}
+		
+		internal void OnWindowDragEntered(WindowDragEventArgs e)
+		{
+			if (this.WindowDragEntered != null)
+			{
+				this.WindowDragEntered (this, e);
+			}
+		}
+		
+		internal void OnWindowDragLeft()
+		{
+			if (this.WindowDragLeft != null)
+			{
+				this.WindowDragLeft (this);
+			}
+		}
+		
+		internal void OnWindowDragDropped(WindowDragEventArgs e)
+		{
+			if (this.WindowDragDropped != null)
+			{
+				this.WindowDragDropped (this, e);
+			}
+		}
+		
 		
 		internal bool FilterMessage(Message message)
 		{
@@ -1527,8 +1565,8 @@ namespace Epsitec.Common.Widgets
 
 		protected void HandleRootMinSizeChanged(object sender)
 		{
-			int width  = (int) (this.root.MinSize.Width + 0.5);
-			int height = (int) (this.root.MinSize.Height + 0.5);
+			int width  = (int) (this.root.RealMinSize.Width + 0.5);
+			int height = (int) (this.root.RealMinSize.Height + 0.5);
 			
 			width  += this.window.Size.Width  - this.window.ClientSize.Width;
 			height += this.window.Size.Height - this.window.ClientSize.Height;
@@ -1582,6 +1620,10 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				WindowDisposed;
 		
 		public event EventHandler				FocusedWidgetChanged;
+		
+		public event WindowDragEventHandler		WindowDragEntered;
+		public event EventHandler				WindowDragLeft;
+		public event WindowDragEventHandler		WindowDragDropped;
 		
 		public static event MessageHandler		MessageFilter;
 		public static event EventHandler		ApplicationActivated;

@@ -49,9 +49,19 @@ namespace Epsitec.Common.Document.Properties
 			this.horizontal  = JustifHorizontal.Left;
 			this.vertical    = JustifVertical.Top;
 			this.orientation = JustifOrientation.LeftToRight;
-			this.marginH     = 0.2;
-			this.marginV     = 0.1;
-			this.offsetV     = 0.0;
+			
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				this.marginH = 0.2;
+				this.marginV = 0.1;
+				this.offsetV = 0.0;
+			}
+			else
+			{
+				this.marginH = 10.0;
+				this.marginV = 10.0;
+				this.offsetV = 0.0;
+			}
 		}
 
 		public JustifHorizontal Horizontal

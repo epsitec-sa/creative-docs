@@ -7,6 +7,48 @@ namespace Epsitec.Common.Document
 	/// </summary>
 	public class Misc
 	{
+		// Donne le nom complet du fichier.
+		// Si le nom n'existe pas, donne "sans titre".
+		// Si le fichier doit être sérialisé, donne le nom en gras.
+		static public string FullName(string filename, bool dirtySerialize)
+		{
+			string name = "";
+			if ( dirtySerialize )  name += "<b>";
+
+			if ( filename == "" )
+			{
+				name += "<i>sans titre</i>";
+			}
+			else
+			{
+				name += filename;
+			}
+
+			if ( dirtySerialize )  name += "</b>";
+			return name;
+		}
+
+		// Extrait le nom de fichier, en ignorant les noms de dossiers et l'extension.
+		// Si le nom n'existe pas, donne "sans titre".
+		// Si le fichier doit être sérialisé, donne le nom en gras.
+		static public string ExtractName(string filename, bool dirtySerialize)
+		{
+			string name = "";
+			if ( dirtySerialize )  name += "<b>";
+
+			if ( filename == "" )
+			{
+				name += "<i>sans titre</i>";
+			}
+			else
+			{
+				name += ExtractName(filename);
+			}
+
+			if ( dirtySerialize )  name += "</b>";
+			return name;
+		}
+
 		// Extrait le nom de fichier, en ignorant les noms de dossiers et l'extension.
 		// "c:\rep\abc.txt" devient "abc".
 		static public string ExtractName(string filename)

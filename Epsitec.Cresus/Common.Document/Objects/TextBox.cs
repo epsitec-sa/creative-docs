@@ -15,7 +15,11 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( this.document == null )  return;  // objet factice ?
 			this.CreateProperties(model, false);
+			this.Initialise();
+		}
 
+		protected void Initialise()
+		{
 			this.textLayout = new TextLayout();
 			this.textNavigator = new TextNavigator(this.textLayout);
 			this.textLayout.BreakMode = TextBreakMode.Hyphenate;
@@ -207,6 +211,11 @@ namespace Epsitec.Common.Document.Objects
 			return true;
 		}
 
+		// Ajoute toutes les fontes utilisées par l'objet dans une liste.
+		public override void FillFontFaceList(System.Collections.ArrayList list)
+		{
+			this.textLayout.FillFontFaceList(list);
+		}
 
 		// Indique si un objet est éditable.
 		public override bool IsEditable
@@ -501,11 +510,14 @@ namespace Epsitec.Common.Document.Objects
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			base.GetObjectData(info, context);
+			info.AddValue("Text", this.textLayout.Text);
 		}
 
 		// Constructeur qui désérialise l'objet.
 		protected TextBox(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
+			this.Initialise();
+			this.textLayout.Text = info.GetString("Text");
 		}
 		#endregion
 

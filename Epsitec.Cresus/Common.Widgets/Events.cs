@@ -1,3 +1,6 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
 	using Epsitec.Common.Drawing;
@@ -6,6 +9,7 @@ namespace Epsitec.Common.Widgets
 	public delegate void MessageEventHandler(object sender, MessageEventArgs e);
 	public delegate void DragEventHandler(object sender, DragEventArgs e);
 	public delegate void SelectionEventHandler(object sender, object o);
+	public delegate void WindowDragEventHandler(object sender, WindowDragEventArgs e);
 	
 	
 	/// <summary>
@@ -21,17 +25,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Graphics						Graphics
+		public Graphics							Graphics
 		{
 			get { return this.graphics; }
 		}
 		
-		public Drawing.Rectangle			ClipRectangle
+		public Drawing.Rectangle				ClipRectangle
 		{
 			get { return this.clip_rect; }
 		}
 		
-		public bool							Suppress
+		public bool								Suppress
 		{
 			get { return this.suppress; }
 			set { this.suppress = value; }
@@ -63,9 +67,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private Graphics					graphics;
-		private Drawing.Rectangle			clip_rect;
-		private bool						suppress;
+		private Graphics						graphics;
+		private Drawing.Rectangle				clip_rect;
+		private bool							suppress;
 	}
 	
 	
@@ -81,26 +85,26 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Message						Message
+		public Message							Message
 		{
 			get { return this.message; }
 		}
 		
-		public Drawing.Point				Point
+		public Drawing.Point					Point
 		{
 			get { return this.point; }
 		}
 		
-		public bool							Suppress
+		public bool								Suppress
 		{
 			get { return this.suppress; }
 			set { this.suppress = value; }
 		}
 		
 		
-		private Message						message;
-		private Drawing.Point				point;
-		private bool						suppress;
+		private Message							message;
+		private Drawing.Point					point;
+		private bool							suppress;
 	}
 	
 	/// <summary>
@@ -117,30 +121,76 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Drawing.Point				FromPoint
+		public Drawing.Point					FromPoint
 		{
 			get { return this.p1; }
 		}
 		
-		public Drawing.Point				ToPoint
+		public Drawing.Point					ToPoint
 		{
 			get { return this.p2; }
 		}
 		
-		public Drawing.Point				Offset
+		public Drawing.Point					Offset
 		{
 			get { return this.offset; }
 			set { this.offset = value; }
 		}
 		
-		public Drawing.Point				InitialOffset
+		public Drawing.Point					InitialOffset
 		{
 			get { return this.p2 - this.p1; }
 		}
 		
 		
-		private Drawing.Point				p1;
-		private Drawing.Point				p2;
-		private Drawing.Point				offset;
+		private Drawing.Point					p1;
+		private Drawing.Point					p2;
+		private Drawing.Point					offset;
+	}
+	
+	
+	/// <summary>
+	/// Summary description for WindowDragEventArgs.
+	/// </summary>
+	public sealed class WindowDragEventArgs : Support.EventArgs
+	{
+		internal WindowDragEventArgs(System.EventArgs args)
+		{
+			this.original = args as System.Windows.Forms.DragEventArgs;
+		}
+		
+		
+		public Support.Clipboard.ReadData		Data
+		{
+			get
+			{
+				return Support.Clipboard.CreateReadDataFromIDataObject (this.original.Data);
+			}
+		}
+		
+		public bool								AcceptDrop
+		{
+			get
+			{
+				return (this.original.Effect & System.Windows.Forms.DragDropEffects.Copy) != 0;
+			}
+			set
+			{
+				if (this.AcceptDrop != value)
+				{
+					if (value)
+					{
+						this.original.Effect = System.Windows.Forms.DragDropEffects.Copy;
+					}
+					else
+					{
+						this.original.Effect = System.Windows.Forms.DragDropEffects.None;
+					}
+				}
+			}
+		}
+		
+		
+		System.Windows.Forms.DragEventArgs		original;
 	}
 }

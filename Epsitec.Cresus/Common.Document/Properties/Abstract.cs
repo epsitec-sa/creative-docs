@@ -309,6 +309,15 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		// Indique si une impression complexe est nécessaire.
+		public virtual bool IsComplexPrinting
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 
 		// Indique si un changement de cette propriété modifie la bbox de l'objet.
 		public virtual bool AlterBoundingBox

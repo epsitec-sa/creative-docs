@@ -907,6 +907,38 @@ namespace Epsitec.Common.Widgets.Platform
 				this.widget_window.OnWindowHidden ();
 			}
 		}
+		
+		
+		protected override void OnDragEnter(System.Windows.Forms.DragEventArgs drgevent)
+		{
+			base.OnDragEnter (drgevent);
+			
+			if (this.widget_window != null)
+			{
+				this.widget_window.OnWindowDragEntered (new WindowDragEventArgs (drgevent));
+			}
+		}
+		
+		protected override void OnDragLeave(System.EventArgs e)
+		{
+			base.OnDragLeave (e);
+			
+			if (this.widget_window != null)
+			{
+				this.widget_window.OnWindowDragLeft ();
+			}
+		}
+		
+		protected override void OnDragDrop(System.Windows.Forms.DragEventArgs drgevent)
+		{
+			base.OnDragDrop (drgevent);
+			
+			if (this.widget_window != null)
+			{
+				this.widget_window.OnWindowDragDropped (new WindowDragEventArgs (drgevent));
+			}
+		}
+		
 
 		
 		protected void ReallocatePixmap()

@@ -99,6 +99,32 @@ namespace Epsitec.Common.Drawing
 		
 		static int last_font_chunk = 0;
 
+		[Test] public void CheckFaces()
+		{
+			Font.FaceInfo[] faces = Font.Faces;
+			System.Console.Out.WriteLine ("{0} font faces found.", faces.Length);
+			
+			for (int i = 0; i < faces.Length; i++)
+			{
+				string   face   = faces[i].Name;
+				string[] styles = faces[i].StyleNames;
+				
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				Font font_regular     = faces[i].GetFont (false, false, 12.0);
+				Font font_italic      = faces[i].GetFont (false, true, 12.0);
+				Font font_bold        = faces[i].GetFont (true, false, 12.0);
+				Font font_bold_italic = faces[i].GetFont (true, true, 12.0);
+				
+				if (font_regular != null     && font_regular.IsSynthetic)		buffer.Append ("* regular ");
+				if (font_italic != null      && font_italic.IsSynthetic)		buffer.Append ("* italic ");
+				if (font_bold != null        && font_bold.IsSynthetic)			buffer.Append ("* bold ");
+				if (font_bold_italic != null && font_bold_italic.IsSynthetic)	buffer.Append ("* bold italic ");
+				
+				System.Console.WriteLine ("{0}: {1} {2}", face, string.Join (", ", styles), buffer.ToString ());
+			}
+		}
+		
 		[Test] public void CheckSyntheticFont()
 		{
 			Font font = Font.GetFont ("Tahoma", "Italic");

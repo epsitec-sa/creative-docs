@@ -30,7 +30,14 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				this.tabButton.Text = value;
+				if ( this.tabButton.Text != value )
+				{
+					this.tabButton.Text = value;
+					if ( this.Book != null )
+					{
+						this.Book.UpdateButtons();
+					}
+				}
 			}
 		}
 

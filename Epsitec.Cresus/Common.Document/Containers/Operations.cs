@@ -142,7 +142,7 @@ namespace Epsitec.Common.Document.Containers
 			// Zoom.
 			this.boxZoom = new GroupBox(this);
 			this.boxZoom.Height = 45;
-			this.boxZoom.Text = "Agrandissements et réductions";
+			this.boxZoom.Text = "Réductions et agrandissements";
 			this.boxZoom.Dock = DockStyle.Top;
 			this.boxZoom.DockMargins = new Margins(0, 0, 0, 10);
 
@@ -150,15 +150,15 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBarZoom.Dock = DockStyle.Top;
 			this.toolBarZoom.DockMargins = new Margins(0, 0, 0, 10);
 
-			this.buttonZoomMul2 = new IconButton(@"file:images/operzoommul2.icon");
-			this.buttonZoomMul2.Clicked += new MessageEventHandler(this.HandleButtonZoomMul2);
-			ToolTip.Default.SetToolTip(this.buttonZoomMul2, "Zoom x2");
-			this.toolBarZoom.Items.Add(this.buttonZoomMul2);
-
 			this.buttonZoomDiv2 = new IconButton(@"file:images/operzoomdiv2.icon");
 			this.buttonZoomDiv2.Clicked += new MessageEventHandler(this.HandleButtonZoomDiv2);
-			ToolTip.Default.SetToolTip(this.buttonZoomDiv2, "Zoom /2");
+			ToolTip.Default.SetToolTip(this.buttonZoomDiv2, "Réduction /2");
 			this.toolBarZoom.Items.Add(this.buttonZoomDiv2);
+
+			this.buttonZoomMul2 = new IconButton(@"file:images/operzoommul2.icon");
+			this.buttonZoomMul2.Clicked += new MessageEventHandler(this.HandleButtonZoomMul2);
+			ToolTip.Default.SetToolTip(this.buttonZoomMul2, "Agrandissement x2");
+			this.toolBarZoom.Items.Add(this.buttonZoomMul2);
 
 			this.toolBarZoom.Items.Add(new IconSeparator());
 
@@ -173,15 +173,15 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.fieldZoom, "Facteur d'agrandissement/réduction");
 			this.toolBarZoom.Items.Add(this.fieldZoom);
 
-			this.buttonZoom = new IconButton(@"file:images/operzoom.icon");
-			this.buttonZoom.Clicked += new MessageEventHandler(this.HandleButtonZoom);
-			ToolTip.Default.SetToolTip(this.buttonZoom, "Agrandissement");
-			this.toolBarZoom.Items.Add(this.buttonZoom);
-
 			this.buttonZoomi = new IconButton(@"file:images/operzoomi.icon");
 			this.buttonZoomi.Clicked += new MessageEventHandler(this.HandleButtonZoomi);
 			ToolTip.Default.SetToolTip(this.buttonZoomi, "Réduction");
 			this.toolBarZoom.Items.Add(this.buttonZoomi);
+
+			this.buttonZoom = new IconButton(@"file:images/operzoom.icon");
+			this.buttonZoom.Clicked += new MessageEventHandler(this.HandleButtonZoom);
+			ToolTip.Default.SetToolTip(this.buttonZoom, "Agrandissement");
+			this.toolBarZoom.Items.Add(this.buttonZoom);
 		}
 		
 
@@ -320,10 +320,10 @@ namespace Epsitec.Common.Document.Containers
 		
 		protected GroupBox				boxZoom;
 		protected HToolBar				toolBarZoom;
-		protected IconButton			buttonZoomMul2;
 		protected IconButton			buttonZoomDiv2;
+		protected IconButton			buttonZoomMul2;
 		protected TextFieldReal			fieldZoom;
-		protected IconButton			buttonZoom;
 		protected IconButton			buttonZoomi;
+		protected IconButton			buttonZoom;
 	}
 }

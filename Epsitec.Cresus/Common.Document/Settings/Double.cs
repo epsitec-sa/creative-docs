@@ -18,17 +18,39 @@ namespace Epsitec.Common.Document.Settings
 
 		protected void Initialise()
 		{
+			switch ( this.name )
+			{
+				case "PrintDpi":
+					this.text = "Résolution";
+					this.integer = true;
+					this.factorMinValue = 150.0;
+					this.factorMaxValue = 600.0;
+					this.factorStep = 50.0;
+					break;
+			}
 		}
 
 		public double Value
 		{
 			get
 			{
+				switch ( this.name )
+				{
+					case "PrintDpi":
+						return this.document.Settings.PrintInfo.Dpi;
+				}
+
 				return 0.0;
 			}
 
 			set
 			{
+				switch ( this.name )
+				{
+					case "PrintDpi":
+						this.document.Settings.PrintInfo.Dpi = value;
+						break;
+				}
 			}
 		}
 
@@ -56,6 +78,14 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
+		public bool Integer
+		{
+			get
+			{
+				return this.integer;
+			}
+		}
+
 
 		#region Serialization
 		// Sérialise le réglage.
@@ -74,9 +104,9 @@ namespace Epsitec.Common.Document.Settings
 		#endregion
 
 
-		protected double			factorMinValue;
-		protected double			factorMaxValue;
-		protected double			factorStep;
-		protected double			resolution;
+		protected double			factorMinValue = -1.0;
+		protected double			factorMaxValue = 1.0;
+		protected double			factorStep = 1.0;
+		protected bool				integer = false;
 	}
 }

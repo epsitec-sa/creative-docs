@@ -462,7 +462,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected void UpdateButtons()
+		public void UpdateButtons()
 		{
 			// Met à jour les boutons, en faisant disparaître les flèches si nécessaire.
 			this.UpdateTabButtons();

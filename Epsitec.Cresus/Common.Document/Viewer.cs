@@ -720,6 +720,7 @@ namespace Epsitec.Common.Document
 		protected void ZoomMouseDown(Point mouse)
 		{
 			this.document.Modifier.OpletQueueEnable = false;
+			this.moveStart = mouse;
 			this.zoomer.FixStarting(mouse);
 		}
 		
@@ -744,7 +745,15 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				this.document.Modifier.ZoomChange(rect.BottomLeft, rect.TopRight);
+				double len = Point.Distance(mouse, this.moveStart);
+				if ( len <= this.drawingContext.MinimalSize )
+				{
+					this.document.Modifier.ZoomChange(2.0, rect.Center);
+				}
+				else
+				{
+					this.document.Modifier.ZoomChange(rect.BottomLeft, rect.TopRight);
+				}
 			}
 
 			this.document.Modifier.OpletQueueEnable = true;
@@ -1290,8 +1299,11 @@ namespace Epsitec.Common.Document
 		
 		protected override void UpdateClientGeometry()
 		{
+			if ( this.drawingContext == null )  return;
+			Point center = this.drawingContext.Center;
 			base.UpdateClientGeometry();
-			//?this.UpdateRulerGeometry();
+			this.UpdateRulerGeometry();
+			this.drawingContext.ZoomAndCenter(this.drawingContext.Zoom, center);
 		}
 
 
@@ -1427,6 +1439,7 @@ namespace Epsitec.Common.Document
 			{
 				if ( this.document.Type == DocumentType.Graphic )
 				{
+					// Dessine la "page".
 					Rectangle rect = new Rectangle(0, 0, this.document.Size.Width, this.document.Size.Height);
 					graphics.Align(ref rect);
 					rect.Offset(ix, iy);
@@ -1448,6 +1461,8 @@ namespace Epsitec.Common.Document
 		// Dessine la grille magnétique dessus.
 		protected void DrawGridForeground(Graphics graphics)
 		{
+			if ( this.drawingContext.PreviewActive )  return;
+
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/this.drawingContext.ScaleX;
 
@@ -1634,19 +1649,13 @@ namespace Epsitec.Common.Document
 			graphics.TranslateTransform(this.drawingContext.OriginX, this.drawingContext.OriginY);
 
 			// Dessine la grille magnétique dessous.
-			if ( !this.drawingContext.PreviewActive )
-			{
-				this.DrawGridBackground(graphics);
-			}
+			this.DrawGridBackground(graphics);
 
 			// Dessine les géométries.
 			this.document.Paint(graphics, this.drawingContext, clipRect);
 
 			// Dessine la grille magnétique dessus.
-			if ( !this.drawingContext.PreviewActive )
-			{
-				this.DrawGridForeground(graphics);
-			}
+			this.DrawGridForeground(graphics);
 
 			// Dessine les poignées.
 			if ( this.IsActiveViewer )

@@ -25,36 +25,29 @@ namespace Epsitec.App.DocumentEditor
 			this.type = type;
 			this.useArray = false;
 
+			this.CreateLayout();
+			this.InitCommands();
+
 			this.clipboard = new Document(this.type, DocumentMode.Clipboard);
 			this.clipboard.Name = "Clipboard";
 
-			this.document = new Document(this.type, DocumentMode.Modify);
-			this.document.Name = "Document";
-			this.document.Clipboard = this.clipboard;
-
-			this.CreateLayout();
-			this.InitCommands();
-			this.ConnectEvents();
-			this.document.Modifier.New();
+			this.documents = new System.Collections.ArrayList();
+			this.currentDocument = -1;
+			this.CreateDocument();
 
 			string[] args = System.Environment.GetCommandLineArgs();
 			if ( args.Length >= 2 )
 			{
-				string err = this.document.Read(args[1]);
+				string err = this.CurrentDocument.Read(args[1]);
 				this.DialogError(this.commandDispatcher, err);
 			}
 
-			this.document.Notifier.NotifyAllChanged();
-			this.document.Notifier.GenerateEvents();
+			this.CurrentDocument.Notifier.NotifyAllChanged();
+			this.CurrentDocument.Notifier.GenerateEvents();
 		}
 
 		protected override void Dispose(bool disposing)
 		{
-			if ( disposing )
-			{
-				this.allWidgets = false;
-			}
-			
 			base.Dispose(disposing);
 		}
 
@@ -71,7 +64,6 @@ namespace Epsitec.App.DocumentEditor
 				{
 					// On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
 					this.commandDispatcher = new Common.Support.CommandDispatcher("DocumentEditor");
-					this.commandDispatcher.CommandDispatched += new EventHandler(this.HandleCommandDispatched);
 					this.commandDispatcher.RegisterController(this);
 				}
 				
@@ -79,14 +71,10 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
-		private void HandleCommandDispatched(object sender)
-		{
-			//?this.document.Notifier.GenerateEvents();
-		}
-
 		public void AsyncNotify()
 		{
-			this.document.Notifier.GenerateEvents();
+			if ( this.currentDocument < 0 )  return;
+			this.CurrentDocument.Notifier.GenerateEvents();
 		}
 
 
@@ -119,6 +107,8 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(fileMenu, @"file:images/open.icon", "Open", "Ouvrir...", "Ctrl+O");
 			this.MenuAdd(fileMenu, @"file:images/save.icon", "Save", "Enregistrer", "Ctrl+S");
 			this.MenuAdd(fileMenu, @"file:images/saveas.icon", "SaveAs", "Enregistrer sous...", "");
+			this.MenuAdd(fileMenu, @"", "Close", "Fermer", "");
+			this.MenuAdd(fileMenu, @"", "CloseAll", "Fermer tout", "");
 			this.MenuAdd(fileMenu, @"", "", "", "");
 			this.MenuAdd(fileMenu, @"file:images/print.icon", "Print", "Imprimer...", "Ctrl+P");
 			this.MenuAdd(fileMenu, @"", "", "", "");
@@ -173,8 +163,8 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(operMenu, @"", "MirrorH", "Miroir horizontal", "");
 			this.MenuAdd(operMenu, @"", "MirrorV", "Miroir vertical", "");
 			this.MenuAdd(operMenu, @"", "", "", "");
-			this.MenuAdd(operMenu, @"", "ZoomMul2", "Zoom x2", "");
-			this.MenuAdd(operMenu, @"", "ZoomDiv2", "Zoom /2", "");
+			this.MenuAdd(operMenu, @"", "ZoomDiv2", "Réduction /2", "");
+			this.MenuAdd(operMenu, @"", "ZoomMul2", "Agrandissement x2", "");
 			operMenu.AdjustSize();
 			objMenu.Items[14].Submenu = operMenu;
 
@@ -195,7 +185,6 @@ namespace Epsitec.App.DocumentEditor
 			showMenu.Host = this;
 			this.MenuAdd(showMenu, @"file:images/preview.icon", "Preview", "Aperçu avant impression", "");
 			this.MenuAdd(showMenu, @"file:images/grid.icon", "Grid", "Grille magnétique", "");
-			this.MenuAdd(showMenu, @"file:images/mode.icon", "Mode", "Tableau des objets", "");
 			this.MenuAdd(showMenu, @"", "", "", "");
 			this.MenuAdd(showMenu, @"file:images/zoommenu.icon", "", "Zoom", "");
 			this.MenuAdd(showMenu, @"", "", "", "");
@@ -214,7 +203,7 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(zoomMenu, @"file:images/zoomsub.icon", "ZoomSub", "Réduction", "");
 			this.MenuAdd(zoomMenu, @"file:images/zoomadd.icon", "ZoomAdd", "Agrandissement", "");
 			zoomMenu.AdjustSize();
-			showMenu.Items[4].Submenu = zoomMenu;
+			showMenu.Items[3].Submenu = zoomMenu;
 
 			VMenu lookMenu = new VMenu();
 			lookMenu.Name = "Look";
@@ -225,7 +214,7 @@ namespace Epsitec.App.DocumentEditor
 				this.MenuAdd(lookMenu, @"y/n", "SelectLook(this.Name)", name, "", name);
 			}
 			lookMenu.AdjustSize();
-			showMenu.Items[6].Submenu = lookMenu;
+			showMenu.Items[5].Submenu = lookMenu;
 
 			if ( this.useArray )
 			{
@@ -278,6 +267,7 @@ namespace Epsitec.App.DocumentEditor
 			docMenu.Name = "Document";
 			docMenu.Host = this;
 			this.MenuAdd(docMenu, @"file:images/settings.icon", "Settings", "Réglages...", "");
+			this.MenuAdd(docMenu, @"file:images/infos.icon", "Infos", "Informations...", "");
 			this.MenuAdd(docMenu, @"", "", "", "");
 			this.MenuAdd(docMenu, @"file:images/pagenew.icon", "PageCreate", "Nouvelle page", "");
 			this.MenuAdd(docMenu, @"file:images/delete.icon", "PageDelete", "Supprimer la page", "");
@@ -307,14 +297,12 @@ namespace Epsitec.App.DocumentEditor
 			VMenu helpMenu = new VMenu();
 			helpMenu.Name = "Help";
 			helpMenu.Host = this;
-			helpMenu.Items.Add(new MenuItem("help", "", "Aide", "F1"));
-			helpMenu.Items.Add(new MenuItem("ctxhelp", "", "Aide contextuelle", ""));
-			helpMenu.Items.Add(new MenuItem("about", "", "A propos de...", ""));
+			this.MenuAdd(helpMenu, @"", "AboutApplication", "A propos de...", "");
 			helpMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = helpMenu;
 
-			this.hToolBar = new HToolBar();
-			this.hToolBar.Parent = this;
+			this.hToolBar = new HToolBar(this);
+			this.hToolBar.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.HToolBarAdd(@"file:images/new.icon", "New", "Nouveau");
 			this.HToolBarAdd(@"file:images/open.icon", "Open", "Ouvrir");
 			this.HToolBarAdd(@"file:images/save.icon", "Save", "Enregistrer");
@@ -341,7 +329,8 @@ namespace Epsitec.App.DocumentEditor
 			this.HToolBarAdd("", "", "");
 			this.HToolBarAdd(@"file:images/preview.icon", "Preview", "Aperçu avant impression");
 			this.HToolBarAdd(@"file:images/grid.icon", "Grid", "Grille magnétique");
-			this.HToolBarAdd(@"file:images/mode.icon", "Mode", "Tableau des objets");
+			this.HToolBarAdd(@"file:images/settings.icon", "Settings", "Réglages...");
+			this.HToolBarAdd(@"file:images/infos.icon", "Infos", "Informations...");
 			this.HToolBarAdd("", "", "");
 			if ( this.useArray )
 			{
@@ -351,204 +340,9 @@ namespace Epsitec.App.DocumentEditor
 				this.HToolBarAdd("", "", "");
 			}
 
-			this.vToolBar = new VToolBar();
-			this.vToolBar.Parent = this;
-			this.VToolBarAdd(@"file:images/select.icon", "SelectTool(this.Name)", "Sélectionner", "Select");
-			this.VToolBarAdd(@"file:images/global.icon", "SelectTool(this.Name)", "Rectangle de sélection", "Global");
-			this.VToolBarAdd(@"file:images/edit.icon", "SelectTool(this.Name)", "Editer", "Edit");
-			this.VToolBarAdd(@"file:images/zoom.icon", "SelectTool(this.Name)", "Agrandir", "Zoom");
-			this.VToolBarAdd(@"file:images/hand.icon", "SelectTool(this.Name)", "Déplacer", "Hand");
-			this.VToolBarAdd(@"file:images/picker.icon", "SelectTool(this.Name)", "Pipette", "Picker");
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.VToolBarAdd(@"file:images/hotspot.icon", "SelectTool(this.Name)", "Point chaud", "HotSpot");
-			}
-			this.VToolBarAdd("", "", "");
-			this.VToolBarAdd(@"file:images/line.icon", "SelectTool(this.Name)", "Segment de ligne", "ObjectLine");
-			this.VToolBarAdd(@"file:images/rectangle.icon", "SelectTool(this.Name)", "Rectangle", "ObjectRectangle");
-			this.VToolBarAdd(@"file:images/circle.icon", "SelectTool(this.Name)", "Cercle", "ObjectCircle");
-			this.VToolBarAdd(@"file:images/ellipse.icon", "SelectTool(this.Name)", "Ellipse", "ObjectEllipse");
-			this.VToolBarAdd(@"file:images/regular.icon", "SelectTool(this.Name)", "Polygone régulier", "ObjectRegular");
-			this.VToolBarAdd(@"file:images/poly.icon", "SelectTool(this.Name)", "Polygone quelconque", "ObjectPoly");
-			this.VToolBarAdd(@"file:images/bezier.icon", "SelectTool(this.Name)", "Courbes de Bézier", "ObjectBezier");
-			this.VToolBarAdd(@"file:images/textline.icon", "SelectTool(this.Name)", "Ligne de texte", "ObjectTextLine");
-			this.VToolBarAdd(@"file:images/textbox.icon", "SelectTool(this.Name)", "Pavé de texte", "ObjectTextBox");
-			if ( this.useArray )
-			{
-				this.VToolBarAdd(@"file:images/array.icon", "SelectTool(this.Name)", "Tableau", "ObjectArray");
-			}
-			this.VToolBarAdd(@"file:images/image.icon", "SelectTool(this.Name)", "Image bitmap", "ObjectImage");
-			this.VToolBarAdd("", "", "");
-			
-			this.root = new Widget();
-			this.root.Parent = this;
-			
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.pane = new PaneBook();
-				this.pane.PaneBookStyle = PaneBookStyle.LeftRight;
-				this.pane.PaneBehaviour = PaneBookBehaviour.FollowMe;
-				this.pane.PaneSizeChanged += new EventHandler(this.HandlePaneSizeChanged);
-				this.pane.Parent = root;
-
-				this.leftPane = new PanePage();
-				this.leftPane.PaneRelativeSize = 10;
-				this.leftPane.PaneElasticity = 1;
-				this.leftPane.PaneMinSize = 100;
-				this.pane.Items.Add(this.leftPane);
-
-				this.rightPane = new PanePage();
-				this.rightPane.PaneAbsoluteSize = 40;
-				this.rightPane.PaneElasticity = 0;
-				this.rightPane.PaneMinSize = 40;
-				this.rightPane.PaneMaxSize = 200;
-				this.pane.Items.Add(this.rightPane);
-			}
-
-			this.book = new TabBook();
-			this.book.Arrows = TabBookArrows.Stretch;
-			this.book.Parent = this;
-
-			this.bookPrincipal = new TabPage();
-			this.bookPrincipal.TabTitle = "Attributs";
-			this.book.Items.Add(this.bookPrincipal);
-
-			this.bookStyles = new TabPage();
-			this.bookStyles.TabTitle = "Styles";
-			this.book.Items.Add(this.bookStyles);
-
-#if DEBUG
-			this.bookAutos = new TabPage();
-			this.bookAutos.TabTitle = "Auto";
-			this.book.Items.Add(this.bookAutos);
-#endif
-
-			this.bookPages = new TabPage();
-			this.bookPages.TabTitle = "Pages";
-			this.book.Items.Add(this.bookPages);
-
-			this.bookLayers = new TabPage();
-			this.bookLayers.TabTitle = "Calques";
-			this.book.Items.Add(this.bookLayers);
-
-			this.bookOper = new TabPage();
-			//?this.bookOper.TabTitle = "Opérations";
-			this.bookOper.TabTitle = "Op";
-			this.book.Items.Add(this.bookOper);
-
-			this.book.ActivePage = this.bookPrincipal;
-
-			this.containerPrincipal = new Containers.Principal(this.document);
-			this.containerPrincipal.Dock = DockStyle.Fill;
-			this.containerPrincipal.DockMargins = new Margins(4, 4, 10, 4);
-			this.containerPrincipal.Parent = this.bookPrincipal;
-			this.document.Modifier.AttachContainer(this.containerPrincipal);
-
-			this.containerStyles = new Containers.Styles(this.document);
-			this.containerStyles.Dock = DockStyle.Fill;
-			this.containerStyles.DockMargins = new Margins(4, 4, 10, 4);
-			this.containerStyles.Parent = this.bookStyles;
-			this.document.Modifier.AttachContainer(this.containerStyles);
-
-#if DEBUG
-			this.containerAutos = new Containers.Autos(this.document);
-			this.containerAutos.Dock = DockStyle.Fill;
-			this.containerAutos.DockMargins = new Margins(4, 4, 10, 4);
-			this.containerAutos.Parent = this.bookAutos;
-			this.document.Modifier.AttachContainer(this.containerAutos);
-#endif
-
-			this.containerPages = new Containers.Pages(this.document);
-			this.containerPages.Dock = DockStyle.Fill;
-			this.containerPages.DockMargins = new Margins(4, 4, 10, 4);
-			this.containerPages.Parent = this.bookPages;
-			this.document.Modifier.AttachContainer(this.containerPages);
-
-			this.containerLayers = new Containers.Layers(this.document);
-			this.containerLayers.Dock = DockStyle.Fill;
-			this.containerLayers.DockMargins = new Margins(4, 4, 10, 4);
-			this.containerLayers.Parent = this.bookLayers;
-			this.document.Modifier.AttachContainer(this.containerLayers);
-
-			this.containerOperations = new Containers.Operations(this.document);
-			this.containerOperations.Dock = DockStyle.Fill;
-			this.containerOperations.DockMargins = new Margins(4, 4, 10, 4);
-			this.containerOperations.Parent = this.bookOper;
-			this.document.Modifier.AttachContainer(this.containerOperations);
-
-			Widget mainViewParent;
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				mainViewParent = this.leftPane;
-				this.viewer = new Viewer(this.document);
-				this.viewer.Parent = mainViewParent;
-				this.document.Modifier.ActiveViewer = this.viewer;
-				this.document.Modifier.AttachViewer(this.viewer);
-
-				this.frame1 = new Viewer(this.document);
-				this.frame1.Parent = this.rightPane;
-				this.frame1.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
-				this.document.Modifier.AttachViewer(this.frame1);
-
-				this.frame2 = new Viewer(this.document);
-				this.frame2.Parent = this.rightPane;
-				this.frame2.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
-				this.document.Modifier.AttachViewer(this.frame2);
-			}
-			else
-			{
-				mainViewParent = root;
-				this.viewer = new Viewer(this.document);
-				this.viewer.Parent = mainViewParent;
-				this.document.Modifier.ActiveViewer = this.viewer;
-				this.document.Modifier.AttachViewer(this.viewer);
-			}
-
-			this.quickPagePrev = new GlyphButton("PagePrev");
-			this.quickPagePrev.GlyphShape = GlyphShape.ArrowLeft;
-			this.quickPagePrev.Parent = mainViewParent;
-			ToolTip.Default.SetToolTip(this.quickPagePrev, "Page précédente");
-
-			this.quickPageMenu = new Button();
-			this.quickPageMenu.Command = "PageMenu";
-			//?this.quickPageMenu.Text = "1";
-			this.quickPageMenu.Clicked += new MessageEventHandler(this.HandleQuickPageMenu);
-			this.quickPageMenu.Parent = mainViewParent;
-			ToolTip.Default.SetToolTip(this.quickPageMenu, "Choix d'une page");
-
-			this.quickPageNext = new GlyphButton("PageNext");
-			this.quickPageNext.GlyphShape = GlyphShape.ArrowRight;
-			this.quickPageNext.Parent = mainViewParent;
-			ToolTip.Default.SetToolTip(this.quickPageNext, "Page suivante");
-
-			this.hScroller = new HScroller();
-			this.hScroller.ValueChanged += new EventHandler(this.HandleHScrollerValueChanged);
-			this.hScroller.Parent = mainViewParent;
-
-			this.quickLayerNext = new GlyphButton("LayerNext");
-			this.quickLayerNext.GlyphShape = GlyphShape.ArrowUp;
-			this.quickLayerNext.Parent = mainViewParent;
-			ToolTip.Default.SetToolTip(this.quickLayerNext, "Calque suivant");
-
-			this.quickLayerMenu = new Button();
-			this.quickLayerMenu.Command = "LayerMenu";
-			//?this.quickLayerMenu.Text = "A";
-			this.quickLayerMenu.Clicked += new MessageEventHandler(this.HandleQuickLayerMenu);
-			this.quickLayerMenu.Parent = mainViewParent;
-			ToolTip.Default.SetToolTip(this.quickLayerMenu, "Choix d'un calque");
-
-			this.quickLayerPrev = new GlyphButton("LayerPrev");
-			this.quickLayerPrev.GlyphShape = GlyphShape.ArrowDown;
-			this.quickLayerPrev.Parent = mainViewParent;
-			ToolTip.Default.SetToolTip(this.quickLayerPrev, "Calque précédent");
-
-			this.vScroller = new VScroller();
-			this.vScroller.ValueChanged += new EventHandler(this.HandleVScrollerValueChanged);
-			this.vScroller.Parent = mainViewParent;
-
-			this.info = new StatusBar();
-			this.info.Parent = this;
-			this.InfoAdd("", 200, "StatusDocument", "");
+			this.info = new StatusBar(this);
+			this.info.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
+			this.InfoAdd("", 120, "StatusDocument", "");
 			this.InfoAdd(@"file:images/deselect.icon", 0, "Deselect", "Désélectionner tout");
 			this.InfoAdd(@"file:images/selectall.icon", 0, "SelectAll", "Tout sélectionner");
 			this.InfoAdd(@"file:images/selectinvert.icon", 0, "SelectInvert", "Inverser la sélection");
@@ -568,9 +362,255 @@ namespace Epsitec.App.DocumentEditor
 			this.InfoAdd("", 120, "StatusMouse", "");
 			StatusField infoField = this.info.Items["StatusMouse"] as StatusField;
 
-			this.allWidgets = true;
-			this.ResizeLayout();
+			this.vToolBar = new VToolBar(this);
+			this.vToolBar.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Left;
+			this.vToolBar.AnchorMargins = new Margins(0, 0, this.hToolBar.Height, this.info.Height);
+			this.VToolBarAdd(@"file:images/select.icon", "SelectTool(this.Name)", "Sélectionner", "Select");
+			this.VToolBarAdd(@"file:images/global.icon", "SelectTool(this.Name)", "Rectangle de sélection", "Global");
+			this.VToolBarAdd(@"file:images/edit.icon", "SelectTool(this.Name)", "Editer", "Edit");
+			this.VToolBarAdd(@"file:images/zoom.icon", "SelectTool(this.Name)", "Agrandir", "Zoom");
+			this.VToolBarAdd(@"file:images/hand.icon", "SelectTool(this.Name)", "Déplacer", "Hand");
+			this.VToolBarAdd(@"file:images/picker.icon", "SelectTool(this.Name)", "Pipette", "Picker");
+			if ( this.type == DocumentType.Pictogram )
+			{
+				this.VToolBarAdd(@"file:images/hotspot.icon", "SelectTool(this.Name)", "Point chaud", "HotSpot");
+			}
+			this.VToolBarAdd("", "", "");
+			this.VToolBarAdd(@"file:images/line.icon", "SelectTool(this.Name)", "Segment de ligne", "ObjectLine");
+			this.VToolBarAdd(@"file:images/rectangle.icon", "SelectTool(this.Name)", "Rectangle", "ObjectRectangle");
+			this.VToolBarAdd(@"file:images/circle.icon", "SelectTool(this.Name)", "Cercle", "ObjectCircle");
+			this.VToolBarAdd(@"file:images/ellipse.icon", "SelectTool(this.Name)", "Ellipse", "ObjectEllipse");
+			this.VToolBarAdd(@"file:images/regular.icon", "SelectTool(this.Name)", "Polygone régulier", "ObjectRegular");
+			this.VToolBarAdd(@"file:images/poly.icon", "SelectTool(this.Name)", "Polygone quelconque", "ObjectPoly");
+			this.VToolBarAdd(@"file:images/bezier.icon", "SelectTool(this.Name)", "Courbes de Bézier", "ObjectBezier");
+			this.VToolBarAdd(@"file:images/textline.icon", "SelectTool(this.Name)", "Ligne de texte", "ObjectTextLine");
+			this.VToolBarAdd(@"file:images/textbox.icon", "SelectTool(this.Name)", "Pavé de texte", "ObjectTextBox");
+			if ( this.useArray )
+			{
+				this.VToolBarAdd(@"file:images/array.icon", "SelectTool(this.Name)", "Tableau", "ObjectArray");
+			}
+			this.VToolBarAdd(@"file:images/image.icon", "SelectTool(this.Name)", "Image bitmap", "ObjectImage");
+			this.VToolBarAdd("", "", "");
+
+			this.bookDocuments = new TabBook(this);
+			this.bookDocuments.Width = this.panelsWidth;
+			this.bookDocuments.Anchor = AnchorStyles.All;
+			this.bookDocuments.AnchorMargins = new Margins(this.vToolBar.Width+1, this.panelsWidth+2, this.hToolBar.Height+1, this.info.Height+1);
+			this.bookDocuments.Arrows = TabBookArrows.Right;
+			this.bookDocuments.HasCloseButton = true;
+			this.bookDocuments.CloseButton.Command = "Close";
+			this.bookDocuments.ActivePageChanged += new EventHandler(this.HandleBookDocumentsActivePageChanged);
+			ToolTip.Default.SetToolTip(this.bookDocuments.CloseButton, "Fermer le document");
 		}
+
+		protected void CreateDocumentLayout(Document document)
+		{
+			DocumentInfo di = this.CurrentDocumentInfo;
+			double sw = 17;  // largeur d'un ascenseur
+			double wm = 4;  // marges autour du viewer
+			
+			di.tabPage = new TabPage();
+			this.bookDocuments.Items.Insert(this.currentDocument, di.tabPage);
+
+			Widget mainViewParent;
+			if ( document.Type == DocumentType.Pictogram )
+			{
+				PaneBook pane = new PaneBook(di.tabPage);
+				pane.Anchor = AnchorStyles.All;
+				pane.PaneBookStyle = PaneBookStyle.LeftRight;
+				pane.PaneBehaviour = PaneBookBehaviour.FollowMe;
+
+				PanePage leftPane = new PanePage();
+				leftPane.PaneRelativeSize = 10;
+				leftPane.PaneElasticity = 1;
+				leftPane.PaneMinSize = 100;
+				pane.Items.Add(leftPane);
+
+				PanePage rightPane = new PanePage();
+				rightPane.PaneAbsoluteSize = 40;
+				rightPane.PaneElasticity = 0;
+				rightPane.PaneMinSize = 40;
+				rightPane.PaneMaxSize = 200;
+				pane.Items.Add(rightPane);
+
+				mainViewParent = leftPane;
+				Viewer viewer = new Viewer(document);
+				viewer.Parent = mainViewParent;
+				viewer.Anchor = AnchorStyles.All;
+				viewer.AnchorMargins = new Margins(wm, wm+sw+1, 10, wm+sw+1);
+				document.Modifier.ActiveViewer = viewer;
+				document.Modifier.AttachViewer(viewer);
+
+				Viewer frame1 = new Viewer(document);
+				frame1.Parent = rightPane;
+				frame1.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+				frame1.AnchorMargins = new Margins(wm, wm, 10, wm);
+				frame1.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
+				document.Modifier.AttachViewer(frame1);
+
+				Viewer frame2 = new Viewer(document);
+				frame2.Parent = rightPane;
+				frame2.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+				frame2.AnchorMargins = new Margins(wm, wm, 10+30, wm);
+				frame2.DrawingContext.LayerDrawingMode = LayerDrawingMode.ShowInactive;
+				document.Modifier.AttachViewer(frame2);
+			}
+			else
+			{
+				mainViewParent = di.tabPage;
+				Viewer viewer = new Viewer(document);
+				viewer.Parent = mainViewParent;
+				viewer.Anchor = AnchorStyles.All;
+				viewer.AnchorMargins = new Margins(wm, wm+sw+1, 10, wm+sw+1);
+				document.Modifier.ActiveViewer = viewer;
+				document.Modifier.AttachViewer(viewer);
+			}
+
+			// Bande horizontale qui contient les boutons des pages et l'ascenseur.
+			Widget hBand = new Widget(mainViewParent);
+			hBand.Height = sw;
+			hBand.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
+			hBand.AnchorMargins = new Margins(wm, wm+sw+1, 0, wm);
+
+			GlyphButton quickPagePrev = new GlyphButton("PagePrev");
+			quickPagePrev.Parent = hBand;
+			quickPagePrev.GlyphShape = GlyphShape.ArrowLeft;
+			quickPagePrev.Width = sw;
+			quickPagePrev.Height = sw;
+			quickPagePrev.Dock = DockStyle.Left;
+			ToolTip.Default.SetToolTip(quickPagePrev, "Page précédente");
+
+			di.quickPageMenu = new Button(hBand);
+			di.quickPageMenu.Command = "PageMenu";
+			di.quickPageMenu.Clicked += new MessageEventHandler(this.HandleQuickPageMenu);
+			di.quickPageMenu.Width = System.Math.Floor(sw*1.5);
+			di.quickPageMenu.Height = sw;
+			di.quickPageMenu.Dock = DockStyle.Left;
+			ToolTip.Default.SetToolTip(di.quickPageMenu, "Choix d'une page");
+
+			GlyphButton quickPageNext = new GlyphButton("PageNext");
+			quickPageNext.Parent = hBand;
+			quickPageNext.GlyphShape = GlyphShape.ArrowRight;
+			quickPageNext.Width = sw;
+			quickPageNext.Height = sw;
+			quickPageNext.Dock = DockStyle.Left;
+			ToolTip.Default.SetToolTip(quickPageNext, "Page suivante");
+
+			di.hScroller = new HScroller(hBand);
+			di.hScroller.ValueChanged += new EventHandler(this.HandleHScrollerValueChanged);
+			di.hScroller.Dock = DockStyle.Fill;
+			di.hScroller.DockMargins = new Margins(2, 0, 0, 0);
+
+			// Bande verticale qui contient les boutons des calques et l'ascenseur.
+			Widget vBand = new Widget(mainViewParent);
+			vBand.Width = sw;
+			vBand.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
+			vBand.AnchorMargins = new Margins(0, wm, 10, wm+sw+1);
+
+			GlyphButton quickLayerNext = new GlyphButton("LayerNext");
+			quickLayerNext.Parent = vBand;
+			quickLayerNext.GlyphShape = GlyphShape.ArrowUp;
+			quickLayerNext.Width = sw;
+			quickLayerNext.Height = sw;
+			quickLayerNext.Dock = DockStyle.Top;
+			ToolTip.Default.SetToolTip(quickLayerNext, "Calque suivant");
+
+			di.quickLayerMenu = new Button(vBand);
+			di.quickLayerMenu.Command = "LayerMenu";
+			di.quickLayerMenu.Clicked += new MessageEventHandler(this.HandleQuickLayerMenu);
+			di.quickLayerMenu.Width = sw;
+			di.quickLayerMenu.Height = sw;
+			di.quickLayerMenu.Dock = DockStyle.Top;
+			ToolTip.Default.SetToolTip(di.quickLayerMenu, "Choix d'un calque");
+
+			GlyphButton quickLayerPrev = new GlyphButton("LayerPrev");
+			quickLayerPrev.Parent = vBand;
+			quickLayerPrev.GlyphShape = GlyphShape.ArrowDown;
+			quickLayerPrev.Width = sw;
+			quickLayerPrev.Height = sw;
+			quickLayerPrev.Dock = DockStyle.Top;
+			ToolTip.Default.SetToolTip(quickLayerPrev, "Calque précédent");
+
+			di.vScroller = new VScroller(vBand);
+			di.vScroller.ValueChanged += new EventHandler(this.HandleVScrollerValueChanged);
+			di.vScroller.Dock = DockStyle.Fill;
+			di.vScroller.DockMargins = new Margins(0, 0, 2, 0);
+
+			di.bookPanels = new TabBook(this);
+			di.bookPanels.Width = this.panelsWidth;
+			di.bookPanels.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
+			di.bookPanels.AnchorMargins = new Margins(1, 1, this.hToolBar.Height+1, this.info.Height+1);
+			di.bookPanels.Arrows = TabBookArrows.Stretch;
+
+			TabPage bookPrincipal = new TabPage();
+			bookPrincipal.TabTitle = "Attributs";
+			di.bookPanels.Items.Add(bookPrincipal);
+
+			TabPage bookStyles = new TabPage();
+			bookStyles.TabTitle = "Styles";
+			di.bookPanels.Items.Add(bookStyles);
+
+#if DEBUG
+			TabPage bookAutos = new TabPage();
+			bookAutos.TabTitle = "Auto";
+			di.bookPanels.Items.Add(bookAutos);
+#endif
+
+			TabPage bookPages = new TabPage();
+			bookPages.TabTitle = "Pages";
+			di.bookPanels.Items.Add(bookPages);
+
+			TabPage bookLayers = new TabPage();
+			bookLayers.TabTitle = "Calques";
+			di.bookPanels.Items.Add(bookLayers);
+
+			TabPage bookOper = new TabPage();
+			bookOper.TabTitle = "Op";
+			di.bookPanels.Items.Add(bookOper);
+
+			di.bookPanels.ActivePage = bookPrincipal;
+
+			di.containerPrincipal = new Containers.Principal(document);
+			di.containerPrincipal.Parent = bookPrincipal;
+			di.containerPrincipal.Dock = DockStyle.Fill;
+			di.containerPrincipal.DockMargins = new Margins(4, 4, 10, 4);
+			document.Modifier.AttachContainer(di.containerPrincipal);
+
+			di.containerStyles = new Containers.Styles(document);
+			di.containerStyles.Parent = bookStyles;
+			di.containerStyles.Dock = DockStyle.Fill;
+			di.containerStyles.DockMargins = new Margins(4, 4, 10, 4);
+			document.Modifier.AttachContainer(di.containerStyles);
+
+#if DEBUG
+			di.containerAutos = new Containers.Autos(document);
+			di.containerAutos.Parent = bookAutos;
+			di.containerAutos.Dock = DockStyle.Fill;
+			di.containerAutos.DockMargins = new Margins(4, 4, 10, 4);
+			document.Modifier.AttachContainer(di.containerAutos);
+#endif
+
+			di.containerPages = new Containers.Pages(document);
+			di.containerPages.Parent = bookPages;
+			di.containerPages.Dock = DockStyle.Fill;
+			di.containerPages.DockMargins = new Margins(4, 4, 10, 4);
+			document.Modifier.AttachContainer(di.containerPages);
+
+			di.containerLayers = new Containers.Layers(document);
+			di.containerLayers.Parent = bookLayers;
+			di.containerLayers.Dock = DockStyle.Fill;
+			di.containerLayers.DockMargins = new Margins(4, 4, 10, 4);
+			document.Modifier.AttachContainer(di.containerLayers);
+
+			di.containerOperations = new Containers.Operations(document);
+			di.containerOperations.Parent = bookOper;
+			di.containerOperations.Dock = DockStyle.Fill;
+			di.containerOperations.DockMargins = new Margins(4, 4, 10, 4);
+			document.Modifier.AttachContainer(di.containerOperations);
+
+			this.bookDocuments.ActivePage = di.tabPage;
+		}
+
 
 		public HMenu GetMenu()
 		{
@@ -675,156 +715,29 @@ namespace Epsitec.App.DocumentEditor
 
 		private void HandleHScrollerValueChanged(object sender)
 		{
-			Viewer viewer = this.document.Modifier.ActiveViewer;
-			viewer.DrawingContext.OriginX = (double) -this.hScroller.Value;
-			//?this.document.Notifier.GenerateEvents();
+			HScroller scroller = sender as HScroller;
+			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
+			viewer.DrawingContext.OriginX = (double) -scroller.Value;
 		}
 
 		private void HandleVScrollerValueChanged(object sender)
 		{
-			Viewer viewer = this.document.Modifier.ActiveViewer;
-			viewer.DrawingContext.OriginY = (double) -this.vScroller.Value;
-			//?this.document.Notifier.GenerateEvents();
+			VScroller scroller = sender as VScroller;
+			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
+			viewer.DrawingContext.OriginY = (double) -scroller.Value;
 		}
 
 
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
-			this.ResizeLayout();
-		}
-
-		protected void ResizeLayout()
-		{
-			if ( !this.allWidgets )  return;
-
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-
-			this.hToolBar.Location = new Point(0, rect.Height-this.hToolBar.DefaultHeight);
-			this.hToolBar.Size = new Size(rect.Width, this.hToolBar.DefaultHeight);
-
-			this.vToolBar.Location = new Point(0, this.info.Height);
-			this.vToolBar.Size = new Size(this.vToolBar.DefaultWidth, rect.Height-this.info.Height-this.hToolBar.DefaultHeight);
-
-			this.info.Location = new Point(0, 0);
-			this.info.Size = new Size(rect.Width, this.info.DefaultHeight);
-
-			double pw = this.panelsWidth+12+1;
-
-			this.book.Location = new Point(rect.Right-pw, this.info.Height+1);
-			this.book.Size = new Size(pw-1, rect.Height-this.info.Height-this.hToolBar.DefaultHeight-2);
-			Drawing.Rectangle inside = this.book.InnerBounds;
-			this.bookPrincipal.Bounds = inside;
-			this.bookStyles.Bounds = inside;
-#if DEBUG
-			this.bookAutos.Bounds = inside;
-#endif
-			this.bookPages.Bounds = inside;
-			this.bookLayers.Bounds = inside;
-			this.bookOper.Bounds = inside;
-
-			this.root.Location = new Point(this.vToolBar.DefaultWidth, this.info.Height);
-			this.root.Size = new Size(rect.Width-this.vToolBar.DefaultWidth-pw, rect.Height-this.info.Height-this.hToolBar.DefaultHeight);
-
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.pane.Location = new Point(0, 0);
-				this.pane.Size = this.root.Size;
-				this.rightPane.PaneMinSize = 20+this.document.Size.Width;
-			}
-
-			Widget mainViewParent;
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				mainViewParent = this.leftPane;
-			}
-			else
-			{
-				mainViewParent = root;
-			}
-
-			Size docSize = this.document.Size;
-			double dimx = mainViewParent.Width-20;
-			double dimy = mainViewParent.Height-20;
-
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				dimy = dimx*docSize.Height/docSize.Width;
-				if ( dimy > this.leftPane.Height-20 )
-				{
-					dimy = mainViewParent.Height-20;
-					dimx = dimy*docSize.Width/docSize.Height;
-				}
-			}
-			dimx -= this.vScroller.DefaultWidth;
-			dimy -= this.hScroller.DefaultHeight;
-			this.viewer.Location = new Point(10, mainViewParent.Height-10-dimy+1);
-			this.viewer.Size = new Size(dimx-1, dimy-1);
-
-			rect.Bottom = mainViewParent.Height-10-dimy-this.hScroller.DefaultHeight;
-			rect.Height = this.hScroller.DefaultHeight;
-			rect.Left   = 10;
-			rect.Width  = this.hScroller.DefaultHeight;
-			this.quickPagePrev.Bounds = rect;
-			rect.Offset(rect.Width, 0);
-			rect.Width += this.hScroller.DefaultHeight*0.5;
-			this.quickPageMenu.Bounds = rect;
-			rect.Offset(rect.Width, 0);
-			rect.Width -= this.hScroller.DefaultHeight*0.5;
-			this.quickPageNext.Bounds = rect;
-			rect.Left   = 10+this.hScroller.DefaultHeight*3.7;
-			rect.Width  = dimx-1-this.hScroller.DefaultHeight*3.7;
-			this.hScroller.Bounds = rect;
-
-			rect.Left   = 10+dimx;
-			rect.Width  = this.vScroller.DefaultWidth;
-			rect.Bottom = mainViewParent.Height-10-this.vScroller.DefaultWidth;
-			rect.Height = this.vScroller.DefaultWidth;
-			this.quickLayerNext.Bounds = rect;
-			rect.Offset(0, -rect.Height);
-			this.quickLayerMenu.Bounds = rect;
-			rect.Offset(0, -rect.Height);
-			this.quickLayerPrev.Bounds = rect;
-			rect.Bottom = mainViewParent.Height-10-dimy+1;
-			rect.Height = dimy-1-this.vScroller.DefaultWidth*3.2;
-			this.vScroller.Bounds = rect;
-
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				dimx = this.rightPane.Width-20;
-				dimy = dimx*docSize.Height/docSize.Width;
-				rect.Left   = 10;
-				rect.Bottom = this.rightPane.Height-10-dimy-1;
-				rect.Width  = dimx;
-				rect.Height = dimy;
-				rect.Inflate(1);
-				this.frame1.Bounds = rect;
-				rect.Deflate(1);
-
-				rect.Offset(0, -dimy-10);
-				rect.Inflate(1);
-				this.frame2.Bounds = rect;
-				rect.Deflate(1);
-			}
-
-			//?this.GeometryPanels();
-		}
-
-		private void HandlePaneSizeChanged(object sender)
-		{
-			PaneBook pane = (PaneBook)sender;
-
-			if ( pane == this.pane )
-			{
-			}
-			this.ResizeLayout();
 		}
 
 
 		[Command ("SelectTool")]
 		void CommandActivateTool(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.Tool = e.CommandArgs[0];
+			this.CurrentDocument.Modifier.Tool = e.CommandArgs[0];
 		}
 
 		[Command ("SelectLook")]
@@ -839,8 +752,8 @@ namespace Epsitec.App.DocumentEditor
 		// document modifié, avant de passer à un autre document.
 		protected Dialogs.DialogResult DialogSave(CommandDispatcher dispatcher)
 		{
-			if ( !this.document.IsDirtySerialize ||
-				 this.document.Modifier.StatisticTotalObjects() == 0 )
+			if ( !this.CurrentDocument.IsDirtySerialize ||
+				 this.CurrentDocument.Modifier.StatisticTotalObjects() == 0 )
 			{
 				return Dialogs.DialogResult.None;
 			}
@@ -848,13 +761,8 @@ namespace Epsitec.App.DocumentEditor
 			string title = "Crésus";
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
 
-			string shortFilename = "<i>sans titre</i>";
-			if ( this.document.Filename != "" )
-			{
-				shortFilename = string.Format("<b>{0}</b>", Misc.ExtractName(this.document.Filename));
-			}
-
-			string statistic = string.Format("<font size=\"80%\">{0}</font><br/>", this.document.Modifier.Statistic());
+			string shortFilename = Misc.ExtractName(this.CurrentDocument.Filename, this.CurrentDocument.IsDirtySerialize);
+			string statistic = string.Format("<font size=\"80%\">{0}</font><br/>", this.CurrentDocument.Modifier.Statistic(false, false));
 			string message = string.Format("<font size=\"100%\">Le fichier {0} a été modifié.</font><br/><br/>{1}Voulez-vous enregistrer les modifications ?", shortFilename, statistic);
 			Dialogs.IDialog dialog = Dialogs.Message.CreateYesNoCancel(title, icon, message, "", "", dispatcher);
 			dialog.Owner = this.Window;
@@ -942,7 +850,7 @@ namespace Epsitec.App.DocumentEditor
 			Dialogs.FileOpen dialog = new Dialogs.FileOpen();
 		
 			dialog.FileName = "";
-			if ( this.document.Type == DocumentType.Graphic )
+			if ( this.type == DocumentType.Graphic )
 			{
 				dialog.Title = "Ouvrir un document";
 				dialog.Filters.Add("crdoc", "Document", "*.crdoc");
@@ -956,7 +864,8 @@ namespace Epsitec.App.DocumentEditor
 			dialog.OpenDialog();
 			if ( dialog.Result != Dialogs.DialogResult.Accept )  return false;
 
-			string err = this.document.Read(dialog.FileName);
+			this.CreateDocument();
+			string err = this.CurrentDocument.Read(dialog.FileName);
 			this.DialogError(dispatcher, err);
 			return (err == "");
 		}
@@ -970,12 +879,12 @@ namespace Epsitec.App.DocumentEditor
 		{
 			string filename;
 
-			if ( this.document.Filename == "" || ask )
+			if ( this.CurrentDocument.Filename == "" || ask )
 			{
 				Dialogs.FileSave dialog = new Dialogs.FileSave();
 			
-				dialog.FileName = this.document.Filename;
-				if ( this.document.Type == DocumentType.Graphic )
+				dialog.FileName = this.CurrentDocument.Filename;
+				if ( this.type == DocumentType.Graphic )
 				{
 					dialog.Title = "Enregistrer un document";
 					dialog.Filters.Add("crdoc", "Document", "*.crdoc");
@@ -993,10 +902,10 @@ namespace Epsitec.App.DocumentEditor
 			}
 			else
 			{
-				filename = this.document.Filename;
+				filename = this.CurrentDocument.Filename;
 			}
 
-			string err = this.document.Write(filename);
+			string err = this.CurrentDocument.Write(filename);
 			this.DialogError(dispatcher, err);
 			return (err == "");
 		}
@@ -1017,19 +926,40 @@ namespace Epsitec.App.DocumentEditor
 			}
 			return true;
 		}
+
+		// Fait tout ce qu'il faut pour éventuellement sauvegarder tous les
+		// documents avant de passer à autre chose.
+		// Retourne false si on ne peut pas continuer.
+		protected bool AutoSaveAll(CommandDispatcher dispatcher)
+		{
+			int cd = this.currentDocument;
+
+			int total = this.bookDocuments.PageCount;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				this.currentDocument = i;
+				if ( !this.AutoSave(dispatcher) )
+				{
+					this.currentDocument = cd;
+					return false;
+				}
+			}
+
+			this.currentDocument = cd;
+			return true;
+		}
 		#endregion
 
 		[Command ("New")]
 		void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.AutoSave(dispatcher) )  return;
-			this.document.Modifier.New();
+			this.CreateDocument();
+			this.CurrentDocument.Modifier.New();
 		}
 
 		[Command ("Open")]
 		void CommandOpen(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.AutoSave(dispatcher) )  return;
 			this.Open(dispatcher);
 		}
 
@@ -1045,10 +975,27 @@ namespace Epsitec.App.DocumentEditor
 			this.Save(dispatcher, true);
 		}
 		
+		[Command ("Close")]
+		void CommandClose(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.AutoSave(dispatcher) )  return;
+			this.CloseDocument();
+		}
+
+		[Command ("CloseAll")]
+		void CommandCloseAll(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.AutoSaveAll(dispatcher) )  return;
+			while ( this.IsCurrentDocument )
+			{
+				this.CloseDocument();
+			}
+		}
+
 		[Command ("QuitApplication")]
 		void CommandQuitApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			if ( !this.AutoSave(dispatcher) )  return;
+			if ( !this.AutoSaveAll(dispatcher) )  return;
 			this.QuitApplication();
 		}
 
@@ -1056,156 +1003,156 @@ namespace Epsitec.App.DocumentEditor
 		void CommandPrint(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			Dialogs.Print dialog = new Dialogs.Print();
+			dialog.Document.SelectPrinter(this.printerName);
 			dialog.AllowFromPageToPage = true;
 			dialog.AllowSelectedPages  = false;
-			int total = this.document.Modifier.StatisticTotalPages();
+			int total = this.CurrentDocument.Modifier.StatisticTotalPages();
 			dialog.Document.PrinterSettings.MinimumPage = 1;
 			dialog.Document.PrinterSettings.MaximumPage = total;
 			dialog.Document.PrinterSettings.FromPage = 1;
 			dialog.Document.PrinterSettings.ToPage = total;
 			dialog.Document.PrinterSettings.PrintRange = Common.Printing.PrintRange.AllPages;
 			dialog.Document.PrinterSettings.Collate = false;
-			dialog.Document.SelectPrinter(this.document.PrinterName);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
 
-			this.document.PrinterName = dialog.Document.PrinterSettings.PrinterName;
-			this.document.Print(dialog);
+			this.printerName = dialog.Document.PrinterSettings.PrinterName;
+			this.CurrentDocument.Print(dialog);
 		}
 		
 
 		[Command ("Delete")]
 		void CommandDelete()
 		{
-			this.document.Modifier.DeleteSelection();
+			this.CurrentDocument.Modifier.DeleteSelection();
 		}
 
 		[Command ("Duplicate")]
 		void CommandDuplicate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			Point move = this.document.Modifier.DuplicateMove;
-			this.document.Modifier.DuplicateSelection(move);
+			Point move = this.CurrentDocument.Modifier.DuplicateMove;
+			this.CurrentDocument.Modifier.DuplicateSelection(move);
 		}
 
 		[Command ("Cut")]
 		void CommandCut(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.CutSelection();
+			this.CurrentDocument.Modifier.CutSelection();
 		}
 
 		[Command ("Copy")]
 		void CommandCopy(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.CopySelection();
+			this.CurrentDocument.Modifier.CopySelection();
 		}
 
 		[Command ("Paste")]
 		void CommandPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.Paste();
+			this.CurrentDocument.Modifier.Paste();
 		}
 
 		[Command ("Undo")]
 		void CommandUndo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.Undo();
+			this.CurrentDocument.Modifier.Undo();
 		}
 
 		[Command ("Redo")]
 		void CommandRedo(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.Redo();
+			this.CurrentDocument.Modifier.Redo();
 		}
 
 		[Command ("OrderUp")]
 		void CommandOrderUp(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.OrderUpSelection();
+			this.CurrentDocument.Modifier.OrderUpSelection();
 		}
 
 		[Command ("OrderDown")]
 		void CommandOrderDown(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.OrderDownSelection();
+			this.CurrentDocument.Modifier.OrderDownSelection();
 		}
 
 		[Command ("Rotate90")]
 		void CommandRotate90(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.RotateSelection(90);
+			this.CurrentDocument.Modifier.RotateSelection(90);
 		}
 
 		[Command ("Rotate180")]
 		void CommandRotate180(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.RotateSelection(180);
+			this.CurrentDocument.Modifier.RotateSelection(180);
 		}
 
 		[Command ("Rotate270")]
 		void CommandRotate270(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.RotateSelection(270);
+			this.CurrentDocument.Modifier.RotateSelection(270);
 		}
 
 		[Command ("MirrorH")]
 		void CommandMirrorH(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.MirrorSelection(true);
+			this.CurrentDocument.Modifier.MirrorSelection(true);
 		}
 
 		[Command ("MirrorV")]
 		void CommandMirrorV(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.MirrorSelection(false);
+			this.CurrentDocument.Modifier.MirrorSelection(false);
 		}
 
 		[Command ("ZoomMul2")]
 		void CommandZoomMul2(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.ZoomSelection(2.0);
+			this.CurrentDocument.Modifier.ZoomSelection(2.0);
 		}
 
 		[Command ("ZoomDiv2")]
 		void CommandZoomDiv2(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.ZoomSelection(0.5);
+			this.CurrentDocument.Modifier.ZoomSelection(0.5);
 		}
 
 		[Command ("Merge")]
 		void CommandMerge(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.MergeSelection();
+			this.CurrentDocument.Modifier.MergeSelection();
 		}
 
 		[Command ("Group")]
 		void CommandGroup(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.GroupSelection();
+			this.CurrentDocument.Modifier.GroupSelection();
 		}
 
 		[Command ("Ungroup")]
 		void CommandUngroup(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.UngroupSelection();
+			this.CurrentDocument.Modifier.UngroupSelection();
 		}
 
 		[Command ("Inside")]
 		void CommandInside(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.InsideSelection();
+			this.CurrentDocument.Modifier.InsideSelection();
 		}
 
 		[Command ("Outside")]
 		void CommandOutside(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.OutsideSelection();
+			this.CurrentDocument.Modifier.OutsideSelection();
 		}
 
 		[Command ("Grid")]
 		void CommandGrid(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			context.GridActive = !context.GridActive;
 			context.GridShow = context.GridActive;
 		}
@@ -1213,106 +1160,106 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("Preview")]
 		void CommandPreview(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			context.PreviewActive = !context.PreviewActive;
 		}
 
 		[Command ("Deselect")]
 		void CommandDeselect(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.DeselectAll();
+			this.CurrentDocument.Modifier.DeselectAll();
 		}
 
 		[Command ("SelectAll")]
 		void CommandSelectAll(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.SelectAll();
+			this.CurrentDocument.Modifier.SelectAll();
 		}
 
 		[Command ("SelectInvert")]
 		void CommandSelectInvert(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.InvertSelection();
+			this.CurrentDocument.Modifier.InvertSelection();
 		}
 
 		[Command ("SelectGlobal")]
 		void CommandSelectGlobal(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.Tool = "Select";
-			Viewer viewer = this.document.Modifier.ActiveViewer;
+			this.CurrentDocument.Modifier.Tool = "Select";
+			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.GlobalSelect = !viewer.GlobalSelect;
 		}
 
 		[Command ("SelectPartial")]
 		void CommandSelectPartial(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.Tool = "Select";
-			Viewer viewer = this.document.Modifier.ActiveViewer;
+			this.CurrentDocument.Modifier.Tool = "Select";
+			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
 			viewer.PartialSelect = !viewer.PartialSelect;
 		}
 
 		[Command ("HideHalf")]
 		void CommandHideHalf(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.Tool = "Select";
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			this.CurrentDocument.Modifier.Tool = "Select";
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			context.HideHalfActive = !context.HideHalfActive;
 		}
 
 		[Command ("HideSel")]
 		void CommandHideSel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.HideSelection();
+			this.CurrentDocument.Modifier.HideSelection();
 		}
 
 		[Command ("HideRest")]
 		void CommandHideRest(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.HideRest();
+			this.CurrentDocument.Modifier.HideRest();
 		}
 
 		[Command ("HideCancel")]
 		void CommandHideCancel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.HideCancel();
+			this.CurrentDocument.Modifier.HideCancel();
 		}
 
 		[Command ("ZoomMin")]
 		void CommandZoomMin(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.ZoomChange(0.0001);
+			this.CurrentDocument.Modifier.ZoomChange(0.0001);
 		}
 
 		[Command ("ZoomDefault")]
 		void CommandZoomDefault(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			this.document.Modifier.ZoomMemorize();
-			context.ZoomAndOrigin(1, 0,0);
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			this.CurrentDocument.Modifier.ZoomMemorize();
+			context.ZoomAndCenter();
 		}
 
 		[Command ("ZoomSel")]
 		void CommandZoomSel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.ZoomSel();
+			this.CurrentDocument.Modifier.ZoomSel();
 		}
 
 		[Command ("ZoomPrev")]
 		void CommandZoomPrev(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.ZoomPrev();
+			this.CurrentDocument.Modifier.ZoomPrev();
 		}
 
 		[Command ("ZoomSub")]
 		void CommandZoomSub(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.ZoomChange(0.5);
+			this.CurrentDocument.Modifier.ZoomChange(0.5);
 		}
 
 		[Command ("ZoomAdd")]
 		void CommandZoomAdd(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.ZoomChange(2.0);
+			this.CurrentDocument.Modifier.ZoomChange(2.0);
 		}
 
 		// Exécute une commande locale à un objet.
@@ -1320,7 +1267,7 @@ namespace Epsitec.App.DocumentEditor
 		void CommandObject(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			Widget widget = e.Source as Widget;
-			this.document.Modifier.ActiveViewer.CommandObject(widget.Name);
+			this.CurrentDocument.Modifier.ActiveViewer.CommandObject(widget.Name);
 		}
 
 		[Command ("ArrayOutlineFrame")]
@@ -1345,13 +1292,26 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("Settings")]
 		void CommandSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Dialogs.ShowSettings();
+			this.CreateWindowSettings();
 		}
+
+		[Command ("Infos")]
+		void CommandInfos(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CreateWindowInfos();
+		}
+
+		[Command ("AboutApplication")]
+		void CommandAboutApplication(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CreateWindowAbout();
+		}
+
 
 		[Command ("PagePrev")]
 		void CommandPagePrev(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			if ( context.CurrentPage > 0 )
 			{
 				context.CurrentPage = context.CurrentPage-1;
@@ -1361,7 +1321,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("PageNext")]
 		void CommandPageNext(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			if ( context.CurrentPage < context.TotalPages()-1 )
 			{
 				context.CurrentPage = context.CurrentPage+1;
@@ -1383,7 +1343,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("PageSelect")]
 		void CommandPageSelect(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			int sel = System.Convert.ToInt32(e.CommandArgs[0]);
 			context.CurrentPage = sel;
 		}
@@ -1391,34 +1351,34 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("PageCreate")]
 		void CommandPageCreate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			int rank = context.CurrentPage;
-			this.document.Modifier.PageCreate(rank+1, "");
+			this.CurrentDocument.Modifier.PageCreate(rank+1, "");
 		}
 
 		[Command ("PageDelete")]
 		void CommandPageDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			int rank = context.CurrentPage;
-			this.document.Modifier.PageDelete(rank);
+			this.CurrentDocument.Modifier.PageDelete(rank);
 		}
 
 		[Command ("PageUp")]
 		void CommandPageUp(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			int rank = context.CurrentPage;
-			this.document.Modifier.PageSwap(rank, rank-1);
+			this.CurrentDocument.Modifier.PageSwap(rank, rank-1);
 			context.CurrentPage = rank-1;
 		}
 
 		[Command ("PageDown")]
 		void CommandPageDown(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			int rank = context.CurrentPage;
-			this.document.Modifier.PageSwap(rank, rank+1);
+			this.CurrentDocument.Modifier.PageSwap(rank, rank+1);
 			context.CurrentPage = rank+1;
 		}
 
@@ -1426,7 +1386,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("LayerPrev")]
 		void CommandLayerPrev(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			if ( context.CurrentLayer > 0 )
 			{
 				context.CurrentLayer = context.CurrentLayer-1;
@@ -1436,7 +1396,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("LayerNext")]
 		void CommandLayerNext(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			if ( context.CurrentLayer < context.TotalLayers()-1 )
 			{
 				context.CurrentLayer = context.CurrentLayer+1;
@@ -1458,7 +1418,7 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("LayerSelect")]
 		void CommandLayerSelect(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			int sel = System.Convert.ToInt32(e.CommandArgs[0]);
 			context.CurrentLayer = sel;
 		}
@@ -1466,34 +1426,34 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("LayerCreate")]
 		void CommandLayerCreate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			int rank = context.CurrentLayer;
-			this.document.Modifier.LayerCreate(rank+1, "");
+			this.CurrentDocument.Modifier.LayerCreate(rank+1, "");
 		}
 
 		[Command ("LayerDelete")]
 		void CommandLayerDelete(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			int rank = context.CurrentLayer;
-			this.document.Modifier.LayerDelete(rank);
+			this.CurrentDocument.Modifier.LayerDelete(rank);
 		}
 
 		[Command ("LayerUp")]
 		void CommandLayerUp(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			int rank = context.CurrentLayer;
-			this.document.Modifier.LayerSwap(rank, rank-1);
+			this.CurrentDocument.Modifier.LayerSwap(rank, rank-1);
 			context.CurrentLayer = rank-1;
 		}
 
 		[Command ("LayerDown")]
 		void CommandLayerDown(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			int rank = context.CurrentLayer;
-			this.document.Modifier.LayerSwap(rank, rank+1);
+			this.CurrentDocument.Modifier.LayerSwap(rank, rank+1);
 			context.CurrentLayer = rank+1;
 		}
 
@@ -1501,43 +1461,43 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("DebugBboxThin")]
 		void CommandDebugBboxThin(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			context.IsDrawBoxThin = !context.IsDrawBoxThin;
 		}
 
 		[Command ("DebugBboxGeom")]
 		void CommandDebugBboxGeom(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			context.IsDrawBoxGeom = !context.IsDrawBoxGeom;
 		}
 
 		[Command ("DebugBboxFull")]
 		void CommandDebugBboxFull(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			context.IsDrawBoxFull = !context.IsDrawBoxFull;
 		}
 
 		[Command ("DebugDirty")]
 		void CommandDebugDirty(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.document.Modifier.ActiveViewer.DirtyAllViews();
+			this.CurrentDocument.Modifier.ActiveViewer.DirtyAllViews();
 		}
 
 
 		// Quitte l'application.
 		public void QuitApplication()
 		{
-			this.Window.Quit();
+			Window.Quit();
 		}
 
 
 		// Construit le menu pour choisir une page.
 		public VMenu CreatePagesMenu()
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			UndoableList pages = this.document.GetObjects;  // liste des pages
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			UndoableList pages = this.CurrentDocument.GetObjects;  // liste des pages
 			int total = pages.Count;
 			VMenu menu = new VMenu();
 			for ( int i=0 ; i<total ; i++ )
@@ -1562,7 +1522,7 @@ namespace Epsitec.App.DocumentEditor
 		// Construit le menu pour choisir un calque.
 		public VMenu CreateLayersMenu()
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			Objects.Abstract page = context.RootObject(1);
 			UndoableList layers = page.Objects;  // liste des calques
 			int total = layers.Count;
@@ -1606,6 +1566,8 @@ namespace Epsitec.App.DocumentEditor
 			this.openState = new CommandState("Open", this.commandDispatcher);
 			this.saveState = new CommandState("Save", this.commandDispatcher);
 			this.saveAsState = new CommandState("SaveAs", this.commandDispatcher);
+			this.closeState = new CommandState("Close", this.commandDispatcher);
+			this.printState = new CommandState("Print", this.commandDispatcher);
 			this.deleteState = new CommandState("Delete", this.commandDispatcher);
 			this.duplicateState = new CommandState("Duplicate", this.commandDispatcher);
 			this.cutState = new CommandState("Cut", this.commandDispatcher);
@@ -1644,7 +1606,6 @@ namespace Epsitec.App.DocumentEditor
 			this.zoomAddState = new CommandState("ZoomAdd", this.commandDispatcher);
 			this.previewState = new CommandState("Preview", this.commandDispatcher);
 			this.gridState = new CommandState("Grid", this.commandDispatcher);
-			this.modeState = new CommandState("Mode", this.commandDispatcher);
 
 			this.arrayOutlineFrameState = new CommandState("ArrayOutlineFrame", this.commandDispatcher);
 			this.arrayOutlineHorizState = new CommandState("ArrayOutlineHoriz", this.commandDispatcher);
@@ -1664,50 +1625,55 @@ namespace Epsitec.App.DocumentEditor
 			this.debugBboxThinState = new CommandState("DebugBboxThin", this.commandDispatcher);
 			this.debugBboxGeomState = new CommandState("DebugBboxGeom", this.commandDispatcher);
 			this.debugBboxFullState = new CommandState("DebugBboxFull", this.commandDispatcher);
+			this.debugDirtyState = new CommandState("DebugDirty", this.commandDispatcher);
 
-			this.pagePrev = new CommandState("PagePrev", this.commandDispatcher);
-			this.pageNext = new CommandState("PageNext", this.commandDispatcher);
-			this.pageMenu = new CommandState("PageMenu", this.commandDispatcher);
-			this.pageCreate = new CommandState("PageCreate", this.commandDispatcher);
-			this.pageDelete = new CommandState("PageDelete", this.commandDispatcher);
-			this.pageUp = new CommandState("PageUp", this.commandDispatcher);
-			this.pageDown = new CommandState("PageDown", this.commandDispatcher);
+			this.pagePrevState = new CommandState("PagePrev", this.commandDispatcher);
+			this.pageNextState = new CommandState("PageNext", this.commandDispatcher);
+			this.pageMenuState = new CommandState("PageMenu", this.commandDispatcher);
+			this.pageCreateState = new CommandState("PageCreate", this.commandDispatcher);
+			this.pageDeleteState = new CommandState("PageDelete", this.commandDispatcher);
+			this.pageUpState = new CommandState("PageUp", this.commandDispatcher);
+			this.pageDownState = new CommandState("PageDown", this.commandDispatcher);
 
-			this.layerPrev = new CommandState("LayerPrev", this.commandDispatcher);
-			this.layerNext = new CommandState("LayerNext", this.commandDispatcher);
-			this.layerMenu = new CommandState("LayerMenu", this.commandDispatcher);
-			this.layerCreate = new CommandState("LayerCreate", this.commandDispatcher);
-			this.layerDelete = new CommandState("LayerDelete", this.commandDispatcher);
-			this.layerUp = new CommandState("LayerUp", this.commandDispatcher);
-			this.layerDown = new CommandState("LayerDown", this.commandDispatcher);
+			this.layerPrevState = new CommandState("LayerPrev", this.commandDispatcher);
+			this.layerNextState = new CommandState("LayerNext", this.commandDispatcher);
+			this.layerMenuState = new CommandState("LayerMenu", this.commandDispatcher);
+			this.layerCreateState = new CommandState("LayerCreate", this.commandDispatcher);
+			this.layerDeleteState = new CommandState("LayerDelete", this.commandDispatcher);
+			this.layerUpState = new CommandState("LayerUp", this.commandDispatcher);
+			this.layerDownState = new CommandState("LayerDown", this.commandDispatcher);
+
+			this.settingsState = new CommandState("Settings", this.commandDispatcher);
+			this.infosState = new CommandState("Infos", this.commandDispatcher);
+			this.aboutState = new CommandState("AboutApplication", this.commandDispatcher);
 		}
 
 
-		// On s'engistre auprès du document pour tous les événements.
+		// On s'enregistre auprès du document pour tous les événements.
 		protected void ConnectEvents()
 		{
-			this.document.Notifier.DocumentChanged  += new SimpleEventHandler(this.HandleDocumentChanged);
-			this.document.Notifier.MouseChanged     += new SimpleEventHandler(this.HandleMouseChanged);
-			this.document.Notifier.OriginChanged    += new SimpleEventHandler(this.HandleOriginChanged);
-			this.document.Notifier.ZoomChanged      += new SimpleEventHandler(this.HandleZoomChanged);
-			this.document.Notifier.ToolChanged      += new SimpleEventHandler(this.HandleToolChanged);
-			this.document.Notifier.SaveChanged      += new SimpleEventHandler(this.HandleSaveChanged);
-			this.document.Notifier.SelectionChanged += new SimpleEventHandler(this.HandleSelectionChanged);
-			this.document.Notifier.CreateChanged    += new SimpleEventHandler(this.HandleCreateChanged);
-			this.document.Notifier.StyleChanged     += new SimpleEventHandler(this.HandleStyleChanged);
-			this.document.Notifier.PagesChanged     += new SimpleEventHandler(this.HandlePagesChanged);
-			this.document.Notifier.LayersChanged    += new SimpleEventHandler(this.HandleLayersChanged);
-			this.document.Notifier.PageChanged      += new ObjectEventHandler(this.HandlePageChanged);
-			this.document.Notifier.LayerChanged     += new ObjectEventHandler(this.HandleLayerChanged);
-			this.document.Notifier.UndoRedoChanged  += new SimpleEventHandler(this.HandleUndoRedoChanged);
-			this.document.Notifier.GridChanged      += new SimpleEventHandler(this.HandleGridChanged);
-			this.document.Notifier.PreviewChanged   += new SimpleEventHandler(this.HandlePreviewChanged);
-			this.document.Notifier.SettingsChanged  += new SimpleEventHandler(this.HandleSettingsChanged);
-			this.document.Notifier.GuidesChanged    += new SimpleEventHandler(this.HandleGuidesChanged);
-			this.document.Notifier.HideHalfChanged  += new SimpleEventHandler(this.HandleHideHalfChanged);
-			this.document.Notifier.DebugChanged     += new SimpleEventHandler(this.HandleDebugChanged);
-			this.document.Notifier.PropertyChanged  += new PropertyEventHandler(this.HandlePropertyChanged);
-			this.document.Notifier.DrawChanged      += new RedrawEventHandler(this.HandleDrawChanged);
+			this.CurrentDocument.Notifier.DocumentChanged  += new SimpleEventHandler(this.HandleDocumentChanged);
+			this.CurrentDocument.Notifier.MouseChanged     += new SimpleEventHandler(this.HandleMouseChanged);
+			this.CurrentDocument.Notifier.OriginChanged    += new SimpleEventHandler(this.HandleOriginChanged);
+			this.CurrentDocument.Notifier.ZoomChanged      += new SimpleEventHandler(this.HandleZoomChanged);
+			this.CurrentDocument.Notifier.ToolChanged      += new SimpleEventHandler(this.HandleToolChanged);
+			this.CurrentDocument.Notifier.SaveChanged      += new SimpleEventHandler(this.HandleSaveChanged);
+			this.CurrentDocument.Notifier.SelectionChanged += new SimpleEventHandler(this.HandleSelectionChanged);
+			this.CurrentDocument.Notifier.CreateChanged    += new SimpleEventHandler(this.HandleCreateChanged);
+			this.CurrentDocument.Notifier.StyleChanged     += new SimpleEventHandler(this.HandleStyleChanged);
+			this.CurrentDocument.Notifier.PagesChanged     += new SimpleEventHandler(this.HandlePagesChanged);
+			this.CurrentDocument.Notifier.LayersChanged    += new SimpleEventHandler(this.HandleLayersChanged);
+			this.CurrentDocument.Notifier.PageChanged      += new ObjectEventHandler(this.HandlePageChanged);
+			this.CurrentDocument.Notifier.LayerChanged     += new ObjectEventHandler(this.HandleLayerChanged);
+			this.CurrentDocument.Notifier.UndoRedoChanged  += new SimpleEventHandler(this.HandleUndoRedoChanged);
+			this.CurrentDocument.Notifier.GridChanged      += new SimpleEventHandler(this.HandleGridChanged);
+			this.CurrentDocument.Notifier.PreviewChanged   += new SimpleEventHandler(this.HandlePreviewChanged);
+			this.CurrentDocument.Notifier.SettingsChanged  += new SimpleEventHandler(this.HandleSettingsChanged);
+			this.CurrentDocument.Notifier.GuidesChanged    += new SimpleEventHandler(this.HandleGuidesChanged);
+			this.CurrentDocument.Notifier.HideHalfChanged  += new SimpleEventHandler(this.HandleHideHalfChanged);
+			this.CurrentDocument.Notifier.DebugChanged     += new SimpleEventHandler(this.HandleDebugChanged);
+			this.CurrentDocument.Notifier.PropertyChanged  += new PropertyEventHandler(this.HandlePropertyChanged);
+			this.CurrentDocument.Notifier.DrawChanged      += new RedrawEventHandler(this.HandleDrawChanged);
 		}
 
 		// Appelé par le document lorsque les informations sur le document ont changé.
@@ -1716,6 +1682,24 @@ namespace Epsitec.App.DocumentEditor
 			StatusField field = this.info.Items["StatusDocument"] as StatusField;
 			field.Text = this.TextDocument;
 			field.Invalidate();
+
+			if ( this.IsCurrentDocument )
+			{
+				this.printState.Enabled = true;
+				this.selectPartialState.Enabled = true;
+				this.settingsState.Enabled = true;
+				this.infosState.Enabled = true;
+
+				this.CurrentDocument.Dialogs.UpdateInfos();
+				this.UpdateBookDocuments();
+			}
+			else
+			{
+				this.printState.Enabled = false;
+				this.selectPartialState.Enabled = false;
+				this.settingsState.Enabled = false;
+				this.infosState.Enabled = false;
+			}
 		}
 
 		// Appelé par le document lorsque la position de la souris a changé.
@@ -1734,8 +1718,15 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.UpdateScroller();
 
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			this.zoomDefaultState.Enabled = ( context.Zoom != 1 || context.OriginX != 0 || context.OriginY != 0 );
+			if ( this.IsCurrentDocument )
+			{
+				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+				this.zoomDefaultState.Enabled = !context.IsZoomDefault;
+			}
+			else
+			{
+				this.zoomDefaultState.Enabled = false;
+			}
 		}
 
 		// Appelé par le document lorsque le zoom a changé.
@@ -1743,12 +1734,23 @@ namespace Epsitec.App.DocumentEditor
 		{
 			this.UpdateScroller();
 
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			this.zoomMinState.Enabled = ( context.Zoom > this.document.Modifier.ZoomMin );
-			this.zoomDefaultState.Enabled = ( context.Zoom != 1 || context.OriginX != 0 || context.OriginY != 0 );
-			this.zoomPrevState.Enabled = ( this.document.Modifier.ZoomMemorizeCount > 0 );
-			this.zoomSubState.Enabled = ( context.Zoom > this.document.Modifier.ZoomMin );
-			this.zoomAddState.Enabled = ( context.Zoom < this.document.Modifier.ZoomMax );
+			if ( this.IsCurrentDocument )
+			{
+				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+				this.zoomMinState.Enabled = ( context.Zoom > this.CurrentDocument.Modifier.ZoomMin );
+				this.zoomDefaultState.Enabled = !context.IsZoomDefault;
+				this.zoomPrevState.Enabled = ( this.CurrentDocument.Modifier.ZoomMemorizeCount > 0 );
+				this.zoomSubState.Enabled = ( context.Zoom > this.CurrentDocument.Modifier.ZoomMin );
+				this.zoomAddState.Enabled = ( context.Zoom < this.CurrentDocument.Modifier.ZoomMax );
+			}
+			else
+			{
+				this.zoomMinState.Enabled = false;
+				this.zoomDefaultState.Enabled = false;
+				this.zoomPrevState.Enabled = false;
+				this.zoomSubState.Enabled = false;
+				this.zoomAddState.Enabled = false;
+			}
 
 			StatusField field = this.info.Items["StatusZoom"] as StatusField;
 			field.Text = this.TextInfoZoom;
@@ -1758,78 +1760,143 @@ namespace Epsitec.App.DocumentEditor
 		// Appelé par le document lorsque l'outil a changé.
 		private void HandleToolChanged()
 		{
-			bool isCreating   = this.document.Modifier.ActiveViewer.IsCreating;
-			string tool = this.document.Modifier.Tool;
-			Widget[] toolWidgets = Widget.FindAllCommandWidgets("SelectTool", this.commandDispatcher);
-			foreach ( Widget widget in toolWidgets )
+			if ( this.IsCurrentDocument )
 			{
-				widget.ActiveState = ( widget.Name == tool ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				widget.SetEnabled(widget.Name == tool || widget.Name == "Select" || !isCreating);
+				bool isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
+				string tool = this.CurrentDocument.Modifier.Tool;
+				Widget[] toolWidgets = Widget.FindAllCommandWidgets("SelectTool", this.commandDispatcher);
+				foreach ( Widget widget in toolWidgets )
+				{
+					widget.ActiveState = ( widget.Name == tool ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+					widget.SetEnabled(widget.Name == tool || widget.Name == "Select" || !isCreating);
+				}
+			}
+			else
+			{
+				Widget[] toolWidgets = Widget.FindAllCommandWidgets("SelectTool", this.commandDispatcher);
+				foreach ( Widget widget in toolWidgets )
+				{
+					widget.ActiveState = WidgetState.ActiveNo;
+					widget.SetEnabled(false);
+				}
 			}
 		}
 
 		// Appelé par le document lorsque l'état "enregistrer" a changé.
 		private void HandleSaveChanged()
 		{
-			this.saveState.Enabled = this.document.IsDirtySerialize;
-			this.saveAsState.Enabled = true;
+			if ( this.IsCurrentDocument )
+			{
+				this.saveState.Enabled = this.CurrentDocument.IsDirtySerialize;
+				this.saveAsState.Enabled = true;
+				this.UpdateBookDocuments();
+			}
+			else
+			{
+				this.saveState.Enabled = false;
+				this.saveAsState.Enabled = false;
+			}
 		}
 
 		// Appelé par le document lorsque la sélection a changé.
 		private void HandleSelectionChanged()
 		{
-			viewer = this.document.Modifier.ActiveViewer;
-
-			this.containerPrincipal.SetDirtyContent();
+			if ( this.IsCurrentDocument )
+			{
+				DocumentInfo di = this.CurrentDocumentInfo;
+				di.containerPrincipal.SetDirtyContent();
 #if DEBUG
-			this.containerAutos.SetDirtyContent();
+				di.containerAutos.SetDirtyContent();
 #endif
-			this.containerOperations.SetDirtyContent();
+				di.containerOperations.SetDirtyContent();
 
-			int totalSelected  = this.document.Modifier.TotalSelected;
-			int totalHide      = this.document.Modifier.TotalHide;
-			int totalPageHide  = this.document.Modifier.TotalPageHide;
-			int totalObjects   = this.document.Modifier.TotalObjects;
-			bool isCreating    = this.document.Modifier.ActiveViewer.IsCreating;
-			bool isBase        = viewer.DrawingContext.RootStackIsBase;
-			Objects.Abstract one = this.document.Modifier.RetOnlySelectedObject();
+				Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
+				int totalSelected  = this.CurrentDocument.Modifier.TotalSelected;
+				int totalHide      = this.CurrentDocument.Modifier.TotalHide;
+				int totalPageHide  = this.CurrentDocument.Modifier.TotalPageHide;
+				int totalObjects   = this.CurrentDocument.Modifier.TotalObjects;
+				bool isCreating    = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
+				bool isBase        = viewer.DrawingContext.RootStackIsBase;
+				Objects.Abstract one = this.CurrentDocument.Modifier.RetOnlySelectedObject();
 
-			this.newState.Enabled = true;
-			this.openState.Enabled = true;
-			this.deleteState.Enabled = ( totalSelected > 0 || isCreating );
-			this.duplicateState.Enabled = ( totalSelected > 0 && !isCreating );
-			this.cutState.Enabled = ( totalSelected > 0 && !isCreating );
-			this.copyState.Enabled = ( totalSelected > 0 && !isCreating );
-			this.pasteState.Enabled = ( !this.document.Modifier.IsClipboardEmpty() && !isCreating );
-			this.orderUpState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating );
-			this.orderDownState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating );
-			this.rotate90State.Enabled = ( totalSelected > 0 && !isCreating );
-			this.rotate180State.Enabled = ( totalSelected > 0 && !isCreating );
-			this.rotate270State.Enabled = ( totalSelected > 0 && !isCreating );
-			this.mirrorHState.Enabled = ( totalSelected > 0 && !isCreating );
-			this.mirrorVState.Enabled = ( totalSelected > 0 && !isCreating );
-			this.zoomMul2State.Enabled = ( totalSelected > 0 && !isCreating );
-			this.zoomDiv2State.Enabled = ( totalSelected > 0 && !isCreating );
-			this.mergeState.Enabled = ( totalSelected > 1 && !isCreating );
-			this.groupState.Enabled = ( totalSelected > 0 && !isCreating );
-			this.ungroupState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating );
-			this.insideState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating );
-			this.outsideState.Enabled = ( !isBase && !isCreating );
+				this.newState.Enabled = true;
+				this.openState.Enabled = true;
+				this.deleteState.Enabled = ( totalSelected > 0 || isCreating );
+				this.duplicateState.Enabled = ( totalSelected > 0 && !isCreating );
+				this.cutState.Enabled = ( totalSelected > 0 && !isCreating );
+				this.copyState.Enabled = ( totalSelected > 0 && !isCreating );
+				this.pasteState.Enabled = ( !this.CurrentDocument.Modifier.IsClipboardEmpty() && !isCreating );
+				this.orderUpState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating );
+				this.orderDownState.Enabled = ( totalObjects > 1 && totalSelected > 0 && !isCreating );
+				this.rotate90State.Enabled = ( totalSelected > 0 && !isCreating );
+				this.rotate180State.Enabled = ( totalSelected > 0 && !isCreating );
+				this.rotate270State.Enabled = ( totalSelected > 0 && !isCreating );
+				this.mirrorHState.Enabled = ( totalSelected > 0 && !isCreating );
+				this.mirrorVState.Enabled = ( totalSelected > 0 && !isCreating );
+				this.zoomMul2State.Enabled = ( totalSelected > 0 && !isCreating );
+				this.zoomDiv2State.Enabled = ( totalSelected > 0 && !isCreating );
+				this.mergeState.Enabled = ( totalSelected > 1 && !isCreating );
+				this.groupState.Enabled = ( totalSelected > 0 && !isCreating );
+				this.ungroupState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating );
+				this.insideState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating );
+				this.outsideState.Enabled = ( !isBase && !isCreating );
 
-			this.hideSelState.Enabled = ( totalSelected > 0 && !isCreating );
-			this.hideRestState.Enabled = ( totalObjects-totalSelected-totalHide > 0 && !isCreating );
-			this.hideCancelState.Enabled = ( totalPageHide > 0 && !isCreating );
+				this.hideSelState.Enabled = ( totalSelected > 0 && !isCreating );
+				this.hideRestState.Enabled = ( totalObjects-totalSelected-totalHide > 0 && !isCreating );
+				this.hideCancelState.Enabled = ( totalPageHide > 0 && !isCreating );
 
-			this.zoomSelState.Enabled = ( totalSelected > 0 );
+				this.zoomSelState.Enabled = ( totalSelected > 0 );
 
-			this.deselectState.Enabled = ( totalSelected > 0 );
-			this.selectAllState.Enabled = ( totalSelected < totalObjects-totalHide );
-			this.selectInvertState.Enabled = ( totalObjects > 0 );
+				this.deselectState.Enabled = ( totalSelected > 0 );
+				this.selectAllState.Enabled = ( totalSelected < totalObjects-totalHide );
+				this.selectInvertState.Enabled = ( totalObjects > 0 );
 
-			this.selectGlobalState.Enabled = ( totalSelected > 0 );
-			this.selectGlobalState.ActiveState = ( totalSelected > 0 && viewer.GlobalSelect ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectGlobalState.Enabled = ( totalSelected > 0 );
+				this.selectGlobalState.ActiveState = ( totalSelected > 0 && viewer.GlobalSelect ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			
-			this.selectPartialState.ActiveState = viewer.PartialSelect ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectPartialState.ActiveState = viewer.PartialSelect ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
+				this.CurrentDocument.Dialogs.UpdateInfos();
+			}
+			else
+			{
+				this.newState.Enabled = true;
+				this.openState.Enabled = true;
+				this.deleteState.Enabled = false;
+				this.duplicateState.Enabled = false;
+				this.cutState.Enabled = false;
+				this.copyState.Enabled = false;
+				this.pasteState.Enabled = false;
+				this.orderUpState.Enabled = false;
+				this.orderDownState.Enabled = false;
+				this.rotate90State.Enabled = false;
+				this.rotate180State.Enabled = false;
+				this.rotate270State.Enabled = false;
+				this.mirrorHState.Enabled = false;
+				this.mirrorVState.Enabled = false;
+				this.zoomMul2State.Enabled = false;
+				this.zoomDiv2State.Enabled = false;
+				this.mergeState.Enabled = false;
+				this.groupState.Enabled = false;
+				this.ungroupState.Enabled = false;
+				this.insideState.Enabled = false;
+				this.outsideState.Enabled = false;
+
+				this.hideSelState.Enabled = false;
+				this.hideRestState.Enabled = false;
+				this.hideCancelState.Enabled = false;
+
+				this.zoomSelState.Enabled = false;
+
+				this.deselectState.Enabled = false;
+				this.selectAllState.Enabled = false;
+				this.selectInvertState.Enabled = false;
+
+				this.selectGlobalState.Enabled = false;
+				this.selectGlobalState.ActiveState = WidgetState.ActiveNo;
+			
+				this.selectPartialState.ActiveState = WidgetState.ActiveNo;
+			}
 
 			StatusField field = this.info.Items["StatusObject"] as StatusField;
 			field.Text = this.TextInfoObject;
@@ -1839,130 +1906,228 @@ namespace Epsitec.App.DocumentEditor
 		// Appelé lorsque la création d'un objet à débuté ou s'est terminée.
 		private void HandleCreateChanged()
 		{
+			if ( !this.IsCurrentDocument )  return;
 			this.HandleSelectionChanged();
 			this.HandlePagesChanged();
 			this.HandleLayersChanged();
 			this.HandleUndoRedoChanged();
 			this.HandleToolChanged();
+			this.CurrentDocument.Dialogs.UpdateInfos();
 		}
 
 		// Appelé par le document lorsqu'un style a changé.
 		private void HandleStyleChanged()
 		{
-			this.containerStyles.SetDirtyContent();
+			if ( !this.IsCurrentDocument )  return;
+			DocumentInfo di = this.CurrentDocumentInfo;
+			di.containerStyles.SetDirtyContent();
 		}
 
 		// Appelé par le document lorsque les pages ont changé.
 		private void HandlePagesChanged()
 		{
-			this.containerPages.SetDirtyContent();
+			if ( this.IsCurrentDocument )
+			{
+				DocumentInfo di = this.CurrentDocumentInfo;
+				di.containerPages.SetDirtyContent();
 
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int cp = context.CurrentPage;
-			int tp = context.TotalPages();
+				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+				int cp = context.CurrentPage;
+				int tp = context.TotalPages();
 
-			bool isCreating = this.document.Modifier.ActiveViewer.IsCreating;
+				bool isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
 
-			this.pagePrev.Enabled = (cp > 0 && !isCreating );
-			this.pageNext.Enabled = (cp < tp-1 && !isCreating );
-			this.pageMenu.Enabled = (tp > 1 && !isCreating );
-			this.pageCreate.Enabled = !isCreating;
-			this.pageDelete.Enabled = (tp > 1 && !isCreating );
-			this.pageUp.Enabled = (cp > 0 && !isCreating );
-			this.pageDown.Enabled = (cp < tp-1 && !isCreating );
+				this.pagePrevState.Enabled = (cp > 0 && !isCreating );
+				this.pageNextState.Enabled = (cp < tp-1 && !isCreating );
+				this.pageMenuState.Enabled = (tp > 1 && !isCreating );
+				this.pageCreateState.Enabled = !isCreating;
+				this.pageDeleteState.Enabled = (tp > 1 && !isCreating );
+				this.pageUpState.Enabled = (cp > 0 && !isCreating );
+				this.pageDownState.Enabled = (cp < tp-1 && !isCreating );
 
-			this.quickPageMenu.Text = (cp+1).ToString();
+				this.CurrentDocumentInfo.quickPageMenu.Text = (cp+1).ToString();
+			}
+			else
+			{
+				this.pagePrevState.Enabled = false;
+				this.pageNextState.Enabled = false;
+				this.pageMenuState.Enabled = false;
+				this.pageCreateState.Enabled = false;
+				this.pageDeleteState.Enabled = false;
+				this.pageUpState.Enabled = false;
+				this.pageDownState.Enabled = false;
+			}
 		}
 
 		// Appelé par le document lorsque les calques ont changé.
 		private void HandleLayersChanged()
 		{
-			this.containerLayers.SetDirtyContent();
+			if ( this.IsCurrentDocument )
+			{
+				DocumentInfo di = this.CurrentDocumentInfo;
+				di.containerLayers.SetDirtyContent();
 
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int cl = context.CurrentLayer;
-			int tl = context.TotalLayers();
+				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+				int cl = context.CurrentLayer;
+				int tl = context.TotalLayers();
 
-			bool isCreating = this.document.Modifier.ActiveViewer.IsCreating;
+				bool isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
 
-			this.layerPrev.Enabled = (cl > 0 && !isCreating );
-			this.layerNext.Enabled = (cl < tl-1 && !isCreating );
-			this.layerMenu.Enabled = (tl > 1 && !isCreating );
-			this.layerCreate.Enabled = !isCreating ;
-			this.layerDelete.Enabled = (tl > 1 && !isCreating );
-			this.layerUp.Enabled = (cl > 0 && !isCreating );
-			this.layerDown.Enabled = (cl < tl-1 && !isCreating );
+				this.layerPrevState.Enabled = (cl > 0 && !isCreating );
+				this.layerNextState.Enabled = (cl < tl-1 && !isCreating );
+				this.layerMenuState.Enabled = (tl > 1 && !isCreating );
+				this.layerCreateState.Enabled = !isCreating ;
+				this.layerDeleteState.Enabled = (tl > 1 && !isCreating );
+				this.layerUpState.Enabled = (cl > 0 && !isCreating );
+				this.layerDownState.Enabled = (cl < tl-1 && !isCreating );
 
-			this.quickLayerMenu.Text = ((char)('A'+cl)).ToString();
+				this.CurrentDocumentInfo.quickLayerMenu.Text = ((char)('A'+cl)).ToString();
+			}
+			else
+			{
+				this.layerPrevState.Enabled = false;
+				this.layerNextState.Enabled = false;
+				this.layerMenuState.Enabled = false;
+				this.layerCreateState.Enabled = false;
+				this.layerDeleteState.Enabled = false;
+				this.layerUpState.Enabled = false;
+				this.layerDownState.Enabled = false;
+			}
 		}
 
 		// Appelé par le document lorsqu'un nom de page a changé.
 		private void HandlePageChanged(Objects.Abstract page)
 		{
-			this.containerPages.SetDirtyObject(page);
+			if ( !this.IsCurrentDocument )  return;
+			DocumentInfo di = this.CurrentDocumentInfo;
+			di.containerPages.SetDirtyObject(page);
 		}
 
 		// Appelé par le document lorsqu'un nom de calque a changé.
 		private void HandleLayerChanged(Objects.Abstract layer)
 		{
-			this.containerLayers.SetDirtyObject(layer);
+			if ( !this.IsCurrentDocument )  return;
+			DocumentInfo di = this.CurrentDocumentInfo;
+			di.containerLayers.SetDirtyObject(layer);
 		}
 
 		// Appelé par le document lorsque l'état des commande undo/redo a changé.
 		private void HandleUndoRedoChanged()
 		{
-			bool isCreating = this.document.Modifier.ActiveViewer.IsCreating;
-			this.undoState.Enabled = ( this.document.Modifier.OpletQueue.CanUndo && !isCreating );
-			this.redoState.Enabled = ( this.document.Modifier.OpletQueue.CanRedo && !isCreating );
+			if ( this.IsCurrentDocument )
+			{
+				bool isCreating = this.CurrentDocument.Modifier.ActiveViewer.IsCreating;
+				this.undoState.Enabled = ( this.CurrentDocument.Modifier.OpletQueue.CanUndo && !isCreating );
+				this.redoState.Enabled = ( this.CurrentDocument.Modifier.OpletQueue.CanRedo && !isCreating );
+			}
+			else
+			{
+				this.undoState.Enabled = false;
+				this.redoState.Enabled = false;
+			}
 		}
 
 		// Appelé par le document lorsque l'état de la grille a changé.
 		private void HandleGridChanged()
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			this.gridState.ActiveState = context.GridActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			if ( this.IsCurrentDocument )
+			{
+				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+				this.gridState.Enabled = true;
+				this.gridState.ActiveState = context.GridActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			}
+			else
+			{
+				this.gridState.Enabled = false;
+				this.gridState.ActiveState = WidgetState.ActiveNo;
+			}
 		}
 
 		// Appelé par le document lorsque l'état de l'aperçu a changé.
 		private void HandlePreviewChanged()
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			this.previewState.ActiveState = context.PreviewActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			if ( this.IsCurrentDocument )
+			{
+				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+				this.previewState.Enabled = true;
+				this.previewState.ActiveState = context.PreviewActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			}
+			else
+			{
+				this.previewState.Enabled = false;
+				this.previewState.ActiveState = WidgetState.ActiveNo;
+			}
 		}
 
 		// Appelé par le document lorsque les réglages ont changé.
 		private void HandleSettingsChanged()
 		{
-			this.document.Dialogs.UpdateSettings();
+			if ( this.IsCurrentDocument )
+			{
+				this.CurrentDocument.Dialogs.UpdateSettings();
+			}
 		}
 
 		// Appelé par le document lorsque les repères ont changé.
 		private void HandleGuidesChanged()
 		{
-			this.document.Dialogs.UpdateGuides();
+			if ( this.IsCurrentDocument )
+			{
+				this.CurrentDocument.Dialogs.UpdateGuides();
+			}
 		}
 
 		// Appelé par le document lorsque l'état de la commande "hide half" a changé.
 		private void HandleHideHalfChanged()
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			this.hideHalfState.ActiveState = context.HideHalfActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			if ( this.IsCurrentDocument )
+			{
+				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+				this.hideHalfState.Enabled = true;
+				this.hideHalfState.ActiveState = context.HideHalfActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			}
+			else
+			{
+				this.hideHalfState.Enabled = false;
+				this.hideHalfState.ActiveState = WidgetState.ActiveNo;
+			}
 		}
 
 		// Appelé par le document lorsque l'état des commande de debug a changé.
 		private void HandleDebugChanged()
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			this.debugBboxThinState.ActiveState = context.IsDrawBoxThin ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.debugBboxGeomState.ActiveState = context.IsDrawBoxGeom ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.debugBboxFullState.ActiveState = context.IsDrawBoxFull ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			if ( this.IsCurrentDocument )
+			{
+				DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+				this.debugBboxThinState.Enabled = true;
+				this.debugBboxGeomState.Enabled = true;
+				this.debugBboxFullState.Enabled = true;
+				this.debugBboxThinState.ActiveState = context.IsDrawBoxThin ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.debugBboxGeomState.ActiveState = context.IsDrawBoxGeom ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.debugBboxFullState.ActiveState = context.IsDrawBoxFull ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.debugDirtyState.Enabled = true;
+			}
+			else
+			{
+				this.debugBboxThinState.Enabled = false;
+				this.debugBboxGeomState.Enabled = false;
+				this.debugBboxFullState.Enabled = false;
+				this.debugBboxThinState.ActiveState = WidgetState.ActiveNo;
+				this.debugBboxGeomState.ActiveState = WidgetState.ActiveNo;
+				this.debugBboxFullState.ActiveState = WidgetState.ActiveNo;
+				this.debugDirtyState.Enabled = false;
+			}
 		}
 
 		// Appelé lorsqu'une propriété a changé.
 		private void HandlePropertyChanged(System.Collections.ArrayList propertyList)
 		{
-			this.containerPrincipal.SetDirtyProperties(propertyList);
-			this.containerStyles.SetDirtyProperties(propertyList);
+			if ( this.IsCurrentDocument )
+			{
+				DocumentInfo di = this.CurrentDocumentInfo;
+				di.containerPrincipal.SetDirtyProperties(propertyList);
+				di.containerStyles.SetDirtyProperties(propertyList);
+			}
 		}
 
 		// Appelé par le document lorsque le dessin a changé.
@@ -2002,29 +2167,38 @@ namespace Epsitec.App.DocumentEditor
 		// Met à jour les ascenseurs.
 		protected void UpdateScroller()
 		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			Size size = this.document.Size;
-			Size area = this.document.Modifier.SizeArea;
+			if ( !this.IsCurrentDocument )  return;
 
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			Size area = this.CurrentDocument.Modifier.SizeArea;
+			Point scale = context.Scale;
+			double ratioH = context.ContainerSize.Width/scale.X/area.Width;
+			double ratioV = context.ContainerSize.Height/scale.Y/area.Height;
+			ratioH = System.Math.Min(ratioH, 1.0);
+			ratioV = System.Math.Min(ratioV, 1.0);
+
+			DocumentInfo di = this.CurrentDocumentInfo;
 			double min, max;
 
 			min = context.MinOriginX;
 			max = context.MaxOriginX;
 			max = System.Math.Max(min, max);
-			this.hScroller.MinValue = (decimal) min;
-			this.hScroller.MaxValue = (decimal) max;
-			this.hScroller.VisibleRangeRatio = (decimal) ((size.Width/area.Width)/context.Zoom);
-			this.hScroller.Value = (decimal) (-context.OriginX);
-			//?context.OriginX = (double) (-this.hScroller.Value);
+			di.hScroller.MinValue = (decimal) min;
+			di.hScroller.MaxValue = (decimal) max;
+			di.hScroller.VisibleRangeRatio = (decimal) ratioH;
+			di.hScroller.Value = (decimal) (-context.OriginX);
+			di.hScroller.SmallChange = (decimal) (10.0/scale.X);
+			di.hScroller.LargeChange = (decimal) (100.0/scale.X);
 
 			min = context.MinOriginY;
 			max = context.MaxOriginY;
 			max = System.Math.Max(min, max);
-			this.vScroller.MinValue = (decimal) min;
-			this.vScroller.MaxValue = (decimal) max;
-			this.vScroller.VisibleRangeRatio = (decimal) ((size.Height/area.Height)/context.Zoom);
-			this.vScroller.Value = (decimal) (-context.OriginY);
-			//?context.OriginY = (double) (-this.vScroller.Value);
+			di.vScroller.MinValue = (decimal) min;
+			di.vScroller.MaxValue = (decimal) max;
+			di.vScroller.VisibleRangeRatio = (decimal) ratioV;
+			di.vScroller.Value = (decimal) (-context.OriginY);
+			di.vScroller.SmallChange = (decimal) (10.0/scale.Y);
+			di.vScroller.LargeChange = (decimal) (100.0/scale.Y);
 		}
 
 
@@ -2045,9 +2219,16 @@ namespace Epsitec.App.DocumentEditor
 		{
 			get
 			{
-				string name = Misc.ExtractName(this.document.Filename);
-				Size size = this.document.Size / this.document.Modifier.RealScale;
-				return string.Format("{0} ({1}x{2})", name, size.Width, size.Height);
+				Document doc = this.CurrentDocument;
+				if ( doc == null )
+				{
+					return "";
+				}
+				else
+				{
+					Size size = doc.Size / doc.Modifier.RealScale;
+					return string.Format("Format {0}x{1}", size.Width, size.Height);
+				}
 			}
 		}
 
@@ -2056,24 +2237,32 @@ namespace Epsitec.App.DocumentEditor
 		{
 			get
 			{
-				int sel   = this.document.Modifier.TotalSelected;
-				int hide  = this.document.Modifier.TotalHide;
-				int total = this.document.Modifier.TotalObjects;
-				int deep  = this.document.Modifier.ActiveViewer.DrawingContext.RootStackDeep;
-
-				string sDeep = "Sélection";
-				if ( deep > 2 )
+				Document doc = this.CurrentDocument;
+				if ( doc == null )
 				{
-					sDeep = string.Format("Niveau {0}", deep-2);
+					return "";
 				}
-
-				string sHide = "";
-				if ( hide > 0 )
+				else
 				{
-					sHide = string.Format("-{0}", hide);
-				}
+					int sel   = doc.Modifier.TotalSelected;
+					int hide  = doc.Modifier.TotalHide;
+					int total = doc.Modifier.TotalObjects;
+					int deep  = doc.Modifier.ActiveViewer.DrawingContext.RootStackDeep;
 
-				return string.Format("{0}: {1}/{2}{3}", sDeep, sel, total, sHide);
+					string sDeep = "Sélection";
+					if ( deep > 2 )
+					{
+						sDeep = string.Format("Niveau {0}", deep-2);
+					}
+
+					string sHide = "";
+					if ( hide > 0 )
+					{
+						sHide = string.Format("-{0}", hide);
+					}
+
+					return string.Format("{0}: {1}/{2}{3}", sDeep, sel, total, sHide);
+				}
 			}
 		}
 
@@ -2082,9 +2271,17 @@ namespace Epsitec.App.DocumentEditor
 		{
 			get
 			{
-				Point mouse = this.document.Modifier.ActiveViewer.MousePos();
-				mouse /= this.document.Modifier.RealScale;
-				return string.Format("(x:{0} y:{1})", mouse.X.ToString("F1"), mouse.Y.ToString("F1"));
+				Document doc = this.CurrentDocument;
+				if ( doc == null )
+				{
+					return "";
+				}
+				else
+				{
+					Point mouse = doc.Modifier.ActiveViewer.MousePos();
+					mouse /= doc.Modifier.RealScale;
+					return string.Format("(x:{0} y:{1})", mouse.X.ToString("F1"), mouse.Y.ToString("F1"));
+				}
 			}
 		}
 
@@ -2093,132 +2290,532 @@ namespace Epsitec.App.DocumentEditor
 		{
 			get
 			{
-				DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-				double zoom = context.Zoom;
-				return string.Format("Zoom {0}%", (zoom*100).ToString("F0"));
+				Document doc = this.CurrentDocument;
+				if ( doc == null )
+				{
+					return "";
+				}
+				else
+				{
+					DrawingContext context = doc.Modifier.ActiveViewer.DrawingContext;
+					double zoom = context.Zoom;
+					return string.Format("Zoom {0}%", (zoom*100).ToString("F0"));
+				}
 			}
 		}
 
 
-		protected DocumentType			type;
-		protected bool					useArray;
-		protected Document				clipboard;
-		protected Document				document;
+		#region Dialogs
+		// Crée la fenêtre pour les réglages.
+		protected void CreateWindowSettings()
+		{
+			if ( this.windowSettings == null )
+			{
+				this.windowSettings = new Window();
+				this.windowSettings.ClientSize = new Size(300, 350);
+				this.windowSettings.Text = "Réglages";
+				this.windowSettings.MakeSecondaryWindow();
+				this.windowSettings.MakeFixedSizeWindow();
+				this.windowSettings.MakeToolWindow();
+				this.windowSettings.PreventAutoClose = true;
+				this.windowSettings.Owner = this.Window;
+				this.windowSettings.WindowCloseClicked += new EventHandler(this.HandleWindowSettingsCloseClicked);
 
-		protected CommandDispatcher		commandDispatcher;
-		protected bool					allWidgets = false;
+				// Crée les onglets.
+				TabBook book = new TabBook(this.windowSettings.Root);
+				book.Arrows = TabBookArrows.Stretch;
+				book.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+				book.AnchorMargins = new Margins(6, 6, 6, 34);
 
-		protected HMenu					menu;
-		protected HToolBar				hToolBar;
-		protected VToolBar				vToolBar;
-		protected Widget				root;
-		protected StatusBar				info;
-		protected PaneBook				pane;
-		protected PanePage				leftPane;
-		protected PanePage				rightPane;
-		protected TabBook				book;
-		protected TabPage				bookPrincipal;
-		protected TabPage				bookStyles;
-		protected TabPage				bookAutos;
-		protected TabPage				bookPages;
-		protected TabPage				bookLayers;
-		protected TabPage				bookOper;
-		protected Containers.Principal	containerPrincipal;
-		protected Containers.Styles		containerStyles;
-		protected Containers.Autos		containerAutos;
-		protected Containers.Pages		containerPages;
-		protected Containers.Layers		containerLayers;
-		protected Containers.Operations	containerOperations;
-		protected Viewer				viewer;
-		protected Viewer				frame1;
-		protected Viewer				frame2;
-		protected Viewer				clipboardViewer;
+				TabPage bookFormat = new TabPage();
+				bookFormat.Name = "Format";
+				bookFormat.TabTitle = "Format";
+				book.Items.Add(bookFormat);
 
-		protected GlyphButton			quickPagePrev;
-		protected Button				quickPageMenu;
-		protected GlyphButton			quickPageNext;
-		protected HScroller				hScroller;
+				TabPage bookGrid = new TabPage();
+				bookGrid.Name = "Grid";
+				bookGrid.TabTitle = "Grille";
+				book.Items.Add(bookGrid);
 
-		protected GlyphButton			quickLayerPrev;
-		protected Button				quickLayerMenu;
-		protected GlyphButton			quickLayerNext;
-		protected VScroller				vScroller;
+				TabPage bookGuides = new TabPage();
+				bookGuides.Name = "Guides";
+				bookGuides.TabTitle = "Repères";
+				book.Items.Add(bookGuides);
 
-		protected double				panelsWidth = 235;
+				TabPage bookPrint = new TabPage();
+				bookPrint.Name = "Print";
+				bookPrint.TabTitle = "Impression";
+				book.Items.Add(bookPrint);
 
-		protected CommandState			newState;
-		protected CommandState			openState;
-		protected CommandState			saveState;
-		protected CommandState			saveAsState;
-		protected CommandState			deleteState;
-		protected CommandState			duplicateState;
-		protected CommandState			cutState;
-		protected CommandState			copyState;
-		protected CommandState			pasteState;
-		protected CommandState			orderUpState;
-		protected CommandState			orderDownState;
-		protected CommandState			rotate90State;
-		protected CommandState			rotate180State;
-		protected CommandState			rotate270State;
-		protected CommandState			mirrorHState;
-		protected CommandState			mirrorVState;
-		protected CommandState			zoomMul2State;
-		protected CommandState			zoomDiv2State;
-		protected CommandState			mergeState;
-		protected CommandState			groupState;
-		protected CommandState			ungroupState;
-		protected CommandState			insideState;
-		protected CommandState			outsideState;
-		protected CommandState			undoState;
-		protected CommandState			redoState;
-		protected CommandState			deselectState;
-		protected CommandState			selectAllState;
-		protected CommandState			selectInvertState;
-		protected CommandState			selectGlobalState;
-		protected CommandState			selectPartialState;
-		protected CommandState			hideHalfState;
-		protected CommandState			hideSelState;
-		protected CommandState			hideRestState;
-		protected CommandState			hideCancelState;
-		protected CommandState			zoomMinState;
-		protected CommandState			zoomDefaultState;
-		protected CommandState			zoomSelState;
-		protected CommandState			zoomPrevState;
-		protected CommandState			zoomSubState;
-		protected CommandState			zoomAddState;
-		protected CommandState			previewState;
-		protected CommandState			gridState;
-		protected CommandState			modeState;
-		protected CommandState			arrayOutlineFrameState;
-		protected CommandState			arrayOutlineHorizState;
-		protected CommandState			arrayOutlineVertiState;
-		protected CommandState			arrayAddColumnLeftState;
-		protected CommandState			arrayAddColumnRightState;
-		protected CommandState			arrayAddRowTopState;
-		protected CommandState			arrayAddRowBottomState;
-		protected CommandState			arrayDelColumnState;
-		protected CommandState			arrayDelRowState;
-		protected CommandState			arrayAlignColumnState;
-		protected CommandState			arrayAlignRowState;
-		protected CommandState			arraySwapColumnState;
-		protected CommandState			arraySwapRowState;
-		protected CommandState			arrayLookState;
-		protected CommandState			debugBboxThinState;
-		protected CommandState			debugBboxGeomState;
-		protected CommandState			debugBboxFullState;
-		protected CommandState			pagePrev;
-		protected CommandState			pageNext;
-		protected CommandState			pageMenu;
-		protected CommandState			pageCreate;
-		protected CommandState			pageDelete;
-		protected CommandState			pageUp;
-		protected CommandState			pageDown;
-		protected CommandState			layerPrev;
-		protected CommandState			layerNext;
-		protected CommandState			layerMenu;
-		protected CommandState			layerCreate;
-		protected CommandState			layerDelete;
-		protected CommandState			layerUp;
-		protected CommandState			layerDown;
+				TabPage bookMisc = new TabPage();
+				bookMisc.Name = "Misc";
+				bookMisc.TabTitle = "Divers";
+				book.Items.Add(bookMisc);
+
+				book.ActivePage = bookFormat;
+
+				// Bouton de fermeture.
+				Button buttonClose = new Button(this.windowSettings.Root);
+				buttonClose.Width = 75;
+				buttonClose.Text = "Fermer";
+				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
+				buttonClose.Anchor = AnchorStyles.BottomLeft;
+				buttonClose.AnchorMargins = new Margins(6, 0, 0, 6);
+				buttonClose.Clicked += new MessageEventHandler(this.HandleSettingsButtonCloseClicked);
+				buttonClose.TabIndex = 1000;
+				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				ToolTip.Default.SetToolTip(buttonClose, "Fermer les réglages");
+			}
+
+			this.CurrentDocument.Dialogs.BuildSettings(this.windowSettings);
+			this.windowSettings.Show();
+		}
+
+		private void HandleWindowSettingsCloseClicked(object sender)
+		{
+			this.windowSettings.Hide();
+		}
+
+		private void HandleSettingsButtonCloseClicked(object sender, MessageEventArgs e)
+		{
+			this.windowSettings.Hide();
+		}
+
+		protected void RebuildWindowSettings()
+		{
+			if ( !this.IsCurrentDocument )  return;
+			if ( this.windowSettings == null )  return;
+			this.CurrentDocument.Dialogs.BuildSettings(this.windowSettings);
+		}
+
+		// Crée la fenêtre pour les informations.
+		protected void CreateWindowInfos()
+		{
+			if ( this.windowInfos == null )
+			{
+				this.windowInfos = new Window();
+				this.windowInfos.ClientSize = new Size(300, 250);
+				this.windowInfos.Text = "Informations";
+				//?this.windowInfos.MakeFixedSizeWindow();
+				this.windowInfos.MakeSecondaryWindow();
+				this.windowInfos.PreventAutoClose = true;
+				this.windowInfos.Owner = this.Window;
+				this.windowInfos.WindowCloseClicked += new EventHandler(this.HandleWindowInfosCloseClicked);
+				this.windowInfos.Root.MinSize = new Size(200, 100);
+
+				TextFieldMulti multi = new TextFieldMulti(this.windowInfos.Root);
+				multi.Name = "Infos";
+				multi.IsReadOnly = true;
+				multi.Dock = DockStyle.Fill;
+				multi.DockMargins = new Margins(10, 10, 10, 40);
+
+				// Bouton de fermeture.
+				Button buttonClose = new Button(this.windowInfos.Root);
+				buttonClose.Width = 75;
+				buttonClose.Text = "Fermer";
+				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
+				buttonClose.Anchor = AnchorStyles.BottomLeft;
+				buttonClose.AnchorMargins = new Margins(10, 0, 0, 10);
+				buttonClose.Clicked += new MessageEventHandler(this.HandleInfosButtonCloseClicked);
+				buttonClose.TabIndex = 1000;
+				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				ToolTip.Default.SetToolTip(buttonClose, "Fermer ce dialogue");
+			}
+
+			this.windowInfos.Show();
+			this.CurrentDocument.Dialogs.BuildInfos(this.windowInfos);
+		}
+
+		private void HandleWindowInfosCloseClicked(object sender)
+		{
+			this.windowInfos.Hide();
+		}
+
+		private void HandleInfosButtonCloseClicked(object sender, MessageEventArgs e)
+		{
+			this.windowInfos.Hide();
+		}
+
+		protected void RebuildWindowInfos()
+		{
+			if ( !this.IsCurrentDocument )  return;
+			if ( this.windowInfos == null )  return;
+			this.CurrentDocument.Dialogs.BuildInfos(this.windowInfos);
+		}
+
+		// Crée la fenêtre "à propos de".
+		protected void CreateWindowAbout()
+		{
+			if ( this.windowAbout == null )
+			{
+				this.windowAbout = new Window();
+				this.windowAbout.ClientSize = new Size(300, 150);
+				this.windowAbout.Text = "A propos de...";
+				this.windowAbout.MakeFixedSizeWindow();
+				this.windowAbout.MakeSecondaryWindow();
+				this.windowAbout.PreventAutoClose = true;
+				this.windowAbout.Owner = this.Window;
+				this.windowAbout.WindowCloseClicked += new EventHandler(this.HandleWindowAboutCloseClicked);
+
+				if ( this.type == DocumentType.Pictogram )
+				{
+					Common.Document.Dialogs.CreateTitle(this.windowAbout.Root, "Crésus pictogramme");
+				}
+				else
+				{
+					Common.Document.Dialogs.CreateTitle(this.windowAbout.Root, "Crésus document");
+				}
+
+				string version = typeof(Document).Assembly.FullName.Split(',')[1].Split('=')[1];
+				Common.Document.Dialogs.CreateLabel(this.windowAbout.Root, "Version", version);
+				Common.Document.Dialogs.CreateLabel(this.windowAbout.Root, "Identificateur", "58421-75001-63244-80751");
+				Common.Document.Dialogs.CreateLabel(this.windowAbout.Root, "Créé par", "EPSITEC SA");
+				Common.Document.Dialogs.CreateLabel(this.windowAbout.Root, "Site web", @"<a href=""http://www.epsitec.ch"">www.epsitec.ch</a>");
+				Common.Document.Dialogs.CreateSeparator(this.windowAbout.Root);
+
+				// Bouton de fermeture.
+				Button buttonClose = new Button(this.windowAbout.Root);
+				buttonClose.Width = 75;
+				buttonClose.Text = "Fermer";
+				buttonClose.ButtonStyle = ButtonStyle.DefaultAccept;
+				buttonClose.Anchor = AnchorStyles.BottomLeft;
+				buttonClose.AnchorMargins = new Margins(10, 0, 0, 10);
+				buttonClose.Clicked += new MessageEventHandler(this.HandleAboutButtonCloseClicked);
+				buttonClose.TabIndex = 1000;
+				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				ToolTip.Default.SetToolTip(buttonClose, "Fermer ce dialogue");
+			}
+
+			this.windowAbout.Show();
+		}
+
+		private void HandleWindowAboutCloseClicked(object sender)
+		{
+			this.windowAbout.Hide();
+		}
+
+		private void HandleAboutButtonCloseClicked(object sender, MessageEventArgs e)
+		{
+			this.windowAbout.Hide();
+		}
+		#endregion
+
+
+		#region TabBook
+		// L'onglet pour le document courant a été cliqué.
+		private void HandleBookDocumentsActivePageChanged(object sender)
+		{
+			if ( this.ignoreChange )  return;
+
+			int total = this.bookDocuments.PageCount;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				DocumentInfo di = this.documents[i] as DocumentInfo;
+				if ( di.tabPage == this.bookDocuments.ActivePage )
+				{
+					this.UseDocument(i);
+					return;
+				}
+			}
+		}
+
+		// Indique s'il existe un document courant.
+		protected bool IsCurrentDocument
+		{
+			get
+			{
+				return ( this.currentDocument >= 0 );
+			}
+		}
+
+		// Retourne le DocumentInfo courant.
+		protected DocumentInfo CurrentDocumentInfo
+		{
+			get
+			{
+				if ( this.currentDocument < 0 )  return null;
+				return this.documents[this.currentDocument] as DocumentInfo;
+			}
+		}
+
+		// Retourne le Document courant.
+		public Document CurrentDocument
+		{
+			get
+			{
+				if ( this.currentDocument < 0 )  return null;
+				return this.CurrentDocumentInfo.document;
+			}
+		}
+
+		// Crée un nouveau document.
+		public void CreateDocument()
+		{
+			this.PrepareCloseDocument();
+
+			Document doc = new Document(this.type, DocumentMode.Modify);
+			doc.Name = "Document";
+			doc.Clipboard = this.clipboard;
+
+			DocumentInfo di = new DocumentInfo();
+			di.document = doc;
+			this.documents.Insert(++this.currentDocument, di);
+
+			this.CreateDocumentLayout(this.CurrentDocument);
+
+			this.ConnectEvents();
+			this.CurrentDocument.Modifier.New();
+			this.UpdateCloseCommand();
+			this.PrepareOpenDocument();
+		}
+
+		// Utilise un document ouvert.
+		protected void UseDocument(int rank)
+		{
+			if ( this.ignoreChange )  return;
+
+			this.PrepareCloseDocument();
+			this.currentDocument = rank;
+			this.PrepareOpenDocument();
+
+			if ( rank >= 0 )
+			{
+				this.ignoreChange = true;
+				this.bookDocuments.ActivePage = this.CurrentDocumentInfo.tabPage;
+				this.ignoreChange = false;
+
+				int total = this.bookDocuments.PageCount;
+				for ( int i=0 ; i<total ; i++ )
+				{
+					DocumentInfo di = this.documents[i] as DocumentInfo;
+					di.bookPanels.SetVisible(i == this.currentDocument);
+				}
+
+				this.CommandStateShake(this.pageNextState);
+				this.CommandStateShake(this.pagePrevState);
+				this.CommandStateShake(this.pageMenuState);
+				this.CommandStateShake(this.layerNextState);
+				this.CommandStateShake(this.layerPrevState);
+				this.CommandStateShake(this.layerMenuState);
+
+				this.CurrentDocument.Notifier.NotifyAllChanged();
+			}
+			else
+			{
+				this.HandleDocumentChanged();
+				this.HandleMouseChanged();
+				this.HandleOriginChanged();
+				this.HandleZoomChanged();
+				this.HandleToolChanged();
+				this.HandleSaveChanged();
+				this.HandleSelectionChanged();
+				this.HandleCreateChanged();
+				this.HandleStyleChanged();
+				this.HandlePagesChanged();
+				this.HandleLayersChanged();
+				this.HandleUndoRedoChanged();
+				this.HandleGridChanged();
+				this.HandlePreviewChanged();
+				this.HandleSettingsChanged();
+				this.HandleGuidesChanged();
+				this.HandleHideHalfChanged();
+				this.HandleDebugChanged();
+			}
+		}
+
+		// Ferme le document courant.
+		protected void CloseDocument()
+		{
+			this.PrepareCloseDocument();
+			int rank = this.currentDocument;
+			if ( rank < 0 )  return;
+
+			DocumentInfo di = this.CurrentDocumentInfo;
+			this.documents.RemoveAt(rank);
+			this.ignoreChange = true;
+			this.bookDocuments.Items.RemoveAt(rank);
+			this.ignoreChange = false;
+			di.Dispose();
+
+			if ( rank >= this.bookDocuments.PageCount )
+			{
+				rank = this.bookDocuments.PageCount-1;
+			}
+			this.currentDocument = -1;
+			this.UseDocument(rank);
+			this.UpdateCloseCommand();
+		}
+
+		// Met à jour l'état de la commande de fermeture.
+		protected void UpdateCloseCommand()
+		{
+			this.closeState.Enabled = (this.bookDocuments.PageCount > 0);
+		}
+
+		// Met à jour le nom de l'onglet des documents.
+		protected void UpdateBookDocuments()
+		{
+			if ( !this.IsCurrentDocument )  return;
+			TabPage tab = this.bookDocuments.Items[this.currentDocument] as TabPage;
+			tab.TabTitle = Misc.ExtractName(this.CurrentDocument.Filename, this.CurrentDocument.IsDirtySerialize);
+		}
+
+		// Préparation avant la fermeture d'un document.
+		protected void PrepareCloseDocument()
+		{
+			if ( !this.IsCurrentDocument )  return;
+			this.CurrentDocument.Dialogs.FlushAll();
+		}
+
+		// Préparation après l'ouverture d'un document.
+		protected void PrepareOpenDocument()
+		{
+			this.RebuildWindowSettings();
+			this.RebuildWindowInfos();
+		}
+
+		// Secoue un CommandState pour le forcer à se remettre à jour.
+		protected void CommandStateShake(CommandState state)
+		{
+			state.Enabled = !state.Enabled;
+			state.Enabled = !state.Enabled;
+		}
+		#endregion
+
+
+		protected DocumentType					type;
+		protected bool							useArray;
+		protected Document						clipboard;
+		protected int							currentDocument;
+		protected System.Collections.ArrayList	documents;
+
+		protected CommandDispatcher				commandDispatcher;
+
+		protected HMenu							menu;
+		protected HToolBar						hToolBar;
+		protected VToolBar						vToolBar;
+		protected StatusBar						info;
+		protected TabBook						bookDocuments;
+		protected double						panelsWidth = 247;
+		protected string						printerName = "";
+		protected bool							ignoreChange;
+
+		protected Window						windowAbout;
+		protected Window						windowInfos;
+		protected Window						windowSettings;
+
+		protected CommandState					newState;
+		protected CommandState					openState;
+		protected CommandState					saveState;
+		protected CommandState					saveAsState;
+		protected CommandState					closeState;
+		protected CommandState					printState;
+		protected CommandState					deleteState;
+		protected CommandState					duplicateState;
+		protected CommandState					cutState;
+		protected CommandState					copyState;
+		protected CommandState					pasteState;
+		protected CommandState					orderUpState;
+		protected CommandState					orderDownState;
+		protected CommandState					rotate90State;
+		protected CommandState					rotate180State;
+		protected CommandState					rotate270State;
+		protected CommandState					mirrorHState;
+		protected CommandState					mirrorVState;
+		protected CommandState					zoomMul2State;
+		protected CommandState					zoomDiv2State;
+		protected CommandState					mergeState;
+		protected CommandState					groupState;
+		protected CommandState					ungroupState;
+		protected CommandState					insideState;
+		protected CommandState					outsideState;
+		protected CommandState					undoState;
+		protected CommandState					redoState;
+		protected CommandState					deselectState;
+		protected CommandState					selectAllState;
+		protected CommandState					selectInvertState;
+		protected CommandState					selectGlobalState;
+		protected CommandState					selectPartialState;
+		protected CommandState					hideHalfState;
+		protected CommandState					hideSelState;
+		protected CommandState					hideRestState;
+		protected CommandState					hideCancelState;
+		protected CommandState					zoomMinState;
+		protected CommandState					zoomDefaultState;
+		protected CommandState					zoomSelState;
+		protected CommandState					zoomPrevState;
+		protected CommandState					zoomSubState;
+		protected CommandState					zoomAddState;
+		protected CommandState					previewState;
+		protected CommandState					gridState;
+		protected CommandState					arrayOutlineFrameState;
+		protected CommandState					arrayOutlineHorizState;
+		protected CommandState					arrayOutlineVertiState;
+		protected CommandState					arrayAddColumnLeftState;
+		protected CommandState					arrayAddColumnRightState;
+		protected CommandState					arrayAddRowTopState;
+		protected CommandState					arrayAddRowBottomState;
+		protected CommandState					arrayDelColumnState;
+		protected CommandState					arrayDelRowState;
+		protected CommandState					arrayAlignColumnState;
+		protected CommandState					arrayAlignRowState;
+		protected CommandState					arraySwapColumnState;
+		protected CommandState					arraySwapRowState;
+		protected CommandState					arrayLookState;
+		protected CommandState					debugBboxThinState;
+		protected CommandState					debugBboxGeomState;
+		protected CommandState					debugBboxFullState;
+		protected CommandState					debugDirtyState;
+		protected CommandState					pagePrevState;
+		protected CommandState					pageNextState;
+		protected CommandState					pageMenuState;
+		protected CommandState					pageCreateState;
+		protected CommandState					pageDeleteState;
+		protected CommandState					pageUpState;
+		protected CommandState					pageDownState;
+		protected CommandState					layerPrevState;
+		protected CommandState					layerNextState;
+		protected CommandState					layerMenuState;
+		protected CommandState					layerCreateState;
+		protected CommandState					layerDeleteState;
+		protected CommandState					layerUpState;
+		protected CommandState					layerDownState;
+		protected CommandState					settingsState;
+		protected CommandState					infosState;
+		protected CommandState					aboutState;
+
+
+		protected class DocumentInfo
+		{
+			public Document						document;
+			public TabPage						tabPage;
+			public HScroller					hScroller;
+			public VScroller					vScroller;
+			public Button						quickPageMenu;
+			public Button						quickLayerMenu;
+			public TabBook						bookPanels;
+			public Containers.Principal			containerPrincipal;
+			public Containers.Styles			containerStyles;
+			public Containers.Autos				containerAutos;
+			public Containers.Pages				containerPages;
+			public Containers.Layers			containerLayers;
+			public Containers.Operations		containerOperations;
+
+			public void Dispose()
+			{
+				if ( this.tabPage != null )  this.tabPage.Dispose();
+				if ( this.hScroller != null )  this.hScroller.Dispose();
+				if ( this.vScroller != null )  this.vScroller.Dispose();
+				if ( this.quickPageMenu != null )  this.quickPageMenu.Dispose();
+				if ( this.quickLayerMenu != null )  this.quickLayerMenu.Dispose();
+				if ( this.bookPanels != null )  this.bookPanels.Dispose();
+				if ( this.containerPrincipal != null )  this.containerPrincipal.Dispose();
+				if ( this.containerStyles != null )  this.containerStyles.Dispose();
+				if ( this.containerAutos != null )  this.containerAutos.Dispose();
+				if ( this.containerPages != null )  this.containerPages.Dispose();
+				if ( this.containerLayers != null )  this.containerLayers.Dispose();
+				if ( this.containerOperations != null )  this.containerOperations.Dispose();
+			}
+		}
 	}
 }

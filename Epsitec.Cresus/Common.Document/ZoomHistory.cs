@@ -1,4 +1,5 @@
 using Epsitec.Common.Support;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Document
 {
@@ -13,8 +14,7 @@ namespace Epsitec.Common.Document
 		public class ZoomElement
 		{
 			public double		Zoom;
-			public double		Ox;
-			public double		Oy;
+			public Point		Center;
 		}
 
 		public ZoomHistory()
@@ -40,7 +40,6 @@ namespace Epsitec.Common.Document
 			if ( total > 0 )
 			{
 				ZoomElement last = this.list[total-1] as ZoomElement;
-				//if ( last.Zoom == item.Zoom )  return;
 				if ( System.Math.Abs(last.Zoom-item.Zoom) < 0.001 )  return;
 			}
 			this.list.Add(item);

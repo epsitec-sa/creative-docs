@@ -549,6 +549,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Settings\PrintInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Settings\Settings.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -71,7 +71,7 @@ namespace Epsitec.Common.Document
 		}
 
 
-		#region ZoomAndOrigin
+		#region Zoom
 		// Retourne l'origine horizontale minimale.
 		public double MinOriginX
 		{
@@ -139,13 +139,59 @@ namespace Epsitec.Common.Document
 			}
 		}
 
-		// Spécifie le zoom et l'origine de la zone visible.
-		public void ZoomAndOrigin(double zoom, Point origin)
+		// Retourne le centre de la zone visible.
+		public Point Center
 		{
-			this.ZoomAndOrigin(zoom, origin.X, origin.Y);
+			get
+			{
+				Point center = new Point();
+				Size cs = this.ContainerSize;
+				center.X = -this.OriginX+(cs.Width/this.ScaleX)/2;
+				center.Y = -this.OriginY+(cs.Height/this.ScaleY)/2;
+				return center;
+			}
 		}
 
-		public void ZoomAndOrigin(double zoom, double originX, double originY)
+		// Vérifie si on utilise le zoom 100% centré.
+		public bool IsZoomDefault
+		{
+			get
+			{
+				if ( this.zoom != 1.0 )  return false;
+
+				Size cs = this.ContainerSize;
+				Size size = this.document.Size;
+				Point scale = this.ScaleForZoom(this.zoom);
+				double originX = size.Width/2 - (cs.Width/scale.X)/2;
+				double originY = size.Height/2 - (cs.Height/scale.Y)/2;
+
+				return ( System.Math.Abs(this.originX+originX) < 0.00001 &&
+						 System.Math.Abs(this.originY+originY) < 0.00001 );
+			}
+		}
+
+		// Remet le zoom et le centre par défaut.
+		public void ZoomAndCenter()
+		{
+			this.ZoomAndCenter(1.0, this.document.Size.Width/2, this.document.Size.Height/2);
+		}
+
+		// Spécifie le zoom et le centre de la zone visible.
+		public void ZoomAndCenter(double zoom, Point center)
+		{
+			this.ZoomAndCenter(zoom, center.X, center.Y);
+		}
+
+		public void ZoomAndCenter(double zoom, double centerX, double centerY)
+		{
+			Size cs = this.ContainerSize;
+			Point scale = this.ScaleForZoom(zoom);
+			double originX = centerX - (cs.Width/scale.X)/2;
+			double originY = centerY - (cs.Height/scale.Y)/2;
+			this.ZoomAndOrigin(zoom, -originX, -originY);
+		}
+
+		protected void ZoomAndOrigin(double zoom, double originX, double originY)
 		{
 			if ( this.zoom    != zoom    ||
 				 this.originX != originX ||
@@ -258,24 +304,26 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Echelles à utiliser pour le dessin pour un zoom donné.
+		protected Point ScaleForZoom(double zoom)
+		{
+			Size size = this.ContainerSize;
+			double sx = zoom*size.Width/this.document.Size.Width;
+			double sy = zoom*size.Height/this.document.Size.Height;
+			double scale = System.Math.Min(sx, sy);
+			if ( this.document.Type != DocumentType.Pictogram )
+			{
+				scale *= 0.9;  // ch'tite marge
+			}
+			return new Point(scale, scale);
+		}
+
 		// Echelles à utiliser pour le dessin.
 		public Point Scale
 		{
 			get
 			{
-				Size size = this.ContainerSize;
-				double sx = this.zoom*size.Width/this.document.Size.Width;
-				double sy = this.zoom*size.Height/this.document.Size.Height;
-				if ( this.document.Type != DocumentType.Pictogram )
-				{
-					if ( sx > sy )
-					{
-						sx = sy;
-					}
-					sx *= 0.9;  // ch'tite marge
-					sy = sx;
-				}
-				return new Point(sx, sy);
+				return this.ScaleForZoom(this.zoom);
 			}
 		}
 

@@ -18,6 +18,8 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefault();
 
 			this.guides = new System.Collections.ArrayList();
+
+			this.printInfo = new PrintInfo();
 		}
 
 		// Crée tous les réglages par défaut, si nécessaire.
@@ -26,15 +28,24 @@ namespace Epsitec.Common.Document.Settings
 		protected void CreateDefault()
 		{
 			this.CreateDefaultPoint("PageSize");
+
 			this.CreateDefaultBool("GridActive");
 			this.CreateDefaultBool("GridShow");
 			this.CreateDefaultPoint("GridStep");
 			this.CreateDefaultPoint("GridSubdiv");
 			this.CreateDefaultPoint("GridOffset");
+
 			this.CreateDefaultBool("GuidesActive");
 			this.CreateDefaultBool("GuidesShow");
+
 			this.CreateDefaultPoint("DuplicateMove");
 			this.CreateDefaultInteger("DefaultUnit");
+
+			this.CreateDefaultBool("PrintAutoLandscape");
+			this.CreateDefaultBool("PrintAutoZoom");
+			this.CreateDefaultBool("PrintDraft");
+			this.CreateDefaultBool("PrintAA");
+			this.CreateDefaultDouble("PrintDpi");
 		}
 
 		protected void CreateDefaultBool(string name)
@@ -75,6 +86,13 @@ namespace Epsitec.Common.Document.Settings
 				sPoint = new Point(this.document, name);
 				this.settings.Add(sPoint);
 			}
+		}
+
+
+		// Donne les réglages de l'impression.
+		public PrintInfo PrintInfo
+		{
+			get { return this.printInfo; }
 		}
 
 		// Remets tous les réglages par défaut.
@@ -168,6 +186,7 @@ namespace Epsitec.Common.Document.Settings
 		{
 			info.AddValue("Settings", this.settings);
 			info.AddValue("Guides", this.guides);
+			info.AddValue("PrintInfo", this.printInfo);
 		}
 
 		// Constructeur qui désérialise les réglages.
@@ -176,6 +195,15 @@ namespace Epsitec.Common.Document.Settings
 			this.document = Document.ReadDocument;
 			this.settings = (System.Collections.ArrayList) info.GetValue("Settings", typeof(System.Collections.ArrayList));
 			this.guides = (System.Collections.ArrayList) info.GetValue("Guides", typeof(System.Collections.ArrayList));
+
+			if ( Support.Serialization.Helper.FindElement(info, "PrintInfo") )
+			{
+				this.printInfo = (PrintInfo) info.GetValue("PrintInfo", typeof(PrintInfo));
+			}
+			else
+			{
+				this.printInfo = new PrintInfo();
+			}
 		}
 
 		// Adapte l'objet après une désérialisation.
@@ -189,5 +217,6 @@ namespace Epsitec.Common.Document.Settings
 		protected Document						document;
 		protected System.Collections.ArrayList	settings;
 		protected System.Collections.ArrayList	guides;
+		protected PrintInfo						printInfo;
 	}
 }
