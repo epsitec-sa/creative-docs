@@ -12,41 +12,40 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelPages : Epsitec.Common.Widgets.Widget
 	{
-		public PanelPages(Drawer drawer, ToolTip toolTip)
+		public PanelPages(Drawer drawer)
 		{
 			this.drawer = drawer;
-			this.toolTip = toolTip;
 
 			this.toolBar = new HToolBar(this);
 
 			this.buttonNew = new IconButton(@"file:images/pagenew.icon");
 			this.buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNew);
 			this.toolBar.Items.Add(this.buttonNew);
-			this.toolTip.SetToolTip(this.buttonNew, "Nouvelle page vide");
+			ToolTip.Default.SetToolTip(this.buttonNew, "Nouvelle page vide");
 
 			this.buttonDuplicate = new IconButton(@"file:images/duplicate.icon");
 			this.buttonDuplicate.Clicked += new MessageEventHandler(this.HandleButtonDuplicate);
 			this.toolBar.Items.Add(this.buttonDuplicate);
-			this.toolTip.SetToolTip(this.buttonDuplicate, "Dupliquer la page");
+			ToolTip.Default.SetToolTip(this.buttonDuplicate, "Dupliquer la page");
 
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonUp = new IconButton(@"file:images/up.icon");
 			this.buttonUp.Clicked += new MessageEventHandler(this.HandleButtonUp);
 			this.toolBar.Items.Add(this.buttonUp);
-			this.toolTip.SetToolTip(this.buttonUp, "Page avant");
+			ToolTip.Default.SetToolTip(this.buttonUp, "Page avant");
 
 			this.buttonDown = new IconButton(@"file:images/down.icon");
 			this.buttonDown.Clicked += new MessageEventHandler(this.HandleButtonDown);
 			this.toolBar.Items.Add(this.buttonDown);
-			this.toolTip.SetToolTip(this.buttonDown, "Page après");
+			ToolTip.Default.SetToolTip(this.buttonDown, "Page après");
 
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonDelete = new IconButton(@"file:images/delete.icon");
 			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDelete);
 			this.toolBar.Items.Add(this.buttonDelete);
-			this.toolTip.SetToolTip(this.buttonDelete, "Supprimer la page");
+			ToolTip.Default.SetToolTip(this.buttonDelete, "Supprimer la page");
 
 			this.table = new CellTable(this);
 			this.table.SelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
@@ -332,15 +331,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
+		protected Drawer						drawer;
 		protected HToolBar						toolBar;
-		protected ToolTip						toolTip;
 		protected IconButton					buttonNew;
 		protected IconButton					buttonDuplicate;
 		protected IconButton					buttonUp;
 		protected IconButton					buttonDown;
 		protected IconButton					buttonDelete;
 		protected CellTable						table;
-		protected Drawer						drawer;
 		protected bool							ignoreListTextChanged = false;
 	}
 }
