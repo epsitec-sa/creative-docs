@@ -461,7 +461,11 @@ namespace Epsitec.Common.Drawing
 						break;
 					
 					default:
-						throw new System.InvalidOperationException (string.Format ("Path cannot be converted, element {0} set to {1}.", i, elements[i]));
+						if ((elements[i] & PathElement.MaskFlags) != PathElement.FlagClose)
+						{
+							throw new System.InvalidOperationException (string.Format ("Path cannot be converted, element {0} set to {1}.", i, elements[i]));
+						}
+						break;
 				}
 				
 				if ((elements[i] & PathElement.FlagClose) != 0)
@@ -473,6 +477,57 @@ namespace Epsitec.Common.Drawing
 			return gp;
 		}
 		
+		
+		public static Path FromLine(double x1, double y1, double x2, double y2)
+		{
+			Path path = new Path ();
+			path.MoveTo (x1, y1);
+			path.LineTo (x2, y2);
+			return path;
+		}
+		
+		public static Path FromLine(Point p1, Point p2)
+		{
+			Path path = new Path ();
+			path.MoveTo (p1.X, p1.Y);
+			path.LineTo (p2.X, p2.Y);
+			return path;
+		}
+		
+		public static Path FromRectangle(double x, double y, double width, double height)
+		{
+			Path path = new Path ();
+			path.MoveTo (x, y);
+			path.LineTo (x+width, y);
+			path.LineTo (x+width, y+height);
+			path.LineTo (x, y+height);
+			path.Close ();
+			return path;
+		}
+		
+		public static Path FromRectangle(Rectangle rect)
+		{
+			return Path.FromRectangle (rect.X, rect.Y, rect.Width, rect.Height);
+		}
+		
+		public static Path FromRectangle(Point p, Size s)
+		{
+			return Path.FromRectangle (p.X, p.Y, s.Width, s.Height);
+		}
+		
+		public static Path FromCircle(double x, double y, double r)
+		{
+			Path path = new Path ();
+			path.AppendCircle (x, y, r);
+			return path;
+		}
+		
+		public static Path FromCircle(double x, double y, double rx, double ry)
+		{
+			Path path = new Path ();
+			path.AppendCircle (x, y, rx, ry);
+			return path;
+		}
 		
 		
 		public void Dispose()
