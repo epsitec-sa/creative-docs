@@ -15,15 +15,23 @@ namespace Epsitec.Icons
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
 			
 			this.main_window = new Window ();
+			this.main_window.PreventAutoClose = true;
 			
-			main_window.ClientSize = new Size (700, 500);
-			main_window.Text       = "Icon Editor";
+			this.main_window.ClientSize = new Size (700, 500);
+			this.main_window.Text       = "App.Icons";
+			this.main_window.Name       = "Application";
 			
 			this.icon_editor = new IconEditor ();
+			this.icon_menu   = this.icon_editor.GetMenu();
+			
+			this.icon_menu.Parent   = this.main_window.Root;
+			this.icon_menu.Dock     = DockStyle.Top;
 			
 			this.icon_editor.Size   = this.main_window.ClientSize;
 			this.icon_editor.Dock   = DockStyle.Fill;
 			this.icon_editor.Parent = this.main_window.Root;
+			
+			this.main_window.CommandDispatcher = this.icon_editor.CommandDispatcher;
 			
 			this.main_window.Show ();
 		}
@@ -57,5 +65,6 @@ namespace Epsitec.Icons
 		
 		private Window					main_window;
 		private IconEditor				icon_editor;
+		private HMenu					icon_menu;
 	}
 }
