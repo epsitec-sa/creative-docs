@@ -130,6 +130,10 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.buffer.Append (c);
 		}
 
+		//	TODO?	l'appel Append pourrait retourner le type de résultat fourni
+		//			void / nombre / chaîne / tableau d'une colonne, tableau de plusieurs colonnes
+		//			ce qui permettrait de controler le compatibilités entre les opérandes
+
 		protected void Append(SqlField field)
 		{
 			//	Ajoute au buffer un champ, quel que soit son type
@@ -363,6 +367,8 @@ namespace Epsitec.Cresus.Database.Implementation
 						this.Append ("*");
 						break;
 					case SqlFieldType.Name:
+						//	TODO?	s'il y a plusieures tables dans sql_query.Tables
+						//			on devrait refuser les noms non qualifiés
 						this.Append (field.AsName);
 						this.AppendAlias (field);
 						break;
@@ -439,6 +445,9 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 				}
 
+				//	TODO?	s'il y a plusieures tables dans sql_query.Tables
+				//			on devrait refuser les noms non qualifiés
+				//			n'importe où dans la fonction donnée
 				this.Append (field.AsFunction);
 			}
 
@@ -453,6 +462,8 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.Append ("ORDER BY ");
 				}
 
+				//	TODO?	si un alias existe on devrait l'utiliser à la place du nom
+				//	TODO?	sinon faut-il utiliser le nom qualifié de préférence ?
 				this.Append (field.AsName);
 				this.Append (' ');
 
@@ -482,6 +493,28 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				this.buffer.Append (' ');
 				this.buffer.Append (alias);
+			}
+		}
+
+		protected void AppendAliasOrName(SqlField field)
+		{
+			//	place le nom d'alias de préférence,
+			//	sinon le nom qualifié
+			//	sinon le nom non qualifié
+
+			string alias = field.Alias;
+			
+			if ((alias != null) && (alias.Length > 0))
+			{
+				this.buffer.Append (alias);
+			}
+			else if (field.Type == SqlFieldType.QualifiedName)
+			{
+				this.buffer.Append (field.AsQualifiedName);
+			}
+			else
+			{
+				this.buffer.Append (field.AsName);
 			}
 		}
 		
@@ -909,6 +942,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 				this.Append (field.Alias);
 				this.Append (" = ");
+#if false
 				switch (field.Type)
 				{
 					case SqlFieldType.Constant:
@@ -924,6 +958,9 @@ namespace Epsitec.Cresus.Database.Implementation
 						this.ThrowError (string.Format ("Unsupported field {0} in UPDATE.", field.AsName));
 						break;
 				}
+#else
+				this.Append (field);
+#endif
 			}
 
 			if (first_field)
@@ -962,7 +999,8 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.command_type = DbCommandType.NonQuery;
 //			this.command_count++;
 			
-			// TODO:  Add FirebirdSqlBuilder.RemoveData implementation
+			// TODO-DD:  Add FirebirdSqlBuilder.RemoveData implementation
+			//			 supprime tous les champs pour les fiches remplissant les conditions
 		}
 
 		
