@@ -162,15 +162,15 @@ namespace Epsitec.Common.Text.Cursors
 				}
 			}
 			
-			public double						FrameOy
+			public double						FrameY
 			{
 				get
 				{
-					return this.frame_oy;
+					return this.frame_y;
 				}
 				set
 				{
-					this.frame_oy = value;
+					this.frame_y = value;
 				}
 			}
 			
@@ -190,7 +190,7 @@ namespace Epsitec.Common.Text.Cursors
 			private ushort						length;
 			private Layout.StretchProfile		profile;
 			private int							frame_index;
-			private double						frame_oy;
+			private double						frame_y;
 			private double						frame_width;
 		}
 		#endregion

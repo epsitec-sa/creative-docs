@@ -68,7 +68,11 @@ namespace Epsitec.Common.Text
 		
 		public void GenerateAllMarks()
 		{
+			this.frame_index = 0;
+			this.frame_y     = 0;
+			
 			this.Process (new Execute (this.ExecuteGenerate));
+			
 			this.frame_list.ClearCursorMap ();
 		}
 		
@@ -160,10 +164,6 @@ namespace Epsitec.Common.Text
 			//	Génère les marques de découpe de lignes et insère les curseurs
 			//	correspondants.
 			
-			double oy = 0;
-			double fence_before = 100;
-			double fence_after  = 20;
-			
 			ulong[] text;
 			
 			if (pos + length < story.TextLength)
@@ -190,8 +190,10 @@ namespace Epsitec.Common.Text
 				text[length] = code;
 			}
 			
-			Layout.Context         layout = new Layout.Context (this.story.TextContext, text, 0, oy, 14.0, 1000, 0, 0, fence_before, fence_after);
+			Layout.Context         layout = new Layout.Context (this.story.TextContext, text, 0, this.frame_list);
 			Layout.BreakCollection result = new Layout.BreakCollection ();
+			
+			layout.SelectFrame (this.frame_index, this.frame_y);
 			
 			int line_count      = 0;
 			int line_start      = 0;
@@ -202,6 +204,9 @@ namespace Epsitec.Common.Text
 			for (;;)
 			{
 				Layout.Status status = layout.Fit (ref result, line_count);
+				
+				this.frame_index = layout.FrameIndex;
+				this.frame_y     = layout.FrameY;
 				
 				switch (status)
 				{
@@ -264,6 +269,9 @@ namespace Epsitec.Common.Text
 				
 				element.Length  = offset - line_start;
 				element.Profile = profile;
+				element.FrameIndex = layout.FrameIndex;
+				element.FrameY     = layout.FrameY;
+				element.FrameWidth = layout.LineWidth;
 				
 				list.Add (element);
 				
@@ -341,6 +349,9 @@ namespace Epsitec.Common.Text
 		private System.Collections.Stack		free_cursors;
 		
 		private FrameList						frame_list;
+		private int								frame_index;
+		private double							frame_y;
+		
 		private IPageCollection					page_collection;
 	}
 }

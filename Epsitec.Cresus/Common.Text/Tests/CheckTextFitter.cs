@@ -107,6 +107,13 @@ namespace Epsitec.Common.Text.Tests
 			
 			TextFitter fitter = new TextFitter (story);
 			
+			for (int i = 0; i < 320; i++)
+			{
+				SimpleTextFrame frame = new SimpleTextFrame (1000, 1400);
+				frame.PageNumber = i;
+				fitter.FrameList.InsertAt (i, frame);
+			}
+			
 			System.Diagnostics.Trace.WriteLine ("Fitter: generate.");
 			fitter.GenerateAllMarks ();
 			System.Diagnostics.Trace.WriteLine ("Done.");
@@ -117,6 +124,8 @@ namespace Epsitec.Common.Text.Tests
 			
 			System.IO.StreamWriter writer = new System.IO.StreamWriter (@"c:\text.txt", false, System.Text.Encoding.UTF8);
 			story.MoveCursor (cursor, -story.TextLength);
+			
+			int last_page = 0;
 			
 			foreach (CursorInfo info in infos)
 			{
@@ -136,6 +145,12 @@ namespace Epsitec.Common.Text.Tests
 					
 					story.ReadText (cursor, length, text);
 					story.MoveCursor (cursor, length);
+					
+					if (last_page != fitter.FrameList[element.FrameIndex].PageNumber)
+					{
+						last_page = fitter.FrameList[element.FrameIndex].PageNumber;
+						writer.WriteLine ("_{0}___________________________________________________________________\r\n", last_page);
+					}
 					
 					TextConverter.ConvertToString (text, out text_str);
 					writer.WriteLine (text_str.Replace ("\n", "<\r\n"));
