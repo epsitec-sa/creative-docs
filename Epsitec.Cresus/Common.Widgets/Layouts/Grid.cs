@@ -282,8 +282,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			else
 			{
-				this.line_gap_height   = 0;
-				this.line_gap_index    = -1;
+				this.line_gap_index  = -1;
+				this.line_gap_height = 0;
 			}
 		}
 		
@@ -856,46 +856,38 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		protected void WidgetDraggingBegin(Drawing.Point mouse)
 		{
-			this.designer.DraggingBegin ();
-			
-			Widget select = this.designer.Widget;
-			
-			Drawing.Point center = select.Bounds.Center;
-			Drawing.Point corner = new Drawing.Point (select.Bounds.Left, select.Bounds.Top);
-			
 			this.is_dragging_widget = true;
 			
-			this.hot_designer_origin        = mouse;
-			this.hot_designer_center_offset = mouse - center;
-			this.hot_designer_corner_offset = mouse - corner;
-			this.hot_designer_columns       = select.LayoutArg2 - select.LayoutArg1;
+			//	Conserve une copie des positions verticales des diverses séparations
+			//	horizontales :
 			
-			this.designer.Widget.Dock   = DockStyle.None;
-			this.designer.Widget.Parent = this.root;
+			this.frozen_lines_y = new double[this.horizontals.Length];
 			
-			this.hot_lines = new Grid.Horizontal[this.horizontals.Length];
-			this.horizontals.CopyTo (this.hot_lines, 0);
+			for (int i = 0; i < this.horizontals.Length; i++)
+			{
+				this.frozen_lines_y[i] = this.horizontals[i].y_live;
+			}
+			
+			this.designer.DraggingBegin (mouse);
 			
 			this.Invalidate ();
 			this.Update ();
-			
 			this.WidgetDraggingMove (mouse);
 		}
 		
 		protected void WidgetDraggingMove(Drawing.Point mouse)
 		{
-			Drawing.Point center = mouse - this.hot_designer_center_offset;
-			Drawing.Point corner = mouse - this.hot_designer_corner_offset;
-			
 			Drawing.Rectangle rect_drop = this.designer.OriginalBounds;
-			Drawing.Rectangle rect_move = Drawing.Rectangle.Offset (this.designer.OriginalBounds, mouse - this.hot_designer_origin);
 			
-			this.designer_drag_rect = rect_move;
-			this.hot_target_ok     = false;
+			this.designer_drag_rect = this.designer.GetDraggingRectangle (mouse);
 			
-			if (this.FindBestColumns (center.X, this.hot_designer_columns, out this.hot_designer_col1, out this.hot_designer_col2))
+			int    col_count = this.designer.Widget.LayoutArg2 - this.designer.Widget.LayoutArg1;
+			double center_x  = this.designer_drag_rect.Center.X;
+			double corner_y  = this.designer_drag_rect.Top;
+			
+			if (this.FindBestColumns (center_x, col_count, out this.hot_designer_col1, out this.hot_designer_col2))
 			{
-				if (this.FindBestHotLine (corner.Y, out this.hot_designer_line, out this.hot_designer_insert))
+				if (this.FindBestHotLine (corner_y, out this.hot_designer_line, out this.hot_designer_insert))
 				{
 					if ((this.hot_designer_insert) ||
 						(this.IsHorizontalRangeEmpty (this.hot_designer_line, this.hot_designer_col1, this.hot_designer_col2, this.designer.WidgetOriginalSurface)))
@@ -921,7 +913,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						
 						double x1 = this.verticals[this.hot_designer_col1].x_live;
 						double x2 = this.verticals[this.hot_designer_col2].x_live;
-						double y2 = this.hot_lines[this.hot_designer_line].y_live;
+						double y2 = this.frozen_lines_y[this.hot_designer_line];
 						double dy = this.designer.OriginalBounds.Height;
 						
 						if (this.hot_designer_insert == false)
@@ -932,22 +924,21 @@ namespace Epsitec.Common.Widgets.Layouts
 							
 							int index = this.hot_designer_line+1;
 							
-							System.Diagnostics.Debug.Assert (index < this.hot_lines.Length);
+							System.Diagnostics.Debug.Assert (index < this.frozen_lines_y.Length);
 							
-							double y1 = this.hot_lines[index].y_live;
+							double y1 = this.frozen_lines_y[index];
 							
 							dy = System.Math.Min (dy, y2-y1);
 						}
 						
 						rect_drop = new Drawing.Rectangle (x1, y2-dy, x2-x1, dy);
-						this.hot_target_ok = true;
 					}
 				}
 			}
 			
-			this.UpdateLineGap ();
-			
 			this.designer.DraggingSetDropHint (rect_drop);
+			
+			this.UpdateLineGap ();
 			this.UpdateGeometry ();
 		}
 		
@@ -1003,14 +994,12 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.UpdateNewLinesInHorizontal ();
 			}
 			
-			this.is_dragging_widget = false;
-			
-			this.line_gap_index  = -1;
-			this.line_gap_height = 0;
-			
-			this.designer_drag_rect = Drawing.Rectangle.Empty;
+			this.hot_designer_insert = false;
+			this.is_dragging_widget  = false;
+			this.designer_drag_rect  = Drawing.Rectangle.Empty;
 			
 			this.Invalidate ();
+			this.UpdateLineGap ();
 			this.Update ();
 		}
 		
@@ -1201,10 +1190,10 @@ namespace Epsitec.Common.Widgets.Layouts
 			double m = 2;
 			y -= m+1;
 			
-			for (int i = 1; i < this.hot_lines.Length; i++)
+			for (int i = 1; i < this.frozen_lines_y.Length; i++)
 			{
-				double y1 = this.hot_lines[i-1].y_live;
-				double y2 = this.hot_lines[i].y_live;
+				double y1 = this.frozen_lines_y[i-1];
+				double y2 = this.frozen_lines_y[i-0];
 				
 				double y1_top = y1 + m;
 				double y1_bot = y1 - m;
@@ -1235,17 +1224,20 @@ namespace Epsitec.Common.Widgets.Layouts
 					return true;
 				}
 			}
-			if (this.hot_lines.Length > 1)
+			
+			int last_line = this.frozen_lines_y.Length - 1;
+			
+			if (last_line > 0)
 			{
-				if (y > this.hot_lines[0].y_live)
+				if (y > this.frozen_lines_y[0])
 				{
 					line_index = 0;
 					line_insert = true;
 					return true;
 				}
-				if (y < this.hot_lines[this.hot_lines.Length-1].y_live)
+				if (y < this.frozen_lines_y[last_line])
 				{
-					line_index  = this.hot_lines.Length-1;
+					line_index  = last_line;
 					line_insert = true;
 					return true;
 				}
@@ -1560,19 +1552,15 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		protected int					hot_column_index = -1;
 		protected double				hot_column_offset;
-		protected Drawing.Point			hot_designer_origin;
-		protected Drawing.Point			hot_designer_center_offset;
-		protected Drawing.Point			hot_designer_corner_offset;
-		protected int					hot_designer_columns;
 		protected int					hot_designer_col1;
 		protected int					hot_designer_col2;
 		protected int					hot_designer_line;
 		protected bool					hot_designer_insert;
-		protected bool					hot_target_ok;
-		protected Grid.Horizontal[]		hot_lines;
 		
 		protected Design.WidgetWrapper	designer;
 		protected Drawing.Rectangle		designer_drag_rect;
+		
+		protected double[]				frozen_lines_y;
 		
 		protected int					line_gap_index;
 		protected double				line_gap_height;
