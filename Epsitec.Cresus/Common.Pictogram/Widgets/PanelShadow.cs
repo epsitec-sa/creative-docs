@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelShadow : AbstractPanel
 	{
-		public PanelShadow()
+		public PanelShadow(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -60,11 +60,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.labelOy.Alignment = Drawing.ContentAlignment.MiddleCenter;
 
 			this.isNormalAndExtended = true;
-		}
-		
-		public PanelShadow(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)

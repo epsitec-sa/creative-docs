@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelRegular : AbstractPanel
 	{
-		public PanelRegular()
+		public PanelRegular(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -44,11 +44,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.labelDeep.Alignment = Drawing.ContentAlignment.MiddleCenter;
 
 			this.isNormalAndExtended = true;
-		}
-		
-		public PanelRegular(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)
