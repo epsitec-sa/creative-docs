@@ -8,43 +8,46 @@ namespace Epsitec.Cresus.Database
 		[Test] public void CheckNewSqlField()
 		{
 			SqlField sql_field;
-
+			
 			//	constructeurs, avec nom qualifié ou non
-
-			sql_field = new SqlField ("TestNotQualified");
+			
+			sql_field = SqlField.CreateName ("TestNotQualified");
 			Assertion.AssertEquals (SqlFieldType.Name, sql_field.Type);
 			Assertion.AssertEquals ("TestNotQualified", sql_field.AsName);
 			Assertion.AssertEquals (null, sql_field.AsQualifiedName);
 			Assertion.AssertEquals (null, sql_field.Alias);
 			Assertion.AssertEquals (SqlFieldOrder.None, sql_field.Order);
 			Assertion.AssertEquals (DbRawType.Unknown, sql_field.RawType);
-
-			sql_field = new SqlField ("Test.Qualified");
+			
+			sql_field = SqlField.CreateName ("Test", "Qualified");
 			Assertion.AssertEquals (SqlFieldType.QualifiedName, sql_field.Type);
 			Assertion.AssertEquals ("Test.Qualified", sql_field.AsQualifiedName);
 			Assertion.AssertEquals ("Qualified", sql_field.AsName);
 			Assertion.AssertEquals (null, sql_field.Alias);
 			Assertion.AssertEquals (SqlFieldOrder.None, sql_field.Order);
 			Assertion.AssertEquals (DbRawType.Unknown, sql_field.RawType);
-
+			
 			sql_field.Alias = "SetAlias";
 			Assertion.AssertEquals ("SetAlias", sql_field.Alias);
 			sql_field.Order = SqlFieldOrder.Normal;
 			Assertion.AssertEquals (SqlFieldOrder.Normal, sql_field.Order);
-
+			
 			//	constructeurs, avec un alias
-
-			sql_field = new SqlField ("TestNotQualified", "NotQ");
+			
+			sql_field = SqlField.CreateName ("TestNotQualified");
+			sql_field.Alias = "NotQ";
 			Assertion.AssertEquals (SqlFieldType.Name, sql_field.Type);
 			Assertion.AssertEquals ("TestNotQualified", sql_field.AsName);
 			Assertion.AssertEquals (null, sql_field.AsQualifiedName);
 			Assertion.AssertEquals ("NotQ", sql_field.Alias);
 			Assertion.AssertEquals (SqlFieldOrder.None, sql_field.Order);
 			Assertion.AssertEquals (DbRawType.Unknown, sql_field.RawType);
-
+			
 			//	constructeurs, avec un alias et un ordre de tri
-
-			sql_field = new SqlField ("Test.Qualified", "TQ", SqlFieldOrder.Inverse);
+			
+			sql_field = SqlField.CreateName ("Test", "Qualified");
+			sql_field.Alias = "TQ";
+			sql_field.Order = SqlFieldOrder.Inverse;
 			Assertion.AssertEquals (SqlFieldType.QualifiedName, sql_field.Type);
 			Assertion.AssertEquals ("Test.Qualified", sql_field.AsQualifiedName);
 			Assertion.AssertEquals ("Qualified", sql_field.AsName);
@@ -63,29 +66,36 @@ namespace Epsitec.Cresus.Database
 
 			SqlField sql_field;
 
-			sql_field = new SqlField ("TestNotQualifiedButValide");
+			sql_field = SqlField.CreateName ("TestNotQualifiedButValid");
 			Assertion.AssertEquals (SqlFieldType.Name, sql_field.Type);
-			Assertion.AssertEquals ("TestNotQualifiedButValide", sql_field.AsName);
+			Assertion.AssertEquals ("TestNotQualifiedButValid", sql_field.AsName);
 			Assertion.AssertEquals (true, sql_field.Validate(sql_builder));
 
-			sql_field = new SqlField ("TestNotQualifiedBut&Invalide");
-			Assertion.AssertEquals (SqlFieldType.Name, sql_field.Type);
-			Assertion.AssertEquals ("TestNotQualifiedBut&Invalide", sql_field.AsName);
-			Assertion.AssertEquals (false, sql_field.Validate(sql_builder));
-
-			sql_field = new SqlField ("Test.QualifiedValide", "TQ", SqlFieldOrder.Inverse);
+			sql_field = SqlField.CreateName ("Test", "QualifiedValid");
+			sql_field.Alias = "TQ";
+			sql_field.Order = SqlFieldOrder.Inverse;
 			Assertion.AssertEquals (SqlFieldType.QualifiedName, sql_field.Type);
-			Assertion.AssertEquals ("Test.QualifiedValide", sql_field.AsQualifiedName);
+			Assertion.AssertEquals ("Test.QualifiedValid", sql_field.AsQualifiedName);
 			Assertion.AssertEquals (true, sql_field.Validate(sql_builder));
-
-			sql_field = new SqlField ("Test.Qualified-Invalide", "TQ", SqlFieldOrder.Inverse);
-/*			il n'est pas possible de créer un Field avec un nom qualifié non valide
- *			le texte est considéré alors comme non-qualifié */
-			Assertion.AssertEquals (SqlFieldType.Name, sql_field.Type);
-			Assertion.AssertEquals ("Test.Qualified-Invalide", sql_field.AsName);
-			Assertion.AssertEquals (false, sql_field.Validate(sql_builder));
 		}
-
+		
+		[Test] [ExpectedException (typeof (DbFormatException))] public void CheckValidateEx1()
+		{
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
+			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
+			
+			SqlField sql_field = SqlField.CreateName ("TestNotQualifiedBut&Invalid");
+		}
+		
+		[Test] [ExpectedException (typeof (DbFormatException))] public void CheckValidateEx2()
+		{
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
+			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
+			
+			SqlField sql_field = SqlField.CreateName ("Test", "Qualified-Invalid");
+		}
+		
+		
 		[Test] public void CheckCreate()
 		{
 			SqlField sql_field, sql_field1, sql_field2;
@@ -143,7 +153,7 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (DbRawType.Unknown, sql_field.RawType);
 
 			//	crée un champ pour un nom (qualifié ou non)
-			sql_field = SqlField.CreateName ("Test.Qualified");
+			sql_field = SqlField.CreateName ("Test", "Qualified");
 			Assertion.AssertEquals (SqlFieldType.QualifiedName, sql_field.Type);
 			Assertion.AssertEquals ("Test.Qualified", sql_field.AsQualifiedName);
 			Assertion.AssertEquals ("Qualified", sql_field.AsName);
