@@ -101,6 +101,11 @@ namespace Epsitec.Common.Designer
 				System.Diagnostics.Debug.Assert (store != null);
 				System.Diagnostics.Debug.Assert (store.FullName == bundles.Name);
 				
+				//	On s'assure que lors de la sauvegarde des bundles, l'édition n'est plus active; ceci
+				//	permet de garantir qu'aucun bundle partiel n'est enregistré...
+				
+				store.Panel.EditArray.ValidateEdition ();
+				
 				foreach (ResourceBundle bundle in bundles)
 				{
 					if (! bundle.IsEmpty)
@@ -661,6 +666,17 @@ namespace Epsitec.Common.Designer
 				}
 			}
 			
+			public Panels.StringEditPanel		Panel
+			{
+				get
+				{
+					return this.panel;
+				}
+				set
+				{
+					this.panel = value;
+				}
+			}
 			
 			public void SetActive(ResourceLevel level, CultureInfo culture)
 			{
@@ -724,6 +740,7 @@ namespace Epsitec.Common.Designer
 			private ResourceBundle				default_bundle;
 			private int							changing;
 			private int							changes;
+			private Panels.StringEditPanel		panel;
 		}
 		#endregion
 		
@@ -829,7 +846,10 @@ namespace Epsitec.Common.Designer
 		
 		protected Panels.StringEditPanel CreatePanel(string full_name, ResourceBundleCollection bundles)
 		{
-			Panels.StringEditPanel panel = new Panels.StringEditPanel (new Store (this, full_name, bundles));
+			Store                  store = new Store (this, full_name, bundles);
+			Panels.StringEditPanel panel = new Panels.StringEditPanel (store);
+			
+			store.Panel = panel;
 			
 			Widget  widget = panel.Widget;
 			Window  window = this.Window;

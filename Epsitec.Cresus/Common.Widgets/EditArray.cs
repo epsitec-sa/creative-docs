@@ -1280,11 +1280,25 @@ namespace Epsitec.Common.Widgets
 			
 			public virtual void Delete()
 			{
+				int n_rows = this.host.RowCount;
+				
 				ScrollInteractionMode mode;
-				int row, column;
+				int row;
+				int column;
+				
 				this.SaveModeAndReset (out mode, out row, out column);
 				
-				this.store.RemoveRows (row, 1);
+				//	Si le passage en mode "read only" a déjà provoqué un changement du nombre
+				//	de lignes dans la table, on ne va rien détruire. En effet, dans l'éditeur
+				//	de ressources, StringEditController supprime des lignes vides dès que l'on
+				//	quitte le mode "edition"; détruire la ligne à notre tour produirait une
+				//	double destruction.
+				
+				if (this.host.RowCount == n_rows)
+				{
+					this.store.RemoveRows (row, 1);
+				}
+				
 				this.RestoreMode (mode, row, 0);
 			}
 			

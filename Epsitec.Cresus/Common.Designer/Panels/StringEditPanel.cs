@@ -91,8 +91,10 @@ namespace Epsitec.Common.Designer.Panels
 			this.edit_array.TitleWidget = title;
 			this.edit_array.SearchCaption = @"<b>Recherche. </b><font size=""90%"">Tapez le texte à chercher ci-dessous&#160;:</font>";
 			
-			this.edit_array.SelectedIndexChanged += new EventHandler(this.HandleEditArraySelectedIndexChanged);
-			this.edit_array.DoubleClicked        += new MessageEventHandler (this.HandleEditArrayDoubleClicked);
+			this.edit_array.SelectedIndexChanged    += new EventHandler(this.HandleEditArraySelectedIndexChanged);
+			this.edit_array.DoubleClicked           += new MessageEventHandler (this.HandleEditArrayDoubleClicked);
+			this.edit_array.InteractionModeChanging += new EventHandler (this.HandleEditArrayInteractionModeChanging);
+			this.edit_array.InteractionModeChanged  += new EventHandler (this.HandleEditArrayInteractionModeChanged);
 			this.edit_array.TabIndex = 0;
 			this.edit_array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
@@ -198,6 +200,42 @@ namespace Epsitec.Common.Designer.Panels
 			this.edit_array.StartEdition (row, column);
 		}
 		
+		private void HandleEditArrayInteractionModeChanging(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.edit_array == sender);
+			
+			this.old_edit_array_mode = this.edit_array.InteractionMode;
+		}
+		
+		private void HandleEditArrayInteractionModeChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.edit_array == sender);
+			
+			if ((this.old_edit_array_mode == ScrollInteractionMode.Edition) &&
+				(this.edit_array.InteractionMode != ScrollInteractionMode.Edition))
+			{
+				
+				//	L'utilisateur a terminé l'édition. Si la ligne actuellement sélectionnée
+				//	contient un nom invalide, on la supprime.
+				
+				int index = this.edit_array.SelectedIndex;
+				
+				if (index != -1)
+				{
+					if (this.store.GetCellText (index, 0) == "")
+					{
+						this.store.RemoveRows (index, 1);
+						
+						if (index >= this.edit_array.RowCount)
+						{
+							this.edit_array.SelectedIndex = index - 1;
+						}
+					}
+				}
+			}
+		}
+		
+		
 		private void HandleLanguageComboSelectedIndexChanged(object sender)
 		{
 			System.Diagnostics.Debug.Assert (this.lang_combo == sender);
@@ -242,5 +280,6 @@ namespace Epsitec.Common.Designer.Panels
 		protected string						lang_suffix_2;
 		protected AbstractTextField				comment;
 		protected StringEditController.Store	store;
+		protected ScrollInteractionMode			old_edit_array_mode;
 	}
 }

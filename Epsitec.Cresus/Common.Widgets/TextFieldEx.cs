@@ -133,7 +133,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override bool AboutToLoseFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode)
 		{
-			if (this.accept_reject_behavior.IsVisible)
+//			if (this.accept_reject_behavior.IsVisible)
 			{
 				switch (this.DefocusAction)
 				{

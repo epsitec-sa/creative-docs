@@ -1,11 +1,17 @@
 namespace Epsitec.Common.Widgets.Validators
 {
+	using BundleAttribute = Support.BundleAttribute;
+	
 	/// <summary>
 	/// La classe RegexValidator permet de valider un widget selon une expression
 	/// régulière.
 	/// </summary>
 	public class RegexValidator : AbstractTextValidator
 	{
+		public RegexValidator() : this (null, "", true)
+		{
+		}
+		
 		public RegexValidator(Widget widget, string regex) : this (widget, regex, true)
 		{
 		}
@@ -24,6 +30,34 @@ namespace Epsitec.Common.Widgets.Validators
 		{
 			this.SetRegex (regex);
 			this.accept_empty = accept_empty;
+		}
+		
+		
+		[Bundle] public bool							AcceptEmptyText
+		{
+			get
+			{
+				return this.accept_empty;
+			}
+			set
+			{
+				this.accept_empty = value;
+			}
+		}
+		
+		[Bundle] public string							Regex
+		{
+			get
+			{
+				return this.regex.ToString ();
+			}
+			set
+			{
+				if (this.Regex != value)
+				{
+					this.SetRegex (value);
+				}
+			}
 		}
 		
 		

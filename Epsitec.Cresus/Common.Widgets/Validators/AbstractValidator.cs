@@ -1,13 +1,32 @@
 namespace Epsitec.Common.Widgets.Validators
 {
+	using SuppressBundleSupportAttribute = Support.SuppressBundleSupportAttribute;
+	
 	/// <summary>
 	/// La classe AbstractValidator permet de simplifier l'implémentation de
 	/// l'interface IValidator en relation avec des widgets.
 	/// </summary>
-	public abstract class AbstractValidator : Support.IValidator, System.IDisposable
+	
+	[SuppressBundleSupport]
+	
+	public abstract class AbstractValidator : Support.IValidator, System.IDisposable, Support.IBundleSupport
 	{
 		public AbstractValidator(Widget widget)
 		{
+			this.widget = widget;
+			
+			if (this.widget != null)
+			{
+				this.AttachWidget (this.widget);
+			}
+		}
+		
+		
+		internal void InternalAttach(Widget widget)
+		{
+			System.Diagnostics.Debug.Assert (this.widget == null);
+			System.Diagnostics.Debug.Assert (widget != null);
+			
 			this.widget = widget;
 			this.AttachWidget (this.widget);
 		}
@@ -25,10 +44,15 @@ namespace Epsitec.Common.Widgets.Validators
 		{
 			if (disposing)
 			{
-				this.DetachWidget (this.widget);
-				this.widget = null;
+				if (this.widget != null)
+				{
+					this.DetachWidget (this.widget);
+					
+					this.widget = null;
+				}
 			}
 		}
+		
 		
 		#region IValidator Members
 		public Support.ValidationState			State
@@ -69,6 +93,32 @@ namespace Epsitec.Common.Widgets.Validators
 		}
 		
 		public event Support.EventHandler		BecameDirty;
+		#endregion
+		
+		#region IBundleSupport Members
+		public void SerializeToBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
+		{
+		}
+
+		public void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
+		{
+		}
+
+		public string									BundleName
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		public string									PublicClassName
+		{
+			get
+			{
+				return this.GetType ().Name;
+			}
+		}
 		#endregion
 		
 		protected virtual void OnBecameDirty()

@@ -5,6 +5,11 @@ namespace Epsitec.Common.Widgets.Validators
 	/// </summary>
 	public class SelectionValidator : AbstractValidator
 	{
+		public SelectionValidator() : base (null)
+		{
+		}
+		
+		
 		public SelectionValidator(Widget widget) : base (widget)
 		{
 			if (widget is Support.Data.INamedStringSelection)

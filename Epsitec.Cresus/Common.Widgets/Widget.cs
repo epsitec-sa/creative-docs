@@ -235,6 +235,19 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
+			Support.ResourceBundle.FieldList validator_list = bundle["validators"].AsList;
+			
+			if (validator_list != null)
+			{
+				foreach (Support.ResourceBundle.Field field in validator_list)
+				{
+					Support.ResourceBundle validator_bundle = field.AsBundle;
+					Validators.AbstractValidator validator = bundler.CreateFromBundle (validator_bundle) as Validators.AbstractValidator;
+					
+					validator.InternalAttach (this);
+				}
+			}
+			
 //			this.ResumeLayout ();
 		}
 		
@@ -261,6 +274,35 @@ namespace Epsitec.Common.Widgets
 				{
 					Support.ResourceBundle.Field field = bundle.CreateField (Support.ResourceFieldType.List, list);
 					field.SetName ("widgets");
+					bundle.Add (field);
+				}
+			}
+			
+			if (this.validator != null)
+			{
+				System.Collections.ArrayList list       = new System.Collections.ArrayList ();
+				Support.IValidator[]         validators = Support.MulticastValidator.ToArray (this.validator);
+				
+				for (int i = 0; i < validators.Length; i++)
+				{
+					if (validators[i] is Support.IBundleSupport)
+					{
+						Support.ResourceBundle validator_bundle = bundler.CreateEmptyBundle (string.Format (System.Globalization.CultureInfo.InvariantCulture, "v{0}", i));
+						
+						bundler.FillBundleFromObject (validator_bundle, validators[i]);
+						
+						list.Add (validator_bundle);
+					}
+					else
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Validator {0} cannot be serialized.", validators[i].GetType ().Name));
+					}
+				}
+				
+				if (list.Count > 0)
+				{
+					Support.ResourceBundle.Field field = bundle.CreateField (Support.ResourceFieldType.List, list);
+					field.SetName ("validators");
 					bundle.Add (field);
 				}
 			}
