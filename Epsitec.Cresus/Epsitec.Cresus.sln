@@ -1,13 +1,4 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database", "Cresus.Database\Cresus.Database.csproj", "{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.Implementation", "Cresus.Database.Implementation\Cresus.Database.Implementation.csproj", "{C757AD58-605D-4480-BC2E-03E8076368B2}"
-	ProjectSection(ProjectDependencies) = postProject
-		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349} = {BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.Tests", "Cresus.Database.Tests\Cresus.Database.Tests.csproj", "{065F982F-9739-426E-99C3-D7C1ED2E791C}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -76,6 +67,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.UserInterface.Tests"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database", "Cresus.Database\Cresus.Database.csproj", "{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.Implementation", "Cresus.Database.Implementation\Cresus.Database.Implementation.csproj", "{C757AD58-605D-4480-BC2E-03E8076368B2}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
 		SccNumberOfProjects = 20
@@ -110,68 +109,60 @@ Global
 		SccLocalPath7 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection7 = Common.Widgets.Tests\\
-		SccProjectUniqueName8 = Cresus.Database\\Cresus.Database.csproj
+		SccProjectUniqueName8 = Cresus.Database.Tests\\Cresus.Database.Tests.csproj
 		SccLocalPath8 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection8 = Cresus.Database\\
-		SccProjectUniqueName9 = Cresus.Database.Implementation\\Cresus.Database.Implementation.csproj
+		SccProjectFilePathRelativizedFromConnection8 = Cresus.Database.Tests\\
+		SccProjectUniqueName9 = Cresus.DataLayer\\Cresus.DataLayer.csproj
 		SccLocalPath9 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection9 = Cresus.Database.Implementation\\
-		SccProjectUniqueName10 = Cresus.Database.Tests\\Cresus.Database.Tests.csproj
+		SccProjectFilePathRelativizedFromConnection9 = Cresus.DataLayer\\
+		SccProjectUniqueName10 = Cresus.DataLayer.Tests\\Cresus.DataLayer.Tests.csproj
 		SccLocalPath10 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection10 = Cresus.Database.Tests\\
-		SccProjectUniqueName11 = Cresus.DataLayer\\Cresus.DataLayer.csproj
+		SccProjectFilePathRelativizedFromConnection10 = Cresus.DataLayer.Tests\\
+		SccProjectUniqueName11 = Cresus.UserInterface\\Cresus.UserInterface.csproj
 		SccLocalPath11 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection11 = Cresus.DataLayer\\
-		SccProjectUniqueName12 = Cresus.DataLayer.Tests\\Cresus.DataLayer.Tests.csproj
+		SccProjectFilePathRelativizedFromConnection11 = Cresus.UserInterface\\
+		SccProjectUniqueName12 = System.Extension\\System.Extension.csproj
 		SccLocalPath12 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection12 = Cresus.DataLayer.Tests\\
-		SccProjectUniqueName13 = Cresus.UserInterface\\Cresus.UserInterface.csproj
+		SccProjectFilePathRelativizedFromConnection12 = System.Extension\\
+		SccProjectUniqueName13 = Common.Drawing.Tests\\Common.Drawing.Tests.csproj
 		SccLocalPath13 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection13 = Cresus.UserInterface\\
-		SccProjectUniqueName14 = System.Extension\\System.Extension.csproj
+		SccProjectFilePathRelativizedFromConnection13 = Common.Drawing.Tests\\
+		SccProjectUniqueName14 = App.Fiche\\App.Fiche.csproj
 		SccLocalPath14 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection14 = System.Extension\\
-		SccProjectUniqueName15 = Common.Drawing.Tests\\Common.Drawing.Tests.csproj
+		SccProjectFilePathRelativizedFromConnection14 = App.Fiche\\
+		SccProjectUniqueName15 = X.Setup.Fiche\\X.Setup.Fiche.vdproj
 		SccLocalPath15 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection15 = Common.Drawing.Tests\\
-		SccProjectUniqueName16 = App.Fiche\\App.Fiche.csproj
+		SccProjectFilePathRelativizedFromConnection15 = X.Setup.Fiche\\
+		SccProjectUniqueName16 = System.Extension.Tests\\System.Extension.Tests.csproj
 		SccLocalPath16 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection16 = App.Fiche\\
-		SccProjectUniqueName17 = X.Setup.Fiche\\X.Setup.Fiche.vdproj
+		SccProjectFilePathRelativizedFromConnection16 = System.Extension.Tests\\
+		SccProjectUniqueName17 = Cresus.UserInterface.Tests\\Cresus.UserInterface.Tests.csproj
 		SccLocalPath17 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection17 = X.Setup.Fiche\\
-		SccProjectUniqueName18 = System.Extension.Tests\\System.Extension.Tests.csproj
-		SccLocalPath18 = .
+		SccProjectFilePathRelativizedFromConnection17 = Cresus.UserInterface.Tests\\
+		SccProjectUniqueName18 = Cresus.Database\\Cresus.Database.csproj
+		SccProjectName18 = \u0022$/Epsitec.Cresus/Cresus.Database\u0022,\u0020AQOAAAAA
+		SccLocalPath18 = Cresus.Database
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection18 = System.Extension.Tests\\
-		SccProjectUniqueName19 = Cresus.UserInterface.Tests\\Cresus.UserInterface.Tests.csproj
-		SccLocalPath19 = .
+		SccProjectUniqueName19 = Cresus.Database.Implementation\\Cresus.Database.Implementation.csproj
+		SccProjectName19 = \u0022$/Epsitec.Cresus/Cresus.Database.Implementation\u0022,\u0020LROAAAAA
+		SccLocalPath19 = Cresus.Database.Implementation
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection19 = Cresus.UserInterface.Tests\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
 		Release = Release
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}.Debug.ActiveCfg = Debug|.NET
-		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}.Debug.Build.0 = Debug|.NET
-		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}.Release.ActiveCfg = Release|.NET
-		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}.Release.Build.0 = Release|.NET
-		{C757AD58-605D-4480-BC2E-03E8076368B2}.Debug.ActiveCfg = Debug|.NET
-		{C757AD58-605D-4480-BC2E-03E8076368B2}.Debug.Build.0 = Debug|.NET
-		{C757AD58-605D-4480-BC2E-03E8076368B2}.Release.ActiveCfg = Release|.NET
-		{C757AD58-605D-4480-BC2E-03E8076368B2}.Release.Build.0 = Release|.NET
 		{065F982F-9739-426E-99C3-D7C1ED2E791C}.Debug.ActiveCfg = Debug|.NET
 		{065F982F-9739-426E-99C3-D7C1ED2E791C}.Debug.Build.0 = Debug|.NET
 		{065F982F-9739-426E-99C3-D7C1ED2E791C}.Release.ActiveCfg = Release|.NET
@@ -238,6 +229,14 @@ Global
 		{6A7B4CDB-5772-4371-9D57-A21B370660AD}.Debug.Build.0 = Debug|.NET
 		{6A7B4CDB-5772-4371-9D57-A21B370660AD}.Release.ActiveCfg = Release|.NET
 		{6A7B4CDB-5772-4371-9D57-A21B370660AD}.Release.Build.0 = Release|.NET
+		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}.Debug.ActiveCfg = Debug|.NET
+		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}.Debug.Build.0 = Debug|.NET
+		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}.Release.ActiveCfg = Release|.NET
+		{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}.Release.Build.0 = Release|.NET
+		{C757AD58-605D-4480-BC2E-03E8076368B2}.Debug.ActiveCfg = Debug|.NET
+		{C757AD58-605D-4480-BC2E-03E8076368B2}.Debug.Build.0 = Debug|.NET
+		{C757AD58-605D-4480-BC2E-03E8076368B2}.Release.ActiveCfg = Release|.NET
+		{C757AD58-605D-4480-BC2E-03E8076368B2}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info
@@ -245,6 +244,9 @@ Global
 		Epsitec Cresus Full Build.mgb = Epsitec Cresus Full Build.mgb
 		Epsitec.Cresus.snk = Epsitec.Cresus.snk
 		import-bin.bat = import-bin.bat
+		External\nunit-gui.exe = External\nunit-gui.exe
+		External\nunit.framework.dll = External\nunit.framework.dll
+		External\nunit.util.dll = External\nunit.util.dll
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

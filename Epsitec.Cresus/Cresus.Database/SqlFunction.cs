@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (count_provided != count_expected)
 			{
-				throw new System.ArgumentOutOfRangeException (type.ToString () + " requires " + count_expected.ToString () + " field");
+				throw new System.ArgumentOutOfRangeException (string.Format ("{0} requires {1} field(s).", type, count_expected));
 			}
 			
 			switch (count_provided)
