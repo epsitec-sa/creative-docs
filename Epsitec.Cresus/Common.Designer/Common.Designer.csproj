@@ -128,6 +128,16 @@
                     Project = "{EAF258A4-E107-4466-A3E1-9FC072557940}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Common.Script"
+                    Project = "{6CFA7609-E5A8-4B9D-B174-BE1CC57A6954}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Common.Script.Glue"
+                    Project = "{B2266071-EA0F-40E5-844F-98EE68A5A39C}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
@@ -257,6 +267,22 @@
                 />
                 <File
                     RelPath = "Images\SwapLang.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\WidgetChecks.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\WidgetField.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\WidgetFieldUpDown.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\WidgetRadios.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
