@@ -77,6 +77,12 @@ namespace Epsitec.Common.Dialogs
 					this.window.Hide ();
 					this.window.CommandDispatcher.Dispose ();
 					this.window.CommandDispatcher = null;
+					
+					if (this.is_modal)
+					{
+						this.window.Close ();
+					}
+					
 					this.window.AsyncDispose ();
 				}
 			}
