@@ -65,6 +65,7 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 		
+		[Support.SuppressBundleSupport]
 		protected class TestWidget : Widgets.Widget
 		{
 			public TestWidget(Pixmap[] stack)

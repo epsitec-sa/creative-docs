@@ -151,7 +151,7 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
-		
+		[Support.SuppressBundleSupport]
 		protected class AggPreview : Widgets.Widget
 		{
 			public AggPreview(Drawing.Agg.Graphics port)
