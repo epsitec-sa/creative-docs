@@ -250,16 +250,29 @@ namespace Epsitec.Cresus.Database
 
 			sql_select.Fields.Add (SqlField.CreateName ("LAST_NAME"));
 			sql_select.Fields.Add (SqlField.CreateName ("FIRST_NAME"));
-			sql_select.Fields.Add (SqlField.CreateName ("PROJ_ID"));
-			sql_select.Tables.Add (SqlField.CreateName ("EMPLOYEE"));
-			sql_select.Tables.Add (SqlField.CreateName ("EMPLOYEE_PROJECT"));
+			sql_select.Fields.Add (SqlField.CreateName ("PROJ_NAME"));
+
+			SqlField table1 = SqlField.CreateName ("EMPLOYEE_PROJECT");
+			table1.Alias = "A1";
+			sql_select.Tables.Add (table1);
+			SqlField table2 = SqlField.CreateName ("EMPLOYEE");
+			table2.Alias = "A2";
+			sql_select.Tables.Add (table2);
+			SqlField table3 = SqlField.CreateName ("PROJECT");
+			table3.Alias = "A3";
+			sql_select.Tables.Add (table3);
 
 			//	défini la fonction INNER JOIN ...
 			SqlJoin sql_join = new SqlJoin (SqlJoinType.Inner, 
-				SqlField.CreateName ("EMPLOYEE.EMP_NO"), 
-				SqlField.CreateName ("EMPLOYEE_PROJECT.EMP_NO"));
+				SqlField.CreateName ("A1", "EMP_NO"), 
+				SqlField.CreateName ("A2", "EMP_NO"));
+			sql_select.Joins.Add (SqlField.CreateJoin(sql_join));
 
-			sql_select.Joins.Add (SqlField.CreateJoin (sql_join));
+			//	cumule un second INNER JOIN ...
+			sql_join = new SqlJoin (SqlJoinType.Inner, 
+				SqlField.CreateName ("A1", "PROJ_ID"), 
+				SqlField.CreateName ("A3", "PROJ_ID"));
+			sql_select.Joins.Add (SqlField.CreateJoin(sql_join));
 
 			//	construit la commande d'extraction
 			sql_builder.SelectData (sql_select);

@@ -360,7 +360,7 @@ namespace Epsitec.Cresus.Database
 		
 		public static SqlField CreateName(string name)
 		{
-			if (DbSqlStandard.ValidateQualifiedName (name) ||
+			if (/*DbSqlStandard.ValidateQualifiedName (name) ||*/
 				DbSqlStandard.ValidateName (name) )
 			{
 				return new SqlField (name);

@@ -207,18 +207,6 @@ namespace Epsitec.Cresus.Database.Implementation
 			switch (sql_function.ArgumentCount)
 			{
 				case 2:
-/*					if ( sql_function.Type == SqlFunctionType.JoinInner )
-					{
-						this.Append (sql_function.A.AsName);
-						this.Append (" INNER JOIN ");
-						this.Append (sql_function.B.AsName);
-						this.Append (" ON ");
-						this.Append (sql_function.A.AsQualifiedName);
-						this.Append (" = ");
-						this.Append (sql_function.B.AsQualifiedName);
-						return;
-					}*/
-
 					this.Append (sql_function.A);
 					switch (sql_function.Type)
 					{
@@ -334,19 +322,28 @@ namespace Epsitec.Cresus.Database.Implementation
 			}			
 		}
 		
-		protected void Append(SqlJoin sql_join)
+		protected void Append(SqlJoin sql_join, SqlFieldCollection sql_tables, int row)
 		{
 			System.Diagnostics.Debug.Assert (sql_join != null);
 
-			//	Converti la fonction en chaîne de caractère SQL
+			//	Converti la jointure en chaîne de caractère SQL
+			//	la liste des tables est nécessaire pour retrouver le nom de la table et son alias
+
+			if (row == 1)
+			{
+				this.Append (sql_tables[0]);
+				this.AppendAlias (sql_tables[0]);
+			}
+
 //			switch (sql_join.ArgumentCount)
 			{
 //				case 2:
 					if (sql_join.Type == SqlJoinType.Inner)
 					{
-						this.Append (sql_join.A.AsQualifier);
+						//this.Append (sql_tables[sql_join.A.AsQualifier]);	// va pas si le qualifier n'est pas l'alias
 						this.Append (" INNER JOIN ");
-						this.Append (sql_join.B.AsQualifier);
+						this.Append (sql_tables[row]);
+						this.AppendAlias (sql_tables[row]);
 						this.Append (" ON ");
 						this.Append (sql_join.A.AsQualifiedName);
 						this.Append (" = ");
@@ -354,7 +351,33 @@ namespace Epsitec.Cresus.Database.Implementation
 						return;
 					}
 
-					System.Diagnostics.Debug.Assert (false);
+				if (sql_join.Type == SqlJoinType.OuterLeft)
+				{
+					//this.Append (sql_tables[sql_join.A.AsQualifier]);	// va pas si le qualifier n'est pas l'alias
+					this.Append (" LEFT OUTER JOIN ");
+					this.Append (sql_tables[row]);
+					this.AppendAlias (sql_tables[row]);
+					this.Append (" ON ");
+					this.Append (sql_join.A.AsQualifiedName);
+					this.Append (" = ");
+					this.Append (sql_join.B.AsQualifiedName);
+					return;
+				}
+				
+				if (sql_join.Type == SqlJoinType.OuterRight)
+				{
+					//this.Append (sql_tables[sql_join.A.AsQualifier]);	// va pas si le qualifier n'est pas l'alias
+					this.Append (" RIGHT OUTER JOIN ");
+					this.Append (sql_tables[row]);
+					this.AppendAlias (sql_tables[row]);
+					this.Append (" ON ");
+					this.Append (sql_join.A.AsQualifiedName);
+					this.Append (" = ");
+					this.Append (sql_join.B.AsQualifiedName);
+					return;
+				}
+
+				System.Diagnostics.Debug.Assert (false);
 /*					break;
 
 				default:
@@ -365,8 +388,6 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		protected void Append(SqlSelect sql_query)
 		{
-			//	TODO-DD:  Compléter encore, notemment pour les JOINTURES
-			
 			this.Append ("SELECT ");
 			bool first_field = true;
 
@@ -423,9 +444,10 @@ namespace Epsitec.Cresus.Database.Implementation
 			if (sql_query.Joins.Count > 0)
 			{
 				//	cas particulier pour les jointures
+				int	row = 1;
 				foreach (SqlField field in sql_query.Joins)
 				{
-					this.Append (field.AsJoin);
+					this.Append (field.AsJoin, sql_query.Tables, row++);
 					first_field = false;
 				}
 			}
@@ -440,7 +462,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.Append (", ");
 				}
 
-				switch ( field.Type )
+				switch (field.Type)
 				{
 					case SqlFieldType.Name:
 						this.Append (field.AsName);
