@@ -16,10 +16,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			this.listFill = new ScrollList(this);
 			this.listFill.Items.Add("Uniforme");
-			this.listFill.Items.Add("Lineaire");
+			this.listFill.Items.Add("Linéaire");
 			this.listFill.Items.Add("Circulaire");
 			this.listFill.Items.Add("Diamant");
-			this.listFill.Items.Add("Conique");
+			this.listFill.Items.Add("Cônique");
 			this.listFill.SelectedIndexChanged += new EventHandler(this.ListChanged);
 			this.listFill.TabIndex = 1;
 			this.listFill.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -58,7 +58,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldSmooth = new TextFieldSlider(this);
 			this.fieldSmooth.MinValue =  0;
 			this.fieldSmooth.MaxValue = 10;
-			this.fieldSmooth.Step = 1;
+			this.fieldSmooth.Step = 0.2M;
+			this.fieldSmooth.Resolution = 0.1M;
 			this.fieldSmooth.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldSmooth.TabIndex = 6;
 			this.fieldSmooth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
