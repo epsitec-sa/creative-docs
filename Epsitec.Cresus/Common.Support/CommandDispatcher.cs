@@ -63,6 +63,31 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public CommandDispatcher.CommandState	this[string command_name]
+		{
+			get
+			{
+				foreach (CommandState state in this.command_states)
+				{
+					if (state.Name == command_name)
+					{
+						return state;
+					}
+				}
+				
+				return null;
+			}
+		}
+		
+		public string							Name
+		{
+			get
+			{
+				return this.dispatcher_name;
+			}
+		}
+		
+		
 		public void Dispatch(string command, object source)
 		{
 			//	Transmet la commande à ceux qui sont intéressés
@@ -375,6 +400,8 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		
+		#region EventRelay class
 		protected class EventRelay
 		{
 			public EventRelay(object controller, System.Reflection.MethodInfo method_info)
@@ -418,7 +445,9 @@ namespace Epsitec.Common.Support
 			protected object						controller;
 			protected System.Reflection.MethodInfo	method_info;
 		}
+		#endregion
 		
+		#region EventSlot class
 		protected class EventSlot
 		{
 			public EventSlot(string name)
@@ -464,7 +493,9 @@ namespace Epsitec.Common.Support
 			protected event CommandEventHandler	command;
 			protected int						count;
 		}
+		#endregion
 		
+		#region CommandState class
 		public abstract class CommandState
 		{
 			public CommandState(string name, CommandDispatcher dispatcher)
@@ -472,6 +503,8 @@ namespace Epsitec.Common.Support
 				System.Diagnostics.Debug.Assert (name != null);
 				System.Diagnostics.Debug.Assert (name.Length > 0);
 				System.Diagnostics.Debug.Assert (dispatcher != null);
+				
+				System.Diagnostics.Debug.Assert (dispatcher.FindCommandStates (name).Length == 0, "CommandState created twice.", string.Format ("The CommandState {0} for dispatcher {1} already exists.\nIt cannot be created more than once.", name, dispatcher.Name));
 				
 				this.name       = name;
 				this.dispatcher = dispatcher;
@@ -494,10 +527,30 @@ namespace Epsitec.Common.Support
 			
 			public abstract void Synchronise();
 			
+			public override int GetHashCode()
+			{
+				return this.name.GetHashCode ();
+			}
+			
+			public override bool Equals(object obj)
+			{
+				CommandState other = obj as CommandState;
+				
+				if (other == null)
+				{
+					return false;
+				}
+				
+				return this.name.Equals (other.name) && (this.dispatcher == other.dispatcher);
+			}
+
+			
 			protected string					name;
 			protected Support.CommandDispatcher	dispatcher;
 			protected Regex						regex;
 		}
+		#endregion
+		
 		
 		public static CommandDispatcher			Default
 		{

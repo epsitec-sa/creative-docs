@@ -738,12 +738,17 @@ namespace Epsitec.Common.Widgets
 		
 		[Test] public void CheckSaveCommandEnable()
 		{
-			Widget[] find = Widget.FindAllCommandWidgets ("save");
+			Widget[]     find  = Widget.FindAllCommandWidgets ("save");
+			CommandState state = find[0].CommandState;
+			
+			Assertion.AssertNotNull (state);
 			
 			for (int i = 0; i < find.Length; i++)
 			{
 				find[i].SetEnabled (true);
 				find[i].Invalidate ();
+				
+				System.Diagnostics.Debug.Assert (find[i].CommandState == state);
 			}
 		}
 		

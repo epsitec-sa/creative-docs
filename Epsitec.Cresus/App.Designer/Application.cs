@@ -22,6 +22,7 @@ namespace Epsitec.Designer
 			button.Parent  = this.MainWindow.Root;
 			button.Anchor  = AnchorStyles.BottomLeft;
 			
+			
 			button = new Button ("Open bundle");
 			button.Bounds  = new Rectangle (100, 10, 80, 24);
 			button.Command = "OpenStringBundle";
