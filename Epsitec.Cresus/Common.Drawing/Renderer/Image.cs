@@ -159,6 +159,8 @@ namespace Epsitec.Common.Drawing.Renderer
 		
 		protected void Detach()
 		{
+			this.Bitmap = null;
+			
 			if (this.agg_ren != System.IntPtr.Zero)
 			{
 				Agg.Library.AggRendererImageDelete (this.agg_ren);
