@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer
 	/// La classe StringEditController gère l'édition d'un bundle de ressources
 	/// textuelles.
 	/// </summary>
-	public class StringEditController
+	public class StringEditController : AbstractController
 	{
 		public StringEditController(CommandDispatcher dispatcher)
 		{
@@ -370,14 +370,6 @@ namespace Epsitec.Common.Designer
 			{
 				Resources.SetBundle (bundle, ResourceSetMode.Write);
 			}
-		}
-		
-		private void ThrowInvalidOperationException(CommandEventArgs e, int num_expected)
-		{
-			string command   = e.CommandName;
-			int    num_found = e.CommandArgs.Length;
-			
-			throw new System.InvalidOperationException (string.Format ("Command {0} requires {1} argument(s), got {2}.", command, num_expected, num_found));
 		}
 		
 		private void HandleTabBookCloseClicked(object sender)
