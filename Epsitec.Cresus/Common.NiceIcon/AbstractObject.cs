@@ -15,13 +15,20 @@ namespace Epsitec.Common.NiceIcon
 		{
 		}
 
-
+		[XmlArrayItem("Bool", Type=typeof(PropertyBool))]
+		[XmlArrayItem("Color", Type=typeof(PropertyColor))]
+		[XmlArrayItem("Double", Type=typeof(PropertyDouble))]
+		[XmlArrayItem("Gradient", Type=typeof(PropertyGradient))]
+		[XmlArrayItem("Line", Type=typeof(PropertyLine))]
+		[XmlArrayItem("List", Type=typeof(PropertyList))]
+		[XmlArrayItem("String", Type=typeof(PropertyString))]
 		public System.Collections.ArrayList Properties
 		{
 			get { return this.properties; }
 			set { this.properties = value; }
 		}
 
+		[XmlArrayItem(Type=typeof(Handle))]
 		public System.Collections.ArrayList Handles
 		{
 			get { return this.handles; }

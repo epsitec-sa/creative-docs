@@ -67,6 +67,14 @@ namespace Epsitec.Common.NiceIcon
 		}
 
 		// Liste des objets.
+		[XmlArrayItem("Arrow",     Type=typeof(ObjectArrow))]
+		[XmlArrayItem("Bezier",    Type=typeof(ObjectBezier))]
+		[XmlArrayItem("Circle",    Type=typeof(ObjectCircle))]
+		[XmlArrayItem("Ellipse",   Type=typeof(ObjectEllipse))]
+		[XmlArrayItem("Line",      Type=typeof(ObjectLine))]
+		[XmlArrayItem("Polyline",  Type=typeof(ObjectPoly))]
+		[XmlArrayItem("Rectangle", Type=typeof(ObjectRectangle))]
+		[XmlArrayItem("Polygon",   Type=typeof(ObjectRegular))]
 		public System.Collections.ArrayList Objects
 		{
 			get
