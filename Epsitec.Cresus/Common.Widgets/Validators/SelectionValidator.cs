@@ -1,0 +1,67 @@
+namespace Epsitec.Common.Widgets.Validators
+{
+	/// <summary>
+	/// Summary description for NamedStringSelectionValidator.
+	/// </summary>
+	public class SelectionValidator : AbstractValidator
+	{
+		public SelectionValidator(Widget widget) : base (widget)
+		{
+			if (widget is Support.INamedStringSelection)
+			{
+				//	OK.
+			}
+			else
+			{
+				throw new System.ArgumentException (string.Format ("Widget {0} does not support interface INamedStringSelection.", widget), "widget");
+			}
+		}
+		
+		
+		public override void Validate()
+		{
+			Support.INamedStringSelection sel = this.widget as Support.INamedStringSelection;
+			
+			if ((sel.SelectedIndex >= 0) &&
+				(this.IsSelectionValid (sel)))
+			{
+				this.state = Support.ValidationState.Ok;
+			}
+			else
+			{
+				this.state = Support.ValidationState.Error;
+			}
+		}
+		
+		
+		protected virtual bool IsSelectionValid(Support.INamedStringSelection selection)
+		{
+			return true;
+		}
+		
+		
+		protected override void AttachWidget(Widget widget)
+		{
+			base.AttachWidget (widget);
+			
+			Support.INamedStringSelection sel = this.widget as Support.INamedStringSelection;
+			
+			sel.SelectedIndexChanged += new Epsitec.Common.Support.EventHandler (this.HandleSelectionSelectedIndexChanged);
+		}
+		
+		protected override void DetachWidget(Widget widget)
+		{
+			base.DetachWidget (widget);
+			
+			Support.INamedStringSelection sel = this.widget as Support.INamedStringSelection;
+			
+			sel.SelectedIndexChanged -= new Epsitec.Common.Support.EventHandler (this.HandleSelectionSelectedIndexChanged);
+		}
+		
+		
+		private void HandleSelectionSelectedIndexChanged(object sender)
+		{
+			this.MakeDirty (false);
+		}
+	}
+}
