@@ -739,7 +739,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.IsFocusedOrPassive)
+				if (this.IsFocusedFlagSet)
 				{
 					Window window = this.Window;
 				
@@ -751,11 +751,17 @@ namespace Epsitec.Common.Widgets
 					return window.IsFocused;
 				}
 				
+				if ((this.InheritFocus) &&
+					(this.parent != null))
+				{
+					return this.parent.IsFocused;
+				}
+				
 				return false;
 			}
 		}
 		
-		public bool									IsFocusedOrPassive
+		public bool									IsFocusedFlagSet
 		{
 			get
 			{
@@ -1034,7 +1040,10 @@ namespace Epsitec.Common.Widgets
 				if ((this.InheritFocus) &&
 					(this.parent != null))
 				{
-					state |= this.parent.State & WidgetState.Focused;
+					if (this.parent.IsFocused)
+					{
+						state |= WidgetState.Focused;
+					}
 				}
 				
 				return state;
@@ -1068,17 +1077,27 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				WidgetState mask  = WidgetState.ActiveMask |
-					/**/			WidgetState.Focused |
 					/**/			WidgetState.Entered |
 					/**/			WidgetState.Engaged |
 					/**/			WidgetState.Selected |
 					/**/			WidgetState.Error;
+				
+				if (this.InheritFocus)
+				{
+					mask |= WidgetState.Focused;
+				}
 				
 				WidgetState state = this.State & mask;
 				
 				if (this.IsEnabled)
 				{
 					state |= WidgetState.Enabled;
+				}
+				
+				if (((state & WidgetState.Focused) == 0) &&
+					(this.IsFocused))
+				{
+					state |= WidgetState.Focused;
 				}
 				
 				return state;
@@ -1090,7 +1109,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.IsFocusedOrPassive)
+				if (this.IsFocusedFlagSet)
 				{
 					return true;
 				}
@@ -1798,16 +1817,17 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void SetFocused(bool focused)
 		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("Focus {0} -> {1}", focused, this.ToString ()));
+			
 			Window window = this.Window;
 			
-			if (! this.IsFocusedOrPassive)
+			if (! this.IsFocusedFlagSet)
 			{
 				if (focused)
 				{
-					this.widget_state |= WidgetState.Focused;
-					
 					if (window != null)
 					{
+						this.widget_state |= WidgetState.Focused;
 						window.FocusedWidget = this;
 					}
 					
@@ -3050,7 +3070,7 @@ namespace Epsitec.Common.Widgets
 					//	Il y a un widget avec le focus. Ca peut être nous, un de nos descendants
 					//	ou un autre widget sans aucun lien.
 					
-					if (this.IsFocusedOrPassive)
+					if (this.IsFocusedFlagSet)
 					{
 						return this;
 					}
