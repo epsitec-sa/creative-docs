@@ -13,8 +13,6 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		
-		
 		public override Layout.Status Fit(Layout.Context context, ref Layout.BreakCollection result)
 		{
 			FitScratch scratch = new FitScratch ();
@@ -94,7 +92,8 @@ namespace Epsitec.Common.Text.Layout
 						//	revient au même par rapport au traitement fait par le système de layout) :				:
 						
 						result.Add (new Layout.Break (scratch.Offset, scratch.Advance, 0, 0, scratch.StretchProfile));
-						return Layout.Status.OkFitEnded;
+						
+						return (scratch.WordBreakInfo == Unicode.BreakInfo.HorizontalTab) ? Layout.Status.OkTabReached : Layout.Status.OkFitEnded;
 					}
 				}
 				else

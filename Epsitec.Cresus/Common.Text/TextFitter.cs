@@ -262,11 +262,14 @@ namespace Epsitec.Common.Text
 			int line_start      = 0;
 			int paragraph_start = 0;
 			
+			double line_ascender  = 0;
+			double line_descender = 0;
+			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
 			for (;;)
 			{
-				Layout.Status status = layout.Fit (ref result, line_count);
+				Layout.Status status = layout.Fit (ref result, line_count, line_ascender, line_descender);
 				
 				this.frame_index = layout.FrameIndex;
 				this.frame_y     = layout.FrameY;
@@ -282,6 +285,7 @@ namespace Epsitec.Common.Text
 					
 					case Layout.Status.Ok:
 					case Layout.Status.OkFitEnded:
+					case Layout.Status.OkTabReached:
 						break;
 					
 					default:

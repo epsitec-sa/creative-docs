@@ -12,6 +12,7 @@ namespace Epsitec.Common.Text.Layout
 		
 		Ok,
 		OkFitEnded,
+		OkTabReached,
 		
 		SwitchLayout,
 		

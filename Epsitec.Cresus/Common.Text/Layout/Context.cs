@@ -282,6 +282,11 @@ namespace Epsitec.Common.Text.Layout
 		
 		public Layout.Status Fit(ref Layout.BreakCollection result, int paragraph_line_count)
 		{
+			return this.Fit (ref result, paragraph_line_count, 0, 0);
+		}
+
+		public Layout.Status Fit(ref Layout.BreakCollection result, int paragraph_line_count, double initial_line_ascender, double initial_line_descender)
+		{
 			//	Détermine les points de découpe pour le texte, selon le contexte
 			//	courant.
 			
@@ -292,7 +297,7 @@ namespace Epsitec.Common.Text.Layout
 			
 			this.SelectLayoutEngine (this.text_offset);
 			this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
-			this.SelectLineHeight (this.text_offset);
+			this.SelectLineHeight (this.text_offset, initial_line_ascender, initial_line_descender);
 			
 			this.ox             = this.mx_left;
 			this.break_anywhere = false;
@@ -353,7 +358,7 @@ restart:
 							this.SelectLayoutEngine (this.text_offset);
 							this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
 							this.SelectFrame (frame_index, 0);
-							this.SelectLineHeight (this.text_offset);
+							this.SelectLineHeight (this.text_offset, initial_line_ascender, initial_line_descender);
 							
 							goto restart;
 						}
@@ -391,6 +396,7 @@ restart:
 				{
 					case Layout.Status.Ok:
 					case Layout.Status.OkFitEnded:
+					case Layout.Status.OkTabReached:
 						if ((this.frame_list != null) &&
 							(this.line_height > initial_line_height))
 						{
@@ -433,6 +439,7 @@ restart:
 			return Layout.Status.ErrorCannotFit;
 		}
 		
+		
 		public void RenderLine(ITextRenderer renderer, Layout.StretchProfile profile, int length, double line_base_x, double line_base_y, double line_width, int paragraph_line_count, bool is_last_line)
 		{
 			//	Réalise le rendu de la ligne, en appelant les divers moteurs de
@@ -445,7 +452,7 @@ restart:
 			
 			this.SelectLayoutEngine (this.text_offset);
 			this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, is_last_line);
-			this.SelectLineHeight (this.text_offset);
+			this.SelectLineHeight (this.text_offset, 0, 0);
 			
 			this.ox      = line_base_x;
 			this.oy_base = line_base_y;
@@ -658,7 +665,7 @@ restart:
 			}
 		}
 		
-		private void SelectLineHeight(int offset)
+		private void SelectLineHeight(int offset, double ascender, double descender)
 		{
 			ulong code = this.text[this.text_start + offset];
 			
@@ -669,10 +676,14 @@ restart:
 			
 			if (font != null)
 			{
-				this.oy_max      = this.oy_base + font.GetAscender (font_size);
-				this.oy_min      = this.oy_base + font.GetDescender (font_size);
+				ascender  = System.Math.Max (ascender, font.GetAscender (font_size));
+				descender = System.Math.Min (descender, font.GetDescender (font_size));
+				
 				this.line_height = font_size * 1.2;
 			}
+			
+			this.oy_max = this.oy_base + ascender;
+			this.oy_min = this.oy_base + descender;
 		}
 		
 		
