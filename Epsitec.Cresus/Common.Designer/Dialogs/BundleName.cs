@@ -54,10 +54,10 @@ namespace Epsitec.Common.Designer.Dialogs
 			
 			Support.ValidationRule rule = new ValidationRule ("name");
 			
-			rule.Validators.Add (new Epsitec.Common.Widgets.Validators.RegexValidator (this.text, Support.RegexFactory.AlphaNumName));
-			rule.CommandStates.Add ("ValidateDialog");
+			rule.AddValidator (new Epsitec.Common.Widgets.Validators.RegexValidator (this.text, Support.RegexFactory.AlphaNumName));
+			rule.AddCommandState ("ValidateDialog");
 			
-			this.private_dispatcher.Validators.Add (rule);
+			this.private_dispatcher.ValidationRule.AddValidator (rule);
 			
 			return body;
 		}

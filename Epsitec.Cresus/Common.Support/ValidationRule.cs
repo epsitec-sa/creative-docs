@@ -55,6 +55,22 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public void AddValidator(IValidator validator)
+		{
+			this.validators.Add (validator);
+		}
+		
+		public void AddCommandState(string name)
+		{
+			this.command_states.Add (name);
+		}
+		
+		public void AddCommandState(CommandDispatcher.CommandState command_state)
+		{
+			this.command_states.Add (command_state);
+		}
+		
+		
 		#region IValidator Members
 		public ValidationState						State
 		{
@@ -609,7 +625,7 @@ namespace Epsitec.Common.Support
 			{
 				if (this.dispatcher != null)
 				{
-					this.dispatcher.NotifyValidationRulesBecameDirty ();
+					this.dispatcher.NotifyValidationRuleBecameDirty ();
 				}
 			}
 		}

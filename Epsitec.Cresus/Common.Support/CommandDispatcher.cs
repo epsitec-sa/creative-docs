@@ -63,7 +63,7 @@ namespace Epsitec.Common.Support
 				CommandDispatcher.global_list.Add (this);
 			}
 			
-			this.validation_rules = new ValidationRule (this);
+			this.validation_rule = new ValidationRule (this);
 		}
 		
 		
@@ -135,11 +135,11 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public ValidationRule.ValidatorList		Validators
+		public ValidationRule					ValidationRule
 		{
 			get
 			{
-				return this.validation_rules.Validators;
+				return this.validation_rule;
 			}
 		}
 		
@@ -261,11 +261,11 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public void ApplyValidationRules()
+		public void ApplyValidationRule()
 		{
-			if (this.validation_rules.State == ValidationState.Dirty)
+			if (this.validation_rule.State == ValidationState.Dirty)
 			{
-				this.validation_rules.Validate ();
+				this.validation_rule.Validate ();
 			}
 		}
 		
@@ -273,17 +273,17 @@ namespace Epsitec.Common.Support
 		{
 			foreach (CommandDispatcher dispatcher in CommandDispatcher.global_list)
 			{
-				dispatcher.ApplyValidationRules ();
+				dispatcher.ApplyValidationRule ();
 			}
 			foreach (CommandDispatcher dispatcher in CommandDispatcher.local_list)
 			{
-				dispatcher.ApplyValidationRules ();
+				dispatcher.ApplyValidationRule ();
 			}
 		}
 		
-		internal void NotifyValidationRulesBecameDirty()
+		internal void NotifyValidationRuleBecameDirty()
 		{
-			this.OnValidationRulesBecameDirty ();
+			this.OnValidationRuleBecameDirty ();
 		}
 		
 		
@@ -333,11 +333,11 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		protected void OnValidationRulesBecameDirty()
+		protected void OnValidationRuleBecameDirty()
 		{
-			if (this.ValidationRulesBecameDirty != null)
+			if (this.ValidationRuleBecameDirty != null)
 			{
-				this.ValidationRulesBecameDirty (this);
+				this.ValidationRuleBecameDirty (this);
 			}
 		}
 		
@@ -774,7 +774,7 @@ namespace Epsitec.Common.Support
 		public delegate CommandDispatcher.CommandState FindCommandStateCallback(string name, CommandDispatcher dispatcher);
 		#endregion
 		
-		public event EventHandler				ValidationRulesBecameDirty;
+		public event EventHandler				ValidationRuleBecameDirty;
 		public event EventHandler				OpletQueueChanged;
 		
 		public static CommandDispatcher			Default
@@ -801,7 +801,7 @@ namespace Epsitec.Common.Support
 		protected System.Collections.Stack		pending_commands  = new System.Collections.Stack ();
 		protected System.Collections.ArrayList	extra_dispatchers = new System.Collections.ArrayList ();
 		protected string						dispatcher_name;
-		protected ValidationRule				validation_rules;
+		protected ValidationRule				validation_rule;
 		protected bool							aborted;
 		protected OpletQueue					oplet_queue;
 		

@@ -305,14 +305,14 @@ namespace Epsitec.Common.Support
 			
 			v1.Validators.Add (v11);
 			
-			dispatcher.Validators.Add (v1);
-			dispatcher.Validators.Add (v2);
+			dispatcher.ValidationRule.Validators.Add (v1);
+			dispatcher.ValidationRule.Validators.Add (v2);
 			
 			Assert.AreEqual (ValidationState.Dirty, v1.State);
 			Assert.AreEqual (ValidationState.Dirty, v11.State);
 			Assert.AreEqual (ValidationState.Dirty, v2.State);
 			
-			dispatcher.ApplyValidationRules ();
+			dispatcher.ApplyValidationRule ();
 			
 			Assert.AreEqual (ValidationState.Ok, v1.State);
 			Assert.AreEqual (ValidationState.Ok, v11.State);
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (ValidationState.Dirty, v11.State);
 			Assert.AreEqual (ValidationState.Ok, v2.State);
 			
-			dispatcher.ApplyValidationRules ();
+			dispatcher.ApplyValidationRule ();
 			
 			v2.MakeDirty (false);
 			

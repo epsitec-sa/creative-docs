@@ -536,14 +536,14 @@ namespace Epsitec.Common.Widgets
 				{
 					if (this.cmd_dispatcher != null)
 					{
-						this.cmd_dispatcher.ValidationRulesBecameDirty -= new Support.EventHandler (this.HandleValidationRulesBecameDirty);
+						this.cmd_dispatcher.ValidationRuleBecameDirty -= new Support.EventHandler (this.HandleValidationRuleBecameDirty);
 					}
 					
 					this.cmd_dispatcher = value;
 					
 					if (this.cmd_dispatcher != null)
 					{
-						this.cmd_dispatcher.ValidationRulesBecameDirty += new Support.EventHandler (this.HandleValidationRulesBecameDirty);
+						this.cmd_dispatcher.ValidationRuleBecameDirty += new Support.EventHandler (this.HandleValidationRuleBecameDirty);
 					}
 				}
 			}
@@ -1126,7 +1126,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		private void HandleValidationRulesBecameDirty(object sender)
+		private void HandleValidationRuleBecameDirty(object sender)
 		{
 			this.AsyncValidation ();
 		}

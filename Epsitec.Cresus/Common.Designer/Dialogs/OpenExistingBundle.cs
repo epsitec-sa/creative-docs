@@ -67,10 +67,10 @@ namespace Epsitec.Common.Designer.Dialogs
 			
 			Support.ValidationRule rule = new ValidationRule ("name");
 			
-			rule.Validators.Add (new Epsitec.Common.Widgets.Validators.SelectionValidator (this.list));
-			rule.CommandStates.Add ("ValidateDialog");
+			rule.AddValidator (new Epsitec.Common.Widgets.Validators.SelectionValidator (this.list));
+			rule.AddCommandState ("ValidateDialog");
 			
-			this.private_dispatcher.Validators.Add (rule);
+			this.private_dispatcher.ValidationRule.AddValidator (rule);
 			
 			return widget;
 		}
