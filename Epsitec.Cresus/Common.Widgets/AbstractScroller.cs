@@ -325,7 +325,7 @@ namespace Epsitec.Common.Widgets
 					return;
 				}
 				
-				if (! this.is_dragging)
+				if (! this.is_dragging && (message.Type != MessageType.MouseLeave))
 				{
 					this.HiliteZone = this.DetectZone (pos);
 					
