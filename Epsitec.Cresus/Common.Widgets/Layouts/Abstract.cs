@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 		
 		
-		public Panel					Panel
+		public Panel							Panel
 		{
 			get
 			{
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 		
 		
-		public double					DesiredWidth
+		public double							DesiredWidth
 		{
 			get
 			{
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
-		public double					DesiredHeight
+		public double							DesiredHeight
 		{
 			get
 			{
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
-		public double					CurrentWidth
+		public double							CurrentWidth
 		{
 			get
 			{
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
-		public double					CurrentHeight
+		public double							CurrentHeight
 		{
 			get
 			{
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 		
 		
-		public bool						EditionEnabled
+		public bool								EditionEnabled
 		{
 			get
 			{
@@ -186,15 +186,15 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		
 		
-		protected Panel					panel;
+		protected Panel							panel;
 		
-		protected bool					is_dirty;					//	Invalidate a été appelé
+		protected bool							is_dirty;					//	Invalidate a été appelé
 		
-		protected double				current_width;
-		protected double				current_height;
-		protected double				desired_width;
-		protected double				desired_height;
+		protected double						current_width;
+		protected double						current_height;
+		protected double						desired_width;
+		protected double						desired_height;
 		
-		protected bool					is_edition_enabled;			//	l'édition est possible
+		protected bool							is_edition_enabled;			//	l'édition est possible
 	}
 }
