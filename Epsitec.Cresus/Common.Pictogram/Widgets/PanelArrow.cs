@@ -101,8 +101,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 					this.fieldLength[j].TextChanged -= new EventHandler(this.HandleFieldChanged);
 					this.fieldEffect1[j].TextChanged -= new EventHandler(this.HandleFieldChanged);
 					this.fieldEffect2[j].TextChanged -= new EventHandler(this.HandleFieldChanged);
+					this.fieldType[j] = null;
+					this.fieldLength[j] = null;
+					this.fieldEffect1[j] = null;
+					this.fieldEffect2[j] = null;
+					this.labelLength[j] = null;
+					this.labelEffect1[j] = null;
+					this.labelEffect2[j] = null;
 				}
 				this.swapArrow.Clicked -= new MessageEventHandler(this.SwapArrowClicked);
+
+				this.label = null;
+				this.separator = null;
+				this.swapArrow = null;
 			}
 			
 			base.Dispose(disposing);

@@ -79,6 +79,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.buttonUp.Clicked -= new MessageEventHandler(this.HandleButtonUp);
 				this.buttonDown.Clicked -= new MessageEventHandler(this.HandleButtonDown);
 				this.buttonDelete.Clicked -= new MessageEventHandler(this.HandleButtonDelete);
+
+				this.drawer = null;
+				this.radioDocument = null;
+				this.radioPattern = null;
+				this.toolBar = null;
+				this.buttonNew = null;
+				this.buttonDuplicate = null;
+				this.buttonUp = null;
+				this.buttonDown = null;
+				this.buttonDelete = null;
+				this.table = null;
 			}
 			
 			base.Dispose(disposing);

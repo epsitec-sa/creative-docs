@@ -223,24 +223,58 @@ namespace Epsitec.Common.Pictogram.Widgets
 				for ( int i=0 ; i<6 ; i++ )
 				{
 					this.buttons[i].Clicked -= new MessageEventHandler(this.PanelLineClicked);
-
-					this.rndMove.ActiveStateChanged -= new EventHandler(this.HandleRndChanged);
-					this.rndSize.ActiveStateChanged -= new EventHandler(this.HandleRndChanged);
-					this.rndShift.ActiveStateChanged -= new EventHandler(this.HandleRndChanged);
-					this.rndAngle.ActiveStateChanged -= new EventHandler(this.HandleRndChanged);
-					this.rndPage.ActiveStateChanged -= new EventHandler(this.HandleRndChanged);
-					this.fieldMove.TextChanged -= new EventHandler(this.HandleFieldChanged);
-					this.fieldSize.TextChanged -= new EventHandler(this.HandleFieldChanged);
-					this.fieldShift.TextChanged -= new EventHandler(this.HandleFieldChanged);
-					this.fieldAngle.TextChanged -= new EventHandler(this.HandleFieldChanged);
-
-					for ( int j=0 ; j<PropertyLine.DashMax ; j++ )
-					{
-						this.radioDashRank[j].ActiveStateChanged -= new EventHandler(this.HandleDashRankChanged);
-					}
-					this.fieldDashPen.TextChanged -= new EventHandler(this.HandleDashChanged);
-					this.fieldDashGap.TextChanged -= new EventHandler(this.HandleDashChanged);
+					this.buttons[i] = null;
 				}
+
+				this.rndMove.ActiveStateChanged -= new EventHandler(this.HandleRndChanged);
+				this.rndSize.ActiveStateChanged -= new EventHandler(this.HandleRndChanged);
+				this.rndShift.ActiveStateChanged -= new EventHandler(this.HandleRndChanged);
+				this.rndAngle.ActiveStateChanged -= new EventHandler(this.HandleRndChanged);
+				this.rndPage.ActiveStateChanged -= new EventHandler(this.HandleRndChanged);
+				this.fieldMove.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldSize.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldShift.TextChanged -= new EventHandler(this.HandleFieldChanged);
+				this.fieldAngle.TextChanged -= new EventHandler(this.HandleFieldChanged);
+
+				for ( int i=0 ; i<PropertyLine.DashMax ; i++ )
+				{
+					this.radioDashRank[i].ActiveStateChanged -= new EventHandler(this.HandleDashRankChanged);
+					this.radioDashRank[i] = null;
+				}
+				this.fieldDashPen.TextChanged -= new EventHandler(this.HandleDashChanged);
+				this.fieldDashGap.TextChanged -= new EventHandler(this.HandleDashChanged);
+
+				for ( int i=0 ; i<5 ; i++ )
+				{
+					this.separators[i] = null;
+				}
+
+				this.label = null;
+				this.field = null;
+				this.patternLabel = null;
+				this.patternId = null;
+				this.rndMove = null;
+				this.rndSize = null;
+				this.rndShift = null;
+				this.rndAngle = null;
+				this.rndPage = null;
+				this.fieldMove = null;
+				this.fieldSize = null;
+				this.fieldShift = null;
+				this.fieldAngle = null;
+				this.labelMove = null;
+				this.labelSize = null;
+				this.labelShift = null;
+				this.labelAngle = null;
+				this.buttonSeed = null;
+				this.fieldDashPen = null;
+				this.fieldDashGap = null;
+				this.labelDashPen = null;
+				this.labelDashGap = null;
+				this.label = null;
+				this.label = null;
+				this.label = null;
+				this.label = null;
 			}
 			
 			base.Dispose(disposing);

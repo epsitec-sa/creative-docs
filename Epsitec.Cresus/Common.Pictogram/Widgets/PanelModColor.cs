@@ -93,9 +93,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 				for ( int i=0 ; i<7 ; i++ )
 				{
 					this.fieldArray[i].TextChanged -= new EventHandler(this.HandleTextChanged);
+					this.fieldArray[i] = null;
+					this.labelArray[i] = null;
 				}
 				this.negativ.ActiveStateChanged -= new EventHandler(this.HandleNegativChanged);
 				this.reset.Clicked -= new MessageEventHandler(this.HandleReset);
+
+				this.label = null;
+				this.negativ = null;
+				this.reset = null;
 			}
 			
 			base.Dispose(disposing);

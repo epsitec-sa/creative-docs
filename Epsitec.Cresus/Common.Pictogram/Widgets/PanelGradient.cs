@@ -95,14 +95,31 @@ namespace Epsitec.Common.Pictogram.Widgets
 		
 		protected override void Dispose(bool disposing)
 		{
-			this.listFill.SelectedIndexChanged -= new EventHandler(this.ListChanged);
-			this.sample.Clicked -= new MessageEventHandler(this.SampleClicked);
-			this.fieldColor1.Clicked -= new MessageEventHandler(this.FieldColorClicked);
-			this.fieldColor2.Clicked -= new MessageEventHandler(this.FieldColorClicked);
-			this.fieldRepeat.TextChanged -= new EventHandler(this.HandleTextChanged);
-			this.fieldMiddle.TextChanged -= new EventHandler(this.HandleTextChanged);
-			this.fieldSmooth.TextChanged -= new EventHandler(this.HandleTextChanged);
-			this.swapColor.Clicked -= new MessageEventHandler(this.SwapColorClicked);
+			if ( disposing )
+			{
+				this.listFill.SelectedIndexChanged -= new EventHandler(this.ListChanged);
+				this.sample.Clicked -= new MessageEventHandler(this.SampleClicked);
+				this.fieldColor1.Clicked -= new MessageEventHandler(this.FieldColorClicked);
+				this.fieldColor2.Clicked -= new MessageEventHandler(this.FieldColorClicked);
+				this.fieldRepeat.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.fieldMiddle.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.fieldSmooth.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.swapColor.Clicked -= new MessageEventHandler(this.SwapColorClicked);
+
+				this.label = null;
+				this.listFill = null;
+				this.sample = null;
+				this.fieldColor1 = null;
+				this.fieldColor2 = null;
+				this.swapColor = null;
+				this.fieldRepeat = null;
+				this.fieldMiddle = null;
+				this.fieldSmooth = null;
+				this.labelRepeat = null;
+				this.labelMiddle = null;
+				this.labelSmooth = null;
+				this.originFieldColor = null;
+			}
 
 			base.Dispose(disposing);
 		}

@@ -73,9 +73,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 				for ( int i=0 ; i<4 ; i++ )
 				{
 					this.buttons[i].Clicked -= new MessageEventHandler(this.PanelTextLineClicked);
+					this.buttons[i] = null;
 				}
 				this.fieldOffset.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fieldAdd.TextChanged -= new EventHandler(this.HandleFieldChanged);
+
+				this.label = null;
+				this.fieldOffset = null;
+				this.fieldAdd = null;
+				this.labelOffset = null;
+				this.labelAdd = null;
 			}
 			
 			base.Dispose(disposing);

@@ -53,6 +53,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.fieldNbFaces.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.checkStar.ActiveStateChanged -= new EventHandler(this.HandleCheckChanged);
 				this.fieldDeep.TextChanged -= new EventHandler(this.HandleFieldChanged);
+
+				this.label = null;
+				this.fieldNbFaces = null;
+				this.checkStar = null;
+				this.fieldDeep = null;
+				this.labelDeep = null;
 			}
 			
 			base.Dispose(disposing);

@@ -64,10 +64,22 @@ namespace Epsitec.Common.Pictogram.Widgets
 		
 		protected override void Dispose(bool disposing)
 		{
-			this.fieldColor.Clicked -= new MessageEventHandler(this.FieldColorClicked);
-			this.fieldRadius.TextChanged -= new EventHandler(this.HandleTextChanged);
-			this.fieldOx.TextChanged -= new EventHandler(this.HandleTextChanged);
-			this.fieldOy.TextChanged -= new EventHandler(this.HandleTextChanged);
+			if ( disposing )
+			{
+				this.fieldColor.Clicked -= new MessageEventHandler(this.FieldColorClicked);
+				this.fieldRadius.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.fieldOx.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.fieldOy.TextChanged -= new EventHandler(this.HandleTextChanged);
+
+				this.label = null;
+				this.fieldColor = null;
+				this.fieldRadius = null;
+				this.fieldOx = null;
+				this.fieldOy = null;
+				this.labelRadius = null;
+				this.labelOx = null;
+				this.labelOy = null;
+			}
 
 			base.Dispose(disposing);
 		}

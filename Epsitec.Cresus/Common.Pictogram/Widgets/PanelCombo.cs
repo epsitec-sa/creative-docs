@@ -29,6 +29,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( disposing )
 			{
 				this.list.TextChanged -= new EventHandler(this.ListChanged);
+				this.list = null;
+				this.label = null;
 			}
 			
 			base.Dispose(disposing);

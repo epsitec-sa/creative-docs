@@ -27,7 +27,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 		
 		protected override void Dispose(bool disposing)
 		{
-			this.field.Clicked -= new MessageEventHandler(this.FieldClicked);
+			if ( disposing )
+			{
+				this.field.Clicked -= new MessageEventHandler(this.FieldClicked);
+				this.field = null;
+				this.label = null;
+			}
+
 			base.Dispose(disposing);
 		}
 

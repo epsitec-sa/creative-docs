@@ -25,6 +25,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( disposing )
 			{
 				this.button.ActiveStateChanged -= new EventHandler(this.ButtonActiveStateChanged);
+				this.button = null;
 			}
 			
 			base.Dispose(disposing);

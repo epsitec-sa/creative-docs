@@ -105,10 +105,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 				for ( int i=0 ; i<5+3+4 ; i++ )
 				{
 					this.buttons[i].Clicked -= new MessageEventHandler(this.PanelJustifClicked);
+					this.buttons[i] = null;
 				}
 				this.fieldMarginH.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fieldMarginV.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fieldOffsetV.TextChanged -= new EventHandler(this.HandleFieldChanged);
+
+				this.label = null;
+				this.fieldMarginH = null;
+				this.fieldMarginV = null;
+				this.fieldOffsetV = null;
+				this.labelMarginH = null;
+				this.labelMarginV = null;
+				this.labelOffsetV = null;
 			}
 			
 			base.Dispose(disposing);

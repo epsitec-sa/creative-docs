@@ -60,6 +60,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.buttonMirrorH.ActiveStateChanged -= new EventHandler(this.ButtonActiveStateChanged);
 				this.buttonMirrorV.ActiveStateChanged -= new EventHandler(this.ButtonActiveStateChanged);
 				this.buttonHomo.ActiveStateChanged -= new EventHandler(this.ButtonActiveStateChanged);
+
+				this.label = null;
+				this.fieldFilename = null;
+				this.buttonBrowse = null;
+				this.buttonMirrorH = null;
+				this.buttonMirrorV = null;
+				this.buttonHomo = null;
 			}
 			
 			base.Dispose(disposing);

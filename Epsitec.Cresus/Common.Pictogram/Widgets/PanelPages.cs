@@ -64,6 +64,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			if ( disposing )
 			{
+				this.drawer = null;
+				this.toolBar = null;
+				this.buttonNew = null;
+				this.buttonDuplicate = null;
+				this.buttonUp = null;
+				this.buttonDown = null;
+				this.buttonDelete = null;
+				this.table = null;
 			}
 			
 			base.Dispose(disposing);

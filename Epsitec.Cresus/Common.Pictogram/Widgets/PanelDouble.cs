@@ -28,6 +28,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( disposing )
 			{
 				this.field.TextChanged -= new EventHandler(this.HandleTextChanged);
+				this.field = null;
+				this.label = null;
 			}
 			
 			base.Dispose(disposing);

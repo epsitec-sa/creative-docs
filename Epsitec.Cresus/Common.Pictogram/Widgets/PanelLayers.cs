@@ -99,6 +99,22 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			if ( disposing )
 			{
+				this.drawer = null;
+				this.toolBar = null;
+				this.buttonNew = null;
+				this.buttonDuplicate = null;
+				this.buttonUp = null;
+				this.buttonDown = null;
+				this.buttonDelete = null;
+				this.table = null;
+				this.radioGroup = null;
+				this.radioShow = null;
+				this.radioDimmed = null;
+				this.radioHide = null;
+				this.buttonShow = null;
+				this.buttonDimmed = null;
+				this.buttonHide = null;
+				this.panel = null;
 			}
 			
 			base.Dispose(disposing);

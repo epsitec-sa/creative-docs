@@ -75,6 +75,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.fontOptical.SelectedIndexChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontSize.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fontColor.Clicked -= new MessageEventHandler(this.HandleColorClicked);
+
+				this.label = null;
+				this.labelOptical = null;
+				this.labelSize = null;
+				this.labelColor = null;
+				this.fontName = null;
+				this.fontOptical = null;
+				this.fontSize = null;
+				this.fontColor = null;
 			}
 			
 			base.Dispose(disposing);

@@ -71,6 +71,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				this.Styles.StyleListChanged -= new EventHandler(this.HandleStyleListChanged);
 				this.Styles.OneStyleChanged -= new StyleEventHandler(this.HandleOneStyleChangedChanged);
+
+				this.drawer = null;
+				this.toolBar = null;
+				this.buttonNew = null;
+				this.buttonDuplicate = null;
+				this.buttonUp = null;
+				this.buttonDown = null;
+				this.buttonDelete = null;
+				this.table = null;
+				this.panel = null;
+				this.colorSelector = null;
+				this.contextMenu = null;
+				this.originColorPanel = null;
 			}
 			
 			base.Dispose(disposing);

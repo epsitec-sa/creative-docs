@@ -80,6 +80,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.fieldRadius.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fieldEffect1.TextChanged -= new EventHandler(this.HandleFieldChanged);
 				this.fieldEffect2.TextChanged -= new EventHandler(this.HandleFieldChanged);
+
+				this.label = null;
+				this.fieldType = null;
+				this.fieldRadius = null;
+				this.fieldEffect1 = null;
+				this.fieldEffect2 = null;
+				this.labelRadius = null;
+				this.labelEffect1 = null;
+				this.labelEffect2 = null;
 			}
 			
 			base.Dispose(disposing);

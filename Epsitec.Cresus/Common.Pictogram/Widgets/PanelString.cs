@@ -36,6 +36,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				this.fieldSingle.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.fieldMulti.TextChanged -= new EventHandler(this.HandleTextChanged);
+
+				this.label = null;
+				this.fieldSingle = null;
+				this.fieldMulti = null;
 			}
 			
 			base.Dispose(disposing);
@@ -114,27 +118,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 				p.String = this.fieldSingle.Text;
 			}
 			return p;
-		}
-
-
-		// Met le focus par défaut dans ce panneau.
-		public override bool DefaultFocus()
-		{
-			if ( this.type == PropertyType.TextString )
-			{
-				if ( this.extendedSize )
-				{
-					this.fieldMulti.SelectAll();
-					this.fieldMulti.Focus();
-				}
-				else
-				{
-					this.fieldSingle.SelectAll();
-					this.fieldSingle.Focus();
-				}
-				return true;
-			}
-			return false;
 		}
 
 
