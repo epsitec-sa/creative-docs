@@ -55,14 +55,14 @@ namespace Epsitec.Cresus.Database
 			column.DefineCategory (DbElementCat.UserDataManaged);
 		}
 		
-		[Test] public void CheckConvertColumnToXml()
+		[Test] public void CheckSerialiseToXml()
 		{
 			DbColumn column = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
 			
 			column.IsIndexed = true;
 			column.DefineCategory (DbElementCat.UserDataManaged);
 			
-			System.Console.Out.WriteLine ("XML: " + DbColumn.ConvertColumnToXml (column));
+			System.Console.Out.WriteLine ("XML: " + DbColumn.SerialiseToXml (column, true));
 		}
 		
 		[Test] public void CheckTypes()

@@ -23,6 +23,24 @@ namespace Epsitec.Cresus.Database
 			table.DefineCategory (DbElementCat.Internal);
 		}
 		
+		[Test] public void CheckSerialiseToXml()
+		{
+			DbTable table = new DbTable ("Test");
+			DbColumn column = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
+			
+			column.IsIndexed = true;
+			column.DefineCategory (DbElementCat.UserDataManaged);
+			
+			table.PrimaryKeys.Add (column);
+			table.Columns.Add (column);
+			
+			string xml = DbTable.SerialiseToXml (table, true);
+			
+			System.Console.Out.WriteLine ("XML: {0}", xml);
+			
+			DbTable test = DbTable.NewTable (xml);
+		}
+		
 		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckNewDbTableEx1()
 		{
 			DbTable table = new DbTable ("Test");
