@@ -1865,8 +1865,6 @@ invalid:	row    = -1;
 		
 		protected virtual  void OnContentsChanged()
 		{
-			System.Diagnostics.Debug.WriteLine ("Contents changed.");
-			
 			if (this.ContentsChanged != null)
 			{
 				this.ContentsChanged (this);
@@ -1875,8 +1873,6 @@ invalid:	row    = -1;
 
 		protected virtual  void OnContentsInvalidated()
 		{
-			System.Diagnostics.Debug.WriteLine ("Contents invalidated.");
-			
 			if (this.ContentsInvalidated != null)
 			{
 				this.ContentsInvalidated (this);
