@@ -8,10 +8,6 @@ namespace Epsitec.Common.Text
 	/// </summary>
 	public sealed class TextConverter
 	{
-		private TextConverter()
-		{
-		}
-		
 		public static void ConvertFromString(string text, out uint[] result)
 		{
 			//	Convertit un texte 'string' codé sous une forme UTF-16 en un
@@ -31,7 +27,7 @@ namespace Epsitec.Common.Text
 				
 				//	S'agit-il là d'un caractère potentiellement complexe ?
 				
-				if ((c >= TextConverter.UnicodeSurrogateMin) ||
+				if ((c >= TextConverter.UnicodeSurrogateMin) &&
 					(c <= TextConverter.UnicodeSurrogateMax))
 				{
 					//	On vient de tomber sur une partie de 'surrogate pair'. Il
@@ -45,6 +41,58 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public static void ConvertToString(uint[] text, out string result)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			TextConverter.ConvertToString (text, buffer);
+			
+			result = buffer.ToString ();
+		}
+		
+		public static void ConvertToString(uint[] text, System.Text.StringBuilder buffer)
+		{
+			for (int i = 0; i < text.Length; i++)
+			{
+				uint code = text[i];
+				
+				if (code > 0x00FFFF)
+				{
+					if (code > 0x10FFFF)
+					{
+						throw new IllegalUnicodeException ();
+					}
+					
+					//	Il faut coder ce caractère comme un surrogate pair.
+					
+					code -= 0x010000;
+					
+					uint low  = (code >> 10) & 0x03FF;
+					uint high = (code >>  0) & 0x03FF;
+					
+					buffer.Append ((char) (low  + TextConverter.UnicodeSurrogateLowMin));
+					buffer.Append ((char) (high + TextConverter.UnicodeSurrogateHighMin));
+				}
+				else
+				{
+					if ((code >= TextConverter.UnicodeSurrogateMin) &&
+						(code <= TextConverter.UnicodeSurrogateMax))
+					{
+						//	Un surrogate pair n'a pas le droit d'apparaître dans le texte
+						//	source, car UTF-32 considère ces codes comme non valides.
+						
+						throw new IllegalUnicodeException ();
+					}
+					
+					buffer.Append ((char) code);
+				}
+			}
+		}
+		
+		
+		private TextConverter()
+		{
+		}
 		
 		private static void ConvertFromComplexString(string text, int index, ref uint[] result)
 		{
@@ -60,6 +108,11 @@ namespace Epsitec.Common.Text
 				if ((c >= TextConverter.UnicodeSurrogateLowMin) &&
 					(c <= TextConverter.UnicodeSurrogateLowMax))
 				{
+					//	Traitement des 'surrogate pairs'.
+					//
+					//	http://www.i18nguy.com/surrogates.html
+					//	http://www.i18nguy.com/unicode/surrogatetable.html
+					
 					if ((i >= text.Length-1) ||
 						(text[i+1] < TextConverter.UnicodeSurrogateHighMin) ||
 						(text[i+1] > TextConverter.UnicodeSurrogateHighMax))
@@ -76,9 +129,9 @@ namespace Epsitec.Common.Text
 					Debug.Assert.IsInBounds (low, 0, 0x3FF);
 					Debug.Assert.IsInBounds (high, 0, 0x3FF);
 					
-					code = low + (high << 10) + 0x10000;
+					code = (low << 10) + (high) + 0x10000;
 					
-					Debug.Assert.IsInBounds (code, 0x00010000, 0x0010FFFF);
+					Debug.Assert.IsInBounds (code, 0x010000, 0x10FFFF);
 					
 					//	Saute le caractère suivant dans la source...
 					
