@@ -114,5 +114,35 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("Button Bounds = {0}, {1}", b1.Bounds, b2.Bounds);
 			System.Console.Out.WriteLine ("Button Bounds (root relative) = {0}, {1}", b1.MapClientToRoot (b1.Client.Bounds), b2.MapClientToRoot (b2.Client.Bounds));
 		}
+		
+		[Test] public void CheckPanelsWidgetPalette()
+		{
+			Window window = new Window ();
+			
+			Design.Panels.WidgetPalette wp = new Design.Panels.WidgetPalette (Design.Panels.PreferredLayout.Horizontal);
+			Drawing.Size palette_size = wp.Size;
+			palette_size.Width  += 20;
+			palette_size.Height += 20;
+			
+			window.Text = "PanelTest.CheckPanelsWidgetPalette";
+			window.ClientSize = palette_size;
+			
+			ScrollablePanel panel = new ScrollablePanel ();
+			
+			panel.Parent = window.Root;
+			panel.Bounds = window.Root.Client.Bounds;
+			panel.Dock   = DockStyle.Fill;
+			panel.Panel.MinSize = palette_size;
+			
+			panel.SuspendLayout ();
+			
+			wp.CreateWidgets (panel.Panel, new Drawing.Point (10, 10));
+			
+			panel.ResumeLayout ();
+			
+			System.Console.Out.WriteLine ("Panel desired size: {0}", panel.Panel.DesiredSize);
+			
+			window.Show ();
+		}	
 	}
 }

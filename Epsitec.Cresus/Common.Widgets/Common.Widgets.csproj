@@ -626,6 +626,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Design\Panels\PreferredLayout.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Design\Panels\WidgetPalette.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

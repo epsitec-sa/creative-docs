@@ -639,6 +639,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public virtual bool							IsLayoutSuspended
+		{
+			get
+			{
+				if (this.suspend_counter > 0)
+				{
+					return true;
+				}
+//				if (this.parent != null)
+//				{
+//					return this.parent.IsLayoutSuspended;
+//				}
+				
+				return false;
+			}
+		}
+		
 		public virtual bool							IsVisible
 		{
 			get
@@ -971,7 +988,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public WidgetCollection						Children
+		public virtual WidgetCollection				Children
 		{
 			get
 			{
@@ -2742,7 +2759,7 @@ namespace Epsitec.Common.Widgets
 					break;
 			}
 			
-			if (this.suspend_counter == 0)
+			if (this.IsLayoutSuspended == false)
 			{
 				this.UpdateChildrenLayout ();
 				System.Diagnostics.Debug.Assert (this.layout_info == null);
@@ -2760,7 +2777,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateChildrenLayout()
 		{
-			if (this.suspend_counter > 0)
+			if (this.IsLayoutSuspended)
 			{
 				//	L'utilisateur a suspendu toute opération de layout, donc on ne va rien faire maintenant
 				//	mais laisser le soin au ResumeLayout final de nous appeler à nouveau.
@@ -3596,7 +3613,7 @@ namespace Epsitec.Common.Widgets
 			
 			System.Diagnostics.Debug.Assert (this.suspend_counter >= 0);
 			
-			if (this.suspend_counter != 0)
+			if (this.IsLayoutSuspended)
 			{
 				//	L'utilisateur pour suspendre le traitement des événements de layout (ceci comprend
 				//	aussi les événements liés aux changement de widgets fils), ce qui permet d'accélérer

@@ -108,6 +108,13 @@ namespace Epsitec.Common.Widgets
 			this.window.Hide ();
 		}
 		
+		public void SynchronousRepaint()
+		{
+			if (this.window != null)
+			{
+				this.window.SynchronousRepaint ();
+			}
+		}
 		
 		public void AnimateShow(Animation animation)
 		{
