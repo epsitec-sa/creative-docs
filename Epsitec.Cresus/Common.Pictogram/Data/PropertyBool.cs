@@ -1,3 +1,4 @@
+using Epsitec.Common.Widgets;
 using Epsitec.Common.Pictogram.Widgets;
 using System.Xml.Serialization;
 
@@ -54,9 +55,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Crée le panneau permettant d'éditer la propriété.
-		public override AbstractPanel CreatePanel()
+		public override AbstractPanel CreatePanel(Drawer drawer)
 		{
-			return new PanelBool();
+			return new PanelBool(drawer);
 		}
 
 		protected bool			boolValue = false;
