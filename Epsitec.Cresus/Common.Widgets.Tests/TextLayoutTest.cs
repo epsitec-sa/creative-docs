@@ -122,13 +122,13 @@ namespace Epsitec.Common.Widgets
 			
 			Assert.AreEqual(layout.TotalRectangle.IsEmpty, false);
 			Assert.IsTrue(layout.TotalRectangle.Width <= layout.LayoutSize.Width);
-			Assert.IsTrue(layout.TotalRectangle.Width >= layout.FontSize);
-			Assert.IsTrue(layout.TotalRectangle.Height >= layout.FontSize);
+			Assert.IsTrue(layout.TotalRectangle.Width >= layout.DefaultFontSize);
+			Assert.IsTrue(layout.TotalRectangle.Height >= layout.DefaultFontSize);
 			
 			Assert.AreEqual(layout.VisibleRectangle.IsEmpty, false);
 			Assert.IsTrue(layout.VisibleRectangle.Width <= layout.LayoutSize.Width);
-			Assert.IsTrue(layout.VisibleRectangle.Width >= layout.FontSize);
-			Assert.IsTrue(layout.VisibleRectangle.Height >= layout.FontSize);
+			Assert.IsTrue(layout.VisibleRectangle.Width >= layout.DefaultFontSize);
+			Assert.IsTrue(layout.VisibleRectangle.Height >= layout.DefaultFontSize);
 			Assert.IsTrue(layout.VisibleRectangle.Height <= layout.TotalRectangle.Height);
 		}
 		
@@ -411,8 +411,8 @@ namespace Epsitec.Common.Widgets
 			//?			layout.Text = "Normal <b>bold <i>bold-italic </b>italic </i>normal.";
 			//?			layout.Text = "<b>Première ligne</b> assez longue pour nécessiter une coupure.<br/><b>Deuxième ligne</b> assez longue pour nécessiter une coupure.";
 			layout.Text = @"Ceci est un <a href=""x"">petit texte <b>ridicule</b></a>, juste pour <font color=""#ff0000"">tester</font> le comportement de la <font size=""20"">classe</font> <font face=""Courier New"">TextLayout</font>, mes premiers pas en &quot;C#&quot;&#160;!<br/>Et voilà une image <img src=""file:images/icon.png""/> simple.";
-			layout.Font = Font.GetFont("Tahoma", "Regular");
-			layout.FontSize = 11.0;
+			layout.DefaultFont = Font.GetFont("Tahoma", "Regular");
+			layout.DefaultFontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleCenter;
 			//?layout.JustifMode = TextJustifMode.All;
 			layout.LayoutSize = new Size(200, 100);
@@ -440,8 +440,8 @@ namespace Epsitec.Common.Widgets
 			TextLayout layout = new TextLayout();
 
 			layout.Text = @"Voilà une image <img src=""file:images/icon.png""/> <w>simple</w>, suivie d'une deuxième <img src=""file:images/icon.png""/> et une troisième <img src=""file:images/icon.png""/>.<br/><br/>On donnait ce jour-là un grand dîner, où, pour la première fois, je vis avec beaucoup d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête.";
-			layout.Font = Font.GetFont("Tahoma", "Regular");
-			layout.FontSize = 11.0;
+			layout.DefaultFont = Font.GetFont("Tahoma", "Regular");
+			layout.DefaultFontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleLeft;
 			layout.JustifMode = TextJustifMode.AllButLast;
 			layout.LayoutSize = new Size(260, 150);
@@ -466,8 +466,8 @@ namespace Epsitec.Common.Widgets
 			TextLayout layout = new TextLayout();
 
 			layout.Text = @"On <u>donnait</u> ce jour-là <u>un grand dîner</u>, où, pour la <u>première <b>fois</b></u>, je vis avec beaucoup <u>d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête</u>.";
-			layout.Font = Font.GetFont("Tahoma", "Regular");
-			layout.FontSize = 11.0;
+			layout.DefaultFont = Font.GetFont("Tahoma", "Regular");
+			layout.DefaultFontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleLeft;
 			layout.JustifMode = TextJustifMode.AllButLast;
 			layout.LayoutSize = new Size(150, 150);
@@ -492,8 +492,8 @@ namespace Epsitec.Common.Widgets
 			TextLayout layout = new TextLayout();
 
 			layout.Text = @"On <w>donnait</w> ce jour-là <w color=""#0000FF"">un grand dîner</w>, où, pour la <w>première <b>fois</b></w>, je vis avec beaucoup <w>d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête</w>.";
-			layout.Font = Font.GetFont("Tahoma", "Regular");
-			layout.FontSize = 11.0;
+			layout.DefaultFont = Font.GetFont("Tahoma", "Regular");
+			layout.DefaultFontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleLeft;
 			layout.JustifMode = TextJustifMode.AllButLast;
 			layout.LayoutSize = new Size(150, 150);
@@ -520,8 +520,8 @@ namespace Epsitec.Common.Widgets
 			TextLayout layout = new TextLayout();
 
 			layout.Text = @"Juste <font size=""30"">trois</font> lignes de texte <font size=""10"">(et une image <img src=""file:images/icon.png""/>)</font> pour rigoler !";
-			layout.Font = Font.GetFont("Tahoma", "Regular");
-			layout.FontSize = 20.0;
+			layout.DefaultFont = Font.GetFont("Tahoma", "Regular");
+			layout.DefaultFontSize = 20.0;
 			layout.Alignment = ContentAlignment.MiddleCenter;
 			layout.LayoutSize = new Size(200, 100);
 
@@ -543,8 +543,8 @@ namespace Epsitec.Common.Widgets
 			TextLayout layout = new TextLayout();
 
 			layout.Text = @"abracadabra&#8212;abracadabra<br/><a href=""x"">abc <img src=""file:images/icon.png"" width=""5"" height=""4""/> def</a><br/>abracadabra abracadabra <a href=""y"">bla bla bla&#160;!</a>";
-			layout.Font = Font.GetFont("Tahoma", "Regular");
-			layout.FontSize = 15.0;
+			layout.DefaultFont = Font.GetFont("Tahoma", "Regular");
+			layout.DefaultFontSize = 15.0;
 			layout.Alignment = ContentAlignment.MiddleCenter;
 			layout.LayoutSize = new Size(200, 100);
 
@@ -561,10 +561,10 @@ namespace Epsitec.Common.Widgets
 		{
 			TextLayout layout = new TextLayout();
 			
-			layout.Text       = @"<a href=""x"">Link</a>, <b>Bold text</b>, normal text, <i>italic text</i>...<br/>And some &lt;more&gt; text, <img src=""file:images/icon.png""/> nice &amp; clean.";
-			layout.Font       = Font.GetFont("Tahoma", "Regular");
-			layout.FontSize   = 11.0;
-			layout.LayoutSize = new Size(100, 50);
+			layout.Text            = @"<a href=""x"">Link</a>, <b>Bold text</b>, normal text, <i>italic text</i>...<br/>And some &lt;more&gt; text, <img src=""file:images/icon.png""/> nice &amp; clean.";
+			layout.DefaultFont     = Font.GetFont("Tahoma", "Regular");
+			layout.DefaultFontSize = 11.0;
+			layout.LayoutSize      = new Size(100, 50);
 			
 			return layout;
 		}

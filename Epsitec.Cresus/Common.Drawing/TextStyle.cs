@@ -256,6 +256,12 @@ namespace Epsitec.Common.Drawing
 		}
 
 		
+		public static void DefineDefaultColor(Drawing.Color color)
+		{
+			TextStyle.default_style.color = color;
+		}
+		
+		
 		public static TextStyle					Default
 		{
 			get

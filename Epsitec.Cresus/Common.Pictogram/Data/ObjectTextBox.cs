@@ -343,9 +343,9 @@ namespace Epsitec.Common.Pictogram.Data
 				else                                       this.textLayout.Alignment = Drawing.ContentAlignment.BottomLeft;
 			}
 
-			     if ( jh == JustifHorizontal.Justif )  this.textLayout.JustifMode = TextJustifMode.AllButLast;
-			else if ( jh == JustifHorizontal.All    )  this.textLayout.JustifMode = TextJustifMode.All;
-			else                                       this.textLayout.JustifMode = TextJustifMode.None;
+			     if ( jh == JustifHorizontal.Justif )  this.textLayout.JustifMode = Drawing.TextJustifMode.AllButLast;
+			else if ( jh == JustifHorizontal.All    )  this.textLayout.JustifMode = Drawing.TextJustifMode.All;
+			else                                       this.textLayout.JustifMode = Drawing.TextJustifMode.None;
 
 			Drawing.Transform ot = graphics.Transform;
 

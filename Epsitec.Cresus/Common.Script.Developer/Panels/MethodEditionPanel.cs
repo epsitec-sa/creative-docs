@@ -63,8 +63,8 @@ namespace Epsitec.Common.Script.Developer.Panels
 			
 			this.text_source.Dock = DockStyle.Fill;
 			this.text_source.DockMargins = new Drawing.Margins (4, 0, 0, 0);
-			this.text_source.TextLayout.Font = Drawing.Font.GetFont ("Courier New", "Regular");
-			this.text_source.TextLayout.FontSize = 13.0;
+			this.text_source.TextLayout.DefaultFont = Drawing.Font.GetFont ("Courier New", "Regular");
+			this.text_source.TextLayout.DefaultFontSize = 13.0;
 			this.text_source.TextEdited += new EventHandler (this.HandleTextSourceEdited);
 			
 			this.UpdateFromMethod ();
