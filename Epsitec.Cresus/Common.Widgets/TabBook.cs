@@ -2,9 +2,8 @@ namespace Epsitec.Common.Widgets
 {
 	public enum TabBookStyle
 	{
-		Normal,							// flèches à gauche et à droite
 		Right,							// les 2 flèches à droite
-		Ellipsis,						// ajoute ... pour résumer
+		LeftRight,						// flèches à gauche et à droite
 	}
 
 	/// <summary>
@@ -15,7 +14,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public TabBook()
 		{
-			this.type = TabBookStyle.Normal;
+			this.type = TabBookStyle.Right;
 			this.items = new TabPageCollection(this);
 
 			this.arrowLeft = new ArrowButton(this);
@@ -163,19 +162,9 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				Drawing.Rectangle rect = this.Client.Bounds;
-				if ( this.scrollArrow )
-				{
-					if ( this.type == TabBookStyle.Normal )
-					{
-						if ( this.arrowLeft.IsVisible  )  rect.Left  += this.tabHeight-2;
-						if ( this.arrowRight.IsVisible )  rect.Right -= this.tabHeight-2;
-					}
-					if ( this.type == TabBookStyle.Right )
-					{
-						rect.Right -= this.tabHeight*2-6;
-					}
-				}
-				
+				rect.Left  = this.TabOffsetMin;
+				if ( rect.Left == 2 )  rect.Left = 0;
+				rect.Right = this.TabOffsetMax;
 				return rect;
 			}
 		}
@@ -184,13 +173,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				double min = 0;
+				double min = 2;
 				if ( this.scrollArrow )
 				{
-					if ( this.type == TabBookStyle.Normal )
+					if ( this.type == TabBookStyle.LeftRight )
 					{
-						if ( this.arrowLeft.IsVisible  )  min += this.tabHeight-2;
-						//min += this.tabHeight-2;
+						min = this.tabHeight-2;
 					}
 				}
 				return min;
@@ -201,17 +189,16 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				double max = this.Client.Width;
+				double max = this.Client.Width-2;
 				if ( this.scrollArrow )
 				{
-					if ( this.type == TabBookStyle.Normal )
+					if ( this.type == TabBookStyle.LeftRight )
 					{
-						if ( this.arrowRight.IsVisible )  max -= this.tabHeight-2;
-						//max -= this.tabHeight-2;
+						max = this.Client.Width-(this.tabHeight-2);
 					}
 					if ( this.type == TabBookStyle.Right )
 					{
-						max -= this.tabHeight*2-6;
+						max = this.Client.Width-(this.tabHeight*2-6);
 					}
 				}
 				return max;
@@ -265,8 +252,9 @@ namespace Epsitec.Common.Widgets
 				move = this.TabClipRectangle.Width/8;
 			}
 
+			move = System.Math.Floor(move);
 			this.scrollOffset += move;
-			this.AdjustScrollOffset();
+			this.UpdateOffset();
 			this.UpdateButtons();
 			this.Invalidate();
 		}
@@ -284,8 +272,24 @@ namespace Epsitec.Common.Widgets
 				this.UpdateDirection(newDir);
 			}
 
-			this.UpdateTabButtons();
-			this.UpdateArrowButtons();
+			this.UpdateOffset();
+			this.UpdateButtons();
+		}
+
+		protected void UpdateOffset()
+		{
+			if ( this.items == null )  return;
+
+			this.scrollTotalWidth = 0;
+			foreach ( TabPage page in this.items )
+			{
+				Drawing.Size size = page.TabSize;
+				double len = System.Math.Floor(size.Width+size.Height);
+				this.scrollTotalWidth += len;
+			}
+
+			this.scrollOffset = System.Math.Min(this.scrollOffset, this.scrollTotalWidth-this.TabOffsetMax);
+			this.scrollOffset = System.Math.Max(this.scrollOffset, -this.TabOffsetMin);
 		}
 		
 		protected void UpdateDirection(Direction dir)
@@ -333,12 +337,14 @@ namespace Epsitec.Common.Widgets
 			if ( begin < this.TabOffsetMin )  // dépasse à gauche ?
 			{
 				this.scrollOffset = this.scrollOffset+begin-this.TabOffsetMin;
+				this.scrollOffset = System.Math.Floor(this.scrollOffset);
 				this.UpdateButtons();
 				return true;
 			}
 			else if ( end > this.TabOffsetMax )  // dépasse à droite ?
 			{
 				this.scrollOffset = this.scrollOffset+end-this.TabOffsetMax;
+				this.scrollOffset = System.Math.Floor(this.scrollOffset);
 				this.UpdateButtons();
 				return true;
 			}
@@ -351,22 +357,6 @@ namespace Epsitec.Common.Widgets
 		{
 			this.UpdateTabButtons();
 			this.UpdateArrowButtons();
-
-			if ( this.AdjustScrollOffset() )
-			{
-				this.UpdateTabButtons();
-			}
-		}
-
-		// Ajuste l'offset pour le scroll. Retourne true s'il y a eu ajustement.
-		protected bool AdjustScrollOffset()
-		{
-			double offset = this.scrollOffset;
-			offset = System.Math.Max(offset, -this.TabOffsetMin);
-			offset = System.Math.Min(offset, this.scrollTotalWidth-this.TabOffsetMax);
-			if ( offset == this.scrollOffset )  return false;
-			this.scrollOffset = offset;
-			return true;
 		}
 
 		// Met à jour tous les boutons des onglets.
@@ -394,30 +384,28 @@ namespace Epsitec.Common.Widgets
 		// Met à jour les 2 boutons flèche < > pour scroller.
 		protected void UpdateArrowButtons()
 		{
-			this.scrollArrow = ( this.scrollTotalWidth > this.Client.Width );
+			this.scrollArrow = ( this.scrollTotalWidth > this.Client.Width-4 );
 
 			if ( this.arrowLeft == null || this.arrowRight == null )  return;
 
 			if ( this.scrollArrow )
 			{
-				if ( this.type == TabBookStyle.Normal )
+				if ( this.type == TabBookStyle.LeftRight )
 				{
 					Drawing.Rectangle rect;
 					rect = new Drawing.Rectangle(0, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 					rect.Inflate(-2, -2);
 					rect.Offset(-2, 0);
 					this.arrowLeft.Bounds = rect;
-					this.arrowLeft.SetVisible(this.scrollOffset > this.TabOffsetMin);
-					//this.arrowLeft.SetVisible(true);
-					//this.arrowLeft.SetEnabled(this.scrollOffset > this.TabOffsetMin);
+					this.arrowLeft.SetVisible(true);
+					this.arrowLeft.SetEnabled(this.scrollOffset > this.TabOffsetMin);
 
 					rect = new Drawing.Rectangle(this.Client.Width-this.tabHeight, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
 					rect.Inflate(-2, -2);
 					rect.Offset(2, 0);
 					this.arrowRight.Bounds = rect;
-					this.arrowRight.SetVisible(this.scrollOffset < this.scrollTotalWidth-this.TabOffsetMax);
-					//this.arrowRight.SetVisible(true);
-					//this.arrowRight.SetEnabled(this.scrollOffset < this.scrollTotalWidth-this.TabOffsetMax);
+					this.arrowRight.SetVisible(true);
+					this.arrowRight.SetEnabled(this.scrollOffset < this.scrollTotalWidth-this.TabOffsetMax);
 				}
 
 				if ( this.type == TabBookStyle.Right )
@@ -442,10 +430,14 @@ namespace Epsitec.Common.Widgets
 			}
 
 			// Pour détecter le clic sur les flèches en premier.
-			this.Children.Remove(this.arrowLeft);
-			this.Children.Remove(this.arrowRight);
-			this.Children.Add(this.arrowLeft);
-			this.Children.Add(this.arrowRight);
+			if ( this.isGrimy )
+			{
+				this.Children.Remove(this.arrowLeft);
+				this.Children.Remove(this.arrowRight);
+				this.Children.Add(this.arrowLeft);
+				this.Children.Add(this.arrowRight);
+				this.isGrimy = false;
+			}
 		}
 
 
@@ -507,10 +499,10 @@ namespace Epsitec.Common.Widgets
 			this.Children.Add(item.TabButton);  // TabButton fils de TabBook !
 			item.TabButton.Pressed += new MessageEventHandler(this.HandleTabButton);
 			item.RankChanged += new System.EventHandler(this.HandlePageRankChanged);
+			this.isGrimy = true;
 			
 			this.UpdateVisiblePages();
-			this.UpdateTabButtons();
-			this.UpdateArrowButtons();
+			this.UpdateButtons();
 		}
 
 		public void NotifyRemoval(Widget widget)
@@ -538,6 +530,7 @@ namespace Epsitec.Common.Widgets
 			item.RankChanged -= new System.EventHandler(this.HandlePageRankChanged);
 
 			this.Children.Remove(item);
+			this.isGrimy = true;
 		}
 		#endregion
 
@@ -567,7 +560,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 
 
-		protected TabBookStyle					type = TabBookStyle.Normal;
+		protected TabBookStyle					type;
 		protected TabPageCollection				items;
 		protected TabPage						activePage;
 		protected Direction						direction;
@@ -577,5 +570,6 @@ namespace Epsitec.Common.Widgets
 		protected ArrowButton					arrowRight;
 		protected double						scrollTotalWidth;
 		protected double						scrollOffset = 0;
+		protected bool							isGrimy;
 	}
 }
