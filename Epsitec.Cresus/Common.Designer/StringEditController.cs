@@ -231,10 +231,26 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert (this.window != null);
 			System.Diagnostics.Debug.Assert (this.tab_book != null);
 			
+			window.Root.DockMargins = new Drawing.Margins (8, 8, 8, 8);
+			
 			widget.Dock   = DockStyle.Fill;
 			widget.Parent = page;
 			
-			page.TabTitle = bundle.Name;
+			string name = bundle.Name;
+			
+			switch (bundle.ResourceLevel)
+			{
+				case ResourceLevel.Default:
+					break;
+				case ResourceLevel.Localised:
+					name = string.Format ("{0} ({1})", name, bundle.Culture.TwoLetterISOLanguageName);
+					break;
+				case ResourceLevel.Customised:
+					name = string.Format ("{0} ({1})", name, "X");
+					break;
+			}
+			
+			page.TabTitle = name;
 			
 			this.tab_book.Items.Add (page);
 			
@@ -265,6 +281,28 @@ namespace Epsitec.Common.Designer
 			else if (e.CommandArgs.Length == 1)
 			{
 				this.AttachNewBundle (e.CommandArgs[0], ResourceLevel.Default);
+				
+				this.tab_book.ActivePageIndex = this.bundles.Count - 1;
+				this.tab_book.Invalidate ();
+			}
+			else
+			{
+				throw new System.InvalidOperationException (string.Format ("Command {0} requires one argument.", e.CommandName));
+			}
+		}
+		
+		[Command ("OpenStringBundle")]  void CommandOpenStringBundle(CommandDispatcher d, CommandEventArgs e)
+		{
+			if (e.CommandArgs.Length == 0)
+			{
+				Dialogs.OpenExistingBundle dialog = new Dialogs.OpenExistingBundle ("OpenStringBundle (\"{0}\", {1})", this.dispatcher);
+				dialog.Show ();
+			}
+			else if (e.CommandArgs.Length == 2)
+			{
+				ResourceLevel  level  = (ResourceLevel) System.Enum.Parse (typeof (ResourceLevel), e.CommandArgs[1]);
+				ResourceBundle bundle = Resources.GetBundle (e.CommandArgs[0], level);
+				this.AttachExistingBundle (bundle);
 				
 				this.tab_book.ActivePageIndex = this.bundles.Count - 1;
 				this.tab_book.Invalidate ();
