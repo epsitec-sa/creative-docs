@@ -10,7 +10,14 @@ namespace Epsitec.Common.Text.Internal
 	{
 		public StyleTable()
 		{
+			this.font_styles      = null;
+			this.paragraph_styles = null;
+			this.special_styles   = null;
 		}
 		
+		
+		private System.Collections.ArrayList	font_styles;
+		private System.Collections.ArrayList	paragraph_styles;
+		private System.Collections.ArrayList	special_styles;
 	}
 }

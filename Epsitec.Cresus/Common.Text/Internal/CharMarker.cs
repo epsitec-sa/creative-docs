@@ -28,7 +28,7 @@ namespace Epsitec.Common.Text.Internal
 		 *
 		 *	[a][bbb bbbb]:[cccc ccc][d:dddd dddd:dddd dddd]:[mmmm mmmm]:[xxx][y yyyy:yyyy yyyy:yyyy yyyy]
 		 *
-		 *	- bit 63 : a,  1-bit, "special mode flag"
+		 *	- bit 63 : a,  1-bit, "special style flag"
 		 *	- 62..56 : b,  7-bit, "extra index"
 		 *	- 55..49 : c,  7-bit, "local index"
 		 *	- 48..32 : d, 17-bit, "style index"
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Text.Internal
 		 *  - 23..21 : x,  3-bit, "unicode flags"
 		 *	- 20...0 : y, 21-bit, "unicode code"
 		 *
-		 *	- Le "special mode flag" indique si le "style index" pointe vers une
+		 *	- Le "special style flag" indique si le "style index" pointe vers une
 		 *	  description de fonte (false) ou vers une description de style spécial
 		 *	  (true).
 		 *
@@ -214,12 +214,12 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public static bool HasSpecialModeFlag(ulong code)
+		public static bool HasSpecialStyleFlag(ulong code)
 		{
 			return ((code & 0x8000000000000000ul) == 0) ? false : true;
 		}
 		
-		public static void SetSpecialModeFlag(ref ulong code, bool flag)
+		public static void SetSpecialStyleFlag(ref ulong code, bool flag)
 		{
 			if (flag)
 			{

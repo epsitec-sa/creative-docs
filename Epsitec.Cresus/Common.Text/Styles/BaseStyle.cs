@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text.Styles
 	/// <summary>
 	/// Summary description for BaseStyle.
 	/// </summary>
-	public abstract class BaseStyle
+	public abstract class BaseStyle : IContentsSignature
 	{
 		protected BaseStyle()
 		{
@@ -14,6 +14,23 @@ namespace Epsitec.Common.Text.Styles
 			this.extra_settings = null;
 		}
 		
+		
+		public int								StyleIndex
+		{
+			get
+			{
+				return this.style_index;
+			}
+			set
+			{
+				this.style_index = value;
+			}
+		}
+		
+		public abstract bool					IsSpecialStyle
+		{
+			get;
+		}
 		
 		
 		
@@ -34,6 +51,7 @@ namespace Epsitec.Common.Text.Styles
 			Debug.Assert.IsTrue (this.local_settings != null);
 			Debug.Assert.IsInBounds (index, 0, this.local_settings.Length-1);
 			Debug.Assert.IsTrue (this.local_settings[index] != null);
+			Debug.Assert.IsTrue (this.local_settings[index].SettingsIndex == index+1);
 			
 			return this.local_settings[index];
 		}
@@ -55,6 +73,7 @@ namespace Epsitec.Common.Text.Styles
 			Debug.Assert.IsTrue (this.extra_settings != null);
 			Debug.Assert.IsInBounds (index, 0, this.extra_settings.Length-1);
 			Debug.Assert.IsTrue (this.extra_settings[index] != null);
+			Debug.Assert.IsTrue (this.extra_settings[index].SettingsIndex == index+1);
 			
 			return this.extra_settings[index];
 		}
@@ -96,6 +115,8 @@ namespace Epsitec.Common.Text.Styles
 			new_settings[index] = settings;
 			this.local_settings = new_settings;
 			
+			settings.SettingsIndex = index+1;
+			
 			return index+1;
 		}
 		
@@ -135,6 +156,8 @@ namespace Epsitec.Common.Text.Styles
 			new_settings[index] = settings;
 			this.extra_settings = new_settings;
 			
+			settings.SettingsIndex = index+1;
+			
 			return index+1;
 		}
 		
@@ -151,6 +174,7 @@ namespace Epsitec.Common.Text.Styles
 					if (this.local_settings[i] == settings)
 					{
 						this.local_settings[i] = null;
+						settings.SettingsIndex = 0;
 						return;
 					}
 				}
@@ -171,6 +195,7 @@ namespace Epsitec.Common.Text.Styles
 					if (this.extra_settings[i] == settings)
 					{
 						this.extra_settings[i] = null;
+						settings.SettingsIndex = 0;
 						return;
 					}
 				}
@@ -180,7 +205,81 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
+		public static bool CompareEqual(BaseStyle a, BaseStyle b)
+		{
+			//	Détermine si les deux styles ont le même contenu. Utilise le
+			//	plus d'indices possibles avant de passer à la comparaison.
+			
+			////////////////////////////////////////////////////////////////////
+			//  NB: contenu identique n'implique pas que le StyleIndex ou les //
+			//      réglages sont identiques !                                //
+			////////////////////////////////////////////////////////////////////
+			
+			if (a == b)
+			{
+				return true;
+			}
+			if ((a == null) ||
+				(b == null))
+			{
+				return false;
+			}
+			if (a.IsSpecialStyle != b.IsSpecialStyle)
+			{
+				return false;
+			}
+			if (a.GetContentsSignature () != b.GetContentsSignature ())
+			{
+				return false;
+			}
+			
+			//	Il y a de fortes chances que les deux objets aient le même
+			//	contenu. Il faut donc opérer une comparaison des contenus.
+			
+			//	TODO: comparer les contenus
+			
+			return true;
+		}
+		
+		
+		protected void ClearContentsSignature()
+		{
+			this.contents_signature = 0;
+		}
+		
+		protected abstract int ComputeContentsSignature();
+		
+		#region IContentsSignature Members
+		public int GetContentsSignature()
+		{
+			//	Retourne la signature (CRC) correspondant au contenu du style.
+			//	La signature exclut les réglages et l'index.
+			
+			//	Si la signature n'existe pas, il faut la calculer; on ne fait
+			//	cela qu'à la demande, car le calcul de la signature peut être
+			//	relativement onéreux :
+			
+			if (this.contents_signature == 0)
+			{
+				int signature = this.ComputeContentsSignature();
+				
+				//	La signature calculée pourrait être nulle; dans ce cas, on
+				//	l'ajuste pour éviter d'interpréter cela comme une absence
+				//	de signature :
+				
+				this.contents_signature = (signature == 0) ? 1 : signature;
+			}
+			
+			return this.contents_signature;
+		}
+		#endregion
+		
+
 		public const int						MaxSettingsCount = 100;
+		
+		
+		private int								style_index;
+		private int								contents_signature;
 		
 		private Styles.LocalSettings[]			local_settings;
 		private Styles.ExtraSettings[]			extra_settings;

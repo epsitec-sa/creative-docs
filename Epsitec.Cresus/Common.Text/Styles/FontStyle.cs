@@ -10,9 +10,21 @@ namespace Epsitec.Common.Text.Styles
 	{
 		public FontStyle()
 		{
-			//
-			// TODO: Add constructor logic here
-			//
+		}
+		
+		
+		public override bool					IsSpecialStyle
+		{
+			get
+			{
+				return false;
+			}
+		}
+		
+		
+		protected override int ComputeContentsSignature()
+		{
+			return 0;
 		}
 	}
 }

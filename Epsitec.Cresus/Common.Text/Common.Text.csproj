@@ -104,6 +104,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IContentsSignature.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TextConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -160,6 +165,11 @@
                 />
                 <File
                     RelPath = "Internal\TextChunkId.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Styles\BaseSettings.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
