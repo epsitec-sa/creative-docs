@@ -43,5 +43,10 @@ namespace Epsitec.Cresus.Database
 		//	Création d'une requête d'exécution de procédure SQL :
 		
 		void ExecuteProcedure(string procedure_name, SqlFieldCollection fields);
+		
+		//	Manipule les paramètres d'un appel de procédure SQL :
+		
+		void SetSqlParameters(System.Data.IDbCommand command, SqlFieldCollection fields);
+		void GetSqlParameters(System.Data.IDbCommand command, SqlFieldCollection fields);
 	}
 }
