@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbInfrastructure infrastructure = new DbInfrastructure ())
 			{
-				DbAccess db_access = DbFactoryTest.CreateDbAccess ("fiche");
+				DbAccess db_access = DbInfrastructure.CreateDbAccess ("fiche");
 				
 				infrastructure.CreateDatabase (db_access);
 				
@@ -269,7 +269,7 @@ namespace Epsitec.Cresus.Database
 		internal static DbInfrastructure GetInfrastructureFromBase(string name, bool debug_attach)
 		{
 			DbInfrastructure infrastructure = new DbInfrastructure ();
-			DbAccess db_access = DbFactoryTest.CreateDbAccess (name);
+			DbAccess db_access = DbInfrastructure.CreateDbAccess (name);
 			
 			if (debug_attach)
 			{

@@ -102,6 +102,21 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public static DbAccess CreateDbAccess(string name)
+		{
+			DbAccess db_access = new DbAccess ();
+			
+			db_access.Provider		= "Firebird";
+			db_access.LoginName		= "sysdba";
+			db_access.LoginPassword = "masterkey";
+			db_access.Database		= name;
+			db_access.Server		= "localhost";
+			db_access.Create		= false;
+			
+			return db_access;
+		}
+		
+		
 		public CallbackDisplayDataSet		DisplayDataSet
 		{
 			get { return this.display_data_set; }

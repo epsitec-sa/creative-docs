@@ -38,3 +38,42 @@ Ce qu'il reste à faire dans "Support"
 	l'interface IBundleSupport.
 
 
+-	La classe Implementation.BaseProvider ne fait pour l'instant aucun
+	accès à la base de données. Il faut implémenter les méthodes qui
+	manquent, en particulier compléter GetData et Setup.
+
+
+-----------------------------------------------------------------
+RESSOURCES DANS LA BASE DE DONNEES
+-----------------------------------------------------------------
+
+La base de données des ressources d'une application se nomme :
+
+	application.resdb
+
+(avec éventuellement l'extension ajoutée par DbInfrastructure et
+les autres couches).
+
+En plus des tables décrivant les méta-données, il y a les tables
+suivantes :
+
+-	DbTable.Name = "Data";
+-	DbTable.Name = "Data.xx";
+
+La première contient toutes les données par défaut (non localisées)
+et les autres, avec le suffixe "xx" correspondent aux versions
+traduites.
+
+Les colonnes dans une table "Data" sont les suivantes :
+
+-	Clef (CR_ID, CR_REV, CR_STAT).
+-	Name (DbColumn.Name = "Name";), type DbTypeString, max=100
+-	Data (DbColumn.Name = "Data";), type DbType(DbSimpleType.ByteArray)
+	contenant des BLOBs binaires.
+
+La recherche dans une des tables (Data ou Data.xx) se fait au moyen
+d'un SELECT tel que :
+
+-	Name = id de la ressource
+-	CR_REV = 0
+

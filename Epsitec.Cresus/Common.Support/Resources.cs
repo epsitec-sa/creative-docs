@@ -59,6 +59,25 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public static void SetupProviders(string application_name)
+		{
+			if (Resources.application_name == application_name)
+			{
+				return;
+			}
+			
+			if (Resources.application_name != null)
+			{
+				throw new System.InvalidOperationException ("Resource Providers may not be setup more than once.");
+			}
+			
+			for (int i = 0; i < Resources.providers.Length; i++)
+			{
+				Resources.providers[i].Setup (application_name);
+			}
+		}
+		
+		
 		public static CultureInfo				Culture
 		{
 			get
@@ -290,5 +309,6 @@ namespace Epsitec.Common.Support
 		protected static CultureInfo			culture;
 		protected static IResourceProvider[]	providers;
 		protected static Hashtable				provider_hash;
+		protected static string					application_name;
 	}
 }
