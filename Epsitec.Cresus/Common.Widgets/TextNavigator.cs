@@ -185,6 +185,109 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public bool								SelectionBold
+		{
+			get
+			{
+				return this.textLayout.IsSelectionBold(this.context);
+			}
+
+			set
+			{
+				if ( this.textLayout.IsSelectionBold(this.context) != value )
+				{
+					this.textLayout.SetSelectionBold(this.context, value);
+					this.OnStyleChanged();
+				}
+			}
+		}
+
+		public bool								SelectionItalic
+		{
+			get
+			{
+				return this.textLayout.IsSelectionItalic(this.context);
+			}
+
+			set
+			{
+				if ( this.textLayout.IsSelectionItalic(this.context) != value )
+				{
+					this.textLayout.SetSelectionItalic(this.context, value);
+					this.OnStyleChanged();
+				}
+			}
+		}
+
+		public bool								SelectionUnderlined
+		{
+			get
+			{
+				return this.textLayout.IsSelectionUnderlined(this.context);
+			}
+
+			set
+			{
+				if ( this.textLayout.IsSelectionUnderlined(this.context) != value )
+				{
+					this.textLayout.SetSelectionUnderlined(this.context, value);
+					this.OnStyleChanged();
+				}
+			}
+		}
+
+		public string							SelectionFontName
+		{
+			get
+			{
+				return this.textLayout.GetSelectionFontName(this.context);
+			}
+
+			set
+			{
+				if ( this.textLayout.GetSelectionFontName(this.context) != value )
+				{
+					this.textLayout.SetSelectionFontName(this.context, value);
+					this.OnStyleChanged();
+				}
+			}
+		}
+
+		public double							SelectionFontScale
+		{
+			get
+			{
+				return this.textLayout.GetSelectionFontScale(this.context);
+			}
+
+			set
+			{
+				if ( this.textLayout.GetSelectionFontScale(this.context) != value )
+				{
+					this.textLayout.SetSelectionFontScale(this.context, value);
+					this.OnStyleChanged();
+				}
+			}
+		}
+
+		public Drawing.Color					SelectionFontColor
+		{
+			get
+			{
+				return this.textLayout.GetSelectionFontColor(this.context);
+			}
+
+			set
+			{
+				if ( this.textLayout.GetSelectionFontColor(this.context) != value )
+				{
+					this.textLayout.SetSelectionFontColor(this.context, value);
+					this.OnStyleChanged();
+				}
+			}
+		}
+
+
 		public bool ProcessMessage(Message message, Drawing.Point pos)
 		{
 			switch ( message.Type )
@@ -535,6 +638,17 @@ namespace Epsitec.Common.Widgets
 		}
 
 		public event EventHandler CursorScrolled;
+
+		// Génère un événement pour dire que le style a changé.
+		protected void OnStyleChanged()
+		{
+			if ( this.StyleChanged != null )  // qq'un écoute ?
+			{
+				this.StyleChanged(this);
+			}
+		}
+
+		public event EventHandler StyleChanged;
 
 
 		protected TextLayout					textLayout;
