@@ -142,6 +142,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "AbstractToolBar.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AlphaBar.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
