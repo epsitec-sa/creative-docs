@@ -55,7 +55,7 @@ namespace Epsitec.Common.Text
 			}
 			
 			double oy = 0;
-			double mx_left  = 20;
+			double mx_left  = 0;
 			double mx_right = 1000;
 			double fence_before = 100;
 			double fence_after  = 20;
@@ -68,9 +68,11 @@ namespace Epsitec.Common.Text
 			
 			Layout.Context layout = new Layout.Context (this.story.Context, text, 0, oy, mx_left, mx_right, fence_before, fence_after);
 			
-			for (int i = 0; i < c.Elements.Length; i++)
+			int n = c.Elements.Length;
+			
+			for (int i = 0; i < n; i++)
 			{
-				layout.RenderLine (renderer, c.Elements[i].Profile, c.Elements[i].Length);
+				layout.RenderLine (renderer, c.Elements[i].Profile, c.Elements[i].Length, i, i == n-1);
 				layout.TextOffset += c.Elements[i].Length;
 			}
 		}
@@ -133,7 +135,7 @@ namespace Epsitec.Common.Text
 			//	correspondants.
 			
 			double oy = 0;
-			double mx_left  = 20;
+			double mx_left  = 0;
 			double mx_right = 1000;
 			double fence_before = 100;
 			double fence_after  = 20;
@@ -167,6 +169,7 @@ namespace Epsitec.Common.Text
 			Layout.Context         layout = new Layout.Context (this.story.Context, text, 0, oy, mx_left, mx_right, fence_before, fence_after);
 			Layout.BreakCollection result = new Layout.BreakCollection ();
 			
+			int line_count      = 0;
 			int line_start      = 0;
 			int paragraph_start = 0;
 			
@@ -174,7 +177,7 @@ namespace Epsitec.Common.Text
 			
 			for (;;)
 			{
-				Layout.Status status = layout.Fit (ref result);
+				Layout.Status status = layout.Fit (ref result, line_count);
 				
 				switch (status)
 				{
@@ -253,10 +256,12 @@ namespace Epsitec.Common.Text
 					
 					line_start      = offset;
 					paragraph_start = offset;
+					line_count      = 0;
 				}
 				else
 				{
 					line_start = offset;
+					line_count++;
 				}
 				
 				if (end_of_text)

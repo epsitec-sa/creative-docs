@@ -20,6 +20,7 @@ namespace Epsitec.Common.Text.Layout
 			
 			this.oy_base    = oy_base;
 			
+			this.width    = mx_right - mx_left;
 			this.mx_left  = mx_left;
 			this.mx_right = mx_right;
 			
@@ -131,6 +132,22 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public double							Justification
+		{
+			get
+			{
+				return this.justification;
+			}
+		}
+		
+		public double							Disposition
+		{
+			get
+			{
+				return this.disposition;
+			}
+		}
+		
 		public double							BreakFenceBefore
 		{
 			get
@@ -201,7 +218,7 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public Layout.Status Fit(ref Layout.BreakCollection result)
+		public Layout.Status Fit(ref Layout.BreakCollection result, int paragraph_line_count)
 		{
 			//	Détermine les points de découpe pour le texte, selon le contexte
 			//	courant.
@@ -212,6 +229,7 @@ namespace Epsitec.Common.Text.Layout
 			}
 			
 			this.SelectLayoutEngine (this.text_offset);
+			this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
 			this.Reset ();
 			
 			Debug.Assert.IsNotNull (this.layout_engine);
@@ -273,7 +291,7 @@ namespace Epsitec.Common.Text.Layout
 			return Layout.Status.ErrorCannotFit;
 		}
 		
-		public void RenderLine(ITextRenderer renderer, Layout.StretchProfile profile, int length)
+		public void RenderLine(ITextRenderer renderer, Layout.StretchProfile profile, int length, int paragraph_line_count, bool is_last_line)
 		{
 			//	Réalise le rendu de la ligne, en appelant les divers moteurs de
 			//	layout associés au texte.
@@ -284,6 +302,7 @@ namespace Epsitec.Common.Text.Layout
 			Debug.Assert.IsTrue (this.text_start + this.text_offset + length <= this.text.Length);
 			
 			this.SelectLayoutEngine (this.text_offset);
+			this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, is_last_line);
 			this.Reset ();
 			
 			Debug.Assert.IsNotNull (this.layout_engine);
@@ -406,6 +425,25 @@ namespace Epsitec.Common.Text.Layout
 			this.text_context.GetLayoutEngine (code, out this.layout_engine, out this.layout_property);
 		}
 		
+		private void SelectMarginsAndJustification(int offset, int paragraph_line_index, bool is_last_line)
+		{
+			ulong code = this.text[this.text_start + offset];
+			
+			Properties.MarginsProperty margins;
+			
+			this.text_context.GetMargins (code, out margins);
+			
+			if (margins != null)
+			{
+				this.mx_left  = paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody;
+				this.mx_right = this.width - (paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody);
+				
+				this.justification = is_last_line ? margins.JustificationLastLine : margins.JustificationBody;
+				this.disposition   = margins.Disposition;
+			}
+		}
+		
+		
 		private ulong[] GetInternalBuffer(int length)
 		{
 			if (this.buffer == null)
@@ -464,8 +502,12 @@ namespace Epsitec.Common.Text.Layout
 		private double							oy_ascender;
 		private double							oy_descender;
 		private double							ox;
+		private double							width;
 		private double							mx_left;
 		private double							mx_right;
+		private double							justification;
+		private double							disposition;
+		
 		private double							break_fence_before;
 		private double							break_fence_after;
 		

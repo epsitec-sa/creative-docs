@@ -30,13 +30,16 @@ namespace Epsitec.Common.Text.Properties
 			this.right_margin_body       = right_margin;
 		}
 		
-		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body) : this ()
+		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body, double justification_body, double justification_last_line, double disposition) : this ()
 		{
-			this.left_margin_first_line = left_margin_first_line;
-			this.left_margin_body       = left_margin_body;
-			
+			this.left_margin_first_line  = left_margin_first_line;
+			this.left_margin_body        = left_margin_body;
 			this.right_margin_first_line = right_margin_first_line;
 			this.right_margin_body       = right_margin_body;
+			
+			this.justification_body      = justification_body;
+			this.justification_last_line = justification_last_line;
+			this.disposition             = disposition;
 		}
 		
 		

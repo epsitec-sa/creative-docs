@@ -62,7 +62,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			breaks  = null;
 			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1100, 40, 10);
-			status  = context.Fit (ref breaks);
+			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 17);
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Text.Tests
 			double y2 = context.MinY;
 			
 			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1170, 40, 10);
-			status  = context.Fit (ref breaks);
+			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 27);
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Text.Tests
 			double y4 = context.MinY;
 			
 			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1300, 40, 10);
-			status  = context.Fit (ref breaks);
+			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 56);
@@ -92,12 +92,12 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[0].Advance < 1307.11);
 			
 			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1400, 40, 10);
-			status  = context.Fit (ref breaks);
+			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.ErrorNeedMoreText);
 			
 			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1020, 10, 10);
-			status  = context.Fit (ref breaks);
+			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.ErrorCannotFit);
 			
@@ -115,25 +115,25 @@ namespace Epsitec.Common.Text.Tests
 			story.ReadText (cursor, story_text.Length, story_text);
 			
 			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1400, 10, 10);
-			status  = context.Fit (ref breaks);
+			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.OkFitEnded);
 			
 			
 			context = new Layout.Context (story.Context, story_text, 0, -100, 1000, 1200, 10, 10);
-			status  = context.Fit (ref breaks);
+			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks[0].Offset == 27);
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			
 			context.TextOffset = breaks[0].Offset;
-			status  = context.Fit (ref breaks);
+			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks[0].Offset == 56);
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			
 			context.TextOffset = breaks[0].Offset;
-			status  = context.Fit (ref breaks);
+			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks[0].Offset == 68);
 			Debug.Assert.IsTrue (status == Layout.Status.OkFitEnded);
@@ -186,7 +186,7 @@ namespace Epsitec.Common.Text.Tests
 			Layout.Status status;
 			
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1300, 150, 10);
-			status  = context.Fit (ref breaks);
+			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks.Count == 3);
 			Debug.Assert.IsTrue (breaks[0].Offset == 35);
@@ -206,18 +206,18 @@ namespace Epsitec.Common.Text.Tests
 			profile.Add (font, font_size, story_text, 0, 26);
 			
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
-			status  = context.Fit (ref breaks);
+			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (breaks.Count == 1);
 			Debug.Assert.IsTrue (breaks[0].Offset == 42);
 			
-			System.Diagnostics.Trace.WriteLine ("Starting layout.");
-			for (int i = 0; i < 1000000; i++)
-			{
-				context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
-				status  = context.Fit (ref breaks);
-			}
-			System.Diagnostics.Trace.WriteLine ("Done.");
+//			System.Diagnostics.Trace.WriteLine ("Starting layout.");
+//			for (int i = 0; i < 1000000; i++)
+//			{
+//				context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
+//				status  = context.Fit (ref breaks, 0);
+//			}
+//			System.Diagnostics.Trace.WriteLine ("Done.");
 		}
 	}
 }

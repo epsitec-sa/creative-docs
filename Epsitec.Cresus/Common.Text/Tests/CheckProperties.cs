@@ -60,7 +60,7 @@ namespace Epsitec.Common.Text.Tests
 		private static void TestMargins()
 		{
 			Properties.MarginsProperty margins_a = new Properties.MarginsProperty ();
-			Properties.MarginsProperty margins_b = new Properties.MarginsProperty (15.0, 20.0, 0.0, 0.0);
+			Properties.MarginsProperty margins_b = new Properties.MarginsProperty (15.0, 20.0, 0.0, 0.0, 0, 0, 0);
 			
 			Properties.MarginsProperty margins_c = margins_a.GetCombination (margins_b) as Properties.MarginsProperty;
 			Properties.MarginsProperty margins_d = margins_b.GetCombination (margins_a) as Properties.MarginsProperty;

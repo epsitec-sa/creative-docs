@@ -148,6 +148,32 @@ namespace Epsitec.Common.Text
 			this.get_layout_last_engine        = engine;
 		}
 		
+		public void GetMargins(ulong code, out Properties.MarginsProperty property)
+		{
+			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			long current_style_version = this.style_list.InternalStyleTable.Version;
+			
+			if ((this.get_margins_last_style_version == current_style_version) &&
+				(this.get_margins_last_code == code))
+			{
+				property = this.get_margins_last_property;
+				
+				return;
+			}
+			
+			Styles.SimpleStyle style = this.style_list[code];
+			
+			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
+			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			
+			property = style[Properties.WellKnownType.Margins] as Properties.MarginsProperty;
+			
+			this.get_margins_last_style_version = current_style_version;
+			this.get_margins_last_code          = code;
+			this.get_margins_last_property      = property;
+		}
+		
 		
 		#region Markers Class
 		public class Markers
@@ -206,5 +232,9 @@ namespace Epsitec.Common.Text
 		private ulong							get_layout_last_code;
 		private Properties.LayoutProperty		get_layout_last_property;
 		private Layout.BaseEngine				get_layout_last_engine;
+		
+		private long							get_margins_last_style_version;
+		private ulong							get_margins_last_code;
+		private Properties.MarginsProperty		get_margins_last_property;
 	}
 }
