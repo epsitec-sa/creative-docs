@@ -281,6 +281,61 @@ namespace Epsitec.Common.Tests
 			form.Show ();
 		}
 
+		[Test] public void CheckGlyphDynamicBold()
+		{
+			System.Windows.Forms.Form form = new System.Windows.Forms.Form ();
+			
+			form.ClientSize = new System.Drawing.Size (160, 480);
+			form.Text = "CheckGlyphPaint";
+			form.Paint +=new System.Windows.Forms.PaintEventHandler(form_Paint3);
+			
+			this.global_pixmap_3 = new Pixmap ();
+			this.global_pixmap_3.Size = form.ClientSize;
+			this.global_pixmap_3.Clear ();
+			
+			Epsitec.Common.Drawing.Renderer.Solid renderer = new Common.Drawing.Renderer.Solid ();
+			renderer.Pixmap = this.global_pixmap_3;
+			renderer.Clear (Color.FromBrightness (1));
+			
+			Rasterizer rasterizer = new Rasterizer ();
+			rasterizer.Gamma = 1.2;
+			rasterizer.Transform = Transform.FromScale (0.25, 0.25);
+			
+			Font font = Font.GetFont ("Times New Roman", "Regular");
+			Path path = new Path ();
+			
+			for (int bold_width = 0; bold_width < 40; bold_width += 8)
+			{
+				double size = 320;
+				double x = 20 + bold_width / 2;
+				double y = 80 + bold_width / 2 * (font.Ascender) / font.LineHeight + size * bold_width / 8;
+				
+				path.MoveTo (0, y);
+				path.LineTo (form.ClientSize.Width, y);
+				
+				string text = "tjfa";
+				
+				rasterizer.FillMode = FillMode.NonZero;
+				
+				foreach (char c in text)
+				{
+					int glyph = font.GetGlyphIndex (c);
+					
+					path.Append (font, glyph, size, 0, 0, size, x, y, bold_width);
+					
+					x += font.GetGlyphAdvance (glyph) * size + bold_width;
+				}
+				
+				renderer.Color = Color.FromARGB (1, 0, 0, 0);
+				rasterizer.AddSurface (path);
+				rasterizer.Render (renderer);
+				
+				path.Clear ();
+			}
+			
+			form.Show ();
+		}
+
 		private void form_Paint1(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
 			this.global_pixmap_1.Paint (e.Graphics, e.ClipRectangle);
@@ -291,7 +346,13 @@ namespace Epsitec.Common.Tests
 			this.global_pixmap_2.Paint (e.Graphics, e.ClipRectangle);
 		}
 		
+		private void form_Paint3(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			this.global_pixmap_3.Paint (e.Graphics, e.ClipRectangle);
+		}
+		
 		private Pixmap					global_pixmap_1;
 		private Pixmap					global_pixmap_2;
+		private Pixmap					global_pixmap_3;
 	}
 }

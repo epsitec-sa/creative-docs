@@ -82,7 +82,13 @@ namespace Epsitec.Common.Drawing
 		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty)
 		{
 			this.CreateOnTheFly ();
-			Agg.Library.AggPathAppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty);
+			Agg.Library.AggPathAppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, 0);
+		}
+		
+		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty, double bold_width)
+		{
+			this.CreateOnTheFly ();
+			Agg.Library.AggPathAppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, bold_width);
 		}
 		
 		public void Append(Font font, int glyph, double x, double y, double size)
@@ -98,7 +104,13 @@ namespace Epsitec.Common.Drawing
 		public void Append(Font font, int glyph, double xx, double xy, double yx, double yy, double tx, double ty)
 		{
 			this.CreateOnTheFly ();
-			Agg.Library.AggPathAppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty);
+			Agg.Library.AggPathAppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, 0);
+		}
+		
+		public void Append(Font font, int glyph, double xx, double xy, double yx, double yy, double tx, double ty, double bold_width)
+		{
+			this.CreateOnTheFly ();
+			Agg.Library.AggPathAppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, bold_width);
 		}
 		
 		
