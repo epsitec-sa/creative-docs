@@ -78,6 +78,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public KeyCode					KeyCodeOnly
+		{
+			get
+			{
+				return this.KeyCode & KeyCode.KeyCodeMask;
+			}
+		}
+		
 		public char						KeyChar
 		{
 			get
@@ -95,9 +103,40 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public bool						IsShiftPressed
+		{
+			get
+			{
+				return (this.KeyCode & KeyCode.ModifierShift) != 0;
+			}
+		}
+		
+		public bool						IsCtrlPressed
+		{
+			get
+			{
+				return (this.KeyCode & KeyCode.ModifierControl) != 0;
+			}
+		}
+		
+		public bool						IsAltPressed
+		{
+			get
+			{
+				return (this.KeyCode & KeyCode.ModifierAlt) != 0;
+			}
+		}
+		
+		
 		public override string ToString()
 		{
-			return System.String.Format ("{{Key={0}}}", this.key_code);
+			System.Text.StringBuilder extra = new System.Text.StringBuilder ();
+			
+			if (this.IsShiftPressed) extra.Append ("+SHIFT");
+			if (this.IsCtrlPressed)  extra.Append ("+CTRL");
+			if (this.IsAltPressed)   extra.Append ("+ALT");
+			
+			return System.String.Format ("[{0}{1}]", this.KeyCodeOnly.ToString (), extra.ToString ());
 		}
 
 		
