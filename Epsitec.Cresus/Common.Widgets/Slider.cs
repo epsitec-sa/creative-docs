@@ -8,7 +8,7 @@ namespace Epsitec.Common.Widgets
 		public Slider()
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			this.color = adorner.GetColorCaption();
+			this.color = adorner.ColorCaption;
 			this.colorBack = Drawing.Color.FromBrightness(1);
 		}
 		
@@ -176,9 +176,8 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect   = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state  = this.PaintState;
-			Direction         dir    = this.RootDirection;
 			
-			adorner.PaintTextFieldBackground(graphics, rect, state, dir, TextFieldStyle.Normal, false);
+			adorner.PaintTextFieldBackground(graphics, rect, state, TextFieldStyle.Simple, false);
 
 			if ( this.IsEnabled )
 			{
