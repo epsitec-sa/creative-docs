@@ -256,6 +256,28 @@ namespace Epsitec.Common.Drawing
 			return r;
 		}
 		
+		public static Rectangle Offset(Rectangle r, Point p)
+		{
+			if (r.IsEmpty)
+			{
+				return Rectangle.Empty;
+			}
+			
+			r.Offset (p);
+			return r;
+		}
+		
+		public static Rectangle Offset(Rectangle r, double x, double y)
+		{
+			if (r.IsEmpty)
+			{
+				return Rectangle.Empty;
+			}
+			
+			r.Offset (x, y);
+			return r;
+		}
+		
 		public static Rectangle Union(Rectangle a, Rectangle b)
 		{
 			if (a.IsEmpty)

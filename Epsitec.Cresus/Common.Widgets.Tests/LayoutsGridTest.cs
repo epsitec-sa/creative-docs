@@ -126,7 +126,7 @@ namespace Epsitec.Common.Widgets
 			
 			wa1.Parent      = wa;
 			wa1.Name        = "A1";
-			wa1.MinSize     = new Drawing.Size (100, 30);
+			wa1.MinSize     = new Drawing.Size (30, 30);
 			wa1.Dock        = DockStyle.Layout;
 			wa1.LayoutFlags = LayoutFlags.IncludeChildren;
 			wa1.SetLayoutArgs (0, 2);
@@ -139,7 +139,7 @@ namespace Epsitec.Common.Widgets
 			
 			wa3.Parent      = wa;
 			wa3.Name        = "A3";
-			wa3.MinSize     = new Drawing.Size (140, 30);
+			wa3.MinSize     = new Drawing.Size (30, 30);
 			wa3.LayoutFlags = LayoutFlags.StartNewLine;
 			wa3.Dock        = DockStyle.Layout;
 			wa3.SetLayoutArgs (0, 3);

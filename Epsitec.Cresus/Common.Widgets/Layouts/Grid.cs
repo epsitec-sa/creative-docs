@@ -178,6 +178,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.LayoutWidgets (this.root, 0, 0, this.current_height);
 			
 			this.root.Size = new Drawing.Size (this.current_width, this.current_height);
+			this.root.Invalidate ();
 		}
 		
 		protected void UpdateColumnsGeometry()
@@ -323,6 +324,10 @@ namespace Epsitec.Common.Widgets.Layouts
 					double dy = widget.Height - margins.Top - margins.Bottom;
 					
 					widget.Bounds = new Drawing.Rectangle (x1 - x_offset, y_offset - margins.Top - dy, dx, dy);
+					
+					//	Insère le widget dans la ligne en cours.
+					
+					this.horizontals[lines-1].list.Add (widget);
 					
 					if (max_dy < dy)
 					{
@@ -593,10 +598,15 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			Drawing.Graphics graphics = e.Graphics;
 			
-			if (this.hilite_box.IsEmpty == false)
+			if (this.hot_hilite_box.IsEmpty == false)
 			{
-				graphics.AddFilledRectangle (this.hilite_box);
+				graphics.AddFilledRectangle (this.hot_hilite_box);
 				graphics.RenderSolid (Drawing.Color.FromARGB (0.5, 1, 0, 0));
+			}
+			if (this.hot_designer_rect.IsEmpty == false)
+			{
+				graphics.AddRectangle (this.hot_designer_rect);
+				graphics.RenderSolid (Drawing.Color.FromARGB (1.0, 1, 0, 0));
 			}
 			
 			double dy = this.root.Client.Height;
@@ -756,10 +766,12 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.hot_designer_offset  = mouse - center;
 			this.hot_designer_columns = select.LayoutArg2 - select.LayoutArg1;
 			
+			this.hot_designer_original_bounds = select.Bounds;
+			
 			this.widget_dummy = new StaticText ();
 			
 			this.widget_dummy.Size        = select.Size;
-			this.widget_dummy.BackColor   = Drawing.Color.FromRGB (1.0, 0.8, 0.8);
+			this.widget_dummy.BackColor   = Drawing.Color.Transparent;
 			this.widget_dummy.Dock        = select.Dock;
 			this.widget_dummy.LayoutFlags = select.LayoutFlags;
 			this.widget_dummy.MinSize     = select.MinSize;
@@ -770,32 +782,295 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			select.Parent.Children.Replace (select, this.widget_dummy);
 			
+			this.widget_wrapper.Widget.Dock   = DockStyle.None;
+			this.widget_wrapper.Widget.Parent = this.root;
+			this.widget_wrapper.GripsEnabled  = false;
+			
+			this.hot_lines = new Grid.Horizontal[this.horizontals.Length];
+			this.horizontals.CopyTo (this.hot_lines, 0);
+			
 			this.Invalidate ();
 			this.Update ();
 			
-			this.root.Invalidate ();
+			this.WidgetDraggingMove (mouse);
 		}
 		
 		protected void WidgetDraggingMove(Drawing.Point mouse)
 		{
-			Drawing.Point center = mouse - this.hot_designer_offset;
+			Drawing.Point     center    = mouse - this.hot_designer_offset;
+			Drawing.Rectangle rect_drop = this.hot_designer_original_bounds;
+			Drawing.Rectangle rect_move = Drawing.Rectangle.Offset (this.hot_designer_original_bounds, mouse - this.hot_designer_origin);
+			
+			this.hot_designer_rect = rect_move;
+			this.hot_hilite_box    = Drawing.Rectangle.Empty;
+			this.hot_target_ok     = false;
+			this.line_gap_height   = 0;
+			this.line_gap_index    = -1;
 			
 			if (this.FindBestColumns (center.X, this.hot_designer_columns, out this.hot_designer_col1, out this.hot_designer_col2))
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("[{0} -> {1}/{2}]", center.X, this.hot_designer_col1, this.hot_designer_col2));
+				if (this.FindBestHotLine (center.Y, out this.hot_designer_line, out this.hot_designer_insert))
+				{
+					if ((this.hot_designer_insert) ||
+						(this.IsHorizontalRangeEmpty (this.hot_designer_line, this.hot_designer_col1, this.hot_designer_col2, this.widget_dummy)))
+					{
+						//	Evite d'insérer une ligne vide après (ou avant) si la ligne courante est adjacente
+						//	et qu'elle ne contient que notre élément; ce déplacement n'aurait aucun sens !
+						
+						if ((this.hot_designer_insert) &&
+							(this.hot_designer_line > 0) &&
+							(this.horizontals[this.hot_designer_line-1].list.Count == 1) &&
+							(this.horizontals[this.hot_designer_line-1].list[0] == this.widget_dummy))
+						{
+							this.hot_designer_insert = false;
+							this.hot_designer_line--;
+						}
+						
+						if ((this.hot_designer_insert) &&
+							(this.horizontals[this.hot_designer_line].list.Count == 1) &&
+							(this.horizontals[this.hot_designer_line].list[0] == this.widget_dummy))
+						{
+							this.hot_designer_insert = false;
+						}
+						
+						this.line_gap_index  = this.hot_designer_line;
+						this.line_gap_height = (this.hot_designer_insert) ? this.widget_dummy.Height : 0;
+						
+						double x1 = this.verticals[this.hot_designer_col1].x_live;
+						double x2 = this.verticals[this.hot_designer_col2].x_live;
+						double y2 = this.hot_lines[this.line_gap_index].y_live;
+						double y1 = y2 - this.widget_dummy.Height;
+						
+						if (this.hot_designer_insert == false)
+						{
+							//	Utilise la hauteur de la ligne en cours, sauf si c'est une ligne qui va être
+							//	créée suite à une insertion...
+							
+							System.Diagnostics.Debug.Assert (this.line_gap_index+1 < this.hot_lines.Length);
+							
+							y1 = this.hot_lines[this.line_gap_index+1].y_live;
+						}
+						
+						rect_drop = new Drawing.Rectangle (x1, y1, x2-x1, y2-y1);
+						
+						if (this.hot_designer_insert)
+						{
+							double y = this.hot_lines[this.line_gap_index].y_live;
+							this.hot_hilite_box = new Drawing.Rectangle (0, y-1, this.root.Client.Width, 3);
+						}
+						
+						this.hot_target_ok = true;
+					}
+				}
 			}
+			
+			this.widget_wrapper.Widget.Bounds = rect_drop;
+			
+			this.UpdateGeometry ();
 		}
 		
 		protected void WidgetDraggingEnd(Drawing.Point mouse)
 		{
 			this.is_dragging_widget = false;
+			this.RemoveWidgetFromHorizontals (this.widget_dummy);
 			
-			this.widget_dummy.Parent.Children.Replace (this.widget_dummy, this.widget_wrapper.Widget);
+			int pos_old = this.root.Children.IndexOf (this.widget_dummy);
+			int pos_new = this.FindWidgetIndexBeforeHotDrop (pos_old);
+			
+			if (this.hot_target_ok == false)
+			{
+				pos_new = pos_old;
+				
+				this.hot_designer_col1 = this.widget_wrapper.Widget.LayoutArg1;
+				this.hot_designer_col2 = this.widget_wrapper.Widget.LayoutArg2;
+			}
+			
+			if (pos_old == pos_new)
+			{
+				//	La position n'a pas changé dans le Z-order...
+				
+				this.widget_wrapper.Widget.Parent = null;
+				this.widget_wrapper.Widget.Dock   = this.widget_dummy.Dock;
+				
+				this.root.Children.Replace (this.widget_dummy, this.widget_wrapper.Widget);
+			}
+			else
+			{
+				Widget temp = new Widget ();
+				
+				this.root.Children.InsertAt (pos_new, temp);
+				
+				this.widget_wrapper.Widget.Parent = null;
+				this.widget_wrapper.Widget.Dock   = this.widget_dummy.Dock;
+				
+				this.widget_dummy.Parent = null;
+				
+				this.root.Children.Replace (temp, this.widget_wrapper.Widget);
+				
+				System.Diagnostics.Debug.Assert (temp.Parent == null);
+			}
+			
+			this.widget_wrapper.Widget.SetLayoutArgs (this.hot_designer_col1, this.hot_designer_col2);
+			this.widget_wrapper.Widget.Height = this.widget_dummy.Height;
+			this.widget_wrapper.GripsEnabled  = true;
+			
+			if (this.hot_designer_insert)
+			{
+				this.InsertHorizontal (this.hot_designer_line);
+			}
+			
+			this.InsertWidgetIntoHorizontal (this.widget_wrapper.Widget, this.hot_designer_line);
+			
+			for (int i = 0; i < this.horizontals.Length; i++)
+			{
+				Grid.Horizontal horizontal = this.horizontals[i];
+				
+				for (int j = 0; j < horizontal.list.Count; j++)
+				{
+					Widget widget = horizontal.list[j] as Widget;
+					
+					if (j == 0)
+					{
+						widget.LayoutFlags |= LayoutFlags.StartNewLine;
+					}
+					else
+					{
+						widget.LayoutFlags &= ~LayoutFlags.StartNewLine;
+					}
+				}
+			}
+			
+			this.line_gap_index  = -1;
+			this.line_gap_height = 0;
+			
+			this.hot_designer_rect = Drawing.Rectangle.Empty;
+			this.hot_hilite_box = Drawing.Rectangle.Empty;
 			
 			this.Invalidate ();
 			this.Update ();
+		}
+		
+		
+		protected int FindWidgetIndexBeforeHotDrop(int pos_old)
+		{
+			Widget find = null;
 			
-			this.root.Invalidate ();
+			for (int i = 0; i < this.horizontals.Length-1; i++)
+			{
+				Grid.Horizontal horizontal = this.horizontals[i];
+				
+				for (int j = 0; j < horizontal.list.Count; j++)
+				{
+					Widget widget = horizontal.list[j] as Widget;
+					
+					if (i < this.hot_designer_line)
+					{
+						find = widget;
+					}
+					else if ( (i == this.hot_designer_line)
+						   && (this.hot_designer_insert == false)
+						   && (this.hot_designer_col1 > widget.LayoutArg1) )
+					{
+						find = widget;
+					}
+				}
+			}
+			
+			int pos_new = (find == null) ? 0 : (this.root.Children.IndexOf (find) + 1);
+			
+			return (find == this.widget_dummy) ? pos_old : pos_new;
+		}
+		
+		protected int FindWidgetLineIndex(Widget widget)
+		{
+			//	Trouve l'index de la ligne où se trouve le widget spécifié.
+			//	Retourne -1 si le widget n'est pas trouvé.
+			
+			for (int i = 0; i < this.horizontals.Length-1; i++)
+			{
+				Grid.Horizontal horizontal = this.horizontals[i];
+				
+				for (int j = 0; j < horizontal.list.Count; j++)
+				{
+					if (horizontal.list[j] == widget)
+					{
+						return i;
+					}
+				}
+			}
+			
+			return -1;
+		}
+		
+		
+		protected bool IsHorizontalRangeEmpty(int index, int col1, int col2, Widget exclude)
+		{
+			Grid.Horizontal horizontal = this.horizontals[index];
+			
+			for (int i = 0; i < horizontal.list.Count; i++)
+			{
+				Widget iter = horizontal.list[i] as Widget;
+				
+				if ((iter.LayoutArg2 > col1) &&
+					(iter.LayoutArg1 < col2) &&
+					(iter != exclude))
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
+		protected void RemoveWidgetFromHorizontals(Widget widget)
+		{
+			for (int i = 0; i < this.horizontals.Length-1; i++)
+			{
+				this.horizontals[i].list.Remove (widget);
+			}
+		}
+		
+		protected void InsertWidgetIntoHorizontal(Widget widget, int index)
+		{
+			Grid.Horizontal horizontal = this.horizontals[index];
+			
+			int column = widget.LayoutArg1;
+			
+			for (int i = 0; i < horizontal.list.Count; i++)
+			{
+				Widget iter = horizontal.list[i] as Widget;
+				
+				if (column < iter.LayoutArg1)
+				{
+					horizontal.list.Insert (i, widget);
+					return;
+				}
+			}
+			
+			//	Ajoute à la fin...
+			
+			horizontal.list.Add (widget);
+		}
+		
+		protected void InsertHorizontal(int index)
+		{
+			Grid.Horizontal[] copy = new Grid.Horizontal[this.horizontals.Length+1];
+			
+			for (int i = 0; i < this.horizontals.Length; i++)
+			{
+				if (i < index)
+				{
+					copy[i] = this.horizontals[i];
+				}
+				else if (i >= index)
+				{
+					copy[i+1] = this.horizontals[i];
+				}
+			}
+			
+			copy[index] = new Grid.Horizontal (0);
+			
+			this.horizontals = copy;
 		}
 		
 		
@@ -809,7 +1084,6 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			
 			this.UpdateGeometry ();
-			this.root.Invalidate ();
 		}
 		
 		protected void ColumnDraggingMove(Drawing.Point mouse)
@@ -820,7 +1094,6 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.columns[this.hot_column_index-1].dx_init = dx;
 			
 			this.UpdateGeometry ();
-			this.root.Invalidate ();
 			this.mouse_cursor = MouseCursor.AsVSplit;
 		}
 		
@@ -830,9 +1103,67 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.desired_width = this.verticals[this.columns.Count].x_live;
 			
 			this.UpdateGeometry ();
-			this.root.Invalidate ();
 		}
 		
+		
+		protected bool FindBestHotLine(double y, out int line_index, out bool line_insert)
+		{
+			for (int i = 1; i < this.hot_lines.Length; i++)
+			{
+				double y1 = this.hot_lines[i-1].y_live;
+				double y2 = this.hot_lines[i].y_live;
+				double m  = 3;
+				
+				double y1_top = y1 + m;
+				double y1_bot = y1 - m;
+				double y2_top = y2 + m;
+				double y2_bot = y2 - m;
+					
+				if ((y <= y1_top) &&
+					(y >= y1_bot))
+				{
+					line_index  = i-1;
+					line_insert = true;
+					return true;
+				}
+				
+				if ((y <= y2_top) &&
+					(y >= y2_bot))
+				{
+					line_index  = i;
+					line_insert = true;
+					return true;
+				}
+				
+				if ((y <= y1) &&
+					(y >= y2))
+				{
+					line_index  = i-1;
+					line_insert = false;
+					return true;
+				}
+			}
+			if (this.hot_lines.Length > 1)
+			{
+				if (y > this.hot_lines[0].y_live)
+				{
+					line_index = 0;
+					line_insert = true;
+					return true;
+				}
+				if (y < this.hot_lines[this.hot_lines.Length-1].y_live)
+				{
+					line_index  = this.hot_lines.Length-1;
+					line_insert = true;
+					return true;
+				}
+			}
+			
+			line_index  = -1;
+			line_insert = false;
+			
+			return false;
+		}
 		
 #if false
 		{
@@ -872,7 +1203,6 @@ namespace Epsitec.Common.Widgets.Layouts
 				}
 				
 				this.UpdateGeometry ();
-				this.root.Invalidate ();
 				
 				if (this.hot_column_index >= 0)
 				{
@@ -911,9 +1241,12 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			public Horizontal(double y)
 			{
+				this.list   = new ArrayList ();
 				this.y_live = y;
 				this.gap    = 0;
 			}
+			
+			internal ArrayList			list;
 			
 			internal double				y_live;
 			internal double				gap;
@@ -1131,16 +1464,22 @@ namespace Epsitec.Common.Widgets.Layouts
 		protected Widget				hot_widget;
 		protected bool					hot_designer;
 		protected Drawing.Point			hot_designer_origin;
+		protected Drawing.Rectangle		hot_designer_original_bounds;
 		protected Drawing.Point			hot_designer_offset;
 		protected int					hot_designer_columns;
 		protected int					hot_designer_col1;
 		protected int					hot_designer_col2;
+		protected int					hot_designer_line;
+		protected bool					hot_designer_insert;
+		protected Drawing.Rectangle		hot_designer_rect;
+		protected bool					hot_target_ok;
+		protected Grid.Horizontal[]		hot_lines;
+		
+		protected Drawing.Rectangle		hot_hilite_box;
 		
 		protected Design.WidgetWrapper	widget_wrapper;
 		protected Widget				widget_dummy;
 		protected MouseCursor			mouse_cursor;
-		
-		protected Drawing.Rectangle		hilite_box;
 		
 		protected int					line_gap_index;
 		protected double				line_gap_height;

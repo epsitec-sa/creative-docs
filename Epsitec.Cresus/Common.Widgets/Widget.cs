@@ -3548,7 +3548,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			public void Replace(Widget old_widget, Widget new_widget)
+			internal void Replace(Widget old_widget, Widget new_widget)
 			{
 				if (old_widget == new_widget)
 				{
@@ -3560,24 +3560,48 @@ namespace Epsitec.Common.Widgets
 				
 				if (pos1 < 0)
 				{
-					throw new System.ArgumentException ("Widget not in collection", "old_widget");
+					throw new System.ArgumentException ("Widget not in collection.", "old_widget");
 				}
 				if (pos2 < 0)
 				{
 					this.PreRemove (old_widget);
 					this.PreInsert (new_widget);
+					
 					this.list[pos1] = new_widget;
-					this.array[pos1] = new_widget;
+					
+					if (this.array != null)
+					{
+						this.array[pos1] = new_widget;
+					}
+					
 					this.NotifyChanged ();
 				}
 				else
 				{
 					this.list[pos1] = new_widget;
 					this.list[pos2] = old_widget;
-					this.array[pos1] = new_widget;
-					this.array[pos2] = old_widget;
+					
+					if (this.array != null)
+					{
+						this.array[pos1] = new_widget;
+						this.array[pos2] = old_widget;
+					}
+					
 					this.NotifyChanged ();
 				}
+			}
+			
+			internal void InsertAt(int index, Widget widget)
+			{
+				if (widget == null)
+				{
+					throw new System.ArgumentException ("Widget is not valid.", "widget");
+				}
+				
+				this.PreInsert (widget);
+				this.array = null;
+				this.list.Insert (index, widget);
+				this.NotifyChanged ();
 			}
 			
 			

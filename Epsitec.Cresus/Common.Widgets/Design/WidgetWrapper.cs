@@ -63,6 +63,12 @@ namespace Epsitec.Common.Widgets.Design
 			get { return this.widget; }
 		}
 		
+		public bool						GripsEnabled
+		{
+			get { return this.grips_enabled; }
+			set { this.grips_enabled = value; }
+		}
+		
 		
 		private void HandleWidgetPreProcessing(object sender, MessageEventArgs e)
 		{
@@ -113,18 +119,21 @@ namespace Epsitec.Common.Widgets.Design
 		{
 			System.Diagnostics.Debug.Assert (this.widget == sender);
 			
-			Drawing.Graphics  graphics = e.Graphics;
-			Drawing.Rectangle bounds   = this.widget.Client.Bounds;
-			
-			bounds.Inflate (0, 0);
-			
-			graphics.AddRectangle (bounds);
-			graphics.AddFilledRectangle (bounds.Left  - 2, bounds.Bottom - 2, 4, 4);
-			graphics.AddFilledRectangle (bounds.Left  - 2, bounds.Top    - 2, 4, 4);
-			graphics.AddFilledRectangle (bounds.Right - 2, bounds.Bottom - 2, 4, 4);
-			graphics.AddFilledRectangle (bounds.Right - 2, bounds.Top    - 2, 4, 4);
-			
-			graphics.RenderSolid (Drawing.Color.FromARGB (0.5, 1, 0, 0));
+			if (this.grips_enabled)
+			{
+				Drawing.Graphics  graphics = e.Graphics;
+				Drawing.Rectangle bounds   = this.widget.Client.Bounds;
+				
+				bounds.Inflate (0, 0);
+				
+				graphics.AddRectangle (bounds);
+				graphics.AddFilledRectangle (bounds.Left  - 2, bounds.Bottom - 2, 4, 4);
+				graphics.AddFilledRectangle (bounds.Left  - 2, bounds.Top    - 2, 4, 4);
+				graphics.AddFilledRectangle (bounds.Right - 2, bounds.Bottom - 2, 4, 4);
+				graphics.AddFilledRectangle (bounds.Right - 2, bounds.Top    - 2, 4, 4);
+				
+				graphics.RenderSolid (Drawing.Color.FromARGB (0.5, 1, 0, 0));
+			}
 		}
 		
 		private void HandlePaintBoundsCallback(Widget widget, ref Drawing.Rectangle bounds)
@@ -135,6 +144,8 @@ namespace Epsitec.Common.Widgets.Design
 		
 		
 		protected bool					is_dragging;
+		protected bool					grips_enabled;
+		
 		protected MouseCursor			mouse_cursor = MouseCursor.Default;
 		
 		protected Widget				widget;
