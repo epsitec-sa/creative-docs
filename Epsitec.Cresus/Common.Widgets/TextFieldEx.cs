@@ -11,7 +11,8 @@ namespace Epsitec.Common.Widgets
 		AcceptEdition,
 		RejectEdition,
 		
-		Modal
+		Modal,
+		AutoAcceptOrRejectEdition
 	}
 	
 	public enum ShowCondition
@@ -39,7 +40,8 @@ namespace Epsitec.Common.Widgets
 			this.accept_reject_behavior.RejectClicked += new Support.EventHandler(this.HandleAcceptRejectRejectClicked);
 			this.accept_reject_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptRejectAcceptClicked);
 			
-			this.UpdateButtonVisibility ();
+			this.DefocusAction       = DefocusAction.None;
+			this.ButtonShowCondition = ShowCondition.WhenModified;
 		}
 		
 		public TextFieldEx(Widget embedder) : this ()
@@ -72,9 +74,37 @@ namespace Epsitec.Common.Widgets
 				if (this.button_show_condition != value)
 				{
 					this.button_show_condition = value;
+					this.UpdateButtonVisibility ();
 				}
 			}
 		}
+		
+		
+		public bool AcceptEdition()
+		{
+			if (this.IsValid)
+			{
+				this.accept_reject_behavior.InitialText = this.Text;
+				this.has_edited_text = false;
+				this.SelectAll ();
+				this.UpdateButtonVisibility ();
+				this.OnEditionAccepted ();
+				return true;
+			}
+			
+			return false;
+		}
+		
+		public bool RejectEdition()
+		{
+			this.Text = this.accept_reject_behavior.InitialText;
+			this.has_edited_text = false;
+			this.SelectAll ();
+			this.UpdateButtonVisibility ();
+			this.OnEditionRejected ();
+			return true;
+		}
+		
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -89,29 +119,6 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 
-		
-		
-		public bool AcceptEdition()
-		{
-			if (this.IsValid)
-			{
-				this.accept_reject_behavior.InitialText = this.Text;
-				this.SelectAll ();
-				this.OnEditionAccepted ();
-				return true;
-			}
-			
-			return false;
-		}
-		
-		public bool RejectEdition()
-		{
-			this.Text = this.accept_reject_behavior.InitialText;
-			this.SelectAll ();
-			this.OnEditionRejected ();
-			return true;
-		}
-		
 		
 		protected override bool ProcessMouseDown(Message message, Drawing.Point pos)
 		{
@@ -157,6 +164,7 @@ namespace Epsitec.Common.Widgets
 						break;
 					
 					case DefocusAction.Modal:
+					case DefocusAction.AutoAcceptOrRejectEdition:
 						if (this.IsValid)
 						{
 							this.AcceptEdition ();
@@ -231,7 +239,7 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case ShowCondition.WhenModified:
-					show = this.Text != this.accept_reject_behavior.InitialText;
+					show = this.has_edited_text;
 					break;
 				
 				default:
@@ -253,12 +261,20 @@ namespace Epsitec.Common.Widgets
 		protected override void OnTextDefined()
 		{
 			base.OnTextDefined ();
+			
 			this.accept_reject_behavior.InitialText = this.Text;
+			this.has_edited_text = false;
 		}
 
 		protected override void OnTextChanged()
 		{
 			base.OnTextChanged ();
+			
+			if (this.Text != this.accept_reject_behavior.InitialText)
+			{
+				this.has_edited_text = true;
+			}
+			
 			this.UpdateButtonEnable ();
 			this.UpdateButtonVisibility ();
 		}
@@ -303,6 +319,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		EditionRejected;
 		
 		protected bool							show_buttons;
+		protected bool							has_edited_text;
 		protected ShowCondition					button_show_condition;
 		protected DefocusAction					defocus_action;
 		protected Helpers.AcceptRejectBehavior	accept_reject_behavior;

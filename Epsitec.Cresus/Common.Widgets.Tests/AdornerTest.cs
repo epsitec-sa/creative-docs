@@ -623,6 +623,44 @@ namespace Epsitec.Common.Widgets
 			text_ex_3.SetEnabled(false);
 			text_ex_3.TabIndex = 3;
 			
+			TextFieldEx text_ex_4 = new TextFieldEx();
+			text_ex_4.Parent = page3;
+			text_ex_4.Bounds = new Drawing.Rectangle(10, page3.Height-30-28-28-28, 120, text_ex_4.Height);
+			text_ex_4.TabIndex = 4;
+			text_ex_4.ButtonShowCondition = ShowCondition.WhenModified;
+			
+			TextFieldEx text_ex_5 = new TextFieldEx();
+			text_ex_5.Parent = page3;
+			text_ex_5.Bounds = new Drawing.Rectangle(10, page3.Height-30-28-28-28-28, 120, text_ex_5.Height);
+			text_ex_5.TabIndex = 5;
+			text_ex_5.ButtonShowCondition = ShowCondition.WhenFocused;
+			text_ex_5.DefocusAction       = DefocusAction.AcceptEdition;
+			
+			TextFieldEx text_ex_6 = new TextFieldEx();
+			text_ex_6.Parent = page3;
+			text_ex_6.Bounds = new Drawing.Rectangle(10+120+5, page3.Height-30, 120, text_ex_6.Height);
+			text_ex_6.TabIndex = 6;
+			text_ex_6.ButtonShowCondition = ShowCondition.WhenModified;
+			text_ex_6.DefocusAction       = DefocusAction.Modal;
+			
+			TextFieldEx text_ex_7 = new TextFieldEx();
+			text_ex_7.Parent = page3;
+			text_ex_7.Bounds = new Drawing.Rectangle(10+120+5, page3.Height-30-28, 120, text_ex_7.Height);
+			text_ex_7.TabIndex = 7;
+			text_ex_7.ButtonShowCondition = ShowCondition.Never;
+			text_ex_7.DefocusAction       = DefocusAction.AcceptEdition;
+			
+			TextFieldEx text_ex_8 = new TextFieldEx();
+			text_ex_8.Parent = page3;
+			text_ex_8.Bounds = new Drawing.Rectangle(10+120+5, page3.Height-30-28-28, 120, text_ex_8.Height);
+			text_ex_8.TabIndex = 8;
+			text_ex_8.ButtonShowCondition = ShowCondition.WhenModified;
+			text_ex_8.DefocusAction       = DefocusAction.AutoAcceptOrRejectEdition;
+			
+			new Validators.RegexValidator (text_ex_6, Support.RegexFactory.AlphaName);
+			new Validators.RegexValidator (text_ex_7, Support.RegexFactory.AlphaName);
+			new Validators.RegexValidator (text_ex_8, Support.RegexFactory.AlphaName);
+			
 			page3.TabIndex = 3;
 			page3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page3);

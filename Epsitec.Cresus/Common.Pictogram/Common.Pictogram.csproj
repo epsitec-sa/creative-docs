@@ -258,6 +258,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Data\PropertyArc.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Data\PropertyArrow.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -379,6 +384,11 @@
                 />
                 <File
                     RelPath = "Widgets\Lister.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\PanelArc.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
