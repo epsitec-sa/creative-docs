@@ -17,7 +17,7 @@ namespace Epsitec.Common.Tests
 			Pane pane = new Pane ();
 			
 			pane.PaneStyle = PaneStyle.LeftRight;
-			pane.DimensionChanged += new EventHandler(this.pane_DimensionChanged);
+			pane.SizeChanged += new EventHandler(this.pane_SizeChanged);
 			pane.Bounds = window.Root.Client.Bounds;
 			pane.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 			pane.LayoutChanged += new EventHandler(pane_LayoutChanged);
@@ -43,12 +43,12 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 		
-		private void pane_DimensionChanged(object sender)
+		private void pane_SizeChanged(object sender)
 		{
 			Pane pane = sender as Pane;
 			
-			double w0 = pane.RetDimension (0);
-			double w1 = pane.RetDimension (1);
+			double w0 = pane.RetSize (0);
+			double w1 = pane.RetSize (1);
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Pane resized: {0} / {1}", w0, w1));
 		}
