@@ -5,6 +5,6 @@ namespace Epsitec.Cresus.UserInterface
 {
 	public interface IBinder
 	{
-		void CreateBinding(object ui_object, DataLayer.DataSet root, string binding, DataLayer.DataRecord data_record);
+		void CreateBinding(object ui_object, DataLayer.DataStore root, string binding, Database.DbColumn db_column);
 	}
 }
