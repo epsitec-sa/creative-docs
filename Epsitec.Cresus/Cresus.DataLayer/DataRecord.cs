@@ -98,12 +98,12 @@ namespace Epsitec.Cresus.DataLayer
 		
 		public string							UserLabel
 		{
-			get { return this.Attributes.GetAttribute (DataAttributes.TagLabel, ResourceLevel.Merged); }
+			get { return this.Attributes.GetAttribute (Tags.Label, ResourceLevel.Merged); }
 		}
 		
 		public string							UserDescription
 		{
-			get { return this.Attributes.GetAttribute (DataAttributes.TagDescription, ResourceLevel.Merged); }
+			get { return this.Attributes.GetAttribute (Tags.Description, ResourceLevel.Merged); }
 		}
 		
 		

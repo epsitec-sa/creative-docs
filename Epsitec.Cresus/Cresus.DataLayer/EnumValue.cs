@@ -24,22 +24,22 @@ namespace Epsitec.Cresus.DataLayer
 		
 		public string						Id
 		{
-			get { return this.Attributes.GetAttribute (DataAttributes.TagId, ResourceLevel.Default); }
+			get { return this.Attributes.GetAttribute (Tags.Id, ResourceLevel.Default); }
 		}
 		
 		public string						Name
 		{
-			get { return this.Attributes.GetAttribute (DataAttributes.TagName, ResourceLevel.Default); }
+			get { return this.Attributes.GetAttribute (Tags.Name, ResourceLevel.Default); }
 		}
 		
 		public string						UserLabel
 		{
-			get { return this.Attributes.GetAttribute (DataAttributes.TagLabel); }
+			get { return this.Attributes.GetAttribute (Tags.Label); }
 		}
 		
 		public string						UserDescription
 		{
-			get { return this.Attributes.GetAttribute (DataAttributes.TagDescription); }
+			get { return this.Attributes.GetAttribute (Tags.Description); }
 		}
 		
 		
