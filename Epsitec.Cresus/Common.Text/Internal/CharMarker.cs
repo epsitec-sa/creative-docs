@@ -26,19 +26,14 @@ namespace Epsitec.Common.Text.Internal
 		/*
 		 *	Structure d'un caractère en mémoire :
 		 *
-		 *	[a][bbb bbbb]:[cccc ccc][d:dddd dddd:dddd dddd]:[mmmm mmmm]:[xxx][y yyyy:yyyy yyyy:yyyy yyyy]
+		 *	[bbbb bbb][c:cccc cc][dd:dddd dddd:dddd dddd]:[mmmm mmmm]:[xxx][y yyyy:yyyy yyyy:yyyy yyyy]
 		 *
-		 *	- bit 63 : a,  1-bit, "rich style flag"
-		 *	- 62..56 : b,  7-bit, "extra index"			1..100
-		 *	- 55..49 : c,  7-bit, "local index"			1..100
-		 *	- 48..32 : d, 17-bit, "style index"			1..100'000
+		 *	- 63..57 : b,  7-bit, "extra index"			1..100
+		 *	- 56..50 : c,  7-bit, "local index"			1..100
+		 *	- 49..32 : d, 18-bit, "style index"			1..250'000
 		 *	- 31..24 : m,  8-bit, "markers"
 		 *  - 23..21 : x,  3-bit, "unicode flags"
 		 *	- 20...0 : y, 21-bit, "unicode code"
-		 *
-		 *	- Le "rich style flag" indique si le "style index" pointe vers une
-		 *	  description de style simple (false => Styles.SimpleStyle) ou vers
-		 *	  une description de style riche (true => Styles.RichStyle).
 		 *
 		 *	- Le "extra index" pointe (au sein du style) sur un descripteur qui
 		 *	  définit des propriétés non typographiques (couleur, langue, etc.)
@@ -181,36 +176,36 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static int GetStyleIndex(ulong code)
 		{
-			return (int)((code >> 32) & 0x000000000001FFFFul);
+			return (int)((code >> 32) & 0x000000000003FFFFul);
 		}
 		
 		public static int GetLocalIndex(ulong code)
 		{
-			return (int)((code >> 49) & 0x000000000000003Ful);
+			return (int)((code >> 50) & 0x000000000000003Ful);
 		}
 		
 		public static int GetExtraIndex(ulong code)
 		{
-			return (int)((code >> 56) & 0x000000000000003Ful);
+			return (int)((code >> 57) & 0x000000000000003Ful);
 		}
 		
 		
 		public static void SetStyleIndex(ref ulong code, int value)
 		{
-			code &= 0xFFFE0000FFFFFFFFul;
-			code |= (uint) (value & 0x0001FFFF) << 32;
+			code &= 0xFFFC0000FFFFFFFFul;
+			code |= (uint) (value & 0x0003FFFF) << 32;
 		}
 		
 		public static void SetLocalIndex(ref ulong code, int value)
 		{
-			code &= 0xFF01FFFFFFFFFFFFul;
-			code |= (uint) (value & 0x0000007F) << 49;
+			code &= 0xFE03FFFFFFFFFFFFul;
+			code |= (uint) (value & 0x0000007F) << 50;
 		}
 		
 		public static void SetExtraIndex(ref ulong code, int value)
 		{
-			code &= 0x80FFFFFFFFFFFFFFul;
-			code |= (uint) (value & 0x0000007F) << 56;
+			code &= 0x01FFFFFFFFFFFFFFul;
+			code |= (uint) (value & 0x0000007F) << 57;
 		}
 		
 		
@@ -221,26 +216,9 @@ namespace Epsitec.Common.Text.Internal
 		
 		public static bool HasSettings(ulong code)
 		{
-			return ((code & 0x7FFE000000000000ul) == 0) ? false : true;
+			return ((code & 0xFFFC000000000000ul) == 0) ? false : true;
 		}
 		
-		
-		public static bool HasRichStyleFlag(ulong code)
-		{
-			return ((code & 0x8000000000000000ul) == 0) ? false : true;
-		}
-		
-		public static void SetRichStyleFlag(ref ulong code, bool flag)
-		{
-			if (flag)
-			{
-				code |= 0x8000000000000000ul;
-			}
-			else
-			{
-				code &= 0x7FFFFFFFFFFFFFFFul;
-			}
-		}
 		
 		
 		#region IEnumerable Members

@@ -1,6 +1,7 @@
 //	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
+#if false
 namespace Epsitec.Common.Text.Styles
 {
 	/// <summary>
@@ -32,3 +33,4 @@ namespace Epsitec.Common.Text.Styles
 		}
 	}
 }
+#endif

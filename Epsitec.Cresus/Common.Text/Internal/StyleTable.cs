@@ -12,12 +12,11 @@ namespace Epsitec.Common.Text.Internal
 	{
 		public StyleTable()
 		{
-			this.simple_styles = null;
-			this.rich_styles   = null;
+			this.styles = null;
 		}
 		
 		
-		public void Attach(ref ulong code, Styles.BaseStyle style)
+		public void Attach(ref ulong code, Styles.SimpleStyle style)
 		{
 			//	Attache un style au caractère passé en entrée.
 			
@@ -25,7 +24,7 @@ namespace Epsitec.Common.Text.Internal
 			//	tique existe déjà, c'est ce style là qui sera réutilisé; on évite
 			//	ainsi les doublons).
 			
-			Styles.BaseStyle find = this.FindStyle (style, null);
+			Styles.SimpleStyle find = this.FindStyle (style, null);
 			
 			if (find == null)
 			{
@@ -41,10 +40,9 @@ namespace Epsitec.Common.Text.Internal
 			Internal.CharMarker.SetStyleIndex (ref code, find.StyleIndex);
 			Internal.CharMarker.SetLocalIndex (ref code, 0);
 			Internal.CharMarker.SetExtraIndex (ref code, 0);
-			Internal.CharMarker.SetRichStyleFlag (ref code, find.IsRichStyle);
 		}
 		
-		public void Attach(ref ulong code, Styles.BaseStyle style, Styles.LocalSettings local_settings, Styles.ExtraSettings extra_settings)
+		public void Attach(ref ulong code, Styles.SimpleStyle style, Styles.LocalSettings local_settings, Styles.ExtraSettings extra_settings)
 		{
 			//	Variante de Attach avec réglages spécifiques (voir méthode simple
 			//	ci-dessus).
@@ -60,7 +58,7 @@ namespace Epsitec.Common.Text.Internal
 				//	les réglages supplémentaires :
 				
 				SettingsStyleMatcher matcher = new SettingsStyleMatcher (local_settings, extra_settings);
-				Styles.BaseStyle     find    = this.FindStyle (style, new StyleMatcher (matcher.FindExactSettings));
+				Styles.SimpleStyle   find    = this.FindStyle (style, new StyleMatcher (matcher.FindExactSettings));
 				
 				if ((find == null) &&
 					(matcher.WasCalled))
@@ -108,7 +106,6 @@ namespace Epsitec.Common.Text.Internal
 				Internal.CharMarker.SetStyleIndex (ref code, find.StyleIndex);
 				Internal.CharMarker.SetLocalIndex (ref code, local_settings == null ? 0 : local_settings.SettingsIndex);
 				Internal.CharMarker.SetExtraIndex (ref code, extra_settings == null ? 0 : extra_settings.SettingsIndex);
-				Internal.CharMarker.SetRichStyleFlag (ref code, find.IsRichStyle);
 			}
 		}
 		
@@ -118,21 +115,18 @@ namespace Epsitec.Common.Text.Internal
 			//	Détache le style et les réglages associés au caractère 'code'.
 			//	Ceci décrémente les divers compteurs d'utilisation.
 			
-			bool rich = Internal.CharMarker.HasRichStyleFlag (code);
-			
 			int style_index = Internal.CharMarker.GetStyleIndex (code);
 			int extra_index = Internal.CharMarker.GetExtraIndex (code);
 			int local_index = Internal.CharMarker.GetLocalIndex (code);
 			
 			if (style_index == 0)
 			{
-				Debug.Assert.IsTrue (rich == false);
 				Debug.Assert.IsTrue (extra_index == 0);
 				Debug.Assert.IsTrue (local_index == 0);
 			}
 			else
 			{
-				Styles.BaseStyle style = (rich ? this.rich_styles[style_index-1] : this.simple_styles[style_index-1]) as Styles.SimpleStyle;
+				Styles.SimpleStyle style = this.styles[style_index-1] as Styles.SimpleStyle;
 				
 				Debug.Assert.IsNotNull (style);
 				
@@ -150,7 +144,6 @@ namespace Epsitec.Common.Text.Internal
 				style.DecrementUserCount ();
 				
 				Internal.CharMarker.SetStyleIndex (ref code, 0);
-				Internal.CharMarker.SetRichStyleFlag (ref code, false);
 			}
 			
 			Debug.Assert.IsFalse (Internal.CharMarker.HasStyleOrSettings (code));
@@ -164,7 +157,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			bool changed = false;
 			
-			foreach (Styles.SimpleStyle style in this.simple_styles)
+			foreach (Styles.SimpleStyle style in this.styles)
 			{
 				changed |= style.Update ();
 			}
@@ -173,7 +166,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public Styles.BaseStyle GetStyle(ulong code)
+		public Styles.SimpleStyle GetStyle(ulong code)
 		{
 			int index = Internal.CharMarker.GetStyleIndex (code);
 			
@@ -182,21 +175,14 @@ namespace Epsitec.Common.Text.Internal
 				return null;
 			}
 			
-			if (Internal.CharMarker.HasRichStyleFlag (code))
-			{
-				return this.rich_styles[index-1] as Styles.BaseStyle;
-			}
-			else
-			{
-				return this.simple_styles[index-1] as Styles.BaseStyle;
-			}
+			return this.styles[index-1] as Styles.SimpleStyle;
 		}
 		
 		public Styles.LocalSettings GetLocalSettings(ulong code)
 		{
 			if (Internal.CharMarker.HasSettings (code))
 			{
-				Styles.BaseStyle style = this.GetStyle (code);
+				Styles.SimpleStyle style = this.GetStyle (code);
 			
 				return (style == null) ? null : style.GetLocalSettings (code);
 			}
@@ -208,7 +194,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			if (Internal.CharMarker.HasSettings (code))
 			{
-				Styles.BaseStyle style = this.GetStyle (code);
+				Styles.SimpleStyle style = this.GetStyle (code);
 				
 				return (style == null) ? null : style.GetExtraSettings (code);
 			}
@@ -217,56 +203,20 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public Styles.BaseStyle FindStyle(Styles.BaseStyle style, StyleMatcher matcher)
+		public Styles.SimpleStyle FindStyle(Styles.SimpleStyle style, StyleMatcher matcher)
 		{
 			//	Cherche si un style identique existe déjà. Si oui, retourne la
 			//	référence au style en question; si non, retourne null.
 			
-			if (style.IsRichStyle)
-			{
-				return this.FindRichStyle (style, matcher);
-			}
-			else
-			{
-				return this.FindSimpleStyle (style, matcher);
-			}
-		}
-		
-		
-		private Styles.SimpleStyle FindSimpleStyle(Styles.BaseStyle style, StyleMatcher matcher)
-		{
-			if ((this.simple_styles == null) ||
-				(this.simple_styles.Count == 0))
+			if ((this.styles == null) ||
+				(this.styles.Count == 0))
 			{
 				return null;
 			}
 			
-			foreach (Styles.SimpleStyle find in this.simple_styles)
+			foreach (Styles.SimpleStyle find in this.styles)
 			{
-				if (Styles.BaseStyle.CompareEqual (find, style))
-				{
-					if ((matcher == null) ||
-						(matcher (find)))
-					{
-						return find;
-					}
-				}
-			}
-			
-			return null;
-		}
-		
-		private Styles.RichStyle FindRichStyle(Styles.BaseStyle style, StyleMatcher matcher)
-		{
-			if ((this.rich_styles == null) ||
-				(this.rich_styles.Count == 0))
-			{
-				return null;
-			}
-			
-			foreach (Styles.RichStyle find in this.rich_styles)
-			{
-				if (Styles.BaseStyle.CompareEqual (find, style))
+				if (Styles.SimpleStyle.CompareEqual (find, style))
 				{
 					if ((matcher == null) ||
 						(matcher (find)))
@@ -280,76 +230,42 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		private void Add(Styles.BaseStyle style)
+		
+		private void Add(Styles.SimpleStyle style)
 		{
 			//	Ajoute le style (qui ne doit pas encore être contenu dans la
 			//	liste). Ceci n'affecte nullement le compteur d'utilisations.
 			
-			if (style.IsRichStyle)
+			Debug.Assert.IsTrue (style.StyleIndex == 0);
+			Debug.Assert.IsTrue (style.CountUsers == 0);
+			
+			for (int i = 0; i < styles.Count; i++)
 			{
-				Debug.Assert.IsTrue (style.StyleIndex == 0);
-				Debug.Assert.IsTrue (style.CountUsers == 0);
-				
-				for (int i = 0; i < rich_styles.Count; i++)
+				if (this.styles[i] == null)
 				{
-					if (this.rich_styles[i] == null)
-					{
-						this.rich_styles[i] = style;
-						style.StyleIndex = i+1;
-						return;
-					}
+					this.styles[i] = style;
+					style.StyleIndex = i+1;
+					return;
 				}
-				
-				style.StyleIndex = this.rich_styles.Add (style) + 1;
 			}
-			else
-			{
-				Debug.Assert.IsTrue (style.StyleIndex == 0);
-				Debug.Assert.IsTrue (style.CountUsers == 0);
-				
-				for (int i = 0; i < simple_styles.Count; i++)
-				{
-					if (this.simple_styles[i] == null)
-					{
-						this.simple_styles[i] = style;
-						style.StyleIndex = i+1;
-						return;
-					}
-				}
-				
-				style.StyleIndex = this.simple_styles.Add (style) + 1;
-			}
+			
+			style.StyleIndex = this.styles.Add (style) + 1;
 		}
 		
-		private void Remove(Styles.BaseStyle style)
+		private void Remove(Styles.SimpleStyle style)
 		{
 			//	Supprime le style. Le style doit exister dans la liste.
 			//	Ceci n'affecte nullement le compteur d'utilisations.
 			
-			if (style.IsRichStyle)
-			{
-				Debug.Assert.IsTrue (style.StyleIndex > 0);
-				Debug.Assert.IsTrue (this.rich_styles[style.StyleIndex-1] == style);
-				
-				//	Retire de la liste, sans pour autant réorganiser la liste
-				//	elle-même :
-				
-				this.rich_styles[style.StyleIndex-1] = null;
-				
-				style.StyleIndex = 0;
-			}
-			else
-			{
-				Debug.Assert.IsTrue (style.StyleIndex > 0);
-				Debug.Assert.IsTrue (this.simple_styles[style.StyleIndex-1] == style);
+			Debug.Assert.IsTrue (style.StyleIndex > 0);
+			Debug.Assert.IsTrue (this.styles[style.StyleIndex-1] == style);
 
-				//	Retire de la liste, sans pour autant réorganiser la liste
-				//	elle-même :
-				
-				this.simple_styles[style.StyleIndex-1] = null;
-				
-				style.StyleIndex = 0;
-			}
+			//	Retire de la liste, sans pour autant réorganiser la liste
+			//	elle-même :
+			
+			this.styles[style.StyleIndex-1] = null;
+			
+			style.StyleIndex = 0;
 		}
 		
 		
@@ -378,7 +294,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			
-			public bool FindExactSettings(Styles.BaseStyle style)
+			public bool FindExactSettings(Styles.SimpleStyle style)
 			{
 				this.counter++;
 				
@@ -401,7 +317,7 @@ namespace Epsitec.Common.Text.Internal
 				return true;
 			}
 			
-			public bool FindFreeSettings(Styles.BaseStyle style)
+			public bool FindFreeSettings(Styles.SimpleStyle style)
 			{
 				this.counter++;
 				
@@ -431,9 +347,8 @@ namespace Epsitec.Common.Text.Internal
 		}
 		#endregion
 		
-		public delegate bool StyleMatcher(Styles.BaseStyle style);
+		public delegate bool StyleMatcher(Styles.SimpleStyle style);
 		
-		private System.Collections.ArrayList	simple_styles;
-		private System.Collections.ArrayList	rich_styles;
+		private System.Collections.ArrayList	styles;
 	}
 }

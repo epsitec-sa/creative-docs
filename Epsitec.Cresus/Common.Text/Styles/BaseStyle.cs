@@ -30,11 +30,6 @@ namespace Epsitec.Common.Text.Styles
 			}
 		}
 		
-		public abstract bool					IsRichStyle
-		{
-			get;
-		}
-		
 		public int								CountUsers
 		{
 			get
@@ -348,10 +343,6 @@ namespace Epsitec.Common.Text.Styles
 				return false;
 			}
 			if (a.GetType () != b.GetType ())
-			{
-				return false;
-			}
-			if (a.IsRichStyle != b.IsRichStyle)
 			{
 				return false;
 			}

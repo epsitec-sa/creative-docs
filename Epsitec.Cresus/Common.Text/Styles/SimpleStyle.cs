@@ -19,15 +19,6 @@ namespace Epsitec.Common.Text.Styles
 //		}
 		
 		
-		public override bool					IsRichStyle
-		{
-			get
-			{
-				return false;
-			}
-		}
-		
-		
 		public long 							Version
 		{
 			get
