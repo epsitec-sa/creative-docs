@@ -4,7 +4,7 @@ using Epsitec.Common.Pictogram.Data;
 namespace Epsitec.Common.Pictogram.Widgets
 {
 	/// <summary>
-	/// La classe PanelList permet de choisir une rang dans une liste.
+	/// La classe PanelList permet de choisir un rang dans une liste.
 	/// </summary>
 	public class PanelList : AbstractPanel
 	{
