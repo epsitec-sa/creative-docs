@@ -46,6 +46,7 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		#region Markers Class
 		public class Markers
 		{
 			internal Markers(Internal.CharMarker marker)
@@ -78,6 +79,7 @@ namespace Epsitec.Common.Text
 			public static string				TagSelected					= "Selected";
 			public static string				TagRequiresSpellChecking	= "RequiresSpellChecking";
 		}
+		#endregion
 		
 		private StyleList						style_list;
 		private Internal.CharMarker				char_marker;

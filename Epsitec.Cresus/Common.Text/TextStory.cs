@@ -70,6 +70,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public Context							Context
+		{
+			get
+			{
+				return this.context;
+			}
+		}
+		
 		
 		internal bool							DebugDisableOpletQueue
 		{
@@ -187,6 +195,21 @@ namespace Epsitec.Common.Text
 			this.InternalAddOplet (new TextDeleteOplet (this, position, length, cursors));
 			
 			this.UpdateTextBreakInformation (position, 0);
+		}
+		
+		public void ReadText(ICursor cursor, int length, ulong[] buffer)
+		{
+			this.ReadText (cursor, length, buffer, 0);
+		}
+		
+		public void ReadText(ICursor cursor, int length, ulong[] buffer, int offset)
+		{
+			this.text.ReadText (cursor.CursorId, length, buffer, offset);
+		}
+		
+		public void ChangeMarkers(ICursor cursor, int length, ulong marker, bool set)
+		{
+			this.text.ChangeMarkers (cursor.CursorId, length, marker, set);
 		}
 		
 		
@@ -374,36 +397,60 @@ namespace Epsitec.Common.Text
 			//	Met à jour l'information relative à la coupure des lignes autour
 			//	du passage modifié.
 			
-			int pos_begin = System.Math.Max (0, position - 20);
-			int pos_end   = System.Math.Min (position + length + 20, this.text_length);
+			int area_begin = System.Math.Max (0, position - 20);
+			int area_end   = System.Math.Min (position + length + 20, this.text_length);
 			
-			if (pos_end > pos_begin)
+			if (area_end > area_begin)
 			{
-				ulong[] text = new ulong[pos_end - pos_begin];
+				ulong[] text = new ulong[area_end - area_begin];
 				
-				this.text.SetCursorPosition (this.temp_cursor.CursorId, pos_begin);
-				this.text.ReadText (this.temp_cursor.CursorId, pos_end - pos_begin, text);
+				this.text.SetCursorPosition (this.temp_cursor.CursorId, area_begin);
+				this.text.ReadText (this.temp_cursor.CursorId, area_end - area_begin, text);
 				
 				//	S'il y a des sauts de lignes "forcés" dans le texte avant et
 				//	après le passage modifié, on recadre la fenêtre :
 				
-				int from_pos = pos_begin;
-				int to_pos   = pos_end;
+				int from_pos = area_begin;
+				int to_pos   = area_end;
 				
-				for (int i = position - 1; i >= pos_begin; i--)
+				for (int i = position - 1; i >= area_begin; i--)
 				{
-					if (Unicode.Bits.GetBreakInfo (text[i - pos_begin]) == Unicode.BreakInfo.Yes)
+					if (Unicode.Bits.GetBreakInfo (text[i - area_begin]) == Unicode.BreakInfo.Yes)
 					{
 						from_pos = i + 1;
 						break;
 					}
 				}
 				
-				for (int i = position + length; i < pos_end; i++)
+				for (int i = position + length; i < area_end; i++)
 				{
-					if (Unicode.Bits.GetBreakInfo (text[i - pos_begin]) == Unicode.BreakInfo.Yes)
+					if (Unicode.Bits.GetBreakInfo (text[i - area_begin]) == Unicode.BreakInfo.Yes)
 					{
 						to_pos = i;
+						break;
+					}
+				}
+				
+				//	Cherche les frontières de mots les plus proches, avant/après le
+				//	passage considéré :
+				
+				int word_begin = from_pos;
+				int word_end   = to_pos;
+				
+				for (int i = position - 1; i >= from_pos; i--)
+				{
+					if (Unicode.Bits.GetBreakInfo (text[i - area_begin]) == Unicode.BreakInfo.Optional)
+					{
+						word_begin = i + 1;
+						break;
+					}
+				}
+				
+				for (int i = position + length; i < to_pos; i++)
+				{
+					if (Unicode.Bits.GetBreakInfo (text[i - area_begin]) == Unicode.BreakInfo.Optional)
+					{
+						word_end = i;
 						break;
 					}
 				}
@@ -411,20 +458,19 @@ namespace Epsitec.Common.Text
 				Debug.Assert.IsTrue (from_pos <= position);
 				Debug.Assert.IsTrue (to_pos >= position + length);
 				
+				Debug.Assert.IsTrue (word_begin >= from_pos);
+				Debug.Assert.IsTrue (word_end <= to_pos);
+				
 				//	Demande une analyse du passage considéré et recopie les
 				//	informations dans le texte lui-même :
 				
 				Unicode.BreakInfo[] breaks = new Unicode.BreakInfo[to_pos - from_pos];
-				Unicode.DefaultBreakAnalyzer.GenerateBreaks (text, from_pos - pos_begin, to_pos - from_pos, breaks);
+				Unicode.DefaultBreakAnalyzer.GenerateBreaks (text, from_pos - area_begin, to_pos - from_pos, breaks);
+				Unicode.Bits.SetBreakInfo (text, from_pos - area_begin, breaks);
 				
-				for (int i = from_pos; i < to_pos; i++)
-				{
-					Unicode.Bits.SetBreakInfo (ref text[i-pos_begin], breaks[i-from_pos]);
-				}
+				Internal.CharMarker.SetMarkers (this.context.Marker.RequiresSpellChecking, text, word_begin - area_begin, word_end - word_begin);
 				
-				//	Il faut encore mettre à jour le texte original :
-				
-				this.text.WriteText (this.temp_cursor.CursorId, pos_end - pos_begin, text);
+				this.text.WriteText (this.temp_cursor.CursorId, area_end - area_begin, text);
 			}
 		}
 		
@@ -593,10 +639,11 @@ namespace Epsitec.Common.Text
 				int undo_end   = undo_start + this.story.undo_length;
 				
 				this.story.InternalMoveText (this.position, undo_end - this.length, this.length);
-				this.story.UpdateTextBreakInformation (this.position, 0);
 				
 				this.story.text_length -= this.length;
 				this.story.undo_length += this.length;
+				
+				this.story.UpdateTextBreakInformation (this.position, 0);
 				
 				return this;
 			}
@@ -607,11 +654,11 @@ namespace Epsitec.Common.Text
 				int undo_end   = undo_start + this.story.undo_length;
 				
 				this.story.InternalMoveText (undo_end - this.length, this.position, this.length);
-				this.story.UpdateTextBreakInformation (this.position, this.length);
 				
 				this.story.text_length += this.length;
 				this.story.undo_length -= this.length;
 				
+				this.story.UpdateTextBreakInformation (this.position, this.length);
 				this.story.InternalRestoreCursorPositions (this.cursors, 0);
 				
 				this.cursors = null;
@@ -673,11 +720,11 @@ namespace Epsitec.Common.Text
 				int undo_end   = undo_start + this.story.undo_length;
 				
 				this.story.InternalMoveText (undo_end - this.length, this.position, this.length);
-				this.story.UpdateTextBreakInformation (this.position, this.length);
 				
 				this.story.text_length += this.length;
 				this.story.undo_length -= this.length;
 				
+				this.story.UpdateTextBreakInformation (this.position, this.length);
 				this.story.InternalRestoreCursorPositions (this.cursors, 0);
 				
 				this.cursors = null;
@@ -695,10 +742,11 @@ namespace Epsitec.Common.Text
 				int undo_end   = undo_start + this.story.undo_length;
 				
 				this.story.InternalMoveText (this.position, undo_end - this.length, this.length);
-				this.story.UpdateTextBreakInformation (this.position, 0);
 				
 				this.story.text_length -= this.length;
 				this.story.undo_length += this.length;
+				
+				this.story.UpdateTextBreakInformation (this.position, 0);
 				
 				return this;
 			}

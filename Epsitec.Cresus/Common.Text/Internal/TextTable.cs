@@ -539,6 +539,41 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public int ChangeMarkers(Internal.CursorId cursor_id, int length, ulong marker, bool set)
+		{
+			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
+			
+			int index   = chunk_id - 1;
+			int changed = 0;
+			int pos     = this.text_chunks[index].GetCursorPosition (cursor_id);
+			
+			while (changed < length)
+			{
+				if (pos == this.text_chunks[index].TextLength)
+				{
+					index++;
+					
+					if (index == this.text_chunks.Length)
+					{
+						break;
+					}
+					
+					pos = 0;
+				}
+				else
+				{
+					int count = System.Math.Min (length - changed, this.text_chunks[index].TextLength);
+					
+					this.text_chunks[index].ChangeMarkers (marker, pos, count, set);
+					
+					changed += count;
+					pos     += count;
+				}
+			}
+			
+			return changed;
+		}
+		
 		public int WriteText(Internal.CursorId cursor_id, int length, ulong[] buffer)
 		{
 			return this.WriteText (cursor_id, length, buffer, 0);

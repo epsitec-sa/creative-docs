@@ -86,6 +86,14 @@ namespace Epsitec.Common.Text
 			{
 				value = (value & ~Bits.InfoMask) | (((ulong) info) << Bits.InfoShift);
 			}
+			
+			public static void SetBreakInfo(ulong[] text, int offset, Unicode.BreakInfo[] breaks)
+			{
+				for (int i = 0; i < breaks.Length; i++)
+				{
+					Unicode.Bits.SetBreakInfo (ref text[offset+i], breaks[i]);
+				}
+			}
 		}
 		#endregion
 		

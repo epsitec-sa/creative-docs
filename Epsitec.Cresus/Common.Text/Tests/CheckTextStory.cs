@@ -12,6 +12,7 @@ namespace Epsitec.Common.Text.Tests
 		{
 			CheckTextStory.TestInsertUndoRedo ();
 			CheckTextStory.TestDeleteUndoRedo ();
+			CheckTextStory.TestBreaks ();
 		}
 
 		
@@ -253,6 +254,77 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Trace.WriteLine ("Redone delete DE.");
 			System.Diagnostics.Trace.WriteLine ("  Text: " + story.GetDebugText ());
 			System.Diagnostics.Trace.WriteLine ("  Undo: " + story.GetDebugUndo ());
+		}
+		
+		private static void TestBreaks()
+		{
+			TextStory story = new TextStory ();
+			
+			ICursor cursor = new Cursors.SimpleCursor ();
+			
+			story.NewCursor (cursor);
+			
+			string text_1 = "Hello you world !\n";
+			string text_2 = "wonderful ";
+			
+			ulong[] utf32_text_1;
+			ulong[] utf32_text_2;
+			
+			TextConverter.ConvertFromString (text_1, out utf32_text_1);
+			TextConverter.ConvertFromString (text_2, out utf32_text_2);
+			
+			story.OpletQueue.PurgeUndo ();
+			story.InsertText (cursor, utf32_text_1);
+			
+			ulong[] buffer = new ulong[text_1.Length];
+			
+			story.MoveCursor (cursor, -text_1.Length);
+			story.ReadText (cursor, text_1.Length, buffer);
+			
+			for (int i = 0; i < buffer.Length; i++)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0:00}: {1}, {2}", i, buffer[i].ToString ("X8"), Unicode.Bits.GetBreakInfo (buffer[i])));
+			}
+			
+			story.ChangeMarkers (cursor, text_1.Length, story.Context.Marker.RequiresSpellChecking, false);
+			story.ReadText (cursor, text_1.Length, buffer);
+			
+			for (int i = 0; i < buffer.Length; i++)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0:00}: {1}, {2}", i, buffer[i].ToString ("X8"), Unicode.Bits.GetBreakInfo (buffer[i])));
+			}
+			
+			story.MoveCursor (cursor, 9);
+			story.InsertText (cursor, utf32_text_2);
+			story.MoveCursor (cursor, -9-utf32_text_2.Length);
+			
+			buffer = new ulong[story.TextLength];
+			story.ReadText (cursor, story.TextLength, buffer);
+			
+			for (int i = 0; i < buffer.Length; i++)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0:00}: {1}, {2}", i, buffer[i].ToString ("X8"), Unicode.Bits.GetBreakInfo (buffer[i])));
+			}
+			
+			story.ChangeMarkers (cursor, text_1.Length, story.Context.Marker.RequiresSpellChecking, false);
+			story.ReadText (cursor, text_1.Length, buffer);
+			
+			for (int i = 0; i < buffer.Length; i++)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0:00}: {1}, {2}", i, buffer[i].ToString ("X8"), Unicode.Bits.GetBreakInfo (buffer[i])));
+			}
+			
+			story.OpletQueue.UndoAction ();
+			story.OpletQueue.UndoAction ();
+			story.OpletQueue.UndoAction ();
+			
+			buffer = new ulong[story.TextLength];
+			story.ReadText (cursor, story.TextLength, buffer);
+			
+			for (int i = 0; i < buffer.Length; i++)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0:00}: {1}, {2}", i, buffer[i].ToString ("X8"), Unicode.Bits.GetBreakInfo (buffer[i])));
+			}
 		}
 	}
 }
