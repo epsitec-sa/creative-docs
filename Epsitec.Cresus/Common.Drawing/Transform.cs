@@ -1,4 +1,4 @@
-namespace Epsitec.Common.Grafix
+namespace Epsitec.Common.Drawing
 {
 	/// <summary>
 	/// La classe Transform représente une transformation 2D (matrice 2x2 et vecteur de

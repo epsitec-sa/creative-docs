@@ -12,7 +12,7 @@ namespace Epsitec.Common.Tests
 			try { System.Diagnostics.Debug.WriteLine (""); } catch { }
 		}
 		
-		[Test] [Ignore ("Not implemented yet")] public void TestParentChildRelationship()
+		[Test] public void TestParentChildRelationship()
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
@@ -38,7 +38,7 @@ namespace Epsitec.Common.Tests
 			Assertion.AssertSame (root.Children[0], widget);
 		}
 		
-		[Test] [Ignore ("Not implemented yet")] public void TestAnchor()
+		[Test] public void TestAnchor()
 		{
 			Widget root = new Widget ();
 			Widget widget = new Widget ();
@@ -202,7 +202,7 @@ namespace Epsitec.Common.Tests
 			
 			root.Children.Add (widget);
 			
-			Epsitec.Common.Grafix.Transform transform = new Epsitec.Common.Grafix.Transform ();
+			Epsitec.Common.Drawing.Transform transform = new Epsitec.Common.Drawing.Transform ();
 			
 			float ox = 1.0f;
 			float oy = 2.0f;
@@ -217,7 +217,7 @@ namespace Epsitec.Common.Tests
 			
 			pt2 = widget.MapParentToClient (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
 			transform.Reset ();
 			widget.SetClientZoom (3);
@@ -226,7 +226,7 @@ namespace Epsitec.Common.Tests
 			
 			pt2 = widget.MapParentToClient (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
 			transform.Reset ();
 			widget.SetClientAngle (180);
@@ -234,7 +234,7 @@ namespace Epsitec.Common.Tests
 			
 			pt2 = widget.MapParentToClient (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
 			transform.Reset ();
 			widget.SetClientAngle (270);
@@ -242,7 +242,7 @@ namespace Epsitec.Common.Tests
 			
 			pt2 = widget.MapParentToClient (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 		}
 		
 		[Test] public void TestTransformToParent()
@@ -258,7 +258,7 @@ namespace Epsitec.Common.Tests
 			
 			root.Children.Add (widget);
 			
-			Epsitec.Common.Grafix.Transform transform = new Epsitec.Common.Grafix.Transform ();
+			Epsitec.Common.Drawing.Transform transform = new Epsitec.Common.Drawing.Transform ();
 			
 			float ox = 1.0f;
 			float oy = 2.0f;
@@ -273,7 +273,7 @@ namespace Epsitec.Common.Tests
 			
 			pt2 = widget.MapClientToParent (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
 			transform.Reset ();
 			widget.SetClientZoom (3);
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Tests
 			
 			pt2 = widget.MapClientToParent (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
 			transform.Reset ();
 			widget.SetClientAngle (180);
@@ -290,7 +290,7 @@ namespace Epsitec.Common.Tests
 			
 			pt2 = widget.MapClientToParent (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
 			transform.Reset ();
 			widget.SetClientAngle (270);
@@ -298,7 +298,7 @@ namespace Epsitec.Common.Tests
 			
 			pt2 = widget.MapClientToParent (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Grafix.Transform.Equal (pt2, pt3));
+			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 		}
 		
 		[Test] public void TestTransformParentClientIdentity()
@@ -314,8 +314,8 @@ namespace Epsitec.Common.Tests
 			
 			root.Children.Add (widget);
 			
-			Epsitec.Common.Grafix.Transform identity  = new Epsitec.Common.Grafix.Transform ();
-			Epsitec.Common.Grafix.Transform transform = new Epsitec.Common.Grafix.Transform ();
+			Epsitec.Common.Drawing.Transform identity  = new Epsitec.Common.Drawing.Transform ();
+			Epsitec.Common.Drawing.Transform transform = new Epsitec.Common.Drawing.Transform ();
 			
 			widget.SetClientZoom (3);
 			widget.SetClientAngle (90);
@@ -348,13 +348,13 @@ namespace Epsitec.Common.Tests
 			widget.SetClientZoom (3);
 			widget.SetClientAngle (90);
 			
-			Epsitec.Common.Grafix.Transform t1 = widget.GetRootToClientTransform ();
-			Epsitec.Common.Grafix.Transform t2 = widget.GetClientToRootTransform ();
+			Epsitec.Common.Drawing.Transform t1 = widget.GetRootToClientTransform ();
+			Epsitec.Common.Drawing.Transform t2 = widget.GetClientToRootTransform ();
 			
 			System.Console.Out.WriteLine ("root -> client : " + t1.ToString ());
 			System.Console.Out.WriteLine ("client -> root : " + t2.ToString ());
 			
-			Assertion.Assert (Epsitec.Common.Grafix.Transform.Multiply (t1, t2).Equals (new Epsitec.Common.Grafix.Transform ()));
+			Assertion.Assert (Epsitec.Common.Drawing.Transform.Multiply (t1, t2).Equals (new Epsitec.Common.Drawing.Transform ()));
 		}
 	}
 }

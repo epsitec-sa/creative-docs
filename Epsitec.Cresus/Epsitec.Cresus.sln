@@ -24,7 +24,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Tests", "Common.Test
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Grafix", "Common.Grafix\Common.Grafix.csproj", "{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Drawing", "Common.Drawing\Common.Drawing.csproj", "{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -58,10 +58,10 @@ Global
 		SccLocalPath6 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection6 = Common.Widgets\\
-		SccProjectUniqueName7 = Common.Grafix\\Common.Grafix.csproj
+		SccProjectUniqueName7 = Common.Drawing\\Common.Drawing.csproj
 		SccLocalPath7 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection7 = Common.Grafix\\
+		SccProjectFilePathRelativizedFromConnection7 = Common.Drawing\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug

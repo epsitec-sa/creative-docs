@@ -13,7 +13,7 @@
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "Grafix"
+                AssemblyName = "Drawing"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -22,7 +22,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "Epsitec.Common.Grafix"
+                RootNamespace = "Epsitec.Common.Drawing"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >

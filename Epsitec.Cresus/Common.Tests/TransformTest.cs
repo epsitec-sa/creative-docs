@@ -1,6 +1,6 @@
 using System;
 using NUnit.Framework;
-using Epsitec.Common.Grafix;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Tests
 {

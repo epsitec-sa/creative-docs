@@ -448,12 +448,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual Epsitec.Common.Grafix.Transform GetRootToClientTransform()
+		public virtual Epsitec.Common.Drawing.Transform GetRootToClientTransform()
 		{
 			Widget iter = this;
 			
-			Epsitec.Common.Grafix.Transform full_transform  = new Epsitec.Common.Grafix.Transform ();
-			Epsitec.Common.Grafix.Transform local_transform = new Epsitec.Common.Grafix.Transform ();
+			Epsitec.Common.Drawing.Transform full_transform  = new Epsitec.Common.Drawing.Transform ();
+			Epsitec.Common.Drawing.Transform local_transform = new Epsitec.Common.Drawing.Transform ();
 			
 			while (iter != null)
 			{
@@ -476,12 +476,12 @@ namespace Epsitec.Common.Widgets
 			return full_transform;
 		}
 		
-		public virtual Epsitec.Common.Grafix.Transform GetClientToRootTransform()
+		public virtual Epsitec.Common.Drawing.Transform GetClientToRootTransform()
 		{
 			Widget iter = this;
 			
-			Epsitec.Common.Grafix.Transform full_transform  = new Epsitec.Common.Grafix.Transform ();
-			Epsitec.Common.Grafix.Transform local_transform = new Epsitec.Common.Grafix.Transform ();
+			Epsitec.Common.Drawing.Transform full_transform  = new Epsitec.Common.Drawing.Transform ();
+			Epsitec.Common.Drawing.Transform local_transform = new Epsitec.Common.Drawing.Transform ();
 			
 			while (iter != null)
 			{
@@ -505,7 +505,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual void MergeTransformToClient(Epsitec.Common.Grafix.Transform t)
+		public virtual void MergeTransformToClient(Epsitec.Common.Drawing.Transform t)
 		{
 			float scale = 1 / this.client_info.zoom;
 			
@@ -517,7 +517,7 @@ namespace Epsitec.Common.Widgets
 			t.Round ();
 		}
 		
-		public virtual void MergeTransformToParent(Epsitec.Common.Grafix.Transform t)
+		public virtual void MergeTransformToParent(Epsitec.Common.Drawing.Transform t)
 		{
 			float scale = this.client_info.zoom;
 			
@@ -613,6 +613,7 @@ namespace Epsitec.Common.Widgets
 							break;
 						case AnchorStyles.Right:						//	[x2] fixe à droite
 							x1 += width_diff;
+							x2 += width_diff;
 							break;
 						case AnchorStyles.None:							//	[x1] et [x2] mobiles (centré)
 							x1 += width_diff / 2.0f;
@@ -629,6 +630,7 @@ namespace Epsitec.Common.Widgets
 							break;
 						case AnchorStyles.Bottom:						//	[y2] fixe en bas
 							y1 += height_diff;
+							y2 += height_diff;
 							break;
 						case AnchorStyles.None:							//	[y1] et [y2] mobiles (centré)
 							y1 += height_diff / 2.0f;
@@ -648,7 +650,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual WidgetCollection CreateWidgetCollection()
 		{
-			return new WidgetCollection ();
+			return new WidgetCollection (this);
 		}
 		
 		
@@ -736,75 +738,113 @@ namespace Epsitec.Common.Widgets
 		
 		public class WidgetCollection : System.Collections.IList
 		{
+			public WidgetCollection(Widget widget)
+			{
+				this.list   = new System.Collections.ArrayList ();
+				this.widget = widget;
+			}
+			
+			
+			private void PreInsert(object widget)
+			{
+				if (widget is Widget)
+				{
+					this.PreInsert (widget as Widget);
+				}
+				else
+				{
+					throw new System.ArgumentException ("Widget");
+				}
+			}
+			
+			private void PreInsert(Widget widget)
+			{
+				if (widget.parent != null)
+				{
+					Widget parent = widget.parent;
+					parent.Children.Remove (widget);
+					System.Diagnostics.Debug.Assert (widget.parent == null);
+				}
+				widget.parent = this.widget;
+			}
+			
+			private void PreRemove(object widget)
+			{
+				if (widget is Widget)
+				{
+					this.PreRemove (widget as Widget);
+				}
+				else
+				{
+					throw new System.ArgumentException ("Widget");
+				}
+			}
+			
+			private void PreRemove(Widget widget)
+			{
+				System.Diagnostics.Debug.Assert (widget.parent == this.widget);
+				widget.parent = null;
+			}
+			
+			
 			#region IList Members
-
+			
 			public bool IsReadOnly
 			{
-				get
-				{
-					// TODO:  Add WidgetCollection.IsReadOnly getter implementation
-					return false;
-				}
+				get	{ return false; }
 			}
-
+			
 			public object this[int index]
 			{
-				get
-				{
-					// TODO:  Add WidgetCollection.this getter implementation
-					return null;
-				}
-				set
-				{
-					// TODO:  Add WidgetCollection.this setter implementation
-				}
+				get	{ return this.list[index]; }
+				set	{ throw new System.NotSupportedException ("Widget"); }
 			}
-
+			
 			public void RemoveAt(int index)
 			{
-				// TODO:  Add WidgetCollection.RemoveAt implementation
+				System.Diagnostics.Debug.Assert (this.list[index] != null);
+				this.PreRemove (this.list[index]);
+				this.list.RemoveAt (index);
 			}
-
+			
 			public void Insert(int index, object value)
 			{
-				// TODO:  Add WidgetCollection.Insert implementation
+				throw new System.NotSupportedException ("Widget");
 			}
-
+			
 			public void Remove(object value)
 			{
-				// TODO:  Add WidgetCollection.Remove implementation
+				this.PreRemove (value);
+				this.list.Remove (value);
 			}
-
+			
 			public bool Contains(object value)
 			{
-				// TODO:  Add WidgetCollection.Contains implementation
-				return false;
+				return this.list.Contains (value);
 			}
-
+			
 			public void Clear()
 			{
-				// TODO:  Add WidgetCollection.Clear implementation
+				while (this.Count > 0)
+				{
+					this.RemoveAt (this.Count - 1);
+				}
 			}
-
+			
 			public int IndexOf(object value)
 			{
-				// TODO:  Add WidgetCollection.IndexOf implementation
-				return 0;
+				return this.list.IndexOf (value);
 			}
-
+			
 			public int Add(object value)
 			{
-				// TODO:  Add WidgetCollection.Add implementation
-				return 0;
+				this.PreInsert (value);
+				return this.list.Add (value);
 			}
-
+			
 			public bool IsFixedSize
 			{
-				get
-				{
-					// TODO:  Add WidgetCollection.IsFixedSize getter implementation
-					return false;
-				}
+				get	{ return false; }
 			}
 
 			#endregion
@@ -813,34 +853,22 @@ namespace Epsitec.Common.Widgets
 
 			public bool IsSynchronized
 			{
-				get
-				{
-					// TODO:  Add WidgetCollection.IsSynchronized getter implementation
-					return false;
-				}
+				get { return false; }
 			}
-
+			
 			public int Count
 			{
-				get
-				{
-					// TODO:  Add WidgetCollection.Count getter implementation
-					return 0;
-				}
+				get	{ return this.list.Count; }
 			}
 
 			public void CopyTo(System.Array array, int index)
 			{
-				// TODO:  Add WidgetCollection.CopyTo implementation
+				this.list.CopyTo (array, index);
 			}
-
+			
 			public object SyncRoot
 			{
-				get
-				{
-					// TODO:  Add WidgetCollection.SyncRoot getter implementation
-					return null;
-				}
+				get { return this.list.SyncRoot; }
 			}
 
 			#endregion
@@ -849,11 +877,13 @@ namespace Epsitec.Common.Widgets
 
 			public System.Collections.IEnumerator GetEnumerator()
 			{
-				// TODO:  Add WidgetCollection.GetEnumerator implementation
-				return null;
+				return this.list.GetEnumerator ();
 			}
-
+			
 			#endregion
+			
+			System.Collections.ArrayList	list;
+			Widget							widget;
 		}
 		
 		
