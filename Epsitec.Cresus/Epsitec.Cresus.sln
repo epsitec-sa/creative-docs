@@ -159,6 +159,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.DynamicData", "Commo
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.DynamicData.Tests", "Common.DynamicData.Tests\Common.DynamicData.Tests.csproj", "{393668A9-1463-42B9-83FA-422FDA860F4E}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -323,6 +327,10 @@ Global
 		{380B6C79-26C5-4274-8F40-BA21DEE4354F}.Debug.Build.0 = Debug|.NET
 		{380B6C79-26C5-4274-8F40-BA21DEE4354F}.Release.ActiveCfg = Release|.NET
 		{380B6C79-26C5-4274-8F40-BA21DEE4354F}.Release.Build.0 = Release|.NET
+		{393668A9-1463-42B9-83FA-422FDA860F4E}.Debug.ActiveCfg = Debug|.NET
+		{393668A9-1463-42B9-83FA-422FDA860F4E}.Debug.Build.0 = Debug|.NET
+		{393668A9-1463-42B9-83FA-422FDA860F4E}.Release.ActiveCfg = Release|.NET
+		{393668A9-1463-42B9-83FA-422FDA860F4E}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info
