@@ -7,6 +7,14 @@ namespace Epsitec.Cresus.Database
 	{
 		[Test] public void CheckFindDbAbstractionAndOpenClose()
 		{
+			//	Détruit le fichier de test, pour contrôler la création
+			//	et pour avoir un fichier vide pour les tests
+			try
+			{
+				System.IO.File.Delete (@"C:\Program Files\firebird15\Data\Epsitec\TEST.FIREBIRD");
+			}
+			catch {}
+
 			IDbAbstraction db_abstraction = DbFactoryTest.CreateDbAbstraction (true);
 			
 			Assertion.AssertNotNull ("Could not instanciate Firebird abstraction", db_abstraction);
@@ -152,10 +160,8 @@ namespace Epsitec.Cresus.Database
 			{
 				db_abstraction = DbFactory.FindDbAbstraction (db_access);
 			}
-			catch (DbExistsException ex)
+			catch (DbExistsException)
 			{
-				Assertion.AssertNotNull (ex);
-				
 				//	OK: la base existait déjà... on ne peut pas la créer !
 				
 				db_access.Create = false;

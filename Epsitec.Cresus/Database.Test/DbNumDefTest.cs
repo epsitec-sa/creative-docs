@@ -50,7 +50,29 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (4, def.DigitPrecision);
 			Assertion.AssertEquals (3, def.DigitShift);
 		}
-		
+
+		[Test] public void CheckInvalidCase()
+		{
+			DbNumDef def = new DbNumDef (1,0);
+			
+			def.MinValue = -1;
+			def.MaxValue = 99;
+			
+			Assertion.AssertEquals (true, def.IsDigitDefined);
+			Assertion.AssertEquals (true, def.IsMinMaxDefined);
+			Assertion.AssertEquals (1, def.DigitPrecision);
+			Assertion.AssertEquals (0, def.DigitShift);
+			Assertion.AssertEquals (false, def.IsValid);
+		}
+
+		[Test] [ExpectedException (typeof (System.OverflowException))] public void CheckOverflowMax()
+		{
+			DbNumDef def = new DbNumDef ();
+			def.MaxValue = 1000000000000000000000000.0M;
+			// génère une exception
+			// une autre approche serait de rendre def.IsValid comme étant "false" ?
+		}		
+
 		[Test] public void CheckMinimumBitsInt()
 		{
 			DbNumDef def = new DbNumDef (3, 0);

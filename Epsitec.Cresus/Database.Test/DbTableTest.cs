@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Database
 			
 			SqlTable sql_table = db_table.CreateSqlTable (type_converter);
 			
-			//	exception: colonne b est nullable
+			//	exception: colonne A est nullable
 		}
 		
 		[Test] [ExpectedException (typeof (DbSyntaxException))] public void CheckCreateSqlTableEx3()

@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 		
-		public static string DirectoryPathOnly(string filename)
+		public string DirectoryPathOnly(string filename)
 		{
 			//	Retourne le nom du dossier en enlevant le nom du fichier
 
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			FirebirdAbstraction.ValidateName (db_access, db_access.Server);
 			
 			//	L'appel FbConnection.CreateDatabase ne sait pas créer le dossier si nécessaire
-			string filename = this.CreateDbFileName (db_access);
+			stringfilename = this.CreateDbFileName (db_access);
 			System.IO.Directory.CreateDirectory (FirebirdAbstraction.DirectoryPathOnly (filename));
 
 			FbConnection.CreateDatabase (db_access.Server,

@@ -47,9 +47,16 @@ namespace Epsitec.Cresus.Database
 			//	TODO: à faire
 		}
 		
-		[Test] [Ignore ("Not implemented")] public void CheckSplitQualifiedName()
+		[Test] public void CheckSplitQualifiedName()
 		{
-			//	TODO: à faire
+			string	qualifier, name;
+			DbSqlStandard.SplitQualifiedName("ABC.12", out qualifier, out name);
+			Assertion.AssertEquals ("ABC", qualifier);
+			Assertion.AssertEquals ("12", name);
+
+			DbSqlStandard.SplitQualifiedName("\"ABC.XY\".12", out qualifier, out name);
+			Assertion.AssertEquals ("\"ABC.XY\"", qualifier);
+			Assertion.AssertEquals (@"12", name);
 		}
 	}
 }

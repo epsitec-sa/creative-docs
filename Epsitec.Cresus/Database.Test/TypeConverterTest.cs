@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Database
 			object obj;
 			object res;
 			
-			def = new DbNumDef (5, 3, 0.000M, 20.000M);
+			def = new DbNumDef (5, 3, 10.000M, 20.000M);
 			val = def.ConvertToInt64 (12.345M);
 			obj = TypeConverter.ConvertToSimpleType (val, DbSimpleType.Decimal, def);
 			

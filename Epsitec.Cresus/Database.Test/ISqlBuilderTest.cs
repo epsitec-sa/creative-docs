@@ -118,6 +118,103 @@ namespace Epsitec.Cresus.Database
 			command.Dispose ();
 		}
 		
+		[Test] public void CheckInsertTableColumns()
+		{
+			// doit être fait après CheckInsertTable
+			// et avant CheckRemoveTable
+			// pour que la table existe déjà
+
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
+			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
+			ISqlEngine		sql_engine     = db_abstraction.SqlEngine;
+	
+			SqlColumn sql_col_1 = new SqlColumn ("Cr_ID2", DbRawType.Int32);
+			SqlColumn sql_col_2 = new SqlColumn ("Cr_REV2", DbRawType.Int32);
+			SqlColumn sql_col_3 = new SqlColumn ("StringDynamic2", DbRawType.String, 100, true, Nullable.Yes);
+			SqlColumn sql_col_4 = new SqlColumn ("StringFixed2",   DbRawType.String,  50, false, Nullable.Yes);
+			
+			SqlColumn[] columns = { sql_col_1, sql_col_2, sql_col_3, sql_col_4 };
+			sql_builder.InsertTableColumns ("FbTestTable", columns);
+			
+			System.Data.IDbCommand command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			command.Transaction = db_abstraction.BeginTransaction ();
+			sql_engine.Execute(command, sql_builder.CommandType);
+
+			command.Transaction.Commit ();
+			command.Transaction.Dispose ();
+			command.Dispose ();
+		}
+
+		[Test] public void CheckRemoveTableColumns()
+		{
+			// doit être fait après CheckInsertTable et après CheckInsertTableColumns
+			// et avant CheckRemoveTable
+			// pour que la table existe déjà
+
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
+			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
+			ISqlEngine		sql_engine     = db_abstraction.SqlEngine;
+	
+			SqlColumn sql_col_1 = new SqlColumn ("Cr_ID2", DbRawType.Int32);
+			SqlColumn sql_col_2 = new SqlColumn ("Cr_REV2", DbRawType.Int32);
+			SqlColumn sql_col_3 = new SqlColumn ("StringDynamic", DbRawType.String, 100, true, Nullable.Yes);
+			SqlColumn sql_col_4 = new SqlColumn ("StringFixed",   DbRawType.String,  50, false, Nullable.Yes);
+			
+			SqlColumn[] columns = { sql_col_1, sql_col_2, sql_col_3, sql_col_4 };
+			sql_builder.RemoveTableColumns ("FbTestTable", columns);
+			
+			System.Data.IDbCommand command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			command.Transaction = db_abstraction.BeginTransaction ();
+			sql_engine.Execute(command, sql_builder.CommandType);
+
+			command.Transaction.Commit ();
+			command.Transaction.Dispose ();
+			command.Dispose ();
+		}
+
+		
+		[Test] public void CheckInsertData()
+		{
+			// doit être fait après CheckRemoveTableColumns
+			// pour que la table existe dans le bon état
+
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
+			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
+			ISqlEngine		sql_engine     = db_abstraction.SqlEngine;
+
+			SqlFieldCollection fields = new SqlFieldCollection ();
+
+			SqlField field;
+			
+			field = SqlField.CreateConstant (123, DbRawType.Int32);
+			field.Alias = "Cr_ID";
+			fields.Add (field);
+			
+			field = SqlField.CreateConstant (456, DbRawType.Int32);
+			field.Alias = "Cr_REV";
+			fields.Add (field);
+			
+			field = SqlField.CreateConstant ("Test © Copyright 2003", DbRawType.String);
+			field.Alias = "StringDynamic";
+			fields.Add (field);
+			
+			sql_builder.InsertData("FbTestTable", fields);
+			
+			System.Data.IDbCommand command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			command.Transaction = db_abstraction.BeginTransaction ();
+			sql_engine.Execute(command, sql_builder.CommandType);
+			
+			command.Transaction.Commit ();
+			command.Transaction.Dispose ();
+			command.Dispose ();
+		}
+
 		[Test] public void CheckRemoveTable()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);

@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				
 				this.buffer.Append ("ALTER TABLE ");
 				this.buffer.Append (table_name);
-				this.buffer.Append (" ADD COLUMN ");
+				this.buffer.Append (" ADD ");	//	not 	this.buffer.Append (" ADD COLUMN ");
 				this.buffer.Append (column.Name);
 				this.buffer.Append (" ");
 				this.buffer.Append (this.GetSqlType (column));
@@ -382,7 +382,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				
 				this.buffer.Append ("ALTER TABLE ");
 				this.buffer.Append (table_name);
-				this.buffer.Append (" DROP COLUMN ");
+				this.buffer.Append (" DROP ");		// not this.buffer.Append (" DROP COLUMN ");
 				this.buffer.Append (column.Name);
 				this.buffer.Append (";\n");
 			}
