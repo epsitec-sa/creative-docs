@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public CheckButton()
 		{
-			this.internalState |= InternalState.AutoToggle;
+			this.InternalState |= InternalState.AutoToggle;
 		}
 		
 		public CheckButton(Widget embedder) : this()
