@@ -3863,11 +3863,26 @@ namespace Epsitec.Common.Widgets
 				
 				for (int i = 0; i < siblings.Length; i++)
 				{
-					if (((siblings[i].TabNavigation & mode) != 0) &&
-						(siblings[i].IsEnabled) &&
-						(siblings[i].IsVisibleFlagSet))
+					Widget sibling = siblings[i];
+					
+					if (((sibling.TabNavigation & mode) != 0) &&
+						(sibling.IsEnabled) &&
+						(sibling.IsVisibleFlagSet))
 					{
-						list.Add (siblings[i]);
+						if (sibling is Types.IReadOnly)
+						{
+							//	Saute aussi les widgets qui déclarent être en lecture seule. Ils ne
+							//	sont pas intéressants pour une navigation clavier :
+							
+							Types.IReadOnly read_only = sibling as Types.IReadOnly;
+							
+							if (read_only.IsReadOnly)
+							{
+								continue;
+							}
+						}
+						
+						list.Add (sibling);
 					}
 				}
 			}

@@ -34,13 +34,15 @@ namespace Epsitec.Common.Widgets
 			this.MouseCursor = MouseCursor.AsIBeam;
 			
 			this.CreateTextLayout();
+			this.TextLayout.BreakMode |= Drawing.TextBreakMode.SingleLine;
+			
 			this.navigator = new TextNavigator(this.TextLayout);
 			this.navigator.TextDeleted += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextDeleted);
 			this.navigator.TextInserted += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextInserted);
 			this.navigator.CursorScrolled += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorScrolled);
 			this.navigator.CursorChanged += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorChanged);
 			this.textFieldStyle = TextFieldStyle.Normal;
-
+			
 			this.copyPasteBehavior = new Helpers.CopyPasteBehavior(this);
 			this.OnCursorChanged(true);
 		}

@@ -48,6 +48,7 @@ namespace Epsitec.Common.Designer.Panels
 			double dy = parent.Client.Height;
 			
 			this.edit_array = new EditArray (parent);
+			this.lang_combo = new TextFieldCombo ();
 			
 			EditArray.Header     title = new EditArray.Header (this.edit_array);
 			EditArray.Controller ctrl  = new EditArray.Controller (this.edit_array, "Table");
@@ -72,6 +73,12 @@ namespace Epsitec.Common.Designer.Panels
 			this.edit_array.SelectedIndexChanged += new EventHandler(this.HandleEditArraySelectedIndexChanged);
 			this.edit_array.DoubleClicked        += new MessageEventHandler (this.HandleEditArrayDoubleClicked);
 			this.edit_array.TabIndex = 0;
+			this.edit_array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			this.lang_combo.Width = 80;
+			this.lang_combo.Dock  = this.edit_array.ArrayToolBar.OppositeIconDockStyle;
+			
+			this.edit_array.ArrayToolBar.Items.Add (this.lang_combo);
 			
 			StaticText     text_label = new StaticText (parent);
 			TextFieldMulti text_field = new TextFieldMulti (parent);
@@ -94,8 +101,6 @@ namespace Epsitec.Common.Designer.Panels
 			ctrl.CreateCommands ();
 			ctrl.CreateToolBarButtons ();
 			ctrl.StartReadOnly ();
-			
-			this.edit_array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
 			this.comment = text_field;
 			this.comment.TextChanged += new EventHandler (this.HandleCommentTextChanged);
@@ -151,6 +156,7 @@ namespace Epsitec.Common.Designer.Panels
 		
 		
 		protected EditArray						edit_array;
+		protected TextFieldCombo				lang_combo;
 		protected AbstractTextField				comment;
 		protected Support.Data.ITextArrayStore	store;
 		protected ResourceBundle				bundle;

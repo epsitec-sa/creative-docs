@@ -569,6 +569,25 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
+			protected Widget FindEditWidget(int column, int dir)
+			{
+				if ((column < 0) ||
+					(column >= this.edit_widgets.Length))
+				{
+					return null;
+				}
+				
+				column = this.host.FindFirstReadWriteColumn (column, dir);
+				
+				if ((column > -1) &&
+					(column < this.edit_widgets.Length))
+				{
+					return this.edit_widgets[column];
+				}
+				
+				return null;
+			}
+			
 			protected override void Dispose(bool disposing)
 			{
 				if (disposing)
@@ -600,24 +619,18 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					int move = 0;
+					int move  =  0;
+					int start = -1;
 					
 					switch (dir)
 					{
-						case TabNavigationDir.Forwards:  move =  1; break;
-						case TabNavigationDir.Backwards: move = -1; break;
+						case TabNavigationDir.Forwards:  move =  1; start = 0;                          break;
+						case TabNavigationDir.Backwards: move = -1; start = this.edit_widgets.Length-1; break;
 					}
 					
 					if (this.host.MoveEditionToLine (move))
 					{
-						if (move > 0)
-						{
-							focus = this.edit_widgets[0];
-						}
-						else
-						{
-							focus = this.edit_widgets[this.edit_widgets.Length-1];
-						}
+						focus = this.FindEditWidget (start, move);
 					}
 					else
 					{
@@ -634,7 +647,7 @@ namespace Epsitec.Common.Widgets
 							this.host.TextArrayStore.InsertRows (this.host.RowCount, 1);
 							this.host.MoveEditionToLine (move);
 							
-							focus = this.edit_widgets[0];
+							focus = this.FindEditWidget (0, 1);
 						}
 						else
 						{
@@ -1189,6 +1202,8 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				this.host.SelectedIndex = row;
+				
+				column = this.host.FindFirstReadWriteColumn (column, 1);
 				
 				switch (mode)
 				{
