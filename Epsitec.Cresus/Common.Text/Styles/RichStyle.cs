@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text.Styles
 	/// <summary>
 	/// Summary description for RichStyle.
 	/// </summary>
-	public class RichStyle : BaseStyle
+	internal sealed class RichStyle : BaseStyle
 	{
 		public RichStyle()
 		{

@@ -7,7 +7,7 @@ namespace Epsitec.Common.Text.Styles
 	/// La classe BaseSettings sert de base pour les réglages, en particulier
 	/// LocalSettings et ExtraSettings.
 	/// </summary>
-	public abstract class BaseSettings : IContentsSignature
+	internal abstract class BaseSettings : IContentsSignature
 	{
 		protected BaseSettings()
 		{
@@ -36,15 +36,15 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		internal void IncrementUserCount()
+		public void IncrementUserCount()
 		{
-			Debug.Assert.IsInBounds (this.user_count+1, 1, 1000000-1);
+			Debug.Assert.IsInBounds (this.user_count+1, 1, BaseStyle.MaxUserCount-1);
 			this.user_count++;
 		}
 		
-		internal void DecrementUserCount()
+		public void DecrementUserCount()
 		{
-			Debug.Assert.IsInBounds (this.user_count, 1, 1000000-1);
+			Debug.Assert.IsInBounds (this.user_count, 1, BaseStyle.MaxUserCount-1);
 			this.user_count--;
 		}
 		

@@ -4,11 +4,11 @@
 namespace Epsitec.Common.Text.Styles
 {
 	/// <summary>
-	/// Summary description for FontStyle.
+	/// Summary description for SimpleStyle.
 	/// </summary>
-	public class FontStyle : BaseStyle
+	internal sealed class SimpleStyle : BaseStyle
 	{
-		public FontStyle()
+		public SimpleStyle()
 		{
 		}
 		

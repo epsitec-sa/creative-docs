@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text.Styles
 	/// <summary>
 	/// Summary description for LocalSettings.
 	/// </summary>
-	public class LocalSettings : BaseSettings
+	internal sealed class LocalSettings : BaseSettings
 	{
 		public LocalSettings()
 		{
