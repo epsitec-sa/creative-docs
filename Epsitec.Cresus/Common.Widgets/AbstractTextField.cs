@@ -23,7 +23,7 @@ namespace Epsitec.Common.Widgets
 	{
 		static AbstractTextField()
 		{
-			TextField.flashTimer.TimeElapsed += new EventHandler(TextField.HandleFlashTimer);
+			TextField.flashTimer.TimeElapsed += new Support.EventHandler(TextField.HandleFlashTimer);
 		}
 		
 		
@@ -936,8 +936,8 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public event EventHandler TextInserted;
-		public event EventHandler TextDeleted;
+		public event Support.EventHandler TextInserted;
+		public event Support.EventHandler TextDeleted;
 		
 		
 		internal static readonly double			TextMargin = 2;
