@@ -300,12 +300,12 @@ namespace Epsitec.Common.Widgets
 				case KeyCode.PageUp:	sel -= this.FullyVisibleRowCount-1;	break;
 				case KeyCode.PageDown:	sel += this.FullyVisibleRowCount-1;	break;
 				
-				case KeyCode.Return:
-				case KeyCode.Space:
-					this.OnSelectionActivated();
-					return true;
-				
 				default:
+					if (Feel.Factory.Active.TestSelectItemKey (message))
+					{
+						this.OnSelectionActivated();
+						return true;
+					}
 					return false;
 			}
 			
