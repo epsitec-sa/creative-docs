@@ -44,17 +44,17 @@ namespace Epsitec.Common.Designer.Panels
 			
 			parent.SuspendLayout ();
 			
-			this.title = new StaticText (parent);
-			this.panel = new ScrollablePanel (parent);
-			this.book  = new TabBook (this.panel);
+			this.title   = new StaticText (parent);
+			this.surface = new Scrollable (parent);
+			this.book    = new TabBook (this.surface);
 			
 			this.title.Height    = 50;
 			this.title.Dock      = DockStyle.Top;
 			this.title.Text      = "<br/>";
 			this.title.Alignment = Drawing.ContentAlignment.MiddleCenter;
 			
-			this.panel.Dock = DockStyle.Fill;
-			this.book.Dock  = DockStyle.Fill;
+			this.surface.Dock = DockStyle.Fill;
+			this.book.Dock    = DockStyle.Fill;
 			
 			this.RebindContents ();
 			
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Designer.Panels
 		
 		
 		protected StaticText					title;
-		protected ScrollablePanel				panel;
+		protected Scrollable					surface;
 		protected object						active;
 		protected System.Type					type;
 		protected TabBook						book;
