@@ -14,7 +14,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		}
 		
 		
-		public Pixmap					Pixmap
+		public Pixmap							Pixmap
 		{
 			get
 			{
@@ -38,22 +38,27 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 		}
 
-		public Drawing.Image			BitmapImage
+		public Drawing.Image					BitmapImage
 		{
 			get
 			{
 				return this.image;
 			}
-			
 			set
 			{
 				if (this.image != value)
 				{
 					if (this.bitmap != null)
 					{
-						this.bitmap.UnlockBits ();
+						if (this.bitmap_needs_unlock)
+						{
+							this.bitmap.UnlockBits ();
+						}
+						
 						this.AssertAttached ();
+						
 						this.bitmap = null;
+						this.bitmap_needs_unlock = false;
 						
 						AntiGrain.Renderer.Image.Source2 (this.agg_ren, System.IntPtr.Zero, 0, 0, 0);
 					}
@@ -62,27 +67,34 @@ namespace Epsitec.Common.Drawing.Renderers
 					
 					if (this.image != null)
 					{
-						this.bitmap = this.image.BitmapImage;
+						this.bitmap              = this.image.BitmapImage;
+						this.bitmap_needs_unlock = ! this.bitmap.IsLocked;
 						
 						int width  = this.bitmap.PixelWidth;
 						int height = this.bitmap.PixelHeight;
 						
-						this.bitmap.LockBits ();
+						if (this.bitmap_needs_unlock)
+						{
+							this.bitmap.LockBits ();
+						}
+						
 						this.AssertAttached ();
 						
 						AntiGrain.Renderer.Image.Source2 (this.agg_ren, this.bitmap.Scan0, width, height, -this.bitmap.Stride);
 					}
 				}
-				
 			}
 		}
 		
-		public System.IntPtr			Handle
+		public System.IntPtr					Handle
 		{
-			get { return this.agg_ren; }
+			get
+			{
+				return this.agg_ren;
+			}
 		}
 		
-		public Transform				Transform
+		public Transform						Transform
 		{
 			get
 			{
@@ -109,12 +121,15 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 		}
 		
-		public Transform				InternalTransform
+		public Transform						InternalTransform
 		{
-			get { return this.int_transform; }
+			get
+			{
+				return this.int_transform;
+			}
 		}
 		
-		public event System.EventHandler TransformUpdating;
+		public event System.EventHandler		TransformUpdating;
 		
 		public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
 		{
@@ -123,11 +138,13 @@ namespace Epsitec.Common.Drawing.Renderers
 		}
 		
 		
+		#region IDisposable Members
 		public void Dispose()
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
 		}
+		#endregion
 		
 		protected virtual void Dispose(bool disposing)
 		{
@@ -139,21 +156,7 @@ namespace Epsitec.Common.Drawing.Renderers
 					this.pixmap = null;
 				}
 				
-				Drawing.Image  image  = this.image;
-				Drawing.Bitmap bitmap = this.bitmap;
-				
 				this.BitmapImage = null;
-				
-				if ((bitmap != null) &&
-					(bitmap != image))
-				{
-					bitmap.Dispose ();
-				}
-				
-				if (image != null)
-				{
-					image.Dispose ();
-				}
 			}
 			
 			this.Detach ();
@@ -187,6 +190,7 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 		}
 		
+		
 		protected virtual void OnTransformUpdating(System.EventArgs e)
 		{
 			if (this.TransformUpdating != null)
@@ -201,6 +205,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		private Pixmap					pixmap;
 		private Drawing.Image			image;
 		private Drawing.Bitmap			bitmap;
+		private bool					bitmap_needs_unlock;
 		private Transform				transform		= new Transform ();
 		private Transform				int_transform	= new Transform ();
 	}
