@@ -39,12 +39,12 @@ namespace Epsitec.Common.Support
 			
 			foreach (string name in good_names)
 			{
-				Assertion.Assert (string.Format ("{0} should be accepted", name), Resources.ValidateId ("file:"+name));
+				Assert.IsTrue (Resources.ValidateId ("file:"+name), string.Format ("{0} should be accepted", name));
 			}
 			
 			foreach (string name in bad_names)
 			{
-				Assertion.Assert (string.Format ("{0} should be rejected", name), !Resources.ValidateId ("file:"+name));
+				Assert.IsTrue (!Resources.ValidateId ("file:"+name), string.Format ("{0} should be rejected", name));
 			}
 		}
 		
@@ -53,7 +53,7 @@ namespace Epsitec.Common.Support
 			ResourceBundle bundle;
 			
 			bundle = Resources.GetBundle ("file:button.cancel");
-			Assertion.AssertNotNull (bundle);
+			Assert.IsNotNull (bundle);
 			System.Console.Out.WriteLine ("Bundle with merged levels:");
 			
 			foreach (string tag in bundle.FieldNames)
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Support
 			}
 			
 			bundle = Resources.GetBundle ("file:button.cancel", ResourceLevel.Default);
-			Assertion.AssertNotNull (bundle);
+			Assert.IsNotNull (bundle);
 			System.Console.Out.WriteLine ("Bundle with default level only:");
 			
 			foreach (string tag in bundle.FieldNames)
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Support
 			}
 			
 			bundle = Resources.GetBundle ("file:button.cancel", ResourceLevel.Localised);
-			Assertion.AssertNotNull (bundle);
+			Assert.IsNotNull (bundle);
 			System.Console.Out.WriteLine ("Bundle with localised level only:");
 			
 			foreach (string tag in bundle.FieldNames)
@@ -93,17 +93,17 @@ namespace Epsitec.Common.Support
 			
 			bundle = Resources.GetBundle ("file:complex");
 			
-			Assertion.AssertNotNull (bundle);
-			Assertion.AssertEquals (ResourceFieldType.Data, bundle["class"].Type);
-			Assertion.AssertEquals (ResourceFieldType.List, bundle["widgets"].Type);
-			Assertion.AssertEquals (3, bundle["widgets"].AsList.Count);
-			Assertion.AssertEquals ("CheckButton", bundle["widgets"].AsList[0].AsBundle["class"].AsString);
-			Assertion.AssertEquals ("RadioButton", bundle["widgets"].AsList[1].AsBundle["class"].AsString);
-			Assertion.AssertEquals ("Button",      bundle["widgets"].AsList[2].AsBundle["class"].AsString);
-			Assertion.AssertEquals ("complex", bundle.Name);
-			Assertion.AssertEquals ("complex#widgets[0]", bundle["widgets"].AsList[0].AsBundle.Name);
-			Assertion.AssertEquals ("complex#widgets[1]", bundle["widgets"].AsList[1].AsBundle.Name);
-			Assertion.AssertEquals ("button.cancel",      bundle["widgets"].AsList[2].AsBundle.Name);
+			Assert.IsNotNull (bundle);
+			Assert.AreEqual (ResourceFieldType.Data, bundle["class"].Type);
+			Assert.AreEqual (ResourceFieldType.List, bundle["widgets"].Type);
+			Assert.AreEqual (3, bundle["widgets"].AsList.Count);
+			Assert.AreEqual ("CheckButton", bundle["widgets"].AsList[0].AsBundle["class"].AsString);
+			Assert.AreEqual ("RadioButton", bundle["widgets"].AsList[1].AsBundle["class"].AsString);
+			Assert.AreEqual ("Button",      bundle["widgets"].AsList[2].AsBundle["class"].AsString);
+			Assert.AreEqual ("complex", bundle.Name);
+			Assert.AreEqual ("complex#widgets[0]", bundle["widgets"].AsList[0].AsBundle.Name);
+			Assert.AreEqual ("complex#widgets[1]", bundle["widgets"].AsList[1].AsBundle.Name);
+			Assert.AreEqual ("button.cancel",      bundle["widgets"].AsList[2].AsBundle.Name);
 		}
 		
 		[Test] public void CheckGetText()
@@ -113,13 +113,13 @@ namespace Epsitec.Common.Support
 			string text_miss_1  = Resources.GetText ("file:strings#DoesNotExist");
 			string text_miss_2  = Resources.GetText ("file:does_not_exist#DoesNotExist");
 			
-			Assertion.AssertNotNull (text_default);
-			Assertion.AssertNotNull (text_merged);
-			Assertion.AssertNull (text_miss_1);
-			Assertion.AssertNull (text_miss_2);
+			Assert.IsNotNull (text_default);
+			Assert.IsNotNull (text_merged);
+			Assert.IsNull (text_miss_1);
+			Assert.IsNull (text_miss_2);
 			
-			Assertion.AssertEquals ("Settings", text_default);
-			Assertion.AssertEquals ("Réglages", text_merged);
+			Assert.AreEqual ("Settings", text_default);
+			Assert.AreEqual ("Réglages", text_merged);
 		}
 		[Test] public void CheckGetBundleIds()
 		{
