@@ -137,11 +137,13 @@ namespace Epsitec.Common.Document
 				// de l'impression. Même s'il semble possible de les atteindre
 				// plus tard avec port.PageSettings.PrinterSettings, cela
 				// fonctionne mal.
-				this.fromPage = dp.Document.PrinterSettings.FromPage;
-				this.toPage   = dp.Document.PrinterSettings.ToPage;
-				this.copies   = dp.Document.PrinterSettings.Copies;
-				this.collate  = dp.Document.PrinterSettings.Collate;
-				this.duplex   = dp.Document.PrinterSettings.Duplex;
+				this.paperSize = dp.Document.PrinterSettings.DefaultPageSettings.PaperSize.Size;
+				this.landscape = dp.Document.PrinterSettings.DefaultPageSettings.Landscape;
+				this.fromPage  = dp.Document.PrinterSettings.FromPage;
+				this.toPage    = dp.Document.PrinterSettings.ToPage;
+				this.copies    = dp.Document.PrinterSettings.Copies;
+				this.collate   = dp.Document.PrinterSettings.Collate;
+				this.duplex    = dp.Document.PrinterSettings.Duplex;
 				this.totalPages = this.toPage-this.fromPage+1;
 				this.pageCounter = 0;
 				this.multicopyByPrinter = false;
@@ -161,6 +163,17 @@ namespace Epsitec.Common.Document
 				{
 					dp.Document.PrinterSettings.Copies = 1;
 				}
+			}
+
+			public Size PaperSize
+			{
+				get { return this.paperSize; }
+			}
+
+			public bool Landscape
+			{
+				get { return this.landscape; }
+				set { this.landscape = value; }
 			}
 
 			#region IPrintEngine Members
@@ -208,7 +221,7 @@ namespace Epsitec.Common.Document
 				}
 				page += this.fromPage-1;
 				//?System.Diagnostics.Debug.WriteLine("PrintPage "+page.ToString());
-				this.printer.PrintGeometry(port, this.drawingContext, page);
+				this.printer.PrintGeometry(port, this, this.drawingContext, page);
 				this.pageCounter ++;
 
 				if ( this.pageCounter < this.totalPages*this.copies )
@@ -222,6 +235,8 @@ namespace Epsitec.Common.Document
 			protected Document				document;
 			protected Printer				printer;
 			protected DrawingContext		drawingContext;
+			protected Size					paperSize;
+			protected bool					landscape;
 			protected int					pageCounter;
 			protected int					fromPage;
 			protected int					toPage;
@@ -235,19 +250,21 @@ namespace Epsitec.Common.Document
 
 		// Imprime la géométrie de tous les objets.
 		protected void PrintGeometry(Printing.PrintPort port,
+									 PrintEngine printEngine,
 									 DrawingContext drawingContext,
 									 int pageNumber)
 		{
 			System.Diagnostics.Debug.Assert(pageNumber >= 0);
 			System.Diagnostics.Debug.Assert(pageNumber < this.document.GetObjects.Count);
 
+			printEngine.Landscape = port.PageSettings.Landscape;
+
 			Point offset = new Point(0, 0);
 			if ( !this.PrintInfo.AutoZoom )
 			{
-				Size paperSize = port.PageSettings.PaperSize.Size;
-				double pw = paperSize.Width*10.0;
-				double ph = paperSize.Height*10.0;
-				if ( port.PageSettings.Landscape )
+				double pw = printEngine.PaperSize.Width*10.0;
+				double ph = printEngine.PaperSize.Height*10.0;
+				if ( printEngine.Landscape )
 				{
 					Misc.Swap(ref pw, ref ph);
 				}
@@ -297,36 +314,36 @@ namespace Epsitec.Common.Document
 
 			if ( this.PrintInfo.ForceSimply )
 			{
-				this.PrintSimplyGeometry(port, drawingContext, pageNumber, offset);
+				this.PrintSimplyGeometry(port, printEngine, drawingContext, pageNumber, offset);
 			}
 			else if ( this.PrintInfo.ForceComplex )
 			{
 				Rectangle clipRect = new Rectangle(0, 0, this.document.Size.Width, this.document.Size.Height);
-				this.PrintBitmapGeometry(port, drawingContext, pageNumber, offset, clipRect, null);
+				this.PrintBitmapGeometry(port, printEngine, drawingContext, pageNumber, offset, clipRect, null);
 			}
 			else
 			{
 				System.Collections.ArrayList areas = this.ComputeAreas(pageNumber);
-				this.PrintMixGeometry(port, drawingContext, pageNumber, offset, areas);
+				this.PrintMixGeometry(port, printEngine, drawingContext, pageNumber, offset, areas);
 
 				if ( this.PrintInfo.DebugArea )
 				{
-					this.PrintAreas(port, drawingContext, areas, offset);
+					this.PrintAreas(port, printEngine, drawingContext, areas, offset);
 				}
 			}
 
 			if ( this.PrintInfo.Target )
 			{
-				this.PrintTarget(port, drawingContext, offset);
+				this.PrintTarget(port, printEngine, drawingContext, offset);
 			}
 
 			if ( this.document.InstallType == InstallType.Demo )
 			{
-				this.PrintDemo(port, offset);
+				this.PrintDemo(port, printEngine, offset);
 			}
 			if ( this.document.InstallType == InstallType.Expired )
 			{
-				this.PrintExpired(port, offset);
+				this.PrintExpired(port, printEngine, offset);
 			}
 		}
 
@@ -341,22 +358,25 @@ namespace Epsitec.Common.Document
 			{
 				if ( layer.Print == Objects.LayerPrint.Hide )  continue;
 
+				Properties.ModColor modColor = layer.PropertyModColor;
+				bool isLayerComplexPrinting = modColor.IsComplexPrinting;
+
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
 					if ( obj.IsHide )  continue;  // objet caché ?
-					if ( !this.PrintInfo.PerfectJoin && !obj.IsComplexPrinting )  continue;
+					if ( !this.PrintInfo.PerfectJoin && !isLayerComplexPrinting && !obj.IsComplexPrinting )  continue;
 					rank ++;
 
 					int i = PrintingArea.Intersect(areas, obj.BoundingBox);
 					if ( i == -1 )
 					{
-						PrintingArea area = new PrintingArea(obj, rank);
+						PrintingArea area = new PrintingArea(obj, rank, isLayerComplexPrinting);
 						areas.Add(area);
 					}
 					else
 					{
 						PrintingArea area = areas[i] as PrintingArea;
-						area.Append(obj, rank);
+						area.Append(obj, rank, isLayerComplexPrinting);
 					}
 				}
 			}
@@ -406,18 +426,18 @@ namespace Epsitec.Common.Document
 		// objets complexes.
 		protected class PrintingArea
 		{
-			public PrintingArea(Objects.Abstract obj, int rank)
+			public PrintingArea(Objects.Abstract obj, int rank, bool isLayerComplexPrinting)
 			{
 				this.area = obj.BoundingBox;
-				this.isComplex = obj.IsComplexPrinting;
+				this.isComplex = (isLayerComplexPrinting || obj.IsComplexPrinting);
 				this.topObject = obj;
 				this.topRank = rank;
 			}
 
-			public void Append(Objects.Abstract obj, int rank)
+			public void Append(Objects.Abstract obj, int rank, bool isLayerComplexPrinting)
 			{
 				this.area.MergeWith(obj.BoundingBox);
-				this.isComplex |= obj.IsComplexPrinting;
+				this.isComplex |= (isLayerComplexPrinting || obj.IsComplexPrinting);
 
 				if ( rank > this.topRank )
 				{
@@ -499,12 +519,13 @@ namespace Epsitec.Common.Document
 		// Imprime la géométrie simple de tous les objets, possible lorsque les
 		// objets n'utilisent ni les dégradés ni la transparence.
 		protected void PrintSimplyGeometry(Printing.PrintPort port,
+										   PrintEngine printEngine,
 										   DrawingContext drawingContext,
 										   int pageNumber,
 										   Point offset)
 		{
 			Transform initialTransform = port.Transform;
-			this.InitSimplyPort(port, offset);
+			this.InitSimplyPort(port, printEngine, offset);
 
 			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
 			foreach ( Objects.Layer layer in this.document.Flat(page) )
@@ -527,13 +548,14 @@ namespace Epsitec.Common.Document
 
 		// Imprime la géométrie composée d'objets simples et de zones complexes.
 		protected void PrintMixGeometry(Printing.PrintPort port,
+										PrintEngine printEngine,
 										DrawingContext drawingContext,
 										int pageNumber,
 										Point offset,
 										System.Collections.ArrayList areas)
 		{
 			Transform initialTransform = port.Transform;
-			this.InitSimplyPort(port, offset);
+			this.InitSimplyPort(port, printEngine, offset);
 
 			Objects.Abstract page = this.document.GetObjects[pageNumber] as Objects.Abstract;
 			foreach ( Objects.Layer layer in this.document.Flat(page) )
@@ -543,6 +565,7 @@ namespace Epsitec.Common.Document
 				Properties.ModColor modColor = layer.PropertyModColor;
 				drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
 				drawingContext.IsDimmed = (layer.Print == Objects.LayerPrint.Dimmed);
+				bool isLayerComplexPrinting = modColor.IsComplexPrinting;
 
 				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
@@ -557,7 +580,7 @@ namespace Epsitec.Common.Document
 
 							Transform saveTransform = port.Transform;
 							port.Transform = initialTransform;
-							this.PrintBitmapGeometry(port, drawingContext, pageNumber, offset, area.Area, area.TopObject);
+							this.PrintBitmapGeometry(port, printEngine, drawingContext, pageNumber, offset, area.Area, area.TopObject);
 							port.Transform = saveTransform;
 						}
 						else
@@ -567,7 +590,7 @@ namespace Epsitec.Common.Document
 					}
 					else
 					{
-						if ( obj.IsComplexPrinting )
+						if ( isLayerComplexPrinting || obj.IsComplexPrinting )
 						{
 							int i = PrintingArea.SearchTopObject(areas, obj);
 							if ( i == -1 )  continue;
@@ -575,7 +598,7 @@ namespace Epsitec.Common.Document
 
 							Transform saveTransform = port.Transform;
 							port.Transform = initialTransform;
-							this.PrintBitmapGeometry(port, drawingContext, pageNumber, offset, area.Area, area.TopObject);
+							this.PrintBitmapGeometry(port, printEngine, drawingContext, pageNumber, offset, area.Area, area.TopObject);
 							port.Transform = saveTransform;
 						}
 						else
@@ -592,6 +615,7 @@ namespace Epsitec.Common.Document
 		// Imprime la géométrie complexe de tous les objets, en utilisant
 		// un bitmap intermédiaire.
 		protected void PrintBitmapGeometry(Printing.PrintPort port,
+										   PrintEngine printEngine,
 										   DrawingContext drawingContext,
 										   int pageNumber,
 										   Point offset,
@@ -605,10 +629,9 @@ namespace Epsitec.Common.Document
 			double autoZoom = 1.0;
 			if ( this.PrintInfo.AutoZoom )
 			{
-				Size paperSize = port.PageSettings.PaperSize.Size;
-				double pw = paperSize.Width*10.0;
-				double ph = paperSize.Height*10.0;
-				if ( port.PageSettings.Landscape )
+				double pw = printEngine.PaperSize.Width*10.0;
+				double ph = printEngine.PaperSize.Height*10.0;
+				if ( printEngine.Landscape )
 				{
 					Misc.Swap(ref pw, ref ph);
 				}
@@ -661,12 +684,13 @@ namespace Epsitec.Common.Document
 
 		// Imprime les zones rectangulaires (pour le debug).
 		protected void PrintAreas(Printing.PrintPort port,
+								  PrintEngine printEngine,
 								  DrawingContext drawingContext,
 								  System.Collections.ArrayList areas,
 								  Point offset)
 		{
 			Transform initialTransform = port.Transform;
-			this.InitSimplyPort(port, offset);
+			this.InitSimplyPort(port, printEngine, offset);
 
 			port.LineWidth = 0.1;
 			port.Color = Color.FromRGB(1,0,0);  // rouge
@@ -683,11 +707,12 @@ namespace Epsitec.Common.Document
 
 		// Imprime les traits de coupe.
 		protected void PrintTarget(Printing.PrintPort port,
+								   PrintEngine printEngine,
 								   DrawingContext drawingContext,
 								   Point offset)
 		{
 			Transform initialTransform = port.Transform;
-			this.InitSimplyPort(port, offset);
+			this.InitSimplyPort(port, printEngine, offset);
 			this.PaintTarget(port, drawingContext);
 			port.Transform = initialTransform;
 		}
@@ -778,10 +803,10 @@ namespace Epsitec.Common.Document
 		}
 
 		// Imprime le warning d'installation.
-		protected void PrintDemo(Printing.PrintPort port, Point offset)
+		protected void PrintDemo(Printing.PrintPort port, PrintEngine printEngine, Point offset)
 		{
 			Transform initialTransform = port.Transform;
-			this.InitSimplyPort(port, offset);
+			this.InitSimplyPort(port, printEngine, offset);
 			this.PaintDemo(port);
 			port.Transform = initialTransform;
 		}
@@ -828,10 +853,10 @@ namespace Epsitec.Common.Document
 		}
 
 		// Imprime le warning d'installation.
-		protected void PrintExpired(Printing.PrintPort port, Point offset)
+		protected void PrintExpired(Printing.PrintPort port, PrintEngine printEngine, Point offset)
 		{
 			Transform initialTransform = port.Transform;
-			this.InitSimplyPort(port, offset);
+			this.InitSimplyPort(port, printEngine, offset);
 			this.PaintExpired(port);
 			port.Transform = initialTransform;
 		}
@@ -893,15 +918,14 @@ namespace Epsitec.Common.Document
 		}
 
 		// Initialise le port pour une impression simplifiée.
-		protected void InitSimplyPort(Printing.PrintPort port, Point offset)
+		protected void InitSimplyPort(Printing.PrintPort port, PrintEngine printEngine, Point offset)
 		{
 			double zoom = 1.0;
 			if ( this.PrintInfo.AutoZoom )
 			{
-				Size paperSize = port.PageSettings.PaperSize.Size;
-				double pw = paperSize.Width;
-				double ph = paperSize.Height;
-				if ( port.PageSettings.Landscape )
+				double pw = printEngine.PaperSize.Width;
+				double ph = printEngine.PaperSize.Height;
+				if ( printEngine.Landscape )
 				{
 					Misc.Swap(ref pw, ref ph);
 				}

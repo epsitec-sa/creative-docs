@@ -18,6 +18,8 @@ namespace Epsitec.Common.Document
 			ArrowDup,
 			Hand,
 			IBeam,
+			HSplit,
+			VSplit,
 			Cross,
 			Finger,
 			FingerPlus,
@@ -149,6 +151,7 @@ namespace Epsitec.Common.Document
 		protected void HandleTimeElapsed(object sender)
 		{
 			if ( this.mouseDown && this.zoomShift )  return;
+			if ( this.mouseDown && this.guideInteractive != -1 )  return;
 
 			Point mouse = this.mousePosWidget;
 
@@ -870,7 +873,7 @@ namespace Epsitec.Common.Document
 				}
 				else if ( !global && this.GuideDetect(mouse, out guideRank) )
 				{
-					this.ChangeMouseCursor(MouseCursorType.Finger);
+					this.ChangeMouseCursor(this.GuideIsHorizontal(guideRank) ? MouseCursorType.HSplit : MouseCursorType.VSplit);
 				}
 				else
 				{
@@ -2045,6 +2048,14 @@ namespace Epsitec.Common.Document
 					this.MouseCursor = MouseCursor.AsIBeam;
 					break;
 
+				case MouseCursorType.HSplit:
+					this.MouseCursor = MouseCursor.AsHSplit;
+					break;
+
+				case MouseCursorType.VSplit:
+					this.MouseCursor = MouseCursor.AsVSplit;
+					break;
+
 				case MouseCursorType.Hand:
 					this.MouseCursorImage(ref this.mouseCursorHand, "manifest:Epsitec.App.DocumentEditor.Images.Hand.icon");
 					break;
@@ -2142,6 +2153,13 @@ namespace Epsitec.Common.Document
 			return false;
 		}
 
+		// Indique si un guide est horizontal.
+		protected bool GuideIsHorizontal(int rank)
+		{
+			Settings.Guide guide = this.document.Settings.GuidesGet(rank);
+			return guide.IsHorizontal;
+		}
+
 		// Met en évidence le guide survolé par la souris.
 		protected void GuideHilite(int rank)
 		{
@@ -2181,6 +2199,7 @@ namespace Epsitec.Common.Document
 			this.document.Dialogs.SelectGuide(this.guideInteractive);
 			this.guideCreate = true;
 			this.mouseDown = true;
+			this.ChangeMouseCursor(horizontal ? MouseCursorType.HSplit : MouseCursorType.VSplit);
 		}
 
 		// Positionne un guide interactif.
@@ -2214,6 +2233,25 @@ namespace Epsitec.Common.Document
 
 			Size size = this.document.Size;
 			Settings.Guide guide = this.document.Settings.GuidesGet(this.guideInteractive);
+
+			// Supprime le repère s'il est tiré hors de la vue.
+			Rectangle rd = this.RectangleDisplayed;
+			double pos = guide.AbsolutePosition;
+			if ( guide.IsHorizontal )
+			{
+				if ( pos < rd.Bottom || pos > rd.Top )
+				{
+					guide.Position = Settings.Guide.Undefined;
+				}
+			}
+			else
+			{
+				if ( pos < rd.Left || pos > rd.Right )
+				{
+					guide.Position = Settings.Guide.Undefined;
+				}
+			}
+
 			if ( guide.Position == Settings.Guide.Undefined )
 			{
 				this.document.Settings.GuidesRemoveAt(this.guideInteractive);
@@ -2403,6 +2441,7 @@ namespace Epsitec.Common.Document
 				// Dessine les repères.
 				if ( this.drawingContext.GuidesShow )
 				{
+					Rectangle rd = this.RectangleDisplayed;
 					int total = this.document.Settings.GuidesCount;
 					for ( int i=0 ; i<total ; i++ )
 					{
@@ -2410,21 +2449,21 @@ namespace Epsitec.Common.Document
 
 						if ( guide.IsHorizontal )  // repère horizontal ?
 						{
-							double x = clipRect.Left;
+							double x = rd.Left;
 							double y = guide.AbsolutePosition;
 							graphics.Align(ref x, ref y);
 							x += ix;
 							y += iy;
-							graphics.AddLine(x, y, clipRect.Right, y);
+							graphics.AddLine(x, y, rd.Right, y);
 						}
 						else	// repère vertical ?
 						{
 							double x = guide.AbsolutePosition;
-							double y = clipRect.Bottom;
+							double y = rd.Bottom;
 							graphics.Align(ref x, ref y);
 							x += ix;
 							y += iy;
-							graphics.AddLine(x, y, x, clipRect.Top);
+							graphics.AddLine(x, y, x, rd.Top);
 						}
 
 						if ( guide.Hilite )

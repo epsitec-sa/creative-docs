@@ -549,7 +549,19 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\LayerMergeDown.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\LayerMergeUp.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\LayerNew.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\LayerNewSel.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

@@ -250,7 +250,8 @@ namespace Epsitec.Common.Document
 					Size size = this.document.Size;
 					double zx = cs.Width/size.Width;
 					double zy = cs.Height/size.Height;
-					return System.Math.Min(zx, zy)*2.54;
+					double dpi = this.document.GlobalSettings.ScreenDpi;
+					return System.Math.Min(zx, zy)*2.54*(96.0/dpi);
 				}
 			}
 		}
@@ -300,43 +301,36 @@ namespace Epsitec.Common.Document
 
 		public void ZoomAndCenter(double zoom, double centerX, double centerY)
 		{
+			bool changed = false;
+			if ( this.zoom != zoom )
+			{
+				this.zoom = zoom;
+				changed = true;
+			}
+
 			Size container = this.ContainerSize;
-			Point scale = this.ScaleForZoom(zoom);
-			container.Width  /= scale.X;
-			container.Height /= scale.Y;
-			Size area = this.document.Modifier.SizeArea;
 
-			double originX = centerX-container.Width/2;
-			if ( area.Width < container.Width )  // fenêtre trop grande ?
-			{
-				originX = -(container.Width-this.document.Size.Width)/2;
-			}
+			double originX = (container.Width/this.ScaleX)/2-centerX;
+			originX = -System.Math.Max(-originX, this.MinOriginX);
+			originX = -System.Math.Min(-originX, this.MaxOriginX);
 
-			double originY = centerY-container.Height/2;
-			if ( area.Height < container.Height )  // fenêtre trop grande ?
-			{
-				originY = -(container.Height-this.document.Size.Height)/2;
-			}
+			double originY = (container.Height/this.ScaleY)/2-centerY;
+			originY = -System.Math.Max(-originY, this.MinOriginY);
+			originY = -System.Math.Min(-originY, this.MaxOriginY);
 
-			this.ZoomAndOrigin(zoom, -originX, -originY);
-		}
-
-		protected void ZoomAndOrigin(double zoom, double originX, double originY)
-		{
-			if ( this.zoom    != zoom    ||
-				 this.originX != originX ||
+			if ( this.originX != originX ||
 				 this.originY != originY )
 			{
-				this.zoom    = zoom;
 				this.originX = originX;
 				this.originY = originY;
+				changed = true;
+			}
 
-				if ( this.document.Notifier != null )
-				{
-					this.document.Notifier.NotifyArea(this.viewer);
-					this.document.Notifier.NotifyZoomChanged();
-					this.document.Notifier.NotifyOriginChanged();
-				}
+			if ( changed && this.document.Notifier != null )
+			{
+				this.document.Notifier.NotifyArea(this.viewer);
+				this.document.Notifier.NotifyZoomChanged();
+				this.document.Notifier.NotifyOriginChanged();
 			}
 		}
 

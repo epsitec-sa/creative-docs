@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Panels
 			this.listFill.IsReadOnly = true;
 			this.listFill.Items.Add("Uniforme");
 			this.listFill.Items.Add("Linéaire");
-			this.listFill.Items.Add("Circulaire");
+			this.listFill.Items.Add("Concentrique");
 			this.listFill.Items.Add("Diamant");
 			this.listFill.Items.Add("Cônique");
 			this.listFill.Items.Add("Hachures");

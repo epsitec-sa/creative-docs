@@ -1231,6 +1231,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			foreach ( Properties.Abstract property in this.properties )
 			{
+				if ( property.Type == Properties.Type.ModColor )  continue;
 				if ( filter != null && !filter.ExistingProperty(property.Type) )  continue;
 				list.Add(property);
 			}

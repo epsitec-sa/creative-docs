@@ -15,35 +15,36 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar = new HToolBar(this);
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
+			System.Diagnostics.Debug.Assert(this.toolBar.CommandDispatcher != null);
 
-			this.buttonNew = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.PageNew.icon");
-			this.buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNew);
+			this.buttonNew = new IconButton("PageNew", "manifest:Epsitec.App.DocumentEditor.Images.PageNew.icon");
 			this.toolBar.Items.Add(this.buttonNew);
 			ToolTip.Default.SetToolTip(this.buttonNew, "Nouvelle page <b>après</b> la page courante");
+			this.Synchro(this.buttonNew);
 
-			this.buttonDuplicate = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.DuplicateItem.icon");
-			this.buttonDuplicate.Clicked += new MessageEventHandler(this.HandleButtonDuplicate);
+			this.buttonDuplicate = new IconButton("PageDuplicate", "manifest:Epsitec.App.DocumentEditor.Images.DuplicateItem.icon");
 			this.toolBar.Items.Add(this.buttonDuplicate);
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, "Dupliquer la page");
+			this.Synchro(this.buttonDuplicate);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonUp = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Up.icon");
-			this.buttonUp.Clicked += new MessageEventHandler(this.HandleButtonUp);
+			this.buttonUp = new IconButton("PageUp", "manifest:Epsitec.App.DocumentEditor.Images.Up.icon");
 			this.toolBar.Items.Add(this.buttonUp);
 			ToolTip.Default.SetToolTip(this.buttonUp, "Page avant");
+			this.Synchro(this.buttonUp);
 
-			this.buttonDown = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Down.icon");
-			this.buttonDown.Clicked += new MessageEventHandler(this.HandleButtonDown);
+			this.buttonDown = new IconButton("PageDown", "manifest:Epsitec.App.DocumentEditor.Images.Down.icon");
 			this.toolBar.Items.Add(this.buttonDown);
 			ToolTip.Default.SetToolTip(this.buttonDown, "Page après");
+			this.Synchro(this.buttonDown);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonDelete = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.DeleteItem.icon");
-			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDelete);
+			this.buttonDelete = new IconButton("PageDelete", "manifest:Epsitec.App.DocumentEditor.Images.DeleteItem.icon");
 			this.toolBar.Items.Add(this.buttonDelete);
 			ToolTip.Default.SetToolTip(this.buttonDelete, "Supprimer la page");
+			this.Synchro(this.buttonDelete);
 
 			this.table = new CellTable(this);
 			this.table.Dock = DockStyle.Fill;
@@ -67,13 +68,19 @@ namespace Epsitec.Common.Document.Containers
 			this.panelPageName.Parent = this;
 		}
 		
+		// Synchronise avec l'état de la commande.
+		// TODO: devrait être inutile, à supprimer donc !!!
+		protected void Synchro(Widget widget)
+		{
+			widget.SetEnabled(this.toolBar.CommandDispatcher[widget.Command].Enabled);
+		}
+
 
 		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
 			this.UpdateTable();
 			this.UpdatePanel();
-			this.UpdateToolBar();
 		}
 
 		// Effectue la mise à jour d'un objet.
@@ -83,19 +90,6 @@ namespace Epsitec.Common.Document.Containers
 			UndoableList pages = this.document.GetObjects;
 			int rank = pages.IndexOf(obj);
 			this.TableUpdateRow(rank, page);
-		}
-
-		// Met à jour les boutons de la toolbar.
-		protected void UpdateToolBar()
-		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int total = this.table.Rows;
-			int sel = context.CurrentPage;
-
-			this.buttonDuplicate.SetEnabled(sel != -1);
-			this.buttonUp.SetEnabled(sel != -1 && sel > 0);
-			this.buttonDown.SetEnabled(sel != -1 && sel < total-1);
-			this.buttonDelete.SetEnabled(sel != -1 && total > 1);
 		}
 
 		// Met à jour le contenu de la table.
@@ -164,53 +158,11 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Crée une nouvelle page.
-		private void HandleButtonNew(object sender, MessageEventArgs e)
-		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int sel = context.CurrentPage;
-			this.document.Modifier.PageCreate(sel+1, "");
-		}
-
-		// Duplique une page.
-		private void HandleButtonDuplicate(object sender, MessageEventArgs e)
-		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int sel = context.CurrentPage;
-			this.document.Modifier.PageDuplicate(sel, "");
-		}
-
-		// Monte d'une ligne la page sélectionnée.
-		private void HandleButtonUp(object sender, MessageEventArgs e)
-		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int sel = context.CurrentPage;
-			this.document.Modifier.PageSwap(sel, sel-1);
-		}
-
-		// Descend d'une ligne la page sélectionnée.
-		private void HandleButtonDown(object sender, MessageEventArgs e)
-		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int sel = context.CurrentPage;
-			this.document.Modifier.PageSwap(sel, sel+1);
-		}
-
-		// Supprime la page sélectionnée.
-		private void HandleButtonDelete(object sender, MessageEventArgs e)
-		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int sel = context.CurrentPage;
-			this.document.Modifier.PageDelete(sel);
-		}
-
 		// Liste cliquée.
 		private void HandleTableSelectionChanged(object sender)
 		{
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			context.CurrentPage = this.table.SelectedRow;
-
-			this.UpdateToolBar();
 		}
 
 

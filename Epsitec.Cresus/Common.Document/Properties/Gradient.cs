@@ -473,6 +473,7 @@ namespace Epsitec.Common.Document.Properties
 			{
 				if ( this.fillType != GradientFillType.None )  return true;
 				if ( this.color1.A > 0.0 && this.color1.A < 1.0 )  return true;
+				if ( this.smooth > 0.0 )  return true;
 				return false;
 			}
 		}
@@ -1301,7 +1302,9 @@ namespace Epsitec.Common.Document.Properties
 				info.AddValue("Repeat", this.repeat);
 				info.AddValue("Middle", this.middle);
 			}
-			if ( this.fillType == GradientFillType.Hatch )
+			if ( this.fillType == GradientFillType.Hatch   ||
+				 this.fillType == GradientFillType.Dots    ||
+				 this.fillType == GradientFillType.Squares )
 			{
 				info.AddValue("HatchAngle", this.hatchAngle);
 				info.AddValue("HatchWidth", this.hatchWidth);
@@ -1326,7 +1329,21 @@ namespace Epsitec.Common.Document.Properties
 				this.repeat = info.GetInt32("Repeat");
 				this.middle = info.GetDouble("Middle");
 			}
+
+			bool hatch = false;
 			if ( this.fillType == GradientFillType.Hatch )
+			{
+				hatch = true;
+			}
+			else if ( this.fillType == GradientFillType.Dots    ||
+					  this.fillType == GradientFillType.Squares )
+			{
+				if ( this.document.IsRevisionGreaterOrEqual(1,0,6) )
+				{
+					hatch = true;
+				}
+			}
+			if ( hatch )
 			{
 				this.hatchAngle    = (double[]) info.GetValue("HatchAngle",    typeof(double[]));
 				this.hatchWidth    = (double[]) info.GetValue("HatchWidth",    typeof(double[]));

@@ -657,6 +657,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainFixType(ConstrainType.Normal);
 
 			this.isCreating = true;
+			bool ignore = false;
 
 			if ( this.TotalHandle == 0 )
 			{
@@ -668,13 +669,28 @@ namespace Epsitec.Common.Document.Objects
 				double len = Point.Distance(pos, this.Handle(1).Position);
 				if ( len <= drawingContext.CloseMargin )
 				{
-					pos = this.Handle(1).Position;
-					this.lastPoint = true;
-					this.ChangePropertyPolyClose(true);
+					if ( this.TotalHandle == 3 )
+					{
+						ignore = true;
+					}
+					else
+					{
+						pos = this.Handle(1).Position;
+						this.lastPoint = true;
+						this.ChangePropertyPolyClose(true);
+					}
+				}
+				else
+				{
+					len = Point.Distance(pos, this.Handle(this.TotalHandle-2).Position);
+					if ( len <= drawingContext.CloseMargin )
+					{
+						ignore = true;
+					}
 				}
 			}
 
-			if ( !this.lastPoint )
+			if ( !this.lastPoint && !ignore )
 			{
 				if ( this.TotalHandle == 0 )
 				{

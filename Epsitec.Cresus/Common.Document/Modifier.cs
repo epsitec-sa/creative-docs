@@ -35,7 +35,7 @@ namespace Epsitec.Common.Document
 				this.arrowMove = new Point(10.0, 10.0);  // 1mm
 				this.arrowMoveMul = 10.0;
 				this.arrowMoveDiv = 10.0;
-				this.outsideArea = 100.0;  // 10mm
+				this.outsideArea = 0.0;
 			}
 
 			int total = 0;
@@ -1216,6 +1216,7 @@ namespace Epsitec.Common.Document
 				if ( this.duplicateMove != value )
 				{
 					this.duplicateMove = value;
+					this.FlushMoveAfterDuplicate();
 					this.document.Notifier.NotifySettingsChanged();
 					this.document.IsDirtySerialize = true;
 				}
@@ -2881,7 +2882,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Crée une nouvelle page.
-		public void PageCreate(int rank, string name)
+		public void PageNew(int rank, string name)
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
@@ -3052,7 +3053,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Crée un nouveau calque.
-		public void LayerCreate(int rank, string name)
+		public void LayerNew(int rank, string name)
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.document.IsDirtySerialize = true;
@@ -3071,6 +3072,39 @@ namespace Epsitec.Common.Document
 				list.Insert(rank, layer);
 
 				this.ActiveViewer.DrawingContext.CurrentLayer = rank;
+
+				this.document.Notifier.NotifyArea(this.ActiveViewer);
+				this.document.Notifier.NotifySelectionChanged();
+				this.document.Notifier.NotifyLayersChanged();
+				this.OpletQueueValidateAction();
+			}
+		}
+
+		// Crée un nouveau calque contenant les objets sélectionnés.
+		public void LayerNewSel(int rank, string name)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			using ( this.OpletQueueBeginAction() )
+			{
+				// Liste des calques:
+				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
+				rank = System.Math.Max(rank, 0);
+				rank = System.Math.Min(rank, list.Count-1);
+
+				Objects.Layer srcLayer = list[rank] as Objects.Layer;
+
+				Objects.Layer layer = new Objects.Layer(this.document, null);
+				layer.Name = name;
+				list.Insert(rank+1, layer);
+
+				UndoableList src = srcLayer.Objects;
+				UndoableList dst = layer.Objects;
+				Modifier.Duplicate(this.document, this.document, src, dst, false, new Point(0,0), true);
+				this.DeleteSelection();
+
+				this.ActiveViewer.DrawingContext.CurrentLayer = rank+1;
 
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
@@ -3146,6 +3180,44 @@ namespace Epsitec.Common.Document
 
 				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifySelectionChanged();
+				this.document.Notifier.NotifyLayersChanged();
+				this.OpletQueueValidateAction();
+			}
+		}
+
+		// Fusionne deux calques.
+		public void LayerMerge(int rankSrc, int rankDst)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.document.IsDirtySerialize = true;
+
+			using ( this.OpletQueueBeginAction() )
+			{
+				// Liste des calques:
+				UndoableList list = this.ActiveViewer.DrawingContext.RootObject(1).Objects;
+				rankSrc = System.Math.Max(rankSrc, 0);
+				rankSrc = System.Math.Min(rankSrc, list.Count-1);
+				rankDst = System.Math.Max(rankDst, 0);
+				rankDst = System.Math.Min(rankDst, list.Count-1);
+
+				if ( rankSrc < rankDst )
+				{
+					Misc.Swap(ref rankSrc, ref rankDst);
+				}
+
+				Objects.Layer srcLayer = list[rankSrc] as Objects.Layer;
+				Objects.Layer dstLayer = list[rankDst] as Objects.Layer;
+
+				UndoableList src = srcLayer.Objects;
+				UndoableList dst = dstLayer.Objects;
+				Modifier.Duplicate(this.document, this.document, src, dst, false, new Point(0,0), false);
+
+				srcLayer.Dispose();
+				list.RemoveAt(rankSrc);
+
+				this.ActiveViewer.DrawingContext.CurrentLayer = rankDst;
+
+				this.document.Notifier.NotifyArea(this.ActiveViewer);
 				this.document.Notifier.NotifyLayersChanged();
 				this.OpletQueueValidateAction();
 			}

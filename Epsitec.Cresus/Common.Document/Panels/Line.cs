@@ -87,6 +87,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldStandardLength = new TextFieldReal(this);
 			this.fieldStandardLength.FactorMinRange = 0.0M;
 			this.fieldStandardLength.FactorMaxRange = 0.1M;
+			this.fieldStandardLength.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldStandardLength);
 			this.fieldStandardLength.ValueChanged += new EventHandler(this.HandleDashChanged);
 			this.fieldStandardLength.TabIndex = 20;
@@ -96,6 +97,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDashPen = new TextFieldReal(this);
 			this.fieldDashPen.FactorMinRange = 0.0M;
 			this.fieldDashPen.FactorMaxRange = 0.1M;
+			this.fieldDashPen.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashPen);
 			this.fieldDashPen.ValueChanged += new EventHandler(this.HandleDashChanged);
 			this.fieldDashPen.TabIndex = 21;
@@ -105,6 +107,7 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldDashGap = new TextFieldReal(this);
 			this.fieldDashGap.FactorMinRange = 0.0M;
 			this.fieldDashGap.FactorMaxRange = 0.1M;
+			this.fieldDashGap.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashGap);
 			this.fieldDashGap.ValueChanged += new EventHandler(this.HandleDashChanged);
 			this.fieldDashGap.TabIndex = 22;
@@ -233,9 +236,25 @@ namespace Epsitec.Common.Document.Panels
 			if ( sel == 1 )  p.Join = JoinStyle.Miter;
 			if ( sel == 2 )  p.Join = JoinStyle.Bevel;
 
-			this.WidgetToDash();
-			p.StandardDash = this.SelectDash;
-			p.StandardLength = (double) this.fieldStandardLength.InternalValue;
+			Properties.StandardDashType newType = this.SelectDash;
+			if ( newType == Properties.StandardDashType.Custom )
+			{
+				p.StandardDash = newType;
+				this.WidgetToDash();
+
+				this.ignoreChanged = true;
+				this.fieldStandardLength.InternalValue = (decimal) p.StandardLength;
+				this.ignoreChanged = false;
+			}
+			else
+			{
+				p.StandardLength = (double) this.fieldStandardLength.InternalValue;
+				p.StandardDash = newType;
+
+				this.ignoreChanged = true;
+				this.DashToWidget();
+				this.ignoreChanged = false;
+			}
 		}
 
 		protected void DashToWidget()

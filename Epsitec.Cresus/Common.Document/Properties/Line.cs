@@ -264,9 +264,9 @@ namespace Epsitec.Common.Document.Properties
 			
 			set
 			{
-				StandardDashType type = this.StandardDash;
+				//?StandardDashType type = this.StandardDash;
 				this.DashGap1 = value;
-				this.StandardDash = type;
+				//?this.StandardDash = type;
 			}
 		}
 
@@ -520,9 +520,9 @@ namespace Epsitec.Common.Document.Properties
 				for ( int i=0 ; i<Line.DashMax ; i++ )
 				{
 					if ( this.dashGap[i] == 0.0 )  continue;
-					double pen = this.dashPen[i];
-					if ( pen == 0.0 )  pen = 0.00001;
-					dp.AddDash(pen, this.dashGap[i]);
+					double pen, gap;
+					this.GetPenGap(i, true, out pen, out gap);
+					dp.AddDash(pen, gap);
 				}
 
 				port.LineWidth = this.width;
@@ -560,9 +560,9 @@ namespace Epsitec.Common.Document.Properties
 				for ( int i=0 ; i<Line.DashMax ; i++ )
 				{
 					if ( this.dashGap[i] == 0.0 )  continue;
-					double pen = this.dashPen[i];
-					if ( pen == 0.0 )  pen = 0.00001;
-					dp.AddDash(pen, this.dashGap[i]);
+					double pen, gap;
+					this.GetPenGap(i, false, out pen, out gap);
+					dp.AddDash(pen, gap);
 				}
 
 				using ( Path temp = dp.GenerateDashedPath() )
@@ -593,9 +593,9 @@ namespace Epsitec.Common.Document.Properties
 				for ( int i=0 ; i<Line.DashMax ; i++ )
 				{
 					if ( this.dashGap[i] == 0.0 )  continue;
-					double pen = this.dashPen[i];
-					if ( pen == 0.0 )  pen = 0.00001;
-					dp.AddDash(pen, this.dashGap[i]);
+					double pen, gap;
+					this.GetPenGap(i, false, out pen, out gap);
+					dp.AddDash(pen, gap);
 				}
 
 				using ( Path temp = dp.GenerateDashedPath() )
@@ -606,6 +606,20 @@ namespace Epsitec.Common.Document.Properties
 			else	// trait continu ?
 			{
 				gradient.RenderOutline(graphics, drawingContext, path, this.width, this.cap, this.join, this.limit, bbox);
+			}
+		}
+
+		// Donne les valeurs trait/trou d'un traitillé.
+		protected void GetPenGap(int i, bool printing, out double pen, out double gap)
+		{
+			pen = this.dashPen[i];
+			gap = this.dashGap[i];
+
+			if ( pen == 0.0 )  // pointillé ?
+			{
+				double min = printing ? 0.5 : 0.00001;
+				pen += min;
+				gap -= min;
 			}
 		}
 

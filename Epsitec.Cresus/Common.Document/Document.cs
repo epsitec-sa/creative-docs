@@ -530,6 +530,33 @@ namespace Epsitec.Common.Document
 			// Version dans le fichier: Version=1.0.1777.11504
 			public override System.Type BindToType(string assemblyName, string typeName) 
 			{
+				if ( typeName == "Epsitec.Common.Document.Document" )
+				{
+					int i, j;
+					string v;
+
+					i = assemblyName.IndexOf("Version=");
+					if ( i >= 0 )
+					{
+						i += 8;
+						j = assemblyName.IndexOf(".", i);
+						v = assemblyName.Substring(i, j-i);
+						long r1 = System.Int64.Parse(v);
+
+						i = j+1;
+						j = assemblyName.IndexOf(".", i);
+						v = assemblyName.Substring(i, j-i);
+						long r2 = System.Int64.Parse(v);
+
+						i = j+1;
+						j = assemblyName.IndexOf(".", i);
+						v = assemblyName.Substring(i, j-i);
+						long r3 = System.Int64.Parse(v);
+
+						Document.ReadDocument.readRevision = (r1<<32) + (r2<<16) + r3;
+					}
+				}
+
 				System.Type typeToDeserialize;
 				typeToDeserialize = System.Type.GetType(string.Format("{0}, {1}", typeName, Document.AssemblyFullName));
 				return typeToDeserialize;
@@ -589,7 +616,8 @@ namespace Epsitec.Common.Document
 
 					if ( this.ioType == IOType.BinaryCompress )
 					{
-						Stream compressor = IO.Compression.CreateBZip2Stream(stream);
+						//?Stream compressor = IO.Compression.CreateBZip2Stream(stream);
+						Stream compressor = IO.Compression.CreateDeflateStream(stream, 1);
 						BinaryFormatter formatter = new BinaryFormatter();
 						formatter.Serialize(compressor, this);
 						compressor.Close();
@@ -651,7 +679,7 @@ namespace Epsitec.Common.Document
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			int revision = 1;
-			int version  = 1;
+			int version  = 2;
 			info.AddValue("Revision", revision);
 			info.AddValue("Version", version);
 			info.AddValue("Type", this.type);
@@ -680,8 +708,7 @@ namespace Epsitec.Common.Document
 		// Constructeur qui désérialise le document.
 		protected Document(SerializationInfo info, StreamingContext context)
 		{
-			this.readRevision = info.GetInt32("Revision");
-			this.readVersion  = info.GetInt32("Version");
+			this.readRevision = 0;
 			this.type = (DocumentType) info.GetValue("Type", typeof(DocumentType));
 			this.name = info.GetString("Name");
 
@@ -694,7 +721,7 @@ namespace Epsitec.Common.Document
 			{
 				this.settings = (Settings.Settings) info.GetValue("Settings", typeof(Settings.Settings));
 
-				if ( this.IsRevisionGreaterOrEqual(1,1) )
+				if ( this.IsRevisionGreaterOrEqual(1,0,5) )
 				{
 					this.exportDirectory = "";
 					this.exportFilename = info.GetString("ExportFilename");
@@ -727,19 +754,10 @@ namespace Epsitec.Common.Document
 		}
 
 		// Indique si un fichier est compatible avec une révision/version.
-		public bool IsRevisionGreaterOrEqual(int revision, int version)
+		public bool IsRevisionGreaterOrEqual(int revision, int version, int subversion)
 		{
-			if ( this.readRevision > revision )
-			{
-				return true;
-			}
-
-			if ( this.readRevision < revision )
-			{
-				return false;
-			}
-
-			return ( this.readVersion >= version );
+			long r = ((long)revision<<32) + ((long)version<<16) + (long)subversion;
+			return ( this.readRevision >= r );
 		}
 		#endregion
 
@@ -1368,8 +1386,7 @@ namespace Epsitec.Common.Document
 		protected Common.Dialogs.Print			printDialog;
 		protected Dialogs						dialogs;
 		protected string						ioDirectory;
-		protected int							readRevision;
-		protected int							readVersion;
+		protected long							readRevision;
 		protected System.Collections.ArrayList	readWarnings;
 		protected IOType						ioType;
 	}

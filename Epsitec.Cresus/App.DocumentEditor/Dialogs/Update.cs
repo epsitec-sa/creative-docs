@@ -44,7 +44,6 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 
 				this.buy = new StaticText(this.window.Root);
 				this.buy.Height = 110;
-//				this.buy.IsReadOnly = true;
 				this.buy.Dock = DockStyle.Top;
 				this.buy.DockMargins = new Margins(10, 10, 0, 10);
 
@@ -90,7 +89,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			}
 			b.Append("<br/>");
 			b.Append(chip);
-			b.Append("Web:<tab/><a href=\"http://www.epsitec.ch\">www.epsitec.ch</a><br/>");
+			b.Append("Web:<tab/><a href=\"http://www.epsitec.ch/cresus/documents/download-f.php\">www.epsitec.ch</a><br/>");
 			b.Append(chip);
 			b.Append("Mail:<tab/><a href=\"mailto:epsitec@epsitec.ch\">epsitec@epsitec.ch</a><br/>");
 			b.Append(chip);

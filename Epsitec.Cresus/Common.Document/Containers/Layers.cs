@@ -15,35 +15,53 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBar = new HToolBar(this);
 			this.toolBar.Dock = DockStyle.Top;
 			this.toolBar.DockMargins = new Margins(0, 0, 0, -1);
+			System.Diagnostics.Debug.Assert(this.toolBar.CommandDispatcher != null);
 
-			this.buttonNew = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.LayerNew.icon");
-			this.buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNew);
+			this.buttonNew = new IconButton("LayerNew", "manifest:Epsitec.App.DocumentEditor.Images.LayerNew.icon");
 			this.toolBar.Items.Add(this.buttonNew);
 			ToolTip.Default.SetToolTip(this.buttonNew, "Nouveau calque <b>dessus</b> le calque courant");
+			this.Synchro(this.buttonNew);
 
-			this.buttonDuplicate = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.DuplicateItem.icon");
-			this.buttonDuplicate.Clicked += new MessageEventHandler(this.HandleButtonDuplicate);
+			this.buttonDuplicate = new IconButton("LayerDuplicate", "manifest:Epsitec.App.DocumentEditor.Images.DuplicateItem.icon");
 			this.toolBar.Items.Add(this.buttonDuplicate);
 			ToolTip.Default.SetToolTip(this.buttonDuplicate, "Dupliquer le calque");
+			this.Synchro(this.buttonDuplicate);
+
+			this.buttonNewSel = new IconButton("LayerNewSel", "manifest:Epsitec.App.DocumentEditor.Images.LayerNewSel.icon");
+			this.toolBar.Items.Add(this.buttonNewSel);
+			ToolTip.Default.SetToolTip(this.buttonNewSel, "Sélection dans un nouveau calque");
+			this.Synchro(this.buttonNewSel);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonUp = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Up.icon");
-			this.buttonUp.Clicked += new MessageEventHandler(this.HandleButtonUp);
+			this.buttonMergeUp = new IconButton("LayerMergeUp", "manifest:Epsitec.App.DocumentEditor.Images.LayerMergeUp.icon");
+			this.toolBar.Items.Add(this.buttonMergeUp);
+			ToolTip.Default.SetToolTip(this.buttonMergeUp, "Fusionne avec le calque dessus");
+			this.Synchro(this.buttonMergeUp);
+
+			this.buttonMergeDown = new IconButton("LayerMergeDown", "manifest:Epsitec.App.DocumentEditor.Images.LayerMergeDown.icon");
+			this.toolBar.Items.Add(this.buttonMergeDown);
+			ToolTip.Default.SetToolTip(this.buttonMergeDown, "Fusionne avec le calque dessous");
+			this.Synchro(this.buttonMergeDown);
+
+			this.toolBar.Items.Add(new IconSeparator());
+
+			this.buttonUp = new IconButton("LayerUp", "manifest:Epsitec.App.DocumentEditor.Images.Up.icon");
 			this.toolBar.Items.Add(this.buttonUp);
 			ToolTip.Default.SetToolTip(this.buttonUp, "Calque dessus");
+			this.Synchro(this.buttonUp);
 
-			this.buttonDown = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.Down.icon");
-			this.buttonDown.Clicked += new MessageEventHandler(this.HandleButtonDown);
+			this.buttonDown = new IconButton("LayerDown", "manifest:Epsitec.App.DocumentEditor.Images.Down.icon");
 			this.toolBar.Items.Add(this.buttonDown);
 			ToolTip.Default.SetToolTip(this.buttonDown, "Calque dessous");
+			this.Synchro(this.buttonDown);
 
 			this.toolBar.Items.Add(new IconSeparator());
 
-			this.buttonDelete = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.DeleteItem.icon");
-			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDelete);
+			this.buttonDelete = new IconButton("LayerDelete", "manifest:Epsitec.App.DocumentEditor.Images.DeleteItem.icon");
 			this.toolBar.Items.Add(this.buttonDelete);
 			ToolTip.Default.SetToolTip(this.buttonDelete, "Supprimer le calque");
+			this.Synchro(this.buttonDelete);
 
 			this.table = new CellTable(this);
 			this.table.Dock = DockStyle.Fill;
@@ -144,15 +162,21 @@ namespace Epsitec.Common.Document.Containers
 
 			this.UpdateExtended();
 		}
-		
 
+		// Synchronise avec l'état de la commande.
+		// TODO: devrait être inutile, à supprimer donc !!!
+		protected void Synchro(Widget widget)
+		{
+			widget.SetEnabled(this.toolBar.CommandDispatcher[widget.Command].Enabled);
+		}
+
+		
 		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
 			this.UpdateTable();
 			this.UpdateRadio();
 			this.UpdatePanel();
-			this.UpdateToolBar();
 		}
 
 		// Effectue la mise à jour d'un objet.
@@ -169,19 +193,6 @@ namespace Epsitec.Common.Document.Containers
 			{
 				this.UpdatePanel();
 			}
-		}
-
-		// Met à jour les boutons de la toolbar.
-		protected void UpdateToolBar()
-		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int total = this.table.Rows;
-			int sel = context.CurrentLayer;
-
-			this.buttonDuplicate.SetEnabled(sel != -1);
-			this.buttonUp.SetEnabled(sel != -1 && sel < total-1);
-			this.buttonDown.SetEnabled(sel != -1 && sel > 0);
-			this.buttonDelete.SetEnabled(sel != -1 && total > 1);
 		}
 
 		// Met à jour le contenu de la table.
@@ -253,6 +264,8 @@ namespace Epsitec.Common.Document.Containers
 			StaticText st;
 			CheckButton bt;
 
+			this.ignoreChanged = true;
+
 			st = this.table[0, row].Children[0] as StaticText;
 			int n = context.TotalLayers()-row-1;
 			st.Text = ((char)('A'+n)).ToString();
@@ -272,6 +285,8 @@ namespace Epsitec.Common.Document.Containers
 			bt.SetEnabled(!select);
 
 			this.table.SelectRow(row, n==context.CurrentLayer);
+
+			this.ignoreChanged = false;
 		}
 
 		// Met à jour le panneau pour éditer la propriété sélectionnée.
@@ -287,58 +302,18 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		// Crée un nouveau calque.
-		private void HandleButtonNew(object sender, MessageEventArgs e)
-		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int sel = context.CurrentLayer;
-			this.document.Modifier.LayerCreate(sel+1, "");
-		}
-
-		// Duplique un calque.
-		private void HandleButtonDuplicate(object sender, MessageEventArgs e)
-		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int sel = context.CurrentLayer;
-			this.document.Modifier.LayerDuplicate(sel, "");
-		}
-
-		// Monte d'une ligne le calque sélectionné.
-		private void HandleButtonUp(object sender, MessageEventArgs e)
-		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int sel = context.CurrentLayer;
-			this.document.Modifier.LayerSwap(sel, sel+1);
-		}
-
-		// Descend d'une ligne le calque sélectionné.
-		private void HandleButtonDown(object sender, MessageEventArgs e)
-		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int sel = context.CurrentLayer;
-			this.document.Modifier.LayerSwap(sel, sel-1);
-		}
-
-		// Supprime le calque sélectionné.
-		private void HandleButtonDelete(object sender, MessageEventArgs e)
-		{
-			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-			int sel = context.CurrentLayer;
-			this.document.Modifier.LayerDelete(sel);
-		}
-
 		// Liste cliquée.
 		private void HandleTableSelectionChanged(object sender)
 		{
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			context.CurrentLayer = context.TotalLayers()-this.table.SelectedRow-1;
-
-			this.UpdateToolBar();
 		}
 
 		// Bouton "check" à 3 états dans la liste cliqué.
 		private void HandleCheckActiveStateChanged(object sender)
 		{
+			if ( this.ignoreChanged )  return;
+
 			CheckButton bt = sender as CheckButton;
 			int sel = System.Convert.ToInt32(bt.Name);
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
@@ -440,6 +415,9 @@ namespace Epsitec.Common.Document.Containers
 		protected HToolBar				toolBar;
 		protected IconButton			buttonNew;
 		protected IconButton			buttonDuplicate;
+		protected IconButton			buttonNewSel;
+		protected IconButton			buttonMergeUp;
+		protected IconButton			buttonMergeDown;
 		protected IconButton			buttonUp;
 		protected IconButton			buttonDown;
 		protected IconButton			buttonDelete;

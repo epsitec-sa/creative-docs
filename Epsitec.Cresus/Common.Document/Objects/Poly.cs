@@ -250,6 +250,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.TotalHandle == 0 )
 			{
+				drawingContext.ConstrainFixStarting(pos);
 				this.ChangePropertyPolyClose(false);
 				this.HandleAdd(pos, HandleType.Starting);
 				this.HandleAdd(pos, HandleType.Primary);
@@ -258,8 +259,12 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else
 			{
-				this.HandleAdd(pos, HandleType.Primary);
-				this.Handle(this.TotalHandle-1).IsVisible = true;
+				double len = Point.Distance(pos, this.Handle(this.TotalHandle-1).Position);
+				if ( len > drawingContext.CloseMargin )
+				{
+					this.HandleAdd(pos, HandleType.Primary);
+					this.Handle(this.TotalHandle-1).IsVisible = true;
+				}
 			}
 
 			this.mouseDown = true;

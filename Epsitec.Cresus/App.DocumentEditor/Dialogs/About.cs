@@ -43,6 +43,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				buttonClose.TabIndex = 1000;
 				buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(buttonClose, "Fermer ce dialogue");
+
+				StaticText www = new StaticText(this.window.Root);
+				www.Width = 100;
+				www.Text = "<a href=\"http://www.epsitec.ch/cresus/documents/base-f.php\">www.epsitec.ch</a><br/>";
+				www.Alignment = ContentAlignment.MiddleRight;
+				www.HypertextClicked += new MessageEventHandler(HandleLinkHypertextClicked);
+				www.Anchor = AnchorStyles.BottomRight;
+				www.AnchorMargins = new Margins(0, 20, 0, 15);
 			}
 
 			this.window.ShowDialog();
@@ -138,6 +146,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			return null;
 		}
 
+
+		private void HandleLinkHypertextClicked(object sender, MessageEventArgs e)
+		{
+			Widget widget = sender as Widget;
+			System.Diagnostics.Process.Start(widget.Hypertext);
+		}
 
 		private void HandleWindowAboutCloseClicked(object sender)
 		{

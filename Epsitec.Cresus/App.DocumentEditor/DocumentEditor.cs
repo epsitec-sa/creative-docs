@@ -435,14 +435,14 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Settings.icon", "Settings", "Réglages...", "F5");
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Infos.icon", "Infos", "Informations...", "");
 			this.MenuAdd(docMenu, "", "", "", "");
-			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.PageNew.icon", "PageCreate", "Nouvelle page", "");
+			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.PageNew.icon", "PageNew", "Nouvelle page", "");
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Up.icon", "PageUp", "Reculer la page", "");
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Down.icon", "PageDown", "Avancer la page", "");
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.DeleteItem.icon", "PageDelete", "Supprimer la page", "");
 			this.MenuAdd(docMenu, "", "", "", "");
-			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.LayerNew.icon", "LayerCreate", "Nouveau calque", "");
-			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Up.icon", "LayerDown", "Monter le calque", "");
-			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Down.icon", "LayerUp", "Descendre le calque", "");
+			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.LayerNew.icon", "LayerNew", "Nouveau calque", "");
+			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Up.icon", "LayerUp", "Monter le calque", "");
+			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Down.icon", "LayerDown", "Descendre le calque", "");
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.DeleteItem.icon", "LayerDelete", "Supprimer le calque", "");
 			docMenu.AdjustSize();
 			this.menu.Items[i++].Submenu = docMenu;
@@ -1017,9 +1017,10 @@ namespace Epsitec.App.DocumentEditor
 				return Common.Dialogs.DialogResult.None;
 			}
 
+			this.dlgSplash.Hide();
+
 			string title = "Crésus";
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-
 			string shortFilename = Misc.ExtractName(this.CurrentDocument.Filename, this.CurrentDocument.IsDirtySerialize);
 			string statistic = string.Format("<font size=\"80%\">{0}</font><br/>", this.CurrentDocument.Modifier.Statistic(false, false));
 			string message = string.Format("<font size=\"100%\">Le fichier {0} a été modifié.</font><br/><br/>{1}Voulez-vous enregistrer les modifications ?", shortFilename, statistic);
@@ -1073,9 +1074,10 @@ namespace Epsitec.App.DocumentEditor
 		// fichier existant.
 		protected Common.Dialogs.DialogResult DialogDelete(CommandDispatcher dispatcher, string filename)
 		{
+			this.dlgSplash.Hide();
+
 			string title = "Crésus";
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
-
 			string shortFilename = string.Format("<b>{0}</b>", Misc.ExtractName(filename));
 			string statistic = string.Format("<font size=\"80%\">{0}</font><br/>", DocumentEditor.StatisticFilename(filename));
 			string message = string.Format("<font size=\"100%\">Le fichier {0} existe déjà.</font><br/><br/>{1}Voulez-vous le remplacer ?", shortFilename, statistic);
@@ -1090,6 +1092,8 @@ namespace Epsitec.App.DocumentEditor
 		protected Common.Dialogs.DialogResult DialogWarnings(CommandDispatcher dispatcher, System.Collections.ArrayList warnings)
 		{
 			if ( warnings == null || warnings.Count == 0 )  return Common.Dialogs.DialogResult.None;
+
+			this.dlgSplash.Hide();
 			warnings.Sort();
 
 			string title = "Crésus";
@@ -1120,6 +1124,8 @@ namespace Epsitec.App.DocumentEditor
 		public Common.Dialogs.DialogResult DialogError(CommandDispatcher dispatcher, string error)
 		{
 			if ( error == "" )  return Common.Dialogs.DialogResult.None;
+
+			this.dlgSplash.Hide();
 
 			string title = "Crésus";
 			string icon = "manifest:Epsitec.Common.Dialogs.Images.Warning.icon";
@@ -1158,6 +1164,8 @@ namespace Epsitec.App.DocumentEditor
 		// Retourne false si le fichier n'a pas été ouvert.
 		protected bool Open(CommandDispatcher dispatcher)
 		{
+			this.dlgSplash.Hide();
+
 			Common.Dialogs.FileOpen dialog = new Common.Dialogs.FileOpen();
 
 			dialog.InitialDirectory = this.globalSettings.InitialDirectory;
@@ -1248,6 +1256,8 @@ namespace Epsitec.App.DocumentEditor
 
 			if ( this.CurrentDocument.Filename == "" || ask )
 			{
+				this.dlgSplash.Hide();
+
 				Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
 			
 				dialog.InitialDirectory = this.globalSettings.InitialDirectory;
@@ -1392,6 +1402,8 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("Print")]
 		void CommandPrint(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.dlgSplash.Hide();
+
 			Document document = this.CurrentDocument;
 			Common.Dialogs.Print dialog = document.PrintDialog;
 			document.Printer.RestoreSettings(dialog.Document.PrinterSettings);
@@ -1411,6 +1423,8 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("Export")]
 		void CommandExport(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.dlgSplash.Hide();
+
 			Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
 			
 			if ( this.CurrentDocument.ExportDirectory == "" )
@@ -1496,6 +1510,8 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("OpenPalette")]
 		void CommandOpenPalette()
 		{
+			this.dlgSplash.Hide();
+
 			Common.Dialogs.FileOpen dialog = new Common.Dialogs.FileOpen();
 			
 			dialog.InitialDirectory = this.CurrentDocument.GlobalSettings.ColorCollectionDirectory;
@@ -1517,6 +1533,8 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("SavePalette")]
 		void CommandSavePalette()
 		{
+			this.dlgSplash.Hide();
+
 			Common.Dialogs.FileSave dialog = new Common.Dialogs.FileSave();
 			
 			dialog.InitialDirectory = this.CurrentDocument.GlobalSettings.ColorCollectionDirectory;
@@ -2005,12 +2023,14 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("Settings")]
 		void CommandSettings(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.dlgSplash.Hide();
 			this.dlgSettings.Show();
 		}
 
 		[Command ("Infos")]
 		void CommandInfos(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.dlgSplash.Hide();
 			this.dlgInfos.Show();
 		}
 
@@ -2149,12 +2169,20 @@ namespace Epsitec.App.DocumentEditor
 			context.CurrentPage = sel;
 		}
 
-		[Command ("PageCreate")]
-		void CommandPageCreate(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("PageNew")]
+		void CommandPageNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			int rank = context.CurrentPage;
-			this.CurrentDocument.Modifier.PageCreate(rank+1, "");
+			this.CurrentDocument.Modifier.PageNew(rank+1, "");
+		}
+
+		[Command ("PageDuplicate")]
+		void CommandPageDuplicate(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			int rank = context.CurrentPage;
+			this.CurrentDocument.Modifier.PageDuplicate(rank, "");
 		}
 
 		[Command ("PageDelete")]
@@ -2224,12 +2252,62 @@ namespace Epsitec.App.DocumentEditor
 			context.CurrentLayer = sel;
 		}
 
-		[Command ("LayerCreate")]
-		void CommandLayerCreate(CommandDispatcher dispatcher, CommandEventArgs e)
+		[Command ("LayerNew")]
+		void CommandLayerNew(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			int rank = context.CurrentLayer;
-			this.CurrentDocument.Modifier.LayerCreate(rank+1, "");
+			this.CurrentDocument.Modifier.LayerNew(rank+1, "");
+		}
+
+		[Command ("LayerDuplicate")]
+		void CommandLayerDuplicate(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			int rank = context.CurrentLayer;
+			this.CurrentDocument.Modifier.LayerDuplicate(rank, "");
+		}
+
+		[Command ("LayerNewSel")]
+		void CommandLayerNewSel(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			int rank = context.CurrentLayer;
+			this.CurrentDocument.Modifier.LayerNewSel(rank, "");
+		}
+
+		[Command ("LayerMergeUp")]
+		void CommandLayerMergeUp(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			int rank = context.CurrentLayer;
+			this.CurrentDocument.Modifier.LayerMerge(rank, rank+1);
+		}
+
+		[Command ("LayerMergeDown")]
+		void CommandLayerMergeDown(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			int rank = context.CurrentLayer;
+			this.CurrentDocument.Modifier.LayerMerge(rank, rank-1);
+		}
+
+		[Command ("LayerUp")]
+		void CommandLayerUp(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			int rank = context.CurrentLayer;
+			this.CurrentDocument.Modifier.LayerSwap(rank, rank+1);
+			context.CurrentLayer = rank+1;
+		}
+
+		[Command ("LayerDown")]
+		void CommandLayerDown(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
+			int rank = context.CurrentLayer;
+			this.CurrentDocument.Modifier.LayerSwap(rank, rank-1);
+			context.CurrentLayer = rank-1;
 		}
 
 		[Command ("LayerDelete")]
@@ -2238,24 +2316,6 @@ namespace Epsitec.App.DocumentEditor
 			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
 			int rank = context.CurrentLayer;
 			this.CurrentDocument.Modifier.LayerDelete(rank);
-		}
-
-		[Command ("LayerUp")]
-		void CommandLayerUp(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-			int rank = context.CurrentLayer;
-			this.CurrentDocument.Modifier.LayerSwap(rank, rank-1);
-			context.CurrentLayer = rank-1;
-		}
-
-		[Command ("LayerDown")]
-		void CommandLayerDown(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			DrawingContext context = this.CurrentDocument.Modifier.ActiveViewer.DrawingContext;
-			int rank = context.CurrentLayer;
-			this.CurrentDocument.Modifier.LayerSwap(rank, rank+1);
-			context.CurrentLayer = rank+1;
 		}
 
 
@@ -2456,18 +2516,23 @@ namespace Epsitec.App.DocumentEditor
 			this.pagePrevState = new CommandState("PagePrev", this.commandDispatcher);
 			this.pageNextState = new CommandState("PageNext", this.commandDispatcher);
 			this.pageMenuState = new CommandState("PageMenu", this.commandDispatcher);
-			this.pageCreateState = new CommandState("PageCreate", this.commandDispatcher);
-			this.pageDeleteState = new CommandState("PageDelete", this.commandDispatcher);
+			this.pageNewState = new CommandState("PageNew", this.commandDispatcher);
+			this.pageDuplicateState = new CommandState("PageDuplicate", this.commandDispatcher);
 			this.pageUpState = new CommandState("PageUp", this.commandDispatcher);
 			this.pageDownState = new CommandState("PageDown", this.commandDispatcher);
+			this.pageDeleteState = new CommandState("PageDelete", this.commandDispatcher);
 
 			this.layerPrevState = new CommandState("LayerPrev", this.commandDispatcher);
 			this.layerNextState = new CommandState("LayerNext", this.commandDispatcher);
 			this.layerMenuState = new CommandState("LayerMenu", this.commandDispatcher);
-			this.layerCreateState = new CommandState("LayerCreate", this.commandDispatcher);
-			this.layerDeleteState = new CommandState("LayerDelete", this.commandDispatcher);
+			this.layerNewState = new CommandState("LayerNew", this.commandDispatcher);
+			this.layerDuplicateState = new CommandState("LayerDuplicate", this.commandDispatcher);
+			this.layerNewSelState = new CommandState("LayerNewSel", this.commandDispatcher);
+			this.layerMergeUpState = new CommandState("LayerMergeUp", this.commandDispatcher);
+			this.layerMergeDownState = new CommandState("LayerMergeDown", this.commandDispatcher);
 			this.layerUpState = new CommandState("LayerUp", this.commandDispatcher);
 			this.layerDownState = new CommandState("LayerDown", this.commandDispatcher);
+			this.layerDeleteState = new CommandState("LayerDelete", this.commandDispatcher);
 
 			this.settingsState = new CommandState("Settings", this.commandDispatcher, KeyCode.FuncF5);
 			this.infosState = new CommandState("Infos", this.commandDispatcher);
@@ -2733,6 +2798,7 @@ namespace Epsitec.App.DocumentEditor
 				this.booleanXorState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
 				this.booleanFrontMinusState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
 				this.booleanBackMinusState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
+				this.layerNewSelState.Enabled = ( totalSelected > 0 && !isCreating );
 
 				this.hideSelState.Enabled = ( totalSelected > 0 && !isCreating );
 				this.hideRestState.Enabled = ( totalObjects-totalSelected-totalHide > 0 && !isCreating );
@@ -2817,6 +2883,7 @@ namespace Epsitec.App.DocumentEditor
 				this.booleanXorState.Enabled = false;
 				this.booleanFrontMinusState.Enabled = false;
 				this.booleanBackMinusState.Enabled = false;
+				this.layerNewSelState.Enabled = false;
 
 				this.hideSelState.Enabled = false;
 				this.hideRestState.Enabled = false;
@@ -2886,10 +2953,11 @@ namespace Epsitec.App.DocumentEditor
 				this.pagePrevState.Enabled = (cp > 0 && !isCreating );
 				this.pageNextState.Enabled = (cp < tp-1 && !isCreating );
 				this.pageMenuState.Enabled = (tp > 1 && !isCreating );
-				this.pageCreateState.Enabled = !isCreating;
-				this.pageDeleteState.Enabled = (tp > 1 && !isCreating );
+				this.pageNewState.Enabled = !isCreating;
+				this.pageDuplicateState.Enabled = !isCreating;
 				this.pageUpState.Enabled = (cp > 0 && !isCreating );
 				this.pageDownState.Enabled = (cp < tp-1 && !isCreating );
+				this.pageDeleteState.Enabled = (tp > 1 && !isCreating );
 
 				this.CurrentDocumentInfo.quickPageMenu.Text = (cp+1).ToString();
 			}
@@ -2898,10 +2966,11 @@ namespace Epsitec.App.DocumentEditor
 				this.pagePrevState.Enabled = false;
 				this.pageNextState.Enabled = false;
 				this.pageMenuState.Enabled = false;
-				this.pageCreateState.Enabled = false;
-				this.pageDeleteState.Enabled = false;
+				this.pageNewState.Enabled = false;
+				this.pageDuplicateState.Enabled = false;
 				this.pageUpState.Enabled = false;
 				this.pageDownState.Enabled = false;
+				this.pageDeleteState.Enabled = false;
 			}
 		}
 
@@ -2922,10 +2991,13 @@ namespace Epsitec.App.DocumentEditor
 				this.layerPrevState.Enabled = (cl > 0 && !isCreating );
 				this.layerNextState.Enabled = (cl < tl-1 && !isCreating );
 				this.layerMenuState.Enabled = (tl > 1 && !isCreating );
-				this.layerCreateState.Enabled = !isCreating ;
+				this.layerNewState.Enabled = !isCreating ;
+				this.layerDuplicateState.Enabled = !isCreating ;
+				this.layerMergeUpState.Enabled = (cl < tl-1 && !isCreating );
+				this.layerMergeDownState.Enabled = (cl > 0 && !isCreating );
+				this.layerUpState.Enabled = (cl < tl-1 && !isCreating );
+				this.layerDownState.Enabled = (cl > 0 && !isCreating );
 				this.layerDeleteState.Enabled = (tl > 1 && !isCreating );
-				this.layerUpState.Enabled = (cl > 0 && !isCreating );
-				this.layerDownState.Enabled = (cl < tl-1 && !isCreating );
 
 				this.CurrentDocumentInfo.quickLayerMenu.Text = ((char)('A'+cl)).ToString();
 			}
@@ -2934,10 +3006,13 @@ namespace Epsitec.App.DocumentEditor
 				this.layerPrevState.Enabled = false;
 				this.layerNextState.Enabled = false;
 				this.layerMenuState.Enabled = false;
-				this.layerCreateState.Enabled = false;
-				this.layerDeleteState.Enabled = false;
+				this.layerNewState.Enabled = false;
+				this.layerDuplicateState.Enabled = false;
+				this.layerMergeUpState.Enabled = false;
+				this.layerMergeDownState.Enabled = false;
 				this.layerUpState.Enabled = false;
 				this.layerDownState.Enabled = false;
+				this.layerDeleteState.Enabled = false;
 			}
 		}
 
@@ -3734,14 +3809,19 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					pagePrevState;
 		protected CommandState					pageNextState;
 		protected CommandState					pageMenuState;
-		protected CommandState					pageCreateState;
-		protected CommandState					pageDeleteState;
+		protected CommandState					pageNewState;
+		protected CommandState					pageDuplicateState;
 		protected CommandState					pageUpState;
 		protected CommandState					pageDownState;
+		protected CommandState					pageDeleteState;
 		protected CommandState					layerPrevState;
 		protected CommandState					layerNextState;
 		protected CommandState					layerMenuState;
-		protected CommandState					layerCreateState;
+		protected CommandState					layerNewState;
+		protected CommandState					layerDuplicateState;
+		protected CommandState					layerNewSelState;
+		protected CommandState					layerMergeUpState;
+		protected CommandState					layerMergeDownState;
 		protected CommandState					layerDeleteState;
 		protected CommandState					layerUpState;
 		protected CommandState					layerDownState;
