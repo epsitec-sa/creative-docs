@@ -19,6 +19,18 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 		}
 
+		public IAdorner Adorner
+		{
+			get { return this.adorner; }
+			set { this.adorner = value; }
+		}
+
+		public Drawing.Color UniqueColor
+		{
+			get { return this.uniqueColor; }
+			set { this.uniqueColor = value; }
+		}
+
 		public double ScaleX
 		{
 			get { return this.scaleX; }
@@ -31,6 +43,24 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.scaleY = value; }
 		}
 
+		public double Zoom
+		{
+			get { return this.zoom; }
+			set { this.zoom = value; }
+		}
+
+		public double OriginX
+		{
+			get { return this.originX; }
+			set { this.originX = value; }
+		}
+
+		public double OriginY
+		{
+			get { return this.originY; }
+			set { this.originY = value; }
+		}
+
 		// Indique si l'objet Drawer est éditable.
 		public bool IsEditable
 		{
@@ -38,11 +68,11 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.isEditable = value; }
 		}
 
-		// Indique si l'icône est activée ou désactivée (n/b).
-		public bool IsEnable
+		// Indique si l'icône est estompée.
+		public bool IsDimmed
 		{
-			get { return this.isEnable; }
-			set { this.isEnable = value; }
+			get { return this.isDimmed; }
+			set { this.isDimmed = value; }
 		}
 
 		// Taille minimale que doit avoir un objet à sa création.
@@ -78,14 +108,21 @@ namespace Epsitec.Common.Pictogram.Data
 		// Adapte une couleur en fonction de l'état de l'icône.
 		public Drawing.Color AdaptColor(Drawing.Color color)
 		{
-			if ( !this.IsEnable )  // desabled ?
+			if ( !this.uniqueColor.IsEmpty )  // desabled (n/b) ?
+			{
+				if ( this.adorner != null )
+				{
+					this.adorner.AdaptDisabledTextColor(ref color, this.uniqueColor);
+				}
+			}
+			if ( this.isDimmed )  // estompé (hors groupe) ?
 			{
 				double alpha = color.A;
 				double intensity = color.GetBrightness ();
-				intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
-				intensity = System.Math.Min(intensity+0.3, 1.0);  // diminue l'intensité
+				intensity = 0.5+(intensity-0.5)*0.05;  // diminue le contraste
+				intensity = System.Math.Min(intensity+0.1, 1.0);  // augmente l'intensité
 				color = Drawing.Color.FromBrightness(intensity);
-				color.A = alpha;
+				color.A = alpha*0.2;  // très transparent
 			}
 			return color;
 		}
@@ -178,10 +215,15 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		protected IAdorner			adorner;
+		protected Drawing.Color		uniqueColor;
 		protected double			scaleX = 1;
 		protected double			scaleY = 1;
+		protected double			zoom = 1;
+		protected double			originX = 0;
+		protected double			originY = 0;
 		protected bool				isEditable = false;
-		protected bool				isEnable = true;
+		protected bool				isDimmed = false;
 		protected double			minimalSize = 3;
 		protected double			minimalWidth = 5;
 		protected double			closeMargin = 10;

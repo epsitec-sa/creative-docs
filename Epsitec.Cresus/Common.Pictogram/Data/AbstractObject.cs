@@ -36,6 +36,22 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.handles = value; }
 		}
 
+		[XmlArrayItem("Arrow",     Type=typeof(ObjectArrow))]
+		[XmlArrayItem("Bezier",    Type=typeof(ObjectBezier))]
+		[XmlArrayItem("Circle",    Type=typeof(ObjectCircle))]
+		[XmlArrayItem("Ellipse",   Type=typeof(ObjectEllipse))]
+		[XmlArrayItem("Group",     Type=typeof(ObjectGroup))]
+		[XmlArrayItem("Line",      Type=typeof(ObjectLine))]
+		[XmlArrayItem("Polyline",  Type=typeof(ObjectPoly))]
+		[XmlArrayItem("Rectangle", Type=typeof(ObjectRectangle))]
+		[XmlArrayItem("Polygon",   Type=typeof(ObjectRegular))]
+		[XmlArrayItem("Text",      Type=typeof(ObjectText))]
+		public System.Collections.ArrayList Objects
+		{
+			get { return this.objects; }
+			set { this.objects = value; }
+		}
+
 
 		// Nom de l'icône.
 		public virtual string IconName
@@ -74,18 +90,21 @@ namespace Epsitec.Common.Pictogram.Data
 			handle.Position = pos;
 			handle.Type = type;
 			this.handles.Add(handle);
+			this.durtyBbox = true;
 		}
 
 		// Insère une poignée.
 		public void HandleInsert(int rank, Handle handle)
 		{
 			this.handles.Insert(rank, handle);
+			this.durtyBbox = true;
 		}
 
 		// Supprime une poignée.
 		public void HandleDelete(int rank)
 		{
 			this.handles.RemoveAt(rank);
+			this.durtyBbox = true;
 		}
 
 		// Donne une poignée de l'objet.
@@ -156,6 +175,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				iconContext.ConstrainSnapPos(ref pos);
 				this.Handle(rank).Position = pos;
+				this.durtyBbox = true;
 			}
 			else	// poignée d'une propriété ?
 			{
@@ -181,6 +201,27 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				handle.Position += move;
 			}
+			this.bbox.Offset(move);
+		}
+
+
+		// Met à jour le rectangle englobant l'objet.
+		public virtual void UpdateBoundingBox()
+		{
+		}
+
+		// Rectangle englobant l'objet.
+		public virtual Drawing.Rectangle BoundingBox
+		{
+			get
+			{
+				if ( this.durtyBbox )
+				{
+					this.UpdateBoundingBox();
+					this.durtyBbox = false;
+				}
+				return this.bbox;
+			}
 		}
 
 
@@ -201,19 +242,19 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Sélectionne toutes les poignées de l'objet.
-		public void SelectObject()
+		public void Select()
 		{
-			this.SelectObject(true);
+			this.Select(true);
 		}
 
 		// Désélectionne toutes les poignées de l'objet.
-		public void DeselectObject()
+		public void Deselect()
 		{
-			this.SelectObject(false);
+			this.Select(false);
 		}
 
 		// Sélectionne ou désélectionne toutes les poignées de l'objet.
-		public void SelectObject(bool select)
+		public void Select(bool select)
 		{
 			this.selected = select;
 
@@ -433,6 +474,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Déplacement pendant la création d'un objet.
 		public virtual void CreateMouseMove(Drawing.Point pos, IconContext iconContext)
 		{
+			this.durtyBbox = true;
 		}
 
 		// Fin de la création d'un objet.
@@ -490,6 +532,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			this.selected       = src.selected;
 			this.editProperties = src.editProperties;
+			this.durtyBbox      = src.durtyBbox;
 			this.bbox           = src.bbox;
 		}
 
@@ -532,6 +575,15 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+		// Retourne l'origine de l'objet.
+		public virtual Drawing.Point Origin
+		{
+			get
+			{
+				return new Drawing.Point(0, 0);
+			}
+		}
+
 
 		protected bool							isHilite;
 		protected double						scaleX;
@@ -541,10 +593,12 @@ namespace Epsitec.Common.Pictogram.Data
 		protected double						closeMargin;
 		protected bool							selected = false;
 		protected bool							editProperties = false;
+		protected bool							durtyBbox = true;
 		protected Drawing.Rectangle				bbox = new Drawing.Rectangle();
 
 		[XmlAttribute]
 		protected System.Collections.ArrayList	properties = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	handles = new System.Collections.ArrayList();
+		protected System.Collections.ArrayList	objects = null;
 	}
 }

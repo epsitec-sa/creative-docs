@@ -168,6 +168,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Data\ObjectGroup.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Data\ObjectLine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -309,6 +314,11 @@
                 />
                 <File
                     RelPath = "Widgets\SampleButton.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\ZoomHistory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

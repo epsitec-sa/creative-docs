@@ -89,6 +89,7 @@ namespace Epsitec.Common.Pictogram.Data
 				this.Handle(rank).Position = pos;
 				this.Handle(2).Position = this.ComputeExtremity(0);
 			}
+			this.durtyBbox = true;
 		}
 
 		// Déplace tout l'objet.
@@ -97,6 +98,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.Handle(0).Position += move;
 			this.Handle(1).Position += move;
 			this.Handle(2).Position = this.ComputeExtremity(0);
+			this.bbox.Offset(move);
 		}
 
 		
@@ -113,6 +115,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			iconContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
+			this.durtyBbox = true;
 		}
 
 		// Fin de la création d'un objet.
@@ -165,14 +168,18 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Dessine l'objet.
-		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		// Met à jour le rectangle englobant l'objet.
+		public override void UpdateBoundingBox()
 		{
-			base.DrawGeometry(graphics, iconContext);
+			Drawing.Path path = this.PathBuild();
+			this.bbox = path.ComputeBounds();
+		}
 
-			if ( this.TotalHandle < 2 )  return;
-
+		// Crée le chemin de l'objet.
+		protected Drawing.Path PathBuild()
+		{
 			Drawing.Path path = new Drawing.Path();
+
 			path.MoveTo(this.Handle(0).Position);
 			path.LineTo(this.Handle(1).Position);
 
@@ -180,21 +187,22 @@ namespace Epsitec.Common.Pictogram.Data
 			path.LineTo(this.Handle(1).Position);
 			path.LineTo(this.ComputeExtremity(1));
 
-			this.bbox = path.ComputeBounds();
+			return path;
+		}
 
+		// Dessine l'objet.
+		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		{
+			base.DrawGeometry(graphics, iconContext);
+
+			if ( this.TotalHandle < 2 )  return;
+
+			Drawing.Path path = this.PathBuild();
 			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
-				path = new Drawing.Path();
-				path.MoveTo(this.Handle(0).Position);
-				path.LineTo(this.Handle(1).Position);
-
-				path.MoveTo(this.ComputeExtremity(0));
-				path.LineTo(this.Handle(1).Position);
-				path.LineTo(this.ComputeExtremity(1));
-
 				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 				graphics.RenderSolid(iconContext.HiliteColor);
 			}

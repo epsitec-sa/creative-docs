@@ -25,7 +25,7 @@ namespace Epsitec.Common.Pictogram
 			this.root.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			window.Root.Children.Add(this.root);
 
-			this.toolbar = new ToolBar();
+			this.toolbar = new HToolBar();
 			this.toolbar.Location = new Drawing.Point(0, window.ClientSize.Height-this.toolbar.DefaultHeight);
 			this.toolbar.Size = new Drawing.Size(window.ClientSize.Width, this.toolbar.DefaultHeight);
 			this.toolbar.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Pictogram
 
 			Window window = new Window();
 			
-			window.ClientSize = new Drawing.Size(700, 500);
+			window.ClientSize = new Drawing.Size(720, 500);
 			window.Text = "CheckIconEditor";
 
 			IconEditor editor = new IconEditor();
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Pictogram
 		}
 
 		protected Widget			root;
-		protected ToolBar			toolbar;
+		protected HToolBar			toolbar;
 
 		private void CanvasEngineButtonClicked(object sender, MessageEventArgs e)
 		{

@@ -70,7 +70,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Détecte si l'objet est dans un rectangle.
 		public override bool Detect(Drawing.Rectangle rect)
 		{
-			Drawing.Rectangle fullBbox = this.bbox;
+			Drawing.Rectangle fullBbox = this.BoundingBox;
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
 			fullBbox.Inflate(width, width);
 			return rect.Contains(fullBbox);
@@ -110,6 +110,7 @@ namespace Epsitec.Common.Pictogram.Data
 			p2 = this.Handle(1).Position;
 			this.Handle(2).Position = new Drawing.Point(p1.X, p2.Y);
 			this.Handle(3).Position = new Drawing.Point(p2.X, p1.Y);
+			this.durtyBbox = true;
 		}
 
 		// Déplace tout l'objet.
@@ -122,6 +123,8 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Point p2 = this.Handle(1).Position;
 			this.Handle(2).Position = new Drawing.Point(p1.X, p2.Y);
 			this.Handle(3).Position = new Drawing.Point(p2.X, p1.Y);
+
+			this.bbox.Offset(move);
 		}
 
 		
@@ -138,6 +141,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			iconContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
+			this.durtyBbox = true;
 		}
 
 		// Fin de la création d'un objet.
@@ -163,6 +167,13 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 	
+		// Met à jour le rectangle englobant l'objet.
+		public override void UpdateBoundingBox()
+		{
+			Drawing.Path path = this.PathBuild();
+			this.bbox = path.ComputeBounds();
+		}
+
 		// Calcule une courbe de Bézier de l'objet.
 		protected bool ComputeBezier(int i, Drawing.Point c, double rx, double ry,
 									 out Drawing.Point p1, out Drawing.Point s1, out Drawing.Point s2, out Drawing.Point p2)
@@ -226,13 +237,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return path;
 		}
 
-		// Dessine l'objet.
-		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		// Crée le chemin de l'objet.
+		protected Drawing.Path PathBuild()
 		{
-			base.DrawGeometry(graphics, iconContext);
-
-			if ( this.TotalHandle < 2 )  return;
-
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
 			Drawing.Point center = new Drawing.Point();
@@ -240,9 +247,18 @@ namespace Epsitec.Common.Pictogram.Data
 			center.Y = (p1.Y+p2.Y)/2;
 			double rx = System.Math.Abs(p1.X-center.X);
 			double ry = System.Math.Abs(p1.Y-center.Y);
-			Drawing.Path path = this.PathCircle(center, rx, ry);
-			this.bbox = path.ComputeBounds();
-			this.PropertyGradient(2).Render(graphics, iconContext, path, this.bbox);
+			return this.PathCircle(center, rx, ry);
+		}
+
+		// Dessine l'objet.
+		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		{
+			base.DrawGeometry(graphics, iconContext);
+
+			if ( this.TotalHandle < 2 )  return;
+
+			Drawing.Path path = this.PathBuild();
+			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBox);
 
 			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));

@@ -86,16 +86,16 @@ namespace Epsitec.Common.Pictogram.Data
 
 		// Couleur de fond du panneau associé.
 		[XmlIgnore]
-		public Drawing.Color BackgroundColor
+		public double BackgroundIntensity
 		{
 			get
 			{
-				return this.backgroundColor;
+				return this.backgroundIntensity;
 			}
 
 			set
 			{
-				this.backgroundColor = value;
+				this.backgroundIntensity = value;
 			}
 		}
 
@@ -152,13 +152,13 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Effectue une copie des informations de base de la propriété.
-		public void CopyInfoTo(AbstractProperty property)
+		public virtual void CopyInfoTo(AbstractProperty property)
 		{
-			property.type            = this.type;
-			property.text            = this.text;
-			property.backgroundColor = this.backgroundColor;
-			property.extendedSize    = this.extendedSize;
-			property.multi           = this.multi;
+			property.type                = this.type;
+			property.text                = this.text;
+			property.backgroundIntensity = this.backgroundIntensity;
+			property.extendedSize        = this.extendedSize;
+			property.multi               = this.multi;
 		}
 
 		// Compare deux propriétés.
@@ -166,6 +166,16 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			if ( property.type != this.type )  return false;
 			return true;
+		}
+
+		// Cherche une propriété de même type dans une liste.
+		public AbstractProperty Search(System.Collections.ArrayList list)
+		{
+			foreach ( AbstractProperty property in list )
+			{
+				if ( property.Type == this.type )  return property;
+			}
+			return null;
 		}
 
 		// Crée le panneau permettant d'éditer la propriété.
@@ -211,7 +221,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		protected string						text;
-		protected Drawing.Color					backgroundColor;
+		protected double						backgroundIntensity;
 		protected bool							extendedSize = false;
 		protected bool							multi = false;
 		protected bool							editProperties = false;
