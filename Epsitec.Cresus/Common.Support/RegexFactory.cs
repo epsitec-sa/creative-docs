@@ -15,12 +15,24 @@ namespace Epsitec.Common.Support
 		{
 		}
 		
-		public static System.Text.RegularExpressions.Regex FromSimpleJoker(string pattern)
+		static RegexFactory()
+		{
+			RegexOptions options = RegexOptions.Compiled | RegexOptions.ExplicitCapture;
+			
+			RegexFactory.alpha_name     = new Regex (@"^[a-zA-Z]+$", options);
+			RegexFactory.alpha_num_name = new Regex (@"^[a-zA-Z_][a-zA-Z0-9_]*$", options);
+			RegexFactory.alpha_dot_name = new Regex (@"^[a-zA-Z_]([a-zA-Z0-9_]*((?![\.]$)(?<X>[\.])(?!\k<X>))*)*$", options);
+			RegexFactory.file_name      = new Regex (@"^[a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]([a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]*((?![\. ]$)(?<X>[\. ])(?!\k<X>))*)*$", options);
+			RegexFactory.resource_name  = new Regex (@"^[a-zA-Z_](([a-zA-Z0-9_]*((?![\.\#]$)(?<X>[\.\#])(?!\k<X>))*)|(\[[0-9]+\]))*$", options);
+		}
+		
+		
+		public static Regex FromSimpleJoker(string pattern)
 		{
 			return RegexFactory.FromSimpleJoker (pattern, Options.None);
 		}
 		
-		public static System.Text.RegularExpressions.Regex FromSimpleJoker(string pattern, Options options)
+		public static Regex FromSimpleJoker(string pattern, Options options)
 		{
 			RegexOptions              regex_options = RegexOptions.ExplicitCapture;
 			System.Text.StringBuilder regex_pattern = new System.Text.StringBuilder ();
@@ -73,6 +85,48 @@ namespace Epsitec.Common.Support
 			return new Regex (regex_pattern.ToString (), regex_options);
 		}
 		
+		
+		public static Regex						AlphaName
+		{
+			get
+			{
+				return RegexFactory.alpha_name;
+			}
+		}
+		
+		public static Regex						AlphaNumName
+		{
+			get
+			{
+				return RegexFactory.alpha_num_name;
+			}
+		}
+		
+		public static Regex						AlphaDotName
+		{
+			get
+			{
+				return RegexFactory.alpha_dot_name;
+			}
+		}
+		
+		public static Regex						FileName
+		{
+			get
+			{
+				return RegexFactory.file_name;
+			}
+		}
+		
+		public static Regex						ResourceName
+		{
+			get
+			{
+				return RegexFactory.resource_name;
+			}
+		}
+		
+		
 		[System.Flags] public enum Options
 		{
 			None			= 0,
@@ -80,5 +134,12 @@ namespace Epsitec.Common.Support
 			Compiled		= 0x0002,
 			Capture			= 0x0004,
 		}
+		
+		
+		private static Regex					alpha_name;
+		private static Regex					alpha_num_name;
+		private static Regex					alpha_dot_name;
+		private static Regex					file_name;
+		private static Regex					resource_name;
 	}
 }
