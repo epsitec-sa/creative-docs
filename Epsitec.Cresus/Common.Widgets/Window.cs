@@ -32,6 +32,11 @@ namespace Epsitec.Common.Widgets
 			System.Windows.Forms.Application.Run (this.window);
 		}
 		
+		public void Quit()
+		{
+			System.Windows.Forms.Application.Exit ();
+		}
+		
 		public static void InvalidateAll()
 		{
 			for (int i = 0; i < Window.windows.Count; )
@@ -234,6 +239,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return this.cmd_dispatcher; }
 			set { this.cmd_dispatcher = value; }
+		}
+		
+		public bool							PreventAutoClose
+		{
+			get { return this.window.PreventAutoClose; }
+			set { this.window.PreventAutoClose = value; }
 		}
 		
 		

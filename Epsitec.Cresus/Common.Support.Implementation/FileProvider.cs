@@ -62,7 +62,7 @@ namespace Epsitec.Common.Support.Implementation
 					case ResourceLevel.Localised:
 						return this.path_prefix + id + this.ext_local;
 					case ResourceLevel.Customised:
-						return this.path_prefix + id + ".custom.resource";
+						return this.path_prefix + id + Resources.CustomisedSuffix + ".resource";
 					default:
 						throw new ResourceException ("Invalid resource level");
 				}

@@ -1,6 +1,8 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 03/11/2003
 
+using Epsitec.Common.Support;
+
 namespace Epsitec.Cresus.DataLayer
 {
 	public delegate void DataChangedHandler(DataRecord sender, string path);
@@ -86,6 +88,11 @@ namespace Epsitec.Cresus.DataLayer
 		public DataState						DataState
 		{
 			get { return this.data_state; }
+		}
+		
+		public string							DataLabel
+		{
+			get { return this.GetAttribute ("label", ResourceLevel.Merged); }
 		}
 		
 		public DataRecord						Parent
@@ -257,12 +264,68 @@ namespace Epsitec.Cresus.DataLayer
 			return path.Substring (0, pos);
 		}
 		
+		protected string GetAttribute(string name, ResourceLevel level)
+		{
+			if (this.attributes == null)
+			{
+				return null;
+			}
+			
+			string find;
+			
+			switch (level)
+			{
+				case ResourceLevel.Default:		find = name; break;
+				case ResourceLevel.Customised:	find = DbTools.BuildCompositeName (name, Resources.CustomisedSuffix);	break;
+				case ResourceLevel.Localised:	find = DbTools.BuildCompositeName (name, Resources.LocalisedSuffix);	break;
+				
+				case ResourceLevel.Merged:
+					
+					//	Cas spécial: on veut trouver automatiquement l'attribut le meilleur dans
+					//	ce contexte; commence par chercher la variante personnalisée, puis la
+					//	variante localisée, pour enfin chercher la variante de base.
+					
+					find = DbTools.BuildCompositeName (name, Resources.CustomisedSuffix);
+					if (this.attributes.Contains (find)) return this.attributes[find] as string;
+					
+					find = DbTools.BuildCompositeName (name, Resources.LocalisedSuffix);
+					if (this.attributes.Contains (find)) return this.attributes[find] as string;
+					
+					find = name;
+					break;
+				
+				default:
+					throw new ResourceException ("Invalid ResourceLevel");
+			}
+			
+			return (this.attributes.Contains (find)) ? this.attributes[find] as string : null;
+		}
 		
+		protected void SetAttribute(string name, string value, ResourceLevel level)
+		{
+			if (this.attributes == null)
+			{
+				this.attributes = new System.Collections.Hashtable ();
+			}
+			
+			switch (level)
+			{
+				case ResourceLevel.Default:		break;
+				case ResourceLevel.Customised:	name = DbTools.BuildCompositeName (name, Resources.CustomisedSuffix);	break;
+				case ResourceLevel.Localised:	name = DbTools.BuildCompositeName (name, Resources.LocalisedSuffix);	break;
+				
+				default:
+					throw new ResourceException ("Invalid ResourceLevel");
+			}
+			
+			this.attributes[name] = value;
+		}
 		
 		
 		protected DataType						data_type;
 		protected DataState						data_state = DataState.Invalid;
 		protected DataRecord					parent;
 		protected System.Collections.Hashtable	data_changed_events;
+		protected System.Collections.Hashtable	attributes;
 	}
 }

@@ -112,11 +112,11 @@
                 />
                 <File
                     RelPath = "resources\AppIcon.resource"
-                    BuildAction = "None"
+                    BuildAction = "Content"
                 />
                 <File
                     RelPath = "resources\MainWindow.resource"
-                    BuildAction = "None"
+                    BuildAction = "Content"
                 />
             </Include>
         </Files>

@@ -30,6 +30,7 @@ class CopyProject:
         self.copy_ext.append('.txt')
         self.copy_ext.append('.png')
         self.copy_ext.append('.tif')
+        self.copy_ext.append('.chm')
         self.copy_ext.append('.py')
         self.copy_ext.append('.resource')
         self.copy_ext.append('.snk')
@@ -37,6 +38,7 @@ class CopyProject:
         self.copy_ext.append('.config')
         self.copy_ext.append('.info')
         self.copy_ext.append('.log')
+        self.copy_ext.append('.vdproj')
 
         self.file_count = 0
         self.proj_count = 0
@@ -74,7 +76,7 @@ class CopyProject:
         f.close()
         return revnum
     
-    def strip_scc_info(self, name):
+    def strip_scc_info_csproj(self, name):
         f = open(name, 'r')
         lines = f.readlines()
         lines_to_remove = list()
@@ -92,6 +94,24 @@ class CopyProject:
                 lines[i] = lines[i].replace ('..\\..\\..\\..\\..\\..', 'C:')
             i += 1
         
+        f = open(name, 'w')
+        f.writelines(lines)
+        f.close()
+
+        self.proj_count += 1
+
+    def strip_scc_info_vdproj(self, name):
+        f = open(name, 'r')
+        lines = f.readlines()
+        lines_to_remove = list()
+        f.close()
+        for line in lines:
+            if line.strip().startswith('"Scc'):
+                lines_to_remove.append (line)
+
+        for line in lines_to_remove:
+            lines.remove(line)
+
         f = open(name, 'w')
         f.writelines(lines)
         f.close()
@@ -142,7 +162,7 @@ class CopyProject:
         return 0
 
     def check_no_copy(self, name):
-        for ext in ['.dll','.pdb','.scc','.user','.exe','.vspscc','.vssscc','.projdata','.suo','.projdata1','.mgb']:
+        for ext in ['.dll','.pdb','.scc','.user','.exe','.vspscc','.vssscc','.projdata','.suo','.projdata1','.mgb','.Exe','.Ini','.msi']:
             if name.endswith(ext):
                 return 1
 
@@ -177,7 +197,9 @@ class CopyProject:
                     f.close()
 
                     if name.endswith('.csproj'):
-                        self.strip_scc_info(dst_name)
+                        self.strip_scc_info_csproj(dst_name)
+                    if name.endswith('.vdproj'):
+                        self.strip_scc_info_vdproj(dst_name)
                     if name.endswith('.csproj.user'):
                         self.patch_path_info(dst_name)
                     if name.endswith('.sln'):

@@ -93,6 +93,18 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		
+		public static string					LocalisedSuffix
+		{
+			get { return Resources.culture.TwoLetterISOLanguageName; }
+		}
+		
+		public static string					CustomisedSuffix
+		{
+			get { return "00"; }
+		}
+		
+		
 		public static bool ValidateId(string id)
 		{
 			IResourceProvider provider = Resources.FindProvider (id, out id);
@@ -117,6 +129,7 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 		
+		
 		public static string ExtractPrefix(string full_id)
 		{
 			if (full_id != null)
@@ -131,6 +144,7 @@ namespace Epsitec.Common.Support
 			
 			return null;
 		}
+		
 		
 		public static ResourceBundle GetBundle(string id)
 		{

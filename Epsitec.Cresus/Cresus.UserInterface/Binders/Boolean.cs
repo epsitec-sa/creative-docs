@@ -15,7 +15,7 @@ namespace Epsitec.Cresus.UserInterface.Binders
 		
 		
 		#region IBinder Members
-		public void CreateBinding(object ui_object, DataLayer.DataSet root, string binding, DataLayer.DataRecord data_record)
+		public void CreateBinding(object ui_object, DataLayer.DataSet root, string binding_path, DataLayer.DataRecord data_record)
 		{
 			Epsitec.Common.Widgets.Widget widget = ui_object as Epsitec.Common.Widgets.Widget;
 			DataLayer.DataField           field  = data_record as DataLayer.DataField;
@@ -23,17 +23,17 @@ namespace Epsitec.Cresus.UserInterface.Binders
 			System.Diagnostics.Debug.Assert (widget != null);
 			System.Diagnostics.Debug.Assert (field != null);
 			
-			new Controller (widget, root, binding);
+			new Controller (widget, root, binding_path);
 		}
 		#endregion
 		
 		protected class Controller
 		{
-			public Controller(Epsitec.Common.Widgets.Widget widget, DataLayer.DataSet data_set, string binding)
+			public Controller(Epsitec.Common.Widgets.Widget widget, DataLayer.DataSet data_set, string binding_path)
 			{
 				this.widget   = widget;
 				this.data_set = data_set;
-				this.binding  = binding;
+				this.binding  = binding_path;
 				
 				this.widget.ActiveStateChanged += new Epsitec.Common.Widgets.EventHandler(this.SetDataFromWidget);
 				data_set.AttachObserver (binding, new DataLayer.DataChangedHandler (this.SetWidgetFromData));
