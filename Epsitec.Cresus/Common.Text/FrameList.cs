@@ -11,8 +11,9 @@ namespace Epsitec.Common.Text
 	{
 		public FrameList(TextFitter fitter)
 		{
-			this.fitter = fitter;
-			this.frames = new System.Collections.ArrayList ();
+			this.fitter     = fitter;
+			this.frames     = new System.Collections.ArrayList ();
+			this.cursor_map = new System.Collections.Hashtable ();
 		}
 		
 		
@@ -55,6 +56,43 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public Cursors.FitterCursor FindFirstCursor(ITextFrame frame)
+		{
+			//	Trouve le curseur correspondant au paragraphe qui se trouve au
+			//	début du ITextFrame.
+			
+			//	Note: un paragraphe peut couvrir plusieurs ITextFrame, ce qui
+			//	complique légèrement les choses.
+			
+			if (this.cursor_map.Contains (frame))
+			{
+				return this.cursor_map[frame] as Cursors.FitterCursor;
+			}
+			
+			//	Recherche le premier curseur contenu dans le texte qui décrit
+			//	un paragraphe occupant au moins partiellement le ITextFrame
+			//	à trouver :
+			
+			TextStory          story  = this.TextFitter.TextStory;
+			int                index  = this.IndexOf (frame);
+			int                length = story.TextLength;
+			CursorInfo.Filter  filter = Cursors.FitterCursor.GetFrameFilter (index);
+			CursorInfo[]       infos  = this.fitter.TextStory.TextTable.FindCursors (0, length, filter, true);
+			
+			Debug.Assert.IsInBounds (index, 0, this.frames.Count-1);
+			
+			if (infos.Length == 1)
+			{
+				Cursors.FitterCursor cursor = story.TextTable.GetCursorInstance (infos[0].CursorId) as Cursors.FitterCursor;
+				
+				this.cursor_map[frame] = cursor;
+				return cursor;
+			}
+			
+			return null;
+		}
+		
+		
 		public void InsertAt(int index, ITextFrame new_frame)
 		{
 			this.frames.Insert (index, new_frame);
@@ -89,15 +127,24 @@ namespace Epsitec.Common.Text
 		
 		private void HandleInsertion(ITextFrame frame)
 		{
+			this.ClearCursorMap ();
 		}
 		
 		private void HandleRemoval(ITextFrame frame)
 		{
+			this.ClearCursorMap ();
+		}
+		
+		
+		private void ClearCursorMap()
+		{
+			this.cursor_map.Clear ();
 		}
 		
 		
 		
 		private TextFitter						fitter;
 		private System.Collections.ArrayList	frames;
+		private System.Collections.Hashtable	cursor_map;
 	}
 }

@@ -44,6 +44,42 @@ namespace Epsitec.Common.Text.Cursors
 			}
 		}
 		
+		public int[]							TextFrameIndexes
+		{
+			get
+			{
+				int index = -1;
+				int count = 0;
+				int n = this.elements.Length;
+				
+				for (int i = 0; i < n; i++)
+				{
+					if (this.elements[i].FrameIndex != index)
+					{
+						index  = this.elements[i].FrameIndex;
+						count += 1;
+					}
+				}
+				
+				int[] result = new int[count];
+				
+				index = -1;
+				count = 0;
+				
+				for (int i = 0; i < n; i++)
+				{
+					if (this.elements[i].FrameIndex != index)
+					{
+						index  = this.elements[i].FrameIndex;
+						result[count] = index;
+						count += 1;
+					}
+				}
+				
+				return result;
+			}
+		}
+		
 		
 		public void AddRange(System.Collections.IList values)
 		{
@@ -80,6 +116,14 @@ namespace Epsitec.Common.Text.Cursors
 		}
 		
 		
+		public static CursorInfo.Filter GetFrameFilter(int frame_index)
+		{
+			FilterFrame filter = new FilterFrame (frame_index);
+			return new CursorInfo.Filter (filter.FilterCallback);
+		}
+		
+		
+		#region Element Structure
 		public struct Element
 		{
 			public int							Length
@@ -123,7 +167,39 @@ namespace Epsitec.Common.Text.Cursors
 			private Layout.StretchProfile		profile;
 			private int							frame_index;
 		}
+		#endregion
 		
+		#region FilterFrame Class
+		private class FilterFrame
+		{
+			public FilterFrame(int index)
+			{
+				this.index = index;
+			}
+			
+			
+			public bool FilterCallback(ICursor cursor, int position)
+			{
+				Cursors.FitterCursor fitter = cursor as Cursors.FitterCursor;
+				
+				if (fitter != null)
+				{
+					foreach (Element elem in fitter.elements)
+					{
+						if (elem.FrameIndex == this.index)
+						{
+							return true;
+						}
+					}
+				}
+				
+				return false;
+			}
+			
+			
+			private int							index;
+		}
+		#endregion
 		
 		private static bool FilterCallback(ICursor cursor, int position)
 		{

@@ -202,6 +202,11 @@ namespace Epsitec.Common.Text.Internal
 		
 		public CursorInfo[] FindCursors(int position, int length, CursorInfo.Filter filter)
 		{
+			return this.FindCursors (position, length, filter, false);
+		}
+		
+		public CursorInfo[] FindCursors(int position, int length, CursorInfo.Filter filter, bool find_only_first)
+		{
 			//	Trouve tous les curseurs compris dans la plage indiquée.
 			
 			if (position > this.text_length)
@@ -245,11 +250,21 @@ namespace Epsitec.Common.Text.Internal
 							
 							if (filter (cursor_instance, i_pos))
 							{
+								if (find_only_first)
+								{
+									return new CursorInfo[] { new CursorInfo (cursor_id, i_pos) };
+								}
+								
 								i_num++;
 							}
 						}
 						else
 						{
+							if (find_only_first)
+							{
+								return new CursorInfo[] { new CursorInfo (chunk.GetNthCursorId (j), i_pos) };
+							}
+							
 							i_num++;
 						}
 					}
