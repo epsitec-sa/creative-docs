@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Replication
 				
 				tables.AddRange (this.infrastructure.FindDbTables (transaction, DbElementCat.Any));
 				
-				System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} tables.", tables.Count));
+				System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} tables. Extracting from {1} to {2}.", tables.Count, sync_start, sync_end));
 				
 				DbTable def_table_table   = ServerEngine.FindTable (tables, Tags.TableTableDef);
 				DbTable def_column_table  = ServerEngine.FindTable (tables, Tags.TableColumnDef);

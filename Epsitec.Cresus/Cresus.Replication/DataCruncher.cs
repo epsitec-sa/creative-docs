@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Replication
 			
 			for (int i = 0; i < ids.Length; i++)
 			{
-				condition.AddCondition (id_column, DbCompare.Equal, ids[0]);
+				condition.AddCondition (id_column, DbCompare.Equal, ids[i]);
 			}
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
