@@ -104,6 +104,7 @@ namespace Epsitec.Cresus.Database
 			return (xml.Name == "null") ? null : new DbColumnCollection (xml);
 		}
 		
+		
 		public static string SerialiseToXml(DbColumnCollection columns, string id)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();

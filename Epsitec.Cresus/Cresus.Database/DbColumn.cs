@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.Database
 				this.Attributes.SerialiseXmlAttributes (buffer);
 				buffer.Append (@">");
 				
-				DbTypeFactory.SerialiseToXml (buffer, this.type);
+				DbTypeFactory.SerialiseToXml (buffer, this.type, true);
 				
 				buffer.Append (@"</col>");
 			}

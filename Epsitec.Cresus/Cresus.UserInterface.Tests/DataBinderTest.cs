@@ -57,11 +57,11 @@ namespace Epsitec.Common.Support
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
 			buffer.Append ("\n");
-			DbTable.ConvertTableToXml (buffer, data.FindDbTable ("x"));
+			DbTable.SerialiseToXml (buffer, data.FindDbTable ("x"), true);
 			buffer.Append ("\n");
-			DbColumn.ConvertColumnToXml (buffer, data.FindDbColumn ("x.*.a"));
+			DbColumn.SerialiseToXml (buffer, data.FindDbColumn ("x.*.a"), true);
 			buffer.Append ("\n");
-			DbColumn.ConvertColumnToXml (buffer, data.FindDbColumn ("x.*.b"));
+			DbColumn.SerialiseToXml (buffer, data.FindDbColumn ("x.*.b"), true);
 			
 			System.Console.Out.WriteLine ("XML meta description:{0}", buffer.ToString ());
 			

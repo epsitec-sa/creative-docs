@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (full)
 			{
-				this.InternalKey.SerialiseXmlAttributes (buffer);
+				DbKey.SerialiseToXmlAttributes (buffer, this.internal_key);
 				this.Attributes.SerialiseXmlAttributes (buffer);
 			}
 			
@@ -124,13 +124,13 @@ namespace Epsitec.Cresus.Database
 		{
 			if (xml.Name != "enumval")
 			{
-				throw new System.ArgumentException (string.Format ("Expected root element named <enumval>, but found <{0}>.", xml.Name));
+				throw new System.FormatException (string.Format ("Expected root element named <enumval>, but found <{0}>.", xml.Name));
 			}
 			
 			Converter.Convert (xml.GetAttribute ("rank"), out this.rank);
 			
-			this.Attributes.ProcessXmlAttributes (xml);
-			this.InternalKey.ProcessXmlAttributes (xml);
+			this.internal_key = DbKey.DeserialiseFromXmlAttributes (xml);
+			this.Attributes.DeserialiseXmlAttributes (xml);
 		}
 		
 		
@@ -309,6 +309,6 @@ namespace Epsitec.Cresus.Database
 		
 		protected DbAttributes				attributes = new DbAttributes ();
 		protected int						rank = -2;
-		protected DbKey						internal_key = new DbKey ();
+		protected DbKey						internal_key = null;
 	}
 }

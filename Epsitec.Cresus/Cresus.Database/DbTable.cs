@@ -38,12 +38,14 @@ namespace Epsitec.Cresus.Database
 		
 		public static DbTable NewTable(System.Xml.XmlElement xml)
 		{
-			return new DbTable (xml);
+			return (xml.Name == "null") ? null : new DbTable (xml);
 		}
 		
 		
-		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer)
+		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer, bool full)
 		{
+			this.UpdatePrimaryKeyInfo ();
+			
 			buffer.Append (@"<table");
 			
 			string arg_cat = DbTools.ElementCategoryToString (this.category);
@@ -55,34 +57,83 @@ namespace Epsitec.Cresus.Database
 				buffer.Append (@"""");
 			}
 			
-			buffer.Append (@"/>");
+			if (full)
+			{
+				DbKey.SerialiseToXmlAttributes (buffer, this.internal_table_key);
+				this.Attributes.SerialiseXmlAttributes (buffer);
+				buffer.Append (@">");
+				
+				DbColumnCollection.SerialiseToXml (buffer, this.primary_keys, "keys");
+				DbColumnCollection.SerialiseToXml (buffer, this.columns, "cols");
+				
+				buffer.Append (@"</table>");
+			}
+			else
+			{
+				buffer.Append (@"/>");
+			}
 		}
 		
 		protected void ProcessXmlDefinition(System.Xml.XmlElement xml)
 		{
 			if (xml.Name != "table")
 			{
-				throw new System.ArgumentException (string.Format ("Expected root element named <table>, but found <{0}>.", xml.Name));
+				throw new System.FormatException (string.Format ("Expected root element named <table>, but found <{0}>.", xml.Name));
 			}
 			
 			string arg_cat = xml.GetAttribute ("cat");
-			
 			this.category  = DbTools.ParseElementCategory (arg_cat);
+			
+			this.internal_table_key = DbKey.DeserialiseFromXmlAttributes (xml);
+			this.Attributes.DeserialiseXmlAttributes (xml);
+			
+			for (int i = 0; i < xml.ChildNodes.Count; i++)
+			{
+				System.Xml.XmlElement node = xml.ChildNodes[i] as System.Xml.XmlElement;
+				
+				if ((node == null) ||
+					(node.GetAttribute ("id") == ""))
+				{
+					new System.FormatException (string.Format ("Expected nodes with id in {0}.", xml.InnerXml));
+				}
+				
+				string id = node.GetAttribute ("id");
+				
+				switch (id)
+				{
+					case "keys":
+						this.primary_keys = DbColumnCollection.NewColumnCollection (node);
+						break;
+					case "cols":
+						this.columns = DbColumnCollection.NewColumnCollection (node);
+						break;
+					
+					default:
+						throw new System.FormatException (string.Format ("Expected id not found, '{0}' is not recognized.", id));
+				}
+			}
+			
+			this.UpdatePrimaryKeyInfo ();
 		}
 		
 		
-		public static string ConvertTableToXml(DbTable table)
+		public static string SerialiseToXml(DbTable table, bool full)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			DbTable.ConvertTableToXml (buffer, table);
-			
+			DbTable.SerialiseToXml (buffer, table, full);
 			return buffer.ToString ();
 		}
 		
-		public static void ConvertTableToXml(System.Text.StringBuilder buffer, DbTable table)
+		public static void SerialiseToXml(System.Text.StringBuilder buffer, DbTable table, bool full)
 		{
-			table.SerialiseXmlDefinition (buffer);
+			if (table == null)
+			{
+				buffer.Append ("<null/>");
+			}
+			else
+			{
+				table.SerialiseXmlDefinition (buffer, full);
+			}
 		}
 		
 		
@@ -170,7 +221,7 @@ namespace Epsitec.Cresus.Database
 		
 		public bool						HasPrimaryKeys
 		{
-			get { return (this.primary_key != null) && (this.primary_key.Count > 0); }
+			get { return (this.primary_keys != null) && (this.primary_keys.Count > 0); }
 		}
 		
 		public DbColumnCollection		PrimaryKeys
@@ -182,12 +233,12 @@ namespace Epsitec.Cresus.Database
 				//	une série de colonnes comme PrimaryKeys implique que les tuples
 				//	doivent être uniques !
 				
-				if (this.primary_key == null)
+				if (this.primary_keys == null)
 				{
-					this.primary_key = new DbColumnCollection ();
+					this.primary_keys = new DbColumnCollection ();
 				}
 				
-				return this.primary_key;
+				return this.primary_keys;
 			}
 		}
 		
@@ -316,7 +367,7 @@ namespace Epsitec.Cresus.Database
 		
 		protected DbAttributes			attributes = new DbAttributes ();
 		protected DbColumnCollection	columns = new DbColumnCollection ();
-		protected DbColumnCollection	primary_key = null;
+		protected DbColumnCollection	primary_keys = null;
 		protected DbElementCat			category;
 		protected DbKey					internal_table_key;
 		

@@ -51,21 +51,24 @@ namespace Epsitec.Cresus.Database
 			
 			DbTypeEnum e_type = new DbTypeEnum (list);
 			
-			string xml_p = DbEnumValue.ConvertValueToXml (ev_1, false);
-			string xml_f = DbEnumValue.ConvertValueToXml (ev_1, true);
+			string xml_p = DbEnumValue.SerialiseToXml (ev_1, false);
+			string xml_f = DbEnumValue.SerialiseToXml (ev_1, true);
 			
 			Assertion.AssertEquals (@"<enumval rank=""2""/>", xml_p);
 			Assertion.AssertEquals (@"<enumval rank=""2"" attr.capt=""Madame"" attr.name=""MME""/>", xml_f);
 			
-			xml_p = DbEnumValue.ConvertValueToXml (ev_2, false);
-			xml_f = DbEnumValue.ConvertValueToXml (ev_2, true);
+			xml_p = DbEnumValue.SerialiseToXml (ev_2, false);
+			xml_f = DbEnumValue.SerialiseToXml (ev_2, true);
 			
 			Assertion.AssertEquals (@"<enumval rank=""3""/>", xml_p);
 			Assertion.AssertEquals (@"<enumval rank=""3"" attr.capt=""&gt;Mademoiselle&lt;"" attr.name=""MLLE""/>", xml_f);
 			
-			DbEnumValue ev_1x = DbEnumValue.NewEnumValue (DbEnumValue.ConvertValueToXml (ev_1, true));
-			DbEnumValue ev_2x = DbEnumValue.NewEnumValue (DbEnumValue.ConvertValueToXml (ev_2, true));
-			DbEnumValue ev_3x = DbEnumValue.NewEnumValue (DbEnumValue.ConvertValueToXml (ev_3, true));
+			string full_xml = DbTypeFactory.SerialiseToXml (e_type, true);
+			System.Console.Out.WriteLine ("XML: {0}", full_xml);
+			
+			DbEnumValue ev_1x = DbEnumValue.NewEnumValue (DbEnumValue.SerialiseToXml (ev_1, true));
+			DbEnumValue ev_2x = DbEnumValue.NewEnumValue (DbEnumValue.SerialiseToXml (ev_2, true));
+			DbEnumValue ev_3x = DbEnumValue.NewEnumValue (DbEnumValue.SerialiseToXml (ev_3, true));
 			
 			Assertion.AssertEquals (ev_1.Name,    ev_1x.Name);
 			Assertion.AssertEquals (ev_1.Caption, ev_1x.Caption);
@@ -78,6 +81,27 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (ev_3.Name,    ev_3x.Name);
 			Assertion.AssertEquals (ev_3.Caption, ev_3x.Caption);
 			Assertion.AssertEquals (ev_3.Rank,    ev_3x.Rank);
+			
+			DbTypeEnum copy = DbTypeFactory.NewType (full_xml) as DbTypeEnum;
+			
+			Assertion.AssertNotNull (copy);
+			Assertion.AssertEquals (3, copy.Count);
+			Assertion.AssertEquals (ev_1.Name,    copy["MME"] .Name);
+			Assertion.AssertEquals (ev_1.Rank,    copy["MME"] .Rank);
+			Assertion.AssertEquals (ev_1.Caption, copy["MME"] .Caption);
+			Assertion.AssertEquals (ev_2.Name,    copy["MLLE"].Name);
+			Assertion.AssertEquals (ev_2.Rank,    copy["MLLE"].Rank);
+			Assertion.AssertEquals (ev_2.Caption, copy["MLLE"].Caption);
+			Assertion.AssertEquals (ev_3.Name,    copy["M"]   .Name);
+			Assertion.AssertEquals (ev_3.Rank,    copy["M"]   .Rank);
+			Assertion.AssertEquals (ev_3.Caption, copy["M"]   .Caption);
+			
+			for (int i = 0; i < 3; i++)
+			{
+				Assertion.AssertEquals (e_type[i].Name,    copy[i].Name);
+				Assertion.AssertEquals (e_type[i].Rank,    copy[i].Rank);
+				Assertion.AssertEquals (e_type[i].Caption, copy[i].Caption);
+			}
 		}
 		
 		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckDbTypeEnumEx1()
