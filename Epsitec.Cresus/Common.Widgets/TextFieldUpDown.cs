@@ -13,8 +13,8 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown = new ArrowButton(this);
 			this.arrowUp.Direction = Direction.Up;
 			this.arrowDown.Direction = Direction.Down;
-			this.arrowUp.ButtonStyle = ButtonStyle.Scroller;
-			this.arrowDown.ButtonStyle = ButtonStyle.Scroller;
+			this.arrowUp.ButtonStyle = ButtonStyle.UpDown;
+			this.arrowDown.ButtonStyle = ButtonStyle.UpDown;
 			this.arrowUp.Engaged += new EventHandler(this.HandleButton);
 			this.arrowDown.Engaged += new EventHandler(this.HandleButton);
 			this.arrowUp.StillEngaged += new EventHandler(this.HandleButton);

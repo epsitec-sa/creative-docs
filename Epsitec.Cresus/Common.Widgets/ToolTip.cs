@@ -255,12 +255,11 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 
 			pos.X += this.margin.X;  // à cause du Drawing.ContentAlignment.MiddleLeft
-			adorner.PaintTooltipBackground(graphics, rect, dir);
-			adorner.PaintTooltipTextLayout(graphics, pos, this.textLayout, dir);
+			adorner.PaintTooltipBackground(graphics, rect);
+			adorner.PaintTooltipTextLayout(graphics, pos, this.textLayout);
 		}
 
 
