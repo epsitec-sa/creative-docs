@@ -141,11 +141,12 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals ("Ville", db_table_b.Columns[5].Name);
 			Assertion.AssertEquals (db_type_name.InternalKey, db_table_b.Columns[5].Type.InternalKey);
 			
-			DbRichCommand command = new DbRichCommand ();
-			
-			command.Tables.Add (db_table_a);
-			command.Tables.Add (db_table_b);
-			command.CreateEmptyDataSet (infrastructure);
+//			DbRichCommand command = new DbRichCommand ();
+//			
+//			command.Tables.Add (db_table_a);
+//			command.Tables.Add (db_table_b);
+//			command.CreateEmptyDataSet (infrastructure);
+			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, new DbTable[] { db_table_a, db_table_b });
 			
 			foreach (System.Data.DataRelation relation in command.DataSet.Relations)
 			{
@@ -163,15 +164,12 @@ namespace Epsitec.Cresus.Database
 			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
 			DbTable db_table_b = infrastructure.ResolveDbTable (null, "Domiciles");
 			
-			DbRichCommand command = new DbRichCommand ();
-			
 			System.Data.DataRow row_1;
 			System.Data.DataRow row_2;
 			System.Data.DataRow row_3;
 			
-			command.Tables.Add (db_table_a);
-			command.Tables.Add (db_table_b);
-			command.CreateEmptyDataSet (infrastructure);
+			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, new DbTable[] { db_table_a, db_table_b });
+			
 			command.CreateNewRow ("Personnes", out row_1);
 			command.CreateNewRow ("Personnes", out row_2);
 			command.CreateNewRow ("Domiciles", out row_3);
@@ -187,6 +185,13 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (k1.Id + 1, k2.Id);
 			Assertion.AssertEquals (k1.Id + 2, k3.Id);
 			Assertion.Assert (DbKey.CheckTemporaryId (k1.Id));
+			
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
+			{
+				command.Transaction = transaction.Transaction;
+				command.UpdateTables ();
+				transaction.Commit ();
+			}
 		}
 		
 		[Test] public void Check99UnregisterDbTables()

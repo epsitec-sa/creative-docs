@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Database
 			
 			switch (count_provided)
 			{
+				case 0: break;
 				case 1: this.a = fields[0]; break;
 				case 2: this.a = fields[0]; this.b = fields[1]; break;
 				case 3: this.a = fields[0]; this.b = fields[1]; this.c = fields[2]; break;
@@ -66,6 +67,10 @@ namespace Epsitec.Cresus.Database
 					case SqlFunctionType.CompareLike:
 					case SqlFunctionType.CompareNotLike:
 						return 2;
+
+					case SqlFunctionType.CompareFalse:
+					case SqlFunctionType.CompareTrue:
+						return 0;
 					
 					
 					case SqlFunctionType.SetIn:
@@ -141,6 +146,8 @@ namespace Epsitec.Cresus.Database
 		CompareIsNotNull,						//	a NOT IS NULL
 		CompareLike,							//	a LIKE b
 		CompareNotLike,							//	a NOT LIKE b
+		CompareFalse,							//	0 = 1
+		CompareTrue,							//	1 = 1
 		
 		SetIn,									//	a IN b
 		SetNotIn,								//	a NOT IN b

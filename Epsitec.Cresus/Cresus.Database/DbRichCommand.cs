@@ -58,6 +58,42 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public static DbRichCommand CreateFromTables(DbInfrastructure infrastructure, System.Collections.IEnumerable tables)
+		{
+			DbRichCommand command = new DbRichCommand ();
+			
+			foreach (DbTable table in tables)
+			{
+				SqlSelect   select  = new SqlSelect ();
+				ISqlBuilder builder = infrastructure.SqlBuilder;
+				
+//				SqlField field_0 = SqlField.CreateConstant (0, DbRawType.Int32);
+//				SqlField field_1 = SqlField.CreateConstant (1, DbRawType.Int32);
+//				
+//				SqlFunction always_false = new SqlFunction (SqlFunctionType.CompareEqual, field_0, field_1);
+				SqlFunction always_false = new SqlFunction (SqlFunctionType.CompareFalse);
+				
+				select.Fields.Add (SqlField.CreateAll ());
+				select.Tables.Add (table.Name, SqlField.CreateName (table.CreateSqlName ()));
+				select.Conditions.Add (always_false);
+				
+				builder.SelectData (select);
+				
+				command.Commands.Add (builder.Command);
+				command.Tables.Add (table);
+			}
+			
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
+			{
+				command.Transaction = transaction.Transaction;
+				
+				infrastructure.SqlEngine.Execute (command);
+				transaction.Commit ();
+			}
+			
+			return command;
+		}
+		
 		public void FillDataSet(System.Data.IDbDataAdapter[] adapters)
 		{
 			//	Définit et remplit le DataSet en se basant sur les données fournies
@@ -108,43 +144,43 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public void CreateEmptyDataSet(DbInfrastructure infrastructure)
-		{
-			if (this.data_set != null)
-			{
-				throw new System.InvalidOperationException ("DataSet already exists.");
-			}
-			
-			ITypeConverter type_converter = infrastructure.TypeConverter;
-			
-			//	Crée un DataSet vide, en ajoutant le schéma correspondant aux tables
-			//	définies.
-			
-			this.data_set = new System.Data.DataSet ();
-			
-			for (int i = 0; i < this.tables.Count; i++)
-			{
-				DbTable db_table      = this.tables[i];
-				string  db_name_table = db_table.Name;
-				
-				System.Data.DataTable ado_table = this.data_set.Tables.Add (db_name_table);
-				
-				for (int c = 0; c < db_table.Columns.Count; c++)
-				{
-					DbColumn  db_column  = db_table.Columns[c];
-					SqlColumn sql_column = db_column.CreateSqlColumn (type_converter);
-					
-					string db_name_column  = db_column.CreateDisplayName ();
-					string ado_name_column = db_column.CreateSqlName ();
-					
-					System.Type native_type = TypeConverter.MapToNativeType (sql_column.Type);
-					
-					ado_table.Columns.Add (db_name_column, native_type);
-				}
-			}
-			
-			this.CreateDataRelations ();
-		}
+//		public void CreateEmptyDataSet(DbInfrastructure infrastructure)
+//		{
+//			if (this.data_set != null)
+//			{
+//				throw new System.InvalidOperationException ("DataSet already exists.");
+//			}
+//			
+//			ITypeConverter type_converter = infrastructure.TypeConverter;
+//			
+//			//	Crée un DataSet vide, en ajoutant le schéma correspondant aux tables
+//			//	définies.
+//			
+//			this.data_set = new System.Data.DataSet ();
+//			
+//			for (int i = 0; i < this.tables.Count; i++)
+//			{
+//				DbTable db_table      = this.tables[i];
+//				string  db_name_table = db_table.Name;
+//				
+//				System.Data.DataTable ado_table = this.data_set.Tables.Add (db_name_table);
+//				
+//				for (int c = 0; c < db_table.Columns.Count; c++)
+//				{
+//					DbColumn  db_column  = db_table.Columns[c];
+//					SqlColumn sql_column = db_column.CreateSqlColumn (type_converter);
+//					
+//					string db_name_column  = db_column.CreateDisplayName ();
+//					string ado_name_column = db_column.CreateSqlName ();
+//					
+//					System.Type native_type = TypeConverter.MapToNativeType (sql_column.Type);
+//					
+//					ado_table.Columns.Add (db_name_column, native_type);
+//				}
+//			}
+//			
+//			this.CreateDataRelations ();
+//		}
 		
 		public void CreateNewRow(string table_name, out System.Data.DataRow data_row)
 		{

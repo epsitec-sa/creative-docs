@@ -261,6 +261,18 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.Append (sql_function.B, only_qualified);
 					return;
 				
+				case 0:
+					switch (sql_function.Type)
+					{
+						case SqlFunctionType.CompareFalse:	this.Append ("0 = 1");	break;
+						case SqlFunctionType.CompareTrue:	this.Append ("1 = 1");	break;
+						
+						default:
+							System.Diagnostics.Debug.Assert (false);
+							break;
+					}
+					return;
+
 				case 1:
 					switch (sql_function.Type)
 					{
