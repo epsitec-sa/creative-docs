@@ -3,7 +3,7 @@
 
 namespace Epsitec.Cresus.Database
 {
-	using Tags				= Epsitec.Common.Support.Tags;
+//	using Tags				= Epsitec.Common.Support.Tags;
 	using ResourceLevel		= Epsitec.Common.Support.ResourceLevel;
 	using Converter			= Epsitec.Common.Converters.Converter;
 	using IComparer			= System.Collections.IComparer;
@@ -35,6 +35,19 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public static DbEnumValue CreateEnumValue(string xml)
+		{
+			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+			doc.LoadXml (xml);
+			return DbEnumValue.CreateEnumValue (doc.DocumentElement);
+		}
+		
+		public static DbEnumValue CreateEnumValue(System.Xml.XmlElement xml)
+		{
+			return (xml.Name == "null") ? null : new DbEnumValue (xml);
+		}
+
+		
 		public string							Name
 		{
 			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
@@ -61,6 +74,23 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public static IComparer					NameComparer
+		{
+			get
+			{
+				return new NameComparerClass (Tags.Name);
+			}
+		}
+		
+		public static IComparer					RankComparer
+		{
+			get
+			{
+				return new RankComparerClass ();
+			}
+		}
+		
+		
 		public   void DefineAttributes(params string[] attributes)
 		{
 			this.attributes.SetFromInitialisationList (attributes);
@@ -81,19 +111,6 @@ namespace Epsitec.Cresus.Database
 			this.internal_key = key.Clone () as DbKey;
 		}
 		
-		
-		public static DbEnumValue NewEnumValue(string xml)
-		{
-			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
-			doc.LoadXml (xml);
-			return DbEnumValue.NewEnumValue (doc.DocumentElement);
-		}
-		
-		public static DbEnumValue NewEnumValue(System.Xml.XmlElement xml)
-		{
-			return (xml.Name == "null") ? null : new DbEnumValue (xml);
-		}
-
 		
 		public static string SerializeToXml(DbEnumValue value, bool full)
 		{
@@ -156,12 +173,12 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion
 		
-		protected virtual object CloneNewObject()
+		protected object CloneNewObject()
 		{
 			return new DbEnumValue ();
 		}
 		
-		protected virtual object CloneCopyToNewObject(object o)
+		protected object CloneCopyToNewObject(object o)
 		{
 			DbEnumValue that = o as DbEnumValue;
 			
@@ -210,23 +227,6 @@ namespace Epsitec.Cresus.Database
 			return (name == null) ? 0 : name.GetHashCode ();
 		}
 		#endregion
-		
-		public static IComparer					NameComparer
-		{
-			get
-			{
-				return new NameComparerClass (Tags.Name);
-			}
-		}
-		
-		public static IComparer					RankComparer
-		{
-			get
-			{
-				return new RankComparerClass ();
-			}
-		}
-		
 		
 		#region NameComparerClass class
 		private class NameComparerClass : System.Collections.IComparer
