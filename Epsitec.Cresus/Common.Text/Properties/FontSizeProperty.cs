@@ -71,12 +71,22 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
-			//	TODO: ...
+			buffer.Append (this.size.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			buffer.Append ("/");
+			buffer.Append (this.units.ToString ());
 		}
 
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
-			//	TODO: ...
+			string[] args = text.Substring (pos, length).Split ('/');
+			
+			Debug.Assert.IsTrue (args.Length == 2);
+			
+			double        size  = System.Double.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture);
+			FontSizeUnits units = (FontSizeUnits) System.Enum.Parse (typeof (FontSizeUnits), args[1]);
+			
+			this.size  = size;
+			this.units = units;
 		}
 
 		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
@@ -91,7 +101,7 @@ namespace Epsitec.Common.Text.Properties
 			{
 				case FontSizeUnits.Percent:				//	xxx * Percent --> xxx
 					c.Units = a.Units;
-					c.Size  = a.Size * b.Size;
+					c.Size  = a.Size * b.Size / 100.0;
 					break;
 				
 				case FontSizeUnits.Points:				//	Points --> Points (écrase)
@@ -99,12 +109,13 @@ namespace Epsitec.Common.Text.Properties
 					c.Size  = b.Size;
 					break;
 				
-				case FontSizeUnits.DeltaPoints:			//	Points + DeltaPoints --> Points, sinon erreur
-					if (a.Units != FontSizeUnits.Points)
+				case FontSizeUnits.DeltaPoints:			//	(Delta)Points + DeltaPoints --> (Delta)Points, sinon erreur
+					if ((a.Units != FontSizeUnits.Points) &&
+						(a.Units != FontSizeUnits.DeltaPoints))
 					{
 						throw new System.InvalidOperationException ("Invalid units combination.");
 					}
-					c.Units = FontSizeUnits.Points;
+					c.Units = a.Units;
 					c.Size  = a.Size + b.Size;
 					break;
 				

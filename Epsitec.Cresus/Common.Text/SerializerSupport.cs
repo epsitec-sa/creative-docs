@@ -4,7 +4,8 @@
 namespace Epsitec.Common.Text
 {
 	/// <summary>
-	/// Summary description for SerializerSupport.
+	/// La classe SerializerSupport implémente une série de méthodes utiles
+	/// pour la sérialisation/désérialisation.
 	/// </summary>
 	public sealed class SerializerSupport
 	{

@@ -324,6 +324,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Tests\CheckProperties.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Tests\CheckTextConverter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
