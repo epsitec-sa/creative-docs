@@ -83,15 +83,22 @@ namespace Epsitec.Common.Types
 			
 			EnumType et = new EnumType (type);
 			
-			et.DefineCaptionsFromResources ("Enums#A");
+			et.DefineTextsFromResources ("Enums#MyEnum");
 			
-			Assert.AreEqual ("[res:Enums#A]", et.Caption);
+			Assert.AreEqual ("[res:Enums#MyEnum.capt]", et.Caption);
+			Assert.AreEqual ("[res:Enums#MyEnum.desc]", et.Description);
 			
-			Assert.AreEqual ("[res:Enums#A.None]",   et["None"].Caption);
-			Assert.AreEqual ("[res:Enums#A.First]",  et["First"].Caption);
-			Assert.AreEqual ("[res:Enums#A.Second]", et["Second"].Caption);
-			Assert.AreEqual ("[res:Enums#A.Third]",  et["Third"].Caption);
-			Assert.AreEqual ("[res:Enums#A.Extra]",  et["Extra"].Caption);
+			Assert.AreEqual ("[res:Enums#MyEnum.None.capt]",   et["None"].Caption);
+			Assert.AreEqual ("[res:Enums#MyEnum.First.capt]",  et["First"].Caption);
+			Assert.AreEqual ("[res:Enums#MyEnum.Second.capt]", et["Second"].Caption);
+			Assert.AreEqual ("[res:Enums#MyEnum.Third.capt]",  et["Third"].Caption);
+			Assert.AreEqual ("[res:Enums#MyEnum.Extra.capt]",  et["Extra"].Caption);
+			
+			Assert.AreEqual ("[res:Enums#MyEnum.None.desc]",   et["None"].Description);
+			Assert.AreEqual ("[res:Enums#MyEnum.First.desc]",  et["First"].Description);
+			Assert.AreEqual ("[res:Enums#MyEnum.Second.desc]", et["Second"].Description);
+			Assert.AreEqual ("[res:Enums#MyEnum.Third.desc]",  et["Third"].Description);
+			Assert.AreEqual ("[res:Enums#MyEnum.Extra.desc]",  et["Extra"].Description);
 		}
 		
 		[Test] public void CheckOpenEnumType()

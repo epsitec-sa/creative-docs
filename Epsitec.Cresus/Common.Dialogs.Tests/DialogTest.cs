@@ -63,23 +63,18 @@ namespace Epsitec.Common.Dialogs
 			
 			Record record = new Record ();
 			
-			Field field_a = new Field ("UserName", "Test");
-			Field field_b = new Field ("UserAge", 10);
-			Field field_c = new Field ("c", Representation.None);
+			record.DefineName ("SimpleData");
+			record.DefineResourcePrefix ("file:strings");
+			record.DefineFieldChangedEventHandler (new Support.EventHandler (this.HandleFieldChanged));
 			
-			field_a.DefineCaption ("[res:file:strings#data.ValueA]");
-			field_b.DefineCaption ("[res:file:strings#data.ValueB]");
-			field_c.DefineCaption ("[res:file:strings#data.ValueC]");
+			record.AddNewField ("UserName", "Test", new Types.StringType (), new Support.RegexConstraint (Support.PredefinedRegex.Alpha));
+			record.AddNewField ("UserAge",  10);
+			record.AddNewField ("Representation", Representation.None);
 			
-			field_a.DefineConstraint (new Support.RegexConstraint (Support.PredefinedRegex.Alpha));
 			
-			field_a.Changed += new Support.EventHandler (this.HandleFieldChanged);
-			field_b.Changed += new Support.EventHandler (this.HandleFieldChanged);
-			field_c.Changed += new Support.EventHandler (this.HandleFieldChanged);
-			
-			record.Add (field_a);
-			record.Add (field_b);
-			record.Add (field_c);
+			Assertion.AssertEquals ("Test", record["UserName"].Value);
+			Assertion.AssertEquals (10, record["UserAge"].Value);
+			Assertion.AssertEquals (Representation.None, record["Representation"].Value);
 			
 			ScriptWrapper script = new ScriptWrapper ();
 			
@@ -115,12 +110,14 @@ namespace Epsitec.Common.Dialogs
 			System.Diagnostics.Debug.WriteLine ("Apply executed.");
 		}
 		
+		
 		private void HandleFieldChanged(object sender)
 		{
 			Field field = sender as Field;
 			
 			System.Diagnostics.Debug.WriteLine ("Field " + field.Name + " changed to " + field.Value.ToString () + (field.IsValueValid ? "" : "(invalid)"));
 		}
+		
 		
 		public static Source CreateSource(Types.IDataValue[] values)
 		{

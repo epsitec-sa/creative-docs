@@ -15,9 +15,57 @@ namespace Epsitec.Common.UI.Data
 		}
 		
 		
+		public void DefineName(string name)
+		{
+			if (name == "")
+			{
+				name = null;
+			}
+			
+			this.name = name;
+		}
+		
+		public void DefineResourcePrefix(string prefix)
+		{
+			if (prefix == "")
+			{
+				prefix = null;
+			}
+			
+			this.resource_prefix = prefix;
+		}
+		
+		public void DefineFieldChangedEventHandler(Support.EventHandler handler)
+		{
+			if (this.field_changed_event_handler != null)
+			{
+				foreach (Field field in this.list)
+				{
+					field.Changed -= this.field_changed_event_handler;
+				}
+			}
+			
+			this.field_changed_event_handler = handler;
+			
+			if (this.field_changed_event_handler != null)
+			{
+				foreach (Field field in this.list)
+				{
+					field.Changed += this.field_changed_event_handler;
+				}
+			}
+		}
+		
+		
 		public void Add(Field field)
 		{
 			this.list.Add (field);
+			
+			if (this.field_changed_event_handler != null)
+			{
+				field.Changed += this.field_changed_event_handler;
+			}
+			
 			this.OnChanged ();
 		}
 		
@@ -34,6 +82,15 @@ namespace Epsitec.Common.UI.Data
 				}
 				
 				this.list.AddRange (fields);
+				
+				foreach (Field field in fields)
+				{
+					if (this.field_changed_event_handler != null)
+					{
+						field.Changed += this.field_changed_event_handler;
+					}
+				}
+				
 				this.OnChanged ();
 			}
 		}
@@ -74,6 +131,28 @@ namespace Epsitec.Common.UI.Data
 			this.list.Clear ();
 			this.OnChanged ();
 		}
+		
+		
+		public Field AddNewField(string name)
+		{
+			return this.InitFieldAndAdd (new Field (name));
+		}
+		
+		public Field AddNewField(string name, object value)
+		{
+			return this.InitFieldAndAdd (new Field (name, value));
+		}
+		
+		public Field AddNewField(string name, object value, Types.INamedType type)
+		{
+			return this.InitFieldAndAdd (new Field (name, value, type));
+		}
+		
+		public Field AddNewField(string name, object value, Types.INamedType type, Types.IDataConstraint constraint)
+		{
+			return this.InitFieldAndAdd (new Field (name, value, type, constraint));
+		}
+		
 		
 		
 		public new Field						this[string name]
@@ -139,7 +218,7 @@ namespace Epsitec.Common.UI.Data
 		{
 			get
 			{
-				return null;
+				return this.name;
 			}
 		}
 		#endregion
@@ -167,6 +246,31 @@ namespace Epsitec.Common.UI.Data
 		#region IChangedSource Members
 		public event Support.EventHandler		Changed;
 		#endregion
+		
+		protected virtual Field InitFieldAndAdd(Field field)
+		{
+			string field_name = field.Name;
+			
+			if ((field_name != null) &&
+				(field_name.Length > 0) &&
+				(this.resource_prefix != null) &&
+				(this.name != null))
+			{
+				//	Les valeurs de 'caption' et 'description' sont recherchées dans les ressources définies
+				//	par un chemin de type "base:records#RecordName.FieldName.capt" et "...desc".
+				
+				string caption     = string.Concat (this.resource_prefix, "#", this.name, ".", field_name, ".", Support.Tags.Caption);
+				string description = string.Concat (this.resource_prefix, "#", this.name, ".", field_name, ".", Support.Tags.Description);
+				
+				field.DefineCaption (Support.Resources.MakeTextRef (caption));
+				field.DefineDescription (Support.Resources.MakeTextRef (description));
+			}
+			
+			this.Add (field);
+			
+			return field;
+		}
+		
 		
 		protected virtual void OnChanged()
 		{
@@ -202,5 +306,8 @@ namespace Epsitec.Common.UI.Data
 		
 		private Field[]							fields;
 		private Types.DataGraph					graph;
+		private string							name;
+		private string							resource_prefix;
+		private Support.EventHandler			field_changed_event_handler;
 	}
 }

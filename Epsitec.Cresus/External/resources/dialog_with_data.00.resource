@@ -30,7 +30,7 @@
       <data name="Anchor">TopLeft</data>
       <data name="AnchorMargins">8;8;62;170</data>
       <data name="Size">348;87</data>
-      <data name="BindingInfo">&lt;bind path="c"/&gt;</data>
+      <data name="BindingInfo">&lt;bind path="Representation"/&gt;</data>
     </bundle>
     <bundle>
       <data name="class">Button</data>

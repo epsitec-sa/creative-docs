@@ -14,4 +14,7 @@
   <data name="data.ValueA">User name</data>
   <data name="data.ValueB">Age</data>
   <data name="data.ValueC">Mode</data>
+  <data name="SimpleData.UserName.capt">User name</data>
+  <data name="SimpleData.UserAge.capt">Age</data>
+  <data name="SimpleData.Representation.capt">Representation mode</data>
 </bundle>
