@@ -761,7 +761,6 @@ namespace Epsitec.Cresus.Database
 			
 			using (System.Data.IDbCommand command = this.sql_builder.CreateCommand (transaction.Transaction))
 			{
-				System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 				this.sql_engine.Execute (command, DbCommandType.Silent, count);
 			}
 		}
@@ -789,7 +788,6 @@ namespace Epsitec.Cresus.Database
 			{
 				object data;
 				
-				System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 				this.sql_engine.Execute (command, DbCommandType.ReturningData, count, out data);
 				
 				return data;
@@ -819,7 +817,6 @@ namespace Epsitec.Cresus.Database
 			{
 				object data;
 				
-				System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 				this.sql_engine.Execute (command, DbCommandType.NonQuery, count, out data);
 				
 				return data;
@@ -849,7 +846,6 @@ namespace Epsitec.Cresus.Database
 			{
 				System.Data.DataSet data;
 				
-				System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 				this.sql_engine.Execute (command, DbCommandType.ReturningData, count, out data);
 				
 				return data;

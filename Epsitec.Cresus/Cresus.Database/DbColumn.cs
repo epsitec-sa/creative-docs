@@ -115,6 +115,11 @@ namespace Epsitec.Cresus.Database
 		
 		public static DbColumn CreateRefColumn(string column_name, string parent_table_name, DbColumnClass column_class, DbType type)
 		{
+			return DbColumn.CreateRefColumn (column_name, parent_table_name, column_class, type, Nullable.Undefined);
+		}
+		
+		public static DbColumn CreateRefColumn(string column_name, string parent_table_name, DbColumnClass column_class, DbType type, Nullable nullable)
+		{
 			System.Diagnostics.Debug.Assert (type != null);
 			
 			DbColumn column = new DbColumn (column_name, type);
@@ -122,6 +127,7 @@ namespace Epsitec.Cresus.Database
 			column.DefineColumnClass (column_class);
 			column.DefineCategory (DbElementCat.UserDataManaged);
 			column.DefineParentTableName (parent_table_name);
+			column.IsNullAllowed = (nullable == Nullable.Yes);
 			
 			return column;
 		}
@@ -166,6 +172,24 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return this.Attributes[Tags.Parent];
+			}
+		}
+		
+		public string							ParentColumnName
+		{
+			get
+			{
+				switch (this.column_class)
+				{
+					case DbColumnClass.RefLiveId:
+					case DbColumnClass.RefSimpleId:
+					case DbColumnClass.RefTupleId:
+						return Tags.ColumnId;
+					case DbColumnClass.RefTupleRevision:
+						return Tags.ColumnRevision;
+				}
+				
+				throw new System.ArgumentException (string.Format ("Column of invalid class {0}.", this.column_class));
 			}
 		}
 		

@@ -94,6 +94,48 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public DbForeignKey[]					ForeignKeys
+		{
+			get
+			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				
+				foreach (DbColumn column in this.Columns)
+				{
+					switch (column.ColumnClass)
+					{
+						case DbColumnClass.RefLiveId:
+						case DbColumnClass.RefSimpleId:
+							list.Add (new DbForeignKey (column));
+							break;
+						
+						case DbColumnClass.RefTupleId:
+							DbColumn column_a = column;
+							DbColumn column_b = this.columns[column.Name, DbColumnClass.RefTupleRevision];
+							
+							if (column_b == null)
+							{
+								throw new DbFormatException (string.Format ("Column {0} defines invalid tuple (no revision found).", column_a.Name));
+							}
+							
+							list.Add (new DbForeignKey (column_a, column_b));
+							break;
+						
+						case DbColumnClass.RefTupleRevision:
+							if (this.columns[column.Name, DbColumnClass.RefTupleId] == null)
+							{
+								throw new DbFormatException (string.Format ("Column {0} defines invalid tuple (no ID found).", column.Name));
+							}
+							break;
+					}
+				}
+				
+				DbForeignKey[] keys = new DbForeignKey[list.Count];
+				list.CopyTo (keys);
+				return keys;
+			}
+		}
+		
 		public DbElementCat						Category
 		{
 			get { return this.category; }

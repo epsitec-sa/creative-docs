@@ -97,6 +97,14 @@ namespace Epsitec.Cresus.Database
 				command.UpdateTables ();
 				transaction.Commit ();
 			}
+			
+			Assertion.AssertEquals (2, ado_table_b.Rows[1]["Personne (ID)"]);
+			Assertion.AssertEquals (2, ado_table_b.Rows[2]["Personne (ID)"]);
+			
+			ado_table_a.Rows[1]["CR_ID"] = 4;
+			
+			Assertion.AssertEquals (4, ado_table_b.Rows[1]["Personne (ID)"]);
+			Assertion.AssertEquals (4, ado_table_b.Rows[2]["Personne (ID)"]);
 		}
 		
 		[Test] public void Check02CreateEmptyDataSet()
@@ -134,6 +142,14 @@ namespace Epsitec.Cresus.Database
 			command.Tables.Add (db_table_a);
 			command.Tables.Add (db_table_b);
 			command.CreateEmptyDataSet (infrastructure);
+			
+			foreach (System.Data.DataRelation relation in command.DataSet.Relations)
+			{
+				for (int i = 0; i < relation.ChildColumns.Length; i++)
+				{
+					System.Console.Out.WriteLine ("{0}.{1} -> {2}.{3}", relation.ChildTable.TableName, relation.ChildColumns[i].ColumnName, relation.ParentTable.TableName, relation.ParentColumns[i].ColumnName);
+				}
+			}
 		}
 		
 		[Test] public void Check99UnregisterDbTables()

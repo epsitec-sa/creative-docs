@@ -41,6 +41,26 @@ namespace Epsitec.Cresus.Database.Collections
 			}
 		}
 		
+		public virtual DbColumn				this[string column_name, DbColumnClass column_class]
+		{
+			get
+			{
+				int index = this.IndexOf (column_name);
+				
+				while (index >= 0)
+				{
+					if (this[index].ColumnClass == column_class)
+					{
+						return this[index];
+					}
+					
+					index = this.IndexOf (column_name, index+1);
+				}
+				
+				return null;
+			}
+		}
+		
 		
 		public virtual void Add(DbColumn column)
 		{
@@ -78,13 +98,21 @@ namespace Epsitec.Cresus.Database.Collections
 		
 		public override int IndexOf(string column_name)
 		{
-			for (int i = 0; i < this.List.Count; i++)
+			return this.IndexOf (column_name, 0);
+		}
+		
+		public virtual int IndexOf(string column_name, int start)
+		{
+			if (start >= 0)
 			{
-				DbColumn column = this.List[i] as DbColumn;
-				
-				if (column.Name == column_name)
+				for (int i = start; i < this.List.Count; i++)
 				{
-					return i;
+					DbColumn column = this.List[i] as DbColumn;
+					
+					if (column.Name == column_name)
+					{
+						return i;
+					}
 				}
 			}
 			

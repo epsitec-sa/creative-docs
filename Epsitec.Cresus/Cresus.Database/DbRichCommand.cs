@@ -19,17 +19,26 @@ namespace Epsitec.Cresus.Database
 		
 		public Collections.DbCommands			Commands
 		{
-			get { return this.commands; }
+			get
+			{
+				return this.commands;
+			}
 		}
 		
 		public Collections.DbTables				Tables
 		{
-			get { return this.tables; }
+			get
+			{
+				return this.tables;
+			}
 		}
 		
 		public System.Data.IDbTransaction		Transaction
 		{
-			get { return this.transaction; }
+			get
+			{
+				return this.transaction;
+			}
 			set 
 			{
 				if (this.transaction != value)
@@ -42,7 +51,10 @@ namespace Epsitec.Cresus.Database
 		
 		public System.Data.DataSet				DataSet
 		{
-			get { return this.data_set; }
+			get
+			{
+				return this.data_set;
+			}
 		}
 		
 		
@@ -80,6 +92,8 @@ namespace Epsitec.Cresus.Database
 				
 				this.adapters[i].Fill (this.data_set);
 			}
+			
+			this.CreateDataRelations ();
 		}
 		
 		public void CreateEmptyDataSet(DbInfrastructure infrastructure)
@@ -108,9 +122,11 @@ namespace Epsitec.Cresus.Database
 					
 					System.Type native_type = TypeConverter.MapToNativeType (sql_column.Type);
 					
-					ado_table.Columns.Add (ado_name_column, native_type);
+					ado_table.Columns.Add (db_name_column, native_type);
 				}
 			}
+			
+			this.CreateDataRelations ();
 		}
 		
 		public void UpdateTables()
@@ -124,6 +140,51 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		
+		protected void CreateDataRelations ()
+		{
+			//	Crée pour le DataSet actuel les relations entre les diverses colonnes,
+			//	en s'appuyant sur les propriétés de DbTable/DbColumn.
+			
+			for (int i = 0; i < this.tables.Count; i++)
+			{
+				DbTable               db_child_table  = this.tables[i];
+				System.Data.DataTable ado_child_table = this.data_set.Tables[db_child_table.Name];
+				DbForeignKey[]        db_foreign_keys = db_child_table.ForeignKeys;
+				
+				foreach (DbForeignKey fk in db_foreign_keys)
+				{
+					int n = fk.Columns.Length;
+					
+					System.Data.DataTable ado_parent_table = this.data_set.Tables[fk.ParentTableName];
+					
+					if (ado_parent_table == null)
+					{
+						//	La table parent n'est pas chargée dans le DataSet, ce qui veut dire
+						//	que l'on doit ignorer la relation.
+						
+						continue;
+					}
+					
+					System.Data.DataColumn[] ado_parent_cols = new System.Data.DataColumn[n];
+					System.Data.DataColumn[] ado_child_cols  = new System.Data.DataColumn[n];
+					
+					for (int j = 0; j < n; j++)
+					{
+						ado_child_cols[j]  = ado_child_table.Columns[fk.Columns[j].CreateDisplayName ()];
+						ado_parent_cols[j] = ado_parent_table.Columns[fk.Columns[j].ParentColumnName];
+					}
+					
+					System.Data.DataRelation relation = new System.Data.DataRelation (null, ado_parent_cols, ado_child_cols);
+					this.data_set.Relations.Add (relation);
+					
+					System.Data.ForeignKeyConstraint constraint = relation.ChildKeyConstraint;
+					
+					System.Diagnostics.Debug.Assert (constraint != null);
+					System.Diagnostics.Debug.Assert (constraint.UpdateRule == System.Data.Rule.Cascade);
+				}
+			}
+		}
 		
 		protected void SetCommandTransaction()
 		{
