@@ -783,24 +783,18 @@ namespace Epsitec.Common.Document.Properties
 			graphics.Color = this.color1;
 			graphics.PaintSurface(path);  // dessine le fond
 
-			double max = System.Math.Max(bbox.Width, bbox.Height);
-			Point diag = new Point(max/2*1.5, max/2*1.5);
-			Rectangle rect = new Rectangle(bbox.Center-diag, bbox.Center+diag);
-
 			for ( int i=0 ; i<Gradient.HatchMax ; i++ )
 			{
 				if ( this.hatchWidth[i] == 0.0 || this.hatchDistance[i] == 0.0 )  continue;
 
+				Point p1, p2, p3, p4;
+				double offset;
+				this.MinRectMotif(bbox, i, out p1, out p2, out p3, out p4, out offset);
 				double width = System.Math.Min(this.hatchWidth[i], this.hatchDistance[i]);
-
-				Point p1 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.BottomLeft);
-				Point p2 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.BottomRight);
-				Point p3 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.TopLeft);
-				Point p4 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.TopRight);
 
 				Path pathLines = new Path();
 				double len = Point.Distance(p1, p2);
-				double pos = 0.0;
+				double pos = offset;
 				while ( pos < len )
 				{
 					Point pp1 = Point.Move(p1, p2, pos);
@@ -834,24 +828,18 @@ namespace Epsitec.Common.Document.Properties
 			graphics.Color = this.color1;
 			graphics.PaintSurface(path);  // dessine le fond
 
-			double max = System.Math.Max(bbox.Width, bbox.Height);
-			Point diag = new Point(max/2*1.5, max/2*1.5);
-			Rectangle rect = new Rectangle(bbox.Center-diag, bbox.Center+diag);
-
 			for ( int i=0 ; i<Gradient.HatchMax ; i++ )
 			{
 				if ( this.hatchWidth[i] == 0.0 || this.hatchDistance[i] == 0.0 )  continue;
 
+				Point p1, p2, p3, p4;
+				double offset;
+				this.MinRectMotif(bbox, i, out p1, out p2, out p3, out p4, out offset);
 				double width = System.Math.Min(this.hatchWidth[i], this.hatchDistance[i]/2);
-
-				Point p1 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.BottomLeft);
-				Point p2 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.BottomRight);
-				Point p3 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.TopLeft);
-				Point p4 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.TopRight);
 
 				Path pathLines = new Path();
 				double lenh = Point.Distance(p1, p2);
-				double posh = 0.0;
+				double posh = offset;
 				while ( posh < lenh )
 				{
 					Point pp1 = Point.Move(p1, p2, posh);
@@ -894,24 +882,18 @@ namespace Epsitec.Common.Document.Properties
 			graphics.Color = this.color1;
 			graphics.PaintSurface(path);  // dessine le fond
 
-			double max = System.Math.Max(bbox.Width, bbox.Height);
-			Point diag = new Point(max/2*1.5, max/2*1.5);
-			Rectangle rect = new Rectangle(bbox.Center-diag, bbox.Center+diag);
-
 			for ( int i=0 ; i<Gradient.HatchMax ; i++ )
 			{
 				if ( this.hatchWidth[i] == 0.0 || this.hatchDistance[i] == 0.0 )  continue;
 
+				Point p1, p2, p3, p4;
+				double offset;
+				this.MinRectMotif(bbox, i, out p1, out p2, out p3, out p4, out offset);
 				double width = System.Math.Min(this.hatchWidth[i], this.hatchDistance[i]/2);
-
-				Point p1 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.BottomLeft);
-				Point p2 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.BottomRight);
-				Point p3 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.TopLeft);
-				Point p4 = Transform.RotatePointDeg(bbox.Center, this.hatchAngle[i], rect.TopRight);
 
 				Path pathLines = new Path();
 				double lenh = Point.Distance(p1, p2);
-				double posh = 0.0;
+				double posh = offset;
 				while ( posh < lenh )
 				{
 					Point pp1 = Point.Move(p1, p2, posh);
@@ -939,6 +921,49 @@ namespace Epsitec.Common.Document.Properties
 			}
 
 			graphics.Color = initialColor;
+		}
+
+		// Calcule le rectangle le plus petit possible qui sera rempli par le motif.
+		// L'offset permet à deux objets proches d'avoir des hachures jointives.
+		protected void MinRectMotif(Rectangle bbox, int i, out Point p1, out Point p2, out Point p3, out Point p4, out double offset)
+		{
+			double b = Math.ClipAngleDeg(this.hatchAngle[i]);
+			double a = Math.DegToRad(b%90.0);
+
+			double ha = System.Math.Cos(a)*bbox.Width;
+			double hx = System.Math.Cos(a)*ha;
+			double hy = System.Math.Sin(a)*ha;
+
+			double va = System.Math.Cos(a)*bbox.Height;
+			double vx = System.Math.Cos(a)*va;
+			double vy = System.Math.Sin(a)*va;
+
+			Point[] rect = new Point[4];
+			rect[0] = new Point();
+			rect[1] = new Point();
+			rect[2] = new Point();
+			rect[3] = new Point();
+
+			rect[0].X = bbox.Right-hx;
+			rect[0].Y = bbox.Bottom-hy;
+
+			rect[1].X = bbox.Right+vy;
+			rect[1].Y = bbox.Top-vx;
+
+			rect[2].X = bbox.Left+hx;
+			rect[2].Y = bbox.Top+hy;
+
+			rect[3].X = bbox.Left-vy;
+			rect[3].Y = bbox.Bottom+vx;
+
+			int j = ((int) (b/90.0)) % 4;
+			p1 = rect[(j+0)%4];
+			p2 = rect[(j+1)%4];
+			p4 = rect[(j+2)%4];
+			p3 = rect[(j+3)%4];
+
+			Point pp1 = Transform.RotatePointDeg(-this.hatchAngle[i], p1);
+			offset = -(pp1.X+100000.0)%this.hatchDistance[i];
 		}
 
 

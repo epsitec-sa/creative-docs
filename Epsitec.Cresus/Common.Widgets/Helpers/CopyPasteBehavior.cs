@@ -81,7 +81,8 @@ namespace Epsitec.Common.Widgets.Helpers
 				
 				Support.Clipboard.WriteData data = new Support.Clipboard.WriteData ();
 				
-				data.WriteHtmlFragment (Support.Clipboard.ConvertSimpleXmlToHtml (value));
+				data.WriteTextLayout (value);
+				data.WriteHtmlFragment (value);
 				Support.Clipboard.SetData (data);
 				
 				return true;
@@ -98,15 +99,25 @@ namespace Epsitec.Common.Widgets.Helpers
 			{
 				Support.Clipboard.ReadData data = Support.Clipboard.GetData ();
 				
-				string html = data.ReadHtmlFragment ();
+				string text_layout = data.ReadTextLayout ();
+				string html        = null;
 				
-				if (html != null)
+				if (text_layout != null)
 				{
-					html = Support.Clipboard.ConvertHtmlToSimpleXml (html);
+					html = text_layout;
 				}
 				else
 				{
-					html = TextLayout.ConvertToTaggedText (data.ReadText ());
+					html = data.ReadHtmlFragment ();
+					
+					if (html != null)
+					{
+						html = Support.Clipboard.ConvertHtmlToSimpleXml (html);
+					}
+					else
+					{
+						html = TextLayout.ConvertToTaggedText (data.ReadText ());
+					}
 				}
 				
 				if (html != null)

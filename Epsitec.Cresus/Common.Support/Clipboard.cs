@@ -137,6 +137,15 @@ namespace Epsitec.Common.Support
 						line_begin = buffer.Length;
 					}
 					
+					if (tag == "<tab/>")
+					{
+						buffer.Length = last_tag;
+						buffer.Append ("<span style='mso-tab-count:1'>");
+						buffer.Append ((char)160, 11);
+						buffer.Append (' ');
+						buffer.Append ("</span>");
+					}
+					
 					last_tag = -1;
 				}
 			}
@@ -153,10 +162,21 @@ namespace Epsitec.Common.Support
 			
 			bool is_space        = true;
 			bool preserve_spaces = false;
+			bool delete_spaces   = false;
 			
 			for (int i = 0; i < value.Length; i++)
 			{
 				char c = value[i];
+				
+				if (((c == ' ') || (c == (char)160)) &&
+					(delete_spaces))
+				{
+					//	Si on est dans un mode spécial dicté par Office
+					//	(<span style="mso-tab-count:1">    </span>) on mange
+					//	tous les espaces.
+					
+					continue;
+				}
 				
 				//	Tous les caratères "blancs" sont considérés comme des espaces :
 				
@@ -172,6 +192,7 @@ namespace Epsitec.Common.Support
 				{
 					last_tag        = buffer.Length;
 					preserve_spaces = false;
+					delete_spaces   = false;
 				}
 				else if (c == '&')
 				{
@@ -191,6 +212,7 @@ namespace Epsitec.Common.Support
 						}
 						
 						is_space = true;
+						
 					}
 					else
 					{
@@ -218,18 +240,72 @@ namespace Epsitec.Common.Support
 					buffer.Length = last_tag;
 					last_tag      = -1;
 					
-					switch (tag)
+					int space_pos = tag.IndexOf (' ');
+					
+					string clean_tag;
+					
+					if (space_pos > 0)
 					{
-						case  "<b>": case  "<B>": buffer.Append ("<b>");  continue;
-						case "</b>": case "</B>": buffer.Append ("</b>"); continue;
-						case  "<i>": case  "<I>": buffer.Append ("<i>");  continue;
-						case "</i>": case "</I>": buffer.Append ("</i>"); continue;
+						if (tag.EndsWith ("/>"))
+						{
+							clean_tag = tag.Substring (0, space_pos).ToLower () + "/>";
+						}
+						else
+						{
+							clean_tag = tag.Substring (0, space_pos).ToLower () + ">";
+						}
+					}
+					else
+					{
+						clean_tag = tag.ToLower ();
+					}
+					
+					switch (clean_tag)
+					{
+						case  "<b>":
+						case  "<strong>":
+							buffer.Append ("<b>");
+							continue;
 						
-						case "</p>": case "</P>":
-						case "<br>": case "<BR>": case "<br/>": case "<br />":
+						case "</b>":
+						case "</strong>":
+							buffer.Append ("</b>");
+							continue;
+						
+						case  "<i>":
+						case  "<em>":
+							buffer.Append ("<i>");
+							continue;
+						
+						case "</i>":
+						case "</em>":
+							buffer.Append ("</i>");
+							continue;
+						
+						case  "<u>":
+							buffer.Append ("<u>");
+							continue;
+						
+						case "</u>":
+							buffer.Append ("</u>");
+							continue;
+						
+						case "</p>":
+						case "<br>":
+						case "<br/>":
 							buffer.Append ("<br/>");
 							is_space = true;
 							continue;
+					}
+					
+					if (tag == "<![if !supportEmptyParas]>")
+					{
+						string mso_nbsp_endif = "&nbsp;<![endif]>";
+						
+						if (value.Substring (i+1).StartsWith (mso_nbsp_endif))
+						{
+							i += mso_nbsp_endif.Length;
+						}
 					}
 					
 					Match match_style = Clipboard.regex_style.Match (tag);
@@ -248,6 +324,30 @@ namespace Epsitec.Common.Support
 								(match_opt.Groups["opt"].Captures[0].Value == "yes"))
 							{
 								preserve_spaces = true;
+							}
+							else
+							{
+								match_opt = Clipboard.regex_mso_tabcount.Match (style);
+								
+								if ((match_opt.Success) &&
+									(match_opt.Groups["opt"].Captures.Count == 1))
+								{
+									int n;
+									try
+									{
+										Types.Converter.Convert (match_opt.Groups["opt"].Captures[0].Value, out n);
+										
+										while (n-- > 0)
+										{
+											buffer.Append ("<tab/>");
+										}
+										
+										delete_spaces = true;
+									}
+									catch
+									{
+									}
+								}
 							}
 						}
 					}
@@ -422,6 +522,11 @@ namespace Epsitec.Common.Support
 				return Clipboard.ConvertBrokenUtf8ToString (raw_html.Substring (idx_begin, idx_end - idx_begin));
 			}
 			
+			public string ReadTextLayout()
+			{
+				return this.ReadAsString ("Epsitec:TextLayout ver:1");
+			}
+			
 			
 			public bool IsCompatible(Format format)
 			{
@@ -522,6 +627,11 @@ namespace Epsitec.Common.Support
 				this.PatchString (html, idx_end_frag,   string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idx_frag_end));
 				
 				this.data.SetData ("HTML Format", false, html.ToString ());
+			}
+			
+			public void WriteTextLayout(string value)
+			{
+				this.data.SetData ("Epsitec:TextLayout ver:1", false, value);
 			}
 			
 			
@@ -662,11 +772,13 @@ namespace Epsitec.Common.Support
 			
 			Clipboard.regex_style        = new Regex (@"\A<span((\s*style\s*=\s*(?<a>['""])(?<style>.*?)\k<a>)|(\s*\w*)|(\s*\w*\s*=\s*[^\s>]*?\s*))*\s*\>\Z", RegexOptions.Compiled | RegexOptions.Multiline);
 			Clipboard.regex_mso_spacerun = new Regex (@"\Amso\-spacerun\:\s*(?<opt>\w*)\s*\Z", RegexOptions.Compiled | RegexOptions.Multiline);
+			Clipboard.regex_mso_tabcount = new Regex (@"\Amso\-tab\-count\:\s*(?<opt>\w*)\s*\Z", RegexOptions.Compiled | RegexOptions.Multiline);
 		}
 		#endregion
 		
 		static System.Collections.Hashtable		map_entities;
 		static Regex							regex_style;
 		static Regex							regex_mso_spacerun;
+		static Regex							regex_mso_tabcount;
 	}
 }

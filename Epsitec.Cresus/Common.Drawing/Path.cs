@@ -467,6 +467,10 @@ namespace Epsitec.Common.Drawing
 						buffer.Append ("arc ");
 						buffer.Append (System.String.Format ("({0:0.00}, {1:0.00})", points[i].X, points[i].Y));
 						break;
+					case PathElement.EndPoly:
+						buffer.Append ("end ");
+						buffer.Append (System.String.Format ("({0:0.00}, {1:0.00})", points[i].X, points[i].Y));
+						break;
 					default:
 						add_space = false;
 						break;
@@ -883,6 +887,7 @@ namespace Epsitec.Common.Drawing
 		Curve3		= 3,
 		Curve4		= 4,
 		Arc			= 5,
+		EndPoly		= 6,
 		
 		MaskCommand	= 0x0f,
 		MaskFlags	= 0xf0,

@@ -723,7 +723,8 @@ namespace Epsitec.Common.Document.Objects
 			string text = this.textNavigator.Selection;
 			if ( text == "" )  return false;
 			Support.Clipboard.WriteData data = new Support.Clipboard.WriteData();
-			data.WriteHtmlFragment(Support.Clipboard.ConvertSimpleXmlToHtml(text));
+			data.WriteHtmlFragment(text);
+			data.WriteTextLayout(text);
 			Support.Clipboard.SetData(data);
 			this.textNavigator.Selection = "";
 			this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -735,7 +736,8 @@ namespace Epsitec.Common.Document.Objects
 			string text = this.textNavigator.Selection;
 			Support.Clipboard.WriteData data = new Support.Clipboard.WriteData();
 			if ( text == "" )  return false;
-			data.WriteHtmlFragment(Support.Clipboard.ConvertSimpleXmlToHtml(text));
+			data.WriteHtmlFragment(text);
+			data.WriteTextLayout(text);
 			Support.Clipboard.SetData(data);
 			return true;
 		}
@@ -743,14 +745,18 @@ namespace Epsitec.Common.Document.Objects
 		public override bool EditPaste()
 		{
 			Support.Clipboard.ReadData data = Support.Clipboard.GetData();
-			string html = data.ReadHtmlFragment();
-			if ( html != null )
+			string html = data.ReadTextLayout();
+			if ( html == null )
 			{
-				html = Support.Clipboard.ConvertHtmlToSimpleXml(html);
-			}
-			else
-			{
-				html = TextLayout.ConvertToTaggedText(data.ReadText());
+				html = data.ReadHtmlFragment();
+				if ( html != null )
+				{
+					html = Support.Clipboard.ConvertHtmlToSimpleXml(html);
+				}
+				else
+				{
+					html = TextLayout.ConvertToTaggedText(data.ReadText());
+				}
 			}
 			if ( html == null )  return false;
 			this.textNavigator.Selection = html;
