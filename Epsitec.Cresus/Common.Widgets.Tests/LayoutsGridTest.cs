@@ -176,6 +176,8 @@ namespace Epsitec.Common.Widgets
 			surface.BackColor = Drawing.Color.FromRGB (0, 0, 0.5);
 			surface.Panel     = panel;
 			
+			layout.EditionEnabled = true;
+			
 			window.Text = "LayoutGridTest.CheckDesigner";
 			window.ClientSize = new Drawing.Size (400, 300);
 			window.Show ();

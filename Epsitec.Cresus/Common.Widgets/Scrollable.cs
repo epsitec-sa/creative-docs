@@ -16,21 +16,19 @@ namespace Epsitec.Common.Widgets
 			this.v_scroller = new VScroller (this);
 			
 			this.h_scroller.Parent = this;
-			this.h_scroller.Minimum = 0;
-			this.h_scroller.Maximum = 1;
-			this.h_scroller.VisibleRange = 1;
+			this.h_scroller.Range  = 0;
+			this.h_scroller.VisibleRangeRatio = 1;
 			
 			this.v_scroller.Parent = this;
-			this.v_scroller.Minimum = 0;
-			this.v_scroller.Maximum = 1;
-			this.v_scroller.VisibleRange = 1;
+			this.v_scroller.Range  = 0;
+			this.v_scroller.VisibleRangeRatio = 1;
 			this.v_scroller.IsInverted = true;
 			
 			this.h_scroller.ValueChanged += new EventHandler (HandleHScrollerValueChanged);
 			this.v_scroller.ValueChanged += new EventHandler(HandleVScrollerValueChanged);
 			
-			this.panel_container = new Widget (this);
-			this.panel_container.Parent = this;
+			this.aperture = new Widget (this);
+			this.aperture.Parent = this;
 			
 			this.UpdateGeometry ();
 		}
@@ -62,7 +60,7 @@ namespace Epsitec.Common.Widgets
 		protected void AttachPanel(Panel panel)
 		{
 			panel.LayoutChanged += new EventHandler (HandlePanelLayoutChanged);
-			panel.Parent = this.panel_container;
+			panel.Parent = this.aperture;
 		}
 		
 		protected void DetachPanel(Panel panel)
@@ -111,6 +109,11 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
+			//	TODO: gérer la rotation/le changement d'échelle du panel qui doit aussi
+			//	être reflété sur ses marges...
+			
+			Drawing.Margins frame = this.panel.FrameMargins;
+			
 			double margin_x = 0;
 			double margin_y = 0;
 			
@@ -119,8 +122,8 @@ namespace Epsitec.Common.Widgets
 			
 			for (;;)
 			{
-				delta_dx = this.panel.Width  - this.Client.Width  + margin_x;
-				delta_dy = this.panel.Height - this.Client.Height + margin_y;
+				delta_dx = this.panel.Width  + frame.Width  - this.Client.Width  + margin_x;
+				delta_dy = this.panel.Height + frame.Height - this.Client.Height + margin_y;
 				
 				if (delta_dx > 0)
 				{
@@ -147,22 +150,58 @@ namespace Epsitec.Common.Widgets
 				break;
 			}
 			
-			double vis_dx = this.Client.Width - margin_x;
-			double vis_dy = this.Client.Height - margin_y;
+			double vis_dx = this.Client.Width  - margin_x - frame.Width;
+			double vis_dy = this.Client.Height - margin_y - frame.Height;
+			
 			double offset_x = 0;
 			double offset_y = 0;
 			
-			if (delta_dx > 0)
+			if ((this.panel.Width > 0) &&
+				(delta_dx > 0) &&
+				(vis_dx > 0))
 			{
-				offset_x = delta_dx * this.h_scroller.Value;
+				this.h_scroller.VisibleRangeRatio = vis_dx / this.panel.Width;
+				this.h_scroller.Range = delta_dx;
+				this.h_scroller.SmallChange = 5;
+				this.h_scroller.LargeChange = vis_dx / 2;
+			
+				offset_x = this.h_scroller.Value;
 			}
-			if (delta_dy > 0)
+			else
 			{
-				offset_y = delta_dy * this.v_scroller.Value;
+				this.h_scroller.Range = 0.0;
+				this.h_scroller.VisibleRangeRatio = 1.0;
 			}
 			
-			this.panel_container.Bounds = new Drawing.Rectangle (0, margin_y, vis_dx, vis_dy);
-			this.panel.Location = new Drawing.Point (- offset_x, offset_y + this.Client.Height - this.panel.Height - margin_y);
+			if ((this.panel.Height > 0) &&
+				(delta_dy > 0) &&
+				(vis_dy > 0))
+			{
+				this.v_scroller.VisibleRangeRatio = vis_dy / this.panel.Height;
+				this.v_scroller.Range = delta_dy;
+				this.v_scroller.SmallChange = 5;
+				this.v_scroller.LargeChange = vis_dy / 2;
+				
+				offset_y = this.v_scroller.Value;
+			}
+			else
+			{
+				this.v_scroller.Range = 0.0;
+				this.v_scroller.VisibleRangeRatio = 1.0;
+			}
+			
+			this.aperture.Bounds = new Drawing.Rectangle (frame.Left, frame.Bottom + margin_y, vis_dx, vis_dy);
+			this.panel.Location  = new Drawing.Point (-offset_x, this.Client.Height - this.panel.Height - margin_y - frame.Height + offset_y);
+			
+			Drawing.Rectangle ap_bounds = this.panel.MapParentToClient (this.aperture.Client.Bounds);
+			
+			this.panel.FrameBounds = new Drawing.Rectangle (ap_bounds.Left - frame.Left, ap_bounds.Bottom - frame.Bottom, ap_bounds.Width + frame.Width, ap_bounds.Height + frame.Height);
+			
+			System.Diagnostics.Debug.WriteLine ("Aperture: " + this.aperture.Bounds.ToString ());
+			System.Diagnostics.Debug.WriteLine ("Location: " + this.panel.Location.ToString ());
+			System.Diagnostics.Debug.WriteLine ("Frame:    " + this.panel.FrameBounds.ToString ());
+			
+			this.Invalidate ();
 			
 			this.h_scroller.SetVisible (margin_y > 0);
 			this.v_scroller.SetVisible (margin_x > 0);
@@ -184,7 +223,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		protected Panel					panel;
-		protected Widget				panel_container;
+		protected Widget				aperture;
 		protected Drawing.Size			panel_size;
 		protected VScroller				v_scroller;
 		protected HScroller				h_scroller;

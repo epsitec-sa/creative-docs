@@ -455,6 +455,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.root.PaintForeground     += new PaintEventHandler (this.HandleRootPaintForeground);
 			this.root.PreProcessing	      += new MessageEventHandler (this.HandleRootPreProcessing);
 			this.root.PaintBoundsCallback += new PaintBoundsCallback (this.HandleRootPaintBoundsCallback);
+			this.root.PaintFrameCallback  += new PaintFrameCallback (this.HandleRootPaintFrameCallback);
 			
 			this.root.SetPropagationModes (Widget.PropagationModes.UpChildrenChanged, true, true);
 		}
@@ -467,6 +468,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.root.PaintForeground     -= new PaintEventHandler (this.HandleRootPaintForeground);
 			this.root.PreProcessing	      -= new MessageEventHandler (this.HandleRootPreProcessing);
 			this.root.PaintBoundsCallback -= new PaintBoundsCallback (this.HandleRootPaintBoundsCallback);
+			this.root.PaintFrameCallback  -= new PaintFrameCallback (this.HandleRootPaintFrameCallback);
 		}
 		
 		
@@ -653,6 +655,14 @@ namespace Epsitec.Common.Widgets.Layouts
 				bounds.Inflate (Grid.GripperRadius + 1, Grid.GripperRadius + 1);
 			}
 		}
+		
+		private void HandleRootPaintFrameCallback(Panel panel, Drawing.Graphics graphics, Drawing.Rectangle frame_outside, Drawing.Rectangle frame_inside)
+		{
+			if (this.is_edition_enabled)
+			{
+				this.PaintVerticals (graphics);
+			}
+		}
 		#endregion
 		
 		#region IPostPaintHandler Members
@@ -665,7 +675,6 @@ namespace Epsitec.Common.Widgets.Layouts
 				
 				this.PaintDropShape (graphics);
 				this.PaintDragShape (graphics);
-				this.PaintVerticals (graphics);
 			}
 		}
 		#endregion

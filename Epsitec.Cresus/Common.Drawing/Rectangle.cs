@@ -172,6 +172,17 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public void Inflate(Margins margins)
+		{
+			if (! this.IsEmpty)
+			{
+				this.x1 -= margins.Left;
+				this.x2 += margins.Right;
+				this.y1 -= margins.Bottom;
+				this.y2 += margins.Top;
+			}
+		}
+		
 		public void Offset(Point p)
 		{
 			this.Offset (p.X, p.Y);
@@ -280,6 +291,17 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			r.Inflate (x, y);
+			return r;
+		}
+		
+		public static Rectangle Inflate(Rectangle r, Margins margins)
+		{
+			if (r.IsEmpty)
+			{
+				return Rectangle.Empty;
+			}
+			
+			r.Inflate (margins);
 			return r;
 		}
 		
