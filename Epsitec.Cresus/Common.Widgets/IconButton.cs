@@ -61,7 +61,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override Drawing.Rectangle GetPaintBounds()
+		public override Drawing.Rectangle GetShapeBounds()
 		{
 			return new Drawing.Rectangle(0, 0, this.clientInfo.width+1, this.clientInfo.height);
 		}
