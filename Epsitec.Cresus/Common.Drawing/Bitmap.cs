@@ -204,10 +204,7 @@ namespace Epsitec.Common.Drawing
 				System.Drawing.Bitmap src_bitmap = image.BitmapImage.bitmap;
 				System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (src_bitmap.Width, src_bitmap.Height);
 				
-				using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
-				{
-					System.Windows.Forms.ControlPaint.DrawImageDisabled (graphics, src_bitmap, 0, 0, color);
-				}
+				Platform.ImageDisabler.Paint (src_bitmap, dst_bitmap, color);
 				
 				Bitmap bitmap = new Bitmap ();
 				

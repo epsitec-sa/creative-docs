@@ -1,0 +1,13 @@
+
+Ce qu'il reste à faire dans "Support"
+-------------------------------------
+
+-	La classe ResourceBundle n'est pas implémentée à 100%.
+	La méthode Merge ne marche correctement que pour les
+	strings.
+
+-	La classe ObjectBundler ne contient pas encore le code qui
+	énumère toutes les assemblies chargées et les analyse
+	dynamiquement pour enregistrer tous les types qui implémentent
+	l'interface IBundleSupport.
+

@@ -12,8 +12,8 @@ namespace Epsitec.Common.Drawing.Agg
 			this.transform  = new Transform ();
 			
 			this.solid_renderer    = new Common.Drawing.Agg.SolidRenderer ();
-			this.image_renderer    = new Common.Drawing.Renderer.Image ();
-			this.gradient_renderer = new Common.Drawing.Renderer.Gradient ();
+			this.image_renderer    = new Common.Drawing.Renderers.Image ();
+			this.gradient_renderer = new Common.Drawing.Renderers.Gradient ();
 			
 			this.image_renderer.TransformUpdating    += new System.EventHandler (HandleTransformUpdating);
 			this.gradient_renderer.TransformUpdating += new System.EventHandler (HandleTransformUpdating);
@@ -255,7 +255,7 @@ namespace Epsitec.Common.Drawing.Agg
 		
 		protected void HandleTransformUpdating(object sender, System.EventArgs e)
 		{
-			Renderer.ITransformProvider provider = sender as Renderer.ITransformProvider;
+			Renderers.ITransformProvider provider = sender as Renderers.ITransformProvider;
 			
 			if (provider != null)
 			{
@@ -283,17 +283,17 @@ namespace Epsitec.Common.Drawing.Agg
 			get { return this.pixmap; }
 		}
 		
-		public override Renderer.Solid						SolidRenderer
+		public override Renderers.Solid						SolidRenderer
 		{
 			get { return this.solid_renderer; }
 		}
 		
-		public override Renderer.Image						ImageRenderer
+		public override Renderers.Image						ImageRenderer
 		{
 			get { return this.image_renderer; }
 		}
 		
-		public override Renderer.Gradient					GradientRenderer
+		public override Renderers.Gradient					GradientRenderer
 		{
 			get { return this.gradient_renderer; }
 		}
@@ -356,9 +356,9 @@ namespace Epsitec.Common.Drawing.Agg
 		private Rasterizer				rasterizer;
 		private Transform				transform;
 		
-		private Renderer.Solid			solid_renderer;
-		private Renderer.Image			image_renderer;
-		private Renderer.Gradient		gradient_renderer;
+		private Renderers.Solid			solid_renderer;
+		private Renderers.Image			image_renderer;
+		private Renderers.Gradient		gradient_renderer;
 		
 		private double					clip_x1, clip_y1, clip_x2, clip_y2;
 		private bool					has_clip_rect;

@@ -417,42 +417,42 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Adorner\Default.cs"
+                    RelPath = "Adorners\Default.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Adorner\Factory.cs"
+                    RelPath = "Adorners\Factory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Adorner\LookCeeBot.cs"
+                    RelPath = "Adorners\LookCeeBot.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Adorner\LookDany.cs"
+                    RelPath = "Adorners\LookDany.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Adorner\LookMetal.cs"
+                    RelPath = "Adorners\LookMetal.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Adorner\LookPlastic.cs"
+                    RelPath = "Adorners\LookPlastic.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Adorner\LookRound.cs"
+                    RelPath = "Adorners\LookRound.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Adorner\LookXP.cs"
+                    RelPath = "Adorners\LookXP.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

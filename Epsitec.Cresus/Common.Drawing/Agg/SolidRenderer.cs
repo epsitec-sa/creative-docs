@@ -5,7 +5,7 @@ namespace Epsitec.Common.Drawing.Agg
 	/// <summary>
 	/// Implémentation de la classe Renderer.Solid basée sur AGG.
 	/// </summary>
-	public class SolidRenderer : Epsitec.Common.Drawing.Renderer.Solid
+	public class SolidRenderer : Epsitec.Common.Drawing.Renderers.Solid
 	{
 		public SolidRenderer()
 		{

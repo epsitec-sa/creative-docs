@@ -17,13 +17,13 @@ namespace Epsitec.Common.Drawing.Null
 			get { return this.rasterizer; }
 		}
 		
-		public override Renderer.Solid		SolidRenderer
+		public override Renderers.Solid						SolidRenderer
 		{
 			get { return this.solid_renderer; }
 		}
 		
 		
-		private Renderer.Solid			solid_renderer;
+		private Renderers.Solid			solid_renderer;
 		private Rasterizer				rasterizer;
 	}
 }

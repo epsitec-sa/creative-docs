@@ -79,24 +79,14 @@
                     HintPath = "c:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
                 />
                 <Reference
-                    Name = "System.Windows.Forms"
-                    AssemblyName = "System.Windows.Forms"
-                    HintPath = "c:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
-                />
-                <Reference
-                    Name = "System.Data"
-                    AssemblyName = "System.Data"
-                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
-                />
-                <Reference
-                    Name = "System.XML"
-                    AssemblyName = "System.Xml"
-                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
-                />
-                <Reference
                     Name = "AntiGrain.NET"
                     AssemblyName = "AntiGrain.NET"
                     HintPath = "..\External\AntiGrain.NET.dll"
+                />
+                <Reference
+                    Name = "Common.Drawing.Platform"
+                    Project = "{0202C35E-E79E-43BE-9E35-1ACECB0BBE9B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>
@@ -228,22 +218,22 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Renderer\Gradient.cs"
+                    RelPath = "Renderers\Gradient.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Renderer\Image.cs"
+                    RelPath = "Renderers\Image.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Renderer\ITransformProvider.cs"
+                    RelPath = "Renderers\ITransformProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Renderer\Solid.cs"
+                    RelPath = "Renderers\Solid.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -118,21 +118,21 @@ namespace Epsitec.Common.Drawing.Agg
 		}
 		
 		
-		public override void Render(Renderer.Solid renderer)
+		public override void Render(Renderers.Solid renderer)
 		{
 			this.CreateOnTheFly ();
 			AntiGrain.Rasterizer.RenderSolid (this.agg_ras, renderer.Handle);
 			AntiGrain.Rasterizer.Clear (this.agg_ras);
 		}
 		
-		public override void Render(Renderer.Image renderer)
+		public override void Render(Renderers.Image renderer)
 		{
 			this.CreateOnTheFly ();
 			AntiGrain.Rasterizer.RenderImage (this.agg_ras, renderer.Handle);
 			AntiGrain.Rasterizer.Clear (this.agg_ras);
 		}
 		
-		public override void Render(Renderer.Gradient renderer)
+		public override void Render(Renderers.Gradient renderer)
 		{
 			this.CreateOnTheFly ();
 			AntiGrain.Rasterizer.RenderGradient (this.agg_ras, renderer.Handle);

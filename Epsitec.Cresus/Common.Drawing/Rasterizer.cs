@@ -137,15 +137,15 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public virtual void Render(Renderer.Solid renderer)
+		public virtual void Render(Renderers.Solid renderer)
 		{
 		}
 		
-		public virtual void Render(Renderer.Image renderer)
+		public virtual void Render(Renderers.Image renderer)
 		{
 		}
 		
-		public virtual void Render(Renderer.Gradient renderer)
+		public virtual void Render(Renderers.Gradient renderer)
 		{
 		}
 		

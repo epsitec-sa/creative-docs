@@ -380,17 +380,17 @@ namespace Epsitec.Common.Drawing
 			get { return null; }
 		}
 		
-		public virtual Renderer.Solid		SolidRenderer
+		public virtual Renderers.Solid		SolidRenderer
 		{
 			get { return null; }
 		}
 		
-		public virtual Renderer.Image		ImageRenderer
+		public virtual Renderers.Image		ImageRenderer
 		{
 			get { return null; }
 		}
 		
-		public virtual Renderer.Gradient	GradientRenderer
+		public virtual Renderers.Gradient	GradientRenderer
 		{
 			get { return null; }
 		}
