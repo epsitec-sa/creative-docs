@@ -128,6 +128,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Data\GlobalModifier.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Data\Handle.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -218,6 +223,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Data\PropertyCorner.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Data\PropertyDouble.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -234,6 +244,11 @@
                 />
                 <File
                     RelPath = "Data\PropertyList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\PropertyRegular.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -293,6 +308,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Widgets\PanelCorner.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\PanelDouble.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -309,6 +329,11 @@
                 />
                 <File
                     RelPath = "Widgets\PanelList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\PanelRegular.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -1,4 +1,5 @@
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Common.Pictogram.Widgets;
 using System.Xml.Serialization;
 
@@ -12,10 +13,8 @@ namespace Epsitec.Common.Pictogram.Data
 		FillGradient,		// dégradé de remplissage
 		Shadow,				// ombre sous l'objet
 		PolyClose,			// mode de fermeture des polygones
-		RoundRect,			// rayons des rectangles arrondis
-		RegularFaces,		// polygone régulier: nb de faces
-		RegularStar,		// polygone régulier: étoile ?
-		RegularShape,		// polygone régulier: forme
+		Corner,				// coins des rectangles
+		Regular,			// définitions du polygone régulier
 		TextString,			// texte
 		TextFontName,		// police
 		TextFontOptical,	// police
@@ -41,10 +40,8 @@ namespace Epsitec.Common.Pictogram.Data
 				case PropertyType.FillGradient:     property = new PropertyGradient();  break;
 				case PropertyType.Shadow:           property = new PropertyShadow();    break;
 				case PropertyType.PolyClose:        property = new PropertyBool();      break;
-				case PropertyType.RoundRect:        property = new PropertyDouble();    break;
-				case PropertyType.RegularFaces:     property = new PropertyDouble();    break;
-				case PropertyType.RegularStar:      property = new PropertyBool();      break;
-				case PropertyType.RegularShape:     property = new PropertyDouble();    break;
+				case PropertyType.Corner:           property = new PropertyCorner();    break;
+				case PropertyType.Regular:          property = new PropertyRegular();   break;
 				case PropertyType.TextString:       property = new PropertyString();    break;
 				case PropertyType.TextFontName:     property = new PropertyCombo();     break;
 				case PropertyType.TextFontOptical:  property = new PropertyCombo();     break;
@@ -183,6 +180,20 @@ namespace Epsitec.Common.Pictogram.Data
 		public virtual void DrawEdit(Drawing.Graphics graphics, IconContext iconContext, Drawing.Rectangle bbox)
 		{
 		}
+
+
+		// Génère un événement pour dire que la propriété a changé.
+		// En fait, ce sont les objets qui vont écouter cet événement, pour
+		// éventuellement modifier les poignées qui reflètent les propriétés.
+		protected virtual void OnChanged()
+		{
+			if ( this.Changed != null )  // qq'un écoute ?
+			{
+				this.Changed(this);
+			}
+		}
+
+		public event EventHandler Changed;
 
 
 		protected string						text;
