@@ -75,6 +75,33 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public bool						IsStyleBold
+		{
+			get
+			{
+				switch (this.StyleName)
+				{
+					case "Bold":
+						return true;
+				}
+				return false;
+			}
+		}
+		
+		public bool						IsStyleItalic
+		{
+			get
+			{
+				switch (this.StyleName)
+				{
+					case "Italic":
+					case "Oblique":
+						return true;
+				}
+				return false;
+			}
+		}
+		
 		public string					LocalStyleName
 		{
 			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.StyleUserLocale); }

@@ -26,8 +26,8 @@ namespace Epsitec.Common.Drawing
 			this.gradient_renderer = new Common.Drawing.Renderers.Gradient ();
 			this.smooth_renderer   = new Common.Drawing.Renderers.Smooth (this);
 			
-			this.image_renderer.TransformUpdating    += new System.EventHandler (this.HandleTransformUpdating);
-			this.gradient_renderer.TransformUpdating += new System.EventHandler (this.HandleTransformUpdating);
+			this.image_renderer.TransformUpdating    += new Support.EventHandler (this.HandleTransformUpdating);
+			this.gradient_renderer.TransformUpdating += new Support.EventHandler (this.HandleTransformUpdating);
 			
 			this.rasterizer.Gamma = 1.2;
 		}
@@ -637,7 +637,7 @@ namespace Epsitec.Common.Drawing
 			this.gradient_renderer.Transform = t_gradient;
 		}
 		
-		protected void HandleTransformUpdating(object sender, System.EventArgs e)
+		protected void HandleTransformUpdating(object sender)
 		{
 			Renderers.ITransformProvider provider = sender as Renderers.ITransformProvider;
 			
