@@ -39,7 +39,6 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
 
 			Drawing.Rectangle titleRect = this.textLayout.StandardRectangle;
 			Drawing.Point pos = new Drawing.Point(10, 0);
@@ -49,8 +48,8 @@ namespace Epsitec.Common.Widgets
 			frameRect = rect;
 			frameRect.Top -= System.Math.Floor(frameRect.Height-(titleRect.Bottom+titleRect.Top)/2);
 
-			adorner.PaintGroupBox(graphics, frameRect, titleRect, state, dir);
-			adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state, dir);
+			adorner.PaintGroupBox(graphics, frameRect, titleRect, state);
+			adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state);
 		}
 	}
 }
