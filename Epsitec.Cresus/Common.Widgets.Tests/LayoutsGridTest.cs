@@ -8,7 +8,7 @@ namespace Epsitec.Common.Widgets
 		{
 			Layouts.Grid layout = new Layouts.Grid ();
 			
-			Widget wa   = new Widget ();
+			Panel  wa   = new Panel ();
 			Widget wa1  = new Widget ();
 			Widget wa11 = new Widget ();
 			Widget wa2  = new Widget ();
@@ -164,6 +164,8 @@ namespace Epsitec.Common.Widgets
 			layout.DesiredWidth  = 200;
 			layout.DesiredHeight = 150;
 			layout.Invalidate ();
+			
+			panel.FrameMargins = new Drawing.Margins (10, 10, 10, 40);
 			
 			Scrollable surface = new Scrollable ();
 			
