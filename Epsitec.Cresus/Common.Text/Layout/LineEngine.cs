@@ -62,10 +62,8 @@ namespace Epsitec.Common.Text.Layout
 							//	Change de moteur de layout. Il faut par conséquent mémoriser où on
 							//	s'arrête pour que le suivant sache où reprendre :
 							
-							context.X              = scratch.Advance;
-							context.TextOffset     = scratch.Offset;
-							context.LayoutEngine   = engine;
-							context.LayoutProperty = layout;
+							context.MoveTo (scratch.Advance, scratch.Offset);
+							context.SwitchLayoutEngine (engine, layout);
 							
 							context.TextStretchProfile.Add (scratch.StretchProfile);
 							
@@ -162,10 +160,8 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 						//	Change de moteur de layout. Il faut par conséquent mémoriser où on
 						//	s'arrête pour que le suivant sache où reprendre :
 						
-						context.X              = ox;
-						context.TextOffset    += offset;
-						context.LayoutEngine   = engine;
-						context.LayoutProperty = layout;
+						context.MoveTo (ox, offset + context.TextOffset);
+						context.SwitchLayoutEngine (engine, layout);
 						
 						return Layout.Status.SwitchLayout;
 					}

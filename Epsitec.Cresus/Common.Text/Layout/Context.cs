@@ -18,9 +18,9 @@ namespace Epsitec.Common.Text.Layout
 			this.text       = text;
 			this.text_start = start;
 			
-			this.oy_base      = oy_base;
-			this.oy_ascender  = oy_base;
-			this.oy_descender = oy_base;
+			this.oy_base = oy_base;
+			this.oy_max  = oy_base;
+			this.oy_min  = oy_base;
 			
 			this.line_height = line_height;
 			this.line_width  = line_width;
@@ -50,10 +50,6 @@ namespace Epsitec.Common.Text.Layout
 			{
 				return this.layout_engine;
 			}
-			set
-			{
-				this.layout_engine = value;
-			}
 		}
 		
 		public Properties.LayoutProperty		LayoutProperty
@@ -61,10 +57,6 @@ namespace Epsitec.Common.Text.Layout
 			get
 			{
 				return this.layout_property;
-			}
-			set
-			{
-				this.layout_property = value;
 			}
 		}
 		
@@ -112,10 +104,6 @@ namespace Epsitec.Common.Text.Layout
 			{
 				return this.ox;
 			}
-			set
-			{
-				this.ox = value;
-			}
 		}
 		
 		public double							Y
@@ -130,7 +118,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.oy_ascender;
+				return this.oy_max;
 			}
 		}
 		
@@ -138,7 +126,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.oy_descender;
+				return this.oy_min;
 			}
 		}
 		
@@ -175,6 +163,23 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public bool								EnableHyphenation
+		{
+			get
+			{
+				return this.enable_hyphenation;
+			}
+		}
+		
+		public bool								BreakAnywhere
+		{
+			get
+			{
+				return this.break_anywhere;
+			}
+		}
+		
+
 		public double							LeftMargin
 		{
 			get
@@ -211,7 +216,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.oy_ascender - this.oy_base;
+				return this.oy_max - this.oy_base;
 			}
 		}
 		
@@ -219,7 +224,7 @@ namespace Epsitec.Common.Text.Layout
 		{
 			get
 			{
-				return this.oy_descender - this.oy_base;
+				return this.oy_min - this.oy_base;
 			}
 		}
 		
@@ -230,7 +235,6 @@ namespace Epsitec.Common.Text.Layout
 				return this.line_width - this.mx_left - this.mx_right;
 			}
 		}
-		
 		
 		
 		public bool								IsLeftToRight
@@ -246,22 +250,6 @@ namespace Epsitec.Common.Text.Layout
 			get
 			{
 				return (this.left_to_right & 1) == 1;
-			}
-		}
-		
-		public bool								EnableHyphenation
-		{
-			get
-			{
-				return this.enable_hyphenation;
-			}
-		}
-		
-		public bool								BreakAnywhere
-		{
-			get
-			{
-				return this.break_anywhere;
 			}
 		}
 		
@@ -290,22 +278,6 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		
-		public void SelectFrame(int frame_index, double y)
-		{
-			if (frame_index == -1)
-			{
-				this.frame_index = -1;
-				this.frame       = null;
-				this.frame_y     = 0;
-			}
-			else
-			{
-				this.frame_index = frame_index;
-				this.frame       = this.frame_list[this.frame_index];
-				this.frame_y     = y;
-			}
-		}
 		
 		
 		public Layout.Status Fit(ref Layout.BreakCollection result, int paragraph_line_count)
@@ -357,8 +329,8 @@ restart:
 				
 				if (this.frame != null)
 				{
-					double line_ascender  = this.oy_ascender - this.oy_base;
-					double line_descender = this.oy_descender - this.oy_base;
+					double line_ascender  = this.oy_max - this.oy_base;
+					double line_descender = this.oy_min - this.oy_base;
 					double line_height    = this.line_height;
 					
 					double ox, oy, dx;
@@ -392,13 +364,13 @@ restart:
 						return Layout.Status.ErrorNeedMoreRoom;
 					}
 					
-					this.ox           = ox + this.mx_left;
-					this.oy_base      = oy;
-					this.oy_ascender  = oy + line_ascender;
-					this.oy_descender = oy + line_descender;
-					this.frame_y      = next_frame_y;
-					this.line_width   = dx;
-					this.line_height  = line_height;
+					this.ox          = ox + this.mx_left;
+					this.oy_base     = oy;
+					this.oy_max      = oy + line_ascender;
+					this.oy_min      = oy + line_descender;
+					this.frame_y     = next_frame_y;
+					this.line_width  = dx;
+					this.line_height = line_height;
 					
 					if ((initial_line_height == 0) &&
 						(initial_line_width == 0))
@@ -529,13 +501,26 @@ restart:
 		}
 		
 		
+		public void MoveTo(double x, int offset)
+		{
+			this.ox = x;
+			this.text_offset = offset;
+		}
+		
+		public void SwitchLayoutEngine(Layout.BaseEngine engine, Properties.LayoutProperty property)
+		{
+			this.layout_engine   = engine;
+			this.layout_property = property;
+		}
+		
+		
 		public void RecordAscender(double value)
 		{
 			double y = this.oy_base + value;
 			
-			if (y > this.oy_ascender)
+			if (y > this.oy_max)
 			{
-				this.oy_ascender = y;
+				this.oy_max = y;
 			}
 		}
 		
@@ -551,9 +536,9 @@ restart:
 		{
 			double y = this.oy_base + value;
 			
-			if (y < this.oy_descender)
+			if (y < this.oy_min)
 			{
-				this.oy_descender = y;
+				this.oy_min = y;
 			}
 		}
 		
@@ -629,6 +614,23 @@ restart:
 		}
 		
 		
+		public void SelectFrame(int frame_index, double y)
+		{
+			if (frame_index == -1)
+			{
+				this.frame_index = -1;
+				this.frame       = null;
+				this.frame_y     = 0;
+			}
+			else
+			{
+				this.frame_index = frame_index;
+				this.frame       = this.frame_list[this.frame_index];
+				this.frame_y     = y;
+			}
+		}
+		
+		
 		private void SelectLayoutEngine(int offset)
 		{
 			ulong code = this.text[this.text_start + offset];
@@ -667,9 +669,9 @@ restart:
 			
 			if (font != null)
 			{
-				this.oy_ascender  = this.oy_base + font.GetAscender (font_size);
-				this.oy_descender = this.oy_base + font.GetDescender (font_size);
-				this.line_height  = font_size * 1.2;
+				this.oy_max      = this.oy_base + font.GetAscender (font_size);
+				this.oy_min      = this.oy_base + font.GetDescender (font_size);
+				this.line_height = font_size * 1.2;
 			}
 		}
 		
@@ -689,6 +691,7 @@ restart:
 		}
 		
 		
+		#region Snapshot Class
 		private class Snapshot
 		{
 			public Snapshot(Context context)
@@ -706,17 +709,17 @@ restart:
 			
 			public void Restore(Context context)
 			{
-				double ascender  = context.oy_ascender  - context.oy_base;
-				double descender = context.oy_descender - context.oy_base;
+				double ascender  = context.oy_max - context.oy_base;
+				double descender = context.oy_min - context.oy_base;
 				
 				context.snapshot      = this.snapshot;
 				context.text_offset   = this.text_offset;
 				context.layout_engine = this.layout_engine;
-				context.ox            = this.ox;
 				
-				context.oy_base       = this.oy_base;
-				context.oy_ascender   = this.oy_base + ascender;
-				context.oy_descender  = this.oy_base + descender;
+				context.ox      = this.ox;
+				context.oy_base = this.oy_base;
+				context.oy_max  = this.oy_base + ascender;
+				context.oy_min  = this.oy_base + descender;
 				
 				context.SelectFrame (this.frame_index, this.frame_y);
 			}
@@ -729,7 +732,7 @@ restart:
 			private int							frame_index;
 			private double						frame_y;
 		}
-		
+		#endregion
 		
 		
 		private Text.Context					text_context;
@@ -748,17 +751,18 @@ restart:
 		
 		private double							ox;
 		private double							oy_base;
-		private double							oy_ascender;
-		private double							oy_descender;
+		private double							oy_max;
+		private double							oy_min;
 		private double							line_height;
 		private double							line_width;
 		private double							mx_left;
 		private double							mx_right;
-		private double							justification;
-		private double							disposition;
 		
 		private double							break_fence_before;
 		private double							break_fence_after;
+		
+		private double							justification;
+		private double							disposition;
 		
 		private bool							enable_hyphenation;
 		private bool							break_anywhere;
