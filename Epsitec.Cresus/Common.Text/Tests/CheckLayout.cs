@@ -60,37 +60,42 @@ namespace Epsitec.Common.Text.Tests
 			Layout.BreakCollection breaks;
 			Layout.Status status;
 			
+			breaks  = null;
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1100, 40, 10);
-			status  = layout.Fit (context, out breaks);
+			status  = context.Fit (layout, ref breaks);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 17);
 			Debug.Assert.IsTrue (breaks[0].Advance > 1092.06);
 			Debug.Assert.IsTrue (breaks[0].Advance < 1092.07);
 			
+			breaks  = null;
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1170, 40, 10);
-			status  = layout.Fit (context, out breaks);
+			status  = context.Fit (layout, ref breaks);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 27);
 			Debug.Assert.IsTrue (breaks[0].Advance > 1148.75);
 			Debug.Assert.IsTrue (breaks[0].Advance < 1148.76);
 			
+			breaks  = null;
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1300, 40, 10);
-			status  = layout.Fit (context, out breaks);
+			status  = context.Fit (layout, ref breaks);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
 			Debug.Assert.IsTrue (breaks[0].Offset == 56);
 			Debug.Assert.IsTrue (breaks[0].Advance > 1307.10);
 			Debug.Assert.IsTrue (breaks[0].Advance < 1307.11);
 			
+			breaks  = null;
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1400, 40, 10);
-			status  = layout.Fit (context, out breaks);
+			status  = context.Fit (layout, ref breaks);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.ErrorNeedMoreText);
 			
+			breaks  = null;
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1020, 10, 10);
-			status  = layout.Fit (context, out breaks);
+			status  = context.Fit (layout, ref breaks);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.ErrorCannotFit);
 		}
@@ -141,16 +146,18 @@ namespace Epsitec.Common.Text.Tests
 			Layout.BreakCollection breaks = null;
 			Layout.Status status;
 			
+			breaks  = null;
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1300, 150, 10);
-			status  = layout.Fit (context, out breaks);
+			status  = context.Fit (layout, ref breaks);
 			
 			Debug.Assert.IsTrue (breaks.Count == 3);
 			Debug.Assert.IsTrue (breaks[0].Offset == 35);
 			Debug.Assert.IsTrue (breaks[1].Offset == 42);
 			Debug.Assert.IsTrue (breaks[2].Offset == 50);
 			
+			breaks  = null;
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
-			status  = layout.Fit (context, out breaks);
+			status  = context.Fit (layout, ref breaks);
 			
 			Debug.Assert.IsTrue (breaks.Count == 1);
 			Debug.Assert.IsTrue (breaks[0].Offset == 42);
@@ -158,8 +165,9 @@ namespace Epsitec.Common.Text.Tests
 			System.Diagnostics.Trace.WriteLine ("Starting layout.");
 			for (int i = 0; i < 1000; i++)
 			{
+				breaks  = null;
 				context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
-				status  = layout.Fit (context, out breaks);
+				status  = context.Fit (layout, ref breaks);
 			}
 			System.Diagnostics.Trace.WriteLine ("Done.");
 		}

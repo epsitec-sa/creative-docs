@@ -94,6 +94,37 @@ namespace Epsitec.Common.Text
 			this.get_font_last_font_size     = font_size;
 		}
 		
+		public void GetLayout(ulong code, out Layout.BaseEngine engine)
+		{
+			code = Internal.CharMarker.ExtractStyleAndSettings (code);
+			
+			long current_style_version = this.style_list.InternalStyleTable.Version;
+			
+			if ((this.get_layout_last_style_version == current_style_version) &&
+				(this.get_layout_last_code == code))
+			{
+				engine = this.get_layout_last_engine;
+				
+				return;
+			}
+			
+			Styles.SimpleStyle style = this.style_list[code];
+			
+			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
+			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			
+			Properties.LayoutProperty layout_p = style[Properties.WellKnownType.Layout] as Properties.LayoutProperty;
+			
+			//	TODO: détermine l'engine à utiliser
+			
+			engine = null;
+			
+			this.get_layout_last_style_version = current_style_version;
+			this.get_layout_last_code          = code;
+			this.get_layout_last_layout        = layout_p;
+			this.get_layout_last_engine        = engine;
+		}
+		
 		
 		#region Markers Class
 		public class Markers
@@ -140,5 +171,10 @@ namespace Epsitec.Common.Text
 		private ulong							get_font_last_code;
 		private OpenType.Font					get_font_last_font;
 		private double							get_font_last_font_size;
+		
+		private long							get_layout_last_style_version;
+		private ulong							get_layout_last_code;
+		private Properties.LayoutProperty		get_layout_last_layout;
+		private Layout.BaseEngine				get_layout_last_engine;
 	}
 }

@@ -34,7 +34,7 @@ namespace Epsitec.Common.Text.Properties
 				return PropertyType.Style;
 			}
 		}
-
+		
 		
 		public string							FaceName
 		{
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Text.Properties
 			buffer.Append ("/");
 			buffer.Append (SerializerSupport.SerializeString (this.style_name));
 		}
-
+		
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
 			string[] args = text.Substring (pos, length).Split ('/');

@@ -13,11 +13,12 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public virtual Layout.Status Fit(Layout.Context context, out Layout.BreakCollection result)
+		public virtual Layout.Status Fit(Layout.Context context, ref Layout.BreakCollection result)
 		{
 			result = null;
 			return Layout.Status.Ok;
 		}
+		
 		
 		public int GetRunLength(ulong[] text, int start, int length)
 		{

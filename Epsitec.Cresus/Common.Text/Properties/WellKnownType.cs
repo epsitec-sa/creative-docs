@@ -14,6 +14,7 @@ namespace Epsitec.Common.Text.Properties
 		FontSize,
 		
 		Styles,
+		Layout,
 		
 		Other			= 1000000,
 	}

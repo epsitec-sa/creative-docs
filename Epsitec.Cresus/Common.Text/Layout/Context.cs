@@ -11,10 +11,10 @@ namespace Epsitec.Common.Text.Layout
 	{
 		public Context(Text.Context text_context, ulong[] text, int start, double oy_base, double mx_left, double mx_right, double break_fence_before, double break_fence_after)
 		{
-			this.text_context = text_context;
+			this.text_context  = text_context;
 			
-			this.text  = text;
-			this.start = start;
+			this.text       = text;
+			this.text_start = start;
 			
 			this.oy_base  = oy_base;
 			this.mx_left  = mx_left;
@@ -29,6 +29,31 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public Layout.BaseEngine				LayoutEngine
+		{
+			get
+			{
+				return this.layout_engine;
+			}
+			set
+			{
+				this.layout_engine = value;
+			}
+		}
+		
+		
+		public ulong[]							Text
+		{
+			get
+			{
+				return this.text;
+			}
+			set
+			{
+				this.text = value;
+			}
+		}
+		
 		public Text.Context						TextContext
 		{
 			get
@@ -37,13 +62,25 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public int								TextStart
+		{
+			get
+			{
+				return this.text_start;
+			}
+			set
+			{
+				this.text_start = value;
+			}
+		}
+		
 		public ulong							this[int offset]
 		{
 			get
 			{
-				if (this.start + offset < this.text.Length)
+				if (this.text_start + offset < this.text.Length)
 				{
-					return this.text[this.start+offset];
+					return this.text[this.text_start+offset];
 				}
 				
 				return 0;
@@ -129,6 +166,17 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public bool								Hyphenate
+		{
+			get
+			{
+				return this.hyphenate;
+			}
+			set
+			{
+				this.hyphenate = value;
+			}
+		}
 		
 		
 		public bool UpdateOffset(ref int offset, int distance)
@@ -138,7 +186,7 @@ namespace Epsitec.Common.Text.Layout
 			offset += distance;
 			
 			if ((offset < 0) ||
-				(this.start + offset >= this.text.Length))
+				(this.text_start + offset >= this.text.Length))
 			{
 				return false;
 			}
@@ -155,7 +203,7 @@ namespace Epsitec.Common.Text.Layout
 			//	TODO: gérer le sens <-- pour l'avance du texte
 			
 			int end   = this.text.Length;
-			int pos   = this.start + offset;
+			int pos   = this.text_start + offset;
 			
 			while (pos < end)
 			{
@@ -172,7 +220,7 @@ namespace Epsitec.Common.Text.Layout
 			}
 			
 			text   = this.text;
-			start  = this.start + offset;
+			start  = this.text_start + offset;
 			length = pos - start;
 			
 			if (length == 0)
@@ -186,10 +234,95 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public Layout.Status Fit(Layout.BaseEngine engine, ref Layout.BreakCollection result)
+		{
+			this.hyphenate = false;
+			this.layout_engine = engine;
+			
+			if (result == null)
+			{
+				result = new Layout.BreakCollection ();
+			}
+			
+			for (int pass = 0; pass < 2; )
+			{
+				Layout.Status status = this.layout_engine.Fit (this, ref result);
+				
+				switch (status)
+				{
+					case Layout.Status.Ok:
+						return status;
+					
+					case Layout.Status.ErrorNeedMoreText:
+						this.RewindAllSnapshots ();
+						return status;
+						
+					case Layout.Status.SwitchLayout:
+						break;
+					
+					case Layout.Status.ErrorCannotFit:
+						this.hyphenate = true;
+						pass++;
+						break;
+					
+					default:
+						throw new System.InvalidOperationException ();
+				}
+			}
+			
+			if (result.Count > 0)
+			{
+				return Layout.Status.Ok;
+			}
+			
+			return Layout.Status.ErrorCannotFit;
+		}
+		
+		
+		public void SaveSnapshot(double advance)
+		{
+			this.snapshot = new Snapshot (this, advance);
+		}
+		
+		public void RewindSnapshot()
+		{
+			this.snapshot.Restore (this);
+		}
+		
+		public void RewindAllSnapshots()
+		{
+			while (this.snapshot != null)
+			{
+				this.snapshot.Restore (this);
+			}
+		}
+		
+		
+		private class Snapshot
+		{
+			public Snapshot(Context context, double advance)
+			{
+				this.snapshot = context.snapshot;
+				this.text_start = context.text_start;
+			}
+			
+			
+			
+			public void Restore(Context context)
+			{
+				context.snapshot   = this.snapshot;
+				context.text_start = this.text_start;
+			}
+			
+			
+			private Snapshot					snapshot;
+			private int							text_start;
+		}
+		
 		
 		private Text.Context					text_context;
 		private ulong[]							text;
-		private int								start;
+		private int								text_start;
 		private int								left_to_right;
 		
 		private double							oy_base;
@@ -198,5 +331,10 @@ namespace Epsitec.Common.Text.Layout
 		private double							mx_right;
 		private double							break_fence_before;
 		private double							break_fence_after;
+		
+		private bool							hyphenate;
+		
+		private Layout.BaseEngine				layout_engine;
+		private Snapshot						snapshot;
 	}
 }

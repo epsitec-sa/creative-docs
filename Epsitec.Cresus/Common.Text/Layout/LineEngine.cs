@@ -13,115 +13,121 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public override Layout.Status Fit(Layout.Context context, out Layout.BreakCollection result)
+		
+		
+		public override Layout.Status Fit(Layout.Context context, ref Layout.BreakCollection result)
 		{
 			FitScratch scratch = new FitScratch ();
 			
-			scratch.Hyphenate = false;
+			scratch.Hyphenate = context.Hyphenate;
 			scratch.FenceMinX = context.RightMargin-context.BreakFenceBefore;
 			scratch.FenceMaxX = context.RightMargin+context.BreakFenceAfter;
 			
-			for (int pass = 0; pass < 2; pass++)
+			scratch.Advance       = context.X;
+			scratch.WordBreakInfo = Unicode.BreakInfo.No;
+			
+			for (;;)
 			{
-				scratch.Advance       = context.X;
-				scratch.WordBreakInfo = Unicode.BreakInfo.No;
-				
-				for (;;)
+				if (context.GetNextWord (scratch.Offset, out scratch.Text, out scratch.TextStart, out scratch.TextLength, out scratch.WordBreakInfo))
 				{
-					if (context.GetNextWord (scratch.Offset, out scratch.Text, out scratch.TextStart, out scratch.TextLength, out scratch.WordBreakInfo))
+					while (scratch.TextLength > 0)
 					{
-						while (scratch.TextLength > 0)
+						if (scratch.Advance > scratch.FenceMinX)
 						{
-							if (scratch.Advance > scratch.FenceMinX)
-							{
-								//	Nous sommes dans la zone sensible nécessitant la césure :
-								
-								scratch.Hyphenate = true;
-							}
+							//	Nous sommes dans la zone sensible nécessitant la césure :
 							
-							//	Détermine la prochaine tranche de caractères contigus utilisant
-							//	le même style de fonte :
-							
-							scratch.RunLength = this.GetRunLength (scratch.Text, scratch.TextStart, scratch.TextLength);
-							
-							context.TextContext.GetFont (scratch.Text[scratch.TextStart], out scratch.Font, out scratch.FontSize);
-							
-							if (this.FitAnalyseRun (ref scratch, scratch.Hyphenate))
-							{
-								goto stop; // --------------------------------------------------------------------------.
-							}              //																			|
-							//																							|
-							//	Avance au morceau suivant :																:
-							
-							scratch.Advance    += scratch.TextWidth;
-							scratch.Offset     += scratch.RunLength;
-							scratch.TextStart  += scratch.RunLength;
-							scratch.TextLength -= scratch.RunLength;
+							scratch.Hyphenate = true;
 						}
 						
-						if ((scratch.WordBreakInfo == Unicode.BreakInfo.Yes) ||
-							(scratch.WordBreakInfo == Unicode.BreakInfo.HorizontalTab))
+						//	Détermine la prochaine tranche de caractères contigus utilisant
+						//	le même style de fonte :
+						
+						scratch.RunLength = this.GetRunLength (scratch.Text, scratch.TextStart, scratch.TextLength);
+						
+						ulong code = scratch.Text[scratch.TextStart];
+						Layout.BaseEngine layout;
+						
+						context.TextContext.GetFont (code, out scratch.Font, out scratch.FontSize);
+						context.TextContext.GetLayout (code, out layout);
+						
+						if ((layout != null) &&
+							(layout != this))
 						{
-							//	Le mot se termine par un saut forcé (ou une marque de tabulation, ce qui				:
-							//	revient au même par rapport au traitement fait par le système de layout) :				:
+							context.SaveSnapshot (scratch.Advance);
 							
-							break;
+							context.TextStart   += scratch.Offset;
+							context.LayoutEngine = layout;
+							
+							return Layout.Status.SwitchLayout;
 						}
-					}
-					else
-					{
-						//	Il n'y a plus aucun résultat disponible, sans pour autant									:
-						//	que l'on ait atteint la fin du paragraphe; abandonne et										:
-						//	demande plus de texte !																		:
 						
-						result = null;
-						return Layout.Status.ErrorNeedMoreText;
+						if (this.FitAnalyseRun (ref scratch, ref result, scratch.Hyphenate))
+						{
+							goto stop; // --------------------------------------------------------------------------.
+						}              //																			|
+						//																							|
+						//	Avance au morceau suivant :																:
+						
+						scratch.Advance    += scratch.TextWidth;
+						scratch.Offset     += scratch.RunLength;
+						scratch.TextStart  += scratch.RunLength;
+						scratch.TextLength -= scratch.RunLength;
+					}
+					
+					if ((scratch.WordBreakInfo == Unicode.BreakInfo.Yes) ||
+						(scratch.WordBreakInfo == Unicode.BreakInfo.HorizontalTab))
+					{
+						//	Le mot se termine par un saut forcé (ou une marque de tabulation, ce qui				:
+						//	revient au même par rapport au traitement fait par le système de layout) :				:
+						
+						break;
 					}
 				}
-				
-				//	Le texte se termine par une fin forcée avant d'arriver dans la marge droite.						:
-				
-				scratch.AddBreak (new Layout.Break (scratch.Offset, scratch.Advance));
-				result = scratch.Breaks;
-				
-				return Layout.Status.Ok;
-				
-				//																										|
-	stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------------------------------------'
-				//	Retourne les points de découpe (s'il y en a) :
-				
-				if ((scratch.Breaks == null) ||
-					(scratch.Breaks.Count == 0))
+				else
 				{
-					if (scratch.LastBreakOffset > 0)
-					{
-						scratch.AddBreak (new Layout.Break (scratch.LastBreakOffset, scratch.LastBreakAdvance));
-					}
-					else
-					{
-						scratch.Offset    = 0;
-						scratch.Hyphenate = true;
-						
-						continue;
-					}
+					//	Il n'y a plus aucun résultat disponible, sans pour autant									:
+					//	que l'on ait atteint la fin du paragraphe; abandonne et										:
+					//	demande plus de texte !																		:
+					
+					result = null;
+					return Layout.Status.ErrorNeedMoreText;
 				}
-				
-				result = scratch.Breaks;
-				return Layout.Status.Ok;
 			}
 			
-			result = null;
-			return Layout.Status.ErrorCannotFit;
+			//	Le texte se termine par une fin forcée avant d'arriver dans la marge droite.						:
+			
+			result.Add (new Layout.Break (scratch.Offset, scratch.Advance));
+			
+			return Layout.Status.Ok;
+			
+			//																										|
+stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------------------------------------'
+			//	Retourne les points de découpe (s'il y en a) :
+			
+			if (result.Count == 0)
+			{
+				if (scratch.LastBreakOffset > 0)
+				{
+					result.Add (new Layout.Break (scratch.LastBreakOffset, scratch.LastBreakAdvance));
+				}
+				else
+				{
+					return Layout.Status.ErrorCannotFit;
+				}
+			}
+			
+			return Layout.Status.Ok;
 		}
 		
 		
-		private bool FitAnalyseRun(ref FitScratch scratch, bool hyphenate)
+		private bool FitAnalyseRun(ref FitScratch scratch, ref Layout.BreakCollection result, bool hyphenate)
 		{
-			//	Si une analyse des découpes est requise, procède par petites étapes
-			//	progressives, sinon traite toute la tranche d'un coup.
+			//	Analyse le texte constituté de caractères de style identique (même
+			//	fonte, même layout). Si une césure est requise, procède par petites
+			//	étapes progressives, sinon traite toute la tranche d'un coup.
 			
-			//	Retourne true s'il faut stopper immédiatement l'analyse (plus de
-			//	place dans l'espace disponible).
+			//	Retourne true s'il faut stopper immédiatement l'analyse (le texte
+			//	est trop long pour l'espace de justification disponible).
 			
 			for (int frag_length = 0; frag_length < scratch.RunLength; )
 			{
@@ -171,14 +177,12 @@ namespace Epsitec.Common.Text.Layout
 				
 				if (can_break)
 				{
+					scratch.LastBreakOffset  = scratch.Offset + frag_length;
+					scratch.LastBreakAdvance = scratch.Advance + scratch.TextWidth;
+					
 					if (hyphenate)
 					{
-						scratch.AddBreak (new Layout.Break (scratch.Offset + frag_length, scratch.Advance + scratch.TextWidth));
-					}
-					else
-					{
-						scratch.LastBreakOffset  = scratch.Offset + frag_length;
-						scratch.LastBreakAdvance = scratch.Advance + scratch.TextWidth;
+						result.Add (new Layout.Break (scratch.LastBreakOffset, scratch.LastBreakAdvance));
 					}
 				}
 			}
@@ -189,16 +193,6 @@ namespace Epsitec.Common.Text.Layout
 		
 		private struct FitScratch
 		{
-			public void AddBreak(Layout.Break info)
-			{
-				if (this.breaks == null)
-				{
-					this.breaks = new Layout.BreakCollection ();
-				}
-				
-				this.breaks.Add (info);
-			}
-			
 			public ulong[] GetBuffer(int length)
 			{
 				if (this.buffer == null)
@@ -213,14 +207,6 @@ namespace Epsitec.Common.Text.Layout
 				return this.buffer;
 			}
 			
-			
-			public Layout.BreakCollection		Breaks
-			{
-				get
-				{
-					return this.breaks;
-				}
-			}
 			
 			public int							Offset;
 			public double						Advance;
@@ -244,7 +230,6 @@ namespace Epsitec.Common.Text.Layout
 			public double						FontSize;
 			
 			public ulong[]						buffer;
-			private Layout.BreakCollection		breaks;
 		}
 	}
 }
