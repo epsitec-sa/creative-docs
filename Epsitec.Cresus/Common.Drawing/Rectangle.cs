@@ -3,6 +3,15 @@ namespace Epsitec.Common.Drawing
 	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
 	using XmlIgnore    = System.Xml.Serialization.XmlIgnoreAttribute;
 	
+	
+	public enum VertexIndex
+	{
+		BottomLeft,
+		BottomRight,
+		TopRight,
+		TopLeft
+	}
+	
 	[System.Serializable]
 	[System.ComponentModel.TypeConverter (typeof (Rectangle.Converter))]
 	
@@ -18,10 +27,10 @@ namespace Epsitec.Common.Drawing
 		
 		public Rectangle(Point p1, Point p2)
 		{
-			this.x1 = System.Math.Min(p1.X, p2.X);
-			this.y1 = System.Math.Min(p1.Y, p2.Y);
-			this.x2 = System.Math.Max(p1.X, p2.X);
-			this.y2 = System.Math.Max(p1.Y, p2.Y);
+			this.x1 = System.Math.Min (p1.X, p2.X);
+			this.y1 = System.Math.Min (p1.Y, p2.Y);
+			this.x2 = System.Math.Max (p1.X, p2.X);
+			this.y2 = System.Math.Max (p1.Y, p2.Y);
 		}
 		
 		public Rectangle(double x, double y, double width, double height)
@@ -55,6 +64,11 @@ namespace Epsitec.Common.Drawing
 		public bool						IsEmpty
 		{
 			get { return (this.x2 < this.x1) || (this.y2 < this.y1); }
+		}
+		
+		public bool						IsSurfaceZero
+		{
+			get { return (this.x2 <= this.x1) || (this.y2 <= this.y1); }
 		}
 		
 		public bool						IsValid
@@ -126,29 +140,83 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public Point					BottomLeft
+		[XmlIgnore] public Point		BottomLeft
 		{
 			get { return new Point (this.x1, this.y1); }
+			set
+			{
+				this.x1 = System.Math.Min (value.X, this.x2);
+				this.y1 = System.Math.Min (value.Y, this.y2);
+			}
 		}
 		
-		public Point					TopRight
-		{
-			get { return new Point (this.x2, this.y2); }
-		}
-		
-		public Point					BottomRight
+		[XmlIgnore] public Point		BottomRight
 		{
 			get { return new Point (this.x2, this.y1); }
+			set
+			{
+				this.x2 = System.Math.Max (value.X, this.x1);
+				this.y1 = System.Math.Min (value.Y, this.y2);
+			}
 		}
 		
-		public Point					TopLeft
+		[XmlIgnore] public Point		TopRight
+		{
+			get { return new Point (this.x2, this.y2); }
+			set
+			{
+				this.x2 = System.Math.Max (value.X, this.x1);
+				this.y2 = System.Math.Max (value.Y, this.y1);
+			}
+		}
+		
+		[XmlIgnore] public Point		TopLeft
 		{
 			get { return new Point (this.x1, this.y2); }
+			set
+			{
+				this.x1 = System.Math.Min (value.X, this.x2);
+				this.y2 = System.Math.Max (value.Y, this.y1);
+			}
 		}
+		
 		
 		public Point					Center
 		{
 			get { return new Point ((this.x1 + this.x2) / 2, (this.y1 + this.y2) / 2); }
+		}
+		
+		
+		
+		public Point GetVertex(VertexIndex i)
+		{
+			switch (i)
+			{
+				case VertexIndex.BottomLeft:	return this.BottomLeft;
+				case VertexIndex.BottomRight:	return this.BottomRight;
+				case VertexIndex.TopLeft:		return this.TopLeft;
+				case VertexIndex.TopRight:		return this.TopRight;
+			}
+			
+			throw new System.ArgumentOutOfRangeException ("VertexIndex", i, "VertexIndex is out of range");
+		}
+		
+		public void SetVertex(VertexIndex i, Point pos)
+		{
+			switch (i)
+			{
+				case VertexIndex.BottomLeft:	this.BottomLeft  = pos; return;
+				case VertexIndex.BottomRight:	this.BottomRight = pos; return;
+				case VertexIndex.TopLeft:		this.TopLeft     = pos; return;
+				case VertexIndex.TopRight:		this.TopRight    = pos; return;
+			}
+			
+			throw new System.ArgumentOutOfRangeException ("VertexIndex", i, "VertexIndex is out of range");
+		}
+		
+		public void OffsetVertex(VertexIndex i, Point p)
+		{
+			this.SetVertex (i, this.GetVertex (i) + p);
 		}
 		
 		
@@ -302,10 +370,22 @@ namespace Epsitec.Common.Drawing
 		{
 			Rectangle r;
 			
-			r.x1 = x1;
-			r.y1 = y1;
-			r.x2 = x2;
-			r.y2 = y2;
+			r.x1 = System.Math.Min (x1, x2);
+			r.y1 = System.Math.Min (y1, y2);
+			r.x2 = System.Math.Max (x1, x2);
+			r.y2 = System.Math.Max (y1, y2);
+			
+			return r;
+		}
+		
+		public static Rectangle FromCorners(Point p1, Point p2)
+		{
+			Rectangle r;
+			
+			r.x1 = System.Math.Min (p1.X, p2.X);
+			r.y1 = System.Math.Min (p1.Y, p2.Y);
+			r.x2 = System.Math.Max (p1.X, p2.X);
+			r.y2 = System.Math.Max (p1.Y, p2.Y);
 			
 			return r;
 		}

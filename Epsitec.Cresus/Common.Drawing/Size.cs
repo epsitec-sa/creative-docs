@@ -41,7 +41,7 @@ namespace Epsitec.Common.Drawing
 		
 		public bool						IsEmpty
 		{
-			get { return this.width == 0 && this.height == 0; }
+			get { return this.width <= 0 && this.height <= 0; }
 		}
 		
 		
