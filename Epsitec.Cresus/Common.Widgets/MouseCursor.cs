@@ -48,6 +48,8 @@ namespace Epsitec.Common.Widgets
 			System.IntPtr               new_handle = Win32Api.CreateIconIndirect (ref icon_info);
 			System.Windows.Forms.Cursor win_cursor = new System.Windows.Forms.Cursor (new_handle);
 			
+			Win32Api.DestroyIcon (org_handle);
+			
 			return new MouseCursor (win_cursor, new_handle);
 		}
 		
@@ -80,6 +82,8 @@ namespace Epsitec.Common.Widgets
 			System.IntPtr               new_handle = Win32Api.CreateIconIndirect (ref icon_info);
 			System.Windows.Forms.Cursor win_cursor = new System.Windows.Forms.Cursor (new_handle);
 			
+			Win32Api.DestroyIcon (org_handle);
+			
 			return new MouseCursor (win_cursor, new_handle);
 		}
 		
@@ -106,7 +110,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				//	Rien à faire...
+				this.cursor = null;
 			}
 			
 			if (this.handle != System.IntPtr.Zero)
