@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 		public DragSource()
 		{
 			this.drag_behavior  = new Helpers.DragBehavior (this);
-			this.widget_margins = new Drawing.Margins (3, 3, 3, 3);
+			this.DockMargins    = new Drawing.Margins (3, 3, 3, 3);
 			this.drop_adorner   = new Design.HiliteAdorner ();
 		}
 		
@@ -40,8 +40,8 @@ namespace Epsitec.Common.Widgets
 				if (this.drag_window != null)
 				{
 					Drawing.Point pos  = this.drag_window.WindowLocation;
-					pos.X += this.widget_margins.Left;
-					pos.Y += this.widget_margins.Bottom;
+					pos.X += this.DockMargins.Left;
+					pos.Y += this.DockMargins.Bottom;
 					return new Drawing.Rectangle (pos, this.widget.Size);
 				}
 				
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Widgets
 			Widget     copy   = bundler.CopyObject (widget) as Widget;
 			DragWindow window = new DragWindow ();
 			
-			window.DefineWidget (copy, this.widget_margins);
+			window.DefineWidget (copy, this.DockMargins);
 			
 			return window;
 		}
@@ -192,8 +192,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Point pos = this.MapClientToScreen (this.widget.Location);
 			
-			pos.X -= this.widget_margins.Left;
-			pos.Y -= this.widget_margins.Bottom;
+			pos.X -= this.DockMargins.Left;
+			pos.Y -= this.DockMargins.Bottom;
 			
 			this.drag_window = this.CreateDragWindow (this.widget);
 			this.drag_window.WindowLocation = pos;
@@ -264,7 +264,7 @@ namespace Epsitec.Common.Widgets
 			if (this.drop_adorner.Widget != null)
 			{
 				Support.ObjectBundler bundler = new Support.ObjectBundler ();
-				Drawing.Point         offset  = new Drawing.Point (this.widget_margins.Left, this.widget_margins.Bottom);
+				Drawing.Point         offset  = new Drawing.Point (this.DockMargins.Left, this.DockMargins.Bottom);
 				Widget                copy    = bundler.CopyObject (this.widget) as Widget;
 				AnchorStyles          anchor  = AnchorStyles.None;
 				
@@ -308,7 +308,6 @@ namespace Epsitec.Common.Widgets
 		
 		
 		protected Widget					widget;
-		protected Drawing.Margins			widget_margins;
 		protected Drawing.Point				drag_cursor;
 		protected DragWindow				drag_window;
 		protected Helpers.DragBehavior		drag_behavior;

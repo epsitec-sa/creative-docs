@@ -616,6 +616,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Design\IGuideAlign.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Design\SmartGuide.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
