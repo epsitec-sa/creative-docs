@@ -790,9 +790,11 @@ namespace Epsitec.Common.Widgets
 			buttonColor2.Parent = window.Root;
 			buttonColor2.Clicked += new MessageEventHandler(this.HandleMultiColor2);
 			
-			window.Root.DebugActive = true;
+//			window.Root.DebugActive = true;
 			window.FocusedWidget    = multi;
 			window.Show();
+			
+			multi.Text = @"abc <b>def</b> ghi.<br/>123 <i>456</i> 789 <b>qrs</b>.<br/>A<img src=""file:images/icon.png""/>B<br/>";
 			
 			return window;
 		}
@@ -803,6 +805,7 @@ namespace Epsitec.Common.Widgets
 			StaticText        stats = text.GetProperty("stats") as StaticText;
 			
 			stats.Text = string.Format("{0} - {1},  after={2}", text.CursorFrom, text.CursorTo, text.CursorAfter);
+			text.TextLayout.SetupTextBreak();
 		}
 
 		private void HandleMultiBold(object sender, MessageEventArgs e)

@@ -1367,11 +1367,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		protected double IndexToPosX(JustifBlock block, int index)
+		protected double IndexToPosX(JustifBlock block, JustifLine line, int index)
 		{
 			// Retourne la position horizontale correspondant à un index dans un bloc.
+			if ( block.lineBreak && index == block.endIndex+1 )
+			{
+				return block.pos.X + block.width + line.height/2;
+			}
+
 			if ( index <= block.beginIndex )  return block.pos.X;
-			if ( index >  block.endIndex   )  return block.pos.X+block.width;
+			if ( index >  block.endIndex   )  return block.pos.X + block.width;
+
 			double[] charsWidth;
 			if ( block.infos == null )
 			{
@@ -1404,8 +1410,11 @@ namespace Epsitec.Common.Widgets
 				JustifLine line = (JustifLine)this.lines[block.indexLine];
 				if ( !block.visible )  continue;
 
-				int localBegin = System.Math.Max(indexBegin, block.beginIndex);
-				int localEnd   = System.Math.Min(indexEnd,   block.endIndex  );
+				int bbi = block.beginIndex;
+				int bei = block.endIndex;
+				if ( block.lineBreak )  bei ++;
+				int localBegin = System.Math.Max(indexBegin, bbi);
+				int localEnd   = System.Math.Min(indexEnd,   bei);
 
 				if ( localBegin >= localEnd )  continue;
 
@@ -1438,8 +1447,8 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					area.Rect.Left  = System.Math.Min(area.Rect.Left,  this.IndexToPosX(block, localBegin));
-					area.Rect.Right = System.Math.Max(area.Rect.Right, this.IndexToPosX(block, localEnd  ));
+					area.Rect.Left  = System.Math.Min(area.Rect.Left,  this.IndexToPosX(block, line, localBegin));
+					area.Rect.Right = System.Math.Max(area.Rect.Right, this.IndexToPosX(block, line, localEnd  ));
 				}
 			}
 			
@@ -1526,7 +1535,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						p1.X = this.IndexToPosX(block, index);
+						p1.X = this.IndexToPosX(block, line, index);
 						p2.X = p1.X;
 					}
 
@@ -2428,6 +2437,250 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		protected System.Collections.Stack CreateFontStack()
+		{
+			System.Collections.Stack stack = new System.Collections.Stack();
+			FontItem font = new FontItem(this);
+			
+			font.fontName  = this.font.FaceName;
+			font.fontSize  = this.fontSize;
+			font.fontColor = Drawing.Color.Empty;
+			
+			stack.Push(font);  // push la fonte initiale (jamais de pop)
+			
+			return stack;
+		}
+		
+		
+		protected void FinishRun(System.Collections.ArrayList list, Drawing.TextBreakNew.Run run)
+		{
+			if ( run.Length > 0 )
+			{
+				list.Add(new Drawing.TextBreakNew.Run(run));
+			}
+			
+			run.Reset();
+		}
+		
+		protected void ProcessFontTag(System.Collections.Stack stack, System.Collections.Hashtable parameters)
+		{
+			if ( parameters != null )
+			{
+				FontItem font = stack.Peek() as FontItem;
+				
+				font = font.Copy();
+				
+				if ( parameters.ContainsKey("face") )
+				{
+					font.fontName = (string)parameters["face"];
+				}
+				if ( parameters.ContainsKey("size") )
+				{
+					string s = parameters["size"] as string;
+								
+					if ( s.EndsWith("%") )
+					{
+						font.fontSize = System.Double.Parse(s.Substring(0, s.Length-1), System.Globalization.CultureInfo.InvariantCulture) * this.fontSize / 100.0;
+					}
+					else
+					{
+						font.fontSize = System.Double.Parse(s, System.Globalization.CultureInfo.InvariantCulture);
+					}
+				}
+				if ( parameters.ContainsKey("color") )
+				{
+					string s = parameters["color"] as string;
+					Drawing.Color color = Drawing.Color.FromName(s);
+					if ( !color.IsEmpty )  font.fontColor = color;
+				}
+				
+				stack.Push(font);
+			}
+		}
+		
+		protected bool ProcessFormatTags(Tag tag, System.Collections.Stack fontStack, SupplItem supplItem, System.Collections.Hashtable parameters)
+		{
+			switch ( tag )
+			{
+				case Tag.Font:
+					this.ProcessFontTag(fontStack, parameters);
+					break;
+
+				case Tag.FontEnd:
+					if ( fontStack.Count > 1 )
+					{
+						fontStack.Pop();
+					}
+					break;
+
+				case Tag.Bold:			supplItem.bold ++;		break;
+				case Tag.BoldEnd:		supplItem.bold --;		break;
+
+				case Tag.Italic:		supplItem.italic ++;	break;
+				case Tag.ItalicEnd:		supplItem.italic --;	break;
+
+				case Tag.Underline:
+				case Tag.Mnemonic:		supplItem.underline ++;	break;
+					
+				case Tag.UnderlineEnd:
+				case Tag.MnemonicEnd:	supplItem.underline --;	break;
+
+				case Tag.Anchor:		supplItem.anchor ++;	supplItem.underline ++;		break;
+				case Tag.AnchorEnd:		supplItem.anchor --;	supplItem.underline --;		break;
+
+				case Tag.Wave:
+					supplItem.wave ++;
+					if ( parameters == null )
+					{
+						supplItem.waveColor = Drawing.Color.Empty;
+					}
+					else
+					{
+						if ( parameters.ContainsKey("color") )
+						{
+							string s = parameters["color"] as string;
+							supplItem.waveColor = Drawing.Color.FromName(s);
+						}
+					}
+					break;
+					
+				case Tag.WaveEnd:
+					supplItem.wave --;
+					break;
+
+				default:
+					return false;
+			}
+			
+			return true;
+		}
+
+		
+		public void SetupTextBreak()
+		{
+			//	Analyse le texte complet afin de générer une liste des "runs" pour TextBreak.
+			//	Un "run" décrit une suite de caractère composés au moyen d'une même fonte.
+			
+			System.Collections.Stack		fontStack = this.CreateFontStack();
+			System.Text.StringBuilder		buffer = new System.Text.StringBuilder();
+			System.Collections.Hashtable	parameters;
+			
+			int       textLength = this.TextLength;
+			SupplItem supplItem  = new SupplItem();
+			
+			double	restWidth = this.layoutSize.Width;
+			int		beginOffset;
+			int		endOffset = 0;
+			int     fontIndex = -1;
+			
+			System.Collections.ArrayList imageList = new System.Collections.ArrayList();
+			System.Collections.ArrayList fontList  = new System.Collections.ArrayList();
+			System.Collections.ArrayList runList   = new System.Collections.ArrayList();
+			
+			Drawing.TextBreakNew.Run run = new Drawing.TextBreakNew.Run();
+			
+			while ( endOffset <= textLength )
+			{
+				beginOffset = endOffset;
+				
+				Tag      tag      = TextLayout.ParseTag(this.text, ref endOffset, out parameters);
+				FontItem fontItem = fontStack.Peek() as FontItem;
+				
+				if ( tag == Tag.Ending )  break;
+				
+				bool processed_tag = this.ProcessFormatTags(tag, fontStack, supplItem, parameters);
+				
+				if ( tag != Tag.None || beginOffset == 0 )
+				{
+					Drawing.Font font = fontItem.RetFont(supplItem.bold>0, supplItem.italic>0);
+					
+					fontIndex = fontList.IndexOf(font);
+					
+					if ( fontIndex == -1 )
+					{
+						//	La fonte n'est pas encore connue. Il faut donc insérer la fonte dans la liste
+						//	et prendre note du changement.
+						
+						fontIndex = fontList.Add(font);
+					}
+				}
+				
+				if ( fontIndex != run.FontId || fontItem.fontSize != run.FontScale )
+				{
+					this.FinishRun(runList, run);
+					
+					run.FontId    = fontIndex;
+					run.FontScale = fontItem.fontSize;
+				}
+				
+				if ( !processed_tag )
+				{
+					switch ( tag )
+					{
+						case Tag.Image:
+							System.Diagnostics.Debug.Assert( parameters != null && this.imageProvider != null && parameters.ContainsKey("src") );
+							
+							string imageName = parameters["src"] as string;
+							Drawing.Image image = this.imageProvider.GetImage(imageName);
+							
+							if ( image == null )
+							{
+								throw new System.FormatException(string.Format("<img> tag references unknown image '{0}'.", imageName));
+							}
+							
+							//	Puisqu'on a trouvé l'image, on va la conserver; en effet, la recherche et la reconstruction
+							//	de l'image est quelque chose de coûteux, et ça va nous servir plus tard pour l'affichage.
+							
+							imageList.Add(image);
+							
+							//	Astuce: on remplace l'image par un caractère spécial [OBJ], dont on ne spécifie exprès pas
+							//	de fonte et dont la largeur correspond à la largeur de l'image :
+							
+							this.FinishRun(runList, run);
+							this.FinishRun(runList, new Drawing.TextBreakNew.Run(1, -1, image.Width));
+							buffer.Append('\ufffc');
+							break;
+
+						case Tag.LineBreak:
+							buffer.Append('\u2028');	//	line separator
+							run.Length++;
+							break;
+
+						case Tag.None:
+							endOffset = beginOffset;
+							char c = TextLayout.AnalyseEntityChar(this.text, ref endOffset);
+							buffer.Append(c);
+							run.Length++;
+							break;
+					}
+				}
+			}
+			
+			this.FinishRun(runList, run);
+			
+			//	Nous avons recueilli toute l'information nécessaire pour initialiser
+			//	TextBreak. Cette information ne changera que si le texte sous-jacent
+			//	est modifié.
+			
+			Drawing.TextBreakNew tbn = new Drawing.TextBreakNew();
+			tbn.SetText(buffer.ToString(), this.breakMode);
+			tbn.SetFonts(fontList);
+			tbn.SetRuns(runList);
+			
+			double width = this.layoutSize.Width;
+			
+			tbn.Rewind();
+			
+			string chunkText;
+			double chunkWidth;
+			int    chunkSkip;
+			
+			while (tbn.GetNextBreak(width, out chunkText, out chunkWidth, out chunkSkip))
+			{
+				System.Diagnostics.Debug.WriteLine(chunkText);
+			}
+		}
 
 		protected void JustifBlocks()
 		{
@@ -2438,15 +2691,7 @@ namespace Epsitec.Common.Widgets
 			System.Collections.Hashtable	parameters;
 
 			this.blocks.Clear();
-			fontStack = new System.Collections.Stack();
-
-			// Prépare la fonte initiale par défaut.
-			fontItem = new FontItem(this);
-			fontItem.fontName  = this.font.FaceName;
-			fontItem.fontSize  = this.fontSize;
-			fontItem.fontColor = Drawing.Color.Empty;
-
-			fontStack.Push(fontItem);  // push la fonte initiale (jamais de pop)
+			fontStack = this.CreateFontStack();
 
 			// Si le texte n'existe pas, met quand même un bloc vide,
 			// afin de voir apparaître le curseur (FindTextCursor).
@@ -2602,191 +2847,103 @@ namespace Epsitec.Common.Widgets
 
 				if ( tag == Tag.Ending )  break;
 
-				switch ( tag )
+				if ( this.ProcessFormatTags(tag, fontStack, supplItem, parameters) == false )
 				{
-					case Tag.Font:
-						if ( parameters != null )
-						{
-							fontItem = ((FontItem)fontStack.Peek()).Copy();
-
-							if ( parameters.ContainsKey("face") )
+					switch ( tag )
+					{
+						case Tag.Image:
+							if ( parameters != null && this.imageProvider != null )
 							{
-								fontItem.fontName = (string)parameters["face"];
+								if ( parameters.ContainsKey("src") )
+								{
+									string imageName = parameters["src"] as string;
+									Drawing.Image image = this.imageProvider.GetImage(imageName);
+									
+									if ( image == null )
+									{
+										throw new System.FormatException(string.Format("<img> tag references unknown image '{0}'.", imageName));
+									}
+									
+									double dx = image.Width;
+									double dy = image.Height;
+
+									if ( dx > restWidth )
+									{
+										restWidth = this.layoutSize.Width;
+										bol = true;
+									}
+
+									fontItem = (FontItem)fontStack.Peek();
+									Drawing.Font blockFont = fontItem.RetFont(supplItem.bold>0, supplItem.italic>0);
+
+									double fontAscender  = blockFont.Ascender;
+									double fontDescender = blockFont.Descender;
+									double fontHeight    = fontAscender-fontDescender;
+
+									JustifBlock block = new JustifBlock();
+									block.bol        = bol;
+									block.lineBreak  = false;
+									block.image      = true;
+									block.text       = imageName;
+									block.beginIndex = index;
+									block.endIndex   = endOffset-beginOffset;
+									block.indexLine  = 0;
+									block.font       = blockFont;
+									block.fontSize   = fontItem.fontSize;
+									block.fontColor  = fontItem.fontColor;
+									block.bold       = supplItem.bold > 0;
+									block.italic     = supplItem.italic > 0;
+									block.underline  = supplItem.underline > 0;
+									block.anchor     = supplItem.anchor > 0;
+									block.wave       = supplItem.wave > 0;
+									block.waveColor  = supplItem.waveColor;
+									block.width      = dx;
+									
+									if ( image.IsOriginDefined )
+									{
+										block.imageAscender  = image.Height - image.Origin.Y;
+										block.imageDescender = -image.Origin.Y;
+									}
+									else
+									{
+										block.imageAscender  = dy*fontAscender/fontHeight;
+										block.imageDescender = dy*fontDescender/fontHeight;
+									}
+									
+									block.pos     = new Drawing.Point(0,0);
+									block.visible = false;
+
+									if ( this.justifMode != TextJustifMode.None )
+									{
+										double width = dx/fontItem.fontSize;
+										block.infos = new Drawing.Font.ClassInfo[1];
+										block.infos[0] = new Drawing.Font.ClassInfo(Drawing.Font.ClassId.PlainText, 1, width, 0.0);
+										block.infoWidth = width;
+										block.infoElast = 0.0;
+									}
+
+									this.blocks.Add(block);
+
+									restWidth -= dx;
+									bol = false;
+								}
 							}
-							if ( parameters.ContainsKey("size") )
-							{
-								string s = parameters["size"] as string;
-								
-								if ( s.EndsWith("%") )
-								{
-									fontItem.fontSize = System.Double.Parse(s.Substring(0, s.Length-1)) * this.fontSize / 100.0;
-								}
-								else
-								{
-									fontItem.fontSize = System.Double.Parse(s);
-								}
-							}
-							if ( parameters.ContainsKey("color") )
-							{
-								string s = parameters["color"] as string;
-								Drawing.Color color = Drawing.Color.FromName(s);
-								if ( !color.IsEmpty )  fontItem.fontColor = color;
-							}
+							break;
 
-							fontStack.Push(fontItem);
-						}
-						break;
+						case Tag.LineBreak:
+							restWidth = this.layoutSize.Width;
+							bol = true;
+							index ++;
+							break;
 
-					case Tag.FontEnd:
-						if ( fontStack.Count > 1 )
-						{
-							fontStack.Pop();
-						}
-						break;
-
-					case Tag.Bold:
-						supplItem.bold ++;
-						break;
-					case Tag.BoldEnd:
-						supplItem.bold --;
-						break;
-
-					case Tag.Italic:
-						supplItem.italic ++;
-						break;
-					case Tag.ItalicEnd:
-						supplItem.italic --;
-						break;
-
-					case Tag.Underline:
-					case Tag.Mnemonic:
-						supplItem.underline ++;
-						break;
-					case Tag.UnderlineEnd:
-					case Tag.MnemonicEnd:
-						supplItem.underline --;
-						break;
-
-					case Tag.Anchor:
-						supplItem.anchor ++;
-						supplItem.underline ++;
-						break;
-					case Tag.AnchorEnd:
-						supplItem.anchor --;
-						supplItem.underline --;
-						break;
-
-					case Tag.Wave:
-						supplItem.wave ++;
-						if ( parameters == null )
-						{
-							supplItem.waveColor = Drawing.Color.Empty;
-						}
-						else
-						{
-							if ( parameters.ContainsKey("color") )
-							{
-								string s = parameters["color"] as string;
-								supplItem.waveColor = Drawing.Color.FromName(s);
-							}
-						}
-						break;
-					case Tag.WaveEnd:
-						supplItem.wave --;
-						break;
-
-					case Tag.Image:
-						if ( parameters != null && this.imageProvider != null )
-						{
-							if ( parameters.ContainsKey("src") )
-							{
-								string imageName = parameters["src"] as string;
-								Drawing.Image image = this.imageProvider.GetImage(imageName);
-								
-								if ( image == null )
-								{
-									throw new System.FormatException(string.Format("<img> tag references unknown image '{0}'.", imageName));
-								}
-								
-								double dx = image.Width;
-								double dy = image.Height;
-
-								if ( dx > restWidth )
-								{
-									restWidth = this.layoutSize.Width;
-									bol = true;
-								}
-
-								fontItem = (FontItem)fontStack.Peek();
-								Drawing.Font blockFont = fontItem.RetFont(supplItem.bold>0, supplItem.italic>0);
-
-								double fontAscender  = blockFont.Ascender;
-								double fontDescender = blockFont.Descender;
-								double fontHeight    = fontAscender-fontDescender;
-
-								JustifBlock block = new JustifBlock();
-								block.bol        = bol;
-								block.lineBreak  = false;
-								block.image      = true;
-								block.text       = imageName;
-								block.beginIndex = index;
-								block.endIndex   = endOffset-beginOffset;
-								block.indexLine  = 0;
-								block.font       = blockFont;
-								block.fontSize   = fontItem.fontSize;
-								block.fontColor  = fontItem.fontColor;
-								block.bold       = supplItem.bold > 0;
-								block.italic     = supplItem.italic > 0;
-								block.underline  = supplItem.underline > 0;
-								block.anchor     = supplItem.anchor > 0;
-								block.wave       = supplItem.wave > 0;
-								block.waveColor  = supplItem.waveColor;
-								block.width      = dx;
-								
-								if ( image.IsOriginDefined )
-								{
-									block.imageAscender  = image.Height - image.Origin.Y;
-									block.imageDescender = -image.Origin.Y;
-								}
-								else
-								{
-									block.imageAscender  = dy*fontAscender/fontHeight;
-									block.imageDescender = dy*fontDescender/fontHeight;
-								}
-								
-								block.pos     = new Drawing.Point(0,0);
-								block.visible = false;
-
-								if ( this.justifMode != TextJustifMode.None )
-								{
-									double width = dx/fontItem.fontSize;
-									block.infos = new Drawing.Font.ClassInfo[1];
-									block.infos[0] = new Drawing.Font.ClassInfo(Drawing.Font.ClassId.PlainText, 1, width, 0.0);
-									block.infoWidth = width;
-									block.infoElast = 0.0;
-								}
-
-								this.blocks.Add(block);
-
-								restWidth -= dx;
-								bol = false;
-							}
-						}
-						break;
-
-					case Tag.LineBreak:
-						restWidth = this.layoutSize.Width;
-						bol = true;
-						index ++;
-						break;
-
-					case Tag.None:
-						if ( buffer.Length == 0 )  textIndex = index;
-						endOffset = beginOffset;
-						char c = TextLayout.AnalyseEntityChar(this.text, ref endOffset);
-						buffer.Append(c);
-						index ++;
-						break;
+						case Tag.None:
+							if ( buffer.Length == 0 )  textIndex = index;
+							endOffset = beginOffset;
+							char c = TextLayout.AnalyseEntityChar(this.text, ref endOffset);
+							buffer.Append(c);
+							index ++;
+							break;
+					}
 				}
 			}
 		}
