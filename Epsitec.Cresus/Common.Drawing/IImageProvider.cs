@@ -7,5 +7,6 @@ namespace Epsitec.Common.Drawing
 	public interface IImageProvider
 	{
 		Image GetImage(string name);
+		void ClearImageCache(string name);
 	}
 }

@@ -110,6 +110,11 @@ namespace Epsitec.Common.Drawing
 			AntiGrain.Buffer.ClearRect (this.agg_buffer, clip.Left, clip.Top, clip.Right, clip.Bottom);
 		}
 		
+		public void GetMemoryLayout(out int width, out int height, out int stride, out System.Drawing.Imaging.PixelFormat format, out System.IntPtr scan0)
+		{
+			format = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
+			AntiGrain.Buffer.GetMemoryLayout (this.agg_buffer, out width, out height, out stride, out scan0);
+		}
 		
 		public void InfiniteClipping()
 		{
