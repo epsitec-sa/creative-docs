@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.UserInterface
 	
 	[System.Serializable]
 	
-	public class BinderException : System.ApplicationException
+	public class BinderException : System.ApplicationException, System.Runtime.Serialization.ISerializable
 	{
 		public BinderException()
 		{
@@ -23,5 +23,17 @@ namespace Epsitec.Cresus.UserInterface
 		public BinderException(string message, System.Exception inner_exception) : base (message, inner_exception)
 		{
 		}
+		
+		
+		#region ISerializable Members
+		protected BinderException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base (info, context)
+		{
+		}
+		
+		void System.Runtime.Serialization.ISerializable.GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+		{
+			base.GetObjectData (info, context);
+		}
+		#endregion
 	}
 }
