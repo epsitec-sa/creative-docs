@@ -112,19 +112,19 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "resources\AppIcon.resource"
+                    RelPath = "resources\AppIcon.00.resource"
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "resources\BaseIcons.resource"
+                    RelPath = "resources\BaseIcons.00.resource"
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "resources\BaseIconsImage.resource"
+                    RelPath = "resources\BaseIconsImage.00.resource"
                     BuildAction = "Content"
                 />
                 <File
-                    RelPath = "resources\MainWindow.resource"
+                    RelPath = "resources\MainWindow.00.resource"
                     BuildAction = "Content"
                 />
             </Include>
