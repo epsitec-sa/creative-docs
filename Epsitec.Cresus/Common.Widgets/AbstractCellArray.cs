@@ -842,7 +842,6 @@ namespace Epsitec.Common.Widgets
 					this.selectedColumn = column;
 					this.selectedRow = row;
 				}
-				this.OnSelectionChanged();
 
 				if ( (this.styleV & CellArrayStyle.SelectLine) != 0 )
 				{
@@ -853,6 +852,8 @@ namespace Epsitec.Common.Widgets
 				{
 					this.SelectColumn(column, state);
 				}
+
+				this.OnSelectionChanged();
 			}
 		}
 
@@ -910,7 +911,6 @@ namespace Epsitec.Common.Widgets
 			this.SelectCell(column, row, true);
 			this.selectedColumn = column;
 			this.selectedRow = row;
-			this.OnSelectionChanged();
 
 			if ( (this.styleV & CellArrayStyle.SelectLine) != 0 )
 			{
@@ -922,6 +922,7 @@ namespace Epsitec.Common.Widgets
 				this.SelectColumn(column, true);
 			}
 
+			this.OnSelectionChanged();
 			this.ShowSelect();
 		}
 

@@ -30,9 +30,10 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
-			switch (message.Type)
+			switch ( message.Type )
 			{
 				case MessageType.MouseEnter:
 					break;
@@ -47,22 +48,22 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				case MessageType.KeyPress:
-					if (message.IsAltPressed || message.IsCtrlPressed)
+					if ( message.IsAltPressed || message.IsCtrlPressed )
 					{
 						return;
 					}
 					
-					if ((message.KeyCode == KeyCode.Space) &&
-						(this.is_keyboard_pressed == false))
+					if ( message.KeyCode == KeyCode.Space &&
+						 this.isKeyboardPressed == false  )
 					{
-						this.is_keyboard_pressed = true;
-						this.OnShortcutPressed ();
+						this.isKeyboardPressed = true;
+						this.OnShortcutPressed();
 					}
 					
 					break;
 				
 				case MessageType.KeyUp:
-					this.is_keyboard_pressed = false;
+					this.isKeyboardPressed = false;
 					break;
 			}
 			
@@ -72,20 +73,20 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnShortcutPressed()
 		{
-			if (this.AutoToggle)
+			if ( this.AutoToggle )
 			{
-				this.Toggle ();
+				this.Toggle();
 			}
 			else
 			{
 				this.Window.EngagedWidget = this;
-				this.SimulatePressed ();
+				this.SimulatePressed();
 			}
 			
-			base.OnShortcutPressed ();
+			base.OnShortcutPressed();
 		}
 		
 		
-		protected bool					is_keyboard_pressed;
+		protected bool					isKeyboardPressed;
 	}
 }
