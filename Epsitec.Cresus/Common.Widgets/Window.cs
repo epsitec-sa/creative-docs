@@ -359,6 +359,26 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public void SetProperty(string key, object value)
+		{
+			if (this.property_hash == null)
+			{
+				this.property_hash = new System.Collections.Hashtable ();
+			}
+			
+			this.property_hash[key] = value;
+		}
+		
+		public object GetProperty(string key)
+		{
+			if (this.property_hash != null)
+			{
+				return this.property_hash[key];
+			}
+			
+			return null;
+		}
+		
 		
 		[Bundle ("size")]	public Drawing.Size		ClientSize
 		{
@@ -971,9 +991,10 @@ namespace Epsitec.Common.Widgets
 		private System.Collections.Queue	 cmd_queue = new System.Collections.Queue ();
 		private System.Collections.Hashtable cmd_names = new System.Collections.Hashtable ();
 		
-		private System.Collections.Queue	post_paint_queue = new System.Collections.Queue ();
+		private System.Collections.Queue	 post_paint_queue = new System.Collections.Queue ();
+		private System.Collections.Hashtable property_hash;
 		
-		private ComponentCollection			components;
+		private ComponentCollection			 components;
 		
 		static System.Collections.ArrayList	windows = new System.Collections.ArrayList ();
 	}

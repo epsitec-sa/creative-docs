@@ -96,6 +96,12 @@ namespace Epsitec.Common.Widgets
 			get { return this.GripLocation; }
 		}
 		
+		public Widget						Widget
+		{
+			get { return this.widget; }
+			set { this.widget = value; }
+		}
+		
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
@@ -193,5 +199,6 @@ namespace Epsitec.Common.Widgets
 		protected GripType					grip_type;
 		protected Drawing.Color				grip_color;
 		protected Helpers.DragBehavior		drag_behavior;
+		protected Widget					widget;
 	}
 }

@@ -38,38 +38,6 @@ namespace Epsitec.Common.Widgets.Design
 		}
 		
 		
-		//	TODO: utilise SelectedWidgets, pas TargetWidget...
-		
-		public Widget					TargetWidget
-		{
-			get
-			{
-				return this.target_widget;
-			}
-			
-			set
-			{
-				if (this.target_widget != value)
-				{
-					if (this.target_widget != null)
-					{
-						this.SelectedWidgets.Remove (this.target_widget);
-						this.DetachWidget ();
-					}
-					
-					this.target_widget = value;
-					
-					if (this.target_widget != null)
-					{
-						this.AttachWidget ();
-						this.SelectedWidgets.Add (this.target_widget);
-					}
-					
-					this.Invalidate ();
-				}
-			}
-		}
-		
 		public Grip						ActiveGrip
 		{
 			get
@@ -82,7 +50,12 @@ namespace Epsitec.Common.Widgets.Design
 		{
 			get
 			{
-				return this.selected;
+				if (this.selected_widgets == null)
+				{
+					this.selected_widgets = new Helpers.WidgetCollection (this);
+				}
+				
+				return this.selected_widgets;
 			}
 		}
 		
@@ -116,64 +89,106 @@ namespace Epsitec.Common.Widgets.Design
 		{
 			if (disposing)
 			{
-				this.TargetWidget = null;
+				if (this.selected_widgets != null)
+				{
+					this.selected_widgets.Clear ();
+					this.selected_widgets.Dispose ();
+					this.selected_widgets = null;
+				}
 			}
 			
 			base.Dispose (disposing);
 		}
 
 		
-		protected virtual void AttachWidget()
+		protected virtual void AttachWidget(Widget widget)
 		{
-			this.target_widget.LayoutChanged += new EventHandler (this.HandleTargetLayoutChanged);
-			this.target_widget.PreparePaint  += new EventHandler (this.HandleTargetPreparePaint);
+			widget.LayoutChanged += new EventHandler (this.HandleTargetLayoutChanged);
+			widget.PreparePaint  += new EventHandler (this.HandleTargetPreparePaint);
 			
-			this.Parent = this.target_widget.Window.Root;
-			this.Bounds = this.target_widget.Window.Root.Client.Bounds;
-			this.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+			//	TODO: vérifier que l'on ne change pas de racine...
+			
+			this.CreateGrips (widget);
+			
+			if (this.Parent == null)
+			{
+				this.Parent = widget.Window.Root;
+				this.Bounds = this.Parent.Client.Bounds;
+				this.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert (this.Parent == widget.Window.Root);
+			}
 			
 			this.UpdateGeometry ();
 		}
 		
-		protected virtual void DetachWidget()
+		protected virtual void DetachWidget(Widget widget)
 		{
-			this.target_widget.LayoutChanged -= new EventHandler (this.HandleTargetLayoutChanged);
-			this.target_widget.PreparePaint  -= new EventHandler (this.HandleTargetPreparePaint);
+			widget.LayoutChanged -= new EventHandler (this.HandleTargetLayoutChanged);
+			widget.PreparePaint  -= new EventHandler (this.HandleTargetPreparePaint);
 			
-			this.Parent = null;
+			int n   = GripsOverlay.grip_map.Length;
+			int len = this.grips.Length;
+			int j   = 0;
 			
-			if (this.grips != null)
+			Grip[] grips = new Grip[len - n];
+			
+			for (int i = 0; i < this.grips.Length; i++)
 			{
-				for (int i = 0; i < this.grips.Length; i++)
-				{
-					this.grips[i].Dragging  -= new DragEventHandler (this.HandleGripsDragging);
-					this.grips[i].DragBegin -= new EventHandler (this.HandleGripsDragBegin);
-					this.grips[i].DragEnd   -= new EventHandler (this.HandleGripsDragEnd);
-					this.grips[i].Dispose ();
-					this.grips[i] = null;
-				}
+				Grip grip = this.grips[i];
 				
-				this.grips = null;
+				if (grip.Widget == widget)
+				{
+					grip.Dragging  -= new DragEventHandler (this.HandleGripsDragging);
+					grip.DragBegin -= new EventHandler (this.HandleGripsDragBegin);
+					grip.DragEnd   -= new EventHandler (this.HandleGripsDragEnd);
+					grip.Dispose ();
+				}
+				else
+				{
+					grips[j++] = grip;
+				}
+			}
+			
+			System.Diagnostics.Debug.Assert (j == grips.Length);
+			
+			this.grips = grips;
+			
+			if (this.grips.Length == 0)
+			{
+				this.Parent = null;
 			}
 		}
 		
-		protected virtual void CreateGrips()
+		protected virtual void CreateGrips(Widget widget)
 		{
-			if (this.grips == null)
+			int n   = GripsOverlay.grip_map.Length;
+			int len = this.grips == null ? 0 : this.grips.Length;
+			
+			Grip[] grips = new Grip[len+n];
+			
+			if (this.grips != null)
 			{
-				int n = GripsOverlay.grip_map.Length;
-				this.grips = new Grip[n];
-				
-				for (int i = 0; i < n; i++)
-				{
-					this.grips[i] = new Grip (this);
-					this.grips[i].GripType   = GripsOverlay.grip_map[i].type;
-					this.grips[i].Index      = i;
-					this.grips[i].Dragging  += new DragEventHandler (this.HandleGripsDragging);
-					this.grips[i].DragBegin += new EventHandler (this.HandleGripsDragBegin);
-					this.grips[i].DragEnd   += new EventHandler (this.HandleGripsDragEnd);
-				}
+				this.grips.CopyTo (grips, 0);
 			}
+			
+			for (int i = 0; i < n; i++)
+			{
+				Grip grip = new Grip (this);
+				
+				grip.GripType   = GripsOverlay.grip_map[i].type;
+				grip.Index      = i;
+				grip.Dragging  += new DragEventHandler (this.HandleGripsDragging);
+				grip.DragBegin += new EventHandler (this.HandleGripsDragBegin);
+				grip.DragEnd   += new EventHandler (this.HandleGripsDragEnd);
+				grip.Widget     = widget;
+				
+				grips[len+i] = grip;
+			}
+			
+			this.grips = grips;
 		}
 		
 		
@@ -198,25 +213,25 @@ namespace Epsitec.Common.Widgets.Design
 		
 		protected virtual void UpdateGeometry()
 		{
-			if ((this.target_widget != null) &&
-				(this.target_widget.Parent != null))
+			if (this.SelectedWidgets.Count > 0)
 			{
-				if (this.grips == null)
-				{
-					this.CreateGrips ();
-				}
+				//	TODO: gérer la possibilité d'avoir plusieurs rectangles
 				
-				Widget parent = this.target_widget.Parent;
+				Widget target_parent = this.SelectedWidgets[0].Parent;
 				
-				this.TargetBounds = parent.MapClientToRoot (this.target_widget.Bounds);
-				this.TargetClip   = parent.MapClientToRoot (parent.GetClipStackBounds ());
+				this.TargetBounds = target_parent.MapClientToRoot (this.SelectedWidgets[0].Bounds);
+				this.TargetClip   = target_parent.MapClientToRoot (target_parent.GetClipStackBounds ());
 				
 				for (int i = 0; i < this.grips.Length; i++)
 				{
-					GripMap map  = GripsOverlay.grip_map[i];
-					Grip    grip = this.grips[i];
+					Grip    grip   = this.grips[i];
+					GripMap map    = GripsOverlay.grip_map[grip.Index];
+					Widget  widget = grip.Widget;
+					Widget  parent = widget.Parent;
 					
-					grip.GripLocation = this.target_bounds.GetGrip (map.id) + map.offset;
+					Drawing.Rectangle bounds = parent.MapClientToRoot (widget.Bounds);
+					
+					grip.GripLocation = bounds.GetGrip (map.id) + map.offset;
 				}
 			}
 		}
@@ -264,12 +279,12 @@ namespace Epsitec.Common.Widgets.Design
 			Drawing.Rectangle bounds = this.target_bounds;
 			
 			bounds.OffsetGrip (map.id, e.Offset);
-			bounds = this.target_widget.MapRootToClient (bounds);
-			bounds = this.target_widget.MapClientToParent (bounds);
+			bounds = this.SelectedWidgets[0].MapRootToClient (bounds);
+			bounds = this.SelectedWidgets[0].MapClientToParent (bounds);
 			bounds = this.ConstrainWidgetBoundsRelative (map.id, bounds);
 			bounds = this.ConstrainWidgetBoundsMinMax (map.id, bounds);
 			
-			this.target_widget.Bounds = bounds;
+			this.SelectedWidgets[0].Bounds = bounds;
 			
 			if (this.Dragging != null)
 			{
@@ -342,8 +357,8 @@ namespace Epsitec.Common.Widgets.Design
 			Design.Constraint cx = new Design.Constraint (5);
 			Design.Constraint cy = new Design.Constraint (5);
 			
-			Widget widget = this.target_widget;
-			Widget parent = this.target_widget.Parent;
+			Widget widget = this.SelectedWidgets[0];
+			Widget parent = widget.Parent;
 			
 			this.drop_adorner.Widget = parent;
 			this.drop_adorner.HiliteMode = HiliteMode.DropCandidate;
@@ -406,7 +421,7 @@ namespace Epsitec.Common.Widgets.Design
 		
 		private Drawing.Rectangle ConstrainWidgetBoundsMinMax(Drawing.GripId grip, Drawing.Rectangle new_bounds)
 		{
-			return GripsOverlay.ConstrainWidgetBoundsMinMax (grip, this.target_widget.Bounds, new_bounds, this.target_widget.MinSize, this.target_widget.MaxSize);
+			return GripsOverlay.ConstrainWidgetBoundsMinMax (grip, this.SelectedWidgets[0].Bounds, new_bounds, this.SelectedWidgets[0].MinSize, this.SelectedWidgets[0].MaxSize);
 		}
 		
 		
@@ -499,6 +514,13 @@ namespace Epsitec.Common.Widgets.Design
 		#region IWidgetCollectionHost Members
 		public void NotifyInsertion(Widget widget)
 		{
+			//	Un widget a été ajouté à la liste des widgets pour lesquels on doit afficher
+			//	des poignées (les widgets sélectionnés). Il faut donc attacher ce widget à
+			//	notre surface de travail :
+			
+			this.AttachWidget (widget);
+			this.Invalidate ();
+			
 			if (this.SelectedTarget != null)
 			{
 				this.SelectedTarget (this, widget);
@@ -511,6 +533,12 @@ namespace Epsitec.Common.Widgets.Design
 			{
 				this.DeselectingTarget (this, widget);
 			}
+			
+			//	Un widget va être retiré de la liste des widgets sélectionnés. Il faut donc
+			//	s'en détacher :
+			
+			this.DetachWidget (widget);
+			this.Invalidate ();
 		}
 		
 		public Epsitec.Common.Widgets.Helpers.WidgetCollection GetWidgetCollection()
@@ -528,7 +556,6 @@ namespace Epsitec.Common.Widgets.Design
 		
 		protected static GripMap[]			grip_map;
 		
-		protected Widget					target_widget;
 		protected Drawing.Rectangle			target_bounds;
 		protected Drawing.Rectangle			target_clip;
 		
@@ -539,6 +566,6 @@ namespace Epsitec.Common.Widgets.Design
 		protected Design.Constraint			drop_cx;
 		protected Design.Constraint			drop_cy;
 		
-		protected Helpers.WidgetCollection	selected;
+		protected Helpers.WidgetCollection	selected_widgets;
 	}
 }

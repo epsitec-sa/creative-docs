@@ -152,7 +152,7 @@ namespace Epsitec.Common.Widgets.Design
 			
 			System.Diagnostics.Debug.Assert (editor != null);
 			System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Count > 0);
-			System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Contains (o) == false);
+			System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Contains (o));
 			
 			this.edit_selected.Add (o);
 			
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Widgets.Design
 			
 			System.Diagnostics.Debug.Assert (editor != null);
 			System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Count > 0);
-			System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Contains (o) == true);
+			System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Contains (o));
 			
 			this.edit_selected.Remove (o);
 			
@@ -213,6 +213,7 @@ namespace Epsitec.Common.Widgets.Design
 			foreach (Widget widget in this.edit_selected)
 			{
 				//	TODO: effacer le widget
+				System.Diagnostics.Debug.WriteLine ("Delete " + widget.ToString ());
 			}
 		}
 		

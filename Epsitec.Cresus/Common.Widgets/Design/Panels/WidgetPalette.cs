@@ -14,8 +14,9 @@ namespace Epsitec.Common.Widgets.Design.Panels
 			//	passée en entrée, au cas où on voudrait mettre la palette dans une barre
 			//	vericale, etc.
 			
-			this.size = new Drawing.Size (172, 125);
+			this.size = new Drawing.Size (172+2*10, 125+2*10);
 		}
+		
 		
 		public PreferredLayout			PreferredLayout
 		{
@@ -25,8 +26,28 @@ namespace Epsitec.Common.Widgets.Design.Panels
 			}
 		}
 		
+		public DragSource				ActiveDragSource
+		{
+			get
+			{
+				return this.active_drag_source;
+			}
+		}
 		
-		public override void CreateWidgets(Widget parent, Drawing.Point origin)
+		
+		protected override Widget CreateWidget()
+		{
+			Widget host = new Widget ();
+			
+			host.Size    = this.Size;
+			host.MinSize = this.Size;
+			
+			this.CreateWidgets (host);
+			
+			return host;
+		}
+
+		protected void CreateWidgets(Widget parent)
 		{
 			System.Diagnostics.Debug.Assert (this.preference != PreferredLayout.None);
 			System.Diagnostics.Debug.Assert (this.parent == null);
@@ -35,16 +56,15 @@ namespace Epsitec.Common.Widgets.Design.Panels
 			//	on voudrait mettre la palette dans une barre vericale, etc.
 			
 			this.parent = parent;
-			this.origin = origin;
 			
-			this.CreateDragSource (typeof (Button),          "Button",   0,   0, 86, 23+6);
-			this.CreateDragSource (typeof (CheckButton),     "Check",    0,  30, 66, 14+6);
-			this.CreateDragSource (typeof (RadioButton),     "Radio",    0,  50, 66, 14+6);
-			this.CreateDragSource (typeof (TextField),       "",         0,  70, 86, 21+6);
-			this.CreateDragSource (typeof (TextFieldUpDown), "10",       0,  98, 43, 21+6);
-			this.CreateDragSource (typeof (TextFieldSlider), "40",      43,  98, 43, 21+6);
-			this.CreateDragSource (typeof (TextFieldMulti),  "",        86,  70, 86, 55);
-			this.CreateDragSource (typeof (GroupBox),        "Group",   86,   0, 86, 69);
+			this.CreateDragSource (typeof (Button),          "Button",  10,  10, 86, 23+6);
+			this.CreateDragSource (typeof (CheckButton),     "Check",   10,  40, 66, 14+6);
+			this.CreateDragSource (typeof (RadioButton),     "Radio",   10,  60, 66, 14+6);
+			this.CreateDragSource (typeof (TextField),       "",        10,  80, 86, 21+6);
+			this.CreateDragSource (typeof (TextFieldUpDown), "10",      10, 108, 43, 21+6);
+			this.CreateDragSource (typeof (TextFieldSlider), "40",      53, 108, 43, 21+6);
+			this.CreateDragSource (typeof (TextFieldMulti),  "",        96,  80, 86, 55);
+			this.CreateDragSource (typeof (GroupBox),        "Group",   96,  10, 86, 69);
 			
 //			this.CreateDragSource (typeof (VScroller), x, ref y, 0, dy);
 //			this.CreateDragSource (typeof (TextFieldCombo),  x, ref y, dx2, 0);
@@ -60,10 +80,41 @@ namespace Epsitec.Common.Widgets.Design.Panels
 			
 			source.Widget   = widget;
 			source.Parent   = this.parent;
-			source.Location = new Drawing.Point (this.origin.X + x, this.origin.Y + this.size.Height - y - dy);
+			source.Location = new Drawing.Point (x, this.size.Height - y - dy);
 			source.Size     = new Drawing.Size (dx, dy);
+			
+			source.DragBegin += new EventHandler (this.HandleSourceDragBegin);
+			source.DragEnd   += new EventHandler (this.HandleSourceDragEnd);
 		}
 		
+		
+		private void HandleSourceDragBegin(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.active_drag_source == null);
+			
+			this.active_drag_source = sender as DragSource;
+			
+			if (this.DragBegin != null)
+			{
+				this.DragBegin (this);
+			}
+		}
+		
+		private void HandleSourceDragEnd(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.active_drag_source == sender);
+			
+			if (this.DragEnd != null)
+			{
+				this.DragEnd (this);
+			}
+			
+			this.active_drag_source = null;
+		}
+		
+		
+		public event EventHandler		DragBegin;
+		public event EventHandler		DragEnd;
 		
 		public static IGuideAlign		Guide
 		{
@@ -212,6 +263,6 @@ namespace Epsitec.Common.Widgets.Design.Panels
 		
 		protected Widget				parent;
 		protected PreferredLayout		preference;
-		protected Drawing.Point			origin;
+		protected DragSource			active_drag_source;
 	}
 }

@@ -201,6 +201,11 @@ namespace Epsitec.Common.Widgets
 			this.drag_window = this.CreateDragWindow (this.widget);
 			this.drag_window.WindowLocation = pos;
 			this.drag_window.Show ();
+			
+			if (this.DragBegin != null)
+			{
+				this.DragBegin (this);
+			}
 		}
 		
 		void Helpers.IDragBehaviorHost.OnDragging(DragEventArgs e)
@@ -329,9 +334,16 @@ namespace Epsitec.Common.Widgets
 			this.drag_window.Hide ();
 			this.drag_window.Dispose ();
 			this.drag_window = null;
+			
+			if (this.DragEnd != null)
+			{
+				this.DragEnd (this);
+			}
 		}
 		#endregion
 		
+		public event EventHandler			DragBegin;
+		public event EventHandler			DragEnd;
 		public event DragEventHandler		Dragging;
 		
 		

@@ -135,11 +135,14 @@ namespace Epsitec.Common.Widgets.Design
 					return;
 				}
 				
-				this.SelectedWidgets.Clear ();
-				this.SelectedWidgets.Add (hot);
+				if ((message.ModifierKeys & ModifierKeys.Shift) == 0)
+				{
+					this.SelectedWidgets.Clear ();
+				}
 				
 				if (hot != null)
 				{
+					this.SelectedWidgets.Add (hot);
 					System.Diagnostics.Debug.WriteLine ("Click on " + hot.Name + " (" + hot.GetType ().Name + ")");
 				}
 			}

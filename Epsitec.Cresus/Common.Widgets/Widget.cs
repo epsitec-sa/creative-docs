@@ -2663,6 +2663,11 @@ namespace Epsitec.Common.Widgets
 		
 		public static Widget[]	FindAllCommandWidgets(System.Text.RegularExpressions.Regex regex)
 		{
+			return Widget.FindAllCommandWidgets (regex, null);
+		}
+		
+		public static Widget[]	FindAllCommandWidgets(System.Text.RegularExpressions.Regex regex, Support.CommandDispatcher dispatcher)
+		{
 			//	Passe en revue absolument tous les widgets qui existent et cherche ceux qui ont
 			//	une commande qui correspond au critère spécifié.
 			
@@ -2683,7 +2688,8 @@ namespace Epsitec.Common.Widgets
 						Widget widget = weak_ref.Target as Widget;
 						
 						if ((widget.IsCommand) &&
-							(widget.Name != ""))
+							(widget.Name != "") &&
+							((dispatcher == null) || (widget.CommandDispatcher == dispatcher)))
 						{
 							if (regex.Match (widget.CommandName).Success)
 							{
