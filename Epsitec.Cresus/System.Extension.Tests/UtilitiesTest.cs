@@ -9,16 +9,16 @@ namespace System
 		{
 			string[] data = new string[] { "A", "B", "C", "C", "D" };
 			
-			Assertion.Assert (System.Utilities.CheckForDuplicates (data));
-			Assertion.Assert (System.Utilities.CheckForDuplicates (data, false));
+			Assert.IsTrue (System.Utilities.CheckForDuplicates (data));
+			Assert.IsTrue (System.Utilities.CheckForDuplicates (data, false));
 		}
 		
 		[Test] public void CheckCheckForDuplicates2()
 		{
 			string[] data = new string[] { "C", "B", "A", "C", "D" };
 			
-			Assertion.AssertEquals (true,  System.Utilities.CheckForDuplicates (data));
-			Assertion.AssertEquals (false, System.Utilities.CheckForDuplicates (data, false));
+			Assert.AreEqual (true,  System.Utilities.CheckForDuplicates (data));
+			Assert.AreEqual (false, System.Utilities.CheckForDuplicates (data, false));
 		}
 		
 		[Test] public void CheckCheckForDuplicates3()
@@ -27,14 +27,14 @@ namespace System
 			object[] data2 = new object[] { new SpecialData(1, "C"), new SpecialData (2, "B"), new SpecialData (3, "C") };
 			object[] data3 = new object[] { new SpecialData(3, "A"), new SpecialData (2, "B"), new SpecialData (3, "C") };
 			
-			Assertion.AssertEquals (false, System.Utilities.CheckForDuplicates (data1, SpecialData.NumComparer));
-			Assertion.AssertEquals (false, System.Utilities.CheckForDuplicates (data1, SpecialData.TextComparer));
+			Assert.AreEqual (false, System.Utilities.CheckForDuplicates (data1, SpecialData.NumComparer));
+			Assert.AreEqual (false, System.Utilities.CheckForDuplicates (data1, SpecialData.TextComparer));
 			
-			Assertion.AssertEquals (false, System.Utilities.CheckForDuplicates (data2, SpecialData.NumComparer));
-			Assertion.AssertEquals (true,  System.Utilities.CheckForDuplicates (data2, SpecialData.TextComparer));
+			Assert.AreEqual (false, System.Utilities.CheckForDuplicates (data2, SpecialData.NumComparer));
+			Assert.AreEqual (true,  System.Utilities.CheckForDuplicates (data2, SpecialData.TextComparer));
 			
-			Assertion.AssertEquals (true,  System.Utilities.CheckForDuplicates (data3, SpecialData.NumComparer));
-			Assertion.AssertEquals (false, System.Utilities.CheckForDuplicates (data3, SpecialData.TextComparer));
+			Assert.AreEqual (true,  System.Utilities.CheckForDuplicates (data3, SpecialData.NumComparer));
+			Assert.AreEqual (false, System.Utilities.CheckForDuplicates (data3, SpecialData.TextComparer));
 		}
 		
 		class SpecialData
@@ -96,36 +96,36 @@ namespace System
 			
 			args = Utilities.Split ("a;b;c", ';');
 			
-			Assertion.AssertEquals (3, args.Length);
-			Assertion.AssertEquals ("a", args[0]);
-			Assertion.AssertEquals ("b", args[1]);
-			Assertion.AssertEquals ("c", args[2]);
+			Assert.AreEqual (3, args.Length);
+			Assert.AreEqual ("a", args[0]);
+			Assert.AreEqual ("b", args[1]);
+			Assert.AreEqual ("c", args[2]);
 			
 			args = Utilities.Split ("'a;b';c", ';');
 			
-			Assertion.AssertEquals (2, args.Length);
-			Assertion.AssertEquals ("'a;b'", args[0]);
-			Assertion.AssertEquals ("c", args[1]);
+			Assert.AreEqual (2, args.Length);
+			Assert.AreEqual ("'a;b'", args[0]);
+			Assert.AreEqual ("c", args[1]);
 			
 			args = Utilities.Split ("'a;\"b';\"c\"", ';');
 			
-			Assertion.AssertEquals (2, args.Length);
-			Assertion.AssertEquals ("'a;\"b'", args[0]);
-			Assertion.AssertEquals ("\"c\"", args[1]);
+			Assert.AreEqual (2, args.Length);
+			Assert.AreEqual ("'a;\"b'", args[0]);
+			Assert.AreEqual ("\"c\"", args[1]);
 			
 			args = Utilities.Split ("a;<b;c>;d", ';');
 			
-			Assertion.AssertEquals (3, args.Length);
-			Assertion.AssertEquals ("a", args[0]);
-			Assertion.AssertEquals ("<b;c>", args[1]);
-			Assertion.AssertEquals ("d", args[2]);
+			Assert.AreEqual (3, args.Length);
+			Assert.AreEqual ("a", args[0]);
+			Assert.AreEqual ("<b;c>", args[1]);
+			Assert.AreEqual ("d", args[2]);
 			
 			args = Utilities.Split ("a;<x arg='1;2'/>;d", ';');
 			
-			Assertion.AssertEquals (3, args.Length);
-			Assertion.AssertEquals ("a", args[0]);
-			Assertion.AssertEquals ("<x arg='1;2'/>", args[1]);
-			Assertion.AssertEquals ("d", args[2]);
+			Assert.AreEqual (3, args.Length);
+			Assert.AreEqual ("a", args[0]);
+			Assert.AreEqual ("<x arg='1;2'/>", args[1]);
+			Assert.AreEqual ("d", args[2]);
 		}
 		
 		[Test] public void CheckStringSimplify()
@@ -137,19 +137,19 @@ namespace System
 			string s5 = @"<abc>";
 			string s6 = @"abc";
 			
-			Assertion.AssertEquals (true,  Utilities.StringSimplify (ref s1));
-			Assertion.AssertEquals (true,  Utilities.StringSimplify (ref s2));
-			Assertion.AssertEquals (true,  Utilities.StringSimplify (ref s3));
-			Assertion.AssertEquals (true,  Utilities.StringSimplify (ref s4));
-			Assertion.AssertEquals (true,  Utilities.StringSimplify (ref s5, '<', '>'));
-			Assertion.AssertEquals (false, Utilities.StringSimplify (ref s6));
+			Assert.AreEqual (true,  Utilities.StringSimplify (ref s1));
+			Assert.AreEqual (true,  Utilities.StringSimplify (ref s2));
+			Assert.AreEqual (true,  Utilities.StringSimplify (ref s3));
+			Assert.AreEqual (true,  Utilities.StringSimplify (ref s4));
+			Assert.AreEqual (true,  Utilities.StringSimplify (ref s5, '<', '>'));
+			Assert.AreEqual (false, Utilities.StringSimplify (ref s6));
 			
-			Assertion.AssertEquals ("xyz", s1);
-			Assertion.AssertEquals ("ab'cd", s2);
-			Assertion.AssertEquals ("abcd'", s3);
-			Assertion.AssertEquals ("xyz'abc", s4);
-			Assertion.AssertEquals ("abc", s5);
-			Assertion.AssertEquals ("abc", s6);
+			Assert.AreEqual ("xyz", s1);
+			Assert.AreEqual ("ab'cd", s2);
+			Assert.AreEqual ("abcd'", s3);
+			Assert.AreEqual ("xyz'abc", s4);
+			Assert.AreEqual ("abc", s5);
+			Assert.AreEqual ("abc", s6);
 		}
 		
 		[Test] [ExpectedException (typeof (System.Exception))] public void CheckStringSimplifyEx1()
@@ -172,12 +172,12 @@ namespace System
 		
 		[Test] public void CheckTextToXml()
 		{
-			Assertion.AssertEquals ("&lt;#&apos;&quot;&gt;\u00A0\u2014x", Utilities.TextToXml ("<#'\">\u00A0\u2014x"));
+			Assert.AreEqual ("&lt;#&apos;&quot;&gt;\u00A0\u2014x", Utilities.TextToXml ("<#'\">\u00A0\u2014x"));
 		}
 		
 		[Test] public void CheckXmlToText()
 		{
-			Assertion.AssertEquals ("<#'\">\u00A0\u2014x", Utilities.XmlToText ("&lt;#&apos;&quot;&gt;&#160;&#8212;x"));
+			Assert.AreEqual ("<#'\">\u00A0\u2014x", Utilities.XmlToText ("&lt;#&apos;&quot;&gt;&#160;&#8212;x"));
 		}
 		
 		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckXmlToTextEx1()
