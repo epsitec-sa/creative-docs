@@ -9,14 +9,14 @@ namespace Epsitec.Common.Converters
 			object a = 1;
 			object b = 1;
 			
-			Assertion.Assert (a != b);
-			Assertion.Assert (a.Equals (b));
+			Assert.IsTrue (a != b);
+			Assert.IsTrue (a.Equals (b));
 			
 			a = "hello";
 			b = "hello";
 			
-			Assertion.Assert (a == b);
-			Assertion.Assert (a.Equals (b));
+			Assert.IsTrue (a == b);
+			Assert.IsTrue (a.Equals (b));
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
@@ -25,9 +25,9 @@ namespace Epsitec.Common.Converters
 			
 			b = buffer.ToString ();
 			
-			Assertion.Assert (a != b);
-			Assertion.Assert ((string)a == (string)b);
-			Assertion.Assert (a.Equals (b));
+			Assert.IsTrue (a != b);
+			Assert.IsTrue ((string)a == (string)b);
+			Assert.IsTrue (a.Equals (b));
 		}
 		
 		[Test] public void CheckEqual()
@@ -35,12 +35,12 @@ namespace Epsitec.Common.Converters
 			object a = 1;
 			object b = 1;
 			
-			Assertion.Assert (Comparer.Equal (a, b));
+			Assert.IsTrue (Comparer.Equal (a, b));
 			
 			a = "hello";
 			b = "hello";
 			
-			Assertion.Assert (Comparer.Equal (a, b));
+			Assert.IsTrue (Comparer.Equal (a, b));
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Converters
 			
 			b = buffer.ToString ();
 			
-			Assertion.Assert (Comparer.Equal (a, b));
+			Assert.IsTrue (Comparer.Equal (a, b));
 		}
 	}
 }

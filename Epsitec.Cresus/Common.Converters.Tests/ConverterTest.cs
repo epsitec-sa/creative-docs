@@ -9,10 +9,10 @@ namespace Epsitec.Common.Converters
 			object a = null;
 			object b = System.DBNull.Value;
 			
-			Assertion.Assert (Converter.IsNull (a));
-			Assertion.Assert (Converter.IsNull (b));
-			Assertion.Assert (! Converter.IsNotNull (a));
-			Assertion.Assert (! Converter.IsNotNull (b));
+			Assert.IsTrue (Converter.IsNull (a));
+			Assert.IsTrue (Converter.IsNull (b));
+			Assert.IsTrue (! Converter.IsNotNull (a));
+			Assert.IsTrue (! Converter.IsNotNull (b));
 		}
 		
 		[Test] public void CheckToString()
@@ -29,23 +29,23 @@ namespace Epsitec.Common.Converters
 			
 			string result;
 			
-			Assertion.Assert (! Converter.Convert (a, out result));
-			Assertion.Assert (! Converter.Convert (b, out result));
+			Assert.IsTrue (! Converter.Convert (a, out result));
+			Assert.IsTrue (! Converter.Convert (b, out result));
 			
-			Assertion.Assert (Converter.Convert (c, out result));
-			Assertion.AssertEquals ("test", result);
-			Assertion.Assert (Converter.Convert (d, out result));
-			Assertion.AssertEquals ("10", result);
-			Assertion.Assert (Converter.Convert (e, out result));
-			Assertion.AssertEquals ("10", result);
-			Assertion.Assert (Converter.Convert (f, out result));
-			Assertion.AssertEquals ("10.00", result);
-			Assertion.Assert (Converter.Convert (g, out result));
-			Assertion.AssertEquals ("True", result);
-			Assertion.Assert (Converter.Convert (h, out result));
-			Assertion.AssertEquals ("0.1;0.2;0.3;0.4", result);
-			Assertion.Assert (Converter.Convert (i, out result));
-			Assertion.AssertEquals ("10;20;30;40", result);
+			Assert.IsTrue (Converter.Convert (c, out result));
+			Assert.AreEqual ("test", result);
+			Assert.IsTrue (Converter.Convert (d, out result));
+			Assert.AreEqual ("10", result);
+			Assert.IsTrue (Converter.Convert (e, out result));
+			Assert.AreEqual ("10", result);
+			Assert.IsTrue (Converter.Convert (f, out result));
+			Assert.AreEqual ("10.00", result);
+			Assert.IsTrue (Converter.Convert (g, out result));
+			Assert.AreEqual ("True", result);
+			Assert.IsTrue (Converter.Convert (h, out result));
+			Assert.AreEqual ("0.1;0.2;0.3;0.4", result);
+			Assert.IsTrue (Converter.Convert (i, out result));
+			Assert.AreEqual ("10;20;30;40", result);
 		}
 		
 		[Test] public void CheckToDecimal()
@@ -62,22 +62,22 @@ namespace Epsitec.Common.Converters
 			
 			decimal result;
 			
-			Assertion.Assert (! Converter.Convert (a, out result));
-			Assertion.Assert (! Converter.Convert (b, out result));
-			Assertion.Assert (! Converter.Convert (c, out result));
+			Assert.IsTrue (! Converter.Convert (a, out result));
+			Assert.IsTrue (! Converter.Convert (b, out result));
+			Assert.IsTrue (! Converter.Convert (c, out result));
 			
-			Assertion.Assert (Converter.Convert (d, out result));
-			Assertion.Assert (result == 10);
-			Assertion.Assert (Converter.Convert (e, out result));
-			Assertion.Assert (result == 10);
-			Assertion.Assert (Converter.Convert (f, out result));
-			Assertion.Assert (result == 10);
-			Assertion.Assert (Converter.Convert (g, out result));
-			Assertion.Assert (result == 1);
-			Assertion.Assert (Converter.Convert (h, out result));
-			Assertion.Assert (result == 10);
-			Assertion.Assert (Converter.Convert (i, out result));
-			Assertion.Assert (result == 10);
+			Assert.IsTrue (Converter.Convert (d, out result));
+			Assert.IsTrue (result == 10);
+			Assert.IsTrue (Converter.Convert (e, out result));
+			Assert.IsTrue (result == 10);
+			Assert.IsTrue (Converter.Convert (f, out result));
+			Assert.IsTrue (result == 10);
+			Assert.IsTrue (Converter.Convert (g, out result));
+			Assert.IsTrue (result == 1);
+			Assert.IsTrue (Converter.Convert (h, out result));
+			Assert.IsTrue (result == 10);
+			Assert.IsTrue (Converter.Convert (i, out result));
+			Assert.IsTrue (result == 10);
 		}
 		
 		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckToDecimalEx1()
@@ -95,17 +95,17 @@ namespace Epsitec.Common.Converters
 		{
 			System.Enum v1, v2, v3, v;
 			
-			Assertion.Assert (Converter.Convert (MyEnum.First, typeof (MyEnum), out v1));
-			Assertion.Assert (Converter.Convert ("Second",     typeof (MyEnum), out v2));
-			Assertion.Assert (Converter.Convert (99,           typeof (MyEnum), out v3));
+			Assert.IsTrue (Converter.Convert (MyEnum.First, typeof (MyEnum), out v1));
+			Assert.IsTrue (Converter.Convert ("Second",     typeof (MyEnum), out v2));
+			Assert.IsTrue (Converter.Convert (99,           typeof (MyEnum), out v3));
 			
-			Assertion.AssertEquals (MyEnum.First,  v1);
-			Assertion.AssertEquals (MyEnum.Second, v2);
-			Assertion.AssertEquals (MyEnum.Extra,  v3);
+			Assert.AreEqual (MyEnum.First,  v1);
+			Assert.AreEqual (MyEnum.Second, v2);
+			Assert.AreEqual (MyEnum.Extra,  v3);
 			
-			Assertion.Assert (Converter.Convert (0,   typeof (MyEnum), out v) == false);
-			Assertion.Assert (Converter.Convert ("",  typeof (MyEnum), out v) == false);
-			Assertion.Assert (Converter.Convert ("0", typeof (MyEnum), out v) == false);
+			Assert.IsTrue (Converter.Convert (0,   typeof (MyEnum), out v) == false);
+			Assert.IsTrue (Converter.Convert ("",  typeof (MyEnum), out v) == false);
+			Assert.IsTrue (Converter.Convert ("0", typeof (MyEnum), out v) == false);
 		}
 		
 		private enum MyEnum
