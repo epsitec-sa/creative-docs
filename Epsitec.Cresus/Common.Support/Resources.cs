@@ -584,7 +584,24 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 
-		
+		public static bool EqualCultures(ResourceLevel level_a, CultureInfo culture_a, ResourceLevel level_b, CultureInfo culture_b)
+		{
+			if (level_a != level_b)
+			{
+				return false;
+			}
+			if (level_a == ResourceLevel.Default)
+			{
+				return true;
+			}
+			if ((culture_a == null) ||
+				(culture_b == null))
+			{
+				return false;
+			}
+			
+			return culture_a.TwoLetterISOLanguageName == culture_b.TwoLetterISOLanguageName;
+		}
 		
 		protected static void SelectLocale(CultureInfo culture)
 		{
