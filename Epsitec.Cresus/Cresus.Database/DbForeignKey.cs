@@ -14,36 +14,13 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (a.ParentTableName != null);
 			System.Diagnostics.Debug.Assert (a.ParentTableName.Length > 0);
 			
-			if ((a.ColumnClass == DbColumnClass.RefLiveId) ||
-				(a.ColumnClass == DbColumnClass.RefSimpleId))
+			if (a.ColumnClass == DbColumnClass.RefId)
 			{
 				this.columns = new DbColumn[] { a };
 			}
 			else
 			{
 				throw new System.ArgumentException (string.Format ("Invalid column, DbColumnClass set to {0}.", a.ColumnClass));
-			}
-		}
-		
-		public DbForeignKey(DbColumn a, DbColumn b)
-		{
-			System.Diagnostics.Debug.Assert (a.ParentTableName != null);
-			System.Diagnostics.Debug.Assert (a.ParentTableName.Length > 0);
-			System.Diagnostics.Debug.Assert (a.ParentTableName == b.ParentTableName);
-			
-			if ((a.ColumnClass == DbColumnClass.RefTupleId) &&
-				(b.ColumnClass == DbColumnClass.RefTupleRevision))
-			{
-				this.columns = new DbColumn[] { a, b };
-			}
-			else if ((a.ColumnClass == DbColumnClass.RefTupleRevision) &&
-				/**/ (b.ColumnClass == DbColumnClass.RefTupleId))
-			{
-				this.columns = new DbColumn[] { b, a };
-			}
-			else
-			{
-				throw new System.ArgumentException (string.Format ("Invalid columns, DbColumnClass set to {0} and {1}.", a.ColumnClass, b.ColumnClass));
 			}
 		}
 		

@@ -19,13 +19,8 @@ namespace Epsitec.Cresus.Database
 	{
 		Data				= 0,		//	contient des données
 		KeyId				= 1,		//	définit une clef (ID)
-		KeyRevision			= 2,		//	définit une clef (révision)
-		KeyStatus			= 3,		//	définit un statut
-		
-		RefSimpleId			= 4,		//	définit une référence à une clef (ID, version simplifiée)
-		RefLiveId			= 5,		//	définit une référence à une clef (ID, révision = 0)
-		RefTupleId			= 6,		//	définit une référence à une clef (tuple: ID)
-		RefTupleRevision	= 7,		//	définit une référence à une clef (tuple: révision)
+		KeyStatus			= 2,		//	définit un statut
+		RefId				= 3,		//	définit une référence à une clef (ID)
 	}
 	
 	/// <summary>
@@ -181,12 +176,8 @@ namespace Epsitec.Cresus.Database
 			{
 				switch (this.column_class)
 				{
-					case DbColumnClass.RefLiveId:
-					case DbColumnClass.RefSimpleId:
-					case DbColumnClass.RefTupleId:
+					case DbColumnClass.RefId:
 						return Tags.ColumnId;
-					case DbColumnClass.RefTupleRevision:
-						return Tags.ColumnRevision;
 				}
 				
 				throw new System.ArgumentException (string.Format ("Column of invalid class {0}.", this.column_class));
@@ -430,7 +421,6 @@ namespace Epsitec.Cresus.Database
 			switch (this.column_class)
 			{
 				case DbColumnClass.KeyId:
-				case DbColumnClass.KeyRevision:
 				case DbColumnClass.KeyStatus:
 					if (this.Category != DbElementCat.Internal)
 					{
@@ -471,18 +461,6 @@ namespace Epsitec.Cresus.Database
 		
 		public string    CreateDisplayName()
 		{
-			//	Ajoute un suffixe éventuel au nom de la colonne pour distinguer plusieurs
-			//	colonnes qui auraient un même nom. C'est le cas pour les références qui
-			//	sont visibles par l'utilisateur sous le même nom.
-			
-			switch (this.column_class)
-			{
-				case DbColumnClass.RefLiveId:			return this.Name + " (live)";
-				case DbColumnClass.RefSimpleId:			return this.Name;
-				case DbColumnClass.RefTupleId:			return this.Name + " (ID)";
-				case DbColumnClass.RefTupleRevision:	return this.Name + " (REV)";
-			}
-			
 			return this.Name;
 		}
 		
@@ -499,33 +477,15 @@ namespace Epsitec.Cresus.Database
 				return DbSqlStandard.MakeSimpleSqlName (this.Name, DbElementCat.Internal);
 			}
 			
-			string prefix;
-			string suffix;
-			
 			switch (this.column_class)
 			{
 				case DbColumnClass.Data:		return DbSqlStandard.MakeSimpleSqlName (this.Name, this.Category);
 				case DbColumnClass.KeyId:		return Tags.ColumnId;
-				case DbColumnClass.KeyRevision:	return Tags.ColumnRevision;
 				case DbColumnClass.KeyStatus:	return Tags.ColumnStatus;
-				
-				case DbColumnClass.RefLiveId:
-				case DbColumnClass.RefSimpleId:
-				case DbColumnClass.RefTupleId:
-					prefix = "REF";
-					suffix = "ID";
-					break;
-				
-				case DbColumnClass.RefTupleRevision:
-					prefix = "REF";
-					suffix = "REV";
-					break;
-				
-				default:
-					throw new System.NotSupportedException (string.Format ("Column '{0}' column class not supported.", this.Name));
+				case DbColumnClass.RefId:		return DbSqlStandard.MakeSimpleSqlName (this.Name, "REF", "ID");
 			}
 			
-			return DbSqlStandard.MakeSimpleSqlName (this.Name, prefix, suffix);;
+			throw new System.NotSupportedException (string.Format ("Column '{0}' column class not supported.", this.Name));
 		}
 		
 		

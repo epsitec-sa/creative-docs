@@ -189,9 +189,6 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual (db_table1.PrimaryKeys.Count,	db_table2.PrimaryKeys.Count);
 				Assert.AreEqual (db_table1.PrimaryKeys[0].Name,	db_table2.PrimaryKeys[0].Name);
 				Assert.AreEqual (db_table1.Columns.Count,		db_table2.Columns.Count);
-				
-				Assert.IsTrue (infrastructure.FindHighestRowRevision (null, "CR_TABLE_DEF", 1) >= 0);
-				Assert.IsTrue (infrastructure.FindHighestRowRevision (null, "CR_TABLE_DEF", 100) == -1);
 			}
 		}
 		

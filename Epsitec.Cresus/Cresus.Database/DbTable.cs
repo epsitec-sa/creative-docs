@@ -108,28 +108,8 @@ namespace Epsitec.Cresus.Database
 				{
 					switch (column.ColumnClass)
 					{
-						case DbColumnClass.RefLiveId:
-						case DbColumnClass.RefSimpleId:
+						case DbColumnClass.RefId:
 							list.Add (new DbForeignKey (column));
-							break;
-						
-						case DbColumnClass.RefTupleId:
-							DbColumn column_a = column;
-							DbColumn column_b = this.columns[column.Name, DbColumnClass.RefTupleRevision];
-							
-							if (column_b == null)
-							{
-								throw new DbFormatException (string.Format ("Column {0} defines invalid tuple (no revision found).", column_a.Name));
-							}
-							
-							list.Add (new DbForeignKey (column_a, column_b));
-							break;
-						
-						case DbColumnClass.RefTupleRevision:
-							if (this.columns[column.Name, DbColumnClass.RefTupleId] == null)
-							{
-								throw new DbFormatException (string.Format ("Column {0} defines invalid tuple (no ID found).", column.Name));
-							}
 							break;
 					}
 				}
@@ -265,17 +245,6 @@ namespace Epsitec.Cresus.Database
 						long id = (long) row[Tags.ColumnId];
 						
 						key = new DbKey (id);
-					}
-					else if (this.PrimaryKeys.Count == 2)
-					{
-						System.Diagnostics.Debug.Assert (this.PrimaryKeys[0].Name.ToUpper () == Tags.ColumnId);
-						System.Diagnostics.Debug.Assert (this.PrimaryKeys[1].Name.ToUpper () == Tags.ColumnRevision);
-						
-						long id   = (long) row[Tags.ColumnId];
-						int  rev  = (int)  row[Tags.ColumnRevision];
-						int  stat = (int)  row[Tags.ColumnStatus];
-						
-						key = new DbKey (id, rev, DbKey.ConvertFromIntStatus (stat));
 					}
 					break;
 				

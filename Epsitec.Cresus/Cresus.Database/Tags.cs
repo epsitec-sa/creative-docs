@@ -8,7 +8,7 @@ namespace Epsitec.Cresus.Database
 		//	Noms des types "Crésus" fondamentaux :
 		
 		public const string	TypeKeyId			= "CR_KeyIdType";
-		public const string	TypeKeyRevision		= "CR_KeyRevisionType";
+//		public const string	TypeKeyRevision		= "CR_KeyRevisionType";
 		public const string	TypeKeyStatus		= "CR_KeyStatusType";
 		public const string	TypeName			= "CR_NameType";
 		public const string	TypeCaption			= "CR_CaptionType";
@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Database
 		//	Noms des colonnes "Crésus" fondamentales :
 		
 		public const string	ColumnId			= "CR_ID";
-		public const string	ColumnRevision		= "CR_REV";
+//		public const string	ColumnRevision		= "CR_REV";
 		public const string	ColumnStatus		= "CR_STAT";
 		public const string	ColumnName			= "CR_NAME";
 		public const string	ColumnCaption		= "CR_CAPTION";

@@ -13,21 +13,19 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
-		public DbKey(DbID id) : this (id, 0, DbRowStatus.Clean)
+		public DbKey(DbID id) : this (id, DbRowStatus.Clean)
 		{
 		}
 		
-		public DbKey(DbID id, int revision, DbRowStatus status)
+		public DbKey(DbID id, DbRowStatus status)
 		{
 			this.id         = id;
-			this.revision   = revision;
 			this.int_status = DbKey.ConvertToIntStatus (status);
 		}
 		
 		public DbKey(System.Data.DataRow data_row)
 		{
 			object value_id       = data_row[Tags.ColumnId];
-			object value_revision = data_row[Tags.ColumnRevision];
 			object value_status   = data_row[Tags.ColumnStatus];
 			
 			long id;
@@ -35,14 +33,11 @@ namespace Epsitec.Cresus.Database
 			if ((Common.Types.Converter.Convert (value_id, out id)) &&
 				(id >= 0))
 			{
-				int   revision;
 				short status;
 				
-				Common.Types.Converter.Convert (value_revision, out revision);
 				Common.Types.Converter.Convert (value_status, out status);
 				
 				this.id         = id;
-				this.revision   = revision;
 				this.int_status = status;
 			}
 			else
@@ -59,7 +54,10 @@ namespace Epsitec.Cresus.Database
 		
 		public int								Revision
 		{
-			get { return this.revision; }
+			get
+			{
+				throw new System.NotImplementedException ();
+			}
 		}
 		
 		public DbRowStatus						Status
@@ -131,18 +129,15 @@ namespace Epsitec.Cresus.Database
 			//	une instance de DbKey. Retourne null si aucun attribut ne correspond.
 			
 			string arg_id   = xml.GetAttribute ("key.id");
-			string arg_rev  = xml.GetAttribute ("key.rev");
 			string arg_stat = xml.GetAttribute ("key.stat");
 			
 			if ((arg_id == "") &&
-				(arg_rev == "") &&
 				(arg_stat == ""))
 			{
 				return null;
 			}
 			
 			DbID id         = 0;
-			int  revision   = 0;
 			int  int_status = 0;
 			
 			if (arg_id.Length > 0)
@@ -150,17 +145,12 @@ namespace Epsitec.Cresus.Database
 				id = System.Int64.Parse (arg_id, System.Globalization.CultureInfo.InvariantCulture);
 			}
 			
-			if (arg_rev.Length > 0)
-			{
-				revision = System.Int32.Parse (arg_rev, System.Globalization.CultureInfo.InvariantCulture);
-			}
-			
 			if (arg_stat.Length > 0)
 			{
 				int_status = System.Int32.Parse (arg_stat, System.Globalization.CultureInfo.InvariantCulture);
 			}
 			
-			return new DbKey (id, revision, DbKey.ConvertFromIntStatus (int_status));
+			return new DbKey (id, DbKey.ConvertFromIntStatus (int_status));
 		}
 		
 		
@@ -181,7 +171,6 @@ namespace Epsitec.Cresus.Database
 			DbKey that = o as DbKey;
 			
 			that.id         = this.id;
-			that.revision   = this.revision;
 			that.int_status = this.int_status;
 			
 			return that;
@@ -196,11 +185,6 @@ namespace Epsitec.Cresus.Database
 			if (key == null)
 			{
 				return 1;
-			}
-			
-			if (this.id == key.id)
-			{
-				return this.revision.CompareTo (key.revision);
 			}
 			
 			return this.id.CompareTo (key.id);
@@ -220,17 +204,17 @@ namespace Epsitec.Cresus.Database
 				return false;
 			}
 			
-			return (key.id == this.id) && (key.revision == this.revision);
+			return (key.id == this.id);
 		}
 		
 		public override int GetHashCode()
 		{
-			return this.id.GetHashCode () ^ (this.revision);
+			return this.id.GetHashCode ();
 		}
 		
 		public override string ToString()
 		{
-			return string.Format ("[{0}.{1}]", this.id, this.revision);
+			return string.Format ("[{0}]", this.id);
 		}
 		#endregion
 		
@@ -239,13 +223,6 @@ namespace Epsitec.Cresus.Database
 			buffer.Append (@" key.id=""");
 			buffer.Append (this.id.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			buffer.Append (@"""");
-			
-			if (this.revision != 0)
-			{
-				buffer.Append (@" key.rev=""");
-				buffer.Append (this.revision.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (@"""");
-			}
 			
 			if (this.int_status != 0)
 			{
@@ -257,21 +234,12 @@ namespace Epsitec.Cresus.Database
 		
 		
 		public const DbRawType					RawTypeForId		= DbRawType.Int64;
-		public const DbRawType					RawTypeForRevision	= DbRawType.Int32;
 		public const DbRawType					RawTypeForStatus	= DbRawType.Int16;
 		
 		private static object					temp_lock	= new object ();
 		private static long						temp_id		= DbID.MinimumTemp;
 		
 		protected DbID							id;
-		protected int							revision;
 		protected short							int_status;
-	}
-	
-	public enum DbKeyMatchMode
-	{
-		SimpleId,								//	ne compare que l'identificateur (ID)
-		LiveId,									//	compare l'identificateur, révision=0
-		ExactIdRevision							//	compare l'identificateur et la révision
 	}
 }

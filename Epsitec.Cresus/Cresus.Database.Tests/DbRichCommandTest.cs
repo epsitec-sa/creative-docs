@@ -19,13 +19,12 @@ namespace Epsitec.Cresus.Database
 			
 			DbType db_type_name = infrastructure.ResolveDbType (null, "CR_NameType");
 			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR_KeyIdType");
-			DbType db_type_rev  = infrastructure.ResolveDbType (null, "CR_KeyRevisionType");
 			DbType db_type_npa  = infrastructure.ResolveDbType (null, "CR_KeyRevisionType");
 			
 			db_table_a.Columns.Add (infrastructure.CreateColumn ("Nom", db_type_name));
 			db_table_a.Columns.Add (infrastructure.CreateColumn ("Prenom", db_type_name));
 			
-			db_table_b.Columns.AddRange (infrastructure.CreateRefColumns ("Personne", "Personnes", DbKeyMatchMode.ExactIdRevision, Nullable.Yes));
+			db_table_b.Columns.AddRange (infrastructure.CreateRefColumns ("Personne", "Personnes", Nullable.Yes));
 			db_table_b.Columns.Add (infrastructure.CreateColumn ("Ville", db_type_name));
 			db_table_b.Columns.Add (infrastructure.CreateColumn ("NPA", db_type_npa, Nullable.No));
 			
@@ -130,10 +129,9 @@ namespace Epsitec.Cresus.Database
 			
 			DbType db_type_name = infrastructure.ResolveDbType (null, "CR_NameType");
 			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR_KeyIdType");
-			DbType db_type_rev  = infrastructure.ResolveDbType (null, "CR_KeyRevisionType");
 			
-			Assertion.AssertEquals (5, db_table_a.Columns.Count);
-			Assertion.AssertEquals (7, db_table_b.Columns.Count);
+			Assertion.AssertEquals (4, db_table_a.Columns.Count);
+			Assertion.AssertEquals (6, db_table_b.Columns.Count);
 			
 			Assertion.AssertEquals ("Nom",    db_table_a.Columns[3].Name);
 			Assertion.AssertEquals ("Prenom", db_table_a.Columns[4].Name);
@@ -141,12 +139,8 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (db_type_name.InternalKey,  db_table_a.Columns[4].Type.InternalKey);
 			
 			Assertion.AssertEquals ("Personne", db_table_b.Columns[3].Name);
-			Assertion.AssertEquals (DbColumnClass.RefTupleId, db_table_b.Columns[3].ColumnClass);
+			Assertion.AssertEquals (DbColumnClass.RefId, db_table_b.Columns[3].ColumnClass);
 			Assertion.AssertEquals ("Personnes", db_table_b.Columns[3].ParentTableName);
-			
-			Assertion.AssertEquals ("Personne", db_table_b.Columns[4].Name);
-			Assertion.AssertEquals (DbColumnClass.RefTupleRevision, db_table_b.Columns[4].ColumnClass);
-			Assertion.AssertEquals ("Personnes", db_table_b.Columns[4].ParentTableName);
 			
 			Assertion.AssertEquals ("Ville", db_table_b.Columns[5].Name);
 			Assertion.AssertEquals (db_type_name.InternalKey, db_table_b.Columns[5].Type.InternalKey);

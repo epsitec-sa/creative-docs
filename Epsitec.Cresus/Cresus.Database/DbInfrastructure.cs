@@ -115,7 +115,6 @@ namespace Epsitec.Cresus.Database
 				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableEnumValDef));
 			
 				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeKeyId));
-				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeKeyRevision));
 				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeKeyStatus));
 				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeName));
 				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeCaption));
@@ -245,12 +244,8 @@ namespace Epsitec.Cresus.Database
 			
 			this.CheckForKnownTable (transaction, table);
 			
-			int revision = this.FindHighestRowRevision (transaction, Tags.TableTableDef, table.InternalKey.Id) + 1;
-			
-			System.Diagnostics.Debug.Assert (revision > 0);
-			
 			DbKey old_key = table.InternalKey;
-			DbKey new_key = new DbKey (old_key.Id, revision, DbRowStatus.Deleted);
+			DbKey new_key = new DbKey (old_key.Id, DbRowStatus.Deleted);
 			
 			this.UpdateKeyInRow (transaction, Tags.TableTableDef, old_key, new_key);
 		}
@@ -339,40 +334,18 @@ namespace Epsitec.Cresus.Database
 			throw new System.NotImplementedException ("CreateLocalisedColumns not implemented.");
 		}
 		
-		public DbColumn[] CreateRefColumns(string column_name, string parent_table_name, DbKeyMatchMode match_mode)
+		public DbColumn[] CreateRefColumns(string column_name, string parent_table_name)
 		{
-			return this.CreateRefColumns (column_name, parent_table_name, match_mode, Nullable.Undefined);
+			return this.CreateRefColumns (column_name, parent_table_name, Nullable.Undefined);
 		}
 		
-		public DbColumn[] CreateRefColumns(string column_name, string parent_table_name, DbKeyMatchMode match_mode, Nullable nullable)
+		public DbColumn[] CreateRefColumns(string column_name, string parent_table_name, Nullable nullable)
 		{
 			//	Crée la ou les colonnes nécessaires à la définition d'une référence à une autre
 			//	table.
 			
-			DbType type_id;
-			DbType type_rev;
-			
-			switch (match_mode)
-			{
-				case DbKeyMatchMode.SimpleId:
-					type_id = this.internal_types[Tags.TypeKeyId];
-					
-					return new DbColumn[] { DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefSimpleId, type_id, nullable) };
-				
-				case DbKeyMatchMode.LiveId:
-					type_id = this.internal_types[Tags.TypeKeyId];
-					
-					return new DbColumn[] { DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefLiveId, type_id, nullable) };
-				
-				case DbKeyMatchMode.ExactIdRevision:
-					type_id  = this.internal_types[Tags.TypeKeyId];
-					type_rev = this.internal_types[Tags.TypeKeyRevision];
-					
-					return new DbColumn[] { DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefTupleId, type_id, nullable),
-						/**/				DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefTupleRevision, type_rev, nullable) };
-			}
-			
-			return null;
+			DbType type_id = this.internal_types[Tags.TypeKeyId];
+			return new DbColumn[] { DbColumn.CreateRefColumn (column_name, parent_table_name, DbColumnClass.RefId, type_id, nullable) };
 		}
 		
 		
@@ -403,10 +376,7 @@ namespace Epsitec.Cresus.Database
 				
 				switch (column.ColumnClass)
 				{
-					case DbColumnClass.RefLiveId:
-					case DbColumnClass.RefSimpleId:
-					case DbColumnClass.RefTupleId:
-					case DbColumnClass.RefTupleRevision:
+					case DbColumnClass.RefId:
 						
 						string parent_name = column.ParentTableName;
 						
@@ -463,10 +433,9 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			Collections.SqlFields conds  = new Collections.SqlFields ();
 			
-			fields.Add (Tags.ColumnRefParent, SqlField.CreateConstant (parent_table_key.Id, DbRawType.Int64));
-			
-			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnId), SqlField.CreateConstant (source_column_key.Id, DbRawType.Int64)));
-			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnRevision), SqlField.CreateConstant (0, DbRawType.Int32)));
+			fields.Add (Tags.ColumnRefParent, SqlField.CreateConstant (parent_table_key.Id, DbKey.RawTypeForId));
+
+			this.AddKeyExtraction (conds, source_column_key);
 			
 			this.sql_builder.UpdateData (Tags.TableColumnDef, fields, conds);
 			this.ExecuteSilent (transaction);
@@ -561,12 +530,8 @@ namespace Epsitec.Cresus.Database
 			
 			this.CheckForKnownType (transaction, type);
 			
-			int revision = this.FindHighestRowRevision (transaction, Tags.TableTypeDef, type.InternalKey.Id) + 1;
-			
-			System.Diagnostics.Debug.Assert (revision > 0);
-			
 			DbKey old_key = type.InternalKey;
-			DbKey new_key = new DbKey (old_key.Id, revision, DbRowStatus.Deleted);
+			DbKey new_key = new DbKey (old_key.Id, DbRowStatus.Deleted);
 			
 			this.UpdateKeyInRow (transaction, Tags.TableTypeDef, old_key, new_key);
 		}
@@ -630,14 +595,10 @@ namespace Epsitec.Cresus.Database
 			DbType type = this.internal_types[Tags.TypeKeyId];
 			
 			DbColumn col_id   = new DbColumn (Tags.ColumnId,       this.internal_types[Tags.TypeKeyId]);
-			DbColumn col_rev  = new DbColumn (Tags.ColumnRevision, this.internal_types[Tags.TypeKeyRevision]);
 			DbColumn col_stat = new DbColumn (Tags.ColumnStatus,   this.internal_types[Tags.TypeKeyStatus]);
 			
 			col_id.DefineCategory (DbElementCat.Internal);
 			col_id.DefineColumnClass (DbColumnClass.KeyId);
-			
-			col_rev.DefineCategory (DbElementCat.Internal);
-			col_rev.DefineColumnClass (DbColumnClass.KeyRevision);
 			
 			col_stat.DefineCategory (DbElementCat.Internal);
 			col_stat.DefineColumnClass (DbColumnClass.KeyStatus);
@@ -645,11 +606,9 @@ namespace Epsitec.Cresus.Database
 			table.DefineCategory (DbElementCat.UserDataManaged);
 			
 			table.Columns.Add (col_id);
-			table.Columns.Add (col_rev);
 			table.Columns.Add (col_stat);
 			
 			table.PrimaryKeys.Add (col_id);
-			table.PrimaryKeys.Add (col_rev);
 			
 			return table;
 		}
@@ -953,7 +912,6 @@ namespace Epsitec.Cresus.Database
 			SqlSelect query = new SqlSelect ();
 			
 			query.Fields.Add ("T_ID",   SqlField.CreateName ("T", Tags.ColumnId));
-			query.Fields.Add ("T_REV",	SqlField.CreateName ("T", Tags.ColumnRevision));
 			query.Fields.Add ("T_STAT",	SqlField.CreateName ("T", Tags.ColumnStatus));
 			
 			query.Tables.Add ("T", SqlField.CreateName (table_name));
@@ -974,14 +932,12 @@ namespace Epsitec.Cresus.Database
 				System.Data.DataRow row = data_table.Rows[i];
 				
 				long id;
-				int  revision;
 				int  status;
 				
 				Converter.Convert (row["T_ID"],   out id);
-				Converter.Convert (row["T_REV"],  out revision);
 				Converter.Convert (row["T_STAT"], out status);
 				
-				keys[i] = new DbKey (id, revision, DbKey.ConvertFromIntStatus (status));
+				keys[i] = new DbKey (id, DbKey.ConvertFromIntStatus (status));
 			}
 			
 			return keys;
@@ -991,15 +947,16 @@ namespace Epsitec.Cresus.Database
 		public int CountMatchingRows(DbTransaction transaction, string table, string name_column, string value)
 		{
 			//	Compte combien de lignes dans la table ont le texte spécifié dans la colonne spécifiée.
-			//	Ne considère que les lignes dont la révision est zéro.
+			//	Ne considère que les lignes actives.
 			
 			SqlSelect query = new SqlSelect ();
 			
 			query.Fields.Add ("N", new SqlAggregate (SqlAggregateType.Count, SqlField.CreateAll ()));
 			query.Tables.Add ("T", SqlField.CreateName (table));
 			
-			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (name_column), SqlField.CreateConstant (value, DbRawType.String)));
-			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnRevision), SqlField.CreateConstant (0, DbRawType.Int32)));
+			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName ("T", name_column), SqlField.CreateConstant (value, DbRawType.String)));
+
+			this.AddKeyExtraction (query, "T", DbRowSearchMode.LiveOrClean);
 			
 			this.sql_builder.SelectData (query);
 			
@@ -1011,31 +968,6 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public int FindHighestRowRevision(DbTransaction transaction, string table, long id)
-		{
-			//	Trouve la révision la plus élevée (-1 si aucune n'est trouvée) pour une clef
-			//	donnée.
-			
-			SqlSelect query = new SqlSelect ();
-			
-			query.Fields.Add ("R", new SqlAggregate (SqlAggregateType.Max, SqlField.CreateName (Tags.ColumnRevision)));
-			query.Tables.Add ("T", SqlField.CreateName (table));
-			
-			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnId), SqlField.CreateConstant (id, DbRawType.Int64)));
-			
-			this.sql_builder.SelectData (query);
-			
-			object result  = this.ExecuteScalar (transaction);
-			int    max_rev = -1;
-			
-			if (Converter.IsNotNull (result))
-			{
-				Converter.Convert (result, out max_rev);
-			}
-			
-			return max_rev;
-		}
-		
 		public void UpdateKeyInRow(DbTransaction transaction, string table, DbKey old_key, DbKey new_key)
 		{
 			//	Met à jour la clef de la ligne spécifiée.
@@ -1043,12 +975,10 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			Collections.SqlFields conds  = new Collections.SqlFields ();
 			
-			fields.Add (Tags.ColumnId,       SqlField.CreateConstant (new_key.Id,        DbKey.RawTypeForId));
-			fields.Add (Tags.ColumnRevision, SqlField.CreateConstant (new_key.Revision,  DbKey.RawTypeForRevision));
-			fields.Add (Tags.ColumnStatus,   SqlField.CreateConstant (new_key.IntStatus, DbKey.RawTypeForStatus));
-			
-			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnId),       SqlField.CreateConstant (old_key.Id,       DbRawType.Int64)));
-			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnRevision), SqlField.CreateConstant (old_key.Revision, DbRawType.Int32)));
+			fields.Add (Tags.ColumnId,     SqlField.CreateConstant (new_key.Id,        DbKey.RawTypeForId));
+			fields.Add (Tags.ColumnStatus, SqlField.CreateConstant (new_key.IntStatus, DbKey.RawTypeForStatus));
+
+			this.AddKeyExtraction (conds, old_key);
 			
 			this.sql_builder.UpdateData (table, fields, conds);
 			
@@ -1097,14 +1027,11 @@ namespace Epsitec.Cresus.Database
 			
 			if (key == null)
 			{
-				//	On extrait toutes les définitions de tables qui correspondent à la version
-				//	'active' (CR_REV = 0). Extrait aussi les colonnes correspondantes.
+				//	On extrait toutes les définitions de tables qui correspondent à une version
+				//	'active' (ignore les versions archivées et détruites). Extrait aussi les colonnes
+				//	correspondantes.
 				
-				SqlField table_rev_name = SqlField.CreateName ("T_TABLE", Tags.ColumnRevision);
-				SqlField table_rev_zero = SqlField.CreateConstant (0, DbRawType.Int32);
-				
-				query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, table_rev_name, table_rev_zero));
-				
+				this.AddKeyExtraction (query, "T_TABLE", DbRowSearchMode.LiveOrClean);
 				this.AddKeyExtraction (query, "T_COLUMN", Tags.ColumnRefTable, "T_TABLE");
 			}
 			else
@@ -1112,7 +1039,7 @@ namespace Epsitec.Cresus.Database
 				//	On extrait toutes les lignes de T_TABLE qui ont un CR_ID = key, ainsi que
 				//	les lignes correspondantes de T_COLUMN qui ont un CREF_TABLE = key.
 				
-				this.AddKeyExtraction (query, key, "T_TABLE", DbKeyMatchMode.ExactIdRevision);
+				this.AddKeyExtraction (query, "T_TABLE", key);
 				this.AddKeyExtraction (query, "T_COLUMN", Tags.ColumnRefTable, key);
 			}
 			
@@ -1251,19 +1178,15 @@ namespace Epsitec.Cresus.Database
 			if (key == null)
 			{
 				//	On extrait toutes les définitions de types qui correspondent à la version
-				//	'active' (CR_REV = 0).
+				//	'active'.
 				
-				SqlField type_rev_name = SqlField.CreateName ("T_TYPE", Tags.ColumnRevision);
-				SqlField type_rev_zero = SqlField.CreateConstant (0, DbRawType.Int32);
-				
-				query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, type_rev_name, type_rev_zero));
+				this.AddKeyExtraction (query, "T_TYPE", DbRowSearchMode.LiveOrClean);
 			}
 			else
 			{
-				//	Cherche la ligne de la table dont 'CR_ID = key' en ne considérant que
-				//	l'ID et dont la révision = 0.
+				//	Cherche la ligne de la table dont 'CR_ID = key'.
 				
-				this.AddKeyExtraction (query, key, "T_TYPE", DbKeyMatchMode.LiveId);
+				this.AddKeyExtraction (query, "T_TYPE", key);
 			}
 			
 			System.Data.DataTable        data_table = this.ExecuteSqlSelect (transaction, query, 1);
@@ -1328,8 +1251,7 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (Tags.ColumnNextId, new SqlFunction (SqlFunctionType.MathAdd, field_next_id, field_const_n));
 			
-			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnId), SqlField.CreateConstant (key.Id, DbRawType.Int64)));
-			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnRevision), SqlField.CreateConstant (key.Revision, DbRawType.Int32)));
+			this.AddKeyExtraction (conds, key);
 			
 			if (num_keys != 0)
 			{
@@ -1338,11 +1260,12 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			SqlSelect query = new SqlSelect ();
-			
+
+			System.Diagnostics.Debug.Assert (conds.Count == 1);
+
 			query.Fields.Add (field_next_id);
 			query.Tables.Add (SqlField.CreateName (Tags.TableTableDef));
 			query.Conditions.Add (conds[0]);
-			query.Conditions.Add (conds[1]);
 			
 			this.sql_builder.SelectData (query);
 			
@@ -1464,30 +1387,21 @@ namespace Epsitec.Cresus.Database
 				query.Fields.Add (index, SqlField.CreateName (table, column));
 			}
 		}
-		
-		
-		protected void AddKeyExtraction(SqlSelect query, DbKey key, string parent_table_name, DbKeyMatchMode mode)
+
+		protected void AddKeyExtraction(Collections.SqlFields conditions, DbKey key)
 		{
-			SqlField name_col_id = SqlField.CreateName (parent_table_name, Tags.ColumnId);
-			SqlField constant_id = SqlField.CreateConstant (key.Id, DbRawType.Int64);
+			SqlField name_col_id = SqlField.CreateName (Tags.ColumnId);
+			SqlField constant_id = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
+			
+			conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, name_col_id, constant_id));
+		}
+
+		protected void AddKeyExtraction(SqlSelect query, string table_name, DbKey key)
+		{
+			SqlField name_col_id = SqlField.CreateName (table_name, Tags.ColumnId);
+			SqlField constant_id = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
 			
 			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, name_col_id, constant_id));
-			
-			int revision = 0;
-			
-			if (mode == DbKeyMatchMode.ExactIdRevision)
-			{
-				revision = key.Revision;
-			}
-			
-			if ((mode == DbKeyMatchMode.LiveId) ||
-				(mode == DbKeyMatchMode.ExactIdRevision))
-			{
-				SqlField name_col_rev = SqlField.CreateName (parent_table_name, Tags.ColumnRevision);
-				SqlField constant_rev = SqlField.CreateConstant (revision, DbRawType.Int32);
-			
-				query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, name_col_rev, constant_rev));
-			}
 		}
 		
 		protected void AddKeyExtraction(SqlSelect query, string source_table_name, string source_col_id, string parent_table_name)
@@ -1501,12 +1415,61 @@ namespace Epsitec.Cresus.Database
 		protected void AddKeyExtraction(SqlSelect query, string source_table_name, string source_col_id, DbKey key)
 		{
 			SqlField source_col  = SqlField.CreateName (source_table_name, source_col_id);
-			SqlField constant_id = SqlField.CreateConstant (key.Id, DbRawType.Int64);
+			SqlField constant_id = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
 			
 			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, source_col, constant_id));
 		}
-		
-		
+
+		protected void AddKeyExtraction(SqlSelect query, string table_name, DbRowSearchMode search_mode)
+		{
+			SqlFunctionType function;
+			DbRowStatus status;
+			
+			switch (search_mode)
+			{
+				case DbRowSearchMode.Clean:
+					status = DbRowStatus.Clean;
+					function = SqlFunctionType.CompareEqual;
+					break;
+				
+				case DbRowSearchMode.Live:
+					status = DbRowStatus.Live;
+					function = SqlFunctionType.CompareEqual;
+					break;
+				
+				case DbRowSearchMode.LiveOrClean:
+					status = DbRowStatus.Archive;
+					function = SqlFunctionType.CompareLessThan;
+					break;
+				
+				case DbRowSearchMode.All:
+					return;
+				
+				case DbRowSearchMode.Archive:
+					status = DbRowStatus.Archive;
+					function = SqlFunctionType.CompareEqual;
+					break;
+
+				case DbRowSearchMode.NotDeleted:
+					status = DbRowStatus.Deleted;
+					function = SqlFunctionType.CompareLessThan;
+					break;
+
+				case DbRowSearchMode.Deleted:
+					status = DbRowStatus.Deleted;
+					function = SqlFunctionType.CompareEqual;
+					break;
+				default:
+					throw new System.ArgumentException (string.Format ("Search mode {0} not supported.", search_mode), "search_mode");
+			}
+
+			SqlField name_status = SqlField.CreateName (table_name, Tags.ColumnStatus);
+			SqlField const_status = SqlField.CreateConstant (DbKey.ConvertToIntStatus (status), DbKey.RawTypeForStatus);
+
+			query.Conditions.Add (new SqlFunction (function, name_status, const_status));
+		}
+
+
 		protected void SetCategory(DbColumn[] columns, DbElementCat cat)
 		{
 			for (int i = 0; i < columns.Length; i++)
@@ -1520,22 +1483,20 @@ namespace Epsitec.Cresus.Database
 		protected void BootCreateTableTableDef(DbTransaction transaction)
 		{
 			DbTable    table   = new DbTable (Tags.TableTableDef);
-			DbColumn[] columns = new DbColumn[8];
+			DbColumn[] columns = new DbColumn[7];
 			
 			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
-			columns[1] = new DbColumn (Tags.ColumnRevision,		this.num_type_revision);
-			columns[2] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
-			columns[3] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
-			columns[4] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
-			columns[5] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
-			columns[6] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
-			columns[7] = new DbColumn (Tags.ColumnNextId,		this.num_type_id);
+			columns[1] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
+			columns[2] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
+			columns[3] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
+			columns[4] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
+			columns[5] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
+			columns[6] = new DbColumn (Tags.ColumnNextId,		this.num_type_id);
 			
 			columns[0].DefineColumnClass (DbColumnClass.KeyId);
-			columns[1].DefineColumnClass (DbColumnClass.KeyRevision);
-			columns[2].DefineColumnClass (DbColumnClass.KeyStatus);
+			columns[1].DefineColumnClass (DbColumnClass.KeyStatus);
+			columns[3].DefineColumnLocalisation (DbColumnLocalisation.Default);
 			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
 			
 			this.SetCategory (columns, DbElementCat.Internal);
 			
@@ -1558,25 +1519,23 @@ namespace Epsitec.Cresus.Database
 			DbColumn[] columns = new DbColumn[10];
 			
 			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
-			columns[1] = new DbColumn (Tags.ColumnRevision,		this.num_type_revision);
-			columns[2] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
-			columns[3] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
-			columns[4] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
-			columns[5] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
-			columns[6] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
-			columns[7] = new DbColumn (Tags.ColumnRefTable,		this.num_type_id);
-			columns[8] = new DbColumn (Tags.ColumnRefType,		this.num_type_id);
-			columns[9] = new DbColumn (Tags.ColumnRefParent,	this.num_type_id, Nullable.Yes);
+			columns[1] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
+			columns[2] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
+			columns[3] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
+			columns[4] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
+			columns[5] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
+			columns[6] = new DbColumn (Tags.ColumnRefTable,		this.num_type_id);
+			columns[7] = new DbColumn (Tags.ColumnRefType,		this.num_type_id);
+			columns[8] = new DbColumn (Tags.ColumnRefParent,	this.num_type_id, Nullable.Yes);
 			
 			columns[0].DefineColumnClass (DbColumnClass.KeyId);
-			columns[1].DefineColumnClass (DbColumnClass.KeyRevision);
-			columns[2].DefineColumnClass (DbColumnClass.KeyStatus);
+			columns[1].DefineColumnClass (DbColumnClass.KeyStatus);
+			columns[3].DefineColumnLocalisation (DbColumnLocalisation.Default);
 			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			columns[7].DefineColumnClass (DbColumnClass.RefLiveId);
-			columns[8].DefineColumnClass (DbColumnClass.RefLiveId);
-			columns[9].DefineColumnClass (DbColumnClass.RefLiveId);
-			
+			columns[6].DefineColumnClass (DbColumnClass.RefId);
+			columns[7].DefineColumnClass (DbColumnClass.RefId);
+			columns[8].DefineColumnClass (DbColumnClass.RefId);
+
 			this.SetCategory (columns, DbElementCat.Internal);
 			
 			table.DefineCategory (DbElementCat.Internal);
@@ -1598,18 +1557,16 @@ namespace Epsitec.Cresus.Database
 			DbColumn[] columns = new DbColumn[7];
 			
 			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
-			columns[1] = new DbColumn (Tags.ColumnRevision,		this.num_type_revision);
-			columns[2] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
-			columns[3] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
-			columns[4] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
-			columns[5] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
-			columns[6] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
+			columns[1] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
+			columns[2] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
+			columns[3] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
+			columns[4] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
+			columns[5] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
 			
 			columns[0].DefineColumnClass (DbColumnClass.KeyId);
-			columns[1].DefineColumnClass (DbColumnClass.KeyRevision);
-			columns[2].DefineColumnClass (DbColumnClass.KeyStatus);
+			columns[1].DefineColumnClass (DbColumnClass.KeyStatus);
+			columns[3].DefineColumnLocalisation (DbColumnLocalisation.Default);
 			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
 			
 			this.SetCategory (columns, DbElementCat.Internal);
 			
@@ -1632,20 +1589,18 @@ namespace Epsitec.Cresus.Database
 			DbColumn[] columns = new DbColumn[8];
 			
 			columns[0] = new DbColumn (Tags.ColumnId,			this.num_type_id);
-			columns[1] = new DbColumn (Tags.ColumnRevision,		this.num_type_revision);
-			columns[2] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
-			columns[3] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
-			columns[4] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
-			columns[5] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
-			columns[6] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
-			columns[7] = new DbColumn (Tags.ColumnRefType,		this.num_type_id);
+			columns[1] = new DbColumn (Tags.ColumnStatus,		this.num_type_status);
+			columns[2] = new DbColumn (Tags.ColumnName,			this.str_type_name, Nullable.No);
+			columns[3] = new DbColumn (Tags.ColumnCaption,		this.str_type_caption, Nullable.Yes);
+			columns[4] = new DbColumn (Tags.ColumnDescription,	this.str_type_description, Nullable.Yes);
+			columns[5] = new DbColumn (Tags.ColumnInfoXml,		this.str_type_info_xml, Nullable.No);
+			columns[6] = new DbColumn (Tags.ColumnRefType,		this.num_type_id);
 			
 			columns[0].DefineColumnClass (DbColumnClass.KeyId);
-			columns[1].DefineColumnClass (DbColumnClass.KeyRevision);
-			columns[2].DefineColumnClass (DbColumnClass.KeyStatus);
+			columns[1].DefineColumnClass (DbColumnClass.KeyStatus);
+			columns[3].DefineColumnLocalisation (DbColumnLocalisation.Default);
 			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			columns[7].DefineColumnClass (DbColumnClass.RefLiveId);
+			columns[6].DefineColumnClass (DbColumnClass.RefId);
 			
 			this.SetCategory (columns, DbElementCat.Internal);
 			
@@ -1673,7 +1628,6 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			
 			fields.Add (type_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, type.InternalKey.Id));
-			fields.Add (type_def.Columns[Tags.ColumnRevision].CreateSqlField (this.type_converter, type.InternalKey.Revision));
 			fields.Add (type_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, type.InternalKey.IntStatus));
 			fields.Add (type_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, type.Name));
 			fields.Add (type_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTypeFactory.SerializeToXml (type, false)));
@@ -1692,7 +1646,6 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			
 			fields.Add (enum_def.Columns[Tags.ColumnId]	     .CreateSqlField (this.type_converter, value.InternalKey.Id));
-			fields.Add (enum_def.Columns[Tags.ColumnRevision].CreateSqlField (this.type_converter, value.InternalKey.Revision));
 			fields.Add (enum_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, value.InternalKey.IntStatus));
 			fields.Add (enum_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, value.Name));
 			fields.Add (enum_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbEnumValue.SerializeToXml (value, false)));
@@ -1712,7 +1665,6 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			
 			fields.Add (table_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, table.InternalKey.Id));
-			fields.Add (table_def.Columns[Tags.ColumnRevision].CreateSqlField (this.type_converter, table.InternalKey.Revision));
 			fields.Add (table_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, table.InternalKey.IntStatus));
 			fields.Add (table_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, table.Name));
 			fields.Add (table_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTable.SerializeToXml (table, false)));
@@ -1728,9 +1680,8 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFields conds  = new Collections.SqlFields ();
 			
 			fields.Add (Tags.ColumnNextId, SqlField.CreateConstant (next_id, DbRawType.Int64));
-			
-			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnId), SqlField.CreateConstant (key.Id, DbRawType.Int64)));
-			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnRevision), SqlField.CreateConstant (key.Revision, DbRawType.Int32)));
+
+			this.AddKeyExtraction (conds, key);
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Table {0}, next ID will be {1}.", key, next_id));
 			
@@ -1748,7 +1699,6 @@ namespace Epsitec.Cresus.Database
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			
 			fields.Add (column_def.Columns[Tags.ColumnId]      .CreateSqlField (this.type_converter, column.InternalKey.Id));
-			fields.Add (column_def.Columns[Tags.ColumnRevision].CreateSqlField (this.type_converter, column.InternalKey.Revision));
 			fields.Add (column_def.Columns[Tags.ColumnStatus]  .CreateSqlField (this.type_converter, column.InternalKey.IntStatus));
 			fields.Add (column_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, column.Name));
 			fields.Add (column_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbColumn.SerializeToXml (column, false)));
@@ -1769,9 +1719,8 @@ namespace Epsitec.Cresus.Database
 			DbColumn column = source.Columns[src_column_name];
 			
 			fields.Add (Tags.ColumnRefParent, SqlField.CreateConstant (parent.InternalKey.Id, DbRawType.Int64));
-			
-			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnId), SqlField.CreateConstant (column.InternalKey.Id, DbRawType.Int64)));
-			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnRevision), SqlField.CreateConstant (0, DbRawType.Int32)));
+
+			this.AddKeyExtraction (conds, column.InternalKey);
 			
 			this.sql_builder.UpdateData (Tags.TableColumnDef, fields, conds);
 			this.ExecuteSilent (transaction);
@@ -1857,11 +1806,9 @@ namespace Epsitec.Cresus.Database
 		protected void InitialiseNumDefs()
 		{
 			this.num_type_id       = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId),       Tags.Name + "=" + Tags.TypeKeyId);
-			this.num_type_revision = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForRevision), Tags.Name + "=" + Tags.TypeKeyRevision);
 			this.num_type_status   = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForStatus),   Tags.Name + "=" + Tags.TypeKeyStatus);
 			
 			this.internal_types.Add (this.num_type_id);
-			this.internal_types.Add (this.num_type_revision);
 			this.internal_types.Add (this.num_type_status);
 		}
 		

@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Database
 		[Test] public void CheckDbKeyXml()
 		{
 			DbKey k0 = null;
-			DbKey k1 = new DbKey (1, 2, DbRowStatus.Archive);
+			DbKey k1 = new DbKey (1, DbRowStatus.Archive);
 			DbKey k2 = new DbKey ();
 			DbKey k3 = new DbKey (10);
 			

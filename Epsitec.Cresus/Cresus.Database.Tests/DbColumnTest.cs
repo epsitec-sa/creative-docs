@@ -48,16 +48,11 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void CheckNewDbColumnForeignKey()
 		{
-			DbColumn column_1 = DbColumn.CreateRefColumn ("A", "ParentTable", DbColumnClass.RefSimpleId, new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId)), Nullable.Yes);
-			DbColumn column_2 = DbColumn.CreateRefColumn ("B", "ParentTable", DbColumnClass.RefTupleRevision, new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForRevision)), Nullable.Yes);
+			DbColumn column_1 = DbColumn.CreateRefColumn ("A", "ParentTable", DbColumnClass.RefId, new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId)), Nullable.Yes);
 			
 			Assert.AreEqual ("A", column_1.Name);
 			Assert.AreEqual ("ParentTable", column_1.ParentTableName);
 			Assert.AreEqual ("CR_ID", column_1.ParentColumnName);
-			
-			Assert.AreEqual ("B", column_2.Name);
-			Assert.AreEqual ("ParentTable", column_2.ParentTableName);
-			Assert.AreEqual ("CR_REV", column_2.ParentColumnName);
 		}
 		
 		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckNewDbColumnForeignKeyEx()

@@ -266,7 +266,6 @@ namespace Epsitec.Cresus.Database
 								
 								data_row.BeginEdit ();
 								data_row[Tags.ColumnId]       = key.Id;
-								data_row[Tags.ColumnRevision] = key.Revision;
 								data_row[Tags.ColumnStatus]   = key.IntStatus;
 								data_row.EndEdit ();
 							}
@@ -299,10 +298,9 @@ namespace Epsitec.Cresus.Database
 			
 			data_row = table.NewRow ();
 			
-			DbKey key = new DbKey (DbKey.CreateTemporaryId (), 0, DbRowStatus.Live);
+			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
 			
 			data_row[Tags.ColumnId]       = key.Id;
-			data_row[Tags.ColumnRevision] = key.Revision;
 			data_row[Tags.ColumnStatus]   = key.IntStatus;
 			
 			table.Rows.Add (data_row);

@@ -49,23 +49,21 @@ namespace Epsitec.Cresus.Database
 		{
 			DbTable table = new DbTable ("Test");
 			
-			DbColumn column_1 = DbColumn.CreateRefColumn ("A", "ParentTable", DbColumnClass.RefTupleId, new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId)), Nullable.Yes);
-			DbColumn column_2 = DbColumn.CreateRefColumn ("A", "ParentTable", DbColumnClass.RefTupleRevision, new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForRevision)), Nullable.Yes);
-			DbColumn column_3 = new DbColumn ("X", new DbTypeNum (DbNumDef.FromRawType (DbRawType.SmallDecimal)), Nullable.Yes, DbColumnClass.Data, DbElementCat.UserDataManaged);
-			DbColumn column_4 = DbColumn.CreateRefColumn ("Z", "Customer", DbColumnClass.RefSimpleId, new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId)), Nullable.Yes);
+			DbColumn column_1 = DbColumn.CreateRefColumn ("A", "ParentTable", DbColumnClass.RefId, new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId)), Nullable.Yes);
+			DbColumn column_2 = new DbColumn ("X", new DbTypeNum (DbNumDef.FromRawType (DbRawType.SmallDecimal)), Nullable.Yes, DbColumnClass.Data, DbElementCat.UserDataManaged);
+			DbColumn column_3 = DbColumn.CreateRefColumn ("Z", "Customer", DbColumnClass.RefId, new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId)), Nullable.Yes);
 			
 			table.Columns.Add (column_1);
 			table.Columns.Add (column_2);
 			table.Columns.Add (column_3);
-			table.Columns.Add (column_4);
 			
 			DbForeignKey[] fk = table.ForeignKeys;
 			
 			Assertion.AssertEquals (2, fk.Length);
-			Assertion.AssertEquals (2, fk[0].Columns.Length);
+			Assertion.AssertEquals (1, fk[0].Columns.Length);
+			Assertion.AssertEquals (1, fk[1].Columns.Length);
 			Assertion.AssertEquals (column_1, fk[0].Columns[0]);
-			Assertion.AssertEquals (column_2, fk[0].Columns[1]);
-			Assertion.AssertEquals (column_4, fk[1].Columns[0]);
+			Assertion.AssertEquals (column_3, fk[1].Columns[0]);
 			
 			table = new DbTable ("Test");
 			
@@ -88,36 +86,6 @@ namespace Epsitec.Cresus.Database
 			
 			Assertion.AssertNull (table.Columns[column_3.Name]);
 			Assertion.AssertNull (column_3.Table);
-		}
-		
-		[Test] [ExpectedException (typeof (DbFormatException))] public void CheckForeignKeysEx1()
-		{
-			DbTable table = new DbTable ("Test");
-			
-			DbColumn column_1 = DbColumn.CreateRefColumn ("A", "ParentTable", DbColumnClass.RefTupleId, new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId)), Nullable.Yes);
-			DbColumn column_2 = DbColumn.CreateRefColumn ("B", "ParentTable", DbColumnClass.RefSimpleId, new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId)), Nullable.Yes);
-			DbColumn column_3 = new DbColumn ("X", new DbTypeNum (DbNumDef.FromRawType (DbRawType.SmallDecimal)), Nullable.Yes, DbColumnClass.Data, DbElementCat.UserDataManaged);
-			
-			table.Columns.Add (column_1);
-			table.Columns.Add (column_2);
-			table.Columns.Add (column_3);
-			
-			DbForeignKey[] fk = table.ForeignKeys;
-		}
-		
-		[Test] [ExpectedException (typeof (DbFormatException))] public void CheckForeignKeysEx2()
-		{
-			DbTable table = new DbTable ("Test");
-			
-			DbColumn column_1 = DbColumn.CreateRefColumn ("A", "ParentTable", DbColumnClass.RefSimpleId, new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId)), Nullable.Yes);
-			DbColumn column_2 = DbColumn.CreateRefColumn ("B", "ParentTable", DbColumnClass.RefTupleRevision, new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForRevision)), Nullable.Yes);
-			DbColumn column_3 = new DbColumn ("X", new DbTypeNum (DbNumDef.FromRawType (DbRawType.SmallDecimal)), Nullable.Yes, DbColumnClass.Data, DbElementCat.UserDataManaged);
-			
-			table.Columns.Add (column_1);
-			table.Columns.Add (column_2);
-			table.Columns.Add (column_3);
-			
-			DbForeignKey[] fk = table.ForeignKeys;
 		}
 		
 		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckNewDbTableEx1()
