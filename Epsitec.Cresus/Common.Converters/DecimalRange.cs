@@ -57,7 +57,7 @@ namespace Epsitec.Common.Converters
 		{
 			get
 			{
-				return (this.minimum < this.maximum);
+				return (this.minimum <= this.maximum);
 			}
 		}
 		

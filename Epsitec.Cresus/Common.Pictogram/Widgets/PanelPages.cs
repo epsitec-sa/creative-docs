@@ -194,7 +194,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.table.SetHeaderTextH(0, "Numéro");
 			this.table.SetHeaderTextH(1, "Nom");
 
-			Cell			cell;
 			StaticText		st;
 			TextField		edit;
 
@@ -202,28 +201,24 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				ObjectPage page = this.drawer.IconObjects.Page(i);
 
-				if ( this.table[0, i].Children.Count == 0 )
+				if ( this.table[0, i].IsEmpty )
 				{
-					cell = new Cell();
 					st = new StaticText();
 					st.Alignment = Drawing.ContentAlignment.MiddleCenter;
 					st.Dock = DockStyle.Fill;
-					cell.Children.Add(st);
-					this.table[0, i] = cell;
+					this.table[0, i].Insert (st);
 				}
 				st = this.table[0, i].Children[0] as StaticText;
 				st.Text = (i+1).ToString();
 
-				if ( this.table[1, i].Children.Count == 0 )
+				if ( this.table[1, i].IsEmpty )
 				{
-					cell = new Cell();
 					edit = new TextField();
 					edit.Dock = DockStyle.Fill;
 					edit.Name = i.ToString();
 					edit.Clicked += new MessageEventHandler(this.HandleListTextClicked);
 					edit.TextChanged += new EventHandler(this.HandleListTextChanged);
-					cell.Children.Add(edit);
-					this.table[1, i] = cell;
+					this.table[1, i].Insert (edit);
 				}
 				edit = this.table[1, i].Children[0] as TextField;
 				this.ignoreListTextChanged = true;
