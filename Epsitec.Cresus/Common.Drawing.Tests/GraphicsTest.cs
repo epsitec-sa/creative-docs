@@ -435,7 +435,7 @@ namespace Epsitec.Common.Tests
 			double cy = root.Client.Height / 2;
 			
 			//e.Graphics.RotateTransform (0, cx, cy);
-			e.Graphics.ScaleTransform (1, 1, cx, cy);
+			//e.Graphics.ScaleTransform (1, 1, cx, cy);
 
 			Path path1 = new Path ();
 			path1.MoveTo (0, 0);
@@ -451,19 +451,20 @@ namespace Epsitec.Common.Tests
 			
 			for (int i = 0 ; i < 256 ; i++)
 			{
-				Color.HSVtoRGB (i/256.0, 0.8, 1.0, out r[i], out g[i], out b[i]);
+				Color.HSVtoRGB (i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
 				a[i] = 1.0;
 			}
 			
 			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
 			e.Graphics.Rasterizer.AddSurface (path1);
 			e.Graphics.GradientRenderer.Fill = Epsitec.Common.Drawing.GradientFill.Conic;
-			e.Graphics.GradientRenderer.SetParameters (0, 150);
+			e.Graphics.GradientRenderer.SetParameters (-1, 200);
 			e.Graphics.GradientRenderer.SetColors (r, g, b, a);
+			//e.Graphics.GradientRenderer.SetColors (Color.FromRGB(1,0,0), Color.FromRGB(0,0,1));
 			
 			Transform t = new Transform ();
 			t.Translate (cx, cy);
-			t.Rotate (30, cx, cy);
+			//t.Rotate (30, cx, cy);
 			e.Graphics.GradientRenderer.Transform = t;
 			
 			e.Graphics.RenderGradient ();

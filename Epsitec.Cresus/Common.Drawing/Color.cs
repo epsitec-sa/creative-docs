@@ -253,6 +253,9 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		// H = [0..360]
+		// S = [0..1]
+		// V = [0..1]
 		public static void RGBtoHSV(double r, double g, double b, out double h, out double s, out double v)
 		{
 			double min = System.Math.Min(r,System.Math.Min(g,b));
@@ -272,19 +275,15 @@ namespace Epsitec.Common.Drawing
 				{
 					h = 60*(g-b)/delta;
 				}
-				else
+				else if ( g == v )  // between cyan and yellow ?
 				{
-					if ( g == v )  // between cyan and yellow ?
-					{
-						h = 120+60*(b-r)/delta;
-					}
-					else	// between magenta and cyan ?
-					{
-						h = 240+60*(r-g)/delta;
-					}
+					h = 120+60*(b-r)/delta;
+				}
+				else	// between magenta and cyan ?
+				{
+					h = 240+60*(r-g)/delta;
 				}
 				if ( h < 0 )  h += 360;
-				h /= 360;
 			}
 		}
 
@@ -293,7 +292,9 @@ namespace Epsitec.Common.Drawing
 			r = g = b = v;
 			if ( s == 0 )  return;  // noir ?
 
-			h *= 6;
+			while ( h <   0 )  h += 360;
+			while ( h > 360 )  h -= 360;
+			h /= 60;  // 0..6
 			double f = h-System.Math.Floor(h);
 			double p = v*(1-s);
 			double q = v*(1-s*f);
