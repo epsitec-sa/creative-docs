@@ -154,7 +154,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event EventHandler			SurfaceSizeChanged;
+		public event Support.EventHandler	SurfaceSizeChanged;
 		
 		
 		protected Drawing.Margins			frame_margins;
