@@ -39,6 +39,17 @@ namespace Epsitec.Common.Widgets
 			window.Show();
 		}
 
+		[Test] public void CheckPaintCourier()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Size(300, 200);
+			window.Text = "CheckPaintCourier";
+			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_PaintCourier);
+			window.Root.Invalidate();
+			window.Show();
+		}
+
 		[Test] public void CheckPaintWave()
 		{
 			Window window = new Window();
@@ -466,6 +477,32 @@ namespace Epsitec.Common.Widgets
 			TextLayout layout = new TextLayout();
 
 			layout.Text = @"On <u>donnait</u> ce jour-là <u>un grand dîner</u>, où, pour la <u>première <b>fois</b></u>, je vis avec beaucoup <u>d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête</u>.";
+			layout.DefaultFont = Font.GetFont("Tahoma", "Regular");
+			layout.DefaultFontSize = 11.0;
+			layout.Alignment = ContentAlignment.MiddleLeft;
+			layout.JustifMode = TextJustifMode.AllButLast;
+			layout.LayoutSize = new Size(150, 150);
+
+			Point pos = new Point(20, 20);
+			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
+			e.Graphics.RenderSolid(Color.FromBrightness(1));
+
+			TextLayout.SelectedArea[] areas = layout.FindTextRange(pos, 0, layout.Text.Length);
+			for ( int i=0 ; i<areas.Length ; i++ )
+			{
+				e.Graphics.Align(ref areas[i].Rect);
+				e.Graphics.AddFilledRectangle(areas[i].Rect.Left, areas[i].Rect.Bottom, areas[i].Rect.Width, areas[i].Rect.Height);
+				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
+			}
+
+			layout.Paint(pos, e.Graphics, e.ClipRectangle, Color.Empty, GlyphPaintStyle.Normal);
+		}
+
+		private void CheckPaint_PaintCourier(object sender, PaintEventArgs e)
+		{
+			TextLayout layout = new TextLayout();
+
+			layout.Text = @"<font face=""Courier New"">On <u>donnait</u> ce jour-là <u>un grand dîner</u>, où, pour la <u>première <b>fois</b></u>, je vis avec beaucoup <u>d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête</u>.</font>";
 			layout.DefaultFont = Font.GetFont("Tahoma", "Regular");
 			layout.DefaultFontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleLeft;
