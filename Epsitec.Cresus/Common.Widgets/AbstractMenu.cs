@@ -400,7 +400,7 @@ namespace Epsitec.Common.Widgets
 		{
 			AbstractMenu menu = AbstractMenu.menuLastLeaf;
 			
-			System.Diagnostics.Debug.Assert( menu != null );
+			if ( menu == null )  menu = this;
 			
 			if ( menu.SelectedIndex >= 0 )
 			{
@@ -648,6 +648,7 @@ namespace Epsitec.Common.Widgets
 							if ( cell.Submenu == null && !cell.Separator )
 							{
 								this.ValidateAndExecuteCommand();
+								message.Swallowed = true;
 							}
 						}
 					}
