@@ -206,6 +206,84 @@ namespace Epsitec.Common.Drawing
 			form.Show ();
 		}
 
+		[Test] public void CheckAppendPathOutlines1()
+		{
+			Path p1  = new Path ();
+			Path p2  = new Path ();
+			Path p3  = new Path ();
+			
+			p1.MoveTo ( 5.5,  5.5);
+			p1.LineTo (15.5,  5.5);
+			p1.LineTo (15.5, 15.5);
+			p1.LineTo ( 5.5, 15.5);
+			p1.Close ();
+			
+			System.Console.Out.WriteLine ("Path:");
+			System.Console.Out.WriteLine (p1.ToString ());
+			
+			p2.Append (p1, 1.0, CapStyle.Round, JoinStyle.Round, 5.0, 2);
+			
+			System.Console.Out.WriteLine ("Path approximation zoom = 2:");
+			System.Console.Out.WriteLine (p2.ToString ());
+			
+			p3.Append (p1, 1.0, CapStyle.Round, JoinStyle.Round, 5.0, 29.4);
+			
+			System.Console.Out.WriteLine ("Path approximation zoom = 29.4:");
+			System.Console.Out.WriteLine (p3.ToString ());
+		}
+		
+		[Test] public void CheckAppendPathOutlines2()
+		{
+			Path p1  = new Path ();
+			Path p2  = new Path ();
+			Path p3  = new Path ();
+			
+			p1.MoveTo ( 5.5, 15.5);
+			p1.LineTo ( 5.5,  5.5);
+			p1.LineTo (15.5,  5.5);
+			p1.LineTo (15.5, 15.5);
+			p1.Close ();
+			
+			System.Console.Out.WriteLine ("Path:");
+			System.Console.Out.WriteLine (p1.ToString ());
+			
+			p2.Append (p1, 1.0, CapStyle.Round, JoinStyle.Round, 5.0, 2.0);
+			
+			System.Console.Out.WriteLine ("Path approximation zoom = 2.0:");
+			System.Console.Out.WriteLine (p2.ToString ());
+			
+			p3.Append (p1, 1.0, CapStyle.Round, JoinStyle.Round, 5.0, 20.0);
+			
+			System.Console.Out.WriteLine ("Path approximation zoom = 20.0:");
+			System.Console.Out.WriteLine (p3.ToString ());
+		}
+		
+		[Test] public void CheckAppendPathOutlines3()
+		{
+			Path p1  = new Path ();
+			Path p2  = new Path ();
+			Path p3  = new Path ();
+			
+			p1.MoveTo ( 55, 155);
+			p1.LineTo ( 55,  55);
+			p1.LineTo (155,  55);
+			p1.LineTo (155, 155);
+			p1.Close ();
+			
+			System.Console.Out.WriteLine ("Path:");
+			System.Console.Out.WriteLine (p1.ToString ());
+			
+			p2.Append (p1, 10.0, CapStyle.Round, JoinStyle.Round, 5.0, 2);
+			
+			System.Console.Out.WriteLine ("Path approximation zoom = 2:");
+			System.Console.Out.WriteLine (p2.ToString ());
+			
+			p3.Append (p1, 10.0, CapStyle.Round, JoinStyle.Round, 5.0, 29.4);
+			
+			System.Console.Out.WriteLine ("Path approximation zoom = 29.4:");
+			System.Console.Out.WriteLine (p3.ToString ());
+		}
+		
 		
 		static readonly int cpu_speed = 1700;
 		

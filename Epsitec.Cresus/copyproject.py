@@ -46,6 +46,7 @@ class CopyProject:
         self.copy_ext.append('.chm')
         self.copy_ext.append('.py')
         self.copy_ext.append('.resource')
+        self.copy_ext.append('.resx')
         self.copy_ext.append('.snk')
         self.copy_ext.append('.sln')
         self.copy_ext.append('.config')

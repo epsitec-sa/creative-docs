@@ -253,6 +253,13 @@ namespace Epsitec.Common.Drawing
 			this.Append (path, 1, 0, 0, 1, 0, 0, approximation_zoom);
 		}
 		
+		public void Append(Path path, double width, CapStyle cap, JoinStyle join, double miter_limit, double approximation_zoom)
+		{
+			this.CreateOnTheFly ();
+			this.is_empty &= path.is_empty;
+			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, width, (int) cap, (int) join, miter_limit, approximation_zoom, path.has_curve);
+		}
+		
 		public void Append(Path path, Transform transform, double approximation_zoom)
 		{
 			this.Append (path, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY, approximation_zoom);
