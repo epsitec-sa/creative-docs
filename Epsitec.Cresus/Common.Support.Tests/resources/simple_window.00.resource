@@ -95,7 +95,7 @@
    <list name='widgets'>
     <bundle>
      <data name='class'>CheckButton</data>
-     <data name='text'><![CDATA[Pour rire, voici une icone&nbsp;:&nbsp;<img src="res:image#open"/>]]></data>
+     <data name='text'><![CDATA[Pour rire, voici une icone&#160;:&#160;<img src="res:image#open"/>]]></data>
      <data name='name'>A</data>
      <data name='size'>200;*</data>
      <data name='pos'>10;215</data>

@@ -14,23 +14,7 @@ namespace Epsitec.Common.Support.Implementation
 	{
 		public FileProvider()
 		{
-			//	Un ID valide pour une ressource stockée dans un fichier se compose comme
-			//	suit :
-			//
-			//	- Une lettre, un chiffre ou le "_".
-			//
-			//	puis :
-			//	
-			//	- Zéro à n occurrences de l'un des suivants :
-			//	  - lettres, chiffres ou le "_"
-			//	  - " ", "+", "-" ou ".", pour autant que :
-			//		- le prochain caractère n'est pas le dernier "." ou " "
-			//		- ce caractère ne se répète pas (la clause ?!\k<X> empêche le doublon)
-			//
-			//	Ainsi, sont valides : "abc", "_123", "a.b+c-2", "a+- .x".
-			//	Sont refusés : ".abc", "a++b", "a.", "b ".
-			
-			this.id_regex = new Regex (@"^([a-zA-Z0-9_]((?![ \.]$)(?<X>[ \+\-\.])(?!\k<X>))*)+$", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
+			this.id_regex    = RegexFactory.FileName;
 			this.path_prefix = System.IO.Directory.GetCurrentDirectory () + System.IO.Path.DirectorySeparatorChar;
 			
 			//	Pas très propre, mais ça suffit maintenant: on supprime le chemin \bin\... pour remonter au niveau

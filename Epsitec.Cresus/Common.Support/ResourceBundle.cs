@@ -14,6 +14,16 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public class ResourceBundle
 	{
+		public static ResourceBundle Create()
+		{
+			return ResourceBundle.Create (null, null, ResourceLevel.Merged, null, 0);
+		}
+		
+		public static ResourceBundle Create(ResourceLevel level)
+		{
+			return ResourceBundle.Create (null, null, level, null, 0);
+		}
+		
 		public static ResourceBundle Create(string name)
 		{
 			return ResourceBundle.Create (name, null, ResourceLevel.Merged, null, 0);
@@ -49,7 +59,7 @@ namespace Epsitec.Common.Support
 		
 		protected ResourceBundle(string name)
 		{
-			this.name = name;
+			this.name   = name;
 			this.fields = new Field[0];
 		}
 		
@@ -67,7 +77,15 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.name;
+				return this.name == null ? "" : this.name;
+			}
+		}
+		
+		public string						Type
+		{
+			get
+			{
+				return this.type == null ? "" : this.type;
 			}
 		}
 		
@@ -170,6 +188,17 @@ namespace Epsitec.Common.Support
 			{
 				return this.fields[index];
 			}
+		}
+		
+		
+		public void DefineName(string name)
+		{
+			this.name = name;
+		}
+		
+		public void DefineType(string type)
+		{
+			this.type = type;
 		}
 		
 		
@@ -333,6 +362,27 @@ namespace Epsitec.Common.Support
 				throw new ResourceException (string.Format ("Bundle is too complex, giving up."));
 			}
 			
+			if (xmlroot.Name != "bundle")
+			{
+				throw new ResourceException (string.Format ("Bundle does not start with <bundle> tag (<{0}> is an unsupported root).", xmlroot.Name));
+			}
+			
+			System.Xml.XmlAttribute name_attr = xmlroot.Attributes["name"];
+			System.Xml.XmlAttribute type_attr = xmlroot.Attributes["type"];
+			
+			if (name_attr != null)
+			{
+				if ((this.name == null) ||
+					(this.name == ""))
+				{
+					this.name = name_attr.Value;
+				}
+			}
+			if (type_attr != null)
+			{
+				this.type = type_attr.Value;
+			}
+			
 			ArrayList list = new ArrayList ();
 			list.AddRange (this.fields);
 			
@@ -385,9 +435,19 @@ namespace Epsitec.Common.Support
 		{
 			System.Xml.XmlElement   bundle_node = xmldoc.CreateElement ("bundle");
 			System.Xml.XmlAttribute name_attr   = xmldoc.CreateAttribute ("name");
+			System.Xml.XmlAttribute type_attr   = xmldoc.CreateAttribute ("type");
 			
-			name_attr.Value = this.Name;
-			bundle_node.Attributes.Append (name_attr);
+			name_attr.Value = this.name;
+			type_attr.Value = this.type;
+			
+			if (name_attr.Value != "")
+			{
+				bundle_node.Attributes.Append (name_attr);
+			}
+			if (type_attr.Value != "")
+			{
+				bundle_node.Attributes.Append (type_attr);
+			}
 			
 			for (int i = 0; i < this.fields.Length; i++)
 			{
@@ -1044,6 +1104,7 @@ namespace Epsitec.Common.Support
 		public event EventHandler			FieldsChanged;
 		
 		protected string					name;
+		protected string					type;
 		protected System.Xml.XmlNode		xmlroot;
 		protected int						depth;
 		protected int						compile_count;

@@ -641,7 +641,7 @@ namespace Epsitec.Common.Support
 		
 		protected string							name;
 		protected bool								top_level;
-		protected ValidationState					state = ValidationState.Unknown;
+		protected ValidationState					state = ValidationState.Dirty;
 		protected ValidationState					old_state = ValidationState.Unknown;
 		protected ValidationRule.CommandStateList	command_states;
 		protected ValidationRule.ValidatorList		validators;
