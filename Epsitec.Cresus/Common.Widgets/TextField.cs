@@ -77,6 +77,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		// Texte édité.
 		public override string Text
 		{
 			get
@@ -86,8 +87,31 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				base.Text = value;
-				this.CursorScroll();
+				if ( value.Length > this.maxChar )
+				{
+					value = value.Substring(0, this.maxChar);
+				}
+
+				if ( this.text_layout == null || base.Text == null || base.Text != value )
+				{
+					base.Text = value;
+					this.Invalidate();
+					this.CursorScroll();
+				}
+			}
+		}
+
+		// Nombre max de caractères dans la ligne éditée.
+		public int MaxChar
+		{
+			get
+			{
+				return this.maxChar;
+			}
+
+			set
+			{
+				this.maxChar = value;
 			}
 		}
 
@@ -125,6 +149,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		// Position du curseur d'édition.
 		public int Cursor
 		{
 			get
@@ -141,7 +166,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.cursorFrom = value;
 					this.cursorTo   = value;
-					CursorScroll();
+					this.CursorScroll();
 					this.Invalidate();
 				}
 			}
@@ -162,7 +187,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.cursorFrom )
 				{
 					this.cursorFrom = value;
-					CursorScroll();
+					this.CursorScroll();
 					this.Invalidate();
 				}
 			}
@@ -183,17 +208,18 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.cursorTo )
 				{
 					this.cursorTo = value;
-					CursorScroll();
+					this.CursorScroll();
 					this.Invalidate();
 				}
 			}
 		}
 
+		// Sélectione tous les caractéres.
 		public void SelectAll()
 		{
 			this.cursorFrom = 0;
 			this.cursorTo = this.Text.Length;
-			CursorScroll();
+			this.CursorScroll();
 			this.Invalidate();
 		}
 
@@ -221,7 +247,7 @@ namespace Epsitec.Common.Widgets
 				this.Text = text;
 				this.cursorFrom = 0;
 				this.cursorTo   = text.Length;
-				CursorScroll();
+				this.CursorScroll();
 				this.Invalidate();
 			}
 		}
@@ -378,6 +404,11 @@ namespace Epsitec.Common.Widgets
 				}
 				this.text_layout.Alignment = this.Alignment;
 				this.text_layout.LayoutSize = new Drawing.Size(dx, dy);
+
+				if ( this.text_layout.Text != null )
+				{
+					this.CursorScroll();
+				}
 			}
 		}
 
@@ -505,6 +536,8 @@ namespace Epsitec.Common.Widgets
 			int sel = this.scrollList.Select;
 			if ( sel == -1 )  return;
 			this.Text = this.scrollList.GetText(sel);
+			this.OnTextChanged();
+			this.OnTextInserted();
 			this.SelectAll();
 			this.SetFocused(true);  // TODO: pourquoi ne marche pas ?
 #if false
@@ -748,7 +781,9 @@ namespace Epsitec.Common.Widgets
 		// Insère une chaîne correspondant à un caractère ou un tag (jamais plus).
 		protected bool InsertString(string ins)
 		{
-			DeleteSelectedCharacter();
+			DeleteSelectedCharacter(false);
+
+			if ( this.Text.Length+ins.Length > this.maxChar )  return false;
 
 			int cursor = this.text_layout.FindOffsetFromIndex(this.cursorTo);
 			string text = this.Text;
@@ -758,15 +793,16 @@ namespace Epsitec.Common.Widgets
 			this.cursorFrom = this.cursorTo;
 			this.Invalidate();
 			this.ResetCursor();
-			CursorScroll();
-			OnTextChanged();
+			this.CursorScroll();
+			this.OnTextChanged();
+			this.OnTextInserted();
 			return true;
 		}
 
 		// Supprime le caractère à gauche ou à droite du curseur.
 		protected bool DeleteCharacter(int dir)
 		{
-			if ( DeleteSelectedCharacter() )  return false;
+			if ( DeleteSelectedCharacter(true) )  return false;
 
 			int cursor = this.text_layout.FindOffsetFromIndex(this.cursorTo);
 
@@ -782,8 +818,9 @@ namespace Epsitec.Common.Widgets
 				this.cursorFrom = this.cursorTo;
 				this.Invalidate();
 				this.ResetCursor();
-				CursorScroll();
-				OnTextChanged();
+				this.CursorScroll();
+				this.OnTextChanged();
+				this.OnTextDeleted();
 			}
 			else	// à droite du curseur ?
 			{
@@ -795,15 +832,16 @@ namespace Epsitec.Common.Widgets
 				this.Text = text;
 				this.Invalidate();
 				this.ResetCursor();
-				CursorScroll();
-				OnTextChanged();
+				this.CursorScroll();
+				this.OnTextChanged();
+				this.OnTextDeleted();
 			}
 
 			return true;
 		}
 
 		// Supprime les caractères sélectionnés dans le texte.
-		protected bool DeleteSelectedCharacter()
+		protected bool DeleteSelectedCharacter(bool signalTextChanged)
 		{
 			int cursorFrom = this.text_layout.FindOffsetFromIndex(this.cursorFrom);
 			int cursorTo   = this.text_layout.FindOffsetFromIndex(this.cursorTo);
@@ -821,8 +859,9 @@ namespace Epsitec.Common.Widgets
 			this.cursorFrom = from;
 			this.Invalidate();
 			this.ResetCursor();
-			CursorScroll();
-			OnTextChanged();
+			this.CursorScroll();
+			if ( signalTextChanged )  this.OnTextChanged();
+			this.OnTextDeleted();
 			return true;
 		}
 
@@ -855,7 +894,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.cursorFrom = cursor;
 			}
-			CursorScroll();
+			this.CursorScroll();
 			this.Invalidate();
 			this.ResetCursor();
 			return true;
@@ -871,7 +910,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.cursorFrom = cursor;
 			}
-			CursorScroll();
+			this.CursorScroll();
 			this.Invalidate();
 			this.ResetCursor();
 			return true;
@@ -925,7 +964,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.cursorFrom = cursor;
 			}
-			CursorScroll();
+			this.CursorScroll();
 			this.Invalidate();
 			this.ResetCursor();
 			return true;
@@ -980,12 +1019,30 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Génère un événement pour dire que le texte a changé.
+		// Génère un événement pour dire que le texte a changé (ajout ou suppression).
 		protected virtual void OnTextChanged()
 		{
 			if ( this.TextChanged != null )  // qq'un écoute ?
 			{
 				this.TextChanged(this);
+			}
+		}
+
+		// Génère un événement pour dire que le texte a changé (ajout).
+		protected virtual void OnTextInserted()
+		{
+			if ( this.TextInserted != null )  // qq'un écoute ?
+			{
+				this.TextInserted(this);
+			}
+		}
+
+		// Génère un événement pour dire que le texte a changé (suppression).
+		protected virtual void OnTextDeleted()
+		{
+			if ( this.TextDeleted != null )  // qq'un écoute ?
+			{
+				this.TextDeleted(this);
 			}
 		}
 
@@ -1019,6 +1076,7 @@ namespace Epsitec.Common.Widgets
 						this.scroller.SetEnabled(false);
 						this.scroller.Range = 1;
 						this.scroller.Display = 1;
+						this.scroller.Position = 0;
 					}
 					else
 					{
@@ -1096,6 +1154,8 @@ namespace Epsitec.Common.Widgets
 
 
 		public event EventHandler TextChanged;
+		public event EventHandler TextInserted;
+		public event EventHandler TextDeleted;
 
 		protected TextFieldType					type = TextFieldType.SingleLine;
 		protected static readonly double		margin = 3;
@@ -1108,6 +1168,7 @@ namespace Epsitec.Common.Widgets
 		protected int							cursorTo = 0;
 		protected int							cursorLine;
 		protected double						cursorPosX;
+		protected int							maxChar = 1000;
 		protected bool							mouseDown = false;
 		protected double						minRange = 0;
 		protected double						maxRange = 100;

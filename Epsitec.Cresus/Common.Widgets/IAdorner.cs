@@ -49,6 +49,11 @@ namespace Epsitec.Common.Widgets
 		void PaintTabSunkenBackground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
 		void PaintTabSunkenForeground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
 		
+		void PaintArrayTextLayout(Drawing.Graphics graphics, Drawing.Rectangle rect, TextLayout text, WidgetState state, Direction shadow);
+
+		void PaintHeaderBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction type);
+		void PaintHeaderForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction type);
+
 		/*
 		 * Méthodes de dessin complémentaires.
 		 */

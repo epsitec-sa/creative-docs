@@ -48,6 +48,12 @@ namespace Epsitec.Common.Widgets
 			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 			
+			if ( (state & WidgetState.Enabled) == 0 )
+			{
+				state &= ~WidgetState.Focused;
+				state &= ~WidgetState.Entered;
+				state &= ~WidgetState.Engaged;
+			}
 			adorner.PaintButtonBackground(graphics, rect, state, dir, this.buttonStyle);
 			adorner.PaintButtonTextLayout(graphics, pos, this.text_layout, state, dir, this.buttonStyle);
 		}

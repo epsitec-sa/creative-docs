@@ -45,39 +45,10 @@ namespace Epsitec.Common.Tests
 			st.Location = new Point(10, 265);
 			st.Size = new Size(200, 15);
 			st.Text = "Choix du <b>look</b> de l'<i>interface</i> :";
-			st.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
 			window.Root.Children.Add(st);
 
-			RadioButton look1 = new RadioButton();
-			look1.Name = "Default";
-			look1.Location = new Point(10, 245);
-			look1.Size = new Size(100, 13);
-			look1.Text = "Look <m>s</m>tandard";
-			look1.ActiveState = WidgetState.ActiveYes;
-			look1.Group = "Look";
-			look1.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			look1.ActiveStateChanged += new EventHandler(this.HandleLook);
-			window.Root.Children.Add(look1);
-
-			RadioButton look2 = new RadioButton();
-			look2.Name = "LookXP";
-			look2.Location = new Point(10, 230);
-			look2.Size = new Size(100, 13);
-			look2.Text = "Look <m>X</m>P";
-			look2.Group = "Look";
-			look2.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			look2.ActiveStateChanged += new EventHandler(this.HandleLook);
-			window.Root.Children.Add(look2);
-
-			RadioButton look3 = new RadioButton();
-			look3.Name = "LookDany";
-			look3.Location = new Point(10, 215);
-			look3.Size = new Size(100, 13);
-			look3.Text = "Look <m>D</m>any";
-			look3.Group = "Look";
-			look3.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			look3.ActiveStateChanged += new EventHandler(this.HandleLook);
-			window.Root.Children.Add(look3);
+			CreateRadioLook(window.Root.Children, new Point(10, 215));
 
 			CheckButton check = new CheckButton();
 			check.Name = "Check";
@@ -232,16 +203,6 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 
-		private void HandleLook(object sender)
-		{
-			RadioButton button = sender as RadioButton;
-			if (button.ActiveState == WidgetState.ActiveYes)
-			{
-				Widgets.Adorner.Factory.SetActive(button.Name);
-				button.RootParent.Invalidate();  // redessine toute la fenêtre
-			}
-		}
-
 		private void HandleCheck(object sender, MessageEventArgs e)
 		{
 			CheckButton button = sender as CheckButton;
@@ -275,7 +236,8 @@ namespace Epsitec.Common.Tests
 			s += "aa<br/><br/>bb";
 #endif
 			multi.Text = s;
-			multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			//multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			multi.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			window.Root.Children.Add(multi);
 
 			window.FocusedWidget = multi;
@@ -377,36 +339,7 @@ namespace Epsitec.Common.Tests
 			page4.TabTitle = "<m>L</m>ook";
 			tb.Add(page4);
 
-			RadioButton look1 = new RadioButton();
-			look1.Name = "Default";
-			look1.Location = new Point(10, 145);
-			look1.Size = new Size(100, 13);
-			look1.Text = "Look <m>s</m>tandard";
-			look1.ActiveState = WidgetState.ActiveYes;
-			look1.Group = "Look";
-			look1.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			look1.ActiveStateChanged += new EventHandler(this.HandleLook);
-			page4.Children.Add(look1);
-
-			RadioButton look2 = new RadioButton();
-			look2.Name = "LookXP";
-			look2.Location = new Point(10, 130);
-			look2.Size = new Size(100, 13);
-			look2.Text = "Look <m>X</m>P";
-			look2.Group = "Look";
-			look2.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			look2.ActiveStateChanged += new EventHandler(this.HandleLook);
-			page4.Children.Add(look2);
-
-			RadioButton look3 = new RadioButton();
-			look3.Name = "LookDany";
-			look3.Location = new Point(10, 115);
-			look3.Size = new Size(100, 13);
-			look3.Text = "Look <m>D</m>any";
-			look3.Group = "Look";
-			look3.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			look3.ActiveStateChanged += new EventHandler(this.HandleLook);
-			page4.Children.Add(look3);
+			CreateRadioLook(page4.Children, new Point(10, 115));
 
 			StaticText link = new StaticText();
 			link.Name = "Link";
@@ -470,6 +403,392 @@ namespace Epsitec.Common.Tests
 			page.Bounds = inside;
 			page.TabTitle = "Nouveau";
 			this.tabBook.Add(page);
+		}
+
+		[Test] public void CheckAdornerCell1()
+		{
+			WindowFrame window = new WindowFrame();
+			
+			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.Text = "CheckAdorner";
+
+			CreateRadioLook(window.Root.Children, new Point(10, 245));
+
+			StaticText title = new StaticText();
+			title.Location = new Point(120, 245);
+			title.Size = new Size(280, 15);
+			title.Text = "Selections possibles avec Ctrl et/ou Shift :";
+			title.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			window.Root.Children.Add(title);
+
+			CellTable table = new CellTable();
+			table.StyleH  = AbstractCellArrayStyle.ScrollNorm;
+			table.StyleH |= AbstractCellArrayStyle.Separator;
+			table.StyleH |= AbstractCellArrayStyle.SelectCell;
+			table.StyleH |= AbstractCellArrayStyle.SelectMulti;
+			table.StyleV  = AbstractCellArrayStyle.ScrollNorm;
+			table.StyleV |= AbstractCellArrayStyle.Separator;
+			table.Name = "Table";
+			table.Location = new Point(10, 20);
+			table.Size = new Size(380, 200);
+			table.SetArraySize(5, 12);
+			for ( int y=0 ; y<12 ; y++ )
+			{
+				for ( int x=0 ; x<5 ; x++ )
+				{
+#if true
+					Cell cell = new Cell();
+					ArrayText st = new ArrayText();
+					string s = "";
+					s += y+1;
+					s += ".";
+					s += x+1;
+					if ( x != 0 || y != 0 )  st.Text = s;
+					st.Alignment = ContentAlignment.MiddleCenter;
+					st.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+					cell.Children.Add(st);
+					table[x,y] = cell;
+#endif
+#if false
+					Cell cell = new Cell();
+					TextField text = new TextField(TextFieldType.SingleLine);
+					text.TextFieldStyle = TextFieldStyle.Flat;
+					string s = "";
+					s += y+1;
+					s += ".";
+					s += x+1;
+					text.Text = s;
+					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+					cell.Children.Add(text);
+					table[x,y] = cell;
+#endif
+#if false
+					Cell cell = new Cell();
+					Button button = new Button();
+					string s = "";
+					s += y+1;
+					s += ".";
+					s += x+1;
+					button.Text = s;
+					button.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+					cell.Children.Add(button);
+					table[x,y] = cell;
+#endif
+				}
+			}
+			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(table);
+
+			window.FocusedWidget = table;
+
+			window.Show();
+		}
+
+		[Test] public void CheckAdornerCell2()
+		{
+			WindowFrame window = new WindowFrame();
+			
+			window.ClientSize = new System.Drawing.Size(500, 300);
+			window.Text = "CheckAdorner";
+
+			CreateRadioLook(window.Root.Children, new Point(10, 245));
+
+			StaticText title = new StaticText();
+			title.Location = new Point(120, 245);
+			title.Size = new Size(380, 15);
+			title.Text = "Tableau de lignes editables et redimensionnable :";
+			title.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			window.Root.Children.Add(title);
+
+			CellTable table = new CellTable();
+			table.StyleH  = AbstractCellArrayStyle.Stretch;
+			table.StyleH |= AbstractCellArrayStyle.Header;
+			table.StyleH |= AbstractCellArrayStyle.Separator;
+			table.StyleH |= AbstractCellArrayStyle.Mobile;
+			table.StyleV  = AbstractCellArrayStyle.ScrollNorm;
+			table.StyleV |= AbstractCellArrayStyle.Separator;
+			table.DefHeight = 20;
+			table.Name = "Table";
+			table.Location = new Point(10, 20);
+			table.Size = new Size(480, 200);
+			table.SetArraySize(5, 6);
+			table.SetWidthColumn(0, 30);
+			table.SetWidthColumn(1, 200);
+			table.SetWidthColumn(2, 50);
+			table.SetWidthColumn(3, 50);
+			table.SetWidthColumn(4, 50);
+			table.SetHeaderTextH(0, "Nb");
+			table.SetHeaderTextH(1, "Article");
+			table.SetHeaderTextH(2, "TVA");
+			table.SetHeaderTextH(3, "Prix");
+			table.SetHeaderTextH(4, "Total");
+
+			string[] texts =
+			{
+				"1",	"Tuyau BX-35",			"7.5",	"35.00",	"35.00",
+				"1",	"Raccord 23'503",		"7.5",	"2.50",		"2.50",
+				"20",	"Ecrou M8",				"7.5",	"0.50",		"10.00",
+				"5",	"Peinture acrylique",	"7.5",	"15.00",	"75.00",
+				"1",	"Equerre 30x50",		"7.5",	"12.00",	"12.00",
+				"",		"",						"",		"",			"",
+			};
+
+			for ( int y=0 ; y<6 ; y++ )
+			{
+				for ( int x=0 ; x<5 ; x++ )
+				{
+					Cell cell = new Cell();
+					TextField text = new TextField(TextFieldType.SingleLine);
+					text.TextFieldStyle = TextFieldStyle.Flat;
+					if ( x != 1 )
+					{
+						text.Alignment = ContentAlignment.MiddleRight;
+					}
+					text.Text = texts[y*5+x];
+					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+					cell.Children.Add(text);
+					table[x,y] = cell;
+				}
+			}
+			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(table);
+
+			window.FocusedWidget = table;
+
+			window.Show();
+		}
+
+		[Test] public void CheckAdornerCell3()
+		{
+			WindowFrame window = new WindowFrame();
+			
+			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.Text = "CheckAdorner";
+
+			CreateRadioLook(window.Root.Children, new Point(10, 245));
+
+			StaticText title = new StaticText();
+			title.Location = new Point(120, 245);
+			title.Size = new Size(280, 15);
+			title.Text = "Tableau redimensionnable non editable :";
+			title.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			window.Root.Children.Add(title);
+
+			CellTable table = new CellTable();
+			table.StyleH  = AbstractCellArrayStyle.ScrollNorm;
+			table.StyleH |= AbstractCellArrayStyle.Header;
+			table.StyleH |= AbstractCellArrayStyle.Separator;
+			table.StyleH |= AbstractCellArrayStyle.Mobile;
+			table.StyleH |= AbstractCellArrayStyle.Sort;
+			table.StyleV  = AbstractCellArrayStyle.ScrollNorm;
+			table.StyleV |= AbstractCellArrayStyle.Header;
+			table.StyleV |= AbstractCellArrayStyle.Separator;
+			table.StyleV |= AbstractCellArrayStyle.SelectLine;
+			table.StyleV |= AbstractCellArrayStyle.Mobile;
+			table.StyleV |= AbstractCellArrayStyle.Sort;
+			table.Name = "Table";
+			table.Location = new Point(10, 20);
+			table.Size = new Size(380, 200);
+			table.SetArraySize(5, 12);
+
+			table.SetHeaderTextH(0, "A");
+			table.SetHeaderTextH(1, "B");
+			table.SetHeaderTextH(2, "C");
+			table.SetHeaderTextH(3, "D");
+			table.SetHeaderTextH(4, "E");
+
+			table.SetHeaderTextV(0, "1");
+			table.SetHeaderTextV(1, "2");
+			table.SetHeaderTextV(2, "3");
+			table.SetHeaderTextV(3, "4");
+			table.SetHeaderTextV(4, "5");
+			table.SetHeaderTextV(5, "6");
+			table.SetHeaderTextV(6, "7");
+			table.SetHeaderTextV(7, "8");
+			table.SetHeaderTextV(8, "9");
+			table.SetHeaderTextV(9, "10");
+			table.SetHeaderTextV(10, "11");
+			table.SetHeaderTextV(11, "12");
+
+			for ( int y=0 ; y<12 ; y++ )
+			{
+				for ( int x=0 ; x<5 ; x++ )
+				{
+					Cell cell = new Cell();
+					ArrayText st = new ArrayText();
+					string s = " ";
+					s += "L";
+					s += x+1;
+					s += "C";
+					s += y+1;
+					st.Text = s;
+					st.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+					cell.Children.Add(st);
+					table[x,y] = cell;
+				}
+			}
+			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(table);
+
+			window.FocusedWidget = table;
+
+			window.Show();
+		}
+
+		[Test] public void CheckAdornerScrollArray()
+		{
+			WindowFrame window = new WindowFrame();
+			
+			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.Text = "CheckAdorner";
+
+			CreateRadioLook(window.Root.Children, new Point(10, 245));
+
+			StaticText title = new StaticText();
+			title.Location = new Point(120, 245);
+			title.Size = new Size(280, 15);
+			title.Text = "Tableau rapide pour liste de gauche :";
+			title.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			window.Root.Children.Add(title);
+
+			ScrollArray table = new ScrollArray();
+			table.Location = new Point(10, 20);
+			table.Size = new Size(380, 200);
+			table.Columns = 5;
+			for ( int x=0 ; x<table.Columns ; x++ )
+			{
+				string s = "C"+(x+1);
+				table.SetHeaderText(x, s);
+				table.SetWidthColumn(x, 80);
+				//table.SetAlignmentColumn(x, ContentAlignment.MiddleCenter);
+			}
+			for ( int y=0 ; y<100 ; y++ )
+			{
+				for ( int x=0 ; x<table.Columns ; x++ )
+				{
+					string s = "";
+					s += y+1;
+					s += ".";
+					s += x+1;
+					table.SetText(y, x, s);
+				}
+			}
+			//table.AdjustToMultiple(Widgets.ScrollArrayAdjust.MoveDown);
+			//table.AdjustToContent(Widgets.ScrollArrayAdjust.MoveDown, 10, 1000);
+			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(table);
+
+			window.FocusedWidget = table;
+
+			window.Show();
+		}
+
+
+		
+		// Crée les 3 boutons radio pour changer de look.
+		protected void CreateRadioLook(Widget.WidgetCollection collection, Point origine)
+		{
+			RadioButton look1 = new RadioButton();
+			look1.Name = "Default";
+			look1.Location = new Point(origine.X, origine.Y+30);
+			look1.Size = new Size(100, 13);
+			look1.Text = "Look <m>s</m>tandard";
+			look1.ActiveState = WidgetState.ActiveYes;
+			look1.Group = "Look";
+			look1.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			look1.ActiveStateChanged += new EventHandler(this.HandleLook);
+			collection.Add(look1);
+
+			RadioButton look2 = new RadioButton();
+			look2.Name = "LookXP";
+			look2.Location = new Point(origine.X, origine.Y+15);
+			look2.Size = new Size(100, 13);
+			look2.Text = "Look <m>X</m>P";
+			look2.Group = "Look";
+			look2.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			look2.ActiveStateChanged += new EventHandler(this.HandleLook);
+			collection.Add(look2);
+
+			RadioButton look3 = new RadioButton();
+			look3.Name = "LookDany";
+			look3.Location = new Point(origine.X, origine.Y+0);
+			look3.Size = new Size(100, 13);
+			look3.Text = "Look <m>D</m>any";
+			look3.Group = "Look";
+			look3.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			look3.ActiveStateChanged += new EventHandler(this.HandleLook);
+			collection.Add(look3);
+		}
+
+		private void HandleLook(object sender)
+		{
+			RadioButton button = sender as RadioButton;
+			if (button.ActiveState == WidgetState.ActiveYes)
+			{
+				Widgets.Adorner.Factory.SetActive(button.Name);
+				button.RootParent.Invalidate();  // redessine toute la fenêtre
+			}
+		}
+
+		[Test] public void CheckAdornerBug1()
+		{
+			WindowFrame window = new WindowFrame();
+			
+			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.Text = "CheckAdorner";
+
+			Button button1 = new Button();
+			//button1.Text = "";
+			button1.Location = new Point(50, 50);
+			button1.Size = new Size(100, 30);
+			button1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(button1);
+
+			window.Show();
+		}
+
+		[Test] public void CheckAdornerBug2()
+		{
+			WindowFrame window = new WindowFrame();
+			
+			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.Text = "CheckAdorner";
+
+			TextField text = new TextField(TextFieldType.SingleLine);
+			text.Name = "TextField";
+			text.Location = new Point(160, 150);
+			text.Size = new Size(100, 20);
+			text.Text = "Bonjour";
+			text.Cursor = text.Text.Length;
+			text.Alignment = ContentAlignment.MiddleRight;
+			text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(text);
+
+			window.Show();
+		}
+
+		[Test] public void CheckAdornerTestParents()
+		{
+			WindowFrame window = new WindowFrame();
+			
+			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.Text = "CheckAdorner";
+
+			Button button1 = new Button();
+			button1.Text = "Pere";
+			button1.Location = new Point(50, 50);
+			button1.Size = new Size(300, 200);
+			button1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(button1);
+
+			Button button2 = new Button();
+			button2.Text = "Fils";
+			button2.Location = new Point(220, 10);
+			button2.Size = new Size(100, 30);
+			button2.Anchor = AnchorStyles.Left|AnchorStyles.Bottom;
+			button1.Children.Add(button2);
+
+			window.Show();
 		}
 
 		[Test] public void CheckAdornerBase()

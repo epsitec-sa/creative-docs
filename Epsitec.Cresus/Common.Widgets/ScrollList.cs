@@ -24,6 +24,7 @@ namespace Epsitec.Common.Widgets
 
 			this.lineHeight = this.GetLineHeight();
 			this.scroller = new Scroller();
+			this.scroller.Invert = true;
 			this.scroller.Moved += new EventHandler(this.HandleScroller);
 			this.Children.Add(this.scroller);
 		}
@@ -195,7 +196,8 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque l'ascenseur a bougé.
 		private void HandleScroller(object sender)
 		{
-			this.FirstLine = (int)(this.scroller.Range-this.scroller.Position);
+			this.FirstLine = (int)this.scroller.Position;
+			this.SetFocused(true);
 		}
 
 
@@ -293,13 +295,12 @@ namespace Epsitec.Common.Widgets
 				this.scroller.Show();
 				this.scroller.Range = total-this.visibleLines;
 				this.scroller.Display = this.scroller.Range*((double)this.visibleLines/total);
-				this.scroller.Position = this.scroller.Range-this.firstLine;
+				this.scroller.Position = this.firstLine;
 				this.scroller.ButtonStep = 1;
 				this.scroller.PageStep = this.visibleLines/2;
 			}
 
 			this.UpdateClientGeometry();
-			this.UpdateTextlayouts();
 		}
 
 		// Met à jour les textes.
@@ -322,10 +323,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateClientGeometry();
 			
-			if ( this.lineHeight == 0 )
-			{
-				return;  // PA
-			}
+			if ( this.lineHeight == 0 )  return;
 
 			Drawing.Rectangle rect = this.Bounds;
 			this.margin = 3;
@@ -344,6 +342,8 @@ namespace Epsitec.Common.Widgets
 				Drawing.Rectangle aRect = new Drawing.Rectangle(this.margin+rect.Width-this.rightMargin, this.margin, this.rightMargin, rect.Height);
 				this.scroller.Bounds = aRect;
 			}
+
+			this.UpdateTextlayouts();
 		}
 
 
@@ -385,6 +385,8 @@ namespace Epsitec.Common.Widgets
 			int max = System.Math.Min(this.visibleLines, this.list.Count);
 			for ( int i=0 ; i<max ; i++ )
 			{
+				if ( this.textLayouts[i] == null )  break;
+
 				Drawing.Color color = Drawing.Color.Empty;
 
 				if ( i+this.firstLine == this.selectedLine )

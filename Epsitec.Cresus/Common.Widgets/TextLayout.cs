@@ -22,7 +22,7 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( value != this.text )
+				if ( this.text == null || value != this.text )
 				{
 					int offsetError;
 					if ( TextLayout.CheckSyntax(value, out offsetError) )
@@ -103,6 +103,20 @@ namespace Epsitec.Common.Widgets
 					this.alignment = value;
 					this.isDirty = true;
 				}
+			}
+		}
+
+		// Mode de césure.
+		public Drawing.TextBreakMode BreakMode
+		{
+			get
+			{
+				return this.breakMode;
+			}
+
+			set
+			{
+				this.breakMode = value;
 			}
 		}
 		
@@ -1208,7 +1222,8 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						Drawing.TextBreakMode mode = bol ? Drawing.TextBreakMode.Split : Drawing.TextBreakMode.None;
+						//Drawing.TextBreakMode mode = bol ? Drawing.TextBreakMode.Split : Drawing.TextBreakMode.None;
+						Drawing.TextBreakMode mode = this.breakMode;
 						Drawing.TextBreak tb = new Drawing.TextBreak(blockFont, buffer.ToString(), fontItem.fontSize, mode);
 
 						string breakText;
@@ -1219,6 +1234,7 @@ namespace Epsitec.Common.Widgets
 						{
 							if ( breakWidth == 0 )  // pas la place ?
 							{
+								if ( restWidth == this.layoutSize.Width )  break;
 								restWidth = this.layoutSize.Width;
 								bol = true;
 								continue;
@@ -1241,8 +1257,7 @@ namespace Epsitec.Common.Widgets
 							block.visible    = false;
 							this.blocks.Add(block);
 
-							// TODO: améliorer GetNextBreak !!!
-							textIndex += breakChars; //breakText.Length+1;
+							textIndex += breakChars;
 
 							if ( tb.MoreText )  // reste encore du texte ?
 							{
@@ -1765,6 +1780,7 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Font					font = Drawing.Font.DefaultFont;
 		protected double						fontSize = Drawing.Font.DefaultFontSize;
 		protected Drawing.Size					layoutSize;
+		protected Drawing.TextBreakMode			breakMode = Drawing.TextBreakMode.Split;
 		protected int							totalLine;
 		protected int							visibleLine;
 		protected Drawing.IImageProvider		imageProvider = Drawing.ImageProvider.Default;

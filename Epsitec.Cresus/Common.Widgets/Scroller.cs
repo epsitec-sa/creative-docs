@@ -38,6 +38,28 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		// Inversion du fonctionnement.
+		// Ascenseur vertical:   false -> zéro en bas
+		// Ascenseur vertical:   true  -> zéro en haut
+		// Ascenseur horizontal: false -> zéro à gauche
+		// Ascenseur horizontal: true  -> zéro à droite
+		public bool Invert
+		{
+			get
+			{
+				return this.invert;
+			}
+
+			set
+			{
+				if ( value != this.invert )
+				{
+					this.invert = value;
+					this.Invalidate();
+				}
+			}
+		}
+		
 		// Hauteur totale représentée par l'ascenseur.
 		public double Range
 		{
@@ -249,14 +271,17 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.pageScroll == 0 )
 			{
+				double p;
 				if ( this.vertical )
 				{
-					this.Position = (pos-this.cabOffset-this.sliderRect.Bottom)*this.range/(this.sliderRect.Height-this.cabRect.Height);
+					p = (pos-this.cabOffset-this.sliderRect.Bottom)*this.range/(this.sliderRect.Height-this.cabRect.Height);
 				}
 				else
 				{
-					this.Position = (pos-this.cabOffset-this.sliderRect.Left)*this.range/(this.sliderRect.Width-this.cabRect.Width);
+					p = (pos-this.cabOffset-this.sliderRect.Left)*this.range/(this.sliderRect.Width-this.cabRect.Width);
 				}
+				if ( this.invert )  p = this.range-p;
+				this.Position = p;
 			}
 		}
 
@@ -266,7 +291,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.mouseDown && this.pageScroll != 0 )
 			{
-				this.Position += this.pageScroll;
+				if ( this.invert )  this.Position -= this.pageScroll;
+				else                this.Position += this.pageScroll;
 			}
 		}
 
@@ -284,12 +310,14 @@ namespace Epsitec.Common.Widgets
 
 			if ( button == this.arrowUp )
 			{
-				this.Position += this.buttonStep;
+				if ( this.invert )  this.Position -= this.buttonStep;
+				else                this.Position += this.buttonStep;
 				this.Invalidate();
 			}
 			else if ( button == this.arrowDown )
 			{
-				this.Position -= this.buttonStep;
+				if ( this.invert )  this.Position += this.buttonStep;
+				else                this.Position -= this.buttonStep;
 				this.Invalidate();
 			}
 		}
@@ -325,11 +353,14 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.range > 0 && this.display > 0 )
 			{
+				double pos = this.position;
+				if ( this.invert )  pos = this.range-pos;
+
 				if ( this.vertical )
 				{
 					double h = this.sliderRect.Height*this.display/this.range;
 					if ( h < Scroller.minimalCab )  h = Scroller.minimalCab;
-					double p = (this.position/this.range)*(this.sliderRect.Height-h);
+					double p = (pos/this.range)*(this.sliderRect.Height-h);
 					this.cabRect = this.sliderRect;
 					this.cabRect.Bottom += p;
 					this.cabRect.Height = h;
@@ -349,7 +380,7 @@ namespace Epsitec.Common.Widgets
 				{
 					double h = this.sliderRect.Width*this.display/this.range;
 					if ( h < Scroller.minimalCab )  h = Scroller.minimalCab;
-					double p = (this.position/this.range)*(this.sliderRect.Width-h);
+					double p = (pos/this.range)*(this.sliderRect.Width-h);
 					this.cabRect = this.sliderRect;
 					this.cabRect.Left += p;
 					this.cabRect.Width = h;
@@ -371,7 +402,7 @@ namespace Epsitec.Common.Widgets
 			adorner.PaintScrollerBackground(graphics, rect, tabRect, this.PaintState, this.RootDirection);
 			
 			// Dessine la cabine.
-			if ( this.range > 0 && this.display > 0 )
+			if ( this.range > 0 && this.display > 0 && this.IsEnabled )
 			{
 				Widgets.Direction dir = this.vertical ? Direction.Up : Direction.Left;
 				adorner.PaintScrollerHandle(graphics, this.cabRect, Drawing.Rectangle.Empty, this.PaintState&(~WidgetState.Engaged), dir);
@@ -384,6 +415,7 @@ namespace Epsitec.Common.Widgets
 		protected static double		standardWidth = 15;
 		protected static double		minimalCab = 8;
 		protected bool				vertical = true;
+		protected bool				invert = false;
 		protected double			range = 1;
 		protected double			display = 0.5;
 		protected double			position = 0;

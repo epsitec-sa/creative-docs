@@ -147,6 +147,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "FicheTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "FontTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -177,6 +182,11 @@
                 />
                 <File
                     RelPath = "TextLayoutTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TinyDataBase.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

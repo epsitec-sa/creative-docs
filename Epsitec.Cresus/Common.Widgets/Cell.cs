@@ -2,17 +2,7 @@ namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe Cell implémente un conteneur pour peupler des tableaux et
-	/// des grilles. Deux scénarios sont possibles :
-	/// 
-	/// - Seule une valeur est définie (Cell.Value), laquelle sert aussi de
-	///   contenu. (cas Cell.IsSimple == true)
-	/// 
-	/// - En plus de la valeur, un contenu riche est défini (Cell.Text), lequel
-	///   est affiché par la cellule elle-même, à la place de la valeur.
-	///   (cas Cell.IsSimple == false)
-	/// 
-	/// Dans tous les cas, Cell.Contents retourne la chaîne formatée utilisée
-	/// pour afficher le contenu.
+	/// des grilles.
 	/// </summary>
 	public class Cell : AbstractGroup
 	{
@@ -21,49 +11,6 @@ namespace Epsitec.Common.Widgets
 			this.internal_state |= InternalState.AcceptTaggedText;
 		}
 		
-		
-		public bool IsSimple
-		{
-			get
-			{
-				return this.text == null;
-			}
-		}
-		
-		public string Value
-		{
-			get
-			{
-				return this.value;
-			}
-
-			set
-			{
-				this.value = value;
-			}
-		}
-		
-		public string Contents
-		{
-			get
-			{
-				if ( this.IsSimple )
-				{
-					if ( this.AcceptTaggedText )
-					{
-						return TextLayout.ConvertToTaggedText(this.value);
-					}
-					else
-					{
-						return this.value;
-					}
-				}
-				else
-				{
-					return this.Text;
-				}
-			}
-		}
 		
 		public AbstractCellArray CellArray
 		{
@@ -98,8 +45,27 @@ namespace Epsitec.Common.Widgets
 			this.rankRow    = row;
 		}
 		
+
+#if false
+		// Dessine la cellule.
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+
+			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			WidgetState       state = this.PaintState;
+			Direction         dir   = this.RootDirection;
+			
+			if ( this.IsSelected )
+			{
+				Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
+				rects[0] = rect;
+				Drawing.Point pos = new Drawing.Point(0,0);
+				adorner.PaintTextSelectionBackground(graphics, pos, rects);
+			}
+		}
+#endif
 		
-		protected string		value;
 		protected int			rankColumn;
 		protected int			rankRow;
 	}

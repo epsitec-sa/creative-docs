@@ -20,6 +20,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorControlDark       = Drawing.Color.FromName("ControlDark");
 			this.colorControlDarkDark   = Drawing.Color.FromName("ControlDarkDark");
 			this.colorCaption           = Drawing.Color.FromName("ActiveCaption");
+			this.colorCaptionText       = Drawing.Color.FromName("ActiveCaptionText");
 
 			double r = 1-(1-this.colorControlLight.R)/2;
 			double g = 1-(1-this.colorControlLight.G)/2;
@@ -285,6 +286,8 @@ namespace Epsitec.Common.Widgets.Adorner
 										  Direction shadow,
 										  ButtonStyle style)
 		{
+			if ( text == null )  return;
+
 			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 			{
 				pos.X ++;
@@ -561,6 +564,51 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 		}
 
+		// Dessine le texte statique dans un tableau.
+		public void PaintArrayTextLayout(Drawing.Graphics graphics,
+										 Drawing.Rectangle rect,
+										 TextLayout text,
+										 WidgetState state,
+										 Direction shadow)
+		{
+			Drawing.Point pos = new Drawing.Point(0,0);
+			if ( (state&WidgetState.Selected) == 0 )
+			{
+				if ( text != null )
+				{
+					text.Paint(pos, graphics);
+				}
+			}
+			else
+			{
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(this.colorCaption);
+
+				if ( text != null )
+				{
+					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorCaptionText);
+				}
+			}
+		}
+
+		// Dessine le fond d'un bouton d'en-tête de tableau.
+		public void PaintHeaderBackground(Drawing.Graphics graphics,
+										  Drawing.Rectangle rect,
+										  WidgetState state,
+										  Direction shadow,
+										  Direction type)
+		{
+			this.PaintButtonBackground(graphics, rect, state, shadow, ButtonStyle.Scroller);
+		}
+
+		public void PaintHeaderForeground(Drawing.Graphics graphics,
+										  Drawing.Rectangle rect,
+										  WidgetState state,
+										  Direction shadow,
+										  Direction type)
+		{
+		}
+
 		// Dessine le rectangle pour indiquer le focus.
 		public void PaintFocusBox(Drawing.Graphics graphics,
 								  Drawing.Rectangle rect)
@@ -609,6 +657,8 @@ namespace Epsitec.Common.Widgets.Adorner
 										   WidgetState state,
 										   Direction shadow)
 		{
+			if ( text == null )  return;
+
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
 				text.Paint(pos, graphics);
@@ -801,5 +851,6 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorControlDarkDark;
 		protected Drawing.Color		colorScrollerBack;
 		protected Drawing.Color		colorCaption;
+		protected Drawing.Color		colorCaptionText;
 	}
 }

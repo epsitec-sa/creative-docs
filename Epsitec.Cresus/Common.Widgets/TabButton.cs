@@ -7,9 +7,14 @@ namespace Epsitec.Common.Widgets
 	{
 		public TabButton()
 		{
-			this.internal_state &= ~ InternalState.Engageable;
+			this.internal_state &= ~InternalState.Engageable;
 		}
 		
+		public override Drawing.Rectangle GetPaintBounds()
+		{
+			return new Drawing.Rectangle(0, -2, this.client_info.width, this.client_info.height+2);
+		}
+
 		// Dessine le bouton.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
@@ -22,8 +27,8 @@ namespace Epsitec.Common.Widgets
 
 			TabBook tabBook = this.Parent as TabBook;
 			Drawing.Rectangle frameRect = tabBook.TabClipRectangle;
-			Drawing.Rectangle localClip = tabBook.MapClientToRoot (frameRect);
-			Drawing.Rectangle saveClip  = graphics.SaveClippingRectangle ();
+			Drawing.Rectangle localClip = tabBook.MapClientToRoot(frameRect);
+			Drawing.Rectangle saveClip  = graphics.SaveClippingRectangle();
 			graphics.SetClippingRectangle(localClip);
 			
 			if ( this.ActiveState == WidgetState.ActiveYes )
@@ -41,7 +46,5 @@ namespace Epsitec.Common.Widgets
 
 			graphics.RestoreClippingRectangle(saveClip);
 		}
-		
-		
 	}
 }
