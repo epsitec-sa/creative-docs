@@ -24,8 +24,8 @@ namespace Epsitec.Common.Widgets
 			this.v_scroller.VisibleRangeRatio = 1;
 			this.v_scroller.IsInverted        = true;
 			
-			this.h_scroller.ValueChanged += new EventHandler (this.HandleHScrollerValueChanged);
-			this.v_scroller.ValueChanged += new EventHandler (this.HandleVScrollerValueChanged);
+			this.h_scroller.ValueChanged += new Support.EventHandler (this.HandleHScrollerValueChanged);
+			this.v_scroller.ValueChanged += new Support.EventHandler (this.HandleVScrollerValueChanged);
 			
 			this.UpdateGeometry ();
 		}
@@ -72,8 +72,8 @@ namespace Epsitec.Common.Widgets
 				
 				this.panel = null;
 				
-				this.h_scroller.ValueChanged -= new EventHandler (this.HandleHScrollerValueChanged);
-				this.v_scroller.ValueChanged -= new EventHandler (this.HandleVScrollerValueChanged);
+				this.h_scroller.ValueChanged -= new Support.EventHandler (this.HandleHScrollerValueChanged);
+				this.v_scroller.ValueChanged -= new Support.EventHandler (this.HandleVScrollerValueChanged);
 				
 				this.h_scroller.Dispose ();
 				this.v_scroller.Dispose ();
@@ -99,8 +99,8 @@ namespace Epsitec.Common.Widgets
 				panel.SetEmbedder (this);
 				panel.Aperture = Drawing.Rectangle.Empty;
 				
-				panel.LayoutChanged += new EventHandler (this.HandlePanelLayoutChanged);
-				panel.SurfaceSizeChanged += new EventHandler (this.HandlePanelSurfaceSizeChanged);
+				panel.LayoutChanged += new Support.EventHandler (this.HandlePanelLayoutChanged);
+				panel.SurfaceSizeChanged += new Support.EventHandler (this.HandlePanelSurfaceSizeChanged);
 			}
 		}
 		
@@ -108,8 +108,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (panel != null)
 			{
-				panel.LayoutChanged -= new EventHandler (this.HandlePanelLayoutChanged);
-				panel.SurfaceSizeChanged -= new EventHandler (this.HandlePanelSurfaceSizeChanged);
+				panel.LayoutChanged -= new Support.EventHandler (this.HandlePanelLayoutChanged);
+				panel.SurfaceSizeChanged -= new Support.EventHandler (this.HandlePanelSurfaceSizeChanged);
 				
 				panel.SetEmbedder (null);
 				panel.Aperture = Drawing.Rectangle.Infinite;
