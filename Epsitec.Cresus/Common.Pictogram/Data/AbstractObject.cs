@@ -895,7 +895,8 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Adapte les propriétés de l'objet collé, pour empêcher d'utiliser un
-		// pattern dans un pattern.
+		// pattern dans un pattern. On empêche aussi d'utiliser un style dans
+		// un pattern.
 		public virtual void PasteAdaptProperties(bool isPatternPossible)
 		{
 			if ( isPatternPossible )  return;
@@ -904,6 +905,15 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( line != null )
 			{
 				line.PatternId = 0;
+			}
+
+			int total = this.TotalProperty;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				AbstractProperty property = this.Property(i);
+				if ( property == null )  break;
+
+				property.StyleID = 0;
 			}
 		}
 

@@ -779,6 +779,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.panelPages.Update();
 			this.panelLayers.Update();
 			this.UpdatePagesLayers();
+			this.bookStyles.SetEnabled(this.drawer.IconObjects.CurrentPattern == 0);
 		}
 
 		private void HandlePanelPagesObjectsChanged(object sender)
@@ -857,6 +858,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					panel.ExtendedSize = this.drawer.GetPropertyExtended(property.Type);
 					panel.Multi = property.Multi;
 					panel.LayoutDirect = (property.Type == PropertyType.Name);
+					panel.PatternDirect = (this.drawer.IconObjects.CurrentPattern != 0);
 
 					AbstractProperty p = this.drawer.GetProperty(property.Type);
 					panel.SetProperty(p);

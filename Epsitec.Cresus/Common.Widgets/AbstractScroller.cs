@@ -491,10 +491,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void OnEntered(MessageEventArgs e)
+		{
+			base.OnEntered (e);
+			this.Invalidate ();
+		}
+		
 		protected override void OnExited(MessageEventArgs e)
 		{
 			base.OnExited (e);
 			this.HiliteZone = Zone.None;
+			this.Invalidate ();
 		}
 
 		protected override void OnStillEngaged()

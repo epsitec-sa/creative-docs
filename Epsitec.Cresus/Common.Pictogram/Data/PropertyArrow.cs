@@ -498,6 +498,7 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Point pa = PropertyArrow.Extremity(p1, p2, len, len*ef1);
 			Drawing.Point pp1 = Drawing.Point.Move(p1, p2, len);
 			double d = Drawing.Point.Distance(pa, pp1);
+			if ( d == 0 )  return 0;
 			return (width/2)/d;
 		}
 
@@ -506,7 +507,7 @@ namespace Epsitec.Common.Pictogram.Data
 												 double distPara, double distPerp)
 		{
 			Drawing.Point c = Drawing.Point.Move(p1, p2, distPara);
-			Drawing.Point p = Drawing.Point.Move(c, p2, System.Math.Abs(distPerp));
+			Drawing.Point p = Drawing.Point.Move(c, c+p2-p1, System.Math.Abs(distPerp));
 			double angle = (distPerp > 0) ? 90 : -90;
 			return Drawing.Transform.RotatePointDeg(c, angle, p);
 		}

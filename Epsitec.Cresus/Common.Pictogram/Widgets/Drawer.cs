@@ -10,14 +10,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	[SuppressBundleSupport]
 	
-	public class Drawer : Epsitec.Common.Widgets.Button
+	public class Drawer : Epsitec.Common.Widgets.Widget
 	{
 		public Drawer()
 		{
 			this.InternalState |= InternalState.AutoDoubleClick;
 			this.BackColor = Drawing.Color.FromBrightness(1);  // fond blanc
-
-			this.ButtonStyle = ButtonStyle.ToolItem;
 
 			this.iconObjects = new IconObjects();
 			this.iconObjects.Drawer = this;
@@ -2441,12 +2439,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		// Dessine l'icône.
+		static Drawing.Color debugColor = Drawing.Color.FromBrightness(1);
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			//?Drawing.Rectangle clip = graphics.SaveClippingRectangle();
 			//?graphics.ResetClippingRectangle();
 			//?graphics.SetClippingRectangle(this.InnerBounds);
 
+#if false
 			if ( this.iconObjects.CurrentPattern != 0 )
 			{
 				graphics.AddFilledRectangle(clipRect);
@@ -2457,6 +2457,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 				graphics.AddFilledRectangle(clipRect);
 				graphics.RenderSolid(this.BackColor);
 			}
+#else
+			graphics.AddFilledRectangle(clipRect);
+			graphics.RenderSolid(Drawer.debugColor);
+			Drawer.debugColor.R = (Drawer.debugColor.R+0.35)%1.0;
+			Drawer.debugColor.G = (Drawer.debugColor.G+0.17)%1.0;
+			Drawer.debugColor.B = (Drawer.debugColor.B+0.59)%1.0;
+#endif
 
 			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
 			this.iconContext.UniqueColor = Drawing.Color.Empty;

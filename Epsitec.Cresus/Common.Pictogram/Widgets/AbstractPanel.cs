@@ -109,6 +109,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 			set { this.layoutDirect = value; }
 		}
 
+		// Indique si le panneau édite directement une propriété d'un motif.
+		public bool PatternDirect
+		{
+			get { return this.patternDirect; }
+			set { this.patternDirect = value; }
+		}
+
 
 		// Propriété -> widget.
 		public virtual void SetProperty(AbstractProperty property)
@@ -168,7 +175,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			rTop.Offset(this.Client.Width-this.extendedZoneWidth, 0);
 			this.stylesButton.Bounds = rTop;
-			this.stylesButton.SetVisible(!this.styleDirect && !this.layoutDirect);
+			this.stylesButton.SetVisible(!this.styleDirect && !this.layoutDirect && !this.patternDirect);
 		}
 
 
@@ -333,5 +340,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected string					styleName = "";
 		protected bool						styleDirect = false;
 		protected bool						layoutDirect = false;
+		protected bool						patternDirect = false;
 	}
 }

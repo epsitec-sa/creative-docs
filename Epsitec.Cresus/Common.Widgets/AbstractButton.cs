@@ -43,6 +43,15 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public override Drawing.Rectangle GetShapeBounds()
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			Drawing.Rectangle rect = this.Client.Bounds;
+			rect.Inflate(adorner.GeometryButtonShapeBounds);
+			return rect;
+		}
+
+		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			switch ( message.Type )
@@ -100,15 +109,20 @@ namespace Epsitec.Common.Widgets
 			base.OnShortcutPressed();
 		}
 
-		public override Drawing.Rectangle GetShapeBounds()
+		protected override void OnEntered(MessageEventArgs e)
 		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryButtonShapeBounds);
-			return rect;
+			base.OnEntered (e);
+			this.Invalidate ();
+		}
+		
+		protected override void OnExited(MessageEventArgs e)
+		{
+			base.OnExited (e);
+			this.Invalidate ();
 		}
 
-
+		
+		
 		protected bool								isKeyboardPressed;
 	}
 }
