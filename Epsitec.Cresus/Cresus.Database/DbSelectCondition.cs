@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Database
 					break;
 				
 				case DbSelectRevision.LiveCurrent:
-					this.AddCondition (main_table.Columns[Tags.ColumnStatus], DbCompare.LessThan, DbKey.ConvertToIntStatus (DbRowStatus.Archive));
+					this.AddCondition (main_table.Columns[Tags.ColumnStatus], DbCompare.LessThan, DbKey.ConvertToIntStatus (DbRowStatus.ArchiveCopy));
 					break;
 				
 				case DbSelectRevision.All:

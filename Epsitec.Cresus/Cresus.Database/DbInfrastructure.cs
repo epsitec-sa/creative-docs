@@ -899,7 +899,7 @@ namespace Epsitec.Cresus.Database
 				switch (keys[i].Status)
 				{
 					case DbRowStatus.Live:
-					case DbRowStatus.Clean:
+					case DbRowStatus.Copied:
 						return keys[i];
 				}
 			}
@@ -958,7 +958,7 @@ namespace Epsitec.Cresus.Database
 			
 			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName ("T", name_column), SqlField.CreateConstant (value, DbRawType.String)));
 
-			this.AddKeyExtraction (query, "T", DbRowSearchMode.LiveOrClean);
+			this.AddKeyExtraction (query, "T", DbRowSearchMode.LiveOrCopied);
 			
 			this.sql_builder.SelectData (query);
 			
@@ -1033,7 +1033,7 @@ namespace Epsitec.Cresus.Database
 				//	'active' (ignore les versions archivées et détruites). Extrait aussi les colonnes
 				//	correspondantes.
 				
-				this.AddKeyExtraction (query, "T_TABLE", DbRowSearchMode.LiveOrClean);
+				this.AddKeyExtraction (query, "T_TABLE", DbRowSearchMode.LiveOrCopied);
 				this.AddKeyExtraction (query, "T_COLUMN", Tags.ColumnRefTable, "T_TABLE");
 			}
 			else
@@ -1182,7 +1182,7 @@ namespace Epsitec.Cresus.Database
 				//	On extrait toutes les définitions de types qui correspondent à la version
 				//	'active'.
 				
-				this.AddKeyExtraction (query, "T_TYPE", DbRowSearchMode.LiveOrClean);
+				this.AddKeyExtraction (query, "T_TYPE", DbRowSearchMode.LiveOrCopied);
 			}
 			else
 			{
@@ -1429,8 +1429,8 @@ namespace Epsitec.Cresus.Database
 			
 			switch (search_mode)
 			{
-				case DbRowSearchMode.Clean:
-					status = DbRowStatus.Clean;
+				case DbRowSearchMode.Copied:
+					status = DbRowStatus.Copied;
 					function = SqlFunctionType.CompareEqual;
 					break;
 				
@@ -1439,16 +1439,16 @@ namespace Epsitec.Cresus.Database
 					function = SqlFunctionType.CompareEqual;
 					break;
 				
-				case DbRowSearchMode.LiveOrClean:
-					status = DbRowStatus.Archive;
+				case DbRowSearchMode.LiveOrCopied:
+					status = DbRowStatus.ArchiveCopy;
 					function = SqlFunctionType.CompareLessThan;
 					break;
 				
 				case DbRowSearchMode.All:
 					return;
 				
-				case DbRowSearchMode.Archive:
-					status = DbRowStatus.Archive;
+				case DbRowSearchMode.ArchiveCopy:
+					status = DbRowStatus.ArchiveCopy;
 					function = SqlFunctionType.CompareEqual;
 					break;
 
