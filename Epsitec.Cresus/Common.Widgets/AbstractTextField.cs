@@ -37,7 +37,6 @@ namespace Epsitec.Common.Widgets
 			this.MouseCursor = MouseCursor.AsIBeam;
 			
 			this.CreateTextLayout();
-			this.TextLayout.BreakMode |= Drawing.TextBreakMode.SingleLine;
 			
 			this.navigator = new TextNavigator(this.TextLayout);
 			this.navigator.TextDeleted += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextDeleted);
