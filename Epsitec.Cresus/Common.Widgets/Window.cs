@@ -1142,25 +1142,6 @@ namespace Epsitec.Common.Widgets
 						}
 						break;
 				}
-				
-				if (message.Swallowed)
-				{
-					//	Le message a été mangé. Il faut donc aussi manger le message
-					//	correspondant si les messages viennent par paire.
-							
-					switch (message.Type)
-					{
-						case MessageType.MouseDown:
-							this.window.FilterMouseMessages = true;
-							this.capturing_widget = null;
-							break;
-								
-						case MessageType.KeyDown:
-							this.window.FilterKeyMessages = true;
-							break;
-					}
-				}
-				
 			}
 			else
 			{
@@ -1241,13 +1222,35 @@ namespace Epsitec.Common.Widgets
 				
 				if (shortcut != null)
 				{
-					message.Handled = this.root.ShortcutHandler (shortcut);
+					if (this.root.ShortcutHandler (shortcut))
+					{
+						message.Handled   = true;
+						message.Swallowed = true;
+					}
 				}
 				
 				if ((! message.Handled) &&
 					(this.owner != null))
 				{
 					this.owner.DispatchMessage (message);
+				}
+			}
+			
+			if (message.Swallowed)
+			{
+				//	Le message a été mangé. Il faut donc aussi manger le message
+				//	correspondant si les messages viennent par paire.
+						
+				switch (message.Type)
+				{
+					case MessageType.MouseDown:
+						this.window.FilterMouseMessages = true;
+						this.capturing_widget = null;
+						break;
+							
+					case MessageType.KeyDown:
+						this.window.FilterKeyMessages = true;
+						break;
 				}
 			}
 		}
