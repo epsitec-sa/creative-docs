@@ -400,7 +400,7 @@ namespace Epsitec.Common.Support
 			string type_attr  = this.GetAttributeValue (xmlroot, "type");
 			string about_attr = this.GetAttributeValue (xmlroot, "about");
 			
-			if (name_attr != null)
+			if ((name_attr != null) && (name_attr != ""))
 			{
 				if ((this.name == null) ||
 					(this.name == ""))
@@ -408,11 +408,11 @@ namespace Epsitec.Common.Support
 					this.name = name_attr;
 				}
 			}
-			if (type_attr != null)
+			if ((type_attr != null) && (type_attr != ""))
 			{
 				this.type = type_attr;
 			}
-			if (about_attr != null)
+			if ((about_attr != null) && (about_attr != ""))
 			{
 				this.about = about_attr;
 			}
@@ -507,17 +507,57 @@ namespace Epsitec.Common.Support
 		
 		public Field CreateField(ResourceFieldType type)
 		{
-			if (type != ResourceFieldType.Data)
+			return this.CreateField (type, null);
+		}
+		
+		public Field CreateField(ResourceFieldType type, object more)
+		{
+			switch (type)
 			{
-				throw new System.NotImplementedException (string.Format ("{0} support not implemented.", type));
+				case ResourceFieldType.Data:
+					return this.CreateFieldAsData ();
+				
+				case ResourceFieldType.List:
+					return this.CreateFieldAsList (more as System.Collections.ICollection);
 			}
 			
+			throw new System.NotImplementedException (string.Format ("{0} support not implemented.", type));
+		}
+		
+		protected Field CreateFieldAsData()
+		{
 			System.Xml.XmlDocument  doc  = this.XmlDocument;
 			System.Xml.XmlElement   elem = doc.CreateElement ("data");
 			System.Xml.XmlAttribute attr = doc.CreateAttribute ("name");
 			
 			elem.Attributes.Append (attr);
 			attr.Value = "?";
+			
+			Field field = new Field (this, elem);
+			
+			return field;
+		}
+		
+		protected Field CreateFieldAsList(System.Collections.ICollection collection)
+		{
+			if (collection == null)
+			{
+				throw new System.ArgumentNullException ("collection", "List field needs a valid collection.");
+			}
+			
+			ResourceBundle[] bundles = new ResourceBundle[collection.Count];
+			collection.CopyTo (bundles, 0);
+			
+			System.Xml.XmlDocument  doc  = this.XmlDocument;
+			System.Xml.XmlElement   elem = doc.CreateElement ("list");
+			System.Xml.XmlAttribute attr = doc.CreateAttribute ("name");
+			
+			elem.Attributes.Append (attr);
+			
+			for (int i = 0; i < bundles.Length; i++)
+			{
+				elem.AppendChild (bundles[i].CreateXmlNode (doc));
+			}
 			
 			Field field = new Field (this, elem);
 			
@@ -904,12 +944,18 @@ namespace Epsitec.Common.Support
 			
 			public System.Xml.XmlNode		Xml
 			{
-				get { return this.xml; }
+				get
+				{
+					return this.xml;
+				}
 			}
 			
 			public bool						IsEmpty
 			{
-				get { return this.parent == null; }
+				get
+				{
+					return this.parent == null;
+				}
 			}
 			
 			public bool						IsValid
@@ -936,9 +982,10 @@ namespace Epsitec.Common.Support
 			{
 				get
 				{
-					if (this.xml != null)
+					if ((this.xml != null) &&
+						(this.xml.FirstChild != null))
 					{
-						return this.xml.Name == "ref";
+						return this.xml.FirstChild.Name == "ref";
 					}
 					
 					return false;
