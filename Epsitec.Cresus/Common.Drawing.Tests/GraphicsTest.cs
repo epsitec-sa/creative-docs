@@ -341,6 +341,29 @@ namespace Epsitec.Common.Drawing
 			path1.LineTo (20, 95);
 			path1.Close ();
 			
+			//	Jouons un peu avec les arcs d'ellipse... D'abord les non jointifs.
+			
+			path1.MoveTo (50, 200);
+			path1.Arc (50, 200, 30, 20, 30 * 3.141592 / 180.0, 135 * 3.141592 / 180.0, true);
+			
+			Point pend = path1.CurrentPoint;
+			path1.Arc (pend, 3, 3, 0, 2*3.1415926, true);
+			path1.Close ();
+			
+			path1.MoveTo (50, 190);
+			path1.Arc (50, 190, 30, 20, 30 * 3.141592 / 180.0, 135 * 3.141592 / 180.0, false);
+			
+			//	...et maintenant les arcs jointifs.
+			
+			path1.MoveTo (90, 180);
+			path1.ArcTo (90, 180, 30, 30, 30 * 3.141592 / 180.0, 135 * 3.141592 / 180.0, true);
+			path1.Close ();
+			
+			path1.MoveTo (90, 180);
+			path1.ArcTo (90, 180, 30, 30, 145 * 3.141592 / 180.0, 20 * 3.141592 / 180.0, true);
+			path1.Close ();
+			
+			
 			path2.MoveTo (210, 10);
 			path2.LineTo (210, 110);
 			path2.LineTo (310, 60);

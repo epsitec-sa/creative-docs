@@ -233,6 +233,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TextBreakNew.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Transform.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
