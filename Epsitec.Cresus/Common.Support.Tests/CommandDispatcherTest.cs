@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support
 			CommandDispatcherTest.buffer.Length = 0;
 			
 			//	Vérifie que le dispatch se fait correctement, et que la visibilité des méthodes
-			//	soit respectée.
+			//	est bien respectée.
 			
 			dispatcher.Dispatch ("private-base-a", null);			//	privé, pas accessible dans la version dérivée
 			dispatcher.Dispatch ("private-base-x", null);			//	privé, pas accessible dans la version dérivée
@@ -40,6 +40,7 @@ namespace Epsitec.Common.Support
 		
 		static System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 		
+		#region XyzTestController classes
 		public class BaseTestController
 		{
 			public BaseTestController()
@@ -114,5 +115,6 @@ namespace Epsitec.Common.Support
 			{
 			}
 		}
+		#endregion
 	}
 }

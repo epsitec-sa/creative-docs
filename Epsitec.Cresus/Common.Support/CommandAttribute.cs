@@ -21,6 +21,7 @@ namespace Epsitec.Common.Support
 		
 		public CommandAttribute(string command_name)
 		{
+			this.command_name = command_name;
 		}
 		
 		

@@ -41,7 +41,6 @@ namespace Epsitec.Common.Support
 						(members[i].MemberType == System.Reflection.MemberTypes.Method))
 					{
 						System.Reflection.MethodInfo info = members[i] as System.Reflection.MethodInfo;
-						System.Diagnostics.Debug.WriteLine ("Method: " + info.Name + " in " + type.Name + " is a command.");
 						this.RegisterMethod (controller, info);
 					}
 				}
@@ -50,7 +49,10 @@ namespace Epsitec.Common.Support
 		
 		public void RegisterMethod(object controller, System.Reflection.MethodInfo info)
 		{
-			object[] attributes = info.GetCustomAttributes (CommandDispatcher.command_attr_type, true);
+			//	Ne parcourt que les attributs au niveau d'implémentation actuel (pas les classes dérivées,
+			//	ni les classes parent). Le parcours des parent est assuré par l'appelant.
+			
+			object[] attributes = info.GetCustomAttributes (CommandDispatcher.command_attr_type, false);
 			
 			foreach (CommandAttribute attribute in attributes)
 			{
@@ -87,12 +89,14 @@ namespace Epsitec.Common.Support
 		
 		
 		
-		protected void RegisterMethod(object controller, System.Reflection.MethodInfo info, CommandAttribute attribute)
+		protected void RegisterMethod(object controller, System.Reflection.MethodInfo method_info, CommandAttribute attribute)
 		{
-			System.Reflection.ParameterInfo[] param_info = info.GetParameters ();
+			System.Diagnostics.Debug.WriteLine ("Method: " + method_info.Name + " in " + method_info.DeclaringType.Name + " is a command called " + attribute.CommandName + ", " + method_info.ToString ());
+			
+			System.Reflection.ParameterInfo[] param_info = method_info.GetParameters ();
 			
 			CommandEventHandler handler = null;
-			EventRelay          relay   = new EventRelay (controller, info);
+			EventRelay          relay   = new EventRelay (controller, method_info);
 			
 			switch (param_info.Length)
 			{
@@ -120,7 +124,7 @@ namespace Epsitec.Common.Support
 			
 			if (handler == null)
 			{
-				throw new System.FormatException (string.Format ("{0}.{1} uses invalid signature: {2}.", controller.GetType ().Name, info.Name, info.ToString ()));
+				throw new System.FormatException (string.Format ("{0}.{1} uses invalid signature: {2}.", controller.GetType ().Name, method_info.Name, method_info.ToString ()));
 			}
 			
 			this.Register (attribute.CommandName, handler);
