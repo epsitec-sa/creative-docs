@@ -30,6 +30,7 @@ namespace Epsitec.Common.Widgets
 				column = System.Math.Min (column, this.max_columns-1);
 			
 				this.ShowEdition (ScrollArrayShowMode.Extremity);
+				this.Update ();
 				this.DispatchDummyMouseMoveEvent ();
 				this.edit_widgets[column].SetFocused (true);
 				this.edit_widgets[column].SelectAll ();
