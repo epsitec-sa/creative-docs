@@ -806,7 +806,6 @@ namespace Epsitec.Common.Widgets
 			StaticText        stats = text.GetProperty("stats") as StaticText;
 			
 			stats.Text = string.Format("{0} - {1},  after={2}", text.CursorFrom, text.CursorTo, text.CursorAfter);
-			text.TextLayout.SetupTextBreak();
 		}
 
 		private void HandleMultiBold(object sender, MessageEventArgs e)

@@ -8,6 +8,7 @@ namespace Epsitec.Common.Widgets
 			this.index = index;
 		}
 		
+		
 		public Drawing.Rectangle				Bounds
 		{
 			get { return this.rect; }
@@ -17,6 +18,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return this.index; }
 		}
+		
 		
 		private Drawing.Rectangle				rect;
 		private int								index;
@@ -69,11 +71,11 @@ namespace Epsitec.Common.Widgets
 					if ( TextLayout.CheckSyntax(value, out offsetError) )
 					{
 						this.text = value;
-						this.isDirty = true;
+						this.MarkContentsAsDirty();
 					}
 					else
 					{
-						throw new System.FormatException("Syntax error at char " + offsetError.ToString());
+						throw new System.FormatException(string.Format ("Syntax error at char {0}.", offsetError.ToString()));
 					}
 				}
 			}
@@ -97,7 +99,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.font )
 				{
 					this.font = value;
-					this.isDirty = true;
+					this.MarkContentsAsDirty();
 				}
 			}
 		}
@@ -115,7 +117,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.fontSize != value )
 				{
 					this.fontSize = value;
-					this.isDirty = true;
+					this.MarkContentsAsDirty();
 				}
 			}
 		}
@@ -153,7 +155,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.alignment != value )
 				{
 					this.alignment = value;
-					this.isDirty = true;
+					this.MarkLayoutAsDirty();
 				}
 			}
 		}
@@ -171,7 +173,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.breakMode != value )
 				{
 					this.breakMode = value;
-					this.isDirty = true;
+					this.MarkContentsAsDirty();
 				}
 			}
 		}
@@ -189,7 +191,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.justifMode != value )
 				{
 					this.justifMode = value;
-					this.isDirty = true;
+					this.MarkLayoutAsDirty();
 				}
 			}
 		}
@@ -221,7 +223,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.layoutSize != value )
 				{
 					this.layoutSize = value;
-					this.isDirty = true;
+					this.MarkLayoutAsDirty();
 				}
 			}
 		}
@@ -300,7 +302,7 @@ namespace Epsitec.Common.Widgets
 					Drawing.Rectangle blockRect = new Drawing.Rectangle();
 					blockRect.Left  = 0;
 					blockRect.Right = block.width;
-					if ( block.image )
+					if ( block.IsImage )
 					{
 						blockRect.Top    = block.imageAscender;
 						blockRect.Bottom = block.imageDescender;
@@ -339,7 +341,7 @@ namespace Epsitec.Common.Widgets
 				if ( !all && !block.visible )  continue;
 
 				Drawing.Rectangle blockRect;
-				if ( block.image )
+				if ( block.IsImage )
 				{
 					blockRect = new Drawing.Rectangle();
 					blockRect.Left   = 0;
@@ -971,14 +973,9 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( !block.visible )  continue;
 
-				if ( block.image )
+				if ( block.IsImage )
 				{
-					Drawing.Image image = this.imageProvider.GetImage(block.text);
-					
-					if ( image == null )
-					{
-						throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", block.text, System.IO.Directory.GetCurrentDirectory()));
-					}
+					Drawing.Image image = block.image;
 					
 					if ( image.IsPaintStyleDefined(paintStyle) )
 					{
@@ -1274,7 +1271,7 @@ namespace Epsitec.Common.Widgets
 						if ( pos.X >= block.pos.X-before &&
 							 pos.X <= block.pos.X+width  )
 						{
-							if ( block.image )
+							if ( block.IsImage )
 							{
 								index = ( pos.X-block.pos.X > width/2 ) ? block.endIndex : block.beginIndex;
 								after = false;
@@ -1441,7 +1438,7 @@ namespace Epsitec.Common.Widgets
 					area.Color       = color;
 				}
 
-				if ( block.image )
+				if ( block.IsImage )
 				{
 					area.Rect.Left  = System.Math.Min(area.Rect.Left,  block.pos.X);
 					area.Rect.Right = System.Math.Max(area.Rect.Right, block.pos.X+block.width);
@@ -1529,7 +1526,7 @@ namespace Epsitec.Common.Widgets
 				{
 					p2.Y = line.pos.Y+line.ascender;
 					p1.Y = line.pos.Y+line.descender;
-					if ( block.image )
+					if ( block.IsImage )
 					{
 						if ( index == block.beginIndex )
 						{
@@ -1877,7 +1874,7 @@ namespace Epsitec.Common.Widgets
 				
 				if ( length < 3 )
 				{
-					throw new System.FormatException(string.Format("Invalid entity found(too short)."));
+					throw new System.FormatException(string.Format("Invalid entity found (too short)."));
 				}
 				
 				char code;
@@ -2171,16 +2168,34 @@ namespace Epsitec.Common.Widgets
 
 			return buffer.ToString();
 		}
-
-
+		
+		protected void MarkContentsAsDirty()
+		{
+			this.isContentsDirty = true;
+			this.isLayoutDirty = true;
+		}
+		
+		protected void MarkLayoutAsDirty()
+		{
+			this.isLayoutDirty = true;
+		}
+		
 		protected void UpdateLayout()
 		{
-			// Met à jour le layout si nécessaire.
-			if ( this.isDirty && this.layoutSize.Width > 0 )
+			if ( this.layoutSize.Width > 0 )
 			{
-				this.JustifBlocks();
-				this.JustifLines();
-				this.isDirty = false;
+				if ( this.isContentsDirty )
+				{
+					this.GenerateTextBreaks();
+					this.isContentsDirty = false;
+				}
+				
+				if ( this.isLayoutDirty )
+				{
+					this.GenerateBlocks();
+					this.GenerateJustification();
+					this.isLayoutDirty = false;
+				}
 			}
 		}
 
@@ -2468,11 +2483,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected void FinishRun(System.Collections.ArrayList list, Drawing.TextBreakNew.Run run)
+		protected void FinishRun(System.Collections.ArrayList list, Drawing.TextBreak.Run run)
 		{
 			if ( run.Length > 0 )
 			{
-				list.Add(new Drawing.TextBreakNew.Run(run));
+				list.Add(new Drawing.TextBreak.Run(run));
 			}
 			
 			run.Reset();
@@ -2572,8 +2587,15 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public void SetupTextBreak()
+		protected void GenerateTextBreaks()
 		{
+			if ( this.TextLength == 0 )
+			{
+				this.textBreak = null;
+				this.imageList = null;
+				return;
+			}
+			
 			//	Analyse le texte complet afin de générer une liste des "runs" pour TextBreak.
 			//	Un "run" décrit une suite de caractère composés au moyen d'une même fonte.
 			
@@ -2588,11 +2610,15 @@ namespace Epsitec.Common.Widgets
 			int		endOffset = 0;
 			int     fontIndex = -1;
 			
-			System.Collections.ArrayList imageList = new System.Collections.ArrayList();
+			if ( this.imageList != null )
+			{
+				this.imageList.Clear();
+			}
+			
 			System.Collections.ArrayList fontList  = new System.Collections.ArrayList();
 			System.Collections.ArrayList runList   = new System.Collections.ArrayList();
 			
-			Drawing.TextBreakNew.Run run = new Drawing.TextBreakNew.Run();
+			Drawing.TextBreak.Run run = new Drawing.TextBreak.Run();
 			
 			while ( endOffset <= textLength )
 			{
@@ -2633,26 +2659,37 @@ namespace Epsitec.Common.Widgets
 					switch ( tag )
 					{
 						case Tag.Image:
-							System.Diagnostics.Debug.Assert( parameters != null && this.imageProvider != null && parameters.ContainsKey("src") );
+							System.Diagnostics.Debug.Assert( parameters != null && parameters.ContainsKey("src") );
 							
 							string imageName = parameters["src"] as string;
+							
+							if ( this.imageProvider == null )
+							{
+								throw new System.FormatException(string.Format("<img> tag for image '{0}' needs an Image Provider.", imageName));
+							}
+							
 							Drawing.Image image = this.imageProvider.GetImage(imageName);
 							
 							if ( image == null )
 							{
-								throw new System.FormatException(string.Format("<img> tag references unknown image '{0}'.", imageName));
+								throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
 							}
 							
 							//	Puisqu'on a trouvé l'image, on va la conserver; en effet, la recherche et la reconstruction
 							//	de l'image est quelque chose de coûteux, et ça va nous servir plus tard pour l'affichage.
 							
-							imageList.Add(image);
+							if ( this.imageList == null )
+							{
+								this.imageList = new System.Collections.ArrayList();
+							}
+							
+							this.imageList.Add(image);
 							
 							//	Astuce: on remplace l'image par un caractère spécial [OBJ], dont on ne spécifie exprès pas
 							//	de fonte et dont la largeur correspond à la largeur de l'image :
 							
 							this.FinishRun(runList, run);
-							this.FinishRun(runList, new Drawing.TextBreakNew.Run(1, -1, image.Width));
+							this.FinishRun(runList, new Drawing.TextBreak.Run(1, -1, image.Width));
 							buffer.Append(TextLayout.CodeObject);
 							break;
 
@@ -2677,14 +2714,13 @@ namespace Epsitec.Common.Widgets
 			//	TextBreak. Cette information ne changera que si le texte sous-jacent
 			//	est modifié.
 			
-			this.textBreak = new Drawing.TextBreakNew();
+			this.textBreak = new Drawing.TextBreak();
 			this.textBreak.SetText(buffer.ToString(), this.breakMode);
 			this.textBreak.SetFonts(fontList);
 			this.textBreak.SetRuns(runList);
 		}
 		
-		
-		protected void JustifBlocks()
+		protected void GenerateBlocks()
 		{
 			// Met à jour this.blocks en fonction du texte, de la fonte et des dimensions.
 			System.Collections.Stack		fontStack;
@@ -2707,33 +2743,15 @@ no_text:
 				JustifBlock block = new JustifBlock();
 				block.bol        = true;
 				block.lineBreak  = false;
-				block.image      = false;
 				block.text       = "";
-				block.beginIndex = 0;
-				block.endIndex   = 0;
-				block.indexLine  = 0;
 				block.font       = blockFont;
 				block.fontSize   = fontItem.fontSize;
 				block.fontColor  = fontItem.fontColor;
-				block.bold       = false;
-				block.italic     = false;
-				block.underline  = false;
-				block.anchor     = false;
-				block.wave       = false;
-				block.waveColor  = Drawing.Color.Empty;
-				block.width      = 0;
-				block.pos        = new Drawing.Point(0,0);
-				block.visible    = false;
-				block.infos      = null;
-				block.infoWidth  = 0;
-				block.infoElast  = 0;
 				this.blocks.Add(block);
 				return;
 			}
 
-			this.SetupTextBreak();
-			
-			Drawing.TextBreakNew.Line[] lines = this.textBreak.GetLines(this.layoutSize.Width);
+			Drawing.TextBreak.Line[] lines = this.textBreak.GetLines(this.layoutSize.Width);
 			
 			if ( lines == null )
 			{
@@ -2755,11 +2773,12 @@ no_text:
 			int		endOffset = 0;
 			int		index = 0;
 			int		textIndex = 0;
+			int     imageIndex = 0;
 			while ( endOffset <= textLength )
 			{
 				beginOffset = endOffset;
 				Tag tag = TextLayout.ParseTag(this.text, ref endOffset, out parameters);
-				Tag tag2 = tag;
+				bool autoLineBreak = false;
 				char c = TextLayout.CodeNull;
 				
 				if ( tag == Tag.None )
@@ -2808,8 +2827,7 @@ no_text:
 						
 						lineNumber++;
 						lineSkip = 1;
-						
-						tag2 = Tag.AutoLineBreak;
+						autoLineBreak = true;
 					}
 					else
 					{
@@ -2817,7 +2835,7 @@ no_text:
 					}
 				}
 				
-				if ( tag2 != Tag.None )
+				if ( tag != Tag.None || autoLineBreak )
 				{
 					fontItem = (FontItem)fontStack.Peek();
 					Drawing.Font blockFont = fontItem.RetFont(supplItem.bold>0, supplItem.italic>0);
@@ -2828,99 +2846,17 @@ no_text:
 						JustifBlock block = new JustifBlock();
 						block.bol        = bol;
 						block.lineBreak  = (tag == Tag.LineBreak);
-						block.image      = false;
 						block.text       = "";
 						block.beginIndex = textIndex;
 						block.endIndex   = textIndex;
-						block.indexLine  = 0;
-						block.font       = blockFont;
-						block.fontSize   = fontItem.fontSize;
-						block.fontColor  = fontItem.fontColor;
-						block.bold       = supplItem.bold > 0;
-						block.italic     = supplItem.italic > 0;
-						block.underline  = supplItem.underline > 0;
-						block.anchor     = supplItem.anchor > 0;
-						block.wave       = supplItem.wave > 0;
-						block.waveColor  = supplItem.waveColor;
-						block.width      = 0;
-						block.pos        = new Drawing.Point(0,0);
-						block.visible    = false;
-						block.infos      = null;
-						block.infoWidth  = 0;
-						block.infoElast  = 0;
+						block.DefineFont(blockFont, fontItem, supplItem);
 						this.blocks.Add(block);
 					}
 					else
 					{
-#if false
-						Drawing.TextBreakMode mode = this.breakMode;
-						if ( !bol )  mode &= ~Drawing.TextBreakMode.Split;
-						Drawing.TextBreak tb = new Drawing.TextBreak(blockFont, buffer.ToString(), fontItem.fontSize, mode);
-
-						string breakText;
-						double breakWidth;
-						int    breakChars;
-						while ( tb.GetNextBreak(remainingWidth, out breakText, out breakWidth, out breakChars) )
-						{
-							if ( breakWidth == 0 )  // pas la place ?
-							{
-								if ( remainingWidth == this.layoutSize.Width )  break;
-								remainingWidth = this.layoutSize.Width;
-								bol = true;
-								continue;
-							}
-
-							JustifBlock block = new JustifBlock();
-							block.bol        = bol;
-							block.lineBreak  = (!tb.MoreText && tag == Tag.LineBreak);
-							block.image      = false;
-							block.text       = breakText;
-							block.beginIndex = textIndex;
-							block.endIndex   = textIndex+System.Math.Min(breakText.Length, breakChars);
-							block.indexLine  = 0;
-							block.font       = blockFont;
-							block.fontSize   = fontItem.fontSize;
-							block.fontColor  = fontItem.fontColor;
-							block.bold       = supplItem.bold > 0;
-							block.italic     = supplItem.italic > 0;
-							block.underline  = supplItem.underline > 0;
-							block.anchor     = supplItem.anchor > 0;
-							block.wave       = supplItem.wave > 0;
-							block.waveColor  = supplItem.waveColor;
-							block.width      = breakWidth;
-							block.pos        = new Drawing.Point(0,0);
-							block.visible    = false;
-
-							if ( this.justifMode == TextJustifMode.None )
-							{
-								block.infos     = null;
-								block.infoWidth = 0;
-								block.infoElast = 0;
-							}
-							else
-							{
-								block.font.GetTextClassInfos(block.text, out block.infos, out block.infoWidth, out block.infoElast);
-							}
-
-							this.blocks.Add(block);
-							this.PurgeAdditionalSpace();
-
-							if ( tb.MoreText )  // reste encore du texte ?
-							{
-								remainingWidth = this.layoutSize.Width;
-								bol = true;
-							}
-							else
-							{
-								remainingWidth -= breakWidth;
-								bol = false;
-							}
-							textIndex += breakChars;
-						}
-#else
 						string text = buffer.ToString();
 						
-						if ( tag2 == Tag.AutoLineBreak )
+						if ( autoLineBreak )
 						{
 							sourceLength -= text.Length;
 							text = text.TrimEnd(TextLayout.CodeSpace);
@@ -2930,23 +2866,11 @@ no_text:
 						JustifBlock block = new JustifBlock();
 						block.bol        = bol;
 						block.lineBreak  = tag == Tag.LineBreak;
-						block.image      = false;
 						block.text       = text;
 						block.beginIndex = textIndex;
 						block.endIndex   = textIndex+sourceLength;
-						block.indexLine  = 0;
-						block.font       = blockFont;
-						block.fontSize   = fontItem.fontSize;
-						block.fontColor  = fontItem.fontColor;
-						block.bold       = supplItem.bold > 0;
-						block.italic     = supplItem.italic > 0;
-						block.underline  = supplItem.underline > 0;
-						block.anchor     = supplItem.anchor > 0;
-						block.wave       = supplItem.wave > 0;
-						block.waveColor  = supplItem.waveColor;
 						block.width      = blockFont.GetTextAdvance(text)*fontItem.fontSize;
-						block.pos        = new Drawing.Point(0,0);
-						block.visible    = false;
+						block.DefineFont(blockFont, fontItem, supplItem);
 						
 						if ( this.justifMode == TextJustifMode.None )
 						{
@@ -2964,7 +2888,7 @@ no_text:
 							this.blocks.Add(block);
 						}
 						
-						if ( tag2 == Tag.AutoLineBreak )
+						if ( autoLineBreak )
 						{
 							remainingWidth = this.layoutSize.Width;
 							bol = true;
@@ -2975,7 +2899,6 @@ no_text:
 							bol = false;
 						}
 						textIndex = index;
-#endif
 					}
 					buffer.Length = 0;
 					sourceLength = 0;
@@ -2988,82 +2911,60 @@ no_text:
 					switch ( tag )
 					{
 						case Tag.Image:
-							if ( parameters != null && this.imageProvider != null )
+							if ( this.imageList != null && imageIndex < this.imageList.Count )
 							{
-								if ( parameters.ContainsKey("src") )
+								Drawing.Image image = this.imageList[imageIndex] as Drawing.Image;
+								
+								double dx = image.Width;
+								double dy = image.Height;
+
+								if ( dx > remainingWidth )
 								{
-									string imageName = parameters["src"] as string;
-									Drawing.Image image = this.imageProvider.GetImage(imageName);
-									
-									if ( image == null )
-									{
-										throw new System.FormatException(string.Format("<img> tag references unknown image '{0}'.", imageName));
-									}
-									
-									double dx = image.Width;
-									double dy = image.Height;
-
-									if ( dx > remainingWidth )
-									{
-										remainingWidth = this.layoutSize.Width;
-										bol = true;
-									}
-
-									fontItem = (FontItem)fontStack.Peek();
-									Drawing.Font blockFont = fontItem.RetFont(supplItem.bold>0, supplItem.italic>0);
-
-									double fontAscender  = blockFont.Ascender;
-									double fontDescender = blockFont.Descender;
-									double fontHeight    = fontAscender-fontDescender;
-
-									JustifBlock block = new JustifBlock();
-									block.bol        = bol;
-									block.lineBreak  = false;
-									block.image      = true;
-									block.text       = imageName;
-									block.beginIndex = index;
-									block.endIndex   = index+1;
-									block.indexLine  = 0;
-									block.font       = blockFont;
-									block.fontSize   = fontItem.fontSize;
-									block.fontColor  = fontItem.fontColor;
-									block.bold       = supplItem.bold > 0;
-									block.italic     = supplItem.italic > 0;
-									block.underline  = supplItem.underline > 0;
-									block.anchor     = supplItem.anchor > 0;
-									block.wave       = supplItem.wave > 0;
-									block.waveColor  = supplItem.waveColor;
-									block.width      = dx;
-									
-									if ( image.IsOriginDefined )
-									{
-										block.imageAscender  = image.Height - image.Origin.Y;
-										block.imageDescender = -image.Origin.Y;
-									}
-									else
-									{
-										block.imageAscender  = dy*fontAscender/fontHeight;
-										block.imageDescender = dy*fontDescender/fontHeight;
-									}
-									
-									block.pos     = new Drawing.Point(0,0);
-									block.visible = false;
-
-									if ( this.justifMode != TextJustifMode.None )
-									{
-										double width = dx/fontItem.fontSize;
-										block.infos = new Drawing.Font.ClassInfo[1];
-										block.infos[0] = new Drawing.Font.ClassInfo(Drawing.Font.ClassId.PlainText, 1, width, 0.0);
-										block.infoWidth = width;
-										block.infoElast = 0.0;
-									}
-
-									this.blocks.Add(block);
-
-									remainingWidth -= dx;
-									bol = false;
-									index ++;
+									remainingWidth = this.layoutSize.Width;
+									bol = true;
 								}
+
+								fontItem = (FontItem)fontStack.Peek();
+								Drawing.Font blockFont = fontItem.RetFont(supplItem.bold>0, supplItem.italic>0);
+
+								double fontAscender  = blockFont.Ascender;
+								double fontDescender = blockFont.Descender;
+								double fontHeight    = fontAscender-fontDescender;
+
+								JustifBlock block = new JustifBlock();
+								block.bol        = bol;
+								block.image      = image;
+								block.text       = "\ufffc";
+								block.beginIndex = index;
+								block.endIndex   = index+1;
+								block.width      = dx;
+								block.DefineFont(blockFont, fontItem, supplItem);
+								
+								if ( image.IsOriginDefined )
+								{
+									block.imageAscender  = image.Height - image.Origin.Y;
+									block.imageDescender = -image.Origin.Y;
+								}
+								else
+								{
+									block.imageAscender  = dy*fontAscender/fontHeight;
+									block.imageDescender = dy*fontDescender/fontHeight;
+								}
+								
+								if ( this.justifMode != TextJustifMode.None )
+								{
+									double width = dx/fontItem.fontSize;
+									block.infos = new Drawing.Font.ClassInfo[1];
+									block.infos[0] = new Drawing.Font.ClassInfo(Drawing.Font.ClassId.PlainText, 1, width, 0.0);
+									block.infoWidth = width;
+									block.infoElast = 0.0;
+								}
+								
+								this.blocks.Add(block);
+
+								remainingWidth -= dx;
+								bol = false;
+								index ++;
 							}
 							break;
 
@@ -3083,6 +2984,8 @@ no_text:
 			}
 		}
 
+
+#if false
 		protected void PurgeAdditionalSpace()
 		{
 			// Supprime l'éventuel espace en trop à la fin de l'avant-dernier bloc
@@ -3105,8 +3008,9 @@ no_text:
 			prevBlock.endIndex --;
 			prevBlock.font.GetTextClassInfos(prevBlock.text, out prevBlock.infos, out prevBlock.infoWidth, out prevBlock.infoElast);
 		}
+#endif
 
-		protected void JustifLines()
+		protected void GenerateJustification()
 		{
 			// Met à jour this.lines en fonction de this.blocks.
 			// Détermine la position des blocs en fonction de l'alignement.
@@ -3138,7 +3042,7 @@ no_text:
 					block = (JustifBlock)this.blocks[j];
 					block.indexLine = totalLine;
 					width += block.width;
-					if ( block.image )
+					if ( block.IsImage )
 					{
 						height    = System.Math.Max(height,    block.imageAscender-block.imageDescender);
 						ascender  = System.Math.Max(ascender,  block.imageAscender);
@@ -3219,7 +3123,7 @@ no_text:
 							block.pos = pos;
 							block.visible = visible;
 
-							if ( block.image )
+							if ( block.IsImage )
 							{
 								pos.X += block.width;
 							}
@@ -3450,7 +3354,6 @@ no_text:
 			SyntaxError,					// syntaxe du tag pas correcte
 			EndOfText,						// fin du texte
 			
-			AutoLineBreak,					// coupure automatique en fin de ligne
 			LineBreak,						// <br/>
 			
 			Bold,		BoldEnd,			// <b>...</b>
@@ -3475,6 +3378,7 @@ no_text:
 				return this.MemberwiseClone() as FontSimplify;
 			}
 
+			
 			public string		fontName;
 			public string		fontSize;
 			public string		fontColor;
@@ -3487,6 +3391,7 @@ no_text:
 				return this.MemberwiseClone() as SupplSimplify;
 			}
 
+			
 			public bool IsBold
 			{
 				get
@@ -3517,6 +3422,7 @@ no_text:
 				}
 			}
 
+			
 			public int		bold         = 0;	// gras si > 0
 			public int		italic       = 0;	// italique si > 0
 			public int		underline    = 0;	// souligné si > 0
@@ -3584,6 +3490,7 @@ no_text:
 				return font;
 			}
 
+			
 			protected TextLayout	host;
 			
 			public string			fontName;
@@ -3605,26 +3512,54 @@ no_text:
 		// la même fonte, même taille et même couleur.
 		protected class JustifBlock
 		{
+			public JustifBlock()
+			{
+			}
+			
+			
+			public bool						IsImage
+			{
+				get
+				{
+					return this.image != null;
+				}
+			}
+
+			
+			public void DefineFont(Drawing.Font blockFont, FontItem fontItem, SupplItem supplItem)
+			{
+				this.font       = blockFont;
+				this.fontSize   = fontItem.fontSize;
+				this.fontColor  = fontItem.fontColor;
+				this.bold       = supplItem.bold > 0;
+				this.italic     = supplItem.italic > 0;
+				this.underline  = supplItem.underline > 0;
+				this.anchor     = supplItem.anchor > 0;
+				this.wave       = supplItem.wave > 0;
+				this.waveColor  = supplItem.waveColor;
+			}
+			
+			
 			public bool						bol;		// begin of line
 			public bool						lineBreak;	// ending with br
-			public bool						image;		// image bitmap
 			public string					text;
 			public int						beginIndex;
 			public int						endIndex;
 			public int						indexLine;	// index dans this.lines
 			public Drawing.Font				font;
 			public double					fontSize;
-			public Drawing.Color			fontColor;
+			public Drawing.Color			fontColor = Drawing.Color.Empty;
 			public bool						bold;
 			public bool						italic;
 			public bool						underline;
 			public bool						anchor;
 			public bool						wave;
-			public Drawing.Color			waveColor;
+			public Drawing.Color			waveColor = Drawing.Color.Empty;
 			public double					width;		// largeur du bloc
+			public Drawing.Point			pos;		// sur la ligne de base
+			public Drawing.Image			image;		// image bitmap
 			public double					imageAscender;
 			public double					imageDescender;
-			public Drawing.Point			pos;		// sur la ligne de base
 			public bool						visible;
 			public Drawing.Font.ClassInfo[]	infos;
 			public double					infoWidth;
@@ -3689,13 +3624,14 @@ no_text:
 
 		public class SelectedArea
 		{
-			public Drawing.Rectangle	Rect;
-			public Drawing.Color		Color;
+			public Drawing.Rectangle		Rect;
+			public Drawing.Color			Color;
 		}
 		
 		public event AnchorEventHandler			Anchor;
 		
-		protected bool							isDirty;
+		protected bool							isContentsDirty;
+		protected bool							isLayoutDirty;
 		protected string						text;
 		protected Drawing.Font					font			= Drawing.Font.DefaultFont;
 		protected double						fontSize		= Drawing.Font.DefaultFontSize;
@@ -3712,7 +3648,8 @@ no_text:
 		protected static Drawing.Color			anchorColor		= new Drawing.Color(0,0,1);
 		protected static Drawing.Color			waveColor		= new Drawing.Color(1,0,0);
 		protected bool							showLineBreak	= false;
-		protected Drawing.TextBreakNew			textBreak;
+		protected Drawing.TextBreak				textBreak;
+		protected System.Collections.ArrayList	imageList;
 		
 		public const double						Infinite		= 1000000;
 		
