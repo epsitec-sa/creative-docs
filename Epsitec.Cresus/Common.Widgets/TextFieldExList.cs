@@ -22,15 +22,19 @@ namespace Epsitec.Common.Widgets
 			this.button_ok     = new GlyphButton(this);
 			this.button_cancel = new GlyphButton(this);
 			
+			IFeel feel = Feel.Factory.Active;
+			
 			this.button_ok.Name        = "OK";
 			this.button_ok.GlyphShape  = GlyphShape.Validate;
 			this.button_ok.ButtonStyle = ButtonStyle.ExListMiddle;
 			this.button_ok.Clicked    += new MessageEventHandler(this.HandleButtonOkClicked);
+			this.button_ok.Shortcut    = feel.AcceptShortcut;
 			
 			this.button_cancel.Name        = "Cancel";
 			this.button_cancel.GlyphShape  = GlyphShape.Cancel;
 			this.button_cancel.ButtonStyle = ButtonStyle.ExListRight;
 			this.button_cancel.Clicked    += new MessageEventHandler(this.HandleButtonCancelClicked);
+			this.button_cancel.Shortcut    = feel.CancelShortcut;
 			
 			this.IsReadOnly = true;
 			this.SwitchToState (TextFieldExListMode.Combo);
@@ -89,7 +93,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool CancelEdition()
 		{
-			if (this.mode == TextFieldExListMode.EditActive)
+			if (this.mode != TextFieldExListMode.EditActive)
 			{
 				this.SwitchToState (TextFieldExListMode.Combo);
 				this.SelectedItem = this.saved_item;
@@ -102,7 +106,7 @@ namespace Epsitec.Common.Widgets
 		
 		public bool ValidateEdition()
 		{
-			if ((this.mode == TextFieldExListMode.EditActive) &&
+			if (((this.mode == TextFieldExListMode.EditActive) || (this.mode == TextFieldExListMode.EditPassive)) &&
 				(this.IsValid))
 			{
 				this.SwitchToState (TextFieldExListMode.Combo);
@@ -114,50 +118,45 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
+		private void SwitchToActiveEdition()
+		{
+			switch (this.mode)
+			{
+				case TextFieldExListMode.EditActive:
+					if (this.Text == this.PlaceHolder)
+					{
+						this.Text = "";
+					}
+					break;
+				
+				case TextFieldExListMode.EditPassive:
+					this.Text = "";
+					this.SwitchToState (TextFieldExListMode.EditActive);
+					break;
+			}
+		}
 		
 		protected override bool ProcessMouseDown(Message message, Epsitec.Common.Drawing.Point pos)
 		{
-			if (this.mode == TextFieldExListMode.EditPassive)
-			{
-				this.Text = "";
-				this.SwitchToState (TextFieldExListMode.EditActive);
-			}
-			
+			this.SwitchToActiveEdition ();
 			return base.ProcessMouseDown (message, pos);
 		}
 		
 		protected override bool ProcessKeyDown(Message message, Epsitec.Common.Drawing.Point pos)
 		{
-			if (this.mode == TextFieldExListMode.EditPassive)
-			{
-				this.Text = "";
-				this.SwitchToState (TextFieldExListMode.EditActive);
-			}
-			if (this.mode == TextFieldExListMode.EditActive)
-			{
-				IFeel feel = Feel.Factory.Active;
-				
-				if (feel.TestCancelKey (message))
-				{
-					this.button_cancel.SimulateClicked ();
-					return true;
-				}
-				if (feel.TestAcceptKey (message))
-				{
-					this.button_ok.SimulateClicked ();
-					return true;
-				}
-			}
-			
+			this.SwitchToActiveEdition ();
 			return base.ProcessKeyDown (message, pos);
 		}
 
 		protected override bool AboutToGetFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode, out Widget focus)
 		{
-			if (this.mode == TextFieldExListMode.EditPassive)
+			if ((this.mode == TextFieldExListMode.EditPassive) &&
+				(mode != Widget.TabNavigationMode.Passive))
 			{
-				this.Text = "";
-				this.SwitchToState (TextFieldExListMode.EditActive);
+				//	Si on entre par un TAB dans ce widget, il faut passer en mode édition active,
+				//	si l'état précédent était passif :
+				
+				this.SwitchToActiveEdition ();
 			}
 			
 			return base.AboutToGetFocus (dir, mode, out focus);
@@ -200,7 +199,7 @@ namespace Epsitec.Common.Widgets
 				(sel == 0))
 			{
 				this.StartPassiveEdition (this.PlaceHolder);
-				this.SetFocused (true);
+				this.Focus ();
 				this.CloseCombo ();
 			}
 			else
@@ -350,7 +349,21 @@ namespace Epsitec.Common.Widgets
 		private void HandleButtonCancelClicked(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.Assert (sender == this.button_cancel);
-			this.CancelEdition ();
+			
+			if (this.Items.FindExactMatch (this.saved_item) == -1)
+			{
+				this.Text = this.PlaceHolder;
+				this.SwitchToState (TextFieldExListMode.EditPassive);
+				this.Focus ();
+				this.SelectAll ();
+			}
+			else
+			{
+				this.SelectedItem = this.saved_item;
+				this.SwitchToState (TextFieldExListMode.Combo);
+			}
+			
+			this.OnEditionCancelled ();
 		}		
 		
 		

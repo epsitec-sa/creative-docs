@@ -27,6 +27,19 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public GlyphShape							ButtonGlyphShape
+		{
+			get
+			{
+				return this.button.GlyphShape;
+			}
+			set
+			{
+				this.button.GlyphShape = value;
+			}
+		}
+		
+		
 		#region Interface IBundleSupport
 		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
 		{
@@ -156,6 +169,11 @@ namespace Epsitec.Common.Widgets
 		
 		protected void Navigate(int dir)
 		{
+			if ( this.items.Count == 0 )
+			{
+				return;
+			}
+
 			// Cherche le nom suivant ou précédent dans la comboList, même si elle
 			// n'est pas "déroulée".
 			
@@ -252,6 +270,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.scrollList != null )  return;
 			
+			Support.CancelEventArgs cancel_event = new Support.CancelEventArgs ();
+			this.OnOpeningCombo (cancel_event);
+			
+			if ( cancel_event.Cancel )  return;
+			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			Drawing.Margins shadow = adorner.GeometryMenuShadow;
 
@@ -326,6 +349,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
+		protected virtual void OnOpeningCombo(Support.CancelEventArgs e)
+		{
+			if ( this.OpeningCombo != null )
+			{
+				this.OpeningCombo(this, e);
+			}
+		}
+		
+		
 		private void HandleApplicationDeactivated(object sender)
 		{
 			this.CloseCombo();
@@ -372,7 +405,7 @@ namespace Epsitec.Common.Widgets
 			this.SelectedIndex = this.MapComboListToIndex(sel);
 		}
 		
-
+		
 		
 		#region IStringCollectionHost Members
 		public void StringCollectionChanged()
@@ -409,7 +442,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.Text = text;
 					this.OnSelectedIndexChanged();
-					this.Cursor = 0;
+//-					this.Cursor = 0;
 					this.SelectAll();
 				}
 			}
@@ -484,6 +517,9 @@ namespace Epsitec.Common.Widgets
 		
 		public event Support.EventHandler			SelectedIndexChanged;
 		#endregion
+		
+		public event Support.CancelEventHandler		OpeningCombo;
+		
 		
 		protected GlyphButton						button;
 		protected Helpers.StringCollection			items;

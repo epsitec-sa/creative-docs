@@ -1081,6 +1081,30 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		internal void FocusWidget(Widget consumer)
+		{
+			if ((consumer != null) &&
+				(consumer.IsFocused == false) &&
+				(consumer.CanFocus) &&
+				(consumer != this.focused_widget))
+			{
+				//	On va réaliser un changement de focus. Mais pour cela, il faut que le widget
+				//	ayant le focus actuellement, ainsi que le widget candidat pour l'obtention du
+				//	focus soient d'accord...
+				
+				if ((this.focused_widget == null) ||
+					(this.focused_widget.InternalAboutToLoseFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive)))
+				{
+					Widget focus;
+					
+					if (consumer.InternalAboutToGetFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive, out focus))
+					{
+						this.FocusedWidget = focus;
+					}
+				}
+			}
+		}
+		
 		internal void PostProcessMessage(Message message)
 		{
 			Widget consumer = message.Consumer;
@@ -1124,25 +1148,9 @@ namespace Epsitec.Common.Widgets
 							this.window.Capture = false;
 						}
 						
-						if ((consumer.AutoFocus) &&
-							(consumer.IsFocused == false) &&
-							(consumer.CanFocus) &&
-							(consumer != this.focused_widget))
+						if (consumer.AutoFocus)
 						{
-							//	On va réaliser un changement de focus. Mais pour cela, il faut que le widget
-							//	ayant le focus actuellement, ainsi que le widget candidat pour l'obtention du
-							//	focus soient d'accord...
-							
-							if ((this.focused_widget == null) ||
-								(this.focused_widget.InternalAboutToLoseFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive)))
-							{
-								Widget focus;
-								
-								if (consumer.InternalAboutToGetFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive, out focus))
-								{
-									this.FocusedWidget = focus;
-								}
-							}
+							this.FocusWidget (consumer);
 						}
 						
 						if (message.IsLeftButton)

@@ -2110,7 +2110,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void SetFocused(bool focused)
+		public void Focus()
+		{
+			Window window = this.Window;
+			
+			if (window != null)
+			{
+				window.FocusWidget (this);
+			}
+		}
+		
+		internal void SetFocused(bool focused)
 		{
 			Window window = this.Window;
 			
@@ -2148,7 +2158,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void SetSelected(bool selected)
+		public void SetSelected(bool selected)
 		{
 			if ((this.widget_state & WidgetState.Selected) == 0)
 			{
@@ -2170,7 +2180,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void SetEngaged(bool engaged)
+		public void SetEngaged(bool engaged)
 		{
 			Window window = this.Window;
 			
@@ -2206,7 +2216,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void SetEventPropagation(Propagate events, bool on, Setting setting)
+		public void SetEventPropagation(Propagate events, bool on, Setting setting)
 		{
 			if (on)
 			{
@@ -2227,12 +2237,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual void SetCommandDispatcher(Support.CommandDispatcher dispatcher)
+		public void SetCommandDispatcher(Support.CommandDispatcher dispatcher)
 		{
 			this.dispatcher = dispatcher;
 		}
 		
-		public virtual void SetSyncPaint(bool enabled)
+		public void SetSyncPaint(bool enabled)
 		{
 			if (enabled)
 			{
@@ -2245,7 +2255,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual CommandState CreateCommandState()
+		public CommandState CreateCommandState()
 		{
 			if (this.command == null)
 			{
