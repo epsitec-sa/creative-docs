@@ -46,6 +46,26 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 		
+		public override string ToString()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			string sep = "";
+			
+			foreach (System.Collections.DictionaryEntry entry in this.attributes)
+			{
+				buffer.Append (sep);
+				buffer.Append (entry.Key as string);
+				buffer.Append (@"=""");
+				buffer.Append (entry.Value as string);
+				buffer.Append (@"""");
+				
+				sep = "; ";
+			}
+			
+			return buffer.ToString ();
+		}
+
+		
 		
 		public string[]							Names
 		{

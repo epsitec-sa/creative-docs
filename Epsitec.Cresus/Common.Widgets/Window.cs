@@ -655,6 +655,19 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
+			if (this.capturing_widget != null)
+			{
+				if (this.capturing_widget.IsVisible == false)
+				{
+					//	Il faut terminer la capture si le widget n'est plus visible,
+					//	sinon on risque de ne plus jamais recevoir d'événements pour
+					//	les autres widgets.
+					
+					this.capturing_widget = null;
+					this.window.Capture = false;
+				}
+			}
+			
 			if (consumer != null)
 			{
 				switch (message.Type)

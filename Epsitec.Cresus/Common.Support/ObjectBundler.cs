@@ -160,11 +160,27 @@ namespace Epsitec.Common.Support
 				
 				if (member_info.MemberType == System.Reflection.MemberTypes.Property)
 				{
+					System.Type type = obj_type;
 					System.Reflection.PropertyInfo prop_info = member_info as System.Reflection.PropertyInfo;
 					
 					System.Diagnostics.Debug.Assert (prop_info != null);
 					
-					this.RestoreProperty (bundle, obj, prop_info);
+					while (this.RestoreProperty (bundle, obj, prop_info) == false)
+					{
+						type = type.BaseType;
+						
+						if (type == null)
+						{
+							break;
+						}
+						
+						prop_info = type.GetProperty (prop_info.Name, prop_info.PropertyType);
+						
+						if (prop_info == null)
+						{
+							break;
+						}
+					}
 				}
 			}
 			

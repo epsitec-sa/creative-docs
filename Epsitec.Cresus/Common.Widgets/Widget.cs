@@ -1213,6 +1213,10 @@ namespace Epsitec.Common.Widgets
 			{
 				if (!visible)
 				{
+					//	Rend invisible un widget qui était visible avant. Il faut
+					//	aussi s'assurer que le widget n'est plus "Entered".
+					
+					this.SetEntered (false);
 					this.internalState &= ~ InternalState.Visible;
 					this.Invalidate ();
 				}
@@ -2722,7 +2726,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				System.Diagnostics.Debug.WriteLine ("Dispatching to invisible widget...");
+				System.Diagnostics.Debug.WriteLine ("Dispatching to invisible widget: '"  + this.Name + "', " + this.GetType ().Name);
 			}
 		}
 		
