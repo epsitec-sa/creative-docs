@@ -290,6 +290,19 @@ namespace Epsitec.Common.Text.Internal
 			this.cursors.Add (id, position);
 		}
 		
+		public void RemoveCursor(Internal.CursorId id)
+		{
+			this.cursors.Remove (id);
+		}
+		
+		public void MoveCursor(Internal.CursorId id, int position)
+		{
+			Debug.Assert.IsInBounds (position, 0, this.length);
+			
+			this.cursors.Move (id, position);
+		}
+		
+		
 		public int GetCursorPosition(Internal.CursorId id)
 		{
 			return this.cursors.GetCursorPosition (id);

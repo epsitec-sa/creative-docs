@@ -30,11 +30,24 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
+		public ulong							this[Internal.CursorId cursor_id]
+		{
+			get
+			{
+				ulong[] buffer = { 0 };
+				this.ReadText (cursor_id, 1, ref buffer, 0);
+				return buffer[0];
+			}
+		}
 		
-		public int NewCursor()
+		
+		public Internal.CursorId NewCursor()
 		{
 			Internal.CursorId id     = this.cursors.NewCursor ();
 			Internal.Cursor   cursor = this.cursors.ReadCursor (id);
+			
+			//	Place (arbitrairement) le curseur au début du texte, donc dans le
+			//	morceau de texte numéro 1, à la position 0 :
 			
 			cursor.TextChunkId = 1;
 			
@@ -43,6 +56,130 @@ namespace Epsitec.Common.Text.Internal
 			this.text_chunks[0].AddCursor (id, 0);
 			
 			return id;
+		}
+		
+		public void DeleteCursor(Internal.CursorId id)
+		{
+			Internal.Cursor cursor = this.cursors.ReadCursor (id);
+			
+			this.text_chunks[cursor.TextChunkId-1].RemoveCursor (id);
+			this.cursors.RecycleCursor (id);
+		}
+		
+		public int GetCursorPosition(Internal.CursorId id)
+		{
+			Internal.Cursor cursor = this.cursors.ReadCursor (id);
+			
+			int offset = this.text_chunks[cursor.TextChunkId-1].GetCursorPosition (id);
+			int start  = this.FindTextChunkPosition (cursor.TextChunkId);
+			
+			return start + offset;
+		}
+		
+		public int MoveCursor(Internal.CursorId id, int distance)
+		{
+			Internal.Cursor cursor = this.cursors.ReadCursor (id);
+			
+			if (distance > 0)
+			{
+				int index = cursor.TextChunkId - 1;
+				int moved = 0;
+				int pos   = this.text_chunks[index].GetCursorPosition (id);
+				
+				while (distance > 0)
+				{
+					int room = this.text_chunks[index].TextLength - pos;
+					
+					//	Si nous sommes dans le dernier morceau de texte, on ne
+					//	peut de toute manière pas aller plus loin :
+					
+					if (index == this.text_chunks.Length-1)
+					{
+						distance = System.Math.Min (room, distance);
+					}
+					
+					//	Le déplacement va-t-il se terminer dans le morceau de
+					//	texte actuel ?
+					
+					if (room >= distance)
+					{
+						this.text_chunks[index].MoveCursor (id, pos + distance);
+						
+						moved   += distance;
+						distance = 0;
+						
+						break;
+					}
+					
+					//	Retire le curseur du morceau de texte actuel pour l'insérer
+					//	dans le morceau suivant :
+					
+					this.text_chunks[index+0].RemoveCursor (id);
+					this.text_chunks[index+1].AddCursor (id, 0);
+					
+					cursor.TextChunkId = index+1 + 1;
+					
+					this.cursors.WriteCursor (id, cursor);
+					
+					moved    += room;
+					distance -= room;
+					pos       = 0;
+					index    += 1;
+				}
+				
+				return moved;
+			}
+			else if (distance < 0)
+			{
+				distance = - distance;
+				
+				int index = cursor.TextChunkId - 1;
+				int moved = 0;
+				int pos   = this.text_chunks[index].GetCursorPosition (id);
+				
+				while (distance > 0)
+				{
+					//	Si nous sommes dans le premier morceau de texte, on ne
+					//	peut de toute manière pas aller plus loin :
+					
+					if (index == 0)
+					{
+						distance = System.Math.Min (pos, distance);
+					}
+					
+					//	Le déplacement va-t-il se terminer dans le morceau de
+					//	texte actuel ?
+					
+					if (pos >= distance)
+					{
+						this.text_chunks[index].MoveCursor (id, pos - distance);
+						
+						moved   += distance;
+						distance = 0;
+						
+						break;
+					}
+					
+					//	Retire le curseur du morceau de texte actuel pour l'insérer
+					//	dans le morceau précédent :
+					
+					this.text_chunks[index+0].RemoveCursor (id);
+					this.text_chunks[index-1].AddCursor (id, this.text_chunks[index-1].TextLength);
+					
+					cursor.TextChunkId = index-1 + 1;
+					
+					this.cursors.WriteCursor (id, cursor);
+					
+					moved    += pos;
+					distance -= pos;
+					pos       = this.text_chunks[index-1].TextLength;
+					index    -= 1;
+				}
+				
+				return - moved;
+			}
+			
+			return 0;
 		}
 		
 		
@@ -69,6 +206,44 @@ namespace Epsitec.Common.Text.Internal
 			}
 			
 			this.text_length += text.Length;
+		}
+		
+		public int ReadText(Internal.CursorId cursor_id, int length, ref ulong[] buffer)
+		{
+			return this.ReadText (cursor_id, length, ref buffer, 0);
+		}
+		
+		public int ReadText(Internal.CursorId cursor_id, int length, ref ulong[] buffer, int offset)
+		{
+			Internal.TextChunkId chunk_id = this.cursors.ReadCursor (cursor_id).TextChunkId;
+			
+			int index = chunk_id - 1;
+			int read  = 0;
+			int pos   = this.text_chunks[index].GetCursorPosition (cursor_id);
+			
+			while (read < length)
+			{
+				if (pos == this.text_chunks[index].TextLength)
+				{
+					index++;
+					
+					if (index == this.text_chunks.Length)
+					{
+						break;
+					}
+					
+					pos = 0;
+				}
+				else
+				{
+					buffer[read] = this.text_chunks[index][pos];
+					
+					read += 1;
+					pos  += 1;
+				}
+			}
+			
+			return read;
 		}
 		
 		
@@ -211,7 +386,7 @@ namespace Epsitec.Common.Text.Internal
 			//	Détermine la position du début du morceau spécifié.
 			
 			Debug.Assert.IsTrue (id.IsValid);
-			Debug.Assert.IsInBounds (id, 0, this.text_chunks.Length-1);
+			Debug.Assert.IsInBounds (id-1, 0, this.text_chunks.Length-1);
 			
 			int position = 0;
 			int fence    = id - 1;
