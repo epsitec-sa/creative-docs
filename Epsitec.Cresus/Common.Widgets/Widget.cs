@@ -3986,6 +3986,12 @@ namespace Epsitec.Common.Widgets
 				switch (message.Type)
 				{
 					case MessageType.MouseUp:
+						
+						if (Message.State.IsSameWindowAsButtonDown == false)
+						{
+							return;
+						}
+						
 						//	Le bouton a été relâché. Ceci génère l'événement 'Released' pour signaler
 						//	ce relâchement, mais aussi un événement 'Clicked' ou 'DoubleClicked' en
 						//	fonction du nombre de clics.

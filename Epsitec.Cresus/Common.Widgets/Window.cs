@@ -860,6 +860,7 @@ namespace Epsitec.Common.Widgets
 					
 					case MessageType.MouseEnter:
 						if ((Message.State.IsLeftButton) &&
+							(Message.State.IsSameWindowAsButtonDown) &&
 							(consumer.AutoEngage) &&
 							(consumer.IsEngaged == false) &&
 							(consumer.CanEngage))

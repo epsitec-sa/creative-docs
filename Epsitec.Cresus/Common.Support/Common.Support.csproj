@@ -222,7 +222,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Data\IArrayStore.cs"
+                    RelPath = "Data\ITextArrayStore.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
