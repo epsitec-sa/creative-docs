@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelString permet de choisir une chaîne de caractères.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelString : AbstractPanel
 	{
 		public PanelString()

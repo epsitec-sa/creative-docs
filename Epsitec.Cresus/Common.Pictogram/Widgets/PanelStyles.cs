@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelStyles permet de représenter la collection de styles.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelStyles : Epsitec.Common.Widgets.Widget
 	{
 		public PanelStyles(Drawer drawer, ToolTip toolTip)
