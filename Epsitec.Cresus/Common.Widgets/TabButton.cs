@@ -48,14 +48,17 @@ namespace Epsitec.Common.Widgets
 				adorner.PaintTabSunkenBackground(graphics, frameRect, rect, state, Direction.Up);
 				pos.Y -= 1;
 			}
-
-			Drawing.Size size = this.Client.Size;
-			size.Width -= 4;
-			this.TextLayout.LayoutSize = size;
-			this.TextLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
-			pos.X += 2;
-			adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, ButtonStyle.Tab);
-
+			
+			if (this.Text != "")
+			{
+				Drawing.Size size = this.Client.Size;
+				size.Width -= 4;
+				this.TextLayout.LayoutSize = size;
+				this.TextLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
+				pos.X += 2;
+				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, ButtonStyle.Tab);
+			}
+			
 			graphics.RestoreClippingRectangle(saveClip);
 		}
 	}

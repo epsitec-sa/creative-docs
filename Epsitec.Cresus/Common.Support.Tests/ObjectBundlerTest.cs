@@ -35,6 +35,26 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals (new Widgets.Button ().Height, button.Height);
 		}
 		
+		[Test] public void CheckCreateABFromBundle()
+		{
+			ResourceBundle bundle = Resources.GetBundle ("file:ab");
+			ObjectBundler bundler = new ObjectBundler ();
+			
+			Assertion.AssertNotNull (bundle);
+			
+			object obj = bundler.CreateFromBundle (bundle);
+			
+			A obj_a = obj as A;
+			B obj_b = obj as B;
+			
+			Assertion.AssertNotNull (obj);
+			Assertion.AssertNotNull (obj_a);
+			Assertion.AssertNotNull (obj_b);
+			
+			Assertion.AssertEquals ("hello world !", obj_a.Value);
+			Assertion.AssertEquals ("hello world !", obj_b.Value);
+		}
+		
 		[Test] public void CheckFillBundleFromObject()
 		{
 			ResourceBundle bundle = Resources.GetBundle ("file:button.cancel");
@@ -51,6 +71,38 @@ namespace Epsitec.Common.Support
 			bundler.PropertyBundled -= new BundlingPropertyEventHandler(this.HandleBundlerPropertyBundled);
 			
 			bundle.CreateXmlDocument (false).Save (System.Console.Out);
+		}
+		
+		[Test] public void CheckFillBundleFromA()
+		{
+			ResourceBundle bundle = ResourceBundle.Create ("a_soft");
+			ObjectBundler bundler = new ObjectBundler ();
+			
+			A obj = new A ();
+			
+			obj.Value = "Hello World !";
+			
+			bundler.FillBundleFromObject (bundle, obj);
+			
+			string xml = bundle.CreateXmlDocument (false).InnerXml;
+			
+			Assertion.AssertEquals (@"<bundle name=""a_soft""><data name=""class"">A</data><data name=""Value"">Hello World !</data></bundle>", xml);
+		}
+		
+		[Test] public void CheckFillBundleFromB()
+		{
+			ResourceBundle bundle = ResourceBundle.Create ("b_soft");
+			ObjectBundler bundler = new ObjectBundler ();
+			
+			A obj = new B ();
+			
+			obj.Value = "Hello World !";
+			
+			bundler.FillBundleFromObject (bundle, obj);
+			
+			string xml = bundle.CreateXmlDocument (false).InnerXml;
+			
+			Assertion.AssertEquals (@"<bundle name=""b_soft""><data name=""class"">B</data><data name=""Value"">hello world !</data></bundle>", xml);
 		}
 		
 		[Test] public void CheckFindPropertyInfo()
@@ -79,6 +131,8 @@ namespace Epsitec.Common.Support
 			
 			Assertion.AssertNotNull (bundle);
 			
+			bundler.EnableMapping ();
+			
 			object             obj  = bundler.CreateFromBundle (bundle);
 			Widgets.WindowRoot root = obj as Widgets.WindowRoot;
 			
@@ -90,6 +144,44 @@ namespace Epsitec.Common.Support
 			root.Window.Show ();
 		}
 		
+		[Test] public void CheckFillBundleFromSimpleWindow()
+		{
+			System.Time time_1 = System.Time.Now;
+			
+			ResourceBundle bundle = Resources.GetBundle ("file:simple_window");
+			ObjectBundler bundler = new ObjectBundler ();
+			
+			Assertion.AssertNotNull (bundle);
+			
+			bundler.EnableMapping ();
+			
+			object             obj  = bundler.CreateFromBundle (bundle);
+			Widgets.WindowRoot root = obj as Widgets.WindowRoot;
+			
+			Assertion.AssertNotNull (obj);
+			Assertion.AssertNotNull (root);
+			
+			System.Time time_2 = System.Time.Now;
+			
+			bundler = new ObjectBundler ();
+			bundle  = ResourceBundle.Create ("cloned_simple_window");
+			
+			bundler.SetupPrefix ("file");
+			bundler.FillBundleFromObject (bundle, root);
+			
+			System.Time time_3 = System.Time.Now;
+			
+			string xml = bundle.CreateXmlDocument (false).OuterXml;
+			
+			System.Time time_4 = System.Time.Now;
+			
+			System.Console.Out.WriteLine (xml);
+			
+			System.Console.Out.WriteLine ("Load:  {0} ms", (time_2.Ticks-time_1.Ticks)/10000);
+			System.Console.Out.WriteLine ("Store: {0} ms", (time_3.Ticks-time_2.Ticks)/10000);
+			System.Console.Out.WriteLine ("XML:   {0} ms", (time_4.Ticks-time_3.Ticks)/10000);
+		}
+		
 		[Test] public void CheckCommandDispatcher()
 		{
 			if (ObjectBundlerTest.register_window_cancel)
@@ -99,6 +191,7 @@ namespace Epsitec.Common.Support
 				ObjectBundlerTest.register_window_cancel = false;
 			}
 		}
+		
 		
 		private static bool		register_window_cancel = true;
 		private Widgets.Window	test_window;
@@ -132,6 +225,81 @@ namespace Epsitec.Common.Support
 					
 					e.PropertyData = Drawing.Size.Converter.ToString (cur_value, System.Globalization.CultureInfo.InvariantCulture, sw, sh);
 				}
+			}
+		}
+		
+		
+		private class A : IBundleSupport
+		{
+			public A()
+			{
+			}
+			
+			
+			[Bundle] public string				Value
+			{
+				get
+				{
+					return this.GetValue ();
+				}
+				set
+				{
+					this.value = value;
+				}
+			}
+			
+			
+			protected virtual string GetValue()
+			{
+				return this.value;
+			}
+			
+			
+			#region IBundleSupport Members
+			public void SerialiseToBundle(ObjectBundler bundler, ResourceBundle bundle)
+			{
+			}
+
+			public void RestoreFromBundle(ObjectBundler bundler, ResourceBundle bundle)
+			{
+			}
+			
+			public string						BundleName
+			{
+				get
+				{
+					return null;
+				}
+			}
+
+			public string PublicClassName
+			{
+				get
+				{
+					return this.GetType ().Name;
+				}
+			}
+			#endregion
+			
+			#region IDisposable Members
+			public void Dispose()
+			{
+			}
+			#endregion
+			
+			protected string					value = "";
+		}
+		
+		private class B : A
+		{
+			public B()
+			{
+			}
+			
+			
+			protected override string GetValue()
+			{
+				return base.GetValue ().ToLower ();
 			}
 		}
 	}

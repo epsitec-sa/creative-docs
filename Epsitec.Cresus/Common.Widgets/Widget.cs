@@ -185,6 +185,21 @@ namespace Epsitec.Common.Widgets
 			get { return this.GetType ().Name; }
 		}
 		
+		public virtual string				BundleName
+		{
+			get
+			{
+				string name = this.Name;
+				
+				if (name == "")
+				{
+					return null;
+				}
+				
+				return name;
+			}
+		}
+		
 		public virtual void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
 //			this.SuspendLayout ();
@@ -211,6 +226,34 @@ namespace Epsitec.Common.Widgets
 			}
 			
 //			this.ResumeLayout ();
+		}
+		
+		public virtual void SerialiseToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
+		{
+			if (this.HasChildren)
+			{
+				System.Collections.ArrayList list    = new System.Collections.ArrayList ();
+				Widget[]                     widgets = this.Children.Widgets;
+				
+				for (int i = 0; i < widgets.Length; i++)
+				{
+					if (! widgets[i].IsEmbedded)
+					{
+						Support.ResourceBundle child_bundle = bundler.CreateEmptyBundle (widgets[i].BundleName);
+						
+						bundler.FillBundleFromObject (child_bundle, widgets[i]);
+						
+						list.Add (child_bundle);
+					}
+				}
+				
+				if (list.Count > 0)
+				{
+					Support.ResourceBundle.Field field = bundle.CreateField (Support.ResourceFieldType.List, list);
+					field.SetName ("widgets");
+					bundle.Add (field);
+				}
+			}
 		}
 		#endregion
 		
