@@ -136,7 +136,7 @@ namespace Epsitec.Common.Tests
 			button.Clicked += new MessageEventHandler(button_Clicked);
 			
 			scroller.Location = new Point (80, 10);
-			scroller.Size = new Size(15, 180);
+			scroller.Size = new Size(17, 180);
 			scroller.Range = 1.0;
 			scroller.Display = 0.1;
 			scroller.Value = 0.0;

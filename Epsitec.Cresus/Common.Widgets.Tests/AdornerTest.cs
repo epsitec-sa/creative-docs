@@ -551,7 +551,7 @@ namespace Epsitec.Common.Tests
 		private void link_HypertextClicked(object sender, MessageEventArgs e)
 		{
 			Widget widget = sender as Widget;
-			System.Diagnostics.Process.Start ("IExplore.exe", widget.Hypertext);
+			System.Diagnostics.Process.Start (widget.Hypertext);
 		}
 
 
