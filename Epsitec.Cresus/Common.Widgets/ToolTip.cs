@@ -233,6 +233,7 @@ namespace Epsitec.Common.Widgets
 			rect.Location = mouse;
 			this.window.ClientSize = size;
 			this.window.WindowBounds = rect;
+			this.window.Owner = this.widget.Window;
 
 			this.Location = new Drawing.Point(0, 0);
 			this.Size = size;
