@@ -1303,7 +1303,7 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				Widget widget = this;
-				double zoom   = 0;
+				double zoom   = 1.0;
 				
 				while (widget != null)
 				{

@@ -93,9 +93,12 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnSelectedIndexChanged()
 		{
-			if (this.SelectedIndexChanged != null)
+			if (this.scrollList == null)
 			{
-				this.SelectedIndexChanged (this);
+				if (this.SelectedIndexChanged != null)
+				{
+					this.SelectedIndexChanged (this);
+				}
 			}
 		}
 
@@ -237,7 +240,9 @@ namespace Epsitec.Common.Widgets
 				this.comboWindow.Alpha = adorner.AlphaVMenu;
 				this.comboWindow.Root.BackColor = Drawing.Color.Transparent;
 			}
-			pos = this.MapClientToScreen(new Drawing.Point(-shadow.Left, -this.scrollList.Height-shadow.Bottom));
+			pos = this.MapClientToScreen(new Drawing.Point(0, 0));
+			pos.X -= shadow.Left;
+			pos.Y -= this.scrollList.Height-shadow.Bottom;
 			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width+shadow.Width, this.scrollList.Height+shadow.Height);
 			this.scrollList.Location = new Drawing.Point(shadow.Left, shadow.Bottom);
 			this.scrollList.SelectedIndexChanged += new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
@@ -250,6 +255,8 @@ namespace Epsitec.Common.Widgets
 			this.SetFocused(true);
 			this.SetFocused(false);
 			this.scrollList.SetFocused(true);
+			
+			this.openText = this.Text;
 		}
 		
 		private void CloseCombo()
@@ -272,6 +279,11 @@ namespace Epsitec.Common.Widgets
 			
 			this.SelectAll();
 			this.SetFocused(true);
+			
+			if ( this.openText != this.Text )
+			{
+				this.OnSelectedIndexChanged();
+			}
 		}
 
 		private void HandleApplicationDeactivated(object sender)
@@ -398,5 +410,6 @@ namespace Epsitec.Common.Widgets
 		protected Helpers.StringCollection			items;
 		protected Window							comboWindow;
 		protected ScrollList						scrollList;
+		protected string							openText;
 	}
 }

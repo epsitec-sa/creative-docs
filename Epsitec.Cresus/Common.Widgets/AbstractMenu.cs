@@ -280,18 +280,22 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.KeyDown:
-					this.ProcessKeyDown(message.KeyCode);
+					if (message.IsAltPressed == false &&
+						message.IsCtrlPressed == false &&
+						message.IsShiftPressed == false &&
+						this.ProcessKeyDown(message.KeyCode))
+					{
+						message.Consumer = this;
+					}
 					break;
 			}
-			
-			message.Consumer = this;
 		}
 
 		// Gestion d'une touche pressée avec KeyDown dans le menu.
-		protected void ProcessKeyDown(KeyCode key)
+		protected bool ProcessKeyDown(KeyCode key)
 		{
 			AbstractMenu parent = this.parentMenu;
-
+			
 			switch ( key )
 			{
 				case KeyCode.ArrowUp:
@@ -366,7 +370,12 @@ namespace Epsitec.Common.Widgets
 				case KeyCode.Escape:
 					this.CloseAll();
 					break;
+				
+				default:
+					return false;
 			}
+			
+			return true;
 		}
 
 		// Sélectionne la case suivante ou précédente.
@@ -547,7 +556,8 @@ namespace Epsitec.Common.Widgets
 			this.submenu.parentMenu = this;
 			this.submenu.parentItem = item;
 
-			Drawing.Point pos = new Drawing.Point();
+			Drawing.Point pos    = new Drawing.Point(0, 0);
+			Drawing.Point offset = new Drawing.Point(0, 0);
 
 			if ( this.IsHorizontal )
 			{
@@ -556,32 +566,37 @@ namespace Epsitec.Common.Widgets
 				pRect.Offset(this.submenu.Left, this.submenu.Bottom);
 				this.submenu.ParentRect = pRect;
 
-				pos = new Drawing.Point(0, -this.submenu.Height);
-				pos.X -= this.shadow.Left;
+				offset.Y = -this.submenu.Height;
+				offset.X = -this.shadow.Left;
 			}
 			else
 			{
 				this.submenu.ParentRect = Drawing.Rectangle.Empty;
 
-				Drawing.Point test = new Drawing.Point(item.Width+this.submenu.Width, 0);
+				Drawing.Point test = new Drawing.Point(item.Width, 0);
 				test = this.MapClientToScreen(test);
+				test.X += this.submenu.Width;
 				ScreenInfo si = ScreenInfo.Find(test);
 				Drawing.Rectangle wa = si.WorkingArea;
 
 				if ( test.X <= wa.Right )  // sous-menu à droite ?
 				{
-					pos = new Drawing.Point(item.Width, item.Height-this.submenu.Height+1);
+					pos.X = item.Width;
+					pos.Y = item.Height;
+					offset.Y = 1-this.submenu.Height;
 				}
 				else	// sous-menu à gauche ?
 				{
-					pos = new Drawing.Point(-this.submenu.Width, item.Height-this.submenu.Height+1);
+					pos.Y = item.Height;
+					offset.X =  -this.submenu.Width;
+					offset.Y = 1-this.submenu.Height;
 				}
 				pos.X -= this.shadow.Left;
 				pos.Y += this.shadow.Top;
 			}
 
-			pos = item.MapClientToScreen(pos);
-
+			pos = item.MapClientToScreen(pos) + offset;
+			
 			this.window = new Window();
 			this.window.MakeFramelessWindow();
 			this.window.MakeFloatingWindow();
@@ -734,7 +749,7 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
-					mouse = window.Root.MapClientToScreen(message.Cursor);
+					mouse = window.MapWindowToScreen(message.Cursor);
 					menu = this.DetectMenu(mouse);
 					if ( menu == null )
 					{
@@ -759,7 +774,7 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.MouseUp:
-					mouse = window.Root.MapClientToScreen(message.Cursor);
+					mouse = window.MapWindowToScreen(message.Cursor);
 					menu = this.DetectMenu(mouse);
 					if ( menu != null )
 					{
@@ -777,7 +792,7 @@ namespace Epsitec.Common.Widgets
 				
 				case MessageType.MouseEnter:
 				case MessageType.MouseMove:
-					mouse = window.Root.MapClientToScreen(message.Cursor);
+					mouse = window.MapWindowToScreen(message.Cursor);
 					menu = this.DetectMenu(mouse);
 					if ( menu == null )
 					{

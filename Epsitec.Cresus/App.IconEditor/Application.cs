@@ -20,6 +20,7 @@ namespace Epsitec.Icons
 			this.main_window.ClientSize = new Size (800, 580);
 			this.main_window.Text       = "App.Icons";
 			this.main_window.Name       = "Application";
+			this.main_window.Root.ClientGeometryUpdated += new EventHandler (this.HandleRootClientGeometryUpdated);
 			
 			this.icon_editor = new IconEditor ();
 			this.icon_menu   = this.icon_editor.GetMenu();
@@ -66,5 +67,16 @@ namespace Epsitec.Icons
 		private Window					main_window;
 		private IconEditor				icon_editor;
 		private HMenu					icon_menu;
+		private int						in_geom_update;
+
+		private void HandleRootClientGeometryUpdated(object sender)
+		{
+			if (this.in_geom_update == 0)
+			{
+				this.in_geom_update++;
+				this.main_window.Root.SetClientZoom (this.main_window.Root.Width / 800);
+				this.in_geom_update--;
+			}
+		}
 	}
 }

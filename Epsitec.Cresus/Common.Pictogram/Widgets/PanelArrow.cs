@@ -36,7 +36,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					if ( type == ArrowType.None )  break;
 					this.fieldType[j].Items.Add(PropertyArrow.GetName(type));
 				}
-				this.fieldType[j].TextChanged += new EventHandler(this.HandleTypeChanged);
+				this.fieldType[j].SelectedIndexChanged += new EventHandler(this.HandleTypeChanged);
 				this.fieldType[j].TabIndex = index++;
 				this.fieldType[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
