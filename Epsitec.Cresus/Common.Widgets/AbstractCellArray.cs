@@ -225,18 +225,18 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert(this.array[column, row] != null);
 				return this.array[column, row];
 			}
-			
-			set
-			{
-				System.Diagnostics.Debug.Assert(this.array[column, row] != null);
-				if ( value == null )  value = new Cell(null);
-				
-				this.array[column, row].SetArrayRank(null, -1, -1);
-				this.array[column, row] = value;
-				this.array[column, row].SetArrayRank(this, column, row);
-				
-				this.NotifyCellChanged(value);
-			}
+//			
+//			set
+//			{
+//				System.Diagnostics.Debug.Assert(this.array[column, row] != null);
+//				if ( value == null )  value = new Cell(null);
+//				
+//				this.array[column, row].SetArrayRank(null, -1, -1);
+//				this.array[column, row] = value;
+//				this.array[column, row].SetArrayRank(this, column, row);
+//				
+//				this.NotifyCellChanged(value);
+//			}
 		}
 		
 		public virtual void NotifyCellChanged(Cell cell)
@@ -1434,21 +1434,11 @@ namespace Epsitec.Common.Widgets
 						this.array[x,y].Bounds = cRect;
 						this.array[x,y].Parent = this.container;
 						this.array[x,y].SetVisible(true);
+						this.array[x,y].SetArrayRank(this, x, y);
 					}
-					else if ( this.array[x,y].Parent != null )
+					else if (this.array[x,y].Parent != null)
 					{
-						if ( this.array[x,y].ContainsFocus )
-						{
-							//	La cellule qui contient le focus n'est plus visible; il faudrait donc
-							//	supprimer son parent, mais ce faisant, on perdrait le focus. Dilemme !
-							
-							focusedCell = this.array[x,y];
-							focusedCell.SetVisible(false);
-						}
-						else
-						{
-							this.array[x,y].Parent = null;
-						}
+						this.DetachCell (this.array[x,y], true);
 					}
 					px += dx;
 				}
@@ -1456,6 +1446,32 @@ namespace Epsitec.Common.Widgets
 			
 			this.SetFocusedCell (focusedCell);
 		}
+		
+		protected void DetachCell(Cell cell, bool keep_focus)
+		{
+			if ((keep_focus) &&
+				(cell.ContainsFocus))
+			{
+				//	La cellule qui contient le focus n'est plus visible; il faudrait donc
+				//	supprimer son parent, mais ce faisant, on perdrait le focus. Dilemme !
+							
+				focusedCell = cell;
+				focusedCell.Hide ();
+			}
+			else
+			{
+				if (this.focusedCell == cell)
+				{
+					this.focusedCell = null;
+					cell.SetFocused (false);
+					this.SetFocused (true);
+				}
+				
+				cell.SetArrayRank (null, -1, -1);
+				cell.Parent = null;
+			}
+		}
+		
 		
 		protected void SetFocusedCell(Cell cell)
 		{
@@ -1485,7 +1501,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleFocusedWidgetDefocused(object sender)
 		{
-			if ( ! this.focusedWidget.IsFocusedOrPassive )
+			if ( ! this.focusedWidget.IsFocusedFlagSet )
 			{
 				this.SetFocusedCell (null);
 			}
@@ -1503,38 +1519,41 @@ namespace Epsitec.Common.Widgets
 		// Choix des dimensions du tableau.
 		public virtual void SetArraySize(int maxColumns, int maxRows)
 		{
-			if ( this.maxColumns == maxColumns &&
-				 this.maxRows    == maxRows    )
+			if ((this.maxColumns == maxColumns) &&
+				(this.maxRows == maxRows))
 			{
 				return;
 			}
 			
-			// Supprime les colonnes excédentaires.
-			for ( int col=maxColumns ; col<this.maxColumns ; col++ )
+			//	Supprime les colonnes excédentaires.
+			
+			for (int col = maxColumns; col < this.maxColumns; col++)
 			{
-				for ( int row=0 ; row<this.maxRows ; row++ )
+				for (int row = 0; row < this.maxRows; row++)
 				{
-					this.array[col,row].SetArrayRank(null, -1, -1);
+					this.DetachCell (this.array[col,row], false);
 					this.array[col,row] = null;
 				}
 			}
 			
-			int minMaxCol = System.Math.Min(maxColumns, this.maxColumns);
-			int minMaxRow = System.Math.Min(maxRows,    this.maxRows   );
+			int minMaxCol = System.Math.Min (maxColumns, this.maxColumns);
+			int minMaxRow = System.Math.Min (maxRows, this.maxRows);
 			
-			// Supprime les lignes excédentaires, sans parcourir une seconde
-			// fois les colonnes déjà supprimées.
-			for ( int row=maxRows ; row<this.maxRows ; row++ )
+			//	Supprime les lignes excédentaires, sans parcourir une seconde
+			//	fois les colonnes déjà supprimées.
+			
+			for (int row = maxRows; row < this.maxRows; row++)
 			{
-				for ( int col=0 ; col<minMaxCol ; col++ )
+				for (int col = 0; col < minMaxCol; col++)
 				{
-					array[col,row].SetArrayRank(null, -1, -1);
+					this.DetachCell (this.array[col,row], false);
 					this.array[col,row] = null;
 				}
 			}
 			
-			// Alloue un nouveau tableau, puis copie le contenu de l'ancien tableau
-			// dans le nouveau. L'ancien sera perdu.
+			//	Alloue un nouveau tableau, puis copie le contenu de l'ancien tableau
+			//	dans le nouveau. L'ancien sera perdu.
+			
 			Cell[,] newArray = (maxColumns*maxRows > 0) ? new Cell[maxColumns, maxRows] : null;
 			
 			for ( int col=0 ; col<minMaxCol ; col++ )
