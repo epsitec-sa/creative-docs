@@ -210,7 +210,7 @@ namespace Epsitec.Common.Widgets
 		private void OpenCombo()
 		{
 			this.scrollList = new ScrollList(null);
-			this.scrollList.ScrollListStyle = ScrollListStyle.Simple;
+			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
 			this.scrollList.ComboMode = true;
 			this.scrollList.Bounds = new Drawing.Rectangle (0, 0, this.Width, 200);
 			
@@ -232,6 +232,12 @@ namespace Epsitec.Common.Widgets
 			
 			this.comboWindow = new Window();
 			this.comboWindow.MakeFramelessWindow();
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			if ( adorner.AlphaVMenu < 1.0 )
+			{
+				this.comboWindow.MakeLayeredWindow();
+				this.comboWindow.Alpha = adorner.AlphaVMenu;
+			}
 			pos = this.MapClientToScreen(new Drawing.Point(0, -this.scrollList.Height));
 			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width, this.scrollList.Height);
 			this.scrollList.SelectedIndexChanged += new EventHandler(this.HandleScrollerSelectedIndexChanged);

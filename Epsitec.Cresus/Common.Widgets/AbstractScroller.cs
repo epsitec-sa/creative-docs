@@ -504,7 +504,9 @@ namespace Epsitec.Common.Widgets
 			// Dessine la cabine.
 			if ( this.Range > 0 && this.VisibleRangeRatio > 0 && this.IsEnabled )
 			{
-				adorner.PaintScrollerHandle(graphics, this.thumbRect, Drawing.Rectangle.Empty, this.PaintState&(~WidgetState.Engaged), dir);
+				rect = this.thumbRect;
+				graphics.Align(ref rect);
+				adorner.PaintScrollerHandle(graphics, rect, Drawing.Rectangle.Empty, this.PaintState&(~WidgetState.Engaged), dir);
 			}
 		}
 

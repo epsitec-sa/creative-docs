@@ -2,9 +2,8 @@ namespace Epsitec.Common.Widgets
 {
 	public enum ScrollListStyle
 	{
-		Flat,			// pas de cadre, ni de relief
-		Normal,			// bouton normal
-		Simple,			// cadre tout simple
+		Normal,			// liste fixe normale
+		Menu,			// menu d'un TextFieldCombo
 	}
 
 	public enum ScrollListShow
@@ -144,7 +143,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.selectedLine )
 				{
 					this.selectedLine = value;
-					this.SetDirty ();
+					this.SetDirty();
 				}
 			}
 		}
@@ -198,7 +197,7 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.firstLine )
 				{
 					this.firstLine = value;
-					this.SetDirty ();
+					this.SetDirty();
 					this.Invalidate();
 				}
 			}
@@ -391,7 +390,7 @@ namespace Epsitec.Common.Widgets
 			int total = this.items.Count;
 			if ( total <= this.visibleLines )
 			{
-				if (this.scroller.IsVisible)
+				if ( this.scroller.IsVisible )
 				{
 					this.scroller.Hide();
 					this.rightMargin = 0;
@@ -400,12 +399,12 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				this.scroller.Range = total-this.visibleLines;
-				this.scroller.VisibleRangeRatio = (double)this.visibleLines / total;
+				this.scroller.VisibleRangeRatio = (double)this.visibleLines/total;
 				this.scroller.Value = this.firstLine;
 				this.scroller.SmallChange = 1;
 				this.scroller.LargeChange = this.visibleLines/2;
 				
-				if (this.scroller.IsVisible == false)
+				if ( !this.scroller.IsVisible )
 				{
 					this.rightMargin = this.scroller.Width;
 					this.scroller.Show();
@@ -415,19 +414,20 @@ namespace Epsitec.Common.Widgets
 		
 		protected void SetDirty()
 		{
-			if (this.isDirty == false)
+			if ( this.isDirty == false )
 			{
 				this.isDirty = true;
-				this.Invalidate ();
+				this.Invalidate();
 			}
 		}
 
 		// Met à jour les textes.
 		protected void UpdateTextLayouts()
 		{
-			if (this.isDirty)
+			if ( this.isDirty )
 			{
-				this.UpdateScroller ();
+				this.UpdateScroller();
+
 				int max = System.Math.Min(this.visibleLines, this.items.Count);
 				for ( int i=0 ; i<max ; i++ )
 				{
@@ -439,7 +439,7 @@ namespace Epsitec.Common.Widgets
 					this.textLayouts[i].Text = this.items[i+this.firstLine];
 					this.textLayouts[i].Font = this.DefaultFont;
 					this.textLayouts[i].FontSize = this.DefaultFontSize;
-					this.textLayouts[i].LayoutSize = new Drawing.Size(this.Client.Width-ScrollList.Margin*2-this.rightMargin, this.lineHeight);
+					this.textLayouts[i].LayoutSize = new Drawing.Size(this.GetTextWidth(), this.lineHeight);
 				}
 				this.isDirty = false;
 			}
@@ -453,20 +453,17 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.lineHeight == 0 )  return;
 
-			Drawing.Rectangle rect = this.Bounds;
-			rect.Inflate(-ScrollList.Margin, -ScrollList.Margin);
-
-			this.visibleLines = (int)(rect.Height/this.lineHeight);
+			this.visibleLines = (int)((this.Bounds.Height-ScrollList.Margin*2)/this.lineHeight);
 			this.textLayouts = new TextLayout[this.visibleLines];
 			
-			this.SetDirty ();
+			this.SetDirty();
 
 			if ( this.scroller != null )
 			{
 				IAdorner adorner = Widgets.Adorner.Factory.Active;
-				rect = new Drawing.Rectangle();
-				rect.Left   = this.Bounds.Width-this.scroller.Width-adorner.GeometryScrollerRightMargin;
+				Drawing.Rectangle rect = new Drawing.Rectangle();
 				rect.Right  = this.Bounds.Width-adorner.GeometryScrollerRightMargin;
+				rect.Left   = rect.Right-this.scroller.Width;
 				rect.Bottom = adorner.GeometryScrollerBottomMargin;
 				rect.Top    = this.Bounds.Height-adorner.GeometryScrollerTopMargin;
 				this.scroller.Bounds = rect;
@@ -477,6 +474,20 @@ namespace Epsitec.Common.Widgets
 		{
 			this.UpdateClientGeometry();
 			base.HandleAdornerChanged();
+		}
+
+		// Calcule la largeur utile pour le texte.
+		protected double GetTextWidth()
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+
+			double width = this.Client.Width-ScrollList.Margin*2;
+			if ( this.rightMargin > 0 )
+			{
+				width -= this.rightMargin-1+adorner.GeometryScrollerRightMargin;
+			}
+
+			return width;
 		}
 
 
@@ -511,7 +522,14 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
 			
-			adorner.PaintTextFieldBackground(graphics, rect, state, TextFieldStyle.Multi, false);
+			if ( this.scrollListStyle == ScrollListStyle.Menu )
+			{
+				adorner.PaintMenuBackground(graphics, rect, state, Direction.Down, Drawing.Rectangle.Empty, 0);
+			}
+			else
+			{
+				adorner.PaintTextFieldBackground(graphics, rect, state, TextFieldStyle.Multi, false);
+			}
 
 			Drawing.Point pos = new Drawing.Point(ScrollList.Margin, rect.Height-ScrollList.Margin-this.lineHeight);
 			int max = System.Math.Min(this.visibleLines, this.items.Count);
@@ -526,9 +544,9 @@ namespace Epsitec.Common.Widgets
 				{
 					Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
 					rects[0].Left   = ScrollList.Margin;
-					rects[0].Width  = this.Client.Width-2*ScrollList.Margin-this.rightMargin;
-					rects[0].Left  += adorner.GeometryScrollListLeftMargin;
-					rects[0].Right += adorner.GeometryScrollListRightMargin+(2-adorner.GeometryScrollerRightMargin);
+					rects[0].Width  = this.GetTextWidth();
+					rects[0].Left  += adorner.GeometrySelectedLeftMargin;
+					rects[0].Right += adorner.GeometrySelectedRightMargin;
 					rects[0].Bottom = pos.Y;
 					rects[0].Height = this.lineHeight;
 					adorner.PaintTextSelectionBackground(graphics, rects);
@@ -541,7 +559,6 @@ namespace Epsitec.Common.Widgets
 					state &= ~WidgetState.Selected;
 				}
 
-				//this.textLayouts[i].Paint(pos, graphics, Drawing.Rectangle.Empty, color);
 				adorner.PaintButtonTextLayout(graphics, pos, this.textLayouts[i], state, ButtonStyle.ListItem);
 				pos.Y -= this.lineHeight;
 			}

@@ -688,6 +688,12 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.RenderSolid(this.colorBorder);
 		}
 
+		public void PaintArrayForeground(Drawing.Graphics graphics,
+										 Drawing.Rectangle rect,
+										 WidgetState state)
+		{
+		}
+
 		// Dessine le fond d'une cellule.
 		public void PaintCellBackground(Drawing.Graphics graphics,
 										Drawing.Rectangle rect,
@@ -720,36 +726,26 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 			{
-				if ( dir == Direction.Up )
-				{
-					this.PaintImageButton(graphics, rect, 26);
-				}
-				if ( dir == Direction.Left )
-				{
-					this.PaintImageButton(graphics, rect, 34);
-				}
+				this.PaintImageButton(graphics, rect, 9);
+			}
+			else if ( (state&WidgetState.Enabled) != 0 )
+			{
+				this.PaintImageButton(graphics, rect, 8);
 			}
 			else
 			{
-				if ( dir == Direction.Up )
-				{
-					this.PaintImageButton(graphics, rect, 25);
-				}
-				if ( dir == Direction.Left )
-				{
-					this.PaintImageButton(graphics, rect, 33);
-				}
+				this.PaintImageButton(graphics, rect, 11);
 			}
 
 			if ( dir == Direction.Up )
 			{
-				Drawing.Path pTitle = PathTopCornerRectangle(rect);
+				Drawing.Path pTitle = PathTopRectangle(rect);
 				graphics.Rasterizer.AddOutline(pTitle, 1);
 				graphics.RenderSolid(this.colorBorder);
 			}
 			if ( dir == Direction.Left )
 			{
-				Drawing.Path pTitle = PathLeftCornerRectangle(rect);
+				Drawing.Path pTitle = PathLeftRectangle(rect);
 				graphics.Rasterizer.AddOutline(pTitle, 1);
 				graphics.RenderSolid(this.colorBorder);
 			}
@@ -1098,6 +1094,40 @@ namespace Epsitec.Common.Widgets.Adorner
 			return path;
 		}
 
+		// Crée le chemin d'un rectangle en forme de "U" inversé.
+		protected Drawing.Path PathTopRectangle(Drawing.Rectangle rect)
+		{
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo(ox+0.5, oy);
+			path.LineTo(ox+0.5, oy+dy-0.5);
+			path.LineTo(ox+dx-0.5, oy+dy-0.5);
+			path.LineTo(ox+dx-0.5, oy);
+
+			return path;
+		}
+
+		// Crée le chemin d'un rectangle en forme de "D" inversé.
+		protected Drawing.Path PathLeftRectangle(Drawing.Rectangle rect)
+		{
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo(ox+dx-0.5, oy+0.5);
+			path.LineTo(ox+0.5, oy+0.5);
+			path.LineTo(ox+0.5, oy+dy-0.5);
+			path.LineTo(ox+dx-0.5, oy+dy-0.5);
+
+			return path;
+		}
+
 		// Crée le chemin d'un rectangle "corné" en forme de "U" inversé.
 		protected Drawing.Path PathTopCornerRectangle(Drawing.Rectangle rect)
 		{
@@ -1303,6 +1333,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double AlphaVMenu { get { return 1.0; } }
 
 		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(2,2,2,2); } }
+		public Drawing.Margins GeometryArrayMargins { get { return new Drawing.Margins(3,3,3,3); } }
 		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public double GeometryComboRightMargin { get { return 2; } }
@@ -1314,8 +1345,8 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double GeometryScrollerRightMargin { get { return 2; } }
 		public double GeometryScrollerBottomMargin { get { return 2; } }
 		public double GeometryScrollerTopMargin { get { return 2; } }
-		public double GeometryScrollListLeftMargin { get { return -2; } }
-		public double GeometryScrollListRightMargin { get { return 2; } }
+		public double GeometrySelectedLeftMargin { get { return -2; } }
+		public double GeometrySelectedRightMargin { get { return 2; } }
 		public double GeometrySliderLeftMargin { get { return 0; } }
 		public double GeometrySliderRightMargin { get { return 0; } }
 

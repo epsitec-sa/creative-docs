@@ -44,11 +44,130 @@ namespace Epsitec.Common.Widgets
 
 			Window window = new Window();
 			
-			window.ClientSize = new Size(600, 300);
+			window.ClientSize = new Size(600, 320);
 			window.Text = "CheckAdornerWidgets";
 
 			ToolTip tip = new ToolTip();
 			tip.Behaviour = ToolTipBehaviour.Normal;
+			
+			HMenu menu = new HMenu();
+			menu.Location = new Point(0, window.ClientSize.Height-menu.DefaultHeight);
+			menu.Size = new Size(window.ClientSize.Width, menu.DefaultHeight);
+			menu.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
+			menu.Items.Add(new MenuItem("file", "Fichier"));
+			menu.Items.Add(new MenuItem("edit", "Edition"));
+			menu.Items.Add(new MenuItem("display", "Affichage"));
+			menu.Items.Add(new MenuItem("debug", "Debug"));
+			menu.Items.Add(new MenuItem("help", "Aide"));
+			window.Root.Children.Add(menu);
+
+			VMenu fileMenu = new VMenu();
+			fileMenu.Items.Add(new MenuItem("new", "", "Nouveau", "Ctrl+N"));
+			fileMenu.Items.Add(new MenuItem("open", @"file:images/open1.icon", "Ouvrir...", "Ctrl+O"));
+			fileMenu.Items.Add(new MenuItem("close", "", "Fermer", ""));
+			fileMenu.Items.Add(new MenuSeparator ());
+			fileMenu.Items.Add(new MenuItem("save", @"file:images/save1.icon", "Enregistrer", "Ctrl+S"));
+			fileMenu.Items.Add(new MenuItem("saveas", "", "Enregistrer sous...", ""));
+			fileMenu.Items.Add(new MenuSeparator ());
+			fileMenu.Items.Add(new MenuItem("print", "", "Imprimer...", "Ctrl+P"));
+			fileMenu.Items.Add(new MenuItem("preview", "", "Apercu avant impression", ""));
+			fileMenu.Items.Add(new MenuItem("warning", "", "Mise en page...", ""));
+			fileMenu.Items.Add(new MenuSeparator ());
+			fileMenu.Items.Add(new MenuItem("quit", "", "Quitter", ""));
+			fileMenu.AdjustSize();
+			menu.Items[0].Submenu = fileMenu;
+
+			VMenu editMenu = new VMenu();
+			editMenu.Items.Add(new MenuItem("undo", "", "Annuler", "Ctrl+Z"));
+			editMenu.Items.Add(new MenuSeparator ());
+			editMenu.Items.Add(new MenuItem("cut", @"file:images/cut1.icon", "Couper", "Ctrl+X"));
+			editMenu.Items.Add(new MenuItem("copy", @"file:images/copy1.icon", "Copier", "Ctrl+C"));
+			editMenu.Items.Add(new MenuItem("paste", @"file:images/paste1.icon", "Coller", "Ctrl+V"));
+			editMenu.AdjustSize();
+			menu.Items[1].Submenu = editMenu;
+
+			VMenu showMenu = new VMenu();
+			showMenu.Items.Add(new MenuItem("addr", "", "Adresses", "F5"));
+			showMenu.Items.Add(new MenuItem("objs", "", "Objets", "F6"));
+			showMenu.Items.Add(new MenuSeparator ());
+			showMenu.Items.Add(new MenuItem("opts", "", "Options", ""));
+			showMenu.Items.Add(new MenuItem("set", "", "Reglages", ""));
+			showMenu.AdjustSize();
+			menu.Items[2].Submenu = showMenu;
+
+			VMenu optMenu = new VMenu();
+			optMenu.Items.Add(new MenuItem("misc", "", "Divers...", ""));
+			optMenu.Items.Add(new MenuItem("print", "", "Impression...", ""));
+			optMenu.Items.Add(new MenuItem("open", "", "Fichiers...", ""));
+			optMenu.AdjustSize();
+			showMenu.Items[3].Submenu = optMenu;
+
+			VMenu setupMenu = new VMenu();
+			setupMenu.Items.Add(new MenuItem("base", "", "Base...", ""));
+			setupMenu.Items.Add(new MenuItem("global", "", "Global...", ""));
+			setupMenu.Items.Add(new MenuItem("list", "", "Liste...", ""));
+			setupMenu.Items.Add(new MenuItem("edit", "", "Edition...", ""));
+			setupMenu.Items.Add(new MenuItem("lang", "", "Langue...", ""));
+			setupMenu.AdjustSize();
+			showMenu.Items[4].Submenu = setupMenu;
+
+			VMenu debugMenu = new VMenu();
+			debugMenu.Items.Add(new MenuItem("colorA", "", "Couleur A", ""));
+			debugMenu.Items.Add(new MenuItem("colorB", "", "Couleur B", ""));
+			debugMenu.Items.Add(new MenuItem("colorC", "", "Couleur C", ""));
+			debugMenu.AdjustSize();
+			menu.Items[3].Submenu = debugMenu;
+
+			VMenu debugMenu1 = new VMenu();
+			debugMenu1.Items.Add(new MenuItem("red", "", "Rouge", ""));
+			debugMenu1.Items.Add(new MenuItem("green", "", "Vert", ""));
+			debugMenu1.Items.Add(new MenuItem("blue", "", "Bleu", ""));
+			debugMenu1.AdjustSize();
+			debugMenu.Items[0].Submenu = debugMenu1;
+
+			VMenu debugMenu2 = new VMenu();
+			debugMenu2.Items.Add(new MenuItem("red", "", "Rouge", ""));
+			debugMenu2.Items.Add(new MenuItem("green", "", "Vert", ""));
+			debugMenu2.Items.Add(new MenuItem("blue", "", "Bleu", ""));
+			debugMenu2.AdjustSize();
+			debugMenu.Items[1].Submenu = debugMenu2;
+
+			VMenu debugMenu3 = new VMenu();
+			debugMenu3.Items.Add(new MenuItem("red", "", "Rouge", ""));
+			debugMenu3.Items.Add(new MenuItem("green", "", "Vert", ""));
+			debugMenu3.Items.Add(new MenuItem("blue", "", "Bleu", ""));
+			debugMenu3.AdjustSize();
+			debugMenu.Items[2].Submenu = debugMenu3;
+
+			VMenu helpMenu = new VMenu();
+			helpMenu.Items.Add(new MenuItem("help", "", "Aide", "F1"));
+			helpMenu.Items.Add(new MenuItem("ctxhelp", "", "Aide contextuelle", ""));
+			helpMenu.Items.Add(new MenuItem("about", "", "A propos de...", ""));
+			helpMenu.AdjustSize();
+			menu.Items[4].Submenu = helpMenu;
+
+			HToolBar tb = new HToolBar();
+			tb.Location = new Point(0, window.ClientSize.Height-menu.DefaultHeight-tb.DefaultHeight);
+			tb.Width = window.ClientSize.Width;
+			tb.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
+			window.Root.Children.Add(tb);
+
+			tb.Items.Add(new IconButton(@"file:images/open1.icon"));
+			tb.Items.Add(new IconButton(@"file:images/save1.icon"));
+			tb.Items.Add(new IconSeparator());
+
+			TextFieldCombo t1 = new TextFieldCombo();
+			t1.Width = 70;
+			t1.Text = "Rouge";
+			t1.Items.Add("red",   "Rouge");
+			t1.Items.Add("green", "Vert");
+			t1.Items.Add("blue",  "Bleu");
+
+			tb.Items.Add(t1);
+			tb.Items.Add(new IconSeparator());
+			tb.Items.Add(new IconButton(@"file:images/cut1.icon"));
+			tb.Items.Add(new IconButton(@"file:images/copy1.icon"));
+			tb.Items.Add(new IconButton(@"file:images/paste1.icon"));
 
 			Button a = new Button();
 			a.Location = new Point(10, 10);
@@ -189,6 +308,7 @@ namespace Epsitec.Common.Widgets
 			combo.Items.Add("Vendredi");
 			combo.Items.Add("Samedi");
 			combo.Items.Add("Dimanche");
+			combo.Items.Add("JusteUnLongTextePourVoir");
 			combo.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(combo);
 
@@ -226,29 +346,6 @@ namespace Epsitec.Common.Widgets
 			multi.Text = "Ceci est une petite phrase ridicule.<br/>Mais elle est assez longue pour faire des essais.";
 			multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(multi);
-
-			HToolBar tb = new HToolBar();
-			tb.Location = new Point(0, window.ClientSize.Height-tb.DefaultHeight);
-			tb.Width = window.ClientSize.Width;
-			tb.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
-			window.Root.Children.Add(tb);
-
-			tb.Items.Add(new IconButton(@"file:images/open1.icon"));
-			tb.Items.Add(new IconButton(@"file:images/save1.icon"));
-			tb.Items.Add(new IconSeparator());
-
-			TextFieldCombo t1 = new TextFieldCombo();
-			t1.Width = 70;
-			t1.Text = "Rouge";
-			t1.Items.Add("red",   "Rouge");
-			t1.Items.Add("green", "Vert");
-			t1.Items.Add("blue",  "Bleu");
-
-			tb.Items.Add(t1);
-			tb.Items.Add(new IconSeparator());
-			tb.Items.Add(new IconButton(@"file:images/cut1.icon"));
-			tb.Items.Add(new IconButton(@"file:images/copy1.icon"));
-			tb.Items.Add(new IconButton(@"file:images/paste1.icon"));
 
 			TabBook tab = new TabBook();
 			tab.TabBookStyle = TabBookStyle.Right;
@@ -383,7 +480,7 @@ namespace Epsitec.Common.Widgets
 			page6.TabTitle = "<m>S</m>ixieme";
 			tab.Items.Add(page6);
 
-			tab.ActivePage = page1;
+			tab.ActivePage = page2;
 			window.FocusedWidget = a;
 
 			window.Show();

@@ -24,6 +24,9 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.Focusable;
 
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			this.margins = adorner.GeometryArrayMargins;
+
 			this.header = new Widget(this);
 
 			this.scrollerV = new VScroller(this);
@@ -419,7 +422,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.Update();
 
-			double h = this.rowHeight*this.maxRows+this.margin*2+this.topMargin+this.bottomMargin;
+			double h = this.rowHeight*this.maxRows+this.margins.Height+this.topMargin+this.bottomMargin;
 			double hope = h;
 			h = System.Math.Max(h, hMin);
 			h = System.Math.Min(h, hMax);
@@ -559,7 +562,7 @@ namespace Epsitec.Common.Widgets
 		protected bool MouseSelect(double pos)
 		{
 			pos = this.Client.Height-pos;
-			int line = (int)((pos-this.margin-this.topMargin)/this.rowHeight);
+			int line = (int)((pos-this.margins.Top-this.topMargin)/this.rowHeight);
 			if ( line < 0 || line >= this.visibleRows )  return false;
 			line += this.firstRow;
 			if ( line > this.maxRows-1 )  return false;
@@ -620,12 +623,18 @@ namespace Epsitec.Common.Widgets
 			
 			this.isDirty = false;
 
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			this.margins = adorner.GeometryArrayMargins;
+
 			this.topMargin = this.rowHeight;
-			this.rightMargin = this.scrollerV.Width;
-			this.bottomMargin = this.scrollerH.Height;
+			this.rightMargin = this.scrollerV.Width-1;
+			this.bottomMargin = this.scrollerH.Height-1;
 
 			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Width, this.Height);
-			rect.Inflate(-this.margin, -this.margin);
+			rect.Left   += this.margins.Left;
+			rect.Right  -= this.margins.Right;
+			rect.Bottom += this.margins.Bottom;
+			rect.Top    -= this.margins.Top;
 
 			this.rectInside.Left   = rect.Left  +this.leftMargin;
 			this.rectInside.Right  = rect.Right -this.rightMargin;
@@ -690,8 +699,8 @@ namespace Epsitec.Common.Widgets
 			}
 
 			// Place l'ascenseur vertical.
-			aRect.Left   = this.rectInside.Right;
-			aRect.Right  = this.rectInside.Right+this.rightMargin;
+			aRect.Left   = this.rectInside.Right-1;
+			aRect.Right  = this.rectInside.Right-1+this.scrollerV.Width;
 			aRect.Bottom = this.rectInside.Bottom;
 			aRect.Top    = this.rectInside.Top;
 			this.scrollerV.Bounds = aRect;
@@ -699,24 +708,28 @@ namespace Epsitec.Common.Widgets
 			// Place l'ascenseur horizontal.
 			aRect.Left   = this.rectInside.Left;
 			aRect.Right  = this.rectInside.Right;
-			aRect.Bottom = this.rectInside.Bottom-this.bottomMargin;
-			aRect.Top    = this.rectInside.Bottom;
+			aRect.Bottom = this.rectInside.Bottom+1-this.scrollerH.Height;
+			aRect.Top    = this.rectInside.Bottom+1;
 			this.scrollerH.Bounds = aRect;
 
 			this.isGrimy = false;
 			this.UpdateScroller();
 		}
 
+		protected override void HandleAdornerChanged()
+		{
+			this.UpdateClientGeometry();
+			base.HandleAdornerChanged();
+		}
+
 		// Met à jour l'ascenseur en fonction de la liste.
 		protected void UpdateScroller()
 		{
 			// Met à jour l'ascenseur vertical.
-			
-			int n_rows = this.maxRows;
-			
-			if ((n_rows <= this.visibleRowsFull) ||
-				(n_rows <= 0) ||
-				(this.visibleRowsFull <= 0))
+			int nbRows = this.maxRows;
+			if ( nbRows <= this.visibleRowsFull ||
+				 nbRows <= 0                    ||
+				 this.visibleRowsFull <= 0      )
 			{
 				this.scrollerV.SetEnabled(false);
 				this.scrollerV.Range = 1;
@@ -726,8 +739,8 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				this.scrollerV.SetEnabled(true);
-				this.scrollerV.Range = n_rows-this.visibleRowsFull;
-				this.scrollerV.VisibleRangeRatio = this.visibleRowsFull/n_rows;
+				this.scrollerV.Range = nbRows-this.visibleRowsFull;
+				this.scrollerV.VisibleRangeRatio = this.visibleRowsFull/(double)nbRows;
 				this.scrollerV.Value = this.firstRow;
 				this.scrollerV.SmallChange = 1;
 				this.scrollerV.LargeChange = this.visibleRowsFull/2.0;
@@ -736,12 +749,10 @@ namespace Epsitec.Common.Widgets
 			this.UpdateTextlayouts();
 
 			// Met à jour l'ascenseur horizontal.
-			
 			double width = this.widthTotal;
-			
-			if ((width <= this.rectInside.Width) ||
-				(width <= 0) ||
-				(this.rectInside.Width <= 0))
+			if ( width <= this.rectInside.Width ||
+				 width <= 0                     ||
+				 this.rectInside.Width <= 0     )
 			{
 				this.scrollerH.SetEnabled(false);
 				this.scrollerH.Range = 1;
@@ -835,13 +846,13 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			if ( this.widthColumns == null )  return;
 
-			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-			WidgetState       state = this.PaintState;
+			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			WidgetState state = this.PaintState;
 			
 			adorner.PaintArrayBackground(graphics, rect, state);
 
 			Drawing.Rectangle localClip = this.MapClientToRoot(this.rectInside);
-			Drawing.Rectangle saveClip  = graphics.SaveClippingRectangle();
+			Drawing.Rectangle saveClip = graphics.SaveClippingRectangle();
 			graphics.SetClippingRectangle(localClip);
 
 			// Dessine le tableau des textes.
@@ -854,7 +865,7 @@ namespace Epsitec.Common.Widgets
 			int max = System.Math.Min(this.visibleRows, this.maxRows);
 			for ( int row=0 ; row<max ; row++ )
 			{
-				pos.X = this.margin;
+				pos.X = this.margins.Left;
 				WidgetState widgetState = WidgetState.Enabled;
 
 				if ( row+this.firstRow == this.selectedRow )  // ligne sélectionnée ?
@@ -885,8 +896,7 @@ namespace Epsitec.Common.Widgets
 			rect.Inflate(-0.5, -0.5);
 
 			graphics.LineWidth = 1;
-			Drawing.Color color;
-			color = adorner.ColorBorder;
+			Drawing.Color color = adorner.ColorTextFieldBorder((state&WidgetState.Enabled) != 0);
 
 			// Dessine le rectangle englobant.
 			graphics.AddRectangle(rect);
@@ -926,6 +936,15 @@ namespace Epsitec.Common.Widgets
 			graphics.RestoreClippingRectangle(saveClip);
 		}
 
+		protected override void PaintForegroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+
+			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			WidgetState state = this.PaintState;
+			adorner.PaintArrayForeground(graphics, rect, state);
+		}
+
 
 		public event EventHandler SelectedIndexChanged;
 		public event EventHandler SortChanged;
@@ -945,7 +964,7 @@ namespace Epsitec.Common.Widgets
 		protected double[]						widthColumns;	// largeur des colonnes
 		protected double						widthTotal;		// largeur totale
 		protected Drawing.ContentAlignment[]	alignmentColumns;
-		protected double						margin = 3;
+		protected Drawing.Margins				margins;
 		protected double						textMargin = 2;
 		protected double						rowHeight = 16;
 		protected double						sliderDim = 6;

@@ -28,6 +28,8 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState &= ~InternalState.PossibleContainer;
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			this.margins = adorner.GeometryArrayMargins;
 
 			double h = this.DefaultFontHeight+4;
 			this.defHeight = h;
@@ -203,10 +205,10 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				Drawing.Rectangle rect = new Drawing.Rectangle();
-				rect.Left   = this.margin+this.leftMargin;
-				rect.Right  = this.Width-this.margin-this.rightMargin;
-				rect.Bottom = this.margin+this.bottomMargin;
-				rect.Top    = this.Height-this.margin-this.topMargin;
+				rect.Left   = this.margins.Left+this.leftMargin;
+				rect.Right  = this.Width-this.margins.Right-this.rightMargin;
+				rect.Bottom = this.margins.Bottom+this.bottomMargin;
+				rect.Top    = this.Height-this.margins.Top-this.topMargin;
 				return rect;
 			}
 		}
@@ -485,7 +487,7 @@ namespace Epsitec.Common.Widgets
 		// Adapte les largeurs des colonnes à la largeur du widget.
 		protected void StretchColumns()
 		{
-			double areaWidth = this.Width-this.margin*2-this.leftMargin-this.rightMargin;
+			double areaWidth = this.Width-this.margins.Width-this.leftMargin-this.rightMargin;
 			double totalWidth = 0;
 			for ( int i=0 ; i<this.maxColumns ; i++ )
 			{
@@ -503,7 +505,7 @@ namespace Epsitec.Common.Widgets
 		// Adapte les hauteurs des lignes à la hauteur du widget.
 		protected void StretchRows()
 		{
-			double areaHeight = this.Height-this.margin*2-this.bottomMargin-this.topMargin;
+			double areaHeight = this.Height-this.margins.Height-this.bottomMargin-this.topMargin;
 			double totalHeight = 0;
 			for ( int i=0 ; i<this.maxRows ; i++ )
 			{
@@ -1102,6 +1104,9 @@ namespace Epsitec.Common.Widgets
 
 			this.isDirty = false;
 
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			this.margins = adorner.GeometryArrayMargins;
+
 			this.showScrollerV = false;
 			this.showScrollerH = false;
 			if ( (this.styleV & CellArrayStyle.ScrollNorm) != 0 )  this.showScrollerV = true;
@@ -1113,10 +1118,10 @@ namespace Epsitec.Common.Widgets
 			if ( (this.styleH & CellArrayStyle.Header) != 0 )  this.topMargin  = this.headerHeight;
 
 			Drawing.Rectangle rect = this.Bounds;
-			Drawing.Rectangle iRect = new Drawing.Rectangle(this.margin, this.margin, rect.Width-this.margin*2, rect.Height-this.margin*2);
+			Drawing.Rectangle iRect = new Drawing.Rectangle(this.margins.Left, this.margins.Bottom, rect.Width-this.margins.Width, rect.Height-this.margins.Height);
 
-			this.rightMargin  = this.showScrollerV ? this.scrollerV.Width : 0;
-			this.bottomMargin = this.showScrollerH ? this.scrollerH.Height : 0;
+			this.rightMargin  = this.showScrollerV ? this.scrollerV.Width-1 : 0;
+			this.bottomMargin = this.showScrollerH ? this.scrollerH.Height-1 : 0;
 
 			iRect.Left   += this.leftMargin;
 			iRect.Right  -= this.rightMargin;
@@ -1136,7 +1141,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.showScrollerV )
 			{
 				Drawing.Rectangle sRect = iRect;
-				sRect.Left  = sRect.Right;
+				sRect.Left  = sRect.Right-1;
 				sRect.Right = sRect.Left+this.scrollerV.Width;
 				this.scrollerV.Bounds = sRect;
 				this.scrollerV.Show();
@@ -1150,7 +1155,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.showScrollerH )
 			{
 				Drawing.Rectangle sRect = iRect;
-				sRect.Top    = sRect.Bottom;
+				sRect.Top    = sRect.Bottom+1;
 				sRect.Bottom = sRect.Top-this.scrollerH.Height;
 				this.scrollerH.Bounds = sRect;
 				this.scrollerH.Show();
@@ -1285,6 +1290,12 @@ namespace Epsitec.Common.Widgets
 			this.UpdateScrollers();
 		}
 
+		protected override void HandleAdornerChanged()
+		{
+			this.UpdateClientGeometry();
+			base.HandleAdornerChanged();
+		}
+
 		// Met à jour les ascenseurs en fonction du tableau.
 		protected void UpdateScrollers()
 		{
@@ -1293,7 +1304,7 @@ namespace Epsitec.Common.Widgets
 			// Traite l'ascenseur vertical.
 			if ( this.showScrollerV )
 			{
-				double areaHeight = this.Height-this.margin*2-this.bottomMargin-this.topMargin;
+				double areaHeight = this.Height-this.margins.Height-this.bottomMargin-this.topMargin;
 				double totalHeight = 0;
 				for ( int i=0 ; i<this.maxRows ; i++ )
 				{
@@ -1323,7 +1334,7 @@ namespace Epsitec.Common.Widgets
 			// Traite l'ascenseur horizontal.
 			if ( this.showScrollerH )
 			{
-				double areaWidth = this.Width-this.margin*2-this.leftMargin-this.rightMargin;
+				double areaWidth = this.Width-this.margins.Width-this.leftMargin-this.rightMargin;
 				double totalWidth = 0;
 				for ( int i=0 ; i<this.maxColumns ; i++ )
 				{
@@ -1584,10 +1595,9 @@ namespace Epsitec.Common.Widgets
 
 			this.Update();  // mis à jour si nécessaire
 
-			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-			WidgetState       state = this.PaintState;
-			
 			// Dessine le cadre et le fond du tableau.
+			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			WidgetState state = this.PaintState;
 			adorner.PaintArrayBackground(graphics, rect, state);
 
 #if false
@@ -1608,11 +1618,12 @@ namespace Epsitec.Common.Widgets
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
+			WidgetState state = this.PaintState;
 			Drawing.Rectangle rect = this.Inside;
 			rect.Inflate(-0.5, -0.5);
 
 			graphics.LineWidth = 1;
-			Drawing.Color color = adorner.ColorBorder;
+			Drawing.Color color = adorner.ColorTextFieldBorder((state&WidgetState.Enabled) != 0);
 
 			// Dessine le rectangle englobant.
 			graphics.AddRectangle(rect);
@@ -1659,6 +1670,10 @@ namespace Epsitec.Common.Widgets
 					graphics.RenderSolid(color);
 				}
 			}
+			
+			// Dessine le cadre du tableau.
+			rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			adorner.PaintArrayForeground(graphics, rect, state);
 		}
 		
 
@@ -1688,7 +1703,7 @@ namespace Epsitec.Common.Widgets
 		protected double[]						widthColumns;	// largeurs des colonnes
 		protected double[]						heightRows;		// hauteurs des lignes
 		protected double						sliderDim = 6;
-		protected double						margin = 3;
+		protected Drawing.Margins				margins;
 		protected double						leftMargin = 0;		// marge pour en-tête
 		protected double						rightMargin = 0;	// marge pour ascenseur
 		protected double						bottomMargin = 0;	// marge pour ascenseur

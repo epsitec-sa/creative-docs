@@ -688,6 +688,12 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.RenderSolid(this.colorBorder);
 		}
 
+		public void PaintArrayForeground(Drawing.Graphics graphics,
+										 Drawing.Rectangle rect,
+										 WidgetState state)
+		{
+		}
+
 		// Dessine le fond d'une cellule.
 		public void PaintCellBackground(Drawing.Graphics graphics,
 										Drawing.Rectangle rect,
@@ -728,7 +734,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					this.PaintImageButton(graphics, rect, 17);
 				}
 			}
-			else
+			else if ( (state&WidgetState.Enabled) != 0 )
 			{
 				if ( dir == Direction.Up )
 				{
@@ -737,6 +743,17 @@ namespace Epsitec.Common.Widgets.Adorner
 				if ( dir == Direction.Left )
 				{
 					this.PaintImageButton(graphics, rect, 16);
+				}
+			}
+			else
+			{
+				if ( dir == Direction.Up )
+				{
+					this.PaintImageButton(graphics, rect, 11);
+				}
+				if ( dir == Direction.Left )
+				{
+					this.PaintImageButton(graphics, rect, 19);
 				}
 			}
 		}
@@ -1328,6 +1345,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double AlphaVMenu { get { return 1.0; } }
 
 		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(2,2,2,2); } }
+		public Drawing.Margins GeometryArrayMargins { get { return new Drawing.Margins(3,3,3,3); } }
 		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public double GeometryComboRightMargin { get { return 2; } }
@@ -1339,9 +1357,9 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double GeometryScrollerRightMargin { get { return 2; } }
 		public double GeometryScrollerBottomMargin { get { return 2; } }
 		public double GeometryScrollerTopMargin { get { return 2; } }
-		public double GeometryScrollListLeftMargin { get { return 0; } }
-		public double GeometryScrollListRightMargin { get { return 0; } }
-		public double GeometrySliderLeftMargin { get { return 4; } }
+		public double GeometrySelectedLeftMargin { get { return -1; } }
+		public double GeometrySelectedRightMargin { get { return 1; } }
+		public double GeometrySliderLeftMargin { get { return 5; } }
 		public double GeometrySliderRightMargin { get { return 0; } }
 
 

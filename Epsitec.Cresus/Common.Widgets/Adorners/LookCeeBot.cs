@@ -651,6 +651,12 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.RenderSolid(this.colorBorder);
 		}
 
+		public void PaintArrayForeground(Drawing.Graphics graphics,
+										 Drawing.Rectangle rect,
+										 WidgetState state)
+		{
+		}
+
 		// Dessine le fond d'une cellule.
 		public void PaintCellBackground(Drawing.Graphics graphics,
 										Drawing.Rectangle rect,
@@ -1271,6 +1277,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double AlphaVMenu { get { return 1.0; } }
 
 		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(2,2,2,2); } }
+		public Drawing.Margins GeometryArrayMargins { get { return new Drawing.Margins(3,3,3,3); } }
 		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public double GeometryComboRightMargin { get { return 2; } }
@@ -1282,8 +1289,8 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double GeometryScrollerRightMargin { get { return 2; } }
 		public double GeometryScrollerBottomMargin { get { return 2; } }
 		public double GeometryScrollerTopMargin { get { return 2; } }
-		public double GeometryScrollListLeftMargin { get { return -2; } }
-		public double GeometryScrollListRightMargin { get { return 1; } }
+		public double GeometrySelectedLeftMargin { get { return -2; } }
+		public double GeometrySelectedRightMargin { get { return 2; } }
 		public double GeometrySliderLeftMargin { get { return 0; } }
 		public double GeometrySliderRightMargin { get { return 0; } }
 

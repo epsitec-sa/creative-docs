@@ -26,12 +26,6 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorWindow      = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
 
 			this.colorCaption.A = 0.7;
-
-			// Voir AdaptDisabledTextColor et PaintGeneralTextLayout !
-			if ( this.colorDisabled == this.colorCaptionText )
-			{
-				colorDisabled.R += (colorDisabled.R<0.5)?0.0001:-0.0001;
-			}
 		}
 		
 
@@ -761,6 +755,15 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.RenderSolid(this.colorBorder);
 		}
 
+		public void PaintArrayForeground(Drawing.Graphics graphics,
+										 Drawing.Rectangle rect,
+										 WidgetState state)
+		{
+			rect.Inflate(-0.5, -0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(this.colorBorder);
+		}
+
 		// Dessine le fond d'une cellule.
 		public void PaintCellBackground(Drawing.Graphics graphics,
 										Drawing.Rectangle rect,
@@ -786,37 +789,40 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			if ( dir == Direction.Up )
 			{
-				rect.Left  += 1;
-				rect.Right -= 0;
-				rect.Top   -= 1;
+				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
+				{
+					this.PaintImageButton(graphics, rect, 36, new Drawing.Margins(-3,-3,0,-1));
+				}
+				else if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintImageButton(graphics, rect, 34, new Drawing.Margins(-10,-10,0,-1));
+				}
+				else
+				{
+					this.PaintImageButton(graphics, rect, 38, new Drawing.Margins(-10,-10,0,-1));
+				}
+
+				graphics.AddLine(rect.Left+0.5, rect.Bottom, rect.Left+0.5, rect.Top);
+				graphics.RenderSolid(this.colorBorder);
 			}
+
 			if ( dir == Direction.Left )
 			{
-				rect.Bottom += 0;
-				rect.Top    -= 1;
-				rect.Left   += 1;
-			}
-			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
-			{
-				if ( dir == Direction.Up )
+				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 				{
-					this.PaintImageButton(graphics, rect, 14);
+					this.PaintImageButton(graphics, rect, 37, new Drawing.Margins(0,-1,-3,-3));
 				}
-				if ( dir == Direction.Left )
+				else if ( (state&WidgetState.Enabled) != 0 )
 				{
-					this.PaintImageButton(graphics, rect, 23);
+					this.PaintImageButton(graphics, rect, 35, new Drawing.Margins(0,-1,-10,-10));
 				}
-			}
-			else
-			{
-				if ( dir == Direction.Up )
+				else
 				{
-					this.PaintImageButton(graphics, rect, 10);
+					this.PaintImageButton(graphics, rect, 39, new Drawing.Margins(0,-1,-10,-10));
 				}
-				if ( dir == Direction.Left )
-				{
-					this.PaintImageButton(graphics, rect, 21);
-				}
+
+				graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
+				graphics.RenderSolid(this.colorBorder);
 			}
 		}
 
@@ -1428,7 +1434,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			else
 			{
 				double l1 = System.Math.Min((245.0/255.0)*lightning, 1.0);
-				double l2 = System.Math.Min((240.0/255.0)*lightning, 1.0);
+				double l2 = System.Math.Min((238.0/255.0)*lightning, 1.0);
 
 				graphics.AddFilledRectangle(paintRect);
 				graphics.RenderSolid(Drawing.Color.FromBrightness(l1));
@@ -1506,9 +1512,10 @@ namespace Epsitec.Common.Widgets.Adorner
 			return this.colorBorder;
 		}
 
-		public double AlphaVMenu { get { return 0.95; } }
+		public double AlphaVMenu { get { return 0.9; } }
 
 		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(1,1,6,6); } }
+		public Drawing.Margins GeometryArrayMargins { get { return new Drawing.Margins(0,0,0,0); } }
 		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public double GeometryComboRightMargin { get { return 0; } }
@@ -1520,8 +1527,8 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double GeometryScrollerRightMargin { get { return 0; } }
 		public double GeometryScrollerBottomMargin { get { return 0; } }
 		public double GeometryScrollerTopMargin { get { return 0; } }
-		public double GeometryScrollListLeftMargin { get { return -2; } }
-		public double GeometryScrollListRightMargin { get { return 1; } }
+		public double GeometrySelectedLeftMargin { get { return -2; } }
+		public double GeometrySelectedRightMargin { get { return 2; } }
 		public double GeometrySliderLeftMargin { get { return 4; } }
 		public double GeometrySliderRightMargin { get { return 0; } }
 
@@ -1537,7 +1544,6 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorWindow;
 	}
-	
 	public class LookAquaMetal : LookAqua
 	{
 		public LookAquaMetal()

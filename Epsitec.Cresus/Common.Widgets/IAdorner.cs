@@ -52,6 +52,7 @@ namespace Epsitec.Common.Widgets
 		void PaintTabSunkenForeground(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle titleRect, WidgetState state, Direction dir);
 		
 		void PaintArrayBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
+		void PaintArrayForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintCellBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 
 		void PaintHeaderBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir);
@@ -103,6 +104,7 @@ namespace Epsitec.Common.Widgets
 		double AlphaVMenu { get; }
 
 		Drawing.Margins GeometryMenuMargins { get; }
+		Drawing.Margins GeometryArrayMargins { get; }
 		Drawing.Margins GeometryRadioShapeBounds { get; }
 		Drawing.Margins GeometryGroupShapeBounds { get; }
 		double GeometryComboRightMargin { get; }
@@ -114,8 +116,8 @@ namespace Epsitec.Common.Widgets
 		double GeometryScrollerRightMargin { get; }
 		double GeometryScrollerBottomMargin { get; }
 		double GeometryScrollerTopMargin { get; }
-		double GeometryScrollListLeftMargin { get; }
-		double GeometryScrollListRightMargin { get; }
+		double GeometrySelectedLeftMargin { get; }
+		double GeometrySelectedRightMargin { get; }
 		double GeometrySliderLeftMargin { get; }
 		double GeometrySliderRightMargin { get; }
 	}

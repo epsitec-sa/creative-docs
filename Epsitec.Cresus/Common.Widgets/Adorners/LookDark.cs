@@ -55,12 +55,6 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorCaptionLight = Drawing.Color.FromRGB(r,g,b);
 
 			this.colorHilite = this.colorCaption;
-
-			// Voir AdaptDisabledTextColor et PaintGeneralTextLayout !
-			if ( this.colorControlLightLight == this.colorCaptionText )
-			{
-				colorControlLightLight.R += (colorControlLightLight.R<0.5)?0.0001:-0.0001;
-			}
 		}
 		
 
@@ -336,7 +330,14 @@ namespace Epsitec.Common.Widgets.Adorner
 				rInside = rect;
 				rInside.Inflate(-0.5, -0.5);
 				graphics.AddRectangle(rInside);
-				graphics.RenderSolid(this.colorBlack);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.RenderSolid(this.colorBlack);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControlDarkDark);
+				}
 			}
 			else if ( style == ButtonStyle.ToolItem )
 			{
@@ -452,7 +453,14 @@ namespace Epsitec.Common.Widgets.Adorner
 
 				rect.Inflate(-0.5, -0.5);
 				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.colorBlack);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.RenderSolid(this.colorBlack);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControlDarkDark);
+				}
 			}
 			else
 			{
@@ -484,7 +492,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			rInside = frameRect;
 			rInside.Inflate(-0.5, -0.5);
 			graphics.AddRectangle(rInside);
-			graphics.RenderSolid(this.colorBlack);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBlack);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControlDarkDark);
+			}
 
 			if ( !tabRect.IsSurfaceZero )
 			{
@@ -628,7 +643,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			rect.Inflate(-0.5, -0.5);
 			graphics.LineWidth = 1;
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorBlack);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBlack);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControlDarkDark);
+			}
 
 			graphics.AddFilledRectangle(titleRect);
 			graphics.RenderSolid(this.colorControl);
@@ -737,7 +759,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			Drawing.Path pTitle = PathTopCornerRectangle(titleRect);
 
 			graphics.Rasterizer.AddSurface(pTitle);
-			graphics.RenderSolid(this.colorButton);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorButton);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControlLight);
+			}
 
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 			{
@@ -750,7 +779,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 
 			graphics.Rasterizer.AddOutline(pTitle, 1);
-			graphics.RenderSolid(this.colorBlack);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBlack);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControlDarkDark);
+			}
 		}
 
 		public void PaintTabSunkenForeground(Drawing.Graphics graphics,
@@ -793,6 +829,12 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 		}
 
+		public void PaintArrayForeground(Drawing.Graphics graphics,
+										 Drawing.Rectangle rect,
+										 WidgetState state)
+		{
+		}
+
 		// Dessine le fond d'une cellule.
 		public void PaintCellBackground(Drawing.Graphics graphics,
 										Drawing.Rectangle rect,
@@ -832,14 +874,21 @@ namespace Epsitec.Common.Widgets.Adorner
 			Drawing.Path path;
 			if ( dir == Direction.Up )
 			{
-				path = this.PathTopCornerRectangle(rect);
+				path = this.PathTopRectangle(rect);
 			}
 			else
 			{
-				path = this.PathLeftCornerRectangle(rect);
+				path = this.PathLeftRectangle(rect);
 			}
 			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(this.colorButton);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorButton);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorWindow);
+			}
 
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 			{
@@ -858,7 +907,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 
 			graphics.Rasterizer.AddOutline(path, 1);
-			graphics.RenderSolid(this.colorBlack);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorBlack);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControlDarkDark);
+			}
 		}
 
 		public void PaintHeaderForeground(Drawing.Graphics graphics,
@@ -1199,7 +1255,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 				else
 				{
-					text.Paint(pos, graphics);
+					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorWhite, Drawing.GlyphPaintStyle.Normal);
 				}
 			}
 			else
@@ -1242,6 +1298,40 @@ namespace Epsitec.Common.Widgets.Adorner
 			path.LineTo (ox+0.5, oy+radius+0.5);
 			path.CurveTo(ox+0.5, oy+0.5, ox+radius+0.5, oy+0.5);
 			path.Close();
+
+			return path;
+		}
+
+		// Crée le chemin d'un rectangle en forme de "U" inversé.
+		protected Drawing.Path PathTopRectangle(Drawing.Rectangle rect)
+		{
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo(ox+0.5, oy);
+			path.LineTo(ox+0.5, oy+dy-0.5);
+			path.LineTo(ox+dx-0.5, oy+dy-0.5);
+			path.LineTo(ox+dx-0.5, oy);
+
+			return path;
+		}
+
+		// Crée le chemin d'un rectangle en forme de "D" inversé.
+		protected Drawing.Path PathLeftRectangle(Drawing.Rectangle rect)
+		{
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo(ox+dx-0.5, oy+0.5);
+			path.LineTo(ox+0.5, oy+0.5);
+			path.LineTo(ox+0.5, oy+dy-0.5);
+			path.LineTo(ox+dx-0.5, oy+dy-0.5);
 
 			return path;
 		}
@@ -1359,6 +1449,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double AlphaVMenu { get { return 1.0; } }
 
 		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(2,2,2,2); } }
+		public Drawing.Margins GeometryArrayMargins { get { return new Drawing.Margins(3,3,3,3); } }
 		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public double GeometryComboRightMargin { get { return 2; } }
@@ -1370,8 +1461,8 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double GeometryScrollerRightMargin { get { return 2; } }
 		public double GeometryScrollerBottomMargin { get { return 2; } }
 		public double GeometryScrollerTopMargin { get { return 2; } }
-		public double GeometryScrollListLeftMargin { get { return -2; } }
-		public double GeometryScrollListRightMargin { get { return 2; } }
+		public double GeometrySelectedLeftMargin { get { return -2; } }
+		public double GeometrySelectedRightMargin { get { return 2; } }
 		public double GeometrySliderLeftMargin { get { return 0; } }
 		public double GeometrySliderRightMargin { get { return 0; } }
 

@@ -122,9 +122,13 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				graphics.RenderSolid(this.colorControl);
 			}
-			else
+			else if ( (state&WidgetState.Enabled) != 0 )
 			{
 				graphics.RenderSolid(this.colorControlLightLight);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControl);
 			}
 
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
@@ -142,7 +146,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			rInside = rect;
 			rInside.Inflate(-0.5, -0.5);
 			graphics.AddRectangle(rInside);
-			graphics.RenderSolid(this.colorControlDarkDark);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorControlDarkDark);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControlDark);
+			}
 
 			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
 			{
@@ -175,7 +186,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.Align(ref rect);
 			Drawing.Rectangle rInside;
 
-			this.PaintCircle(graphics, rect, this.colorControlDarkDark);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				this.PaintCircle(graphics, rect, this.colorControlDarkDark);
+			}
+			else
+			{
+				this.PaintCircle(graphics, rect, this.colorControlDark);
+			}
 
 			rInside = rect;
 			rInside.Inflate(-1, -1);
@@ -192,9 +210,13 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				this.PaintCircle(graphics, rInside, this.colorControl);
 			}
-			else
+			else if ( (state&WidgetState.Enabled) != 0 )
 			{
 				this.PaintCircle(graphics, rInside, this.colorControlLightLight);
+			}
+			else
+			{
+				this.PaintCircle(graphics, rInside, this.colorControl);
 			}
 
 			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
@@ -269,7 +291,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.Rasterizer.AddOutline(path, 1);
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
-					graphics.RenderSolid(this.colorBlack);
+					graphics.RenderSolid(this.colorControlDarkDark);
 				}
 				else
 				{
@@ -308,7 +330,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.Rasterizer.AddOutline(path, 1);
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
-					graphics.RenderSolid(this.colorBlack);
+					graphics.RenderSolid(this.colorControlDarkDark);
 				}
 				else
 				{
@@ -412,7 +434,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.Rasterizer.AddOutline(path, 1);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					graphics.RenderSolid(this.colorBlack);
+					graphics.RenderSolid(this.colorControlDarkDark);
 				}
 				else
 				{
@@ -428,7 +450,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.AddRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					graphics.RenderSolid(this.colorBlack);
+					graphics.RenderSolid(this.colorControlDarkDark);
 				}
 				else
 				{
@@ -566,7 +588,14 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			rect.Inflate(-0.5, -0.5);
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorControlDarkDark);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorControlDarkDark);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControlDark);
+			}
 
 			rect.Inflate(-0.5, -0.5);
 			graphics.AddFilledRectangle(rect);
@@ -613,7 +642,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 
 			graphics.Rasterizer.AddOutline(pTitle, 1);
-			graphics.RenderSolid(this.colorControlDarkDark);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorControlDarkDark);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControlDark);
+			}
 		}
 
 		public void PaintTabAboveForeground(Drawing.Graphics graphics,
@@ -651,7 +687,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 
 			graphics.Rasterizer.AddOutline(pTitle, 1);
-			graphics.RenderSolid(this.colorControlDarkDark);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorControlDarkDark);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControlDark);
+			}
 		}
 
 		public void PaintTabSunkenForeground(Drawing.Graphics graphics,
@@ -681,7 +724,20 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 
 			graphics.Rasterizer.AddOutline(path, 1);
-			graphics.RenderSolid(this.colorBlack);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorControlDarkDark);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControlDark);
+			}
+		}
+
+		public void PaintArrayForeground(Drawing.Graphics graphics,
+										 Drawing.Rectangle rect,
+										 WidgetState state)
+		{
 		}
 
 		// Dessine le fond d'une cellule.
@@ -745,7 +801,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 
 			graphics.Rasterizer.AddOutline(path, 1);
-			graphics.RenderSolid(this.colorBlack);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorControlDarkDark);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControlDark);
+			}
 		}
 
 		public void PaintHeaderForeground(Drawing.Graphics graphics,
@@ -804,7 +867,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( parentRect.IsSurfaceZero )
 			{
 				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.colorControlDark);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.RenderSolid(this.colorControlDarkDark);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControlDark);
+				}
 			}
 			else
 			{
@@ -812,7 +882,14 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.AddLine(rect.Left-0.5, rect.Bottom, rect.Right+0.5, rect.Bottom);
 				graphics.AddLine(rect.Right, rect.Bottom-0.5, rect.Right, rect.Top+0.5);
 				graphics.AddLine(parentRect.Right-0.5, rect.Top, rect.Right+0.5, rect.Top);
-				graphics.RenderSolid(this.colorControlDark);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					graphics.RenderSolid(this.colorControlDarkDark);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControlDark);
+				}
 			}
 		}
 
@@ -855,7 +932,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.RenderSolid(this.colorControl);
 
 					graphics.Rasterizer.AddOutline(path, 1);
-					graphics.RenderSolid(this.colorControlDark);
+					graphics.RenderSolid(this.colorControlDarkDark);
 				}
 			}
 
@@ -1032,7 +1109,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			
 			rect.Inflate(-0.5, -0.5);
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(this.colorBlack);  // cadre noir
+			graphics.RenderSolid(this.colorControlDarkDark);  // cadre noir
 		}
 
 		// Dessine le texte d'une bulle d'aide.
@@ -1251,12 +1328,13 @@ namespace Epsitec.Common.Widgets.Adorner
 
 		public Drawing.Color ColorTextFieldBorder(bool enabled)
 		{
-			return enabled ? this.colorBlack : this.colorControlDark;
+			return enabled ? this.colorControlDarkDark : this.colorControlDark;
 		}
 
 		public double AlphaVMenu { get { return 1.0; } }
 
 		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(2,2,2,2); } }
+		public Drawing.Margins GeometryArrayMargins { get { return new Drawing.Margins(3,3,3,3); } }
 		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public Drawing.Margins GeometryGroupShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
 		public double GeometryComboRightMargin { get { return 2; } }
@@ -1268,9 +1346,9 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double GeometryScrollerRightMargin { get { return 2; } }
 		public double GeometryScrollerBottomMargin { get { return 2; } }
 		public double GeometryScrollerTopMargin { get { return 2; } }
-		public double GeometryScrollListLeftMargin { get { return 0; } }
-		public double GeometryScrollListRightMargin { get { return 0; } }
-		public double GeometrySliderLeftMargin { get { return 4; } }
+		public double GeometrySelectedLeftMargin { get { return -1; } }
+		public double GeometrySelectedRightMargin { get { return 1; } }
+		public double GeometrySliderLeftMargin { get { return 3; } }
 		public double GeometrySliderRightMargin { get { return 0; } }
 
 
