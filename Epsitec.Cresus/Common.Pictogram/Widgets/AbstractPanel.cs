@@ -18,6 +18,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.extendedButton.TabIndex = 0;
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
+			this.stylesButton = new GlyphButton(this);
+			this.stylesButton.ButtonStyle = ButtonStyle.Icon;
+			this.stylesButton.GlyphType = GlyphType.Dots;
+			this.stylesButton.Clicked += new MessageEventHandler(this.StylesButtonClicked);
+			this.stylesButton.TabIndex = 1000;
+			this.stylesButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
 			this.colorBlack = Drawing.Color.FromName("WindowFrame");
 		}
 		
@@ -31,9 +38,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( disposing )
 			{
 				this.extendedButton.Clicked -= new MessageEventHandler(this.ExtendedButtonClicked);
+				this.stylesButton.Clicked -= new MessageEventHandler(this.StylesButtonClicked);
 			}
 			
 			base.Dispose(disposing);
+		}
+
+		public Drawer Drawer
+		{
+			set { this.drawer = value; }
 		}
 
 		
@@ -70,13 +83,30 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 		}
 
+		// Indique si le panneau édite directement un style.
+		public bool StyleDirect
+		{
+			get { return this.styleDirect; }
+			set { this.styleDirect = value; }
+		}
+
+		// Indique si le panneau édite directement une propriété de calque.
+		public bool LayoutDirect
+		{
+			get { return this.layoutDirect; }
+			set { this.layoutDirect = value; }
+		}
+
 
 		// Propriété -> widget.
 		public virtual void SetProperty(AbstractProperty property)
 		{
 			this.type                = property.Type;
 			this.text                = property.Text;
+			this.textStyle           = property.TextStyle;
 			this.backgroundIntensity = property.BackgroundIntensity;
+			this.styleID             = property.StyleID;
+			this.styleName           = property.StyleName;
 			this.extendedSize        = property.ExtendedSize;
 
 			this.extendedButton.GlyphType = this.extendedSize ? GlyphType.ArrowUp : GlyphType.ArrowDown;
@@ -93,6 +123,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			property.Type                = this.type;
 			property.Text                = this.text;
 			property.BackgroundIntensity = this.backgroundIntensity;
+			property.StyleID             = this.styleID;
+			property.StyleName           = this.styleName;
 			property.ExtendedSize        = this.extendedSize;
 		}
 
@@ -119,7 +151,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 			rTop.Top -= 8;
 			rTop.Bottom = rTop.Top-13;
 			this.extendedButton.Bounds = rTop;
-			this.extendedButton.SetVisible(this.isNormalAndExtended);
+			this.extendedButton.SetVisible(this.isNormalAndExtended && !this.styleDirect && !this.layoutDirect);
+
+			rTop.Offset(this.Client.Width-this.extendedZoneWidth, 0);
+			this.stylesButton.Bounds = rTop;
+			this.stylesButton.SetVisible(!this.styleDirect && !this.layoutDirect);
 		}
 
 
@@ -182,6 +218,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.OnExtendedChanged();
 		}
 
+		// Le bouton des styles a été cliqué.
+		private void StylesButtonClicked(object sender, MessageEventArgs e)
+		{
+			GlyphButton button = sender as GlyphButton;
+			Drawing.Point pos = button.MapClientToScreen(new Drawing.Point(0, button.Height));
+			VMenu menu = this.Styles.CreateMenu(this.type, this.styleID);
+			menu.Host = this;
+			pos.X -= menu.Width;
+			menu.ShowContextMenu(this.Window, pos);
+		}
+
 		// Génère un événement pour dire que la hauteur a changé.
 		protected virtual void OnExtendedChanged()
 		{
@@ -194,12 +241,27 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public event EventHandler ExtendedChanged;
 
 
+		// Retourne la collection des styles.
+		protected StylesCollection Styles
+		{
+			get { return this.drawer.IconObjects.StylesCollection; }
+		}
+
+
+		public override Drawing.Rectangle GetShapeBounds()
+		{
+			Drawing.Rectangle rect = base.GetShapeBounds();
+			rect.Left  -= 1;
+			rect.Right += 1;
+			rect.Top   += 1;
+			return rect;
+		}
+
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
 
-			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-			
+			Drawing.Rectangle rect = this.Client.Bounds;
 			graphics.AddFilledRectangle(rect);
 #if false
 			Drawing.Color color = adorner.ColorWindow;
@@ -215,27 +277,48 @@ namespace Epsitec.Common.Pictogram.Widgets
 				Drawing.Rectangle part = rect;
 				part.Width = this.extendedZoneWidth;
 				graphics.AddFilledRectangle(part);
-				graphics.RenderSolid(Drawing.Color.FromRGB(1,0,0));
+				graphics.RenderSolid(IconContext.ColorMulti);
 			}
 
-			rect.Inflate(-0.5, -0.5);
+			if ( this.styleID != 0 || styleDirect )
+			{
+				Drawing.Rectangle part = rect;
+				part.Left = part.Right-this.extendedZoneWidth;
+				graphics.AddFilledRectangle(part);
+				graphics.RenderSolid(IconContext.ColorStyle);
 
+				part.Left = rect.Left+this.extendedZoneWidth;
+				part.Right = rect.Right-this.extendedZoneWidth;
+				graphics.AddFilledRectangle(part);
+				graphics.RenderSolid(IconContext.ColorStyleBack);
+			}
+
+			rect.Deflate(0.5, 0.5);
+			graphics.AddLine(rect.Left-1, rect.Bottom-0.5, rect.Left-1, rect.Top+0.5);
 			graphics.AddLine(rect.Left+this.extendedZoneWidth, rect.Bottom-0.5, rect.Left+this.extendedZoneWidth, rect.Top+0.5);
-			graphics.RenderSolid(adorner.ColorBorder);
-
-			graphics.AddLine(rect.Left-0.5, rect.Bottom, rect.Right+0.5, rect.Bottom);
+			graphics.AddLine(rect.Right-this.extendedZoneWidth, rect.Bottom-0.5, rect.Right-this.extendedZoneWidth, rect.Top+0.5);
+			graphics.AddLine(rect.Right+1, rect.Bottom-0.5, rect.Right+1, rect.Top+0.5);
+			graphics.AddLine(rect.Left-1.5, rect.Top+1, rect.Right+1.5, rect.Top+1);
+			graphics.AddLine(rect.Left-1.5, rect.Bottom, rect.Right+1.5, rect.Bottom);
 			graphics.RenderSolid(adorner.ColorBorder);
 		}
 
 
+		protected Drawer					drawer;
 		protected Drawing.Color				colorBlack;
 		protected double					backgroundIntensity;
 		protected bool						extendedSize;
 		protected PropertyType				type;
 		protected string					text;
+		protected string					textStyle;
 		protected bool						isNormalAndExtended = false;
 		protected double					extendedZoneWidth = 15;
 		protected GlyphButton				extendedButton;
+		protected GlyphButton				stylesButton;
 		protected bool						multi = false;
+		protected int						styleID = 0;
+		protected string					styleName = "";
+		protected bool						styleDirect = false;
+		protected bool						layoutDirect = false;
 	}
 }
