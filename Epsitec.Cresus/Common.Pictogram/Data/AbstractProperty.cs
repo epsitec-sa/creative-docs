@@ -46,8 +46,8 @@ namespace Epsitec.Common.Pictogram.Data
 				case PropertyType.RegularStar:      property = new PropertyBool();      break;
 				case PropertyType.RegularShape:     property = new PropertyDouble();    break;
 				case PropertyType.TextString:       property = new PropertyString();    break;
-				case PropertyType.TextFontName:     property = new PropertyList();      break;
-				case PropertyType.TextFontOptical:  property = new PropertyList();      break;
+				case PropertyType.TextFontName:     property = new PropertyCombo();     break;
+				case PropertyType.TextFontOptical:  property = new PropertyCombo();     break;
 			}
 			if ( property == null )  return null;
 			property.Type = type;

@@ -108,7 +108,7 @@ namespace Epsitec.Common.Pictogram.Data
 			textString.String = "Abc";
 			this.AddProperty(textString);
 
-			PropertyList textFontName = new PropertyList();
+			PropertyCombo textFontName = new PropertyCombo();
 			textFontName.Type = PropertyType.TextFontName;
 			textFontName.Text = "Police";
 			textFontName.BackgroundIntensity = 0.90;
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Pictogram.Data
 			textFontName.Add("Times");
 			this.AddProperty(textFontName);
 
-			PropertyList textFontOptical = new PropertyList();
+			PropertyCombo textFontOptical = new PropertyCombo();
 			textFontOptical.Type = PropertyType.TextFontOptical;
 			textFontOptical.Text = "Style";
 			textFontOptical.BackgroundIntensity = 0.90;

@@ -22,6 +22,7 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlArrayItem("Shadow",   Type=typeof(PropertyShadow))]
 		[XmlArrayItem("Line",     Type=typeof(PropertyLine))]
 		[XmlArrayItem("List",     Type=typeof(PropertyList))]
+		[XmlArrayItem("Combo",    Type=typeof(PropertyCombo))]
 		[XmlArrayItem("String",   Type=typeof(PropertyString))]
 		public System.Collections.ArrayList Properties
 		{
@@ -369,6 +370,13 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			System.Diagnostics.Debug.Assert(this.properties[rank] != null);
 			return this.properties[rank] as PropertyList;
+		}
+
+		// Donne une propriété de l'objet.
+		public PropertyCombo PropertyCombo(int rank)
+		{
+			System.Diagnostics.Debug.Assert(this.properties[rank] != null);
+			return this.properties[rank] as PropertyCombo;
 		}
 
 		// Cherche une propriété d'après son type.

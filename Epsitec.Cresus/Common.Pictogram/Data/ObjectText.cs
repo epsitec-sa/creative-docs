@@ -21,11 +21,11 @@ namespace Epsitec.Common.Pictogram.Data
 			textString.Type = PropertyType.TextString;
 			this.AddProperty(textString);
 
-			PropertyList textFontName = new PropertyList();
+			PropertyCombo textFontName = new PropertyCombo();
 			textFontName.Type = PropertyType.TextFontName;
 			this.AddProperty(textFontName);
 
-			PropertyList textFontOptical = new PropertyList();
+			PropertyCombo textFontOptical = new PropertyCombo();
 			textFontOptical.Type = PropertyType.TextFontOptical;
 			this.AddProperty(textFontOptical);
 		}
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Pictogram.Data
 			graphics.RotateTransform(angle, p1.X, p1.Y);
 
 			string fn = "";  // font name
-			switch ( this.PropertyList(2).Choice )
+			switch ( this.PropertyCombo(2).Choice )
 			{
 				case 0:  fn="Tahoma";           break;
 				case 1:  fn="Arial";            break;
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Pictogram.Data
 				case 3:  fn="Times New Roman";  break;
 			}
 			string fo = "";  // font optical
-			switch ( this.PropertyList(3).Choice )
+			switch ( this.PropertyCombo(3).Choice )
 			{
 				case 0:  fo="Regular";       break;
 				case 1:  fo="Bold";          break;
