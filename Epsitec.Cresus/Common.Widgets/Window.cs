@@ -372,7 +372,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (bundle.GetFieldType ("icon") == Support.ResourceFieldType.Data)
 			{
-				this.Icon = Support.ImageProvider.Default.GetImage ("res:" + bundle.GetFieldString ("icon"));
+				this.Icon = Support.ImageProvider.Default.GetImage ("res:" + bundle["icon"].AsString);
 			}
 		}
 		#endregion

@@ -157,7 +157,7 @@ namespace Epsitec.Common.Widgets
 			//	qui sont marquées par l'attribut [Bundle]), mais il ne sait pas comment
 			//	restitue les enfants du widget :
 			
-			System.Collections.IList widget_list = bundle.GetFieldBundleList ("widgets");
+			Support.ResourceBundle.FieldList widget_list = bundle["widgets"].AsList;
 			
 			if (widget_list != null)
 			{
@@ -165,8 +165,9 @@ namespace Epsitec.Common.Widgets
 				//	widgets enfants. On les restitue nous-même et on les ajoute dans la liste des
 				//	enfants.
 				
-				foreach (Support.ResourceBundle widget_bundle in widget_list)
+				foreach (Support.ResourceBundle.Field field in widget_list)
 				{
+					Support.ResourceBundle widget_bundle = field.AsBundle;
 					Widget widget = bundler.CreateFromBundle (widget_bundle) as Widget;
 					
 					this.Children.Add (widget);
