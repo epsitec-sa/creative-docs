@@ -93,6 +93,15 @@ namespace Epsitec.Common.Drawing.Null
 		{
 		}
 		
+		public override Point ApplyTransformDirect(Point pt)
+		{
+			return pt;
+		}
+		
+		public override Point ApplyTransformInverse(Point pt)
+		{
+			return pt;
+		}
 		
 		public override void SetClippingRectangle(double x, double y, double width, double height)
 		{
