@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Database.Collections
 			
 			for (int i = 0; i < xml.ChildNodes.Count; i++)
 			{
-				this.Add (DbColumn.NewColumn (xml.ChildNodes[i] as System.Xml.XmlElement));
+				this.Add (DbColumn.CreateColumn (xml.ChildNodes[i] as System.Xml.XmlElement));
 			}
 		}
 	}
