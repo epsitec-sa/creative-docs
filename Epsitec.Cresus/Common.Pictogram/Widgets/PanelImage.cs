@@ -8,6 +8,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelImage permet de choisir un fichier image bitmap.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelImage : AbstractPanel
 	{
 		public PanelImage()

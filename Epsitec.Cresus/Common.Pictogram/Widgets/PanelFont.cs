@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelFont permet de choisir une police de caractères.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelFont : AbstractPanel
 	{
 		public PanelFont()

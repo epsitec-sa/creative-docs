@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelLine permet de choisir un mode de trait.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelLine : AbstractPanel
 	{
 		public PanelLine()

@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelLayers permet de représenter tous les calques d'une page.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelLayers : Epsitec.Common.Widgets.Widget
 	{
 		public PanelLayers(Drawer drawer, ToolTip toolTip)

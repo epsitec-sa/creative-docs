@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelJustif permet de choisir un mode de justification.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelJustif : AbstractPanel
 	{
 		public PanelJustif()

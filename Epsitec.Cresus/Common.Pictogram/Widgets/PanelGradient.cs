@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelGradient permet de choisir un dégradé de couleurs.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelGradient : AbstractPanel
 	{
 		public PanelGradient()
