@@ -343,17 +343,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 			Drawing.Size size = icon.Size;
 			Drawing.Size area = icon.SizeArea;
 
-			this.hScroller.Minimum = (size.Width-area.Width)/2;
-			this.hScroller.Maximum = (area.Width+this.hScroller.Minimum) - size.Width/this.drawer.Zoom;
-			this.hScroller.VisibleRangeRatio = (size.Width/area.Width)/this.drawer.Zoom;
-			this.hScroller.Value = -this.drawer.OriginX;
-			this.drawer.OriginX = -this.hScroller.Value;
+			this.hScroller.MinValue = (decimal) ((size.Width-area.Width)/2);
+			this.hScroller.MaxValue = (decimal) ((area.Width+(double)this.hScroller.MinValue) - size.Width/this.drawer.Zoom);
+			this.hScroller.VisibleRangeRatio = (decimal) ((size.Width/area.Width)/this.drawer.Zoom);
+			this.hScroller.Value = (decimal) (-this.drawer.OriginX);
+			this.drawer.OriginX = (double) (-this.hScroller.Value);
 
-			this.vScroller.Minimum = (size.Height-area.Height)/2;
-			this.vScroller.Maximum = (area.Height+this.vScroller.Minimum) - size.Height/this.drawer.Zoom;
-			this.vScroller.VisibleRangeRatio = (size.Height/area.Height)/this.drawer.Zoom;
-			this.vScroller.Value = -this.drawer.OriginY;
-			this.drawer.OriginY = -this.vScroller.Value;
+			this.vScroller.MinValue = (decimal) ((size.Height-area.Height)/2);
+			this.vScroller.MaxValue = (decimal) ((area.Height+(double)this.vScroller.MinValue) - size.Height/this.drawer.Zoom);
+			this.vScroller.VisibleRangeRatio = (decimal) ((size.Height/area.Height)/this.drawer.Zoom);
+			this.vScroller.Value = (decimal) (-this.drawer.OriginY);
+			this.drawer.OriginY = (double) (-this.vScroller.Value);
 		}
 
 		// Ajoute une icône.
@@ -497,12 +497,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		private void HandleHScrollerValueChanged(object sender)
 		{
-			this.drawer.OriginX = -this.hScroller.Value;
+			this.drawer.OriginX = (double) -this.hScroller.Value;
 		}
 
 		private void HandleVScrollerValueChanged(object sender)
 		{
-			this.drawer.OriginY = -this.vScroller.Value;
+			this.drawer.OriginY = (double) -this.vScroller.Value;
 		}
 
 		// Met à jour les panneaux de gauche en fonction des propriétés de l'objet.

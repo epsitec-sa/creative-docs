@@ -234,7 +234,7 @@ namespace Epsitec.Common.Widgets
 		
 		private Helpers.DragBehavior		drag_behavior;
 		private decimal						value = 0;
-		private Converters.DecimalRange		range = new Epsitec.Common.Converters.DecimalRange (0, 100, 1);
+		private Converters.DecimalRange		range = new Converters.DecimalRange (0, 100, 1);
 		private Drawing.Color				color = Drawing.Color.Empty;
 		protected readonly double			margin = 1;
 		private bool						has_frame = true;

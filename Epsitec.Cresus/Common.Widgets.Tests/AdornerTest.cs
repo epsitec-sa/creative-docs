@@ -347,8 +347,8 @@ namespace Epsitec.Common.Widgets
 			VScroller scrollv = new VScroller();
 			scrollv.Location = new Point(120, 70);
 			scrollv.Size = new Size(17, 120);
-			scrollv.Range = 10;
-			scrollv.VisibleRangeRatio = 3.0/10.0;
+			scrollv.MaxValue = 10;
+			scrollv.VisibleRangeRatio = 0.3M;
 			scrollv.Value = 1;
 			scrollv.SmallChange = 1;
 			scrollv.LargeChange = 2;
@@ -359,8 +359,8 @@ namespace Epsitec.Common.Widgets
 			HScroller scrollh = new HScroller();
 			scrollh.Location = new Point(140, 70);
 			scrollh.Size = new Size(120, 17);
-			scrollh.Range = 10;
-			scrollh.VisibleRangeRatio = 7.0/10.0;
+			scrollh.MaxValue = 10;
+			scrollh.VisibleRangeRatio = 0.7M;
 			scrollh.Value = 1;
 			scrollh.SmallChange = 1;
 			scrollh.LargeChange = 2;
@@ -723,8 +723,8 @@ namespace Epsitec.Common.Widgets
 			scrollv.Name = "Scroller";
 			scrollv.Location = new Point(10, 10);
 			scrollv.Size = new Size(17, inside.Height-20);
-			scrollv.Range = 10;
-			scrollv.VisibleRangeRatio = 3.0/10.0;
+			scrollv.MaxValue = 10;
+			scrollv.VisibleRangeRatio = 0.3M;
 			scrollv.Value = 1;
 			scrollv.SmallChange = 1;
 			scrollv.LargeChange = 2;
@@ -1406,8 +1406,8 @@ namespace Epsitec.Common.Widgets
 			scrollv.Name = "Scroller";
 			scrollv.Location = new Point(10, 10);
 			scrollv.Size = new Size(17, inside.Height-20);
-			scrollv.Range = 10;
-			scrollv.VisibleRangeRatio = 3.0/10.0;
+			scrollv.MaxValue = 10;
+			scrollv.VisibleRangeRatio = 0.3M;
 			scrollv.Value = 1;
 			scrollv.SmallChange = 1;
 			scrollv.LargeChange = 2;

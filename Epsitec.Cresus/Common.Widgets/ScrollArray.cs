@@ -1228,14 +1228,14 @@ invalid:	row    = -1;
 		
 		private void HandleVScrollerChanged(object sender)
 		{
-			int virtual_row = (int) System.Math.Floor (this.v_scroller.Value + 0.5);
+			int virtual_row = (int) System.Math.Floor (this.v_scroller.DoubleValue + 0.5);
 			this.SetFirstVirtualVisibleIndex (virtual_row);
 			this.UpdateScrollView ();
 		}
 
 		private void HandleHScrollerChanged(object sender)
 		{
-			this.Offset = System.Math.Floor (this.h_scroller.Value);
+			this.Offset = System.Math.Floor (this.h_scroller.DoubleValue);
 			this.UpdateScrollView ();
 		}
 
@@ -1589,18 +1589,18 @@ invalid:	row    = -1;
 				(this.n_fully_visible_rows <= 0))
 			{
 				this.v_scroller.SetEnabled (false);
-				this.v_scroller.Range             = 1;
+				this.v_scroller.MaxValue          = 1;
 				this.v_scroller.VisibleRangeRatio = 1;
 				this.v_scroller.Value             = 0;
 			}
 			else
 			{
 				this.v_scroller.SetEnabled (true);
-				this.v_scroller.Range             = rows - this.n_fully_visible_rows;
-				this.v_scroller.VisibleRangeRatio = this.n_fully_visible_rows / (double) rows;
-				this.v_scroller.Value             = this.first_virtvis_row;
+				this.v_scroller.MaxValue          = (decimal) (rows - this.n_fully_visible_rows);
+				this.v_scroller.VisibleRangeRatio = (decimal) (this.n_fully_visible_rows / (double) rows);
+				this.v_scroller.Value             = (decimal) (this.first_virtvis_row);
 				this.v_scroller.SmallChange       = 1;
-				this.v_scroller.LargeChange       = this.n_fully_visible_rows / 2.0;
+				this.v_scroller.LargeChange       = (decimal) (this.n_fully_visible_rows / 2);
 			}
 			
 			this.UpdateTextLayouts ();
@@ -1614,18 +1614,18 @@ invalid:	row    = -1;
 				(this.table_bounds.Width <= 0))
 			{
 				this.h_scroller.SetEnabled (false);
-				this.h_scroller.Range             = 1;
+				this.h_scroller.MaxValue          = 1;
 				this.h_scroller.VisibleRangeRatio = 1;
 				this.h_scroller.Value             = 0;
 			}
 			else
 			{
 				this.h_scroller.SetEnabled (true);
-				this.h_scroller.Range             = width - this.table_bounds.Width;
-				this.h_scroller.VisibleRangeRatio = this.table_bounds.Width / width;
-				this.h_scroller.Value             = this.offset;
+				this.h_scroller.MaxValue          = (decimal) (width - this.table_bounds.Width);
+				this.h_scroller.VisibleRangeRatio = (decimal) (this.table_bounds.Width / width);
+				this.h_scroller.Value             = (decimal) (this.offset);
 				this.h_scroller.SmallChange       = 10;
-				this.h_scroller.LargeChange       = this.table_bounds.Width / 2.0;
+				this.h_scroller.LargeChange       = (decimal) (this.table_bounds.Width / 2);
 			}
 			
 			this.UpdateScrollView ();

@@ -222,11 +222,11 @@ namespace Epsitec.Common.Widgets
 			
 			scroller.Location = new Point (80, 10);
 			scroller.Size = new Size(17, 180);
-			scroller.Range = 1.0;
-			scroller.VisibleRangeRatio = 0.1;
-			scroller.Value = 0.0;
-			scroller.SmallChange = 0.01;
-			scroller.LargeChange = 0.10;
+			scroller.MaxValue = 1.0M;
+			scroller.VisibleRangeRatio = 0.1M;
+			scroller.Value = 0.0M;
+			scroller.SmallChange = 0.01M;
+			scroller.LargeChange = 0.10M;
 			scroller.Parent = back;
 			scroller.ValueChanged += new EventHandler(scroller_ValueChanged);
 			
@@ -555,7 +555,7 @@ namespace Epsitec.Common.Widgets
 		{
 			VScroller scroller = sender as VScroller;
 			Window window = scroller.Window;
-			window.Alpha = scroller.Value / 2 + 0.5;
+			window.Alpha = scroller.DoubleValue / 2 + 0.5;
 		}
 
 		private void button_Clicked(object sender, MessageEventArgs e)

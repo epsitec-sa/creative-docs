@@ -71,24 +71,24 @@ namespace Epsitec.Common.Widgets
 				if ( h <= this.realSize.Height || this.realSize.Height < 0 )
 				{
 					this.scroller.SetEnabled(false);
-					this.scroller.Range = 1;
+					this.scroller.MaxValue          = 1;
 					this.scroller.VisibleRangeRatio = 1;
-					this.scroller.Value = 0;
+					this.scroller.Value             = 0;
 				}
 				else
 				{
 					this.scroller.SetEnabled(true);
-					this.scroller.Range = h-this.realSize.Height;
-					this.scroller.VisibleRangeRatio = this.realSize.Height/h;
+					this.scroller.MaxValue          = (decimal) (h-this.realSize.Height);
+					this.scroller.VisibleRangeRatio = (decimal) (this.realSize.Height/h);
 					
-					double value = this.scroller.Range - (AbstractTextField.Infinity-offset);
+					decimal value = this.scroller.Range - (decimal) (AbstractTextField.Infinity-offset);
 					
-					value = System.Math.Min (value, this.scroller.Range);
-					value = System.Math.Max (value, 0.0);
+					if (value > this.scroller.Range) value = this.scroller.Range;
+					if (value < 0)                   value = 0;
 					
-					this.scroller.Value = value;
+					this.scroller.Value       = value;
 					this.scroller.SmallChange = 20;
-					this.scroller.LargeChange = this.realSize.Height/2;
+					this.scroller.LargeChange = (decimal) (this.realSize.Height/2.0);
 				}
 			}
 		}
@@ -98,9 +98,9 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.MouseWheel:
-					double v = this.scroller.Value;
-					if ( message.Wheel > 0 )  v = System.Math.Min(v+this.scroller.SmallChange, this.scroller.Range);
-					if ( message.Wheel < 0 )  v = System.Math.Max(v-this.scroller.SmallChange, 0);
+					decimal v = this.scroller.Value;
+					if (message.Wheel > 0)  v = System.Math.Min(v+this.scroller.SmallChange, this.scroller.Range);
+					if (message.Wheel < 0)  v = System.Math.Max(v-this.scroller.SmallChange, 0);
 					this.scroller.Value = v;
 					message.Consumer = this;
 					return;
@@ -147,9 +147,10 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleScrollerValueChanged(object sender)
 		{
-			this.scrollOffset.Y = this.scroller.Value-this.scroller.Range+AbstractTextField.Infinity-this.realSize.Height;
+			this.scrollOffset.Y = this.scroller.DoubleValue-this.scroller.DoubleRange+AbstractTextField.Infinity-this.realSize.Height;
 			this.Invalidate();
 		}
+		
 		
 		protected VScroller						scroller;
 	}

@@ -16,11 +16,11 @@ namespace Epsitec.Common.Widgets
 			this.v_scroller = new VScroller (this);
 			
 			this.h_scroller.Parent            = this;
-			this.h_scroller.Range             = 0;
+			this.h_scroller.MaxValue          = 0;
 			this.h_scroller.VisibleRangeRatio = 1;
 			
 			this.v_scroller.Parent            = this;
-			this.v_scroller.Range             = 0;
+			this.v_scroller.MaxValue          = 0;
 			this.v_scroller.VisibleRangeRatio = 1;
 			this.v_scroller.IsInverted        = true;
 			
@@ -220,15 +220,15 @@ namespace Epsitec.Common.Widgets
 				(delta_dx > 0) &&
 				(vis_dx > 0))
 			{
-				this.h_scroller.Range             = delta_dx;
-				this.h_scroller.VisibleRangeRatio = vis_dx / panel_dx;
-				this.h_scroller.SmallChange       = Scrollable.SmallScrollPixels;
-				this.h_scroller.LargeChange       = vis_dx * Scrollable.LargeScrollPercent / 100;
+				this.h_scroller.MaxValue          = (decimal) (delta_dx);
+				this.h_scroller.VisibleRangeRatio = (decimal) (vis_dx / panel_dx);
+				this.h_scroller.SmallChange       = (decimal) (Scrollable.SmallScrollPixels);
+				this.h_scroller.LargeChange       = (decimal) (vis_dx * Scrollable.LargeScrollPercent / 100);
 			
 				offset_x = System.Math.Min (this.panel_offset.X, delta_dx);
 				
-				this.h_scroller_value = offset_x;
-				this.h_scroller.Value = offset_x;
+				this.h_scroller_value = (decimal) offset_x;
+				this.h_scroller.Value = (decimal) offset_x;
 			}
 			else
 			{
@@ -237,24 +237,24 @@ namespace Epsitec.Common.Widgets
 				this.h_scroller_value = 0;
 				this.panel_offset.X   = 0;
 				
-				this.h_scroller.Range             = 0.0;
-				this.h_scroller.Value             = 0.0;
-				this.h_scroller.VisibleRangeRatio = 1.0;
+				this.h_scroller.MaxValue          = 1.0M;
+				this.h_scroller.Value             = 0.0M;
+				this.h_scroller.VisibleRangeRatio = 1.0M;
 			}
 			
 			if ((panel_dy > 0) &&
 				(delta_dy > 0) &&
 				(vis_dy > 0))
 			{
-				this.v_scroller.Range             = delta_dy;
-				this.v_scroller.VisibleRangeRatio = vis_dy / panel_dy;
-				this.v_scroller.SmallChange       = Scrollable.SmallScrollPixels;
-				this.v_scroller.LargeChange       = vis_dy * Scrollable.LargeScrollPercent / 100;
+				this.v_scroller.MaxValue          = (decimal) (delta_dy);
+				this.v_scroller.VisibleRangeRatio = (decimal) (vis_dy / panel_dy);
+				this.v_scroller.SmallChange       = (decimal) (Scrollable.SmallScrollPixels);
+				this.v_scroller.LargeChange       = (decimal) (vis_dy * Scrollable.LargeScrollPercent / 100);
 				
 				offset_y = System.Math.Min (this.panel_offset.Y, delta_dy);
 				
-				this.v_scroller_value = offset_y;
-				this.v_scroller.Value = offset_y;
+				this.v_scroller_value = (decimal) offset_y;
+				this.v_scroller.Value = (decimal) offset_y;
 			}
 			else
 			{
@@ -263,9 +263,9 @@ namespace Epsitec.Common.Widgets
 				this.v_scroller_value = 0;
 				this.panel_offset.Y   = 0;
 				
-				this.v_scroller.Range             = 0.0;
-				this.v_scroller.Value             = 0.0;
-				this.v_scroller.VisibleRangeRatio = 1.0;
+				this.v_scroller.MaxValue          = 1.0M;
+				this.v_scroller.Value             = 0.0M;
+				this.v_scroller.VisibleRangeRatio = 1.0M;
 			}
 			
 			//	Met à jour l'ouverture (aperture) qui permet de voir le panel et ajuste
@@ -291,7 +291,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.h_scroller.Value != this.h_scroller_value)
 			{
-				this.panel_offset.X = this.h_scroller.Value;
+				this.panel_offset.X = this.h_scroller.DoubleValue;
 				this.UpdatePanelLocation ();
 			}
 		}
@@ -302,7 +302,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.v_scroller.Value != this.v_scroller_value)
 			{
-				this.panel_offset.Y = this.v_scroller.Value;
+				this.panel_offset.Y = this.v_scroller.DoubleValue;
 				this.UpdatePanelLocation ();
 			}
 		}
@@ -333,9 +333,9 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Point			panel_offset;				//	offset du panel, dérivé de la position des ascenceurs
 		
 		protected VScroller				v_scroller;
-		protected double				v_scroller_value;			//	dernière position de l'ascenceur
+		protected decimal				v_scroller_value;			//	dernière position de l'ascenceur
 		protected HScroller				h_scroller;
-		protected double				h_scroller_value;			//	dernière position de l'ascenceur
+		protected decimal				h_scroller_value;			//	dernière position de l'ascenceur
 		
 		protected const double			SmallScrollPixels  = 5;
 		protected const double			LargeScrollPercent = 50;

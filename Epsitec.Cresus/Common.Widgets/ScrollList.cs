@@ -284,7 +284,7 @@ namespace Epsitec.Common.Widgets
 		{
 			// Appelé lorsque l'ascenseur a bougé.
 			
-			this.FirstVisibleLine = (int)(this.scroller.Value + 0.5);
+			this.FirstVisibleLine = (int)(this.scroller.DoubleValue + 0.5);
 		}
 
 
@@ -415,11 +415,11 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				this.scroller.Range = total-this.visibleLines;
-				this.scroller.VisibleRangeRatio = (double)this.visibleLines/total;
-				this.scroller.Value = this.firstLine;
-				this.scroller.SmallChange = 1;
-				this.scroller.LargeChange = this.visibleLines/2;
+				this.scroller.MaxValue          = (decimal) (total-this.visibleLines);
+				this.scroller.VisibleRangeRatio = (decimal) ((double)this.visibleLines/total);
+				this.scroller.Value             = (decimal) (this.firstLine);
+				this.scroller.SmallChange       = 1;
+				this.scroller.LargeChange       = (decimal) (this.visibleLines/2.0);
 				
 				if ( !this.scroller.IsVisible )
 				{

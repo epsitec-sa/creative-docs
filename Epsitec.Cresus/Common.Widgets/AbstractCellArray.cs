@@ -615,16 +615,13 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque l'ascenseur vertical a bougé.
 		private void HandleScrollerV(object sender)
 		{
-			//this.OffsetV = System.Math.Floor(this.scrollerV.Range-this.scrollerV.Value+0.5);
-			this.OffsetV = System.Math.Floor(this.scrollerV.Value+0.5);
-			//this.SetFocused(true);
+			this.OffsetV = System.Math.Floor(this.scrollerV.DoubleValue+0.5);
 		}
 
 		// Appelé lorsque l'ascenseur horizontal a bougé.
 		private void HandleScrollerH(object sender)
 		{
-			this.OffsetH = System.Math.Floor(this.scrollerH.Value+0.5);
-			//this.SetFocused(true);
+			this.OffsetH = System.Math.Floor(this.scrollerH.DoubleValue+0.5);
 		}
 
 		// Appelé lorsque le bouton d'en-tête vertical a été cliqué.
@@ -804,7 +801,7 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.MouseWheel:
-					if ( message.Wheel < 0 )  this.OffsetV = System.Math.Min(this.OffsetV+this.defHeight, this.scrollerV.Range);
+					if ( message.Wheel < 0 )  this.OffsetV = System.Math.Min(this.OffsetV+this.defHeight, this.scrollerV.DoubleRange);
 					if ( message.Wheel > 0 )  this.OffsetV = System.Math.Max(this.OffsetV-this.defHeight, 0);
 					break;
 
@@ -1356,18 +1353,18 @@ namespace Epsitec.Common.Widgets
 					 areaHeight  <= 0          )
 				{
 					this.scrollerV.SetEnabled(false);
-					this.scrollerV.Range = 1;
+					this.scrollerV.MaxValue          = 1;
 					this.scrollerV.VisibleRangeRatio = 1;
-					this.scrollerV.Value = 0;
+					this.scrollerV.Value             = 0;
 				}
 				else
 				{
 					this.scrollerV.SetEnabled(true);
-					this.scrollerV.Range = totalHeight-areaHeight;
-					this.scrollerV.VisibleRangeRatio = areaHeight/totalHeight;
-					this.scrollerV.Value = this.offsetV;
-					this.scrollerV.SmallChange = this.defHeight;
-					this.scrollerV.LargeChange = areaHeight/2;
+					this.scrollerV.MaxValue          = (decimal) (totalHeight-areaHeight);
+					this.scrollerV.VisibleRangeRatio = (decimal) (areaHeight/totalHeight);
+					this.scrollerV.Value             = (decimal) (this.offsetV);
+					this.scrollerV.SmallChange       = (decimal) (this.defHeight);
+					this.scrollerV.LargeChange       = (decimal) (areaHeight/2);
 				}
 				this.HandleScrollerV(this.scrollerV);  // update this.offsetV
 			}
@@ -1387,18 +1384,18 @@ namespace Epsitec.Common.Widgets
 					 areaWidth  <= 0         )
 				{
 					this.scrollerH.SetEnabled(false);
-					this.scrollerH.Range = 1;
+					this.scrollerH.MaxValue          = 1;
 					this.scrollerH.VisibleRangeRatio = 1;
-					this.scrollerH.Value = 0;
+					this.scrollerH.Value             = 0;
 				}
 				else
 				{
 					this.scrollerH.SetEnabled(true);
-					this.scrollerH.Range = totalWidth-areaWidth;
-					this.scrollerH.VisibleRangeRatio = areaWidth/totalWidth;
-					this.scrollerH.Value = this.offsetH;
-					this.scrollerH.SmallChange = this.defWidth;
-					this.scrollerH.LargeChange = areaWidth/2;
+					this.scrollerH.MaxValue          = (decimal) (totalWidth-areaWidth);
+					this.scrollerH.VisibleRangeRatio = (decimal) (areaWidth/totalWidth);
+					this.scrollerH.Value             = (decimal) (this.offsetH);
+					this.scrollerH.SmallChange       = (decimal) (this.defWidth);
+					this.scrollerH.LargeChange       = (decimal) (areaWidth/2);
 				}
 				this.HandleScrollerH(this.scrollerH);  // update this.offsetH
 			}

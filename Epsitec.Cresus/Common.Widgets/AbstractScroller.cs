@@ -5,7 +5,7 @@ namespace Epsitec.Common.Widgets
 	/// HScroller et VScroller.
 	/// </summary>
 	[Support.SuppressBundleSupport]
-	public abstract class AbstractScroller : Widget, Helpers.IDragBehaviorHost
+	public abstract class AbstractScroller : Widget, Helpers.IDragBehaviorHost, INumValue
 	{
 		protected AbstractScroller(bool vertical)
 		{
@@ -27,6 +27,7 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown.Engaged += new Support.EventHandler(this.HandleButton);
 			this.arrowUp.StillEngaged += new Support.EventHandler(this.HandleButton);
 			this.arrowDown.StillEngaged += new Support.EventHandler(this.HandleButton);
+			this.range.Changed += new System.EventHandler(this.HandleRangeChanged);
 			this.arrowUp.AutoRepeatEngaged = true;
 			this.arrowDown.AutoRepeatEngaged = true;
 		}
@@ -45,6 +46,7 @@ namespace Epsitec.Common.Widgets
 				this.arrowDown.Engaged -= new Support.EventHandler(this.HandleButton);
 				this.arrowUp.StillEngaged -= new Support.EventHandler(this.HandleButton);
 				this.arrowDown.StillEngaged -= new Support.EventHandler(this.HandleButton);
+				this.range.Changed -= new System.EventHandler(this.HandleRangeChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -74,26 +76,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
-		public double						Range
-		{
-			//	Hauteur totale représentée par l'ascenseur (unités quelconques).
-			
-			get
-			{
-				return System.Math.Max (0, this.maximum - this.minimum);
-			}
-
-			set
-			{
-				System.Diagnostics.Debug.Assert (value >= 0);
-				
-				this.Maximum = this.Minimum + value;
-				this.UpdateInternalGeometry ();
-			}
-		}
-		
-		public double						VisibleRangeRatio
+		public decimal						VisibleRangeRatio
 		{
 			//	Hauteur visible représentée par l'ascenseur (de 0 à 1).
 			
@@ -104,8 +87,8 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				System.Diagnostics.Debug.Assert (value >= 0.0);
-				System.Diagnostics.Debug.Assert (value <= 1.0);
+				System.Diagnostics.Debug.Assert (value >= 0.0M);
+				System.Diagnostics.Debug.Assert (value <= 1.0M);
 				
 				if (this.display != value)
 				{
@@ -116,70 +99,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public double						Minimum
-		{
-			get
-			{
-				return this.minimum;
-			}
-			set
-			{
-				if (this.minimum != value)
-				{
-					this.minimum = value;
-					this.UpdateInternalGeometry ();
-					this.Invalidate ();
-				}
-			}
-		}
 		
-		public double						Maximum
-		{
-			get
-			{
-				return this.maximum;
-			}
-			set
-			{
-				if (this.maximum != value)
-				{
-					this.maximum = value;
-					this.UpdateInternalGeometry ();
-					this.Invalidate ();
-				}
-			}
-		}
-		
-		public double						Value
-		{
-			// Valeur représentée par l'ascenseur (position).
-			get
-			{
-				double pos = this.position + this.minimum;
-				
-				pos = System.Math.Min (pos, this.maximum);
-				pos = System.Math.Max (pos, this.Minimum);
-				
-				return pos;
-			}
-
-			set
-			{
-				if ( value < this.minimum )  value = this.minimum;
-				if ( value > this.maximum )  value = this.maximum;
-				
-				value -= this.minimum;
-				
-				if ( value != this.position )
-				{
-					this.position = value;
-					this.OnValueChanged();
-					this.Invalidate();
-				}
-			}
-		}
-		
-		public double						SmallChange
+		public decimal						SmallChange
 		{
 			// Valeur avancée par les boutons.
 			get
@@ -193,7 +114,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public double						LargeChange
+		public decimal						LargeChange
 		{
 			// Valeur avancée en cliquant hors de la cabine.
 			get
@@ -207,6 +128,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
+		public double						DoubleValue
+		{
+			get { return (double) this.Value; }
+		}
+		
+		public double						DoubleRange
+		{
+			get { return (double) this.Range; }
+		}
 		
 		protected Zone						HiliteZone
 		{
@@ -321,14 +252,17 @@ namespace Epsitec.Common.Widgets
 			
 			if ((this.Range > 0) && (this.VisibleRangeRatio > 0))
 			{
-				double pos = this.is_inverted ? this.Range - this.position : this.position;
+				double pos   = (double) (this.is_inverted ? this.Range - this.position : this.position);
+				double range = (double) (this.Range);
+				double ratio = (double) (this.VisibleRangeRatio);
 				
 				if (this.is_vertical)
 				{
-					double h = slider_rect.Height * this.VisibleRangeRatio;
+					
+					double h = slider_rect.Height * ratio;
 					h = System.Math.Max (h, AbstractScroller.minimalThumb);
 					h = System.Math.Min (h, slider_rect.Height);
-					double p = (pos/this.Range) * (slider_rect.Height-h);
+					double p = (pos/range) * (slider_rect.Height-h);
 					
 					thumb_rect = slider_rect;
 					thumb_rect.Bottom += p;
@@ -348,10 +282,10 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					double h = slider_rect.Width * this.VisibleRangeRatio;
+					double h = slider_rect.Width * ratio;
 					h = System.Math.Max (h, AbstractScroller.minimalThumb);
 					h = System.Math.Min (h, slider_rect.Width);
-					double p = (pos/this.Range) * (slider_rect.Width-h);
+					double p = (pos/range) * (slider_rect.Width-h);
 					
 					thumb_rect = slider_rect;
 					thumb_rect.Left += p;
@@ -484,7 +418,9 @@ namespace Epsitec.Common.Widgets
 					new_pos = 1.0 - new_pos;
 				}
 				
-				this.Value = new_pos * this.Range + this.Minimum;
+				decimal value = (decimal) new_pos;
+				
+				this.Value = value * this.Range + this.MinValue;
 			}
 		}
 
@@ -520,6 +456,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		private void HandleRangeChanged(object sender, System.EventArgs e)
+		{
+			this.UpdateInternalGeometry ();
+			this.Invalidate ();
+		}
 
 		protected virtual  void OnValueChanged()
 		{
@@ -601,6 +542,71 @@ namespace Epsitec.Common.Widgets
 			this.is_dragging = false;
 			this.Invalidate ();
 		}
+		#endregion
+		
+		#region INumValue Members
+		public decimal						Value
+		{
+			get
+			{
+				return this.range.Constrain (this.position + this.range.Minimum);
+			}
+			set
+			{
+				value = this.range.Constrain (value);
+				
+				if (this.Value != value)
+				{
+					this.position = value - this.range.Minimum;
+					this.OnValueChanged ();
+					this.Invalidate ();
+				}
+			}
+		}
+
+		public decimal						MinValue
+		{
+			get
+			{
+				return this.range.Minimum;
+			}
+			set
+			{
+				this.range.Minimum = value;
+			}
+		}
+
+		public decimal						MaxValue
+		{
+			get
+			{
+				return this.range.Maximum;
+			}
+			set
+			{
+				this.range.Maximum = value;
+			}
+		}
+
+		public decimal						Resolution
+		{
+			get
+			{
+				return this.range.Resolution;
+			}
+			set
+			{
+				this.range.Resolution = value;
+			}
+		}
+
+		public decimal						Range
+		{
+			get
+			{
+				return this.MaxValue - this.MinValue;
+			}
+		}
 		
 		
 		public event Support.EventHandler	ValueChanged;
@@ -624,12 +630,10 @@ namespace Epsitec.Common.Widgets
 		
 		private bool						is_vertical;
 		private bool						is_inverted;
-		private double						minimum = 0.0;
-		private double						maximum = 1.0;
-		private double						display = 0.5;
-		private double						position = 0;
-		private double						buttonStep = 0.1;
-		private double						pageStep = 0.2;
+		private decimal						display    = 0.5M;
+		private decimal						position   = 0.0M;
+		private decimal						buttonStep = 0.1M;
+		private decimal						pageStep   = 0.2M;
 		private GlyphButton					arrowUp;
 		private GlyphButton					arrowDown;
 		private bool						is_scrolling;
@@ -639,5 +643,6 @@ namespace Epsitec.Common.Widgets
 		private Drawing.Rectangle			tabRect;
 		
 		private Zone						hiliteZone;
+		private Converters.DecimalRange		range = new Converters.DecimalRange (0, 1, 0.000001M);
 	}
 }

@@ -83,7 +83,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.Text != "")
 			{
-				this.slider.Value = (decimal) this.Value;
+				this.slider.Value = this.Value;
 			}
 		}
 
