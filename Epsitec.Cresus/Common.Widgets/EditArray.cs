@@ -577,7 +577,25 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						focus = null;
+						//	On ne peut plus avancer/reculer, car est arrivé en extrémité de table.
+						
+						if ((move > 0) &&
+							(this.host.mode == EditArrayMode.Edition) &&
+							(this.host.TextArrayStore != null) &&
+							(this.host.TextArrayStore.CheckInsertRows (this.host.RowCount, 1)))
+						{
+							//	Il s'avère que la table est en cours d'édition et que le "store" associé
+							//	avec celle-ci permet l'insertion en fin de table. Profitons-en !
+							
+							this.host.TextArrayStore.InsertRows (this.host.RowCount, 1);
+							this.host.MoveEditionToLine (move);
+							
+							focus = this.edit_widgets[0];
+						}
+						else
+						{
+							focus = null;
+						}
 					}
 				}
 				
@@ -817,7 +835,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region Header class
-		public class Header : Widget
+		[Support.SuppressBundleSupport] public class Header : Widget
 		{
 			public Header(EditArray host)
 			{
@@ -1105,6 +1123,11 @@ namespace Epsitec.Common.Widgets
 			
 			protected void RestoreMode(EditArrayMode mode, int row, int column)
 			{
+				if (row >= this.host.RowCount)
+				{
+					row = this.host.RowCount - 1;
+				}
+				
 				this.host.SelectedIndex = row;
 				
 				switch (mode)
