@@ -44,9 +44,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Support.Tests", "Support.Te
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserInterface", "UserInterface\UserInterface.csproj", "{5E8E51FA-AB4A-4E48-BD20-7796EDCA1B63}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 12
+		SccNumberOfProjects = 13
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -94,6 +98,10 @@ Global
 		SccLocalPath11 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection11 = Support.Tests\\
+		SccProjectUniqueName12 = UserInterface\\UserInterface.csproj
+		SccLocalPath12 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection12 = UserInterface\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -144,6 +152,10 @@ Global
 		{99DC1B23-014D-4BE4-8D4D-3FC613360102}.Debug.Build.0 = Debug|.NET
 		{99DC1B23-014D-4BE4-8D4D-3FC613360102}.Release.ActiveCfg = Release|.NET
 		{99DC1B23-014D-4BE4-8D4D-3FC613360102}.Release.Build.0 = Release|.NET
+		{5E8E51FA-AB4A-4E48-BD20-7796EDCA1B63}.Debug.ActiveCfg = Debug|.NET
+		{5E8E51FA-AB4A-4E48-BD20-7796EDCA1B63}.Debug.Build.0 = Debug|.NET
+		{5E8E51FA-AB4A-4E48-BD20-7796EDCA1B63}.Release.ActiveCfg = Release|.NET
+		{5E8E51FA-AB4A-4E48-BD20-7796EDCA1B63}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info

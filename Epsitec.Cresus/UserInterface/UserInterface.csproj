@@ -3,7 +3,7 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{10453A3B-CA2A-4D36-B634-78BA87AAAB26}"
+        ProjectGuid = "{5E8E51FA-AB4A-4E48-BD20-7796EDCA1B63}"
         SccProjectName = "SAK"
         SccLocalPath = "SAK"
         SccAuxPath = "SAK"
@@ -13,7 +13,7 @@
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "System.Extension"
+                AssemblyName = "Cresus.UserInterface"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -22,7 +22,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "System"
+                RootNamespace = "Epsitec.Cresus.UserInterface"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -89,16 +89,6 @@
             <Include>
                 <File
                     RelPath = "AssemblyInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Date.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Time.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

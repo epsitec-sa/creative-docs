@@ -28,7 +28,7 @@ namespace Epsitec.Common.Support
 		protected static void Initialise()
 		{
 			System.Collections.ArrayList providers = new System.Collections.ArrayList ();
-			System.Reflection.Assembly   assembly  = System.Reflection.Assembly.LoadWithPartialName ("Support.Implementation");
+			System.Reflection.Assembly   assembly  = System.Reflection.Assembly.LoadWithPartialName ("Common.Support.Implementation");
 			
 			System.Type[] types_in_assembly = assembly.GetTypes ();
 			
