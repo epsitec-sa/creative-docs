@@ -98,8 +98,6 @@ Global
 		{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
-		Common.Tests\bin\Debug\copy.info = Common.Tests\bin\Debug\copy.info
-		Common.Tests\bin\Release\copy.info = Common.Tests\bin\Release\copy.info
 		copyproject.py = copyproject.py
 		Epsitec.Cresus.snk = Epsitec.Cresus.snk
 		import-bin.bat = import-bin.bat

@@ -21,6 +21,7 @@ class CopyProject:
         self.copy_ext.append('.snk')
         self.copy_ext.append('.sln')
         self.copy_ext.append('.config')
+        self.copy_ext.append('.info')
 
         self.file_count = 0
         self.proj_count = 0
@@ -77,7 +78,7 @@ class CopyProject:
         return 0
 
     def check_no_copy(self, name):
-        for ext in ['.dll','.pdb','.scc','.user','.exe','.vspscc','.vssscc','.projdata','.suo','.info']:
+        for ext in ['.dll','.pdb','.scc','.user','.exe','.vspscc','.vssscc','.projdata','.suo']:
             if name.endswith(ext):
                 return 1
 
@@ -95,8 +96,8 @@ class CopyProject:
                 files = f.readlines()
                 f.close()
                 for file in files:
-                    self.copy_file(path, file.strip(), 1)
-                return
+                    if (file.strip().startswith('#') == 0) & (len(file.strip())>0):
+                        self.copy_file(path, file.strip(), 1)
 
             if os.path.isdir(src_name):
                 if os.path.isdir(dst_name) == 0:
