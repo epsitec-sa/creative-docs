@@ -54,6 +54,40 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert (height >= ascender-descender);
 		}
 		
+		[Test] public void CheckTextBreak()
+		{
+			Font   font = Font.GetFont ("Times New Roman", "Regular");
+			string text = "The quick brown fox jumps over the lazy dog. Whatever, we just need a piece of long text to break apart.";
+			double width = 100;
+			TextBreak tb = new TextBreak (font, text, 12.0);
+			
+			string break_text;
+			double break_width;
+			
+			int line_count = 0;
+			string[] chunk = new string[10];
+			
+			while (tb.GetNextBreak (width, out break_text, out break_width))
+			{
+				Assertion.Assert (break_width <= width);
+				Assertion.Assert (break_text.Length > 0);
+				
+				chunk[line_count++] = break_text;
+			}
+			
+			Assertion.Assert (line_count == 6);
+			Assertion.Assert (break_text == "");
+			Assertion.Assert (break_width == 0);
+			
+			Assertion.Assert (chunk[5] == "apart.");
+			
+			Assertion.Assert (tb.GetNextBreak (width, out break_text, out break_width) == false);
+			
+			tb.Dispose ();
+			
+			Assertion.Assert (tb.GetNextBreak (width, out break_text, out break_width) == false);
+		}
+		
 		[Test] public void CheckGlyphPaint()
 		{
 			System.Windows.Forms.Form form = new System.Windows.Forms.Form ();
