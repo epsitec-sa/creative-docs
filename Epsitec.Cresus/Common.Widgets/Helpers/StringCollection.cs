@@ -62,15 +62,19 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		public int FindExactMatch(string find)
 		{
-			find = find.ToUpper ();
-			
-			for (int i = 0; i < this.list.Count; i++)
+			if ((find != null) &&
+				(find.Length > 0))
 			{
-				string text = this[i].ToUpper ();
+				find = find.ToUpper ();
 				
-				if (text == find)
+				for (int i = 0; i < this.list.Count; i++)
 				{
-					return i;
+					string text = this[i].ToUpper ();
+					
+					if (text == find)
+					{
+						return i;
+					}
 				}
 			}
 			
