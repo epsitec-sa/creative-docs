@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Database
 	[TestFixture]
 	public class SqlSelectTest
 	{
-		[Test] public void CheckNewSqlSelect()
+		[Test] public void Check00NewSqlSelect()
 		{
 			//	il n'existe qu'un seul constructeur, sans paramètre
 			SqlSelect sql_select1 = new SqlSelect ();
@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Database
 			return db_access;
 		}
 
-		[Test] public void CheckSqlSelectExecute()
+		[Test] public void Check01SqlSelectExecute()
 		{
 			//	fait un test de sélection de données.
 			//	utilise une base de données existante
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Database
 			return nb;
 		}
 
-		[Test] public void CheckSqlSelectExecute2()
+		[Test] public void Check02SqlSelectExecute2()
 		{
 			//	Test pour la clause ORDER BY
 			//	C:\Program Files\firebird15\Data\Epsitec\Employee.Firebird
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Database
 			int n = this.DumpDataSet (data_set);
 		}
 
-		[Test] public void CheckSqlSelectExecute3()
+		[Test] public void Check03SqlSelectExecute3()
 		{
 			//	Test pour la clause WHERE
 			//	C:\Program Files\firebird15\Data\Epsitec\Employee.Firebird
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Database
 			int n = this.DumpDataSet (data_set);
 		}
 
-		[Test] public void CheckSqlSelectExecute4()
+		[Test] public void Check04SqlSelectExecute4()
 		{
 			//	Test avec une sous-requête, dans
 			//	C:\Program Files\firebird15\Data\Epsitec\Employee.Firebird
@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Database
 			int n = this.DumpDataSet (data_set);
 		}	
 
-		[Test] public void CheckSqlSelectInnerJoin()
+		[Test] public void Check05SqlSelectInnerJoin()
 		{
 			//	Test avec jointure, dans
 			//	C:\Program Files\firebird15\Data\Epsitec\Employee.Firebird

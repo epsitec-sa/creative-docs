@@ -4,7 +4,7 @@ namespace Epsitec.Cresus.Database
 {
 	[TestFixture] public class DbInfrastructureTest
 	{
-		[Test] public void CheckCreateDatabase()
+		[Test] public void Check01CreateDatabase()
 		{
 			try
 			{
@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] public void CheckAttachDatabase()
+		[Test] public void Check02AttachDatabase()
 		{
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
 			{
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] public void CheckCreateDbType()
+		[Test] public void Check04CreateDbType()
 		{
 			//	Ce test ne marche que pour une base qui est propre (i.e. qui vient d'être
 			//	créée par CheckCreateDatabase).
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] public void CheckReadBackDbType()
+		[Test] public void Check04ReadBackDbType()
 		{
 			//	Ce test ne marche que pour une base qui a été peuplée par la méthode
 			//	CheckCreateDbType...
@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] public void CheckCreateDbTable()
+		[Test] public void Check05CreateDbTable()
 		{
 			//	Ce test ne marche que pour une base qui est propre (i.e. qui vient d'être
 			//	créée par CheckCreateDatabase).
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] [ExpectedException (typeof (DbException))] public void CheckCreateDbTableEx1()
+		[Test] [ExpectedException (typeof (DbException))] public void Check06CreateDbTableEx1()
 		{
 			//	Exécuter deux fois une création de table va nécessairement générer une exception.
 			//	Il faut exécuter le test CheckCreateDbTable avant celui-ci.
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] public void CheckFindDbTables()
+		[Test] public void Check07FindDbTables()
 		{
 			//	Il faut exécuter le test CheckCreateDbTable avant celui-ci.
 			
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] public void CheckFindDbTypes()
+		[Test] public void Check08FindDbTypes()
 		{
 			//	Il faut exécuter le test CheckCreateDbTable avant celui-ci.
 			
@@ -240,7 +240,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] public void CheckUnregisterDbTable()
+		[Test] public void Check09UnregisterDbTable()
 		{
 			//	Il faut exécuter le test CheckCreateDbTable avant celui-ci.
 			
@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] public void CheckRegisterDbTableSameAsUnregistered()
+		[Test] public void Check10RegisterDbTableSameAsUnregistered()
 		{
 			//	Il faut exécuter le test CheckUnregisterDbTable avant celui-ci.
 			
@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] [ExpectedException (typeof (DbException))] public void CheckUnregisterDbTableEx1()
+		[Test] [ExpectedException (typeof (DbException))] public void Check11UnregisterDbTableEx1()
 		{
 			//	Il faut exécuter le test CheckRegisterDbTableSameAsUnregistered avant celui-ci.
 			

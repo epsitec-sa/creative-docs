@@ -6,7 +6,7 @@ namespace Epsitec.Cresus.Database
 	[TestFixture]
 	public class ISqlBuilderTest
 	{
-		[Test] public void CheckSqlBuilder()
+		[Test] public void Check01SqlBuilder()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -14,7 +14,7 @@ namespace Epsitec.Cresus.Database
 			Assert.IsNotNull (sql_builder);
 		}
 		
-		[Test] [ExpectedException (typeof (DbSyntaxException))] public void CheckInsertTableExPrimaryKey()
+		[Test] [ExpectedException (typeof (DbSyntaxException))] public void Check02InsertTableExPrimaryKey()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand command = sql_builder.Command;
 		}
 		
-		[Test] public void CheckInsertTableFbProblem()
+		[Test] public void Check03InsertTableFbProblem()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Database
 			command.Dispose ();
 		}
 		
-		[Test] public void CheckInsertTable()
+		[Test] public void Check04InsertTable()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Database
 			command.Dispose ();
 		}
 		
-		[Test] public void CheckInsertTableColumns()
+		[Test] public void Check05InsertTableColumns()
 		{
 			// doit être fait après CheckInsertTable
 			// et avant CheckRemoveTable
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Database
 			command.Dispose ();
 		}
 
-		[Test] public void CheckRemoveTableColumns()
+		[Test] public void Check06RemoveTableColumns()
 		{
 			// doit être fait après CheckInsertTable et après CheckInsertTableColumns
 			// et avant CheckRemoveTable
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 		
-		[Test] public void CheckInsertData()
+		[Test] public void Check07InsertData()
 		{
 			// doit être fait après CheckRemoveTableColumns
 			// pour que la table existe dans le bon état
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Database
 			command.Dispose ();
 		}
 
-		[Test] public void CheckRemoveData()
+		[Test] public void Check08RemoveData()
 		{
 			// doit être fait après CheckInsertData
 			// pour que la table existe dans le bon état
@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.Database
 			command.Dispose ();
 		}
 
-		[Test] public void CheckRemoveTable()
+		[Test] public void Check09RemoveTable()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -280,7 +280,7 @@ namespace Epsitec.Cresus.Database
 			command.Dispose ();
 		}
 
-		[Test] public void CheckInsertTableWithSqlEngine()
+		[Test] public void Check10InsertTableWithSqlEngine()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.Database
 			command.Dispose ();
 		}
 		
-		[Test] public void CheckRemoveTableWithSqlEngine()
+		[Test] public void Check11RemoveTableWithSqlEngine()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.Database
 			command.Dispose ();
 		}
 
-		[Test] public void CheckInsertArrayTable()
+		[Test] public void Check12InsertArrayTable()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
