@@ -379,7 +379,8 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(scrollh);
 			tip.SetToolTip(scrollh, "Ascenseur horizontal");
 
-			TextFieldCombo combo = new TextFieldCombo();
+			TextFieldExList combo = new TextFieldExList();
+			combo.PlaceHolder = "<b>&lt;autre&gt;</b>";
 //			combo.Location = new Point(160, 220);
 			combo.Width = 100;
 			combo.Text = "Janvier";
