@@ -174,6 +174,14 @@ namespace Epsitec.Common.UI.Data
 				(this.type != null) &&
 				(value.GetType () != this.type.SystemType))
 			{
+				if (value is string)
+				{
+					if (Common.Types.Converter.Convert (value, this.type.SystemType, out value))
+					{
+						return value;
+					}
+				}
+				
 				throw new System.InvalidOperationException ("Value is not of required type.");
 			}
 			

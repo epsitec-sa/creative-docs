@@ -23,5 +23,9 @@ namespace Epsitec.Common.UI.Data
 		RadioList,
 		RadioRows,
 		RadioColumns,
+		
+		CheckList,
+		CheckRows,
+		CheckColumns,
 	}
 }

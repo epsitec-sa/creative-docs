@@ -68,6 +68,14 @@ namespace Epsitec.Cresus.Database
 			get { return this.rank; }
 		}
 		
+		public bool								IsHidden
+		{
+			get
+			{
+				return false;
+			}
+		}
+		
 		public DbKey							InternalKey
 		{
 			get { return this.internal_key; }

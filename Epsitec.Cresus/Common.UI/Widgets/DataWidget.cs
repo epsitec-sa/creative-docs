@@ -56,6 +56,21 @@ namespace Epsitec.Common.UI.Widgets
 			}
 		}
 		
+		[Bundle] public bool					HasCaption
+		{
+			get
+			{
+				return this.has_caption;
+			}
+			set
+			{
+				if (this.has_caption != value)
+				{
+					this.has_caption = value;
+					this.CreateUI ();
+				}
+			}
+		}
 		
 		public static bool CheckCompatibility(Types.IDataValue data, Data.Representation representation)
 		{
@@ -84,6 +99,9 @@ namespace Epsitec.Common.UI.Widgets
 				case Data.Representation.RadioList:
 				case Data.Representation.RadioColumns:
 				case Data.Representation.RadioRows:
+				case Data.Representation.CheckList:
+				case Data.Representation.CheckColumns:
+				case Data.Representation.CheckRows:
 					return (enum_type != null) && (enum_type.IsCustomizable == false);
 				case Data.Representation.ComboConstantList:
 					return (enum_type != null) && (enum_type.IsCustomizable == false);
@@ -161,6 +179,18 @@ namespace Epsitec.Common.UI.Widgets
 					this.CreateUIRadio (LayoutMode.Rows);
 					break;
 				
+				case Data.Representation.CheckList:
+					this.CreateUICheck (LayoutMode.None);
+					break;
+				
+				case Data.Representation.CheckColumns:
+					this.CreateUICheck (LayoutMode.Columns);
+					break;
+				
+				case Data.Representation.CheckRows:
+					this.CreateUICheck (LayoutMode.Rows);
+					break;
+				
 				default:
 					//	Forme de représentation inconnue : remplace pas "aucune".
 					
@@ -174,17 +204,21 @@ namespace Epsitec.Common.UI.Widgets
 		{
 			this.widget_container = this;
 			
-			StaticText caption    = new StaticText (this.widget_container, this.source.Caption);
-			TextField  text_field = new TextField (this.widget_container);
+			if (this.has_caption)
+			{
+				StaticText caption = new StaticText (this.widget_container, this.source.Caption);
+				
+				caption.Text          = this.source.Caption;
+				caption.Anchor        = AnchorStyles.TopAndBottom | AnchorStyles.Left;
+				caption.Width         = this.caption_width;
+				caption.AnchorMargins = new Drawing.Margins (0, 0, 0, 0);
+			}
 			
-			caption.Text          = this.source.Caption;
-			caption.Anchor        = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-			caption.Width         = this.caption_width;
-			caption.AnchorMargins = new Drawing.Margins (0, 0, 0, 0);
+			TextField  text_field = new TextField (this.widget_container);
 			
 			text_field.TabIndex      = 1;
 			text_field.Anchor        = AnchorStyles.Top | AnchorStyles.LeftAndRight;
-			text_field.AnchorMargins = new Drawing.Margins (this.caption_width, 0, 0, 0);
+			text_field.AnchorMargins = new Drawing.Margins (this.has_caption ? this.caption_width : 0, 0, 0, 0);
 			
 			this.best_fit_size = new Drawing.Size (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinSize.Height);
 			this.Size          = this.best_fit_size;
@@ -197,17 +231,21 @@ namespace Epsitec.Common.UI.Widgets
 		{
 			this.widget_container = this;
 			
-			StaticText       caption    = new StaticText (this.widget_container, this.source.Caption);
 			TextFieldUpDown  text_field = new TextFieldUpDown (this.widget_container);
 			
-			caption.Text          = this.source.Caption;
-			caption.Anchor        = AnchorStyles.TopAndBottom | AnchorStyles.Left;
-			caption.Width         = this.caption_width;
-			caption.AnchorMargins = new Drawing.Margins (0, 0, 0, 0);
+			if (this.has_caption)
+			{
+				StaticText caption = new StaticText (this.widget_container, this.source.Caption);
+				
+				caption.Text          = this.source.Caption;
+				caption.Anchor        = AnchorStyles.TopAndBottom | AnchorStyles.Left;
+				caption.Width         = this.caption_width;
+				caption.AnchorMargins = new Drawing.Margins (0, 0, 0, 0);
+			}
 			
 			text_field.TabIndex      = 1;
 			text_field.Anchor        = AnchorStyles.Top | AnchorStyles.LeftAndRight;
-			text_field.AnchorMargins = new Drawing.Margins (this.caption_width, 0, 0, 0);
+			text_field.AnchorMargins = new Drawing.Margins (this.has_caption ? this.caption_width : 0, 0, 0, 0);
 			
 			this.best_fit_size = new Drawing.Size (this.caption_width + text_field.GetBestFitSize ().Width, text_field.MinSize.Height);
 			this.Size          = this.best_fit_size;
@@ -232,15 +270,27 @@ namespace Epsitec.Common.UI.Widgets
 			//	C'est une énumération pour laquelle nous devons trouver les légendes des
 			//	divers éléments.
 			
-			this.widget_container = new GroupBox (this);
-			this.widget_container.Dock = DockStyle.Fill;
-			this.widget_container.Text = this.source.Caption;
-			this.widget_container.DockPadding = new Drawing.Margins (4, 0, 4, 4);
+			if (this.has_caption)
+			{
+				this.widget_container = new GroupBox (this);
+				this.widget_container.Dock = DockStyle.Fill;
+				this.widget_container.Text = this.source.Caption;
+				this.widget_container.DockPadding = new Drawing.Margins (4, 0, 4, 4);
+			}
+			else
+			{
+				this.widget_container = this;
+			}
 			
 			RadioButton radio_0 = null;
 			
 			foreach (Types.IEnumValue enum_value in enum_values)
 			{
+				if (enum_value.IsHidden)
+				{
+					continue;
+				}
+				
 				RadioButton button = new RadioButton (this.widget_container);
 				
 				string caption = enum_value.Caption;
@@ -271,6 +321,77 @@ namespace Epsitec.Common.UI.Widgets
 				}
 			}
 			
+			this.CreateUILayout ();
+			
+			if (radio_0 != null)
+			{
+				Engine.BindWidget (this.source, radio_0);
+			}
+		}
+		
+		protected virtual void CreateUICheck(LayoutMode layout_mode)
+		{
+			this.widget_layout_mode = layout_mode;
+			
+			Types.IEnum enum_type = this.source.DataType as Types.IEnum;
+			
+			if (enum_type == null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Cannot setup check buttons based on type {0}.", this.source.DataType.Name));
+			}
+			
+			Types.IEnumValue[] enum_values = enum_type.Values;
+			
+			//	C'est une énumération pour laquelle nous devons trouver les légendes des
+			//	divers éléments.
+			
+			if (this.has_caption)
+			{
+				this.widget_container = new GroupBox (this);
+				this.widget_container.Dock = DockStyle.Fill;
+				this.widget_container.Text = this.source.Caption;
+				this.widget_container.DockPadding = new Drawing.Margins (4, 0, 4, 4);
+			}
+			else
+			{
+				this.widget_container = this;
+			}
+			
+			int tab_index = 1;
+			
+			foreach (Types.IEnumValue enum_value in enum_values)
+			{
+				if ((enum_value.IsHidden) ||
+					(enum_value.Rank <= 0))
+				{
+					continue;
+				}
+				
+				CheckButton button = new CheckButton (this.widget_container);
+				
+				string caption = enum_value.Caption;
+				
+				if (caption == null)
+				{
+					caption = enum_value.Name;
+				}
+				
+				button.Index    = enum_value.Rank;
+				button.Name     = enum_value.Name;
+				button.Text     = caption;
+				button.TabIndex = tab_index++;
+				button.Dock     = DockStyle.Top;
+				button.MinSize  = button.GetBestFitSize ();
+				
+				Engine.BindWidget (this.source, button);
+			}
+			
+			this.CreateUILayout ();
+		}
+		
+		
+		protected virtual void CreateUILayout()
+		{
 			Drawing.Size cell_size = this.GetCellSize ();
 			
 			int n = this.widget_container.Children.Count;
@@ -311,11 +432,6 @@ namespace Epsitec.Common.UI.Widgets
 			this.MinSize       = new Drawing.Size (frame_width + cell_size.Width, frame_height + cell_size.Height);
 			
 			this.UpdateInternalLayout ();
-			
-			if (radio_0 != null)
-			{
-				Engine.BindWidget (this.source, radio_0);
-			}
 		}
 		
 		protected virtual void DisposeUI()
@@ -480,6 +596,7 @@ namespace Epsitec.Common.UI.Widgets
 		protected LayoutMode					widget_layout_mode;
 		protected AbstractGroup					widget_container;
 		protected double						caption_width = 80;
+		protected bool							has_caption   = true;
 		protected Drawing.Size					best_fit_size = Drawing.Size.Empty;
 	}
 }
