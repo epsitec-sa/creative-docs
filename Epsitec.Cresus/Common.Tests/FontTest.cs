@@ -380,7 +380,7 @@ namespace Epsitec.Common.Tests
 			
 			form.Show ();
 		}
-		static readonly int cpu_speed = 500;
+		static readonly int cpu_speed = 1700;
 
 		[Test] public void CheckRenderingSpeed()
 		{
@@ -389,19 +389,29 @@ namespace Epsitec.Common.Tests
 			double   size = 10.6;
 			string   text = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
 			
-			long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
-			long c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
-			long c0 = c2 - c1;
+			long c1 = AntiGrain.Interface.DebugGetCycleDelta ();
+			long c2 = AntiGrain.Interface.DebugGetCycleDelta ();
+			long c0 = AntiGrain.Interface.DebugGetCycleDelta ();
 			
 			System.Console.Out.WriteLine ("Zero work: " + c0.ToString ());
+			
+			c1 = AntiGrain.Interface.DebugGetCycleDelta ();
+			AntiGrain.Interface.NoOp ();
+			c2 = AntiGrain.Interface.DebugGetCycleDelta () - c0;
+			System.Console.Out.WriteLine ("No-op work: " + c2.ToString ());
+			
+			c1 = AntiGrain.Interface.DebugGetCycleDelta ();
+			AntiGrain.Interface.NoOpString (text);
+			c2 = AntiGrain.Interface.DebugGetCycleDelta () - c0;
+			System.Console.Out.WriteLine ("No-op work with string: " + c2.ToString ());
 			
 			gra.SetPixmapSize (1000, 400);
 			gra.SolidRenderer.Color = Color.FromBrightness (0);
 			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			c1 = AntiGrain.Interface.DebugGetCycleDelta ();
 			gra.AddText (10, 200, text, font, size);
 			gra.RenderSolid ();
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+			c2 = AntiGrain.Interface.DebugGetCycleDelta () - c0;
 			
 			System.Console.Out.WriteLine ("First rendering: " + c2.ToString ());
 			
@@ -409,10 +419,10 @@ namespace Epsitec.Common.Tests
 			
 			for (int i = 0; i < 100; i++)
 			{
-				c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+				c1 = AntiGrain.Interface.DebugGetCycleDelta ();
 				gra.AddText (10, 200, text, font, size);
 				gra.RenderSolid ();
-				c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+				c2 = AntiGrain.Interface.DebugGetCycleDelta () - c0;
 				
 				tot += c2;
 			}

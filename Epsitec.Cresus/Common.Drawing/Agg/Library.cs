@@ -5,9 +5,9 @@ namespace Epsitec.Common.Drawing.Agg
 {
 	public class Library : System.IDisposable
 	{
-		private Library()
+		Library()
 		{
-			Library.AggInitialise ();
+			AntiGrain.Interface.Initialise ();
 		}
 		
 		~Library()
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Drawing.Agg
 			}
 			
 			Library.instance = null;
-			Library.AggShutDown ();
+			AntiGrain.Interface.ShutDown ();
 		}
 		
 		public string				ProductName
@@ -191,16 +191,11 @@ namespace Epsitec.Common.Drawing.Agg
 		{
 			get
 			{
-				if (Library.instance == null)
-				{
-					Library.instance = new Library ();
-				}
-				
 				return Library.instance;
 			}
 		}
 		
 		
-		static Library				instance;
+		static Library				instance = new Library ();
 	}
 }

@@ -4,7 +4,7 @@ namespace Epsitec.Common.Drawing
 	{
 		public TextBreak(Font font, string text, double size, TextBreakMode mode)
 		{
-			this.handle = Agg.Library.AggFontFaceBreakNew (font.Handle, text, (int) mode);
+			this.handle = AntiGrain.Interface.FontFaceBreakNew (font.Handle, text, (int) mode);
 			this.size   = size;
 		}
 		
@@ -27,7 +27,7 @@ namespace Epsitec.Common.Drawing
 		
 		public bool						MoreText
 		{
-			get { return Agg.Library.AggFontFaceBreakHasMore (this.handle); }
+			get { return AntiGrain.Interface.FontFaceBreakHasMore (this.handle); }
 		}
 		
 		
@@ -42,13 +42,8 @@ namespace Epsitec.Common.Drawing
 				return false;
 			}
 			
-			unsafe
-			{
-				width = max_width / this.size;
-				System.IntPtr ptr = Agg.Library.AggFontFaceBreakIter (this.handle, ref width, out n_char);
-				
-				text  = (ptr == System.IntPtr.Zero) ? null : new string ((char*) ptr);
-			}
+			width = max_width / this.size;
+			text  = AntiGrain.Interface.FontFaceBreakIter (this.handle, ref width, out n_char);
 			
 			width *= this.size;
 			
@@ -74,7 +69,7 @@ namespace Epsitec.Common.Drawing
 			
 			if (this.handle != System.IntPtr.Zero)
 			{
-				Agg.Library.AggFontFaceBreakDelete (this.handle);
+				AntiGrain.Interface.FontFaceBreakDelete (this.handle);
 				this.handle = System.IntPtr.Zero;
 			}
 		}

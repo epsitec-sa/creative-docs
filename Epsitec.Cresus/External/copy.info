@@ -1,0 +1,13 @@
+# Copy our own variant of NUnit
+
+nunit-gui.exe
+nunit.framework.dll
+nunit.util.dll
+
+# Copy the Firebird .NET provider
+
+FirebirdSql.Data.Firebird.dll
+
+# Copy the AGG .NET interface
+
+AntiGrain.NET.dll

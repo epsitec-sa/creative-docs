@@ -108,6 +108,11 @@
                     AssemblyName = "nunit.framework"
                     HintPath = "..\External\nunit.framework.dll"
                 />
+                <Reference
+                    Name = "AntiGrain.NET"
+                    AssemblyName = "AntiGrain.NET"
+                    HintPath = "..\External\AntiGrain.NET.dll"
+                />
             </References>
         </Build>
         <Files>

@@ -93,6 +93,11 @@
                     AssemblyName = "System.Xml"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
+                <Reference
+                    Name = "AntiGrain.NET"
+                    AssemblyName = "AntiGrain.NET"
+                    HintPath = "..\External\AntiGrain.NET.dll"
+                />
             </References>
         </Build>
         <Files>
