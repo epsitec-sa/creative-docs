@@ -135,6 +135,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Support.Events", "Co
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.DocumentEditor", "App.DocumentEditor\App.DocumentEditor.csproj", "{B3B20AC3-680D-41E0-94C2-8113577CE703}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Document", "Common.Document\Common.Document.csproj", "{B324896E-2CDE-45B8-91CE-B476687EA384}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
@@ -278,6 +286,14 @@ Global
 		{EAF258A4-E107-4466-A3E1-9FC072557940}.Debug.Build.0 = Debug|.NET
 		{EAF258A4-E107-4466-A3E1-9FC072557940}.Release.ActiveCfg = Release|.NET
 		{EAF258A4-E107-4466-A3E1-9FC072557940}.Release.Build.0 = Release|.NET
+		{B3B20AC3-680D-41E0-94C2-8113577CE703}.Debug.ActiveCfg = Debug|.NET
+		{B3B20AC3-680D-41E0-94C2-8113577CE703}.Debug.Build.0 = Debug|.NET
+		{B3B20AC3-680D-41E0-94C2-8113577CE703}.Release.ActiveCfg = Release|.NET
+		{B3B20AC3-680D-41E0-94C2-8113577CE703}.Release.Build.0 = Release|.NET
+		{B324896E-2CDE-45B8-91CE-B476687EA384}.Debug.ActiveCfg = Debug|.NET
+		{B324896E-2CDE-45B8-91CE-B476687EA384}.Debug.Build.0 = Debug|.NET
+		{B324896E-2CDE-45B8-91CE-B476687EA384}.Release.ActiveCfg = Release|.NET
+		{B324896E-2CDE-45B8-91CE-B476687EA384}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info
