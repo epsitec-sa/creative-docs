@@ -3,6 +3,8 @@
 
 namespace Epsitec.Common.Support
 {
+	using Regex = System.Text.RegularExpressions.Regex;
+	
 	/// <summary>
 	/// La classe CommandDispatcher permet de gérer la distribution des
 	/// commandes de l'interface graphique vers les routines de traitement.
@@ -53,6 +55,17 @@ namespace Epsitec.Common.Support
 				command = string.Join (".", command_elements, command_subpart, command_length);
 				command_subpart++;
 				command_length--;
+			}
+		}
+		
+		public void SynchroniseCommandStates()
+		{
+			CommandState[] states = new CommandState[this.command_states.Count];
+			this.command_states.CopyTo (states);
+			
+			for (int i = 0; i < states.Length; i++)
+			{
+				states[i].Synchronise ();
 			}
 		}
 		
@@ -265,6 +278,39 @@ namespace Epsitec.Common.Support
 			protected int						count;
 		}
 		
+		public abstract class CommandState
+		{
+			public CommandState(string name, CommandDispatcher dispatcher)
+			{
+				System.Diagnostics.Debug.Assert (name != null);
+				System.Diagnostics.Debug.Assert (name.Length > 0);
+				System.Diagnostics.Debug.Assert (dispatcher != null);
+				
+				this.name       = name;
+				this.dispatcher = dispatcher;
+				this.regex      = Support.RegexFactory.FromSimpleJoker (this.name, Support.RegexFactory.Options.None);
+				
+				this.dispatcher.command_states.Add (this);
+			}
+			
+			
+			public string						Name
+			{
+				get { return this.name; }
+			}
+			
+			public Support.CommandDispatcher	CommandDispatcher
+			{
+				get { return this.dispatcher; }
+			}
+			
+			
+			public abstract void Synchronise();
+			
+			protected string					name;
+			protected Support.CommandDispatcher	dispatcher;
+			protected Regex						regex;
+		}
 		
 		public static CommandDispatcher			Default
 		{
@@ -273,6 +319,7 @@ namespace Epsitec.Common.Support
 		
 		
 		protected System.Collections.Hashtable	event_handlers = new System.Collections.Hashtable ();
+		protected System.Collections.ArrayList	command_states = new System.Collections.ArrayList ();
 		protected string						dispatcher_name;
 		
 		private static System.Type				command_attr_type  = typeof (CommandAttribute);

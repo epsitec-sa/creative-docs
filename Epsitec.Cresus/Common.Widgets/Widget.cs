@@ -1062,12 +1062,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Support.CommandDispatcher			CommandDispatcher
+		public virtual Support.CommandDispatcher	CommandDispatcher
 		{
 			get
 			{
-				Window window = this.Window;
-				return (window == null) ? null : window.CommandDispatcher;
+				if (this.parent != null)
+				{
+					return this.parent.CommandDispatcher;
+				}
+				
+				return null;
 			}
 		}
 		

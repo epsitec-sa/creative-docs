@@ -14,14 +14,27 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.PossibleContainer;
 		}
 		
-		public override bool			IsVisible
+		public override bool						IsVisible
 		{
 			get { return true; }
 		}
 		
-		public override Window			Window
+		public override Window						Window
 		{
 			get { return this.window; }
+		}
+		
+		public override Support.CommandDispatcher	CommandDispatcher
+		{
+			get
+			{
+				if (this.window != null)
+				{
+					return this.window.CommandDispatcher;
+				}
+				
+				return null;
+			}
 		}
 		
 		
@@ -106,6 +119,7 @@ namespace Epsitec.Common.Widgets
 			this.HandleAdornerChanged ();
 		}
 		
-		protected Window					window;
+		
+		protected Window							window;
 	}
 }

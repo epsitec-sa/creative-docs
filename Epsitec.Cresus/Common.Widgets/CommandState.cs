@@ -1,12 +1,10 @@
 namespace Epsitec.Common.Widgets
 {
-	using Regex = System.Text.RegularExpressions.Regex;
-	
 	/// <summary>
 	/// La classe CommandState permet de représenter l'état d'une commande tout
 	/// en maintenant la synchronisation avec les widgets associés.
 	/// </summary>
-	public class CommandState
+	public class CommandState : Support.CommandDispatcher.CommandState
 	{
 		public CommandState(string name) : this (name, Support.CommandDispatcher.Default)
 		{
@@ -16,24 +14,11 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
-		public CommandState(string name, Support.CommandDispatcher dispatcher)
+		public CommandState(string name, Support.CommandDispatcher dispatcher) : base (name, dispatcher)
 		{
-			this.name       = name;
-			this.dispatcher = dispatcher;
-			this.regex      = Support.RegexFactory.FromSimpleJoker (this.name, Support.RegexFactory.Options.None);
-			this.state      = WidgetState.Enabled | WidgetState.ActiveNo;
+			this.state = WidgetState.Enabled | WidgetState.ActiveNo;
 		}
 		
-		
-		public string						Name
-		{
-			get { return this.name; }
-		}
-		
-		public Support.CommandDispatcher	CommandDispatcher
-		{
-			get { this.dispatcher; }
-		}
 		
 		public bool							Enabled
 		{
@@ -56,6 +41,7 @@ namespace Epsitec.Common.Widgets
 					
 					foreach (Widget widget in this.FindWidgets ())
 					{
+						System.Diagnostics.Debug.WriteLine ("Enable="+value.ToString ()+" for "+widget.ToString ());
 						widget.SetEnabled (value);
 						widget.Invalidate ();
 					}
@@ -94,9 +80,24 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected string					name;
-		protected Support.CommandDispatcher	dispatcher;
-		protected Regex						regex;
+		public override void Synchronise()
+		{
+			bool        enabled = this.Enabled;
+			WidgetState active  = this.ActiveState;
+			
+			foreach (Widget widget in this.FindWidgets ())
+			{
+				if ((widget.IsEnabled != enabled) ||
+					(widget.ActiveState != active))
+				{
+					widget.SetEnabled (enabled);
+					widget.ActiveState = active;
+					widget.Invalidate ();
+				}
+			}
+		}
+		
+		
 		protected WidgetState				state;
 	}
 }

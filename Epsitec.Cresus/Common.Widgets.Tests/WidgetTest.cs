@@ -730,6 +730,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		[Test] public void CheckCommandState()
+		{
+			WidgetTest.open_state.Enabled = ! WidgetTest.open_state.Enabled;
+		}
+		
+		static CommandState open_state = new CommandState ("*.open");
+		
 		[Test] public void CheckFindChildBasedOnName()
 		{
 			Widget root = new Widget ();

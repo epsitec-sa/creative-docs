@@ -872,6 +872,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 
 			this.contextMenu = new VMenu();
+			this.contextMenu.AppWindow = this.Window;
+			
 			foreach ( ContextMenuItem cmi in list )
 			{
 				if ( cmi.Name == "" )

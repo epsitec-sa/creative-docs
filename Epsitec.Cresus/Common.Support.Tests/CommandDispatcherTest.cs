@@ -97,6 +97,34 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals ("*.b.c/*.c/", CommandDispatcherTest.buffer.ToString ());
 		}
 		
+		[Test] public void CheckCommandState()
+		{
+			CommandDispatcher dispatcher = new CommandDispatcher ();
+			
+			CommandDispatcherTest.buffer.Length = 0;
+			
+			CommandState s1 = new CommandState ("s1", dispatcher);
+			CommandState s2 = new CommandState ("s2", dispatcher);
+			CommandState s3 = new CommandState ("s3", dispatcher);
+			
+			dispatcher.SynchroniseCommandStates ();
+			
+			Assertion.AssertEquals ("s1/s2/s3/", CommandDispatcherTest.buffer.ToString ());
+		}
+		
+		class CommandState : CommandDispatcher.CommandState
+		{
+			public CommandState(string name, CommandDispatcher dispatcher) : base (name, dispatcher)
+			{
+			}
+			
+			public override void Synchronise()
+			{
+				CommandDispatcherTest.buffer.Append (this.Name);
+				CommandDispatcherTest.buffer.Append ("/");
+			}
+
+		}
 		
 		static System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 		

@@ -10,9 +10,9 @@ namespace Epsitec.Common.Widgets.Design
 	{
 		public Controller()
 		{
-			this.command_dispatcher = new Support.CommandDispatcher ("design dispatcher");
-			this.edit_window_list   = new System.Collections.ArrayList ();
-			this.edit_selected      = new System.Collections.ArrayList ();
+			this.dispatcher       = new Support.CommandDispatcher ("design dispatcher");
+			this.edit_window_list = new System.Collections.ArrayList ();
+			this.edit_selected    = new System.Collections.ArrayList ();
 		}
 		
 		
@@ -27,12 +27,12 @@ namespace Epsitec.Common.Widgets.Design
 			
 			this.CreateCreationWindow ();
 			
-			this.EnableDeleteSelection = false;
+			this.state_delete_selection = new CommandState ("*.delete selection", this.dispatcher);
 			
 			//	Enregistre cette classe comme un contrôleur sachant exécuter des commandes
 			//	interactives :
 			
-			this.command_dispatcher.RegisterController (this);
+			this.dispatcher.RegisterController (this);
 			
 			this.is_initialised = true;
 		}
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Widgets.Design
 		
 		public Support.CommandDispatcher		CommandDispatcher
 		{
-			get { return this.command_dispatcher; }
+			get { return this.dispatcher; }
 		}
 		
 		public Window							CreationWindow
@@ -49,20 +49,11 @@ namespace Epsitec.Common.Widgets.Design
 		}
 		
 		
-		public bool								EnableDeleteSelection
+		public CommandState						StateDeleteSelection
 		{
 			get
 			{
-				return this.enable_delete_selection;
-			}
-			set
-			{
-				if (this.enable_delete_selection != value)
-				{
-					this.enable_delete_selection = value;
-					
-					this.SetWidgetEnable ("*.delete selection", value);
-				}
+				return this.state_delete_selection;
 			}
 		}
 		
@@ -72,7 +63,7 @@ namespace Epsitec.Common.Widgets.Design
 			Window window = new Window ();
 			
 			window.Name = name;
-			window.CommandDispatcher = this.command_dispatcher;
+			window.CommandDispatcher = this.dispatcher;
 			
 			return window;
 		}
@@ -125,7 +116,7 @@ namespace Epsitec.Common.Widgets.Design
 		{
 			System.Text.RegularExpressions.Regex regex = Support.RegexFactory.FromSimpleJoker (name);
 			
-			Widget[] widgets = Widget.FindAllCommandWidgets (regex, this.command_dispatcher);
+			Widget[] widgets = Widget.FindAllCommandWidgets (regex, this.dispatcher);
 			
 			for (int i = 0; i < widgets.Length; i++)
 			{
@@ -168,7 +159,7 @@ namespace Epsitec.Common.Widgets.Design
 				}
 			}
 			
-			this.EnableDeleteSelection = this.edit_selected.Count > 0;
+			this.StateDeleteSelection.Enabled = this.edit_selected.Count > 0;
 		}
 		
 		private void HandleEditorDeselecting(object sender, object o)
@@ -181,7 +172,7 @@ namespace Epsitec.Common.Widgets.Design
 			
 			this.edit_selected.Remove (o);
 			
-			this.EnableDeleteSelection = this.edit_selected.Count > 0;
+			this.StateDeleteSelection.Enabled = this.edit_selected.Count > 0;
 		}
 		
 		
@@ -218,7 +209,7 @@ namespace Epsitec.Common.Widgets.Design
 		}
 		
 		
-		protected Support.CommandDispatcher		command_dispatcher;
+		protected Support.CommandDispatcher		dispatcher;
 		protected bool							is_initialised;
 		
 		protected Panels.WidgetPalette			widget_palette;
@@ -228,6 +219,6 @@ namespace Epsitec.Common.Widgets.Design
 		protected System.Collections.ArrayList	edit_window_list;
 		protected System.Collections.ArrayList	edit_selected;
 		
-		protected bool							enable_delete_selection = true;
+		protected CommandState					state_delete_selection;
 	}
 }

@@ -57,6 +57,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.toolTip.Behaviour = ToolTipBehaviour.Normal;
 
 			this.menu = new HMenu();
+			this.menu.AppWindow = this.Window;
 			this.menu.Items.Add(new MenuItem("", "Fichier"));
 			this.menu.Items.Add(new MenuItem("", "Edition"));
 			this.menu.Items.Add(new MenuItem("", "Objets"));
@@ -64,6 +65,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.menu.Items.Add(new MenuItem("", "Aide"));
 
 			VMenu fileMenu = new VMenu();
+			fileMenu.AppWindow = this.Window;
 			this.MenuAdd(fileMenu, @"file:images/new1.icon", "New", "Nouveau", "Ctrl+N");
 			this.MenuAdd(fileMenu, @"file:images/open1.icon", "Open", "Ouvrir...", "Ctrl+O");
 			this.MenuAdd(fileMenu, @"file:images/save1.icon", "Save", "Enregistrer sous...", "Ctrl+S");
@@ -74,6 +76,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.collector.Add(fileMenu);
 
 			VMenu editMenu = new VMenu();
+			editMenu.AppWindow = this.Window;
 			this.MenuAdd(editMenu, @"file:images/undo1.icon", "Undo", "Annuler", "Ctrl+Z");
 			this.MenuAdd(editMenu, @"file:images/redo1.icon", "Redo", "Refaire", "Ctrl+Y");
 			this.MenuAdd(editMenu, @"", "", "", "");
@@ -88,6 +91,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.collector.Add(editMenu);
 
 			VMenu objMenu = new VMenu();
+			objMenu.AppWindow = this.Window;
 			this.MenuAdd(objMenu, @"file:images/deselect1.icon", "Deselect", "Deselectionner tout", "");
 			this.MenuAdd(objMenu, @"file:images/selectall1.icon", "SelectAll", "Tout selectionner", "");
 			this.MenuAdd(objMenu, @"file:images/selectinvert1.icon", "SelectInvert", "Inverser la selection", "");
@@ -101,6 +105,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.collector.Add(objMenu);
 
 			VMenu groupMenu = new VMenu();
+			groupMenu.AppWindow = this.Window;
 			this.MenuAdd(groupMenu, @"file:images/merge1.icon", "Merge", "Fusionner", "");
 			this.MenuAdd(groupMenu, @"file:images/group1.icon", "Group", "Associer", "");
 			this.MenuAdd(groupMenu, @"file:images/ungroup1.icon", "Ungroup", "Dissocier", "");
@@ -112,6 +117,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.collector.Add(groupMenu);
 
 			VMenu showMenu = new VMenu();
+			showMenu.AppWindow = this.Window;
 			this.MenuAdd(showMenu, @"file:images/grid1.icon", "Grid", "Grille magnetique", "");
 			this.MenuAdd(showMenu, @"file:images/mode1.icon", "Mode", "Tableau des objets", "");
 			this.MenuAdd(showMenu, @"", "", "", "");
@@ -123,6 +129,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.collector.Add(showMenu);
 
 			VMenu zoomMenu = new VMenu();
+			zoomMenu.AppWindow = this.Window;
 			this.MenuAdd(zoomMenu, @"file:images/zoommin1.icon", "ZoomMin", "Zoom minimal", "");
 			this.MenuAdd(zoomMenu, @"file:images/zoomdefault1.icon", "ZoomDefault", "Zoom 100%", "");
 			this.MenuAdd(zoomMenu, @"file:images/zoomsel1.icon", "ZoomSel", "Zoom selection", "");
@@ -135,6 +142,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.collector.Add(zoomMenu);
 
 			VMenu lookMenu = new VMenu();
+			lookMenu.AppWindow = this.Window;
 			string[] list = Epsitec.Common.Widgets.Adorner.Factory.AdornerNames;
 			foreach ( string name in list )
 			{
@@ -145,6 +153,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.collector.Add(lookMenu);
 
 			VMenu helpMenu = new VMenu();
+			helpMenu.AppWindow = this.Window;
 			helpMenu.Items.Add(new MenuItem("help", "", "Aide", "F1"));
 			helpMenu.Items.Add(new MenuItem("ctxhelp", "", "Aide contextuelle", ""));
 			helpMenu.Items.Add(new MenuItem("about", "", "A propos de...", ""));

@@ -23,6 +23,8 @@ namespace Epsitec.Common.Widgets
 			this.items = new MenuItemCollection(this);
 			this.timer = new Timer();
 			this.timer.TimeElapsed += new EventHandler(this.HandleTimerTimeElapsed);
+			
+			this.dispatcher = Support.CommandDispatcher.Default;
 		}
 		
 		#region Interface IBundleSupport
@@ -98,12 +100,33 @@ namespace Epsitec.Common.Widgets
 				
 				this.items = null;
 				this.timer = null;
+				
+				this.appWindow = null;
 			}
 			
 			base.Dispose(disposing);
 		}
 
 
+		public Window AppWindow
+		{
+			get { return this.appWindow; }
+			set { this.appWindow = value; }
+		}
+		
+		public override Support.CommandDispatcher CommandDispatcher
+		{
+			get
+			{
+				if (this.appWindow != null)
+				{
+					return this.appWindow.CommandDispatcher;
+				}
+				
+				return base.CommandDispatcher;
+			}
+		}
+		
 		// Retourne la hauteur standard d'un menu.
 		public override double DefaultHeight
 		{
@@ -823,6 +846,10 @@ namespace Epsitec.Common.Widgets
 		// Dessine le menu.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			System.Diagnostics.Debug.Assert (this.appWindow != null, "No AppWindow defined for menu.",
+				/**/						 "The menu you are trying to display has no associated application window.\n"+
+				/**/						 "Use AbstractMenu.AppWindow to define it when you setup the menu.");
+			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
@@ -911,6 +938,7 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Margins			shadow  = new Drawing.Margins(0,0,0,0);
 		protected MenuItemCollection		items;
 		protected Window					window;
+		protected Window					appWindow;
 		protected Timer						timer;
 		protected AbstractMenu				submenu;
 		protected AbstractMenu				parentMenu;
@@ -918,6 +946,7 @@ namespace Epsitec.Common.Widgets
 		protected double					iconWidth;
 		protected Drawing.Rectangle			parentRect;
 		protected MenuItem					delayedMenuItem;
+		protected Support.CommandDispatcher	dispatcher;
 		
 		protected static bool				menuDeveloped;
 		protected static AbstractMenu		menuFiltering;

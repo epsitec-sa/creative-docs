@@ -278,6 +278,7 @@ namespace Epsitec.Common.Widgets
 			this.tip = new ToolTip();
 
 			this.menu = new HMenu();
+			this.menu.AppWindow = this.window;
 			this.menu.Name = "base";
 			this.menu.Location = new Point(0, rect.Height-this.menu.DefaultHeight);
 			this.menu.Size = new Size(rect.Width, this.menu.DefaultHeight);
@@ -290,6 +291,7 @@ namespace Epsitec.Common.Widgets
 			this.menu.Parent = this.window.Root;
 
 			VMenu fileMenu = new VMenu();
+			fileMenu.AppWindow = this.window;
 			fileMenu.Name = "fileMenu";
 			fileMenu.Items.Add(new MenuItem ("new", "", "Nouveau", "Ctrl+N"));
 			fileMenu.Items.Add(new MenuItem ("open", @"file:images/open.png", "Ouvrir...", "Ctrl+O"));
@@ -307,6 +309,7 @@ namespace Epsitec.Common.Widgets
 			this.menu.Items[0].Submenu = fileMenu;
 
 			VMenu editMenu = new VMenu();
+			editMenu.AppWindow = this.window;
 			editMenu.Name = "editMenu";
 			editMenu.Items.Add(new MenuItem ("undo", "", "Annuler", "Ctrl+Z"));
 			editMenu.Items.Add(new MenuSeparator ());
@@ -317,6 +320,7 @@ namespace Epsitec.Common.Widgets
 			this.menu.Items[1].Submenu = editMenu;
 
 			VMenu showMenu = new VMenu();
+			showMenu.AppWindow = this.window;
 			showMenu.Name = "showMenu";
 			showMenu.Items.Add(new MenuItem ("addr", "", "Adresses", "F5"));
 			showMenu.Items.Add(new MenuItem ("objs", "", "Objets", "F6"));
@@ -327,6 +331,7 @@ namespace Epsitec.Common.Widgets
 			this.menu.Items[2].Submenu = showMenu;
 
 			VMenu optMenu = new VMenu();
+			optMenu.AppWindow = this.window;
 			optMenu.Name = "optMenu";
 			optMenu.Items.Add(new MenuItem ("misc", "", "Divers...", ""));
 			optMenu.Items.Add(new MenuItem ("print", @"file:images/print.png", "Impression...", ""));
@@ -335,6 +340,7 @@ namespace Epsitec.Common.Widgets
 			showMenu.Items[3].Submenu = optMenu;
 
 			VMenu setupMenu = new VMenu();
+			setupMenu.AppWindow = this.window;
 			setupMenu.Name = "setupMenu";
 			setupMenu.Items.Add(new MenuItem ("base", "", "Base...", ""));
 			setupMenu.Items.Add(new MenuItem ("global", "", "Global...", ""));
@@ -345,6 +351,7 @@ namespace Epsitec.Common.Widgets
 			showMenu.Items[4].Submenu = setupMenu;
 
 			VMenu debugMenu = new VMenu();
+			debugMenu.AppWindow = this.window;
 			debugMenu.Name = "debugMenu";
 			debugMenu.Items.Add(new MenuItem ("colorA", "", "Couleur A", ""));
 			debugMenu.Items.Add(new MenuItem ("colorB", "", "Couleur B", ""));
@@ -353,6 +360,7 @@ namespace Epsitec.Common.Widgets
 			this.menu.Items[3].Submenu = debugMenu;
 
 			VMenu debugMenu1 = new VMenu();
+			debugMenu1.AppWindow = this.window;
 			debugMenu1.Name = "debugMenu1";
 			debugMenu1.Items.Add(new MenuItem ("red", "", "Rouge", ""));
 			debugMenu1.Items.Add(new MenuItem ("green", "", "Vert", ""));
@@ -361,6 +369,7 @@ namespace Epsitec.Common.Widgets
 			debugMenu.Items[0].Submenu = debugMenu1;
 
 			VMenu debugMenu2 = new VMenu();
+			debugMenu2.AppWindow = this.window;
 			debugMenu2.Name = "debugMenu2";
 			debugMenu2.Items.Add(new MenuItem ("red", "", "Rouge", ""));
 			debugMenu2.Items.Add(new MenuItem ("green", "", "Vert", ""));
@@ -369,6 +378,7 @@ namespace Epsitec.Common.Widgets
 			debugMenu.Items[1].Submenu = debugMenu2;
 
 			VMenu debugMenu3 = new VMenu();
+			debugMenu3.AppWindow = this.window;
 			debugMenu3.Name = "debugMenu3";
 			debugMenu3.Items.Add(new MenuItem ("red", "", "Rouge", ""));
 			debugMenu3.Items.Add(new MenuItem ("green", "", "Vert", ""));
@@ -377,6 +387,7 @@ namespace Epsitec.Common.Widgets
 			debugMenu.Items[2].Submenu = debugMenu3;
 
 			VMenu helpMenu = new VMenu();
+			helpMenu.AppWindow = this.window;
 			helpMenu.Name = "helpMenu";
 			helpMenu.Items.Add(new MenuItem ("help", "", "Aide", "F1"));
 			helpMenu.Items.Add(new MenuItem ("ctxhelp", @"file:images/help.png", "Aide contextuelle", ""));
