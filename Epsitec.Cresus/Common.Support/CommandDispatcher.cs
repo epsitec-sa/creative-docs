@@ -38,6 +38,7 @@ namespace Epsitec.Common.Support
 			CommandDispatcher.numeric_regex     = new Regex (regex_2, options);
 			
 			CommandDispatcher.global_list = new System.Collections.ArrayList ();
+			CommandDispatcher.local_list  = new System.Collections.ArrayList ();
 			CommandDispatcher.default_dispatcher = new CommandDispatcher ("default");
 		}
 		
@@ -54,6 +55,7 @@ namespace Epsitec.Common.Support
 			if (private_dispatcher)
 			{
 				this.dispatcher_name = string.Format ("{0}_{1}", name, CommandDispatcher.generation++);
+				CommandDispatcher.local_list.Add (this);
 			}
 			else
 			{
@@ -162,6 +164,10 @@ namespace Epsitec.Common.Support
 		public static void ApplyAllValidationRules()
 		{
 			foreach (CommandDispatcher dispatcher in CommandDispatcher.global_list)
+			{
+				dispatcher.ApplyValidationRules ();
+			}
+			foreach (CommandDispatcher dispatcher in CommandDispatcher.local_list)
 			{
 				dispatcher.ApplyValidationRules ();
 			}
@@ -440,6 +446,10 @@ namespace Epsitec.Common.Support
 				{
 					CommandDispatcher.global_list.Remove (this);
 				}
+				if (CommandDispatcher.local_list.Contains (this))
+				{
+					CommandDispatcher.local_list.Remove (this);
+				}
 			}
 		}
 		
@@ -613,5 +623,6 @@ namespace Epsitec.Common.Support
 		static CommandDispatcher				default_dispatcher;
 		static int								generation = 1;
 		static System.Collections.ArrayList		global_list;
+		static System.Collections.ArrayList		local_list;
 	}
 }

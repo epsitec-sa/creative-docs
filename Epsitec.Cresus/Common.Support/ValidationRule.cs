@@ -125,11 +125,8 @@ namespace Epsitec.Common.Support
 		
 		public void MakeDirty(bool deep)
 		{
-			if (this.state != ValidationState.Dirty)
-			{
-				this.state = ValidationState.Dirty;
-				this.OnBecameDirty ();
-			}
+			this.state = ValidationState.Dirty;
+			this.OnBecameDirty ();
 			
 			if (deep)
 			{
@@ -541,7 +538,7 @@ namespace Epsitec.Common.Support
 		
 		
 		protected string							name;
-		protected ValidationState					state = ValidationState.Dirty;
+		protected ValidationState					state = ValidationState.Unknown;
 		protected ValidationState					old_state = ValidationState.Unknown;
 		protected ValidationRule.CommandStateList	command_states;
 		protected ValidationRule.ValidatorList		validators;

@@ -760,6 +760,21 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
+                <File
+                    RelPath = "Validators\AbstractTextValidator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Validators\AbstractValidator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Validators\RegexValidator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
             </Include>
         </Files>
     </CSHARP>
