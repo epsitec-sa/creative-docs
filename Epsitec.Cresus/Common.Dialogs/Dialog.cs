@@ -170,6 +170,11 @@ namespace Epsitec.Common.Dialogs
 			this.CommandDispatcher.AddValidator (new Support.ValidationRule (validator, command_states));
 		}
 		
+		public void AddController(object controller)
+		{
+			this.CommandDispatcher.RegisterController (controller);
+		}
+		
 		
 		public void StoreInitialData()
 		{

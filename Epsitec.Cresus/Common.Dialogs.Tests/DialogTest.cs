@@ -75,8 +75,6 @@ namespace Epsitec.Common.Dialogs
 			Dialog           dialog     = new Dialog ("dialog_with_data");
 			DialogController controller = new DialogController (dialog);
 			
-			dialog.CommandDispatcher.RegisterController (controller);
-			
 			Record record = new Record ("Rec", "dialog_with_data_strings");
 			
 			record.AddField ("UserName", "Test", new Types.StringType (), new Support.RegexConstraint (Support.PredefinedRegex.Alpha));
@@ -87,6 +85,7 @@ namespace Epsitec.Common.Dialogs
 			record.FieldChanged += new Support.EventHandler (this.HandleFieldChanged);
 			
 			dialog.AddRule (record.Validator, "Ok;Apply");
+			dialog.AddController (controller);
 			
 			Assertion.AssertEquals ("Test", record["UserName"].Value);
 			Assertion.AssertEquals (10, record["UserAge"].Value);
@@ -94,9 +93,7 @@ namespace Epsitec.Common.Dialogs
 			Assertion.AssertEquals (LoginOptions.None, record["LoginOptions"].Value);
 			
 //			ScriptWrapper script = new ScriptWrapper ();
-			
 //			script.Source = DialogTest.CreateSource (null);
-			
 //			dialog.CommandDispatcher.RegisterExtraDispatcher (script);
 			
 			dialog.Load ();
