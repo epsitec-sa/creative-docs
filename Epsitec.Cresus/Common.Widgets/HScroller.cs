@@ -7,8 +7,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public HScroller() : base(false)
 		{
-			this.arrowUp.Name = "Right";
-			this.arrowDown.Name = "Left";
+			this.ArrowUp.Name   = "Right";
+			this.ArrowDown.Name = "Left";
 		}
 		
 		public HScroller(Widget embedder) : this()
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double DefaultHeight
+		public override double				DefaultHeight
 		{
 			get
 			{
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.Size DefaultMinSize
+		public override Drawing.Size		DefaultMinSize
 		{
 			get
 			{
