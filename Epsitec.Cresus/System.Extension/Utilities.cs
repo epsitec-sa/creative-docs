@@ -166,7 +166,8 @@ namespace System
 		public static string[] Split(string text, char sep)
 		{
 			//	Comme string.Split, mais en mieux, en ce sens que cette méthode gère les
-			//	guillemets simples (') et doubles ("), ainsi que les tags <>.
+			//	guillemets simples (') et doubles ("), ainsi que les tags <>. Voir aussi
+			//	la méthode StringToTokens qui fait la même chose sans gérer les tags.
 			//
 			//	Si un séparateur se trouve entre guillemets ou dans un tag, il est sauté.
 			

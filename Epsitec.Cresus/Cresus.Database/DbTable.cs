@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Database
 		
 		public SqlTable CreateSqlTable(ITypeConverter type_converter)
 		{
-			SqlTable sql_table = new SqlTable (this.Name);
+			SqlTable sql_table = new SqlTable (this.CreateSqlName ());
 			
 			foreach (DbColumn db_column in this.columns)
 			{
@@ -243,6 +243,12 @@ namespace Epsitec.Cresus.Database
 			
 			return sql_table;
 		}
+		
+		public string CreateSqlName()
+		{
+			return DbSqlStandard.CreateSimpleSqlName (this.Name);
+		}
+		
 		
 		public DbKey CreateKeyFromRow(System.Data.DataRow row)
 		{

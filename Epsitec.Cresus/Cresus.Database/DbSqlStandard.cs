@@ -201,6 +201,55 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public static string CreateSimpleSqlName(string name)
+		{
+			//	Simplifie le nom passé en entrée pour ne conserver plus que des
+			//	majuscules, des chiffres et le "_". Les caractères non reconnus
+			//	sont remplacés par des "_".
+			
+			//	En début de nom, ni "_", ni un chiffre n'est permis; ces caractères
+			//	sont simplement supprimés.
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			for (int i = 0; i < name.Length; i++)
+			{
+				char c = name[i];
+				
+				if ((c >= 'a') && (c <= 'z'))
+				{
+					buffer.Append ((char)(c + 'A' - 'a'));
+					continue;
+				}
+				
+				if ((c >= 'A') && (c <= 'Z'))
+				{
+					buffer.Append (c);
+					continue;
+				}
+				
+				if ((c >= '0') && (c <= '9'))
+				{
+					if (buffer.Length > 0)
+					{
+						buffer.Append (c);
+					}
+					continue;
+				}
+				
+				//	Remplace les caractères inconnus par des "_".
+				
+				if (buffer.Length > 0)
+				{
+					buffer.Append ('_');
+				}
+			}
+			
+			return buffer.ToString ();
+		}
+		
+		
+		
 		protected static Regex		regex_name;
 		protected static Regex		regex_string;
 		protected static Regex		regex_number;
