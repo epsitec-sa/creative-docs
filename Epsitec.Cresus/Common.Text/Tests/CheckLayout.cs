@@ -252,9 +252,13 @@ namespace Epsitec.Common.Text.Tests
 			status  = context.Fit (ref breaks, 0);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.Ok);
-			Debug.Assert.IsTrue (breaks[0].Offset == 56);
-			Debug.Assert.IsTrue (breaks[0].Advance > 307.10);
-			Debug.Assert.IsTrue (breaks[0].Advance < 307.11);
+			Debug.Assert.IsTrue (breaks.Count == 2);
+			Debug.Assert.IsTrue (breaks[0].Offset == 53);
+			Debug.Assert.IsTrue (breaks[0].Advance > 291.09);
+			Debug.Assert.IsTrue (breaks[0].Advance < 291.10);
+			Debug.Assert.IsTrue (breaks[1].Offset == 56);
+			Debug.Assert.IsTrue (breaks[1].Advance > 307.10);
+			Debug.Assert.IsTrue (breaks[1].Advance < 307.11);
 			
 			context = new Layout.Context (story.TextContext, story_text, 0, -100, 14.0, 400, 0, 0, 40, 10);
 			status  = context.Fit (ref breaks, 0);

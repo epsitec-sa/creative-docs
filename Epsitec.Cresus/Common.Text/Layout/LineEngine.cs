@@ -20,7 +20,7 @@ namespace Epsitec.Common.Text.Layout
 			FitScratch scratch = new FitScratch ();
 			
 			scratch.Offset    = context.TextOffset;
-			scratch.Hyphenate = context.Hyphenate;
+			scratch.AddBreak  = context.Hyphenate;
 			scratch.FenceMinX = context.LineWidth-context.RightMargin-context.BreakFenceBefore;
 			scratch.FenceMaxX = context.LineWidth-context.RightMargin+context.BreakFenceAfter;
 			
@@ -40,7 +40,7 @@ namespace Epsitec.Common.Text.Layout
 						{
 							//	Nous sommes dans la zone sensible nécessitant la césure :
 							
-							scratch.Hyphenate = true;
+							scratch.AddBreak = true;
 						}
 						
 						//	Détermine la prochaine tranche de caractères contigus utilisant
@@ -202,73 +202,100 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 		
 		private bool FitRun(Layout.Context context, ref FitScratch scratch, ref Layout.BreakCollection result)
 		{
-			//	Analyse le texte constituté de caractères de style identique (même
-			//	fonte, même layout). Si une césure est requise, procède par petites
-			//	étapes progressives, sinon traite toute la tranche d'un coup.
+			//	Analyse le fragment de texte constituté de caractères de style
+			//	géométriquement identique (même fonte, même layout).
+			
+			//	Si une césure est requise, traite tous les points de découpe qui
+			//	sont possibles, sinon traite toute la tranche d'un coup.
 			
 			//	Retourne true s'il faut stopper immédiatement l'analyse (le texte
 			//	est trop long pour l'espace de justification disponible).
 			
-			bool hyphenate = scratch.Hyphenate;
-			
 			StretchProfile profile = null;
 			
-			for (int frag_length = 0; frag_length < scratch.RunLength; )
+			ulong[] text = scratch.Text;
+			
+			int offset      = scratch.TextStart;
+			int run_length  = scratch.RunLength;
+			int text_length = scratch.TextLength;
+			int frag_length = 0;
+			
+			while (frag_length < run_length)
 			{
-				if (hyphenate)
+				if (scratch.AddBreak && context.Hyphenate)
 				{
-					frag_length = this.GetNextFragmentLength (scratch.Text, scratch.TextStart, scratch.RunLength, frag_length);
+					frag_length = this.GetNextFragmentLength (text, offset, run_length, frag_length);
 				}
 				else
 				{
-					frag_length = scratch.RunLength;
+					frag_length = run_length;
 				}
 				
 				ulong    hyphen = scratch.Font.GetHyphen ();
 				ushort[] glyphs;
 				bool     can_break;
+				bool     add_break;
 				double   penalty;
 				
-				if (frag_length < scratch.RunLength)
+				if (frag_length < run_length)
 				{
 					//	Produit la césure manuellement (il faudrait faire mieux pour gérer
 					//	correctement des langues comme le norvégien ou l'ancien allemand
 					//	qui peuvent provoquer le dédoublement de certains caractères) :
 					
-					ulong save = scratch.Text[scratch.TextStart+frag_length];
-					scratch.Text[scratch.TextStart+frag_length] = hyphen;
+					int   len = frag_length + 1;
+					int   end = offset + frag_length;
+					ulong old = text[end];
+					text[end] = hyphen;
 					
-					glyphs    = scratch.Font.GenerateGlyphs (scratch.Text, scratch.TextStart, frag_length+1);
+					glyphs    = scratch.Font.GenerateGlyphs (text, offset, len);
 					can_break = true;
+					add_break = true;
 					penalty   = -1;
 					profile   = new StretchProfile (scratch.StretchProfile);
 					
-					profile.Add (scratch.Font, scratch.FontSize, scratch.Text, scratch.TextStart, frag_length+1);
+					profile.Add (scratch.Font, scratch.FontSize, text, offset, len);
 					
-					scratch.Text[scratch.TextStart+frag_length] = save;
+					text[end] = old;
+					
+					scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize);
 				}
 				else
 				{
-					//	Détermine si le texte se termine par des espaces. Si oui, il
-					//	ne faut pas en tenir compte dans le calcul de la pénalité, ni
-					//	dans le calcul de la largeur.
-					
-					int black_length = frag_length;
-					int white_length = 0;
-					
-					can_break = (scratch.RunLength == scratch.TextLength);
-					hyphenate = hyphenate && (scratch.WordBreakInfo == Unicode.BreakInfo.Optional);
-					penalty   = 1;
-					
 					//	TODO: gérer les espaces qui dépassent de la ligne...
 					
 					profile = scratch.StretchProfile;
-					glyphs  = scratch.Font.GenerateGlyphs(scratch.Text, scratch.TextStart, black_length);
+					glyphs  = scratch.Font.GenerateGlyphs(text, offset, frag_length);
 					
-					scratch.StretchProfile.Add (scratch.Font, scratch.FontSize, scratch.Text, scratch.TextStart, black_length);
+					scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize);
+					
+					if ((scratch.Advance+scratch.TextWidth > scratch.FenceMinX) &&
+						(scratch.AddBreak == false))
+					{
+						//	Le fragment de mot déborde dans la zone nécessitant une
+						//	découpe :
+						
+						scratch.AddBreak = true;
+						
+						if (context.Hyphenate)
+						{
+							//	Reprend au début du fragment de mot pour traiter les
+							//	points de césure :
+							
+							frag_length = 0;
+							continue;
+						}
+					}
+					
+					//	Détermine si une coupure de ligne est possible (comme c'est
+					//	le cas à la frontière de mots) :
+					
+					can_break = (run_length == text_length);
+					add_break = scratch.AddBreak && (scratch.WordBreakInfo == Unicode.BreakInfo.Optional);
+					penalty   = 1;
+					
+					scratch.StretchProfile.Add (scratch.Font, scratch.FontSize, text, offset, frag_length);
 				}
-				
-				scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize);
 				
 				if (scratch.Advance+scratch.TextWidth > scratch.FenceMaxX)
 				{
@@ -285,7 +312,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					scratch.LastBreakPenalty   = penalty;
 					scratch.LastStretchProfile = new StretchProfile (profile);
 					
-					if (hyphenate)
+					if (add_break)
 					{
 						double total_width   = context.AvailableWidth;
 						double total_penalty = scratch.LastBreakPenalty * profile.ComputePenalty (total_width, context.BreakFenceBefore, context.BreakFenceAfter);
@@ -387,7 +414,8 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			public double						LastBreakAdvance;
 			public double						LastBreakPenalty;
 			public StretchProfile				LastStretchProfile;
-			public bool							Hyphenate;
+			
+			public bool							AddBreak;
 			
 			public ulong[]						Text;
 			public int							TextStart;
