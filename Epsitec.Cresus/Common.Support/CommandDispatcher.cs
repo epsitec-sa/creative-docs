@@ -152,6 +152,16 @@ namespace Epsitec.Common.Support
 			return states;
 		}
 		
+		public CommandDispatcher.CommandState FindOrCreateCommandState(string command_name)
+		{
+			if (CommandDispatcher.find_command_state_callback == null)
+			{
+				throw new System.InvalidOperationException ("Missing default find callback.");
+			}
+			
+			return CommandDispatcher.find_command_state_callback (command_name, this);
+		}
+		
 		
 		public void ApplyValidationRules()
 		{
@@ -610,6 +620,20 @@ namespace Epsitec.Common.Support
 			get { return CommandDispatcher.default_dispatcher; }
 		}
 		
+		public delegate CommandDispatcher.CommandState FindCommandStateCallback(string name, CommandDispatcher dispatcher);
+		
+		public static FindCommandStateCallback	DefaultFindCommandStateCallback
+		{
+			get
+			{
+				return CommandDispatcher.find_command_state_callback;
+			}
+			set
+			{
+				CommandDispatcher.find_command_state_callback = value;
+			}
+		}
+		
 		
 		protected System.Collections.Hashtable	event_handlers = new System.Collections.Hashtable ();
 		protected System.Collections.ArrayList	command_states = new System.Collections.ArrayList ();
@@ -617,6 +641,7 @@ namespace Epsitec.Common.Support
 		protected string						dispatcher_name;
 		protected ValidationRule				validation_rules;
 		
+		static FindCommandStateCallback			find_command_state_callback;
 		static Regex							command_arg_regex;
 		static Regex							numeric_regex;
 		static System.Type						command_attr_type  = typeof (CommandAttribute);

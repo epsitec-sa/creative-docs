@@ -51,6 +51,13 @@ namespace Epsitec.Common.Designer.Panels
 			{
 				return this.dispatcher;
 			}
+			set
+			{
+				if (this.dispatcher != value)
+				{
+					this.SetCommandDispatcher (value);
+				}
+			}
 		}
 		
 		

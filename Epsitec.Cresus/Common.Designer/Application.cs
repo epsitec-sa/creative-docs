@@ -39,6 +39,10 @@ namespace Epsitec.Common.Designer
 				
 				return this.dispatcher;
 			}
+			set
+			{
+				throw new System.InvalidOperationException ("CommandDispatcher cannot be set.");
+			}
 		}
 		
 		
