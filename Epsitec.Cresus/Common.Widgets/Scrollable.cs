@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Statut : OK/PA, 16.01.2004
 
 namespace Epsitec.Common.Widgets
 {
@@ -271,9 +271,6 @@ namespace Epsitec.Common.Widgets
 			
 			this.panel_aperture = new Drawing.Rectangle (0, margin_y, vis_dx, vis_dy);
 			this.panel_size     = new Drawing.Size (panel_dx, panel_dy);
-			
-//			System.Diagnostics.Debug.WriteLine (string.Format ("Panel desired size: {0}, set to size {1}, surface {2}", this.panel.DesiredSize, this.panel_size, this.panel.SurfaceSize));
-			
 			
 			this.panel.Bounds   = new Drawing.Rectangle (-offset_x, total_dy - panel_dy + offset_y, panel_dx, panel_dy);
 			this.panel.Aperture = this.panel.MapParentToClient (this.panel_aperture);

@@ -1694,6 +1694,9 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Rectangle GetClipStackBounds()
 		{
+			//	Calcule le rectangle de clipping (relatif au widget) en tenant compte des
+			//	rectangles de clipping de tous les parents.
+			
 			Drawing.Rectangle clip = this.GetClipBounds ();
 			
 			if (this.parent != null)
