@@ -36,7 +36,7 @@ namespace Epsitec.Common.Widgets
 			this.scroller.IsInverted = true;
 			this.scroller.Parent = this;
 			//this.scroller.Dock = DockStyle.Right;
-			this.scroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
+			this.scroller.ValueChanged += new Support.EventHandler(this.HandleScrollerValueChanged);
 			this.scroller.Hide();
 		}
 		
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.scroller.ValueChanged -= new EventHandler(this.HandleScrollerValueChanged);
+				this.scroller.ValueChanged -= new Support.EventHandler(this.HandleScrollerValueChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -578,8 +578,8 @@ namespace Epsitec.Common.Widgets
 		#endregion
 
 
-		public event EventHandler				SelectedIndexChanged;
-		public event EventHandler				Validation;
+		public event Support.EventHandler		SelectedIndexChanged;
+		public event Support.EventHandler		Validation;
 		
 
 		protected static readonly double		Margin = 3;
