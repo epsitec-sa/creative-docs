@@ -519,6 +519,9 @@ namespace Epsitec.Common.Support
 				
 				case ResourceFieldType.List:
 					return this.CreateFieldAsList (more as System.Collections.ICollection);
+				
+				case ResourceFieldType.Bundle:
+					return this.CreateFieldAsBundle (more as ResourceBundle);
 			}
 			
 			throw new System.NotImplementedException (string.Format ("{0} support not implemented.", type));
@@ -564,6 +567,18 @@ namespace Epsitec.Common.Support
 			return field;
 		}
 		
+		protected Field CreateFieldAsBundle(ResourceBundle bundle)
+		{
+			if (bundle == null)
+			{
+				throw new System.ArgumentNullException ("bundle", "Bundle field needs a valid bundle.");
+			}
+			
+			Field field = new Field (this, bundle.CreateXmlNode (this.XmlDocument));
+			
+			return field;
+		}
+		
 		
 		public static bool SplitTarget(string target, out string target_bundle, out string target_field)
 		{
@@ -583,7 +598,7 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 		
-		public static string ExtractName(string sort_name)
+		public static string ExtractSortName(string sort_name)
 		{
 			int pos = sort_name.IndexOf ('/');
 			
@@ -593,6 +608,20 @@ namespace Epsitec.Common.Support
 			}
 			
 			return sort_name.Substring (pos+1);
+		}
+		
+		public static string CreateSortName(string name, int rank, int num_digits)
+		{
+			string rank_text = rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			
+			if (rank_text.Length > num_digits)
+			{
+				throw new ResourceException (string.Format ("Cannot create a sort name using '{0}/{1}', maximum {2} digits not respected.", name, rank_text, num_digits));
+			}
+
+			string sort_name = string.Concat (rank_text, "/", name);
+			
+			return sort_name.PadLeft (name.Length + num_digits + 1, '0');
 		}
 		
 		

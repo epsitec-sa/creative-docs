@@ -54,9 +54,9 @@ namespace Epsitec.Common.Widgets
 			
 			HMenu menu = new HMenu();
 			menu.Host = window;
-			menu.Location = new Point(0, window.ClientSize.Height-menu.DefaultHeight);
-			menu.Size = new Size(window.ClientSize.Width, menu.DefaultHeight);
-			menu.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
+//			menu.Location = new Point(0, window.ClientSize.Height-menu.DefaultHeight);
+//			menu.Size = new Size(window.ClientSize.Width, menu.DefaultHeight);
+			menu.Dock = DockStyle.Top;
 			menu.Items.Add(new MenuItem("file", "Fichier"));
 			menu.Items.Add(new MenuItem("edit", "Edition"));
 			menu.Items.Add(new MenuItem("display", "Affichage"));
@@ -172,9 +172,9 @@ namespace Epsitec.Common.Widgets
 			menu.Items[4].Submenu = helpMenu;
 
 			HToolBar tb = new HToolBar();
-			tb.Location = new Point(0, window.ClientSize.Height-menu.DefaultHeight-tb.DefaultHeight);
-			tb.Width = window.ClientSize.Width;
-			tb.Anchor = AnchorStyles.Top|AnchorStyles.LeftAndRight;
+//			tb.Location = new Point(0, window.ClientSize.Height-menu.DefaultHeight-tb.DefaultHeight);
+//			tb.Width = window.ClientSize.Width;
+			tb.Dock  = DockStyle.Top;
 			window.Root.Children.Add(tb);
 
 			tb.Items.Add(new IconButton("open", @"file:images/open.icon"));
@@ -195,9 +195,9 @@ namespace Epsitec.Common.Widgets
 			tb.Items.Add(new IconButton("paste", @"file:images/paste.icon"));
 
 			StatusBar sb = new StatusBar();
-			sb.Location = new Point(0, 0);
-			sb.Width = window.ClientSize.Width;
-			sb.Anchor = AnchorStyles.Bottom|AnchorStyles.LeftAndRight;
+//			sb.Location = new Point(0, 0);
+//			sb.Width = window.ClientSize.Width;
+			sb.Dock = DockStyle.Bottom;
 			StatusField sf1 = new StatusField();
 			sf1.Text = "Statuts 1";
 			sb.Items.Add(sf1);
@@ -207,45 +207,49 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(sb);
 
 			Button a = new Button();
-			a.Location = new Point(10, 30);
+//			a.Location = new Point(10, 30);
 			a.Width = 75;
 			a.Text = "OK";
 			a.ButtonStyle = ButtonStyle.DefaultAccept;
-			a.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			a.Anchor = AnchorStyles.BottomLeft;
+			a.AnchorMargins = new Margins(10, 0, 0, 30);
 			a.TabIndex = 20;
 			a.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(a);
 			tip.SetToolTip(a, "C'est d'accord, tout baigne");
 
 			Button b = new Button();
-			b.Location = new Point(95, 30);
+//			b.Location = new Point(95, 30);
 			b.Width = 75;
 			b.Text = "<m>A</m>nnuler";
-			b.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			b.Anchor = AnchorStyles.BottomLeft;
+			b.AnchorMargins = new Margins(95, 0, 0, 30);
 			b.TabIndex = 21;
 			b.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(b);
 			tip.SetToolTip(b, "Annule tout<br/>Deuxieme ligne, juste pour voir !");
 
 			Button c = new Button();
-			c.Location = new Point(95+150, 30);
+//			c.Location = new Point(95+150, 30);
 			c.Width = 75;
 			c.Text = "Ai<m>d</m>e";
 			c.SetEnabled(false);
-			c.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			c.Anchor = AnchorStyles.BottomLeft;
+			c.AnchorMargins = new Margins(245, 0, 0, 30);
 			c.TabIndex = 22;
 			c.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(c);
 			tip.SetToolTip(c, "Au secours !");
 
 			StaticText st = new StaticText();
-			st.Location = new Point(10, 265);
+//			st.Location = new Point(10, 265);
 			st.Width = 150;
 			st.Text = @"Choix du <b>look</b> de l'<i>interface</i> :";
-			st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			st.Anchor = AnchorStyles.TopLeft;
+			st.AnchorMargins = new Margins(10, 0, 340 - st.Height - 265, 0);
 			window.Root.Children.Add(st);
 
-			CreateListLook(window.Root.Children, new Point(10, 195), tip, 1);
+			this.CreateListLook(window.Root, 10, 80, tip, 1);
 			
 			Tag tag1 = new Tag("ExecuteTag", "TestTag");
 			tag1.Bounds = new Drawing.Rectangle(115, 241, 18, 18);
@@ -276,20 +280,21 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(tag5, "Je suis un petit <i>smart tag</i> maison bleu.");
 
 			StaticText link = new StaticText();
-			link.Location = new Point(360, 36);
+//			link.Location = new Point(360, 36);
 			link.Width = 200;
 			link.Text = @"Visitez notre <a href=""http://www.epsitec.ch"">site web</a> !";
-			link.Anchor = AnchorStyles.Bottom|AnchorStyles.Right;
+			link.Anchor = AnchorStyles.BottomRight;
+			link.AnchorMargins = new Margins(0, 600 - 360 - 200, 0, 36);
 			link.HypertextClicked += new MessageEventHandler(link_HypertextClicked);
 			window.Root.Children.Add(link);
 
 			GroupBox box = new GroupBox();
-			box.Location = new Point(10, 100);
+//			box.Location = new Point(10, 100);
 			box.Size = new Size(100, 75);
 			box.Text = "Couleur";
-			box.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			box.Anchor = AnchorStyles.BottomLeft;
+			box.AnchorMargins = new Margins(10, 0, 0, 100);
 			box.TabIndex = 2;
-//			box.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			window.Root.Children.Add(box);
 
 			RadioButton radio1 = new RadioButton();
@@ -298,7 +303,6 @@ namespace Epsitec.Common.Widgets
 			radio1.Text = "<font color=\"#ff0000\"><m>R</m>ouge</font>";
 			radio1.ActiveState = WidgetState.ActiveYes;
 			radio1.Group = "RGB";
-			radio1.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			radio1.TabIndex = 1;
 			radio1.Index = 1;
 			radio1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -311,7 +315,6 @@ namespace Epsitec.Common.Widgets
 			radio2.Width = 80;
 			radio2.Text = "<font color=\"#00ff00\"><m>V</m>ert</font>";
 			radio2.Group = "RGB";
-			radio2.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			radio2.TabIndex = 1;
 			radio2.Index = 2;
 			radio2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -324,7 +327,6 @@ namespace Epsitec.Common.Widgets
 			radio3.Width = 80;
 			radio3.Text = "<font color=\"#0000ff\"><m>B</m>leu</font>";
 			radio3.Group = "RGB";
-			radio3.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			radio3.TabIndex = 1;
 			radio3.Index = 3;
 			radio3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -333,11 +335,12 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(radio3, "Couleur bleue");
 
 			CheckButton check = new CheckButton();
-			check.Location = new Point(10, 70);
+//			check.Location = new Point(10, 70);
 			check.Width = 100;
 			check.Text = "<m>C</m>ochez ici";
 			check.ActiveState = WidgetState.ActiveYes;
-			check.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			check.Anchor = AnchorStyles.BottomLeft;
+			check.AnchorMargins = new Margins(10, 0, 0, 70);
 			check.TabIndex = 3;
 			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			check.Clicked += new MessageEventHandler(this.HandleCheck);
@@ -345,31 +348,33 @@ namespace Epsitec.Common.Widgets
 			tip.SetToolTip(check, "Juste pour voir");
 
 			VScroller scrollv = new VScroller();
-			scrollv.Location = new Point(120, 70);
+//			scrollv.Location = new Point(120, 70);
 			scrollv.Size = new Size(17, 120);
 			scrollv.MaxValue = 10;
 			scrollv.VisibleRangeRatio = 0.3M;
 			scrollv.Value = 1;
 			scrollv.SmallChange = 1;
 			scrollv.LargeChange = 2;
-			scrollv.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			scrollv.Anchor = AnchorStyles.Left | AnchorStyles.TopAndBottom;
+			scrollv.AnchorMargins = new Margins(120, 0, 340 - 120 - 70, 70);
 			window.Root.Children.Add(scrollv);
 			tip.SetToolTip(scrollv, "Ascenseur vertical");
 
 			HScroller scrollh = new HScroller();
-			scrollh.Location = new Point(140, 70);
+//			scrollh.Location = new Point(140, 70);
 			scrollh.Size = new Size(120, 17);
 			scrollh.MaxValue = 10;
 			scrollh.VisibleRangeRatio = 0.7M;
 			scrollh.Value = 1;
 			scrollh.SmallChange = 1;
 			scrollh.LargeChange = 2;
-			scrollh.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			scrollh.Anchor = AnchorStyles.BottomLeft;
+			scrollh.AnchorMargins = new Margins(140, 0, 0, 70);
 			window.Root.Children.Add(scrollh);
 			tip.SetToolTip(scrollh, "Ascenseur horizontal");
 
 			TextFieldCombo combo = new TextFieldCombo();
-			combo.Location = new Point(160, 220);
+//			combo.Location = new Point(160, 220);
 			combo.Width = 100;
 			combo.Text = "Janvier";
 			combo.Cursor = combo.Text.Length;
@@ -393,23 +398,25 @@ namespace Epsitec.Common.Widgets
 			combo.Items.Add("Samedi");
 			combo.Items.Add("Dimanche");
 			combo.Items.Add("JusteUnLongTextePourVoir");
-			combo.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			combo.Anchor = AnchorStyles.BottomLeft;
+			combo.AnchorMargins = new Margins(160, 0, 0, 220);
 			combo.TabIndex = 10;
 			combo.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(combo);
 
 			TextField text = new TextField();
-			text.Location = new Point(160, 190);
+//			text.Location = new Point(160, 190);
 			text.Width = 100;
 			text.Text = "Bonjour";
 			text.Cursor = text.Text.Length;
-			text.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			text.Anchor = AnchorStyles.BottomLeft;
+			text.AnchorMargins = new Margins(160, 0, 0, 190);
 			text.TabIndex = 11;
 			text.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(text);
 
 			TextFieldUpDown tud = new TextFieldUpDown();
-			tud.Location = new Point(160, 160);
+//			tud.Location = new Point(160, 160);
 			tud.Width = 45;
 			
 			tud.Value        =   5.00M;
@@ -419,38 +426,42 @@ namespace Epsitec.Common.Widgets
 			tud.Step         =   2.50M;
 			tud.Resolution   =   0.25M;
 			
-			tud.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			tud.Anchor = AnchorStyles.BottomLeft;
+			tud.AnchorMargins = new Margins(160, 0, 0, 160);
 			tud.TabIndex = 12;
 			tud.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(tud);
 
 			TextFieldSlider slider = new TextFieldSlider();
-			slider.Location = new Point(215, 160);
+//			slider.Location = new Point(215, 160);
 			slider.Width = 45;
 			slider.Value = 50;
 			slider.MinValue = -100;
 			slider.MaxValue = 100;
 			slider.Step = 10;
 			slider.Resolution = 5;
-			slider.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			slider.Anchor = AnchorStyles.BottomLeft;
+			slider.AnchorMargins = new Margins(215, 0, 0, 160);
 			slider.TabIndex = 13;
 			slider.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(slider);
 
 			TextFieldMulti multi = new TextFieldMulti();
-			multi.Location = new Point(160, 100);
+//			multi.Location = new Point(160, 100);
 			multi.Size = new Size(100, 50);
 			multi.Text = "Ceci est une petite phrase ridicule.<br/>Mais elle est assez longue pour faire des essais.";
-			multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			multi.Anchor = AnchorStyles.BottomLeft;
+			multi.AnchorMargins = new Margins(160, 0, 0, 100);
 			multi.TabIndex = 14;
 			multi.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			window.Root.Children.Add(multi);
 
 			TabBook tab = new TabBook();
 			tab.Arrows = TabBookArrows.Right;
-			tab.Location = new Point(280, 70);
-			tab.Size = new Size(300, 180);
-			tab.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+//			tab.Location = new Point(280, 70);
+//			tab.Size = new Size(300, 180);
+			tab.Anchor = AnchorStyles.All;
+			tab.AnchorMargins = new Margins(280, 600-280-300, 340-180-70, 70);
 			tab.HasMenuButton = true;
 			tab.HasCloseButton = true;
 			tab.TabIndex = 15;
@@ -461,14 +472,14 @@ namespace Epsitec.Common.Widgets
 
 			// Crée l'onglet 1.
 			TabPage page1 = new TabPage();
-			page1.Bounds = inside;
+//			page1.Bounds = inside;
 			page1.TabTitle = "<m>P</m>remier";
 			page1.TabIndex = 1;
 			page1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page1);
 
 			ScrollList sl = new ScrollList();
-			sl.Location = new Point(20, 10);
+//			sl.Location = new Point(20, 10);
 			sl.Size = new Size(90, 100);
 			sl.AdjustHeight(ScrollAdjustMode.MoveDown);
 			sl.Items.Add("Janvier");
@@ -486,28 +497,31 @@ namespace Epsitec.Common.Widgets
 			sl.SelectedIndex = 5;  // sélectionne juin
 			sl.ShowSelected(ScrollShowMode.Center);
 			sl.Anchor = AnchorStyles.TopAndBottom|AnchorStyles.Left;
+			sl.AnchorMargins = new Margins(10, 0, 10, 10);
 			sl.TabIndex = 1;
 			sl.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			page1.Children.Add(sl);
 			tip.SetToolTip(sl, "Choix du mois");
 
 			StaticText st2 = new StaticText();
-			st2.Location = new Point(160, 120);
+//			st2.Location = new Point(160, 120);
 			st2.Width = 90;
-			st2.Text = "Non editable :";
-			st2.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			st2.Text = "Non éditable :";
+			st2.Anchor = AnchorStyles.TopLeft;
+			st2.AnchorMargins = new Margins(160, 0, 30, 0);
 			page1.Children.Add(st2);
 
 			TextField textfix = new TextField();
-			textfix.Location = new Point(160, 80);
+//			textfix.Location = new Point(160, 80);
 			textfix.Width = 100;
 			textfix.Text = "Texte fixe";
 			textfix.IsReadOnly = true;
-			textfix.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			textfix.Anchor = AnchorStyles.TopLeft;
+			textfix.AnchorMargins = new Margins(160, 0, 50, 0);
 			page1.Children.Add(textfix);
 
 			TextFieldCombo combofix = new TextFieldCombo();
-			combofix.Location = new Point(160, 50);
+//			combofix.Location = new Point(160, 50);
 			combofix.Width = 100;
 			combofix.Text = "Mardi";
 			combofix.IsReadOnly = true;
@@ -518,15 +532,16 @@ namespace Epsitec.Common.Widgets
 			combofix.Items.Add("Vendredi");
 			combofix.Items.Add("Samedi");
 			combofix.Items.Add("Dimanche");
-			combofix.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			combofix.Anchor = AnchorStyles.TopLeft;
+			combofix.AnchorMargins = new Margins(160, 0, 80, 0);
 			combofix.TabIndex = 2;
 			combofix.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			page1.Children.Add(combofix);
 
 			// Crée l'onglet 2.
 			TabPage page2 = new TabPage();
-			page2.Bounds = inside;
-			page2.TabTitle = "<m>D</m>euxieme";
+//			page2.Bounds = inside;
+			page2.TabTitle = "<m>D</m>euxième";
 			page2.TabIndex = 2;
 			page2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page2);
@@ -542,8 +557,8 @@ namespace Epsitec.Common.Widgets
 			table.StyleV |= CellArrayStyle.SelectLine;
 			table.StyleV |= CellArrayStyle.SelectMulti;
 			table.StyleV |= CellArrayStyle.Sort;
-			table.Location = new Point(10, 10);
-			table.Size = new Size(inside.Width-20, inside.Height-20);
+//			table.Location = new Point(10, 10);
+//			table.Size = new Size(inside.Width-20, inside.Height-20);
 			table.SetArraySize(5, 12);
 
 			table.SetHeaderTextH(0, "A");
@@ -565,7 +580,8 @@ namespace Epsitec.Common.Widgets
 					table[x,y].Insert(tx);
 				}
 			}
-			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			table.Anchor = AnchorStyles.All;
+			table.AnchorMargins = new Margins(10, 10, 10, 10);
 			table.TabIndex = 1;
 			table.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			page2.Children.Add(table);
@@ -573,7 +589,7 @@ namespace Epsitec.Common.Widgets
 			// Crée l'onglet 3.
 			TabPage page3 = new TabPage();
 			page3.Bounds = inside;
-			page3.TabTitle = "<m>T</m>roisieme";
+			page3.TabTitle = "<m>T</m>roisième";
 			page3.TabIndex = 3;
 			page3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page3);
@@ -581,7 +597,7 @@ namespace Epsitec.Common.Widgets
 			// Crée l'onglet 4.
 			TabPage page4 = new TabPage();
 			page4.Bounds = inside;
-			page4.TabTitle = "<m>Q</m>uatrieme";
+			page4.TabTitle = "<m>Q</m>uatrième";
 			page4.TabIndex = 4;
 			page4.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page4);
@@ -589,7 +605,7 @@ namespace Epsitec.Common.Widgets
 			// Crée l'onglet 5.
 			TabPage page5 = new TabPage();
 			page5.Bounds = inside;
-			page5.TabTitle = "<m>C</m>inquieme";
+			page5.TabTitle = "<m>C</m>inquième";
 			page5.TabIndex = 5;
 			page5.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page5);
@@ -597,7 +613,7 @@ namespace Epsitec.Common.Widgets
 			// Crée l'onglet 6.
 			TabPage page6 = new TabPage();
 			page6.Bounds = inside;
-			page6.TabTitle = "<m>S</m>ixieme";
+			page6.TabTitle = "<m>S</m>ixième";
 			page6.TabIndex = 6;
 			page6.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			tab.Items.Add(page6);
@@ -640,7 +656,7 @@ namespace Epsitec.Common.Widgets
 			StaticText     stats = new StaticText();
 			
 			multi.Name = "Multi";
-			multi.Bounds = new Rectangle(10, 30, 380, 260);
+//			multi.Bounds = new Rectangle(10, 30, 380, 260);
 			multi.MaxChar = 10000;
 			
 			string s = "";
@@ -651,14 +667,17 @@ namespace Epsitec.Common.Widgets
 			s += "<b>FIN</b>";
 			
 			multi.Text = s;
-			multi.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			multi.Anchor = AnchorStyles.All;
+			multi.AnchorMargins = new Margins(10, 10, 10, 30);
 			multi.Parent = window.Root;
 			multi.SetProperty("stats", stats);
 			multi.SelectionChanged += new EventHandler(this.HandleMultiSelectionOrCursorChanged);
 			multi.CursorChanged    += new EventHandler(this.HandleMultiSelectionOrCursorChanged);
 			
-			stats.Bounds = new Rectangle(10, 2, 380, 26);
+//			stats.Bounds = new Rectangle(10, 2, 380, 26);
+			stats.Height = 26;
 			stats.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
+			stats.AnchorMargins = new Margins(10, 10, 0, 2);
 			stats.Parent = window.Root;
 			
 			window.Root.DebugActive = true;
@@ -682,23 +701,19 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerTab1";
 			window.WindowClosed += new EventHandler(this.HandleWindowClosed);
+			window.Root.DockPadding = new Margins(10, 10, 10, 10);
 
 			TabBook tb = new TabBook();
 			tb.Arrows = TabBookArrows.Right;
 			tb.Name = "TabBook";
-			tb.Location = new Point(10, 10);
-			tb.Size = new Size(380, 280);
 			tb.Text = "";
-			tb.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			tb.Dock = DockStyle.Fill;
 			window.Root.Children.Add(tb);
 			this.tabBook = tb;
-
-			Rectangle inside = tb.InnerBounds;
 
 			// Crée l'onglet 1.
 			TabPage page1 = new TabPage();
 			page1.Name = "p1";
-			page1.Bounds = inside;
 			page1.TabTitle = "<m>P</m>remier";
 			tb.Items.Add(page1);
 
@@ -708,7 +723,6 @@ namespace Epsitec.Common.Widgets
 			a.Size = new Size(75, 24);
 			a.Text = "OK";
 			a.ButtonStyle = ButtonStyle.DefaultAccept;
-			//a.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			page1.Children.Add(a);
 
 			Button b = new Button();
@@ -716,7 +730,6 @@ namespace Epsitec.Common.Widgets
 			b.Location = new Point(95, 10);
 			b.Size = new Size(75, 24);
 			b.Text = "<m>A</m>nnuler";
-			//b.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			page1.Children.Add(b);
 
 			TextFieldMulti multi = new TextFieldMulti();
@@ -724,33 +737,31 @@ namespace Epsitec.Common.Widgets
 			multi.Location = new Point(10, 45);
 			multi.Size = new Size(350, 200);
 			multi.Text = "1. Introduction<br/><br/>Les onglets permettent de mettre beaucoup de widgets sur une petite surface, ce qui s'avère extrèmement utile et diablement pratique.<br/><br/>2. Conclusion<br/><br/>Un truc chouette, qui sera certainement très utile dans le nouveau Crésus !";
-			//multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			multi.Anchor = AnchorStyles.All;
+			multi.AnchorMargins = new Margins(10, 10, 20, 40);
 			page1.Children.Add(multi);
 
 			// Crée l'onglet 2.
 			TabPage page2 = new TabPage();
 			page2.Name = "p2";
-			page2.Bounds = inside;
-			page2.TabTitle = "<m>D</m>euxieme";
+			page2.TabTitle = "<m>D</m>euxième";
 			tb.Items.Add(page2);
 
 			VScroller scrollv = new VScroller();
 			scrollv.Name = "Scroller";
 			scrollv.Location = new Point(10, 10);
-			scrollv.Size = new Size(17, inside.Height-20);
+			scrollv.Size = new Size(17, tb.InnerBounds.Height-20);
 			scrollv.MaxValue = 10;
 			scrollv.VisibleRangeRatio = 0.3M;
 			scrollv.Value = 1;
 			scrollv.SmallChange = 1;
 			scrollv.LargeChange = 2;
-			//scrollv.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			page2.Children.Add(scrollv);
 
 			// Crée l'onglet 3.
 			TabPage page3 = new TabPage();
 			page3.Name = "p3";
-			page3.Bounds = inside;
-			page3.TabTitle = "<m>T</m>roisieme";
+			page3.TabTitle = "<m>T</m>roisième";
 			tb.Items.Add(page3);
 
 			StaticText st = new StaticText();
@@ -758,30 +769,26 @@ namespace Epsitec.Common.Widgets
 			st.Location = new Point(50, 130);
 			st.Size = new Size(200, 15);
 			st.Text = "<b>Onglet</b> volontairement <i>vide</i> !";
-			//st.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			page3.Children.Add(st);
 
 			// Crée l'onglet 4.
 			TabPage page4 = new TabPage();
 			page4.Name = "p4";
-			page4.Bounds = inside;
 			page4.TabTitle = "<m>L</m>ook";
 			tb.Items.Add(page4);
 
-			CreateListLook(page4.Children, new Point(10, 95), null, -1);
+			this.CreateListLook(page4, 10, 10, null, -1);
 
 			StaticText link = new StaticText();
 			link.Name = "Link";
 			link.Location = new Point(10, 50);
 			link.Size = new Size(200, 15);
 			link.Text = "Voir sur <a href=\"www.epsitec.ch\">www.epsitec.ch</a> !";
-			//link.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			page4.Children.Add(link);
 
 			// Crée l'onglet 5.
 			TabPage page5 = new TabPage();
 			page5.Name = "p5";
-			page5.Bounds = inside;
 			page5.TabTitle = "<m>A</m>dd";
 			tb.Items.Add(page5);
 
@@ -791,29 +798,25 @@ namespace Epsitec.Common.Widgets
 			add.Size = new Size(140, 24);
 			add.Text = "<m>A</m>jouter un onglet";
 			add.ButtonStyle = ButtonStyle.DefaultAccept;
-			add.Clicked += new MessageEventHandler(HandleAdd);
-			//add.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
+			add.Clicked += new MessageEventHandler(this.HandleAdd);
 			page5.Children.Add(add);
 
 #if true
 			// Crée l'onglet 6.
 			TabPage page6 = new TabPage();
 			page6.Name = "p6";
-			page6.Bounds = inside;
 			page6.TabTitle = "Titre long";
 			tb.Items.Add(page6);
 
 			// Crée l'onglet 7.
 			TabPage page7 = new TabPage();
 			page7.Name = "p7";
-			page7.Bounds = inside;
 			page7.TabTitle = "Titre assez long";
 			tb.Items.Add(page7);
 
 			// Crée l'onglet 8.
 			TabPage page8 = new TabPage();
 			page8.Name = "p8";
-			page8.Bounds = inside;
 			page8.TabTitle = "Titre encore plus long";
 			tb.Items.Add(page8);
 #endif
@@ -839,87 +842,6 @@ namespace Epsitec.Common.Widgets
 			this.tabBook.Items.Add(page);
 		}
 
-		[Test] public void CheckAdornerTab2()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(400, 300);
-			window.Text = "CheckAdornerTab2";
-
-			TabBook tb = new TabBook();
-			tb.Arrows = TabBookArrows.Right;
-			tb.Name = "TabBook";
-			tb.Location = new Point(10, 10);
-			tb.Size = new Size(380, 280);
-			tb.Text = "";
-			tb.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			window.Root.Children.Add(tb);
-
-			Rectangle inside = tb.InnerBounds;
-
-			string[] texts =
-			{
-#if true
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>DbTable.[1.0]</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>DbTable.[2.0]</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>DbTable.[3.0]</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>DbTable.[5.0]</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>DbTable.[4.0]</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-				"Table <i>CR_TABLE_DEF</i>...",
-#else
-				"Janvier",
-				"Fevrier",
-				"Mars",
-				"Avril",
-				"Mai",
-				"Juin",
-				"Juillet",
-				"Aout",
-				"Septembre",
-				"Octobre",
-				"Novembre",
-				"Decembre",
-				"Lundi",
-				"Mardi",
-				"Mercredi",
-				"Jeudi",
-				"Vendredi",
-				"Samedi",
-				"Dimanche",
-				"Blabla",
-				"Coucou",
-#endif
-			};
-
-			for ( int i=0 ; i<21 ; i++ )
-			{
-				TabPage page = new TabPage();
-				page.Bounds = inside;
-				page.TabTitle = texts[i];
-				tb.Items.Add(page);
-				if ( i == 20 )  tb.ActivePage = page;
-			}
-
-			window.FocusedWidget = tb;
-
-			window.Show();
-		}
-
 		[Test] public void CheckAdornerCell1()
 		{
 			Window window = new Window();
@@ -927,13 +849,14 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerCell1";
 
-			CreateListLook(window.Root.Children, new Point(10, 230), null, -1);
+			this.CreateListLook(window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
-			title.Location = new Point(120, 245);
+//			title.Location = new Point(120, 245);
 			title.Size = new Size(280, 15);
-			title.Text = "Selections possibles avec Ctrl et/ou Shift :";
-			title.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			title.Text = "Sélections possibles avec Ctrl et/ou Shift :";
+			title.Anchor = AnchorStyles.TopLeft;
+			title.AnchorMargins = new Margins(120, 0, 55, 0);
 			window.Root.Children.Add(title);
 
 			CellTable table = new CellTable();
@@ -1001,7 +924,8 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 			}
-			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			table.Anchor = AnchorStyles.All;
+			table.AnchorMargins = new Margins(10, 10, 80, 10);
 			window.Root.Children.Add(table);
 
 			window.FocusedWidget = table;
@@ -1016,13 +940,14 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Size(500, 300);
 			window.Text = "CheckAdornerCell2";
 
-			CreateListLook(window.Root.Children, new Point(10, 230), null, -1);
+			this.CreateListLook(window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
 			title.Location = new Point(120, 245);
 			title.Size = new Size(380, 15);
 			title.Text = "Tableau de lignes editables et redimensionnable :";
-			title.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			title.Anchor = AnchorStyles.TopLeft;
+			title.AnchorMargins = new Margins(120, 0, 55, 0);
 			window.Root.Children.Add(title);
 
 			CellTable table = new CellTable();
@@ -1073,7 +998,8 @@ namespace Epsitec.Common.Widgets
 					table[x,y].Insert(text);
 				}
 			}
-			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			table.Anchor = AnchorStyles.All;
+			table.AnchorMargins = new Margins(10, 10, 80, 10);
 			window.Root.Children.Add(table);
 
 			window.FocusedWidget = table;
@@ -1088,13 +1014,14 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerCell3";
 
-			CreateListLook(window.Root.Children, new Point(10, 230), null, -1);
+			this.CreateListLook(window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
 			title.Location = new Point(120, 245);
 			title.Size = new Size(280, 15);
-			title.Text = "Tableau redimensionnable non editable :";
-			title.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			title.Text = "Tableau redimensionnable non éditable :";
+			title.Anchor = AnchorStyles.TopLeft;
+			title.AnchorMargins = new Margins(120, 0, 55, 0);
 			window.Root.Children.Add(title);
 
 			CellTable table = new CellTable();
@@ -1159,7 +1086,8 @@ namespace Epsitec.Common.Widgets
 #endif
 				}
 			}
-			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			table.Anchor = AnchorStyles.All;
+			table.AnchorMargins = new Margins(10, 10, 80, 10);
 			window.Root.Children.Add(table);
 
 			window.FocusedWidget = table;
@@ -1174,13 +1102,14 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerScrollArray";
 
-			CreateListLook(window.Root.Children, new Point(10, 230), null, -1);
+			this.CreateListLook(window.Root, 10, 10, null, -1);
 
 			StaticText title = new StaticText();
 			title.Location = new Point(120, 245);
 			title.Size = new Size(280, 15);
 			title.Text = "Tableau rapide pour liste de gauche :";
-			title.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			title.Anchor = AnchorStyles.TopLeft;
+			title.AnchorMargins = new Margins(120, 0, 55, 0);
 			window.Root.Children.Add(title);
 
 			ScrollArray table = new ScrollArray();
@@ -1204,6 +1133,7 @@ namespace Epsitec.Common.Widgets
 			//table.AdjustHeight(Widgets.ScrollArrayAdjust.MoveDown);
 			//table.AdjustHeightToContent(Widgets.ScrollArrayAdjust.MoveDown, 10, 1000);
 			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			table.AnchorMargins = new Margins(10, 10, 80, 10);
 			window.Root.Children.Add(table);
 
 			window.FocusedWidget = table;
@@ -1214,11 +1144,14 @@ namespace Epsitec.Common.Widgets
 
 		
 		// Crée la liste pour changer de look.
-		protected void CreateListLook(Widget.ChildrenCollection collection, Point origine, ToolTip tooltip, int tab)
+		protected void CreateListLook(Widget parent, double mx, double my, ToolTip tooltip, int tab)
 		{
 			ScrollList sl = new ScrollList();
-			sl.Location = origine;
+			
+			sl.Parent = parent;
 			sl.Size = new Size(100, 64);
+			sl.Anchor = AnchorStyles.TopLeft;
+			sl.AnchorMargins = new Margins(mx, 0, my, 0);
 			sl.AdjustHeight(ScrollAdjustMode.MoveDown);
 			if ( tab != -1 )
 			{
@@ -1238,9 +1171,7 @@ namespace Epsitec.Common.Widgets
 
 			sl.SelectedIndex = sel;
 			sl.ShowSelected(ScrollShowMode.Center);
-			sl.Anchor = AnchorStyles.Top|AnchorStyles.Left;
 			sl.SelectedIndexChanged += new EventHandler(this.HandleLook);
-			collection.Add(sl);
 
 			if ( tooltip != null )
 			{
@@ -1254,285 +1185,20 @@ namespace Epsitec.Common.Widgets
 			int sel = sl.SelectedIndex;
 			Widgets.Adorner.Factory.SetActive(sl.Items[sel]);
 		}
-
-		[Test] public void CheckAdornerBug1()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(400, 300);
-			window.Text = "CheckAdornerBug1";
-
-			Button button1 = new Button();
-			//button1.Text = "";
-			button1.Location = new Point(50, 50);
-			button1.Size = new Size(100, 30);
-			button1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			window.Root.Children.Add(button1);
-
-			window.Show();
-		}
-
-		[Test] public void CheckAdornerBug2()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(400, 300);
-			window.Text = "CheckAdornerBug2";
-
-			TextField text = new TextField();
-			text.Name = "TextField";
-			text.Location = new Point(160, 150);
-			text.Width = 100;
-			text.Text = "Bonjour";
-			text.Cursor = text.Text.Length;
-			text.Alignment = ContentAlignment.MiddleRight;
-			text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			window.Root.Children.Add(text);
-
-			window.Show();
-		}
-
-		[Test] public void CheckAdornerBug3()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(400, 300);
-			window.Text = "CheckAdornerBug3";
-
-			TextFieldCombo combo = new TextFieldCombo();
-			combo.Name = "TextFieldCombo";
-			combo.Location = new Point(160, 150);
-			combo.Width = 100;
-			combo.Items.Add("Janvier");
-			combo.Items.Add("Fevrier");
-			combo.Items.Add("Mars");
-			combo.Items.Add("Avril");
-			combo.Items.Add("Mai");
-			combo.Items.Add("Juin");
-			combo.Items.Add("Juillet");
-			combo.Items.Add("Aout");
-			combo.Items.Add("Septembre");
-			combo.Items.Add("Octobre");
-			combo.Items.Add("Novembre");
-			combo.Items.Add("Decembre");
-			combo.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			window.Root.Children.Add(combo);
-
-			window.Show();
-		}
-
-		[Test] public void CheckAdornerBugAlive1()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(600, 300);
-			window.Text = "CheckAdornerBugAlive1";
-
-			Button a = new Button();
-			a.Location = new Point(10, 10);
-			a.Width = 75;
-			a.Text = "OK";
-			window.Root.Children.Add(a);
-
-			window.Show();
-		}
-
-		[Test] public void CheckAdornerBugAlive2()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(400, 300);
-			window.Text = "CheckAdornerBugAlive2";
-
-			CellTable table = new CellTable();
-#if true
-			table.StyleH  = CellArrayStyle.ScrollNorm;
-			table.StyleH |= CellArrayStyle.Separator;
-			table.StyleH |= CellArrayStyle.SelectCell;
-			table.StyleH |= CellArrayStyle.SelectMulti;
-			table.StyleV  = CellArrayStyle.ScrollNorm;
-			table.StyleV |= CellArrayStyle.Separator;
-#else
-			table.StyleH  = AbstractCellArrayStyle.ScrollNorm;
-			table.StyleH |= AbstractCellArrayStyle.Header;
-			table.StyleH |= AbstractCellArrayStyle.Separator;
-			table.StyleH |= AbstractCellArrayStyle.Mobile;
-			table.StyleH |= AbstractCellArrayStyle.Sort;
-			table.StyleV  = AbstractCellArrayStyle.ScrollNorm;
-			table.StyleV |= AbstractCellArrayStyle.Header;
-			table.StyleV |= AbstractCellArrayStyle.Separator;
-			table.StyleV |= AbstractCellArrayStyle.SelectLine;
-			table.StyleV |= AbstractCellArrayStyle.Mobile;
-			table.StyleV |= AbstractCellArrayStyle.Sort;
-#endif
-			table.Name = "Table";
-			table.Location = new Point(10, 20);
-			table.Size = new Size(380, 200);
-			table.SetArraySize(2, 2);
-			for ( int y=0 ; y<2 ; y++ )
-			{
-				for ( int x=0 ; x<2 ; x++ )
-				{
-#if true
-					TextField text = new TextField();
-					text.TextFieldStyle = TextFieldStyle.Flat;
-					text.Text = "abc";
-					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-					table[x,y].Insert(text);
-#else
-					Cell cell = new Cell();
-					TextField text = new TextField(TextFieldType.SingleLine);
-					text.TextFieldStyle = TextFieldStyle.Flat;
-					text.Text = "abc";
-					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-					cell.Children.Add(text);
-					table[x,y] = cell;
-#endif
-				}
-			}
-			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			window.Root.Children.Add(table);
-
-			window.Show();
-		}
-
-		[Test] public void CheckAdornerBugAlive3()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(400, 300);
-			window.Text = "CheckAdornerTab";
-
-			TabBook tb = new TabBook();
-			tb.Arrows = TabBookArrows.Right;
-			tb.Name = "TabBook";
-			tb.Location = new Point(10, 10);
-			tb.Size = new Size(380, 280);
-			tb.Text = "";
-			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			window.Root.Children.Add(tb);
-
-			Rectangle inside = tb.InnerBounds;
-
-			// Crée l'onglet 1.
-			TabPage page1 = new TabPage();
-			page1.Name = "p1";
-			page1.Bounds = inside;
-			page1.TabTitle = "<m>P</m>remier";
-			tb.Items.Add(page1);
-
-#if true
-			Button a = new Button();
-			a.Name = "A";
-			a.Location = new Point(10, 10);
-			a.Size = new Size(75, 24);
-			a.Text = "OK";
-			a.ButtonStyle = ButtonStyle.DefaultAccept;
-			page1.Children.Add(a);
-#endif
-
-			// Crée l'onglet 2.
-			TabPage page2 = new TabPage();
-			page2.Name = "p2";
-			page2.Bounds = inside;
-			page2.TabTitle = "<m>D</m>euxieme";
-			tb.Items.Add(page2);
-
-#if true
-			VScroller scrollv = new VScroller();
-			scrollv.Name = "Scroller";
-			scrollv.Location = new Point(10, 10);
-			scrollv.Size = new Size(17, inside.Height-20);
-			scrollv.MaxValue = 10;
-			scrollv.VisibleRangeRatio = 0.3M;
-			scrollv.Value = 1;
-			scrollv.SmallChange = 1;
-			scrollv.LargeChange = 2;
-			page2.Children.Add(scrollv);
-#endif
-
-			tb.ActivePage = page1;
-			window.FocusedWidget = tb;
-
-			window.Show();
-		}
-
-		[Test] public void CheckAdornerTestParents1()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(400, 300);
-			window.Text = "CheckAdornerTestParents1";
-
-			Button button1 = new Button();
-			button1.Text = "Pere";
-			button1.Location = new Point(50, 50);
-			button1.Size = new Size(300, 200);
-			button1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			window.Root.Children.Add(button1);
-
-			Button button2 = new Button();
-			button2.Text = "Fils";
-			button2.Location = new Point(220, 10);
-			button2.Size = new Size(100, 30);
-			button2.Anchor = AnchorStyles.Left|AnchorStyles.Bottom;
-			button1.Children.Add(button2);
-
-			window.Show();
-		}
-
-		[Test] public void CheckAdornerTestParents2()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(300, 300);
-			window.Text = "CheckAdornerTestParents2";
-
-			Button button1 = new Button();
-			button1.Location = new Point(50, 50);
-			button1.Size = new Size(200, 200);
-			button1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			button1.Name = "B1";
-			button1.Parent = window.Root;
-			
-			Button button2 = new Button();
-			button2.Location = new Point(50, 50);
-			button2.Size = new Size(100, 100);
-			button2.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			button2.Name = "B2";
-			button2.Parent = button1;
-
-			Button button3 = new Button();
-			button3.Location = new Point(20, 20);
-			button3.Size = new Size(60, 60);
-			button3.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			button3.Name = "B3";
-			button3.Parent = button2;
-
-			Button button4 = new Button();
-			button4.Location = new Point(20, 20);
-			button4.Size = new Size(20, 20);
-			button4.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-			button4.Name = "B4";
-			button4.Parent = button3;
-
-			window.Show();
-		}
-
+		
 		[Test] public void CheckAdornerPaneBook1()
 		{
 			Window window = new Window();
 			
 			window.ClientSize = new Size(500, 300);
 			window.Text = "CheckAdornerPaneBook1";
+			window.Root.DockPadding = new Margins(10, 10, 10, 10);
 
 			PaneBook book = new PaneBook();
-			book.Location = new Point(10, 10);
-			book.Size = new Size(480, 280);
 			book.PaneBookStyle = PaneBookStyle.LeftRight;
 			book.PaneBehaviour = PaneBookBehaviour.FollowMe;
 			//book.PaneBehaviour = PaneBookBehaviour.Draft;
-			book.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			book.Dock = DockStyle.Fill;
 			book.Parent = window.Root;
 
 			PanePage p1 = new PanePage();
@@ -1635,13 +1301,12 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Size(500, 300);
 			window.Text = "CheckAdornerPaneBook2";
+			window.Root.DockPadding = new Margins(10, 10, 10, 10);
 
 			PaneBook book = new PaneBook();
-			book.Location = new Point(10, 10);
-			book.Size = new Size(480, 280);
 			book.PaneBookStyle = PaneBookStyle.LeftRight;
 			book.PaneBehaviour = PaneBookBehaviour.FollowMe;
-			book.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			book.Dock = DockStyle.Fill;
 			book.Parent = window.Root;
 
 			PanePage p1 = new PanePage();
@@ -1682,13 +1347,12 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Size(500, 300);
 			window.Text = "CheckAdornerPaneBook3";
+			window.Root.DockPadding = new Margins(10, 10, 10, 10);
 
 			PaneBook book = new PaneBook();
-			book.Location = new Point(10, 10);
-			book.Size = new Size(480, 280);
 			book.PaneBookStyle = PaneBookStyle.LeftRight;
 			book.PaneBehaviour = PaneBookBehaviour.FollowMe;
-			book.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			book.Dock = DockStyle.Fill;
 			book.Parent = window.Root;
 
 			PanePage p1 = new PanePage();
@@ -1719,54 +1383,6 @@ namespace Epsitec.Common.Widgets
 			button2.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			button2.Text = "P2";
 			p2.Children.Add(button2);
-
-			window.Show();
-		}
-
-		[Test] public void CheckAdornerAntialiasing1()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(400, 500);
-			window.Text = "CheckAdornerAntialiasing1";
-			window.WindowClosed += new EventHandler(this.HandleWindowClosed);
-
-			Point pos = new Point(100, 10.5);
-			for ( int i=0 ; i<20 ; i++ )
-			{
-				StaticText st = new StaticText();
-				st.Location = pos;
-				st.Width = 150;
-				st.Text = "Table <i>DbTable.[2.0]</i>...";
-				st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
-				window.Root.Children.Add(st);
-				pos.X += 0.05;
-				pos.Y += 20;
-			}
-
-			window.Show();
-		}
-
-		[Test] public void CheckAdornerAntialiasing2()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Size(1200, 200);
-			window.Text = "CheckAdornerAntialiasing2";
-			window.WindowClosed += new EventHandler(this.HandleWindowClosed);
-
-			Point pos = new Point(-90, 10);
-			for ( int i=0 ; i<10 ; i++ )
-			{
-				StaticText st = new StaticText();
-				st.Location = pos;
-				st.Width = 120;
-				st.Text = "Table <i>DbTable.[2.0]</i>...";
-				st.Alignment = ContentAlignment.MiddleCenter;
-				st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
-				window.Root.Children.Add(st);
-				pos.X += 120.0+3.0/7.0;
-			}
 
 			window.Show();
 		}

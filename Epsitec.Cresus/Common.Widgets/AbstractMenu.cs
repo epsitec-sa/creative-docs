@@ -27,55 +27,17 @@ namespace Epsitec.Common.Widgets
 		
 		
 		#region Interface IBundleSupport
-		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
+		public override void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
 			base.RestoreFromBundle (bundler, bundle);
-			
-			Support.ResourceBundle.FieldList item_list = bundle["items"].AsList;
-			
-			if (item_list != null)
-			{
-				//	Notre bundle contient une liste de sous-bundles contenant les descriptions des
-				//	items composant le menu.
-				
-				foreach (Support.ResourceBundle.Field field in item_list)
-				{
-					Support.ResourceBundle item_bundle = field.AsBundle;
-					MenuItem               item_widget = bundler.CreateFromBundle (item_bundle) as MenuItem;
-					
-					this.Items.Add (item_widget);
-					item_widget.SetEmbedder (this);
-				}
-				
-				this.AdjustSize ();
-			}
+			this.items.RestoreFromBundle ("items", bundler, bundle);
+			this.AdjustSize ();
 		}
 		
 		public override void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
 			base.SerializeToBundle (bundler, bundle);
-			
-			if (this.items.Count > 0)
-			{
-				System.Collections.ArrayList list = new System.Collections.ArrayList ();
-				
-				Widget[] widgets = new Widget[this.items.Count];
-				this.items.CopyTo (widgets, 0);
-				
-				for (int i = 0; i < widgets.Length; i++)
-				{
-					Support.ResourceBundle child_bundle = bundler.CreateEmptyBundle (widgets[i].BundleName);
-					bundler.FillBundleFromObject (child_bundle, widgets[i]);
-					list.Add (child_bundle);
-				}
-				
-				if (list.Count > 0)
-				{
-					Support.ResourceBundle.Field field = bundle.CreateField (Support.ResourceFieldType.List, list);
-					field.SetName ("items");
-					bundle.Add (field);
-				}
-			}
+			this.items.SerializeToBundle ("items", bundler, bundle);
 		}
 		#endregion
 		
@@ -529,7 +491,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (AbstractMenu.menuFiltering != null)
 			{
-				Window.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(AbstractMenu.menuFiltering.MessageFilter);
+				Window.MessageFilter -= new MessageHandler(AbstractMenu.menuFiltering.MessageFilter);
 				AbstractMenu.menuContextOpen = false;
 				AbstractMenu.menuDeveloped = false;
 				AbstractMenu.menuFiltering = null;
@@ -568,7 +530,7 @@ namespace Epsitec.Common.Widgets
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.Width, this.Height);
 			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
 			
-			Window.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
+			Window.MessageFilter += new MessageHandler(this.MessageFilter);
 			AbstractMenu.menuContextOpen = true;
 			AbstractMenu.menuDeveloped = true;
 			AbstractMenu.menuFiltering = this;
@@ -762,7 +724,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (AbstractMenu.menuDeveloped == false)
 				{
-					Window.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
+					Window.MessageFilter += new MessageHandler(this.MessageFilter);
 					AbstractMenu.menuDeveloped = true;
 					AbstractMenu.menuFiltering = this;
 				}

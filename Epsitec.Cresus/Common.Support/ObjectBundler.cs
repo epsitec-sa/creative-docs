@@ -812,6 +812,8 @@ namespace Epsitec.Common.Support
 				//	C'est bien une propriété qui peut être lue et écrite, et qui a l'attribut
 				//	[Bundle] défini.
 				
+				//	TODO: gérer les propriétés de type non-string (collections, etc.)
+				
 				object        data = prop_info.GetValue (source, null);
 				TypeConverter conv = TypeDescriptor.GetConverter (prop_info.PropertyType);
 				string        text = conv.ConvertToInvariantString (data);
