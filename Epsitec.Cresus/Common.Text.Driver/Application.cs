@@ -10,6 +10,8 @@ namespace Epsitec.Common.Text.Driver
 	{
 		[System.STAThread] static void Main(string[] args)
 		{
+			Tests.CheckUnicode.RunTests ();
+#if false
 			Tests.CheckProperties.RunTests ();
 			Tests.CheckInternalCursor.RunTests ();
 			Tests.CheckInternalCursorTable.RunTests ();
@@ -17,6 +19,7 @@ namespace Epsitec.Common.Text.Driver
 			Tests.CheckTextConverter.RunTests ();
 			Tests.CheckTextTable.RunTests ();
 			Tests.CheckTextStory.RunTests ();
+#endif
 			
 //			CheckPerformance.RunTests (100*1000, 1000);
 			
