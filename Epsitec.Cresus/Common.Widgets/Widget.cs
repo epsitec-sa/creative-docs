@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 	
 	public delegate bool WalkWidgetCallback(Widget widget);
 	
-	[System.Flags] public enum AnchorStyles
+	[System.Flags] public enum AnchorStyles : byte
 	{
 		None			= 0,
 		Top				= 1,
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 		TopAndBottom	= Top + Bottom,
 	}
 	
-	[System.Flags] public enum WidgetState
+	[System.Flags] public enum WidgetState : uint
 	{
 		ActiveNo		= 0,
 		ActiveYes		= 1,
@@ -38,14 +38,25 @@ namespace Epsitec.Common.Widgets
 		Error			= 0x00200000,		//	=> signale une erreur
 	}
 	
-	public enum DockStyle
+	public enum DockStyle : byte
 	{
 		None			= 0,
-		Top				= 1,
-		Bottom			= 2,
-		Left			= 3,
-		Right			= 4,
-		Fill			= 5
+		
+		Top				= 1,				//	colle en haut
+		Bottom			= 2,				//	colle en bas
+		Left			= 3,				//	colle à gauche
+		Right			= 4,				//	colle à droite
+		Fill			= 5,				//	remplit tout
+		
+		Layout			= 6,				//	utilise un Layout Manager externe
+	}
+	
+	public enum LayoutFlags : byte
+	{
+		None			= 0,
+		
+		StartNewLine	= 0x40,				//	force layout sur une nouvelle ligne
+		IncludeChildren	= 0x80				//	inclut les enfants
 	}
 	
 	
@@ -228,6 +239,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		[Bundle ("lay_f")]	public LayoutFlags		LayoutFlags
+		{
+			get { return this.layout_flags; }
+			set
+			{
+				if (this.layout_flags != value)
+				{
+					this.layout_flags = value;
+					
+					if (this.parent != null)
+					{
+						this.parent.HandleChildrenChanged ();
+						this.parent.UpdateChildrenLayout ();
+					}
+				}
+			}
+		}
+		
 		[Bundle ("dock_m")] public Drawing.Margins	DockMargins
 		{
 			get { return this.dockMargins; }
@@ -263,6 +292,17 @@ namespace Epsitec.Common.Widgets
 					this.UpdateDockedChildrenLayout ();
 				}
 			}
+		}
+		
+		
+		public int							LayoutArg1
+		{
+			get { return this.layout_arg1; }
+		}
+		
+		public int							LayoutArg2
+		{
+			get { return this.layout_arg2; }
 		}
 		
 		
@@ -1152,6 +1192,7 @@ namespace Epsitec.Common.Widgets
 		public event PaintEventHandler		PaintBackground;
 		public event PaintEventHandler		PaintForeground;
 		public event EventHandler			ChildrenChanged;
+		public event EventHandler			ParentChanged;
 		public event EventHandler			LayoutChanged;
 		
 		public event MessageEventHandler	Pressed;
@@ -1387,6 +1428,19 @@ namespace Epsitec.Common.Widgets
 				this.internalState &= ~ InternalState.AutoMinMax;
 			}
 		}
+		
+		public virtual void SetLayoutArgs(int arg1, int arg2)
+		{
+			this.layout_arg1 = (byte) arg1;
+			this.layout_arg2 = (byte) arg2;
+		}
+		
+		public virtual void GetLayoutArgs(out int arg1, out int arg2)
+		{
+			arg1 = this.layout_arg1;
+			arg2 = this.layout_arg2;
+		}
+		
 		
 		internal virtual void FireStillEngaged()
 		{
@@ -2974,6 +3028,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnParentChanged()
+		{
+			if (this.ParentChanged != null)
+			{
+				this.ParentChanged (this);
+			}
+		}
+		
 		protected virtual void OnLayoutChanged()
 		{
 			if (this.LayoutChanged != null)
@@ -3202,7 +3264,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		[System.Flags] protected enum InternalState
+		[System.Flags] protected enum InternalState : uint
 		{
 			None				= 0,
 			ChildrenChanged		= 0x00000001,
@@ -3227,8 +3289,8 @@ namespace Epsitec.Common.Widgets
 			AutoMnemonic		= 0x00100000,
 			AutoRepeatEngaged	= 0x00200000,
 			
-			Command				= 0x20000000,		//	widget génère des commandes
-			DebugActive			= 0x40000000		//	widget marqué pour le debug
+			Command				= 0x40000000,		//	widget génère des commandes
+			DebugActive			= 0x80000000		//	widget marqué pour le debug
 		}
 		
 		[System.Flags] public enum TabNavigationMode
@@ -3354,7 +3416,9 @@ namespace Epsitec.Common.Widgets
 					parent.Children.Remove (widget);
 					System.Diagnostics.Debug.Assert (widget.parent == null);
 				}
+				
 				widget.parent = this.widget;
+				widget.OnParentChanged ();
 			}
 			
 			private void PostInsert(object widget)
@@ -3388,6 +3452,7 @@ namespace Epsitec.Common.Widgets
 				widget.SetEngaged (false);
 				widget.SetEntered (false);
 				widget.parent = null;
+				widget.OnParentChanged ();
 			}
 			
 			private void NotifyChanged()
@@ -3403,15 +3468,19 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
+			public Widget					this[int index]
+			{
+				get { return this.list[index] as Widget; }
+			}
+			
 			
 			#region IList Members
-			
 			public bool IsReadOnly
 			{
 				get	{ return false; }
 			}
 			
-			public object this[int index]
+			object							System.Collections.IList.this[int index]
 			{
 				get	{ return this.list[index]; }
 				set	{ throw new System.NotSupportedException ("Widget"); }
@@ -3474,7 +3543,6 @@ namespace Epsitec.Common.Widgets
 			#endregion
 			
 			#region ICollection Members
-
 			public bool IsSynchronized
 			{
 				get { return false; }
@@ -3498,7 +3566,6 @@ namespace Epsitec.Common.Widgets
 			#endregion
 			
 			#region IEnumerable Members
-
 			public System.Collections.IEnumerator GetEnumerator()
 			{
 				return this.list.GetEnumerator ();
@@ -3602,6 +3669,9 @@ namespace Epsitec.Common.Widgets
 		protected AnchorStyles					anchor;
 		protected DockStyle						dock;
 		protected Drawing.Margins				dockMargins;
+		protected LayoutFlags					layout_flags;
+		protected byte							layout_arg1;
+		protected byte							layout_arg2;
 		protected Drawing.Color					backColor;
 		protected Drawing.Color					foreColor;
 		protected double						x1, y1, x2, y2;
