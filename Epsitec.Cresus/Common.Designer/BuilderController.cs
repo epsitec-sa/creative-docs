@@ -513,7 +513,7 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert (this.active_editor != null);
 			
 			bool enable;
-			Converters.Converter.Convert (e.CommandArgs[0], out enable);
+			Types.Converter.Convert (e.CommandArgs[0], out enable);
 			
 			this.active_editor.SelectedWidgets.Clear ();
 			this.SetTabIndexSetter (enable);
@@ -524,7 +524,7 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert (this.active_editor != null);
 			
 			bool enable;
-			Converters.Converter.Convert (e.CommandArgs[0], out enable);
+			Types.Converter.Convert (e.CommandArgs[0], out enable);
 			
 			this.active_editor.SelectedWidgets.Clear ();
 			this.SetTabIndexPicker (enable);
@@ -550,7 +550,7 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert (this.active_editor != null);
 			
 			int index;
-			Converters.Converter.Convert (e.CommandArgs[0], out index);
+			Types.Converter.Convert (e.CommandArgs[0], out index);
 			
 			this.active_editor.DefineTabIndex (index);
 		}
