@@ -183,6 +183,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "INameCaption.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "INamedStringSelection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
