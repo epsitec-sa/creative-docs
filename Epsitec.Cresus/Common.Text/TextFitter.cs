@@ -34,20 +34,177 @@ namespace Epsitec.Common.Text
 		
 		
 		
+		public void ClearAllMarks()
+		{
+			this.Process (new Execute (this.ExecuteClear));
+		}
+		
+		public void GenerateAllMarks()
+		{
+			this.Process (new Execute (this.ExecuteGenerate));
+		}
+		
+		
+		protected void Process(Execute method)
+		{
+			//	Exécute une méthode pour chaque tout le texte, en procédant par
+			//	tranches (exécution itérative).
+			
+			int pos = 0;
+			
+			Cursors.TempCursor cursor = new Cursors.TempCursor ();
+			
+			this.story.NewCursor (cursor);
+			
+			try
+			{
+				for (;;)
+				{
+					//	TODO: lock et détection d'altérations du texte
+					
+					int max    = this.story.TextLength;
+					int length = System.Math.Min (max - pos, 10000);
+					
+					if (length <= 0)
+					{
+						break;
+					}
+					
+					method (cursor, pos, ref length);
+					
+					this.story.MoveCursor (cursor, length);
+					pos += length;
+				}
+			}
+			finally
+			{
+				this.story.RecycleCursor (cursor);
+			}
+		}
+		
+		protected void ExecuteClear(Cursors.TempCursor temp_cursor, int pos, ref int length)
+		{
+			//	Supprime les marques de découpe de lignes représentées par des
+			//	curseurs (instances de Cursors.FitterCursor).
+			
+			CursorInfo[] cursors = this.story.TextTable.FindCursors (pos, length, Cursors.FitterCursor.Filter);
+			
+			for (int i = 0; i < cursors.Length; i++)
+			{
+				ICursor cursor = this.story.TextTable.GetCursorInstance (cursors[i].CursorId);
+				this.RecycleCursor (cursor);
+			}
+		}
+		
+		protected void ExecuteGenerate(Cursors.TempCursor cursor, int pos, ref int length)
+		{
+			//	Génère les marques de découpe de lignes et insère les curseurs
+			//	correspondants.
+			
+			double oy = 0;
+			double mx_left  = 20;
+			double mx_right = 1000;
+			double fence_before = 100;
+			double fence_after  = 20;
+			
+			ulong[] text;
+			
+			if (pos + length < story.TextLength)
+			{
+				text = new ulong[length];
+				this.story.ReadText (cursor, length, text);
+			}
+			else
+			{
+				//	On arrive au bout du texte: il faut donc synthétiser un caractère
+				//	supplémentaire de fin de texte pour que l'algorithme de layout
+				//	soit satisfait :
+				
+				text = new ulong[length+1];
+				this.story.ReadText (cursor, length, text);
+				
+				text[length] = (text[length-1] & 0xffffffff00000000ul) | (int) Unicode.Code.EndOfText;
+			}
+			
+			Layout.Context         layout = new Layout.Context (this.story.Context, text, 0, oy, mx_left, mx_right, fence_before, fence_after);
+			Layout.BreakCollection result = new Layout.BreakCollection ();
+			
+			int line_start      = 0;
+			int paragraph_start = 0;
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			for (;;)
+			{
+				Layout.Status status = layout.Fit (ref result);
+				
+				switch (status)
+				{
+					case Layout.Status.ErrorNeedMoreText:
+						length = paragraph_start;
+						return;
+					
+					case Layout.Status.ErrorCannotFit:
+						throw new System.InvalidOperationException ("Cannot fit.");
+					
+					case Layout.Status.Ok:
+					case Layout.Status.OkFitEnded:
+						break;
+					
+					default:
+						throw new System.InvalidOperationException ("Invalid layout status received.");
+				}
+				
+				int offset = result[0].Offset;
+				int code   = Unicode.Bits.GetCode (text[offset]);
+				
+				Cursors.FitterCursor.Element element = new Cursors.FitterCursor.Element ();
+				
+				element.Length = offset;
+				
+				list.Add (element);
+				
+				layout.TextOffset = offset + 1;
+				
+				if (status == Layout.Status.OkFitEnded)
+				{
+					Cursors.FitterCursor mark = this.NewCursor ();
+					
+					mark.AddRange (list);
+					list.Clear ();
+					
+					story.MoveCursor (mark, pos + line_start);
+					
+					line_start      = offset + 1;
+					paragraph_start = offset + 1;
+				}
+				else
+				{
+					line_start = offset + 1;
+				}
+			}
+		}
+		
+		
 		protected Cursors.FitterCursor NewCursor()
 		{
 			//	Retourne un curseur tout neuf (ou reprend un curseur qui a été
 			//	recyclé précédemment, pour éviter de devoir en allouer à tour
 			//	de bras).
 			
+			Cursors.FitterCursor cursor;
+			
 			if (this.free_cursors.Count > 0)
 			{
-				return this.free_cursors.Pop () as Cursors.FitterCursor;
+				cursor = this.free_cursors.Pop () as Cursors.FitterCursor;
+			}
+			else
+			{
+				cursor = new Cursors.FitterCursor ();
+				this.cursors.Add (cursor);
 			}
 			
-			Cursors.FitterCursor cursor = new Cursors.FitterCursor ();
-			
-			this.cursors.Add (cursor);
+			this.story.NewCursor (cursor);
 			
 			return cursor;
 		}
@@ -60,10 +217,13 @@ namespace Epsitec.Common.Text
 			Debug.Assert.IsTrue (this.cursors.Contains (cursor));
 			Debug.Assert.IsFalse (this.free_cursors.Contains (cursor));
 			
+			this.story.RecycleCursor (cursor);
+			
 			this.free_cursors.Push (cursor);
 		}
 		
 		
+		protected delegate void Execute(Cursors.TempCursor cursor, int pos, ref int length);
 		
 		private TextStory						story;
 		private System.Collections.ArrayList	cursors;

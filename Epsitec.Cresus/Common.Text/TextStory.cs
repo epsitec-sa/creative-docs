@@ -78,14 +78,31 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		public int								TextChangeMarkPosition
+		
+		public int								TextChangeMark
 		{
 			get
 			{
-				return this.low_text_change_mark;
+				return this.text_change_mark;
 			}
 		}
 		
+		public long								TextChangeVersion
+		{
+			get
+			{
+				return this.text_change_version;
+			}
+		}
+		
+		
+		internal Internal.TextTable				TextTable
+		{
+			get
+			{
+				return this.text;
+			}
+		}
 		
 		internal bool							DebugDisableOpletQueue
 		{
@@ -104,21 +121,40 @@ namespace Epsitec.Common.Text
 		{
 			this.text.NewCursor (cursor);
 			
-			this.InternalAddOplet (new CursorMoveOplet (this, cursor, 0));
+			if (cursor.Attachment != CursorAttachment.Temporary)
+			{
+				this.InternalAddOplet (new CursorMoveOplet (this, cursor, 0));
+			}
 		}
 		
 		public void MoveCursor(ICursor cursor, int distance)
 		{
-			int old_pos = this.GetCursorPosition (cursor);
-			
-			this.text.MoveCursor (cursor.CursorId, distance);
-			
-			int new_pos = this.GetCursorPosition (cursor);
-			
-			if (old_pos != new_pos)
+			if (cursor.Attachment == CursorAttachment.Temporary)
 			{
-				this.InternalAddOplet (new CursorMoveOplet (this, cursor, old_pos));
+				this.text.MoveCursor (cursor.CursorId, distance);
 			}
+			else
+			{
+				int old_pos = this.GetCursorPosition (cursor);
+				
+				this.text.MoveCursor (cursor.CursorId, distance);
+				
+				int new_pos = this.GetCursorPosition (cursor);
+				
+				if (old_pos != new_pos)
+				{
+					this.InternalAddOplet (new CursorMoveOplet (this, cursor, old_pos));
+				}
+			}
+		}
+		
+		public void RecycleCursor(ICursor cursor)
+		{
+			//	ATTENTION: la suppression d'un curseur doit être gérée avec
+			//	prudence, car les mécanismes de Undo/Redo doivent pouvoir y
+			//	faire référence en tout temps via ICursor.
+			
+			this.text.RecycleCursor (cursor.CursorId);
 		}
 		
 		
@@ -223,7 +259,8 @@ namespace Epsitec.Common.Text
 		
 		public void ResetTextChangeMarkPosition()
 		{
-			this.low_text_change_mark = this.TextLength;
+			this.text_change_mark     = this.TextLength;
+			this.text_change_version += 1;
 		}
 		
 		
@@ -411,9 +448,11 @@ namespace Epsitec.Common.Text
 			//	Met à jour l'information relative à la coupure des lignes autour
 			//	du passage modifié.
 			
-			if (position < this.low_text_change_mark)
+			this.text_change_version += 1;
+			
+			if (position < this.text_change_mark)
 			{
-				this.low_text_change_mark = position;
+				this.text_change_mark = position;
 			}
 			
 			Debug.Assert.IsTrue (position <= this.TextLength);
@@ -859,6 +898,7 @@ namespace Epsitec.Common.Text
 		
 		private bool							debug_disable_oplet;
 		
-		private int								low_text_change_mark;
+		private int								text_change_mark;
+		private long							text_change_version;
 	}
 }

@@ -60,7 +60,7 @@ namespace Epsitec.Common.Text.Internal
 			return id;
 		}
 		
-		public void DeleteCursor(Internal.CursorId id)
+		public void RecycleCursor(Internal.CursorId id)
 		{
 			Internal.Cursor record = this.cursors.ReadCursor (id);
 			
@@ -187,6 +187,11 @@ namespace Epsitec.Common.Text.Internal
 		public void SetCursorPosition(Internal.CursorId id, int position)
 		{
 			this.MoveCursor (id, position - this.GetCursorPosition (id));
+		}
+		
+		public ICursor GetCursorInstance(Internal.CursorId id)
+		{
+			return this.cursors.GetCursorInstance (id);
 		}
 		
 		
