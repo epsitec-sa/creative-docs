@@ -140,8 +140,10 @@ namespace Epsitec.Common.Drawing
 			Assertion.AssertNotNull (font);
 			
 			string   text  = "Hello";
-			double[] end_x = font.GetTextCharEndX (text);
+			double[] end_x;
 			double   width = font.GetTextAdvance (text);
+			
+			font.GetTextCharEndX (text, out end_x);
 			
 			Assertion.Assert (end_x.Length == text.Length);
 			Assertion.Assert (end_x[end_x.Length-1] == width);
