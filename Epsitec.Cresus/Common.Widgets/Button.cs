@@ -81,19 +81,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public override Drawing.Point	BaseLine
-		{
-			get
-			{
-				if (this.TextLayout != null)
-				{
-					return this.TextLayout.GetLineOrigin (0);
-				}
-				
-				return base.BaseLine;
-			}
-		}
-		
 		
 		protected override void OnShortcutChanged()
 		{
