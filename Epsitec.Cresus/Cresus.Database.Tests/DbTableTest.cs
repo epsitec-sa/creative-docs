@@ -5,6 +5,33 @@ namespace Epsitec.Cresus.Database
 	[TestFixture]
 	public class DbTableTest
 	{
+		[Test] public void CheckNewDbTable()
+		{
+			DbTable table = new DbTable ("Test");
+			
+			Assertion.AssertNotNull (table);
+			Assertion.AssertEquals ("Test", table.Name);
+			Assertion.AssertEquals (DbElementCat.Unknown, table.Category);
+			Assertion.AssertEquals (false, table.HasPrimaryKeys);
+			Assertion.AssertEquals (0, table.PrimaryKey.Length);
+			Assertion.AssertEquals (0, table.Columns.Count);
+			
+			table.DefineCategory (DbElementCat.Internal);
+			
+			Assertion.AssertEquals (DbElementCat.Internal, table.Category);
+			
+			table.DefineCategory (DbElementCat.Internal);
+		}
+		
+		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckNewDbTableEx1()
+		{
+			DbTable table = new DbTable ("Test");
+			
+			table.DefineCategory (DbElementCat.Internal);
+			table.DefineCategory (DbElementCat.UserDataExternal);
+		}
+		
+		
 		[Test] public void CheckCreateSqlTable()
 		{
 			IDbAbstraction db_abstraction = DbFactoryTest.CreateDbAbstraction (true);
