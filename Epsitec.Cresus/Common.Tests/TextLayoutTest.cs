@@ -30,8 +30,10 @@ namespace Epsitec.Common.Tests
 			layout.Alignment = ContentAlignment.MiddleCenter;
 			layout.LayoutSize = new Size(200, 100);
 
-			Point pos = new Point(50, 50);
+			Point pos = new Point(20, 20);
 
+			e.Graphics.RotateTransform (5, 0, 0);
+			e.Graphics.ScaleTransform (1.2, 1.2, 0, 0);
 			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
 			e.Graphics.RenderSolid(Color.FromBrightness(1));
 
