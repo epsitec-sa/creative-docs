@@ -13,7 +13,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckCompile()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><field name='a'>A</field><field name='b'>B</field></bundle>";
+			string test_string = "<bundle><data name='a'>A</data><data name='b'>B</data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
@@ -30,7 +30,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckCompileRefBundle()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><field name='a'>A</field><bundle name='b'><ref target='file:button.cancel'/></bundle></bundle>";
+			string test_string = "<bundle><data name='a'>A</data><bundle name='b'><ref target='file:button.cancel'/></bundle></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckCompileSubBundle()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><field name='a'>A0</field><bundle name='b'><field name='a'>A1</field><field name='b'>B1</field></bundle></bundle>";
+			string test_string = "<bundle><data name='a'>A0</data><bundle name='b'><data name='a'>A1</data><data name='b'>B1</data></bundle></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckCompileCDATA()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><field name='text'><![CDATA[Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.]]></field></bundle>";
+			string test_string = "<bundle><data name='text'><![CDATA[Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.]]></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
@@ -87,10 +87,25 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals ("Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.", bundle["text"]);
 		}
 		
+		[Test] public void CheckCompileEmbeddedXml()
+		{
+			ResourceBundle bundle = ResourceBundle.Create ("test");
+			string test_string = "<bundle><data name='text'><xml>Small <b>text</b> to <i>check</i> if embedded &lt;xml&gt; works.</xml></data></bundle>";
+			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+			byte[] test_data = encoding.GetBytes (test_string);
+			bundle.Compile (test_data);
+			
+			string[] names = bundle.FieldNames;
+			
+			Assertion.AssertEquals (1, bundle.CountFields);
+			Assertion.AssertEquals ("text", names[0]);
+			Assertion.AssertEquals ("Small <b>text</b> to <i>check</i> if embedded &lt;xml&gt; works.", bundle["text"]);
+		}
+		
 		[Test] public void CheckCompileEscapes()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><field name='text'>&lt;&amp;&gt;</field></bundle>";
+			string test_string = "<bundle><data name='text'>&lt;&amp;&gt;</data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
@@ -105,8 +120,8 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckCompileAndMerge()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string_1 = "<bundle><field name='a'>A</field><field name='b'>B</field></bundle>";
-			string test_string_2 = "<bundle><field name='a'>X</field><field name='c'>C</field></bundle>";
+			string test_string_1 = "<bundle><data name='a'>A</data><data name='b'>B</data></bundle>";
+			string test_string_2 = "<bundle><data name='a'>X</data><data name='c'>C</data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data_1 = encoding.GetBytes (test_string_1);
 			byte[] test_data_2 = encoding.GetBytes (test_string_2);
@@ -127,19 +142,19 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals (null, bundle["d"]);
 		}
 		
-		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileEx1()
+		[Test] [ExpectedException (typeof (System.Xml.XmlException))] public void CheckCompileEx1()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<field name='a'>A</field><field name='b'>B</field>";
+			string test_string = "<data name='a'>A</data><data name='b'>B</data>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
 		}
 		
-		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileEx2()
+		[Test] [ExpectedException (typeof (System.Xml.XmlException))] public void CheckCompileEx2()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><field name='a'>A<field name='b'>B</field></bundle>";
+			string test_string = "<bundle><data name='a'>A<data name='b'>B</data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
@@ -148,7 +163,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckCompileRefLevel1()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><field name='a'>A</field><ref target='file:button.cancel'/></bundle>";
+			string test_string = "<bundle><data name='a'>A</data><ref target='file:button.cancel'/></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
@@ -169,7 +184,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckCompileRefLevel2()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><field name='a'>A</field><field name='b'><ref target='file:strings#label.Hello'/></field><field name='c'><ref target='file:strings#title.MainWindow'/></field></bundle>";
+			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='file:strings#label.Hello'/></data><data name='c'><ref target='file:strings#title.MainWindow'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
@@ -190,7 +205,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckCompileRefLevel2AutoPrefix()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><field name='a'>A</field><field name='b'><ref target='button.cancel#text'/></field></bundle>";
+			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='button.cancel#text'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data, "file", ResourceLevel.Default);
@@ -208,28 +223,37 @@ namespace Epsitec.Common.Support
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx1()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><field name='a'>A</field><field name='b'><ref target='button.cancel#text'/></field></bundle>";
+			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='button.cancel#text'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
+			
+			string value_a = bundle.GetFieldString ("a");
+			string value_b = bundle.GetFieldString ("b");
 		}
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx2()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><field name='a'>A</field><field name='b'><ref target='file:does-not-exist#text'/></field></bundle>";
+			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='file:does-not-exist#text'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
+			
+			string value_a = bundle.GetFieldString ("a");
+			string value_b = bundle.GetFieldString ("b");
 		}
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx3()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><field name='a'>A</field><field name='b'><ref target='file:button.cancel#does-not-exist'/></field></bundle>";
+			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='file:button.cancel#does-not-exist'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
+			
+			string value_a = bundle.GetFieldString ("a");
+			string value_b = bundle.GetFieldString ("b");
 		}
 		
 		private void CompileWithExceptionHandling(string test_string)
@@ -253,31 +277,31 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCompileSyntax1()
 		{
-			string test_string = "<bundle><field name='a'>A</field><fold name='b'>B</field></bundle>";
+			string test_string = "<bundle><data name='a'>A</data><d*ta name='b'>B</data></bundle>";
 			this.CompileWithExceptionHandling (test_string);
 		}
 		
 		[Test] public void CheckCompileSyntax2()
 		{
-			string test_string = "<bundle><field name='a'>A</field><field name='b'>B</fold></bundle>";
+			string test_string = "<bundle><data name='a'>A</data><data name='b'>B</d*ta></bundle>";
 			this.CompileWithExceptionHandling (test_string);
 		}
 		
 		[Test] public void CheckCompileSyntax3()
 		{
-			string test_string = "<bundle><field name='a'>A</field><field nome='b'>B</field></bundle>";
+			string test_string = "<bundle><data name='a'>A</data><data nome='b'>B</data></bundle>";
 			this.CompileWithExceptionHandling (test_string);
 		}
 		
 		[Test] public void CheckCompileSyntax4()
 		{
-			string test_string = "<bundle><field name='a'>A</field>\n<ref target='x'/></bundle>";
+			string test_string = "<bundle><data name='a'>A</data>\n<ref target='x'/></bundle>";
 			this.CompileWithExceptionHandling (test_string);
 		}
 		
 		[Test] public void CheckCompileSyntax5()
 		{
-			string test_string = "<bundle><field name='a'>A</field>\n<ref target='file:button.cancel' type='x'/></bundle>";
+			string test_string = "<bundle><data name='a'>A</data>\n<ref target='file:button.cancel' type='x'/></bundle>";
 			this.CompileWithExceptionHandling (test_string);
 		}
 	}
