@@ -22,7 +22,7 @@ namespace Epsitec.Common.Support.Implementation
 		public virtual void SelectLocale(System.Globalization.CultureInfo culture)
 		{
 			this.culture = culture;
-			this.suffix  = "." + this.culture.TwoLetterISOLanguageName.ToUpper ();
+			this.suffix  = "." + this.culture.TwoLetterISOLanguageName;
 			this.custom  = "." + Resources.CustomisedSuffix;
 		}
 		
