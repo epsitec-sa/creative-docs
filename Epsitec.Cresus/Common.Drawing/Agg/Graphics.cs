@@ -165,6 +165,12 @@ namespace Epsitec.Common.Drawing.Agg
 			this.UpdateTransform ();
 		}
 		
+		public override void TranslateTransform(double ox, double oy)
+		{
+			this.transform.MultiplyByPostfix (Drawing.Transform.FromTranslation (ox, oy));
+			this.UpdateTransform ();
+		}
+		
 		
 		public override void SetClippingRectangle(double x, double y, double width, double height)
 		{
