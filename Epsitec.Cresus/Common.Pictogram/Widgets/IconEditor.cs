@@ -8,12 +8,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe IconEditor représente l'éditeur d'icône complet.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class IconEditor : Epsitec.Common.Widgets.Widget
 	{
 		public IconEditor()
 		{
-			Epsitec.Common.Support.ImageProvider.RegisterAssembly("Epsitec.Common.Pictogram", this.GetType().Assembly);
-			
 			this.CreateLayout();
 			this.UpdatePanels();
 			this.panelPages.Update();

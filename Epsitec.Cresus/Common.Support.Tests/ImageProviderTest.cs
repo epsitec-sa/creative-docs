@@ -14,5 +14,25 @@ namespace Epsitec.Common.Support
 			Assertion.AssertNotNull (im2);
 			Assertion.AssertNull (im3);
 		}
+		
+		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckGetImageEx1()
+		{
+			Drawing.Image im1 = Support.ImageProvider.Default.GetImage ("file:../open.png");
+		}
+		
+		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckGetImageEx2()
+		{
+			Drawing.Image im1 = Support.ImageProvider.Default.GetImage ("file:/open.png");
+		}
+		
+		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckGetImageEx3()
+		{
+			Drawing.Image im1 = Support.ImageProvider.Default.GetImage ("file:C:/open.png");
+		}
+		
+		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckGetImageEx4()
+		{
+			Drawing.Image im1 = Support.ImageProvider.Default.GetImage ("file:\\open.png");
+		}
 	}
 }
