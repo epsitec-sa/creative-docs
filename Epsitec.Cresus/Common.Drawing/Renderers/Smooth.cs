@@ -81,7 +81,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		public void AddPath(Drawing.Path path)
 		{
-			this.SetTransform (graphics.InternalTransform);
+			this.SetTransform (graphics.Transform);
 			
 			AntiGrain.Renderer.Smooth.Setup (this.agg_ren, this.r1, this.r2, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
 			AntiGrain.Renderer.Smooth.AddPath (this.agg_ren, path.Handle);
