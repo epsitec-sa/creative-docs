@@ -24,7 +24,7 @@ namespace Epsitec.Icons
 			this.icon_editor.Dock   = DockStyle.Fill;
 			this.icon_editor.Parent = this.main_window.Root;
 			
-			this.main_window.Show();
+			this.main_window.Show ();
 			this.main_window.ClientSize = new Size (700, 500);  // TODO: dessin initial KO sans cela !
 		}
 		

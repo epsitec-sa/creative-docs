@@ -85,7 +85,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Icons", "App.IconEditor
 EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 20
+		SccNumberOfProjects = 22
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -165,6 +165,14 @@ Global
 		SccProjectName19 = \u0022$/Epsitec.Cresus/Cresus.Database.Implementation\u0022,\u0020LROAAAAA
 		SccLocalPath19 = Cresus.Database.Implementation
 		CanCheckoutShared = false
+		SccProjectUniqueName20 = Common.NiceIcon\\Common.NiceIcon.csproj
+		SccLocalPath20 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection20 = Common.NiceIcon\\
+		SccProjectUniqueName21 = App.IconEditor\\App.Icons.csproj
+		SccLocalPath21 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection21 = App.IconEditor\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug

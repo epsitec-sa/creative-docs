@@ -5,10 +5,42 @@ namespace Epsitec.Common.Drawing
 	/// <summary>
 	/// La classe Bitmap encapsule une image de type bitmap.
 	/// </summary>
-	public class Bitmap : Image, System.IDisposable
+	public class Bitmap : Image
 	{
 		public Bitmap()
 		{
+		}
+		
+		
+		public override void DefineZoom(double zoom)
+		{
+			//	Le zoom de l'appelant ne joue aucun rôle... La définition de
+			//	l'image est fixe.
+			
+			System.Diagnostics.Debug.WriteLine ("Zoom : " + zoom);
+		}
+		
+		public override void MergeTransform(Transform transform)
+		{
+			//	Fusionne la transformation spécifiée avec la transformation propre à l'image
+			//	(changement d'échelle pour que la taille logique soit respectée).
+			
+			if (this.bitmap != null)
+			{
+				//	Il se peut que le bitmap définisse une échelle interne (la taille logique ne
+				//	correspond pas à la taille exprimée en pixels). Dans ce cas, il faut modifier
+				//	la matrice de transformation pour que le dessin ait la taille logique, et pas
+				//	la taille physique :
+					
+				double sx = this.PixelWidth / this.Width;
+				double sy = this.PixelHeight / this.Height;
+					
+				if ((sx != 1) &&
+					(sy != 1))
+				{
+					transform.Scale (1/sx, 1/sy);
+				}
+			}
 		}
 		
 		
@@ -33,6 +65,11 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public bool						IsValid
+		{
+			get { return this.bitmap != null; }
+		}
+
 		public int						PixelWidth
 		{
 			get { return this.bitmap.Width; }
@@ -88,19 +125,19 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public static Bitmap FromNativeBitmap(System.Drawing.Bitmap native)
+		public static Image FromNativeBitmap(System.Drawing.Bitmap native)
 		{
-			Bitmap bitmap = Bitmap.FromNativeBitmap (native, new Point (0, 0));
+			Image bitmap = Bitmap.FromNativeBitmap (native, new Point (0, 0));
 			bitmap.is_origin_defined = false;
 			return bitmap;
 		}
 		
-		public static Bitmap FromNativeBitmap(System.Drawing.Bitmap native, Point origin)
+		public static Image FromNativeBitmap(System.Drawing.Bitmap native, Point origin)
 		{
 			return Bitmap.FromNativeBitmap (native, origin, Size.Empty);
 		}
 		
-		public static Bitmap FromNativeBitmap(System.Drawing.Bitmap native, Point origin, Size size)
+		public static Image FromNativeBitmap(System.Drawing.Bitmap native, Point origin, Size size)
 		{
 			if (size == Size.Empty)
 			{
@@ -117,96 +154,99 @@ namespace Epsitec.Common.Drawing
 			return bitmap;
 		}
 		
-		public static Bitmap FromData(byte[] data)
+		public static Image FromData(byte[] data)
 		{
-			using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
-			{
-				System.Drawing.Bitmap native = new System.Drawing.Bitmap (stream);
-				Bitmap bitmap = Bitmap.FromNativeBitmap (native);
-				bitmap.is_origin_defined = false;
-				return bitmap;
-			}
-		}
-		
-		public static Bitmap FromData(byte[] data, Point origin)
-		{
-			using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
-			{
-				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (stream);
-				return Bitmap.FromNativeBitmap (bitmap, origin);
-			}
-		}
-		
-		public static Bitmap FromData(byte[] data, Point origin, Size size)
-		{
-			using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
-			{
-				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (stream);
-				return Bitmap.FromNativeBitmap (bitmap, origin, size);
-			}
-		}
-		
-		public static Bitmap FromFile(string file_name)
-		{
-			Bitmap bitmap = Bitmap.FromFile (file_name, new Point (0, 0));
+			Image bitmap = Bitmap.FromData (data, new Point (0, 0));
 			bitmap.is_origin_defined = false;
 			return bitmap;
 		}
 		
-		public static Bitmap FromFile(string file_name, Point origin)
+		public static Image FromData(byte[] data, Point origin)
+		{
+			return Bitmap.FromData (data, origin, Size.Empty);
+		}
+		
+		public static Image FromData(byte[] data, Point origin, Size size)
+		{
+			//	Avant de passer les données brutes à .NET pour en extraire l'image de
+			//	format PNG/TIFF/JPEG, on regarde s'il ne s'agit pas d'un format "maison".
+			
+			if (data.Length > 40)
+			{
+				if ((data[0] == (byte) '<') &&
+					(data[1] == (byte) '?') &&
+					(data[2] == (byte) 'x'))
+				{
+					//	Il y a de très fortes chances que ce soit une image vectorielle définie
+					//	au moyen du format interne propre à EPSITEC.
+					
+					return new Canvas (data);
+				}
+			}
+			
+			using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
+			{
+				System.Drawing.Bitmap src_bitmap = new System.Drawing.Bitmap (stream);
+				System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (src_bitmap.Width, src_bitmap.Height);
+			
+				using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+				{
+					graphics.DrawImageUnscaled (src_bitmap, 0, 0, src_bitmap.Width, src_bitmap.Height);
+				}
+			
+				return Bitmap.FromNativeBitmap (dst_bitmap, origin, size);
+			}
+		}
+		
+		public static Image FromFile(string file_name)
+		{
+			Image bitmap = Bitmap.FromFile (file_name, new Point (0, 0));
+			bitmap.is_origin_defined = false;
+			return bitmap;
+		}
+		
+		public static Image FromFile(string file_name, Point origin)
 		{
 			return Bitmap.FromFile (file_name, origin, Size.Empty);
 		}
 		
-		public static Bitmap FromFile(string file_name, Point origin, Size size)
+		public static Image FromFile(string file_name, Point origin, Size size)
 		{
-			Bitmap bitmap = new Bitmap ();
-			
-			using (System.Drawing.Image src_image = System.Drawing.Image.FromFile (file_name))
+			using (System.IO.FileStream file = new System.IO.FileStream (file_name, System.IO.FileMode.Open, System.IO.FileAccess.Read))
 			{
-				if (size == Size.Empty)
-				{
-					size = new Size (src_image.Width, src_image.Height);
-				}
+				long   length = file.Length;
+				byte[] buffer = new byte[length];
+				file.Read (buffer, 0, (int) length);
 				
-				bitmap.bitmap = new System.Drawing.Bitmap (src_image);
-				bitmap.size   = size;
-				bitmap.origin = origin;
-				
-				bitmap.is_origin_defined = true;
+				return Bitmap.FromData (buffer, origin, size);
 			}
-			
+		}
+		
+		public static Image FromManifestResource(string resource_name, System.Reflection.Assembly assembly)
+		{
+			Image bitmap = Bitmap.FromManifestResource (resource_name, assembly, new Point (0, 0));
+			bitmap.is_origin_defined = false;
 			return bitmap;
 		}
 		
-		public static Bitmap FromManifestResource(string resource_name, System.Reflection.Assembly assembly)
+		public static Image FromManifestResource(string resource_name, System.Reflection.Assembly assembly, Point origin)
+		{
+			return Bitmap.FromManifestResource (resource_name, assembly, origin, Size.Empty);
+		}
+		
+		public static Image FromManifestResource(string resource_name, System.Reflection.Assembly assembly, Point origin, Size size)
 		{
 			using (System.IO.Stream stream = assembly.GetManifestResourceStream (resource_name))
 			{
-				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (stream);
-				return Bitmap.FromNativeBitmap (bitmap);
+				long   length = stream.Length;
+				byte[] buffer = new byte[length];
+				stream.Read (buffer, 0, (int) length);
+				
+				return Bitmap.FromData (buffer, origin, size);
 			}
 		}
 		
-		public static Bitmap FromManifestResource(string resource_name, System.Reflection.Assembly assembly, Point origin)
-		{
-			using (System.IO.Stream stream = assembly.GetManifestResourceStream (resource_name))
-			{
-				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (stream);
-				return Bitmap.FromNativeBitmap (bitmap, origin);
-			}
-		}
-		
-		public static Bitmap FromManifestResource(string resource_name, System.Reflection.Assembly assembly, Point origin, Size size)
-		{
-			using (System.IO.Stream stream = assembly.GetManifestResourceStream (resource_name))
-			{
-				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (stream);
-				return Bitmap.FromNativeBitmap (bitmap, origin, size);
-			}
-		}
-		
-		public static Bitmap FromImageDisabled(Image image, Color background)
+		public static Image FromImageDisabled(Image image, Color background)
 		{
 			if (image == null)
 			{
@@ -246,7 +286,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public static Bitmap CopyImage(Image image)
+		public static Image CopyImage(Image image)
 		{
 			if (image == null)
 			{
@@ -271,14 +311,14 @@ namespace Epsitec.Common.Drawing
 			return bitmap;
 		}
 		
-		public static Bitmap FromLargerImage(Image image, Rectangle clip)
+		public static Image FromLargerImage(Image image, Rectangle clip)
 		{
-			Bitmap bitmap = Bitmap.FromLargerImage (image, clip, Point.Empty);
+			Image bitmap = Bitmap.FromLargerImage (image, clip, Point.Empty);
 			bitmap.is_origin_defined = false;
 			return bitmap;
 		}
 		
-		public static Bitmap FromLargerImage(Image image, Rectangle clip, Point origin)
+		public static Image FromLargerImage(Image image, Rectangle clip, Point origin)
 		{
 			if (image == null)
 			{
@@ -314,14 +354,12 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public void Dispose()
+		protected override void Dispose(bool disposing)
 		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
-		}
-
-		protected virtual void Dispose(bool disposing)
-		{
+			System.Diagnostics.Debug.Assert (this.is_disposed == false);
+			
+			this.is_disposed = true;
+			
 			if (disposing)
 			{
 				if (this.bitmap != null)
@@ -333,6 +371,8 @@ namespace Epsitec.Common.Drawing
 				this.bitmap_data = null;
 				this.bitmap_lock_count = 0;
 			}
+			
+			base.Dispose (disposing);
 		}
 		
 		
@@ -378,6 +418,8 @@ namespace Epsitec.Common.Drawing
 		protected System.Drawing.Bitmap			bitmap;
 		protected BitmapData					bitmap_data;
 		protected volatile int					bitmap_lock_count;
+		
+		protected bool							is_disposed;
 		
 		static System.Collections.Hashtable		disabled_images = new System.Collections.Hashtable ();
 	}
