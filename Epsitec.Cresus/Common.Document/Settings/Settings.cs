@@ -8,7 +8,7 @@ namespace Epsitec.Common.Document.Settings
 	/// La classe Settings contient tous les réglages.
 	/// </summary>
 	[System.Serializable()]
-	public class Settings
+	public class Settings : ISerializable
 	{
 		public Settings(Document document)
 		{
@@ -20,111 +20,67 @@ namespace Epsitec.Common.Document.Settings
 			this.guides = new System.Collections.ArrayList();
 		}
 
-		// Crée tous les réglages par défaut.
+		// Crée tous les réglages par défaut, si nécessaire.
+		// Il est possible d'en ajouter de nouveaux tout en restant compatible
+		// avec les anciens fichiers sérialisés.
 		protected void CreateDefault()
 		{
-			Bool sBool;
-			Point sPoint;
-			
-			sPoint = new Point(this.document);
-			sPoint.Name = "PageSize";
-			sPoint.TextX = "Largeur";
-			sPoint.TextY = "Hauteur";
-			if ( this.document.Type == DocumentType.Pictogram )
+			this.CreateDefaultPoint("PageSize");
+			this.CreateDefaultBool("GridActive");
+			this.CreateDefaultBool("GridShow");
+			this.CreateDefaultPoint("GridStep");
+			this.CreateDefaultPoint("GridSubdiv");
+			this.CreateDefaultPoint("GridOffset");
+			this.CreateDefaultBool("GuidesActive");
+			this.CreateDefaultBool("GuidesShow");
+			this.CreateDefaultPoint("DuplicateMove");
+			this.CreateDefaultInteger("DefaultUnit");
+		}
+
+		protected void CreateDefaultBool(string name)
+		{
+			Bool sBool = this.Get(name) as Bool;
+			if ( sBool == null )
 			{
-				sPoint.MinValue = 5.0;
-				sPoint.MaxValue = 100.0;
-				sPoint.Step = 1.0;
-				sPoint.Resolution = 1.0;
+				sBool = new Bool(this.document, name);
+				this.settings.Add(sBool);
 			}
-			else
+		}
+
+		protected void CreateDefaultInteger(string name)
+		{
+			Integer sInteger = this.Get(name) as Integer;
+			if ( sInteger == null )
 			{
-				sPoint.MinValue = 10.0;
-				sPoint.MaxValue = 1000.0;
-				sPoint.Step = 1.0;
-				sPoint.Resolution = 0.1;
+				sInteger = new Integer(this.document, name);
+				this.settings.Add(sInteger);
 			}
-			this.settings.Add(sPoint);
-			
-			sBool = new Bool(this.document);
-			sBool.Name = "GridActive";
-			sBool.Text = "Grille active";
-			this.settings.Add(sBool);
-			
-			sBool = new Bool(this.document);
-			sBool.Name = "GridShow";
-			sBool.Text = "Grille visible";
-			this.settings.Add(sBool);
-			
-			sPoint = new Point(this.document);
-			sPoint.Name = "GridStep";
-			sPoint.TextX = "Pas horizontal";
-			sPoint.TextY = "Pas vertical";
-			if ( this.document.Type == DocumentType.Pictogram )
+		}
+
+		protected void CreateDefaultDouble(string name)
+		{
+			Double sDouble = this.Get(name) as Double;
+			if ( sDouble == null )
 			{
-				sPoint.MinValue = 0.5;
-				sPoint.MaxValue = 10.0;
-				sPoint.Step = 0.5;
-				sPoint.Resolution = 0.5;
+				sDouble = new Double(this.document, name);
+				this.settings.Add(sDouble);
 			}
-			else
+		}
+
+		protected void CreateDefaultPoint(string name)
+		{
+			Point sPoint = this.Get(name) as Point;
+			if ( sPoint == null )
 			{
-				sPoint.MinValue = 0.1;
-				sPoint.MaxValue = 100.0;
-				sPoint.Step = 1.0;
-				sPoint.Resolution = 0.1;
+				sPoint = new Point(this.document, name);
+				this.settings.Add(sPoint);
 			}
-			this.settings.Add(sPoint);
-			
-			sPoint = new Point(this.document);
-			sPoint.Name = "GridOffset";
-			sPoint.TextX = "Décalage horizontal";
-			sPoint.TextY = "Décalage vertical";
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				sPoint.MinValue = -10.0;
-				sPoint.MaxValue = 10.0;
-				sPoint.Step = 0.5;
-				sPoint.Resolution = 0.1;
-			}
-			else
-			{
-				sPoint.MinValue = -100.0;
-				sPoint.MaxValue = 100.0;
-				sPoint.Step = 0.5;
-				sPoint.Resolution = 0.1;
-			}
-			this.settings.Add(sPoint);
-			
-			sBool = new Bool(this.document);
-			sBool.Name = "GuidesActive";
-			sBool.Text = "Repères magnétiques";
-			this.settings.Add(sBool);
-			
-			sBool = new Bool(this.document);
-			sBool.Name = "GuidesShow";
-			sBool.Text = "Repères visibles";
-			this.settings.Add(sBool);
-			
-			sPoint = new Point(this.document);
-			sPoint.Name = "DuplicateMove";
-			sPoint.TextX = "Déplacement à droite";
-			sPoint.TextY = "Déplacement en haut";
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				sPoint.MinValue = -100.0;
-				sPoint.MaxValue = 100.0;
-				sPoint.Step = 1.0;
-				sPoint.Resolution = 0.5;
-			}
-			else
-			{
-				sPoint.MinValue = -1000.0;
-				sPoint.MaxValue = 1000.0;
-				sPoint.Step = 1.0;
-				sPoint.Resolution = 0.1;
-			}
-			this.settings.Add(sPoint);
+		}
+
+		// Remets tous les réglages par défaut.
+		public void Reset()
+		{
+			this.GuidesReset();
 		}
 
 		// Nombre total de réglages.
@@ -162,12 +118,28 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
+		// Supprime tous les guides.
+		public void GuidesReset()
+		{
+			this.guides = new System.Collections.ArrayList();
+			this.document.Notifier.NotifyGuidesChanged();
+			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+			this.document.IsDirtySerialize = true;
+		}
+
+		// Donne un guide.
+		public Guide GuidesGet(int index)
+		{
+			return this.guides[index] as Guide;
+		}
+
 		// Ajoute un nouveau guide.
 		public int GuidesAdd(Guide guide)
 		{
 			int index = this.guides.Add(guide);
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+			this.document.IsDirtySerialize = true;
 			return index;
 		}
 
@@ -177,6 +149,7 @@ namespace Epsitec.Common.Document.Settings
 			this.guides.Insert(index, guide);
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+			this.document.IsDirtySerialize = true;
 		}
 
 		// Supprime un guide.
@@ -185,12 +158,7 @@ namespace Epsitec.Common.Document.Settings
 			this.guides.RemoveAt(index);
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
-		}
-
-		// Donne un guide.
-		public Guide GuidesGet(int index)
-		{
-			return this.guides[index] as Guide;
+			this.document.IsDirtySerialize = true;
 		}
 
 
@@ -208,6 +176,12 @@ namespace Epsitec.Common.Document.Settings
 			this.document = Document.ReadDocument;
 			this.settings = (System.Collections.ArrayList) info.GetValue("Settings", typeof(System.Collections.ArrayList));
 			this.guides = (System.Collections.ArrayList) info.GetValue("Guides", typeof(System.Collections.ArrayList));
+		}
+
+		// Adapte l'objet après une désérialisation.
+		public void ReadFinalize()
+		{
+			this.CreateDefault();
 		}
 		#endregion
 

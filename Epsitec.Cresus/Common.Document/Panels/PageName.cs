@@ -20,7 +20,7 @@ namespace Epsitec.Common.Document.Panels
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			ToolTip.Default.SetToolTip(this.field, "Nom du style");
+			ToolTip.Default.SetToolTip(this.field, "Nom de la page");
 		}
 		
 		protected override void Dispose(bool disposing)

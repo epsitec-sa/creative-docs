@@ -12,6 +12,10 @@ namespace Epsitec.Common.Document.Properties
 	{
 		public Color(Document document, Type type) : base(document, type)
 		{
+		}
+
+		protected override void Initialise()
+		{
 			this.color = Drawing.Color.FromBrightness(0.0);
 		}
 
@@ -87,6 +91,6 @@ namespace Epsitec.Common.Document.Properties
 		#endregion
 
 	
-		protected Drawing.Color			color = Drawing.Color.FromBrightness(0);
+		protected Drawing.Color			color;
 	}
 }

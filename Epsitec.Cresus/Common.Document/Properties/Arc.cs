@@ -22,6 +22,10 @@ namespace Epsitec.Common.Document.Properties
 	{
 		public Arc(Document document, Type type) : base(document, type)
 		{
+		}
+
+		protected override void Initialise()
+		{
 			this.arcType       = ArcType.Full;
 			this.startingAngle =  90.0;
 			this.endingAngle   = 360.0;
@@ -227,11 +231,6 @@ namespace Epsitec.Common.Document.Properties
 			{
 				this.startingAngle = info.GetDouble("StartingAngle");
 				this.endingAngle   = info.GetDouble("EndingAngle");
-			}
-			else
-			{
-				this.startingAngle =  90.0;
-				this.endingAngle   = 360.0;
 			}
 		}
 		#endregion

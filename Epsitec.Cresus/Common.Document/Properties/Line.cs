@@ -12,6 +12,10 @@ namespace Epsitec.Common.Document.Properties
 	{
 		public Line(Document document, Type type) : base(document, type)
 		{
+		}
+
+		protected override void Initialise()
+		{
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
 				this.width = 1.0;
@@ -328,19 +332,25 @@ namespace Epsitec.Common.Document.Properties
 
 
 		// Retourne la valeur d'engraissement pour la bbox.
-		public override double WidthInflateBoundingBox()
+		public double InflateBoundingBoxWidth()
+		{
+			return this.width*0.5;
+		}
+
+		// Retourne la valeur d'engraissement pour la bbox.
+		public double InflateBoundingBoxFactor()
 		{
 			if ( this.join == JoinStyle.Miter )
 			{
-				return this.width*0.5*this.limit;
+				return this.limit;
 			}
 			else if ( this.cap == CapStyle.Square )
 			{
-				return this.width*0.5*1.415;  // augmente de racine de 2
+				return 1.415;  // augmente de racine de 2
 			}
 			else
 			{
-				return this.width*0.5;
+				return 1.0;
 			}
 		}
 
@@ -483,18 +493,6 @@ namespace Epsitec.Common.Document.Properties
 			{
 				this.dashPen = (double[]) info.GetValue("DashPen", typeof(double[]));
 				this.dashGap = (double[]) info.GetValue("DashGap", typeof(double[]));
-			}
-			else
-			{
-				this.dashPen = new double[Line.DashMax];
-				this.dashGap = new double[Line.DashMax];
-				this.dashPen[0] = 1.0;
-				this.dashGap[0] = 1.0;
-				for ( int i=1 ; i<Line.DashMax ; i++ )
-				{
-					this.dashPen[i] = 0.0;
-					this.dashGap[i] = 0.0;
-				}
 			}
 		}
 		#endregion

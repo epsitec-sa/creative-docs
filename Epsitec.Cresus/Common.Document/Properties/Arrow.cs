@@ -29,6 +29,10 @@ namespace Epsitec.Common.Document.Properties
 	{
 		public Arrow(Document document, Type type) : base(document, type)
 		{
+		}
+
+		protected override void Initialise()
+		{
 			this.arrowType = new ArrowType[2];
 			this.length    = new double[2];
 			this.effect1   = new double[2];
@@ -706,19 +710,6 @@ namespace Epsitec.Common.Document.Properties
 				this.length = (double[]) info.GetValue("Length", typeof(double[]));
 				this.effect1 = (double[]) info.GetValue("Effect1", typeof(double[]));
 				this.effect2 = (double[]) info.GetValue("Effect2", typeof(double[]));
-			}
-			else
-			{
-				this.length    = new double[2];
-				this.effect1   = new double[2];
-				this.effect2   = new double[2];
-
-				this.length[0]    = 2.0;
-				this.length[1]    = 2.0;
-				this.effect1[0]   = 0.5;
-				this.effect1[1]   = 0.5;
-				this.effect2[0]   = 0.5;
-				this.effect2[1]   = 0.5;
 			}
 		}
 		#endregion

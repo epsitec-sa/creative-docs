@@ -12,6 +12,10 @@ namespace Epsitec.Common.Document.Properties
 	{
 		public ModColor(Document document, Type type) : base(document, type)
 		{
+		}
+
+		protected override void Initialise()
+		{
 			this.h = 0.0;
 			this.s = 0.0;
 			this.v = 0.0;
@@ -304,13 +308,13 @@ namespace Epsitec.Common.Document.Properties
 		#endregion
 
 	
-		protected double			h = 0.0;  // 0..360
-		protected double			s = 0.0;  // -1..1
-		protected double			v = 0.0;  // -1..1
-		protected double			r = 0.0;  // -1..1
-		protected double			g = 0.0;  // -1..1
-		protected double			b = 0.0;  // -1..1
-		protected double			a = 0.0;  // -1..1
-		protected bool				n = false;  // negativ
+		protected double			h;  // 0..360
+		protected double			s;  // -1..1
+		protected double			v;  // -1..1
+		protected double			r;  // -1..1
+		protected double			g;  // -1..1
+		protected double			b;  // -1..1
+		protected double			a;  // -1..1
+		protected bool				n;  // negativ
 	}
 }

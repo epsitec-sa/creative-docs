@@ -43,29 +43,29 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldColor2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldColor2, "Couleur 2");
 
-			this.fieldRepeat = new TextFieldSlider(this);
-			this.fieldRepeat.MinValue = 1;
-			this.fieldRepeat.MaxValue = 8;
-			this.fieldRepeat.Step = 1;
+			this.fieldRepeat = new TextFieldReal(this);
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldRepeat);
+			this.fieldRepeat.InternalMinValue = 1;
+			this.fieldRepeat.InternalMaxValue = 8;
 			this.fieldRepeat.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldRepeat.TabIndex = 4;
 			this.fieldRepeat.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRepeat, "Nombre de répétitions");
 
-			this.fieldMiddle = new TextFieldSlider(this);
-			this.fieldMiddle.MinValue = -100;
-			this.fieldMiddle.MaxValue =  100;
-			this.fieldMiddle.Step = 10;
+			this.fieldMiddle = new TextFieldReal(this);
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldMiddle);
+			this.fieldMiddle.InternalMinValue = -100;
+			this.fieldMiddle.InternalMaxValue =  100;
 			this.fieldMiddle.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldMiddle.TabIndex = 5;
 			this.fieldMiddle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMiddle, "Couleur médiane");
 
-			this.fieldSmooth = new TextFieldSlider(this);
-			this.fieldSmooth.MinValue =  0;
-			this.fieldSmooth.MaxValue = 10;
-			this.fieldSmooth.Step = 0.2M;
-			this.fieldSmooth.Resolution = 0.1M;
+			this.fieldSmooth = new TextFieldReal(this);
+			this.fieldSmooth.FactorMinRange = 0.0M;
+			this.fieldSmooth.FactorMaxRange = 0.1M;
+			this.fieldSmooth.FactorStep = 1.0M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldSmooth);
 			this.fieldSmooth.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldSmooth.TabIndex = 6;
 			this.fieldSmooth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -159,9 +159,9 @@ namespace Epsitec.Common.Document.Panels
 
 			this.fieldColor1.Color = p.Color1;
 			this.fieldColor2.Color = p.Color2;
-			this.fieldRepeat.Value = (decimal) p.Repeat;
-			this.fieldMiddle.Value = (decimal) p.Middle*100;
-			this.fieldSmooth.Value = (decimal) p.Smooth;
+			this.fieldRepeat.InternalValue = (decimal) p.Repeat;
+			this.fieldMiddle.InternalValue = (decimal) p.Middle*100;
+			this.fieldSmooth.InternalValue = (decimal) p.Smooth;
 
 			this.angle = p.Angle;
 			this.cx    = p.Cx;
@@ -193,9 +193,9 @@ namespace Epsitec.Common.Document.Panels
 
 			p.Color1 = this.fieldColor1.Color;
 			p.Color2 = this.fieldColor2.Color;
-			p.Repeat = (int)this.fieldRepeat.Value;
-			p.Middle = (double) this.fieldMiddle.Value/100;
-			p.Smooth = (double) this.fieldSmooth.Value;
+			p.Repeat = (int)this.fieldRepeat.InternalValue;
+			p.Middle = (double) this.fieldMiddle.InternalValue/100;
+			p.Smooth = (double) this.fieldSmooth.InternalValue;
 
 			p.Angle = this.angle;
 			p.Cx    = this.cx;
@@ -425,9 +425,9 @@ namespace Epsitec.Common.Document.Panels
 		protected ColorSample				fieldColor1;
 		protected ColorSample				fieldColor2;
 		protected IconButton				swapColor;
-		protected TextFieldSlider			fieldRepeat;
-		protected TextFieldSlider			fieldMiddle;
-		protected TextFieldSlider			fieldSmooth;
+		protected TextFieldReal				fieldRepeat;
+		protected TextFieldReal				fieldMiddle;
+		protected TextFieldReal				fieldSmooth;
 		protected StaticText				labelRepeat;
 		protected StaticText				labelMiddle;
 		protected StaticText				labelSmooth;

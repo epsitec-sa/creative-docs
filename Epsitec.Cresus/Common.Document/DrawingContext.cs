@@ -35,13 +35,16 @@ namespace Epsitec.Common.Document
 
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
-				this.gridStep = new Point(1.0, 1.0);
+				this.gridStep   = new Point(1.0, 1.0);
+				this.gridSubdiv = new Point(1.0, 1.0);
+				this.gridOffset = new Point(0.0, 0.0);
 			}
 			else
 			{
-				this.gridStep = new Point(50.0, 50.0);  // 5mm
+				this.gridStep   = new Point(50.0, 50.0);  // 5mm
+				this.gridSubdiv = new Point(5.0, 5.0);
+				this.gridOffset = new Point(0.0, 0.0);
 			}
-			this.gridOffset = new Point(0.0, 0.0);
 		}
 
 		public Viewer Viewer
@@ -321,7 +324,7 @@ namespace Epsitec.Common.Document
 
 
 		#region Grid
-		// Présence de la grille magnétique.
+		// Action de la grille magnétique.
 		public bool GridActive
 		{
 			get
@@ -339,12 +342,13 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
 					}
 				}
 			}
 		}
 
-		// Présence de la grille magnétique.
+		// Affichage de la grille magnétique.
 		public bool GridShow
 		{
 			get
@@ -363,6 +367,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
 					}
 				}
 			}
@@ -387,12 +392,38 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
 					}
 				}
 			}
 		}
 
-		// Pas de la grille magnétique.
+		// Subdivisions de la grille magnétique.
+		public Point GridSubdiv
+		{
+			get
+			{
+				return this.gridSubdiv;
+			}
+
+			set
+			{
+				if ( this.gridSubdiv != value )
+				{
+					this.gridSubdiv = value;
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifyArea(this.viewer);
+						this.document.Notifier.NotifyGridChanged();
+						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
+					}
+				}
+			}
+		}
+
+		// Décalage de la grille magnétique.
 		public Point GridOffset
 		{
 			get
@@ -411,6 +442,7 @@ namespace Epsitec.Common.Document
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifyGridChanged();
 						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
 					}
 				}
 			}
@@ -454,7 +486,7 @@ namespace Epsitec.Common.Document
 
 
 		#region Guides
-		// Présence de la grille magnétique.
+		// Action des repères magnétiques.
 		public bool GuidesActive
 		{
 			get
@@ -471,12 +503,13 @@ namespace Epsitec.Common.Document
 					if ( this.document.Notifier != null )
 					{
 						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
 					}
 				}
 			}
 		}
 
-		// Présence de la grille magnétique.
+		// Affichage des repères magnétiques.
 		public bool GuidesShow
 		{
 			get
@@ -494,12 +527,13 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
 					}
 				}
 			}
 		}
 
-		// Force un point sur un repère.
+		// Force un point sur un repère magnétique.
 		protected void SnapGuides(ref Point pos, out bool snapX, out bool snapY)
 		{
 			snapX = false;
@@ -1302,6 +1336,7 @@ namespace Epsitec.Common.Document
 		protected bool							gridActive = false;
 		protected bool							gridShow = false;
 		protected Point							gridStep = new Point(1, 1);
+		protected Point							gridSubdiv = new Point(1, 1);
 		protected Point							gridOffset = new Point(0, 0);
 		protected bool							guidesActive = true;
 		protected bool							guidesShow = true;

@@ -21,7 +21,8 @@ namespace Epsitec.Common.Document.Settings
 	/// <summary>
 	/// La classe Guide contient un repère magnétique.
 	/// </summary>
-	public class Guide
+	[System.Serializable()]
+	public class Guide : ISerializable
 	{
 		public Guide(Document document)
 		{
@@ -41,6 +42,7 @@ namespace Epsitec.Common.Document.Settings
 				{
 					this.type = value;
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+					this.document.IsDirtySerialize = true;
 				}
 			}
 		}
@@ -58,6 +60,7 @@ namespace Epsitec.Common.Document.Settings
 				{
 					this.position = value;
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+					this.document.IsDirtySerialize = true;
 				}
 			}
 		}

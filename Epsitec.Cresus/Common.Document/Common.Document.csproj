@@ -189,6 +189,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Printer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Selector.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -530,6 +535,11 @@
                 />
                 <File
                     RelPath = "Settings\Guide.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Settings\Integer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

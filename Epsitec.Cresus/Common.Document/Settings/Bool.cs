@@ -8,10 +8,34 @@ namespace Epsitec.Common.Document.Settings
 	/// <summary>
 	/// La classe Bool contient un réglage numérique.
 	/// </summary>
+	[System.Serializable()]
 	public class Bool : Abstract
 	{
-		public Bool(Document document) : base(document)
+		public Bool(Document document, string name) : base(document, name)
 		{
+			this.Initialise();
+		}
+
+		protected void Initialise()
+		{
+			switch ( this.name )
+			{
+				case "GridActive":
+					this.text = "Grille active";
+					break;
+
+				case "GridShow":
+					this.text = "Grille visible";
+					break;
+
+				case "GuidesActive":
+					this.text = "Repères actifs";
+					break;
+
+				case "GuidesShow":
+					this.text = "Repères visibles";
+					break;
+			}
 		}
 
 		public bool Value
@@ -60,37 +84,20 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
-		// Indique quel est le widget qui édite ce réglage.
-		public void CheckButton(CheckButton widget)
-		{
-			this.checkButton = widget;
-		}
-
-		// Met à jour la valeur du réglage.
-		public override void UpdateValue()
-		{
-			this.checkButton.ActiveState = this.Value ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-		}
-
-		
 		#region Serialization
 		// Sérialise le réglage.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			base.GetObjectData(info, context);
-
 			info.AddValue("Value", this.Value);
 		}
 
 		// Constructeur qui désérialise le réglage.
 		protected Bool(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			this.document = Document.ReadDocument;
 			this.Value = info.GetBoolean("Value");
+			this.Initialise();
 		}
 		#endregion
-
-
-		protected CheckButton		checkButton;
 	}
 }

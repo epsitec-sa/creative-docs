@@ -1454,12 +1454,20 @@ namespace Epsitec.Common.Document
 			double ix = 0.5/this.drawingContext.ScaleX;
 			double iy = 0.5/this.drawingContext.ScaleY;
 
+			// Dessine la grille.
 			if ( this.drawingContext.GridShow )
 			{
 				Point origin = this.document.Modifier.OriginArea;
 				origin = Point.GridAlign(origin, -this.drawingContext.GridOffset, this.drawingContext.GridStep);
+
+				double s = System.Math.Min(this.drawingContext.GridStep.X*this.drawingContext.ScaleX,
+										   this.drawingContext.GridStep.Y*this.drawingContext.ScaleY);
+				int mul = (int) System.Math.Max(10.0/s, 1.0);
+
 				// Dessine les traits verticaux.
-				double step = this.drawingContext.GridStep.X;
+				double step = this.drawingContext.GridStep.X*mul;
+				int subdiv = (int) this.drawingContext.GridSubdiv.X;
+				int rank = subdiv-(int)(-this.document.Modifier.OriginArea.X/step);
 				for ( double pos=origin.X ; pos<=this.document.Modifier.SizeArea.Width ; pos+=step )
 				{
 					double x = pos;
@@ -1468,9 +1476,21 @@ namespace Epsitec.Common.Document
 					x += ix;
 					y += iy;
 					graphics.AddLine(x, y, x, this.document.Modifier.SizeArea.Height);
+					if ( rank%subdiv == 0 )
+					{
+						graphics.RenderSolid(Color.FromARGB(0.3, 0.6,0.6,0.6));  // gris
+					}
+					else
+					{
+						graphics.RenderSolid(Color.FromARGB(0.1, 0.6,0.6,0.6));  // gris
+					}
+					rank ++;
 				}
+
 				// Dessine les traits horizontaux.
-				step = this.drawingContext.GridStep.Y;
+				step = this.drawingContext.GridStep.Y*mul;
+				subdiv = (int) this.drawingContext.GridSubdiv.Y;
+				rank = subdiv-(int)(-this.document.Modifier.OriginArea.Y/step);
 				for ( double pos=origin.Y ; pos<=this.document.Modifier.SizeArea.Height ; pos+=step )
 				{
 					double x = this.document.Modifier.OriginArea.X;
@@ -1479,10 +1499,19 @@ namespace Epsitec.Common.Document
 					x += ix;
 					y += iy;
 					graphics.AddLine(x, y, this.document.Modifier.SizeArea.Width, y);
+					if ( rank%subdiv == 0 )
+					{
+						graphics.RenderSolid(Color.FromARGB(0.3, 0.6,0.6,0.6));  // gris
+					}
+					else
+					{
+						graphics.RenderSolid(Color.FromARGB(0.1, 0.6,0.6,0.6));  // gris
+					}
+					rank ++;
 				}
-				graphics.RenderSolid(Color.FromARGB(0.3, 0.6,0.6,0.6));  // gris
 			}
 
+			// Dessine les repères.
 			if ( this.drawingContext.GuidesShow )
 			{
 				int total = this.document.Settings.GuidesCount;
@@ -1520,6 +1549,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 
+			// Dessine la cible.
 			if ( this.IsActiveViewer )
 			{
 				if ( this.document.Type == DocumentType.Pictogram )

@@ -82,22 +82,9 @@ namespace Epsitec.Common.Document.Containers
 			this.editType.DockMargins = new Margins(3, 1, 0, 0);
 			this.editType.TextChanged += new EventHandler(this.HandleEditTypeChanged);
 
-			this.editPosition = new TextFieldSlider(this.editGroup);
+			this.editPosition = new TextFieldReal(this.editGroup);
+			this.document.Modifier.AdaptTextFieldRealDimension(this.editPosition);
 			this.editPosition.Width = 60+10;
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.editPosition.MinValue = -200.0M;
-				this.editPosition.MaxValue = 200.0M;
-				this.editPosition.Step = 1.0M;
-				this.editPosition.Resolution = 1.0M;
-			}
-			else
-			{
-				this.editPosition.MinValue = -2000.0M;
-				this.editPosition.MaxValue = 2000.0M;
-				this.editPosition.Step = 1.0M;
-				this.editPosition.Resolution = 0.1M;
-			}
 			this.editPosition.Dock = DockStyle.Left;
 			this.editPosition.DockMargins = new Margins(1, 0, 0, 0);
 			this.editPosition.ValueChanged += new EventHandler(this.HandleEditPositionChanged);
@@ -109,6 +96,11 @@ namespace Epsitec.Common.Document.Containers
 		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
+			if ( this.tableRowSelected >= this.document.Settings.GuidesCount )
+			{
+				this.tableRowSelected = this.document.Settings.GuidesCount-1;
+			}
+
 			this.UpdateTable();
 			this.UpdateToolBar();
 			this.UpdateEdits();
@@ -118,7 +110,7 @@ namespace Epsitec.Common.Document.Containers
 		protected void UpdateToolBar()
 		{
 			int total = this.document.Settings.GuidesCount;
-			int sel = this.table.SelectedRow;
+			int sel = this.tableRowSelected;
 
 			this.buttonDuplicate.SetEnabled(sel != -1);
 			this.buttonUp.SetEnabled(sel != -1 && sel > 0);
@@ -174,7 +166,7 @@ namespace Epsitec.Common.Document.Containers
 			st.Text = " " + Settings.Guide.TypeToString(guide.Type);
 
 			st = this.table[1, row].Children[0] as StaticText;
-			st.Text = guide.Position.ToString() + " ";
+			st.Text = (guide.Position/this.document.Modifier.RealScale).ToString() + " ";
 
 			this.table.SelectRow(row, row==this.tableRowSelected);
 		}
@@ -186,14 +178,18 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.tableRowSelected < 0 )
 			{
+				this.editType.SetEnabled(false);
+				this.editPosition.SetEnabled(false);
 				this.editType.Text = "";
 				this.editPosition.Text = "";
 			}
 			else
 			{
+				this.editType.SetEnabled(true);
+				this.editPosition.SetEnabled(true);
 				Settings.Guide guide = this.document.Settings.GuidesGet(this.tableRowSelected);
 				this.editType.Text = Settings.Guide.TypeToString(guide.Type);
-				this.editPosition.Value = (decimal) guide.Position;
+				this.editPosition.InternalValue = (decimal) guide.Position;
 			}
 
 			this.ignoreChanged = false;
@@ -313,7 +309,7 @@ namespace Epsitec.Common.Document.Containers
 			Settings.Guide guide = this.document.Settings.GuidesGet(this.tableRowSelected);
 
 			this.ignoreChanged = true;
-			guide.Position = (double) this.editPosition.Value;
+			guide.Position = (double) this.editPosition.InternalValue;
 			this.UpdateTable();
 			this.ignoreChanged = false;
 		}
@@ -330,7 +326,7 @@ namespace Epsitec.Common.Document.Containers
 		protected CellTable				table;
 		protected Widget				editGroup;
 		protected TextFieldCombo		editType;
-		protected TextFieldSlider		editPosition;
+		protected TextFieldReal			editPosition;
 		protected bool					ignoreChanged = false;
 	}
 }

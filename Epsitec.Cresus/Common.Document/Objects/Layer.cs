@@ -11,6 +11,14 @@ namespace Epsitec.Common.Document.Objects
 		Hide,		// caché complètement
 	}
 
+	public enum LayerPrint
+	{
+		None,		// aucun
+		Show,		// imprimé normalement
+		Dimmed,		// imprimé estompé
+		Hide,		// caché complètement
+	}
+
 	/// <summary>
 	/// La classe Layer est la classe de l'objet graphique "calque".
 	/// </summary>
@@ -52,6 +60,23 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		public LayerPrint Print
+		{
+			get
+			{
+				return this.layerPrint;
+			}
+			
+			set
+			{
+				if ( this.layerPrint != value )
+				{
+					this.InsertOpletType();
+					this.layerPrint = value;
+				}
+			}
+		}
+
 
 		// Reprend toutes les caractéristiques d'un objet.
 		public override void CloneObject(Objects.Abstract src)
@@ -59,6 +84,7 @@ namespace Epsitec.Common.Document.Objects
 			base.CloneObject(src);
 			Layer layer = src as Layer;
 			this.layerType = layer.layerType;
+			this.layerPrint = layer.layerPrint;
 		}
 
 
@@ -103,13 +129,18 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.host = host;
 				this.layerType = host.layerType;
+				this.layerPrint = host.layerPrint;
 			}
 
 			protected void Swap()
 			{
-				LayerType temp = host.layerType;
+				LayerType type = host.layerType;
 				host.layerType = this.layerType;  // host.layerType <-> this.layerType
-				this.layerType = temp;
+				this.layerType = type;
+
+				LayerPrint prnt = host.layerPrint;
+				host.layerPrint = this.layerPrint;  // host.layerPrint <-> this.layerPrint
+				this.layerPrint = prnt;
 
 				this.host.document.Notifier.NotifyLayersChanged();
 				this.host.document.Notifier.NotifyArea(this.host.document.Modifier.ActiveViewer);
@@ -129,6 +160,7 @@ namespace Epsitec.Common.Document.Objects
 
 			protected Layer					host;
 			protected LayerType				layerType;
+			protected LayerPrint			layerPrint;
 		}
 		#endregion
 
@@ -140,16 +172,23 @@ namespace Epsitec.Common.Document.Objects
 			base.GetObjectData(info, context);
 
 			info.AddValue("LayerType", this.layerType);
+			info.AddValue("LayerPrint", this.layerPrint);
 		}
 
 		// Constructeur qui désérialise l'objet.
 		protected Layer(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
 			this.layerType = (LayerType) info.GetValue("LayerType", typeof(LayerType));
+
+			if ( Support.Serialization.Helper.FindElement(info, "LayerPrint") )
+			{
+				this.layerPrint = (LayerPrint) info.GetValue("LayerPrint", typeof(LayerPrint));
+			}
 		}
 		#endregion
 
 		
 		protected LayerType			layerType = LayerType.Dimmed;
+		protected LayerPrint		layerPrint = LayerPrint.Show;
 	}
 }

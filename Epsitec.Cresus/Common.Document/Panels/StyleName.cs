@@ -14,8 +14,8 @@ namespace Epsitec.Common.Document.Panels
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = ContentAlignment.MiddleLeft;
-			//?this.label.Text = "Nom du style";  // plantée dans font.cs avec ce texte !!!
-			this.label.Text = "Nom_du_style";
+			this.label.Text = "Nom du style";  // plantée dans font.cs avec ce texte !!!
+			//?this.label.Text = "Nom_du_style";
 
 			this.field = new TextField(this);
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);

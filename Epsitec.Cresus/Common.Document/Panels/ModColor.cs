@@ -30,22 +30,22 @@ namespace Epsitec.Common.Document.Panels
 				this.labelArray[i].Alignment = ContentAlignment.MiddleCenter;
 			}
 
-			this.fieldArray = new TextFieldSlider[7];
+			this.fieldArray = new TextFieldReal[7];
 			for ( int i=0 ; i<7 ; i++ )
 			{
-				this.fieldArray[i] = new TextFieldSlider(this);
+				this.fieldArray[i] = new TextFieldReal(this);
 				this.fieldArray[i].TextChanged += new EventHandler(this.HandleTextChanged);
 				this.fieldArray[i].TabIndex = 1+i;
 				this.fieldArray[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				if ( i == 0 )
 				{
-					this.fieldArray[i].MinValue = 0;
-					this.fieldArray[i].MaxValue = 360;
+					this.document.Modifier.AdaptTextFieldRealAngle(this.fieldArray[i]);
 				}
 				else
 				{
-					this.fieldArray[i].MinValue = -100;
-					this.fieldArray[i].MaxValue =  100;
+					this.document.Modifier.AdaptTextFieldRealScalar(this.fieldArray[i]);
+					this.fieldArray[i].InternalMinValue = -100;
+					this.fieldArray[i].InternalMaxValue =  100;
 				}
 				this.fieldArray[i].Step = 5;
 			}
@@ -126,13 +126,13 @@ namespace Epsitec.Common.Document.Panels
 
 			this.ignoreChanged = true;
 
-			this.fieldArray[0].Value = (decimal) p.H;
-			this.fieldArray[1].Value = (decimal) p.S*100;
-			this.fieldArray[2].Value = (decimal) p.V*100;
-			this.fieldArray[3].Value = (decimal) p.R*100;
-			this.fieldArray[4].Value = (decimal) p.G*100;
-			this.fieldArray[5].Value = (decimal) p.B*100;
-			this.fieldArray[6].Value = (decimal) p.A*100;
+			this.fieldArray[0].InternalValue = (decimal) p.H;
+			this.fieldArray[1].InternalValue = (decimal) p.S*100;
+			this.fieldArray[2].InternalValue = (decimal) p.V*100;
+			this.fieldArray[3].InternalValue = (decimal) p.R*100;
+			this.fieldArray[4].InternalValue = (decimal) p.G*100;
+			this.fieldArray[5].InternalValue = (decimal) p.B*100;
+			this.fieldArray[6].InternalValue = (decimal) p.A*100;
 			this.negativ.ActiveState = p.N ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 
 			this.EnableWidgets();
@@ -145,13 +145,13 @@ namespace Epsitec.Common.Document.Panels
 			Properties.ModColor p = this.property as Properties.ModColor;
 			if ( p == null )  return;
 
-			p.H = (double) this.fieldArray[0].Value;
-			p.S = (double) this.fieldArray[1].Value/100;
-			p.V = (double) this.fieldArray[2].Value/100;
-			p.R = (double) this.fieldArray[3].Value/100;
-			p.G = (double) this.fieldArray[4].Value/100;
-			p.B = (double) this.fieldArray[5].Value/100;
-			p.A = (double) this.fieldArray[6].Value/100;
+			p.H = (double) this.fieldArray[0].InternalValue;
+			p.S = (double) this.fieldArray[1].InternalValue/100;
+			p.V = (double) this.fieldArray[2].InternalValue/100;
+			p.R = (double) this.fieldArray[3].InternalValue/100;
+			p.G = (double) this.fieldArray[4].InternalValue/100;
+			p.B = (double) this.fieldArray[5].InternalValue/100;
+			p.A = (double) this.fieldArray[6].InternalValue/100;
 			p.N = (this.negativ.ActiveState & WidgetState.ActiveYes) != 0;
 		}
 
@@ -214,7 +214,7 @@ namespace Epsitec.Common.Document.Panels
 		// Couleur -> sliders.
 		protected void ColoriseSliders()
 		{
-			double h = (double) this.fieldArray[0].Value;
+			double h = (double) this.fieldArray[0].InternalValue;
 			Drawing.Color saturated = Drawing.Color.FromHSV(h,1,1);
 			
 			this.fieldArray[0].Color = saturated;
@@ -237,19 +237,19 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleReset(object sender, MessageEventArgs e)
 		{
-			this.fieldArray[0].Value = 0.0M;
-			this.fieldArray[1].Value = 0.0M;
-			this.fieldArray[2].Value = 0.0M;
-			this.fieldArray[3].Value = 0.0M;
-			this.fieldArray[4].Value = 0.0M;
-			this.fieldArray[5].Value = 0.0M;
-			this.fieldArray[6].Value = 0.0M;
+			this.fieldArray[0].InternalValue = 0.0M;
+			this.fieldArray[1].InternalValue = 0.0M;
+			this.fieldArray[2].InternalValue = 0.0M;
+			this.fieldArray[3].InternalValue = 0.0M;
+			this.fieldArray[4].InternalValue = 0.0M;
+			this.fieldArray[5].InternalValue = 0.0M;
+			this.fieldArray[6].InternalValue = 0.0M;
 			this.negativ.ActiveState = WidgetState.ActiveNo;
 		}
 
 		protected StaticText				label;
 		protected StaticText[]				labelArray;
-		protected TextFieldSlider[]			fieldArray;
+		protected TextFieldReal[]			fieldArray;
 		protected CheckButton				negativ;
 		protected Button					reset;
 	}

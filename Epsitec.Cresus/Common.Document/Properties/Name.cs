@@ -13,6 +13,11 @@ namespace Epsitec.Common.Document.Properties
 		{
 		}
 
+		protected override void Initialise()
+		{
+			this.stringValue = "";
+		}
+
 		public string String
 		{
 			get
@@ -80,6 +85,6 @@ namespace Epsitec.Common.Document.Properties
 		#endregion
 
 	
-		protected string			stringValue = "";
+		protected string			stringValue;
 	}
 }

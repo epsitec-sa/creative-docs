@@ -15,21 +15,11 @@ namespace Epsitec.Common.Document.Panels
 			this.label = new StaticText(this);
 			this.label.Alignment = ContentAlignment.MiddleLeft;
 
-			this.field = new TextFieldSlider(this);
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.field.MinValue = 0.0M;
-				this.field.MaxValue = 5.0M;
-				this.field.Step = 0.1M;
-				this.field.Resolution = 0.01M;
-			}
-			else
-			{
-				this.field.MinValue = 0.0M;
-				this.field.MaxValue = 100.0M;
-				this.field.Step = 1.0M;
-				this.field.Resolution = 0.1M;
-			}
+			this.field = new TextFieldReal(this);
+			this.field.FactorMinRange = 0.0M;
+			this.field.FactorMaxRange = 0.1M;
+			this.field.FactorStep = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.field);
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -76,41 +66,19 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.radioDashRank[2], "3ème couple trait/trou");
 			this.RadioSelected = 0;
 
-			this.fieldDashPen = new TextFieldSlider(this);
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.fieldDashPen.MinValue = 0.0M;
-				this.fieldDashPen.MaxValue = 10.0M;
-				this.fieldDashPen.Step = 0.1M;
-				this.fieldDashPen.Resolution = 0.1M;
-			}
-			else
-			{
-				this.fieldDashPen.MinValue = 0.0M;
-				this.fieldDashPen.MaxValue = 1000.0M;
-				this.fieldDashPen.Step = 10.0M;
-				this.fieldDashPen.Resolution = 1.0M;
-			}
+			this.fieldDashPen = new TextFieldReal(this);
+			this.fieldDashPen.FactorMinRange = 0.0M;
+			this.fieldDashPen.FactorMaxRange = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashPen);
 			this.fieldDashPen.TextChanged += new EventHandler(this.HandleDashChanged);
 			this.fieldDashPen.TabIndex = 32;
 			this.fieldDashPen.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldDashPen, "Longueur du trait");
 
-			this.fieldDashGap = new TextFieldSlider(this);
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.fieldDashGap.MinValue = 0.0M;
-				this.fieldDashGap.MaxValue = 10.0M;
-				this.fieldDashGap.Step = 0.1M;
-				this.fieldDashGap.Resolution = 0.1M;
-			}
-			else
-			{
-				this.fieldDashGap.MinValue = 0.0M;
-				this.fieldDashGap.MaxValue = 1000.0M;
-				this.fieldDashGap.Step = 10.0M;
-				this.fieldDashGap.Resolution = 1.0M;
-			}
+			this.fieldDashGap = new TextFieldReal(this);
+			this.fieldDashGap.FactorMinRange = 0.0M;
+			this.fieldDashGap.FactorMaxRange = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldDashGap);
 			this.fieldDashGap.TextChanged += new EventHandler(this.HandleDashChanged);
 			this.fieldDashGap.TabIndex = 22;
 			this.fieldDashGap.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -192,7 +160,7 @@ namespace Epsitec.Common.Document.Panels
 			this.ignoreChanged = true;
 
 			this.label.Text = p.TextStyle;
-			this.field.Value = (decimal) p.Width;
+			this.field.InternalValue = (decimal) p.Width;
 
 			int sel = -1;
 			if ( p.Cap == CapStyle.Round  )  sel = 0;
@@ -219,7 +187,7 @@ namespace Epsitec.Common.Document.Panels
 			Properties.Line p = this.property as Properties.Line;
 			if ( p == null )  return;
 
-			p.Width = (double) this.field.Value;
+			p.Width = (double) this.field.InternalValue;
 
 			int sel = this.SelectButtonCap;
 			if ( sel == 0 )  p.Cap = CapStyle.Round;
@@ -241,8 +209,8 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			int i = this.RadioSelected;
-			this.fieldDashPen.Value = (decimal) p.GetDashPen(i);
-			this.fieldDashGap.Value = (decimal) p.GetDashGap(i);
+			this.fieldDashPen.InternalValue = (decimal) p.GetDashPen(i);
+			this.fieldDashGap.InternalValue = (decimal) p.GetDashGap(i);
 		}
 
 		protected void WidgetToDash()
@@ -251,8 +219,8 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			int i = this.RadioSelected;
-			p.SetDashPen(i, (double) this.fieldDashPen.Value);
-			p.SetDashGap(i, (double) this.fieldDashGap.Value);
+			p.SetDashPen(i, (double) this.fieldDashPen.InternalValue);
+			p.SetDashGap(i, (double) this.fieldDashGap.InternalValue);
 		}
 
 		protected bool SelectDash
@@ -478,12 +446,12 @@ namespace Epsitec.Common.Document.Panels
 
 
 		protected StaticText				label;
-		protected TextFieldSlider			field;
+		protected TextFieldReal				field;
 		protected CheckButton				dash;
 		protected IconButton[]				buttons;
 		protected RadioButton[]				radioDashRank;
-		protected TextFieldSlider			fieldDashPen;
-		protected TextFieldSlider			fieldDashGap;
+		protected TextFieldReal				fieldDashPen;
+		protected TextFieldReal				fieldDashGap;
 		protected StaticText				labelDashPen;
 		protected StaticText				labelDashGap;
 	}

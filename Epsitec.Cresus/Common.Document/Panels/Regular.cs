@@ -15,9 +15,10 @@ namespace Epsitec.Common.Document.Panels
 			this.label = new StaticText(this);
 			this.label.Alignment = ContentAlignment.MiddleLeft;
 
-			this.fieldNbFaces = new TextFieldSlider(this);
-			this.fieldNbFaces.MinValue = 3;
-			this.fieldNbFaces.MaxValue = 24;
+			this.fieldNbFaces = new TextFieldReal(this);
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldNbFaces);
+			this.fieldNbFaces.InternalMinValue = 3;
+			this.fieldNbFaces.InternalMaxValue = 24;
 			this.fieldNbFaces.Step = 1;
 			this.fieldNbFaces.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldNbFaces.TabIndex = 1;
@@ -29,9 +30,10 @@ namespace Epsitec.Common.Document.Panels
 			this.checkStar.TabIndex = 2;
 			this.checkStar.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.fieldDeep = new TextFieldSlider(this);
-			this.fieldDeep.MinValue = 0;
-			this.fieldDeep.MaxValue = 100;
+			this.fieldDeep = new TextFieldReal(this);
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldDeep);
+			this.fieldDeep.InternalMinValue = 0;
+			this.fieldDeep.InternalMaxValue = 100;
 			this.fieldDeep.Step = 5;
 			this.fieldDeep.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldDeep.TabIndex = 3;
@@ -84,9 +86,9 @@ namespace Epsitec.Common.Document.Panels
 
 			this.label.Text = p.TextStyle;
 
-			this.fieldNbFaces.Value = p.NbFaces;
+			this.fieldNbFaces.InternalValue = p.NbFaces;
 			this.checkStar.ActiveState = p.Star ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.fieldDeep.Value = (decimal) p.Deep*100;
+			this.fieldDeep.InternalValue = (decimal) p.Deep*100;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -98,9 +100,9 @@ namespace Epsitec.Common.Document.Panels
 			Properties.Regular p = this.property as Properties.Regular;
 			if ( p == null )  return;
 
-			p.NbFaces = (int)this.fieldNbFaces.Value;
+			p.NbFaces = (int)this.fieldNbFaces.InternalValue;
 			p.Star = ( this.checkStar.ActiveState == WidgetState.ActiveYes );
-			p.Deep = (double) this.fieldDeep.Value/100;
+			p.Deep = (double) this.fieldDeep.InternalValue/100;
 		}
 
 		// Grise les widgets nécessaires.
@@ -165,9 +167,9 @@ namespace Epsitec.Common.Document.Panels
 
 
 		protected StaticText				label;
-		protected TextFieldSlider			fieldNbFaces;
+		protected TextFieldReal				fieldNbFaces;
 		protected CheckButton				checkStar;
-		protected TextFieldSlider			fieldDeep;
+		protected TextFieldReal				fieldDeep;
 		protected StaticText				labelDeep;
 	}
 }

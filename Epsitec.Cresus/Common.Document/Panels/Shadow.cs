@@ -21,26 +21,29 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldColor.TabIndex = 1;
 			this.fieldColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.fieldRadius = new TextFieldSlider(this);
-			this.fieldRadius.MinValue =  0;
-			this.fieldRadius.MaxValue = 10;
-			this.fieldRadius.Step = 1;
+			this.fieldRadius = new TextFieldReal(this);
+			this.fieldRadius.FactorMinRange = 0.0M;
+			this.fieldRadius.FactorMaxRange = 0.1M;
+			this.fieldRadius.FactorStep = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldRadius);
 			this.fieldRadius.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldRadius.TabIndex = 2;
 			this.fieldRadius.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.fieldOx = new TextFieldSlider(this);
-			this.fieldOx.MinValue = -10;
-			this.fieldOx.MaxValue =  10;
-			this.fieldOx.Step = 1;
+			this.fieldOx = new TextFieldReal(this);
+			this.fieldOx.FactorMinRange = 0.0M;
+			this.fieldOx.FactorMaxRange = 0.1M;
+			this.fieldOx.FactorStep = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldOx);
 			this.fieldOx.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldOx.TabIndex = 3;
 			this.fieldOx.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.fieldOy = new TextFieldSlider(this);
-			this.fieldOy.MinValue = -10;
-			this.fieldOy.MaxValue =  10;
-			this.fieldOy.Step = 1;
+			this.fieldOy = new TextFieldReal(this);
+			this.fieldOy.FactorMinRange = 0.0M;
+			this.fieldOy.FactorMaxRange = 0.1M;
+			this.fieldOy.FactorStep = 0.1M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldOy);
 			this.fieldOy.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.fieldOy.TabIndex = 4;
 			this.fieldOy.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -105,10 +108,10 @@ namespace Epsitec.Common.Document.Panels
 
 			this.label.Text = p.TextStyle;
 
-			this.fieldColor.Color  = p.Color;
-			this.fieldRadius.Value = (decimal) p.Radius;
-			this.fieldOx.Value     = (decimal) p.Ox;
-			this.fieldOy.Value     = (decimal) p.Oy;
+			this.fieldColor.Color = p.Color;
+			this.fieldRadius.InternalValue = (decimal) p.Radius;
+			this.fieldOx.InternalValue     = (decimal) p.Ox;
+			this.fieldOy.InternalValue     = (decimal) p.Oy;
 
 			this.ignoreChanged = false;
 		}
@@ -120,9 +123,9 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			p.Color  = this.fieldColor.Color;
-			p.Radius = (double) this.fieldRadius.Value;
-			p.Ox     = (double) this.fieldOx.Value;
-			p.Oy     = (double) this.fieldOy.Value;
+			p.Radius = (double) this.fieldRadius.InternalValue;
+			p.Ox     = (double) this.fieldOx.InternalValue;
+			p.Oy     = (double) this.fieldOy.InternalValue;
 		}
 
 
@@ -208,9 +211,9 @@ namespace Epsitec.Common.Document.Panels
 
 		protected StaticText				label;
 		protected ColorSample				fieldColor;
-		protected TextFieldSlider			fieldRadius;
-		protected TextFieldSlider			fieldOx;
-		protected TextFieldSlider			fieldOy;
+		protected TextFieldReal				fieldRadius;
+		protected TextFieldReal				fieldOx;
+		protected TextFieldReal				fieldOy;
 		protected StaticText				labelRadius;
 		protected StaticText				labelOx;
 		protected StaticText				labelOy;

@@ -59,9 +59,11 @@ namespace Epsitec.Common.Document.Containers
 			this.table.DefHeight = 16;
 
 			this.colorSelector = new ColorSelector();
+			this.colorSelector.HasCloseButton = true;
 			this.colorSelector.Dock = DockStyle.Bottom;
 			this.colorSelector.DockMargins = new Margins(0, 0, 10, 0);
 			this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
+			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
 			this.colorSelector.TabIndex = 100;
 			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			this.colorSelector.Parent = this;
@@ -353,6 +355,15 @@ namespace Epsitec.Common.Document.Containers
 		{
 			if ( this.ignoreChanged )  return;
 			this.panel.OriginColorChange(this.colorSelector.Color);
+		}
+
+		// Fermer la roue.
+		private void HandleColorSelectorClosed(object sender)
+		{
+			this.panel.OriginColorDeselect();
+
+			this.colorSelector.SetVisible(false);
+			this.colorSelector.BackColor = Color.Empty;
 		}
 
 

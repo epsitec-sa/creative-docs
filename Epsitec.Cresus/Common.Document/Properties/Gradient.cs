@@ -23,6 +23,10 @@ namespace Epsitec.Common.Document.Properties
 	{
 		public Gradient(Document document, Type type) : base(document, type)
 		{
+		}
+
+		protected override void Initialise()
+		{
 			this.fillType = GradientFillType.None;
 
 			if ( this.type == Type.LineColor )
@@ -255,7 +259,6 @@ namespace Epsitec.Common.Document.Properties
 			set
 			{
 				value = System.Math.Max(value,  0.0);
-				value = System.Math.Min(value, 10.0);
 				
 				if ( this.smooth != value )
 				{
@@ -522,7 +525,7 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Retourne la valeur d'engraissement pour la bbox.
-		public override double WidthInflateBoundingBox()
+		public double InflateBoundingBoxWidth()
 		{
 			return this.smooth;
 		}
@@ -775,17 +778,6 @@ namespace Epsitec.Common.Document.Properties
 				this.sy     = info.GetDouble("Sy");
 				this.repeat = info.GetInt32("Repeat");
 				this.middle = info.GetDouble("Middle");
-			}
-			else
-			{
-				this.color2 = Drawing.Color.FromBrightness(0.5);
-				this.angle  = 0.0;
-				this.cx     = 0.5;
-				this.cy     = 0.5;
-				this.sx     = 1.0;
-				this.sy     = 1.0;
-				this.repeat = 1;
-				this.middle = 0.0;
 			}
 			this.smooth = info.GetDouble("Smooth");
 		}

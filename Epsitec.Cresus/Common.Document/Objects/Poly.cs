@@ -444,19 +444,25 @@ namespace Epsitec.Common.Document.Objects
 			paths[2] = pathEnd;
 			paths[3] = pathTemp;
 
-			bool[] outlines = new bool[4];
-			outlines[0] = true;
-			outlines[1] = outlineStart;
-			outlines[2] = outlineEnd;
-			outlines[3] = true;
+			bool[] lineModes = new bool[4];
+			lineModes[0] = true;
+			lineModes[1] = outlineStart;
+			lineModes[2] = outlineEnd;
+			lineModes[3] = true;
 
-			bool[] surfaces = new bool[4];
-			surfaces[0] = true;
-			surfaces[1] = surfaceStart;
-			surfaces[2] = surfaceEnd;
-			surfaces[3] = false;
+			bool[] lineColors = new bool[4];
+			lineColors[0] = true;
+			lineColors[1] = surfaceStart;
+			lineColors[2] = surfaceEnd;
+			lineColors[3] = true;
 
-			this.ComputeBoundingBox(paths, outlines, surfaces);
+			bool[] fillGradients = new bool[4];
+			fillGradients[0] = true;
+			fillGradients[1] = false;
+			fillGradients[2] = false;
+			fillGradients[3] = false;
+
+			this.ComputeBoundingBox(paths, lineModes, lineColors, fillGradients);
 
 			for ( int i=0 ; i<this.TotalMainHandle ; i++ )
 			{

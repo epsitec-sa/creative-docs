@@ -30,9 +30,11 @@ namespace Epsitec.Common.Document.Containers
 			this.scrollable.Parent = this;
 
 			this.colorSelector = new ColorSelector();
+			this.colorSelector.HasCloseButton = true;
 			this.colorSelector.Dock = DockStyle.Bottom;
 			this.colorSelector.DockMargins = new Margins(0, 0, 10, 0);
 			this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
+			this.colorSelector.CloseClicked += new EventHandler(this.HandleColorSelectorClosed);
 			this.colorSelector.TabIndex = 100;
 			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			this.colorSelector.Parent = this;
@@ -223,13 +225,11 @@ namespace Epsitec.Common.Document.Containers
 
 			if ( this.originColorPanel == null )
 			{
-				//?this.colorSelector.SetEnabled(false);
 				this.colorSelector.SetVisible(false);
 				this.colorSelector.BackColor = Color.Empty;
 			}
 			else
 			{
-				//?this.colorSelector.SetEnabled(true);
 				this.colorSelector.SetVisible(true);
 				this.colorSelector.BackColor = backColor;
 				this.ignoreColorChanged = true;
@@ -245,6 +245,23 @@ namespace Epsitec.Common.Document.Containers
 		{
 			if ( this.ignoreColorChanged || this.originColorPanel == null )  return;
 			this.originColorPanel.OriginColorChange(this.colorSelector.Color);
+		}
+
+		// Fermer la roue.
+		private void HandleColorSelectorClosed(object sender)
+		{
+			this.originColorPanel = null;
+			this.originColorType = Properties.Type.None;
+
+			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
+			{
+				Panels.Abstract panel = widget as Panels.Abstract;
+				if ( panel == null )  continue;
+				panel.OriginColorDeselect();
+			}
+
+			this.colorSelector.SetVisible(false);
+			this.colorSelector.BackColor = Color.Empty;
 		}
 
 

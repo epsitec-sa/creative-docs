@@ -33,21 +33,15 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.buttons[2], "Arc fermé");
 			ToolTip.Default.SetToolTip(this.buttons[3], "Camembert");
 
-			this.fieldStarting = new TextFieldSlider(this);
-			this.fieldStarting.MinValue =   0;
-			this.fieldStarting.MaxValue = 360;
-			this.fieldStarting.Step = 5;
-			this.fieldStarting.Resolution = 1;
+			this.fieldStarting = new TextFieldReal(this);
+			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldStarting);
 			this.fieldStarting.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldStarting.TabIndex = 20;
 			this.fieldStarting.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldStarting, "Angle initial");
 
-			this.fieldEnding = new TextFieldSlider(this);
-			this.fieldEnding.MinValue =   0;
-			this.fieldEnding.MaxValue = 360;
-			this.fieldEnding.Step = 5;
-			this.fieldEnding.Resolution = 1;
+			this.fieldEnding = new TextFieldReal(this);
+			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldEnding);
 			this.fieldEnding.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldEnding.TabIndex = 21;
 			this.fieldEnding.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -108,9 +102,9 @@ namespace Epsitec.Common.Document.Panels
 
 			this.label.Text = p.TextStyle;
 
-			this.SelectButtonType    = p.ArcType;
-			this.fieldStarting.Value = (decimal) p.StartingAngle;
-			this.fieldEnding.Value   = (decimal) p.EndingAngle;
+			this.SelectButtonType            = p.ArcType;
+			this.fieldStarting.InternalValue = (decimal) p.StartingAngle;
+			this.fieldEnding.InternalValue   = (decimal) p.EndingAngle;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -123,8 +117,8 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			p.ArcType       = this.SelectButtonType;
-			p.StartingAngle = (double) this.fieldStarting.Value;
-			p.EndingAngle   = (double) this.fieldEnding.Value;
+			p.StartingAngle = (double) this.fieldStarting.InternalValue;
+			p.EndingAngle   = (double) this.fieldEnding.InternalValue;
 		}
 
 		protected Properties.ArcType SelectButtonType
@@ -238,8 +232,8 @@ namespace Epsitec.Common.Document.Panels
 
 		protected StaticText				label;
 		protected IconButton[]				buttons;
-		protected TextFieldSlider			fieldStarting;
-		protected TextFieldSlider			fieldEnding;
+		protected TextFieldReal				fieldStarting;
+		protected TextFieldReal				fieldEnding;
 		protected StaticText				labelStarting;
 		protected StaticText				labelEnding;
 	}

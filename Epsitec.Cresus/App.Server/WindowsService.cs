@@ -113,11 +113,11 @@ namespace Epsitec.Cresus.Server
 		{
 			Database.DbAccess db_access = new Database.DbAccess ();
 			
-			db_access.Provider		= "Firebird";
-			db_access.LoginName		= "sysdba";
-			db_access.LoginPassword = "masterkey";
-			db_access.Database		= "fiche";
-			db_access.Server		= "localhost";
+			db_access.Provider		= System.Configuration.ConfigurationSettings.AppSettings["DatabaseProvider"];
+			db_access.Database		= System.Configuration.ConfigurationSettings.AppSettings["DatabaseSource"];
+			db_access.Server		= System.Configuration.ConfigurationSettings.AppSettings["DatabaseServer"];
+			db_access.LoginName		= System.Configuration.ConfigurationSettings.AppSettings["DatabaseUserName"];
+			db_access.LoginPassword = System.Configuration.ConfigurationSettings.AppSettings["DatabaseUserPass"];
 			db_access.Create		= false;
 			
 			return db_access;

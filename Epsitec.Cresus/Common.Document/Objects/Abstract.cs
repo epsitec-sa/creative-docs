@@ -531,10 +531,11 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Calcule toutes les bbox de l'objet en fonction des propriétés.
-		protected void ComputeBoundingBox(Path[] paths, bool[] outlines, bool[] surfaces)
+		protected void ComputeBoundingBox(Path[] paths, bool[] lineModes, bool[] lineColors, bool[] fillGradients)
 		{
-			System.Diagnostics.Debug.Assert(paths.Length == outlines.Length);
-			System.Diagnostics.Debug.Assert(paths.Length == surfaces.Length);
+			System.Diagnostics.Debug.Assert(paths.Length == lineModes.Length);
+			System.Diagnostics.Debug.Assert(paths.Length == lineColors.Length);
+			System.Diagnostics.Debug.Assert(paths.Length == fillGradients.Length);
 
 			Properties.Line     line    = this.PropertyLineMode;
 			Properties.Gradient outline = this.PropertyLineColor;
@@ -552,25 +553,19 @@ namespace Epsitec.Common.Document.Objects
 				double width1 = 0.0;
 				double width2 = 0.0;
 
-				if ( outlines[i] )
+				if ( lineColors[i] && outline != null )
 				{
-					if ( line != null )
-					{
-						width1 += line.WidthInflateBoundingBox();
-					}
-
-					if ( outline != null )
-					{
-						width1 += outline.WidthInflateBoundingBox();
-					}
+					width1 += outline.InflateBoundingBoxWidth();
+				}
+				if ( lineModes[i] && line != null )
+				{
+					width1 += line.InflateBoundingBoxWidth();
+					width1 *= line.InflateBoundingBoxFactor();
 				}
 
-				if ( surfaces[i] )
+				if ( fillGradients[i] && surface != null )
 				{
-					if ( surface != null )
-					{
-						width2 += surface.WidthInflateBoundingBox();
-					}
+					width2 += surface.InflateBoundingBoxWidth();
 				}
 
 				double width = System.Math.Max(width1, width2);

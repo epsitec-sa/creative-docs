@@ -28,38 +28,30 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldType.TabIndex = 1;
 			this.fieldType.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-			this.fieldRadius = new TextFieldSlider(this);
-			if ( this.document.Type == DocumentType.Pictogram )
-			{
-				this.fieldRadius.MinValue = 0.0M;
-				this.fieldRadius.MaxValue = 10.0M;
-				this.fieldRadius.Step = 0.1M;
-				this.fieldRadius.Resolution = 0.1M;
-			}
-			else
-			{
-				this.fieldRadius.MinValue = 0.0M;
-				this.fieldRadius.MaxValue = 500.0M;
-				this.fieldRadius.Step = 10.0M;
-				this.fieldRadius.Resolution = 1.0M;
-			}
+			this.fieldRadius = new TextFieldReal(this);
+			this.fieldRadius.FactorMinRange = 0.0M;
+			this.fieldRadius.FactorMaxRange = 0.1M;
+			this.fieldRadius.FactorStep = 1.0M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldRadius);
 			this.fieldRadius.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldRadius.TabIndex = 2;
 			this.fieldRadius.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRadius, "Rayon");
 
-			this.fieldEffect1 = new TextFieldSlider(this);
-			this.fieldEffect1.MinValue = -100;
-			this.fieldEffect1.MaxValue = 200;
+			this.fieldEffect1 = new TextFieldReal(this);
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldEffect1);
+			this.fieldEffect1.InternalMinValue = -100;
+			this.fieldEffect1.InternalMaxValue = 200;
 			this.fieldEffect1.Step = 5;
 			this.fieldEffect1.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldEffect1.TabIndex = 3;
 			this.fieldEffect1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldEffect1, "Paramètre A");
 
-			this.fieldEffect2 = new TextFieldSlider(this);
-			this.fieldEffect2.MinValue = -100;
-			this.fieldEffect2.MaxValue = 200;
+			this.fieldEffect2 = new TextFieldReal(this);
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldEffect2);
+			this.fieldEffect2.InternalMinValue = -100;
+			this.fieldEffect2.InternalMaxValue = 200;
 			this.fieldEffect2.Step = 5;
 			this.fieldEffect2.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldEffect2.TabIndex = 4;
@@ -127,9 +119,9 @@ namespace Epsitec.Common.Document.Panels
 			this.label.Text = p.TextStyle;
 
 			this.fieldType.SelectedIndex = Properties.Corner.ConvType(p.CornerType);
-			this.fieldRadius.Value  = (decimal) p.Radius;
-			this.fieldEffect1.Value = (decimal) p.Effect1*100;
-			this.fieldEffect2.Value = (decimal) p.Effect2*100;
+			this.fieldRadius.InternalValue  = (decimal) p.Radius;
+			this.fieldEffect1.InternalValue = (decimal) p.Effect1*100;
+			this.fieldEffect2.InternalValue = (decimal) p.Effect2*100;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -142,9 +134,9 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			p.CornerType = Properties.Corner.ConvType(this.fieldType.SelectedIndex);
-			p.Radius  = (double) this.fieldRadius.Value;
-			p.Effect1 = (double) this.fieldEffect1.Value/100;
-			p.Effect2 = (double) this.fieldEffect2.Value/100;
+			p.Radius  = (double) this.fieldRadius.InternalValue;
+			p.Effect1 = (double) this.fieldEffect1.InternalValue/100;
+			p.Effect2 = (double) this.fieldEffect2.InternalValue/100;
 		}
 
 		// Grise les widgets nécessaires.
@@ -157,10 +149,10 @@ namespace Epsitec.Common.Document.Panels
 			double effect2, min2, max2;
 			Properties.Corner.GetFieldsParam(type, out enableRadius, out enable1, out effect1, out min1, out max1, out enable2, out effect2, out min2, out max2);
 
-			this.fieldEffect1.MinValue = (decimal) min1*100;
-			this.fieldEffect1.MaxValue = (decimal) max1*100;
-			this.fieldEffect2.MinValue = (decimal) min2*100;
-			this.fieldEffect2.MaxValue = (decimal) max2*100;
+			this.fieldEffect1.InternalMinValue = (decimal) min1*100;
+			this.fieldEffect1.InternalMaxValue = (decimal) max1*100;
+			this.fieldEffect2.InternalMinValue = (decimal) min2*100;
+			this.fieldEffect2.InternalMaxValue = (decimal) max2*100;
 
 			this.fieldRadius.SetEnabled(this.isExtendedSize && enableRadius);
 			this.fieldEffect1.SetEnabled(this.isExtendedSize && enable1);
@@ -225,8 +217,8 @@ namespace Epsitec.Common.Document.Panels
 			double effect1, min1, max1;
 			double effect2, min2, max2;
 			Properties.Corner.GetFieldsParam(type, out enableRadius, out enable1, out effect1, out min1, out max1, out enable2, out effect2, out min2, out max2);
-			this.fieldEffect1.Value = (decimal) effect1*100;
-			this.fieldEffect2.Value = (decimal) effect2*100;
+			this.fieldEffect1.InternalValue = (decimal) effect1*100;
+			this.fieldEffect2.InternalValue = (decimal) effect2*100;
 
 			this.OnChanged();
 		}
@@ -241,9 +233,9 @@ namespace Epsitec.Common.Document.Panels
 
 		protected StaticText				label;
 		protected TextFieldCombo			fieldType;
-		protected TextFieldSlider			fieldRadius;
-		protected TextFieldSlider			fieldEffect1;
-		protected TextFieldSlider			fieldEffect2;
+		protected TextFieldReal				fieldRadius;
+		protected TextFieldReal				fieldEffect1;
+		protected TextFieldReal				fieldEffect2;
 		protected StaticText				labelRadius;
 		protected StaticText				labelEffect1;
 		protected StaticText				labelEffect2;

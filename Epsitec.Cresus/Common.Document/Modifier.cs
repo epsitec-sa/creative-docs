@@ -18,7 +18,17 @@ namespace Epsitec.Common.Document
 			this.zoomHistory = new ZoomHistory();
 			this.opletQueue = new OpletQueue();
 			this.objectMemory = new Objects.Memory(this.document, null);
-			this.duplicateMove = new Point(1, 1);
+
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				this.RealUnitDimension = RealUnitType.None;
+				this.duplicateMove = new Point(1.0, 1.0);
+			}
+			else
+			{
+				this.RealUnitDimension = RealUnitType.DimensionMillimeter;
+				this.duplicateMove = new Point(50.0, 50.0);  // 5mm
+			}
 
 			int total = 0;
 			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
@@ -172,6 +182,145 @@ namespace Epsitec.Common.Document
 		}
 
 
+		#region RealUnit
+		// Choix de l'unité de dimension par défaut.
+		public RealUnitType RealUnitDimension
+		{
+			get
+			{
+				return this.realUnitDimension;
+			}
+			
+			set
+			{
+				this.realUnitDimension = value;
+
+				switch ( this.realUnitDimension )
+				{
+					case RealUnitType.DimensionMillimeter:
+						this.realScale = 10.0;
+						break;
+
+					case RealUnitType.DimensionCentimeter:
+						this.realScale = 100.0;
+						break;
+
+					case RealUnitType.DimensionInch:
+						this.realScale = 254.0;
+						break;
+
+					default:
+						this.realScale = 1.0;
+						break;
+				}
+
+				this.AdaptAllTextFieldReal();
+			}
+		}
+
+		// Facteur d'échelle.
+		public double RealScale
+		{
+			get
+			{
+				return this.realScale;
+			}
+		}
+
+		// Adapte un TextFieldReal pour éditer un scalaire.
+		public void AdaptTextFieldRealScalar(TextFieldReal field)
+		{
+			field.UnitType = RealUnitType.Scalar;
+			field.Step = 1.0M;
+			field.Resolution = 1.0M;
+		}
+
+		// Adapte un TextFieldReal pour éditer un pourcent.
+		public void AdaptTextFieldRealPercent(TextFieldReal field)
+		{
+			field.UnitType = RealUnitType.Percent;
+			field.Step = 1.0M;
+			field.Resolution = 0.1M;
+		}
+
+		// Adapte un TextFieldReal pour éditer une dimension.
+		public void AdaptTextFieldRealDimension(TextFieldReal field)
+		{
+			field.UnitType = this.realUnitDimension;
+			field.Scale = (decimal) this.realScale;
+
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				field.InternalMinValue = 100.0M * field.FactorMinRange;
+				field.InternalMaxValue = 100.0M * field.FactorMaxRange;
+				field.Step = 1.0M * field.FactorStep;
+				field.Resolution = 0.1M;
+			}
+			else
+			{
+				field.InternalMinValue = 10000.0M * field.FactorMinRange;
+				field.InternalMaxValue = 10000.0M * field.FactorMaxRange;
+
+				switch ( this.realUnitDimension )
+				{
+					case RealUnitType.DimensionMillimeter:
+						field.Step = 1.0M * field.FactorStep;
+						field.Resolution = 0.01M;
+						break;
+
+					case RealUnitType.DimensionCentimeter:
+						field.Step = 0.1M * field.FactorStep;
+						field.Resolution = 0.001M;
+						break;
+
+					case RealUnitType.DimensionInch:
+						field.Step = 0.1M * field.FactorStep;
+						field.Resolution = 0.0001M;
+						break;
+
+					default:
+						field.Step = 1.0M * field.FactorStep;
+						field.Resolution = 1.0M;
+						break;
+				}
+			}
+		}
+
+		// Adapte un TextFieldReal pour éditer un angle.
+		public void AdaptTextFieldRealAngle(TextFieldReal field)
+		{
+			field.UnitType = RealUnitType.AngleDeg;
+			field.InternalMinValue = 0.0M;
+			field.InternalMaxValue = 360.0M;
+			field.Step = 2.5M;
+			field.Resolution = 0.1M;
+		}
+
+		// 
+		protected void AdaptAllTextFieldReal()
+		{
+			foreach ( Window window in Window.DebugAliveWindows )
+			{
+				if ( window.Root == null )  continue;
+				Widget[] widgets = window.Root.FindAllChildren();
+				foreach ( Widget widget in widgets )
+				{
+					if ( widget is TextFieldReal )
+					{
+						TextFieldReal field = widget as TextFieldReal;
+						if ( field.IsDimension && field.Text != "" )
+						{
+							decimal val = field.InternalValue;
+							this.AdaptTextFieldRealDimension(field);
+							field.InternalValue = val;
+						}
+					}
+				}
+			}
+		}
+		#endregion
+
+
 		#region Viewers
 		// Un seul visualisateur privilégié peut être actif.
 		public Viewer ActiveViewer
@@ -262,6 +411,7 @@ namespace Epsitec.Common.Document
 				context.ZoomAndOrigin(1, new Point(0,0));
 			}
 
+			this.document.Settings.Reset();
 			this.zoomHistory.Clear();
 			this.document.HotSpot = new Point(0, 0);
 			this.document.Filename = "";
@@ -376,7 +526,7 @@ namespace Epsitec.Common.Document
 		{
 			string chip = "<list type=\"fix\" width=\"1.5\"/>";
 			string info1 = string.Format("{0}Nom complet: {1}<br/>", chip, this.document.Filename);
-			string info2 = string.Format("{0}Dimensions: {1}x{2}<br/>", chip, this.document.Size.Width, this.document.Size.Height);
+			string info2 = string.Format("{0}Dimensions: {1}x{2}<br/>", chip, this.document.Size.Width/this.document.Modifier.RealScale, this.document.Size.Height/this.document.Modifier.RealScale);
 			string info3 = string.Format("{0}Nombre de pages: {1}<br/>", chip, this.StatisticTotalPages());
 			string info4 = string.Format("{0}Nombre de calques: {1}<br/>", chip, this.StatisticTotalLayers());
 			string info5 = string.Format("{0}Nombre d'objets: {1}<br/>", chip, this.StatisticTotalObjects());
@@ -390,14 +540,14 @@ namespace Epsitec.Common.Document
 		}
 
 		// Retourne le nombre total de pages.
-		protected int StatisticTotalPages()
+		public int StatisticTotalPages()
 		{
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			return context.TotalPages();
 		}
 
 		// Retourne le nombre total de calques.
-		protected int StatisticTotalLayers()
+		public int StatisticTotalLayers()
 		{
 			int total = 0;
 			foreach ( Objects.Abstract obj in this.document.Deep(null) )
@@ -616,6 +766,7 @@ namespace Epsitec.Common.Document
 				{
 					this.duplicateMove = value;
 					this.document.Notifier.NotifySettingsChanged();
+					this.document.IsDirtySerialize = true;
 				}
 			}
 		}
@@ -2378,6 +2529,8 @@ namespace Epsitec.Common.Document
 		protected bool							operInitialSelector;
 		protected Containers.Abstract			activeContainer;
 		protected bool[]						isPropertiesExtended;
+		protected RealUnitType					realUnitDimension;
+		protected double						realScale;
 		protected Point							duplicateMove;
 	}
 }

@@ -23,13 +23,17 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBarMove.Dock = DockStyle.Top;
 			this.toolBarMove.DockMargins = new Margins(0, 0, 0, 10);
 
-			this.fieldMoveH = new TextFieldSlider();
+			this.fieldMoveH = new TextFieldReal();
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldMoveH);
 			this.fieldMoveH.Width = 50;
-			this.fieldMoveH.MinValue = 0.0M;
-			this.fieldMoveH.MaxValue = 100.0M;
-			this.fieldMoveH.Step = 1.0M;
-			this.fieldMoveH.Resolution = 0.1M;
-			this.fieldMoveH.Value = 1.0M;
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				this.fieldMoveH.InternalValue = 1.0M;
+			}
+			else
+			{
+				this.fieldMoveH.InternalValue = 100.0M;  // 10mm
+			}
 			ToolTip.Default.SetToolTip(this.fieldMoveH, "Valeur du déplacement horizontal");
 			this.toolBarMove.Items.Add(this.fieldMoveH);
 
@@ -45,13 +49,17 @@ namespace Epsitec.Common.Document.Containers
 
 			this.toolBarMove.Items.Add(new IconSeparator());
 
-			this.fieldMoveV = new TextFieldSlider();
+			this.fieldMoveV = new TextFieldReal();
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldMoveV);
 			this.fieldMoveV.Width = 50;
-			this.fieldMoveV.MinValue = 0.0M;
-			this.fieldMoveV.MaxValue = 100.0M;
-			this.fieldMoveV.Step = 1.0M;
-			this.fieldMoveV.Resolution = 0.1M;
-			this.fieldMoveV.Value = 1.0M;
+			if ( this.document.Type == DocumentType.Pictogram )
+			{
+				this.fieldMoveV.InternalValue = 1.0M;
+			}
+			else
+			{
+				this.fieldMoveV.InternalValue = 100.0M;  // 10mm
+			}
 			ToolTip.Default.SetToolTip(this.fieldMoveV, "Valeur du déplacement vertical");
 			this.toolBarMove.Items.Add(this.fieldMoveV);
 
@@ -93,13 +101,10 @@ namespace Epsitec.Common.Document.Containers
 
 			this.toolBarRot.Items.Add(new IconSeparator());
 
-			this.fieldRotate = new TextFieldSlider();
+			this.fieldRotate = new TextFieldReal();
+			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldRotate);
 			this.fieldRotate.Width = 50;
-			this.fieldRotate.MinValue = 0.0M;
-			this.fieldRotate.MaxValue = 360.0M;
-			this.fieldRotate.Step = 2.5M;
-			this.fieldRotate.Resolution = 0.1M;
-			this.fieldRotate.Value = 10.0M;
+			this.fieldRotate.InternalValue = 10.0M;
 			ToolTip.Default.SetToolTip(this.fieldRotate, "Angle de rotation en degrés");
 			this.toolBarRot.Items.Add(this.fieldRotate);
 
@@ -157,13 +162,14 @@ namespace Epsitec.Common.Document.Containers
 
 			this.toolBarZoom.Items.Add(new IconSeparator());
 
-			this.fieldZoom = new TextFieldSlider();
+			this.fieldZoom = new TextFieldReal();
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldZoom);
 			this.fieldZoom.Width = 50;
-			this.fieldZoom.MinValue = 1.0M;
-			this.fieldZoom.MaxValue = 2.0M;
+			this.fieldZoom.InternalMinValue = 1.0M;
+			this.fieldZoom.InternalMaxValue = 2.0M;
 			this.fieldZoom.Step = 0.1M;
 			this.fieldZoom.Resolution = 0.01M;
-			this.fieldZoom.Value = 1.2M;
+			this.fieldZoom.InternalValue = 1.2M;
 			ToolTip.Default.SetToolTip(this.fieldZoom, "Facteur d'agrandissement/réduction");
 			this.toolBarZoom.Items.Add(this.fieldZoom);
 
@@ -207,25 +213,25 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleButtonMoveH(object sender, MessageEventArgs e)
 		{
-			double dx = (double) this.fieldMoveH.Value;
+			double dx = (double) this.fieldMoveH.InternalValue;
 			this.document.Modifier.MoveSelection(new Point(dx,0));
 		}
 
 		private void HandleButtonMoveHi(object sender, MessageEventArgs e)
 		{
-			double dx = (double) this.fieldMoveH.Value;
+			double dx = (double) this.fieldMoveH.InternalValue;
 			this.document.Modifier.MoveSelection(new Point(-dx,0));
 		}
 
 		private void HandleButtonMoveV(object sender, MessageEventArgs e)
 		{
-			double dy = (double) this.fieldMoveV.Value;
+			double dy = (double) this.fieldMoveV.InternalValue;
 			this.document.Modifier.MoveSelection(new Point(0,dy));
 		}
 
 		private void HandleButtonMoveVi(object sender, MessageEventArgs e)
 		{
-			double dy = (double) this.fieldMoveV.Value;
+			double dy = (double) this.fieldMoveV.InternalValue;
 			this.document.Modifier.MoveSelection(new Point(0,-dy));
 		}
 
@@ -246,13 +252,13 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleButtonRotate(object sender, MessageEventArgs e)
 		{
-			double angle = (double) this.fieldRotate.Value;
+			double angle = (double) this.fieldRotate.InternalValue;
 			this.document.Modifier.RotateSelection(angle);
 		}
 
 		private void HandleButtonRotatei(object sender, MessageEventArgs e)
 		{
-			double angle = (double) this.fieldRotate.Value;
+			double angle = (double) this.fieldRotate.InternalValue;
 			this.document.Modifier.RotateSelection(-angle);
 		}
 
@@ -278,23 +284,23 @@ namespace Epsitec.Common.Document.Containers
 
 		private void HandleButtonZoom(object sender, MessageEventArgs e)
 		{
-			double scale = (double) this.fieldZoom.Value;
+			double scale = (double) this.fieldZoom.InternalValue;
 			this.document.Modifier.ZoomSelection(scale);
 		}
 
 		private void HandleButtonZoomi(object sender, MessageEventArgs e)
 		{
-			double scale = (double) this.fieldZoom.Value;
+			double scale = (double) this.fieldZoom.InternalValue;
 			this.document.Modifier.ZoomSelection(1.0/scale);
 		}
 
 
 		protected GroupBox				boxMove;
 		protected HToolBar				toolBarMove;
-		protected TextFieldSlider		fieldMoveH;
+		protected TextFieldReal			fieldMoveH;
 		protected IconButton			buttonMoveH;
 		protected IconButton			buttonMoveHi;
-		protected TextFieldSlider		fieldMoveV;
+		protected TextFieldReal			fieldMoveV;
 		protected IconButton			buttonMoveV;
 		protected IconButton			buttonMoveVi;
 
@@ -303,7 +309,7 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton			buttonRotate90;
 		protected IconButton			buttonRotate180;
 		protected IconButton			buttonRotate270;
-		protected TextFieldSlider		fieldRotate;
+		protected TextFieldReal			fieldRotate;
 		protected IconButton			buttonRotate;
 		protected IconButton			buttonRotatei;
 		
@@ -316,7 +322,7 @@ namespace Epsitec.Common.Document.Containers
 		protected HToolBar				toolBarZoom;
 		protected IconButton			buttonZoomMul2;
 		protected IconButton			buttonZoomDiv2;
-		protected TextFieldSlider		fieldZoom;
+		protected TextFieldReal			fieldZoom;
 		protected IconButton			buttonZoom;
 		protected IconButton			buttonZoomi;
 	}

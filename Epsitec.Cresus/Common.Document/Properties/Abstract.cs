@@ -39,6 +39,11 @@ namespace Epsitec.Common.Document.Properties
 			this.document = document;
 			this.type = type;
 			this.owners = new UndoableList(this.document, UndoableListType.ObjectsInsideProperty);
+			this.Initialise();
+		}
+
+		protected virtual void Initialise()
+		{
 		}
 
 		// Crée une nouvelle propriété.
@@ -309,12 +314,6 @@ namespace Epsitec.Common.Document.Properties
 		public virtual bool AlterBoundingBox
 		{
 			get { return false; }
-		}
-
-		// Retourne la valeur d'engraissement pour la bbox.
-		public virtual double WidthInflateBoundingBox()
-		{
-			return 0.0;
 		}
 
 		// Engraisse la bbox en fonction de la propriété.
@@ -624,6 +623,7 @@ namespace Epsitec.Common.Document.Properties
 		protected Abstract(SerializationInfo info, StreamingContext context)
 		{
 			this.document = Document.ReadDocument;
+			this.Initialise();
 			this.type = (Type) info.GetValue("Type", typeof(Type));
 			this.isStyle = info.GetBoolean("IsStyle");
 			if ( this.isStyle )

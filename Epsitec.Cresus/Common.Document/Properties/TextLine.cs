@@ -11,6 +11,10 @@ namespace Epsitec.Common.Document.Properties
 	{
 		public TextLine(Document document, Type type) : base(document, type)
 		{
+		}
+
+		protected override void Initialise()
+		{
 			this.horizontal = JustifHorizontal.Left;
 			this.offset     = 0.0;
 			this.add        = 0.0;

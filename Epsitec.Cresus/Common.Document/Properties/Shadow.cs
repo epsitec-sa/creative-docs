@@ -12,6 +12,10 @@ namespace Epsitec.Common.Document.Properties
 	{
 		public Shadow(Document document, Type type) : base(document, type)
 		{
+		}
+
+		protected override void Initialise()
+		{
 			this.color  = Drawing.Color.FromARGB(0.0, 0.5, 0.5, 0.5);
 			this.radius =  2.0;
 			this.ox     =  1.0;

@@ -11,6 +11,10 @@ namespace Epsitec.Common.Document.Properties
 	{
 		public Image(Document document, Type type) : base(document, type)
 		{
+		}
+
+		protected override void Initialise()
+		{
 			this.filename = "";
 			this.mirrorH  = false;
 			this.mirrorV  = false;

@@ -34,6 +34,10 @@ namespace Epsitec.Common.Document.Properties
 	{
 		public Corner(Document document, Type type) : base(document, type)
 		{
+		}
+
+		protected override void Initialise()
+		{
 			this.cornerType = CornerType.Right;
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
@@ -569,12 +573,6 @@ namespace Epsitec.Common.Document.Properties
 				this.radius  = info.GetDouble("Radius");
 				this.effect1 = info.GetDouble("Effect1");
 				this.effect2 = info.GetDouble("Effect2");
-			}
-			else
-			{
-				this.radius  = 2.0;
-				this.effect1 = 0.5;
-				this.effect2 = 0.5;
 			}
 		}
 		#endregion

@@ -18,8 +18,8 @@ namespace Epsitec.App.DocumentEditor
 			Epsitec.Common.Pictogram.Engine.Initialise();
 			Epsitec.Common.Document.Engine.Initialise();
 			Epsitec.Common.UI.Engine.Initialise();
-			Application.application = new Application(DocumentType.Pictogram);
-			//Application.application = new Application(DocumentType.Graphic);
+			//Application.application = new Application(DocumentType.Pictogram);
+			Application.application = new Application(DocumentType.Graphic);
 			Application.application.MainWindow.Run();
 		}
 		#endregion

@@ -51,31 +51,30 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.buttons[10], "Orientation de droite à gauche");
 			ToolTip.Default.SetToolTip(this.buttons[11], "Orientation de haut en bas");
 
-			this.fieldMarginH = new TextFieldSlider(this);
-			this.fieldMarginH.MinValue = 0;
-			this.fieldMarginH.MaxValue = 10;
-			this.fieldMarginH.Step = 0.1M;
-			this.fieldMarginH.Resolution = 0.1M;
+			this.fieldMarginH = new TextFieldReal(this);
+			this.fieldMarginH.FactorMinRange = 0.0M;
+			this.fieldMarginH.FactorMaxRange = 0.1M;
+			this.fieldMarginH.FactorStep = 1.0M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldMarginH);
 			this.fieldMarginH.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldMarginH.TabIndex = 20;
 			this.fieldMarginH.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMarginH, "Marges gauche et droite");
 
-			this.fieldMarginV = new TextFieldSlider(this);
-			this.fieldMarginV.MinValue = 0;
-			this.fieldMarginV.MaxValue = 10;
-			this.fieldMarginV.Step = 0.1M;
-			this.fieldMarginV.Resolution = 0.1M;
+			this.fieldMarginV = new TextFieldReal(this);
+			this.fieldMarginV.FactorMinRange = 0.0M;
+			this.fieldMarginV.FactorMaxRange = 0.1M;
+			this.fieldMarginV.FactorStep = 1.0M;
+			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldMarginV);
 			this.fieldMarginV.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldMarginV.TabIndex = 21;
 			this.fieldMarginV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMarginV, "Marges sup/inf");
 
-			this.fieldOffsetV = new TextFieldSlider(this);
-			this.fieldOffsetV.MinValue = -50;
-			this.fieldOffsetV.MaxValue =  50;
-			this.fieldOffsetV.Step = 5;
-			this.fieldOffsetV.Resolution = 1;
+			this.fieldOffsetV = new TextFieldReal(this);
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldOffsetV);
+			this.fieldOffsetV.InternalMinValue = -50.0M;
+			this.fieldOffsetV.InternalMaxValue =  50.0M;
 			this.fieldOffsetV.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldOffsetV.TabIndex = 22;
 			this.fieldOffsetV.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -143,12 +142,12 @@ namespace Epsitec.Common.Document.Panels
 
 			this.label.Text = p.TextStyle;
 
-			this.SelectButtonHorizontal  = p.Horizontal;
-			this.SelectButtonVertical    = p.Vertical;
-			this.SelectButtonOrientation = p.Orientation;
-			this.fieldMarginH.Value      = (decimal) p.MarginH;
-			this.fieldMarginV.Value      = (decimal) p.MarginV;
-			this.fieldOffsetV.Value      = (decimal) p.OffsetV*100;
+			this.SelectButtonHorizontal     = p.Horizontal;
+			this.SelectButtonVertical       = p.Vertical;
+			this.SelectButtonOrientation    = p.Orientation;
+			this.fieldMarginH.InternalValue = (decimal) p.MarginH;
+			this.fieldMarginV.InternalValue = (decimal) p.MarginV;
+			this.fieldOffsetV.InternalValue = (decimal) p.OffsetV*100;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -163,9 +162,9 @@ namespace Epsitec.Common.Document.Panels
 			p.Horizontal  = this.SelectButtonHorizontal;
 			p.Vertical    = this.SelectButtonVertical;
 			p.Orientation = this.SelectButtonOrientation;
-			p.MarginH     = (double) this.fieldMarginH.Value;
-			p.MarginV     = (double) this.fieldMarginV.Value;
-			p.OffsetV     = (double) this.fieldOffsetV.Value/100;
+			p.MarginH     = (double) this.fieldMarginH.InternalValue;
+			p.MarginV     = (double) this.fieldMarginV.InternalValue;
+			p.OffsetV     = (double) this.fieldOffsetV.InternalValue/100;
 		}
 
 		protected Properties.JustifHorizontal SelectButtonHorizontal
@@ -374,9 +373,9 @@ namespace Epsitec.Common.Document.Panels
 
 		protected StaticText				label;
 		protected IconButton[]				buttons;
-		protected TextFieldSlider			fieldMarginH;
-		protected TextFieldSlider			fieldMarginV;
-		protected TextFieldSlider			fieldOffsetV;
+		protected TextFieldReal				fieldMarginH;
+		protected TextFieldReal				fieldMarginV;
+		protected TextFieldReal				fieldOffsetV;
 		protected StaticText				labelMarginH;
 		protected StaticText				labelMarginV;
 		protected StaticText				labelOffsetV;

@@ -13,6 +13,11 @@ namespace Epsitec.Common.Document.Properties
 		{
 		}
 
+		protected override void Initialise()
+		{
+			this.boolValue = false;
+		}
+
 		// Valeur de la propriété.
 		public bool BoolValue
 		{
@@ -81,6 +86,6 @@ namespace Epsitec.Common.Document.Properties
 		#endregion
 
 	
-		protected bool			boolValue = false;
+		protected bool			boolValue;
 	}
 }

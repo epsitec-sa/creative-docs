@@ -11,9 +11,10 @@ namespace Epsitec.Common.Document.Settings
 	[System.Serializable()]
 	public abstract class Abstract : ISerializable
 	{
-		public Abstract(Document document)
+		public Abstract(Document document, string name)
 		{
 			this.document = document;
+			this.name = name;
 		}
 
 		// Nom logique.
@@ -22,11 +23,6 @@ namespace Epsitec.Common.Document.Settings
 			get
 			{
 				return this.name;
-			}
-
-			set
-			{
-				this.name = value;
 			}
 		}
 
@@ -37,20 +33,9 @@ namespace Epsitec.Common.Document.Settings
 			{
 				return this.text;
 			}
-
-			set
-			{
-				this.text = value;
-			}
 		}
 
 		
-		// Met à jour la valeur du réglage.
-		public virtual void UpdateValue()
-		{
-		}
-
-
 		#region Serialization
 		// Sérialise le réglage.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)

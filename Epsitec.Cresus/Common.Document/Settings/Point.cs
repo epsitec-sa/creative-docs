@@ -8,10 +8,58 @@ namespace Epsitec.Common.Document.Settings
 	/// <summary>
 	/// La classe Point contient un réglage numérique.
 	/// </summary>
+	[System.Serializable()]
 	public class Point : Abstract
 	{
-		public Point(Document document) : base(document)
+		public Point(Document document, string name) : base(document, name)
 		{
+			this.Initialise();
+		}
+
+		protected void Initialise()
+		{
+			switch ( this.name )
+			{
+				case "PageSize":
+					this.textX = "Largeur";
+					this.textY = "Hauteur";
+					this.factorMinValue = 0.01;  // 10mm
+					this.factorMaxValue = 1.0;
+					if ( this.document.Type != DocumentType.Pictogram )
+					{
+						this.link = false;
+					}
+					break;
+
+				case "GridStep":
+					this.textX = "Pas horizontal";
+					this.textY = "Pas vertical";
+					this.factorMinValue = 0.001;  // 1mm
+					this.factorMaxValue = 0.1;  // 100mm
+					break;
+
+				case "GridSubdiv":
+					this.textX = "Subdivisions horizontales";
+					this.textY = "Subdivisions verticales";
+					this.integer = true;
+					this.factorMinValue = 1.0;
+					this.factorMaxValue = 10.0;
+					break;
+
+				case "GridOffset":
+					this.textX = "Décalage horizontal";
+					this.textY = "Décalage vertical";
+					this.factorMinValue = -0.1;
+					this.factorMaxValue = 0.1;
+					this.factorStep = 0.5;
+					break;
+
+				case "DuplicateMove":
+					this.textX = "Déplacement à droite";
+					this.textY = "Déplacement en haut";
+					this.link = false;
+					break;
+			}
 		}
 
 		// Texte explicatif.
@@ -21,11 +69,6 @@ namespace Epsitec.Common.Document.Settings
 			{
 				return this.textX;
 			}
-
-			set
-			{
-				this.textX = value;
-			}
 		}
 
 		// Texte explicatif.
@@ -34,11 +77,6 @@ namespace Epsitec.Common.Document.Settings
 			get
 			{
 				return this.textY;
-			}
-
-			set
-			{
-				this.textY = value;
 			}
 		}
 
@@ -53,6 +91,9 @@ namespace Epsitec.Common.Document.Settings
 
 					case "GridStep":
 						return this.document.Modifier.ActiveViewer.DrawingContext.GridStep;
+
+					case "GridSubdiv":
+						return this.document.Modifier.ActiveViewer.DrawingContext.GridSubdiv;
 
 					case "GridOffset":
 						return this.document.Modifier.ActiveViewer.DrawingContext.GridOffset;
@@ -76,6 +117,10 @@ namespace Epsitec.Common.Document.Settings
 						this.document.Modifier.ActiveViewer.DrawingContext.GridStep = value;
 						break;
 
+					case "GridSubdiv":
+						this.document.Modifier.ActiveViewer.DrawingContext.GridSubdiv = value;
+						break;
+
 					case "GridOffset":
 						this.document.Modifier.ActiveViewer.DrawingContext.GridOffset = value;
 						break;
@@ -87,55 +132,27 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-		public double MinValue
+		public double FactorMinValue
 		{
 			get
 			{
-				return this.minValue;
-			}
-
-			set
-			{
-				this.minValue = value;
+				return this.factorMinValue;
 			}
 		}
 
-		public double MaxValue
+		public double FactorMaxValue
 		{
 			get
 			{
-				return this.maxValue;
-			}
-
-			set
-			{
-				this.maxValue = value;
+				return this.factorMaxValue;
 			}
 		}
 
-		public double Step
+		public double FactorStep
 		{
 			get
 			{
-				return this.step;
-			}
-
-			set
-			{
-				this.step = value;
-			}
-		}
-
-		public double Resolution
-		{
-			get
-			{
-				return this.resolution;
-			}
-
-			set
-			{
-				this.resolution = value;
+				return this.factorStep;
 			}
 		}
 
@@ -152,50 +169,41 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
-
-		// Indique quel est le widget qui édite ce réglage.
-		public void TextField(int rank, TextFieldSlider widget)
+		public bool Integer
 		{
-			if ( this.textField == null )
+			get
 			{
-				this.textField = new TextFieldSlider[2];
+				return this.integer;
 			}
-			this.textField[rank] = widget;
 		}
 
-		// Met à jour la valeur du réglage.
-		public override void UpdateValue()
-		{
-			this.textField[0].Value = (decimal) this.Value.X;
-			this.textField[1].Value = (decimal) this.Value.Y;
-		}
 
-		
 		#region Serialization
 		// Sérialise le réglage.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			base.GetObjectData(info, context);
-
+			info.AddValue("Link", this.Link);
 			info.AddValue("Value", this.Value);
 		}
 
 		// Constructeur qui désérialise le réglage.
 		protected Point(SerializationInfo info, StreamingContext context) : base(info, context)
 		{
-			this.document = Document.ReadDocument;
+			this.link = false;
 			this.Value = (Drawing.Point) info.GetValue("Value", typeof(Drawing.Point));
+			this.Initialise();
+			this.link = info.GetBoolean("Link");
 		}
 		#endregion
 
 
 		protected string			textX;
 		protected string			textY;
-		protected double			minValue;
-		protected double			maxValue;
-		protected double			step;
-		protected double			resolution;
+		protected double			factorMinValue = -1.0;
+		protected double			factorMaxValue = 1.0;
+		protected double			factorStep = 1.0;
 		protected bool				link = true;
-		protected TextFieldSlider[]	textField;
+		protected bool				integer = false;
 	}
 }

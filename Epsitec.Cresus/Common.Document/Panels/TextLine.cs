@@ -33,21 +33,21 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.buttons[2], "Justification à droite");
 			ToolTip.Default.SetToolTip(this.buttons[3], "Justification alignée");
 
-			this.fieldOffset = new TextFieldSlider(this);
-			this.fieldOffset.MinValue =  0;
-			this.fieldOffset.MaxValue = 70;
-			this.fieldOffset.Step = 5;
-			this.fieldOffset.Resolution = 1;
+			this.fieldOffset = new TextFieldReal(this);
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldOffset);
+			this.fieldOffset.InternalMinValue =  0.0M;
+			this.fieldOffset.InternalMaxValue = 70.0M;
+			this.fieldOffset.Step = 5.0M;
 			this.fieldOffset.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldOffset.TabIndex = 20;
 			this.fieldOffset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldOffset, "Offset perpendiculaire");
 
-			this.fieldAdd = new TextFieldSlider(this);
-			this.fieldAdd.MinValue = -20;
-			this.fieldAdd.MaxValue = 100;
+			this.fieldAdd = new TextFieldReal(this);
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldAdd);
+			this.fieldAdd.InternalMinValue = -20.0M;
+			this.fieldAdd.InternalMaxValue = 100.0M;
 			this.fieldAdd.Step = 1.0M;
-			this.fieldAdd.Resolution = 1.0M;
 			this.fieldAdd.TextChanged += new EventHandler(this.HandleFieldChanged);
 			this.fieldAdd.TabIndex = 21;
 			this.fieldAdd.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -108,9 +108,9 @@ namespace Epsitec.Common.Document.Panels
 
 			this.label.Text = p.TextStyle;
 
-			this.SelectButtonHorizontal = p.Horizontal;
-			this.fieldOffset.Value      = (decimal) p.Offset*100;
-			this.fieldAdd.Value         = (decimal) p.Add*100;
+			this.SelectButtonHorizontal    = p.Horizontal;
+			this.fieldOffset.InternalValue = (decimal) p.Offset*100;
+			this.fieldAdd.InternalValue    = (decimal) p.Add*100;
 
 			this.EnableWidgets();
 			this.ignoreChanged = false;
@@ -123,8 +123,8 @@ namespace Epsitec.Common.Document.Panels
 			if ( p == null )  return;
 
 			p.Horizontal = this.SelectButtonHorizontal;
-			p.Offset     = (double) this.fieldOffset.Value/100;
-			p.Add        = (double) this.fieldAdd.Value/100;
+			p.Offset     = (double) this.fieldOffset.InternalValue/100;
+			p.Add        = (double) this.fieldAdd.InternalValue/100;
 		}
 
 		protected Properties.JustifHorizontal SelectButtonHorizontal
@@ -232,8 +232,8 @@ namespace Epsitec.Common.Document.Panels
 
 		protected StaticText				label;
 		protected IconButton[]				buttons;
-		protected TextFieldSlider			fieldOffset;
-		protected TextFieldSlider			fieldAdd;
+		protected TextFieldReal				fieldOffset;
+		protected TextFieldReal				fieldAdd;
 		protected StaticText				labelOffset;
 		protected StaticText				labelAdd;
 	}

@@ -23,6 +23,7 @@ namespace Epsitec.App.DocumentEditor
 		public DocumentEditor(DocumentType type)
 		{
 			this.type = type;
+			this.useArray = false;
 
 			this.clipboard = new Document(this.type, DocumentMode.Clipboard);
 			this.clipboard.Name = "Clipboard";
@@ -99,7 +100,10 @@ namespace Epsitec.App.DocumentEditor
 			this.menu.Items.Add(new MenuItem("", "Edition"));
 			this.menu.Items.Add(new MenuItem("", "Objets"));
 			this.menu.Items.Add(new MenuItem("", "Affichage"));
-			this.menu.Items.Add(new MenuItem("", "Tableau"));
+			if ( this.useArray )
+			{
+				this.menu.Items.Add(new MenuItem("", "Tableau"));
+			}
 			this.menu.Items.Add(new MenuItem("", "Document"));
 #if DEBUG
 			this.menu.Items.Add(new MenuItem("", "Debug"));
@@ -223,49 +227,52 @@ namespace Epsitec.App.DocumentEditor
 			lookMenu.AdjustSize();
 			showMenu.Items[6].Submenu = lookMenu;
 
-			VMenu arrayMenu = new VMenu();
-			arrayMenu.Name = "Array";
-			arrayMenu.Host = this;
-			this.MenuAdd(arrayMenu, @"file:images/arrayframe.icon", "ArrayOutlineFrame", "Modifie le cadre", "");
-			this.MenuAdd(arrayMenu, @"file:images/arrayhoriz.icon", "ArrayOutlineHoriz", "Modifie l'intérieur horizontal", "");
-			this.MenuAdd(arrayMenu, @"file:images/arrayverti.icon", "ArrayOutlineVerti", "Modifie l'intérieur vertical", "");
-			this.MenuAdd(arrayMenu, @"", "", "", "");
-			this.MenuAdd(arrayMenu, @"", "", "Assistants", "");
-			this.MenuAdd(arrayMenu, @"", "", "", "");
-			this.MenuAdd(arrayMenu, @"", "ArrayAddColumnLeft", "Insérer des colonnes à gauche", "");
-			this.MenuAdd(arrayMenu, @"", "ArrayAddColumnRight", "Insérer des colonnes à droite", "");
-			this.MenuAdd(arrayMenu, @"", "ArrayAddRowTop", "Insérer des lignes en dessus", "");
-			this.MenuAdd(arrayMenu, @"", "ArrayAddRowBottom", "Insérer des lignes en dessous", "");
-			this.MenuAdd(arrayMenu, @"", "", "", "");
-			this.MenuAdd(arrayMenu, @"", "ArrayDelColumn", "Supprimer les colonnes", "");
-			this.MenuAdd(arrayMenu, @"", "ArrayDelRow", "Supprimer les lignes", "");
-			this.MenuAdd(arrayMenu, @"", "", "", "");
-			this.MenuAdd(arrayMenu, @"", "ArrayAlignColumn", "Egaliser les largeurs de colonne", "");
-			this.MenuAdd(arrayMenu, @"", "ArrayAlignRow", "Egaliser les hauteurs de ligne", "");
-			this.MenuAdd(arrayMenu, @"", "", "", "");
-			this.MenuAdd(arrayMenu, @"", "ArraySwapColumn", "Permuter le contenu des colonnes", "");
-			this.MenuAdd(arrayMenu, @"", "ArraySwapRow", "Permuter le contenu des lignes", "");
-			arrayMenu.AdjustSize();
-			this.menu.Items[i++].Submenu = arrayMenu;
-
-			VMenu arrayLookMenu = new VMenu();
-			arrayLookMenu.Name = "ArrayLook";
-			arrayLookMenu.Host = this;
-			for ( int j=0 ; j<100 ; j++ )
+			if ( this.useArray )
 			{
-				string text, name;
-				if ( !Objects.Array.CommandLook(j, out text, out name) )  break;
-				if ( name == "" )
+				VMenu arrayMenu = new VMenu();
+				arrayMenu.Name = "Array";
+				arrayMenu.Host = this;
+				this.MenuAdd(arrayMenu, @"file:images/arrayframe.icon", "ArrayOutlineFrame", "Modifie le cadre", "");
+				this.MenuAdd(arrayMenu, @"file:images/arrayhoriz.icon", "ArrayOutlineHoriz", "Modifie l'intérieur horizontal", "");
+				this.MenuAdd(arrayMenu, @"file:images/arrayverti.icon", "ArrayOutlineVerti", "Modifie l'intérieur vertical", "");
+				this.MenuAdd(arrayMenu, @"", "", "", "");
+				this.MenuAdd(arrayMenu, @"", "", "Assistants", "");
+				this.MenuAdd(arrayMenu, @"", "", "", "");
+				this.MenuAdd(arrayMenu, @"", "ArrayAddColumnLeft", "Insérer des colonnes à gauche", "");
+				this.MenuAdd(arrayMenu, @"", "ArrayAddColumnRight", "Insérer des colonnes à droite", "");
+				this.MenuAdd(arrayMenu, @"", "ArrayAddRowTop", "Insérer des lignes en dessus", "");
+				this.MenuAdd(arrayMenu, @"", "ArrayAddRowBottom", "Insérer des lignes en dessous", "");
+				this.MenuAdd(arrayMenu, @"", "", "", "");
+				this.MenuAdd(arrayMenu, @"", "ArrayDelColumn", "Supprimer les colonnes", "");
+				this.MenuAdd(arrayMenu, @"", "ArrayDelRow", "Supprimer les lignes", "");
+				this.MenuAdd(arrayMenu, @"", "", "", "");
+				this.MenuAdd(arrayMenu, @"", "ArrayAlignColumn", "Egaliser les largeurs de colonne", "");
+				this.MenuAdd(arrayMenu, @"", "ArrayAlignRow", "Egaliser les hauteurs de ligne", "");
+				this.MenuAdd(arrayMenu, @"", "", "", "");
+				this.MenuAdd(arrayMenu, @"", "ArraySwapColumn", "Permuter le contenu des colonnes", "");
+				this.MenuAdd(arrayMenu, @"", "ArraySwapRow", "Permuter le contenu des lignes", "");
+				arrayMenu.AdjustSize();
+				this.menu.Items[i++].Submenu = arrayMenu;
+
+				VMenu arrayLookMenu = new VMenu();
+				arrayLookMenu.Name = "ArrayLook";
+				arrayLookMenu.Host = this;
+				for ( int j=0 ; j<100 ; j++ )
 				{
-					this.MenuAdd(arrayLookMenu, @"", "", "", "");
+					string text, name;
+					if ( !Objects.Array.CommandLook(j, out text, out name) )  break;
+					if ( name == "" )
+					{
+						this.MenuAdd(arrayLookMenu, @"", "", "", "");
+					}
+					else
+					{
+						this.MenuAdd(arrayLookMenu, @"", "ArrayLook(this.Name)", text, "", name);
+					}
 				}
-				else
-				{
-					this.MenuAdd(arrayLookMenu, @"", "ArrayLook(this.Name)", text, "", name);
-				}
+				arrayLookMenu.AdjustSize();
+				arrayMenu.Items[4].Submenu = arrayLookMenu;
 			}
-			arrayLookMenu.AdjustSize();
-			arrayMenu.Items[4].Submenu = arrayLookMenu;
 
 			VMenu docMenu = new VMenu();
 			docMenu.Name = "Document";
@@ -336,10 +343,13 @@ namespace Epsitec.App.DocumentEditor
 			this.HToolBarAdd(@"file:images/grid.icon", "Grid", "Grille magnétique");
 			this.HToolBarAdd(@"file:images/mode.icon", "Mode", "Tableau des objets");
 			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(@"file:images/arrayframe.icon", "ArrayOutlineFrame", "Modifie le cadre");
-			this.HToolBarAdd(@"file:images/arrayhoriz.icon", "ArrayOutlineHoriz", "Modifie l'intérieur horizontal");
-			this.HToolBarAdd(@"file:images/arrayverti.icon", "ArrayOutlineVerti", "Modifie l'intérieur vertical");
-			this.HToolBarAdd("", "", "");
+			if ( this.useArray )
+			{
+				this.HToolBarAdd(@"file:images/arrayframe.icon", "ArrayOutlineFrame", "Modifie le cadre");
+				this.HToolBarAdd(@"file:images/arrayhoriz.icon", "ArrayOutlineHoriz", "Modifie l'intérieur horizontal");
+				this.HToolBarAdd(@"file:images/arrayverti.icon", "ArrayOutlineVerti", "Modifie l'intérieur vertical");
+				this.HToolBarAdd("", "", "");
+			}
 
 			this.vToolBar = new VToolBar();
 			this.vToolBar.Parent = this;
@@ -363,7 +373,10 @@ namespace Epsitec.App.DocumentEditor
 			this.VToolBarAdd(@"file:images/bezier.icon", "SelectTool(this.Name)", "Courbes de Bézier", "ObjectBezier");
 			this.VToolBarAdd(@"file:images/textline.icon", "SelectTool(this.Name)", "Ligne de texte", "ObjectTextLine");
 			this.VToolBarAdd(@"file:images/textbox.icon", "SelectTool(this.Name)", "Pavé de texte", "ObjectTextBox");
-			this.VToolBarAdd(@"file:images/array.icon", "SelectTool(this.Name)", "Tableau", "ObjectArray");
+			if ( this.useArray )
+			{
+				this.VToolBarAdd(@"file:images/array.icon", "SelectTool(this.Name)", "Tableau", "ObjectArray");
+			}
 			this.VToolBarAdd(@"file:images/image.icon", "SelectTool(this.Name)", "Image bitmap", "ObjectImage");
 			this.VToolBarAdd("", "", "");
 			
@@ -1043,22 +1056,21 @@ namespace Epsitec.App.DocumentEditor
 		void CommandPrint(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			Dialogs.Print dialog = new Dialogs.Print();
-			
-			dialog.AllowFromPageToPage = false;
+			dialog.AllowFromPageToPage = true;
 			dialog.AllowSelectedPages  = false;
-			
-			string[] printers = Common.Printing.PrinterSettings.InstalledPrinters;
-			
+			int total = this.document.Modifier.StatisticTotalPages();
 			dialog.Document.PrinterSettings.MinimumPage = 1;
-			dialog.Document.PrinterSettings.MaximumPage = 1;
+			dialog.Document.PrinterSettings.MaximumPage = total;
 			dialog.Document.PrinterSettings.FromPage = 1;
-			dialog.Document.PrinterSettings.ToPage = 1;
+			dialog.Document.PrinterSettings.ToPage = total;
 			dialog.Document.PrinterSettings.PrintRange = Common.Printing.PrintRange.AllPages;
 			dialog.Document.PrinterSettings.Collate = false;
+			dialog.Document.SelectPrinter(this.document.PrinterName);
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
 			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
 
+			this.document.PrinterName = dialog.Document.PrinterSettings.PrinterName;
 			this.document.Print(dialog);
 		}
 		
@@ -2034,7 +2046,7 @@ namespace Epsitec.App.DocumentEditor
 			get
 			{
 				string name = Misc.ExtractName(this.document.Filename);
-				Size size = this.document.Size;
+				Size size = this.document.Size / this.document.Modifier.RealScale;
 				return string.Format("{0} ({1}x{2})", name, size.Width, size.Height);
 			}
 		}
@@ -2071,7 +2083,8 @@ namespace Epsitec.App.DocumentEditor
 			get
 			{
 				Point mouse = this.document.Modifier.ActiveViewer.MousePos();
-				return string.Format("(x:{0} y:{1})", mouse.X.ToString("F2"), mouse.Y.ToString("F2"));
+				mouse /= this.document.Modifier.RealScale;
+				return string.Format("(x:{0} y:{1})", mouse.X.ToString("F1"), mouse.Y.ToString("F1"));
 			}
 		}
 
@@ -2088,6 +2101,7 @@ namespace Epsitec.App.DocumentEditor
 
 
 		protected DocumentType			type;
+		protected bool					useArray;
 		protected Document				clipboard;
 		protected Document				document;
 

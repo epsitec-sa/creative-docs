@@ -54,6 +54,7 @@ namespace Epsitec.Common.Document
 			this.propertiesAuto = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
 			this.propertiesSel = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
 			this.propertiesStyle = new UndoableList(this, UndoableListType.PropertiesInsideDocument);
+			this.printerName = "";
 
 			if ( this.mode == DocumentMode.Modify    ||
 				 this.mode == DocumentMode.Clipboard )
@@ -62,6 +63,7 @@ namespace Epsitec.Common.Document
 				this.notifier = new Notifier(this);
 				this.dialogs  = new Dialogs(this);
 				this.settings = new Settings.Settings(this);
+				this.printer  = new Printer(this);
 			}
 
 			if ( this.mode == DocumentMode.Clipboard )
@@ -216,6 +218,24 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Nom du pilote d'impression.
+		public string PrinterName
+		{
+			get
+			{
+				return this.printerName;
+			}
+
+			set
+			{
+				if ( this.printerName != value )
+				{
+					this.printerName = value;
+					this.IsDirtySerialize = true;
+				}
+			}
+		}
+
 		// Indique si la sérialisation est nécessaire.
 		public bool IsDirtySerialize
 		{
@@ -346,8 +366,17 @@ namespace Epsitec.Common.Document
 			this.objects = doc.objects;
 			this.propertiesAuto = doc.propertiesAuto;
 			this.propertiesStyle = doc.propertiesStyle;
-			this.size = doc.size;
-			this.hotSpot = doc.hotSpot;
+			
+			if ( this.type == DocumentType.Pictogram )
+			{
+				this.size = doc.size;
+				this.hotSpot = doc.hotSpot;
+			}
+			else
+			{
+				this.settings = doc.settings;
+			}
+
 			this.ReadFinalize();
 
 			if ( this.Notifier != null )
@@ -388,6 +417,11 @@ namespace Epsitec.Common.Document
 			foreach ( Objects.Abstract obj in this.Deep(null) )
 			{
 				obj.ReadFinalize();
+			}
+
+			if ( this.settings != null )
+			{
+				this.settings.ReadFinalize();
 			}
 
 			if ( this.Modifier != null )
@@ -482,8 +516,17 @@ namespace Epsitec.Common.Document
 			info.AddValue("Version", version);
 			info.AddValue("Type", this.type);
 			info.AddValue("Name", this.name);
-			info.AddValue("Size", this.size);
-			info.AddValue("HotSpot", this.hotSpot);
+
+			if ( this.type == DocumentType.Pictogram )
+			{
+				info.AddValue("Size", this.size);
+				info.AddValue("HotSpot", this.hotSpot);
+			}
+			else
+			{
+				info.AddValue("Settings", this.settings);
+			}
+
 			info.AddValue("UniqueObjectId", Modifier.UniqueObjectId);
 			info.AddValue("UniqueStyleId", Modifier.UniqueStyleId);
 			info.AddValue("Objects", this.objects);
@@ -498,8 +541,17 @@ namespace Epsitec.Common.Document
 			this.readVersion  = info.GetInt32("Version");
 			this.type = (DocumentType) info.GetValue("Type", typeof(DocumentType));
 			this.name = info.GetString("Name");
-			this.size = (Size) info.GetValue("Size", typeof(Size));
-			this.hotSpot = (Point) info.GetValue("HotSpot", typeof(Point));
+
+			if ( this.type == DocumentType.Pictogram )
+			{
+				this.size = (Size) info.GetValue("Size", typeof(Size));
+				this.hotSpot = (Point) info.GetValue("HotSpot", typeof(Point));
+			}
+			else
+			{
+				this.settings = (Settings.Settings) info.GetValue("Settings", typeof(Settings.Settings));
+			}
+
 			Modifier.UniqueObjectId = info.GetInt32("UniqueObjectId");
 			Modifier.UniqueStyleId = info.GetInt32("UniqueStyleId");
 			this.objects = (UndoableList) info.GetValue("Objects", typeof(UndoableList));
@@ -583,6 +635,7 @@ namespace Epsitec.Common.Document
 		// Imprime le document.
 		public void Print(Common.Dialogs.Print dp)
 		{
+			this.printer.Print(dp);
 		}
 
 
@@ -1006,8 +1059,8 @@ namespace Epsitec.Common.Document
 			}
 
 			protected Document					document;
-			protected Objects.Abstract	root;
-			protected Objects.Abstract	branch;
+			protected Objects.Abstract			root;
+			protected Objects.Abstract			branch;
 			protected bool						isInsideBranch;
 			protected bool						first;
 			protected int						index;
@@ -1071,6 +1124,7 @@ namespace Epsitec.Common.Document
 		protected Size							size;
 		protected Point							hotSpot;
 		protected string						filename;
+		protected string						printerName;
 		protected bool							isDirtySerialize;
 		protected UndoableList					objects;
 		protected UndoableList					propertiesAuto;
@@ -1079,6 +1133,7 @@ namespace Epsitec.Common.Document
 		protected Settings.Settings				settings;
 		protected Modifier						modifier;
 		protected Notifier						notifier;
+		protected Printer						printer;
 		protected Dialogs						dialogs;
 		protected int							readRevision;
 		protected int							readVersion;

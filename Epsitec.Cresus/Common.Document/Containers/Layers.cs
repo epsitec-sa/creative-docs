@@ -72,29 +72,60 @@ namespace Epsitec.Common.Document.Containers
 			this.panelMisc.DockMargins = new Margins(0, 0, 5, 0);
 			this.panelMisc.Height = 152;
 			
-			this.radioGroup = new GroupBox(this.panelMisc);
-			this.radioGroup.Dock = DockStyle.Top;
-			this.radioGroup.DockMargins = new Margins(0, 0, 0, 5);
-			this.radioGroup.Height = 64;
-			this.radioGroup.Text = "Si le calque est inactif :";
+			this.panelRadio = new Widget(this.panelMisc);
+			this.panelRadio.Dock = DockStyle.Top;
+			this.panelRadio.DockMargins = new Margins(0, 0, 5, 0);
+			this.panelRadio.Height = 64;
+			
+			this.radioGroupType = new GroupBox(this.panelRadio);
+			this.radioGroupType.Dock = DockStyle.Left;
+			this.radioGroupType.DockMargins = new Margins(0, 0, 0, 0);
+			this.radioGroupType.Width = 116;
+			this.radioGroupType.Height = this.panelRadio.Height;
+			this.radioGroupType.Text = "Si calque inactif :";
 
-			this.radioShow = new RadioButton(this.radioGroup);
-			this.radioShow.Dock = DockStyle.Top;
-			this.radioShow.DockMargins = new Margins(20, 20, 0, 0);
-			this.radioShow.Text = "Afficher normalement";
-			this.radioShow.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			this.radioShowType = new RadioButton(this.radioGroupType);
+			this.radioShowType.Dock = DockStyle.Top;
+			this.radioShowType.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioShowType.Text = "Afficher";
+			this.radioShowType.Clicked += new MessageEventHandler(this.HandleRadioTypeClicked);
 
-			this.radioDimmed = new RadioButton(this.radioGroup);
-			this.radioDimmed.Dock = DockStyle.Top;
-			this.radioDimmed.DockMargins = new Margins(20, 20, 0, 0);
-			this.radioDimmed.Text = "Afficher estompé";
-			this.radioDimmed.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			this.radioDimmedType = new RadioButton(this.radioGroupType);
+			this.radioDimmedType.Dock = DockStyle.Top;
+			this.radioDimmedType.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioDimmedType.Text = "Estomper";
+			this.radioDimmedType.Clicked += new MessageEventHandler(this.HandleRadioTypeClicked);
 
-			this.radioHide = new RadioButton(this.radioGroup);
-			this.radioHide.Dock = DockStyle.Top;
-			this.radioHide.DockMargins = new Margins(20, 20, 0, 0);
-			this.radioHide.Text = "Cacher";
-			this.radioHide.Clicked += new MessageEventHandler(this.HandleRadioClicked);
+			this.radioHideType = new RadioButton(this.radioGroupType);
+			this.radioHideType.Dock = DockStyle.Top;
+			this.radioHideType.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioHideType.Text = "Cacher";
+			this.radioHideType.Clicked += new MessageEventHandler(this.HandleRadioTypeClicked);
+
+			this.radioGroupPrint = new GroupBox(this.panelRadio);
+			this.radioGroupPrint.Dock = DockStyle.Right;
+			this.radioGroupPrint.DockMargins = new Margins(0, 0, 0, 0);
+			this.radioGroupPrint.Width = 116;
+			this.radioGroupPrint.Height = this.panelRadio.Height;
+			this.radioGroupPrint.Text = "Si impression :";
+
+			this.radioShowPrint = new RadioButton(this.radioGroupPrint);
+			this.radioShowPrint.Dock = DockStyle.Top;
+			this.radioShowPrint.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioShowPrint.Text = "Imprimer";
+			this.radioShowPrint.Clicked += new MessageEventHandler(this.HandleRadioPrintClicked);
+
+			this.radioDimmedPrint = new RadioButton(this.radioGroupPrint);
+			this.radioDimmedPrint.Dock = DockStyle.Top;
+			this.radioDimmedPrint.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioDimmedPrint.Text = "Estomper";
+			this.radioDimmedPrint.Clicked += new MessageEventHandler(this.HandleRadioPrintClicked);
+
+			this.radioHidePrint = new RadioButton(this.radioGroupPrint);
+			this.radioHidePrint.Dock = DockStyle.Top;
+			this.radioHidePrint.DockMargins = new Margins(10, 10, 0, 0);
+			this.radioHidePrint.Text = "Cacher";
+			this.radioHidePrint.Clicked += new MessageEventHandler(this.HandleRadioPrintClicked);
 
 			this.buttonShow = new Button(this.panelMisc);
 			this.buttonShow.Dock = DockStyle.Top;
@@ -319,20 +350,40 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 		// Un bouton radio a été cliqué.
-		private void HandleRadioClicked(object sender, MessageEventArgs e)
+		private void HandleRadioTypeClicked(object sender, MessageEventArgs e)
 		{
 			using ( this.document.Modifier.OpletQueueBeginAction() )
 			{
 				DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 				Objects.LayerType type = Objects.LayerType.None;
-				if ( sender == this.radioShow   )  type = Objects.LayerType.Show;
-				if ( sender == this.radioDimmed )  type = Objects.LayerType.Dimmed;
-				if ( sender == this.radioHide   )  type = Objects.LayerType.Hide;
+				if ( sender == this.radioShowType   )  type = Objects.LayerType.Show;
+				if ( sender == this.radioDimmedType )  type = Objects.LayerType.Dimmed;
+				if ( sender == this.radioHideType   )  type = Objects.LayerType.Hide;
 				int sel = context.CurrentLayer;
 				Objects.Page page = context.RootObject(1) as Objects.Page;
 				Objects.Layer layer = page.Objects[sel] as Objects.Layer;
 
 				layer.Type = type;
+
+				this.document.Modifier.OpletQueueValidateAction();
+			}
+		}
+
+		// Un bouton radio a été cliqué.
+		private void HandleRadioPrintClicked(object sender, MessageEventArgs e)
+		{
+			using ( this.document.Modifier.OpletQueueBeginAction() )
+			{
+				DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+				Objects.LayerPrint print = Objects.LayerPrint.None;
+				if ( sender == this.radioShowPrint   )  print = Objects.LayerPrint.Show;
+				if ( sender == this.radioDimmedPrint )  print = Objects.LayerPrint.Dimmed;
+				if ( sender == this.radioHidePrint   )  print = Objects.LayerPrint.Hide;
+				int sel = context.CurrentLayer;
+				Objects.Page page = context.RootObject(1) as Objects.Page;
+				Objects.Layer layer = page.Objects[sel] as Objects.Layer;
+
+				layer.Print = print;
 
 				this.document.Modifier.OpletQueueValidateAction();
 			}
@@ -345,10 +396,16 @@ namespace Epsitec.Common.Document.Containers
 			int sel = context.CurrentLayer;
 			Objects.Page page = context.RootObject(1) as Objects.Page;
 			Objects.Layer layer = page.Objects[sel] as Objects.Layer;
+
 			Objects.LayerType type = layer.Type;
-			this.radioShow.ActiveState   = (type == Objects.LayerType.Show  ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radioDimmed.ActiveState = (type == Objects.LayerType.Dimmed) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radioHide.ActiveState   = (type == Objects.LayerType.Hide  ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioShowType.ActiveState   = (type == Objects.LayerType.Show  ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioDimmedType.ActiveState = (type == Objects.LayerType.Dimmed) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioHideType.ActiveState   = (type == Objects.LayerType.Hide  ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
+			Objects.LayerPrint print = layer.Print;
+			this.radioShowPrint.ActiveState   = (print == Objects.LayerPrint.Show  ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioDimmedPrint.ActiveState = (print == Objects.LayerPrint.Dimmed) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.radioHidePrint.ActiveState   = (print == Objects.LayerPrint.Hide  ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 		}
 
 
@@ -387,10 +444,15 @@ namespace Epsitec.Common.Document.Containers
 		protected Panels.LayerName		panelLayerName;
 		protected GlyphButton			extendedButton;
 		protected Widget				panelMisc;
-		protected GroupBox				radioGroup;
-		protected RadioButton			radioShow;
-		protected RadioButton			radioDimmed;
-		protected RadioButton			radioHide;
+		protected Widget				panelRadio;
+		protected GroupBox				radioGroupType;
+		protected RadioButton			radioShowType;
+		protected RadioButton			radioDimmedType;
+		protected RadioButton			radioHideType;
+		protected GroupBox				radioGroupPrint;
+		protected RadioButton			radioShowPrint;
+		protected RadioButton			radioDimmedPrint;
+		protected RadioButton			radioHidePrint;
 		protected Button				buttonShow;
 		protected Button				buttonDimmed;
 		protected Button				buttonHide;

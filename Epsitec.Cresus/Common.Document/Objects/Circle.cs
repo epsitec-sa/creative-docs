@@ -151,13 +151,16 @@ namespace Epsitec.Common.Document.Objects
 			Path[] paths = new Path[1];
 			paths[0] = path;
 
-			bool[] outlines = new bool[1];
-			outlines[0] = true;
+			bool[] lineModes = new bool[1];
+			lineModes[0] = true;
 
-			bool[] surfaces = new bool[1];
-			surfaces[0] = true;
+			bool[] lineColors = new bool[1];
+			lineColors[0] = true;
 
-			this.ComputeBoundingBox(paths, outlines, surfaces);
+			bool[] fillGradients = new bool[1];
+			fillGradients[0] = true;
+
+			this.ComputeBoundingBox(paths, lineModes, lineColors, fillGradients);
 
 			if ( this.TotalHandle >= 2 )
 			{

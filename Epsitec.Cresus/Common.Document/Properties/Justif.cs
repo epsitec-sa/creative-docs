@@ -42,6 +42,10 @@ namespace Epsitec.Common.Document.Properties
 	{
 		public Justif(Document document, Type type) : base(document, type)
 		{
+		}
+
+		protected override void Initialise()
+		{
 			this.horizontal  = JustifHorizontal.Left;
 			this.vertical    = JustifVertical.Top;
 			this.orientation = JustifOrientation.LeftToRight;

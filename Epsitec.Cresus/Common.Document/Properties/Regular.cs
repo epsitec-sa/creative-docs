@@ -12,6 +12,10 @@ namespace Epsitec.Common.Document.Properties
 	{
 		public Regular(Document document, Type type) : base(document, type)
 		{
+		}
+
+		protected override void Initialise()
+		{
 			this.nbFaces = 6;
 			this.star    = false;
 			this.deep    = 0.5;
@@ -169,10 +173,6 @@ namespace Epsitec.Common.Document.Properties
 			if ( this.star )
 			{
 				this.deep = info.GetDouble("Deep");
-			}
-			else
-			{
-				this.deep = 0.5;
 			}
 		}
 		#endregion

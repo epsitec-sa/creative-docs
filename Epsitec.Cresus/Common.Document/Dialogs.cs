@@ -12,6 +12,7 @@ namespace Epsitec.Common.Document
 		public Dialogs(Document document)
 		{
 			this.document = document;
+			this.widgetsTable = new System.Collections.Hashtable();
 		}
 
 
@@ -34,7 +35,68 @@ namespace Epsitec.Common.Document
 			for ( int i=0 ; i<total ; i++ )
 			{
 				Settings.Abstract setting = this.document.Settings.Get(i);
-				setting.UpdateValue();
+
+				if ( setting is Settings.Bool )
+				{
+					Settings.Bool sBool = setting as Settings.Bool;
+
+					CheckButton check = this.WidgetsTableSearch(setting.Name, "") as CheckButton;
+					if ( check != null )
+					{
+						check.ActiveState = sBool.Value ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+					}
+				}
+
+				if ( setting is Settings.Integer )
+				{
+					Settings.Integer sInteger = setting as Settings.Integer;
+
+					TextFieldReal field = this.WidgetsTableSearch(setting.Name, "") as TextFieldReal;
+					if ( field != null )
+					{
+						field.InternalValue = (decimal) sInteger.Value;
+					}
+				}
+
+				if ( setting is Settings.Double )
+				{
+					Settings.Double sDouble = setting as Settings.Double;
+
+					TextFieldReal field = this.WidgetsTableSearch(setting.Name, "") as TextFieldReal;
+					if ( field != null )
+					{
+						field.InternalValue = (decimal) sDouble.Value;
+					}
+				}
+
+				if ( setting is Settings.Point )
+				{
+					Settings.Point sPoint = setting as Settings.Point;
+					TextFieldReal field;
+
+					field = this.WidgetsTableSearch(setting.Name, ".X") as TextFieldReal;
+					if ( field != null )
+					{
+						field.InternalValue = (decimal) sPoint.Value.X;
+					}
+
+					field = this.WidgetsTableSearch(setting.Name, ".Y") as TextFieldReal;
+					if ( field != null )
+					{
+						field.InternalValue = (decimal) sPoint.Value.Y;
+					}
+
+					CheckButton check = this.WidgetsTableSearch(setting.Name, ".Link") as CheckButton;
+					if ( check != null )
+					{
+						check.ActiveState = sPoint.Link ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+					}
+
+					if ( setting.Name == "PageSize" )
+					{
+						this.UpdatePaper();
+					}
+				}
 			}
 		}
 
@@ -50,7 +112,7 @@ namespace Epsitec.Common.Document
 		{
 			this.windowSettings = new Window();
 			
-			this.windowSettings.ClientSize = new Size(300, 320);
+			this.windowSettings.ClientSize = new Size(300, 350);
 			this.windowSettings.Text = "Réglages";
 			this.windowSettings.MakeSecondaryWindow();
 			this.windowSettings.MakeFixedSizeWindow();
@@ -78,50 +140,54 @@ namespace Epsitec.Common.Document
 			bookGuides.TabTitle = "Repères";
 			book.Items.Add(bookGuides);
 
-			TabPage bookDuplicate = new TabPage();
-			bookDuplicate.TabTitle = "Dupliquer";
-			book.Items.Add(bookDuplicate);
-
-			TabPage bookColors = new TabPage();
-			bookColors.TabTitle = "Couleurs";
-			book.Items.Add(bookColors);
+			TabPage bookMisc = new TabPage();
+			bookMisc.TabTitle = "Divers";
+			book.Items.Add(bookMisc);
 
 			book.ActivePage = bookFormat;
 
 			// Onglet bookFormat:
+			this.tabIndex = 0;
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
 				this.CreateTitle(bookFormat, "Dimensions d'un pictogramme");
+				this.CreatePoint(bookFormat, "PageSize");
 			}
 			else
 			{
 				this.CreateTitle(bookFormat, "Dimensions d'une page");
+				this.CreatePaper(bookFormat);
+				this.CreatePoint(bookFormat, "PageSize");
+				this.CreateSeparator(bookFormat);
+				this.CreateCombo(bookFormat, "DefaultUnit");
 			}
-			this.CreatePoint(bookFormat, "PageSize");
 
 			// Onglet bookGrid:
+			this.tabIndex = 0;
 			this.CreateTitle(bookGrid, "Grille magnétique");
 			this.CreateBool(bookGrid, "GridActive");
 			this.CreateBool(bookGrid, "GridShow");
-			this.CreatePoint(bookGrid, "GridStep");
-			this.CreatePoint(bookGrid, "GridOffset");
 			this.CreateSeparator(bookGrid);
-			this.CreateBool(bookGrid, "GuidesActive");
-			this.CreateBool(bookGrid, "GuidesShow");
+			this.CreatePoint(bookGrid, "GridStep");
+			this.CreatePoint(bookGrid, "GridSubdiv");
+			this.CreatePoint(bookGrid, "GridOffset");
 
 			// Onglet bookGuides:
-			this.CreateTitle(bookGuides, "Définition des repères");
+			this.tabIndex = 0;
+			this.CreateTitle(bookGuides, "Repères magnétiques");
+			this.CreateBool(bookGuides, "GuidesActive");
+			this.CreateBool(bookGuides, "GuidesShow");
+			this.CreateSeparator(bookGuides);
+
 			this.containerGuides = new Containers.Guides(this.document);
 			this.containerGuides.Dock = DockStyle.Fill;
 			this.containerGuides.DockMargins = new Margins(10, 10, 4, 10);
 			this.containerGuides.Parent = bookGuides;
 
-			// Onglet bookDuplicate:
-			this.CreateTitle(bookDuplicate, "Déplacement lorsq'un objet est dupliqué");
-			this.CreatePoint(bookDuplicate, "DuplicateMove");
-
-			// Onglet bookColors:
-			this.CreateTitle(bookColors, "Choix des couleurs");
+			// Onglet bookMisc:
+			this.tabIndex = 0;
+			this.CreateTitle(bookMisc, "Déplacement lorsqu'un objet est dupliqué");
+			this.CreatePoint(bookMisc, "DuplicateMove");
 
 			// Bouton de fermeture.
 			Button buttonClose = new Button();
@@ -131,6 +197,8 @@ namespace Epsitec.Common.Document
 			buttonClose.Anchor = AnchorStyles.BottomLeft;
 			buttonClose.AnchorMargins = new Margins(6, 0, 0, 6);
 			buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
+			buttonClose.TabIndex = 1000;
+			buttonClose.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.windowSettings.Root.Children.Add(buttonClose);
 			ToolTip.Default.SetToolTip(buttonClose, "Fermer les réglages");
 		}
@@ -188,14 +256,17 @@ namespace Epsitec.Common.Document
 			check.Width = 100;
 			check.Name = sBool.Name;
 			check.ActiveState = sBool.Value ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			check.TabIndex = this.tabIndex++;
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			check.Dock = DockStyle.Top;
 			check.DockMargins = new Margins(10, 10, 0, 5);
 			check.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
-			sBool.CheckButton(check);
+			this.WidgetsTableAdd(check, "");
 		}
 
 		private void HandleCheckActiveStateChanged(object sender)
 		{
+			if ( this.ignoreChanged )  return;
 			CheckButton check = sender as CheckButton;
 			if ( check == null )  return;
 
@@ -218,8 +289,9 @@ namespace Epsitec.Common.Document
 			Settings.Double sDouble = settings as Settings.Double;
 			if ( sDouble == null )  return;
 
-			Widget container = new Widget(parent);
+			Panel container = new Panel(parent);
 			container.Height = 22;
+			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.DockMargins = new Margins(10, 10, 0, 5);
 
@@ -229,25 +301,26 @@ namespace Epsitec.Common.Document
 			text.Dock = DockStyle.Left;
 			text.DockMargins = new Margins(0, 0, 0, 0);
 
-			TextFieldSlider field = new TextFieldSlider(container);
+			TextFieldReal field = new TextFieldReal(container);
 			field.Width = 60;
 			field.Name = sDouble.Name;
-			field.MinValue = (decimal) sDouble.MinValue;
-			field.MaxValue = (decimal) sDouble.MaxValue;
-			field.Step = (decimal) sDouble.Step;
-			field.Resolution = (decimal) sDouble.Resolution;
-			field.Value = (decimal) sDouble.Value;
+			field.FactorMinRange = (decimal) sDouble.FactorMinValue;
+			field.FactorMaxRange = (decimal) sDouble.FactorMaxValue;
+			field.FactorStep = (decimal) sDouble.FactorStep;
+			this.document.Modifier.AdaptTextFieldRealDimension(field);
+			field.InternalValue = (decimal) sDouble.Value;
 			field.ValueChanged += new EventHandler(this.HandleFieldDoubleChanged);
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
 			field.DockMargins = new Margins(0, 0, 0, 0);
-			string tooltip = string.Format("{0}..{1}", sDouble.MinValue, sDouble.MaxValue);
-			ToolTip.Default.SetToolTip(field, tooltip);
-			sDouble.TextField(field);
+			this.WidgetsTableAdd(field, "");
 		}
 
 		private void HandleFieldDoubleChanged(object sender)
 		{
-			TextFieldSlider field = sender as TextFieldSlider;
+			if ( this.ignoreChanged )  return;
+			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
 
 			Settings.Abstract settings = this.document.Settings.Get(field.Name);
@@ -255,7 +328,7 @@ namespace Epsitec.Common.Document
 			Settings.Double sDouble = settings as Settings.Double;
 			if ( sDouble == null )  return;
 
-			sDouble.Value = (double) field.Value;
+			sDouble.Value = (double) field.InternalValue;
 		}
 		#endregion
 
@@ -270,23 +343,25 @@ namespace Epsitec.Common.Document
 			if ( sPoint == null )  return;
 
 			StaticText text;
-			TextFieldSlider field;
-			string tooltip;
+			TextFieldReal field;
 
-			Widget container = new Widget(parent);
+			Panel container = new Panel(parent);
 			container.Height = 22+2+22;
+			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
 			container.DockMargins = new Margins(10, 10, 0, 5);
 
-			Widget containerXY = new Widget(container);
+			Panel containerXY = new Panel(container);
 			containerXY.Width = 120+60;
 			containerXY.Height = container.Height;
+			containerXY.TabIndex = this.tabIndex++;
 			containerXY.Dock = DockStyle.Left;
 			containerXY.DockMargins = new Margins(0, 0, 0, 0);
 
-			Widget containerX = new Widget(containerXY);
+			Panel containerX = new Panel(containerXY);
 			containerX.Width = containerXY.Width;
 			containerX.Height = 22;
+			containerX.TabIndex = this.tabIndex++;
 			containerX.Dock = DockStyle.Top;
 			containerX.DockMargins = new Margins(0, 0, 0, 0);
 
@@ -296,24 +371,34 @@ namespace Epsitec.Common.Document
 			text.Dock = DockStyle.Left;
 			text.DockMargins = new Margins(0, 0, 0, 0);
 
-			field = new TextFieldSlider(containerX);
+			field = new TextFieldReal(containerX);
 			field.Width = 60;
 			field.Name = sPoint.Name;
-			field.MinValue = (decimal) sPoint.MinValue;
-			field.MaxValue = (decimal) sPoint.MaxValue;
-			field.Step = (decimal) sPoint.Step;
-			field.Resolution = (decimal) sPoint.Resolution;
-			field.Value = (decimal) sPoint.Value.X;
+			if ( sPoint.Integer )
+			{
+				this.document.Modifier.AdaptTextFieldRealScalar(field);
+				field.MinValue = (decimal) sPoint.FactorMinValue;
+				field.MaxValue = (decimal) sPoint.FactorMaxValue;
+			}
+			else
+			{
+				field.FactorMinRange = (decimal) sPoint.FactorMinValue;
+				field.FactorMaxRange = (decimal) sPoint.FactorMaxValue;
+				field.FactorStep = (decimal) sPoint.FactorStep;
+				this.document.Modifier.AdaptTextFieldRealDimension(field);
+			}
+			field.InternalValue = (decimal) sPoint.Value.X;
 			field.ValueChanged += new EventHandler(this.HandleFieldPointXChanged);
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
 			field.DockMargins = new Margins(0, 0, 0, 0);
-			tooltip = string.Format("{0}..{1}", sPoint.MinValue, sPoint.MaxValue);
-			ToolTip.Default.SetToolTip(field, tooltip);
-			sPoint.TextField(0, field);
+			this.WidgetsTableAdd(field, ".X");
 
-			Widget containerY = new Widget(containerXY);
+			Panel containerY = new Panel(containerXY);
 			containerY.Width = containerXY.Width;
 			containerY.Height = 22;
+			containerY.TabIndex = this.tabIndex++;
 			containerY.Dock = DockStyle.Bottom;
 			containerY.DockMargins = new Margins(0, 0, 0, 0);
 
@@ -323,20 +408,29 @@ namespace Epsitec.Common.Document
 			text.Dock = DockStyle.Left;
 			text.DockMargins = new Margins(0, 0, 0, 0);
 
-			field = new TextFieldSlider(containerY);
+			field = new TextFieldReal(containerY);
 			field.Width = 60;
 			field.Name = sPoint.Name;
-			field.MinValue = (decimal) sPoint.MinValue;
-			field.MaxValue = (decimal) sPoint.MaxValue;
-			field.Step = (decimal) sPoint.Step;
-			field.Resolution = (decimal) sPoint.Resolution;
-			field.Value = (decimal) sPoint.Value.Y;
+			if ( sPoint.Integer )
+			{
+				this.document.Modifier.AdaptTextFieldRealScalar(field);
+				field.MinValue = (decimal) sPoint.FactorMinValue;
+				field.MaxValue = (decimal) sPoint.FactorMaxValue;
+			}
+			else
+			{
+				field.FactorMinRange = (decimal) sPoint.FactorMinValue;
+				field.FactorMaxRange = (decimal) sPoint.FactorMaxValue;
+				field.FactorStep = (decimal) sPoint.FactorStep;
+				this.document.Modifier.AdaptTextFieldRealDimension(field);
+			}
+			field.InternalValue = (decimal) sPoint.Value.Y;
 			field.ValueChanged += new EventHandler(this.HandleFieldPointYChanged);
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			field.Dock = DockStyle.Left;
 			field.DockMargins = new Margins(0, 0, 0, 0);
-			tooltip = string.Format("{0}..{1}", sPoint.MinValue, sPoint.MaxValue);
-			ToolTip.Default.SetToolTip(field, tooltip);
-			sPoint.TextField(1, field);
+			this.WidgetsTableAdd(field, ".Y");
 
 			Separator sep = new Separator(container);
 			sep.Width = 1;
@@ -350,14 +444,18 @@ namespace Epsitec.Common.Document
 			check.Name = sPoint.Name;
 			check.Text = "Liés";
 			check.ActiveState = sPoint.Link ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			check.TabIndex = this.tabIndex++;
+			check.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			check.Dock = DockStyle.Left;
 			check.DockMargins = new Margins(-3, 0, 0, 0);
 			check.ActiveStateChanged += new EventHandler(this.HandleCheckPointActiveStateChanged);
+			this.WidgetsTableAdd(check, ".Link");
 		}
 
 		private void HandleFieldPointXChanged(object sender)
 		{
-			TextFieldSlider field = sender as TextFieldSlider;
+			if ( this.ignoreChanged )  return;
+			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
 
 			Settings.Abstract settings = this.document.Settings.Get(field.Name);
@@ -366,7 +464,7 @@ namespace Epsitec.Common.Document
 			if ( sPoint == null )  return;
 
 			Drawing.Point point = sPoint.Value;
-			point.X = (double) field.Value;
+			point.X = (double) field.InternalValue;
 			if ( sPoint.Link )
 			{
 				point.Y = point.X;
@@ -376,7 +474,8 @@ namespace Epsitec.Common.Document
 
 		private void HandleFieldPointYChanged(object sender)
 		{
-			TextFieldSlider field = sender as TextFieldSlider;
+			if ( this.ignoreChanged )  return;
+			TextFieldReal field = sender as TextFieldReal;
 			if ( field == null )  return;
 
 			Settings.Abstract settings = this.document.Settings.Get(field.Name);
@@ -385,7 +484,7 @@ namespace Epsitec.Common.Document
 			if ( sPoint == null )  return;
 
 			Drawing.Point point = sPoint.Value;
-			point.Y = (double) field.Value;
+			point.Y = (double) field.InternalValue;
 			if ( sPoint.Link )
 			{
 				point.X = point.Y;
@@ -408,8 +507,300 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		#region WidgetCombo
+		// Crée un widget combo pour éditer un réglage de type Integer.
+		protected void CreateCombo(Widget parent, string name)
+		{
+			Settings.Abstract settings = this.document.Settings.Get(name);
+			if ( settings == null )  return;
+			Settings.Integer sInteger = settings as Settings.Integer;
+			if ( sInteger == null )  return;
+
+			Panel container = new Panel(parent);
+			container.Height = 22;
+			container.TabIndex = this.tabIndex++;
+			container.Dock = DockStyle.Top;
+			container.DockMargins = new Margins(10, 10, 0, 5);
+
+			StaticText text = new StaticText(container);
+			text.Text = sInteger.Text;
+			text.Width = 120;
+			text.Dock = DockStyle.Left;
+			text.DockMargins = new Margins(0, 0, 0, 0);
+
+			TextFieldCombo field = new TextFieldCombo(container);
+			field.Width = 100;
+			field.IsReadOnly = true;
+			field.Name = sInteger.Name;
+			sInteger.InitCombo(field);
+			field.SelectedIndexChanged += new EventHandler(this.HandleFieldComboChanged);
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			field.Dock = DockStyle.Left;
+			field.DockMargins = new Margins(0, 0, 0, 0);
+			this.WidgetsTableAdd(field, "");
+		}
+
+		private void HandleFieldComboChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			TextFieldCombo field = sender as TextFieldCombo;
+			if ( field == null )  return;
+
+			Settings.Abstract settings = this.document.Settings.Get(field.Name);
+			if ( settings == null )  return;
+			Settings.Integer sInteger = settings as Settings.Integer;
+			if ( sInteger == null )  return;
+
+			this.document.Modifier.RealUnitDimension = Settings.Integer.IntToType(field.SelectedIndex);
+		}
+		#endregion
+
+
+		#region WidgetPaper
+		// Crée un widget combo pour éditer le format d'une page.
+		protected void CreatePaper(Widget parent)
+		{
+			Panel container = new Panel(parent);
+			container.Height = 22;
+			container.TabIndex = this.tabIndex++;
+			container.Dock = DockStyle.Top;
+			container.DockMargins = new Margins(10, 10, 0, 0);
+
+			StaticText text = new StaticText(container);
+			text.Text = "Orientation";
+			text.Width = 120;
+			text.Dock = DockStyle.Left;
+			text.DockMargins = new Margins(0, 0, 0, 0);
+
+			RadioButton radio = new RadioButton(container);
+			radio.Width = 70;
+			radio.Name = "PaperFormat.Portrait";
+			radio.Text = "Portrait";
+			radio.Clicked += new MessageEventHandler(this.HandlePaperActiveStateChanged);
+			radio.TabIndex = this.tabIndex++;
+			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			radio.Dock = DockStyle.Left;
+			radio.DockMargins = new Margins(0, 0, 0, 0);
+			this.WidgetsTableAdd(radio, "");
+			
+			radio = new RadioButton(container);
+			radio.Width = 70;
+			radio.Name = "PaperFormat.Landscape";
+			radio.Text = "Paysage";
+			radio.Clicked += new MessageEventHandler(this.HandlePaperActiveStateChanged);
+			radio.TabIndex = this.tabIndex++;
+			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			radio.Dock = DockStyle.Left;
+			this.WidgetsTableAdd(radio, "");
+
+			container = new Panel(parent);
+			container.Height = 22;
+			container.TabIndex = this.tabIndex++;
+			container.Dock = DockStyle.Top;
+			container.DockMargins = new Margins(10, 10, 0, 5);
+
+			text = new StaticText(container);
+			text.Text = "Papier";
+			text.Width = 120;
+			text.Dock = DockStyle.Left;
+			text.DockMargins = new Margins(0, 0, 0, 0);
+
+			TextFieldCombo field = new TextFieldCombo(container);
+			field.Width = 100;
+			field.IsReadOnly = true;
+			field.Name = "PaperFormat";
+
+			field.Items.Add("Personnalisée");
+			field.Items.Add("Diapositive");
+			field.Items.Add("Lettre US");
+			field.Items.Add("Légal");
+			field.Items.Add("Tabloïd");
+			field.Items.Add("Formulaire/Demi");
+			field.Items.Add("Exécutive US");
+			field.Items.Add("Listing");
+			field.Items.Add("Affiche");
+			field.Items.Add("A1");
+			field.Items.Add("A2");
+			field.Items.Add("A3");
+			field.Items.Add("A4");
+			field.Items.Add("A5");
+			field.Items.Add("A6");
+			field.Items.Add("B1 (ISO)");
+			field.Items.Add("B4 (ISO)");
+			field.Items.Add("B5 (ISO)");
+			field.Items.Add("B4 (JIS)");
+			field.Items.Add("B5 (JIS)");
+			field.Items.Add("C3");
+			field.Items.Add("C4");
+			field.Items.Add("C5");
+			field.Items.Add("C6");
+			field.Items.Add("RA2");
+			field.Items.Add("RA3");
+			field.Items.Add("RA4");
+			field.Items.Add("DL");
+
+			field.SelectedIndexChanged += new EventHandler(this.HandleFieldPaperChanged);
+			field.TabIndex = this.tabIndex++;
+			field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			field.Dock = DockStyle.Left;
+			field.DockMargins = new Margins(0, 0, 0, 0);
+			this.WidgetsTableAdd(field, "");
+
+			this.UpdatePaper();
+		}
+
+		private void HandleFieldPaperChanged(object sender)
+		{
+			if ( this.ignoreChanged )  return;
+			TextFieldCombo field = sender as TextFieldCombo;
+			if ( field == null )  return;
+
+			int sel = field.SelectedIndex;
+			if ( sel == 0 )  return;  // personnalisé ?
+
+			Settings.Abstract settings = this.document.Settings.Get("PageSize");
+			if ( settings == null )  return;
+			Settings.Point sPoint = settings as Settings.Point;
+			if ( sPoint == null )  return;
+			sPoint.Link = false;
+
+			Size size = Dialogs.PaperRankToSize(sel);
+			RadioButton radio = this.WidgetsTableSearch("PaperFormat.Landscape", "") as RadioButton;
+			if ( radio != null && radio.ActiveState == WidgetState.ActiveYes )
+			{
+				Dialogs.SwapSize(ref size);
+			}
+			this.document.Size = size;
+		}
+
+		private void HandlePaperActiveStateChanged(object sender, MessageEventArgs e)
+		{
+			if ( this.ignoreChanged )  return;
+			RadioButton radio = sender as RadioButton;
+			if ( radio == null )  return;
+
+			Size size = this.document.Size;
+			if ( radio.Name == "PaperFormat.Portrait" )
+			{
+				if ( size.Width > size.Height )
+				{
+					Dialogs.SwapSize(ref size);
+					this.document.Size = size;
+				}
+			}
+			else
+			{
+				if ( size.Width < size.Height )
+				{
+					Dialogs.SwapSize(ref size);
+					this.document.Size = size;
+				}
+			}
+		}
+
+		protected void UpdatePaper()
+		{
+			this.ignoreChanged = true;
+
+			TextFieldCombo combo = this.WidgetsTableSearch("PaperFormat", "") as TextFieldCombo;
+			if ( combo != null )
+			{
+				combo.SelectedIndex = Dialogs.PaperSizeToRank(this.document.Size);
+			}
+
+			RadioButton radio;
+			bool portrait = (this.document.Size.Width <= this.document.Size.Height);
+
+			radio = this.WidgetsTableSearch("PaperFormat.Portrait", "") as RadioButton;
+			if ( radio != null )
+			{
+				radio.ActiveState = portrait ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			}
+
+			radio = this.WidgetsTableSearch("PaperFormat.Landscape", "") as RadioButton;
+			if ( radio != null )
+			{
+				radio.ActiveState = !portrait ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			}
+
+			this.ignoreChanged = false;
+		}
+
+		protected static Size PaperRankToSize(int rank)
+		{
+			Size size = new Size(500.0, 500.0);
+			switch ( rank )
+			{
+				case  1:  size = new Size(279.400, 186.182);  break;  // Diapositive
+				case  2:  size = new Size(215.900, 279.400);  break;  // Lettre US
+				case  3:  size = new Size(215.900, 355.600);  break;  // Légal
+				case  4:  size = new Size(279.400, 431.800);  break;  // Tabloïd
+				case  5:  size = new Size(139.700, 215.900);  break;  // Formulaire/Demi
+				case  6:  size = new Size(184.150, 266.700);  break;  // Exécutive US
+				case  7:  size = new Size(279.400, 377.952);  break;  // Listing
+				case  8:  size = new Size(457.200, 609.600);  break;  // Affiche
+				case  9:  size = new Size(594.000, 841.000);  break;  // A1
+				case 10:  size = new Size(420.000, 594.000);  break;  // A2
+				case 11:  size = new Size(297.000, 420.000);  break;  // A3
+				case 12:  size = new Size(210.000, 297.000);  break;  // A4
+				case 13:  size = new Size(148.000, 210.000);  break;  // A5
+				case 14:  size = new Size(105.000, 148.000);  break;  // A6
+				case 15:  size = new Size(707.000,1000.000);  break;  // B1 (ISO)
+				case 16:  size = new Size(250.000, 353.000);  break;  // B4 (ISO)
+				case 17:  size = new Size(176.000, 250.000);  break;  // B5 (ISO)
+				case 18:  size = new Size(257.000, 364.000);  break;  // B4 (JIS)
+				case 19:  size = new Size(182.000, 257.000);  break;  // B5 (JIS)
+				case 20:  size = new Size(324.000, 458.000);  break;  // C3
+				case 21:  size = new Size(229.000, 324.000);  break;  // C4
+				case 22:  size = new Size(162.000, 229.000);  break;  // C5
+				case 23:  size = new Size(114.000, 162.000);  break;  // C6
+				case 24:  size = new Size(430.000, 610.000);  break;  // RA2
+				case 25:  size = new Size(305.000, 430.000);  break;  // RA3
+				case 26:  size = new Size(215.000, 305.000);  break;  // RA4
+				case 27:  size = new Size(220.000, 110.000);  break;  // DL
+			}
+			return size*10.0;
+		}
+
+		protected static int PaperSizeToRank(Size size)
+		{
+			for ( int rank=1 ; rank<=27 ; rank++ )
+			{
+				Size paper = Dialogs.PaperRankToSize(rank);
+				if ( size.Width == paper.Width  && size.Height == paper.Height )  return rank;
+				if ( size.Width == paper.Height && size.Height == paper.Width  )  return rank;
+			}
+			return 0;
+		}
+
+		protected static void SwapSize(ref Size size)
+		{
+			double temp = size.Width;
+			size.Width = size.Height;
+			size.Height = temp;
+		}
+		#endregion
+
+
+		// Ajoute un widget dans la table.
+		protected void WidgetsTableAdd(Widget widget, string option)
+		{
+			this.widgetsTable.Add(widget.Name+option, widget);
+		}
+
+		// Cherche un widget dans la table.
+		protected Widget WidgetsTableSearch(string name, string option)
+		{
+			return this.widgetsTable[name+option] as Widget;
+		}
+
+
 		protected Document						document;
 		protected Window						windowSettings;
 		protected Containers.Guides				containerGuides;
+		protected System.Collections.Hashtable	widgetsTable;
+		protected bool							ignoreChanged = false;
+		protected int							tabIndex;
 	}
 }

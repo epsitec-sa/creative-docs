@@ -16,9 +16,9 @@ namespace Epsitec.Common.Document.Panels
 			this.label.Alignment = ContentAlignment.MiddleLeft;
 
 			this.fieldType    = new TextFieldCombo[2];
-			this.fieldLength  = new TextFieldSlider[2];
-			this.fieldEffect1 = new TextFieldSlider[2];
-			this.fieldEffect2 = new TextFieldSlider[2];
+			this.fieldLength  = new TextFieldReal[2];
+			this.fieldEffect1 = new TextFieldReal[2];
+			this.fieldEffect2 = new TextFieldReal[2];
 			this.labelLength  = new StaticText[2];
 			this.labelEffect1 = new StaticText[2];
 			this.labelEffect2 = new StaticText[2];
@@ -39,39 +39,29 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldType[j].TabIndex = index++;
 				this.fieldType[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
-				this.fieldLength[j] = new TextFieldSlider(this);
-				if ( this.document.Type == DocumentType.Pictogram )
-				{
-					this.fieldLength[j].MinValue = 0.0M;
-					this.fieldLength[j].MaxValue = 10.0M;
-					this.fieldLength[j].Step = 0.1M;
-					this.fieldLength[j].Resolution = 0.1M;
-				}
-				else
-				{
-					this.fieldLength[j].MinValue = 0.0M;
-					this.fieldLength[j].MaxValue = 500.0M;
-					this.fieldLength[j].Step = 10.0M;
-					this.fieldLength[j].Resolution = 1.0M;
-				}
+				this.fieldLength[j] = new TextFieldReal(this);
+				this.fieldLength[j].FactorMinRange = 0.0M;
+				this.fieldLength[j].FactorMaxRange = 0.1M;
+				this.fieldLength[j].FactorStep = 1.0M;
+				this.document.Modifier.AdaptTextFieldRealDimension(this.fieldLength[j]);
 				this.fieldLength[j].TextChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldLength[j].TabIndex = index++;
 				this.fieldLength[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.fieldLength[j], "Longueur");
 
-				this.fieldEffect1[j] = new TextFieldSlider(this);
-				this.fieldEffect1[j].MinValue = -100;
-				this.fieldEffect1[j].MaxValue = 200;
-				this.fieldEffect1[j].Step = 5;
+				this.fieldEffect1[j] = new TextFieldReal(this);
+				this.document.Modifier.AdaptTextFieldRealScalar(this.fieldEffect1[j]);
+				this.fieldEffect1[j].InternalMinValue = -100;
+				this.fieldEffect1[j].InternalMaxValue = 200;
 				this.fieldEffect1[j].TextChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldEffect1[j].TabIndex = index++;
 				this.fieldEffect1[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				ToolTip.Default.SetToolTip(this.fieldEffect1[j], "Paramètre A");
 
-				this.fieldEffect2[j] = new TextFieldSlider(this);
-				this.fieldEffect2[j].MinValue = -100;
-				this.fieldEffect2[j].MaxValue = 200;
-				this.fieldEffect2[j].Step = 5;
+				this.fieldEffect2[j] = new TextFieldReal(this);
+				this.document.Modifier.AdaptTextFieldRealScalar(this.fieldEffect2[j]);
+				this.fieldEffect2[j].InternalMinValue = -100;
+				this.fieldEffect2[j].InternalMaxValue = 200;
 				this.fieldEffect2[j].TextChanged += new EventHandler(this.HandleFieldChanged);
 				this.fieldEffect2[j].TabIndex = index++;
 				this.fieldEffect2[j].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -154,9 +144,9 @@ namespace Epsitec.Common.Document.Panels
 			for ( int j=0 ; j<2 ; j++ )
 			{
 				this.fieldType[j].SelectedIndex = Properties.Arrow.ConvType(p.GetArrowType(j));
-				this.fieldLength[j].Value  = (decimal) p.GetLength(j);
-				this.fieldEffect1[j].Value = (decimal) p.GetEffect1(j)*100;
-				this.fieldEffect2[j].Value = (decimal) p.GetEffect2(j)*100;
+				this.fieldLength[j].InternalValue  = (decimal) p.GetLength(j);
+				this.fieldEffect1[j].InternalValue = (decimal) p.GetEffect1(j)*100;
+				this.fieldEffect2[j].InternalValue = (decimal) p.GetEffect2(j)*100;
 			}
 
 			this.EnableWidgets();
@@ -172,9 +162,9 @@ namespace Epsitec.Common.Document.Panels
 			for ( int j=0 ; j<2 ; j++ )
 			{
 				p.SetArrowType(j, Properties.Arrow.ConvType(this.fieldType[j].SelectedIndex));
-				p.SetLength(j,  (double) this.fieldLength[j].Value);
-				p.SetEffect1(j, (double) this.fieldEffect1[j].Value/100);
-				p.SetEffect2(j, (double) this.fieldEffect2[j].Value/100);
+				p.SetLength(j,  (double) this.fieldLength[j].InternalValue);
+				p.SetEffect1(j, (double) this.fieldEffect1[j].InternalValue/100);
+				p.SetEffect2(j, (double) this.fieldEffect2[j].InternalValue/100);
 			}
 		}
 
@@ -190,10 +180,10 @@ namespace Epsitec.Common.Document.Panels
 				double effect2, min2, max2;
 				Properties.Arrow.GetFieldsParam(type, out enableRadius, out enable1, out effect1, out min1, out max1, out enable2, out effect2, out min2, out max2);
 
-				this.fieldEffect1[j].MinValue = (decimal) min1*100;
-				this.fieldEffect1[j].MaxValue = (decimal) max1*100;
-				this.fieldEffect2[j].MinValue = (decimal) min2*100;
-				this.fieldEffect2[j].MaxValue = (decimal) max2*100;
+				this.fieldEffect1[j].InternalMinValue = (decimal) min1*100;
+				this.fieldEffect1[j].InternalMaxValue = (decimal) max1*100;
+				this.fieldEffect2[j].InternalMinValue = (decimal) min2*100;
+				this.fieldEffect2[j].InternalMaxValue = (decimal) max2*100;
 
 				this.fieldLength[j].SetEnabled(this.isExtendedSize && enableRadius);
 				this.fieldEffect1[j].SetEnabled(this.isExtendedSize && enable1);
@@ -280,8 +270,8 @@ namespace Epsitec.Common.Document.Panels
 				double effect1, min1, max1;
 				double effect2, min2, max2;
 				Properties.Arrow.GetFieldsParam(type, out enableRadius, out enable1, out effect1, out min1, out max1, out enable2, out effect2, out min2, out max2);
-				this.fieldEffect1[j].Value = (decimal) effect1*100;
-				this.fieldEffect2[j].Value = (decimal) effect2*100;
+				this.fieldEffect1[j].InternalValue = (decimal) effect1*100;
+				this.fieldEffect2[j].InternalValue = (decimal) effect2*100;
 			}
 
 			this.EnableWidgets();
@@ -301,27 +291,27 @@ namespace Epsitec.Common.Document.Panels
 
 			for ( int j=0 ; j<2 ; j++ )
 			{
-				this.fieldEffect1[j].MinValue = -1000.0M;
-				this.fieldEffect1[j].MaxValue =  1000.0M;
-				this.fieldEffect2[j].MinValue = -1000.0M;
-				this.fieldEffect2[j].MaxValue =  1000.0M;
+				this.fieldEffect1[j].InternalMinValue = -1000.0M;
+				this.fieldEffect1[j].InternalMaxValue =  1000.0M;
+				this.fieldEffect2[j].InternalMinValue = -1000.0M;
+				this.fieldEffect2[j].InternalMaxValue =  1000.0M;
 			}
 
 			int type = this.fieldType[0].SelectedIndex;
 			this.fieldType[0].SelectedIndex = this.fieldType[1].SelectedIndex;
 			this.fieldType[1].SelectedIndex = type;
 
-			decimal len = this.fieldLength[0].Value;
-			this.fieldLength[0].Value = this.fieldLength[1].Value;
-			this.fieldLength[1].Value = len;
+			decimal len = this.fieldLength[0].InternalValue;
+			this.fieldLength[0].InternalValue = this.fieldLength[1].InternalValue;
+			this.fieldLength[1].InternalValue = len;
 
-			decimal ef1 = this.fieldEffect1[0].Value;
-			this.fieldEffect1[0].Value = this.fieldEffect1[1].Value;
-			this.fieldEffect1[1].Value = ef1;
+			decimal ef1 = this.fieldEffect1[0].InternalValue;
+			this.fieldEffect1[0].InternalValue = this.fieldEffect1[1].InternalValue;
+			this.fieldEffect1[1].InternalValue = ef1;
 
-			decimal ef2 = this.fieldEffect2[0].Value;
-			this.fieldEffect2[0].Value = this.fieldEffect2[1].Value;
-			this.fieldEffect2[1].Value = ef2;
+			decimal ef2 = this.fieldEffect2[0].InternalValue;
+			this.fieldEffect2[0].InternalValue = this.fieldEffect2[1].InternalValue;
+			this.fieldEffect2[1].InternalValue = ef2;
 
 			this.ignoreChanged = false;
 
@@ -332,9 +322,9 @@ namespace Epsitec.Common.Document.Panels
 
 		protected StaticText				label;
 		protected TextFieldCombo[]			fieldType;
-		protected TextFieldSlider[]			fieldLength;
-		protected TextFieldSlider[]			fieldEffect1;
-		protected TextFieldSlider[]			fieldEffect2;
+		protected TextFieldReal[]			fieldLength;
+		protected TextFieldReal[]			fieldEffect1;
+		protected TextFieldReal[]			fieldEffect2;
 		protected StaticText[]				labelLength;
 		protected StaticText[]				labelEffect1;
 		protected StaticText[]				labelEffect2;

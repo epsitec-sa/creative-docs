@@ -27,18 +27,19 @@ namespace Epsitec.Common.Document.Panels
 			this.fontName.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontName, "Police du texte par défaut");
 
-			this.fontSize = new TextFieldSlider(this);
+			this.fontSize = new TextFieldReal(this);
+			this.document.Modifier.AdaptTextFieldRealScalar(this.fontSize);
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
-				this.fontSize.MinValue =  0.1M;
-				this.fontSize.MaxValue = 20.0M;
+				this.fontSize.InternalMinValue =  0.1M;
+				this.fontSize.InternalMaxValue = 20.0M;
 				this.fontSize.Step = 0.1M;
 				this.fontSize.Resolution = 0.01M;
 			}
 			else
 			{
-				this.fontSize.MinValue =  1.0M;
-				this.fontSize.MaxValue = 200.0M;
+				this.fontSize.InternalMinValue =  1.0M;
+				this.fontSize.InternalMaxValue = 200.0M;
 				this.fontSize.Step = 5.0M;
 				this.fontSize.Resolution = 0.1M;
 			}
@@ -109,7 +110,7 @@ namespace Epsitec.Common.Document.Panels
 
 			//?this.fontName.SelectedName = p.FontName;
 			this.ComboSelectedName(this.fontName, p.FontName);
-			this.fontSize.Value = (decimal) p.FontSize;
+			this.fontSize.InternalValue = (decimal) p.FontSize;
 			this.fontColor.Color = p.FontColor;
 
 			this.ignoreChanged = false;
@@ -126,7 +127,7 @@ namespace Epsitec.Common.Document.Panels
 			if ( name == null )  p.FontName = "";
 			else                 p.FontName = name;
 
-			p.FontSize = (double) this.fontSize.Value;
+			p.FontSize = (double) this.fontSize.InternalValue;
 			p.FontColor = this.fontColor.Color;
 		}
 
@@ -238,7 +239,7 @@ namespace Epsitec.Common.Document.Panels
 		protected StaticText				labelSize;
 		protected StaticText				labelColor;
 		protected TextFieldCombo			fontName;
-		protected TextFieldSlider			fontSize;
+		protected TextFieldReal				fontSize;
 		protected ColorSample				fontColor;
 	}
 }
