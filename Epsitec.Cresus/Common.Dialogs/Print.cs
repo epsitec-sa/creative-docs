@@ -108,7 +108,7 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		#region IDialog Members
-		public void Show()
+		public void OpenDialog()
 		{
 			System.Windows.Forms.DialogResult result = this.dialog.ShowDialog (this.owner == null ? null : this.owner.PlatformWindowObject as System.Windows.Forms.IWin32Window);
 			

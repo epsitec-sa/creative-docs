@@ -7,10 +7,16 @@ namespace Epsitec.Common.Dialogs
 	/// La classe Dialog permet d'ouvrir et de gérer un dialogue à partir d'une
 	/// ressource et d'une source de données.
 	/// </summary>
-	public class Dialog : Support.ICommandDispatcherHost
+	public class Dialog : AbstractDialog, Support.ICommandDispatcherHost
 	{
 		public Dialog()
 		{
+			this.dispatcher = new Support.CommandDispatcher ("AnonymousDialog", true);
+		}
+		
+		public Dialog(string name)
+		{
+			this.dispatcher = new Support.CommandDispatcher (name);
 		}
 		
 		
@@ -30,30 +36,29 @@ namespace Epsitec.Common.Dialogs
 					}
 					
 					this.data = value;
-					
-					if (this.designer != null)
-					{
-						this.designer.DialogData = this.data;
-					}
-					if (this.window != null)
-					{
-						this.UpdateWindowBindings ();
-					}
-					if (this.script_wrapper != null)
-					{
-						this.script_wrapper.Data = this.data;
-					}
+					this.AttachData ();
+					this.OnDataBindingChanged ();
 				}
 			}
 		}
 		
-		public Widgets.Window					Window
+		public Script.ScriptWrapper				Script
 		{
 			get
 			{
-				return this.window;
+				return this.script;
+			}
+			set
+			{
+				if (this.script != value)
+				{
+					this.script = value;
+					this.AttachScript ();
+					this.OnScriptBindingChanged ();
+				}
 			}
 		}
+		
 		
 		public Support.CommandDispatcher		CommandDispatcher
 		{
@@ -61,52 +66,17 @@ namespace Epsitec.Common.Dialogs
 			{
 				return this.dispatcher;
 			}
-			set
-			{
-				if (this.dispatcher != value)
-				{
-					this.dispatcher = value;
-					
-					if (this.designer != null)
-					{
-						this.designer.DialogCommands = this.dispatcher;
-					}
-					if (this.window != null)
-					{
-						this.window.CommandDispatcher = this.dispatcher;
-					}
-				}
-			}
 		}
 		
-		public Script.ScriptWrapper				ScriptWrapper
+		
+		public override bool					IsReady
 		{
 			get
 			{
-				return this.script_wrapper;
-			}
-			set
-			{
-				if (this.script_wrapper != value)
-				{
-					this.script_wrapper = value;
-					
-					if (this.designer != null)
-					{
-						this.designer.DialogScript = this.script_wrapper;
-					}
-					if (this.data != null)
-					{
-						this.script_wrapper.Data = this.data;
-					}
-				}
-			}
-		}
-		
-		public bool								IsReady
-		{
-			get
-			{
+				//	Un dialogue est considéré comme "prêt" uniquement s'il est actuellement
+				//	configuré pour s'afficher comme dialogue (il a été initialisé et il n'est
+				//	pas en cours d'édition dans l'éditeur).
+				
 				return (this.mode == InternalMode.Dialog);
 			}
 		}
@@ -115,10 +85,26 @@ namespace Epsitec.Common.Dialogs
 		{
 			get
 			{
+				//	Un dialogue est chargé dès qu'il a été complètement initialisé.
+				
 				return (this.mode != InternalMode.None);
 			}
 		}
 		
+		
+		#region ICommandDispatcherHost Members
+		Support.CommandDispatcher				Support.ICommandDispatcherHost.CommandDispatcher
+		{
+			get
+			{
+				return this.CommandDispatcher;
+			}
+			set
+			{
+				throw new System.InvalidOperationException ("CommandDispatcher is read-only.");
+			}
+		}
+		#endregion
 		
 		public static IDialogDesignerFactory	DesignerFactory
 		{
@@ -128,6 +114,7 @@ namespace Epsitec.Common.Dialogs
 				return Dialog.factory;
 			}
 		}
+		
 		
 		
 		public void Load(string full_name)
@@ -165,39 +152,47 @@ namespace Epsitec.Common.Dialogs
 				this.window = root.Window;
 				this.mode   = InternalMode.Dialog;
 				
+				this.window.CommandDispatcher = this.CommandDispatcher;
+				
 				this.CreateDesignerActivatorWidget ();
-				this.UpdateWindowBindings ();
+				this.AttachWindow ();
 			}
 		}
 		
 		
-		public void ShowWindow()
+		public void StoreInitialData()
 		{
-			if (this.IsReady)
+			this.initial_data_folder = null;
+			
+			if ((this.data != null) &&
+				(this.data.Root != null))
 			{
-				this.window.Show ();
+				//	Conserve une copie des données d'origine en réalisant un "clonage" en
+				//	profondeur :
+				
+				this.initial_data_folder = this.data.Root.Clone () as Types.IDataFolder;
 			}
 		}
 		
-		public void ShowDialog()
+		public void RestoreInitialData()
 		{
-			if (this.IsReady)
+			if ((this.initial_data_folder != null) &&
+				(this.data != null) &&
+				(this.data.Root != null))
 			{
-				this.window.ShowDialog ();
+				Types.IDataFolder root = this.data.Root;
+				
+				int changes = Types.DataGraph.CopyValues (this.initial_data_folder, root);
+				
+				if (changes > 0)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Restored {0} changes.", changes));
+				}
 			}
 		}
 		
-		public void Close()
-		{
-			if (this.IsReady)
-			{
-				this.window.Hide ();
-			}
-		}
 		
-		
-		
-		protected virtual void UpdateWindowBindings()
+		protected virtual void AttachWindow()
 		{
 			if (this.window != null)
 			{
@@ -207,6 +202,41 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 		}
+		
+		protected virtual void AttachScript()
+		{
+			if (this.designer != null)
+			{
+				this.designer.DialogScript = this.script;
+			}
+			
+			if (this.data != null)
+			{
+				this.script.Data = this.data;
+			}
+		}
+		
+		protected virtual void AttachData()
+		{
+			//	Attache la structure de données aux divers "partenaires" qui gèrent
+			//	le dialogue :
+			
+			if (this.designer != null)
+			{
+				this.designer.DialogData = this.data;
+			}
+			
+			if (this.window != null)
+			{
+				this.AttachWindow ();
+			}
+			
+			if (this.script != null)
+			{
+				this.script.Data = this.data;
+			}
+		}
+		
 		
 		protected virtual void SwitchToDesigner()
 		{
@@ -270,7 +300,7 @@ namespace Epsitec.Common.Dialogs
 			this.designer.DialogWindow   = this.window;
 			this.designer.ResourceName   = this.full_name;
 			this.designer.DialogCommands = this.dispatcher;
-			this.designer.DialogScript   = this.script_wrapper;
+			this.designer.DialogScript   = this.script;
 			
 			this.designer.Disposed += new Support.EventHandler (this.HandleDesignerDisposed);
 		}
@@ -278,6 +308,16 @@ namespace Epsitec.Common.Dialogs
 		protected virtual void DetachDesigner()
 		{
 			this.designer.Disposed -= new Support.EventHandler (this.HandleDesignerDisposed);
+		}
+		
+		
+		
+		protected virtual void OnDataBindingChanged()
+		{
+		}
+		
+		protected virtual void OnScriptBindingChanged()
+		{
 		}
 		
 		
@@ -346,9 +386,9 @@ namespace Epsitec.Common.Dialogs
 		
 		protected InternalMode					mode;
 		protected Types.IDataGraph				data;
-		protected Widgets.Window				window;
+		protected Types.IDataFolder				initial_data_folder;
 		protected Support.CommandDispatcher		dispatcher;
-		protected Script.ScriptWrapper			script_wrapper;
+		protected Script.ScriptWrapper			script;
 		protected IDialogDesigner				designer;
 		protected string						full_name;
 		protected Widgets.Widget				designer_activator_widget;

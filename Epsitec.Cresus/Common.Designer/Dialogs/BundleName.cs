@@ -54,7 +54,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			
 			Support.ValidationRule rule = new ValidationRule ("name");
 			
-			rule.Validators.Add (new Epsitec.Common.Widgets.Validators.RegexValidator (this.text, @"\A\w(\w|[_])*\z"));
+			rule.Validators.Add (new Epsitec.Common.Widgets.Validators.RegexValidator (this.text, Support.RegexFactory.AlphaNumName));
 			rule.CommandStates.Add ("ValidateDialog");
 			
 			this.private_dispatcher.Validators.Add (rule);

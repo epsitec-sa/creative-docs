@@ -294,7 +294,7 @@ namespace Epsitec.Common.UI.Data
 			that.value          = this.value;
 			that.is_value_valid = this.is_value_valid;
 			
-			System.Diagnostics.Debug.Assert ((that.value == null) || (that.value.GetType ().IsValueType));
+			System.Diagnostics.Debug.Assert (Types.Converter.IsSimple (that.value));
 			
 			return that;
 		}

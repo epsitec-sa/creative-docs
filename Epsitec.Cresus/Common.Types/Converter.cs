@@ -24,6 +24,25 @@ namespace Epsitec.Common.Types
 			return (obj != null) && !(obj is System.DBNull);
 		}
 		
+		public static bool IsSimple(object obj)
+		{
+			//	Considère comme simple les cas suivants:
+			//
+			//	- obj est nul
+			//	- obj est une valeur (ValueType)
+			//	- obj est une chaîne de caractères
+			
+			if ((obj == null) ||
+				(obj is System.DBNull) ||
+				(obj is string) ||
+				(obj is System.ValueType))
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		
 		
 		public static string ToString(object obj)
 		{

@@ -156,6 +156,39 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (DataGraph.Equal (root_1, root_3));
 		}		
 		
+		[Test] public void CheckCopyValues()
+		{
+			Folder root_1 = new Folder ("/");
+			Folder root_2 = new Folder ("/");
+			Folder root_3 = new Folder ("/");
+			
+			Value v1 = new Value ("a");
+			Value v2 = new Value ("b");
+			Value v3 = new Value ("c");
+			
+			v1.WriteValue (1);	root_1.Add (v1.Clone () as IDataItem);
+			v1.WriteValue (2);	root_2.Add (v1.Clone () as IDataItem);
+			v1.WriteValue (5);	root_3.Add (v1.Clone () as IDataItem);
+			
+			v2.WriteValue ("X"); //root_1.Add (v2.Clone () as IDataItem);
+			v2.WriteValue ("Y"); root_2.Add (v2.Clone () as IDataItem);
+			v2.WriteValue ("Z"); root_3.Add (v2.Clone () as IDataItem);
+			
+			v3.WriteValue (1.0); root_1.Add (v3.Clone () as IDataItem);
+			v3.WriteValue (2.0); //root_2.Add (v3.Clone () as IDataItem);
+			v3.WriteValue (5.0); root_3.Add (v3.Clone () as IDataItem);
+			
+			Assert.IsFalse (DataGraph.Equal (root_1, root_2));
+			Assert.IsFalse (DataGraph.Equal (root_1, root_3));
+			Assert.IsFalse (DataGraph.Equal (root_2, root_3));
+			
+			Assert.AreEqual (1, DataGraph.CopyValues (root_1, root_2));
+			Assert.AreEqual (2, DataGraph.CopyValues (root_1, root_3));
+			Assert.AreEqual (1, DataGraph.CopyValues (root_2, root_3));
+		}		
+		
+		
+		
 		private static void CompareFolders(IDataFolder f1, IDataFolder f2)
 		{
 			//	Vérifie que les dossiers sont identiques... récursivement.
@@ -334,11 +367,12 @@ namespace Epsitec.Common.Types
 			
 			public object ReadValue()
 			{
-				return null;
+				return this.value;
 			}
 			
 			public void WriteValue(object value)
 			{
+				this.value = value;
 			}
 			
 			public void NotifyInvalidData()
@@ -388,7 +422,11 @@ namespace Epsitec.Common.Types
 			#region ICloneable Members
 			public object Clone()
 			{
-				return new Value (this.name);
+				Value that = new Value (this.name);
+				
+				that.value = this.value;
+				
+				return that;
 			}
 			#endregion
 			
@@ -402,6 +440,7 @@ namespace Epsitec.Common.Types
 			
 			
 			private string						name;
+			private object						value;
 		}
 	}
 }

@@ -35,7 +35,7 @@ namespace Epsitec.Common.Dialogs
 			designer.StartDesign ();
 		}
 		
-		[Test] public void CheckLoad1Unknwon()
+		[Test] public void CheckLoad1Unknown()
 		{
 			Dialog dialog = new Dialog ();
 			dialog.Load ("unknown_dialog");
@@ -43,23 +43,23 @@ namespace Epsitec.Common.Dialogs
 			Assert.IsTrue (dialog.IsLoaded);
 			Assert.IsFalse (dialog.IsReady);
 			
-			dialog.ShowWindow ();
+			dialog.OpenDialog ();
 		}
 		
 		[Test] public void CheckLoad2SimpleTest()
 		{
 			Dialog dialog = new Dialog ();
 			dialog.Load ("test");
-			dialog.ShowWindow ();
+			dialog.OpenDialog ();
 		}
 		
 		[Test] public void CheckLoad3WithData()
 		{
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookPastel");
 			
-			Support.CommandDispatcher dispatcher = new Support.CommandDispatcher ("CheckLoad3WithData");
+			Dialog dialog = new Dialog ("CheckLoad3WithData");
 			
-			dispatcher.RegisterController (this);
+			dialog.CommandDispatcher.RegisterController (this);
 			
 			Record record = new Record ("Rec", "dialog_with_data_strings", new Support.EventHandler (this.HandleFieldChanged));
 			
@@ -76,20 +76,25 @@ namespace Epsitec.Common.Dialogs
 			
 //			script.Source = DialogTest.CreateSource (null);
 			
-//			dispatcher.RegisterExtraDispatcher (script);
+//			dialog.CommandDispatcher.RegisterExtraDispatcher (script);
 			
-			Dialog dialog = new Dialog ();
 			dialog.Load ("dialog_with_data");
 			dialog.Data = record;
-//			dialog.ScriptWrapper = script;
-			dialog.CommandDispatcher = dispatcher;
-			dialog.ShowWindow ();
+//			dialog.Script = script;
+			
+			this.dialog = dialog;
+			this.dialog.StoreInitialData ();
+			
+			//	Ouvre le dialogue modal (ce qui bloque !)
+			
+			dialog.OpenDialog ();
 			
 			
 //			object document = Editor.Engine.CreateDocument (script);
 //			Editor.Engine.ShowMethod (document, "Main");
 		}
 		
+		private Dialog dialog;
 		
 		[Support.Command ("Ok")] private void CommandOk()
 		{
@@ -98,11 +103,13 @@ namespace Epsitec.Common.Dialogs
 		
 		[Support.Command ("Cancel")] private void CommandCancel()
 		{
+			this.dialog.RestoreInitialData ();
 			System.Diagnostics.Debug.WriteLine ("Cancel executed.");
 		}
 		
 		[Support.Command ("Apply")] private void CommandApply()
 		{
+			this.dialog.StoreInitialData ();
 			System.Diagnostics.Debug.WriteLine ("Apply executed.");
 		}
 		

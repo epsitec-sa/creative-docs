@@ -1222,7 +1222,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			dialog.Title = "Ouvrir une icone";
 			dialog.FileName = this.filename;
 			dialog.Filters.Add("icon", "Icônes", "*.icon");
-			dialog.Show();
+			dialog.OpenDialog();
 			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
 
 			this.filename = dialog.FileName;
@@ -1247,7 +1247,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			dialog.Title = "Enregisrter une icone";
 			dialog.FileName = this.filename;
 			dialog.Filters.Add("icon", "Icônes", "*.icon");
-			dialog.Show();
+			dialog.OpenDialog();
 			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
 
 			this.filename = dialog.FileName;
@@ -1272,7 +1272,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			dialog.Document.PrinterSettings.ToPage = 1;
 			dialog.Document.PrinterSettings.PrintRange = Printing.PrintRange.AllPages;
 			dialog.Document.PrinterSettings.Collate = false;
-			dialog.Show();
+			dialog.OpenDialog();
 			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
 
 			this.drawer.Print(dialog);

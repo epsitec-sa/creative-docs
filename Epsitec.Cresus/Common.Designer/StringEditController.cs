@@ -997,7 +997,7 @@ namespace Epsitec.Common.Designer
 			{
 				Dialogs.BundleName dialog = new Dialogs.BundleName ("CreateStringBundle (\"{0}\", \"{1}\")", this.dispatcher);
 				dialog.Owner = this.main_panel.Window;
-				dialog.Show ();
+				dialog.OpenDialog ();
 			}
 			else if (e.CommandArgs.Length == 2)
 			{
@@ -1020,7 +1020,7 @@ namespace Epsitec.Common.Designer
 				dialog.SubBundleSpec.TypeFilter = "String";
 				dialog.Owner = this.main_panel.Window;
 				dialog.UpdateListContents ();
-				dialog.Show ();
+				dialog.OpenDialog ();
 			}
 			else if (e.CommandArgs.Length == 1)
 			{
@@ -1088,7 +1088,7 @@ namespace Epsitec.Common.Designer
 					Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel (this.application.Name, Common.Dialogs.Icon.Warning, question, command_yes, command_no, this.dispatcher);
 					
 					dialog.Owner = this.main_panel.Window;
-					dialog.Show ();
+					dialog.OpenDialog ();
 				}
 			}
 		}

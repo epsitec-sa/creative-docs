@@ -109,41 +109,6 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		public static bool Equal(IDataFolder f1, IDataFolder f2)
-		{
-			if (f1 == f2)
-			{
-				return true;
-			}
-			
-			if ((f1 == null) ||
-				(f2 == null))
-			{
-				return false;
-			}
-			
-			if ((f1.Name != f2.Name) ||
-				(f1.Count != f2.Count))
-			{
-				return false;
-			}
-			
-			int n = f1.Count;
-			
-			for (int i = 0; i < n; i++)
-			{
-				IDataItem i1 = f1[i];
-				IDataItem i2 = f2[i];
-				
-				if (DataGraph.Equal (i1, i2) == false)
-				{
-					return false;
-				}
-			}
-			
-			return true;
-		}
-		
 		public static bool Equal(IDataItem i1, IDataItem i2)
 		{
 			if (i1 == i2)
@@ -162,10 +127,34 @@ namespace Epsitec.Common.Types
 				return false;
 			}
 			
+			bool ok = false;
+			
 			if ((i1 is IDataFolder) &&
 				(i2 is IDataFolder))
 			{
-				return DataGraph.Equal (i1 as IDataFolder, i2 as IDataFolder);
+				IDataFolder f1 = i1 as IDataFolder;
+				IDataFolder f2 = i2 as IDataFolder;
+				
+				if (f1.Count != f2.Count)
+				{
+					return false;
+				}
+				
+				int n = f1.Count;
+				
+				for (int i = 0; i < n; i++)
+				{
+					if (DataGraph.Equal (f1[i], f2[i]) == false)
+					{
+						return false;
+					}
+				}
+				
+				ok = true;
+				
+				//	Les noeuds pourraient aussi être des valeurs (IDataValue), alors on
+				//	ne s'arrête pas immédiatement en cas de succès, mais on vérifie que
+				//	les valeurs correspondent aussi, s'il y en a.
 			}
 			
 			if ((i1 is IDataValue) &&
@@ -180,7 +169,69 @@ namespace Epsitec.Common.Types
 				return Comparer.Equal (o1, o2);
 			}
 			
+			if (ok)
+			{
+				return true;
+			}
+			
 			throw new System.InvalidOperationException (string.Format ("Cannot compare items of type {0} and {1}.", i1.GetType ().Name, i2.GetType ().Name));
+		}
+		
+		public static int CopyValues(IDataItem src, IDataItem dst)
+		{
+			//	Copie les valeurs de la source à la destination. Cela ne va pas créer
+			//	des noeuds et/ou feuilles supplémentaires dans la destination, mais
+			//	uniquement copier les données qui existaient déjà dans la destination.
+			
+			//	Retourne le nombre valeurs copiées.
+			
+			int count = 0;
+			
+			DataGraph.CopyValues (src, dst, ref count);
+			
+			return count;
+		}
+		
+		
+		private static void CopyValues(IDataItem src, IDataItem dst, ref int count)
+		{
+			if ((src == null) ||
+				(dst == null) ||
+				(src == dst) ||
+				(src.Name != dst.Name))
+			{
+				return;
+			}
+			
+			if ((src is IDataFolder) &&
+				(dst is IDataFolder))
+			{
+				IDataFolder f1 = src as IDataFolder;
+				IDataFolder f2 = dst as IDataFolder;
+				
+				int n = f1.Count;
+				
+				for (int i = 0; i < n; i++)
+				{
+					DataGraph.CopyValues (f1[i], f2[f1[i].Name], ref count);
+				}
+			}
+			
+			if ((src is IDataValue) &&
+				(dst is IDataValue))
+			{
+				IDataValue v1 = src as IDataValue;
+				IDataValue v2 = dst as IDataValue;
+				
+				object o1 = v1.ReadValue ();
+				object o2 = v2.ReadValue ();
+				
+				if (Comparer.Equal (o1, o2) == false)
+				{
+					v2.WriteValue (o1);
+					count++;
+				}
+			}
 		}
 		
 		

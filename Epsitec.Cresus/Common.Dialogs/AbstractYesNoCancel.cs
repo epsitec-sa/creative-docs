@@ -9,7 +9,7 @@ namespace Epsitec.Common.Dialogs
 	/// <summary>
 	/// Summary description for AbstractYesNoCancel.
 	/// </summary>
-	public abstract class AbstractYesNoCancel : AbstractDialog
+	public abstract class AbstractYesNoCancel : AbstractMessageDialog
 	{
 		public AbstractYesNoCancel(string dialog_title, string command_yes_template, string command_no_template, CommandDispatcher command_dispatcher)
 		{
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Dialogs
 			button3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			button3.ButtonStyle   = ButtonStyle.DefaultCancel;
 			
-			AbstractDialog.LayoutButtons (this.window.Root.Width, button1, button2, button3);
+			AbstractMessageDialog.LayoutButtons (this.window.Root.Width, button1, button2, button3);
 			
 			this.window.FocusedWidget = body.FindTabWidget (Widget.TabNavigationDir.Forwards, Widget.TabNavigationMode.ActivateOnTab);
 		}
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Dialogs
 				this.window.QueueCommand (this, string.Format (this.command_yes_template, this.CommandArgs), this.command_dispatcher);
 			}
 			
-			this.Close ();
+			this.CloseDialog ();
 		}
 		
 		[Command ("ValidateDialogNo")]  protected void CommandValidateDialogNo()
@@ -110,12 +110,12 @@ namespace Epsitec.Common.Dialogs
 				this.window.QueueCommand (this, string.Format (this.command_no_template, this.CommandArgs), this.command_dispatcher);
 			}
 			
-			this.Close ();
+			this.CloseDialog ();
 		}
 		
 		[Command ("QuitDialog")]        protected void CommandQuitDialog()
 		{
-			this.Close ();
+			this.CloseDialog ();
 		}
 		
 		

@@ -93,7 +93,7 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		#region IDialog Members
-		public void Show()
+		public void OpenDialog()
 		{
 			this.dialog.Filter = this.Filters.FileDialogFilter;
 			this.dialog.FilterIndex = this.filter_index + 1;

@@ -23,14 +23,14 @@ namespace Epsitec.Common.Dialogs
 		{
 			IDialog dialog = Message.CreateYesNoCancel ("Notepad", "manifest:Epsitec.Common.Dialogs.Images.Warning.icon", "The text in the <i>c:\\Documents and Settings\\Tester\\Desktop\\dummy file.txt</i> file has changed.<br/><br/>Do you want to save the changes ?", "ExecYes", "ExecNo", this.dispatcher);
 			
-			dialog.Show ();
+			dialog.OpenDialog ();
 		}
 
 		[Test] public void CheckOkCancel()
 		{
 			IDialog dialog = Message.CreateOkCancel ("Notepad", "manifest:Epsitec.Common.Dialogs.Images.Warning.icon", "About to mogrify this document...", "ExecYes", this.dispatcher);
 			
-			dialog.Show ();
+			dialog.OpenDialog ();
 		}
 
 		

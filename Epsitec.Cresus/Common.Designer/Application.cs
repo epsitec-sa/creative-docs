@@ -110,6 +110,7 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.WriteLine ("Initialising designer application object.");
 			
 			this.is_initialising = true;
+			this.context_stack   = new System.Collections.Stack ();
 			
 			this.CreateMainWindow ();
 			this.RegisterCommands ();
@@ -421,6 +422,6 @@ namespace Epsitec.Common.Designer
 		protected Widgets.Switcher				switcher;
 		protected Support.EventHandler			switcher_accept_handler;
 		
-		private System.Collections.Stack		context_stack = new System.Collections.Stack ();
+		private System.Collections.Stack		context_stack;
 	}
 }

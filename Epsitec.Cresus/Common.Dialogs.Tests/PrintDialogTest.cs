@@ -40,7 +40,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.Document.PrinterSettings.PrintRange = Printing.PrintRange.FromPageToPage;
 			dialog.Document.PrinterSettings.Collate = false;
 			
-			dialog.Show ();
+			dialog.OpenDialog ();
 			
 			System.Console.Out.WriteLine ("Paper Source: {0}", dialog.Document.PrinterSettings.DefaultPageSettings.PaperSource.Name);
 			System.Console.Out.WriteLine ("Paper Size:   {0}", dialog.Document.PrinterSettings.DefaultPageSettings.PaperSize.Name);
@@ -58,7 +58,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.Document.PrinterSettings.Collate = true;
 			dialog.Document.PrinterSettings.Copies = 3;
 			
-			dialog.Show ();
+			dialog.OpenDialog ();
 			
 			System.Console.Out.WriteLine ("Paper Source: {0}", dialog.Document.PrinterSettings.DefaultPageSettings.PaperSource.Name);
 			System.Console.Out.WriteLine ("Paper Size:   {0}", dialog.Document.PrinterSettings.DefaultPageSettings.PaperSize.Name);
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.Document.PrinterSettings.PrintRange = Printing.PrintRange.AllPages;
 			dialog.Document.PrinterSettings.Collate = false;
 			
-			dialog.Show ();
+			dialog.OpenDialog ();
 			
 			if (dialog.Result == Dialogs.DialogResult.Accept)
 			{

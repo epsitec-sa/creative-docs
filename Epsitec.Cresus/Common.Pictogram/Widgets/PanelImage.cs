@@ -174,7 +174,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			dialog.FileName = this.fieldFilename.Text;
 			dialog.Filters.Add("tiff", "Images TIFF", "*.tif");
 			dialog.Filters.Add("jpg", "Images JPG", "*.jpg");
-			dialog.Show();
+			dialog.OpenDialog();
 
 			this.fieldFilename.Text = dialog.FileName;
 			this.fieldFilename.Cursor = dialog.FileName.Length;

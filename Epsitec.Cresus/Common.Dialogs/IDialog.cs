@@ -8,7 +8,8 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public interface IDialog
 	{
-		void Show();
-		Common.Widgets.Window Owner { get; set; }
+		void OpenDialog();
+		
+		Common.Widgets.Window	Owner	{ get; set; }
 	}
 }

@@ -1,13 +1,11 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-using Epsitec.Common.Widgets;
-using Epsitec.Common.Support;
-
 namespace Epsitec.Common.Dialogs
 {
 	/// <summary>
-	/// Summary description for AbstractClass.
+	/// La classe AbstractDialog implémente l'interface IDialog et offre les
+	/// méthodes de base pour ouvrir et fermer un dialogue.
 	/// </summary>
 	public abstract class AbstractDialog : IDialog
 	{
@@ -16,65 +14,75 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
-		public void Close()
+		public void OpenDialog()
 		{
-			if (this.window != null)
+			if (this.IsReady)
 			{
-				if (this.Window.IsActive)
+				if (this.window == null)
 				{
-					Window owner = this.Owner;
-					
-					if (owner != null)
-					{
-						owner.MakeActive ();
-					}
+					throw new System.InvalidOperationException ("Cannot show window.");
 				}
 				
-				this.window.Hide ();
-				this.window.CommandDispatcher.Dispose ();
-				this.window.CommandDispatcher = null;
-				this.window.AsyncDispose ();
+				Widgets.Window owner = this.Owner;
+				
+				if (owner != null)
+				{
+					Drawing.Rectangle owner_bounds  = owner.WindowBounds;
+					Drawing.Rectangle dialog_bounds = this.window.WindowBounds;
+					
+					double ox = System.Math.Floor (owner_bounds.Left + (owner_bounds.Width - dialog_bounds.Width) / 2);
+					double oy = System.Math.Floor (owner_bounds.Top  - (owner_bounds.Height - dialog_bounds.Height) / 3 - dialog_bounds.Height);
+					
+					dialog_bounds.Location = new Drawing.Point (ox, oy);
+					
+					this.window.WindowBounds = dialog_bounds;
+				}
+				
+				this.OnDialogOpening ();
+				this.window.WindowShown += new Support.EventHandler (this.HandleWindowShown);
+				this.window.ShowDialog ();
+				this.window.WindowShown -= new Support.EventHandler (this.HandleWindowShown);
+			}
+		}
+		
+		public void CloseDialog()
+		{
+			if (this.IsReady)
+			{
+				if (this.window != null)
+				{
+					if (this.window.IsActive)
+					{
+						//	Si la fenêtre est active, il faut faire attention à rendre d'abord
+						//	le parent actif, avant de cacher la fenêtre, pour éviter que le focus
+						//	ne parte dans le décor.
+						
+						Widgets.Window owner = this.Owner;
+						
+						if (owner != null)
+						{
+							owner.MakeActive ();
+						}
+					}
+					
+					this.window.Hide ();
+					this.window.CommandDispatcher.Dispose ();
+					this.window.CommandDispatcher = null;
+					this.window.AsyncDispose ();
+				}
 			}
 		}
 		
 		
-		public Window							Window
+		public virtual Widgets.Window			Window
 		{
 			get
 			{
-				if (this.window == null)
-				{
-					this.CreateWindow ();
-				}
-				
 				return this.window;
 			}
 		}
 		
-		
-		#region IDialog Members
-		public void Show()
-		{
-			Window owner = this.Owner;
-			
-			if (owner != null)
-			{
-				Drawing.Rectangle owner_bounds  = owner.WindowBounds;
-				Drawing.Rectangle dialog_bounds = this.Window.WindowBounds;
-				
-				double ox = System.Math.Floor (owner_bounds.Left + (owner_bounds.Width - dialog_bounds.Width) / 2);
-				double oy = System.Math.Floor (owner_bounds.Top  - (owner_bounds.Height - dialog_bounds.Height) / 3 - dialog_bounds.Height);
-				
-				dialog_bounds.Location = new Drawing.Point (ox, oy);
-				
-				this.Window.WindowBounds = dialog_bounds;
-			}
-			
-			this.OnShowing ();
-			this.Window.ShowDialog ();
-		}
-		
-		public Window							Owner
+		public virtual Widgets.Window			Owner
 		{
 			get
 			{
@@ -85,56 +93,72 @@ namespace Epsitec.Common.Dialogs
 				
 				return null;
 			}
-			
 			set
 			{
-				this.Window.Owner = value;
-			}
-		}
-		#endregion
-		
-		public static void LayoutButtons(double width, params Widgets.Button[] buttons)
-		{
-			if (buttons.Length > 0)
-			{
-				double total_width = 0;
-				
-				for (int i = 0; i < buttons.Length; i++)
+				if ((this.window != null) &&
+					(this.window.Owner != value))
 				{
-					total_width += buttons[i].Width;
-				}
-				
-				total_width += (buttons.Length-1) * 8;
-				
-				if (total_width < width)
-				{
-					double x = System.Math.Floor ((width - total_width) / 2);
-					
-					for (int i = 0; i < buttons.Length; i++)
-					{
-						buttons[i].Location = new Drawing.Point (x, buttons[i].Bottom);
-						
-						x += buttons[i].Width;
-						x += 8;
-					}
+					this.window.Owner = value;
+					this.OnOwnerChanged ();
 				}
 			}
 		}
 		
 		
-		protected abstract void CreateWindow();
-		
-		protected virtual void OnShowing()
+		public bool								IsVisible
 		{
-			if (this.Showing != null)
+			get
 			{
-				this.Showing (this);
+				if (this.window != null)
+				{
+					return this.window.IsVisible;
+				}
+				
+				return false;
+			}
+		}
+		
+		public virtual bool						IsReady
+		{
+			get
+			{
+				return true;
 			}
 		}
 		
 		
-		public event Support.EventHandler		Showing;
 		
-		protected Window						window;
+		protected virtual void OnDialogOpening()
+		{
+			if (this.DialogOpening != null)
+			{
+				this.DialogOpening (this);
+			}
+		}
+		
+		protected virtual void OnDialogOpened()
+		{
+			if (this.DialogOpened != null)
+			{
+				this.DialogOpened (this);
+			}
+		}
+		
+		protected virtual void OnOwnerChanged()
+		{
+		}
+		
+		
+		private void HandleWindowShown(object sender)
+		{
+			this.OnDialogOpened ();
+		}
+		
+		
+		
+		public event Support.EventHandler		DialogOpening;
+		public event Support.EventHandler		DialogOpened;
+		
+		protected Widgets.Window				window;
 	}
 }

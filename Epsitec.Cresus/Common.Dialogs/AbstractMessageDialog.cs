@@ -1,0 +1,81 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
+namespace Epsitec.Common.Dialogs
+{
+	/// <summary>
+	/// La classe AbstractMessageDialog sert de base aux dialogues présentant
+	/// un message avec des boutons de style oui/non.
+	/// </summary>
+	public abstract class AbstractMessageDialog : AbstractDialog
+	{
+		public AbstractMessageDialog()
+		{
+		}
+		
+		
+		
+		
+		public override Widgets.Window			Window
+		{
+			get
+			{
+				if (this.window == null)
+				{
+					this.CreateWindow ();
+				}
+				
+				return this.window;
+			}
+		}
+		
+		public override Widgets.Window			Owner
+		{
+			get
+			{
+				return base.Owner;
+			}
+			set
+			{
+				if (this.window == null)
+				{
+					this.CreateWindow ();
+				}
+				
+				base.Owner = value;
+			}
+		}
+		
+		
+		public static void LayoutButtons(double width, params Widgets.Button[] buttons)
+		{
+			if (buttons.Length > 0)
+			{
+				double total_width = 0;
+				
+				for (int i = 0; i < buttons.Length; i++)
+				{
+					total_width += buttons[i].Width;
+				}
+				
+				total_width += (buttons.Length-1) * 8;
+				
+				if (total_width < width)
+				{
+					double x = System.Math.Floor ((width - total_width) / 2);
+					
+					for (int i = 0; i < buttons.Length; i++)
+					{
+						buttons[i].Location = new Drawing.Point (x, buttons[i].Bottom);
+						
+						x += buttons[i].Width;
+						x += 8;
+					}
+				}
+			}
+		}
+		
+		
+		protected abstract void CreateWindow();
+	}
+}

@@ -286,9 +286,9 @@ namespace Epsitec.Common.UI.Data
 		
 		protected override object CloneCopyToNewObject(object o)
 		{
-			base.CloneCopyToNewObject (o);
-			
 			Record that = o as Record;
+			
+			base.CloneCopyToNewObject (o);
 			
 			that.DefineName (this.name);
 			that.DefineResourcePrefix (this.resource_prefix);

@@ -134,6 +134,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "AbstractMessageDialog.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AbstractOkCancel.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -62,9 +62,9 @@ namespace Epsitec.Common.Dialogs
 				}
 			}
 			
-			protected override void OnShowing()
+			protected override void OnDialogOpened()
 			{
-				base.OnShowing ();
+				base.OnDialogOpened ();
 				Platform.Beep.MessageBeep (Platform.Beep.MessageType.Warning);
 			}
 			
@@ -96,9 +96,9 @@ namespace Epsitec.Common.Dialogs
 			}
 			
 			
-			protected override void OnShowing()
+			protected override void OnDialogOpened()
 			{
-				base.OnShowing ();
+				base.OnDialogOpened ();
 				Platform.Beep.MessageBeep (Platform.Beep.MessageType.Warning);
 			}
 			

@@ -56,7 +56,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 			dialog.Owner = this.app_window;
-			dialog.Show ();
+			dialog.OpenDialog ();
 		}
 
 		private void button2_Clicked(object sender, MessageEventArgs e)
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 			dialog.Owner = this.app_window;
-			dialog.Show ();
+			dialog.OpenDialog ();
 		}
 
 		[Test] public void CheckFileOpen()
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 			dialog.Owner = this.app_window;
-			dialog.Show ();
+			dialog.OpenDialog ();
 			
 			System.Console.Out.WriteLine ("Name: {0}", dialog.FileName);
 			System.Console.Out.WriteLine ("Filter: {0} -> {1}", dialog.FilterIndex, dialog.Filters[dialog.FilterIndex].Name);
@@ -96,7 +96,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
 			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
 			dialog.Owner = this.app_window;
-			dialog.Show ();
+			dialog.OpenDialog ();
 			
 			System.Console.Out.WriteLine ("Name: {0}", dialog.FileName);
 			System.Console.Out.WriteLine ("Filter: {0} -> {1}", dialog.FilterIndex, dialog.Filters[dialog.FilterIndex].Name);
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Dialogs
 			dialog.PromptForCreation = true;
 			dialog.PromptForOverwriting = true;
 			dialog.Owner = this.app_window;
-			dialog.Show ();
+			dialog.OpenDialog ();
 			
 			System.Console.Out.WriteLine ("Name: {0}", dialog.FileName);
 			System.Console.Out.WriteLine ("Filter: {0} -> {1}", dialog.FilterIndex, dialog.Filters[dialog.FilterIndex].Name);

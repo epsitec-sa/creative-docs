@@ -9,7 +9,7 @@ namespace Epsitec.Common.Dialogs
 	/// <summary>
 	/// Summary description for AbstractOkCancel.
 	/// </summary>
-	public abstract class AbstractOkCancel : AbstractDialog
+	public abstract class AbstractOkCancel : AbstractMessageDialog
 	{
 		public AbstractOkCancel(string dialog_title, string command_template, CommandDispatcher command_dispatcher)
 		{
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Dialogs
 			button2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			button2.Shortcut      = Widgets.Feel.Factory.Active.CancelShortcut;
 			
-			AbstractDialog.LayoutButtons (this.window.Root.Width, button1, button2);
+			AbstractMessageDialog.LayoutButtons (this.window.Root.Width, button1, button2);
 			
 			this.window.FocusedWidget = body.FindTabWidget (Widget.TabNavigationDir.Forwards, Widget.TabNavigationMode.ActivateOnTab);
 		}
@@ -92,12 +92,12 @@ namespace Epsitec.Common.Dialogs
 				this.window.QueueCommand (this, string.Format (this.command_template, this.CommandArgs), this.command_dispatcher);
 			}
 			
-			this.Close ();
+			this.CloseDialog ();
 		}
 		
 		[Command ("QuitDialog")]     protected void CommandQuitDialog()
 		{
-			this.Close ();
+			this.CloseDialog ();
 		}
 		
 		
