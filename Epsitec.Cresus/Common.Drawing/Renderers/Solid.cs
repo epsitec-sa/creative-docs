@@ -66,6 +66,8 @@ namespace Epsitec.Common.Drawing.Renderers
 		}
 		
 		
+		public abstract void SetAlphaMask(Pixmap pixmap, MaskComponent component);
+		
 		public void Dispose()
 		{
 			this.Dispose (true);
