@@ -170,6 +170,7 @@ namespace Epsitec.Common.Support
 		{
 			return Resources.GetBundle (id, ResourceLevel.Merged, 0);
 		}
+		
 		public static ResourceBundle GetBundle(string id, ResourceLevel level)
 		{
 			return Resources.GetBundle (id, level, 0);
@@ -259,6 +260,35 @@ namespace Epsitec.Common.Support
 			}
 			
 			return data;
+		}
+		
+		
+		public static string GetText(string id)
+		{
+			return Resources.GetText (id, ResourceLevel.Merged);
+		}
+		
+		public static string GetText(string id, ResourceLevel level)
+		{
+			string bundle_name;
+			string field_name;
+			
+			if (ResourceBundle.SplitTarget (id, out bundle_name, out field_name))
+			{
+				ResourceBundle bundle = Resources.GetBundle (bundle_name, level);
+			
+				if (bundle != null)
+				{
+					ResourceBundle.Field field = bundle[field_name];
+					
+					if (field != null)
+					{
+						return field.AsString;
+					}
+				}
+			}
+			
+			return null;
 		}
 		
 		
