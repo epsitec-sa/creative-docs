@@ -194,21 +194,24 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			
 			this.UpdateColumnsGeometry ();
-//			this.UpdateCurrentHeightBefore ();
 			this.LayoutWidgets (this.root, 0, 0, 0);
-//			this.UpdateCurrentHeightAfter ();
 			
-			if (this.designer_adjust_widget != null)
+			if (this.designer_adjust_widget == null)
 			{
-				Drawing.Point pos = new Drawing.Point (this.designer_adjust_widget.Left, this.designer_adjust_widget.Bottom + this.current_height);
 				this.UpdateWidgetOffset ();
-				this.designer_adjust_widget.Location = pos;
-				System.Diagnostics.Debug.WriteLine ("Adjusted to: " + this.designer_adjust_widget.Bounds);
-				this.designer_adjust_widget = null;
 			}
 			else
 			{
+				//	Il y a un widget particulier à ajuster manuellement. Calcule sa position
+				//	avant le redimensionnement du conteneur.
+				
+				double x = this.designer_adjust_widget.Left;
+				double y = this.designer_adjust_widget.Bottom + this.current_height;
+				
 				this.UpdateWidgetOffset ();
+				
+				this.designer_adjust_widget.Location = new Drawing.Point (x, y);
+				this.designer_adjust_widget = null;
 			}
 			
 			this.root.Size = new Drawing.Size (this.current_width, this.current_height);
@@ -288,59 +291,28 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
-		protected void UpdateCurrentHeightBefore()
-		{
-			this.current_height = this.desired_height;
-		}
-		
-		protected void UpdateCurrentHeightAfter()
-		{
-			if (this.is_dragging)
-			{
-				return;
-			}
-			
-			int last = this.horizontals.Length - 1;
-			
-			if (last < 1)
-			{
-				this.current_height = this.desired_height;
-			}
-			else
-			{
-				this.current_height = this.horizontals[0].y_live - this.horizontals[last].y_live;
-			}
-		}
-		
 		protected void UpdateWidgetOffset()
 		{
-			int last = this.horizontals.Length - 1;
+			//	Met à jour les offsets verticaux des widgets considérés. Le positionnement
+			//	en [y] fait par LayoutWidgets a pris le bord supérieur du conteneur comme
+			//	référence [y=0].
 			
-			if (last < 1)
+			int    last   = this.horizontals.Length - 1;
+			double offset = (last < 1) ? this.desired_height : (this.horizontals[0].y_live - this.horizontals[last].y_live);
+			
+			this.current_height = offset;
+			
+			for (int i = 0; i < root.Children.Count; i++)
 			{
-				this.current_height = this.desired_height;
-			}
-			else
-			{
-				this.current_height = this.horizontals[0].y_live - this.horizontals[last].y_live;
-			}
-			
-			double offset = this.current_height;
-			
-			Widget.WidgetCollection widgets = root.Children;
-			
-			for (int i = 0; i < widgets.Count; i++)
-			{
-				Widget widget = widgets[i] as Widget;
+				Widget widget = root.Children[i] as Widget;
+				
 				if (widget.Dock == DockStyle.Layout)
 				{
+					//	Ne déplace que les widgets qui sont gérés par le système de layout
+					//	automatique :
+					
 					widget.Location = new Drawing.Point (widget.Left, widget.Bottom + offset);
 				}
-			}
-			
-			for (int i = 0; i < this.horizontals.Length; i++)
-			{
-//				this.horizontals[i].y_live += offset;
 			}
 		}
 		
@@ -360,6 +332,9 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		protected void LayoutWidgets(Widget root, int left_index, double x_offset, double y_offset)
 		{
+			//	Utilise 'y_offset' comme origine supérieure pour le positionnement. En général,
+			//	'y_offset=0', l'ajustement final se fait dans la méthode UpdateWidgetOffset.
+			
 			double max_dy = 0;
 			
 			int lines = 1;
