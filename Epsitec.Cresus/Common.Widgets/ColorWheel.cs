@@ -339,6 +339,29 @@ namespace Epsitec.Common.Widgets
 	{
 			if ( this.IsEnabled )
 			{
+#if true
+				Drawing.Color c1 = Drawing.Color.FromBrightness(0);
+				Drawing.Color c4 = Drawing.Color.FromBrightness(1);
+				Drawing.Color c2 = c1;
+				Drawing.Color c3 = Drawing.Color.FromHSV(this.h,1,1);
+				
+				double x1 = rect.Left;
+				double y1 = rect.Bottom;
+				double x2 = rect.Right;
+				double y2 = rect.Top;
+				
+				Drawing.Transform transform = graphics.SaveTransform ();
+				
+				transform.TransformDirect (ref x1, ref y1);
+				transform.TransformDirect (ref x2, ref y2);
+				
+				int x  = (int) x1;
+				int y  = (int) y1;
+				int dx = (int) (x2-x1);
+				int dy = (int) (y2-y1);
+				
+				graphics.SolidRenderer.Clear4Colors (x, y, dx, dy, c1, c2, c3, c4);
+#else
 				for ( double posy=rect.Bottom ; posy<=rect.Top ; posy++ )
 				{
 					Drawing.Path path = new Drawing.Path();
@@ -365,6 +388,7 @@ namespace Epsitec.Common.Widgets
 
 					graphics.RenderGradient();
 				}
+#endif
 			}
 
 			graphics.AddRectangle(rect);
