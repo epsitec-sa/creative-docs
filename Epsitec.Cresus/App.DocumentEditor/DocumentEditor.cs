@@ -3411,11 +3411,13 @@ namespace Epsitec.App.DocumentEditor
 
 		private void HandleWindowSettingsCloseClicked(object sender)
 		{
+			this.Window.MakeActive();
 			this.windowSettings.Hide();
 		}
 
 		private void HandleSettingsButtonCloseClicked(object sender, MessageEventArgs e)
 		{
+			this.Window.MakeActive();
 			this.windowSettings.Hide();
 		}
 
@@ -3480,11 +3482,13 @@ namespace Epsitec.App.DocumentEditor
 
 		private void HandleWindowInfosCloseClicked(object sender)
 		{
+			this.Window.MakeActive();
 			this.windowInfos.Hide();
 		}
 
 		private void HandleInfosButtonCloseClicked(object sender, MessageEventArgs e)
 		{
+			this.Window.MakeActive();
 			this.windowInfos.Hide();
 		}
 
@@ -3541,11 +3545,13 @@ namespace Epsitec.App.DocumentEditor
 
 		private void HandleWindowAboutCloseClicked(object sender)
 		{
+			this.Window.MakeActive();
 			this.windowAbout.Hide();
 		}
 
 		private void HandleAboutButtonCloseClicked(object sender, MessageEventArgs e)
 		{
+			this.Window.MakeActive();
 			this.windowAbout.Hide();
 		}
 
@@ -3715,16 +3721,19 @@ namespace Epsitec.App.DocumentEditor
 
 		private void HandleWindowExportCloseClicked(object sender)
 		{
+			this.Window.MakeActive();
 			this.windowExport.Hide();
 		}
 
 		private void HandleExportButtonCancelClicked(object sender, MessageEventArgs e)
 		{
+			this.Window.MakeActive();
 			this.windowExport.Hide();
 		}
 
 		private void HandleExportButtonOkClicked(object sender, MessageEventArgs e)
 		{
+			this.Window.MakeActive();
 			this.windowExport.Hide();
 			string filename = string.Format("{0}\\{1}", this.CurrentDocument.ExportDirectory, this.CurrentDocument.ExportFilename);
 			string err = this.CurrentDocument.Export(filename);
