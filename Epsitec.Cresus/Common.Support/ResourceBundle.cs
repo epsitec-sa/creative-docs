@@ -48,7 +48,7 @@ namespace Epsitec.Common.Support
 		{
 			ResourceBundle bundle = new ResourceBundle (name);
 			
-			bundle.prefix  = prefix;
+			bundle.DefinePrefix (prefix);
 			bundle.level   = level;
 			bundle.depth   = recursion;
 			bundle.culture = culture;
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Support
 		
 		protected ResourceBundle(ResourceBundle parent, string name, System.Xml.XmlNode xmlroot) : this(name)
 		{
-			this.prefix = parent.prefix;
+			this.DefinePrefix (parent.prefix);
 			this.level  = parent.level;
 			this.depth  = parent.depth + 1;
 			
@@ -118,7 +118,12 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.prefix + ":" + this.name;
+				if (this.prefix == null)
+				{
+					throw new ResourceException (string.Format ("Resource bundle '{0}' has no prefix.", this.Name));
+				}
+				
+				return Resources.MakeFullName (this.prefix, this.name);
 			}
 		}
 		
@@ -217,18 +222,39 @@ namespace Epsitec.Common.Support
 					throw new ResourceException (string.Format ("Name '{0}' is not a valid bundle name.", name));
 				}
 			}
-		
+			
 			this.name = name;
 		}
 		
 		public void DefineType(string type)
 		{
+			if (type != null)
+			{
+				if (! RegexFactory.AlphaName.IsMatch (type))
+				{
+					throw new ResourceException (string.Format ("Type '{0}' is not a valid type name.", type));
+				}
+			}
+			
 			this.type = type;
 		}
 		
 		public void DefineAbout(string about)
 		{
 			this.about = about;
+		}
+		
+		public void DefinePrefix(string prefix)
+		{
+			if (prefix != null)
+			{
+				if (! RegexFactory.AlphaName.IsMatch (prefix))
+				{
+					throw new ResourceException (string.Format ("Prefix '{0}' is not a valid prefix name.", prefix));
+				}
+			}
+			
+			this.prefix = prefix;
 		}
 		
 		public bool Contains(string name)
@@ -765,7 +791,7 @@ namespace Epsitec.Common.Support
 					throw new ResourceException (string.Format ("No default prefix specified, target '{0}' cannot be resolved.", target));
 				}
 				
-				target = this.prefix + ":" + target;
+				target = Resources.MakeFullName (this.prefix, target);
 			}
 			
 			return target;
