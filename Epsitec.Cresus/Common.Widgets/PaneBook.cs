@@ -290,7 +290,7 @@ namespace Epsitec.Common.Widgets
 			this.windowSize = this.RetWindowSize();
 			this.totalRelativeSize = this.RetTotalRelativeSize();
 
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect = this.Client.Bounds;
 			Drawing.Point start = new Drawing.Point(0, rect.Height);
 			Drawing.Point end = new Drawing.Point();
 
