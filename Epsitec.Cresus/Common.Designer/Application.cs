@@ -84,14 +84,14 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		internal void OpenStringPicker()
+		internal void OpenStringPicker(Support.EventHandler accept_handler)
 		{
-			//	TODO: ...
-			
 			Context.Save (this);
 			
 			this.switcher.Mode         = Widgets.SwitcherMode.AcceptReject;
 			this.switcher.SelectedName = PanelName.StringEdit.ToString ();
+			
+			this.switcher_accept_handler = accept_handler;
 		}
 		
 		protected void Initialise()
@@ -221,7 +221,14 @@ namespace Epsitec.Common.Designer
 		{
 			System.Diagnostics.Debug.Assert (this.switcher == sender);
 			
+			Support.EventHandler accept_handler = this.switcher_accept_handler;
+			
 			Context.Restore (this);
+			
+			if (accept_handler != null)
+			{
+				accept_handler (this);
+			}
 		}
 		
 		private void HandleSwitcherRejectClicked(object sender)
@@ -246,6 +253,8 @@ namespace Epsitec.Common.Designer
 			{
 				this.switcher_mode = app.switcher.Mode;
 				this.switcher_sel  = app.switcher.SelectedName;
+				
+				this.switcher_accept_handler = app.switcher_accept_handler;
 			}
 			
 			
@@ -258,13 +267,15 @@ namespace Epsitec.Common.Designer
 			{
 				Context context = app.context_stack.Pop () as Context;
 				
-				app.switcher.Mode         = context.switcher_mode;
-				app.switcher.SelectedName = context.switcher_sel;
+				app.switcher.Mode           = context.switcher_mode;
+				app.switcher.SelectedName   = context.switcher_sel;
+				app.switcher_accept_handler = context.switcher_accept_handler;
 			}
 			
 			
 			private Widgets.SwitcherMode		switcher_mode;
 			private string						switcher_sel;
+			private Support.EventHandler		switcher_accept_handler;
 		}
 		
 		public static Application				Current
@@ -290,6 +301,7 @@ namespace Epsitec.Common.Designer
 		
 		protected AbstractToolBar				tool_bar;
 		protected Widgets.Switcher				switcher;
+		protected Support.EventHandler			switcher_accept_handler;
 		
 		private System.Collections.Stack		context_stack = new System.Collections.Stack ();
 		

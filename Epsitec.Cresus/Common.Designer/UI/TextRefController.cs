@@ -205,9 +205,28 @@ namespace Epsitec.Common.Designer.UI
 		
 		private void HandleComboTextButtonClicked(object sender, MessageEventArgs e)
 		{
-			//	TODO: ...
+			Application.Current.OpenStringPicker (new Support.EventHandler (this.HandleStringPickerValidated));
+		}
+		
+		private void HandleStringPickerValidated(object sender)
+		{
+			Application            app   = sender as Application;
+			Panels.StringEditPanel panel = app.StringEditController.ActivePanel;
+			EditArray              edit  = panel.EditArray;
 			
-			Application.Current.OpenStringPicker ();
+			int index = edit.SelectedIndex;
+			
+			if (index >= 0)
+			{
+				string bundle = panel.Store.Name;
+				string field  = edit[index, 0];
+				
+				this.combo_bundle.SelectedItem = bundle;
+				this.combo_field.SelectedItem  = field;
+				
+				this.combo_text.SelectAll ();
+				this.combo_text.Focus ();
+			}
 		}
 		
 		private void HandleComboBundleSelectedIndexChanged(object sender)
