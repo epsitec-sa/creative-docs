@@ -25,7 +25,7 @@ namespace Epsitec.Common.NiceIcon
 			origin = new Drawing.Point (0, 0);
 		}
 
-		public void Paint(Drawing.Graphics graphics, Drawing.Size size, byte[] data)
+		public void Paint(Drawing.Graphics graphics, Drawing.Size size, byte[] data, bool disabled)
 		{
 			using (System.IO.MemoryStream stream = new System.IO.MemoryStream(data))
 			{
@@ -34,7 +34,7 @@ namespace Epsitec.Common.NiceIcon
 				
 				if ( icon.Read(stream) )
 				{
-					context.IsEnable = true;
+					context.IsEnable = !disabled;
 					context.ScaleX = size.Width / 100;
 					context.ScaleY = size.Height / 100;
 					

@@ -180,7 +180,7 @@ namespace Epsitec.Common.Tests
 
 			Window window = new Window();
 			
-			window.ClientSize = new Drawing.Size(600, 500);
+			window.ClientSize = new Drawing.Size(700, 500);
 			window.Text = "CheckIconEditor";
 
 			IconEditor editor = new IconEditor();
@@ -189,7 +189,6 @@ namespace Epsitec.Common.Tests
 			window.Root.Children.Add(editor);
 
 			window.Show();
-			window.ClientSize = new Drawing.Size(700, 500);  // TODO: dessin initial KO sans cela !
 		}
 
 		[Test] public void CheckCanvasEngine()
@@ -198,7 +197,7 @@ namespace Epsitec.Common.Tests
 			
 			Window window = new Window();
 			
-			window.ClientSize = new Drawing.Size(200, 100);
+			window.ClientSize = new Drawing.Size(200, 180);
 			window.Text = "CheckCanvasEngine";
 			
 			StaticText icon1 = new StaticText (@"<img src=""file:images/open2.icon""/>");
@@ -208,20 +207,41 @@ namespace Epsitec.Common.Tests
 			icon1.Dock = DockStyle.Top;
 			icon1.Parent = window.Root;
 			icon1.Size = new Drawing.Size (20, 20);
+			icon1.Name = "Zoom x 1";
+			icon1.DebugActive = true;
+			
 			icon2.Dock = DockStyle.Top;
 			icon2.Parent = window.Root;
 			icon2.SetClientZoom (1.5);
 			icon2.Size = new Drawing.Size (20*1.5, 20*1.5);
+			icon2.Name = "Zoom x 1.5";
+			icon2.DebugActive = true;
+			
 			icon3.Dock = DockStyle.Top;
 			icon3.Parent = window.Root;
 			icon3.SetClientZoom (4.0);
 			icon3.Size = new Drawing.Size (20*4.0, 20*4.0);
+			icon3.Name = "Zoom x 4.0";
+			icon3.DebugActive = true;
+			icon3.SetEnabled (false);
+			
+			Button button = new Button ("Purge Image Cache");
+			button.Dock = DockStyle.Bottom;
+			button.Parent = window.Root;
+			button.Clicked += new MessageEventHandler(CanvasEngineButtonClicked);
 			
 			window.Show();
-			window.ClientSize = new Drawing.Size(200, 160);
 		}
 
 		protected Widget			root;
 		protected ToolBar			toolbar;
+
+		private void CanvasEngineButtonClicked(object sender, MessageEventArgs e)
+		{
+			Support.ImageProvider.Default.ClearImageCache ("file:images/open2.icon");
+			System.Diagnostics.Debug.WriteLine ("Image cache cleared.");
+			Widget widget = sender as Widget;
+			widget.RootParent.Invalidate ();
+		}
 	}
 }

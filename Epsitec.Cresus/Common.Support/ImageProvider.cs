@@ -168,7 +168,17 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 		
-		
+		public void ClearImageCache(string name)
+		{
+			if (name == null)
+			{
+				this.images.Clear ();
+			}
+			else
+			{
+				this.images.Remove (name);
+			}
+		}
 		
 		protected System.Collections.Hashtable	images = new System.Collections.Hashtable ();
 		protected System.Collections.Hashtable	assemblies = new System.Collections.Hashtable ();

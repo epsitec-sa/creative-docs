@@ -15,7 +15,7 @@ namespace Epsitec.Icons
 			
 			this.main_window = new Window ();
 			
-			main_window.ClientSize = new Size (600, 500);
+			main_window.ClientSize = new Size (700, 500);
 			main_window.Text       = "Icon Editor";
 			
 			this.icon_editor = new IconEditor ();
@@ -25,7 +25,6 @@ namespace Epsitec.Icons
 			this.icon_editor.Parent = this.main_window.Root;
 			
 			this.main_window.Show ();
-			this.main_window.ClientSize = new Size (700, 500);  // TODO: dessin initial KO sans cela !
 		}
 		
 		
