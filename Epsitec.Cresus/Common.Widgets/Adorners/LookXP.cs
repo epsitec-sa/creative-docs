@@ -63,14 +63,14 @@ namespace Epsitec.Common.Widgets.Adorner
 		public void PaintGlyph(Drawing.Graphics graphics,
 							   Drawing.Rectangle rect,
 							   Widgets.WidgetState state,
-							   GlyphType type,
+							   GlyphShape type,
 							   PaintTextStyle style)
 		{
 			Drawing.Point center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
 			Drawing.Path path = new Drawing.Path();
 			switch ( type )
 			{
-				case GlyphType.ArrowUp:
+				case GlyphShape.ArrowUp:
 					path.MoveTo(center.X+0.0*rect.Width, center.Y+0.2*rect.Height);
 					path.LineTo(center.X-0.3*rect.Width, center.Y-0.1*rect.Height);
 					path.LineTo(center.X-0.2*rect.Width, center.Y-0.2*rect.Height);
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+0.3*rect.Width, center.Y-0.1*rect.Height);
 					break;
 
-				case GlyphType.ArrowDown:
+				case GlyphShape.ArrowDown:
 					path.MoveTo(center.X+0.0*rect.Width, center.Y-0.2*rect.Height);
 					path.LineTo(center.X-0.3*rect.Width, center.Y+0.1*rect.Height);
 					path.LineTo(center.X-0.2*rect.Width, center.Y+0.2*rect.Height);
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+0.3*rect.Width, center.Y+0.1*rect.Height);
 					break;
 
-				case GlyphType.ArrowRight:
+				case GlyphShape.ArrowRight:
 					path.MoveTo(center.X+0.2*rect.Width, center.Y+0.0*rect.Height);
 					path.LineTo(center.X-0.1*rect.Width, center.Y-0.3*rect.Height);
 					path.LineTo(center.X-0.2*rect.Width, center.Y-0.2*rect.Height);
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X-0.1*rect.Width, center.Y+0.3*rect.Height);
 					break;
 
-				case GlyphType.ArrowLeft:
+				case GlyphShape.ArrowLeft:
 					path.MoveTo(center.X-0.2*rect.Width, center.Y+0.0*rect.Height);
 					path.LineTo(center.X+0.1*rect.Width, center.Y-0.3*rect.Height);
 					path.LineTo(center.X+0.2*rect.Width, center.Y-0.2*rect.Height);
@@ -106,13 +106,13 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+0.1*rect.Width, center.Y+0.3*rect.Height);
 					break;
 
-				case GlyphType.Menu:
+				case GlyphShape.Menu:
 					path.MoveTo(center.X+rect.Width*0.00, center.Y-rect.Height*0.25);
 					path.LineTo(center.X-rect.Width*0.30, center.Y+rect.Height*0.15);
 					path.LineTo(center.X+rect.Width*0.30, center.Y+rect.Height*0.15);
 					break;
 
-				case GlyphType.Close:
+				case GlyphShape.Close:
 					path.MoveTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.30);
 					path.LineTo(center.X-rect.Width*0.30, center.Y-rect.Height*0.20);
 					path.LineTo(center.X-rect.Width*0.10, center.Y+rect.Height*0.00);
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+rect.Width*0.00, center.Y-rect.Height*0.10);
 					break;
 
-				case GlyphType.Dots:
+				case GlyphShape.Dots:
 					path.MoveTo(center.X-rect.Width*0.30, center.Y+rect.Height*0.06);
 					path.LineTo(center.X-rect.Width*0.18, center.Y+rect.Height*0.06);
 					path.LineTo(center.X-rect.Width*0.18, center.Y-rect.Height*0.06);
@@ -1108,7 +1108,8 @@ namespace Epsitec.Common.Widgets.Adorner
 		public void PaintTagBackground(Drawing.Graphics graphics,
 									   Drawing.Rectangle rect,
 									   WidgetState state,
-									   Drawing.Color color)
+									   Drawing.Color color,
+									   Direction dir)
 		{
 			Drawing.Path path;
 			
@@ -1151,14 +1152,13 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				graphics.RenderSolid(this.colorControlDark);
 			}
-
-			this.PaintGlyph(graphics, rect, state, GlyphType.Menu, PaintTextStyle.Button);
 		}
 
 		public void PaintTagForeground(Drawing.Graphics graphics,
 									   Drawing.Rectangle rect,
 									   WidgetState state,
-									   Drawing.Color color)
+									   Drawing.Color color,
+									   Direction dir)
 		{
 		}
 

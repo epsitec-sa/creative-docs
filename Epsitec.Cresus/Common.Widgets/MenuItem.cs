@@ -424,7 +424,7 @@ namespace Epsitec.Common.Widgets
 					aRect.Left = aRect.Right-this.subIndicatorWidth;
 					aRect.Bottom = (rect.Height-this.subIndicatorWidth)/2;
 					aRect.Top = aRect.Bottom+this.subIndicatorWidth;
-					adorner.PaintGlyph(graphics, aRect, state, GlyphType.ArrowRight, PaintTextStyle.VMenu);
+					adorner.PaintGlyph(graphics, aRect, state, GlyphShape.ArrowRight, PaintTextStyle.VMenu);
 				}
 			}
 		}

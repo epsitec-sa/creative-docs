@@ -1,17 +1,5 @@
 namespace Epsitec.Common.Widgets
 {
-	public enum GlyphType
-	{
-		None,
-		ArrowUp,
-		ArrowDown,
-		ArrowLeft,
-		ArrowRight,
-		Menu,
-		Close,
-		Dots,
-	}
-
 	public enum PaintTextStyle
 	{
 		StaticText,
@@ -49,7 +37,7 @@ namespace Epsitec.Common.Widgets
 
 		void PaintWindowBackground(Drawing.Graphics graphics, Drawing.Rectangle windowRect, Drawing.Rectangle paintRect, WidgetState state);
 
-		void PaintGlyph(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, GlyphType type, PaintTextStyle style);
+		void PaintGlyph(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, GlyphShape type, PaintTextStyle style);
 		void PaintCheck(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintRadio(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintIcon(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, string icon);
@@ -106,8 +94,8 @@ namespace Epsitec.Common.Widgets
 		void PaintStatusItemBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintStatusItemForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 
-		void PaintTagBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Drawing.Color color);
-		void PaintTagForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Drawing.Color color);
+		void PaintTagBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Drawing.Color color, Direction dir);
+		void PaintTagForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Drawing.Color color, Direction dir);
 
 		void PaintTooltipBackground(Drawing.Graphics graphics, Drawing.Rectangle rect);
 		void PaintTooltipTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text);

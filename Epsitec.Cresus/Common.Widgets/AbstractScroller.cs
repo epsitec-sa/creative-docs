@@ -19,8 +19,8 @@ namespace Epsitec.Common.Widgets
 
 			this.arrowUp = new GlyphButton(this);
 			this.arrowDown = new GlyphButton(this);
-			this.arrowUp.GlyphType = GlyphType.ArrowUp;
-			this.arrowDown.GlyphType = GlyphType.ArrowDown;
+			this.arrowUp.GlyphShape = GlyphShape.ArrowUp;
+			this.arrowDown.GlyphShape = GlyphShape.ArrowDown;
 			this.arrowUp.ButtonStyle = ButtonStyle.Scroller;
 			this.arrowDown.ButtonStyle = ButtonStyle.Scroller;
 			this.arrowUp.Engaged += new Support.EventHandler(this.HandleButton);
@@ -209,13 +209,13 @@ namespace Epsitec.Common.Widgets
 				
 				this.arrowUp.SetVisible (arrow_length > 0);
 				this.arrowUp.Bounds    = bounds;
-				this.arrowUp.GlyphType = GlyphType.ArrowUp;
+				this.arrowUp.GlyphShape = GlyphShape.ArrowUp;
 				
 				bounds = new Drawing.Rectangle (0, 0, rect.Width, arrow_length);
 				
 				this.arrowDown.SetVisible (arrow_length > 0);
 				this.arrowDown.Bounds    = bounds;
-				this.arrowDown.GlyphType = GlyphType.ArrowDown;
+				this.arrowDown.GlyphShape = GlyphShape.ArrowDown;
 				
 				rect.Bottom += arrow_length;
 				rect.Top    -= arrow_length;
@@ -228,13 +228,13 @@ namespace Epsitec.Common.Widgets
 				
 				this.arrowUp.SetVisible (arrow_length > 0);
 				this.arrowUp.Bounds    = bounds;
-				this.arrowUp.GlyphType = GlyphType.ArrowRight;
+				this.arrowUp.GlyphShape = GlyphShape.ArrowRight;
 				
 				bounds = new Drawing.Rectangle (0, 0, arrow_length, rect.Height);
 				
 				this.arrowDown.SetVisible (arrow_length > 0);
 				this.arrowDown.Bounds    = bounds;
-				this.arrowDown.GlyphType = GlyphType.ArrowLeft;
+				this.arrowDown.GlyphShape = GlyphShape.ArrowLeft;
 				
 				rect.Left  += arrow_length;
 				rect.Right -= arrow_length;

@@ -1,13 +1,37 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
+	/// GlyphShape détermine l'aspect d'un "glyph" représenté par la classe
+	/// GlyphButton.
+	/// </summary>
+	public enum GlyphShape
+	{
+		None,
+		ArrowUp,
+		ArrowDown,
+		ArrowLeft,
+		ArrowRight,
+		Menu,
+		Close,
+		Dots,
+	}
+	
+	/// <summary>
 	/// La classe GlyphButton dessine un bouton avec une icône simple.
 	/// </summary>
-	public class GlyphButton : Button
+	public class GlyphButton : IconButton
 	{
-		public GlyphButton()
+		public GlyphButton() : this (null, null)
 		{
-			this.glyphType = GlyphType.None;
+		}
+		
+		public GlyphButton(string command) : this (command, null)
+		{
+		}
+		
+		public GlyphButton(string command, string name) : base (command, null, name)
+		{
+			this.shape = GlyphShape.None;
 			this.InternalState &= ~InternalState.AutoFocus;
 			this.InternalState &= ~InternalState.Focusable;
 		}
@@ -18,42 +42,52 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public GlyphType GlyphType
+		public GlyphShape						GlyphShape
 		{
-			get { return this.glyphType; }
-			set { this.glyphType = value; }
+			get
+			{
+				return this.shape;
+			}
+			set
+			{
+				if ( this.shape != value )
+				{
+					this.shape = value;
+					this.Invalidate();
+				}
+			}
 		}
 		
-		public override double DefaultWidth
+		public override double					DefaultWidth
 		{
 			get { return 17; }
 		}
 		
-		public override double DefaultHeight
+		public override double					DefaultHeight
 		{
 			get { return 17; }
 		}
 		
-
-		// Dessine le bouton.
+		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
 			Direction dir = Direction.None;
-			switch ( this.glyphType )
+			switch ( this.shape )
 			{
-				case GlyphType.ArrowUp:     dir = Direction.Up;     break;
-				case GlyphType.ArrowDown:   dir = Direction.Down;   break;
-				case GlyphType.ArrowLeft:   dir = Direction.Left;   break;
-				case GlyphType.ArrowRight:  dir = Direction.Right;  break;
+				case GlyphShape.ArrowUp:     dir = Direction.Up;     break;
+				case GlyphShape.ArrowDown:   dir = Direction.Down;   break;
+				case GlyphShape.ArrowLeft:   dir = Direction.Left;   break;
+				case GlyphShape.ArrowRight:  dir = Direction.Right;  break;
 			}
+			
 			adorner.PaintButtonBackground(graphics, rect, this.PaintState, dir, this.buttonStyle);
-			adorner.PaintGlyph(graphics, rect, this.PaintState, this.glyphType, PaintTextStyle.Button);
+			adorner.PaintGlyph(graphics, rect, this.PaintState, this.shape, PaintTextStyle.Button);
 		}
 
 		
-		protected GlyphType				glyphType;
+		private GlyphShape						shape;
 	}
 }

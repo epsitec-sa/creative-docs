@@ -129,8 +129,8 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.sortMode != 0 )  // triangle ?
 			{
-				GlyphType type = GlyphType.None;
-				type = GlyphType.None;
+				GlyphShape type = GlyphShape.None;
+				type = GlyphShape.None;
 
 				if ( this.headerButtonStyle == HeaderButtonStyle.Top )
 				{
@@ -140,11 +140,11 @@ namespace Epsitec.Common.Widgets
 
 					if ( this.sortMode > 0 )
 					{
-						type = GlyphType.ArrowDown;
+						type = GlyphShape.ArrowDown;
 					}
 					else
 					{
-						type = GlyphType.ArrowUp;
+						type = GlyphShape.ArrowUp;
 						rect.Offset(0, rect.Height/3);
 					}
 				}
@@ -157,11 +157,11 @@ namespace Epsitec.Common.Widgets
 
 					if ( this.sortMode > 0 )
 					{
-						type = GlyphType.ArrowRight;
+						type = GlyphShape.ArrowRight;
 					}
 					else
 					{
-						type = GlyphType.ArrowLeft;
+						type = GlyphShape.ArrowLeft;
 					}
 				}
 				adorner.PaintGlyph(graphics, rect, state, type, PaintTextStyle.Header);

@@ -346,7 +346,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.AddClone(this.lister);
 
 			this.quickPagePrev = new GlyphButton();
-			this.quickPagePrev.GlyphType = GlyphType.ArrowLeft;
+			this.quickPagePrev.GlyphShape = GlyphShape.ArrowLeft;
 			this.quickPagePrev.Clicked += new MessageEventHandler(this.HandleQuickPagePrev);
 			this.quickPagePrev.Parent = this.leftPane;
 
@@ -356,7 +356,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.quickPageMenu.Parent = this.leftPane;
 
 			this.quickPageNext = new GlyphButton();
-			this.quickPageNext.GlyphType = GlyphType.ArrowRight;
+			this.quickPageNext.GlyphShape = GlyphShape.ArrowRight;
 			this.quickPageNext.Clicked += new MessageEventHandler(this.HandleQuickPageNext);
 			this.quickPageNext.Parent = this.leftPane;
 
@@ -365,7 +365,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.hScroller.Parent = this.leftPane;
 
 			this.quickLayerNext = new GlyphButton();
-			this.quickLayerNext.GlyphType = GlyphType.ArrowUp;
+			this.quickLayerNext.GlyphShape = GlyphShape.ArrowUp;
 			this.quickLayerNext.Clicked += new MessageEventHandler(this.HandleQuickLayerNext);
 			this.quickLayerNext.Parent = this.leftPane;
 
@@ -375,7 +375,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.quickLayerMenu.Parent = this.leftPane;
 
 			this.quickLayerPrev = new GlyphButton();
-			this.quickLayerPrev.GlyphType = GlyphType.ArrowDown;
+			this.quickLayerPrev.GlyphShape = GlyphShape.ArrowDown;
 			this.quickLayerPrev.Clicked += new MessageEventHandler(this.HandleQuickLayerPrev);
 			this.quickLayerPrev.Parent = this.leftPane;
 

@@ -392,6 +392,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "SmartTag.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "StaticImage.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
