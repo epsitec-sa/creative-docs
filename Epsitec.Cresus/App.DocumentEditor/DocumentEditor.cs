@@ -57,17 +57,19 @@ namespace Epsitec.App.DocumentEditor
 
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive(this.globalSettings.Adorner);
 
-			this.dlgAbout    = new Dialogs.About(this);
-			this.dlgExport   = new Dialogs.Export(this);
-			this.dlgInfos    = new Dialogs.Infos(this);
-			this.dlgKey      = new Dialogs.Key(this);
-			this.dlgPrint    = new Dialogs.Print(this);
-			this.dlgSettings = new Dialogs.Settings(this);
-			this.dlgSplash   = new Dialogs.Splash(this);
-			this.dlgUpdate   = new Dialogs.Update(this);
+			this.dlgAbout     = new Dialogs.About(this);
+			this.dlgExport    = new Dialogs.Export(this);
+			this.dlgInfos     = new Dialogs.Infos(this);
+			this.dlgKey       = new Dialogs.Key(this);
+			this.dlgPageStack = new Dialogs.PageStack(this);
+			this.dlgPrint     = new Dialogs.Print(this);
+			this.dlgSettings  = new Dialogs.Settings(this);
+			this.dlgSplash    = new Dialogs.Splash(this);
+			this.dlgUpdate    = new Dialogs.Update(this);
 
-			this.dlgInfos.Closed    += new EventHandler(this.HandleDlgClosed);
-			this.dlgSettings.Closed += new EventHandler(this.HandleDlgClosed);
+			this.dlgInfos.Closed     += new EventHandler(this.HandleDlgClosed);
+			this.dlgPageStack.Closed += new EventHandler(this.HandleDlgClosed);
+			this.dlgSettings.Closed  += new EventHandler(this.HandleDlgClosed);
 
 			if ( this.type != DocumentType.Pictogram &&
 				 this.globalSettings.SplashScreen )
@@ -455,6 +457,7 @@ namespace Epsitec.App.DocumentEditor
 			docMenu.Host = this;
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Settings.icon", "Settings", "Réglages...", "F5");
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Infos.icon", "Infos", "Informations...", "");
+			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.PageStack.icon", "PageStack", "Structure de la page...", "");
 			this.MenuAdd(docMenu, "", "", "", "");
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.PageNew.icon", "PageNew", "Nouvelle page", "");
 			this.MenuAdd(docMenu, "manifest:Epsitec.App.DocumentEditor.Images.Up.icon", "PageUp", "Reculer la page", "");
@@ -984,6 +987,11 @@ namespace Epsitec.App.DocumentEditor
 				this.infosState.ActiveState = WidgetState.ActiveNo;
 			}
 
+			if ( sender == this.dlgPageStack )
+			{
+				this.pageStackState.ActiveState = WidgetState.ActiveNo;
+			}
+
 			if ( sender == this.dlgSettings )
 			{
 				this.settingsState.ActiveState = WidgetState.ActiveNo;
@@ -1270,8 +1278,7 @@ namespace Epsitec.App.DocumentEditor
 		// Retourne false si le fichier n'a pas été ouvert.
 		public bool Open(string filename)
 		{
-			this.MouseCursor = MouseCursor.AsWait;
-			this.Window.MouseCursor = this.MouseCursor;
+			this.MouseShowWait();
 
 			string err = "";
 			if ( Misc.IsExtension(filename, ".crcolors") )
@@ -1294,6 +1301,7 @@ namespace Epsitec.App.DocumentEditor
 						this.globalSettings.LastFilenameAdd(filename);
 						this.BuildLastFilenamesMenu();
 						this.UseDocument(i);
+						this.MouseHideWait();
 						return true;
 					}
 				}
@@ -1312,6 +1320,7 @@ namespace Epsitec.App.DocumentEditor
 					this.DialogWarnings(this.commandDispatcher, this.CurrentDocument.ReadWarnings);
 				}
 			}
+			//?this.MouseHideWait();
 			this.DialogError(this.commandDispatcher, err);
 			return (err == "");
 		}
@@ -1355,9 +1364,7 @@ namespace Epsitec.App.DocumentEditor
 				filename = this.CurrentDocument.Filename;
 			}
 
-			this.MouseCursor = MouseCursor.AsWait;
-			this.Window.MouseCursor = this.MouseCursor;
-
+			this.MouseShowWait();
 			string err = this.CurrentDocument.Write(filename);
 			if ( err == "" )
 			{
@@ -1365,6 +1372,7 @@ namespace Epsitec.App.DocumentEditor
 				this.globalSettings.LastFilenameAdd(filename);
 				this.BuildLastFilenamesMenu();
 			}
+			this.MouseHideWait();
 			this.DialogError(dispatcher, err);
 			return (err == "");
 		}
@@ -1390,9 +1398,7 @@ namespace Epsitec.App.DocumentEditor
 			filename = dialog.FileName;
 			filename = DocumentEditor.AdjustFilename(filename);
 
-			this.MouseCursor = MouseCursor.AsWait;
-			this.Window.MouseCursor = this.MouseCursor;
-
+			this.MouseShowWait();
 			string err = this.CurrentDocument.Write(filename);
 			if ( err == "" )
 			{
@@ -1400,6 +1406,7 @@ namespace Epsitec.App.DocumentEditor
 				this.globalSettings.LastFilenameAdd(filename);
 				this.BuildLastFilenamesMenu();
 			}
+			this.MouseHideWait();
 			this.DialogError(dispatcher, err);
 			return (err == "");
 		}
@@ -2186,6 +2193,23 @@ namespace Epsitec.App.DocumentEditor
 			}
 		}
 
+		[Command ("PageStack")]
+		void CommandPageStack(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.dlgSplash.Hide();
+
+			if ( this.pageStackState.ActiveState == WidgetState.ActiveNo )
+			{
+				this.dlgPageStack.Show();
+				this.pageStackState.ActiveState = WidgetState.ActiveYes;
+			}
+			else
+			{
+				this.dlgPageStack.Hide();
+				this.pageStackState.ActiveState = WidgetState.ActiveNo;
+			}
+		}
+
 		[Command ("KeyApplication")]
 		void CommandKeyApplication(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -2557,11 +2581,11 @@ namespace Epsitec.App.DocumentEditor
 				string name = "";
 				if ( layer.Name == "" )
 				{
-					name = string.Format("{0}: {1}", ((char)('A'+ii)).ToString(), Objects.Layer.LayerPositionName(ii, total));
+					name = string.Format("{0}: {1}", Objects.Layer.ShortName(ii), Objects.Layer.LayerPositionName(ii, total));
 				}
 				else
 				{
-					name = string.Format("{0}: {1}", ((char)('A'+ii)).ToString(), layer.Name);
+					name = string.Format("{0}: {1}", Objects.Layer.ShortName(ii), layer.Name);
 				}
 
 				string icon = "manifest:Epsitec.App.DocumentEditor.Images.ActiveNo.icon";
@@ -2702,6 +2726,7 @@ namespace Epsitec.App.DocumentEditor
 			this.settingsState = new CommandState("Settings", this.commandDispatcher, KeyCode.FuncF5);
 			this.infosState = new CommandState("Infos", this.commandDispatcher);
 			this.aboutState = new CommandState("AboutApplication", this.commandDispatcher);
+			this.pageStackState = new CommandState("PageStack", this.commandDispatcher);
 			this.updateState = new CommandState("UpdateApplication", this.commandDispatcher);
 			this.keyState = new CommandState("KeyApplication", this.commandDispatcher);
 
@@ -2761,6 +2786,7 @@ namespace Epsitec.App.DocumentEditor
 				this.printState.Enabled = true;
 				this.exportState.Enabled = true;
 				this.infosState.Enabled = true;
+				this.pageStackState.Enabled = true;
 
 				this.CurrentDocument.Dialogs.UpdateInfos();
 				this.UpdateBookDocuments();
@@ -2770,6 +2796,7 @@ namespace Epsitec.App.DocumentEditor
 				this.printState.Enabled = false;
 				this.exportState.Enabled = false;
 				this.infosState.Enabled = false;
+				this.pageStackState.Enabled = false;
 			}
 
 			this.BuildLastFilenamesMenu();
@@ -3137,6 +3164,7 @@ namespace Epsitec.App.DocumentEditor
 				Objects.Page page = this.CurrentDocument.GetObjects[cp] as Objects.Page;
 				this.CurrentDocumentInfo.quickPageMenu.Text = page.ShortName;
 
+				this.dlgPageStack.Update();
 				this.dlgPrint.UpdatePages();
 				this.HandleModifChanged();
 			}
@@ -3150,6 +3178,8 @@ namespace Epsitec.App.DocumentEditor
 				this.pageUpState.Enabled = false;
 				this.pageDownState.Enabled = false;
 				this.pageDeleteState.Enabled = false;
+
+				this.dlgPageStack.Update();
 			}
 		}
 
@@ -3178,7 +3208,8 @@ namespace Epsitec.App.DocumentEditor
 				this.layerDownState.Enabled = (cl > 0 && !isCreating );
 				this.layerDeleteState.Enabled = (tl > 1 && !isCreating );
 
-				this.CurrentDocumentInfo.quickLayerMenu.Text = ((char)('A'+cl)).ToString();
+				this.CurrentDocumentInfo.quickLayerMenu.Text = Objects.Layer.ShortName(cl);
+				this.dlgPageStack.Update();
 				this.HandleModifChanged();
 			}
 			else
@@ -3566,7 +3597,7 @@ namespace Epsitec.App.DocumentEditor
 						if ( sp == "" )  sp = page.ShortName;
 
 						string sl = layer.Name;
-						if ( sl == "" )  sl = ((char)('A'+cl)).ToString();
+						if ( sl == "" )  sl = Objects.Layer.ShortName(cl);
 
 						return string.Format("Page: {0}  Calque: {1}", sp, sl);
 					}
@@ -3592,6 +3623,26 @@ namespace Epsitec.App.DocumentEditor
 					return string.Format("Zoom {0}%", (zoom*100).ToString("F0"));
 				}
 			}
+		}
+
+
+		// Met le sablier.
+		protected void MouseShowWait()
+		{
+			if ( this.MouseCursor != MouseCursor.AsWait )
+			{
+				this.lastMouseCursor = this.MouseCursor;
+			}
+
+			this.MouseCursor = MouseCursor.AsWait;
+			this.Window.MouseCursor = this.MouseCursor;
+		}
+
+		// Enlève le sablier.
+		protected void MouseHideWait()
+		{
+			this.MouseCursor = this.lastMouseCursor;
+			this.Window.MouseCursor = this.MouseCursor;
 		}
 
 
@@ -3851,6 +3902,7 @@ namespace Epsitec.App.DocumentEditor
 			this.dlgExport.Save();
 			this.dlgInfos.Save();
 			this.dlgKey.Save();
+			this.dlgPageStack.Save();
 			this.dlgPrint.Save();
 			this.dlgSettings.Save();
 			this.dlgUpdate.Save();
@@ -3908,6 +3960,7 @@ namespace Epsitec.App.DocumentEditor
 		protected System.Collections.ArrayList	documents;
 		protected GlobalSettings				globalSettings;
 		protected bool							askKey = false;
+		protected MouseCursor					lastMouseCursor = MouseCursor.AsArrow;
 
 		protected CommandDispatcher				commandDispatcher;
 
@@ -3925,6 +3978,7 @@ namespace Epsitec.App.DocumentEditor
 		protected Dialogs.Export				dlgExport;
 		protected Dialogs.Infos					dlgInfos;
 		protected Dialogs.Key					dlgKey;
+		protected Dialogs.PageStack				dlgPageStack;
 		protected Dialogs.Print					dlgPrint;
 		protected Dialogs.Settings				dlgSettings;
 		protected Dialogs.Splash				dlgSplash;
@@ -4043,6 +4097,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					settingsState;
 		protected CommandState					infosState;
 		protected CommandState					aboutState;
+		protected CommandState					pageStackState;
 		protected CommandState					updateState;
 		protected CommandState					keyState;
 		protected CommandState					moveLeftNormState;

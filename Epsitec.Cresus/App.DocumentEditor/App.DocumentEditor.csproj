@@ -198,6 +198,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Dialogs\PageStack.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Dialogs\Print.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -707,6 +712,10 @@
                 />
                 <File
                     RelPath = "Images\PageNew.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\PageStack.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

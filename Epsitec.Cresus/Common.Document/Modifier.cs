@@ -3400,6 +3400,84 @@ namespace Epsitec.Common.Document
 		}
 		#endregion
 
+		#region PageStack
+		public class PageStackInfos
+		{
+			public Objects.Page		Page;
+			public Objects.Layer	Layer;
+			public string			LayerShortName;
+			public string			LayerAutoName;
+			public bool				Master;
+		}
+
+		// Retourne les informations qui résument la structure d'une page.
+		public System.Collections.ArrayList GetPageStackInfos(int pageNumber)
+		{
+			System.Collections.ArrayList infos = new System.Collections.ArrayList();
+
+			System.Collections.ArrayList masterList = new System.Collections.ArrayList();
+			this.document.Modifier.ComputeMasterPageList(masterList, pageNumber);
+
+			// Mets d'abord les premiers calques de toutes les pages maîtres.
+			foreach ( Objects.Page master in masterList )
+			{
+				int frontier = master.MasterFirstFrontLayer;
+				for ( int i=0 ; i<frontier ; i++ )
+				{
+					Objects.Layer layer = master.Objects[i] as Objects.Layer;
+					if ( layer.Print == Objects.LayerPrint.Hide )  continue;
+
+					PageStackInfos info = new PageStackInfos();
+					info.Page = master;
+					info.Layer = layer;
+					info.LayerShortName = Objects.Layer.ShortName(i);
+					info.LayerAutoName = Objects.Layer.LayerPositionName(i, master.Objects.Count);
+					info.Master = true;
+					infos.Add(info);
+				}
+			}
+
+			// Mets ensuite tous les calques de la page.
+			Objects.Page page = this.document.GetObjects[pageNumber] as Objects.Page;
+			int rl = 0;
+			foreach ( Objects.Layer layer in this.document.Flat(page) )
+			{
+				if ( layer.Print == Objects.LayerPrint.Hide )  continue;
+
+				PageStackInfos info = new PageStackInfos();
+				info.Page = page;
+				info.Layer = layer;
+				info.LayerShortName = Objects.Layer.ShortName(rl);
+				info.LayerAutoName = Objects.Layer.LayerPositionName(rl, page.Objects.Count);
+				info.Master = false;
+				infos.Add(info);
+				rl ++;
+			}
+
+			// Mets finalement les derniers calques de toutes les pages maîtres.
+			foreach ( Objects.Page master in masterList )
+			{
+				int frontier = master.MasterFirstFrontLayer;
+				int total = master.Objects.Count;
+				for ( int i=frontier ; i<total ; i++ )
+				{
+					Objects.Layer layer = master.Objects[i] as Objects.Layer;
+					if ( layer.Print == Objects.LayerPrint.Hide )  continue;
+
+					PageStackInfos info = new PageStackInfos();
+					info.Page = master;
+					info.Layer = layer;
+					info.LayerShortName = Objects.Layer.ShortName(i);
+					info.LayerAutoName = Objects.Layer.LayerPositionName(i, master.Objects.Count);
+					info.Master = true;
+					infos.Add(info);
+				}
+			}
+
+			return infos;
+		}
+		#endregion
+
 
 		#region Layer
 		// Commence un changement de calque.

@@ -1243,29 +1243,17 @@ namespace Epsitec.Common.Document
 			Common.Dialogs.Print dialog = this.document.PrintDialog;
 			Settings.PrintInfo pi = this.document.Settings.PrintInfo;
 			
-			dialog.Owner = button.Window;
-			dialog.AllowFromPageToPage = false;
-			dialog.AllowSelectedPages  = false;
-			
 			if ( dialog.Document.PrinterSettings.PrinterName != pi.PrintName )
 			{
 				dialog.Document.SelectPrinter(pi.PrintName);
 			}
 			
-			dialog.Document.PrinterSettings.Copies = pi.Copies;
-			dialog.Document.PrinterSettings.Collate = pi.Collate;
-			dialog.Document.PrinterSettings.PrintToFile = pi.PrintToFile;
-			//?dialog.Document.PrinterSettings.OutputFileName = pi.PrintFilename;
-
+			dialog.Owner = button.Window;
 			dialog.OpenDialog();
 
 			if ( dialog.Result == Common.Dialogs.DialogResult.Accept )
 			{
 				pi.PrintName = dialog.Document.PrinterSettings.PrinterName;
-				pi.Copies = dialog.Document.PrinterSettings.Copies;
-				pi.Collate = dialog.Document.PrinterSettings.Collate;
-				pi.PrintToFile = dialog.Document.PrinterSettings.PrintToFile;
-				//?pi.PrintFilename = dialog.Document.PrinterSettings.OutputFileName;
 				this.UpdatePrint(false);
 			}
 		}
@@ -1492,7 +1480,9 @@ namespace Epsitec.Common.Document
 
 			value = System.Math.Max(value, sRange.Min);
 			value = System.Math.Min(value, sRange.Max);
+			this.ignoreChanged = true;
 			field.InternalValue = (decimal) value;
+			this.ignoreChanged = false;
 		}
 		#endregion
 

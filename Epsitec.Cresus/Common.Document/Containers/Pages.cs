@@ -60,6 +60,13 @@ namespace Epsitec.Common.Document.Containers
 			this.table.DefHeight = 16;
 
 			// --- Début panelMisc
+			this.buttonPageStack = new Button(this);
+			this.buttonPageStack.Dock = DockStyle.Bottom;
+			this.buttonPageStack.DockMargins = new Margins(0, 0, 0, 0);
+			this.buttonPageStack.Command = "PageStack";
+			this.buttonPageStack.Text = "Structure de la page...";
+
+			
 			this.panelMisc = new Widget(this);
 			this.panelMisc.Dock = DockStyle.Bottom;
 			this.panelMisc.DockMargins = new Margins(0, 0, 5, 0);
@@ -370,6 +377,7 @@ namespace Epsitec.Common.Document.Containers
 			this.extendedButton.GlyphShape = this.isExtended ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
 
 			this.panelMisc.SetVisible(this.isExtended);
+			this.buttonPageStack.SetVisible(this.isExtended);
 		}
 
 		// Un bouton radio a été cliqué.
@@ -383,12 +391,10 @@ namespace Epsitec.Common.Document.Containers
 			if ( sender == this.radioSlave )
 			{
 				page.MasterType = Objects.MasterType.Slave;
-				this.document.Notifier.NotifyPagesChanged();
 			}
 			if ( sender == this.radioMaster )
 			{
 				page.MasterType = Objects.MasterType.All;
-				this.document.Notifier.NotifyPagesChanged();
 			}
 
 			if ( sender == this.radioAll )
@@ -422,6 +428,7 @@ namespace Epsitec.Common.Document.Containers
 			}
 
 			this.UpdatePanel();
+			this.document.Notifier.NotifyPagesChanged();
 			this.document.Modifier.OpletQueueValidateAction();
 		}
 
@@ -436,22 +443,20 @@ namespace Epsitec.Common.Document.Containers
 			if ( sender == this.checkGuides )
 			{
 				page.MasterGuides = !page.MasterGuides;
-				this.document.Notifier.NotifyPagesChanged();
 			}
 
 			if ( sender == this.checkAutoStop )
 			{
 				page.MasterAutoStop = !page.MasterAutoStop;
-				this.document.Notifier.NotifyPagesChanged();
 			}
 
 			if ( sender == this.checkSpecific )
 			{
 				page.MasterSpecific = !page.MasterSpecific;
-				this.document.Notifier.NotifyPagesChanged();
 			}
 
 			this.UpdatePanel();
+			this.document.Notifier.NotifyPagesChanged();
 			this.document.Modifier.OpletQueueValidateAction();
 		}
 
@@ -492,6 +497,7 @@ namespace Epsitec.Common.Document.Containers
 					this.document.Modifier.OpletQueueBeginAction();
 					Objects.Page currentPage = context.RootObject(1) as Objects.Page;
 					currentPage.MasterPageToUse = page;
+					this.document.Notifier.NotifyPagesChanged();
 					this.document.Modifier.OpletQueueValidateAction();
 					return;
 				}
@@ -532,6 +538,8 @@ namespace Epsitec.Common.Document.Containers
 		protected RadioButton			radioSpecific;
 		protected CheckButton			checkGuides;
 		protected TextFieldCombo		specificSlavePage;
+
+		protected Button				buttonPageStack;
 
 		protected bool					isExtended = false;
 		protected bool					ignoreChanged = false;

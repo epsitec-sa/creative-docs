@@ -207,15 +207,13 @@ namespace Epsitec.Common.Document
 						{
 							page %= totalPages;
 						}
-						else
+						else	// 1,1 - 2,2 - 3,3 - 4,4 ?
 						{
 							if ( dp.Document.PrinterSettings.Duplex != DuplexMode.Simplex )  // 1,2 - 1,2 - 3,4 - 3,4 ?
 							{
-								if      ( (page&0x3) == 0x1 )  page = (page&~0x3)|0x2;
-								else if ( (page&0x3) == 0x2 )  page = (page&~0x3)|0x1;
-								page /= copies;
+								page = (page/(copies*2)*2)|(page&0x1);
 							}
-							else	// 1,1 - 2,2 - 3,3 - 4,4 ?
+							else
 							{
 								page /= copies;
 							}

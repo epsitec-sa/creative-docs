@@ -118,6 +118,12 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Retourne le nom court d'un calque en fonction de son rang.
+		public static string ShortName(int rank)
+		{
+			return ((char)('A'+rank)).ToString();
+		}
+
 		
 		#region OpletType
 		// Ajoute un oplet pour mémoriser le type du calque.

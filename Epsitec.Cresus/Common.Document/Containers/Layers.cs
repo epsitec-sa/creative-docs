@@ -269,7 +269,7 @@ namespace Epsitec.Common.Document.Containers
 
 			st = this.table[0, row].Children[0] as StaticText;
 			int n = context.TotalLayers()-row-1;
-			st.Text = ((char)('A'+n)).ToString();
+			st.Text = Objects.Layer.ShortName(n);
 
 			st = this.table[1, row].Children[0] as StaticText;
 			st.Text = Objects.Layer.LayerPositionName(n, context.TotalLayers());

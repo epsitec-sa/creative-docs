@@ -1678,7 +1678,7 @@ namespace Epsitec.Common.Document
 		protected double						closeMargin = 10;
 		protected double						guideMargin = 8;
 		protected double						hiliteSize = 4;
-		protected double						handleSize = 10;
+		protected double						handleSize = 8;
 		protected bool							isShift = false;
 		protected bool							isCtrl = false;
 		protected bool							isAlt = false;

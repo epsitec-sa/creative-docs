@@ -230,11 +230,24 @@ namespace Epsitec.Common.Document.Objects
 			double scaleY     = context.ScaleY;
 			double handleSize = context.HandleSize;
 
+			if ( this.type == HandleType.Secondary ||
+				 this.type == HandleType.Bezier    )
+			{
+				handleSize -= 4.0/scaleX;
+			}
+
+			if ( this.type == HandleType.Property )
+			{
+				handleSize -= 2.0/scaleX;
+			}
+
+			handleSize += 1.0/scaleX;
+
 			Drawing.Rectangle rect = new Drawing.Rectangle();
-			rect.Left   = this.position.X - handleSize/2 - 3.0/scaleX;
-			rect.Right  = this.position.X + handleSize/2 + 1.0/scaleX;
-			rect.Bottom = this.position.Y - handleSize/2 - 3.0/scaleY;
-			rect.Top    = this.position.Y + handleSize/2 + 1.0/scaleY;
+			rect.Left   = this.position.X - handleSize/2.0;
+			rect.Right  = this.position.X + handleSize/2.0;
+			rect.Bottom = this.position.Y - handleSize/2.0;
+			rect.Top    = this.position.Y + handleSize/2.0;
 			return rect.Contains(pos);
 		}
 
@@ -377,7 +390,7 @@ namespace Epsitec.Common.Document.Objects
 
 				if ( this.type == HandleType.Property )
 				{
-					rect.Deflate(2.0/scaleX, 2.0/scaleY);
+					rect.Deflate(1.0/scaleX, 1.0/scaleY);
 					graphics.AddFilledRectangle(rect);
 					graphics.RenderSolid(this.Adapt(color, context));
 
