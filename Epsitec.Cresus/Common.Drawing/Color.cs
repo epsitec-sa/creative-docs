@@ -180,6 +180,13 @@ namespace Epsitec.Common.Drawing
 			return new Color(r, g, b);
 		}
 
+		public static Color FromAHSV(double a, double h, double s, double v)
+		{
+			Color color = Color.FromHSV (h, s, v);
+			color.A = a;
+			return color;
+		}
+		
 		public static Color FromName(string name)
 		{
 			if ((name.Length > 1) &&
@@ -221,7 +228,6 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		
 		
 		public override bool Equals(object obj)
 		{
