@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier/PA
 
 namespace Epsitec.Common.Support.Implementation
@@ -59,27 +59,32 @@ namespace Epsitec.Common.Support.Implementation
 				
 				buffer.Append (this.path_prefix);
 				buffer.Append (id);
+				buffer.Append (this.GetLevelSuffix (level));
 				
 				switch (level)
 				{
 					case ResourceLevel.Default:
-						break;
-					
 					case ResourceLevel.Localised:
-						buffer.Append (this.suffix);
-						break;
-					
 					case ResourceLevel.Customised:
-						buffer.Append (this.custom);
 						break;
 					
 					default:
 						throw new ResourceException (string.Format ("Invalid resource level {0} for resource '{1}'.", level, id));
 				}
 				
-				buffer.Append (".resource");
-				
 				return buffer.ToString ();
+			}
+			
+			return null;
+		}
+		
+		protected string GetLevelSuffix(ResourceLevel level)
+		{
+			switch (level)
+			{
+				case ResourceLevel.Default:		return this.file_default;
+				case ResourceLevel.Localised:	return this.file_local;
+				case ResourceLevel.Customised:	return this.file_custom;
 			}
 			
 			return null;
@@ -96,6 +101,14 @@ namespace Epsitec.Common.Support.Implementation
 		{
 		}
 
+		public override void SelectLocale(System.Globalization.CultureInfo culture)
+		{
+			base.SelectLocale (culture);
+			
+			this.file_default = "." + this.default_suffix + ".resource";
+			this.file_local   = "." + this.local_suffix   + ".resource";
+			this.file_custom  = "." + this.custom_suffix  + ".resource";
+		}
 		
 		public override bool ValidateId(string id)
 		{
@@ -142,6 +155,27 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
+		public override string[] GetIds(string filter, ResourceLevel level)
+		{
+			filter = "*";
+			
+			string path   = this.path_prefix;
+			string search = filter + this.GetLevelSuffix (level);
+			
+			string[] files = System.IO.Directory.GetFiles (path, search);
+			
+			int start = path.Length;
+			int strip = search.Length - filter.Length + start;
+			
+			for (int i = 0; i < files.Length; i++)
+			{
+				files[i] = files[i].Substring (start, files[i].Length - strip);
+			}
+			
+			return files;
+		}
+
+		
 		public override void Create(string id, Epsitec.Common.Support.ResourceLevel level)
 		{
 			// TODO:  Add FileProvider.Create implementation
@@ -163,5 +197,9 @@ namespace Epsitec.Common.Support.Implementation
 		
 		protected string				path_prefix;
 		protected Regex					id_regex;
+		
+		protected string				file_default;
+		protected string				file_local;
+		protected string				file_custom;
 	}
 }

@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier/PA
 
 namespace Epsitec.Common.Support.Implementation
@@ -86,9 +86,11 @@ namespace Epsitec.Common.Support.Implementation
 		
 		public override void SelectLocale(System.Globalization.CultureInfo culture)
 		{
-			this.table_default = "Data";
-			this.table_local   = this.table_default + this.suffix;
-			this.table_custom  = this.table_default + this.custom;
+			base.SelectLocale (culture);
+			
+			this.table_default = "Data_" + this.default_suffix;
+			this.table_local   = "Data_" + this.local_suffix;
+			this.table_custom  = "Data_" + this.custom_suffix;
 		}
 		
 		
@@ -126,6 +128,14 @@ namespace Epsitec.Common.Support.Implementation
 			throw new System.NotImplementedException ("GetData not implemented.");
 		}
 		
+		
+		public override string[] GetIds(string filter, ResourceLevel level)
+		{
+			//	TODO: retourne la liste de tous les <id> de ressources connus.
+			
+			return null;
+		}
+
 		
 		public override void Create(string id, Epsitec.Common.Support.ResourceLevel level)
 		{

@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier/PA
 
 namespace Epsitec.Common.Support.Implementation
@@ -23,8 +23,10 @@ namespace Epsitec.Common.Support.Implementation
 		public virtual void SelectLocale(System.Globalization.CultureInfo culture)
 		{
 			this.culture = culture;
-			this.suffix  = "." + this.culture.TwoLetterISOLanguageName;
-			this.custom  = "." + Resources.CustomisedSuffix;
+			
+			this.default_suffix = Resources.DefaultSuffix;
+			this.local_suffix   = this.culture.TwoLetterISOLanguageName;
+			this.custom_suffix  = Resources.CustomisedSuffix;
 		}
 		
 		
@@ -36,6 +38,7 @@ namespace Epsitec.Common.Support.Implementation
 		public abstract bool Contains(string id);
 		
 		public abstract byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level);
+		public abstract string[] GetIds(string filter, ResourceLevel level);
 		
 		public abstract void Create(string id, Epsitec.Common.Support.ResourceLevel level);
 		public abstract void Update(string id, Epsitec.Common.Support.ResourceLevel level, byte[] data);
@@ -44,7 +47,9 @@ namespace Epsitec.Common.Support.Implementation
 		
 		
 		protected CultureInfo			culture;
-		protected string				suffix;
-		protected string				custom;
+		
+		protected string				default_suffix;
+		protected string				local_suffix;
+		protected string				custom_suffix;
 	}
 }
