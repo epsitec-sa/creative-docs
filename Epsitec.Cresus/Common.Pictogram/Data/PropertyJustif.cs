@@ -38,7 +38,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public PropertyJustif()
 		{
 			this.horizontal  = JustifHorizontal.Left;
-			this.vertical    = JustifVertical.Center;
+			this.vertical    = JustifVertical.Top;
 			this.orientation = JustifOrientation.LeftToRight;
 			this.marginH     = 0.2;
 			this.marginV     = 0.1;
