@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 			this.db.Title = "Adresses";
 			this.CreateFields();
 			this.CreateRecords();
-			this.SetSort(1, 1);
+			this.SetSort(1, SortMode.Down);
 
 			this.CreateLayout();
 
@@ -675,17 +675,17 @@ namespace Epsitec.Common.Widgets
 		// Initialise la table.
 		protected void InitTable()
 		{
-			this.table.FuncFillText = new Epsitec.Common.Widgets.ScrollArray.FillText(this.FillText);
-			this.table.Columns = this.db.TotalField;
+			this.table.TextProviderCallback = new TextProviderCallback(this.FillText);
+			this.table.ColumnCount = this.db.TotalField;
 
-			for ( int x=0 ; x<this.table.Columns ; x++ )
+			for ( int x=0 ; x<this.table.ColumnCount ; x++ )
 			{
 				int fieldID = this.db.RetFieldID(x);
 				TinyDataBase.FieldDesc fd = this.db.RetFieldDesc(fieldID);
 
 				this.table.SetHeaderText(x, fd.name);
-				this.table.SetWidthColumn(x, fd.width);
-				this.table.SetAlignmentColumn(x, fd.alignment);
+				this.table.SetColumnWidth(x, fd.width);
+				this.table.SetColumnAlignment(x, fd.alignment);
 			}
 		}
 
@@ -701,13 +701,14 @@ namespace Epsitec.Common.Widgets
 		// Met à jour le contenu de la table.
 		protected void UpdateTable()
 		{
-			this.table.Reset();
-			this.table.Rows = this.db.TotalRecord;
+			this.table.Clear();
+			this.table.RowCount = this.db.TotalRecord;
 
-			int field, mode;
+			int field;
+			SortMode mode;
 			this.db.GetSortField(0, out field, out mode);
 			TinyDataBase.FieldDesc fd = this.db.RetFieldDesc(field);
-			this.table.SetHeaderSort(fd.rank, mode);
+			this.table.SetSortingHeader(fd.rank, mode);
 
 			this.table.SelectedIndex = this.recordRank;
 			this.table.ShowSelect(ScrollArrayShow.Extremity);
@@ -729,7 +730,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Choix du mode de tri.
-		protected void SetSort(int field, int mode)
+		protected void SetSort(int field, SortMode mode)
 		{
 			for ( int i=0 ; i<10 ; i++ )
 			{
@@ -756,8 +757,9 @@ namespace Epsitec.Common.Widgets
 		// Changement de tri dans la liste.
 		private void table_SortChanged(object sender)
 		{
-			int column, mode;
-			this.table.GetHeaderSort(out column, out mode);
+			int column;
+			SortMode mode;
+			this.table.GetSortingHeader(out column, out mode);
 			int fieldID = this.db.RetFieldID(column);
 			int sel = this.db.SortToInternal(this.recordRank);
 			this.SetSort(fieldID, mode);
@@ -999,8 +1001,8 @@ namespace Epsitec.Common.Widgets
 
 			Assertion.Assert(mydb.TotalRecord == 3);
 
-			mydb.SetSortField(0, 0, 1);  // tri par noms
-			mydb.SetSortField(1, 1, 1);  // puis par prénoms
+			mydb.SetSortField(0, 0, SortMode.Down);  // tri par noms
+			mydb.SetSortField(1, 1, SortMode.Down);  // puis par prénoms
 
 			// Dumoulin, Roux, Walz
 			TinyDataBase.Record r1;
@@ -1033,8 +1035,8 @@ namespace Epsitec.Common.Widgets
 			mydb.SetFieldInRecord(record, 1, "Pierre");
 			rank = mydb.CreateRecord(record);
 
-			mydb.SetSortField(0, 1, 1);  // tri par prénoms
-			mydb.SetSortField(1, 0, 1);  // puis par noms
+			mydb.SetSortField(0, 1, SortMode.Down);  // tri par prénoms
+			mydb.SetSortField(1, 0, SortMode.Down);  // puis par noms
 
 			// Roux, Arnaud, Raboud
 			r1 = mydb.RetRecord(0);

@@ -1063,23 +1063,19 @@ namespace Epsitec.Common.Widgets
 			ScrollArray table = new ScrollArray();
 			table.Location = new Point(10, 20);
 			table.Size = new Size(380, 200);
-			table.Columns = 5;
-			for ( int x=0 ; x<table.Columns ; x++ )
+			table.ColumnCount = 5;
+			for ( int x=0 ; x<table.ColumnCount ; x++ )
 			{
 				string s = "C"+(x+1);
 				table.SetHeaderText(x, s);
-				table.SetWidthColumn(x, 80);
+				table.SetColumnWidth(x, 80);
 				//table.SetAlignmentColumn(x, ContentAlignment.MiddleCenter);
 			}
 			for ( int y=0 ; y<100 ; y++ )
 			{
-				for ( int x=0 ; x<table.Columns ; x++ )
+				for ( int x=0 ; x<table.ColumnCount ; x++ )
 				{
-					string s = "Val ";
-					s += y+1;
-					s += ".";
-					s += x+1;
-					table.SetText(y, x, s);
+					table[y, x] = string.Format ("Val {0}.{1}", y+1, x+1);
 				}
 			}
 			//table.AdjustHeight(Widgets.ScrollArrayAdjust.MoveDown);
