@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -1515,13 +1515,37 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		internal void RefreshGraphics(Drawing.Graphics graphics, Drawing.Rectangle repaint)
+		internal void RefreshGraphics(Drawing.Graphics graphics, Drawing.Rectangle repaint, Drawing.Rectangle[] strips)
 		{
-			graphics.Transform = new Drawing.Transform ();
-			graphics.ResetClippingRectangle ();
-			graphics.SetClippingRectangle (repaint);
+			if (strips.Length > 1)
+			{
+				//	On doit repeindre toute une série de rectangles :
 				
-			this.Root.PaintHandler (graphics, repaint, this.paint_filter);
+				for (int i = 0; i < strips.Length; i++)
+				{
+					graphics.Transform = new Drawing.Transform ();
+					graphics.ResetClippingRectangle ();
+					graphics.SetClippingRectangle (strips[i]);
+					
+//-					System.Diagnostics.Debug.WriteLine (string.Format ("Strip {0} : {1}", i, strips[i].ToString ()));
+					
+					this.Root.PaintHandler (graphics, strips[i], this.paint_filter);
+				}
+				
+//-				System.Diagnostics.Debug.WriteLine ("Done");
+				
+				graphics.Transform = new Drawing.Transform ();
+				graphics.ResetClippingRectangle ();
+				graphics.SetClippingRectangle (repaint);
+			}
+			else
+			{
+				graphics.Transform = new Drawing.Transform ();
+				graphics.ResetClippingRectangle ();
+				graphics.SetClippingRectangle (repaint);
+				
+				this.Root.PaintHandler (graphics, repaint, this.paint_filter);
+			}
 			
 			while (this.post_paint_queue.Count > 0)
 			{

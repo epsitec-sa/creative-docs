@@ -149,6 +149,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DirtyRegion.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Font.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -230,11 +235,6 @@
                 />
                 <File
                     RelPath = "Segment.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "SimpleRegion.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -4,16 +4,23 @@
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
-	/// La classe SimpleRegion permet de représenter une région simple qui
+	/// La classe DirtyRegion permet de représenter une région simple qui
 	/// consiste en un petit nombre de rectangles.
 	/// </summary>
-	public class SimpleRegion
+	public class DirtyRegion
 	{
-		public SimpleRegion()
+		public DirtyRegion() : this (DirtyRegion.DefaultCount)
 		{
-			this.rectangles = new Rectangle[SimpleRegion.DefaultCount];
+		}
+		
+		public DirtyRegion(int n)
+		{
+			System.Diagnostics.Debug.Assert (n > 1);
+			System.Diagnostics.Debug.Assert (n < 10);
 			
-			for (int i = 0; i < SimpleRegion.DefaultCount; i++)
+			this.rectangles = new Rectangle[n];
+			
+			for (int i = 0; i < n; i++)
 			{
 				this.rectangles[i] = Rectangle.Empty;
 			}
@@ -22,8 +29,37 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public Rectangle[]						Rectangles
+		{
+			get
+			{
+				Rectangle[] rects = new Rectangle[this.used];
+				
+				for (int i = 0; i < this.used; i++)
+				{
+					rects[i] = this.rectangles[i];
+				}
+				
+				return rects;
+			}
+		}
+		
+		
 		public void Add(Rectangle rectangle)
 		{
+			//	Le rectangle est-il déjà entièrement contenu dans la région ?
+			
+			for (int i = 0; i < this.used; i++)
+			{
+				if (this.rectangles[i].Contains (rectangle))
+				{
+					return;
+				}
+			}
+			
+			//	Vérifie si notre rectangle couvre complètement un des éléments
+			//	composant la région :
+			
 			int j = 0;
 			
 			for (int i = 0; i < this.used; i++)
@@ -55,7 +91,7 @@ namespace Epsitec.Common.Drawing
 				this.rectangles.CopyTo (rects, 0);
 				rects[n] = rectangle;
 				
-				this.rectangles = SimpleRegion.MergeSmallestPair (rects);
+				this.rectangles = DirtyRegion.MergeSmallestPair (rects);
 				this.used       = this.rectangles.Length;
 				
 				System.Diagnostics.Debug.Assert (this.rectangles.Length == n);
@@ -78,6 +114,11 @@ namespace Epsitec.Common.Drawing
 					this.rectangles[j++] = Rectangle.Empty;
 				}
 			}
+		}
+		
+		public Rectangle[] GenerateStrips()
+		{
+			return DirtyRegion.GenerateHorizontalStrips (this.Rectangles);
 		}
 		
 		
@@ -139,7 +180,7 @@ namespace Epsitec.Common.Drawing
 			//	surface possible, on a l'assurance qu'aucun autre rectangle n'est couvert
 			//	entièrement par leur union; on peut donc économiser ici une deuxième passe :
 			
-			result[j] = union;
+			result[j] = Rectangle.Union (rectangles[index_a], rectangles[index_b]);
 			
 			return result;
 		}
@@ -172,14 +213,14 @@ namespace Epsitec.Common.Drawing
 			//	Trie les rectangles de manière à avoir les bords gauches triés par
 			//	coordonnées croissantes :
 			
-			System.Array.Sort (rectangles, new SimpleRegion.LeftXSorter ());
+			System.Array.Sort (rectangles, new DirtyRegion.LeftXSorter ());
 			
-			Segment[] segments = new SimpleRegion.Segment[n];
-			Segment[] h_segs   = new SimpleRegion.Segment[n];
+			Segment[] segments = new DirtyRegion.Segment[n];
+			Segment[] h_segs   = new DirtyRegion.Segment[n];
 			
 			for (int i = 0; i < n; i++)
 			{
-				segments[i] = new SimpleRegion.Segment (rectangles[i].Left, rectangles[i].Right);
+				segments[i] = new DirtyRegion.Segment (rectangles[i].Left, rectangles[i].Right);
 				
 				System.Diagnostics.Debug.Assert ((i == 0) || (segments[i-1].Left <= segments[i].Left));
 			}
@@ -204,22 +245,22 @@ namespace Epsitec.Common.Drawing
 				
 				for (int j = 0; j < n; j++)
 				{
-					if ((rectangles[i].Top > y_bot) &&
-						(rectangles[i].Bottom < y_top))
+					if ((rectangles[j].Top > y_bot) &&
+						(rectangles[j].Bottom < y_top))
 					{
 						if (h_seg_count == 0)
 						{
-							h_segs[h_seg_count++] = segments[i];
+							h_segs[h_seg_count++] = segments[j];
 						}
 						else
 						{
-							if (SimpleRegion.Segment.Overlap (h_segs[h_seg_count-1], segments[i]))
+							if (DirtyRegion.Segment.Overlap (h_segs[h_seg_count-1], segments[j]))
 							{
-								h_segs[h_seg_count-1] = SimpleRegion.Segment.Union (h_segs[h_seg_count-1], segments[i]);
+								h_segs[h_seg_count-1] = DirtyRegion.Segment.Union (h_segs[h_seg_count-1], segments[j]);
 							}
 							else
 							{
-								h_segs[h_seg_count++] = segments[i];
+								h_segs[h_seg_count++] = segments[j];
 							}
 						}
 					}
@@ -276,7 +317,7 @@ namespace Epsitec.Common.Drawing
 			
 			public static bool Overlap(Segment a, Segment b)
 			{
-				if ((a.Right >= b.Left) ||
+				if ((a.Right >= b.Left) &&
 					(a.Left <= b.Right))
 				{
 					return true;

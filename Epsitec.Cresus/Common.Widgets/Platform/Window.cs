@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Platform
@@ -975,7 +975,9 @@ namespace Epsitec.Common.Widgets.Platform
 				this.graphics.Pixmap.Clear ();
 				
 				this.widget_window.Root.Size = new Drawing.Size (width, height);
-				this.dirty_rectangle  = new Drawing.Rectangle (0, 0, width, height);
+				this.dirty_rectangle = new Drawing.Rectangle (0, 0, width, height);
+				this.dirty_region    = new Drawing.DirtyRegion ();
+				this.dirty_region.Add (this.dirty_rectangle);
 				
 				this.UpdateLayeredWindow ();
 			}
@@ -1034,6 +1036,7 @@ namespace Epsitec.Common.Widgets.Platform
 			rect.RoundInflate ();
 			
 			this.dirty_rectangle.MergeWith (rect);
+			this.dirty_region.Add (rect);
 			
 			int top    = (int) (rect.Top);
 			int bottom = (int) (rect.Bottom);
@@ -1513,11 +1516,13 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (this.dirty_rectangle.IsValid)
 			{
-				Drawing.Rectangle repaint = this.dirty_rectangle;
+				Drawing.Rectangle   repaint = this.dirty_rectangle;
+				Drawing.Rectangle[] strips  = this.dirty_region.GenerateStrips ();
 				
 				this.dirty_rectangle = Drawing.Rectangle.Empty;
+				this.dirty_region = new Drawing.DirtyRegion ();
 				
-				this.widget_window.RefreshGraphics (this.graphics, repaint);
+				this.widget_window.RefreshGraphics (this.graphics, repaint, strips);
 				
 				return true;
 			}
@@ -1644,6 +1649,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		private Drawing.Graphics				graphics;
 		private Drawing.Rectangle				dirty_rectangle;
+		private Drawing.DirtyRegion				dirty_region;
 		private Drawing.Rectangle				window_bounds;
 		private Drawing.Point					paint_offset;
 		private System.Drawing.Rectangle		form_bounds;

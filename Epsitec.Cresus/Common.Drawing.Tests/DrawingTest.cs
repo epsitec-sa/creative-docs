@@ -3,9 +3,9 @@ using NUnit.Framework;
 namespace Epsitec.Common.Drawing
 {
 	[TestFixture]
-	public class Drawing
+	public class DrawingTest
 	{
-		public Drawing()
+		public DrawingTest()
 		{
 		}
 		
