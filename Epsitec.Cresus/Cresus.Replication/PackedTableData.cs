@@ -77,6 +77,8 @@ namespace Epsitec.Cresus.Replication
 		
 		public object[][] GetValuesArray()
 		{
+			//	Retourne un tableau de valeurs : n lignes de m colonnes.
+			
 			this.UnpackNullFlags ();
 			
 			object[][] values = new object[this.row_count][];
@@ -89,6 +91,28 @@ namespace Epsitec.Cresus.Replication
 				bool[] null_flags = this.column_null_flags[i] as bool[];
 				
 				DataCruncher.UnpackColumnFromArray (values, i, n, data, null_flags);
+			}
+			
+			return values;
+		}
+		
+		
+		public object[] GetRowValues(int row)
+		{
+			//	Retourne un tableau de valeurs : 1 ligne de m colonnes.
+			
+			this.UnpackNullFlags ();
+			
+			int n = this.column_data_rows.Count;
+			
+			object[] values = new object[n];
+			
+			for (int i = 0; i < n; i++)
+			{
+				System.Array data = this.column_data_rows[i] as System.Array;
+				bool[] null_flags = this.column_null_flags[i] as bool[];
+				
+				values[i] = DataCruncher.UnpackValueFromArray (row, data, null_flags);
 			}
 			
 			return values;

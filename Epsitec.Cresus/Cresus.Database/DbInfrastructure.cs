@@ -435,48 +435,12 @@ namespace Epsitec.Cresus.Database
 		
 		public void      RegisterNewDbTable(DbTransaction transaction, DbTable table)
 		{
-			//	Enregistre une nouvelle table dans la base de données. Ceci va attribuer à
-			//	la table une clef DbKey et vérifier qu'il n'y a pas de collision avec une
-			//	éventuelle table déjà existante. Cela va aussi attribuer des colonnes pour
-			//	la nouvelle table.
-			
-			if (transaction == null)
-			{
-				using (transaction = this.BeginTransaction ())
-				{
-					this.RegisterNewDbTable (transaction, table);
-					transaction.Commit ();
-					return;
-				}
-			}
-			
-			this.CheckForRegisteredTypes (transaction, table);
-			this.CheckForUnknownTable (transaction, table);
-			
-			long table_id  = this.NewRowIdInTable (transaction, this.internal_tables[Tags.TableTableDef] .InternalKey, 1);
-			long column_id = this.NewRowIdInTable (transaction, this.internal_tables[Tags.TableColumnDef].InternalKey, table.Columns.Count);
-			
-			//	Crée la ligne de description de la table :
-			
-			table.DefineInternalKey (new DbKey (table_id));
-			table.UpdatePrimaryKeyInfo ();
-			
-			this.InsertTableDefRow (transaction, table);
-			
-			//	Crée les lignes de description des colonnes :
-			
-			for (int i = 0; i < table.Columns.Count; i++)
-			{
-				table.Columns[i].DefineInternalKey (new DbKey (column_id + i));
-				this.InsertColumnDefRow (transaction, table, table.Columns[i]);
-			}
-			
-			//	Finalement, il faut créer la table elle-même :
-			
-			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
-			
-			transaction.SqlBuilder.InsertTable (sql_table);
-			this.ExecuteSilent (transaction);
+			this.RegisterDbTable (transaction, table, false);
+		}
+		
+		public void      RegisterKnownDbTable(DbTransaction transaction, DbTable table)
+		{
+			this.RegisterDbTable (transaction, table, true);
 		}
 		
 		public void      UnregisterDbTable(DbTransaction transaction, DbTable table)
@@ -871,6 +835,61 @@ namespace Epsitec.Cresus.Database
 			table.PrimaryKeys.Add (col_id);
 			
 			return table;
+		}
+		
+		
+		protected void RegisterDbTable(DbTransaction transaction, DbTable table, bool check_for_known)
+		{
+			//	Enregistre une nouvelle table dans la base de données. Ceci va attribuer à
+			//	la table une clef DbKey et vérifier qu'il n'y a pas de collision avec une
+			//	éventuelle table déjà existante. Cela va aussi attribuer des colonnes pour
+			//	la nouvelle table.
+			
+			if (transaction == null)
+			{
+				using (transaction = this.BeginTransaction ())
+				{
+					this.RegisterNewDbTable (transaction, table);
+					transaction.Commit ();
+					return;
+				}
+			}
+			
+			this.CheckForRegisteredTypes (transaction, table);
+			
+			if (check_for_known)
+			{
+				this.CheckForKnownTable (transaction, table);
+			}
+			else
+			{
+				this.CheckForUnknownTable (transaction, table);
+				
+				long table_id  = this.NewRowIdInTable (transaction, this.internal_tables[Tags.TableTableDef] .InternalKey, 1);
+				long column_id = this.NewRowIdInTable (transaction, this.internal_tables[Tags.TableColumnDef].InternalKey, table.Columns.Count);
+				
+				//	Crée la ligne de description de la table :
+				
+				table.DefineInternalKey (new DbKey (table_id));
+				table.UpdatePrimaryKeyInfo ();
+				
+				this.InsertTableDefRow (transaction, table);
+				
+				//	Crée les lignes de description des colonnes :
+				
+				for (int i = 0; i < table.Columns.Count; i++)
+				{
+					table.Columns[i].DefineInternalKey (new DbKey (column_id + i));
+					this.InsertColumnDefRow (transaction, table, table.Columns[i]);
+				}
+			}
+			
+			//	Finalement, il faut créer la table elle-même :
+			
+			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
+			
+			transaction.SqlBuilder.InsertTable (sql_table);
+			this.ExecuteSilent (transaction);
 		}
 		
 		

@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Replication
 					//	Met à jour la structure de la base de données selon les nouvelles descriptions de
 					//	tables/colonnes/types :
 					
-					this.ApplyStructuralChanges (def_table, def_column, def_type);
+					this.ApplyStructuralChanges (database, def_table, def_column, def_type);
 					
 					using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, database))
 					{
@@ -101,6 +101,8 @@ namespace Epsitec.Cresus.Replication
 		
 		protected void ApplyChanges(DbTransaction transaction, System.Collections.ArrayList list)
 		{
+			//	Applique les modifications pour toutes les tables de la liste :
+			
 			foreach (PackedTableData data in list)
 			{
 				this.ApplyChanges (transaction, data);
@@ -109,18 +111,41 @@ namespace Epsitec.Cresus.Replication
 		
 		protected void ApplyChanges(DbTransaction transaction, PackedTableData data)
 		{
-			//	Applique les modifications décrites pour la table spécifiée.
+			//	Applique les modifications décrites pour la table spécifiée. Pour ce faire,
+			//	on remplit une table avec les lignes à répliquer et on utiliser un 'REPLACE'
+			//	de toutes celles-ci :
 			
-			System.Diagnostics.Debug.WriteLine (string.Format ("Applying changes in table {0}.", data.Name));
+			//	TODO: utiliser une clef pour la table.
 			
+			DbTable table = this.infrastructure.ResolveDbTable (transaction, data.Name);
 			
+			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, transaction, table))
+			{
+				System.Diagnostics.Debug.Assert (command.DataSet != null);
+				System.Diagnostics.Debug.Assert (command.DataSet.Tables.Count == 1);
+				
+				System.Data.DataTable data_table = command.DataSet.Tables[0];
+				
+				data.FillTable (data_table);
+				
+				System.Diagnostics.Debug.Assert (data_table.Rows.Count > 0);
+				
+				command.ReplaceTables (transaction);
+			}
 		}
 		
-		protected void ApplyStructuralChanges(PackedTableData def_table, PackedTableData def_column, PackedTableData def_type)
+		protected void ApplyStructuralChanges(IDbAbstraction database, PackedTableData def_table, PackedTableData def_column, PackedTableData def_type)
 		{
+			//	Applique des modifications structurelles (tables, colonnes, types...)
+			//	Pour l'instant, seule la création d'une nouvelle table est gérée.
+			
+			//	TODO: gérer les mises à jour de tables existantes (modification des types et colonnes).
+			
 			if (def_table != null)
 			{
 				object[][] def_table_rows = def_table.GetValuesArray ();
+				
+				//	Passe en revue toutes les lignes qui ont changé dans CR_TABLE :
 				
 				for (int i = 0; i < def_table_rows.Length; i++)
 				{
@@ -131,16 +156,50 @@ namespace Epsitec.Cresus.Replication
 					
 					if (def_table_row_key.Status == DbRowStatus.Deleted)
 					{
-						//	La table a été supprimée. Dans les faits, on ne la supprime pas de la base
-						//	de données.
+						//	La table a été supprimée. Dans les faits, on ne la supprime jamais
+						//	de table dans la base de données. Il n'y a donc rien à faire...
 						
-						System.Diagnostics.Debug.WriteLine ("Replication: table {0} was deleted.", def_table_runtime.Name);
+						System.Diagnostics.Debug.WriteLine (string.Format ("Replication: table {0} was deleted.", def_table_runtime.Name));
 					}
 					else
 					{
-						//	La table a été modifiée et peut-être même créée...
+						//	La table a été modifiée (peut-être créée).
 						
-						System.Diagnostics.Debug.WriteLine ("Replication: table {0} was modified/created.", def_table_runtime.Name);
+						string   find_sql_name    = def_table_runtime.CreateSqlName ();
+						string[] known_sql_tables = database.UserTableNames;
+						
+						bool found = false;
+						
+						for (int j = 0; j < known_sql_tables.Length; j++)
+						{
+							if (known_sql_tables[j] == find_sql_name)
+							{
+								found = true;
+								break;
+							}
+						}
+						
+						if (found)
+						{
+							System.Diagnostics.Debug.WriteLine (string.Format ("Replication: table {0} was modified. SQL Name is {1}.", def_table_runtime.Name, find_sql_name));
+							
+							//	TODO: gérer la mise à jour de la table...
+						}
+						else
+						{
+							System.Diagnostics.Debug.WriteLine (string.Format ("Replication: table {0} was created. SQL Name is {1}.", def_table_runtime.Name, find_sql_name));
+							
+							//	La table doit être créée. On va simplement créer la table dans la base
+							//	de données, sans créer les informations dans CR_TABLE/CR_COLUMN, car
+							//	celles-ci sont déjà présentes :
+							
+							using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, database))
+							{
+								this.infrastructure.RegisterKnownDbTable (transaction, def_table_runtime);
+								
+								transaction.Commit ();
+							}
+						}
 					}
 				}
 			}

@@ -322,6 +322,41 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
+		public static object UnpackValueFromArray(int row, System.Array array, bool[] null_values)
+		{
+			if ((null_values != null) &&
+				(null_values.Length > 0))
+			{
+				//	Il existe des indications pour savoir si une cellule contient un DBNull
+				//	ou non; utilise les informations disponibles :
+				
+				if (null_values[row])
+				{
+					return System.DBNull.Value;
+				}
+				else
+				{
+					return array.GetValue (row);
+				}
+			}
+			else
+			{
+				if ((array == null) ||
+					(array.Length == 0))
+				{
+					//	Il n'y a ni indications au sujet des valeurs, ni au sujet de leur null-ité.
+					//	Cela signifie que toutes les lignes contiennent DBNull !
+					
+					return System.DBNull.Value;
+				}
+				else
+				{
+					return array.GetValue (row);
+				}
+			}
+		}
+		
+		
 		public static void PackBooleanArray(bool[] values, out byte[] packed)
 		{
 			int n = values.Length;
