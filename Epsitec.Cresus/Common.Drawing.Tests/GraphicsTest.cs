@@ -192,6 +192,16 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 
+		[Test] public void CheckSpecial4Fill()
+		{
+			Window window = new Window ();
+			
+			window.Text = "CheckSpecial4Fill";
+			window.Root.PaintForeground += new PaintEventHandler(Special4Fill_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+
 		
 		private void Text_PaintForeground(object sender, PaintEventArgs e)
 		{
@@ -988,5 +998,19 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.PaintText ( 10, 10, string.Format ("{0} dpi", bitmap_1.DpiX), font, 12);
 			e.Graphics.PaintText (210, 10, string.Format ("{0} dpi", bitmap_2.DpiX), font, 12);
 		}
+		private void Special4Fill_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			int dx = (int) root.Width;
+			int dy = (int) root.Height;
+			
+			e.Graphics.SolidRenderer.Clear4Colors (10, 10, dx - 20, dy - 20,
+				Color.FromRGB (0.75, 0, 0),
+				Color.FromRGB (0.75, 0, 1),
+				Color.FromRGB (0.75, 1, 1),
+				Color.FromRGB (0.75, 1, 0));
+		}
+		
 	}
 }
