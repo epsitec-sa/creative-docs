@@ -260,27 +260,51 @@ namespace Epsitec.Common.Drawing
 			this.OnChanged (System.EventArgs.Empty);
 		}
 		
-		public void Rotate(double angle)
+		public void RotateDeg(double angle)
 		{
 			if (angle != 0)
 			{
-				this.MultiplyBy (Transform.FromRotation (angle));
+				this.MultiplyBy (Transform.FromRotationDeg (angle));
 			}
 		}
 		
-		public void Rotate(double angle, Point center)
+		public void RotateDeg(double angle, Point center)
 		{
 			if (angle != 0)
 			{
-				this.MultiplyBy (Transform.FromRotation (angle, center.X, center.Y));
+				this.MultiplyBy (Transform.FromRotationDeg (angle, center.X, center.Y));
 			}
 		}
 		
-		public void Rotate(double angle, double x, double y)
+		public void RotateDeg(double angle, double x, double y)
 		{
 			if (angle != 0)
 			{
-				this.MultiplyBy (Transform.FromRotation (angle, x, y));
+				this.MultiplyBy (Transform.FromRotationDeg (angle, x, y));
+			}
+		}
+		
+		public void RotateRad(double angle)
+		{
+			if (angle != 0)
+			{
+				this.MultiplyBy (Transform.FromRotationRad (angle));
+			}
+		}
+		
+		public void RotateRad(double angle, Point center)
+		{
+			if (angle != 0)
+			{
+				this.MultiplyBy (Transform.FromRotationRad (angle, center.X, center.Y));
+			}
+		}
+		
+		public void RotateRad(double angle, double x, double y)
+		{
+			if (angle != 0)
+			{
+				this.MultiplyBy (Transform.FromRotationRad (angle, x, y));
 			}
 		}
 		
@@ -334,23 +358,46 @@ namespace Epsitec.Common.Drawing
 			return new Transform (1, 0, 0, 1, offset.X, offset.Y);
 		}
 		
-		public static Transform FromRotation(double angle)
+		public static Transform FromRotationDeg(double angle)
 		{
-			double alpha = angle * System.Math.PI / 180;
+			double alpha = Math.DegToRad (angle);
 			double sin   = System.Math.Sin (alpha);
 			double cos   = System.Math.Cos (alpha);
 			
 			return new Transform (cos, -sin, sin, cos, 0, 0);
 		}
 		
-		public static Transform FromRotation(double angle, Point center)
+		public static Transform FromRotationDeg(double angle, Point center)
 		{
-			return Transform.FromRotation (angle, center.X, center.Y);
+			return Transform.FromRotationDeg (angle, center.X, center.Y);
 		}
 		
-		public static Transform FromRotation(double angle, double cx, double cy)
+		public static Transform FromRotationDeg(double angle, double cx, double cy)
 		{
-			Transform m = FromRotation (angle);
+			Transform m = FromRotationDeg (angle);
+			
+			m.tx = cx - m.xx * cx - m.xy * cy;
+			m.ty = cy - m.yx * cx - m.yy * cy;
+			
+			return m;
+		}
+		
+		public static Transform FromRotationRad(double angle)
+		{
+			double sin   = System.Math.Sin (angle);
+			double cos   = System.Math.Cos (angle);
+			
+			return new Transform (cos, -sin, sin, cos, 0, 0);
+		}
+		
+		public static Transform FromRotationRad(double angle, Point center)
+		{
+			return Transform.FromRotationRad (angle, center.X, center.Y);
+		}
+		
+		public static Transform FromRotationRad(double angle, double cx, double cy)
+		{
+			Transform m = FromRotationRad (angle);
 			
 			m.tx = cx - m.xx * cx - m.xy * cy;
 			m.ty = cy - m.yx * cx - m.yy * cy;
@@ -404,7 +451,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public static Point RotatePoint(Point center, double angle, Point p)
+		public static Point RotatePointRad(Point center, double angle, Point p)
 		{
 			// Fait tourner un point autour d'un centre.
 			// L'angle est exprimé en radians.
@@ -424,7 +471,7 @@ namespace Epsitec.Common.Drawing
 			return b;
 		}
 
-		public static Point RotatePoint(double angle, Point p)
+		public static Point RotatePointRad(double angle, Point p)
 		{
 			// Fait tourner un point autour de l'origine.
 			// L'angle est exprimé en radians.
@@ -436,6 +483,16 @@ namespace Epsitec.Common.Drawing
 			a.Y = p.X*System.Math.Sin(angle) + p.Y*System.Math.Cos(angle);
 
 			return a;
+		}
+
+		public static Point RotatePointDeg(Point center, double angle, Point p)
+		{
+			return Transform.RotatePointRad (center, Math.DegToRad (angle), p);
+		}
+
+		public static Point RotatePointDeg(double angle, Point p)
+		{
+			return Transform.RotatePointRad (Math.DegToRad (angle), p);
 		}
 
 
