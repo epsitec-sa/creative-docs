@@ -11,40 +11,41 @@ namespace Epsitec.Cresus.Database.Implementation
 	{
 		public FirebirdAbstraction(DbAccess db_access, IDbAbstractionFactory db_factory)
 		{
+			this.db_access  = db_access;
 			this.db_factory = db_factory;
-			this.db_connection = null;
 			this.db_connection_string = this.CreateConnectionString (db_access);
 			
 			if (db_access.create)
 			{
+				//	Si l'appelant a demandé la création de la base, commence par tenter d'ouvrir une
+				//	base existante. Si celle-ci existe, c'est considéré comme une erreur, et on génère
+				//	une exception.
+				
+				bool base_already_exists = false;
+				
 				try
 				{
-					this.CreateConnection ();
-					this.TestConnection ();
+					this.CreateConnection (true);
+					
+					//	Si on est arrivé ici, c'est que la base existait déjà... Aïe !
+					
+					base_already_exists = true;
 				}
 				catch
 				{
 					this.CreateDatabase (db_access);
-					this.CreateConnection ();
-					this.TestConnection ();
+					this.CreateConnection (true);
+				}
+				
+				if (base_already_exists)
+				{
+					throw new DbExistsException (db_access, "Cannot create existing database");
 				}
 			}
-			
-			//	TODO: initialisation
-			//
-			//	1. La connexion est ouverte pour vérifier que la base existe. Il faut voir
-			//	   si la connexion doit être conservée dans l'état ouvert.
-			//
-			//	2. Si la base n'existe pas mais que db_access.create est actif, on crée
-			//	   la base de données, puis on ouvre la connexion.
-			//
-			//	- La propriété 'Connection' doit-elle s'assurer que la connexion est ouverte ?
-			//
-			//	- Comment sont gérées les transactions ? Je crois que IDbCommand.Transaction
-			//	  et IDbConnection.BeginTransaction offrent ce qu'il faut, donc ce n'est pas
-			//	  la peine de s'en occuper ici.
-			
-//-			throw new DbFactoryException ();
+			else
+			{
+				this.CreateConnection (true);
+			}
 		}
 
 		~FirebirdAbstraction()
@@ -69,6 +70,26 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.db_connection = new FbConnection (this.db_connection_string);
 		}
 		
+		protected virtual void CreateConnection(bool test_if_ok)
+		{
+			try
+			{
+				this.CreateConnection ();
+				
+				if (test_if_ok)
+				{
+					this.TestConnection ();
+				}
+			}
+			catch
+			{
+				this.db_connection.Dispose ();
+				this.db_connection = null;
+				
+				throw;
+			}
+		}
+		
 		protected virtual void TestConnection()
 		{
 			switch (this.db_connection.State)
@@ -89,9 +110,9 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			System.Diagnostics.Debug.Assert (db_access.create);
 			
-			FirebirdAbstraction.ValidateName (db_access.login_name);
-			FirebirdAbstraction.ValidateName (db_access.login_pwd);
-			FirebirdAbstraction.ValidateName (db_access.server);
+			FirebirdAbstraction.ValidateName (db_access, db_access.login_name);
+			FirebirdAbstraction.ValidateName (db_access, db_access.login_pwd);
+			FirebirdAbstraction.ValidateName (db_access, db_access.server);
 			
 			FbConnection.CreateDatabase (db_access.server,
 				/**/					 FirebirdAbstraction.fb_port,
@@ -107,9 +128,9 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		protected virtual string CreateConnectionString(DbAccess db_access)
 		{
-			FirebirdAbstraction.ValidateName (db_access.login_name);
-			FirebirdAbstraction.ValidateName (db_access.login_pwd);
-			FirebirdAbstraction.ValidateName (db_access.server);
+			FirebirdAbstraction.ValidateName (db_access, db_access.login_name);
+			FirebirdAbstraction.ValidateName (db_access, db_access.login_pwd);
+			FirebirdAbstraction.ValidateName (db_access, db_access.server);
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
@@ -131,7 +152,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		protected virtual string CreateDbFileName(DbAccess db_access)
 		{
-			FirebirdAbstraction.ValidateName (db_access.database);
+			FirebirdAbstraction.ValidateName (db_access, db_access.database);
 			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
@@ -144,15 +165,15 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 		
 		
-		protected static void ValidateName(string name)
+		protected static void ValidateName(DbAccess db_access, string name)
 		{
 			if (name.Length > 100)
 			{
-				throw new System.ArgumentException ("Name is too long");
+				throw new DbSyntaxException (db_access, string.Format ("Name is too long (length={0})", name));
 			}
 			if (System.Text.RegularExpressions.Regex.IsMatch (name, @"\w") == false)
 			{
-				throw new System.FormatException (string.Format ("{0} contains an invalid character", name));
+				throw new DbSyntaxException (db_access, string.Format ("{0} contains an invalid character", name));
 			}
 		}
 		
@@ -203,16 +224,47 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		public System.Data.IDataAdapter NewDataAdapter(System.Data.IDbCommand command)
 		{
-			//	TODO: implémenter new DataAdapter(command)
-			return null;
-		}
-
-		public void ExtractSqlParameters(System.Data.IDbCommand command, SqlFieldCollection fields)
-		{
-			//	TODO: extraire les paramètres de retour de command et
-			//	copier leurs valeurs dans les champs correspondants.
+			System.Diagnostics.Debug.Assert (command.Connection != null);
+			System.Diagnostics.Debug.Assert (command.Connection.State != System.Data.ConnectionState.Closed);
+			
+			FbCommand fb_command = command as FbCommand;
+			
+			if (fb_command == null)
+			{
+				throw new DbException (this.db_access, "Invalid command object");
+			}
+			
+			return new FbDataAdapter (fb_command);
 		}
 		#endregion
+
+#if false
+		public void GetSqlParameters(System.Data.IDbCommand command, SqlFieldCollection fields)
+		{
+			FbCommand fb_command = command as FbCommand;
+			
+			for (int i = 0; i < fb_command.Parameters.Count; i++)
+			{
+				FbParameter param = fb_command.Parameters[i] as FbParameter;
+				
+				System.Diagnostics.Debug.Assert (param != null);
+				System.Diagnostics.Debug.WriteLine (param.ParameterName + ": " + param.FbDbType.ToString ());
+				
+				switch (param.Direction)
+				{
+					case System.Data.ParameterDirection.Input:
+						break;
+					
+					case System.Data.ParameterDirection.InputOutput:
+					case System.Data.ParameterDirection.Output:
+						break;
+					
+					case System.Data.ParameterDirection.ReturnValue:
+						break;
+				}
+			}
+		}
+#endif
 		
 		#region IDisposable Members
 		public void Dispose()
@@ -222,6 +274,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 		#endregion
 		
+		private DbAccess							db_access;
 		private IDbAbstractionFactory				db_factory;
 		private FbConnection						db_connection;
 		private string								db_connection_string;
