@@ -156,6 +156,9 @@ namespace Epsitec.Common.Widgets
 			double offset_x = 0;
 			double offset_y = 0;
 			
+			//	Détermine l'aspect des ascenceurs ainsi que les offsets [x] et [y] qui
+			//	doivent s'appliquer à l'ouverture qui permet de voir le panel.
+			
 			if ((this.panel.Width > 0) &&
 				(delta_dx > 0) &&
 				(vis_dx > 0))
@@ -190,16 +193,13 @@ namespace Epsitec.Common.Widgets
 				this.v_scroller.VisibleRangeRatio = 1.0;
 			}
 			
+			//	Met à jour l'ouverture qui permet de voir le panel (aperture) et déplace
+			//	le panel pour que la partie qui intéresse l'utilisateur soit en face de
+			//	l'ouverture.
+			
 			this.aperture.Bounds = new Drawing.Rectangle (frame.Left, frame.Bottom + margin_y, vis_dx, vis_dy);
 			this.panel.Location  = new Drawing.Point (-offset_x, this.Client.Height - this.panel.Height - margin_y - frame.Height + offset_y);
-			
-			Drawing.Rectangle ap_bounds = this.panel.MapParentToClient (this.aperture.Client.Bounds);
-			
-			this.panel.FrameBounds = new Drawing.Rectangle (ap_bounds.Left - frame.Left, ap_bounds.Bottom - frame.Bottom, ap_bounds.Width + frame.Width, ap_bounds.Height + frame.Height);
-			
-			System.Diagnostics.Debug.WriteLine ("Aperture: " + this.aperture.Bounds.ToString ());
-			System.Diagnostics.Debug.WriteLine ("Location: " + this.panel.Location.ToString ());
-			System.Diagnostics.Debug.WriteLine ("Frame:    " + this.panel.FrameBounds.ToString ());
+			this.panel.Aperture  = this.panel.MapParentToClient (this.aperture.Client.Bounds);
 			
 			this.Invalidate ();
 			

@@ -1,7 +1,10 @@
 namespace Epsitec.Common.Widgets
 {
+	public delegate void PaintFrameCallback(Panel panel, Drawing.Graphics graphics, Drawing.Rectangle frame_outside, Drawing.Rectangle frame_inside);
+	
 	/// <summary>
-	/// Summary description for Panel.
+	/// La classe Panel permet de gérer des panneaux avec une marge peinte par des
+	/// décorateurs externes.
 	/// </summary>
 	public class Panel : AbstractGroup
 	{
@@ -16,14 +19,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			Drawing.Rectangle shape = base.GetShapeBounds ();
-			
-			double x1 = shape.Left   - this.frame_margins.Left;
-			double x2 = shape.Right  + this.frame_margins.Right;
-			double y1 = shape.Bottom - this.frame_margins.Bottom;
-			double y2 = shape.Top    + this.frame_margins.Top;
-			
-			return new Drawing.Rectangle (x1, y1, x2-x1, y2-y1);
+			return Drawing.Rectangle.Inflate (base.GetShapeBounds (), this.frame_margins);
 		}
 		
 		public override Drawing.Rectangle GetClipBounds()
@@ -37,6 +33,10 @@ namespace Epsitec.Common.Widgets
 		
 		public Drawing.Margins			FrameMargins
 		{
+			//	Les marges du cadre du panel sont utilisées par la classe Scrollable pour
+			//	assurer que l'ouverture est toujours calée de telle manière qu'il reste de
+			//	la place pour un cadre autour du morceau de panel visible.
+			
 			get
 			{
 				return this.frame_margins;
@@ -52,38 +52,58 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Drawing.Rectangle		FrameBounds
+		public Drawing.Rectangle		Aperture
 		{
+			//	L'ouverture, si elle est définie pour un panel, permet de définir quelle
+			//	partie est actuellement visible, relativement au système de coordonnées
+			//	client du panel.
+			
 			get
 			{
-				return this.frame_bounds;
+				return this.aperture;
 			}
+			
 			set
 			{
-				if (this.frame_bounds != value)
+				if (this.aperture != value)
 				{
-					this.frame_bounds = value;
+					this.aperture = value;
 					this.Invalidate ();
 				}
 			}
 		}
 		
-		protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clip_rect)
+		protected override void PaintForegroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clip_rect)
 		{
-			Drawing.Rectangle old_clip = graphics.SaveClippingRectangle ();
-			Drawing.Rectangle new_clip = this.MapClientToRoot (this.frame_bounds);
-			
-			graphics.RestoreClippingRectangle (new_clip);
-			graphics.AddRectangle (this.frame_bounds);
-			graphics.RenderSolid (Drawing.Color.FromRGB (0, 0, 1));
-			graphics.RestoreClippingRectangle (old_clip);
-			
-			base.PaintBackgroundImplementation (graphics, clip_rect);
+			if ((this.aperture.IsValid) &&
+				(this.PaintFrameCallback != null))
+			{
+				//	Une ouverture a été définie, il faut donc donner l'occasion à des
+				//	éventuels décorateurs de peindre dans le cadre.
+				
+				Drawing.Rectangle frame_inside  = this.aperture;
+				Drawing.Rectangle frame_outside = Drawing.Rectangle.Inflate (frame_inside, this.frame_margins);
+				
+				Drawing.Rectangle old_clip = graphics.SaveClippingRectangle ();
+				Drawing.Rectangle new_clip = this.MapClientToRoot (frame_outside);
+				
+				base.PaintForegroundImplementation (graphics, clip_rect);
+				
+				graphics.RestoreClippingRectangle (new_clip);
+				this.PaintFrameCallback (this, graphics, frame_outside, frame_inside);
+				graphics.RestoreClippingRectangle (old_clip);
+			}
+			else
+			{
+				base.PaintForegroundImplementation (graphics, clip_rect);
+			}
 		}
-
+		
+		
+		public event PaintFrameCallback	PaintFrameCallback;
 		
 		
 		protected Drawing.Margins		frame_margins;
-		protected Drawing.Rectangle		frame_bounds;
+		protected Drawing.Rectangle		aperture;
 	}
 }
