@@ -108,6 +108,17 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public void Compose(int x, int y, Pixmap source, int x_source, int y_source, int width, int height)
+		{
+			AntiGrain.Buffer.ComposeBuffer (this.agg_buffer, x, y, source.agg_buffer, x_source, y_source, width, height);
+		}
+		
+		public void Copy(int x, int y, Pixmap source, int x_source, int y_source, int width, int height)
+		{
+			AntiGrain.Buffer.BltBuffer (this.agg_buffer, x, y, source.agg_buffer, x_source, y_source, width, height);
+		}
+		
+		
 		public void Erase(System.Drawing.Rectangle clip)
 		{
 			AntiGrain.Buffer.ClearRect (this.agg_buffer, clip.Left, clip.Top, clip.Right, clip.Bottom);
@@ -136,6 +147,21 @@ namespace Epsitec.Common.Drawing
 			int cx2 = (int)(x2+0.9999);
 			int cy2 = (int)(y2+0.9999);
 			AntiGrain.Buffer.AddClipBox (this.agg_buffer, cx1, cy1, cx2-1, cy2-1);
+		}
+		
+		
+		public Color GetPixel(int x, int y)
+		{
+			if ((x < 0) || (x >= this.Size.Width) ||
+				(y < 0) || (y >= this.Size.Height))
+			{
+				return Color.Empty;
+			}
+			
+			using (Pixmap.RawData src = new Pixmap.RawData (this))
+			{
+				return src[x, y];
+			}
 		}
 		
 		
