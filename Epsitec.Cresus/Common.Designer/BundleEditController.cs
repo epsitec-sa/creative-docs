@@ -30,6 +30,7 @@ namespace Epsitec.Common.Designer
 			{
 				Dialogs.OpenExistingBundle dialog = new Dialogs.OpenExistingBundle ("OpenBundle (\"{0}\", {1})", this.dispatcher);
 				dialog.Owner = this.application.MainWindow;
+				dialog.UpdateListContents ();
 				dialog.Show ();
 			}
 			else if (e.CommandArgs.Length == 2)

@@ -14,21 +14,28 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.culture = CultureInfo.CurrentUICulture;
 		}
 		
-		public event Support.EventHandler		Changed;
-		
-		protected virtual void OnChanged()
-		{
-			if (this.Changed != null)
-			{
-				this.Changed (this);
-			}
-		}
 		
 		public string							Prefix
 		{
 			get
 			{
 				return this.prefix;
+			}
+		}
+		
+		public string							TypeFilter
+		{
+			get
+			{
+				return this.type_filter;
+			}
+			set
+			{
+				if (this.type_filter != value)
+				{
+					this.type_filter = value;
+					this.OnChanged ();
+				}
 			}
 		}
 		
@@ -165,11 +172,24 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 		
 		
+		protected virtual void OnChanged()
+		{
+			if (this.Changed != null)
+			{
+				this.Changed (this);
+			}
+		}
+		
+		
+		public event Support.EventHandler		Changed;
+		
+		
 		protected Widget						container;
 		protected TextFieldCombo				lang_id;
 		
-		protected string						prefix = "file:";
-		protected CultureInfo					culture = null;
+		protected string						type_filter;
+		protected string						prefix = "file";
+		protected CultureInfo					culture;
 		protected ResourceLevel					level = ResourceLevel.Default;
 	}
 }

@@ -15,21 +15,21 @@ namespace Epsitec.Common.Designer.Dialogs
 		public OpenExistingBundle(string command_template, CommandDispatcher command_dispatcher)
 			: base ("Ouvrir", "Ressource à ouvrir :", null, command_template, command_dispatcher)
 		{
-			this.Items = this.GetAvailableNames ();
+			this.bundle_spec = new SubBundleSpec ();
 			this.bundle_spec.Changed += new EventHandler (this.HandleBundleSpecChanged);
 		}
 		
 		
-		public string[] GetAvailableNames()
-		{
-			string   filter = this.bundle_spec.Prefix + "*";
-			string[] array  = Support.Resources.GetBundleIds (filter, this.bundle_spec.ResourceLevel, this.bundle_spec.CultureInfo);
-			return array;
-		}
-		
-		private void HandleBundleSpecChanged(object sender)
+		public void UpdateListContents()
 		{
 			this.Items = this.GetAvailableNames ();
+		}
+		
+		public string[] GetAvailableNames()
+		{
+			string   name_filter = Resources.MakeFullName (this.bundle_spec.Prefix, "*");
+			string[] array       = Support.Resources.GetBundleIds (name_filter, this.bundle_spec.TypeFilter, this.bundle_spec.ResourceLevel, this.bundle_spec.CultureInfo);
+			return array;
 		}
 		
 		
@@ -44,10 +44,18 @@ namespace Epsitec.Common.Designer.Dialogs
 			{
 				string[] values = new string[2];
 				
-				values[0] = this.bundle_spec.Prefix + this.list.Items[this.list.SelectedIndex];
+				values[0] = Resources.MakeFullName (this.bundle_spec.Prefix, this.list.Items[this.list.SelectedIndex]);
 				values[1] = this.bundle_spec.ResourceLevel.ToString ();
 				
 				return values;
+			}
+		}
+		
+		public SubBundleSpec					SubBundleSpec
+		{
+			get
+			{
+				return this.bundle_spec;
 			}
 		}
 		
@@ -66,13 +74,18 @@ namespace Epsitec.Common.Designer.Dialogs
 			return widget;
 		}
 
-		
 		protected override void AddExtraWidgets(Widget body)
 		{
 			this.bundle_spec.AddExtraWidgets (body);
 		}
 		
 		
-		protected SubBundleSpec					bundle_spec = new SubBundleSpec ();
+		private void HandleBundleSpecChanged(object sender)
+		{
+			this.Items = this.GetAvailableNames ();
+		}
+		
+		
+		protected SubBundleSpec					bundle_spec;
 	}
 }
