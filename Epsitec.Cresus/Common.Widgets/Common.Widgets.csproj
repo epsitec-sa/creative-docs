@@ -532,6 +532,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "WindowStyles.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "WindowType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Adorners\Default.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

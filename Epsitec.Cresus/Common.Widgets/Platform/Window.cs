@@ -23,6 +23,9 @@ namespace Epsitec.Common.Widgets.Platform
 			this.SetStyle (System.Windows.Forms.ControlStyles.ResizeRedraw, true);
 			this.SetStyle (System.Windows.Forms.ControlStyles.UserPaint, true);
 			
+			this.WindowType   = WindowType.Document;
+			this.WindowStyles = WindowStyles.CanResize | WindowStyles.HasCloseButton;
+			
 			this.graphics = new Epsitec.Common.Drawing.Graphics ();
 			
 			Window.DummyHandleEater (this.Handle);
@@ -42,6 +45,7 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			WindowList.Insert (this);
 		}
+		
 		
 		internal void MakeTopLevelWindow()
 		{
@@ -97,6 +101,7 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			this.widget_window_disposed = true;
 		}
+		
 		
 		static void DummyHandleEater(System.IntPtr handle)
 		{
@@ -315,6 +320,87 @@ namespace Epsitec.Common.Widgets.Platform
 			this.widget_window.OnWindowAnimationEnded ();
 		}
 		
+		
+		
+		internal WindowStyles					WindowStyles
+		{
+			get
+			{
+				return this.window_styles;
+			}
+			set
+			{
+				if (this.window_styles != value)
+				{
+					this.window_styles = value;
+					this.UpdateWindowTypeAndStyles ();
+				}
+			}
+		}
+		
+		internal WindowType						WindowType
+		{
+			get
+			{
+				return this.window_type;
+			}
+			set
+			{
+				if (this.window_type != value)
+				{
+					this.window_type = value;
+					this.UpdateWindowTypeAndStyles ();
+				}
+			}
+		}
+		
+		
+		private void UpdateWindowTypeAndStyles()
+		{
+			switch (this.window_type)
+			{
+				case WindowType.Document:
+					if ((this.window_styles & WindowStyles.CanResize) == 0)
+					{
+						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+					}
+					else
+					{
+						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+					}
+					this.ShowInTaskbar = true;
+					break;
+				
+				case WindowType.Dialog:
+					if ((this.window_styles & WindowStyles.CanResize) == 0)
+					{
+						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+					}
+					else
+					{
+						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Sizable;
+					}
+					this.ShowInTaskbar = false;
+					break;
+				
+				case WindowType.Palette:
+					if ((this.window_styles & WindowStyles.CanResize) == 0)
+					{
+						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+					}
+					else
+					{
+						this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+					}
+					this.ShowInTaskbar = false;
+					break;
+			}
+			
+			this.MinimizeBox = ((this.window_styles & WindowStyles.CanMinimize)    != 0);
+			this.MaximizeBox = ((this.window_styles & WindowStyles.CanMaximize)    != 0);
+			this.HelpButton  = ((this.window_styles & WindowStyles.HasHelpButton)  != 0);
+			this.ControlBox  = ((this.window_styles & WindowStyles.HasCloseButton) != 0);
+		}
 		
 		
 		internal bool							PreventAutoClose
@@ -1445,6 +1531,10 @@ namespace Epsitec.Common.Widgets.Platform
 		private bool							filter_mouse_messages;
 		private bool							filter_key_messages;
 		private double							alpha = 1.0;
+		
+		private WindowStyles					window_styles;
+		private WindowType						window_type;
+		
 		private int								wnd_proc_depth;
 		
 		private static bool						is_app_active;

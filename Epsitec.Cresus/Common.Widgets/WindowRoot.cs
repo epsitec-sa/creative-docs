@@ -3,6 +3,9 @@
 
 namespace Epsitec.Common.Widgets
 {
+	using BundleAttribute   = Support.BundleAttribute;
+	using CommandDispatcher = Support.CommandDispatcher;
+	
 	/// <summary>
 	/// La classe WindowRoot implémente le fond de chaque fenêtre. L'utilisateur obtient
 	/// en général une instance de WindowRoot en appelant Window.Root.
@@ -23,12 +26,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override bool						IsVisible
+		public override bool					IsVisible
 		{
 			get { return true; }
 		}
 		
-		public override LayoutStyles				Layout
+		public override LayoutStyles			Layout
 		{
 			get
 			{
@@ -40,12 +43,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Window						Window
+		public override Window					Window
 		{
 			get { return this.window; }
 		}
 		
-		public override Support.CommandDispatcher	CommandDispatcher
+		public override CommandDispatcher		CommandDispatcher
 		{
 			get
 			{
@@ -57,6 +60,50 @@ namespace Epsitec.Common.Widgets
 				return null;
 			}
 		}
+		
+		
+		[Bundle] public WindowStyles			WindowStyles
+		{
+			get
+			{
+				if (this.window == null)
+				{
+					return WindowStyles.None;
+				}
+				
+				return this.window.WindowStyles;
+			}
+			set
+			{
+				if (this.window.WindowStyles != value)
+				{
+					this.window.WindowStyles = value;
+					this.OnWindowStylesChanged ();
+				}
+			}
+		}
+		
+		[Bundle] public WindowType				WindowType
+		{
+			get
+			{
+				if (this.window == null)
+				{
+					return WindowType.None;
+				}
+				
+				return this.window.WindowType;
+			}
+			set
+			{
+				if (this.window.WindowType != value)
+				{
+					this.window.WindowType = value;
+					this.OnWindowTypeChanged ();
+				}
+			}
+		}
+		
 		
 		
 		#region IBundleSupport Members
@@ -259,6 +306,23 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected virtual  void OnWindowStylesChanged()
+		{
+			if (this.WindowStylesChanged != null)
+			{
+				this.WindowStylesChanged (this);
+			}
+		}
+		
+		protected virtual  void OnWindowTypeChanged()
+		{
+			if (this.WindowTypeChanged != null)
+			{
+				this.WindowTypeChanged (this);
+			}
+		}
+		
+		
 		internal void NotifyAdornerChanged()
 		{
 			this.HandleAdornerChanged ();
@@ -268,6 +332,11 @@ namespace Epsitec.Common.Widgets
 		{
 			this.HandleCultureChanged ();
 		}
+		
+		
+		
+		public event Support.EventHandler			WindowStylesChanged;
+		public event Support.EventHandler			WindowTypeChanged;
 		
 		
 		protected Window							window;

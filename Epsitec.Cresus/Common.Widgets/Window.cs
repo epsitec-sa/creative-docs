@@ -479,6 +479,31 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public WindowStyles						WindowStyles
+		{
+			get
+			{
+				return this.window.WindowStyles;
+			}
+			set
+			{
+				this.window.WindowStyles = value;
+			}
+		}
+		
+		public WindowType						WindowType
+		{
+			get
+			{
+				return this.window.WindowType;
+			}
+			set
+			{
+				this.window.WindowType = value;
+			}
+		}
+		
+		
 		#region ICommandDispatcherHost Members
 		public Support.CommandDispatcher		CommandDispatcher
 		{
