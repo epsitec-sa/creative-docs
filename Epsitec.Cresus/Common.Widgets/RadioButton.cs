@@ -1,6 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	using BundleAttribute  = Support.BundleAttribute;
+	using ContentAlignment = Drawing.ContentAlignment;
 	
 	/// <summary>
 	/// La classe RadioButton réalise un bouton radio.
@@ -12,13 +13,19 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.AutoToggle;
 		}
 		
-		public RadioButton(Widget embedder) : this()
+		public RadioButton(Widget embedder) : this ()
 		{
 			this.SetEmbedder(embedder);
 		}
 		
+		public RadioButton(Widget parent, string group, int index) : this ()
+		{
+			this.Parent = parent;
+			this.Group  = group;
+			this.Index  = index;
+		}
 		
-		// Retourne la hauteur standard.
+		
 		public override double					DefaultHeight
 		{
 			get
@@ -27,13 +34,51 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public override ContentAlignment		DefaultAlignment
+		{
+			get
+			{
+				return Drawing.ContentAlignment.MiddleLeft;
+			}
+		}
+		
+		public RadioButton.GroupController		Controller
+		{
+			get
+			{
+				if ((this.Parent != null) &&
+					(this.Group != null) &&
+					(this.Group.Length > 0))
+				{
+					//	Trouve le contrôleur du groupe, lequel est en principe accessible depuis
+					//	le parent. S'il n'existe pas pour ce groupe, on le crée :
+					
+					string prop_name  = "$RadioGroupController$" + this.Group;
+					object prop_value = this.Parent.GetProperty (prop_name);
+					
+					if (prop_value == null)
+					{
+						RadioButton active = RadioButton.FindActiveRadio (this.Parent, this.Group);
+						
+						prop_value = new GroupController (this.Parent, this.Group, active == null ? -1 : active.Index);
+						
+						this.Parent.SetProperty (prop_name, prop_value);
+					}
+					
+					return prop_value as GroupController;
+				}
+				
+				return null;
+			}
+		}
+		
+		
 		[Bundle]	public string				Group
 		{
 			get
 			{
 				return this.group;
 			}
-
 			set
 			{
 				this.group = value;
@@ -41,28 +86,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected override void OnActiveStateChanged()
-		{
-			base.OnActiveStateChanged();
-			
-			if ( this.ActiveState != WidgetState.ActiveNo )
-			{
-				RadioButton.TurnOff(this.Parent, this.Group, this);
-			}
-		}
-
-		public override void Toggle()
-		{
-			if (this.ActiveState != WidgetState.ActiveYes)
-			{
-				base.Toggle ();
-			}
-		}
-
-		
-		// Eteint tous les boutons radio du groupe, sauf keep.
 		public static void TurnOff(Widget parent, string group, RadioButton keep)
 		{
+			// Eteint tous les boutons radio du groupe, sauf keep.
 			System.Collections.ArrayList list = RadioButton.FindRadioChildren(parent, group);
 			
 			foreach (RadioButton radio in list)
@@ -126,7 +152,66 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 		
+		public static RadioButton FindActiveRadio(Widget parent, string group)
+		{
+			foreach (RadioButton radio in RadioButton.FindRadioChildren (parent, group))
+			{
+				if ((radio.Group == group) &&
+					(radio.ActiveState == WidgetState.ActiveYes))
+				{
+					return radio;
+				}
+			}
+			
+			return null;
+		}
 		
+		
+		public override void Toggle()
+		{
+			if (this.ActiveState != WidgetState.ActiveYes)
+			{
+				base.Toggle ();
+			}
+		}
+		
+		public override Drawing.Rectangle GetShapeBounds()
+		{
+			Drawing.Rectangle rect = base.GetShapeBounds();
+			
+			if ( this.TextLayout != null )
+			{
+				Drawing.Rectangle text = this.TextLayout.StandardRectangle;
+				text.Offset(this.LabelOffset);
+				text.Inflate(1, 1);
+				text.Inflate(Widgets.Adorner.Factory.Active.GeometryRadioShapeBounds);
+				rect.MergeWith(text);
+			}
+			
+			return rect;
+		}
+
+		
+		protected override void OnActiveStateChanged()
+		{
+			base.OnActiveStateChanged ();
+			
+			if (this.ActiveState == WidgetState.ActiveYes)
+			{
+				//	Eteint les autres boutons du groupe (s'il y en a), puis notifie le contrôleur
+				//	du groupe à propos du changement :
+				
+				RadioButton.TurnOff (this.Parent, this.Group, this);
+				
+				GroupController controller = this.Controller;
+				
+				if (controller != null)
+				{
+					controller.SetActiveIndex (this.Index);
+				}
+			}
+		}
+
 		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
 			if ((this.ActiveState == WidgetState.ActiveYes) ||
@@ -259,6 +344,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		#region RadioButtonComparer Class
 		protected class RadioButtonComparer : System.Collections.IComparer
 		{
 			public RadioButtonComparer(int dir)
@@ -280,35 +366,77 @@ namespace Epsitec.Common.Widgets
 			
 			protected int						dir;
 		}
+		#endregion
 		
-
-		// Retourne l'alignement par défaut d'un bouton.
-		public override Drawing.ContentAlignment DefaultAlignment
+		#region GroupController Class
+		public class GroupController : Support.Data.IChangedSource
 		{
-			get
+			public GroupController(Widget parent, string group, int index)
 			{
-				return Drawing.ContentAlignment.MiddleLeft;
-			}
-		}
-		
-		public override Drawing.Rectangle GetShapeBounds()
-		{
-			Drawing.Rectangle rect = base.GetShapeBounds();
-			
-			if ( this.TextLayout != null )
-			{
-				Drawing.Rectangle text = this.TextLayout.StandardRectangle;
-				text.Offset(this.LabelOffset);
-				text.Inflate(1, 1);
-				text.Inflate(Widgets.Adorner.Factory.Active.GeometryRadioShapeBounds);
-				rect.MergeWith(text);
+				this.parent = parent;
+				this.group  = group;
+				this.index  = index;
 			}
 			
-			return rect;
+			
+			public int							ActiveIndex
+			{
+				get
+				{
+					return this.index;
+				}
+				set
+				{
+					if (this.index != value)
+					{
+						RadioButton.Activate (this.parent, this.group, value);
+						
+						//	On ne met pas à jour this.index directement, car le fait d'activer
+						//	le bouton en question va provoquer un événement qui va à son tour
+						//	appeler notre méthode SetActiveIndex...
+					}
+				}
+			}
+			
+			public string						Group
+			{
+				get
+				{
+					return this.group;
+				}
+			}
+			
+			
+			internal void SetActiveIndex(int value)
+			{
+				if (this.index != value)
+				{
+					this.index = value;
+					this.OnChanged ();
+				}
+			}
+			
+			
+			protected virtual void OnChanged()
+			{
+				if (this.Changed != null)
+				{
+					this.Changed (this);
+				}
+			}
+			
+			
+			#region IChangedSource Members
+			public event Support.EventHandler	Changed;
+			#endregion
+			
+			protected Widget					parent;
+			protected int						index;
+			protected string					group;
 		}
+		#endregion
+		
 
-
-		// Dessine le bouton.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;

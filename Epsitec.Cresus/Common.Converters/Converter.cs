@@ -167,5 +167,62 @@ namespace Epsitec.Common.Converters
 			
 			throw new System.NotSupportedException (string.Format ("Type {0}: conversion not supported.", obj.GetType ().Name));
 		}
+		
+		public static bool Convert(object obj, System.Type type, out object value)
+		{
+			if (type == typeof (string))
+			{
+				string result;
+				
+				if (Converter.Convert (obj, out result))
+				{
+					value = result;
+					return true;
+				}
+			}
+			else if (type == typeof (bool))
+			{
+				bool result;
+				
+				if (Converter.Convert (obj, out result))
+				{
+					value = result;
+					return true;
+				}
+			}
+			else if (type == typeof (int))
+			{
+				int result;
+				
+				if (Converter.Convert (obj, out result))
+				{
+					value = result;
+					return true;
+				}
+			}
+			else if (type == typeof (long))
+			{
+				long result;
+				
+				if (Converter.Convert (obj, out result))
+				{
+					value = result;
+					return true;
+				}
+			}
+			else if (type == typeof (decimal))
+			{
+				decimal result;
+				
+				if (Converter.Convert (obj, out result))
+				{
+					value = result;
+					return true;
+				}
+			}
+			
+			value = null;
+			return false;
+		}
 	}
 }

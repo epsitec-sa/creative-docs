@@ -8,6 +8,8 @@ namespace Epsitec.Common.Widgets
 		public TextFieldMulti()
 		{
 			this.TextLayout.BreakMode &= ~ Drawing.TextBreakMode.SingleLine;
+			this.TextLayout.BreakMode |=   Drawing.TextBreakMode.Hyphenate;
+			
 			this.textFieldStyle = TextFieldStyle.Multi;
 
 			this.scroller = new VScroller(this);
