@@ -3,14 +3,15 @@ namespace Epsitec.Common.Widgets.Design
 	using System.Collections;
 	
 	/// <summary>
-	/// La classe WidgetWrapper encapsule un Widget de manière à le rendre
-	/// éditable.
+	/// La classe WidgetWrapper encapsule un Widget de manière à lui ajouter
+	/// un feed-back visuel permettant de visualiser son état d'édition.
 	/// </summary>
 	public class WidgetWrapper : Window.IPostPaintHandler
 	{
 		public WidgetWrapper()
 		{
 		}
+		
 		
 		public void Attach(Widget widget)
 		{
@@ -23,13 +24,12 @@ namespace Epsitec.Common.Widgets.Design
 			{
 				this.widget.Invalidate ();
 				
-				this.widget.PaintForeground     -= new PaintEventHandler (HandleWidgetPaintForeground);
-				this.widget.PreProcessing       -= new MessageEventHandler (this.HandleWidgetPreProcessing);
-				this.widget.PaintBoundsCallback -= new PaintBoundsCallback (HandlePaintBoundsCallback);
+				this.widget.PaintForeground     -= new PaintEventHandler (this.HandleWidgetPaintForeground);
+				this.widget.PaintBoundsCallback -= new PaintBoundsCallback (this.HandlePaintBoundsCallback);
 				
 				foreach (Widget parent in this.ancestors)
 				{
-					parent.PaintBoundsCallback -= new PaintBoundsCallback (HandlePaintBoundsCallback);
+					parent.PaintBoundsCallback -= new PaintBoundsCallback (this.HandlePaintBoundsCallback);
 				}
 				
 				this.ancestors.Clear ();
@@ -42,9 +42,8 @@ namespace Epsitec.Common.Widgets.Design
 			
 			if (this.widget != null)
 			{
-				this.widget.PaintForeground     += new PaintEventHandler (HandleWidgetPaintForeground);
-				this.widget.PreProcessing       += new MessageEventHandler (this.HandleWidgetPreProcessing);
-				this.widget.PaintBoundsCallback += new PaintBoundsCallback (HandlePaintBoundsCallback);
+				this.widget.PaintForeground     += new PaintEventHandler (this.HandleWidgetPaintForeground);
+				this.widget.PaintBoundsCallback += new PaintBoundsCallback (this.HandlePaintBoundsCallback);
 				
 				Widget parent = widget.Parent;
 				
@@ -61,15 +60,23 @@ namespace Epsitec.Common.Widgets.Design
 			}
 		}
 		
+		public void Detach()
+		{
+			this.Attach (null);
+		}
+		
 		
 		public Widget					Widget
 		{
 			get { return this.widget; }
 		}
 		
-		public Widget					WidgetOriginalSurface
+		public Widget					WidgetBeforeDrag
 		{
-			get { return this.widget_original_surface; }
+			//	Retourne un widget qui occupe la surface avant que l'opération de
+			//	drag & drop ne commence.
+			
+			get { return this.widget_before_drag; }
 		}
 		
 		
@@ -111,50 +118,6 @@ namespace Epsitec.Common.Widgets.Design
 			get { return this.original_bounds; }
 		}
 		
-		
-		private void HandleWidgetPreProcessing(object sender, MessageEventArgs e)
-		{
-			System.Diagnostics.Debug.Assert (this.widget == sender);
-			
-			e.Suppress |= this.ProcessMessage (e.Message);
-		}
-		
-		
-		internal bool ProcessMessage(Message message)
-		{
-			if (message.IsMouseType)
-			{
-				Drawing.Point mouse = this.widget.MapRootToClient (message.Cursor);
-				
-				switch (message.Type)
-				{
-					case MessageType.MouseEnter:
-						this.mouse_cursor = MouseCursor.AsSizeAll;
-						break;
-					case MessageType.MouseLeave:
-						this.mouse_cursor = MouseCursor.Default;
-						break;
-					
-					case MessageType.MouseDown:
-						this.is_dragging = true;
-						break;
-					
-					case MessageType.MouseUp:
-						this.is_dragging = false;
-						break;
-					
-					case MessageType.MouseMove:
-						break;
-				}
-				
-				this.widget.Window.MouseCursor = this.mouse_cursor;
-			}
-			
-			message.ForceCapture = this.is_dragging;
-			message.Consumer = this.widget;
-			
-			return true;
-		}
 		
 		
 		private void HandleWidgetPaintForeground(object sender, PaintEventArgs e)
@@ -206,25 +169,25 @@ namespace Epsitec.Common.Widgets.Design
 		}
 		
 		
-		public void DraggingBegin(Drawing.Point mouse)
+		public void DragBegin(Drawing.Point mouse)
 		{
 			this.original_bounds = this.widget.Bounds;
 			this.original_mouse  = mouse;
 			
-			this.widget_original_surface = new StaticText ();
+			this.widget_before_drag = new StaticText ();
 			
-			this.widget_original_surface.Bounds      = this.original_bounds;
-			this.widget_original_surface.Dock        = this.widget.Dock;
-			this.widget_original_surface.LayoutFlags = this.widget.LayoutFlags;
-			this.widget_original_surface.MinSize     = this.widget.MinSize;
-			this.widget_original_surface.MaxSize     = this.widget.MaxSize;
-			this.widget_original_surface.Name        = "WidgetWrapper Original Surface";
-			this.widget_original_surface.BackColor   = Drawing.Color.Transparent;
-			this.widget_original_surface.Anchor      = this.widget.Anchor;
+			this.widget_before_drag.Bounds      = this.original_bounds;
+			this.widget_before_drag.Dock        = this.widget.Dock;
+			this.widget_before_drag.LayoutFlags = this.widget.LayoutFlags;
+			this.widget_before_drag.MinSize     = this.widget.MinSize;
+			this.widget_before_drag.MaxSize     = this.widget.MaxSize;
+			this.widget_before_drag.Name        = "WidgetWrapper-BeforeDrag";
+			this.widget_before_drag.BackColor   = Drawing.Color.Transparent;
+			this.widget_before_drag.Anchor      = this.widget.Anchor;
 			
-			this.widget_original_surface.SetLayoutArgs (this.widget.LayoutArg1, this.widget.LayoutArg2);
+			this.widget_before_drag.SetLayoutArgs (this.widget.LayoutArg1, this.widget.LayoutArg2);
 			
-			this.parent.Children.Replace (this.widget, this.widget_original_surface);
+			this.parent.Children.Replace (this.widget, this.widget_before_drag);
 			
 			this.widget.Dock   = DockStyle.None;
 			this.widget.Anchor = AnchorStyles.None;
@@ -233,53 +196,52 @@ namespace Epsitec.Common.Widgets.Design
 			this.GripsVisible = false;
 		}
 		
-		public void DraggingEnd()
+		public void DragEnd()
 		{
 			this.widget.Parent = null;
 			
 			this.widget.Bounds      = this.original_bounds;
-			this.widget.Dock        = this.widget_original_surface.Dock;
-			this.widget.LayoutFlags = this.widget_original_surface.LayoutFlags;
-			this.widget.MinSize     = this.widget_original_surface.MinSize;
-			this.widget.MaxSize     = this.widget_original_surface.MaxSize;
-			this.widget.Anchor      = this.widget_original_surface.Anchor;
+			this.widget.Dock        = this.widget_before_drag.Dock;
+			this.widget.LayoutFlags = this.widget_before_drag.LayoutFlags;
+			this.widget.MinSize     = this.widget_before_drag.MinSize;
+			this.widget.MaxSize     = this.widget_before_drag.MaxSize;
+			this.widget.Anchor      = this.widget_before_drag.Anchor;
 			
-			this.widget.SetLayoutArgs (this.widget_original_surface.LayoutArg1, this.widget_original_surface.LayoutArg2);
+			this.widget.SetLayoutArgs (this.widget_before_drag.LayoutArg1, this.widget_before_drag.LayoutArg2);
 			
-			this.parent.Children.Replace (this.widget_original_surface, this.widget);
+			this.parent.Children.Replace (this.widget_before_drag, this.widget);
 			
-			this.widget_original_surface.Dispose ();
-			this.widget_original_surface = null;
+			this.widget_before_drag.Dispose ();
+			this.widget_before_drag = null;
 			
 			this.GripsVisible = true;
 		}
 		
 		
-		public Drawing.Rectangle GetDraggingRectangle(Drawing.Point mouse)
+		public Drawing.Rectangle GetDragRectangle(Drawing.Point mouse)
 		{
 			return Drawing.Rectangle.Offset (this.original_bounds, mouse - this.original_mouse);
 		}
 		
 		
-		public void DraggingSetDropHint(Drawing.Rectangle drop_bounds)
+		public void DragSetDropHint(Drawing.Rectangle drop_bounds)
 		{
-			if ((drop_bounds == this.widget_original_surface.Bounds) ||
+			if ((drop_bounds == this.widget_before_drag.Bounds) ||
 				(drop_bounds.IsEmpty))
 			{
 				//	La cible du drag & drop est la même que la position de départ,
 				//	ce qui signifie que l'on va cacher la surface de mise en évidence.
 				
-				this.widget_original_surface.BackColor = Drawing.Color.Transparent;
-				this.widget.Bounds = this.widget_original_surface.Bounds;
+				this.widget_before_drag.BackColor = Drawing.Color.Transparent;
+				this.widget.Bounds = this.widget_before_drag.Bounds;
 				this.is_drop_target_valid = false;
 			}
 			else
 			{
-				this.widget_original_surface.BackColor = Drawing.Color.FromARGB (0.2, 1.0, 0.0, 0.0);
+				this.widget_before_drag.BackColor = Drawing.Color.FromARGB (0.2, 1.0, 0.0, 0.0);
 				this.widget.Bounds = drop_bounds;
 				this.is_drop_target_valid = true;
 			}
-
 		}
 		
 		
@@ -291,11 +253,9 @@ namespace Epsitec.Common.Widgets.Design
 		protected bool					grips_visible;
 		protected bool					grips_hilited;
 		
-		protected MouseCursor			mouse_cursor = MouseCursor.Default;
-		
 		protected Widget				parent;
 		protected Widget				widget;
-		protected Widget				widget_original_surface;
+		protected Widget				widget_before_drag;
 		protected Drawing.Rectangle		original_bounds;
 		protected Drawing.Point			original_mouse;
 		protected ArrayList				ancestors = new ArrayList ();
