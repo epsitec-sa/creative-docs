@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 			this.items = new Helpers.StringCollection(this);
 			this.isCombo = true;
 			
-			this.button = new ArrowButton(this);
+			this.button = new GlyphButton(this);
 			this.button.Name = "Open";
 			this.button.GlyphType = GlyphType.ArrowDown;
 			this.button.ButtonStyle = ButtonStyle.Combo;
@@ -351,7 +351,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		protected ArrowButton						button;
+		protected GlyphButton						button;
 		protected Helpers.StringCollection			items;
 		protected Window							comboWindow;
 		protected ScrollList						scrollList;

@@ -19,8 +19,8 @@ namespace Epsitec.Common.Widgets
 			
 			this.InternalState &= ~InternalState.PossibleContainer;
 
-			this.arrowLeft = new ArrowButton(this);
-			this.arrowRight = new ArrowButton(this);
+			this.arrowLeft = new GlyphButton(this);
+			this.arrowRight = new GlyphButton(this);
 			this.arrowLeft.GlyphType = GlyphType.ArrowLeft;
 			this.arrowRight.GlyphType = GlyphType.ArrowRight;
 			this.arrowLeft.ButtonStyle = ButtonStyle.Scroller;
@@ -32,14 +32,14 @@ namespace Epsitec.Common.Widgets
 			this.arrowLeft.AutoRepeatEngaged = true;
 			this.arrowRight.AutoRepeatEngaged = true;
 
-			this.buttonMenu = new ArrowButton(this);
+			this.buttonMenu = new GlyphButton(this);
 			this.buttonMenu.GlyphType = GlyphType.Menu;
-			this.buttonMenu.ButtonStyle = ButtonStyle.Icon;
+			this.buttonMenu.ButtonStyle = ButtonStyle.Scroller;
 			this.buttonMenu.Clicked += new MessageEventHandler(this.HandleButtonMenuClicked);
 
-			this.buttonClose = new ArrowButton(this);
+			this.buttonClose = new GlyphButton(this);
 			this.buttonClose.GlyphType = GlyphType.Close;
-			this.buttonClose.ButtonStyle = ButtonStyle.Icon;
+			this.buttonClose.ButtonStyle = ButtonStyle.Scroller;
 			this.buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 		}
 		
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Widgets
 				this.arrowRight = null;
 				this.buttonMenu = null;
 				this.buttonClose = null;
-				
+
 				this.Clear();
 			}
 			
@@ -105,7 +105,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.hasMenuButton != value )
 				{
 					this.hasMenuButton = value;
-					this.UpdateArrowButtons();
+					this.UpdateGlyphButtons();
 				}
 			}
 		}
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.hasCloseButton != value )
 				{
 					this.hasCloseButton = value;
-					this.UpdateArrowButtons();
+					this.UpdateGlyphButtons();
 				}
 			}
 		}
@@ -311,7 +311,7 @@ namespace Epsitec.Common.Widgets
 		// Gestion d'un événement lorsqu'un bouton de scroll < > est pressé.
 		private void HandleScrollButton(object sender)
 		{
-			ArrowButton button = sender as ArrowButton;
+			GlyphButton button = sender as GlyphButton;
 
 			double move = 0;
 			if ( button == this.arrowLeft )
@@ -332,12 +332,12 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleButtonMenuClicked(object sender, MessageEventArgs e)
 		{
-			this.OnMenuClicked ();
+			this.OnMenuClicked();
 		}
 
 		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
 		{
-			this.OnCloseClicked ();
+			this.OnCloseClicked();
 		}
 
 		protected override void UpdateClientGeometry()
@@ -438,7 +438,7 @@ namespace Epsitec.Common.Widgets
 		protected void UpdateButtons()
 		{
 			this.UpdateTabButtons();
-			this.UpdateArrowButtons();
+			this.UpdateGlyphButtons();
 		}
 
 		// Met à jour tous les boutons des onglets.
@@ -463,8 +463,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		// Met à jour les 2 boutons flèche < > pour scroller.
-		protected void UpdateArrowButtons()
+		// Met à jour les 4 boutons spéciaux.
+		protected void UpdateGlyphButtons()
 		{
 			this.scrollArrow = ( this.scrollTotalWidth > this.Client.Width-4 );
 
@@ -566,20 +566,24 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnCloseClicked()
 		{
-			if (this.CloseClicked != null)
+			if ( this.CloseClicked != null )
 			{
-				this.CloseClicked (this);
+				this.CloseClicked(this);
 			}
 		}
 		
+		public event Support.EventHandler CloseClicked;
+
 		protected virtual void OnMenuClicked()
 		{
-			if (this.MenuClicked != null)
+			if ( this.MenuClicked != null )
 			{
-				this.MenuClicked (this);
+				this.MenuClicked(this);
 			}
 		}
 		
+		public event Support.EventHandler MenuClicked;
+
 		
 		class TabComparer : System.Collections.IComparer
 		{
@@ -752,9 +756,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		#endregion
-		
-		public event Support.EventHandler		CloseClicked;
-		public event Support.EventHandler		MenuClicked;
+
 
 		protected TabBookStyle					type;
 		protected TabPageCollection				items;
@@ -764,10 +766,10 @@ namespace Epsitec.Common.Widgets
 		protected bool							scrollArrow = false;
 		protected bool							hasMenuButton = false;
 		protected bool							hasCloseButton = false;
-		protected ArrowButton					arrowLeft;
-		protected ArrowButton					arrowRight;
-		protected ArrowButton					buttonMenu;
-		protected ArrowButton					buttonClose;
+		protected GlyphButton					arrowLeft;
+		protected GlyphButton					arrowRight;
+		protected GlyphButton					buttonMenu;
+		protected GlyphButton					buttonClose;
 		protected double						scrollTotalWidth;
 		protected double						scrollOffset = 0;
 		protected bool							isGrimy;

@@ -9,8 +9,8 @@ namespace Epsitec.Common.Widgets
 		{
 			this.textStyle = TextFieldStyle.UpDown;
 
-			this.arrowUp = new ArrowButton(this);
-			this.arrowDown = new ArrowButton(this);
+			this.arrowUp = new GlyphButton(this);
+			this.arrowDown = new GlyphButton(this);
 			this.arrowUp.Name = "Up";
 			this.arrowDown.Name = "Down";
 			this.arrowUp.GlyphType = GlyphType.ArrowUp;
@@ -129,7 +129,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleButton(object sender)
 		{
-			ArrowButton button = sender as ArrowButton;
+			GlyphButton button = sender as GlyphButton;
 
 			if ( button == this.arrowUp )
 			{
@@ -224,8 +224,8 @@ namespace Epsitec.Common.Widgets
 		
 		public event Support.EventHandler		ValueChanged;
 		
-		protected ArrowButton					arrowUp;
-		protected ArrowButton					arrowDown;
+		protected GlyphButton					arrowUp;
+		protected GlyphButton					arrowDown;
 		protected double						minRange = 0;
 		protected double						maxRange = 100;
 		protected double						step = 1;

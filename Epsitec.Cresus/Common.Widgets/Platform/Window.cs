@@ -25,8 +25,9 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			this.graphics = Epsitec.Common.Drawing.GraphicsFactory.NewGraphics ();
 			
+			Window.DummyHandleEater (this.Handle);
+			
 			this.ReallocatePixmap ();
-			this.CreateHandle ();
 			
 			WindowList.Insert (this);
 		}
@@ -35,6 +36,7 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
 			this.ShowInTaskbar   = false;
+			Window.DummyHandleEater (this.Handle);
 		}
 		
 		internal void MakeFixedSizeWindow()
@@ -43,11 +45,13 @@ namespace Epsitec.Common.Widgets.Platform
 			this.ControlBox      = false;
 			this.MaximizeBox     = false;
 			this.MinimizeBox     = false;
+			Window.DummyHandleEater (this.Handle);
 		}
 		
 		internal void MakeSecondaryWindow()
 		{
 			this.ShowInTaskbar   = false;
+			Window.DummyHandleEater (this.Handle);
 		}
 		
 		internal void ResetHostingWidgetWindow()
@@ -55,9 +59,14 @@ namespace Epsitec.Common.Widgets.Platform
 			this.widget_window_disposed = true;
 		}
 		
+		static void DummyHandleEater(System.IntPtr handle)
+		{
+		}
+		
 		
 		internal void AnimateShow(Animation animation, Drawing.Rectangle bounds)
 		{
+			Window.DummyHandleEater (this.Handle);
 			Drawing.Rectangle b1;
 			Drawing.Rectangle b2;
 			Drawing.Point o1;
@@ -141,6 +150,7 @@ namespace Epsitec.Common.Widgets.Platform
 				case Animation.RollLeft:
 					this.is_frozen = true;
 					this.WindowBounds = b1;
+					this.UpdateLayeredWindow ();
 					
 					animator = new Animator (SystemInformation.MenuAnimationRollTime);
 					animator.SetCallback (new BoundsOffsetCallback (this.AnimateWindowBounds), new AnimatorCallback (this.AnimateCleanup));

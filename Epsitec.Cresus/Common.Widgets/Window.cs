@@ -31,9 +31,9 @@ namespace Epsitec.Common.Widgets
 			
 			this.root.Size = new Drawing.Size (this.window.ClientSize);
 			this.root.Name = "Root";
-			this.root.MinSizeChanged += new EventHandler (HandleRootMinSizeChanged);
+			this.root.MinSizeChanged += new EventHandler (this.HandleRootMinSizeChanged);
 			
-			this.timer.TimeElapsed += new EventHandler(HandleTimeElapsed);
+			this.timer.TimeElapsed += new EventHandler (this.HandleTimeElapsed);
 			this.timer.AutoRepeat = 0.050;
 			
 			Window.windows.Add (new System.WeakReference (this));
@@ -471,8 +471,13 @@ namespace Epsitec.Common.Widgets
 		#region IDisposable Members
 		public void Dispose()
 		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
+			if (!this.is_disposed)
+			{
+				this.is_disposed = true;
+				
+				this.Dispose (true);
+				System.GC.SuppressFinalize (this);
+			}
 		}
 		#endregion
 		
@@ -482,7 +487,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.root != null)
 				{
-					this.root.MinSizeChanged -= new EventHandler (HandleRootMinSizeChanged);
+					this.root.MinSizeChanged -= new EventHandler (this.HandleRootMinSizeChanged);
 					this.root.Dispose ();
 				}
 				
@@ -492,7 +497,7 @@ namespace Epsitec.Common.Widgets
 					this.window.Dispose ();
 				}
 				
-				this.timer.TimeElapsed -= new EventHandler(HandleTimeElapsed);
+				this.timer.TimeElapsed -= new EventHandler (this.HandleTimeElapsed);
 				this.timer.Dispose ();
 				
 				this.root   = null;
@@ -1115,6 +1120,7 @@ namespace Epsitec.Common.Widgets
 		private Support.CommandDispatcher		cmd_dispatcher;
 		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();
 		private bool							is_dispose_queued;
+		private bool							is_disposed;
 		
 		private System.Collections.Queue		post_paint_queue = new System.Collections.Queue ();
 		private System.Collections.Hashtable	property_hash;
