@@ -34,8 +34,8 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckValidateFile()
 		{
-			string[] good_names = new string[] { "123", "ABC-123", "ABC.A", "ABC D", "AB+. .-", "_", "__", "_1" };
-			string[] bad_names  = new string[] { "", "@123", "ABC.", "ABC..A", "ABC ", "A(B)", "A[X]", "A/B", "A\\B", "A#B", "A*B", "A\"B", "A'B" };
+			string[] good_names = new string[] { "123", "@123", "ABC-123", "A(B)", "ABC.A", "ABC D", "AB+. .-", "_", "__", "_1", "A\"B", "A'B" };
+			string[] bad_names  = new string[] { "", "ABC.", "ABC..A", "ABC ", "A[X]", "A/B", "A\\B", "A#B", "A*B" };
 			
 			foreach (string name in good_names)
 			{
@@ -100,10 +100,10 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals ("CheckButton", bundle["widgets"].AsList[0].AsBundle["class"].AsString);
 			Assertion.AssertEquals ("RadioButton", bundle["widgets"].AsList[1].AsBundle["class"].AsString);
 			Assertion.AssertEquals ("Button",      bundle["widgets"].AsList[2].AsBundle["class"].AsString);
-			Assertion.AssertEquals ("file:complex", bundle.Name);
-			Assertion.AssertEquals ("file:complex#widgets[0]", bundle["widgets"].AsList[0].AsBundle.Name);
-			Assertion.AssertEquals ("file:complex#widgets[1]", bundle["widgets"].AsList[1].AsBundle.Name);
-			Assertion.AssertEquals ("file:button.cancel",      bundle["widgets"].AsList[2].AsBundle.Name);
+			Assertion.AssertEquals ("complex", bundle.Name);
+			Assertion.AssertEquals ("complex#widgets[0]", bundle["widgets"].AsList[0].AsBundle.Name);
+			Assertion.AssertEquals ("complex#widgets[1]", bundle["widgets"].AsList[1].AsBundle.Name);
+			Assertion.AssertEquals ("button.cancel",      bundle["widgets"].AsList[2].AsBundle.Name);
 		}
 		
 		[Test] public void CheckGetText()
