@@ -24,7 +24,7 @@ namespace Epsitec.Common.Widgets
 	{
 		static TextField()
 		{
-			TextField.flashTimer.Elapsed += new System.Timers.ElapsedEventHandler(TextField.HandleFlashTimer);
+			TextField.flashTimer.Tick += new System.EventHandler(TextField.HandleFlashTimer);
 		}
 		
 		// Crée une ligne éditable d'un type quelconque.
@@ -79,25 +79,39 @@ namespace Epsitec.Common.Widgets
 					break;
 			}
 			
-			this.CreateTextLayout ();
+			this.CreateTextLayout();
 		}
 		
 
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing)
+			if ( disposing )
 			{
 				System.Diagnostics.Debug.WriteLine("Dispose TextField " + this.Text);
 				
 				TextField.Blinking -= new EventHandler(this.FlashCursor);
 				
-				// TODO: détruit aussi le reste...
+				switch ( this.type )
+				{
+					case TextFieldType.MultiLine:
+						this.scroller.Moved -= new EventHandler(this.HandleScroller);
+						break;
+
+					case TextFieldType.UpDown:
+						this.arrowUp.Engaged -= new EventHandler(this.HandleButton);
+						this.arrowDown.Engaged -= new EventHandler(this.HandleButton);
+						this.arrowUp.StillEngaged -= new EventHandler(this.HandleButton);
+						this.arrowDown.StillEngaged -= new EventHandler(this.HandleButton);
+						break;
+
+					case TextFieldType.Combo:
+						this.arrowDown.Pressed -= new MessageEventHandler(this.HandleCombo);
+						break;
+				}
 			}
 			
 			base.Dispose(disposing);
 		}
-
-		
 
 		
 		// Retourne la hauteur standard d'une ligne éditable.
@@ -137,9 +151,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void DisposeTextLayout()
 		{
-			//	Ne fait rien, on veut s'assurer que le TextLayout associé avec le TextField
-			//	n'est jamais détruit du vivant du TextField.
-			
+			// Ne fait rien, on veut s'assurer que le TextLayout associé avec le
+			// TextField n'est jamais détruit du vivant du TextField.
 			this.textLayout.Text = "";
 		}
 
@@ -477,45 +490,44 @@ namespace Epsitec.Common.Widgets
 #endif
 
 		// Gère le temps écoulé pour faire clignoter un curseur.
-		protected static void HandleFlashTimer(object source, System.Timers.ElapsedEventArgs e)
+		protected static void HandleFlashTimer(object source, System.EventArgs e)
 		{
 			TextField.showCursor = !TextField.showCursor;
 			
-			if (TextField.Blinking != null)
+			if ( TextField.Blinking != null )
 			{
-				System.Diagnostics.Debug.WriteLine ("Blinking");
+				System.Diagnostics.Debug.WriteLine("Blinking");
 				TextField.Blinking(null);
 			}
 		}
 		
 		protected override void OnFocused()
 		{
-			base.OnFocused ();
+			base.OnFocused();
 			TextField.Blinking += new EventHandler(this.FlashCursor);
-			this.ResetCursor ();
+			this.ResetCursor();
 		}
 
 		protected override void OnDefocused()
 		{
 			TextField.Blinking -= new EventHandler(this.FlashCursor);
-			base.OnDefocused ();
+			base.OnDefocused();
 		}
 
 		
 		// Fait clignoter le curseur.
 		protected void FlashCursor(object sender)
 		{
-			this.Invalidate ();
+			this.Invalidate();
 		}
 
 		// Allume le curseur au prochain affichage.
 		protected void ResetCursor()
 		{
-			if (this.IsFocused && this.WindowFrame.Focused)
+			if ( this.IsFocused && this.WindowFrame.Focused )
 			{
 				TextField.flashTimer.Interval = SystemInformation.CursorBlinkDelay;
-				TextField.flashTimer.AutoReset = true;
-				TextField.flashTimer.Stop ();
+				TextField.flashTimer.Stop();
 				TextField.flashTimer.Start();  // restart du timer
 				TextField.showCursor = true;  // avec le curseur visible
 			}
@@ -587,9 +599,17 @@ namespace Epsitec.Common.Widgets
 				i ++;
 			}
 
+#if true
+			pos = this.MapClientToRoot(new Drawing.Point(0, 0));
+			pos = this.WindowFrame.MapWindowToScreen(pos);
+			ScreenInfo si = ScreenInfo.Find(pos);
+			Drawing.Rectangle wa = si.WorkingArea;
+			double hMax = pos.Y-wa.Bottom;
+#else
 			pos = this.MapClientToRoot(new Drawing.Point(0, 0));
 			pos = this.WindowFrame.MapWindowToScreen(pos);
 			double hMax = pos.Y-20;
+#endif
 			this.scrollList.AdjustToContent(ScrollListAdjust.MoveUp, 40, hMax);
 
 			this.scrollList.Select = sel;
@@ -1262,7 +1282,7 @@ namespace Epsitec.Common.Widgets
 		protected ScrollList					scrollList;
 		protected System.Collections.ArrayList	comboList = new System.Collections.ArrayList();
 		
-		protected static System.Timers.Timer	flashTimer = new System.Timers.Timer(SystemInformation.CursorBlinkDelay);
+		protected static System.Windows.Forms.Timer	flashTimer = new System.Windows.Forms.Timer();
 		protected static bool					showCursor = true;
 		
 		protected static event EventHandler		Blinking;
