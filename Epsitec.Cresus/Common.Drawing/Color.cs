@@ -133,6 +133,13 @@ namespace Epsitec.Common.Drawing
 			return new Color (brightness);
 		}
 		
+		public static Color FromHSV(double h, double s, double v)
+		{
+			double r,g,b;
+			Color.HSVtoRGB(h,s,v, out r, out g, out b);
+			return new Color(r, g, b);
+		}
+
 		public static Color FromName(string name)
 		{
 			if ((name.Length > 1) &&
@@ -172,6 +179,17 @@ namespace Epsitec.Common.Drawing
 			{
 				return Color.Empty;
 			}
+		}
+
+
+		public static void ToHSV(Color color, out double h, out double s, out double v)
+		{
+			Color.RGBtoHSV(color.r, color.g, color.b, out h, out s, out v);
+		}
+				
+		public void ToHSV(out double h, out double s, out double v)
+		{
+			Color.RGBtoHSV(this.r, this.g, this.b, out h, out s, out v);
 		}
 				
 		
@@ -234,6 +252,66 @@ namespace Epsitec.Common.Drawing
 				|| (a.a != b.a);
 		}
 		
+		
+		public static void RGBtoHSV(double r, double g, double b, out double h, out double s, out double v)
+		{
+			double min = System.Math.Min(r,System.Math.Min(g,b));
+			v = System.Math.Max(r,System.Math.Max(g,b));
+			double delta = v-min;
+
+			if ( v == 0 )  s = 0;
+			else           s = delta/v;
+
+			if ( s == 0 )  // achromatic ?
+			{
+				h = 0;
+			}
+			else	// chromatic ?
+			{
+				if ( r == v )  // between yellow and magenta ?
+				{
+					h = 60*(g-b)/delta;
+				}
+				else
+				{
+					if ( g == v )  // between cyan and yellow ?
+					{
+						h = 120+60*(b-r)/delta;
+					}
+					else	// between magenta and cyan ?
+					{
+						h = 240+60*(r-g)/delta;
+					}
+				}
+				if ( h < 0 )  h += 360;
+				h /= 360;
+			}
+		}
+
+		public static void HSVtoRGB(double h, double s, double v, out double r, out double g, out double b)
+		{
+			r = g = b = v;
+			if ( s == 0 )  return;  // noir ?
+
+			h *= 6;
+			double f = h-System.Math.Floor(h);
+			double p = v*(1-s);
+			double q = v*(1-s*f);
+			double t = v*(1-s*(1-f));
+
+			int i = (int)h;
+			if ( i == 6 )  i = 0;
+			switch ( i )
+			{
+				case 0:  r=v;  g=t;  b=p;  break;
+				case 1:  r=q;  g=v;  b=p;  break;
+				case 2:  r=p;  g=v;  b=t;  break;
+				case 3:  r=p;  g=q;  b=v;  break;
+				case 4:  r=t;  g=p;  b=v;  break;
+				case 5:  r=v;  g=p;  b=q;  break;
+			}
+		}
+
 		
 		private float					r, g, b, a;
 		private bool					is_empty;

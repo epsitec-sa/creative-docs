@@ -70,12 +70,22 @@ namespace Epsitec.Common.Tests
 			window.Show ();
 		}
 
-		[Test] public void CheckGradient()
+		[Test] public void CheckGradient1()
 		{
 			Window window = new Window ();
 			
-			window.Text = "CheckGradient";
-			window.Root.PaintForeground += new PaintEventHandler(Gradient_PaintForeground);
+			window.Text = "CheckGradient1";
+			window.Root.PaintForeground += new PaintEventHandler(Gradient1_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+
+		[Test] public void CheckGradient2()
+		{
+			Window window = new Window ();
+			
+			window.Text = "CheckGradient2";
+			window.Root.PaintForeground += new PaintEventHandler(Gradient2_PaintForeground);
 			window.Root.Invalidate ();
 			window.Show ();
 		}
@@ -349,7 +359,7 @@ namespace Epsitec.Common.Tests
 			e.Graphics.RenderSolid (Color.FromRGB (0, 0, 0.4));
 		}
 		
-		private void Gradient_PaintForeground(object sender, PaintEventArgs e)
+		private void Gradient1_PaintForeground(object sender, PaintEventArgs e)
 		{
 			WindowRoot root = sender as WindowRoot;
 			
@@ -417,6 +427,52 @@ namespace Epsitec.Common.Tests
 			e.Graphics.RenderGradient ();
 		}
 		
+		private void Gradient2_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double cx = root.Client.Width / 2;
+			double cy = root.Client.Height / 2;
+			
+			//e.Graphics.RotateTransform (0, cx, cy);
+			e.Graphics.ScaleTransform (1, 1, cx, cy);
+
+			Path path1 = new Path ();
+			path1.MoveTo (0, 0);
+			path1.LineTo (0, root.Client.Height);
+			path1.LineTo (root.Client.Width, root.Client.Height);
+			path1.LineTo (root.Client.Width, 0);
+			path1.Close ();
+			
+			double[] r = new double[256];
+			double[] g = new double[256];
+			double[] b = new double[256];
+			double[] a = new double[256];
+			
+			for (int i = 0 ; i < 256 ; i++)
+			{
+				Color.HSVtoRGB (i/256.0, 0.8, 1.0, out r[i], out g[i], out b[i]);
+				a[i] = 1.0;
+			}
+			
+			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
+			e.Graphics.Rasterizer.AddSurface (path1);
+			e.Graphics.GradientRenderer.Fill = Epsitec.Common.Drawing.GradientFill.Conic;
+			e.Graphics.GradientRenderer.SetParameters (0, 150);
+			e.Graphics.GradientRenderer.SetColors (r, g, b, a);
+			
+			Transform t = new Transform ();
+			t.Translate (cx, cy);
+			t.Rotate (30, cx, cy);
+			e.Graphics.GradientRenderer.Transform = t;
+			
+			e.Graphics.RenderGradient ();
+
+			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
+			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
+			e.Graphics.RenderSolid (Color.FromBrightness (0));
+		}
+
 		private void Image_PaintForeground(object sender, PaintEventArgs e)
 		{
 			WindowRoot root = sender as WindowRoot;
