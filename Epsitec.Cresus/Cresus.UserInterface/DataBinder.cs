@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.UserInterface
 				{
 					ResourceBundle bundle = this.object_bundler.FindBundleFromObject (obj);
 					
-					this.CreateBinding (obj, bundle, bundle.GetFieldString (Tags.Binding));
+					this.CreateBinding (obj, bundle, bundle[Tags.Binding].AsString);
 				}
 				
 				this.object_list.Clear ();
@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.UserInterface
 			
 			if (bundle.Contains (Tags.Binding))
 			{
-				string binding = bundle.GetFieldString (Tags.Binding);
+				string binding = bundle[Tags.Binding].AsString;
 				
 				if (binding != null)
 				{
