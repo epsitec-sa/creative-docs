@@ -61,6 +61,13 @@ namespace Epsitec.Common.Drawing.Renderers
 		}
 		
 		
+		public void SetAlphaMask(Pixmap pixmap, MaskComponent component)
+		{
+			this.AssertAttached ();
+			AntiGrain.Renderer.Smooth.SetAlphaMask (this.agg_ren, (pixmap == null) ? System.IntPtr.Zero : pixmap.Handle, (AntiGrain.Renderer.MaskComponent) component);
+		}
+		
+		
 		public void SetParameters(double r1, double r2)
 		{
 			if ((this.r1 != r1) ||
@@ -85,6 +92,7 @@ namespace Epsitec.Common.Drawing.Renderers
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
 		}
+		
 		
 		protected virtual void Dispose(bool disposing)
 		{
