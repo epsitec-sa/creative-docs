@@ -13,6 +13,14 @@ namespace Epsitec.Common.Script
 		{
 		}
 		
+		public Source(string name, Method[] methods, Types.IDataValue[] values, string about)
+		{
+			this.DefineName (name);
+			this.DefineMethods (methods);
+			this.DefineValues (values);
+			this.DefineAbout (about);
+		}
+		
 		
 		public string							Name
 		{
@@ -43,6 +51,171 @@ namespace Epsitec.Common.Script
 			get
 			{
 				return this.about;
+			}
+		}
+		
+		
+		public string GenerateAssemblySource()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append ("// Code generated dynamically based on '");
+			buffer.Append (this.Name);
+			buffer.Append ("'.\n\n");
+			buffer.Append ("namespace ");
+			buffer.Append (Text.DynamicNamespace);
+			buffer.Append ("\n{\n");
+			buffer.Append ("public sealed class ");
+			buffer.Append (Text.DynamicClass);
+			buffer.Append (" : ");
+			buffer.Append (Text.DynamicClassBase);
+			buffer.Append ("\n{\n");
+			
+			this.GenerateConstructor (buffer, Text.DynamicClass);
+			this.GenerateDataAccessors (buffer);
+			this.GenerateExecuteMethod (buffer);
+			this.GenerateScriptMethods (buffer);
+			
+			buffer.Append ("}\n");
+			buffer.Append ("}\n");
+			
+			return buffer.ToString ();
+		}
+		
+		private void GenerateConstructor(System.Text.StringBuilder buffer, string name)
+		{
+			buffer.Append ("public ");
+			buffer.Append (name);
+			buffer.Append ("()\n{\n");
+			
+			//	Corps du constructeur ici...
+			
+			buffer.Append ("}\n");
+		}
+		
+		private void GenerateDataAccessors(System.Text.StringBuilder buffer)
+		{
+			foreach (Types.IDataValue value in this.values)
+			{
+				buffer.Append ("private ");
+				buffer.Append (value.DataType.SystemType.FullName);
+				buffer.Append (" ");
+				buffer.Append (value.Name);
+				buffer.Append ("\n");
+				buffer.Append ("{\n");
+				buffer.Append ("get { return (");
+				buffer.Append (value.DataType.SystemType.FullName);
+				buffer.Append (") this.ReadData (\"");
+				buffer.Append (value.Name);
+				buffer.Append ("\", ");
+				buffer.Append (value.DataType.SystemType);
+				buffer.Append ("); }\n");
+				buffer.Append ("}\n");
+			}
+		}
+		
+		private void GenerateExecuteMethod(System.Text.StringBuilder buffer)
+		{
+			buffer.Append ("public override bool Execute(string name, object[] in_args)\n");
+			buffer.Append ("{\n");
+			buffer.Append ("switch (name)\n{\n");
+			
+			foreach (Method method in this.methods)
+			{
+				buffer.Append ("case \"");
+				buffer.Append (method.Name);
+				buffer.Append ("\":\n");
+				buffer.Append ("{\n");
+				
+				this.GenerateExecuteMethodCase (buffer, method);
+				
+				buffer.Append ("}\n");
+				buffer.Append ("break;\n");
+			}
+			
+			buffer.Append ("}\n");
+			buffer.Append ("return false;\n");
+			buffer.Append ("}\n");
+		}
+		
+		private void GenerateExecuteMethodCase(System.Text.StringBuilder buffer, Method method)
+		{
+			buffer.Append ("this.");
+			buffer.Append (method.Name);
+			buffer.Append (" ();\n");
+			buffer.Append ("return true;\n");
+		}
+
+		private void GenerateScriptMethods(System.Text.StringBuilder buffer)
+		{
+			foreach (Method method in this.methods)
+			{
+				this.GenerateScriptMethod (buffer, method);
+			}
+		}
+		
+		private void GenerateScriptMethod(System.Text.StringBuilder buffer, Method method)
+		{
+			buffer.Append ("public ");
+			
+			if (method.ReturnType.SystemType == typeof (void))
+			{
+				buffer.Append ("void");
+			}
+			else
+			{
+				buffer.Append (method.ReturnType.SystemType.FullName);
+			}
+			
+			buffer.Append (" ");
+			buffer.Append (method.Name);
+			buffer.Append ("(");
+			
+			for (int i = 0; i < method.Parameters.Length; i++)
+			{
+				if (i > 0)
+				{
+					buffer.Append (", ");
+				}
+				
+				ParameterInfo parameter = method.Parameters[i];
+				
+				switch (parameter.Direction)
+				{
+					case ParameterDirection.In:
+					case ParameterDirection.InOut:
+					case ParameterDirection.Out:
+						break;
+					default:
+						throw new System.InvalidOperationException (string.Format ("Method {0} has invalid parameter {1}, direction is {2}.", method.Name, parameter.Name, parameter.Direction));
+				}
+				
+				buffer.Append (parameter.Type.SystemType.FullName);
+				buffer.Append (" ");
+				buffer.Append (parameter.Name);
+			}
+			
+			buffer.Append (")\n");
+			buffer.Append ("{\n");
+			
+			this.GenerateScriptMethodBody (buffer, method);
+			
+			buffer.Append ("}\n");
+		}
+		
+		private void GenerateScriptMethodBody(System.Text.StringBuilder buffer, Method method)
+		{
+			int section_id = 1;
+			
+			foreach (CodeSection section in method.CodeSections)
+			{
+				System.Diagnostics.Debug.Assert (section.Location == CodeLocation.Local);
+				
+				buffer.Append ("// Section #");
+				buffer.Append (section_id++);
+				buffer.Append ("\n");
+				buffer.Append (section.Code);
+				buffer.Append ("\n\n");
 			}
 		}
 		
@@ -84,7 +257,7 @@ namespace Epsitec.Common.Script
 		{
 			None,
 			
-			Client			= 1,
+			Local			= 1,
 			Server			= 2,
 		}
 		#endregion
@@ -92,11 +265,11 @@ namespace Epsitec.Common.Script
 		#region ParameterInfo Class
 		public class ParameterInfo
 		{
-			internal ParameterInfo()
+			public ParameterInfo()
 			{
 			}
 			
-			internal ParameterInfo(ParameterDirection direction, Types.INamedType type, string name)
+			public ParameterInfo(ParameterDirection direction, Types.INamedType type, string name)
 			{
 				this.DefineDirection (direction);
 				this.DefineType (type);
@@ -179,15 +352,16 @@ namespace Epsitec.Common.Script
 		#region CodeSection Class
 		public class CodeSection
 		{
-			internal CodeSection()
+			public CodeSection()
 			{
 			}
 			
-			internal CodeSection(CodeLocation location, string code)
+			public CodeSection(CodeLocation location, string code)
 			{
 				this.DefineLocation (location);
 				this.DefineCode (code);
 			}
+			
 			
 			public CodeLocation					Location
 			{
@@ -230,11 +404,11 @@ namespace Epsitec.Common.Script
 		#region Method Class
 		public class Method
 		{
-			internal Method()
+			public Method()
 			{
 			}
 			
-			internal Method(string name, Types.INamedType return_type, ParameterInfo[] parameters, CodeSection[] code_sections)
+			public Method(string name, Types.INamedType return_type, ParameterInfo[] parameters, CodeSection[] code_sections)
 			{
 				this.DefineName (name);
 				this.DefineReturnType (return_type);
@@ -255,7 +429,7 @@ namespace Epsitec.Common.Script
 			{
 				get
 				{
-					return this.return_parameter == null ? null : this.return_parameter.Type;
+					return this.return_parameter == null ? Types.VoidType.Default : this.return_parameter.Type;
 				}
 			}
 			
@@ -291,16 +465,31 @@ namespace Epsitec.Common.Script
 			
 			internal void DefineParameters(ParameterInfo[] parameters)
 			{
+				if (parameters == null)
+				{
+					parameters = new ParameterInfo[0];
+				}
+				
 				this.parameters = parameters;
 			}
 			
 			internal void DefineReturnType(Types.INamedType type)
 			{
+				if (type == null)
+				{
+					type = Types.VoidType.Default;
+				}
+				
 				this.return_parameter = new ParameterInfo (ParameterDirection.ReturnValue, type, null);
 			}
 			
 			internal void DefineCodeSections(CodeSection[] code_sections)
 			{
+				if (code_sections == null)
+				{
+					code_sections = new CodeSection[0];
+				}
+				
 				this.code_sections = code_sections;
 			}
 			
@@ -316,5 +505,12 @@ namespace Epsitec.Common.Script
 		private Method[]						methods;
 		private Types.IDataValue[]				values;
 		private string							about;
+		
+		internal class Text
+		{
+			public const string					DynamicNamespace	= "Epsitec.Dynamic.Script";
+			public const string					DynamicClass		= "DynamicScript";
+			public const string					DynamicClassBase	= "Epsitec.Common.Script.Glue.AbstractScriptBase";
+		}
 	}
 }
