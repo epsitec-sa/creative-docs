@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
@@ -205,11 +205,21 @@ namespace Epsitec.Common.Designer.UI
 		
 		private void HandleComboTextButtonClicked(object sender, MessageEventArgs e)
 		{
+			this.combo_text.SelectAll ();
+			this.combo_text.Focus ();
+			
+			//	Demande à l'application de commuter dans l'éditeur de ressources textuelles
+			//	avec des boutons pour accepter/rejeter le choix. A la fin de l'édition, on
+			//	demande d'appeler HandleStringPickerValidated en cas d'acceptation :
+			
 			Application.Current.OpenStringPicker (new Support.EventHandler (this.HandleStringPickerValidated));
 		}
 		
 		private void HandleStringPickerValidated(object sender)
 		{
+			//	L'utilisateur a validé le choix d'une string dans l'éditeur de ressources
+			//	textuelles. Il faut reprendre le nom du bundle et celui du champ :
+			
 			Application            app   = sender as Application;
 			Panels.StringEditPanel panel = app.StringEditController.ActivePanel;
 			EditArray              edit  = panel.EditArray;
