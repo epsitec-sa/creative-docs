@@ -155,7 +155,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event EventHandler ValueChanged;
+		public event Support.EventHandler ValueChanged;
 
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
