@@ -135,8 +135,13 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		protected void HandlePanelLayoutUpdate(object sender, Epsitec.Common.Widgets.Layouts.UpdateEventArgs e)
 		{
-			System.Diagnostics.Debug.WriteLine ("Suppressed panel layout.");
+			System.Diagnostics.Debug.WriteLine ("PanelLayoutUpdate called");
+			
+			//	Evite que ce soit le gestionnaire interne de Widget qui s'occupe du layout de ses
+			//	fils :
+			
 			e.Cancel = true;
+			this.is_dirty_structure = true;
 		}
 		
 		

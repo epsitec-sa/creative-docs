@@ -798,7 +798,7 @@ namespace Epsitec.Common.Widgets
 				oldBook.items.Remove(item);
 			}
 
-			item.Bounds = this.Inside;
+			item.Bounds = this.InnerBounds;
 			item.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 			item.PaneButton.PaneButtonStyle = ( this.type == PaneBookStyle.LeftRight ) ? PaneButtonStyle.Vertical : PaneButtonStyle.Horizontal;
 			
