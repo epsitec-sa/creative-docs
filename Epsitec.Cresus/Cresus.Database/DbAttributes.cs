@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		internal void SerialiseXmlAttributes(System.Text.StringBuilder buffer)
+		internal void SerializeXmlAttributes(System.Text.StringBuilder buffer)
 		{
 			string[] names = this.Names;
 			
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		internal void DeserialiseXmlAttributes(System.Xml.XmlElement xml)
+		internal void DeserializeXmlAttributes(System.Xml.XmlElement xml)
 		{
 			foreach (System.Xml.XmlAttribute attr in xml.Attributes)
 			{
