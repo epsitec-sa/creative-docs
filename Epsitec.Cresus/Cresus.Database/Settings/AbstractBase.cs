@@ -46,10 +46,25 @@ namespace Epsitec.Cresus.Database.Settings
 		}
 		
 		
+		public static string CreateTableName(string name)
+		{
+			return name;
+		}
+		
+		public static void CreateTable(DbInfrastructure infrastructure, DbTransaction transaction, string name, DbElementCat category, DbRevisionMode revision_mode)
+		{
+			string table_name = AbstractBase.CreateTableName (name);
+			
+			DbDict.CreateTable (infrastructure, transaction, table_name, category, revision_mode);
+		}
+		
+		
 		protected void Setup(DbInfrastructure infrastructure, DbTransaction transaction, string name)
 		{
+			string table_name = AbstractBase.CreateTableName (name);
+			
 			this.dict = new DbDict ();
-			this.dict.Attach (infrastructure, infrastructure.ResolveDbTable (transaction, name));
+			this.dict.Attach (infrastructure, infrastructure.ResolveDbTable (transaction, table_name));
 			this.dict.RestoreFromBase (transaction);
 			
 			Epsitec.Common.Support.ObjectDictMapper.CopyFromDict (this, this.dict);

@@ -209,13 +209,13 @@ namespace Epsitec.Cresus.Database
 		{
 			//	Crée une table pour stocker un dictionnaire.
 			
-			DbTable table = infrastructure.CreateDbTable (table_name, category, revision_mode);
+			DbTable table = infrastructure.CreateTable (table_name, category, revision_mode);
 			
 			DbType type_dict_key   = infrastructure.ResolveDbType (transaction, Tags.TypeDictKey);
 			DbType type_dict_value = infrastructure.ResolveDbType (transaction, Tags.TypeDictValue);
 			
-			DbColumn col1 = new DbColumn (Tags.ColumnDictKey,   type_dict_key,   Nullable.No, DbColumnClass.Data, DbElementCat.Internal);
-			DbColumn col2 = new DbColumn (Tags.ColumnDictValue, type_dict_value, Nullable.No, DbColumnClass.Data, DbElementCat.Internal);
+			DbColumn col1 = new DbColumn (Tags.ColumnDictKey,   type_dict_key,   Nullable.No,  DbColumnClass.Data, DbElementCat.Internal);
+			DbColumn col2 = new DbColumn (Tags.ColumnDictValue, type_dict_value, Nullable.Yes, DbColumnClass.Data, DbElementCat.Internal);
 			
 			table.Columns.Add (col1);
 			table.Columns.Add (col2);

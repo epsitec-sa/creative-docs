@@ -52,9 +52,9 @@ namespace Epsitec.Cresus.Database
 				
 				table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
 				
-				Assert.AreEqual (1000000000006L, infrastructure.NewRowIdInTable (null, table.InternalKey, 2));
-				Assert.AreEqual (1000000000008L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
-				Assert.AreEqual (1000000000008L, infrastructure.NewRowIdInTable (null, table.InternalKey, 1));
+				Assert.AreEqual (1000000000008L, infrastructure.NewRowIdInTable (null, table.InternalKey, 2));
+				Assert.AreEqual (1000000000010L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
+				Assert.AreEqual (1000000000010L, infrastructure.NewRowIdInTable (null, table.InternalKey, 1));
 			}
 		}
 		
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Database
 				Assert.AreEqual (db_table1.PrimaryKeys.Count,	db_table2.PrimaryKeys.Count);
 				Assert.AreEqual (db_table1.PrimaryKeys[0].Name,	db_table2.PrimaryKeys[0].Name);
 				Assert.AreEqual (db_table1.Columns.Count,		db_table2.Columns.Count);
-				Assert.AreEqual (1000000000009L, db_table2.InternalKey.Id);
+				Assert.AreEqual (1000000000011L, db_table2.InternalKey.Id);
 			}
 		}
 		
@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.Database
 				infrastructure.RegisterNewDbTable (null, db_table);
 				
 				Assert.IsNotNull (infrastructure.ResolveDbTable (null, db_table.Name));
-				Assert.AreEqual (1000000000010L, db_table.InternalKey.Id);
+				Assert.AreEqual (1000000000012L, db_table.InternalKey.Id);
 				Assert.AreEqual (DbRowStatus.Live, db_table.InternalKey.Status);
 			}
 		}

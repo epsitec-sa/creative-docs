@@ -10,9 +10,53 @@ namespace Epsitec.Cresus.Database.Settings
 	{
 		internal Globals(DbInfrastructure infrastructure, DbTransaction transaction)
 		{
-			this.Setup (infrastructure, transaction, "Settings/Globals");
+			this.Setup (infrastructure, transaction, Globals.Name);
 		}
 		
 		
+		internal static string					Name
+		{
+			get
+			{
+				return "CR_SETTINGS_GLOBALS";
+			}
+		}
+		
+		
+		public string							CustomerLicence
+		{
+			get
+			{
+				return this.customer_licence;
+			}
+			set
+			{
+				if (this.customer_licence != value)
+				{
+					this.customer_licence = value;
+					this.NotifyPropertyChanged ("CustomerLicence");
+				}
+			}
+		}
+		
+		public string							CustomerId
+		{
+			get
+			{
+				return this.customer_id;
+			}
+			set
+			{
+				if (this.customer_id != value)
+				{
+					this.customer_id = value;
+					this.NotifyPropertyChanged ("CustomerId");
+				}
+			}
+		}
+		
+		
+		private string							customer_licence;
+		private string							customer_id;
 	}
 }

@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Database
 			
 			//	Il faut créer les tables internes utilisées pour la gestion des méta-données.
 			
-			using (DbTransaction transaction = this.BeginTransaction ())
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				BootHelper helper = new BootHelper (this, transaction);
 				
@@ -113,10 +113,10 @@ namespace Epsitec.Cresus.Database
 				transaction.Commit ();
 			}
 			
-			//	Les tables ont toutes été créées. Il faut maintenant les remplir avec
-			//	les informations de départ.
-				
-			using (DbTransaction transaction = this.BeginTransaction ())
+			//	Les tables de description ont toutes été créées. Il faut maintenant les remplir
+			//	avec les informations de initiales.
+			
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				//	TODO: gérer client_id
 				
@@ -124,8 +124,35 @@ namespace Epsitec.Cresus.Database
 				
 				this.SetupTables (transaction);
 				
+				//	Crée aussi les réglages globaux et locaux, ce qui va créer des tables dans
+				//	la base, donc nécessiter une validation de transaction avant que celles-ci
+				//	ne soient accessibles en écriture :
+				
+				Settings.Globals.CreateTable (this, transaction, Settings.Globals.Name, DbElementCat.Internal, DbRevisionMode.Disabled);
+				Settings.Locals.CreateTable (this, transaction, Settings.Locals.Name, DbElementCat.Internal, DbRevisionMode.Disabled);
+				
 				transaction.Commit ();
 			}
+			
+			//	Crée les valeurs par défaut dans les réglages (Globals et Locals) :
+			
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				Settings.Globals globals = new Settings.Globals (this, transaction);
+				Settings.Locals  locals  = new Settings.Locals (this, transaction);
+				
+				globals.PersistToBase (transaction);
+				
+				locals.ClientId = this.client_id;
+				locals.PersistToBase (transaction);
+				
+				globals = null;
+				locals  = null;
+
+				transaction.Commit ();
+			}
+			
+			this.StartUsingDatabase ();
 		}
 		
 		public void AttachDatabase(DbAccess db_access)
@@ -142,7 +169,7 @@ namespace Epsitec.Cresus.Database
 			
 			System.Diagnostics.Debug.Assert (this.db_abstraction.UserTableNames.Length > 0);
 			
-			using (DbTransaction transaction = this.BeginTransaction ())
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
 			{
 				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableLog));
 				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableTableDef));
@@ -152,9 +179,20 @@ namespace Epsitec.Cresus.Database
 				
 				this.types.ResolveTypes (transaction);
 				
-				//	TODO: gérer client_id
+				transaction.Commit ();
+			}
+			
+			this.StartUsingDatabase ();
+		}
+		
+		protected virtual void StartUsingDatabase()
+		{
+			using (DbTransaction transaction = this.BeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				this.globals = new Settings.Globals (this, transaction);
+				this.locals  = new Settings.Locals (this, transaction);
 				
-				this.client_id = 1;
+				this.client_id = this.locals.ClientId;
 				this.SetupLogger (transaction);
 				
 				transaction.Commit ();
@@ -2124,8 +2162,8 @@ namespace Epsitec.Cresus.Database
 		private TypeHelper						types;
 		private DbLogger						logger;
 		
-		private DbDict							global_dict;
-		private DbDict							local_dict;
+		private Settings.Globals				globals;
+		private Settings.Locals					locals;
 		
 		protected Collections.DbTables			internal_tables = new Collections.DbTables ();
 		protected Collections.DbTypes			internal_types  = new Collections.DbTypes ();
