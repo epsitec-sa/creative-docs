@@ -7,6 +7,6 @@ namespace Epsitec.Common.Drawing
 	public interface ICanvasEngine
 	{
 		void GetSizeAndOrigin(byte[] data, out Drawing.Size size, out Drawing.Point origin);
-		void Paint(Drawing.Graphics graphics, Drawing.Size size, byte[] data, bool disabled);
+		void Paint(Drawing.Graphics graphics, Drawing.Size size, byte[] data, bool disabled, Drawing.Color color, object adorner);
 	}
 }

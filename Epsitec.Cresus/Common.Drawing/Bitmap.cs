@@ -18,6 +18,14 @@ namespace Epsitec.Common.Drawing
 			//	l'image est fixe.
 		}
 		
+		public override void DefineColor(Drawing.Color color)
+		{
+		}
+		
+		public override void DefineAdorner(object adorner)
+		{
+		}
+		
 		public override void MergeTransform(Transform transform)
 		{
 			//	Fusionne la transformation spécifiée avec la transformation propre à l'image

@@ -35,6 +35,24 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public override void DefineColor(Drawing.Color color)
+		{
+			if (this.color != color)
+			{
+				this.color = color;
+				this.InvalidateCache ();
+			}
+		}
+		
+		public override void DefineAdorner(object adorner)
+		{
+			if (this.adorner != adorner)
+			{
+				this.adorner = adorner;
+				this.InvalidateCache ();
+			}
+		}
+		
 		public override Image GetDisabled()
 		{
 			return this.disabled;
@@ -104,7 +122,7 @@ namespace Epsitec.Common.Drawing
 					
 					bool is_disabled = (this == this.disabled);
 					
-					Canvas.Engine.Paint (graphics, size, this.data, is_disabled);
+					Canvas.Engine.Paint (graphics, size, this.data, is_disabled, this.color, this.adorner);
 					
 					int width, height, stride;
 					System.Drawing.Imaging.PixelFormat format;
@@ -203,6 +221,8 @@ namespace Epsitec.Common.Drawing
 		protected Canvas				disabled;
 		protected byte[]				data;
 		protected double				zoom = 1.0;
+		protected Drawing.Color			color = Drawing.Color.Empty;
+		protected object				adorner = null;
 		protected Bitmap				cache;
 		
 		protected static ICanvasEngine	engine;
