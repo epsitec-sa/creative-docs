@@ -27,45 +27,45 @@ namespace Epsitec.Common.Drawing
 		{
 			this.CreateOnTheFly ();
 			this.has_curve = false;
-			AntiGrain.Interface.PathRemoveAll (this.agg_path);
+			AntiGrain.Path.RemoveAll (this.agg_path);
 		}
 		
 		public void MoveTo(double x, double y)
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.PathMoveTo (this.agg_path, x, y);
+			AntiGrain.Path.MoveTo (this.agg_path, x, y);
 		}
 		
 		public void LineTo(double x, double y)
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.PathLineTo (this.agg_path, x, y);
+			AntiGrain.Path.LineTo (this.agg_path, x, y);
 		}
 		
 		public void CurveTo(double x_c1, double y_c1, double x_c2, double y_c2, double x, double y)
 		{
 			this.CreateOnTheFly ();
 			this.has_curve = true;
-			AntiGrain.Interface.PathCurve4 (this.agg_path, x_c1, y_c1, x_c2, y_c2, x, y);
+			AntiGrain.Path.Curve4 (this.agg_path, x_c1, y_c1, x_c2, y_c2, x, y);
 		}
 		
 		public void CurveTo(double x_c, double y_c, double x, double y)
 		{
 			this.CreateOnTheFly ();
 			this.has_curve = true;
-			AntiGrain.Interface.PathCurve3 (this.agg_path, x_c, y_c, x, y);
+			AntiGrain.Path.Curve3 (this.agg_path, x_c, y_c, x, y);
 		}
 		
 		public void Close()
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.PathClose (this.agg_path);
+			AntiGrain.Path.Close (this.agg_path);
 		}
 		
 		public void StartNewPath()
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.PathAddNewPath (this.agg_path);
+			AntiGrain.Path.AddNewPath (this.agg_path);
 		}
 		
 		
@@ -83,14 +83,14 @@ namespace Epsitec.Common.Drawing
 		{
 			this.CreateOnTheFly ();
 			this.has_curve |= path.has_curve;
-			AntiGrain.Interface.PathAppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, 0);
+			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, 0);
 		}
 		
 		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty, double bold_width)
 		{
 			this.CreateOnTheFly ();
 			this.has_curve |= path.has_curve;
-			AntiGrain.Interface.PathAppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, bold_width);
+			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, bold_width);
 		}
 		
 		public void Append(Font font, int glyph, double x, double y, double size)
@@ -107,21 +107,21 @@ namespace Epsitec.Common.Drawing
 		{
 			this.CreateOnTheFly ();
 			this.has_curve = true;
-			AntiGrain.Interface.PathAppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, 0);
+			AntiGrain.Path.AppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, 0);
 		}
 		
 		public void Append(Font font, int glyph, double xx, double xy, double yx, double yy, double tx, double ty, double bold_width)
 		{
 			this.CreateOnTheFly ();
 			this.has_curve = true;
-			AntiGrain.Interface.PathAppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, bold_width);
+			AntiGrain.Path.AppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, bold_width);
 		}
 		
 		
 		public void ComputeBounds(out double x1, out double y1, out double x2, out double y2)
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.PathComputeBounds (this.agg_path, out x1, out y1, out x2, out y2);
+			AntiGrain.Path.ComputeBounds (this.agg_path, out x1, out y1, out x2, out y2);
 		}
 		
 		public Rectangle ComputeBounds()
@@ -136,13 +136,13 @@ namespace Epsitec.Common.Drawing
 		{
 			this.CreateOnTheFly ();
 			
-			int n = AntiGrain.Interface.PathElemCount (this.agg_path);
+			int n = AntiGrain.Path.ElemCount (this.agg_path);
 			
 			int[]    e = new int[n];
 			double[] x = new double[n];
 			double[] y = new double[n];
 			
-			AntiGrain.Interface.PathElemGet (this.agg_path, n, e, x, y);
+			AntiGrain.Path.ElemGet (this.agg_path, n, e, x, y);
 			
 			elements = new PathElement[n];
 			points   = new Point[n];
@@ -236,7 +236,7 @@ namespace Epsitec.Common.Drawing
 			
 			if (this.agg_path != System.IntPtr.Zero)
 			{
-				AntiGrain.Interface.PathDelete (this.agg_path);
+				AntiGrain.Path.Delete (this.agg_path);
 				this.agg_path = System.IntPtr.Zero;
 			}
 		}
@@ -245,7 +245,7 @@ namespace Epsitec.Common.Drawing
 		{
 			if (this.agg_path == System.IntPtr.Zero)
 			{
-				this.agg_path = AntiGrain.Interface.PathNew ();
+				this.agg_path = AntiGrain.Path.New ();
 			}
 		}
 		

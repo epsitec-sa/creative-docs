@@ -13,19 +13,19 @@ namespace Epsitec.Common.Drawing.Agg
 		protected override void SyncFillMode()
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.RasterizerFillingRule (this.agg_ras, (int) this.fill_mode);
+			AntiGrain.Rasterizer.FillingRule (this.agg_ras, (int) this.fill_mode);
 		}
 		
 		protected override void SyncGamma()
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.RasterizerGamma (this.agg_ras, this.gamma);
+			AntiGrain.Rasterizer.Gamma (this.agg_ras, this.gamma);
 		}
 		
 		protected override void SyncTransform()
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.RasterizerSetTransform (this.agg_ras, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
+			AntiGrain.Rasterizer.SetTransform (this.agg_ras, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
 		}
 		
 		
@@ -35,32 +35,32 @@ namespace Epsitec.Common.Drawing.Agg
 			//	The clip box is specified in destination pixel coordinates (without any transform
 			//	matrix).
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.RasterizerSetClipBox (this.agg_ras, x1, y1, x2, y2);
+			AntiGrain.Rasterizer.SetClipBox (this.agg_ras, x1, y1, x2, y2);
 		}
 		
 		public override void ResetClipBox()
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.RasterizerResetClipBox (this.agg_ras);
+			AntiGrain.Rasterizer.ResetClipBox (this.agg_ras);
 		}
 		
 		
 		public override void AddSurface(Path path)
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.RasterizerAddPath (this.agg_ras, path.Handle, path.ContainsCurves);
+			AntiGrain.Rasterizer.AddPath (this.agg_ras, path.Handle, path.ContainsCurves);
 		}
 		
 		public override void AddOutline(Path path, double width)
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.RasterizerAddPathStroke1 (this.agg_ras, path.Handle, width, path.ContainsCurves);
+			AntiGrain.Rasterizer.AddPathStroke1 (this.agg_ras, path.Handle, width, path.ContainsCurves);
 		}
 		
 		public override void AddOutline(Path path, double width, CapStyle cap, JoinStyle join, double miter_limit)
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.RasterizerAddPathStroke2 (this.agg_ras, path.Handle, width, (int) cap, (int) join, miter_limit, path.ContainsCurves);
+			AntiGrain.Rasterizer.AddPathStroke2 (this.agg_ras, path.Handle, width, (int) cap, (int) join, miter_limit, path.ContainsCurves);
 		}
 		
 		public override void AddGlyph(Font font, int glyph, double x, double y, double scale)
@@ -78,9 +78,9 @@ namespace Epsitec.Common.Drawing.Agg
 				{
 					case SyntheticFontMode.Oblique:
 						font_transform.MultiplyBy (this.transform);
-						AntiGrain.Interface.RasterizerSetTransform (this.agg_ras, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
-						AntiGrain.Interface.RasterizerAddGlyph(this.agg_ras, font.Handle, glyph, 0, 0, scale);
-						AntiGrain.Interface.RasterizerSetTransform (this.agg_ras, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
+						AntiGrain.Rasterizer.SetTransform (this.agg_ras, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
+						AntiGrain.Rasterizer.AddGlyph(this.agg_ras, font.Handle, glyph, 0, 0, scale);
+						AntiGrain.Rasterizer.SetTransform (this.agg_ras, this.transform.XX, this.transform.XY, this.transform.YX, this.transform.YY, this.transform.TX, this.transform.TY);
 						return;
 					
 					default:
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Drawing.Agg
 				}
 			}
 			
-			AntiGrain.Interface.RasterizerAddGlyph(this.agg_ras, font.Handle, glyph, x, y, scale);
+			AntiGrain.Rasterizer.AddGlyph(this.agg_ras, font.Handle, glyph, x, y, scale);
 		}
 		
 		public override double AddText(Font font, string text, double x, double y, double scale)
@@ -107,36 +107,36 @@ namespace Epsitec.Common.Drawing.Agg
 				switch (font.SyntheticFontMode)
 				{
 					case SyntheticFontMode.Oblique:
-						return AntiGrain.Interface.RasterizerAddText (this.agg_ras, font.Handle, text, 0, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
+						return AntiGrain.Rasterizer.AddText (this.agg_ras, font.Handle, text, 0, font_transform.XX, font_transform.XY, font_transform.YX, font_transform.YY, font_transform.TX, font_transform.TY);
 					
 					default:
 						break;
 				}
 			}
 			
-			return AntiGrain.Interface.RasterizerAddText (this.agg_ras, font.Handle, text, 0, scale, 0, 0, scale, x, y);
+			return AntiGrain.Rasterizer.AddText (this.agg_ras, font.Handle, text, 0, scale, 0, 0, scale, x, y);
 		}
 		
 		
 		public override void Render(Renderer.Solid renderer)
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.RasterizerRenderSolid (this.agg_ras, renderer.Handle);
-			AntiGrain.Interface.RasterizerClear (this.agg_ras);
+			AntiGrain.Rasterizer.RenderSolid (this.agg_ras, renderer.Handle);
+			AntiGrain.Rasterizer.Clear (this.agg_ras);
 		}
 		
 		public override void Render(Renderer.Image renderer)
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.RasterizerRenderImage (this.agg_ras, renderer.Handle);
-			AntiGrain.Interface.RasterizerClear (this.agg_ras);
+			AntiGrain.Rasterizer.RenderImage (this.agg_ras, renderer.Handle);
+			AntiGrain.Rasterizer.Clear (this.agg_ras);
 		}
 		
 		public override void Render(Renderer.Gradient renderer)
 		{
 			this.CreateOnTheFly ();
-			AntiGrain.Interface.RasterizerRenderGradient (this.agg_ras, renderer.Handle);
-			AntiGrain.Interface.RasterizerClear (this.agg_ras);
+			AntiGrain.Rasterizer.RenderGradient (this.agg_ras, renderer.Handle);
+			AntiGrain.Rasterizer.Clear (this.agg_ras);
 		}
 		
 		
@@ -149,7 +149,7 @@ namespace Epsitec.Common.Drawing.Agg
 			
 			if (this.agg_ras != System.IntPtr.Zero)
 			{
-				AntiGrain.Interface.RasterizerDelete (this.agg_ras);
+				AntiGrain.Rasterizer.Delete (this.agg_ras);
 				this.agg_ras = System.IntPtr.Zero;
 			}
 		}
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Drawing.Agg
 		{
 			if (this.agg_ras == System.IntPtr.Zero)
 			{
-				this.agg_ras = AntiGrain.Interface.RasterizerNew ();
+				this.agg_ras = AntiGrain.Rasterizer.New ();
 			}
 		}
 		

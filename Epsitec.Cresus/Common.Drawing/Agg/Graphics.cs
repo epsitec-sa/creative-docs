@@ -44,6 +44,28 @@ namespace Epsitec.Common.Drawing.Agg
 		
 		
 
+		public override double PaintText(double x, double y, string text, Font font, double size, Color color)
+		{
+			if (this.transform.OnlyTranslate && ! font.IsSynthetic)
+			{
+				x += this.transform.TX;
+				y += this.transform.TY;
+				
+				if (this.has_clip_rect)
+				{
+					return font.PaintPixelCache (this.pixmap, text, size, x, y, this.clip_x1, this.clip_y1, this.clip_x2, this.clip_y2, color);
+				}
+			
+				return font.PaintPixelCache (this.pixmap, text, size, x, y, 0, 0, this.pixmap.Size.Width-1, this.pixmap.Size.Height-1, color);
+			}
+			else
+			{
+				double advance = this.AddText (x, y, text, font, size);
+				this.RenderSolid (color);
+				return advance;
+			}
+		}
+		
 		
 		
 		public override void AddLine(double x1, double y1, double x2, double y2)

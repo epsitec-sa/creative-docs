@@ -54,7 +54,7 @@ namespace Epsitec.Common.Drawing.Renderer
 						this.bitmap.UnlockBits ();
 						this.AssertAttached ();
 						
-						AntiGrain.Interface.RendererImageSource2 (this.agg_ren, System.IntPtr.Zero, 0, 0, 0);
+						AntiGrain.Renderer.Image.Source2 (this.agg_ren, System.IntPtr.Zero, 0, 0, 0);
 					}
 					
 					this.bitmap = value;
@@ -67,7 +67,7 @@ namespace Epsitec.Common.Drawing.Renderer
 						this.bitmap.LockBits ();
 						this.AssertAttached ();
 						
-						AntiGrain.Interface.RendererImageSource2 (this.agg_ren, this.bitmap.Scan0, width, height, -this.bitmap.Stride);
+						AntiGrain.Renderer.Image.Source2 (this.agg_ren, this.bitmap.Scan0, width, height, -this.bitmap.Stride);
 					}
 				}
 				
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Drawing.Renderer
 				this.int_transform = new Transform (value);
 				this.OnTransformUpdating (System.EventArgs.Empty);
 				Transform inverse = Transform.Inverse (this.int_transform);
-				AntiGrain.Interface.RendererImageMatrix (this.agg_ren, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
+				AntiGrain.Renderer.Image.Matrix (this.agg_ren, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
 			}
 		}
 		
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Drawing.Renderer
 			this.Detach ();
 			
 			this.transform.Reset ();
-			this.agg_ren = AntiGrain.Interface.RendererImageNew (pixmap.Handle);
+			this.agg_ren = AntiGrain.Renderer.Image.New (pixmap.Handle);
 			this.pixmap  = pixmap;
 		}
 		
@@ -163,7 +163,7 @@ namespace Epsitec.Common.Drawing.Renderer
 		{
 			if (this.agg_ren != System.IntPtr.Zero)
 			{
-				AntiGrain.Interface.RendererImageDelete (this.agg_ren);
+				AntiGrain.Renderer.Image.Delete (this.agg_ren);
 				this.agg_ren = System.IntPtr.Zero;
 				this.pixmap  = null;
 			}

@@ -59,7 +59,7 @@ namespace Epsitec.Common.Drawing.Renderer
 				{
 					this.AssertAttached ();
 					this.fill = value;
-					AntiGrain.Interface.RendererGradientSelect (this.agg_ren, (int) this.fill);
+					AntiGrain.Renderer.Gradient.Select (this.agg_ren, (int) this.fill);
 				}
 			}
 		}
@@ -90,7 +90,7 @@ namespace Epsitec.Common.Drawing.Renderer
 				this.int_transform = new Transform (value);
 				this.OnTransformUpdating (System.EventArgs.Empty);
 				Transform inverse = Transform.Inverse (this.int_transform);
-				AntiGrain.Interface.RendererGradientMatrix (this.agg_ren, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
+				AntiGrain.Renderer.Gradient.Matrix (this.agg_ren, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
 			}
 		}
 		
@@ -146,14 +146,14 @@ namespace Epsitec.Common.Drawing.Renderer
 			}
 			
 			this.AssertAttached ();
-			AntiGrain.Interface.RendererGradientColor1 (this.agg_ren, r, g, b, a);
+			AntiGrain.Renderer.Gradient.Color1 (this.agg_ren, r, g, b, a);
 		}
 
 		
 		public void SetParameters(double r1, double r2)
 		{
 			this.AssertAttached ();
-			AntiGrain.Interface.RendererGradientRange (this.agg_ren, r1, r2);
+			AntiGrain.Renderer.Gradient.Range (this.agg_ren, r1, r2);
 		}
 		
 		
@@ -190,7 +190,7 @@ namespace Epsitec.Common.Drawing.Renderer
 		{
 			this.Detach ();
 			
-			this.agg_ren = AntiGrain.Interface.RendererGradientNew (pixmap.Handle);
+			this.agg_ren = AntiGrain.Renderer.Gradient.New (pixmap.Handle);
 			this.pixmap  = pixmap;
 		}
 		
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Drawing.Renderer
 		{
 			if (this.agg_ren != System.IntPtr.Zero)
 			{
-				AntiGrain.Interface.RendererGradientDelete (this.agg_ren);
+				AntiGrain.Renderer.Gradient.Delete (this.agg_ren);
 				this.agg_ren = System.IntPtr.Zero;
 				this.pixmap  = null;
 				this.fill    = GradientFill.None;

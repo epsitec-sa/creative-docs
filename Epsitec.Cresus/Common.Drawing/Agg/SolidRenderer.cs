@@ -42,12 +42,12 @@ namespace Epsitec.Common.Drawing.Agg
 		
 		public override void Clear(double r, double g, double b, double a)
 		{
-			AntiGrain.Interface.RendererSolidClear (this.agg_ren, r, g, b, a);
+			AntiGrain.Renderer.Solid.Clear (this.agg_ren, r, g, b, a);
 		}
 		
 		public override void SetColor(double r, double g, double b, double a)
 		{
-			AntiGrain.Interface.RendererSolidColor (this.agg_ren, r, g, b, a);
+			AntiGrain.Renderer.Solid.Color (this.agg_ren, r, g, b, a);
 		}
 		
 		
@@ -71,7 +71,7 @@ namespace Epsitec.Common.Drawing.Agg
 		{
 			this.Detach ();
 			
-			this.agg_ren = AntiGrain.Interface.RendererSolidNew (pixmap.Handle);
+			this.agg_ren = AntiGrain.Renderer.Solid.New (pixmap.Handle);
 			this.pixmap  = pixmap;
 		}
 		
@@ -79,7 +79,7 @@ namespace Epsitec.Common.Drawing.Agg
 		{
 			if (this.agg_ren != System.IntPtr.Zero)
 			{
-				AntiGrain.Interface.RendererSolidDelete (this.agg_ren);
+				AntiGrain.Renderer.Solid.Delete (this.agg_ren);
 				this.agg_ren = System.IntPtr.Zero;
 				this.pixmap  = null;
 			}

@@ -24,11 +24,11 @@ namespace Epsitec.Common.Drawing
 				{
 					if (this.agg_buffer == System.IntPtr.Zero)
 					{
-						this.agg_buffer = AntiGrain.Interface.BufferNew (value.Width, value.Height, 32);
+						this.agg_buffer = AntiGrain.Buffer.New (value.Width, value.Height, 32);
 					}
 					else
 					{
-						AntiGrain.Interface.BufferResize (this.agg_buffer, value.Width, value.Height, 32);
+						AntiGrain.Buffer.Resize (this.agg_buffer, value.Width, value.Height, 32);
 					}
 					
 					this.size = value;
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Drawing
 		
 		public void Clear()
 		{
-			AntiGrain.Interface.BufferClear (this.agg_buffer);
+			AntiGrain.Buffer.Clear (this.agg_buffer);
 		}
 		
 		public void Paint(System.Drawing.Graphics graphics, System.Drawing.Rectangle clip)
@@ -91,23 +91,23 @@ namespace Epsitec.Common.Drawing
 		
 		public void Paint(System.IntPtr hdc, System.Drawing.Rectangle clip)
 		{
-			AntiGrain.Interface.BufferPaint (this.agg_buffer, hdc, clip.Left, clip.Bottom, clip.Right, clip.Top);
+			AntiGrain.Buffer.Paint (this.agg_buffer, hdc, clip.Left, clip.Bottom, clip.Right, clip.Top);
 		}
 		
 		public void Paint(System.IntPtr hdc, System.Drawing.Point offset, System.Drawing.Rectangle clip)
 		{
-			AntiGrain.Interface.BufferPaintOffset (this.agg_buffer, hdc, offset.X, offset.Y, clip.Left, clip.Bottom, clip.Right, clip.Top);
+			AntiGrain.Buffer.PaintOffset (this.agg_buffer, hdc, offset.X, offset.Y, clip.Left, clip.Bottom, clip.Right, clip.Top);
 		}
 		
 		public void Blend(System.IntPtr hdc, System.Drawing.Point offset, System.Drawing.Rectangle clip)
 		{
-			AntiGrain.Interface.BufferBlendOffset (this.agg_buffer, hdc, offset.X, offset.Y, clip.Left, clip.Bottom, clip.Right, clip.Top);
+			AntiGrain.Buffer.BlendOffset (this.agg_buffer, hdc, offset.X, offset.Y, clip.Left, clip.Bottom, clip.Right, clip.Top);
 		}
 		
 		
 		public void Erase(System.Drawing.Rectangle clip)
 		{
-			AntiGrain.Interface.BufferClearRect (this.agg_buffer, clip.Left, clip.Top, clip.Right, clip.Bottom);
+			AntiGrain.Buffer.ClearRect (this.agg_buffer, clip.Left, clip.Top, clip.Right, clip.Bottom);
 		}
 		
 		
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Drawing
 			
 			if (this.agg_buffer != System.IntPtr.Zero)
 			{
-				AntiGrain.Interface.BufferDelete (this.agg_buffer);
+				AntiGrain.Buffer.Delete (this.agg_buffer);
 				this.agg_buffer = System.IntPtr.Zero;
 			}
 		}
