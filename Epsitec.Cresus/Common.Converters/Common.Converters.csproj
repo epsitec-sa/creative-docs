@@ -88,6 +88,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Converter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Copier.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DecimalRange.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
