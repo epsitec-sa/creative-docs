@@ -673,7 +673,8 @@ namespace Epsitec.Common.Widgets
 				switch (message.Type)
 				{
 					case MessageType.MouseDown:
-						if (consumer.AutoCapture)
+						if ((consumer.AutoCapture) ||
+							(message.ForceCapture))
 						{
 							this.capturing_widget = consumer;
 							this.window.Capture = true;
