@@ -421,8 +421,15 @@ namespace Epsitec.Common.Printing
 				font.GetTextCharEndX (text, out end_x);
 				
 				System.Diagnostics.Debug.WriteLine ("adjust = " + adjust);
+				System.Drawing.FontFamily family = os_font.FontFamily;
 				
-				y += font.Ascender * size;
+				int ascent = family.GetCellAscent (System.Drawing.FontStyle.Regular);
+				int descent= family.GetCellDescent (System.Drawing.FontStyle.Regular);
+				int line   = family.GetLineSpacing (System.Drawing.FontStyle.Regular);
+				int em_h   = family.GetEmHeight (System.Drawing.FontStyle.Regular);
+				
+//-				y += font.Ascender * size;
+				y += ascent * size / em_h;
 				
 				System.Diagnostics.Debug.Assert (end_x.Length == n);
 				

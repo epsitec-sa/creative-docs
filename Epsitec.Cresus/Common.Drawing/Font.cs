@@ -137,6 +137,11 @@ namespace Epsitec.Common.Drawing
 			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.Optical); }
 		}
 		
+		public string					UniqueName
+		{
+			get { return AntiGrain.Font.Face.GetName (this.handle, (int) NameId.Unique); }
+		}
+		
 		public string					FullName
 		{
 			get
@@ -1197,7 +1202,7 @@ namespace Epsitec.Common.Drawing
 		
 		enum NameId
 		{
-			None, Face = 1, Style = 2, StyleUserLocale = 3, Optical = 4
+			None, Face = 1, Style = 2, StyleUserLocale = 3, Optical = 4, Unique = 5
 		}
 	}
 	

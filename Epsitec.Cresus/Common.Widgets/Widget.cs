@@ -1746,12 +1746,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Support.ResourceManager				ResourceManager
+		public virtual Support.ResourceManager		ResourceManager
 		{
 			get
 			{
 				if (this.resource_manager == null)
 				{
+					if (this.parent != null)
+					{
+						return this.parent.ResourceManager;
+					}
+					
 					System.Diagnostics.Debug.WriteLine ("Falling back to default resource manager: " + this.ToString ());
 					return Support.Resources.DefaultManager;
 				}

@@ -147,9 +147,8 @@ namespace Epsitec.Common.Drawing
 					foreach (Font font in fonts)
 					{
 						Assert.IsFalse (font.IsStyleRegular);
+						System.Console.WriteLine ("   {0}", font.UniqueName);
 					}
-					
-					
 				}
 			}
 		}
@@ -171,6 +170,13 @@ namespace Epsitec.Common.Drawing
 					System.Console.WriteLine ("{0}: {1}", face, string.Join (", ", styles));
 					
 					Assert.IsTrue (font_regular.IsStyleRegular);
+					
+					Font[] fonts = faces[i].GetFonts ();
+					
+					foreach (Font font in fonts)
+					{
+						System.Console.WriteLine ("   {0}", font.UniqueName);
+					}
 				}
 			}
 		}
@@ -624,6 +630,7 @@ namespace Epsitec.Common.Drawing
 			
 			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " -> " + (tot * 1000 / 100 / cpu_speed / text.Length) + "ns / char in GDI+");
 		}
+		
 		
 		[System.Runtime.InteropServices.DllImport ("GDI32.dll")] extern static void TextOut(System.IntPtr hdc, int x, int y, string text, int len);
 		[System.Runtime.InteropServices.DllImport ("GDI32.dll")] extern static void SelectObject(System.IntPtr hdc, System.IntPtr hfont);
