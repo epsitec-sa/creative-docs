@@ -77,6 +77,23 @@ namespace Epsitec.Common.Types
 			Assert.IsFalse (et.CheckConstraint ("{Other}"));
 		}
 		
+		[Test] public void CheckEnumType3()
+		{
+			System.Type type = typeof (MyEnum);
+			
+			EnumType et = new EnumType (type);
+			
+			et.DefineCaptionsFromResources ("Enums#A");
+			
+			Assert.AreEqual ("[res:Enums#A]", et.Caption);
+			
+			Assert.AreEqual ("[res:Enums#A.None]",   et["None"].Caption);
+			Assert.AreEqual ("[res:Enums#A.First]",  et["First"].Caption);
+			Assert.AreEqual ("[res:Enums#A.Second]", et["Second"].Caption);
+			Assert.AreEqual ("[res:Enums#A.Third]",  et["Third"].Caption);
+			Assert.AreEqual ("[res:Enums#A.Extra]",  et["Extra"].Caption);
+		}
+		
 		[Test] public void CheckOpenEnumType()
 		{
 			EnumType et = new OpenEnumType (typeof (MyEnum));

@@ -85,6 +85,16 @@ namespace Epsitec.Common.Types
 			this.description = description;
 		}
 		
+		public void DefineCaptionsFromResources(string id)
+		{
+			this.DefineCaption (Resources.MakeTextRef (id));
+			
+			foreach (EnumValue value in this.enum_values)
+			{
+				value.DefineCaption (Resources.MakeTextRef (id, value.Name));
+			}
+		}
+		
 		
 		public EnumValue FindValueFromRank(int rank)
 		{
