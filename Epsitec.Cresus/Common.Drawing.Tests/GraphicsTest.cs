@@ -962,6 +962,12 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.PaintImage (bitmap, new Rectangle ( 10,  10,  40,  40), new Rectangle (32, 32, 32, 32));
 			e.Graphics.PaintImage (bitmap, new Rectangle ( 60,  10,  64,  64), new Rectangle (32, 32, 32, 32));
 			e.Graphics.PaintImage (bitmap, new Rectangle ( 10,  60, 100, 100), new Rectangle (32, 32, 32, 32));
+			
+			e.Graphics.ScaleTransform (0.5, 0.5, 0, 0);
+			
+			e.Graphics.PaintImage (bitmap, new Rectangle (  1,   1,  2, 2), new Rectangle (0, 0, 2, 1));
+			e.Graphics.PaintImage (bitmap, new Rectangle (  1,   5,  4, 4), new Rectangle (0, 0, 2, 1));
+			e.Graphics.PaintImage (bitmap, new Rectangle (  1,  10,  8, 8), new Rectangle (0, 0, 2, 1));
 		}
 		
 		private void Image100dpi200dpi_PaintForeground(object sender, PaintEventArgs e)

@@ -242,8 +242,8 @@ namespace Epsitec.Common.Drawing
 			double fix_x = System.Math.Sqrt (vector_ox.X * vector_ox.X + vector_ox.Y * vector_ox.Y);
 			double fix_y = System.Math.Sqrt (vector_oy.X * vector_oy.X + vector_oy.Y * vector_oy.Y);
 			
-			double sx = (fill_width > 1)  ? (fill_width-1/fix_x)  / (ix2-ix1-1) : 1.0;
-			double sy = (fill_height > 1) ? (fill_height-1/fix_x) / (iy2-iy1-1) : 1.0;
+			double sx = (ix2-ix1 <= 1) ? (Graphics.AlmostInfinite) : ((fill_width > 1)  ? (fill_width-1/fix_x)  / (ix2-ix1-1) : 1.0);
+			double sy = (iy2-iy1 <= 1) ? (Graphics.AlmostInfinite) : ((fill_height > 1) ? (fill_height-1/fix_y) / (iy2-iy1-1) : 1.0);
 			
 			transform.Translate (-ix1, -iy1);
 			transform.Scale (sx, sy);
@@ -426,6 +426,7 @@ namespace Epsitec.Common.Drawing
 		
 		protected abstract void Dispose(bool disposing);
 		
+		protected const double				AlmostInfinite = 1000000000.0;
 		
 		protected double					line_width;
 		protected JoinStyle					line_join;
