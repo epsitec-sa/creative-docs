@@ -46,7 +46,7 @@ namespace Epsitec.Common.Text.Layout
 							
 							context.TextContext.GetFont (scratch.Text[scratch.TextStart], out scratch.Font, out scratch.FontSize);
 							
-							if (this.FitAnalyseRun (ref scratch))
+							if (this.FitAnalyseRun (ref scratch, scratch.Hyphenate))
 							{
 								goto stop; // --------------------------------------------------------------------------.
 							}              //																			|
@@ -115,7 +115,7 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		private bool FitAnalyseRun(ref FitScratch scratch)
+		private bool FitAnalyseRun(ref FitScratch scratch, bool hyphenate)
 		{
 			//	Si une analyse des découpes est requise, procède par petites étapes
 			//	progressives, sinon traite toute la tranche d'un coup.
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Text.Layout
 			
 			for (int frag_length = 0; frag_length < scratch.RunLength; )
 			{
-				if (scratch.Hyphenate)
+				if (hyphenate)
 				{
 					frag_length = this.GetNextFragmentLength (scratch.Text, scratch.TextStart, scratch.RunLength, frag_length);
 				}
@@ -156,6 +156,7 @@ namespace Epsitec.Common.Text.Layout
 				{
 					glyphs    = scratch.Font.GenerateGlyphs (scratch.Text, scratch.TextStart, frag_length);
 					can_break = (scratch.RunLength == scratch.TextLength);
+					hyphenate = hyphenate && (scratch.WordBreakInfo == Unicode.BreakInfo.Optional);
 				}
 				
 				scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize);
@@ -170,7 +171,7 @@ namespace Epsitec.Common.Text.Layout
 				
 				if (can_break)
 				{
-					if (scratch.Hyphenate)
+					if (hyphenate)
 					{
 						scratch.AddBreak (new Layout.Break (scratch.Offset + frag_length, scratch.Advance + scratch.TextWidth));
 					}

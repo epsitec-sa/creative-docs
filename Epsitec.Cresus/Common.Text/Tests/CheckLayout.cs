@@ -11,6 +11,7 @@ namespace Epsitec.Common.Text.Tests
 		public static void RunTests()
 		{
 			CheckLayout.TestLineEngine ();
+			CheckLayout.TestLineEngineWithHyphens ();
 		}
 		
 		private static void TestLineEngine()
@@ -92,6 +93,75 @@ namespace Epsitec.Common.Text.Tests
 			status  = layout.Fit (context, out breaks);
 			
 			Debug.Assert.IsTrue (status == Layout.Status.ErrorCannotFit);
+		}
+		
+		private static void TestLineEngineWithHyphens()
+		{
+			TextStory story  = new TextStory ();
+			ICursor   cursor = new Cursors.SimpleCursor ();
+			
+			story.NewCursor (cursor);
+			
+			ulong[] styled_text;
+			System.Collections.ArrayList properties;
+			
+			properties = new System.Collections.ArrayList ();
+			
+			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			
+			story.ConvertToStyledText ("Affiche quelques mots pour ", properties, out styled_text);
+			story.InsertText (cursor, styled_text);
+			
+			properties = new System.Collections.ArrayList ();
+			
+			properties.Add (new Properties.FontProperty ("Arial", "Bold"));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			
+			story.ConvertToStyledText ("essayer", properties, out styled_text);
+			story.InsertText (cursor, styled_text);
+			
+			properties = new System.Collections.ArrayList ();
+			
+			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			
+			story.ConvertToStyledText (" l'algo-rithme.\n", properties, out styled_text);
+			story.InsertText (cursor, styled_text);
+			
+			story.MoveCursor (cursor, - story.TextLength);
+			
+			ulong[] story_text = new ulong[story.TextLength];
+			
+			story.ReadText (cursor, story_text.Length, story_text);
+			
+			Layout.LineEngine layout = new Layout.LineEngine ();
+			Layout.Context    context;
+			
+			Layout.BreakCollection breaks = null;
+			Layout.Status status;
+			
+			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1300, 150, 10);
+			status  = layout.Fit (context, out breaks);
+			
+			Debug.Assert.IsTrue (breaks.Count == 3);
+			Debug.Assert.IsTrue (breaks[0].Offset == 35);
+			Debug.Assert.IsTrue (breaks[1].Offset == 42);
+			Debug.Assert.IsTrue (breaks[2].Offset == 50);
+			
+			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
+			status  = layout.Fit (context, out breaks);
+			
+			Debug.Assert.IsTrue (breaks.Count == 1);
+			Debug.Assert.IsTrue (breaks[0].Offset == 42);
+			
+			System.Diagnostics.Trace.WriteLine ("Starting layout.");
+			for (int i = 0; i < 1000; i++)
+			{
+				context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
+				status  = layout.Fit (context, out breaks);
+			}
+			System.Diagnostics.Trace.WriteLine ("Done.");
 		}
 	}
 }
