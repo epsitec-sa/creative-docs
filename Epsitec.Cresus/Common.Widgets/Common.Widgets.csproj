@@ -452,6 +452,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TextFieldEx.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TextFieldExList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -626,6 +631,11 @@
                 />
                 <File
                     RelPath = "Feels\Factory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Helpers\AcceptCancelBehavior.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

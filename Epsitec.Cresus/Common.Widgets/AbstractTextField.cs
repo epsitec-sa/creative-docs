@@ -517,6 +517,17 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		public Drawing.Rectangle GetButtonBounds()
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			Drawing.Rectangle rect = new Drawing.Rectangle();
+			rect.Left   = this.Bounds.Width-this.margins.Right-adorner.GeometryComboRightMargin;
+			rect.Right  = this.Bounds.Width-adorner.GeometryComboRightMargin;
+			rect.Bottom = adorner.GeometryComboBottomMargin;
+			rect.Top    = this.Bounds.Height-adorner.GeometryComboTopMargin;
+			return rect;
+		}
+
 		protected override void UpdateTextLayout()
 		{
 			if ( this.TextLayout != null )
@@ -756,6 +767,12 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 			
 			base.OnTextChanged();
+		}
+		
+		protected override void OnAdornerChanged()
+		{
+			base.OnAdornerChanged();
+			this.UpdateClientGeometry();
 		}
 		
 		protected void OnTextDeleted()
@@ -1064,9 +1081,14 @@ namespace Epsitec.Common.Widgets
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
+			this.UpdateButtonGeometry();
 			this.OnCursorChanged(true);
 		}
-
+		
+		protected virtual void UpdateButtonGeometry()
+		{
+		}
+		
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
