@@ -146,30 +146,32 @@ namespace Epsitec.Common.Widgets
 			base.OnAdornerChanged();
 		}
 
-		protected override void ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
+		protected override bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
-			if ( this.IsReadOnly )
+			if (this.IsReadOnly)
 			{
-				if ( key == KeyCode.ArrowDown )
+				if (key == KeyCode.ArrowDown)
 				{
-					this.OpenCombo();
+					this.OpenCombo ();
+					return true;
 				}
 			}
 			else
 			{
-				switch ( key )
+				switch (key)
 				{
 					case KeyCode.ArrowUp:
 						this.Navigate(-1);
-						break;
+						return true;
 					case KeyCode.ArrowDown:
 						this.Navigate(1);
-						break;
+						return true;
 					default:
-						base.ProcessKeyDown(key, isShiftPressed, isCtrlPressed);
-						break;
+						return base.ProcessKeyDown(key, isShiftPressed, isCtrlPressed);
 				}
 			}
+			
+			return false;
 		}
 		
 		

@@ -87,9 +87,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override void ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
+		protected override bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
-			switch ( key )
+			switch (key)
 			{
 				case KeyCode.Return:
 					this.InsertCharacter('\n');
@@ -112,9 +112,10 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				default:
-					base.ProcessKeyDown (key, isShiftPressed, isCtrlPressed);
-					break;
+					return base.ProcessKeyDown (key, isShiftPressed, isCtrlPressed);
 			}
+			
+			return true;
 		}
 		
 		protected override void UpdateTextLayout()
