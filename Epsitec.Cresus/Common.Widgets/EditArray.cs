@@ -67,6 +67,9 @@ namespace Epsitec.Common.Widgets
 			this.ShowEdition (ScrollShowMode.Extremity);
 			this.InvalidateContents ();
 			this.Update ();
+			
+			column = this.FindFirstReadWriteColumn (column, 1);
+			
 			this.edit_line.Values = this.GetRowTexts (row);
 			this.edit_line.FocusColumn (column);
 			this.Invalidate ();
@@ -167,6 +170,32 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 		
+		
+		protected int FindFirstReadWriteColumn(int column, int dir)
+		{
+			if (dir > 0)
+			{
+				for (int i = column; i < this.max_columns; i++)
+				{
+					if (! this.Columns[i].IsReadOnly)
+					{
+						return i;
+					}
+				}
+			}
+			else if (dir < 0)
+			{
+				for (int i = column; i >= 0; i--)
+				{
+					if (! this.Columns[i].IsReadOnly)
+					{
+						return i;
+					}
+				}
+			}
+			
+			return -1;
+		}
 		
 		protected override void UpdateColumnCount()
 		{
@@ -310,7 +339,7 @@ namespace Epsitec.Common.Widgets
 					{
 						if (this.HitTestTable (pos, out row, out column))
 						{
-							window.MouseCursor = MouseCursor.AsIBeam;
+							window.MouseCursor = this.Columns[column].IsReadOnly ? this.MouseCursor : MouseCursor.AsIBeam;
 							
 							if ((message.Type == MessageType.MouseDown) &&
 								(message.ButtonDownCount == 1) &&
@@ -322,6 +351,8 @@ namespace Epsitec.Common.Widgets
 								
 								this.SelectedIndex = row;
 								this.Update ();
+								
+								column = this.FindFirstReadWriteColumn (column, 1);
 								
 								this.edit_line.FocusColumn (column);
 								
@@ -496,6 +527,7 @@ namespace Epsitec.Common.Widgets
 					for (int i = 0; i < this.edit_widgets.Length; i++)
 					{
 						this.edit_widgets[i].Text = value[i];
+						this.edit_widgets[i].IsReadOnly = this.host.Columns[i].IsReadOnly;
 					}
 					
 					this.setting_values = false;
