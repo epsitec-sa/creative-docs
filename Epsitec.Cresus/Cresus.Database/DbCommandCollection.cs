@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 01/12/2003
 
 namespace Epsitec.Cresus.Database
@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Database
 		public virtual void Add(IDbCommand command)
 		{
 			this.List.Add (command);
+			this.OnChanged ();
 		}
 
 		public virtual void AddRange(IDbCommand[] commands)
@@ -28,11 +29,13 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.List.AddRange (commands);
+			this.OnChanged ();
 		}
 		
 		public virtual void Remove(IDbCommand command)
 		{
 			this.List.Remove (command);
+			this.OnChanged ();
 		}
 		
 		
