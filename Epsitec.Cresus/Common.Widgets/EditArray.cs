@@ -11,7 +11,7 @@ namespace Epsitec.Common.Widgets
 		public EditArray()
 		{
 			this.edit_line = new EditWidget (this);
-			this.edit_line.SetVisible (false);
+			this.edit_line.Hide ();
 		}
 		
 		public EditArray(Widget embedder) : this ()
@@ -32,18 +32,9 @@ namespace Epsitec.Common.Widgets
 				{
 					this.mode = value;
 					
-					if (this.mode == EditArrayMode.Search)
-					{
-						this.InnerTopMargin = this.edit_line.DesiredHeight;
-						this.edit_line.ColumnCount = 0;
-						this.edit_line.ColumnCount = this.max_columns;
-					}
-					else
-					{
-						this.InnerTopMargin = 0;
-						this.edit_line.ColumnCount = 0;
-						this.edit_line.ColumnCount = this.max_columns;
-					}
+					this.edit_line.ReallocateLines ();
+					this.edit_line.UpdateCaption ();
+					this.edit_bounds = Drawing.Rectangle.Empty;
 					
 					this.InvalidateContents ();
 					this.OnEditArrayModeChanged ();
@@ -92,11 +83,19 @@ namespace Epsitec.Common.Widgets
 				column = System.Math.Min (column, this.max_columns-1);
 			
 				this.ShowEdition (ScrollShowMode.Extremity);
+				this.InvalidateContents ();
 				this.Update ();
 				this.DispatchDummyMouseMoveEvent ();
 				this.edit_line.FocusColumn (column);
 			}
 			
+			this.Invalidate ();
+		}
+		
+		public void StartSearch()
+		{
+			this.EditArrayMode = EditArrayMode.Search;
+			this.edit_line.FocusColumn (0);
 			this.Invalidate ();
 		}
 		
@@ -122,6 +121,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.edit_line.Values = this.GetRowTexts (this.edit_active);
 				
+				this.InvalidateContents ();
+				
 				if (finished)
 				{
 					this.SelectedIndex = this.edit_active;
@@ -136,6 +137,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.SetRowTexts (this.edit_active, this.edit_line.Values);
 				
+				this.InvalidateContents ();
+				
 				if (finished)
 				{
 					this.SelectedIndex = this.edit_active;
@@ -143,7 +146,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-
+		
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -194,7 +197,7 @@ namespace Epsitec.Common.Widgets
 					bounds.Deflate (1, 1, 0, -1);
 					
 					this.edit_line.Bounds = bounds;
-					this.edit_line.SetVisible (true);
+					this.edit_line.Show ();
 					this.edit_line.UpdateGeometry ();
 				}
 				else if (this.edit_line.IsVisible)
@@ -204,11 +207,22 @@ namespace Epsitec.Common.Widgets
 						this.SetFocused (true);
 					}
 					
-					this.edit_line.SetVisible (false);
+					this.edit_line.Hide ();
 				}
 			}
 		}
 		
+		protected virtual  void UpdateInnerTopMargin()
+		{
+			if (this.mode == EditArrayMode.Search)
+			{
+				this.InnerTopMargin = this.edit_line.DesiredHeight;
+			}
+			else
+			{
+				this.InnerTopMargin = 0;
+			}
+		}
 		
 		protected virtual Drawing.Rectangle GetEditBounds()
 		{
@@ -597,11 +611,11 @@ namespace Epsitec.Common.Widgets
 						cell.Height = height - 1;
 						
 						this.edit_widgets[i].Bounds = cell;
-						this.edit_widgets[i].SetVisible (true);
+						this.edit_widgets[i].Show ();
 					}
 					else
 					{
-						this.edit_widgets[i].SetVisible (false);
+						this.edit_widgets[i].Hide ();
 					}
 				}
 			}
@@ -622,7 +636,6 @@ namespace Epsitec.Common.Widgets
 						this.caption.Parent = null;
 						this.caption.Dispose ();
 						this.caption = null;
-						this.host.InnerTopMargin = this.LineHeight;
 					}
 				}
 				else
@@ -634,9 +647,15 @@ namespace Epsitec.Common.Widgets
 					
 					this.caption.Text   = caption;
 					this.caption.Height = System.Math.Floor (this.caption.TextLayout.SingleLineSize.Height * 1.2);
-					
-					this.host.InnerTopMargin = this.DesiredHeight;
 				}
+				
+				this.host.UpdateInnerTopMargin ();
+			}
+			
+			public void ReallocateLines()
+			{
+				this.ColumnCount = 0;
+				this.ColumnCount = this.host.max_columns;
 			}
 			
 			
@@ -647,6 +666,7 @@ namespace Epsitec.Common.Widgets
 				widget.TabNavigation = TabNavigationMode.ActivateOnTab;
 				widget.Focused      += new Support.EventHandler (this.HandleEditArrayFocused);
 				widget.TextChanged  += new Epsitec.Common.Support.EventHandler (this.HandleTextChanged);
+				widget.Hide ();
 			}
 			
 			protected void Detach(AbstractTextField widget)
@@ -711,10 +731,10 @@ namespace Epsitec.Common.Widgets
 				this.toolbar = new HToolBar (this);
 				
 				this.caption.Dock = DockStyle.Fill;
-				this.caption.SetVisible (false);
+				this.caption.Hide ();
 				
 				this.toolbar.Dock = DockStyle.Bottom;
-				this.toolbar.SetVisible (false);
+				this.toolbar.Hide ();
 				this.toolbar.ClientGeometryUpdated += new Support.EventHandler (this.HandleToolBarGeometryChanged);
 				this.toolbar.ItemsChanged += new Support.EventHandler (this.HandleToolBarItemsChanged);
 				
@@ -849,38 +869,33 @@ namespace Epsitec.Common.Widgets
 					AbstractToolBar toolbar = header.ToolBar;
 					
 					toolbar.SuspendLayout ();
-					toolbar.Items.Add (this.CreateIconButton ("StartEdition", null, "Modifie les données"));
-					toolbar.Items.Add (this.CreateIconButton ("StartSearch",  null, "Démarre une recherche"));
-					toolbar.Items.Add (this.CreateIconButton ("StartReadOnly",null, "Consultation uniquement"));
+					toolbar.Items.Add (this.CreateIconButton ("StartEdition",  "manifest:Epsitec.Common.Widgets/Images.TableEdition.icon",  "Modifie les données"));
+					toolbar.Items.Add (this.CreateIconButton ("StartSearch",   "manifest:Epsitec.Common.Widgets/Images.TableSearch.icon",   "Démarre une recherche"));
+					toolbar.Items.Add (this.CreateIconButton ("StartReadOnly", "manifest:Epsitec.Common.Widgets/Images.TableReadOnly.icon", "Consultation uniquement"));
 					toolbar.Items.Add (new IconSeparator ());
-					toolbar.Items.Add (this.CreateIconButton ("InsertBefore", null, "Insère une ligne avant"));
-					toolbar.Items.Add (this.CreateIconButton ("InsertAfter",  null, "Insère une ligne après"));
-					toolbar.Items.Add (this.CreateIconButton ("Delete",       null, "Supprime une ligne"));
-					toolbar.Items.Add (this.CreateIconButton ("MoveUp",       null, "Déplace la ligne vers le haut"));
-					toolbar.Items.Add (this.CreateIconButton ("MoveDown",     null, "Déplace la ligne vers le bas"));
+					toolbar.Items.Add (this.CreateIconButton ("InsertBefore",  "manifest:Epsitec.Common.Widgets/Images.InsertBeforeCell.icon", "Insère une ligne avant"));
+					toolbar.Items.Add (this.CreateIconButton ("InsertAfter",   "manifest:Epsitec.Common.Widgets/Images.InsertAfterCell.icon",  "Insère une ligne après"));
+					toolbar.Items.Add (this.CreateIconButton ("Delete",        "manifest:Epsitec.Common.Widgets/Images.DeleteCell.icon",       "Supprime une ligne"));
+					toolbar.Items.Add (this.CreateIconButton ("MoveUp",        "manifest:Epsitec.Common.Widgets/Images.MoveUpCell.icon",       "Déplace la ligne vers le haut"));
+					toolbar.Items.Add (this.CreateIconButton ("MoveDown",      "manifest:Epsitec.Common.Widgets/Images.MoveDownCell.icon",     "Déplace la ligne vers le bas"));
 					toolbar.ResumeLayout ();
 				}
+				
+				this.UpdateCommandStates ();
 			}
 			
 			
 			public virtual void StartEdition()
 			{
 				this.StartReadOnly ();
-				
-				int row = this.host.SelectedIndex;
-				int col = 0;
-				
-				this.host.StartEdition (row, col);
+				this.host.StartEdition (this.host.SelectedIndex, 0);
 			}
 			
 			public virtual void StartSearch()
 			{
-				if (this.host.EditArrayMode == EditArrayMode.Edition)
-				{
-					this.host.ValidateEdition ();
-				}
+				this.StartReadOnly ();
+				this.host.StartSearch ();
 				
-				this.host.EditArrayMode = EditArrayMode.Search;
 			}
 			
 			public virtual void StartReadOnly()
@@ -891,6 +906,7 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				this.host.EditArrayMode = EditArrayMode.Standard;
+				this.host.SetFocused (true);
 			}
 			
 			public virtual void InsertBefore()
@@ -1002,29 +1018,46 @@ namespace Epsitec.Common.Widgets
 				int edit_index = this.host.EditionIndex;
 				int act_index  = -1;
 				
+				WidgetState act_edition  = WidgetState.ActiveNo;
+				WidgetState act_search   = WidgetState.ActiveNo;
+				WidgetState act_readonly = WidgetState.ActiveNo;
+				
 				switch (this.host.EditArrayMode)
 				{
 					case EditArrayMode.Standard:
 						act_index = sel_index;
+						act_readonly = WidgetState.ActiveYes;
 						break;
 					
 					case EditArrayMode.Edition:
 						act_index = edit_index;
+						act_edition = WidgetState.ActiveYes;
 						break;
 					
 					case EditArrayMode.Search:
 						act_index = sel_index;
+						act_search = WidgetState.ActiveYes;
 						break;
 				}
 				
-				this.GetCommandState ("StartEdition") .Enabled = (act_index >= 0);
-				this.GetCommandState ("StartSearch")  .Enabled = true;
-				this.GetCommandState ("StartReadOnly").Enabled = true;
-				this.GetCommandState ("InsertBefore") .Enabled = (act_index >= 0);
-				this.GetCommandState ("InsertAfter")  .Enabled = (act_index >= 0);
-				this.GetCommandState ("Delete")       .Enabled = (act_index >= 0);
-				this.GetCommandState ("MoveUp")       .Enabled = (act_index >  0);
-				this.GetCommandState ("MoveDown")     .Enabled = (act_index >= 0) && (act_index+1 < this.host.RowCount);
+				this.UpdateCommandState ("StartEdition", (act_index >= 0), act_edition);
+				this.UpdateCommandState ("StartSearch", true, act_search);
+				this.UpdateCommandState ("StartReadOnly", true, act_readonly);
+				
+				this.UpdateCommandState ("InsertBefore", (act_index >= 0), WidgetState.ActiveNo);
+				this.UpdateCommandState ("InsertAfter", (act_index >= 0), WidgetState.ActiveNo);
+				this.UpdateCommandState ("Delete", (act_index >= 0), WidgetState.ActiveNo);
+				this.UpdateCommandState ("MoveUp", (act_index >  0), WidgetState.ActiveNo);
+				this.UpdateCommandState ("MoveDown", (act_index >= 0) && (act_index+1 < this.host.RowCount), WidgetState.ActiveNo);
+			}
+			
+			protected virtual void UpdateCommandState(string name, bool enabled, WidgetState active)
+			{
+				CommandState state = this.GetCommandState (name);
+				
+				state.Enabled     = enabled;
+				state.ActiveState = active;
+				state.Synchronise ();
 			}
 			
 			

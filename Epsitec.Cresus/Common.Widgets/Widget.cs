@@ -155,6 +155,7 @@ namespace Epsitec.Common.Widgets
 			Widgets.CommandState.Initialise ();
 			
 			Support.ObjectBundler.RegisterAssembly (typeof (Widget).Assembly);
+			Support.ImageProvider.RegisterAssembly ("Epsitec.Common.Widgets", typeof (Widget).Assembly);
 			
 			System.Threading.Thread          thread  = System.Threading.Thread.CurrentThread;
 			System.Globalization.CultureInfo culture = thread.CurrentCulture;

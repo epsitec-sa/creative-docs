@@ -155,8 +155,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.panel == null)
 			{
-				this.h_scroller.SetVisible (false);
-				this.v_scroller.SetVisible (false);
+				this.h_scroller.Hide ();
+				this.v_scroller.Hide ();
 				
 				return;
 			}

@@ -13,6 +13,7 @@ namespace Epsitec.Common.Widgets
 			this.MakeFramelessWindow ();
 			this.MakeToolWindow();
 			this.MakeLayeredWindow ();
+			this.DisableMouseActivation ();
 			
 			this.Alpha = 0.9;
 		}

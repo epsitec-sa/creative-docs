@@ -939,7 +939,7 @@ namespace Epsitec.Common.Widgets
 			this.InvalidateContents ();
 		}
 		
-		public void InvalidateContents()
+		public virtual void InvalidateContents()
 		{
 			this.cache_visible_rows = -1;
 			this.is_dirty = true;
@@ -1887,12 +1887,12 @@ invalid:	row    = -1;
 				
 				if (bounds.IsSurfaceZero)
 				{
-					this.clip_widget.SetVisible (false);
+					this.clip_widget.Hide ();
 				}
 				else
 				{
 					this.clip_widget.Bounds = bounds;
-					this.clip_widget.SetVisible (true);
+					this.clip_widget.Show ();
 					
 					double dx = System.Math.Min (this.row_height + 1, 18);
 					double dy = dx;
