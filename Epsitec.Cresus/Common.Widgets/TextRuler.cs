@@ -70,13 +70,13 @@ namespace Epsitec.Common.Widgets
 
 			this.buttonListNum = new IconButton(this);
 			this.buttonListNum.AutoFocus = false;
-			this.buttonListNum.IconName = @"file:images/rulerlistnum.icon";
+			this.buttonListNum.IconName = @"manifest:Epsitec.Common.Widgets.Images.RulerListNum.icon";
 			this.buttonListNum.Clicked += new MessageEventHandler(this.HandleButtonListNumClicked);
 			ToolTip.Default.SetToolTip(this.buttonListNum, "Numérotation");
 
 			this.buttonListFix = new IconButton(this);
 			this.buttonListFix.AutoFocus = false;
-			this.buttonListFix.IconName = @"file:images/rulerlistfix.icon";
+			this.buttonListFix.IconName = @"manifest:Epsitec.Common.Widgets.Images.RulerListFix.icon";
 			this.buttonListFix.Clicked += new MessageEventHandler(this.HandleButtonListFixClicked);
 			ToolTip.Default.SetToolTip(this.buttonListFix, "Puces");
 
