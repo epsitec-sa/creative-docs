@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.textFieldStyle = TextFieldStyle.UpDown;
 			this.TextNavigator.IsNumeric = true;
-			this.range = new Epsitec.Common.Converters.DecimalRange(0, 100, 1);
+			this.range = new Types.DecimalRange(0, 100, 1);
 
 			this.arrowUp = new GlyphButton(this);
 			this.arrowDown = new GlyphButton(this);
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void IncrementValue(decimal delta)
 		{
-			Converters.DecimalRange range = new Epsitec.Common.Converters.DecimalRange (this.MinValue, this.MaxValue, this.Step);
+			Types.DecimalRange range = new Types.DecimalRange (this.MinValue, this.MaxValue, this.Step);
 			
 			decimal orgValue   = this.Value;
 			decimal roundValue = range.ConstrainToZero(orgValue);
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected Converters.DecimalRange		range;
+		protected Types.DecimalRange			range;
 		
 		protected GlyphButton					arrowUp;
 		protected GlyphButton					arrowDown;
