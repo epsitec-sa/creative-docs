@@ -56,7 +56,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		Offset
+		public uint		Checksum
 		{
 			get
 			{
@@ -64,11 +64,19 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		Length
+		public uint		Offset
 		{
 			get
 			{
 				return this.ReadInt32 (8);
+			}
+		}
+		
+		public uint		Length
+		{
+			get
+			{
+				return this.ReadInt32 (12);
 			}
 		}
 	}
@@ -112,10 +120,18 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
+		public uint		RangeShift
+		{
+			get
+			{
+				return this.ReadInt16 (10);
+			}
+		}
+		
 		
 		public TableEntry GetEntry(int n)
 		{
-			return new TableEntry (this.data, this.offset + 16*n + 10);
+			return new TableEntry (this.data, this.offset + 16*n + 12);
 		}
 		public TableEntry FindTable(string name)
 		{
@@ -135,9 +151,9 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class TableHead : Tables
+	public class Table_head : Tables
 	{
-		public TableHead(byte[] data, int offset) : base (data, offset)
+		public Table_head(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
@@ -283,9 +299,9 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class TableGlyf : Tables
+	public class Table_glyf : Tables
 	{
-		public TableGlyf(byte[] data, int offset) : base (data, offset)
+		public Table_glyf(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
@@ -386,9 +402,9 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class TableLocaShort : Tables
+	public class Table_loca_Short : Tables
 	{
-		public TableLocaShort(byte[] data, int offset) : base (data, offset)
+		public Table_loca_Short(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
@@ -399,9 +415,9 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class TableLocaLong : Tables
+	public class Table_loca_Long : Tables
 	{
-		public TableLocaLong(byte[] data, int offset) : base (data, offset)
+		public Table_loca_Long(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
@@ -412,9 +428,9 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class TableMaxp : Tables
+	public class Table_maxp : Tables
 	{
-		public TableMaxp(byte[] data, int offset) : base (data, offset)
+		public Table_maxp(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
@@ -540,11 +556,11 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class TableCMap : Tables
+	public class Table_cmap : Tables
 	{
 		//	http://partners.adobe.com/public/developer/opentype/index_cmap.html
 		
-		public TableCMap(byte[] data, int offset) : base (data, offset)
+		public Table_cmap(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
@@ -581,15 +597,44 @@ namespace Epsitec.Common.OpenType
 			return this.ReadInt32 (4+n*8+4);
 		}
 		
-		public CMapFormat GetGenericSubtable(int n)
+		public IndexMappingTable GetGenericSubtable(int n)
 		{
-			return new CMapFormat (this.data, this.offset + (int) this.GetSubtableOffset (n));
+			return new IndexMappingTable (this.data, this.offset + (int) this.GetSubtableOffset (n));
+		}
+		
+		
+		public IndexMappingTable FindFormatSubtable(uint platform, uint encoding, uint format)
+		{
+			int n = (int) this.NumEncodingTables;
+			
+			for (int i = 0; i < n; i++)
+			{
+				if ((this.GetSubtablePlatformId (i) == platform) &&
+					(this.GetSubtableEncodingId (i) == encoding))
+				{
+					IndexMappingTable fmt = this.GetGenericSubtable (i);
+					
+					if (fmt.Format == format)
+					{
+						switch (fmt.Format)
+						{
+							case 0:  return new IndexMappingTable0 (this.data, this.offset + (int) this.GetSubtableOffset (n));
+							case 4:  return new IndexMappingTable4 (this.data, this.offset + (int) this.GetSubtableOffset (n));
+							case 12: return new IndexMappingTable12 (this.data, this.offset + (int) this.GetSubtableOffset (n));
+						}
+						
+						return null;
+					}
+				}
+			}
+			
+			return null;
 		}
 	}
 	
-	public class CMapFormat : Tables
+	public class IndexMappingTable : Tables
 	{
-		public CMapFormat(byte[] data, int offset) : base (data, offset)
+		public IndexMappingTable(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
@@ -617,9 +662,9 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class CMapFormat0 : CMapFormat
+	public class IndexMappingTable0 : IndexMappingTable
 	{
-		public CMapFormat0(byte[] data, int offset) : base (data, offset)
+		public IndexMappingTable0(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
@@ -639,9 +684,9 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class CMapFormat4 : CMapFormat
+	public class IndexMappingTable4 : IndexMappingTable
 	{
-		public CMapFormat4(byte[] data, int offset) : base (data, offset)
+		public IndexMappingTable4(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
@@ -737,9 +782,9 @@ namespace Epsitec.Common.OpenType
 		}
 	}
 	
-	public class CMapFormat12 : CMapFormat
+	public class IndexMappingTable12 : IndexMappingTable
 	{
-		public CMapFormat12(byte[] data, int offset) : base (data, offset)
+		public IndexMappingTable12(byte[] data, int offset) : base (data, offset)
 		{
 		}
 		
@@ -795,5 +840,344 @@ namespace Epsitec.Common.OpenType
 			
 			throw new System.InvalidOperationException ();
 		}
+	}
+	
+	public class Table_name : Tables
+	{
+		public Table_name(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		FormatSelector
+		{
+			get
+			{
+				return this.ReadInt16 (0);
+			}
+		}
+		
+		public uint		NumNameRecords
+		{
+			get
+			{
+				return this.ReadInt16 (2);
+			}
+		}
+		
+		public uint		StorageAreaOffset
+		{
+			get
+			{
+				return this.ReadInt16 (4);
+			}
+		}
+		
+		
+		public string GetLatinName(uint language, NameId name, PlatformId platform)
+		{
+			int num = (int) this.NumNameRecords;
+			
+			uint lang_id = (uint) language;
+			uint name_id = (uint) name;
+			uint plat_id = (uint) platform;
+			
+			int o_platform_id   = 6;
+			int o_encoding_id   = 8;
+			int o_language_id   = 10;
+			int o_name_id       = 12;
+			int o_string_length = 14;
+			int o_string_offset = 16;
+			
+			for (int i = 0; i < num; i++)
+			{
+				if ((this.ReadInt16 (i*12 + o_platform_id) == plat_id) &&
+					(this.ReadInt16 (i*12 + o_encoding_id) == 0) &&
+					(this.ReadInt16 (i*12 + o_language_id) == lang_id) &&
+					(this.ReadInt16 (i*12 + o_name_id)     == name_id))
+				{
+					int length = (int) (this.ReadInt16 (i*12 + o_string_length));
+					int offset = (int) (this.ReadInt16 (i*12 + o_string_offset) + this.StorageAreaOffset);
+					
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+					
+					for (int j = 0; j < length; j++)
+					{
+						buffer.Append ((char) this.ReadInt8 (offset+j));
+					}
+					
+					return buffer.ToString ();
+				}
+			}
+			
+			return null;
+		}
+		
+		public string GetUnicodeName(uint language, NameId name, PlatformId platform)
+		{
+			int num = (int) this.NumNameRecords;
+			
+			uint lang_id = (uint) language;
+			uint name_id = (uint) name;
+			uint plat_id = (uint) platform;
+			
+			int o_platform_id   = 6;
+			int o_encoding_id   = 8;
+			int o_language_id   = 10;
+			int o_name_id       = 12;
+			int o_string_length = 14;
+			int o_string_offset = 16;
+			
+			for (int i = 0; i < num; i++)
+			{
+				if ((this.ReadInt16 (i*12 + o_platform_id) == plat_id) &&
+					(this.ReadInt16 (i*12 + o_encoding_id) == 1) &&
+					(this.ReadInt16 (i*12 + o_language_id) == lang_id) &&
+					(this.ReadInt16 (i*12 + o_name_id)     == name_id))
+				{
+					int length = (int) (this.ReadInt16 (i*12 + o_string_length));
+					int offset = (int) (this.ReadInt16 (i*12 + o_string_offset) + this.StorageAreaOffset);
+					
+					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+					
+					for (int j = 0; j < length; j += 2)
+					{
+						buffer.Append ((char) this.ReadInt16 (offset+j));
+					}
+					
+					return buffer.ToString ();
+				}
+			}
+			
+			return null;
+		}
+	}
+	
+	#region PlatformId and NameId Enumeration
+	public enum PlatformId
+	{
+		Unicode		= 0,
+		Macintosh	= 1,
+		Microsoft	= 3,
+		Custom		= 4,
+	}
+	
+	public enum NameId
+	{
+		CopyrightNotice,
+		FontFamily,				//	"Futura Lt BT"
+		FontSubfamily,			//	"Light Italic"
+		UniqueFontIdentifier,	//	"Futura Light Italic, Geometric 211"
+		FullFontName,			//	"Futura Lt BT Light Italic"
+		Version,				//	"Version 2.001 mfgpctt 4.4"
+		PostScriptName,			//	"FuturaBT-LightItalic"
+		Trademark,
+		Manufacturer,
+		Designer,
+		Description,
+		VendorURL,
+		DesignerURL,
+		License,
+		LicenseURL,
+		Reserved_0,
+		PreferredFamily,
+		PreferredSubfamily,
+		Mac_CompatibleFull,
+		SampleText,
+		PostScriptCID,
+	}
+	#endregion
+	
+	public class Table_hhea : Tables
+	{
+		//	http://partners.adobe.com/public/developer/opentype/index_hhea.html
+		
+		public Table_hhea(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		TableVersion
+		{
+			get
+			{
+				return this.ReadInt32 (0);
+			}
+		}
+		
+		public int		MacAscender
+		{
+			get
+			{
+				return (short) this.ReadInt16 (4);
+			}
+		}
+		
+		public int		MacDescender
+		{
+			get
+			{
+				return (short) this.ReadInt16 (6);
+			}
+		}
+		
+		public int		MacLineGap
+		{
+			get
+			{
+				return (short) this.ReadInt16 (8);
+			}
+		}
+		
+		public uint		AdvanceWidthMax
+		{
+			get
+			{
+				return this.ReadInt16 (10);
+			}
+		}
+		
+		public int		MinLeftSideBearing
+		{
+			get
+			{
+				return (short) this.ReadInt16 (12);
+			}
+		}
+		
+		public int		MinRightSideBearing
+		{
+			get
+			{
+				return (short) this.ReadInt16 (14);
+			}
+		}
+		
+		public int		XMaxExtent
+		{
+			get
+			{
+				return (short) this.ReadInt16 (16);
+			}
+		}
+		
+		public uint		CaretSlopeRise
+		{
+			get
+			{
+				return this.ReadInt16 (18);
+			}
+		}
+		
+		public uint		CaretSlopeRun
+		{
+			get
+			{
+				return this.ReadInt16 (20);
+			}
+		}
+		
+		public uint		CaretOffset
+		{
+			get
+			{
+				return this.ReadInt16 (22);
+			}
+		}
+		
+		public uint		MetricDataFormat
+		{
+			get
+			{
+				return this.ReadInt16 (32);
+			}
+		}
+		
+		public uint		NumberOfHMetrics
+		{
+			get
+			{
+				return this.ReadInt16 (34);
+			}
+		}
+	}
+	
+	public class Table_hmtx : Tables
+	{
+		//	http://partners.adobe.com/public/developer/opentype/index_hmtx.html
+		
+		public Table_hmtx(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint GetAdvanceWidth(int n)
+		{
+			return this.ReadInt16 (n*4+0);
+		}
+		
+		public int GetLeftSideBearing(int n)
+		{
+			return (short) this.ReadInt16 (n*4+2);
+		}
+		
+		public int GetExtraLeftSideBearing(int number_h_metrics, int n)
+		{
+			return (short) this.ReadInt16 (number_h_metrics*4 + n*2);
+		}
+	}
+	
+	public class Table_GDEF : Tables
+	{
+		//	http://partners.adobe.com/public/developer/opentype/index_table_formats5.html
+		
+		public Table_GDEF(byte[] data, int offset) : base (data, offset)
+		{
+		}
+		
+		
+		public uint		TableVersion
+		{
+			get
+			{
+				return this.ReadInt32 (0);
+			}
+		}
+		
+		public uint		GlyphClassDefOffset
+		{
+			get
+			{
+				return this.ReadInt16 (4);
+			}
+		}
+		
+		public uint		AttachListOffset
+		{
+			get
+			{
+				return this.ReadInt16 (6);
+			}
+		}
+		
+		public uint		LigCaretListOffset
+		{
+			get
+			{
+				return this.ReadInt16 (8);
+			}
+		}
+		
+		public uint		MarkAttachClassDefOffset
+		{
+			get
+			{
+				return this.ReadInt16 (10);
+			}
+		}
+	}
+	
+	public class Table_GSUB
+	{
 	}
 }
