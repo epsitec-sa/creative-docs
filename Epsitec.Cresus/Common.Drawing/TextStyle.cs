@@ -16,6 +16,9 @@ namespace Epsitec.Common.Drawing
 	/// La classe TextStyle définit le style d'un texte (paragraphe) qui peut dériver
 	/// d'un style par défaut ou de n'importe quel autre style.
 	/// </summary>
+	
+	[System.ComponentModel.TypeConverter (typeof (TextStyle.Converter))]
+	
 	public class TextStyle : System.ICloneable
 	{
 		public TextStyle() : this (null)
@@ -44,6 +47,7 @@ namespace Epsitec.Common.Drawing
 			
 			this.language        = null;
 		}
+		
 		
 		private TextStyle(int i)
 		{
@@ -317,10 +321,102 @@ namespace Epsitec.Common.Drawing
 		}
 		#endregion
 		
+		
 		public TextStyle Clone()
 		{
+			//	Crée une copie parfaite du TextStyle. L'astuce des deux méthodes
+			//	ci-après permet de réalise un "Clone" qui marche aussi pour des
+			//	classes dérivées, lesquelles doivent simplement surcharger ces
+			//	méthodes pour (1) allouer le bon objet et (2) copier les champs
+			//	supplémentaires.
+			
 			return this.CloneCopyToNewObject (this.CloneNewObject ()) as TextStyle;
 		}
+		
+		
+		public override string ToString()
+		{
+			return this.ToString (System.Globalization.CultureInfo.InvariantCulture);
+		}
+
+		public string ToString(System.Globalization.CultureInfo culture)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			if (this.font != null)
+			{
+				if (buffer.Length > 0) buffer.Append (";");
+					
+				buffer.Append ("<Font=");
+				buffer.Append (this.font.FaceName);
+				buffer.Append ("/");
+				buffer.Append (this.font.StyleName);
+				buffer.Append ("/");
+				buffer.Append (this.font.OpticalName);
+				buffer.Append (">");
+			}
+				
+			if (this.size != 0)
+			{
+				if (buffer.Length > 0) buffer.Append (";");
+					
+				buffer.Append ("<Size=");
+				buffer.Append (this.size.ToString (culture));
+				buffer.Append (">");
+			}
+				
+			//	TODO: ajouter tout ce qui manque...
+				
+			return buffer.ToString ();
+		}
+		
+		
+		public void Parse(string value)
+		{
+			this.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
+		}
+		
+		public void Parse(string value, System.Globalization.CultureInfo culture)
+		{
+			string[]  args = System.Utilities.Split (value, ';');
+				
+			foreach (string arg in args)
+			{
+				int n   = arg.Length;
+				int pos = arg.IndexOf ("=");
+					
+				System.Diagnostics.Debug.Assert (arg[0] == '<');
+				System.Diagnostics.Debug.Assert (arg[n-1] == '>');
+				System.Diagnostics.Debug.Assert (pos > 1);
+					
+				string name = arg.Substring (1, pos-1);
+				string data = arg.Substring (pos+1, n-pos-2);
+					
+				switch (name)
+				{
+					case "Font":
+					{
+						string[] font_args = data.Split ('/');
+							
+						System.Diagnostics.Debug.Assert (font_args.Length == 3);
+							
+						string face  = font_args[0];
+						string style = font_args[1];
+						string optic = font_args[2];
+							
+						this.Font = Font.GetFont (face, style, optic);
+					}
+						break;
+						
+					case "Size":
+						this.Size = System.Double.Parse (data, culture);
+						break;
+
+						//	TODO: ajouter les autres propriétés ici...
+				}
+			}
+		}
+	
 		
 		public static void DefineDefaultColor(Drawing.Color color)
 		{
@@ -386,9 +482,27 @@ namespace Epsitec.Common.Drawing
 			False,
 			True
 		}
-	
+		
+		
+		public class Converter : Epsitec.Common.Types.AbstractStringConverter
+		{
+			public override object ParseString(string value, System.Globalization.CultureInfo culture)
+			{
+				TextStyle that = new TextStyle ();
+				that.Parse (value, culture);
+				return that;
+			}
+			
+			public override string ToString(object value, System.Globalization.CultureInfo culture)
+			{
+				TextStyle that = value as TextStyle;
+				return that.ToString (culture);
+			}
+		}
+		
 		
 		public event Support.EventHandler		Changed;
+		
 		
 		private static TextStyle				default_style;
 		
