@@ -964,66 +964,21 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (this.is_layered)
 			{
-				using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (this.Width, this.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb))
+				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (this.Width, this.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+				
+				using (bitmap)
 				{
-					System.Drawing.Point  client = this.PointToScreen (new System.Drawing.Point (0, 0));
-					System.Drawing.Point  offset = new System.Drawing.Point (client.X - this.Location.X, client.Y - this.Location.Y);
+					Drawing.Pixmap.RawData src = new Drawing.Pixmap.RawData (this.graphics.Pixmap);
+					Drawing.Pixmap.RawData dst = new Drawing.Pixmap.RawData (bitmap, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 					
-					System.Drawing.Rectangle clip = new System.Drawing.Rectangle (0, 0, this.ClientSize.Width, this.ClientSize.Height);
-					
-#if false
-					using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (bitmap))
+					using (src)
 					{
-						//	Ce code ne marche pas, car on dirait que le "blending" fait par ::AlphaBlend perd le canal
-						//	alpha dans l'opération...
-						Drawing.Pixmap pixmap = this.graphics.Pixmap;
-						pixmap.Blend (graphics, offset, clip);
-					}
-#else
-					unsafe
-					{
-						//	Version manuelle de la copie des bits depuis le buffer source (avec alpha et composantes
-						//	pré-multipliées) dans le buffer destination.
-						
-						Drawing.Pixmap pixmap = this.graphics.Pixmap;
-						System.Drawing.Imaging.BitmapData bm = bitmap.LockBits (clip, System.Drawing.Imaging.ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-						
-						System.Drawing.Imaging.PixelFormat srcpixfmt;
-						
-						int           srcdx, srcdy;
-						int           srcstride;
-						System.IntPtr srcscan0;
-						
-						pixmap.GetMemoryLayout (out srcdx, out srcdy, out srcstride, out srcpixfmt, out srcscan0);
-						
-						System.IntPtr dstscan0  = bm.Scan0;
-						int           dststride = bm.Stride;
-						
-						int dx = System.Math.Min (srcdx, bm.Width);
-						int dy = System.Math.Min (srcdy, bm.Height);
-						
-						int* srcdata = (int*) srcscan0.ToPointer ();
-						int* dstdata = (int*) dstscan0.ToPointer ();
-						int  srcymul = srcstride / 4;
-						int  dstymul = dststride / 4;
-						
-						dstdata += dy * dstymul;
-						
-						for (int y = 0; y < dy; y++)
+						using (dst)
 						{
-							dstdata -= dstymul;
-							
-							for (int x = 0; x < dx; x++)
-							{
-								dstdata[x] = srcdata[x];
-							}
-							
-							srcdata += srcymul;
+							src.CopyTo (dst);
 						}
-						
-						bitmap.UnlockBits (bm);
 					}
-#endif
+					
 					paint_needed = ! Win32Api.UpdateLayeredWindow (this.Handle, bitmap, this.Bounds, this.alpha);
 				}
 			}

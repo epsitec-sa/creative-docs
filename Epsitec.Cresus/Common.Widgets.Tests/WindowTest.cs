@@ -10,6 +10,7 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		
 		[Test] public void CheckFrameCreation()
 		{
 			Window window = new Window ();
@@ -235,6 +236,17 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Console.Out.WriteLine ("{0}: {1}", i, windows[i].Text);
 			}
+		}
+		
+		[Test] public void CheckMouseCursor()
+		{
+			Drawing.Image image = Drawing.Bitmap.FromFile (@"..\..\cursor.png");
+			
+			Window window = new Window ();
+			window.ClientSize = new Size (200, 200);
+			window.MouseCursor = MouseCursor.FromImage (image, 4, 4);
+			window.Text = "CheckMouseCursor";
+			window.Show ();
 		}
 		
 		private void Root_Clicked(object sender, MessageEventArgs e)
