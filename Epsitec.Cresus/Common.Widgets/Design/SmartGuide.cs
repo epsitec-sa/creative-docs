@@ -3,7 +3,7 @@ namespace Epsitec.Common.Widgets.Design
 	/// <summary>
 	/// La classe SmartGuide propose un service d'alignement au moyen de guides
 	/// verticaux et horizontaux, basé sur la connaissance du widget en cours de
-	/// déplacement et du widget cible (conteneur, futur parent).
+	/// déplacement et du widget cible (conteneur actuel ou futur parent).
 	/// </summary>
 	public class SmartGuide
 	{
@@ -83,12 +83,18 @@ namespace Epsitec.Common.Widgets.Design
 			{
 				if (this.grip_id == Drawing.GripId.Body)
 				{
+					//	Si on déplace un widget par sa poignée centrale, alors on accepte des alignements
+					//	sur tous les bords du widget, y compris sur la ligne de base.
+					
 					this.ConstrainVerticals (bounds, cx, Drawing.EdgeId.Left | Drawing.EdgeId.Right);
 					this.ConstrainHorizontals (bounds, base_line_offset, cy, Drawing.EdgeId.Top | Drawing.EdgeId.Bottom);
 				}
 				else
 				{
 					Drawing.EdgeId edges = Drawing.Rectangle.ConvertToEdges (this.grip_id);
+					
+					//	Pour les poignées périphériques, on utilise uniquement le ou les bord(s) correspondant(s)
+					//	pour déterminer l'alignement.
 					
 					if ((edges & (Drawing.EdgeId.Left | Drawing.EdgeId.Right)) != 0)
 					{
@@ -114,6 +120,8 @@ namespace Epsitec.Common.Widgets.Design
 			
 			double mx;
 			
+			//	Considère tout d'abord l'alignement avec les marges intérieures du widget parent :
+			
 			if ((edges & Drawing.EdgeId.Left) != 0)
 			{
 				mx = model.Left + widget.DockMargins.Left + margins.Left;
@@ -125,6 +133,8 @@ namespace Epsitec.Common.Widgets.Design
 				mx = model.Right - widget.DockMargins.Right - margins.Right;
 				constraint.Add (xr, mx, mx, model.Bottom, mx, model.Top, Constraint.Priority.Low, AnchorStyles.Right);
 			}
+			
+			//	Passe en revue tous les frères et détermine les alignements respectifs :
 			
 			Widget[] children = widget.Children.Widgets;
 			
@@ -189,6 +199,8 @@ namespace Epsitec.Common.Widgets.Design
 			
 			double my;
 			
+			//	Considère tout d'abord l'alignement avec les marges intérieures du widget parent :
+			
 			if ((edges & Drawing.EdgeId.Bottom) != 0)
 			{
 				my = model.Bottom + widget.DockMargins.Bottom + margins.Bottom;
@@ -200,6 +212,8 @@ namespace Epsitec.Common.Widgets.Design
 				my = model.Top - widget.DockMargins.Top - margins.Top;
 				constraint.Add (y3, my, model.Left, my, model.Right, my, Constraint.Priority.Low, AnchorStyles.Top);
 			}
+			
+			//	Passe en revue tous les frères et détermine les alignements respectifs :
 			
 			Widget[] children = widget.Children.Widgets;
 			
@@ -262,9 +276,9 @@ namespace Epsitec.Common.Widgets.Design
 		}
 		
 		
+		#region DefaultGuideAlign class
 		protected class DefaultGuideAlign : IGuideAlign
 		{
-			#region IGuideAlign Members
 			public Drawing.Margins GetInnerMargins(Widget widget)
 			{
 				return SmartGuide.root_margins;
@@ -274,18 +288,15 @@ namespace Epsitec.Common.Widgets.Design
 			{
 				return SmartGuide.align_margins;
 			}
-			#endregion
 		}
-
+		#endregion
 		
 		protected Drawing.GripId			grip_id;
 		protected Widget					widget;
 		protected Widget					target;
-		
 		protected IGuideAlign				align;
 		
 		protected static IGuideAlign		default_align = new DefaultGuideAlign();
-		
 		protected static Drawing.Margins	root_margins  = new Drawing.Margins (12, 12, 20, 20);
 		protected static Drawing.Margins	align_margins = new Drawing.Margins (8, 8, 6, 6);
 	}
