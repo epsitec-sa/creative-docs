@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.UserInterface
 		{
 			if (type != null)
 			{
-				return BinderFactory.FindBinder (type.BinderName);
+				return BinderFactory.FindBinder (type.BinderEngine);
 			}
 			
 			return null;
