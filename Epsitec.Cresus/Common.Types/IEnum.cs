@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// L'interface IEnum décrit une énumération.
 	/// </summary>
-	public interface IEnum : INameCaption
+	public interface IEnum : INamedType
 	{
 		IEnumValue[]	Values		{ get; }
 	}

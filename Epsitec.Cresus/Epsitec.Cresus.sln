@@ -127,9 +127,20 @@ Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "X.Setup.Icons", "X.Setup.Ic
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Types", "Common.Types\Common.Types.csproj", "{8960D1EA-3B82-49A1-9D44-F92F467209FF}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Types.Tests", "Common.Types.Tests\Common.Types.Tests.csproj", "{B8A20FF0-D043-4EE7-BDC2-02518955A0F9}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
+	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
+		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
+	EndGlobalSection
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 33
+		SccNumberOfProjects = 35
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -261,6 +272,14 @@ Global
 		SccLocalPath32 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection32 = X.Setup.Icons\\
+		SccProjectUniqueName33 = Common.Types\\Common.Types.csproj
+		SccLocalPath33 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection33 = Common.Types\\
+		SccProjectUniqueName34 = Common.Types.Tests\\Common.Types.Tests.csproj
+		SccLocalPath34 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection34 = Common.Types.Tests\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -391,6 +410,14 @@ Global
 		{BDF75452-AAB1-4E62-82D5-AE23F35C6319}.Release.Build.0 = Release|.NET
 		{8875E452-73E5-4296-98F8-B7000023324C}.Debug.ActiveCfg = Debug
 		{8875E452-73E5-4296-98F8-B7000023324C}.Release.ActiveCfg = Release
+		{8960D1EA-3B82-49A1-9D44-F92F467209FF}.Debug.ActiveCfg = Debug|.NET
+		{8960D1EA-3B82-49A1-9D44-F92F467209FF}.Debug.Build.0 = Debug|.NET
+		{8960D1EA-3B82-49A1-9D44-F92F467209FF}.Release.ActiveCfg = Release|.NET
+		{8960D1EA-3B82-49A1-9D44-F92F467209FF}.Release.Build.0 = Release|.NET
+		{B8A20FF0-D043-4EE7-BDC2-02518955A0F9}.Debug.ActiveCfg = Debug|.NET
+		{B8A20FF0-D043-4EE7-BDC2-02518955A0F9}.Debug.Build.0 = Debug|.NET
+		{B8A20FF0-D043-4EE7-BDC2-02518955A0F9}.Release.ActiveCfg = Release|.NET
+		{B8A20FF0-D043-4EE7-BDC2-02518955A0F9}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info
@@ -412,8 +439,5 @@ Global
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
 	GlobalSection(ExtensibilityAddIns) = postSolution
-	EndGlobalSection
-	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
-		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
 	EndGlobalSection
 EndGlobal
