@@ -15,6 +15,14 @@ namespace Epsitec.Common.Widgets
 		MoveDown,		// déplace le bas
 	}
 
+	
+	public enum ScrollInteractionMode
+	{
+		ReadOnly,
+		Edition,
+		Search
+	}
+	
 	public delegate string TextProviderCallback(int row, int column);
 
 	/// <summary>
@@ -231,31 +239,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int								EditionIndex
-		{
-			get
-			{
-				return this.edition_row;
-			}
-			set
-			{
-				if (value != -1)
-				{
-					value = System.Math.Max (value, 0);
-					value = System.Math.Min (value, this.max_rows);
-				}
-				if (this.edition_row != value)
-				{
-					int top = this.FromVirtualRow (this.first_virtvis_row);
-					
-					this.edition_row       = value;
-					this.first_virtvis_row = this.ToVirtualRow (top);
-					
-					this.InvalidateContents ();
-					this.OnEditionIndexChanged ();
-				}
-			}
-		}
 		
 		public int								EditionZoneHeight
 		{
@@ -315,6 +298,14 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				return false;
+			}
+		}
+		
+		public ScrollInteractionMode			InteractionMode
+		{
+			get
+			{
+				return this.interaction_mode;
 			}
 		}
 		
@@ -934,8 +925,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.max_rows          = 0;
 			this.first_virtvis_row = 0;
-			this.selected_row      = -1;
-			this.edition_row       = -1;
+			this.SelectedIndex     = -1;
 			
 			this.InvalidateContents ();
 		}
@@ -1331,6 +1321,17 @@ invalid:	row    = -1;
 			}
 		}
 		
+		protected void SetInteractionMode(ScrollInteractionMode value)
+		{
+			if (this.interaction_mode != value)
+			{
+				this.interaction_mode = value;
+				
+				this.InvalidateContents ();
+				this.OnInteractionModeChanged ();
+			}
+		}
+		
 		
 		private void HandleVScrollerChanged(object sender)
 		{
@@ -1537,6 +1538,7 @@ invalid:	row    = -1;
 			if (this.is_dirty)
 			{
 				this.UpdateClientGeometry ();
+				this.DispatchDummyMouseMoveEvent ();
 			}
 		}
 		
@@ -1929,19 +1931,19 @@ invalid:	row    = -1;
 			base.OnAdornerChanged ();
 		}
 		
+		protected virtual  void OnSelectedIndexChanging()
+		{
+			if (this.SelectedIndexChanging != null)
+			{
+				this.SelectedIndexChanging (this);
+			}
+		}
+		
 		protected virtual  void OnSelectedIndexChanged()
 		{
 			if (this.SelectedIndexChanged != null)
 			{
 				this.SelectedIndexChanged (this);
-			}
-		}
-		
-		protected virtual  void OnEditionIndexChanged()
-		{
-			if (this.EditionIndexChanged != null)
-			{
-				this.EditionIndexChanged (this);
 			}
 		}
 		
@@ -1978,6 +1980,15 @@ invalid:	row    = -1;
 				this.TextArrayStoreChanged (this);
 			}
 		}
+		
+		protected virtual  void OnInteractionModeChanged()
+		{
+			if (this.InteractionModeChanged != null)
+			{
+				this.InteractionModeChanged (this);
+			}
+		}
+		
 		
 		protected HeaderButton FindButton(int index)
 		{
@@ -2209,6 +2220,7 @@ invalid:	row    = -1;
 				}
 				if (value != this.selected_row)
 				{
+					this.OnSelectedIndexChanging ();
 					this.selected_row = value;
 					this.InvalidateContents ();
 					this.OnSelectedIndexChanged ();
@@ -2241,16 +2253,15 @@ invalid:	row    = -1;
 				this.SelectedIndex = this.FindRow (value.Split (this.separator));
 			}
 		}
-		
-		public event Support.EventHandler		SelectedIndexChanged;
 		#endregion
 		
-		public event Support.EventHandler		EditionIndexChanged;
+		public event Support.EventHandler		InteractionModeChanged;
 		public event Support.EventHandler		ContentsChanged;
 		public event Support.EventHandler		SortChanged;
 		public event Support.EventHandler		LayoutUpdated;
 		public event Support.EventHandler		TextArrayStoreChanged;
-		
+		public event Support.EventHandler		SelectedIndexChanging;
+		public event Support.EventHandler		SelectedIndexChanged;
 		
 		protected bool							is_dirty;
 		protected bool							is_header_dirty;
@@ -2295,10 +2306,10 @@ invalid:	row    = -1;
 		protected int							n_fully_visible_rows;
 		protected int							first_virtvis_row;
 		protected double						offset;
-		protected int							selected_row		= -1;
+		private int								selected_row		= -1;
 		protected bool							is_select_enabled	= true;
 		
-		protected int							edition_row			= -1;
+		private int								edition_row			= -1;
 		protected int							edition_add_rows	= 0;
 		
 		protected int							drag_index;
@@ -2310,5 +2321,7 @@ invalid:	row    = -1;
 		protected int							cache_visible_rows;
 		protected int							cache_first_virtvis_row;
 		protected char							separator = ';';
+		
+		private ScrollInteractionMode			interaction_mode = ScrollInteractionMode.ReadOnly;
 	}
 }
