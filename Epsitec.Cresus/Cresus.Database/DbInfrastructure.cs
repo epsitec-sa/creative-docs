@@ -1708,7 +1708,7 @@ namespace Epsitec.Cresus.Database
 			fields.Add (table_def.Columns[Tags.ColumnRefLog]  .CreateSqlField (this.type_converter, this.logger.CurrentId));
 			fields.Add (table_def.Columns[Tags.ColumnName]    .CreateSqlField (this.type_converter, table.Name));
 			fields.Add (table_def.Columns[Tags.ColumnInfoXml] .CreateSqlField (this.type_converter, DbTable.SerializeToXml (table, false)));
-			fields.Add (table_def.Columns[Tags.ColumnNextId]  .CreateSqlField (this.type_converter, 0));
+			fields.Add (table_def.Columns[Tags.ColumnNextId]  .CreateSqlField (this.type_converter, DbId.CreateId (1, this.client_id)));
 			
 			//	TODO: Initialiser les colonnes descriptives
 			
