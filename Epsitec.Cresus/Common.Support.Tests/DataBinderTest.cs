@@ -14,7 +14,7 @@ namespace Epsitec.Common.Support.Tests
 		
 		[Test] public void CheckBinderFactory()
 		{
-			IBinder binder = BinderFactory.FindBinder ("Test");
+			IBinder binder = BinderFactory.FindBinderForType ("Test");
 			Assertion.AssertNull (binder);
 		}
 		
@@ -32,7 +32,6 @@ namespace Epsitec.Common.Support.Tests
 			
 			
 			Assertion.AssertEquals ("boolean", data.GetDataField ("a").DataType.Name);
-			Assertion.AssertEquals ("boolean", data.GetDataField ("a").DataType.BinderEngine);
 			
 			Assertion.AssertEquals ("Option vitale 'A'",			data.GetDataField ("a").UserLabel);
 			Assertion.AssertEquals ("Copie de l'option vitale 'A'",	data.GetDataField ("b").UserLabel);

@@ -15,6 +15,27 @@ namespace Epsitec.Cresus.DataLayer
 		{
 		}
 		
+		
+		public void SetFromInitialisationList(params string[] list)
+		{
+			for (int i = 0; i < list.Length; i++)
+			{
+				string init = list[i];
+				int pos = init.IndexOf ('=');
+				
+				if (pos < 1)
+				{
+					throw new DataException ("Invalid attribute initialisation syntax");
+				}
+				
+				string attr_name = init.Substring (0, pos);
+				string attr_data = init.Substring (pos+1);
+				
+				this.SetAttribute (attr_name, attr_data, null);
+			}
+		}
+		
+		
 		public string[]							Names
 		{
 			get
@@ -33,6 +54,11 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 		
+		
+		public string GetAttribute(string name)
+		{
+			return this.GetAttribute (name, ResourceLevel.Merged);
+		}
 		
 		public string GetAttribute(string name, ResourceLevel level)
 		{
@@ -97,7 +123,10 @@ namespace Epsitec.Cresus.DataLayer
 				this.attributes = new System.Collections.Hashtable ();
 			}
 			
-			name = DbTools.BuildCompositeName (name, localisation_suffix);
+			if (localisation_suffix != null)
+			{
+				name = DbTools.BuildCompositeName (name, localisation_suffix);
+			}
 			
 			this.attributes[name] = value;
 		}

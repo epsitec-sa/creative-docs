@@ -1,6 +1,8 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier/PA
 
+using Epsitec.Common.Support;
+
 namespace Epsitec.Cresus.DataLayer
 {
 	/// <summary>
@@ -8,30 +10,43 @@ namespace Epsitec.Cresus.DataLayer
 	/// </summary>
 	public class DataType : IDataAttributesHost
 	{
-		public DataType() : this (null)
+		public DataType()
 		{
 		}
 		
-		public DataType(string binder_engine)
+		public DataType(params string[] attributes)
 		{
-			this.Initialise (binder_engine);
+			this.Attributes.SetFromInitialisationList (attributes);
 		}
 		
 		
-		protected void Initialise(string binder_engine)
+		public string							Name
 		{
-			this.binder_engine = binder_engine;
+			get { return this.Attributes.GetAttribute ("name"); }
 		}
-		
 		
 		public string							BinderEngine
 		{
-			get { return this.binder_engine; }
+			get
+			{
+				string binder = this.Attributes.GetAttribute ("binder");
+				return (binder == null) ? this.Name : binder;
+			}
+		}
+		
+		public string							UserLabel
+		{
+			get { return this.Attributes.GetAttribute ("label"); }
+		}
+		
+		public string							UserDescription
+		{
+			get { return this.Attributes.GetAttribute ("descr"); }
 		}
 		
 		
 		#region IDataAttributesHost Members
-		public DataAttributes					DataAttributes
+		public DataAttributes					Attributes
 		{
 			get
 			{
@@ -47,7 +62,8 @@ namespace Epsitec.Cresus.DataLayer
 		
 		public override bool Equals(object obj)
 		{
-			//	ATTENTION: L'égalité ne prend pas en compte la valeur des attributs.
+			//	ATTENTION: L'égalité se base uniquement sur le nom des types, pas sur les
+			//	détails internes...
 			
 			DataType that = obj as DataType;
 			
@@ -56,18 +72,17 @@ namespace Epsitec.Cresus.DataLayer
 				return false;
 			}
 			
-			return (this.binder_engine == that.binder_engine);
+			return (this.Name == that.Name);
 		}
 		
 		public override int GetHashCode()
 		{
-			return (this.binder_engine == null) ? 0 : this.binder_engine.GetHashCode ();
+			string name = this.Name;
+			return (name == null) ? 0 : name.GetHashCode ();
 		}
 
-
 		
 		
-		protected string						binder_engine;
 		protected DataAttributes				attributes;
 	}
 }

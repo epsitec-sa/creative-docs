@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.DataLayer
 		public DataSet(string name)
 		{
 			this.name  = name;
-			this.type  = new DataType (null);
+			this.type  = new DataType ();
 			this.state = DataState.Added;
 		}
 		

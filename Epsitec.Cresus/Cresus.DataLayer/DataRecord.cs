@@ -90,24 +90,25 @@ namespace Epsitec.Cresus.DataLayer
 			get { return this.state; }
 		}
 		
-		public string							DataLabel
-		{
-			get { return this.DataAttributes.GetAttribute ("label", ResourceLevel.Merged); }
-		}
-		
-		public string							DataDescription
-		{
-			get { return this.DataAttributes.GetAttribute ("descr", ResourceLevel.Merged); }
-		}
-		
 		public DataRecord						Parent
 		{
 			get { return this.parent; }
 		}
 		
 		
+		public string							UserLabel
+		{
+			get { return this.Attributes.GetAttribute ("label", ResourceLevel.Merged); }
+		}
+		
+		public string							UserDescription
+		{
+			get { return this.Attributes.GetAttribute ("descr", ResourceLevel.Merged); }
+		}
+		
+		
 		#region IDataAttributesHost Members
-		public DataAttributes					DataAttributes
+		public DataAttributes					Attributes
 		{
 			get
 			{

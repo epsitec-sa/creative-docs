@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Statut : OK/PA, 13/11/2003
 
 namespace Epsitec.Cresus.DataLayer
 {
@@ -9,6 +9,6 @@ namespace Epsitec.Cresus.DataLayer
 	/// </summary>
 	public interface IDataAttributesHost
 	{
-		DataAttributes		DataAttributes		{ get; }
+		DataAttributes		Attributes			{ get; }
 	}
 }
