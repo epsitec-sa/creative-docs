@@ -7,8 +7,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldMulti()
 		{
-			this.TextLayout.BreakMode &= ~ Drawing.TextBreakMode.SingleLine;
-			this.TextLayout.BreakMode |=   Drawing.TextBreakMode.Hyphenate;
+			this.TextLayout.BreakMode &= ~Drawing.TextBreakMode.SingleLine;
+			this.TextLayout.BreakMode |=  Drawing.TextBreakMode.Hyphenate;
 			
 			this.textFieldStyle = TextFieldStyle.Multi;
 
@@ -59,21 +59,47 @@ namespace Epsitec.Common.Widgets
 			base.OnAdornerChanged();
 		}
 
-		protected override void CursorScrollText(Drawing.Rectangle cursor)
+		protected override void CursorScrollText(Drawing.Rectangle cursor, bool force)
 		{
 			Drawing.Point end = this.TextLayout.FindTextEnd();
-			double offset = cursor.Bottom;
-			offset -= this.realSize.Height/2;
-			offset  = System.Math.Max(offset, end.Y);
-			offset += this.realSize.Height;
-			offset  = System.Math.Min(offset, AbstractTextField.Infinity);
-			this.scrollOffset.Y = offset-this.realSize.Height;
+
+			if ( force )
+			{
+				double offset = cursor.Bottom;
+				offset -= this.realSize.Height/2;
+				offset  = System.Math.Max(offset, end.Y);
+				offset += this.realSize.Height;
+				offset  = System.Math.Min(offset, AbstractTextField.Infinity);
+				this.scrollOffset.Y = offset-this.realSize.Height;
+			}
+			else
+			{
+				double ratioBottom = (cursor.Bottom-this.scrollOffset.Y)/this.realSize.Height;  // 0..1
+				double ratioTop    = (cursor.Top   -this.scrollOffset.Y)/this.realSize.Height;  // 0..1
+				double zone = this.scrollZone*0.5;
+
+				if ( ratioBottom <= zone )  // curseur trop bas ?
+				{
+					this.scrollOffset.Y -= (zone-ratioBottom)*this.realSize.Height;
+					double min = System.Math.Min(end.Y, AbstractTextField.Infinity-this.realSize.Height);
+					this.scrollOffset.Y = System.Math.Max(this.scrollOffset.Y, min);
+				}
+
+				if ( ratioTop >= 1.0-zone )  // curseur trop haut ?
+				{
+					this.scrollOffset.Y += (ratioTop-(1.0-zone))*this.realSize.Height;
+					this.scrollOffset.Y = System.Math.Min(this.scrollOffset.Y, AbstractTextField.Infinity-this.realSize.Height);
+				}
+			}
+
+			this.scrollOffset.X = 0;
 			this.UpdateScroller();
 		}
 		
 		protected override void ScrollVertical(double dist)
 		{
-			// Décale le texte vers le haut (+) ou le bas (-).
+			// Décale le texte vers le haut (+) ou le bas (-), lorsque la
+			// souris dépasse pendant une sélection.
 			this.scrollOffset.Y += dist;
 			Drawing.Point end = this.TextLayout.FindTextEnd();
 			double min = System.Math.Min(end.Y, AbstractTextField.Infinity-this.realSize.Height);
@@ -125,12 +151,32 @@ namespace Epsitec.Common.Widgets
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
+			decimal v;
 			switch ( message.Type )
 			{
+				case MessageType.KeyDown:
+					if ( message.KeyCode == KeyCode.ArrowUp && message.IsCtrlPressed )
+					{
+						v = this.scroller.Value;
+						v = System.Math.Min(v+this.scroller.SmallChange*0.5m, this.scroller.Range);
+						this.scroller.Value = v;
+						message.Consumer = this;
+						return;
+					}
+					if ( message.KeyCode == KeyCode.ArrowDown && message.IsCtrlPressed )
+					{
+						v = this.scroller.Value;
+						v = System.Math.Max(v-this.scroller.SmallChange*0.5m, 0);
+						this.scroller.Value = v;
+						message.Consumer = this;
+						return;
+					}
+					break;
+
 				case MessageType.MouseWheel:
-					decimal v = this.scroller.Value;
-					if (message.Wheel > 0)  v = System.Math.Min(v+this.scroller.SmallChange, this.scroller.Range);
-					if (message.Wheel < 0)  v = System.Math.Max(v-this.scroller.SmallChange, 0);
+					v = this.scroller.Value;
+					if ( message.Wheel > 0 )  v = System.Math.Min(v+this.scroller.SmallChange, this.scroller.Range);
+					if ( message.Wheel < 0 )  v = System.Math.Max(v-this.scroller.SmallChange, 0);
 					this.scroller.Value = v;
 					message.Consumer = this;
 					return;

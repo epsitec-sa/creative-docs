@@ -2311,8 +2311,6 @@ invalid:	row    = -1;
 			private double						width;
 			private double						offset;
 			private Drawing.ContentAlignment	alignment;
-			private SortMode					sort_mode;
-			private string						header;
 			
 			private HeaderButton				header_button;
 			private HeaderSlider				header_slider;
@@ -2334,10 +2332,8 @@ invalid:	row    = -1;
 		protected double						def_width			= 100;
 		protected double						min_width			= 10;
 		protected double						total_width;
-//		protected double[]						column_widths;
-//		protected Drawing.ContentAlignment[]	column_alignments;
 		
-		protected ColumnDefinition[]			columns;
+		private ColumnDefinition[]				columns;
 		
 		protected Drawing.Margins				frame_margins;				//	marges du cadre
 		protected Drawing.Margins				table_margins;				//	marges de la table interne

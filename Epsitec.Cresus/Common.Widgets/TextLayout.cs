@@ -359,8 +359,9 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.text == null )  return;
 
-			context.CursorFrom = 0;
-			context.CursorTo   = this.Text.Length;
+			context.CursorFrom  = 0;
+			context.CursorTo    = this.Text.Length;
+			context.CursorAfter = false;
 		}
 
 		// Sélectionne toute la ligne.
@@ -370,6 +371,7 @@ namespace Epsitec.Common.Widgets
 			int from = context.CursorFrom;
 			this.MoveExtremity(context, 1, false);
 			context.CursorFrom = from;
+			context.CursorAfter = false;
 		}
 
 		// Sélectionne tout le mot.
@@ -388,6 +390,8 @@ namespace Epsitec.Common.Widgets
 				if ( this.IsWordSeparator(simple[context.CursorTo]) )  break;
 				context.CursorTo ++;
 			}
+
+			context.CursorAfter = false;
 		}
 
 		public bool DeleteSelection(TextLayout.Context context)
@@ -436,11 +440,12 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 			
-			int cursor = this.FindOffsetFromIndex(context.CursorTo);
+			int cursor = this.FindOffsetFromIndex(context.CursorTo, context.CursorAfter);
 			text = text.Insert(cursor, ins);
 			this.Text = text;
 			context.CursorTo   = this.FindIndexFromOffset(cursor + ins.Length);
 			context.CursorFrom = context.CursorTo;
+			this.MemoryCursorPosX(context);
 			return true;
 		}
 
@@ -484,11 +489,16 @@ namespace Epsitec.Common.Widgets
 		public bool MoveLine(TextLayout.Context context, int move, bool select)
 		{
 			// Déplace le curseur par lignes.
-			int cursor = this.DetectIndex(context.CursorPosX, context.CursorLine+move);
-			if ( cursor == -1 )  return false;
+			int index;
+			bool after;
+			if ( !this.DetectIndex(context.CursorPosX, context.CursorLine+move, out index, out after) )
+			{
+				return false;
+			}
 
-			context.CursorTo = cursor;
-			if ( !select )  context.CursorFrom = cursor;
+			context.CursorTo = index;
+			if ( !select )  context.CursorFrom = index;
+			context.CursorAfter = after;
 			return true;
 		}
 
@@ -498,11 +508,18 @@ namespace Epsitec.Common.Widgets
 			double posx;
 			if ( move < 0 )  posx = 0;
 			else             posx = this.LayoutSize.Width;
-			int cursor = this.DetectIndex(posx, context.CursorLine);
-			if ( cursor == -1 )  return false;
+			int index;
+			bool after;
+			if ( !this.DetectIndex(posx, context.CursorLine, out index, out after) )
+			{
+				return false;
+			}
 
-			context.CursorTo = cursor;
-			if ( !select )  context.CursorFrom = cursor;
+			context.CursorTo = index;
+			if ( !select )  context.CursorFrom = index;
+			context.CursorAfter = after;
+
+			this.MemoryCursorPosX(context);
 			return true;
 		}
 
@@ -524,10 +541,62 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
+		protected bool IsDualCursor(int index)
+		{
+			// Indique s'il existe 2 positions différentes pour un index.
+			// L'une avec CursorAfter = false, et l'autre avec CursorAfter = true.
+			this.UpdateLayout();
+
+			int total = 0;
+			int rankLine = 0;
+			foreach ( JustifBlock block in this.blocks )
+			{
+				if ( block.visible && index >= block.beginIndex && index <= block.endIndex )
+				{
+					JustifLine line = (JustifLine)this.lines[block.indexLine];
+
+					if ( total == 0 )
+					{
+						rankLine = line.rank;
+					}
+					else if ( total == 1 )
+					{
+						return ( rankLine != line.rank );
+					}
+					total ++;
+				}
+			}
+			return false;
+		}
+
 		public bool MoveCursor(TextLayout.Context context, int move, bool select, bool word)
 		{
 			// Déplace le curseur.
-			int cursor = context.CursorTo;
+			if ( move == 1 && !select && !word )
+			{
+				if ( !context.CursorAfter && this.IsDualCursor(context.CursorTo) )
+				{
+					context.CursorAfter = true;
+					this.MemoryCursorPosX(context);
+					return true;
+				}
+			}
+
+			if ( move == -1 && !select && !word )
+			{
+				if ( context.CursorAfter && this.IsDualCursor(context.CursorTo) )
+				{
+					context.CursorAfter = false;
+					this.MemoryCursorPosX(context);
+					return true;
+				}
+			}
+
+			context.CursorAfter = (move < 0);
+
+			int from = System.Math.Min(context.CursorFrom, context.CursorTo);
+			int to   = System.Math.Max(context.CursorFrom, context.CursorTo);
+			int cursor = (move < 0) ? from : to;
 			string simple = TextLayout.ConvertToSimpleText(this.Text);
 
 			if ( word )  // déplacement par mots ?
@@ -570,7 +639,17 @@ namespace Epsitec.Common.Widgets
 
 			context.CursorTo = cursor;
 			if ( !select )  context.CursorFrom = cursor;
+
+			this.MemoryCursorPosX(context);
 			return true;
+		}
+
+		public void MemoryCursorPosX(TextLayout.Context context)
+		{
+			// Mémorise la position horizontale du curseur, afin de pouvoir y
+			// revenir en cas de déplacement par lignes.
+			Drawing.Rectangle cursor = this.FindTextCursor(context.CursorTo, context.CursorAfter, out context.CursorLine);
+			context.CursorPosX = (cursor.Left+cursor.Right)/2;
 		}
 
 
@@ -819,23 +898,35 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public int DetectIndex(Drawing.Point pos)
+		public bool DetectIndex(Drawing.Point pos, out int index, out bool after)
+		{
+			return this.DetectIndex(pos, -1, out index, out after);
+		}
+		
+		public bool DetectIndex(double posx, int posLine, out int index, out bool after)
+		{
+			return this.DetectIndex(new Drawing.Point(posx, 0), posLine, out index, out after);
+		}
+
+		protected bool DetectIndex(Drawing.Point pos, int posLine, out int index, out bool after)
 		{
 			// Trouve l'index dans le texte interne qui correspond à la
-			// position indiquée. Retourne -1 en cas d'échec.
+			// position indiquée. Retourne false en cas d'échec.
 			this.UpdateLayout();
-
+			
 			pos.Y = System.Math.Max(pos.Y, 0);
 			pos.Y = System.Math.Min(pos.Y, this.layoutSize.Height);
 			pos.X = System.Math.Max(pos.X, 0);
 			pos.X = System.Math.Min(pos.X, this.layoutSize.Width);
-			
+
 			foreach ( JustifLine line in this.lines )
 			{
 				if ( !line.visible )  continue;
 
-				if ( pos.Y <= line.pos.Y+line.ascender  &&
-					 pos.Y >= line.pos.Y+line.descender )
+				if ( (posLine == -1                     &&
+					  pos.Y <= line.pos.Y+line.ascender &&
+					  pos.Y >= line.pos.Y+line.descender) ||
+					 posLine == line.rank )
 				{
 					for ( int j=line.firstBlock ; j<=line.lastBlock ; j++ )
 					{
@@ -853,6 +944,10 @@ namespace Epsitec.Common.Widgets
 							{
 								width = this.layoutSize.Width-block.pos.X;
 							}
+							else
+							{
+								width = nextBlock.pos.X-block.pos.X;
+							}
 						}
 
 						if ( pos.X >= block.pos.X       &&
@@ -860,7 +955,9 @@ namespace Epsitec.Common.Widgets
 						{
 							if ( block.image )
 							{
-								return block.beginIndex;
+								index = block.beginIndex;
+								after = false;
+								return true;
 							}
 							else
 							{
@@ -881,89 +978,38 @@ namespace Epsitec.Common.Widgets
 									right = charsWidth[k]*block.fontSize;
 									if ( pos.X-line.pos.X-block.pos.X <= left+(right-left)/2 )
 									{
-										return block.beginIndex+k;
+										index = block.beginIndex+k;
+										after = this.IsAfter(j, index);
+										return true;
 									}
 									left = right;
 								}
-								return block.beginIndex+max;
+								index = block.beginIndex+max;
+								after = this.IsAfter(j, index);
+								return true;
 							}
 						}
 					}
 				}
 			}
-			return -1;
+			index = -1;
+			after = false;
+			return false;
 		}
-		
-		public int DetectIndex(double posx, int posLine)
+
+		protected bool IsAfter(int blockRank, int index)
 		{
-			// Trouve l'index dans le texte interne qui correspond à la
-			// position indiquée. Retourne -1 en cas d'échec.
-			this.UpdateLayout();
-			
-			posx = System.Math.Max(posx, 0);
-			posx = System.Math.Min(posx, this.layoutSize.Width);
-
-			foreach ( JustifLine line in this.lines )
+			// Teste si le bloc précédent contient aussi le même index. Si oui,
+			// retourne true, car l'index trouvé correspond à la 2ème position possible.
+			if ( blockRank > 0 )
 			{
-				if ( !line.visible )  continue;
-
-				if ( posLine == line.rank )
+				JustifBlock prevBlock = (JustifBlock)this.blocks[blockRank-1];
+				if ( index >= prevBlock.beginIndex && index <= prevBlock.endIndex )
 				{
-					for ( int j=line.firstBlock ; j<=line.lastBlock ; j++ )
-					{
-						JustifBlock block = (JustifBlock)this.blocks[j];
-
-						double width = block.width;
-						if ( j == this.blocks.Count-1 )  // dernier bloc ?
-						{
-							width = this.layoutSize.Width-block.pos.X;
-						}
-						else
-						{
-							JustifBlock nextBlock = (JustifBlock)this.blocks[j+1];
-							if ( nextBlock.bol )
-							{
-								width = this.layoutSize.Width-block.pos.X;
-							}
-						}
-
-						if ( posx >= block.pos.X       &&
-							 posx <= block.pos.X+width )
-						{
-							if ( block.image )
-							{
-								return block.beginIndex;
-							}
-							else
-							{
-								double[] charsWidth;
-								if ( block.infos == null )
-								{
-									block.font.GetTextCharEndX(block.text, out charsWidth);
-								}
-								else
-								{
-									block.font.GetTextCharEndX(block.text, block.infos, out charsWidth);
-								}
-								double left = 0;
-								double right;
-								int max = System.Math.Min(charsWidth.Length, block.endIndex-block.beginIndex);
-								for ( int k=0 ; k<max ; k++ )
-								{
-									right = charsWidth[k]*block.fontSize;
-									if ( posx-line.pos.X-block.pos.X <= left+(right-left)/2 )
-									{
-										return block.beginIndex+k;
-									}
-									left = right;
-								}
-								return block.beginIndex+max;
-							}
-						}
-					}
+					return true;
 				}
 			}
-			return -1;
+			return false;
 		}
 
 		public string DetectAnchor(Drawing.Point pos)
@@ -971,7 +1017,9 @@ namespace Epsitec.Common.Widgets
 			// Détecte s'il y a un lien hypertexte dans la liste des
 			// tags actifs à la position en question. Si oui, extrait la chaîne
 			// de l'argument href, en supprimant les guillemets.
-			int index = this.DetectIndex(pos);
+			int index;
+			bool after;
+			this.DetectIndex(pos, out index, out after);
 			return this.FindAnchor(index);
 		}
 		
@@ -1063,8 +1111,8 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					rect.Left  = System.Math.Min(rect.Left,  IndexToPosX(block, localBegin));
-					rect.Right = System.Math.Max(rect.Right, IndexToPosX(block, localEnd  ));
+					rect.Left  = System.Math.Min(rect.Left,  this.IndexToPosX(block, localBegin));
+					rect.Right = System.Math.Max(rect.Right, this.IndexToPosX(block, localEnd  ));
 				}
 			}
 			
@@ -1123,19 +1171,19 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		public Drawing.Rectangle FindTextCursor(int index, out int rankLine)
+		public Drawing.Rectangle FindTextCursor(int index, bool after, out int rankLine)
 		{
 			// Retourne le rectangle correspondant au curseur.
 			// Indique également le numéro de la ligne (0..n).
 			this.UpdateLayout();
 
 			rankLine = -1;
-			foreach ( JustifBlock block in this.blocks )
+			int i = after ? this.blocks.Count-1 : 0;
+			while ( i >= 0 && i < this.blocks.Count )
 			{
+				JustifBlock block = (JustifBlock)this.blocks[i];
 				JustifLine line = (JustifLine)this.lines[block.indexLine];
-				if ( !block.visible )  continue;
-
-				if ( index >= block.beginIndex && index <= block.endIndex )
+				if ( block.visible && index >= block.beginIndex && index <= block.endIndex )
 				{
 					Drawing.Rectangle rect = new Drawing.Rectangle();
 					rect.Top    = line.pos.Y+line.ascender;
@@ -1147,14 +1195,15 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
-						rect.Left  = IndexToPosX(block, index);
+						rect.Left  = this.IndexToPosX(block, index);
 						rect.Right = rect.Left;
 					}
 					rankLine = line.rank;
 					return rect;
 				}
+				i += after ? -1 : 1;
 			}
-			
+
 			return Drawing.Rectangle.Empty;
 		}
 
@@ -1238,6 +1287,11 @@ namespace Epsitec.Common.Widgets
 
 		public int FindOffsetFromIndex(int textIndex)
 		{
+			return this.FindOffsetFromIndex(textIndex, true);
+		}
+
+		public int FindOffsetFromIndex(int textIndex, bool after)
+		{
 			// Retourne l'offset dans le texte interne, correspondant à l'index
 			// spécifié pour le texte sans tags. On saute tous les tags qui précèdent
 			// le caractère indiqué (textIndex=0 => premier caractère non tag dans
@@ -1250,6 +1304,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( endOffset == this.textLength )  return endOffset;
 				beginOffset = endOffset;
+
+				if ( !after )
+				{
+					if ( index == textIndex )  return beginOffset;
+				}
 
 				if ( this.text[endOffset] == '<' )
 				{
@@ -1271,7 +1330,10 @@ namespace Epsitec.Common.Widgets
 					endOffset ++;
 				}
 
-				if ( index == textIndex )  return beginOffset;
+				if ( after )
+				{
+					if ( index == textIndex )  return beginOffset;
+				}
 				index ++;
 			}
 			
@@ -2568,11 +2630,12 @@ namespace Epsitec.Common.Widgets
 
 		public class Context
 		{
-			public int							CursorFrom = 0;
-			public int							CursorTo   = 0;
-			public int							CursorLine = 0;
-			public double						CursorPosX = 0;
-			public int							MaxChar    = 1000;
+			public int							CursorFrom  = 0;
+			public int							CursorTo    = 0;
+			public bool							CursorAfter = false;
+			public int							CursorLine  = 0;
+			public double						CursorPosX  = 0;
+			public int							MaxChar     = 1000;
 		}
 		
 		public event AnchorEventHandler			Anchor;

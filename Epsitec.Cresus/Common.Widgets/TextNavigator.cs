@@ -138,6 +138,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								CursorAfter
+		{
+			get
+			{
+				return this.context.CursorAfter;
+			}
+
+			set
+			{
+				if ( value != this.context.CursorAfter )
+				{
+					this.context.CursorAfter = value;
+					this.OnCursorScrolled();
+					this.OnCursorChanged(true);
+				}
+			}
+		}
+
 		
 		public bool ProcessMessage(Message message, Drawing.Point pos)
 		{
@@ -347,11 +365,14 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque le bouton de la souris est pressé.
 		protected bool ProcessBeginPress(Drawing.Point pos)
 		{
-			int detect = this.textLayout.DetectIndex(pos);
-			if ( detect != -1 )
+			int index;
+			bool after;
+			if ( this.textLayout.DetectIndex(pos, out index, out after) )
 			{
-				this.context.CursorFrom = detect;
-				this.context.CursorTo   = detect;
+				this.context.CursorFrom  = index;
+				this.context.CursorTo    = index;
+				this.context.CursorAfter = after;
+				this.textLayout.MemoryCursorPosX(this.context);
 				this.OnCursorChanged(true);
 				return true;
 			}
@@ -362,10 +383,13 @@ namespace Epsitec.Common.Widgets
 		// Appelé lorsque la souris est déplacée, bouton pressé.
 		protected void ProcessMovePress(Drawing.Point pos)
 		{
-			int detect = this.textLayout.DetectIndex(pos);
-			if ( detect != -1 )
+			int index;
+			bool after;
+			if ( this.textLayout.DetectIndex(pos, out index, out after) )
 			{
-				this.context.CursorTo = detect;
+				this.context.CursorTo    = index;
+				this.context.CursorAfter = after;
+				this.textLayout.MemoryCursorPosX(this.context);
 				this.OnCursorChanged(true);
 			}
 		}
@@ -394,10 +418,13 @@ namespace Epsitec.Common.Widgets
 			}
 			else	// simple clic ?
 			{
-				int detect = this.textLayout.DetectIndex(pos);
-				if ( detect != -1 )
+				int index;
+				bool after;
+				if ( this.textLayout.DetectIndex(pos, out index, out after) )
 				{
-					this.context.CursorTo = detect;
+					this.context.CursorTo    = index;
+					this.context.CursorAfter = after;
+					this.textLayout.MemoryCursorPosX(this.context);
 				}
 			}
 
@@ -408,9 +435,10 @@ namespace Epsitec.Common.Widgets
 		// Mémorise l'état avant une opération quelconque sur le texte.
 		protected void InitialMemorize()
 		{
-			this.iCursorFrom = this.context.CursorFrom;
-			this.iCursorTo   = this.context.CursorTo;
-			this.iTextLength = this.textLayout.Text.Length;
+			this.iCursorFrom  = this.context.CursorFrom;
+			this.iCursorTo    = this.context.CursorTo;
+			this.iCursorAfter = this.context.CursorAfter;
+			this.iTextLength  = this.textLayout.Text.Length;
 		}
 
 		// Génère un événement pour dire que des caractères ont été insérés.
@@ -442,7 +470,10 @@ namespace Epsitec.Common.Widgets
 		// Génère un événement pour dire que le curseur a bougé.
 		protected void OnCursorChanged(bool always)
 		{
-			if ( !always && this.iCursorFrom == this.context.CursorFrom && this.iCursorTo == this.context.CursorTo )  return;
+			if ( !always                                       &&
+				 this.iCursorFrom  == this.context.CursorFrom  &&
+				 this.iCursorTo    == this.context.CursorTo    &&
+				 this.iCursorAfter == this.context.CursorAfter )  return;
 
 			if ( this.CursorChanged != null )  // qq'un écoute ?
 			{
@@ -470,6 +501,7 @@ namespace Epsitec.Common.Widgets
 		protected bool							isNumeric = false;
 		protected int							iCursorFrom;
 		protected int							iCursorTo;
+		protected bool							iCursorAfter;
 		protected int							iTextLength;
 		protected bool							mouseDown = false;
 		protected bool							mouseDrag = false;

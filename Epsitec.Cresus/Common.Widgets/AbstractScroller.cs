@@ -573,11 +573,11 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				value = this.range.Constrain (value);
+				value = this.range.Constrain (value) - this.range.Minimum;
 				
-				if (this.Value != value)
+				if (this.position != value)
 				{
-					this.position = value - this.range.Minimum;
+					this.position = value;
 					this.OnValueChanged ();
 					this.Invalidate ();
 				}
@@ -592,7 +592,10 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.range.Minimum = value;
+				if (this.range.Minimum != value)
+				{
+					this.range.Minimum = value;
+				}
 			}
 		}
 
@@ -604,7 +607,10 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				this.range.Maximum = value;
+				if (this.range.Maximum != value)
+				{
+					this.range.Maximum = value;
+				}
 			}
 		}
 

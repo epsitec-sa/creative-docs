@@ -27,8 +27,8 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.Engageable;
-			this.InternalState |= InternalState.AutoRepeatEngaged;
 			this.InternalState |= InternalState.AutoDoubleClick;
+			this.InternalState |= InternalState.AutoRepeatEngaged;
 			
 			this.ResetCursor();
 			this.MouseCursor = MouseCursor.AsIBeam;
@@ -227,6 +227,28 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public double							ScrollZone
+		{
+			// Amplitude de la zone dans laquelle le curseur provoque un scroll.
+			// Avec 0.0, le texte ne scrolle que lorsque le curseur arrive aux extrémités.
+			// Avec 1.0, le texte scrolle tout le temps (curseur au milieu).
+			get
+			{
+				return this.scrollZone;
+			}
+
+			set
+			{
+				value = System.Math.Max(value, 0.0);
+				value = System.Math.Min(value, 1.0);
+				if ( this.scrollZone != value )
+				{
+					this.scrollZone = value;
+					this.CursorScroll(true);
+				}
+			}
+		}
+
 		
 		public string							Selection
 		{
@@ -278,6 +300,19 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.navigator.CursorTo = value;
+			}
+		}
+
+		public bool								CursorAfter
+		{
+			get
+			{
+				return this.navigator.CursorAfter;
+			}
+
+			set
+			{
+				this.navigator.CursorAfter = value;
 			}
 		}
 
@@ -359,7 +394,7 @@ namespace Epsitec.Common.Widgets
 				
 				if ( this.TextLayout.Text != null )
 				{
-					this.CursorScroll();
+					this.CursorScroll(true);
 				}
 			}
 		}
@@ -526,7 +561,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleNavigatorCursorScrolled(object sender)
 		{
-			this.CursorScroll();
+			this.CursorScroll(false);
 		}
 
 		private void HandleNavigatorCursorChanged(object sender)
@@ -568,9 +603,8 @@ namespace Epsitec.Common.Widgets
 		protected override void OnTextChanged()
 		{
 			// Génère un événement pour dire que le texte a changé (tout changement).
-			
 			this.ResetCursor();
-			this.CursorScroll();
+			this.CursorScroll(false);
 			this.Invalidate();
 			
 			base.OnTextChanged();
@@ -625,35 +659,56 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected void CursorScroll()
+		protected void CursorScroll(bool force)
 		{
 			//	Calcule le scrolling pour que le curseur soit visible.
-			
 			if ( this.TextLayout == null )  return;
-			if ( this.navigator == null )  return;
 			if ( this.mouseDown )  return;
+			if ( this.navigator == null ) return;
 
-			this.scrollOffset = new Drawing.Point();
-
-			Drawing.Rectangle cursor = this.TextLayout.FindTextCursor(this.navigator.Context.CursorTo, out this.navigator.Context.CursorLine);
-			this.navigator.Context.CursorPosX = (cursor.Left+cursor.Right)/2;
-			this.CursorScrollText(cursor);
+			Drawing.Rectangle cursor = this.TextLayout.FindTextCursor(this.navigator.Context.CursorTo, this.navigator.Context.CursorAfter, out this.navigator.Context.CursorLine);
+			this.CursorScrollText(cursor, force);
 		}
 		
-		protected virtual void CursorScrollText(Drawing.Rectangle cursor)
+		protected virtual void CursorScrollText(Drawing.Rectangle cursor, bool force)
 		{
 			Drawing.Point end = this.TextLayout.FindTextEnd();
-			double offset = cursor.Right;
-			offset += this.realSize.Width/2;
-			offset  = System.Math.Min(offset, end.X);
-			offset -= this.realSize.Width;
-			offset  = System.Math.Max(offset, 0);
-			this.scrollOffset.X = offset;
+
+			if ( force )
+			{
+				double offset = cursor.Right;
+				offset += this.realSize.Width/2;
+				offset  = System.Math.Min(offset, end.X);
+				offset -= this.realSize.Width;
+				offset  = System.Math.Max(offset, 0);
+				this.scrollOffset.X = offset;
+			}
+			else
+			{
+				double ratio = (cursor.Right-this.scrollOffset.X)/this.realSize.Width;  // 0..1
+				double zone = this.scrollZone*0.5;
+
+				if ( ratio <= zone )  // curseur trop à gauche ?
+				{
+					this.scrollOffset.X -= (zone-ratio)*this.realSize.Width;
+					this.scrollOffset.X = System.Math.Max(this.scrollOffset.X, 0.0);
+				}
+
+				if ( ratio >= 1.0-zone )  // curseur trop à droite ?
+				{
+					this.scrollOffset.X += (ratio-(1.0-zone))*this.realSize.Width;
+					double max = System.Math.Max(end.X-this.realSize.Width, 0.0);
+					this.scrollOffset.X = System.Math.Min(this.scrollOffset.X, max);
+				}
+			}
+
+			this.scrollOffset.Y = 0;
 		}
 
 		protected virtual void ScrollHorizontal(double dist)
 		{
-			// Décale le texte vers la droite (+) ou la gauche (-).
+			// Décale le texte vers la droite (+) ou la gauche (-), lorsque la
+			// souris dépasse pendant une sélection.
 			if ( this.textFieldStyle == TextFieldStyle.Multi )  return;
 
 			this.scrollOffset.X += dist;
@@ -673,16 +728,18 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void ScrollVertical(double dist)
 		{
-			// Décale le texte vers le haut (+) ou le bas (-).
+			// Décale le texte vers le haut (+) ou le bas (-), lorsque la
+			// souris dépasse pendant une sélection.
 		}
+
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			if ( AbstractTextField.flashTimerStarted == false )
 			{
-				//	Il faut enregistrer le timer; on ne peut pas le faire avant que le
-				//	premier TextField ne s'affiche, car sinon les WinForms semblent se
-				//	mélanger les pinceaux :
+				// Il faut enregistrer le timer; on ne peut pas le faire avant que le
+				// premier TextField ne s'affiche, car sinon les WinForms semblent se
+				// mélanger les pinceaux :
 				TextField.flashTimer = new Timer();
 				TextField.flashTimer.TimeElapsed += new Support.EventHandler(TextField.HandleFlashTimer);
 				TextField.flashTimerStarted = true;
@@ -690,8 +747,7 @@ namespace Epsitec.Common.Widgets
 				this.ResetCursor();
 			}
 			
-			//	Dessine le texte en cours d'édition :
-			
+			// Dessine le texte en cours d'édition :
 			System.Diagnostics.Debug.Assert(this.TextLayout != null);
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
@@ -711,14 +767,13 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.BackColor.IsTransparent )
 			{
-				//	Ne peint pas le fond de la ligne éditable si celle-ci a un fond explicitement
-				//	défini comme "transparent".
+				// Ne peint pas le fond de la ligne éditable si celle-ci a un fond explicitement
+				// défini comme "transparent".
 			}
 			else
 			{
-				//	Ne reproduit pas l'état sélectionné si on peint nous-même le fond de la ligne
-				//	éditable.
-				
+				// Ne reproduit pas l'état sélectionné si on peint nous-même le fond de la ligne
+				// éditable.
 				state &= ~WidgetState.Selected;
 				adorner.PaintTextFieldBackground(graphics, rFill, state, this.textFieldStyle, this.navigator.IsReadOnly);
 			}
@@ -781,8 +836,7 @@ namespace Epsitec.Common.Widgets
 				if ( !this.navigator.IsReadOnly )
 				{
 					// Dessine le curseur :
-					Drawing.Rectangle cursor = this.TextLayout.FindTextCursor(this.navigator.Context.CursorTo, out this.navigator.Context.CursorLine);
-					this.navigator.Context.CursorPosX = (cursor.Left+cursor.Right)/2;
+					Drawing.Rectangle cursor = this.TextLayout.FindTextCursor(this.navigator.Context.CursorTo, this.navigator.Context.CursorAfter, out this.navigator.Context.CursorLine);
 					cursor.Offset(0, -1);
 					double x = cursor.Left;
 					double y = cursor.Bottom;
@@ -848,8 +902,8 @@ namespace Epsitec.Common.Widgets
 		protected bool							scrollBottom = false;
 		protected bool							scrollTop = false;
 		protected Drawing.Point					lastMousePos;
-		
 		protected TextFieldStyle				textFieldStyle = TextFieldStyle.Normal;
+		protected double						scrollZone = 0.5;
 		
 		private TextNavigator					navigator;
 		private int								lastCursorFrom = -1;

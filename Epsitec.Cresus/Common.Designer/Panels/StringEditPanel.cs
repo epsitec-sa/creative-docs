@@ -58,10 +58,13 @@ namespace Epsitec.Common.Designer.Panels
 			this.edit_array.ColumnCount       = 2;
 			this.edit_array.RowCount          = 0;
 			
+			this.edit_array.Columns[0].HeaderText = "Clef";
+			this.edit_array.Columns[0].IsReadOnly = true;
+			this.edit_array.Columns[1].HeaderText = "Valeur";
+			this.edit_array.Columns[1].IsReadOnly = false;
+			
 			this.edit_array.SetColumnWidth (0, 160);
 			this.edit_array.SetColumnWidth (1, this.edit_array.GetColumnWidth (1) + this.edit_array.FreeTableWidth);
-			this.edit_array.SetHeaderText (0, "Clef");
-			this.edit_array.SetHeaderText (1, "Valeur");
 			this.edit_array.TextArrayStore = this.store;
 			this.edit_array.TitleWidget = title;
 			this.edit_array.SearchCaption = @"<b>Recherche. </b><font size=""90%"">Tapez le texte à chercher ci-dessous&#160;:</font>";
