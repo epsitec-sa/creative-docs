@@ -11,6 +11,7 @@ namespace Epsitec.Common.Widgets.Platform
 		public const int WM_ACTIVATE		= 0x0006;
 		public const int WM_ACTIVATEAPP		= 0x001C;
 		public const int WM_MOUSEACTIVATE	= 0x0021;
+		public const int WM_GETMINMAXINFO   = 0x0024;
 		public const int WM_WINDOWPOSCHANGING = 0x0046;
 		public const int WM_WINDOWPOSCHANGED = 0x0047;
 		public const int WM_NCACTIVATE		= 0x0086;

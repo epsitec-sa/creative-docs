@@ -68,14 +68,22 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			this.DeleteWindowSplash();
 		}
+		
+		private void HandleWindowAnimationEnded(object sender)
+		{
+			if ( this.window == null )  return;
+			
+			this.window.Hide();
+			this.window.Dispose();
+			this.window = null;
+		}
 
 		protected void DeleteWindowSplash()
 		{
 			if ( this.window == null )  return;
 
-			this.window.Hide();
-			this.window.Dispose();
-			this.window = null;
+			this.window.WindowAnimationEnded += new Common.Support.EventHandler(this.HandleWindowAnimationEnded);
+			this.window.AnimateHide(Common.Widgets.Animation.FadeOut);
 
 			this.splashTimer.Stop();
 			this.splashTimer.TimeElapsed -= new EventHandler(this.HandleSplashTimerTimeElapsed);

@@ -91,6 +91,7 @@ namespace Epsitec.App.DocumentEditor
 			
 			this.mainWindow.CommandDispatcher = this.editor.CommandDispatcher;
 			this.mainWindow.Show();
+			this.mainWindow.MakeActive();
 
 			this.editor.Finalize();
 		}

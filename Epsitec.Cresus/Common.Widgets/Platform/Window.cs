@@ -572,8 +572,8 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromPoint (new System.Drawing.Point (placement.NormalPosition.Left, placement.NormalPosition.Top));
 				
-//				System.Diagnostics.Debug.WriteLine ("WorkingArea:  " + screen.WorkingArea);
-//				System.Diagnostics.Debug.WriteLine ("ScreenBounds: " + screen.Bounds);
+//				System.Diagnostics.Trace.WriteLine ("WorkingArea:  " + screen.WorkingArea);
+//				System.Diagnostics.Trace.WriteLine ("ScreenBounds: " + screen.Bounds);
 				
 				if (screen.WorkingArea != screen.Bounds)
 				{
@@ -587,8 +587,8 @@ namespace Epsitec.Common.Widgets.Platform
 						ox -= placement.NormalPosition.Left - f.Location.X;
 						oy += placement.NormalPosition.Top - f.Location.Y;
 						
-//						System.Diagnostics.Debug.WriteLine ("Adjust X by " + (-placement.NormalPosition.Left + f.Location.X));
-//						System.Diagnostics.Debug.WriteLine ("Adjust Y by " + (placement.NormalPosition.Top - f.Location.Y));
+//						System.Diagnostics.Trace.WriteLine ("Adjust X by " + (-placement.NormalPosition.Left + f.Location.X));
+//						System.Diagnostics.Trace.WriteLine ("Adjust Y by " + (placement.NormalPosition.Top - f.Location.Y));
 					}
 				}
 				
@@ -930,6 +930,8 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			try
 			{
+//				System.Diagnostics.Trace.WriteLine ("OnSizeChanged: Created="+this.Created+", form_bounds_set="+this.form_bounds_set+", form_bounds="+this.form_bounds.ToString()+", Bounds="+this.Bounds.ToString()+", WindowBounds="+this.WindowBounds.ToString());
+				
 				if ((this.Created == false) &&
 					(this.form_bounds_set) &&
 					(this.form_bounds.Size != this.Size))
@@ -1156,7 +1158,41 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
 		{
-//			System.Diagnostics.Debug.WriteLine ("WndProc: " + msg.Msg.ToString ("X4"));
+//			System.Diagnostics.Debug.WriteLine ("WndProc: " + msg.Msg.ToString ("X4") + " LP=" + msg.LParam.ToInt32 ().ToString ("X8") + " WP=" + msg.WParam.ToInt32 ().ToString ("X8") + " Bounds=" + this.Bounds.ToString());
+			
+			if (msg.Msg == Win32Const.WM_GETMINMAXINFO)
+			{
+				//	Pour des raisons mystérieuses, WinForms (?) se croit obligé de touiller les positions
+				//	pour la fenêtre maximisée avec un résultat désastreux (si la barre des tâches est à
+				//	gauche ou en haut). On force la position maximisée à ce qu'elle devrait toujours être.
+				
+				unsafe
+				{
+					Win32Api.MinMaxInfo* mmi = (Win32Api.MinMaxInfo*) msg.LParam.ToPointer ();
+//					System.Diagnostics.Debug.WriteLine (">MINMAXINFO: MaxSize=["+mmi->MaxSize.Width+";"+mmi->MaxSize.Height+"] MaxPosition=["+mmi->MaxPosition.X+";"+mmi->MaxPosition.Y+"]");
+					mmi->MaxPosition.X = -4;
+					mmi->MaxPosition.Y = -4;
+				}
+			}
+			
+//			if (msg.Msg == Win32Const.WM_WINDOWPOSCHANGING)
+//			{
+//				unsafe
+//				{
+//					Win32Api.WindowPos* wp = (Win32Api.WindowPos*) msg.LParam.ToPointer ();
+//					System.Diagnostics.Debug.WriteLine (" WINDOWPOSCHANGING: "+wp->X+", "+wp->Y+", "+wp->Width+", "+wp->Height+", flags="+wp->Flags.ToString("X8"));
+//					System.Diagnostics.Debug.WriteLine (" WindowState: "+this.WindowState.ToString());
+//				}
+//			}
+//			if (msg.Msg == Win32Const.WM_WINDOWPOSCHANGED)
+//			{
+//				unsafe
+//				{
+//					Win32Api.WindowPos* wp = (Win32Api.WindowPos*) msg.LParam.ToPointer ();
+//					System.Diagnostics.Debug.WriteLine (" WINDOWPOSCHANGED: "+wp->X+", "+wp->Y+", "+wp->Width+", "+wp->Height+", flags="+wp->Flags.ToString("X8"));
+//					System.Diagnostics.Debug.WriteLine (" WindowState: "+this.WindowState.ToString());
+//				}
+//			}
 			
 			if (msg.Msg == Win32Const.WM_APP_DISPOSE)
 			{
@@ -1270,6 +1306,15 @@ namespace Epsitec.Common.Widgets.Platform
 				}
 				
 				base.WndProc (ref msg);
+				
+//				if (msg.Msg == Win32Const.WM_GETMINMAXINFO)
+//				{
+//					unsafe
+//					{
+//						Win32Api.MinMaxInfo* mmi = (Win32Api.MinMaxInfo*) msg.LParam.ToPointer ();
+//						System.Diagnostics.Debug.WriteLine ("<MINMAXINFO: MaxSize=["+mmi->MaxSize.Width+";"+mmi->MaxSize.Height+"] MaxPosition=["+mmi->MaxPosition.X+";"+mmi->MaxPosition.Y+"]");
+//					}
+//				}
 			}
 			catch (System.Exception ex)
 			{
@@ -1725,7 +1770,9 @@ namespace Epsitec.Common.Widgets.Platform
 			this.UpdateLayeredWindow ();
 			if (this.IsMouseActivationEnabled)
 			{
+//				System.Diagnostics.Debug.WriteLine ("Show-----------------------------------");
 				this.Show ();
+//				System.Diagnostics.Debug.WriteLine ("Show OK--------------------------------");
 			}
 			else
 			{

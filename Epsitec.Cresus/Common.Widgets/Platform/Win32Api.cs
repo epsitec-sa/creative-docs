@@ -106,7 +106,26 @@ namespace Epsitec.Common.Widgets.Platform
 			public Point MinPosition;
 			public Point MaxPosition;
 			public Rect NormalPosition;
+		}
+		
+		[StructLayout(LayoutKind.Sequential, Pack=1) ] public struct WindowPos
+		{
+			public System.IntPtr WindowHandle;
+			public System.IntPtr WindowHandleInsertAfter;
+			public int X;
+			public int Y;
+			public int Width;
+			public int Height;
+			public int Flags;
+		}
 
+		[StructLayout(LayoutKind.Sequential, Pack=1) ] public struct MinMaxInfo
+		{
+			public Point Reserved;
+			public Size  MaxSize;
+			public Point MaxPosition;
+			public Size  MinTrackSize;
+			public Size  MaxTrackSize;
 		}
 
 		[StructLayout(LayoutKind.Sequential, Pack=1) ] public struct GUIThreadInfo
