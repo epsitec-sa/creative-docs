@@ -27,6 +27,11 @@ namespace Epsitec.Cresus.Database
 			get { return this.length; }
 		}
 		
+		public IRawTypeConverter		RawConverter
+		{
+			get { return this.raw_converter; }
+		}
+		
 		
 		public bool						IsNullAllowed
 		{
@@ -51,6 +56,17 @@ namespace Epsitec.Cresus.Database
 			get { return this.is_fixed_length; }
 		}
 		
+		public bool						HasRawConverter
+		{
+			get { return this.raw_converter != null; }
+		}
+		
+		
+		public void SetRawConverter(IRawTypeConverter raw_converter)
+		{
+			this.raw_converter = raw_converter;
+			this.SetType (raw_converter.MatchingType, raw_converter.Length, true);
+		}
 		
 		public void SetType(DbRawType type)
 		{
@@ -91,5 +107,6 @@ namespace Epsitec.Cresus.Database
 		protected bool					is_indexed			= false;
 		protected bool					is_fixed_length		= true;
 		protected int					length				= 1;
+		protected IRawTypeConverter		raw_converter		= null;
 	}
 }

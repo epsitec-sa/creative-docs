@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (db_access.Provider != null);
 			
-			foreach (IDbAbstractionFactory db_factory in DbFactories)
+			foreach (IDbAbstractionFactory db_factory in DbFactory.DbFactories)
 			{
 				if (db_factory.ProviderName == db_access.Provider)
 				{
@@ -52,9 +52,24 @@ namespace Epsitec.Cresus.Database
 			return null;
 		}
 		
+		public static IDbAbstractionFactory FindDbAbstractionFactory(string provider)
+		{
+			System.Diagnostics.Debug.Assert (provider != null);
+			
+			foreach (IDbAbstractionFactory db_factory in DbFactory.DbFactories)
+			{
+				if (db_factory.ProviderName == provider)
+				{
+					return db_factory;
+				}
+			}
+			
+			return null;
+		}
+		
 		public static void DebugDumpRegisteredDbAbstractions()
 		{
-			foreach (IDbAbstractionFactory entry in DbFactories)
+			foreach (IDbAbstractionFactory entry in DbFactory.DbFactories)
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 				
@@ -72,9 +87,9 @@ namespace Epsitec.Cresus.Database
 		{
 			System.Diagnostics.Debug.Assert (db_factory != null);
 			System.Diagnostics.Debug.Assert (db_factory.ProviderName != null);
-			System.Diagnostics.Debug.Assert (DbFactories.Contains (db_factory) == false);
+			System.Diagnostics.Debug.Assert (DbFactory.DbFactories.Contains (db_factory) == false);
 			
-			DbFactories.Add (db_factory);
+			DbFactory.DbFactories.Add (db_factory);
 		}
 		
 		

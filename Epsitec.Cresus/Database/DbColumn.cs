@@ -57,28 +57,29 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public SqlColumn[] CreateSqlColumns(ITypeConverter type_converter)
+		public SqlColumn CreateSqlColumn(ITypeConverter type_converter)
 		{
-			//	TODO: crée la ou les colonnes équivalentes...
+			DbRawType raw_type = TypeConverter.MapToRawType (this.simple_type, this.num_def);
+			SqlColumn column   = null;
 			
-			DbRawType   raw_type = TypeConverter.MapToRawType (this.simple_type, this.num_def);
-			SqlColumn[] columns  = null;
-			
-/****************/
+			IRawTypeConverter raw_converter;
 			
 			if (type_converter.CheckNativeSupport (raw_type))
 			{
-				columns = new SqlColumn[1];
-				columns[0] = new SqlColumn ();
-				columns[0].SetType (raw_type, this.Length, this.IsFixedLength);
+				column = new SqlColumn ();
+				column.SetType (raw_type, this.Length, this.IsFixedLength);
+			}
+			else if (type_converter.GetRawTypeConverter (raw_type, out raw_converter))
+			{
+				column = new SqlColumn ();
+				column.SetRawConverter (raw_converter);
 			}
 			else
 			{
-				//	TODO: gère les cas comme Guid, par exemple, qui doivent être
-				//	fractionnés en plusieurs colonnes.
+				System.Diagnostics.Debug.WriteLine (string.Format ("Conversion of DbColumn to SqlColumn not possible for {0}.", this.Name));
 			}
 			
-			return null;
+			return column;
 		}
 		
 		public void SetTypeAndLength(DbSimpleType type, int length, bool is_fixed_length)

@@ -30,6 +30,8 @@ namespace Epsitec.Cresus.Database
 		/// un objet simplifié. De manière interne, cette méthode appelle à son
 		/// tour TypeConverter.ConvertToSimpleType pour gérer tous les cas de
 		/// conversion normaux.
+		/// En aucun cas, il faut appeler cette méthode pour des types non supportés par
+		/// la base de données (vérifier avec CheckNativeSupport).
 		/// </summary>
 		/// <param name="value">objet brut fourni par ADO.NET</param>
 		/// <param name="simple_type">type simplifié attendu</param>
@@ -42,6 +44,8 @@ namespace Epsitec.Cresus.Database
 		/// le provider ADO.NET. C'est la réciproque de la méthode ConvertToSimpleType.
 		/// De manière interne, cette méthode appelle TypeConverter.ConvertFromSimpleType
 		/// pour gérer les cas de conversion normaux.
+		/// En aucun cas, il faut appeler cette méthode pour des types non supportés par
+		/// la base de données (vérifier avec CheckNativeSupport).
 		/// </summary>
 		/// <param name="value">objet de type simplifié</param>
 		/// <param name="simple_type">type de l'objet</param>
