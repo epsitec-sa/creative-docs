@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public DbID								Id
+		public long								Id
 		{
 			get { return this.id; }
 		}
