@@ -123,6 +123,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IDataConstraint.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IDataFolder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -235,11 +235,27 @@ namespace Epsitec.Common.Types
 			
 			
 			#region IDataValue Members
+			public INamedType					DataType
+			{
+				get
+				{
+					return null;
+				}
+			}
+			
+			public IDataConstraint				DataConstraint
+			{
+				get
+				{
+					return null;
+				}
+			}
+			
 			public object ReadValue()
 			{
 				return null;
 			}
-
+			
 			public void WriteValue(object value)
 			{
 			}
