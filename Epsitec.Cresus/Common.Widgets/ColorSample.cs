@@ -9,8 +9,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public ColorSample()
 		{
-			this.colorBlack   = Drawing.Color.FromName("WindowFrame");
-			this.colorWhite   = Drawing.Color.FromName("Window");
 		}
 		
 		public ColorSample(Widget embedder) : this()
@@ -82,14 +80,13 @@ namespace Epsitec.Common.Widgets
 			{
 				graphics.AddLine(rect.Left+0.5, rect.Bottom+0.5, rect.Right-0.5, rect.Top-0.5);
 				graphics.AddLine(rect.Left+0.5, rect.Top-0.5, rect.Right-0.5, rect.Bottom+0.5);
-				graphics.RenderSolid(this.colorBlack);
+				graphics.RenderSolid(adorner.ColorBorder);
 
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.color);
 
 				rect.Inflate(-0.5, -0.5);
 				graphics.AddRectangle(rect);
-				//?graphics.RenderSolid(this.colorBlack);
 				graphics.RenderSolid(adorner.ColorBorder);
 			}
 			else
@@ -102,8 +99,6 @@ namespace Epsitec.Common.Widgets
 
 
 
-		protected Drawing.Color				colorBlack;
-		protected Drawing.Color				colorWhite;
 		protected Drawing.Color				color;
 		protected bool						possibleOrigin = false;
 	}

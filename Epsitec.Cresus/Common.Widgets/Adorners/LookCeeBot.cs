@@ -1288,6 +1288,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			get { return this.colorBorder; }
 		}
 
+		public Drawing.Color ColorTextSliderBorder(bool enabled)
+		{
+			return this.colorBorder;
+		}
+
 		public Drawing.Color ColorTextFieldBorder(bool enabled)
 		{
 			return this.colorBorder;
@@ -1317,6 +1322,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double GeometrySelectedRightMargin { get { return 2; } }
 		public double GeometrySliderLeftMargin { get { return 0; } }
 		public double GeometrySliderRightMargin { get { return 0; } }
+		public double GeometrySliderBottomMargin { get { return 0; } }
 
 
 		protected Drawing.Image		bitmap;

@@ -602,89 +602,89 @@ namespace Epsitec.Common.Widgets.Design
 			
 			private void HandleGripsDragging(object sender, DragEventArgs e)
 			{
-				System.Diagnostics.Debug.Assert (this.active_grip == sender);
-				
-				Grip grip = sender as Grip;
-				
-				System.Diagnostics.Debug.Assert (grip != null);
-				System.Diagnostics.Debug.Assert (this.grips[grip.Index] == grip);
-				
-				int     index = grip.Index;
-				GripMap map   = GripsOverlay.grip_map[index];
-				
-				Drawing.Rectangle bounds = this.target_bounds;
-				
-				bounds.OffsetGrip (map.id, e.Offset);
-				bounds = this.SelectedWidgets[0].MapRootToClient (bounds);
-				bounds = this.SelectedWidgets[0].MapClientToParent (bounds);
-				bounds = this.ConstrainWidgetBoundsRelative (map.id, bounds);
-				bounds = this.ConstrainWidgetBoundsMinMax (map.id, bounds);
-				
-				this.SelectedWidgets[0].Bounds = bounds;
-				
-				if (this.Dragging != null)
-				{
-					this.Dragging (this, e);
-				}
+//				System.Diagnostics.Debug.Assert (this.active_grip == sender);
+//				
+//				Grip grip = sender as Grip;
+//				
+//				System.Diagnostics.Debug.Assert (grip != null);
+//				System.Diagnostics.Debug.Assert (this.grips[grip.Index] == grip);
+//				
+//				int     index = grip.Index;
+//				GripMap map   = GripsOverlay.grip_map[index];
+//				
+//				Drawing.Rectangle bounds = this.target_bounds;
+//				
+//				bounds.OffsetGrip (map.id, e.Offset);
+//				bounds = this.SelectedWidgets[0].MapRootToClient (bounds);
+//				bounds = this.SelectedWidgets[0].MapClientToParent (bounds);
+//				bounds = this.ConstrainWidgetBoundsRelative (map.id, bounds);
+//				bounds = this.ConstrainWidgetBoundsMinMax (map.id, bounds);
+//				
+//				this.SelectedWidgets[0].Bounds = bounds;
+//				
+//				if (this.Dragging != null)
+//				{
+//					this.Dragging (this, e);
+//				}
 			}
 			
 			private void HandleGripsDragBegin(object sender)
 			{
-				System.Diagnostics.Debug.Assert (this.active_grip == null);
-				
-				Grip grip = sender as Grip;
-				
-				System.Diagnostics.Debug.Assert (grip != null);
-				System.Diagnostics.Debug.Assert (this.grips[grip.Index] == grip);
-				
-				for (int i = 0; i < this.grips.Length; i++)
-				{
-					if (this.grips[i] != grip)
-					{
-						this.grips[i].SetVisible (false);
-					}
-				}
-				
-				this.active_grip = grip;
-				
-				if (this.DragBegin != null)
-				{
-					this.DragBegin (this);
-				}
+//				System.Diagnostics.Debug.Assert (this.active_grip == null);
+//				
+//				Grip grip = sender as Grip;
+//				
+//				System.Diagnostics.Debug.Assert (grip != null);
+//				System.Diagnostics.Debug.Assert (this.grips[grip.Index] == grip);
+//				
+//				for (int i = 0; i < this.grips.Length; i++)
+//				{
+//					if (this.grips[i] != grip)
+//					{
+//						this.grips[i].SetVisible (false);
+//					}
+//				}
+//				
+//				this.active_grip = grip;
+//				
+//				if (this.DragBegin != null)
+//				{
+//					this.DragBegin (this);
+//				}
 			}
 			
 			private void HandleGripsDragEnd(object sender)
 			{
-				System.Diagnostics.Debug.Assert (this.active_grip == sender);
-				
-				Grip grip = sender as Grip;
-				
-				System.Diagnostics.Debug.Assert (grip != null);
-				System.Diagnostics.Debug.Assert (this.grips[grip.Index] == grip);
-				
-				for (int i = 0; i < this.grips.Length; i++)
-				{
-					if (this.grips[i] != grip)
-					{
-						this.grips[i].SetVisible (true);
-					}
-				}
-				
-				if (this.drop_adorner.Widget != null)
-				{
-					this.drop_adorner.Widget.InternalUpdateGeometry ();
-				}
-				
-				this.drop_adorner.Widget = null;
-				this.drop_cx = null;
-				this.drop_cy = null;
-				
-				if (this.DragEnd != null)
-				{
-					this.DragEnd (this);
-				}
-				
-				this.active_grip = null;
+//				System.Diagnostics.Debug.Assert (this.active_grip == sender);
+//				
+//				Grip grip = sender as Grip;
+//				
+//				System.Diagnostics.Debug.Assert (grip != null);
+//				System.Diagnostics.Debug.Assert (this.grips[grip.Index] == grip);
+//				
+//				for (int i = 0; i < this.grips.Length; i++)
+//				{
+//					if (this.grips[i] != grip)
+//					{
+//						this.grips[i].SetVisible (true);
+//					}
+//				}
+//				
+//				if (this.drop_adorner.Widget != null)
+//				{
+//					this.drop_adorner.Widget.InternalUpdateGeometry ();
+//				}
+//				
+//				this.drop_adorner.Widget = null;
+//				this.drop_cx = null;
+//				this.drop_cy = null;
+//				
+//				if (this.DragEnd != null)
+//				{
+//					this.DragEnd (this);
+//				}
+//				
+//				this.active_grip = null;
 			}
 			
 			

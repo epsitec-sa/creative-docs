@@ -115,6 +115,7 @@ namespace Epsitec.Common.Widgets
 		Drawing.Color ColorWindow { get; }
 		Drawing.Color ColorDisabled { get; }
 		Drawing.Color ColorBorder { get; }
+		Drawing.Color ColorTextSliderBorder(bool enabled);
 		Drawing.Color ColorTextFieldBorder(bool enabled);
 
 		double AlphaVMenu { get; }
@@ -141,6 +142,7 @@ namespace Epsitec.Common.Widgets
 		double GeometrySelectedRightMargin { get; }
 		double GeometrySliderLeftMargin { get; }
 		double GeometrySliderRightMargin { get; }
+		double GeometrySliderBottomMargin { get; }
 	}
 	
 	public enum Direction

@@ -1252,6 +1252,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			get { return this.colorCaption; }
 		}
 
+		public Drawing.Color ColorTextSliderBorder(bool enabled)
+		{
+			return this.colorCaption;
+		}
+
 		public Drawing.Color ColorTextFieldBorder(bool enabled)
 		{
 			return this.colorCaption;
@@ -1281,6 +1286,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double GeometrySelectedRightMargin { get { return 1; } }
 		public double GeometrySliderLeftMargin { get { return 0; } }
 		public double GeometrySliderRightMargin { get { return 0; } }
+		public double GeometrySliderBottomMargin { get { return 0; } }
 
 
 		// Variables membres de TextLayout.

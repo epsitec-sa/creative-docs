@@ -198,8 +198,9 @@ namespace Epsitec.Common.Widgets
 			WidgetState       state = this.PaintState;
 
 			double width = rect.Width;
-			rect.Left  += adorner.GeometrySliderLeftMargin;
-			rect.Right += adorner.GeometrySliderRightMargin;
+			rect.Left   += adorner.GeometrySliderLeftMargin;
+			rect.Right  += adorner.GeometrySliderRightMargin;
+			rect.Bottom += adorner.GeometrySliderBottomMargin;
 			
 			if ( this.frame )
 			{
@@ -208,7 +209,7 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				graphics.AddLine(1, rect.Top-0.5, width-1, rect.Top-0.5);
-				graphics.RenderSolid(adorner.ColorTextFieldBorder(this.IsEnabled));
+				graphics.RenderSolid(adorner.ColorTextSliderBorder(this.IsEnabled));
 			}
 
 			if ( this.IsEnabled )

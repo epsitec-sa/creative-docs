@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : System.IDisposable, IBundleSupport, IContainer
+	public class Window : System.IDisposable, IBundleSupport, IContainer, Support.ICommandDispatcherHost
 	{
 		public Window()
 		{
@@ -276,6 +276,7 @@ namespace Epsitec.Common.Widgets
 			set { this.cmd_dispatcher = value; }
 		}
 		
+		
 		public bool							PreventAutoClose
 		{
 			get { return this.window.PreventAutoClose; }
@@ -398,6 +399,13 @@ namespace Epsitec.Common.Widgets
 			set { this.window.Name = this.name = value; }
 		}
 		
+		
+		#region ICommandDispatcherHost Members
+		Support.CommandDispatcher Support.ICommandDispatcherHost.CommandDispatcher
+		{
+			get { return this.cmd_dispatcher; }
+		}
+		#endregion
 		
 		#region IBundleSupport Members
 		public virtual string				PublicClassName
@@ -631,7 +639,9 @@ namespace Epsitec.Common.Widgets
 				
 				this.cmd_names.Remove (widget);
 				
-				this.cmd_dispatcher.Dispatch (name, widget);
+				Support.CommandDispatcher dispatcher = widget.CommandDispatcher;
+				
+				dispatcher.Dispatch (name, widget);
 			}
 		}
 		

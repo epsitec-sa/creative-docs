@@ -9,8 +9,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public ColorCircle()
 		{
-			this.colorBlack   = Drawing.Color.FromName("WindowFrame");
-			this.colorControl = Drawing.Color.FromName("Control");
+			this.colorBlack = Drawing.Color.FromName("WindowFrame");
 		}
 		
 		public ColorCircle(Widget embedder) : this()
@@ -233,7 +232,8 @@ namespace Epsitec.Common.Widgets
 		// Dessine un cercle dégradé pour la teinte (H).
 		protected void PaintGradientCircle(Drawing.Graphics graphics,
 										   Drawing.Rectangle rect,
-										   Drawing.Color color)
+										   Drawing.Color colorBorder,
+										   Drawing.Color colorWindow)
 		{
 			if ( this.IsEnabled )
 			{
@@ -273,12 +273,12 @@ namespace Epsitec.Common.Widgets
 				path = new Drawing.Path();
 				this.PathAddCircle(path, rInside);
 				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(this.colorControl);
+				graphics.RenderSolid(colorWindow);
 
 				rInside.Inflate(-0.5, -0.5);
 				graphics.AddLine(rInside.Left, (rInside.Bottom+rInside.Top)/2, rInside.Right, (rInside.Bottom+rInside.Top)/2);
 				graphics.AddLine((rInside.Left+rInside.Right)/2, rInside.Bottom, (rInside.Left+rInside.Right)/2, rInside.Top);
-				graphics.RenderSolid(this.colorBlack);
+				graphics.RenderSolid(colorBorder);
 
 				rInside.Inflate(0.5, 0.5);
 				path = new Drawing.Path();
@@ -288,9 +288,9 @@ namespace Epsitec.Common.Widgets
 			}
 
 			rect.Inflate(-0.5, -0.5);
-			this.PaintCircle(graphics, rect, color);
+			this.PaintCircle(graphics, rect, colorBorder);
 			rect.Inflate(-this.rectCircle.Width*0.125, -this.rectCircle.Width*0.125);
-			this.PaintCircle(graphics, rect, color);
+			this.PaintCircle(graphics, rect, colorBorder);
 		}
 
 		// Dessine un cercle inscrit dans un rectangle.
@@ -315,7 +315,7 @@ namespace Epsitec.Common.Widgets
 		// Dessine un carré dégradé pour représenter SV.
 		protected void PaintGradientSquare(Drawing.Graphics graphics,
 										   Drawing.Rectangle rect,
-										   Drawing.Color color)
+										   Drawing.Color colorBorder)
 	{
 			if ( this.IsEnabled )
 			{
@@ -348,7 +348,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			graphics.AddRectangle(rect);
-			graphics.RenderSolid(color);
+			graphics.RenderSolid(colorBorder);
 		}
 
 		// Dessine une poignée.
@@ -386,14 +386,14 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			Drawing.Rectangle rect = this.rectCircle;
-			//?Drawing.Color color = this.IsEnabled ? this.colorBlack : adorner.ColorBorder;
-			Drawing.Color color = adorner.ColorBorder;
-			this.PaintGradientCircle(graphics, rect, color);
+			Drawing.Color colorBorder = adorner.ColorBorder;
+			Drawing.Color colorWindow = adorner.ColorWindow;
+			this.PaintGradientCircle(graphics, rect, colorBorder, colorWindow);
 
 			rect = this.rectSquare;
 			graphics.Align(ref rect);
 			rect.Inflate(-0.5, -0.5);
-			this.PaintGradientSquare(graphics, rect, color);
+			this.PaintGradientSquare(graphics, rect, colorBorder);
 
 			this.PaintHandler(graphics, this.posHandlerH,  this.radiusHandler);
 			this.PaintHandler(graphics, this.posHandlerSV, this.radiusHandler);
@@ -402,7 +402,6 @@ namespace Epsitec.Common.Widgets
 
 		protected double					h,s,v,a;
 		protected Drawing.Color				colorBlack;
-		protected Drawing.Color				colorControl;
 		protected Drawing.Rectangle			rectCircle;
 		protected Drawing.Point				centerCircle;
 		protected double					radiusCircleMax;

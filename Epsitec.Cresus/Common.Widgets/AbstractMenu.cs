@@ -23,8 +23,6 @@ namespace Epsitec.Common.Widgets
 			this.items = new MenuItemCollection(this);
 			this.timer = new Timer();
 			this.timer.TimeElapsed += new EventHandler(this.HandleTimerTimeElapsed);
-			
-			this.dispatcher = Support.CommandDispatcher.Default;
 		}
 		
 		#region Interface IBundleSupport
@@ -101,26 +99,26 @@ namespace Epsitec.Common.Widgets
 				this.items = null;
 				this.timer = null;
 				
-				this.appWindow = null;
+				this.host = null;
 			}
 			
 			base.Dispose(disposing);
 		}
 
 
-		public Window AppWindow
+		public Support.ICommandDispatcherHost Host
 		{
-			get { return this.appWindow; }
-			set { this.appWindow = value; }
+			get { return this.host; }
+			set { this.host = value; }
 		}
 		
 		public override Support.CommandDispatcher CommandDispatcher
 		{
 			get
 			{
-				if (this.appWindow != null)
+				if (this.host != null)
 				{
-					return this.appWindow.CommandDispatcher;
+					return this.host.CommandDispatcher;
 				}
 				
 				return base.CommandDispatcher;
@@ -846,9 +844,9 @@ namespace Epsitec.Common.Widgets
 		// Dessine le menu.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			System.Diagnostics.Debug.Assert (this.appWindow != null, "No AppWindow defined for menu.",
-				/**/						 "The menu you are trying to display has no associated application window.\n"+
-				/**/						 "Use AbstractMenu.AppWindow to define it when you setup the menu.");
+			System.Diagnostics.Debug.Assert (this.host != null, "No Host defined for menu.",
+				/**/						 "The menu you are trying to display has no associated command dispatcher host.\n"+
+				/**/						 "Use AbstractMenu.Host to define it when you setup the menu.");
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
@@ -930,26 +928,25 @@ namespace Epsitec.Common.Widgets
 
 		#endregion
 		
-		protected MenuType					type;
-		protected bool						isDirty;
-		protected bool						isActive = true;  // dernier menu (feuille)
-		protected double					margin = 2;  // pour menu horizontal
-		protected Drawing.Margins			margins = new Drawing.Margins(2,2,2,2);
-		protected Drawing.Margins			shadow  = new Drawing.Margins(0,0,0,0);
-		protected MenuItemCollection		items;
-		protected Window					window;
-		protected Window					appWindow;
-		protected Timer						timer;
-		protected AbstractMenu				submenu;
-		protected AbstractMenu				parentMenu;
-		protected MenuItem					parentItem;
-		protected double					iconWidth;
-		protected Drawing.Rectangle			parentRect;
-		protected MenuItem					delayedMenuItem;
-		protected Support.CommandDispatcher	dispatcher;
+		protected MenuType							type;
+		protected bool								isDirty;
+		protected bool								isActive = true;  // dernier menu (feuille)
+		protected double							margin = 2;  // pour menu horizontal
+		protected Drawing.Margins					margins = new Drawing.Margins(2,2,2,2);
+		protected Drawing.Margins					shadow  = new Drawing.Margins(0,0,0,0);
+		protected MenuItemCollection				items;
+		protected Window							window;
+		protected Support.ICommandDispatcherHost	host;
+		protected Timer								timer;
+		protected AbstractMenu						submenu;
+		protected AbstractMenu						parentMenu;
+		protected MenuItem							parentItem;
+		protected double							iconWidth;
+		protected Drawing.Rectangle					parentRect;
+		protected MenuItem							delayedMenuItem;
 		
-		protected static bool				menuDeveloped;
-		protected static AbstractMenu		menuFiltering;
-		protected static AbstractMenu		menuLastLeaf;
+		protected static bool						menuDeveloped;
+		protected static AbstractMenu				menuFiltering;
+		protected static AbstractMenu				menuLastLeaf;
 	}
 }
