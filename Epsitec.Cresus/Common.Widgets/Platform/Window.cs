@@ -874,13 +874,10 @@ namespace Epsitec.Common.Widgets.Platform
 			if (this.dirty_rectangle.IsValid)
 			{
 				Drawing.Rectangle repaint = this.dirty_rectangle;
-					
+				
 				this.dirty_rectangle = Drawing.Rectangle.Empty;
-					
-				this.graphics.ResetClippingRectangle ();
-				this.graphics.SetClippingRectangle (repaint);
-					
-				this.widget_window.Root.PaintHandler (this.graphics, repaint);
+				
+				this.widget_window.RefreshGraphics (this.graphics, repaint);
 				
 				return true;
 			}

@@ -8,7 +8,7 @@ namespace Epsitec.Common.Widgets.Layouts
 	/// <summary>
 	/// La classe Grid implémente un Layout Manager basé sur une grille.
 	/// </summary>
-	public class Grid
+	public class Grid : Window.IPostPaintHandler
 	{
 		public Grid()
 		{
@@ -64,6 +64,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
+		
 		public Grid.ColumnCollection	Columns
 		{
 			get { return this.columns; }
@@ -83,15 +84,6 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
-		public double					CurrentWidth
-		{
-			get
-			{
-				this.Update ();
-				return this.current_width;
-			}
-		}
-		
 		public double					DesiredHeight
 		{
 			get { return this.desired_height; }
@@ -105,6 +97,15 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
+		public double					CurrentWidth
+		{
+			get
+			{
+				this.Update ();
+				return this.current_width;
+			}
+		}
+		
 		public double					CurrentHeight
 		{
 			get
@@ -115,14 +116,25 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 		
 		
+		protected int					HotColumnIndex
+		{
+			get { return this.hot_column_index; }
+			set
+			{
+				if (this.hot_column_index != value)
+				{
+					this.hot_column_index = value;
+					this.root.Invalidate ();
+				}
+			}
+		}
+		
+		
 		public void Update()
 		{
 			if (this.is_dirty)
 			{
-				if (this.freeze_count == 0)
-				{
-					this.Rebuild ();
-				}
+				this.Rebuild ();
 			}
 		}
 		
@@ -132,17 +144,6 @@ namespace Epsitec.Common.Widgets.Layouts
 			{
 				this.is_dirty = true;
 			}
-		}
-		
-		
-		protected void FreezeEnter()
-		{
-			System.Threading.Interlocked.Increment (ref this.freeze_count);
-		}
-		
-		protected void FreezeRelease()
-		{
-			System.Threading.Interlocked.Decrement (ref this.freeze_count);
 		}
 		
 		
@@ -182,6 +183,8 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		protected void UpdateGeometry()
 		{
+			this.is_dragging = this.is_dragging_column | this.is_dragging_widget;
+			
 			if (this.is_dirty)
 			{
 				//	On ne va pas mettre à jour la géométrie si la structure n'est pas à
@@ -191,24 +194,31 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			
 			this.UpdateColumnsGeometry ();
-			this.UpdateLinesGeometry ();
+			this.UpdateCurrentHeight ();
 			this.LayoutWidgets (this.root, 0, 0, this.current_height);
 			
-			this.root.Size = new Drawing.Size (this.current_width, this.current_height);
+			Drawing.Rectangle bounds = this.root.Bounds;
+			
+			bounds.Bottom = bounds.Top  - this.current_height;
+			bounds.Right  = bounds.Left + this.current_width;
+			
+			this.root.Bounds = bounds;
 			this.root.Invalidate ();
 		}
 		
 		protected void UpdateColumnsGeometry()
 		{
-			System.Diagnostics.Debug.Assert (this.is_dirty == false);
-			
 			//	Met à jour les colonnes, en calculant la largeur de chaque colonne, ainsi que
 			//	son élasticité résiduelle. Les frontières verticales sont positionnées aux
 			//	bonnes coordonnées.
 			
+			System.Diagnostics.Debug.Assert (this.is_dirty == false);
+			
+			bool suppress_elasticity = this.is_dragging_column;
+			
 			for (int i = 0; i < this.columns.Count; i++)
 			{
-				this.columns[i].Reset (this.is_dragging_column);
+				this.columns[i].Reset (suppress_elasticity);
 			}
 			
 			again:
@@ -269,18 +279,34 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
-		protected void UpdateLinesGeometry()
+		protected void UpdateCurrentHeight()
 		{
-			this.current_height = this.desired_height;
+#if false
+			if (this.is_dragging)
+			{
+				return;
+			}
 			
-			//	TODO: calculer la hauteur réelle...
+			int last = this.horizontals.Length - 1;
+			
+			if (last < 1)
+			{
+				this.current_height = this.desired_height;
+			}
+			else
+			{
+				this.current_height = this.horizontals[0].y_live - this.horizontals[last].y_live;
+			}
+#else
+			this.current_height = this.desired_height;
+#endif
 		}
 		
 		protected void UpdateLineGap()
 		{
-			if (this.hot_designer_insert)
+			if (this.is_dragging_widget && this.designer_drop_insert)
 			{
-				this.line_gap_index  = this.hot_designer_line;
+				this.line_gap_index  = this.designer_drop_line;
 				this.line_gap_height = this.designer.OriginalBounds.Height;
 			}
 			else
@@ -389,7 +415,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.root.PreparePaint        += new EventHandler (this.HandleRootPreparePaint);
 			this.root.PaintForeground     += new PaintEventHandler (this.HandleRootPaintForeground);
 			this.root.PreProcessing	      += new MessageEventHandler (this.HandleRootPreProcessing);
-			this.root.PaintBoundsCallback += new PaintBoundsCallback (this.HandlePaintBoundsCallback);
+			this.root.PaintBoundsCallback += new PaintBoundsCallback (this.HandleRootPaintBoundsCallback);
 			
 			this.root.SetPropagationModes (Widget.PropagationModes.UpChildrenChanged, true, true);
 		}
@@ -401,7 +427,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.root.PreparePaint        -= new EventHandler (this.HandleRootPreparePaint);
 			this.root.PaintForeground     -= new PaintEventHandler (this.HandleRootPaintForeground);
 			this.root.PreProcessing	      -= new MessageEventHandler (this.HandleRootPreProcessing);
-			this.root.PaintBoundsCallback -= new PaintBoundsCallback (this.HandlePaintBoundsCallback);
+			this.root.PaintBoundsCallback -= new PaintBoundsCallback (this.HandleRootPaintBoundsCallback);
 		}
 		
 		
@@ -534,72 +560,16 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 		
 		
-		protected bool FindBestColumns(double x, int num_columns, out int index_left, out int index_right)
-		{
-			index_left = 0;
-			index_right = 0;
-			
-			bool found = false;
-			
-			if ((num_columns & 1) == 1)
-			{
-				//	Nombre de colonnes impair: tant que [x] se trouve dans une colonne,
-				//	on prend celle-ci comme référence.
-				
-				for (int i = 0; i < this.columns.Count; i++)
-				{
-					double x_left  = this.columns[i].x_live;
-					double x_right = x_left + this.columns[i].dx_live;
-					
-					if ((x >= x_left) &&
-						(x <= x_right))
-					{
-						found = true;
-						index_left = i - num_columns / 2;
-						break;
-					}
-				}
-			}
-			else
-			{
-				//	Nombre de colonnes pair: tant que [x] se trouve dans la moitié gauche d'une colonne,
-				//	on prend celle-ci comme référence, si [x] se trouve dans la moitié droite, on prend
-				//	la suivante comme référence.
-				
-				for (int i = 0; i < this.columns.Count; i++)
-				{
-					double x_left  = this.columns[i].x_live;
-					double x_mid   = x_left + this.columns[i].dx_live / 2;
-					double x_right = x_left + this.columns[i].dx_live;
-					
-					if ((x >= x_left) &&
-						(x <= x_mid))
-					{
-						found = true;
-						index_left = i - num_columns / 2;
-						break;
-					}
-					if ((x >= x_mid) &&
-						(x <= x_right))
-					{
-						found = true;
-						index_left = i - num_columns / 2 + 1;
-						break;
-					}
-				}
-			}
-			
-			index_left  = System.Math.Max (0, index_left);
-			index_right = System.Math.Min (this.columns.Count, index_left + num_columns);
-			
-			return found;
-		}
-		
-		
+		#region Root Widget Event Handlers
 		private void HandleRootLayoutChanged(object sender)
 		{
 			System.Diagnostics.Debug.Assert (this.root == sender);
-			this.UpdateGeometry ();
+			
+			if ((this.root.Width  != this.current_width) ||
+				(this.root.Height != this.current_height))
+			{
+				this.UpdateGeometry ();
+			}
 		}
 		
 		private void HandleRootChildrenChanged(object sender)
@@ -618,11 +588,10 @@ namespace Epsitec.Common.Widgets.Layouts
 			System.Diagnostics.Debug.Assert (this.root == sender);
 			System.Diagnostics.Debug.Assert (this.is_dirty == false);
 			
-			Drawing.Graphics graphics = e.Graphics;
+			//	La peinture des "ornements" se fait après-coup, dans une dernière phase
+			//	d'affichage, afin d'être sûr qu'aucun widget ne couvre notre dessin.
 			
-			this.PaintDropShape (graphics);
-			this.PaintDragShape (graphics);
-			this.PaintVerticals (graphics);
+			this.root.Window.QueuePostPaintHandler (this, e.Graphics, e.ClipRectangle);
 		}
 		
 		private void HandleRootPreProcessing(object sender, MessageEventArgs e)
@@ -632,12 +601,23 @@ namespace Epsitec.Common.Widgets.Layouts
 			e.Suppress |= this.ProcessMessage (e.Message);
 		}
 		
-		private void HandlePaintBoundsCallback(Widget widget, ref Drawing.Rectangle bounds)
+		private void HandleRootPaintBoundsCallback(Widget widget, ref Drawing.Rectangle bounds)
 		{
 			bounds.Inflate (Grid.GripperRadius + 1, Grid.GripperRadius + 1);
 		}
-
+		#endregion
 		
+		#region IPostPaintHandler Members
+		void Window.IPostPaintHandler.Paint(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle repaint)
+		{
+			double m = Grid.GripperRadius + 1;
+			graphics.RestoreClippingRectangle (Drawing.Rectangle.Inflate (graphics.SaveClippingRectangle (), m, m));
+			
+			this.PaintDropShape (graphics);
+			this.PaintDragShape (graphics);
+			this.PaintVerticals (graphics);
+		}
+		#endregion
 		
 		protected void PaintVerticals(Drawing.Graphics graphics)
 		{
@@ -648,8 +628,12 @@ namespace Epsitec.Common.Widgets.Layouts
 				double x = this.verticals[i].x_live;
 				
 				graphics.AddLine (x, 0, x, dy);
-				graphics.AddFilledRectangle (x-Grid.GripperRadius,  0-Grid.GripperRadius, Grid.GripperRadius*2, Grid.GripperRadius*2);
-				graphics.AddFilledRectangle (x-Grid.GripperRadius, dy-Grid.GripperRadius, Grid.GripperRadius*2, Grid.GripperRadius*2);
+				
+				if (i == this.hot_column_index)
+				{
+					graphics.AddFilledRectangle (x-Grid.GripperRadius,  0-Grid.GripperRadius, Grid.GripperRadius*2, Grid.GripperRadius*2);
+					graphics.AddFilledRectangle (x-Grid.GripperRadius, dy-Grid.GripperRadius, Grid.GripperRadius*2, Grid.GripperRadius*2);
+				}
 			}
 			
 			graphics.RenderSolid (Drawing.Color.FromARGB (0.5, 1.0, 0.0, 0.0));
@@ -665,8 +649,10 @@ namespace Epsitec.Common.Widgets.Layouts
 			//	figure sert de référence dans les opérations de drag & drop, pour représenter
 			//	l'objet en cours de dragging.
 			
-			if (this.designer_drag_rect.IsValid)
+			if (this.is_dragging_widget)
 			{
+				System.Diagnostics.Debug.Assert (this.designer_drag_rect.IsValid);
+				
 				double x = this.designer_drag_rect.Left;
 				double y = this.designer_drag_rect.Top;
 				double w = 6;
@@ -708,7 +694,10 @@ namespace Epsitec.Common.Widgets.Layouts
 					switch (message.Type)
 					{
 						case MessageType.MouseEnter:
+							break;
+						
 						case MessageType.MouseLeave:
+							this.HandleMouseMove (new Drawing.Point (-100, -100), new Drawing.Point (-100, -100));
 							break;
 						
 						case MessageType.MouseDown:
@@ -720,8 +709,6 @@ namespace Epsitec.Common.Widgets.Layouts
 							break;
 					}
 				}
-				
-				this.is_dragging = this.is_dragging_column | this.is_dragging_widget;
 			}
 			
 			return true;
@@ -785,13 +772,24 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		protected void HandleMouseMove(Drawing.Point rel_mouse, Drawing.Point abs_mouse)
 		{
-			this.hot_column_index = 0;
 			this.is_widget_hot    = false;
 			this.is_designer_hot  = false;
 			
-			if (this.DetectSelectedWidget (rel_mouse, abs_mouse))	return;
-			if (this.DetectColumn (rel_mouse))						return;
-			if (this.DetectWidget (rel_mouse))						return;
+			if (this.DetectSelectedWidget (rel_mouse, abs_mouse))
+			{
+				this.HotColumnIndex = -1;
+				return;
+			}
+			
+			if (this.DetectColumn (rel_mouse))
+			{
+				return;
+			}
+			
+			if (this.DetectWidget (rel_mouse))
+			{
+				return;
+			}
 		}
 		
 		
@@ -840,6 +838,9 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		protected bool DetectColumn(Drawing.Point mouse)
 		{
+			int    hit    = -1;
+			double offset = 0;
+			
 			for (int i = 1; i < this.verticals.Length; i++)
 			{
 				double x = this.verticals[i].x_live;
@@ -847,17 +848,18 @@ namespace Epsitec.Common.Widgets.Layouts
 				if ((mouse.X <= x+1) &&
 					(mouse.X >= x-1))
 				{
-					this.hot_column_index  = i;
-					this.hot_column_offset = mouse.X - x;
-					
-					return true;
+					hit    = i;
+					offset = mouse.X - x;
 				}
 			}
 			
-			return false;
+			this.HotColumnIndex    = hit;
+			this.hot_column_offset = offset;
+					
+			return (hit > -1);
 		}
 		
-
+		
 		protected void WidgetDraggingBegin(Drawing.Point mouse)
 		{
 			//	Active le dragging d'un widget sélectionné; un widget "bidon" remplace le
@@ -891,10 +893,10 @@ namespace Epsitec.Common.Widgets.Layouts
 			if ((this.FindBestColumns (center_x, col_count, out col1, out col2)) &&
 				(this.FindBestHotLine (corner_y, out line, out insert)))
 			{
-				this.hot_designer_col1   = col1;
-				this.hot_designer_col2   = col2;
-				this.hot_designer_line   = line;
-				this.hot_designer_insert = insert;
+				this.designer_drop_col1   = col1;
+				this.designer_drop_col2   = col2;
+				this.designer_drop_line   = line;
+				this.designer_drop_insert = insert;
 				
 				double x1 = this.verticals[col1].x_live;
 				double x2 = this.verticals[col2].x_live;
@@ -910,14 +912,14 @@ namespace Epsitec.Common.Widgets.Layouts
 						(this.horizontals[line-1].list.Count == 1) &&
 						(this.horizontals[line-1].list[0] == original))
 					{
-						this.hot_designer_line   = --line;
-						this.hot_designer_insert = false;
+						this.designer_drop_line   = --line;
+						this.designer_drop_insert = false;
 					}
 					
 					if ((this.horizontals[line].list.Count == 1) &&
 						(this.horizontals[line].list[0] == original))
 					{
-						this.hot_designer_insert = false;
+						this.designer_drop_insert = false;
 					}
 					
 					double dy = this.designer.OriginalBounds.Height;
@@ -928,7 +930,7 @@ namespace Epsitec.Common.Widgets.Layouts
 					System.Diagnostics.Debug.Assert (line+1 < this.frozen_lines_y.Length);
 					
 					double y1 = this.frozen_lines_y[line+1];
-					double y2 = this.frozen_lines_y[this.hot_designer_line];
+					double y2 = this.frozen_lines_y[this.designer_drop_line];
 					double dy = System.Math.Min (this.designer.OriginalBounds.Height, y2-y1);
 					
 					rect_drop = new Drawing.Rectangle (x1, y2-dy, x2-x1, dy);
@@ -978,31 +980,30 @@ namespace Epsitec.Common.Widgets.Layouts
 				//	les séparations verticales gauche et droite, puis mettre à jour les passages à
 				//	la ligne forcés :
 				
-				this.designer.Widget.SetLayoutArgs (this.hot_designer_col1, this.hot_designer_col2);
+				this.designer.Widget.SetLayoutArgs (this.designer_drop_col1, this.designer_drop_col2);
 				
-				if (this.hot_designer_insert)
+				if (this.designer_drop_insert)
 				{
 					//	Le widget se trouve dans une nouvelle ligne, il faut donc en insérer une :
 					
-					this.InsertHorizontal (this.hot_designer_line);
+					this.InsertHorizontalIntoHorizontals (this.designer_drop_line);
 				}
 				
-				this.InsertWidgetIntoHorizontal (this.designer.Widget, this.hot_designer_line);
+				this.InsertWidgetIntoHorizontal (this.designer.Widget, this.designer_drop_line);
 				this.UpdateNewLinesInHorizontal ();
 			}
 			
-			this.hot_designer_insert = false;
-			this.is_dragging_widget  = false;
-			this.designer_drag_rect  = Drawing.Rectangle.Empty;
+			this.is_dragging_widget = false;
 			
-			this.DisposeFrozenLinePositions ();
 			this.Invalidate ();
+			this.DisposeFrozenLinePositions ();
 			this.UpdateLineGap ();
 			this.Update ();
 		}
 		
 		
-		protected int FindWidgetIndexBeforeHotDrop()
+		#region Widget Dragging helper methods
+		protected int  FindWidgetIndexBeforeHotDrop()
 		{
 			Widget find = null;
 			
@@ -1014,13 +1015,13 @@ namespace Epsitec.Common.Widgets.Layouts
 				{
 					Widget widget = horizontal.list[j] as Widget;
 					
-					if (i < this.hot_designer_line)
+					if (i < this.designer_drop_line)
 					{
 						find = widget;
 					}
-					else if ( (i == this.hot_designer_line)
-						   && (this.hot_designer_insert == false)
-						   && (this.hot_designer_col1 > widget.LayoutArg1) )
+					else if ( (i == this.designer_drop_line)
+						   && (this.designer_drop_insert == false)
+						   && (this.designer_drop_col1 > widget.LayoutArg1) )
 					{
 						find = widget;
 					}
@@ -1033,7 +1034,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			return (find == this.designer.WidgetOriginalSurface) ? pos_old : pos_new;
 		}
 		
-		protected int FindWidgetLineIndex(Widget widget)
+		protected int  FindWidgetLineIndex(Widget widget)
 		{
 			//	Trouve l'index de la ligne où se trouve le widget spécifié.
 			//	Retourne -1 si le widget n'est pas trouvé.
@@ -1052,6 +1053,131 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			
 			return -1;
+		}
+		
+		protected bool FindBestColumns(double x, int num_columns, out int index_left, out int index_right)
+		{
+			index_left = 0;
+			index_right = 0;
+			
+			bool found = false;
+			
+			if ((num_columns & 1) == 1)
+			{
+				//	Nombre de colonnes impair: tant que [x] se trouve dans une colonne,
+				//	on prend celle-ci comme référence.
+				
+				for (int i = 0; i < this.columns.Count; i++)
+				{
+					double x_left  = this.columns[i].x_live;
+					double x_right = x_left + this.columns[i].dx_live;
+					
+					if ((x >= x_left) &&
+						(x <= x_right))
+					{
+						found = true;
+						index_left = i - num_columns / 2;
+						break;
+					}
+				}
+			}
+			else
+			{
+				//	Nombre de colonnes pair: tant que [x] se trouve dans la moitié gauche d'une colonne,
+				//	on prend celle-ci comme référence, si [x] se trouve dans la moitié droite, on prend
+				//	la suivante comme référence.
+				
+				for (int i = 0; i < this.columns.Count; i++)
+				{
+					double x_left  = this.columns[i].x_live;
+					double x_mid   = x_left + this.columns[i].dx_live / 2;
+					double x_right = x_left + this.columns[i].dx_live;
+					
+					if ((x >= x_left) &&
+						(x <= x_mid))
+					{
+						found = true;
+						index_left = i - num_columns / 2;
+						break;
+					}
+					if ((x >= x_mid) &&
+						(x <= x_right))
+					{
+						found = true;
+						index_left = i - num_columns / 2 + 1;
+						break;
+					}
+				}
+			}
+			
+			index_left  = System.Math.Max (0, index_left);
+			index_right = System.Math.Min (this.columns.Count, index_left + num_columns);
+			
+			return found;
+		}
+		
+		protected bool FindBestHotLine(double y, out int line_index, out bool line_insert)
+		{
+			double m = 2;
+			y -= m+1;
+			
+			for (int i = 1; i < this.frozen_lines_y.Length; i++)
+			{
+				double y1 = this.frozen_lines_y[i-1];
+				double y2 = this.frozen_lines_y[i-0];
+				
+				double y1_top = y1 + m;
+				double y1_bot = y1 - m;
+				double y2_top = y2 + m;
+				double y2_bot = y2 - m;
+					
+				if ((y <= y1_top) &&
+					(y >= y1_bot))
+				{
+					line_index  = i-1;
+					line_insert = true;
+					return true;
+				}
+				
+				if ((y <= y2_top) &&
+					(y >= y2_bot))
+				{
+					line_index  = i;
+					line_insert = true;
+					return true;
+				}
+				
+				if ((y <= y1) &&
+					(y >= y2))
+				{
+					line_index  = i-1;
+					line_insert = false;
+					return true;
+				}
+			}
+			
+			int last_line = this.frozen_lines_y.Length - 1;
+			
+			if (last_line > 0)
+			{
+				if (y > this.frozen_lines_y[0])
+				{
+					line_index = 0;
+					line_insert = true;
+					return true;
+				}
+				if (y < this.frozen_lines_y[last_line])
+				{
+					line_index  = last_line;
+					line_insert = true;
+					return true;
+				}
+			}
+			
+			line_index  = -1;
+			line_insert = false;
+			
+			return false;
 		}
 		
 		
@@ -1148,7 +1274,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		protected void InsertHorizontal(int index)
+		protected void InsertHorizontalIntoHorizontals(int index)
 		{
 			Grid.Horizontal[] copy = new Grid.Horizontal[this.horizontals.Length+1];
 			
@@ -1168,7 +1294,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			this.horizontals = copy;
 		}
-		
+		#endregion
 		
 		protected void ColumnDraggingBegin(Drawing.Point mouse)
 		{
@@ -1199,122 +1325,6 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			this.UpdateGeometry ();
 		}
-		
-		
-		protected bool FindBestHotLine(double y, out int line_index, out bool line_insert)
-		{
-			double m = 2;
-			y -= m+1;
-			
-			for (int i = 1; i < this.frozen_lines_y.Length; i++)
-			{
-				double y1 = this.frozen_lines_y[i-1];
-				double y2 = this.frozen_lines_y[i-0];
-				
-				double y1_top = y1 + m;
-				double y1_bot = y1 - m;
-				double y2_top = y2 + m;
-				double y2_bot = y2 - m;
-					
-				if ((y <= y1_top) &&
-					(y >= y1_bot))
-				{
-					line_index  = i-1;
-					line_insert = true;
-					return true;
-				}
-				
-				if ((y <= y2_top) &&
-					(y >= y2_bot))
-				{
-					line_index  = i;
-					line_insert = true;
-					return true;
-				}
-				
-				if ((y <= y1) &&
-					(y >= y2))
-				{
-					line_index  = i-1;
-					line_insert = false;
-					return true;
-				}
-			}
-			
-			int last_line = this.frozen_lines_y.Length - 1;
-			
-			if (last_line > 0)
-			{
-				if (y > this.frozen_lines_y[0])
-				{
-					line_index = 0;
-					line_insert = true;
-					return true;
-				}
-				if (y < this.frozen_lines_y[last_line])
-				{
-					line_index  = last_line;
-					line_insert = true;
-					return true;
-				}
-			}
-			
-			line_index  = -1;
-			line_insert = false;
-			
-			return false;
-		}
-		
-#if false
-		{
-	
-				
-				int i1, i2;
-				
-				if (this.FindBestColumns (mouse_x, 1, out i1, out i2))
-				{
-					double x1 = this.verticals[i1].x_live;
-					double x2 = this.verticals[i2].x_live;
-					
-					this.hilite_box = new Drawing.Rectangle (x1, 0, x2-x1, this.root.Client.Height);
-				}
-				else
-				{
-					this.hilite_box = Drawing.Rectangle.Empty;
-				}
-				
-				this.line_gap_index  = -1;
-				this.line_gap_height = 0;
-				
-				for (int i = 1; i < this.horizontals.Length; i++)
-				{
-					double y1_top = this.horizontals[i-1].y_live + 3;
-					double y1_bot = this.horizontals[i-1].y_live - 3;
-					
-					if ((mouse_y <= y1_top) &&
-						(mouse_y >= y1_bot))
-					{
-						this.line_gap_index = i-1;
-						this.line_gap_height = 20;
-						this.hilite_box = Drawing.Rectangle.Intersection (this.hilite_box, new Drawing.Rectangle (0, this.horizontals[i-1].y_live - 20, this.root.Client.Width, 20));
-						
-						break;
-					}
-				}
-				
-				this.UpdateGeometry ();
-				
-				if (this.hot_column_index >= 0)
-				{
-					this.root.Window.MouseCursor = MouseCursor.Default;
-					this.hot_column_index = -1;
-				}
-			}
-			
-			e.Message.Consumer = this.root;
-			e.Suppress = true;
-		}
-#endif
 		
 		
 		#region Class: Vertical & Horizontal
@@ -1545,8 +1555,6 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		protected Widget				root;
 		
-		private int						freeze_count;
-		
 		protected Grid.ColumnCollection	columns;
 		protected Grid.Vertical[]		verticals;
 		protected Grid.Horizontal[]		horizontals;
@@ -1556,7 +1564,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		protected double				current_width;
 		protected double				current_height;
 		
-		protected bool					is_dirty;
+		protected bool					is_dirty;					//	Grid.Invalidate a été appelé
 		protected bool					is_dragging;				//	opération de dragging en cours
 		protected bool					is_dragging_column;			//	dragging d'une colonne
 		protected bool					is_dragging_widget;			//	dragging d'un widget complet
@@ -1568,13 +1576,15 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		protected int					hot_column_index = -1;
 		protected double				hot_column_offset;
-		protected int					hot_designer_col1;
-		protected int					hot_designer_col2;
-		protected int					hot_designer_line;
-		protected bool					hot_designer_insert;
+		
 		
 		protected Design.WidgetWrapper	designer;
 		protected Drawing.Rectangle		designer_drag_rect;
+		
+		protected bool					designer_drop_insert;		//	signale qu'il faut insérer une ligne
+		protected int					designer_drop_col1;
+		protected int					designer_drop_col2;
+		protected int					designer_drop_line;
 		
 		protected double[]				frozen_lines_y;
 		
