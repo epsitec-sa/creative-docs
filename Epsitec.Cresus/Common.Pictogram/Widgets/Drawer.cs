@@ -2511,6 +2511,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			// Dessine les géométries.
 #if true
+			this.iconContext.IsFocused = this.IsFocused;
 			this.iconObjects.DrawGeometry(graphics, this.iconContext, this.iconObjects, adorner, clipRect, false);
 #else
 			Drawer.totalObjectDraw = 0;
