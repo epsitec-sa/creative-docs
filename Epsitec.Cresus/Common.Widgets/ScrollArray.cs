@@ -1445,7 +1445,9 @@ invalid:	row    = -1;
 			}
 			
 			int  top     = this.FromVirtualRow (this.first_virtvis_row);
-			int  max     = System.Math.Min (this.n_visible_rows, this.max_rows);
+			int  bottom  = this.FromVirtualRow (this.first_virtvis_row + this.n_visible_rows);
+			int  height  = bottom - top;
+			int  max     = System.Math.Min (height, this.max_rows);
 			bool refresh = (max != this.cache_visible_rows) || (this.first_virtvis_row != this.cache_first_virtvis_row);
 			
 			this.cache_visible_rows      = max;
