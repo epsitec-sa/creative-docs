@@ -14,13 +14,20 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public DbTypeByteArray(int length) : this (length, true)
+		public DbTypeByteArray(int length) : base (DbSimpleType.ByteArray)
 		{
+			this.length = length;
 		}
 		
 		public DbTypeByteArray(int length, params string[] attributes) : base (DbSimpleType.ByteArray, attributes)
 		{
 			this.length = length;
+		}
+		
+		
+		public int								Length
+		{
+			get { return this.length; }
 		}
 		
 		
@@ -45,12 +52,6 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.length = System.Int32.Parse (arg_length, System.Globalization.CultureInfo.InvariantCulture);
-		}
-		
-		
-		public int								Length
-		{
-			get { return this.length; }
 		}
 		
 		

@@ -13,14 +13,14 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
-		public static DbType NewType(string xml)
+		public static DbType CreateType(string xml)
 		{
 			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
 			doc.LoadXml (xml);
-			return DbTypeFactory.NewType (doc.DocumentElement);
+			return DbTypeFactory.CreateType (doc.DocumentElement);
 		}
 		
-		public static DbType NewType(System.Xml.XmlElement xml)
+		public static DbType CreateType(System.Xml.XmlElement xml)
 		{
 			if (xml.Name == "null")
 			{

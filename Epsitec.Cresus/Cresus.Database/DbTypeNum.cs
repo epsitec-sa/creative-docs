@@ -24,6 +24,12 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public DbNumDef							NumDef
+		{
+			get { return this.num_def; }
+		}
+		
+		
 		internal override void SerializeXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{
 			if (this.num_def.InternalRawType != DbRawType.Unsupported)
@@ -82,12 +88,6 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public DbNumDef						NumDef
-		{
-			get { return this.num_def; }
-		}
-		
-		
 		protected override object CloneNewObject()
 		{
 			return new DbTypeNum ();
@@ -105,6 +105,6 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		private DbNumDef					num_def;
+		private DbNumDef						num_def;
 	}
 }

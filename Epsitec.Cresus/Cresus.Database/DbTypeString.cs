@@ -35,6 +35,20 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public int								Length
+		{
+			get { return this.length; }
+		}
+		
+		public bool								IsFixedLength
+		{
+			get
+			{
+				return this.is_fixed_length;
+			}
+		}
+		
+		
 		internal override void SerializeXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{
 			buffer.Append (@" length=""");
@@ -69,20 +83,6 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public int						Length
-		{
-			get { return this.length; }
-		}
-		
-		public bool						IsFixedLength
-		{
-			get
-			{
-				return this.is_fixed_length;
-			}
-		}
-		
-		
 		protected override object CloneNewObject()
 		{
 			return new DbTypeString ();
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		private int						length;
-		private bool					is_fixed_length;
+		private int								length;
+		private bool							is_fixed_length;
 	}
 }

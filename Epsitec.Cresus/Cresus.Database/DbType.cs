@@ -1,16 +1,15 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 19/10/2003
+//	Statut : OK/PA, 23/04/2004
 
 namespace Epsitec.Cresus.Database
 {
-	using Tags = Epsitec.Common.Support.Tags;
 	using ResourceLevel = Epsitec.Common.Support.ResourceLevel;
 	
 	/// <summary>
 	/// La classe DbType décrit un type de donnée pour spécifier DbColumn de
 	/// manière plus précise.
 	/// </summary>
-	public class DbType : IDbAttributesHost, System.ICloneable
+	public class DbType : IDbAttributesHost, System.ICloneable, Epsitec.Common.Support.INameCaption
 	{
 		public DbType()
 		{
@@ -24,6 +23,47 @@ namespace Epsitec.Cresus.Database
 		public DbType(DbSimpleType type, params string[] attributes) : this (attributes)
 		{
 			this.Initialise (type);
+		}
+		
+		
+		public string							Name
+		{
+			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
+		}
+		
+		public string							Caption
+		{
+			get { return this.Attributes[Tags.Caption]; }
+		}
+		
+		public string							Description
+		{
+			get { return this.Attributes[Tags.Description]; }
+		}
+		
+		
+		public DbAttributes						Attributes
+		{
+			get
+			{
+				if (this.attributes == null)
+				{
+					this.attributes = new DbAttributes ();
+				}
+				
+				return this.attributes;
+			}
+		}
+		
+		
+		public DbSimpleType						SimpleType
+		{
+			get { return this.simple_type; }
+		}
+		
+		public DbKey							InternalKey
+		{
+			get { return this.internal_type_key; }
 		}
 		
 		
@@ -98,33 +138,6 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public string					Name
-		{
-			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
-		}
-		
-		public string					Caption
-		{
-			get { return this.Attributes[Tags.Caption]; }
-		}
-		
-		public string					Description
-		{
-			get { return this.Attributes[Tags.Description]; }
-		}
-		
-		
-		public DbSimpleType				SimpleType
-		{
-			get { return this.simple_type; }
-		}
-		
-		public DbKey					InternalKey
-		{
-			get { return this.internal_type_key; }
-		}
-		
-		
 		#region ICloneable Members
 		public object Clone()
 		{
@@ -148,21 +161,6 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		#region IDbAttributesHost Members
-		public DbAttributes					Attributes
-		{
-			get
-			{
-				if (this.attributes == null)
-				{
-					this.attributes = new DbAttributes ();
-				}
-				
-				return this.attributes;
-			}
-		}
-		#endregion
-		
 		#region Equals and GetHashCode support
 		public override bool Equals(object obj)
 		{
@@ -184,7 +182,6 @@ namespace Epsitec.Cresus.Database
 			string name = this.Name;
 			return (name == null) ? 0 : name.GetHashCode ();
 		}
-
 		#endregion
 		
 		protected virtual void EnsureTypeIsNotInitialised()
@@ -197,16 +194,7 @@ namespace Epsitec.Cresus.Database
 		
 		
 		
-		private DbAttributes			attributes;
-		private DbSimpleType			simple_type;
-		private DbKey					internal_type_key;
-		
-		internal const string			TagKeyId		= "CR_KeyId";
-		internal const string			TagKeyRevision	= "CR_KeyRevision";
-		internal const string			TagKeyStatus	= "CR_KeyStatus";
-		internal const string			TagName			= "CR_Name";
-		internal const string			TagCaption		= "CR_Caption";
-		internal const string			TagDescription	= "CR_Description";
-		internal const string			TagInfoXml		= "CR_InfoXml";
-	}
+		private DbAttributes					attributes;
+		private DbSimpleType					simple_type;
+		private DbKey							internal_type_key;}
 }

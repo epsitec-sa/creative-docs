@@ -22,6 +22,37 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public DbEnumValue						this[int index]
+		{
+			get
+			{
+				return this.values[index];
+			}
+		}
+		
+		public DbEnumValue						this[string name]
+		{
+			get
+			{
+				for (int i = 0; i < this.values.Length; i++)
+				{
+					if (this.values[i].Name == name)
+					{
+						return this.values[i];
+					}
+				}
+				
+				return null;
+			}
+		}
+		
+		
+		public int								MaxNameLength
+		{
+			get { return this.max_name_length; }
+		}
+		
+		
 		internal override void SerializeXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{
 			buffer.Append (@" nmlen=""");
@@ -65,7 +96,7 @@ namespace Epsitec.Cresus.Database
 			while ((index < nodes.Count) && (nodes[index].Name == "enumval"))
 			{
 				System.Xml.XmlElement node = nodes[index++] as System.Xml.XmlElement;
-				list.Add (DbEnumValue.NewEnumValue (node));
+				list.Add (DbEnumValue.CreateEnumValue (node));
 			}
 			
 			this.values = new DbEnumValue[list.Count];
@@ -85,36 +116,6 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.CopyValues (temp);
-		}
-		
-		
-		public DbEnumValue					this[int index]
-		{
-			get
-			{
-				return this.values[index];
-			}
-		}
-		
-		public DbEnumValue					this[string name]
-		{
-			get
-			{
-				for (int i = 0; i < this.values.Length; i++)
-				{
-					if (this.values[i].Name == name)
-					{
-						return this.values[i];
-					}
-				}
-				
-				return null;
-			}
-		}
-		
-		public int							MaxNameLength
-		{
-			get { return this.max_name_length; }
 		}
 		
 		
@@ -206,7 +207,7 @@ namespace Epsitec.Cresus.Database
 		#endregion
 		
 		
-		protected DbEnumValue[]				values;
-		private int							max_name_length = 8;
+		protected DbEnumValue[]					values;
+		private int								max_name_length = 8;
 	}
 }

@@ -3,14 +3,13 @@
 
 namespace Epsitec.Cresus.Database
 {
-	using Tags = Epsitec.Common.Support.Tags;
 	using ResourceLevel = Epsitec.Common.Support.ResourceLevel;
 	
 	/// <summary>
 	/// La classe DbTable décrit la structure d'une table dans la base de données.
 	/// Cette classe ressemble dans l'esprit à System.Data.DataTable.
 	/// </summary>
-	public class DbTable : IDbAttributesHost
+	public class DbTable : IDbAttributesHost, Epsitec.Common.Support.INameCaption
 	{
 		public DbTable()
 		{
@@ -27,113 +26,82 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public static DbTable NewTable(string xml)
+		public static DbTable CreateTable(string xml)
 		{
 			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
 			
 			doc.LoadXml (xml);
 			
-			return DbTable.NewTable (doc.DocumentElement);
+			return DbTable.CreateTable (doc.DocumentElement);
 		}
 		
-		public static DbTable NewTable(System.Xml.XmlElement xml)
+		public static DbTable CreateTable(System.Xml.XmlElement xml)
 		{
 			return (xml.Name == "null") ? null : new DbTable (xml);
 		}
 		
 		
-		protected void SerializeXmlDefinition(System.Text.StringBuilder buffer, bool full)
+		public string							Name
 		{
-			this.UpdatePrimaryKeyInfo ();
-			
-			buffer.Append (@"<table");
-			
-			string arg_cat = DbTools.ElementCategoryToString (this.category);
-			
-			if (arg_cat != null)
+			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
+		}
+		
+		public string							Caption
+		{
+			get { return this.Attributes[Tags.Caption]; }
+		}
+		
+		public string							Description
+		{
+			get { return this.Attributes[Tags.Description]; }
+		}
+		
+		
+		public DbAttributes						Attributes
+		{
+			get
 			{
-				buffer.Append (@" cat=""");
-				buffer.Append (arg_cat);
-				buffer.Append (@"""");
-			}
-			
-			if (full)
-			{
-				DbKey.SerializeToXmlAttributes (buffer, this.internal_table_key);
-				this.Attributes.SerializeXmlAttributes (buffer);
-				buffer.Append (@">");
-				
-				DbColumnCollection.SerializeToXml (buffer, this.primary_keys, "keys");
-				DbColumnCollection.SerializeToXml (buffer, this.columns, "cols");
-				
-				buffer.Append (@"</table>");
-			}
-			else
-			{
-				buffer.Append (@"/>");
+				return this.attributes;
 			}
 		}
 		
-		protected void ProcessXmlDefinition(System.Xml.XmlElement xml)
+		
+		public Collections.DbColumns			Columns
 		{
-			if (xml.Name != "table")
+			get { return this.columns; }
+		}
+		
+		public bool								HasPrimaryKey
+		{
+			get { return (this.primary_keys != null) && (this.primary_keys.Count > 0); }
+		}
+		
+		public Collections.DbColumns			PrimaryKeys
+		{
+			get
 			{
-				throw new System.FormatException (string.Format ("Expected root element named <table>, but found <{0}>.", xml.Name));
-			}
-			
-			string arg_cat = xml.GetAttribute ("cat");
-			this.category  = DbTools.ParseElementCategory (arg_cat);
-			
-			this.internal_table_key = DbKey.DeserializeFromXmlAttributes (xml);
-			this.Attributes.DeserializeXmlAttributes (xml);
-			
-			for (int i = 0; i < xml.ChildNodes.Count; i++)
-			{
-				System.Xml.XmlElement node = xml.ChildNodes[i] as System.Xml.XmlElement;
+				//	NB: les clefs primaires spécifiées par PrimaryKeys sont utilisées
+				//	pour former un 'tuple' (par exemple une paire de clef). Déclarer
+				//	une série de colonnes comme PrimaryKeys implique que les tuples
+				//	doivent être uniques !
 				
-				if ((node == null) ||
-					(node.GetAttribute ("id") == ""))
+				if (this.primary_keys == null)
 				{
-					new System.FormatException (string.Format ("Expected nodes with id in {0}.", xml.InnerXml));
+					this.primary_keys = new Collections.DbColumns ();
 				}
 				
-				string id = node.GetAttribute ("id");
-				
-				switch (id)
-				{
-					case "keys":
-						this.primary_keys = DbColumnCollection.NewColumnCollection (node);
-						break;
-					case "cols":
-						this.columns = DbColumnCollection.NewColumnCollection (node);
-						break;
-					
-					default:
-						throw new System.FormatException (string.Format ("Expected id not found, '{0}' is not recognized.", id));
-				}
+				return this.primary_keys;
 			}
-			
-			this.UpdatePrimaryKeyInfo ();
 		}
 		
-		
-		public static string SerializeToXml(DbTable table, bool full)
+		public DbElementCat						Category
 		{
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			DbTable.SerializeToXml (buffer, table, full);
-			return buffer.ToString ();
+			get { return this.category; }
 		}
 		
-		public static void SerializeToXml(System.Text.StringBuilder buffer, DbTable table, bool full)
+		public DbKey							InternalKey
 		{
-			if (table == null)
-			{
-				buffer.Append ("<null/>");
-			}
-			else
-			{
-				table.SerializeXmlDefinition (buffer, full);
-			}
+			get { return this.internal_table_key; }
 		}
 		
 		
@@ -173,86 +141,6 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		internal void UpdatePrimaryKeyInfo()
-		{
-			if (this.HasPrimaryKeys)
-			{
-				foreach (DbColumn column in this.Columns)
-				{
-					column.IsPrimaryKey = false;
-				}
-				foreach (DbColumn column in this.PrimaryKeys)
-				{
-					column.IsPrimaryKey = true;
-				}
-			}
-		}
-		
-		
-		#region IDbAttributesHost Members
-		public DbAttributes				Attributes
-		{
-			get
-			{
-				return this.attributes;
-			}
-		}
-		#endregion
-		
-		public string					Name
-		{
-			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
-		}
-		
-		public string					Caption
-		{
-			get { return this.Attributes[Tags.Caption]; }
-		}
-		
-		public string					Description
-		{
-			get { return this.Attributes[Tags.Description]; }
-		}
-		
-		public DbColumnCollection		Columns
-		{
-			get { return this.columns; }
-		}
-		
-		public bool						HasPrimaryKeys
-		{
-			get { return (this.primary_keys != null) && (this.primary_keys.Count > 0); }
-		}
-		
-		public DbColumnCollection		PrimaryKeys
-		{
-			get
-			{
-				//	NB: les clefs primaires spécifiées par PrimaryKeys sont utilisées
-				//	pour former un 'tuple' (par exemple une paire de clef). Déclarer
-				//	une série de colonnes comme PrimaryKeys implique que les tuples
-				//	doivent être uniques !
-				
-				if (this.primary_keys == null)
-				{
-					this.primary_keys = new DbColumnCollection ();
-				}
-				
-				return this.primary_keys;
-			}
-		}
-		
-		public DbElementCat				Category
-		{
-			get { return this.category; }
-		}
-		
-		public DbKey					InternalKey
-		{
-			get { return this.internal_table_key; }
-		}
-		
-		
 		public SqlTable CreateSqlTable(ITypeConverter type_converter)
 		{
 			SqlTable sql_table = new SqlTable (this.CreateSqlName ());
@@ -273,7 +161,7 @@ namespace Epsitec.Cresus.Database
 				sql_table.Columns.Add (sql_column);
 			}
 			
-			if (this.HasPrimaryKeys)
+			if (this.HasPrimaryKey)
 			{
 				//	S'il y a des clefs primaires définies, reprend simplement les clefs qui
 				//	correspondent (elles doivent être définies dans la collection des colonnes
@@ -311,13 +199,12 @@ namespace Epsitec.Cresus.Database
 			return sql_table;
 		}
 		
-		public string CreateSqlName()
+		public string   CreateSqlName()
 		{
 			return DbSqlStandard.CreateSqlTableName (this.Name, this.Category, this.InternalKey);
 		}
 		
-		
-		public DbKey CreateKeyFromRow(System.Data.DataRow row)
+		public DbKey    CreateKeyFromRow(System.Data.DataRow row)
 		{
 			DbKey key = null;
 			
@@ -327,20 +214,20 @@ namespace Epsitec.Cresus.Database
 				case DbElementCat.UserDataManaged:
 					if (this.PrimaryKeys.Count == 1)
 					{
-						System.Diagnostics.Debug.Assert (this.PrimaryKeys[0].Name.ToUpper () == DbColumn.TagId);
+						System.Diagnostics.Debug.Assert (this.PrimaryKeys[0].Name.ToUpper () == Tags.ColumnId);
 						
-						long id = (long) row[DbColumn.TagId];
+						long id = (long) row[Tags.ColumnId];
 						
 						key = new DbKey (id);
 					}
 					else if (this.PrimaryKeys.Count == 2)
 					{
-						System.Diagnostics.Debug.Assert (this.PrimaryKeys[0].Name.ToUpper () == DbColumn.TagId);
-						System.Diagnostics.Debug.Assert (this.PrimaryKeys[1].Name.ToUpper () == DbColumn.TagRevision);
+						System.Diagnostics.Debug.Assert (this.PrimaryKeys[0].Name.ToUpper () == Tags.ColumnId);
+						System.Diagnostics.Debug.Assert (this.PrimaryKeys[1].Name.ToUpper () == Tags.ColumnRevision);
 						
-						long id   = (long) row[DbColumn.TagId];
-						int  rev  = (int)  row[DbColumn.TagRevision];
-						int  stat = (int)  row[DbColumn.TagStatus];
+						long id   = (long) row[Tags.ColumnId];
+						int  rev  = (int)  row[Tags.ColumnRevision];
+						int  stat = (int)  row[Tags.ColumnStatus];
 						
 						key = new DbKey (id, rev, stat);
 					}
@@ -365,17 +252,122 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected DbAttributes			attributes = new DbAttributes ();
-		protected DbColumnCollection	columns = new DbColumnCollection ();
-		protected DbColumnCollection	primary_keys = null;
-		protected DbElementCat			category;
-		protected DbKey					internal_table_key;
+		public static string SerializeToXml(DbTable table, bool full)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			DbTable.SerializeToXml (buffer, table, full);
+			return buffer.ToString ();
+		}
+		
+		public static void   SerializeToXml(System.Text.StringBuilder buffer, DbTable table, bool full)
+		{
+			if (table == null)
+			{
+				buffer.Append ("<null/>");
+			}
+			else
+			{
+				table.SerializeXmlDefinition (buffer, full);
+			}
+		}
 		
 		
-		internal const string			TagTableDef			= "CR_TABLE_DEF";
-		internal const string			TagColumnDef		= "CR_COLUMN_DEF";
-		internal const string			TagTypeDef			= "CR_TYPE_DEF";
-		internal const string			TagEnumValDef		= "CR_ENUMVAL_DEF";
-		internal const string			TagRelationDef		= "CR_RELATION_DEF";
+		internal void UpdatePrimaryKeyInfo()
+		{
+			if (this.HasPrimaryKey)
+			{
+				foreach (DbColumn column in this.Columns)
+				{
+					column.DefinePrimaryKey (false);
+				}
+				foreach (DbColumn column in this.PrimaryKeys)
+				{
+					column.DefinePrimaryKey (true);
+				}
+			}
+		}
+		
+		
+		protected void SerializeXmlDefinition(System.Text.StringBuilder buffer, bool full)
+		{
+			this.UpdatePrimaryKeyInfo ();
+			
+			buffer.Append (@"<table");
+			
+			string arg_cat = DbTools.ElementCategoryToString (this.category);
+			
+			if (arg_cat != null)
+			{
+				buffer.Append (@" cat=""");
+				buffer.Append (arg_cat);
+				buffer.Append (@"""");
+			}
+			
+			if (full)
+			{
+				DbKey.SerializeToXmlAttributes (buffer, this.internal_table_key);
+				this.Attributes.SerializeXmlAttributes (buffer);
+				buffer.Append (@">");
+				
+				Collections.DbColumns.SerializeToXml (buffer, this.primary_keys, "keys");
+				Collections.DbColumns.SerializeToXml (buffer, this.columns, "cols");
+				
+				buffer.Append (@"</table>");
+			}
+			else
+			{
+				buffer.Append (@"/>");
+			}
+		}
+		
+		protected void ProcessXmlDefinition(System.Xml.XmlElement xml)
+		{
+			if (xml.Name != "table")
+			{
+				throw new System.FormatException (string.Format ("Expected root element named <table>, but found <{0}>.", xml.Name));
+			}
+			
+			string arg_cat = xml.GetAttribute ("cat");
+			this.category  = DbTools.ParseElementCategory (arg_cat);
+			
+			this.internal_table_key = DbKey.DeserializeFromXmlAttributes (xml);
+			this.Attributes.DeserializeXmlAttributes (xml);
+			
+			for (int i = 0; i < xml.ChildNodes.Count; i++)
+			{
+				System.Xml.XmlElement node = xml.ChildNodes[i] as System.Xml.XmlElement;
+				
+				if ((node == null) ||
+					(node.GetAttribute ("id") == ""))
+				{
+					new System.FormatException (string.Format ("Expected nodes with id in {0}.", xml.InnerXml));
+				}
+				
+				string id = node.GetAttribute ("id");
+				
+				switch (id)
+				{
+					case "keys":
+						this.primary_keys = Collections.DbColumns.CreateCollection (node);
+						break;
+					case "cols":
+						this.columns = Collections.DbColumns.CreateCollection (node);
+						break;
+					
+					default:
+						throw new System.FormatException (string.Format ("Expected id not found, '{0}' is not recognized.", id));
+				}
+			}
+			
+			this.UpdatePrimaryKeyInfo ();
+		}
+		
+		
+		
+		protected DbAttributes					attributes	= new DbAttributes ();
+		protected Collections.DbColumns			columns		= new Collections.DbColumns ();
+		protected Collections.DbColumns			primary_keys;
+		protected DbElementCat					category;
+		protected DbKey							internal_table_key;
 	}
 }
