@@ -4,6 +4,7 @@ namespace Epsitec.Common.Widgets
 	{
 		Right,							// les 2 flèches à droite
 		LeftRight,						// flèches à gauche et à droite
+		Stretch,						// jamais de flèches
 	}
 
 	/// <summary>
@@ -418,8 +419,15 @@ namespace Epsitec.Common.Widgets
 				this.scrollTotalWidth += len;
 			}
 
-			this.scrollOffset = System.Math.Min(this.scrollOffset, this.scrollTotalWidth-this.TabOffsetMax);
-			this.scrollOffset = System.Math.Max(this.scrollOffset, -this.TabOffsetMin);
+			if ( this.Arrows == TabBookArrows.Stretch )
+			{
+				this.scrollOffset = 0;
+			}
+			else
+			{
+				this.scrollOffset = System.Math.Min(this.scrollOffset, this.scrollTotalWidth-this.TabOffsetMax);
+				this.scrollOffset = System.Math.Max(this.scrollOffset, -this.TabOffsetMin);
+			}
 		}
 		
 		protected void UpdateDirection(Direction dir)
@@ -475,12 +483,29 @@ namespace Epsitec.Common.Widgets
 				page.TabBounds = rect;
 				rect.Left = rect.Right;
 			}
+
+			if ( this.Arrows == TabBookArrows.Stretch )
+			{
+				double width = this.Client.Bounds.Width-2;
+				rect.Left = 0;
+				foreach ( TabPage page in this.items )
+				{
+					Drawing.Size size = page.TabSize;
+					double len = System.Math.Floor(size.Width+size.Height);
+					len *= width/this.scrollTotalWidth;
+
+					rect.Right = rect.Left+len;
+					page.TabBounds = rect;
+					rect.Left = rect.Right;
+				}
+			}
 		}
 		
 		protected void UpdateGlyphButtons()
 		{
 			// Met à jour les 4 boutons spéciaux.
 			this.scrollArrow = ( this.scrollTotalWidth > this.Client.Width-4 );
+			if ( this.Arrows == TabBookArrows.Stretch )  this.scrollArrow = false;
 
 			if ( this.arrowLeft == null )  return;
 
