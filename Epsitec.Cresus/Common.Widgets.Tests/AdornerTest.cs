@@ -800,52 +800,52 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleMultiBold(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectBold = !this.bigText.SelectBold;
+			this.bigText.SelectionBold = !this.bigText.SelectionBold;
 		}
 
 		private void HandleMultiItalic(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectItalic = !this.bigText.SelectItalic;
+			this.bigText.SelectionItalic = !this.bigText.SelectionItalic;
 		}
 
 		private void HandleMultiUnderline(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectUnderline = !this.bigText.SelectUnderline;
+			this.bigText.SelectionUnderlined = !this.bigText.SelectionUnderlined;
 		}
 
 		private void HandleMultiFace1(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectFontName = "Tahoma";
+			this.bigText.SelectionFontName = "Tahoma";
 		}
 
 		private void HandleMultiFace2(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectFontName = "Courier New";
+			this.bigText.SelectionFontName = "Courier New";
 		}
 
 		private void HandleMultiFace3(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectFontName = "Times New Roman";
+			this.bigText.SelectionFontName = "Times New Roman";
 		}
 
 		private void HandleMultiSize1(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectFontSize = Drawing.Font.DefaultFontSize;
+			this.bigText.SelectionFontSize = Drawing.Font.DefaultFontSize;
 		}
 
 		private void HandleMultiSize2(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectFontSize = 20;
+			this.bigText.SelectionFontSize = 20;
 		}
 
 		private void HandleMultiColor1(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectFontColor = Drawing.Color.FromBrightness(0);
+			this.bigText.SelectionFontColor = Drawing.Color.FromBrightness(0);
 		}
 
 		private void HandleMultiColor2(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectFontColor = Drawing.Color.FromRGB(1,0,0);
+			this.bigText.SelectionFontColor = Drawing.Color.FromRGB(1,0,0);
 		}
 
 

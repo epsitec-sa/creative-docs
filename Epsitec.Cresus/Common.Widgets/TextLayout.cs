@@ -353,7 +353,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public bool SelectBold(TextLayout.Context context)
+		public bool IsSelectionBold(TextLayout.Context context)
 		{
 			// Indique si les caractères sélectionnés sont gras.
 			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
@@ -362,14 +362,14 @@ namespace Epsitec.Common.Widgets
 			return ( i >= 0 );
 		}
 
-		public void SelectBold(TextLayout.Context context, bool bold)
+		public void SetSelectionBold(TextLayout.Context context, bool bold)
 		{
 			// Met en gras ou en normal tous les caractères sélectionnés.
 			string state = bold ? "yes" : "no";
 			this.PutSelect(context, "bold=\"" + state + "\"");
 		}
 
-		public bool SelectItalic(TextLayout.Context context)
+		public bool IsSelectionItalic(TextLayout.Context context)
 		{
 			// Indique si les caractères sélectionnés sont italiques.
 			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
@@ -379,14 +379,14 @@ namespace Epsitec.Common.Widgets
 			return ( i >= 0 || j >= 0 );
 		}
 
-		public void SelectItalic(TextLayout.Context context, bool italic)
+		public void SetSelectionItalic(TextLayout.Context context, bool italic)
 		{
 			// Met en italique ou en normal tous les caractères sélectionnés.
 			string state = italic ? "yes" : "no";
 			this.PutSelect(context, "italic=\"" + state + "\"");
 		}
 
-		public bool SelectUnderline(TextLayout.Context context)
+		public bool IsSelectionUnderlined(TextLayout.Context context)
 		{
 			// Indique si les caractères sélectionnés sont soulignés.
 			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
@@ -394,14 +394,14 @@ namespace Epsitec.Common.Widgets
 			return block.underline;
 		}
 
-		public void SelectUnderline(TextLayout.Context context, bool underline)
+		public void SetSelectionUnderlined(TextLayout.Context context, bool underline)
 		{
 			// Met en souligné ou en normal tous les caractères sélectionnés.
 			string state = underline ? "yes" : "no";
 			this.PutSelect(context, "underline=\"" + state + "\"");
 		}
 
-		public string SelectFontName(TextLayout.Context context)
+		public string GetSelectionFontName(TextLayout.Context context)
 		{
 			// Indique le nom de la fonte des caractères sélectionnés.
 			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
@@ -409,13 +409,13 @@ namespace Epsitec.Common.Widgets
 			return block.font.FaceName;
 		}
 
-		public void SelectFontName(TextLayout.Context context, string name)
+		public void SetSelectionFontName(TextLayout.Context context, string name)
 		{
 			// Modifie le nom de la fonte des caractères sélectionnés.
 			this.PutSelect(context, "face=\"" + name + "\"");
 		}
 
-		public double SelectFontSize(TextLayout.Context context)
+		public double GetSelectionFontSize(TextLayout.Context context)
 		{
 			// Indique la taille des caractères sélectionnés.
 			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
@@ -423,13 +423,13 @@ namespace Epsitec.Common.Widgets
 			return block.fontSize;
 		}
 
-		public void SelectFontSize(TextLayout.Context context, double size)
+		public void SetSelectionFontSize(TextLayout.Context context, double size)
 		{
 			// Modifie la taille des caractères sélectionnés.
 			this.PutSelect(context, "size=\"" + size + "\"");
 		}
 
-		public Drawing.Color SelectFontColor(TextLayout.Context context)
+		public Drawing.Color GetSelectionFontColor(TextLayout.Context context)
 		{
 			// Indique la couleur des caractères sélectionnés.
 			JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
@@ -437,13 +437,14 @@ namespace Epsitec.Common.Widgets
 			return block.fontColor;
 		}
 
-		public void SelectFontColor(TextLayout.Context context, Drawing.Color color)
+		public void SetSelectionFontColor(TextLayout.Context context, Drawing.Color color)
 		{
 			// Modifie la couleur des caractères sélectionnés.
 			string s = "#" + Drawing.Color.ToHexa(color);
 			this.PutSelect(context, "color=\"" + s + "\"");
 		}
 
+		
 		protected JustifBlock SearchJustifBlock(int index)
 		{
 			// Cherche le premier bloc correspondant à un index.
@@ -522,6 +523,7 @@ namespace Epsitec.Common.Widgets
 			context.CursorAfter = false;
 		}
 
+		
 		protected void DeleteText(int from, int to)
 		{
 			// Supprime des caractères, tout en conservant les commandes.
@@ -545,6 +547,7 @@ namespace Epsitec.Common.Widgets
 			this.Text = text;
 		}
 
+		
 		public bool DeleteSelection(TextLayout.Context context)
 		{
 			// Supprime les caractères sélectionnés dans le texte.
@@ -669,6 +672,7 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
+		
 		protected bool IsWordSeparator(char character)
 		{
 			// Indique si un caractère est un séparateur pour les déplacements
@@ -715,6 +719,7 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
+		
 		public bool MoveCursor(TextLayout.Context context, int move, bool select, bool word)
 		{
 			// Déplace le curseur.
@@ -940,6 +945,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
 		protected void UnderlinePoints(Drawing.IPaintPort graphics, JustifBlock block,
 									   Drawing.Point pos,
 									   out Drawing.Point p1, out Drawing.Point p2)
@@ -1067,6 +1073,7 @@ namespace Epsitec.Common.Widgets
 			return this.DetectIndex(new Drawing.Point(posx, 0), posLine, out index, out after);
 		}
 
+		
 		protected bool DetectIndex(Drawing.Point pos, int posLine, out int index, out bool after)
 		{
 			// Trouve l'index dans le texte interne qui correspond à la
@@ -1177,6 +1184,7 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 
+		
 		public string DetectAnchor(Drawing.Point pos)
 		{
 			// Détecte s'il y a un lien hypertexte dans la liste des
