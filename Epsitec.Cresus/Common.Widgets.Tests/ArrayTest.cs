@@ -172,7 +172,7 @@ namespace Epsitec.Common.Widgets
 			table.RowCount          = 100;
 			table.SelectedIndex     = 0;
 			table.EditionIndex      = -1;
-			table.EditionZoneHeight = 2;
+			table.EditionZoneHeight = 1;
 			table.TitleHeight       = 32;
 			table.DoubleClicked    += new MessageEventHandler(this.HandleEditDoubleClicked);
 			

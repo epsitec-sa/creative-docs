@@ -42,6 +42,8 @@ namespace Epsitec.Common.Widgets
 			this.scrollerV  = new VScroller(this);
 			this.scrollerH  = new HScroller(this);
 			
+			this.container.InheritFocus = true;
+			
 			this.scrollerV.IsInverted = true;  // de haut en bas
 			this.scrollerV.ValueChanged += new Support.EventHandler(this.HandleScrollerV);
 			this.scrollerH.ValueChanged += new Support.EventHandler(this.HandleScrollerH);
@@ -802,8 +804,8 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.MouseWheel:
-					if ( message.Wheel < 0 )  this.ProcessKeyDown(KeyCode.ArrowDown);
-					if ( message.Wheel > 0 )  this.ProcessKeyDown(KeyCode.ArrowUp);
+					if ( message.Wheel < 0 )  this.OffsetV = System.Math.Min(this.OffsetV+this.defHeight, this.scrollerV.Range);
+					if ( message.Wheel > 0 )  this.OffsetV = System.Math.Max(this.OffsetV-this.defHeight, 0);
 					break;
 
 				case MessageType.KeyDown:
@@ -1349,9 +1351,9 @@ namespace Epsitec.Common.Widgets
 					totalHeight += this.RetHeightRow(i);
 				}
 
-				if ((totalHeight <= areaHeight) ||
-					(totalHeight <= 0) ||
-					(areaHeight <= 0))
+				if ( totalHeight <= areaHeight ||
+					 totalHeight <= 0          ||
+					 areaHeight  <= 0          )
 				{
 					this.scrollerV.SetEnabled(false);
 					this.scrollerV.Range = 1;
@@ -1380,9 +1382,9 @@ namespace Epsitec.Common.Widgets
 					totalWidth += this.RetWidthColumn(i);
 				}
 
-				if ((totalWidth <= areaWidth) ||
-					(totalWidth <= 0) ||
-					(areaWidth <= 0))
+				if ( totalWidth <= areaWidth ||
+					 totalWidth <= 0         ||
+					 areaWidth  <= 0         )
 				{
 					this.scrollerH.SetEnabled(false);
 					this.scrollerH.Range = 1;

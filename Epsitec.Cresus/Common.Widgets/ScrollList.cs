@@ -279,6 +279,10 @@ namespace Epsitec.Common.Widgets
 			
 			switch ( message.Type )
 			{
+				case MessageType.MouseEnter:
+				case MessageType.MouseLeave:
+					break;
+				
 				case MessageType.MouseDown:
 					this.mouseDown = true;
 					this.MouseSelect(pos);
@@ -301,9 +305,20 @@ namespace Epsitec.Common.Widgets
 					}
 					break;
 
-				case MessageType.KeyDown:
-					this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
+				case MessageType.MouseWheel:
+					if ( message.Wheel < 0 )  this.ProcessKeyDown(KeyCode.ArrowDown, false, false);
+					if ( message.Wheel > 0 )  this.ProcessKeyDown(KeyCode.ArrowUp, false, false);
 					break;
+
+				case MessageType.KeyDown:
+					if ( !this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed) )
+					{
+						return;
+					}
+					break;
+				
+				default:
+					return;
 			}
 			
 			message.Consumer = this;
@@ -549,7 +564,7 @@ namespace Epsitec.Common.Widgets
 					rects[0].Right += adorner.GeometrySelectedRightMargin;
 					rects[0].Bottom = pos.Y;
 					rects[0].Height = this.lineHeight;
-					adorner.PaintTextSelectionBackground(graphics, rects);
+					adorner.PaintTextSelectionBackground(graphics, rects, state);
 
 					state |= WidgetState.Selected;
 				}

@@ -274,6 +274,7 @@ namespace Epsitec.Common.Widgets
 			button.Parent = window.Root;
 			button.TabIndex = 2;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			button.SetEnabled (false);
 			
 			button = new Button ("C");
 			button.Bounds = new Drawing.Rectangle (10, 110, 40, 25);

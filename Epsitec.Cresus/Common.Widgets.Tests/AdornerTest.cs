@@ -288,7 +288,7 @@ namespace Epsitec.Common.Widgets
 			box.Text = "Couleur";
 			box.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			box.TabIndex = 2;
-			box.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+//			box.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			window.Root.Children.Add(box);
 
 			RadioButton radio1 = new RadioButton();
@@ -446,7 +446,7 @@ namespace Epsitec.Common.Widgets
 			tab.Size = new Size(300, 180);
 			tab.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			tab.TabIndex = 15;
-			tab.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			tab.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren;
 			window.Root.Children.Add(tab);
 
 			Rectangle inside = tab.InnerBounds;

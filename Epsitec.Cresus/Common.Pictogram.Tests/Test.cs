@@ -12,8 +12,9 @@ namespace Epsitec.Common.Pictogram
 	{
 		[Test] public void CheckApplication()
 		{
+			Engine.Initialise();
+
 			Window window = new Window();
-			
 			window.ClientSize = new Drawing.Size(500, 300);
 			window.Text = "CheckApplication";
 			window.Root.LayoutChanged += new EventHandler(this.Root_LayoutChanged);
@@ -55,7 +56,7 @@ namespace Epsitec.Common.Pictogram
 				{
 					string name = texts[i] + "1";
 					IconObjects objects = new IconObjects();
-					objects.Read("..\\..\\images\\" + name + ".icon");
+					objects.Read("..\\..\\..\\External\\images\\" + name + ".icon");
 					SampleButton button = new SampleButton();
 					button.Size = new Drawing.Size(22, 22);
 					button.ButtonStyle = ButtonStyle.ToolItem;

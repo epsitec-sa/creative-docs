@@ -10,7 +10,7 @@ namespace Epsitec.Common.Widgets
 		public AbstractGroup()
 		{
 			this.InternalState |= InternalState.PossibleContainer;
-			this.TabNavigation  = TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+			this.TabNavigation  = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 		}
 		
 		public AbstractGroup(Widget embedder) : this()
