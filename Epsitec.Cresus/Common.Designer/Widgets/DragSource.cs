@@ -333,9 +333,17 @@ namespace Epsitec.Common.Designer.Widgets
 				
 				Widget copy = bundler.CopyObject (this.widget) as Widget;
 				
-				copy.Location = this.drop_adorner.Widget.MapScreenToClient (this.DragLocation) + offset;
+				copy.Anchor   = AnchorStyles.None;
 				copy.Dock     = DockStyle.None;
-				copy.Anchor   = anchor;
+				copy.Location = this.drop_adorner.Widget.MapScreenToClient (this.DragLocation) + offset;
+				
+				Drawing.Rectangle bounds    = copy.Bounds;
+				Drawing.Rectangle container = this.drop_adorner.Widget.Client.Bounds;
+				Drawing.Margins   margins   = new Drawing.Margins (bounds.Left - container.Left, container.Right - bounds.Right,
+					/**/										   container.Top - bounds.Top, bounds.Bottom - container.Bottom);
+				
+				copy.Anchor        = anchor;
+				copy.AnchorMargins = margins;
 				
 				this.drop_adorner.Widget.Children.Add (copy);
 				this.drop_adorner.Widget = null;
