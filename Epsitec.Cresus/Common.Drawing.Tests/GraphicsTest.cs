@@ -59,6 +59,16 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 		
+		[Test] public void CheckMultiPath()
+		{
+			Window window = new Window ();
+			
+			window.Text = "CheckMultiPath";
+			window.Root.PaintForeground += new PaintEventHandler(MultiPath_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+		
 		[Test] public void CheckAlphaMask()
 		{
 			Window window = new Window ();
@@ -478,6 +488,35 @@ namespace Epsitec.Common.Drawing
 			path3.Append (path2, 10, -2);
 			e.Graphics.Rasterizer.AddSurface (path3);
 			e.Graphics.RenderSolid (Color.FromARGB (0.5, 0, 1, 0));
+		}
+		
+		private void MultiPath_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double cx = root.Client.Width / 2;
+			double cy = root.Client.Height / 2;
+			
+			Path path1 = new Path ();
+			Path path2 = new Path ();
+			
+			path2.MoveTo (10, 10);
+			path2.LineTo (110, 10);
+			path2.LineTo (110, 40);
+			path2.Close ();
+			
+			path1.Append (path2);
+			
+			path2.Clear ();
+			path2.MoveTo (10,  50);
+			path2.LineTo (110, 50);
+			path2.LineTo (110, 90);
+			path2.Close ();
+			
+			path1.Append (path2);
+			
+			e.Graphics.Rasterizer.AddOutline (path1, 2, CapStyle.Round, JoinStyle.Miter, 5.0);
+			e.Graphics.RenderSolid (Color.FromRGB (0, 0, 0));
 		}
 		
 		private void NonZeroFill_PaintForeground(object sender, PaintEventArgs e)
