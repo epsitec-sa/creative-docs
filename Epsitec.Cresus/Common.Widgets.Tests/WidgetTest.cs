@@ -804,6 +804,20 @@ namespace Epsitec.Common.Widgets
 			Assertion.AssertEquals (4, command_widgets.Length);
 		}
 		
+		[Test] public void CheckColorSelector()
+		{
+			Window window = new Window ();
+			window.Text = "CheckColorSelector";
+			window.ClientSize = new Drawing.Size (250, 250);
+			
+			ColorSelector selector = new ColorSelector ();
+			
+			selector.Dock = DockStyle.Fill;
+			selector.Parent = window.Root;
+			
+			window.Show ();
+		}
+		
 		
 		[Test] public void CheckSmartTagColor()
 		{

@@ -3,13 +3,13 @@ namespace Epsitec.Common.Widgets
 	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
 	
 	/// <summary>
-	/// La classe ColorSelector permet de choisir une couleur rgb.
+	/// La classe ColorSelector permet de choisir une couleur.
 	/// </summary>
 	public class ColorSelector : Widget
 	{
 		public ColorSelector()
 		{
-			this.colorBlack = Drawing.Color.FromName("WindowFrame");
+			this.black = Drawing.Color.FromName("WindowFrame");
 
 			this.nbField = 4+3;
 			this.labels = new StaticText[this.nbField];
@@ -96,6 +96,10 @@ namespace Epsitec.Common.Widgets
 			this.palette[13].Color = Drawing.Color.FromARGB(1.0, 0.5, 0.5, 0.5);
 			this.palette[14].Color = Drawing.Color.FromARGB(1.0, 0.4, 0.4, 0.4);
 			this.palette[15].Color = Drawing.Color.FromARGB(1.0, 0.0, 0.0, 0.0);
+			
+			this.picker = new Tools.Magnifier.DragSource (this);
+			
+			this.picker.HotColorChanged += new Support.EventHandler (this.HandlePickerHotColorChanged);
 		}
 		
 		public ColorSelector(Widget embedder) : this()
@@ -131,6 +135,11 @@ namespace Epsitec.Common.Widgets
 				foreach ( ColorSample cs in this.palette )
 				{
 					cs.Clicked -= new MessageEventHandler(this.ColorSelectorClicked);
+				}
+				
+				if ( this.picker != null )
+				{
+					this.picker.HotColorChanged -= new Support.EventHandler (this.HandlePickerHotColorChanged);
 				}
 			}
 			
@@ -331,6 +340,18 @@ namespace Epsitec.Common.Widgets
 
 				r.Offset(0, -19);
 			}
+			
+			r.Top    = r.Top - 2;
+			r.Bottom = r.Bottom + 1;
+			r.Right = this.fields[6].Right;
+			r.Left  = r.Right - r.Height;
+			this.picker.Bounds = r;
+		}
+		
+		
+		private void HandlePickerHotColorChanged(object sender)
+		{
+			this.Color = this.picker.HotColor;
 		}
 		
 		// Une valeur RGB a été changée.
@@ -400,7 +421,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected Drawing.Color				colorBlack;
+		protected Drawing.Color				black;
 		protected ColorWheel				circle;
 		protected int						nbPalette;
 		protected ColorSample[]				palette;
@@ -408,5 +429,6 @@ namespace Epsitec.Common.Widgets
 		protected StaticText[]				labels;
 		protected TextFieldSlider[]			fields;
 		protected bool						suspendColorEvents = false;
+		private Tools.Magnifier.DragSource	picker;
 	}
 }

@@ -3,13 +3,13 @@ namespace Epsitec.Common.Widgets
 	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
 	
 	/// <summary>
-	/// La classe ColorWheel permet de choisir une couleur rgb.
+	/// La classe ColorWheel permet de choisir une couleur.
 	/// </summary>
 	public class ColorWheel : Widget
 	{
 		public ColorWheel()
 		{
-			this.colorBlack = Drawing.Color.FromName("WindowFrame");
+			this.black = Drawing.Color.FromName("WindowFrame");
 		}
 		
 		public ColorWheel(Widget embedder) : this()
@@ -398,7 +398,7 @@ namespace Epsitec.Common.Widgets
 			this.PaintHandler(graphics, center, radius+1, Drawing.Color.FromBrightness(1));
 			graphics.LineWidth = originalWidth;
 
-			this.PaintHandler(graphics, center, radius, this.colorBlack);
+			this.PaintHandler(graphics, center, radius, this.black);
 		}
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
@@ -421,7 +421,7 @@ namespace Epsitec.Common.Widgets
 
 
 		protected double					h,s,v,a;
-		protected Drawing.Color				colorBlack;
+		protected Drawing.Color				black;
 		protected Drawing.Rectangle			rectCircle;
 		protected Drawing.Point				centerCircle;
 		protected double					radiusCircleMax;
