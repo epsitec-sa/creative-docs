@@ -18,7 +18,7 @@ namespace Epsitec.Common.Designer.Editors
 		protected override void FillTabPage()
 		{
 			this.AddPropPane (this.CreatePropPane ("Name", new Common.UI.Adapters.StringAdapter ()));
-			this.AddPropPane (this.CreatePropPane ("Text", new UI.TextRefAdapter (this.application)));
+			this.AddPropPane (this.CreatePropPane ("Text", new UI.TextRefAdapter (this.Application)));
 			this.AddPropPane (this.CreatePropPane ("Size", new Common.UI.Adapters.Num2Adapter ()));
 			this.AddPropPane (this.CreatePropPane ("WindowType",   new Common.UI.Adapters.EnumAdapter (new Types.EnumType (typeof (WindowType)))));
 			this.AddPropPane (this.CreatePropPane ("WindowStyles", new Common.UI.Adapters.FlagsAdapter (new Types.EnumType (typeof (WindowStyles)))));

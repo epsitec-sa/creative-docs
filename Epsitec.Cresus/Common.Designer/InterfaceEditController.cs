@@ -218,6 +218,8 @@ namespace Epsitec.Common.Designer
 			editor.Selected   += new SelectionEventHandler (this.HandleEditorSelected);
 			editor.Deselected += new SelectionEventHandler (this.HandleEditorDeselected);
 			
+			editor.DirtyChanged += new EventHandler (this.HandleEditorDirtyChanged);
+			
 			editor.DragSelectionBegin += new EventHandler (this.HandleEditorDragSelectionBegin);
 			editor.DragSelectionEnd   += new EventHandler (this.HandleEditorDragSelectionEnd);
 			
@@ -264,6 +266,8 @@ namespace Epsitec.Common.Designer
 				
 				editor.Selected   -= new SelectionEventHandler (this.HandleEditorSelected);
 				editor.Deselected -= new SelectionEventHandler (this.HandleEditorDeselected);
+				
+				editor.DirtyChanged -= new EventHandler (this.HandleEditorDirtyChanged);
 			
 				editor.DragSelectionBegin -= new EventHandler (this.HandleEditorDragSelectionBegin);
 				editor.DragSelectionEnd   -= new EventHandler (this.HandleEditorDragSelectionEnd);
@@ -505,6 +509,11 @@ namespace Epsitec.Common.Designer
 			this.UpdateCommandStates ();
 		}
 		
+		private void HandleEditorDirtyChanged(object sender)
+		{
+			this.UpdateCommandStates ();
+		}
+		
 		private void HandleEditWindowWindowActivated(object sender)
 		{
 			Window			     window = sender as Window;
@@ -664,6 +673,11 @@ namespace Epsitec.Common.Designer
 			if (this.active_widget != widget)
 			{
 				this.active_widget = widget;
+				
+				//	Attention : il faut définir d'abord l'éditeur, puis l'objet actif, ou sinon les
+				//	événements ne seront pas acheminés correctement !
+				
+				this.attribute_palette.ActiveEditor = Editors.WidgetEditor.FromWidget (widget);
 				this.attribute_palette.ActiveObject = widget;
 			}
 		}

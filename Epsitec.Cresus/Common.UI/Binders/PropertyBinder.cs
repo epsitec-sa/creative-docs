@@ -59,7 +59,7 @@ namespace Epsitec.Common.UI.Binders
 					this.Detach ();
 					this.prop_name = value;
 					this.UpdatePropertyInfo ();
-					this.OnPropertyChanged ();
+					this.OnPropertyNameChanged ();
 				}
 			}
 		}
@@ -180,15 +180,25 @@ namespace Epsitec.Common.UI.Binders
 		{
 		}
 		
-		protected virtual void OnPropertyChanged()
+		protected virtual void OnPropertyNameChanged()
 		{
 			this.SyncToAdapter (SyncReason.ValueChanged);
+		}
+		
+		protected virtual void OnPropertyValueChanged()
+		{
+			this.SyncToAdapter (SyncReason.ValueChanged);
+			
+			if (this.PropertyValueChanged != null)
+			{
+				this.PropertyValueChanged (this);
+			}
 		}
 		
 		
 		private void HandlePropChanged(object sender)
 		{
-			this.OnPropertyChanged ();
+			this.OnPropertyValueChanged ();
 		}
 		
 		
@@ -210,6 +220,8 @@ namespace Epsitec.Common.UI.Binders
 		}
 		
 		
+		
+		public event Support.EventHandler		PropertyValueChanged;
 		
 		private bool							source_attached;
 		private object							source_object;

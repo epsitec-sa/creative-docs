@@ -34,8 +34,22 @@ namespace Epsitec.Common.Designer.Panels
 					this.active_object = value;
 					this.active_type   = value == null ? null : this.active_object.GetType ();
 					
+					System.Diagnostics.Debug.Assert ((this.active_object == null) || (this.active_editor != null));
+					
 					this.RebindContents ();
 				}
+			}
+		}
+		
+		public Editors.WidgetEditor				ActiveEditor
+		{
+			get
+			{
+				return this.active_editor;
+			}
+			set
+			{
+				this.active_editor = value;
 			}
 		}
 		
@@ -347,6 +361,7 @@ namespace Epsitec.Common.Designer.Panels
 			Editors.AbstractPropEdit new_prop = System.Activator.CreateInstance (prop_type, args) as Editors.AbstractPropEdit;
 			
 			new_prop.ActiveObject = this.active_object;
+			new_prop.ActiveEditor = this.active_editor;
 			
 			this.props.Add (new_prop);
 		}
@@ -359,6 +374,7 @@ namespace Epsitec.Common.Designer.Panels
 		
 		private object							active_object;		//	objet actif (dont les propriétés sont visibles)
 		private System.Type						active_type;		//	type de l'objet actif
+		private Editors.WidgetEditor			active_editor;		//	éditeur associé à l'objet actif
 		
 		private System.Collections.ArrayList	props;				//	propriétés
 		

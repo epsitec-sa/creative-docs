@@ -222,7 +222,7 @@ namespace Epsitec.Common.Designer.Editors
 			Resources.SetBundle (bundle, Support.ResourceSetMode.Write);
 //			bundle.CreateXmlDocument (false).Save (path);
 			
-			this.is_dirty = false;
+			this.MakeClean ();
 		}
 		
 		
@@ -337,11 +337,20 @@ namespace Epsitec.Common.Designer.Editors
 		
 		protected virtual void MakeDirty()
 		{
-			//	Il n'y a pas besoin de générer un événement ici, car l'état "dirty" sera
-			//	évalué manuellement à la fin de l'exécution de chaque commande, et les
-			//	commandes mises à jour en conséquence dans InterfaceEditController.
-			
-			this.is_dirty = true;
+			if (this.is_dirty == false)
+			{
+				this.is_dirty = true;
+				this.OnDirtyChanged ();
+			}
+		}
+		
+		protected virtual void MakeClean()
+		{
+			if (this.is_dirty == true)
+			{
+				this.is_dirty = false;
+				this.OnDirtyChanged ();
+			}
 		}
 		
 		
@@ -587,6 +596,14 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
+		protected virtual void OnDirtyChanged()
+		{
+			if (this.DirtyChanged != null)
+			{
+				this.DirtyChanged (this);
+			}
+		}
+		
 		
 		public event SelectionEventHandler		Selected;
 		public event SelectionEventHandler		Deselecting;
@@ -595,6 +612,7 @@ namespace Epsitec.Common.Designer.Editors
 		public event Support.EventHandler		DragSelectionBegin;
 		public event Support.EventHandler		DragSelectionEnd;
 		public event Support.EventHandler		DialogDesignerChanged;
+		public event Support.EventHandler		DirtyChanged;
 		
 		
 		private Support.CommandDispatcher		dispatcher;

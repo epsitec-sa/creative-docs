@@ -3,7 +3,7 @@
   <data name="WindowStyles">None</data>
   <data name="WindowType">Dialog</data>
   <data name="Size">330;260</data>
-  <data name="Name">Root</data>
+  <data name="Name">SettingsDialog</data>
   <data name="Text">[res:strings#title.SettingsWindow]</data>
   <list name="widgets">
     <bundle>
@@ -35,26 +35,29 @@
       <data name="TabIndex">3</data>
       <data name="BindingInfo">&lt;bind path="AccessMode"/&gt;</data>
     </bundle>
-    <bundle>
+    <bundle name="OkButton">
       <data name="class">Button</data>
       <data name="Anchor">BottomRight</data>
       <data name="AnchorMargins">66;184;221;16</data>
+      <data name="Name">OkButton</data>
       <data name="Command">Ok</data>
       <data name="Text">[res:strings#label.OK]</data>
       <data name="TabIndex">5</data>
     </bundle>
-    <bundle>
+    <bundle name="CancelButton">
       <data name="class">Button</data>
       <data name="Anchor">BottomRight</data>
       <data name="AnchorMargins">154;96;221;16</data>
+      <data name="Name">CancelButton</data>
       <data name="Command">Cancel</data>
       <data name="Text">[res:strings#label.Cancel]</data>
       <data name="TabIndex">6</data>
     </bundle>
-    <bundle>
+    <bundle name="ApplyButton">
       <data name="class">Button</data>
       <data name="Anchor">BottomRight</data>
       <data name="AnchorMargins">276;8;171;16</data>
+      <data name="Name">ApplyButton</data>
       <data name="Command">Apply</data>
       <data name="Text">[res:strings#label.Apply]</data>
       <data name="TabIndex">7</data>

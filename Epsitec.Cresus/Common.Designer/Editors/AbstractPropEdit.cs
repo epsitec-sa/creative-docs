@@ -20,21 +20,40 @@ namespace Epsitec.Common.Designer.Editors
 		}
 		
 		
+		public Application						Application
+		{
+			get
+			{
+				return this.application;
+			}
+		}
+		
 		public System.Object					ActiveObject
 		{
 			get
 			{
-				return this.active;
+				return this.active_object;
 			}
 			set
 			{
-				if (this.active != value)
+				if (this.active_object != value)
 				{
-					this.active = value;
-					this.type   = value == null ? null : this.active.GetType ();
+					this.active_object = value;
 					
 					this.UpdateContents ();
 				}
+			}
+		}
+		
+		public WidgetEditor						ActiveEditor
+		{
+			get
+			{
+				return this.active_editor;
+			}
+			set
+			{
+				this.active_editor = value;
 			}
 		}
 		
@@ -55,7 +74,7 @@ namespace Epsitec.Common.Designer.Editors
 		{
 			get
 			{
-				return new RankComparerClass ();
+				return new InternalRankComparer ();
 			}
 		}
 		
@@ -155,7 +174,7 @@ namespace Epsitec.Common.Designer.Editors
 		protected void UpdateContents()
 		{
 			if ((this.page == null) ||
-				(this.active == null))
+				(this.active_object == null))
 			{
 				return;
 			}
@@ -198,7 +217,7 @@ namespace Epsitec.Common.Designer.Editors
 		{
 			foreach (Common.UI.Binders.PropertyBinder binder in this.binders.Values)
 			{
-				binder.Source = this.active;
+				binder.Source = this.active_object;
 			}
 		}
 		
@@ -214,6 +233,7 @@ namespace Epsitec.Common.Designer.Editors
 			if (binder == null)
 			{
 				binder = new Common.UI.Binders.PropertyBinder (name);
+				binder.PropertyValueChanged += new EventHandler(this.HandleBinderPropertyValueChanged);
 				this.binders[name] = binder;
 			}
 			
@@ -224,7 +244,27 @@ namespace Epsitec.Common.Designer.Editors
 		}
 		
 		
-		private class RankComparerClass : IComparer
+		private void HandleBinderPropertyValueChanged(object sender)
+		{
+			Common.UI.Binders.PropertyBinder binder = sender as Common.UI.Binders.PropertyBinder;
+			
+			System.Diagnostics.Debug.Assert (binder != null);
+			
+			if (this.active_editor != null)
+			{
+				this.active_editor.NotifyWidgetModified (binder.Source as Widget);
+			}
+			
+#if DEBUG
+			object data;
+			binder.ReadData (out data);
+			System.Diagnostics.Debug.WriteLine (string.Format ("New value of property {0} is {1}", binder.Caption, data));
+#endif
+		}
+		
+		
+		#region InternalRankComparer Class
+		private class InternalRankComparer : IComparer
 		{
 			#region IComparer Members
 			public int Compare(object x, object y)
@@ -246,23 +286,24 @@ namespace Epsitec.Common.Designer.Editors
 					return 1;
 				}
 				
-				int rx = prop_x.rank;
-				int ry = prop_y.rank;
+				int rx = prop_x.class_rank;
+				int ry = prop_y.class_rank;
 				
 				return rx - ry;
 			}
 			#endregion
 		}
+		#endregion
 		
+		protected int							class_rank;			//	rang servant au tri des variantes de XyzPropEdit
 		
+		private System.Object					active_object;		//	object actuellement en cours d'édition
+		private WidgetEditor					active_editor;		//	éditeur associé à l'objet actif
 		
-		protected System.Object					active;
-		protected System.Type					type;
-		protected int							rank;
-		protected TabPage						page;
+		private TabPage							page;				//	page à onglet contenant les panneaux des propriétés
 		
-		protected System.Collections.ArrayList	prop_panes;
-		protected System.Collections.Hashtable	binders;
-		protected Application					application;
+		private System.Collections.ArrayList	prop_panes;
+		private System.Collections.Hashtable	binders;
+		private Application						application;
 	}
 }
