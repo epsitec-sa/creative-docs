@@ -184,20 +184,23 @@ namespace Epsitec.Common.Widgets
 
 		// Retourne les dimensions du texte indépendament de LayoutSize,
 		// s'il est mis sur une seule ligne.
-		public Drawing.Size SingleLineSize()
+		public Drawing.Size SingleLineSize
 		{
-			Drawing.Size originalSize = this.LayoutSize;
-			Drawing.ContentAlignment originalAlignment = this.Alignment;
+			get
+			{
+				Drawing.Size originalSize = this.LayoutSize;
+				Drawing.ContentAlignment originalAlignment = this.Alignment;
 
-			this.LayoutSize = new Drawing.Size(1000000, 1000000);
-			this.Alignment = Drawing.ContentAlignment.TopLeft;
+				this.LayoutSize = new Drawing.Size(TextLayout.Infinite, TextLayout.Infinite);
+				this.Alignment  = Drawing.ContentAlignment.TopLeft;
 
-			Drawing.Point end = this.FindTextEnd();
-			
-			this.LayoutSize = originalSize;
-			this.Alignment = originalAlignment;
+				Drawing.Point end = this.FindTextEnd();
+				
+				this.LayoutSize = originalSize;
+				this.Alignment  = originalAlignment;
 
-			return new Drawing.Size(end.X, 1000000-end.Y);
+				return new Drawing.Size(end.X, TextLayout.Infinite-end.Y);
+			}
 		}
 		
 		// Retourne le nombre de lignes total dans le layout courant
@@ -622,10 +625,10 @@ namespace Epsitec.Common.Widgets
 
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			Drawing.Rectangle rect = new Drawing.Rectangle();
-			rect.Top    = -1000000;
-			rect.Bottom =  1000000;
-			rect.Left   =  1000000;
-			rect.Right  = -1000000;
+			rect.Top    = -TextLayout.Infinite;
+			rect.Bottom =  TextLayout.Infinite;
+			rect.Left   =  TextLayout.Infinite;
+			rect.Right  = -TextLayout.Infinite;
 			foreach ( JustifBlock block in this.blocks )
 			{
 				JustifLine line = (JustifLine)this.lines[block.indexLine];
@@ -642,15 +645,15 @@ namespace Epsitec.Common.Widgets
 				if ( rect.Top    != top    ||
 					 rect.Bottom != bottom )  // rectangle dans autre ligne ?
 				{
-					if ( rect.Top > -1000000 && rect.Left < 1000000 )
+					if ( rect.Top > -TextLayout.Infinite && rect.Left < TextLayout.Infinite )
 					{
 						list.Add(rect);
 					}
 
 					rect.Top    = top;
 					rect.Bottom = bottom;
-					rect.Left   =  1000000;
-					rect.Right  = -1000000;
+					rect.Left   =  TextLayout.Infinite;
+					rect.Right  = -TextLayout.Infinite;
 				}
 
 				if ( block.image )
@@ -665,7 +668,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			if ( rect.Top > -1000000 && rect.Left < 1000000 )
+			if ( rect.Top > -TextLayout.Infinite && rect.Left < TextLayout.Infinite )
 			{
 				list.Add(rect);
 			}
@@ -680,6 +683,48 @@ namespace Epsitec.Common.Widgets
 					
 			return rects;
 		}
+		
+		public Drawing.Point GetLineOrigin(int line)
+		{
+			Drawing.Point pos;
+			
+			double ascender;
+			double descender;
+			double width;
+			
+			if (this.GetLineGeometry (line, out pos, out ascender, out descender, out width))
+			{
+				return pos;
+			}
+			
+			return Drawing.Point.Empty;
+		}
+		
+		public bool GetLineGeometry(int line, out Drawing.Point pos, out double ascender, out double descender, out double width)
+		{
+			this.UpdateLayout();
+			
+			if ( line >= 0 && line < this.lines.Count )
+			{
+				JustifLine info = (JustifLine)this.lines[line];
+				
+				pos       = info.pos;
+				ascender  = info.ascender;
+				descender = info.descender;
+				width     = info.width;
+				
+				return true;
+			}
+			
+			pos       = Drawing.Point.Empty;
+			ascender  = 0;
+			descender = 0;
+			width     = 0;
+			
+			return false;
+		}
+		
+		
 		
 		// Retourne le rectangle correspondant au curseur.
 		// Indique également le numéro de la ligne (0..n).
@@ -1920,5 +1965,7 @@ namespace Epsitec.Common.Widgets
 		protected System.Collections.ArrayList	lines = new System.Collections.ArrayList();
 
 		protected static Drawing.Color			anchorColor = new Drawing.Color(0,0,1);
+		
+		public const double						Infinite = 1000000;
 	}
 }

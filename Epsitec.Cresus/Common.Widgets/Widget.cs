@@ -604,6 +604,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return this.default_font_height; }
 		}
+		
 		public virtual Drawing.Size			DefaultMinSize
 		{
 			get { return new Drawing.Size (4, 4); }
@@ -617,6 +618,11 @@ namespace Epsitec.Common.Widgets
 		public virtual Drawing.Size			PreferredSize
 		{
 			get { return new Drawing.Size (this.DefaultWidth, this.DefaultHeight); }
+		}
+		
+		public virtual Drawing.Point		BaseLine
+		{
+			get { return Drawing.Point.Empty; }
 		}
 		
 		

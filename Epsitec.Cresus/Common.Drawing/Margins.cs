@@ -136,6 +136,11 @@ namespace Epsitec.Common.Drawing
 			return !a.Equals (b);
 		}
 		
+		public static Margins operator -(Margins a)
+		{
+			return new Margins (-a.left, -a.right, -a.top, -a.bottom);
+		}
+		
 		public class Converter : Epsitec.Common.Converters.AbstractStringConverter
 		{
 			public override object ParseString(string value, System.Globalization.CultureInfo culture)

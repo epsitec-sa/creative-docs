@@ -218,7 +218,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.widget == null )  return;
 
 			this.Text = (string)this.hash[this.widget];
-			Drawing.Size size = this.TextLayout.SingleLineSize();
+			Drawing.Size size = this.TextLayout.SingleLineSize;
 			size.Width  += this.margin.X*2;
 			size.Height += this.margin.Y*2;
 
