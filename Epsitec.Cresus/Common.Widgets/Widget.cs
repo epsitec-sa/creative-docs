@@ -1424,8 +1424,10 @@ namespace Epsitec.Common.Widgets
 					else
 					{
 						parent = value;
-						value.Children.Add (this);
+						parent.Children.Add (this);
 					}
+					
+					System.Diagnostics.Debug.Assert (this.parent == value);
 					
 					if (this.Dock != DockStyle.None)
 					{
