@@ -13,11 +13,11 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
-		public DbKey(DbID id) : this (id, DbRowStatus.Live)
+		public DbKey(DbId id) : this (id, DbRowStatus.Live)
 		{
 		}
 		
-		public DbKey(DbID id, DbRowStatus status)
+		public DbKey(DbId id, DbRowStatus status)
 		{
 			this.id         = id;
 			this.int_status = DbKey.ConvertToIntStatus (status);
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public static DbID CreateTemporaryId()
+		public static DbId CreateTemporaryId()
 		{
 			lock (DbKey.temp_lock)
 			{
@@ -85,10 +85,10 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public static bool CheckTemporaryId(DbID id)
+		public static bool CheckTemporaryId(DbId id)
 		{
-			if ((id >= DbID.MinimumTemp) &&
-				(id <= DbID.MaximumTemp))
+			if ((id >= DbId.MinimumTemp) &&
+				(id <= DbId.MaximumTemp))
 			{
 				return true;
 			}
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Database
 				return null;
 			}
 			
-			DbID id         = 0;
+			DbId id         = 0;
 			int  int_status = 0;
 			
 			if (arg_id.Length > 0)
@@ -229,9 +229,9 @@ namespace Epsitec.Cresus.Database
 		public const DbRawType					RawTypeForStatus	= DbRawType.Int16;
 		
 		private static object					temp_lock	= new object ();
-		private static long						temp_id		= DbID.MinimumTemp;
+		private static long						temp_id		= DbId.MinimumTemp;
 		
-		protected DbID							id;
+		protected DbId							id;
 		protected short							int_status;
 	}
 }

@@ -4,14 +4,14 @@
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbID encapsule un identificateur utilisé par la base de données
+	/// La classe DbId encapsule un identificateur utilisé par la base de données
 	/// (ID = clef d'une fiche).
 	/// </summary>
 	
 	[System.Serializable]
-	public struct DbID : System.IComparable
+	public struct DbId : System.IComparable
 	{
-		public DbID(long id)
+		public DbId(long id)
 		{
 			this.value = id;
 		}
@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.value % DbID.LocalRange;
+				return this.value % DbId.LocalRange;
 			}
 		}
 
@@ -29,58 +29,58 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return (int) ((this.value / DbID.LocalRange) % DbID.ClientRange);
+				return (int) ((this.value / DbId.LocalRange) % DbId.ClientRange);
 			}
 		}
 
 		
-		public static DbIDClass AnalyzeClass(DbID id)
+		public static DbIdClass AnalyzeClass(DbId id)
 		{
 			long local_id  = id.LocalID;
 			int  client_id = id.ClientID;
 			
-			if ((id.value < DbID.MinimumValid) ||
-				(id.value > DbID.MaximumValid))
+			if ((id.value < DbId.MinimumValid) ||
+				(id.value > DbId.MaximumValid))
 			{
-				return DbIDClass.Invalid;
+				return DbIdClass.Invalid;
 			}
 			
-			if (client_id == DbID.TempClientID)
+			if (client_id == DbId.TempClientID)
 			{
-				return DbIDClass.Temporary;
+				return DbIdClass.Temporary;
 			}
 			
-			return DbIDClass.Standard;
+			return DbIdClass.Standard;
 		}
 
 		
-		public static DbID CreateID(long local_id, int client_id)
+		public static DbId CreateID(long local_id, int client_id)
 		{
 			System.Diagnostics.Debug.Assert (local_id >= 0);
-			System.Diagnostics.Debug.Assert (local_id < DbID.LocalRange);
+			System.Diagnostics.Debug.Assert (local_id < DbId.LocalRange);
 			System.Diagnostics.Debug.Assert (client_id >= 0);
-			System.Diagnostics.Debug.Assert (client_id < DbID.ClientRange);
+			System.Diagnostics.Debug.Assert (client_id < DbId.ClientRange);
 			
-			return new DbID (local_id + DbID.LocalRange * client_id);
+			return new DbId (local_id + DbId.LocalRange * client_id);
 		}
 
-		public static DbID CreateTempID(long local_id)
+		public static DbId CreateTempID(long local_id)
 		{
 			System.Diagnostics.Debug.Assert (local_id >= 0);
-			System.Diagnostics.Debug.Assert (local_id < DbID.LocalRange);
+			System.Diagnostics.Debug.Assert (local_id < DbId.LocalRange);
 
-			return new DbID (local_id + DbID.MinimumTemp);
+			return new DbId (local_id + DbId.MinimumTemp);
 		}
 
 
-		public static implicit operator long(DbID id)
+		public static implicit operator long(DbId id)
 		{
 			return id.value;
 		}
 		
-		public static implicit operator DbID(long id)
+		public static implicit operator DbId(long id)
 		{
-			return new DbID (id);
+			return new DbId (id);
 		}
 		
 		
@@ -124,9 +124,9 @@ namespace Epsitec.Cresus.Database
 				return 1;
 			}
 			
-			if (obj is DbID)
+			if (obj is DbId)
 			{
-				DbID value = (DbID) obj;
+				DbId value = (DbId) obj;
 				return this.value.CompareTo (value.value);
 			}
 			
@@ -143,21 +143,21 @@ namespace Epsitec.Cresus.Database
 		private const long						LocalRange		= 1000000000000;	//	10^12
 		private const long						ClientRange		= 1000000;			//	10^6
 		
-		private const long						TempClientID	= DbID.ClientRange - 1;
+		private const long						TempClientID	= DbId.ClientRange - 1;
 		
 		public const long						MinimumValid	= 0;
-		public const long						MaximumValid	= DbID.LocalRange * DbID.ClientRange - 1;
-		public const long						MinimumTemp		= DbID.LocalRange * DbID.TempClientID;
-		public const long						MaximumTemp		= DbID.MinimumTemp + DbID.LocalRange - 1;
+		public const long						MaximumValid	= DbId.LocalRange * DbId.ClientRange - 1;
+		public const long						MinimumTemp		= DbId.LocalRange * DbId.TempClientID;
+		public const long						MaximumTemp		= DbId.MinimumTemp + DbId.LocalRange - 1;
 		
 		private long							value;
 	}
 	
 	/// <summary>
-	/// L'énumération DbIDClass identifie les diverses classes d'identificateurs
+	/// L'énumération DbIdClass identifie les diverses classes d'identificateurs
 	/// connues.
 	/// </summary>
-	public enum DbIDClass
+	public enum DbIdClass
 	{
 		Standard,								//	ID standard
 		Temporary,								//	ID temporaire

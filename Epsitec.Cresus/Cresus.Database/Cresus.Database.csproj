@@ -179,7 +179,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DbID.cs"
+                    RelPath = "DbId.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

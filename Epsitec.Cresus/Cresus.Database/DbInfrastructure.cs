@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Database
 				long log_id = this.NextRowIdInTable (transaction, this.internal_tables[Tags.TableLog].InternalKey);
 				
 				this.client_id      = 0;
-				this.current_log_id = DbID.CreateID (log_id, this.client_id);
+				this.current_log_id = DbId.CreateID (log_id, this.client_id);
 				
 				transaction.Commit ();
 			}
@@ -1616,7 +1616,7 @@ namespace Epsitec.Cresus.Database
 		#endregion
 		
 		
-		protected void BootInsertLogRow(DbTransaction transaction, DbID id, long date_time)
+		protected void BootInsertLogRow(DbTransaction transaction, DbId id, long date_time)
 		{
 			DbTable log_table = this.internal_tables[Tags.TableLog];
 			
@@ -1760,7 +1760,7 @@ namespace Epsitec.Cresus.Database
 			int column_key_id   = 1;
 			int enum_val_key_id = 1;
 			
-			this.current_log_id = DbID.CreateID (log_key_id++, this.client_id);
+			this.current_log_id = DbId.CreateID (log_key_id++, this.client_id);
 			
 			this.BootInsertLogRow (transaction, this.current_log_id, 0);
 			
@@ -2055,7 +2055,7 @@ namespace Epsitec.Cresus.Database
 		protected Collections.DbTypes			internal_types  = new Collections.DbTypes ();
 		
 		protected int							client_id;
-		protected DbID							current_log_id;
+		protected DbId							current_log_id;
 		
 		CallbackDisplayDataSet					display_data_set;
 		string[]								localisations;
