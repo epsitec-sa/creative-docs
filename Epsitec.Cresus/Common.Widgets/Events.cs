@@ -90,8 +90,15 @@ namespace Epsitec.Common.Widgets
 			get { return this.point; }
 		}
 		
+		public bool							Suppress
+		{
+			get { return this.suppress; }
+			set { this.suppress = value; }
+		}
+		
 		
 		private Message						message;
 		private Drawing.Point				point;
+		private bool						suppress;
 	}
 }

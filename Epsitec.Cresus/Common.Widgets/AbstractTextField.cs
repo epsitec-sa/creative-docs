@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets
 		
 		public AbstractTextField()
 		{
-			this.dockMargins = new Drawing.Margins (2, 2, 2, 2);
+			this.DockMargins = new Drawing.Margins (2, 2, 2, 2);
 
 			this.internalState |= InternalState.AutoFocus;
 			this.internalState |= InternalState.AutoEngage;
