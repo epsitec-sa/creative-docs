@@ -36,6 +36,17 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public double					Width
+		{
+			get { return this.left + this.right; }
+		}
+		
+		public double					Height
+		{
+			get { return this.top + this.bottom; }
+		}
+		
+		
 		public override bool Equals(object obj)
 		{
 			if ((obj == null) &&
