@@ -346,11 +346,11 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				int from = System.Math.Min(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
 				int to   = System.Math.Max(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
-				Drawing.Rectangle[] rects = this.textLayout.FindTextRange(new Drawing.Point(0,0), from, to);
-				for ( int i=0 ; i<rects.Length ; i++ )
+				TextLayout.SelectedArea[] areas = this.textLayout.FindTextRange(new Drawing.Point(0,0), from, to);
+				for ( int i=0 ; i<areas.Length ; i++ )
 				{
-					graphics.Align(ref rects[i]);
-					graphics.AddFilledRectangle(rects[i]);
+					graphics.Align(ref areas[i].Rect);
+					graphics.AddFilledRectangle(areas[i].Rect);
 					graphics.RenderSolid(IconContext.ColorSelectEdit);
 				}
 			}
@@ -362,7 +362,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( this.edited && this.textNavigator.Context.CursorTo != -1 )
 			{
 				Drawing.Point c1, c2;
-				if ( this.textLayout.FindTextCursor(this.textNavigator.Context.CursorTo, this.textNavigator.Context.CursorAfter, out c1, out c2, out this.textNavigator.Context.CursorLine) )
+				if ( this.textLayout.FindTextCursor(this.textNavigator.Context, out c1, out c2) )
 				{
 					graphics.LineWidth = 1.0/iconContext.ScaleX;
 					graphics.AddLine(c1, c2);

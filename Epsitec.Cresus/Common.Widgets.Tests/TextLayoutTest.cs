@@ -210,12 +210,12 @@ namespace Epsitec.Common.Widgets
 		{
 			TextLayout layout = this.NewTextLayout();
 			layout.Text = "<a href=\"x\">Link</a>";
-			Rectangle[] rects = layout.FindTextRange(new Drawing.Point (), 0, 20);
-			Assert.IsNotNull(rects);
-			Assert.AreEqual(1, rects.Length);
+			TextLayout.SelectedArea[] areas = layout.FindTextRange(new Drawing.Point (), 0, 20);
+			Assert.IsNotNull(areas);
+			Assert.AreEqual(1, areas.Length);
 			
-			double x = (rects[0].Left + rects[0].Right) / 2;
-			double y = (rects[0].Bottom + rects[0].Top) / 2;
+			double x = (areas[0].Rect.Left + areas[0].Rect.Right) / 2;
+			double y = (areas[0].Rect.Bottom + areas[0].Rect.Top) / 2;
 			string anchor = layout.DetectAnchor(new Point(x, y));
 			Assert.IsNotNull(anchor);
 			Assert.AreEqual("x", anchor);
@@ -358,11 +358,11 @@ namespace Epsitec.Common.Widgets
 			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
 			e.Graphics.RenderSolid(Color.FromBrightness(1));
 
-			Rectangle[] rects = layout.FindTextRange(pos, 0, layout.Text.Length);
-			for ( int i=0 ; i<rects.Length ; i++ )
+			TextLayout.SelectedArea[] areas = layout.FindTextRange(pos, 0, layout.Text.Length);
+			for ( int i=0 ; i<areas.Length ; i++ )
 			{
-				e.Graphics.Align (ref rects[i]);
-				e.Graphics.AddFilledRectangle(rects[i].Left, rects[i].Bottom, rects[i].Width, rects[i].Height);
+				e.Graphics.Align(ref areas[i].Rect);
+				e.Graphics.AddFilledRectangle(areas[i].Rect.Left, areas[i].Rect.Bottom, areas[i].Rect.Width, areas[i].Rect.Height);
 				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
 			}
 
@@ -384,11 +384,11 @@ namespace Epsitec.Common.Widgets
 			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
 			e.Graphics.RenderSolid(Color.FromBrightness(1));
 
-			Rectangle[] rects = layout.FindTextRange(pos, 0, layout.Text.Length);
-			for ( int i=0 ; i<rects.Length ; i++ )
+			TextLayout.SelectedArea[] areas = layout.FindTextRange(pos, 0, layout.Text.Length);
+			for ( int i=0 ; i<areas.Length ; i++ )
 			{
-				e.Graphics.Align (ref rects[i]);
-				e.Graphics.AddFilledRectangle(rects[i].Left, rects[i].Bottom, rects[i].Width, rects[i].Height);
+				e.Graphics.Align(ref areas[i].Rect);
+				e.Graphics.AddFilledRectangle(areas[i].Rect.Left, areas[i].Rect.Bottom, areas[i].Rect.Width, areas[i].Rect.Height);
 				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
 			}
 
@@ -410,11 +410,11 @@ namespace Epsitec.Common.Widgets
 			e.Graphics.AddFilledRectangle(pos.X, pos.Y, layout.LayoutSize.Width, layout.LayoutSize.Height);
 			e.Graphics.RenderSolid(Color.FromBrightness(1));
 
-			Rectangle[] rects = layout.FindTextRange(pos, 0, layout.Text.Length);
-			for ( int i=0 ; i<rects.Length ; i++ )
+			TextLayout.SelectedArea[] areas = layout.FindTextRange(pos, 0, layout.Text.Length);
+			for ( int i=0 ; i<areas.Length ; i++ )
 			{
-				e.Graphics.Align (ref rects[i]);
-				e.Graphics.AddFilledRectangle(rects[i].Left, rects[i].Bottom, rects[i].Width, rects[i].Height);
+				e.Graphics.Align(ref areas[i].Rect);
+				e.Graphics.AddFilledRectangle(areas[i].Rect.Left, areas[i].Rect.Bottom, areas[i].Rect.Width, areas[i].Rect.Height);
 				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
 			}
 
@@ -437,11 +437,11 @@ namespace Epsitec.Common.Widgets
 			e.Graphics.RenderSolid(Color.FromBrightness(1));
 
 #if false
-			Rectangle[] rects = layout.FindTextRange(pos, 0, layout.Text.Length);
-			for ( int i=0 ; i<rects.Length ; i++ )
+			TextLayout.SelectedArea[] areas = layout.FindTextRange(pos, 0, layout.Text.Length);
+			for ( int i=0 ; i<areas.Length ; i++ )
 			{
-				e.Graphics.Align (ref rects[i]);
-				e.Graphics.AddFilledRectangle(rects[i].Left, rects[i].Bottom, rects[i].Width, rects[i].Height);
+				e.Graphics.Align(ref areas[i].Rect);
+				e.Graphics.AddFilledRectangle(areas[i].Rect.Left, areas[i].Rect.Bottom, areas[i].Rect.Width, areas[i].Rect.Height);
 				e.Graphics.RenderSolid(Color.FromRGB(0,1,0));
 			}
 #endif

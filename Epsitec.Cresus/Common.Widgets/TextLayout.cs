@@ -120,6 +120,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public static Drawing.Color				DefaultColor
+		{
+			get { return TextLayout.defaultColor; }
+			set { TextLayout.defaultColor = value; }
+		}
+
 		public static Drawing.Color				AnchorColor
 		{
 			// Couleur pour les liens.
@@ -546,7 +552,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( context.CursorFrom == context.CursorTo )  // prépare l'insertion ?
 			{
-				int cursor1 = this.FindOffsetFromIndex(context.CursorFrom, true);
+				int cursor1 = this.FindOffsetFromIndex(context.CursorFrom, false);
 				int cursor2 = cursor1;
 				if ( context.PrepareOffset == -1 )  // première préparation ?
 				{
@@ -941,7 +947,7 @@ namespace Epsitec.Common.Widgets
 			// Mémorise la position horizontale du curseur, afin de pouvoir y
 			// revenir en cas de déplacement par lignes.
 			Drawing.Point p1, p2;
-			if ( this.FindTextCursor(context.CursorTo, context.CursorAfter, out p1, out p2, out context.CursorLine) )
+			if ( this.FindTextCursor(context, out p1, out p2) )
 			{
 				context.CursorPosX = p1.X;
 			}
@@ -1008,6 +1014,10 @@ namespace Epsitec.Common.Widgets
 					else
 					{
 						color = block.fontColor;
+						if ( color.IsEmpty )
+						{
+							color = TextLayout.defaultColor;
+						}
 					}
 				}
 				else
@@ -1022,7 +1032,6 @@ namespace Epsitec.Common.Widgets
 				{
 					double ascender  = block.font.Ascender * block.fontSize;
 					double descender = block.font.Descender * block.fontSize;
-					
 					this.OnAnchor(new AnchorEventArgs(x, y+descender, block.width, ascender-descender, block.beginIndex));
 				}
 
@@ -1376,20 +1385,20 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public Drawing.Rectangle[] FindTextRange(Drawing.Point pos, int indexBegin, int indexEnd)
+		public SelectedArea[] FindTextRange(Drawing.Point pos, int indexBegin, int indexEnd)
 		{
 			// Retourne un tableau avec les rectangles englobant le texte
 			// spécifié par son début et sa fin. Il y a un rectangle par ligne.
-			if ( indexBegin >= indexEnd )  return new Drawing.Rectangle[0];
+			if ( indexBegin >= indexEnd )  return new SelectedArea[0];
 
 			this.UpdateLayout();
 
 			System.Collections.ArrayList list = new System.Collections.ArrayList();
-			Drawing.Rectangle rect = new Drawing.Rectangle();
-			rect.Top    = -TextLayout.Infinite;
-			rect.Bottom =  TextLayout.Infinite;
-			rect.Left   =  TextLayout.Infinite;
-			rect.Right  = -TextLayout.Infinite;
+			SelectedArea area = new SelectedArea();
+			area.Rect.Top    = -TextLayout.Infinite;
+			area.Rect.Bottom =  TextLayout.Infinite;
+			area.Rect.Left   =  TextLayout.Infinite;
+			area.Rect.Right  = -TextLayout.Infinite;
 			foreach ( JustifBlock block in this.blocks )
 			{
 				JustifLine line = (JustifLine)this.lines[block.indexLine];
@@ -1402,47 +1411,53 @@ namespace Epsitec.Common.Widgets
 
 				double top    = line.pos.Y+line.ascender;
 				double bottom = line.pos.Y+line.descender;
+				Drawing.Color color = block.fontColor;
 
-				if ( rect.Top    != top    ||
-					 rect.Bottom != bottom )  // rectangle dans autre ligne ?
+				if ( area.Rect.Top    != top    ||
+					 area.Rect.Bottom != bottom ||  // rectangle dans autre ligne ?
+					 area.Color       != color  )
 				{
-					if ( rect.Top > -TextLayout.Infinite && rect.Left < TextLayout.Infinite )
+					if ( area.Rect.Top > -TextLayout.Infinite &&
+						 area.Rect.Left < TextLayout.Infinite )
 					{
-						list.Add(rect);
+						list.Add(area);
 					}
 
-					rect.Top    = top;
-					rect.Bottom = bottom;
-					rect.Left   =  TextLayout.Infinite;
-					rect.Right  = -TextLayout.Infinite;
+					area = new SelectedArea();
+					area.Rect.Top    = top;
+					area.Rect.Bottom = bottom;
+					area.Rect.Left   =  TextLayout.Infinite;
+					area.Rect.Right  = -TextLayout.Infinite;
+					area.Color       = color;
 				}
 
 				if ( block.image )
 				{
-					rect.Left  = System.Math.Min(rect.Left,  block.pos.X);
-					rect.Right = System.Math.Max(rect.Right, block.pos.X+block.width);
+					area.Rect.Left  = System.Math.Min(area.Rect.Left,  block.pos.X);
+					area.Rect.Right = System.Math.Max(area.Rect.Right, block.pos.X+block.width);
 				}
 				else
 				{
-					rect.Left  = System.Math.Min(rect.Left,  this.IndexToPosX(block, localBegin));
-					rect.Right = System.Math.Max(rect.Right, this.IndexToPosX(block, localEnd  ));
+					area.Rect.Left  = System.Math.Min(area.Rect.Left,  this.IndexToPosX(block, localBegin));
+					area.Rect.Right = System.Math.Max(area.Rect.Right, this.IndexToPosX(block, localEnd  ));
 				}
 			}
 			
-			if ( rect.Top > -TextLayout.Infinite && rect.Left < TextLayout.Infinite )
+			if ( area.Rect.Top > -TextLayout.Infinite &&
+				 area.Rect.Left < TextLayout.Infinite )
 			{
-				list.Add(rect);
+				list.Add(area);
 			}
 			
-			Drawing.Rectangle[] rects = new Drawing.Rectangle[list.Count];
-			list.CopyTo(rects);
+			SelectedArea[] areas = new SelectedArea[list.Count];
+			list.CopyTo(areas);
 			
-			for ( int i=0 ; i<rects.Length ; i++ )
+			for ( int i=0 ; i<areas.Length ; i++ )
 			{
-				rects[i].Offset(pos.X, pos.Y);
+				areas[i].Rect.Offset(pos.X, pos.Y);
 			}
 					
-			return rects;
+			return areas;
 		}
 		
 		public Drawing.Point GetLineOrigin(int line)
@@ -1484,17 +1499,17 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		public bool FindTextCursor(int index, bool after,
-								   out Drawing.Point p1, out Drawing.Point p2,
-								   out int rankLine)
+		public bool FindTextCursor(Context context, out Drawing.Point p1, out Drawing.Point p2)
 		{
 			// Retourne les deux extrémités du curseur.
 			// Indique également le numéro de la ligne (0..n).
 			this.UpdateLayout();
 
+			int  index = context.CursorTo;
+			bool after = context.CursorAfter;
 			p1 = new Drawing.Point();
 			p2 = new Drawing.Point();
-			rankLine = -1;
+			context.CursorLine = -1;
 			int i = after ? this.blocks.Count-1 : 0;
 			while ( i >= 0 && i < this.blocks.Count )
 			{
@@ -1514,20 +1529,66 @@ namespace Epsitec.Common.Widgets
 						p1.X = this.IndexToPosX(block, index);
 						p2.X = p1.X;
 					}
-					if ( block.italic )  // incline le curseur ?
+
+					double angle = 0.0;
+					if ( block.italic )
 					{
-						double angle = (90-block.font.CaretSlope)*System.Math.PI/180.0;
+						angle = 90.0-block.font.CaretSlope;
+					}
+					if ( context.PrepareOffset != -1 )
+					{
+						angle = this.ScanItalic(context.PrepareOffset+context.PrepareLength1) ? Drawing.Font.DefaultObliqueAngle : 0.0;
+					}
+					if ( angle != 0.0 )
+					{
+						angle *= System.Math.PI/180.0;  // en radians
 						double f = System.Math.Sin(angle);
 						p2.X += line.ascender*f;
 						p1.X += line.descender*f;
 					}
-					rankLine = line.rank;
+
+					context.CursorLine = line.rank;
 					return true;
 				}
 				i += after ? -1 : 1;
 			}
 
 			return false;
+		}
+
+		protected bool ScanItalic(int offset)
+		{
+			System.Collections.Hashtable parameters;
+			string text = this.Text;
+
+			int from = 0;
+			int to   = offset;
+			bool italic = false;
+			while ( from < to )
+			{
+				Tag tag = TextLayout.ParseTag(text, ref from, out parameters);
+
+				if ( tag == Tag.Italic )
+				{
+					italic = true;
+				}
+
+				if ( tag == Tag.ItalicEnd )
+				{
+					italic = false;
+				}
+
+				if ( tag == Tag.Put )
+				{
+					if ( parameters.ContainsKey("italic") )
+					{
+						string s = (string)parameters["italic"];
+						italic = (s == "yes");
+					}
+				}
+			}
+
+			return italic;
 		}
 
 		public Drawing.Point FindTextEnd()
@@ -2383,7 +2444,7 @@ namespace Epsitec.Common.Widgets
 			fontItem = new FontItem(this);
 			fontItem.fontName  = this.font.FaceName;
 			fontItem.fontSize  = this.fontSize;
-			fontItem.fontColor = Drawing.Color.FromBrightness(0);  // noir
+			fontItem.fontColor = Drawing.Color.Empty;
 
 			fontStack.Push(fontItem);  // push la fonte initiale (jamais de pop)
 
@@ -3331,6 +3392,12 @@ namespace Epsitec.Common.Widgets
 			public int						PrepareLength2 = 0;
 			public int						MaxChar        = 1000;
 		}
+
+		public class SelectedArea
+		{
+			public Drawing.Rectangle	Rect;
+			public Drawing.Color		Color;
+		}
 		
 		public event AnchorEventHandler			Anchor;
 		
@@ -3347,6 +3414,7 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.ContentAlignment		alignment		= Drawing.ContentAlignment.TopLeft;
 		protected System.Collections.ArrayList	blocks			= new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	lines			= new System.Collections.ArrayList();
+		protected static Drawing.Color			defaultColor	= new Drawing.Color(0,0,0);
 		protected static Drawing.Color			anchorColor		= new Drawing.Color(0,0,1);
 		protected static Drawing.Color			waveColor		= new Drawing.Color(1,0,0);
 		protected bool							showLineBreak	= false;

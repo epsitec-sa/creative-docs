@@ -1165,24 +1165,32 @@ namespace Epsitec.Common.Widgets.Adorner
 		
 		// Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 		public void PaintTextSelectionBackground(Drawing.Graphics graphics,
-												 Drawing.Rectangle[] rects,
+												 TextLayout.SelectedArea[] areas,
 												 WidgetState state)
 		{
-			for ( int i=0 ; i<rects.Length ; i++ )
+			for ( int i=0 ; i<areas.Length ; i++ )
 			{
 				if ( (state&WidgetState.Focused) != 0 )
 				{
-					this.PaintImageButton(graphics, rects[i], 33);
+					this.PaintImageButton(graphics, areas[i].Rect, 33);
+
+					if ( areas[i].Color != Drawing.Color.FromBrightness(0) )
+					{
+						Drawing.Rectangle rect = areas[i].Rect;
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(areas[i].Color);
+					}
 				}
 				else
 				{
-					this.PaintImageButton(graphics, rects[i], 38);
+					this.PaintImageButton(graphics, areas[i].Rect, 38);
 				}
 			}
 		}
 
 		public void PaintTextSelectionForeground(Drawing.Graphics graphics,
-												 Drawing.Rectangle[] rects,
+												 TextLayout.SelectedArea[] areas,
 												 WidgetState state)
 		{
 		}
@@ -1196,6 +1204,8 @@ namespace Epsitec.Common.Widgets.Adorner
 										   Drawing.Color backColor)
 		{
 			if ( text == null )  return;
+
+			TextLayout.DefaultColor = this.colorBlack;
 
 			if ( (state&WidgetState.Enabled) != 0 )
 			{

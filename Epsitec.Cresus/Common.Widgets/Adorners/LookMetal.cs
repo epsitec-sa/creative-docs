@@ -1325,15 +1325,23 @@ namespace Epsitec.Common.Widgets.Adorner
 		
 		// Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 		public void PaintTextSelectionBackground(Drawing.Graphics graphics,
-												 Drawing.Rectangle[] rects,
+												 TextLayout.SelectedArea[] areas,
 												 WidgetState state)
 		{
-			for ( int i=0 ; i<rects.Length ; i++ )
+			for ( int i=0 ; i<areas.Length ; i++ )
 			{
-				graphics.AddFilledRectangle(rects[i]);
+				graphics.AddFilledRectangle(areas[i].Rect);
 				if ( (state&WidgetState.Focused) != 0 )
 				{
 					graphics.RenderSolid(this.colorCaption);
+
+					if ( areas[i].Color != Drawing.Color.FromBrightness(0) )
+					{
+						Drawing.Rectangle rect = areas[i].Rect;
+						rect.Deflate(0.5);
+						graphics.AddRectangle(rect);
+						graphics.RenderSolid(areas[i].Color);
+					}
 				}
 				else
 				{
@@ -1343,7 +1351,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		}
 
 		public void PaintTextSelectionForeground(Drawing.Graphics graphics,
-												 Drawing.Rectangle[] rects,
+												 TextLayout.SelectedArea[] areas,
 												 WidgetState state)
 		{
 		}
@@ -1358,11 +1366,13 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			if ( text == null )  return;
 
+			TextLayout.DefaultColor = this.colorBlack;
+
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
 				if ( (state&WidgetState.Selected) != 0 )
 				{
-					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.Empty, Drawing.GlyphPaintStyle.Selected);
+					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorBlack, Drawing.GlyphPaintStyle.Selected);
 				}
 				else
 				{

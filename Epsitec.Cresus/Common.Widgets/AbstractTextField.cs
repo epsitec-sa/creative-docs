@@ -764,7 +764,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.navigator == null ) return;
 
 			Drawing.Point p1, p2;
-			if ( this.TextLayout.FindTextCursor(this.navigator.Context.CursorTo, this.navigator.Context.CursorAfter, out p1, out p2, out this.navigator.Context.CursorLine) )
+			if ( this.TextLayout.FindTextCursor(this.navigator.Context, out p1, out p2) )
 			{
 				Drawing.Rectangle cursor = new Drawing.Rectangle(p1, p2);
 				this.CursorScrollText(cursor, force);
@@ -894,12 +894,13 @@ namespace Epsitec.Common.Widgets
 				
 				if ( this.isCombo && this.navigator.IsReadOnly )
 				{
-					Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
-					rects[0] = rInside;
-					rects[0].Deflate(1, 1);
-					adorner.PaintTextSelectionBackground(graphics, rects, state);
+					TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1];
+					areas[0] = new TextLayout.SelectedArea();
+					areas[0].Rect = rInside;
+					areas[0].Rect.Deflate(1, 1);
+					adorner.PaintTextSelectionBackground(graphics, areas, state);
 					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.BackColor);
-					adorner.PaintFocusBox(graphics, rects[0]);
+					adorner.PaintFocusBox(graphics, areas[0].Rect);
 				}
 				else if ( from == to )
 				{
@@ -915,19 +916,19 @@ namespace Epsitec.Common.Widgets
 					
 					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state&~(WidgetState.Focused|WidgetState.Selected), PaintTextStyle.TextField, this.BackColor);
 					
-					Drawing.Rectangle[] rects = this.TextLayout.FindTextRange(pos, from, to);
+					TextLayout.SelectedArea[] areas = this.TextLayout.FindTextRange(pos, from, to);
 					
-					for ( int i=0 ; i<rects.Length ; i++ )
+					for ( int i=0 ; i<areas.Length ; i++ )
 					{
-						rects[i].Offset(0, -1);
-						graphics.Align(ref rects[i]);
+						areas[i].Rect.Offset(0, -1);
+						graphics.Align(ref areas[i].Rect);
 					}
+					adorner.PaintTextSelectionBackground(graphics, areas, state);
 					
-					adorner.PaintTextSelectionBackground(graphics, rects, state);
-					
-					for ( int i=0 ; i<rects.Length ; i++ )
+					Drawing.Rectangle[] rects = new Drawing.Rectangle[areas.Length];
+					for ( int i=0 ; i<areas.Length ; i++ )
 					{
-						rects[i] = this.MapClientToRoot(rects[i]);
+						rects[i] = this.MapClientToRoot(areas[i].Rect);
 					}
 					graphics.SetClippingRectangles(rects);
 
@@ -938,7 +939,7 @@ namespace Epsitec.Common.Widgets
 				{
 					// Dessine le curseur :
 					Drawing.Point p1, p2;
-					if ( this.TextLayout.FindTextCursor(this.navigator.Context.CursorTo, this.navigator.Context.CursorAfter, out p1, out p2, out this.navigator.Context.CursorLine) )
+					if ( this.TextLayout.FindTextCursor(this.navigator.Context, out p1, out p2) )
 					{
 						p1 += pos;
 						p2 += pos;

@@ -2266,29 +2266,44 @@ namespace Epsitec.Common.Widgets
 		
 		internal void SimulatePressed()
 		{
-			this.OnPressed (null);
+			if (this.IsEnabled)
+			{
+				this.OnPressed (null);
+			}
 		}
 		
 		internal void SimulateReleased()
 		{
-			this.OnReleased (null);
+			if (this.IsEnabled)
+			{
+				this.OnReleased (null);
+			}
 		}
 		
 		internal void SimulateClicked()
 		{
-			this.OnClicked (null);
+			if (this.IsEnabled)
+			{
+				this.OnClicked (null);
+			}
 		}
 		
 		internal void SimulateFocused()
 		{
-			this.OnFocused ();
-			this.Invalidate ();
+			if (this.IsEnabled)
+			{
+				this.OnFocused ();
+				this.Invalidate ();
+			}
 		}
 		
 		internal void SimulateDefocused()
 		{
-			this.OnDefocused ();
-			this.Invalidate ();
+			if (this.IsEnabled)
+			{
+				this.OnDefocused ();
+				this.Invalidate ();
+			}
 		}
 		
 		

@@ -496,14 +496,15 @@ namespace Epsitec.Common.Widgets
 				if ( i+this.firstLine == this.selectedLine &&
 					 (state&WidgetState.Enabled) != 0 )
 				{
-					Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
-					rects[0].Left   = ScrollList.Margin;
-					rects[0].Width  = this.GetTextWidth();
-					rects[0].Left  += adorner.GeometrySelectedLeftMargin;
-					rects[0].Right += adorner.GeometrySelectedRightMargin;
-					rects[0].Bottom = pos.Y;
-					rects[0].Height = this.lineHeight;
-					adorner.PaintTextSelectionBackground(graphics, rects, state);
+					TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1];
+					areas[0] = new TextLayout.SelectedArea();
+					areas[0].Rect.Left   = ScrollList.Margin;
+					areas[0].Rect.Width  = this.GetTextWidth();
+					areas[0].Rect.Left  += adorner.GeometrySelectedLeftMargin;
+					areas[0].Rect.Right += adorner.GeometrySelectedRightMargin;
+					areas[0].Rect.Bottom = pos.Y;
+					areas[0].Rect.Height = this.lineHeight;
+					adorner.PaintTextSelectionBackground(graphics, areas, state);
 
 					state |= WidgetState.Selected;
 				}
