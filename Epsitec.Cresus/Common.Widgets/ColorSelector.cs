@@ -25,21 +25,21 @@ namespace Epsitec.Common.Widgets
 					this.fields[i].MinRange = 0;
 					this.fields[i].MaxRange = 255;
 					this.fields[i].Step = 10;
-					this.fields[i].TextChanged += new EventHandler(this.HandleTextRGBChanged);
+					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextRGBChanged);
 				}
 				else if ( i == 4 )
 				{
 					this.fields[i].MinRange = 0;
 					this.fields[i].MaxRange = 360;
 					this.fields[i].Step = 15;
-					this.fields[i].TextChanged += new EventHandler(this.HandleTextHSVChanged);
+					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextHSVChanged);
 				}
 				else
 				{
 					this.fields[i].MinRange = 0;
 					this.fields[i].MaxRange = 100;
 					this.fields[i].Step = 5;
-					this.fields[i].TextChanged += new EventHandler(this.HandleTextHSVChanged);
+					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextHSVChanged);
 				}
 			}
 			this.fields[0].Color = Drawing.Color.FromRGB(1,0,0);
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Widgets
 			this.labels[6].Text = "L";
 
 			this.circle = new ColorWheel(this);
-			this.circle.Changed += new EventHandler(this.HandleCircleChanged);
+			this.circle.Changed += new Support.EventHandler(this.HandleCircleChanged);
 
 			this.nbPalette = 16;
 			this.palette = new ColorSample[this.nbPalette];
@@ -107,21 +107,21 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( i < 4 )
 					{
-						this.fields[i].TextChanged -= new EventHandler(this.HandleTextRGBChanged);
+						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextRGBChanged);
 					}
 					else if ( i == 4 )
 					{
-						this.fields[i].TextChanged -= new EventHandler(this.HandleTextHSVChanged);
+						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextHSVChanged);
 					}
 					else
 					{
-						this.fields[i].TextChanged -= new EventHandler(this.HandleTextHSVChanged);
+						this.fields[i].TextChanged -= new Support.EventHandler(this.HandleTextHSVChanged);
 					}
 				}
 				
 				if ( this.circle != null )
 				{
-					this.circle.Changed -= new EventHandler(this.HandleCircleChanged);
+					this.circle.Changed -= new Support.EventHandler(this.HandleCircleChanged);
 				}
 
 				foreach ( ColorSample cs in this.palette )
@@ -383,7 +383,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public event EventHandler Changed;
+		public event Support.EventHandler	Changed;
 		
 
 		protected Drawing.Color				colorBlack;
