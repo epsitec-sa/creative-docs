@@ -3,7 +3,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe TextFieldCombo implémente la ligne éditable avec bouton "v".
 	/// </summary>
-	public class TextFieldCombo : AbstractTextField, Helpers.IStringCollectionHost, Support.INamedStringSelection
+	public class TextFieldCombo : AbstractTextField, Helpers.IStringCollectionHost, Support.Data.INamedStringSelection
 	{
 		public TextFieldCombo()
 		{

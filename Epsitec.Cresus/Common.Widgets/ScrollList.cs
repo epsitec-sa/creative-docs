@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe ScrollList réalise une liste déroulante simple.
 	/// </summary>
-	public class ScrollList : Widget, Helpers.IStringCollectionHost, Support.INamedStringSelection
+	public class ScrollList : Widget, Helpers.IStringCollectionHost, Support.Data.INamedStringSelection
 	{
 		public ScrollList()
 		{
