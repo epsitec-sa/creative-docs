@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		internal override void SerialiseXmlAttributes(System.Text.StringBuilder buffer, bool full)
+		internal override void SerializeXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{
 			buffer.Append (@" length=""");
 			buffer.Append (this.length.ToString (System.Globalization.CultureInfo.InvariantCulture));
@@ -49,12 +49,12 @@ namespace Epsitec.Cresus.Database
 				buffer.Append (@"""");
 			}
 			
-			base.SerialiseXmlAttributes (buffer, full);
+			base.SerializeXmlAttributes (buffer, full);
 		}
 		
-		internal override void DeserialiseXmlAttributes(System.Xml.XmlElement xml)
+		internal override void DeserializeXmlAttributes(System.Xml.XmlElement xml)
 		{
-			base.DeserialiseXmlAttributes (xml);
+			base.DeserializeXmlAttributes (xml);
 			
 			string arg_length = xml.GetAttribute ("length");
 			string arg_fixed  = xml.GetAttribute ("fixed");
