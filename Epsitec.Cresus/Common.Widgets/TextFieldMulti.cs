@@ -7,10 +7,12 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldMulti()
 		{
+			this.textStyle = TextFieldStyle.Multi;
+
 			this.scroller = new VScroller(this);
 			this.scroller.SetEnabled(false);
 			this.scroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
-			this.scroller.Dock = DockStyle.Right;
+			//this.scroller.Dock = DockStyle.Right;
 			
 			this.rightMargin = this.scroller.Width;
 		}
@@ -32,6 +34,22 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 		
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry();
+			
+			if ( this.scroller != null )
+			{
+				IAdorner adorner = Widgets.Adorner.Factory.Active;
+				Drawing.Rectangle rect = new Drawing.Rectangle();
+				rect.Left   = this.Bounds.Width-this.rightMargin-adorner.GeometryScrollerRightMargin;
+				rect.Right  = this.Bounds.Width-adorner.GeometryScrollerRightMargin;
+				rect.Bottom = adorner.GeometryScrollerBottomMargin;
+				rect.Top    = this.Bounds.Height-adorner.GeometryScrollerTopMargin;
+				this.scroller.Bounds = rect;
+			}
+		}
+
 		protected override void CursorScrollTextEnd(Drawing.Point end, Drawing.Rectangle cursor)
 		{
 			double offset = cursor.Bottom;
