@@ -287,14 +287,20 @@ namespace Epsitec.Common.Printing
 		
 		public void PaintOutline(Drawing.Path path)
 		{
-			this.UpdatePen ();
-			this.graphics.DrawPath (this.pen, path.CreateSystemPath ());
+			if (path != null)
+			{
+				this.UpdatePen ();
+				this.graphics.DrawPath (this.pen, path.CreateSystemPath ());
+			}
 		}
 		
 		public void PaintSurface(Drawing.Path path)
 		{
-			this.UpdateBrush ();
-			this.graphics.FillPath (this.brush, path.CreateSystemPath ());
+			if (path != null)
+			{
+				this.UpdateBrush ();
+				this.graphics.FillPath (this.brush, path.CreateSystemPath ());
+			}
 		}
 		
 		
