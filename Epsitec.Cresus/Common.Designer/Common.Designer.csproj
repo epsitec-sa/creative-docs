@@ -188,17 +188,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Editors\AbsPosWidgetEdit.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Editors\AbstractPropEdit.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Editors\AbstractWidgetEdit.cs"
+                    RelPath = "Editors\WidgetEditor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

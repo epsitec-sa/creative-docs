@@ -73,16 +73,16 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		public Editors.AbstractWidgetEdit[]		Editors
+		public Editors.WidgetEditor[]			WidgetEditors
 		{
 			get
 			{
-				Editors.AbstractWidgetEdit[] editors = new Editors.AbstractWidgetEdit[this.edit_window_list.Count];
+				Editors.WidgetEditor[] editors = new Editors.WidgetEditor[this.edit_window_list.Count];
 				int i = 0;
 				
 				foreach (Window window in this.edit_window_list)
 				{
-					editors[i++] = this.FindEditor (window);
+					editors[i++] = Editors.WidgetEditor.FromWindow (window);
 				}
 				
 				return editors;
@@ -212,12 +212,6 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		protected Editors.AbstractWidgetEdit FindEditor(Window window)
-		{
-			return window == null ? null : window.GetProperty ("$editor") as Editors.AbstractWidgetEdit;
-		}
-		
-		
 		private void HandleSourceDragBegin(object sender)
 		{
 			System.Diagnostics.Debug.Assert (this.widget_palette == sender);
@@ -228,7 +222,7 @@ namespace Epsitec.Common.Designer
 			//	Quand on commence une opération de drag & drop depuis la palette des widgets, on commence
 			//	par dé-sélectionner tous les widgets de toutes les fenêtres :
 			
-			Editors.AbstractWidgetEdit[] editors = this.Editors;
+			Editors.WidgetEditor[] editors = this.WidgetEditors;
 			
 			for (int i = 0; i < editors.Length; i++)
 			{
@@ -246,7 +240,7 @@ namespace Epsitec.Common.Designer
 			
 			if (widget != null)
 			{
-				Editors.AbstractWidgetEdit editor = this.FindEditor (widget.Window);
+				Editors.WidgetEditor editor = Editors.WidgetEditor.FromWidget (widget);
 				
 				System.Diagnostics.Debug.Assert (editor != null);
 				System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Count == 0);
@@ -257,8 +251,8 @@ namespace Epsitec.Common.Designer
 		
 		private void HandleEditorSelected(object sender, object o)
 		{
-			Editors.AbstractWidgetEdit editor = sender as Editors.AbstractWidgetEdit;
-			Widget			           widget = o as Widget;
+			Editors.WidgetEditor editor = sender as Editors.WidgetEditor;
+			Widget			     widget = o as Widget;
 			
 			System.Diagnostics.Debug.Assert (editor != null);
 			System.Diagnostics.Debug.Assert (widget != null);
@@ -276,8 +270,8 @@ namespace Epsitec.Common.Designer
 		
 		private void HandleEditorDeselected(object sender, object o)
 		{
-			Editors.AbstractWidgetEdit editor = sender as Editors.AbstractWidgetEdit;
-			Widget			           widget = o as Widget;
+			Editors.WidgetEditor editor = sender as Editors.WidgetEditor;
+			Widget			     widget = o as Widget;
 			
 			System.Diagnostics.Debug.Assert (editor != null);
 			System.Diagnostics.Debug.Assert (widget != null);
@@ -291,8 +285,8 @@ namespace Epsitec.Common.Designer
 		
 		private void HandleEditWindowWindowActivated(object sender)
 		{
-			Window			           window = sender as Window;
-			Editors.AbstractWidgetEdit editor = this.FindEditor (window);
+			Window			     window = sender as Window;
+			Editors.WidgetEditor editor = Editors.WidgetEditor.FromWindow (window);
 			
 			System.Diagnostics.Debug.Assert (window != null);
 			System.Diagnostics.Debug.Assert (editor != null);
@@ -360,7 +354,7 @@ namespace Epsitec.Common.Designer
 		
 		
 		
-		protected void SetActiveEditor(Editors.AbstractWidgetEdit editor)
+		protected void SetActiveEditor(Editors.WidgetEditor editor)
 		{
 			//	Change d'éditeur actif. Si on change d'éditeur, on s'assure qu'aucune
 			//	sélection n'est encore active dans un autre éditeur :
@@ -371,7 +365,7 @@ namespace Epsitec.Common.Designer
 				
 				foreach (Window window in this.edit_window_list)
 				{
-					editor = this.FindEditor (window);
+					editor = Editors.WidgetEditor.FromWindow (window);
 					
 					if (editor != this.active_editor)
 					{
@@ -412,7 +406,7 @@ namespace Epsitec.Common.Designer
 				this.StateTabIndexSetter.ActiveState = enable ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 				this.tool_tab_setter_active          = enable;
 				
-				this.SetTabIndexSetter (this.Editors);
+				this.SetTabIndexSetter (this.WidgetEditors);
 				this.SetTabIndexPicker (false);
 				this.UpdateTabIndexIcons ();
 			}
@@ -425,12 +419,12 @@ namespace Epsitec.Common.Designer
 				this.StateTabIndexPicker.ActiveState = enable ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 				this.tool_tab_picker_active          = enable;
 				
-				this.SetTabIndexPicker (this.Editors);
+				this.SetTabIndexPicker (this.WidgetEditors);
 				this.UpdateTabIndexIcons ();
 			}
 		}
 				
-		protected void SetTabIndexSetter(Editors.AbstractWidgetEdit[] editors)
+		protected void SetTabIndexSetter(Editors.WidgetEditor[] editors)
 		{
 			for (int i = 0; i < editors.Length; i++)
 			{
@@ -438,7 +432,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		protected void SetTabIndexPicker(Editors.AbstractWidgetEdit[] editors)
+		protected void SetTabIndexPicker(Editors.WidgetEditor[] editors)
 		{
 			for (int i = 0; i < editors.Length; i++)
 			{
@@ -446,7 +440,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		protected void ResetTabIndexSeq(Editors.AbstractWidgetEdit[] editors)
+		protected void ResetTabIndexSeq(Editors.WidgetEditor[] editors)
 		{
 			for (int i = 0; i < editors.Length; i++)
 			{
@@ -457,28 +451,21 @@ namespace Epsitec.Common.Designer
 		
 		[Command ("CreateNewWindow")]			void CommandCreateNewWindow()
 		{
-			Window     window  = new Window ();
-			Scrollable surface = new Scrollable ();
+			Window window = new Window ();
 			
 			window.ClientSize = new Drawing.Size (400, 300);
-			
-			surface.Dock   = DockStyle.Fill;
-			surface.Parent = window.Root;
-			surface.IsEditionEnabled = true;
+			window.Root.IsEditionEnabled = true;
 			
 			this.edit_window_list.Add (window);
 			
-			Editors.AbsPosWidgetEdit editor = new Editors.AbsPosWidgetEdit ();
+			Editors.WidgetEditor editor = new Editors.WidgetEditor ();
 			
-			editor.Panel = surface.Panel;
 			editor.Root  = window.Root;
 			
 			editor.Selected   += new SelectionEventHandler (this.HandleEditorSelected);
 			editor.Deselected += new SelectionEventHandler (this.HandleEditorDeselected);
 			
 			window.WindowActivated += new Support.EventHandler (this.HandleEditWindowWindowActivated);
-			
-			window.SetProperty ("$editor", editor);
 			window.Show ();
 		}
 		
@@ -503,23 +490,21 @@ namespace Epsitec.Common.Designer
 			Support.ObjectBundler  bundler = new Support.ObjectBundler ();
 			Support.ResourceBundle bundle  = Support.Resources.GetBundle ("file:test");
 			
-			Widget     root    = bundler.CreateFromBundle (bundle) as Widget;
-			Window     window  = root.Window;
-			Scrollable surface = root.Children[0] as Scrollable;
+			Widget root   = bundler.CreateFromBundle (bundle) as Widget;
+			Window window = root.Window;
+			
+			root.IsEditionEnabled = true;
 			
 			this.edit_window_list.Add (window);
 			
-			Editors.AbsPosWidgetEdit editor = new Editors.AbsPosWidgetEdit ();
+			Editors.WidgetEditor editor = new Editors.WidgetEditor ();
 			
-			editor.Panel = surface.Panel;
 			editor.Root  = window.Root;
 			
 			editor.Selected   += new SelectionEventHandler (this.HandleEditorSelected);
 			editor.Deselected += new SelectionEventHandler (this.HandleEditorDeselected);
 			
 			window.WindowActivated += new Support.EventHandler (this.HandleEditWindowWindowActivated);
-			
-			window.SetProperty ("$editor", editor);
 			window.Show ();
 		}
 		
@@ -573,7 +558,7 @@ namespace Epsitec.Common.Designer
 		[Command ("TabIndexResetSeq")]			void CommandTabIndexResetSeq()
 		{
 			this.SetTabIndexPicker (false);
-			this.ResetTabIndexSeq (this.Editors);
+			this.ResetTabIndexSeq (this.WidgetEditors);
 		}
 		
 		[Command ("TabIndexStartSeq")]			void CommandTabIndexStartSeq()
@@ -581,7 +566,7 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert (this.active_editor != null);
 			
 			this.SetTabIndexPicker (false);
-			this.ResetTabIndexSeq (this.Editors);
+			this.ResetTabIndexSeq (this.WidgetEditors);
 			this.active_editor.StartTabIndexSeq ();
 		}
 		
@@ -612,7 +597,7 @@ namespace Epsitec.Common.Designer
 		protected System.Collections.ArrayList	edit_window_list;
 		
 		protected Window						active_window;
-		protected Editors.AbstractWidgetEdit	active_editor;
+		protected Editors.WidgetEditor			active_editor;
 		protected Widget						active_widget;
 	}
 }

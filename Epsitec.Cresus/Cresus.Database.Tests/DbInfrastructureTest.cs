@@ -312,11 +312,9 @@ namespace Epsitec.Cresus.Database
 		
 		public static void DisplayDataSet(DbInfrastructure infrastructure, string name, System.Data.DataTable table)
 		{
-			DbInfrastructureTest.display.AddTable (name, table);
-			DbInfrastructureTest.display.ShowWindow ();
+//			DbInfrastructureTest.display.AddTable (name, table);
+//			DbInfrastructureTest.display.ShowWindow ();
 		}
 		#endregion
-		
-		static UserInterface.Debugging.DataSetDisplay	display = new UserInterface.Debugging.DataSetDisplay ();
 	}
 }
