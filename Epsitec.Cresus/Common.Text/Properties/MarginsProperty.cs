@@ -12,14 +12,27 @@ namespace Epsitec.Common.Text.Properties
 		{
 			this.left_margin_first_line = double.NaN;
 			this.left_margin_body       = double.NaN;
-			this.right_margin           = double.NaN;
+			
+			this.right_margin_first_line = double.NaN;
+			this.right_margin_body       = double.NaN;
 		}
 		
-		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin1)
+		public MarginsProperty(double left_margin, double right_margin)
+		{
+			this.left_margin_first_line = left_margin;
+			this.left_margin_body       = left_margin;
+			
+			this.right_margin_first_line = right_margin;
+			this.right_margin_body       = right_margin;
+		}
+		
+		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body)
 		{
 			this.left_margin_first_line = left_margin_first_line;
 			this.left_margin_body       = left_margin_body;
-			this.right_margin           = right_margin;
+			
+			this.right_margin_first_line = right_margin_first_line;
+			this.right_margin_body       = right_margin_body;
 		}
 		
 		
@@ -72,17 +85,33 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
-		public double							RightMargin
+		public double							RightMarginFirstLine
 		{
 			get
 			{
-				return this.right_margin;
+				return this.right_margin_first_line;
 			}
 			set
 			{
-				if (NumberSupport.Different (this.right_margin, value))
+				if (NumberSupport.Different (this.right_margin_first_line, value))
 				{
-					this.right_margin = value;
+					this.right_margin_first_line = value;
+					this.Invalidate ();
+				}
+			}
+		}
+		
+		public double							RightMarginBody
+		{
+			get
+			{
+				return this.right_margin_body;
+			}
+			set
+			{
+				if (NumberSupport.Different (this.right_margin_body, value))
+				{
+					this.right_margin_body = value;
 					this.Invalidate ();
 				}
 			}
@@ -94,18 +123,20 @@ namespace Epsitec.Common.Text.Properties
 			SerializerSupport.Join (buffer,
 				/**/				SerializerSupport.SerializeDouble (this.left_margin_first_line),
 				/**/				SerializerSupport.SerializeDouble (this.left_margin_body),
-				/**/				SerializerSupport.SerializeDouble (this.right_margin));
+				/**/				SerializerSupport.SerializeDouble (this.right_margin_first_line),
+				/**/				SerializerSupport.SerializeDouble (this.right_margin_body));
 		}
 		
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 3);
+			Debug.Assert.IsTrue (args.Length == 4);
 			
-			this.left_margin_first_line = SerializerSupport.DeserializeDouble (args[0]);
-			this.left_margin_body       = SerializerSupport.DeserializeDouble (args[1]);
-			this.right_margin           = SerializerSupport.DeserializeDouble (args[2]);
+			this.left_margin_first_line  = SerializerSupport.DeserializeDouble (args[0]);
+			this.left_margin_body        = SerializerSupport.DeserializeDouble (args[1]);
+			this.right_margin_first_line = SerializerSupport.DeserializeDouble (args[2]);
+			this.right_margin_body       = SerializerSupport.DeserializeDouble (args[3]);
 		}
 		
 		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
@@ -116,9 +147,10 @@ namespace Epsitec.Common.Text.Properties
 			MarginsProperty b = property as MarginsProperty;
 			MarginsProperty c = new MarginsProperty ();
 			
-			c.left_margin_first_line = NumberSupport.Combine (a.left_margin_first_line, b.left_margin_first_line);
-			c.left_margin_body       = NumberSupport.Combine (a.left_margin_body,       b.left_margin_body);
-			c.right_margin           = NumberSupport.Combine (a.right_margin,           b.right_margin);
+			c.left_margin_first_line  = NumberSupport.Combine (a.left_margin_first_line,  b.left_margin_first_line);
+			c.left_margin_body        = NumberSupport.Combine (a.left_margin_body,        b.left_margin_body);
+			c.right_margin_first_line = NumberSupport.Combine (a.right_margin_first_line, b.right_margin_first_line);
+			c.right_margin_body       = NumberSupport.Combine (a.right_margin_body,       b.right_margin_body);
 			
 			return c;
 		}
@@ -127,7 +159,8 @@ namespace Epsitec.Common.Text.Properties
 		{
 			checksum.UpdateValue (this.left_margin_first_line);
 			checksum.UpdateValue (this.left_margin_body);
-			checksum.UpdateValue (this.right_margin);
+			checksum.UpdateValue (this.right_margin_first_line);
+			checksum.UpdateValue (this.right_margin_body);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -138,9 +171,10 @@ namespace Epsitec.Common.Text.Properties
 		
 		private static bool CompareEqualContents(MarginsProperty a, MarginsProperty b)
 		{
-			if ((a.left_margin_first_line == b.left_margin_first_line) &&
-				(a.left_margin_body       == b.left_margin_body) &&
-				(a.right_margin           == b.right_margin))
+			if ((a.left_margin_first_line  == b.left_margin_first_line) &&
+				(a.left_margin_body        == b.left_margin_body) &&
+				(a.right_margin_first_line == b.right_margin_first_line) &&
+				(a.right_margin_body       == b.right_margin_body))
 			{
 				return true;
 			}
@@ -151,6 +185,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		private double							left_margin_first_line;
 		private double							left_margin_body;
-		private double							right_margin;
+		private double							right_margin_first_line;
+		private double							right_margin_body;
 	}
 }

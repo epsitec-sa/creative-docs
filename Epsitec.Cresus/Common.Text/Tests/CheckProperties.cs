@@ -59,32 +59,35 @@ namespace Epsitec.Common.Text.Tests
 		private static void TestMargins()
 		{
 			Properties.MarginsProperty margins_a = new Properties.MarginsProperty ();
-			Properties.MarginsProperty margins_b = new Properties.MarginsProperty (15.0, 20.0, 0.0);
+			Properties.MarginsProperty margins_b = new Properties.MarginsProperty (15.0, 20.0, 0.0, 0.0);
 			
 			Properties.MarginsProperty margins_c = margins_a.GetCombination (margins_b) as Properties.MarginsProperty;
 			Properties.MarginsProperty margins_d = margins_b.GetCombination (margins_a) as Properties.MarginsProperty;
 			
-			margins_a.LeftMarginBody = 10;
-			margins_a.RightMargin    = 10;
+			margins_a.LeftMarginBody  = 10;
+			margins_a.RightMarginBody = 10;
 			
 			Properties.MarginsProperty margins_e = margins_a.GetCombination (margins_b) as Properties.MarginsProperty;
 			Properties.MarginsProperty margins_f = margins_b.GetCombination (margins_a) as Properties.MarginsProperty;
 			
 			Debug.Assert.IsTrue (margins_c.LeftMarginFirstLine == 15.0);
 			Debug.Assert.IsTrue (margins_c.LeftMarginBody      == 20.0);
-			Debug.Assert.IsTrue (margins_c.RightMargin         ==  0.0);
+			Debug.Assert.IsTrue (margins_c.RightMarginBody     ==  0.0);
 			
 			Debug.Assert.IsTrue (margins_d.LeftMarginFirstLine == 15.0);
 			Debug.Assert.IsTrue (margins_d.LeftMarginBody      == 20.0);
-			Debug.Assert.IsTrue (margins_d.RightMargin         ==  0.0);
+			Debug.Assert.IsTrue (margins_d.RightMarginBody     ==  0.0);
 			
 			Debug.Assert.IsTrue (margins_e.LeftMarginFirstLine == 15.0);
 			Debug.Assert.IsTrue (margins_e.LeftMarginBody      == 20.0);
-			Debug.Assert.IsTrue (margins_e.RightMargin         ==  0.0);
+			Debug.Assert.IsTrue (margins_e.RightMarginBody     ==  0.0);
 			
 			Debug.Assert.IsTrue (margins_f.LeftMarginFirstLine == 15.0);
 			Debug.Assert.IsTrue (margins_f.LeftMarginBody      == 10.0);
-			Debug.Assert.IsTrue (margins_f.RightMargin         == 10.0);
+			Debug.Assert.IsTrue (margins_f.RightMarginBody     == 10.0);
+			
+			Debug.Assert.IsTrue (margins_a.ToString () == "<NaN>/10/<NaN>/10");
+			Debug.Assert.IsTrue (margins_b.ToString () == "15/20/0/0");
 		}
 		
 		private static void Ex1()
