@@ -3,8 +3,6 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public delegate void PaintFrameCallback(Panel panel, Drawing.Graphics graphics, Drawing.Rectangle frame_outside, Drawing.Rectangle frame_inside);
-	
 	/// <summary>
 	/// La classe Panel est un widget qui permet de grouper d'autres widgets
 	/// tout en limitant la surface affichée à une ouverture (aperture).
@@ -131,41 +129,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected override void PaintForegroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clip_rect)
-		{
-#if false
-			if ((this.aperture.IsValid) &&
-				(this.PaintFrameCallback != null))
-			{
-				//	Une ouverture a été définie, il faut donc donner l'occasion à des
-				//	éventuels décorateurs de peindre dans le cadre.
-				
-				Drawing.Rectangle frame_inside  = this.aperture;
-				Drawing.Rectangle frame_outside = Drawing.Rectangle.Inflate (frame_inside, this.frame_margins);
-				
-				Drawing.Rectangle old_clip = graphics.SaveClippingRectangle ();
-				Drawing.Rectangle new_clip = this.MapClientToRoot (frame_outside);
-				
-				base.PaintForegroundImplementation (graphics, clip_rect);
-				
-				graphics.RestoreClippingRectangle (new_clip);
-				this.PaintFrameCallback (this, graphics, frame_outside, frame_inside);
-				graphics.RestoreClippingRectangle (old_clip);
-			}
-			else
-			{
-				base.PaintForegroundImplementation (graphics, clip_rect);
-			}
-#else
-			base.PaintForegroundImplementation (graphics, clip_rect);
-			
-			graphics.AddRectangle (20, 20, 3, 3);
-			graphics.RenderSolid (Drawing.Color.FromRGB (0.4, 0, 0));
-#endif
-		}
-		
-		
-		
 		protected virtual void OnSurfaceSizeChanged()
 		{
 			if (this.SurfaceSizeChanged != null)
@@ -175,7 +138,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event PaintFrameCallback		PaintFrameCallback;
 		public event EventHandler			SurfaceSizeChanged;
 		
 		
