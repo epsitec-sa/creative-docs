@@ -203,6 +203,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Editors\DataWidgetPropEdit1.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Editors\WidgetEditor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -71,6 +71,10 @@ namespace Epsitec.Common.Designer.Editors
 			{
 				list.Add (typeof (WindowPropEdit1));
 			}
+			else if (type == typeof (Common.UI.Widgets.DataWidget))
+			{
+				list.Add (typeof (DataWidgetPropEdit1));
+			}
 			else if (type.IsSubclassOf (typeof (Widget)))
 			{
 				list.Add (typeof (WidgetPropEdit1));

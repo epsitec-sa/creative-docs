@@ -479,7 +479,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public WindowStyles						WindowStyles
+		internal WindowStyles					WindowStyles
 		{
 			get
 			{
@@ -491,7 +491,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public WindowType						WindowType
+		internal WindowType						WindowType
 		{
 			get
 			{

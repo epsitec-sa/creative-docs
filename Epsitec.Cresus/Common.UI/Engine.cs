@@ -193,32 +193,24 @@ namespace Epsitec.Common.UI
 			
 			if (enum_type != null)
 			{
-				if (widget is Common.Widgets.CheckButton)
+				Adapters.DecimalAdapter adapter = new Adapters.DecimalAdapter (binder);
+				
+				if ((widget is Common.Widgets.CheckButton) &&
+					(widget.Index != 0))
 				{
 					//	C'est un cas particulier: un bouton de type "check box" permet de définir
 					//	l'état d'un bit d'une énumération représentant un bitset. Dans un tel cas,
-					//	le nom du bouton détermine le nom du bit, et le lien se fait nécessairement
-					//	par une représentation textuelle.
-					
-					//	TODO: gérer aussi sous forme numérique ???
-					
-					Adapters.StringAdapter adapter = new Adapters.StringAdapter (binder);
+					//	l'index du bouton détermine la valeur du bit.
 					
 					new Controllers.WidgetFlagController (adapter, widget, null, enum_type);
 				}
+				else if (widget is Support.Data.INamedStringSelection)
+				{
+					new Controllers.WidgetNamedSelController (adapter, widget, null, enum_type);
+				}
 				else
 				{
-					//	...
-					Adapters.DecimalAdapter adapter = new Adapters.DecimalAdapter (binder);
-					
-					if (widget is Support.Data.INamedStringSelection)
-					{
-						new Controllers.WidgetNamedSelController (adapter, widget, null, enum_type);
-					}
-					else
-					{
-						new Controllers.WidgetStateController (adapter, widget, source.Caption, enum_type);
-					}
+					new Controllers.WidgetStateController (adapter, widget, source.Caption, enum_type);
 				}
 				
 				return true;

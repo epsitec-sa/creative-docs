@@ -14,6 +14,9 @@ namespace Epsitec.Common.Widgets
 	{
 		protected WindowRoot()
 		{
+			this.WindowType   = WindowType.Document;
+			this.WindowStyles = WindowStyles.CanResize | WindowStyles.HasCloseButton;
+			
 			this.InternalState |= InternalState.PossibleContainer;
 			this.InternalState |= InternalState.AutoDoubleClick;
 		}
@@ -21,14 +24,17 @@ namespace Epsitec.Common.Widgets
 		
 		public WindowRoot(Window window) : this ()
 		{
-			this.window   = window;
-			this.is_ready = true;
+			this.window       = window;
+			this.is_ready     = true;
 		}
 		
 		
 		public override bool					IsVisible
 		{
-			get { return true; }
+			get
+			{
+				return true;
+			}
 		}
 		
 		public override LayoutStyles			Layout
@@ -45,7 +51,10 @@ namespace Epsitec.Common.Widgets
 		
 		public override Window					Window
 		{
-			get { return this.window; }
+			get
+			{
+				return this.window;
+			}
 		}
 		
 		public override CommandDispatcher		CommandDispatcher
@@ -66,18 +75,19 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.window == null)
-				{
-					return WindowStyles.None;
-				}
-				
-				return this.window.WindowStyles;
+				return this.window_styles;
 			}
 			set
 			{
-				if (this.window.WindowStyles != value)
+				if (this.window_styles != value)
 				{
-					this.window.WindowStyles = value;
+					this.window_styles = value;
+					
+					if (this.window != null)
+					{
+						this.window.WindowStyles = value;
+					}
+					
 					this.OnWindowStylesChanged ();
 				}
 			}
@@ -87,18 +97,19 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.window == null)
-				{
-					return WindowType.None;
-				}
-				
-				return this.window.WindowType;
+				return this.window_type;
 			}
 			set
 			{
-				if (this.window.WindowType != value)
+				if (this.window_type != value)
 				{
-					this.window.WindowType = value;
+					this.window_type = value;
+					
+					if (this.window != null)
+					{
+						this.window.WindowType = value;
+					}
+					
 					this.OnWindowTypeChanged ();
 				}
 			}
@@ -118,11 +129,16 @@ namespace Epsitec.Common.Widgets
 			Drawing.Size size = this.Size;
 			string       text = this.Text;
 			
+			WindowStyles window_styles = this.WindowStyles;
+			WindowType   window_type   = this.WindowType;
+			
 			this.window = new Window (this);
 			
-			this.window.Name       = name;
-			this.window.ClientSize = size;
-			this.window.Text       = Support.Resources.ResolveTextRef (text);
+			this.window.Name         = name;
+			this.window.ClientSize   = size;
+			this.window.Text         = Support.Resources.ResolveTextRef (text);
+			this.window.WindowStyles = window_styles;
+			this.window.WindowType   = window_type;
 			
 			this.Name = name;
 			this.Text = text;
@@ -339,6 +355,8 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			WindowTypeChanged;
 		
 		
+		protected WindowStyles						window_styles;
+		protected WindowType						window_type;
 		protected Window							window;
 		protected bool								is_ready;
 	}

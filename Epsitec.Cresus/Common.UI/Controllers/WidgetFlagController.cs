@@ -61,65 +61,38 @@ namespace Epsitec.Common.UI.Controllers
 		
 		public override void SyncFromAdapter(SyncReason reason)
 		{
-			Adapters.StringAdapter adapter = this.Adapter as Adapters.StringAdapter;
+			Adapters.DecimalAdapter adapter = this.Adapter as Adapters.DecimalAdapter;
 			
 			if ((adapter != null) &&
 				(this.widget != null))
 			{
-				string   value  = adapter.Value;
-				string[] values = value.Split (',', '|', ';');
+				long flags = (long) adapter.Value;
+				long bit   = (long) this.widget.Index;
 				
-				bool active = false;
-				
-				for (int i = 0; i < values.Length; i++)
-				{
-					string flag = values[i].Trim ();
-					
-					if (this.widget.Name == flag)
-					{
-						active = true;
-						break;
-					}
-				}
-				
-				this.widget.ActiveState = active ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.widget.ActiveState = ((flags & bit) != 0) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			}
 		}
 		
 		public override void SyncFromUI()
 		{
-			Adapters.StringAdapter adapter = this.Adapter as Adapters.StringAdapter;
+			Adapters.DecimalAdapter adapter = this.Adapter as Adapters.DecimalAdapter;
 			
 			if ((adapter != null) &&
 				(this.widget != null))
 			{
-				string   value  = adapter.Value;
-				string[] values = value.Split (',', '|', ';');
-				
-				System.Collections.ArrayList list = new System.Collections.ArrayList ();
-				
-				for (int i = 0; i < values.Length; i++)
-				{
-					string flag = values[i].Trim ();
-					
-					if ((flag != "") &&
-						(this.widget.Name != flag))
-					{
-						list.Add (flag);
-					}
-				}
+				long flags = (long) adapter.Value;
+				long bit   = (long) this.widget.Index;
 				
 				if (this.widget.IsActive)
 				{
-					list.Add (this.widget.Name);
+					flags |= bit;
+				}
+				else
+				{
+					flags &= ~ bit;
 				}
 				
-				values = new string[list.Count];
-				list.CopyTo (values);
-				
-				//	TODO: ...
-				
-				adapter.Value = (values.Length == 0) ? "0" : string.Join (", ", values);
+				adapter.Value = flags;
 			}
 		}
 		
@@ -130,15 +103,8 @@ namespace Epsitec.Common.UI.Controllers
 			this.SyncFromUI ();
 		}
 		
-		private void HandleGroupChanged(object sender)
-		{
-			System.Diagnostics.Debug.Assert (sender == this.group);
-			this.SyncFromUI ();
-		}
-		
 		
 		private Widget							widget;
-		private RadioButton.GroupController		group;
 		private Types.INamedType				data_type;
 	}
 }

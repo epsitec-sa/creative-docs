@@ -144,6 +144,9 @@ namespace Epsitec.Common.Designer
 		
 		internal void Kill()
 		{
+			this.string_edit_controller.Dispose ();
+			this.interf_edit_controller.Dispose ();
+			
 			this.main_window            = null;
 			this.string_edit_controller = null;
 			this.interf_edit_controller = null;

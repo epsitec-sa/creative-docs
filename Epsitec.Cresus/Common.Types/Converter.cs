@@ -7,7 +7,7 @@ namespace Epsitec.Common.Types
 	/// La classe Converter permet de convertir des données simples entre
 	/// elles.
 	/// </summary>
-	public class Converter
+	public sealed class Converter
 	{
 		private Converter()
 		{
@@ -182,53 +182,42 @@ namespace Epsitec.Common.Types
 				return true;
 			}
 			
-			string text = obj as string;
+			string name = string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0}", obj);
 			
-			if (text != null)
+			if (Converter.ParseEnum (type, name, out value))
 			{
-				try
-				{
-					value = (System.Enum) System.Enum.Parse (type, text);
-					
-					string[] values = text.Split (',', '|', ';');
-					bool     ok     = true;
-					
-					for (int i = 0; i < values.Length; i++)
-					{
-						string name = values[i].Trim ();
-						
-						if (name == "")
-						{
-							continue;
-						}
-						
-						System.Enum item = (System.Enum) System.Enum.Parse (type, name);
-						
-						if (System.Enum.IsDefined (type, item) == false)
-						{
-							ok = false;
-						}
-					}
-					
-					return ok;
-				}
-				catch
-				{
-				}
-			}
-			
-			int index;
-			
-			if ((Converter.Convert (obj, out index)) &&
-				(System.Enum.IsDefined (type, index)))
-			{
-				value = (System.Enum) System.Enum.Parse (type, index.ToString (System.Globalization.CultureInfo.InvariantCulture));
 				return true;
 			}
+			
+			//	Si la conversion depuis la représentation textuelle de l'objet n'a pas marché,
+			//	on tente encore une conversion numérique préalable :
+			
+			long index;
+			
+			try
+			{
+				if (Converter.Convert (obj, out index))
+				{
+					value = (System.Enum) System.Enum.ToObject (type, index);
+				
+					if (Converter.CheckEnumValue (type, value))
+					{
+						return true;
+					}
+				}
+			}
+			catch (System.FormatException)
+			{
+			}
+			
+			//	Rien n'a marché, on abandonne...
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Could not convert value '{0}' to type {1}.", obj, type.Name));
 			
 			value = null;
 			return false;
 		}
+		
 		
 		public static bool Convert(object obj, System.Type type, out object value)
 		{
@@ -323,5 +312,73 @@ namespace Epsitec.Common.Types
 			value = null;
 			return false;
 		}
+		
+		public static string[] GetSplitEnumValues(System.Type type, System.Enum value)
+		{
+			string   name   = value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			string[] values = name.Split (',', '|', ';');
+			
+			if (values.Length > 0)
+			{
+				if (values[0] == "")
+				{
+					return new string[0];
+				}
+				
+				for (int i = 0; i < values.Length; i++)
+				{
+					values[i] = values[i].Trim ();
+				}
+			}
+			
+			return values;
+		}
+		
+		
+		private static bool ParseEnum(System.Type type, string name, out System.Enum value)
+		{
+			//	Tente une conversion du nom donné en entrée en une valeur de
+			//	l'énumération; gère aussi les énumérations avec valeurs multiples.
+			
+			try
+			{
+				value = (System.Enum) System.Enum.Parse (type, name);
+				
+				return Converter.CheckEnumValue (type, value);
+			}
+			catch
+			{
+			}
+			
+			value = null;
+			return false;
+		}
+		
+		private static bool CheckEnumValue(System.Type type, System.Enum value)
+		{
+			string[] values = Converter.GetSplitEnumValues (type, value);
+			
+			try
+			{
+				for (int i = 0; i < values.Length; i++)
+				{
+					string name = values[i];
+					
+					System.Enum item = (System.Enum) System.Enum.Parse (type, name);
+					
+					if (System.Enum.IsDefined (type, item) == false)
+					{
+						return false;
+					}
+				}
+				
+				return true;
+			}
+			catch (System.OverflowException)
+			{
+				return false;
+			}
+		}
+		
 	}
 }

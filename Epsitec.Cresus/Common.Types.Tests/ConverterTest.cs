@@ -91,7 +91,8 @@ namespace Epsitec.Common.Types
 			decimal result;
 			Converter.Convert (new Drawing.Rectangle (10, 20, 30, 40), out result);
 		}
-		[Test] public void CheckToEnum()
+		
+		[Test] public void CheckToEnum1()
 		{
 			System.Enum v1, v2, v3, v;
 			
@@ -103,9 +104,30 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual (MyEnum.Second, v2);
 			Assert.AreEqual (MyEnum.Extra,  v3);
 			
-			Assert.IsTrue (Converter.Convert (0,   typeof (MyEnum), out v) == false);
-			Assert.IsTrue (Converter.Convert ("",  typeof (MyEnum), out v) == false);
-			Assert.IsTrue (Converter.Convert ("0", typeof (MyEnum), out v) == false);
+			Assert.IsFalse (Converter.Convert (0,   typeof (MyEnum), out v));
+			Assert.IsFalse (Converter.Convert ("",  typeof (MyEnum), out v));
+			Assert.IsFalse (Converter.Convert ("X", typeof (MyEnum), out v));
+			Assert.IsFalse (Converter.Convert ("0", typeof (MyEnum), out v));
+		}
+		
+		[Test] public void CheckToEnum2()
+		{
+			System.Enum v1, v2, v3, v;
+			
+			Assert.IsTrue (Converter.Convert (MyFlags.Flag1,  typeof (MyFlags), out v1));
+			Assert.IsTrue (Converter.Convert ("Flag2, Flag4", typeof (MyFlags), out v2));
+			Assert.IsTrue (Converter.Convert (9,              typeof (MyFlags), out v3));
+			
+			Assert.AreEqual (MyFlags.Flag1,  v1);
+			Assert.AreEqual (MyFlags.Flag2 | MyFlags.Flag4, v2);
+			Assert.AreEqual (MyFlags.Flag1 | MyFlags.Flag4, v3);
+			
+			Assert.IsFalse (Converter.Convert (-1,   typeof (MyFlags), out v));
+			Assert.IsTrue  (Converter.Convert (0x0f, typeof (MyFlags), out v));
+			Assert.IsFalse (Converter.Convert (0x1f, typeof (MyFlags), out v));
+			Assert.IsFalse (Converter.Convert ("",   typeof (MyFlags), out v));
+			Assert.IsFalse (Converter.Convert ("X",  typeof (MyFlags), out v));
+			Assert.IsFalse (Converter.Convert ("-1", typeof (MyFlags), out v));
 		}
 		
 		private enum MyEnum
@@ -115,6 +137,16 @@ namespace Epsitec.Common.Types
 			Second	=  2,
 			Third	=  3,
 			Extra	= 99
+		}
+		
+		[System.Flags]
+		private enum MyFlags
+		{
+			None	= 0,
+			Flag1	= 1,
+			Flag2	= 2,
+			Flag3	= 4,
+			Flag4	= 8
 		}
 	}
 }
