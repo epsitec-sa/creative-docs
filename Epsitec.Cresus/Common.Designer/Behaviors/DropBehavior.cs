@@ -439,7 +439,7 @@ namespace Epsitec.Common.Designer.Behaviors
 		
 		public static Widget CloneWidget(Widget widget)
 		{
-			Support.ObjectBundler bundler = new Support.ObjectBundler ();
+			Support.ObjectBundler bundler = new Support.ObjectBundler (widget.ResourceManager);
 			widget = bundler.CopyObject (widget) as Widget;
 			return widget;
 		}

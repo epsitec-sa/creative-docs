@@ -69,10 +69,7 @@ namespace Epsitec.Common.Support.Implementation
 					throw new ResourceException (string.Format ("Invalid resource level {0} for resource '{1}'.", level, id));
 			}
 			
-			string suffix;
-			Resources.MapToSuffix (level, this.culture, out suffix);
-			
-			return suffix;
+			return Resources.MapToSuffix (level, this.culture);
 		}
 		
 		protected string GetTableNameFromId(string id, ResourceLevel level)
@@ -98,7 +95,7 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public override void Setup(string application)
+		public override void SetupApplication(string application)
 		{
 			//	Le nom de l'application est utile pour déterminer le nom de la
 			//	base de données à laquelle on va se connecter.

@@ -107,15 +107,26 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public class ObjectBundler
 	{
-		public ObjectBundler() : this (false)
+		public ObjectBundler(ResourceManager resource_manager) : this (resource_manager, false)
 		{
 		}
 		
-		public ObjectBundler(bool store_mapping)
+		public ObjectBundler(ResourceManager resource_manager, bool store_mapping)
 		{
+			this.manager = resource_manager;
+			
 			if (store_mapping)
 			{
 				this.EnableMapping ();
+			}
+		}
+		
+		
+		public ResourceManager						ResourceManager
+		{
+			get
+			{
+				return this.manager;
 			}
 		}
 		
@@ -299,7 +310,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 			
-			ResourceBundle bundle = ResourceBundle.Create ("x");
+			ResourceBundle bundle = ResourceBundle.Create (this.manager, "x");
 			
 			src_obj.SerializeToBundle (this, bundle);
 			dst_obj.RestoreFromBundle (this, bundle);
@@ -356,7 +367,7 @@ namespace Epsitec.Common.Support
 				}
 			}
 			
-			ResourceBundle bundle = ResourceBundle.Create ("x");
+			ResourceBundle bundle = ResourceBundle.Create (this.manager, "x");
 			
 			src_obj.SerializeToBundle (this, bundle);
 			dst_obj.RestoreFromBundle (this, bundle);
@@ -432,7 +443,7 @@ namespace Epsitec.Common.Support
 				name = null;
 			}
 			
-			return ResourceBundle.Create (this.default_prefix, name, this.default_level, this.default_culture);
+			return ResourceBundle.Create (this.manager, this.default_prefix, name, this.default_level, this.default_culture);
 		}
 		
 		public bool FillBundleFromObject(ResourceBundle bundle, object source)
@@ -1137,8 +1148,9 @@ namespace Epsitec.Common.Support
 		
 		protected static Hashtable					classes;
 		protected static System.Xml.XmlDocument		xmldoc = new System.Xml.XmlDocument ();
-		protected static ObjectBundler				default_bundler = new ObjectBundler ();
+		protected static ObjectBundler				default_bundler = new ObjectBundler (Resources.DefaultManager);
 		
+		protected ResourceManager					manager;
 		protected Hashtable							obj_to_bundle;			//	lien entre noms de bundles et objets
 		protected string							default_prefix;
 		protected ResourceLevel						default_level;

@@ -20,7 +20,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckCreateFromBundle()
 		{
 			ResourceBundle bundle = Resources.GetBundle ("file:button.cancel");
-			ObjectBundler bundler = new ObjectBundler ();
+			ObjectBundler bundler = new ObjectBundler (Resources.DefaultManager);
 			
 			Assert.IsNotNull (bundle);
 			
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckCreateABFromBundle()
 		{
 			ResourceBundle bundle = Resources.GetBundle ("file:ab");
-			ObjectBundler bundler = new ObjectBundler ();
+			ObjectBundler bundler = new ObjectBundler (Resources.DefaultManager);
 			
 			Assert.IsNotNull (bundle);
 			
@@ -59,14 +59,14 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckFillBundleFromObject()
 		{
 			ResourceBundle bundle = Resources.GetBundle ("file:button.cancel");
-			ObjectBundler bundler = new ObjectBundler ();
+			ObjectBundler bundler = new ObjectBundler (Resources.DefaultManager);
 			
 			Assert.IsNotNull (bundle);
 			
 			object         obj    = bundler.CreateFromBundle (bundle);
 			Widgets.Button button = obj as Widgets.Button;
 			
-			bundle = ResourceBundle.Create ("button.cancel");
+			bundle = ResourceBundle.Create (Resources.DefaultManager, "button.cancel");
 			bundler.PropertyBundled += new BundlingPropertyEventHandler(this.HandleBundlerPropertyBundled);
 			bundler.FillBundleFromObject (bundle, button);
 			bundler.PropertyBundled -= new BundlingPropertyEventHandler(this.HandleBundlerPropertyBundled);
@@ -76,8 +76,8 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckFillBundleFromA()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("a_soft");
-			ObjectBundler bundler = new ObjectBundler ();
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "a_soft");
+			ObjectBundler bundler = new ObjectBundler (Resources.DefaultManager);
 			
 			A obj = new A ();
 			
@@ -92,8 +92,8 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckFillBundleFromB()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("b_soft");
-			ObjectBundler bundler = new ObjectBundler ();
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "b_soft");
+			ObjectBundler bundler = new ObjectBundler (Resources.DefaultManager);
 			
 			A obj = new B ();
 			
@@ -108,7 +108,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckFindPropertyInfo()
 		{
-			ObjectBundler bundler = new ObjectBundler ();
+			ObjectBundler bundler = new ObjectBundler (Resources.DefaultManager);
 			Widgets.Button button = new Widgets.Button ();
 			
 			Assert.IsNotNull (bundler.FindPropertyInfo (button, "Text"));
@@ -116,7 +116,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckIsPropertyEqual()
 		{
-			ObjectBundler bundler = new ObjectBundler ();
+			ObjectBundler bundler = new ObjectBundler (Resources.DefaultManager);
 			Widgets.Button button = new Widgets.Button ();
 			
 			button.Text = "Hello";
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckSimpleWindow()
 		{
 			ResourceBundle bundle = Resources.GetBundle ("file:simple_window");
-			ObjectBundler bundler = new ObjectBundler ();
+			ObjectBundler bundler = new ObjectBundler (Resources.DefaultManager);
 			
 			Assert.IsNotNull (bundle);
 			
@@ -150,7 +150,7 @@ namespace Epsitec.Common.Support
 			Types.Time time_1 = Types.Time.Now;
 			
 			ResourceBundle bundle = Resources.GetBundle ("file:simple_window");
-			ObjectBundler bundler = new ObjectBundler ();
+			ObjectBundler bundler = new ObjectBundler (Resources.DefaultManager);
 			
 			Assert.IsNotNull (bundle);
 			
@@ -164,8 +164,8 @@ namespace Epsitec.Common.Support
 			
 			Types.Time time_2 = Types.Time.Now;
 			
-			bundler = new ObjectBundler ();
-			bundle  = ResourceBundle.Create ("file", "cloned_simple_window", ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
+			bundler = new ObjectBundler (Resources.DefaultManager);
+			bundle  = ResourceBundle.Create (Resources.DefaultManager, "file", "cloned_simple_window", ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
 			
 			bundler.SetupPrefix ("file");
 			bundler.FillBundleFromObject (bundle, root);
@@ -185,7 +185,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckFillBundleFromSimpleWindowAndRestore()
 		{
 			ResourceBundle bundle = Resources.GetBundle ("file:simple_window");
-			ObjectBundler bundler = new ObjectBundler ();
+			ObjectBundler bundler = new ObjectBundler (Resources.DefaultManager);
 			
 			Assert.IsNotNull (bundle);
 			
@@ -197,13 +197,13 @@ namespace Epsitec.Common.Support
 			Assert.IsNotNull (obj);
 			Assert.IsNotNull (root);
 			
-			bundler = new ObjectBundler ();
-			bundle  = ResourceBundle.Create ("file", "cloned_simple_window", ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
+			bundler = new ObjectBundler (Resources.DefaultManager);
+			bundle  = ResourceBundle.Create (Resources.DefaultManager, "file", "cloned_simple_window", ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
 			
 			bundler.SetupPrefix ("file");
 			bundler.FillBundleFromObject (bundle, root);
 			
-			bundler = new ObjectBundler ();
+			bundler = new ObjectBundler (Resources.DefaultManager);
 			
 			obj  = bundler.CreateFromBundle (bundle);
 			root = obj as Widgets.WindowRoot;
@@ -278,7 +278,7 @@ namespace Epsitec.Common.Support
 			c1.Value = "C1-Value";
 			c1.Extra = "C1-Extra";
 			
-			ObjectBundler bundler = new ObjectBundler ();
+			ObjectBundler bundler = new ObjectBundler (Resources.DefaultManager);
 			
 			Assert.IsTrue (bundler.CopyObject (a1, a2));
 			Assert.IsTrue (bundler.CopyObject (a1, c2));
@@ -299,7 +299,7 @@ namespace Epsitec.Common.Support
 			Widgets.Validators.RegexValidator v1 = new Epsitec.Common.Widgets.Validators.RegexValidator (w1, "[a-z][1-9]*", false);
 			Widgets.Validators.RegexValidator v2 = new Epsitec.Common.Widgets.Validators.RegexValidator (w1, "....", false);
 			
-			ObjectBundler bundler = new ObjectBundler ();
+			ObjectBundler bundler = new ObjectBundler (Resources.DefaultManager);
 			
 			Widgets.Widget w2 = bundler.CopyObject (w1) as Widgets.Widget;
 			

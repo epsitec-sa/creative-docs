@@ -11,9 +11,10 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public class ResourceBundleCollection : System.Collections.ICollection, System.IDisposable, System.Collections.IList
 	{
-		public ResourceBundleCollection()
+		public ResourceBundleCollection(ResourceManager resource_manager)
 		{
-			this.list = new System.Collections.ArrayList ();
+			this.list    = new System.Collections.ArrayList ();
+			this.manager = resource_manager;
 		}
 		
 		
@@ -35,7 +36,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this[level, Resources.Culture];
+				return this[level, this.manager.DefaultCulture];
 			}
 		}
 		
@@ -70,7 +71,7 @@ namespace Epsitec.Common.Support
 				ResourceLevel level;
 				CultureInfo   culture;
 				
-				Resources.MapFromSuffix (suffix, out level, out culture);
+				this.manager.MapFromSuffix (suffix, out level, out culture);
 				
 				return this[level, culture];
 			}
@@ -108,11 +109,7 @@ namespace Epsitec.Common.Support
 					ResourceLevel level   = bundle.ResourceLevel;
 					CultureInfo   culture = bundle.Culture;
 					
-					string suffix;
-					
-					Resources.MapToSuffix (level, culture, out suffix);
-					
-					list.Add (suffix);
+					list.Add (this.manager.MapToSuffix (level, culture));
 				}
 				
 				string[] suffixes = new string[list.Count];
@@ -163,12 +160,12 @@ namespace Epsitec.Common.Support
 				ResourceLevel level;
 				CultureInfo   culture;
 				
-				Resources.MapFromSuffix (suffix, out level, out culture);
+				this.manager.MapFromSuffix (suffix, out level, out culture);
 				
 				System.Diagnostics.Debug.Assert (level != ResourceLevel.None);
 				System.Diagnostics.Debug.Assert (culture != null || level == ResourceLevel.Default);
 				
-				ResourceBundle bundle = Resources.GetBundle (Resources.MakeFullName (prefix, name), level, culture);
+				ResourceBundle bundle = this.manager.GetBundle (this.manager.MakeFullName (prefix, name), level, culture);
 				
 				System.Diagnostics.Debug.Assert (bundle != null);
 				
@@ -415,7 +412,7 @@ namespace Epsitec.Common.Support
 		
 		public event EventHandler				FieldsChanged;
 		
-		
+		private ResourceManager					manager;
 		private System.Collections.ArrayList	merged;
 		private System.Collections.ArrayList	list;
 		private string							name;

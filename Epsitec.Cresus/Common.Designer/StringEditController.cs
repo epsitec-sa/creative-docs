@@ -14,16 +14,18 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class StringEditController : AbstractMainPanelController, Support.IBundleProvider
 	{
-		public StringEditController(Application application) : base (application)
+		public StringEditController(Application application, Support.ResourceManager resource_manager) : base (application)
 		{
 			this.bundles    = new System.Collections.Hashtable ();
 			this.panels     = new System.Collections.ArrayList ();
 			this.provider   = new BundleStringProvider (this);
 			
+			this.resource_manager = resource_manager;
+			
 			this.save_command_state = CommandState.Find ("SaveStringBundle", this.dispatcher);
 			this.UpdateCommandStates ();
 			
-			Support.Resources.Add (this);
+			Support.Resources.AddBundleProvider (this);
 		}
 		
 		
@@ -57,8 +59,8 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 			
-			ResourceBundleCollection bundles = new ResourceBundleCollection ();
-			ResourceBundle           bundle  = ResourceBundle.Create (prefix, name, ResourceLevel.Default);
+			ResourceBundleCollection bundles = new ResourceBundleCollection (this.resource_manager);
+			ResourceBundle           bundle  = ResourceBundle.Create (this.resource_manager, prefix, name, ResourceLevel.Default);
 			
 			bundle.DefineType ("String");
 			
@@ -77,8 +79,8 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 			
-			string[] ids = Resources.GetBundleIds (full_name, null, ResourceLevel.All, null);
-			ResourceBundleCollection bundles = new ResourceBundleCollection ();
+			string[] ids = this.resource_manager.GetBundleIds (full_name, null, ResourceLevel.All, null);
+			ResourceBundleCollection bundles = new ResourceBundleCollection (this.resource_manager);
 			
 			bundles.FullName = full_name;
 			bundles.LoadBundles (prefix, ids);
@@ -248,7 +250,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (bundles[ResourceLevel.Localised, culture] == null)
 				{
-					bundles.Add (ResourceBundle.Create (prefix, name, ResourceLevel.Localised, culture));
+					bundles.Add (ResourceBundle.Create (this.resource_manager, prefix, name, ResourceLevel.Localised, culture));
 				}
 			}
 		}
@@ -280,7 +282,7 @@ namespace Epsitec.Common.Designer
 			{
 				this.CloseBundles ("*");
 				
-				Support.Resources.Remove (this);
+				Support.Resources.RemoveBundleProvider (this);
 			}
 			
 			base.Dispose (disposing);
@@ -288,7 +290,7 @@ namespace Epsitec.Common.Designer
 
 		
 		#region IBundleProvider Members
-		public ResourceBundle GetBundle(IResourceProvider provider, string id, Epsitec.Common.Support.ResourceLevel level, CultureInfo culture, int recursion)
+		public ResourceBundle GetBundle(ResourceManager manager, IResourceProvider provider, string id, Epsitec.Common.Support.ResourceLevel level, CultureInfo culture, int recursion)
 		{
 			//	Le gestionnaire de ressources recherche un bundle; s'il s'avère que nous
 			//	sommes en train de l'éditer, on va utiliser les données de notre copie locale
@@ -1195,6 +1197,7 @@ namespace Epsitec.Common.Designer
 		
 		private BundleStringProvider			provider;
 		
+		protected Support.ResourceManager		resource_manager;
 		protected string						default_prefix = "file";
 		protected TabBook						tab_book;
 		protected CommandState					save_command_state;

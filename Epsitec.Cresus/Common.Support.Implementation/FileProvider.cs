@@ -82,7 +82,7 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public override void Setup(string application)
+		public override void SetupApplication(string application)
 		{
 		}
 
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Support.Implementation
 					(type_filter != "*"))
 				{
 					System.Text.RegularExpressions.Regex type_regex = Support.RegexFactory.FromSimpleJoker (type_filter);
-					ResourceBundle bundle = ResourceBundle.Create (bundle_name);
+					ResourceBundle bundle = ResourceBundle.Create (this.manager, bundle_name);
 					
 					bundle.RefInclusionEnabled = false;
 					bundle.AutoMergeEnabled    = false;
@@ -278,13 +278,12 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
+		protected string					path_prefix;
+		protected Regex						id_regex;
 		
-		protected string				path_prefix;
-		protected Regex					id_regex;
-		
-		protected string				file_default;
-		protected string				file_local;
-		protected string				file_custom;
-		protected string				file_all;
+		protected string					file_default;
+		protected string					file_local;
+		protected string					file_custom;
+		protected string					file_all;
 	}
 }

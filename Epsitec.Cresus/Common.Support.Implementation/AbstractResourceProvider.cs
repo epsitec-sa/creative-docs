@@ -19,14 +19,21 @@ namespace Epsitec.Common.Support.Implementation
 		#region IResourceProvider Members
 		public abstract string Prefix		{ get; }
 		
-		public abstract void Setup(string application);
+		public virtual void Setup(ResourceManager resource_manager)
+		{
+			this.manager = resource_manager;
+		}
+
+		public abstract void SetupApplication(string application);
 		public virtual void SelectLocale(System.Globalization.CultureInfo culture)
 		{
 			this.culture = culture;
 			
-			this.default_suffix = Resources.DefaultSuffix;
-			this.local_suffix   = this.culture.TwoLetterISOLanguageName;
-			this.custom_suffix  = Resources.CustomisedSuffix;
+			this.default_suffix = this.manager.MapToSuffix (ResourceLevel.Default, culture);
+			this.local_suffix   = this.manager.MapToSuffix (ResourceLevel.Localised, culture);
+			this.custom_suffix  = this.manager.MapToSuffix (ResourceLevel.Customised, culture);
+			
+			System.Diagnostics.Debug.Assert (culture.TwoLetterISOLanguageName == this.local_suffix);
 		}
 		
 		
@@ -45,10 +52,11 @@ namespace Epsitec.Common.Support.Implementation
 		#endregion
 		
 		
-		protected CultureInfo			culture;
+		protected CultureInfo				culture;
+		protected ResourceManager			manager;
 		
-		protected string				default_suffix;
-		protected string				local_suffix;
-		protected string				custom_suffix;
+		protected string					default_suffix;
+		protected string					local_suffix;
+		protected string					custom_suffix;
 	}
 }

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCompile()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<bundle type='String'><data name='a'>A</data><data name='b'>B</data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCompileRefBundle()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<bundle><data name='a'>A</data><bundle name='b'><ref target='file:button.cancel'/></bundle></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -50,7 +50,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCompileSubBundle()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<bundle><data name='a'>A0</data><bundle name='b'><data name='a'>A1</data><data name='b'>B1</data></bundle></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCompileCDATA()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<bundle><data name='text'><![CDATA[Small <b>text</b> to <i>check</i> if CDATA&lt;..&gt; works.]]></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -91,7 +91,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCompileEmbeddedXml()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<bundle><data name='text'><xml>Small <b>text</b> to <i>check</i> if embedded &lt;xml&gt; works.</xml></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -106,7 +106,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCompileEscapes()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<bundle><data name='text'>&lt;&amp;&gt;</data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCompileAndMerge()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string_1 = "<bundle><data name='a'>A</data><data name='b'>B</data></bundle>";
 			string test_string_2 = "<bundle><data name='a'>X</data><data name='c'>C</data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCompileAndNoMerge()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string_1 = "<bundle><data name='a'>A</data><data name='b'>B</data></bundle>";
 			string test_string_2 = "<bundle><data name='a'>X</data><data name='c'>C</data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileEx1()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<data name='a'>A</data><data name='b'>B</data>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -180,7 +180,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] [ExpectedException (typeof (System.Xml.XmlException))] public void CheckCompileEx2()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<bundle><data name='a'>A<data name='b'>B</data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -189,7 +189,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] [ExpectedException (typeof (Support.ResourceException))] public void CheckCompileEx3()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<invalid_root><data name='a'>A</data><data name='b'>B</data></invalid_root>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCompileRefLevel1()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<bundle><data name='a'>A</data><ref target='file:button.cancel'/></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -218,7 +218,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCompileRefLevel2()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='file:strings#label.Hello'/></data><data name='c'><ref target='file:strings#title.MainWindow'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -239,7 +239,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCompileRefLevel2AutoPrefix()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("file", "test", ResourceLevel.Default, 0);
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "file", "test", ResourceLevel.Default, 0);
 			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='button.cancel#Text'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -257,7 +257,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx1()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='button.cancel#Text'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -269,7 +269,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx2()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='file:does-not-exist#Text'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -281,7 +281,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx3()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='file:button.cancel#does-not-exist'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
@@ -293,7 +293,7 @@ namespace Epsitec.Common.Support
 		
 		private void CompileWithExceptionHandling(string test_string)
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			
@@ -342,7 +342,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCreateXmlNode1()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string =
 				"<bundle name='test'>\r\n" +
 				"  <data name='a'>Aà</data>\r\n" +
@@ -364,7 +364,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCreateXmlNode2()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ();
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager);
 			string test_string = 
 				"<bundle name=\"&quot;test&quot;\" type='String'>\r\n" +
 				"  <data name='a'>\r\n" +
@@ -389,7 +389,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCreateXmlNode3()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ("test");
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager, "test");
 			string test_string = 
 				"<bundle name='test'>\r\n" +
 				"  <ref target='file:button.cancel' />\r\n" +
@@ -413,7 +413,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckCreateXmlNode4()
 		{
-			ResourceBundle bundle = ResourceBundle.Create ();
+			ResourceBundle bundle = ResourceBundle.Create (Resources.DefaultManager);
 			
 			string test_string = 
 				"<bundle name='test' type='String' about='Simple description...'>\r\n" +
@@ -456,7 +456,7 @@ namespace Epsitec.Common.Support
 			ResourceBundleTest.XmlDumpIfDifferent (test_data, live_data, bundle);
 			Assert.IsTrue (ResourceBundleTest.XmlTestEqual (test_data, live_data), "Serialized data not equal to source data");
 			
-			bundle = ResourceBundle.Create ();
+			bundle = ResourceBundle.Create (Resources.DefaultManager);
 			bundle.Compile (test_data);
 			
 			Assert.AreEqual ("A", bundle[0].AsString);

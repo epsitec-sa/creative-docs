@@ -15,6 +15,7 @@ namespace Epsitec.Common.Designer
 	{
 		public InterfaceEditController(Application application) : base (application)
 		{
+			this.resource_manager = Support.Resources.DefaultManager;
 			this.dispatcher.CommandDispatched += new EventHandler (this.HandleCommandDispatched);
 		}
 		
@@ -67,6 +68,14 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		public Support.ResourceManager			ResourceManager
+		{
+			get
+			{
+				return this.resource_manager;
+			}
+		}
+
 		
 		public override void Initialise()
 		{
@@ -860,7 +869,7 @@ namespace Epsitec.Common.Designer
 			{
 				string full_id = e.CommandArgs[0];
 				
-				Support.ObjectBundler  bundler = new Support.ObjectBundler ();
+				Support.ObjectBundler  bundler = new Support.ObjectBundler (this.ResourceManager);
 				Support.ResourceBundle bundle  = Support.Resources.GetBundle (full_id);
 				
 				bundler.EnableMapping ();
@@ -1059,9 +1068,10 @@ namespace Epsitec.Common.Designer
 		
 		private bool							is_initialised;
 		
+		protected Support.ResourceManager		resource_manager;
 		protected Widget						creation_panel;
 		protected TabBook						creation_book;
-		protected Panels.WidgetSourcePanel	widget_palette;
+		protected Panels.WidgetSourcePanel		widget_palette;
 		protected Panels.DataSourcePanel		data_palette;
 		
 		protected AbstractToolBar				tool_bar;

@@ -13,6 +13,6 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public interface IBundleProvider
 	{
-		ResourceBundle GetBundle(IResourceProvider provider, string id, ResourceLevel level, CultureInfo culture, int recursion);
+		ResourceBundle GetBundle(ResourceManager resource_manager, IResourceProvider provider, string id, ResourceLevel level, CultureInfo culture, int recursion);
 	}
 }

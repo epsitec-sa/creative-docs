@@ -58,7 +58,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckFileContains()
 		{
-			Assertion.Assert (Resources.Contains ("file:button.cancel"));
+			Assertion.Assert (Resources.ContainsId ("file:button.cancel"));
 		}
 		
 		[Test] public void CheckFileGetBundle()
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckBase00ContainsNo()
 		{
-			Assertion.Assert (! Resources.Contains ("base:raw_data_test"));
+			Assertion.Assert (! Resources.ContainsId ("base:raw_data_test"));
 		}
 		
 		[Test] public void CheckBase01SetBinaryData()
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckBase02ContainsYes()
 		{
-			Assertion.Assert (Resources.Contains ("base:raw_data_test"));
+			Assertion.Assert (Resources.ContainsId ("base:raw_data_test"));
 		}
 		
 		[Test] public void CheckBase03GetBinaryData()
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckBase04RemoveResource()
 		{
-			Assertion.Assert (Resources.Contains ("base:raw_data_test"));
+			Assertion.Assert (Resources.ContainsId ("base:raw_data_test"));
 			
 			byte[] data_xx = new byte[] { (byte)'X' };
 			byte[] data_de = new byte[] { (byte)'D', (byte)'E' };
@@ -151,7 +151,7 @@ namespace Epsitec.Common.Support
 			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null));
 			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de")));
 			Assertion.AssertNotNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Default, null));
-			Assertion.Assert (Resources.Contains ("base:raw_data_test"));
+			Assertion.Assert (Resources.ContainsId ("base:raw_data_test"));
 			
 			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null, data_xx, ResourceSetMode.CreateOnly);
 			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de"), data_de, ResourceSetMode.CreateOnly);
@@ -161,13 +161,15 @@ namespace Epsitec.Common.Support
 			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null));
 			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de")));
 			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Default, null));
-			Assertion.Assert (! Resources.Contains ("base:raw_data_test"));
+			Assertion.Assert (! Resources.ContainsId ("base:raw_data_test"));
 		}
 		
+
+#if false
 		[Test] public void CheckBaseStressTest()
 		{
-			Assertion.Assert (! Resources.Contains ("base:StressResourceLtl.0"));
-			Assertion.Assert (! Resources.Contains ("base:StressResourceBig.0"));
+			Assertion.Assert (! Resources.ContainsId ("base:StressResourceLtl.0"));
+			Assertion.Assert (! Resources.ContainsId ("base:StressResourceBig.0"));
 			
 			System.Diagnostics.Debug.WriteLine ("Creating 1000 resources (10 bytes).");
 			for (int i = 0; i < 1000; i++)
@@ -221,6 +223,7 @@ namespace Epsitec.Common.Support
 			}
 			System.Diagnostics.Debug.WriteLine ("Done.");
 		}
+#endif
 		
 		[Test] public void CheckBase50GetBundle()
 		{

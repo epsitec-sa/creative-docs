@@ -14,44 +14,44 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public class ResourceBundle : System.ICloneable
 	{
-		public static ResourceBundle Create()
+		public static ResourceBundle Create(ResourceManager resource_manager)
 		{
-			return ResourceBundle.Create (null, null, ResourceLevel.Merged, null, 0);
+			return ResourceBundle.Create (resource_manager, null, null, ResourceLevel.Merged, null, 0);
 		}
 		
-		public static ResourceBundle Create(ResourceLevel level)
+		public static ResourceBundle Create(ResourceManager resource_manager, ResourceLevel level)
 		{
-			return ResourceBundle.Create (null, null, level, null, 0);
+			return ResourceBundle.Create (resource_manager, null, null, level, null, 0);
 		}
 		
-		public static ResourceBundle Create(string name)
+		public static ResourceBundle Create(ResourceManager resource_manager, string name)
 		{
-			return ResourceBundle.Create (null, name, ResourceLevel.Merged, null, 0);
+			return ResourceBundle.Create (resource_manager, null, name, ResourceLevel.Merged, null, 0);
 		}
 		
-		public static ResourceBundle Create(string name, ResourceLevel level)
+		public static ResourceBundle Create(ResourceManager resource_manager, string name, ResourceLevel level)
 		{
-			return ResourceBundle.Create (null, name, level, null, 0);
+			return ResourceBundle.Create (resource_manager, null, name, level, null, 0);
 		}
 		
-		public static ResourceBundle Create(string prefix, string name, ResourceLevel level)
+		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, string name, ResourceLevel level)
 		{
-			return ResourceBundle.Create (prefix, name, level, null, 0);
+			return ResourceBundle.Create (resource_manager, prefix, name, level, null, 0);
 		}
 		
-		public static ResourceBundle Create(string prefix, string name, ResourceLevel level, int recursion)
+		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, string name, ResourceLevel level, int recursion)
 		{
-			return ResourceBundle.Create (prefix, name, level, null, recursion);
+			return ResourceBundle.Create (resource_manager, prefix, name, level, null, recursion);
 		}
 		
-		public static ResourceBundle Create(string prefix, string name, ResourceLevel level, CultureInfo culture)
+		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, string name, ResourceLevel level, CultureInfo culture)
 		{
-			return ResourceBundle.Create (prefix, name, level, culture, 0);
+			return ResourceBundle.Create (resource_manager, prefix, name, level, culture, 0);
 		}
 		
-		public static ResourceBundle Create(string prefix, string name, ResourceLevel level, CultureInfo culture, int recursion)
+		public static ResourceBundle Create(ResourceManager resource_manager, string prefix, string name, ResourceLevel level, CultureInfo culture, int recursion)
 		{
-			ResourceBundle bundle = new ResourceBundle (name);
+			ResourceBundle bundle = new ResourceBundle (resource_manager, name);
 			
 			bundle.DefinePrefix (prefix);
 			bundle.DefineCulture (culture);
@@ -62,17 +62,18 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		protected ResourceBundle()
+		protected ResourceBundle(ResourceManager resource_manager)
 		{
-			this.fields = new Field[0];
+			this.manager = resource_manager;
+			this.fields  = new Field[0];
 		}
 		
-		protected ResourceBundle(string name) : this ()
+		protected ResourceBundle(ResourceManager resource_manager, string name) : this (resource_manager)
 		{
 			this.DefineName (name);
 		}
 		
-		protected ResourceBundle(ResourceBundle parent, string name, System.Xml.XmlNode xmlroot) : this (name)
+		protected ResourceBundle(ResourceManager resource_manager, ResourceBundle parent, string name, System.Xml.XmlNode xmlroot) : this (resource_manager, name)
 		{
 			this.DefinePrefix (parent.prefix);
 			this.level  = parent.level;
@@ -114,6 +115,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public ResourceManager				ResourceManager
+		{
+			get
+			{
+				return this.manager;
+			}
+		}
+		
 		public CultureInfo					Culture
 		{
 			get
@@ -126,7 +135,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return Resources.MakeFullName (this.prefix, this.name);
+				return this.manager.MakeFullName (this.prefix, this.name);
 			}
 		}
 		
@@ -245,6 +254,11 @@ namespace Epsitec.Common.Support
 		public void DefineAbout(string about)
 		{
 			this.about = about;
+		}
+		
+		public void DefineManager(ResourceManager resource_manager)
+		{
+			this.manager = resource_manager;
 		}
 		
 		public void DefinePrefix(string prefix)
@@ -794,7 +808,7 @@ namespace Epsitec.Common.Support
 				throw new ResourceException (string.Format ("<ref target='{0}'/> specifies type='{1}'. XML: {2}.", ref_target, ref_type, node.OuterXml));
 			}
 			
-			ResourceBundle bundle = Resources.GetBundle (target_bundle, this.level, this.depth + 1) as ResourceBundle;
+			ResourceBundle bundle = this.manager.GetBundle (target_bundle, this.level, this.depth + 1) as ResourceBundle;
 			
 			if (bundle == null)
 			{
@@ -824,7 +838,7 @@ namespace Epsitec.Common.Support
 				throw new ResourceException (string.Format ("<ref target='{0}'/> specifies type='{1}'. XML: {2}.", ref_target, ref_type, node.OuterXml));
 			}
 			
-			ResourceBundle bundle = Resources.GetBundle (target_bundle, this.level, this.depth + 1) as ResourceBundle;
+			ResourceBundle bundle = this.manager.GetBundle (target_bundle, this.level, this.depth + 1) as ResourceBundle;
 			
 			if (bundle == null)
 			{
@@ -854,7 +868,7 @@ namespace Epsitec.Common.Support
 			if ((target_bundle != null) &&
 				(target_field  == null))
 			{
-				byte[] data = Resources.GetBinaryData (target_bundle, level);
+				byte[] data = this.manager.GetBinaryData (target_bundle, level);
 				
 				if (data == null)
 				{
@@ -881,7 +895,7 @@ namespace Epsitec.Common.Support
 					throw new ResourceException (string.Format ("No default prefix specified, target '{0}' cannot be resolved.", target));
 				}
 				
-				target = Resources.MakeFullName (this.prefix, target);
+				target = this.manager.MakeFullName (this.prefix, target);
 			}
 			
 			return target;
@@ -955,7 +969,7 @@ namespace Epsitec.Common.Support
 		
 		protected virtual object CloneNewObject()
 		{
-			return new ResourceBundle ();
+			return new ResourceBundle (this.manager);
 		}
 		
 		protected virtual object CloneCopyToNewObject(object o)
@@ -1393,7 +1407,7 @@ namespace Epsitec.Common.Support
 			
 			protected void CompileBundle()
 			{
-				this.data = new ResourceBundle (this.parent, /*ResourceBundle.MakeTarget (this.parent.Name, this.Name)*/ null, this.xml);
+				this.data = new ResourceBundle (this.parent.ResourceManager, this.parent, null, this.xml);
 				this.type = ResourceFieldType.Bundle;
 			}
 			
@@ -1490,6 +1504,7 @@ namespace Epsitec.Common.Support
 		protected string					type;
 		protected string					about;
 		
+		protected ResourceManager			manager;
 		protected System.Xml.XmlNode		xmlroot;
 		protected int						depth;
 		protected int						compile_count;

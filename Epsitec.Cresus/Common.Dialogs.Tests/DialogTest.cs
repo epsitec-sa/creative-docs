@@ -38,7 +38,7 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckLoad1Unknown()
 		{
-			Dialog dialog = new Dialog ();
+			Dialog dialog = new Dialog (Support.Resources.DefaultManager);
 			dialog.Load ("unknown_dialog");
 			
 			Assert.IsTrue (dialog.IsLoaded);
@@ -49,7 +49,7 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckLoad2SimpleTest()
 		{
-			Dialog dialog = new Dialog ();
+			Dialog dialog = new Dialog (Support.Resources.DefaultManager);
 			dialog.Load ("test");
 			dialog.OpenDialog ();
 		}
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookPastel");
 			
-			Dialog           dialog     = new Dialog ("dialog_with_data");
+			Dialog           dialog     = new Dialog (Support.Resources.DefaultManager, "dialog_with_data");
 			DialogController controller = new DialogController (dialog);
 			
 			Record record = new Record ("Rec", "dialog_with_data_strings");

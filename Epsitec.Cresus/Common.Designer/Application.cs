@@ -115,7 +115,7 @@ namespace Epsitec.Common.Designer
 			this.is_initialising = false;
 			
 			this.interf_edit_controller = new InterfaceEditController (this);
-			this.string_edit_controller = new StringEditController (this);
+			this.string_edit_controller = new StringEditController (this, this.interf_edit_controller.ResourceManager);
 			
 			this.interf_edit_controller.Initialise ();
 			this.string_edit_controller.Initialise ();
@@ -287,7 +287,7 @@ namespace Epsitec.Common.Designer
 				this.lang_suffix_2 = this.lang_suffix_1;
 				this.lang_suffix_1 = suffix;
 				
-				Resources.Culture = culture;
+				Resources.DefaultCulture = culture;
 				
 				System.Threading.Thread.CurrentThread.CurrentCulture   = culture;
 				System.Threading.Thread.CurrentThread.CurrentUICulture = culture;

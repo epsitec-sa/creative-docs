@@ -17,11 +17,6 @@ namespace Epsitec.Common.Support
 		
 		static Resources()
 		{
-			Resources.resource_providers     = new IResourceProvider[0];
-			Resources.resource_provider_hash = new System.Collections.Hashtable ();
-			Resources.bundle_providers       = new IBundleProvider[0];
-			Resources.culture                = CultureInfo.CurrentCulture;
-			
 			string[] names = { "fr", "de", "it", "en" };
 			
 			Resources.InternalDefineCultures (names);
@@ -29,38 +24,19 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public static CultureInfo				Culture
+		public static int						ProviderCount
 		{
 			get
 			{
-				return Resources.culture;
+				return Resources.manager.ProviderCount;
 			}
-			set
-			{
-				if (Resources.culture != value)
-				{
-					Resources.SelectLocale (value);
-				}
-			}
-		}
-		
-		public static int						ProviderCount
-		{
-			get { return Resources.resource_providers.Length; }
 		}
 		
 		public static string[]					ProviderPrefixes
 		{
 			get
 			{
-				string[] prefixes = new string[Resources.resource_providers.Length];
-				
-				for (int i = 0; i < Resources.resource_providers.Length; i++)
-				{
-					prefixes[i] = Resources.resource_providers[i].Prefix;
-				}
-				
-				return prefixes;
+				return Resources.manager.ProviderPrefixes;
 			}
 		}
 		
@@ -68,23 +44,34 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (Resources.default_prefix == null)
-				{
-					return "";
-				}
-				
-				return Resources.default_prefix;
+				return Resources.manager.DefaultPrefix;
 			}
 			set
 			{
-				if (value == "")
-				{
-					value = null;
-				}
-				
-				Resources.default_prefix = value;
+				Resources.manager.DefaultPrefix = value;
 			}
 		}
+		
+		public static CultureInfo				DefaultCulture
+		{
+			get
+			{
+				return Resources.manager.DefaultCulture;
+			}
+			set
+			{
+				Resources.manager.DefaultCulture = value;
+			}
+		}
+		
+		public static ResourceManager			DefaultManager
+		{
+			get
+			{
+				return Resources.manager;
+			}
+		}
+		
 		
 		public static CultureInfo[]				Cultures
 		{
@@ -97,84 +84,54 @@ namespace Epsitec.Common.Support
 		
 		public static string					DefaultSuffix
 		{
-			get { return "00"; }
+			get
+			{
+				return Resources.manager.DefaultSuffix;
+			}
 		}
 		
 		public static string					LocalisedSuffix
 		{
-			get { return Resources.culture.TwoLetterISOLanguageName; }
+			get
+			{
+				return Resources.manager.LocalisedSuffix;
+			}
 		}
 		
 		public static string					CustomisedSuffix
 		{
-			get { return string.Concat ("X", Resources.LocalisedSuffix); }
+			get
+			{
+				return Resources.manager.CustomisedSuffix;
+			}
 		}
 		
 		
 		public static void SetupProviders(string application_name)
 		{
-			if (Resources.application_name == application_name)
-			{
-				return;
-			}
-			
-			if (Resources.application_name != null)
-			{
-				throw new System.InvalidOperationException ("Resource Providers may not be setup more than once.");
-			}
-			
-			Resources.application_name = application_name;
-			
-			for (int i = 0; i < Resources.resource_providers.Length; i++)
-			{
-				Resources.resource_providers[i].Setup (application_name);
-			}
+			Resources.manager.SetupProviders (application_name);
 		}
 		
 		
-		public static void Add(IBundleProvider bundle_provider)
+		public static void AddBundleProvider(IBundleProvider bundle_provider)
 		{
-			ArrayList list = new ArrayList ();
-			list.AddRange (Resources.bundle_providers);
-			list.Add (bundle_provider);
-			
-			Resources.bundle_providers = new IBundleProvider[list.Count];
-			list.CopyTo (Resources.bundle_providers);
+			Resources.manager.AddBundleProvider (bundle_provider);
 		}
 		
-		public static void Remove(IBundleProvider bundle_provider)
+		public static void RemoveBundleProvider(IBundleProvider bundle_provider)
 		{
-			ArrayList list = new ArrayList ();
-			list.AddRange (Resources.bundle_providers);
-			list.Remove (bundle_provider);
-			
-			Resources.bundle_providers = new IBundleProvider[list.Count];
-			list.CopyTo (Resources.bundle_providers);
+			Resources.manager.RemoveBundleProvider (bundle_provider);
 		}
 		
 		
 		public static bool ValidateId(string id)
 		{
-			IResourceProvider provider = Resources.FindProvider (id, out id);
-			
-			if (provider != null)
-			{
-				return provider.ValidateId (id);
-			}
-			
-			return false;
+			return Resources.manager.ValidateId (id);
 		}
 		
-		public static bool Contains(string id)
+		public static bool ContainsId(string id)
 		{
-			IResourceProvider provider = Resources.FindProvider (id, out id);
-			
-			if (provider != null)
-			{
-				return provider.Contains (id);
-			}
-			
-			return false;
+			return Resources.manager.ContainsId (id);
 		}
 		
 		
@@ -250,290 +207,97 @@ namespace Epsitec.Common.Support
 		
 		public static string MakeFullName(string prefix, string name)
 		{
-			if (name == null)
-			{
-				throw new ResourceException ("Cannot make full name if name is missing.");
-			}
-			if (prefix == null)
-			{
-				prefix = Resources.DefaultPrefix;
-				
-				if (prefix == null)
-				{
-					throw new ResourceException (string.Format ("Cannot make full name if prefix is missing for resource {0}.", name));
-				}
-			}
-			
-			return string.Concat (prefix, ":", name);
+			return Resources.manager.MakeFullName(prefix, name);
 		}
 		
 		
-		public static void MapToSuffix(ResourceLevel level, CultureInfo culture, out string suffix)
+		public static string MapToSuffix(ResourceLevel level, CultureInfo culture)
 		{
-			if (culture == null)
-			{
-				culture = Resources.Culture;
-			}
-			
-			switch (level)
-			{
-				case ResourceLevel.Default:		suffix = Resources.DefaultSuffix;								return;
-				case ResourceLevel.Localised:	suffix = culture.TwoLetterISOLanguageName;						return;
-				case ResourceLevel.Customised:	suffix = string.Concat ("X", culture.TwoLetterISOLanguageName);	return;
-			}
-			
-			throw new ResourceException (string.Format ("Invalid level {0} specified in MapToSuffix.", level));
+			return Resources.manager.MapToSuffix (level, culture);
 		}
 		
 		public static void MapFromSuffix(string suffix, out ResourceLevel level, out CultureInfo culture)
 		{
-			int len = suffix.Length;
-			
-			if (len == 2)
-			{
-				if (suffix == "00")
-				{
-					level   = ResourceLevel.Default;
-					culture = Resources.Culture;
-					return;
-				}
-				
-				culture = Resources.FindCultureInfo (suffix);
-				
-				if (culture != null)
-				{
-					level = ResourceLevel.Localised;
-					return;
-				}
-			}
-			
-			if ((len == 3) &&
-				(suffix[0] == 'X'))
-			{
-				culture = Resources.FindCultureInfo (suffix.Substring (1, 2));
-				
-				if (culture != null)
-				{
-					level = ResourceLevel.Customised;
-					return;
-				}
-			}
-			
-			throw new ResourceException (string.Format ("Invalid suffix ({0}) specified in MapFromSuffix.", suffix));
+			Resources.manager.MapFromSuffix (suffix, out level, out culture);
 		}
 		
 		
 		public static string GetLevelCaption(ResourceLevel level, CultureInfo culture)
 		{
-			if (culture == null)
-			{
-				culture = Resources.Culture;
-			}
-			
-			switch (level)
-			{
-				case ResourceLevel.Default:
-					return "*";
-				case ResourceLevel.Localised:
-					return culture.DisplayName;
-				case ResourceLevel.Customised:
-					return string.Concat ("Perso. ", culture.DisplayName);
-			}
-			
-			throw new ResourceException (string.Format ("Invalid level {0} specified in GetLevelCaption.", level));
+			return Resources.manager.GetLevelCaption (level, culture);
 		}
 		
 		
 		public static string[] GetBundleIds(string name_filter)
 		{
-			return Resources.GetBundleIds (name_filter, null, ResourceLevel.Default, Resources.Culture);
+			return Resources.manager.GetBundleIds (name_filter);
 		}
 		
 		public static string[] GetBundleIds(string name_filter, string type_filter)
 		{
-			return Resources.GetBundleIds (name_filter, type_filter, ResourceLevel.Default, Resources.Culture);
+			return Resources.manager.GetBundleIds (name_filter, type_filter);
 		}
 		
 		public static string[] GetBundleIds(string name_filter, ResourceLevel level)
 		{
-			return Resources.GetBundleIds (name_filter, null, level, Resources.Culture);
+			return Resources.manager.GetBundleIds (name_filter, level);
 		}
 		
 		public static string[] GetBundleIds(string name_filter, string type_filter, ResourceLevel level)
 		{
-			return Resources.GetBundleIds (name_filter, type_filter, level, Resources.Culture);
+			return Resources.manager.GetBundleIds (name_filter, type_filter, level);
 		}
 		
 		public static string[] GetBundleIds(string name_filter, ResourceLevel level, CultureInfo culture)
 		{
-			return Resources.GetBundleIds (name_filter, null, level, culture);
+			return Resources.manager.GetBundleIds (name_filter, level, culture);
 		}
 		
 		public static string[] GetBundleIds(string name_filter, string type_filter, ResourceLevel level, CultureInfo culture)
 		{
-			if (culture == null)
-			{
-				culture = Resources.Culture;
-			}
-			
-			switch (level)
-			{
-				case ResourceLevel.Default:
-				case ResourceLevel.Customised:
-				case ResourceLevel.Localised:
-				case ResourceLevel.All:
-					break;
-				default:
-					throw new ResourceException (string.Format ("Invalid level {0} specified in GetBundleIds.", level));
-			}
-			
-			string name_filter_id;
-			
-			IResourceProvider provider = Resources.FindProvider (name_filter, out name_filter_id);
-			
-			if (provider != null)
-			{
-				return provider.GetIds (name_filter_id, type_filter, level, culture);
-			}
-			
-			return null;
+			return Resources.manager.GetBundleIds (name_filter, type_filter, level, culture);
 		}
 		
 		
 		public static ResourceBundle GetBundle(string id)
 		{
-			return Resources.GetBundle (id, ResourceLevel.Merged, 0);
+			return Resources.manager.GetBundle (id);
 		}
 		
 		public static ResourceBundle GetBundle(string id, ResourceLevel level)
 		{
-			return Resources.GetBundle (id, level, 0);
+			return Resources.manager.GetBundle (id, level);
 		}
 		
 		public static ResourceBundle GetBundle(string id, ResourceLevel level, int recursion)
 		{
-			return Resources.GetBundle (id, level, Resources.Culture, recursion);
+			return Resources.manager.GetBundle (id, level, recursion);
 		}
 		
 		public static ResourceBundle GetBundle(string id, ResourceLevel level, CultureInfo culture)
 		{
-			return Resources.GetBundle (id, level, culture, 0);
+			return Resources.manager.GetBundle (id, level, culture);
 		}
 		
 		public static ResourceBundle GetBundle(string id, ResourceLevel level, CultureInfo culture, int recursion)
 		{
-			if (culture == null)
-			{
-				culture = Resources.Culture;
-			}
-			
-			//	TODO: il faudra rajouter un cache pour éviter de consulter chaque fois
-			//	le provider, lorsqu'une ressource est demandée...
-			
-			string resource_id;
-			
-			IResourceProvider provider = Resources.FindProvider (id, out resource_id);
-			ResourceBundle    bundle   = null;
-			
-			//	Passe en revue les divers providers de bundles pour voir si la ressource
-			//	demandée n'est pas disponible chez eux. Si oui, c'est celle-ci qui sera
-			//	utilisée :
-			
-			foreach (IBundleProvider bundle_provider in Resources.bundle_providers)
-			{
-				bundle = bundle_provider.GetBundle (provider, resource_id, level, culture, recursion);
-				
-				if (bundle != null)
-				{
-					return bundle;
-				}
-			}
-			
-			if (provider != null)
-			{
-				string prefix = provider.Prefix;
-				
-				switch (level)
-				{
-					case ResourceLevel.Merged:
-						bundle = ResourceBundle.Create (prefix, resource_id, level, culture, recursion);
-						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Default, culture));
-						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Localised, culture));
-						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Customised, culture));
-						break;
-					
-					case ResourceLevel.Default:
-					case ResourceLevel.Localised:
-					case ResourceLevel.Customised:
-						bundle = ResourceBundle.Create (prefix, resource_id, level, culture, recursion);
-						bundle.Compile (provider.GetData (resource_id, level, culture));
-						break;
-					
-					default:
-						throw new ResourceException (string.Format ("Invalid level {0} for resource '{1}'", level, id));
-				}
-			}
-			
-			if ((bundle != null) &&
-				(bundle.IsEmpty))
-			{
-				bundle = null;
-			}
-			
-			return bundle;
+			return Resources.manager.GetBundle (id, level, culture, recursion);
 		}
 		
 		
 		public static byte[] GetBinaryData(string id)
 		{
-			return Resources.GetBinaryData (id, ResourceLevel.Merged, null);
+			return Resources.manager.GetBinaryData (id);
 		}
 		
 		public static byte[] GetBinaryData(string id, ResourceLevel level)
 		{
-			return Resources.GetBinaryData (id, ResourceLevel.Merged, null);
+			return Resources.manager.GetBinaryData (id, level);
 		}
 		
 		public static byte[] GetBinaryData(string id, ResourceLevel level, CultureInfo culture)
 		{
-			if (culture == null)
-			{
-				culture = Resources.Culture;
-			}
-			
-			//	TODO: il faudrait peut-être rajouter un cache pour éviter de consulter
-			//	chaque fois le provider, lorsqu'une ressource est demandée.
-			
-			string resource_id;
-			byte[] data = null;
-			
-			IResourceProvider provider = Resources.FindProvider (id, out resource_id);
-			
-			if (provider != null)
-			{
-				switch (level)
-				{
-					case ResourceLevel.Merged:
-						data = provider.GetData (resource_id, ResourceLevel.Default, culture);
-						if (data != null) break;
-						data = provider.GetData (resource_id, ResourceLevel.Localised, culture);
-						if (data != null) break;
-						data = provider.GetData (resource_id, ResourceLevel.Customised, culture);
-						if (data != null) break;
-						break;
-					
-					case ResourceLevel.Default:
-					case ResourceLevel.Localised:
-					case ResourceLevel.Customised:
-						data = provider.GetData (resource_id, level, culture);
-						break;
-					
-					default:
-						throw new ResourceException (string.Format ("Invalid level {0} for resource '{1}'", level, id));
-				}
-			}
-			
-			return data;
+			return Resources.manager.GetBinaryData (id, level, culture);
 		}
 		
 		
@@ -572,139 +336,41 @@ namespace Epsitec.Common.Support
 		
 		public static string ResolveTextRef(string text)
 		{
-			if (Resources.IsTextRef (text))
-			{
-				string res = Resources.GetText (text.Substring (5, text.Length-6));
-				
-				if (res == null)
-				{
-					res = string.Concat (@"<font color=""#ff0000"">", text, "</font>");
-				}
-				
-				return res;
-			}
-			
-			return text;
+			return Resources.manager.ResolveTextRef (text);
 		}
 		
 		
 		public static string GetText(string id)
 		{
-			return Resources.GetText (id, ResourceLevel.Merged);
+			return Resources.manager.GetText (id);
 		}
 		
 		public static string GetText(string id, ResourceLevel level)
 		{
-			string bundle_name;
-			string field_name;
-			
-			if (ResourceBundle.SplitTarget (id, out bundle_name, out field_name))
-			{
-				ResourceBundle bundle = Resources.GetBundle (bundle_name, level);
-			
-				if (bundle != null)
-				{
-					ResourceBundle.Field field = bundle[field_name];
-					
-					if (field != null)
-					{
-						return field.AsString;
-					}
-				}
-			}
-			
-			return null;
+			return Resources.manager.GetText (id, level);
 		}
 		
 		
 		public static void SetBundle(ResourceBundle bundle, ResourceSetMode mode)
 		{
-			ResourceLevel level   = bundle.ResourceLevel;
-			CultureInfo   culture = bundle.Culture;
-			string        id      = bundle.PrefixedName;
-			byte[]        data    = bundle.CreateXmlAsData ();
-			
-			if (Resources.SetBinaryData (id, level, culture, data, mode) == false)
-			{
-				throw new ResourceException (string.Format ("Could not store bundle '{0}'.", id));
-			}
+			Resources.manager.SetBundle (bundle, mode);
 		}
 		
 		public static bool SetBinaryData(string id, ResourceLevel level, CultureInfo culture, byte[] data, ResourceSetMode mode)
 		{
-			if (culture == null)
-			{
-				culture = Resources.Culture;
-			}
-			
-			switch (level)
-			{
-				case ResourceLevel.Default:
-				case ResourceLevel.Localised:
-				case ResourceLevel.Customised:
-					break;
-				
-				default:
-					throw new ResourceException (string.Format ("Invalid level {0} for resource '{1}'", level, id));
-			}
-			
-			string resource_id;
-			
-			IResourceProvider provider = Resources.FindProvider (id, out resource_id);
-			
-			if (provider != null)
-			{
-				if (provider.SetData (resource_id, level, culture, data, mode))
-				{
-					return true;
-				}
-			}
-			
-			return false;
+			return Resources.manager.SetBinaryData (id, level, culture, data, mode);
 		}
 		
 		
 		public static bool RemoveResource(string id, ResourceLevel level, CultureInfo culture)
 		{
-			if (culture == null)
-			{
-				culture = Resources.Culture;
-			}
-			
-			switch (level)
-			{
-				case ResourceLevel.Default:
-				case ResourceLevel.Localised:
-				case ResourceLevel.Customised:
-				case ResourceLevel.All:
-					break;
-				
-				default:
-					throw new ResourceException (string.Format ("Invalid level {0} for resource '{1}'", level, id));
-			}
-			
-			string resource_id;
-			
-			IResourceProvider provider = Resources.FindProvider (id, out resource_id);
-			
-			if (provider != null)
-			{
-				if (provider.Remove (resource_id, level, culture))
-				{
-					return true;
-				}
-			}
-			
-			return false;
+			return Resources.manager.RemoveResource (id, level, culture);
 		}
 		
 		
 		public static void DebugDumpProviders()
 		{
-			for (int i = 0; i < Resources.resource_providers.Length; i++)
-			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Prefix '{0}' implemented by class {1}", Resources.resource_providers[i].Prefix, Resources.resource_providers[i].GetType ().Name));
-			}
+			Resources.manager.DebugDumpProviders ();
 		}
 		
 		
@@ -757,6 +423,7 @@ namespace Epsitec.Common.Support
 			return found;
 		}
 
+		
 		public static bool EqualCultures(ResourceLevel level_a, CultureInfo culture_a, ResourceLevel level_b, CultureInfo culture_b)
 		{
 			if (level_a != level_b)
@@ -790,35 +457,7 @@ namespace Epsitec.Common.Support
 		
 		private static void InternalInitialise()
 		{
-			System.Collections.ArrayList providers = new System.Collections.ArrayList ();
-			System.Reflection.Assembly   assembly  = System.Reflection.Assembly.LoadWithPartialName ("Common.Support.Implementation");
-			
-			System.Type[] types_in_assembly = assembly.GetTypes ();
-			
-			foreach (System.Type type in types_in_assembly)
-			{
-				if ((type.IsClass) &&
-					(!type.IsAbstract))
-				{
-					if (type.GetInterface ("IResourceProvider") != null)
-					{
-						IResourceProvider provider = System.Activator.CreateInstance (type) as IResourceProvider;
-						
-						if (provider != null)
-						{
-							System.Diagnostics.Debug.Assert (Resources.resource_provider_hash.Contains (provider.Prefix) == false);
-							
-							providers.Add (provider);
-							Resources.resource_provider_hash[provider.Prefix] = provider;
-							
-							provider.SelectLocale (Resources.culture);
-						}
-					}
-				}
-			}
-			
-			Resources.resource_providers = new IResourceProvider[providers.Count];
-			providers.CopyTo (Resources.resource_providers);
+			Resources.manager = new ResourceManager ();
 		}
 		
 		private static void InternalDefineCultures(string[] names)
@@ -834,59 +473,8 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		private static void SelectLocale(CultureInfo culture)
-		{
-			Resources.culture = culture;
-			
-			for (int i = 0; i < Resources.resource_providers.Length; i++)
-			{
-				Resources.resource_providers[i].SelectLocale (culture);
-			}
-		}
 		
-		private static IResourceProvider FindProvider(string full_id, out string local_id)
-		{
-			if (full_id != null)
-			{
-				int pos = full_id.IndexOf (":");
-			
-				if (pos > 0)
-				{
-					string prefix;
-					
-					prefix   = full_id.Substring (0, pos);
-					local_id = full_id.Substring (pos+1);
-					
-					IResourceProvider provider = Resources.resource_provider_hash[prefix] as IResourceProvider;
-					
-					return provider;
-				}
-				
-				if (Resources.default_prefix != null)
-				{
-					string prefix;
-					
-					prefix   = Resources.DefaultPrefix;
-					local_id = full_id;
-					
-					IResourceProvider provider = Resources.resource_provider_hash[prefix] as IResourceProvider;
-					
-					return provider;
-				}
-			}
-			
-			local_id = null;
-			return null;
-		}
-		
-		
-		
-		private static CultureInfo				culture;
 		private static CultureInfo[]			cultures;
-		private static IResourceProvider[]		resource_providers;
-		private static Hashtable				resource_provider_hash;
-		private static string					application_name;
-		private static string					default_prefix = "file";
-		private static IBundleProvider[]		bundle_providers;
+		private static ResourceManager			manager;
 	}
 }

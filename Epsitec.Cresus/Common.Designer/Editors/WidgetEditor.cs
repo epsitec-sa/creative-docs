@@ -199,7 +199,7 @@ namespace Epsitec.Common.Designer.Editors
 		
 		public void Save()
 		{
-			string full_name  = this.dialog_designer.ResourceName;
+			string full_name = this.dialog_designer.ResourceName;
 			
 			if ((full_name == null) ||
 				(full_name.Length == 0))
@@ -213,8 +213,10 @@ namespace Epsitec.Common.Designer.Editors
 			string res_prefix = Support.Resources.ExtractPrefix (full_name);
 			string res_name   = Support.Resources.ExtractName (full_name);
 			
-			Support.ObjectBundler  bundler = new Support.ObjectBundler ();
-			Support.ResourceBundle bundle  = Support.ResourceBundle.Create (res_prefix, res_name, ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
+			Support.ResourceManager res_manager = this.interf_edit_controller.ResourceManager;
+			
+			Support.ObjectBundler  bundler = new Support.ObjectBundler (res_manager);
+			Support.ResourceBundle bundle  = Support.ResourceBundle.Create (res_manager, res_prefix, res_name, ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
 			
 			bundler.SetupPrefix (res_prefix);
 			bundler.FillBundleFromObject (bundle, this.root);

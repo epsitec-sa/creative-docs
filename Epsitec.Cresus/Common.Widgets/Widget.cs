@@ -228,6 +228,8 @@ namespace Epsitec.Common.Widgets
 		{
 //			this.SuspendLayout ();
 			
+			this.resource_manager = bundler.ResourceManager;
+			
 			//	L'ObjectBundler sait initialiser la plupart des propriétés simples (celles
 			//	qui sont marquées par l'attribut [Bundle]), mais il ne sait pas comment
 			//	restitue les enfants du widget :
@@ -1313,7 +1315,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return (this.internal_state & InternalState.AutoResolveResRef) != 0;
+				return (this.resource_manager != null) && ((this.internal_state & InternalState.AutoResolveResRef) != 0);
 			}
 			set
 			{
@@ -1660,6 +1662,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Support.ResourceManager				ResourceManager
+		{
+			get
+			{
+				return this.resource_manager;
+			}
+		}
+		
 		
 		public Widget								RootParent
 		{
@@ -1905,7 +1915,7 @@ namespace Epsitec.Common.Widgets
 					
 					this.ModifyText (value);
 					
-					string text = this.AutoResolveResRef ? Support.Resources.ResolveTextRef (value) : value;
+					string text = this.AutoResolveResRef ? this.resource_manager.ResolveTextRef (value) : value;
 					
 					if (this.text_layout.Text != text)
 					{
@@ -1963,7 +1973,15 @@ namespace Epsitec.Common.Widgets
 				{
 					//	Le code mnémonique est encapsulé par des tags <m>..</m>.
 					
-					return TextLayout.ExtractMnemonic (this.AutoResolveResRef ? Support.Resources.ResolveTextRef (this.Text) : this.Text);
+					if (this.AutoResolveResRef)
+					{
+						string text = this.resource_manager.ResolveTextRef (this.Text);
+						return TextLayout.ExtractMnemonic (text);
+					}
+					else
+					{
+						return TextLayout.ExtractMnemonic (this.Text);
+					}
 				}
 				
 				return (char) 0;
@@ -6516,6 +6534,7 @@ namespace Epsitec.Common.Widgets
 		private double							default_font_height;
 		private MouseCursor						mouse_cursor;
 		private System.Collections.Hashtable	property_hash;
+		private Support.ResourceManager			resource_manager;
 		private Support.CommandDispatcher		dispatcher;
 		private Support.IValidator				validator;
 		private int								widget_id;

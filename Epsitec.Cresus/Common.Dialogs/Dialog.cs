@@ -9,16 +9,18 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public class Dialog : AbstractDialog, Support.ICommandDispatcherHost
 	{
-		public Dialog()
+		public Dialog(Support.ResourceManager resource_manager)
 		{
-			this.name       = "AnonymousDialog";
-			this.dispatcher = new Support.CommandDispatcher (this.name, true);
+			this.name             = "AnonymousDialog";
+			this.dispatcher       = new Support.CommandDispatcher (this.name, true);
+			this.resource_manager = resource_manager;
 		}
 		
-		public Dialog(string name)
+		public Dialog(Support.ResourceManager resource_manager, string name)
 		{
-			this.name       = name;
-			this.dispatcher = new Support.CommandDispatcher (this.name);
+			this.name             = name;
+			this.dispatcher       = new Support.CommandDispatcher (this.name);
+			this.resource_manager = resource_manager;
 		}
 		
 		
@@ -149,7 +151,7 @@ namespace Epsitec.Common.Dialogs
 			}
 			else
 			{
-				Support.ObjectBundler bundler = new Support.ObjectBundler ();
+				Support.ObjectBundler bundler = new Support.ObjectBundler (this.resource_manager);
 				
 				Widgets.Widget root = bundler.CreateFromBundle (bundle) as Widgets.Widget;
 				
@@ -404,6 +406,7 @@ namespace Epsitec.Common.Dialogs
 		
 		private static IDialogDesignerFactory	factory;
 		
+		protected Support.ResourceManager		resource_manager;
 		protected InternalMode					mode;
 		protected Types.IDataGraph				data;
 		protected Types.IDataFolder				initial_data_folder;

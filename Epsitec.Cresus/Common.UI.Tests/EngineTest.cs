@@ -264,7 +264,7 @@ namespace Epsitec.Common.UI
 			Data.Record record = EngineTest.CreateRecord ();
 			
 			Support.ResourceBundle bundle  = Support.Resources.GetBundle ("file:binding_form");
-			Support.ObjectBundler  bundler = new Support.ObjectBundler ();
+			Support.ObjectBundler  bundler = new Support.ObjectBundler (Support.Resources.DefaultManager);
 			
 			Assert.IsNotNull (bundle);
 			
