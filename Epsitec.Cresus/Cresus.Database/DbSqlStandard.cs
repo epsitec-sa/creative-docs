@@ -99,16 +99,16 @@ namespace Epsitec.Cresus.Database
 				//	Si le qualifier est entre guillemets, il peut lui aussi contenir un "."...
 				//	Exemple valide "A.B".C où le résultat doit être qualifier="A.B" et name="C".
 
-				System.Collections.ArrayList list;
-				int nb = System.Utilities.StringToTokens (value, '.', out list);
+				string[] tokens;
+				int nb = System.Utilities.StringToTokens (value, '.', out tokens);
 
 				if ( nb != 2 )
 				{
 					throw new DbFormatException (string.Format ("{0} is not a qualified name", value));
 				}
 
-				qualifier = (string)list[0];
-				name      = (string)list[1];
+				qualifier = tokens [0];
+				name      = tokens [1];
 				
 				return;
 			}
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Database
 				int len = value.Length;
 				if ((len > 0) && (len < 256))
 				{
-					System.Collections.ArrayList list;
+					string[] tokens;
 					int		nb;
 
 					//	Valide un nom qualifié de type N1.N2 où N1 est un nom
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Database
 
 					try
 					{
-						nb = System.Utilities.StringToTokens (value, '.', out list);
+						nb = System.Utilities.StringToTokens (value, '.', out tokens);
 					}
 					catch
 					{
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Database
 						return false;
 					}
 
-					return (ValidateName ((string)list[0]) && ValidateName ((string)list[1]));
+					return (ValidateName (tokens [0]) && ValidateName (tokens [1]));
 				}
 			}
 			

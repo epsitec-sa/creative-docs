@@ -18,6 +18,11 @@ namespace Epsitec.Cresus.Database
 		{
 			if (this.set_query == null)
 			{
+				if (set_op == SqlSelectSetOp.None)
+				{
+					throw new System.ArgumentException ("Invalid set operation");
+				}
+				
 				this.set_query = set_query;
 				this.set_op    = set_op;
 			}

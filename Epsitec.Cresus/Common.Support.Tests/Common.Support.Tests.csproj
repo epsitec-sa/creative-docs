@@ -84,16 +84,6 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
-                    Name = "Cresus.DataLayer"
-                    Project = "{BA604F89-53C1-4228-AC76-5D5E68205029}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
-                    Name = "Cresus.UserInterface"
-                    Project = "{5E8E51FA-AB4A-4E48-BD20-7796EDCA1B63}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
                     Name = "Common.Support"
                     Project = "{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
@@ -109,11 +99,6 @@
             <Include>
                 <File
                     RelPath = "AssemblyInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DataBinderTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
