@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelDouble : AbstractPanel
 	{
-		public PanelDouble()
+		public PanelDouble(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -21,11 +21,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-		}
-		
-		public PanelDouble(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)
