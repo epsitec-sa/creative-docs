@@ -114,6 +114,8 @@ namespace Epsitec.Common.Widgets.Design
 			}
 		}
 		
+		
+		
 		protected Panel					panel;
 		protected Widget				hot_widget;
 		
