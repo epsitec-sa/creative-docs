@@ -7,6 +7,12 @@ namespace Epsitec.Common.Drawing
 			System.Diagnostics.Debug.Assert (handle != System.IntPtr.Zero);
 			this.handle = handle;
 		}
+		
+		Font(System.IntPtr handle, string synthetic_style, SyntheticFontMode synthetic_mode) : this (handle)
+		{
+			this.synthetic_style = synthetic_style;
+			this.synthetic_mode  = synthetic_mode;
+		}
 
 		~Font()
 		{
@@ -37,7 +43,15 @@ namespace Epsitec.Common.Drawing
 		
 		public string					StyleName
 		{
-			get { return Agg.Library.AggFontFaceGetName (this.handle, (int) NameID.Style); }
+			get
+			{
+				if (this.synthetic_style == null)
+				{
+					return Agg.Library.AggFontFaceGetName (this.handle, (int) NameID.Style);
+				}
+				
+				return this.synthetic_style;
+			}
 		}
 		
 		public string					LocalStyleName
@@ -91,6 +105,22 @@ namespace Epsitec.Common.Drawing
 		public double					LineHeight
 		{
 			get { return Agg.Library.AggFontFaceGetMetrics (this.handle, 3); }
+		}
+		
+		public bool						IsSynthetic
+		{
+			get { return this.synthetic_mode != SyntheticFontMode.None; }
+		}
+		
+		public SyntheticFontMode		SyntheticFontMode
+		{
+			get { return this.synthetic_mode; }
+		}
+		
+		
+		public static double			ObliqueAngle
+		{
+			get { return 20.0; }
 		}
 		
 		
@@ -175,8 +205,6 @@ namespace Epsitec.Common.Drawing
 						Font.array[j++] = font;
 						Font.hash[name] = font;
 					}
-					
-					System.Diagnostics.Debug.Assert (font != null);
 				}
 				
 				Font.count = j;
@@ -232,12 +260,73 @@ namespace Epsitec.Common.Drawing
 				
 			string key = buffer.ToString ();
 			
-			return Font.hash[key] as Font;
+			Font font = Font.hash[key] as Font;
+			
+			if (font == null)
+			{
+				int pos;
+				
+				pos = style.IndexOf ("Italic");
+				
+				if (pos >= 0)
+				{
+					return Font.GetFont (face, style.Replace ("Italic", "Oblique"), optical);
+				}
+				
+				pos = style.IndexOf ("Oblique");
+				
+				if (pos >= 0)
+				{
+					//	Le style oblique n'existe pas pour cette fonte. Tentons de le synthétiser
+					//	à partir de la version droite la plus approchante.
+					
+					string clean_style;
+					
+					clean_style = style.Replace ("Oblique", "");
+					clean_style = clean_style.Trim ();
+					
+					if (clean_style == "")
+					{
+						clean_style = "Regular";
+					}
+					
+					font = Font.GetFont (face, clean_style, optical);
+					
+					if (font != null)
+					{
+						//	La fonte de base (droite) existe. C'est une bonne nouvelle. On va créer
+						//	une fonte synthétique oblique...
+						
+						Font   syn_font = new Font (font.Handle, style, SyntheticFontMode.Oblique);
+						string syn_name = syn_font.FullName;
+						
+						System.Diagnostics.Debug.Assert (syn_font.StyleName == style);
+						System.Diagnostics.Debug.Assert (syn_font.IsSynthetic);
+						System.Diagnostics.Debug.Assert (Font.hash.ContainsKey (syn_name) == false);
+						
+						int n = Font.count;
+						Font[] array_copy = new Font[n+1];
+						Font.array.CopyTo (array_copy, 0);
+						Font.array = array_copy;
+						
+						Font.array[n]       = syn_font;
+						Font.hash[syn_name] = syn_font;
+						Font.count          = n + 1;
+						
+						font = syn_font;
+					}
+				}
+			}
+			
+			return font;
 		}
 		
 		
 		
 		protected System.IntPtr							handle;
+		protected string								synthetic_style;
+		protected SyntheticFontMode						synthetic_mode;
+		
 		protected static Font[]							array;
 		protected static System.Collections.Hashtable	hash;
 		protected static int							count;
@@ -246,5 +335,10 @@ namespace Epsitec.Common.Drawing
 		{
 			None, Face = 1, Style = 2, StyleUserLocale = 3, Optical = 4
 		}
+	}
+	
+	public enum SyntheticFontMode
+	{
+		None, Oblique
 	}
 }

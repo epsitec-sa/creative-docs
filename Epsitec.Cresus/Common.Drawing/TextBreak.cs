@@ -39,7 +39,7 @@ namespace Epsitec.Common.Drawing
 			
 			width *= this.size;
 			
-			if (width <= 0)
+			if (text == null)
 			{
 				text  = "";
 				width = 0;

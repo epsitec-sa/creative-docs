@@ -130,6 +130,26 @@ namespace Epsitec.Common.Drawing
 		public void AddGlyph(Font font, int glyph, double x, double y, double scale)
 		{
 			this.CreateOnTheFly ();
+			
+			if (font.IsSynthetic)
+			{
+				Transform transform = new Transform (this.transform);
+				
+				switch (font.SyntheticFontMode)
+				{
+					case SyntheticFontMode.Oblique:
+						transform.MultiplyBy (new Transform (1, System.Math.Sin (Font.ObliqueAngle * System.Math.PI / 180.0), 0, 1, x, y));
+						Agg.Library.AggRasterizerSetTransform (this.agg_ras, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY);
+						Agg.Library.AggRasterizerAddGlyph(this.agg_ras, font.Handle, glyph, 0, 0, scale);
+						transform = this.transform;
+						Agg.Library.AggRasterizerSetTransform (this.agg_ras, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY);
+						return;
+					
+					default:
+						break;
+				}
+			}
+			
 			Agg.Library.AggRasterizerAddGlyph(this.agg_ras, font.Handle, glyph, x, y, scale);
 		}
 		
