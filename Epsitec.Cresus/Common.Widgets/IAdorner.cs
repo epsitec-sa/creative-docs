@@ -1,5 +1,16 @@
 namespace Epsitec.Common.Widgets
 {
+	public enum GlyphType
+	{
+		None,
+		ArrowUp,
+		ArrowDown,
+		ArrowLeft,
+		ArrowRight,
+		Menu,
+		Close,
+	}
+
 	public enum PaintTextStyle
 	{
 		StaticText,
@@ -37,7 +48,7 @@ namespace Epsitec.Common.Widgets
 
 		void PaintWindowBackground(Drawing.Graphics graphics, Drawing.Rectangle windowRect, Drawing.Rectangle paintRect, WidgetState state);
 
-		void PaintArrow(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir, PaintTextStyle style);
+		void PaintGlyph(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, GlyphType type, PaintTextStyle style);
 		void PaintCheck(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintRadio(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 		void PaintIcon(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, string icon);
