@@ -113,7 +113,7 @@ namespace Epsitec.Common.UI.Data
 //				{
 //					object value;
 //					
-//					if (Common.Converters.Converter.Convert (this.value, this.type.SystemType, out value))
+//					if (Common.Types.Converter.Convert (this.value, this.type.SystemType, out value))
 //					{
 //						return value;
 //					}
@@ -125,7 +125,7 @@ namespace Epsitec.Common.UI.Data
 			}
 			set
 			{
-				if (Common.Converters.Comparer.Equal (this.value, value) == false)
+				if (Common.Types.Comparer.Equal (this.value, value) == false)
 				{
 					if (this.type == null)
 					{
@@ -174,7 +174,7 @@ namespace Epsitec.Common.UI.Data
 		{
 			if (this.type != null)
 			{
-				if (Common.Converters.Converter.Convert (value, this.type.SystemType, out value))
+				if (Common.Types.Converter.Convert (value, this.type.SystemType, out value))
 				{
 					this.Value = value;
 				}

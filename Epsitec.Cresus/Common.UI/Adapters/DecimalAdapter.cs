@@ -55,7 +55,7 @@ namespace Epsitec.Common.UI.Adapters
 			
 			decimal value;
 			
-			if (Common.Converters.Converter.Convert (data, out value))
+			if (Common.Types.Converter.Convert (data, out value))
 			{
 				this.Value = value;
 				return true;

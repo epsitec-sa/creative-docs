@@ -8,7 +8,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// La classe EnumType décrit divers une énumération native.
 	/// </summary>
-	public class EnumType : IEnum
+	public class EnumType : IEnum, IDataConstraint
 	{
 		public EnumType(System.Type enum_type)
 		{
@@ -80,6 +80,26 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 		
+		
+		#region IDataConstraint Members
+		public virtual bool CheckConstraint(object value)
+		{
+			try
+			{
+				System.Enum enum_value = (System.Enum) System.Enum.Parse (this.enum_type, value.ToString ());
+				
+				if (System.Enum.IsDefined (this.enum_type, enum_value))
+				{
+					return true;
+				}
+			}
+			catch
+			{
+			}
+			
+			return false;
+		}
+		#endregion
 		
 		#region INamedType Members
 		public virtual System.Type				SystemType

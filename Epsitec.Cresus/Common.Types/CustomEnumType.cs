@@ -7,7 +7,7 @@ namespace Epsitec.Common.Types
 	/// La classe CustomEnumType décrit une énumération, basée sur une enum
 	/// native, mais avec la possibilité d'accepter d'autres valeurs.
 	/// </summary>
-	public class CustomEnumType : EnumType, IDataConstraint
+	public class CustomEnumType : EnumType
 	{
 		public CustomEnumType(System.Type enum_type) : base (enum_type)
 		{
@@ -44,17 +44,55 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		#region IDataConstraint Members
-		public bool CheckConstraint(object value)
+		public override bool CheckConstraint(object value)
 		{
-			if (this.constraint == null)
+			if ((CustomEnumType.IsCustomName (value as string)) ||
+				(base.CheckConstraint (value)))
 			{
-				return value is string;
+				if (this.constraint != null)
+				{
+					return this.constraint.CheckConstraint (value);
+				}
+				
+				return true;
 			}
 			
-			return this.constraint.CheckConstraint (value);
+			return false;
 		}
-		#endregion
+		
+		
+		public static bool IsCustomName(string value)
+		{
+			if ((value != null) &&
+				(value.Length > 1) &&
+				(value[0] == '{') &&
+				(value[value.Length-1] == '}'))
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		
+		public static string ToCustomName(string value)
+		{
+			if (value != null)
+			{
+				return string.Concat ("{", value, "}");
+			}
+			
+			return "{}";
+		}
+		
+		public static string FromCustomName(string value)
+		{
+			if (CustomEnumType.IsCustomName (value))
+			{
+				return value.Substring (1, value.Length-2);
+			}
+			
+			throw new System.ArgumentException (string.Format ("Specified name ({0}) is not a valid custom name.", value), "value");
+		}
 		
 		
 		private IDataConstraint					constraint;

@@ -63,15 +63,14 @@ namespace Epsitec.Common.UI.Controllers
 			this.widget    = widget;
 			this.named_sel = named_sel;
 			
-			if ((this.data_type is Types.IEnum) &&
+			Types.IEnum enum_type = this.data_type as Types.IEnum;
+			
+			if ((enum_type != null) &&
 				(string_host != null))
 			{
 				//	La donnée est de type 'enum' et le widget accepte des listes de valeurs.
 				
-				Types.IEnum        enum_type   = this.data_type as Types.IEnum;
-				Types.IEnumValue[] enum_values = enum_type.Values;
-				
-				this.enum_values = enum_values;
+				this.enum_values = enum_type.Values;
 				
 				if (string_host.Items.Count == 0)
 				{
@@ -123,6 +122,7 @@ namespace Epsitec.Common.UI.Controllers
 			}
 			
 			this.named_sel.SelectedIndexChanged += new EventHandler(HandleSelectedIndexChanged);
+			this.widget.TextChanged += new EventHandler(HandleTextChanged);
 			
 			this.SyncFromAdapter ();
 		}
@@ -159,7 +159,18 @@ namespace Epsitec.Common.UI.Controllers
 			
 			if (text_adapter != null)
 			{
-				this.named_sel.SelectedName = text_adapter.Value;
+				string value = text_adapter.Value;
+				
+				//	Vérifions tout d'abord si la valeur correspond à un texte personnalisé...
+				
+				if (Types.CustomEnumType.IsCustomName (value))
+				{
+					this.widget.Text = Types.CustomEnumType.FromCustomName (value);
+				}
+				else
+				{
+					this.named_sel.SelectedName = value;
+				}
 			}
 		}
 		
@@ -201,6 +212,18 @@ namespace Epsitec.Common.UI.Controllers
 			{
 				string value = this.named_sel.SelectedName;
 				
+				Types.IReadOnly read_only = this.widget as Types.IReadOnly;
+				
+				if ((value == null) &&
+					(read_only != null) &&
+					(read_only.IsReadOnly == false))
+				{
+					//	Il n'y a pas d'élément sélectionné dans la liste, mais peut-être y a-t-il un
+					//	text personnalisé à la place ?
+					
+					value = Types.CustomEnumType.ToCustomName (this.widget.Text);
+				}
+				
 				if (this.CheckConstraint (value))
 				{
 					text_adapter.Value = value;
@@ -210,6 +233,11 @@ namespace Epsitec.Common.UI.Controllers
 		
 		
 		private void HandleSelectedIndexChanged(object sender)
+		{
+			this.SyncFromUI ();
+		}
+		
+		private void HandleTextChanged(object sender)
 		{
 			this.SyncFromUI ();
 		}
