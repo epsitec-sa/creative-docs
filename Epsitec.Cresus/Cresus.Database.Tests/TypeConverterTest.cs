@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void CheckIsCompatibleToSimpleType()
 		{
-			object[] objects = new object[] { true, (short)(10), (int)(20), (long)(30), (decimal)(40), System.Date.Today, System.Time.Now, System.DateTime.Now, "x", new byte[] { (byte)1 } };
+			object[] objects = new object[] { true, (short)(10), (int)(20), (long)(30), (decimal)(40), Common.Types.Date.Today, Common.Types.Time.Now, System.DateTime.Now, "x", new byte[] { (byte)1 } };
 			DbSimpleType[] types = new DbSimpleType[] { DbSimpleType.Decimal, DbSimpleType.Decimal, DbSimpleType.Decimal, DbSimpleType.Decimal, DbSimpleType.Decimal, DbSimpleType.Date, DbSimpleType.Time, DbSimpleType.DateTime, DbSimpleType.String, DbSimpleType.ByteArray };
 			
 			for (int i = 0; i < objects.Length; i++)
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Database
 			
 			System.Console.Out.WriteLine ("Today is {0}", obj);
 			
-			Assertion.AssertEquals (new System.Date (val), new System.Date (res));
+			Assertion.AssertEquals (new Common.Types.Date (val), new Common.Types.Date (res));
 			
 			val = System.DateTime.Now;
 			def = null;
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Database
 			
 			System.Console.Out.WriteLine ("Now is {0}", obj);
 			
-			Assertion.AssertEquals (new System.Time (val), new System.Time (res));
+			Assertion.AssertEquals (new Common.Types.Time (val), new Common.Types.Time (res));
 			
 			val = "Hello";
 			def = null;
