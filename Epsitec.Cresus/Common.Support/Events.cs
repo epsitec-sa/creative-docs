@@ -4,4 +4,12 @@
 namespace Epsitec.Common.Support
 {
 	public delegate void EventHandler(object sender);
+	public delegate void CancelEventHandler(object sender, CancelEventArgs e);
+	
+	public class CancelEventArgs : System.ComponentModel.CancelEventArgs
+	{
+		public CancelEventArgs()
+		{
+		}
+	}
 }
