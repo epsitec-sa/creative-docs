@@ -28,7 +28,7 @@ namespace Epsitec.Common.UI.Controllers
 			
 			double y = System.Math.Floor ((h_pane - h_line) / 2);
 			
-			this.caption_label.Bounds = new Drawing.Rectangle (0, y, 100, h_line);
+			this.caption_label.Bounds = new Drawing.Rectangle (0, y, 80, h_line);
 			this.caption_label.Anchor = AnchorStyles.TopLeft;
 			
 			this.text_field.Bounds = new Drawing.Rectangle (this.caption_label.Right, y, panel.Width - this.caption_label.Width, h_line);
