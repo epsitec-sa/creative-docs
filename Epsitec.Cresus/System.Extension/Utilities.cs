@@ -165,6 +165,11 @@ namespace System
 		
 		public static string[] Split(string text, char sep)
 		{
+			//	Comme string.Split, mais en mieux, en ce sens que cette méthode gère les
+			//	guillemets simples (') et doubles ("), ainsi que les tags <>.
+			//
+			//	Si un séparateur se trouve entre guillemets ou dans un tag, il est sauté.
+			
 			if (text.IndexOf (sep) < 0)
 			{
 				//	Optimisation pour le cas le plus fréquent : il n'y a qu'un seul élément

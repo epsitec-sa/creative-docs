@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 19/11/2003
+//	Statut : OK/PA, 24/11/2003
 
 namespace Epsitec.Cresus.Database
 {
@@ -28,6 +28,11 @@ namespace Epsitec.Cresus.Database
 			get { return this.Attributes[Tags.Id, ResourceLevel.Default]; }
 		}
 		
+		public string						Information
+		{
+			get { return this.Attributes[Tags.Information, ResourceLevel.Default]; }
+		}
+		
 		public string						Name
 		{
 			get { return this.Attributes[Tags.Name, ResourceLevel.Default]; }
@@ -41,6 +46,55 @@ namespace Epsitec.Cresus.Database
 		public string						Description
 		{
 			get { return this.Attributes[Tags.Description]; }
+		}
+		
+		public int							Rank
+		{
+			get
+			{
+				if (this.rank == -2)
+				{
+					//	Si 'rank' n'a jamais été initialisé, faisons-le maintenant en se
+					//	basant sur l'attributs 'sort'.
+					
+					this.rank = -1;
+					this.ParseInformation (this.Information);
+				}
+				
+				return this.rank;
+			}
+		}
+		
+		
+		protected void ParseInformation(string xml)
+		{
+			if (xml == null)
+			{
+				return;
+			}
+			
+			//	L'information existe (sous forme XML). On va donc demander à .NET de
+			//	parser l'arbre XML.
+			
+			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+			doc.LoadXml (xml);
+			
+			this.ParseInformation (doc.DocumentElement);
+		}
+		
+		protected virtual void ParseInformation(System.Xml.XmlElement xml)
+		{
+			if (xml.Name != Tags.Information)
+			{
+				throw new System.ArgumentException (string.Format ("Expected root element named <{0}>, but found <{1}>.", Tags.Information, xml.Name));
+			}
+			
+			string arg_rank = xml.GetAttribute ("rank");
+			
+			if (arg_rank != "")
+			{
+				this.rank = System.Int32.Parse (arg_rank, System.Globalization.CultureInfo.InvariantCulture);
+			}
 		}
 		
 		
@@ -97,7 +151,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return new IdComparerClass ();
+				return new ComparerClass (Tags.Id);
 			}
 		}
 		
@@ -105,12 +159,55 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return new NameComparerClass ();
+				return new ComparerClass (Tags.Name);
+			}
+		}
+		
+		public static System.Collections.IComparer	RankComparer
+		{
+			get
+			{
+				return new RankComparerClass ();
 			}
 		}
 		
 		
-		private class IdComparerClass : System.Collections.IComparer
+		private class ComparerClass : System.Collections.IComparer
+		{
+			public ComparerClass(string tag)
+			{
+				this.tag = tag;
+			}
+			
+			#region IComparer Members
+			public int Compare(object x, object y)
+			{
+				DbEnumValue ex = x as DbEnumValue;
+				DbEnumValue ey = y as DbEnumValue;
+
+				if (ex == ey)
+				{
+					return 0;
+				}
+				
+				if (ex == null)
+				{
+					return -1;
+				}
+				if (ey == null)
+				{
+					return 1;
+				}
+				
+				return string.Compare (ex.Attributes[this.tag, ResourceLevel.Default], ey.Attributes[this.tag, ResourceLevel.Default], false, System.Globalization.CultureInfo.InvariantCulture);
+			}
+			#endregion
+			
+			private string					tag;
+		}
+		
+		
+		private class RankComparerClass : System.Collections.IComparer
 		{
 			#region IComparer Members
 			public int Compare(object x, object y)
@@ -132,40 +229,19 @@ namespace Epsitec.Cresus.Database
 					return 1;
 				}
 				
-				return string.Compare (ex.Id, ey.Id);
+				int rx = ex.Rank;
+				int ry = ey.Rank;
+				
+				return rx - ry;
 			}
 			#endregion
-		}
-		
-		private class NameComparerClass : System.Collections.IComparer
-		{
-			#region IComparer Members
-			public int Compare(object x, object y)
-			{
-				DbEnumValue ex = x as DbEnumValue;
-				DbEnumValue ey = y as DbEnumValue;
-
-				if (ex == ey)
-				{
-					return 0;
-				}
-				
-				if (ex == null)
-				{
-					return -1;
-				}
-				if (ey == null)
-				{
-					return 1;
-				}
-				
-				return string.Compare (ex.Name, ey.Name);
-			}
-			#endregion
+			
+			private string					tag;
 		}
 		
 		
 		
 		protected DbAttributes				attributes;
+		protected int						rank = -2;
 	}
 }

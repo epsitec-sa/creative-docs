@@ -125,13 +125,31 @@
      <field name='class'>PanePage</field>
      <field name='rs'>10</field>
      <field name='min'>50</field>
-     <field name='e'>1</field>
+     <field name='e'>0</field>
+     <list name='widgets'>
+      <bundle>
+       <field name='class'>Button</field>
+       <field name='text'>Panneau 1</field>
+       <field name='pos'>50;100</field>
+       <field name='size'>80;*</field>
+       <field name='anchor'>Bottom, Left</field>
+      </bundle>
+     </list>
     </bundle>
     <bundle>
      <field name='class'>PanePage</field>
      <field name='rs'>10</field>
      <field name='min'>50</field>
-     <field name='e'>0</field>
+     <field name='e'>1</field>
+     <list name='widgets'>
+      <bundle>
+       <field name='class'>Button</field>
+       <field name='text'>Panneau 2</field>
+       <field name='pos'>50;100</field>
+       <field name='size'>80;*</field>
+       <field name='anchor'>Bottom, Left</field>
+      </bundle>
+     </list>
     </bundle>
    </list>
   </bundle>

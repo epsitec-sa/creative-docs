@@ -333,7 +333,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		public System.Data.IDbTransaction BeginTransaction()
 		{
 			this.EnsureConnection ();
-			return this.db_connection.BeginTransaction ();
+			return this.db_connection.BeginTransaction (System.Data.IsolationLevel.RepeatableRead);
 		}
 		
 		#endregion
