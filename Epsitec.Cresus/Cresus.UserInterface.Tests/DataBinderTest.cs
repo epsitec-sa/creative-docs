@@ -61,8 +61,8 @@ namespace Epsitec.Common.Support.Tests
 			Assertion.AssertEquals ("Option vitale 'A'",			data.FindDbColumn ("x.*.a").Caption);
 			Assertion.AssertEquals ("Copie de l'option vitale 'A'",	data.FindDbColumn ("x.*.b").Caption);
 			
-			data.AttachObserver ("x.0.a", new DataChangeEventHandler (HandleDataChanged));
-			data.AttachObserver ("x.0.b", new DataChangeEventHandler (HandleDataChanged));
+			data.AttachObserver ("x.*.a", new DataChangeEventHandler (HandleDataChanged));
+			data.AttachObserver ("x.*.b", new DataChangeEventHandler (HandleDataChanged));
 			
 			Assertion.AssertNotNull (bundle);
 			Assertion.AssertNotNull (bundler);

@@ -222,7 +222,9 @@ namespace Epsitec.Cresus.DataLayer
 			DataChangeEventArgs e = new DataChangeEventArgs (path, action);
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			for (int i = 0; i < elem.Length; i++)
+			int count = elem.Length;
+			
+			for (int i = 0; i < count; i++)
 			{
 				if (i > 0)
 				{
@@ -233,15 +235,33 @@ namespace Epsitec.Cresus.DataLayer
 				
 				this.OnDataChanged (buffer.ToString (), e);
 			}
+			
+			if (count > 2)
+			{
+				//	Génère aussi un événement avec un "wildcard", ça permet d'écouter sur des
+				//	modifications de certaines colonnes d'une table, indépendemment du numéro
+				//	de la ligne.
+				
+				buffer.Length = 0;
+				buffer.Append (elem[0]);
+				buffer.Append (".*.");
+				buffer.Append (elem[count-1]);
+				
+				this.OnDataChanged (buffer.ToString (), e);
+			}
 		}
 		
 		
 		protected virtual void OnDataChanged(string path, DataChangeEventArgs e)
 		{
-			DataChangeEventHandler handler = this.changed_events[path] as DataChangeEventHandler;
+			object obj = this.changed_events[path];
 			
-			if (handler != null)
+			if (obj != null)
 			{
+				DataChangeEventHandler handler = obj as DataChangeEventHandler;
+				
+				System.Diagnostics.Debug.Assert (handler != null);
+				
 				handler (this, e);
 			}
 		}
