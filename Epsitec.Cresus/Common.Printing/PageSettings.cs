@@ -52,6 +52,17 @@ namespace Epsitec.Common.Printing
 				
 				return new Drawing.Margins (left, right, top, bottom);
 			}
+			set
+			{
+				System.Drawing.Printing.Margins margins = new System.Drawing.Printing.Margins ();
+				
+				margins.Left   = (int)(value.Left   / PageSettings.Millimeters);
+				margins.Right  = (int)(value.Right  / PageSettings.Millimeters);
+				margins.Top    = (int)(value.Top    / PageSettings.Millimeters);
+				margins.Bottom = (int)(value.Bottom / PageSettings.Millimeters);
+				
+				this.ps.Margins = margins;
+			}
 		}
 		
 		public PaperSize						PaperSize

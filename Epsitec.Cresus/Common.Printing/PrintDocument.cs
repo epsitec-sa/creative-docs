@@ -16,6 +16,8 @@ namespace Epsitec.Common.Printing
 			this.pd.EndPrint          += new System.Drawing.Printing.PrintEventHandler (this.HandleEndPrint);
 			this.pd.PrintPage         += new System.Drawing.Printing.PrintPageEventHandler (this.HandlePrintPage);
 			this.pd.QueryPageSettings += new System.Drawing.Printing.QueryPageSettingsEventHandler (this.HandleQueryPageSettings);
+			
+			this.pd.OriginAtMargins = true;
 		}
 		
 		
