@@ -7,7 +7,7 @@ namespace Epsitec.Common.Drawing
 	{
 		[Test] public void CheckPixmapCopy()
 		{
-			Graphics cache = new Agg.Graphics ();
+			Graphics cache = new Graphics ();
 			Pixmap[] stack = new Pixmap[3];
 			
 			cache.SetPixmapSize (400, 400);
