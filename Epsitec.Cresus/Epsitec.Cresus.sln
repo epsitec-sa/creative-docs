@@ -123,12 +123,16 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.UI.Tests", "Common.U
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.IO", "Common.IO\Common.IO.csproj", "{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
 	EndGlobalSection
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 32
+		SccNumberOfProjects = 33
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -256,6 +260,10 @@ Global
 		SccLocalPath31 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection31 = Common.UI.Tests\\
+		SccProjectUniqueName32 = Common.IO\\Common.IO.csproj
+		SccLocalPath32 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection32 = Common.IO\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -382,6 +390,10 @@ Global
 		{D824EAFD-3E55-4B86-9F9C-BAFDF9D14362}.Debug.Build.0 = Debug|.NET
 		{D824EAFD-3E55-4B86-9F9C-BAFDF9D14362}.Release.ActiveCfg = Release|.NET
 		{D824EAFD-3E55-4B86-9F9C-BAFDF9D14362}.Release.Build.0 = Release|.NET
+		{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}.Debug.ActiveCfg = Debug|.NET
+		{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}.Debug.Build.0 = Debug|.NET
+		{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}.Release.ActiveCfg = Release|.NET
+		{5A67ED63-98AC-4FC2-9E25-0AFA3229B9D0}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info

@@ -7,6 +7,10 @@ namespace Epsitec.Common.Drawing
 			int    line_break_length;
 			byte[] line_break_data;
 			
+			//	The compressed file is produced by Common.Drawing.Tests, CompressLineBreakTool, based on
+			//	the UNICODE LineBreak-4.0.0.txt source file, applying maximum BZIP2 compression to it.
+			//	This allows us to reduce the size from 558KB to 85KB of data.
+			
 			using (System.IO.Stream stream = typeof (TextBreak).Assembly.GetManifestResourceStream ("Epsitec.Common.Drawing.Resources.LineBreak.compressed"))
 			{
 				line_break_data   = IO.Decompression.DecompressToArray (stream);
