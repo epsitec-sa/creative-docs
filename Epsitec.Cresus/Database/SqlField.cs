@@ -50,6 +50,10 @@ namespace Epsitec.Cresus.Database
 		public bool Validate(ISqlValidator validator)
 		{
 			//	TODO: valide en fonction du validator et du type du SqlField.
+			//
+			//	Il faudra compléter au fur et à mesure si ISqlValidator sait
+			//	valider d'autres types de champs. On pourrait imaginer valider
+			//	une procédure SQL...
 			
 			switch (this.Type)
 			{
@@ -57,7 +61,7 @@ namespace Epsitec.Cresus.Database
 				case SqlFieldType.QualifiedName:	return validator.ValidateQualifiedName (this.AsQualifiedName);
 			}
 			
-			return false;
+			return true;
 		}
 		
 		
@@ -240,8 +244,25 @@ namespace Epsitec.Cresus.Database
 		
 		public static SqlField CreateConstant(object raw_value, DbRawType raw_type)
 		{
-			//	TODO: crée et initialise une instance de SqlField.
-			return null;
+			//	Crée et initialise une instance de SqlField. Dans le cas
+			//	d'une constante, la valeur est 'raw_value', et le type de la
+			//	valeur est 'raw_type'. On espère que l'appelant utilise un
+			//	type cohérent (ex.: raw_value est un objet decimal, raw_type
+			//	est DbRawType.SmallDecimal et la valeur est "correcte"),
+			//	mais ce serait trop compliqué à vérifier ici.
+			
+			//	Exemple de constantes : 1.5, "X", etc.
+			
+			//	Une constante n'a généralement pas de nom d'alias (ça n'a pas
+			//	de sens).
+			
+			SqlField field	= new SqlField ();
+			
+			field.type		= SqlFieldType.Constant;
+			field.raw_type	= raw_type;
+			field.value		= raw_value;
+
+			return field;
 		}
 		
 		public static SqlField CreateParameterIn(object raw_value, DbRawType raw_type)

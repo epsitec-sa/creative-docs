@@ -39,6 +39,8 @@ namespace Epsitec.Cresus.Database
 			this.digit_shift     = digit_shift;
 			this.min_value       = min_value;
 			this.max_value       = max_value;
+
+			this.InvalidateAutoPrecision ();
 		}
 		
 		
@@ -113,17 +115,14 @@ namespace Epsitec.Cresus.Database
 			//	le "shift" (nombre de décimales après le point décimal).
 			
 			//	Le résultat est mémorisé de manière à ne pas devoir recalculer cela à
-			//	chaque fois.
-			
-			//	TODO: que faire en cas de dépassement des capacités ?
-			//	TODO: ne pourrait-on pas stocker le résultat dans digit_shift/precision ?
+			//	chaque fois que nécessaire.
 			
 			System.Diagnostics.Debug.Assert (this.IsMinMaxDefined);		
 			System.Diagnostics.Debug.Assert (this.digit_shift_auto == 0);
 			System.Diagnostics.Debug.Assert (this.digit_precision_auto == 0);
 			
-			decimal min = this.MinValue > 0 ? this.MinValue : -this.MinValue;
-			decimal max = this.MaxValue > 0 ? this.MaxValue : -this.MaxValue;
+			decimal min = System.Math.Abs (this.MinValue);
+			decimal max = System.Math.Abs (this.MaxValue);
 
 			//	Cherche déjà le nombre de décimales :
 			
@@ -133,8 +132,8 @@ namespace Epsitec.Cresus.Database
 				this.digit_shift_auto++;
 				min *= 10M; 
 				max *= 10M; 
-				System.Diagnostics.Debug.Assert (this.digit_shift_auto < DbNumDef.digit_max);
 			}
+			System.Diagnostics.Debug.Assert (this.digit_shift_auto < DbNumDef.digit_max);
 			
 			//	Puis cherche le nombre de digits :
 			
@@ -142,14 +141,31 @@ namespace Epsitec.Cresus.Database
 				   (DbNumDef.digit_table[this.digit_precision_auto] <= max))
 			{
 				this.digit_precision_auto++;
-				System.Diagnostics.Debug.Assert (this.digit_precision_auto < DbNumDef.digit_max);
 			}
+			System.Diagnostics.Debug.Assert (this.digit_precision_auto < DbNumDef.digit_max);
 		}
 		
 		protected void InvalidateAutoPrecision()
 		{
 			this.digit_precision_auto = 0;
 			this.digit_shift_auto     = 0;
+
+			if (this.IsMinMaxDefined)
+			{
+				//	Détermine de suite la précision selon Min et Max
+				this.UpdateAutoPrecision ();
+			}
+		}
+
+		[System.Diagnostics.Conditional ("DEBUG")] protected void DebugCheckAbsolute(decimal value)
+		{
+			//	Utilisé pour vérifier que ni le min_value, ni le max_value
+			//	n'est pas donné au delà des 24 digits autorisés. Cette méthode
+			//	de vérification n'est pas appelée si le projet est compilé en
+			//	mode 'Release'.
+			
+			System.Diagnostics.Debug.Assert (value >= min_absolute);
+			System.Diagnostics.Debug.Assert (value <= max_absolute);
 		}
 		
 		
@@ -159,13 +175,6 @@ namespace Epsitec.Cresus.Database
 			{
 				if (this.digit_precision == 0)
 				{
-					if (this.digit_precision_auto == 0)
-					{
-						if (this.IsMinMaxDefined)
-						{
-							this.UpdateAutoPrecision ();
-						}
-					}
 					return this.digit_precision_auto;
 				}
 				
@@ -187,13 +196,6 @@ namespace Epsitec.Cresus.Database
 			{ 
 				if (this.digit_precision == 0)
 				{
-					if (this.digit_precision_auto == 0)
-					{
-						if (this.IsMinMaxDefined)
-						{
-							this.UpdateAutoPrecision ();
-						}
-					}
 					return this.digit_shift_auto;
 				}
 				return this.digit_shift;
@@ -254,10 +256,10 @@ namespace Epsitec.Cresus.Database
 			}
 			set
 			{
+				this.DebugCheckAbsolute (value);
+
 				this.min_value = value;
-				this.InvalidateAutoPrecision ();
-				
-				//	TODO: vérifier que la valeur n'est pas hors limites
+				this.InvalidateAutoPrecision ();				
 			}
 		}
 		
@@ -284,10 +286,10 @@ namespace Epsitec.Cresus.Database
 			}
 			set
 			{
+				this.DebugCheckAbsolute (value);
+
 				this.max_value = value;
 				this.InvalidateAutoPrecision ();
-				
-				//	TODO: vérifier que la valeur n'est pas hors limites
 			}
 		}
 		
@@ -334,7 +336,21 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public bool						IsValid
+		{
+			get
+			{
+				if (this.IsMinMaxDefined && this.IsDigitDefined)
+				{
+					//	Contrôle que la précision donnée est suffisante pour représenter le min et le max
+					if ( this.digit_precision < this.digit_precision_auto ) return false;
+					if ( this.digit_shift     < this.digit_shift_auto     ) return false;
+				}
+				return true;
+			}
+		}
 		
+
 		public bool CheckCompatibility(decimal value)
 		{
 			if ((value >= this.MinValue) && (value <= this.MaxValue))
@@ -506,7 +522,8 @@ namespace Epsitec.Cresus.Database
 		
 		static DbNumDef()
 		{
-			//  Constructeur statique de la classe.
+			//	Constructeur statique de la classe.
+			
 			//	Initialise la table de conversion entre nombre de décimales après la
 			//	virgule et facteur multiplicatif/facteur d'échelle.
 			
@@ -526,17 +543,19 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected static readonly int	digit_max	= 24;
-		protected static decimal[]		digit_table;
-		protected static decimal[]		digit_table_scale;
+		protected static readonly int		digit_max		= 24;
+		protected static readonly decimal	max_absolute	= 999999999999999999999999.0M;
+		protected static readonly decimal	min_absolute	= -max_absolute;
+		protected static decimal[]			digit_table;
+		protected static decimal[]			digit_table_scale;
 		
-		protected DbRawType				raw_type = DbRawType.Unsupported;
-		protected int					digit_precision;
-		protected int					digit_shift;
-		protected decimal				min_value	=  0.0M;
-		protected decimal				max_value	= -1.0M;
+		protected DbRawType					raw_type = DbRawType.Unsupported;
+		protected int						digit_precision;
+		protected int						digit_shift;
+		protected decimal					min_value		=  max_absolute;
+		protected decimal					max_value		=  min_absolute;
 
-		protected int					digit_precision_auto;	//	cache les val. dét. selon Min et Max
-		protected int					digit_shift_auto;		//	cache les val. dét. selon Min et Max
+		protected int						digit_precision_auto;	//	cache les val. dét. selon Min et Max
+		protected int						digit_shift_auto;		//	cache les val. dét. selon Min et Max
 	}
 }
