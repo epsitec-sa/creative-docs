@@ -18,6 +18,9 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			this.widget_window = window;
 			
+			this.dirty_rectangle = Drawing.Rectangle.Empty;
+			this.dirty_region    = new Drawing.DirtyRegion ();
+			
 			this.SetStyle (System.Windows.Forms.ControlStyles.AllPaintingInWmPaint, true);
 			this.SetStyle (System.Windows.Forms.ControlStyles.Opaque, true);
 			this.SetStyle (System.Windows.Forms.ControlStyles.ResizeRedraw, true);
@@ -919,6 +922,10 @@ namespace Epsitec.Common.Widgets.Platform
 			
 			if (this.Visible)
 			{
+				if (! this.is_pixmap_ok)
+				{
+					this.ReallocatePixmap ();
+				}
 				this.widget_window.OnWindowShown ();
 			}
 			else
@@ -962,13 +969,18 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		protected void ReallocatePixmap()
 		{
-			int width  = this.ClientSize.Width;
-			int height = this.ClientSize.Height;
+			if (Support.ObjectBundler.IsBooting)
+			{
+				return;
+			}
 			
 			if (this.IsFrozen)
 			{
 				return;
 			}
+			
+			int width  = this.ClientSize.Width;
+			int height = this.ClientSize.Height;
 			
 			if (this.graphics.SetPixmapSize (width, height))
 			{
@@ -981,6 +993,8 @@ namespace Epsitec.Common.Widgets.Platform
 				
 				this.UpdateLayeredWindow ();
 			}
+			
+			this.is_pixmap_ok = true;
 		}
 
 		
@@ -1628,6 +1642,8 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal void ShowWindow()
 		{
+			System.Windows.Forms.Application.DoEvents ();
+			this.UpdateLayeredWindow ();
 			if (this.IsMouseActivationEnabled)
 			{
 				this.Show ();
@@ -1640,6 +1656,8 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal void ShowDialogWindow()
 		{
+			System.Windows.Forms.Application.DoEvents ();
+			this.UpdateLayeredWindow ();
 			this.ShowDialog (this.Owner);
 		}
 		
@@ -1675,6 +1693,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		private int								wnd_proc_depth;
 		private bool							is_dispatch_pending;
+		private bool							is_pixmap_ok;
 		
 		private static bool						is_app_active;
 	}

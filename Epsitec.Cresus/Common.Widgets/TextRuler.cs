@@ -7,6 +7,15 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextRuler()
 		{
+			if ( Support.ObjectBundler.IsBooting )
+			{
+				//	N'initialise rien, car cela prend passablement de temps... et de toute
+				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
+				//	utiliser IBundleSupport.
+				
+				return;
+			}
+			
 			this.AutoFocus = false;
 			this.MouseCursor = MouseCursor.AsArrow;
 
@@ -91,15 +100,43 @@ namespace Epsitec.Common.Widgets
 			if ( disposing )
 			{
 				this.DetachFromText();
-				this.buttonTab.Clicked -= new MessageEventHandler(this.HandleButtonTabClicked);
-				this.fieldFontName.SelectedIndexChanged -= new Support.EventHandler(this.HandleFieldFontNameChanged);
-				this.fieldFontScale.TextChanged -= new Support.EventHandler(this.HandleFieldFontScaleChanged);
-				this.buttonBold.Clicked -= new MessageEventHandler(this.HandleButtonBoldClicked);
-				this.buttonItalic.Clicked -= new MessageEventHandler(this.HandleButtonItalicClicked);
-				this.buttonUnderlined.Clicked -= new MessageEventHandler(this.HandleButtonUnderlinedClicked);
-				this.fieldFontColor.SelectedIndexChanged -= new Support.EventHandler(this.HandleFieldFontColorChanged);
-				this.buttonListNum.Clicked -= new MessageEventHandler(this.HandleButtonListNumClicked);
-				this.buttonListFix.Clicked -= new MessageEventHandler(this.HandleButtonListFixClicked);
+				
+				if ( this.buttonTab != null )
+				{
+					this.buttonTab.Clicked -= new MessageEventHandler(this.HandleButtonTabClicked);
+				}
+				if ( this.fieldFontName != null )
+				{
+					this.fieldFontName.SelectedIndexChanged -= new Support.EventHandler(this.HandleFieldFontNameChanged);
+				}
+				if ( this.fieldFontScale != null )
+				{
+					this.fieldFontScale.TextChanged -= new Support.EventHandler(this.HandleFieldFontScaleChanged);
+				}
+				if ( this.buttonBold != null )
+				{
+					this.buttonBold.Clicked -= new MessageEventHandler(this.HandleButtonBoldClicked);
+				}
+				if ( this.buttonItalic != null )
+				{
+					this.buttonItalic.Clicked -= new MessageEventHandler(this.HandleButtonItalicClicked);
+				}
+				if ( this.buttonUnderlined != null )
+				{
+					this.buttonUnderlined.Clicked -= new MessageEventHandler(this.HandleButtonUnderlinedClicked);
+				}
+				if ( this.fieldFontColor != null )
+				{
+					this.fieldFontColor.SelectedIndexChanged -= new Support.EventHandler(this.HandleFieldFontColorChanged);
+				}
+				if ( this.buttonListNum != null )
+				{
+					this.buttonListNum.Clicked -= new MessageEventHandler(this.HandleButtonListNumClicked);
+				}
+				if ( this.buttonListFix != null )
+				{
+					this.buttonListFix.Clicked -= new MessageEventHandler(this.HandleButtonListFixClicked);
+				}
 			}
 			
 			base.Dispose(disposing);

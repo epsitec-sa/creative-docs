@@ -130,6 +130,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public static bool							IsBooting
+		{
+			get
+			{
+				return ObjectBundler.is_booting;
+			}
+		}
+		
 		
 		public void EnableMapping()
 		{
@@ -153,10 +161,14 @@ namespace Epsitec.Common.Support
 			System.AppDomain             domain     = System.AppDomain.CurrentDomain;
 			System.Reflection.Assembly[] assemblies = domain.GetAssemblies ();
 			
+			ObjectBundler.is_booting = true;
+			
 			for (int i = 0; i < assemblies.Length; i++)
 			{
 				ObjectBundler.RegisterAssembly (assemblies[i]);
 			}
+			
+			ObjectBundler.is_booting = false;
 		}
 		
 		
@@ -209,6 +221,7 @@ namespace Epsitec.Common.Support
 						
 						try
 						{
+//							System.Diagnostics.Debug.WriteLine ("Bundler inspecting " + type.Name);
 							IBundleSupport bundle_support = System.Activator.CreateInstance (type, true) as IBundleSupport;
 							ObjectBundler.RegisterClass (bundle_support);
 							bundle_support.Dispose ();
@@ -1155,6 +1168,7 @@ namespace Epsitec.Common.Support
 		protected static Hashtable					classes;
 		protected static System.Xml.XmlDocument		xmldoc = new System.Xml.XmlDocument ();
 		protected static ObjectBundler				default_bundler = new ObjectBundler (Resources.DefaultManager);
+		protected static bool						is_booting = false;
 		
 		protected ResourceManager					manager;
 		protected Hashtable							obj_to_bundle;			//	lien entre noms de bundles et objets

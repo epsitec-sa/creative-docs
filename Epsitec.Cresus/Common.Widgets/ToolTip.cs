@@ -118,12 +118,18 @@ namespace Epsitec.Common.Widgets
 				this.owner  = null;
 				this.Parent = null;
 				
-				this.window.Dispose ();
-				this.window = null;
+				if ( this.window != null )
+				{
+					this.window.Dispose ();
+					this.window = null;
+				}
 				
-				this.timer.TimeElapsed -= new EventHandler(this.HandleTimerTimeElapsed);
-				this.timer.Dispose();
-				this.timer = null;
+				if ( this.timer != null )
+				{
+					this.timer.TimeElapsed -= new EventHandler(this.HandleTimerTimeElapsed);
+					this.timer.Dispose();
+					this.timer = null;
+				}
 			}
 			
 			// Ne pas oublier, une fois que le dispose est terminé, de signaler encore

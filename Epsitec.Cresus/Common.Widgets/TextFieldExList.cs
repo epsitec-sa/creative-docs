@@ -21,11 +21,20 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldExList()
 		{
+			if (Support.ObjectBundler.IsBooting)
+			{
+				//	N'initialise rien, car cela prend passablement de temps... et de toute
+				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
+				//	utiliser IBundleSupport.
+				
+				return;
+			}
+			
 			this.accept_reject_behavior = new Helpers.AcceptRejectBehavior (this);
 			this.accept_reject_behavior.CreateButtons ();
 			
-			this.accept_reject_behavior.RejectClicked += new Support.EventHandler(this.HandleRejectClicked);
-			this.accept_reject_behavior.AcceptClicked += new Support.EventHandler(this.HandleAcceptClicked);
+			this.accept_reject_behavior.RejectClicked += new Support.EventHandler (this.HandleRejectClicked);
+			this.accept_reject_behavior.AcceptClicked += new Support.EventHandler (this.HandleAcceptClicked);
 			
 			this.DefocusAction = DefocusAction.None;
 			this.IsReadOnly    = true;
@@ -42,8 +51,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.accept_reject_behavior.RejectClicked -= new Support.EventHandler(this.HandleRejectClicked);
-				this.accept_reject_behavior.AcceptClicked -= new Support.EventHandler(this.HandleAcceptClicked);
+				if (this.accept_reject_behavior != null)
+				{
+					this.accept_reject_behavior.RejectClicked -= new Support.EventHandler (this.HandleRejectClicked);
+					this.accept_reject_behavior.AcceptClicked -= new Support.EventHandler (this.HandleAcceptClicked);
+				}
 				
 				this.accept_reject_behavior = null;
 			}

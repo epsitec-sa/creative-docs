@@ -10,6 +10,15 @@ namespace Epsitec.Common.Widgets
 	{
 		public ColorPalette()
 		{
+			if ( Support.ObjectBundler.IsBooting )
+			{
+				//	N'initialise rien, car cela prend passablement de temps... et de toute
+				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
+				//	utiliser IBundleSupport.
+				
+				return;
+			}
+			
 			this.nbColumns = 4;
 			this.nbRows = 8;
 			this.nbTotal = this.nbColumns*this.nbRows;
@@ -59,12 +68,18 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				foreach ( ColorSample cs in this.palette )
+				if ( this.palette != null )
 				{
-					cs.Clicked -= new MessageEventHandler(this.HandleColorClicked);
+					foreach ( ColorSample cs in this.palette )
+					{
+						cs.Clicked -= new MessageEventHandler(this.HandleColorClicked);
+					}
 				}
 
-				this.buttonOption.Clicked += new MessageEventHandler(this.HandleButtonOptionClicked);
+				if ( this.buttonOption != null )
+				{
+					this.buttonOption.Clicked += new MessageEventHandler(this.HandleButtonOptionClicked);
+				}
 			}
 			
 			base.Dispose(disposing);

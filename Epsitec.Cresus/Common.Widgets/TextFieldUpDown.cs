@@ -7,6 +7,15 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldUpDown()
 		{
+			if ( Support.ObjectBundler.IsBooting )
+			{
+				//	N'initialise rien, car cela prend passablement de temps... et de toute
+				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
+				//	utiliser IBundleSupport.
+				
+				return;
+			}
+			
 			this.textFieldStyle = TextFieldStyle.UpDown;
 			this.TextNavigator.IsNumeric = true;
 			this.range = new Types.DecimalRange(0, 100, 1);
@@ -173,13 +182,19 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.arrowUp.Engaged -= new Support.EventHandler(this.HandleButton);
-				this.arrowDown.Engaged -= new Support.EventHandler(this.HandleButton);
-				this.arrowUp.StillEngaged -= new Support.EventHandler(this.HandleButton);
-				this.arrowDown.StillEngaged -= new Support.EventHandler(this.HandleButton);
+				if ( this.arrowUp != null )
+				{
+					this.arrowUp.Engaged -= new Support.EventHandler(this.HandleButton);
+					this.arrowUp.StillEngaged -= new Support.EventHandler(this.HandleButton);
+					this.arrowUp.Dispose();
+				}
+				if ( this.arrowDown != null )
+				{
+					this.arrowDown.Engaged -= new Support.EventHandler(this.HandleButton);
+					this.arrowDown.StillEngaged -= new Support.EventHandler(this.HandleButton);
+					this.arrowDown.Dispose();
+				}
 				
-				this.arrowUp.Dispose();
-				this.arrowDown.Dispose();
 				this.arrowUp = null;
 				this.arrowDown = null;
 			}

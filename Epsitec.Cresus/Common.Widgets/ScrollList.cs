@@ -13,6 +13,15 @@ namespace Epsitec.Common.Widgets
 	{
 		public ScrollList()
 		{
+			if ( Support.ObjectBundler.IsBooting )
+			{
+				//	N'initialise rien, car cela prend passablement de temps... et de toute
+				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
+				//	utiliser IBundleSupport.
+				
+				return;
+			}
+			
 			this.items = new Helpers.StringCollection(this);
 			this.DockPadding = new Drawing.Margins(2, 2, 2, 2);
 			this.InternalState |= InternalState.AutoFocus;
@@ -53,7 +62,10 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.scroller.ValueChanged -= new Support.EventHandler (this.HandleScrollerValueChanged);
+				if ( this.scroller != null )
+				{
+					this.scroller.ValueChanged -= new Support.EventHandler(this.HandleScrollerValueChanged);
+				}
 			}
 			
 			base.Dispose (disposing);

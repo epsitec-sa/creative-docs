@@ -9,6 +9,15 @@ namespace Epsitec.Common.Widgets
 	{
 		public ColorSelector()
 		{
+			if ( Support.ObjectBundler.IsBooting )
+			{
+				//	N'initialise rien, car cela prend passablement de temps... et de toute
+				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
+				//	utiliser IBundleSupport.
+				
+				return;
+			}
+			
 			this.black = Drawing.Color.FromName("WindowFrame");
 
 			this.nbField = 4+3;

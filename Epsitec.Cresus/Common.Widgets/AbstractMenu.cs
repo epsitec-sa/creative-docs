@@ -53,6 +53,15 @@ namespace Epsitec.Common.Widgets
 	{
 		protected AbstractMenu(MenuType type)
 		{
+			if ( Support.ObjectBundler.IsBooting )
+			{
+				//	N'initialise rien, car cela prend passablement de temps... et de toute
+				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
+				//	utiliser IBundleSupport.
+				
+				return;
+			}
+			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			this.margins = adorner.GeometryMenuMargins;
 			this.shadow  = adorner.GeometryMenuShadow;
@@ -373,18 +382,25 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				MenuItem[] items = new MenuItem[this.items.Count];
-				this.items.CopyTo(items, 0);
-				this.items.Clear();
-				
-				foreach ( MenuItem item in items )
+				if ( this.timer != null )
 				{
-					item.Dispose();
+					this.timer.TimeElapsed -= new Support.EventHandler(this.HandleTimerTimeElapsed);
+					this.timer.Dispose();
 				}
 				
-				this.timer.TimeElapsed -= new Support.EventHandler(this.HandleTimerTimeElapsed);
-				this.timer.Dispose();
-				this.items.Dispose();
+				if ( this.items != null )
+				{
+					MenuItem[] items = new MenuItem[this.items.Count];
+					this.items.CopyTo(items, 0);
+					this.items.Clear();
+					
+					foreach ( MenuItem item in items )
+					{
+						item.Dispose();
+					}
+					
+					this.items.Dispose();
+				}
 				
 				this.items = null;
 				this.timer = null;

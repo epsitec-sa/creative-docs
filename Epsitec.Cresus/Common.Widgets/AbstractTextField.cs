@@ -23,6 +23,15 @@ namespace Epsitec.Common.Widgets
 	{
 		public AbstractTextField()
 		{
+			if ( Support.ObjectBundler.IsBooting )
+			{
+				//	N'initialise rien, car cela prend passablement de temps... et de toute
+				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
+				//	utiliser IBundleSupport.
+				
+				return;
+			}
+			
 			this.AutoEngage = false;
 			
 			this.InternalState |= InternalState.AutoFocus;
@@ -382,11 +391,15 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( TextField.blinking == this )
 				{
-					this.navigator.TextDeleted -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextDeleted);
-					this.navigator.TextInserted -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextInserted);
-					this.navigator.CursorScrolled -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorScrolled);
-					this.navigator.CursorChanged -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorChanged);
-					this.navigator.StyleChanged -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorStyleChanged);
+					if ( this.navigator != null )
+					{
+						this.navigator.TextDeleted -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextDeleted);
+						this.navigator.TextInserted -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextInserted);
+						this.navigator.CursorScrolled -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorScrolled);
+						this.navigator.CursorChanged -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorChanged);
+						this.navigator.StyleChanged -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorStyleChanged);
+					}
+					
 					TextField.blinking = null;
 				}
 			}

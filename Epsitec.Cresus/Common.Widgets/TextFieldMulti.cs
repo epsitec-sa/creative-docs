@@ -7,6 +7,15 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldMulti()
 		{
+			if ( Support.ObjectBundler.IsBooting )
+			{
+				//	N'initialise rien, car cela prend passablement de temps... et de toute
+				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
+				//	utiliser IBundleSupport.
+				
+				return;
+			}
+			
 			this.TextLayout.BreakMode &= ~Drawing.TextBreakMode.SingleLine;
 			this.TextLayout.BreakMode |=  Drawing.TextBreakMode.Hyphenate;
 			
@@ -29,8 +38,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.scroller.ValueChanged -= new Support.EventHandler(this.HandleScrollerValueChanged);
-				this.scroller.Dispose();
+				if ( this.scroller != null )
+				{
+					this.scroller.ValueChanged -= new Support.EventHandler(this.HandleScrollerValueChanged);
+					this.scroller.Dispose();
+				}
 				this.scroller = null;
 			}
 			

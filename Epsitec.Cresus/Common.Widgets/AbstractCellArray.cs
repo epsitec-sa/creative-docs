@@ -25,6 +25,15 @@ namespace Epsitec.Common.Widgets
 	{
 		public AbstractCellArray()
 		{
+			if ( Support.ObjectBundler.IsBooting )
+			{
+				//	N'initialise rien, car cela prend passablement de temps... et de toute
+				//	manière, on n'a pas besoin de toutes ces informations pour pouvoir
+				//	utiliser IBundleSupport.
+				
+				return;
+			}
+			
 			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState &= ~InternalState.PossibleContainer;
@@ -54,8 +63,14 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.scrollerV.ValueChanged -= new Support.EventHandler(this.HandleScrollerV);
-				this.scrollerH.ValueChanged -= new Support.EventHandler(this.HandleScrollerH);
+				if ( this.scrollerV != null )
+				{
+					this.scrollerV.ValueChanged -= new Support.EventHandler(this.HandleScrollerV);
+				}
+				if ( this.scrollerH != null )
+				{
+					this.scrollerH.ValueChanged -= new Support.EventHandler(this.HandleScrollerH);
+				}
 				
 				this.SetFocusedCell(null);
 			}
