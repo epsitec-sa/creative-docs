@@ -286,7 +286,7 @@ namespace Epsitec.Common.Tests
 			//	Génère les infos de debug pour le fond de la fenêtre, ce qui permet de
 			//	réaliser des timings.
 			
-			this.window.Root.DebugActive = true;
+//-			this.window.Root.DebugActive = true;
 
 #if false
 			this.listCrit.Scroller.ArrowDown.Name = "Down";
@@ -745,94 +745,95 @@ namespace Epsitec.Common.Tests
 		// -------------------------------------------------------------------------
 		[Test] public void CheckTinyDataBase()
 		{
-			this.db = new TinyDataBase();
-			this.db.Title = "essai";
+			TinyDataBase mydb;
+			mydb = new TinyDataBase();
+			mydb.Title = "essai";
 
 			TinyDataBase.FieldDesc fd;
 
-			this.db.CreateEmptyFieldDesc(out fd);
+			mydb.CreateEmptyFieldDesc(out fd);
 			fd.name = "Nom";
-			this.db.CreateFieldDesc(fd);
+			mydb.CreateFieldDesc(fd);
 
-			this.db.CreateEmptyFieldDesc(out fd);
+			mydb.CreateEmptyFieldDesc(out fd);
 			fd.name = "Prénom";
-			this.db.CreateFieldDesc(fd);
+			mydb.CreateFieldDesc(fd);
 
-			Assertion.Assert(this.db.TotalField == 2);
+			Assertion.Assert(mydb.TotalField == 2);
 
 			TinyDataBase.Record record;
 			int rank;
 
-			this.db.CreateEmptyRecord(out record);
-			this.db.SetFieldInRecord(record, 0, "Roux");
-			this.db.SetFieldInRecord(record, 1, "Daniel");
-			Assertion.Assert(this.db.RetFieldInRecord(record, 0) == "Roux");
-			Assertion.Assert(this.db.RetFieldInRecord(record, 1) == "Daniel");
-			rank = this.db.CreateRecord(record);
+			mydb.CreateEmptyRecord(out record);
+			mydb.SetFieldInRecord(record, 0, "Roux");
+			mydb.SetFieldInRecord(record, 1, "Daniel");
+			Assertion.Assert(mydb.RetFieldInRecord(record, 0) == "Roux");
+			Assertion.Assert(mydb.RetFieldInRecord(record, 1) == "Daniel");
+			rank = mydb.CreateRecord(record);
 			Assertion.Assert(rank == 0);
 
-			this.db.CreateEmptyRecord(out record);
-			this.db.SetFieldInRecord(record, 1, "Denis");
-			this.db.SetFieldInRecord(record, 0, "Dumoulin");
-			Assertion.Assert(this.db.RetFieldInRecord(record, 0) == "Dumoulin");
-			Assertion.Assert(this.db.RetFieldInRecord(record, 1) == "Denis");
-			rank = this.db.CreateRecord(record);
+			mydb.CreateEmptyRecord(out record);
+			mydb.SetFieldInRecord(record, 1, "Denis");
+			mydb.SetFieldInRecord(record, 0, "Dumoulin");
+			Assertion.Assert(mydb.RetFieldInRecord(record, 0) == "Dumoulin");
+			Assertion.Assert(mydb.RetFieldInRecord(record, 1) == "Denis");
+			rank = mydb.CreateRecord(record);
 			Assertion.Assert(rank == 1);
 
-			this.db.CreateEmptyRecord(out record);
-			this.db.SetFieldInRecord(record, 0, "Walz");
-			this.db.SetFieldInRecord(record, 1, "Michael");
-			Assertion.Assert(this.db.RetFieldInRecord(record, 0) == "Walz");
-			Assertion.Assert(this.db.RetFieldInRecord(record, 1) == "Michael");
-			rank = this.db.CreateRecord(record);
+			mydb.CreateEmptyRecord(out record);
+			mydb.SetFieldInRecord(record, 0, "Walz");
+			mydb.SetFieldInRecord(record, 1, "Michael");
+			Assertion.Assert(mydb.RetFieldInRecord(record, 0) == "Walz");
+			Assertion.Assert(mydb.RetFieldInRecord(record, 1) == "Michael");
+			rank = mydb.CreateRecord(record);
 			Assertion.Assert(rank == 2);
 
-			Assertion.Assert(this.db.TotalRecord == 3);
+			Assertion.Assert(mydb.TotalRecord == 3);
 
-			this.db.SetSortField(0, 0, 1);  // tri par noms
-			this.db.SetSortField(1, 1, 1);  // puis par prénoms
+			mydb.SetSortField(0, 0, 1);  // tri par noms
+			mydb.SetSortField(1, 1, 1);  // puis par prénoms
 
 			// Dumoulin, Roux, Walz
 			TinyDataBase.Record r1;
-			r1 = this.db.RetRecord(0);
-			Assertion.Assert(this.db.RetFieldInRecord(r1, 0) == "Dumoulin");
-			r1 = this.db.RetRecord(2);
-			Assertion.Assert(this.db.RetFieldInRecord(r1, 0) == "Walz");
-			r1 = this.db.RetRecord(1);
-			Assertion.Assert(this.db.RetFieldInRecord(r1, 0) == "Roux");
+			r1 = mydb.RetRecord(0);
+			Assertion.Assert(mydb.RetFieldInRecord(r1, 0) == "Dumoulin");
+			r1 = mydb.RetRecord(2);
+			Assertion.Assert(mydb.RetFieldInRecord(r1, 0) == "Walz");
+			r1 = mydb.RetRecord(1);
+			Assertion.Assert(mydb.RetFieldInRecord(r1, 0) == "Roux");
 
 			TinyDataBase.Record r2;
-			r2 = this.db.RetRecord(2);
-			this.db.SetFieldInRecord(r2, 0, "Raboud");  // Walz -> Raboud
-			this.db.SetFieldInRecord(r2, 1, "Yves");  // Michael -> Yves
+			r2 = mydb.RetRecord(2);
+			mydb.SetFieldInRecord(r2, 0, "Raboud");  // Walz -> Raboud
+			mydb.SetFieldInRecord(r2, 1, "Yves");  // Michael -> Yves
 			// Dumoulin, Raboud, Roux
-			rank = this.db.SetRecord(2, r2);
+			rank = mydb.SetRecord(2, r2);
 			Assertion.Assert(rank == 1);
 
-			this.db.DeleteRecord(0);  // supprime Dumoulin
-			Assertion.Assert(this.db.TotalRecord == 2);
+			mydb.DeleteRecord(0);  // supprime Dumoulin
+			Assertion.Assert(mydb.TotalRecord == 2);
 
 			// Raboud, Roux
-			r1 = this.db.RetRecord(1);
-			Assertion.Assert(this.db.RetFieldInRecord(r1, 0) == "Roux");
-			r1 = this.db.RetRecord(0);
-			Assertion.Assert(this.db.RetFieldInRecord(r1, 0) == "Raboud");
+			r1 = mydb.RetRecord(1);
+			Assertion.Assert(mydb.RetFieldInRecord(r1, 0) == "Roux");
+			r1 = mydb.RetRecord(0);
+			Assertion.Assert(mydb.RetFieldInRecord(r1, 0) == "Raboud");
 
-			this.db.CreateEmptyRecord(out record);
-			this.db.SetFieldInRecord(record, 0, "Arnaud");
-			this.db.SetFieldInRecord(record, 1, "Pierre");
-			rank = this.db.CreateRecord(record);
+			mydb.CreateEmptyRecord(out record);
+			mydb.SetFieldInRecord(record, 0, "Arnaud");
+			mydb.SetFieldInRecord(record, 1, "Pierre");
+			rank = mydb.CreateRecord(record);
 
-			this.db.SetSortField(0, 1, 1);  // tri par prénoms
-			this.db.SetSortField(1, 0, 1);  // puis par noms
+			mydb.SetSortField(0, 1, 1);  // tri par prénoms
+			mydb.SetSortField(1, 0, 1);  // puis par noms
 
 			// Roux, Arnaud, Raboud
-			r1 = this.db.RetRecord(0);
-			Assertion.Assert(this.db.RetFieldInRecord(r1, 1) == "Daniel");
-			r1 = this.db.RetRecord(1);
-			Assertion.Assert(this.db.RetFieldInRecord(r1, 1) == "Pierre");
-			r1 = this.db.RetRecord(2);
-			Assertion.Assert(this.db.RetFieldInRecord(r1, 1) == "Yves");
+			r1 = mydb.RetRecord(0);
+			Assertion.Assert(mydb.RetFieldInRecord(r1, 1) == "Daniel");
+			r1 = mydb.RetRecord(1);
+			Assertion.Assert(mydb.RetFieldInRecord(r1, 1) == "Pierre");
+			r1 = mydb.RetRecord(2);
+			Assertion.Assert(mydb.RetFieldInRecord(r1, 1) == "Yves");
 		}
 
 
