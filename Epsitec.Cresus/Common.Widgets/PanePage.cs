@@ -1,5 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
+	using BundleAttribute  = Support.BundleAttribute;
+	
 	/// <summary>
 	/// La classe PanePage représente une page du PaneBook.
 	/// </summary>
@@ -20,9 +22,32 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 
-		// Largeur ou hauteur relative du panneau.
-		[ Support.Bundle ("rs") ] public double PaneRelativeSize
+		
+		public double							AbsoluteOrder
 		{
+			get
+			{
+				double ret = this.paneAbsoluteOrder;
+				this.paneAbsoluteOrder = System.Double.NaN;
+				return ret;
+			}
+		}
+		
+		public double							AbsoluteSize
+		{
+			get
+			{
+				return this.paneAbsoluteSize;
+			}
+			set
+			{
+				this.paneAbsoluteSize = value;
+			}
+		}
+		
+		[Bundle]	public double				PaneRelativeSize
+		{
+			// Largeur ou hauteur relative du panneau.
 			get
 			{
 				return this.paneRelativeSize;
@@ -38,9 +63,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Largeur ou hauteur absolue (en points) du panneau.
-		[ Support.Bundle ("as") ] public double PaneAbsoluteSize
+		[Bundle]	public double				PaneAbsoluteSize
 		{
+			// Largeur ou hauteur absolue (en points) du panneau.
 			get
 			{
 				return this.paneAbsoluteSize;
@@ -57,21 +82,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public double GetAbsoluteOrder()
+		[Bundle]	public double				PaneMinSize
 		{
-			double ret = this.paneAbsoluteOrder;
-			this.paneAbsoluteOrder = System.Double.NaN;
-			return ret;
-		}
-
-		public void SetAbsoluteSize(double value)
-		{
-			this.paneAbsoluteSize = value;
-		}
-
-		// Largeur ou hauteur minimale du panneau en points.
-		[ Support.Bundle ("min") ] public double PaneMinSize
-		{
+			// Largeur ou hauteur minimale du panneau en points.
 			get
 			{
 				return this.paneMinSize;
@@ -87,9 +100,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Largeur ou hauteur maximale du panneau en points.
-		[ Support.Bundle ("max") ] public double PaneMaxSize
+		[Bundle]	public double				PaneMaxSize
 		{
+			// Largeur ou hauteur maximale du panneau en points.
 			get
 			{
 				return this.paneMaxSize;
@@ -105,9 +118,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Largeur ou hauteur maximale en dessous de laquelle le contenu est caché.
-		[ Support.Bundle ("hs") ] public double PaneHideSize
+		[Bundle]	public double				PaneHideSize
 		{
+			// Largeur ou hauteur maximale en dessous de laquelle le contenu est caché.
 			get
 			{
 				return this.paneHideSize;
@@ -123,9 +136,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Elasticité du panneau (0=fixe, 1=élastique).
-		[ Support.Bundle ("e") ] public double PaneElasticity
+		[Bundle]	public double				PaneElasticity
 		{
+			// Elasticité du panneau (0=fixe, 1=élastique).
 			get
 			{
 				return this.paneElasticity;
@@ -141,9 +154,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Mode du panneau.
-		[ Support.Bundle ("toggle") ] public bool PaneToggle
+		[Bundle]	public bool					PaneToggle
 		{
+			// Mode du panneau.
 			get
 			{
 				return this.paneToggle;
@@ -159,27 +172,27 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Retourne le bouton associé.
-		public PaneButton PaneButton
+		public PaneButton						PaneButton
 		{
+			// Retourne le bouton associé.
 			get
 			{
 				return this.paneButton;
 			}
 		}
 		
-		// Retourne le bouton associé.
-		public GlyphButton GlyphButton
+		public GlyphButton						GlyphButton
 		{
+			// Retourne le bouton associé.
 			get
 			{
 				return this.glyphButton;
 			}
 		}
 		
-		// Retourne le PaneBook parent.
-		public PaneBook Book
+		public PaneBook							Book
 		{
+			// Retourne le PaneBook parent.
 			get
 			{
 				PaneBook book = this.Parent as PaneBook;
@@ -187,9 +200,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Indique si le PanePage doit être recalculé.
-		public bool IsDirty
+		public bool								IsDirty
 		{
+			// Indique si le PanePage doit être recalculé.
 			get
 			{
 				return this.isDirty;
@@ -201,9 +214,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		// Rang facultatif du panneau.
-		public int Rank
+		public int								Rank
 		{
+			// Rang facultatif du panneau.
 			get
 			{
 				return this.rank;
@@ -220,7 +233,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public event System.EventHandler RankChanged;
+		public event System.EventHandler		RankChanged;
 		
 		protected virtual void OnRankChanged(System.EventArgs e)
 		{
