@@ -109,6 +109,11 @@ namespace Epsitec.Common.Drawing
 			return Agg.Library.AggFontFaceGetCharAdvance (this.handle, unicode);
 		}
 		
+		public double GetTextAdvance(string text)
+		{
+			return Agg.Library.AggFontFaceGetTextAdvance (this.handle, text, 0);
+		}
+		
 		
 		protected virtual void Dispose(bool disposing)
 		{

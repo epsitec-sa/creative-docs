@@ -4,9 +4,9 @@ using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Tests
 {
 	[TestFixture]
-	public class FontTests
+	public class FontTest
 	{
-		public FontTests()
+		public FontTest()
 		{
 			Font.Initialise ();
 		}

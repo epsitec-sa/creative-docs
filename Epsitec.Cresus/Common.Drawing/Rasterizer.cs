@@ -44,6 +44,23 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public double					Gamma
+		{
+			get
+			{
+				return this.gamma;
+			}
+			set
+			{
+				if (this.gamma != value)
+				{
+					this.gamma = value;
+					this.CreateOnTheFly ();
+					Agg.Library.AggRasterizerGamma (this.agg_ras, value);
+				}
+			}
+		}
+		
 		public Transform				Transform
 		{
 			get
@@ -148,5 +165,6 @@ namespace Epsitec.Common.Drawing
 		private System.IntPtr					agg_ras;
 		private FillMode						fill_mode = FillMode.NonZero;
 		private Transform						transform = new Transform ();
+		private double							gamma = 1.0;
 	}
 }

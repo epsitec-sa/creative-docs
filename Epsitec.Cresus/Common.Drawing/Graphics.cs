@@ -1,5 +1,20 @@
 namespace Epsitec.Common.Drawing
 {
+	public enum ContentAlignment
+	{
+		BottomLeft,
+		BottomCenter,
+		BottomRight,
+		
+		MiddleLeft,
+		MiddleCenter,
+		MiddleRight,
+		
+		TopLeft,
+		TopCenter,
+		TopRight
+	}
+	
 	/// <summary>
 	/// La classe Graphics encapsule le contexte graphique utilisé pour peindre.
 	/// </summary>
@@ -13,6 +28,10 @@ namespace Epsitec.Common.Drawing
 			
 			this.solid_renderer    = new Common.Drawing.Renderer.Solid ();
 			this.gradient_renderer = new Common.Drawing.Renderer.Gradient ();
+			
+			this.ResetLineStyle ();
+			
+			this.rasterizer.Gamma = 1.2;
 		}
 
 		~ Graphics()
@@ -26,9 +45,160 @@ namespace Epsitec.Common.Drawing
 			this.rasterizer.Render (this.solid_renderer);
 		}
 		
+		public void RenderSolid(Color color)
+		{
+			this.solid_renderer.Color = color;
+			this.rasterizer.Render (this.solid_renderer);
+		}
+		
 		public void RenderGradient()
 		{
 			this.rasterizer.Render (this.gradient_renderer);
+		}
+		
+		
+		public void ResetLineStyle()
+		{
+			this.LineWidth      = 1.0;
+			this.LineJoin       = JoinStyle.Miter;
+			this.LineCap        = CapStyle.Square;
+			this.LineMiterLimit = 4.0;
+		}
+		
+		public double					LineWidth
+		{
+			get { return this.line_width; }
+			set { this.line_width = value; }
+		}
+		
+		public JoinStyle				LineJoin
+		{
+			get { return this.line_join; }
+			set { this.line_join = value; }
+		}
+		
+		public CapStyle					LineCap
+		{
+			get { return this.line_cap; }
+			set { this.line_cap = value; }
+		}
+		
+		public double					LineMiterLimit
+		{
+			get { return this.line_miter_limit; }
+			set { this.line_miter_limit = value; }
+		}
+
+		
+		
+		public void AddLine(double x1, double y1, double x2, double y2)
+		{
+			Path path = new Path ();
+			path.MoveTo (x1, y1);
+			path.LineTo (x2, y2);
+			
+			this.rasterizer.AddOutline (path, this.line_width, this.line_cap, this.line_join, this.line_miter_limit);
+		}
+		
+		public void AddLine(Point p1, Point p2)
+		{
+			this.AddLine (p1.X, p1.Y, p2.X, p2.Y);
+		}
+		
+		public void AddRectangle(double x, double y, double width, double height)
+		{
+			Path path = new Path ();
+			path.MoveTo (x, y);
+			path.LineTo (x+width, y);
+			path.LineTo (x+width, y+height);
+			path.LineTo (x, y+height);
+			path.Close ();
+			
+			this.rasterizer.AddOutline (path, this.line_width, this.line_cap, this.line_join, this.line_miter_limit);
+		}
+		
+		public void AddRectangle(Point p, Size s)
+		{
+			this.AddRectangle (p.X, p.Y, s.Width, s.Height);
+		}
+		
+		public void AddRectangle(Rectangle rect)
+		{
+			this.AddRectangle (rect.X, rect.Y, rect.Width, rect.Height);
+		}
+		
+		public void AddText(double x, double y, string text, Font font, double size)
+		{
+			foreach (char c in text)
+			{
+				int    glyph = font.GetGlyphIndex (c);
+				double width = font.GetGlyphAdvance (glyph);
+				
+				this.rasterizer.AddGlyph (font, glyph, x, y, size);
+				
+				x += width * size;
+			}
+		}
+		
+		public void AddFilledRectangle(double x, double y, double width, double height)
+		{
+			Path path = new Path ();
+			path.MoveTo (x, y);
+			path.LineTo (x+width, y);
+			path.LineTo (x+width, y+height);
+			path.LineTo (x, y+height);
+			path.Close ();
+			
+			this.rasterizer.AddSurface (path);
+		}
+		
+		public void AddText(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment align)
+		{
+			double text_width  = font.GetTextAdvance (text) * size;
+			double text_height = (font.Ascender - font.Descender) * size;
+			
+			switch (align)
+			{
+				case ContentAlignment.BottomLeft:
+				case ContentAlignment.BottomCenter:
+				case ContentAlignment.BottomRight:
+					y = y - font.Descender * size;
+					break;
+				
+				case ContentAlignment.MiddleLeft:
+				case ContentAlignment.MiddleCenter:
+				case ContentAlignment.MiddleRight:
+					y = y + (height - text_height) / 2 - font.Descender * size;
+					break;
+				
+				case ContentAlignment.TopLeft:
+				case ContentAlignment.TopCenter:
+				case ContentAlignment.TopRight:
+					y = y + height - text_height - font.Descender * size;
+					break;
+			}
+			
+			switch (align)
+			{
+				case ContentAlignment.BottomLeft:
+				case ContentAlignment.MiddleLeft:
+				case ContentAlignment.TopLeft:
+					break;
+				
+				case ContentAlignment.BottomCenter:
+				case ContentAlignment.MiddleCenter:
+				case ContentAlignment.TopCenter:
+					x = x + (width - text_width) / 2;
+					break;
+				
+				case ContentAlignment.BottomRight:
+				case ContentAlignment.MiddleRight:
+				case ContentAlignment.TopRight:
+					x = x + width - text_width;
+					break;
+			}
+			
+			this.AddText (x, y, text, font, size);
 		}
 		
 		
@@ -40,6 +210,12 @@ namespace Epsitec.Common.Drawing
 		public void ScaleTransform(double sx, double sy, double cx, double cy)
 		{
 			this.transform.MultiplyByPostfix (Drawing.Transform.FromScale (sx, sy, cx, cy));
+			this.rasterizer.Transform = this.transform;
+		}
+		
+		public void RotateTransform(double angle, double cx, double cy)
+		{
+			this.transform.MultiplyByPostfix (Drawing.Transform.FromRotation (angle, cx, cy));
 			this.rasterizer.Transform = this.transform;
 		}
 		
@@ -127,5 +303,10 @@ namespace Epsitec.Common.Drawing
 		
 		Renderer.Solid				solid_renderer;
 		Renderer.Gradient			gradient_renderer;
+		
+		double						line_width;
+		JoinStyle					line_join;
+		CapStyle					line_cap;
+		double						line_miter_limit;
 	}
 }

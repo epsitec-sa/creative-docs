@@ -14,9 +14,10 @@ namespace Epsitec.Common.Tests
 			catch { }
 		}
 		
-		[Test] public void CheckCreation()
+		[Test] public void CheckSimpleWindow()
 		{
 			WindowFrame window = new WindowFrame ();
+			window.Text = "Simple demo";
 			
 			CustomWidget a = new CustomWidget ();
 			CustomWidget b = new CustomWidget ();
@@ -48,7 +49,7 @@ namespace Epsitec.Common.Tests
 			
 			if (this.highlight)
 			{
-				graphics.ScaleTransform (1.05, 1.05, dx/2, dy/2);
+				graphics.ScaleTransform (1.03, 1.03, dx/2, dy/2);
 			}
 			
 			path.MoveTo (5, 0);
@@ -86,7 +87,7 @@ namespace Epsitec.Common.Tests
 		
 		public override Rectangle GetPaintBounds()
 		{
-			double growth = System.Math.Max (this.Client.Width, this.Client.Height) * 0.05;
+			double growth = System.Math.Max (this.Client.Width, this.Client.Height) * 0.03;
 			double margin = 0.3 + (this.highlight ? growth : 0);
 			
 			return Rectangle.Inflate (base.GetPaintBounds (), margin, margin);
