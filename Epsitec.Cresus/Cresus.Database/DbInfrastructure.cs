@@ -73,6 +73,7 @@ namespace Epsitec.Cresus.Database
 					
 					try
 					{
+						System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 						this.sql_engine.Execute (command, DbCommandType.Silent);
 					}
 					catch
@@ -86,6 +87,77 @@ namespace Epsitec.Cresus.Database
 				
 				transaction.Commit ();
 			}
+		}
+		
+		public void ExecuteReturningData(out System.Data.DataSet data)
+		{
+			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
+			{
+				using (System.Data.IDbCommand command = this.sql_builder.Command)
+				{
+					command.Transaction = transaction;
+					
+					try
+					{
+						System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+						this.sql_engine.Execute (command, DbCommandType.ReturningData, out data);
+					}
+					catch
+					{
+						System.Diagnostics.Debug.WriteLine ("DbInfrastructure.ExecuteSilent: Roll back transaction.");
+						
+						transaction.Rollback ();
+						throw;
+					}
+				}
+				
+				transaction.Commit ();
+			}
+		}
+		
+		public DbTable ReadDbTableMeta(string table_name)
+		{
+			SqlSelect query = new SqlSelect ();
+			
+			query.Fields.Add ("T_ID",   SqlField.CreateName ("T_TABLE", DbColumn.TagId));
+			query.Fields.Add ("T_NAME", SqlField.CreateName ("T_TABLE", DbColumn.TagName));
+			query.Fields.Add ("T_INFO", SqlField.CreateName ("T_TABLE", DbColumn.TagInfoXml));
+			query.Fields.Add ("C_ID",   SqlField.CreateName ("T_COLUMN", DbColumn.TagId));
+			query.Fields.Add ("C_NAME", SqlField.CreateName ("T_COLUMN", DbColumn.TagName));
+			query.Fields.Add ("C_INFO", SqlField.CreateName ("T_COLUMN", DbColumn.TagInfoXml));
+			query.Fields.Add ("C_TYPE", SqlField.CreateName ("T_COLUMN", DbColumn.TagRefType));
+			
+			query.Tables.Add ("T_TABLE",  SqlField.CreateName (DbTable.TagTableDef));
+			query.Tables.Add ("T_COLUMN", SqlField.CreateName (DbTable.TagColumnDef));
+			
+			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName ("T_TABLE", DbColumn.TagName), SqlField.CreateConstant (table_name, DbRawType.String)));
+			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName ("T_TABLE", DbColumn.TagId), SqlField.CreateName ("T_COLUMN", DbColumn.TagRefTable)));
+			
+			this.sql_builder.SelectData (query);
+			
+			System.Data.DataSet data;
+			
+			this.ExecuteReturningData (out data);
+			
+			foreach (System.Data.DataTable t in data.Tables)
+			{
+				System.Console.Out.WriteLine ("Table " + t.TableName);
+				foreach (System.Data.DataColumn c in t.Columns)
+				{
+					System.Console.Out.Write ("'" + c.Caption + "'");
+				}
+				System.Console.Out.WriteLine ();
+				foreach (System.Data.DataRow r in t.Rows)
+				{
+					foreach (object o in r.ItemArray)
+					{
+						System.Console.Out.Write ("'" + o + "' ");
+					}
+					System.Console.Out.WriteLine ();
+				}
+			}
+			
+			return null;
 		}
 		
 		

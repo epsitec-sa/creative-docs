@@ -81,6 +81,12 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public static string QuoteString(string value)
+		{
+			return "'" + value.Replace ("'", "''") + "'";
+		}
+		
+		
 		public static string QualifyName(string qualifier, string name)
 		{
 			if (DbSqlStandard.ValidateName (qualifier) &&

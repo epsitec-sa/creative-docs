@@ -407,7 +407,7 @@ namespace Epsitec.Cresus.Database
 				case SqlFieldType.ParameterOut:
 				case SqlFieldType.ParameterInOut:
 				case SqlFieldType.ParameterResult:
-                    return this.AsConstant.ToString();
+                    return this.ConstantToString();
 				case SqlFieldType.Name:
                     return this.AsName;
 				case SqlFieldType.QualifiedName:
@@ -424,6 +424,26 @@ namespace Epsitec.Cresus.Database
                     return this.AsSubQuery.ToString();
 				default:
 					return "<unsupported>";
+			}
+		}
+
+		protected string ConstantToString()
+		{
+			//	TODO: supprimer cette méthode qui n'a rien à faire ici et passer les arguments
+			//	comme des paramètres SQL @... en lieu et place de leur version "in-line".
+			
+			object value = this.AsConstant;
+			
+			if (value is string)
+			{
+				return DbSqlStandard.QuoteString (value as string);
+			}
+			else
+			{
+				//	On espère que c'est une valeur numérique... Il faudrait utiliser
+				//	le bon convertisseur, avec le "locale" invariant.
+				
+				return value.ToString ();
 			}
 		}
 

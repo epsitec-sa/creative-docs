@@ -32,6 +32,8 @@ namespace Epsitec.Common.Drawing
 			System.IntPtr result = Font.LoadLibrary ("AntiGrain.Win32.dll");
 			System.Diagnostics.Debug.Assert (result != System.IntPtr.Zero);
 			
+			System.Diagnostics.Debug.WriteLine ("AntiGrain.Win32.dll loaded successfully");
+			
 			Font.Initialise ();
 		}
 		
@@ -262,8 +264,11 @@ namespace Epsitec.Common.Drawing
 			{
 				Font.initialised = true;
 				
+				System.Diagnostics.Debug.WriteLine ("Calling AntiGrain.Interface.");
 				AntiGrain.Interface.Initialise ();
+				System.Diagnostics.Debug.WriteLine ("AntiGrain.Interface initialised.");
 				AntiGrain.Font.Initialise ();
+				System.Diagnostics.Debug.WriteLine ("AntiGrain.Font initialised.");
 			}
 		}
 

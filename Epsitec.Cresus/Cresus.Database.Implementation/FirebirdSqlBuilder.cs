@@ -396,7 +396,20 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.command_type |= DbCommandType.FlagMultiple;
 			}
 		}
-
+		
+		protected void AppendAlias(SqlField field)
+		{
+			//	Si un alias existe, ajoute celui-ci dans le buffer.
+			
+			string alias = field.Alias;
+			
+			if ((alias != null) && (alias.Length > 0))
+			{
+				this.buffer.Append (' ');
+				this.buffer.Append (alias);
+			}
+		}
+		
 		
 		public void SelectData(SqlSelect query)
 		{
@@ -434,6 +447,12 @@ namespace Epsitec.Cresus.Database.Implementation
 						break;
 					case SqlFieldType.Name:
 						this.buffer.Append (field.AsName);
+						this.AppendAlias (field);
+						this.buffer.Append (' ');
+						break;
+					case SqlFieldType.QualifiedName:
+						this.buffer.Append (field.AsQualifiedName);
+						this.AppendAlias (field);
 						this.buffer.Append (' ');
 						break;
 					default:
@@ -466,6 +485,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				{
 					case SqlFieldType.Name:
 						this.buffer.Append (field.AsName);
+						this.AppendAlias (field);
 						this.buffer.Append (' ');
 						break;
 					default:
@@ -491,7 +511,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				}
 				else
 				{
-					this.buffer.Append ("AND ");
+					this.buffer.Append (" AND ");
 				}
 
 				if (field.Type != SqlFieldType.Function)
