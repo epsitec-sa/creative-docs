@@ -1214,7 +1214,7 @@ namespace Epsitec.Common.Widgets
 
 		
 		// Crée la liste pour changer de look.
-		protected void CreateListLook(Widget.WidgetCollection collection, Point origine, ToolTip tooltip, int tab)
+		protected void CreateListLook(Widget.ChildrenCollection collection, Point origine, ToolTip tooltip, int tab)
 		{
 			ScrollList sl = new ScrollList();
 			sl.Location = origine;
