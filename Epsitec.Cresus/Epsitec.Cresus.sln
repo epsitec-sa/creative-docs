@@ -95,10 +95,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Pictogram.Tests", "C
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Converters", "Common.Converters\Common.Converters.csproj", "{E8944309-DFF8-44E6-A5C0-F491BA97B9B5}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Designer", "Common.Designer\Common.Designer.csproj", "{55C3166C-C975-4147-91B1-9A57E4F48538}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
@@ -108,10 +104,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Designer.Tests", "Co
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Designer", "App.Designer\App.Designer.csproj", "{A6FD1793-6726-45EA-90D3-913A6CDD8A2C}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Converters.Tests", "Common.Converters.Tests\Common.Converters.Tests.csproj", "{65EAC3E3-ED75-4C13-A549-F35286AA050B}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -144,7 +136,7 @@ Global
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
 	EndGlobalSection
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 36
+		SccNumberOfProjects = 34
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -244,50 +236,42 @@ Global
 		SccLocalPath24 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection24 = Common.Pictogram.Tests\\
-		SccProjectUniqueName25 = Common.Converters\\Common.Converters.csproj
+		SccProjectUniqueName25 = Common.Designer\\Common.Designer.csproj
 		SccLocalPath25 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection25 = Common.Converters\\
-		SccProjectUniqueName26 = Common.Designer\\Common.Designer.csproj
+		SccProjectFilePathRelativizedFromConnection25 = Common.Designer\\
+		SccProjectUniqueName26 = Common.Designer.Tests\\Common.Designer.Tests.csproj
 		SccLocalPath26 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection26 = Common.Designer\\
-		SccProjectUniqueName27 = Common.Designer.Tests\\Common.Designer.Tests.csproj
+		SccProjectFilePathRelativizedFromConnection26 = Common.Designer.Tests\\
+		SccProjectUniqueName27 = App.Designer\\App.Designer.csproj
 		SccLocalPath27 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection27 = Common.Designer.Tests\\
-		SccProjectUniqueName28 = App.Designer\\App.Designer.csproj
+		SccProjectFilePathRelativizedFromConnection27 = App.Designer\\
+		SccProjectUniqueName28 = Common.Printing\\Common.Printing.csproj
 		SccLocalPath28 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection28 = App.Designer\\
-		SccProjectUniqueName29 = Common.Converters.Tests\\Common.Converters.Tests.csproj
+		SccProjectFilePathRelativizedFromConnection28 = Common.Printing\\
+		SccProjectUniqueName29 = Common.UI\\Common.UI.csproj
 		SccLocalPath29 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection29 = Common.Converters.Tests\\
-		SccProjectUniqueName30 = Common.Printing\\Common.Printing.csproj
+		SccProjectFilePathRelativizedFromConnection29 = Common.UI\\
+		SccProjectUniqueName30 = X.Setup.Icons\\X.Setup.Icons.vdproj
 		SccLocalPath30 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection30 = Common.Printing\\
-		SccProjectUniqueName31 = Common.UI\\Common.UI.csproj
+		SccProjectFilePathRelativizedFromConnection30 = X.Setup.Icons\\
+		SccProjectUniqueName31 = Common.Types\\Common.Types.csproj
 		SccLocalPath31 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection31 = Common.UI\\
-		SccProjectUniqueName32 = X.Setup.Icons\\X.Setup.Icons.vdproj
+		SccProjectFilePathRelativizedFromConnection31 = Common.Types\\
+		SccProjectUniqueName32 = Common.Types.Tests\\Common.Types.Tests.csproj
 		SccLocalPath32 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection32 = X.Setup.Icons\\
-		SccProjectUniqueName33 = Common.Types\\Common.Types.csproj
+		SccProjectFilePathRelativizedFromConnection32 = Common.Types.Tests\\
+		SccProjectUniqueName33 = Common.UI.Tests\\Common.UI.Tests.csproj
 		SccLocalPath33 = .
 		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection33 = Common.Types\\
-		SccProjectUniqueName34 = Common.Types.Tests\\Common.Types.Tests.csproj
-		SccLocalPath34 = .
-		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection34 = Common.Types.Tests\\
-		SccProjectUniqueName35 = Common.UI.Tests\\Common.UI.Tests.csproj
-		SccLocalPath35 = .
-		CanCheckoutShared = false
-		SccProjectFilePathRelativizedFromConnection35 = Common.UI.Tests\\
+		SccProjectFilePathRelativizedFromConnection33 = Common.UI.Tests\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -388,10 +372,6 @@ Global
 		{01477BAD-9EB1-4FF1-8793-3B9300BD9340}.Debug.Build.0 = Debug|.NET
 		{01477BAD-9EB1-4FF1-8793-3B9300BD9340}.Release.ActiveCfg = Release|.NET
 		{01477BAD-9EB1-4FF1-8793-3B9300BD9340}.Release.Build.0 = Release|.NET
-		{E8944309-DFF8-44E6-A5C0-F491BA97B9B5}.Debug.ActiveCfg = Debug|.NET
-		{E8944309-DFF8-44E6-A5C0-F491BA97B9B5}.Debug.Build.0 = Debug|.NET
-		{E8944309-DFF8-44E6-A5C0-F491BA97B9B5}.Release.ActiveCfg = Release|.NET
-		{E8944309-DFF8-44E6-A5C0-F491BA97B9B5}.Release.Build.0 = Release|.NET
 		{55C3166C-C975-4147-91B1-9A57E4F48538}.Debug.ActiveCfg = Debug|.NET
 		{55C3166C-C975-4147-91B1-9A57E4F48538}.Debug.Build.0 = Debug|.NET
 		{55C3166C-C975-4147-91B1-9A57E4F48538}.Release.ActiveCfg = Release|.NET
@@ -404,10 +384,6 @@ Global
 		{A6FD1793-6726-45EA-90D3-913A6CDD8A2C}.Debug.Build.0 = Debug|.NET
 		{A6FD1793-6726-45EA-90D3-913A6CDD8A2C}.Release.ActiveCfg = Release|.NET
 		{A6FD1793-6726-45EA-90D3-913A6CDD8A2C}.Release.Build.0 = Release|.NET
-		{65EAC3E3-ED75-4C13-A549-F35286AA050B}.Debug.ActiveCfg = Debug|.NET
-		{65EAC3E3-ED75-4C13-A549-F35286AA050B}.Debug.Build.0 = Debug|.NET
-		{65EAC3E3-ED75-4C13-A549-F35286AA050B}.Release.ActiveCfg = Release|.NET
-		{65EAC3E3-ED75-4C13-A549-F35286AA050B}.Release.Build.0 = Release|.NET
 		{21655556-2BC3-46A4-931A-1295AD971737}.Debug.ActiveCfg = Debug|.NET
 		{21655556-2BC3-46A4-931A-1295AD971737}.Debug.Build.0 = Debug|.NET
 		{21655556-2BC3-46A4-931A-1295AD971737}.Release.ActiveCfg = Release|.NET

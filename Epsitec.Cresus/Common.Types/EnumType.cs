@@ -31,6 +31,38 @@ namespace Epsitec.Common.Types
 		}
 		
 		
+		public EnumValue[]						Values
+		{
+			get
+			{
+				return this.enum_values;
+			}
+		}
+		
+		public EnumValue						this[string name]
+		{
+			get
+			{
+				return this.FindValueFromName (name);
+			}
+		}
+		
+		public EnumValue						this[int rank]
+		{
+			get
+			{
+				return this.FindValueFromRank (rank);
+			}
+		}
+		
+		public EnumValue						this[System.Enum rank]
+		{
+			get
+			{
+				return this.FindValueFromRank (System.Convert.ToInt32 (rank));
+			}
+		}
+		
 		
 		public static IComparer					RankComparer
 		{
@@ -41,7 +73,18 @@ namespace Epsitec.Common.Types
 		}
 		
 		
-		public IEnumValue FindValueFromRank(int rank)
+		public void DefineCaption(string caption)
+		{
+			this.caption = caption;
+		}
+			
+		public void DefineDescription(string description)
+		{
+			this.description = description;
+		}
+		
+		
+		public EnumValue FindValueFromRank(int rank)
 		{
 			for (int i = 0; i < this.enum_values.Length; i++)
 			{
@@ -54,7 +97,7 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 		
-		public IEnumValue FindValueFromName(string name)
+		public EnumValue FindValueFromName(string name)
 		{
 			for (int i = 0; i < this.enum_values.Length; i++)
 			{
@@ -67,7 +110,7 @@ namespace Epsitec.Common.Types
 			return null;
 		}
 		
-		public IEnumValue FindValueFromCaption(string caption)
+		public EnumValue FindValueFromCaption(string caption)
 		{
 			for (int i = 0; i < this.enum_values.Length; i++)
 			{
@@ -120,26 +163,27 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
-		public IEnumValue[]						Values
+		IEnumValue[]							IEnum.Values
 		{
 			get
 			{
-				return this.enum_values;
-			}
-		}
-		public IEnumValue						this[string name]
-		{
-			get
-			{
-				return this.FindValueFromName (name);
+				return this.Values;
 			}
 		}
 		
-		public IEnumValue						this[int rank]
+		IEnumValue								IEnum.this[string name]
 		{
 			get
 			{
-				return this.FindValueFromRank (rank);
+				return this[name];
+			}
+		}
+		
+		IEnumValue								IEnum.this[int rank]
+		{
+			get
+			{
+				return this[rank];
 			}
 		}
 		#endregion
@@ -157,7 +201,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return null;
+				return this.caption;
 			}
 		}
 
@@ -165,7 +209,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return null;
+				return this.description;
 			}
 		}
 		#endregion
@@ -186,6 +230,17 @@ namespace Epsitec.Common.Types
 				this.rank        = rank;
 				this.name        = name;
 				this.caption     = caption;
+				this.description = description;
+			}
+			
+			
+			public void DefineCaption(string caption)
+			{
+				this.caption = caption;
+			}
+			
+			public void DefineDescription(string description)
+			{
 				this.description = description;
 			}
 			
@@ -266,5 +321,7 @@ namespace Epsitec.Common.Types
 		
 		private System.Type						enum_type;
 		private EnumValue[]						enum_values;
+		private string							caption;
+		private string							description;
 	}
 }

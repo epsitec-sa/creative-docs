@@ -191,14 +191,20 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (null,       combo_w.SelectedItem);
 			Assert.AreEqual (-1,         combo_w.SelectedIndex);
 			Assert.AreEqual (null,       combo_w.SelectedName);
-			 
+			
 			combo_r.SelectedName = "Smooth";
+			combo_w.SelectedName = "Large";
 			
 			Assert.AreEqual (Quality.Smooth, record["Quality"].ReadValue ());
 			
 			Assert.AreEqual (false, radio_4.IsActive);
 			Assert.AreEqual (true,  radio_5.IsActive);
 			Assert.AreEqual (false, radio_6.IsActive);
+			
+			Assert.AreEqual ("Large", combo_w.Text);
+			Assert.AreEqual ("Large", combo_w.SelectedItem);
+			Assert.AreEqual (2,       combo_w.SelectedIndex);
+			Assert.AreEqual ("Large", combo_w.SelectedName);
 			
 			combo_r.SelectedItem = "Default";
 			
@@ -269,9 +275,9 @@ namespace Epsitec.Common.UI
 		
 		private enum Optical
 		{
-			Default,
-			Small,
-			Large
+			Default	= 0,
+			Small	= 5,
+			Large	= 10
 		}
 		
 		private class XStringConstraint : Types.IDataConstraint
