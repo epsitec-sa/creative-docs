@@ -165,9 +165,23 @@ namespace Epsitec.Common.Widgets
 			Widget widget = this.FindTargetWidget (target, this.drag_cursor);
 			string title  = widget == null ? "-" : widget.ToString ();
 			
-			this.drop_adorner.Widget = widget;
-			
-			System.Diagnostics.Debug.WriteLine ("Hot: " + this.drag_cursor.ToString () + " Wdo: " + this.drag_window.WindowBounds.ToString () + " => " + title);
+			if (widget != null)
+			{
+				Design.SmartGuide.Constraint cx = new Design.SmartGuide.Constraint ();
+				Design.SmartGuide.Constraint cy = new Design.SmartGuide.Constraint ();
+				
+				Design.SmartGuide guide  = new Design.SmartGuide (this.widget, Drawing.GripId.Body, widget);
+				Drawing.Rectangle bounds = this.drag_window.WindowBounds;
+				
+				bounds = widget.MapScreenToClient (bounds);
+				
+				guide.Constrain (bounds, cx, cy);
+				
+				this.drop_adorner.Widget = widget;
+				
+//				System.Diagnostics.Debug.WriteLine ("Hot: " + this.drag_cursor.ToString () + " Wdo: " + this.drag_window.WindowBounds.ToString () + " => " + title);
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0} {1} : {2} {3}", cx.P1, cx.P2, cy.P1, cy.P2));
+			}
 			
 			if (this.Dragging != null)
 			{

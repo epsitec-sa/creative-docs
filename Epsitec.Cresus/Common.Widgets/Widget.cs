@@ -1954,6 +1954,9 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Rectangle MapRootToClient(Drawing.Rectangle rect)
 		{
+			bool flip_x = rect.Width < 0;
+			bool flip_y = rect.Height < 0;
+			
 			Drawing.Point p1 = this.MapRootToClient (new Drawing.Point (rect.Left, rect.Bottom));
 			Drawing.Point p2 = this.MapRootToClient (new Drawing.Point (rect.Right, rect.Top));
 			
@@ -1963,11 +1966,34 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
+			int angle = this.RootAngle;
+			
+			switch (angle)
+			{
+				case 0:
+				case 180:
+					if (flip_x) rect.FlipX ();
+					if (flip_y) rect.FlipY ();
+					break;
+				
+				case 90:
+				case 270:
+					if (flip_y) rect.FlipX ();
+					if (flip_x) rect.FlipY ();
+					break;
+				
+				default:
+					throw new System.ArgumentOutOfRangeException ("Invalid angle");
+			}
+			
 			return rect;
 		}
 		
 		public virtual Drawing.Rectangle MapClientToRoot(Drawing.Rectangle rect)
 		{
+			bool flip_x = rect.Width < 0;
+			bool flip_y = rect.Height < 0;
+			
 			Drawing.Point p1 = this.MapClientToRoot (new Drawing.Point (rect.Left, rect.Bottom));
 			Drawing.Point p2 = this.MapClientToRoot (new Drawing.Point (rect.Right, rect.Top));
 			
@@ -1977,12 +2003,35 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
+			int angle = this.RootAngle;
+			
+			switch (angle)
+			{
+				case 0:
+				case 180:
+					if (flip_x) rect.FlipX ();
+					if (flip_y) rect.FlipY ();
+					break;
+				
+				case 90:
+				case 270:
+					if (flip_y) rect.FlipX ();
+					if (flip_x) rect.FlipY ();
+					break;
+				
+				default:
+					throw new System.ArgumentOutOfRangeException ("Invalid angle");
+			}
+			
 			return rect;
 		}
 		
 		
 		public virtual Drawing.Rectangle MapParentToClient(Drawing.Rectangle rect)
 		{
+			bool flip_x = rect.Width < 0;
+			bool flip_y = rect.Height < 0;
+			
 			Drawing.Point p1 = this.MapParentToClient (new Drawing.Point (rect.Left, rect.Bottom));
 			Drawing.Point p2 = this.MapParentToClient (new Drawing.Point (rect.Right, rect.Top));
 			
@@ -1992,11 +2041,34 @@ namespace Epsitec.Common.Widgets
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
+			int angle = this.client_info.angle;
+			
+			switch (angle)
+			{
+				case 0:
+				case 180:
+					if (flip_x) rect.FlipX ();
+					if (flip_y) rect.FlipY ();
+					break;
+				
+				case 90:
+				case 270:
+					if (flip_y) rect.FlipX ();
+					if (flip_x) rect.FlipY ();
+					break;
+				
+				default:
+					throw new System.ArgumentOutOfRangeException ("Invalid angle");
+			}
+			
 			return rect;
 		}
 		
 		public virtual Drawing.Rectangle MapClientToParent(Drawing.Rectangle rect)
 		{
+			bool flip_x = rect.Width < 0;
+			bool flip_y = rect.Height < 0;
+			
 			Drawing.Point p1 = this.MapClientToParent (new Drawing.Point (rect.Left, rect.Bottom));
 			Drawing.Point p2 = this.MapClientToParent (new Drawing.Point (rect.Right, rect.Top));
 			
@@ -2005,6 +2077,26 @@ namespace Epsitec.Common.Widgets
 			
 			rect.Width  = System.Math.Abs (p1.X - p2.X);
 			rect.Height = System.Math.Abs (p1.Y - p2.Y);
+			
+			int angle = this.client_info.angle;
+			
+			switch (angle)
+			{
+				case 0:
+				case 180:
+					if (flip_x) rect.FlipX ();
+					if (flip_y) rect.FlipY ();
+					break;
+				
+				case 90:
+				case 270:
+					if (flip_y) rect.FlipX ();
+					if (flip_x) rect.FlipY ();
+					break;
+				
+				default:
+					throw new System.ArgumentOutOfRangeException ("Invalid angle");
+			}
 			
 			return rect;
 		}

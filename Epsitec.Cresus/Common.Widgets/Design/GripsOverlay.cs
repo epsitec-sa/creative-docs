@@ -239,10 +239,11 @@ namespace Epsitec.Common.Widgets.Design
 			this.target_widget.Bounds = bounds;
 		}
 		
-		protected virtual Drawing.Rectangle ConstrainWidgetBounds(Drawing.GripId grip, Drawing.Rectangle new_bounds)
+		private Drawing.Rectangle ConstrainWidgetBounds(Drawing.GripId grip, Drawing.Rectangle new_bounds)
 		{
 			return GripsOverlay.ConstrainWidgetBounds (grip, this.target_widget.Bounds, new_bounds, this.target_widget.MinSize, this.target_widget.MaxSize);
 		}
+		
 		
 		public static Drawing.Rectangle ConstrainWidgetBounds(Drawing.GripId grip, Drawing.Rectangle old_bounds, Drawing.Rectangle new_bounds, Drawing.Size min, Drawing.Size max)
 		{
@@ -314,6 +315,7 @@ namespace Epsitec.Common.Widgets.Design
 			
 			return new_bounds;
 		}
+		
 		
 		protected struct GripMap
 		{

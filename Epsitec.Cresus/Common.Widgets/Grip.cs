@@ -7,6 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		None,
 		Vertex,								//	coin (poignée standard)
+		Edge,								//	côté
 		Center								//	centre de gravité
 	}
 	
@@ -65,6 +66,7 @@ namespace Epsitec.Common.Widgets
 				{
 					case GripType.None:		return new Drawing.Point (0, 0);
 					case GripType.Vertex:	return new Drawing.Point (2, 2);
+					case GripType.Edge:		return new Drawing.Point (2, 2);
 					case GripType.Center:	return new Drawing.Point (2, 2);
 				}
 				
@@ -80,6 +82,7 @@ namespace Epsitec.Common.Widgets
 				{
 					case GripType.None:		return new Drawing.Size (0, 0);
 					case GripType.Vertex:	return new Drawing.Size (5, 5);
+					case GripType.Edge:		return new Drawing.Size (5, 5);
 					case GripType.Center:	return new Drawing.Size (5, 5);
 				}
 				
@@ -99,6 +102,7 @@ namespace Epsitec.Common.Widgets
 			switch (this.grip_type)
 			{
 				case GripType.Vertex:
+				case GripType.Edge:
 				case GripType.Center:
 					using (Drawing.Path path = new Drawing.Path ())
 					{
