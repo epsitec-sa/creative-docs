@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.UserInterface.Binders
 				}
 			}
 			
-			public void SetWidgetFromData(DataLayer.DataRecord data, string path)
+			public void SetWidgetFromData(DataLayer.AbstractRecord data, string path)
 			{
 				bool value1 = (bool) this.data_set.GetData (this.binding);
 				bool value2 = (this.widget.ActiveState == Epsitec.Common.Widgets.WidgetState.ActiveYes);
