@@ -1,3 +1,6 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : en chantier/PA
+
 namespace Epsitec.Common.Widgets
 {
 	public delegate void PaintFrameCallback(Panel panel, Drawing.Graphics graphics, Drawing.Rectangle frame_outside, Drawing.Rectangle frame_inside);
@@ -43,7 +46,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
 		public Drawing.Margins				FrameMargins
 		{
 			//	Les marges du cadre permettent de restreindre la surface utilisable pour
@@ -81,15 +83,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Drawing.Size					SurfaceSize
-		{
-			get
-			{
-				return this.desired_size + this.frame_margins;
-			}
-		}
-		
-		
 		public double						DesiredWidth
 		{
 			get { return this.DesiredSize.Width; }
@@ -100,6 +93,13 @@ namespace Epsitec.Common.Widgets
 			get { return this.DesiredSize.Height; }
 		}
 		
+		public Drawing.Size					SurfaceSize
+		{
+			get
+			{
+				return this.desired_size + this.frame_margins;
+			}
+		}
 		
 		public double						SurfaceWidth
 		{
@@ -133,6 +133,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void PaintForegroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clip_rect)
 		{
+#if false
 			if ((this.aperture.IsValid) &&
 				(this.PaintFrameCallback != null))
 			{
@@ -155,7 +156,14 @@ namespace Epsitec.Common.Widgets
 			{
 				base.PaintForegroundImplementation (graphics, clip_rect);
 			}
+#else
+			base.PaintForegroundImplementation (graphics, clip_rect);
+			
+			graphics.AddRectangle (20, 20, 3, 3);
+			graphics.RenderSolid (Drawing.Color.FromRGB (0.4, 0, 0));
+#endif
 		}
+		
 		
 		
 		protected virtual void OnSurfaceSizeChanged()

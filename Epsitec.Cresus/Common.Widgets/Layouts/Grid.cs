@@ -461,7 +461,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.root.PaintBoundsCallback += new PaintBoundsCallback (this.HandleRootPaintBoundsCallback);
 			this.root.PaintFrameCallback  += new PaintFrameCallback (this.HandleRootPaintFrameCallback);
 			
-			this.root.SetPropagationModes (Widget.PropagationModes.UpChildrenChanged, true, true);
+			this.root.SetPropagationModes (Widget.PropagationModes.UpChildrenChanged, true, Widget.PropagationSetting.IncludeChildren);
 		}
 		
 		protected void DetachRootWidget()

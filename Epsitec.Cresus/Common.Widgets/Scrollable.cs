@@ -100,6 +100,7 @@ namespace Epsitec.Common.Widgets
 				panel.Aperture = Drawing.Rectangle.Empty;
 				
 				panel.LayoutChanged += new EventHandler (this.HandlePanelLayoutChanged);
+				panel.SurfaceSizeChanged += new EventHandler (this.HandlePanelSurfaceSizeChanged);
 			}
 		}
 		
@@ -108,6 +109,7 @@ namespace Epsitec.Common.Widgets
 			if (panel != null)
 			{
 				panel.LayoutChanged -= new EventHandler (this.HandlePanelLayoutChanged);
+				panel.SurfaceSizeChanged -= new EventHandler (this.HandlePanelSurfaceSizeChanged);
 				
 				panel.Parent   = null;
 				panel.Aperture = Drawing.Rectangle.Infinite;
@@ -229,7 +231,11 @@ namespace Epsitec.Common.Widgets
 			{
 				panel_dx = vis_dx;
 				
+				this.h_scroller_value = 0;
+				this.panel_offset.X   = 0;
+				
 				this.h_scroller.Range             = 0.0;
+				this.h_scroller.Value             = 0.0;
 				this.h_scroller.VisibleRangeRatio = 1.0;
 			}
 			
@@ -251,7 +257,11 @@ namespace Epsitec.Common.Widgets
 			{
 				panel_dy = vis_dy;
 				
+				this.v_scroller_value = 0;
+				this.panel_offset.Y   = 0;
+				
 				this.v_scroller.Range             = 0.0;
+				this.v_scroller.Value             = 0.0;
 				this.v_scroller.VisibleRangeRatio = 1.0;
 			}
 			
@@ -306,6 +316,13 @@ namespace Epsitec.Common.Widgets
 				this.panel_size = this.panel.Size;
 				this.UpdatePanelLocation ();
 			}
+		}
+		
+		private void HandlePanelSurfaceSizeChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.panel == sender);
+			
+			this.UpdatePanelLocation ();
 		}
 		
 		
