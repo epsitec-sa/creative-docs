@@ -75,6 +75,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Database.Implementat
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.NiceIcon", "Common.NiceIcon\Common.NiceIcon.csproj", "{1922B387-70D5-407A-9718-B991404D436C}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Icons", "App.IconEditor\App.Icons.csproj", "{2FD3B557-9C1D-472E-A634-EA0338CA6F67}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
 		SccNumberOfProjects = 20
@@ -237,6 +245,14 @@ Global
 		{C757AD58-605D-4480-BC2E-03E8076368B2}.Debug.Build.0 = Debug|.NET
 		{C757AD58-605D-4480-BC2E-03E8076368B2}.Release.ActiveCfg = Release|.NET
 		{C757AD58-605D-4480-BC2E-03E8076368B2}.Release.Build.0 = Release|.NET
+		{1922B387-70D5-407A-9718-B991404D436C}.Debug.ActiveCfg = Debug|.NET
+		{1922B387-70D5-407A-9718-B991404D436C}.Debug.Build.0 = Debug|.NET
+		{1922B387-70D5-407A-9718-B991404D436C}.Release.ActiveCfg = Release|.NET
+		{1922B387-70D5-407A-9718-B991404D436C}.Release.Build.0 = Release|.NET
+		{2FD3B557-9C1D-472E-A634-EA0338CA6F67}.Debug.ActiveCfg = Debug|.NET
+		{2FD3B557-9C1D-472E-A634-EA0338CA6F67}.Debug.Build.0 = Debug|.NET
+		{2FD3B557-9C1D-472E-A634-EA0338CA6F67}.Release.ActiveCfg = Release|.NET
+		{2FD3B557-9C1D-472E-A634-EA0338CA6F67}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info

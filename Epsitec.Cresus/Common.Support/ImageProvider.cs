@@ -21,6 +21,12 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public static void RegisterAssembly(string name, System.Reflection.Assembly assembly)
+		{
+			ImageProvider.Default.assemblies[name] = assembly;
+		}
+		
+		
 		public Drawing.Image GetImage(string name)
 		{
 			if ((name == null) ||
@@ -122,12 +128,50 @@ namespace Epsitec.Common.Support
 				return image;
 			}
 			
+			if (name.StartsWith ("manifest:"))
+			{
+				//	L'image décrite est stockée dans les ressources du manifeste de l'assembly .NET.
+				//	Il faut en faire une copie locale, car les bits d'origine ne sont pas copiés par
+				//	.NET et des transformations futures pourraient ne pas fonctionner.
+				
+				string res_name = name.Remove (0, 9);
+				string[] args = res_name.Split ('/');
+				
+				if (args.Length != 2)
+				{
+					throw new System.ArgumentException (string.Format ("Illegal name format for manifest image ({0}).", res_name));
+				}
+				
+				string assembly_name = args[0];
+				string resource_name = args[1];
+				
+				System.Reflection.Assembly assembly = this.assemblies[assembly_name] as System.Reflection.Assembly;
+				
+				if (assembly == null)
+				{
+					throw new System.ArgumentException (string.Format ("Illegal assembly name for manifest image ({0}).", res_name));
+				}
+				
+				Drawing.Image image = Drawing.Bitmap.FromManifestResource (assembly_name + "." + resource_name, assembly);
+				image = Drawing.Bitmap.CopyImage (image);
+				
+				System.Diagnostics.Debug.WriteLine ("Loaded image " + resource_name + " from assembly " + assembly_name);
+				
+				if (image != null)
+				{
+					this.images[name] = new System.WeakReference (image);
+				}
+				
+				return image;
+			}
+			
 			return null;
 		}
 		
 		
 		
 		protected System.Collections.Hashtable	images = new System.Collections.Hashtable ();
+		protected System.Collections.Hashtable	assemblies = new System.Collections.Hashtable ();
 		protected string						default_resource_provider = "file:";
 		
 		protected static ImageProvider			default_provider = new ImageProvider ();
