@@ -24,11 +24,11 @@ namespace Epsitec.Common.Drawing
 				{
 					if (this.agg_buffer == System.IntPtr.Zero)
 					{
-						this.agg_buffer = Agg.Library.AggBufferNew (value.Width, value.Height, 24);
+						this.agg_buffer = Agg.Library.AggBufferNew (value.Width, value.Height, 32);
 					}
 					else
 					{
-						Agg.Library.AggBufferResize (this.agg_buffer, value.Width, value.Height, 24);
+						Agg.Library.AggBufferResize (this.agg_buffer, value.Width, value.Height, 32);
 					}
 					
 					this.size = value;

@@ -183,6 +183,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Renderer\Image.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Renderer\ITransformProvider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Renderer\Solid.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

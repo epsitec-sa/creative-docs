@@ -31,6 +31,13 @@ namespace Epsitec.Common.Drawing.Agg
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererSolidColor(System.IntPtr renderer, double r, double g, double b, double a);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererSolidDelete(System.IntPtr renderer);
 		
+		
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggRendererImageNew(System.IntPtr buffer);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererImageMatrix(System.IntPtr renderer, double xx, double xy, double yx, double yy, double tx, double ty);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererImageSource1(System.IntPtr renderer, System.IntPtr buffer);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererImageSource2(System.IntPtr renderer, System.IntPtr byte_buffer, int dx, int dy, int stride);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererImageDelete(System.IntPtr renderer);
+		
 		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggRendererGradientNew(System.IntPtr buffer);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererGradientDelete(System.IntPtr renderer);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererGradientSelect(System.IntPtr renderer, int id);
@@ -50,6 +57,7 @@ namespace Epsitec.Common.Drawing.Agg
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerAddPathStroke1(System.IntPtr rasterizer, System.IntPtr path, double width, bool curves);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerAddPathStroke2(System.IntPtr rasterizer, System.IntPtr path, double width, int cap, int join, double miter_limit, bool curves);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerRenderSolid(System.IntPtr rasterizer, System.IntPtr renderer);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerRenderImage(System.IntPtr rasterizer, System.IntPtr renderer);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerRenderGradient(System.IntPtr rasterizer, System.IntPtr renderer);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerDelete(System.IntPtr rasterizer);
 		

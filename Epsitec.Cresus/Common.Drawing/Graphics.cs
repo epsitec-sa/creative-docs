@@ -27,7 +27,11 @@ namespace Epsitec.Common.Drawing
 			this.transform  = new Transform ();
 			
 			this.solid_renderer    = new Common.Drawing.Renderer.Solid ();
+			this.image_renderer    = new Common.Drawing.Renderer.Image ();
 			this.gradient_renderer = new Common.Drawing.Renderer.Gradient ();
+			
+			this.image_renderer.TransformUpdating    += new System.EventHandler (HandleTransformUpdating);
+			this.gradient_renderer.TransformUpdating += new System.EventHandler (HandleTransformUpdating);
 			
 			this.ResetLineStyle ();
 			
@@ -49,6 +53,11 @@ namespace Epsitec.Common.Drawing
 		{
 			this.solid_renderer.Color = color;
 			this.rasterizer.Render (this.solid_renderer);
+		}
+		
+		public void RenderImage()
+		{
+			this.rasterizer.Render (this.image_renderer);
 		}
 		
 		public void RenderGradient()
@@ -210,14 +219,31 @@ namespace Epsitec.Common.Drawing
 		public void ScaleTransform(double sx, double sy, double cx, double cy)
 		{
 			this.transform.MultiplyByPostfix (Drawing.Transform.FromScale (sx, sy, cx, cy));
-			this.rasterizer.Transform = this.transform;
+			this.UpdateTransform ();
 		}
 		
 		public void RotateTransform(double angle, double cx, double cy)
 		{
 			this.transform.MultiplyByPostfix (Drawing.Transform.FromRotation (angle, cx, cy));
-			this.rasterizer.Transform = this.transform;
+			this.UpdateTransform ();
 		}
+		
+		
+		protected virtual void UpdateTransform()
+		{
+			this.rasterizer.Transform = this.transform;
+			
+			//	Lorsque la matrice de transformation change, il faut aussi mettre à jour les
+			//	transformations des renderers qui en ont...
+			
+			Transform t_image    = this.image_renderer.Transform;
+			Transform t_gradient = this.gradient_renderer.Transform;
+			
+			this.image_renderer.Transform    = t_image;
+			this.gradient_renderer.Transform = t_gradient;
+		}
+		
+		
 		
 		public Rasterizer				Rasterizer
 		{
@@ -238,12 +264,17 @@ namespace Epsitec.Common.Drawing
 			get { return this.pixmap; }
 		}
 		
-		public Renderer.Solid			Solid
+		public Renderer.Solid			SolidRenderer
 		{
 			get { return this.solid_renderer; }
 		}
 		
-		public Renderer.Gradient		Gradient
+		public Renderer.Image			ImageRenderer
+		{
+			get { return this.image_renderer; }
+		}
+		
+		public Renderer.Gradient		GradientRenderer
 		{
 			get { return this.gradient_renderer; }
 		}
@@ -254,9 +285,11 @@ namespace Epsitec.Common.Drawing
 			this.pixmap.Size = new System.Drawing.Size (width, height);
 			
 			this.solid_renderer.Pixmap    = null;
+			this.image_renderer.Pixmap	  = null;
 			this.gradient_renderer.Pixmap = null;
 			
 			this.solid_renderer.Pixmap    = this.pixmap;
+			this.image_renderer.Pixmap    = this.pixmap;
 			this.gradient_renderer.Pixmap = this.pixmap;
 		}
 		
@@ -296,17 +329,29 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		protected virtual void HandleTransformUpdating(object sender, System.EventArgs e)
+		{
+			Renderer.ITransformProvider provider = sender as Renderer.ITransformProvider;
+			
+			if (provider != null)
+			{
+				provider.InternalTransform.MultiplyBy (this.transform);
+			}
+		}
 		
-		Pixmap						pixmap;
-		Rasterizer					rasterizer;
-		Transform					transform;
 		
-		Renderer.Solid				solid_renderer;
-		Renderer.Gradient			gradient_renderer;
 		
-		double						line_width;
-		JoinStyle					line_join;
-		CapStyle					line_cap;
-		double						line_miter_limit;
+		private Pixmap					pixmap;
+		private Rasterizer				rasterizer;
+		private Transform				transform;
+		
+		private Renderer.Solid			solid_renderer;
+		private Renderer.Image			image_renderer;
+		private Renderer.Gradient		gradient_renderer;
+		
+		private double					line_width;
+		private JoinStyle				line_join;
+		private CapStyle				line_cap;
+		private double					line_miter_limit;
 	}
 }

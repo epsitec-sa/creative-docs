@@ -99,6 +99,7 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		copyproject.py = copyproject.py
+		Epsitec Cresus Full Build.mgb = Epsitec Cresus Full Build.mgb
 		Epsitec.Cresus.snk = Epsitec.Cresus.snk
 		import-bin.bat = import-bin.bat
 	EndGlobalSection

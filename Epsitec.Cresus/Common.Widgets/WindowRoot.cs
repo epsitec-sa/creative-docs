@@ -67,7 +67,7 @@ namespace Epsitec.Common.Widgets
 			path.LineTo (x1, y2);
 			path.Close ();
 			
-			graphics.Solid.Color = this.BackColor;
+			graphics.SolidRenderer.Color = this.BackColor;
 			graphics.Rasterizer.AddSurface (path);
 			graphics.RenderSolid ();
 		}

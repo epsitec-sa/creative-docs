@@ -147,6 +147,10 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "test.png"
+                    BuildAction = "None"
+                />
+                <File
                     RelPath = "TextLayoutTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

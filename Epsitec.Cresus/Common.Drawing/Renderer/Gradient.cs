@@ -13,7 +13,7 @@ namespace Epsitec.Common.Drawing
 
 namespace Epsitec.Common.Drawing.Renderer
 {
-	public class Gradient : IRenderer, System.IDisposable
+	public class Gradient : IRenderer, System.IDisposable, ITransformProvider
 	{
 		public Gradient()
 		{
@@ -82,15 +82,24 @@ namespace Epsitec.Common.Drawing.Renderer
 					throw new System.NullReferenceException ("Rasterizer.Transform");
 				}
 				
-				if (this.transform != value)
-				{
-					this.AssertAttached ();
-					this.transform = new Transform (value);
-					Transform inverse = Transform.Inverse (value);
-					Agg.Library.AggRendererGradientMatrix (this.agg_ren, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
-				}
+				//	Note: on recalcule la transformation à tous les coups, parce que l'appelant peut être
+				//	Graphics.UpdateTransform...
+				
+				this.AssertAttached ();
+				this.transform     = new Transform (value);
+				this.int_transform = new Transform (value);
+				this.OnTransformUpdating (System.EventArgs.Empty);
+				Transform inverse = Transform.Inverse (this.int_transform);
+				Agg.Library.AggRendererGradientMatrix (this.agg_ren, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
 			}
 		}
+		
+		public Transform				InternalTransform
+		{
+			get { return this.int_transform; }
+		}
+		
+		public event System.EventHandler TransformUpdating;
 		
 		
 		public void SetColors(Color a, Color b)
@@ -194,6 +203,15 @@ namespace Epsitec.Common.Drawing.Renderer
 				this.pixmap  = null;
 				this.fill    = GradientFill.None;
 				this.transform.Reset ();
+				this.int_transform.Reset ();
+			}
+		}
+		
+		protected virtual void OnTransformUpdating(System.EventArgs e)
+		{
+			if (this.TransformUpdating != null)
+			{
+				this.TransformUpdating (this, e);
 			}
 		}
 		
@@ -201,7 +219,8 @@ namespace Epsitec.Common.Drawing.Renderer
 		
 		private System.IntPtr			agg_ren;
 		private Pixmap					pixmap;
-		private GradientFill			fill		= GradientFill.None;
-		private Transform				transform	= new Transform ();
+		private GradientFill			fill			= GradientFill.None;
+		private Transform				transform		= new Transform ();
+		private Transform				int_transform	= new Transform ();
 	}
 }

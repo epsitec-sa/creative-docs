@@ -125,6 +125,12 @@ namespace Epsitec.Common.Drawing
 			Agg.Library.AggRasterizerRenderSolid (this.agg_ras, renderer.Handle);
 		}
 		
+		public void Render(Renderer.Image renderer)
+		{
+			this.CreateOnTheFly ();
+			Agg.Library.AggRasterizerRenderImage (this.agg_ras, renderer.Handle);
+		}
+		
 		public void Render(Renderer.Gradient renderer)
 		{
 			this.CreateOnTheFly ();

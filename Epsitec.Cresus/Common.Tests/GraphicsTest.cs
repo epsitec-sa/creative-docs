@@ -64,6 +64,15 @@ namespace Epsitec.Common.Tests
 			window.Show ();
 		}
 
+		[Test] public void CheckImage()
+		{
+			WindowFrame window = new WindowFrame ();
+			
+			window.Text = "CheckImage";
+			window.Root.PaintForeground += new PaintEventHandler(Image_PaintForeground);
+			window.Show ();
+		}
+
 		private void Text_PaintForeground(object sender, PaintEventArgs e)
 		{
 			WindowRoot root = sender as WindowRoot;
@@ -255,12 +264,16 @@ namespace Epsitec.Common.Tests
 			e.Graphics.AddText (0, cy + 10, root.Client.Width, 20, "The quick brown fox jumps over the lazy dog !", font, 12, ContentAlignment.BottomCenter);
 			e.Graphics.RenderSolid (Color.FromRGB (0, 0, 0.4));
 		}
+		
 		private void Gradient_PaintForeground(object sender, PaintEventArgs e)
 		{
 			WindowRoot root = sender as WindowRoot;
 			
 			double cx = root.Client.Width / 2;
 			double cy = root.Client.Height / 2;
+			
+			e.Graphics.RotateTransform (0, cx, cy);
+			e.Graphics.ScaleTransform (0.8, 0.8, cx, cy);
 			
 			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
@@ -309,11 +322,64 @@ namespace Epsitec.Common.Tests
 			e.Graphics.Rasterizer.AddSurface (path2);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
-			e.Graphics.Gradient.Fill = Epsitec.Common.Drawing.GradientFill.X;
-			e.Graphics.Gradient.SetParameters (0, root.Client.Width);
-			e.Graphics.Gradient.SetColors (r, g, b, a);
-			e.Graphics.Gradient.Transform = Transform.FromRotation (30, cx, cy);
+			e.Graphics.GradientRenderer.Fill = Epsitec.Common.Drawing.GradientFill.X;
+			e.Graphics.GradientRenderer.SetParameters (0, root.Client.Width);
+			e.Graphics.GradientRenderer.SetColors (r, g, b, a);
+			
+			Transform t = new Transform ();
+			t.Rotate (30, cx, cy);
+			e.Graphics.GradientRenderer.Transform = t;
+			
 			e.Graphics.RenderGradient ();
+		}
+		
+		private void Image_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double cx = root.Client.Width / 2;
+			double cy = root.Client.Height / 2;
+			
+			e.Graphics.RotateTransform (-30, cx, cy);
+			
+			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
+			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
+			e.Graphics.RenderSolid (Color.FromBrightness (0));
+			
+			Font   font = Font.GetFont ("Arial Black", "Regular");
+			double size = 50;
+			
+			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
+			System.Drawing.Bitmap bitmap = System.Drawing.Image.FromFile (@"..\..\test.png") as System.Drawing.Bitmap;
+			string text = "TOMATE";
+			
+			double max_width = 0;
+			
+			foreach (char c in text)
+			{
+				max_width = System.Math.Max (max_width, font.GetCharAdvance (c) * size);
+			}
+			
+			double x = cx - max_width * text.Length / 2;
+			double y = cy - size * 1.3;
+			
+			double width  = max_width;
+			double height = font.LineHeight * size;
+			
+			foreach (char c in text)
+			{
+				e.Graphics.AddText (x, y, width, height, new string (c, 1), font, size,  ContentAlignment.MiddleCenter);
+				e.Graphics.ImageRenderer.Bitmap = bitmap;
+				
+				Transform t = new Transform ();
+				t.Scale (width / bitmap.Width, height / bitmap.Height);
+				t.Translate (x, y);
+				
+				e.Graphics.ImageRenderer.Transform = t;
+				e.Graphics.RenderImage ();
+				
+				x += width;
+			}
 		}
 	}
 }
