@@ -124,14 +124,13 @@ namespace Epsitec.Common.Support
 		{
 			this.aborted = false;
 			
-			//	TODO: il faudrait gérer un vrai petit langage ici; pour l'instant, on supporte
-			//	soit des commandes isolées, soit des commandes intercalées
-			
-			//	TODO: réfléchir au problème de commandes qui en génèrent d'autres qui demandent
-			//	une interaction avec l'utilisateur. Dans le cas idéal, il faudrait mettre en
-			//	attente les commandes jusqu'à ce que le commande interactive est terminée avec
-			//	succès; en cas d'interruption, il faudrait pouvoir ne pas exécuter les commandes
-			//	mises en attente, mais les supprimer.
+			//	L'appelant peut spécifier une ou plusieurs commandes. Dans ce dernier cas, les
+			//	commandes sont chaînées au moyen du symbole "->" et elles sont exécutées dans
+			//	l'ordre. Une commande peut prendre connaissance des commandes encore en attente
+			//	d'exécution au moyen de XxxPendingMultipleCommands.
+			//
+			//	De cette façon, une commande interactive peut annuler les commandes en attente
+			//	et les exécuter soi-même lorsque l'utilisateur valide le dialogue, par exemple.
 			
 			if (command.IndexOf ("->") >= 0)
 			{
