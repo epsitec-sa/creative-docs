@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_d = new DbColumn ("D", DbSimpleType.Guid, Nullable.Yes);
 			DbColumn column_e = new DbColumn ("E", DbNumDef.FromRawType (DbRawType.Boolean), Nullable.No);
 			
-			DbTable db_table = new DbTable ("Test");
+			DbTable db_table = new DbTable ("Test (1)");
 			
 			db_table.PrimaryKey = new DbColumn[] { column_a, column_b };
 			db_table.Columns.AddRange (new DbColumn[] { column_a, column_b, column_c, column_d, column_e });
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Database
 			SqlTable sql_table = db_table.CreateSqlTable (type_converter);
 			
 			Assertion.AssertNotNull (sql_table);
-			Assertion.AssertEquals (db_table.Name, sql_table.Name);
+			Assertion.AssertEquals ("TEST__1_", sql_table.Name);
 			Assertion.AssertEquals (db_table.Columns.Count, sql_table.Columns.Count);
 			Assertion.AssertEquals (db_table.PrimaryKey.Length, sql_table.PrimaryKey.Length);
 		}
