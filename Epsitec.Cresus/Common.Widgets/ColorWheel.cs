@@ -88,7 +88,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateClientGeometry();
 
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect = this.Client.Bounds;
 			double dim = System.Math.Min(rect.Width, rect.Height);
 			rect.Width = dim;
 			rect.Height = dim;

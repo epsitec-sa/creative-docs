@@ -385,15 +385,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		public event EventHandler Changed;
-
-
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
-		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-
-			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-		}
-
+		
 
 		protected Drawing.Color				colorBlack;
 		protected ColorWheel				circle;

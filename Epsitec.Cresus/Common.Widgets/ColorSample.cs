@@ -57,7 +57,7 @@ namespace Epsitec.Common.Widgets
 			{
 				return new Drawing.Rectangle(-5, -5, this.Client.Width+10, this.Client.Height+10);
 			}
-			return new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			return this.Client.Bounds;
 		}
 
 
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect = this.Client.Bounds;
 
 			if ( this.possibleOrigin && this.ActiveState == WidgetState.ActiveYes )
 			{

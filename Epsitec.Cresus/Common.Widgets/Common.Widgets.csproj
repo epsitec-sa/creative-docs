@@ -422,6 +422,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Tag.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TextField.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
