@@ -78,6 +78,17 @@ namespace Epsitec.Cresus.Database
 			this.IsNullAllowed = (nullable == Nullable.Yes);
 		}
 		
+		public DbColumn(string name, DbType type, DbColumnClass column_class) : this (name, type, Nullable.Undefined)
+		{
+			this.DefineColumnClass (column_class);
+		}
+		
+		public DbColumn(string name, DbType type, DbColumnClass column_class, DbColumnLocalisation column_localisation) : this (name, type, Nullable.Undefined)
+		{
+			this.DefineColumnClass (column_class);
+			this.DefineColumnLocalisation (column_localisation);
+		}
+		
 		public DbColumn(string name, DbType type, DbColumnClass column_class, DbElementCat category) : this (name, type, Nullable.Undefined)
 		{
 			this.DefineColumnClass (column_class);
@@ -88,6 +99,17 @@ namespace Epsitec.Cresus.Database
 		{
 			this.DefineColumnClass (column_class);
 			this.DefineCategory (category);
+		}
+		
+		public DbColumn(string name, DbType type, Nullable nullable, DbColumnClass column_class) : this (name, type, nullable)
+		{
+			this.DefineColumnClass (column_class);
+		}
+		
+		public DbColumn(string name, DbType type, Nullable nullable, DbColumnClass column_class, DbColumnLocalisation column_localisation) : this (name, type, nullable)
+		{
+			this.DefineColumnClass (column_class);
+			this.DefineColumnLocalisation (column_localisation);
 		}
 		
 		public DbColumn(System.Xml.XmlElement xml)

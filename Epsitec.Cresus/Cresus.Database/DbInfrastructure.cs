@@ -91,11 +91,13 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbTransaction transaction = this.BeginTransaction ())
 			{
-				this.BootCreateTableTableDef (transaction);
-				this.BootCreateTableColumnDef (transaction);
-				this.BootCreateTableTypeDef (transaction);
-				this.BootCreateTableEnumValDef (transaction);
-				this.BootCreateTableLog (transaction);
+				BootHelper helper = new BootHelper (this, transaction);
+				
+				helper.CreateTableTableDef ();
+				helper.CreateTableColumnDef ();
+				helper.CreateTableTypeDef ();
+				helper.CreateTableEnumValDef ();
+				helper.CreateTableLog ();
 				
 				//	Valide la création de toutes ces tables avant de commencer à peupler
 				//	les tables. Firebird requiert ce mode de fonctionnement.
@@ -1504,7 +1506,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		protected void SetCategory(DbColumn[] columns, DbElementCat cat)
+		protected static void SetCategory(DbColumn[] columns, DbElementCat cat)
 		{
 			for (int i = 0; i < columns.Length; i++)
 			{
@@ -1513,180 +1515,132 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		#region Bootstrapping
-		protected void BootCreateTableTableDef(DbTransaction transaction)
+		public class BootHelper
 		{
-			DbTable    table   = new DbTable (Tags.TableTableDef);
-			DbColumn[] columns = new DbColumn[8];
+			public BootHelper(DbInfrastructure infrastructure, DbTransaction transaction)
+			{
+				this.infrastructure = infrastructure;
+				this.transaction    = transaction;
+			}
 			
-			columns[0] = new DbColumn (Tags.ColumnId,			this.types.KeyId);
-			columns[1] = new DbColumn (Tags.ColumnStatus,		this.types.KeyStatus);
-			columns[2] = new DbColumn (Tags.ColumnRefLog,		this.types.KeyId);
-			columns[3] = new DbColumn (Tags.ColumnName,			this.types.Name, Nullable.No);
-			columns[4] = new DbColumn (Tags.ColumnCaption,		this.types.Caption, Nullable.Yes);
-			columns[5] = new DbColumn (Tags.ColumnDescription,	this.types.Description, Nullable.Yes);
-			columns[6] = new DbColumn (Tags.ColumnInfoXml,		this.types.InfoXml, Nullable.No);
-			columns[7] = new DbColumn (Tags.ColumnNextId,		this.types.KeyId);
 			
-			columns[0].DefineColumnClass (DbColumnClass.KeyId);
-			columns[1].DefineColumnClass (DbColumnClass.KeyStatus);
-			columns[2].DefineColumnClass (DbColumnClass.RefId);
+			public void CreateTableTableDef()
+			{
+				DbTypeCache types   = this.infrastructure.types;
+				DbTable     table   = new DbTable (Tags.TableTableDef);
+				DbColumn[]  columns = new DbColumn[]
+					{
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
+						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
+						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefId),
+						new DbColumn (Tags.ColumnName,		  types.Name,		 Nullable.No,  DbColumnClass.Data),
+						new DbColumn (Tags.ColumnCaption,	  types.Caption,	 Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
+						new DbColumn (Tags.ColumnDescription, types.Description, Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
+						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 Nullable.No,  DbColumnClass.Data),
+						new DbColumn (Tags.ColumnNextId,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefId)
+					};
+				
+				this.CreateTable (table, columns);
+			}
 			
-			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
+			public void CreateTableColumnDef()
+			{
+				DbTypeCache types   = this.infrastructure.types;
+				DbTable     table   = new DbTable (Tags.TableColumnDef);
+				DbColumn[]  columns = new DbColumn[]
+					{
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
+						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
+						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefId),
+						new DbColumn (Tags.ColumnName,		  types.Name,		 Nullable.No,  DbColumnClass.Data),
+						new DbColumn (Tags.ColumnCaption,	  types.Caption,	 Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
+						new DbColumn (Tags.ColumnDescription, types.Description, Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
+						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 Nullable.No,  DbColumnClass.Data),
+						new DbColumn (Tags.ColumnRefTable,	  types.KeyId,       Nullable.No,  DbColumnClass.RefId),
+						new DbColumn (Tags.ColumnRefType,	  types.KeyId,       Nullable.No,  DbColumnClass.RefId),
+						new DbColumn (Tags.ColumnRefParent,	  types.KeyId,       Nullable.Yes, DbColumnClass.RefId)
+					};
+				
+				this.CreateTable (table, columns);
+			}
 			
-			this.SetCategory (columns, DbElementCat.Internal);
+			public void CreateTableTypeDef()
+			{
+				DbTypeCache types   = this.infrastructure.types;
+				DbTable     table   = new DbTable (Tags.TableTypeDef);
+				DbColumn[]  columns = new DbColumn[]
+					{
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
+						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
+						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefId),
+						new DbColumn (Tags.ColumnName,		  types.Name,		 Nullable.No,  DbColumnClass.Data),
+						new DbColumn (Tags.ColumnCaption,	  types.Caption,	 Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
+						new DbColumn (Tags.ColumnDescription, types.Description, Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
+						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 Nullable.No,  DbColumnClass.Data)
+					};
+				
+				this.CreateTable (table, columns);
+			}
 			
-			table.Columns.AddRange (columns);
+			public void CreateTableEnumValDef()
+			{
+				DbTypeCache types   = this.infrastructure.types;
+				DbTable     table   = new DbTable (Tags.TableEnumValDef);
+				DbColumn[]  columns = new DbColumn[]
+					{
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
+						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
+						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefId),
+						new DbColumn (Tags.ColumnName,		  types.Name,		 Nullable.No,  DbColumnClass.Data),
+						new DbColumn (Tags.ColumnCaption,	  types.Caption,	 Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
+						new DbColumn (Tags.ColumnDescription, types.Description, Nullable.Yes, DbColumnClass.Data, DbColumnLocalisation.Default),
+						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 Nullable.No,  DbColumnClass.Data),
+						new DbColumn (Tags.ColumnRefType,	  types.KeyId,       Nullable.No,  DbColumnClass.RefId)
+					};
+				
+				this.CreateTable (table, columns);
+			}
 			
-			table.DefineCategory (DbElementCat.Internal);
-			table.DefinePrimaryKey (columns[0]);
+			public void CreateTableLog()
+			{
+				DbTypeCache types   = this.infrastructure.types;
+				DbTable     table   = new DbTable (Tags.TableLog);
+				DbColumn[]  columns = new DbColumn[]
+					{
+						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
+						new DbColumn (Tags.ColumnDateTime,	  types.DateTime,	 Nullable.No,  DbColumnClass.Data)
+					};
+				
+				//	TODO: ajouter ici une colonne définissant la nature du changement (et l'utilisateur
+				//	qui en est la cause).
+				
+				this.CreateTable (table, columns);
+			}
 			
-			this.internal_tables.Add (table);
 			
-			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
-			this.sql_builder.InsertTable (sql_table);
-			this.ExecuteSilent (transaction);
+			private void CreateTable(DbTable table, DbColumn[] columns)
+			{
+				DbInfrastructure.SetCategory (columns, DbElementCat.Internal);
+				
+				table.Columns.AddRange (columns);
+				
+				table.DefineCategory (DbElementCat.Internal);
+				table.DefinePrimaryKey (columns[0]);
+				
+				this.infrastructure.internal_tables.Add (table);
+				
+				SqlTable sql_table = table.CreateSqlTable (this.infrastructure.type_converter);
+				this.infrastructure.sql_builder.InsertTable (sql_table);
+				this.infrastructure.ExecuteSilent (this.transaction);
+			}
+		
+			
+			private DbInfrastructure			infrastructure;
+			private DbTransaction				transaction;
 		}
 		
-		protected void BootCreateTableColumnDef(DbTransaction transaction)
-		{
-			DbTable    table   = new DbTable (Tags.TableColumnDef);
-			DbColumn[] columns = new DbColumn[10];
-			
-			columns[0] = new DbColumn (Tags.ColumnId,			this.types.KeyId);
-			columns[1] = new DbColumn (Tags.ColumnStatus,		this.types.KeyStatus);
-			columns[2] = new DbColumn (Tags.ColumnRefLog,		this.types.KeyId);
-			columns[3] = new DbColumn (Tags.ColumnName,			this.types.Name, Nullable.No);
-			columns[4] = new DbColumn (Tags.ColumnCaption,		this.types.Caption, Nullable.Yes);
-			columns[5] = new DbColumn (Tags.ColumnDescription,	this.types.Description, Nullable.Yes);
-			columns[6] = new DbColumn (Tags.ColumnInfoXml,		this.types.InfoXml, Nullable.No);
-			columns[7] = new DbColumn (Tags.ColumnRefTable,		this.types.KeyId);
-			columns[8] = new DbColumn (Tags.ColumnRefType,		this.types.KeyId);
-			columns[9] = new DbColumn (Tags.ColumnRefParent,	this.types.KeyId, Nullable.Yes);
-			
-			columns[0].DefineColumnClass (DbColumnClass.KeyId);
-			columns[1].DefineColumnClass (DbColumnClass.KeyStatus);
-			columns[2].DefineColumnClass (DbColumnClass.RefId);
-			
-			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			
-			columns[7].DefineColumnClass (DbColumnClass.RefId);
-			columns[8].DefineColumnClass (DbColumnClass.RefId);
-			columns[9].DefineColumnClass (DbColumnClass.RefId);
-
-			this.SetCategory (columns, DbElementCat.Internal);
-			
-			table.Columns.AddRange (columns);
-			
-			table.DefineCategory (DbElementCat.Internal);
-			table.DefinePrimaryKey (columns[0]);
-			
-			this.internal_tables.Add (table);
-			
-			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
-			this.sql_builder.InsertTable (sql_table);
-			this.ExecuteSilent (transaction);
-		}
 		
-		protected void BootCreateTableTypeDef(DbTransaction transaction)
-		{
-			DbTable    table   = new DbTable (Tags.TableTypeDef);
-			DbColumn[] columns = new DbColumn[7];
-			
-			columns[0] = new DbColumn (Tags.ColumnId,			this.types.KeyId);
-			columns[1] = new DbColumn (Tags.ColumnStatus,		this.types.KeyStatus);
-			columns[2] = new DbColumn (Tags.ColumnRefLog,		this.types.KeyId);
-			columns[3] = new DbColumn (Tags.ColumnName,			this.types.Name, Nullable.No);
-			columns[4] = new DbColumn (Tags.ColumnCaption,		this.types.Caption, Nullable.Yes);
-			columns[5] = new DbColumn (Tags.ColumnDescription,	this.types.Description, Nullable.Yes);
-			columns[6] = new DbColumn (Tags.ColumnInfoXml,		this.types.InfoXml, Nullable.No);
-			
-			columns[0].DefineColumnClass (DbColumnClass.KeyId);
-			columns[1].DefineColumnClass (DbColumnClass.KeyStatus);
-			columns[2].DefineColumnClass (DbColumnClass.RefId);
-			
-			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			
-			this.SetCategory (columns, DbElementCat.Internal);
-			
-			table.Columns.AddRange (columns);
-			
-			table.DefineCategory (DbElementCat.Internal);
-			table.DefinePrimaryKey (columns[0]);
-			
-			this.internal_tables.Add (table);
-			
-			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
-			this.sql_builder.InsertTable (sql_table);
-			this.ExecuteSilent (transaction);
-		}
 		
-		protected void BootCreateTableEnumValDef(DbTransaction transaction)
-		{
-			DbTable    table   = new DbTable (Tags.TableEnumValDef);
-			DbColumn[] columns = new DbColumn[8];
-			
-			columns[0] = new DbColumn (Tags.ColumnId,			this.types.KeyId);
-			columns[1] = new DbColumn (Tags.ColumnStatus,		this.types.KeyStatus);
-			columns[2] = new DbColumn (Tags.ColumnRefLog,		this.types.KeyId);
-			columns[3] = new DbColumn (Tags.ColumnName,			this.types.Name, Nullable.No);
-			columns[4] = new DbColumn (Tags.ColumnCaption,		this.types.Caption, Nullable.Yes);
-			columns[5] = new DbColumn (Tags.ColumnDescription,	this.types.Description, Nullable.Yes);
-			columns[6] = new DbColumn (Tags.ColumnInfoXml,		this.types.InfoXml, Nullable.No);
-			columns[7] = new DbColumn (Tags.ColumnRefType,		this.types.KeyId);
-			
-			columns[0].DefineColumnClass (DbColumnClass.KeyId);
-			columns[1].DefineColumnClass (DbColumnClass.KeyStatus);
-			columns[2].DefineColumnClass (DbColumnClass.RefId);
-			
-			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			
-			columns[7].DefineColumnClass (DbColumnClass.RefId);
-			
-			this.SetCategory (columns, DbElementCat.Internal);
-			
-			table.Columns.AddRange (columns);
-			
-			table.DefineCategory (DbElementCat.Internal);
-			table.DefinePrimaryKey (columns[0]);
-			
-			this.internal_tables.Add (table);
-			
-			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
-			this.sql_builder.InsertTable (sql_table);
-			this.ExecuteSilent (transaction);
-		}
-		
-		protected void BootCreateTableLog(DbTransaction transaction)
-		{
-			DbTable    table   = new DbTable (Tags.TableLog);
-			DbColumn[] columns = new DbColumn[2];
-			
-			columns[0] = new DbColumn (Tags.ColumnId,		this.types.KeyId);
-			columns[1] = new DbColumn (Tags.ColumnDateTime,	this.types.DateTime);
-			
-			//	TODO: ajouter ici une colonne définissant la nature du changement (et l'utilisateur
-			//	qui en est la cause).
-			
-			columns[0].DefineColumnClass (DbColumnClass.KeyId);
-			
-			this.SetCategory (columns, DbElementCat.Internal);
-			
-			table.Columns.AddRange (columns);
-			
-			table.DefineCategory (DbElementCat.Internal);
-			table.DefinePrimaryKey (columns[0]);
-			
-			this.internal_tables.Add (table);
-			
-			SqlTable sql_table = table.CreateSqlTable (this.type_converter);
-			this.sql_builder.InsertTable (sql_table);
-			this.ExecuteSilent (transaction);
-		}
 		
 		
 		protected void BootInsertLogRow(DbTransaction transaction, DbID id, long date_time)
@@ -1887,7 +1841,7 @@ namespace Epsitec.Cresus.Database
 			this.BootUpdateTableNextId (transaction, this.internal_tables[Tags.TableTypeDef].InternalKey, type_key_id);
 			this.BootUpdateTableNextId (transaction, this.internal_tables[Tags.TableEnumValDef].InternalKey, enum_val_key_id);
 		}
-		#endregion
+		
 		
 		#region Initialisation
 		protected void InitialiseDatabaseAbstraction()
