@@ -9,10 +9,11 @@ namespace Epsitec.Common.Designer.Panels
 	/// </summary>
 	public class StringEditPanel : AbstractPanel
 	{
-		public StringEditPanel(Support.Data.ITextArrayStore store)
+		public StringEditPanel(Support.Data.ITextArrayStore store, ResourceBundle bundle)
 		{
-			this.size  = StringEditPanel.DefaultSize;
-			this.store = store;
+			this.size   = StringEditPanel.DefaultSize;
+			this.store  = store;
+			this.bundle = bundle;
 		}
 		
 		
@@ -71,8 +72,9 @@ namespace Epsitec.Common.Designer.Panels
 			TextFieldMulti text_field = new TextFieldMulti (parent);
 			
 			text_label.Bounds = new Drawing.Rectangle (5, 50, dx - 10, 15);
-			text_label.Text   = "Commentaire :";
+			text_label.Text   = "Co<m>m</m>mentaire :";
 			text_label.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
+			text_label.ShortcutPressed += new EventHandler (this.HandleCommentTextLabelShortcutPressed);
 			
 			text_field.Bounds        = new Drawing.Rectangle (5, 5, dx - 10, 44);
 			text_field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -86,18 +88,59 @@ namespace Epsitec.Common.Designer.Panels
 			ctrl.StartReadOnly ();
 			
 			this.edit_array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
+			
+			this.comment = text_field;
+			this.comment.TextChanged += new EventHandler (this.HandleCommentTextChanged);
+			
+			this.edit_array.SelectedIndex = 0;
 		}
 		
 		
 		private void HandleEditArraySelectedIndexChanging(object sender)
 		{
-			System.Diagnostics.Debug.WriteLine ("Sel.Changing " + this.edit_array.SelectedIndex);
+			int index = this.edit_array.SelectedIndex;
+			
+			if (index >= 0)
+			{
+				this.bundle[index].SetAbout (this.comment.Text);
+			}
 		}
 		
 		private void HandleEditArraySelectedIndexChanged(object sender)
 		{
-			System.Diagnostics.Debug.WriteLine ("Sel.Changed " + this.edit_array.SelectedIndex);
+			int index = this.edit_array.SelectedIndex;
+			
+			if (index >= 0)
+			{
+				this.comment.Text = this.bundle[index].About;
+			}
+			else
+			{
+				this.comment.Text = "";
+			}
+		}
+		
+		private void HandleCommentTextChanged(object sender)
+		{
+			int index = this.edit_array.SelectedIndex;
+			
+			if (index >= 0)
+			{
+				this.bundle[index].SetAbout (this.comment.Text);
+			}
+		}
+		
+		private void HandleCommentTextLabelShortcutPressed(object sender)
+		{
+			if (this.comment.ContainsFocus)
+			{
+				this.edit_array.SetFocused (true);
+			}
+			else
+			{
+				this.comment.SelectAll ();
+				this.comment.SetFocused (true);
+			}
 		}
 		
 		private void HandleEditArrayDoubleClicked(object sender, MessageEventArgs e)
@@ -110,6 +153,8 @@ namespace Epsitec.Common.Designer.Panels
 		
 		
 		protected EditArray						edit_array;
+		protected AbstractTextField				comment;
 		protected Support.Data.ITextArrayStore	store;
+		protected ResourceBundle				bundle;
 	}
 }

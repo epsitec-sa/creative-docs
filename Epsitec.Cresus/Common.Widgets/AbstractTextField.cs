@@ -35,6 +35,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.CreateTextLayout();
 			this.copyPasteBehavior = new Helpers.CopyPasteBehavior (this);
+			this.OnCursorChanged(true);
 		}
 		
 		public AbstractTextField(Widget embedder) : this()
@@ -475,6 +476,7 @@ namespace Epsitec.Common.Widgets
 					{
 						message.Consumer = this;
 						this.mouseDown = true;
+						this.preventScroll = true;
 					}
 					
 					break;
@@ -492,6 +494,7 @@ namespace Epsitec.Common.Widgets
 					{
 						this.ProcessEndPress(pos, message.ButtonDownCount);
 						this.mouseDown = false;
+						this.preventScroll = false;
 						message.Consumer = this;
 					}
 					break;
@@ -914,11 +917,7 @@ namespace Epsitec.Common.Widgets
 		{
 			// Ne génère rien pour l'instant...
 			
-			if ( silent == false )
-			{
-				this.CursorScroll();
-			}
-			
+			this.CursorScroll();
 			this.ResetCursor();
 			this.Invalidate();
 		}
@@ -927,7 +926,10 @@ namespace Epsitec.Common.Widgets
 		// Calcule le scrolling pour que le curseur soit visible.
 		protected void CursorScroll()
 		{
-			System.Diagnostics.Debug.Assert(this.TextLayout != null);
+			if (this.TextLayout == null)
+			{
+				return;
+			}
 			
 			if ( this.mouseDown )  return;
 
@@ -1077,6 +1079,12 @@ namespace Epsitec.Common.Widgets
 			graphics.RestoreClippingRectangle(rSaveClip);
 		}
 
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry ();
+			this.OnCursorChanged(true);
+		}
+
 
 		public override Drawing.Rectangle GetShapeBounds()
 		{
@@ -1108,6 +1116,7 @@ namespace Epsitec.Common.Widgets
 		protected double						cursorPosX;
 		protected int							maxChar = 1000;
 		protected bool							mouseDown = false;
+		protected bool							preventScroll = false;
 		
 		private Helpers.CopyPasteBehavior		copyPasteBehavior;
 		

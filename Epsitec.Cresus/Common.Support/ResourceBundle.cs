@@ -114,6 +114,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public string						PrefixedName
+		{
+			get
+			{
+				return this.prefix + ":" + this.name;
+			}
+		}
+		
 		public bool							IsEmpty
 		{
 			get
@@ -388,25 +396,25 @@ namespace Epsitec.Common.Support
 				throw new ResourceException (string.Format ("Bundle does not start with <bundle> tag (<{0}> is an unsupported root).", xmlroot.Name));
 			}
 			
-			System.Xml.XmlAttribute name_attr  = xmlroot.Attributes["name"];
-			System.Xml.XmlAttribute type_attr  = xmlroot.Attributes["type"];
-			System.Xml.XmlAttribute about_attr = xmlroot.Attributes["about"];
+			string name_attr  = this.GetAttributeValue (xmlroot, "name");
+			string type_attr  = this.GetAttributeValue (xmlroot, "type");
+			string about_attr = this.GetAttributeValue (xmlroot, "about");
 			
 			if (name_attr != null)
 			{
 				if ((this.name == null) ||
 					(this.name == ""))
 				{
-					this.name = name_attr.Value;
+					this.name = name_attr;
 				}
 			}
 			if (type_attr != null)
 			{
-				this.type = type_attr.Value;
+				this.type = type_attr;
 			}
 			if (about_attr != null)
 			{
-				this.about = about_attr.Value;
+				this.about = about_attr;
 			}
 			
 			ArrayList list = new ArrayList ();
@@ -706,6 +714,23 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 		
+		protected void SetAttributeValue(System.Xml.XmlNode node, string name, string value)
+		{
+			if (node == null)
+			{
+				throw new ResourceException ("Invalid node specified.");
+			}
+			
+			if (node.Attributes[name] == null)
+			{
+				node.Attributes.Append (this.XmlDocument.CreateAttribute (name));
+			}
+			
+			node.Attributes[name].Value = value;
+			
+			this.OnFieldsChanged ();
+		}
+		
 		
 		protected virtual void OnFieldsChanged()
 		{
@@ -833,6 +858,7 @@ namespace Epsitec.Common.Support
 			{
 				this.parent = parent;
 				this.name   = parent.GetAttributeValue (xml, "name");
+				this.about  = parent.GetAttributeValue (xml, "about");
 				this.xml    = xml;
 			}
 			
@@ -840,6 +866,7 @@ namespace Epsitec.Common.Support
 			{
 				this.parent = parent;
 				this.name   = bundle.Name;
+				this.about  = bundle.About;
 				this.data   = bundle;
 				this.type   = ResourceFieldType.Bundle;
 			}
@@ -848,7 +875,13 @@ namespace Epsitec.Common.Support
 			public string					Name
 			{
 				get { return this.name; }
-				set { this.name = value; }
+//				set { this.name = value; }
+			}
+			
+			public string					About
+			{
+				get { return this.about; }
+//				set { this.about = value; }
 			}
 			
 			public ResourceFieldType		Type
@@ -972,8 +1005,24 @@ namespace Epsitec.Common.Support
 				if (this.name != name)
 				{
 					this.name = name;
-					this.xml.Attributes["name"].Value = name;
-					this.parent.OnFieldsChanged ();
+					
+					if (this.xml != null)
+					{
+						this.parent.SetAttributeValue (this.xml, "name", name);
+					}
+				}
+			}
+			
+			public void SetAbout(string about)
+			{
+				if (this.about != about)
+				{
+					this.about = about;
+					
+					if (this.xml != null)
+					{
+						this.parent.SetAttributeValue (this.xml, "about", about);
+					}
 				}
 			}
 			
@@ -1117,7 +1166,7 @@ namespace Epsitec.Common.Support
 				for (int i = 0; i < list.Count; i++)
 				{
 					Field field = list[i] as Field;
-					field.Name  = string.Format ("{0}[{1}]", this.Name, i);
+					field.SetName (string.Format ("{0}[{1}]", this.Name, i));
 				}
 				
 				this.data = new FieldList (list);
@@ -1127,6 +1176,7 @@ namespace Epsitec.Common.Support
 			
 			protected ResourceBundle		parent;
 			protected string				name;
+			protected string				about;
 			protected System.Xml.XmlNode	xml;
 			protected object				data;
 			protected ResourceFieldType		type = ResourceFieldType.None;

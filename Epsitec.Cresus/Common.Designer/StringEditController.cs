@@ -258,7 +258,7 @@ namespace Epsitec.Common.Designer
 		
 		protected Panels.StringEditPanel CreatePanel(ResourceBundle bundle)
 		{
-			Panels.StringEditPanel panel  = new Panels.StringEditPanel (new Store (this, bundle));
+			Panels.StringEditPanel panel  = new Panels.StringEditPanel (new Store (this, bundle), bundle);
 			
 			Widget  widget = panel.Widget;
 			Window  window = this.Window;

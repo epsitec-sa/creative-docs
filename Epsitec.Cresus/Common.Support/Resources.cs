@@ -367,7 +367,7 @@ namespace Epsitec.Common.Support
 		{
 			ResourceLevel level   = bundle.ResourceLevel;
 			CultureInfo   culture = bundle.Culture;
-			string        id      = bundle.Name;
+			string        id      = bundle.PrefixedName;
 			
 			if (culture == null)
 			{
