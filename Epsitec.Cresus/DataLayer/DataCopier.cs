@@ -27,6 +27,8 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				return obj;
 			}
+			
+			//	TODO: compléter...
 
 			throw new DataException (string.Format ("Cannot copy type {0}, not supported", obj.GetType ().Name));
 		}

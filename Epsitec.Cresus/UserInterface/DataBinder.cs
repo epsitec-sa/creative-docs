@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.UserInterface
 			//	les données qui se trouvent dans le data set. La description du lien est
 			//	contenue dans 'binding'.
 			
-			DataLayer.DataRecord data_record = this.root_data_set.FindRecord (binding);
+			DataLayer.DataRecord data_record = this.root_data_set.FindRecord (binding, DataLayer.DataVersion.Original);
 			
 			if (data_record == null)
 			{

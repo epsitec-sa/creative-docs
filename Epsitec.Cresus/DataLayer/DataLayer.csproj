@@ -93,6 +93,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DataCopier.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DataException.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DataField.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -108,12 +118,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DataState.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DataTable.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "DataType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DataVersion.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
