@@ -14,6 +14,7 @@ namespace Epsitec.Common.Support
 		//	Le gestionnaire de ressources utilise ces méthodes pour configurer le
 		//	fournisseur de ressources :
 		
+		void Setup(string application);
 		void SelectLocale(System.Globalization.CultureInfo culture);
 		
 		//	Méthodes d'accès aux données (en lecture) :

@@ -5,6 +5,11 @@ namespace Epsitec.Common.Support.Tests
 	[TestFixture]
 	public class ResourcesTest
 	{
+		[SetUp] public void SetUp()
+		{
+			Resources.SetupProviders ("test");
+		}
+		
 		[Test] public void CheckDebugDumpProviders()
 		{
 			System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} providers.", Resources.ProviderCount));
