@@ -138,6 +138,8 @@ namespace Epsitec.Common.Widgets
 			int dx = native.Width;
 			int dy = native.Height;
 			
+			y = System.Windows.Forms.SystemInformation.VirtualScreen.Height - y - dy;
+			
 			Win32Api.SetStretchBltMode (bitmap_dc, Win32Const.BLT_COLOR_ON_COLOR);
 			Win32Api.StretchBlt (bitmap_dc, 0, 0, dx, dy, desktop_dc, x, y, dx, dy, Win32Const.ROP_SRC_COPY);
 			
