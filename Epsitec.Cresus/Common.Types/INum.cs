@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// L'interface INum décrit un type numérique.
 	/// </summary>
-	public interface INum : INameCaption
+	public interface INum : INamedType
 	{
 		DecimalRange	Range	{ get; }
 	}

@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	/// <summary>
 	/// L'interface IString décrit un type texte.
 	/// </summary>
-	public interface IString : INameCaption
+	public interface IString : INamedType
 	{
 		int		Length	{ get; }
 	}
