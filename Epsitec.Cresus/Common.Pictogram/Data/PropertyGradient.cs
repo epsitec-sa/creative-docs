@@ -258,7 +258,7 @@ namespace Epsitec.Common.Pictogram.Data
 				mask = graphics.CreateAlphaMask();
 
 				int step = (int)(this.smooth*sx);
-				if ( step <  0 )  step =  2;
+				if ( step <  2 )  step =  2;
 				if ( step > 20 )  step = 20;
 				for ( int i=0 ; i<step ; i++ )
 				{
