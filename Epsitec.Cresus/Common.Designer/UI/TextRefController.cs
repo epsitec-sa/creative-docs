@@ -56,7 +56,6 @@ namespace Epsitec.Common.Designer.UI
 			this.combo_field.AnchorMargins   = new Drawing.Margins (this.caption_label.Right, 0, 4+20+8+20+4, 0);
 			this.combo_field.IsReadOnly      = true;
 			this.combo_field.PlaceHolder     = "<b>&lt;create new field&gt;</b>";
-			this.combo_field.AutoErasing    += new CancelEventHandler (this.HandleComboFieldAutoErasing);
 			
 			IValidator field_validator  = new Common.Widgets.Validators.RegexValidator (this.combo_field, RegexFactory.ResourceName, false);
 			IValidator bundle_validator = new Common.Widgets.Validators.RegexValidator (this.combo_bundle, RegexFactory.ResourceName, false);
@@ -73,6 +72,10 @@ namespace Epsitec.Common.Designer.UI
 		
 		public override void SyncFromAdapter(Common.UI.SyncReason reason)
 		{
+			System.Diagnostics.Debug.Assert (this.sync_level == 0);
+			
+			this.sync_level++;
+			
 			if (reason == Common.UI.SyncReason.SourceChanged)
 			{
 				this.State = InternalState.Passive;
@@ -111,6 +114,8 @@ namespace Epsitec.Common.Designer.UI
 					this.combo_text.SelectAll ();
 				}
 			}
+			
+			this.sync_level--;
 		}
 		
 		public override void SyncFromUI()
@@ -154,11 +159,23 @@ namespace Epsitec.Common.Designer.UI
 		
 		private void HandleComboTextTextChanged(object sender)
 		{
+			if (this.sync_level > 0)
+			{
+				return;
+			}
+			
 			this.SyncFromUI ();
 		}
 		
 		private void HandleComboTextTextEdited(object sender)
 		{
+			if (this.sync_level > 0)
+			{
+				return;
+			}
+			
+			this.SyncFromUI ();
+			
 			this.State = InternalState.UsingCustomText;
 		}
 		
@@ -171,6 +188,11 @@ namespace Epsitec.Common.Designer.UI
 		
 		private void HandleComboBundleSelectedIndexChanged(object sender)
 		{
+			if (this.sync_level > 0)
+			{
+				return;
+			}
+			
 			System.Diagnostics.Debug.Assert (sender == this.combo_bundle);
 			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
 			this.UpdateFieldList (adapter, this.combo_bundle.SelectedItem);
@@ -178,6 +200,11 @@ namespace Epsitec.Common.Designer.UI
 		
 		private void HandleComboFieldSelectedIndexChanged(object sender)
 		{
+			if (this.sync_level > 0)
+			{
+				return;
+			}
+			
 			System.Diagnostics.Debug.Assert (sender == this.combo_field);
 			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
 			
@@ -194,12 +221,18 @@ namespace Epsitec.Common.Designer.UI
 			}
 			else
 			{
-				this.State = InternalState.Passive;
+				adapter.XmlRefTarget = "";
+//-				this.State = InternalState.Passive;
 			}
 		}
 		
 		private void HandleComboFieldEditionValidated(object sender)
 		{
+			if (this.sync_level > 0)
+			{
+				return;
+			}
+			
 			System.Diagnostics.Debug.Assert (sender == this.combo_field);
 			
 			//	Il faut créer un nouveau champ dans le bundle.
@@ -209,21 +242,15 @@ namespace Epsitec.Common.Designer.UI
 		
 		private void HandleComboFieldEditionCancelled(object sender)
 		{
+			if (this.sync_level > 0)
+			{
+				return;
+			}
+			
 			System.Diagnostics.Debug.Assert (sender == this.combo_field);
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Cancelled field, restored to {0}#{1}.", this.combo_bundle.Text, this.combo_field.Text));
 		}
-		
-		private void HandleComboFieldAutoErasing(object sender, CancelEventArgs e)
-		{
-			System.Diagnostics.Debug.Assert (sender == this.combo_field);
-			
-			if (this.combo_field.Text != this.combo_field.PlaceHolder)
-			{
-				e.Cancel = true;
-			}
-		}
-		
 		
 		
 		private InternalState					State
@@ -236,6 +263,8 @@ namespace Epsitec.Common.Designer.UI
 			{
 				if (this.state != value)
 				{
+					TextRefAdapter adapter = this.Adapter as TextRefAdapter;
+					
 					switch (value)
 					{
 						case InternalState.Passive:
@@ -243,6 +272,7 @@ namespace Epsitec.Common.Designer.UI
 							break;
 						case InternalState.UsingCustomText:
 							this.combo_field.StartPassiveEdition (this.combo_field.PlaceHolder);
+							adapter.XmlRefTarget = "";
 							break;
 						case InternalState.UsingExistingText:
 							this.combo_field.CancelEdition ();
@@ -268,6 +298,7 @@ namespace Epsitec.Common.Designer.UI
 		}
 		
 		
+		private int								sync_level;
 		private InternalState					state;
 		private TextFieldCombo					combo_text;
 		
