@@ -117,6 +117,45 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals ("123",                CommandDispatcher.ExtractCommandArgs (cmd5)[2]);
 		}
 		
+		[Test] public void CheckExtractAndParseCommandArgs()
+		{
+			string   cmd  = "foo (this.Name, 'abc', 123.456, bar, this.Mode)";
+			string[] args = CommandDispatcher.ExtractCommandArgs (cmd);
+			string[] vals = CommandDispatcher.ExtractAndParseCommandArgs (cmd, this);
+			string[] expect = new string[] { "test", "abc", "123.456", "bar", "Funny" };
+			
+			for (int i = 0; i < args.Length; i++)
+			{
+				Assertion.AssertEquals (string.Format ("{0} mismatched;", args[i]), expect[i], vals[i]);
+			}
+		}
+		
+		[Test] [ExpectedException (typeof (System.FieldAccessException))] public void CheckExtractAndParseCommandArgsEx1()
+		{
+			string   cmd  = "foo (this.Name, 'abc', 123.456, bar, this.DoesNotExist)";
+			string[] args = CommandDispatcher.ExtractCommandArgs (cmd);
+			string[] vals = CommandDispatcher.ExtractAndParseCommandArgs (cmd, this);
+		}
+		
+		
+		#region Test Properties used by ExtractAndParseCommandArgs
+		public string						Name
+		{
+			get { return "test"; }
+		}
+		
+		public TestMode						Mode
+		{
+			get { return TestMode.Funny; }
+		}
+		
+		public enum TestMode
+		{
+			Boring, Funny, Strange
+		}
+		#endregion
+		
+		#region Custom CommandState class
 		class CommandState : CommandDispatcher.CommandState
 		{
 			public CommandState(string name, CommandDispatcher dispatcher) : base (name, dispatcher)
@@ -130,8 +169,7 @@ namespace Epsitec.Common.Support
 			}
 
 		}
-		
-		static System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+		#endregion
 		
 		#region XyzTestController classes
 		public class BaseTestController
@@ -209,5 +247,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		#endregion
+		
+		static System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 	}
 }
