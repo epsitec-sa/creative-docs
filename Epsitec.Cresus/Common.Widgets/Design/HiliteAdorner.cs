@@ -28,20 +28,32 @@ namespace Epsitec.Common.Widgets.Design
 			graphics.Rasterizer.FillMode = Drawing.FillMode.EvenOdd;
 			graphics.AddFilledRectangle (this.widget.Client.Bounds);
 			graphics.AddFilledRectangle (Drawing.Rectangle.Inflate (this.widget.Client.Bounds, -1, -1));
-			graphics.RenderSolid (Drawing.Color.FromARGB (0.75, 0.57, 0.66, 0.80));
+			graphics.RenderSolid (Drawing.Color.FromColor (HiliteAdorner.FrameColor, 0.75));
 			graphics.AddFilledRectangle (Drawing.Rectangle.Inflate (this.widget.Client.Bounds, -1, -1));
 			graphics.AddFilledRectangle (Drawing.Rectangle.Inflate (this.widget.Client.Bounds, -2, -2));
-			graphics.RenderSolid (Drawing.Color.FromARGB (1.00, 0.57, 0.66, 0.80));
+			graphics.RenderSolid (HiliteAdorner.FrameColor);
 			
 			if (this.path.IsValid)
 			{
 				graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
 				graphics.Rasterizer.AddOutline (this.path, 1.0, Drawing.CapStyle.Square, Drawing.JoinStyle.Miter);
-				graphics.RenderSolid (Drawing.Color.FromARGB (1.0, 0.0, 0.0, 1.0));
+				graphics.RenderSolid (HiliteAdorner.HintColor);
 			}
 			
 			graphics.Rasterizer.FillMode = old_fill_mode;
 		}
+		
+		
+		public static Drawing.Color			FrameColor
+		{
+			get { return Drawing.Color.FromRGB (0.57, 0.66, 0.80); }
+		}
+		
+		public static Drawing.Color			HintColor
+		{
+			get { return Drawing.Color.FromRGB (0.00, 0.00, 1.00); }
+		}
+		
 		
 		protected Drawing.Path				path;
 	}

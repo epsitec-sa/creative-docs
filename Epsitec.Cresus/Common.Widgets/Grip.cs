@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 		public Grip()
 		{
 			this.grip_type  = GripType.None;
-			this.grip_color = Drawing.Color.FromRGB (1.0, 0.0, 0.0);
+			this.grip_color = Design.HiliteAdorner.FrameColor;
 			
 			this.drag_behavior = new Helpers.DragBehavior (this);
 			
@@ -65,9 +65,9 @@ namespace Epsitec.Common.Widgets
 				switch (this.grip_type)
 				{
 					case GripType.None:		return new Drawing.Point (0, 0);
-					case GripType.Vertex:	return new Drawing.Point (2, 2);
-					case GripType.Edge:		return new Drawing.Point (2, 2);
-					case GripType.Center:	return new Drawing.Point (2, 2);
+					case GripType.Vertex:	return new Drawing.Point (3, 3);
+					case GripType.Edge:		return new Drawing.Point (3, 3);
+					case GripType.Center:	return new Drawing.Point (3, 3);
 				}
 				
 				return Drawing.Point.Empty;
@@ -81,9 +81,9 @@ namespace Epsitec.Common.Widgets
 				switch (this.grip_type)
 				{
 					case GripType.None:		return new Drawing.Size (0, 0);
-					case GripType.Vertex:	return new Drawing.Size (5, 5);
-					case GripType.Edge:		return new Drawing.Size (5, 5);
-					case GripType.Center:	return new Drawing.Size (5, 5);
+					case GripType.Vertex:	return new Drawing.Size (6, 6);
+					case GripType.Edge:		return new Drawing.Size (6, 6);
+					case GripType.Center:	return new Drawing.Size (6, 6);
 				}
 				
 				return Drawing.Size.Empty;
@@ -106,15 +106,12 @@ namespace Epsitec.Common.Widgets
 				case GripType.Center:
 					using (Drawing.Path path = new Drawing.Path ())
 					{
-						path.AppendCircle (2.5, 2.5, 2.5);
+						this.DefineGradientShape (graphics);
+						this.DefineGradientOffset (graphics, 2, 4, 3);
+						
+						path.AppendCircle (3, 3, 3);
 						graphics.Rasterizer.AddSurface (path);
-						graphics.RenderSolid (this.grip_color);
-					}
-					using (Drawing.Path path = new Drawing.Path ())
-					{
-						path.AppendCircle (2.5, 2.5, 1.5);
-						graphics.Rasterizer.AddSurface (path);
-						graphics.RenderSolid (Drawing.Color.FromBrightness (1.0));
+						graphics.RenderGradient ();
 					}
 					break;
 			}
@@ -129,8 +126,47 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected void DefineGradientShape(Drawing.Graphics graphics)
+		{
+			double[] r = new double[256];
+			double[] g = new double[256];
+			double[] b = new double[256];
+			double[] a = new double[256];
+			
+			Drawing.Color color = Design.HiliteAdorner.FrameColor;
+			Drawing.Color spot  = Drawing.Color.FromRGB (1.0, 1.0, 1.0);
+			
+			for (int i = 0; i < 256; i++)
+			{
+				double mix1 = (i/255.0); // * 0.5 + 0.5;
+				double mix2 = 1.0 - mix1;
+				
+				r[i] = mix1*color.R + mix2*spot.R;
+				g[i] = mix1*color.G + mix2*spot.G;
+				b[i] = mix1*color.B + mix2*spot.B;
+				a[i] = 1.0;
+			}
+			
+			graphics.GradientRenderer.SetParameters (0, 100);
+			graphics.GradientRenderer.SetColors (r, g, b, a);
+			graphics.GradientRenderer.Fill = Drawing.GradientFill.Circle;
+		}
+		
+		protected void DefineGradientOffset(Drawing.Graphics graphics, double cx, double cy, double r)
+		{
+			Drawing.Transform t = new Drawing.Transform ();
+			t.Scale (r / 100.0, r / 100.0);
+			t.Translate (cx, cy);
+			
+			graphics.GradientRenderer.Transform = t;
+		}
+		
 		void Helpers.IDragBehaviorHost.OnDragBegin()
 		{
+			if (this.DragBegin != null)
+			{
+				this.DragBegin (this);
+			}
 		}
 		
 		void Helpers.IDragBehaviorHost.OnDragging(DragEventArgs e)
@@ -143,9 +179,15 @@ namespace Epsitec.Common.Widgets
 		
 		void Helpers.IDragBehaviorHost.OnDragEnd()
 		{
+			if (this.DragEnd != null)
+			{
+				this.DragEnd (this);
+			}
 		}
 		
 		
+		public event EventHandler			DragBegin;
+		public event EventHandler			DragEnd;
 		public event DragEventHandler		Dragging;
 		
 		protected GripType					grip_type;

@@ -1,5 +1,7 @@
 namespace Epsitec.Common.Widgets.Design
 {
+	using ArrayList = System.Collections.ArrayList;
+	
 	/// <summary>
 	/// La classe Constraint représente une contrainte (verticale ou horizontale)
 	/// utilisée par le système de drag & drop pour positionner les widgets, par
@@ -21,23 +23,28 @@ namespace Epsitec.Common.Widgets.Design
 		public void Clear()
 		{
 			this.segments = new Drawing.Segment[0];
+			this.hints    = new ArrayList ();
 			this.distance = Constraint.Infinite;
 			this.bounds   = Drawing.Rectangle.Empty;
 			this.priority = Priority.Low;
-			this.anchor   = AnchorStyles.None;
 		}
 		
 		public void Add (double coord, double model_coord, double x1, double y1, double x2, double y2)
 		{
-			this.Add (coord, model_coord, x1, y1, x2, y2, Priority.Low, AnchorStyles.None);
+			this.Add (coord, model_coord, x1, y1, x2, y2, Priority.Low, null);
 		}
 		
 		public void Add (double coord, double model_coord, double x1, double y1, double x2, double y2, Priority priority)
 		{
-			this.Add (coord, model_coord, x1, y1, x2, y2, priority, AnchorStyles.None);
+			this.Add (coord, model_coord, x1, y1, x2, y2, priority, null);
 		}
 		
-		public void Add (double coord, double model_coord, double x1, double y1, double x2, double y2, Priority priority, AnchorStyles anchor_hint)
+		public void Add (double coord, double model_coord, double x1, double y1, double x2, double y2, Priority priority, AnchorStyles anchor)
+		{
+			this.Add (coord, model_coord, x1, y1, x2, y2, priority, new Hint (anchor));
+		}
+		
+		public void Add (double coord, double model_coord, double x1, double y1, double x2, double y2, Priority priority, Hint hint)
 		{
 			double delta  = coord - model_coord;
 			double weight = priority == Priority.High ? System.Math.Abs (delta * 0.8) : System.Math.Abs (delta);
@@ -49,7 +56,12 @@ namespace Epsitec.Common.Widgets.Design
 			
 			Drawing.Segment seg = new Drawing.Segment (new Drawing.Point (x1, y1), new Drawing.Point (x2, y2));
 			
-			this.anchor |= anchor_hint;
+			if (hint != null)
+			{
+				hint = hint.Clone ();
+				hint.Weight = weight;
+				this.hints.Add (hint);
+			}
 			
 			if ((delta == this.distance) &&
 				(priority == this.priority))
@@ -82,6 +94,7 @@ namespace Epsitec.Common.Widgets.Design
 			}
 		}
 		
+		
 		public Constraint Clone()
 		{
 			return this.CloneCopyToNewObject (this.CloneNewObject ()) as Constraint;
@@ -105,9 +118,15 @@ namespace Epsitec.Common.Widgets.Design
 			get { return this.segments; }
 		}
 		
-		public AnchorStyles				Anchor
+		public Hint[]					Hints
 		{
-			get { return this.anchor; }
+			get
+			{
+				Hint[] hints = new Hint[this.hints.Count];
+				this.hints.CopyTo (hints);
+				System.Array.Sort (hints);
+				return hints;
+			}
 		}
 		public bool						IsValid
 		{
@@ -183,6 +202,82 @@ namespace Epsitec.Common.Widgets.Design
 			High
 		}
 		
+		public class Hint : System.IComparable
+		{
+			public Hint(Widget widget) : this(widget, AnchorStyles.None)
+			{
+			}
+			
+			public Hint(AnchorStyles anchor) : this(null, anchor)
+			{
+			}
+			
+			public Hint(Widget widget, AnchorStyles anchor)
+			{
+				this.widget = widget;
+				this.anchor = anchor;
+			}
+			
+			
+			public Hint Clone()
+			{
+				Hint copy = new Hint (this.widget, this.anchor);
+				
+				copy.weight = this.weight;
+				
+				return copy;
+			}
+			
+			
+			public double				Weight
+			{
+				get { return this.weight; }
+				set { this.weight = value; }
+			}
+			
+			public Widget				Widget
+			{
+				get { return this.widget; }
+			}
+			
+			public AnchorStyles			Anchor
+			{
+				get { return this.anchor; }
+			}
+			
+			
+			#region IComparable Members
+			public int CompareTo(object obj)
+			{
+				Hint that = obj as Hint;
+				
+				if (that == null)
+				{
+					return 1;
+				}
+				
+				return this.weight.CompareTo (that.weight);
+			}
+			#endregion
+			
+			public static AnchorStyles MergedAnchor(Hint[] hints)
+			{
+				AnchorStyles anchor = AnchorStyles.None;
+				
+				for (int i = 0; i < hints.Length; i++)
+				{
+					anchor |= hints[i].Anchor;
+				}
+				
+				return anchor;
+			}
+			
+			
+			protected Widget			widget;
+			protected AnchorStyles		anchor;
+			protected double			weight;
+		}
+		
 		
 		
 		protected Priority				priority;
@@ -190,6 +285,7 @@ namespace Epsitec.Common.Widgets.Design
 		protected double				distance;
 		protected Drawing.Rectangle		bounds;
 		protected Drawing.Segment[]		segments;
+		protected ArrayList				hints;
 		protected AnchorStyles			anchor;
 	}
 }

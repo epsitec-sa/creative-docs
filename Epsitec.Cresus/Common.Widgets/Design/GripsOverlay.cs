@@ -26,13 +26,13 @@ namespace Epsitec.Common.Widgets.Design
 			GripsOverlay.grip_map = new GripMap[9];
 			
 			GripsOverlay.grip_map[0] = new GripMap (Drawing.GripId.VertexBottomLeft, GripType.Vertex, 0, 0);
-			GripsOverlay.grip_map[1] = new GripMap (Drawing.GripId.VertexBottomRight, GripType.Vertex, -1, 0);
-			GripsOverlay.grip_map[2] = new GripMap (Drawing.GripId.VertexTopLeft, GripType.Vertex, 0, -1);
-			GripsOverlay.grip_map[3] = new GripMap (Drawing.GripId.VertexTopRight, GripType.Vertex, -1, -1);
+			GripsOverlay.grip_map[1] = new GripMap (Drawing.GripId.VertexBottomRight, GripType.Vertex, 0, 0);
+			GripsOverlay.grip_map[2] = new GripMap (Drawing.GripId.VertexTopLeft, GripType.Vertex, 0, 0);
+			GripsOverlay.grip_map[3] = new GripMap (Drawing.GripId.VertexTopRight, GripType.Vertex, 0, 0);
 			GripsOverlay.grip_map[4] = new GripMap (Drawing.GripId.Body, GripType.Center, 0, 0);
 			GripsOverlay.grip_map[5] = new GripMap (Drawing.GripId.EdgeBottom, GripType.Edge, 0, 0);
-			GripsOverlay.grip_map[6] = new GripMap (Drawing.GripId.EdgeRight, GripType.Edge, -1, 0);
-			GripsOverlay.grip_map[7] = new GripMap (Drawing.GripId.EdgeTop, GripType.Edge, 0, -1);
+			GripsOverlay.grip_map[6] = new GripMap (Drawing.GripId.EdgeRight, GripType.Edge, 0, 0);
+			GripsOverlay.grip_map[7] = new GripMap (Drawing.GripId.EdgeTop, GripType.Edge, 0, 0);
 			GripsOverlay.grip_map[8] = new GripMap (Drawing.GripId.EdgeLeft, GripType.Edge, 0, 0);
 		}
 		
@@ -123,7 +123,9 @@ namespace Epsitec.Common.Widgets.Design
 			{
 				for (int i = 0; i < this.grips.Length; i++)
 				{
-					this.grips[i].Dragging -= new DragEventHandler (this.HandleGripsDragging);
+					this.grips[i].Dragging  -= new DragEventHandler (this.HandleGripsDragging);
+					this.grips[i].DragBegin -= new EventHandler (this.HandleGripsDragBegin);
+					this.grips[i].DragEnd   -= new EventHandler (this.HandleGripsDragEnd);
 					this.grips[i].Dispose ();
 					this.grips[i] = null;
 				}
@@ -142,9 +144,11 @@ namespace Epsitec.Common.Widgets.Design
 				for (int i = 0; i < n; i++)
 				{
 					this.grips[i] = new Grip (this);
-					this.grips[i].GripType  = GripsOverlay.grip_map[i].type;
-					this.grips[i].Index     = i;
-					this.grips[i].Dragging += new DragEventHandler (this.HandleGripsDragging);
+					this.grips[i].GripType   = GripsOverlay.grip_map[i].type;
+					this.grips[i].Index      = i;
+					this.grips[i].Dragging  += new DragEventHandler (this.HandleGripsDragging);
+					this.grips[i].DragBegin += new EventHandler (this.HandleGripsDragBegin);
+					this.grips[i].DragEnd   += new EventHandler (this.HandleGripsDragEnd);
 				}
 			}
 		}
@@ -203,10 +207,11 @@ namespace Epsitec.Common.Widgets.Design
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
 			base.PaintBackgroundImplementation (graphics, clip_rect);
-			
+#if false			
 			graphics.SetClippingRectangle (this.target_clip);
-			graphics.AddRectangle (Drawing.Rectangle.Inflate (this.target_bounds, -0.5, -0.5));
-			graphics.RenderSolid (Drawing.Color.FromRGB (1.0, 0.0, 0.0));
+			graphics.AddRectangle (Drawing.Rectangle.Deflate (this.target_bounds, 0.5, 0.5));
+			graphics.RenderSolid (HiliteAdorner.FrameColor);
+#endif
 		}
 		
 		private void HandleTargetLayoutChanged(object sender)
@@ -237,6 +242,38 @@ namespace Epsitec.Common.Widgets.Design
 			bounds = this.ConstrainWidgetBounds (map.id, bounds);
 			
 			this.target_widget.Bounds = bounds;
+		}
+		
+		private void HandleGripsDragBegin(object sender)
+		{
+			Grip grip = sender as Grip;
+			
+			System.Diagnostics.Debug.Assert (grip != null);
+			System.Diagnostics.Debug.Assert (this.grips[grip.Index] == grip);
+			
+			for (int i = 0; i < this.grips.Length; i++)
+			{
+				if (this.grips[i] != grip)
+				{
+					this.grips[i].SetVisible (false);
+				}
+			}
+		}
+		
+		private void HandleGripsDragEnd(object sender)
+		{
+			Grip grip = sender as Grip;
+			
+			System.Diagnostics.Debug.Assert (grip != null);
+			System.Diagnostics.Debug.Assert (this.grips[grip.Index] == grip);
+			
+			for (int i = 0; i < this.grips.Length; i++)
+			{
+				if (this.grips[i] != grip)
+				{
+					this.grips[i].SetVisible (true);
+				}
+			}
 		}
 		
 		private Drawing.Rectangle ConstrainWidgetBounds(Drawing.GripId grip, Drawing.Rectangle new_bounds)
