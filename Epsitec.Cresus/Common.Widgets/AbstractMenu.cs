@@ -95,6 +95,12 @@ namespace Epsitec.Common.Widgets
 			set { this.host = value; }
 		}
 		
+		public static bool IsMenuDeveloped
+		{
+			get { return AbstractMenu.menuDeveloped; }
+		}
+		
+		
 		protected Support.ICommandDispatcherHost GetHost()
 		{
 			if (this.host != null)
@@ -471,6 +477,7 @@ namespace Epsitec.Common.Widgets
 			// au départ, sinon on se retrouve avec un filtre qui traîne...
 			
 			Window.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(AbstractMenu.menuFiltering.MessageFilter);
+			AbstractMenu.menuContextOpen = false;
 			AbstractMenu.menuDeveloped = false;
 			AbstractMenu.menuFiltering = null;
 			AbstractMenu.menuLastLeaf  = null;
@@ -479,6 +486,13 @@ namespace Epsitec.Common.Widgets
 		// Affiche un menu contextuel dont on spécifie le coin sup/gauche.
 		public void ShowContextMenu(Drawing.Point pos)
 		{
+			Window lastWindow = Message.State.LastWindow;
+			
+			if ( lastWindow != null )
+			{
+				lastWindow.MouseCursor = MouseCursor.Default;
+			}
+			
 			pos.Y -= this.Height;
 			pos.X -= this.shadow.Left;
 			pos.Y += this.shadow.Top;
@@ -497,6 +511,7 @@ namespace Epsitec.Common.Widgets
 			Window.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
 			
 			Window.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
+			AbstractMenu.menuContextOpen = true;
 			AbstractMenu.menuDeveloped = true;
 			AbstractMenu.menuFiltering = this;
 
@@ -753,6 +768,13 @@ namespace Epsitec.Common.Widgets
 						message.Swallowed = true;
 					}
 					break;
+				
+				case MessageType.MouseLeave:
+					if ( AbstractMenu.menuContextOpen )
+					{
+						message.Swallowed = true;
+					}
+					break;
 			}
 		}
 
@@ -953,6 +975,7 @@ namespace Epsitec.Common.Widgets
 		protected MenuItem							delayedMenuItem;
 		
 		protected static bool						menuDeveloped;
+		protected static bool						menuContextOpen;
 		protected static AbstractMenu				menuFiltering;
 		protected static AbstractMenu				menuLastLeaf;
 	}

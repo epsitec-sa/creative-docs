@@ -1299,7 +1299,7 @@ namespace Epsitec.Common.Widgets
 			bool stringExist = false;
 
 			// Prépare la fonte initiale par défaut.
-			fontItem = new FontItem();
+			fontItem = new FontItem(this);
 			fontItem.fontName  = this.font.FaceName;
 			fontItem.fontSize  = this.fontSize;
 			fontItem.fontColor = Drawing.Color.FromBrightness(0);  // noir
@@ -1867,6 +1867,11 @@ namespace Epsitec.Common.Widgets
 		// Un stack de FontItem est créé.
 		protected class FontItem
 		{
+			public FontItem(TextLayout host)
+			{
+				this.host = host;
+			}
+			
 			public FontItem Copy()
 			{
 				return this.MemberwiseClone() as FontItem;
@@ -1895,13 +1900,22 @@ namespace Epsitec.Common.Widgets
 				}
 
 				font = Drawing.Font.GetFont(this.fontName, fontStyle);
+				
 				if ( font == null )
 				{
 					font = Drawing.Font.GetFont(this.fontName, "Regular");
 				}
+				
+				if ( font == null )
+				{
+					font = this.host.font;
+				}
+				
 				return font;
 			}
 
+			protected TextLayout	host;
+			
 			public string			fontName;
 			public double			fontSize;
 			public Drawing.Color	fontColor;

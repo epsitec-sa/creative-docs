@@ -25,21 +25,21 @@ namespace Epsitec.Common.Widgets
 					this.fields[i].MinRange = 0;
 					this.fields[i].MaxRange = 255;
 					this.fields[i].Step = 10;
-					this.fields[i].TextChanged += new EventHandler(this.TextRGBChanged);
+					this.fields[i].TextChanged += new EventHandler(this.HandleTextRGBChanged);
 				}
 				else if ( i == 4 )
 				{
 					this.fields[i].MinRange = 0;
 					this.fields[i].MaxRange = 360;
 					this.fields[i].Step = 15;
-					this.fields[i].TextChanged += new EventHandler(this.TextHSVChanged);
+					this.fields[i].TextChanged += new EventHandler(this.HandleTextHSVChanged);
 				}
 				else
 				{
 					this.fields[i].MinRange = 0;
 					this.fields[i].MaxRange = 100;
 					this.fields[i].Step = 5;
-					this.fields[i].TextChanged += new EventHandler(this.TextHSVChanged);
+					this.fields[i].TextChanged += new EventHandler(this.HandleTextHSVChanged);
 				}
 			}
 			this.fields[0].Color = Drawing.Color.FromRGB(1,0,0);
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Widgets
 			this.labels[6].Text = "L";
 
 			this.circle = new ColorCircle(this);
-			this.circle.Changed += new EventHandler(this.CircleChanged);
+			this.circle.Changed += new EventHandler(this.HandleCircleChanged);
 
 			this.nbPalette = 16;
 			this.palette = new ColorSample[this.nbPalette];
@@ -107,16 +107,21 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( i < 4 )
 					{
-						this.fields[i].TextChanged -= new EventHandler(this.TextRGBChanged);
+						this.fields[i].TextChanged -= new EventHandler(this.HandleTextRGBChanged);
 					}
 					else if ( i == 4 )
 					{
-						this.fields[i].TextChanged -= new EventHandler(this.TextHSVChanged);
+						this.fields[i].TextChanged -= new EventHandler(this.HandleTextHSVChanged);
 					}
 					else
 					{
-						this.fields[i].TextChanged -= new EventHandler(this.TextHSVChanged);
+						this.fields[i].TextChanged -= new EventHandler(this.HandleTextHSVChanged);
 					}
+				}
+				
+				if ( this.circle != null )
+				{
+					this.circle.Changed -= new EventHandler(this.HandleCircleChanged);
 				}
 
 				foreach ( ColorSample cs in this.palette )
@@ -158,6 +163,7 @@ namespace Epsitec.Common.Widgets
 					this.ColorToFieldsRGB();
 					this.ColorToFieldsHSV();
 					this.suspendColorEvents = false;
+					this.OnChanged ();
 					this.Invalidate();
 				}
 			}
@@ -166,34 +172,37 @@ namespace Epsitec.Common.Widgets
 		// Couleur -> textes éditables.
 		protected void ColorToFieldsRGB()
 		{
-			this.fields[0].Value = System.Math.Floor(this.color.R*255+0.5);
-			this.fields[1].Value = System.Math.Floor(this.color.G*255+0.5);
-			this.fields[2].Value = System.Math.Floor(this.color.B*255+0.5);
-			this.fields[3].Value = System.Math.Floor(this.color.A*255+0.5);
+			double a,r,g,b;
+			this.Color.GetARGB(out a, out r, out g, out b);
+			
+			this.fields[0].Value = System.Math.Floor(r*255+0.5);
+			this.fields[1].Value = System.Math.Floor(g*255+0.5);
+			this.fields[2].Value = System.Math.Floor(b*255+0.5);
+			this.fields[3].Value = System.Math.Floor(a*255+0.5);
 		}
 
 		// Couleur -> textes éditables.
 		protected void ColorToFieldsHSV()
 		{
 			double h,s,v;
-			this.color.GetHSV(out h, out s, out v);
+			this.Color.GetHSV(out h, out s, out v);
+			
 			this.fields[4].Value = System.Math.Floor(h);
 			this.fields[5].Value = System.Math.Floor(s*100+0.5);
 			this.fields[6].Value = System.Math.Floor(v*100+0.5);
-
-			this.ColorToSliders();
+			
+			this.ColoriseSliders();
 		}
 
 		// Textes éditables RGB -> couleur.
 		protected void FieldsRGBToColor()
 		{
-			this.color.R = this.fields[0].Value/255;
-			this.color.G = this.fields[1].Value/255;
-			this.color.B = this.fields[2].Value/255;
-			this.color.A = this.fields[3].Value/255;
-
-			this.ColorToFieldsHSV();
-			this.circle.Color = this.color;
+			double r = this.fields[0].Value/255;
+			double g = this.fields[1].Value/255;
+			double b = this.fields[2].Value/255;
+			double a = this.fields[3].Value/255;
+			
+			this.Color = Drawing.Color.FromARGB(a,r,g,b);
 		}
 
 		// Textes éditables HSV -> couleur.
@@ -202,21 +211,21 @@ namespace Epsitec.Common.Widgets
 			double h = this.fields[4].Value;
 			double s = this.fields[5].Value/100;
 			double v = this.fields[6].Value/100;
-			this.color = Drawing.Color.FromHSV(h,s,v);
-
-			this.ColorToFieldsRGB();
-			this.circle.Color = this.color;
+			
+			this.Color = Drawing.Color.FromHSV(h,s,v);
 		}
 
 		// Couleur -> sliders.
-		protected void ColorToSliders()
+		protected void ColoriseSliders()
 		{
 			double h,s,v;
-			this.color.GetHSV(out h, out s, out v);
-			Drawing.Color saturate = Drawing.Color.FromHSV(h,1,1);
-			this.fields[4].Color = saturate;
-			this.fields[5].Color = saturate;
-			this.fields[6].Color = saturate;
+			this.Color.GetHSV(out h, out s, out v);
+			
+			Drawing.Color saturated = Drawing.Color.FromHSV(h,1,1);
+			
+			this.fields[4].Color = saturated;
+			this.fields[5].Color = saturated;
+			this.fields[6].Color = saturated;
 		}
 
 
@@ -312,27 +321,30 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		// Une valeur RGB a été changée.
-		private void TextRGBChanged(object sender)
+		private void HandleTextRGBChanged(object sender)
 		{
-			this.FieldsRGBToColor();
-			this.OnChanged();
+			if ( ! this.suspendColorEvents )
+			{
+				this.FieldsRGBToColor();
+			}
 		}
 
 		// Une valeur HSV a été changée.
-		private void TextHSVChanged(object sender)
+		private void HandleTextHSVChanged(object sender)
 		{
-			this.FieldsHSVToColor();
-			this.ColorToSliders();
-			this.OnChanged();
+			if ( ! this.suspendColorEvents )
+			{
+				this.FieldsHSVToColor();
+			}
 		}
 
 		// Couleur dans le cercle changée.
-		private void CircleChanged(object sender)
+		private void HandleCircleChanged(object sender)
 		{
-			this.color = this.circle.Color;
-			this.ColorToFieldsRGB();
-			this.ColorToFieldsHSV();
-			this.OnChanged();
+			if ( ! this.suspendColorEvents )
+			{
+				this.Color = this.circle.Color;
+			}
 		}
 
 		// Couleur dans palette cliquée.

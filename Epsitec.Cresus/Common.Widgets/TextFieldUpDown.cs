@@ -107,12 +107,7 @@ namespace Epsitec.Common.Widgets
 			number = System.Math.Max(number, this.minRange);
 			number = System.Math.Min(number, this.maxRange);
 
-			text = System.Convert.ToString(number);
-			this.Text = text;
-			this.OnTextChanged();
-			this.cursorFrom = 0;
-			this.cursorTo   = text.Length;
-			this.Invalidate();
+			this.Value = number;
 		}
 
 		// Valeur numérique éditée.
@@ -122,6 +117,7 @@ namespace Epsitec.Common.Widgets
 			{
 				string text = this.Text;
 				double number = this.minRange;
+				
 				if ( text != "" )
 				{
 					try
@@ -133,17 +129,17 @@ namespace Epsitec.Common.Widgets
 						number = this.minRange;
 					}
 				}
+				
 				return number;
 			}
 
 			set
 			{
-				string text = System.Convert.ToString(value);
-				this.Text = text;
-				this.cursorFrom = 0;
-				this.cursorTo   = text.Length;
-				this.CursorScroll();
-				this.Invalidate();
+				if (this.Value != value)
+				{
+					this.Text = System.Convert.ToString(value);
+					this.SelectAll();
+				}
 			}
 		}
 

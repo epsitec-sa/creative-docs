@@ -453,7 +453,7 @@ namespace Epsitec.Common.Widgets
 			set { this.mouse_cursor = value; }
 		}
 		
-		public Drawing.Color						BackColor
+		public virtual Drawing.Color				BackColor
 		{
 			get
 			{

@@ -144,6 +144,14 @@ namespace Epsitec.Common.Drawing
 			Color.ConvertRGBtoHSV (this.r, this.g, this.b, out h, out s, out v);
 		}
 
+		public void GetARGB(out double a, out double r, out double g, out double b)
+		{
+			a = this.A;
+			r = this.R;
+			g = this.G;
+			b = this.B;
+		}
+		
 		
 		public static Color FromColor(Color color, double alpha)
 		{

@@ -8,7 +8,7 @@ namespace Epsitec.Common.Widgets
 		public TextFieldSlider()
 		{
 			this.slider = new Slider(this);
-			this.slider.Frame = false;
+			this.slider.HasFrame = false;
 			this.slider.ValueChanged += new EventHandler(this.SliderValueChanged);
 		}
 		
@@ -89,16 +89,16 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Couleur de fond du slider.
-		public Drawing.Color ColorBack
+		public override Drawing.Color BackColor
 		{
 			get
 			{
-				return this.slider.ColorBack;
+				return this.slider.BackColor;
 			}
 
 			set
 			{
-				this.slider.ColorBack = value;
+				this.slider.BackColor = value;
 			}
 		}
 		

@@ -8,8 +8,7 @@ namespace Epsitec.Common.Widgets
 		public Slider()
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			this.color = adorner.ColorCaption;
-			this.colorBack = adorner.ColorWindow;
+			this.color = Drawing.Color.Empty;
 		}
 		
 		public Slider(Widget embedder) : this()
@@ -17,7 +16,7 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 
-		public bool Frame
+		public bool HasFrame
 		{
 			get { return this.frame; }
 			set { this.frame = value; }
@@ -82,32 +81,11 @@ namespace Epsitec.Common.Widgets
 				if ( this.color != value )
 				{
 					this.color = value;
-					this.defaultColor = false;
 					this.Invalidate();
 				}
 			}
 		}
 		
-		// Couleur de fond du slider.
-		public Drawing.Color ColorBack
-		{
-			get
-			{
-				return this.colorBack;
-			}
-
-			set
-			{
-				if ( this.colorBack != value )
-				{
-					this.colorBack = value;
-					this.defaultColorBack = false;
-					this.Invalidate();
-				}
-			}
-		}
-		
-
 		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
@@ -182,14 +160,6 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler ValueChanged;
 
 
-		protected override void OnAdornerChanged()
-		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			if ( this.defaultColor )  this.color = adorner.ColorCaption;
-			if ( this.defaultColorBack )  this.colorBack = adorner.ColorWindow;
-			base.OnAdornerChanged();
-		}
-
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
@@ -215,7 +185,10 @@ namespace Epsitec.Common.Widgets
 			if ( this.IsEnabled )
 			{
 				rect.Inflate(-this.margin, -this.margin);
-
+				
+				Drawing.Color front = this.color.IsEmpty ? adorner.ColorCaption : this.color;
+				Drawing.Color back  = this.BackColor.IsEmpty ? adorner.ColorWindow : this.BackColor;
+				
 				if ( !this.frame && rect.Left > 1 )
 				{
 					Drawing.Path path = new Drawing.Path();
@@ -224,14 +197,14 @@ namespace Epsitec.Common.Widgets
 					path.LineTo(rect.Left, rect.Bottom);
 					path.CurveTo(1, rect.Bottom, 1, rect.Top);
 					graphics.Rasterizer.AddSurface(path);
-					graphics.RenderSolid(this.color);
+					graphics.RenderSolid(front);
 				}
-
+				
 				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.colorBack);
+				graphics.RenderSolid(back);
 				rect.Width *= (this.sliderValue-this.minRange)/(this.maxRange-this.minRange);
 				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.color);
+				graphics.RenderSolid(front);
 			}
 		}
 
@@ -240,9 +213,6 @@ namespace Epsitec.Common.Widgets
 		protected double					minRange = 0;
 		protected double					maxRange = 100;
 		protected Drawing.Color				color;
-		protected Drawing.Color				colorBack;
-		protected bool						defaultColor = true;
-		protected bool						defaultColorBack = true;
 		protected bool						mouseDown = false;
 		protected double					margin = 1;
 		protected bool						frame = true;
