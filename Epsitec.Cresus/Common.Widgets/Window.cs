@@ -202,6 +202,7 @@ namespace Epsitec.Common.Widgets
 			System.Windows.Forms.Application.DoEvents ();
 		}
 		
+		
 		public void MakeTopLevelWindow()
 		{
 			this.window.MakeTopLevelWindow ();

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -19,6 +19,7 @@ namespace Epsitec.Common.Widgets
 			this.DisableMouseActivation ();
 			
 			this.Alpha = 0.9;
+			this.Name = "DragWindow";
 		}
 		
 		public void DefineWidget(Widget widget, Drawing.Size initial_size, Drawing.Margins margins)
@@ -31,6 +32,19 @@ namespace Epsitec.Common.Widgets
 			widget.Location = new Drawing.Point (margins.Bottom, margins.Left);
 			
 			this.MarkForRepaint ();
+		}
+		
+		public void DissolveAndDisposeWindow()
+		{
+			this.AnimateHide (Animation.FadeOut);
+			this.WindowAnimationEnded += new Support.EventHandler (this.HandleWindowAnimationEnded);
+		}
+		
+		
+		private void HandleWindowAnimationEnded(object sender)
+		{
+			this.Hide ();
+			this.Dispose ();
 		}
 	}
 }

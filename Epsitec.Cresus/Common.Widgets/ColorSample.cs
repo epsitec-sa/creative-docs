@@ -5,11 +5,12 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe ColorSample permet de représenter une couleur rgb.
 	/// </summary>
-	public class ColorSample : AbstractButton
+	public class ColorSample : AbstractButton, Helpers.IDragBehaviorHost
 	{
 		public ColorSample()
 		{
-			this.LinkClear();
+			this.dragBehavior = new Helpers.DragBehavior(this, true, true);
+			this.DetachColorCollection();
 		}
 		
 		public ColorSample(Widget embedder) : this()
@@ -18,22 +19,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		// Lie l'échantillon à une couleur dans une liste.
-		public void LinkWithColorCollection(Drawing.ColorCollection list, int index)
-		{
-			this.collectionList = list;
-			this.collectionIndex = index;
-		}
-
-		// Délie l'échantillon.
-		public void LinkClear()
-		{
-			this.collectionList = null;
-			this.collectionIndex = -1;
-		}
-
-		// Couleur.
-		public Drawing.Color Color
+		public Drawing.Color					Color
 		{
 			get
 			{
@@ -69,114 +55,210 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Possibilité d'utiliser ce widget comme origine des couleurs.
-		public bool PossibleOrigin
+		public bool								PossibleSource
 		{
+			// Possibilité d'utiliser ce widget comme origine des couleurs.
+			
 			get
 			{
-				return this.possibleOrigin;
+				return this.possibleSource;
 			}
 
 			set
 			{
-				this.possibleOrigin = value;
+				this.possibleSource = value;
 			}
 		}
 
+		
+		// Lie l'échantillon à une couleur dans une liste.
+		public void AttachColorCollection(Drawing.ColorCollection list, int index)
+		{
+			this.collectionList = list;
+			this.collectionIndex = index;
+		}
 
+		// Délie l'échantillon.
+		public void DetachColorCollection()
+		{
+			this.collectionList = null;
+			this.collectionIndex = -1;
+		}
+
+
+		#region IDragBehaviorHost Members
+		public Drawing.Point					DragLocation
+		{
+			get
+			{
+				// Pas utile ici:
+				return new Drawing.Point (0, 0);
+			}
+		}
+
+		
+		public bool OnDragBegin(Drawing.Point cursor)
+		{
+			// Crée un échantillon utilisable pour l'opération de drag & drop (il
+			// va représenter visuellement l'échantillon de couleur). On le place
+			// dans un DragWindow et hop.
+			
+			ColorSample widget = new ColorSample();
+			
+			widget.Color = this.Color;
+			
+			// Signale à l'échantillon qui est la cause du drag. On aurait très
+			// bien pu ajouter une variable à ColorSample, mais ça paraît du
+			// gaspillage de mémoire d'avoir cette variable inutilisée pour
+			// tous les ColorSample. Alors on utilise une "propriété" :
+			
+			widget.SetProperty ("DragHost", this);
+			
+			this.dragTarget = null;
+			this.dragOrigin = this.MapClientToScreen(new Drawing.Point (-3, -3));
+			this.dragWindow = new DragWindow();
+			this.dragWindow.DefineWidget(widget, new Drawing.Size(7, 7), Drawing.Margins.Zero);
+			this.dragWindow.WindowLocation = this.dragOrigin + cursor;
+			this.dragWindow.Owner = this.Window;
+			this.dragWindow.FocusedWidget = widget;
+			this.dragWindow.Show();
+			
+			return true;
+		}
+
+		public void OnDragging(DragEventArgs e)
+		{
+			this.dragWindow.WindowLocation = this.dragOrigin + e.Offset;
+			
+			ColorSample cs = this.SearchDropTarget(e.ToPoint);
+			if ( cs != this.dragTarget )
+			{
+				this.DragHilite(this.dragTarget, this, false);
+				this.dragTarget = cs;
+				this.DragHilite(this.dragTarget, this, true);
+				this.UpdateSwapping();
+			}
+		}
+
+		public void OnDragEnd()
+		{
+			this.DragHilite(this, this.dragTarget, false);
+			this.DragHilite(this.dragTarget, this, false);
+			
+			if ( this.dragTarget != null )
+			{
+				if ( Message.State.IsShiftPressed || Message.State.IsCtrlPressed )
+				{
+					Drawing.Color temp = this.Color;
+					this.Color = this.dragTarget.Color;
+					this.dragTarget.Color = temp;
+
+					this.OnChanged();
+					this.dragTarget.OnChanged();
+				}
+				else
+				{
+					this.dragTarget.Color = this.Color;
+					this.dragTarget.OnChanged();
+				}
+				
+				this.dragWindow.Hide();
+				this.dragWindow.Dispose();
+				this.dragWindow = null;
+			}
+			else
+			{
+				this.dragWindow.DissolveAndDisposeWindow();
+				this.dragWindow = null;
+			}
+		}
+		#endregion
+		
+		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			if ( this.possibleOrigin )
+			if ( this.possibleSource )
 			{
 				return new Drawing.Rectangle(-5, -5, this.Client.Width+10, this.Client.Height+10);
 			}
 			return this.Client.Bounds;
 		}
 
-
 		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
+			ColorSample dragHost = this.GetProperty ("DragHost") as ColorSample;
+			
+			// Est-ce que l'événement clavier est reçu dans un échantillon en
+			// cours de drag dans un DragWindow ? C'est possible, car le focus
+			// clavier change quand on montre le DragWindow.
+			
+			if ( dragHost != null &&
+				 message.IsKeyType )
+			{
+				// Signalons l'événement clavier à l'auteur du drag :
+				
+				dragHost.ProcessMessage(message, pos);
+				return;
+			}
+			
 			switch ( message.Type )
 			{
-				case MessageType.MouseDown:
-					this.mouseDown = true;
-					this.dragTarget = null;
-					message.Consumer = this;
-					break;
-
-				case MessageType.MouseMove:
-					if ( this.mouseDown )
+				case MessageType.KeyDown:
+				case MessageType.KeyUp:
+					if ( message.KeyCode == KeyCode.ShiftKey   ||
+						 message.KeyCode == KeyCode.ControlKey )
 					{
-						ColorSample cs = this.DragSearchDst(pos);
-						if ( cs != this.dragTarget )
+						if ( this.dragWindow != null )
 						{
-							this.DragHilite(this.dragTarget, false);
-							this.dragTarget = cs;
-							this.DragHilite(this.dragTarget, true);
+							this.UpdateSwapping();
+							message.Consumer = this;
+							return;
 						}
-						message.Consumer = this;
 					}
 					break;
-
-				case MessageType.MouseUp:
-					if ( this.mouseDown )
-					{
-						this.DragHilite(this.dragTarget, false);
-						if ( this.dragTarget != null )
-						{
-							if ( message.IsShiftPressed || message.IsCtrlPressed )
-							{
-								Drawing.Color temp = this.Color;
-								this.Color = this.dragTarget.Color;
-								this.dragTarget.Color = temp;
-
-								this.OnChanged();
-								this.dragTarget.OnChanged();
-							}
-							else
-							{
-								this.dragTarget.Color = this.Color;
-								this.dragTarget.OnChanged();
-							}
-						}
-						this.mouseDown = false;
-						message.Consumer = this;
-					}
-					break;
+			}
+			
+			if ( !this.dragBehavior.ProcessMessage(message, pos) )
+			{
+				base.ProcessMessage(message, pos);
 			}
 		}
 
-		// Cherche un widget ColorSample destinataire du drag & drop.
-		protected ColorSample DragSearchDst(Drawing.Point mouse)
+		// Mise à jour après un changement de mode swap d'un drag & drop.
+		protected void UpdateSwapping()
 		{
-			mouse = this.MapClientToScreen(mouse);
-			Widget parent = this.RootParent;
-			Widget[] widgets = parent.FindAllChildren();
-			foreach ( Widget widget in widgets )
+			if ( this.dragTarget != null )
 			{
-				if ( widget.IsVisible && widget is ColorSample && widget != this )
-				{
-					Drawing.Rectangle rect = widget.MapClientToScreen(widget.Client.Bounds);
-					if ( rect.Contains(mouse) )
-					{
-						return widget as ColorSample;
-					}
-				}
+				bool swap = Message.State.IsShiftPressed || Message.State.IsCtrlPressed;
+				this.DragHilite(this, this.dragTarget, swap);
 			}
-			return null;
+			else
+			{
+				this.dragColor = Drawing.Color.Empty;
+				this.Invalidate();
+			}
+		}
+		
+		// Cherche un widget ColorSample destinataire du drag & drop.
+		protected ColorSample SearchDropTarget(Drawing.Point mouse)
+		{
+			mouse = this.MapClientToRoot(mouse);
+			Widget root   = this.Window.Root;
+			Widget widget = root.FindChild(mouse, Widget.ChildFindMode.SkipHidden | Widget.ChildFindMode.Deep | Widget.ChildFindMode.SkipDisabled);
+			return widget as ColorSample;
 		}
 
 		// Met en évidence le widget ColorSample destinataire du drag & drop.
-		protected void DragHilite(ColorSample widget, bool enable)
+		protected void DragHilite(ColorSample dst, ColorSample src, bool enable)
 		{
-			if ( widget == null )  return;
+			if ( dst == null || src == null )  return;
 
-			Drawing.Color color = enable ? this.Color : Drawing.Color.Empty;
-			if ( widget.dragColor != color )
+			Drawing.Color color = enable ? src.Color : Drawing.Color.Empty;
+			if ( dst.dragColor != color )
 			{
-				widget.dragColor = color;
-				widget.Invalidate();
+				dst.dragColor = color;
+				dst.Invalidate();
 			}
 		}
 
@@ -187,7 +269,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			Drawing.Rectangle rect = this.Client.Bounds;
 
-			if ( this.possibleOrigin && this.ActiveState == WidgetState.ActiveYes )
+			if ( this.possibleSource && this.ActiveState == WidgetState.ActiveYes )
 			{
 				Drawing.Rectangle r = rect;
 				r.Inflate(4);
@@ -212,7 +294,7 @@ namespace Epsitec.Common.Widgets
 				{
 					rect.Deflate(1, 1);
 					graphics.AddRectangle(rect);
-					graphics.RenderSolid(ColorSample.Opposite(this.Color));
+					graphics.RenderSolid(ColorSample.GetOpposite(this.Color));
 				}
 
 				if ( !this.dragColor.IsEmpty )
@@ -228,7 +310,7 @@ namespace Epsitec.Common.Widgets
 					graphics.RenderSolid(this.dragColor);
 
 					graphics.AddCircle(rect.Center, radius);
-					graphics.RenderSolid(ColorSample.Opposite(this.dragColor));
+					graphics.RenderSolid(ColorSample.GetOpposite(this.dragColor));
 				}
 			}
 			else
@@ -240,7 +322,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Calcule la couleur opposée pour le mise en évidence.
-		protected static Drawing.Color Opposite(Drawing.Color color)
+		protected static Drawing.Color GetOpposite(Drawing.Color color)
 		{
 			double h,s,v;
 			color.GetHSV(out h, out s, out v);
@@ -269,14 +351,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		public event Support.EventHandler		Changed;
 
+		
+		private Helpers.DragBehavior			dragBehavior;
+		private DragWindow					dragWindow;
+		private Drawing.Point					dragOrigin;
+		private ColorSample					dragTarget;
+		private Drawing.Color					dragColor = Drawing.Color.Empty;
+		
 		protected Drawing.ColorCollection		collectionList;
 		protected int							collectionIndex;
 		protected Drawing.Color					color;
-		protected bool							possibleOrigin = false;
-		protected Drawing.Color					dragColor = Drawing.Color.Empty;
-		protected bool							mouseDown = false;
-		protected ColorSample					dragTarget = null;
+		protected bool							possibleSource = false;
 	}
 }

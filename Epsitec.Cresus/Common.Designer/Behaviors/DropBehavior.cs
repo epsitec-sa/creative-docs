@@ -499,21 +499,11 @@ namespace Epsitec.Common.Designer.Behaviors
 		{
 			if (this.drag_window != null)
 			{
-				this.drag_window.AnimateHide (Animation.FadeOut);
-				this.drag_window.WindowAnimationEnded += new Epsitec.Common.Support.EventHandler(this.HandleDragWindowAnimationEnded);
+				this.drag_window.DissolveAndDisposeWindow ();
 				this.drag_window = null;
 			}
 			
 			this.DropTarget = null;
-		}
-		
-		
-		private void HandleDragWindowAnimationEnded(object sender)
-		{
-			DragWindow drag_window = sender as DragWindow;
-			
-			drag_window.Hide ();
-			drag_window.Dispose ();
 		}
 		
 		

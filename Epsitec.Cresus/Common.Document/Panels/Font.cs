@@ -42,7 +42,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.fontSize, "Taille du texte par défaut");
 
 			this.fontColor = new ColorSample(this);
-			this.fontColor.PossibleOrigin = true;
+			this.fontColor.PossibleSource = true;
 			this.fontColor.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
 			this.fontColor.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.fontColor.TabIndex = 4;

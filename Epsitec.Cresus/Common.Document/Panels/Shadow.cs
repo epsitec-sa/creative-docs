@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Panels
 			this.label.Alignment = ContentAlignment.MiddleLeft;
 
 			this.fieldColor = new ColorSample(this);
-			this.fieldColor.PossibleOrigin = true;
+			this.fieldColor.PossibleSource = true;
 			this.fieldColor.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
 			this.fieldColor.TabIndex = 1;
 			this.fieldColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

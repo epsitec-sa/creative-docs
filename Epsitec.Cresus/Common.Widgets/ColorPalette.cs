@@ -196,11 +196,11 @@ namespace Epsitec.Common.Widgets
 					{
 						if ( this.colorCollection == null )
 						{
-							this.palette[i].LinkClear();
+							this.palette[i].DetachColorCollection();
 						}
 						else
 						{
-							this.palette[i].LinkWithColorCollection(this.colorCollection, i);
+							this.palette[i].AttachColorCollection(this.colorCollection, i);
 						}
 					}
 				}

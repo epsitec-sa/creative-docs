@@ -23,7 +23,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.nothingButton, "Aucune couleur");
 
 			this.fieldColor1 = new ColorSample(this);
-			this.fieldColor1.PossibleOrigin = true;
+			this.fieldColor1.PossibleSource = true;
 			this.fieldColor1.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
 			this.fieldColor1.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.fieldColor1.TabIndex = 2;
@@ -31,7 +31,7 @@ namespace Epsitec.Common.Document.Panels
 			ToolTip.Default.SetToolTip(this.fieldColor1, "Couleur 1");
 
 			this.fieldColor2 = new ColorSample(this);
-			this.fieldColor2.PossibleOrigin = true;
+			this.fieldColor2.PossibleSource = true;
 			this.fieldColor2.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
 			this.fieldColor2.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.fieldColor2.TabIndex = 3;

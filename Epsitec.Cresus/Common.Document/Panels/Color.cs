@@ -16,7 +16,7 @@ namespace Epsitec.Common.Document.Panels
 			this.label.Alignment = ContentAlignment.MiddleLeft;
 
 			this.field = new ColorSample(this);
-			this.field.PossibleOrigin = true;
+			this.field.PossibleSource = true;
 			this.field.Clicked += new MessageEventHandler(this.HandleFieldColorClicked);
 			this.field.Changed += new EventHandler(this.HandleFieldColorChanged);
 			this.field.TabIndex = 1;
