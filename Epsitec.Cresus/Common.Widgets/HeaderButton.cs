@@ -126,7 +126,6 @@ namespace Epsitec.Common.Widgets
 			if ( this.TextLayout != null )
 			{
 				pos.X += HeaderButton.Margin;
-				this.TextLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 				adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, ButtonStyle.Flat);
 			}
 
