@@ -46,6 +46,12 @@ namespace Epsitec.Common.Drawing.Agg
 			AntiGrain.Renderer.Solid.Clear (this.agg_ren, r, g, b, a);
 		}
 		
+		public override void Clear4Colors(int x, int y, int dx, int dy, Color c1, Color c2, Color c3, Color c4)
+		{
+			this.AssertAttached ();
+			AntiGrain.Renderer.Special.Fill4Colors (this.agg_ren, x, y, dx, dy, c1.R, c1.G, c1.B, c2.R, c2.G, c2.B, c3.R, c3.G, c3.B, c4.R, c4.G, c4.B);
+		}
+		
 		public override void SetColorARGB(double a, double r, double g, double b)
 		{
 			this.AssertAttached ();

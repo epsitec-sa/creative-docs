@@ -54,6 +54,10 @@ namespace Epsitec.Common.Drawing.Renderers
 		{
 		}
 		
+		public virtual void Clear4Colors(int x, int y, int dx, int dy, Color c1, Color c2, Color c3, Color c4)
+		{
+		}
+		
 		
 		public void SetColor(Color color)
 		{
