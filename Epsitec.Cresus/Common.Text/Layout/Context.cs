@@ -215,6 +215,22 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public double							LineAscender
+		{
+			get
+			{
+				return this.oy_ascender - this.oy_base;
+			}
+		}
+		
+		public double							LineDescender
+		{
+			get
+			{
+				return this.oy_descender - this.oy_base;
+			}
+		}
+		
 		public double							AvailableWidth
 		{
 			get

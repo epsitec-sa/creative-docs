@@ -198,6 +198,30 @@ namespace Epsitec.Common.Text.Cursors
 				}
 			}
 			
+			public double						LineAscender
+			{
+				get
+				{
+					return this.line_ascender;
+				}
+				set
+				{
+					this.line_ascender = value;
+				}
+			}
+			
+			public double						LineDescender
+			{
+				get
+				{
+					return this.line_descender;
+				}
+				set
+				{
+					this.line_descender = value;
+				}
+			}
+			
 			
 			private ushort						length;
 			private Layout.StretchProfile		profile;
@@ -205,6 +229,8 @@ namespace Epsitec.Common.Text.Cursors
 			private double						line_base_x;
 			private double						line_base_y;
 			private double						line_width;
+			private double						line_ascender;
+			private double						line_descender;
 		}
 		#endregion
 		

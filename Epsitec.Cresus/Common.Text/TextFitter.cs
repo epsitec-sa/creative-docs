@@ -104,6 +104,8 @@ namespace Epsitec.Common.Text
 				double ox    = c.Elements[i].LineBaseX;
 				double oy    = c.Elements[i].LineBaseY;
 				double width = c.Elements[i].LineWidth;
+				double asc   = c.Elements[i].LineAscender;
+				double desc  = c.Elements[i].LineDescender;
 				
 				Layout.StretchProfile profile = c.Elements[i].Profile;
 				
@@ -111,7 +113,11 @@ namespace Epsitec.Common.Text
 				
 				layout.Frame.MapToView (ref ox, ref oy);
 				
-				layout.RenderLine (renderer, profile, count, ox, oy, width, i, i == n-1);
+				if (renderer.IsFrameAreaVisible (layout.Frame, ox, oy+desc, width, asc+desc))
+				{
+					layout.RenderLine (renderer, profile, count, ox, oy, width, i, i == n-1);
+				}
+				
 				layout.TextOffset += count;
 			}
 		}
@@ -283,6 +289,9 @@ namespace Epsitec.Common.Text
 				element.LineBaseX  = layout.X;
 				element.LineBaseY  = layout.Y;
 				element.LineWidth  = layout.AvailableWidth;
+				
+				element.LineAscender  = layout.LineAscender;
+				element.LineDescender = layout.LineDescender;
 				
 				list.Add (element);
 				
