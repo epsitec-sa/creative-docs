@@ -65,6 +65,20 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public Font CreateFont(string face, string style)
+		{
+			foreach (FontIdentity identity in this.full_list)
+			{
+				if ((identity.InvariantFaceName == face) &&
+					(identity.InvariantStyleName == style))
+				{
+					return this.CreateFont (identity);
+				}
+			}
+			
+			return null;
+		}
+		
 		public Font CreateFont(string font)
 		{
 			return this.CreateFont (this[font]);

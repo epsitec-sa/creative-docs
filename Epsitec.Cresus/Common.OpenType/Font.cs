@@ -258,6 +258,15 @@ namespace Epsitec.Common.OpenType
 		
 		public void SelectScript(string script, string language)
 		{
+			if ((this.active_script == script) &&
+				(this.active_language == language))
+			{
+				return;
+			}
+			
+			this.active_script   = script;
+			this.active_language = language;
+			
 			if (this.ot_GSUB.ScriptListTable.ContainsScript (script))
 			{
 				int   required_feature  = this.ot_GSUB.GetRequiredFeatureIndex (script, language);
@@ -290,6 +299,16 @@ namespace Epsitec.Common.OpenType
 		
 		public void SelectFeatures(params string[] features)
 		{
+			string collapsed_features = string.Join ("/", features);
+			
+			if ((this.active_features == collapsed_features) &&
+				(this.substitution_lookups != null))
+			{
+				return;
+			}
+			
+			this.active_features = collapsed_features;
+			
 			FeatureListTable             feature_list    = this.ot_GSUB.FeatureListTable;
 			System.Collections.ArrayList active_features = new System.Collections.ArrayList ();
 			System.Collections.Hashtable active_names    = new System.Collections.Hashtable ();
@@ -969,6 +988,10 @@ namespace Epsitec.Common.OpenType
 		private Table_hhea						ot_hhea;
 		private Table_hmtx						ot_hmtx;
 		private IndexMappingTable				ot_index_mapping;
+		
+		private string							active_script;
+		private string							active_language;
+		private string							active_features;
 		
 		private bool							map_default_ligatures;
 		private bool							use_system_glyph_size;
