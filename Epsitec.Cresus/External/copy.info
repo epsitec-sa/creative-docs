@@ -10,6 +10,7 @@ nunit-gui.exe.manifest
 # Copy the Firebird .NET provider
 
 FirebirdSql.Data.Firebird.dll
+FirebirdSql.Data.Firebird.xml
 FirebirdNETProviderSDK.chm
 
 # Copy the AGG .NET interface

@@ -136,6 +136,14 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		ValueChanged;
 		#endregion
 		
+		public virtual bool						IsValueInRange
+		{
+			get
+			{
+				return this.range.CheckInRange(this.Value);
+			}
+		}
+		
 		public virtual decimal					DefaultValue
 		{
 			get
@@ -264,7 +272,16 @@ namespace Epsitec.Common.Widgets
 		protected override void OnTextChanged()
 		{
 			base.OnTextChanged();
-			this.OnValueChanged();
+			
+			if ( this.IsValueInRange )
+			{
+				this.IsError = false;
+				this.OnValueChanged();
+			}
+			else
+			{
+				this.IsError = true;
+			}
 		}
 		
 		protected virtual  void OnValueChanged()
