@@ -111,18 +111,18 @@ namespace Epsitec.Common.Drawing
 		
 		public bool Contains(double x, double y)
 		{
-			return (this.x1 <= x) && (this.x2 > x) && (this.y1 <= y) && (this.y2 > y);
+			return (!this.IsEmpty) && (this.x1 <= x) && (this.x2 > x) && (this.y1 <= y) && (this.y2 > y);
 		}
 		
 		public bool Contains(Rectangle r)
 		{
-			return (r.x1 >= this.x1) && (r.x2 <= this.x2) && (r.y1 >= this.y1) && (r.y2 <= this.y2);
+			return (!r.IsEmpty) && (!this.IsEmpty) && (r.x1 >= this.x1) && (r.x2 <= this.x2) && (r.y1 >= this.y1) && (r.y2 <= this.y2);
 		}
 		
 		
 		public bool IntersectsWith(Rectangle r)
 		{
-			return (this.x1 < r.x2) && (this.x2 > r.x1) && (this.y1 < r.y2) && (this.y2 > r.y1);
+			return (!r.IsEmpty) && (!this.IsEmpty) && (this.x1 < r.x2) && (this.x2 > r.x1) && (this.y1 < r.y2) && (this.y2 > r.y1);
 		}
 		
 		
@@ -133,10 +133,13 @@ namespace Epsitec.Common.Drawing
 		
 		public void Inflate(double x, double y)
 		{
-			this.x1 -= x;
-			this.x2 += x;
-			this.y1 -= y;
-			this.y2 += y;
+			if (! this.IsEmpty)
+			{
+				this.x1 -= x;
+				this.x2 += x;
+				this.y1 -= y;
+				this.y2 += y;
+			}
 		}
 		
 		public void Offset(Point p)
@@ -146,10 +149,13 @@ namespace Epsitec.Common.Drawing
 		
 		public void Offset(double x, double y)
 		{
-			this.x1 += x;
-			this.y1 += y;
-			this.x2 += x;
-			this.y2 += y;
+			if (! this.IsEmpty)
+			{
+				this.x1 += x;
+				this.y1 += y;
+				this.x2 += x;
+				this.y2 += y;
+			}
 		}
 		
 		public void Scale(double s)
@@ -170,23 +176,43 @@ namespace Epsitec.Common.Drawing
 		
 		public void MergeWith(Rectangle r)
 		{
-			double x1 = System.Math.Min (this.x1, r.x1);
-			double y1 = System.Math.Min (this.y1, r.y1);
-			double x2 = System.Math.Max (this.x2, r.x2);
-			double y2 = System.Math.Max (this.y2, r.y2);
+			if (this.IsEmpty)
+			{
+				this.x1 = r.x1;
+				this.y1 = r.y1;
+				this.x2 = r.x2;
+				this.y2 = r.y2;
+			}
+			else
+			{
+				double x1 = System.Math.Min (this.x1, r.x1);
+				double y1 = System.Math.Min (this.y1, r.y1);
+				double x2 = System.Math.Max (this.x2, r.x2);
+				double y2 = System.Math.Max (this.y2, r.y2);
 			
-			this.x1 = x1;
-			this.y1 = y1;
-			this.x2 = x2;
-			this.y2 = y2;
+				this.x1 = x1;
+				this.y1 = y1;
+				this.x2 = x2;
+				this.y2 = y2;
+			}
 		}
 		
 		public void MergeWith(Point p)
 		{
-			this.x1 = System.Math.Min (this.x1, p.X);
-			this.y1 = System.Math.Min (this.y1, p.Y);
-			this.x2 = System.Math.Max (this.x2, p.X);
-			this.y2 = System.Math.Max (this.y2, p.Y);
+			if (this.IsEmpty)
+			{
+				this.x1 = p.X;
+				this.y1 = p.Y;
+				this.x2 = p.X + 0.000001;
+				this.y2 = p.Y + 0.000001;
+			}
+			else
+			{
+				this.x1 = System.Math.Min (this.x1, p.X);
+				this.y1 = System.Math.Min (this.y1, p.Y);
+				this.x2 = System.Math.Max (this.x2, p.X);
+				this.y2 = System.Math.Max (this.y2, p.Y);
+			}
 		}
 		
 		
@@ -205,12 +231,26 @@ namespace Epsitec.Common.Drawing
 		
 		public static Rectangle Inflate(Rectangle r, double x, double y)
 		{
+			if (r.IsEmpty)
+			{
+				return Rectangle.Empty;
+			}
+			
 			r.Inflate (x, y);
 			return r;
 		}
 		
 		public static Rectangle Union(Rectangle a, Rectangle b)
 		{
+			if (a.IsEmpty)
+			{
+				return b;
+			}
+			if (b.IsEmpty)
+			{
+				return a;
+			}
+			
 			double x1 = System.Math.Min (a.x1, b.x1);
 			double x2 = System.Math.Max (a.x2, b.x2);
 			double y1 = System.Math.Min (a.y1, b.y1);
@@ -221,6 +261,11 @@ namespace Epsitec.Common.Drawing
 		
 		public static Rectangle Intersection(Rectangle a, Rectangle b)
 		{
+			if (a.IsEmpty || b.IsEmpty)
+			{
+				return Rectangle.Empty;
+			}
+			
 			double x1 = System.Math.Max (a.x1, b.x1);
 			double x2 = System.Math.Min (a.x2, b.x2);
 			double y1 = System.Math.Max (a.y1, b.y1);
