@@ -86,15 +86,15 @@ namespace Epsitec.Common.UI.Binders
 		
 		protected virtual void OnAdapterChanged()
 		{
-			this.SyncToAdapter ();
+			this.SyncToAdapter (SyncReason.AdapterChanged);
 		}
 		
 		
-		protected virtual void SyncToAdapter()
+		protected virtual void SyncToAdapter(SyncReason reason)
 		{
 			if (this.adapter != null)
 			{
-				this.adapter.SyncFromBinder ();
+				this.adapter.SyncFromBinder (reason);
 			}
 		}
 		
