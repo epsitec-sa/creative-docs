@@ -4,7 +4,7 @@
 namespace Epsitec.Cresus.Database
 {
 //	using Tags = Epsitec.Common.Support.Tags;
-	using Converter = Epsitec.Common.Converters.Converter;
+	using Converter = Epsitec.Common.Types.Converter;
 	
 	public delegate void CallbackDisplayDataSet(DbInfrastructure infrastructure, string name, System.Data.DataTable table);
 	
