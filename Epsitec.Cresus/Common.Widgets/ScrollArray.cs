@@ -840,7 +840,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		// Dessine la liste.
+		// Dessine le tableau.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
@@ -885,7 +885,7 @@ namespace Epsitec.Common.Widgets
 					double endx = pos.X+this.widthColumns[column];
 					if ( pos.X < localClip.Right && endx > localClip.Left )
 					{
-						adorner.PaintGeneralTextLayout(graphics, pos, this.textLayouts[row,column], widgetState);
+						adorner.PaintGeneralTextLayout(graphics, pos, this.textLayouts[row,column], widgetState, PaintTextStyle.Array, this.BackColor);
 					}
 					pos.X = endx;
 				}

@@ -364,7 +364,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			if ( text == null )  return;
 			state &= ~WidgetState.Focused;
-			this.PaintGeneralTextLayout(graphics, pos, text, state);
+			this.PaintGeneralTextLayout(graphics, pos, text, state, PaintTextStyle.Button, Drawing.Color.Empty);
 		}
 
 		public void PaintButtonForeground(Drawing.Graphics graphics,
@@ -858,7 +858,8 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( text == null )  return;
 			state &= ~WidgetState.Selected;
 			state &= ~WidgetState.Focused;
-			this.PaintGeneralTextLayout(graphics, pos, text, state);
+			PaintTextStyle style = ( type == MenuType.Horizontal ) ? PaintTextStyle.HMenu : PaintTextStyle.VMenu;
+			this.PaintGeneralTextLayout(graphics, pos, text, state, style, Drawing.Color.Empty);
 		}
 
 		// Dessine le devant d'une case de menu.
@@ -1055,7 +1056,9 @@ namespace Epsitec.Common.Widgets.Adorner
 		public void PaintGeneralTextLayout(Drawing.Graphics graphics,
 										   Drawing.Point pos,
 										   TextLayout text,
-										   WidgetState state)
+										   WidgetState state,
+										   PaintTextStyle style,
+										   Drawing.Color backColor)
 		{
 			if ( text == null )  return;
 

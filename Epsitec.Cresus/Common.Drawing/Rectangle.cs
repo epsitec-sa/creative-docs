@@ -4,12 +4,52 @@ namespace Epsitec.Common.Drawing
 	using XmlIgnore    = System.Xml.Serialization.XmlIgnoreAttribute;
 	
 	
-	public enum VertexIndex
+	/// <summary>
+	/// Définition des coins d'un rectangle.
+	/// </summary>
+	public enum VertexId
 	{
+		None = -1,
+		
 		BottomLeft,
 		BottomRight,
+		TopLeft,
 		TopRight,
-		TopLeft
+}
+	
+	/// <summary>
+	/// Définition des côtés d'un rectangle. Plusieurs côtés peuvent être
+	/// combinés, c'est donc un bitset.
+	/// </summary>
+	[System.Flags] public enum EdgeId : byte
+	{
+		None = 0,
+		
+		Bottom	= 1,
+		Top		= 2,
+		Left	= 4,
+		Right	= 8
+	}
+	
+	/// <summary>
+	/// Définition des poignées d'un rectangle. Il y en a à chaque sommet, au
+	/// milieu des côtés et au centre de gravité.
+	/// </summary>
+	public enum GripId
+	{
+		None = -1,
+		
+		VertexBottomLeft,
+		VertexBottomRight,
+		VertexTopRight,
+		VertexTopLeft,
+		
+		EdgeBottom,
+		EdgeTop,
+		EdgeLeft,
+		EdgeRight,
+		
+		Body
 	}
 	
 	[System.Serializable]
@@ -187,36 +227,164 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		
-		public Point GetVertex(VertexIndex i)
+		public Point GetGrip(GripId grip)
 		{
-			switch (i)
+			switch (grip)
 			{
-				case VertexIndex.BottomLeft:	return this.BottomLeft;
-				case VertexIndex.BottomRight:	return this.BottomRight;
-				case VertexIndex.TopLeft:		return this.TopLeft;
-				case VertexIndex.TopRight:		return this.TopRight;
+				case GripId.VertexBottomLeft:	return this.BottomLeft;
+				case GripId.VertexBottomRight:	return this.BottomRight;
+				case GripId.VertexTopLeft:		return this.TopLeft;
+				case GripId.VertexTopRight:		return this.TopRight;
+				case GripId.EdgeBottom:			return new Point (this.Center.X, this.Bottom);
+				case GripId.EdgeTop:			return new Point (this.Center.X, this.Top);
+				case GripId.EdgeLeft:			return new Point (this.Left, this.Center.Y);
+				case GripId.EdgeRight:			return new Point (this.Right, this.Center.Y);
+				case GripId.Body:				return this.Center;
 			}
 			
-			throw new System.ArgumentOutOfRangeException ("VertexIndex", i, "VertexIndex is out of range");
+			throw new System.ArgumentOutOfRangeException ("GripId", grip, "GripId is out of range.");
 		}
 		
-		public void SetVertex(VertexIndex i, Point pos)
+		public void SetGrip(GripId grip, Point pos)
 		{
-			switch (i)
+			switch (grip)
 			{
-				case VertexIndex.BottomLeft:	this.BottomLeft  = pos; return;
-				case VertexIndex.BottomRight:	this.BottomRight = pos; return;
-				case VertexIndex.TopLeft:		this.TopLeft     = pos; return;
-				case VertexIndex.TopRight:		this.TopRight    = pos; return;
+				case GripId.VertexBottomLeft:	this.BottomLeft  = pos; break;
+				case GripId.VertexBottomRight:	this.BottomRight = pos; break;
+				case GripId.VertexTopLeft:		this.TopLeft     = pos; break;;
+				case GripId.VertexTopRight:		this.TopRight    = pos; break;
+				
+				case GripId.EdgeBottom:			this.Bottom = pos.Y; break;
+				case GripId.EdgeTop:			this.Top    = pos.Y; break;
+				case GripId.EdgeLeft:			this.Left   = pos.X; break;
+				case GripId.EdgeRight:			this.Right  = pos.X; break;
+				
+				case GripId.Body:
+					this.Location = this.Location + pos - this.Center;
+					break;
+					
+				default:
+					throw new System.ArgumentOutOfRangeException ("GripId", grip, "GripId is out of range.");
+			}
+		}
+		
+		public void OffsetGrip(GripId grip, Point offset)
+		{
+			this.SetGrip (grip, this.GetGrip (grip) + offset);
+		}
+		
+		public void FlipX()
+		{
+			double x = this.x1;
+			this.x1  = this.x2;
+			this.x2  = x;
+		}
+		
+		public void FlipY()
+		{
+			double y = this.y1;
+			this.y1  = this.y2;
+			this.y2  = y;
+		}
+		
+		public Point GetVertex(VertexId vertex)
+		{
+			switch (vertex)
+			{
+				case VertexId.BottomLeft:	return this.BottomLeft;
+				case VertexId.BottomRight:	return this.BottomRight;
+				case VertexId.TopLeft:		return this.TopLeft;
+				case VertexId.TopRight:		return this.TopRight;
 			}
 			
-			throw new System.ArgumentOutOfRangeException ("VertexIndex", i, "VertexIndex is out of range");
+			throw new System.ArgumentOutOfRangeException ("VertexId", vertex, "VertexId is out of range.");
 		}
 		
-		public void OffsetVertex(VertexIndex i, Point p)
+		public void SetVertex(VertexId vertex, Point pos)
 		{
-			this.SetVertex (i, this.GetVertex (i) + p);
+			switch (vertex)
+			{
+				case VertexId.BottomLeft:	this.BottomLeft  = pos; return;
+				case VertexId.BottomRight:	this.BottomRight = pos; return;
+				case VertexId.TopLeft:		this.TopLeft     = pos; return;
+				case VertexId.TopRight:		this.TopRight    = pos; return;
+			}
+			
+			throw new System.ArgumentOutOfRangeException ("VertexId", vertex, "VertexId is out of range.");
+		}
+		
+		public void OffsetVertex(VertexId vertex, Point offset)
+		{
+			this.SetVertex (vertex, this.GetVertex (vertex) + offset);
+		}
+		
+		
+		public static GripId ConvertToGrip(VertexId vertex)
+		{
+			switch (vertex)
+			{
+				case VertexId.None:			return GripId.None;
+				case VertexId.BottomLeft:	return GripId.VertexBottomLeft;
+				case VertexId.BottomRight:	return GripId.VertexBottomRight;
+				case VertexId.TopLeft:		return GripId.VertexTopLeft;
+				case VertexId.TopRight:		return GripId.VertexTopRight;
+			}
+			
+			throw new System.ArgumentOutOfRangeException ("VertexId", vertex, "VertexId is out of range.");
+		}
+		
+		public static GripId ConvertToGrip(EdgeId edges)
+		{
+			switch (edges)
+			{
+				case EdgeId.None:					return GripId.None;
+				
+				case EdgeId.Bottom:					return GripId.EdgeBottom;
+				case EdgeId.Top:					return GripId.EdgeTop;
+				case EdgeId.Left:					return GripId.EdgeLeft;
+				case EdgeId.Right:					return GripId.EdgeRight;
+				
+				case EdgeId.Bottom | EdgeId.Left:	return GripId.VertexBottomLeft;
+				case EdgeId.Bottom | EdgeId.Right:	return GripId.VertexBottomRight;
+				case EdgeId.Top    | EdgeId.Left:	return GripId.VertexTopLeft;
+				case EdgeId.Top    | EdgeId.Right:	return GripId.VertexTopRight;
+			}
+			
+			throw new System.ArgumentException (string.Format ("EdgeId {0} cannot be mapped to GripId.", edges), "edges");
+		}
+		
+		public static VertexId ConvertToVertex(GripId grip)
+		{
+			switch (grip)
+			{
+				case GripId.None:				return VertexId.None;
+				case GripId.VertexBottomLeft:	return VertexId.BottomLeft;
+				case GripId.VertexBottomRight:	return VertexId.BottomRight;
+				case GripId.VertexTopLeft:		return VertexId.TopLeft;
+				case GripId.VertexTopRight:		return VertexId.TopRight;
+			}
+			
+			throw new System.ArgumentOutOfRangeException ("GripId", grip, "GripId is out of range.");
+		}
+		
+		public static EdgeId ConvertToEdges(GripId grip)
+		{
+			switch (grip)
+			{
+				case GripId.None:				return EdgeId.None;
+				
+				case GripId.VertexBottomLeft:	return EdgeId.Bottom | EdgeId.Left;
+				case GripId.VertexBottomRight:	return EdgeId.Bottom | EdgeId.Right;
+				case GripId.VertexTopLeft:		return EdgeId.Top    | EdgeId.Left;
+				case GripId.VertexTopRight:		return EdgeId.Top    | EdgeId.Right;
+				
+				case GripId.EdgeBottom:			return EdgeId.Bottom;
+				case GripId.EdgeTop:			return EdgeId.Top;
+				case GripId.EdgeLeft:			return EdgeId.Left;
+				case GripId.EdgeRight:			return EdgeId.Right;
+			}
+			
+			throw new System.ArgumentOutOfRangeException ("GripId", grip, "GripId is out of range.");
 		}
 		
 		

@@ -1,5 +1,20 @@
 namespace Epsitec.Common.Widgets
 {
+	public enum PaintTextStyle
+	{
+		StaticText,
+		TextField,
+		Group,
+		Status,
+		Button,
+		CheckButton,
+		RadioButton,
+		List,
+		Array,
+		HMenu,
+		VMenu,
+	}
+
 	/// <summary>
 	/// L'interface IAdorner donne accès aux routines de dessin des divers
 	/// éléments de l'interface graphique.
@@ -90,7 +105,7 @@ namespace Epsitec.Common.Widgets
 		void PaintTextSelectionBackground(Drawing.Graphics graphics, Drawing.Rectangle[] rect);
 		void PaintTextSelectionForeground(Drawing.Graphics graphics, Drawing.Rectangle[] rect);
 		
-		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state);
+		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, PaintTextStyle style, Drawing.Color backColor);
 
 		void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor);
 

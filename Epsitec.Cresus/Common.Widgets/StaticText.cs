@@ -8,6 +8,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public StaticText()
 		{
+			this.paintTextStyle = PaintTextStyle.StaticText;
 		}
 		
 		public StaticText(Widget embedder) : this()
@@ -60,7 +61,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
+		public PaintTextStyle PaintTextStyle
+		{
+			get { return this.paintTextStyle; }
+			set { this.paintTextStyle = value; }
+		}
+
+
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			// Dessine le texte.
@@ -79,7 +86,10 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.TextLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
-			adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state);
+			adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state, this.paintTextStyle, this.BackColor);
 		}
+
+
+		protected PaintTextStyle		paintTextStyle;
 	}
 }

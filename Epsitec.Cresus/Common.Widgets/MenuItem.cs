@@ -22,12 +22,19 @@ namespace Epsitec.Common.Widgets
 			this.InternalState &= ~InternalState.Focusable;
 			this.InternalState &= ~InternalState.Engageable;
 
-			this.icon     = new TextLayout();
-			this.mainText = new TextLayout();
-			this.shortKey = new TextLayout();
-			this.icon.Alignment     = Drawing.ContentAlignment.MiddleLeft;
-			this.mainText.Alignment = Drawing.ContentAlignment.MiddleLeft;
-			this.shortKey.Alignment = Drawing.ContentAlignment.MiddleLeft;
+			this.iconName          = "";
+			this.iconNameActiveNo  = "";
+			this.iconNameActiveYes = "";
+			this.icon          = new TextLayout();
+			this.iconActiveNo  = new TextLayout();
+			this.iconActiveYes = new TextLayout();
+			this.mainText      = new TextLayout();
+			this.shortKey      = new TextLayout();
+			this.icon.Alignment          = Drawing.ContentAlignment.MiddleLeft;
+			this.iconActiveNo.Alignment  = Drawing.ContentAlignment.MiddleLeft;
+			this.iconActiveYes.Alignment = Drawing.ContentAlignment.MiddleLeft;
+			this.mainText.Alignment      = Drawing.ContentAlignment.MiddleLeft;
+			this.shortKey.Alignment      = Drawing.ContentAlignment.MiddleLeft;
 
 			this.subIndicatorWidth = this.DefaultFontHeight;
 			this.colorControlDark = Drawing.Color.FromName("ControlDark");
@@ -142,8 +149,58 @@ namespace Epsitec.Common.Widgets
 					this.icon.Text = @"<img src=""" + this.iconName + @"""/>";
 				}
 				this.iconSize = this.icon.SingleLineSize;
-				this.separator = false;
 				this.AdjustSize(ref this.iconSize);
+				this.separator = false;
+			}
+		}
+
+		// Nom de l'icône affichée à gauche.
+		[ Support.Bundle ("iconNo") ] public string IconNameActiveNo
+		{
+			get
+			{
+				return this.iconNameActiveNo;
+			}
+
+			set
+			{
+				this.iconNameActiveNo = value;
+				if ( this.iconNameActiveNo == "" )
+				{
+					this.iconActiveNo.Text = "";
+				}
+				else
+				{
+					this.iconActiveNo.Text = @"<img src=""" + this.iconNameActiveNo + @"""/>";
+					this.iconSize = this.iconActiveNo.SingleLineSize;
+					this.AdjustSize(ref this.iconSize);
+				}
+				this.separator = false;
+			}
+		}
+
+		// Nom de l'icône affichée à gauche.
+		[ Support.Bundle ("iconYes") ] public string IconNameActiveYes
+		{
+			get
+			{
+				return this.iconNameActiveYes;
+			}
+
+			set
+			{
+				this.iconNameActiveYes = value;
+				if ( this.iconNameActiveYes == "" )
+				{
+					this.iconActiveYes.Text = "";
+				}
+				else
+				{
+					this.iconActiveYes.Text = @"<img src=""" + this.iconNameActiveYes + @"""/>";
+					this.iconSize = this.iconActiveYes.SingleLineSize;
+					this.AdjustSize(ref this.iconSize);
+				}
+				this.separator = false;
 			}
 		}
 
@@ -271,20 +328,20 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateClientGeometry();
 
-			if ( this.icon == null )  return;
-
 			if ( this.onlyText )
 			{
-				this.mainText.LayoutSize = this.mainTextSize;
+				if ( this.mainText != null )  this.mainText.LayoutSize = this.mainTextSize;
 			}
 			else if ( this.separator )
 			{
 			}
 			else
 			{
-				this.icon.LayoutSize     = this.iconSize;
-				this.mainText.LayoutSize = this.mainTextSize;
-				this.shortKey.LayoutSize = this.shortKeySize;
+				if ( this.icon != null )  this.icon.LayoutSize = this.iconSize;
+				if ( this.iconActiveNo != null )  this.iconActiveNo.LayoutSize = this.iconSize;
+				if ( this.iconActiveYes != null )  this.iconActiveYes.LayoutSize = this.iconSize;
+				if ( this.mainText != null )  this.mainText.LayoutSize = this.mainTextSize;
+				if ( this.shortKey != null )  this.shortKey.LayoutSize = this.shortKeySize;
 			}
 		}
 
@@ -319,11 +376,32 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				if ( this.iconName != "" )  // icône existe ?
+				TextLayout il = null;
+				if ( this.iconNameActiveNo != "" && this.ActiveState == WidgetState.ActiveNo )
 				{
+					il = this.iconActiveNo;
+				}
+				if ( this.iconNameActiveYes != "" && this.ActiveState == WidgetState.ActiveYes )
+				{
+					il = this.iconActiveYes;
+				}
+				if ( il == null && this.iconName != "" )
+				{
+					il = this.icon;
+				}
+
+				if ( il != null )  // icône existe ?
+				{
+					if ( this.ActiveState == WidgetState.ActiveYes && il != this.iconActiveYes )
+					{
+						Drawing.Rectangle iRect = rect;
+						iRect.Width = this.iconSize.Width;
+						iRect.Inflate(-2, -2);
+						adorner.PaintButtonBackground(graphics, iRect, state, Direction.Up, ButtonStyle.ToolItem);
+					}
 					pos.X = this.marginItem;
 					pos.Y = (rect.Height-this.iconSize.Height)/2;
-					adorner.PaintMenuItemTextLayout(graphics, pos, this.icon, state, Direction.Up, this.type, iType);
+					adorner.PaintMenuItemTextLayout(graphics, pos, il, state, Direction.Up, this.type, iType);
 				}
 
 				pos.X = this.marginItem*2+this.iconSize.Width;
@@ -356,7 +434,11 @@ namespace Epsitec.Common.Widgets
 		protected double			separatorHeight = 5;
 		protected double			subIndicatorWidth;
 		protected string			iconName;
+		protected string			iconNameActiveNo;
+		protected string			iconNameActiveYes;
 		protected TextLayout		icon;
+		protected TextLayout		iconActiveNo;
+		protected TextLayout		iconActiveYes;
 		protected TextLayout		mainText;
 		protected TextLayout		shortKey;
 		protected Drawing.Size		iconSize;

@@ -635,6 +635,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 					break;
 			}
 
+			if ( cmd.StartsWith("Look.") )
+			{
+				active = ( cmd.Substring(5) == Epsitec.Common.Widgets.Adorner.Factory.ActiveName );
+			}
+
 			return active;
 		}
 
@@ -875,6 +880,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 				else
 				{
 					MenuItem mi = new MenuItem(cmi.Name, cmi.Icon, cmi.Text, "");
+					mi.IconNameActiveNo = cmi.IconActiveNo;
+					mi.IconNameActiveYes = cmi.IconActiveYes;
+					mi.ActiveState = cmi.Active ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 					mi.Pressed += new MessageEventHandler(this.MenuPressed);
 					this.contextMenu.Items.Add(mi);
 				}
@@ -922,7 +930,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Effectue une commande du menu.
 		protected void ContextCommand(string cmd)
 		{
-			if ( this.contextMenuObject != null && cmd[0] == '-' )
+			if ( this.contextMenuObject != null && cmd.StartsWith("Object.") )
 			{
 				this.UndoMemorize("Object");
 				this.contextMenuObject.ContextCommand(cmd, this.contextMenuPos, this.contextMenuRank);

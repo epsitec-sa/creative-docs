@@ -597,6 +597,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Design\SmartGuide.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Design\WidgetWrapper.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -164,7 +164,7 @@ namespace Epsitec.Common.Widgets
 			rect.Top    = rect.Bottom+RadioButton.radioHeight;
 			adorner.PaintRadio(graphics, rect, this.PaintState);
 
-			adorner.PaintGeneralTextLayout(graphics, this.LabelOffset, this.TextLayout, this.PaintState);
+			adorner.PaintGeneralTextLayout(graphics, this.LabelOffset, this.TextLayout, this.PaintState, PaintTextStyle.RadioButton, this.BackColor);
 		}
 		
 		protected Drawing.Point LabelOffset

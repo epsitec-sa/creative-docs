@@ -56,7 +56,7 @@ namespace Epsitec.Common.Widgets
 			frameRect.Top -= System.Math.Floor(frameRect.Height-(titleRect.Bottom+titleRect.Top)/2);
 
 			adorner.PaintGroupBox(graphics, frameRect, titleRect, state);
-			adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state);
+			adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state, PaintTextStyle.Group, this.BackColor);
 		}
 	}
 }

@@ -25,6 +25,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorControlDarkDark   = Drawing.Color.FromRGB(  0.0/255.0,  51.0/255.0, 102.0/255.0);
 			this.colorCaption           = Drawing.Color.FromRGB(255.0/255.0, 186.0/255.0,   1.0/255.0);
 			this.colorCaptionText       = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
+			this.colorHilite            = Drawing.Color.FromRGB(255.0/255.0, 186.0/255.0,   1.0/255.0);
 			this.colorInfo              = Drawing.Color.FromName("Info");
 
 			r = 1-(1-this.colorControlLight.R)*0.5;
@@ -41,8 +42,6 @@ namespace Epsitec.Common.Widgets.Adorner
 			g = 1-(1-this.colorCaption.G)*0.25;
 			b = 1-(1-this.colorCaption.B)*0.25;
 			this.colorCaptionLight = Drawing.Color.FromRGB(r,g,b);
-
-			this.colorHilite = Drawing.Color.FromRGB(255.0/255.0, 186.0/255.0,   1.0/255.0);
 		}
 		
 
@@ -389,7 +388,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				pos.Y --;
 			}
 			state &= ~WidgetState.Focused;
-			this.PaintGeneralTextLayout(graphics, pos, text, state);
+			this.PaintGeneralTextLayout(graphics, pos, text, state, PaintTextStyle.Button, Drawing.Color.Empty);
 		}
 
 		public void PaintButtonForeground(Drawing.Graphics graphics,
@@ -908,7 +907,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					Drawing.Path path = PathTopRoundRectangle(rect, 0);
 
 					graphics.Rasterizer.AddSurface(path);
-					graphics.RenderSolid(this.colorControl);
+					graphics.RenderSolid(this.colorCaptionLight);
 
 					graphics.Rasterizer.AddOutline(path, 1);
 					graphics.RenderSolid(this.colorControlDark);
@@ -942,7 +941,8 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( text == null )  return;
 			state &= ~WidgetState.Selected;
 			state &= ~WidgetState.Focused;
-			this.PaintGeneralTextLayout(graphics, pos, text, state);
+			PaintTextStyle style = ( type == MenuType.Horizontal ) ? PaintTextStyle.HMenu : PaintTextStyle.VMenu;
+			this.PaintGeneralTextLayout(graphics, pos, text, state, style, Drawing.Color.Empty);
 		}
 
 		// Dessine le devant d'une case de menu.
@@ -1139,7 +1139,9 @@ namespace Epsitec.Common.Widgets.Adorner
 		public void PaintGeneralTextLayout(Drawing.Graphics graphics,
 										   Drawing.Point pos,
 										   TextLayout text,
-										   WidgetState state)
+										   WidgetState state,
+										   PaintTextStyle style,
+										   Drawing.Color backColor)
 		{
 			if ( text == null )  return;
 

@@ -812,17 +812,17 @@ namespace Epsitec.Common.Widgets
 					rects[0] = rInside;
 					rects[0].Deflate(1, 1);
 					adorner.PaintTextSelectionBackground(graphics, rects);
-					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected);
+					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.BackColor);
 					adorner.PaintFocusBox(graphics, rects[0]);
 				}
 				else if ( from == to )
 				{
-					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state&~WidgetState.Focused);
+					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.BackColor);
 					visibleCursor = TextField.showCursor && this.Window.IsFocused;
 				}
 				else
 				{
-					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state&~(WidgetState.Focused|WidgetState.Selected));
+					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state&~(WidgetState.Focused|WidgetState.Selected), PaintTextStyle.TextField, this.BackColor);
 
 					Drawing.Rectangle[] rects = this.TextLayout.FindTextRange(pos, from, to);
 					for ( int i=0 ; i<rects.Length ; i++ )
@@ -837,7 +837,7 @@ namespace Epsitec.Common.Widgets
 					}
 					graphics.SetClippingRectangles(rects);
 
-					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected);
+					adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, (state&~WidgetState.Focused)|WidgetState.Selected, PaintTextStyle.TextField, this.BackColor);
 				}
 
 
@@ -857,7 +857,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state&~WidgetState.Focused);
+				adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state&~WidgetState.Focused, PaintTextStyle.TextField, this.BackColor);
 			}
 
 			graphics.RestoreClippingRectangle(rSaveClip);

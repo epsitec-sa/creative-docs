@@ -389,7 +389,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				pos.Y --;
 			}
 			state &= ~WidgetState.Focused;
-			this.PaintGeneralTextLayout(graphics, pos, text, state);
+			this.PaintGeneralTextLayout(graphics, pos, text, state, PaintTextStyle.Button, Drawing.Color.Empty);
 		}
 
 		public void PaintButtonForeground(Drawing.Graphics graphics,
@@ -883,15 +883,17 @@ namespace Epsitec.Common.Widgets.Adorner
 										WidgetState state,
 										Direction dir)
 		{
-			rect.Inflate(-0.5, -0.5);
+			if ( dir == Direction.Up )
+			{
+				graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
+				graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
+			}
 
-			graphics.AddLine(rect.Left, rect.Top, rect.Right, rect.Top);
-			graphics.AddLine(rect.Left, rect.Bottom, rect.Left, rect.Top);
-			graphics.RenderSolid(this.colorControlLightLight);
-
-			graphics.AddLine(rect.Left, rect.Bottom, rect.Right, rect.Bottom);
-			graphics.AddLine(rect.Right, rect.Bottom, rect.Right, rect.Top);
-			graphics.RenderSolid(this.colorControlDark);
+			if ( dir == Direction.Left )
+			{
+				graphics.AddLine(rect.Right-0.5, rect.Bottom, rect.Right-0.5, rect.Top);
+				graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
+			}
 		}
 
 		public void PaintToolForeground(Drawing.Graphics graphics,
@@ -1025,7 +1027,8 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( text == null )  return;
 			state &= ~WidgetState.Selected;
 			state &= ~WidgetState.Focused;
-			this.PaintGeneralTextLayout(graphics, pos, text, state);
+			PaintTextStyle style = ( type == MenuType.Horizontal ) ? PaintTextStyle.HMenu : PaintTextStyle.VMenu;
+			this.PaintGeneralTextLayout(graphics, pos, text, state, style, Drawing.Color.Empty);
 		}
 
 		// Dessine le devant d'une case de menu.
@@ -1222,7 +1225,9 @@ namespace Epsitec.Common.Widgets.Adorner
 		public void PaintGeneralTextLayout(Drawing.Graphics graphics,
 										   Drawing.Point pos,
 										   TextLayout text,
-										   WidgetState state)
+										   WidgetState state,
+										   PaintTextStyle style,
+										   Drawing.Color backColor)
 		{
 			if ( text == null )  return;
 

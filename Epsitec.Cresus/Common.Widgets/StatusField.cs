@@ -87,7 +87,7 @@ namespace Epsitec.Common.Widgets
 			pos.X += this.margin;
 			pos.Y += 0.5;
 			this.TextLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
-			adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state);
+			adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state, PaintTextStyle.Status, this.BackColor);
 		}
 
 

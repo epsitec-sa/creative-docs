@@ -76,6 +76,7 @@ namespace Epsitec.Common.Widgets
 			fileMenu.Items.Add(new MenuItem("quit", "", "Quitter", ""));
 			fileMenu.AdjustSize();
 			menu.Items[0].Submenu = fileMenu;
+			fileMenu.Items[4].SetEnabled(false);
 
 			VMenu editMenu = new VMenu();
 			editMenu.Items.Add(new MenuItem("undo", "", "Annuler", "Ctrl+Z"));
@@ -94,6 +95,7 @@ namespace Epsitec.Common.Widgets
 			showMenu.Items.Add(new MenuItem("set", "", "Reglages", ""));
 			showMenu.AdjustSize();
 			menu.Items[2].Submenu = showMenu;
+			showMenu.Items[1].SetEnabled(false);
 
 			VMenu optMenu = new VMenu();
 			optMenu.Items.Add(new MenuItem("misc", "", "Divers...", ""));
@@ -447,6 +449,7 @@ namespace Epsitec.Common.Widgets
 				{
 					table.SetWidthColumn(x, 60);
 					StaticText tx = new StaticText();
+					tx.PaintTextStyle = PaintTextStyle.Array;
 					tx.Text = string.Format("L{0} C{1}", x+1, y+1);
 					tx.Alignment = ContentAlignment.MiddleLeft;
 					tx.Dock = Widgets.DockStyle.Fill;
@@ -815,6 +818,7 @@ namespace Epsitec.Common.Widgets
 				for ( int x=0 ; x<5 ; x++ )
 				{
 					StaticText text = new StaticText();
+					text.PaintTextStyle = PaintTextStyle.Array;
 					if ( x != 0 || y != 0 )  text.Text = string.Format("{0}.{1}", y+1, x+1);
 					text.Alignment = ContentAlignment.MiddleCenter;
 					text.Dock = Widgets.DockStyle.Fill;
@@ -989,6 +993,7 @@ namespace Epsitec.Common.Widgets
 					}
 #else
 					StaticText text = new StaticText();
+					text.PaintTextStyle = PaintTextStyle.Array;
 					text.Text = string.Format("L{0} C{1}", x+1, y+1);
 					text.Alignment = ContentAlignment.MiddleLeft;
 					//text.Alignment = ContentAlignment.BottomLeft;

@@ -454,6 +454,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.lineHeight == 0 )  return;
 
 			this.visibleLines = (int)((this.Bounds.Height-ScrollList.Margin*2)/this.lineHeight);
+			if ( this.visibleLines < 1 )  this.visibleLines = 1;
 			this.textLayouts = new TextLayout[this.visibleLines];
 			
 			this.SetDirty();
