@@ -70,6 +70,8 @@ namespace Epsitec.Common.Dialogs
 			field_b.DefineCaption ("[res:file:strings#data.ValueB]");
 			field_c.DefineCaption ("[res:file:strings#data.ValueC]");
 			
+			field_a.DefineConstraint (new Support.RegexConstraint (Support.PredefinedRegex.Alpha));
+			
 			field_a.Changed += new Support.EventHandler (this.HandleFieldChanged);
 			field_b.Changed += new Support.EventHandler (this.HandleFieldChanged);
 			field_c.Changed += new Support.EventHandler (this.HandleFieldChanged);
@@ -104,7 +106,8 @@ namespace Epsitec.Common.Dialogs
 		private void HandleFieldChanged(object sender)
 		{
 			Field field = sender as Field;
-			System.Diagnostics.Debug.WriteLine ("Field " + field.Name + " changed to " + field.Value.ToString () + (field.IsValueValid ? "" : "(invalid)") + ", widgets: " + Widgets.Widget.DebugAliveWidgetsCount + ", windows: " + Widgets.Window.DebugAliveWindowsCount);
+			
+			System.Diagnostics.Debug.WriteLine ("Field " + field.Name + " changed to " + field.Value.ToString () + (field.IsValueValid ? "" : "(invalid)"));
 		}
 	}
 }
