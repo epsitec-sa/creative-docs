@@ -109,7 +109,7 @@ namespace Epsitec.Common.Widgets.Design
 		
 		public Drawing.Rectangle		OriginalBounds
 		{
-			get { return this.widget_original_surface.Bounds; }
+			get { return this.original_bounds; }
 		}
 		
 		
@@ -193,9 +193,11 @@ namespace Epsitec.Common.Widgets.Design
 		
 		public void DraggingBegin()
 		{
+			this.original_bounds = this.widget.Bounds;
+			
 			this.widget_original_surface = new StaticText ();
 			
-			this.widget_original_surface.Bounds      = this.widget.Bounds;
+			this.widget_original_surface.Bounds      = this.original_bounds;
 			this.widget_original_surface.Dock        = this.widget.Dock;
 			this.widget_original_surface.LayoutFlags = this.widget.LayoutFlags;
 			this.widget_original_surface.MinSize     = this.widget.MinSize;
@@ -206,13 +208,15 @@ namespace Epsitec.Common.Widgets.Design
 			this.widget_original_surface.SetLayoutArgs (this.widget.LayoutArg1, this.widget.LayoutArg2);
 			
 			this.parent.Children.Replace (this.widget, this.widget_original_surface);
+			
+			this.GripsVisible = false;
 		}
 		
-		public void DraggingEndCancel()
+		public void DraggingEnd()
 		{
 			this.widget.Parent = null;
 			
-			this.widget.Bounds      = this.widget_original_surface.Bounds;
+			this.widget.Bounds      = this.original_bounds;
 			this.widget.Dock        = this.widget_original_surface.Dock;
 			this.widget.LayoutFlags = this.widget_original_surface.LayoutFlags;
 			this.widget.MinSize     = this.widget_original_surface.MinSize;
@@ -224,6 +228,8 @@ namespace Epsitec.Common.Widgets.Design
 			
 			this.widget_original_surface.Dispose ();
 			this.widget_original_surface = null;
+			
+			this.GripsVisible = true;
 		}
 		
 		public void DraggingSetDropHint(Drawing.Rectangle drop_bounds)
@@ -261,6 +267,7 @@ namespace Epsitec.Common.Widgets.Design
 		protected Widget				parent;
 		protected Widget				widget;
 		protected Widget				widget_original_surface;
+		protected Drawing.Rectangle		original_bounds;
 		protected ArrayList				ancestors = new ArrayList ();
 	}
 }

@@ -119,7 +119,10 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			if (this.is_dirty)
 			{
-				this.Rebuild ();
+				if (this.freeze_count == 0)
+				{
+					this.Rebuild ();
+				}
 			}
 		}
 		
@@ -843,7 +846,6 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			this.widget_designer.Widget.Dock   = DockStyle.None;
 			this.widget_designer.Widget.Parent = this.root;
-			this.widget_designer.GripsVisible  = false;
 			
 			this.hot_lines = new Grid.Horizontal[this.horizontals.Length];
 			this.horizontals.CopyTo (this.hot_lines, 0);
@@ -928,92 +930,74 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.UpdateGeometry ();
 		}
 		
+		
+		protected void FreezeEnter()
+		{
+			System.Threading.Interlocked.Increment (ref this.freeze_count);
+		}
+		
+		protected void FreezeRelease()
+		{
+			System.Threading.Interlocked.Decrement (ref this.freeze_count);
+		}
+		
+		
+		
 		protected void WidgetDraggingEnd(Drawing.Point mouse)
 		{
 			this.is_dragging_widget = false;
 			
+			this.widget_designer.DraggingEnd ();
+			
+			this.Update ();
+			this.FreezeEnter ();
+			
 			if (this.widget_designer.IsDropTargetValid)
 			{
-			}
-			else
-			{
-				this.widget_designer.DraggingEndCancel ();
+				this.RemoveWidgetFromHorizontals (this.widget_designer.Widget);
 				
-				this.line_gap_index  = -1;
-				this.line_gap_height = 0;
+				int pos_old = this.root.Children.IndexOf (this.widget_designer.Widget);
+				int pos_new = this.FindWidgetIndexBeforeHotDrop ();
 				
-				this.hot_designer_rect = Drawing.Rectangle.Empty;
-				
-				this.Invalidate ();
-				this.Update ();
-				
-				return;
-			}
-			
-			this.RemoveWidgetFromHorizontals (this.widget_designer.WidgetOriginalSurface);
-			
-			int pos_old = this.root.Children.IndexOf (this.widget_designer.WidgetOriginalSurface);
-			int pos_new = this.FindWidgetIndexBeforeHotDrop (pos_old);
-			
-			if (this.hot_target_ok == false)
-			{
-				pos_new = pos_old;
-				
-				this.hot_designer_col1 = this.widget_designer.Widget.LayoutArg1;
-				this.hot_designer_col2 = this.widget_designer.Widget.LayoutArg2;
-			}
-			
-			if (pos_old == pos_new)
-			{
-				//	La position n'a pas changé dans le Z-order...
-				
-				this.widget_designer.Widget.Parent = null;
-				this.widget_designer.Widget.Dock   = this.widget_designer.WidgetOriginalSurface.Dock;
-				
-				this.root.Children.Replace (this.widget_designer.WidgetOriginalSurface, this.widget_designer.Widget);
-			}
-			else
-			{
-				Widget temp = new Widget ();
-				
-				this.root.Children.InsertAt (pos_new, temp);
-				
-				this.widget_designer.Widget.Parent = null;
-				this.widget_designer.Widget.Dock   = this.widget_designer.WidgetOriginalSurface.Dock;
-				
-				this.widget_designer.WidgetOriginalSurface.Parent = null;
-				
-				this.root.Children.Replace (temp, this.widget_designer.Widget);
-				
-				System.Diagnostics.Debug.Assert (temp.Parent == null);
-			}
-			
-			this.widget_designer.Widget.SetLayoutArgs (this.hot_designer_col1, this.hot_designer_col2);
-			this.widget_designer.Widget.Height = this.widget_designer.WidgetOriginalSurface.Height;
-			this.widget_designer.GripsVisible  = true;
-			
-			if (this.hot_designer_insert)
-			{
-				this.InsertHorizontal (this.hot_designer_line);
-			}
-			
-			this.InsertWidgetIntoHorizontal (this.widget_designer.Widget, this.hot_designer_line);
-			
-			for (int i = 0; i < this.horizontals.Length; i++)
-			{
-				Grid.Horizontal horizontal = this.horizontals[i];
-				
-				for (int j = 0; j < horizontal.list.Count; j++)
+				if (pos_old != pos_new)
 				{
-					Widget widget = horizontal.list[j] as Widget;
+					//	La position a changé dans le Z-order. La nouvelle position correspond à l'endroit
+					//	où nous devons procéder à l'insertion.
 					
-					if (j == 0)
+					Widget temp = new Widget ();
+					
+					this.root.Children.InsertAt (pos_new, temp);
+					this.root.Children.Replace (temp, this.widget_designer.Widget);
+					
+					temp.Parent = null;
+					temp.Dispose ();
+				}
+				
+				this.widget_designer.Widget.SetLayoutArgs (this.hot_designer_col1, this.hot_designer_col2);
+				
+				if (this.hot_designer_insert)
+				{
+					this.InsertHorizontal (this.hot_designer_line);
+				}
+				
+				this.InsertWidgetIntoHorizontal (this.widget_designer.Widget, this.hot_designer_line);
+				
+				for (int i = 0; i < this.horizontals.Length; i++)
+				{
+					Grid.Horizontal horizontal = this.horizontals[i];
+				
+					for (int j = 0; j < horizontal.list.Count; j++)
 					{
-						widget.LayoutFlags |= LayoutFlags.StartNewLine;
-					}
-					else
-					{
-						widget.LayoutFlags &= ~LayoutFlags.StartNewLine;
+						Widget widget = horizontal.list[j] as Widget;
+					
+						if (j == 0)
+						{
+							widget.LayoutFlags |= LayoutFlags.StartNewLine;
+						}
+						else
+						{
+							widget.LayoutFlags &= ~LayoutFlags.StartNewLine;
+						}
 					}
 				}
 			}
@@ -1023,12 +1007,13 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			this.hot_designer_rect = Drawing.Rectangle.Empty;
 			
+			this.FreezeRelease ();
 			this.Invalidate ();
 			this.Update ();
 		}
 		
 		
-		protected int FindWidgetIndexBeforeHotDrop(int pos_old)
+		protected int FindWidgetIndexBeforeHotDrop()
 		{
 			Widget find = null;
 			
@@ -1054,6 +1039,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			
 			int pos_new = (find == null) ? 0 : (this.root.Children.IndexOf (find) + 1);
+			int pos_old = this.root.Children.IndexOf (this.widget_designer.Widget);
 			
 			return (find == this.widget_designer.WidgetOriginalSurface) ? pos_old : pos_new;
 		}
@@ -1522,6 +1508,8 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		
 		protected Widget				root;
+		
+		private int						freeze_count;
 		
 		protected Grid.ColumnCollection	columns;
 		protected Grid.Vertical[]		verticals;
