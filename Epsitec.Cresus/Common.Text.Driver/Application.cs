@@ -10,15 +10,15 @@ namespace Epsitec.Common.Text.Driver
 	{
 		[System.STAThread] static void Main(string[] args)
 		{
-			Tests.CheckTextFitter.RunTests ();
-			
 			Tests.CheckLayout.RunTests ();
+			
+			Tests.CheckProperties.RunTests ();
 			Tests.CheckStretchProfile.RunTests ();
+			Tests.CheckTextFitter.RunTests ();
 			
 			OpenType.Tests.CheckTables.RunTests ();
 			
 			Tests.CheckUnicode.RunTests ();
-			Tests.CheckProperties.RunTests ();
 			Tests.CheckInternalCursor.RunTests ();
 			Tests.CheckInternalCursorTable.RunTests ();
 			Tests.CheckInternalCursorIdArray.RunTests ();
