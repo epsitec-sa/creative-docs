@@ -67,6 +67,8 @@ namespace Epsitec.Common.Document
 			this.exportDirectory = "";
 			this.exportFilename = "";
 			this.exportFilter = 0;
+			this.isSurfaceRotation = false;
+			this.surfaceRotationAngle = 0.0;
 
 			this.printDialog = new Common.Dialogs.PrinterDocumentProperties();
 
@@ -198,6 +200,35 @@ namespace Epsitec.Common.Document
 		public Common.Dialogs.Print PrintDialog
 		{
 			get { return this.printDialog; }
+		}
+
+
+		// Rotation spéciale pour calculer SurfaceAnchor en cours.
+		public bool IsSurfaceRotation
+		{
+			get
+			{
+				return this.isSurfaceRotation;
+			}
+			
+			set
+			{
+				this.isSurfaceRotation = value;
+			}
+		}
+
+		// Angle de la rotation spéciale pour calculer SurfaceAnchor.
+		public double SurfaceRotationAngle
+		{
+			get
+			{
+				return this.surfaceRotationAngle;
+			}
+			
+			set
+			{
+				this.surfaceRotationAngle = value;
+			}
 		}
 
 
@@ -475,6 +506,8 @@ namespace Epsitec.Common.Document
 
 				if ( this.Modifier != null && doc.readObjectMemory != null )
 				{
+					doc.readObjectMemory.PropertiesXferMemory(this.Modifier.ObjectMemory);
+					doc.readObjectMemoryText.PropertiesXferMemory(this.Modifier.ObjectMemoryText);
 					this.Modifier.ObjectMemory = doc.readObjectMemory;
 					this.Modifier.ObjectMemoryText = doc.readObjectMemoryText;
 				}
@@ -1429,5 +1462,7 @@ namespace Epsitec.Common.Document
 		protected Objects.Memory				readObjectMemory;
 		protected Objects.Memory				readObjectMemoryText;
 		protected System.Collections.ArrayList	readRootStack;
+		protected bool							isSurfaceRotation;
+		protected double						surfaceRotationAngle;
 	}
 }

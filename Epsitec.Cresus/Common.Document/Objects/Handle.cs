@@ -42,7 +42,14 @@ namespace Epsitec.Common.Document.Objects
 		{
 			get
 			{
-				return this.position;
+				if ( this.document.IsSurfaceRotation )
+				{
+					return Transform.RotatePointDeg(this.document.SurfaceRotationAngle, this.position);
+				}
+				else
+				{
+					return this.position;
+				}
 			}
 
 			set
@@ -193,6 +200,7 @@ namespace Epsitec.Common.Document.Objects
 		protected void NotifyArea()
 		{
 			if ( this.document.Notifier == null )  return;
+			if ( !this.isVisible )  return;
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 

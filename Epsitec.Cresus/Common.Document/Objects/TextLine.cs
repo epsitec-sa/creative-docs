@@ -157,7 +157,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -330,7 +330,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.Handle(rank).ConstrainType = HandleConstrainType.Symmetric;
 			this.MoveSecondary(rank, rank-1, rank+1, this.Handle(rank-1).Position);
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 		}
 
 		// Passe le point en mode lisse.
@@ -346,7 +346,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.MoveSecondary(rank, rank-1, rank+1, this.Handle(rank-1).Position);
 			}
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 		}
 
 		// Passe le point en mode anguleux.
@@ -395,7 +395,7 @@ namespace Epsitec.Common.Document.Objects
 				if ( this.Handle(prev+1).ConstrainType == HandleConstrainType.Symmetric )  this.Handle(prev+1).ConstrainType = HandleConstrainType.Smooth;
 				if ( this.Handle(next+1).ConstrainType == HandleConstrainType.Symmetric )  this.Handle(next+1).ConstrainType = HandleConstrainType.Smooth;
 			}
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 		}
 
 		// Supprime une poignée sans changer l'aspect de la courbe.
@@ -417,7 +417,7 @@ namespace Epsitec.Common.Document.Objects
 					this.ContextToCurve(prev);
 				}
 			}
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 		}
 
 		// Conversion d'un segement en ligne droite.
@@ -431,7 +431,7 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(next+0).Type = HandleType.Hide;
 			this.Handle(rank+1).ConstrainType = HandleConstrainType.Corner;
 			this.Handle(next+1).ConstrainType = HandleConstrainType.Corner;
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 		}
 
 		// Conversion d'un segement en courbe.
@@ -445,7 +445,7 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(next+0).Type = HandleType.Bezier;
 			this.Handle(rank+1).ConstrainType = HandleConstrainType.Corner;
 			this.Handle(next+1).ConstrainType = HandleConstrainType.Corner;
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 		}
 
 
@@ -465,7 +465,7 @@ namespace Epsitec.Common.Document.Objects
 			pos = Point.Move(this.Handle(rankPrimary).Position, this.Handle(rankExtremity).Position, dist);
 			pos = Point.Symmetry(this.Handle(rankPrimary).Position, pos);
 			this.Handle(rankSecondary).Position = pos;
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 		}
 
 		// Cherche le rang du groupe "sps" précédent, en tenant compte
@@ -517,7 +517,7 @@ namespace Epsitec.Common.Document.Objects
 			this.AdaptPrimaryLine(rankExtremity, rankExtremity+1, out rankExtremity);
 			this.AdaptPrimaryLine(rank, rank+1, out rankExtremity);
 			this.AdaptPrimaryLine(rankExtremity, rankExtremity-1, out rankExtremity);
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 		}
 
 		// Déplace une poignée secondaire selon les contraintes.
@@ -628,8 +628,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.ConstrainSnapPos(ref pos);
-			drawingContext.SnapGrid(ref pos);
+			drawingContext.SnapPos(ref pos);
 
 			if ( this.Handle(rank).Type == HandleType.Starting ||
 				 this.Handle(rank).Type == HandleType.Primary  )  // principale ?
@@ -647,7 +646,7 @@ namespace Epsitec.Common.Document.Objects
 					this.MoveSecondary(rank-1, rank, rank-2, pos);
 				}
 			}
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.TextInfoModifLine();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -678,12 +677,11 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.SnapGrid(ref pos);
-			drawingContext.ConstrainSnapPos(ref pos);
+			drawingContext.SnapPos(ref pos);
 			this.Handle(3).Position = pos;
 			this.Handle(4).Position = pos;
 			this.Handle(5).Position = pos;
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.TextInfoModifLine();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -692,8 +690,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.SnapGrid(ref pos);
-			drawingContext.ConstrainSnapPos(ref pos);
+			drawingContext.SnapPos(ref pos);
 			this.Handle(3).Position = pos;
 			this.Handle(4).Position = pos;
 			this.Handle(5).Position = pos;
@@ -782,7 +779,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( !this.textNavigator.ProcessMessage(message, pos) )  return false;
 
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			return true;
 		}
 
@@ -1559,7 +1556,7 @@ namespace Epsitec.Common.Document.Objects
 		
 		private void HandleTextChanged(object sender)
 		{
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 		}
 
 

@@ -148,6 +148,28 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		// Début du déplacement global de la propriété.
+		public override void MoveGlobalStarting()
+		{
+			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptText )  return;
+
+			this.InsertOpletProperty();
+
+			this.initialFontSize = this.fontSize;
+		}
+		
+		// Effectue le déplacement global de la propriété.
+		public override void MoveGlobalProcess(Selector selector)
+		{
+			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptText )  return;
+
+			double zoom = selector.GetTransformZoom;
+			this.fontSize = this.initialFontSize*zoom;
+
+			this.document.Notifier.NotifyPropertyChanged(this);
+		}
+
+		
 		#region Serialization
 		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -172,5 +194,6 @@ namespace Epsitec.Common.Document.Properties
 		protected string				fontName;
 		protected double				fontSize;
 		protected Drawing.Color			fontColor;
+		protected double				initialFontSize;
 	}
 }

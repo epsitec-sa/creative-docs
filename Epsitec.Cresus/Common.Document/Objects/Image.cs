@@ -91,8 +91,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.ConstrainSnapPos(ref pos);
-			drawingContext.SnapGrid(ref pos);
+			drawingContext.SnapPos(ref pos);
 
 			     if ( rank == 0 )  this.MoveCorner(pos, 0, 2,3, 1);
 			else if ( rank == 1 )  this.MoveCorner(pos, 1, 3,2, 0);
@@ -100,7 +99,7 @@ namespace Epsitec.Common.Document.Objects
 			else if ( rank == 3 )  this.MoveCorner(pos, 3, 1,0, 2);
 			else                   this.Handle(rank).Position = pos;
 
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.TextInfoModifRect();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -121,10 +120,9 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.SnapGrid(ref pos);
-			drawingContext.ConstrainSnapPos(ref pos);
+			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.TextInfoModifRect();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -134,8 +132,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
-			drawingContext.SnapGrid(ref pos);
-			drawingContext.ConstrainSnapPos(ref pos);
+			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
 			drawingContext.ConstrainDelStarting();
 			drawingContext.MagnetClearStarting();

@@ -86,6 +86,7 @@ namespace Epsitec.Common.Document.Objects
 					if ( rank == 1 )  // extrémité ?
 					{
 						drawingContext.ConstrainAddCenter(this.Handle(0).Position);
+						drawingContext.ConstrainAddCircle(this.Handle(0).Position, this.Handle(1).Position);
 					}
 				}
 				else
@@ -108,8 +109,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.ConstrainSnapPos(ref pos);
-			drawingContext.SnapGrid(ref pos);
+			drawingContext.SnapPos(ref pos);
 
 			if ( rank == 0 )  // centre ?
 			{
@@ -123,7 +123,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.HandlePropertiesUpdate();
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.TextInfoModifCircle();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -144,10 +144,9 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.SnapGrid(ref pos);
-			drawingContext.ConstrainSnapPos(ref pos);
+			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.TextInfoModifCircle();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -156,8 +155,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.SnapGrid(ref pos);
-			drawingContext.ConstrainSnapPos(ref pos);
+			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
 			drawingContext.ConstrainDelStarting();
 			drawingContext.MagnetClearStarting();
@@ -311,9 +309,11 @@ namespace Epsitec.Common.Document.Objects
 			if ( this.TotalHandle < 2 )  return;
 
 			Path path = this.PathBuild(drawingContext);
-			this.PropertyFillGradient.RenderSurface(graphics, drawingContext, path, this.BoundingBoxThin);
+			this.surfaceAnchor.LineUse = false;
+			this.PropertyFillGradient.RenderSurface(graphics, drawingContext, path, this.surfaceAnchor);
 
-			this.PropertyLineMode.DrawPath(graphics, drawingContext, path, this.PropertyLineColor, this.BoundingBoxGeom);
+			this.surfaceAnchor.LineUse = true;
+			this.PropertyLineMode.DrawPath(graphics, drawingContext, path, this.PropertyLineColor, this.surfaceAnchor);
 
 			if ( this.IsHilite && drawingContext.IsActive )
 			{

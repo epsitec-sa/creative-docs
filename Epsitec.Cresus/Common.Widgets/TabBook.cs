@@ -413,6 +413,36 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
+		protected bool CenterSelectedTabButton()
+		{
+			// Scroll les boutons pour centrer l'onglet actif.
+			double pos = 0;
+
+			if ( this.scrollArrow )
+			{
+				double min = this.TabOffsetMin;
+				double max = this.TabOffsetMax;
+
+				foreach ( TabPage page in this.items )
+				{
+					Drawing.Size size = page.TabSize;
+					double len = System.Math.Floor(size.Width+size.Height);
+					pos += len;
+					if ( page == this.ActivePage )  break;
+				}
+
+				pos += (max-min)/2.0;
+				pos = System.Math.Min(pos, this.scrollTotalWidth);
+
+				pos -= max-min;
+				pos = System.Math.Max(pos, 0.0);
+			}
+
+			if ( this.scrollOffset == pos )  return false;
+			this.scrollOffset = pos;
+			return true;
+		}
+		
 		protected void UpdateOffset()
 		{
 			if ( this.items == null )  return;
@@ -469,6 +499,18 @@ namespace Epsitec.Common.Widgets
 			this.UpdateGlyphButtons();
 		}
 
+		public void UpdateAfterChanges()
+		{
+			// Met à jour les boutons après un changement (insertion ou suppression
+			// d'un onglet, ou modification du texte d'un onglet).
+			this.UpdateButtons();
+
+			if ( this.CenterSelectedTabButton() )
+			{
+				this.Invalidate();
+			}
+		}
+
 		protected void UpdateTabButtons()
 		{
 			// Met à jour tous les boutons des onglets.
@@ -492,13 +534,14 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.Arrows == TabBookArrows.Stretch )
 			{
-				double width = this.Client.Bounds.Width-2;
+				double width = this.Client.Bounds.Width-3;
 				rect.Left = 0;
 				foreach ( TabPage page in this.items )
 				{
 					Drawing.Size size = page.TabSize;
-					double len = System.Math.Floor(size.Width+size.Height);
+					double len = size.Width+size.Height;
 					len *= width/this.scrollTotalWidth;
+					len = System.Math.Floor(len);
 
 					rect.Right = rect.Left+len;
 					page.TabBounds = rect;
@@ -510,8 +553,16 @@ namespace Epsitec.Common.Widgets
 		protected void UpdateGlyphButtons()
 		{
 			// Met à jour les 4 boutons spéciaux.
-			this.scrollArrow = ( this.scrollTotalWidth > this.Client.Width-4 );
-			if ( this.Arrows == TabBookArrows.Stretch )  this.scrollArrow = false;
+			if ( this.Arrows == TabBookArrows.Stretch )
+			{
+				this.scrollArrow = false;
+			}
+			else
+			{
+				this.scrollArrow = true;
+				double width = this.TabOffsetMax-this.TabOffsetMin;
+				this.scrollArrow = ( this.scrollTotalWidth > width );
+			}
 
 			if ( this.arrowLeft == null )  return;
 

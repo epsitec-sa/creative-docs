@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using System.Text.RegularExpressions;
@@ -20,7 +20,8 @@ namespace Epsitec.Common.Support
 		ResourceBundleName,				//	"abc"
 		ResourceFieldName,				//	"x.y3.z"
 		
-		DecimalNum
+		InvariantDecimalNum,
+		LocalizedDecimalNum
 	}
 	
 	/// <summary>
@@ -45,7 +46,26 @@ namespace Epsitec.Common.Support
 			RegexFactory.r_full_name    = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*" + @"(\#([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*)*" + @"(\[[0-9]{1,4}\])?" + @"$", options);
 			RegexFactory.r_bundle_name  = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*$", options);
 			RegexFactory.r_field_name   = new Regex (@"^([a-zA-Z_][a-zA-Z0-9_]*)(\.([a-zA-Z0-9_]+))*$", options);
-			RegexFactory.decimal_num    = new Regex (@"^(\-|\+)?((\d{1,12}(\.\d{0,12})?0*)|(\d{0,12}\.(\d{0,12})?0*))$", options);
+			
+			//	L'expression régulière utilisée pour déterminer si un nombre est formaté correctement
+			//	devrait être recalculée chaque fois que la culture active change, mais on ne le fait
+			//	pas encore :
+			
+			char decimal_separator;
+			
+			decimal_separator = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
+			
+			//	TODO: regénérer loc_decimal_num à chaque changement de culture
+			
+			RegexFactory.loc_decimal_num = new Regex (@"^(\-|\+)?((\d{1,12}(\" + decimal_separator +
+				/**/								 @"\d{0,12})?0*)|(\d{0,12}\" + decimal_separator +
+				/**/								 @"(\d{0,12})?0*))$", options);
+			
+			decimal_separator = System.Globalization.CultureInfo.InvariantCulture.NumberFormat.NumberDecimalSeparator[0];
+			
+			RegexFactory.inv_decimal_num = new Regex (@"^(\-|\+)?((\d{1,12}(\" + decimal_separator +
+				/**/								 @"\d{0,12})?0*)|(\d{0,12}\" + decimal_separator +
+				/**/								 @"(\d{0,12})?0*))$", options);
 		}
 		
 		
@@ -131,7 +151,8 @@ namespace Epsitec.Common.Support
 				case PredefinedRegex.ResourceFullName:		return RegexFactory.ResourceFullName;
 				case PredefinedRegex.ResourceBundleName:	return RegexFactory.ResourceBundleName;
 				case PredefinedRegex.ResourceFieldName:		return RegexFactory.ResourceFieldName;
-				case PredefinedRegex.DecimalNum:			return RegexFactory.DecimalNum;
+				case PredefinedRegex.InvariantDecimalNum:	return RegexFactory.InvariantDecimalNum;
+				case PredefinedRegex.LocalizedDecimalNum:	return RegexFactory.LocalizedDecimalNum;
 			}
 			
 			return null;
@@ -202,11 +223,19 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public static Regex						DecimalNum
+		public static Regex						LocalizedDecimalNum
 		{
 			get
 			{
-				return RegexFactory.decimal_num;
+				return RegexFactory.loc_decimal_num;
+			}
+		}
+		
+		public static Regex						InvariantDecimalNum
+		{
+			get
+			{
+				return RegexFactory.inv_decimal_num;
 			}
 		}
 		
@@ -229,6 +258,7 @@ namespace Epsitec.Common.Support
 		private static Regex					r_full_name;
 		private static Regex					r_bundle_name;
 		private static Regex					r_field_name;
-		private static Regex					decimal_num;
+		private static Regex					loc_decimal_num;
+		private static Regex					inv_decimal_num;
 	}
 }

@@ -168,7 +168,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Initialise le sélectionneur complexe (avec poignées).
-		public void Initialize(Rectangle rect)
+		public void Initialize(Rectangle rect, double angle)
 		{
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.OpletQueueInsert();
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Document
 			this.finalData.P3 = rect.TopLeft;
 			this.finalData.P4 = rect.BottomRight;
 			this.finalData.Center = rect.Center;
-			this.finalData.Angle = 0.0;
+			this.finalData.Angle = angle;
 			this.UpdateHandlePos();
 			this.Visible = true;
 			this.Handles = true;
@@ -271,7 +271,14 @@ namespace Epsitec.Common.Document
 			}
 			else
 			{
-				this.document.Modifier.OpletQueueNameAction("Zoom global");
+				if ( this.finalData.TypeInUse == SelectorType.Stretcher )
+				{
+					this.document.Modifier.OpletQueueNameAction("Déformation globale");
+				}
+				else
+				{
+					this.document.Modifier.OpletQueueNameAction("Zoom global");
+				}
 			}
 		}
 
@@ -368,22 +375,42 @@ namespace Epsitec.Common.Document
 
 			if ( rank == 1 )  // inf/gauche ?
 			{
+				Point initial = this.finalData.P1;
 				this.finalData.P1 = pos;
+				if ( !this.IsCorrectGeometry() )
+				{
+					this.finalData.P1 = initial;
+				}
 			}
 
 			if ( rank == 2 )  // sup/droite ?
 			{
+				Point initial = this.finalData.P2;
 				this.finalData.P2 = pos;
+				if ( !this.IsCorrectGeometry() )
+				{
+					this.finalData.P2 = initial;
+				}
 			}
 
 			if ( rank == 3 )  // sup/gauche ?
 			{
+				Point initial = this.finalData.P3;
 				this.finalData.P3 = pos;
+				if ( !this.IsCorrectGeometry() )
+				{
+					this.finalData.P3 = initial;
+				}
 			}
 
 			if ( rank == 4 )  // inf/droite ?
 			{
+				Point initial = this.finalData.P4;
 				this.finalData.P4 = pos;
+				if ( !this.IsCorrectGeometry() )
+				{
+					this.finalData.P4 = initial;
+				}
 			}
 
 			if ( rank == 5 )  // center ?
@@ -653,41 +680,139 @@ namespace Epsitec.Common.Document
 			return Transform.RotatePointDeg(c, angle, p);
 		}
 
+		// Lors d'une déformation, la forme finale ne doit jamais contenir d'angle
+		// aigu, car Stretcher.Reverse ne s'en sort pas dans ce as.
+		protected bool IsCorrectGeometry()
+		{
+			if ( this.finalData.TypeInUse != SelectorType.Stretcher )  return true;
+
+			InsideSurface i;
+			
+			i = new InsideSurface(this.finalData.P1, 4);
+			i.AddLine(this.finalData.P3, this.finalData.P4);
+			i.AddLine(this.finalData.P4, this.finalData.P2);
+			i.AddLine(this.finalData.P2, this.finalData.P3);
+			if ( i.IsInside() )  return false;
+
+			i = new InsideSurface(this.finalData.P2, 4);
+			i.AddLine(this.finalData.P4, this.finalData.P3);
+			i.AddLine(this.finalData.P3, this.finalData.P1);
+			i.AddLine(this.finalData.P1, this.finalData.P4);
+			if ( i.IsInside() )  return false;
+
+			i = new InsideSurface(this.finalData.P3, 4);
+			i.AddLine(this.finalData.P2, this.finalData.P1);
+			i.AddLine(this.finalData.P1, this.finalData.P4);
+			i.AddLine(this.finalData.P4, this.finalData.P2);
+			if ( i.IsInside() )  return false;
+
+			i = new InsideSurface(this.finalData.P4, 4);
+			i.AddLine(this.finalData.P1, this.finalData.P2);
+			i.AddLine(this.finalData.P2, this.finalData.P3);
+			i.AddLine(this.finalData.P3, this.finalData.P1);
+			if ( i.IsInside() )  return false;
+
+			return true;
+		}
+
 
 		// Transforme un point.
-		static public Point DotTransform(Selector selector, Point pos)
+		public Point DotTransform(Point pos)
 		{
 			double sx=0.5, sy=0.5;
 
-			if ( selector.initialData.P1.X != selector.initialData.P2.X )
+			if ( this.initialData.P1.X != this.initialData.P2.X )
 			{
-				sx = (pos.X-selector.initialData.P1.X) / (selector.initialData.P2.X-selector.initialData.P1.X);
+				sx = (pos.X-this.initialData.P1.X) / (this.initialData.P2.X-this.initialData.P1.X);
 			}
 
-			if ( selector.initialData.P1.Y != selector.initialData.P2.Y )
+			if ( this.initialData.P1.Y != this.initialData.P2.Y )
 			{
-				sy = (pos.Y-selector.initialData.P1.Y) / (selector.initialData.P2.Y-selector.initialData.P1.Y);
+				sy = (pos.Y-this.initialData.P1.Y) / (this.initialData.P2.Y-this.initialData.P1.Y);
 			}
 
-			if ( selector.finalData.TypeInUse == SelectorType.Stretcher )
+			if ( this.finalData.TypeInUse == SelectorType.Stretcher )
 			{
-				Point p14 = Point.Scale(selector.finalData.P1, selector.finalData.P4, sx);
-				Point p32 = Point.Scale(selector.finalData.P3, selector.finalData.P2, sx);
-				pos = Point.Scale(p14, p32, sy);
+				Stretcher s = new Stretcher();
+
+				if ( this.initialData.P3.X == this.initialData.P1.X &&
+					 this.initialData.P3.Y == this.initialData.P2.Y &&
+					 this.initialData.P4.X == this.initialData.P2.X &&
+					 this.initialData.P4.Y == this.initialData.P1.Y )
+				{
+					// Si la forme initiale est rectangulaire, il suffit d'une
+					// simple transformation normale dans la forme de destination.
+					s.InitialRectangle = new Rectangle(this.initialData.P1, this.initialData.P2);
+					this.finalData.ToStretcher(s);
+					pos = s.Transform(pos);
+				}
+				else
+				{
+					// Si la forme initiale est quelconque, il faut d'abord effectuer
+					// une transformation inverse dans un rectangle arbitraire unité,
+					// puis ensuite effectuer une transformation normale de ce
+					// rectangle dans la forme de destination.
+					s.InitialRectangle = new Rectangle(0, 0, 1, 1);
+					this.initialData.ToStretcher(s);
+					pos = s.Reverse(pos);
+
+					this.finalData.ToStretcher(s);
+					pos = s.Transform(pos);
+				}
 			}
 			else
 			{
-				pos.X = selector.finalData.P1.X + sx*(selector.finalData.P2.X-selector.finalData.P1.X);
-				pos.Y = selector.finalData.P1.Y + sy*(selector.finalData.P2.Y-selector.finalData.P1.Y);
+				pos.X = this.finalData.P1.X + sx*(this.finalData.P2.X-this.finalData.P1.X);
+				pos.Y = this.finalData.P1.Y + sy*(this.finalData.P2.Y-this.finalData.P1.Y);
 
-				double rot = selector.finalData.Angle-selector.initialData.Angle;
+				double rot = this.finalData.Angle-this.initialData.Angle;
 				if ( rot != 0 )
 				{
-					pos = Transform.RotatePointDeg(selector.finalData.Center, rot, pos);
+					pos = Transform.RotatePointDeg(this.finalData.Center, rot, pos);
 				}
 			}
 
 			return pos;
+		}
+
+		// Retourne l'angle de rotation.
+		public double GetTransformAngle
+		{
+			get
+			{
+				return this.finalData.Angle-this.initialData.Angle;
+			}
+		}
+
+		// Retourne le facteur de zoom moyen.
+		public double GetTransformZoom
+		{
+			get
+			{
+				return (this.GetTransformZoomX+this.GetTransformZoomY)/2.0;
+			}
+		}
+
+		// Retourne le facteur de zoom horizontal.
+		public double GetTransformZoomX
+		{
+			get
+			{
+				double di = this.initialData.P2.X-this.initialData.P1.X;
+				double df = this.finalData.P2.X-this.finalData.P1.X;
+				return (di == 0) ? 1.0 : System.Math.Abs(df/di);
+			}
+		}
+
+		// Retourne le facteur de zoom vertical.
+		public double GetTransformZoomY
+		{
+			get
+			{
+				double di = this.initialData.P2.Y-this.initialData.P1.Y;
+				double df = this.finalData.P2.Y-this.finalData.P1.Y;
+				return (di == 0) ? 1.0 : System.Math.Abs(df/di);
+			}
 		}
 
 
@@ -904,6 +1029,14 @@ namespace Epsitec.Common.Document
 					//return (width+height)/4.0;
 					return System.Math.Min(width, height)*0.4;
 				}
+			}
+
+			public void ToStretcher(Stretcher stretcher)
+			{
+				stretcher.FinalBottomLeft  = this.p1;
+				stretcher.FinalBottomRight = this.p4;
+				stretcher.FinalTopLeft     = this.p3;
+				stretcher.FinalTopRight    = this.p2;
 			}
 
 			public void CopyTo(SelectorData dest)

@@ -104,8 +104,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.ConstrainSnapPos(ref pos);
-			drawingContext.SnapGrid(ref pos);
+			drawingContext.SnapPos(ref pos);
 
 			     if ( rank == 0 )  this.MoveCorner(pos, 0, 2,3, 1);
 			else if ( rank == 1 )  this.MoveCorner(pos, 1, 3,2, 0);
@@ -114,7 +113,7 @@ namespace Epsitec.Common.Document.Objects
 			else                   this.Handle(rank).Position = pos;
 
 			this.HandlePropertiesUpdate();
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.TextInfoModifRect();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -135,10 +134,9 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.SnapGrid(ref pos);
-			drawingContext.ConstrainSnapPos(ref pos);
+			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.TextInfoModifRect();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -148,8 +146,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 
-			drawingContext.SnapGrid(ref pos);
-			drawingContext.ConstrainSnapPos(ref pos);
+			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
 			drawingContext.ConstrainDelStarting();
 			drawingContext.MagnetClearStarting();
@@ -206,8 +203,26 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
-		// Calcule la géométrie de l'ellipse.
-		protected void ComputeGeometry(out Point center, out double rx, out double ry, out double angle)
+		// Calcule la position d'une poignée pour l'arc.
+		public Point ComputeArcHandle(double angle)
+		{
+			Stretcher stretcher = this.GetStretcher();
+			Point pos = Transform.RotatePointDeg(angle, new Point(0.5, 0.0));
+			return stretcher.Transform(pos);
+		}
+
+		// Calcule l'angle d'après la position de la souris.
+		public double ComputeArcHandle(Point pos)
+		{
+			Stretcher stretcher = this.GetStretcher();
+			pos = stretcher.Reverse(pos);
+			double angle = Point.ComputeAngleDeg(new Point(0.0, 0.0), pos);
+			if ( angle < 0.0 )  angle += 360.0;  // 0..360
+			return angle;
+		}
+
+		// Donne le stretcher à utiliser pour l'ellipse.
+		protected Stretcher GetStretcher()
 		{
 			Point p1 = this.Handle(0).Position;
 			Point p2 = new Point();
@@ -227,64 +242,25 @@ namespace Epsitec.Common.Document.Objects
 				p4 = this.Handle(3).Position;
 			}
 
-			center = new Point((p1.X+p2.X+p3.X+p4.X)/4.0, (p1.Y+p2.Y+p3.Y+p4.Y)/4.0);
-			rx = (Point.Distance(p1,p4) + Point.Distance(p2,p3))/4.0;
-			ry = (Point.Distance(p1,p2) + Point.Distance(p3,p4))/4.0;
-			angle = Point.ComputeAngleDeg(p1,p4);
-		}
+			Stretcher stretcher = new Stretcher();
+			stretcher.InitialRectangle = new Drawing.Rectangle(-0.5, 0.5, 1.0, -1.0);
+			stretcher.FinalBottomLeft  = p1;
+			stretcher.FinalTopLeft     = p2;
+			stretcher.FinalTopRight    = p3;
+			stretcher.FinalBottomRight = p4;
 
-		// Calcule la position d'une poignée pour l'arc.
-		public Point ComputeArcHandle(double angle)
-		{
-			Point center, p;
-			double rx, ry, rot;
-			this.ComputeGeometry(out center, out rx, out ry, out rot);
-
-			if ( rx == 0.0 || ry == 0.0 )
-			{
-				return center;
-			}
-			else
-			{
-				p = center;
-				p.X += rx;
-				p = Transform.RotatePointDeg(center, angle, p);
-				p.Y = (p.Y-center.Y)*(ry/rx)+center.Y;
-				return Transform.RotatePointDeg(center, rot, p);
-			}
-		}
-
-		// Calcule l'angle d'après la position de la souris.
-		public double ComputeArcHandle(Point pos)
-		{
-			Point center, p;
-			double rx, ry, rot;
-			this.ComputeGeometry(out center, out rx, out ry, out rot);
-
-			if ( rx == 0.0 || ry == 0.0 )
-			{
-				return 0.0;
-			}
-			else
-			{
-				p = Transform.RotatePointDeg(center, -rot, pos);
-				p.Y = (p.Y-center.Y)/(ry/rx)+center.Y;
-				double angle = Point.ComputeAngleDeg(center, p);
-				if ( angle < 0.0 )  angle += 360.0;  // 0..360
-				return angle;
-			}
+			return stretcher;
 		}
 
 		// Crée le chemin d'une ellipse inscrite dans un quadrilatère.
-		protected Path PathEllipse(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
+		protected Path PathEllipse(DrawingContext drawingContext)
 		{
-			Point center;
-			double rx, ry, rot;
-			this.ComputeGeometry(out center, out rx, out ry, out rot);
+			Stretcher stretcher = this.GetStretcher();
+			Point center = new Point(0.0, 0.0);
 
 			double zoom = Properties.Abstract.DefaultZoom(drawingContext);
-			Path rightPath = new Path();
-			rightPath.DefaultZoom = zoom;
+			Path path = new Path();
+			path.DefaultZoom = zoom;
 
 			Properties.Arc arc = this.PropertyArc;
 			double a1, a2;
@@ -300,50 +276,26 @@ namespace Epsitec.Common.Document.Objects
 			}
 			if ( a1 != a2 )
 			{
-				rightPath.ArcDeg(center, rx, ry, a1, a2, true);
+				Geometry.ArcBezierDeg(path, stretcher, center, 0.5, 0.5, a1, a2, true, false);
 			}
 
 			if ( arc.ArcType == Properties.ArcType.Close )
 			{
-				rightPath.Close();
+				path.Close();
 			}
 			if ( arc.ArcType == Properties.ArcType.Pie )
 			{
-				rightPath.LineTo(center);
-				rightPath.Close();
+				path.LineTo(stretcher.Transform(center));
+				path.Close();
 			}
 
-			Path rotPath = new Path();
-			rotPath.DefaultZoom = zoom;
-			Transform rotate = new Transform();
-			rotate.RotateDeg(rot, center);
-			rotPath.Append(rightPath, rotate, 0.0);
-			rightPath.Dispose();
-			return rotPath;
+			return path;
 		}
 
 		// Crée le chemin de l'objet.
 		protected Path PathBuild(DrawingContext drawingContext)
 		{
-			Point p1 = this.Handle(0).Position;
-			Point p2 = new Point();
-			Point p3 = this.Handle(1).Position;
-			Point p4 = new Point();
-
-			if ( this.handles.Count < 4 )
-			{
-				p2.X = p1.X;
-				p2.Y = p3.Y;
-				p4.X = p3.X;
-				p4.Y = p1.Y;
-			}
-			else
-			{
-				p2 = this.Handle(2).Position;
-				p4 = this.Handle(3).Position;
-			}
-
-			return this.PathEllipse(drawingContext, p1, p2, p3, p4);
+			return this.PathEllipse(drawingContext);
 		}
 
 		// Dessine l'objet.
@@ -354,9 +306,11 @@ namespace Epsitec.Common.Document.Objects
 			if ( this.TotalHandle < 2 )  return;
 
 			Path path = this.PathBuild(drawingContext);
-			this.PropertyFillGradient.RenderSurface(graphics, drawingContext, path, this.BoundingBoxThin);
+			this.surfaceAnchor.LineUse = false;
+			this.PropertyFillGradient.RenderSurface(graphics, drawingContext, path, this.surfaceAnchor);
 
-			this.PropertyLineMode.DrawPath(graphics, drawingContext, path, this.PropertyLineColor, this.BoundingBoxGeom);
+			this.surfaceAnchor.LineUse = true;
+			this.PropertyLineMode.DrawPath(graphics, drawingContext, path, this.PropertyLineColor, this.surfaceAnchor);
 
 			if ( this.IsHilite && drawingContext.IsActive )
 			{

@@ -32,14 +32,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 			ToolTip.Default.SetToolTip(this.sample, "Echantillon (cliquez pour remettre les valeurs standards)");
 
 			this.fieldColor1 = new ColorSample(this);
-			this.fieldColor1.PossibleOrigin = true;
+			this.fieldColor1.PossibleSource = true;
 			this.fieldColor1.Clicked += new MessageEventHandler(this.FieldColorClicked);
 			this.fieldColor1.TabIndex = 2;
 			this.fieldColor1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldColor1, "Couleur 1");
 
 			this.fieldColor2 = new ColorSample(this);
-			this.fieldColor2.PossibleOrigin = true;
+			this.fieldColor2.PossibleSource = true;
 			this.fieldColor2.Clicked += new MessageEventHandler(this.FieldColorClicked);
 			this.fieldColor2.TabIndex = 3;
 			this.fieldColor2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

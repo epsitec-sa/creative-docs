@@ -126,6 +126,24 @@ namespace Epsitec.Common.Document.Settings
 					this.factorStep = 10.0;
 					this.suffix = "%";
 					break;
+
+				case "DimensionScale":
+					this.text = "Echelle";
+					this.integer = true;
+					this.factorMinValue = 1.0;
+					this.factorMaxValue = 10000.0;
+					this.factorResolution = 0.1;
+					this.factorStep = 1.0;
+					this.suffix = "%";
+					break;
+
+				case "DimensionDecimal":
+					this.text = "Nombre de décimales";
+					this.integer = true;
+					this.factorMinValue = 0.0;
+					this.factorMaxValue = 4.0;
+					this.factorStep = 1.0;
+					break;
 			}
 		}
 
@@ -167,6 +185,12 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ToLinePrecision":
 						return this.document.Modifier.ToLinePrecision*100.0;
+
+					case "DimensionScale":
+						return this.document.Modifier.DimensionScale*100.0;
+
+					case "DimensionDecimal":
+						return this.document.Modifier.DimensionDecimal;
 				}
 
 				return 0.0;
@@ -218,6 +242,14 @@ namespace Epsitec.Common.Document.Settings
 
 					case "ToLinePrecision":
 						this.document.Modifier.ToLinePrecision = value/100.0;
+						break;
+
+					case "DimensionScale":
+						this.document.Modifier.DimensionScale = value/100.0;
+						break;
+
+					case "DimensionDecimal":
+						this.document.Modifier.DimensionDecimal = value;
 						break;
 				}
 			}

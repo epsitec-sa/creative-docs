@@ -426,21 +426,27 @@ namespace Epsitec.Common.Document.Panels
 				this.reset.SetEnabled(this.isExtendedSize);
 				this.fieldRepeat.SetEnabled(this.isExtendedSize);
 				this.fieldMiddle.SetEnabled(this.isExtendedSize);
+				this.labelRepeat.SetEnabled(this.isExtendedSize);
+				this.labelMiddle.SetEnabled(this.isExtendedSize);
 			}
 			else
 			{
 				this.reset.SetEnabled(false);
 				this.fieldRepeat.SetEnabled(false);
 				this.fieldMiddle.SetEnabled(false);
+				this.labelRepeat.SetEnabled(false);
+				this.labelMiddle.SetEnabled(false);
 			}
 
 			if ( sel == 1 || sel == 4 )  // linéaire ou cônique ?
 			{
 				this.fieldAngle.SetEnabled(this.isExtendedSize);
+				this.labelAngle.SetEnabled(this.isExtendedSize);
 			}
 			else
 			{
 				this.fieldAngle.SetEnabled(false);
+				this.labelAngle.SetEnabled(false);
 			}
 
 			if ( hatch )  // hachures ?

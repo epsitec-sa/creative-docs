@@ -49,10 +49,6 @@ namespace Epsitec.Common.Document.Panels
 			this.fontColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fontColor, "Couleur du texte par défaut");
 
-			this.labelSize = new StaticText(this);
-			this.labelSize.Text = "Taille";
-			this.labelSize.Alignment = ContentAlignment.MiddleLeft;
-
 			this.labelColor = new StaticText(this);
 			this.labelColor.Text = "Couleur";
 			this.labelColor.Alignment = ContentAlignment.MiddleLeft;
@@ -71,7 +67,6 @@ namespace Epsitec.Common.Document.Panels
 				this.fontColor.Changed -= new EventHandler(this.HandleFieldColorChanged);
 
 				this.label = null;
-				this.labelSize = null;
 				this.labelColor = null;
 				this.fontName = null;
 				this.fontSize = null;
@@ -87,7 +82,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			get
 			{
-				return ( this.isExtendedSize ? 80 : 55 );
+				return ( this.isExtendedSize ? 80 : 30 );
 			}
 		}
 
@@ -193,16 +188,8 @@ namespace Epsitec.Common.Document.Panels
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
 			r.Left = rect.Left;
-			r.Right = rect.Right-110;
-			this.label.Bounds = r;
-			r.Left = rect.Right-110;
-			r.Right = rect.Right;
-			this.fontName.Bounds = r;
-
-			r.Offset(0, -25);
-			r.Left = rect.Left;
 			r.Right = rect.Right-50;
-			this.labelSize.Bounds = r;
+			this.label.Bounds = r;
 			r.Left = rect.Right-50;
 			r.Right = rect.Right;
 			this.fontSize.Bounds = r;
@@ -216,6 +203,11 @@ namespace Epsitec.Common.Document.Panels
 			r.Right = rect.Right;
 			this.fontColor.Bounds = r;
 			this.fontColor.SetVisible(this.isExtendedSize);
+
+			r.Offset(0, -25);
+			r.Left = rect.Left;
+			r.Right = rect.Right;
+			this.fontName.Bounds = r;
 		}
 
 
@@ -257,7 +249,6 @@ namespace Epsitec.Common.Document.Panels
 
 
 		protected StaticText				label;
-		protected StaticText				labelSize;
 		protected StaticText				labelColor;
 		protected TextFieldCombo			fontName;
 		protected TextFieldReal				fontSize;

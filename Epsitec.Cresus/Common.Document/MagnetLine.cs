@@ -10,6 +10,7 @@ namespace Epsitec.Common.Document
 		public enum Type
 		{
 			Constrain,	// contrainte
+			Circle,		// cercle (contrainte de distance)
 			Main,		// segment principal détecté
 			Perp,		// perpendiculaire
 			Inter,		// intersection
@@ -48,6 +49,12 @@ namespace Epsitec.Common.Document
 		public bool IsMain
 		{
 			get { return this.type == Type.Main; }
+		}
+
+		// Indique s'il s'agit d'un cercle de distance.
+		public bool IsCircle
+		{
+			get { return this.type == Type.Circle; }
 		}
 
 		// Indique si la ligne est visible.
@@ -180,7 +187,8 @@ namespace Epsitec.Common.Document
 		public bool Detect(Point pos, double margin)
 		{
 			if ( !this.isUsed || !this.isVisible )  return false;
-			Point proj = Point.Projection(this.p1, this.p2, pos);
+
+			Point proj = this.Projection(pos);
 			return (Point.Distance(proj, pos) <= margin);
 		}
 
@@ -188,14 +196,57 @@ namespace Epsitec.Common.Document
 		public double Distance(Point pos)
 		{
 			if ( !this.isUsed || !this.isVisible )  return 1000000.0;
-			Point proj = Point.Projection(this.p1, this.p2, pos);
+
+			Point proj = this.Projection(pos);
 			return Point.Distance(proj, pos);
 		}
 
 		// Calcule la projection d'un point sur la ligne.
 		public Point Projection(Point pos)
 		{
-			return Point.Projection(this.p1, this.p2, pos);
+			if ( this.type == Type.Circle )
+			{
+				double radius = Point.Distance(this.p1, this.p2);
+				return Point.Move(this.p1, pos, radius);
+			}
+			else
+			{
+				return Point.Projection(this.p1, this.p2, pos);
+			}
+		}
+
+		// Calcule l'intersection entre deux lignes magnétiques.
+		// Est capable de trouver les intersections de deux droites, d'une droite
+		// et d'un cercle et de deux cercles.
+		static public Point[] Intersect(MagnetLine line1, MagnetLine line2)
+		{
+			if ( line1.IsCircle && line2.IsCircle )  // 2 cercles ?
+			{
+				double r1 = Point.Distance(line1.p1, line1.p2);
+				double r2 = Point.Distance(line2.p1, line2.p2);
+				return Geometry.Intersect(line1.p1, r1, line2.p1, r2);
+			}
+			else if ( line1.IsCircle || line2.IsCircle )  // 1 cercle et 1 ligne ?
+			{
+				MagnetLine circle, line;
+				if ( line1.IsCircle )
+				{
+					circle = line1;
+					line   = line2;
+				}
+				else
+				{
+					circle = line2;
+					line   = line1;
+				}
+
+				double r = Point.Distance(circle.p1, circle.p2);
+				return Geometry.Intersect(line.p1, line.p2, circle.p1, r);
+			}
+			else	// 2 lignes ?
+			{
+				return Geometry.Intersect(line1.p1, line1.p2, line2.p1, line2.p2);
+			}
 		}
 
 		// Essaie de pousser une position sur la ligne, si la distance est
@@ -203,7 +254,8 @@ namespace Epsitec.Common.Document
 		public bool Snap(ref Point pos, double margin)
 		{
 			if ( !this.isUsed || !this.isVisible )  return false;
-			Point proj = Point.Projection(this.p1, this.p2, pos);
+
+			Point proj = this.Projection(pos);
 			if ( Point.Distance(proj, pos) > margin )  return false;
 			pos = proj;
 			return true;
@@ -266,6 +318,22 @@ namespace Epsitec.Common.Document
 					Path path = new Path();
 					path.MoveTo(pp1);
 					path.LineTo(pp2);
+					Properties.Line.DrawPathDash(graphics, context, path, 1.0, 0.0, 3.0, DrawingContext.ColorConstrain);
+				}
+			}
+
+			if ( this.type == Type.Circle )  // contrainte de distance ?
+			{
+				if ( this.flyOver )
+				{
+					graphics.LineWidth = 2.0/this.context.ScaleX;
+					graphics.AddCircle(p1, Point.Distance(p1,p2));
+					graphics.RenderSolid(DrawingContext.ColorConstrain);
+				}
+				else
+				{
+					Path path = new Path();
+					path.AppendCircle(p1, Point.Distance(p1,p2));
 					Properties.Line.DrawPathDash(graphics, context, path, 1.0, 0.0, 3.0, DrawingContext.ColorConstrain);
 				}
 			}

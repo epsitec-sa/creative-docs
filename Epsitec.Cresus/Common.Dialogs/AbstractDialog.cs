@@ -1,4 +1,4 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Dialogs
@@ -29,6 +29,11 @@ namespace Epsitec.Common.Dialogs
 				{
 					Drawing.Rectangle owner_bounds  = owner.WindowBounds;
 					Drawing.Rectangle dialog_bounds = this.Window.WindowBounds;
+					
+					if (owner.IsMinimized)
+					{
+						owner_bounds = Widgets.ScreenInfo.AllScreens[0].Bounds;
+					}
 					
 					double ox = System.Math.Floor (owner_bounds.Left + (owner_bounds.Width - dialog_bounds.Width) / 2);
 					double oy = System.Math.Floor (owner_bounds.Top  - (owner_bounds.Height - dialog_bounds.Height) / 3 - dialog_bounds.Height);

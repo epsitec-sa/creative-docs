@@ -38,22 +38,40 @@ namespace Epsitec.Common.Document.Properties
 			this.effect1   = new double[2];
 			this.effect2   = new double[2];
 
-			this.arrowType[0] = ArrowType.Right;
-			this.arrowType[1] = ArrowType.Right;
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
-				this.length[0] = 10.0;
-				this.length[1] = 10.0;
+				this.length[0] = 5.0;
+				this.length[1] = 5.0;
 			}
 			else
 			{
 				this.length[0] = 100.0;
 				this.length[1] = 100.0;
 			}
-			this.effect1[0] = 0.5;
-			this.effect1[1] = 0.5;
-			this.effect2[0] = 0.5;
-			this.effect2[1] = 0.5;
+
+			if ( this.type == Type.DimensionArrow )
+			{
+				this.length[0] = 50.0;
+				this.length[1] = 50.0;
+
+				this.arrowType[0] = ArrowType.ArrowSimply;
+				this.arrowType[1] = ArrowType.ArrowSimply;
+
+				this.effect1[0] = 0.2;
+				this.effect1[1] = 0.2;
+				this.effect2[0] = 1.0;
+				this.effect2[1] = 1.0;
+			}
+			else
+			{
+				this.arrowType[0] = ArrowType.Right;
+				this.arrowType[1] = ArrowType.Right;
+
+				this.effect1[0] = 0.5;
+				this.effect1[1] = 0.5;
+				this.effect2[0] = 0.5;
+				this.effect2[1] = 0.5;
+			}
 		}
 
 		public ArrowType ArrowType1

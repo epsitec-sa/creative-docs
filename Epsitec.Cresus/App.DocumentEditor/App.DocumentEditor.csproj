@@ -323,6 +323,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\ArrowGlobal.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\ArrowPlus.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -392,6 +396,42 @@
                 />
                 <File
                     RelPath = "Images\Deselect.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Dimension.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\DimensionAuto.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\DimensionCenterOrLeft.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\DimensionCenterOrRight.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\DimensionInside.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\DimensionLeft.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\DimensionOutside.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\DimensionRight.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\DimensionRotateText.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -796,6 +836,18 @@
                 />
                 <File
                     RelPath = "Images\SelectInvert.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SelectorAdaptGradient.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SelectorAdaptLine.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SelectorAdaptText.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

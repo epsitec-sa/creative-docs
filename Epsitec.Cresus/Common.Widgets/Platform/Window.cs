@@ -515,6 +515,7 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
+		
 		internal Drawing.Rectangle				WindowBounds
 		{
 			get
@@ -1782,8 +1783,21 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal void ShowDialogWindow()
 		{
+//			if (this.Owner != null)
+//			{
+//				if (Win32Api.IsWindowVisible (this.Owner.Handle) == false)
+//				{
+//					this.Owner.Show ();
+//				}
+//				if (Win32Api.IsIconic (this.Owner.Handle))
+//				{
+//					Win32Api.ShowWindow (this.Owner.Handle, Win32Const.SW_RESTORE);
+//				}
+//			}
+			
 			System.Windows.Forms.Application.DoEvents ();
 			this.UpdateLayeredWindow ();
+			
 			this.ShowDialog (this.Owner);
 		}
 		

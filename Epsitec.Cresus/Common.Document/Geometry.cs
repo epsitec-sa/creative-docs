@@ -416,7 +416,7 @@ namespace Epsitec.Common.Document
 		//		P = OC + b*CD
 		//
 		// Traite les cas particuliers des segments confondus ou parallèles.
-		public static bool Intersect(Point a, Point b, Point c, Point d, out Point p)
+		public static Point[] Intersect(Point a, Point b, Point c, Point d)
 		{
 			double	q,r,s,t,u,v;
 
@@ -427,19 +427,21 @@ namespace Epsitec.Common.Document
 			u = c.Y-d.Y;
 			v = c.Y-a.Y;
 
-			p = new Point(0,0);
+			Point p = new Point();
+			Point[] table = new Point[1];
 
 			if ( q == 0.0 )  // ab vertical ?
 			{
 				if ( r == 0.0 )  // cd vertical ?
 				{
-					return false;
+					return null;
 				}
 				else
 				{
 					p.X = ((d.X-c.X)*s/r)+c.X;
 					p.Y = ((d.Y-c.Y)*s/r)+c.Y;
-					return true;
+					table[0] = p;
+					return table;
 				}
 			}
 
@@ -451,12 +453,13 @@ namespace Epsitec.Common.Document
 
 			if ( u == 0.0 )
 			{
-				return false;
+				return null;
 			}
 
 			p.X = ((d.X-c.X)*v/u)+c.X;
 			p.Y = ((d.Y-c.Y)*v/u)+c.Y;
-			return true;
+			table[0] = p;
+			return table;
 		}
 
 		// Teste si un point p est entre les points a et b du segment ab.
@@ -465,6 +468,111 @@ namespace Epsitec.Common.Document
 			if ( p == a || p == b )  return true;
 			double length = Point.Distance(a,b);
 			return ( Point.Distance(a,p) <= length && Point.Distance(b,p) <= length );
+		}
+
+
+		// Calcule le ou les deux points d'intersection entre une droite ab et
+		// un cercle de centre c et de rayon r.
+		public static Point[] Intersect(Point a, Point b, Point c, double r)
+		{
+			double angle = Point.ComputeAngleDeg(a, b);
+			a = Transform.RotatePointDeg(-angle, a-c);
+			if ( a.Y < -r || a.Y > r )  return null;
+
+			if ( a.Y == r || a.Y == -r )
+			{
+				Point i = new Point(0, a.Y);
+				i = Transform.RotatePointDeg(angle, i)+c;
+				Point[] table = new Point[1];
+				table[0] = i;
+				return table;
+			}
+			else
+			{
+				double x = System.Math.Sqrt(r*r - a.Y*a.Y);
+				Point i1 = new Point( x, a.Y);
+				Point i2 = new Point(-x, a.Y);
+				i1 = Transform.RotatePointDeg(angle, i1)+c;
+				i2 = Transform.RotatePointDeg(angle, i2)+c;
+				Point[] table = new Point[2];
+				table[0] = i1;
+				table[1] = i2;
+				return table;
+			}
+		}
+
+		// Calcule le ou les deux points d'intersection entre deux cercles.
+		public static Point[] Intersect(Point a, double ra, Point b, double rb)
+		{
+			double d = Point.Distance(a, b);
+
+			if ( d > ra+rb )
+			{
+				return null;
+			}
+
+			if ( d == ra+rb )
+			{
+				Point[] table = new Point[1];
+				table[0] = Point.Move(a, b, ra);
+				return table;
+			}
+
+			if ( a.Y == b.Y )
+			{
+				double sqr = ((ra*ra-rb*rb+a.X*a.X+b.X*b.X-2*a.X*b.X)/(2*(b.X-a.X)));
+				sqr = System.Math.Pow(sqr, 2);
+				sqr = ra*ra - sqr;
+				sqr = System.Math.Sqrt(sqr);
+
+				Point p = new Point();
+				Point q = new Point();
+				p.X = q.X = (ra*ra-rb*rb-a.X*a.X+b.X*b.X)/(2*(b.X-a.X));
+				p.Y = a.Y + sqr;
+				q.Y = a.Y - sqr;
+
+				Point[] table = new Point[2];
+				table[0] = p;
+				table[1] = q;
+				return table;
+			}
+
+			double A = 2*(b.X-a.X);
+			double B = 2*(b.Y-a.Y);
+			double C = System.Math.Pow(b.X-a.X, 2) + System.Math.Pow(b.Y-a.Y, 2) - rb*rb + ra*ra;
+			double delta = System.Math.Pow(2*A*C, 2) - 4*(A*A+B*B)*(C*C-B*B*ra*ra);
+
+			if ( B == 0 )
+			{
+				Point p = new Point();
+				Point q = new Point();
+				double sqr = System.Math.Sqrt(delta);
+				p.X = a.X + (2*A*C-sqr)/(2*(A*A+B*B));
+				q.X = a.X + (2*A*C+sqr)/(2*(A*A+B*B));
+				double sqr2 = System.Math.Sqrt(rb*rb - System.Math.Pow((2*C-A*A)/2*A, 2));
+				p.Y = a.Y + B/2 + sqr2;
+				q.Y = a.Y + B/2 - sqr2;
+
+				Point[] table = new Point[2];
+				table[0] = p;
+				table[1] = q;
+				return table;
+			}
+			else
+			{
+				Point p = new Point();
+				Point q = new Point();
+				double sqr = System.Math.Sqrt(delta);
+				p.X = a.X + (2*A*C-sqr)/(2*(A*A+B*B));
+				q.X = a.X + (2*A*C+sqr)/(2*(A*A+B*B));
+				p.Y = a.Y + (C-A*(p.X-a.X))/B;
+				q.Y = a.Y + (C-A*(q.X-a.X))/B;
+
+				Point[] table = new Point[2];
+				table[0] = p;
+				table[1] = q;
+				return table;
+			}
 		}
 
 		
@@ -479,7 +587,7 @@ namespace Epsitec.Common.Document
 		}
 
 		// Teste si 3 points forment un angle droit.
-		protected static bool IsRight(Point p1, Point corner, Point p2)
+		public static bool IsRight(Point p1, Point corner, Point p2)
 		{
 			Point p = Point.Projection(p1, corner, p2);
 			return Point.Distance(p, corner) < 0.00001;
@@ -492,6 +600,118 @@ namespace Epsitec.Common.Document
 			double dx = System.Math.Abs(a.X-b.X);
 			double dy = System.Math.Abs(a.Y-b.Y);
 			return ( dx < 0.0000001 && dy < 0.0000001 );
+		}
+
+
+		// Calcule l'hypothénuse d'un triangle rectangle.
+		public static double Hypothenus(double a, double b)
+		{
+			return System.Math.Sqrt(a*a + b*b);
+		}
+
+	
+		// Génère un arc de cercle à l'aide d'un maximun de 4 courbes de Bézier.
+		// Retourne le point d'arrivée.
+		public static Point ArcBezierDeg(Path path, Stretcher stretcher, Point c, double rx, double ry, double a1, double a2, bool ccw, bool continuePath)
+		{
+			Point r = new Point(rx, ry);
+			Point p2 = new Point();
+			
+			a1 = Math.DegToRad(a1);
+			a2 = Math.DegToRad(a2);
+			a1 = Math.ClipAngleRad(a1);
+			a2 = Math.ClipAngleRad(a2);
+			
+			if ( System.Math.Abs(a1-a2) < 0.0000001 )
+			{
+				a2 = a1;
+			}
+			
+			if ( ccw )
+			{
+				if ( a2 <= a1 )
+				{
+					a2 += System.Math.PI * 2.0;
+				}
+				
+				while ( a1 < a2 )
+				{
+					double aa = System.Math.Min(a1 + System.Math.PI/2.0, a2);
+					double k  = Geometry.GetArcBezierKappaRad(aa - a1);
+					
+					Point p1, s1, s2;
+					
+					Geometry.ArcBezierPSRad(a1, k,  ccw, out p1, out s1);
+					Geometry.ArcBezierPSRad(aa, k, !ccw, out p2, out s2);
+					
+					p1 = c + Point.ScaleMul(p1, r);
+					s1 = c + Point.ScaleMul(s1, r);
+					s2 = c + Point.ScaleMul(s2, r);
+					p2 = c + Point.ScaleMul(p2, r);
+
+					if ( !continuePath )
+					{
+						continuePath = true;
+						path.MoveTo(stretcher.Transform(p1));
+					}
+					path.CurveTo(stretcher.Transform(s1), stretcher.Transform(s2), stretcher.Transform(p2));
+					a1 = aa;
+				}
+			}
+			else
+			{
+				if ( a2 >= a1 )
+				{
+					a2 -= System.Math.PI * 2.0;
+				}
+				
+				while ( a1 > a2 )
+				{
+					double aa = System.Math.Max(a1 - System.Math.PI/2.0, a2);
+					double k  = Geometry.GetArcBezierKappaRad(a1 - aa);
+					
+					Point p1, s1, s2;
+					
+					Geometry.ArcBezierPSRad(a1, k,  ccw, out p1, out s1);
+					Geometry.ArcBezierPSRad(aa, k, !ccw, out p2, out s2);
+					
+					p1 = c + Point.ScaleMul(p1, r);
+					s1 = c + Point.ScaleMul(s1, r);
+					s2 = c + Point.ScaleMul(s2, r);
+					p2 = c + Point.ScaleMul(p2, r);
+					
+					if ( !continuePath )
+					{
+						continuePath = true;
+						path.MoveTo(stretcher.Transform(p1));
+					}
+					path.CurveTo(stretcher.Transform(s1), stretcher.Transform(s2), stretcher.Transform(p2));
+					a1 = aa;
+				}
+			}
+			
+			return p2;
+		}
+
+		// Calcule le point principal et le point secondaire d'un arc de Bézier
+		// de rayon 1 et de centre (0;0).
+		protected static void ArcBezierPSRad(double a, double k, bool ccw, out Point p, out Point s)
+		{
+			p = new Point(System.Math.Cos(a), System.Math.Sin(a));
+			s = (ccw) ? new Point(p.X - System.Math.Sin(a)*k, p.Y + System.Math.Cos(a)*k)
+					  : new Point(p.X + System.Math.Sin(a)*k, p.Y - System.Math.Cos(a)*k);
+		}
+
+		// Détermine le facteur kappa en fonction de l'angle (0..PI/2).
+		protected static double GetArcBezierKappaRad(double a)
+		{
+			double sin = System.Math.Sin(a/2.0);
+			double cos = System.Math.Cos(a/2.0);
+			
+			double dx = (4.0-4.0*cos)/3.0;
+			double dy = sin+(1.0-cos)*(cos-3.0)/(3.0*sin);
+			
+			return System.Math.Sqrt(dx*dx + dy*dy);
 		}
 	}
 }

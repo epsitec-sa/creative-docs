@@ -1077,6 +1077,12 @@ namespace Epsitec.Common.Document
 			get { return this.handleSize/this.ScaleX; }
 		}
 
+		// Taille de la zone à redessiner d'une poignée.
+		public double HandleRedrawSize
+		{
+			get { return (this.handleSize+1.0)/this.ScaleX; }
+		}
+
 		// Marge à ajouter à la bbox lors du dessin, pour résoudre le cas des poignées
 		// qui débordent d'un objet avec un trait mince, et du mode Hilite qui augmente
 		// l'épaisseur lors du survol de la souris.
@@ -1221,6 +1227,15 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Indique s'il existe des lignes magnétiques activées.
+		public bool MagnetActiveAndExist
+		{
+			get
+			{
+				return (this.magnetActive && this.magnetLayerList.Count > 0);
+			}
+		}
+
 		// Annule le point de départ.
 		public void MagnetClearStarting()
 		{
@@ -1235,14 +1250,14 @@ namespace Epsitec.Common.Document
 		}
 
 		// Retourne une position éventuellement contrainte.
-		public void MagnetSnapPos(ref Point pos)
+		public bool MagnetSnapPos(ref Point pos)
 		{
-			if ( !this.magnetActive )  return;
+			if ( !this.magnetActive )  return false;
 
 			if ( this.isCtrl )
 			{
 				this.MagnetDelStarting();
-				return;
+				return false;
 			}
 
 			if ( this.isMagnetStarting && this.magnetLineMain.IsUsed )
@@ -1252,7 +1267,7 @@ namespace Epsitec.Common.Document
 				{
 					this.magnetLineProj.Initialise(proj, this.magnetStarting, false);
 					pos = proj;
-					return;
+					return true;
 				}
 			}
 			this.magnetLineProj.Clear();
@@ -1405,9 +1420,8 @@ namespace Epsitec.Common.Document
 					Point p1, p2;
 					if ( this.document.Modifier.MagnetLayerDetect(pos, this.magnetLineMain.P1, this.magnetLineMain.P2, out p1, out p2) )
 					{
-						Point inter;
-						if ( Geometry.Intersect(first.P1, first.P2, p1, p2, out inter) &&
-							Geometry.IsInside(p1, p2, inter) )
+						Point[] inter = Geometry.Intersect(first.P1, first.P2, p1, p2);
+						if ( inter != null && Geometry.IsInside(p1, p2, inter[0]) )
 						{
 							this.magnetLineInter.Initialise(p1, p2, false);
 							second = this.magnetLineInter;
@@ -1431,14 +1445,20 @@ namespace Epsitec.Common.Document
 				{
 					this.magnetLineInter.Clear();
 					pos = first.Projection(pos);
-					return;
+					return true;
 				}
 				else
 				{
-					Geometry.Intersect(first.P1, first.P2, second.P1, second.P2, out pos);
-					return;
+					Point[] inter = Geometry.Intersect(first.P1, first.P2, second.P1, second.P2);
+					if ( inter != null )
+					{
+						pos = inter[0];
+						return true;
+					}
 				}
 			}
+
+			return false;
 		}
 
 		// Enlève le point initial pour les lignes magnétiques.
@@ -1549,14 +1569,33 @@ namespace Epsitec.Common.Document
 			this.constrainList.Add(line);
 		}
 
+		// Ajoute une contrainte de distance (circulaire).
+		public void ConstrainAddCircle(Point center, Point ext)
+		{
+			if ( center == ext )  return;
+
+			MagnetLine line = new MagnetLine(this.document, this, MagnetLine.Type.Circle);
+			line.Initialise(center, ext, true, false);
+
+			line.IsVisible = this.isCtrl;
+			this.constrainList.Add(line);
+		}
+
+		// Retourne une position éventuellement contrainte, d'abord sur une
+		// contrainte magnétique, sinon sur la grille.
+		public void SnapPos(ref Point pos)
+		{
+			if ( this.ConstrainSnapPos(ref pos) )  return;
+			this.SnapGrid(ref pos);
+		}
+
 		// Retourne une position éventuellement contrainte, en fonction du nombre
 		// quelconque de contraintes existantes.
-		public void ConstrainSnapPos(ref Point pos)
+		public bool ConstrainSnapPos(ref Point pos)
 		{
 			if ( !this.isCtrl )
 			{
-				this.MagnetSnapPos(ref pos);
-				return;
+				return this.MagnetSnapPos(ref pos);
 			}
 
 			// Met toutes les lignes proches dans une table avec les distances
@@ -1576,7 +1615,7 @@ namespace Epsitec.Common.Document
 				}
 				line.Temp = false;
 			}
-			
+
 			bool snap = false;
 			if ( detect >= 2 )
 			{
@@ -1606,12 +1645,22 @@ namespace Epsitec.Common.Document
 				while ( more );
 
 				// Calcule l'intersection entre les 2 lignes les plus proches.
-				Point inter = pos;
-				if ( Geometry.Intersect(table[0].P1, table[0].P2, table[1].P1, table[1].P2, out inter) )
+				Point[] inter = MagnetLine.Intersect(table[0], table[1]);
+				if ( inter != null )
 				{
-					if ( Point.Distance(pos, inter) <= this.MagnetMargin )
+					if ( inter.Length == 2 )
 					{
-						pos = inter;
+						double d1 = Point.Distance(pos, inter[0]);
+						double d2 = Point.Distance(pos, inter[1]);
+						if ( d2 < d1 )
+						{
+							inter[0] = inter[1];
+						}
+					}
+
+					if ( Point.Distance(pos, inter[0]) <= this.MagnetMargin )
+					{
+						pos = inter[0];
 						table[0].Temp = true;
 						table[1].Temp = true;
 						snap = true;
@@ -1635,6 +1684,7 @@ namespace Epsitec.Common.Document
 			{
 				table[0].Snap(ref pos, margin);
 				table[0].Temp = true;
+				snap = true;
 			}
 
 			// Modifie la propriété FlyOver une seule fois, pour éviter de redessiner
@@ -1643,6 +1693,8 @@ namespace Epsitec.Common.Document
 			{
 				line.FlyOver = line.Temp;
 			}
+
+			return snap;
 		}
 
 		// Met à jour les contraintes en fonction de la touche Ctrl.

@@ -55,6 +55,8 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultDouble("Settings", "ArrowMoveDiv");
 			this.CreateDefaultDouble("Settings", "ToLinePrecision");
 			this.CreateDefaultInteger("Settings", "DefaultUnit");
+			this.CreateDefaultDouble("Settings", "DimensionScale");
+			this.CreateDefaultDouble("Settings", "DimensionDecimal");
 
 			this.CreateDefaultString("Print", "PrintName");
 			this.CreateDefaultRange("Print", "PrintRange");

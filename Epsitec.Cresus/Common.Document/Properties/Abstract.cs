@@ -31,6 +31,9 @@ namespace Epsitec.Common.Document.Properties
 		FillGradientVT = 19,	// dégradé de remplissage volume top
 		FillGradientVL = 20,	// dégradé de remplissage volume left
 		FillGradientVR = 21,	// dégradé de remplissage volume right
+		DimensionArrow = 22,	// extrémité des cotes
+		Dimension      = 23,	// cotes
+		LineDimension  = 24,	// lignes secondaires d'une cote
 	}
 
 	/// <summary>
@@ -60,7 +63,10 @@ namespace Epsitec.Common.Document.Properties
 				case Type.Name:           property = new Name(document, type);      break;
 				case Type.LineColor:      property = new Gradient(document, type);  break;
 				case Type.LineMode:       property = new Line(document, type);      break;
+				case Type.LineDimension:  property = new Line(document, type);      break;
 				case Type.Arrow:          property = new Arrow(document, type);     break;
+				case Type.DimensionArrow: property = new Arrow(document, type);     break;
+				case Type.Dimension:      property = new Dimension(document, type); break;
 				case Type.FillGradient:   property = new Gradient(document, type);  break;
 				case Type.FillGradientVT: property = new Gradient(document, type);  break;
 				case Type.FillGradientVL: property = new Gradient(document, type);  break;
@@ -101,25 +107,28 @@ namespace Epsitec.Common.Document.Properties
 			{
 				case Type.Name:           return 1;
 				case Type.LineMode:       return 2;
-				case Type.Arrow:          return 3;
-				case Type.LineColor:      return 4;
-				case Type.FillGradient:   return 5;
-				case Type.FillGradientVT: return 6;
-				case Type.FillGradientVL: return 7;
-				case Type.FillGradientVR: return 8;
-				case Type.BackColor:      return 9;
-				case Type.Shadow:         return 10;
-				case Type.PolyClose:      return 11;
-				case Type.Corner:         return 12;
-				case Type.Regular:        return 13;
-				case Type.Arc:            return 14;
-				case Type.Surface:        return 15;
-				case Type.Volume:         return 16;
-				case Type.TextFont:       return 17;
-				case Type.TextJustif:     return 18;
-				case Type.TextLine:       return 19;
-				case Type.Image:          return 20;
-				case Type.ModColor:       return 21;
+				case Type.LineDimension:  return 3;
+				case Type.Arrow:          return 4;
+				case Type.DimensionArrow: return 5;
+				case Type.LineColor:      return 6;
+				case Type.FillGradient:   return 7;
+				case Type.FillGradientVT: return 8;
+				case Type.FillGradientVL: return 9;
+				case Type.FillGradientVR: return 10;
+				case Type.BackColor:      return 11;
+				case Type.Shadow:         return 12;
+				case Type.PolyClose:      return 13;
+				case Type.Corner:         return 14;
+				case Type.Regular:        return 15;
+				case Type.Arc:            return 16;
+				case Type.Surface:        return 17;
+				case Type.Volume:         return 18;
+				case Type.TextFont:       return 19;
+				case Type.TextJustif:     return 20;
+				case Type.TextLine:       return 21;
+				case Type.Image:          return 22;
+				case Type.ModColor:       return 23;
+				case Type.Dimension:      return 24;
 			}
 			return 0;
 		}
@@ -232,7 +241,10 @@ namespace Epsitec.Common.Document.Properties
 				case Type.Name:           return 0.70;
 				case Type.LineColor:      return 0.85;
 				case Type.LineMode:       return 0.85;
+				case Type.LineDimension:  return 0.85;
 				case Type.Arrow:          return 0.85;
+				case Type.DimensionArrow: return 0.85;
+				case Type.Dimension:      return 0.85;
 				case Type.FillGradient:   return 0.95;
 				case Type.FillGradientVT: return 0.95;
 				case Type.FillGradientVL: return 0.95;
@@ -262,6 +274,7 @@ namespace Epsitec.Common.Document.Properties
 				case Type.Name:           return "Nom";
 				case Type.LineColor:      return "Couleur trait";
 				case Type.LineMode:       return "Epaisseur trait";
+				case Type.LineDimension:  return "Epaisseur supports";
 				case Type.FillGradient:   return "Couleur intérieure";
 				case Type.FillGradientVT: return "Couleur couvercle";
 				case Type.FillGradientVL: return "Couleur flanc gauche";
@@ -269,6 +282,8 @@ namespace Epsitec.Common.Document.Properties
 				case Type.Shadow:         return "Ombre";
 				case Type.PolyClose:      return "Contour fermé";
 				case Type.Arrow:          return "Extrémités";
+				case Type.DimensionArrow: return "Extrém. cote";
+				case Type.Dimension:      return "Cote";
 				case Type.Corner:         return "Coins";
 				case Type.Regular:        return "Nombre de côtés";
 				case Type.Arc:            return "Arc";
@@ -362,7 +377,7 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Engraisse la bbox en fonction de la propriété.
-		public virtual void InflateBoundingBox(Rectangle bbox, ref Rectangle bboxFull)
+		public virtual void InflateBoundingBox(SurfaceAnchor sa, ref Rectangle bboxFull)
 		{
 		}
 
@@ -468,6 +483,16 @@ namespace Epsitec.Common.Document.Properties
 			obj.HandlePropertiesUpdate();
 
 			this.document.Notifier.NotifyPropertyChanged(this);
+		}
+
+		// Début du déplacement global de la propriété.
+		public virtual void MoveGlobalStarting()
+		{
+		}
+		
+		// Effectue le déplacement global de la propriété.
+		public virtual void MoveGlobalProcess(Selector selector)
+		{
 		}
 		
 		// Dessine les traits de construction avant les poignées.

@@ -39,7 +39,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			ToolTip.Default.SetToolTip(this.fontSize, "Taille du texte par défaut");
 
 			this.fontColor = new ColorSample(this);
-			this.fontColor.PossibleOrigin = true;
+			this.fontColor.PossibleSource = true;
 			this.fontColor.Clicked += new MessageEventHandler(this.HandleColorClicked);
 			this.fontColor.TabIndex = 4;
 			this.fontColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -537,6 +537,8 @@ namespace Epsitec.Common.Types
 		
 		public static string ExtractDecimal(ref string value)
 		{
+			char dot_char = System.Threading.Thread.CurrentThread.CurrentCulture.NumberFormat.NumberDecimalSeparator[0];
+			
 			if (value == null)
 			{
 				return null;
@@ -564,7 +566,7 @@ namespace Epsitec.Common.Types
 				{
 					continue;
 				}
-				if ((c == '.') &&
+				if ((c == dot_char) &&
 					(dot == false))
 				{
 					dot = true;

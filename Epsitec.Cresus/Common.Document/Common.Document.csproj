@@ -204,6 +204,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Stretcher.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SurfaceAnchor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "UndoableList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -285,6 +295,11 @@
                 />
                 <File
                     RelPath = "Objects\Circle.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Objects\Dimension.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -394,6 +409,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Panels\Dimension.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Panels\Font.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -495,6 +515,11 @@
                 />
                 <File
                     RelPath = "Properties\Corner.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\Dimension.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

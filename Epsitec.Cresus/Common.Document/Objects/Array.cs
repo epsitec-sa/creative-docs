@@ -378,8 +378,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.ConstrainSnapPos(ref pos);
-			drawingContext.SnapGrid(ref pos);
+			drawingContext.SnapPos(ref pos);
 
 			if ( rank < 4 )
 			{
@@ -453,7 +452,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.UpdateHandle();
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -1200,10 +1199,9 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.SnapGrid(ref pos);
-			drawingContext.ConstrainSnapPos(ref pos);
+			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -1222,8 +1220,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( this.draftStep == 1 )  // choix du nombre de cellules ?
 			{
-				drawingContext.SnapGrid(ref pos);
-				drawingContext.ConstrainSnapPos(ref pos);
+				drawingContext.SnapPos(ref pos);
 				this.Handle(1).Position = pos;
 				drawingContext.ConstrainDelStarting();
 

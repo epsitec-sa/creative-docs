@@ -89,6 +89,10 @@ namespace Epsitec.Common.Document.Objects
 					drawingContext.ConstrainAddHV(this.Handle(0).Position);
 					drawingContext.ConstrainAddHV(this.Handle(1).Position);
 					drawingContext.ConstrainAddLine(this.Handle(0).Position, this.Handle(1).Position);
+					if ( rank == 0 || rank == 1 )
+					{
+						drawingContext.ConstrainAddCircle(this.Handle(rank^1).Position, this.Handle(rank).Position);
+					}
 				}
 				else
 				{
@@ -121,8 +125,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.ConstrainSnapPos(ref pos);
-			drawingContext.SnapGrid(ref pos);
+			drawingContext.SnapPos(ref pos);
 
 			if ( rank == 0 )  // p1 ?
 			{
@@ -133,7 +136,7 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(1).Position = pos;
 			}
 			this.HandlePropertiesUpdate();
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.TextInfoModifLine();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -172,10 +175,9 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.SnapGrid(ref pos);
-			drawingContext.ConstrainSnapPos(ref pos);
+			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.TextInfoModifLine();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -184,8 +186,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseUp(Point pos, DrawingContext drawingContext)
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.SnapGrid(ref pos);
-			drawingContext.ConstrainSnapPos(ref pos);
+			drawingContext.SnapPos(ref pos);
 			this.Handle(1).Position = pos;
 			drawingContext.ConstrainDelStarting();
 			drawingContext.MagnetClearStarting();
@@ -287,23 +288,28 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( outlineStart )
 			{
-				this.PropertyLineMode.DrawPath(graphics, drawingContext, pathStart, this.PropertyLineColor, this.BoundingBoxGeom);
+				this.surfaceAnchor.LineUse = true;
+				this.PropertyLineMode.DrawPath(graphics, drawingContext, pathStart, this.PropertyLineColor, this.surfaceAnchor);
 			}
 			if ( surfaceStart )
 			{
-				this.PropertyLineColor.RenderSurface(graphics, drawingContext, pathStart, this.BoundingBoxThin);
+				this.surfaceAnchor.LineUse = false;
+				this.PropertyLineColor.RenderSurface(graphics, drawingContext, pathStart, this.surfaceAnchor);
 			}
 
 			if ( outlineEnd )
 			{
-				this.PropertyLineMode.DrawPath(graphics, drawingContext, pathEnd, this.PropertyLineColor, this.BoundingBoxGeom);
+				this.surfaceAnchor.LineUse = true;
+				this.PropertyLineMode.DrawPath(graphics, drawingContext, pathEnd, this.PropertyLineColor, this.surfaceAnchor);
 			}
 			if ( surfaceEnd )
 			{
-				this.PropertyLineColor.RenderSurface(graphics, drawingContext, pathEnd, this.BoundingBoxThin);
+				this.surfaceAnchor.LineUse = false;
+				this.PropertyLineColor.RenderSurface(graphics, drawingContext, pathEnd, this.surfaceAnchor);
 			}
 
-			this.PropertyLineMode.DrawPath(graphics, drawingContext, pathLine, this.PropertyLineColor, this.BoundingBoxGeom);
+			this.surfaceAnchor.LineUse = true;
+			this.PropertyLineMode.DrawPath(graphics, drawingContext, pathLine, this.PropertyLineColor, this.surfaceAnchor);
 
 			if ( this.IsHilite && drawingContext.IsActive )
 			{
@@ -419,7 +425,7 @@ namespace Epsitec.Common.Document.Objects
 		{
 			this.HandleAdd(p1, HandleType.Primary);
 			this.HandleAdd(p2, HandleType.Primary);
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 		}
 
 

@@ -174,7 +174,8 @@ namespace Epsitec.Common.Designer
 			panel.Dock   = DockStyle.Fill;
 			panel.Parent = this.main_window.Root;
 			
-			this.main_window.MakeFixedSizeWindow ();
+			this.main_window.ClientSize = new Drawing.Size (400, 800);
+//			this.main_window.MakeFixedSizeWindow ();
 			this.main_window.ClientSize = new Drawing.Size (312, 704);
 		}
 		

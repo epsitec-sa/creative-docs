@@ -18,7 +18,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
 
 			this.fieldColor = new ColorSample(this);
-			this.fieldColor.PossibleOrigin = true;
+			this.fieldColor.PossibleSource = true;
 			this.fieldColor.Clicked += new MessageEventHandler(this.FieldColorClicked);
 			this.fieldColor.TabIndex = 1;
 			this.fieldColor.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;

@@ -8,11 +8,11 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckConstraint()
 		{
 			RegexConstraint c1 = new RegexConstraint ("a*", RegexFactory.Options.IgnoreCase);
-			RegexConstraint c2 = new RegexConstraint (RegexFactory.DecimalNum);
+			RegexConstraint c2 = new RegexConstraint (RegexFactory.LocalizedDecimalNum);
 			RegexConstraint c3 = new RegexConstraint (PredefinedRegex.AlphaNum);
 			
 			Assert.IsTrue (c1.CheckConstraint ("abc"));
-			Assert.IsTrue (c2.CheckConstraint ("10.5"));
+			Assert.IsTrue (c2.CheckConstraint ((10.5M).ToString ()));
 			Assert.IsTrue (c3.CheckConstraint ("abc"));
 			
 			Assert.IsFalse (c1.CheckConstraint ("xyz"));
@@ -23,7 +23,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckToStringFromString()
 		{
 			RegexConstraint c1 = new RegexConstraint ("a*", RegexFactory.Options.IgnoreCase);
-			RegexConstraint c2 = new RegexConstraint (RegexFactory.DecimalNum);
+			RegexConstraint c2 = new RegexConstraint (RegexFactory.LocalizedDecimalNum);
 			RegexConstraint c3 = new RegexConstraint (PredefinedRegex.AlphaNum);
 			
 			string s1 = c1.ToString ();
@@ -35,7 +35,7 @@ namespace Epsitec.Common.Support
 			c3 = RegexConstraint.FromString (s3);
 			
 			Assert.IsTrue (c1.CheckConstraint ("abc"));
-			Assert.IsTrue (c2.CheckConstraint ("10.5"));
+			Assert.IsTrue (c2.CheckConstraint ((10.5M).ToString ()));
 			Assert.IsTrue (c3.CheckConstraint ("abc"));
 			
 			Assert.IsFalse (c1.CheckConstraint ("xyz"));
@@ -44,7 +44,7 @@ namespace Epsitec.Common.Support
 			
 			Assert.AreEqual ("a*", c1.Pattern);
 			Assert.AreEqual (RegexFactory.Options.IgnoreCase, c1.PatternOptions);
-			Assert.AreEqual (RegexFactory.DecimalNum.ToString (), c2.Regex.ToString ());
+			Assert.AreEqual (RegexFactory.LocalizedDecimalNum.ToString (), c2.Regex.ToString ());
 			Assert.AreEqual (PredefinedRegex.AlphaNum, c3.PredefinedRegex);
 		}
 	}

@@ -244,6 +244,30 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		// Début du déplacement global de la propriété.
+		public override void MoveGlobalStarting()
+		{
+			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptText )  return;
+
+			this.InsertOpletProperty();
+
+			this.initialMarginH = this.marginH;
+			this.initialMarginV = this.marginV;
+		}
+		
+		// Effectue le déplacement global de la propriété.
+		public override void MoveGlobalProcess(Selector selector)
+		{
+			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptText )  return;
+
+			double zoom = selector.GetTransformZoom;
+			this.marginH = this.initialMarginH*zoom;
+			this.marginV = this.initialMarginV*zoom;
+
+			this.document.Notifier.NotifyPropertyChanged(this);
+		}
+
+		
 		#region Serialization
 		// Sérialise la propriété.
 		public override void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -277,5 +301,7 @@ namespace Epsitec.Common.Document.Properties
 		protected double				marginH;
 		protected double				marginV;
 		protected double				offsetV;
+		protected double				initialMarginH;
+		protected double				initialMarginV;
 	}
 }

@@ -54,6 +54,8 @@ namespace Epsitec.Common.Document
 			this.FlushMoveAfterDuplicate();
 
 			this.toLinePrecision = 0.25;
+			this.dimensionScale = 1.0;
+			this.dimensionDecimal = 1.0;
 		}
 
 		// Outil sélectionné dans la palette.
@@ -201,6 +203,7 @@ namespace Epsitec.Common.Document
 				case "ObjectTextBox":  return "Pavé de texte";
 				case "ObjectArray":  return "Tableau";
 				case "ObjectImage":  return "Image bitmap";
+				case "ObjectDimension":  return "Cote";
 			}
 
 			return "?";
@@ -288,6 +291,46 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Echelle pour les cotes.
+		public double DimensionScale
+		{
+			get
+			{
+				return this.dimensionScale;
+			}
+			
+			set
+			{
+				if ( this.dimensionScale != value )
+				{
+					this.dimensionScale = value;
+					this.document.Notifier.NotifySettingsChanged();
+					this.document.Notifier.NotifyArea(this.ActiveViewer);
+					this.document.IsDirtySerialize = true;
+				}
+			}
+		}
+
+		// Nombre de décimales des cotes.
+		public double DimensionDecimal
+		{
+			get
+			{
+				return this.dimensionDecimal;
+			}
+			
+			set
+			{
+				if ( this.dimensionDecimal != value )
+				{
+					this.dimensionDecimal = value;
+					this.document.Notifier.NotifySettingsChanged();
+					this.document.Notifier.NotifyArea(this.ActiveViewer);
+					this.document.IsDirtySerialize = true;
+				}
+			}
+		}
+
 
 		// Texte des informations de modification.
 		public string TextInfoModif
@@ -343,7 +386,7 @@ namespace Epsitec.Common.Document
 			{
 				value /= this.realScale;
 				value /= this.realPrecision*10.0;  // *10 -> un digit de moins
-				value = System.Math.Floor(value+this.realPrecision/2);
+				value = System.Math.Floor(value+0.5);
 				value *= this.realPrecision*10.0;
 				return value.ToString();
 			}
@@ -1587,6 +1630,7 @@ namespace Epsitec.Common.Document
 
 			this.opletLastCmd = "";
 			this.opletLastId = 0;
+			this.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 			this.document.Notifier.NotifySelectionChanged();
 			this.document.Notifier.NotifyStyleChanged();
 			this.document.Notifier.NotifyUndoRedoChanged();
@@ -1607,6 +1651,7 @@ namespace Epsitec.Common.Document
 
 			this.opletLastCmd = "";
 			this.opletLastId = 0;
+			this.ActiveViewer.DrawingContext.UpdateAfterPageChanged();
 			this.document.Notifier.NotifySelectionChanged();
 			this.document.Notifier.NotifyStyleChanged();
 			this.document.Notifier.NotifyUndoRedoChanged();
@@ -1791,6 +1836,7 @@ namespace Epsitec.Common.Document
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 			int total = layer.Objects.Count;
+			if ( total == 0 )  return;
 
 			int iDst = 0;
 			if ( dir < 0 )
@@ -1903,6 +1949,22 @@ namespace Epsitec.Common.Document
 			if ( alter > 0 )  // touche Shift ?
 			{
 				move *= this.arrowMoveMul;
+			}
+
+			if ( this.ActiveViewer.DrawingContext.GridActive )
+			{
+				Point initial = move;
+				this.ActiveViewer.DrawingContext.SnapGridForce(ref move, new Point(0,0));
+				if ( initial.X != 0.0 && move.X == 0.0 )
+				{
+					move.X = this.ActiveViewer.DrawingContext.GridStep.X;
+					if ( initial.X < 0.0 )  move.X = -move.X;
+				}
+				if ( initial.Y != 0.0 && move.Y == 0.0 )
+				{
+					move.Y = this.ActiveViewer.DrawingContext.GridStep.Y;
+					if ( initial.Y < 0.0 )  move.Y = -move.Y;
+				}
 			}
 
 			string name = string.Format("Déplacement {0};{1}", this.RealToString(move.X), this.RealToString(move.Y));
@@ -3933,7 +3995,7 @@ namespace Epsitec.Common.Document
 			for ( int i=total-1 ; i>=0 ; i-- )
 			{
 				Objects.Layer layer = layers[i] as Objects.Layer;
-				foreach ( Objects.Abstract obj in this.document.FlatReverse(layer) )
+				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
 				{
 					if ( obj.IsSelected )  continue;
 					if ( obj.IsCreating )  continue;
@@ -4942,6 +5004,8 @@ namespace Epsitec.Common.Document
 		protected double						toLinePrecision;
 		protected string						textInfoModif = "";
 		protected double						outsideArea;
+		protected double						dimensionScale;
+		protected double						dimensionDecimal;
 
 		public static readonly double			fontSizeScale = 3.5;  // empyrique !
 	}

@@ -25,6 +25,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.properties = new UndoableList(this.document, UndoableListType.PropertiesInsideObject);
+			this.surfaceAnchor = new SurfaceAnchor(this.document, this);
 		}
 
 		public virtual void Dispose()
@@ -88,6 +89,7 @@ namespace Epsitec.Common.Document.Objects
 				case "ObjectTextBox":    obj = new TextBox(document, model);    break;
 				case "ObjectImage":      obj = new Image(document, model);      break;
 				case "ObjectArray":      obj = new Array(document, model);      break;
+				case "ObjectDimension":  obj = new Dimension(document, model);  break;
 			}
 			System.Diagnostics.Debug.Assert(obj != null);
 			return obj;
@@ -138,6 +140,85 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		// Direction de l'objet.
+		public double Direction
+		{
+			get
+			{
+				return this.direction;
+			}
+
+			set
+			{
+				if ( this.direction != value )
+				{
+					this.direction = value;
+					this.surfaceAnchor.SetDirty();
+				}
+			}
+		}
+
+		// Donne la surface.
+		public SurfaceAnchor SurfaceAnchor
+		{
+			get
+			{
+				return this.surfaceAnchor;
+			}
+		}
+
+
+		#region HotSpot
+		// Retourne la position du point chaud.
+		public Point HotSpotPosition
+		{
+			get
+			{
+				if ( this.hotSpotRank != -1 && this.hotSpotRank < this.TotalMainHandle )
+				{
+					Handle handle = this.handles[this.hotSpotRank] as Handle;
+					return handle.Position;
+				}
+				else
+				{
+					return this.BoundingBoxThin.Center;
+				}
+			}
+		}
+
+		// Utilise le point chaud suivant ou précédent.
+		public void ChangeHotSpot(int dir)
+		{
+			for ( int i=0 ; i<1000 ; i++ )
+			{
+				if ( dir > 0 )
+				{
+					this.hotSpotRank ++;
+					if ( this.hotSpotRank >= this.TotalMainHandle )
+					{
+						this.hotSpotRank = -1;
+					}
+				}
+				else
+				{
+					this.hotSpotRank --;
+					if ( this.hotSpotRank < -1 )
+					{
+						this.hotSpotRank = this.TotalMainHandle-1;
+					}
+				}
+
+				if ( this.hotSpotRank == -1 )  break;
+
+				Handle handle = this.handles[this.hotSpotRank] as Handle;
+				if ( handle.Type != HandleType.Bezier    &&
+					 handle.Type != HandleType.Secondary &&
+					 handle.Type != HandleType.Hide      )  break;
+			}
+		}
+		#endregion
+
+
 		// Nombre total de poignées, avec celles des propriétés.
 		public int TotalHandle
 		{
@@ -170,7 +251,7 @@ namespace Epsitec.Common.Document.Objects
 					handle.PropertyRank = i;
 					this.handles.Add(handle);
 					this.totalPropertyHandle ++;
-					this.dirtyBbox = true;
+					this.SetDirtyBbox();
 				}
 			}
 		}
@@ -189,7 +270,7 @@ namespace Epsitec.Common.Document.Objects
 					handle.IsVisible = property.IsHandleVisible(this, handle.PropertyRank) && sel;
 					handle.IsGlobalSelected = this.globalSelected && handle.IsVisible;
 					handle.Position = property.GetHandlePosition(this, handle.PropertyRank);
-					this.dirtyBbox = true;
+					this.SetDirtyBbox();
 				}
 			}
 		}
@@ -201,21 +282,21 @@ namespace Epsitec.Common.Document.Objects
 			handle.Position = pos;
 			handle.Type = type;
 			this.handles.Add(handle);
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 		}
 
 		// Insère une poignée.
 		public void HandleInsert(int rank, Handle handle)
 		{
 			this.handles.Insert(rank, handle);
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 		}
 
 		// Supprime une poignée.
 		public void HandleDelete(int rank)
 		{
 			this.handles.RemoveAt(rank);
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 		}
 
 		// Donne la position d'une poignée.
@@ -275,8 +356,7 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( rank < this.handles.Count )  // poignée de l'objet ?
 			{
-				drawingContext.ConstrainSnapPos(ref pos);
-				drawingContext.SnapGrid(ref pos);
+				drawingContext.SnapPos(ref pos);
 
 				Handle handle = this.Handle(rank);
 				handle.Position = pos;
@@ -287,7 +367,7 @@ namespace Epsitec.Common.Document.Objects
 					property.SetHandlePosition(this, handle.PropertyRank, pos);
 				}
 
-				this.dirtyBbox = true;
+				this.SetDirtyBbox();
 			}
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
@@ -365,7 +445,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.HandlePropertiesUpdate();
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -379,6 +459,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				handle.InitialPosition = handle.Position;
 			}
+
+			this.initialDirection = this.direction;
 		}
 
 		// Effectue le déplacement global de l'objet.
@@ -393,12 +475,38 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if ( allHandle || handle.IsVisible )
 				{
-					handle.Position = Selector.DotTransform(selector, handle.InitialPosition);
+					handle.Position = selector.DotTransform(handle.InitialPosition);
 				}
 			}
 
-			this.dirtyBbox = true;
+			this.direction = this.initialDirection + selector.GetTransformAngle;
+
+			this.SetDirtyBbox();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
+		}
+
+		// Début du déplacement global des propriétés de l'objet.
+		public virtual void MoveGlobalStartingProperties()
+		{
+			for ( int i=0 ; i<this.properties.Count ; i++ )
+			{
+				Properties.Abstract property = this.properties[i] as Properties.Abstract;
+				if ( property.IsStyle )  continue;
+
+				property.MoveGlobalStarting();
+			}
+		}
+
+		// Effectue le déplacement global des propriétés de l'objet.
+		public void MoveGlobalProcessProperties(Selector selector)
+		{
+			for ( int i=0 ; i<this.properties.Count ; i++ )
+			{
+				Properties.Abstract property = this.properties[i] as Properties.Abstract;
+				if ( property.IsStyle )  continue;
+
+				property.MoveGlobalProcess(selector);
+			}
 		}
 
 		// Aligne l'objet sur la grille.
@@ -417,7 +525,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -571,6 +679,7 @@ namespace Epsitec.Common.Document.Objects
 		public void SetDirtyBbox()
 		{
 			this.dirtyBbox = true;
+			this.surfaceAnchor.SetDirty();
 		}
 
 		// Rectangle englobant l'objet.
@@ -694,6 +803,35 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Calcule les 2 rectangles pour SurfaceAnchor, qui sont les bbox
+		// (thin et geom) de l'objet lorsqu'il n'est pas tourné.
+		public void UpdateSurfaceBox(out Drawing.Rectangle surfThin, out Drawing.Rectangle surfGeom)
+		{
+			if ( this.direction == 0.0 )
+			{
+				surfThin = this.bboxThin;
+				surfGeom = this.bboxGeom;
+			}
+			else
+			{
+				Drawing.Rectangle initThin = this.bboxThin;
+				Drawing.Rectangle initGeom = this.bboxGeom;
+				Drawing.Rectangle initFull = this.bboxFull;
+
+				this.document.IsSurfaceRotation = true;
+				this.document.SurfaceRotationAngle = -this.direction;  // comme si droit
+				this.UpdateBoundingBox();
+				this.document.IsSurfaceRotation = false;
+				this.document.SurfaceRotationAngle = 0.0;
+				surfThin = this.bboxThin;
+				surfGeom = this.bboxGeom;
+
+				this.bboxThin = initThin;
+				this.bboxGeom = initGeom;
+				this.bboxFull = initFull;
+			}
+		}
+
 		// Calcule le rectangle englobant l'objet. Chaque objet se charge de
 		// ce calcul, selon sa géométrie, l'épaisseur de son trait, etc.
 		// Il faut calculer :
@@ -757,14 +895,19 @@ namespace Epsitec.Common.Document.Objects
 
 			this.bboxFull = this.bboxGeom;
 
-			if ( outline != null )
+			if ( !this.document.IsSurfaceRotation )
 			{
-				outline.InflateBoundingBox(this.bboxGeom, ref this.bboxFull);
-			}
+				if ( outline != null )
+				{
+					this.surfaceAnchor.LineUse = true;
+					outline.InflateBoundingBox(this.surfaceAnchor, ref this.bboxFull);
+				}
 
-			if ( surface != null )
-			{
-				surface.InflateBoundingBox(this.bboxThin, ref this.bboxFull);
+				if ( surface != null )
+				{
+					this.surfaceAnchor.LineUse = false;
+					surface.InflateBoundingBox(this.surfaceAnchor, ref this.bboxFull);
+				}
 			}
 		}
 
@@ -866,7 +1009,7 @@ namespace Epsitec.Common.Document.Objects
 				handle.IsGlobalSelected = false;
 			}
 			this.HandlePropertiesUpdate();
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Notifier.NotifySelectionChanged();
@@ -1046,6 +1189,26 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Transfert toutes les propriétés d'un ObjectMemory source qui n'existent
+		// pas dans l'objet courant.
+		public void PropertiesXferMemory(Objects.Abstract src)
+		{
+			bool ie = this.document.Modifier.OpletQueueEnable;
+			this.document.Modifier.OpletQueueEnable = false;
+
+			for ( int i=0 ; i<src.properties.Count ; i++ )
+			{
+				Properties.Abstract property = src.properties[i] as Properties.Abstract;
+				if ( this.ExistProperty(property.Type) )  continue;
+
+				property.Owners.Clear();
+				property.Owners.Add(this);  // l'objet est un propriétaire de cette propriété
+				this.properties.Add(property);  // ajoute dans la liste de l'objet
+			}
+
+			this.document.Modifier.OpletQueueEnable = ie;
+		}
+
 		// Donne l'index d'une propriété de l'objet.
 		public int PropertyIndex(Properties.Type type)
 		{
@@ -1082,6 +1245,11 @@ namespace Epsitec.Common.Document.Objects
 			get { return this.Property(Properties.Type.LineMode) as Properties.Line; }
 		}
 
+		public Properties.Line PropertyLineDimension
+		{
+			get { return this.Property(Properties.Type.LineDimension) as Properties.Line; }
+		}
+
 		public Properties.Gradient PropertyFillGradient
 		{
 			get { return this.Property(Properties.Type.FillGradient) as Properties.Gradient; }
@@ -1115,6 +1283,16 @@ namespace Epsitec.Common.Document.Objects
 		public Properties.Arrow PropertyArrow
 		{
 			get { return this.Property(Properties.Type.Arrow) as Properties.Arrow; }
+		}
+
+		public Properties.Arrow PropertyDimensionArrow
+		{
+			get { return this.Property(Properties.Type.DimensionArrow) as Properties.Arrow; }
+		}
+
+		public Properties.Dimension PropertyDimension
+		{
+			get { return this.Property(Properties.Type.Dimension) as Properties.Dimension; }
 		}
 
 		public Properties.Corner PropertyCorner
@@ -1300,7 +1478,7 @@ namespace Epsitec.Common.Document.Objects
 						this.PickerProperty(mp);
 					}
 				}
-				this.dirtyBbox = true;
+				this.SetDirtyBbox();
 			}
 		}
 
@@ -1534,7 +1712,7 @@ namespace Epsitec.Common.Document.Objects
 		// Déplacement pendant la création d'un objet.
 		public virtual void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 		}
 
 		// Fin de la création d'un objet.
@@ -1628,7 +1806,9 @@ namespace Epsitec.Common.Document.Objects
 			this.name                = src.name;
 			this.totalPropertyHandle = src.totalPropertyHandle;
 			this.mark                = src.mark;
+			this.direction           = src.direction;
 
+			this.surfaceAnchor.SetDirty();
 			this.SplitProperties();
 		}
 
@@ -1947,6 +2127,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.host = host;
 				this.list = new System.Collections.ArrayList();
+				this.direction = host.direction;
 
 				foreach ( Handle handle in this.host.handles )
 				{
@@ -1964,7 +2145,9 @@ namespace Epsitec.Common.Document.Objects
 				this.host.handles = this.list;
 				this.list = temp;
 
-				this.host.dirtyBbox = true;
+				Misc.Swap(ref this.direction, ref host.direction);
+
+				this.host.SetDirtyBbox();
 				this.host.document.Notifier.NotifyArea(this.host.BoundingBox);
 			}
 
@@ -1982,6 +2165,7 @@ namespace Epsitec.Common.Document.Objects
 
 			protected Objects.Abstract				host;
 			protected System.Collections.ArrayList	list;
+			protected double						direction;
 		}
 		#endregion
 
@@ -2052,6 +2236,7 @@ namespace Epsitec.Common.Document.Objects
 			info.AddValue("Handles", objHandles);
 
 			info.AddValue("Objects", this.objects);
+			info.AddValue("Direction", this.direction);
 		}
 
 		// Constructeur qui désérialise l'objet.
@@ -2061,11 +2246,21 @@ namespace Epsitec.Common.Document.Objects
 			this.uniqueId = info.GetInt32("UniqueId");
 			this.name = info.GetString("Name");
 			this.properties = (UndoableList) info.GetValue("Properties", typeof(UndoableList));
+			this.surfaceAnchor = new SurfaceAnchor(this.document, this);
 
 			this.handles = (System.Collections.ArrayList) info.GetValue("Handles", typeof(System.Collections.ArrayList));
 			this.HandlePropertiesCreate();  // crée les poignées des propriétés
 
 			this.objects = (UndoableList) info.GetValue("Objects", typeof(UndoableList));
+
+			if ( this.document.IsRevisionGreaterOrEqual(1,0,17) )
+			{
+				this.direction = info.GetDouble("Direction");
+			}
+			else
+			{
+				this.direction = 0.0;
+			}
 		}
 
 		// Adapte l'objet après une désérialisation.
@@ -2130,11 +2325,15 @@ namespace Epsitec.Common.Document.Objects
 		protected Drawing.Rectangle				bboxThin = Drawing.Rectangle.Empty;
 		protected Drawing.Rectangle				bboxGeom = Drawing.Rectangle.Empty;
 		protected Drawing.Rectangle				bboxFull = Drawing.Rectangle.Empty;
+		protected int							hotSpotRank = -1;
 
 		protected string						name = "";
 		protected UndoableList					properties;
 		protected System.Collections.ArrayList	handles = new System.Collections.ArrayList();
 		protected UndoableList					objects = null;
 		protected int							totalPropertyHandle = 0;
+		protected double						direction = 0.0;
+		protected double						initialDirection = 0.0;
+		protected SurfaceAnchor					surfaceAnchor;
 	}
 }

@@ -729,7 +729,6 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.AddFilledRectangle(rBack);
 			graphics.RenderSolid(this.colorControl);
 
-			titleRect.Left   -= 2;
 			titleRect.Bottom += 1;
 			this.PaintTabBackground(graphics, frameRect, titleRect, state, dir);
 		}
@@ -749,6 +748,7 @@ namespace Epsitec.Common.Widgets.Adorner
 											 Widgets.WidgetState state,
 											 Widgets.Direction dir)
 		{
+			titleRect.Right += 1;
 			this.PaintTabBackground(graphics, frameRect, titleRect, state, dir);
 		}
 

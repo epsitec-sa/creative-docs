@@ -327,6 +327,9 @@ namespace Epsitec.Cresus.Database.Implementation
 				{
 					using (System.Data.IDbCommand command = this.NewDbCommand ())
 					{
+						//	TODO: essayer d'utiliser code de Carlos
+						//	DataTable tables = c.GetSchema("Tables", new string[] { null, null, null, "TABLE" });
+						
 						command.Transaction = transaction;
 						command.CommandText = "SELECT RDB$RELATION_NAME FROM RDB$RELATIONS WHERE RDB$SYSTEM_FLAG = 0 AND RDB$VIEW_BLR IS NULL;";
 						command.CommandType = System.Data.CommandType.Text;

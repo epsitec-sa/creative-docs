@@ -391,7 +391,7 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomMin.icon", "ZoomMin", "Zoom minimal", "");
 			if ( this.type != DocumentType.Pictogram )
 			{
-				this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomPage.icon", "ZoomPage", "Zoom pleine page", "");
+				this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomPage.icon", "ZoomPage", "Zoom pleine page", "Ctrl+0");
 				this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomPageWidth.icon", "ZoomPageWidth", "Zoom largeur page", "");
 			}
 			this.MenuAdd(showMenu, "manifest:Epsitec.App.DocumentEditor.Images.ZoomDefault.icon", "ZoomDefault", "Zoom 100%", "");
@@ -619,6 +619,10 @@ namespace Epsitec.App.DocumentEditor
 				this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Array.icon", "ToolArray", "Tableau", "ObjectArray");
 			}
 			this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Image.icon", "ToolImage", "Image bitmap", "ObjectImage");
+			if ( this.type != DocumentType.Pictogram )
+			{
+				this.VToolBarAdd("manifest:Epsitec.App.DocumentEditor.Images.Dimension.icon", "ToolDimension", "Cote", "ObjectDimension");
+			}
 			this.VToolBarAdd("", "", "");
 
 			this.bookDocuments = new TabBook(this);
@@ -1244,6 +1248,13 @@ namespace Epsitec.App.DocumentEditor
 		void CommandToolImage(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.CurrentDocument.Modifier.Tool = "ObjectImage";
+			this.DispatchDummyMouseMoveEvent();
+		}
+
+		[Command ("ToolDimension")]
+		void CommandToolDimension(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.Tool = "ObjectDimension";
 			this.DispatchDummyMouseMoveEvent();
 		}
 
@@ -2304,6 +2315,20 @@ namespace Epsitec.App.DocumentEditor
 			viewer.SelectorType = SelectorType.Stretcher;
 		}
 
+		[Command ("SelectorAdaptLine")]
+		void CommandSelectorAdaptLine(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
+			viewer.SelectorAdaptLine = !viewer.SelectorAdaptLine;
+		}
+
+		[Command ("SelectorAdaptText")]
+		void CommandSelectorAdaptText(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			Viewer viewer = this.CurrentDocument.Modifier.ActiveViewer;
+			viewer.SelectorAdaptText = !viewer.SelectorAdaptText;
+		}
+
 		[Command ("HideHalf")]
 		void CommandHideHalf(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -2840,6 +2865,7 @@ namespace Epsitec.App.DocumentEditor
 			this.toolTextBoxState = new CommandState("ToolTextBox", this.commandDispatcher, KeyCode.AlphaT);
 			this.toolArrayState = new CommandState("ToolArray", this.commandDispatcher);
 			this.toolImageState = new CommandState("ToolImage", this.commandDispatcher);
+			this.toolDimensionState = new CommandState("ToolDimension", this.commandDispatcher);
 
 			this.newState = new CommandState("New", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaN);
 			this.openState = new CommandState("Open", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaO);
@@ -2898,6 +2924,8 @@ namespace Epsitec.App.DocumentEditor
 			this.selectorStretchState = new CommandState("SelectorStretch", this.commandDispatcher);
 			this.selectTotalState = new CommandState("SelectTotal", this.commandDispatcher);
 			this.selectPartialState = new CommandState("SelectPartial", this.commandDispatcher);
+			this.selectorAdaptLine = new CommandState("SelectorAdaptLine", this.commandDispatcher);
+			this.selectorAdaptText = new CommandState("SelectorAdaptText", this.commandDispatcher);
 			this.hideHalfState = new CommandState("HideHalf", this.commandDispatcher);
 			this.hideSelState = new CommandState("HideSel", this.commandDispatcher);
 			this.hideRestState = new CommandState("HideRest", this.commandDispatcher);
@@ -3183,6 +3211,7 @@ namespace Epsitec.App.DocumentEditor
 			this.UpdateTool(this.toolTextBoxState, "ObjectTextBox", tool, isCreating, enabled);
 			this.UpdateTool(this.toolArrayState, "ObjectArray", tool, isCreating, enabled);
 			this.UpdateTool(this.toolImageState, "ObjectImage", tool, isCreating, enabled);
+			this.UpdateTool(this.toolDimensionState, "ObjectDimension", tool, isCreating, enabled);
 		}
 
 		// Appelé par le document lorsque l'état "enregistrer" a changé.
@@ -3247,7 +3276,7 @@ namespace Epsitec.App.DocumentEditor
 				this.groupState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.ungroupState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating && !isEdit );
 				this.insideState.Enabled = ( totalSelected == 1 && one is Objects.Group && !isCreating && !isEdit );
-				this.outsideState.Enabled = ( !isBase && !isCreating && !isEdit );
+				this.outsideState.Enabled = ( !isBase && !isCreating );
 				this.combineState.Enabled = ( totalSelected > 1 && !isCreating && !isEdit );
 				this.uncombineState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
 				this.toBezierState.Enabled = ( totalSelected > 0 && !isCreating && !isEdit );
@@ -3284,6 +3313,11 @@ namespace Epsitec.App.DocumentEditor
 				this.selectPartialState.Enabled = true;
 				this.selectTotalState.ActiveState   = !viewer.PartialSelect ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 				this.selectPartialState.ActiveState =  viewer.PartialSelect ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+
+				this.selectorAdaptLine.Enabled = true;
+				this.selectorAdaptText.Enabled = true;
+				this.selectorAdaptLine.ActiveState = viewer.SelectorAdaptLine ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.selectorAdaptText.ActiveState = viewer.SelectorAdaptText ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 
 				Objects.Abstract edit = this.CurrentDocument.Modifier.RetEditObject();
 				if ( edit == null )
@@ -3373,6 +3407,11 @@ namespace Epsitec.App.DocumentEditor
 				this.selectPartialState.Enabled = false;
 				this.selectTotalState.ActiveState   = WidgetState.ActiveNo;
 				this.selectPartialState.ActiveState = WidgetState.ActiveNo;
+
+				this.selectorAdaptLine.Enabled = false;
+				this.selectorAdaptText.Enabled = false;
+				this.selectorAdaptLine.ActiveState = WidgetState.ActiveNo;
+				this.selectorAdaptText.ActiveState = WidgetState.ActiveNo;
 			}
 
 			StatusField field = this.info.Items["StatusObject"] as StatusField;
@@ -3678,7 +3717,7 @@ namespace Epsitec.App.DocumentEditor
 
 			if ( viewer.DrawingContext.IsActive )
 			{
-				box.Inflate(viewer.DrawingContext.HandleSize/2 + 1);
+				box.Inflate(viewer.DrawingContext.HandleRedrawSize/2);
 			}
 
 			box = viewer.InternalToScreen(box);
@@ -4294,6 +4333,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					toolTextBoxState;
 		protected CommandState					toolArrayState;
 		protected CommandState					toolImageState;
+		protected CommandState					toolDimensionState;
 		protected CommandState					newState;
 		protected CommandState					openState;
 		protected CommandState					openModelState;
@@ -4351,6 +4391,8 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					selectorStretchState;
 		protected CommandState					selectTotalState;
 		protected CommandState					selectPartialState;
+		protected CommandState					selectorAdaptLine;
+		protected CommandState					selectorAdaptText;
 		protected CommandState					hideHalfState;
 		protected CommandState					hideSelState;
 		protected CommandState					hideRestState;

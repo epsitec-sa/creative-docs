@@ -514,6 +514,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public bool								IsMinimized
+		{
+			get
+			{
+				return (this.window != null) && (this.window.WindowState == System.Windows.Forms.FormWindowState.Minimized);
+			}
+		}
+		
 		public bool								IsToolWindow
 		{
 			get

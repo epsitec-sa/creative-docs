@@ -60,7 +60,8 @@ namespace Epsitec.Common.Document
 					path.LineTo(rect.Right, rect.Bottom);
 					path.Close();
 
-					gradient.RenderSurface(graphics, null, path, rect);
+					SurfaceAnchor sa = new SurfaceAnchor(rect);
+					gradient.RenderSurface(graphics, null, path, sa);
 				}
 			}
 

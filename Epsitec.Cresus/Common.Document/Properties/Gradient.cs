@@ -87,6 +87,11 @@ namespace Epsitec.Common.Document.Properties
 			}
 
 			this.hatchWidth[1] = 0.0;
+
+			this.initialHatchAngle    = new double[Gradient.HatchMax];
+			this.initialHatchWidth    = new double[Gradient.HatchMax];
+			this.initialHatchDistance = new double[Gradient.HatchMax];
+
 		}
 
 		// Mode de remplissage du dégradé.
@@ -542,7 +547,6 @@ namespace Epsitec.Common.Document.Properties
 			if ( p.middle   != this.middle   )  return false;
 			if ( p.smooth   != this.smooth   )  return false;
 
-
 			for ( int i=0 ; i<Gradient.HatchMax ; i++ )
 			{
 				if ( p.hatchAngle[i]    != this.hatchAngle[i]    )  return false;
@@ -585,31 +589,32 @@ namespace Epsitec.Common.Document.Properties
 
 		// Effectue le rendu de la surface du chemin courant avec le dégradé.
 		public void RenderSurface(Graphics graphics, DrawingContext drawingContext,
-								  Path path, Rectangle bbox)
+								  Path path, SurfaceAnchor sa)
 		{
-			this.RenderOutline(graphics, drawingContext, path, 0.0, Drawing.CapStyle.Round, Drawing.JoinStyle.Round, 0.0, bbox);
+			this.RenderOutline(graphics, drawingContext, path, 0.0, Drawing.CapStyle.Round, Drawing.JoinStyle.Round, 0.0, sa);
 		}
 
 		// Effectue le rendu du trait du chemin courant avec le dégradé.
 		public void RenderOutline(Graphics graphics, DrawingContext drawingContext,
 								  Path path, double width, Drawing.CapStyle cap, Drawing.JoinStyle join,
-								  double limit, Rectangle bbox)
+								  double limit, SurfaceAnchor sa)
 		{
-			if ( bbox.IsSurfaceZero )  return;
-
 			if ( this.fillType == GradientFillType.Hatch )
 			{
-				this.RenderHatch(graphics, drawingContext, path, bbox);
+				if ( sa.IsSurfaceZero )  return;
+				this.RenderHatch(graphics, drawingContext, path, sa);
 				return;
 			}
 			if ( this.fillType == GradientFillType.Dots )
 			{
-				this.RenderDots(graphics, drawingContext, path, bbox);
+				if ( sa.IsSurfaceZero )  return;
+				this.RenderDots(graphics, drawingContext, path, sa);
 				return;
 			}
 			if ( this.fillType == GradientFillType.Squares )
 			{
-				this.RenderSquares(graphics, drawingContext, path, bbox);
+				if ( sa.IsSurfaceZero )  return;
+				this.RenderSquares(graphics, drawingContext, path, sa);
 				return;
 			}
 
@@ -647,8 +652,9 @@ namespace Epsitec.Common.Document.Properties
 
 				graphics.SolidRenderer.SetAlphaMask(mask.Pixmap, MaskComponent.R);
 
-				bbox.Inflate(this.smooth);
-				graphics.AddFilledRectangle(bbox);
+				Rectangle box = sa.BoundingBox;
+				box.Inflate(this.smooth);
+				graphics.AddFilledRectangle(box);
 			}
 			else
 			{
@@ -726,8 +732,8 @@ namespace Epsitec.Common.Document.Properties
 				Transform ot = graphics.GradientRenderer.Transform;
 				Transform t = new Transform();
 
-				Point center = new Point(bbox.Left+bbox.Width*this.cx, bbox.Bottom+bbox.Height*this.cy);
-				Point corner = center+new Size(bbox.Width*this.sx, bbox.Height*this.sy);
+				Point center = sa.ToAbs(new Point(this.cx, this.cy));
+				Point corner = sa.ToAbs(new Point(this.cx+this.sx, this.cy+this.sy));
 
 				if ( this.fillType == GradientFillType.Linear )
 				{
@@ -743,24 +749,24 @@ namespace Epsitec.Common.Document.Properties
 				{
 					graphics.GradientRenderer.Fill = GradientFill.Circle;
 					graphics.GradientRenderer.SetParameters(0, 255);
-					t.RotateDeg(this.angle);
-					t.Scale(bbox.Width/255*this.sx, bbox.Height/255*this.sy);
+					t.RotateDeg(sa.Direction);
+					t.Scale(sa.Width/255*this.sx, sa.Height/255*this.sy);
 					t.Translate(center);
 				}
 				else if ( this.fillType == GradientFillType.Diamond )
 				{
 					graphics.GradientRenderer.Fill = GradientFill.Diamond;
 					graphics.GradientRenderer.SetParameters(0, 255);
-					t.RotateDeg(this.angle);
-					t.Scale(bbox.Width/255*this.sx, bbox.Height/255*this.sy);
+					t.RotateDeg(sa.Direction);
+					t.Scale(sa.Width/255*this.sx, sa.Height/255*this.sy);
 					t.Translate(center);
 				}
 				else if ( this.fillType == GradientFillType.Conic )
 				{
 					graphics.GradientRenderer.Fill = GradientFill.Conic;
 					graphics.GradientRenderer.SetParameters(0, 250);
-					t.RotateDeg(this.angle-90.0);
-					t.Scale(bbox.Width/255*this.sx, bbox.Height/255*this.sy);
+					t.RotateDeg(sa.Direction+this.angle-90.0);
+					t.Scale(sa.Width/255*this.sx, sa.Height/255*this.sy);
 					t.Translate(center);
 				}
 
@@ -777,7 +783,7 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Effectue le rendu d'une zone quelconque hachurée.
-		public void RenderHatch(Graphics graphics, DrawingContext drawingContext, Path path, Rectangle bbox)
+		public void RenderHatch(Graphics graphics, DrawingContext drawingContext, Path path, SurfaceAnchor sa)
 		{
 			Drawing.Color initialColor = graphics.Color;
 
@@ -798,7 +804,7 @@ namespace Epsitec.Common.Document.Properties
 
 				Point p1, p2, p3, p4;
 				double offset;
-				this.MinRectMotif(bbox, i, out p1, out p2, out p3, out p4, out offset);
+				this.MinRectMotif(sa, i, out p1, out p2, out p3, out p4, out offset);
 				double width = System.Math.Min(this.hatchWidth[i], this.hatchDistance[i]);
 
 				Path pathLines = new Path();
@@ -830,7 +836,7 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Effectue le rendu d'une zone quelconque de points.
-		public void RenderDots(Graphics graphics, DrawingContext drawingContext, Path path, Rectangle bbox)
+		public void RenderDots(Graphics graphics, DrawingContext drawingContext, Path path, SurfaceAnchor sa)
 		{
 			Drawing.Color initialColor = graphics.Color;
 
@@ -851,7 +857,7 @@ namespace Epsitec.Common.Document.Properties
 
 				Point p1, p2, p3, p4;
 				double offset;
-				this.MinRectMotif(bbox, i, out p1, out p2, out p3, out p4, out offset);
+				this.MinRectMotif(sa, i, out p1, out p2, out p3, out p4, out offset);
 				double width = System.Math.Min(this.hatchWidth[i], this.hatchDistance[i]/2);
 
 				Path pathLines = new Path();
@@ -892,7 +898,7 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Effectue le rendu d'une zone quelconque de carrés.
-		public void RenderSquares(Graphics graphics, DrawingContext drawingContext, Path path, Rectangle bbox)
+		public void RenderSquares(Graphics graphics, DrawingContext drawingContext, Path path, SurfaceAnchor sa)
 		{
 			Drawing.Color initialColor = graphics.Color;
 
@@ -913,7 +919,7 @@ namespace Epsitec.Common.Document.Properties
 
 				Point p1, p2, p3, p4;
 				double offset;
-				this.MinRectMotif(bbox, i, out p1, out p2, out p3, out p4, out offset);
+				this.MinRectMotif(sa, i, out p1, out p2, out p3, out p4, out offset);
 				double width = System.Math.Min(this.hatchWidth[i], this.hatchDistance[i]/2);
 
 				Path pathLines = new Path();
@@ -950,9 +956,11 @@ namespace Epsitec.Common.Document.Properties
 
 		// Calcule le rectangle le plus petit possible qui sera rempli par le motif.
 		// L'offset permet à deux objets proches d'avoir des hachures jointives.
-		protected void MinRectMotif(Rectangle bbox, int i, out Point p1, out Point p2, out Point p3, out Point p4, out double offset)
+		protected void MinRectMotif(SurfaceAnchor sa, int i, out Point p1, out Point p2, out Point p3, out Point p4, out double offset)
 		{
-			double b = Math.ClipAngleDeg(this.hatchAngle[i]);
+			Rectangle bbox = sa.BoundingBox;
+
+			double b = Math.ClipAngleDeg(sa.Direction+this.hatchAngle[i]);
 			double a = Math.DegToRad(b%90.0);
 
 			double ha = System.Math.Cos(a)*bbox.Width;
@@ -987,7 +995,7 @@ namespace Epsitec.Common.Document.Properties
 			p4 = rect[(j+2)%4];
 			p3 = rect[(j+3)%4];
 
-			Point pp1 = Transform.RotatePointDeg(-this.hatchAngle[i], p1);
+			Point pp1 = Transform.RotatePointDeg(-(sa.Direction+this.hatchAngle[i]), p1);
 			offset = -(pp1.X+100000.0)%this.hatchDistance[i];
 		}
 
@@ -1006,15 +1014,15 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Engraisse la bbox en fonction de la propriété.
-		public override void InflateBoundingBox(Rectangle bbox, ref Rectangle bboxFull)
+		public override void InflateBoundingBox(SurfaceAnchor sa, ref Rectangle bboxFull)
 		{
 			if ( this.fillType == GradientFillType.None )  return;
 
-			Point center = new Point(bbox.Left+bbox.Width*this.cx, bbox.Bottom+bbox.Height*this.cy);
-			Point p1 = center+new Size( bbox.Width*this.sx,  bbox.Height*this.sy);
-			Point p2 = center+new Size(-bbox.Width*this.sx,  bbox.Height*this.sy);
-			Point p3 = center+new Size(-bbox.Width*this.sx, -bbox.Height*this.sy);
-			Point p4 = center+new Size( bbox.Width*this.sx, -bbox.Height*this.sy);
+			Point center = sa.ToAbs(new Point(this.cx, this.cy));
+			Point p1 = sa.ToAbs(new Point(this.cx+this.sx, this.cy+this.sy));
+			Point p2 = sa.ToAbs(new Point(this.cx-this.sx, this.cy+this.sy));
+			Point p3 = sa.ToAbs(new Point(this.cx-this.sx, this.cy-this.sy));
+			Point p4 = sa.ToAbs(new Point(this.cx+this.sx, this.cy-this.sy));
 
 			if ( this.fillType == GradientFillType.Linear )
 			{
@@ -1044,8 +1052,8 @@ namespace Epsitec.Common.Document.Properties
 			{
 				if ( rank == 0 )  // angle ?
 				{
-					Rectangle bbox = this.BoundingBoxHandlesGradient(obj);
-					drawingContext.ConstrainAddCenter(bbox.Center);
+					SurfaceAnchor sa = this.SurfaceAnchor(obj);
+					drawingContext.ConstrainAddCenter(sa.Center);
 				}
 
 				if ( rank == 1 )  // épaisseur ?
@@ -1111,27 +1119,18 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
-		// Retourne le bbox à utiliser pour les poignées du dégradé.
-		protected Rectangle BoundingBoxHandlesGradient(Objects.Abstract obj)
+		// Retourne la surface à utiliser pour les poignées du dégradé.
+		protected SurfaceAnchor SurfaceAnchor(Objects.Abstract obj)
 		{
-			if ( this.type == Properties.Type.LineColor )
-			{
-				return obj.BoundingBoxGeom;
-			}
-			return obj.BoundingBoxThin;
+			obj.SurfaceAnchor.LineUse = (this.type == Properties.Type.LineColor);
+			return obj.SurfaceAnchor;
 		}
 
 		// Retourne la position d'une poignée.
 		public override Point GetHandlePosition(Objects.Abstract obj, int rank)
 		{
 			Point pos = new Point();
-			Point center = new Point();
-			Point corner = new Point();
-			Rectangle bbox = this.BoundingBoxHandlesGradient(obj);
-			center.X = bbox.Left+bbox.Width*this.cx;
-			center.Y = bbox.Bottom+bbox.Height*this.cy;
-			corner.X = center.X+bbox.Width*this.sx;
-			corner.Y = center.Y+bbox.Height*this.sy;
+			SurfaceAnchor sa = this.SurfaceAnchor(obj);
 
 			if ( this.fillType == GradientFillType.Hatch   ||
 				 this.fillType == GradientFillType.Dots    ||
@@ -1139,24 +1138,24 @@ namespace Epsitec.Common.Document.Properties
 			{
 				if ( rank == 0 )  // angle ?
 				{
-					double radius = System.Math.Min(bbox.Width, bbox.Height)*0.45;
-					pos = bbox.Center+Transform.RotatePointDeg(this.hatchAngle[0], new Point(0, radius));
+					pos = sa.Center+Transform.RotatePointDeg(sa.Direction+this.hatchAngle[0], new Point(0, sa.RotateRadius));
 				}
 
 				if ( rank == 1 )  // épaisseur ?
 				{
-					double radius = this.hatchWidth[0];
-					pos = bbox.Center+Transform.RotatePointDeg(this.hatchAngle[0]-90, new Point(0, radius));
+					pos = sa.Center+Transform.RotatePointDeg(sa.Direction+this.hatchAngle[0]-90, new Point(0, this.hatchWidth[0]));
 				}
 
 				if ( rank == 2 )  // distance ?
 				{
-					double radius = this.hatchDistance[0];
-					pos = bbox.Center+Transform.RotatePointDeg(this.hatchAngle[0]-90, new Point(0, radius));
+					pos = sa.Center+Transform.RotatePointDeg(sa.Direction+this.hatchAngle[0]-90, new Point(0, this.hatchDistance[0]));
 				}
 			}
 			else
 			{
+				Point center = sa.ToAbs(new Point(this.cx, this.cy));
+				Point corner = sa.ToAbs(new Point(this.cx+this.sx, this.cy+this.sy));
+
 				if ( rank == 0 )  // centre ?
 				{
 					pos = center;
@@ -1169,8 +1168,8 @@ namespace Epsitec.Common.Document.Properties
 
 				if ( rank == 2 )  // angle ?
 				{
-					double radius = System.Math.Min(System.Math.Abs(this.sx*bbox.Width), System.Math.Abs(this.sy*bbox.Height));
-					pos = center+Transform.RotatePointDeg(this.angle, new Point(0, radius));
+					double radius = System.Math.Min(System.Math.Abs(this.sx*sa.Width), System.Math.Abs(this.sy*sa.Height));
+					pos = center+Transform.RotatePointDeg(sa.Direction+this.angle, new Point(0, radius));
 				}
 			}
 
@@ -1180,7 +1179,7 @@ namespace Epsitec.Common.Document.Properties
 		// Modifie la position d'une poignée.
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
-			Rectangle bbox = this.BoundingBoxHandlesGradient(obj);
+			SurfaceAnchor sa = this.SurfaceAnchor(obj);
 
 			if ( this.fillType == GradientFillType.Hatch   ||
 				 this.fillType == GradientFillType.Dots    ||
@@ -1188,39 +1187,39 @@ namespace Epsitec.Common.Document.Properties
 			{
 				if ( rank == 0 )  // angle ?
 				{
-					this.HatchAngle1 = Point.ComputeAngleDeg(bbox.Center, pos)-90;
+					this.HatchAngle1 = Point.ComputeAngleDeg(sa.Center, pos)-90-sa.Direction;
 				}
 
 				if ( rank == 1 )  // épaisseur ?
 				{
-					this.HatchWidth1 = Point.Distance(bbox.Center, pos);
+					this.HatchWidth1 = Point.Distance(sa.Center, pos);
 				}
 
 				if ( rank == 2 )  // distance ?
 				{
-					this.HatchDistance1 = Point.Distance(bbox.Center, pos);
+					this.HatchDistance1 = Point.Distance(sa.Center, pos);
 				}
 			}
 			else
 			{
 				if ( rank == 0 )  // centre ?
 				{
-					this.Cx = (pos.X-bbox.Left)/bbox.Width;
-					this.Cy = (pos.Y-bbox.Bottom)/bbox.Height;
+					Point rel = sa.ToRel(pos);
+					this.Cx = rel.X;
+					this.Cy = rel.Y;
 				}
 
 				if ( rank == 1 )  // coin ?
 				{
-					this.Sx = (pos.X-bbox.Left-bbox.Width*this.cx)/bbox.Width;
-					this.Sy = (pos.Y-bbox.Bottom-bbox.Height*this.cy)/bbox.Height;
+					Point rel = sa.ToRel(pos);
+					this.Sx = rel.X-this.cx;
+					this.Sy = rel.Y-this.cy;
 				}
 
 				if ( rank == 2 )  // angle ?
 				{
-					Point center = new Point();
-					center.X = bbox.Left+bbox.Width*this.cx;
-					center.Y = bbox.Bottom+bbox.Height*this.cy;
-					this.Angle = Point.ComputeAngleDeg(center, pos)-90;
+					Point center = sa.ToAbs(new Point(this.cx, this.cy));
+					this.Angle = Point.ComputeAngleDeg(center, pos)-90-sa.Direction;
 				}
 			}
 
@@ -1247,12 +1246,12 @@ namespace Epsitec.Common.Document.Properties
 				 obj.IsEdited ||
 				 !this.IsHandleVisible(obj, 0) )  return;
 
-			Rectangle bbox = this.BoundingBoxHandlesGradient(obj);
-			Point center = new Point(bbox.Left+bbox.Width*this.cx, bbox.Bottom+bbox.Height*this.cy);
-			Point p1 = center+new Size( bbox.Width*this.sx,  bbox.Height*this.sy);
-			Point p2 = center+new Size(-bbox.Width*this.sx,  bbox.Height*this.sy);
-			Point p3 = center+new Size(-bbox.Width*this.sx, -bbox.Height*this.sy);
-			Point p4 = center+new Size( bbox.Width*this.sx, -bbox.Height*this.sy);
+			SurfaceAnchor sa = this.SurfaceAnchor(obj);
+			Point center = sa.ToAbs(new Point(this.cx, this.cy));
+			Point p1 = sa.ToAbs(new Point(this.cx+this.sx, this.cy+this.sy));
+			Point p2 = sa.ToAbs(new Point(this.cx-this.sx, this.cy+this.sy));
+			Point p3 = sa.ToAbs(new Point(this.cx-this.sx, this.cy-this.sy));
+			Point p4 = sa.ToAbs(new Point(this.cx+this.sx, this.cy-this.sy));
 
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/drawingContext.ScaleX;
@@ -1270,15 +1269,15 @@ namespace Epsitec.Common.Document.Properties
 					  this.fillType == GradientFillType.Dots    ||
 					  this.fillType == GradientFillType.Squares )
 			{
-				center = bbox.Center;
-				double radius = System.Math.Min(bbox.Width, bbox.Height)*0.5;
-				Point pa = center+Transform.RotatePointDeg(this.hatchAngle[0], new Point(0, radius*0.9));
+				center = sa.Center;
+				double radius = System.Math.Min(sa.Width, sa.Height)*0.5;
+				Point pa = center+Transform.RotatePointDeg(sa.Direction+this.hatchAngle[0], new Point(0, radius*0.9));
 				graphics.AddLine(pa, this.ComputeExtremity(center, pa, 0.4, 0.2, 0));
 				graphics.AddLine(pa, this.ComputeExtremity(center, pa, 0.4, 0.2, 1));  // flèche
 				graphics.AddLine(center, pa);
 
-				Point pb = center+Transform.RotatePointDeg(this.hatchAngle[0]+90, new Point(0, radius));
-				Point pc = center+Transform.RotatePointDeg(this.hatchAngle[0]-90, new Point(0, radius));
+				Point pb = center+Transform.RotatePointDeg(sa.Direction+this.hatchAngle[0]+90, new Point(0, radius));
+				Point pc = center+Transform.RotatePointDeg(sa.Direction+this.hatchAngle[0]-90, new Point(0, radius));
 				graphics.AddLine(pb, pc);
 			}
 			else
@@ -1290,7 +1289,12 @@ namespace Epsitec.Common.Document.Properties
 
 				if ( this.fillType == GradientFillType.Circle )
 				{
-					graphics.AddCircle(center.X, center.Y, System.Math.Abs(this.sx*bbox.Width), System.Math.Abs(this.sy*bbox.Height));
+					Transform ot = graphics.Transform;
+					Transform t = new Transform();
+					t.RotateDeg(sa.Direction);
+					graphics.Transform = t;
+					graphics.AddCircle(center.X, center.Y, System.Math.Abs(this.sx*sa.Width), System.Math.Abs(this.sy*sa.Height));
+					graphics.Transform = ot;
 				}
 
 				if ( this.fillType == GradientFillType.Diamond )
@@ -1301,9 +1305,8 @@ namespace Epsitec.Common.Document.Properties
 
 				if ( this.fillType == GradientFillType.Conic )
 				{
-					double radius = System.Math.Min(System.Math.Abs(this.sx*bbox.Width), System.Math.Abs(this.sy*bbox.Height));
+					double radius = System.Math.Min(System.Math.Abs(this.sx*sa.Width), System.Math.Abs(this.sy*sa.Height));
 					Point pa = center+Transform.RotatePointDeg(this.angle, new Point(0, radius));
-					//?graphics.AddCircle(center, radius);
 					graphics.AddLine(pa, this.ComputeExtremity(center, pa, 0.4, 0.2, 0));
 					graphics.AddLine(pa, this.ComputeExtremity(center, pa, 0.4, 0.2, 1));  // flèche
 					graphics.AddLine(center, pa);
@@ -1410,6 +1413,15 @@ namespace Epsitec.Common.Document.Properties
 		protected double[]				hatchAngle;
 		protected double[]				hatchWidth;
 		protected double[]				hatchDistance;
+		protected double				initialAngle;
+		protected double				initialCx;
+		protected double				initialCy;
+		protected double				initialSx;
+		protected double				initialSy;
+		protected double				initialSmooth;
+		protected double[]				initialHatchAngle;
+		protected double[]				initialHatchWidth;
+		protected double[]				initialHatchDistance;
 		public static readonly int		HatchMax = 2;
 	}
 }

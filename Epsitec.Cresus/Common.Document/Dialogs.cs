@@ -118,8 +118,8 @@ namespace Epsitec.Common.Document
 				this.containerGuides.DockMargins = new Margins(10, 10, 4, 10);
 				this.containerGuides.Parent = container;
 
-				// Onglet Misc:
-				parent = book.FindChild("Misc");
+				// Onglet Move:
+				parent = book.FindChild("Move");
 				container = new Widget(parent);
 				container.Name = "Container";
 				container.Dock = DockStyle.Fill;
@@ -133,6 +133,18 @@ namespace Epsitec.Common.Document
 				this.CreatePoint(container, "ArrowMove");
 				this.CreateDouble(container, "ArrowMoveMul");
 				this.CreateDouble(container, "ArrowMoveDiv");
+				Dialogs.CreateSeparator(container);
+
+				// Onglet Misc:
+				parent = book.FindChild("Misc");
+				container = new Widget(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+
+				this.tabIndex = 0;
+				Dialogs.CreateTitle(container, "Valeurs des cotes");
+				this.CreateDouble(container, "DimensionScale");
+				this.CreateDouble(container, "DimensionDecimal");
 
 				Dialogs.CreateTitle(container, "Convertir en droites et opérations booléennes");
 				this.CreateDouble(container, "ToLinePrecision");
@@ -1016,6 +1028,7 @@ namespace Epsitec.Common.Document
 			field.Items.Add("Affiche");
 			field.Items.Add("A1");
 			field.Items.Add("A2");
+			field.Items.Add("A3+");
 			field.Items.Add("A3");
 			field.Items.Add("A4");
 			field.Items.Add("A5");
@@ -1136,30 +1149,31 @@ namespace Epsitec.Common.Document
 				case  8:  size = new Size(457.200, 609.600);  break;  // Affiche
 				case  9:  size = new Size(594.000, 841.000);  break;  // A1
 				case 10:  size = new Size(420.000, 594.000);  break;  // A2
-				case 11:  size = new Size(297.000, 420.000);  break;  // A3
-				case 12:  size = new Size(210.000, 297.000);  break;  // A4
-				case 13:  size = new Size(148.000, 210.000);  break;  // A5
-				case 14:  size = new Size(105.000, 148.000);  break;  // A6
-				case 15:  size = new Size(707.000,1000.000);  break;  // B1 (ISO)
-				case 16:  size = new Size(250.000, 353.000);  break;  // B4 (ISO)
-				case 17:  size = new Size(176.000, 250.000);  break;  // B5 (ISO)
-				case 18:  size = new Size(257.000, 364.000);  break;  // B4 (JIS)
-				case 19:  size = new Size(182.000, 257.000);  break;  // B5 (JIS)
-				case 20:  size = new Size(324.000, 458.000);  break;  // C3
-				case 21:  size = new Size(229.000, 324.000);  break;  // C4
-				case 22:  size = new Size(162.000, 229.000);  break;  // C5
-				case 23:  size = new Size(114.000, 162.000);  break;  // C6
-				case 24:  size = new Size(430.000, 610.000);  break;  // RA2
-				case 25:  size = new Size(305.000, 430.000);  break;  // RA3
-				case 26:  size = new Size(215.000, 305.000);  break;  // RA4
-				case 27:  size = new Size(220.000, 110.000);  break;  // DL
+				case 11:  size = new Size(329.000, 483.000);  break;  // A3+
+				case 12:  size = new Size(297.000, 420.000);  break;  // A3
+				case 13:  size = new Size(210.000, 297.000);  break;  // A4
+				case 14:  size = new Size(148.000, 210.000);  break;  // A5
+				case 15:  size = new Size(105.000, 148.000);  break;  // A6
+				case 16:  size = new Size(707.000,1000.000);  break;  // B1 (ISO)
+				case 17:  size = new Size(250.000, 353.000);  break;  // B4 (ISO)
+				case 18:  size = new Size(176.000, 250.000);  break;  // B5 (ISO)
+				case 19:  size = new Size(257.000, 364.000);  break;  // B4 (JIS)
+				case 20:  size = new Size(182.000, 257.000);  break;  // B5 (JIS)
+				case 21:  size = new Size(324.000, 458.000);  break;  // C3
+				case 22:  size = new Size(229.000, 324.000);  break;  // C4
+				case 23:  size = new Size(162.000, 229.000);  break;  // C5
+				case 24:  size = new Size(114.000, 162.000);  break;  // C6
+				case 25:  size = new Size(430.000, 610.000);  break;  // RA2
+				case 26:  size = new Size(305.000, 430.000);  break;  // RA3
+				case 27:  size = new Size(215.000, 305.000);  break;  // RA4
+				case 28:  size = new Size(220.000, 110.000);  break;  // DL
 			}
 			return size*10.0;
 		}
 
 		protected static int PaperSizeToRank(Size size)
 		{
-			for ( int rank=1 ; rank<=27 ; rank++ )
+			for ( int rank=1 ; rank<=28 ; rank++ )
 			{
 				Size paper = Dialogs.PaperRankToSize(rank);
 				if ( size.Width == paper.Width  && size.Height == paper.Height )  return rank;
@@ -1505,6 +1519,7 @@ namespace Epsitec.Common.Document
 				this.DeleteContainer(parent, "Format");
 				this.DeleteContainer(parent, "Grid");
 				this.DeleteContainer(parent, "Guides");
+				this.DeleteContainer(parent, "Move");
 				this.DeleteContainer(parent, "Misc");
 				this.windowSettings = null;
 			}

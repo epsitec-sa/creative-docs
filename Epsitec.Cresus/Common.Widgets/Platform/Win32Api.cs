@@ -31,6 +31,8 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("User32.dll")]	internal extern static bool DestroyIcon(System.IntPtr handle);
 		[DllImport ("User32.dll")]	internal extern static bool ShowWindow(System.IntPtr handle, int cmd_show);
 		[DllImport ("User32.dll")]	internal extern static bool GetWindowPlacement(System.IntPtr handle, out WindowPlacement placement);
+		[DllImport ("User32.dll")]	internal extern static System.IntPtr SetParent(System.IntPtr child, System.IntPtr parent);
+		[DllImport ("User32.dll")]	internal extern static bool IsIconic(System.IntPtr window);
 		
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr CreateCompatibleDC(System.IntPtr dc);
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr SelectObject(System.IntPtr dc, System.IntPtr handle_object);

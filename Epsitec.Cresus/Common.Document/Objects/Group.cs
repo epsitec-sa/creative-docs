@@ -66,8 +66,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.ConstrainSnapPos(ref pos);
-			drawingContext.SnapGrid(ref pos);
+			drawingContext.SnapPos(ref pos);
 
 			Selector selector = new Selector(this.document);
 			if ( rank == 0 )
@@ -125,7 +124,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.minimalBBox = this.initialBBox;
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 

@@ -372,6 +372,7 @@ Global
 		External\nunit.uikit.dll = External\nunit.uikit.dll
 		External\nunit.util.dll = External\nunit.util.dll
 		External\resources\strings.00.resource = External\resources\strings.00.resource
+		External\resources\strings.de.resource = External\resources\strings.de.resource
 		External\resources\strings.fr.resource = External\resources\strings.fr.resource
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

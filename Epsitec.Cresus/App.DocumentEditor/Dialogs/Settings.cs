@@ -147,6 +147,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				bookGuides.TabTitle = "Repères";
 				bookDoc.Items.Add(bookGuides);
 
+				TabPage bookMove = new TabPage();
+				bookMove.Name = "Move";
+				bookMove.TabTitle = "Déplacements";
+				bookDoc.Items.Add(bookMove);
+
 				TabPage bookMisc = new TabPage();
 				bookMisc.Name = "Misc";
 				bookMisc.TabTitle = "Divers";

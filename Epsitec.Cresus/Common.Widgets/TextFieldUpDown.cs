@@ -55,12 +55,14 @@ namespace Epsitec.Common.Widgets
 				
 				if ( text != "" )
 				{
-					decimal num;
 					string  dec = Types.Converter.ExtractDecimal(ref text);
 					
-					if ( Types.Converter.SafeConvert(dec, out num) )
+					try
 					{
-						value = num;
+						value = decimal.Parse(dec, System.Globalization.CultureInfo.CurrentUICulture);
+					}
+					catch
+					{
 					}
 				}
 				
@@ -443,7 +445,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.validator_1 == null)
 			{
-				this.validator_1 = new Validators.RegexValidator(this, Support.RegexFactory.DecimalNum, this.IsDefaultValueDefined);
+				this.validator_1 = new Validators.RegexValidator(this, Support.RegexFactory.LocalizedDecimalNum, this.IsDefaultValueDefined);
 			}
 			if (this.validator_2 == null)
 			{

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Support
@@ -446,7 +446,7 @@ namespace Epsitec.Common.Support
 			for (int i = 0; i < args.Length; i++)
 			{
 				string arg   = args[i];
-				Match  match = RegexFactory.DecimalNum.Match (arg);
+				Match  match = RegexFactory.InvariantDecimalNum.Match (arg);
 				
 				if (match.Success)
 				{

@@ -80,7 +80,7 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorZoom = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorZoom.icon");
 			this.selectorToolBar.Items.Add(this.selectorZoom);
 			this.selectorZoom.Command = "SelectorZoom";
-			ToolTip.Default.SetToolTip(this.selectorZoom, "Déplacement, zoom et rotation");
+			ToolTip.Default.SetToolTip(this.selectorZoom, "Déplacement, agrandissement et rotation");
 			
 			this.selectorStretch = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorStretch.icon");
 			this.selectorToolBar.Items.Add(this.selectorStretch);
@@ -98,6 +98,18 @@ namespace Epsitec.Common.Document.Containers
 			this.selectorToolBar.Items.Add(this.selectorPartial);
 			this.selectorPartial.Command = "SelectPartial";
 			ToolTip.Default.SetToolTip(this.selectorPartial, "Sélection partielle autorisée");
+
+			this.selectorToolBar.Items.Add(new IconSeparator());
+			
+			this.selectorAdaptLine = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorAdaptLine.icon");
+			this.selectorToolBar.Items.Add(this.selectorAdaptLine);
+			this.selectorAdaptLine.Command = "SelectorAdaptLine";
+			ToolTip.Default.SetToolTip(this.selectorAdaptLine, "Adapte les traits");
+			
+			this.selectorAdaptText = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.SelectorAdaptText.icon");
+			this.selectorToolBar.Items.Add(this.selectorAdaptText);
+			this.selectorAdaptText.Command = "SelectorAdaptText";
+			ToolTip.Default.SetToolTip(this.selectorAdaptText, "Adapte les textes");
 		}
 
 		// Crée le panneau pour les sélections.
@@ -439,6 +451,8 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton					selectorStretch;
 		protected IconButton					selectorTotal;
 		protected IconButton					selectorPartial;
+		protected IconButton					selectorAdaptLine;
+		protected IconButton					selectorAdaptText;
 		protected Panel							selectorPanel;
 		protected TextFieldCombo				selectorName;
 		protected Button						selectorGo;

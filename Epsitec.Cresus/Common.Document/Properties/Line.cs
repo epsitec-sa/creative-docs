@@ -34,7 +34,14 @@ namespace Epsitec.Common.Document.Properties
 			}
 			else
 			{
-				this.width = 5.0;  // 0.5mm
+				if ( this.type == Type.LineDimension )
+				{
+					this.width = 2.0;  // 0.2mm
+				}
+				else
+				{
+					this.width = 5.0;  // 0.5mm
+				}
 			}
 
 			this.cap   = CapStyle.Round;
@@ -44,6 +51,8 @@ namespace Epsitec.Common.Document.Properties
 			this.dash = false;
 			this.dashPen = new double[Line.DashMax];
 			this.dashGap = new double[Line.DashMax];
+			this.initialDashPen = new double[Line.DashMax];
+			this.initialDashGap = new double[Line.DashMax];
 
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
@@ -502,6 +511,41 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 
+		// Début du déplacement global de la propriété.
+		public override void MoveGlobalStarting()
+		{
+			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
+
+			this.InsertOpletProperty();
+
+			this.initialWidth = this.width;
+
+			for ( int i=0 ; i<Line.DashMax ; i++ )
+			{
+				this.initialDashPen[i] = this.dashPen[i];
+				this.initialDashGap[i] = this.dashGap[i];
+			}
+		}
+		
+		// Effectue le déplacement global de la propriété.
+		public override void MoveGlobalProcess(Selector selector)
+		{
+			if ( !this.document.Modifier.ActiveViewer.SelectorAdaptLine )  return;
+
+			double zoom = selector.GetTransformZoom;
+
+			this.width = this.initialWidth*zoom;
+
+			for ( int i=0 ; i<Line.DashMax ; i++ )
+			{
+				this.dashPen[i] = this.initialDashPen[i]*zoom;
+				this.dashGap[i] = this.initialDashGap[i]*zoom;
+			}
+
+			this.document.Notifier.NotifyPropertyChanged(this);
+		}
+
+		
 		// Effectue un graphics.Rasterizer.AddOutline.
 		public void AddOutline(Graphics graphics, Path path, double addWidth)
 		{
@@ -579,7 +623,7 @@ namespace Epsitec.Common.Document.Properties
 		}
 
 		// Dessine le trait le long d'un chemin.
-		public void DrawPath(Graphics graphics, DrawingContext drawingContext, Path path, Properties.Gradient gradient, Rectangle bbox)
+		public void DrawPath(Graphics graphics, DrawingContext drawingContext, Path path, Properties.Gradient gradient, SurfaceAnchor sa)
 		{
 			if ( this.width == 0.0 )  return;
 			if ( path.IsEmpty )  return;
@@ -600,12 +644,12 @@ namespace Epsitec.Common.Document.Properties
 
 				using ( Path temp = dp.GenerateDashedPath() )
 				{
-					gradient.RenderOutline(graphics, drawingContext, temp, this.width, this.cap, this.join, this.limit, bbox);
+					gradient.RenderOutline(graphics, drawingContext, temp, this.width, this.cap, this.join, this.limit, sa);
 				}
 			}
 			else	// trait continu ?
 			{
-				gradient.RenderOutline(graphics, drawingContext, path, this.width, this.cap, this.join, this.limit, bbox);
+				gradient.RenderOutline(graphics, drawingContext, path, this.width, this.cap, this.join, this.limit, sa);
 			}
 		}
 
@@ -714,6 +758,9 @@ namespace Epsitec.Common.Document.Properties
 		protected bool						dash;
 		protected double[]					dashPen;
 		protected double[]					dashGap;
+		protected double					initialWidth;
+		protected double[]					initialDashPen;
+		protected double[]					initialDashGap;
 		protected static readonly double	step = 0.01;
 		public static readonly int			DashMax = 3;
 	}

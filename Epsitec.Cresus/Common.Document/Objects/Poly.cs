@@ -127,6 +127,8 @@ namespace Epsitec.Common.Document.Objects
 						drawingContext.ConstrainAddLine(this.Handle(rank).Position, this.Handle(this.NextRank(rank)).Position);
 						drawingContext.ConstrainAddLine(this.Handle(rank).Position, this.Handle(this.PrevRank(rank)).Position);
 						drawingContext.ConstrainAddHV(this.Handle(rank).Position);
+						drawingContext.ConstrainAddCircle(this.Handle(this.NextRank(rank)).Position, this.Handle(rank).Position);
+						drawingContext.ConstrainAddCircle(this.Handle(this.PrevRank(rank)).Position, this.Handle(rank).Position);
 					}
 					else
 					{
@@ -149,13 +151,12 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.ConstrainSnapPos(ref pos);
-			drawingContext.SnapGrid(ref pos);
+			drawingContext.SnapPos(ref pos);
 
 			this.Handle(rank).Position = pos;
 
 			this.HandlePropertiesUpdate();
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.TextInfoModif(pos, rank);
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -301,8 +302,7 @@ namespace Epsitec.Common.Document.Objects
 		// Début de la création d'un objet.
 		public override void CreateMouseDown(Point pos, DrawingContext drawingContext)
 		{
-			drawingContext.ConstrainSnapPos(ref pos);
-			drawingContext.SnapGrid(ref pos);
+			drawingContext.SnapPos(ref pos);
 
 			if ( this.TotalHandle == 0 )
 			{
@@ -332,8 +332,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void CreateMouseMove(Point pos, DrawingContext drawingContext)
 		{
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.SnapGrid(ref pos);
-			drawingContext.ConstrainSnapPos(ref pos);
+			drawingContext.SnapPos(ref pos);
 
 			this.isCreating = true;
 
@@ -357,7 +356,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.Handle(rank).Position = pos;
 			}
-			this.dirtyBbox = true;
+			this.SetDirtyBbox();
 			this.TextInfoModif(pos, rank);
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -375,8 +374,7 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			this.document.Notifier.NotifyArea(this.BoundingBox);
-			drawingContext.SnapGrid(ref pos);
-			drawingContext.ConstrainSnapPos(ref pos);
+			drawingContext.SnapPos(ref pos);
 			int rank = this.TotalHandle-1;
 			this.Handle(rank).Position = pos;
 			drawingContext.ConstrainDelStarting();
@@ -794,27 +792,33 @@ namespace Epsitec.Common.Document.Objects
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
 						   out pathLine);
 
-			this.PropertyFillGradient.RenderSurface(graphics, drawingContext, pathLine, this.BoundingBoxThin);
+			this.surfaceAnchor.LineUse = false;
+			this.PropertyFillGradient.RenderSurface(graphics, drawingContext, pathLine, this.surfaceAnchor);
 
 			if ( outlineStart )
 			{
-				this.PropertyLineMode.DrawPath(graphics, drawingContext, pathStart, this.PropertyLineColor, this.BoundingBoxGeom);
+				this.surfaceAnchor.LineUse = true;
+				this.PropertyLineMode.DrawPath(graphics, drawingContext, pathStart, this.PropertyLineColor, this.surfaceAnchor);
 			}
 			if ( surfaceStart )
 			{
-				this.PropertyLineColor.RenderSurface(graphics, drawingContext, pathStart, this.BoundingBoxThin);
+				this.surfaceAnchor.LineUse = false;
+				this.PropertyLineColor.RenderSurface(graphics, drawingContext, pathStart, this.surfaceAnchor);
 			}
 
 			if ( outlineEnd )
 			{
-				this.PropertyLineMode.DrawPath(graphics, drawingContext, pathEnd, this.PropertyLineColor, this.BoundingBoxGeom);
+				this.surfaceAnchor.LineUse = true;
+				this.PropertyLineMode.DrawPath(graphics, drawingContext, pathEnd, this.PropertyLineColor, this.surfaceAnchor);
 			}
 			if ( surfaceEnd )
 			{
-				this.PropertyLineColor.RenderSurface(graphics, drawingContext, pathEnd, this.BoundingBoxThin);
+				this.surfaceAnchor.LineUse = false;
+				this.PropertyLineColor.RenderSurface(graphics, drawingContext, pathEnd, this.surfaceAnchor);
 			}
 
-			this.PropertyLineMode.DrawPath(graphics, drawingContext, pathLine, this.PropertyLineColor, this.BoundingBoxGeom);
+			this.surfaceAnchor.LineUse = true;
+			this.PropertyLineMode.DrawPath(graphics, drawingContext, pathLine, this.PropertyLineColor, this.surfaceAnchor);
 
 			if ( this.IsHilite && drawingContext.IsActive )
 			{
