@@ -10,6 +10,15 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ArrayCell()
 		{
+			this.textLayout = new TextLayout();
+			this.textNavigator = new TextNavigator(this.textLayout);
+			this.textLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
+		}
+
+		public string Content
+		{
+			get { return this.textLayout.Text; }
+			set { this.textLayout.Text = value; }
 		}
 
 		[XmlIgnore]
@@ -98,18 +107,6 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.backColor = value; }
 		}
 
-		public PropertyString TextString
-		{
-			get { return this.textString; }
-			set { this.textString = value; }
-		}
-
-		public PropertyFont TextFont
-		{
-			get { return this.textFont; }
-			set { this.textFont = value; }
-		}
-
 		public PropertyJustif TextJustif
 		{
 			get { return this.textJustif; }
@@ -130,12 +127,10 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				switch ( type )
 				{
-					case PropertyType.LineMode:      p = (sub==0) ? this.leftLine   : this.bottomLine;   break;
-					case PropertyType.LineColor:     p = (sub==0) ? this.leftColor  : this.bottomColor;  break;
-					case PropertyType.BackColor:     p = (sub==0) ? this.backColor  : null;              break;
-					case PropertyType.TextString:    p = (sub==0) ? this.textString : null;              break;
-					case PropertyType.TextFont:      p = (sub==0) ? this.textFont   : null;              break;
-					case PropertyType.TextJustif:    p = (sub==0) ? this.textJustif : null;              break;
+					case PropertyType.LineMode:    p = (sub==0) ? this.leftLine   : this.bottomLine;   break;
+					case PropertyType.LineColor:   p = (sub==0) ? this.leftColor  : this.bottomColor;  break;
+					case PropertyType.BackColor:   p = (sub==0) ? this.backColor  : null;              break;
+					case PropertyType.TextJustif:  p = (sub==0) ? this.textJustif : null;              break;
 				}
 			}
 			return p;
@@ -143,13 +138,12 @@ namespace Epsitec.Common.Pictogram.Data
 
 		public void CopyTo(ArrayCell dst)
 		{
+			dst.textLayout.Text = this.textLayout.Text;
 			this.leftLine   .CopyTo(dst.leftLine);
 			this.bottomLine .CopyTo(dst.bottomLine);
 			this.leftColor  .CopyTo(dst.leftColor);
 			this.bottomColor.CopyTo(dst.bottomColor);
 			this.backColor  .CopyTo(dst.backColor);
-			this.textString .CopyTo(dst.textString);
-			this.textFont   .CopyTo(dst.textFont);
 			this.textJustif .CopyTo(dst.textJustif);
 		}
 
@@ -169,8 +163,6 @@ namespace Epsitec.Common.Pictogram.Data
 		protected PropertyColor			leftColor;
 		protected PropertyColor			bottomColor;
 		protected PropertyColor			backColor;
-		protected PropertyString		textString;
-		protected PropertyFont			textFont;
 		protected PropertyJustif		textJustif;
 	}
 }
