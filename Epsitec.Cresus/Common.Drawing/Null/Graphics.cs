@@ -38,12 +38,12 @@ namespace Epsitec.Common.Drawing.Null
 		}
 		
 		
-		public override double PaintText(double x, double y, string text, Font font, double size, Color color)
+		public override double PaintText(double x, double y, string text, Font font, double size)
 		{
 			return font.GetTextAdvance (text) * size;
 		}
 		
-		public override double PaintText(double x, double y, string text, Font font, double size, Color color, Font.ClassInfo[] infos)
+		public override double PaintText(double x, double y, string text, Font font, double size, Font.ClassInfo[] infos)
 		{
 			return font.GetTextAdvance (text) * size;
 		}

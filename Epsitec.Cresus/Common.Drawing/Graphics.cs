@@ -91,12 +91,12 @@ namespace Epsitec.Common.Drawing
 		public abstract Renderers.Gradient	GradientRenderer{ get; }
 		public abstract Renderers.Smooth	SmoothRenderer	{ get; }
 		
-		public abstract double PaintText(double x, double y, string text, Font font, double size, Color color);
-		public abstract double PaintText(double x, double y, string text, Font font, double size, Color color, Font.ClassInfo[] infos);
+		public abstract double PaintText(double x, double y, string text, Font font, double size);
+		public abstract double PaintText(double x, double y, string text, Font font, double size, Font.ClassInfo[] infos);
 		
 		public abstract Graphics CreateAlphaMask();
 		
-		public void PaintText(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment align, Color color)
+		public void PaintText(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment align)
 		{
 			double text_width  = font.GetTextAdvance (text) * size;
 			double text_height = (font.Ascender - font.Descender) * size;
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Drawing
 					break;
 			}
 			
-			this.PaintText (x, y, text, font, size, color);
+			this.PaintText (x, y, text, font, size);
 		}
 		
 		public void PaintImage(Image bitmap, Rectangle fill)

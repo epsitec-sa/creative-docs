@@ -216,12 +216,13 @@ namespace Epsitec.Common.Drawing
 			
 			font = Font.GetFont ("Times New Roman", "Italic");
 			
-			e.Graphics.PaintText (10, 60, "Hello, world. 14pt", font, 14.0, Color.FromRGB (0, 0, 0));
-			e.Graphics.PaintText (10, 50, "Hello, world. 13pt", font, 13.0, Color.FromRGB (0, 0, 0));
-			e.Graphics.PaintText (10, 40, "Hello, world. 12pt", font, 12.0, Color.FromRGB (0, 0, 0));
-			e.Graphics.PaintText (10, 30, "Hello, world. 11pt", font, 11.0, Color.FromRGB (0, 0, 0));
-			e.Graphics.PaintText (10, 20, "Hello, world. 10pt", font, 10.0, Color.FromRGB (0, 0, 0));
-			e.Graphics.PaintText (10, 10, "Hello, world. 9pt",  font,  9.0, Color.FromRGB (0, 0, 0));
+			e.Graphics.SolidRenderer.Color = Color.FromRGB (0, 0, 0);
+			e.Graphics.PaintText (10, 60, "Hello, world. 14pt", font, 14.0);
+			e.Graphics.PaintText (10, 50, "Hello, world. 13pt", font, 13.0);
+			e.Graphics.PaintText (10, 40, "Hello, world. 12pt", font, 12.0);
+			e.Graphics.PaintText (10, 30, "Hello, world. 11pt", font, 11.0);
+			e.Graphics.PaintText (10, 20, "Hello, world. 10pt", font, 10.0);
+			e.Graphics.PaintText (10, 10, "Hello, world. 9pt",  font,  9.0);
 			
 			text = "Quelle idée\u00A0! Un fjord finlandais...";
 			y    = 80;
@@ -252,7 +253,8 @@ namespace Epsitec.Common.Drawing
 					}
 				}
 				
-				e.Graphics.PaintText (10, y, text, font, font_size, Color.FromRGB (0, 0, 0), text_infos);
+				e.Graphics.SolidRenderer.Color = Color.FromRGB (0, 0, 0);
+				e.Graphics.PaintText (10, y, text, font, font_size, text_infos);
 				e.Graphics.LineWidth = 0.8;
 				e.Graphics.AddLine (10, y, 10, y+10);
 				e.Graphics.AddLine (10 + text_width, y, 10 + text_width, y+10);
@@ -342,8 +344,8 @@ namespace Epsitec.Common.Drawing
 			
 			Agg.Graphics gfx = new Agg.Graphics ();
 			gfx.Pixmap.Size  = new System.Drawing.Size (40, 40);
-			
-			gfx.PaintText (2, 8, "@", Font.DefaultFont, 40, Color.FromRGB (1, 0.2, 0));
+			gfx.SolidRenderer.Color = Color.FromRGB (1, 0.2, 0);
+			gfx.PaintText (2, 8, "@", Font.DefaultFont, 40);
 			
 			using (Pixmap.RawData src = new Pixmap.RawData (gfx.Pixmap))
 			{
@@ -905,8 +907,9 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.PaintImage (bitmap_1, new Rectangle (0, 0, 200, 200), new Rectangle (0, 0, 200, 200));
 			e.Graphics.PaintImage (bitmap_2, new Rectangle (200, 0, 200, 200), new Rectangle (0, 0, 200, 200));
 			
-			e.Graphics.PaintText ( 10, 10, string.Format ("{0} dpi", bitmap_1.DpiX), font, 12, Color.FromBrightness (0));
-			e.Graphics.PaintText (210, 10, string.Format ("{0} dpi", bitmap_2.DpiX), font, 12, Color.FromBrightness (0));
+			e.Graphics.SolidRenderer.Color = Color.FromBrightness (0);
+			e.Graphics.PaintText ( 10, 10, string.Format ("{0} dpi", bitmap_1.DpiX), font, 12);
+			e.Graphics.PaintText (210, 10, string.Format ("{0} dpi", bitmap_2.DpiX), font, 12);
 		}
 	}
 }

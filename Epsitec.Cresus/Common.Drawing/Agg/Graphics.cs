@@ -62,24 +62,24 @@ namespace Epsitec.Common.Drawing.Agg
 		}
 		
 		
-		public override double PaintText(double x, double y, string text, Font font, double size, Color color)
+		public override double PaintText(double x, double y, string text, Font font, double size)
 		{
 			if (this.transform.OnlyTranslate && ! font.IsSynthetic)
 			{
 				x += this.transform.TX;
 				y += this.transform.TY;
 				
-				return font.PaintPixelCache (this.pixmap, text, size, x, y, color);
+				return font.PaintPixelCache (this.pixmap, text, size, x, y, this.SolidRenderer.Color);
 			}
 			else
 			{
 				double advance = this.AddText (x, y, text, font, size);
-				this.RenderSolid (color);
+				this.RenderSolid ();
 				return advance;
 			}
 		}
 		
-		public override double PaintText(double x, double y, string text, Font font, double size, Color color, Font.ClassInfo[] infos)
+		public override double PaintText(double x, double y, string text, Font font, double size, Font.ClassInfo[] infos)
 		{
 			//	TODO: déplacer ce code dans la librairie AGG; faire en sorte que ça marche aussi
 			//	si ClassId != ClassId.Space...
@@ -95,7 +95,7 @@ namespace Epsitec.Common.Drawing.Agg
 					
 					for (int j = 0; j < texts.Length; j++)
 					{
-						double w = this.PaintText (x, y, texts[j], font, size, color) + space_w;
+						double w = this.PaintText (x, y, texts[j], font, size) + space_w;
 						
 						total_w += w;
 						x       += w;
@@ -105,7 +105,7 @@ namespace Epsitec.Common.Drawing.Agg
 				}
 			}
 			
-			return this.PaintText (x, y, text, font, size, color);
+			return this.PaintText (x, y, text, font, size);
 		}
 		
 		

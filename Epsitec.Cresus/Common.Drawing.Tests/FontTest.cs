@@ -642,14 +642,14 @@ namespace Epsitec.Common.Drawing
 			
 			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " cycles -> " + (tot * 10 / cpu_speed / text.Length) + "ns / char in Cached AGG");
 			
-			
+			gra.SolidRenderer.Color = color;
 			
 			tot = 0;
 			
 			for (int i = 0; i < 100; i++)
 			{
 				c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
-				gra.PaintText (10, 180, text, font, size, color);
+				gra.PaintText (10, 180, text, font, size);
 				c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 				
 				tot += c2;
