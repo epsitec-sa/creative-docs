@@ -100,7 +100,7 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
             </References>
@@ -124,6 +124,11 @@
                 />
                 <File
                     RelPath = "Adapters\IAdapter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Adapters\Num2Adapter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -159,6 +164,11 @@
                 />
                 <File
                     RelPath = "Controllers\IController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Controllers\Num2Controller.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
