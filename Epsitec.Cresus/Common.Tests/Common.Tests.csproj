@@ -71,17 +71,17 @@
                 <Reference
                     Name = "System"
                     AssemblyName = "System"
-                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
+                    HintPath = "c:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
                     Name = "nunit.framework"
                     AssemblyName = "nunit.framework"
-                    HintPath = "..\..\..\..\..\..\Program Files\NUnit V2.0\bin\nunit.framework.dll"
+                    HintPath = "c:\Program Files\NUnit V2.0\bin\nunit.framework.dll"
                 />
                 <Reference
                     Name = "System.Drawing"
                     AssemblyName = "System.Drawing"
-                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
+                    HintPath = "c:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Drawing.dll"
                 />
                 <Reference
                     Name = "Common.Widgets"
@@ -94,19 +94,19 @@
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
                 <Reference
+                    Name = "System.Windows.Forms"
+                    AssemblyName = "System.Windows.Forms"
+                    HintPath = "c:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
+                />
+                <Reference
                     Name = "System.Data"
                     AssemblyName = "System.Data"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.Xml"
+                    AssemblyName = "System.XML"
                     HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
-                />
-                <Reference
-                    Name = "System.Windows.Forms"
-                    AssemblyName = "System.Windows.Forms"
-                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Windows.Forms.dll"
                 />
             </References>
         </Build>
@@ -114,6 +114,11 @@
             <Include>
                 <File
                     RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ColorTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -128,7 +133,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "FontTests.cs"
+                    RelPath = "FontTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "GraphicsTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -39,15 +39,15 @@ namespace Epsitec.Common.Drawing.Renderer
 			get { return this.agg_ren; }
 		}
 		
-		public System.Drawing.Color		Color
+		public Color					Color
 		{
 			set { this.SetColor (value); }
 		}
 		
 		
-		public void Clear(System.Drawing.Color color)
+		public void Clear(Color color)
 		{
-			Agg.Library.AggRendererSolidClear (this.agg_ren, color.R / 255.0, color.G / 255.0, color.B / 255.0, color.A / 255.0);
+			Agg.Library.AggRendererSolidClear (this.agg_ren, color.R, color.G, color.B, color.A);
 		}
 		
 		public void Clear(double r, double g, double b)
@@ -61,9 +61,9 @@ namespace Epsitec.Common.Drawing.Renderer
 		}
 		
 		
-		public void SetColor(System.Drawing.Color color)
+		public void SetColor(Color color)
 		{
-			Agg.Library.AggRendererSolidColor (this.agg_ren, color.R / 255.0, color.G / 255.0, color.B / 255.0, color.A / 255.0);
+			Agg.Library.AggRendererSolidColor (this.agg_ren, color.R, color.G, color.B, color.A);
 		}
 		
 		public void SetColor(double r, double g, double b)

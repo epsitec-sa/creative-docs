@@ -51,7 +51,7 @@ namespace Epsitec.Common.Tests
 		public void CheckRendererGradientEx3()
 		{
 			Common.Drawing.Renderer.Gradient gradient = new Common.Drawing.Renderer.Gradient ();
-			gradient.Fill = Common.Drawing.Renderer.GradientFill.Conic;
+			gradient.Fill = Common.Drawing.GradientFill.Conic;
 		}
 		
 		[Test] [ExpectedException (typeof (System.ArgumentOutOfRangeException))]
@@ -69,8 +69,8 @@ namespace Epsitec.Common.Tests
 			
 			pixmap.Size = new System.Drawing.Size (200, 200);
 			gradient.Pixmap = pixmap;
-			gradient.Fill = Common.Drawing.Renderer.GradientFill.Circle;
-			gradient.SetColors (System.Drawing.Color.Black, System.Drawing.Color.White);
+			gradient.Fill = Common.Drawing.GradientFill.Circle;
+			gradient.SetColors (Color.FromBrightness (0.0), Color.FromBrightness (1.0));
 			gradient.SetParameters (0, 100);
 			
 			gradient.Dispose ();
@@ -91,9 +91,9 @@ namespace Epsitec.Common.Tests
 			
 			this.global_renderer_solid = new Common.Drawing.Renderer.Solid ();
 			this.global_renderer_solid.Pixmap = this.global_pixmap;
-			this.global_renderer_solid.Clear (System.Drawing.Color.Aquamarine);
+			this.global_renderer_solid.Clear (Color.FromRGB (0, 0.5, 1.0));
 			
-			int angle = 30;
+			int angle = 5;
 			
 			double cx = form.ClientSize.Width / 2;
 			double cy = form.ClientSize.Height / 2;
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Tests
 			path.LineTo (20, 95);
 			path.Close ();
 			
-			this.global_renderer_solid.SetColor (System.Drawing.Color.White);
+			this.global_renderer_solid.SetColor (Color.FromBrightness (1.0));
 			this.global_rasterizer.FillMode = FillMode.EvenOdd;
 			this.global_rasterizer.AddSurface (path);
 			this.global_rasterizer.Render (this.global_renderer_solid);
@@ -188,7 +188,7 @@ namespace Epsitec.Common.Tests
 			this.global_renderer_gradient = new Common.Drawing.Renderer.Gradient ();
 			
 			this.global_renderer_gradient.Pixmap = this.global_pixmap;
-			this.global_renderer_gradient.Fill = Common.Drawing.Renderer.GradientFill.Circle;
+			this.global_renderer_gradient.Fill = Common.Drawing.GradientFill.Circle;
 			this.global_renderer_gradient.SetColors (0,0,0.5,1,  0,0,0.5,0);		//	R,G,B,A -> R,G,B,A
 			this.global_renderer_gradient.SetParameters (0, 150);
 			this.global_renderer_gradient.Transform = Transform.Multiply (tr, Transform.FromTranslation (170, 140));
@@ -204,6 +204,7 @@ namespace Epsitec.Common.Tests
 		{
 			this.global_pixmap.Paint (e.Graphics, e.ClipRectangle);
 		}
+		
 		
 		Common.Drawing.Rasterizer			global_rasterizer;
 		Common.Drawing.Renderer.Solid		global_renderer_solid;

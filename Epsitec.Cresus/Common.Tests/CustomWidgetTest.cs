@@ -63,7 +63,7 @@ namespace Epsitec.Common.Tests
 			path.CurveTo (0, 0, 5, 0);
 			path.Close ();
 			
-			graphics.Solid.Color = System.Drawing.Color.White;
+			graphics.Solid.Color = Color.FromName ("White");
 			graphics.Rasterizer.AddSurface (path);
 			graphics.RenderSolid ();
 			
@@ -73,14 +73,8 @@ namespace Epsitec.Common.Tests
 			Font   font = Font.GetFont ("Tahoma", "Regular");
 			double size = dy * 0.8;
 			
-			foreach (char c in this.Text)
-			{
-				int glyph = font.GetGlyphIndex (c);
-				graphics.Rasterizer.AddGlyph (font, glyph, x, y, size);
-				x += font.GetGlyphAdvance (glyph) * size;
-			}
-			
-			graphics.Solid.Color = System.Drawing.Color.Black;
+			graphics.Solid.Color = Color.FromName ("Black");
+			graphics.AddText (x, y, this.Text, font, size);
 			graphics.Rasterizer.AddOutline (path, 0.6);
 			graphics.RenderSolid ();
 		}

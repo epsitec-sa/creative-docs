@@ -62,7 +62,7 @@ namespace Epsitec.Common.Widgets
 			path.LineTo (x1, y2);
 			path.Close ();
 			
-			graphics.Solid.Color = System.Drawing.Color.FromArgb (239, 235, 222);
+			graphics.Solid.Color = this.BackColor;
 			graphics.Rasterizer.AddSurface (path);
 			graphics.RenderSolid ();
 		}

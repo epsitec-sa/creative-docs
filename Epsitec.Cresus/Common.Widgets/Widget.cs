@@ -9,6 +9,8 @@ namespace Epsitec.Common.Widgets
 		{
 			this.internal_state = InternalState.Enabled | InternalState.Visible;
 			this.anchor = AnchorStyles.Left | AnchorStyles.Top;
+			this.back_color = new Drawing.Color (0.9);
+			this.fore_color = new Drawing.Color (0.0);
 		}
 		
 		public void Dispose()
@@ -16,25 +18,39 @@ namespace Epsitec.Common.Widgets
 			this.SetEntered (false);
 		}
 
+		
 		public AnchorStyles					Anchor
 		{
 			get { return this.anchor; }
 			set { this.anchor = value; }
 		}
 		
-#if false
-		public System.Drawing.Color			BackColor
+		public Drawing.Color				BackColor
 		{
-			get;
-			set;
+			get { return this.back_color; }
+			set
+			{
+				if (this.back_color != value)
+				{
+					this.back_color = value;
+					this.Invalidate ();
+				}
+			}
 		}
 		
-		public System.Drawing.Color			ForeColor
+		public Drawing.Color				ForeColor
 		{
-			get;
-			set;
+			get { return this.fore_color; }
+			set
+			{
+				if (this.fore_color != value)
+				{
+					this.fore_color = value;
+					this.Invalidate ();
+				}
+			}
 		}
-#endif
+		
 		
 		public double						Top
 		{
@@ -1634,8 +1650,8 @@ namespace Epsitec.Common.Widgets
 		
 		
 		protected AnchorStyles				anchor;
-		protected System.Drawing.Color		back_color;
-		protected System.Drawing.Color		fore_color;
+		protected Drawing.Color				back_color;
+		protected Drawing.Color				fore_color;
 		protected double					x1, y1, x2, y2;
 		protected ClientInfo				client_info = new ClientInfo ();
 		
