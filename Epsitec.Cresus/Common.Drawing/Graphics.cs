@@ -221,6 +221,27 @@ namespace Epsitec.Common.Drawing
 			this.transform.TransformInverse (ref x, ref y);
 		}
 		
+		public void Align(ref Drawing.Rectangle rect)
+		{
+			double x1 = rect.Left;
+			double y1 = rect.Bottom;
+			double x2 = rect.Right;
+			double y2 = rect.Top;
+			
+			this.transform.TransformDirect (ref x1, ref y1);
+			this.transform.TransformDirect (ref x2, ref y2);
+			
+			x1 = System.Math.Floor (x1 + 0.5);
+			y1 = System.Math.Floor (y1 + 0.5);
+			x2 = System.Math.Floor (x2 + 0.5);
+			y2 = System.Math.Floor (y2 + 0.5);
+			
+			this.transform.TransformInverse (ref x1, ref y1);
+			this.transform.TransformInverse (ref x2, ref y2);
+			
+			rect = new Rectangle (x1, y1, x2-x1, y2-y1);
+		}
+		
 		
 		public Transform SaveTransform()
 		{
@@ -252,7 +273,7 @@ namespace Epsitec.Common.Drawing
 				x1 = System.Math.Max (x1, this.clip_x1);
 				x2 = System.Math.Min (x2, this.clip_x2);
 				y1 = System.Math.Max (y1, this.clip_y1);
-				y2 = System.Math.Max (y2, this.clip_y2);
+				y2 = System.Math.Min (y2, this.clip_y2);
 			}
 			else
 			{
@@ -275,6 +296,35 @@ namespace Epsitec.Common.Drawing
 		public void SetClippingRectangle(Rectangle rect)
 		{
 			this.SetClippingRectangle (rect.X, rect.Y, rect.Width, rect.Height);
+		}
+		
+		public Drawing.Rectangle SaveClippingRectangle()
+		{
+			if (this.has_clip_rect)
+			{
+				return new Drawing.Rectangle (this.clip_x1, this.clip_y1, this.clip_x2-this.clip_x1, this.clip_y2-this.clip_y1);
+			}
+			
+			return new Drawing.Rectangle ();
+		}
+		
+		public void RestoreClippingRectangle(Drawing.Rectangle rect)
+		{
+			if (rect.IsEmpty)
+			{
+				this.ResetClippingRectangle ();
+			}
+			else
+			{
+				this.clip_x1 = rect.Left;
+				this.clip_y1 = rect.Bottom;
+				this.clip_x2 = rect.Right;
+				this.clip_y2 = rect.Top;
+				
+				this.has_clip_rect = true;
+				
+				this.rasterizer.SetClipBox (this.clip_x1, this.clip_y1, this.clip_x2, this.clip_y2);
+			}
 		}
 		
 		public void ResetClippingRectangle()

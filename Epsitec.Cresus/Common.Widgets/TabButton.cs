@@ -7,6 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public TabButton()
 		{
+			this.internal_state &= ~ InternalState.Engageable;
 		}
 		
 		// Dessine le bouton.
@@ -21,7 +22,9 @@ namespace Epsitec.Common.Widgets
 
 			TabBook tabBook = this.Parent as TabBook;
 			Drawing.Rectangle frameRect = tabBook.TabClipRectangle;
-			graphics.SetClippingRectangle(frameRect);
+			Drawing.Rectangle localClip = tabBook.MapClientToRoot (frameRect);
+			Drawing.Rectangle saveClip  = graphics.SaveClippingRectangle ();
+			graphics.SetClippingRectangle(localClip);
 			
 			if ( this.ActiveState == WidgetState.ActiveYes )
 			{
@@ -36,7 +39,7 @@ namespace Epsitec.Common.Widgets
 
 			adorner.PaintButtonTextLayout(graphics, pos, this.text_layout, state, dir, ButtonStyle.Normal);
 
-			graphics.ResetClippingRectangle();
+			graphics.RestoreClippingRectangle(saveClip);
 		}
 		
 		

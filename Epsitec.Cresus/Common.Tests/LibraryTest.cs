@@ -18,5 +18,15 @@ namespace Epsitec.Common.Tests
 			string text = Epsitec.Common.Drawing.Agg.Library.Current.ProductName;
 			System.Console.Out.WriteLine ("ProductName: " + text);
 		}
+		
+		[Test] public void CheckCycleDelta()
+		{
+			int t0 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			int t1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			int t2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			int t3 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			
+			System.Console.Out.WriteLine ("Deltas: " + t1.ToString () + ", " + t2.ToString () + ", " + t3.ToString ());
+		}
 	}
 }

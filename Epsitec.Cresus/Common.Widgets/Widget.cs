@@ -980,6 +980,11 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 			
+			if ((this.internal_state & InternalState.Engageable) == 0)
+			{
+				return;
+			}
+			
 			if ((this.widget_state & WidgetState.Engaged) == 0)
 			{
 				if (engaged)
@@ -1010,6 +1015,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		internal virtual void SimulatePressed()
+		{
+			this.OnPressed (null);
+		}
+		
+		internal virtual void SimulateReleased()
+		{
+			this.OnReleased (null);
+		}
+		
+		internal virtual void SimulateClicked()
+		{
+			this.OnClicked (null);
+		}
 		
 		protected void SetEntered(bool entered)
 		{
@@ -1189,6 +1208,20 @@ namespace Epsitec.Common.Widgets
 			return this.MapParentToClient (point);
 		}
 		
+		public virtual Drawing.Rectangle MapRootToClient(Drawing.Rectangle rect)
+		{
+			Drawing.Point p1 = this.MapRootToClient (new Drawing.Point (rect.Left, rect.Bottom));
+			Drawing.Point p2 = this.MapRootToClient (new Drawing.Point (rect.Right, rect.Top));
+			
+			rect.X = System.Math.Min (p1.X, p2.X);
+			rect.Y = System.Math.Min (p1.Y, p2.Y);
+			
+			rect.Width  = System.Math.Abs (p1.X - p2.X);
+			rect.Height = System.Math.Abs (p1.Y - p2.Y);
+			
+			return rect;
+		}
+		
 		public virtual Drawing.Point MapClientToRoot(Drawing.Point point)
 		{
 			Widget iter = this;
@@ -1203,6 +1236,20 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			return point;
+		}
+		
+		public virtual Drawing.Rectangle MapClientToRoot(Drawing.Rectangle rect)
+		{
+			Drawing.Point p1 = this.MapClientToRoot (new Drawing.Point (rect.Left, rect.Bottom));
+			Drawing.Point p2 = this.MapClientToRoot (new Drawing.Point (rect.Right, rect.Top));
+			
+			rect.X = System.Math.Min (p1.X, p2.X);
+			rect.Y = System.Math.Min (p1.Y, p2.Y);
+			
+			rect.Width  = System.Math.Abs (p1.X - p2.X);
+			rect.Height = System.Math.Abs (p1.Y - p2.Y);
+			
+			return rect;
 		}
 		
 		
@@ -1607,7 +1654,9 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual bool PaintCheckClipping(Drawing.Rectangle repaint)
 		{
-			return repaint.IntersectsWith (this.Bounds);
+			Drawing.Rectangle bounds = this.GetPaintBounds ();
+			bounds = this.MapClientToParent (bounds);
+			return repaint.IntersectsWithAligned (bounds);
 		}
 		
 		
@@ -1752,9 +1801,7 @@ namespace Epsitec.Common.Widgets
 				{
 					Widget widget = children[children_num-1 - i];
 				
-					if ((widget.IsEnabled) &&
-						(widget.IsFrozen == false) &&
-						(widget.ContainsFocus))
+					if (widget.ContainsFocus)
 					{
 						if (widget.ShortcutHandler (shortcut))
 						{
@@ -1774,7 +1821,8 @@ namespace Epsitec.Common.Widgets
 				Widget widget = children[children_num-1 - i];
 				
 				if ((widget.IsEnabled) &&
-					(widget.IsFrozen == false))
+					(widget.IsFrozen == false) &&
+					(widget.IsVisible))
 				{
 					if (widget.ShortcutHandler (shortcut, false))
 					{
@@ -1872,7 +1920,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.Pressed != null)
 			{
-				e.Message.Consumer = this;
+				if (e != null)
+				{
+					e.Message.Consumer = this;
+				}
+				
 				this.Pressed (this, e);
 			}
 		}
@@ -1881,7 +1933,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.Released != null)
 			{
-				e.Message.Consumer = this;
+				if (e != null)
+				{
+					e.Message.Consumer = this;
+				}
+				
 				this.Released (this, e);
 			}
 		}
@@ -1890,7 +1946,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.Clicked != null)
 			{
-				e.Message.Consumer = this;
+				if (e != null)
+				{
+					e.Message.Consumer = this;
+				}
+				
 				this.Clicked (this, e);
 			}
 		}
@@ -2058,6 +2118,11 @@ namespace Epsitec.Common.Widgets
 				get { return new Drawing.Size (this.width, this.height); }
 			}
 			
+			public Drawing.Rectangle		Bounds
+			{
+				get { return new Drawing.Rectangle (0, 0, this.width, this.height); }
+			}
+			
 			public int						Angle
 			{
 				get { return this.angle; }
@@ -2182,6 +2247,7 @@ namespace Epsitec.Common.Widgets
 				System.Diagnostics.Debug.Assert (this.list[index] != null);
 				this.PreRemove (this.list[index]);
 				this.list.RemoveAt (index);
+				this.array = null;
 				this.NotifyChanged ();
 			}
 			
@@ -2194,6 +2260,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.PreRemove (value);
 				this.list.Remove (value);
+				this.array = null;
 				this.NotifyChanged ();
 			}
 			
@@ -2219,6 +2286,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.PreInsert (value);
 				int result = this.list.Add (value);
+				this.array = null;
 				this.NotifyChanged ();
 				return result;
 			}

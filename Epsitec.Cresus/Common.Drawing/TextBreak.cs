@@ -31,12 +31,13 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public bool GetNextBreak(double max_width, out string text, out double width)
+		public bool GetNextBreak(double max_width, out string text, out double width, out int n_char)
 		{
 			if (this.handle == System.IntPtr.Zero)
 			{
-				text  = "";
-				width = 0;
+				text   = "";
+				width  = 0;
+				n_char = 0;
 				
 				return false;
 			}
@@ -44,7 +45,7 @@ namespace Epsitec.Common.Drawing
 			unsafe
 			{
 				width = max_width / this.size;
-				System.IntPtr ptr = Agg.Library.AggFontFaceBreakIter (this.handle, ref width);
+				System.IntPtr ptr = Agg.Library.AggFontFaceBreakIter (this.handle, ref width, out n_char);
 				
 				text  = (ptr == System.IntPtr.Zero) ? null : new string ((char*) ptr);
 			}
@@ -53,8 +54,9 @@ namespace Epsitec.Common.Drawing
 			
 			if (text == null)
 			{
-				text  = "";
-				width = 0;
+				text   = "";
+				width  = 0;
+				n_char = 0;
 				
 				return false;
 			}

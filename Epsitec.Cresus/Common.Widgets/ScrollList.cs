@@ -15,7 +15,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.lineHeight = this.GetLineHeight();
 			this.scroller = new Scroller();
-			this.scroller.Moved += new System.EventHandler(this.HandleScroller);
+			this.scroller.Moved += new EventHandler(this.HandleScroller);
 			this.Children.Add(this.scroller);
 		}
 
@@ -28,7 +28,7 @@ namespace Epsitec.Common.Widgets
 			this.list.Clear();
 			this.isDirty = true;
 			this.Invalidate();
-			OnSelectChanged(System.EventArgs.Empty);
+			OnSelectChanged();
 		}
 
 		// Ajoute un texte à la fin de la liste.
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Widgets
 					this.selectedLine = value;
 					this.isDirty = true;
 					this.Invalidate();
-					OnSelectChanged(System.EventArgs.Empty);
+					OnSelectChanged();
 				}
 			}
 		}
@@ -134,7 +134,7 @@ namespace Epsitec.Common.Widgets
 
 
 		// Appelé lorsque l'ascenseur a bougé.
-		private void HandleScroller(object sender, System.EventArgs e)
+		private void HandleScroller(object sender)
 		{
 			this.FirstLine = (int)(this.scroller.Range-this.scroller.Position);
 		}
@@ -248,15 +248,13 @@ namespace Epsitec.Common.Widgets
 
 
 		// Génère un événement pour dire que la sélection dans la liste a changé.
-		protected virtual void OnSelectChanged(System.EventArgs e)
+		protected virtual void OnSelectChanged()
 		{
 			if ( this.SelectChanged != null )  // qq'un écoute ?
 			{
-				this.SelectChanged(this, e);
+				this.SelectChanged(this);
 			}
 		}
-
-		public event System.EventHandler SelectChanged;
 
 
 		// Retourne la hauteur de l'interligne.
@@ -303,6 +301,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+
+		public event EventHandler SelectChanged;
 
 		protected bool							isDirty;
 		protected bool							mouseDown = false;

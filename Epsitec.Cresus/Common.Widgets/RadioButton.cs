@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public RadioButton()
 		{
-			//? this.internal_state |= InternalState.AutoToggle;
+			this.internal_state |= InternalState.AutoToggle;
 		}
 		
 		public string Group
@@ -31,6 +31,14 @@ namespace Epsitec.Common.Widgets
 			if ( this.ActiveState != WidgetState.ActiveNo )
 			{
 				RadioButton.TurnOffRadio(this.Parent, this.Group, this);
+			}
+		}
+
+		public override void Toggle()
+		{
+			if (this.ActiveState != WidgetState.ActiveYes)
+			{
+				base.Toggle ();
 			}
 		}
 
@@ -110,6 +118,22 @@ namespace Epsitec.Common.Widgets
 				return Drawing.ContentAlignment.MiddleLeft;
 			}
 		}
+		
+		public override Drawing.Rectangle GetPaintBounds()
+		{
+			Drawing.Rectangle rect = base.GetPaintBounds ();
+			
+			if (this.text_layout != null)
+			{
+				Drawing.Rectangle text = this.text_layout.StandardRectangle;
+				text.Offset (this.LabelOffset);
+				text.Inflate (1, 1);
+				rect.MergeWith (text);
+			}
+			
+			return rect;
+		}
+
 
 		// Dessine le bouton.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
@@ -118,9 +142,15 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Height, this.Client.Height);
 			adorner.PaintRadio(graphics, rect, this.PaintState, this.RootDirection);
-
-			Drawing.Point origine = new Drawing.Point(this.Client.Height*RadioButton.radioWidth, 0);
-			adorner.PaintGeneralTextLayout(graphics, origine, this.text_layout, this.PaintState, this.RootDirection);
+			adorner.PaintGeneralTextLayout(graphics, this.LabelOffset, this.text_layout, this.PaintState, this.RootDirection);
+		}
+		
+		protected Drawing.Point				LabelOffset
+		{
+			get
+			{
+				return new Drawing.Point(this.Client.Height*RadioButton.radioWidth, 0);
+			}
 		}
 
 

@@ -126,6 +126,16 @@ namespace Epsitec.Common.Drawing
 			return (!r.IsEmpty) && (!this.IsEmpty) && (this.x1 < r.x2) && (this.x2 > r.x1) && (this.y1 < r.y2) && (this.y2 > r.y1);
 		}
 		
+		public bool IntersectsWithAligned(Rectangle r)
+		{
+			return (!r.IsEmpty)
+				&& (!this.IsEmpty)
+				&& (System.Math.Floor (this.x1) < System.Math.Ceiling (r.x2))
+				&& (System.Math.Ceiling (this.x2) > System.Math.Floor (r.x1))
+				&& (System.Math.Floor (this.y1) < System.Math.Ceiling (r.y2))
+				&& (System.Math.Ceiling (this.y2) > System.Math.Floor (r.y1));
+		}
+		
 		
 		public void Inflate(Size s)
 		{

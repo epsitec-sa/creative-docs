@@ -74,6 +74,7 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				this.WindowFrame.EngagedWidget = this;
+				this.SimulatePressed ();
 			}
 			
 			base.OnShortcutPressed ();

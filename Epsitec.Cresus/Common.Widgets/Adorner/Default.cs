@@ -394,8 +394,6 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			Drawing.Rectangle rect = new Drawing.Rectangle();
 
-//?			graphics.SetClippingRectangle(~titleRect);
-
 			rect = frameRect;
 			rect.Inflate(-1, -1);
 			graphics.LineWidth = 2;
@@ -410,7 +408,6 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(this.colorControlDark);
 
-//?			graphics.ResetClippingRectangle();
 			graphics.AddFilledRectangle(titleRect);
 			graphics.RenderSolid(this.colorControl);
 		}
@@ -633,6 +630,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				Drawing.Rectangle rFocus = text.StandardRectangle;
 				rFocus.Offset(pos);
+				graphics.Align (ref rFocus);
 				rFocus.Inflate(2.5, -0.5);
 				PaintFocusBox(graphics, rFocus);
 			}

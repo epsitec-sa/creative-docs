@@ -217,6 +217,16 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public void FillPixelCache(string text, double size, double ox, double oy)
+		{
+			Agg.Library.AggFontPixelCacheFill (this.handle, text, size, ox, oy);
+		}
+		
+		public void RenderPixelCache(Pixmap pixmap, string text, double size, double ox, double oy)
+		{
+			Agg.Library.AggFontPixelCacheRender (pixmap.Handle, this.handle, text, size, ox, oy);
+		}
+		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)

@@ -225,7 +225,8 @@ namespace Epsitec.Common.Tests
 		[Test] public void CheckAnchor()
 		{
 			TextLayout layout = this.NewTextLayout();
-			Rectangle[] rects = layout.FindTextRange(0, 22);
+			layout.Text = "<a href=\"x\">Link</a>";
+			Rectangle[] rects = layout.FindTextRange(0, 20);
 			Assertion.AssertNotNull(rects);
 			Assertion.AssertEquals(1, rects.Length);
 			

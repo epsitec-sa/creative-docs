@@ -96,7 +96,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.position = value;
 					this.Invalidate();
-					OnMoved(System.EventArgs.Empty);
+					OnMoved();
 				}
 			}
 		}
@@ -296,17 +296,15 @@ namespace Epsitec.Common.Widgets
 
 
 		// Génère un événement pour dire que l'ascenseur a bougé.
-		protected virtual void OnMoved(System.EventArgs e)
+		protected virtual void OnMoved()
 		{
 			if ( this.Moved != null )  // qq'un écoute ?
 			{
-				this.Moved(this, e);
+				this.Moved(this);
 			}
 		}
 
-		public event System.EventHandler Moved;
 
-		
 		// Dessine l'ascenseur.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
@@ -380,6 +378,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+
+		public event EventHandler Moved;
 
 		protected static double		standardWidth = 15;
 		protected static double		minimalCab = 8;

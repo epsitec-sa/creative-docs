@@ -102,11 +102,18 @@ namespace Epsitec.Common.Drawing.Agg
 										internal extern static int		AggFontFaceGetTextCharEndXArray(System.IntPtr face, string text, int mode, double[] x_array);
 		[DllImport ("AGG-Wrapper.dll", CharSet=CharSet.Unicode)]
 										internal extern static IntPtr	AggFontFaceBreakNew(System.IntPtr face, string text, int mode);
-		[DllImport ("AGG-Wrapper.dll")]	internal extern static IntPtr	AggFontFaceBreakIter(System.IntPtr context, ref double width);
+		[DllImport ("AGG-Wrapper.dll")]	internal extern static IntPtr	AggFontFaceBreakIter(System.IntPtr context, ref double width, out int n_char);
 		[DllImport ("AGG-Wrapper.dll")]	internal extern static void		AggFontFaceBreakDelete(System.IntPtr context);
 		[DllImport ("AGG-Wrapper.dll")]	internal extern static bool		AggFontFaceBreakHasMore(System.IntPtr context);
 		
+		[DllImport ("AGG-Wrapper.dll", CharSet=CharSet.Unicode)]
+										internal extern static void		AggFontPixelCacheFill(System.IntPtr face, string text, double scale, double ox, double oy);
+		[DllImport ("AGG-Wrapper.dll", CharSet=CharSet.Unicode)]
+										internal extern static void		AggFontPixelCacheRender(System.IntPtr buffer, System.IntPtr face, string text, double scale, double ox, double oy);
+
+		
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggDebugGetCycles(out System.UInt32 high, out System.UInt32 low);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static int		AggDebugGetCycleDelta();
 		
 		
 		public static long			Cycles
@@ -117,6 +124,14 @@ namespace Epsitec.Common.Drawing.Agg
 				Library.AggDebugGetCycles (out high, out low);
 				long cycles = (((long)high) << 32) + low;
 				return cycles;
+			}
+		}
+		
+		public static int			CycleDelta
+		{
+			get
+			{
+				return Library.AggDebugGetCycleDelta ();
 			}
 		}
 		
@@ -145,7 +160,7 @@ namespace Epsitec.Common.Drawing.Agg
 				unsafe
 				{
 					System.IntPtr ptr = Library.AggGetProductName ();
-					text = new string ((sbyte*) ptr);
+					text = new string ((char*) ptr);
 				}
 				
 				return text;
@@ -161,7 +176,7 @@ namespace Epsitec.Common.Drawing.Agg
 				unsafe
 				{
 					System.IntPtr ptr = Library.AggGetVersion ();
-					text = new string ((sbyte*) ptr);
+					text = new string ((char*) ptr);
 				}
 				
 				return text;

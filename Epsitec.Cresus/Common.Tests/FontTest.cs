@@ -98,12 +98,14 @@ namespace Epsitec.Common.Tests
 			double break_width;
 			
 			int line_count = 0;
+			int n_char;
 			string[] chunk = new string[10];
 			
-			while (tb.GetNextBreak (width, out break_text, out break_width))
+			while (tb.GetNextBreak (width, out break_text, out break_width, out n_char))
 			{
 				Assertion.Assert (break_width <= width);
 				Assertion.Assert (break_text.Length > 0);
+				Assertion.Assert (n_char > 0);
 				Assertion.Assert (! break_text.StartsWith (" "));
 				Assertion.Assert (! break_text.EndsWith (" "));
 				
@@ -116,44 +118,45 @@ namespace Epsitec.Common.Tests
 			Assertion.AssertEquals (6, line_count);
 			Assertion.AssertEquals ("", break_text);
 			Assertion.AssertEquals (0, break_width);
+			Assertion.AssertEquals (0, n_char);
 			
 			Assertion.AssertEquals ("apart.", chunk[5]);
 			
-			Assertion.AssertEquals (false, tb.GetNextBreak (width, out break_text, out break_width));
+			Assertion.AssertEquals (false, tb.GetNextBreak (width, out break_text, out break_width, out n_char));
 			
 			tb.Dispose ();
 			
 			tb = new TextBreak (font, "absolutely   ", 12.0, TextBreakMode.None);
-			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width));
+			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			Assertion.AssertEquals ("", break_text);
 			Assertion.AssertEquals (0.0, break_width);
-			Assertion.AssertEquals (true, tb.GetNextBreak (55.0, out break_text, out break_width));
+			Assertion.AssertEquals (true, tb.GetNextBreak (55.0, out break_text, out break_width, out n_char));
 			Assertion.AssertEquals ("absolutely", break_text);
-			Assertion.AssertEquals (false, tb.GetNextBreak (55.0, out break_text, out break_width));
+			Assertion.AssertEquals (false, tb.GetNextBreak (55.0, out break_text, out break_width, out n_char));
 			tb.Dispose ();
 			
 			tb = new TextBreak (font, "absolutely   ", 12.0, TextBreakMode.None);
-			Assertion.AssertEquals (true, tb.GetNextBreak (60.0, out break_text, out break_width));
+			Assertion.AssertEquals (true, tb.GetNextBreak (60.0, out break_text, out break_width, out n_char));
 			Assertion.AssertEquals ("absolutely   ", break_text);
-			Assertion.AssertEquals (false, tb.GetNextBreak (60.0, out break_text, out break_width));
+			Assertion.AssertEquals (false, tb.GetNextBreak (60.0, out break_text, out break_width, out n_char));
 			tb.Dispose ();
 			
 			tb = new TextBreak (font, "absolutely, really", 12.0, TextBreakMode.Split);
-			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width));
+			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			Assertion.AssertEquals ("absolute", break_text);
-			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width));
+			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			Assertion.AssertEquals ("ly,", break_text);
-			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width));
+			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			Assertion.AssertEquals ("really", break_text);
-			Assertion.AssertEquals (false, tb.GetNextBreak (40.0, out break_text, out break_width));
+			Assertion.AssertEquals (false, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			tb.Dispose ();
 			
 			tb = new TextBreak (font, "absolutely, really", 12.0, TextBreakMode.Ellipsis);
-			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width));
+			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			Assertion.AssertEquals ("absol\u2026", break_text);
-			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width));
+			Assertion.AssertEquals (true, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			Assertion.AssertEquals ("really", break_text);
-			Assertion.AssertEquals (false, tb.GetNextBreak (40.0, out break_text, out break_width));
+			Assertion.AssertEquals (false, tb.GetNextBreak (40.0, out break_text, out break_width, out n_char));
 			tb.Dispose ();
 		}
 		
@@ -377,6 +380,7 @@ namespace Epsitec.Common.Tests
 			
 			form.Show ();
 		}
+		static readonly int cpu_speed = 500;
 
 		[Test] public void CheckRenderingSpeed()
 		{
@@ -413,10 +417,10 @@ namespace Epsitec.Common.Tests
 				tot += c2;
 			}
 			
-			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " -> " + (tot / 100 / 1700 / text.Length) + "us / char in AGG");
+			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " -> " + (tot / 100 / cpu_speed / text.Length) + "us / char in AGG");
 		}
 		
-		[Test] public void CheckRenderingSpeedGDI()
+		[Test] public void CheckRenderingSpeedGDIPlus()
 		{
 			double   size = 10.6;
 			string   text = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
@@ -448,9 +452,121 @@ namespace Epsitec.Common.Tests
 				tot += c2;
 			}
 			
-			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " -> " + (tot * 1000 / 100 / 1700 / text.Length) + "ns / char in GDI+");
+			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " -> " + (tot * 1000 / 100 / cpu_speed / text.Length) + "ns / char in GDI+");
 		}
+		
+		[System.Runtime.InteropServices.DllImport ("GDI32.dll")] extern static void TextOut(System.IntPtr hdc, int x, int y, string text, int len);
+		[System.Runtime.InteropServices.DllImport ("GDI32.dll")] extern static void SelectObject(System.IntPtr hdc, System.IntPtr hfont);
 
+		[Test] public void CheckRenderingSpeedGDI()
+		{
+			double   size = 10.6;
+			string   text = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
+			
+			System.Drawing.Bitmap image = new System.Drawing.Bitmap (1000, 400, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+			System.Drawing.Graphics gra = System.Drawing.Graphics.FromImage (image);
+			System.Drawing.Font font = new System.Drawing.Font ("Tahoma", (float) size);
+			
+			long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c0 = c2 - c1;
+			
+			System.Console.Out.WriteLine ("Zero work: " + c0.ToString ());
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			System.IntPtr hFont = font.ToHfont ();
+			System.IntPtr hDC   = gra.GetHdc ();
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+			
+			System.Console.Out.WriteLine ("Setup: " + c2.ToString ());
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			SelectObject(hDC, hFont);
+			TextOut (hDC, 10, 200, text, text.Length);
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+			
+			System.Console.Out.WriteLine ("First rendering: " + c2.ToString ());
+			
+			long tot = 0;
+			
+			for (int i = 0; i < 100; i++)
+			{
+				c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+				SelectObject(hDC, hFont);
+				TextOut (hDC, 10, 200, text, text.Length);
+				c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+				
+				tot += c2;
+			}
+			
+			gra.ReleaseHdc (hDC);
+			
+			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " -> " + (tot * 1000 / 100 / cpu_speed / text.Length) + "ns / char in GDI");
+		}
+		
+		[Test] public void CheckFillPixelCache()
+		{
+			Graphics gra  = new Graphics ();
+			double   size = 10.6;
+			string   text = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
+			Font     font = Font.GetFont ("Tahoma", "Regular");
+			
+			long cc = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c0 = c2 - c1;
+			
+			System.Console.Out.WriteLine ("Timer overhead: " + (c0) + " cycles -> " + (c0 / cpu_speed) + "us");
+			
+			gra.SetPixmapSize (1000, 400);
+			gra.SolidRenderer.Color = Color.FromBrightness (0);
+			
+			font.FillPixelCache ("", size, 10, 200);
+			font.RenderPixelCache (gra.Pixmap, "", size, 10, 200);
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			font.FillPixelCache ("", size, 10, 200);
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+			
+			System.Console.Out.WriteLine ("Calling FillPixelCache, no work done: " + (c2) + " cycles -> " + (c2 * 1000 / cpu_speed) + "ns");
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			font.FillPixelCache (text, size, 10, 200);
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+			
+			System.Console.Out.WriteLine ("Filling the cache: " + (c2) + " cycles -> " + (c2 * 1000 / cpu_speed / text.Length) + "ns / char");
+			
+			long tot = 0;
+			
+			for (int i = 0; i < 100; i++)
+			{
+				c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+				font.RenderPixelCache (gra.Pixmap, text, size, 10, 200);
+				c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+				
+				tot += c2;
+			}
+			
+			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " cycles -> " + (tot * 10 / cpu_speed / text.Length) + "ns / char in Cached AGG");
+			
+			
+			font.FillPixelCache (text, size, 10, 240);
+			font.RenderPixelCache (gra.Pixmap, text, size, 10, 240);
+			
+			gra.AddText (10, 220, text, font, size);
+			gra.RenderSolid ();
+			
+			System.Windows.Forms.Form form = new System.Windows.Forms.Form ();
+			
+			form.ClientSize = new System.Drawing.Size (1000, 400);
+			form.Text = "CheckFillPixelCache";
+			form.Paint +=new System.Windows.Forms.PaintEventHandler(form_Paint4);
+			
+			this.global_pixmap_4 = gra.Pixmap;
+			
+			form.Show ();
+		}
+		
 		private void form_Paint1(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
 			this.global_pixmap_1.Paint (e.Graphics, e.ClipRectangle);
@@ -466,8 +582,14 @@ namespace Epsitec.Common.Tests
 			this.global_pixmap_3.Paint (e.Graphics, e.ClipRectangle);
 		}
 		
+		private void form_Paint4(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			this.global_pixmap_4.Paint (e.Graphics, e.ClipRectangle);
+		}
+		
 		private Pixmap					global_pixmap_1;
 		private Pixmap					global_pixmap_2;
 		private Pixmap					global_pixmap_3;
+		private Pixmap					global_pixmap_4;
 	}
 }

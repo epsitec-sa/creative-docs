@@ -90,6 +90,8 @@ namespace Epsitec.Common.Widgets
 						if (new_engage.AutoRepeatEngaged)
 						{
 							this.winforms_timer.Enabled = true;
+							this.winforms_timer.Interval = (int) (1000 * WindowFrame.InitialKeyboardDelay);
+							this.tick_count = 0;
 						}
 					}
 				}
@@ -241,10 +243,10 @@ namespace Epsitec.Common.Widgets
 		{
 			this.dirty_rectangle.MergeWith (rect);
 			
-			int x = (int) rect.Left;
-			int y = this.ClientSize.Height - 1 - (int) rect.Top;
-			int width  = (int) rect.Width;
-			int height = (int) rect.Height;
+			int x = (int) (rect.Left);
+			int y = this.ClientSize.Height - (int) (rect.Top + 0.9999);
+			int width  = (int) (rect.Width + 0.9999);
+			int height = (int) (rect.Height + 0.9999);
 			
 			this.Invalidate (new System.Drawing.Rectangle (x, y, width, height));
 		}
@@ -259,6 +261,19 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.engaged_widget != null)
 			{
+				this.tick_count++;
+				
+				//	Accélération progressive: première attente = délai avant répétition clavier,
+				//	puis de 20% à 100% de la vitesse de répétition clavier...
+				
+				int max   = 10;
+				int phase = System.Math.Min (this.tick_count, max);
+				double t1 = WindowFrame.InitialKeyboardDelay;
+				double t2 = WindowFrame.KeyboardRepeatPeriod;
+				double t3 = System.Math.Min (t1, t2 * 5);
+				
+				this.winforms_timer.Interval = (int) ((t3*(max-phase) + t2*phase) * 1000 / max);
+				
 				if (this.engaged_widget.IsEngaged)
 				{
 					this.engaged_widget.FireStillEngaged ();
@@ -386,7 +401,12 @@ namespace Epsitec.Common.Widgets
 			
 			if (message.Type == MessageType.KeyUp)
 			{
-				this.EngagedWidget = null;
+				if (this.EngagedWidget != null)
+				{
+					this.EngagedWidget.SimulateReleased ();
+					this.EngagedWidget.SimulateClicked ();
+					this.EngagedWidget = null;
+				}
 			}
 			
 			if (consumer != null)
@@ -491,6 +511,51 @@ namespace Epsitec.Common.Widgets
 			Widget child = this.root.FindChild (pos);
 			return (child == null) ? this.root : child;
 		}
+
+		public static double					InitialKeyboardDelay
+		{
+			get
+			{
+				try
+				{
+					using (Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey (@"Control Panel\Keyboard"))
+					{
+						switch (System.Int32.Parse ((string) key.GetValue ("KeyboardDelay")))
+						{
+							case 0:	return 0.250;
+							case 1: return 0.500;
+							case 2: return 0.750;
+							case 3: return 1.000;
+						}
+					}
+				}
+				catch
+				{
+				}
+				
+				return 0.5;
+			}
+		}
+		
+		public static double					KeyboardRepeatPeriod
+		{
+			get
+			{
+				try
+				{
+					using (Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey (@"Control Panel\Keyboard"))
+					{
+						int speed = System.Int32.Parse ((string) key.GetValue ("KeyboardSpeed")) + 2;
+						return 1.0 / speed;
+					}
+				}
+				catch
+				{
+				}
+				
+				return 0.1;
+			}
+		}
 		
 		
 		protected WindowRoot					root;
@@ -501,5 +566,6 @@ namespace Epsitec.Common.Widgets
 		protected Widget						focused_widget;
 		protected Widget						engaged_widget;
 		protected System.Windows.Forms.Timer	winforms_timer;
+		protected int							tick_count;
 	}
 }

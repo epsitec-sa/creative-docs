@@ -1213,7 +1213,9 @@ namespace Epsitec.Common.Widgets
 
 						string breakText;
 						double breakWidth;
-						while ( tb.GetNextBreak(restWidth, out breakText, out breakWidth) )
+						int    breakChars;
+						
+						while ( tb.GetNextBreak(restWidth, out breakText, out breakWidth, out breakChars) )
 						{
 							if ( breakWidth == 0 )  // pas la place ?
 							{
@@ -1239,7 +1241,8 @@ namespace Epsitec.Common.Widgets
 							block.visible    = false;
 							this.blocks.Add(block);
 
-							textIndex += breakText.Length+1;  // TODO: améliorer GetNextBreak !!!
+							// TODO: améliorer GetNextBreak !!!
+							textIndex += breakChars; //breakText.Length+1;
 
 							if ( tb.MoreText )  // reste encore du texte ?
 							{

@@ -682,6 +682,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				Drawing.Rectangle rFocus = text.StandardRectangle;
 				rFocus.Offset(pos);
+				graphics.Align (ref rFocus);
 				rFocus.Inflate(2.5, -0.5);
 				PaintFocusBox(graphics, rFocus);
 			}

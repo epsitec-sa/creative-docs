@@ -45,7 +45,7 @@ namespace Epsitec.Common.Widgets
 				case TextFieldType.MultiLine:
 					this.scroller = new Scroller();
 					this.scroller.SetEnabled(false);
-					this.scroller.Moved += new System.EventHandler(this.HandleScroller);
+					this.scroller.Moved += new EventHandler(this.HandleScroller);
 					this.Children.Add(this.scroller);
 					break;
 
@@ -395,7 +395,7 @@ namespace Epsitec.Common.Widgets
 
 
 		// Gestion d'un événement lorsque l'ascenseur est déplacé.
-		private void HandleScroller(object sender, System.EventArgs e)
+		private void HandleScroller(object sender)
 		{
 			if ( this.type != TextFieldType.MultiLine )  return;
 
@@ -459,7 +459,7 @@ namespace Epsitec.Common.Widgets
 			this.scrollList.AddText("Octobre");
 			this.scrollList.AddText("Novembre");
 			this.scrollList.AddText("Decembre");
-			this.Parent.Children.Add(this.scrollList);  // TODO: pourquoi ça ne fonctionne pas ???
+			this.Parent.Children.Add(this.scrollList);
 		}
 
 		// Gestion d'un événement.
@@ -679,7 +679,7 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 			this.ResetCursor();
 			CursorScroll();
-			OnTextChanged(System.EventArgs.Empty);
+			OnTextChanged();
 			return true;
 		}
 
@@ -703,7 +703,7 @@ namespace Epsitec.Common.Widgets
 				this.Invalidate();
 				this.ResetCursor();
 				CursorScroll();
-				OnTextChanged(System.EventArgs.Empty);
+				OnTextChanged();
 			}
 			else	// à droite du curseur ?
 			{
@@ -716,7 +716,7 @@ namespace Epsitec.Common.Widgets
 				this.Invalidate();
 				this.ResetCursor();
 				CursorScroll();
-				OnTextChanged(System.EventArgs.Empty);
+				OnTextChanged();
 			}
 
 			return true;
@@ -742,7 +742,7 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 			this.ResetCursor();
 			CursorScroll();
-			OnTextChanged(System.EventArgs.Empty);
+			OnTextChanged();
 			return true;
 		}
 
@@ -853,15 +853,13 @@ namespace Epsitec.Common.Widgets
 
 
 		// Génère un événement pour dire que le texte a changé.
-		protected virtual void OnTextChanged(System.EventArgs e)
+		protected virtual void OnTextChanged()
 		{
 			if ( this.TextChanged != null )  // qq'un écoute ?
 			{
-				this.TextChanged(this, e);
+				this.TextChanged(this);
 			}
 		}
-
-		public event System.EventHandler TextChanged;
 
 
 		// Calcule le scrolling pour que le curseur soit visible.
@@ -928,11 +926,12 @@ namespace Epsitec.Common.Widgets
 			pos -= this.scrollOffset;
 			
 			adorner.PaintTextFieldBackground(graphics, rect, state, dir, this.textStyle);
-
+			
+			Drawing.Rectangle rSaveClip = graphics.SaveClippingRectangle ();
 			Drawing.Rectangle rClip = new Drawing.Rectangle();
 			rClip = rect;
-			rClip.Inflate(-2, -2);  // TODO: le clipping ne semble pas fonctionner en haut !
-			rClip.Offset(this.Left, this.Bottom);
+			rClip.Inflate(-2, -2);
+			rClip = this.MapClientToRoot (rClip);
 			graphics.SetClippingRectangle(rClip);
 
 			if ( (state&WidgetState.Focused) == 0 )
@@ -951,7 +950,6 @@ namespace Epsitec.Common.Widgets
 				{
 					Drawing.Rectangle[] rects = this.text_layout.FindTextRange(from, to);
 					adorner.PaintTextSelectionBackground(graphics, pos, rects);
-
 					adorner.PaintGeneralTextLayout(graphics, pos, this.text_layout, state&~WidgetState.Focused, dir);
 				}
 
@@ -960,14 +958,16 @@ namespace Epsitec.Common.Widgets
 				this.cursorPosX = (rCursor.Left+rCursor.Right)/2;
 				double x = rCursor.Left;
 				double y = rCursor.Bottom;
-				graphics.Align(ref x, ref x);
+				graphics.Align(ref x, ref y);
 				rCursor.Offset(x-rCursor.Left+0.5, 0);
 				adorner.PaintTextCursor(graphics, pos, rCursor, this.showCursor);
 			}
 
-			graphics.ResetClippingRectangle();
+			graphics.RestoreClippingRectangle(rSaveClip);
 		}
 
+
+		public event EventHandler TextChanged;
 
 		protected TextFieldType				type = TextFieldType.SingleLine;
 		protected static readonly double	margin = 3;

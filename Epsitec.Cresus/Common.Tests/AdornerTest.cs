@@ -56,7 +56,7 @@ namespace Epsitec.Common.Tests
 			look1.ActiveState = WidgetState.ActiveYes;
 			look1.Group = "Look";
 			look1.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			look1.Clicked += new MessageEventHandler(this.HandleLook);
+			look1.ActiveStateChanged += new EventHandler(this.HandleLook);
 			window.Root.Children.Add(look1);
 
 			RadioButton look2 = new RadioButton();
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Tests
 			look2.Text = "Look <m>X</m>P";
 			look2.Group = "Look";
 			look2.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			look2.Clicked += new MessageEventHandler(this.HandleLook);
+			look2.ActiveStateChanged += new EventHandler(this.HandleLook);
 			window.Root.Children.Add(look2);
 
 			RadioButton look3 = new RadioButton();
@@ -76,7 +76,7 @@ namespace Epsitec.Common.Tests
 			look3.Text = "Look <m>D</m>any";
 			look3.Group = "Look";
 			look3.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			look3.Clicked += new MessageEventHandler(this.HandleLook);
+			look3.ActiveStateChanged += new EventHandler(this.HandleLook);
 			window.Root.Children.Add(look3);
 
 			CheckButton check = new CheckButton();
@@ -152,7 +152,7 @@ namespace Epsitec.Common.Tests
 			scrollh.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(scrollh);
 
-#if false
+#if true
 			TextField combo = new TextField(TextFieldType.Combo);
 			combo.Name = "Combo";
 			combo.Location = new Point(160, 180);
@@ -220,24 +220,26 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 
-		private void HandleLook(object sender, MessageEventArgs e)
+		private void HandleLook(object sender)
 		{
 			RadioButton button = sender as RadioButton;
-			button.Toggle();
-			Widgets.Adorner.Factory.SetActive(button.Name);
-			button.Parent.Invalidate();  // redessine toute la fenêtre
+			if (button.ActiveState == WidgetState.ActiveYes)
+			{
+				Widgets.Adorner.Factory.SetActive(button.Name);
+				button.RootParent.Invalidate();  // redessine toute la fenêtre
+			}
 		}
 
 		private void HandleCheck(object sender, MessageEventArgs e)
 		{
 			CheckButton button = sender as CheckButton;
-			button.Toggle();
+//			button.Toggle();
 		}
 
 		private void HandleRadio(object sender, MessageEventArgs e)
 		{
 			RadioButton button = sender as RadioButton;
-			button.Toggle();
+//			button.Toggle();
 		}
 
 
@@ -281,6 +283,8 @@ namespace Epsitec.Common.Tests
 			tb.Name = "TabBook";
 			tb.Location = new Point(10, 10);
 			tb.Size = new Size(380, 280);
+//PA			tb.Size = new Size(280, 380);
+//PA			tb.SetClientAngle (90);
 			tb.Text = "";
 			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(tb);
@@ -369,7 +373,7 @@ namespace Epsitec.Common.Tests
 			look1.ActiveState = WidgetState.ActiveYes;
 			look1.Group = "Look";
 			look1.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			look1.Clicked += new MessageEventHandler(this.HandleLookP);
+			look1.ActiveStateChanged += new EventHandler(this.HandleLook);
 			page4.Children.Add(look1);
 
 			RadioButton look2 = new RadioButton();
@@ -379,7 +383,7 @@ namespace Epsitec.Common.Tests
 			look2.Text = "Look <m>X</m>P";
 			look2.Group = "Look";
 			look2.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			look2.Clicked += new MessageEventHandler(this.HandleLookP);
+			look2.ActiveStateChanged += new EventHandler(this.HandleLook);
 			page4.Children.Add(look2);
 
 			RadioButton look3 = new RadioButton();
@@ -389,7 +393,7 @@ namespace Epsitec.Common.Tests
 			look3.Text = "Look <m>D</m>any";
 			look3.Group = "Look";
 			look3.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
-			look3.Clicked += new MessageEventHandler(this.HandleLookP);
+			look3.ActiveStateChanged += new EventHandler(this.HandleLook);
 			page4.Children.Add(look3);
 
 			StaticText link = new StaticText();
@@ -445,14 +449,6 @@ namespace Epsitec.Common.Tests
 			window.FocusedWidget = tb;
 
 			window.Show();
-		}
-
-		private void HandleLookP(object sender, MessageEventArgs e)
-		{
-			RadioButton button = sender as RadioButton;
-			button.Toggle();
-			Widgets.Adorner.Factory.SetActive(button.Name);
-			button.Parent.Parent.Invalidate();  // redessine toute la fenêtre
 		}
 
 		private void HandleAdd(object sender, MessageEventArgs e)
