@@ -524,7 +524,7 @@ namespace Epsitec.Common.Widgets
 
 			this.window = new WindowFrame();
 			this.window.MakeFramelessWindow();
-			//this.window.Owner = this.WindowFrame;
+			this.window.IsMouseActivationEnabled = false;
 			pos = item.WindowFrame.MapWindowToScreen(pos);
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
 			WindowFrame.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
@@ -627,7 +627,8 @@ namespace Epsitec.Common.Widgets
 					if ( menu == null )
 					{
 						this.CloseAll();
-						message.Consumer = this;  // TODO: comment bouffer aussi le MouseUp ?
+						message.Handled = true;  // TODO: comment bouffer aussi le MouseUp ?
+						message.Swallowed = true;
 					}
 					else
 					{
@@ -636,7 +637,8 @@ namespace Epsitec.Common.Widgets
 							Menu sub = this;
 							while ( sub.submenu != null )  sub = sub.submenu;
 							sub.SetFocused(true);  // TODO: il faudrait pouvoir ignorer ce clic !!!
-							message.Consumer = this;
+							message.Handled = true;
+							message.Swallowed = true;
 						}
 					}
 					break;

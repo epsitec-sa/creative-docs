@@ -1345,6 +1345,32 @@ namespace Epsitec.Common.Widgets
 					Widget.enteredWidgets.Remove (this);
 					this.widgetState &= ~ WidgetState.Entered;
 					
+					//	Il faut aussi supprimer les éventuels enfants encore marqués comme 'entered'.
+					//	Pour ce faire, on passe en revue tous les widgets à la recherche d'enfants
+					//	directs.
+					
+					int i = 0;
+					
+					while (i < Widget.enteredWidgets.Count)
+					{
+						Widget candidate = Widget.enteredWidgets[i] as Widget;
+						
+						if (candidate.Parent == this)
+						{
+							candidate.SetEntered (false);
+							
+							//	Note: le fait de changer l'état de l'enfant va modifier la liste des
+							//	widgets sur laquelle on est en train d'itérer. On reprend donc, par
+							//	précaution, l'itération au début...
+							
+							i = 0;
+						}
+						else
+						{
+							i++;
+						}
+					}
+					
 					message = Message.FromMouseEvent (MessageType.MouseLeave, null, null);
 					
 					this.OnExited (new MessageEventArgs (message, Message.State.LastPosition));

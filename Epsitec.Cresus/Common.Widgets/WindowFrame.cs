@@ -305,6 +305,19 @@ namespace Epsitec.Common.Widgets
 			get { return this.is_frozen; }
 		}
 		
+		public bool							IsMouseActivationEnabled
+		{
+			get
+			{
+				return !this.is_no_activate;
+			}
+			
+			set
+			{
+				this.is_no_activate = !value;
+			}
+		}
+		
 		public double						Alpha
 		{
 			get { return this.alpha; }
@@ -839,7 +852,7 @@ namespace Epsitec.Common.Widgets
 					//	Si l'utilisateur clique dans la fenêtre, on veut recevoir l'événement d'activation
 					//	dans tous les cas.
 					
-					msg.Result = (System.IntPtr) Win32Const.MA_ACTIVATE;
+					msg.Result = (System.IntPtr) (this.is_no_activate ? Win32Const.MA_NOACTIVATE : Win32Const.MA_ACTIVATE);
 					return;
 				}
 				
@@ -918,6 +931,23 @@ namespace Epsitec.Common.Widgets
 		{
 			Message message = Message.FromWndProcMessage (this, ref msg);
 			
+			if (this.filter_mouse_messages)
+			{
+				//	Si le filtre des messages souris est actif, on mange absolument tous
+				//	les événements relatifs à la souris, jusqu'à ce que tous les boutons
+				//	aient été relâchés.
+				
+				if (Message.IsMouseMsg (msg))
+				{
+					if (Message.State.Buttons == Widgets.MouseButtons.None)
+					{
+						this.filter_mouse_messages = false;
+					}
+					
+					return true;
+				}
+			}
+			
 			if (message != null)
 			{
 				if (WindowFrame.MessageFilter != null)
@@ -929,6 +959,23 @@ namespace Epsitec.Common.Widgets
 					
 					if (message.Handled)
 					{
+						if (message.Swallowed)
+						{
+							//	Le message a été mangé. Il faut donc aussi manger le message
+							//	correspondant si les messages viennent par paire.
+							
+							switch (message.Type)
+							{
+								case MessageType.MouseDown:
+									this.filter_mouse_messages = true;
+									break;
+								
+								case MessageType.KeyDown:
+									//	TODO: prend note qu'il faut manger l'événement
+									break;
+							}
+						}
+						
 						return true;
 					}
 				}
@@ -1236,6 +1283,8 @@ namespace Epsitec.Common.Widgets
 		protected bool							prevent_close;
 		protected bool							is_layered;
 		protected bool							is_frozen;
+		protected bool							is_no_activate;
+		protected bool							filter_mouse_messages;
 		protected double						alpha = 1.0;
 		protected int							wnd_proc_depth;
 		

@@ -50,6 +50,12 @@ namespace Epsitec.Common.Widgets
 			set { this.is_handled = value; }
 		}
 		
+		public bool							Swallowed
+		{
+			get { return this.is_swallowed; }
+			set { this.is_swallowed = value; }
+		}
+		
 		public bool							NonClient
 		{
 			get { return this.is_non_client; }
@@ -252,6 +258,38 @@ namespace Epsitec.Common.Widgets
 		{
 			x = (short)((((int)l_param) >>  0) & 0x0000ffff);
 			y = (short)((((int)l_param) >> 16) & 0x0000ffff);
+		}
+		
+		internal static bool IsMouseMsg(System.Windows.Forms.Message msg)
+		{
+			switch (msg.Msg)
+			{
+				case Win32Const.WM_LBUTTONDOWN:
+				case Win32Const.WM_LBUTTONDBLCLK:
+				case Win32Const.WM_LBUTTONUP:
+				case Win32Const.WM_NCLBUTTONDOWN:
+				
+				case Win32Const.WM_RBUTTONDOWN:
+				case Win32Const.WM_RBUTTONDBLCLK:
+				case Win32Const.WM_RBUTTONUP:
+				case Win32Const.WM_NCRBUTTONDOWN:
+				
+				case Win32Const.WM_MBUTTONDOWN:
+				case Win32Const.WM_MBUTTONDBLCLK:
+				case Win32Const.WM_MBUTTONUP:
+				case Win32Const.WM_NCMBUTTONDOWN:
+				
+				case Win32Const.WM_XBUTTONDOWN:
+				case Win32Const.WM_XBUTTONDBLCLK:
+				case Win32Const.WM_XBUTTONUP:
+				case Win32Const.WM_NCXBUTTONDOWN:
+				
+				case Win32Const.WM_MOUSEMOVE:
+				case Win32Const.WM_MOUSEWHEEL:
+					return true;
+			}
+			
+			return false;
 		}
 		
 		internal static System.Windows.Forms.MouseButtons ButtonFromMsg(System.Windows.Forms.Message msg)
@@ -538,6 +576,7 @@ namespace Epsitec.Common.Widgets
 		protected bool						is_captured;
 		protected bool						is_handled;
 		protected bool						is_non_client;
+		protected bool						is_swallowed;
 		protected Widget					in_widget;
 		protected Widget					consumer;
 		
