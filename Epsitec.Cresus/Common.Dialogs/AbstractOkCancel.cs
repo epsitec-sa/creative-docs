@@ -6,7 +6,7 @@ namespace Epsitec.Common.Dialogs
 	/// <summary>
 	/// Summary description for AbstractOkCancel.
 	/// </summary>
-	public abstract class AbstractOkCancel
+	public abstract class AbstractOkCancel : AbstractDialog
 	{
 		public AbstractOkCancel(string dialog_title, string command_template, CommandDispatcher command_dispatcher)
 		{
@@ -15,25 +15,6 @@ namespace Epsitec.Common.Dialogs
 			this.command_template   = command_template;
 			this.command_dispatcher = command_dispatcher;
 			this.private_dispatcher = new CommandDispatcher ("Dialog", true);
-		}
-		
-		
-		public void Show()
-		{
-			if (this.window == null)
-			{
-				this.CreateWindow ();
-			}
-			
-			this.window.Show ();
-		}
-		
-		public void Close()
-		{
-			this.window.Hide ();
-			this.window.CommandDispatcher.Dispose ();
-			this.window.CommandDispatcher = null;
-			this.window.AsyncDispose ();
 		}
 		
 		
@@ -70,7 +51,7 @@ namespace Epsitec.Common.Dialogs
 		
 		protected abstract Widget CreateBodyWidget();
 		
-		protected virtual void CreateWindow()
+		protected override void CreateWindow()
 		{
 			Widget body = this.CreateBodyWidget ();
 			Button button;
@@ -101,6 +82,7 @@ namespace Epsitec.Common.Dialogs
 			button.ButtonStyle   = ButtonStyle.DefaultActive;
 			button.TabIndex      = 2;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			button.Shortcut      = new Shortcut (KeyCode.Return);
 			
 			button               = new Button (this.window.Root);
 			button.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 80 - 8, 16, 80, 24);
@@ -108,6 +90,7 @@ namespace Epsitec.Common.Dialogs
 			button.Command       = "QuitDialog";
 			button.TabIndex      = 3;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			button.Shortcut      = new Shortcut (KeyCode.Escape);
 			
 			this.window.FocusedWidget = body.FindTabWidget (Widget.TabNavigationDir.Forwards, Widget.TabNavigationMode.ActivateOnTab);
 		}
@@ -128,7 +111,6 @@ namespace Epsitec.Common.Dialogs
 		
 		protected string						dialog_title;
 		protected System.Collections.ArrayList	dialog_values;
-		protected Window						window;
 		protected string						command_template;
 		protected Support.CommandDispatcher		command_dispatcher;
 		protected Support.CommandDispatcher		private_dispatcher;

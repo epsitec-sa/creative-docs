@@ -154,6 +154,18 @@ namespace Epsitec.Common.Widgets
 			window.Show ();
 		}
 
+		[Test] public void CheckMakeToolWindow()
+		{
+			Window owner  = Window.FindFromName ("CheckAdornerWidgets");
+			Window window = new Window ();
+			window.MakeToolWindow ();
+			window.Name = "ToolWindow";
+			window.Owner = owner;
+			window.ClientSize = new Size (300, 50);
+			window.Root.BackColor = Color.FromRGB (1, 1, 1);
+			window.Show ();
+		}
+		
 		[Test] public void CheckWindowParentChildRelationship()
 		{
 			Window w1 = new Window ();
@@ -506,6 +518,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.Show ();
 		}
+		
 		
 		private void Root_Clicked(object sender, MessageEventArgs e)
 		{

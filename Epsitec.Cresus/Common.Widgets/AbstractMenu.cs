@@ -484,7 +484,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Affiche un menu contextuel dont on spécifie le coin sup/gauche.
-		public void ShowContextMenu(Drawing.Point pos)
+		public void ShowContextMenu(Window owner, Drawing.Point pos)
 		{
 			Window lastWindow = Message.State.LastWindow;
 			
@@ -499,6 +499,9 @@ namespace Epsitec.Common.Widgets
 
 			this.window = new Window();
 			this.window.MakeFramelessWindow();
+			this.window.MakeToolWindow();
+			this.window.Owner = owner;
+			this.window.Name = "ContextMenu";
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			if ( adorner.AlphaVMenu < 1.0 )
 			{
@@ -577,6 +580,9 @@ namespace Epsitec.Common.Widgets
 
 			this.window = new Window();
 			this.window.MakeFramelessWindow();
+			this.window.MakeToolWindow();
+			this.window.Owner = item.Window;
+			this.window.Name = "Menu";
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			if ( this.submenu.IsVertical && adorner.AlphaVMenu < 1.0 )
 			{

@@ -47,6 +47,7 @@ namespace Epsitec.Common.Widgets
 			
 			window.ClientSize = new Size(600, 340);
 			window.Text = "CheckAdornerWidgets";
+			window.Name = "CheckAdornerWidgets";
 
 			ToolTip tip = new ToolTip();
 			tip.Behaviour = ToolTipBehaviour.Normal;
@@ -441,7 +442,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(multi);
 
 			TabBook tab = new TabBook();
-			tab.TabBookStyle = TabBookStyle.Right;
+			tab.Arrows = TabBookArrows.Right;
 			tab.Location = new Point(280, 70);
 			tab.Size = new Size(300, 180);
 			tab.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
@@ -663,7 +664,7 @@ namespace Epsitec.Common.Widgets
 			window.WindowClosed += new EventHandler(this.HandleWindowClosed);
 
 			TabBook tb = new TabBook();
-			tb.TabBookStyle = TabBookStyle.Right;
+			tb.Arrows = TabBookArrows.Right;
 			tb.Name = "TabBook";
 			tb.Location = new Point(10, 10);
 			tb.Size = new Size(380, 280);
@@ -826,7 +827,7 @@ namespace Epsitec.Common.Widgets
 			window.Text = "CheckAdornerTab2";
 
 			TabBook tb = new TabBook();
-			tb.TabBookStyle = TabBookStyle.Right;
+			tb.Arrows = TabBookArrows.Right;
 			tb.Name = "TabBook";
 			tb.Location = new Point(10, 10);
 			tb.Size = new Size(380, 280);
@@ -1361,7 +1362,7 @@ namespace Epsitec.Common.Widgets
 			window.Text = "CheckAdornerTab";
 
 			TabBook tb = new TabBook();
-			tb.TabBookStyle = TabBookStyle.Right;
+			tb.Arrows = TabBookArrows.Right;
 			tb.Name = "TabBook";
 			tb.Location = new Point(10, 10);
 			tb.Size = new Size(380, 280);
