@@ -27,8 +27,8 @@ namespace Epsitec.Common.Tests
 			
 			double x = window.ClientSize.Width - 90;
 
-			a.Name = "A"; a.Location = new Point (x, 40); a.Size = new Size (80, 20); a.Text = "OK";	 a.Anchor = Widget.AnchorStyles.Bottom | Widget.AnchorStyles.Right;
-			b.Name = "B"; b.Location = new Point (x, 10); b.Size = new Size (80, 20); b.Text = "Cancel"; b.Anchor = Widget.AnchorStyles.Bottom | Widget.AnchorStyles.Right;
+			a.Name = "A"; a.Location = new Point (x, 40); a.Size = new Size (80, 20); a.Text = "OK";	 a.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+			b.Name = "B"; b.Location = new Point (x, 10); b.Size = new Size (80, 20); b.Text = "Cancel"; b.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
 			
 			window.Show ();
 		}
@@ -39,7 +39,9 @@ namespace Epsitec.Common.Tests
 		public CustomWidget()
 		{
 			this.internal_state |= InternalState.AutoFocus;
+			this.internal_state |= InternalState.AutoEngage;
 			this.internal_state |= InternalState.Focusable;
+			this.internal_state |= InternalState.Engageable;
 		}
 		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clip_rect)
@@ -123,7 +125,7 @@ namespace Epsitec.Common.Tests
 					if ((message.IsCtrlPressed == false) &&
 						(message.KeyCode == 27))
 					{
-						this.SetFocus (false);
+						this.SetFocused (false);
 					}
 					
 					break;

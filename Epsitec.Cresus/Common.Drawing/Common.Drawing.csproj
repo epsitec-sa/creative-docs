@@ -118,6 +118,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IImageProvider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Image.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IRenderer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

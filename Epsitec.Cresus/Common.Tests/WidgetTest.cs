@@ -48,10 +48,10 @@ namespace Epsitec.Common.Tests
 			
 			root.Children.Add (widget);
 			
-			widget.Anchor = Widget.AnchorStyles.Left;
+			widget.Anchor = AnchorStyles.Left;
 			widget.Bounds = new Rectangle (20, 10, 80, 30);
 			
-			Assertion.Assert (widget.Anchor == Widget.AnchorStyles.Left);
+			Assertion.Assert (widget.Anchor == AnchorStyles.Left);
 			
 			root.Width = 140;
 			Assertion.Assert (widget.Left == 20);
@@ -61,10 +61,10 @@ namespace Epsitec.Common.Tests
 			Assertion.Assert (widget.Left == 20);
 			Assertion.Assert (widget.Width == 80);
 			
-			widget.Anchor = Widget.AnchorStyles.Right;
+			widget.Anchor = AnchorStyles.Right;
 			widget.Bounds = new Rectangle (20, 10, 80, 30);
 			
-			Assertion.Assert (widget.Anchor == Widget.AnchorStyles.Right);
+			Assertion.Assert (widget.Anchor == AnchorStyles.Right);
 			
 			root.Width = 140;
 			Assertion.Assert ("AnchorStyles.Right, widget.Left not OK", widget.Left == 40);
