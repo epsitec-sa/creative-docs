@@ -27,6 +27,7 @@ namespace Epsitec.Common.Drawing
 		void ScaleTransform(double sx, double sy, double cx, double cy);
 		void RotateTransform(double angle, double cx, double cy);
 		void TranslateTransform(double ox, double oy);
+		void MergeTransform(Transform transform);
 		
 		void PaintOutline(Path path);
 		void PaintSurface(Path path);
