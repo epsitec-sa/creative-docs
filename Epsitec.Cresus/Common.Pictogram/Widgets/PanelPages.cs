@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelPages permet de représenter toutes les pages.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelPages : Epsitec.Common.Widgets.Widget
 	{
 		public PanelPages(Drawer drawer, ToolTip toolTip)
