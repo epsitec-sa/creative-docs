@@ -2101,6 +2101,80 @@ namespace Epsitec.Common.Widgets
 			return rect;
 		}
 
+		public virtual Drawing.Rectangle MapScreenToClient(Drawing.Rectangle rect)
+		{
+			bool flip_x = rect.Width < 0;
+			bool flip_y = rect.Height < 0;
+			
+			Drawing.Point p1 = this.MapScreenToClient (new Drawing.Point (rect.Left, rect.Bottom));
+			Drawing.Point p2 = this.MapScreenToClient (new Drawing.Point (rect.Right, rect.Top));
+			
+			rect.X = System.Math.Min (p1.X, p2.X);
+			rect.Y = System.Math.Min (p1.Y, p2.Y);
+			
+			rect.Width  = System.Math.Abs (p1.X - p2.X);
+			rect.Height = System.Math.Abs (p1.Y - p2.Y);
+			
+			int angle = this.client_info.angle;
+			
+			switch (angle)
+			{
+				case 0:
+				case 180:
+					if (flip_x) rect.FlipX ();
+					if (flip_y) rect.FlipY ();
+					break;
+				
+				case 90:
+				case 270:
+					if (flip_y) rect.FlipX ();
+					if (flip_x) rect.FlipY ();
+					break;
+				
+				default:
+					throw new System.ArgumentOutOfRangeException ("Invalid angle");
+			}
+			
+			return rect;
+		}
+		
+		public virtual Drawing.Rectangle MapClientToScreen(Drawing.Rectangle rect)
+		{
+			bool flip_x = rect.Width < 0;
+			bool flip_y = rect.Height < 0;
+			
+			Drawing.Point p1 = this.MapClientToScreen (new Drawing.Point (rect.Left, rect.Bottom));
+			Drawing.Point p2 = this.MapClientToScreen (new Drawing.Point (rect.Right, rect.Top));
+			
+			rect.X = System.Math.Min (p1.X, p2.X);
+			rect.Y = System.Math.Min (p1.Y, p2.Y);
+			
+			rect.Width  = System.Math.Abs (p1.X - p2.X);
+			rect.Height = System.Math.Abs (p1.Y - p2.Y);
+			
+			int angle = this.client_info.angle;
+			
+			switch (angle)
+			{
+				case 0:
+				case 180:
+					if (flip_x) rect.FlipX ();
+					if (flip_y) rect.FlipY ();
+					break;
+				
+				case 90:
+				case 270:
+					if (flip_y) rect.FlipX ();
+					if (flip_x) rect.FlipY ();
+					break;
+				
+				default:
+					throw new System.ArgumentOutOfRangeException ("Invalid angle");
+			}
+			
+			return rect;
+		}
+
 		
 		public virtual Drawing.Size MapParentToClient(Drawing.Size size)
 		{
