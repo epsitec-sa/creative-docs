@@ -11,7 +11,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("EPSITEC SA")]
 [assembly: AssemblyProduct("Mini Fiche")]
-[assembly: AssemblyCopyright("Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
+[assembly: AssemblyCopyright("Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -26,7 +26,7 @@ using System.Runtime.CompilerServices;
 // You can specify all the values or you can default the Revision and Build Numbers 
 // by using the '*' as shown below:
 
-[assembly: AssemblyVersion("1.0.*")]
+[assembly: AssemblyVersion("1.0.0.0")]
 
 //
 // In order to sign your assembly you must specify a key to use. Refer to the 
