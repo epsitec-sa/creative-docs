@@ -5741,6 +5741,13 @@ namespace Epsitec.Common.Widgets
 			{
 				this.VisibleChanged (this);
 			}
+			
+			Widget[] children = this.Children.Widgets;
+			
+			foreach (Widget child in children)
+			{
+				child.OnVisibleChanged ();
+			}
 		}
 		
 		protected virtual void OnFocusChanged()
