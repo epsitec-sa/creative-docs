@@ -131,6 +131,13 @@ namespace Epsitec.Common.Widgets
 	{
 		public Widget()
 		{
+			this.widget_id = Widget.next_widget_id++;
+			
+			if (Widget.DebugDispose)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("{1}+ Created {0}", this.GetType ().Name, this.widget_id));
+			}
+			
 			this.internal_state |= InternalState.Visible;
 			this.internal_state |= InternalState.AutoCapture;
 			this.internal_state |= InternalState.AutoMnemonic;
@@ -159,6 +166,11 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder (embedder);
 		}
 		
+		
+		~Widget()
+		{
+			this.Dispose (false);
+		}
 		
 		static Widget()
 		{
@@ -372,6 +384,11 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void Dispose(bool disposing)
 		{
+			if (Widget.DebugDispose)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("{2}- {0} widget {1}", (disposing ? "Disposing" : "Collecting"), this.ToString (), this.widget_id.ToString ()));
+			}
+			
 			if (disposing)
 			{
 				if (this.HasChildren)
@@ -387,12 +404,10 @@ namespace Epsitec.Common.Widgets
 					System.Diagnostics.Debug.Assert (this.children.Count == 0);
 				}
 				
-				ToolTip.Default.SetToolTip (this, null);
-				
-				if (this.Disposing != null)
+				if (this.Disposed != null)
 				{
-					this.Disposing (this);
-					this.Disposing = null;
+					this.Disposed (this);
+					this.Disposed = null;
 				}
 				
 				this.Parent = null;
@@ -417,6 +432,18 @@ namespace Epsitec.Common.Widgets
 				{
 					this.internal_state &= ~ InternalState.DebugActive;
 				}
+			}
+		}
+		
+		public static bool					DebugDispose
+		{
+			get
+			{
+				return Widget.debug_dispose;
+			}
+			set
+			{
+				Widget.debug_dispose = value;
 			}
 		}
 		
@@ -2513,6 +2540,8 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
+			buffer.Append (this.widget_id.ToString ());
+			buffer.Append (":");
 			buffer.Append (this.GetType ().Name);
 			this.BuildFullPathName (buffer);
 			buffer.Append (@".""");
@@ -5848,7 +5877,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			ActiveStateChanged;
 		public event Support.EventHandler			MinSizeChanged;
 		public event Support.EventHandler			MaxSizeChanged;
-		public event Support.EventHandler			Disposing;
+		public event Support.EventHandler			Disposed;
 		public event Support.EventHandler			TextDefined;
 		public event Support.EventHandler			TextChanged;
 		public event Support.EventHandler			NameChanged;
@@ -6409,9 +6438,12 @@ namespace Epsitec.Common.Widgets
 		private System.Collections.Hashtable	property_hash;
 		private Support.CommandDispatcher		dispatcher;
 		private Support.IValidator				validator;
+		private int								widget_id;
 		
 		static System.Collections.ArrayList		entered_widgets = new System.Collections.ArrayList ();
 		static System.Collections.ArrayList		alive_widgets   = new System.Collections.ArrayList ();
+		static int								next_widget_id  = 0;
+		static bool								debug_dispose	= false;
 		
 		private const string					prop_binding	= "$widget$binding$";
 	}

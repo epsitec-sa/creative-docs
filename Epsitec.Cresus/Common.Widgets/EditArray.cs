@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 13/02/2004
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
@@ -197,6 +197,12 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
+				if (this.controller != null)
+				{
+					this.controller.Dispose ();
+					this.controller = null;
+				}
+				
 				this.edit_line.ColumnCount = 0;
 				
 				this.max_columns  = 0;
@@ -1164,7 +1170,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region Controller Class
-		public class Controller
+		public class Controller : System.IDisposable
 		{
 			public Controller(EditArray host, string name)
 			{
@@ -1173,8 +1179,14 @@ namespace Epsitec.Common.Widgets
 					throw new System.ArgumentNullException ("host", "Controller must be hosted in EditArray.");
 				}
 				
+				if (host.controller != null)
+				{
+					throw new System.ArgumentException ("EditArray cannot host more than one controller.", "host");
+				}
+				
 				this.host = host;
 				this.name = name;
+				this.host.controller = this;
 				
 				this.host.InteractionModeChanged += new Support.EventHandler (this.HandleHostInteractionModeChanged);
 				this.host.SelectedIndexChanged   += new Support.EventHandler (this.HandleHostSelectedIndexChanged);
@@ -1399,6 +1411,37 @@ namespace Epsitec.Common.Widgets
 				this.tips.SetToolTip (widget, text);
 			}
 			
+			
+			protected void Dispose(bool disposing)
+			{
+				if (disposing)
+				{
+					if (this.tips != null)
+					{
+						this.tips.Dispose ();
+						this.tips = null;
+					}
+					
+					if (this.host != null)
+					{
+						this.host.InteractionModeChanged -= new Support.EventHandler (this.HandleHostInteractionModeChanged);
+						this.host.SelectedIndexChanged   -= new Support.EventHandler (this.HandleHostSelectedIndexChanged);
+						this.host.TextArrayStoreContentsChanged  -= new Support.EventHandler (this.HandleHostTextArrayStoreContentsChanged);
+						this.host.ContentsInvalidated    -= new Support.EventHandler (this.HandleHostContentsInvalidated);
+						
+						this.host = null;
+					}
+				}
+			}
+			
+			
+			#region IDisposable Members
+			public void Dispose()
+			{
+				this.Dispose (true);
+				System.GC.SuppressFinalize (this);
+			}
+			#endregion
 			
 			#region Commands...
 			private void CommandStartReadOnly(Support.CommandDispatcher sender, Support.CommandEventArgs e)
@@ -1643,5 +1686,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected string						search_caption;
 		protected int							focused_column = -1;
+		
+		protected Controller					controller;
 	}
 }

@@ -763,6 +763,11 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void Dispose(bool disposing)
 		{
+			if (Widget.DebugDispose)
+			{
+				System.Diagnostics.Debug.WriteLine ("Window.Dispose: " + this.Name);
+			}
+			
 			if (disposing)
 			{
 				if (this.cmd_queue.Count > 0)
@@ -790,6 +795,8 @@ namespace Epsitec.Common.Widgets
 						}
 					}
 				}
+				
+				this.CommandDispatcher = null;
 				
 				if (this.root != null)
 				{
@@ -828,6 +835,7 @@ namespace Epsitec.Common.Widgets
 				this.timer.TimeElapsed -= new EventHandler (this.HandleTimeElapsed);
 				this.timer.Dispose ();
 				
+				this.timer  = null;
 				this.root   = null;
 				this.window = null;
 				this.owner  = null;

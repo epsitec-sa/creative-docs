@@ -78,7 +78,15 @@ namespace Epsitec.Common.Widgets
 				this.buttonClose.Clicked -= new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonMenu.Clicked -= new MessageEventHandler(this.HandleButtonMenuClicked);
 				
-				this.Clear();
+				TabPage[] pages = new TabPage[this.items.Count];
+				this.items.CopyTo (pages, 0);
+				
+				for (int i = 0; i < pages.Length; i++)
+				{
+					pages[i].Dispose ();
+				}
+				
+				this.items = null;
 				
 				this.arrowLeft = null;
 				this.arrowRight = null;

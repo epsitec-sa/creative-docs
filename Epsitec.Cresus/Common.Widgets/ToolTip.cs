@@ -59,18 +59,11 @@ namespace Epsitec.Common.Widgets
 				this.timer = null;
 			}
 			
-			base.Dispose(disposing);
-			
 			// Ne pas oublier, une fois que le dispose est terminé, de signaler encore
-			// que nous n'existons plus (c'est requis par IComponent).
+			// que nous n'existons plus (c'est requis par IComponent). C'est fait par
+			// Widget !
 			
-			if ( disposing )
-			{
-				if ( this.Disposed != null )
-				{
-					this.Disposed (this, System.EventArgs.Empty);
-				}
-			}
+			base.Dispose(disposing);
 		}
 
 		// Choix du comportement des tooltips.
@@ -104,7 +97,7 @@ namespace Epsitec.Common.Widgets
 					this.hash.Remove(widget);
 					widget.Entered   -= new MessageEventHandler(this.HandleWidgetEntered);
 					widget.Exited    -= new MessageEventHandler(this.HandleWidgetExited);
-					widget.Disposing -= new EventHandler(this.HandleWidgetDisposing);
+					widget.Disposed  -= new EventHandler(this.HandleWidgetDisposed);
 					return;
 				}
 			}
@@ -117,7 +110,7 @@ namespace Epsitec.Common.Widgets
 				
 				widget.Entered   += new MessageEventHandler(this.HandleWidgetEntered);
 				widget.Exited    += new MessageEventHandler(this.HandleWidgetExited);
-				widget.Disposing += new EventHandler(this.HandleWidgetDisposing);
+				widget.Disposed  += new EventHandler(this.HandleWidgetDisposed);
 			}
 			
 			if ( this.owner == null )
@@ -167,7 +160,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		// Un widget est supprimé -- on doit donc le retirer de notre liste interne.
-		private void HandleWidgetDisposing(object sender)
+		private void HandleWidgetDisposed(object sender)
 		{
 			Widget widget = sender as Widget;
 			
@@ -282,12 +275,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		#region IComponent Members
-		public event System.EventHandler Disposed;
-		#endregion
-
-		
-		public static ToolTip			Default
+		public static ToolTip					Default
 		{
 			get
 			{

@@ -134,11 +134,12 @@ namespace Epsitec.Common.Widgets
 			
 			this.window = new Window (this);
 			
-			this.window.Name         = name;
-			this.window.ClientSize   = size;
-			this.window.Text         = Support.Resources.ResolveTextRef (text);
-			this.window.WindowStyles = window_styles;
-			this.window.WindowType   = window_type;
+			this.window.Name             = name;
+			this.window.ClientSize       = size;
+			this.window.Text             = Support.Resources.ResolveTextRef (text);
+			this.window.WindowStyles     = window_styles;
+			this.window.WindowType       = window_type;
+			this.window.PreventAutoClose = true;
 			
 			this.Name = name;
 			this.Text = text;
