@@ -316,26 +316,26 @@ namespace Epsitec.Common.Widgets
 
 					if ( page.PaneToggle )
 					{
-						page.ArrowButton.Show();
+						page.GlyphButton.Show();
 
 						Drawing.Rectangle arect = rect;
 						arect.Left  -= 3;
 						arect.Right += 3;
 						arect.Top   = arect.Bottom+12;
-						page.ArrowButton.Bounds = arect;
+						page.GlyphButton.Bounds = arect;
 
 						if ( this.RetSize(i) < (this.RetMinSize(i)+this.RetMaxSize(i))/2 )
 						{
-							page.ArrowButton.GlyphType = GlyphType.ArrowRight;
+							page.GlyphButton.GlyphType = GlyphType.ArrowRight;
 						}
 						else
 						{
-							page.ArrowButton.GlyphType = GlyphType.ArrowLeft;
+							page.GlyphButton.GlyphType = GlyphType.ArrowLeft;
 						}
 					}
 					else
 					{
-						page.ArrowButton.Hide();
+						page.GlyphButton.Hide();
 					}
 
 					start.X = end.X;
@@ -356,26 +356,26 @@ namespace Epsitec.Common.Widgets
 
 					if ( page.PaneToggle )
 					{
-						page.ArrowButton.Show();
+						page.GlyphButton.Show();
 
 						Drawing.Rectangle arect = rect;
 						arect.Left   = arect.Right-12;
 						arect.Bottom -= 3;
 						arect.Top    += 3;
-						page.ArrowButton.Bounds = arect;
+						page.GlyphButton.Bounds = arect;
 
 						if ( this.RetSize(i) < (this.RetMinSize(i)+this.RetMaxSize(i))/2 )
 						{
-							page.ArrowButton.GlyphType = GlyphType.ArrowDown;
+							page.GlyphButton.GlyphType = GlyphType.ArrowDown;
 						}
 						else
 						{
-							page.ArrowButton.GlyphType = GlyphType.ArrowUp;
+							page.GlyphButton.GlyphType = GlyphType.ArrowUp;
 						}
 					}
 					else
 					{
-						page.ArrowButton.Hide();
+						page.GlyphButton.Hide();
 					}
 
 					start.Y = end.Y;
@@ -532,10 +532,10 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Bouton flèche cliqué.
-		private void HandleArrowButtonClicked(object sender, MessageEventArgs e)
+		private void HandleGlyphButtonClicked(object sender, MessageEventArgs e)
 		{
-			if ( !(sender is ArrowButton) )  return;
-			ArrowButton button = sender as ArrowButton;
+			if ( !(sender is GlyphButton) )  return;
+			GlyphButton button = sender as GlyphButton;
 			int index = this.SearchPage(button);
 			if ( index == -1 )  return;
 			PanePage page = this.items[index];
@@ -672,13 +672,13 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Cherche l'index de la page correspondant à un bouton.
-		protected int SearchPage(ArrowButton button)
+		protected int SearchPage(GlyphButton button)
 		{
 			int count = this.items.Count;
 			for ( int i=0 ; i<count ; i++ )
 			{
 				PanePage page = this.items[i];
-				if ( page.ArrowButton == button )  return i;
+				if ( page.GlyphButton == button )  return i;
 			}
 			return -1;
 		}
@@ -809,8 +809,8 @@ namespace Epsitec.Common.Widgets
 			item.PaneButton.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
 			item.RankChanged += new System.EventHandler(this.HandlePageRankChanged);
 			
-			this.Children.Add(item.ArrowButton);  // ArrowButton fils de PaneBook !
-			item.ArrowButton.Clicked += new MessageEventHandler(this.HandleArrowButtonClicked);
+			this.Children.Add(item.GlyphButton);  // GlyphButton fils de PaneBook !
+			item.GlyphButton.Clicked += new MessageEventHandler(this.HandleGlyphButtonClicked);
 
 			this.UpdatePaneButtons();
 		}
@@ -824,7 +824,7 @@ namespace Epsitec.Common.Widgets
 			item.PaneButton.DragEnded   -= new MessageEventHandler(this.HandleSliderDragEnded);
 			item.RankChanged -= new System.EventHandler(this.HandlePageRankChanged);
 
-			item.ArrowButton.Clicked -= new MessageEventHandler(this.HandleArrowButtonClicked);
+			item.GlyphButton.Clicked -= new MessageEventHandler(this.HandleGlyphButtonClicked);
 
 			this.Children.Remove(item);
 

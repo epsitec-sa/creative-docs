@@ -30,7 +30,7 @@ namespace Epsitec.Common.Widgets
 			this.slider.DragMoved   += new MessageEventHandler(this.HandleSliderDragMoved);
 			this.slider.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
 			
-			this.button = new ArrowButton(this);
+			this.button = new GlyphButton(this);
 			this.button.Hide();
 			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			
@@ -500,7 +500,7 @@ namespace Epsitec.Common.Widgets
 		protected PaneBehaviour				paneBehaviour = PaneBehaviour.Draft;
 		protected bool						flipFlop = false;
 		protected Widget[]					panes;
-		protected ArrowButton				button;
+		protected GlyphButton				button;
 		protected PaneButton				slider;
 		protected double					sliderDim = 5;
 		protected double					sliderDragPos;
