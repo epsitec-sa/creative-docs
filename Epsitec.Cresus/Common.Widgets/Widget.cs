@@ -1,5 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
+	using Epsitec.Common.Drawing;
+	
 	/// <summary>
 	/// 
 	/// </summary>
@@ -297,9 +299,19 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual Widget FindChild(System.Drawing.PointF point, ChildFindMode mode)
 		{
-			for (int i = 1; i <= this.Children.Count; i++)
+			if (this.Children.Count == 0)
 			{
-				Widget widget = this.Children[this.Children.Count - i] as Widget;
+				return null;
+			}
+			
+			Widget[] children = this.Children.Widgets;
+			int  children_num = children.Length;
+			
+			for (int i = 0; i < children_num; i++)
+			{
+				Widget widget = children[children_num-1 - i];
+				
+				System.Diagnostics.Debug.Assert (widget != null);
 				
 				if (mode != ChildFindMode.All)
 				{
@@ -448,12 +460,63 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public virtual System.Drawing.RectangleF MapParentToClient(System.Drawing.RectangleF rect)
+		{
+			float x1 = rect.Left   - this.x1;
+			float y1 = rect.Top    - this.y1;
+			float x2 = rect.Right  - this.x1;
+			float y2 = rect.Bottom - this.y1;
+			
+			double angle = this.client_info.angle * System.Math.PI / 180.0;
+			float  zoom  = this.client_info.zoom;
+			
+			System.Diagnostics.Debug.Assert (zoom > 0.0f);
+			System.Diagnostics.Debug.Assert ((angle >= 0) && (angle < 360));
+			
+			if (angle != 0)
+			{
+				float sin = (float) System.Math.Sin (angle);
+				float cos = (float) System.Math.Cos (angle);
+				
+				float cx = (this.x2 - this.x1) / 2;
+				float cy = (this.y2 - this.y1) / 2;
+				
+				x1 -= cx;		x2 -= cx;
+				y1 -= cy;		y2 -= cy;
+				
+				float xr1 = ( x1 * cos + y1 * sin) / zoom;
+				float yr1 = (-x1 * sin + y1 * cos) / zoom;
+				float xr2 = ( x2 * cos + y2 * sin) / zoom;
+				float yr2 = (-x2 * sin + y2 * cos) / zoom;
+				
+				cx = this.client_info.width / 2;
+				cy = this.client_info.height / 2;
+				
+				x1 = xr1 + cx;		x2 = xr2 + cx;
+				y1 = yr1 + cy;		y2 = yr2 + cy;
+			}
+			else
+			{
+				x1 /= zoom;		x2 /= zoom;
+				y1 /= zoom;		y2 /= zoom;
+			}
+			
+			rect.X = System.Math.Min (x1, x2);
+			rect.Y = System.Math.Min (y1, y2);
+			
+			rect.Width  = System.Math.Abs (x2 - x1);
+			rect.Height = System.Math.Abs (y2 - y1);
+			
+			return rect;
+		}
+		
+		
 		public virtual Epsitec.Common.Drawing.Transform GetRootToClientTransform()
 		{
 			Widget iter = this;
 			
-			Epsitec.Common.Drawing.Transform full_transform  = new Epsitec.Common.Drawing.Transform ();
-			Epsitec.Common.Drawing.Transform local_transform = new Epsitec.Common.Drawing.Transform ();
+			Transform full_transform  = new Transform ();
+			Transform local_transform = new Transform ();
 			
 			while (iter != null)
 			{
@@ -480,8 +543,8 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget iter = this;
 			
-			Epsitec.Common.Drawing.Transform full_transform  = new Epsitec.Common.Drawing.Transform ();
-			Epsitec.Common.Drawing.Transform local_transform = new Epsitec.Common.Drawing.Transform ();
+			Transform full_transform  = new Transform ();
+			Transform local_transform = new Transform ();
 			
 			while (iter != null)
 			{
@@ -647,6 +710,77 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected virtual bool PaintCheckClipping(PaintEventArgs e)
+		{
+			return e.ClipRectangle.IntersectsWith (this.Bounds);
+		}
+		
+		protected virtual void PaintAlgorithm(PaintEventArgs e)
+		{
+			if (this.PaintCheckClipping (e))
+			{
+				Graphics                  graphics  = e.Graphics;
+				System.Drawing.RectangleF clip_rect = this.MapParentToClient (e.ClipRectangle);
+				
+				Transform original_transform = graphics.Transform;
+				Transform graphics_transform = new Transform (original_transform);
+				
+				this.MergeTransformToClient (graphics_transform);
+				
+				graphics.Transform = graphics_transform;
+			
+				try
+				{
+					PaintEventArgs local_paint_args = new PaintEventArgs (graphics, clip_rect);
+					
+					//	Peint l'arrière-plan du widget. En principe, tout va dans l'arrière plan, sauf
+					//	si l'on désire réaliser des effets de transparence par dessus le dessin des
+					//	widgets enfants.
+					
+					this.OnPaintBackground (local_paint_args);
+					
+					//	Peint tous les widgets enfants, en commençant par le numéro 0, lequel se trouve
+					//	derrière tous les autres, etc. On saute les widgets qui ne sont pas visibles.
+					
+					if (this.Children.Count > 0)
+					{
+						Widget[] children = this.Children.Widgets;
+						int  children_num = children.Length;
+						
+						for (int i = 0; i < children_num; i++)
+						{
+							Widget widget = children[i];
+						
+							System.Diagnostics.Debug.Assert (widget != null);
+						
+							if (widget.IsVisible)
+							{
+								widget.PaintAlgorithm (local_paint_args);
+							}
+						}
+					}
+				
+					//	Peint l'avant-plan du widget, à n'utiliser que pour faire un "effet" spécial
+					//	après coup.
+					
+					this.OnPaintForeground (local_paint_args);
+				}
+				finally
+				{
+					graphics.Transform = original_transform;
+				}
+			}
+		}
+		
+		protected virtual void OnPaintBackground(PaintEventArgs e)
+		{
+		}
+		
+		protected virtual void OnPaintForeground(PaintEventArgs e)
+		{
+		}
+		
+		
 		
 		protected virtual WidgetCollection CreateWidgetCollection()
 		{
@@ -744,6 +878,20 @@ namespace Epsitec.Common.Widgets
 				this.widget = widget;
 			}
 			
+			
+			public Widget[]					Widgets
+			{
+				get
+				{
+					if (this.array == null)
+					{
+						this.array = new Widget[this.list.Count];
+						this.list.CopyTo (this.array);
+					}
+					
+					return this.array;
+				}
+			}
 			
 			private void PreInsert(object widget)
 			{
@@ -883,6 +1031,7 @@ namespace Epsitec.Common.Widgets
 			#endregion
 			
 			System.Collections.ArrayList	list;
+			Widget[]						array;
 			Widget							widget;
 		}
 		

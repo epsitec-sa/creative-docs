@@ -93,6 +93,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "PaintEventArgs.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widget.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
