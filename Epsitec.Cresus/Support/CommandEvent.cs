@@ -9,9 +9,10 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public class CommandEventArgs : System.EventArgs
 	{
-		public CommandEventArgs(CommandDispatcher dispatcher)
+		public CommandEventArgs(CommandDispatcher dispatcher, string name)
 		{
 			this.dispatcher = dispatcher;
+			this.name       = name;
 		}
 		
 		public CommandDispatcher		Dispatcher
@@ -19,8 +20,14 @@ namespace Epsitec.Common.Support
 			get { return this.dispatcher; }
 		}
 		
+		public string					Name
+		{
+			get { return this.name; }
+		}
+		
 		
 		protected CommandDispatcher		dispatcher;
+		protected string				name;
 	}
 	
 	public delegate void CommandEventHandler(object sender, CommandEventArgs e);

@@ -15,14 +15,14 @@ namespace Epsitec.Common.Support
 		
 		public void Dispatch(string command, object source)
 		{
-			//	TODO: transmet la commande à ceux qui sont intéressés
+			//	Transmet la commande à ceux qui sont intéressés
 			
 			System.Diagnostics.Debug.WriteLine ("Command: " + command);
 			System.Diagnostics.Debug.WriteLine ("Source:  " + source);
 			
 			if (this.handlers.Contains (command))
 			{
-				(this.handlers[command] as Slot).Fire (source, new CommandEventArgs (this));
+				(this.handlers[command] as Slot).Fire (source, new CommandEventArgs (this, command));
 			}
 		}
 		

@@ -103,6 +103,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "CommandDispatcher.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "CommandEvent.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IBundleSupport.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
