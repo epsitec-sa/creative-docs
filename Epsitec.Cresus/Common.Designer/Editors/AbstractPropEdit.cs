@@ -100,10 +100,10 @@ namespace Epsitec.Common.Designer.Editors
 		}
 		
 		
-		protected Widget CreatePropPane(string property_name, UI.Adapters.IAdapter adapter)
+		protected Widget CreatePropPane(string property_name, Common.UI.Adapters.IAdapter adapter)
 		{
-			UI.Widgets.PropPane       pane   = new UI.Widgets.PropPane ();
-			UI.Binders.PropertyBinder binder = this.GetBinder (property_name, adapter);
+			Common.UI.Widgets.PropPane       pane   = new Common.UI.Widgets.PropPane ();
+			Common.UI.Binders.PropertyBinder binder = this.GetBinder (property_name, adapter);
 			
 			pane.Dock   = DockStyle.Top;
 			pane.Width  = this.page.Width;
@@ -120,24 +120,24 @@ namespace Epsitec.Common.Designer.Editors
 		
 		protected virtual void LoadContents()
 		{
-			foreach (UI.Binders.PropertyBinder binder in this.binders.Values)
+			foreach (Common.UI.Binders.PropertyBinder binder in this.binders.Values)
 			{
 				binder.Source = this.active;
 			}
 		}
 		
-		protected UI.Binders.PropertyBinder GetBinder(string name, UI.Adapters.IAdapter adapter)
+		protected Common.UI.Binders.PropertyBinder GetBinder(string name, Common.UI.Adapters.IAdapter adapter)
 		{
 			if (this.binders == null)
 			{
 				this.binders = new System.Collections.Hashtable ();
 			}
 			
-			UI.Binders.PropertyBinder binder = this.binders[name] as UI.Binders.PropertyBinder;
+			Common.UI.Binders.PropertyBinder binder = this.binders[name] as Common.UI.Binders.PropertyBinder;
 			
 			if (binder == null)
 			{
-				binder = new UI.Binders.PropertyBinder (name);
+				binder = new Common.UI.Binders.PropertyBinder (name);
 				this.binders[name] = binder;
 			}
 			
