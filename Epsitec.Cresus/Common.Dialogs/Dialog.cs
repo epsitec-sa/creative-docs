@@ -11,12 +11,14 @@ namespace Epsitec.Common.Dialogs
 	{
 		public Dialog()
 		{
-			this.dispatcher = new Support.CommandDispatcher ("AnonymousDialog", true);
+			this.name       = "AnonymousDialog";
+			this.dispatcher = new Support.CommandDispatcher (this.name, true);
 		}
 		
 		public Dialog(string name)
 		{
-			this.dispatcher = new Support.CommandDispatcher (name);
+			this.name       = name;
+			this.dispatcher = new Support.CommandDispatcher (this.name);
 		}
 		
 		
@@ -116,8 +118,12 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
+		public void Load()
+		{
+			this.Load (this.name);
+		}
 		
-		public void Load(string full_name)
+		public void Load(string name)
 		{
 			if ((this.designer != null) ||
 				(this.window != null))
@@ -125,9 +131,9 @@ namespace Epsitec.Common.Dialogs
 				throw new System.InvalidOperationException ("Dialog may not be loaded twice.");
 			}
 			
-			this.full_name = full_name;
+			this.name = name;
 			
-			Support.ResourceBundle bundle = Support.Resources.GetBundle (full_name);
+			Support.ResourceBundle bundle = Support.Resources.GetBundle (this.name);
 			
 			if (bundle == null)
 			{
@@ -250,7 +256,7 @@ namespace Epsitec.Common.Dialogs
 				return;
 			}
 			
-			if (this.full_name == null)
+			if (this.name == null)
 			{
 				throw new System.InvalidOperationException ("Cannot switch to designer.");
 			}
@@ -303,7 +309,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			this.designer.DialogData     = this.data;
 			this.designer.DialogWindow   = this.window;
-			this.designer.ResourceName   = this.full_name;
+			this.designer.ResourceName   = this.name;
 			this.designer.DialogCommands = this.dispatcher;
 			this.designer.DialogScript   = this.script;
 			
@@ -395,7 +401,7 @@ namespace Epsitec.Common.Dialogs
 		protected Support.CommandDispatcher		dispatcher;
 		protected Script.ScriptWrapper			script;
 		protected IDialogDesigner				designer;
-		protected string						full_name;
+		protected string						name;
 		protected Widgets.Widget				designer_activator_widget;
 	}
 }

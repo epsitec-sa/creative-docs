@@ -72,9 +72,10 @@ namespace Epsitec.Common.Dialogs
 		{
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookPastel");
 			
-			Dialog dialog = new Dialog ("CheckLoad3WithData");
+			Dialog           dialog     = new Dialog ("dialog_with_data");
+			DialogController controller = new DialogController (dialog);
 			
-			dialog.CommandDispatcher.RegisterController (this);
+			dialog.CommandDispatcher.RegisterController (controller);
 			
 			Record record = new Record ("Rec", "dialog_with_data_strings");
 			
@@ -90,6 +91,7 @@ namespace Epsitec.Common.Dialogs
 			Assertion.AssertEquals ("Test", record["UserName"].Value);
 			Assertion.AssertEquals (10, record["UserAge"].Value);
 			Assertion.AssertEquals (AccessMode.Local, record["AccessMode"].Value);
+			Assertion.AssertEquals (LoginOptions.None, record["LoginOptions"].Value);
 			
 //			ScriptWrapper script = new ScriptWrapper ();
 			
@@ -97,12 +99,11 @@ namespace Epsitec.Common.Dialogs
 			
 //			dialog.CommandDispatcher.RegisterExtraDispatcher (script);
 			
-			dialog.Load ("dialog_with_data");
+			dialog.Load ();
 			dialog.Data = record;
 //			dialog.Script = script;
-			
-			this.dialog = dialog;
-			this.dialog.StoreInitialData ();
+//			dialog.IsModal = false;
+			dialog.StoreInitialData ();
 			
 			//	Ouvre le dialogue modal (ce qui bloque !)
 			
@@ -113,25 +114,34 @@ namespace Epsitec.Common.Dialogs
 //			Editor.Engine.ShowMethod (document, "Main");
 		}
 		
-		private Dialog dialog;
-		
-		[Support.Command ("Ok")] private void CommandOk()
+		private class DialogController
 		{
-			System.Diagnostics.Debug.WriteLine ("OK executed.");
-		}
+			public DialogController(Dialog dialog)
+			{
+				this.dialog = dialog;
+			}
+			
+			
+			[Support.Command ("Ok")]		private void CommandOk()
+			{
+				System.Diagnostics.Debug.WriteLine ("OK executed.");
+			}
+			
+			[Support.Command ("Cancel")]	private void CommandCancel()
+			{
+				this.dialog.RestoreInitialData ();
+				System.Diagnostics.Debug.WriteLine ("Cancel executed.");
+			}
+			
+			[Support.Command ("Apply")]		private void CommandApply()
+			{
+				this.dialog.StoreInitialData ();
+				System.Diagnostics.Debug.WriteLine ("Apply executed.");
+			}
 		
-		[Support.Command ("Cancel")] private void CommandCancel()
-		{
-			this.dialog.RestoreInitialData ();
-			System.Diagnostics.Debug.WriteLine ("Cancel executed.");
+			
+			private Dialog					dialog;
 		}
-		
-		[Support.Command ("Apply")] private void CommandApply()
-		{
-			this.dialog.StoreInitialData ();
-			System.Diagnostics.Debug.WriteLine ("Apply executed.");
-		}
-		
 		
 		private void HandleFieldChanged(object sender)
 		{

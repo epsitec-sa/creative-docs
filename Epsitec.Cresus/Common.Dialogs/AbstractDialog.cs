@@ -39,9 +39,18 @@ namespace Epsitec.Common.Dialogs
 				}
 				
 				this.OnDialogOpening ();
-				this.window.WindowShown += new Support.EventHandler (this.HandleWindowShown);
-				this.window.ShowDialog ();
-				this.window.WindowShown -= new Support.EventHandler (this.HandleWindowShown);
+				
+				if (this.is_modal)
+				{
+					this.window.WindowShown += new Support.EventHandler (this.HandleWindowShown);
+					this.window.ShowDialog ();
+					this.window.WindowShown -= new Support.EventHandler (this.HandleWindowShown);
+				}
+				else
+				{
+					this.window.Show ();
+					this.HandleWindowShown (this.window);
+				}
 			}
 		}
 		
@@ -126,6 +135,17 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
+		public bool								IsModal
+		{
+			get
+			{
+				return this.is_modal;
+			}
+			set
+			{
+				this.is_modal = value;
+			}
+		}
 		
 		
 		protected virtual void OnDialogOpening()
@@ -160,5 +180,6 @@ namespace Epsitec.Common.Dialogs
 		public event Support.EventHandler		DialogOpened;
 		
 		protected Widgets.Window				window;
+		protected bool							is_modal = true;
 	}
 }
