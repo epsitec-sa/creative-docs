@@ -67,6 +67,7 @@ namespace Epsitec.Common.Designer.Panels
 			
 			host.Size    = this.Size;
 			host.MinSize = this.Size;
+			host.TabNavigation = Widget.TabNavigationMode.ForwardTabPassive;
 			
 			this.CreateWidgets (host);
 			
