@@ -25,6 +25,18 @@ namespace Epsitec.Common.Widgets
 			get { return true; }
 		}
 		
+		public override LayoutStyles				Layout
+		{
+			get
+			{
+				return LayoutStyles.Manual;
+			}
+			set
+			{
+				//	Poubellise toute modification...
+			}
+		}
+		
 		public override Window						Window
 		{
 			get { return this.window; }

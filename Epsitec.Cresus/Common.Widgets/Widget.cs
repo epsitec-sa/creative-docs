@@ -123,15 +123,6 @@ namespace Epsitec.Common.Widgets
 	}
 	#endregion
 	
-	//	#region LayoutFlags enum
-//	[System.Flags] public enum LayoutFlags : byte
-//	{
-//		None				= 0,
-//		
-//		StartNewLine		= 0x40,				//	force layout sur une nouvelle ligne
-//		IncludeChildren		= 0x80				//	inclut les enfants
-//	}
-//	#endregion
 	
 	/// <summary>
 	/// La classe Widget implémente la classe de base dont dérivent tous les
@@ -420,7 +411,7 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public LayoutStyles							Layout
+		public virtual LayoutStyles					Layout
 		{
 			get
 			{
@@ -434,8 +425,24 @@ namespace Epsitec.Common.Widgets
 					
 					this.Invalidate ();
 					
-					if (this.layout != LayoutStyles.Manual)
+					LayoutStyles dock_old = this.layout;
+					LayoutStyles dock_new = value & LayoutStyles.MaskDock;
+					
+					if (((dock_old == LayoutStyles.DockLeft) && (dock_new == LayoutStyles.DockRight)) ||
+						((dock_old == LayoutStyles.DockRight) && (dock_new == LayoutStyles.DockLeft)) ||
+						((dock_old == LayoutStyles.DockTop) && (dock_new == LayoutStyles.DockBottom)) ||
+						((dock_old == LayoutStyles.DockBottom) && (dock_new == LayoutStyles.DockTop)) ||
+						(dock_old == LayoutStyles.Manual))
 					{
+						//	Ne change pas la géométrie, puisque le docking reste défini selon les
+						//	mêmes grandeurs (gauche <-> droite ou haut <-> bas), ou qu'il n'y avait
+						//	pas de docking actif avant.
+					}
+					else
+					{
+						//	Le style de docking change; il faut donc mieux remettre les dimensions
+						//	par défaut
+						
 						this.x2 = this.x1 + this.DefaultWidth;
 						this.y2 = this.y1 + this.DefaultHeight;
 					}
@@ -565,24 +572,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-//		[Bundle]			public LayoutFlags		LayoutFlags
-//		{
-//			get { return this.layout_flags; }
-//			set
-//			{
-//				if (this.layout_flags != value)
-//				{
-//					this.layout_flags = value;
-//					
-//					if (this.parent != null)
-//					{
-//						this.parent.UpdateChildrenLayout ();
-//					}
-//				}
-//			}
-//		}
-		
-		
 		public Layouts.LayoutInfo					LayoutInfo
 		{
 			get { return this.layout_info; }
@@ -668,6 +657,16 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.Bounds != value)
 				{
+					if (this.parent != null)
+					{
+						Drawing.Rectangle bounds    = value;
+						Drawing.Rectangle container = this.parent.Client.Bounds;
+						Drawing.Margins   margins   = new Drawing.Margins (bounds.Left - container.Left, container.Right - bounds.Right,
+							/**/										   container.Top - bounds.Top, bounds.Bottom - container.Bottom);
+						
+						this.anchor_margins = margins;
+					}
+					
 					this.SetBounds (value.X, value.Y, value.X + value.Width, value.Y + value.Height);
 				}
 			}
@@ -682,6 +681,16 @@ namespace Epsitec.Common.Widgets
 				if ((this.Location != value) &&
 					(this.Dock == DockStyle.None))
 				{
+					if (this.parent != null)
+					{
+						Drawing.Rectangle bounds    = new Drawing.Rectangle (value, this.Size);
+						Drawing.Rectangle container = this.parent.Client.Bounds;
+						Drawing.Margins   margins   = new Drawing.Margins (bounds.Left - container.Left, container.Right - bounds.Right,
+							/**/										   container.Top - bounds.Top, bounds.Bottom - container.Bottom);
+						
+						this.anchor_margins = margins;
+					}
+					
 					this.SetBounds (value.X, value.Y, value.X + this.x2 - this.x1, value.Y + this.y2 - this.y1);
 					
 					if (this.Layout != LayoutStyles.Manual)
@@ -699,6 +708,16 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.Size != value)
 				{
+					if (this.parent != null)
+					{
+						Drawing.Rectangle bounds    = new Drawing.Rectangle (this.Location, value);
+						Drawing.Rectangle container = this.parent.Client.Bounds;
+						Drawing.Margins   margins   = new Drawing.Margins (bounds.Left - container.Left, container.Right - bounds.Right,
+							/**/										   container.Top - bounds.Top, bounds.Bottom - container.Bottom);
+						
+						this.anchor_margins = margins;
+					}
+					
 					this.SetBounds (this.x1, this.y1, this.x1 + value.Width, this.y1 + value.Height);
 					
 					if (this.Layout != LayoutStyles.Manual)
@@ -5961,7 +5980,6 @@ namespace Epsitec.Common.Widgets
 		private WidgetState						widget_state;
 		
 		private Layouts.LayoutInfo				layout_info;
-//		private LayoutFlags						layout_flags;
 		private byte							layout_arg1;
 		private byte							layout_arg2;
 		
