@@ -7,7 +7,7 @@ namespace Epsitec.Common.Drawing
 	{
 		public Image()
 		{
-			this.size   = new Size ();
+			this.size   = Size.Empty;
 			this.origin = new Point ();
 			
 			this.unique_id = System.Threading.Interlocked.Increment (ref Image.unique_id_seed);
@@ -42,8 +42,10 @@ namespace Epsitec.Common.Drawing
 			get { return this.Size.Height; }
 		}
 		
-		public virtual Point			Origin//	0 < origin < size: l'origine est dans l'image
+		public virtual Point			Origin
 		{
+			//	0 < origin < size: l'origine est dans l'image
+			
 			get { return this.origin; }
 		}
 		

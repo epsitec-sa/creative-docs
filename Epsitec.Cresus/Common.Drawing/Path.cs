@@ -145,6 +145,36 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public void AppendCircle(Point c, double r)
+		{
+			this.AppendCircle (c.X, c.Y, r, r);
+		}
+		
+		public void AppendCircle(Point c, double rx, double ry)
+		{
+			this.AppendCircle (c.X, c.Y, rx, ry);
+		}
+		
+		public void AppendCircle(double cx, double cy, double r)
+		{
+			this.AppendCircle (cx, cy, r, r);
+		}
+		
+		public void AppendCircle(double cx, double cy, double rx, double ry)
+		{
+			Drawing.Path path = new Drawing.Path();
+			
+			path.MoveTo (cx-rx, cy);
+			path.CurveTo (cx-rx*1.00, cy+ry*0.56, cx-rx*0.56, cy+ry*1.00, cx,    cy+ry);
+			path.CurveTo (cx+rx*0.56, cy+ry*1.00, cx+rx*1.00, cy+ry*0.56, cx+rx, cy);
+			path.CurveTo (cx+rx*1.00, cy-ry*0.56, cx+rx*0.56, cy-ry*1.00, cx,    cy-ry);
+			path.CurveTo (cx-rx*0.56, cy-ry*1.00, cx-rx*1.00, cy-ry*0.56, cx-rx, cy);
+			path.Close ();
+			
+			this.Append (path);
+		}
+		
+		
 		public void ComputeBounds(out double x1, out double y1, out double x2, out double y2)
 		{
 			this.CreateOnTheFly ();
