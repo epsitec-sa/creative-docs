@@ -422,7 +422,7 @@ namespace Epsitec.Common.Types
 		
 		public static string[] GetSplitEnumValues(System.Type type, System.Enum value)
 		{
-			string   name   = value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			string   name   = value.ToString ();
 			string[] values = name.Split (',', '|', ';');
 			
 			if (values.Length > 0)

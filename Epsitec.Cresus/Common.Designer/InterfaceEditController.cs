@@ -510,8 +510,8 @@ namespace Epsitec.Common.Designer
 				
 				state.Enabled = true;
 				
-				this.active_editor.SetTabIndexSetterMode (this.tool_tab_setter_active);
-				this.active_editor.SetTabIndexPickerMode (this.tool_tab_picker_active);
+				this.active_editor.SetTabIndexSetterMode (this.is_tool_tab_setter_active);
+				this.active_editor.SetTabIndexPickerMode (this.is_tool_tab_picker_active);
 				this.active_editor.IsActiveEditor = true;
 			}
 			else
@@ -618,14 +618,14 @@ namespace Epsitec.Common.Designer
 		
 		protected void SetTabIndexSetter(bool enable)
 		{
-			if ((this.tool_tab_setter_active != enable) ||
+			if ((this.is_tool_tab_setter_active != enable) ||
 				(this.is_initialised == false))
 			{
 				CommandState state = this.GetCommandState (Command.TabIndexSetter);
 				
 				state.ActiveState = enable ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 				
-				this.tool_tab_setter_active = enable;
+				this.is_tool_tab_setter_active = enable;
 				
 				this.SetTabIndexSetter (this.WidgetEditors);
 				this.SetTabIndexPicker (false);
@@ -635,12 +635,12 @@ namespace Epsitec.Common.Designer
 		
 		protected void SetTabIndexPicker(bool enable)
 		{
-			if ((this.tool_tab_picker_active != enable) ||
+			if ((this.is_tool_tab_picker_active != enable) ||
 				(this.is_initialised == false))
 			{
 				this.GetCommandState (Command.TabIndexPicker).ActiveState = enable ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 				
-				this.tool_tab_picker_active = enable;
+				this.is_tool_tab_picker_active = enable;
 				
 				this.SetTabIndexPicker (this.WidgetEditors);
 				this.UpdateTabIndexIcons ();
@@ -651,7 +651,7 @@ namespace Epsitec.Common.Designer
 		{
 			for (int i = 0; i < editors.Length; i++)
 			{
-				editors[i].SetTabIndexSetterMode (this.tool_tab_setter_active);
+				editors[i].SetTabIndexSetterMode (this.is_tool_tab_setter_active);
 			}
 		}
 		
@@ -659,7 +659,7 @@ namespace Epsitec.Common.Designer
 		{
 			for (int i = 0; i < editors.Length; i++)
 			{
-				editors[i].SetTabIndexPickerMode (this.tool_tab_picker_active);
+				editors[i].SetTabIndexPickerMode (this.is_tool_tab_picker_active);
 			}
 		}
 		
@@ -924,8 +924,8 @@ namespace Epsitec.Common.Designer
 		protected Panels.DataSourcePalette		data_palette;
 		
 		protected AbstractToolBar				tool_bar;
-		protected bool							tool_tab_setter_active;
-		protected bool							tool_tab_picker_active;
+		protected bool							is_tool_tab_setter_active;
+		protected bool							is_tool_tab_picker_active;
 		
 		protected Widget						attribute_panel;
 		protected Panels.WidgetAttributePalette	attribute_palette;
