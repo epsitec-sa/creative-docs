@@ -108,6 +108,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.MenuAdd(fileMenu, @"file:images/open.icon", "Open", "Ouvrir...", "Ctrl+O");
 			this.MenuAdd(fileMenu, @"file:images/save.icon", "Save", "Enregistrer sous...", "Ctrl+S");
 			this.MenuAdd(fileMenu, @"", "", "", "");
+			this.MenuAdd(fileMenu, @"file:images/print.icon", "Print", "Imprimer...", "Ctrl+P");
+			this.MenuAdd(fileMenu, @"", "", "", "");
 			this.MenuAdd(fileMenu, @"", "QuitApplication", "Quitter", "");
 			fileMenu.AdjustSize();
 			this.menu.Items[0].Submenu = fileMenu;
@@ -264,6 +266,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.HToolBarAdd(@"file:images/new.icon", "New", "Nouveau");
 			this.HToolBarAdd(@"file:images/open.icon", "Open", "Ouvrir");
 			this.HToolBarAdd(@"file:images/save.icon", "Save", "Enregistrer");
+			this.HToolBarAdd(@"file:images/print.icon", "Print", "Imprimer");
 			this.HToolBarAdd("", "", "");
 			this.HToolBarAdd(@"file:images/delete.icon", "Delete", "Supprimer");
 			this.HToolBarAdd(@"file:images/duplicate.icon", "Duplicate", "Dupliquer");
@@ -1211,6 +1214,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			dialog.FileName = this.filename;
 			dialog.Filters.Add("icon", "Icônes", "*.icon");
 			dialog.Show();
+			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
 
 			this.filename = dialog.FileName;
 			this.HandleDrawerInfoDocumentChanged(null);
@@ -1235,11 +1239,34 @@ namespace Epsitec.Common.Pictogram.Widgets
 			dialog.FileName = this.filename;
 			dialog.Filters.Add("icon", "Icônes", "*.icon");
 			dialog.Show();
+			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
 
 			this.filename = dialog.FileName;
 			this.HandleDrawerInfoDocumentChanged(null);
 
 			this.drawer.CommandSave(this.filename);
+		}
+		
+		[Command ("Print")]
+		void CommandPrint(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			Print dialog = new Print();
+			
+			dialog.AllowFromPageToPage = false;
+			dialog.AllowSelectedPages  = false;
+			
+			string[] printers = Printing.PrinterSettings.InstalledPrinters;
+			
+			dialog.Document.PrinterSettings.MinimumPage = 1;
+			dialog.Document.PrinterSettings.MaximumPage = 1;
+			dialog.Document.PrinterSettings.FromPage = 1;
+			dialog.Document.PrinterSettings.ToPage = 1;
+			dialog.Document.PrinterSettings.PrintRange = Printing.PrintRange.AllPages;
+			dialog.Document.PrinterSettings.Collate = false;
+			dialog.Show();
+			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
+
+			this.drawer.Print(dialog);
 		}
 		
 		[Command ("QuitApplication")]

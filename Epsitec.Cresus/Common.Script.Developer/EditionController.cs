@@ -58,6 +58,8 @@ namespace Epsitec.Common.Script.Developer
 			this.UpdateToolBar ();
 			this.UpdateFromSource ();
 			this.UpdateCommandStates (true);
+			
+			parent.Window.FocusedWidgetChanged += new EventHandler (this.HandleWindowFocusedWidgetChanged);
 		}
 		
 		
@@ -117,6 +119,27 @@ namespace Epsitec.Common.Script.Developer
 			}
 		}
 		
+		private void HandleWindowFocusedWidgetChanged(object sender)
+		{
+			EditArray edit  = this.panel.ParameterInfoPanel.EditArray;
+			bool      value = edit.ContainsFocus;
+			
+			if (this.edit_array_focused != value)
+			{
+				this.edit_array_focused = value;
+				
+				if (this.edit_array_focused == false)
+				{
+					if (edit.InteractionMode == ScrollInteractionMode.Edition)
+					{
+						edit.ValidateEdition (false);
+						
+						System.Diagnostics.Debug.WriteLine ("EditArray: validated edition.");
+					}
+				}
+			}
+		}
+		
 		
 		[Command ("SaveSource")] void CommandSaveSource()
 		{
@@ -130,6 +153,7 @@ namespace Epsitec.Common.Script.Developer
 		protected HToolBar						tool_bar;
 		protected TextFieldCombo				method_combo;
 		protected int							method_index;
+		protected bool							edit_array_focused;
 		
 		protected CommandState					save_command_state;
 	}

@@ -36,6 +36,22 @@ namespace Epsitec.Common.Script.Developer.Panels
 			}
 		}
 		
+		public MethodProtoPanel					MethodProtoPanel
+		{
+			get
+			{
+				return this.panel_proto;
+			}
+		}
+		
+		public ParameterInfoPanel				ParameterInfoPanel
+		{
+			get
+			{
+				return this.panel_param;
+			}
+		}
+		
 		
 		protected override void CreateWidgets(Widget parent)
 		{
