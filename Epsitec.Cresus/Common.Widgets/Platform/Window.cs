@@ -563,6 +563,8 @@ namespace Epsitec.Common.Widgets.Platform
 				base.OnSizeChanged (e);
 				this.ReallocatePixmap ();
 			}
+			
+			this.form_bounds_set = false;
 		}
 		
 		protected override void OnActivated(System.EventArgs e)

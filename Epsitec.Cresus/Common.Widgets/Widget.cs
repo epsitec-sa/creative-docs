@@ -3046,7 +3046,6 @@ namespace Epsitec.Common.Widgets
 			this.y2 = y2;
 			
 			this.UpdateClientGeometry ();
-			this.UpdateTextLayout ();
 			this.Invalidate ();
 		}
 		
@@ -3112,6 +3111,7 @@ namespace Epsitec.Common.Widgets
 			
 			Widget[] children = this.Children.Widgets;
 			
+			this.UpdateTextLayout ();
 			this.UpdateHasDockedChildren (children);
 			this.UpdateMinMaxBasedOnDockedChildren (children);
 			this.UpdateDockedChildrenLayout (children);

@@ -61,6 +61,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					//	autres commandes...
 					
 					this.commandDispatcher = new Support.CommandDispatcher ("IconEditor");
+					this.commandDispatcher.RegisterController (this);
 				}
 				
 				return this.commandDispatcher;
@@ -171,7 +172,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			string[] list = Epsitec.Common.Widgets.Adorner.Factory.AdornerNames;
 			foreach ( string name in list )
 			{
-				this.MenuAdd(lookMenu, @"y/n", "Look."+name, name, "");
+				this.MenuAdd(lookMenu, @"y/n", "SelectLook", name, "", name);
 			}
 			lookMenu.AdjustSize();
 			showMenu.Items[5].Submenu = lookMenu;
@@ -305,19 +306,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.info = new StatusBar();
 			this.info.Parent = this;
 			this.collector.Add(this.info);
-			this.InfoAdd("", 200, "StatusDocument", "");
+			this.InfoAdd("", 200, "", "", "StatusDocument");
 			this.InfoAdd(@"file:images/deselect1.icon", 0, "Deselect", "Deselectionner tout");
 			this.InfoAdd(@"file:images/selectall1.icon", 0, "SelectAll", "Tout selectionner");
 			this.InfoAdd(@"file:images/selectinvert1.icon", 0, "SelectInvert", "Inverser la selection");
-			this.InfoAdd("", 120, "StatusObject", "");
+			this.InfoAdd("", 120, "", "", "StatusObject");
 			this.InfoAdd(@"file:images/zoommin1.icon", 0, "ZoomMin", "Zoom minimal");
 			this.InfoAdd(@"file:images/zoomdefault1.icon", 0, "ZoomDefault", "Zoom 100%");
 			this.InfoAdd(@"file:images/zoomsel1.icon", 0, "ZoomSel", "Zoom selection");
 			this.InfoAdd(@"file:images/zoomprev1.icon", 0, "ZoomPrev", "Zoom precedent");
 			this.InfoAdd(@"file:images/zoomsub1.icon", 0, "ZoomSub", "Reduction");
 			this.InfoAdd(@"file:images/zoomadd1.icon", 0, "ZoomAdd", "Agrandissement");
-			this.InfoAdd("", 90, "StatusZoom", "");
-			this.InfoAdd("", 120, "StatusMouse", "");
+			this.InfoAdd("", 90, "", "", "StatusZoom");
+			this.InfoAdd("", 120, "", "", "StatusMouse");
 
 			this.allWidgets = true;
 			this.ResizeLayout();
@@ -365,7 +366,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		// Ajoute une icône.
-		protected void MenuAdd(VMenu vmenu, string icon, string name, string text, string shortcut)
+		protected void MenuAdd(VMenu vmenu, string icon, string command, string text, string shortcut)
+		{
+			this.MenuAdd(vmenu, icon, command, text, shortcut, command);
+		}
+		
+		protected void MenuAdd(VMenu vmenu, string icon, string command, string text, string shortcut, string name)
 		{
 			if ( text == "" )
 			{
@@ -383,18 +389,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 					iconYes = @"file:images/activeyes1.icon";
 				}
 
-				MenuItem item = new MenuItem(name, icon, text, shortcut);
+				MenuItem item = new MenuItem(command, icon, text, shortcut, name);
 				if ( iconNo  != "" )  item.IconNameActiveNo  = iconNo;
 				if ( iconYes != "" )  item.IconNameActiveYes = iconYes;
 				vmenu.Items.Add(item);
 
-				CommandDispatcher disp = this.CommandDispatcher;
-				disp.Register("*."+name, new CommandEventHandler(this.HandleCommand));
+//-				CommandDispatcher disp = this.CommandDispatcher;
+//-				disp.Register(command, new CommandEventHandler(this.HandleCommand));
 			}
 		}
 
 		// Ajoute une icône.
-		protected void HToolBarAdd(string icon, string name, string tooltip)
+		protected void HToolBarAdd(string icon, string command, string tooltip)
 		{
 			if ( icon == "" )
 			{
@@ -404,17 +410,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			else
 			{
-				IconButton button = new IconButton(name, icon);
+				IconButton button = new IconButton(command, icon, command);
 				this.hToolBar.Items.Add(button);
 				this.toolTip.SetToolTip(button, tooltip);
 
-				CommandDispatcher disp = this.CommandDispatcher;
-				disp.Register("*."+name, new CommandEventHandler(this.HandleCommand));
+//-				CommandDispatcher disp = this.CommandDispatcher;
+//-				disp.Register(command, new CommandEventHandler(this.HandleCommand));
 			}
 		}
 
 		// Ajoute une icône.
-		protected void VToolBarAdd(string icon, string name, string tooltip)
+		protected void VToolBarAdd(string icon, string command, string tooltip)
 		{
 			if ( icon == "" )
 			{
@@ -424,17 +430,22 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			else
 			{
-				IconButton button = new IconButton(name, icon);
+				IconButton button = new IconButton(command, icon, command);
 				this.vToolBar.Items.Add(button);
 				this.toolTip.SetToolTip(button, tooltip);
 
-				CommandDispatcher disp = this.CommandDispatcher;
-				disp.Register("*."+name, new CommandEventHandler(this.HandleCommand));
+//-				CommandDispatcher disp = this.CommandDispatcher;
+//-				disp.Register(command, new CommandEventHandler(this.HandleCommand));
 			}
 		}
 
 		// Ajoute une icône.
-		protected void InfoAdd(string icon, double width, string name, string tooltip)
+		protected void InfoAdd(string icon, double width, string command, string tooltip)
+		{
+			this.InfoAdd(icon, width, command, tooltip, command);
+		}
+		
+		protected void InfoAdd(string icon, double width, string command, string tooltip, string name)
 		{
 			if ( icon == "" )
 			{
@@ -447,14 +458,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			else
 			{
-				IconButton button = new IconButton(name, icon);
+				IconButton button = new IconButton(command, icon, name);
 				double h = this.info.DefaultHeight-3;
 				button.Size = new Drawing.Size(h, h);
 				this.info.Items.Add(button);
 				this.toolTip.SetToolTip(button, tooltip);
 
-				CommandDispatcher disp = this.CommandDispatcher;
-				disp.Register("*."+name, new CommandEventHandler(this.HandleCommand));
+//-				CommandDispatcher disp = this.CommandDispatcher;
+//-				disp.Register(command, new CommandEventHandler(this.HandleCommand));
 			}
 		}
 
@@ -849,16 +860,45 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.UpdateToolBar();
 			}
 
-			if ( cmd.StartsWith("Look") )
-			{
-				Epsitec.Common.Widgets.Adorner.Factory.SetActive(cmd);
-				this.UpdateToolBar();
-			}
-
 			if ( this.lister.IsVisible )
 			{
 				this.lister.UpdateContent();
 			}
+		}
+		
+		[Command ("SelectLook")] void CommandSelectLook(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			Widget widget = e.Source as Widget;
+			Epsitec.Common.Widgets.Adorner.Factory.SetActive(widget.Name);
+			this.UpdateToolBar();
+		}
+		
+		[Command ("Select")]
+		[Command ("Zoom")]
+		[Command ("Hand")]
+		[Command ("Picker")]
+		[Command ("ObjectLine")]
+		[Command ("ObjectArrow")]
+		[Command ("ObjectRectangle")]
+		[Command ("ObjectCircle")]
+		[Command ("ObjectEllipse")]
+		[Command ("ObjectRegular")]
+		[Command ("ObjectPoly")]
+		[Command ("ObjectBezier")]
+		[Command ("ObjectText")]
+		void CommandActivateTool(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( this.drawer.IsVisible )
+			{
+				this.drawer.SelectedTool = e.Name;
+			}
+			else
+			{
+				this.drawer.SelectedTool = "Select";
+			}
+			
+			this.UpdateToolBar();
+			this.UpdatePanels();
 		}
 
 		// Bouton de la toolbar cliqué.

@@ -733,7 +733,7 @@ namespace Epsitec.Common.Widgets
 		
 		[Test] public void CheckSaveCommandEnable()
 		{
-			Widget[] find = Widget.FindAllCommandWidgets (Support.RegexFactory.FromSimpleJoker ("*.save"));
+			Widget[] find = Widget.FindAllCommandWidgets ("save");
 			
 			for (int i = 0; i < find.Length; i++)
 			{
@@ -744,7 +744,7 @@ namespace Epsitec.Common.Widgets
 		
 		[Test] public void CheckSaveCommandDisable()
 		{
-			Widget[] find = Widget.FindAllCommandWidgets (Support.RegexFactory.FromSimpleJoker ("*.save"));
+			Widget[] find = Widget.FindAllCommandWidgets ("save");
 			
 			for (int i = 0; i < find.Length; i++)
 			{
@@ -758,7 +758,7 @@ namespace Epsitec.Common.Widgets
 			WidgetTest.open_state.Enabled = ! WidgetTest.open_state.Enabled;
 		}
 		
-		static CommandState open_state = new CommandState ("*.open");
+		static CommandState open_state = new CommandState ("open");
 		
 		[Test] public void CheckFindChildBasedOnName()
 		{
