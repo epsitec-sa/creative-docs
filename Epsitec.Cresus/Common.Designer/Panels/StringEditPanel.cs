@@ -52,6 +52,20 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		
 		
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				if (this.local_dispatcher != null)
+				{
+					this.local_dispatcher.Dispose ();
+					this.local_dispatcher = null;
+				}
+			}
+			
+			base.Dispose (disposing);
+		}
+		
 		protected override void CreateWidgets(Widget parent)
 		{
 			double dx = parent.Client.Width;
@@ -66,8 +80,10 @@ namespace Epsitec.Common.Designer.Panels
 			EditArray.Header     title = new EditArray.Header (this.edit_array);
 			EditArray.Controller ctrl  = new EditArray.Controller (this.edit_array, "Table");
 			
+			this.local_dispatcher = new Support.CommandDispatcher ("StringEditTable", true);
+			
 			this.edit_array.AutoResolveResRef = false;
-			this.edit_array.CommandDispatcher = new Support.CommandDispatcher ("StringEditTable", true);
+			this.edit_array.CommandDispatcher = this.local_dispatcher;
 			this.edit_array.Anchor            = AnchorStyles.All;
 			this.edit_array.AnchorMargins     = new Drawing.Margins (4, 4, 4, 65);
 			this.edit_array.ColumnCount       = 2;
@@ -333,5 +349,6 @@ namespace Epsitec.Common.Designer.Panels
 		protected AbstractTextField				comment;
 		protected StringEditController.Store	store;
 		protected ScrollInteractionMode			old_edit_array_mode;
+		protected CommandDispatcher				local_dispatcher;
 	}
 }

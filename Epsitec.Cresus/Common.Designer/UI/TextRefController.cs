@@ -108,13 +108,20 @@ namespace Epsitec.Common.Designer.UI
 			{
 				this.sync_level++;
 				
+				TextRefAdapter adapter = this.Adapter;
+				
 				if ((reason == Common.UI.SyncReason.SourceChanged) ||
 					(reason == Common.UI.SyncReason.Initialisation))
 				{
 					this.State = InternalState.Passive;
+					
+					if ((adapter != null) &&
+						(this.combo_text != null))
+					{
+						this.UpdateBundleList (adapter);
+						this.UpdateFieldList (adapter, this.combo_bundle.SelectedItem);
+					}
 				}
-				
-				TextRefAdapter adapter = this.Adapter;
 				
 				if ((adapter != null) &&
 					(this.combo_text != null))

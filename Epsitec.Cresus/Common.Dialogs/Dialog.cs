@@ -110,6 +110,8 @@ namespace Epsitec.Common.Dialogs
 				throw new System.InvalidOperationException ("Dialog may not be loaded twice.");
 			}
 			
+			this.full_name = full_name;
+			
 			Support.ResourceBundle bundle = Support.Resources.GetBundle (full_name);
 			
 			if (bundle == null)
@@ -120,9 +122,7 @@ namespace Epsitec.Common.Dialogs
 				
 				this.window.Root.Text = "&lt; à créer ... &gt;";
 				
-				this.designer.DialogData   = this.data;
-				this.designer.DialogWindow = this.window;
-				this.designer.ResourceName = full_name;
+				this.AttachDesigner ();
 				
 				this.designer.StartDesign ();
 			}
@@ -137,6 +137,7 @@ namespace Epsitec.Common.Dialogs
 				this.window = root.Window;
 				this.mode   = InternalMode.Dialog;
 				
+				this.CreateDesignerActivatorWidget ();
 				this.UpdateWindowBindings ();
 			}
 		}
@@ -179,6 +180,75 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
+		protected virtual void SwitchToDesigner()
+		{
+			if (this.mode == InternalMode.Design)
+			{
+				return;
+			}
+			
+			if (this.full_name == null)
+			{
+				throw new System.InvalidOperationException ("Cannot switch to designer.");
+			}
+			
+			this.designer = Dialog.CreateDesigner ();
+			this.mode     = InternalMode.Design;
+			
+			if (this.designer_activator_widget != null)
+			{
+				this.designer_activator_widget.SetVisible (false);
+			}
+			
+			this.AttachDesigner ();
+			
+			this.designer.StartDesign ();
+		}
+		
+		protected virtual void SwitchBackToDialog()
+		{
+			if (this.mode != InternalMode.Design)
+			{
+				return;
+			}
+			
+			this.DetachDesigner ();
+			
+			this.designer = null;
+			this.mode     = InternalMode.Dialog;
+			
+			if (this.designer_activator_widget != null)
+			{
+				this.designer_activator_widget.SetVisible (true);
+			}
+		}
+		
+		protected virtual void CreateDesignerActivatorWidget()
+		{
+			Widgets.IconButton button = new Widgets.IconButton (this.window.Root);
+			
+			button.IconName = "manifest:Epsitec.Common.Dialogs.Images.StartDesigner.icon";
+			button.Clicked += new Widgets.MessageEventHandler (this.HandleDesignerActivatorClicked);
+			button.Anchor   = Widgets.AnchorStyles.BottomLeft;
+			button.AnchorMargins = new Drawing.Margins (0, 0, 0, 0);
+			
+			this.designer_activator_widget = button;
+		}
+		
+		
+		protected virtual void AttachDesigner()
+		{
+			this.designer.DialogData   = this.data;
+			this.designer.DialogWindow = this.window;
+			this.designer.ResourceName = this.full_name;
+			
+			this.designer.Disposed += new Support.EventHandler (this.HandleDesignerDisposed);
+		}
+		
+		protected virtual void DetachDesigner()
+		{
+			this.designer.Disposed -= new Support.EventHandler (this.HandleDesignerDisposed);
+		}
 		
 		public static bool LoadDesignerFactory()
 		{
@@ -219,6 +289,19 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
+		private void HandleDesignerActivatorClicked(object sender, Widgets.MessageEventArgs e)
+		{
+			System.Diagnostics.Debug.Assert (this.designer_activator_widget == sender);
+			
+			this.SwitchToDesigner ();
+		}
+		
+		private void HandleDesignerDisposed(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.designer == sender);
+			this.SwitchBackToDialog ();
+		}
+		
 		protected enum InternalMode
 		{
 			None,
@@ -234,5 +317,7 @@ namespace Epsitec.Common.Dialogs
 		protected Widgets.Window				window;
 		protected Support.CommandDispatcher		dispatcher;
 		protected IDialogDesigner				designer;
+		protected string						full_name;
+		protected Widgets.Widget				designer_activator_widget;
 	}
 }

@@ -8,6 +8,7 @@ namespace Epsitec.Common.Dialogs
 		[SetUp] public void SetUp()
 		{
 			Epsitec.Common.UI.Engine.Initialise ();
+			Epsitec.Common.Pictogram.Engine.Initialise ();
 		}
 		
 		[Test] public void CheckLoadDesignerFactory()
@@ -103,7 +104,7 @@ namespace Epsitec.Common.Dialogs
 		private void HandleFieldChanged(object sender)
 		{
 			Field field = sender as Field;
-			System.Diagnostics.Debug.WriteLine ("Field " + field.Name + " changed to " + field.Value.ToString () + (field.IsValueValid ? "" : "(invalid)"));
+			System.Diagnostics.Debug.WriteLine ("Field " + field.Name + " changed to " + field.Value.ToString () + (field.IsValueValid ? "" : "(invalid)") + ", widgets: " + Widgets.Widget.DebugAliveWidgetsCount + ", windows: " + Widgets.Window.DebugAliveWindowsCount);
 		}
 	}
 }

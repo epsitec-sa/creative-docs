@@ -80,6 +80,16 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		
 		
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.ActiveObject = null;
+			}
+			
+			base.Dispose (disposing);
+		}
+
 		protected override void CreateWidgets(Widget parent)
 		{
 			System.Diagnostics.Debug.Assert (this.widget == parent);
@@ -109,7 +119,12 @@ namespace Epsitec.Common.Designer.Panels
 			if (this.active == null)
 			{
 				this.title.Text = @"<font size=""120%""><b>Object Attributes</b><br/>(no selected object)</font>";
-				this.props.Clear ();
+				
+				this.DetachAllProps ();
+				this.DisposeUnusedProps ();
+				
+				System.Diagnostics.Debug.Assert (this.props.Count == 0);
+				
 				this.book.Items.Clear ();
 			}
 			else
@@ -130,20 +145,16 @@ namespace Epsitec.Common.Designer.Panels
 			}
 		}
 		
-		protected void CreateProps()
+		protected void DetachAllProps()
 		{
-			System.Diagnostics.Debug.Assert (this.type != null);
-			
-			int         active_index    = this.book.ActivePageIndex;
-			System.Type active_tab_type = (active_index < 0) ? null : this.props[active_index].GetType ();
-			
 			foreach (Editors.AbstractPropEdit prop in this.props)
 			{
 				prop.ActiveObject = null;
 			}
-			
-			this.SelectMatchingProps ();
-			
+		}
+		
+		protected void DisposeUnusedProps()
+		{
 			int i = 0;
 			
 			while (i < this.props.Count)
@@ -153,12 +164,25 @@ namespace Epsitec.Common.Designer.Panels
 				if (prop.ActiveObject == null)
 				{
 					this.props.RemoveAt (i);
+					prop.Dispose ();
 				}
 				else
 				{
 					i++;
 				}
 			}
+		}
+		
+		protected void CreateProps()
+		{
+			System.Diagnostics.Debug.Assert (this.type != null);
+			
+			int         active_index    = this.book.ActivePageIndex;
+			System.Type active_tab_type = (active_index < 0) ? null : this.props[active_index].GetType ();
+			
+			this.DetachAllProps ();
+			this.SelectMatchingProps ();
+			this.DisposeUnusedProps ();
 			
 			Editors.AbstractPropEdit[] props = new Editors.AbstractPropEdit[this.props.Count];
 			this.props.CopyTo (props);
@@ -183,7 +207,8 @@ namespace Epsitec.Common.Designer.Panels
 			this.book.Items.Clear ();
 			
 			active_index = -1;
-			i = 0;
+			
+			int i = 0;
 			
 			foreach (Editors.AbstractPropEdit prop in this.props)
 			{

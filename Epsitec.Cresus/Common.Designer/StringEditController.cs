@@ -146,21 +146,33 @@ namespace Epsitec.Common.Designer
 		
 		public void CloseBundles(string name)
 		{
-			ResourceBundleCollection bundles = this.bundles[name] as ResourceBundleCollection;
-			
-			if (bundles != null)
+			if ((this.bundles.ContainsKey (name)) ||
+				(name == "*"))
 			{
-				for (int i = 0; i < this.panels.Count; i++)
+				Panels.StringEditPanel[] panels = new Panels.StringEditPanel[this.panels.Count];
+				TabPage[]                pages  = new TabPage[this.tab_book.Items.Count];
+				
+				this.panels.CopyTo (panels, 0);
+				this.tab_book.Items.CopyTo (pages, 0);
+				
+				for (int i = 0; i < panels.Length; i++)
 				{
-					Panels.StringEditPanel panel = this.panels[i] as Panels.StringEditPanel;
+					Panels.StringEditPanel panel = panels[i];
 					
-					if (panel.Store.Name == name)
+					if ((panel.Store.Name == name) ||
+						(name == "*"))
 					{
-						this.bundles.Remove (name);
-						this.panels.RemoveAt (i);
-						this.tab_book.Items.RemoveAt (i);
+						TabPage page = pages[i];
+						string  current_name = panel.Store.Name;
+						
+						this.bundles.Remove (current_name);
+						this.panels.Remove (panel);
+						this.tab_book.Items.Remove (page);
+						
 						this.OnBundleRemoved ();
-						return;
+						
+						panel.Dispose ();
+						page.Dispose ();
 					}
 				}
 			}
@@ -266,6 +278,8 @@ namespace Epsitec.Common.Designer
 		{
 			if (disposing)
 			{
+				this.CloseBundles ("*");
+				
 				Support.Resources.Remove (this);
 			}
 			
@@ -373,6 +387,12 @@ namespace Epsitec.Common.Designer
 		
 		public bool LoadStringBundle(string name)
 		{
+			if ((name == null) ||
+				(name.Length == 0))
+			{
+				return false;
+			}
+			
 			if (this.IsStringBundleLoaded (name))
 			{
 				return true;

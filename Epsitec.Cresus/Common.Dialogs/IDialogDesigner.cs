@@ -16,5 +16,7 @@ namespace Epsitec.Common.Dialogs
 		string						ResourceName		{ get; set; }
 		
 		void StartDesign();
+		
+		event Support.EventHandler	Disposed;
 	}
 }
