@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelCorner permet de choisir un type de coin.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelCorner : AbstractPanel
 	{
 		public PanelCorner()
