@@ -7,7 +7,7 @@ namespace Epsitec.Common.UI.Data
 	/// La classe Record décrit un ensemble de champs utilisés pour échanger des
 	/// données entre une application et son interface via mapper/binder/...
 	/// </summary>
-	public class Record : Types.AbstractDataCollection, Types.IDataFolder, Types.IDataGraph
+	public class Record : Types.AbstractDataCollection, Types.IDataFolder, Types.IDataGraph, Support.Data.IChangedSource
 	{
 		public Record()
 		{
@@ -18,7 +18,7 @@ namespace Epsitec.Common.UI.Data
 		public void Add(Field field)
 		{
 			this.list.Add (field);
-			this.ClearCachedItemArray ();
+			this.OnChanged ();
 		}
 		
 		public void AddRange(System.Collections.ICollection fields)
@@ -32,7 +32,7 @@ namespace Epsitec.Common.UI.Data
 			}
 			
 			this.list.AddRange (fields);
-			this.ClearCachedItemArray ();
+			this.OnChanged ();
 		}
 		
 		
@@ -108,6 +108,21 @@ namespace Epsitec.Common.UI.Data
 			return this.graph.Navigate (path);
 		}
 		#endregion
+		
+		#region IChangedSource Members
+		public event Support.EventHandler		Changed;
+		#endregion
+		
+		protected virtual void OnChanged()
+		{
+			this.ClearCachedItemArray ();
+			
+			if (this.Changed != null)
+			{
+				this.Changed (this);
+			}
+		}
+		
 		
 		protected override Types.IDataItem[] GetCachedItemArray()
 		{

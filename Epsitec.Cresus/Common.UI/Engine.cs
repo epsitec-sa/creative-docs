@@ -22,6 +22,15 @@ namespace Epsitec.Common.UI
 		
 		public static void BindWidget(Types.IDataGraph graph, Common.Widgets.Widget widget, System.Xml.XmlNode binding)
 		{
+			//	L'information de binding permet de réaliser le lien entre un champ contenu
+			//	dans IDataGraph et un widget. La syntaxe doit être du style :
+			//
+			//	  <bind path="chemin"/>
+			//
+			//	où :
+			//
+			//	- path définit le chemin d'accès à l'objet IDataValue dans IDataGraph.
+			
 			System.Xml.XmlAttribute x_path = binding.Attributes["path"];
 			
 			if (x_path == null)
@@ -46,16 +55,25 @@ namespace Epsitec.Common.UI
 			
 			if (type is Types.IString)
 			{
-				Binders.DataValueBinder          binder  = new Binders.DataValueBinder (source);
-				Adapters.StringAdapter           adapter = new Adapters.StringAdapter (binder);
-				Controllers.WidgetTextController control = new Controllers.WidgetTextController (adapter, widget);
+				Types.IDataConstraint   constraint = source.DataConstraint;
+				Binders.DataValueBinder binder     = new Binders.DataValueBinder (source);
+				Adapters.StringAdapter  adapter    = new Adapters.StringAdapter (binder);
+				
+				new Controllers.WidgetTextController (adapter, widget, constraint);
 				
 				return;
 			}
 			
 			if (type is Types.INum)
 			{
-				//	TODO: attache le widget à cette valeur numérique
+				Types.IDataConstraint   constraint = source.DataConstraint;
+				Types.INum              num_type   = source.DataType as Types.INum;
+				Binders.DataValueBinder binder     = new Binders.DataValueBinder (source);
+				Adapters.DecimalAdapter adapter    = new Adapters.DecimalAdapter (binder);
+				
+				new Controllers.WidgetValueController (adapter, widget, constraint, num_type);
+				
+				return;
 			}
 			
 			if (type is Types.IEnum)

@@ -7,7 +7,7 @@ namespace Epsitec.Common.UI.Data
 	/// La classe Field décrit un champ d'un Record, utilisé pour échanger des
 	/// données entre une application et son interface via mapper/binder/...
 	/// </summary>
-	public class Field : Types.IDataValue
+	public class Field : Types.IDataValue, Support.Data.IChangedSource
 	{
 		public Field()
 		{
@@ -27,7 +27,19 @@ namespace Epsitec.Common.UI.Data
 		
 		public Field(string name, object value, Types.INamedType type) : this (name)
 		{
-			this.DefineValue (value, type);
+			if (type == null)
+			{
+				this.DefineValue (value);
+			}
+			else
+			{
+				this.DefineValue (value, type);
+			}
+			
+			if (type is Types.IDataConstraint)
+			{
+				this.DefineConstraint (type as Types.IDataConstraint);
+			}
 		}
 		
 		public Field(string name, object value, Types.INamedType type, Types.IDataConstraint constraint) : this (name, value, type)
@@ -79,6 +91,28 @@ namespace Epsitec.Common.UI.Data
 		}
 		
 		
+		public object							Value
+		{
+			get
+			{
+				return this.value;
+			}
+			set
+			{
+				if (Common.Converters.Comparer.Equal (this.value, value) == false)
+				{
+					if (this.type == null)
+					{
+						throw new System.InvalidOperationException ("Value cannot be changed; no type is defined.");
+					}
+					
+					this.value = value;
+					this.OnChanged ();
+				}
+			}
+		}
+		
+		
 		#region IDataValue Members
 		public Types.INamedType					DataType
 		{
@@ -98,12 +132,12 @@ namespace Epsitec.Common.UI.Data
 		
 		public object ReadValue()
 		{
-			return this.value;
+			return this.Value;
 		}
 
 		public void WriteValue(object value)
 		{
-			this.value = value;
+			this.Value = value;
 		}
 		#endregion
 
@@ -142,6 +176,20 @@ namespace Epsitec.Common.UI.Data
 			}
 		}
 		#endregion
+		
+		#region IChangedSource Members
+		public event Support.EventHandler		Changed;
+		#endregion
+		
+		
+		protected virtual void OnChanged()
+		{
+			if (this.Changed != null)
+			{
+				this.Changed (this);
+			}
+		}
+		
 		
 		private string							name;
 		private string							caption;
