@@ -19,6 +19,10 @@ namespace Epsitec.Common.Pictogram.Data
 			textLine.Type = PropertyType.TextLine;
 			this.AddProperty(textLine);
 
+			PropertyFont font = new PropertyFont();
+			font.Type = PropertyType.TextFont;
+			this.AddProperty(font);
+
 			this.textLayout = new TextLayout();
 			this.textNavigator = new TextNavigator(this.textLayout);
 			this.textLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
@@ -790,6 +794,10 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( this.textLayout.Text == "" )  return false;
 
 			PropertyTextLine justif = this.PropertyTextLine(1);
+
+			this.textLayout.DefaultFont     = this.PropertyFont(2).GetFont();
+			this.textLayout.DefaultFontSize = this.PropertyFont(2).FontSize;
+			this.textLayout.DefaultColor    = this.PropertyFont(2).FontColor;
 			this.advanceCharArray = this.textLayout.ComputeStructure();
 
 			double width = 0;
@@ -1051,7 +1059,10 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				int rank = this.advanceRank-1;
 
-				if ( port is Drawing.Graphics && this.edited && cursorFrom != cursorTo && rank >= cursorFrom && rank < cursorTo )
+				if ( port is Drawing.Graphics &&
+					 iconContext.IsFocused &&
+					 this.edited &&
+					 cursorFrom != cursorTo && rank >= cursorFrom && rank < cursorTo )
 				{
 					Drawing.Graphics graphics = port as Drawing.Graphics;
 					Drawing.Path path = new Drawing.Path();
@@ -1079,7 +1090,10 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 				port.Transform = ot;
 
-				if ( port is Drawing.Graphics && this.edited && rank == this.textNavigator.Context.CursorTo )
+				if ( port is Drawing.Graphics &&
+					 iconContext.IsFocused &&
+					 this.edited &&
+					 rank == this.textNavigator.Context.CursorTo )
 				{
 					Drawing.Graphics graphics = port as Drawing.Graphics;
 					graphics.LineWidth = 1.0/iconContext.ScaleX;
@@ -1091,7 +1105,10 @@ namespace Epsitec.Common.Pictogram.Data
 				lastBottom = pbr;
 			}
 
-			if ( port is Drawing.Graphics && this.edited && this.advanceRank-1 == this.textNavigator.Context.CursorTo )
+			if ( port is Drawing.Graphics &&
+				 iconContext.IsFocused &&
+				 this.edited &&
+				 this.advanceRank-1 == this.textNavigator.Context.CursorTo )
 			{
 				Drawing.Graphics graphics = port as Drawing.Graphics;
 				graphics.LineWidth = 1.0/iconContext.ScaleX;

@@ -31,6 +31,10 @@ namespace Epsitec.Common.Pictogram.Data
 			textJustif.Type = PropertyType.TextJustif;
 			this.AddProperty(textJustif);
 
+			PropertyFont font = new PropertyFont();
+			font.Type = PropertyType.TextFont;
+			this.AddProperty(font);
+
 			this.textLayout = new TextLayout();
 			this.textNavigator = new TextNavigator(this.textLayout);
 			this.textLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
@@ -318,8 +322,9 @@ namespace Epsitec.Common.Pictogram.Data
 			size.Height = Drawing.Point.Distance(p1,p3);
 			this.textLayout.LayoutSize = size;
 
-			//?this.textLayout.Font     = this.PropertyFont(5).GetFont();
-			//?this.textLayout.FontSize = this.PropertyFont(5).FontSize;
+			this.textLayout.DefaultFont     = this.PropertyFont(5).GetFont();
+			this.textLayout.DefaultFontSize = this.PropertyFont(5).FontSize;
+			this.textLayout.DefaultColor    = this.PropertyFont(5).FontColor;
 
 			JustifVertical   jv = this.PropertyJustif(4).Vertical;
 			JustifHorizontal jh = this.PropertyJustif(4).Horizontal;
@@ -355,7 +360,10 @@ namespace Epsitec.Common.Pictogram.Data
 			this.transform.RotateDeg(angle, p1);
 			port.MergeTransform(transform);
 
-			if ( port is Drawing.Graphics && this.edited && this.textNavigator.Context.CursorFrom != this.textNavigator.Context.CursorTo )
+			if ( port is Drawing.Graphics &&
+				 iconContext.IsFocused &&
+				 this.edited &&
+				 this.textNavigator.Context.CursorFrom != this.textNavigator.Context.CursorTo )
 			{
 				Drawing.Graphics graphics = port as Drawing.Graphics;
 				int from = System.Math.Min(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
@@ -371,17 +379,11 @@ namespace Epsitec.Common.Pictogram.Data
 
 			this.textLayout.ShowLineBreak = this.edited;
 			this.textLayout.Paint(new Drawing.Point(0,0), port);
-#if true
-			if ( port is Printing.PrintPort )
-			{
-				port.Color = Drawing.Color.FromBrightness(0.5);
-				port.LineWidth = 1.0/iconContext.ScaleX;
-				port.PaintOutline(Drawing.Path.FromLine(new Drawing.Point(-2,0), new Drawing.Point(2,0)));
-				port.PaintOutline(Drawing.Path.FromLine(new Drawing.Point(0,-2), new Drawing.Point(0,2)));
-			}
-#endif
 
-			if ( port is Drawing.Graphics && this.edited && this.textNavigator.Context.CursorTo != -1 )
+			if ( port is Drawing.Graphics &&
+				 iconContext.IsFocused &&
+				 this.edited &&
+				 this.textNavigator.Context.CursorTo != -1 )
 			{
 				Drawing.Graphics graphics = port as Drawing.Graphics;
 				Drawing.Point c1, c2;
