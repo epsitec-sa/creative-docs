@@ -229,9 +229,10 @@ namespace Epsitec.Common.Widgets
 			pRect.Offset(-pRect.Left, -pRect.Bottom);
 			pRect.Offset(list.Left, list.Bottom);
 			list.ParentRect = pRect;
-
+			
 			this.window = new WindowFrame();
 			this.window.MakeFramelessWindow();
+			this.window.Owner = this.WindowFrame;
 			Drawing.Point pos = item.MapClientToRoot(new Drawing.Point(0, -list.Height));
 			pos = item.WindowFrame.MapWindowToScreen(pos);
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, list.Width, list.Height);
@@ -249,6 +250,7 @@ namespace Epsitec.Common.Widgets
 
 			this.itemParent.SetSelected(false);
 			this.window.WindowDeactivated -= new System.EventHandler(this.HandleWindowDeactivated);
+			this.window.Root.Children.Clear ();
 			this.window.Dispose();
 			this.window = null;
 			return true;

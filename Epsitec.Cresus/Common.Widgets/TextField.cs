@@ -36,6 +36,7 @@ namespace Epsitec.Common.Widgets
 			this.flashTimer = new System.Timers.Timer(400);  // ms
 			this.flashTimer.Elapsed += new System.Timers.ElapsedEventHandler(FlashCursor);
 			this.ResetCursor();
+			this.MouseCursor = MouseCursor.AsIBeam;
 
 			switch ( type )
 			{

@@ -2408,10 +2408,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnEntered(MessageEventArgs e)
 		{
-			if (this.mouseCursor != null)
-			{
-				this.mouseCursor.SetWindowCursor (this.WindowFrame);
-			}
+			this.MouseCursor.SetWindowCursor (this.WindowFrame);
 			
 			if (this.Entered != null)
 			{
