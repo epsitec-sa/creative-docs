@@ -82,12 +82,24 @@ namespace Epsitec.Cresus.Database
 				
 				System.Data.DataTable table = RequestsTest.CreateSampleTable ();
 				
-				Requests.Group            group = new Requests.Group ();
+				Requests.Group group = new Requests.Group ();
+				
 				Requests.InsertStaticData req_1 = new Requests.InsertStaticData (table.Rows[0]);
 				Requests.InsertStaticData req_2 = new Requests.InsertStaticData (table.Rows[1]);
 				
+				table.Rows[0].BeginEdit ();
+				table.Rows[0][1] = "Pierre Arnaud-Bühlmann";
+				table.Rows[0].EndEdit ();
+				
+				Requests.UpdateStaticData req_3 = new Requests.UpdateStaticData (table.Rows[0], Requests.UpdateMode.Changed);
+				
 				group.Add (req_1);
 				group.Add (req_2);
+				group.Add (req_3);
+				
+				Assertion.AssertEquals (2, req_3.ColumnNames.Length);
+				Assertion.AssertEquals ("ID", req_3.ColumnNames[0]);
+				Assertion.AssertEquals ("Name", req_3.ColumnNames[1]);
 				
 				formatter.Serialize (stream, group);
 			}
@@ -97,13 +109,15 @@ namespace Epsitec.Cresus.Database
 				BinaryFormatter formatter = new BinaryFormatter ();
 				Requests.Group group = formatter.Deserialize (stream) as Requests.Group;
 				
-				Assertion.AssertEquals (2, group.Count);
+				Assertion.AssertEquals (3, group.Count);
 				
 				Assertion.AssertEquals (Requests.Type.InsertStaticData, group[0].Type);
 				Assertion.AssertEquals (Requests.Type.InsertStaticData, group[1].Type);
+				Assertion.AssertEquals (Requests.Type.UpdateStaticData, group[2].Type);
 				
 				Requests.InsertStaticData req_1 = group[0] as Requests.InsertStaticData;
 				Requests.InsertStaticData req_2 = group[1] as Requests.InsertStaticData;
+				Requests.UpdateStaticData req_3 = group[2] as Requests.UpdateStaticData;
 				
 				Assertion.AssertEquals ("DemoTable", req_1.TableName);
 				Assertion.AssertEquals ("DemoTable", req_2.TableName);
@@ -116,7 +130,45 @@ namespace Epsitec.Cresus.Database
 				
 				Assertion.AssertEquals (1972, req_1.ColumnValues[2]);
 				Assertion.AssertEquals (1994, req_2.ColumnValues[2]);
+				
+				Assertion.AssertEquals (2, req_3.ColumnNames.Length);
+				Assertion.AssertEquals ("ID", req_3.ColumnNames[0]);
+				Assertion.AssertEquals ("Name", req_3.ColumnNames[1]);
+				Assertion.AssertEquals (1L, req_3.ColumnValues[0]);
+				Assertion.AssertEquals ("Pierre Arnaud-Bühlmann", req_3.ColumnValues[1]);
 			}
+		}
+		
+		[Test] public void Check06UpdateStaticData()
+		{
+			System.Data.DataTable table = RequestsTest.CreateSampleTable ();
+			
+			Requests.UpdateStaticData req_1 = new Requests.UpdateStaticData (table.Rows[0], Requests.UpdateMode.Changed);
+			
+			table.Rows[0].BeginEdit ();
+			table.Rows[0][1] = "Pierre Arnaud-Bühlmann";
+			table.Rows[0].EndEdit ();
+			
+			Requests.UpdateStaticData req_2 = new Requests.UpdateStaticData (table.Rows[0], Requests.UpdateMode.Changed);
+			Requests.UpdateStaticData req_3 = new Requests.UpdateStaticData (table.Rows[1], Requests.UpdateMode.Full);
+			
+			Assertion.Assert (req_1.ContainsData == false);
+			Assertion.Assert (req_2.ContainsData == true);
+			Assertion.Assert (req_3.ContainsData == true);
+			
+			Assertion.AssertEquals (2, req_2.ColumnNames.Length);
+			Assertion.AssertEquals ("ID", req_2.ColumnNames[0]);
+			Assertion.AssertEquals ("Name", req_2.ColumnNames[1]);
+			Assertion.AssertEquals (1L, req_2.ColumnValues[0]);
+			Assertion.AssertEquals ("Pierre Arnaud-Bühlmann", req_2.ColumnValues[1]);
+			
+			Assertion.AssertEquals (3, req_3.ColumnNames.Length);
+			Assertion.AssertEquals ("ID", req_3.ColumnNames[0]);
+			Assertion.AssertEquals ("Name", req_3.ColumnNames[1]);
+			Assertion.AssertEquals ("Birth Year", req_3.ColumnNames[2]);
+			Assertion.AssertEquals (2L, req_3.ColumnValues[0]);
+			Assertion.AssertEquals ("Jérôme André", req_3.ColumnValues[1]);
+			Assertion.AssertEquals (1994, req_3.ColumnValues[2]);
 		}
 		
 		public static System.Data.DataTable CreateSampleTable()
@@ -130,12 +182,16 @@ namespace Epsitec.Cresus.Database
 			System.Data.DataColumn col_2 = new System.Data.DataColumn ("Name", typeof (string));
 			System.Data.DataColumn col_3 = new System.Data.DataColumn ("Birth Year", typeof (int));
 			
+			col_1.Unique = true;
+			
 			table.Columns.Add (col_1);
 			table.Columns.Add (col_2);
 			table.Columns.Add (col_3);
 			
 			table.Rows.Add (new object[] { 1L, "Pierre Arnaud", 1972 });
 			table.Rows.Add (new object[] { 2L, "Jérôme André",  1994 });
+			
+			table.AcceptChanges ();
 			
 			return table;
 		}
