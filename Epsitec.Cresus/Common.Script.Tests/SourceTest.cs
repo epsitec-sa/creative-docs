@@ -48,6 +48,15 @@ namespace Epsitec.Common.Script
 			Assert.AreEqual (24, a_out[1]);
 			Assert.AreEqual ("hello", record["UserName"].Value);
 			
+			a_in = new object[] { "12", "Hello" };
+			Assert.IsTrue (script.Execute ("Mysterious", a_in, out a_out));
+			
+			a_in = new object[] { 12, 34 };
+			Assert.IsTrue (script.Execute ("Mysterious", a_in, out a_out));
+			
+			a_in = new object[] { "x", "y" };
+			Assert.IsFalse (script.Execute ("Mysterious", a_in, out a_out));
+			
 			script.Dispose ();
 		}
 		
