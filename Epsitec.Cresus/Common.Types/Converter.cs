@@ -535,6 +535,44 @@ namespace Epsitec.Common.Types
 		}
 		
 		
+		public static string ExtractDecimal(ref string value)
+		{
+			if (value == null)
+			{
+				return null;
+			}
+			
+			value = value.TrimStart ();
+			
+			int  n   = value.Length;
+			bool dot = false;
+			int  i   = 0;
+			
+			while (i < n)
+			{
+				char c = value[i++];
+				
+				if (System.Char.IsDigit (c))
+				{
+					continue;
+				}
+				if ((c == '.') &&
+					(dot == false))
+				{
+					dot = true;
+					continue;
+				}
+				
+				i--;
+				break;
+			}
+			
+			string num = value.Substring (0, i);
+			value = value.Substring (i);
+			
+			return num;
+		}
+		
 		internal static bool ParseEnum(System.Type type, string name, out System.Enum value)
 		{
 			//	Tente une conversion du nom donné en entrée en une valeur de

@@ -29,7 +29,7 @@ namespace Epsitec.Common.Widgets
 			this.fieldFontName.IsReadOnly = true;
 			this.UpdateFieldFontName();
 			this.fieldFontName.SelectedIndexChanged += new Support.EventHandler(this.HandleFieldFontNameChanged);
-			ToolTip.Default.SetToolTip(this.fieldFontName, "Police de caractère");
+			ToolTip.Default.SetToolTip(this.fieldFontName, "Police de caractères");
 
 			this.fieldFontScale = new TextFieldUpDown(this);
 			this.fieldFontScale.AutoFocus = false;
@@ -37,8 +37,8 @@ namespace Epsitec.Common.Widgets
 			this.fieldFontScale.MaxValue = 1000.0M;
 			this.fieldFontScale.Step = 10.0M;
 			this.fieldFontScale.Resolution = 1.0M;
-			this.fieldFontScale.TextChanged += new Support.EventHandler(this.HandleFieldFontScaleChanged);
-			ToolTip.Default.SetToolTip(this.fieldFontScale, "Taille en pour-cent");
+			this.fieldFontScale.ValueChanged += new Support.EventHandler(this.HandleFieldFontScaleChanged);
+			ToolTip.Default.SetToolTip(this.fieldFontScale, "Taille en pourcents");
 
 			this.buttonBold = new IconButton(this);
 			this.buttonBold.AutoFocus = false;
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Widgets
 				}
 				if ( this.fieldFontScale != null )
 				{
-					this.fieldFontScale.TextChanged -= new Support.EventHandler(this.HandleFieldFontScaleChanged);
+					this.fieldFontScale.ValueChanged -= new Support.EventHandler(this.HandleFieldFontScaleChanged);
 				}
 				if ( this.buttonBold != null )
 				{
@@ -887,6 +887,10 @@ namespace Epsitec.Common.Widgets
 			this.GlyphType(this.buttonTab, this.tabType);
 			this.ComboSelectedName(this.fieldFontName, this.fontName);
 			this.fieldFontScale.Value = (decimal) this.fontScale * 100;
+			if ( !this.fieldFontScale.Text.EndsWith("%") )
+			{
+				this.fieldFontScale.Text = string.Concat(this.fieldFontScale.Text, "%");
+			}
 			this.ButtonActive(this.buttonBold,       this.bold      );
 			this.ButtonActive(this.buttonItalic,     this.italic    );
 			this.ButtonActive(this.buttonUnderlined, this.underlined);

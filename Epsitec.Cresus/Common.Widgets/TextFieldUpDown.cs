@@ -55,13 +55,12 @@ namespace Epsitec.Common.Widgets
 				
 				if ( text != "" )
 				{
-					try
+					decimal num;
+					string  dec = Types.Converter.ExtractDecimal(ref text);
+					
+					if ( Types.Converter.SafeConvert(dec, out num) )
 					{
-						value = System.Convert.ToDecimal(text);
-					}
-					catch
-					{
-						//	ignore l'erreur
+						value = num;
 					}
 				}
 				
