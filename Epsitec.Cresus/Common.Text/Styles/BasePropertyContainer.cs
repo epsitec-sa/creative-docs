@@ -86,6 +86,23 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
+		public int								CountProperties
+		{
+			get
+			{
+				return (this.properties == null) ? 0 : this.properties.Length;
+			}
+		}
+		
+		public bool								IsEmpty
+		{
+			get
+			{
+				return (this.properties == null) || (this.properties.Length == 0);
+			}
+		}
+		
+		
 		public long 							Version
 		{
 			get
@@ -99,27 +116,11 @@ namespace Epsitec.Common.Text.Styles
 			}
 		}
 		
-		public int								CountProperties
-		{
-			get
-			{
-				return (this.properties == null) ? 0 : this.properties.Length;
-			}
-		}
-		
 		public int								CountUsers
 		{
 			get
 			{
 				return this.user_count;
-			}
-		}
-		
-		public bool								IsEmpty
-		{
-			get
-			{
-				return (this.properties == null) || (this.properties.Length == 0);
 			}
 		}
 		
@@ -198,6 +199,57 @@ namespace Epsitec.Common.Text.Styles
 			}
 			
 			return changed;
+		}
+		
+		
+		public Styles.BasePropertyContainer.Accumulator StartAccumulation()
+		{
+			return new Styles.BasePropertyContainer.Accumulator (this);
+		}
+		
+		
+		public class Accumulator
+		{
+			public Accumulator(Styles.BasePropertyContainer host)
+			{
+				this.host = host;
+				this.hash = new System.Collections.Hashtable ();
+			}
+			
+			
+			public void Accumulate(Styles.BasePropertyContainer source)
+			{
+				int n = source.CountProperties;
+				
+				for (int i = 0; i < n; i++)
+				{
+					System.Type type = source[i].GetType ();
+					
+					if (this.hash.Contains (type))
+					{
+						Properties.BaseProperty base_prop = this.hash[type] as Properties.BaseProperty;
+						Properties.BaseProperty comb_prop = base_prop.GetCombination (source[i]);
+						
+						this.hash[type] = comb_prop;
+					}
+					else
+					{
+						this.hash[type] = source[i];
+					}
+				}
+			}
+			
+			public void Done()
+			{
+				this.host.Initialise (this.hash.Values);
+				
+				this.host = null;
+				this.hash = null;
+			}
+			
+			
+			Styles.BasePropertyContainer		host;
+			System.Collections.Hashtable		hash;
 		}
 		
 		

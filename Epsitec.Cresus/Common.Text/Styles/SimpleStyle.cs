@@ -28,58 +28,5 @@ namespace Epsitec.Common.Text.Styles
 			return Styles.BasePropertyContainer.CompareEqualContents (this, value as Styles.SimpleStyle);
 		}
 		
-		
-		public SimpleStyle.Accumulator StartAccumulation()
-		{
-			return new SimpleStyle.Accumulator (this);
-		}
-		
-		
-		public class Accumulator
-		{
-			public Accumulator(Styles.SimpleStyle host)
-			{
-				this.host = host;
-				this.hash = new System.Collections.Hashtable ();
-			}
-			
-			
-			public void Accumulate(Styles.SimpleStyle source)
-			{
-				int n = source.CountProperties;
-				
-				for (int i = 0; i < n; i++)
-				{
-					System.Type type = source[i].GetType ();
-					
-					if (this.hash.Contains (type))
-					{
-						Properties.BaseProperty base_prop = this.hash[type] as Properties.BaseProperty;
-						Properties.BaseProperty comb_prop = base_prop.GetCombination (source[i]);
-						
-						this.hash[type] = comb_prop;
-					}
-					else
-					{
-						this.hash[type] = source[i];
-					}
-				}
-			}
-			
-			public void Done()
-			{
-				int count = this.hash.Count;
-				
-				this.host.properties = new Properties.BaseProperty[count];
-				this.hash.Values.CopyTo (this.host.properties, 0);
-			}
-			
-			
-			Styles.SimpleStyle					host;
-			System.Collections.Hashtable		hash;
-		}
-		
-		
-		private Properties.BaseProperty[]		properties;
 	}
 }
