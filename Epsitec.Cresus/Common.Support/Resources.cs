@@ -253,7 +253,7 @@ namespace Epsitec.Common.Support
 				switch (level)
 				{
 					case ResourceLevel.Merged:
-						bundle = ResourceBundle.Create (id, prefix, level, recursion, culture);
+						bundle = ResourceBundle.Create (id, prefix, level, culture, recursion);
 						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Default, culture));
 						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Localised, culture));
 						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Customised, culture));
@@ -262,7 +262,7 @@ namespace Epsitec.Common.Support
 					case ResourceLevel.Default:
 					case ResourceLevel.Localised:
 					case ResourceLevel.Customised:
-						bundle = ResourceBundle.Create (id, prefix, level, recursion, culture);
+						bundle = ResourceBundle.Create (id, prefix, level, culture, recursion);
 						bundle.Compile (provider.GetData (resource_id, level, culture));
 						break;
 					
@@ -403,6 +403,23 @@ namespace Epsitec.Common.Support
 				System.Diagnostics.Debug.WriteLine (string.Format ("Prefix '{0}' implemented by class {1}", Resources.providers[i].Prefix, Resources.providers[i].GetType ().Name));
 			}
 		}
+		
+		
+		public static CultureInfo FindCultureInfo(string two_letter_code)
+		{
+			CultureInfo[] cultures = CultureInfo.GetCultures (System.Globalization.CultureTypes.NeutralCultures);
+			
+			for (int i = 0; i < cultures.Length; i++)
+			{
+				if (cultures[i].TwoLetterISOLanguageName == two_letter_code)
+				{
+					return cultures[i];
+				}
+			}
+			
+			return null;
+		}
+
 		
 		
 		protected static void SelectLocale(CultureInfo culture)
