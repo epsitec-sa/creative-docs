@@ -511,7 +511,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
 			
-			adorner.PaintMenuBackground(graphics, rect, state, Direction.Up, Drawing.Rectangle.Empty, 0);
+			adorner.PaintTextFieldBackground(graphics, rect, state, TextFieldStyle.Multi, false);
 
 			Drawing.Point pos = new Drawing.Point(ScrollList.Margin, rect.Height-ScrollList.Margin-this.lineHeight);
 			int max = System.Math.Min(this.visibleLines, this.items.Count);

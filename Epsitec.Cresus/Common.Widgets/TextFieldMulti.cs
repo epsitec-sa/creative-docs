@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 			this.scroller.ValueChanged += new EventHandler(this.HandleScrollerValueChanged);
 			//this.scroller.Dock = DockStyle.Right;
 			
-			this.rightMargin = this.scroller.Width;
+			this.margins.Right = this.scroller.Width;
 		}
 		
 		public TextFieldMulti(Widget embedder) : this()
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Widgets
 			{
 				IAdorner adorner = Widgets.Adorner.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle();
-				rect.Left   = this.Bounds.Width-this.rightMargin-adorner.GeometryScrollerRightMargin;
+				rect.Left   = this.Bounds.Width-this.margins.Right-adorner.GeometryScrollerRightMargin;
 				rect.Right  = this.Bounds.Width-adorner.GeometryScrollerRightMargin;
 				rect.Bottom = adorner.GeometryScrollerBottomMargin;
 				rect.Top    = this.Bounds.Height-adorner.GeometryScrollerTopMargin;
@@ -121,7 +121,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.textLayout != null )
 			{
-				double dx = this.Client.Width - AbstractTextField.Margin*2 - this.rightMargin - this.leftMargin;
+				double dx = this.Client.Width - AbstractTextField.Margin*2 - this.margins.Width;
 				double dy = this.Client.Height - AbstractTextField.Margin*2;
 				this.realSize = new Drawing.Size(dx, dy);
 				this.textLayout.Alignment = this.Alignment;

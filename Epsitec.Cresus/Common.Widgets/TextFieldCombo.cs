@@ -19,7 +19,7 @@ namespace Epsitec.Common.Widgets
 			this.button.Pressed += new MessageEventHandler(this.HandleButtonPressed);
 			//this.button.Dock = DockStyle.Right;
 
-			this.rightMargin = this.button.Width;
+			this.margins.Right = this.button.Width;
 		}
 		
 		public TextFieldCombo(Widget embedder) : this()
@@ -104,7 +104,7 @@ namespace Epsitec.Common.Widgets
 			{
 				IAdorner adorner = Widgets.Adorner.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle();
-				rect.Left   = this.Bounds.Width-this.rightMargin-adorner.GeometryComboRightMargin;
+				rect.Left   = this.Bounds.Width-this.margins.Right-adorner.GeometryComboRightMargin;
 				rect.Right  = this.Bounds.Width-adorner.GeometryComboRightMargin;
 				rect.Bottom = adorner.GeometryComboBottomMargin;
 				rect.Top    = this.Bounds.Height-adorner.GeometryComboTopMargin;

@@ -9,12 +9,18 @@ namespace Epsitec.Common.Widgets
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			this.color = adorner.ColorCaption;
-			this.colorBack = Drawing.Color.FromBrightness(1);
+			this.colorBack = adorner.ColorWindow;
 		}
 		
 		public Slider(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
+		}
+
+		public bool Frame
+		{
+			get { return this.frame; }
+			set { this.frame = value; }
 		}
 
 		// Valeur numérique représentée.
@@ -76,6 +82,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.color != value )
 				{
 					this.color = value;
+					this.defaultColor = false;
 					this.Invalidate();
 				}
 			}
@@ -94,6 +101,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.colorBack != value )
 				{
 					this.colorBack = value;
+					this.defaultColorBack = false;
 					this.Invalidate();
 				}
 			}
@@ -177,7 +185,8 @@ namespace Epsitec.Common.Widgets
 		protected override void HandleAdornerChanged()
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			this.color = adorner.ColorCaption;
+			if ( this.defaultColor )  this.color = adorner.ColorCaption;
+			if ( this.defaultColorBack )  this.colorBack = adorner.ColorWindow;
 			base.HandleAdornerChanged();
 		}
 
@@ -188,14 +197,35 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
 
+			double width = rect.Width;
 			rect.Left  += adorner.GeometrySliderLeftMargin;
 			rect.Right += adorner.GeometrySliderRightMargin;
 			
-			adorner.PaintTextFieldBackground(graphics, rect, state, TextFieldStyle.Simple, false);
+			if ( this.frame )
+			{
+				adorner.PaintTextFieldBackground(graphics, rect, state, TextFieldStyle.Multi, false);
+			}
+			else
+			{
+				graphics.AddLine(1, rect.Top-0.5, width-1, rect.Top-0.5);
+				graphics.RenderSolid(adorner.ColorTextFieldBorder(this.IsEnabled));
+			}
 
 			if ( this.IsEnabled )
 			{
 				rect.Inflate(-this.margin, -this.margin);
+
+				if ( !this.frame && rect.Left > 1 )
+				{
+					Drawing.Path path = new Drawing.Path();
+					path.MoveTo(1, rect.Top);
+					path.LineTo(rect.Left, rect.Top);
+					path.LineTo(rect.Left, rect.Bottom);
+					path.CurveTo(1, rect.Bottom, 1, rect.Top);
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(this.color);
+				}
+
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.colorBack);
 				rect.Width *= (this.sliderValue-this.minRange)/(this.maxRange-this.minRange);
@@ -210,7 +240,10 @@ namespace Epsitec.Common.Widgets
 		protected double					maxRange = 100;
 		protected Drawing.Color				color;
 		protected Drawing.Color				colorBack;
+		protected bool						defaultColor = true;
+		protected bool						defaultColorBack = true;
 		protected bool						mouseDown = false;
 		protected double					margin = 1;
+		protected bool						frame = true;
 	}
 }
