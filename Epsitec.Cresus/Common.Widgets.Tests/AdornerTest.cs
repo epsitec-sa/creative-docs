@@ -761,7 +761,7 @@ namespace Epsitec.Common.Widgets
 			multi.Alignment = Drawing.ContentAlignment.TopLeft;
 			multi.TextLayout.JustifMode = TextJustifMode.AllButLast;
 			//?multi.Alignment = Drawing.ContentAlignment.TopRight;
-			//?multi.TextLayout.JustifMode = TextJustifMode.None;
+			//?multi.TextLayout.JustifMode = TextJustifMode.NoLine;
 			multi.TextLayout.ShowLineBreak = true;
 			multi.ScrollZone = 0.2;
 			multi.Anchor = AnchorStyles.All;

@@ -39,7 +39,7 @@ namespace Epsitec.Common.Support
 			ImageProvider.default_paths[2] = other;
 			ImageProvider.default_paths[3] = "";
 			
-			Drawing.TextStyle.DefaultImageProvider = ImageProvider.default_provider;
+			Drawing.TextStyle.DefineDefaultImageProvider (ImageProvider.default_provider);
 		}
 		
 		

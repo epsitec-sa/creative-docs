@@ -6,16 +6,46 @@ namespace Epsitec.Common.Drawing
 	public enum TextJustifMode
 	{
 		None,
+		
+		NoLine,
 		AllButLast,
 		All,
 	}
 	
 	/// <summary>
-	/// La classe TextStyle définit le style d'un texte (paragraphe).
+	/// La classe TextStyle définit le style d'un texte (paragraphe) qui peut dériver
+	/// d'un style par défaut ou de n'importe quel autre style.
 	/// </summary>
-	public class TextStyle
+	public class TextStyle : System.ICloneable
 	{
-		public TextStyle()
+		public TextStyle() : this (null)
+		{
+		}
+		
+		public TextStyle(TextStyle parent)
+		{
+			if (parent == null)
+			{
+				parent = TextStyle.Default;
+			}
+			
+			this.parent          = parent;
+			this.font            = null;
+			this.size            = 0;
+			
+			this.color           = Color.Empty;
+			this.color_anchor    = Color.Empty;
+			this.color_wave      = Color.Empty;
+			
+			this.alignment       = ContentAlignment.None;
+			this.break_mode      = TextBreakMode.None;
+			this.justif_mode     = TextJustifMode.None;
+			this.show_line_break = ThreeState.None;
+			
+			this.language        = null;
+		}
+		
+		private TextStyle(int i)
 		{
 			this.font            = Font.DefaultFont;
 			this.size            = Font.DefaultFontSize;
@@ -25,17 +55,16 @@ namespace Epsitec.Common.Drawing
 			this.color_wave      = new Color (1, 0, 0);
 			
 			this.alignment       = ContentAlignment.TopLeft;
-			this.break_mode      = TextBreakMode.Split;
-			this.justif_mode     = TextJustifMode.None;
-			this.show_line_break = false;
+			this.break_mode      = TextBreakMode.Ellipsis | TextBreakMode.SingleLine;
+			this.justif_mode     = TextJustifMode.NoLine;
+			this.show_line_break = ThreeState.False;
 			
 			this.language        = "";
 		}
 		
 		static TextStyle()
 		{
-			TextStyle.default_style = new TextStyle ();
-			
+			TextStyle.default_style = new TextStyle (0);
 			TextStyle.default_style.is_default_style = true;
 		}
 		
@@ -48,6 +77,14 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public TextStyle						Parent
+		{
+			get
+			{
+				return this.parent;
+			}
+		}
+		
 		
 		//	UnderlineThickness
 		//	UnderlineOffset
@@ -56,7 +93,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.font;
+				return (this.font == null) ? this.parent.Font : this.font;
 			}
 			set
 			{
@@ -74,7 +111,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.size;
+				return (this.size == 0) ? this.parent.Size : this.size;
 			}
 			set
 			{
@@ -92,7 +129,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.color;
+				return (this.color.IsEmpty) ? this.parent.Color : this.color;
 			}
 			set
 			{
@@ -110,7 +147,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.color_anchor;
+				return (this.color_anchor.IsEmpty) ? this.parent.AnchorColor : this.color_anchor;
 			}
 			set
 			{
@@ -128,7 +165,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.color_wave;
+				return (this.color_wave.IsEmpty) ? this.parent.WaveColor : this.color_wave;
 			}
 			set
 			{
@@ -146,7 +183,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.alignment;
+				return (this.alignment == ContentAlignment.None) ? this.parent.Alignment : this.alignment;
 			}
 			set
 			{
@@ -164,7 +201,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.break_mode;
+				return (this.break_mode == TextBreakMode.None) ? this.parent.BreakMode : this.break_mode;
 			}
 
 			set
@@ -183,7 +220,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.justif_mode;
+				return (this.justif_mode == TextJustifMode.None) ? this.parent.JustifMode : this.justif_mode;
 			}
 			set
 			{
@@ -201,15 +238,28 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.show_line_break;
+				if (this.show_line_break == ThreeState.None)
+				{
+					return this.parent.ShowLineBreak;
+				}
+				
+				switch (this.show_line_break)
+				{
+					case ThreeState.True:	return true;
+					case ThreeState.False:	return false;
+				}
+				
+				throw new System.InvalidOperationException ("TextStyle has invalid ShowLineBreak state.");
 			}
 			set
 			{
 				this.CheckForDefaultStyle ();
 				
-				if (this.show_line_break != value)
+				ThreeState test = (value ? ThreeState.True : ThreeState.False);
+				
+				if (this.show_line_break != test)
 				{
-					this.show_line_break = value;
+					this.show_line_break = test;
 					this.OnChanged ();
 				}
 			}
@@ -219,7 +269,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				return this.language;
+				return (this.language == null) ? this.parent.Language : this.language;
 			}
 			set
 			{
@@ -236,12 +286,7 @@ namespace Epsitec.Common.Drawing
 		{
 			get
 			{
-				if (this.image_provider == null)
-				{
-					return TextStyle.DefaultImageProvider;
-				}
-				
-				return this.image_provider;
+				return (this.image_provider == null) ? this.parent.ImageProvider : this.image_provider;
 			}
 			set
 			{
@@ -256,12 +301,6 @@ namespace Epsitec.Common.Drawing
 		}
 
 		
-		public static void DefineDefaultColor(Drawing.Color color)
-		{
-			TextStyle.default_style.color = color;
-		}
-		
-		
 		public static TextStyle					Default
 		{
 			get
@@ -270,16 +309,27 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public static IImageProvider			DefaultImageProvider
+		
+		#region ICloneable Members
+		object System.ICloneable.Clone()
 		{
-			get
-			{
-				return TextStyle.default_image_provider;
-			}
-			set
-			{
-				TextStyle.default_image_provider = value;
-			}
+			return this.Clone ();
+		}
+		#endregion
+		
+		public TextStyle Clone()
+		{
+			return this.CloneCopyToNewObject (this.CloneNewObject ()) as TextStyle;
+		}
+		
+		public static void DefineDefaultColor(Drawing.Color color)
+		{
+			TextStyle.default_style.color = color;
+		}
+		
+		public static void DefineDefaultImageProvider(IImageProvider provider)
+		{
+			TextStyle.Default.image_provider = provider;
 		}
 		
 		
@@ -292,6 +342,35 @@ namespace Epsitec.Common.Drawing
 		}
 				
 		
+		protected virtual object CloneNewObject()
+		{
+			return new TextStyle ();
+		}
+		
+		protected virtual object CloneCopyToNewObject(object o)
+		{
+			TextStyle that = o as TextStyle;
+			
+			//	Copie tous les éléments en utilisant "this" comme modèle. Il y a juste le
+			//	parent pour lequel nous devons faire attention.
+			
+			that.parent          = this.is_default_style ? TextStyle.default_style : this.parent;
+			that.font            = this.font;
+			that.size            = this.size;
+			that.color           = this.color;
+			that.color_anchor    = this.color_anchor;
+			that.color_wave      = this.color_wave;
+			that.alignment       = this.alignment;
+			that.break_mode      = this.break_mode;
+			that.justif_mode     = this.justif_mode;
+			that.show_line_break = this.show_line_break;
+			that.language        = this.language;
+			that.image_provider  = this.image_provider;
+			
+			return that;
+		}
+		
+		
 		protected virtual void OnChanged()
 		{
 			if (this.Changed != null)
@@ -301,12 +380,20 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		protected enum ThreeState
+		{
+			None,								//	état non défini
+			False,
+			True
+		}
+	
+		
 		public event Support.EventHandler		Changed;
 		
 		private static TextStyle				default_style;
-		private static IImageProvider			default_image_provider;
 		
 		private bool							is_default_style;
+		private TextStyle						parent;
 		
 		private Font							font;
 		private double							size;
@@ -316,7 +403,7 @@ namespace Epsitec.Common.Drawing
 		private ContentAlignment				alignment;
 		private TextBreakMode					break_mode;
 		private TextJustifMode					justif_mode;
-		private bool							show_line_break;
+		private ThreeState						show_line_break;
 		private string							language;
 		private IImageProvider					image_provider;
 	}

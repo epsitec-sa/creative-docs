@@ -345,7 +345,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			     if ( jh == JustifHorizontal.Justif )  this.textLayout.JustifMode = Drawing.TextJustifMode.AllButLast;
 			else if ( jh == JustifHorizontal.All    )  this.textLayout.JustifMode = Drawing.TextJustifMode.All;
-			else                                       this.textLayout.JustifMode = Drawing.TextJustifMode.None;
+			else                                       this.textLayout.JustifMode = Drawing.TextJustifMode.NoLine;
 
 			Drawing.Transform ot = graphics.Transform;
 
