@@ -15,34 +15,29 @@ namespace Epsitec.Designer
 			this.runs_as_plug_in = runs_as_plug_in;
 			this.name = "Designer";
 			
-			Button button;
-			
-			button = new Button ("New bundle");
-			button.Bounds  = new Rectangle (10, 10, 80, 24);
-			button.Command = "CreateStringBundle";
-			button.Parent  = this.MainWindow.Root;
-			button.CreateCommandState ();
-			
-			button = new Button ("Open bundle");
-			button.Bounds  = new Rectangle (100, 10, 80, 24);
-			button.Command = "OpenBundle";
-			button.Parent  = this.MainWindow.Root;
-			button.CreateCommandState ();
-			
-			button = new Button ("Save bundle");
-			button.Bounds  = new Rectangle (190, 10, 80, 24);
-			button.Command = "SaveStringBundle";
-			button.Parent  = this.MainWindow.Root;
-			button.CreateCommandState ();
+//			Button button;
+//			
+//			button = new Button ("New bundle");
+//			button.Bounds  = new Rectangle (10, 10, 80, 24);
+//			button.Command = "CreateStringBundle";
+//			button.Parent  = this.MainWindow.Root;
+//			button.CreateCommandState ();
+//			
+//			button = new Button ("Open bundle");
+//			button.Bounds  = new Rectangle (100, 10, 80, 24);
+//			button.Command = "OpenBundle";
+//			button.Parent  = this.MainWindow.Root;
+//			button.CreateCommandState ();
+//			
+//			button = new Button ("Save bundle");
+//			button.Bounds  = new Rectangle (190, 10, 80, 24);
+//			button.Command = "SaveStringBundle";
+//			button.Parent  = this.MainWindow.Root;
+//			button.CreateCommandState ();
 			
 			this.MainWindow.Show ();
 			
-			this.BuilderController.CreationWindow.Owner = this.MainWindow;
-			this.BuilderController.AttributeWindow.Owner = this.MainWindow;
-			
 			this.StringEditController.Window.Show ();
-			this.BuilderController.CreationWindow.Show ();
-			this.BuilderController.AttributeWindow.Show ();
 		}
 		
 		#region Application Commands

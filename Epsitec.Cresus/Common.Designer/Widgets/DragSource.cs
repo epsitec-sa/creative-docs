@@ -10,7 +10,7 @@ namespace Epsitec.Common.Designer.Widgets
 	using DragBehavior      = Epsitec.Common.Widgets.Helpers.DragBehavior;
 	
 	
-	public class DragBeginningEventArgs : System.ComponentModel.CancelEventArgs
+	public class DragBeginningEventArgs : Support.CancelEventArgs
 	{
 		public DragBeginningEventArgs(Widget model)
 		{

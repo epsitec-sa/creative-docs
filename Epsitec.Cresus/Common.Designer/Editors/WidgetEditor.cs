@@ -13,9 +13,9 @@ namespace Epsitec.Common.Designer.Editors
 	/// </summary>
 	public class WidgetEditor : Support.ICommandDispatcherHost
 	{
-		public WidgetEditor(BuilderController builder_controller)
+		public WidgetEditor(InterfaceEditController interf_edit_controller)
 		{
-			this.builder_controller = builder_controller;
+			this.interf_edit_controller = interf_edit_controller;
 			
 			this.hilite_adorner = new HiliteWidgetAdorner ();
 			this.grips_overlay  = new Widgets.GripsOverlay (this);
@@ -74,11 +74,11 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
-		public BuilderController				BuilderController
+		public InterfaceEditController			InterfaceEditController
 		{
 			get
 			{
-				return this.builder_controller;
+				return this.interf_edit_controller;
 			}
 		}
 		
@@ -350,7 +350,7 @@ namespace Epsitec.Common.Designer.Editors
 						this.SelectedWidgets.Add (hot);
 					}
 					
-					this.builder_controller.ActivateEditor (hot, false);
+					this.interf_edit_controller.ActivateEditor (hot, false);
 				}
 			}
 		}
@@ -423,7 +423,7 @@ namespace Epsitec.Common.Designer.Editors
 		
 		
 		protected Support.CommandDispatcher		dispatcher;
-		protected BuilderController				builder_controller;
+		protected InterfaceEditController		interf_edit_controller;
 		
 		protected Widget						hot_widget;
 		protected Widget						root;

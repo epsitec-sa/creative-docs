@@ -219,26 +219,30 @@ namespace Epsitec.Common.Support
 				
 				for (int i = 0; i < assemblies.Length; i++)
 				{
-					try
+					object assembly_object = assemblies[i];
+					
+					if (assembly_object is System.Reflection.Emit.AssemblyBuilder)
 					{
-						string[] names = assemblies[i].GetManifestResourceNames ();
+						//	Saute les assembly dont on sait qu'elles n'ont pas de ressources intéressantes,
+						//	puisqu'elles ont été générées dynamiquement.
+						
+						continue;
+					}
 					
-						for (int j = 0; j < names.Length; j++)
-						{
-							if (names[j] == res_name)
-							{
-								assembly = assemblies[i];
-								break;
-							}
-						}
+					string[] names = assemblies[i].GetManifestResourceNames ();
 					
-						if (assembly != null)
+					for (int j = 0; j < names.Length; j++)
+					{
+						if (names[j] == res_name)
 						{
+							assembly = assemblies[i];
 							break;
 						}
 					}
-					catch
+					
+					if (assembly != null)
 					{
+						break;
 					}
 				}
 				
