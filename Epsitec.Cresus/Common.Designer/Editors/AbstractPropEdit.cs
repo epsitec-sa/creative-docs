@@ -67,7 +67,11 @@ namespace Epsitec.Common.Designer.Editors
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			if (type.IsSubclassOf (typeof (Widget)))
+			if (type == typeof (WindowRoot))
+			{
+				list.Add (typeof (WindowPropEdit1));
+			}
+			else if (type.IsSubclassOf (typeof (Widget)))
 			{
 				list.Add (typeof (WidgetPropEdit1));
 			}

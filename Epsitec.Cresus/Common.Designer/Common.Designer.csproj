@@ -213,6 +213,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Editors\WindowPropEdit1.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Images\Delete.icon"
                     BuildAction = "EmbeddedResource"
                 />
