@@ -294,9 +294,29 @@ namespace Epsitec.Common.Support
 							}
 							else if (prop_type == typeof (double))
 							{
-								//	C'est un double...
+								//	C'est une valeur numérique qu'il faut convertir... On ne supporte pas
+								//	de valeur par défaut ici, donc on fait simplement un "Parse".
 								
-								prop_info.SetValue (obj, System.Double.Parse (str_value, System.Globalization.CultureInfo.InvariantCulture), null);
+								double num_value = System.Double.Parse (str_value, System.Globalization.CultureInfo.InvariantCulture);
+								prop_info.SetValue (obj, num_value, null);
+								ok = true;
+							}
+							else if (prop_type == typeof (int))
+							{
+								int num_value = System.Int32.Parse (str_value, System.Globalization.CultureInfo.InvariantCulture);
+								prop_info.SetValue (obj, num_value, null);
+								ok = true;
+							}
+							else if (prop_type == typeof (long))
+							{
+								long num_value = System.Int64.Parse (str_value, System.Globalization.CultureInfo.InvariantCulture);
+								prop_info.SetValue (obj, num_value, null);
+								ok = true;
+							}
+							else if (prop_type == typeof (decimal))
+							{
+								decimal num_value = System.Decimal.Parse (str_value, System.Globalization.CultureInfo.InvariantCulture);
+								prop_info.SetValue (obj, num_value, null);
 								ok = true;
 							}
 							else if (prop_type.IsSubclassOf (typeof (System.Enum)))

@@ -1129,17 +1129,17 @@ namespace Epsitec.Common.Tests
 			table.StyleV  = CellArrayStyle.ScrollNorm;
 			table.StyleV |= CellArrayStyle.Separator;
 #else
-			table.StyleH  = CellArrayStyle.ScrollNorm;
-			table.StyleH |= CellArrayStyle.Header;
-			table.StyleH |= CellArrayStyle.Separator;
-			table.StyleH |= CellArrayStyle.Mobile;
-			table.StyleH |= CellArrayStyle.Sort;
-			table.StyleV  = CellArrayStyle.ScrollNorm;
-			table.StyleV |= CellArrayStyle.Header;
-			table.StyleV |= CellArrayStyle.Separator;
-			table.StyleV |= CellArrayStyle.SelectLine;
-			table.StyleV |= CellArrayStyle.Mobile;
-			table.StyleV |= CellArrayStyle.Sort;
+			table.StyleH  = AbstractCellArrayStyle.ScrollNorm;
+			table.StyleH |= AbstractCellArrayStyle.Header;
+			table.StyleH |= AbstractCellArrayStyle.Separator;
+			table.StyleH |= AbstractCellArrayStyle.Mobile;
+			table.StyleH |= AbstractCellArrayStyle.Sort;
+			table.StyleV  = AbstractCellArrayStyle.ScrollNorm;
+			table.StyleV |= AbstractCellArrayStyle.Header;
+			table.StyleV |= AbstractCellArrayStyle.Separator;
+			table.StyleV |= AbstractCellArrayStyle.SelectLine;
+			table.StyleV |= AbstractCellArrayStyle.Mobile;
+			table.StyleV |= AbstractCellArrayStyle.Sort;
 #endif
 			table.Name = "Table";
 			table.Location = new Point(10, 20);
@@ -1331,6 +1331,7 @@ namespace Epsitec.Common.Tests
 			p2.PaneMinSize = 50;
 			p2.PaneMaxSize = 200;
 			p2.PaneElasticity = 0;
+			p2.PaneToggle = true;
 			book.Items.Add(p2);
 
 			PanePage p3 = new PanePage();

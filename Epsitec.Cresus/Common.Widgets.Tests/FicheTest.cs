@@ -31,11 +31,13 @@ namespace Epsitec.Common.Tests
 
 		private void HandleWindowClosed(object sender)
 		{
+			this.allWidgets = false;
+
 			this.window = null;
 			this.tip = null;
 			this.menu = null;
 			this.toolBar = null;
-			this.pane= null;
+			this.pane = null;
 			this.subPane = null;
 			this.leftPane = null;
 			this.rightPane = null;
@@ -403,19 +405,49 @@ namespace Epsitec.Common.Tests
 			root.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			root.Parent = this.window.Root;
 			
-			this.pane = new Pane();
-			this.pane.PaneStyle = PaneStyle.LeftRight;
+			this.pane = new PaneBook();
+			this.pane.Location = new Point(0, 0);
+			this.pane.Size = root.Size;
+			this.pane.PaneBookStyle = PaneBookStyle.LeftRight;
+			//this.pane.PaneBehaviour = PaneBookBehaviour.Draft;
+			this.pane.PaneBehaviour = PaneBookBehaviour.FollowMe;
+			this.pane.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			this.pane.SizeChanged += new EventHandler(this.pane_SizeChanged);
 			this.pane.Parent = root;
-			this.leftPane  = this.pane.RetPane(0);
-			this.rightPane = this.pane.RetPane(1);
 
-			this.subPane = new Pane();
-			this.subPane.PaneStyle = PaneStyle.BottomTop;
+			this.leftPane = new PanePage();
+			this.leftPane.PaneRelativeSize = 10;
+			this.leftPane.PaneElasticity = 1;
+			this.pane.Items.Add(this.leftPane);
+
+			this.rightPane = new PanePage();
+			this.rightPane.PaneRelativeSize = 10;
+			this.rightPane.PaneElasticity = 0;
+			//this.rightPane.PaneMaxSize = 300;
+			this.pane.Items.Add(this.rightPane);
+
+			this.subPane = new PaneBook();
+			this.subPane.Location = new Point(0, 0);
+			this.subPane.Size = new Size(this.leftPane.Width, this.leftPane.Height);
+			this.subPane.PaneBookStyle = PaneBookStyle.BottomTop;
+			//this.subPane.PaneBehaviour = PaneBookBehaviour.Draft;
+			this.subPane.PaneBehaviour = PaneBookBehaviour.FollowMe;
+			this.subPane.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			this.subPane.SizeChanged += new EventHandler(this.pane_SizeChanged);
 			this.subPane.Parent = this.leftPane;
-			this.topPane    = this.subPane.RetPane(1);
-			this.bottomPane = this.subPane.RetPane(0);
+
+			this.topPane = new PanePage();
+			this.topPane.PaneToggle = true;
+			this.topPane.PaneMinSize = 80;
+			this.topPane.PaneMaxSize = 80+this.listCritHeight+10;
+			this.topPane.PaneRelativeSize = 1;
+			this.topPane.PaneElasticity = 0;
+			this.subPane.Items.Add(this.topPane);
+
+			this.bottomPane = new PanePage();
+			this.bottomPane.PaneRelativeSize = 10;
+			this.bottomPane.PaneElasticity = 1;
+			this.subPane.Items.Add(this.bottomPane);
 
 			this.title = new StaticText();
 			this.title.SetClientZoom(3);
@@ -524,6 +556,8 @@ namespace Epsitec.Common.Tests
 			this.rightPane.Children.Add(this.buttonCancel);
 			this.tip.SetToolTip(this.buttonCancel, "Annule les modifications dans la fiche");
 
+			this.allWidgets = true;
+
 			this.ResizeLayout();
 			this.UpdateButton();
 		}
@@ -535,15 +569,15 @@ namespace Epsitec.Common.Tests
 
 		private void pane_SizeChanged(object sender)
 		{
-			Pane pane = (Pane)sender;
+			PaneBook pane = (PaneBook)sender;
 
 			if ( pane == this.pane )
 			{
-				this.listWidth = this.pane.RetSize(0);
+				this.listWidth = this.leftPane.Client.Width;
 			}
 			if ( pane == this.subPane )
 			{
-				this.critHeight = this.subPane.RetSize(1);
+				this.critHeight = this.topPane.Client.Height;
 			}
 			this.ResizeLayout();
 		}
@@ -558,23 +592,7 @@ namespace Epsitec.Common.Tests
 
 		protected void ResizeLayout()
 		{
-			if ( this.pane == null )  return;
-
-			Size windowDim = this.pane.Parent.Client.Size;
-
-			this.pane.Location = new Point(0, 0);
-			this.pane.Size = new Size(windowDim.Width, windowDim.Height);
-			this.pane.PaneBehaviour = PaneBehaviour.Draft;
-			this.pane.SetHideSize(0, 100);
-			this.pane.SetMinSize(1, 300);
-			this.pane.SetSize(0, this.listWidth);
-
-			this.subPane.Location = new Point(0, 0);
-			this.subPane.Size = new Size(this.leftPane.Width, this.leftPane.Height);
-			this.subPane.FlipFlop = true;
-			this.subPane.SetMinSize(1, 80);
-			this.subPane.SetMaxSize(1, 80+this.listCritHeight+10);
-			this.subPane.SetSize(1, this.critHeight);
+			if ( !this.allWidgets )  return;
 
 			this.title.Location = new Point(10, this.topPane.Height-50);
 			this.title.Size = new Size(this.topPane.Width, 50);
@@ -1032,12 +1050,12 @@ namespace Epsitec.Common.Tests
 		protected ToolTip						tip;
 		protected HMenu							menu;
 		protected ToolBar						toolBar;
-		protected Pane							pane;
-		protected Pane							subPane;
-		protected Widget						leftPane;
-		protected Widget						rightPane;
-		protected Widget						topPane;
-		protected Widget						bottomPane;
+		protected PaneBook						pane;
+		protected PaneBook						subPane;
+		protected PanePage						leftPane;
+		protected PanePage						rightPane;
+		protected PanePage						topPane;
+		protected PanePage						bottomPane;
 		protected StaticText					title;
 		protected TextField						editCrit;
 		protected Button						buttonSearch;
@@ -1051,6 +1069,7 @@ namespace Epsitec.Common.Tests
 		protected Button						buttonCancel;
 		protected System.Collections.ArrayList	staticTexts;
 		protected System.Collections.ArrayList	textFields;
+		protected bool							allWidgets = false;
 	}
 	
 	

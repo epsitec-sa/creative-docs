@@ -97,7 +97,7 @@
      <field name='cmd'>on</field>
      <field name='size'>200;*</field>
      <field name='pos'>10;215</field>
-     <field name='bind'>x.0.a;x.*.a#capt</field>
+     <field name='bind'><![CDATA[x.0.a<setup mode="on-off"/>;x.*.a#capt]]></field>
     </bundle>
     <bundle>
      <field name='class'>Button</field>

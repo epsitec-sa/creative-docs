@@ -15,29 +15,31 @@ namespace Epsitec.Cresus.UserInterface.Binders
 		
 		
 		#region IBinder Members
-		public void CreateBinding(object ui_object, DataLayer.DataStore root, string binding_path, Database.DbColumn db_column)
+		public void CreateBinding(object ui_object, DataLayer.DataStore root, string path, string args, Database.DbColumn db_column)
 		{
+			System.Diagnostics.Debug.WriteLine ("Boolean Binder, args="+args);
+			
 			Epsitec.Common.Widgets.Widget widget = ui_object as Epsitec.Common.Widgets.Widget;
 			
 			System.Diagnostics.Debug.Assert (widget != null);
 			System.Diagnostics.Debug.Assert (db_column != null);
 			
-			new Controller (widget, root, binding_path);
+			new Controller (widget, root, path);
 		}
 		#endregion
 		
 		protected class Controller
 		{
-			public Controller(Epsitec.Common.Widgets.Widget widget, DataLayer.DataStore data_store, string binding_path)
+			public Controller(Epsitec.Common.Widgets.Widget widget, DataLayer.DataStore data_store, string path)
 			{
 				this.widget     = widget;
 				this.data_store = data_store;
-				this.binding    = binding_path;
+				this.binding    = path;
 				
 				this.widget.ActiveStateChanged += new Epsitec.Common.Widgets.EventHandler(this.SetDataFromWidget);
 				data_store.AttachObserver (binding, new DataLayer.DataChangeEventHandler (this.SetWidgetFromData));
 				
-				this.SetWidgetFromData (null, new DataLayer.DataChangeEventArgs (binding_path, System.Data.DataRowAction.Nothing));
+				this.SetWidgetFromData (null, new DataLayer.DataChangeEventArgs (path, System.Data.DataRowAction.Nothing));
 			}
 			
 			public void SetWidgetValue(bool value)

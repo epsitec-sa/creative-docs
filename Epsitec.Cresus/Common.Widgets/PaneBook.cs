@@ -15,7 +15,6 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// Summary description for PaneBook.
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public class PaneBook : AbstractGroup, Helpers.IWidgetCollectionHost
 	{
 		public PaneBook()
@@ -60,7 +59,7 @@ namespace Epsitec.Common.Widgets
 
 
 		// Comportement lorsque la frontière est déplacée.
-		public PaneBookBehaviour PaneBehaviour
+		[ Support.Bundle ("behaviour") ] public PaneBookBehaviour PaneBehaviour
 		{
 			get
 			{
@@ -81,7 +80,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public PaneBookStyle PaneBookStyle
+		[ Support.Bundle ("style") ] public PaneBookStyle PaneBookStyle
 		{
 			get
 			{
@@ -130,10 +129,20 @@ namespace Epsitec.Common.Widgets
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
+
 			this.UpdateGeometryPages();
 			this.UpdatePaneButtons();
-
 			this.lastWindowSize = this.Client.Size;
+			this.IsDirty = false;
+		}
+
+		public void Update()
+		{
+			if ( !this.IsDirty )  return;
+
+			this.UpdateGeometryPages();
+			this.UpdatePaneButtons();
+			this.IsDirty = false;
 		}
 		
 		// Adapte les panneaux après un changement de géométrie.
@@ -177,6 +186,7 @@ namespace Epsitec.Common.Widgets
 					page.PaneRelativeSize *= factor*page.PaneElasticity;
 				}
 			}
+			this.totalRelativeSize = this.RetTotalRelativeSize();
 		}
 
 		// Vérifie si un ou plusieurs panneaux sont en-dessous de la taille
@@ -266,6 +276,30 @@ namespace Epsitec.Common.Widgets
 					this.Align(ref rect);
 					page.PaneButton.Bounds = rect;
 
+					if ( page.PaneToggle )
+					{
+						page.ArrowButton.Show();
+
+						Drawing.Rectangle arect = rect;
+						arect.Left  -= 3;
+						arect.Right += 3;
+						arect.Top   = arect.Bottom+12;
+						page.ArrowButton.Bounds = arect;
+
+						if ( this.RetSize(i) < (this.RetMinSize(i)+this.RetMaxSize(i))/2 )
+						{
+							page.ArrowButton.Direction = Direction.Right;
+						}
+						else
+						{
+							page.ArrowButton.Direction = Direction.Left;
+						}
+					}
+					else
+					{
+						page.ArrowButton.Hide();
+					}
+
 					start.X = end.X;
 				}
 				else
@@ -282,17 +316,35 @@ namespace Epsitec.Common.Widgets
 					this.Align(ref rect);
 					page.PaneButton.Bounds = rect;
 
+					if ( page.PaneToggle )
+					{
+						page.ArrowButton.Show();
+
+						Drawing.Rectangle arect = rect;
+						arect.Left   = arect.Right-12;
+						arect.Bottom -= 3;
+						arect.Top    += 3;
+						page.ArrowButton.Bounds = arect;
+
+						if ( this.RetSize(i) < (this.RetMinSize(i)+this.RetMaxSize(i))/2 )
+						{
+							page.ArrowButton.Direction = Direction.Down;
+						}
+						else
+						{
+							page.ArrowButton.Direction = Direction.Up;
+						}
+					}
+					else
+					{
+						page.ArrowButton.Hide();
+					}
+
 					start.Y = end.Y;
 				}
 			}
-		}
 
-		protected void Align(ref Drawing.Rectangle rect)
-		{
-			rect.Left   = System.Math.Floor(rect.Left+0.5);
-			rect.Right  = System.Math.Floor(rect.Right+0.5);
-			rect.Bottom = System.Math.Floor(rect.Bottom+0.5);
-			rect.Top    = System.Math.Floor(rect.Top+0.5);
+			this.OnSizeChanged();
 		}
 
 
@@ -377,19 +429,18 @@ namespace Epsitec.Common.Widgets
 					{
 						this.sliderDragDim += pos.X - this.sliderDragPos;
 						this.sliderDragPos  = pos.X;
-						this.SetSize(index, this.sliderDragDim);
+						this.SetSizeMinMax(index, this.sliderDragDim);
 					}
 					else
 					{
 
 						this.sliderDragDim -= pos.Y - this.sliderDragPos;
 						this.sliderDragPos  = pos.Y;
-						this.SetSize(index, this.sliderDragDim);
+						this.SetSizeMinMax(index, this.sliderDragDim);
 					}
+					this.UpdatePaneButtons();
 					break;
 			}
-			
-			this.UpdatePaneButtons();
 		}
 
 		// Appelé lorsque le slider est fini de déplacer.
@@ -408,23 +459,43 @@ namespace Epsitec.Common.Widgets
 					{
 						this.sliderDragDim += pos.X - this.sliderDragPos;
 						this.sliderDragPos  = pos.X;
-						this.SetSize(index, this.sliderDragDim);
+						this.SetSizeMinMax(index, this.sliderDragDim);
 					}
 					else
 					{
 						this.sliderDragDim -= pos.Y - this.sliderDragPos;
 						this.sliderDragPos  = pos.Y;
-						this.SetSize(index, this.sliderDragDim);
+						this.SetSizeMinMax(index, this.sliderDragDim);
 					}
 
 					this.Children.Remove(this.alphaBar);
 					this.alphaBar = null;
+
+					this.UpdatePaneButtons();
 					break;
 
 				case PaneBookBehaviour.FollowMe:
 					break;
 			}
+		}
 
+		// Bouton flèche cliqué.
+		private void HandleArrowButtonClicked(object sender, MessageEventArgs e)
+		{
+			if ( !(sender is ArrowButton) )  return;
+			ArrowButton button = sender as ArrowButton;
+			int index = this.SearchPage(button);
+			if ( index == -1 )  return;
+			PanePage page = this.items[index];
+
+			if ( this.RetSize(index) < (this.RetMinSize(index)+this.RetMaxSize(index))/2 )
+			{
+				this.SetSize(index, this.RetMaxSize(index));
+			}
+			else
+			{
+				this.SetSize(index, this.RetMinSize(index));
+			}
 			this.UpdatePaneButtons();
 		}
 
@@ -452,6 +523,14 @@ namespace Epsitec.Common.Widgets
 			this.alphaBar.Bounds = rect;
 		}
 
+		protected void Align(ref Drawing.Rectangle rect)
+		{
+			rect.Left   = System.Math.Floor(rect.Left+0.5);
+			rect.Right  = System.Math.Floor(rect.Right+0.5);
+			rect.Bottom = System.Math.Floor(rect.Bottom+0.5);
+			rect.Top    = System.Math.Floor(rect.Top+0.5);
+		}
+
 
 		// Retourne la taille actuelle.
 		protected double RetSize(int index)
@@ -461,11 +540,17 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Modifie la taille.
+		protected void SetSizeMinMax(int index, double size)
+		{
+			size = System.Math.Max(size, this.sliderDragMin);
+			size = System.Math.Min(size, this.sliderDragMax);
+			this.SetSize(index, size);
+		}
+
+		// Modifie la taille.
 		protected void SetSize(int index, double size)
 		{
 			PanePage page = this.items[index];
-			size = System.Math.Max(size, this.sliderDragMin);
-			size = System.Math.Min(size, this.sliderDragMax);
 
 			if ( index < this.items.Count-1 )
 			{
@@ -486,6 +571,15 @@ namespace Epsitec.Common.Widgets
 			PanePage page = this.items[index];
 			size = System.Math.Max(size, page.PaneMinSize);
 			size = System.Math.Min(size, page.PaneMaxSize);
+			if ( index == 0 )
+			{
+				double current = page.PaneRelativeSize;
+				double future = size*this.totalRelativeSize/this.windowSize;
+				if ( future > current )
+				{
+					int i=123;
+				}
+			}
 			page.PaneRelativeSize = size*this.totalRelativeSize/this.windowSize;
 		}
 
@@ -529,6 +623,18 @@ namespace Epsitec.Common.Widgets
 			{
 				PanePage page = this.items[i];
 				if ( page.PaneButton == button )  return i;
+			}
+			return -1;
+		}
+
+		// Cherche l'index de la page correspondant à un bouton.
+		protected int SearchPage(ArrowButton button)
+		{
+			int count = this.items.Count;
+			for ( int i=0 ; i<count ; i++ )
+			{
+				PanePage page = this.items[i];
+				if ( page.ArrowButton == button )  return i;
 			}
 			return -1;
 		}
@@ -586,13 +692,51 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		// Génère un événement pour dire qu'une taille a changé.
+		protected virtual void OnSizeChanged()
+		{
+			if ( this.SizeChanged != null )  // qq'un écoute ?
+			{
+				this.SizeChanged(this);
+			}
+		}
+
+
+		public event EventHandler SizeChanged;
+
 		
 		// Dessine le groupe de panneaux.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
+
+			this.Update();
 		}
-		
+
+
+		// Indique si le PaneBook doit être recalculé.
+		public bool IsDirty
+		{
+			get
+			{
+				if ( this.items == null )  return false;
+				foreach ( PanePage page in this.items )
+				{
+					if ( page.IsDirty )  return true;
+				}
+				return false;
+			}
+
+			set
+			{
+				if ( this.items == null )  return;
+				foreach ( PanePage page in this.items )
+				{
+					page.IsDirty = value;
+				}
+			}
+		}
+
 
 		#region IWidgetCollectionHost Members
 		public void NotifyInsertion(Widget widget)
@@ -604,7 +748,7 @@ namespace Epsitec.Common.Widgets
 			{
 				oldBook.items.Remove(item);
 			}
-			
+
 			item.Bounds = this.Inside;
 			item.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 			item.PaneButton.PaneButtonStyle = ( this.type == PaneBookStyle.LeftRight ) ? PaneButtonStyle.Vertical : PaneButtonStyle.Horizontal;
@@ -616,6 +760,9 @@ namespace Epsitec.Common.Widgets
 			item.PaneButton.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
 			item.RankChanged += new System.EventHandler(this.HandlePageRankChanged);
 			
+			this.Children.Add(item.ArrowButton);  // ArrowButton fils de PaneBook !
+			item.ArrowButton.Clicked += new MessageEventHandler(this.HandleArrowButtonClicked);
+
 			this.UpdatePaneButtons();
 		}
 
@@ -627,6 +774,8 @@ namespace Epsitec.Common.Widgets
 			item.PaneButton.DragMoved   -= new MessageEventHandler(this.HandleSliderDragMoved);
 			item.PaneButton.DragEnded   -= new MessageEventHandler(this.HandleSliderDragEnded);
 			item.RankChanged -= new System.EventHandler(this.HandlePageRankChanged);
+
+			item.ArrowButton.Clicked -= new MessageEventHandler(this.HandleArrowButtonClicked);
 
 			this.Children.Remove(item);
 
