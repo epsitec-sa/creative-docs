@@ -34,7 +34,7 @@ namespace Epsitec.Common.Script
 				"{\n" +
 				"public DynamicScript() { System.Diagnostics.Debug.WriteLine(\"Instanciated Epsitec.Dynamic.Script.DynamicScript\"); }\n" +
 				"public void SetScriptHost(Epsitec.Common.Script.Glue.IScriptHost host) { System.Diagnostics.Debug.WriteLine(\"Host set to \" + host.Name); }\n" +
-				"public bool Execute(string name, object[] in_args) { System.Diagnostics.Debug.WriteLine(\"Executing in Epsitec.Dynamic.Script.DynamicScript: \" + name); return true; }\n" +
+				"public bool Execute(string name, object[] in_args, out object[] out_args) { System.Diagnostics.Debug.WriteLine(\"Executing in Epsitec.Dynamic.Script.DynamicScript: \" + name); out_args = null; return true; }\n" +
 				"}\n" +
 				"}\n";
 			
@@ -49,8 +49,8 @@ namespace Epsitec.Common.Script
 				}
 			}
 			
-			script.Execute ("Hello.", null);
-			script.Execute ("Good bye.", null);
+			script.Execute ("Hello.");
+			script.Execute ("Good bye.");
 			
 			script.Dispose ();
 		}

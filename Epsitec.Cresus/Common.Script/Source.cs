@@ -5,7 +5,7 @@ namespace Epsitec.Common.Script
 {
 	/// <summary>
 	/// La classe Source représente le source complet d'un script, lequel est
-	/// constitué d'une série de méthodes.
+	/// constitué d'une série de méthodes et d'une source de données.
 	/// </summary>
 	public class Source
 	{
@@ -103,20 +103,26 @@ namespace Epsitec.Common.Script
 				buffer.Append (value.Name);
 				buffer.Append ("\n");
 				buffer.Append ("{\n");
+				
 				buffer.Append ("get { return (");
 				buffer.Append (value.DataType.SystemType.FullName);
 				buffer.Append (") this.ReadData (\"");
 				buffer.Append (value.Name);
-				buffer.Append ("\", ");
+				buffer.Append ("\", typeof (");
 				buffer.Append (value.DataType.SystemType);
-				buffer.Append ("); }\n");
+				buffer.Append (")); }\n");
+				
+				buffer.Append ("set { this.WriteData (\"");
+				buffer.Append (value.Name);
+				buffer.Append ("\", value); }\n");
+				
 				buffer.Append ("}\n");
 			}
 		}
 		
 		private void GenerateExecuteMethod(System.Text.StringBuilder buffer)
 		{
-			buffer.Append ("public override bool Execute(string name, object[] in_args)\n");
+			buffer.Append ("public override bool Execute(string name, object[] in_args, out object[] out_args)\n");
 			buffer.Append ("{\n");
 			buffer.Append ("switch (name)\n{\n");
 			
@@ -134,15 +140,105 @@ namespace Epsitec.Common.Script
 			}
 			
 			buffer.Append ("}\n");
+			buffer.Append ("out_args = null;\n");
 			buffer.Append ("return false;\n");
 			buffer.Append ("}\n");
 		}
 		
 		private void GenerateExecuteMethodCase(System.Text.StringBuilder buffer, Method method)
 		{
+			int in_index  = 0;
+			int out_index = 0;
+			
+			for (int i = 0; i < method.Parameters.Length; i++)
+			{
+				Source.ParameterInfo parameter = method.Parameters[i];
+				
+				buffer.Append (parameter.Type.SystemType.FullName);
+				buffer.Append (" p_");
+				buffer.Append (parameter.Name);
+				
+				if (parameter.IsIn)
+				{
+					buffer.Append (" = (");
+					buffer.Append (parameter.Type.SystemType.FullName);
+					buffer.Append (") in_args[");
+					buffer.Append (in_index.ToString (System.Globalization.CultureInfo.InvariantCulture));
+					buffer.Append ("]");
+					
+					in_index++;
+				}
+				if (parameter.IsOut)
+				{
+					out_index++;
+				}
+				
+				buffer.Append (";\n");
+			}
+			
+			if (out_index == 0)
+			{
+				buffer.Append ("out_args = null;\n");
+			}
+			else
+			{
+				buffer.Append ("out_args = new object[");
+				buffer.Append (out_index.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append ("];\n");
+			}
+			
 			buffer.Append ("this.");
 			buffer.Append (method.Name);
-			buffer.Append (" ();\n");
+			buffer.Append (" (");
+			
+			for (int i = 0; i < method.Parameters.Length; i++)
+			{
+				if (i > 0)
+				{
+					buffer.Append (", ");
+				}
+				
+				Source.ParameterInfo parameter = method.Parameters[i];
+				
+				switch (parameter.Direction)
+				{
+					case ParameterDirection.In:
+						buffer.Append ("p_");
+						buffer.Append (parameter.Name);
+						break;
+					
+					case ParameterDirection.Out:
+						buffer.Append ("out p_");
+						buffer.Append (parameter.Name);
+						break;
+					
+					case ParameterDirection.InOut:
+						buffer.Append ("ref p_");
+						buffer.Append (parameter.Name);
+						break;
+				}
+			}
+			
+			buffer.Append (");\n");
+			
+			out_index = 0;
+			
+			for (int i = 0; i < method.Parameters.Length; i++)
+			{
+				Source.ParameterInfo parameter = method.Parameters[i];
+				
+				if (parameter.IsOut)
+				{
+					buffer.Append ("out_args[");
+					buffer.Append (out_index.ToString (System.Globalization.CultureInfo.InvariantCulture));
+					buffer.Append ("] = p_");
+					buffer.Append (parameter.Name);
+					buffer.Append (";\n");
+					
+					out_index++;
+				}
+			}
+			
 			buffer.Append ("return true;\n");
 		}
 
@@ -183,8 +279,12 @@ namespace Epsitec.Common.Script
 				switch (parameter.Direction)
 				{
 					case ParameterDirection.In:
+						break;
 					case ParameterDirection.InOut:
+						buffer.Append ("ref ");
+						break;
 					case ParameterDirection.Out:
+						buffer.Append ("out ");
 						break;
 					default:
 						throw new System.InvalidOperationException (string.Format ("Method {0} has invalid parameter {1}, direction is {2}.", method.Name, parameter.Name, parameter.Direction));
@@ -209,13 +309,29 @@ namespace Epsitec.Common.Script
 			
 			foreach (CodeSection section in method.CodeSections)
 			{
-				System.Diagnostics.Debug.Assert (section.Location == CodeLocation.Local);
+				System.Diagnostics.Debug.Assert (section.CodeType == CodeType.Local);
 				
 				buffer.Append ("// Section #");
 				buffer.Append (section_id++);
+				buffer.Append (", CodeType is ");
+				buffer.Append (section.CodeType);
 				buffer.Append ("\n");
-				buffer.Append (section.Code);
-				buffer.Append ("\n\n");
+				
+				switch (section.CodeType)
+				{
+					case CodeType.Local:
+						buffer.Append (section.Code);
+						buffer.Append ("\n\n");
+						break;
+					case CodeType.Comment:
+						break;
+					case CodeType.None:
+						break;
+					case CodeType.Server:
+						throw new System.NotImplementedException ("Support for Server CodeType is not implemented yet.");
+					default:
+						throw new System.ArgumentException (string.Format ("Code Section type {0} not recognized.", section.CodeType));
+				}
 			}
 		}
 		
@@ -241,7 +357,7 @@ namespace Epsitec.Common.Script
 		}
 		
 		
-		#region ParameterDirection and CodeLocation Enumerations
+		#region ParameterDirection and CodeType Enumerations
 		public enum ParameterDirection
 		{
 			None			= 0,
@@ -253,12 +369,14 @@ namespace Epsitec.Common.Script
 			ReturnValue		= 4,
 		}
 		
-		public enum CodeLocation
+		public enum CodeType
 		{
 			None,
 			
 			Local			= 1,
 			Server			= 2,
+			
+			Comment			= 3,
 		}
 		#endregion
 		
@@ -356,18 +474,18 @@ namespace Epsitec.Common.Script
 			{
 			}
 			
-			public CodeSection(CodeLocation location, string code)
+			public CodeSection(CodeType code_type, string code)
 			{
-				this.DefineLocation (location);
+				this.DefineCodeType (code_type);
 				this.DefineCode (code);
 			}
 			
 			
-			public CodeLocation					Location
+			public CodeType						CodeType
 			{
 				get
 				{
-					return this.location;
+					return this.code_type;
 				}
 			}
 			
@@ -380,14 +498,14 @@ namespace Epsitec.Common.Script
 			}
 			
 			
-			internal void DefineLocation(CodeLocation location)
+			internal void DefineCodeType(CodeType code_type)
 			{
-				if (location == CodeLocation.None)
+				if (code_type == CodeType.None)
 				{
-					throw new System.ArgumentException ("Invalid code location.", "location");
+					throw new System.ArgumentException ("Invalid code code_type.", "code_type");
 				}
 				
-				this.location = location;
+				this.code_type = code_type;
 			}
 			
 			internal void DefineCode(string code)
@@ -396,7 +514,7 @@ namespace Epsitec.Common.Script
 			}
 			
 			
-			private CodeLocation				location;
+			private CodeType					code_type;
 			private string						code;
 		}
 		#endregion
@@ -501,16 +619,19 @@ namespace Epsitec.Common.Script
 		}
 		#endregion
 		
-		private string							name;
-		private Method[]						methods;
-		private Types.IDataValue[]				values;
-		private string							about;
-		
+		#region Text Class
 		internal class Text
 		{
 			public const string					DynamicNamespace	= "Epsitec.Dynamic.Script";
 			public const string					DynamicClass		= "DynamicScript";
 			public const string					DynamicClassBase	= "Epsitec.Common.Script.Glue.AbstractScriptBase";
 		}
+		#endregion
+		
+		private string							name;
+		private Method[]						methods;
+		private Types.IDataValue[]				values;
+		private string							about;
+		
 	}
 }

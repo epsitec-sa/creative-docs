@@ -38,9 +38,27 @@ namespace Epsitec.Common.Script
 		}
 		
 		
+		public void Attach(Types.IDataGraph data)
+		{
+			this.data = data;
+		}
+		
+		
+		public bool Execute(string name)
+		{
+			object[] out_args;
+			return this.Execute (name, null, out out_args);
+		}
+		
 		public bool Execute(string name, object[] in_args)
 		{
-			return this.script.Execute (name, in_args);
+			object[] out_args;
+			return this.Execute (name, in_args, out out_args);
+		}
+		
+		public bool Execute(string name, object[] in_args, out object[] out_args)
+		{
+			return this.script.Execute (name, in_args, out out_args);
 		}
 		
 		
@@ -69,6 +87,20 @@ namespace Epsitec.Common.Script
 		
 		public bool WriteData(string name, object value)
 		{
+			System.Diagnostics.Debug.WriteLine ("Asked to write data " + name + " of type " + value.GetType ().Name);
+			
+			if (this.data != null)
+			{
+				Types.IDataItem  item = this.data.Navigate (name);
+				Types.IDataValue data = item as Types.IDataValue;
+				
+				if (data != null)
+				{
+					data.WriteValue (value);
+					return true;
+				}
+			}
+			
 			return false;
 		}
 		
@@ -76,8 +108,24 @@ namespace Epsitec.Common.Script
 		{
 		}
 		
-		public bool ReadData(string name, out object value)
+		public bool ReadData(string name, System.Type type, out object value)
 		{
+			System.Diagnostics.Debug.WriteLine ("Asked to read data " + name + " of type " + type.Name);
+			
+			if (this.data != null)
+			{
+				Types.IDataItem  item = this.data.Navigate (name);
+				Types.IDataValue data = item as Types.IDataValue;
+				
+				if (data != null)
+				{
+					if (Types.Converter.Convert (data.ReadValue (), type, out value))
+					{
+						return true;
+					}
+				}
+			}
+			
 			value = null;
 			return false;
 		}
@@ -143,5 +191,6 @@ namespace Epsitec.Common.Script
 		private Glue.IScript				script;
 		private string						dll_file_name;
 		private string						pdb_file_name;
+		private Types.IDataGraph			data;
 	}
 }

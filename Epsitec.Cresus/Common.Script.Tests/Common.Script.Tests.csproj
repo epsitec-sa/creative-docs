@@ -108,6 +108,11 @@
                     AssemblyName = "nunit.framework"
                     HintPath = "..\External\nunit.framework.dll"
                 />
+                <Reference
+                    Name = "Common.UI"
+                    Project = "{BDF75452-AAB1-4E62-82D5-AE23F35C6319}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
