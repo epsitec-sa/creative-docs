@@ -10,7 +10,10 @@ namespace Epsitec.Common.Text.Driver
 	{
 		[System.STAThread] static void Main(string[] args)
 		{
+			Tests.CheckTextFitter.RunTests ();
+			
 			Tests.CheckLayout.RunTests ();
+			Tests.CheckStretchProfile.RunTests ();
 			
 			OpenType.Tests.CheckTables.RunTests ();
 			
