@@ -1083,11 +1083,11 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.Rasterizer.Gamma = 0.5;
 				pos.X ++;
 				pos.Y --;
-				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlLightLight);
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlLightLight, Drawing.GlyphPaintStyle.Disabled, false);
 				graphics.Rasterizer.Gamma = gamma;  // remet gamma initial
 				pos.X --;
 				pos.Y ++;
-				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlDark);
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlDark, Drawing.GlyphPaintStyle.Disabled, true);
 			}
 
 			if ( (state&WidgetState.Focused) != 0 )

@@ -91,6 +91,8 @@ namespace Epsitec.Common.Widgets
 		
 		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state);
 
+		//PA: Il faudrait peut-être unifier les divers Adapt pour offrir une méthode unique;
+		// void AdaptGlyphColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor);
 		void AdaptEnabledTextColor(ref Drawing.Color color);
 		void AdaptDisabledTextColor(ref Drawing.Color color, Drawing.Color uniqueColor);
 

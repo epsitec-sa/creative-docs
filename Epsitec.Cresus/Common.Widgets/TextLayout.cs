@@ -327,10 +327,20 @@ namespace Epsitec.Common.Widgets
 		// avec cette couleur, en ignorant les <font color=...>.
 		public void Paint(Drawing.Point pos, Drawing.Graphics graphics)
 		{
-			this.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.Empty);
+			this.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.Empty, Drawing.GlyphPaintStyle.Normal, true);
 		}
 
 		public void Paint(Drawing.Point pos, Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Color uniqueColor)
+		{
+			//PA: Cette méthode pourra être supprimée une fois que tous les adorners auront été
+			// adaptés...
+			
+			Drawing.GlyphPaintStyle paintStyle = (uniqueColor.IsEmpty ? Drawing.GlyphPaintStyle.Normal : Drawing.GlyphPaintStyle.Disabled);
+			
+			this.Paint (pos, graphics, clipRect, uniqueColor, paintStyle, true);
+		}
+			
+		public void Paint(Drawing.Point pos, Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Color uniqueColor, Drawing.GlyphPaintStyle paintStyle, bool paintImages)
 		{
 			this.UpdateLayout();
 
@@ -341,6 +351,8 @@ namespace Epsitec.Common.Widgets
 
 				if ( block.image )
 				{
+					if ( !paintImages )  continue;
+					
 					Drawing.Image image = this.imageProvider.GetImage(block.text);
 					
 					if ( image == null )
@@ -348,9 +360,9 @@ namespace Epsitec.Common.Widgets
 						throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", block.text, System.IO.Directory.GetCurrentDirectory ()));
 					}
 					
-					if ( !uniqueColor.IsEmpty )
+					if ( image.IsPaintStyleDefined(paintStyle) )
 					{
-						image = Drawing.Bitmap.FromImageDisabled(image, uniqueColor);
+						image = image.GetImageForPaintStyle(paintStyle);
 					}
 					
 					image.DefineZoom(graphics.GetTransformZoom());
@@ -391,6 +403,7 @@ namespace Epsitec.Common.Widgets
 					}
 					else
 					{
+						//PA: Utiliser AdaptGlyphColor.
 						color = block.fontColor;
 						adorner.AdaptEnabledTextColor(ref color);
 					}
@@ -430,8 +443,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public event AnchorEventHandler Anchor;
 		
+		public event AnchorEventHandler Anchor;
 		
 		protected virtual void OnAnchor(AnchorEventArgs e)
 		{
