@@ -15,6 +15,7 @@ namespace Epsitec.Common.Widgets
 			this.Dispose (false);
 		}
 		
+		
 		public static MouseCursor FromImage(Drawing.Image image, int xhot, int yhot)
 		{
 			System.IntPtr     org_handle = image.BitmapImage.NativeBitmap.GetHicon ();
@@ -56,6 +57,17 @@ namespace Epsitec.Common.Widgets
 			cursor.handle = new_handle;
 			
 			return cursor;
+		}
+		
+		
+		public static void Hide()
+		{
+			System.Windows.Forms.Cursor.Hide ();
+		}
+		
+		public static void Show()
+		{
+			System.Windows.Forms.Cursor.Show ();
 		}
 		
 		#region IDisposable Members
