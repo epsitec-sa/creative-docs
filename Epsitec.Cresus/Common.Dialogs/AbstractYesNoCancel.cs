@@ -41,7 +41,7 @@ namespace Epsitec.Common.Dialogs
 			Widget body = this.CreateBodyWidget ();
 			Button button1;
 			Button button2;
-			Button button3;
+			Button button3 = null;
 			
 			double dx = body.Width;
 			double dy = body.Height;
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Dialogs
 			
 			button1               = new Button (this.window.Root);
 			button1.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 3*75 - 3*8, 16, 75, button1.Height);
-			button1.Text          = "<m>Y</m>es";
+			button1.Text          = "<m>O</m>ui";
 			button1.Command       = "ValidateDialogYes";
 			button1.TabIndex      = 2;
 			button1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
@@ -74,18 +74,22 @@ namespace Epsitec.Common.Dialogs
 			
 			button2               = new Button (this.window.Root);
 			button2.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 2*75 - 2*8, 16, 75, button2.Height);
-			button2.Text          = "<m>N</m>o";
+			button2.Text          = "<m>N</m>on";
 			button2.Command       = "ValidateDialogNo";
 			button2.TabIndex      = 3;
 			button2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
-			button3               = new Button (this.window.Root);
-			button3.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 75 - 8, 16, 75, button3.Height);
-			button3.Text          = "Annuler";
-			button3.Command       = "QuitDialog";
-			button3.TabIndex      = 4;
-			button3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			button3.ButtonStyle   = ButtonStyle.DefaultCancel;
+			if (this.hide_cancel == false)
+			{
+				button3               = new Button (this.window.Root);
+				button3.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 75 - 8, 16, 75, button3.Height);
+				button3.Text          = "Annuler";
+				button3.Name          = "Cancel";
+				button3.Command       = "QuitDialog";
+				button3.TabIndex      = 4;
+				button3.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				button3.ButtonStyle   = ButtonStyle.DefaultCancel;
+			}
 			
 			AbstractMessageDialog.LayoutButtons (this.window.Root.Width, button1, button2, button3);
 			
@@ -95,9 +99,11 @@ namespace Epsitec.Common.Dialogs
 		
 		[Command ("ValidateDialogYes")] protected void CommandValidateDialogYes()
 		{
+			this.result = DialogResult.Yes;
+			
 			if (this.command_yes_template != null)
 			{
-				this.window.QueueCommand (this, string.Format (this.command_yes_template, this.CommandArgs), this.command_dispatcher);
+				this.DispatchWindow.QueueCommand (this, string.Format (this.command_yes_template, this.CommandArgs), this.command_dispatcher);
 			}
 			
 			this.CloseDialog ();
@@ -105,9 +111,11 @@ namespace Epsitec.Common.Dialogs
 		
 		[Command ("ValidateDialogNo")]  protected void CommandValidateDialogNo()
 		{
+			this.result = DialogResult.No;
+			
 			if (this.command_no_template != null)
 			{
-				this.window.QueueCommand (this, string.Format (this.command_no_template, this.CommandArgs), this.command_dispatcher);
+				this.DispatchWindow.QueueCommand (this, string.Format (this.command_no_template, this.CommandArgs), this.command_dispatcher);
 			}
 			
 			this.CloseDialog ();
@@ -115,6 +123,8 @@ namespace Epsitec.Common.Dialogs
 		
 		[Command ("QuitDialog")]        protected void CommandQuitDialog()
 		{
+			this.result = DialogResult.Cancel;
+			
 			this.CloseDialog ();
 		}
 		

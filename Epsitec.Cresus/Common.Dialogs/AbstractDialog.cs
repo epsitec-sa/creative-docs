@@ -119,6 +119,25 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
+		public DialogResult						Result
+		{
+			get
+			{
+				return this.result;
+			}
+		}
+		
+		public virtual Widgets.Window			DispatchWindow
+		{
+			get
+			{
+				Widgets.Window window = this.Window;
+				Widgets.Window owner  = window.Owner;
+				
+				return owner == null ? window : owner;
+			}
+		}
+				
 		
 		public bool								IsVisible
 		{
@@ -187,5 +206,6 @@ namespace Epsitec.Common.Dialogs
 		
 		protected Widgets.Window				window;
 		protected bool							is_modal = true;
+		protected DialogResult					result = DialogResult.None;
 	}
 }

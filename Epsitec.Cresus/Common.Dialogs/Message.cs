@@ -20,6 +20,20 @@ namespace Epsitec.Common.Dialogs
 			return Message.CreateYesNoCancel (dialog_title, message_icon, message_text, command_yes_template, command_no_template, command_dispatcher);
 		}
 		
+		public static IDialog CreateYesNo(string dialog_title, string message_icon, string message_text, string command_yes_template, string command_no_template, Support.CommandDispatcher command_dispatcher)
+		{
+			AbstractMessageDialog dialog = new Message.YesNoCancel (dialog_title, message_icon, message_text, command_yes_template, command_no_template, command_dispatcher);
+			dialog.HideCancelButton ();
+			return dialog;
+		}
+		
+		public static IDialog CreateYesNo(string dialog_title, Icon icon, string message_text, string command_yes_template, string command_no_template, Support.CommandDispatcher command_dispatcher)
+		{
+			string message_icon = Message.GetIconName (icon);
+			
+			return Message.CreateYesNo (dialog_title, message_icon, message_text, command_yes_template, command_no_template, command_dispatcher);
+		}
+		
 		public static IDialog CreateOkCancel(string dialog_title, string message_icon, string message_text, string command_ok_template, Support.CommandDispatcher command_dispatcher)
 		{
 			return new Message.OkCancel (dialog_title, message_icon, message_text, command_ok_template, command_dispatcher);
@@ -30,6 +44,20 @@ namespace Epsitec.Common.Dialogs
 			string message_icon = Message.GetIconName (icon);
 			
 			return Message.CreateOkCancel (dialog_title, message_icon, message_text, command_ok_template, command_dispatcher);
+		}
+		
+		public static IDialog CreateOk(string dialog_title, string message_icon, string message_text, string command_ok_template, Support.CommandDispatcher command_dispatcher)
+		{
+			AbstractMessageDialog dialog = new Message.OkCancel (dialog_title, message_icon, message_text, command_ok_template, command_dispatcher);
+			dialog.HideCancelButton ();
+			return dialog;
+		}
+		
+		public static IDialog CreateOk(string dialog_title, Icon icon, string message_text, string command_ok_template, Support.CommandDispatcher command_dispatcher)
+		{
+			string message_icon = Message.GetIconName (icon);
+			
+			return Message.CreateOk (dialog_title, message_icon, message_text, command_ok_template, command_dispatcher);
 		}
 		
 		

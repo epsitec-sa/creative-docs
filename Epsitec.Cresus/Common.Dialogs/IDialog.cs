@@ -11,5 +11,6 @@ namespace Epsitec.Common.Dialogs
 		void OpenDialog();
 		
 		Common.Widgets.Window	Owner	{ get; set; }
+		DialogResult			Result	{ get; }
 	}
 }

@@ -15,7 +15,6 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		
-		
 		public override Widgets.Window			Window
 		{
 			get
@@ -47,6 +46,12 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
+		internal void HideCancelButton()
+		{
+			this.hide_cancel = true;
+		}
+		
+		
 		public static void LayoutButtons(double width, params Widgets.Button[] buttons)
 		{
 			if (buttons.Length > 0)
@@ -55,7 +60,10 @@ namespace Epsitec.Common.Dialogs
 				
 				for (int i = 0; i < buttons.Length; i++)
 				{
-					total_width += buttons[i].Width;
+					if (buttons[i] != null)
+					{
+						total_width += buttons[i].Width;
+					}
 				}
 				
 				total_width += (buttons.Length-1) * 8;
@@ -66,10 +74,13 @@ namespace Epsitec.Common.Dialogs
 					
 					for (int i = 0; i < buttons.Length; i++)
 					{
-						buttons[i].Location = new Drawing.Point (x, buttons[i].Bottom);
-						
-						x += buttons[i].Width;
-						x += 8;
+						if (buttons[i] != null)
+						{
+							buttons[i].Location = new Drawing.Point (x, buttons[i].Bottom);
+							
+							x += buttons[i].Width;
+							x += 8;
+						}
 					}
 				}
 			}
@@ -77,5 +88,7 @@ namespace Epsitec.Common.Dialogs
 		
 		
 		protected abstract void CreateWindow();
+		
+		protected bool							hide_cancel;
 	}
 }

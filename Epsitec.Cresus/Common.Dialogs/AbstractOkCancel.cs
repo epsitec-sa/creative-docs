@@ -39,7 +39,7 @@ namespace Epsitec.Common.Dialogs
 		{
 			Widget body = this.CreateBodyWidget ();
 			Button button1;
-			Button button2;
+			Button button2 = null;
 			
 			double dx = body.Width;
 			double dy = body.Height;
@@ -71,13 +71,17 @@ namespace Epsitec.Common.Dialogs
 			button1.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			button1.Shortcut      = Widgets.Feel.Factory.Active.AcceptShortcut;
 			
-			button2               = new Button (this.window.Root);
-			button2.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 75 - 8, 16, 75, button2.Height);
-			button2.Text          = "Annuler";
-			button2.Command       = "QuitDialog";
-			button2.TabIndex      = 3;
-			button2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			button2.Shortcut      = Widgets.Feel.Factory.Active.CancelShortcut;
+			if (this.hide_cancel == false)
+			{
+				button2               = new Button (this.window.Root);
+				button2.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 75 - 8, 16, 75, button2.Height);
+				button2.Text          = "Annuler";
+				button2.Name          = "Cancel";
+				button2.Command       = "QuitDialog";
+				button2.TabIndex      = 3;
+				button2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				button2.Shortcut      = Widgets.Feel.Factory.Active.CancelShortcut;
+			}
 			
 			AbstractMessageDialog.LayoutButtons (this.window.Root.Width, button1, button2);
 			
@@ -87,9 +91,11 @@ namespace Epsitec.Common.Dialogs
 		
 		[Command ("ValidateDialog")] protected void CommandValidateDialog()
 		{
+			this.result = DialogResult.Accept;
+			
 			if (this.command_template != null)
 			{
-				this.window.QueueCommand (this, string.Format (this.command_template, this.CommandArgs), this.command_dispatcher);
+				this.DispatchWindow.QueueCommand (this, string.Format (this.command_template, this.CommandArgs), this.command_dispatcher);
 			}
 			
 			this.CloseDialog ();
@@ -97,6 +103,8 @@ namespace Epsitec.Common.Dialogs
 		
 		[Command ("QuitDialog")]     protected void CommandQuitDialog()
 		{
+			this.result = DialogResult.Cancel;
+			
 			this.CloseDialog ();
 		}
 		
