@@ -465,7 +465,7 @@ namespace Epsitec.Common.Widgets
 					this.ProcessBeginPress (pos);
 					
 					if ((this.AutoSelectOnFocus) &&
-						(this.IsFocusedOrPassive == false))
+						(this.IsFocusedFlagSet == false))
 					{
 						this.SelectAll ();
 						message.Consumer  = this;
@@ -860,7 +860,7 @@ namespace Epsitec.Common.Widgets
 		{
 			TextField.blinking = null;
 			
-			if ( this.IsFocusedOrPassive )
+			if ( this.IsFocusedFlagSet )
 			{
 				//	On a perdu le focus visible, mais pas le focus réel, vraisemblablement
 				//	parce que la fenêtre a perdu le focus. On ne doit pas toucher à la
