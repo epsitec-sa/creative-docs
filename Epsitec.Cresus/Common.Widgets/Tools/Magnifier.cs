@@ -492,8 +492,22 @@ namespace Epsitec.Common.Widgets.Tools
 				
 				double r = System.Math.Min (cx, cy) - 1;
 				
+				Drawing.Color color_1 = Drawing.Color.FromARGB (0.3, 0.3, 0.8, 1.0);
+				Drawing.Color color_2 = Drawing.Color.FromRGB (0, 0, 0.7);
+				
+				if ((this.PaintState & WidgetState.Enabled) == 0)
+				{
+					double bright = color_1.GetBrightness ();
+					
+					color_1.R = bright;
+					color_1.G = bright;
+					color_1.B = bright;
+					
+					color_2 = Adorner.Factory.Active.ColorTextFieldBorder (false);
+				}
+				
 				graphics.AddFilledCircle (cx, cy, r);
-				graphics.RenderSolid (Drawing.Color.FromARGB (0.3, 0.3, 0.8, 1.0));
+				graphics.RenderSolid (color_1);
 				graphics.LineWidth = 0.5;
 				graphics.AddCircle (cx, cy, r);
 				
@@ -520,7 +534,7 @@ namespace Epsitec.Common.Widgets.Tools
 					graphics.Rasterizer.AddOutline (path, 0.5);
 				}
 				
-				graphics.RenderSolid (Drawing.Color.FromRGB (0, 0, 0.7));
+				graphics.RenderSolid (color_2);
 			}
 			
 			protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)

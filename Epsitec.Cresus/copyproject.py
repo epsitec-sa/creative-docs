@@ -8,7 +8,7 @@
 #	              CH-1400 Yverdon-les-Bains, Switzerland		#
 #########################################################################
 
-# par rapport au script original, celui-ci ne crée par de dossier vide
+# par rapport au script original, celui-ci ne crée pas de dossier vide
 # dans le ZIP des différences.
 # par contre il n'enlève pas, dans la référence, les fichiers supprimés
 
@@ -295,7 +295,11 @@ class CopyProject:
                     f.close()
                     shutil.copystat(ref_name, delta_name)
                     os.chmod(delta_name, 0777)
-                    os.remove(ref_name)
+                    try:
+                        os.remove(ref_name) # ne sait pas supprimer les dossiers
+                    except OSError, e:
+                        e = ''
+
                     self.del_count += 1
 
     def print_statistics(self):
@@ -426,6 +430,9 @@ def do_it():
     what  = '"' + dst + '\\delta\\*.*"'
 
     cmd   = wzzip + ' ' + opt + ' ' + qzip + ' ' + what
+
+    if copy_project.mod_count > 100 :   # wzzip se bloque lorsqu'il y a trop de fichiers
+        cmd.replace ("wzzip" , "WINZIP32.EXE")  # utilise winzip32 à la place
     
     print 'MEGABUILD.SET %ziprev%=' + rev
     print 'MEGABUILD.SET %zipfile%=' + zip
