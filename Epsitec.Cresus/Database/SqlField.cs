@@ -72,7 +72,9 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				if ((this.type == SqlFieldType.ParameterIn) ||
-					(this.type == SqlFieldType.ParameterOut))
+					(this.type == SqlFieldType.ParameterInOut) ||
+					(this.type == SqlFieldType.ParameterOut) ||
+					(this.type == SqlFieldType.ParameterResult))
 				{
 					return this.value;
 				}
@@ -195,7 +197,19 @@ namespace Epsitec.Cresus.Database
 			return SqlField.CreateConstant (raw_value, raw_type);
 		}
 		
+		public static SqlField CreateParameterInOut(object raw_value, DbRawType raw_type)
+		{
+			//	TODO: crée et initialise une instance de SqlField.
+			return null;
+		}
+		
 		public static SqlField CreateParameterOut(DbRawType raw_type)
+		{
+			//	TODO: crée et initialise une instance de SqlField.
+			return null;
+		}
+		
+		public static SqlField CreateParameterResult(DbRawType raw_type)
 		{
 			//	TODO: crée et initialise une instance de SqlField.
 			return null;
@@ -276,6 +290,8 @@ namespace Epsitec.Cresus.Database
 		
 		ParameterIn = Constant,			//	paramètre en entrée = comme constante
 		ParameterOut,					//	paramètre en sortie
+		ParameterInOut,					//	paramètre en entrée et en sortie
+		ParameterResult,				//	paramètre en sortie (résultat de procédure)
 		
 		Name,							//	nom (nom de colonne, nom de table, ...)
 		
