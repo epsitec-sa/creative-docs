@@ -1,3 +1,6 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
 	using BundleAttribute = Epsitec.Common.Support.BundleAttribute;
@@ -33,6 +36,62 @@ namespace Epsitec.Common.Widgets
 			this.Name = name;
 		}
 		
+		
+		public override double					DefaultWidth
+		{
+			// Retourne la largeur standard d'une icône.
+			get
+			{
+				return 22;
+			}
+		}
+
+		public override double					DefaultHeight
+		{
+			// Retourne la hauteur standard d'une icône.
+			get
+			{
+				return 22;
+			}
+		}
+
+		
+		[Bundle ("Icon")] public string			IconName
+		{
+			get
+			{
+				return this.iconName;
+			}
+
+			set
+			{
+				if ( this.iconName != value )
+				{
+					this.iconName = value;
+					
+					if ( this.iconName == null ||
+						this.iconName == ""   )
+					{
+						this.Text = null;
+					}
+					else
+					{
+						this.Text = @"<img src=""" + this.iconName + @"""/>";
+					}
+				}
+			}
+		}
+
+		
+		public override Drawing.Rectangle GetShapeBounds()
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			Drawing.Rectangle rect = this.Client.Bounds;
+			rect.Inflate(adorner.GeometryToolShapeBounds);
+			return rect;
+		}
+		
+		
 		public static IconButton CreateSimple(string command, string icon)
 		{
 			IconButton button = new IconButton (command, icon);
@@ -62,61 +121,23 @@ namespace Epsitec.Common.Widgets
 			return button;
 		}
 		
-		public override double DefaultWidth
+		
+		public static IconButton CreateSimple(System.Enum command, string icon)
 		{
-			// Retourne la largeur standard d'une icône.
-			get
-			{
-				return 22;
-			}
+			return IconButton.CreateSimple (command.ToString (), icon);
 		}
-
-		public override double DefaultHeight
+		
+		public static IconButton CreateHidden(System.Enum command, string icon)
 		{
-			// Retourne la hauteur standard d'une icône.
-			get
-			{
-				return 22;
-			}
+			return IconButton.CreateHidden (command.ToString (), icon);
 		}
-
-
-		[Bundle ("Icon")] public string IconName
+		
+		public static IconButton CreateToggle(System.Enum command, string icon)
 		{
-			get
-			{
-				return this.iconName;
-			}
-
-			set
-			{
-				if ( this.iconName != value )
-				{
-					this.iconName = value;
-					
-					if ( this.iconName == null ||
-						 this.iconName == ""   )
-					{
-						this.Text = null;
-					}
-					else
-					{
-						this.Text = @"<img src=""" + this.iconName + @"""/>";
-					}
-				}
-			}
+			return IconButton.CreateToggle (command.ToString (), icon);
 		}
-
-
-		public override Drawing.Rectangle GetShapeBounds()
-		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryToolShapeBounds);
-			return rect;
-		}
-
-
-		protected string				iconName;
+		
+		
+		protected string						iconName;
 	}
 }
