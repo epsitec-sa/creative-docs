@@ -105,6 +105,7 @@ namespace Epsitec.Common.Pictogram.Data
 			p2 = this.Handle(1).Position;
 			this.Handle(2).Position = new Drawing.Point(p1.X, p2.Y);
 			this.Handle(3).Position = new Drawing.Point(p2.X, p1.Y);
+			this.durtyBbox = true;
 		}
 
 		// Déplace tout l'objet.
@@ -117,6 +118,8 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Point p2 = this.Handle(1).Position;
 			this.Handle(2).Position = new Drawing.Point(p1.X, p2.Y);
 			this.Handle(3).Position = new Drawing.Point(p2.X, p1.Y);
+
+			this.bbox.Offset(move);
 		}
 
 		
@@ -133,6 +136,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			iconContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
+			this.durtyBbox = true;
 		}
 
 		// Fin de la création d'un objet.
@@ -158,6 +162,13 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
+		// Met à jour le rectangle englobant l'objet.
+		public override void UpdateBoundingBox()
+		{
+			Drawing.Path path = this.PathBuild();
+			this.bbox = path.ComputeBounds();
+		}
+
 		// Crée le chemin d'un rectangle à coins arrondis.
 		protected Drawing.Path PathRoundRectangle(Drawing.Rectangle rect, double radius)
 		{
@@ -194,13 +205,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return path;
 		}
 
-		// Dessine l'objet.
-		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		// Crée le chemin de l'objet.
+		protected Drawing.Path PathBuild()
 		{
-			base.DrawGeometry(graphics, iconContext);
-
-			if ( this.TotalHandle < 2 )  return;
-
 			Drawing.Rectangle rect = new Drawing.Rectangle();
 			rect.Left   = this.Handle(0).Position.X;
 			rect.Bottom = this.Handle(0).Position.Y;
@@ -209,9 +216,18 @@ namespace Epsitec.Common.Pictogram.Data
 			rect.Normalise();
 
 			double radius = this.PropertyDouble(3).Value;
-			Drawing.Path path = this.PathRoundRectangle(rect, radius);
-			this.bbox = path.ComputeBounds();
-			this.PropertyGradient(2).Render(graphics, iconContext, path, this.bbox);
+			return this.PathRoundRectangle(rect, radius);
+		}
+
+		// Dessine l'objet.
+		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		{
+			base.DrawGeometry(graphics, iconContext);
+
+			if ( this.TotalHandle < 2 )  return;
+
+			Drawing.Path path = this.PathBuild();
+			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBox);
 
 			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));

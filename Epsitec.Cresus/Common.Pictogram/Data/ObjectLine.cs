@@ -58,6 +58,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			iconContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
+			this.durtyBbox = true;
 		}
 
 		// Fin de la création d'un objet.
@@ -77,6 +78,22 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Met à jour le rectangle englobant l'objet.
+		public override void UpdateBoundingBox()
+		{
+			Drawing.Path path = this.PathBuild();
+			this.bbox = path.ComputeBounds();
+		}
+
+		// Crée le chemin de l'objet.
+		protected Drawing.Path PathBuild()
+		{
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo(this.Handle(0).Position);
+			path.LineTo(this.Handle(1).Position);
+			return path;
+		}
+
 		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
 		{
@@ -84,21 +101,12 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( this.TotalHandle != 2 )  return;
 
-			Drawing.Path path = new Drawing.Path();
-			path.MoveTo(this.Handle(0).Position);
-			path.LineTo(this.Handle(1).Position);
-
-			this.bbox = path.ComputeBounds();
-
+			Drawing.Path path = this.PathBuild();
 			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
-				path = new Drawing.Path();
-				path.MoveTo(this.Handle(0).Position);
-				path.LineTo(this.Handle(1).Position);
-
 				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 				graphics.RenderSolid(iconContext.HiliteColor);
 			}

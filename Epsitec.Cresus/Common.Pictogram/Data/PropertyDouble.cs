@@ -81,6 +81,16 @@ namespace Epsitec.Common.Pictogram.Data
 			p.Step = this.step;
 		}
 
+		// Effectue une copie des informations de base de la propriété.
+		public override void CopyInfoTo(AbstractProperty property)
+		{
+			base.CopyInfoTo(property);
+			PropertyDouble p = property as PropertyDouble;
+			p.MinRange = this.minRange;
+			p.MaxRange = this.maxRange;
+			p.Step = this.step;
+		}
+
 		// Compare deux propriétés.
 		public override bool Compare(AbstractProperty property)
 		{

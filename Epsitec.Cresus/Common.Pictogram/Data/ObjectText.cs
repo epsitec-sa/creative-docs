@@ -67,6 +67,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			iconContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
+			this.durtyBbox = true;
 		}
 
 		// Fin de la création d'un objet.
@@ -81,11 +82,20 @@ namespace Epsitec.Common.Pictogram.Data
 		// pas exister et doit être détruit.
 		public override bool CreateIsExist(IconContext iconContext)
 		{
-			this.DeselectObject();
+			this.Deselect();
 			double len = Drawing.Point.Distance(this.Handle(0).Position, this.Handle(1).Position);
 			return ( len > this.minimalSize );
 		}
 
+
+		// Met à jour le rectangle englobant l'objet.
+		public override void UpdateBoundingBox()
+		{
+			Drawing.Point p1 = this.Handle(0).Position;
+			Drawing.Point p2 = this.Handle(1).Position;
+			this.bbox = new Epsitec.Common.Drawing.Rectangle(p1.X, p1.Y, p2.X-p1.X, p2.Y-p1.Y);
+			this.bbox.Normalise();
+		}
 
 		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)

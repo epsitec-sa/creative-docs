@@ -292,7 +292,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public void Render(Drawing.Graphics graphics, IconContext iconContext,
 						   Drawing.Path path, Drawing.Rectangle bbox)
 		{
-			if ( bbox.IsEmpty )  return;
+			if ( bbox.IsSurfaceZero )  return;
 
 			Drawing.Graphics mask = null;
 

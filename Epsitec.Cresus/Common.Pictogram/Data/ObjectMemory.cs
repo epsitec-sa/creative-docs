@@ -15,7 +15,7 @@ namespace Epsitec.Common.Pictogram.Data
 			PropertyLine lineMode = new PropertyLine();
 			lineMode.Type = PropertyType.LineMode;
 			lineMode.Text = "Epaisseur trait";
-			lineMode.BackgroundColor = Drawing.Color.FromBrightness(0.7);
+			lineMode.BackgroundIntensity = 0.85;
 			lineMode.Width = 1.0;
 			lineMode.Cap   = Drawing.CapStyle.Round;
 			lineMode.Join  = Drawing.JoinStyle.Round;
@@ -24,14 +24,14 @@ namespace Epsitec.Common.Pictogram.Data
 			PropertyColor lineColor = new PropertyColor();
 			lineColor.Type = PropertyType.LineColor;
 			lineColor.Text = "Couleur trait";
-			lineColor.BackgroundColor = Drawing.Color.FromBrightness(0.7);
+			lineColor.BackgroundIntensity = 0.85;
 			lineColor.Color = Drawing.Color.FromBrightness(0.0);
 			this.AddProperty(lineColor);
 
 			PropertyGradient fillGradient = new PropertyGradient();
 			fillGradient.Type = PropertyType.FillGradient;
 			fillGradient.Text = "Couleur interieure";
-			fillGradient.BackgroundColor = Drawing.Color.FromBrightness(0.9);
+			fillGradient.BackgroundIntensity = 0.95;
 			fillGradient.Fill   = GradientFill.None;
 			fillGradient.Color1 = Drawing.Color.FromBrightness(1.0);
 			fillGradient.Color2 = Drawing.Color.FromBrightness(0.5);
@@ -60,14 +60,14 @@ namespace Epsitec.Common.Pictogram.Data
 			PropertyBool fillClose = new PropertyBool();
 			fillClose.Type = PropertyType.PolyClose;
 			fillClose.Text = "Contour ferme";
-			fillClose.BackgroundColor = Drawing.Color.FromBrightness(0.8);
+			fillClose.BackgroundIntensity = 0.90;
 			fillClose.Bool = false;
 			this.AddProperty(fillClose);
 
 			PropertyDouble roundRect = new PropertyDouble();
 			roundRect.Type = PropertyType.RoundRect;
 			roundRect.Text = "Rayon des coins";
-			roundRect.BackgroundColor = Drawing.Color.FromBrightness(0.8);
+			roundRect.BackgroundIntensity = 0.90;
 			roundRect.Value = 0;
 			roundRect.MinRange = 0;
 			roundRect.MaxRange = 10;
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Pictogram.Data
 			PropertyDouble regularFaces = new PropertyDouble();
 			regularFaces.Type = PropertyType.RegularFaces;
 			regularFaces.Text = "Nombre de cotes";
-			regularFaces.BackgroundColor = Drawing.Color.FromBrightness(0.8);
+			regularFaces.BackgroundIntensity = 0.90;
 			regularFaces.Value = 6;
 			regularFaces.MinRange = 3;
 			regularFaces.MaxRange = 24;
@@ -87,14 +87,14 @@ namespace Epsitec.Common.Pictogram.Data
 			PropertyBool regularStar = new PropertyBool();
 			regularStar.Type = PropertyType.RegularStar;
 			regularStar.Text = "Etoile";
-			regularStar.BackgroundColor = Drawing.Color.FromBrightness(0.8);
+			regularStar.BackgroundIntensity = 0.90;
 			regularStar.Bool = false;
 			this.AddProperty(regularStar);
 
 			PropertyDouble regularShape = new PropertyDouble();
 			regularShape.Type = PropertyType.RegularShape;
 			regularShape.Text = "Renfoncement";
-			regularShape.BackgroundColor = Drawing.Color.FromBrightness(0.8);
+			regularShape.BackgroundIntensity = 0.90;
 			regularShape.Value = 50;
 			regularShape.MinRange = 0;
 			regularShape.MaxRange = 100;
@@ -104,14 +104,14 @@ namespace Epsitec.Common.Pictogram.Data
 			PropertyString textString = new PropertyString();
 			textString.Type = PropertyType.TextString;
 			textString.Text = "Texte";
-			textString.BackgroundColor = Drawing.Color.FromBrightness(0.8);
+			textString.BackgroundIntensity = 0.90;
 			textString.String = "Abc";
 			this.AddProperty(textString);
 
 			PropertyList textFontName = new PropertyList();
 			textFontName.Type = PropertyType.TextFontName;
 			textFontName.Text = "Police";
-			textFontName.BackgroundColor = Drawing.Color.FromBrightness(0.8);
+			textFontName.BackgroundIntensity = 0.90;
 			textFontName.Choice = 0;
 			textFontName.Add("Tahoma");
 			textFontName.Add("Arial");
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Pictogram.Data
 			PropertyList textFontOptical = new PropertyList();
 			textFontOptical.Type = PropertyType.TextFontOptical;
 			textFontOptical.Text = "Style";
-			textFontOptical.BackgroundColor = Drawing.Color.FromBrightness(0.8);
+			textFontOptical.BackgroundIntensity = 0.90;
 			textFontOptical.Choice = 0;
 			textFontOptical.Add("Normal");
 			textFontOptical.Add("Gras");

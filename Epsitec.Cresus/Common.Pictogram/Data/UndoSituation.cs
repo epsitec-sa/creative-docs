@@ -12,10 +12,10 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Liste des objets.
-		public IconObjects Objects
+		public IconObjects IconObjects
 		{
-			get { return this.objects; }
-			set { this.objects = value; }
+			get { return this.iconObjects; }
+			set { this.iconObjects = value; }
 		}
 
 		// Nom de l'opération.
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.selectedTool = value; }
 		}
 
-		protected IconObjects			objects;
+		protected IconObjects			iconObjects;
 		protected string				operation;
 		protected AbstractObject		obj;
 		protected PropertyType			propertyType;

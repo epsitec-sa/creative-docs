@@ -11,7 +11,7 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public PropertyLine()
 		{
-			this.width = 5.0;
+			this.width = 1.0;
 			this.cap   = Drawing.CapStyle.Round;
 			this.join  = Drawing.JoinStyle.Round;
 		}
