@@ -3,6 +3,8 @@
 
 namespace Epsitec.Common.Support
 {
+	using System.Globalization;
+	
 	using ArrayList = System.Collections.ArrayList;
 	using Hashtable = System.Collections.Hashtable;
 	
@@ -14,21 +16,27 @@ namespace Epsitec.Common.Support
 	{
 		public static ResourceBundle Create(string name)
 		{
-			return ResourceBundle.Create (name, null, ResourceLevel.Merged, 0);
+			return ResourceBundle.Create (name, null, ResourceLevel.Merged, 0, null);
 		}
 		
 		public static ResourceBundle Create(string name, ResourceLevel level)
 		{
-			return ResourceBundle.Create (name, null, level, 0);
+			return ResourceBundle.Create (name, null, level, 0, null);
 		}
 		
 		public static ResourceBundle Create(string name, string prefix, ResourceLevel level, int recursion)
 		{
+			return ResourceBundle.Create (name, null, level, recursion, null);
+		}
+		
+		public static ResourceBundle Create(string name, string prefix, ResourceLevel level, int recursion, CultureInfo culture)
+		{
 			ResourceBundle bundle = new ResourceBundle (name);
 			
-			bundle.prefix = prefix;
-			bundle.level  = level;
-			bundle.depth  = recursion;
+			bundle.prefix  = prefix;
+			bundle.level   = level;
+			bundle.depth   = recursion;
+			bundle.culture = culture;
 			
 			return bundle;
 		}
@@ -52,12 +60,34 @@ namespace Epsitec.Common.Support
 		
 		public string						Name
 		{
-			get { return this.name; }
+			get
+			{
+				return this.name;
+			}
+		}
+		
+		public ResourceLevel				ResourceLevel
+		{
+			get
+			{
+				return this.level;
+			}
+		}
+		
+		public CultureInfo					Culture
+		{
+			get
+			{
+				return this.culture;
+			}
 		}
 		
 		public bool							IsEmpty
 		{
-			get { return this.CountFields == 0; }
+			get
+			{
+				return this.CountFields == 0;
+			}
 		}
 		
 		public int							CountFields
@@ -975,5 +1005,6 @@ namespace Epsitec.Common.Support
 		protected Field[]					fields;
 		protected bool						ref_inclusion = true;
 		protected bool						auto_merge    = true;
+		protected CultureInfo				culture;
 	}
 }

@@ -173,11 +173,21 @@ namespace Epsitec.Common.Support
 		
 		public static string[] GetBundleIds(string filter)
 		{
-			return Resources.GetBundleIds (filter, ResourceLevel.Default);
+			return Resources.GetBundleIds (filter, ResourceLevel.Default, Resources.Culture);
 		}
 		
 		public static string[] GetBundleIds(string filter, ResourceLevel level)
 		{
+			return Resources.GetBundleIds (filter, level, Resources.Culture);
+		}
+		
+		public static string[] GetBundleIds(string filter, ResourceLevel level, CultureInfo culture)
+		{
+			if (culture == null)
+			{
+				culture = Resources.Culture;
+			}
+			
 			switch (level)
 			{
 				case ResourceLevel.Default:
@@ -194,7 +204,7 @@ namespace Epsitec.Common.Support
 			
 			if (provider != null)
 			{
-				return provider.GetIds (resource_id, level);
+				return provider.GetIds (resource_id, level, culture);
 			}
 			
 			return null;
@@ -212,6 +222,21 @@ namespace Epsitec.Common.Support
 		
 		public static ResourceBundle GetBundle(string id, ResourceLevel level, int recursion)
 		{
+			return Resources.GetBundle (id, level, recursion, Resources.Culture);
+		}
+		
+		public static ResourceBundle GetBundle(string id, ResourceLevel level, CultureInfo culture)
+		{
+			return Resources.GetBundle (id, level, 0, culture);
+		}
+		
+		public static ResourceBundle GetBundle(string id, ResourceLevel level, int recursion, CultureInfo culture)
+		{
+			if (culture == null)
+			{
+				culture = Resources.Culture;
+			}
+			
 			//	TODO: il faudrait peut-être rajouter un cache pour éviter de consulter
 			//	chaque fois le provider, lorsqu'une ressource est demandée.
 			
@@ -227,17 +252,17 @@ namespace Epsitec.Common.Support
 				switch (level)
 				{
 					case ResourceLevel.Merged:
-						bundle = ResourceBundle.Create (id, prefix, level, recursion);
-						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Default));
-						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Localised));
-						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Customised));
+						bundle = ResourceBundle.Create (id, prefix, level, recursion, culture);
+						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Default, culture));
+						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Localised, culture));
+						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Customised, culture));
 						break;
 					
 					case ResourceLevel.Default:
 					case ResourceLevel.Localised:
 					case ResourceLevel.Customised:
-						bundle = ResourceBundle.Create (id, prefix, level, recursion);
-						bundle.Compile (provider.GetData (resource_id, level));
+						bundle = ResourceBundle.Create (id, prefix, level, recursion, culture);
+						bundle.Compile (provider.GetData (resource_id, level, culture));
 						break;
 					
 					default:
@@ -257,11 +282,21 @@ namespace Epsitec.Common.Support
 		
 		public static byte[] GetBinaryData(string id)
 		{
-			return Resources.GetBinaryData (id, ResourceLevel.Merged);
+			return Resources.GetBinaryData (id, ResourceLevel.Merged, null);
 		}
 		
 		public static byte[] GetBinaryData(string id, ResourceLevel level)
 		{
+			return Resources.GetBinaryData (id, ResourceLevel.Merged, null);
+		}
+		
+		public static byte[] GetBinaryData(string id, ResourceLevel level, CultureInfo culture)
+		{
+			if (culture == null)
+			{
+				culture = Resources.Culture;
+			}
+			
 			//	TODO: il faudrait peut-être rajouter un cache pour éviter de consulter
 			//	chaque fois le provider, lorsqu'une ressource est demandée.
 			
@@ -275,18 +310,18 @@ namespace Epsitec.Common.Support
 				switch (level)
 				{
 					case ResourceLevel.Merged:
-						data = provider.GetData (resource_id, ResourceLevel.Default);
+						data = provider.GetData (resource_id, ResourceLevel.Default, culture);
 						if (data != null) break;
-						data = provider.GetData (resource_id, ResourceLevel.Localised);
+						data = provider.GetData (resource_id, ResourceLevel.Localised, culture);
 						if (data != null) break;
-						data = provider.GetData (resource_id, ResourceLevel.Customised);
+						data = provider.GetData (resource_id, ResourceLevel.Customised, culture);
 						if (data != null) break;
 						break;
 					
 					case ResourceLevel.Default:
 					case ResourceLevel.Localised:
 					case ResourceLevel.Customised:
-						data = provider.GetData (resource_id, level);
+						data = provider.GetData (resource_id, level, culture);
 						break;
 					
 					default:

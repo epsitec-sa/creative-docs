@@ -22,9 +22,9 @@ namespace Epsitec.Common.Support
 		bool ValidateId(string id);
 		bool Contains(string id);
 		
-		byte[] GetData(string id, ResourceLevel level);
+		byte[] GetData(string id, ResourceLevel level, System.Globalization.CultureInfo culture);
 		
-		string[] GetIds(string filter, ResourceLevel level);
+		string[] GetIds(string filter, ResourceLevel level, System.Globalization.CultureInfo culture);
 		
 		//	Méthodes d'accès en écriture/modification :
 		
