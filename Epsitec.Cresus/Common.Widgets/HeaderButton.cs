@@ -88,6 +88,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void UpdateLayoutSize()
+		{
+			base.UpdateLayoutSize();
+			
+			if ( this.textLayout != null )
+			{
+				double dx = this.Client.Width - HeaderButton.Margin*2;
+				double dy = this.Client.Height;
+				this.textLayout.Alignment = this.Alignment;
+				this.textLayout.LayoutSize = new Drawing.Size(dx, dy);
+			}
+		}
+
 		// Dessine le bouton.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
@@ -114,7 +127,13 @@ namespace Epsitec.Common.Widgets
 				type = Direction.Left;
 			}
 			adorner.PaintHeaderBackground(graphics, rect, state, dir, type);
-			adorner.PaintButtonTextLayout(graphics, pos, this.textLayout, state, dir, ButtonStyle.Flat);
+
+			if ( this.textLayout != null )
+			{
+				pos.X += HeaderButton.Margin;
+				this.textLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
+				adorner.PaintButtonTextLayout(graphics, pos, this.textLayout, state, dir, ButtonStyle.Flat);
+			}
 
 			if ( this.sortMode != 0 )  // triangle ?
 			{
@@ -160,5 +179,7 @@ namespace Epsitec.Common.Widgets
 		protected bool						dynamic = false;
 		protected int						sortMode = 0;
 		protected int						rank;
+		
+		protected const double				Margin = 2;
 	}
 }
