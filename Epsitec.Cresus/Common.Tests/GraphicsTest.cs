@@ -81,9 +81,9 @@ namespace Epsitec.Common.Tests
 			e.Graphics.LineWidth = 0.2;
 			ContentAlignment[] modes = new ContentAlignment[]
 				{
-					ContentAlignment.BottomLeft, ContentAlignment.BottomCenter, ContentAlignment.BottomRight,
+					ContentAlignment.TopLeft,    ContentAlignment.TopCenter,    ContentAlignment.TopRight,
 					ContentAlignment.MiddleLeft, ContentAlignment.MiddleCenter, ContentAlignment.MiddleRight,
-					ContentAlignment.TopLeft,    ContentAlignment.TopCenter,    ContentAlignment.TopRight
+					ContentAlignment.BottomLeft, ContentAlignment.BottomCenter, ContentAlignment.BottomRight
 				};
 			
 			foreach (ContentAlignment mode in modes)
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Tests
 				e.Graphics.RenderSolid (Color.FromBrightness (1));
 				
 				e.Graphics.AddText (10, y+5+13, "A theme is a background plus a set of sounds, icons, and other elements", font, size);
-				e.Graphics.AddText (10, y+5,    "to help you personalize your computer with one click. gamme=" + e.Graphics.Rasterizer.Gamma.ToString (), font, size);
+				e.Graphics.AddText (10, y+5,    "to help you personalize your computer with one click. gamma=" + e.Graphics.Rasterizer.Gamma.ToString (), font, size);
 				e.Graphics.RenderSolid (Color.FromBrightness (0));
 			}
 		}
