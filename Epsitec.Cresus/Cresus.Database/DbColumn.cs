@@ -97,6 +97,21 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public void DefineCategory(DbElementCat category)
+		{
+			if (this.category == category)
+			{
+				return;
+			}
+			
+			if (this.category != DbElementCat.Unknown)
+			{
+				throw new System.InvalidOperationException (string.Format ("Table '{0}' cannot change its category.", this.Name));
+			}
+			
+			this.category = category;
+		}
+		
 		public void DefineAttributes(params string[] attributes)
 		{
 			this.attributes.SetFromInitialisationList (attributes);
@@ -122,6 +137,15 @@ namespace Epsitec.Cresus.Database
 				buffer.Append (@" index=""1""");
 			}
 			
+			string arg_cat = DbTools.ElementCategoryToString (this.category);
+			
+			if (arg_cat != null)
+			{
+				buffer.Append (@" cat=""");
+				buffer.Append (arg_cat);
+				buffer.Append (@"""");
+			}
+			
 			buffer.Append (@"/>");
 		}
 		
@@ -135,10 +159,12 @@ namespace Epsitec.Cresus.Database
 			string arg_null   = xml.GetAttribute ("null");
 			string arg_unique = xml.GetAttribute ("unique");
 			string arg_index  = xml.GetAttribute ("index");
+			string arg_cat    = xml.GetAttribute ("cat");
 			
 			this.is_null_allowed = (arg_null == "1");
 			this.is_unique       = (arg_unique == "1");
 			this.is_indexed      = (arg_index == "1");
+			this.category        = DbTools.ParseElementCategory (arg_cat);
 		}
 		
 		#region IDbAttributesHost Members
@@ -206,6 +232,11 @@ namespace Epsitec.Cresus.Database
 				
 				return 1;
 			}
+		}
+		
+		public DbElementCat				Category
+		{
+			get { return this.category; }
 		}
 		
 		
@@ -382,5 +413,6 @@ namespace Epsitec.Cresus.Database
 		protected bool					is_null_allowed		= false;
 		protected bool					is_unique			= false;
 		protected bool					is_indexed			= false;
+		protected DbElementCat			category;
 	}
 }

@@ -128,6 +128,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DbElementCat.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DbEnumValue.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

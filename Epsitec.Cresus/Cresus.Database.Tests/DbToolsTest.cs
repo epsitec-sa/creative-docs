@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace Epsitec.Cresus.Database.Tests
+namespace Epsitec.Cresus.Database
 {
 	[TestFixture]
 	public class DbToolsTest
