@@ -1,0 +1,110 @@
+using System;
+using NUnit.Framework;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Drawing;
+
+namespace Epsitec.Common.Tests
+{
+	[TestFixture]
+	public class CustomWidgetTest
+	{
+		static CustomWidgetTest()
+		{
+			try { System.Diagnostics.Debug.WriteLine (""); } 
+			catch { }
+		}
+		
+		[Test] public void CheckCreation()
+		{
+			WindowFrame window = new WindowFrame ();
+			
+			CustomWidget a = new CustomWidget ();
+			CustomWidget b = new CustomWidget ();
+			
+			window.Root.Children.Add (a);
+			window.Root.Children.Add (b);
+
+			a.Name = "A"; a.Location = new Point (10, 50); a.Size = new Size (80, 20); a.Text = "OK";
+			b.Name = "B"; b.Location = new Point (10, 10); b.Size = new Size (80, 20); b.Text = "Cancel";
+			
+			window.Show ();
+		}
+	}
+	
+	public class CustomWidget : Widget
+	{
+		public CustomWidget()
+		{
+		}
+		
+		protected override void PaintBackgroundImplementation(Graphics graphics)
+		{
+			Path path = new Path ();
+			
+			double dx = this.Client.Width;
+			double dy = this.Client.Height;
+			
+			if (this.highlight)
+			{
+				graphics.ScaleTransform (1.05, 1.05, dx/2, dy/2);
+			}
+			
+			path.MoveTo (5, 0);
+			path.LineTo (dx-5, 0);
+			path.CurveTo (dx, 0, dx, 5);
+			path.LineTo (dx, dy-5);
+			path.CurveTo (dx, dy, dx-5, dy);
+			path.LineTo (5, dy);
+			path.CurveTo (0, dy, 0, dy-5);
+			path.LineTo (0, 5);
+			path.CurveTo (0, 0, 5, 0);
+			path.Close ();
+			
+			graphics.Solid.Color = System.Drawing.Color.White;
+			graphics.Rasterizer.AddSurface (path);
+			graphics.RenderSolid ();
+			
+			double x = 10;
+			double y = dy * 0.25;
+			
+			Font   font = Font.GetFont ("Tahoma", "Regular");
+			double size = dy * 0.8;
+			
+			foreach (char c in this.Text)
+			{
+				int glyph = font.GetGlyphIndex (c);
+				graphics.Rasterizer.AddGlyph (font, glyph, x, y, size);
+				x += font.GetGlyphAdvance (glyph) * size;
+			}
+			
+			graphics.Solid.Color = System.Drawing.Color.Black;
+			graphics.Rasterizer.AddOutline (path, 0.6);
+			graphics.RenderSolid ();
+		}
+		
+		public override Rectangle GetPaintBounds()
+		{
+			double growth = System.Math.Max (this.Client.Width, this.Client.Height) * 0.05;
+			double margin = 0.3 + (this.highlight ? growth : 0);
+			
+			return Rectangle.Inflate (base.GetPaintBounds (), margin, margin);
+		}
+
+		
+		protected override void ProcessMessage(Message message, Point pos)
+		{
+			if (message.Type == MessageType.MouseEnter)
+			{
+				this.highlight = true;
+				this.Invalidate ();
+			}
+			else if (message.Type == MessageType.MouseLeave)
+			{
+				this.Invalidate ();
+				this.highlight = false;
+			}
+		}
+		
+		protected bool					highlight;
+	}
+}

@@ -9,7 +9,8 @@ namespace Epsitec.Common.Drawing.Renderer
 		SqrtXY,
 		Conic
 	}
-	public class Gradient : System.IDisposable
+	
+	public class Gradient : IRenderer, System.IDisposable
 	{
 		public Gradient()
 		{
@@ -153,36 +154,6 @@ namespace Epsitec.Common.Drawing.Renderer
 		}
 		
 		
-		protected virtual void AssertAttached()
-		{
-			if (this.agg_ren == System.IntPtr.Zero)
-			{
-				throw new System.NullReferenceException ("RendererGradient not attached");
-			}
-		}
-		
-		
-		public void Attach(Pixmap pixmap)
-		{
-			this.Detach ();
-			
-			this.agg_ren = Agg.Library.AggRendererGradientNew (pixmap.Handle);
-			this.pixmap  = pixmap;
-		}
-		
-		public void Detach()
-		{
-			if (this.agg_ren != System.IntPtr.Zero)
-			{
-				Agg.Library.AggRendererGradientDelete (this.agg_ren);
-				this.agg_ren = System.IntPtr.Zero;
-				this.pixmap  = null;
-			}
-		}
-		
-		
-		
-		
 		public void Dispose()
 		{
 			this.Dispose (true);
@@ -201,6 +172,33 @@ namespace Epsitec.Common.Drawing.Renderer
 			}
 			
 			this.Detach ();
+		}
+		
+		protected virtual void AssertAttached()
+		{
+			if (this.agg_ren == System.IntPtr.Zero)
+			{
+				throw new System.NullReferenceException ("RendererGradient not attached");
+			}
+		}
+		
+		
+		protected void Attach(Pixmap pixmap)
+		{
+			this.Detach ();
+			
+			this.agg_ren = Agg.Library.AggRendererGradientNew (pixmap.Handle);
+			this.pixmap  = pixmap;
+		}
+		
+		protected void Detach()
+		{
+			if (this.agg_ren != System.IntPtr.Zero)
+			{
+				Agg.Library.AggRendererGradientDelete (this.agg_ren);
+				this.agg_ren = System.IntPtr.Zero;
+				this.pixmap  = null;
+			}
 		}
 		
 		

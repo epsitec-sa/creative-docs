@@ -57,17 +57,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public System.Drawing.PointF		Cursor
+		public Drawing.Point				Cursor
 		{
 			get { return this.cursor; }
 		}
 		
-		public float						X
+		public double						X
 		{
 			get { return this.cursor.X; }
 		}
 
-		public float						Y
+		public double						Y
 		{
 			get { return this.cursor.Y; }
 		}
@@ -131,7 +131,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (e != null)
 			{
-				message.cursor = new System.Drawing.PointF (e.X, e.Y);
+				message.cursor = new Drawing.Point (e.X, e.Y);
 				message.button = (MouseButtons) (int) e.Button;
 				message.wheel  = e.Delta;
 				
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected MessageType				type;
 		protected int						tick_count;
-		protected System.Drawing.PointF		cursor;
+		protected Drawing.Point				cursor;
 		
 		protected MouseButtons				button;
 		protected int						button_down_count;
@@ -309,7 +309,7 @@ namespace Epsitec.Common.Widgets
 		internal int						button_down_time;
 		internal int						button_down_x;
 		internal int						button_down_y;
-		internal System.Drawing.PointF		cursor;
+		internal Drawing.Point				cursor;
 	}
 	
 	

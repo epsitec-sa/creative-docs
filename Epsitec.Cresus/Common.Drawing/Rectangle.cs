@@ -15,7 +15,7 @@ namespace Epsitec.Common.Drawing
 			this.x1 = x;
 			this.y1 = y;
 			this.x2 = x + width;
-			this.y2 = y + width;
+			this.y2 = y + height;
 		}
 		
 		public Rectangle(System.Drawing.RectangleF r)
@@ -139,7 +139,6 @@ namespace Epsitec.Common.Drawing
 			this.y2 += y;
 		}
 		
-		
 		public void Offset(Point p)
 		{
 			this.Offset (p.X, p.Y);
@@ -151,6 +150,27 @@ namespace Epsitec.Common.Drawing
 			this.y1 += y;
 			this.x2 += x;
 			this.y2 += y;
+		}
+		
+		public void MergeWith(Rectangle r)
+		{
+			double x1 = System.Math.Min (this.x1, r.x1);
+			double y1 = System.Math.Min (this.y1, r.y1);
+			double x2 = System.Math.Max (this.x2, r.x2);
+			double y2 = System.Math.Max (this.y2, r.y2);
+			
+			this.x1 = x1;
+			this.y1 = y1;
+			this.x2 = x2;
+			this.y2 = y2;
+		}
+		
+		public void MergeWith(Point p)
+		{
+			this.x1 = System.Math.Min (this.x1, p.X);
+			this.y1 = System.Math.Min (this.y1, p.Y);
+			this.x2 = System.Math.Max (this.x2, p.X);
+			this.y2 = System.Math.Max (this.y2, p.Y);
 		}
 		
 		

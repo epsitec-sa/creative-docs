@@ -202,7 +202,7 @@ namespace Epsitec.Common.Tests
 
 		private void form_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
-			this.global_pixmap.Paint (e.Graphics);
+			this.global_pixmap.Paint (e.Graphics, e.ClipRectangle);
 		}
 		
 		Common.Drawing.Rasterizer			global_rasterizer;

@@ -15,7 +15,7 @@ namespace Epsitec.Common.Widgets
 			this.graphics = new Epsitec.Common.Drawing.Graphics ();
 			this.root     = new WindowRoot ();
 			
-			this.root.Size = this.ClientSize;
+			this.root.Size = new Drawing.Size (this.ClientSize);
 			this.root.Name = "Root";
 		}
 		
@@ -145,7 +145,7 @@ namespace Epsitec.Common.Widgets
 		protected override void OnSizeChanged(System.EventArgs e)
 		{
 			base.OnSizeChanged (e);
-			this.root.Size = this.ClientSize;
+			this.root.Size = new Drawing.Size (this.ClientSize);
 		}
 
 		
@@ -211,7 +211,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.graphics.AttachHandle (hdc);
 				System.Drawing.RectangleF clip_rect = new System.Drawing.RectangleF (win_clip_rect.X, win_clip_rect.Y, win_clip_rect.Width, win_clip_rect.Height);
-				this.root.PaintHandler (this.graphics, clip_rect);
+				this.root.PaintHandler (this.graphics, new Drawing.Rectangle (clip_rect));
 			}
 			finally
 			{

@@ -47,13 +47,13 @@ namespace Epsitec.Common.Drawing
 			Agg.Library.AggBufferClear (this.agg_buffer);
 		}
 		
-		public void Paint(System.Drawing.Graphics graphics)
+		public void Paint(System.Drawing.Graphics graphics, System.Drawing.Rectangle clip)
 		{
 			System.IntPtr hdc = graphics.GetHdc ();
 			
 			try
 			{
-				this.Paint (hdc);
+				this.Paint (hdc, clip);
 			}
 			finally
 			{
@@ -61,9 +61,9 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-		public void Paint(System.IntPtr hdc)
+		public void Paint(System.IntPtr hdc, System.Drawing.Rectangle clip)
 		{
-			Agg.Library.AggBufferPaint (this.agg_buffer, hdc);
+			Agg.Library.AggBufferPaint (this.agg_buffer, hdc, clip.Left, clip.Top, clip.Right, clip.Bottom);
 		}
 
 

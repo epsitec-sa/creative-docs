@@ -31,55 +31,55 @@ namespace Epsitec.Common.Widgets
 		}
 #endif
 		
-		public float						Top
+		public double						Top
 		{
 			get { return this.y1; }
 			set { this.SetBounds (this.x1, value, this.x2, this.y2); }
 		}
 		
-		public float						Left
+		public double						Left
 		{
 			get { return this.x1; }
 			set { this.SetBounds (value, this.y1, this.x2, this.y2); }
 		}
 		
-		public float						Bottom
+		public double						Bottom
 		{
 			get { return this.y2; }
 			set { this.SetBounds (this.x1, this.y1, this.x2, value); }
 		}
 		
-		public float						Right
+		public double						Right
 		{
 			get { return this.x2; }
 			set { this.SetBounds (this.x1, this.y1, value, this.y2); }
 		}
 		
-		public System.Drawing.RectangleF	Bounds
+		public Drawing.Rectangle			Bounds
 		{
-			get { return new System.Drawing.RectangleF (this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1); }
+			get { return new Drawing.Rectangle (this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1); }
 			set { this.SetBounds (value.X, value.Y, value.X + value.Width, value.Y + value.Height); }
 		}
 		
-		public System.Drawing.PointF		Location
+		public Drawing.Point				Location
 		{
-			get { return new System.Drawing.PointF (this.x1, this.y1); }
+			get { return new Point (this.x1, this.y1); }
 			set { this.SetBounds (value.X, value.Y, value.X + this.x2 - this.x1, value.Y + this.y2 - this.y1); }
 		}
 		
-		public System.Drawing.SizeF			Size
+		public Drawing.Size					Size
 		{
-			get { return new System.Drawing.SizeF (this.x2 - this.x1, this.y2 - this.y1); }
+			get { return new Size (this.x2 - this.x1, this.y2 - this.y1); }
 			set { this.SetBounds (this.x1, this.y1, this.x1 + value.Width, this.y1 + value.Height); }
 		}
 		
-		public float						Width
+		public double						Width
 		{
 			get { return this.x2 - this.x1; }
 			set { this.SetBounds (this.x1, this.y1, this.x1 + value, this.y2); }
 		}
 		
-		public float						Height
+		public double						Height
 		{
 			get { return this.y2 - this.y1; }
 			set { this.SetBounds (this.x1, this.y1, this.x2, this.y1 + value); }
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Widgets
 			this.UpdateClientGeometry ();
 		}
 		
-		public void SetClientZoom(float zoom)
+		public void SetClientZoom(double zoom)
 		{
 			this.client_info.SetZoom (zoom);
 			this.UpdateClientGeometry ();
@@ -353,7 +353,7 @@ namespace Epsitec.Common.Widgets
 		//	FindNextWidget/FindPrevWidget
 		//	Invalidate/Update/Refresh
 		
-		public virtual bool HitTest(System.Drawing.PointF point)
+		public virtual bool HitTest(Point point)
 		{
 			if ((point.X >= this.x1) &&
 				(point.X <  this.x2) &&
@@ -367,27 +367,27 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual System.Drawing.PointF MapParentToClient(System.Drawing.PointF point)
+		public virtual Point MapParentToClient(Point point)
 		{
-			float x = point.X - this.x1;
-			float y = point.Y - this.y1;
+			double x = point.X - this.x1;
+			double y = point.Y - this.y1;
 			
 			double angle = this.client_info.angle * System.Math.PI / 180.0;
-			float  zoom  = this.client_info.zoom;
+			double zoom  = this.client_info.zoom;
 			
 			System.Diagnostics.Debug.Assert (zoom > 0.0f);
 			System.Diagnostics.Debug.Assert ((angle >= 0) && (angle < 360));
 			
 			if (angle != 0)
 			{
-				float sin = (float) System.Math.Sin (angle);
-				float cos = (float) System.Math.Cos (angle);
+				double sin = System.Math.Sin (angle);
+				double cos = System.Math.Cos (angle);
 				
 				x -= (this.x2 - this.x1) / 2;
 				y -= (this.y2 - this.y1) / 2;
 				
-				float xr = ( x * cos + y * sin) / zoom;
-				float yr = (-x * sin + y * cos) / zoom;
+				double xr = (x * cos - y * sin) / zoom;
+				double yr = (x * sin + y * cos) / zoom;
 				
 				x = xr + this.client_info.width / 2;
 				y = yr + this.client_info.height / 2;
@@ -398,30 +398,30 @@ namespace Epsitec.Common.Widgets
 				y /= zoom;
 			}
 			
-			return new System.Drawing.PointF (x, y);
+			return new Point (x, y);
 		}
 		
-		public virtual System.Drawing.PointF MapClientToParent(System.Drawing.PointF point)
+		public virtual Point MapClientToParent(Point point)
 		{
-			float x = point.X;
-			float y = point.Y;
+			double x = point.X;
+			double y = point.Y;
 			
 			double angle = this.client_info.angle * System.Math.PI / 180.0;
-			float  zoom  = this.client_info.zoom;
+			double zoom  = this.client_info.zoom;
 			
 			System.Diagnostics.Debug.Assert (zoom > 0.0f);
 			System.Diagnostics.Debug.Assert ((angle >= 0) && (angle < 360));
 			
 			if (angle != 0)
 			{
-				float sin = (float) System.Math.Sin (angle);
-				float cos = (float) System.Math.Cos (angle);
+				double sin = System.Math.Sin (angle);
+				double cos = System.Math.Cos (angle);
 				
 				x -= this.client_info.width / 2;
 				y -= this.client_info.height / 2;
 				
-				float xr = (x * cos - y * sin) * zoom;
-				float yr = (x * sin + y * cos) * zoom;
+				double xr = (  x * cos + y * sin) * zoom;
+				double yr = (- x * sin + y * cos) * zoom;
 				
 				x = xr + (this.x2 - this.x1) / 2;
 				y = yr + (this.y2 - this.y1) / 2;
@@ -432,10 +432,10 @@ namespace Epsitec.Common.Widgets
 				y *= zoom;
 			}
 			
-			return new System.Drawing.PointF (x + this.x1, y + this.y1);
+			return new Point (x + this.x1, y + this.y1);
 		}
 		
-		public virtual System.Drawing.PointF MapRootToClient(System.Drawing.PointF point)
+		public virtual Point MapRootToClient(Point point)
 		{
 			Widget parent = this.Parent;
 			
@@ -450,7 +450,7 @@ namespace Epsitec.Common.Widgets
 			return this.MapParentToClient (point);
 		}
 		
-		public virtual System.Drawing.PointF MapClientToRoot(System.Drawing.PointF point)
+		public virtual Point MapClientToRoot(Point point)
 		{
 			Widget iter = this;
 			
@@ -467,34 +467,34 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual System.Drawing.RectangleF MapParentToClient(System.Drawing.RectangleF rect)
+		public virtual Drawing.Rectangle MapParentToClient(Drawing.Rectangle rect)
 		{
-			float x1 = rect.Left   - this.x1;
-			float y1 = rect.Top    - this.y1;
-			float x2 = rect.Right  - this.x1;
-			float y2 = rect.Bottom - this.y1;
+			double x1 = rect.Left   - this.x1;
+			double y1 = rect.Top    - this.y1;
+			double x2 = rect.Right  - this.x1;
+			double y2 = rect.Bottom - this.y1;
 			
 			double angle = this.client_info.angle * System.Math.PI / 180.0;
-			float  zoom  = this.client_info.zoom;
+			double zoom  = this.client_info.zoom;
 			
 			System.Diagnostics.Debug.Assert (zoom > 0.0f);
 			System.Diagnostics.Debug.Assert ((angle >= 0) && (angle < 360));
 			
 			if (angle != 0)
 			{
-				float sin = (float) System.Math.Sin (angle);
-				float cos = (float) System.Math.Cos (angle);
+				double sin = System.Math.Sin (angle);
+				double cos = System.Math.Cos (angle);
 				
-				float cx = (this.x2 - this.x1) / 2;
-				float cy = (this.y2 - this.y1) / 2;
+				double cx = (this.x2 - this.x1) / 2;
+				double cy = (this.y2 - this.y1) / 2;
 				
 				x1 -= cx;		x2 -= cx;
 				y1 -= cy;		y2 -= cy;
 				
-				float xr1 = ( x1 * cos + y1 * sin) / zoom;
-				float yr1 = (-x1 * sin + y1 * cos) / zoom;
-				float xr2 = ( x2 * cos + y2 * sin) / zoom;
-				float yr2 = (-x2 * sin + y2 * cos) / zoom;
+				double xr1 = (x1 * cos - y1 * sin) / zoom;
+				double yr1 = (x1 * sin + y1 * cos) / zoom;
+				double xr2 = (x2 * cos - y2 * sin) / zoom;
+				double yr2 = (x2 * sin + y2 * cos) / zoom;
 				
 				cx = this.client_info.width / 2;
 				cy = this.client_info.height / 2;
@@ -577,7 +577,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void MergeTransformToClient(Epsitec.Common.Drawing.Transform t)
 		{
-			float scale = 1 / this.client_info.zoom;
+			double scale = 1 / this.client_info.zoom;
 			
 			t.Translate (- this.x1, - this.y1);
 			t.Translate (- this.Width / 2, - this.Height / 2);
@@ -589,7 +589,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void MergeTransformToParent(Epsitec.Common.Drawing.Transform t)
 		{
-			float scale = this.client_info.zoom;
+			double scale = this.client_info.zoom;
 			
 			t.Translate (- this.client_info.width / 2, - this.client_info.height / 2);
 			t.Scale (scale);
@@ -600,12 +600,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected Widget FindChild(System.Drawing.PointF point)
+		protected Widget FindChild(Point point)
 		{
 			return this.FindChild (point, ChildFindMode.All);
 		}
 		
-		protected virtual Widget FindChild(System.Drawing.PointF point, ChildFindMode mode)
+		protected virtual Widget FindChild(Point point, ChildFindMode mode)
 		{
 			if (this.Children.Count == 0)
 			{
@@ -654,7 +654,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void SetBounds(float x1, float y1, float x2, float y2)
+		protected virtual void SetBounds(double x1, double y1, double x2, double y2)
 		{
 			if ((x1 == this.x1) && (y1 == this.y1) && (x2 == this.x2) && (y2 == this.y2))
 			{
@@ -678,10 +678,10 @@ namespace Epsitec.Common.Widgets
 			
 			try
 			{
-				float zoom = this.client_info.zoom;
+				double zoom = this.client_info.zoom;
 				
-				float dx = (this.x2 - this.x1) / zoom;
-				float dy = (this.y2 - this.y1) / zoom;
+				double dx = (this.x2 - this.x1) / zoom;
+				double dy = (this.y2 - this.y1) / zoom;
 				
 				switch (this.client_info.angle)
 				{
@@ -697,8 +697,8 @@ namespace Epsitec.Common.Widgets
 					
 					default:
 						double angle = this.client_info.angle * System.Math.PI / 180.0;
-						float cos = (float) System.Math.Cos (angle);
-						float sin = (float) System.Math.Sin (angle);
+						double cos = System.Math.Cos (angle);
+						double sin = System.Math.Sin (angle);
 						this.client_info.SetSize (cos*cos*dx + sin*sin*dy, sin*sin*dx + cos*cos*dy);
 						break;
 				}
@@ -721,18 +721,18 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.HasChildren)
 			{
-				float width_diff  = this.client_info.width  - this.layout_info.OriginalWidth;
-				float height_diff = this.client_info.height - this.layout_info.OriginalHeight;
+				double width_diff  = this.client_info.width  - this.layout_info.OriginalWidth;
+				double height_diff = this.client_info.height - this.layout_info.OriginalHeight;
 				
 				foreach (Widget child in this.children)
 				{
 					AnchorStyles anchor_x = (AnchorStyles) child.Anchor & AnchorStyles.LeftAndRight;
 					AnchorStyles anchor_y = (AnchorStyles) child.Anchor & AnchorStyles.TopAndBottom;
 					
-					float x1 = child.x1;
-					float x2 = child.x2;
-					float y1 = child.y1;
-					float y2 = child.y2;
+					double x1 = child.x1;
+					double x2 = child.x2;
+					double y1 = child.y1;
+					double y2 = child.y2;
 					
 					switch (anchor_x)
 					{
@@ -774,7 +774,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual void PaintHandler(Graphics graphics, System.Drawing.RectangleF clip_rect)
+		public virtual void PaintHandler(Graphics graphics, Drawing.Rectangle clip_rect)
 		{
 			if (this.PaintCheckClipping (clip_rect))
 			{
@@ -840,13 +840,13 @@ namespace Epsitec.Common.Widgets
 			//	Implémenter le dessin des enjoliveurs additionnels dans cette méthode.
 		}
 		
-		protected virtual bool PaintCheckClipping(System.Drawing.RectangleF clip_rect)
+		protected virtual bool PaintCheckClipping(Drawing.Rectangle clip_rect)
 		{
 			return clip_rect.IntersectsWith (this.Bounds);
 		}
 		
 		
-		public virtual void MessageHandler(Message message, System.Drawing.PointF pos)
+		public virtual void MessageHandler(Message message, Point pos)
 		{
 			this.PreProcessMessage (message, pos);
 			
@@ -858,7 +858,7 @@ namespace Epsitec.Common.Widgets
 				(message.Handled == false) &&
 				(this.Children.Count > 0))
 			{
-				System.Drawing.PointF client_pos = this.MapParentToClient (pos);
+				Point client_pos = this.MapParentToClient (pos);
 				
 				Widget[] children = this.Children.Widgets;
 				int  children_num = children.Length;
@@ -889,7 +889,7 @@ namespace Epsitec.Common.Widgets
 			this.PostProcessMessage (message, pos);
 		}
 		
-		protected virtual void DispatchMessage(Message message, System.Drawing.PointF pos)
+		protected virtual void DispatchMessage(Message message, Point pos)
 		{
 			System.Diagnostics.Debug.WriteLine (message.ToString () + " / " + pos.ToString ());
 			
@@ -905,17 +905,17 @@ namespace Epsitec.Common.Widgets
 			this.ProcessMessage (message, pos);
 		}
 		
-		protected virtual void PreProcessMessage(Message message, System.Drawing.PointF pos)
+		protected virtual void PreProcessMessage(Message message, Point pos)
 		{
 			//	...appelé avant que l'événement ne soit traité...
 		}
 		
-		protected virtual void ProcessMessage(Message message, System.Drawing.PointF pos)
+		protected virtual void ProcessMessage(Message message, Point pos)
 		{
 			//	...appelé pour traiter l'événement...
 		}
 		
-		protected virtual void PostProcessMessage(Message message, System.Drawing.PointF pos)
+		protected virtual void PostProcessMessage(Message message, Point pos)
 		{
 			//	...appelé après que l'événement ait été traité...
 		}
@@ -1110,7 +1110,7 @@ namespace Epsitec.Common.Widgets
 			{
 			}
 			
-			internal void SetSize(float width, float height)
+			internal void SetSize(double width, double height)
 			{
 				this.width  = width;
 				this.height = height;
@@ -1122,25 +1122,25 @@ namespace Epsitec.Common.Widgets
 				this.angle = (angle < 0) ? (short) (angle + 360) : (short) (angle);
 			}
 			
-			internal void SetZoom(float zoom)
+			internal void SetZoom(double zoom)
 			{
 				System.Diagnostics.Debug.Assert (zoom > 0.0f);
 				this.zoom = zoom;
 			}
 			
-			public float					Width
+			public double					Width
 			{
 				get { return this.width; }
 			}
 			
-			public float					Height
+			public double					Height
 			{
 				get { return this.height; }
 			}
 			
-			public System.Drawing.SizeF		Size
+			public Size						Size
 			{
-				get { return new System.Drawing.SizeF (this.width, this.height); }
+				get { return new Size (this.width, this.height); }
 			}
 			
 			public int						Angle
@@ -1148,15 +1148,15 @@ namespace Epsitec.Common.Widgets
 				get { return this.angle; }
 			}
 			
-			public float					Zoom
+			public double					Zoom
 			{
 				get { return this.zoom; }
 			}
 			
-			internal float					width	= 0.0f;
-			internal float					height	= 0.0f;
+			internal double					width	= 0.0;
+			internal double					height	= 0.0;
 			internal short					angle	= 0;
-			internal float					zoom	= 1.0f;
+			internal double					zoom	= 1.0;
 		}
 		
 		public class WidgetCollection : System.Collections.IList
@@ -1360,23 +1360,23 @@ namespace Epsitec.Common.Widgets
 		
 		protected class LayoutInfo
 		{
-			internal LayoutInfo(float width, float height)
+			internal LayoutInfo(double width, double height)
 			{
 				this.width  = width;
 				this.height = height;
 			}
 			
-			public float					OriginalWidth
+			public double					OriginalWidth
 			{
 				get { return this.width; }
 			}
 			
-			public float					OriginalHeight
+			public double					OriginalHeight
 			{
 				get { return this.height; }
 			}
 			
-			private float					width, height;
+			private double					width, height;
 		}
 		
 		
@@ -1384,7 +1384,7 @@ namespace Epsitec.Common.Widgets
 		protected AnchorStyles				anchor;
 		protected System.Drawing.Color		back_color;
 		protected System.Drawing.Color		fore_color;
-		protected float						x1, y1, x2, y2;
+		protected double					x1, y1, x2, y2;
 		protected ClientInfo				client_info = new ClientInfo ();
 		
 		protected WidgetCollection			children;

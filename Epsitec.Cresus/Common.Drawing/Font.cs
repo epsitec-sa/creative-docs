@@ -170,6 +170,11 @@ namespace Epsitec.Common.Drawing
 			return null;
 		}
 		
+		static public Font GetFont(string face, string style)
+		{
+			return Font.GetFont (face, style, "");
+		}
+		
 		static public Font GetFont(string face, string style, string optical)
 		{
 			Font.SetupFonts ();

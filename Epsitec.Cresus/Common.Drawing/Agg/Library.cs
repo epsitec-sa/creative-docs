@@ -22,7 +22,7 @@ namespace Epsitec.Common.Drawing.Agg
 		
 		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggBufferNew(int dx, int dy, int bpp);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggBufferResize(IntPtr buffer, int dx, int dy, int bpp);
-		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggBufferPaint(IntPtr buffer, IntPtr hdc);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggBufferPaint(IntPtr buffer, IntPtr hdc, int x1, int y1, int x2, int y2);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggBufferClear(IntPtr buffer);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggBufferDelete(IntPtr buffer);
 		

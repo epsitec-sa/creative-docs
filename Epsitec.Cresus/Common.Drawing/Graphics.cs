@@ -7,7 +7,12 @@ namespace Epsitec.Common.Drawing
 	{
 		public Graphics()
 		{
-			this.transform = new Transform ();
+			this.pixmap     = new Pixmap ();
+			this.rasterizer = new Rasterizer ();
+			this.transform  = new Transform ();
+			
+			this.solid_renderer    = new Common.Drawing.Renderer.Solid ();
+			this.gradient_renderer = new Common.Drawing.Renderer.Gradient ();
 		}
 
 		~ Graphics()
@@ -15,56 +20,112 @@ namespace Epsitec.Common.Drawing
 			this.Dispose (false);
 		}
 		
-		public Transform			Transform
+		
+		public void RenderSolid()
 		{
-			get 
-			{
-				return this.transform;
-			}
+			this.rasterizer.Render (this.solid_renderer);
+		}
+		
+		public void RenderGradient()
+		{
+			this.rasterizer.Render (this.gradient_renderer);
+		}
+		
+		
+		public Transform SaveTransform()
+		{
+			return new Transform (this.transform);
+		}
+		
+		public void ScaleTransform(double sx, double sy, double cx, double cy)
+		{
+			this.transform.MultiplyByPostfix (Drawing.Transform.FromScale (sx, sy, cx, cy));
+			this.rasterizer.Transform = this.transform;
+		}
+		
+		public Rasterizer				Rasterizer
+		{
+			get { return this.rasterizer; }
+		}
+		
+		public Transform				Transform
+		{
 			set
 			{
+				this.transform.Reset (value);
+				this.rasterizer.Transform = this.transform;
 			}
 		}
 		
-		public void AttachHandle(System.IntPtr handle)
+		public Pixmap					Pixmap
 		{
-			System.Diagnostics.Debug.Assert (this.handle == System.IntPtr.Zero);
-			this.handle = handle;
+			get { return this.pixmap; }
 		}
 		
-		public void DetachHandle()
+		public Renderer.Solid			Solid
 		{
-			System.Diagnostics.Debug.Assert (this.handle != System.IntPtr.Zero);
-			this.handle = System.IntPtr.Zero;
+			get { return this.solid_renderer; }
 		}
 		
-		#region IDisposable Members
-
+		public Renderer.Gradient		Gradient
+		{
+			get { return this.gradient_renderer; }
+		}
+		
+		
+		public void SetPixmapSize(int width, int height)
+		{
+			this.pixmap.Size = new System.Drawing.Size (width, height);
+			
+			this.solid_renderer.Pixmap    = null;
+			this.gradient_renderer.Pixmap = null;
+			
+			this.solid_renderer.Pixmap    = this.pixmap;
+			this.gradient_renderer.Pixmap = this.pixmap;
+		}
+		
 		public void Dispose()
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (true);
 		}
 
-		#endregion
 		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)
 			{
-				//	TODO: libère objets locaux
-			}
-			
-			//	TODO: libère ressources non managed
-			
-			if (this.handle != System.IntPtr.Zero)
-			{
-				this.DetachHandle ();
+				if (this.pixmap != null)
+				{
+					this.pixmap.Dispose ();
+				}
+				if (this.rasterizer != null)
+				{
+					this.rasterizer.Dispose ();
+				}
+				if (this.solid_renderer != null)
+				{
+					this.solid_renderer.Dispose ();
+				}
+				if (this.gradient_renderer != null)
+				{
+					this.gradient_renderer.Dispose ();
+				}
+				
+				this.pixmap            = null;
+				this.rasterizer        = null;
+				this.solid_renderer    = null;
+				this.gradient_renderer = null;
 			}
 		}
 		
 		
-		System.IntPtr				handle;
+		
+		Pixmap						pixmap;
+		Rasterizer					rasterizer;
 		Transform					transform;
+		
+		Renderer.Solid				solid_renderer;
+		Renderer.Gradient			gradient_renderer;
 	}
 }

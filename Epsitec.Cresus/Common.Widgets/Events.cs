@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class PaintEventArgs : System.EventArgs, System.IDisposable
 	{
-		public PaintEventArgs(Graphics graphics, System.Drawing.RectangleF clip_rect)
+		public PaintEventArgs(Graphics graphics, Drawing.Rectangle clip_rect)
 		{
 			this.graphics  = graphics;
 			this.clip_rect = clip_rect;
@@ -24,7 +24,7 @@ namespace Epsitec.Common.Widgets
 			get { return this.graphics; }
 		}
 		
-		public System.Drawing.RectangleF	ClipRectangle
+		public Drawing.Rectangle			ClipRectangle
 		{
 			get { return this.clip_rect; }
 		}
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		private Graphics					graphics;
-		private System.Drawing.RectangleF	clip_rect;
+		private Drawing.Rectangle			clip_rect;
 		private bool						suppress;
 	}
 	
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class MessageEventArgs : System.EventArgs
 	{
-		public MessageEventArgs(Message message, System.Drawing.PointF point)
+		public MessageEventArgs(Message message, Drawing.Point point)
 		{
 			this.message = message;
 			this.point   = point;
@@ -84,13 +84,13 @@ namespace Epsitec.Common.Widgets
 			get { return this.message; }
 		}
 		
-		public System.Drawing.PointF		Point
+		public Drawing.Point				Point
 		{
 			get { return this.point; }
 		}
 		
 		
 		private Message						message;
-		private System.Drawing.PointF		point;
+		private Drawing.Point				point;
 	}
 }

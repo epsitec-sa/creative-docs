@@ -1,6 +1,6 @@
 namespace Epsitec.Common.Drawing.Renderer
 {
-	public class Solid : System.IDisposable
+	public class Solid : IRenderer, System.IDisposable
 	{
 		public Solid()
 		{
@@ -39,23 +39,9 @@ namespace Epsitec.Common.Drawing.Renderer
 			get { return this.agg_ren; }
 		}
 		
-		
-		public void Attach(Pixmap pixmap)
+		public System.Drawing.Color		Color
 		{
-			this.Detach ();
-			
-			this.agg_ren = Agg.Library.AggRendererSolidNew (pixmap.Handle);
-			this.pixmap  = pixmap;
-		}
-		
-		public void Detach()
-		{
-			if (this.agg_ren != System.IntPtr.Zero)
-			{
-				Agg.Library.AggRendererSolidDelete (this.agg_ren);
-				this.agg_ren = System.IntPtr.Zero;
-				this.pixmap  = null;
-			}
+			set { this.SetColor (value); }
 		}
 		
 		
@@ -109,6 +95,25 @@ namespace Epsitec.Common.Drawing.Renderer
 			}
 			
 			this.Detach ();
+		}
+		
+		
+		protected void Attach(Pixmap pixmap)
+		{
+			this.Detach ();
+			
+			this.agg_ren = Agg.Library.AggRendererSolidNew (pixmap.Handle);
+			this.pixmap  = pixmap;
+		}
+		
+		protected void Detach()
+		{
+			if (this.agg_ren != System.IntPtr.Zero)
+			{
+				Agg.Library.AggRendererSolidDelete (this.agg_ren);
+				this.agg_ren = System.IntPtr.Zero;
+				this.pixmap  = null;
+			}
 		}
 		
 		

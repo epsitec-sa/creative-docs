@@ -135,6 +135,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		
 		protected virtual void CreateOnTheFly()
 		{
 			if (this.agg_ras == System.IntPtr.Zero)
@@ -142,6 +143,7 @@ namespace Epsitec.Common.Drawing
 				this.agg_ras = Agg.Library.AggRasterizerNew ();
 			}
 		}
+		
 		
 		private System.IntPtr					agg_ras;
 		private FillMode						fill_mode = FillMode.NonZero;
