@@ -45,7 +45,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.ActiveState != WidgetState.ActiveNo )
 			{
-				RadioButton.TurnOffRadio(this.Parent, this.Group, this);
+				RadioButton.TurnOff(this.Parent, this.Group, this);
 			}
 		}
 
@@ -59,60 +59,105 @@ namespace Epsitec.Common.Widgets
 
 		
 		// Eteint tous les boutons radio du groupe, sauf keep.
-		public static void TurnOffRadio(Widget parent, string group, RadioButton keep)
+		public static void TurnOff(Widget parent, string group, RadioButton keep)
 		{
-			RadioButton[] list = FindRadioNotOff(parent, group);
-			for ( int i=0 ; i<list.Length ; i++ )
+			System.Collections.ArrayList list = RadioButton.FindRadioChildren(parent, group);
+			
+			foreach (RadioButton radio in list)
 			{
-				if ( list[i] == keep )  continue;
-				list[i].ActiveState = WidgetState.ActiveNo;
+				if ((radio != keep) &&
+					(radio.ActiveState != WidgetState.ActiveNo))
+				{
+					radio.ActiveState = WidgetState.ActiveNo;
+				}
 			}
 		}
 		
-		// Trouve tous les boutons radio du même groupe dont l'état n'est
-		// pas WidgetState.ActiveNo.
-		public static RadioButton[] FindRadioNotOff(Widget parent, string group)
+		public static System.Collections.ArrayList FindRadioChildren(Widget parent, string group)
 		{
-			if ( parent == null )  return new RadioButton[0];
-
-			// Compte le nombre de boutons.
-			Widget[] children = parent.Children.Widgets;
-			int childrenNum = children.Length;
-			int total = 0;
-			for ( int i=0 ; i<childrenNum ; i++ )
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			//	Trouve tous les boutons radio du même groupe :
+			
+			if (parent == null)
 			{
-				Widget widget = children[i];
-				System.Diagnostics.Debug.Assert(widget != null);
-				if ( widget is RadioButton )
+				return list;
+			}
+			
+			foreach (Widget widget in parent.Children)
+			{
+				RadioButton radio = widget as RadioButton;
+				
+				if (radio != null)
 				{
-					RadioButton radio = (RadioButton)widget;
-					if ( radio.Group == group && radio.ActiveState != WidgetState.ActiveNo )
+					if (radio.Group == group)
 					{
-						total ++;
+						list.Add (radio);
 					}
 				}
 			}
-			if ( total == 0 )  return new RadioButton[0];
-
-			// Construit la liste.
-			RadioButton[] list = new RadioButton[total];
-			int j=0;
-			for ( int i=0 ; i<childrenNum ; i++ )
-			{
-				Widget widget = children[i];
-				System.Diagnostics.Debug.Assert(widget != null);
-				if ( widget is RadioButton )
-				{
-					RadioButton radio = (RadioButton)widget;
-					if ( radio.Group == group && radio.ActiveState != WidgetState.ActiveNo )
-					{
-						list[j++] = radio;
-					}
-				}
-			}
+			
 			return list;
 		}
 		
+		
+		internal override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
+		{
+			if ((this.ActiveState == WidgetState.ActiveYes) ||
+				(mode != TabNavigationMode.ActivateOnTab))
+			{
+				return base.AboutToGetFocus (dir, mode, out focus);
+			}
+			
+			//	Ce n'est pas notre bouton radio qui est allumé. Si TAB doit sélectionner
+			//	un bouton radio, on doit plutôt mettre le focus sur celui qui est déjà
+			//	actif :
+			
+			System.Collections.ArrayList list = RadioButton.FindRadioChildren (this.Parent, this.Group);
+			
+			foreach (RadioButton radio in list)
+			{
+				if (radio.ActiveState == WidgetState.ActiveYes)
+				{
+					return radio.AboutToGetFocus (dir, mode, out focus);
+				}
+			}
+			
+			return base.AboutToGetFocus (dir, mode, out focus);
+		}
+		
+		protected override System.Collections.ArrayList FindTabWidgetList(TabNavigationMode mode)
+		{
+			if (mode != TabNavigationMode.ActivateOnTab)
+			{
+				return base.FindTabWidgetList (mode);
+			}
+			
+			System.Collections.ArrayList list = base.FindTabWidgetList (mode);
+			System.Collections.ArrayList copy = new System.Collections.ArrayList ();
+			
+			string group = this.Group;
+			
+			foreach (Widget widget in list)
+			{
+				RadioButton radio = widget as RadioButton;
+				
+				if ((radio != null) &&
+					(radio != this) &&
+					(radio.Group == group))
+				{
+					//	Saute les boutons du même groupe. Ils ne sont pas accessibles par la
+					//	touche TAB.
+				}
+				else
+				{
+					copy.Add (widget);
+				}
+			}
+			
+			return copy;
+		}
+
 
 		protected override void UpdateTextLayout()
 		{
@@ -126,6 +171,87 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		{
+			switch (message.Type)
+			{
+				case MessageType.KeyDown:
+					if (this.ProcessKeyDown (message.KeyCode))
+					{
+						message.Consumer = this;
+						return;
+					}
+					break;
+			}
+			
+			base.ProcessMessage (message, pos);
+		}
+
+		protected virtual  bool ProcessKeyDown(KeyCode key)
+		{
+			int dir = 0;
+			
+			switch (key)
+			{
+				case KeyCode.ArrowUp:	 dir =  1; break;
+				case KeyCode.ArrowDown:  dir = -1; break;
+				case KeyCode.ArrowLeft:  dir =  1; break;
+				case KeyCode.ArrowRight: dir = -1; break;
+				
+				default:
+					return false;
+			}
+			
+			System.Collections.ArrayList list = RadioButton.FindRadioChildren (this.Parent, this.Group);
+			list.Sort (new RadioButtonComparer (dir));
+			
+			RadioButton turn_on = null;
+			
+			foreach (RadioButton button in list)
+			{
+				if (button == this)
+				{
+					break;
+				}
+				
+				turn_on = button;
+			}
+			
+			if (turn_on != null)
+			{
+				turn_on.ActiveState = WidgetState.ActiveYes;
+				turn_on.SetFocused (true);
+				
+				return true;
+			}
+			
+			return false;
+		}
+
+		
+		protected class RadioButtonComparer : System.Collections.IComparer
+		{
+			public RadioButtonComparer(int dir)
+			{
+				this.dir = dir;
+			}
+			
+			
+			public int Compare(object x, object y)
+			{
+				RadioButton bx = x as RadioButton;
+				RadioButton by = y as RadioButton;
+				if (bx == by) return 0;
+				if (bx == null) return -this.dir;
+				if (by == null) return  this.dir;
+				return (bx.Index - by.Index) * this.dir;
+			}
+			
+			
+			protected int					dir;
+		}
+
+
 		// Retourne l'alignement par défaut d'un bouton.
 		public override Drawing.ContentAlignment DefaultAlignment
 		{
