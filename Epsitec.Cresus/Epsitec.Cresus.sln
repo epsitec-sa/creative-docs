@@ -394,12 +394,20 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info
+		External\ipp20\copy.info = External\ipp20\copy.info
+		copyproject-clean.py = copyproject-clean.py
 		copyproject.py = copyproject.py
 		Epsitec Cresus Full Build.mgb = Epsitec Cresus Full Build.mgb
 		Epsitec.Cresus.snk = Epsitec.Cresus.snk
 		External\FirebirdNETProviderSDK.chm = External\FirebirdNETProviderSDK.chm
 		External\FirebirdSql.Data.Firebird.dll = External\FirebirdSql.Data.Firebird.dll
 		import-bin.bat = import-bin.bat
+		External\ippi20.dll = External\ippi20.dll
+		External\ipp20\ippia6.dll = External\ipp20\ippia6.dll
+		External\ipp20\ippii7.dll = External\ipp20\ippii7.dll
+		External\ipp20\ippim6.dll = External\ipp20\ippim6.dll
+		External\ipp20\ippipx.dll = External\ipp20\ippipx.dll
+		External\ipp20\ippiw7.dll = External\ipp20\ippiw7.dll
 		loc-bigdell.txt = loc-bigdell.txt
 		External\nunit-gui.exe = External\nunit-gui.exe
 		External\nunit.framework.dll = External\nunit.framework.dll
