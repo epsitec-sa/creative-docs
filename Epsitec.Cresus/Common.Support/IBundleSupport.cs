@@ -10,7 +10,9 @@ namespace Epsitec.Common.Support
 	public interface IBundleSupport : System.IDisposable
 	{
 		string			PublicClassName		{ get; }
+		string			BundleName			{ get; }
 		
-		void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle);
+		void RestoreFromBundle(ObjectBundler bundler, ResourceBundle bundle);
+		void SerialiseToBundle(ObjectBundler bundler, ResourceBundle bundle);
 	}
 }
