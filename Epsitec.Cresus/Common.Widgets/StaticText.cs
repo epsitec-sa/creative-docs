@@ -11,7 +11,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public StaticText()
 		{
-			this.TextBreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 		}
 		
 		public StaticText(Widget embedder) : this ()

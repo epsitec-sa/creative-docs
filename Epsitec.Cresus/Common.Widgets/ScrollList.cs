@@ -413,7 +413,6 @@ namespace Epsitec.Common.Widgets
 					if ( this.textLayouts[i] == null )
 					{
 						this.textLayouts[i] = new TextLayout();
-						this.textLayouts[i].BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 					}
 					
 					string text = this.items[i+this.firstLine];

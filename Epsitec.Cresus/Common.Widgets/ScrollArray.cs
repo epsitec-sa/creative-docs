@@ -1817,7 +1817,6 @@ invalid:	row    = -1;
 					
 					this.layouts[row, column].LayoutSize = new Drawing.Size (this.Columns[column].Width - this.text_margin * 2, this.row_height);
 					this.layouts[row, column].Alignment  = this.Columns[column].Alignment;
-					this.layouts[row, column].BreakMode  = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 				}
 			}
 			if (max > -1)
