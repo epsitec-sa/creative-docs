@@ -39,12 +39,14 @@ namespace Epsitec.Common.Pictogram
 			}
 		}
 
-		public void Paint(Drawing.Graphics graphics, Drawing.Size size, byte[] data, bool disabled)
+		public void Paint(Drawing.Graphics graphics, Drawing.Size size, byte[] data, bool disabled, Drawing.Color color, object adorner_object)
 		{
 			using ( System.IO.MemoryStream stream = new System.IO.MemoryStream(data) )
 			{
 				IconObjects icon = new IconObjects();
 				IconContext context = new IconContext();
+				
+				Epsitec.Common.Widgets.IAdorner adorner = adorner_object as Epsitec.Common.Widgets.IAdorner;
 				
 				if ( icon.Read(stream) )
 				{
@@ -54,6 +56,9 @@ namespace Epsitec.Common.Pictogram
 					//context.ScaleX = 0.2;
 					//context.ScaleY = 0.2;
 					graphics.ScaleTransform(context.ScaleX, context.ScaleY, 0, 0);
+					
+					//	Daniel: je te laisse modifier DrawGeometry pour incorporer les deux arguments supplémentaires,
+					//	à savoir 'color' et 'adorner'...
 					
 					icon.DrawGeometry(graphics, context);
 				}

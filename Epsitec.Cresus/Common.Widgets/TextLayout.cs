@@ -352,7 +352,9 @@ namespace Epsitec.Common.Widgets
 						image = Drawing.Bitmap.FromImageDisabled(image, uniqueColor);
 					}
 					
-					image.DefineZoom (graphics.GetTransformZoom ());
+					image.DefineZoom(graphics.GetTransformZoom ());
+					image.DefineColor(uniqueColor);
+					image.DefineAdorner(Adorner.Factory.Active);
 					
 					double dx = image.Width;
 					double dy = image.Height;
