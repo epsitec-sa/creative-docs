@@ -334,7 +334,7 @@ namespace Epsitec.Common.Support
 			
 			
 			protected ValidationRule				host;
-			protected System.Collections.ArrayList	list;
+			protected System.Collections.ArrayList	list = new System.Collections.ArrayList ();
 		}
 		#endregion
 		
@@ -489,14 +489,12 @@ namespace Epsitec.Common.Support
 			
 			
 			protected ValidationRule				host;
-			protected System.Collections.ArrayList	list;
+			protected System.Collections.ArrayList	list = new System.Collections.ArrayList ();
 		}
 		#endregion
 		
 		protected virtual void UpdateState(ValidationState new_state)
 		{
-			System.Diagnostics.Debug.Assert (this.old_state != ValidationState.Dirty);
-			System.Diagnostics.Debug.Assert (this.state != ValidationState.Dirty);
 			System.Diagnostics.Debug.Assert (new_state != ValidationState.Dirty);
 			
 			this.state = new_state;
@@ -539,8 +537,8 @@ namespace Epsitec.Common.Support
 		
 		
 		protected string							name;
-		protected ValidationState					state;
-		protected ValidationState					old_state;
+		protected ValidationState					state = ValidationState.Dirty;
+		protected ValidationState					old_state = ValidationState.Unknown;
 		protected ValidationRule.CommandStateList	command_states;
 		protected ValidationRule.ValidatorList		validators;
 		protected CommandDispatcher					dispatcher;

@@ -157,6 +157,15 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public ValidationRule.ValidatorList		Validators
+		{
+			get
+			{
+				return this.validation_rules.Validators;
+			}
+		}
+		
+		
 		public void RegisterController(object controller)
 		{
 			if (controller != null)

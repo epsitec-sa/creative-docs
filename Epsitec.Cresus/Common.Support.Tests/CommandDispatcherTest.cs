@@ -173,6 +173,17 @@ namespace Epsitec.Common.Support
 				CommandDispatcherTest.buffer.Append ("/");
 			}
 
+			public override bool Enabled
+			{
+				get
+				{
+					return false;
+				}
+				set
+				{
+				}
+			}
+
 		}
 		#endregion
 		
@@ -252,6 +263,57 @@ namespace Epsitec.Common.Support
 			}
 		}
 		#endregion
+		
+		[Test] public void CheckValidators()
+		{
+			CommandDispatcher dispatcher = new CommandDispatcher ();
+			
+			ValidationRule v1  = new ValidationRule ("v1");
+			ValidationRule v11 = new ValidationRule ("v11");
+			ValidationRule v2  = new ValidationRule ("v2");
+			
+			v1.Validators.Add (v11);
+			
+			dispatcher.Validators.Add (v1);
+			dispatcher.Validators.Add (v2);
+			
+			Assertion.AssertEquals (ValidationState.Dirty, v1.State);
+			Assertion.AssertEquals (ValidationState.Dirty, v11.State);
+			Assertion.AssertEquals (ValidationState.Dirty, v2.State);
+			
+			dispatcher.ApplyValidationRules ();
+			
+			Assertion.AssertEquals (ValidationState.Ok, v1.State);
+			Assertion.AssertEquals (ValidationState.Ok, v11.State);
+			Assertion.AssertEquals (ValidationState.Ok, v2.State);
+			
+			v1.MakeDirty (false);
+			
+			Assertion.AssertEquals (ValidationState.Dirty, v1.State);
+			Assertion.AssertEquals (ValidationState.Ok, v11.State);
+			Assertion.AssertEquals (ValidationState.Ok, v2.State);
+			
+			v1.MakeDirty (true);
+			
+			Assertion.AssertEquals (ValidationState.Dirty, v1.State);
+			Assertion.AssertEquals (ValidationState.Dirty, v11.State);
+			Assertion.AssertEquals (ValidationState.Ok, v2.State);
+			
+			dispatcher.ApplyValidationRules ();
+			
+			v2.MakeDirty (false);
+			
+			Assertion.AssertEquals (ValidationState.Ok, v1.State);
+			Assertion.AssertEquals (ValidationState.Ok, v11.State);
+			Assertion.AssertEquals (ValidationState.Dirty, v2.State);
+			
+			v11.MakeDirty (false);
+			
+			Assertion.AssertEquals (ValidationState.Dirty, v1.State);
+			Assertion.AssertEquals (ValidationState.Dirty, v11.State);
+			Assertion.AssertEquals (ValidationState.Dirty, v2.State);
+		}
+		
 		
 		static System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 	}

@@ -10,6 +10,7 @@ namespace Epsitec.Common.Widgets
 	public delegate bool WalkWidgetCallback(Widget widget);
 	public delegate void PaintBoundsCallback(Widget widget, ref Drawing.Rectangle bounds);
 	
+	#region AnchorStyles enum
 	[System.Flags] public enum AnchorStyles : byte
 	{
 		None				= 0,
@@ -26,7 +27,9 @@ namespace Epsitec.Common.Widgets
 		TopAndBottom		= Top | Bottom,
 		All					= TopAndBottom | LeftAndRight
 	}
+	#endregion
 	
+	#region WidgetState enum
 	[System.Flags] public enum WidgetState : uint
 	{
 		ActiveNo			= 0,
@@ -43,7 +46,9 @@ namespace Epsitec.Common.Widgets
 		Engaged				= 0x00100000,		//	=> pression en cours
 		Error				= 0x00200000,		//	=> signale une erreur
 	}
+	#endregion
 	
+	#region InternalState enum
 	[System.Flags] public enum InternalState : uint
 	{
 		None				= 0,
@@ -80,7 +85,9 @@ namespace Epsitec.Common.Widgets
 		
 		DebugActive			= 0x80000000		//	widget marqué pour le debug
 	}
+	#endregion
 	
+	#region DockStyle enum
 	public enum DockStyle : byte
 	{
 		None				= 0,
@@ -93,7 +100,9 @@ namespace Epsitec.Common.Widgets
 		
 		Layout				= 6,				//	utilise un Layout Manager externe
 	}
+	#endregion
 	
+	#region LayoutFlags enum
 	[System.Flags] public enum LayoutFlags : byte
 	{
 		None				= 0,
@@ -101,7 +110,7 @@ namespace Epsitec.Common.Widgets
 		StartNewLine		= 0x40,				//	force layout sur une nouvelle ligne
 		IncludeChildren		= 0x80				//	inclut les enfants
 	}
-	
+	#endregion
 	
 	/// <summary>
 	/// La classe Widget implémente la classe de base dont dérivent tous les
@@ -793,6 +802,22 @@ namespace Epsitec.Common.Widgets
 						this.internal_state &= ~InternalState.EditionEnabled;
 					}
 				}
+			}
+		}
+		
+		public bool									IsValid
+		{
+			get
+			{
+				if (this.Validator != null)
+				{
+					return this.Validator.IsValid;
+				}
+				
+				//	Un widget qui n'a pas de validateur est considéré comme étant en tout
+				//	temps valide.
+				
+				return true;
 			}
 		}
 		
@@ -1511,46 +1536,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		
-		public event Support.EventHandler			PreparePaint;
-		public event PaintEventHandler				PaintBackground;
-		public event PaintEventHandler				PaintForeground;
-		public event Support.EventHandler			ChildrenChanged;
-		public event Support.EventHandler			ParentChanged;
-		public event Support.EventHandler			AdornerChanged;
-		public event Support.EventHandler			LayoutChanged;
-		
-		public event Layouts.UpdateEventHandler		LayoutUpdate;
-		
-		public event MessageEventHandler			Pressed;
-		public event MessageEventHandler			Released;
-		public event MessageEventHandler			Clicked;
-		public event MessageEventHandler			DoubleClicked;
-		public event MessageEventHandler			Entered;
-		public event MessageEventHandler			Exited;
-		public event Support.EventHandler			ShortcutPressed;
-		public event Support.EventHandler			ShortcutChanged;
-		public event Support.EventHandler			HypertextHot;
-		public event MessageEventHandler			HypertextClicked;
-		
-		public event MessageEventHandler			PreProcessing;
-		public event MessageEventHandler			PostProcessing;
-		
-		public event Support.EventHandler			Focused;
-		public event Support.EventHandler			Defocused;
-		public event Support.EventHandler			Selected;
-		public event Support.EventHandler			Deselected;
-		public event Support.EventHandler			Engaged;
-		public event Support.EventHandler			StillEngaged;
-		public event Support.EventHandler			Disengaged;
-		public event Support.EventHandler			ActiveStateChanged;
-		public event Support.EventHandler			MinSizeChanged;
-		public event Support.EventHandler			MaxSizeChanged;
-		public event Support.EventHandler			Disposing;
-		public event Support.EventHandler			TextChanged;
-		public event Support.EventHandler			NameChanged;
-		
-		public event PaintBoundsCallback			PaintBoundsCallback;
+		public Support.IValidator					Validator
+		{
+			get
+			{
+				return this.validator;
+			}
+			set
+			{
+				if (this.validator != value)
+				{
+					this.validator = value;
+					this.OnValidatorChanged ();
+				}
+			}
+		}
 		
 		
 		public void SuspendLayout()
@@ -1651,6 +1651,18 @@ namespace Epsitec.Common.Widgets
 					case WidgetState.ActiveNo:
 						this.ActiveState = WidgetState.ActiveYes;
 						break;
+				}
+			}
+		}
+		
+		
+		public virtual void Validate()
+		{
+			if (this.Validator != null)
+			{
+				if (this.Validator.State == Support.ValidationState.Dirty)
+				{
+					this.Validator.Validate ();
 				}
 			}
 		}
@@ -4881,8 +4893,59 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnValidatorChanged()
+		{
+			if (this.ValidatorChanged != null)
+			{
+				this.ValidatorChanged (this);
+			}
+		}
 		
-		#region Enums...
+		
+		#region Events
+		public event Support.EventHandler			PreparePaint;
+		public event PaintEventHandler				PaintBackground;
+		public event PaintEventHandler				PaintForeground;
+		public event Support.EventHandler			ChildrenChanged;
+		public event Support.EventHandler			ParentChanged;
+		public event Support.EventHandler			AdornerChanged;
+		public event Support.EventHandler			LayoutChanged;
+		
+		public event Layouts.UpdateEventHandler		LayoutUpdate;
+		
+		public event MessageEventHandler			Pressed;
+		public event MessageEventHandler			Released;
+		public event MessageEventHandler			Clicked;
+		public event MessageEventHandler			DoubleClicked;
+		public event MessageEventHandler			Entered;
+		public event MessageEventHandler			Exited;
+		public event Support.EventHandler			ShortcutPressed;
+		public event Support.EventHandler			ShortcutChanged;
+		public event Support.EventHandler			HypertextHot;
+		public event MessageEventHandler			HypertextClicked;
+		public event Support.EventHandler			ValidatorChanged;
+		
+		public event MessageEventHandler			PreProcessing;
+		public event MessageEventHandler			PostProcessing;
+		
+		public event Support.EventHandler			Focused;
+		public event Support.EventHandler			Defocused;
+		public event Support.EventHandler			Selected;
+		public event Support.EventHandler			Deselected;
+		public event Support.EventHandler			Engaged;
+		public event Support.EventHandler			StillEngaged;
+		public event Support.EventHandler			Disengaged;
+		public event Support.EventHandler			ActiveStateChanged;
+		public event Support.EventHandler			MinSizeChanged;
+		public event Support.EventHandler			MaxSizeChanged;
+		public event Support.EventHandler			Disposing;
+		public event Support.EventHandler			TextChanged;
+		public event Support.EventHandler			NameChanged;
+		
+		public event PaintBoundsCallback			PaintBoundsCallback;
+		#endregion
+		
+		#region Various enums
 		public enum Setting : byte
 		{
 			None				= 0,
@@ -4932,6 +4995,7 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		#region ClientInfo class
 		public class ClientInfo
 		{
 			internal ClientInfo()
@@ -5007,7 +5071,9 @@ namespace Epsitec.Common.Widgets
 			internal double					ox		= 0.0;
 			internal double					oy		= 0.0;
 		}
+		#endregion
 		
+		#region WidgetCollection class
 		public class WidgetCollection : System.Collections.IList
 		{
 			public WidgetCollection(Widget widget)
@@ -5289,8 +5355,9 @@ namespace Epsitec.Common.Widgets
 			Widget[]						array;
 			Widget							widget;
 		}
+		#endregion
 		
-		
+		#region HypertextInfo class
 		protected sealed class HypertextInfo : System.ICloneable, System.IComparable
 		{
 			internal HypertextInfo(TextLayout layout, Drawing.Rectangle bounds, int index)
@@ -5353,7 +5420,7 @@ namespace Epsitec.Common.Widgets
 			private Drawing.Rectangle		bounds;
 			private int						index;
 		}
-		
+		#endregion
 		
 		private AnchorStyles					anchor;
 		
@@ -5394,6 +5461,7 @@ namespace Epsitec.Common.Widgets
 		private MouseCursor						mouse_cursor;
 		private System.Collections.Hashtable	property_hash;
 		private Support.CommandDispatcher		dispatcher;
+		private Support.IValidator				validator;
 		
 		static System.Collections.ArrayList		entered_widgets = new System.Collections.ArrayList ();
 		static System.Collections.ArrayList		alive_widgets   = new System.Collections.ArrayList ();

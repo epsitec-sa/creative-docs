@@ -19,7 +19,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool							Enabled
+		public override bool				Enabled
 		{
 			get
 			{
