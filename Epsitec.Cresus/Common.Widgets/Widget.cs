@@ -1847,9 +1847,9 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.IsPropertyDefined (Widget.prop_binding_info))
+				if (this.IsPropertyDefined (Widget.prop_binding))
 				{
-					return this.GetProperty (Widget.prop_binding_info) as string;
+					return this.GetProperty (Widget.prop_binding) as string;
 				}
 				
 				return null;
@@ -1858,7 +1858,15 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.BindingInfo != value)
 				{
-					this.SetProperty (Widget.prop_binding_info, value);
+					if (value == null)
+					{
+						this.ClearProperty (Widget.prop_binding);
+					}
+					else
+					{
+						this.SetProperty (Widget.prop_binding, value);
+					}
+					
 					this.OnBindingInfoChanged ();
 				}
 			}
@@ -6036,6 +6044,6 @@ namespace Epsitec.Common.Widgets
 		static System.Collections.ArrayList		entered_widgets = new System.Collections.ArrayList ();
 		static System.Collections.ArrayList		alive_widgets   = new System.Collections.ArrayList ();
 		
-		private const string					prop_binding_info = "$BindingInfo$";
+		private const string					prop_binding	= "$widget$binding$";
 	}
 }

@@ -53,7 +53,7 @@ namespace Epsitec.Common.Widgets
 					//	Trouve le contrôleur du groupe, lequel est en principe accessible depuis
 					//	le parent. S'il n'existe pas pour ce groupe, on le crée :
 					
-					string prop_name  = "$RadioGroupController$" + this.Group;
+					string prop_name  = "$radio$group controller$" + this.Group;
 					object prop_value = this.Parent.GetProperty (prop_name);
 					
 					if (prop_value == null)

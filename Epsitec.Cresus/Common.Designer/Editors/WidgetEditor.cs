@@ -130,7 +130,7 @@ namespace Epsitec.Common.Designer.Editors
 		
 		public static WidgetEditor FromWindow(Window window)
 		{
-			return window == null ? null : window.GetProperty ("$WidgetEditor$") as Editors.WidgetEditor;
+			return window == null ? null : window.GetProperty (WidgetEditor.prop_widget_editor) as Editors.WidgetEditor;
 		}
 		
 		
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Designer.Editors
 		{
 			if (window != null)
 			{
-				window.SetProperty ("$WidgetEditor$", this);
+				window.SetProperty (WidgetEditor.prop_widget_editor, this);
 			}
 		}
 		
@@ -167,7 +167,7 @@ namespace Epsitec.Common.Designer.Editors
 		{
 			if (window != null)
 			{
-				window.SetProperty ("$WidgetEditor$", null);
+				window.ClearProperty (WidgetEditor.prop_widget_editor);
 			}
 		}
 		
@@ -359,5 +359,7 @@ namespace Epsitec.Common.Designer.Editors
 		protected HiliteWidgetAdorner			hilite_adorner;
 		protected Widgets.GripsOverlay			grips_overlay;
 		protected Widgets.TabOrderOverlay		tab_o_overlay;
+		
+		private const string					prop_widget_editor = "$widget editor$editor$";
 	}
 }

@@ -225,7 +225,7 @@ namespace Epsitec.Common.Support
 				}
 				else
 				{
-					throw new System.Exception (string.Format ("Class {0} and class {1} share the name {2}", cur_type.Name, new_type.Name, name));
+					throw new System.InvalidOperationException (string.Format ("Class {0} and class {1} share the name {2}", cur_type.Name, new_type.Name, name));
 				}
 			}
 			
@@ -783,8 +783,8 @@ namespace Epsitec.Common.Support
 					
 					Data.IPropertyProvider prop = obj as Data.IPropertyProvider;
 					
-					//	Si la propriété est définie au moyen d'un champ <ref...>, on prend note du code XML
-					//	source :
+					//	Si la propriété est définie au moyen d'un champ <ref target="..." />, on prend note du
+					//	code XML source :
 					
 					if ((prop != null) &&
 						(field.IsDataRef))
@@ -797,10 +797,80 @@ namespace Epsitec.Common.Support
 			return ok;
 		}
 		
+		
 		public static string GetPropNameForXmlRef(string name)
 		{
-			return "$bundle$ref$" + name.ToLower (System.Globalization.CultureInfo.InvariantCulture);
+			return "$bundler$ref$" + name.ToLower (System.Globalization.CultureInfo.InvariantCulture);
 		}
+		
+		
+		public static bool FindXmlRef(object obj, string name, out string target)
+		{
+			Data.IPropertyProvider pp = obj as Data.IPropertyProvider;
+			
+			if ((pp != null) &&
+				(name != null) &&
+				(name.Length > 0))
+			{
+				string key = ObjectBundler.GetPropNameForXmlRef (name);
+				
+				if (pp.IsPropertyDefined (key))
+				{
+					string value = pp.GetProperty (key) as string;
+					
+					if ((value != null) &&
+						(value.StartsWith ("<ref ")))
+					{
+						int pos = value.IndexOf ("target=");
+						
+						if (pos > 0)
+						{
+							pos += 8;
+							
+							char quote  = value[pos-1];
+							int  length = value.IndexOf (quote, pos) - pos;
+							
+							if (length > 0)
+							{
+								target = value.Substring (pos, length);
+								return true;
+							}
+						}
+					}
+				}
+			}
+			
+			target = null;
+			
+			return false;
+		}
+		
+		public static void DefineXmlRef(object obj, string name, string target)
+		{
+			Data.IPropertyProvider pp = obj as Data.IPropertyProvider;
+			
+			if ((pp != null) &&
+				(name != null) &&
+				(name.Length > 0))
+			{
+				string key = ObjectBundler.GetPropNameForXmlRef (name);
+				
+				if ((target == null) ||
+					(target.Length == 0))
+				{
+					pp.ClearProperty (key);
+				}
+				else
+				{
+					pp.SetProperty (key, string.Concat (@"<ref target=""", System.Utilities.TextToXml (target), @""" />"));
+				}
+			}
+			else
+			{
+				throw new System.ArgumentException (string.Format ("Cannot define XML <ref ... /> tag for property '{0}' and target '{1}'.", name, target));
+			}
+		}
+		
 		
 		
 		public bool CopyProperty(object source, object copy, PropertyInfo prop_info)

@@ -161,7 +161,7 @@ namespace Epsitec.Common.Designer.Widgets
 		{
 			Selection sel = new Selection (this, widget);
 			
-			widget.SetProperty ("Selected by " + this.Name, sel);
+			widget.SetProperty (string.Concat (GripsOverlay.prop_selected_by, this.Name), sel);
 			
 			this.Parent = null;
 			
@@ -189,8 +189,8 @@ namespace Epsitec.Common.Designer.Widgets
 				
 				if (sel.Widget == widget)
 				{
-					System.Diagnostics.Debug.Assert (widget.GetProperty ("Selected by " + this.Name) == sel);
-					widget.ClearProperty ("Selected by " + this.Name);
+					System.Diagnostics.Debug.Assert (widget.GetProperty (string.Concat (GripsOverlay.prop_selected_by, this.Name)) == sel);
+					widget.ClearProperty (string.Concat (GripsOverlay.prop_selected_by, this.Name));
 					this.selections.RemoveAt (i);
 					sel.Dispose ();
 					break;
@@ -226,7 +226,7 @@ namespace Epsitec.Common.Designer.Widgets
 		
 		protected virtual bool WidgetAlignFilter(Widget widget)
 		{
-			return widget.IsPropertyDefined ("Selected by " + this.Name);
+			return widget.IsPropertyDefined (string.Concat (GripsOverlay.prop_selected_by, this.Name));
 		}
 		
 		protected override void UpdateClientGeometry()
@@ -682,5 +682,7 @@ namespace Epsitec.Common.Designer.Widgets
 		protected System.Collections.ArrayList	selections;
 		
 		static long								overlay_id;
+		
+		private const string					prop_selected_by = "$grips overlay$selected by$";
 	}
 }

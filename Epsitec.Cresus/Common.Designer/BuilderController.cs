@@ -490,6 +490,8 @@ namespace Epsitec.Common.Designer
 			Support.ObjectBundler  bundler = new Support.ObjectBundler ();
 			Support.ResourceBundle bundle  = Support.Resources.GetBundle ("file:test");
 			
+			bundler.EnableMapping ();
+			
 			Widget root   = bundler.CreateFromBundle (bundle) as Widget;
 			Window window = root.Window;
 			

@@ -11,6 +11,7 @@ namespace Epsitec.Common.Support
 			Resources.SetupProviders ("test");
 		}
 		
+		
 		[Test] public void CheckRegisterAssembly()
 		{
 			ObjectBundler.Initialise ();
@@ -223,6 +224,48 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		[Test] public void CheckFindXmlRef()
+		{
+			Widgets.Widget widget = new Widgets.Widget ();
+			
+			widget.SetProperty (ObjectBundler.GetPropNameForXmlRef ("PropA"), @"<ref target=""strings#label.OK"" />");
+			widget.SetProperty (ObjectBundler.GetPropNameForXmlRef ("PropB"), @"<ref target='strings#label.OK' />");
+			widget.SetProperty (ObjectBundler.GetPropNameForXmlRef ("PropC"), @"<ref target="""" />");
+			widget.SetProperty (ObjectBundler.GetPropNameForXmlRef ("PropD"), @"<ref />");
+			widget.SetProperty (ObjectBundler.GetPropNameForXmlRef ("PropE"), @"foo");
+			
+			string s1, s2, s3, s4, s5, s6;
+			
+			Assert.IsTrue (ObjectBundler.FindXmlRef (widget, "PropA", out s1));
+			Assert.IsTrue (ObjectBundler.FindXmlRef (widget, "PropB", out s2));
+			
+			Assert.IsFalse (ObjectBundler.FindXmlRef (widget, "PropC", out s3));
+			Assert.IsFalse (ObjectBundler.FindXmlRef (widget, "PropD", out s4));
+			Assert.IsFalse (ObjectBundler.FindXmlRef (widget, "PropE", out s5));
+			Assert.IsFalse (ObjectBundler.FindXmlRef (widget, "PropX", out s6));
+			
+			Assert.AreEqual ("strings#label.OK", s1);
+			Assert.AreEqual ("strings#label.OK", s2);
+		}
+		
+		[Test] public void CheckDefineXmlRef()
+		{
+			Widgets.Widget widget = new Widgets.Widget ();
+			
+			widget.SetProperty (ObjectBundler.GetPropNameForXmlRef ("PropA"), @"A");
+			widget.SetProperty (ObjectBundler.GetPropNameForXmlRef ("PropB"), @"B");
+			
+			ObjectBundler.DefineXmlRef (widget, "PropA", null);
+			ObjectBundler.DefineXmlRef (widget, "PropB", "a#b");
+			ObjectBundler.DefineXmlRef (widget, "PropC", "a#<b>");
+			
+			Assert.IsFalse (widget.IsPropertyDefined (ObjectBundler.GetPropNameForXmlRef ("PropA")));
+			Assert.IsTrue (widget.IsPropertyDefined (ObjectBundler.GetPropNameForXmlRef ("PropB")));
+			Assert.IsTrue (widget.IsPropertyDefined (ObjectBundler.GetPropNameForXmlRef ("PropC")));
+			
+			Assert.AreEqual (@"<ref target=""a#b"" />", widget.GetProperty (ObjectBundler.GetPropNameForXmlRef ("PropB")));
+			Assert.AreEqual (@"<ref target=""a#&lt;b&gt;"" />", widget.GetProperty (ObjectBundler.GetPropNameForXmlRef ("PropC")));
+		}
 		
 		private static bool		register_window_cancel = true;
 		private Widgets.Window	test_window;

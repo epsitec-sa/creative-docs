@@ -233,6 +233,16 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
+		public static string ToHexa(Color color)
+		{
+			// Conversion d'une couleur en chaîne "FF3300".
+			
+			int r = (int)(color.R*255.0+0.5);
+			int g = (int)(color.G*255.0+0.5);
+			int b = (int)(color.B*255.0+0.5);
+			return r.ToString("X2") + g.ToString("X2") + b.ToString("X2");
+		}
+
 		
 		public override bool Equals(object obj)
 		{
