@@ -103,19 +103,21 @@ namespace Epsitec.Common.Designer.Widgets
 		}
 		
 		
-		public DragWindow CreateDragWindow(Widget widget)
+		public static DragWindow CreateDragWindow(Widget widget, bool use_copy_of_widget, Drawing.Margins padding)
 		{
-			Support.ObjectBundler bundler = new Support.ObjectBundler ();
+			if (use_copy_of_widget)
+			{
+				Support.ObjectBundler bundler = new Support.ObjectBundler ();
+				widget = bundler.CopyObject (widget) as Widget;
+			}
 			
-			Widget     copy   = bundler.CopyObject (widget) as Widget;
 			DragWindow window = new DragWindow ();
-			
-			window.DefineWidget (copy, this.DockPadding);
+			window.DefineWidget (widget, padding);
 			
 			return window;
 		}
 		
-		public Window FindTargetWindow(Drawing.Point pos)
+		public static Window FindTargetWindow(Drawing.Point pos)
 		{
 			Window[] windows = Epsitec.Common.Widgets.Platform.WindowList.GetVisibleWindows ();
 			
@@ -135,7 +137,7 @@ namespace Epsitec.Common.Designer.Widgets
 			return null;
 		}
 		
-		public Widget FindTargetWidget(Window window, Drawing.Point pos)
+		public static Widget FindTargetWidget(Window window, Drawing.Point pos)
 		{
 			if (window == null)
 			{
@@ -151,7 +153,7 @@ namespace Epsitec.Common.Designer.Widgets
 			{
 				widget = temp;
 				pos    = widget.MapParentToClient (pos);
-				temp   = widget.FindChild (pos, Widget.ChildFindMode.SkipDisabled | Widget.ChildFindMode.SkipHidden);
+				temp   = widget.FindChild (pos, Widget.ChildFindMode.SkipDisabled | Widget.ChildFindMode.SkipHidden | Widget.ChildFindMode.SkipNonContainer);
 				
 				if (widget.PossibleContainer && widget.IsEditionEnabled)
 				{
@@ -192,6 +194,23 @@ namespace Epsitec.Common.Designer.Widgets
 			}
 		}
 		
+		protected virtual  void StartWidgetDragging(bool use_copy_of_widget)
+		{
+			Drawing.Point pos = this.MapClientToScreen (this.widget.Location);
+			
+			pos.X -= this.DockPadding.Left;
+			pos.Y -= this.DockPadding.Bottom;
+			
+			this.drag_window = DragSource.CreateDragWindow (this.widget, true, this.DockPadding);
+			this.drag_window.WindowLocation = pos;
+			this.drag_window.Show ();
+			
+			if (this.DragBegin != null)
+			{
+				this.DragBegin (this);
+			}
+		}
+		
 		
 		#region Interface IDragBehaviorHost
 		public Drawing.Point				DragLocation
@@ -208,28 +227,17 @@ namespace Epsitec.Common.Designer.Widgets
 			//	L'utilisateur aimerait déplacer le widget pour faire du drag & drop. Il faut créer
 			//	la fenêtre miniature qui contient le widget en déplacement :
 			
-			Drawing.Point pos = this.MapClientToScreen (this.widget.Location);
-			
-			pos.X -= this.DockPadding.Left;
-			pos.Y -= this.DockPadding.Bottom;
-			
-			this.drag_window = this.CreateDragWindow (this.widget);
-			this.drag_window.WindowLocation = pos;
-			this.drag_window.Show ();
-			
-			if (this.DragBegin != null)
-			{
-				this.DragBegin (this);
-			}
+			this.StartWidgetDragging(true);
 		}
+		
 		
 		void IDragBehaviorHost.OnDragging(DragEventArgs e)
 		{
 			this.drag_cursor = this.Window.MapWindowToScreen (Message.State.LastPosition) - new Drawing.Point (1, 1);
 			this.drag_window.WindowLocation += e.Offset;
 			
-			Window target = this.FindTargetWindow (this.drag_cursor);
-			Widget widget = this.FindTargetWidget (target, this.drag_cursor);
+			Window target = DragSource.FindTargetWindow (this.drag_cursor);
+			Widget widget = DragSource.FindTargetWidget (target, this.drag_cursor);
 			
 			//	Définit la cible où le "drop" aurait lieu si l'utilisateur relâchait le bouton
 			//	de la souris maintenant.
@@ -246,7 +254,7 @@ namespace Epsitec.Common.Designer.Widgets
 				Behaviors.ConstraintBehavior cx = new Behaviors.ConstraintBehavior (5);
 				Behaviors.ConstraintBehavior cy = new Behaviors.ConstraintBehavior (5);
 				
-				Behaviors.SmartGuideBehavior guide  = new Behaviors.SmartGuideBehavior (this.Widget, Drawing.GripId.Body, this.DropTarget);
+				Behaviors.SmartGuideBehavior guide  = new Behaviors.SmartGuideBehavior (widget, Drawing.GripId.Body, this.DropTarget);
 				Drawing.Rectangle            bounds = this.DropTargetBounds;
 				
 				guide.Constrain (bounds, this.DropTargetBaseLineOffset, cx, cy);
