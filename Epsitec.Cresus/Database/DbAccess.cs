@@ -7,19 +7,21 @@ namespace Epsitec.Cresus.Database
 	{
 		DbAccess (string provider, string database, string server, string login_name, string login_pwd, bool create)
 		{
-			this.provider   = provider;
-			this.database   = database;
-			this.server     = server;
-			this.login_name = login_name;
-			this.login_pwd  = login_pwd;
-			this.create     = create;
+			this.Provider		= provider;
+			this.Database		= database;
+			this.Server			= server;
+			this.LoginName		= login_name;
+			this.LoginPassword	= login_pwd;
+			this.Create			= create;
 		}
 		
-		public string		provider;
-		public string		database;
-		public string		server;
-		public string		login_name;
-		public string		login_pwd;
-		public bool			create;
+		public string						Provider;
+		public string						Database;
+		public string						Server;
+		public string						LoginName;
+		public string						LoginPassword;
+		public bool							Create;
+		
+		public static readonly DbAccess		Empty;
 	}
 }
