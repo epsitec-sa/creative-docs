@@ -552,6 +552,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else if ( style == TextFieldStyle.Simple )
 			{
+				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
 					graphics.RenderSolid(this.colorControlLightLight);
@@ -561,16 +562,14 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.RenderSolid(this.colorControl);
 				}
 
-				rect.Deflate(0.5);
-				graphics.AddRectangle(rect);
-				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
-				{
-					graphics.RenderSolid(this.colorBlack);
-				}
-				else
-				{
-					graphics.RenderSolid(this.colorControlDark);
-				}
+				graphics.LineWidth = 1;
+				graphics.LineCap = Drawing.CapStyle.Butt;
+
+				Drawing.Rectangle rInside = rect;
+				rInside.Deflate(0.5);
+
+				graphics.AddRectangle(rInside);
+				graphics.RenderSolid(this.colorCaption);
 			}
 			else
 			{

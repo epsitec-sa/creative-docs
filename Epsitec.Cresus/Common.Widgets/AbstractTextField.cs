@@ -577,8 +577,11 @@ namespace Epsitec.Common.Widgets
 				case MessageType.MouseMove:
 					if ( this.mouseDown )
 					{
-						this.EnableScroll(this.lastMousePos);
-						this.navigator.ProcessMessage(message, pos);
+						if ( !message.IsRightButton )
+						{
+							this.EnableScroll(this.lastMousePos);
+							this.navigator.ProcessMessage(message, pos);
+						}
 						message.Consumer = this;
 					}
 					else
@@ -593,10 +596,17 @@ namespace Epsitec.Common.Widgets
 				case MessageType.MouseUp:
 					if ( this.mouseDown )
 					{
-						this.SetEngaged(false);
-						this.navigator.ProcessMessage(message, pos);
+						if ( !message.IsRightButton )
+						{
+							this.SetEngaged(false);
+							this.navigator.ProcessMessage(message, pos);
+						}
 						this.mouseDown = false;
 						message.Consumer = this;
+						if ( message.IsRightButton )
+						{
+							this.ContextMenu();
+						}
 					}
 					break;
 				
@@ -630,7 +640,10 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual bool ProcessMouseDown(Message message, Drawing.Point pos)
 		{
-			this.navigator.ProcessMessage(message, pos);
+			if ( !message.IsRightButton )
+			{
+				this.navigator.ProcessMessage(message, pos);
+			}
 			
 			if ( this.AutoSelectOnFocus && !this.IsFocusedFlagSet )
 			{
@@ -686,6 +699,99 @@ namespace Epsitec.Common.Widgets
 			if ( this.scrollBottom )  this.ScrollVertical(-amplitude);
 			if ( this.scrollTop    )  this.ScrollVertical(amplitude);
 		}
+
+
+		#region ContextMenu
+		protected void ContextMenu()
+		{
+			this.contextMenu = new VMenu();
+			this.contextMenu.Host = this;
+			this.contextMenu.Accepted += new MenuEventHandler(this.HandleContextMenuAccepted);
+			this.contextMenu.Rejected += new Epsitec.Common.Support.EventHandler(this.HandleContextMenuRejected);
+
+			MenuItem mi;
+			bool sel = (this.TextNavigator.CursorFrom != this.TextNavigator.CursorTo);
+
+			mi = new MenuItem();
+			mi.Name = "Cut";
+			mi.Text = "Couper";
+			mi.SetEnabled(sel);
+			this.contextMenu.Items.Add(mi);
+
+			mi = new MenuItem();
+			mi.Name = "Copy";
+			mi.Text = "Copier";
+			mi.SetEnabled(sel);
+			this.contextMenu.Items.Add(mi);
+
+			mi = new MenuItem();
+			mi.Name = "Paste";
+			mi.Text = "Coller";
+			this.contextMenu.Items.Add(mi);
+
+			mi = new MenuItem();
+			mi.Name = "Erase";
+			mi.Text = "Supprimer";
+			mi.SetEnabled(sel);
+			this.contextMenu.Items.Add(mi);
+
+			this.contextMenu.Items.Add(new MenuSeparator());
+
+			mi = new MenuItem();
+			mi.Name = "SelectAll";
+			mi.Text = "Sélectionner tout";
+			this.contextMenu.Items.Add(mi);
+
+			this.contextMenu.AdjustSize();
+			Drawing.Point mouse = this.lastMousePos;
+			mouse = this.MapClientToScreen(mouse);
+
+			ScreenInfo si = ScreenInfo.Find(mouse);
+			Drawing.Rectangle wa = si.WorkingArea;
+			if ( mouse.Y-this.contextMenu.Height < wa.Bottom )
+			{
+				mouse.Y = wa.Bottom+this.contextMenu.Height;
+			}
+			
+			this.contextMenu.ShowAsContextMenu(this.Window, mouse);
+		}
+
+		private void HandleContextMenuAccepted(object sender, MenuEventArgs e)
+		{
+			if ( e.MenuItem.Name == "Cut" )
+			{
+				this.copyPasteBehavior.ProcessCopy();
+				this.copyPasteBehavior.ProcessErase();
+			}
+
+			if ( e.MenuItem.Name == "Copy" )
+			{
+				this.copyPasteBehavior.ProcessCopy();
+			}
+
+			if ( e.MenuItem.Name == "Paste" )
+			{
+				this.copyPasteBehavior.ProcessPaste();
+			}
+
+			if ( e.MenuItem.Name == "Erase" )
+			{
+				this.copyPasteBehavior.ProcessErase();
+			}
+
+			if ( e.MenuItem.Name == "SelectAll" )
+			{
+				this.copyPasteBehavior.ProcessSelectAll();
+			}
+
+			this.contextMenu = null;
+		}
+
+		private void HandleContextMenuRejected(object sender)
+		{
+			this.contextMenu = null;
+		}
+		#endregion
 
 		
 		private void HandleNavigatorTextDeleted(object sender)
@@ -1009,7 +1115,7 @@ namespace Epsitec.Common.Widgets
 			rClip = this.MapClientToRoot(rClip);
 			graphics.SetClippingRectangle(rClip);
 			
-			if ( this.IsFocused )
+			if ( this.IsFocused || this.contextMenu != null )
 			{
 				bool visibleCursor = false;
 				
@@ -1053,7 +1159,9 @@ namespace Epsitec.Common.Widgets
 							areas[i].Rect.Offset(0, -1);
 							graphics.Align(ref areas[i].Rect);
 						}
-						adorner.PaintTextSelectionBackground(graphics, areas, state);
+						WidgetState st = state;
+						if ( this.contextMenu != null )  st |= WidgetState.Focused;
+						adorner.PaintTextSelectionBackground(graphics, areas, st);
 					
 						Drawing.Rectangle[] rects = new Drawing.Rectangle[areas.Length];
 						for ( int i=0 ; i<areas.Length ; i++ )
@@ -1177,5 +1285,6 @@ namespace Epsitec.Common.Widgets
 		private static bool						showCursor = true;
 		
 		protected static AbstractTextField		blinking;
+		protected VMenu							contextMenu;
 	}
 }

@@ -548,9 +548,8 @@ namespace Epsitec.Common.Widgets
 			if ( this.scrollListStyle == ScrollListStyle.Menu )
 			{
 				Drawing.Rectangle menu = rect;
-				menu.Inflate(adorner.GeometryMenuShadow);
 				menu.Deflate(0, 0, ScrollList.TextOffsetY-this.margins.Top, ScrollList.TextOffsetY-this.margins.Bottom);
-				adorner.PaintMenuBackground(graphics, menu, state, Direction.Down, Drawing.Rectangle.Empty, 0);
+				adorner.PaintTextFieldBackground(graphics, menu, state, TextFieldStyle.Simple, false);
 			}
 			else
 			{

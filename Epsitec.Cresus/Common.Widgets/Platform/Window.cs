@@ -559,6 +559,39 @@ namespace Epsitec.Common.Widgets.Platform
 				double dx = this.MapFromWinFormsWidth (placement.NormalPosition.Right - placement.NormalPosition.Left);
 				double dy = this.MapFromWinFormsHeight (placement.NormalPosition.Bottom - placement.NormalPosition.Top);
 				
+				//	Attention: les coordonnées retournées par WindowPlacement sont exprimées
+				//	en "workspace coordinates" (elles tiennent compte de la présence d'une
+				//	barre "Desktop").
+				
+				//	Cf. http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/winui/windowsuserinterface/windowing/windows/windowreference/windowstructures/windowplacement.asp
+
+				//	La conversion entre "screen coordinates" et "workspace coordinates" est
+				//	théoriquement impossible avec les informations que fournit Windows mais
+				//	on peut s'arranger en créant une fenêtre temporaire pour déterminer son
+				//	offset par rapport à l'endroit désiré :
+				
+				System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromPoint (new System.Drawing.Point (placement.NormalPosition.Left, placement.NormalPosition.Top));
+				
+//				System.Diagnostics.Debug.WriteLine ("WorkingArea:  " + screen.WorkingArea);
+//				System.Diagnostics.Debug.WriteLine ("ScreenBounds: " + screen.Bounds);
+				
+				if (screen.WorkingArea != screen.Bounds)
+				{
+					using (System.Windows.Forms.Form f = new System.Windows.Forms.Form ())
+					{
+						f.Hide ();
+						f.Location = new System.Drawing.Point (placement.NormalPosition.Left, placement.NormalPosition.Bottom);
+					
+						Win32Api.GetWindowPlacement (f.Handle, out placement);
+					
+						ox -= placement.NormalPosition.Left - f.Location.X;
+						oy += placement.NormalPosition.Top - f.Location.Y;
+						
+//						System.Diagnostics.Debug.WriteLine ("Adjust X by " + (-placement.NormalPosition.Left + f.Location.X));
+//						System.Diagnostics.Debug.WriteLine ("Adjust Y by " + (placement.NormalPosition.Top - f.Location.Y));
+					}
+				}
+				
 				return new Drawing.Rectangle (ox, oy, dx, dy);
 			}
 		}

@@ -2507,6 +2507,103 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		#region SubstringComplete
+		public static string SubstringComplete(string text, int from, int to)
+		{
+			// Extrait une sous-chaîne et complète les tags manquants.
+			from = System.Math.Min(from, text.Length);
+			to   = System.Math.Min(to,   text.Length);
+			string result = text.Substring(from, to-from);
+
+			TextLayout.TagComplete(ref result, Tag.Bold,       Tag.BoldEnd,       "<b>", "</b>");
+			TextLayout.TagComplete(ref result, Tag.Italic,     Tag.ItalicEnd,     "<i>", "</i>");
+			TextLayout.TagComplete(ref result, Tag.Underlined, Tag.UnderlinedEnd, "<u>", "</u>");
+			TextLayout.TagComplete(ref result, Tag.Mnemonic,   Tag.MnemonicEnd,   "<m>", "</m>");
+			TextLayout.TagComplete(ref result, Tag.Wave,       Tag.WaveEnd,       "<w>", "</w>");
+
+			string fot = TextLayout.TagCapturePrev(text, 0, from, Tag.Font);
+			TextLayout.TagComplete(ref result, Tag.Font, Tag.FontEnd, fot, "</font>");
+
+			string aot = TextLayout.TagCapturePrev(text, 0, from, Tag.Anchor);
+			TextLayout.TagComplete(ref result, Tag.Anchor, Tag.AnchorEnd, aot, "</a>");
+
+			return result;
+		}
+
+		protected static string TagCapturePrev(string text, int from, int to, Tag search)
+		{
+			int i = TextLayout.TagSearchPrev(text, from, to, search);
+			if ( i == -1 )  return null;
+			int j = text.IndexOf(">", i);
+			if ( j == -1 )  return null;
+			return text.Substring(i, j-i+1);
+		}
+
+		protected static void TagComplete(ref string text, Tag open, Tag close, string ot, string ct)
+		{
+			if ( ot != null && TextLayout.TagCompleteNext(text, open, close) )
+			{
+				text = text.Insert(0, ot);
+			}
+			
+			if ( ct != null && TextLayout.TagCompletePrev(text, open, close) )
+			{
+				text = text.Insert(text.Length, ct);
+			}
+		}
+
+		protected static bool TagCompleteNext(string text, Tag open, Tag close)
+		{
+			int ic = TextLayout.TagSearchNext(text, 0, text.Length, close);
+			if ( ic == -1 )  return false;
+			int io = TextLayout.TagSearchNext(text, 0, text.Length, open);
+			return ( io == -1 || io > ic );
+		}
+
+		protected static bool TagCompletePrev(string text, Tag open, Tag close)
+		{
+			int io = TextLayout.TagSearchPrev(text, 0, text.Length, open);
+			if ( io == -1 )  return false;
+			int ic = TextLayout.TagSearchPrev(text, 0, text.Length, close);
+			return ( ic == -1 || io > ic );
+		}
+
+		protected static int TagSearchNext(string text, int from, int to, Tag search)
+		{
+			// Cherche un tag en avant.
+			System.Collections.Hashtable parameters;
+			int offset = from;
+			while ( offset < to )
+			{
+				Tag tag = TextLayout.ParseTag(text, ref offset, out parameters);
+				if ( tag == search )
+				{
+					return offset;
+				}
+			}
+			return -1;
+		}
+
+		protected static int TagSearchPrev(string text, int from, int to, Tag search)
+		{
+			// Cherche un tag en arrière.
+			System.Collections.Hashtable parameters;
+			int last = -1;
+			int offset = from;
+			while ( offset < to )
+			{
+				int o = offset;
+				Tag tag = TextLayout.ParseTag(text, ref offset, out parameters);
+				if ( tag == search )
+				{
+					last = o;
+				}
+			}
+			return last;
+		}
+		#endregion
+
+
 		public bool AnalyseTagsAtOffset(int offset, out string[] tags)
 		{
 			// Parcourt le texte et accumule les informations sur les tags <>

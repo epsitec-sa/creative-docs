@@ -541,11 +541,11 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
-					graphics.RenderSolid(this.colorControlLightLight);
+					this.PaintImageButton(graphics, rect, 16);
 				}
 				else
 				{
-					graphics.RenderSolid(this.colorControl);
+					this.PaintImageButton(graphics, rect, 18);
 				}
 
 				rect.Deflate(0.5);
