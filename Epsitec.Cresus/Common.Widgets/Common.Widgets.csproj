@@ -342,11 +342,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "TextFieldAny.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "TextFieldCombo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -493,7 +493,7 @@ namespace Epsitec.Common.Tests
 				TextFieldType type = TextFieldType.SingleLine;
 				if ( fd.lines > 1 )  type = TextFieldType.MultiLine;
 				if ( fd.combo != "" )  type = TextFieldType.Combo;
-				TextFieldAny tf = new TextFieldAny(type);
+				AbstractTextField tf = TextFieldAny.FromType (type);
 				tf.Name = fd.name;
 				tf.Text = "";
 				tf.Alignment = fd.alignment;
@@ -612,7 +612,7 @@ namespace Epsitec.Common.Tests
 				st.Location = new Point(0, posy-20);
 				st.Size = new Size(this.labelWidth-10, 20);
 
-				TextFieldAny tf = (TextFieldAny)this.textFields[x];
+				AbstractTextField tf = this.textFields[x] as AbstractTextField;
 				tf.Location = new Point(this.labelWidth, posy-height);
 				double width = System.Math.Min(fd.max*7, maxWidth);
 				tf.Size = new Size(width, height);
@@ -674,16 +674,18 @@ namespace Epsitec.Common.Tests
 		}
 
 		// Initialise la liste d'une ligne éditable "combo".
-		protected void InitCombo(TextFieldAny tf, string combo)
+		protected void InitCombo(AbstractTextField tf, string combo)
 		{
+			TextFieldCombo cb = tf as TextFieldCombo;
+			
 			while ( true )
 			{
 				int index = combo.IndexOf('$');
 				if ( index < 0 )  break;
-				tf.ComboAddText(combo.Substring(0, index));
+				cb.Items.Add(combo.Substring(0, index));
 				combo = combo.Remove(0, index+1);
 			}
-			tf.ComboAddText(combo);
+			cb.Items.Add(combo);
 		}
 
 		// Choix du mode de tri.
@@ -856,7 +858,7 @@ namespace Epsitec.Common.Tests
 			int nbFields = this.db.TotalField;
 			for ( int i=0 ; i<nbFields ; i++ )
 			{
-				TextFieldAny tf = (TextFieldAny)this.textFields[i];
+				AbstractTextField tf = this.textFields[i] as AbstractTextField;
 				int fieldID = this.db.RetFieldID(i);
 				tf.Text = this.db.RetFieldInRecord(this.record, fieldID);
 			}
@@ -869,7 +871,7 @@ namespace Epsitec.Common.Tests
 			int nbFields = this.db.TotalField;
 			for ( int i=0 ; i<nbFields ; i++ )
 			{
-				TextFieldAny tf = (TextFieldAny)this.textFields[i];
+				AbstractTextField tf = this.textFields[i] as AbstractTextField;
 				int fieldID = this.db.RetFieldID(i);
 				this.db.SetFieldInRecord(this.record, fieldID, tf.Text);
 			}
@@ -903,7 +905,7 @@ namespace Epsitec.Common.Tests
 		// Met le focus dans une rubrique éditable.
 		protected void SetFocus(int rank)
 		{
-			TextFieldAny tf = (TextFieldAny)this.textFields[rank];
+			AbstractTextField tf = this.textFields[rank] as AbstractTextField;
 			tf.SelectAll();
 			tf.SetFocused(true);
 		}
@@ -1037,5 +1039,33 @@ namespace Epsitec.Common.Tests
 		protected Button						buttonCancel;
 		protected System.Collections.ArrayList	staticTexts;
 		protected System.Collections.ArrayList	textFields;
+	}
+	
+	
+	public class TextFieldAny
+	{
+		private TextFieldAny()
+		{
+		}
+	
+		public static AbstractTextField FromType(TextFieldType type)
+		{
+			switch (type)
+			{
+				case TextFieldType.Combo:
+					return new TextFieldCombo ();
+
+				case TextFieldType.SingleLine:
+					return new TextField ();
+
+				case TextFieldType.MultiLine:
+					return new TextFieldMulti ();
+
+				case TextFieldType.UpDown:
+					return new TextFieldUpDown ();
+			}
+		
+			throw new System.ArgumentException ("Unsupported type");
+		}
 	}
 }

@@ -790,7 +790,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( cursorOn )
 			{
 				rect.Offset(pos);
-				graphics.AddRectangle(rect);
+				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.colorBlack);
 			}
 		}

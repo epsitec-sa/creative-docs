@@ -1,5 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
+	using Keys = System.Windows.Forms.Keys;
+	
 	public enum TextFieldStyle
 	{
 		Flat,							// pas de cadre, ni de relief, fond blanc
@@ -75,11 +77,6 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case TextFieldType.Combo:
-					this.arrowDown = new ArrowButton();
-					this.arrowDown.Direction = Direction.Down;
-					this.arrowDown.ButtonStyle = ButtonStyle.Scroller;
-					this.arrowDown.Pressed += new MessageEventHandler(this.HandleCombo);
-					this.Children.Add(this.arrowDown);
 					break;
 			}
 			
@@ -109,7 +106,6 @@ namespace Epsitec.Common.Widgets
 						break;
 
 					case TextFieldType.Combo:
-						this.arrowDown.Pressed -= new MessageEventHandler(this.HandleCombo);
 						break;
 				}
 			}
@@ -373,26 +369,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		// Vide toute la liste de la ComboBox.
-		public void ComboReset()
-		{
-			this.comboList.Clear();
-		}
-
-		// Ajoute un texte à la fin de la liste de la ComboBox.
-		public void ComboAddText(string text)
-		{
-			this.comboList.Add(text);
-		}
-
-		// Donne un texte de la liste de la ComboBox.
-		public string ComboGetText(int index)
-		{
-			if ( index < 0 || index >= this.comboList.Count )  return "";
-			return (string)this.comboList[index];
-		}
-
-		
 		// Met à jour la géométrie des boutons de l'ascenseur.
 		protected override void UpdateClientGeometry()
 		{
@@ -447,21 +423,6 @@ namespace Epsitec.Common.Widgets
 					this.arrowDown.Bounds = aRect;
 				}
 #endif
-			}
-
-			if ( this.type == TextFieldType.Combo )
-			{
-				Drawing.Rectangle rect = this.Bounds;
-				double m = TextField.margin-1;
-				this.rightMargin = rect.Height-m*2;
-				if ( this.rightMargin > rect.Width/2 )  this.rightMargin = rect.Width/2;
-				rect.Inflate(-m, -m);
-
-				if ( this.arrowDown != null )
-				{
-					Drawing.Rectangle aRect = new Drawing.Rectangle(m+rect.Width-this.rightMargin, m, this.rightMargin, rect.Height);
-					this.arrowDown.Bounds = aRect;
-				}
 			}
 		}
 
@@ -598,121 +559,6 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 		}
 
-		// Gestion d'un événement lorsqu'un bouton est pressé.
-		private void HandleCombo(object sender, MessageEventArgs e)
-		{
-			this.scrollList = new ScrollList();
-			this.scrollList.ScrollListStyle = ScrollListStyle.Simple;
-			this.scrollList.ComboMode = true;
-			Drawing.Point pos = new Drawing.Point(0, 0);
-			this.scrollList.Location = pos;
-			this.scrollList.Size = new Drawing.Size(this.Width, 200);
-
-			int sel = -1;
-			int i = 0;
-			foreach ( string text in this.comboList )
-			{
-				this.scrollList.AddText(text);
-				if ( text == this.Text )
-				{
-					sel = i;
-				}
-				i ++;
-			}
-
-			pos = this.MapClientToRoot(new Drawing.Point(0, 0));
-			pos = this.WindowFrame.MapWindowToScreen(pos);
-			ScreenInfo si = ScreenInfo.Find(pos);
-			Drawing.Rectangle wa = si.WorkingArea;
-			double hMax = pos.Y-wa.Bottom;
-			this.scrollList.AdjustToContent(ScrollListAdjust.MoveUp, 40, hMax);
-
-			this.scrollList.SelectedIndex = sel;
-			this.scrollList.ShowSelect(ScrollListShow.Middle);
-			this.scrollList.SelectedIndexChanged += new EventHandler(this.HandleScrollListSelectedIndexChanged);
-
-			this.comboWindow = new WindowFrame();
-			this.comboWindow.MakeFramelessWindow();
-			pos = this.MapClientToRoot(new Drawing.Point(0, -this.scrollList.Height));
-			pos = this.WindowFrame.MapWindowToScreen(pos);
-			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width, this.scrollList.Height);
-			WindowFrame.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
-			WindowFrame.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
-			this.comboWindow.Root.Children.Add(this.scrollList);
-			this.comboWindow.AnimateShow(Animation.RollDown);
-
-			this.SetFocused(false);
-			this.scrollList.SetFocused(true);
-		}
-
-		// Gestion d'un événement lorsque la scroll-liste est sélectionnée.
-		private void HandleScrollListSelectedIndexChanged(object sender)
-		{
-			int sel = this.scrollList.SelectedIndex;
-			if ( sel == -1 )  return;
-			this.Text = this.scrollList.GetText(sel);
-			this.OnTextChanged();
-			this.OnTextInserted();
-			this.SelectAll();
-			this.SetFocused(true);
-
-			this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollListSelectedIndexChanged);
-			WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
-			WindowFrame.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
-			this.scrollList.Dispose();
-			this.scrollList = null;
-			this.comboWindow.Dispose();
-			this.comboWindow = null;
-		}
-
-		// Conversion d'une coordonnée écran -> widget.
-		protected Drawing.Point MapScreenToClient(Widget widget, Drawing.Point pos)
-		{
-			pos = widget.WindowFrame.MapScreenToWindow(pos);
-			pos = widget.MapRootToClient(pos);
-			return pos;
-		}
-
-		private void HandlerMessageFilter(object sender, Message message)
-		{
-			if ( this.scrollList == null )  return;
-			WindowFrame window = sender as WindowFrame;
-
-			switch ( message.Type )
-			{
-				case MessageType.MouseDown:
-					Drawing.Point mouse = window.MapWindowToScreen(message.Cursor);
-					Drawing.Point pos = this.MapScreenToClient(this.scrollList, mouse);
-					if ( !this.scrollList.HitTest(pos) )
-					{
-						this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollListSelectedIndexChanged);
-						WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
-						WindowFrame.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
-						this.scrollList.Dispose();
-						this.scrollList = null;
-						this.comboWindow.Dispose();
-						this.comboWindow = null;
-
-						if ( !message.NonClient )
-						{
-							message.Handled = true;
-							message.Swallowed = true;
-						}
-					}
-					break;
-			}
-		}
-
-		private void HandleApplicationDeactivated(object sender)
-		{
-			this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollListSelectedIndexChanged);
-			WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
-			WindowFrame.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
-			this.scrollList.Dispose();
-			this.scrollList = null;
-			this.comboWindow.Dispose();
-			this.comboWindow = null;
-		}
 
 
 		// Gestion d'un événement.
@@ -746,7 +592,7 @@ namespace Epsitec.Common.Widgets
 
 				case MessageType.KeyDown:
 					//System.Diagnostics.Debug.WriteLine("KeyDown "+message.KeyChar+" "+message.KeyCode);
-					this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
+					this.ProcessKeyDown((Keys)message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
 					break;
 
 				case MessageType.KeyPress:
@@ -799,29 +645,29 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Gestion d'une touche pressée avec KeyDown dans le texte.
-		protected void ProcessKeyDown(int key, bool isShiftPressed, bool isCtrlPressed)
+		protected virtual void ProcessKeyDown(Keys key, bool isShiftPressed, bool isCtrlPressed)
 		{
 			switch ( key )
 			{
-				case (int)System.Windows.Forms.Keys.Enter:
+				case Keys.Enter:
 					if ( this.type == TextFieldType.MultiLine )
 					{
 						this.InsertCharacter('\n');
 					}
 					break;
 
-				case (int)System.Windows.Forms.Keys.Back:
+				case Keys.Back:
 					this.DeleteCharacter(-1);
 					break;
 
-				case (int)System.Windows.Forms.Keys.Delete:
+				case Keys.Delete:
 					this.DeleteCharacter(1);
 					break;
 
-				case (int)System.Windows.Forms.Keys.Escape:
+				case Keys.Escape:
 					break;
 
-				case (int)System.Windows.Forms.Keys.Home:
+				case Keys.Home:
 					if ( this.type == TextFieldType.MultiLine )
 					{
 						this.MoveExtremity(-1, isShiftPressed, isCtrlPressed);
@@ -832,7 +678,7 @@ namespace Epsitec.Common.Widgets
 					}
 					break;
 
-				case (int)System.Windows.Forms.Keys.End:
+				case Keys.End:
 					if ( this.type == TextFieldType.MultiLine )
 					{
 						this.MoveExtremity(1, isShiftPressed, isCtrlPressed);
@@ -843,55 +689,41 @@ namespace Epsitec.Common.Widgets
 					}
 					break;
 
-				case (int)System.Windows.Forms.Keys.PageUp:
+				case Keys.PageUp:
 					this.MoveCursor(-1000000, isShiftPressed, false);  // recule beaucoup
 					break;
 
-				case (int)System.Windows.Forms.Keys.PageDown:
+				case Keys.PageDown:
 					this.MoveCursor(1000000, isShiftPressed, false);  // avance beaucoup
 					break;
 
-				case (int)System.Windows.Forms.Keys.Left:
+				case Keys.Left:
 					this.MoveCursor(-1, isShiftPressed, isCtrlPressed);
 					break;
 
-				case (int)System.Windows.Forms.Keys.Right:
+				case Keys.Right:
 					this.MoveCursor(1, isShiftPressed, isCtrlPressed);
 					break;
 
-				case (int)System.Windows.Forms.Keys.Up:
-					if ( this.type == TextFieldType.Combo )
+				case Keys.Up:
+					if ( this.type == TextFieldType.MultiLine )
 					{
-						this.ComboExcavation(-1);
+						this.MoveLine(-1, isShiftPressed, isCtrlPressed);
 					}
 					else
 					{
-						if ( this.type == TextFieldType.MultiLine )
-						{
-							this.MoveLine(-1, isShiftPressed, isCtrlPressed);
-						}
-						else
-						{
-							this.MoveCursor(-1, isShiftPressed, isCtrlPressed);
-						}
+						this.MoveCursor(-1, isShiftPressed, isCtrlPressed);
 					}
 					break;
 
-				case (int)System.Windows.Forms.Keys.Down:
-					if ( this.type == TextFieldType.Combo )
+				case Keys.Down:
+					if ( this.type == TextFieldType.MultiLine )
 					{
-						this.ComboExcavation(1);
+						this.MoveLine(1, isShiftPressed, isCtrlPressed);
 					}
 					else
 					{
-						if ( this.type == TextFieldType.MultiLine )
-						{
-							this.MoveLine(1, isShiftPressed, isCtrlPressed);
-						}
-						else
-						{
-							this.MoveCursor(1, isShiftPressed, isCtrlPressed);
-						}
+						this.MoveCursor(1, isShiftPressed, isCtrlPressed);
 					}
 					break;
 			}
@@ -1115,54 +947,6 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		// Cherche le nom suivant ou précédent dans la comboList, même si elle
-		// n'est pas "déroulée".
-		protected void ComboExcavation(int dir)
-		{
-			int		sel;
-			bool	exact;
-
-			if ( !this.ComboSearch(out sel, out exact) )
-			{
-				sel = 0;
-			}
-			else
-			{
-				if ( exact)  sel += dir;
-			}
-			sel = System.Math.Max(sel, 0);
-			sel = System.Math.Min(sel, this.comboList.Count-1);
-			this.Text = (string)this.comboList[sel];
-			this.SelectAll();
-			this.SetFocused(true);
-		}
-
-		// Cherche à quelle ligne (dans comboList) correspond le mieux la ligne éditée.
-		protected bool ComboSearch(out int rank, out bool exact)
-		{
-			string edit = this.Text.ToUpper();
-			rank = 0;
-			exact = false;
-			foreach ( string text in this.comboList )
-			{
-				string maj = text.ToUpper();
-				if ( maj == edit )
-				{
-					exact = true;
-					return true;
-				}
-
-				if ( maj.StartsWith(edit) )
-				{
-					exact = false;
-					return true;
-				}
-
-				rank ++;
-			}
-			return false;
-		}
-
 
 		// Génère un événement pour dire que le texte a changé (ajout ou suppression).
 		protected virtual void OnTextChanged()
@@ -1319,6 +1103,8 @@ namespace Epsitec.Common.Widgets
 		
 		
 		protected TextFieldType					type = TextFieldType.SingleLine;
+		protected ArrowButton					arrowUp;
+		protected ArrowButton					arrowDown;
 		protected bool							readOnly = false;
 		protected static readonly double		margin = 3;
 		protected static readonly double		infinity = 1000000;
@@ -1337,11 +1123,6 @@ namespace Epsitec.Common.Widgets
 		protected double						maxRange = 100;
 		protected double						step = 1;
 		protected VScroller						scroller;
-		protected ArrowButton					arrowUp;
-		protected ArrowButton					arrowDown;
-		protected WindowFrame					comboWindow;
-		protected ScrollList					scrollList;
-		protected System.Collections.ArrayList	comboList = new System.Collections.ArrayList();
 		
 		protected static System.Windows.Forms.Timer	flashTimer = new System.Windows.Forms.Timer();
 		protected static bool					showCursor = true;

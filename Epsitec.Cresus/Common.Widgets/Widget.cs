@@ -196,8 +196,10 @@ namespace Epsitec.Common.Widgets
 				if (this.dock != value)
 				{
 					this.dock = value;
+					
 					if (this.parent != null)
 					{
+						this.parent.HandleChildrenChanged ();
 						this.parent.UpdateChildrenLayout ();
 					}
 				}
@@ -1558,20 +1560,6 @@ namespace Epsitec.Common.Widgets
 			return this.MapParentToClient (point);
 		}
 		
-		public virtual Drawing.Rectangle MapRootToClient(Drawing.Rectangle rect)
-		{
-			Drawing.Point p1 = this.MapRootToClient (new Drawing.Point (rect.Left, rect.Bottom));
-			Drawing.Point p2 = this.MapRootToClient (new Drawing.Point (rect.Right, rect.Top));
-			
-			rect.X = System.Math.Min (p1.X, p2.X);
-			rect.Y = System.Math.Min (p1.Y, p2.Y);
-			
-			rect.Width  = System.Math.Abs (p1.X - p2.X);
-			rect.Height = System.Math.Abs (p1.Y - p2.Y);
-			
-			return rect;
-		}
-		
 		public virtual Drawing.Point MapClientToRoot(Drawing.Point point)
 		{
 			Widget iter = this;
@@ -1586,6 +1574,37 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			return point;
+		}
+		
+		
+		public virtual Drawing.Point MapScreenToClient(Drawing.Point point)
+		{
+			point = this.WindowFrame.MapScreenToWindow (point);
+			point = this.MapRootToClient (point);
+			return point;
+		}
+		
+		public virtual Drawing.Point MapScreenToParent(Drawing.Point point)
+		{
+			point = this.WindowFrame.MapScreenToWindow (point);
+			point = this.MapRootToClient (point);
+			point = this.MapClientToParent (point);
+			return point;
+		}
+		
+		
+		public virtual Drawing.Rectangle MapRootToClient(Drawing.Rectangle rect)
+		{
+			Drawing.Point p1 = this.MapRootToClient (new Drawing.Point (rect.Left, rect.Bottom));
+			Drawing.Point p2 = this.MapRootToClient (new Drawing.Point (rect.Right, rect.Top));
+			
+			rect.X = System.Math.Min (p1.X, p2.X);
+			rect.Y = System.Math.Min (p1.Y, p2.Y);
+			
+			rect.Width  = System.Math.Abs (p1.X - p2.X);
+			rect.Height = System.Math.Abs (p1.Y - p2.Y);
+			
+			return rect;
 		}
 		
 		public virtual Drawing.Rectangle MapClientToRoot(Drawing.Rectangle rect)
