@@ -32,10 +32,22 @@ namespace Epsitec.Common.UI.Adapters
 			}
 		}
 		
-		
-		public void SyncFromBinder()
+		public SyncReason						SyncReason
 		{
+			get
+			{
+				return this.sync_reason;
+			}
+		}
+		
+		
+		public void SyncFromBinder(SyncReason reason)
+		{
+			this.sync_reason = reason;
+			
 			this.ReadFromBinder ();
+			
+			this.sync_reason = SyncReason.None;
 		}
 		
 		protected virtual void OnBinderChanged()
@@ -50,10 +62,17 @@ namespace Epsitec.Common.UI.Adapters
 		{
 			this.WriteToBinder ();
 			
+			SyncReason old_reason = this.sync_reason;
+			SyncReason new_reason = this.sync_reason == SyncReason.None ? SyncReason.ValueChanged : old_reason;
+			
+			this.sync_reason = new_reason;
+			
 			if (this.Changed != null)
 			{
 				this.Changed (this);
 			}
+			
+			this.sync_reason = old_reason;
 		}
 		
 		
@@ -117,6 +136,7 @@ namespace Epsitec.Common.UI.Adapters
 		public event EventHandler				Changed;
 		
 		protected Binders.IBinder				binder;
+		protected SyncReason					sync_reason;
 		protected bool							job_in_progress;
 	}
 }

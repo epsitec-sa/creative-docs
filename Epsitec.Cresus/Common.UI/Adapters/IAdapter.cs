@@ -12,7 +12,8 @@ namespace Epsitec.Common.UI.Adapters
 	public interface IAdapter : Support.Data.IChangedSource
 	{
 		Binders.IBinder		Binder		{ get; set; }
+		SyncReason			SyncReason	{ get; }
 		
-		void SyncFromBinder();
+		void SyncFromBinder(SyncReason reason);
 	}
 }
