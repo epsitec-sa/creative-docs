@@ -87,7 +87,11 @@ namespace Epsitec.Common.Dialogs
 		
 		[Command ("ValidateDialog")] protected void CommandValidateDialog()
 		{
-			this.window.QueueCommand (this, string.Format (this.command_template, this.CommandArgs), this.command_dispatcher);
+			if (this.command_template != null)
+			{
+				this.window.QueueCommand (this, string.Format (this.command_template, this.CommandArgs), this.command_dispatcher);
+			}
+			
 			this.Close ();
 		}
 		

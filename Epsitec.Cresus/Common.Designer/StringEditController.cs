@@ -117,6 +117,27 @@ namespace Epsitec.Common.Designer
 			return false;
 		}
 		
+		public void CloseBundles(string name)
+		{
+			ResourceBundleCollection bundles = this.bundles[name] as ResourceBundleCollection;
+			
+			if (bundles != null)
+			{
+				for (int i = 0; i < this.panels.Count; i++)
+				{
+					Panels.StringEditPanel panel = this.panels[i] as Panels.StringEditPanel;
+					
+					if (panel.Store.Name == name)
+					{
+						this.bundles.Remove (name);
+						this.panels.RemoveAt (i);
+						this.tab_book.Items.RemoveAt (i);
+						return;
+					}
+				}
+			}
+		}
+		
 		
 		public Store FindStore(string bundle_name)
 		{
@@ -903,12 +924,28 @@ namespace Epsitec.Common.Designer
 		
 		[Command ("SaveStringBundle")]		void CommandSaveStringBundle(CommandDispatcher d, CommandEventArgs e)
 		{
+			if (e.CommandArgs.Length == 1)
+			{
+				this.SaveBundles (e.CommandArgs[0]);
+				return;
+			}
+			
 			if (e.CommandArgs.Length > 0)
 			{
 				this.ThrowInvalidOperationException (e, 0);
 			}
 			
 			this.SaveBundles (this.ActiveBundleCollection);
+		}
+		
+		[Command ("CloseStringBundle")]		void CommandCloseStringBundle(CommandDispatcher d, CommandEventArgs e)
+		{
+			if (e.CommandArgs.Length != 1)
+			{
+				this.ThrowInvalidOperationException (e, 1);
+			}
+			
+			this.CloseBundles (e.CommandArgs[0]);
 		}
 		
 		
@@ -918,16 +955,27 @@ namespace Epsitec.Common.Designer
 			
 			if (index > -1)
 			{
-				//	TODO: implémenter cela au moyen d'une commande...
-				
 				//	Ferme la page active.
 				
 				Panels.StringEditPanel panel = this.panels[index] as Panels.StringEditPanel;
-				string name = panel.Store.Name;
+				Store                  store = panel.Store;
+				string                 name  = store.Name;
 				
-				this.bundles.Remove (name);
-				this.panels.RemoveAt (index);
-				this.tab_book.Items.RemoveAt (index);
+				if (store.Changed == false)
+				{
+					this.CloseBundles (name);
+				}
+				else
+				{
+					string question    = "The bundle has been modified.<br/><br/>Would you like to save it ?";
+					string command_yes = "SaveStringBundle (\""+name+"\") & CloseStringBundle (\""+name+"\")";
+					string command_no  = "CloseStringBundle (\""+name+"\")";
+					
+					Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel (Application.Current.Name, Common.Dialogs.Icon.Warning, question, command_yes, command_no, this.dispatcher);
+					
+					dialog.Owner = this.Window;
+					dialog.Show ();
+				}
 			}
 		}
 		

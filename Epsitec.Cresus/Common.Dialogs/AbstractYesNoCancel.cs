@@ -95,13 +95,21 @@ namespace Epsitec.Common.Dialogs
 		
 		[Command ("ValidateDialogYes")] protected void CommandValidateDialogYes()
 		{
-			this.window.QueueCommand (this, string.Format (this.command_yes_template, this.CommandArgs), this.command_dispatcher);
+			if (this.command_yes_template != null)
+			{
+				this.window.QueueCommand (this, string.Format (this.command_yes_template, this.CommandArgs), this.command_dispatcher);
+			}
+			
 			this.Close ();
 		}
 		
 		[Command ("ValidateDialogNo")]  protected void CommandValidateDialogNo()
 		{
-			this.window.QueueCommand (this, string.Format (this.command_no_template, this.CommandArgs), this.command_dispatcher);
+			if (this.command_no_template != null)
+			{
+				this.window.QueueCommand (this, string.Format (this.command_no_template, this.CommandArgs), this.command_dispatcher);
+			}
+			
 			this.Close ();
 		}
 		
