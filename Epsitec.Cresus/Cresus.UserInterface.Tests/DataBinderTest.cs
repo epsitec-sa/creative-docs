@@ -67,13 +67,13 @@ namespace Epsitec.Common.Support
 			Assertion.AssertNotNull (bundle);
 			Assertion.AssertNotNull (bundler);
 			
-			object         obj    = bundler.CreateFromBundle (bundle);
-			Widgets.Window window = obj as Widgets.Window;
+			object             obj  = bundler.CreateFromBundle (bundle);
+			Widgets.WindowRoot root = obj as Widgets.WindowRoot;
 			
 			Assertion.AssertNotNull (obj);
-			Assertion.AssertNotNull (window);
+			Assertion.AssertNotNull (root);
 			
-			window.Show ();
+			root.Window.Show ();
 		}
 
 		private void HandleDataChanged(object sender, DataChangeEventArgs e)
