@@ -61,6 +61,14 @@ namespace Epsitec.Common.Converters
 			}
 		}
 		
+		public bool							IsEmpty
+		{
+			get
+			{
+				return (this.minimum >= this.maximum);
+			}
+		}
+		
 		public decimal						Resolution
 		{
 			get { return this.resolution; }
