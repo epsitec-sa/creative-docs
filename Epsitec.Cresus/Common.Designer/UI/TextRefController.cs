@@ -110,7 +110,10 @@ namespace Epsitec.Common.Designer.UI
 				}
 				else if (stored_text == null)
 				{
-					this.State = InternalState.UsingUndefinedText;
+					if (this.State != InternalState.UsingCustomText)
+					{
+						this.State = InternalState.UsingUndefinedText;
+					}
 				}
 				
 				if (reason != Common.UI.SyncReason.ValueChanged)
@@ -288,7 +291,15 @@ namespace Epsitec.Common.Designer.UI
 							this.combo_field.RejectEdition ();
 							break;
 						case InternalState.UsingCustomText:
-							this.combo_field.StartPassiveEdition (this.combo_field.PlaceHolder);
+							if (this.combo_field.Mode == TextFieldExListMode.EditActive)
+							{
+								//	L'utilisateur a déjà commencé à éditer le nom du champ, donc il n'y a rien à faire
+								//	de particulier ici.
+							}
+							else
+							{
+								this.combo_field.StartPassiveEdition (this.combo_field.PlaceHolder);
+							}
 							adapter.XmlRefTarget = "";
 							break;
 						case InternalState.UsingExistingText:

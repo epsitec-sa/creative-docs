@@ -108,17 +108,17 @@ namespace Epsitec.Common.Widgets
 					
 					if (this.text_array_store != null)
 					{
-						this.text_array_store.StoreChanged -= new Support.EventHandler (this.HandleStoreChanged);
+						this.text_array_store.StoreContentsChanged -= new Support.EventHandler (this.HandleStoreContentsChanged);
 					}
 					
 					this.text_array_store = value;
 					
 					if (this.text_array_store != null)
 					{
-						this.text_array_store.StoreChanged += new Support.EventHandler (this.HandleStoreChanged);
+						this.text_array_store.StoreContentsChanged += new Support.EventHandler (this.HandleStoreContentsChanged);
 					}
 					
-					this.OnTextArrayStoreChanged ();
+					this.OnTextArrayStoreContentsChanged ();
 					this.SyncWithTextArrayStore (false);
 				}
 			}
@@ -1341,7 +1341,7 @@ invalid:	row    = -1;
 			this.DragEndedColumn (slider.Index, e.Point.X);
 		}
 
-		private void HandleStoreChanged(object sender)
+		private void HandleStoreContentsChanged(object sender)
 		{
 			this.SyncWithTextArrayStore (false);
 		}
@@ -1904,11 +1904,11 @@ invalid:	row    = -1;
 			}
 		}
 		
-		protected virtual  void OnTextArrayStoreChanged()
+		protected virtual  void OnTextArrayStoreContentsChanged()
 		{
-			if (this.TextArrayStoreChanged != null)
+			if (this.TextArrayStoreContentsChanged != null)
 			{
-				this.TextArrayStoreChanged (this);
+				this.TextArrayStoreContentsChanged (this);
 			}
 		}
 		
@@ -2224,7 +2224,7 @@ invalid:	row    = -1;
 		public event Support.EventHandler		ContentsInvalidated;
 		public event Support.EventHandler		SortChanged;
 		public event Support.EventHandler		LayoutUpdated;
-		public event Support.EventHandler		TextArrayStoreChanged;
+		public event Support.EventHandler		TextArrayStoreContentsChanged;
 		public event Support.EventHandler		SelectedIndexChanging;
 		public event Support.EventHandler		SelectedIndexChanged;
 		

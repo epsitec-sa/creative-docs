@@ -24,6 +24,9 @@ namespace Epsitec.Common.Designer
 			this.dispatcher.RegisterController (this);
 			
 			Support.Globals.Properties.SetProperty ("$resources$string controller", this);
+			
+			this.save_command_state = CommandState.Find ("SaveStringBundle", this.dispatcher);
+			this.UpdateCommandStates ();
 		}
 		
 		
@@ -41,6 +44,7 @@ namespace Epsitec.Common.Designer
 			
 			bundle.DefineType ("String");
 			bundles.Add (bundle);
+			bundles.Name = full_name;
 			
 			this.CreateMissingBundles (bundles, prefix, name);
 			
@@ -61,6 +65,8 @@ namespace Epsitec.Common.Designer
 			
 			string[] ids = Resources.GetBundleIds (full_name, null, ResourceLevel.All, null);
 			ResourceBundleCollection bundles = new ResourceBundleCollection (prefix, ids);
+			
+			bundles.Name = full_name;
 			
 			this.CreateMissingBundles (bundles, prefix, name);
 			
@@ -90,6 +96,11 @@ namespace Epsitec.Common.Designer
 		{
 			if (bundles != null)
 			{
+				Store store = this.FindStore (bundles);
+				
+				System.Diagnostics.Debug.Assert (store != null);
+				System.Diagnostics.Debug.Assert (store.FullName == bundles.Name);
+				
 				foreach (ResourceBundle bundle in bundles)
 				{
 					if (! bundle.IsEmpty)
@@ -97,6 +108,8 @@ namespace Epsitec.Common.Designer
 						Resources.SetBundle (bundle, ResourceSetMode.Write);
 					}
 				}
+				
+				store.ResetChanges ();
 				
 				return true;
 			}
@@ -117,6 +130,21 @@ namespace Epsitec.Common.Designer
 					{
 						return panel.Store;
 					}
+				}
+			}
+			
+			return null;
+		}
+		
+		public Store FindStore(ResourceBundleCollection bundles)
+		{
+			for (int i = 0; i < this.panels.Count; i++)
+			{
+				Panels.StringEditPanel panel = this.panels[i] as Panels.StringEditPanel;
+				
+				if (panel.Store.Bundles == bundles)
+				{
+					return panel.Store;
 				}
 			}
 			
@@ -166,6 +194,21 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
+		public Store							ActiveStore
+		{
+			get
+			{
+				Panels.StringEditPanel panel = this.ActivePanel;
+				
+				if (panel != null)
+				{
+					return panel.Store;
+				}
+				
+				return null;
+			}
+		}
+		
 		public ResourceBundleCollection			ActiveBundleCollection
 		{
 			get
@@ -196,6 +239,7 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		
 		public Window							Window
 		{
 			get
@@ -209,13 +253,6 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		public Support.Data.IPropertyProvider	DataProvider
-		{
-			get
-			{
-				return this.provider;
-			}
-		}
 		
 		
 		public bool IsStringBundleLoaded(string name)
@@ -241,6 +278,7 @@ namespace Epsitec.Common.Designer
 			
 			return this.IsStringBundleLoaded (name);
 		}
+		
 		
 		public string[] GetStringBundleNames()
 		{
@@ -268,6 +306,7 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
+		#region Store Class
 		public class Store : Support.Data.ITextArrayStore
 		{
 			public Store(StringEditController controller, string full_name, ResourceBundleCollection bundles)
@@ -297,7 +336,7 @@ namespace Epsitec.Common.Designer
 				}
 				
 				this.changing--;
-				this.OnStoreChanged ();
+				this.OnStoreContentsChanged ();
 			}
 			
 			public void RemoveRows(int row, int num)
@@ -323,7 +362,7 @@ namespace Epsitec.Common.Designer
 				}
 				
 				this.changing--;
-				this.OnStoreChanged ();
+				this.OnStoreContentsChanged ();
 			}
 			
 			public void MoveRow(int row, int distance)
@@ -357,7 +396,7 @@ namespace Epsitec.Common.Designer
 				field_b.SetAbout (about_a);
 				
 				this.changing--;
-				this.OnStoreChanged ();
+				this.OnStoreContentsChanged ();
 			}
 			
 			public string GetCellText(int row, int column)
@@ -475,7 +514,7 @@ namespace Epsitec.Common.Designer
 				}
 				
 				this.changing--;
-				this.OnStoreChanged ();
+				this.OnStoreContentsChanged ();
 			}
 			
 			public int GetColumnCount()
@@ -529,8 +568,16 @@ namespace Epsitec.Common.Designer
 				return this.ActiveBundle[this.DefaultBundle[row].Name].IsEmpty ? false : true;
 			}
 			
-			public event Support.EventHandler	StoreChanged;
+			public event Support.EventHandler	StoreContentsChanged;
 			#endregion
+			
+			public bool							Changed
+			{
+				get
+				{
+					return this.changes > 0;
+				}
+			}
 			
 			public bool							IsDefaultActive
 			{
@@ -617,20 +664,33 @@ namespace Epsitec.Common.Designer
 				}
 			}
 			
-			
-			private void HandleBundleFieldsChanged(object sender)
+			public void ResetChanges()
 			{
-				this.OnStoreChanged ();
+				if (this.changes > 0)
+				{
+					this.changes = 0;
+					this.controller.UpdateCommandStates ();
+				}
 			}
 			
 			
-			protected virtual void OnStoreChanged()
+			private void HandleBundleFieldsChanged(object sender)
 			{
+				this.OnStoreContentsChanged ();
+			}
+			
+			
+			protected virtual void OnStoreContentsChanged ()
+			{
+				this.changes++;
+				
 				if (this.changing == 0)
 				{
-					if (this.StoreChanged != null)
+					this.controller.OnStoreContentsChanged ();
+					
+					if (this.StoreContentsChanged != null)
 					{
-						this.StoreChanged (this);
+						this.StoreContentsChanged (this);
 					}
 				}
 			}
@@ -642,8 +702,11 @@ namespace Epsitec.Common.Designer
 			private ResourceBundle				active_bundle;
 			private ResourceBundle				default_bundle;
 			private int							changing;
+			private int							changes;
 		}
+		#endregion
 		
+		#region BundleStringProvider Class
 		private class BundleStringProvider : Support.Data.IPropertyProvider
 		{
 			public BundleStringProvider(StringEditController host)
@@ -725,17 +788,22 @@ namespace Epsitec.Common.Designer
 			public void ClearProperty(string key)
 			{
 				// TODO:  Add Resource.ClearProperty implementation
+				
+				throw new System.NotImplementedException ("ClearProperty not implemented.");
 			}
 
 			public void SetProperty(string key, object value)
 			{
 				// TODO:  Add Resource.SetProperty implementation
+				
+				throw new System.NotImplementedException ("SetProperty not implemented.");
 			}
 			#endregion
 			
 			private ResourceLevel				level = ResourceLevel.Default;
 			private StringEditController		host;
 		}
+		#endregion
 		
 		
 		protected Panels.StringEditPanel CreatePanel(string full_name, ResourceBundleCollection bundles)
@@ -780,7 +848,10 @@ namespace Epsitec.Common.Designer
 			this.tab_book.Dock = DockStyle.Fill;
 			this.tab_book.DockMargins = new Drawing.Margins (8, 8, 8, 8);
 			this.tab_book.HasCloseButton = true;
-			this.tab_book.CloseClicked += new EventHandler (this.HandleTabBookCloseClicked);
+			this.tab_book.CloseClicked      += new EventHandler (this.HandleTabBookCloseClicked);
+			this.tab_book.ActivePageChanged += new EventHandler (this.HandleTabBookActivePageChanged);
+			
+			this.UpdateCommandStates ();
 		}
 		
 		
@@ -846,6 +917,8 @@ namespace Epsitec.Common.Designer
 			
 			if (index > -1)
 			{
+				//	TODO: implémenter cela au moyen d'une commande...
+				
 				//	Ferme la page active.
 				
 				Panels.StringEditPanel panel = this.panels[index] as Panels.StringEditPanel;
@@ -857,11 +930,74 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		private void HandleTabBookActivePageChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.tab_book == sender);
+			
+			this.OnActiveStoreChanged ();
+		}
+		
+		
 		private void ActivateTabBookPage()
 		{
 			this.tab_book.ActivePageIndex = this.bundles.Count - 1;
 		}
 		
+		private void UpdateCommandStates()
+		{
+			System.Diagnostics.Debug.Assert (this.save_command_state != null);
+			
+			if ((this.tab_book != null) &&
+				(this.tab_book.Items.Count > 0))
+			{
+				this.tab_book.CloseButton.SetEnabled (true);
+				
+				Store store = this.ActiveStore;
+				
+				if ((store != null) &&
+					(store.Changed))
+				{
+					this.save_command_state.Enabled = true;
+				}
+				else
+				{
+					this.save_command_state.Enabled = false;
+				}
+			}
+			else
+			{
+				if (this.tab_book != null)
+				{
+					this.tab_book.CloseButton.SetEnabled (false);
+				}
+				this.save_command_state.Enabled = false;
+			}
+		}
+		
+		
+		protected virtual void OnActiveStoreChanged()
+		{
+			this.UpdateCommandStates ();
+			
+			if (this.ActiveStoreChanged != null)
+			{
+				this.ActiveStoreChanged (this);
+			}
+		}
+		
+		protected virtual void OnStoreContentsChanged()
+		{
+			this.UpdateCommandStates ();
+			
+			if (this.StoreContentsChanged != null)
+			{
+				this.StoreContentsChanged (this);
+			}
+		}
+		
+		
+		public event Support.EventHandler		ActiveStoreChanged;
+		public event Support.EventHandler		StoreContentsChanged;
 		
 		
 		protected System.Collections.Hashtable	bundles;
@@ -874,5 +1010,6 @@ namespace Epsitec.Common.Designer
 		protected AbstractToolBar				tool_bar;
 		protected TabBook						tab_book;
 		protected Support.CommandDispatcher		dispatcher;
+		protected CommandState					save_command_state;
 	}
 }

@@ -249,17 +249,17 @@ namespace Epsitec.Common.Widgets
 		{
 			public void InsertRows(int row, int num)
 			{
-				if (this.StoreChanged != null)
+				if (this.StoreContentsChanged != null)
 				{
-					this.StoreChanged (this);
+					this.StoreContentsChanged (this);
 				}
 			}
 
 			public void RemoveRows(int row, int num)
 			{
-				if (this.StoreChanged != null)
+				if (this.StoreContentsChanged != null)
 				{
-					this.StoreChanged (this);
+					this.StoreContentsChanged (this);
 				}
 			}
 			
@@ -311,7 +311,7 @@ namespace Epsitec.Common.Widgets
 				return (row % 2) == 0 ? true : false;
 			}
 			
-			public event Support.EventHandler	StoreChanged;
+			public event Support.EventHandler	StoreContentsChanged;
 		}
 		
 		

@@ -77,12 +77,13 @@ namespace Epsitec.Common.Widgets
 				this.arrowRight.StillEngaged -= new Support.EventHandler(this.HandleScrollButton);
 				this.buttonClose.Clicked -= new MessageEventHandler(this.HandleButtonCloseClicked);
 				this.buttonMenu.Clicked -= new MessageEventHandler(this.HandleButtonMenuClicked);
+				
+				this.Clear();
+				
 				this.arrowLeft = null;
 				this.arrowRight = null;
 				this.buttonMenu = null;
 				this.buttonClose = null;
-
-				this.Clear();
 			}
 			
 			base.Dispose(disposing);

@@ -853,7 +853,6 @@ namespace Epsitec.Common.Widgets
 					 window != null )
 				{
 					AbstractMenu.initiallyFocusedWidget = window.FocusedWidget;
-					System.Diagnostics.Debug.WriteLine(string.Format("Last focus on {0}, saved.", AbstractMenu.initiallyFocusedWidget));
 				}
 				
 				MenuItem item = sender as MenuItem;
@@ -987,7 +986,6 @@ namespace Epsitec.Common.Widgets
 					 window != null )
 				{
 					AbstractMenu.initiallyFocusedWidget = window.FocusedWidget;
-					System.Diagnostics.Debug.WriteLine(string.Format("Last focus on {0}, saved.", AbstractMenu.initiallyFocusedWidget));
 				}
 			}
 			else if ( AbstractMenu.menuRoot == null )

@@ -165,6 +165,19 @@ namespace Epsitec.Common.Widgets
 			return base.ProcessKeyDown (message, pos);
 		}
 
+		protected override void ProcessComboActivatedIndex(int sel)
+		{
+			if ((this.HasPlaceHolder) &&
+				(sel == 0))
+			{
+				this.CloseCombo (true);
+			}
+			else
+			{
+				base.ProcessComboActivatedIndex (sel);
+			}
+		}
+
 		protected override bool AboutToGetFocus(Widget.TabNavigationDir dir, Widget.TabNavigationMode mode, out Widget focus)
 		{
 			if ((this.mode == TextFieldExListMode.EditPassive) &&
@@ -210,19 +223,6 @@ namespace Epsitec.Common.Widgets
 			return base.MapIndexToComboList (value);
 		}
 		
-		protected override void ComboActivatedIndex(int sel)
-		{
-			if ((this.HasPlaceHolder) &&
-				(sel == 0))
-			{
-				this.CloseCombo (true);
-			}
-			else
-			{
-				base.ComboActivatedIndex (sel);
-			}
-		}
-
 		protected override void UpdateButtonGeometry()
 		{
 			if (this.accept_reject_behavior != null)

@@ -54,19 +54,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		protected override void Dispose(bool disposing)
-		{
-			if ( disposing )
-			{
-				this.button.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
-				this.button.Dispose();
-				this.button = null;
-			}
-			
-			base.Dispose(disposing);
-		}
-
-		
 		public bool FindMatch(string find, out int index, out bool exactMatch)
 		{
 			index = this.items.FindExactMatch(find);
@@ -97,6 +84,19 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		protected override void Dispose(bool disposing)
+		{
+			if ( disposing )
+			{
+				this.button.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
+				this.button.Dispose();
+				this.button = null;
+			}
+			
+			base.Dispose(disposing);
+		}
+
+		
 		protected override void UpdateButtonGeometry()
 		{
 			base.UpdateButtonGeometry();
@@ -119,23 +119,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected override bool ProcessKeyDown(Message message, Drawing.Point pos)
-		{
-			if ( this.OpenComboAfterKeyDown(message) == false )
-			{
-				switch ( message.KeyCode )
-				{
-					case KeyCode.ArrowUp:	this.Navigate(-1);	break;
-					case KeyCode.ArrowDown:	this.Navigate(1);	break;
-					
-					default:
-						return base.ProcessKeyDown(message, pos);
-				}
-			}
-			
-			return true;
-		}
-		
 		protected virtual bool OpenComboAfterKeyDown(Message message)
 		{
 			if ( this.IsReadOnly )
@@ -153,6 +136,87 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
+		
+		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		{
+			if ( message.Type == MessageType.MouseWheel )
+			{
+				if ( message.Wheel > 0 )  this.Navigate(-1);
+				if ( message.Wheel < 0 )  this.Navigate(1);
+				message.Consumer = this;
+				return;
+			}
+
+			if ( this.IsReadOnly )
+			{
+				if ( message.Type == MessageType.MouseDown )
+				{
+					this.OpenCombo();
+					return;
+				}
+			}
+			
+			base.ProcessMessage(message, pos);
+		}
+
+		protected override bool ProcessKeyDown(Message message, Drawing.Point pos)
+		{
+			if ( this.OpenComboAfterKeyDown(message) == false )
+			{
+				switch ( message.KeyCode )
+				{
+					case KeyCode.ArrowUp:	this.Navigate(-1);	break;
+					case KeyCode.ArrowDown:	this.Navigate(1);	break;
+					
+					default:
+						return base.ProcessKeyDown(message, pos);
+				}
+			}
+			
+			return true;
+		}
+		
+		protected virtual  void ProcessComboActivatedIndex(int sel)
+		{
+			sel = this.MapComboListToIndex(sel);
+			
+			// Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
+			// est validée par un clic de souris, au contraire de ProcessComboSelectedIndex
+			// qui est appelée à chaque changement "visuel".
+			
+			if ( sel == -1 )  return;
+			
+			this.SelectedIndex = sel;
+//			this.SetFocused(true);
+			this.CloseCombo(true);
+		}
+		
+		protected virtual  void ProcessComboSelectedIndex(int sel)
+		{
+			this.SelectedIndex = this.MapComboListToIndex(sel);
+		}
+		
+		
+		protected virtual void FillComboList(Helpers.StringCollection list)
+		{
+			for ( int i=0 ; i<this.items.Count ; i++ )
+			{
+				string name = this.items.GetName(i);
+				string text = this.items[i];
+				list.Add(name, text);
+			}
+		}
+		
+		protected virtual int MapComboListToIndex(int value)
+		{
+			return (value < 0) ? -1 : value;
+		}
+		
+		protected virtual int MapIndexToComboList(int value)
+		{
+			return (value < 0) ? -1 : value;
+		}
+		
 		
 		protected virtual void Navigate(int dir)
 		{
@@ -178,90 +242,6 @@ namespace Epsitec.Common.Widgets
 			this.SelectedIndex = sel;
 			this.SetFocused(true);
 		}
-		
-		protected override void ProcessMessage(Message message, Drawing.Point pos)
-		{
-			if ( message.Type == MessageType.MouseWheel )
-			{
-				if ( message.Wheel > 0 )  this.Navigate(-1);
-				if ( message.Wheel < 0 )  this.Navigate(1);
-				message.Consumer = this;
-				return;
-			}
-
-			if ( this.IsReadOnly )
-			{
-				if ( message.Type == MessageType.MouseDown )
-				{
-					this.OpenCombo();
-					return;
-				}
-			}
-			
-			base.ProcessMessage(message, pos);
-		}
-
-		
-		private void MessageFilter(object sender, Message message)
-		{
-			if ( this.scrollList == null )  return;
-			Window window = sender as Window;
-
-			switch ( message.Type )
-			{
-				case MessageType.KeyPress:
-					IFeel feel = Feel.Factory.Active;
-					
-					if ( feel.TestCancelKey(message) )
-					{
-						this.CloseCombo(false);
-						message.Swallowed = true;
-					}
-					if ( feel.TestAcceptKey(message) )
-					{
-						this.CloseCombo(true);
-						message.Swallowed = true;
-					}
-					if ( feel.TestNavigationKey(message) )
-					{
-						this.CloseCombo(true);
-						Message.DefineLastWindow (this.Window);
-					}
-					break;
-				
-				case MessageType.MouseDown:
-					Drawing.Point mouse = window.Root.MapClientToScreen(message.Cursor);
-					Drawing.Point pos = this.scrollList.MapScreenToClient(mouse);
-					if ( !this.scrollList.HitTest(pos) )
-					{
-						this.CloseCombo(false);
-						message.Swallowed = ! message.NonClient;
-					}
-					break;
-			}
-		}
-		
-		
-		protected virtual void FillComboList(Helpers.StringCollection list)
-		{
-			for ( int i=0 ; i<this.items.Count ; i++ )
-			{
-				string name = this.items.GetName(i);
-				string text = this.items[i];
-				list.Add(name, text);
-			}
-		}
-		
-		protected virtual int MapComboListToIndex(int value)
-		{
-			return (value < 0) ? -1 : value;
-		}
-		
-		protected virtual int MapIndexToComboList(int value)
-		{
-			return (value < 0) ? -1 : value;
-		}
-		
 		
 		protected virtual void OpenCombo()
 		{
@@ -307,13 +287,12 @@ namespace Epsitec.Common.Widgets
 			this.scrollList.Location = new Drawing.Point(shadow.Left, shadow.Bottom);
 			this.scrollList.SelectedIndexChanged += new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
 			this.scrollList.SelectionActivated += new Support.EventHandler(this.HandleScrollListSelectionActivated);
-			Window.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
-			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
+			this.RegisterFilter();
 			this.comboWindow.Root.Children.Add(this.scrollList);
 			this.comboWindow.AnimateShow(Animation.RollDown);
 			
-			this.SetFocused(true);
-			this.SetFocused(false);
+//			this.SetFocused(true);
+//			this.SetFocused(false);
 			this.scrollList.SetFocused(true);
 			
 			this.openText = this.Text;
@@ -323,9 +302,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.scrollList.SelectionActivated -= new Support.EventHandler(this.HandleScrollListSelectionActivated);
 			this.scrollList.SelectedIndexChanged -= new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
-			Window.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
-			Window.ApplicationDeactivated -= new Support.EventHandler(this.HandleApplicationDeactivated);
-			
+			this.UnregisterFilter();
 			this.scrollList.Dispose();
 			this.scrollList = null;
 			
@@ -338,7 +315,11 @@ namespace Epsitec.Common.Widgets
 			this.comboWindow = null;
 			
 			this.SelectAll();
-			this.SetFocused(true);
+			
+			if ( this.AutoFocus )
+			{
+				this.SetFocused(true);
+			}
 			
 			if ( !accept )
 			{
@@ -361,12 +342,55 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		private void MessageFilter(object sender, Message message)
+		{
+			Window window = sender as Window;
+			
+			System.Diagnostics.Debug.Assert(this.scrollList != null);
+			System.Diagnostics.Debug.Assert(window != null);
+			
+			if ( this.scrollList == null )  return;
+			
+			IFeel feel = Feel.Factory.Active;
+			
+			switch ( message.Type )
+			{
+				case MessageType.KeyPress:
+					if ( feel.TestCancelKey(message) )
+					{
+						this.CloseCombo(false);
+						message.Swallowed = true;
+					}
+					if ( feel.TestAcceptKey(message) )
+					{
+						this.CloseCombo(true);
+						message.Swallowed = true;
+					}
+					if ( feel.TestNavigationKey(message) )
+					{
+						this.CloseCombo(true);
+						Message.DefineLastWindow (this.Window);
+					}
+					break;
+				
+				case MessageType.MouseDown:
+					Drawing.Point mouse = window.Root.MapClientToScreen(message.Cursor);
+					Drawing.Point pos = this.scrollList.MapScreenToClient(mouse);
+					if ( !this.scrollList.HitTest(pos) )
+					{
+						this.CloseCombo(false);
+						message.Swallowed = ! message.NonClient;
+					}
+					break;
+			}
+		}
+		
+		
 		private void HandleApplicationDeactivated(object sender)
 		{
 			this.CloseCombo(false);
 		}
 
-		
 		private void HandleButtonPressed(object sender, MessageEventArgs e)
 		{
 			this.OpenCombo();
@@ -376,35 +400,43 @@ namespace Epsitec.Common.Widgets
 		{
 			// L'utilisateur a cliqué dans la liste pour terminer son choix.
 			
-			this.ComboActivatedIndex(this.scrollList.SelectedIndex);
+			this.ProcessComboActivatedIndex(this.scrollList.SelectedIndex);
 		}
 		
 		private void HandleScrollerSelectedIndexChanged(object sender)
 		{
 			// L'utilisateur a simplement déplacé la souris dans la liste.
 			
-			this.ComboSelectedIndex(this.scrollList.SelectedIndex);
+			this.ProcessComboSelectedIndex(this.scrollList.SelectedIndex);
 		}
 		
 		
-		protected virtual void ComboActivatedIndex(int sel)
+		private void RegisterFilter()
 		{
-			sel = this.MapComboListToIndex(sel);
+			Window.MessageFilter          += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
+			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
 			
-			// Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
-			// est validée par un clic de souris, au contraire de ComboSelectedIndex
-			// qui est appelée à chaque changement "visuel".
-			
-			if ( sel == -1 )  return;
-			
-			this.SelectedIndex = sel;
-			this.SetFocused(true);
-			this.CloseCombo(true);
+			if ( this.Window != null &&
+				 this.AutoFocus == false )
+			{
+				this.initiallyFocusedWidget = this.Window.FocusedWidget;
+			}
 		}
 		
-		protected virtual void ComboSelectedIndex(int sel)
+		private void UnregisterFilter()
 		{
-			this.SelectedIndex = this.MapComboListToIndex(sel);
+			Window.MessageFilter          -= new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
+			Window.ApplicationDeactivated -= new Support.EventHandler(this.HandleApplicationDeactivated);
+			
+			if ( this.initiallyFocusedWidget != null )
+			{
+				if ( this.initiallyFocusedWidget.Window != null )
+				{
+					this.initiallyFocusedWidget.SetFocused(true);
+				}
+				
+				this.initiallyFocusedWidget = null;
+			}
 		}
 		
 		
@@ -522,6 +554,7 @@ namespace Epsitec.Common.Widgets
 		
 		public event Support.CancelEventHandler		OpeningCombo;
 		
+		private Widget								initiallyFocusedWidget;
 		
 		protected GlyphButton						button;
 		protected Helpers.StringCollection			items;

@@ -24,6 +24,6 @@ namespace Epsitec.Common.Support.Data
 		bool CheckMoveRow(int row, int distance);
 		bool CheckEnabledCell(int row, int column);
 		
-		event Epsitec.Common.Support.EventHandler StoreChanged;
+		event Support.EventHandler		StoreContentsChanged;
 	}
 }

@@ -74,6 +74,18 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public string							Name
+		{
+			get
+			{
+				return this.name;
+			}
+			set
+			{
+				this.name = value;
+			}
+		}
+		
 		public string[]							Suffixes
 		{
 			get
@@ -327,5 +339,6 @@ namespace Epsitec.Common.Support
 		
 		
 		private System.Collections.ArrayList	list;
+		private string							name;
 	}
 }

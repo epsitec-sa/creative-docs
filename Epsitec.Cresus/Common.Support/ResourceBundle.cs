@@ -853,7 +853,16 @@ namespace Epsitec.Common.Support
 			
 			if (node.Attributes[name] == null)
 			{
+				if (value == "")
+				{
+					return;
+				}
+				
 				node.Attributes.Append (this.XmlDocument.CreateAttribute (name));
+				
+				this.OnFieldsChanged ();
+				
+				return;
 			}
 			
 			if (value == "")
@@ -862,6 +871,11 @@ namespace Epsitec.Common.Support
 			}
 			else
 			{
+				if (node.Attributes[name].Value == value)
+				{
+					return;
+				}
+				
 				node.Attributes[name].Value = value;
 			}
 			

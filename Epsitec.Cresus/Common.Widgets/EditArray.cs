@@ -1177,7 +1177,7 @@ namespace Epsitec.Common.Widgets
 				
 				this.host.InteractionModeChanged += new Support.EventHandler (this.HandleHostInteractionModeChanged);
 				this.host.SelectedIndexChanged   += new Support.EventHandler (this.HandleHostSelectedIndexChanged);
-				this.host.TextArrayStoreChanged  += new Support.EventHandler (this.HandleHostTextArrayStoreChanged);
+				this.host.TextArrayStoreContentsChanged  += new Support.EventHandler (this.HandleHostTextArrayStoreContentsChanged);
 				this.host.ContentsInvalidated    += new Support.EventHandler (this.HandleHostContentsInvalidated);
 				
 				this.UpdateStore ();
@@ -1437,7 +1437,7 @@ namespace Epsitec.Common.Widgets
 				this.UpdateCommandStates ();
 			}
 			
-			private void HandleHostTextArrayStoreChanged(object sender)
+			private void HandleHostTextArrayStoreContentsChanged(object sender)
 			{
 				this.UpdateStore ();
 			}
@@ -1540,7 +1540,7 @@ namespace Epsitec.Common.Widgets
 				if (this.host[row, column] != value)
 				{
 					this.host[row, column] = value;
-					this.OnStoreChanged ();
+					this.OnStoreContentsChanged ();
 				}
 			}
 
@@ -1571,7 +1571,7 @@ namespace Epsitec.Common.Widgets
 					this.host[row_b, i] = a;
 				}
 				
-				this.OnStoreChanged ();
+				this.OnStoreContentsChanged ();
 			}
 
 			
@@ -1603,14 +1603,14 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			public event Support.EventHandler	StoreChanged;
+			public event Support.EventHandler	StoreContentsChanged;
 			#endregion
 			
-			protected virtual void OnStoreChanged()
+			protected virtual void OnStoreContentsChanged()
 			{
-				if (this.StoreChanged != null)
+				if (this.StoreContentsChanged != null)
 				{
-					this.StoreChanged (this);
+					this.StoreContentsChanged (this);
 				}
 			}
 			

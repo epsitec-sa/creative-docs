@@ -81,14 +81,14 @@ namespace Epsitec.Common.Support.Data
 		}
 		
 		
-		public event Epsitec.Common.Support.EventHandler StoreChanged;
+		public event Support.EventHandler		StoreContentsChanged;
 		#endregion
 		
-		protected virtual void OnStoreChanged()
+		protected virtual void OnStoreContentsChanged()
 		{
-			if (this.StoreChanged != null)
+			if (this.StoreContentsChanged != null)
 			{
-				this.StoreChanged (this);
+				this.StoreContentsChanged (this);
 			}
 		}
 		
