@@ -996,6 +996,17 @@ namespace Epsitec.Common.Widgets.Platform
 		}
 		
 		
+		internal void ShowWindow()
+		{
+			if (this.IsMouseActivationEnabled)
+			{
+				this.Show ();
+			}
+			else
+			{
+				Win32Api.ShowWindow (this.Handle, Win32Const.SW_SHOWNA);
+			}
+		}
 		
 		
 		private bool							widget_window_disposed;

@@ -148,10 +148,16 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ((this.Value != value) ||
-					(this.Text == ""))
+				if ( this.Value != value || this.Text == "" )
 				{
-					this.Text = System.Convert.ToString(value);
+					if ( value%1.0 == 0.0 )
+					{
+						this.Text = System.Convert.ToString(value);
+					}
+					else
+					{
+						this.Text = value.ToString("F2");
+					}
 					this.SelectAll();
 				}
 			}
