@@ -29,19 +29,8 @@ namespace Epsitec.Common.Document.Settings
 			this.windowLocation = new Drawing.Point(0, 0);
 			this.windowSize = new Drawing.Size(830, 580);
 			this.isFullScreen = false;
+			this.windowBounds = new System.Collections.Hashtable();
 
-			this.settingsLocation = new Drawing.Point(0, 0);
-			this.settingsSize = new Drawing.Size(0, 0);
-			
-			this.infosLocation = new Drawing.Point(0, 0);
-			this.infosSize = new Drawing.Size(0, 0);
-			
-			this.exportLocation = new Drawing.Point(0, 0);
-			this.exportSize = new Drawing.Size(0, 0);
-			
-			this.aboutLocation = new Drawing.Point(0, 0);
-			this.aboutSize = new Drawing.Size(0, 0);
-			
 			this.screenDpi = 96.0;
 			this.adorner = "LookMetal";
 			this.defaultZoom = 1.5;
@@ -90,29 +79,27 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
-		public Drawing.Point WindowLocation
+		// Fenêtre principale de l'application.
+		public Drawing.Rectangle MainWindow
 		{
 			get
 			{
-				return this.windowLocation;
+				Drawing.Rectangle rect = new Rectangle(this.windowLocation, this.windowSize);
+				if ( this.windowLocation.IsEmpty )
+				{
+					// Lors de la première exécution, met l'application au centre
+					// de la fenêtre.
+					Widgets.ScreenInfo si = Widgets.ScreenInfo.Find(new Drawing.Point(0,0));
+					Rectangle area = si.WorkingArea;
+					rect = new Rectangle(area.Center-rect.Size/2, area.Center+rect.Size/2);
+				}
+				return GlobalSettings.WindowClip(rect);
 			}
 
 			set
 			{
-				this.windowLocation = value;
-			}
-		}
-
-		public Drawing.Size WindowSize
-		{
-			get
-			{
-				return this.windowSize;
-			}
-
-			set
-			{
-				this.windowSize = value;
+				this.windowLocation = value.Location;
+				this.windowSize = value.Size;
 			}
 		}
 
@@ -130,111 +117,30 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
-		public Drawing.Point SettingsLocation
+		// Ajoute une définition de fenêtre.
+		public void SetWindowBounds(string name, Drawing.Point location, Drawing.Size size)
 		{
-			get
+			WindowBounds wb = this.windowBounds[name] as WindowBounds;
+			if ( wb == null )
 			{
-				return this.settingsLocation;
+				wb = new WindowBounds(location, size);
+				this.windowBounds.Add(name, wb);
 			}
-
-			set
+			else
 			{
-				this.settingsLocation = value;
+				wb.Location = location;
+				wb.Size = size;
 			}
 		}
 
-		public Drawing.Size SettingsSize
+		// Cherche une définition de fenêtre.
+		public bool GetWindowBounds(string name, ref Drawing.Point location, ref Drawing.Size size)
 		{
-			get
-			{
-				return this.settingsSize;
-			}
-
-			set
-			{
-				this.settingsSize = value;
-			}
-		}
-
-
-		public Drawing.Point InfosLocation
-		{
-			get
-			{
-				return this.infosLocation;
-			}
-
-			set
-			{
-				this.infosLocation = value;
-			}
-		}
-
-		public Drawing.Size InfosSize
-		{
-			get
-			{
-				return this.infosSize;
-			}
-
-			set
-			{
-				this.infosSize = value;
-			}
-		}
-
-
-		public Drawing.Point ExportLocation
-		{
-			get
-			{
-				return this.exportLocation;
-			}
-
-			set
-			{
-				this.exportLocation = value;
-			}
-		}
-
-		public Drawing.Size ExportSize
-		{
-			get
-			{
-				return this.exportSize;
-			}
-
-			set
-			{
-				this.exportSize = value;
-			}
-		}
-
-
-		public Drawing.Point AboutLocation
-		{
-			get
-			{
-				return this.aboutLocation;
-			}
-
-			set
-			{
-				this.aboutLocation = value;
-			}
-		}
-
-		public Drawing.Size AboutSize
-		{
-			get
-			{
-				return this.aboutSize;
-			}
-
-			set
-			{
-				this.aboutSize = value;
-			}
+			WindowBounds wb = this.windowBounds[name] as WindowBounds;
+			if ( wb == null )  return false;
+			location = wb.Location;
+			size = wb.Size;
+			return true;
 		}
 
 
@@ -434,6 +340,40 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
+		// Adapte un rectangle pour qu'il entre dans l'écran, si possible
+		// sans modifier ses dimensions. Utilisé pour les dialogues.
+		public static Drawing.Rectangle WindowClip(Drawing.Rectangle rect)
+		{
+			Widgets.ScreenInfo si = Widgets.ScreenInfo.Find(rect.Center);
+			Rectangle area = si.WorkingArea;
+
+			rect.Width  = System.Math.Min(rect.Width,  area.Width );
+			rect.Height = System.Math.Min(rect.Height, area.Height);
+
+			if ( rect.Left < area.Left )  // dépasse à gauche ?
+			{
+				rect.Offset(area.Left-rect.Left, 0);
+			}
+
+			if ( rect.Right > area.Right )  // dépasse à droite ?
+			{
+				rect.Offset(area.Right-rect.Right, 0);
+			}
+
+			if ( rect.Bottom < area.Bottom )  // dépasse en bas ?
+			{
+				rect.Offset(0, area.Bottom-rect.Bottom);
+			}
+
+			if ( rect.Top > area.Top )  // dépasse en haut ?
+			{
+				rect.Offset(0, area.Top-rect.Top);
+			}
+
+			return rect;
+		}
+
+
 		#region FirstAction
 		public static int FirstActionCount
 		{
@@ -515,21 +455,12 @@ namespace Epsitec.Common.Document.Settings
 		// Sérialise les réglages.
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
+			info.AddValue("Version", 1);
+
 			info.AddValue("WindowLocation", this.windowLocation);
 			info.AddValue("WindowSize", this.windowSize);
 			info.AddValue("IsFullScreen", this.isFullScreen);
-
-			info.AddValue("SettingsLocation", this.settingsLocation);
-			info.AddValue("SettingsSize", this.settingsSize);
-
-			info.AddValue("InfosLocation", this.infosLocation);
-			info.AddValue("InfosSize", this.infosSize);
-
-			info.AddValue("ExportLocation", this.exportLocation);
-			info.AddValue("ExportSize", this.exportSize);
-
-			info.AddValue("AboutLocation", this.aboutLocation);
-			info.AddValue("AboutSize", this.aboutSize);
+			info.AddValue("WindowBounds", this.windowBounds);
 
 			info.AddValue("ScreenDpi", this.screenDpi);
 			info.AddValue("Adorner", this.adorner);
@@ -549,21 +480,12 @@ namespace Epsitec.Common.Document.Settings
 		// Constructeur qui désérialise les réglages.
 		protected GlobalSettings(SerializationInfo info, StreamingContext context) : this()
 		{
+			int version = info.GetInt32("Version");
+
 			this.windowLocation = (Drawing.Point) info.GetValue("WindowLocation", typeof(Drawing.Point));
 			this.windowSize = (Drawing.Size) info.GetValue("WindowSize", typeof(Drawing.Size));
 			this.isFullScreen = info.GetBoolean("IsFullScreen");
-
-			this.settingsLocation = (Drawing.Point) info.GetValue("SettingsLocation", typeof(Drawing.Point));
-			this.settingsSize = (Drawing.Size) info.GetValue("SettingsSize", typeof(Drawing.Size));
-
-			this.infosLocation = (Drawing.Point) info.GetValue("InfosLocation", typeof(Drawing.Point));
-			this.infosSize = (Drawing.Size) info.GetValue("InfosSize", typeof(Drawing.Size));
-
-			this.exportLocation = (Drawing.Point) info.GetValue("ExportLocation", typeof(Drawing.Point));
-			this.exportSize = (Drawing.Size) info.GetValue("ExportSize", typeof(Drawing.Size));
-
-			this.aboutLocation = (Drawing.Point) info.GetValue("AboutLocation", typeof(Drawing.Point));
-			this.aboutSize = (Drawing.Size) info.GetValue("AboutSize", typeof(Drawing.Size));
+			this.windowBounds = (System.Collections.Hashtable) info.GetValue("WindowBounds", typeof(System.Collections.Hashtable));
 
 			this.screenDpi = info.GetDouble("ScreenDpi");
 			this.adorner = info.GetString("Adorner");
@@ -584,15 +506,8 @@ namespace Epsitec.Common.Document.Settings
 
 		protected Drawing.Point					windowLocation;
 		protected Drawing.Size					windowSize;
-		protected Drawing.Point					settingsLocation;
-		protected Drawing.Size					settingsSize;
-		protected Drawing.Point					infosLocation;
-		protected Drawing.Size					infosSize;
-		protected Drawing.Point					exportLocation;
-		protected Drawing.Size					exportSize;
-		protected Drawing.Point					aboutLocation;
-		protected Drawing.Size					aboutSize;
 		protected bool							isFullScreen;
+		protected System.Collections.Hashtable	windowBounds;
 		protected double						screenDpi;
 		protected string						adorner;
 		protected double						defaultZoom;
@@ -606,5 +521,47 @@ namespace Epsitec.Common.Document.Settings
 		protected Drawing.ColorCollection		colorCollection;
 		protected string						colorCollectionDirectory;
 		protected string						colorCollectionFilename;
+
+
+		#region WindowBounds
+		[System.Serializable()]
+		protected class WindowBounds : ISerializable
+		{
+			public WindowBounds(Drawing.Point location, Drawing.Size size)
+			{
+				this.location = location;
+				this.size = size;
+			}
+
+			public Drawing.Point Location
+			{
+				get { return this.location; }
+				set { this.location = value; }
+			}
+
+			public Drawing.Size Size
+			{
+				get { return this.size; }
+				set { this.size = value; }
+			}
+
+			// Sérialise les réglages.
+			public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
+			{
+				info.AddValue("Location", this.location);
+				info.AddValue("Size", this.size);
+			}
+
+			// Constructeur qui désérialise les réglages.
+			protected WindowBounds(SerializationInfo info, StreamingContext context)
+			{
+				this.location = (Drawing.Point) info.GetValue("Location", typeof(Drawing.Point));
+				this.size = (Drawing.Size) info.GetValue("Size", typeof(Drawing.Size));
+			}
+		
+			protected Drawing.Point					location;
+			protected Drawing.Size					size;
+		}
+		#endregion
 	}
 }

@@ -393,7 +393,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 				double len = Point.Distance(p1, p2);
 				double angle = Point.ComputeAngleDeg(p1, p2);
-				string text = string.Format("lg={0} a={1}", this.document.Modifier.RealToString(len), angle.ToString("F1"));
+				string text = string.Format("lg={0} a={1}\u00B0", this.document.Modifier.RealToString(len), angle.ToString("F1"));
 				this.document.Modifier.TextInfoModif = text;
 			}
 			else
@@ -411,7 +411,7 @@ namespace Epsitec.Common.Document.Objects
 				double len2 = Point.Distance(p2, p3);
 				double angle1 = Point.ComputeAngleDeg(p1, p2);
 				double angle2 = Point.ComputeAngleDeg(p3, p2);
-				string text = string.Format("lg={0} a={2}  |  lg={1} a={3}", this.document.Modifier.RealToString(len1), this.document.Modifier.RealToString(len2), this.document.Modifier.AngleToString(angle1), this.document.Modifier.AngleToString(angle2));
+				string text = string.Format("lg={0} a={2}\u00B0  |  lg={1} a={3}\u00B0", this.document.Modifier.RealToString(len1), this.document.Modifier.RealToString(len2), this.document.Modifier.AngleToString(angle1), this.document.Modifier.AngleToString(angle2));
 				this.document.Modifier.TextInfoModif = text;
 			}
 		}
@@ -439,43 +439,21 @@ namespace Epsitec.Common.Document.Objects
 		// Crée l'objet temporaire pour montrer le nouveau segment.
 		protected void TempCreate(Point pos, DrawingContext drawingContext)
 		{
-			this.document.Modifier.OpletQueueEnable = false;
-
-			if ( this.tempLine == null )
-			{
-				this.tempLine = new Objects.Line(this.document, this, true);
-			}
-
-			Properties.Gradient pg = this.tempLine.PropertyLineColor;
-			pg.Color1 = Color.FromARGB(0.2, pg.Color1.R, pg.Color1.G, pg.Color1.B);
-			pg.Color2 = Color.FromARGB(0.2, pg.Color2.R, pg.Color2.G, pg.Color2.B);
-
-			Properties.Line pl = this.tempLine.PropertyLineMode;
-			if ( pl.Width == 0 )  pl.Width = 1.0/drawingContext.ScaleX;
-
-			Properties.Arrow pa = this.tempLine.PropertyArrow;
-			pa.ArrowType1 = Properties.ArrowType.Right;
-			pa.ArrowType2 = Properties.ArrowType.Right;
-
-			this.document.Modifier.OpletQueueEnable = true;
-
-			this.tempLine.CreateMouseDown(pos, drawingContext);
+			this.tempLineExist = true;
+			this.tempLineP1 = pos;
+			this.tempLineP2 = pos;
 		}
 
 		// Déplace l'objet temporaire pour montrer le nouveau segment.
 		protected void TempMove(Point pos, DrawingContext drawingContext)
 		{
-			if ( this.tempLine != null )
-			{
-				this.tempLine.CreateMouseMove(pos, drawingContext);
-			}
+			this.tempLineP2 = pos;
 		}
 
 		// Détruit l'objet temporaire pour montrer le nouveau segment.
 		protected void TempDelete()
 		{
-			if ( this.tempLine != null )  this.tempLine.Dispose();
-			this.tempLine = null;
+			this.tempLineExist = false;
 		}
 
 		
@@ -491,11 +469,11 @@ namespace Epsitec.Common.Document.Objects
 						   out pathLine);
 
 			Path pathTemp = null;
-			if ( this.tempLine != null )
+			if ( this.tempLineExist )
 			{
 				pathTemp = new Path();
-				pathTemp.MoveTo(this.tempLine.Handle(0).Position);
-				pathTemp.LineTo(this.tempLine.Handle(1).Position);
+				pathTemp.MoveTo(this.tempLineP1);
+				pathTemp.LineTo(this.tempLineP2);
 			}
 
 			Path[] paths = new Path[4];
@@ -808,9 +786,14 @@ namespace Epsitec.Common.Document.Objects
 				graphics.RenderSolid(drawingContext.HiliteOutlineColor);
 			}
 
-			if ( this.tempLine != null )
+			if ( this.tempLineExist )
 			{
-				this.tempLine.DrawGeometry(graphics, drawingContext);
+				Path pathTemp = new Path();
+				pathTemp.MoveTo(this.tempLineP1);
+				pathTemp.LineTo(this.tempLineP2);
+				Color color = this.PropertyLineColor.Color1;
+				color.A = 0.2;
+				this.PropertyLineMode.DrawPath(graphics, drawingContext, pathTemp, color);
 			}
 
 			if ( this.IsDrawDash(drawingContext) )
@@ -1033,6 +1016,8 @@ namespace Epsitec.Common.Document.Objects
 
 		
 		protected bool				mouseDown = false;
-		protected Objects.Line		tempLine;
+		protected bool				tempLineExist = false;
+		protected Point				tempLineP1;
+		protected Point				tempLineP2;
 	}
 }

@@ -21,17 +21,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			if ( this.window == null )
 			{
-				double dx = 275;
-				double dy = 190;
 				this.window = new Window();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-
-				Rectangle wrect = this.CurrentBounds;
-				this.window.ClientSize = new Size(dx, dy);
-				this.window.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
-
+				this.WindowInit("Key", 275, 190);
 				this.window.Text = "Clé...";
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
@@ -149,6 +143,12 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			this.UpdateButton();
 
 			this.window.ShowDialog();
+		}
+
+		// Enregistre la position de la fenêtre du dialogue.
+		public override void Save()
+		{
+			this.WindowSave("Key");
 		}
 
 

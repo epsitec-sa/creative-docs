@@ -21,22 +21,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			if ( this.window == null )
 			{
-				double dx = 400;
-				double dy = 243;
 				this.window = new Window();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
-				if ( this.globalSettings.AboutLocation.IsEmpty )
-				{
-					Rectangle wrect = this.CurrentBounds;
-					this.window.ClientSize = new Size(dx, dy);
-					this.window.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
-				}
-				else
-				{
-					this.window.ClientSize = new Size(dx, dy);
-					this.window.WindowLocation = this.globalSettings.AboutLocation;
-				}
+				this.WindowInit("About", 400, 243);
 				this.window.Text = "A propos de...";
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
@@ -57,15 +45,13 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 				ToolTip.Default.SetToolTip(buttonClose, "Fermer ce dialogue");
 			}
 
-			this.window.Show();
+			this.window.ShowDialog();
 		}
 
 		// Enregistre la position de la fenêtre du dialogue.
 		public override void Save()
 		{
-			if ( this.window == null )  return;
-			this.globalSettings.AboutLocation = this.window.WindowLocation;
-			this.globalSettings.AboutSize = this.window.ClientSize;
+			this.WindowSave("About");
 		}
 
 

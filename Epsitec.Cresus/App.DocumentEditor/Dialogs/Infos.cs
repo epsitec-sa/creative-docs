@@ -21,23 +21,11 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			if ( this.window == null )
 			{
-				double dx = 300;
-				double dy = 250;
 				this.window = new Window();
 				//?this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
 				this.window.PreventAutoClose = true;
-				if ( this.globalSettings.InfosLocation.IsEmpty )
-				{
-					Rectangle wrect = this.CurrentBounds;
-					this.window.ClientSize = new Size(dx, dy);
-					this.window.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
-				}
-				else
-				{
-					this.window.ClientSize = this.globalSettings.InfosSize;
-					this.window.WindowLocation = this.globalSettings.InfosLocation;
-				}
+				this.WindowInit("Infos", 300, 250, true);
 				this.window.Text = "Informations";
 				this.window.Owner = this.editor.Window;
 				this.window.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
@@ -71,9 +59,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		// Enregistre la position de la fenêtre du dialogue.
 		public override void Save()
 		{
-			if ( this.window == null )  return;
-			this.globalSettings.InfosLocation = this.window.WindowLocation;
-			this.globalSettings.InfosSize = this.window.ClientSize;
+			this.WindowSave("Infos");
 		}
 
 		// Reconstruit le dialogue.

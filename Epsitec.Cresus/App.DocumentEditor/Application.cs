@@ -59,21 +59,8 @@ namespace Epsitec.App.DocumentEditor
 				this.mainWindow.Root.MinSize = new Size(430, 250);
 			}
 
-			if ( this.editor.GlobalSettings.WindowLocation.IsEmpty )
-			{
-				ScreenInfo si = ScreenInfo.Find(new Point(0,0));
-				Rectangle wa = si.WorkingArea;
-				if ( this.editor.GlobalSettings.WindowSize.Width  > wa.Width  ||
-					 this.editor.GlobalSettings.WindowSize.Height > wa.Height )
-				{
-					this.editor.GlobalSettings.WindowSize = wa.Size;
-					this.editor.GlobalSettings.IsFullScreen = true;
-				}
-				this.editor.GlobalSettings.WindowLocation = wa.Center-this.editor.GlobalSettings.WindowSize/2;
-			}
-			this.mainWindow.WindowLocation = this.editor.GlobalSettings.WindowLocation;
-			this.mainWindow.WindowSize     = this.editor.GlobalSettings.WindowSize;
-			this.mainWindow.IsFullScreen   = this.editor.GlobalSettings.IsFullScreen;
+			this.mainWindow.WindowBounds = this.editor.GlobalSettings.MainWindow;
+			this.mainWindow.IsFullScreen = this.editor.GlobalSettings.IsFullScreen;
 
 			switch ( type )
 			{

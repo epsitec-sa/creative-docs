@@ -23,22 +23,14 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				double dx = 400;
 				double dy = 200;
-
-				Point wLoc = this.globalSettings.WindowLocation;
-				Size wSize = this.globalSettings.WindowSize;
-				if ( wLoc.IsEmpty )
-				{
-					ScreenInfo si = ScreenInfo.Find(new Point(0,0));
-					Rectangle wa = si.WorkingArea;
-					wLoc = wa.Center-wSize/2;
-				}
-				Rectangle wrect = new Rectangle(wLoc, wSize);
+				Rectangle mw = this.globalSettings.MainWindow;
+				Rectangle wrect = new Rectangle(mw.Center.X-dx/2, mw.Center.Y-dy/2, dx, dy);
 
 				this.window = new Window();
 				this.window.MakeFramelessWindow();
 				this.window.MakeTopLevelWindow();
-				this.window.ClientSize = new Size(dx, dy);
-				this.window.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
+				this.window.ClientSize = wrect.Size;
+				this.window.WindowLocation = wrect.Location;
 				this.window.PreventAutoClose = true;
 				this.window.Root.PaintForeground += new PaintEventHandler(this.HandleSplashPaintForeground);
 				this.window.Owner = this.editor.Window;

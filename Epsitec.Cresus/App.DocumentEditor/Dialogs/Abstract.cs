@@ -44,6 +44,49 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		}
 
 
+		// Initialise la fenêtre, à partir de la taille intérieure,
+		// c'est-à-dire sans le cadre.
+		protected void WindowInit(string name, double dx, double dy)
+		{
+			this.WindowInit(name, dx, dy, false);
+		}
+
+		protected void WindowInit(string name, double dx, double dy, bool resizable)
+		{
+			this.window.ClientSize = new Size(dx, dy);
+			dx = this.window.WindowSize.Width;
+			dy = this.window.WindowSize.Height;  // taille avec le cadre
+
+			Point location = new Point();
+			Size size = new Size();
+			if ( this.globalSettings.GetWindowBounds(name, ref location, ref size) )
+			{
+				if ( resizable )
+				{
+					this.window.ClientSize = size;
+					dx = this.window.WindowSize.Width;
+					dy = this.window.WindowSize.Height;  // taille avec le cadre
+				}
+
+				Rectangle rect = new Rectangle(location, new Size(dx, dy));
+				rect = GlobalSettings.WindowClip(rect);
+				this.window.WindowBounds = rect;
+			}
+			else
+			{
+				Rectangle cb = this.CurrentBounds;
+				Rectangle rect = new Rectangle(cb.Center.X-dx/2, cb.Center.Y-dy/2, dx, dy);
+				this.window.WindowBounds = rect;
+			}
+		}
+
+		// Sauve la fenêtre.
+		protected void WindowSave(string name)
+		{
+			if ( this.window == null )  return;
+			this.globalSettings.SetWindowBounds(name, this.window.WindowLocation, this.window.ClientSize);
+		}
+
 		// Donne les frontières de l'application.
 		protected Rectangle CurrentBounds
 		{
@@ -51,7 +94,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 			{
 				if ( this.editor.Window == null )
 				{
-					return new Rectangle(this.globalSettings.WindowLocation, this.globalSettings.WindowSize);
+					return this.globalSettings.MainWindow;
 				}
 				else
 				{

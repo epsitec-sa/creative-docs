@@ -161,6 +161,7 @@ namespace Epsitec.Common.Document
 		// Initialise le sélectionneur complexe (avec poignées).
 		public void Initialize(Rectangle rect)
 		{
+			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.OpletQueueInsert();
 			this.finalData.P1 = rect.BottomLeft;
 			this.finalData.P2 = rect.TopRight;
@@ -171,6 +172,7 @@ namespace Epsitec.Common.Document
 			this.UpdateHandlePos();
 			this.Visible = true;
 			this.Handles = true;
+			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
 
 		// Retourne une position d'une poignée.
@@ -347,10 +349,21 @@ namespace Epsitec.Common.Document
 			this.OpletQueueInsert();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Modifier.ActiveViewer.MoveGlobalStarting();
-			Point p3 = this.finalData.P3;
-			Point p4 = this.finalData.P4;
-			this.finalData.P1 = horizontal ? p4 : p3;
-			this.finalData.P2 = horizontal ? p3 : p4;
+
+			Point p1 = this.finalData.P1;
+			Point p2 = this.finalData.P2;
+			Point center = this.finalData.Center;
+			if ( horizontal )
+			{
+				this.finalData.P1 = new Point(center.X*2-p1.X, p1.Y);
+				this.finalData.P2 = new Point(center.X*2-p2.X, p2.Y);
+			}
+			else
+			{
+				this.finalData.P1 = new Point(p1.X, center.Y*2-p1.Y);
+				this.finalData.P2 = new Point(p2.X, center.Y*2-p2.Y);
+			}
+
 			this.document.Modifier.ActiveViewer.MoveGlobalProcess(this);
 			this.UpdateHandlePos();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);

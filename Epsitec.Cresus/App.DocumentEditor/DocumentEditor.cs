@@ -57,13 +57,13 @@ namespace Epsitec.App.DocumentEditor
 
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive(this.globalSettings.Adorner);
 
-			this.dlgSplash   = new Dialogs.Splash(this);
-			this.dlgKey      = new Dialogs.Key(this);
-			this.dlgUpdate   = new Dialogs.Update(this);
 			this.dlgAbout    = new Dialogs.About(this);
-			this.dlgInfos    = new Dialogs.Infos(this);
 			this.dlgExport   = new Dialogs.Export(this);
+			this.dlgInfos    = new Dialogs.Infos(this);
+			this.dlgKey      = new Dialogs.Key(this);
 			this.dlgSettings = new Dialogs.Settings(this);
+			this.dlgSplash   = new Dialogs.Splash(this);
+			this.dlgUpdate   = new Dialogs.Update(this);
 
 			if ( this.type != DocumentType.Pictogram &&
 				 this.globalSettings.SplashScreen )
@@ -747,31 +747,38 @@ namespace Epsitec.App.DocumentEditor
 			di.bookPanels.Anchor = AnchorStyles.TopAndBottom | AnchorStyles.Right;
 			di.bookPanels.AnchorMargins = new Margins(1, 1, this.hToolBar.Height+1, this.info.Height+1);
 			di.bookPanels.Arrows = TabBookArrows.Stretch;
+			di.bookPanels.ActivePageChanged += new EventHandler(this.HandleBookPanelsActivePageChanged);
 
 			TabPage bookPrincipal = new TabPage();
 			bookPrincipal.TabTitle = "Attributs";
+			bookPrincipal.Name = "Principal";
 			di.bookPanels.Items.Add(bookPrincipal);
 
 			TabPage bookStyles = new TabPage();
 			bookStyles.TabTitle = "Styles";
+			bookStyles.Name = "Styles";
 			di.bookPanels.Items.Add(bookStyles);
 
 #if DEBUG
 			TabPage bookAutos = new TabPage();
 			bookAutos.TabTitle = "Auto";
+			bookAutos.Name = "Autos";
 			di.bookPanels.Items.Add(bookAutos);
 #endif
 
 			TabPage bookPages = new TabPage();
 			bookPages.TabTitle = "Pages";
+			bookPages.Name = "Pages";
 			di.bookPanels.Items.Add(bookPages);
 
 			TabPage bookLayers = new TabPage();
 			bookLayers.TabTitle = "Calques";
+			bookLayers.Name = "Layers";
 			di.bookPanels.Items.Add(bookLayers);
 
 			TabPage bookOper = new TabPage();
 			bookOper.TabTitle = "Op";
+			bookOper.Name = "Operations";
 			di.bookPanels.Items.Add(bookOper);
 
 			di.bookPanels.ActivePage = bookPrincipal;
@@ -979,6 +986,13 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.ActiveViewer.GuideInteractiveEnd();
 		}
 
+		private void HandleBookPanelsActivePageChanged(object sender)
+		{
+			TabBook book = sender as TabBook;
+			TabPage page = book.ActivePage;
+			this.CurrentDocument.Modifier.TabBookChanged(page.Name);
+		}
+
 
 		protected override void UpdateClientGeometry()
 		{
@@ -1180,8 +1194,11 @@ namespace Epsitec.App.DocumentEditor
 		// Retourne false si le fichier n'a pas été ouvert.
 		public bool Open(string filename)
 		{
+			this.MouseCursor = MouseCursor.AsWait;
+			this.Window.MouseCursor = this.MouseCursor;
+
 			string err = "";
-			if ( filename.ToLower().EndsWith("crcolors") )
+			if ( filename.ToLower().EndsWith(".crcolors") )
 			{
 				if ( !this.IsCurrentDocument )
 				{
@@ -1256,6 +1273,9 @@ namespace Epsitec.App.DocumentEditor
 			{
 				filename = this.CurrentDocument.Filename;
 			}
+
+			this.MouseCursor = MouseCursor.AsWait;
+			this.Window.MouseCursor = this.MouseCursor;
 
 			string err = this.CurrentDocument.Write(filename);
 			if ( err == "" )
@@ -1375,6 +1395,8 @@ namespace Epsitec.App.DocumentEditor
 			Document document = this.CurrentDocument;
 			Common.Dialogs.Print dialog = document.PrintDialog;
 			document.Printer.RestoreSettings(dialog.Document.PrinterSettings);
+			
+			dialog.Document.DocumentName = System.Utilities.XmlToText(Common.Document.Misc.FullName(document.Filename, false));
 			
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
@@ -2342,7 +2364,7 @@ namespace Epsitec.App.DocumentEditor
 		{
 			CommandDispatcher foo = this.CommandDispatcher;
 
-			this.newState = new CommandState("New", this.commandDispatcher);
+			this.newState = new CommandState("New", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaN);
 			this.openState = new CommandState("Open", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaO);
 			this.saveState = new CommandState("Save", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaS);
 			this.saveAsState = new CommandState("SaveAs", this.commandDispatcher);
@@ -3540,13 +3562,14 @@ namespace Epsitec.App.DocumentEditor
 		protected bool WritedGlobalSettings()
 		{
 			this.globalSettings.IsFullScreen = this.Window.IsFullScreen;
-			this.globalSettings.WindowLocation = this.Window.WindowPlacementNormalBounds.Location;
-			this.globalSettings.WindowSize = this.Window.WindowPlacementNormalBounds.Size;
+			this.globalSettings.MainWindow = this.Window.WindowPlacementNormalBounds;
 
 			this.dlgAbout.Save();
-			this.dlgInfos.Save();
 			this.dlgExport.Save();
+			this.dlgInfos.Save();
+			this.dlgKey.Save();
 			this.dlgSettings.Save();
+			this.dlgUpdate.Save();
 
 			this.globalSettings.Adorner = Epsitec.Common.Widgets.Adorner.Factory.ActiveName;
 
@@ -3585,7 +3608,7 @@ namespace Epsitec.App.DocumentEditor
 				}
 				else
 				{
-					return string.Format("{0}\\{1}", dir, "CresusDoc.data");
+					return string.Format("{0}\\{1}", dir, "CresusDocuments.data");
 				}
 			}
 		}
@@ -3614,13 +3637,13 @@ namespace Epsitec.App.DocumentEditor
 		protected bool							ignoreChange;
 		protected int							tabIndex;
 
-		protected Dialogs.Splash				dlgSplash;
-		protected Dialogs.Key					dlgKey;
-		protected Dialogs.Update				dlgUpdate;
 		protected Dialogs.About					dlgAbout;
-		protected Dialogs.Infos					dlgInfos;
 		protected Dialogs.Export				dlgExport;
+		protected Dialogs.Infos					dlgInfos;
+		protected Dialogs.Key					dlgKey;
 		protected Dialogs.Settings				dlgSettings;
+		protected Dialogs.Splash				dlgSplash;
+		protected Dialogs.Update				dlgUpdate;
 
 		protected CommandState					newState;
 		protected CommandState					openState;

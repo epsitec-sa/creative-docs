@@ -21,22 +21,10 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		{
 			if ( this.window == null )
 			{
-				double dx = 300;
-				double dy = 300;
 				this.window = new Window();
 				this.window.MakeFixedSizeWindow();
 				this.window.MakeSecondaryWindow();
-				if ( this.globalSettings.ExportLocation.IsEmpty )
-				{
-					Rectangle wrect = this.CurrentBounds;
-					this.window.ClientSize = new Size(dx, dy);
-					this.window.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
-				}
-				else
-				{
-					this.window.ClientSize = new Size(dx, dy);
-					this.window.WindowLocation = this.globalSettings.ExportLocation;
-				}
+				this.WindowInit("Export", 300, 300);
 				this.window.PreventAutoClose = true;
 				this.window.Owner = this.editor.Window;
 				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowExportCloseClicked);
@@ -81,9 +69,7 @@ namespace Epsitec.App.DocumentEditor.Dialogs
 		// Enregistre la position de la fenêtre du dialogue.
 		public override void Save()
 		{
-			if ( this.window == null )  return;
-			this.globalSettings.ExportLocation = this.window.WindowLocation;
-			this.globalSettings.ExportSize = this.window.ClientSize;
+			this.WindowSave("Export");
 		}
 
 		// Reconstruit le dialogue.

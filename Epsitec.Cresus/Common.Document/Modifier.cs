@@ -271,6 +271,29 @@ namespace Epsitec.Common.Document
 			}
 		}
 
+		// Appelé lorsque l'onglet a changé.
+		public void TabBookChanged(string name)
+		{
+			if ( name == "Operations" )
+			{
+				this.bookInitialSelector = SelectorType.None;
+				if ( !this.ActiveViewer.Selector.Visible ||
+					 this.ActiveViewer.Selector.TypeInUse != SelectorType.Zoomer )
+				{
+					this.bookInitialSelector = this.ActiveViewer.SelectorType;
+					this.ActiveViewer.SelectorType = SelectorType.Zoomer;
+				}
+			}
+			else
+			{
+				if ( this.bookInitialSelector != SelectorType.None )
+				{
+					this.ActiveViewer.SelectorType = this.bookInitialSelector;
+					this.bookInitialSelector = SelectorType.None;
+				}
+			}
+		}
+
 
 		#region RealUnit
 		// Conversion d'une distance en chaîne.
@@ -1660,8 +1683,18 @@ namespace Epsitec.Common.Document
 			this.OpletQueueBeginAction();
 
 			this.document.Notifier.EnableSelectionChanged = false;
-			this.operInitialSelector = this.ActiveViewer.SelectorType;
-			this.ActiveViewer.SelectorType = SelectorType.Zoomer;
+
+			if ( this.ActiveViewer.Selector.Visible &&
+				 this.ActiveViewer.Selector.TypeInUse == SelectorType.Zoomer )
+			{
+				this.operInitialSelector = SelectorType.None;
+			}
+			else
+			{
+				this.operInitialSelector = this.ActiveViewer.SelectorType;
+				this.ActiveViewer.SelectorType = SelectorType.Zoomer;
+			}
+
 			this.document.Notifier.EnableSelectionChanged = true;
 		}
 
@@ -1669,7 +1702,12 @@ namespace Epsitec.Common.Document
 		protected void TerminateOper()
 		{
 			this.document.Notifier.EnableSelectionChanged = false;
-			this.ActiveViewer.SelectorType = this.operInitialSelector;
+
+			if ( this.operInitialSelector != SelectorType.None )
+			{
+				this.ActiveViewer.SelectorType = this.operInitialSelector;
+			}
+
 			this.document.Notifier.EnableSelectionChanged = true;
 
 			this.ShowSelection();
@@ -4078,6 +4116,7 @@ namespace Epsitec.Common.Document
 		protected Objects.Memory				objectMemoryText;
 		protected Properties.Abstract			menuProperty;
 		protected SelectorType					operInitialSelector;
+		protected SelectorType					bookInitialSelector = SelectorType.None;
 		protected Containers.Abstract			activeContainer;
 		protected bool[]						isPropertiesExtended;
 		protected RealUnitType					realUnitDimension;
