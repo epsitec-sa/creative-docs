@@ -10,6 +10,10 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ObjectLine()
 		{
+			PropertyName name = new PropertyName();
+			name.Type = PropertyType.Name;
+			this.AddProperty(name);
+
 			PropertyLine lineMode = new PropertyLine();
 			lineMode.Type = PropertyType.LineMode;
 			this.AddProperty(lineMode);
@@ -31,7 +35,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 		public override void Dispose()
 		{
-			if ( this.ExistProperty(2) )  this.PropertyArrow(2).Changed -= new EventHandler(this.HandleChanged);
+			if ( this.ExistProperty(3) )  this.PropertyArrow(3).Changed -= new EventHandler(this.HandleChanged);
 			base.Dispose();
 		}
 
@@ -55,7 +59,7 @@ namespace Epsitec.Common.Pictogram.Data
 						   out pathEnd,   out outlineEnd,   out surfaceEnd,
 						   out pathLine);
 
-			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
+			double width = System.Math.Max(this.PropertyLine(1).Width/2, this.minimalWidth);
 
 			if (                 AbstractObject.DetectOutline(pathLine,  width, pos) )  return true;
 			if ( outlineStart && AbstractObject.DetectOutline(pathStart, width, pos) )  return true;
@@ -91,12 +95,12 @@ namespace Epsitec.Common.Pictogram.Data
 			else if ( rank == this.HandleArrowRank(0) )  // pp1 ?
 			{
 				double d = Drawing.Point.Distance(this.Handle(0).Position, pos);
-				this.PropertyArrow(2).Length1 = d;
+				this.PropertyArrow(3).Length1 = d;
 			}
 			else if ( rank == this.HandleArrowRank(1) )  // pp2 ?
 			{
 				double d = Drawing.Point.Distance(this.Handle(1).Position, pos);
-				this.PropertyArrow(2).Length2 = d;
+				this.PropertyArrow(3).Length2 = d;
 			}
 			this.UpdateHandle();
 			this.dirtyBbox = true;
@@ -119,7 +123,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				return base.MoveHandleProperty(rank);
 			}
-			if ( rank >= 2 )  return this.PropertyArrow(2);
+			if ( rank >= 2 )  return this.PropertyArrow(3);
 			return null;
 		}
 
@@ -180,8 +184,8 @@ namespace Epsitec.Common.Pictogram.Data
 
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
-			Drawing.Point pp1 = Drawing.Point.Move(p1, p2, this.PropertyArrow(2).GetLength(0));
-			Drawing.Point pp2 = Drawing.Point.Move(p2, p1, this.PropertyArrow(2).GetLength(1));
+			Drawing.Point pp1 = Drawing.Point.Move(p1, p2, this.PropertyArrow(3).GetLength(0));
+			Drawing.Point pp2 = Drawing.Point.Move(p2, p1, this.PropertyArrow(3).GetLength(1));
 			int r1 = this.HandleArrowRank(0);
 			int r2 = this.HandleArrowRank(1);
 			int total = 2 + ((r1==-1)?0:1) + ((r2==-1)?0:1);
@@ -216,7 +220,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// extremity = 1: poignée proche de p2 (this.Handle(2))
 		protected int HandleArrowRank(int extremity)
 		{
-			if ( this.PropertyArrow(2).GetArrowType(extremity) == ArrowType.Right )  return -1;
+			if ( this.PropertyArrow(3).GetArrowType(extremity) == ArrowType.Right )  return -1;
 
 			if ( extremity == 0 )
 			{
@@ -224,7 +228,7 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 			else
 			{
-				if ( this.PropertyArrow(2).GetArrowType(0) == ArrowType.Right )  return 2;
+				if ( this.PropertyArrow(3).GetArrowType(0) == ArrowType.Right )  return 2;
 				return 3;
 			}
 		}
@@ -246,13 +250,13 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Rectangle bboxEnd   = AbstractObject.ComputeBoundingBox(pathEnd);
 			Drawing.Rectangle bboxLine  = AbstractObject.ComputeBoundingBox(pathLine);
 
-			this.PropertyLine(0).InflateBoundingBox(ref bboxLine);
+			this.PropertyLine(1).InflateBoundingBox(ref bboxLine);
 			this.bboxGeom = bboxLine;
 
-			if ( outlineStart )  this.PropertyLine(0).InflateBoundingBox(ref bboxStart);
+			if ( outlineStart )  this.PropertyLine(1).InflateBoundingBox(ref bboxStart);
 			this.bboxGeom.MergeWith(bboxStart);
 
-			if ( outlineEnd )  this.PropertyLine(0).InflateBoundingBox(ref bboxEnd);
+			if ( outlineEnd )  this.PropertyLine(1).InflateBoundingBox(ref bboxEnd);
 			this.bboxGeom.MergeWith(bboxEnd);
 
 			this.bboxGeom.MergeWith(this.bboxThin);
@@ -270,20 +274,20 @@ namespace Epsitec.Common.Pictogram.Data
 
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
-			double w = this.PropertyLine(0).Width;
-			Drawing.CapStyle cap = this.PropertyLine(0).Cap;
-			Drawing.Point pp1 = this.PropertyArrow(2).PathExtremity(pathStart, 0, w,cap, p1,p2, out outlineStart, out surfaceStart);
-			Drawing.Point pp2 = this.PropertyArrow(2).PathExtremity(pathEnd,   1, w,cap, p2,p1, out outlineEnd,   out surfaceEnd);
+			double w = this.PropertyLine(1).Width;
+			Drawing.CapStyle cap = this.PropertyLine(1).Cap;
+			Drawing.Point pp1 = this.PropertyArrow(3).PathExtremity(pathStart, 0, w,cap, p1,p2, out outlineStart, out surfaceStart);
+			Drawing.Point pp2 = this.PropertyArrow(3).PathExtremity(pathEnd,   1, w,cap, p2,p1, out outlineEnd,   out surfaceEnd);
 
 			pathLine.MoveTo(pp1);
 			pathLine.LineTo(pp2);
 		}
 
 		// Dessine l'objet.
-		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
 			if ( base.IsFullHide(iconContext) )  return;
-			base.DrawGeometry(graphics, iconContext);
+			base.DrawGeometry(graphics, iconContext, iconObjects);
 
 			if ( this.TotalHandle < 2 )  return;
 
@@ -296,34 +300,33 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( outlineStart )
 			{
-				graphics.Rasterizer.AddOutline(pathStart, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
-				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
+				graphics.Rasterizer.AddOutline(pathStart, this.PropertyLine(1).Width, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
+				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(2).Color));
 			}
 			if ( surfaceStart )
 			{
 				graphics.Rasterizer.AddSurface(pathStart);
-				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
+				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(2).Color));
 			}
 
 			if ( outlineEnd )
 			{
-				graphics.Rasterizer.AddOutline(pathEnd, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
-				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
+				graphics.Rasterizer.AddOutline(pathEnd, this.PropertyLine(1).Width, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
+				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(2).Color));
 			}
 			if ( surfaceEnd )
 			{
 				graphics.Rasterizer.AddSurface(pathEnd);
-				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
+				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(2).Color));
 			}
 
-			graphics.Rasterizer.AddOutline(pathLine, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
-			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
+			this.PropertyLine(1).DrawPath(graphics, iconContext, iconObjects, pathLine, this.PropertyColor(2).Color);
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
 				if ( outlineStart )
 				{
-					graphics.Rasterizer.AddOutline(pathStart, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
+					graphics.Rasterizer.AddOutline(pathStart, this.PropertyLine(1).Width+iconContext.HiliteSize, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
 					graphics.RenderSolid(iconContext.HiliteOutlineColor);
 				}
 				if ( surfaceStart )
@@ -334,7 +337,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 				if ( outlineEnd )
 				{
-					graphics.Rasterizer.AddOutline(pathEnd, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
+					graphics.Rasterizer.AddOutline(pathEnd, this.PropertyLine(1).Width+iconContext.HiliteSize, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
 					graphics.RenderSolid(iconContext.HiliteOutlineColor);
 				}
 				if ( surfaceEnd )
@@ -343,7 +346,7 @@ namespace Epsitec.Common.Pictogram.Data
 					graphics.RenderSolid(iconContext.HiliteOutlineColor);
 				}
 
-				graphics.Rasterizer.AddOutline(pathLine, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
+				graphics.Rasterizer.AddOutline(pathLine, this.PropertyLine(1).Width+iconContext.HiliteSize, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}

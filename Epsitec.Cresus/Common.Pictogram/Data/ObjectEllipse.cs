@@ -9,6 +9,10 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ObjectEllipse()
 		{
+			PropertyName name = new PropertyName();
+			name.Type = PropertyType.Name;
+			this.AddProperty(name);
+
 			PropertyLine lineMode = new PropertyLine();
 			lineMode.Type = PropertyType.LineMode;
 			this.AddProperty(lineMode);
@@ -45,10 +49,10 @@ namespace Epsitec.Common.Pictogram.Data
 
 			Drawing.Path path = this.PathBuild();
 
-			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
+			double width = System.Math.Max(this.PropertyLine(1).Width/2, this.minimalWidth);
 			if ( AbstractObject.DetectOutline(path, width, pos) )  return true;
 			
-			if ( this.PropertyGradient(2).IsVisible() )
+			if ( this.PropertyGradient(3).IsVisible() )
 			{
 				path.Close();
 				if ( AbstractObject.DetectSurface(path, pos) )  return true;
@@ -127,8 +131,8 @@ namespace Epsitec.Common.Pictogram.Data
 			this.bboxThin = AbstractObject.ComputeBoundingBox(path);
 
 			this.bboxGeom = this.bboxThin;
-			this.PropertyLine(0).InflateBoundingBox(ref this.bboxGeom);
-			this.bboxGeom.MergeWith(this.PropertyGradient(2).BoundingBoxGeom(this.bboxThin));
+			this.PropertyLine(1).InflateBoundingBox(ref this.bboxGeom);
+			this.bboxGeom.MergeWith(this.PropertyGradient(3).BoundingBoxGeom(this.bboxThin));
 
 			this.bboxFull = this.bboxGeom;
 			if ( this.TotalHandle >= 4 )
@@ -138,7 +142,7 @@ namespace Epsitec.Common.Pictogram.Data
 				this.bboxFull.MergeWith(this.Handle(2).Position);
 				this.bboxFull.MergeWith(this.Handle(3).Position);
 			}
-			this.bboxFull.MergeWith(this.PropertyGradient(2).BoundingBoxFull(this.bboxThin));
+			this.bboxFull.MergeWith(this.PropertyGradient(3).BoundingBoxFull(this.bboxThin));
 		}
 
 		// Crée le chemin d'une ellipse inscrite dans un quadrilatère.
@@ -184,28 +188,27 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Dessine l'objet.
-		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
 			if ( base.IsFullHide(iconContext) )  return;
-			base.DrawGeometry(graphics, iconContext);
+			base.DrawGeometry(graphics, iconContext, iconObjects);
 
 			if ( this.TotalHandle < 2 )  return;
 
 			Drawing.Path path = this.PathBuild();
-			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBoxThin);
+			this.PropertyGradient(3).Render(graphics, iconContext, path, this.BoundingBoxThin);
 
-			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
-			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
+			this.PropertyLine(1).DrawPath(graphics, iconContext, iconObjects, path, this.PropertyColor(2).Color);
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
-				if ( this.PropertyGradient(2).IsVisible() )
+				if ( this.PropertyGradient(3).IsVisible() )
 				{
 					graphics.Rasterizer.AddSurface(path);
 					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 				}
 
-				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
+				graphics.Rasterizer.AddOutline(path, this.PropertyLine(1).Width+iconContext.HiliteSize, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}

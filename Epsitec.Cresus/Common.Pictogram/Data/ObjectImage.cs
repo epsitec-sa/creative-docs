@@ -11,6 +11,10 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ObjectImage()
 		{
+			PropertyName name = new PropertyName();
+			name.Type = PropertyType.Name;
+			this.AddProperty(name);
+
 			PropertyImage image = new PropertyImage();
 			image.Type = PropertyType.Image;
 			this.AddProperty(image);
@@ -235,7 +239,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Ouvre le bitmap de l'image si nécessaire.
 		protected void OpenBitmapOriginal()
 		{
-			PropertyImage image = this.PropertyImage(0);
+			PropertyImage image = this.PropertyImage(1);
 			if ( image.Filename == "" )
 			{
 				this.imageOriginal = null;
@@ -294,10 +298,10 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Dessine l'objet.
-		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
 			if ( base.IsFullHide(iconContext) )  return;
-			base.DrawGeometry(graphics, iconContext);
+			base.DrawGeometry(graphics, iconContext, iconObjects);
 
 			if ( this.TotalHandle < 2 )  return;
 
@@ -336,7 +340,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 				if ( width > 0 && height > 0 )
 				{
-					PropertyImage property = this.PropertyImage(0);
+					PropertyImage property = this.PropertyImage(1);
 
 					if ( property.Homo )  // conserve les proportions ?
 					{

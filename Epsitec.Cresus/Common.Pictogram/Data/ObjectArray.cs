@@ -20,6 +20,10 @@ namespace Epsitec.Common.Pictogram.Data
 
 		public ObjectArray()
 		{
+			PropertyName name = new PropertyName();
+			name.Type = PropertyType.Name;
+			this.AddProperty(name);
+
 			PropertyLine lineMode = new PropertyLine();
 			lineMode.Type = PropertyType.LineMode;
 			this.AddProperty(lineMode);
@@ -169,8 +173,10 @@ namespace Epsitec.Common.Pictogram.Data
 
 		// Ajoute toutes les propriétés de l'objet dans une liste.
 		// Un type de propriété donné n'est qu'une fois dans la liste.
-		public override void PropertiesList(System.Collections.ArrayList list)
+		public override void PropertiesList(System.Collections.ArrayList list, bool firstLevel)
 		{
+			this.PropertyAllList(list, this.Property(0));
+
 			foreach ( AbstractProperty property in this.properties )
 			{
 				PropertyType type = property.Type;
@@ -218,6 +224,8 @@ namespace Epsitec.Common.Pictogram.Data
 		// Cherche une propriété d'après son type.
 		protected override AbstractProperty SearchProperty(PropertyType type)
 		{
+			if ( type == PropertyType.Name )  return this.Property(0);
+
 			if ( this.onlyBase )
 			{
 				return base.SearchProperty(type);
@@ -263,6 +271,11 @@ namespace Epsitec.Common.Pictogram.Data
 		// Retourne une copie d'une propriété.
 		public override AbstractProperty GetProperty(PropertyType type)
 		{
+			if ( type == PropertyType.Name )
+			{
+				return base.GetProperty(type);
+			}
+
 			AbstractProperty property = null;
 
 			if ( type == PropertyType.LineMode  ||
@@ -1430,7 +1443,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Indique s'il faut sélectionner l'objet après sa création.
-		public override bool SelectAfterCreation()
+		public override bool EditAfterCreation()
 		{
 			return true;
 		}
@@ -1442,6 +1455,39 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
+		// Gestion d'un événement pendant l'édition.
+		public override bool EditProcessMessage(Message message, Drawing.Point pos)
+		{
+			if ( this.cellToEdit == -1 )  return false;
+			int c = this.cellToEdit%(this.columns+1);
+			int r = this.cellToEdit/(this.columns+1);
+
+			TextLayout textLayout = this.Cell(c,r).TextLayout;
+			TextNavigator textNavigator = this.Cell(c,r).TextNavigator;
+			Drawing.Transform transform = this.Cell(c,r).Transform;
+
+			pos = transform.TransformInverse(pos);
+			if ( !textNavigator.ProcessMessage(message, pos) )  return false;
+
+			this.Cell(c,r).TextString.String = textLayout.Text;
+			return true;
+		}
+
+		// Gestion d'un événement pendant l'édition.
+		public override void EditMouseDownMessage(Drawing.Point pos)
+		{
+			if ( this.cellToEdit == -1 )  return;
+			int c = this.cellToEdit%(this.columns+1);
+			int r = this.cellToEdit/(this.columns+1);
+
+			TextNavigator textNavigator = this.Cell(c,r).TextNavigator;
+			Drawing.Transform transform = this.Cell(c,r).Transform;
+
+			pos = transform.TransformInverse(pos);
+			textNavigator.MouseDownMessage(pos);
+		}
+
+
 		// Met à jour les poignées pour les largeurs/hauteurs.
 		protected void UpdateHandle()
 		{
@@ -1681,28 +1727,28 @@ namespace Epsitec.Common.Pictogram.Data
 			cell.Selected = false;
 
 			cell.LeftLine = new PropertyLine();
-			this.PropertyLine(0).CopyTo(cell.LeftLine);
+			this.PropertyLine(1).CopyTo(cell.LeftLine);
 
 			cell.BottomLine = new PropertyLine();
-			this.PropertyLine(0).CopyTo(cell.BottomLine);
+			this.PropertyLine(1).CopyTo(cell.BottomLine);
 
 			cell.LeftColor = new PropertyColor();
-			this.PropertyColor(1).CopyTo(cell.LeftColor);
+			this.PropertyColor(2).CopyTo(cell.LeftColor);
 
 			cell.BottomColor = new PropertyColor();
-			this.PropertyColor(1).CopyTo(cell.BottomColor);
+			this.PropertyColor(2).CopyTo(cell.BottomColor);
 
 			cell.BackColor = new PropertyColor();
-			this.PropertyColor(2).CopyTo(cell.BackColor);
+			this.PropertyColor(3).CopyTo(cell.BackColor);
 
 			cell.TextString = new PropertyString();
-			this.PropertyString(3).CopyTo(cell.TextString);
+			this.PropertyString(4).CopyTo(cell.TextString);
 
 			cell.TextFont = new PropertyFont();
-			this.PropertyFont(4).CopyTo(cell.TextFont);
+			this.PropertyFont(5).CopyTo(cell.TextFont);
 
 			cell.TextJustif = new PropertyJustif();
-			this.PropertyJustif(5).CopyTo(cell.TextJustif);
+			this.PropertyJustif(6).CopyTo(cell.TextJustif);
 
 			return cell;
 		}
@@ -2025,15 +2071,16 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine le texte d'une cellule.
 		protected void DrawCellText(Drawing.Graphics graphics, IconContext iconContext, int c, int r)
 		{
-			string text = this.Cell(c,r).TextString.String;
-			if ( text == "" )  return;
-
 			if ( this.Cell(c,r).TextLayout == null )
 			{
 				this.Cell(c,r).TextLayout = new TextLayout();
+				this.Cell(c,r).TextNavigator = new TextNavigator(this.Cell(c,r).TextLayout);
+				this.Cell(c,r).TextLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
 			}
 			TextLayout textLayout = this.Cell(c,r).TextLayout;
-			textLayout.Text = text;
+			textLayout.Text = this.Cell(c,r).TextString.String;
+
+			TextNavigator textNavigator = this.Cell(c,r).TextNavigator;
 
 			Drawing.Point p1, p2, p3, p4;
 			this.CellCorners(c,r, out p1, out p2, out p3, out p4);
@@ -2073,10 +2120,46 @@ namespace Epsitec.Common.Pictogram.Data
 
 			double angle = Drawing.Point.ComputeAngle(p1, p2);
 			angle *= 180.0/System.Math.PI;  // radians -> degrés
-			graphics.RotateTransform(angle, p1.X, p1.Y);
+			Drawing.Transform transform = new Drawing.Transform();
+			transform.Translate(p1);
+			transform.Rotate(angle, p1);
+			this.Cell(c,r).Transform = transform;
+			graphics.MergeTransform(transform);
+
+			bool edited = this.edited;
+			int ce = this.cellToEdit%(this.columns+1);
+			int re = this.cellToEdit/(this.columns+1);
+			if ( ce != c || re != r )  edited = false;
+
+			if ( edited && textNavigator.Context.CursorFrom != textNavigator.Context.CursorTo )
+			{
+				int from = System.Math.Min(textNavigator.Context.CursorFrom, textNavigator.Context.CursorTo);
+				int to   = System.Math.Max(textNavigator.Context.CursorFrom, textNavigator.Context.CursorTo);
+				Drawing.Rectangle[] rects = textLayout.FindTextRange(new Drawing.Point(0,0), from, to);
+				for ( int i=0 ; i<rects.Length ; i++ )
+				{
+					graphics.Align(ref rects[i]);
+					graphics.AddFilledRectangle(rects[i]);
+					graphics.RenderSolid(IconContext.ColorSelectEdit);
+				}
+			}
 
 			Drawing.Color color = iconContext.AdaptColor(this.Cell(c,r).TextFont.FontColor);
-			textLayout.Paint(p1, graphics, Drawing.Rectangle.Empty, color, Drawing.GlyphPaintStyle.Normal);
+			textLayout.Paint(new Drawing.Point(0,0), graphics, Drawing.Rectangle.Empty, color, Drawing.GlyphPaintStyle.Normal);
+
+			if ( edited && textNavigator.Context.CursorTo != -1 )
+			{
+				Drawing.Rectangle rect = textLayout.FindTextCursor(textNavigator.Context.CursorTo, out textNavigator.Context.CursorLine);
+				if ( !rect.IsEmpty )
+				{
+					textNavigator.Context.CursorPosX = (rect.Left+rect.Right)/2;
+
+					rect.Left  -= 0.5/iconContext.ScaleX;
+					rect.Right += 0.5/iconContext.ScaleX;
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(IconContext.ColorFrameEdit);
+				}
+			}
 
 			graphics.Transform = ot;
 		}
@@ -2168,10 +2251,10 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Dessine l'objet.
-		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
 			if ( base.IsFullHide(iconContext) )  return;
-			base.DrawGeometry(graphics, iconContext);
+			base.DrawGeometry(graphics, iconContext, iconObjects);
 
 			if ( this.TotalHandle < 2 )  return;
 
@@ -2294,7 +2377,7 @@ namespace Epsitec.Common.Pictogram.Data
 		protected int							cellToHilite = -1;
 		protected int							cellToEdit = -1;
 
-		protected int							maxColumns = 10;
-		protected int							maxRows    = 10;
+		protected int							maxColumns = 13;
+		protected int							maxRows    = 13;
 	}
 }

@@ -100,7 +100,7 @@ namespace Epsitec.Common.Pictogram.Data
 			PropertyJustif textJustif = new PropertyJustif();
 			textJustif.Type = PropertyType.TextJustif;
 			textJustif.Horizontal  = JustifHorizontal.Left;
-			textJustif.Vertical    = JustifVertical.Center;
+			textJustif.Vertical    = JustifVertical.Top;
 			textJustif.Orientation = JustifOrientation.LeftToRight;
 			textJustif.MarginH     = 0.2;
 			textJustif.MarginV     = 0.1;
