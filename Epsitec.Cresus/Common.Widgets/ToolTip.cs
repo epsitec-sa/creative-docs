@@ -257,9 +257,9 @@ namespace Epsitec.Common.Widgets
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
-			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetState       state = this.PaintState;
-			Drawing.Point     pos   = new Drawing.Point(0, 0);
+			Drawing.Point     pos   = new Drawing.Point();
 
 			pos.X += this.margin.X;  // à cause du Drawing.ContentAlignment.MiddleLeft
 			adorner.PaintTooltipBackground(graphics, rect);

@@ -96,7 +96,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.arrowUp == null )  return;
 
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Width -= System.Math.Floor(rect.Height*0.6)-1;
 			rect.Height = TextFieldSlider.sliderHeight;
 			this.slider.Bounds = rect;

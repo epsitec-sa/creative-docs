@@ -770,7 +770,7 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.blocks.Count == 0 )
 			{
-				return new Drawing.Point(0, 0);
+				return new Drawing.Point();
 			}
 
 			JustifBlock block = (JustifBlock)this.blocks[this.blocks.Count-1];
