@@ -91,10 +91,10 @@ namespace Epsitec.Common.Widgets
 			radio.Index = (int) ScrollableScrollerMode.ShowAlways;
 			radio.ActiveStateChanged += new Support.EventHandler (this.HandleRadioActiveStateChanged);
 			
-			Assertion.Assert (b1.Parent == surface.Panel);
-			Assertion.Assert (b2.Parent == surface.Panel);
-			Assertion.Assert (surface.Panel.Parent == surface);
-			Assertion.Assert (surface.Panel.Children.Count == 2+4+4);
+			Assert.IsTrue (b1.Parent == surface.Panel);
+			Assert.IsTrue (b2.Parent == surface.Panel);
+			Assert.IsTrue (surface.Panel.Parent == surface);
+			Assert.IsTrue (surface.Panel.Children.Count == 2+4+4);
 			
 			surface.ResumeLayout ();
 			

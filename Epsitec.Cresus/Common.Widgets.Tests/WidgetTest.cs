@@ -13,23 +13,23 @@ namespace Epsitec.Common.Widgets
 			
 			root.Children.Add (widget);
 			
-			Assertion.Assert (root.HasChildren);
-			Assertion.Assert (root.Children.Count == 1);
-			Assertion.Assert (widget.HasParent);
-			Assertion.AssertSame (widget.Parent, root);
-			Assertion.AssertSame (root.Children[0], widget);
+			Assert.IsTrue (root.HasChildren);
+			Assert.IsTrue (root.Children.Count == 1);
+			Assert.IsTrue (widget.HasParent);
+			Assert.AreSame (widget.Parent, root);
+			Assert.AreSame (root.Children[0], widget);
 			
 			root.Children.Remove (widget);
 			
-			Assertion.Assert (root.HasChildren == false);
+			Assert.IsTrue (root.HasChildren == false);
 			
 			widget.Parent = root;
 			
-			Assertion.Assert (root.HasChildren);
-			Assertion.Assert (root.Children.Count == 1);
-			Assertion.Assert (widget.HasParent);
-			Assertion.AssertSame (widget.Parent, root);
-			Assertion.AssertSame (root.Children[0], widget);
+			Assert.IsTrue (root.HasChildren);
+			Assert.IsTrue (root.Children.Count == 1);
+			Assert.IsTrue (widget.HasParent);
+			Assert.AreSame (widget.Parent, root);
+			Assert.AreSame (root.Children[0], widget);
 		}
 		
 		[Test] public void CheckParentChanged()
@@ -43,26 +43,26 @@ namespace Epsitec.Common.Widgets
 			this.check_parent_changed_sender = null;
 			this.check_parent_changed_count  = 0;
 			w2.Parent = w1;
-			Assertion.AssertEquals (w2, this.check_parent_changed_sender);
-			Assertion.AssertEquals (1, this.check_parent_changed_count);
+			Assert.AreEqual (w2, this.check_parent_changed_sender);
+			Assert.AreEqual (1, this.check_parent_changed_count);
 			
 			this.check_parent_changed_sender = null;
 			this.check_parent_changed_count  = 0;
 			w2.Parent = null;
-			Assertion.AssertEquals (w2, this.check_parent_changed_sender);
-			Assertion.AssertEquals (1, this.check_parent_changed_count);
+			Assert.AreEqual (w2, this.check_parent_changed_sender);
+			Assert.AreEqual (1, this.check_parent_changed_count);
 			
 			this.check_parent_changed_sender = null;
 			this.check_parent_changed_count  = 0;
 			w1.Children.Add (w2);
-			Assertion.AssertEquals (w2, this.check_parent_changed_sender);
-			Assertion.AssertEquals (1, this.check_parent_changed_count);
+			Assert.AreEqual (w2, this.check_parent_changed_sender);
+			Assert.AreEqual (1, this.check_parent_changed_count);
 			
 			this.check_parent_changed_sender = null;
 			this.check_parent_changed_count  = 0;
 			w0.Children.Add (w2);
-			Assertion.AssertEquals (w2, this.check_parent_changed_sender);
-			Assertion.AssertEquals (2, this.check_parent_changed_count);
+			Assert.AreEqual (w2, this.check_parent_changed_sender);
+			Assert.AreEqual (2, this.check_parent_changed_count);
 		}
 		
 		
@@ -90,31 +90,31 @@ namespace Epsitec.Common.Widgets
 			widget.Anchor = AnchorStyles.Left;
 			widget.AnchorMargins = new Drawing.Margins (20, 0, 0, 0);
 			
-			Assertion.Assert (widget.Anchor == AnchorStyles.Left);
+			Assert.IsTrue (widget.Anchor == AnchorStyles.Left);
 			
 			root.Width = 140;
-			Assertion.Assert (widget.Left == 20);
-			Assertion.Assert (widget.Width == 80);
+			Assert.IsTrue (widget.Left == 20);
+			Assert.IsTrue (widget.Width == 80);
 			
 			root.Width = 120;
-			Assertion.Assert (widget.Left == 20);
-			Assertion.Assert (widget.Width == 80);
+			Assert.IsTrue (widget.Left == 20);
+			Assert.IsTrue (widget.Width == 80);
 			
 			widget.Bounds = new Rectangle (20, 10, 80, 30);
 			widget.Anchor = AnchorStyles.Right;
 			widget.AnchorMargins = new Drawing.Margins (0, 20, 0, 0);
 			
-			Assertion.Assert (widget.Anchor == AnchorStyles.Right);
-			Assertion.Assert ("AnchorStyles.Right, widget.Right not OK", widget.Right == 100);
-			Assertion.Assert ("AnchorStyles.Right, widget.Left not OK",  widget.Left  == 20);
+			Assert.IsTrue (widget.Anchor == AnchorStyles.Right);
+			Assert.IsTrue (widget.Right == 100, "AnchorStyles.Right, widget.Right not OK");
+			Assert.IsTrue (widget.Left  == 20, "AnchorStyles.Right, widget.Left not OK");
 			
 			root.Width = 140;
-			Assertion.Assert ("AnchorStyles.Right, widget.Left not OK",  widget.Left  == 40);
-			Assertion.Assert ("AnchorStyles.Right, widget.Width not OK", widget.Width == 80);
+			Assert.IsTrue (widget.Left  == 40, "AnchorStyles.Right, widget.Left not OK");
+			Assert.IsTrue (widget.Width == 80, "AnchorStyles.Right, widget.Width not OK");
 			
 			root.Width = 120;
-			Assertion.Assert (widget.Left == 20);
-			Assertion.Assert (widget.Width == 80);
+			Assert.IsTrue (widget.Left == 20);
+			Assert.IsTrue (widget.Width == 80);
 			
 			//	TODO: ...tests additionnels...
 		}
@@ -125,10 +125,10 @@ namespace Epsitec.Common.Widgets
 			Widget widget = new Widget ();
 			string text = "Hel<m>l</m>o";
 			widget.Text = text;
-			Assertion.Assert (widget.Text == text);
-			Assertion.Assert (widget.Mnemonic == 'L');
+			Assert.IsTrue (widget.Text == text);
+			Assert.IsTrue (widget.Mnemonic == 'L');
 			widget.Text = null;
-			Assertion.Assert (widget.Text == "");
+			Assert.IsTrue (widget.Text == "");
 		}
 		
 		[Test] public void CheckTextLayoutInfo()
@@ -162,41 +162,41 @@ namespace Epsitec.Common.Widgets
 			widget.Location = new Point (30, 20);
 			widget.Size     = new Size (50, 40);
 			
-			Assertion.Assert (widget.Left == 30);
-			Assertion.Assert (widget.Right == 80);
-			Assertion.Assert (widget.Top == 60);
-			Assertion.Assert (widget.Bottom == 20);
-			Assertion.Assert (widget.Client.Width == 50);
-			Assertion.Assert (widget.Client.Height == 40);
+			Assert.IsTrue (widget.Left == 30);
+			Assert.IsTrue (widget.Right == 80);
+			Assert.IsTrue (widget.Top == 60);
+			Assert.IsTrue (widget.Bottom == 20);
+			Assert.IsTrue (widget.Client.Width == 50);
+			Assert.IsTrue (widget.Client.Height == 40);
 			
 			root.Children.Add (widget);
 			
-			Assertion.Assert (widget.Left == 30);
-			Assertion.Assert (widget.Right == 80);
-			Assertion.Assert (widget.Top == 60);
-			Assertion.Assert (widget.Bottom == 20);
+			Assert.IsTrue (widget.Left == 30);
+			Assert.IsTrue (widget.Right == 80);
+			Assert.IsTrue (widget.Top == 60);
+			Assert.IsTrue (widget.Bottom == 20);
 			
 			Point pt_test   = new Point (40, 35);
 			Point pt_client = widget.MapParentToClient (pt_test);
 			Point pt_widget = widget.MapClientToParent (pt_client);
 			
-			Assertion.Assert (pt_client.X == 10);
-			Assertion.Assert (pt_client.Y == 15);
-			Assertion.Assert (pt_widget.X == pt_test.X);
-			Assertion.Assert (pt_widget.Y == pt_test.Y);
+			Assert.IsTrue (pt_client.X == 10);
+			Assert.IsTrue (pt_client.Y == 15);
+			Assert.IsTrue (pt_widget.X == pt_test.X);
+			Assert.IsTrue (pt_widget.Y == pt_test.Y);
 			
 			widget.SetClientAngle (90);
 			
-			Assertion.Assert (widget.Client.Angle == 90);
-			Assertion.Assert (widget.Client.Width == 40);
-			Assertion.Assert (widget.Client.Height == 50);
+			Assert.IsTrue (widget.Client.Angle == 90);
+			Assert.IsTrue (widget.Client.Width == 40);
+			Assert.IsTrue (widget.Client.Height == 50);
 			
 			widget.SetClientAngle (180);
 			widget.SetClientZoom (0.5f);
 			
-			Assertion.Assert (widget.Client.Angle == 180);
-			Assertion.Assert (widget.Client.Width == 100);
-			Assertion.Assert (widget.Client.Height == 80);
+			Assert.IsTrue (widget.Client.Angle == 180);
+			Assert.IsTrue (widget.Client.Width == 100);
+			Assert.IsTrue (widget.Client.Height == 80);
 			
 			widget.SetClientAngle (180);
 			widget.SetClientZoom (0.5f);
@@ -205,9 +205,9 @@ namespace Epsitec.Common.Widgets
 			pt_client = widget.MapParentToClient (pt_test);
 			pt_widget = widget.MapClientToParent (pt_client);
 			
-			Assertion.Assert (Transform.Equal (pt_widget, pt_test));
-			Assertion.Assert (Transform.Equal (pt_client.X, widget.Client.Width));
-			Assertion.Assert (Transform.Equal (pt_client.Y, widget.Client.Height));
+			Assert.IsTrue (Transform.Equal (pt_widget, pt_test));
+			Assert.IsTrue (Transform.Equal (pt_client.X, widget.Client.Width));
+			Assert.IsTrue (Transform.Equal (pt_client.Y, widget.Client.Height));
 			
 			
 			double zoom = 2.0;
@@ -223,28 +223,28 @@ namespace Epsitec.Common.Widgets
 				pt_client = widget.MapParentToClient (pt_test);
 				pt_widget = widget.MapClientToParent (pt_client);
 			
-				Assertion.Assert (Transform.Equal (pt_widget, pt_test));
+				Assert.IsTrue (Transform.Equal (pt_widget, pt_test));
 				
 				switch (angle)
 				{
 					case 0:
-						Assertion.Assert ("0° failed", Transform.Equal (pt_client.X, ox / zoom));
-						Assertion.Assert ("0° failed", Transform.Equal (pt_client.Y, oy / zoom));
+						Assert.IsTrue (Transform.Equal (pt_client.X, ox / zoom), "0° failed");
+						Assert.IsTrue (Transform.Equal (pt_client.Y, oy / zoom), "0° failed");
 						break;
 					
 					case 90:
-						Assertion.Assert ("90° failed", Transform.Equal (pt_client.X, oy / zoom));
-						Assertion.Assert ("90° failed", Transform.Equal (pt_client.Y, widget.Client.Height - ox / zoom));
+						Assert.IsTrue (Transform.Equal (pt_client.X, oy / zoom), "90° failed");
+						Assert.IsTrue (Transform.Equal (pt_client.Y, widget.Client.Height - ox / zoom), "90° failed");
 						break;
 					
 					case 180:
-						Assertion.Assert ("180° failed", Transform.Equal (pt_client.X, (widget.Client.Width - ox / zoom)));
-						Assertion.Assert ("180° failed", Transform.Equal (pt_client.Y, (widget.Client.Height - oy / zoom)));
+						Assert.IsTrue (Transform.Equal (pt_client.X, (widget.Client.Width - ox / zoom)), "180° failed");
+						Assert.IsTrue (Transform.Equal (pt_client.Y, (widget.Client.Height - oy / zoom)), "180° failed");
 						break;
 					
 					case 270:
-						Assertion.Assert ("270° failed", Transform.Equal (pt_client.X, (widget.Client.Width - oy / zoom)));
-						Assertion.Assert ("270° failed", Transform.Equal (pt_client.Y, ox / zoom));
+						Assert.IsTrue (Transform.Equal (pt_client.X, (widget.Client.Width - oy / zoom)), "270° failed");
+						Assert.IsTrue (Transform.Equal (pt_client.Y, ox / zoom), "270° failed");
 						break;
 				}
 			}
@@ -277,7 +277,7 @@ namespace Epsitec.Common.Widgets
 			
 			pt2 = widget.MapParentToClient (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
 			widget.SetClientZoom (3);
 			widget.SetClientAngle (90);
@@ -285,21 +285,21 @@ namespace Epsitec.Common.Widgets
 			
 			pt2 = widget.MapParentToClient (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
 			widget.SetClientAngle (180);
 			transform = widget.GetTransformToClient ();
 			
 			pt2 = widget.MapParentToClient (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
 			widget.SetClientAngle (270);
 			transform = widget.GetTransformToClient ();
 			
 			pt2 = widget.MapParentToClient (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 		}
 		
 		[Test] public void CheckTransformRectToClient()
@@ -337,10 +337,10 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
-			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 			
 			widget.SetClientZoom (3);
 			widget.SetClientAngle (90);
@@ -352,10 +352,10 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
-			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 			
 			widget.SetClientZoom (7);
 			widget.SetClientAngle (180);
@@ -367,10 +367,10 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
-			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 			
 			widget.SetClientZoom (1.5f);
 			widget.SetClientAngle (270);
@@ -382,10 +382,10 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
-			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 		}
 		
 		[Test] public void CheckTransformRectToParent()
@@ -423,10 +423,10 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
-			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 			
 			widget.SetClientZoom (3);
 			widget.SetClientAngle (90);
@@ -438,10 +438,10 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
-			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 			
 			widget.SetClientZoom (7);
 			widget.SetClientAngle (180);
@@ -453,10 +453,10 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
-			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 			
 			widget.SetClientZoom (1.5f);
 			widget.SetClientAngle (270);
@@ -468,10 +468,10 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("rect = " + rect2.ToString ());
 			System.Console.Out.WriteLine ("pts  = " + pt3.ToString () + " / " + pt4.ToString ());
 			
-			Assertion.Assert (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
-			Assertion.Assert (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
-			Assertion.Assert (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Left,   System.Math.Min (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Bottom, System.Math.Min (pt3.Y, pt4.Y)));
+			Assert.IsTrue (Transform.Equal (rect2.Right,  System.Math.Max (pt3.X, pt4.X)));
+			Assert.IsTrue (Transform.Equal (rect2.Top,    System.Math.Max (pt3.Y, pt4.Y)));
 		}
 		
 		[Test] public void CheckTransformToParent()
@@ -501,7 +501,7 @@ namespace Epsitec.Common.Widgets
 			
 			pt2 = widget.MapClientToParent (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
 			transform.Reset ();
 			widget.SetClientZoom (3);
@@ -510,7 +510,7 @@ namespace Epsitec.Common.Widgets
 			
 			pt2 = widget.MapClientToParent (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
 			transform.Reset ();
 			widget.SetClientAngle (180);
@@ -518,7 +518,7 @@ namespace Epsitec.Common.Widgets
 			
 			pt2 = widget.MapClientToParent (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
 			transform.Reset ();
 			widget.SetClientAngle (270);
@@ -526,7 +526,7 @@ namespace Epsitec.Common.Widgets
 			
 			pt2 = widget.MapClientToParent (pt1);
 			pt3 = transform.TransformDirect (pt1);
-			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
+			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 		}
 		
 		[Test] public void CheckTransformParentClientIdentity()
@@ -551,12 +551,12 @@ namespace Epsitec.Common.Widgets
 			transform = widget.GetTransformToClient ();
 			transform.MultiplyBy (widget.GetTransformToParent ());
 			
-			Assertion.Assert (identity.Equals (transform));
+			Assert.IsTrue (identity.Equals (transform));
 			
 			transform = widget.GetTransformToParent ();
 			transform.MultiplyBy (widget.GetTransformToClient ());
 			
-			Assertion.Assert (identity.Equals (transform));
+			Assert.IsTrue (identity.Equals (transform));
 		}
 		
 		[Test] public void CheckTransformHierarchy()
@@ -580,7 +580,7 @@ namespace Epsitec.Common.Widgets
 			System.Console.Out.WriteLine ("root -> client : " + t1.ToString ());
 			System.Console.Out.WriteLine ("client -> root : " + t2.ToString ());
 			
-			Assertion.Assert (Epsitec.Common.Drawing.Transform.Multiply (t1, t2).Equals (new Epsitec.Common.Drawing.Transform ()));
+			Assert.IsTrue (Epsitec.Common.Drawing.Transform.Multiply (t1, t2).Equals (new Epsitec.Common.Drawing.Transform ()));
 		}
 		
 		[Test] public void CheckDocking()
@@ -689,18 +689,18 @@ namespace Epsitec.Common.Widgets
 			Widget w2 = new Widget (); w2.Name = "XB"; w2.Parent = w1;
 			Widget w3 = new Widget (); w3.Name = "XC"; w3.Parent = w2;
 			
-			Assertion.AssertEquals ("XA", w1.FullPathName);
-			Assertion.AssertEquals ("XA.XB", w2.FullPathName);
-			Assertion.AssertEquals ("XA.XB.XC", w3.FullPathName);
+			Assert.AreEqual ("XA", w1.FullPathName);
+			Assert.AreEqual ("XA.XB", w2.FullPathName);
+			Assert.AreEqual ("XA.XB.XC", w3.FullPathName);
 			
-			Assertion.AssertEquals (w2, w1.FindChildByPath ("XA.XB"));
-			Assertion.AssertEquals (w3, w1.FindChildByPath ("XA.XB.XC"));
+			Assert.AreEqual (w2, w1.FindChildByPath ("XA.XB"));
+			Assert.AreEqual (w3, w1.FindChildByPath ("XA.XB.XC"));
 			
 			Widget[] find = Widget.FindAllFullPathWidgets (Support.RegexFactory.FromSimpleJoker ("*XB*"));
 			
-			Assertion.AssertEquals (2, find.Length);
-			Assertion.AssertEquals (w2, find[0]);
-			Assertion.AssertEquals (w3, find[1]);
+			Assert.AreEqual (2, find.Length);
+			Assert.AreEqual (w2, find[0]);
+			Assert.AreEqual (w3, find[1]);
 		}
 		
 		[Test] public void CheckCommandName()
@@ -709,25 +709,25 @@ namespace Epsitec.Common.Widgets
 			Widget w2 = new Widget (); w2.Name = "B"; w2.Command = "b ()";  w2.Parent = w1;
 			Widget w3 = new Widget (); w3.Name = "C"; w3.Command = "c (1)"; w3.Parent = w2;
 			
-			Assertion.AssertEquals ("a",     w1.Command);
-			Assertion.AssertEquals ("b ()",  w2.Command);
-			Assertion.AssertEquals ("c (1)", w3.Command);
+			Assert.AreEqual ("a",     w1.Command);
+			Assert.AreEqual ("b ()",  w2.Command);
+			Assert.AreEqual ("c (1)", w3.Command);
 			
-			Assertion.AssertEquals ("a", w1.CommandName);
-			Assertion.AssertEquals ("b", w2.CommandName);
-			Assertion.AssertEquals ("c", w3.CommandName);
+			Assert.AreEqual ("a", w1.CommandName);
+			Assert.AreEqual ("b", w2.CommandName);
+			Assert.AreEqual ("c", w3.CommandName);
 			
-			Assertion.Assert (w1.IsCommand);
-			Assertion.Assert (w2.IsCommand);
-			Assertion.Assert (w3.IsCommand);
+			Assert.IsTrue (w1.IsCommand);
+			Assert.IsTrue (w2.IsCommand);
+			Assert.IsTrue (w3.IsCommand);
 			
-			Assertion.AssertEquals (w2, w1.FindChildByPath ("A.B"));
-			Assertion.AssertEquals (w3, w1.FindChildByPath ("A.B.C"));
+			Assert.AreEqual (w2, w1.FindChildByPath ("A.B"));
+			Assert.AreEqual (w3, w1.FindChildByPath ("A.B.C"));
 			
 			Widget[] find = w1.FindCommandWidgets ("b");
 			
-			Assertion.AssertEquals (1, find.Length);
-			Assertion.AssertEquals (w2, find[0]);
+			Assert.AreEqual (1, find.Length);
+			Assert.AreEqual (w2, find[0]);
 		}
 		
 		[Test] public void CheckFindAllCommandNames()
@@ -745,7 +745,7 @@ namespace Epsitec.Common.Widgets
 			Widget[]     find  = Widget.FindAllCommandWidgets ("save");
 			CommandState state = find[0].CommandState;
 			
-			Assertion.AssertNotNull (state);
+			Assert.IsNotNull (state);
 			
 			for (int i = 0; i < find.Length; i++)
 			{
@@ -782,8 +782,8 @@ namespace Epsitec.Common.Widgets
 			Widget w2 = new Widget ();					w2.Parent = root;
 			Widget w3 = new Widget ();	w3.Name = "b";	w3.Parent = w2;
 			
-			Assertion.AssertEquals (w1, root.FindChild ("a"));
-			Assertion.AssertEquals (w3, root.FindChild ("b"));
+			Assert.AreEqual (w1, root.FindChild ("a"));
+			Assert.AreEqual (w3, root.FindChild ("b"));
 		}
 		
 		[Test] public void CheckFindChildBasedOnCommandName()
@@ -796,16 +796,16 @@ namespace Epsitec.Common.Widgets
 			Widget w5 = new Widget ();	w5.Command = "d";	w5.Parent = w4;
 			Widget w6 = new Widget ();	w6.Name = "e";		w6.Parent = w1;
 			
-			Assertion.AssertEquals (w1, root.FindCommandWidgets ("a") [0]);
-			Assertion.AssertEquals (w3, root.FindCommandWidgets ("b") [0]);
-			Assertion.AssertEquals (w4, root.FindCommandWidgets ("c") [0]);
-			Assertion.AssertEquals (w5, root.FindCommandWidgets ("d") [0]);
+			Assert.AreEqual (w1, root.FindCommandWidgets ("a") [0]);
+			Assert.AreEqual (w3, root.FindCommandWidgets ("b") [0]);
+			Assert.AreEqual (w4, root.FindCommandWidgets ("c") [0]);
+			Assert.AreEqual (w5, root.FindCommandWidgets ("d") [0]);
 			
-			Assertion.Assert (root.FindCommandWidgets ("e").Length == 0);
+			Assert.IsTrue (root.FindCommandWidgets ("e").Length == 0);
 			
 			Widget[] command_widgets = root.FindCommandWidgets ();
 			
-			Assertion.AssertEquals (4, command_widgets.Length);
+			Assert.AreEqual (4, command_widgets.Length);
 		}
 		
 		[Test] public void CheckColorSelector()

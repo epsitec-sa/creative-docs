@@ -7,6 +7,16 @@ namespace Epsitec.Common.Widgets
 	[TestFixture]
 	public class AdornerTest
 	{
+//		[Test] public void ManualCheckAdornerWidgets()
+//		{
+//			this.CreateAdornerWidgets().Run();
+//		}
+//		
+//		[Test] public void ManualCheckBigText()
+//		{
+//			this.CreateBigText ().Run();
+//		}
+		
 		[Test] public void CheckAdornerWidgets()
 		{
 			this.CreateAdornerWidgets();
@@ -17,6 +27,12 @@ namespace Epsitec.Common.Widgets
 			Window window = this.CreateAdornerWidgets();
 			this.RecursiveDisable(window.Root, true);
 		}
+		
+		[Test] public void CheckAdornerBigText()
+		{
+			this.CreateBigText ();
+		}
+		
 		
 		void RecursiveDisable(Widget widget, bool top_level)
 		{
@@ -645,7 +661,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		[Test] public void CheckAdornerBigText()
+		private Window CreateBigText()
 		{
 			Window window = new Window();
 			
@@ -684,6 +700,8 @@ namespace Epsitec.Common.Widgets
 			window.FocusedWidget    = multi;
 
 			window.Show();
+			
+			return window;
 		}
 		
 		private void HandleMultiSelectionOrCursorChanged(object sender)

@@ -77,20 +77,20 @@ namespace Epsitec.Common.Widgets
 		{
 			TextLayout layout = this.NewTextLayout();
 			
-			Assertion.Assert(layout.TotalLineCount > 0);
-			Assertion.Assert(layout.VisibleLineCount > 0);
-			Assertion.Assert(layout.VisibleLineCount <= layout.TotalLineCount);
+			Assert.IsTrue(layout.TotalLineCount > 0);
+			Assert.IsTrue(layout.VisibleLineCount > 0);
+			Assert.IsTrue(layout.VisibleLineCount <= layout.TotalLineCount);
 			
-			Assertion.AssertEquals(layout.TotalRectangle.IsEmpty, false);
-			Assertion.Assert(layout.TotalRectangle.Width <= layout.LayoutSize.Width);
-			Assertion.Assert(layout.TotalRectangle.Width >= layout.FontSize);
-			Assertion.Assert(layout.TotalRectangle.Height >= layout.FontSize);
+			Assert.AreEqual(layout.TotalRectangle.IsEmpty, false);
+			Assert.IsTrue(layout.TotalRectangle.Width <= layout.LayoutSize.Width);
+			Assert.IsTrue(layout.TotalRectangle.Width >= layout.FontSize);
+			Assert.IsTrue(layout.TotalRectangle.Height >= layout.FontSize);
 			
-			Assertion.AssertEquals(layout.VisibleRectangle.IsEmpty, false);
-			Assertion.Assert(layout.VisibleRectangle.Width <= layout.LayoutSize.Width);
-			Assertion.Assert(layout.VisibleRectangle.Width >= layout.FontSize);
-			Assertion.Assert(layout.VisibleRectangle.Height >= layout.FontSize);
-			Assertion.Assert(layout.VisibleRectangle.Height <= layout.TotalRectangle.Height);
+			Assert.AreEqual(layout.VisibleRectangle.IsEmpty, false);
+			Assert.IsTrue(layout.VisibleRectangle.Width <= layout.LayoutSize.Width);
+			Assert.IsTrue(layout.VisibleRectangle.Width >= layout.FontSize);
+			Assert.IsTrue(layout.VisibleRectangle.Height >= layout.FontSize);
+			Assert.IsTrue(layout.VisibleRectangle.Height <= layout.TotalRectangle.Height);
 		}
 		
 		[Test] public void CheckTextConversions()
@@ -99,27 +99,27 @@ namespace Epsitec.Common.Widgets
 			string t12 = "(a &lt; b) &amp;&amp; (b &gt; c)<br/>Second line";
 			string t13 = TextLayout.ConvertToTaggedText(t11);
 			string t14 = TextLayout.ConvertToSimpleText(t13);
-			Assertion.AssertEquals(t12, t13);
-			Assertion.AssertEquals(t11, t14);
+			Assert.AreEqual(t12, t13);
+			Assert.AreEqual(t11, t14);
 
 			string t21 = "Hel&lo && <bye>";
 			string t22 = "Hel<m>l</m>o &amp; &lt;bye&gt;";
 			string t23 = TextLayout.ConvertToTaggedText(t21, true);
 			string t24 = TextLayout.ConvertToSimpleText(t23);
 			string t25 = "Hello & <bye>";
-			Assertion.AssertEquals(t22, t23);
-			Assertion.AssertEquals(t25, t24);
+			Assert.AreEqual(t22, t23);
+			Assert.AreEqual(t25, t24);
 
 			string t36 = "This is an image <img src=\"x.jpg\" width=\"5\" height=\"4\"/> !";
 			string t37 = "This is an image xyz !";
 			string t38 = TextLayout.ConvertToSimpleText(t36, "xyz");
-			Assertion.AssertEquals(t37, t38);
+			Assert.AreEqual(t37, t38);
 		}
 		
 		[Test] public void CheckMnemonic()
 		{
-			Assertion.AssertEquals('L', TextLayout.ExtractMnemonic("Hel<m>l</m>o"));
-			Assertion.AssertEquals('\0', TextLayout.ExtractMnemonic("Hello"));
+			Assert.AreEqual('L', TextLayout.ExtractMnemonic("Hel<m>l</m>o"));
+			Assert.AreEqual('\0', TextLayout.ExtractMnemonic("Hello"));
 		}
 		
 		[Test] public void CheckTextManipulation()
@@ -128,28 +128,28 @@ namespace Epsitec.Common.Widgets
 			
 			string reference = "Link, Bold text, normal text, italic text...\nAnd some <more> text,  nice & clean.";
 			string text = TextLayout.ConvertToSimpleText(layout.Text);
-			Assertion.AssertEquals(reference, text);
+			Assert.AreEqual(reference, text);
 
-			Assertion.AssertEquals(12, layout.FindOffsetFromIndex(0));
-			Assertion.AssertEquals(13, layout.FindOffsetFromIndex(1));
-			Assertion.AssertEquals(20, layout.FindOffsetFromIndex(4));
-			Assertion.AssertEquals(21, layout.FindOffsetFromIndex(5));
-			Assertion.AssertEquals(74, layout.FindOffsetFromIndex(44));
-			Assertion.AssertEquals(79, layout.FindOffsetFromIndex(45));
-			Assertion.AssertEquals(88, layout.FindOffsetFromIndex(54));
-			Assertion.AssertEquals(92, layout.FindOffsetFromIndex(55));
-//?			Assertion.AssertEquals(layout.Text.Length, layout.FindOffsetFromIndex(reference.Length));
+			Assert.AreEqual(12, layout.FindOffsetFromIndex(0));
+			Assert.AreEqual(13, layout.FindOffsetFromIndex(1));
+			Assert.AreEqual(20, layout.FindOffsetFromIndex(4));
+			Assert.AreEqual(21, layout.FindOffsetFromIndex(5));
+			Assert.AreEqual(74, layout.FindOffsetFromIndex(44));
+			Assert.AreEqual(79, layout.FindOffsetFromIndex(45));
+			Assert.AreEqual(88, layout.FindOffsetFromIndex(54));
+			Assert.AreEqual(92, layout.FindOffsetFromIndex(55));
+//?			Assert.AreEqual(layout.Text.Length, layout.FindOffsetFromIndex(reference.Length));
 			
-			Assertion.AssertEquals(0,  layout.FindIndexFromOffset(12));
-			Assertion.AssertEquals(1,  layout.FindIndexFromOffset(13));
-			Assertion.AssertEquals(4,  layout.FindIndexFromOffset(16));
-			Assertion.AssertEquals(4,  layout.FindIndexFromOffset(20));
-			Assertion.AssertEquals(5,  layout.FindIndexFromOffset(21));
-			Assertion.AssertEquals(44, layout.FindIndexFromOffset(74));
-			Assertion.AssertEquals(45, layout.FindIndexFromOffset(79));
-			Assertion.AssertEquals(54, layout.FindIndexFromOffset(88));
-			Assertion.AssertEquals(55, layout.FindIndexFromOffset(92));
-//?			Assertion.AssertEquals(reference.Length, layout.FindIndexFromOffset(layout.Text.Length));
+			Assert.AreEqual(0,  layout.FindIndexFromOffset(12));
+			Assert.AreEqual(1,  layout.FindIndexFromOffset(13));
+			Assert.AreEqual(4,  layout.FindIndexFromOffset(16));
+			Assert.AreEqual(4,  layout.FindIndexFromOffset(20));
+			Assert.AreEqual(5,  layout.FindIndexFromOffset(21));
+			Assert.AreEqual(44, layout.FindIndexFromOffset(74));
+			Assert.AreEqual(45, layout.FindIndexFromOffset(79));
+			Assert.AreEqual(54, layout.FindIndexFromOffset(88));
+			Assert.AreEqual(55, layout.FindIndexFromOffset(92));
+//?			Assert.AreEqual(reference.Length, layout.FindIndexFromOffset(layout.Text.Length));
 		}
 		
 		[Test] public void CheckEntityChar()
@@ -157,14 +157,14 @@ namespace Epsitec.Common.Widgets
 			int index = 0;
 			string text = "A&lt;&Amp;&GT;.&quot;&#160;";
 			
-			Assertion.AssertEquals('A', TextLayout.AnalyseEntityChar(text, ref index));
-			Assertion.AssertEquals('<', TextLayout.AnalyseEntityChar(text, ref index));
-			Assertion.AssertEquals('&', TextLayout.AnalyseEntityChar(text, ref index));
-			Assertion.AssertEquals('>', TextLayout.AnalyseEntityChar(text, ref index));
-			Assertion.AssertEquals('.', TextLayout.AnalyseEntityChar(text, ref index));
-			Assertion.AssertEquals('"', TextLayout.AnalyseEntityChar(text, ref index));
-			Assertion.AssertEquals(160, TextLayout.AnalyseEntityChar(text, ref index));
-			Assertion.AssertEquals(text.Length, index);
+			Assert.AreEqual('A', TextLayout.AnalyseEntityChar(text, ref index));
+			Assert.AreEqual('<', TextLayout.AnalyseEntityChar(text, ref index));
+			Assert.AreEqual('&', TextLayout.AnalyseEntityChar(text, ref index));
+			Assert.AreEqual('>', TextLayout.AnalyseEntityChar(text, ref index));
+			Assert.AreEqual('.', TextLayout.AnalyseEntityChar(text, ref index));
+			Assert.AreEqual('"', TextLayout.AnalyseEntityChar(text, ref index));
+			Assert.AreEqual(160, TextLayout.AnalyseEntityChar(text, ref index));
+			Assert.AreEqual(text.Length, index);
 		}
 		
 		[Test] public void CheckAnchor()
@@ -172,14 +172,14 @@ namespace Epsitec.Common.Widgets
 			TextLayout layout = this.NewTextLayout();
 			layout.Text = "<a href=\"x\">Link</a>";
 			Rectangle[] rects = layout.FindTextRange(new Drawing.Point (), 0, 20);
-			Assertion.AssertNotNull(rects);
-			Assertion.AssertEquals(1, rects.Length);
+			Assert.IsNotNull(rects);
+			Assert.AreEqual(1, rects.Length);
 			
 			double x = (rects[0].Left + rects[0].Right) / 2;
 			double y = (rects[0].Bottom + rects[0].Top) / 2;
 			string anchor = layout.DetectAnchor(new Point(x, y));
-			Assertion.AssertNotNull(anchor);
-			Assertion.AssertEquals("x", anchor);
+			Assert.IsNotNull(anchor);
+			Assert.AreEqual("x", anchor);
 		}
 		
 		[Test] public void CheckAnalyseTagsAtOffset()
@@ -187,27 +187,27 @@ namespace Epsitec.Common.Widgets
 			TextLayout layout = this.NewTextLayout();
 			string[] tags;
 			layout.AnalyseTagsAtOffset(30, out tags);
-			Assertion.AssertEquals(tags.Length, 1);
-			Assertion.AssertEquals(tags[0], "<b>");
+			Assert.AreEqual(tags.Length, 1);
+			Assert.AreEqual(tags[0], "<b>");
 
 			layout.Text = "<b><u>abc</u></b> <b><i>abc</i></b> abc";
 			layout.AnalyseTagsAtOffset(6, out tags);
-			Assertion.AssertEquals(tags.Length, 2);
-			Assertion.AssertEquals(tags[0], "<b>");
-			Assertion.AssertEquals(tags[1], "<u>");
+			Assert.AreEqual(tags.Length, 2);
+			Assert.AreEqual(tags[0], "<b>");
+			Assert.AreEqual(tags[1], "<u>");
 			layout.AnalyseTagsAtOffset(24, out tags);
-			Assertion.AssertEquals(tags.Length, 2);
-			Assertion.AssertEquals(tags[0], "<b>");
-			Assertion.AssertEquals(tags[1], "<i>");
+			Assert.AreEqual(tags.Length, 2);
+			Assert.AreEqual(tags[0], "<b>");
+			Assert.AreEqual(tags[1], "<i>");
 			layout.AnalyseTagsAtOffset(27, out tags);
-			Assertion.AssertEquals(tags.Length, 2);
-			Assertion.AssertEquals(tags[0], "<b>");
-			Assertion.AssertEquals(tags[1], "<i>");
+			Assert.AreEqual(tags.Length, 2);
+			Assert.AreEqual(tags[0], "<b>");
+			Assert.AreEqual(tags[1], "<i>");
 			layout.AnalyseTagsAtOffset(31, out tags);
-			Assertion.AssertEquals(tags.Length, 1);
-			Assertion.AssertEquals(tags[0], "<b>");
+			Assert.AreEqual(tags.Length, 1);
+			Assert.AreEqual(tags[0], "<b>");
 			layout.AnalyseTagsAtOffset(35, out tags);
-			Assertion.AssertEquals(tags.Length, 0);
+			Assert.AreEqual(tags.Length, 0);
 		}
 
 		[Test] public void CheckParseTags()
@@ -235,31 +235,31 @@ namespace Epsitec.Common.Widgets
 					continue;
 				}
 				
-				Assertion.AssertEquals(expected_tags[i], tag);
+				Assert.AreEqual(expected_tags[i], tag);
 				i++;
 			}
 			
 			text  = "<img src=\"x\">";
 			index = 0;
-			Assertion.AssertEquals(TextLayout.Tag.SyntaxError, TextLayout.ParseTag(text, ref index, out parameters));
-			Assertion.AssertNull(parameters);
-			Assertion.AssertEquals(text.Length, index);
+			Assert.AreEqual(TextLayout.Tag.SyntaxError, TextLayout.ParseTag(text, ref index, out parameters));
+			Assert.IsNull(parameters);
+			Assert.AreEqual(text.Length, index);
 			
 			text  = "<img src=\"x\"/>";
 			index = 0;
-			Assertion.AssertEquals(TextLayout.Tag.Image, TextLayout.ParseTag(text, ref index, out parameters));
-			Assertion.AssertNotNull(parameters);
-			Assertion.AssertEquals("x", parameters["src"]);
-			Assertion.AssertEquals(text.Length, index);
+			Assert.AreEqual(TextLayout.Tag.Image, TextLayout.ParseTag(text, ref index, out parameters));
+			Assert.IsNotNull(parameters);
+			Assert.AreEqual("x", parameters["src"]);
+			Assert.AreEqual(text.Length, index);
 			
 			text  = "<font face=\"Arial Bold\" size=\"2\" color=\"#FFCC00\">";
 			index = 0;
-			Assertion.AssertEquals(TextLayout.Tag.Font, TextLayout.ParseTag(text, ref index, out parameters));
-			Assertion.AssertNotNull(parameters);
-			Assertion.AssertEquals(parameters["face"], "Arial Bold");
-			Assertion.AssertEquals(parameters["size"], "2");
-			Assertion.AssertEquals(parameters["color"], "#FFCC00");
-			Assertion.AssertEquals(text.Length, index);
+			Assert.AreEqual(TextLayout.Tag.Font, TextLayout.ParseTag(text, ref index, out parameters));
+			Assert.IsNotNull(parameters);
+			Assert.AreEqual(parameters["face"], "Arial Bold");
+			Assert.AreEqual(parameters["size"], "2");
+			Assert.AreEqual(parameters["color"], "#FFCC00");
+			Assert.AreEqual(text.Length, index);
 		}
 		
 		[Test] public void CheckCheckSyntax()
@@ -267,21 +267,21 @@ namespace Epsitec.Common.Widgets
 			int offsetError;
 
 			// Textes tordus mais corrects.
-			Assertion.Assert(TextLayout.CheckSyntax("<a href=\"x\">Link</a>", out offsetError));
-			Assertion.Assert(TextLayout.CheckSyntax("<b><i></B></I>", out offsetError));
-			Assertion.Assert(TextLayout.CheckSyntax("Première<BR/>Deuxième", out offsetError));
-			Assertion.Assert(TextLayout.CheckSyntax("<img src=\"x\"/>", out offsetError));
-			Assertion.Assert(TextLayout.CheckSyntax("A&lt;&Amp;&GT;.&quot;&#160;", out offsetError));
+			Assert.IsTrue(TextLayout.CheckSyntax("<a href=\"x\">Link</a>", out offsetError));
+			Assert.IsTrue(TextLayout.CheckSyntax("<b><i></B></I>", out offsetError));
+			Assert.IsTrue(TextLayout.CheckSyntax("Première<BR/>Deuxième", out offsetError));
+			Assert.IsTrue(TextLayout.CheckSyntax("<img src=\"x\"/>", out offsetError));
+			Assert.IsTrue(TextLayout.CheckSyntax("A&lt;&Amp;&GT;.&quot;&#160;", out offsetError));
 
 			// Textes faux qui doivent être rejetés.
-			Assertion.Assert(!TextLayout.CheckSyntax("<bold", out offsetError));
-			Assertion.Assert(!TextLayout.CheckSyntax("&quot", out offsetError));
-			Assertion.Assert(!TextLayout.CheckSyntax("<b>bold", out offsetError));
-			Assertion.Assert(!TextLayout.CheckSyntax("bold</b>", out offsetError));
-			Assertion.Assert(!TextLayout.CheckSyntax("Première<br>Deuxième", out offsetError));
-			Assertion.Assert(!TextLayout.CheckSyntax("<img src=\"x\">", out offsetError));
-			Assertion.Assert(!TextLayout.CheckSyntax("ab&quott;cd", out offsetError));
-			Assertion.Assert(!TextLayout.CheckSyntax("<x>", out offsetError));
+			Assert.IsTrue(!TextLayout.CheckSyntax("<bold", out offsetError));
+			Assert.IsTrue(!TextLayout.CheckSyntax("&quot", out offsetError));
+			Assert.IsTrue(!TextLayout.CheckSyntax("<b>bold", out offsetError));
+			Assert.IsTrue(!TextLayout.CheckSyntax("bold</b>", out offsetError));
+			Assert.IsTrue(!TextLayout.CheckSyntax("Première<br>Deuxième", out offsetError));
+			Assert.IsTrue(!TextLayout.CheckSyntax("<img src=\"x\">", out offsetError));
+			Assert.IsTrue(!TextLayout.CheckSyntax("ab&quott;cd", out offsetError));
+			Assert.IsTrue(!TextLayout.CheckSyntax("<x>", out offsetError));
 		}
 			
 		[Test] public void CheckTextBrBr()

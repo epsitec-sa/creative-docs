@@ -977,7 +977,7 @@ namespace Epsitec.Common.Widgets
 			fd.name = "Prénom";
 			mydb.CreateFieldDesc(fd);
 
-			Assertion.Assert(mydb.TotalField == 2);
+			Assert.IsTrue(mydb.TotalField == 2);
 
 			TinyDataBase.Record record;
 			int rank;
@@ -985,28 +985,28 @@ namespace Epsitec.Common.Widgets
 			mydb.CreateEmptyRecord(out record);
 			mydb.SetFieldInRecord(record, 0, "Roux");
 			mydb.SetFieldInRecord(record, 1, "Daniel");
-			Assertion.Assert(mydb.RetFieldInRecord(record, 0) == "Roux");
-			Assertion.Assert(mydb.RetFieldInRecord(record, 1) == "Daniel");
+			Assert.IsTrue(mydb.RetFieldInRecord(record, 0) == "Roux");
+			Assert.IsTrue(mydb.RetFieldInRecord(record, 1) == "Daniel");
 			rank = mydb.CreateRecord(record);
-			Assertion.Assert(rank == 0);
+			Assert.IsTrue(rank == 0);
 
 			mydb.CreateEmptyRecord(out record);
 			mydb.SetFieldInRecord(record, 1, "Denis");
 			mydb.SetFieldInRecord(record, 0, "Dumoulin");
-			Assertion.Assert(mydb.RetFieldInRecord(record, 0) == "Dumoulin");
-			Assertion.Assert(mydb.RetFieldInRecord(record, 1) == "Denis");
+			Assert.IsTrue(mydb.RetFieldInRecord(record, 0) == "Dumoulin");
+			Assert.IsTrue(mydb.RetFieldInRecord(record, 1) == "Denis");
 			rank = mydb.CreateRecord(record);
-			Assertion.Assert(rank == 1);
+			Assert.IsTrue(rank == 1);
 
 			mydb.CreateEmptyRecord(out record);
 			mydb.SetFieldInRecord(record, 0, "Walz");
 			mydb.SetFieldInRecord(record, 1, "Michael");
-			Assertion.Assert(mydb.RetFieldInRecord(record, 0) == "Walz");
-			Assertion.Assert(mydb.RetFieldInRecord(record, 1) == "Michael");
+			Assert.IsTrue(mydb.RetFieldInRecord(record, 0) == "Walz");
+			Assert.IsTrue(mydb.RetFieldInRecord(record, 1) == "Michael");
 			rank = mydb.CreateRecord(record);
-			Assertion.Assert(rank == 2);
+			Assert.IsTrue(rank == 2);
 
-			Assertion.Assert(mydb.TotalRecord == 3);
+			Assert.IsTrue(mydb.TotalRecord == 3);
 
 			mydb.SetSortField(0, 0, SortMode.Down);  // tri par noms
 			mydb.SetSortField(1, 1, SortMode.Down);  // puis par prénoms
@@ -1014,11 +1014,11 @@ namespace Epsitec.Common.Widgets
 			// Dumoulin, Roux, Walz
 			TinyDataBase.Record r1;
 			r1 = mydb.RetRecord(0);
-			Assertion.Assert(mydb.RetFieldInRecord(r1, 0) == "Dumoulin");
+			Assert.IsTrue(mydb.RetFieldInRecord(r1, 0) == "Dumoulin");
 			r1 = mydb.RetRecord(2);
-			Assertion.Assert(mydb.RetFieldInRecord(r1, 0) == "Walz");
+			Assert.IsTrue(mydb.RetFieldInRecord(r1, 0) == "Walz");
 			r1 = mydb.RetRecord(1);
-			Assertion.Assert(mydb.RetFieldInRecord(r1, 0) == "Roux");
+			Assert.IsTrue(mydb.RetFieldInRecord(r1, 0) == "Roux");
 
 			TinyDataBase.Record r2;
 			r2 = mydb.RetRecord(2);
@@ -1026,16 +1026,16 @@ namespace Epsitec.Common.Widgets
 			mydb.SetFieldInRecord(r2, 1, "Yves");  // Michael -> Yves
 			// Dumoulin, Raboud, Roux
 			rank = mydb.SetRecord(2, r2);
-			Assertion.Assert(rank == 1);
+			Assert.IsTrue(rank == 1);
 
 			mydb.DeleteRecord(0);  // supprime Dumoulin
-			Assertion.Assert(mydb.TotalRecord == 2);
+			Assert.IsTrue(mydb.TotalRecord == 2);
 
 			// Raboud, Roux
 			r1 = mydb.RetRecord(1);
-			Assertion.Assert(mydb.RetFieldInRecord(r1, 0) == "Roux");
+			Assert.IsTrue(mydb.RetFieldInRecord(r1, 0) == "Roux");
 			r1 = mydb.RetRecord(0);
-			Assertion.Assert(mydb.RetFieldInRecord(r1, 0) == "Raboud");
+			Assert.IsTrue(mydb.RetFieldInRecord(r1, 0) == "Raboud");
 
 			mydb.CreateEmptyRecord(out record);
 			mydb.SetFieldInRecord(record, 0, "Arnaud");
@@ -1047,11 +1047,11 @@ namespace Epsitec.Common.Widgets
 
 			// Roux, Arnaud, Raboud
 			r1 = mydb.RetRecord(0);
-			Assertion.Assert(mydb.RetFieldInRecord(r1, 1) == "Daniel");
+			Assert.IsTrue(mydb.RetFieldInRecord(r1, 1) == "Daniel");
 			r1 = mydb.RetRecord(1);
-			Assertion.Assert(mydb.RetFieldInRecord(r1, 1) == "Pierre");
+			Assert.IsTrue(mydb.RetFieldInRecord(r1, 1) == "Pierre");
 			r1 = mydb.RetRecord(2);
-			Assertion.Assert(mydb.RetFieldInRecord(r1, 1) == "Yves");
+			Assert.IsTrue(mydb.RetFieldInRecord(r1, 1) == "Yves");
 		}
 
 

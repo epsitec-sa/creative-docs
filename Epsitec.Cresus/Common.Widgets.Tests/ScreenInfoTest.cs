@@ -21,8 +21,8 @@ namespace Epsitec.Common.Widgets
 				System.Console.Out.WriteLine (" - IsPrimary={0}", info.IsPrimary);
 				System.Console.Out.WriteLine ();
 				
-				Assertion.Assert (info.Bounds.Contains (info.WorkingArea));
-				Assertion.Assert (ScreenInfo.GlobalArea.Contains (info.Bounds));
+				Assert.IsTrue (info.Bounds.Contains (info.WorkingArea));
+				Assert.IsTrue (ScreenInfo.GlobalArea.Contains (info.Bounds));
 			}
 		}
 		
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Widgets
 			foreach (ScreenInfo info in screens)
 			{
 				ScreenInfo found = ScreenInfo.Find (new Point (info.Bounds.Left + info.Bounds.Width / 2, info.Bounds.Bottom + info.Bounds.Height / 2));
-				Assertion.AssertEquals (info.Bounds, found.Bounds);
+				Assert.AreEqual (info.Bounds, found.Bounds);
 			}
 		}
 		
