@@ -41,6 +41,30 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public static void ConvertFromString(string text, out ulong[] result)
+		{
+			result = new ulong[text.Length];
+			
+			for (int i = 0; i < text.Length; i++)
+			{
+				char c = text[i];
+				
+				//	S'agit-il là d'un caractère potentiellement complexe ?
+				
+				if ((c >= Unicode.SurrogateMin) &&
+					(c <= Unicode.SurrogateMax))
+				{
+					//	On vient de tomber sur une partie de 'surrogate pair'. Il
+					//	faut donc traiter tout le texte comme un texte complexe :
+					
+					TextConverter.ConvertFromComplexString (text, i, ref result);
+					break;
+				}
+				
+				result[i] = c;
+			}
+		}
+		
 		public static void ConvertToString(uint[] text, out string result)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -157,6 +181,67 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		
+		private static void ConvertFromComplexString(string text, int index, ref ulong[] result)
+		{
+			//	Conversion d'un texte contenant des surrogate pairs. L'appelant
+			//	a alloué un buffer suffisamment grand pour stocker le résultat
+			//	de la conversion, mais peut-être sera-t-il trop grand ?
+			
+			for (int i = index; i < text.Length; i++)
+			{
+				char  c    = text[i];
+				ulong code = c;
+				
+				if ((c >= Unicode.SurrogateLowMin) &&
+					(c <= Unicode.SurrogateLowMax))
+				{
+					//	Traitement des 'surrogate pairs'.
+					//
+					//	http://www.i18nguy.com/surrogates.html
+					//	http://www.i18nguy.com/unicode/surrogatetable.html
+					
+					if ((i >= text.Length-1) ||
+						(text[i+1] < Unicode.SurrogateHighMin) ||
+						(text[i+1] > Unicode.SurrogateHighMax))
+					{
+						//	Demi paire ou paire incorrecte; ceci implique une erreur de
+						//	codage de la part de l'appelant.
+						
+						throw new Unicode.IllegalCodeException ();
+					}
+					
+					ulong low  = (ulong)text[i+0] - Unicode.SurrogateLowMin;
+					ulong high = (ulong)text[i+1] - Unicode.SurrogateHighMin;
+					
+					Debug.Assert.IsInBounds (low, 0, 0x3FF);
+					Debug.Assert.IsInBounds (high, 0, 0x3FF);
+					
+					code = (low << 10) + (high) + 0x10000;
+					
+					Debug.Assert.IsInBounds (code, 0x010000, 0x10FFFF);
+					
+					//	Saute le caractère suivant dans la source...
+					
+					i++;
+				}
+				else if ((c >= Unicode.SurrogateHighMin) &&
+					/**/ (c <= Unicode.SurrogateHighMax))
+				{
+					throw new Unicode.IllegalCodeException ();
+				}
+				
+				result[index++] = code;
+			}
+			
+			if (index < result.Length)
+			{
+				ulong[] old_result = result;
+				ulong[] new_result = new ulong[index];
+				
+				System.Buffer.BlockCopy (old_result, 0, new_result, 0, index*4);
+				
+				result = new_result;
+			}
+		}
 	}
 }

@@ -218,12 +218,16 @@ namespace Epsitec.Common.Text
 			//	Normative Properties
 				
 			BK_MandatoryBreak,						//	cause a line break (after)
+			CR_CarriageReturn,						//	cause a line break (after), except between CR and LF
+			LF_LineFeed,							//	cause a line break (after)
 			CM_CombiningMarks,						//	prohibit a line break between char and preceding char
 			SG_Surrogates,							//	prohibit a break between high and following low surrogate
-			ZW_ZeroWidthSpace,						//	optional break
 			GL_NonBreakingGlue,						//	prohibit a line break before or after
 			CB_ContingentBreakOpportunity,			//	provide a line break opportunity contingent on add. info.
 			SP_Space,								//	generally provide a line break opportunity after, enables indirect breaks
+			ZW_ZeroWidthSpace,						//	optional break
+			NL_NewLine,								//	causes a line break (after)
+			WJ_WordJoiner,							//	prohibit line breaks before or after
 				
 			//	Break Opportunities
 				
@@ -330,8 +334,9 @@ namespace Epsitec.Common.Text
 			
 			public void LoadFile(string path)
 			{
-				//	Voir http://www.unicode.org/Public/4.0-Update/LineBreak-4.0.0.txt
-				//	pour le fichier à jour.
+				//	Voir http://www.unicode.org/Public/LineBreak.txt pour le
+				//	fichier à jour; les explications relatives à son format sont
+				//	ici http://www.unicode.org/Public/UNIDATA/UCD.html.
 				
 				using (System.IO.StreamReader reader = new System.IO.StreamReader (path, System.Text.Encoding.ASCII))
 				{
@@ -479,6 +484,27 @@ namespace Epsitec.Common.Text
 					cur_unicode = Unicode.Bits.GetCode (text[start+i]);
 					cur_class   = this[cur_unicode];
 					
+					//	Comme on passe déjà en revue le texte, on profite de mettre
+					//	à jour les fanions Combining et Reordering :
+					
+					if (cur_class == Unicode.BreakClass.CM_CombiningMarks)
+					{
+						Unicode.Bits.SetCombiningFlag (ref text[start+i], true);
+						
+						if (prv_class == Unicode.BreakClass.SP_Space)
+						{
+							cur_class = Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol;
+						}
+						else
+						{
+							cur_class = prv_class;
+						}
+					}
+					else
+					{
+						Unicode.Bits.SetCombiningFlag (ref text[start+i], false);
+					}
+					
 					//	Simplifie les traitements ultérieurs en remplaçant certaines
 					//	classes par d'autres :
 					
@@ -487,15 +513,12 @@ namespace Epsitec.Common.Text
 						case Unicode.BreakClass.SG_Surrogates:
 							throw new Unicode.IllegalCodeException ("Found surrogate in UTF-32");
 						
-						case Unicode.BreakClass.CM_CombiningMarks:
-							if (prv_class == Unicode.BreakClass.SP_Space)
-							{
-								cur_class = Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol;
-							}
-							else
-							{
-								cur_class = prv_class;
-							}
+						case Unicode.BreakClass.NL_NewLine:
+							cur_class = Unicode.BreakClass.BK_MandatoryBreak;
+							break;
+						
+						case Unicode.BreakClass.WJ_WordJoiner:
+							cur_class = Unicode.BreakClass.GL_NonBreakingGlue;
 							break;
 						
 						case Unicode.BreakClass.AI_AmbiguousAlphabeticOrIdeographic:
@@ -508,21 +531,27 @@ namespace Epsitec.Common.Text
 							cur_class = Unicode.BreakClass.ID_Ideographic;
 							break;
 						
+						//	LB 9
+						//	LB 11a
+						
 						case Unicode.BreakClass.SP_Space:
-							if ((prv_class == Unicode.BreakClass.OP_OpeningPunctuation) ||				//	LB 9
-								(prv_class == Unicode.BreakClass.B2_BreakOpportunityBeforeAndAfter))	//	LB 11a
+							if ((prv_class == Unicode.BreakClass.OP_OpeningPunctuation) ||				
+								(prv_class == Unicode.BreakClass.B2_BreakOpportunityBeforeAndAfter))
 							{
 								cur_class = prv_class;
 							}
 							break;
+						
+						//	Remplace "a'a" par "aaa" pour simplifier le traitement
+						//	des apostrophes latins (en français, par exemple).
 						
 						case Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol:
 							if ((i > 1) &&
 								(cclass[i-2] == Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol) &&
 								(prv_unicode == '\''))
 							{
-								cclass[i-1] = Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol;		//	remplace a'a par aaa pour simplifier..
-							}																			//	..le traitement des apostrophes latins
+								cclass[i-1] = Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol;
+							}
 							break;
 					}
 					
@@ -544,16 +573,35 @@ namespace Epsitec.Common.Text
 					
 					//	LB 3a / Always break after hard line breaks
 					
-					if (cclass[i] == Unicode.BreakClass.BK_MandatoryBreak)
+					if ((cclass[i] == Unicode.BreakClass.BK_MandatoryBreak) ||
+						(cclass[i] == Unicode.BreakClass.LF_LineFeed))
 					{
 						breaks[i] = Unicode.BreakInfo.Yes;
 						continue;
 					}
 					
-					//	LB 3b / Don't break before hard line breaks
+					//	LB 3b / Treat CR followed by LF as hard line breaks
+					
+					if (cclass[i] == Unicode.BreakClass.CR_CarriageReturn)
+					{
+						if (cclass[i+1] == Unicode.BreakClass.LF_LineFeed)
+						{
+							breaks[i] = Unicode.BreakInfo.No;
+						}
+						else
+						{
+							breaks[i] = Unicode.BreakInfo.Yes;
+						}
+						continue;
+					}
+					
+					
+					//	LB 3c / Don't break before hard line breaks
 					//	LB 4  / Don't break before spaces or zero-width space
 					
 					if ((cclass[i+1] == Unicode.BreakClass.BK_MandatoryBreak) ||
+						(cclass[i+1] == Unicode.BreakClass.LF_LineFeed) ||
+						(cclass[i+1] == Unicode.BreakClass.CR_CarriageReturn) ||
 						(cclass[i+1] == Unicode.BreakClass.SP_Space) ||
 						(cclass[i+1] == Unicode.BreakClass.ZW_ZeroWidthSpace))
 					{
@@ -754,12 +802,19 @@ namespace Epsitec.Common.Text
 					
 					//	LB 19 / Don't break between alphabetics
 					
-					if ((cclass[i] == Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol) &&
-						(cclass[i+1] == Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol))
+					if (cclass[i] == Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol)
 					{
-						breaks[i] = Unicode.BreakInfo.No;
-						continue;
+						if ((cclass[i+1] == Unicode.BreakClass.AL_OrdinaryAlphabeticAndSymbol) ||
+							(cclass[i+1] == Unicode.BreakClass.BK_MandatoryBreak) ||
+							(cclass[i+1] == Unicode.BreakClass.NL_NewLine) ||
+							(cclass[i+1] == Unicode.BreakClass.LF_LineFeed) ||
+							(cclass[i+1] == Unicode.BreakClass.CR_CarriageReturn))
+						{
+							breaks[i] = Unicode.BreakInfo.No;
+							continue;
+						}
 					}
+					
 					//	LB 20 / Break everywhere else
 					
 					breaks[i] = Unicode.BreakInfo.Optional;
@@ -791,12 +846,16 @@ namespace Epsitec.Common.Text
 				{
 					case "XX": return Unicode.BreakClass.XX_Unknown;
 					case "BK": return Unicode.BreakClass.BK_MandatoryBreak;
+					case "CR": return Unicode.BreakClass.CR_CarriageReturn;
+					case "LF": return Unicode.BreakClass.LF_LineFeed;
 					case "CM": return Unicode.BreakClass.CM_CombiningMarks;
 					case "SG": return Unicode.BreakClass.SG_Surrogates;
-					case "ZW": return Unicode.BreakClass.ZW_ZeroWidthSpace;
 					case "GL": return Unicode.BreakClass.GL_NonBreakingGlue;
 					case "CB": return Unicode.BreakClass.CB_ContingentBreakOpportunity;
 					case "SP": return Unicode.BreakClass.SP_Space;
+					case "ZW": return Unicode.BreakClass.ZW_ZeroWidthSpace;
+					case "NL": return Unicode.BreakClass.NL_NewLine;
+					case "WJ": return Unicode.BreakClass.WJ_WordJoiner;
 					case "BA": return Unicode.BreakClass.BA_BreakOpportunityAfter;
 					case "BB": return Unicode.BreakClass.BB_BreakOpportunityBefore;
 					case "B2": return Unicode.BreakClass.B2_BreakOpportunityBeforeAndAfter;
