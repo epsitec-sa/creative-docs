@@ -50,25 +50,17 @@ namespace Epsitec.Cresus.Database.Collections
 		
 		public virtual void Add(DbTable table)
 		{
-			this.List.Add (table);
-			this.OnChanged ();
+			this.InternalAdd (table);
 		}
 		
 		public virtual void AddRange(DbTable[] tables)
 		{
-			if (tables == null)
-			{
-				return;
-			}
-			
-			this.List.AddRange (tables);
-			this.OnChanged ();
+			this.InternalAddRange (tables);
 		}
 		
 		public virtual void Remove(DbTable table)
 		{
-			this.List.Remove (table);
-			this.OnChanged ();
+			this.InternalRemove (table);
 		}
 		
 		

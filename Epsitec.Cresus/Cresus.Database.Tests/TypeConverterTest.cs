@@ -103,6 +103,7 @@ namespace Epsitec.Cresus.Database
 			
 			Assert.IsTrue (exception_thrown, "ConverToSimpleType: incompatible values should fail");
 		}
+		
 		[Test] public void CheckMiscConversions()
 		{
 			DbNumDef def;
@@ -148,6 +149,24 @@ namespace Epsitec.Cresus.Database
 			res = TypeConverter.ConvertFromSimpleType (obj, DbSimpleType.Guid, def);
 			
 			Assert.AreEqual (val, res);
+		}
+		
+		[Test] public void CheckInternalConversions()
+		{
+			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
+			ITypeConverter   converter      = infrastructure.TypeConverter;
+			
+			object a = TypeConverter.ConvertToInternal (converter, "ABC", DbRawType.String);
+			object b = TypeConverter.ConvertToInternal (converter, true, DbRawType.Boolean);
+			
+			Assertion.AssertEquals (typeof (string), a.GetType ());
+			Assertion.AssertEquals (typeof (short), b.GetType ());
+			
+			object c = TypeConverter.ConvertFromInternal (converter, a, DbRawType.String);
+			object d = TypeConverter.ConvertFromInternal (converter, b, DbRawType.Boolean);
+			
+			Assertion.AssertEquals ("ABC", c);
+			Assertion.AssertEquals (true, d);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 07/10/2003
+//	Responsable: Pierre ARNAUD
 
 using System.Collections;
 using Epsitec.Common.Support;
@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Database.Collections
 		
 		public virtual void RemoveAt(int index)
 		{
+			this.OnRemoving (this.list[index]);
 			this.list.RemoveAt (index);
 			this.OnChanged ();
 		}
@@ -59,6 +60,35 @@ namespace Epsitec.Cresus.Database.Collections
 		}
 		
 		
+		protected void InternalAdd(object element)
+		{
+			this.list.Add (element);
+			this.OnInserted (element);
+			this.OnChanged ();
+		}
+		
+		protected void InternalAddRange(object[] elements)
+		{
+			if (elements == null)
+			{
+				return;
+			}
+			
+			this.list.AddRange (elements);
+			foreach (object element in elements)
+			{
+				this.OnInserted (element);
+			}
+			this.OnChanged ();
+		}
+		
+		protected void InternalRemove(object element)
+		{
+			this.OnRemoving (element);
+			this.list.Remove (element);
+			this.OnChanged ();
+		}
+		
 		
 		protected virtual void OnChanged()
 		{
@@ -68,7 +98,25 @@ namespace Epsitec.Cresus.Database.Collections
 			}
 		}
 		
+		protected virtual void OnInserted(object element)
+		{
+			if (this.Inserted != null)
+			{
+				this.Inserted (this, element);
+			}
+		}
 		
+		protected virtual void OnRemoving(object element)
+		{
+			if (this.Removing != null)
+			{
+				this.Removing (this, element);
+			}
+		}
+		
+		
+		public event ArgEventHandler			Removing;
+		public event ArgEventHandler			Inserted;
 		public event EventHandler				Changed;
 		
 		protected ArrayList						list = new System.Collections.ArrayList ();

@@ -13,14 +13,15 @@ namespace Epsitec.Cresus.Database
 	{
 		public DbTable()
 		{
+			this.AttachColumns (new Collections.DbColumns ());
 		}
 		
-		public DbTable(string name)
+		public DbTable(string name) : this ()
 		{
 			this.Attributes.SetAttribute (Tags.Name, name);
 		}
 		
-		public DbTable(System.Xml.XmlElement xml)
+		public DbTable(System.Xml.XmlElement xml) : this ()
 		{
 			this.ProcessXmlDefinition (xml);
 		}
@@ -68,7 +69,10 @@ namespace Epsitec.Cresus.Database
 		
 		public Collections.DbColumns			Columns
 		{
-			get { return this.columns; }
+			get
+			{
+				return this.columns;
+			}
 		}
 		
 		public bool								HasPrimaryKey
@@ -393,7 +397,7 @@ namespace Epsitec.Cresus.Database
 						this.primary_keys = Collections.DbColumns.CreateCollection (node);
 						break;
 					case "cols":
-						this.columns = Collections.DbColumns.CreateCollection (node);
+						this.AttachColumns (Collections.DbColumns.CreateCollection (node));
 						break;
 					
 					default:
@@ -405,9 +409,35 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		private void AttachColumns(Collections.DbColumns columns)
+		{
+			this.columns = columns;
+			
+			this.columns.Inserted += new Epsitec.Common.Support.ArgEventHandler(this.HandleColumnInserted);
+			this.columns.Removing += new Epsitec.Common.Support.ArgEventHandler(this.HandleColumnRemoving);
+			
+			foreach (DbColumn column in this.columns)
+			{
+				column.DefineTable (this);
+			}
+		}
+		
+		
+		private void HandleColumnInserted(object sender, object arg)
+		{
+			DbColumn column = arg as DbColumn;
+			column.DefineTable (this);
+		}
+		
+		private void HandleColumnRemoving(object sender, object arg)
+		{
+			DbColumn column = arg as DbColumn;
+			column.DefineTable (null);
+		}
+		
 		
 		protected DbAttributes					attributes	= new DbAttributes ();
-		protected Collections.DbColumns			columns		= new Collections.DbColumns ();
+		protected Collections.DbColumns			columns;
 		protected Collections.DbColumns			primary_keys;
 		protected DbElementCat					category;
 		protected DbKey							internal_table_key;

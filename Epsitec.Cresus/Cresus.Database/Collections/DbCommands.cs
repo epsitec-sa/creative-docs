@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 01/12/2003
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Collections
 {
@@ -26,25 +26,17 @@ namespace Epsitec.Cresus.Database.Collections
 		
 		public virtual void Add(IDbCommand command)
 		{
-			this.List.Add (command);
-			this.OnChanged ();
+			this.InternalAdd (command);
 		}
 		
 		public virtual void AddRange(IDbCommand[] commands)
 		{
-			if (commands == null)
-			{
-				return;
-			}
-			
-			this.List.AddRange (commands);
-			this.OnChanged ();
+			this.InternalAddRange (commands);
 		}
 		
 		public virtual void Remove(IDbCommand command)
 		{
-			this.List.Remove (command);
-			this.OnChanged ();
+			this.InternalRemove (command);
 		}
 		
 		

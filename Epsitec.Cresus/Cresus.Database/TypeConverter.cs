@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 07/10/2003
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
@@ -329,6 +329,41 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			throw new DbFormatException (string.Format ("Invalid value format {0}, cannot convert to {1}", value.GetType ().ToString (), simple_type.ToString ()));
+		}
+		
+		
+		public static object ConvertToInternal(ITypeConverter converter, object value, DbRawType raw_type)
+		{
+			if (converter.CheckNativeSupport (raw_type))
+			{
+				return value;
+			}
+			
+			IRawTypeConverter raw_converter;
+			
+			if (converter.GetRawTypeConverter (raw_type, out raw_converter))
+			{
+				return raw_converter.ConvertToInternalType (value);
+			}
+			
+			throw new System.InvalidOperationException (string.Format ("Cannot convert type {0} to internal representation.", raw_type));
+		}
+		
+		public static object ConvertFromInternal(ITypeConverter converter, object value, DbRawType raw_type)
+		{
+			if (converter.CheckNativeSupport (raw_type))
+			{
+				return value;
+			}
+			
+			IRawTypeConverter raw_converter;
+			
+			if (converter.GetRawTypeConverter (raw_type, out raw_converter))
+			{
+				return raw_converter.ConvertFromInternalType (value);
+			}
+			
+			throw new System.InvalidOperationException (string.Format ("Cannot convert from internal representation to type {0}.", raw_type));
 		}
 		
 		

@@ -212,6 +212,23 @@ namespace Epsitec.Cresus.Database
 				/**/									@"DataSource=localhost;Database=C:\Program Files\Firebird15\Data\Epsitec\fiche.firebird;Port=3050;Dialect=3;Packet Size=8192;" +
 				/**/									@"ServerType=1;Charset=UNICODE_FSS;Role=;Pooling=true;Connection Lifetime=10;");
 			
+#if false
+			connection.Open();
+           
+			string sql = "insert into U_DOMICILES_35 (CR_ID, CR_REV, CR_STAT, U_VILLE, U_NPA) values (@CR_ID, @CR_REV, @CR_STAT, @U_VILLE, @U_NPA)";
+
+			FbCommand cmd = new FbCommand(sql, connection);
+			cmd.Parameters.Add("@CR_ID", FbDbType.BigInt).Value = 1;
+			cmd.Parameters.Add("@CR_REV", FbDbType.Integer).Value = 2;
+			cmd.Parameters.Add("@CR_STAT", FbDbType.SmallInt).Value = 3;
+			cmd.Parameters.Add("@U_VILLE", FbDbType.VarChar, 40).Value = "aa";
+			cmd.Parameters.Add("@U_NPA", FbDbType.Integer).Value = null;
+
+			cmd.ExecuteNonQuery();
+
+			connection.Close();
+
+#else
 			FbCommand    command    = connection.CreateCommand ();
 			
 			command.CommandType = System.Data.CommandType.Text;
@@ -248,6 +265,7 @@ namespace Epsitec.Cresus.Database
 			transaction.Rollback ();
 
 			connection.Close ();
+#endif
 		}
 #endif
 		

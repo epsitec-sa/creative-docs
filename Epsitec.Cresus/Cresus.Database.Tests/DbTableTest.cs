@@ -34,11 +34,15 @@ namespace Epsitec.Cresus.Database
 			table.PrimaryKeys.Add (column);
 			table.Columns.Add (column);
 			
+			Assertion.AssertEquals (table, column.Table);
+			
 			string xml = DbTable.SerializeToXml (table, true);
 			
 			System.Console.Out.WriteLine ("XML: {0}", xml);
 			
 			DbTable test = DbTable.CreateTable (xml);
+			
+			Assertion.AssertEquals (test, test.Columns["A"].Table);
 		}
 		
 		[Test] public void CheckForeignKeys()
@@ -75,6 +79,15 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (2, fk[0].Columns.Length);
 			Assertion.AssertEquals (column_1, fk[0].Columns[0]);
 			Assertion.AssertEquals (column_2, fk[0].Columns[1]);
+			
+			Assertion.AssertEquals (table, table.Columns[column_1.Name].Table);
+			Assertion.AssertEquals (table, table.Columns[column_2.Name].Table);
+			Assertion.AssertEquals (table, table.Columns[column_3.Name].Table);
+			
+			table.Columns.Remove (column_3);
+			
+			Assertion.AssertNull (table.Columns[column_3.Name]);
+			Assertion.AssertNull (column_3.Table);
 		}
 		
 		[Test] [ExpectedException (typeof (DbFormatException))] public void CheckForeignKeysEx1()

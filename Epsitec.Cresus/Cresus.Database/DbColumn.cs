@@ -194,6 +194,14 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public DbTable							Table
+		{
+			get
+			{
+				return this.table;
+			}
+		}
+		
 		public DbType							Type
 		{
 			get { return this.type; }
@@ -317,6 +325,11 @@ namespace Epsitec.Cresus.Database
 			this.attributes.SetFromInitialisationList (attributes);
 		}
 		
+		
+		internal void DefineTable(DbTable table)
+		{
+			this.table = table;
+		}
 		
 		internal void DefineParentTableName(string parent_table_name)
 		{
@@ -744,6 +757,8 @@ namespace Epsitec.Cresus.Database
 		
 		protected DbAttributes					attributes				= new DbAttributes ();
 		protected DbType						type;
+		protected DbTable						table;
+		
 		protected bool							is_null_allowed;
 		protected bool							is_unique;
 		protected bool							is_indexed;

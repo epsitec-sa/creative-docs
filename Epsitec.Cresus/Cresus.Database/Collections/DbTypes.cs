@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 23/11/2003
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Collections
 {
@@ -39,25 +39,17 @@ namespace Epsitec.Cresus.Database.Collections
 		
 		public virtual void Add(DbType type)
 		{
-			this.List.Add (type);
-			this.OnChanged ();
+			this.InternalAdd (type);
 		}
 		
 		public virtual void AddRange(DbType[] types)
 		{
-			if (types == null)
-			{
-				return;
-			}
-			
-			this.List.AddRange (types);
-			this.OnChanged ();
+			this.InternalAddRange (types);
 		}
 		
 		public virtual void Remove(DbType type)
 		{
-			this.List.Remove (type);
-			this.OnChanged ();
+			this.InternalRemove (type);
 		}
 		
 		

@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 07/10/2003
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
@@ -20,12 +20,12 @@ namespace Epsitec.Cresus.Database
 		bool CheckNativeSupport(DbRawType type);
 		
 		/// <summary>
-		/// Trouve le meilleur type natif correspondant au type brut spécifié.
+		/// Trouve le convertisseur de types correspondant.
 		/// </summary>
-		/// <param name="type"></param>
-		/// <param name="native_type"></param>
-		/// <param name="length"></param>
-		/// <returns></returns>
+		/// <param name="type">type brut à analyser</param>
+		/// <param name="converter">convertisseur (ou null si le type est supporté
+		/// nativement par la base</param>
+		/// <returns>true si un convertisseur existe</returns>
 		bool GetRawTypeConverter(DbRawType type, out IRawTypeConverter converter);
 		
 		/// <summary>

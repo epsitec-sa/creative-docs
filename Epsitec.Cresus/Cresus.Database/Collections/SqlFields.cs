@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 07/10/2003
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Collections
 {
@@ -40,73 +40,68 @@ namespace Epsitec.Cresus.Database.Collections
 		
 		public virtual void Add(SqlField field)
 		{
-			this.List.Add (field);
+			this.InternalAdd (field);
 		}
 
 		public virtual void Add(string alias, SqlField field)
 		{
 			field.Alias = alias;
-			this.List.Add (field);
+			this.InternalAdd (field);
 		}
 		
 		public virtual void Add(SqlField field, SqlFieldOrder order)
 		{
 			field.Order = order;
-			this.List.Add (field);
+			this.InternalAdd (field);
 		}
 		
 		public virtual void Add(string alias, SqlField field, SqlFieldOrder order)
 		{
 			field.Alias = alias;
 			field.Order = order;
-			this.List.Add (field);
+			this.InternalAdd (field);
 		}
 		
 		public virtual void Add(SqlFunction sql_function)
 		{
 			SqlField field = SqlField.CreateFunction (sql_function);
-			this.List.Add (field);
+			this.InternalAdd (field);
 		}
 
 		public virtual void Add(string alias, SqlFunction sql_function)
 		{
 			SqlField field = SqlField.CreateFunction (sql_function);
 			field.Alias = alias;
-			this.List.Add (field);
+			this.InternalAdd (field);
 		}
 		
 		public virtual void Add(SqlAggregate sql_aggregate)
 		{
 			SqlField field = SqlField.CreateAggregate (sql_aggregate);
-			this.List.Add (field);
+			this.InternalAdd (field);
 		}
 
 		public virtual void Add(string alias, SqlAggregate sql_aggregate)
 		{
 			SqlField field = SqlField.CreateAggregate (sql_aggregate);
 			field.Alias = alias;
-			this.List.Add (field);
+			this.InternalAdd (field);
 		}
 		
 		public virtual void Add(SqlJoin sql_join)
 		{
 			SqlField field = SqlField.CreateJoin (sql_join);
-			this.List.Add (field);
+			this.InternalAdd (field);
 		}
 		
 		public virtual void AddRange(SqlField[] fields)
 		{
-			if (fields == null)
-			{
-				return;
-			}
-			
-			this.List.AddRange (fields);
+			this.InternalAddRange (fields);
 		}
 		
 		public virtual void Remove(SqlField field)
 		{
-			this.List.Remove (field);
+			this.InternalRemove (field);
 		}
 		
 		
