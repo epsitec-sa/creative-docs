@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 24/11/2003
 
 namespace Epsitec.Cresus.Database
@@ -33,6 +33,21 @@ namespace Epsitec.Cresus.Database
 			this.ProcessXmlDefinition (xml);
 		}
 		
+		
+		public static DbEnumValue NewEnumValue(string xml)
+		{
+			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+			
+			doc.LoadXml (xml);
+			
+			return DbEnumValue.NewEnumValue (doc.DocumentElement);
+		}
+		
+		public static DbEnumValue NewEnumValue(System.Xml.XmlElement xml)
+		{
+			return new DbEnumValue (xml);
+		}
+
 		
 		public   void DefineAttributes(params string[] attributes)
 		{
@@ -70,30 +85,38 @@ namespace Epsitec.Cresus.Database
 		}
 
 		
-		public static string ConvertValueToXml(DbEnumValue value)
+		public static string ConvertValueToXml(DbEnumValue value, bool full)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
-			DbEnumValue.ConvertValueToXml (buffer, value);
+			DbEnumValue.ConvertValueToXml (buffer, value, full);
 			
 			return buffer.ToString ();
 		}
 		
-		public static void ConvertValueToXml(System.Text.StringBuilder buffer, DbEnumValue value)
+		public static void ConvertValueToXml(System.Text.StringBuilder buffer, DbEnumValue value, bool full)
 		{
-			value.SerialiseXmlDefinition (buffer);
+			value.SerialiseXmlDefinition (buffer, full);
 		}
 		
 		
-		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer)
+		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer, bool full)
 		{
 			buffer.Append (@"<enumval");
+			
 			if (this.rank >= 0)
 			{
 				buffer.Append (@" rank=""");
 				buffer.Append (Converter.ToString (this.rank));
 				buffer.Append (@"""");
 			}
+			
+			if (full)
+			{
+				this.InternalKey.SerialiseXmlAttributes (buffer);
+				this.Attributes.SerialiseXmlAttributes (buffer);
+			}
+			
 			buffer.Append (@"/>");
 		}
 		
@@ -105,28 +128,11 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			Converter.Convert (xml.GetAttribute ("rank"), out this.rank);
-		}
-		
-		protected void ParseInfo()
-		{
-			this.rank = -1;
 			
-			string info_xml = this.Information;
-			
-			if (info_xml != null)
-			{
-				System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
-				doc.LoadXml (info_xml);
-				
-				this.ProcessXmlDefinition (doc.DocumentElement);
-			}
+			this.Attributes.ProcessXmlAttributes (xml);
+			this.InternalKey.ProcessXmlAttributes (xml);
 		}
 		
-		
-		public string						Information
-		{
-			get { return this.Attributes[Tags.InfoXml, ResourceLevel.Default]; }
-		}
 		
 		public string						Name
 		{
@@ -145,18 +151,7 @@ namespace Epsitec.Cresus.Database
 		
 		public int							Rank
 		{
-			get
-			{
-				if (this.rank == -2)
-				{
-					//	Si 'rank' n'a jamais été initialisé, faisons-le maintenant en se
-					//	basant sur l'attribut contenant l'information XML.
-					
-					this.ParseInfo ();
-				}
-				
-				return this.rank;
-			}
+			get { return this.rank; }
 		}
 		
 		public DbKey						InternalKey
@@ -314,6 +309,6 @@ namespace Epsitec.Cresus.Database
 		
 		protected DbAttributes				attributes = new DbAttributes ();
 		protected int						rank = -2;
-		protected DbKey						internal_key;
+		protected DbKey						internal_key = new DbKey ();
 	}
 }

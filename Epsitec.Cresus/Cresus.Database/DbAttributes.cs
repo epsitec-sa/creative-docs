@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2004-2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 19/11/2003
 
 using Epsitec.Common.Support;
@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Database
 			return that;
 		}
 		
+		
 		#region ToString override
 		public override string ToString()
 		{
@@ -69,12 +70,12 @@ namespace Epsitec.Cresus.Database
 		}
 		#endregion
 		
-		
 		public string[]							Names
 		{
 			get
 			{
-				if ((this.attributes == null) || (this.attributes.Count == 0))
+				if ((this.attributes == null) ||
+					(this.attributes.Count == 0))
 				{
 					return new string[0];
 				}
@@ -119,7 +120,10 @@ namespace Epsitec.Cresus.Database
 					throw new System.ArgumentException (string.Format ("Invalid attribute initialisation syntax in '{0}'.", list[i]));
 				}
 				
-				this.SetAttribute (args[0], args[1], null);
+				string name  = args[0];
+				string value = System.Utilities.StringSimplify (args[1]);
+				
+				this.SetAttribute (name, value, null);
 			}
 		}
 		
@@ -151,10 +155,19 @@ namespace Epsitec.Cresus.Database
 					//	variante localisée, pour enfin chercher la variante de base.
 					
 					find = DbTools.BuildCompositeName (name, Resources.CustomisedSuffix);
-					if (this.attributes.Contains (find)) return this.attributes[find] as string;
+					
+					if (this.attributes.Contains (find))
+					{
+						return this.attributes[find] as string;
+					}
+					
 					
 					find = DbTools.BuildCompositeName (name, Resources.LocalisedSuffix);
-					if (this.attributes.Contains (find)) return this.attributes[find] as string;
+					
+					if (this.attributes.Contains (find))
+					{
+						return this.attributes[find] as string;
+					}
 					
 					find = name;
 					break;
@@ -215,6 +228,34 @@ namespace Epsitec.Cresus.Database
 			this.attributes[name] = value;
 		}
 		
+		
+		internal void SerialiseXmlAttributes(System.Text.StringBuilder buffer)
+		{
+			string[] names = this.Names;
+			
+			for (int i = 0; i < names.Length; i++)
+			{
+				buffer.Append (" attr.");
+				buffer.Append (names[i]);
+				buffer.Append (@"=""");
+				buffer.Append (System.Utilities.TextToXml (this.GetAttribute (names[i], null)));
+				buffer.Append (@"""");
+			}
+		}
+		
+		internal void ProcessXmlAttributes(System.Xml.XmlElement xml)
+		{
+			foreach (System.Xml.XmlAttribute attr in xml.Attributes)
+			{
+				if (attr.Name.StartsWith ("attr."))
+				{
+					string name  = attr.Name.Substring (5);
+					string value = attr.Value;
+					
+					this.SetAttribute (name, value, null);
+				}
+			}
+		}
 		
 		
 		protected System.Collections.Hashtable	attributes;

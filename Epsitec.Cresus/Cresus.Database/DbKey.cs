@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 22/10/2003
 
 namespace Epsitec.Cresus.Database
@@ -109,6 +109,52 @@ namespace Epsitec.Cresus.Database
 			return string.Format ("[{0}.{1}]", this.id, this.revision);
 		}
 
+		
+		internal void SerialiseXmlAttributes(System.Text.StringBuilder buffer)
+		{
+			if (this.id != 0)
+			{
+				buffer.Append (@" key.id=""");
+				buffer.Append (this.id.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (@"""");
+			}
+			
+			if (this.revision != 0)
+			{
+				buffer.Append (@" key.rev=""");
+				buffer.Append (this.revision.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (@"""");
+			}
+			
+			if (this.raw_status != 0)
+			{
+				buffer.Append (@" key.stat=""");
+				buffer.Append (this.raw_status.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				buffer.Append (@"""");
+			}
+		}
+		
+		internal void ProcessXmlAttributes(System.Xml.XmlElement xml)
+		{
+			string arg_id   = xml.GetAttribute ("key.id");
+			string arg_rev  = xml.GetAttribute ("key.rev");
+			string arg_stat = xml.GetAttribute ("key.stat");
+			
+			if (arg_id.Length > 0)
+			{
+				this.id = System.Int64.Parse (arg_id, System.Globalization.CultureInfo.InvariantCulture);
+			}
+			
+			if (arg_rev.Length > 0)
+			{
+				this.revision = System.Int32.Parse (arg_rev, System.Globalization.CultureInfo.InvariantCulture);
+			}
+			
+			if (arg_id.Length > 0)
+			{
+				this.raw_status = System.Int32.Parse (arg_stat, System.Globalization.CultureInfo.InvariantCulture);
+			}
+		}
 		
 		
 		protected long					id;
