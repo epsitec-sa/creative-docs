@@ -108,6 +108,11 @@
         <Files>
             <Include>
                 <File
+                    RelPath = "AbstractOplet.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -183,6 +188,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IOplet.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IPropertyProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -204,6 +214,11 @@
                 />
                 <File
                     RelPath = "ObjectBundler.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "OpletQueue.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
