@@ -105,6 +105,20 @@ namespace Epsitec.Common.Drawing.Agg
 		[DllImport ("AGG-Wrapper.dll")]	internal extern static void		AggFontFaceBreakDelete(System.IntPtr context);
 		[DllImport ("AGG-Wrapper.dll")]	internal extern static bool		AggFontFaceBreakHasMore(System.IntPtr context);
 		
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggDebugGetCycles(out System.UInt32 high, out System.UInt32 low);
+		
+		
+		public static long			Cycles
+		{
+			get
+			{
+				uint high, low;
+				Library.AggDebugGetCycles (out high, out low);
+				long cycles = (((long)high) << 32) + low;
+				return cycles;
+			}
+		}
+		
 		public void Dispose()
 		{
 			this.Dispose (true);

@@ -369,6 +369,79 @@ namespace Epsitec.Common.Tests
 			form.Show ();
 		}
 
+		[Test] public void CheckRenderingSpeed()
+		{
+			Graphics gra  = new Graphics ();
+			Font     font = Font.GetFont ("Tahoma", "Regular");
+			double   size = 10.6;
+			string   text = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
+			
+			long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c0 = c2 - c1;
+			
+			System.Console.Out.WriteLine ("Zero work: " + c0.ToString ());
+			
+			gra.SetPixmapSize (1000, 400);
+			gra.SolidRenderer.Color = Color.FromBrightness (0);
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			gra.AddText (10, 200, text, font, size);
+			gra.RenderSolid ();
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+			
+			System.Console.Out.WriteLine ("First rendering: " + c2.ToString ());
+			
+			long tot = 0;
+			
+			for (int i = 0; i < 100; i++)
+			{
+				c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+				gra.AddText (10, 200, text, font, size);
+				gra.RenderSolid ();
+				c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0 * (1 + text.Length * 3);
+				
+				tot += c2;
+			}
+			
+			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " -> " + (tot / 100 / 1700 / text.Length) + "us / char in AGG");
+		}
+		
+		[Test] public void CheckRenderingSpeedGDI()
+		{
+			double   size = 10.6;
+			string   text = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
+			
+			System.Drawing.Bitmap image = new System.Drawing.Bitmap (1000, 400, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
+			System.Drawing.Graphics gra = System.Drawing.Graphics.FromImage (image);
+			System.Drawing.Font font = new System.Drawing.Font ("Tahoma", (float) size);
+			
+			long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long c0 = c2 - c1;
+			
+			System.Console.Out.WriteLine ("Zero work: " + c0.ToString ());
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			gra.DrawString (text, font, System.Drawing.Brushes.Black, 10, 200);
+			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+			
+			System.Console.Out.WriteLine ("First rendering: " + c2.ToString ());
+			
+			long tot = 0;
+			
+			for (int i = 0; i < 100; i++)
+			{
+				c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+				gra.DrawString (text, font, System.Drawing.Brushes.Black, 10, 200);
+				c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+				
+				tot += c2;
+			}
+			
+			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " -> " + (tot * 1000 / 100 / 1700 / text.Length) + "ns / char in GDI+");
+		}
+
 		private void form_Paint1(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
 			this.global_pixmap_1.Paint (e.Graphics, e.ClipRectangle);
