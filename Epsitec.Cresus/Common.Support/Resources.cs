@@ -669,6 +669,40 @@ namespace Epsitec.Common.Support
 			
 			return null;
 		}
+		
+		public static CultureInfo FindSpecificCultureInfo(string two_letter_code)
+		{
+			//	FindSpecificCultureInfo retourne une culture propre à un pays, avec
+			//	une préférence pour la Suisse ou les USA.
+			
+			CultureInfo[] cultures = CultureInfo.GetCultures (System.Globalization.CultureTypes.SpecificCultures);
+			
+			CultureInfo found = null;
+			
+			for (int i = 0; i < cultures.Length; i++)
+			{
+				CultureInfo item = cultures[i];
+				string      name = item.Name;
+				
+				if ((item.TwoLetterISOLanguageName == two_letter_code) &&
+					(name.Length == 5) &&
+					(name[2] == '-'))
+				{
+					if (((name[3] == 'C') && (name[4] == 'H')) ||
+						((name[3] == 'U') && (name[4] == 'S')))
+					{
+						return item;
+					}
+					
+					if (found == null)
+					{
+						found = item;
+					}
+				}
+			}
+			
+			return found;
+		}
 
 		public static bool EqualCultures(ResourceLevel level_a, CultureInfo culture_a, ResourceLevel level_b, CultureInfo culture_b)
 		{

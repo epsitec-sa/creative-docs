@@ -61,16 +61,11 @@ namespace Epsitec.Common.Designer
 			ResourceBundle           bundle  = ResourceBundle.Create (prefix, name, ResourceLevel.Default);
 			
 			bundle.DefineType ("String");
-			bundles.DefinePrefix (prefix);
+			
+			bundles.FullName = full_name;
 			bundles.Add (bundle);
-			bundles.Name = full_name;
 			
-			this.CreateMissingBundles (bundles, prefix, name);
-			
-			this.bundles.Add (name, bundles);
-			this.panels.Add (this.CreatePanel (full_name, bundles));
-			
-			this.ActivateTabBookPage ();
+			this.AddBundles (bundles, prefix, name);
 		}
 		
 		public void AttachExistingBundle(string prefix, string name)
@@ -83,15 +78,23 @@ namespace Epsitec.Common.Designer
 			}
 			
 			string[] ids = Resources.GetBundleIds (full_name, null, ResourceLevel.All, null);
-			ResourceBundleCollection bundles = new ResourceBundleCollection (prefix, ids);
+			ResourceBundleCollection bundles = new ResourceBundleCollection ();
 			
-			bundles.Name = full_name;
+			bundles.FullName = full_name;
+			bundles.LoadBundles (prefix, ids);
 			
+			this.AddBundles (bundles, prefix, name);
+		}
+		
+		
+		protected virtual void AddBundles(ResourceBundleCollection bundles, string prefix, string name)
+		{
 			this.CreateMissingBundles (bundles, prefix, name);
 			
 			this.bundles.Add (name, bundles);
-			this.panels.Add (this.CreatePanel (full_name, bundles));
+			this.panels.Add (this.CreatePanel (bundles));
 			
+			this.OnBundleAdded ();
 			this.ActivateTabBookPage ();
 		}
 		
@@ -118,7 +121,7 @@ namespace Epsitec.Common.Designer
 				Store store = this.FindStore (bundles);
 				
 				System.Diagnostics.Debug.Assert (store != null);
-				System.Diagnostics.Debug.Assert (store.FullName == bundles.Name);
+				System.Diagnostics.Debug.Assert (store.FullName == bundles.FullName);
 				
 				//	On s'assure que lors de la sauvegarde des bundles, l'édition n'est plus active; ceci
 				//	permet de garantir qu'aucun bundle partiel n'est enregistré...
@@ -156,6 +159,7 @@ namespace Epsitec.Common.Designer
 						this.bundles.Remove (name);
 						this.panels.RemoveAt (i);
 						this.tab_book.Items.RemoveAt (i);
+						this.OnBundleRemoved ();
 						return;
 					}
 				}
@@ -416,10 +420,10 @@ namespace Epsitec.Common.Designer
 		#region Store Class
 		public class Store : Support.Data.ITextArrayStore
 		{
-			public Store(StringEditController controller, string full_name, ResourceBundleCollection bundles)
+			public Store(StringEditController controller, ResourceBundleCollection bundles)
 			{
 				this.controller = controller;
-				this.full_name  = full_name;
+				this.full_name  = bundles.FullName;
 				this.bundles    = bundles;
 				
 				this.bundles.FieldsChanged += new Epsitec.Common.Support.EventHandler (this.HandleBundleFieldsChanged);
@@ -927,9 +931,9 @@ namespace Epsitec.Common.Designer
 		#endregion
 		
 		
-		protected Panels.StringEditPanel CreatePanel(string full_name, ResourceBundleCollection bundles)
+		protected Panels.StringEditPanel CreatePanel(ResourceBundleCollection bundles)
 		{
-			Store                  store = new Store (this, full_name, bundles);
+			Store                  store = new Store (this, bundles);
 			Panels.StringEditPanel panel = new Panels.StringEditPanel (store);
 			
 			store.Panel = panel;
@@ -1148,9 +1152,27 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		protected virtual void OnBundleAdded()
+		{
+			if (this.BundleAdded != null)
+			{
+				this.BundleAdded (this);
+			}
+		}
+		
+		protected virtual void OnBundleRemoved()
+		{
+			if (this.BundleRemoved != null)
+			{
+				this.BundleRemoved (this);
+			}
+		}
+		
 		
 		public event Support.EventHandler		ActiveStoreChanged;
 		public event Support.EventHandler		StoreContentsChanged;
+		public event Support.EventHandler		BundleAdded;
+		public event Support.EventHandler		BundleRemoved;
 		
 		
 		private bool							is_initialised;

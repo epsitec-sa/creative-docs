@@ -54,9 +54,9 @@ namespace Epsitec.Common.Support
 			ResourceBundle bundle = new ResourceBundle (name);
 			
 			bundle.DefinePrefix (prefix);
+			bundle.DefineCulture (culture);
 			bundle.level   = level;
 			bundle.depth   = recursion;
-			bundle.culture = culture;
 			
 			return bundle;
 		}
@@ -272,6 +272,11 @@ namespace Epsitec.Common.Support
 			}
 			
 			this.prefix = prefix;
+		}
+		
+		public void DefineCulture(CultureInfo culture)
+		{
+			this.culture = culture;
 		}
 		
 		public bool Contains(string name)

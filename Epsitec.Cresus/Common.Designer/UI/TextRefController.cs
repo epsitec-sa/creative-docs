@@ -77,6 +77,15 @@ namespace Epsitec.Common.Designer.UI
 			this.combo_field.EditionAccepted       += new EventHandler (this.HandleComboFieldEditionAccepted);
 			this.combo_field.EditionRejected       += new EventHandler (this.HandleComboFieldEditionRejected);
 			
+			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
+			
+			System.Diagnostics.Debug.Assert (adapter != null);
+			System.Diagnostics.Debug.Assert (adapter.StringController != null);
+			
+			adapter.StringController.BundleAdded          += new EventHandler (this.HandleStringControllerBundleAdded);
+			adapter.StringController.BundleRemoved        += new EventHandler (this.HandleStringControllerBundleRemoved);
+			adapter.StringController.StoreContentsChanged += new EventHandler (this.HandleStringControllerStoreContentsChanged);
+			
 			this.OnCaptionChanged ();
 			
 			this.SyncFromAdapter (Common.UI.SyncReason.Initialisation);
@@ -164,6 +173,7 @@ namespace Epsitec.Common.Designer.UI
 			{
 				this.combo_bundle.Items.Clear ();
 				this.combo_bundle.Items.AddRange (adapter.StringController.GetStringBundleNames ());
+				System.Diagnostics.Debug.WriteLine ("Updated bundle list, " + this.combo_bundle.Items.Count + " elements.");
 			}
 		}
 		
@@ -180,6 +190,7 @@ namespace Epsitec.Common.Designer.UI
 					this.combo_field.SetEnabled (true);
 					this.combo_field.Items.Clear ();
 					this.combo_field.Items.AddRange (adapter.StringController.GetStringFieldNames (name));
+					System.Diagnostics.Debug.WriteLine ("Updated field list, " + this.combo_field.Items.Count + " elements for bundle " + name + ".");
 				}
 			}
 		}
@@ -367,6 +378,21 @@ namespace Epsitec.Common.Designer.UI
 			System.Diagnostics.Debug.Assert (sender == this.combo_field);
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Rejected field, restored to {0}#{1}.", this.combo_bundle.Text, this.combo_field.Text));
+		}
+		
+		private void HandleStringControllerBundleAdded(object sender)
+		{
+			this.UpdateBundleList (this.Adapter as TextRefAdapter);
+		}
+		
+		private void HandleStringControllerBundleRemoved(object sender)
+		{
+			this.UpdateBundleList (this.Adapter as TextRefAdapter);
+		}
+		
+		private void HandleStringControllerStoreContentsChanged(object sender)
+		{
+			this.UpdateFieldList (this.Adapter as TextRefAdapter, this.combo_bundle.SelectedItem);
 		}
 		
 		

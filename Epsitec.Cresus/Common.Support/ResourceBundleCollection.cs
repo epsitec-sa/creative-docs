@@ -16,11 +16,6 @@ namespace Epsitec.Common.Support
 			this.list = new System.Collections.ArrayList ();
 		}
 		
-		public ResourceBundleCollection(string prefix, string[] ids) : this ()
-		{
-			this.LoadBundles (prefix, ids);
-		}
-		
 		
 		public ResourceBundle					this[int index]
 		{
@@ -82,7 +77,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public string							Name
+		public string							FullName
 		{
 			get
 			{
@@ -98,7 +93,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				return this.prefix;
+				return Resources.ExtractPrefix (this.name);
 			}
 		}
 		
@@ -153,14 +148,10 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public void DefinePrefix(string prefix)
-		{
-			this.prefix = prefix;
-		}
-		
 		public void LoadBundles(string prefix, string[] ids)
 		{
-			this.DefinePrefix (prefix);
+			System.Diagnostics.Debug.Assert (this.FullName != null, "FullName should be defined first.");
+			System.Diagnostics.Debug.Assert (this.Prefix == prefix, string.Format ("Prefix mismatch, expecting '{0}', got '{1}'.", this.Prefix, prefix));
 			
 			this.Clear ();
 			
@@ -385,7 +376,7 @@ namespace Epsitec.Common.Support
 		
 		protected virtual ResourceBundle CreateMerged(CultureInfo culture)
 		{
-			System.Diagnostics.Debug.WriteLine (string.Format ("Merging ressource {0} for culture '{1}'.", this.Name, culture.TwoLetterISOLanguageName));
+			System.Diagnostics.Debug.WriteLine (string.Format ("Merging ressource {0} for culture '{1}'.", this.FullName, culture.TwoLetterISOLanguageName));
 			
 			ResourceBundle model_default    = this[ResourceLevel.Default, culture];
 			ResourceBundle model_localised  = this[ResourceLevel.Localised, culture];
@@ -397,6 +388,8 @@ namespace Epsitec.Common.Support
 			}
 			
 			ResourceBundle bundle = model_default.Clone ();
+			
+			bundle.DefineCulture (culture);
 			
 			if (model_localised != null)
 			{
@@ -425,7 +418,6 @@ namespace Epsitec.Common.Support
 		
 		private System.Collections.ArrayList	merged;
 		private System.Collections.ArrayList	list;
-		private string							prefix;
 		private string							name;
 	}
 }

@@ -6,6 +6,8 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Designer
 {
+	using CultureInfo = System.Globalization.CultureInfo;
+	
 	/// <summary>
 	/// La classe Application initialise tout ce qui est en relation avec le
 	/// "designer".
@@ -146,6 +148,8 @@ namespace Epsitec.Common.Designer
 			this.string_edit_controller = null;
 			this.interf_edit_controller = null;
 			this.tool_bar               = null;
+			this.lang_swap              = null;
+			this.lang_combo             = null;
 			this.switcher               = null;
 			this.dispatcher             = null;
 			this.context_stack          = null;
@@ -179,6 +183,31 @@ namespace Epsitec.Common.Designer
 			this.tool_bar = new HToolBar (this.main_window.Root);
 			
 			this.tool_bar.Dock = DockStyle.Top;
+			
+			this.lang_sep   = new IconSeparator ();
+			this.lang_swap  = new IconButton ("manifest:Epsitec.Common.Designer.Images.SwapLang.icon");
+			this.lang_combo = new TextFieldCombo ();
+			
+			this.lang_sep.Dock         = this.tool_bar.OppositeIconDockStyle;
+			this.lang_swap.Dock        = this.tool_bar.OppositeIconDockStyle;
+			this.lang_combo.Dock       = this.tool_bar.OppositeIconDockStyle;
+			this.lang_combo.IsReadOnly = true;
+			this.lang_combo.Width      = 80;
+			
+			this.lang_swap.Clicked               += new MessageEventHandler (this.HandleLangSwapClicked);
+			this.lang_combo.SelectedIndexChanged += new EventHandler (this.HandleLanguageComboSelectedIndexChanged);
+			
+			this.FillLangCombo ();
+		}
+		
+		private void FillLangCombo()
+		{
+			this.lang_combo.Items.Clear ();
+			
+			foreach (CultureInfo culture in Resources.Cultures)
+			{
+				this.lang_combo.Items.Add (culture.TwoLetterISOLanguageName, culture.DisplayName);
+			}
 		}
 		
 		private void CreateMainWindow()
@@ -223,10 +252,52 @@ namespace Epsitec.Common.Designer
 					break;
 			}
 			
+			this.FillToolBar (this.tool_bar);
+			
 			this.interf_edit_controller.MainPanel.SetVisible (show_interf_edit);
 			this.string_edit_controller.MainPanel.SetVisible (show_string_edit);
 		}
 		
+		private void FillToolBar (AbstractToolBar tool_bar)
+		{
+			tool_bar.Items.Add (this.lang_combo);
+			tool_bar.Items.Add (this.lang_swap);
+			tool_bar.Items.Add (this.lang_sep);
+		}
+		
+		
+		private void HandleLanguageComboSelectedIndexChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.lang_combo == sender);
+			
+			string suffix = this.lang_combo.SelectedName;
+			
+			if (suffix != this.lang_suffix_1)
+			{
+				CultureInfo culture = Resources.FindSpecificCultureInfo (suffix);
+				
+				this.lang_suffix_2 = this.lang_suffix_1;
+				this.lang_suffix_1 = suffix;
+				
+				Resources.Culture = culture;
+				
+				System.Threading.Thread.CurrentThread.CurrentCulture   = culture;
+				System.Threading.Thread.CurrentThread.CurrentUICulture = culture;
+				
+				Window.InvalidateAll (Window.InvalidateReason.CultureChanged);
+			}
+		}
+		
+		private void HandleLangSwapClicked(object sender, MessageEventArgs e)
+		{
+			System.Diagnostics.Debug.Assert (this.lang_swap == sender);
+			
+			if ((this.lang_suffix_2 != null) &&
+				(this.lang_suffix_1 != this.lang_suffix_2))
+			{
+				this.lang_combo.SelectedName = this.lang_suffix_2;
+			}
+		}
 		
 		private void HandleSwitcherSelectedIndexChanged(object sender)
 		{
@@ -336,6 +407,13 @@ namespace Epsitec.Common.Designer
 		protected string						name;
 		
 		protected AbstractToolBar				tool_bar;
+		
+		protected IconSeparator					lang_sep;
+		protected IconButton					lang_swap;
+		protected TextFieldCombo				lang_combo;
+		protected string						lang_suffix_1;
+		protected string						lang_suffix_2;
+		
 		protected Widgets.Switcher				switcher;
 		protected Support.EventHandler			switcher_accept_handler;
 		
