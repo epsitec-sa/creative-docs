@@ -87,6 +87,10 @@ namespace Epsitec.Cresus.Database.Implementation
 					basic_type = "BLOB SUB_TYPE 0 SEGMENT SIZE " + length;
 					break;
 				
+				//	Tous les types ne sont pas gérés ici, seuls ceux supportés en natif par
+				//	Firebird sont listés ici. Pour une base plus complète que Firebird, il
+				//	faudra par exemple ajouter un support pour Guid.
+				
 				default:
 					break;
 			}
@@ -321,7 +325,6 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.buffer.Append (table_name);
 			this.buffer.Append (";\n");
 		}
-
 		
 		public void InsertTableColumns(string table_name, SqlColumn[] columns)
 		{

@@ -24,16 +24,14 @@ A FAIRE
 -	Tester la fonctionalité actuelle du FirebirdSqlBuilder, en passant par
 	l'interface ISqlBuilder :
 
-	-	InsertTable (OK, cf ISqlBuilderTest)
-	-	RemoveTable (OK, cf ISqlBuilderTest)
-	-	InsertTableColumns
-	-	RemoveTableColumns
-	-	InsertData
-
--	Compléter SqlColumnTest et SqlTableTest, si besoin.
+	-	InsertTable (OK, cf ISqlBuilderTest.CheckInsertTable)
+	-	RemoveTable (OK, cf ISqlBuilderTest.CheckRemoveTable)
+	-	InsertTableColumns (OK, cf ISqlBuilderTest.CheckInsertTableColumns)
+	-	RemoveTableColumns (OK, cf ISqlBuilderTest.CheckRemoveTableColumns)
+	-	InsertData (OK, cf ISqlBuilderTest.CheckInsertData)
 
 -	Vérifier que FbTypeConverterTest teste bien correctement l'interface
-	IRawTypeConverter.
+	IRawTypeConverter. (OK amha)
 
 -	Compléter les méthodes de création de SqlField, ainsi que la méthode
 	de validation.
