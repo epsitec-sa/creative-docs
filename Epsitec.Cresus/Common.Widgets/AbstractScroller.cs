@@ -67,13 +67,14 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Inversion du fonctionnement.
-		// Ascenseur vertical:   false -> zéro en bas
-		// Ascenseur vertical:   true  -> zéro en haut
-		// Ascenseur horizontal: false -> zéro à gauche
-		// Ascenseur horizontal: true  -> zéro à droite
 		public bool IsInverted
 		{
+			// Inversion du fonctionnement.
+			// Ascenseur vertical:   false -> zéro en bas
+			// Ascenseur vertical:   true  -> zéro en haut
+			// Ascenseur horizontal: false -> zéro à gauche
+			// Ascenseur horizontal: true  -> zéro à droite
+			
 			get
 			{
 				return this.invert;
@@ -81,7 +82,7 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( value != this.invert )
+				if (this.invert != value)
 				{
 					this.invert = value;
 					this.Invalidate();
@@ -89,9 +90,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		// Hauteur totale représentée par l'ascenseur.
+		
 		public double Range
 		{
+			//	Hauteur totale représentée par l'ascenseur (unités quelconques).
+			
 			get
 			{
 				return System.Math.Max (0, this.maximum - this.minimum);
@@ -99,12 +102,33 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				if ( value < 0 )  value = 0;
+				System.Diagnostics.Debug.Assert (value >= 0);
 				
-				this.Maximum = value + this.minimum;
+				this.Maximum = this.Minimum + value;
 			}
 		}
 		
+		public double VisibleRange
+		{
+			//	Hauteur visible représentée par l'ascenseur (unités quelconques).
+			
+			get
+			{
+				return this.display;
+			}
+
+			set
+			{
+				System.Diagnostics.Debug.Assert (value >= 0);
+				
+				if (this.display != value)
+				{
+					this.display = value;
+					this.Invalidate();
+				}
+			}
+		}
+
 		public double Minimum
 		{
 			get
@@ -137,30 +161,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		// Hauteur visible représentée par l'ascenseur.
-		public double Display
-		{
-			get
-			{
-				return this.display;
-			}
-
-			set
-			{
-				if ( value < 0          )  value = 0;
-				if ( value > this.Range )  value = this.Range;
-
-				if ( value != this.display )
-				{
-					this.display = value;
-					this.Invalidate();
-				}
-			}
-		}
-
-		// Valeur représentée par l'ascenseur (position).
 		public double Value
 		{
+			// Valeur représentée par l'ascenseur (position).
 			get
 			{
 				return this.position + this.minimum;
@@ -182,9 +185,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		// Valeur avancée par les boutons.
 		public double SmallChange
 		{
+			// Valeur avancée par les boutons.
 			get
 			{
 				return this.buttonStep;
@@ -196,9 +199,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		// Valeur avancée en cliquant hors de la cabine.
 		public double LargeChange
 		{
+			// Valeur avancée en cliquant hors de la cabine.
 			get
 			{
 				return this.pageStep;
@@ -270,7 +273,7 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
-					if ( this.Range > 0 && this.Display > 0 )
+					if ( this.Range > 0 && this.VisibleRange > 0 )
 					{
 						this.mouseDown = true;
 						this.BeginPress(this.vertical ? pos.Y : pos.X);
@@ -342,17 +345,31 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.pageScroll == 0 )
 			{
-				double p;
+				double offset;
+				double length;
+				
 				if ( this.vertical )
 				{
-					p = (pos-this.thumbOffset-this.sliderRect.Bottom)*this.Range/(this.sliderRect.Height-this.thumbRect.Height);
+					offset = pos-this.thumbOffset-this.sliderRect.Bottom;
+					length = this.sliderRect.Height-this.thumbRect.Height;
 				}
 				else
 				{
-					p = (pos-this.thumbOffset-this.sliderRect.Left)*this.Range/(this.sliderRect.Width-this.thumbRect.Width);
+					offset = pos-this.thumbOffset-this.sliderRect.Left;
+					length = this.sliderRect.Width-this.thumbRect.Width;
 				}
-				if ( this.invert )  p = this.Range-p;
-				this.Value = this.minimum + p;
+				
+				if ( length > 0 )
+				{
+					double new_pos = offset / length;
+					
+					if ( this.invert )
+					{
+						new_pos = 1.0 - new_pos;
+					}
+					
+					this.Value = new_pos * this.Range + this.Minimum;
+				}
 			}
 		}
 
@@ -426,7 +443,7 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle tabRect = Drawing.Rectangle.Empty;
 
-			if ( this.Range > 0 && this.Display > 0 )
+			if ( this.Range > 0 && this.VisibleRange > 0 )
 			{
 				double pos = this.position;
 				if ( this.invert )  pos = this.Range-pos;
@@ -477,7 +494,7 @@ namespace Epsitec.Common.Widgets
 			adorner.PaintScrollerBackground(graphics, rect, tabRect, this.PaintState, this.RootDirection);
 			
 			// Dessine la cabine.
-			if ( this.Range > 0 && this.Display > 0 && this.IsEnabled )
+			if ( this.Range > 0 && this.VisibleRange > 0 && this.IsEnabled )
 			{
 				Widgets.Direction dir = this.vertical ? Direction.Up : Direction.Left;
 				adorner.PaintScrollerHandle(graphics, this.thumbRect, Drawing.Rectangle.Empty, this.PaintState&(~WidgetState.Engaged), dir);
