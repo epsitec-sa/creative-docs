@@ -1336,20 +1336,25 @@ invalid:	row    = -1;
 
 		private void HandleSliderDragStarted(object sender, MessageEventArgs e)
 		{
+			this.is_dragging_slider = true;
+			
 			HeaderSlider slider = sender as HeaderSlider;
-			this.DragStartedColumn (slider.Index, e.Point.X);
+			this.DragStartedColumn (slider.Index, e.Message.Cursor.X);
 		}
 
 		private void HandleSliderDragMoved(object sender, MessageEventArgs e)
 		{
 			HeaderSlider slider = sender as HeaderSlider;
-			this.DragMovedColumn (slider.Index, e.Point.X);
+			this.DragMovedColumn (slider.Index, e.Message.Cursor.X);
 		}
 		
 		private void HandleSliderDragEnded(object sender, MessageEventArgs e)
 		{
+			this.is_dragging_slider = false;
+			
 			HeaderSlider slider = sender as HeaderSlider;
-			this.DragEndedColumn (slider.Index, e.Point.X);
+			this.DragEndedColumn (slider.Index, e.Message.Cursor.X);
+			this.DispatchDummyMouseMoveEvent ();
 		}
 
 		private void HandleStoreContentsChanged(object sender)
@@ -1367,7 +1372,7 @@ invalid:	row    = -1;
 
 		protected virtual void DragMovedColumn(int column, double pos)
 		{
-			double width = this.GetColumnWidth (column) + pos - this.drag_pos;
+			double width = this.drag_dim + pos - this.drag_pos;
 
 			this.SetColumnWidth (this.drag_index, width);
 			this.InvalidateContents ();
@@ -1375,7 +1380,10 @@ invalid:	row    = -1;
 
 		protected virtual void DragEndedColumn(int column, double pos)
 		{
+			this.UpdateTotalWidth ();
+			this.UpdateScrollView ();
 			this.InvalidateContents ();
+			this.Update ();
 		}
 
 		
@@ -1525,6 +1533,7 @@ invalid:	row    = -1;
 			
 			this.UpdateRowHeight ();
 			this.UpdateTableBounds ();
+			this.UpdateTotalWidth ();
 			this.UpdateVisibleRows ();
 			this.UpdateLayoutCache ();
 			this.UpdateHeaderGeometry ();
@@ -1633,8 +1642,9 @@ invalid:	row    = -1;
 				
 				rect.Right = rect.Left + this.GetColumnWidth (i);
 				
-				button.Show ();
+				button.Layout = LayoutStyles.Manual;
 				button.Bounds = rect;
+				button.Show ();
 				
 				rect.Left  = rect.Right;
 			}
@@ -1655,8 +1665,10 @@ invalid:	row    = -1;
 				bounds.Right = rect.Right + this.slider_dim / 2;
 				rect.Left    = rect.Right;
 				
-				slider.Show ();
+				slider.Layout = LayoutStyles.Manual;
+				slider.ZOrder = i;
 				slider.Bounds = bounds;
+				slider.SetVisible (this.columns[i].Elasticity == 0);
 			}
 			
 			this.header.ResumeLayout ();
@@ -1798,13 +1810,52 @@ invalid:	row    = -1;
 
 		protected virtual void UpdateTotalWidth()
 		{
+			if (this.is_dragging_slider)
+			{
+				return;
+			}
+			
+			double e = 0;
+			double w = 0;
+			
+			for (int i = 0; i < this.max_columns; i++)
+			{
+				double elasticity = this.columns[i].Elasticity;
+				
+				if (elasticity != 0)
+				{
+					e += elasticity;
+				}
+				else
+				{
+					w += this.columns[i].Width;
+				}
+			}
+
+			if (e > 0)
+			{
+				double dw = this.table_bounds.Width - w;
+				
+				if (dw != 0)
+				{
+					for (int i = 0; i < this.max_columns; i++)
+					{
+						if (this.columns[i].Elasticity != 0)
+						{
+							this.columns[i].AdjustWidth (dw * this.columns[i].Elasticity / e);
+						}
+					}
+				}
+			}
+			
+			
 			double x = 0;
 			this.total_width = 0;
 			
 			for (int i = 0; i < this.max_columns; i++)
 			{
-				this.Columns[i].DefineOffset (x);
-				x += this.Columns[i].Width;
+				this.columns[i].DefineOffset (x);
+				x += this.columns[i].Width;
 			}
 			
 			this.total_width = x;
@@ -2009,10 +2060,22 @@ invalid:	row    = -1;
 			
 			this.Update ();
 			
+			double total_width = this.total_width;
+			
+			if (this.is_dragging_slider)
+			{
+				total_width = 0;
+				
+				for (int i = 0; i < this.max_columns; i++)
+				{
+					total_width += this.Columns[i].Width;
+				}
+			}
+			
 			int           top    = this.FromVirtualRow (this.first_virtvis_row);						//	index de la ligne en haut
 			int           delta  = this.first_virtvis_row - this.ToVirtualRow (top);					//	0 si complètement visible, n => déborde n 'lignes'
 			Drawing.Point pos    = new Drawing.Point (this.inner_bounds.Left, this.inner_bounds.Top);
-			double        limit  = this.total_width - this.offset + this.inner_bounds.Left + 1;
+			double        limit  = total_width - this.offset + this.inner_bounds.Left + 1;
 			double        right  = System.Math.Min (this.inner_bounds.Right, limit);
 			
 			//	Détermine le nombre de lignes (virtuelles) actuellement affichables. Ceci est limité
@@ -2403,6 +2466,27 @@ invalid:	row    = -1;
 				}
 			}
 			
+			public double						Elasticity
+			{
+				get
+				{
+					return this.elasticity;
+				}
+				set
+				{
+					if (this.elasticity != value)
+					{
+						this.elasticity = value;
+						this.host.OnColumnWidthChanged (this);
+					}
+				}
+			}
+			
+			internal void AdjustWidth(double width)
+			{
+				this.width = width;
+			}
+			
 			internal void DefineColumnIndex(int index)
 			{
 				if (this.column != index)
@@ -2463,6 +2547,7 @@ invalid:	row    = -1;
 			private bool						is_read_only;
 			private double						width;
 			private double						offset;
+			private double						elasticity;
 			private Drawing.ContentAlignment	alignment;
 			
 			private HeaderButton				header_button;
@@ -2516,6 +2601,7 @@ invalid:	row    = -1;
 		protected double						offset;
 		private int								selected_row		= -1;
 		protected bool							is_select_enabled	= true;
+		protected bool							is_dragging_slider	= false;
 		
 		private int								edition_row			= -1;
 		protected int							edition_add_rows	= 0;

@@ -682,7 +682,15 @@ namespace Epsitec.Common.Widgets
 		private void HandleSliderDragStarted(object sender, MessageEventArgs e)
 		{
 			HeaderSlider slider = sender as HeaderSlider;
-
+			
+			this.is_dragging_slider = true;
+			this.saved_total_width  = 0;
+			
+			for ( int i=0 ; i<this.maxColumns ; i++ )
+			{
+				this.saved_total_width += this.RetWidthColumn(i);
+			}
+			
 			if ( slider.Style == HeaderSliderStyle.Left )
 			{
 				DragStartedRow(slider.Index, e.Message.Y);
@@ -714,7 +722,9 @@ namespace Epsitec.Common.Widgets
 		private void HandleSliderDragEnded(object sender, MessageEventArgs e)
 		{
 			HeaderSlider slider = sender as HeaderSlider;
-
+			
+			this.is_dragging_slider = false;
+			
 			if ( slider.Style == HeaderSliderStyle.Left )
 			{
 				DragEndedRow(slider.Index, e.Message.Y);
@@ -1382,9 +1392,17 @@ namespace Epsitec.Common.Widgets
 			{
 				double areaWidth = this.Width-this.margins.Width-this.leftMargin-this.rightMargin;
 				double totalWidth = 0;
-				for ( int i=0 ; i<this.maxColumns ; i++ )
+				
+				if (this.is_dragging_slider)
 				{
-					totalWidth += this.RetWidthColumn(i);
+					totalWidth = this.saved_total_width;
+				}
+				else
+				{
+					for ( int i=0 ; i<this.maxColumns ; i++ )
+					{
+						totalWidth += this.RetWidthColumn(i);
+					}
 				}
 
 				if ( totalWidth <= areaWidth ||
@@ -1847,6 +1865,9 @@ namespace Epsitec.Common.Widgets
 		protected int							dragRank;
 		protected double						dragPos;
 		protected double						dragDim;
+		
+		protected bool							is_dragging_slider;
+		protected double						saved_total_width;
 		
 		protected Cell							focusedCell;
 		protected Widget						focusedWidget;

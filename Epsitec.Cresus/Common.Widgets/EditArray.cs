@@ -3,6 +3,8 @@
 
 namespace Epsitec.Common.Widgets
 {
+	using BundleAttribute = Support.BundleAttribute;
+	
 	/// <summary>
 	/// La classe EditArray implémente un ScrollArray éditable.
 	/// </summary>
@@ -629,7 +631,17 @@ namespace Epsitec.Common.Widgets
 						bool read_only = this.host.Columns[i].IsReadOnly;
 						
 						this.edit_widgets[i].Text = value[i];
-						this.edit_widgets[i].IsReadOnly = read_only;
+						
+						if (this.edit_widgets[i].IsPropertyDefined (EditArray.prop_model_based))
+						{
+							//	Si c'est une ligne éditable créée à partir d'un modèle, on ne touche pas
+							//	à la propriété "read only", car elle a été définie dans le modèle !
+						}
+						else
+						{
+							this.edit_widgets[i].IsReadOnly = read_only;
+						}
+						
 						this.edit_widgets[i].SetEnabled (!read_only);
 					}
 					
@@ -892,11 +904,15 @@ namespace Epsitec.Common.Widgets
 						}
 						
 						this.edit_widgets[i] = System.Activator.CreateInstance (type, new object[] { this } ) as AbstractTextField;
-						this.edit_widgets[i].TextFieldStyle = style;
 						
 						if (model != null)
 						{
 							Support.ObjectBundler.Default.CopyObject (model, this.edit_widgets[i]);
+							this.edit_widgets[i].SetProperty (EditArray.prop_model_based, true);
+						}
+						else
+						{
+							this.edit_widgets[i].TextFieldStyle = style;
 						}
 						
 						this.Attach (this.edit_widgets[i], i);
@@ -1073,6 +1089,8 @@ namespace Epsitec.Common.Widgets
 				this.toolbar.ItemsChanged += new Support.EventHandler (this.HandleToolBarItemsChanged);
 				
 				this.UpdateHeaderHeight ();
+				
+				this.host.TitleWidget = this;
 			}
 			
 			
@@ -1676,6 +1694,73 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		#region UniqueValueValidator Class
+		public class UniqueValueValidator : Common.Widgets.Validators.AbstractTextValidator
+		{
+			public UniqueValueValidator() : base (null)
+			{
+			}
+			
+			public UniqueValueValidator(Widget widget, int column) : base (widget)
+			{
+				this.column = column;
+			}
+			
+			
+			[Bundle] public int					Column
+			{
+				get
+				{
+					return this.column;
+				}
+				set
+				{
+					this.column = value;
+				}
+			}
+			
+			protected override void ValidateText(string text)
+			{
+				Widget iter = this.widget;
+				
+				this.state = Support.ValidationState.Ok;
+				
+				while (iter != null)
+				{
+					EditArray edit_array = iter as EditArray;
+					
+					if ((edit_array != null) &&
+						(edit_array.InteractionMode == ScrollInteractionMode.Edition))
+					{
+						int                          index = edit_array.SelectedIndex;
+						Support.Data.ITextArrayStore store = edit_array.TextArrayStore;
+						
+						int max_rows = store.GetRowCount ();
+						
+						for (int i = 0; i < max_rows; i++)
+						{
+							if (i != index)
+							{
+								if (store.GetCellText (i, this.column) == text)
+								{
+									this.state = Support.ValidationState.Error;
+									return;
+								}
+							}
+						}
+						
+						break;
+					}
+					
+					iter = iter.Parent;
+				}
+			}
+			
+			protected int						column;
+		}
+		#endregion
+		
+		
 		public event Support.EventHandler		EditTextChanged;
 		public event Support.EventHandler		EditWidgetsCreated;
 		
@@ -1688,5 +1773,6 @@ namespace Epsitec.Common.Widgets
 		protected int							focused_column = -1;
 		
 		protected Controller					controller;
+		protected const string					prop_model_based = "$edit array$model based$";
 	}
 }
