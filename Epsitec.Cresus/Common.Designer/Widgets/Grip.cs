@@ -146,7 +146,7 @@ namespace Epsitec.Common.Designer.Widgets
 		{
 			if (! this.drag_behavior.ProcessMessage (message, pos))
 			{
-				base.ProcessMessage (message, pos);
+				message.Consumer = this;
 			}
 		}
 		
@@ -185,6 +185,7 @@ namespace Epsitec.Common.Designer.Widgets
 			
 			graphics.GradientRenderer.Transform = t;
 		}
+		
 		
 		void IDragBehaviorHost.OnDragBegin(Drawing.Point cursor)
 		{
