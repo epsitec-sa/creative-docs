@@ -70,6 +70,7 @@ namespace Epsitec.Common.Support
 						{
 							IBundleSupport bundle_support = System.Activator.CreateInstance (type) as IBundleSupport;
 							ObjectBundler.Register (bundle_support);
+							bundle_support.Dispose ();
 						}
 						catch (System.Exception ex)
 						{

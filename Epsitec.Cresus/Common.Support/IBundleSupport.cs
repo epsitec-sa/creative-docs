@@ -7,7 +7,7 @@ namespace Epsitec.Common.Support
 	/// L'interface IBundleSupport définit les méthodes nécessaires
 	/// pour gérer l'initialisation d'objets basée sur des bundles.
 	/// </summary>
-	public interface IBundleSupport
+	public interface IBundleSupport : System.IDisposable
 	{
 		string			PublicClassName		{ get; }
 		

@@ -8,10 +8,6 @@ namespace Epsitec.Common.Tests
 	[TestFixture]
 	public class WidgetTest
 	{
-		static WidgetTest()
-		{
-		}
-		
 		[Test] public void CheckParentChildRelationship()
 		{
 			Widget root = new Widget ();
@@ -589,9 +585,13 @@ namespace Epsitec.Common.Tests
 		
 		[Test] public void CheckAliveWidgets()
 		{
-			System.Console.Out.WriteLine ("{0} widgets alive before GC.Collect", Widget.DebugAliveWidgetsCount);
+			System.Console.Out.WriteLine ("{0} widgets and {1} windows alive before GC.Collect", Widget.DebugAliveWidgetsCount, Window.DebugAliveWindowsCount);
 			System.GC.Collect ();
-			System.Console.Out.WriteLine ("{0} widgets alive after GC.Collect", Widget.DebugAliveWidgetsCount);
+			System.Console.Out.WriteLine ("{0} widgets and {1} windows alive after GC.Collect", Widget.DebugAliveWidgetsCount, Window.DebugAliveWindowsCount);
+			foreach (Window window in Window.DebugAliveWindows)
+			{
+				System.Console.Out.WriteLine ("{0}: Name='{1}', Text='{2}'", window.GetType ().Name, window.Name, window.Text);
+			}
 			foreach (Widget widget in Widget.DebugAliveWidgets)
 			{
 				System.Console.Out.WriteLine ("{0}: Name='{1}', Text='{2}', Parent={3}", widget.GetType ().Name, widget.Name, widget.Text, (widget.Parent == null) ? "<null>" : (widget.Parent.GetType ().Name));
