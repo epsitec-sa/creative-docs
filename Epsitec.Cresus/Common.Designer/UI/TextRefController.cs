@@ -275,14 +275,22 @@ namespace Epsitec.Common.Designer.UI
 			if ((bundle != "") &&
 				(field != ""))
 			{
+#if false
 				adapter.XmlRefTarget = ResourceBundle.MakeTarget (bundle, field);
+#else
+				adapter.TextRef = ResourceBundle.MakeTarget (bundle, field);
+#endif
 				
 				this.SyncFromAdapter (Common.UI.SyncReason.AdapterChanged);
 				this.State = InternalState.UsingExistingText;
 			}
 			else
 			{
+#if false
 				adapter.XmlRefTarget = "";
+#else
+				adapter.TextRef = "";
+#endif
 			}
 		}
 		
@@ -307,7 +315,11 @@ namespace Epsitec.Common.Designer.UI
 				(field != ""))
 			{
 				adapter.DefineFieldValue (bundle, field, value);
+#if false
 				adapter.XmlRefTarget = ResourceBundle.MakeTarget (bundle, field);
+#else
+				adapter.TextRef = ResourceBundle.MakeTarget (bundle, field);
+#endif
 				
 				this.SyncFromAdapter (Common.UI.SyncReason.AdapterChanged);
 				this.State = InternalState.UsingExistingText;
@@ -354,7 +366,11 @@ namespace Epsitec.Common.Designer.UI
 							{
 								this.combo_field.StartPassiveEdition (this.combo_field.PlaceHolder);
 							}
+#if false
 							adapter.XmlRefTarget = "";
+#else
+							adapter.TextRef = "";
+#endif
 							break;
 						case InternalState.UsingExistingText:
 							this.combo_field.RejectEdition ();

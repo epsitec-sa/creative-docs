@@ -38,6 +38,7 @@ namespace Epsitec.Common.Designer.UI
 			}
 		}
 		
+#if false
 		public string							XmlRefTarget
 		{
 			//	Accès à la définition de la référence XML; plus précisément, cette propriété permet
@@ -79,14 +80,57 @@ namespace Epsitec.Common.Designer.UI
 				}
 			}
 		}
-		
+#else
+		public string							TextRef
+		{
+			get
+			{
+				Common.UI.Binders.PropertyBinder binder = this.binder as Common.UI.Binders.PropertyBinder;
+				
+				if (binder != null)
+				{
+					object data;
+					
+					if (binder.ReadData (out data))
+					{
+						string text = Support.Resources.ExtractTextRefTarget (data as string);
+						
+						if (text != null)
+						{
+							return text;
+						}
+					}
+				}
+				
+				return "";
+			}
+			set
+			{
+				if (this.TextRef != value)
+				{
+					Common.UI.Binders.PropertyBinder binder = this.binder as Common.UI.Binders.PropertyBinder;
+					
+					if (binder != null)
+					{
+						binder.WriteData (Support.Resources.MakeTextRef (value));
+						
+						this.SyncFromBinder (Common.UI.SyncReason.AdapterChanged);
+						this.OnValueChanged ();
+					}
+				}
+			}
+		}
+#endif
 		
 		public string							BundleName
 		{
 			get
 			{
+#if false
 				string target = this.XmlRefTarget;
-				
+#else
+				string target = this.TextRef;
+#endif				
 				if (target != null)
 				{
 					string bundle, field;
@@ -105,7 +149,11 @@ namespace Epsitec.Common.Designer.UI
 		{
 			get
 			{
+#if false
 				string target = this.XmlRefTarget;
+#else
+				string target = this.TextRef;
+#endif
 				
 				if (target != null)
 				{
@@ -159,9 +207,14 @@ namespace Epsitec.Common.Designer.UI
 		
 		public string GetFieldValue()
 		{
+#if false
 			string target = this.XmlRefTarget;
+#else
+			string target = this.TextRef;
+#endif
 			
 			if ((target != null) &&
+				(target.Length > 0) &&
 				(this.StringProvider != null))
 			{
 				string bundle;
