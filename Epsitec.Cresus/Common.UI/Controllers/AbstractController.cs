@@ -66,12 +66,12 @@ namespace Epsitec.Common.UI.Controllers
 		
 		protected void Attach(Adapters.IAdapter adapter)
 		{
-			adapter.ValueChanged += new EventHandler (this.HandleAdapterValueChanged);
+			adapter.Changed += new EventHandler (this.HandleAdapterValueChanged);
 		}
 		
 		protected void Detach(Adapters.IAdapter adapter)
 		{
-			adapter.ValueChanged -= new EventHandler (this.HandleAdapterValueChanged);
+			adapter.Changed -= new EventHandler (this.HandleAdapterValueChanged);
 		}
 		
 		
