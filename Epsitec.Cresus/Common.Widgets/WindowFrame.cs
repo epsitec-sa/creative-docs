@@ -25,6 +25,12 @@ namespace Epsitec.Common.Widgets
 			this.ReallocatePixmap ();
 		}
 		
+		public void MakeFramelessWindow()
+		{
+			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+			this.ShowInTaskbar   = false;
+		}
+		
 		
 		public WindowRoot				Root
 		{
@@ -112,13 +118,21 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				int ox = this.MapToWinFormsX (value.Left);
-				int oy = this.MapToWinFormsY (value.Top);
-				int dx = this.MapToWinFormsWidth (value.Width);
-				int dy = this.MapToWinFormsHeight (value.Height);
-				
-				this.Bounds = new System.Drawing.Rectangle (ox, oy, dx, dy);
-				this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+				if (this.window_bounds != value)
+				{
+					int ox = this.MapToWinFormsX (value.Left);
+					int oy = this.MapToWinFormsY (value.Top);
+					int dx = this.MapToWinFormsWidth (value.Width);
+					int dy = this.MapToWinFormsHeight (value.Height);
+					
+					this.window_bounds   = value;
+					this.form_bounds     = new System.Drawing.Rectangle (ox, oy, dx, dy);
+					this.form_bounds_set = true;
+					this.on_resize_event = true;
+					
+					this.Bounds        = this.form_bounds;
+					this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+				}
 			}
 		}
 		
@@ -270,8 +284,28 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnSizeChanged(System.EventArgs e)
 		{
-			base.OnSizeChanged (e);
-			this.ReallocatePixmap ();
+			if ((this.Created == false) &&
+				(this.form_bounds_set) &&
+				(this.form_bounds.Size != this.Size))
+			{
+				this.Size = this.form_bounds.Size;
+			}
+			else if ((this.form_bounds_set) &&
+					 (this.form_bounds.Size == this.Size) &&
+				     (this.on_resize_event == false))
+			{
+				//	Rien à faire, car la taille correspond à la dernière taille mémorisée.
+			}
+			else
+			{
+				this.form_bounds_set = true;
+				this.on_resize_event = false;
+				this.form_bounds     = this.Bounds;
+				this.window_bounds   = this.WindowBounds;
+				
+				base.OnSizeChanged (e);
+				this.ReallocatePixmap ();
+			}
 		}
 		
 		
@@ -406,6 +440,9 @@ namespace Epsitec.Common.Widgets
 			const int WM_KEYUP		= 0x0101;	const int WM_SYSKEYUP		= 0x0105;
 			const int WM_CHAR		= 0x0102;	const int WM_SYSCHAR		= 0x0106;
 			const int WM_DEADCHAR	= 0x0103;	const int WM_SYSDEADCHAR	= 0x0107;
+			
+//-			const int WM_NCCALCSIZE    = 0x0083;
+//-			const int WM_CHANGEUISTATE = 0x0127;
 			
 			const int VK_SHIFT		= 0x0010;
 			const int VK_CONTROL	= 0x0011;
@@ -677,6 +714,10 @@ namespace Epsitec.Common.Widgets
 		protected WindowRoot					root;
 		protected Drawing.Graphics				graphics;
 		protected Drawing.Rectangle				dirty_rectangle;
+		protected Drawing.Rectangle				window_bounds;
+		protected System.Drawing.Rectangle		form_bounds;
+		protected bool							form_bounds_set = false;
+		protected bool							on_resize_event = false;
 		protected Widget						last_in_widget;
 		protected Widget						capturing_widget;
 		protected Widget						focused_widget;

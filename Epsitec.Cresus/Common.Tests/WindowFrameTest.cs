@@ -65,6 +65,21 @@ namespace Epsitec.Common.Tests
 			System.Console.Out.WriteLine ("Start {0}", window.StartPosition.ToString ());
 			window.Show ();
 		}
+		
+		[Test] public void CheckMakeFramelessWindow()
+		{
+			ScreenInfo info = ScreenInfo.Find (new Point (10, 10));
+			
+			double oy = info.WorkingArea.Bottom;
+			double ox = info.WorkingArea.Left;
+			
+			WindowFrame window = new WindowFrame ();
+			window.MakeFramelessWindow ();
+			window.Paint += new System.Windows.Forms.PaintEventHandler(window_Paint);
+			window.SizeChanged += new System.EventHandler(window_SizeChanged);
+			window.WindowBounds = new Rectangle (ox+10, oy+10, 24, 16);
+			window.Show ();
+		}
 
 		private void Root_Clicked(object sender, MessageEventArgs e)
 		{
@@ -79,6 +94,17 @@ namespace Epsitec.Common.Tests
 		private void Root_ShortcutPressed(object sender)
 		{
 			System.Diagnostics.Debug.WriteLine ("Shortcut key pressed");
+		}
+
+		private void window_Paint(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			System.Windows.Forms.Form window = sender as System.Windows.Forms.Form;
+			e.Graphics.FillRectangle (System.Drawing.Brushes.Red, window.ClientRectangle);
+		}
+
+		private void window_SizeChanged(object sender, System.EventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine ("Changed size of window: " + ((WindowFrame)sender).Size.ToString ());
 		}
 	}
 }
