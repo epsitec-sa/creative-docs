@@ -11,6 +11,10 @@ namespace Epsitec.Common.Drawing
 			data.CopyTo (this.data, 0);
 			
 			this.disabled = new Canvas (this);
+			
+			Canvas.global_icon_cache.Add (this);
+			
+			System.Diagnostics.Debug.WriteLine ("Inserted image into cache.");
 		}
 		
 		protected Canvas(Canvas original)
@@ -178,12 +182,20 @@ namespace Epsitec.Common.Drawing
 			
 			if (disposing)
 			{
+				Canvas.global_icon_cache.Remove (this);
 				this.InvalidateCache ();
 			}
 			
 			base.Dispose (disposing);
 		}
 
+		public override void RemoveFromCache()
+		{
+			System.Diagnostics.Debug.WriteLine ("Removed image from cache.");
+			
+			Canvas.global_icon_cache.Remove (this);
+		}
+		
 		
 		protected bool					is_disposed;
 		protected bool					is_geom_ok;
@@ -194,5 +206,6 @@ namespace Epsitec.Common.Drawing
 		protected Bitmap				cache;
 		
 		protected static ICanvasEngine	engine;
+		protected static System.Collections.ArrayList global_icon_cache = new System.Collections.ArrayList ();
 	}
 }

@@ -342,6 +342,11 @@ namespace Epsitec.Common.Widgets
 				{
 					Drawing.Image image = this.imageProvider.GetImage(block.text);
 					
+					if (image == null)
+					{
+						throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", block.text, System.IO.Directory.GetCurrentDirectory ()));
+					}
+					
 					if ( !uniqueColor.IsEmpty )
 					{
 						image = Drawing.Bitmap.FromImageDisabled(image, uniqueColor);

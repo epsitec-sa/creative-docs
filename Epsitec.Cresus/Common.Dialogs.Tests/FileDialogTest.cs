@@ -1,9 +1,72 @@
 using NUnit.Framework;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Pictogram;
 
 namespace Epsitec.Common.Dialogs
 {
 	[TestFixture] public class FileDialogTest
 	{
+		[Test] public void CheckApplication()
+		{
+			Engine.Initialise();
+
+			Window window = new Window();
+			
+			window.ClientSize = new Size(400, 300);
+			window.Text = "CheckApplication";
+
+			Button button1 = new Button();
+			button1.Text = "Ouvrir";
+			button1.Location = new Point(50, 50);
+			button1.Width = 100;
+			button1.Clicked += new MessageEventHandler(this.button1_Clicked);
+			window.Root.Children.Add(button1);
+
+			Button button2 = new Button();
+			button2.Text = "Enregistrer";
+			button2.Location = new Point(160, 50);
+			button2.Width = 100;
+			button2.Clicked += new MessageEventHandler(this.button2_Clicked);
+			window.Root.Children.Add(button2);
+
+			IconButton button3 = new IconButton();
+			button3.IconName = @"file:images/open1.icon";
+			button3.Location = new Point(50, 100);
+			button3.Clicked += new MessageEventHandler(this.button1_Clicked);
+			window.Root.Children.Add(button3);
+
+			IconButton button4 = new IconButton();
+			button4.IconName = @"file:images/save1.icon";
+			button4.Location = new Point(80, 100);
+			button4.Clicked += new MessageEventHandler(this.button2_Clicked);
+			window.Root.Children.Add(button4);
+
+			window.Show();
+		}
+
+		private void button1_Clicked(object sender, MessageEventArgs e)
+		{
+			FileOpen dialog = new FileOpen ();
+			
+			dialog.Title = "CheckFileOpen";
+			dialog.Filters.Add ("text", "Textes", "*.txt");
+			dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
+			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
+			dialog.Show ();
+		}
+
+		private void button2_Clicked(object sender, MessageEventArgs e)
+		{
+			FileSave dialog = new FileSave ();
+			
+			dialog.Title = "CheckFileSave";
+			dialog.Filters.Add ("text", "Textes", "*.txt");
+			dialog.Filters.Add ("image", "Images", "*.jpg;*.png;*.bmp");
+			dialog.Filters.Add ("any", "Tous les fichiers", "*.*");
+			dialog.Show ();
+		}
+
 		[Test] public void CheckFileOpen()
 		{
 			FileOpen dialog = new FileOpen ();

@@ -172,11 +172,26 @@ namespace Epsitec.Common.Support
 		{
 			if (name == null)
 			{
-				this.images.Clear ();
+				string[] names = new string[this.images.Count];
+				
+				this.images.Keys.CopyTo (names, 0);
+				
+				for (int i = 0; i < names.Length; i++)
+				{
+					this.ClearImageCache (names[i]);
+				}
 			}
 			else
 			{
+				System.WeakReference weak_ref = this.images[name] as System.WeakReference;
+				Drawing.Image        image    = weak_ref.Target as Drawing.Image;
+				
 				this.images.Remove (name);
+				
+				if (image != null)
+				{
+					image.RemoveFromCache ();
+				}
 			}
 		}
 		

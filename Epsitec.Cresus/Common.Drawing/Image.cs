@@ -93,6 +93,11 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public virtual void RemoveFromCache()
+		{
+		}
+		
+		
 		internal bool					is_origin_defined;
 		
 		protected Size					size;
