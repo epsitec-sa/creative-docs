@@ -175,10 +175,6 @@ namespace Epsitec.Common.Pictogram
 		{
 			Engine.Initialise();
 
-			//Widgets.Adorner.Factory.SetActive("LookDefault");
-			//Widgets.Adorner.Factory.SetActive("LookDany");
-			//Widgets.Adorner.Factory.SetActive("LookCeeBot");
-			//Widgets.Adorner.Factory.SetActive("LookPlastic");
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive("LookMetal");
 
 			Window window = new Window();
@@ -187,9 +183,23 @@ namespace Epsitec.Common.Pictogram
 			window.Text = "CheckIconEditor";
 
 			IconEditor editor = new IconEditor();
-			editor.Size = window.ClientSize;
+			HMenu menu = editor.GetMenu();
+
+			Drawing.Rectangle rect = new Drawing.Rectangle();
+			rect.Left   = 0;
+			rect.Width  = window.ClientSize.Width;
+			rect.Bottom = 0;
+			rect.Height = window.ClientSize.Height-menu.DefaultHeight;
+			editor.Bounds = rect;
 			editor.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			window.Root.Children.Add(editor);
+
+			rect.Left   = 0;
+			rect.Width  = window.ClientSize.Width;
+			rect.Bottom = window.ClientSize.Height-menu.DefaultHeight;
+			rect.Height = menu.DefaultHeight;
+			menu.Bounds = rect;
+			window.Root.Children.Add(menu);
 
 			window.Show();
 		}

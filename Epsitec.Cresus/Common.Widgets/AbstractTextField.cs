@@ -97,10 +97,32 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.TextLayout != null)
 				{
-					return this.TextLayout.GetLineOrigin (0);
+					Drawing.Point pos   = this.TextLayout.GetLineOrigin (0);
+					Drawing.Point shift = this.InnerTextOffset;
+					
+					double y_from_top = this.TextLayout.LayoutSize.Height - pos.Y;
+					double y_from_bot = this.realSize.Height - y_from_top + shift.Y;
+					
+					return new Drawing.Point (shift.X, y_from_bot);
 				}
 				
 				return base.BaseLine;
+			}
+		}
+		
+		public virtual Drawing.Point InnerTextOffset
+		{
+			get
+			{
+				Drawing.Point     pos  = new Drawing.Point(AbstractTextField.Margin, AbstractTextField.Margin);
+				Drawing.Rectangle rect = this.InnerBounds;
+				
+				if ( rect.Height < 18 )	//	TODO: remplacer cette constante par qqch de plus adéquat...
+				{
+					pos.Y += 18-rect.Height;  // remonte le texte si la hauteur est très petite
+				}
+				
+				return pos;
 			}
 		}
 		
@@ -766,11 +788,9 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			WidgetState   state = this.PaintState;
-			Drawing.Point pos   = new Drawing.Point(AbstractTextField.Margin, AbstractTextField.Margin);
+			Drawing.Point pos   = this.InnerTextOffset - this.scrollOffset;
 			
 			adorner.PaintTextFieldBackground(graphics, this.Client.Bounds, state, this.textStyle, this.isReadOnly);
-			
-			pos -= this.scrollOffset;
 			
 			Drawing.Rectangle rInside = this.InnerBounds;
 			Drawing.Rectangle rSaveClip = graphics.SaveClippingRectangle();
@@ -779,14 +799,6 @@ namespace Epsitec.Common.Widgets
 			rClip = this.MapClientToRoot(rClip);
 			graphics.SetClippingRectangle(rClip);
 			
-			graphics.AddFilledRectangle (rInside);
-			graphics.RenderSolid (Drawing.Color.FromRGB (1, 1, 0));
-			
-			if ( rClip.Height < 18 )	//	TODO: remplacer cette constante par qqch de plus adéquat...
-			{
-				pos.Y += 18-rClip.Height;  // remonte le texte si la hauteur est très petite
-			}
-
 			if ( this.IsFocused )
 			{
 				bool visibleCursor = false;
