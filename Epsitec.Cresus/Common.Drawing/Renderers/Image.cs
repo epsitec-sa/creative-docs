@@ -26,7 +26,7 @@ namespace Epsitec.Common.Drawing.Renderers
 				{
 					if (value == null)
 					{
-						this.Bitmap = null;
+						this.BitmapImage = null;
 						this.Detach ();
 						this.transform.Reset ();
 					}
@@ -38,29 +38,32 @@ namespace Epsitec.Common.Drawing.Renderers
 			}
 		}
 
-		public Bitmap					Bitmap
+		public Drawing.Image			BitmapImage
 		{
 			get
 			{
-				return this.bitmap;
+				return this.image;
 			}
 			
 			set
 			{
-				if (this.bitmap != value)
+				if (this.image != value)
 				{
 					if (this.bitmap != null)
 					{
 						this.bitmap.UnlockBits ();
 						this.AssertAttached ();
+						this.bitmap = null;
 						
 						AntiGrain.Renderer.Image.Source2 (this.agg_ren, System.IntPtr.Zero, 0, 0, 0);
 					}
 					
-					this.bitmap = value;
+					this.image = value;
 					
-					if (this.bitmap != null)
+					if (this.image != null)
 					{
+						this.bitmap = this.image.BitmapImage;
+						
 						int width  = this.bitmap.PixelWidth;
 						int height = this.bitmap.PixelHeight;
 						
@@ -99,7 +102,9 @@ namespace Epsitec.Common.Drawing.Renderers
 				this.transform     = new Transform (value);
 				this.int_transform = new Transform (value);
 				this.OnTransformUpdating (System.EventArgs.Empty);
+				
 				Transform inverse = Transform.Inverse (this.int_transform);
+				
 				AntiGrain.Renderer.Image.Matrix (this.agg_ren, inverse.XX, inverse.XY, inverse.YX, inverse.YY, inverse.TX, inverse.TY);
 			}
 		}
@@ -128,13 +133,20 @@ namespace Epsitec.Common.Drawing.Renderers
 					this.pixmap = null;
 				}
 				
-				Bitmap bitmap = this.bitmap;
+				Drawing.Image  image  = this.image;
+				Drawing.Bitmap bitmap = this.bitmap;
 				
-				this.Bitmap = null;
+				this.BitmapImage = null;
 				
-				if (bitmap != null)
+				if ((bitmap != null) &&
+					(bitmap != image))
 				{
 					bitmap.Dispose ();
+				}
+				
+				if (image != null)
+				{
+					image.Dispose ();
 				}
 			}
 			
@@ -181,7 +193,8 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		private System.IntPtr			agg_ren;
 		private Pixmap					pixmap;
-		private Bitmap					bitmap;
+		private Drawing.Image			image;
+		private Drawing.Bitmap			bitmap;
 		private Transform				transform		= new Transform ();
 		private Transform				int_transform	= new Transform ();
 	}
