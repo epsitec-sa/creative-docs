@@ -238,6 +238,11 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(st);
 
 			CreateListLook(window.Root.Children, new Point(10, 195), tip);
+			
+			Tag tag = new Tag ("ExecuteTag", null, "TestTag");
+			tag.Bounds = new Drawing.Rectangle (112, 240, 18, 18);
+			tag.Parent = window.Root;
+			tip.SetToolTip (tag, "Je suis un <i>smart tag</i> maison.");
 
 			StaticText link = new StaticText();
 			link.Location = new Point(360, 36);
