@@ -94,11 +94,11 @@ namespace Epsitec.Cresus.Database
 			switch (this.revision)
 			{
 				case DbSelectRevision.LiveAll:
-					this.AddCondition (main_table.Columns[Tags.ColumnStatus], DbCompare.Equal, DbKey.ConvertToIntStatus (DbRowStatus.Live));
+					this.AddCondition (main_table.Columns[Tags.ColumnStatus], DbCompare.LessThan, DbKey.ConvertToIntStatus (DbRowStatus.Deleted));
 					break;
 				
 				case DbSelectRevision.LiveCurrent:
-					this.AddCondition (main_table.Columns[Tags.ColumnStatus], DbCompare.Equal, DbKey.ConvertToIntStatus (DbRowStatus.Live));
+					this.AddCondition (main_table.Columns[Tags.ColumnStatus], DbCompare.LessThan, DbKey.ConvertToIntStatus (DbRowStatus.Deleted));
 					this.AddCondition (main_table.Columns[Tags.ColumnRevision], DbCompare.Equal, 0);
 					break;
 				

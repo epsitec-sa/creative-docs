@@ -93,9 +93,9 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		[Test] public void CheckBase00Contains()
+		[Test] public void CheckBase00ContainsNo()
 		{
-			Assertion.Assert (Resources.Contains ("base:button.cancel"));
+			Assertion.Assert (! Resources.Contains ("base:raw_data_test"));
 		}
 		
 		[Test] public void CheckBase01SetBinaryData()
@@ -105,9 +105,17 @@ namespace Epsitec.Common.Support
 			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Default, null, data, ResourceSetMode.Write);
 		}
 		
-		[Test] public void CheckBase02GetBinaryData()
+		[Test] public void CheckBase02ContainsYes()
 		{
+			Assertion.Assert (Resources.Contains ("base:raw_data_test"));
+		}
+		
+		[Test] public void CheckBase03GetBinaryData()
+		{
+			System.Diagnostics.Debug.WriteLine ("Check: Base / GetBinaryData");
+			System.Diagnostics.Debug.WriteLine (">> begin");
 			byte[] data = Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Default, null);
+			System.Diagnostics.Debug.WriteLine ("<< end");
 			
 			Assertion.AssertNotNull (data);
 			Assertion.AssertEquals (5, data.Length);
@@ -116,6 +124,102 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals (3, data[2]);
 			Assertion.AssertEquals (4, data[3]);
 			Assertion.AssertEquals (5, data[4]);
+		}
+		
+		[Test] public void CheckBase04RemoveResource()
+		{
+			Assertion.Assert (Resources.Contains ("base:raw_data_test"));
+			
+			byte[] data_xx = new byte[] { (byte)'X' };
+			byte[] data_de = new byte[] { (byte)'D', (byte)'E' };
+			
+			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null, data_xx, ResourceSetMode.CreateOnly);
+			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de"), data_de, ResourceSetMode.CreateOnly);
+			
+			byte[] find_xx = Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null);
+			byte[] find_de = Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de"));
+			
+			Assertion.AssertNotNull (find_xx);
+			Assertion.AssertNotNull (find_de);
+			Assertion.AssertEquals (data_xx[0], find_xx[0]);
+			Assertion.AssertEquals (data_de[0], find_de[0]);
+			Assertion.AssertEquals (data_de[1], find_de[1]);
+			
+			Resources.RemoveResource ("base:raw_data_test", ResourceLevel.Customised, null);
+			Resources.RemoveResource ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de"));
+			
+			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null));
+			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de")));
+			Assertion.AssertNotNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Default, null));
+			Assertion.Assert (Resources.Contains ("base:raw_data_test"));
+			
+			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null, data_xx, ResourceSetMode.CreateOnly);
+			Resources.SetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de"), data_de, ResourceSetMode.CreateOnly);
+			
+			Resources.RemoveResource ("base:raw_data_test", ResourceLevel.All, null);
+			
+			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Customised, null));
+			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Localised, Resources.FindCultureInfo ("de")));
+			Assertion.AssertNull (Resources.GetBinaryData ("base:raw_data_test", ResourceLevel.Default, null));
+			Assertion.Assert (! Resources.Contains ("base:raw_data_test"));
+		}
+		
+		[Test] public void CheckBaseStressTest()
+		{
+			Assertion.Assert (! Resources.Contains ("base:StressResourceLtl.0"));
+			Assertion.Assert (! Resources.Contains ("base:StressResourceBig.0"));
+			
+			System.Diagnostics.Debug.WriteLine ("Creating 1000 resources (10 bytes).");
+			for (int i = 0; i < 1000; i++)
+			{
+				string id_name = string.Format ("base:StressResourceLtl.{0}", i);
+				byte[] id_data = new byte[10];
+				
+				Resources.SetBinaryData (id_name, ResourceLevel.Default, null, id_data, ResourceSetMode.CreateOnly);
+			}
+			System.Diagnostics.Debug.WriteLine ("Done.");
+			
+			System.Diagnostics.Debug.WriteLine ("Creating 1000 resources (10'000 bytes).");
+			for (int i = 0; i < 1000; i++)
+			{
+				string id_name = string.Format ("base:StressResourceBig.{0}", i);
+				byte[] id_data = new byte[10000];
+				
+				Resources.SetBinaryData (id_name, ResourceLevel.Default, null, id_data, ResourceSetMode.CreateOnly);
+			}
+			System.Diagnostics.Debug.WriteLine ("Done.");
+			
+			System.Diagnostics.Debug.WriteLine ("Loading 1000 resources (10 bytes).");
+			for (int i = 0; i < 1000; i++)
+			{
+				string id_name = string.Format ("base:StressResourceLtl.{0}", i);
+				byte[] id_data = Resources.GetBinaryData (id_name, ResourceLevel.Default, null);
+			}
+			System.Diagnostics.Debug.WriteLine ("Done.");
+			
+			System.Diagnostics.Debug.WriteLine ("Loading 1000 resources (10'000 bytes).");
+			for (int i = 0; i < 1000; i++)
+			{
+				string id_name = string.Format ("base:StressResourceBig.{0}", i);
+				byte[] id_data = Resources.GetBinaryData (id_name, ResourceLevel.Default, null);
+			}
+			System.Diagnostics.Debug.WriteLine ("Done.");
+			
+			System.Diagnostics.Debug.WriteLine ("Deleting 1000 resources (10 bytes).");
+			for (int i = 0; i < 1000; i++)
+			{
+				string id_name = string.Format ("base:StressResourceLtl.{0}", i);
+				Resources.RemoveResource (id_name, ResourceLevel.Default, null);
+			}
+			System.Diagnostics.Debug.WriteLine ("Done.");
+			
+			System.Diagnostics.Debug.WriteLine ("Deleting 1000 resources (10'000 bytes).");
+			for (int i = 0; i < 1000; i++)
+			{
+				string id_name = string.Format ("base:StressResourceBig.{0}", i);
+				Resources.RemoveResource (id_name, ResourceLevel.Default, null);
+			}
+			System.Diagnostics.Debug.WriteLine ("Done.");
 		}
 		
 		[Test] public void CheckBase50GetBundle()

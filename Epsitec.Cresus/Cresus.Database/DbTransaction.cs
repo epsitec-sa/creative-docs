@@ -17,18 +17,25 @@ namespace Epsitec.Cresus.Database
 		{
 			this.transaction    = transaction;
 			this.infrastructure = infrastructure;
+			
 			this.infrastructure.NotifyBeginTransaction (this);
 		}
 		
 		
 		public System.Data.IDbTransaction		Transaction
 		{
-			get { return this.transaction; }
+			get
+			{
+				return this.transaction;
+			}
 		}
 		
 		public DbInfrastructure					Infrastructure
 		{
-			get { return this.infrastructure; }
+			get
+			{
+				return this.infrastructure;
+			}
 		}
 		
 		

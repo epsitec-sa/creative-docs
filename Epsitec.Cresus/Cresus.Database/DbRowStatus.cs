@@ -7,9 +7,13 @@ namespace Epsitec.Cresus.Database
 	{
 		Live			= 0,				//	ligne standard
 		Clean			= 1,				//	ligne propre, fraîchement clônée
-		Deleted			= 2,				//	ligne supprimée
 		
-		TempLive		= 64,				//	ligne temporaire, standard
-		TempClean		= 65,				//	ligne temporaire, propre
+		TempLive		= 8,				//	ligne temporaire, standard
+		TempClean		= 9,				//	ligne temporaire, propre
+		
+		//	Attention: tout ce qui a un code inférieur à DbRowStatus.Deleted est
+		//	considéré comme "live", donc visible par les requêtes normales :
+		
+		Deleted			= 64,				//	ligne supprimée
 	}
 }

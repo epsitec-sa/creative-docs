@@ -1,5 +1,5 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database.Implementation
 {
@@ -133,16 +133,24 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		protected virtual void EnsureConnection()
 		{
-			switch (this.db_connection.State)
+			if (this.auto_reopen_connection)
 			{
-				case System.Data.ConnectionState.Closed:
-					this.db_connection.Open ();
-					break;
-				
-				case System.Data.ConnectionState.Broken:
-					this.db_connection.Close ();
-					this.db_connection.Open ();
-					break;
+				this.auto_reopen_connection = false;
+				this.db_connection.Open ();
+			}
+			else
+			{
+				switch (this.db_connection.State)
+				{
+					case System.Data.ConnectionState.Closed:
+						this.db_connection.Open ();
+						break;
+					
+					case System.Data.ConnectionState.Broken:
+						this.db_connection.Close ();
+						this.db_connection.Open ();
+						break;
+				}
 			}
 		}
 		
@@ -308,11 +316,13 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		public System.Data.IDbCommand NewDbCommand()
 		{
+			this.EnsureConnection ();
 			return this.db_connection.CreateCommand ();
 		}
 		
 		public System.Data.IDataAdapter NewDataAdapter(System.Data.IDbCommand command)
 		{
+			this.EnsureConnection ();
 			System.Diagnostics.Debug.Assert (command.Connection != null);
 			System.Diagnostics.Debug.Assert (command.Connection.State != System.Data.ConnectionState.Closed);
 			
@@ -332,6 +342,17 @@ namespace Epsitec.Cresus.Database.Implementation
 			return this.db_connection.BeginTransaction (System.Data.IsolationLevel.RepeatableRead);
 		}
 		
+		public void ReleaseConnection()
+		{
+			//	Ferme la connexion à la base de données, en mettant un fanion pour ré-établir
+			//	automatiquement la connexion en cas de besoin.
+			
+			if (this.db_connection.State != System.Data.ConnectionState.Closed)
+			{
+				this.db_connection.Close ();
+				this.auto_reopen_connection = true;
+			}
+		}
 		#endregion
 		
 		#region IDisposable Members
@@ -348,6 +369,8 @@ namespace Epsitec.Cresus.Database.Implementation
 		private string					db_connection_string;
 		private FirebirdSqlBuilder		sql_builder;
 		private FirebirdSqlEngine		sql_engine;
+		
+		private bool					auto_reopen_connection;
 		
 		protected static int			fb_port				= 3050;
 		protected static byte			fb_dialect			= 3;

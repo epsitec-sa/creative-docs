@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 07/10/2003
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
@@ -22,5 +22,7 @@ namespace Epsitec.Cresus.Database
 		System.Data.IDbCommand NewDbCommand();
 		System.Data.IDataAdapter NewDataAdapter(System.Data.IDbCommand command);
 		System.Data.IDbTransaction BeginTransaction();
+		
+		void ReleaseConnection();
 	}
 }

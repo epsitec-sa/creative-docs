@@ -281,6 +281,11 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public void DeleteRow(System.Data.DataRow data_row)
+		{
+			data_row[Tags.ColumnStatus] = DbKey.ConvertToIntStatus (DbRowStatus.Deleted);
+		}
+		
 		public void CreateNewRow(string table_name, out System.Data.DataRow data_row)
 		{
 			this.CheckValidState ();

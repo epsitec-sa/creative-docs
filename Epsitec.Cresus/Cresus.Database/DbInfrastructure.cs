@@ -126,6 +126,18 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public void ReleaseConnection()
+		{
+			if (this.live_transaction == null)
+			{
+				this.db_abstraction.ReleaseConnection ();
+			}
+			else
+			{
+				this.release_connection_requested = true;
+			}
+		}
+		
 		
 		public static DbAccess CreateDbAccess(string name)
 		{
@@ -745,6 +757,12 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.live_transaction = null;
+			
+			if (this.release_connection_requested)
+			{
+				this.release_connection_requested = false;
+				this.ReleaseConnection ();
+			}
 		}
 		
 		
@@ -1919,5 +1937,6 @@ namespace Epsitec.Cresus.Database
 		Cache.DbTables							cache_db_tables = new Cache.DbTables ();
 		
 		protected DbTransaction					live_transaction;
+		protected bool							release_connection_requested;
 	}
 }

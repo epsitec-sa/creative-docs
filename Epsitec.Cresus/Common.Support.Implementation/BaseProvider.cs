@@ -141,14 +141,8 @@ namespace Epsitec.Common.Support.Implementation
 				string row_name   = this.GetRowNameFromId (id, ResourceLevel.Default);
 				string level_name = this.GetRowLevelFromId (id, ResourceLevel.Default);
 				
-				DbSelectCondition condition = new DbSelectCondition (this.dbi.TypeConverter);
-				
-				//	TODO: ajouter une condition sur CR_REV/CR_STAT
-				
-				condition.AddCondition (this.data_table.Columns["Name"], DbCompare.Equal, row_name);
-				condition.AddCondition (this.data_table.Columns["Level"], DbCompare.Equal, level_name);
-				
-				DbRichCommand command = DbRichCommand.CreateFromTable (this.dbi, null, this.data_table, condition);
+				DbSelectCondition condition = this.CreateSelectCondition (row_name, level_name);
+				DbRichCommand     command   = DbRichCommand.CreateFromTable (this.dbi, null, this.data_table, condition);
 				
 				if (command.DataSet.Tables[0].Rows.Count > 0)
 				{
@@ -170,15 +164,11 @@ namespace Epsitec.Common.Support.Implementation
 			string row_name   = this.GetRowNameFromId (id, level);
 			string level_name = this.GetRowLevelFromId (id, level);
 			
-			DbSelectCondition condition = new DbSelectCondition (this.dbi.TypeConverter);
+			DbSelectCondition condition = this.CreateSelectCondition (row_name, level_name);
+			DbRichCommand     command   = DbRichCommand.CreateFromTable (this.dbi, null, this.data_table, condition);
 			
-			//	TODO: ajouter une condition sur CR_REV/CR_STAT
-			
-			condition.AddCondition (this.data_table.Columns["Name"], DbCompare.Equal, row_name);
-			condition.AddCondition (this.data_table.Columns["Level"], DbCompare.Equal, level_name);
-			
-			DbRichCommand command = DbRichCommand.CreateFromTable (this.dbi, null, this.data_table, condition);
-			
+			this.dbi.ReleaseConnection ();
+
 			if (command.DataSet.Tables[0].Rows.Count > 0)
 			{
 				byte[] data = (byte[]) command.DataSet.Tables[0].Rows[0][this.data_column_index];
@@ -212,12 +202,7 @@ namespace Epsitec.Common.Support.Implementation
 			string row_name   = this.GetRowNameFromId (id, level);
 			string level_name = this.GetRowLevelFromId (id, level);
 			
-			DbSelectCondition condition = new DbSelectCondition (this.dbi.TypeConverter);
-			
-			//	TODO: ajouter une condition sur CR_REV/CR_STAT
-			
-			condition.AddCondition (this.data_table.Columns["Name"], DbCompare.Equal, row_name);
-			condition.AddCondition (this.data_table.Columns["Level"], DbCompare.Equal, level_name);
+			DbSelectCondition condition = this.CreateSelectCondition (row_name, level_name);
 			
 			using (DbTransaction transaction = this.dbi.BeginTransaction ())
 			{
@@ -259,6 +244,8 @@ namespace Epsitec.Common.Support.Implementation
 				command.UpdateRealIds (transaction);
 				command.UpdateTables (transaction);
 				transaction.Commit ();
+				
+				this.dbi.ReleaseConnection ();
 			}
 			
 			return true;
@@ -266,9 +253,82 @@ namespace Epsitec.Common.Support.Implementation
 		
 		public override bool Remove(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
-			// TODO:  Add FileProvider.Remove implementation
-			throw new ResourceException ("Not implemented");
+			DbSelectCondition condition;
+			
+			if (level == ResourceLevel.All)
+			{
+				condition = this.CreateSelectAllCondition (id);
+			}
+			else
+			{
+				if (this.culture != culture)
+				{
+					this.SelectLocale (culture);
+				}
+				
+				string row_name   = this.GetRowNameFromId (id, level);
+				string level_name = this.GetRowLevelFromId (id, level);
+				
+				condition = this.CreateSelectCondition (row_name, level_name);
+			}
+			
+			using (DbTransaction transaction = this.dbi.BeginTransaction ())
+			{
+				DbRichCommand command = DbRichCommand.CreateFromTable (this.dbi, transaction, this.data_table, condition);
+				int           changes = 0;
+				
+				foreach (System.Data.DataRow row in command.DataSet.Tables[0].Rows)
+				{
+					command.DeleteRow (row);
+					changes++;
+				}
+				
+				if (changes > 0)
+				{
+					command.UpdateTables (transaction);
+					transaction.Commit ();
+				}
+				else
+				{
+					transaction.Rollback ();
+				}
+				
+				this.dbi.ReleaseConnection ();
+			}
+			
+			return true;
 		}
+		
+		
+		protected DbSelectCondition CreateSelectCondition(string name, string level)
+		{
+			DbSelectCondition condition = new DbSelectCondition (this.dbi.TypeConverter);
+				
+			//	Nous ne sommes intéressés qu'aux lignes de la table qui sont "live" et
+			//	dont la révision est 0 (= version actuelle).
+			
+			condition.Revision = DbSelectRevision.LiveCurrent;
+			
+			condition.AddCondition (this.data_table.Columns["Name"], DbCompare.Equal, name);
+			condition.AddCondition (this.data_table.Columns["Level"], DbCompare.Equal, level);
+			
+			return condition;
+		}
+		
+		protected DbSelectCondition CreateSelectAllCondition(string name)
+		{
+			DbSelectCondition condition = new DbSelectCondition (this.dbi.TypeConverter);
+				
+			//	Nous ne sommes intéressés qu'aux lignes de la table qui sont "live" et
+			//	dont la révision est 0 (= version actuelle).
+			
+			condition.Revision = DbSelectRevision.LiveCurrent;
+			
+			condition.AddCondition (this.data_table.Columns["Name"], DbCompare.Equal, name);
+			
+			return condition;
+		}
+		
 		
 		protected void AddNewDataRow(DbRichCommand command, DbTransaction transaction, string name, string level, byte[] data)
 		{
@@ -294,6 +354,7 @@ namespace Epsitec.Common.Support.Implementation
 			row["Data"]  = data;
 			row.EndEdit ();
 		}
+		
 		
 		protected static void SetupInitialBase(DbInfrastructure infrastructure, DbTransaction transaction)
 		{

@@ -663,6 +663,42 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 		
+		
+		public static bool RemoveResource(string id, ResourceLevel level, CultureInfo culture)
+		{
+			if (culture == null)
+			{
+				culture = Resources.Culture;
+			}
+			
+			switch (level)
+			{
+				case ResourceLevel.Default:
+				case ResourceLevel.Localised:
+				case ResourceLevel.Customised:
+				case ResourceLevel.All:
+					break;
+				
+				default:
+					throw new ResourceException (string.Format ("Invalid level {0} for resource '{1}'", level, id));
+			}
+			
+			string resource_id;
+			
+			IResourceProvider provider = Resources.FindProvider (id, out resource_id);
+			
+			if (provider != null)
+			{
+				if (provider.Remove (resource_id, level, culture))
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		
 		public static void DebugDumpProviders()
 		{
 			for (int i = 0; i < Resources.resource_providers.Length; i++)
