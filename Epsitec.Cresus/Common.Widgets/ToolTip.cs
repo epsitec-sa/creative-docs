@@ -6,6 +6,7 @@ namespace Epsitec.Common.Widgets
 	{
 		Normal,							// presque comme Window
 		FollowMe,						// suit la souris
+		Manual,							// position définie manuellement
 	}
 
 	/// <summary>
@@ -32,6 +33,54 @@ namespace Epsitec.Common.Widgets
 			this.timer.TimeElapsed += new EventHandler(this.HandleTimerTimeElapsed);
 		}
 
+		
+		public ToolTipBehaviour					Behaviour
+		{
+			get
+			{
+				return this.behaviour;
+			}
+
+			set
+			{
+				this.behaviour = value;
+			}
+		}
+
+		public Drawing.Point					InitialLocation
+		{
+			get
+			{
+				return this.initialPos;
+			}
+			set
+			{
+				this.initialPos = value;
+			}
+		}
+		
+		
+		public void ShowToolTipForWidget(Widget widget)
+		{
+			if (this.hash.Contains (widget))
+			{
+				this.timer.Stop ();
+				this.HideToolTip ();
+				this.widget = widget;
+				this.ShowToolTip ();
+			}
+		}
+		
+		public void HideToolTipForWidget(Widget widget)
+		{
+			if (this.widget == widget)
+			{
+				this.timer.Stop ();
+				this.HideToolTip ();
+			}
+		}
+		
+		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
@@ -66,20 +115,7 @@ namespace Epsitec.Common.Widgets
 			base.Dispose(disposing);
 		}
 
-		// Choix du comportement des tooltips.
-		public ToolTipBehaviour Behaviour
-		{
-			get
-			{
-				return this.behaviour;
-			}
-
-			set
-			{
-				this.behaviour = value;
-			}
-		}
-
+		
 		// Utilisé par un widget pour spécifier son texte.
 		public void SetToolTip(Widget widget, string text)
 		{
@@ -198,6 +234,9 @@ namespace Epsitec.Common.Widgets
 							mouse.Y -= this.Size.Height;
 							this.window.WindowLocation = mouse;
 							break;
+						
+						case ToolTipBehaviour.Manual:
+							break;
 					}
 
 					break;
@@ -229,12 +268,27 @@ namespace Epsitec.Common.Widgets
 			Drawing.Size size = this.TextLayout.SingleLineSize;
 			size.Width  += this.margin.X*2;
 			size.Height += this.margin.Y*2;
-
-			Drawing.Point mouse = Message.State.LastWindow.MapWindowToScreen(Message.State.LastPosition);
+			
+			Drawing.Point mouse;
+			
+			if ( this.behaviour == ToolTipBehaviour.Manual )
+			{
+				mouse = this.initialPos;
+			}
+			else
+			{
+				mouse = Message.State.LastWindow.MapWindowToScreen(Message.State.LastPosition);
+			}
+			
 			this.birthPos = mouse;
-			mouse += this.offset;
+			
+			if ( this.behaviour != ToolTipBehaviour.Manual )
+			{
+				mouse += this.offset;
+			}
+			
 			mouse.Y -= size.Height;
-
+			
 			Drawing.Rectangle rect = new Drawing.Rectangle();
 			rect.Size = size;
 			rect.Location = mouse;
@@ -284,20 +338,21 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected ToolTipBehaviour		behaviour = ToolTipBehaviour.Normal;
-		protected Window				owner;
-		protected Window				window;
-		protected bool					isVisible = false;
-		protected Timer					timer;
-		protected Widget				widget;
-		protected Drawing.Point			birthPos;
-		protected double				deadDist = 12;
-		protected Drawing.Point			margin = new Drawing.Point(3, 2);
-		protected Drawing.Point			offset = new Drawing.Point(8, -16);
-		protected Drawing.Color			colorBack;
-		protected Drawing.Color			colorFrame;
+		protected ToolTipBehaviour				behaviour = ToolTipBehaviour.Normal;
+		protected Window						owner;
+		protected Window						window;
+		protected bool							isVisible = false;
+		protected Timer							timer;
+		protected Widget						widget;
+		protected Drawing.Point					birthPos;
+		protected Drawing.Point					initialPos;
+		protected double						deadDist = 12;
+		protected Drawing.Point					margin = new Drawing.Point(3, 2);
+		protected Drawing.Point					offset = new Drawing.Point(8, -16);
+		protected Drawing.Color					colorBack;
+		protected Drawing.Color					colorFrame;
 		protected System.Collections.Hashtable	hash = new System.Collections.Hashtable();
-		protected int					filterRegisterCount;
-		protected static ToolTip		defaultToolTip = new ToolTip();
+		protected int							filterRegisterCount;
+		protected static ToolTip				defaultToolTip = new ToolTip();
 	}
 }
