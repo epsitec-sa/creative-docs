@@ -7,6 +7,7 @@ namespace Epsitec.Common.Support
 	{
 		[SetUp] public void SetUp()
 		{
+			Widgets.Widget.Initialise ();
 			Resources.SetupProviders ("test");
 		}
 		
@@ -57,7 +58,7 @@ namespace Epsitec.Common.Support
 			ObjectBundler bundler = new ObjectBundler ();
 			Widgets.Button button = new Widgets.Button ();
 			
-			Assertion.AssertNotNull (bundler.FindPropertyInfo (button, "text"));
+			Assertion.AssertNotNull (bundler.FindPropertyInfo (button, "Text"));
 		}
 		
 		[Test] public void CheckIsPropertyEqual()
@@ -67,8 +68,8 @@ namespace Epsitec.Common.Support
 			
 			button.Text = "Hello";
 			
-			Assertion.Assert (bundler.IsPropertyEqual (button, "text", "Hello"));
-			Assertion.Assert (bundler.IsPropertyEqual (button, "anchor", button.Anchor.ToString ()));
+			Assertion.Assert (bundler.IsPropertyEqual (button, "Text", "Hello"));
+			Assertion.Assert (bundler.IsPropertyEqual (button, "Anchor", button.Anchor.ToString ()));
 		}
 		
 		[Test] public void CheckSimpleWindow()

@@ -18,7 +18,7 @@ namespace Epsitec.Common.Designer.Widgets
 		public DragSource()
 		{
 			this.drag_behavior  = new Epsitec.Common.Widgets.Helpers.DragBehavior (this);
-			this.DockMargins    = new Drawing.Margins (3, 3, 3, 3);
+			this.DockPadding    = new Drawing.Margins (3, 3, 3, 3);
 			this.drop_adorner   = new HiliteWidgetAdorner ();
 		}
 		
@@ -55,8 +55,8 @@ namespace Epsitec.Common.Designer.Widgets
 				if (this.drag_window != null)
 				{
 					Drawing.Point pos  = this.drag_window.WindowLocation;
-					pos.X += this.DockMargins.Left;
-					pos.Y += this.DockMargins.Bottom;
+					pos.X += this.DockPadding.Left;
+					pos.Y += this.DockPadding.Bottom;
 					return new Drawing.Rectangle (pos, this.widget.Size);
 				}
 				
@@ -110,7 +110,7 @@ namespace Epsitec.Common.Designer.Widgets
 			Widget     copy   = bundler.CopyObject (widget) as Widget;
 			DragWindow window = new DragWindow ();
 			
-			window.DefineWidget (copy, this.DockMargins);
+			window.DefineWidget (copy, this.DockPadding);
 			
 			return window;
 		}
@@ -210,8 +210,8 @@ namespace Epsitec.Common.Designer.Widgets
 			
 			Drawing.Point pos = this.MapClientToScreen (this.widget.Location);
 			
-			pos.X -= this.DockMargins.Left;
-			pos.Y -= this.DockMargins.Bottom;
+			pos.X -= this.DockPadding.Left;
+			pos.Y -= this.DockPadding.Bottom;
 			
 			this.drag_window = this.CreateDragWindow (this.widget);
 			this.drag_window.WindowLocation = pos;
@@ -301,7 +301,7 @@ namespace Epsitec.Common.Designer.Widgets
 			if (this.drop_adorner.Widget != null)
 			{
 				Support.ObjectBundler bundler = new Support.ObjectBundler ();
-				Drawing.Point         offset  = new Drawing.Point (this.DockMargins.Left, this.DockMargins.Bottom);
+				Drawing.Point         offset  = new Drawing.Point (this.DockPadding.Left, this.DockPadding.Bottom);
 				AnchorStyles          anchor  = AnchorStyles.None;
 				
 				//	Met à jour la position d'insertion en fonction des contraintes actuellement

@@ -135,13 +135,13 @@ namespace Epsitec.Common.Designer.Behaviors
 			
 			if ((edges & Drawing.EdgeId.Left) != 0)
 			{
-				mx = model.Left + widget.DockMargins.Left + margins.Left;
+				mx = model.Left + widget.DockPadding.Left + margins.Left;
 				constraint.Add (xl, mx, mx, model.Bottom, mx, model.Top, ConstraintBehavior.Priority.Low, AnchorStyles.Left);
 			}
 			
 			if ((edges & Drawing.EdgeId.Right) != 0)
 			{
-				mx = model.Right - widget.DockMargins.Right - margins.Right;
+				mx = model.Right - widget.DockPadding.Right - margins.Right;
 				constraint.Add (xr, mx, mx, model.Bottom, mx, model.Top, ConstraintBehavior.Priority.Low, AnchorStyles.Right);
 			}
 			
@@ -220,13 +220,13 @@ namespace Epsitec.Common.Designer.Behaviors
 			
 			if ((edges & Drawing.EdgeId.Bottom) != 0)
 			{
-				my = model.Bottom + widget.DockMargins.Bottom + margins.Bottom;
+				my = model.Bottom + widget.DockPadding.Bottom + margins.Bottom;
 				constraint.Add (y1, my, model.Left, my, model.Right, my, ConstraintBehavior.Priority.Low, AnchorStyles.Bottom);
 			}
 			
 			if ((edges & Drawing.EdgeId.Top) != 0)
 			{
-				my = model.Top - widget.DockMargins.Top - margins.Top;
+				my = model.Top - widget.DockPadding.Top - margins.Top;
 				constraint.Add (y3, my, model.Left, my, model.Right, my, ConstraintBehavior.Priority.Low, AnchorStyles.Top);
 			}
 			

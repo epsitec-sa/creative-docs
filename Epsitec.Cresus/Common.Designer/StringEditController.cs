@@ -276,7 +276,7 @@ namespace Epsitec.Common.Designer
 			System.Diagnostics.Debug.Assert (this.window != null);
 			System.Diagnostics.Debug.Assert (this.tab_book != null);
 			
-			window.Root.DockMargins = new Drawing.Margins (8, 8, 8, 8);
+			window.Root.DockPadding = new Drawing.Margins (8, 8, 8, 8);
 			
 			widget.Dock   = DockStyle.Fill;
 			widget.Parent = page;

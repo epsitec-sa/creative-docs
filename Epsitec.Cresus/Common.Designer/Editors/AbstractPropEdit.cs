@@ -81,7 +81,7 @@ namespace Epsitec.Common.Designer.Editors
 		protected void CreateTabPage()
 		{
 			this.page = new TabPage ();
-			this.page.DockMargins = new Drawing.Margins (5, 5, 5, 5);
+			this.page.DockPadding = new Drawing.Margins (5, 5, 5, 5);
 			this.page.PreferHorizontalDockLayout = false;
 			
 			this.FillTabPage ();
