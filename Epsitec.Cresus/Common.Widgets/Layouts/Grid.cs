@@ -935,7 +935,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.SetupFrozenLinePositions ();
 			this.Invalidate ();
 			
-			this.designer.DraggingBegin (mouse);
+			this.designer.DragBegin (mouse);
 			
 			this.Update ();
 			this.WidgetDraggingMove (mouse);
@@ -947,7 +947,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			
 			mouse.Y -= this.current_height;
 			
-			this.designer_drag_rect = this.designer.GetDraggingRectangle (mouse);
+			this.designer_drag_rect = this.designer.GetDragRectangle (mouse);
 			this.designer_adjust_widget = null;
 			
 			int    col_count = this.designer.Widget.LayoutArg2 - this.designer.Widget.LayoutArg1;
@@ -970,7 +970,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				
 				if (insert)
 				{
-					Widget original = this.designer.WidgetOriginalSurface;
+					Widget original = this.designer.WidgetBeforeDrag;
 					
 					//	Evite d'insérer une ligne vide après (ou avant) si la ligne courante est adjacente
 					//	et qu'elle ne contient que notre élément; ce déplacement n'aurait aucun sens !
@@ -994,7 +994,7 @@ namespace Epsitec.Common.Widgets.Layouts
 					
 					this.designer_adjust_widget = this.designer.Widget;
 				}
-				else if (this.IsHorizontalRangeEmpty (line, col1, col2, this.designer.WidgetOriginalSurface))
+				else if (this.IsHorizontalRangeEmpty (line, col1, col2, this.designer.WidgetBeforeDrag))
 				{
 					System.Diagnostics.Debug.Assert (line+1 < this.frozen_lines_y.Length);
 					
@@ -1008,7 +1008,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				}
 			}
 			
-			this.designer.DraggingSetDropHint (rect_drop);
+			this.designer.DragSetDropHint (rect_drop);
 			
 			this.UpdateLineGap ();
 			this.UpdateGeometry ();
@@ -1016,7 +1016,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		protected void WidgetDraggingEnd(Drawing.Point mouse)
 		{
-			this.designer.DraggingEnd ();
+			this.designer.DragEnd ();
 			
 			//	Reconstruit la liste des lignes avec l'état d'origine. Cela va nous simplifier le
 			//	travail pour trouver les anciennes et nouvelles positions dans le Z-order :
