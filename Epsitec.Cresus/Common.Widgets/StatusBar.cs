@@ -57,11 +57,7 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
-			Drawing.Point     pos   = new Drawing.Point(0, 0);
-			
-			graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
-			graphics.RenderSolid(adorner.GetColorBorder());
+			adorner.PaintStatusBackground(graphics, rect, state);
 		}
 
 		#region Interface IBundleSupport

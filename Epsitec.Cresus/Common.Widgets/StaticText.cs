@@ -54,7 +54,6 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 			
 			if ( !this.BackColor.IsTransparent )
@@ -64,7 +63,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			this.textLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
-			adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state, dir);
+			adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state);
 		}
 	}
 }

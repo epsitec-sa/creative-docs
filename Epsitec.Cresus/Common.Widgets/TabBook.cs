@@ -470,17 +470,16 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
 
 			Drawing.Rectangle part = new Drawing.Rectangle();
 
 			part = rect;
 			part.Bottom = part.Top-this.TabHeight;
-			//adorner.PaintTabBand(graphics, part, state, dir);
+			//adorner.PaintTabBand(graphics, part, state, Direction.Down);
 			
 			part = rect;
 			part.Top -= this.TabHeight;
-			adorner.PaintTabFrame(graphics, part, state, dir);
+			adorner.PaintTabFrame(graphics, part, state, Direction.Down);
 		}
 		
 
