@@ -184,7 +184,7 @@ class CopyProject:
         return 0
 
     def check_no_copy(self, name):
-        for ext in ['.dll','.pdb','.scc','.user','.exe','.vspscc','.vssscc','.projdata','.suo','.projdata1','.mgb','.Exe','.Ini','.msi']:
+        for ext in ['.dll','.pdb','.scc','.user','.exe','.vspscc','.vssscc','.projdata','.suo','.projdata1','.mgb','.Exe','.Ini','.msi','.load']:
             if name.endswith(ext):
                 return 1
 
@@ -192,6 +192,9 @@ class CopyProject:
 
 
     def copy_file(self, path, name, force_copy = 0):
+        if path.find('.svn') > -1:
+            return 0
+		
         if path.find(self.src_root) > -1:
             src_path = path
             src_name = src_path + "\\" + name

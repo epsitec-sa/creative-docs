@@ -381,7 +381,6 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
-                <Folder RelPath = "Widgets\Helpers\" />
             </Include>
         </Files>
     </CSHARP>

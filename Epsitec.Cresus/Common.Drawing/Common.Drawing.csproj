@@ -262,7 +262,6 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
-                <Folder RelPath = "Null\" />
                 <File
                     RelPath = "Renderers\Gradient.cs"
                     SubType = "Code"

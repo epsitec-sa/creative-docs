@@ -723,6 +723,14 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\RulerListFix.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\RulerListNum.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\TableEdition.icon"
                     BuildAction = "EmbeddedResource"
                 />
