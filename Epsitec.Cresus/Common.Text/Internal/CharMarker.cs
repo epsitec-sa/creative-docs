@@ -204,6 +204,11 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public static ulong ExtractStyleAndSettings(ulong code)
+		{
+			return code & 0xffffffff00000000ul;
+		}
+		
 		public static int GetStyleIndex(ulong code)
 		{
 			return (int)((code >> 32) & 0x000000000003FFFFul);

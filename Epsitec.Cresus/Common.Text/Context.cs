@@ -53,7 +53,7 @@ namespace Epsitec.Common.Text
 		
 		public void GetFont(ulong code, out OpenType.Font font, out double font_size)
 		{
-			code &= 0xffffffff00000000ul;
+			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
 			long current_style_version = this.style_list.InternalStyleTable.Version;
 			
