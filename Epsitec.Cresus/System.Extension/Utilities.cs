@@ -366,5 +366,98 @@ namespace System
 			
 			return args;
 		}
+
+		public static string[] Split(string text, string separator)
+		{
+			//	Comme ci-dessus, avec une chaîne de caractères comme séparateur
+			//	Tous texte entre guillemets ou dans un tag est sauté.
+
+			if (separator.Length == 0)
+			{
+				throw new System.ArgumentException (string.Format ("Empty separator for split: {0}.", text));
+			}
+
+			if (text.IndexOf (separator) < 0)
+			{
+				//	Optimisation pour le cas le plus fréquent : il n'y a qu'un seul élément
+				//	et aucun séparateur.
+				
+				return new string[1] { text };
+			}
+			
+			const int max = 50;
+			int[] sep_pos = new int[max];
+			int arg_count = 1;
+
+			SplitState state  = SplitState.Normal;
+			int        depth  = 0;
+			bool       escape = false;
+			char	   sep	  = separator[0];
+			
+			for (int i = 0; i <= text.Length - separator.Length; i++)
+			{
+				char c = text[i];
+				
+				if (escape)
+				{
+					escape = false;
+					continue;
+				}
+				
+				switch (state)
+				{
+					case SplitState.Normal:
+					switch (c)
+					{
+						case '\"':	state = SplitState.DoubleQuote; break;
+						case '\'':	state = SplitState.SingleQuote; break;
+						case '<':	depth++;						break;
+						case '>':	depth--;						break;
+						case '\\':	escape = true;					break;
+							
+						default:
+							if ((depth == 0) && (c == sep))
+							{
+								if (text.Substring (i, separator.Length) != separator) break;
+								sep_pos[arg_count] = i;
+								arg_count++;
+								if (arg_count >= max-1)
+								{
+									throw new System.ArgumentException (string.Format ("Text too complex to split: {0}.", text));
+								}
+								i += separator.Length-1;
+							}
+							break;
+					}
+					break;
+				
+					case SplitState.SingleQuote:
+						if (c == '\'')
+						{
+							state = SplitState.Normal;
+						}
+						break;
+					
+					case SplitState.DoubleQuote:
+						if (c == '\"')
+						{
+							state = SplitState.Normal;
+						}
+						break;
+				}
+			}
+			
+			sep_pos[0]         = -separator.Length;
+			sep_pos[arg_count] = text.Length;
+			
+			string[] args = new string[arg_count];
+			
+			for (int i = 0; i < arg_count; i++)
+			{
+				args[i] = text.Substring (sep_pos[i]+separator.Length, sep_pos[i+1]-sep_pos[i]-separator.Length);
+			}
+			
+			return args;
+		}
 	}
 }
