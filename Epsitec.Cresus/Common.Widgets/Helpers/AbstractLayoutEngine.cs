@@ -80,6 +80,7 @@ namespace Epsitec.Common.Widgets.Helpers
 				panel.LayoutChanged   += new EventHandler (this.HandlePanelLayoutChanged);
 				panel.ChildrenChanged += new EventHandler (this.HandlePanelChildrenChanged);
 				panel.PreparePaint    += new EventHandler (this.HandlePanelPreparePaint);
+				panel.LayoutUpdate    += new Epsitec.Common.Widgets.Layouts.UpdateEventHandler(this.HandlePanelLayoutUpdate);
 				
 				panel.SetEventPropagation (Widget.Propagate.ChildrenChanged, true,
 					/**/				   Widget.Setting.IncludeChildren);
@@ -95,6 +96,7 @@ namespace Epsitec.Common.Widgets.Helpers
 				panel.LayoutChanged   -= new EventHandler (this.HandlePanelLayoutChanged);
 				panel.ChildrenChanged -= new EventHandler (this.HandlePanelChildrenChanged);
 				panel.PreparePaint    -= new EventHandler (this.HandlePanelPreparePaint);
+				panel.LayoutUpdate    -= new Epsitec.Common.Widgets.Layouts.UpdateEventHandler(this.HandlePanelLayoutUpdate);
 			}
 		}
 		
@@ -129,6 +131,12 @@ namespace Epsitec.Common.Widgets.Helpers
 			//	est bien à jour.
 			
 			this.Validate ();
+		}
+		
+		protected void HandlePanelLayoutUpdate(object sender, Epsitec.Common.Widgets.Layouts.UpdateEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine ("Suppressed panel layout.");
+			e.Cancel = true;
 		}
 		
 		

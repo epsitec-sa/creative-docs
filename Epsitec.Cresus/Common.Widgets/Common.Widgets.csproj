@@ -661,7 +661,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Layouts\Events.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Layouts\Grid.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Layouts\LayoutInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
