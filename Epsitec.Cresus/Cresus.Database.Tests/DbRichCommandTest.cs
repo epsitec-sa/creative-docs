@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Database
 			
 			FbConnection connection = new FbConnection (@"User=sysdba;Password=masterkey;" +
 				/**/									@"DataSource=localhost;Database=C:\Program Files\Firebird15\Data\Epsitec\fiche.firebird;Port=3050;Dialect=3;Packet Size=8192;" +
-				/**/									@"ServerType=1;Charset=UNICODE_FSS;Role=;Pooling=false;Connection Lifetime=60;");
+				/**/									@"ServerType=1;Charset=UNICODE_FSS;Role=;Pooling=true;Connection Lifetime=10;");
 			
 			FbCommand    command    = connection.CreateCommand ();
 			
