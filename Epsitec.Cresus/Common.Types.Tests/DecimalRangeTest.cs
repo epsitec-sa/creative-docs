@@ -10,9 +10,9 @@ namespace Epsitec.Common.Types
 			DecimalRange range2 = new DecimalRange (0.0M, -1.0M);
 			DecimalRange range3 = new DecimalRange (0.0M, 1.0M, 0.05M);
 			
-			Assertion.AssertEquals (true,  range1.IsValid);
-			Assertion.AssertEquals (false, range2.IsValid);
-			Assertion.AssertEquals (true,  range3.IsValid);
+			Assert.AreEqual (true,  range1.IsValid);
+			Assert.AreEqual (false, range2.IsValid);
+			Assert.AreEqual (true,  range3.IsValid);
 		}
 		
 		[Test] public void CheckConstrain()
@@ -22,32 +22,32 @@ namespace Epsitec.Common.Types
 			DecimalRange range3 = new DecimalRange (0.0M, 100.0M, 4.00M);
 			DecimalRange range4 = new DecimalRange (-100.0M, 100.0M, 1.00M);
 			
-			Assertion.Assert (0.50M == range1.Constrain (0.50M));
-			Assertion.Assert (0.50M == range1.Constrain (0.501M));
-			Assertion.Assert (0.50M == range1.Constrain (0.496M));
-			Assertion.Assert (0.50M == range1.Constrain (0.495M));
-			Assertion.Assert (0.49M == range1.Constrain (0.494M));
+			Assert.IsTrue (0.50M == range1.Constrain (0.50M));
+			Assert.IsTrue (0.50M == range1.Constrain (0.501M));
+			Assert.IsTrue (0.50M == range1.Constrain (0.496M));
+			Assert.IsTrue (0.50M == range1.Constrain (0.495M));
+			Assert.IsTrue (0.49M == range1.Constrain (0.494M));
 			
-			Assertion.Assert (0.50M == range2.Constrain (0.50M));
-			Assertion.Assert (0.50M == range2.Constrain (0.52M));
-			Assertion.Assert (0.50M == range2.Constrain (0.475M));
-			Assertion.Assert (0.50M == range2.Constrain (0.52499M));
-			Assertion.Assert (0.45M == range2.Constrain (0.474M));
+			Assert.IsTrue (0.50M == range2.Constrain (0.50M));
+			Assert.IsTrue (0.50M == range2.Constrain (0.52M));
+			Assert.IsTrue (0.50M == range2.Constrain (0.475M));
+			Assert.IsTrue (0.50M == range2.Constrain (0.52499M));
+			Assert.IsTrue (0.45M == range2.Constrain (0.474M));
 			
-			Assertion.Assert (12.0M == range3.Constrain (13.0M));
-			Assertion.Assert (12.0M == range3.Constrain (10.0M));
-			Assertion.Assert (12.0M == range3.Constrain (13.999M));
-			Assertion.Assert (16.0M == range3.Constrain (14.0M));
-			Assertion.Assert ( 8.0M == range3.Constrain (9.9999M));
+			Assert.IsTrue (12.0M == range3.Constrain (13.0M));
+			Assert.IsTrue (12.0M == range3.Constrain (10.0M));
+			Assert.IsTrue (12.0M == range3.Constrain (13.999M));
+			Assert.IsTrue (16.0M == range3.Constrain (14.0M));
+			Assert.IsTrue ( 8.0M == range3.Constrain (9.9999M));
 			
-			Assertion.Assert ( 1.0M == range4.Constrain ( 0.500M));
-			Assertion.Assert ( 1.0M == range4.Constrain ( 1.499M));
-			Assertion.Assert ( 2.0M == range4.Constrain ( 1.500M));
-			Assertion.Assert ( 0.0M == range4.Constrain ( 0.499M));
-			Assertion.Assert ( 0.0M == range4.Constrain (-0.499M));
-			Assertion.Assert (-1.0M == range4.Constrain (-0.500M));
-			Assertion.Assert (-1.0M == range4.Constrain (-1.499M));
-			Assertion.Assert (-2.0M == range4.Constrain (-1.500M));
+			Assert.IsTrue ( 1.0M == range4.Constrain ( 0.500M));
+			Assert.IsTrue ( 1.0M == range4.Constrain ( 1.499M));
+			Assert.IsTrue ( 2.0M == range4.Constrain ( 1.500M));
+			Assert.IsTrue ( 0.0M == range4.Constrain ( 0.499M));
+			Assert.IsTrue ( 0.0M == range4.Constrain (-0.499M));
+			Assert.IsTrue (-1.0M == range4.Constrain (-0.500M));
+			Assert.IsTrue (-1.0M == range4.Constrain (-1.499M));
+			Assert.IsTrue (-2.0M == range4.Constrain (-1.500M));
 		}
 		
 		[Test] public void CheckConstrainToZero()
@@ -57,32 +57,32 @@ namespace Epsitec.Common.Types
 			DecimalRange range3 = new DecimalRange (0.0M, 100.0M, 4.00M);
 			DecimalRange range4 = new DecimalRange (-100.0M, 100.0M, 1.00M);
 			
-			Assertion.Assert (0.50M == range1.ConstrainToZero (0.50M));
-			Assertion.Assert (0.50M == range1.ConstrainToZero (0.501M));
-			Assertion.Assert (0.49M == range1.ConstrainToZero (0.496M));
-			Assertion.Assert (0.49M == range1.ConstrainToZero (0.495M));
-			Assertion.Assert (0.49M == range1.ConstrainToZero (0.494M));
+			Assert.IsTrue (0.50M == range1.ConstrainToZero (0.50M));
+			Assert.IsTrue (0.50M == range1.ConstrainToZero (0.501M));
+			Assert.IsTrue (0.49M == range1.ConstrainToZero (0.496M));
+			Assert.IsTrue (0.49M == range1.ConstrainToZero (0.495M));
+			Assert.IsTrue (0.49M == range1.ConstrainToZero (0.494M));
 			
-			Assertion.Assert (0.50M == range2.ConstrainToZero (0.50M));
-			Assertion.Assert (0.50M == range2.ConstrainToZero (0.52M));
-			Assertion.Assert (0.45M == range2.ConstrainToZero (0.475M));
-			Assertion.Assert (0.50M == range2.ConstrainToZero (0.52499M));
-			Assertion.Assert (0.45M == range2.ConstrainToZero (0.474M));
+			Assert.IsTrue (0.50M == range2.ConstrainToZero (0.50M));
+			Assert.IsTrue (0.50M == range2.ConstrainToZero (0.52M));
+			Assert.IsTrue (0.45M == range2.ConstrainToZero (0.475M));
+			Assert.IsTrue (0.50M == range2.ConstrainToZero (0.52499M));
+			Assert.IsTrue (0.45M == range2.ConstrainToZero (0.474M));
 			
-			Assertion.Assert (12.0M == range3.ConstrainToZero (13.0M));
-			Assertion.Assert ( 8.0M == range3.ConstrainToZero (10.0M));
-			Assertion.Assert (12.0M == range3.ConstrainToZero (13.999M));
-			Assertion.Assert (12.0M == range3.ConstrainToZero (14.0M));
-			Assertion.Assert ( 8.0M == range3.ConstrainToZero (9.9999M));
+			Assert.IsTrue (12.0M == range3.ConstrainToZero (13.0M));
+			Assert.IsTrue ( 8.0M == range3.ConstrainToZero (10.0M));
+			Assert.IsTrue (12.0M == range3.ConstrainToZero (13.999M));
+			Assert.IsTrue (12.0M == range3.ConstrainToZero (14.0M));
+			Assert.IsTrue ( 8.0M == range3.ConstrainToZero (9.9999M));
 			
-			Assertion.Assert ( 0.0M == range4.ConstrainToZero ( 0.500M));
-			Assertion.Assert ( 1.0M == range4.ConstrainToZero ( 1.499M));
-			Assertion.Assert ( 1.0M == range4.ConstrainToZero ( 1.500M));
-			Assertion.Assert ( 0.0M == range4.ConstrainToZero ( 0.499M));
-			Assertion.Assert ( 0.0M == range4.ConstrainToZero (-0.499M));
-			Assertion.Assert ( 0.0M == range4.ConstrainToZero (-0.500M));
-			Assertion.Assert (-1.0M == range4.ConstrainToZero (-1.499M));
-			Assertion.Assert (-1.0M == range4.ConstrainToZero (-1.500M));
+			Assert.IsTrue ( 0.0M == range4.ConstrainToZero ( 0.500M));
+			Assert.IsTrue ( 1.0M == range4.ConstrainToZero ( 1.499M));
+			Assert.IsTrue ( 1.0M == range4.ConstrainToZero ( 1.500M));
+			Assert.IsTrue ( 0.0M == range4.ConstrainToZero ( 0.499M));
+			Assert.IsTrue ( 0.0M == range4.ConstrainToZero (-0.499M));
+			Assert.IsTrue ( 0.0M == range4.ConstrainToZero (-0.500M));
+			Assert.IsTrue (-1.0M == range4.ConstrainToZero (-1.499M));
+			Assert.IsTrue (-1.0M == range4.ConstrainToZero (-1.500M));
 		}
 		
 		[Test] public void CheckPrecision()
@@ -92,15 +92,15 @@ namespace Epsitec.Common.Types
 			DecimalRange range3 = new DecimalRange (0.0M, 100.0M, 0.01M);
 			DecimalRange range4 = new DecimalRange (0.0M, 100.0M, 10.0M);
 			
-			Assertion.AssertEquals (50M,    range1.Constrain (50.0M));
-			Assertion.AssertEquals (50.0M,  range2.Constrain (50.0M));
-			Assertion.AssertEquals (50.00M, range3.Constrain (50.0M));
-			Assertion.AssertEquals (50M,    range4.Constrain (50.0M));
+			Assert.AreEqual (50M,    range1.Constrain (50.0M));
+			Assert.AreEqual (50.0M,  range2.Constrain (50.0M));
+			Assert.AreEqual (50.00M, range3.Constrain (50.0M));
+			Assert.AreEqual (50M,    range4.Constrain (50.0M));
 			
-			Assertion.AssertEquals (0M,     range1.Constrain (0.0M));
-			Assertion.AssertEquals (0.0M,   range2.Constrain (0.0M));
-			Assertion.AssertEquals (0.00M,  range3.Constrain (0.0M));
-			Assertion.AssertEquals (0M,     range4.Constrain (0.0M));
+			Assert.AreEqual (0M,     range1.Constrain (0.0M));
+			Assert.AreEqual (0.0M,   range2.Constrain (0.0M));
+			Assert.AreEqual (0.00M,  range3.Constrain (0.0M));
+			Assert.AreEqual (0M,     range4.Constrain (0.0M));
 		}
 		
 		[Test] public void CheckConvertToString()
@@ -110,15 +110,15 @@ namespace Epsitec.Common.Types
 			DecimalRange range3 = new DecimalRange (0.0M, 100.0M, 0.01M);
 			DecimalRange range4 = new DecimalRange (0.0M, 100.0M, 10.0M);
 			
-			Assertion.AssertEquals ("50",    range1.ConvertToString (50.0M));
-			Assertion.AssertEquals ("50.0",  range2.ConvertToString (50.0M));
-			Assertion.AssertEquals ("50.00", range3.ConvertToString (50.0M));
-			Assertion.AssertEquals ("50",    range4.ConvertToString (50.0M));
+			Assert.AreEqual ("50",    range1.ConvertToString (50.0M));
+			Assert.AreEqual ("50.0",  range2.ConvertToString (50.0M));
+			Assert.AreEqual ("50.00", range3.ConvertToString (50.0M));
+			Assert.AreEqual ("50",    range4.ConvertToString (50.0M));
 			
-			Assertion.AssertEquals ("0",     range1.ConvertToString (0.0M));
-			Assertion.AssertEquals ("0.0",   range2.ConvertToString (0.0M));
-			Assertion.AssertEquals ("0.00",  range3.ConvertToString (0.0M));
-			Assertion.AssertEquals ("0",     range4.ConvertToString (0.0M));
+			Assert.AreEqual ("0",     range1.ConvertToString (0.0M));
+			Assert.AreEqual ("0.0",   range2.ConvertToString (0.0M));
+			Assert.AreEqual ("0.00",  range3.ConvertToString (0.0M));
+			Assert.AreEqual ("0",     range4.ConvertToString (0.0M));
 		}
 	}
 }
