@@ -62,7 +62,7 @@ namespace Epsitec.Common.Dialogs
 			button.Command       = "ValidateDialog";
 			button.TabIndex      = 2;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			button.Shortcut      = new Shortcut (KeyCode.Return);
+			button.Shortcut      = Widgets.Feel.Factory.Active.AcceptShortcut;
 			
 			button               = new Button (this.window.Root);
 			button.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 80 - 8, 16, 80, 24);
@@ -70,7 +70,7 @@ namespace Epsitec.Common.Dialogs
 			button.Command       = "QuitDialog";
 			button.TabIndex      = 3;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			button.Shortcut      = new Shortcut (KeyCode.Escape);
+			button.Shortcut      = Widgets.Feel.Factory.Active.CancelShortcut;
 			
 			this.window.FocusedWidget = body.FindTabWidget (Widget.TabNavigationDir.Forwards, Widget.TabNavigationMode.ActivateOnTab);
 		}
