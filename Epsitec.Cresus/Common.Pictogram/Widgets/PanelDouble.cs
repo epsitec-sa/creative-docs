@@ -14,7 +14,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
 
 			this.field = new TextFieldSlider(this);
-			this.field.TextChanged += new EventHandler(this.TextChanged);
+			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
 		}
 		
 		public PanelDouble(Widget embedder) : this()
@@ -26,7 +26,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			if ( disposing )
 			{
-				this.field.TextChanged -= new EventHandler(this.TextChanged);
+				this.field.TextChanged -= new EventHandler(this.HandleTextChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 		
 		// Une valeur a été changée.
-		private void TextChanged(object sender)
+		private void HandleTextChanged(object sender)
 		{
 			this.OnChanged();
 		}
