@@ -11,19 +11,11 @@ namespace Epsitec.Cresus.Widgets
 		
 		public AnchorStyles					Anchor
 		{
-			get
-			{
-				return this.anchor;
-			}
-			set
-			{
-				if (this.anchor != value)
-				{
-					this.anchor = value;
-				}
-			}
+			get { return this.anchor; }
+			set { this.anchor = value; }
 		}
 		
+#if false
 		public System.Drawing.Color			BackColor
 		{
 			get;
@@ -35,51 +27,58 @@ namespace Epsitec.Cresus.Widgets
 			get;
 			set;
 		}
+#endif
 		
 		
 		public float						Top
 		{
-			get { return this.y; }
-			set { this.SetBounds (0, value, 0, 0, BoundsSpecified.Y); }
+			get { return this.y1; }
+			set { this.SetBounds (this.x1, value, this.x2, this.y2); }
 		}
 		
 		public float						Left
 		{
-			get { return this.x; }
-			set { this.SetBounds (value, 0, 0, 0, BoundsSpecified.X); }
+			get { return this.x1; }
+			set { this.SetBounds (value, this.y1, this.x2, this.y2); }
 		}
 		
 		public float						Bottom
 		{
-			get { return this.y + this.height; }
-			set { this.SetBounds (0, 0, 0, value - this.y, BoundsSpecified.Height); }
+			get { return this.y2; }
+			set { this.SetBounds (this.x1, this.y1, this.x2, value); }
 		}
 		
 		public float						Right
 		{
-			get { return this.x + this.width; }
-			set { this.SetBounds (0, 0, value - this.x, 0, BoundsSpecified.Width); }
+			get { return this.x2; }
+			set { this.SetBounds (this.x1, this.y1, value, this.y2); }
 		}
 		
 		public System.Drawing.RectangleF	Bounds
 		{
-			get { return new System.Drawing.RectangleF (this.x, this.y, this.width, this.height); }
-			set { this.SetBounds (value.X, value.Y, value.Width, value.Height, BoundsSpecified.All); }
+			get { return new System.Drawing.RectangleF (this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1); }
+			set { this.SetBounds (value.X, value.Y, value.X + value.Width, value.Y + value.Height); }
 		}
 		
 		public System.Drawing.PointF		Location
 		{
-			get { return new System.Drawing.PointF (this.x, this.y); }
-			set { this.SetBounds (value.X, value.Y, 0, 0, BoundsSpecified.Location); }
+			get { return new System.Drawing.PointF (this.x1, this.y1); }
+			set { this.SetBounds (value.X, value.Y, value.X + this.x2 - this.x1, value.Y + this.y2 - this.y1); }
 		}
 		
 		public System.Drawing.SizeF			Size
 		{
-			get { return new System.Drawing.SizeF (this.width, this.height); }
-			set { this.SetBounds (0, 0, value.Width, value.Height, BoundsSpecified.Size); }
+			get { return new System.Drawing.SizeF (this.x2 - this.x1, this.y2 - this.y1); }
+			set { this.SetBounds (this.x1, this.y1, this.x1 + value.Width, this.y1 + value.Height); }
+		}
+		
+		public ClientInfo					Client
+		{
+			get { return this.client_info; }
 		}
 		
 		
+#if false
 		public bool							CanFocus
 		{
 			get;
@@ -115,6 +114,7 @@ namespace Epsitec.Cresus.Widgets
 		{
 			get;
 		}
+#endif
 
 		
 		public WidgetCollection				Children
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Widgets
 					{
 						if (this.children == null)
 						{
-							this.children = new WidgetCollection ();
+							this.children = this.CreateWidgetCollection ();
 						}
 					}
 				}
@@ -180,6 +180,7 @@ namespace Epsitec.Cresus.Widgets
 		{
 			get { return this.parent != null; }
 		}
+		
 		public string						Name
 		{
 			get
@@ -250,7 +251,7 @@ namespace Epsitec.Cresus.Widgets
 					}
 				}
 				
-				return 0;
+				return (char) 0;
 			}
 		}
 		
@@ -276,14 +277,14 @@ namespace Epsitec.Cresus.Widgets
 			{
 				if (mode != ChildFindMode.All)
 				{
-					if (mode & ChildFindMode.SkipDisabled)
+					if ((mode & ChildFindMode.SkipDisabled) != 0)
 					{
 						if (widget.IsEnabled == false)
 						{
 							continue;
 						}
 					}
-					else if (mode & ChildFindMode.SkipHidden)
+					else if ((mode & ChildFindMode.SkipHidden) != 0)
 					{
 						if (widget.IsVisible == false)
 						{
@@ -294,7 +295,7 @@ namespace Epsitec.Cresus.Widgets
 				
 				if (widget.HitTest (point))
 				{
-					if (mode & ChildFindMode.SkipTransparent)
+					if ((mode & ChildFindMode.SkipTransparent) != 0)
 					{
 						//	TODO: vérifier que le point en question n'est pas transparent
 					}
@@ -309,10 +310,10 @@ namespace Epsitec.Cresus.Widgets
 		
 		public virtual bool HitTest(System.Drawing.PointF point)
 		{
-			if ((point.X >= this.x) &&
-				(point.X <  this.x + this.width) &&
-				(point.Y >= this.y) &&
-				(point.Y <  this.y + this.height))
+			if ((point.X >= this.x1) &&
+				(point.X <  this.x2) &&
+				(point.Y >= this.y1) &&
+				(point.Y <  this.y2))
 			{
 				return true;
 			}
@@ -322,107 +323,116 @@ namespace Epsitec.Cresus.Widgets
 		
 		
 		
-		protected virtual void SetBounds(float x, float y, float width, float height, BoundsSpecified bounds)
+		protected virtual void SetBounds(float x1, float y1, float x2, float y2)
 		{
-			if (bounds != BoundsSpecified.All)
-			{
-				if ((bounds & BoundsSpecified.X) == 0)
-				{
-					x = this.x;
-				}
-				if ((bounds & BoundsSpecified.Y) == 0)
-				{
-					y = this.y;
-				}
-				if ((bounds & BoundsSpecified.Width) == 0)
-				{
-					width = this.width;
-				}
-				if ((bounds & BoundsSpecified.Height) == 0)
-				{
-					height = this.height;
-				}
-			}
-			if ((x == this.x) && (y == this.y) && (width == this.width) && (height == this.height))
+			if ((x1 == this.x1) && (y1 == this.y1) && (x2 == this.x2) && (y2 == this.y2))
 			{
 				return;
 			}
-			this.SetBoundsAndPerformLayout (x, y, width, height);
-		}
-		
-		protected virtual void SetBoundsAndPerformLayout(float x, float y, float width, float height)
-		{
-			LayoutInfo layout_info = new LayoutInfo (this.x, this.y, this.width, this.height);
 			
-			this.x = x;
-			this.y = y;
+			this.x1 = x1;
+			this.y1 = y1;
+			this.x2 = x2;
+			this.y2 = y2;
 			
-			this.width  = width;
-			this.height = height;
-			
-			this.PerformLayout (layout_info);
+			this.UpdateClientGeometry ();
 		}
 		
 		
-		protected virtual void PerformLayout(LayoutInfo layout_info)
+		protected virtual void UpdateClientGeometry()
 		{
-			lock (this)
+			System.Diagnostics.Debug.Assert (this.layout_info == null);
+			
+			this.layout_info = new LayoutInfo (this.client_info.width, this.client_info.height);
+			
+			try
 			{
-				if (this.layout_info == null)
-				{
-					this.layout_info = layout_info;
-				}
+				float dx = this.x2 - this.x1;
+				float dy = this.y2 - this.y1;
 				
-				if (this.layout_suspended > 0)
+				switch (this.client_info.angle)
 				{
-					this.internal_state |= InternalState.LayoutDirty;
-					return;
-				}
-				
-				try
-				{
-					//	TODO: gère le layout automatique du contenu...
-				}
-				finally
-				{
-					this.layout_info = null;
-					this.internal_state &= ~ InternalState.LayoutDirty;
-				}
-			}
-		}
-		
-		protected virtual void SuspendLayout()
-		{
-			lock (this)
-			{
-				this.layout_suspended++;
-			}
-		}
-		
-		protected virtual void ResumeLayout()
-		{
-			this.ResumeLayout (true);
-		}
-		
-		protected virtual void ResumeLayout(bool perform_layout)
-		{
-			lock (this)
-			{
-				if (this.layout_suspended > 0)
-				{
-					this.layout_suspended--;
+					case 0:
+					case 180:
+						this.client_info.SetSize (dx, dy);
+						break;
 					
-					if ((this.layout_suspended == 0) &&
-						(this.internal_state & InternalState.LayoutDirty) &&
-						(perform_layout))
-					{
-						System.Diagnostics.Debug.Assert (this.layout_info != null);
-						this.PerformLayout (this.layout_info);
-					}
+					case 90:
+					case 270:
+						this.client_info.SetSize (dy, dx);
+						break;
+					
+					default:
+						float cos = (float) System.Math.Cos (this.client_info.angle);
+						float sin = (float) System.Math.Sin (this.client_info.angle);
+						this.client_info.SetSize (cos*cos*dx + sin*sin*dy, sin*sin*dx + cos*cos*dy);
+						break;
 				}
+				
+				this.UpdateChildrenLayout ();
+			}
+			finally
+			{
+				this.layout_info = null;
 			}
 		}
 		
+		protected virtual void UpdateChildrenLayout()
+		{
+			System.Diagnostics.Debug.Assert (this.client_info != null);
+			System.Diagnostics.Debug.Assert (this.layout_info != null);
+			
+			if (this.HasChildren)
+			{
+				float width_diff  = this.client_info.width  - this.layout_info.OriginalWidth;
+				float height_diff = this.client_info.height - this.layout_info.OriginalHeight;
+				
+				foreach (Widget child in this.children)
+				{
+					AnchorStyles anchor_x = (AnchorStyles) child.Anchor & AnchorStyles.LeftAndRight;
+					AnchorStyles anchor_y = (AnchorStyles) child.Anchor & AnchorStyles.TopAndBottom;
+					
+					float x1 = child.x1;
+					float x2 = child.x2;
+					float y1 = child.y1;
+					float y2 = child.y2;
+					
+					switch (anchor_x)
+					{
+						case AnchorStyles.Left:							//	[x1] fixe à gauche
+							break;
+						case AnchorStyles.Right:						//	[x2] fixe à droite
+							x1 += width_diff;
+							break;
+						case AnchorStyles.None:							//	[x1] et [x2] mobiles (centré)
+							x1 += width_diff / 2.0f;
+							x2 += width_diff / 2.0f;
+							break;
+						case AnchorStyles.LeftAndRight:					//	[x1] fixe à gauche, [x2] fixe à droite
+							x2 += width_diff;
+							break;
+					}
+					
+					switch (anchor_y)
+					{
+						case AnchorStyles.Top:							//	[y1] fixe en haut
+							break;
+						case AnchorStyles.Bottom:						//	[y2] fixe en bas
+							y1 += height_diff;
+							break;
+						case AnchorStyles.None:							//	[y1] et [y2] mobiles (centré)
+							y1 += height_diff / 2.0f;
+							y2 += height_diff / 2.0f;
+							break;
+						case AnchorStyles.TopAndBottom:					//	[y1] fixe en haut, [y2] fixe en bas
+							y2 += height_diff;
+							break;
+					}
+					
+					child.SetBounds (x1, y1, x2, y2);
+				}
+			}
+		}
 		
 		
 		
@@ -436,20 +446,6 @@ namespace Epsitec.Cresus.Widgets
 		[System.Flags] protected enum InternalState
 		{
 			None		= 0,
-			LayoutDirty	= 1,
-		}
-		
-		[System.Flags] protected enum BoundsSpecified
-		{
-			None		= 0,
-			X			= 1,
-			Y			= 2,
-			Width		= 4,
-			Height		= 8,
-			
-			Location	= X+Y,
-			Size		= Width+Height,
-			All			= Location+Size
 		}
 		
 		[System.Flags] public enum ChildFindMode
@@ -466,9 +462,54 @@ namespace Epsitec.Cresus.Widgets
 			Top				= 1,
 			Bottom			= 2,
 			Left			= 4,
-			Right			= 8
+			Right			= 8,
+			
+			LeftAndRight	= Left + Right,
+			TopAndBottom	= Top + Bottom,
 		}
 		
+		public class ClientInfo
+		{
+			internal ClientInfo()
+			{
+			}
+			
+			internal void SetSize(float width, float height)
+			{
+				this.width  = width;
+				this.height = height;
+			}
+			
+			internal void SetAngle(int angle)
+			{
+				angle = angle % 360;
+				this.angle = (angle < 0) ? (short) (angle + 360) : (short) (angle);
+			}
+			
+			public float					Width
+			{
+				get { return this.width; }
+			}
+			
+			public float					Height
+			{
+				get { return this.height; }
+			}
+			
+			public System.Drawing.SizeF		Size
+			{
+				get { return new System.Drawing.SizeF (this.width, this.height); }
+			}
+			
+			public int						Angle
+			{
+				get { return this.angle; }
+			}
+			
+			internal float					width	= 0.0f;
+			internal float					height	= 0.0f;
+			internal short					angle	= 0;
+		}
 		
 		public class WidgetCollection : System.Collections.IList
 		{
@@ -592,6 +633,7 @@ namespace Epsitec.Cresus.Widgets
 			#endregion
 		}
 		
+		
 		protected class LayoutManager
 		{
 		}
@@ -599,39 +641,23 @@ namespace Epsitec.Cresus.Widgets
 		
 		protected class LayoutInfo
 		{
-			public LayoutInfo(float x, float y, float width, float height)
+			internal LayoutInfo(float width, float height)
 			{
-				this.x1 = x1;
-				this.y1 = y1;
-				this.x2 = x1 + width;
-				this.y2 = y1 + height;
+				this.width  = width;
+				this.height = height;
 			}
 			
-			public float					OriginalX1
-			{
-				get { return this.x; }
-				set { this.x = value; }
-			}
-			
-			public float					OriginalY1
-			{
-				get { return this.y; }
-				set { this.y = value; }
-			}
-			
-			public float					OriginalX2
+			public float					OriginalWidth
 			{
 				get { return this.width; }
-				set { this.width = value; }
 			}
 			
-			public float					OriginalY2
+			public float					OriginalHeight
 			{
 				get { return this.height; }
-				set { this.height = value; }
 			}
 			
-			private float					x1, y1, x2, y2;
+			private float					width, height;
 		}
 		
 		
@@ -639,13 +665,14 @@ namespace Epsitec.Cresus.Widgets
 		protected AnchorStyles				anchor;
 		protected System.Drawing.Color		back_color;
 		protected System.Drawing.Color		fore_color;
-		protected float						x, y, width, height;
+		protected float						x1, y1, x2, y2;
+		protected ClientInfo				client_info = new ClientInfo ();
+		
 		protected WidgetCollection			children;
 		protected Widget					parent;
 		protected string					name;
 		protected string					text;
 		protected LayoutInfo				layout_info;
-		protected int						layout_suspended;
 		protected InternalState				internal_state;
 	}
 }
