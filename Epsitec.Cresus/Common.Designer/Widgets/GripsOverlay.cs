@@ -515,17 +515,29 @@ namespace Epsitec.Common.Designer.Widgets
 				
 				if (this.drag_drop_active)
 				{
-					this.overlay.drop_behavior.ValidateWidgetDragging ();
-					
-					this.drag_drop_active = false;
-					this.target_parent    = this.target_widget.Parent;
-					
 					grip.Parent = this.overlay;
 					
-					if (this.target_parent == this.target_z_parent)
+					if (this.overlay.drop_behavior.ValidateWidgetDragging ())
 					{
-						this.target_widget.ZOrder = this.target_z_order;
+						//	C'est en ordre; le widget a été déposé dans son nouveau parent (ou dans
+						//	le même, auquel cas on veut préserver l'ordre parmi les frères et soeurs).
+						
+						this.target_parent = this.target_widget.Parent;
+						
+						if (this.target_parent == this.target_z_parent)
+						{
+							this.target_widget.ZOrder = this.target_z_order;
+						}
 					}
+					else
+					{
+						//	Le widget a été déposé hors de la fenêtre et il faut donc le mettre à la
+						//	poubelle...
+						
+						this.overlay.SelectedWidgets.Remove (this.target_widget);
+					}
+					
+					this.drag_drop_active = false;
 				}
 				
 				System.Diagnostics.Debug.Assert (grip != null);

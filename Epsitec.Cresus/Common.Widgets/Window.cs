@@ -269,6 +269,11 @@ namespace Epsitec.Common.Widgets
 			this.window.AnimateShow (animation, bounds);
 		}
 
+		public void AnimateHide(Animation animation)
+		{
+			this.window.AnimateHide (animation, this.WindowBounds);
+		}
+		
 		
 		
 		public WindowRoot						Root

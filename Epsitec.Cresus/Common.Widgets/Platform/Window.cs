@@ -201,6 +201,83 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
+		internal void AnimateHide(Animation animation, Drawing.Rectangle bounds)
+		{
+			Drawing.Rectangle b1;
+			Drawing.Rectangle b2;
+			Drawing.Point o1;
+			Drawing.Point o2;
+			
+			double start_alpha = this.alpha;
+			
+			this.WindowBounds = bounds;
+			this.MarkForRepaint ();
+			this.RefreshGraphics ();
+			
+			Animator animator;
+			
+			switch (animation)
+			{
+				case Animation.None:
+					this.Hide ();
+					return;
+				
+				case Animation.RollDown:
+					b1 = bounds;
+					b2 = new Drawing.Rectangle (bounds.Left, bounds.Top - 1, bounds.Width, 1);
+					o1 = new Drawing.Point (0, 0);
+					o2 = new Drawing.Point (0, 1 - bounds.Height);
+					break;
+				
+				case Animation.RollUp:
+					b1 = bounds;
+					b2 = new Drawing.Rectangle (bounds.Left, bounds.Bottom, bounds.Width, 1);
+					o1 = new Drawing.Point (0, 0);
+					o2 = new Drawing.Point (0, 0);
+					break;
+				
+				case Animation.RollRight:
+					b1 = bounds;
+					b2 = new Drawing.Rectangle (bounds.Left, bounds.Bottom, 1, bounds.Height);
+					o1 = new Drawing.Point (0, 0);
+					o2 = new Drawing.Point (1 - bounds.Width, 0);
+					break;
+				
+				case Animation.RollLeft:
+					b1 = bounds;
+					b2 = new Drawing.Rectangle (bounds.Right - 1, bounds.Bottom, 1, bounds.Height);
+					o1 = new Drawing.Point (0, 0);
+					o2 = new Drawing.Point (0, 0);
+					break;
+				
+				case Animation.FadeIn:
+				case Animation.FadeOut:
+					this.AnimateShow (animation, bounds);
+					return;
+				
+				default:
+					this.Hide ();
+					return;
+			}
+			
+			switch (animation)
+			{
+				case Animation.RollDown:
+				case Animation.RollUp:
+				case Animation.RollRight:
+				case Animation.RollLeft:
+					this.is_frozen = true;
+					this.WindowBounds = b1;
+					this.UpdateLayeredWindow ();
+					
+					animator = new Animator (SystemInformation.MenuAnimationRollTime);
+					animator.SetCallback (new BoundsOffsetCallback (this.AnimateWindowBounds), new AnimatorCallback (this.AnimateCleanup));
+					animator.SetValue (0, b1, b2);
+					animator.SetValue (1, o1, o2);
+					animator.Start ();
+					break;
+			}
+		}
 		
 		protected void AnimateWindowBounds(Drawing.Rectangle bounds, Drawing.Point offset)
 		{

@@ -18,7 +18,7 @@ namespace Epsitec.Common.Designer.Editors
 			this.builder_controller = builder_controller;
 			
 			this.hilite_adorner = new HiliteWidgetAdorner ();
-			this.grips_overlay  = new Widgets.GripsOverlay ();
+			this.grips_overlay  = new Widgets.GripsOverlay (this);
 			this.tab_o_overlay  = new Widgets.TabOrderOverlay ();
 			
 			this.grips_overlay.SelectedTarget    += new SelectionEventHandler (this.HandleSelectedTarget);
