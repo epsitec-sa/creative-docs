@@ -39,7 +39,24 @@ namespace Epsitec.Cresus.Database.Settings
 			}
 		}
 		
+		public bool								IsServer
+		{
+			get
+			{
+				return this.is_server;
+			}
+			set
+			{
+				if (this.is_server != value)
+				{
+					this.is_server = value;
+					this.NotifyPropertyChanged ("IsServer");
+				}
+			}
+		}
+		
 		
 		private int								client_id;
+		private bool							is_server;
 	}
 }

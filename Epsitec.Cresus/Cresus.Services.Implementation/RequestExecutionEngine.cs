@@ -16,6 +16,8 @@ namespace Epsitec.Cresus.Services
 		{
 			this.orchestrator    = this.engine.Orchestrator;
 			this.execution_queue = this.orchestrator.ExecutionQueue;
+			
+			System.Diagnostics.Debug.Assert (this.execution_queue.IsRunningAsServer);
 		}
 		
 		
@@ -69,7 +71,17 @@ namespace Epsitec.Cresus.Services
 				
 				if (key.Id.ClientId == client.ClientId)
 				{
-					list.Add (new RequestState (key.Id.Value, (int) this.execution_queue.GetRequestExecutionState (rows[i])));
+					Requests.ExecutionState state = this.execution_queue.GetRequestExecutionState (rows[i]);
+					
+					//	Comme l'exécution a été faite sur le serveur, il faut ajuster l'état d'exécution
+					//	de manière à refléter la réalité :
+					
+					if (state == Requests.ExecutionState.ExecutedByClient)
+					{
+						state = Requests.ExecutionState.ExecutedByServer;
+					}
+					
+					list.Add (new RequestState (key.Id.Value, (int) state));
 				}
 			}
 			

@@ -414,8 +414,13 @@ namespace Epsitec.Cresus.Database
 		[Test] /*[Ignore ("Temporary")]*/ public void Check11ServiceServer()
 		{
 			DbInfrastructure      infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
+			
+			infrastructure.LocalSettings.IsServer = true;
+			
 			Requests.Orchestrator orchestrator   = new Requests.Orchestrator (infrastructure);
 			Services.Engine       engine         = new Services.Engine (orchestrator, 1234);
+			
+			infrastructure.LocalSettings.IsServer = false;
 			
 			RequestsTest.CreateTestTable (infrastructure, "ServiceTest");
 			

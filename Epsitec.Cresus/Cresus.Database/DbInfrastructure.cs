@@ -177,6 +177,7 @@ namespace Epsitec.Cresus.Database
 				globals.PersistToBase (transaction);
 				
 				locals.ClientId = this.client_id;
+				locals.IsServer = false;			//	TODO: gérer IsServer
 				locals.PersistToBase (transaction);
 				
 				globals = null;

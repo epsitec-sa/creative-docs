@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Requests
 			this.infrastructure = infrastructure;
 			this.database       = (database == null) ? this.infrastructure.DefaultDbAbstraction : database;
 			this.enqueue_event  = new System.Threading.AutoResetEvent (false);
+			this.is_server      = this.infrastructure.LocalSettings.IsServer;
 			
 			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly, this.database))
 			{
@@ -50,6 +51,14 @@ namespace Epsitec.Cresus.Requests
 			get
 			{
 				return this.enqueue_event;
+			}
+		}
+		
+		public bool								IsRunningAsServer
+		{
+			get
+			{
+				return this.is_server;
 			}
 		}
 		
@@ -243,5 +252,6 @@ namespace Epsitec.Cresus.Requests
 		private System.Data.DataTable			queue_data_table;
 		
 		private System.Threading.AutoResetEvent	enqueue_event;
+		private bool							is_server;
 	}
 }
