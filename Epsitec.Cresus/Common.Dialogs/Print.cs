@@ -98,11 +98,31 @@ namespace Epsitec.Common.Dialogs
 			}
 		}
 		
+		public DialogResult						Result
+		{
+			get
+			{
+				return this.result;
+			}
+		}
+		
 		
 		#region IDialog Members
 		public void Show()
 		{
-			this.dialog.ShowDialog (this.owner == null ? null : this.owner.PlatformWindowObject as System.Windows.Forms.IWin32Window);
+			System.Windows.Forms.DialogResult result = this.dialog.ShowDialog (this.owner == null ? null : this.owner.PlatformWindowObject as System.Windows.Forms.IWin32Window);
+			
+			switch (result)
+			{
+				case System.Windows.Forms.DialogResult.OK:
+				case System.Windows.Forms.DialogResult.Yes:
+					this.result = DialogResult.Accept;
+					break;
+				
+				default:
+					this.result = DialogResult.Cancel;
+					break;
+			}
 		}
 		
 		public Common.Widgets.Window	Owner
@@ -144,5 +164,6 @@ namespace Epsitec.Common.Dialogs
 		Common.Widgets.Window					owner;
 		System.Windows.Forms.PrintDialog		dialog;
 		private Printing.PrintDocument			document;
+		private DialogResult					result = DialogResult.None;
 	}
 }
