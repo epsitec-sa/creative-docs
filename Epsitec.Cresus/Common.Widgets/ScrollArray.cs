@@ -390,6 +390,22 @@ namespace Epsitec.Common.Widgets
 			return this.column_widths[column];
 		}
 		
+		public double GetColumnOffset(int column)
+		{
+			System.Diagnostics.Debug.Assert (this.column_widths != null);
+			System.Diagnostics.Debug.Assert (column > -1);
+			System.Diagnostics.Debug.Assert (column < this.column_widths.Length);
+			
+			double offset = 0;
+			
+			for (int i = 0; i < column; i++)
+			{
+				offset += this.column_widths[i];
+			}
+			
+			return offset;
+		}
+		
 		
 		public virtual string GetCellText(int row, int column)
 		{
@@ -888,19 +904,20 @@ invalid:	row    = -1;
 			this.ShowRow (mode, this.edition_row);
 		}
 		
-		public void ShowRow(ScrollArrayShowMode mode, int show_row)
+		public void ShowRow(ScrollArrayShowMode mode, int row)
 		{
-			if ((show_row == -1) ||
+			if ((row == -1) ||
 				(this.is_mouse_down))
 			{
 				return;
 			}
 			
-			int row    = this.ToVirtualRow (show_row);
 			int top    = this.first_virtvis_row;
 			int first  = top;
 			int num    = System.Math.Min (this.n_fully_visible_rows, this.max_rows);
-			int height = (show_row == this.edition_row) ? this.edition_add_rows+1 : 1;
+			int height = (row == this.edition_row) ? this.edition_add_rows+1 : 1;
+			
+			row = this.ToVirtualRow (row);
 			
 			switch (mode)
 			{
@@ -935,6 +952,72 @@ invalid:	row    = -1;
 				
 				Message.ResetButtonDownCounter ();
 			}
+		}
+		
+		public void ShowColumn(ScrollArrayShowMode mode, int column)
+		{
+			if ((column == -1) ||
+				(this.is_mouse_down))
+			{
+				return;
+			}
+			
+			column = System.Math.Max (column, 0);
+			column = System.Math.Min (column, this.max_columns-1);
+			
+			double dx = this.GetColumnWidth (column);
+			double ox = this.GetColumnOffset (column);
+			double x1 = ox - this.offset;
+			double x2 = ox + dx - this.offset;
+			double min_x = 0;
+			double max_x = this.table_bounds.Width;
+			double offset = this.offset;
+			
+			switch (mode)
+			{
+				case ScrollArrayShowMode.Extremity:
+					
+					if (x2 > max_x)
+					{
+						//	La colonne dépasse à droite, on ajuste l'offset pour que la colonne
+						//	soit alignée sur son bord droit; ceci peut être corrigé ensuite si
+						//	du coup la colonne dépasse à gauche.
+						
+						x2 = max_x;
+						x1 = max_x - dx;
+					}
+					if (x1 < min_x)
+					{
+						//	La colonne dépasse à gauche, on ajuste l'offset pour que la colonne
+						//	soit juste visible.
+						
+						x1 = 0;
+						x2 = dx;
+					}
+					break;
+				
+				case ScrollArrayShowMode.Center:
+					
+					x1 = (max_x - min_x - dx) / 2;
+					x2 = x1 + dx;
+					break;
+			}
+			
+			offset = ox - x1;
+			
+			if (this.offset != offset)
+			{
+				this.offset = offset;
+				this.RefreshContents ();
+				
+				Message.ResetButtonDownCounter ();
+			}
+		}
+		
+		public void ShowCell(ScrollArrayShowMode mode, int row, int column)
+		{
+			this.ShowRow (mode, row);
+			this.ShowColumn (mode, column);
 		}
 
 		

@@ -116,19 +116,19 @@ namespace Epsitec.Common.Widgets
 					return false;
 				}
 				
-				Widget.TabNavigationMode mode = Widget.TabNavigationMode.Passive;
-				Widget.TabNavigationDir  dir  = Widget.TabNavigationDir.None;
+				TabNavigationMode mode = TabNavigationMode.Passive;
+				TabNavigationDir  dir  = TabNavigationDir.None;
 				
 				switch (shortcut.KeyCode)
 				{
 					case KeyCode.Tab:
-						mode = Widget.TabNavigationMode.ActivateOnTab;
-						dir  = Message.State.IsShiftPressed ? Widget.TabNavigationDir.Backwards : Widget.TabNavigationDir.Forwards;
+						mode = TabNavigationMode.ActivateOnTab;
+						dir  = Message.State.IsShiftPressed ? TabNavigationDir.Backwards : TabNavigationDir.Forwards;
 						break;
 				}
 				
-				if ((mode != Widget.TabNavigationMode.Passive) &&
-					(dir != Widget.TabNavigationDir.None))
+				if ((mode != TabNavigationMode.Passive) &&
+					(dir != TabNavigationDir.None))
 				{
 					//	Navigue dans la hiérarchie...
 					
@@ -136,7 +136,14 @@ namespace Epsitec.Common.Widgets
 					
 					if (find != null)
 					{
-						find.SetFocused (true);
+						if (find != focused)
+						{
+							if (focused.AboutToLoseFocus (dir, mode) &&
+								find.AboutToGetFocus (dir, mode))
+							{
+								find.SetFocused (true);
+							}
+						}
 					}
 				}
 				

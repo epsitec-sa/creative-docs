@@ -39,6 +39,61 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate ();
 		}
 		
+		public void ReloadEdition()
+		{
+			this.CancelEdition (false);
+		}
+		
+		public void CancelEdition()
+		{
+			this.CancelEdition (true);
+		}
+		
+		public void ValidateEdition()
+		{
+			this.ValidateEdition (true);
+		}
+		
+		
+		public virtual void CancelEdition(bool finished)
+		{
+			if (this.EditionIndex > -1)
+			{
+				string[] values = this.GetRowTexts (this.edition_row);
+				
+				for (int i = 0; i < this.max_columns; i++)
+				{
+					this.edit_widgets[i].Text = values[i];
+				}
+				
+				if (finished)
+				{
+					this.EditionIndex = -1;
+				}
+			}
+		}
+		
+		public virtual void ValidateEdition(bool finished)
+		{
+			if (this.EditionIndex > -1)
+			{
+				string[] values = new string[this.edit_widgets.Length];
+				
+				for (int i = 0; i < this.edit_widgets.Length; i++)
+				{
+					values[i] = this.edit_widgets[i].Text;
+				}
+				
+				this.SetRowTexts (this.edit_active, values);
+				
+				if (finished)
+				{
+					this.EditionIndex = -1;
+				}
+			}
+		}
+
+		
 		protected override void UpdateColumnCount()
 		{
 			base.UpdateColumnCount ();
@@ -59,14 +114,34 @@ namespace Epsitec.Common.Widgets
 					if (widgets[i] == null)
 					{
 						widgets[i] = new TextFieldMulti (this.edit_line);
+						widgets[i].Index = i;
 						widgets[i].TabIndex = i;
 						widgets[i].TabNavigation = TabNavigationMode.ActivateOnTab;
+						widgets[i].Focused += new EventHandler (this.HandleEditArrayFocused);
 					}
 				}
 				
 				this.edit_widgets = widgets;
 			}
 		}
+		
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				for (int i = 0; i < this.max_columns; i++)
+				{
+					this.edit_widgets[i].Focused -= new EventHandler (this.HandleEditArrayFocused);
+					this.edit_widgets[i] = null;
+				}
+				
+				this.max_columns  = 0;
+				this.edit_widgets = null;
+			}
+			
+			base.Dispose (disposing);
+		}
+
 		
 		protected override void UpdateScrollView()
 		{
@@ -75,10 +150,12 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle bounds = this.GetRowBounds (this.edition_row);
 			
 			if ((this.edit_bounds != bounds) ||
-				(this.edit_offset != this.offset))
+				(this.edit_offset != this.offset) ||
+				(this.edit_width  != this.total_width))
 			{
 				this.edit_bounds = bounds;
-				this.edit_offset = offset;
+				this.edit_offset = this.offset;
+				this.edit_width  = this.total_width;
 				
 				if (this.edit_bounds.IsValid)
 				{
@@ -120,29 +197,9 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.edition_row != this.edit_active)
 			{
-				if (this.edit_active > -1)
-				{
-					string[] values = new string[this.edit_widgets.Length];
-					
-					for (int i = 0; i < this.edit_widgets.Length; i++)
-					{
-						values[i] = this.edit_widgets[i].Text;
-					}
-					
-					this.SetRowTexts (this.edit_active, values);
-				}
-				
+				this.ValidateEdition (false);
 				this.edit_active = this.edition_row;
-				
-				if (this.edition_row > -1)
-				{
-					string[] values = this.GetRowTexts (this.edition_row);
-					
-					for (int i = 0; i < this.max_columns; i++)
-					{
-						this.edit_widgets[i].Text = values[i];
-					}
-				}
+				this.ReloadEdition ();
 			}
 		}
 		
@@ -163,6 +220,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		private void HandleEditArrayFocused(object sender)
+		{
+			Widget widget = sender as Widget;
+			
+			int row    = this.edition_row;
+			int column = widget.Index;
+			
+			this.ShowCell (ScrollArrayShowMode.Extremity, row, column);
+		}
+		
+		
 		protected class EditWidget : Widget
 		{
 			public EditWidget(EditArray host)
@@ -172,6 +240,7 @@ namespace Epsitec.Common.Widgets
 				this.SetEmbedder (this.host);
 				this.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
 			}
+			
 			
 			protected override bool ProcessTabChildrenExit(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 			{
@@ -202,6 +271,22 @@ namespace Epsitec.Common.Widgets
 				return true;
 			}
 			
+			protected override void ProcessMessage(Message message, Drawing.Point pos)
+			{
+				if (message.Type == MessageType.KeyPress)
+				{
+					if (message.KeyCode == KeyCode.Escape)
+					{
+						this.host.CancelEdition ();
+						message.Consumer = this;
+						return;
+					}
+				}
+				
+				base.ProcessMessage (message, pos);
+			}
+
+			
 			protected EditArray					host;
 		}
 		
@@ -211,5 +296,6 @@ namespace Epsitec.Common.Widgets
 		protected EditWidget					edit_line    = null;
 		protected Drawing.Rectangle				edit_bounds  = Drawing.Rectangle.Empty;
 		protected double						edit_offset  = 0;
+		protected double						edit_width   = 0;
 	}
 }

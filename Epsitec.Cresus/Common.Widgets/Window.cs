@@ -801,9 +801,21 @@ namespace Epsitec.Common.Widgets
 						
 						if ((consumer.AutoFocus) &&
 							(consumer.IsFocused == false) &&
-							(consumer.CanFocus))
+							(consumer.CanFocus) &&
+							(consumer != this.focused_widget))
 						{
-							this.FocusedWidget = consumer;
+							//	On va réaliser un changement de focus. Mais pour cela, il faut que le widget
+							//	ayant le focus actuellement, ainsi que le widget candidat pour l'obtention du
+							//	focus soient d'accord...
+							
+							if ((this.focused_widget == null) ||
+								(this.focused_widget.AboutToLoseFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive)))
+							{
+								if (consumer.AboutToGetFocus (Widget.TabNavigationDir.None, Widget.TabNavigationMode.Passive))
+								{
+									this.FocusedWidget = consumer;
+								}
+							}
 						}
 						
 						if (message.IsLeftButton)
