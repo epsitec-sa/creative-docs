@@ -1143,7 +1143,10 @@ namespace Epsitec.Common.Widgets.Platform
 					return false;
 				}
 				
-				this.DispatchMessage (message);
+				Widgets.Window  w_window = Message.State.LastWindow;
+				Platform.Window p_window = (w_window == null) ? this : w_window.PlatformWindow;
+				
+				p_window.DispatchMessage (message);
 				
 				return true;
 			}

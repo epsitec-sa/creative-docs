@@ -209,6 +209,11 @@ namespace Epsitec.Common.Widgets
 						this.CloseCombo();
 						message.Swallowed = true;
 					}
+					if ( feel.TestNavigationKey(message) )
+					{
+						this.CloseCombo();
+						Message.DefineLastWindow (this.Window);
+					}
 					break;
 				
 				case MessageType.MouseDown:

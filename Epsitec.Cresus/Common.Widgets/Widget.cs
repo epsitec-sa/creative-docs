@@ -437,7 +437,7 @@ namespace Epsitec.Common.Widgets
 					
 					this.Invalidate ();
 					
-					LayoutStyles dock_old = this.layout;
+					LayoutStyles dock_old = this.layout & LayoutStyles.MaskDock;
 					LayoutStyles dock_new = value & LayoutStyles.MaskDock;
 					
 					if (((dock_old == LayoutStyles.DockLeft) && (dock_new == LayoutStyles.DockRight)) ||
@@ -3942,7 +3942,8 @@ namespace Epsitec.Common.Widgets
 						(sibling.IsEnabled) &&
 						(sibling.IsVisibleFlagSet))
 					{
-						if (sibling is Types.IReadOnly)
+						if (((sibling.TabNavigation & TabNavigationMode.SkipIfReadOnly) != 0) &&
+							(sibling is Types.IReadOnly))
 						{
 							//	Saute aussi les widgets qui déclarent être en lecture seule. Ils ne
 							//	sont pas intéressants pour une navigation clavier :
@@ -5639,6 +5640,7 @@ namespace Epsitec.Common.Widgets
 			
 			ForwardToChildren	= 0x00010000,		//	transmet aux widgets enfants
 			ForwardOnly			= 0x00020000,		//	utilisé avec ForwardToChilden: ne prend pas le focus soi-même
+			SkipIfReadOnly		= 0x00040000,		//	saute si 'read-only'
 			
 			ForwardTabActive	= ActivateOnTab | ForwardToChildren,
 			ForwardTabPassive	= ActivateOnTab | ForwardToChildren | ForwardOnly,
