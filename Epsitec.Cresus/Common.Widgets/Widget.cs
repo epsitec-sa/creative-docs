@@ -115,7 +115,7 @@ namespace Epsitec.Common.Widgets
 			this.minSize = this.DefaultMinSize;
 			this.maxSize = this.DefaultMaxSize;
 			
-			Widget.aliveWidgets.Add (new System.WeakReference (this));
+			Widget.alive_widgets.Add (new System.WeakReference (this));
 		}
 		
 		public Widget(Widget embedder) : this()
@@ -212,7 +212,7 @@ namespace Epsitec.Common.Widgets
 			{
 				System.Collections.ArrayList alive = new System.Collections.ArrayList ();
 				
-				foreach (System.WeakReference weak_ref in Widget.aliveWidgets)
+				foreach (System.WeakReference weak_ref in Widget.alive_widgets)
 				{
 					if (weak_ref.IsAlive)
 					{
@@ -220,7 +220,7 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 				
-				Widget.aliveWidgets = alive;
+				Widget.alive_widgets = alive;
 				return alive.Count;
 			}
 		}
@@ -233,7 +233,7 @@ namespace Epsitec.Common.Widgets
 				
 				int i = 0;
 				
-				foreach (System.WeakReference weak_ref in Widget.aliveWidgets)
+				foreach (System.WeakReference weak_ref in Widget.alive_widgets)
 				{
 					if (weak_ref.IsAlive)
 					{
@@ -993,7 +993,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual Window			Window
+		public virtual Window				Window
 		{
 			get
 			{
@@ -1560,6 +1560,20 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public override string ToString()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			buffer.Append (this.GetType ().Name);
+			this.BuildCommandName (buffer);
+			buffer.Append (@".""");
+			buffer.Append (this.Text);
+			buffer.Append (@"""");
+			
+			return buffer.ToString ();
+		}
+		
+		
 		protected void SetEntered(bool entered)
 		{
 			if (this.IsEntered != entered)
@@ -1569,7 +1583,8 @@ namespace Epsitec.Common.Widgets
 				
 				if (entered)
 				{
-					Widget.enteredWidgets.Add (this);
+					Widget.ExitWidgetsNotParentOf (this);
+					Widget.entered_widgets.Add (this);
 					this.widget_state |= WidgetState.Entered;
 					
 					System.Diagnostics.Debug.Assert ((this.parent == null) || (this.parent.IsEntered) || (this.parent == this.RootParent));
@@ -1580,7 +1595,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					Widget.enteredWidgets.Remove (this);
+					Widget.entered_widgets.Remove (this);
 					this.widget_state &= ~ WidgetState.Entered;
 					
 					//	Il faut aussi supprimer les éventuels enfants encore marqués comme 'entered'.
@@ -1589,9 +1604,9 @@ namespace Epsitec.Common.Widgets
 					
 					int i = 0;
 					
-					while (i < Widget.enteredWidgets.Count)
+					while (i < Widget.entered_widgets.Count)
 					{
-						Widget candidate = Widget.enteredWidgets[i] as Widget;
+						Widget candidate = Widget.entered_widgets[i] as Widget;
 						
 						if (candidate.Parent == this)
 						{
@@ -1625,6 +1640,35 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected static void ExitWidgetsNotParentOf(Widget widget)
+		{
+			int i = 0;
+			
+			while (i < Widget.entered_widgets.Count)
+			{
+				Widget candidate = Widget.entered_widgets[i] as Widget;
+				
+				if (widget.IsAncestor (candidate) == false)
+				{
+					//	Ce candidat n'est pas un ancêtre (parent direct ou indirect) du widget
+					//	considéré; il faut donc changer son état Entered pour refléter le fait
+					//	que le candidat n'a plus la souris :
+					
+					candidate.SetEntered (false);
+					
+					//	Note: le fait de changer l'état du candidat va modifier la liste des
+					//	widgets sur laquelle on est en train d'itérer. On reprend donc, par
+					//	précaution, l'itération au début...
+					
+					i = 0;
+				}
+				else
+				{
+					i++;
+				}
+			}
+		}
+		
 		public void SetEmbedder(Widget embedder)
 		{
 			this.Parent = embedder;
@@ -1634,15 +1678,15 @@ namespace Epsitec.Common.Widgets
 		
 		public static void UpdateEntered(Window window, Message message)
 		{
-			int index = Widget.enteredWidgets.Count;
+			int index = Widget.entered_widgets.Count;
 			
 			while (index > 0)
 			{
 				index--;
 				
-				if (index < Widget.enteredWidgets.Count)
+				if (index < Widget.entered_widgets.Count)
 				{
-					Widget widget = Widget.enteredWidgets[index] as Widget;
+					Widget widget = Widget.entered_widgets[index] as Widget;
 					Widget.UpdateEntered (window, widget, message);
 				}
 			}
@@ -2751,7 +2795,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void PaintHandler(Drawing.Graphics graphics, Drawing.Rectangle repaint)
 		{
-//			System.Diagnostics.Debug.WriteLine ("Paint: " + this.GetType ().Name + " " + this.Bounds.ToString () + " oy=" + this.client_info.oy);
+//			System.Diagnostics.Debug.WriteLine ("Paint: " + this.ToString () + " " + this.Bounds.ToString () + " oy=" + this.client_info.oy);
 			
 			this.OnPreparePaint ();
 			
@@ -2759,7 +2803,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.DebugActive)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0}: clip {1}, widget {2}", this.Name, graphics.SaveClippingRectangle ().ToString (), this.MapClientToRoot (this.Client.Bounds).ToString ()));
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}: clip {1}, widget {2}", this.ToString (), graphics.SaveClippingRectangle ().ToString (), this.MapClientToRoot (this.Client.Bounds).ToString ()));
 			}
 			
 			if (this.PaintCheckClipping (repaint))
@@ -2847,7 +2891,7 @@ namespace Epsitec.Common.Widgets
 			if (this.DebugActive)
 			{
 				cycles = Drawing.Agg.Library.Cycles - cycles;
-				System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1} us @ 1.7GHz", this.Name, cycles/1700));
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1} us @ 1.7GHz", this.ToString (), cycles/1700));
 			}
 		}
 		
@@ -2990,7 +3034,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				System.Diagnostics.Debug.WriteLine ("Dispatching to invisible widget: '"  + this.Name + "', " + this.GetType ().Name);
+				System.Diagnostics.Debug.WriteLine ("Dispatching to invisible widget: "  + this.ToString ());
 			}
 		}
 		
@@ -3992,7 +4036,7 @@ namespace Epsitec.Common.Widgets
 		protected double						defaultFontHeight;
 		protected MouseCursor					mouseCursor;
 		
-		static System.Collections.ArrayList		enteredWidgets = new System.Collections.ArrayList ();
-		static System.Collections.ArrayList		aliveWidgets = new System.Collections.ArrayList ();
+		static System.Collections.ArrayList		entered_widgets = new System.Collections.ArrayList ();
+		static System.Collections.ArrayList		alive_widgets   = new System.Collections.ArrayList ();
 	}
 }
