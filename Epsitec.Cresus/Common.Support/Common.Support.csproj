@@ -293,11 +293,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Data\IChangedSource.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Data\IComponent.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

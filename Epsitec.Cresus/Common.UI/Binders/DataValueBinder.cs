@@ -101,21 +101,21 @@ namespace Epsitec.Common.UI.Binders
 		
 		protected void Attach()
 		{
-			Support.Data.IChangedSource changed_source = this.source as Support.Data.IChangedSource;
+			Types.IChange change_source = this.source as Types.IChange;
 			
-			if (changed_source != null)
+			if (change_source != null)
 			{
-				changed_source.Changed += new Support.EventHandler (this.HandleSourceValueChanged);
+				change_source.Changed += new Support.EventHandler (this.HandleSourceValueChanged);
 			}
 		}
 		
 		protected void Detach()
 		{
-			Support.Data.IChangedSource changed_source = this.source as Support.Data.IChangedSource;
+			Types.IChange change_source = this.source as Types.IChange;
 			
-			if (changed_source != null)
+			if (change_source != null)
 			{
-				changed_source.Changed -= new Support.EventHandler (this.HandleSourceValueChanged);
+				change_source.Changed -= new Support.EventHandler (this.HandleSourceValueChanged);
 			}
 		}
 		

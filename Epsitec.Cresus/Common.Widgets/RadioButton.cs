@@ -402,7 +402,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		#region GroupController Class
-		public class GroupController : Support.Data.IChangedSource
+		public class GroupController : Types.IChange
 		{
 			public GroupController(Widget parent, string group, int index)
 			{
@@ -459,7 +459,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			#region IChangedSource Members
+			#region IChange Members
 			public event Support.EventHandler	Changed;
 			#endregion
 			

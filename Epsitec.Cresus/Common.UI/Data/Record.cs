@@ -7,7 +7,7 @@ namespace Epsitec.Common.UI.Data
 	/// La classe Record décrit un ensemble de champs utilisés pour échanger des
 	/// données entre une application et son interface via mapper/binder/...
 	/// </summary>
-	public class Record : Types.AbstractDataCollection, Types.IDataFolder, Types.IDataGraph, Support.Data.IChangedSource
+	public class Record : Types.AbstractDataCollection, Types.IDataFolder, Types.IDataGraph, Types.IChange
 	{
 		public Record()
 		{

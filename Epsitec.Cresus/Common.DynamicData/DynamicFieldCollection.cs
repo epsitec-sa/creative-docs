@@ -7,7 +7,7 @@ namespace Epsitec.Common.DynamicData
 	/// La classe DynamicFieldCollection définit quels champs d'une table
 	/// sont calculés de manière dynamique.
 	/// </summary>
-	public class DynamicFieldCollection : System.Collections.ICollection
+	public class DynamicFieldCollection : System.Collections.ICollection, Types.IChange
 	{
 		public DynamicFieldCollection()
 		{
@@ -15,10 +15,25 @@ namespace Epsitec.Common.DynamicData
 		}
 		
 		
+		public IDynamicField					this[int index]
+		{
+			get
+			{
+				return this.list[index] as IDynamicField;
+			}
+		}
+		
+		
 		public void Add(IDynamicField field)
 		{
 			this.list.Add (field);
-			this.InvalidateCache ();
+			this.OnChanged ();
+		}
+		
+		public void Clear()
+		{
+			this.list.Clear ();
+			this.OnChanged ();
 		}
 		
 		
@@ -50,8 +65,8 @@ namespace Epsitec.Common.DynamicData
 			FieldMatchResult[] match_cols = this.AnalyseColumns (table);
 			FieldMatchResult[] match_rows = this.AnalyseRows (table);
 			
-			int[] analyse_rows = DynamicFieldCollection.FindPossibleIndexes (match_rows);
-			int[] analyse_cols = DynamicFieldCollection.FindPossibleIndexes (match_cols);
+			int[] analyse_rows = this.FindPossibleIndexes (match_rows);
+			int[] analyse_cols = this.FindPossibleIndexes (match_cols);
 			
 			bool refresh;
 			
@@ -103,7 +118,7 @@ namespace Epsitec.Common.DynamicData
 						
 						if (refresh)
 						{
-							analyse_cols = DynamicFieldCollection.FindPossibleIndexes (match_cols);
+							analyse_cols = this.FindPossibleIndexes (match_cols);
 						}
 						break;
 				}
@@ -158,33 +173,6 @@ namespace Epsitec.Common.DynamicData
 			}
 			
 			return results;
-		}
-		
-		
-		public static int[] FindPossibleIndexes(FieldMatchResult[] results)
-		{
-			int n = 0;
-			
-			for (int i = 0; i < results.Length; i++)
-			{
-				if (results[i] != FieldMatchResult.Zero)
-				{
-					n++;
-				}
-			}
-			
-			int[] array = new int[n];
-			n = 0;
-			
-			for (int i = 0; i < results.Length; i++)
-			{
-				if (results[i] != FieldMatchResult.Zero)
-				{
-					array[n++] = i;
-				}
-			}
-			
-			return array;
 		}
 		
 		
@@ -316,12 +304,52 @@ namespace Epsitec.Common.DynamicData
 			}
 		}
 		
+		private int[] FindPossibleIndexes(FieldMatchResult[] results)
+		{
+			int n = 0;
+			
+			for (int i = 0; i < results.Length; i++)
+			{
+				if (results[i] != FieldMatchResult.Zero)
+				{
+					n++;
+				}
+			}
+			
+			int[] array = new int[n];
+			n = 0;
+			
+			for (int i = 0; i < results.Length; i++)
+			{
+				if (results[i] != FieldMatchResult.Zero)
+				{
+					array[n++] = i;
+				}
+			}
+			
+			return array;
+		}
+		
 		
 		protected void InvalidateCache()
 		{
 			//	TODO: gérer un cache
 		}
 		
+		protected virtual void OnChanged()
+		{
+			this.InvalidateCache ();
+			
+			if (this.Changed != null)
+			{
+				this.Changed (this);
+			}
+		}
+		
+		
+		#region IChange Members
+		public event Support.EventHandler		Changed;
+		#endregion
 		
 		private System.Collections.ArrayList	list;
 	}
