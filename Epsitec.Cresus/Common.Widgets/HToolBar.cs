@@ -8,7 +8,6 @@ namespace Epsitec.Common.Widgets
 		public HToolBar()
 		{
 			this.direction     = Direction.Up;
-			this.iconDockStyle = DockStyle.Left;
 			
 			double m = (this.DefaultHeight-this.defaultButtonHeight)/2;
 			this.DockPadding = new Drawing.Margins(m, m, m, m);
@@ -26,6 +25,14 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return 28;
+			}
+		}
+		
+		public override DockStyle			DefaultIconDockStyle
+		{
+			get
+			{
+				return DockStyle.Left;
 			}
 		}
 	}

@@ -7,8 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public VToolBar()
 		{
-			this.direction     = Direction.Left;
-			this.iconDockStyle = DockStyle.Top;
+			this.direction = Direction.Left;
 			
 			double m = (this.DefaultWidth-this.defaultButtonWidth)/2;
 			this.DockPadding = new Drawing.Margins(m, m, m, m);
@@ -26,6 +25,14 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return 28;
+			}
+		}
+		
+		public override DockStyle			DefaultIconDockStyle
+		{
+			get
+			{
+				return DockStyle.Top;
 			}
 		}
 	}
