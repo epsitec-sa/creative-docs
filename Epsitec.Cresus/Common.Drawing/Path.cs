@@ -143,6 +143,49 @@ namespace Epsitec.Common.Drawing
 			this.CurveTo (s1, s2, p);
 		}
 		
+		
+		public void ArcTo(Point c, double rx, double ry, double a1, double a2, bool ccw)
+		{
+			this.ArcTo (c.X, c.Y, rx, ry, a1, a2, ccw);
+		}
+		
+		public void ArcTo(double x, double y, double rx, double ry, double a1, double a2, bool ccw)
+		{
+			this.ArcTo (x, y, rx, ry, a1, a2, ccw, this.default_zoom);
+		}
+		
+		public void ArcTo(double x, double y, double rx, double ry, double a1, double a2, bool ccw, double approximation_zoom)
+		{
+			this.CreateOnTheFly ();
+			AntiGrain.Path.AppendArc (this.agg_path, x, y, rx, ry, a1, a2, ccw, approximation_zoom, true);
+			
+			double ex = x + System.Math.Cos (a2) * rx;
+			double ey = y + System.Math.Sin (a2) * ry;
+			
+			this.current_point = new Point (ex, ey);
+		}
+		
+		public void Arc(Point c, double rx, double ry, double a1, double a2, bool ccw)
+		{
+			this.Arc (c.X, c.Y, rx, ry, a1, a2, ccw);
+		}
+		
+		public void Arc(double x, double y, double rx, double ry, double a1, double a2, bool ccw)
+		{
+			this.Arc (x, y, rx, ry, a1, a2, ccw, this.default_zoom);
+		}
+		
+		public void Arc(double x, double y, double rx, double ry, double a1, double a2, bool ccw, double approximation_zoom)
+		{
+			this.CreateOnTheFly ();
+			AntiGrain.Path.AppendArc (this.agg_path, x, y, rx, ry, a1, a2, ccw, approximation_zoom, false);
+			
+			double ex = x + System.Math.Cos (a2) * rx;
+			double ey = y + System.Math.Sin (a2) * ry;
+			
+			this.current_point = new Point (ex, ey);
+		}
+		
 		public void Close()
 		{
 			if (! this.is_empty)
