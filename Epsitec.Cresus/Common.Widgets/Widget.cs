@@ -430,6 +430,16 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.layout != value)
 				{
+					Drawing.Size size = this.Size;
+					
+					this.Invalidate ();
+					
+					if (this.layout != LayoutStyles.Manual)
+					{
+						this.x2 = this.x1 + this.DefaultWidth;
+						this.y2 = this.y1 + this.DefaultHeight;
+					}
+					
 					this.layout = value;
 					
 					if ((this.parent != null) &&
@@ -440,6 +450,13 @@ namespace Epsitec.Common.Widgets
 						//	de notre nouveau mode de docking.
 						
 						this.parent.UpdateChildrenLayout ();
+						
+						if (this.Size != size)
+						{
+							this.UpdateClientGeometry ();
+							this.OnSizeChanged ();
+						}
+						this.Invalidate ();
 					}
 				}
 			}
@@ -647,33 +664,74 @@ namespace Epsitec.Common.Widgets
 		public Drawing.Rectangle					Bounds
 		{
 			get { return new Drawing.Rectangle (this.x1, this.y1, this.x2 - this.x1, this.y2 - this.y1); }
-			set { this.SetBounds (value.X, value.Y, value.X + value.Width, value.Y + value.Height); }
+			set
+			{
+				if (this.Bounds != value)
+				{
+					this.SetBounds (value.X, value.Y, value.X + value.Width, value.Y + value.Height);
+				}
+			}
 		}
 		
 		
 		[Bundle]			public Drawing.Point	Location
 		{
 			get { return new Drawing.Point (this.x1, this.y1); }
-			set { this.SetBounds (value.X, value.Y, value.X + this.x2 - this.x1, value.Y + this.y2 - this.y1); }
+			set
+			{
+				if ((this.Location != value) &&
+					(this.Dock == DockStyle.None))
+				{
+					this.SetBounds (value.X, value.Y, value.X + this.x2 - this.x1, value.Y + this.y2 - this.y1);
+					
+					if (this.Layout != LayoutStyles.Manual)
+					{
+						this.ForceLayout ();
+					}
+				}
+			}
 		}
 		
 		[Bundle]			public Drawing.Size		Size
 		{
 			get { return new Drawing.Size (this.x2 - this.x1, this.y2 - this.y1); }
-			set { this.SetBounds (this.x1, this.y1, this.x1 + value.Width, this.y1 + value.Height); }
+			set
+			{
+				if (this.Size != value)
+				{
+					this.SetBounds (this.x1, this.y1, this.x1 + value.Width, this.y1 + value.Height);
+					
+					if (this.Layout != LayoutStyles.Manual)
+					{
+						this.ForceLayout ();
+					}
+				}
+			}
 		}
 		
 		
 		public double								Width
 		{
 			get { return this.x2 - this.x1; }
-			set { this.SetBounds (this.x1, this.y1, this.x1 + value, this.y2); }
+			set
+			{
+				if (this.Width != value)
+				{
+					this.SetBounds (this.x1, this.y1, this.x1 + value, this.y2);
+				}
+			}
 		}
 		
 		public double								Height
 		{
 			get { return this.y2 - this.y1; }
-			set { this.SetBounds (this.x1, this.y1, this.x2, this.y1 + value); }
+			set
+			{
+				if (this.Height != value)
+				{
+					this.SetBounds (this.x1, this.y1, this.x2, this.y1 + value);
+				}
+			}
 		}
 		
 		public ContentAlignment						Alignment

@@ -242,6 +242,12 @@ namespace Epsitec.Common.Drawing.Agg
 			this.transform.MultiplyByPostfix (Drawing.Transform.FromTranslation (ox, oy));
 			this.UpdateTransform ();
 		}
+		
+		public override void MergeTransform(Transform transform)
+		{
+			this.transform.MultiplyByPostfix (transform);
+			this.UpdateTransform ();
+		}
 
 		public override Point ApplyTransformDirect(Point pt)
 		{
