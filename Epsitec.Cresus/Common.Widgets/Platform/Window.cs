@@ -59,6 +59,13 @@ namespace Epsitec.Common.Widgets.Platform
 		internal void MakeFixedSizeWindow()
 		{
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
+			this.MaximizeBox     = false;
+			this.MinimizeBox     = false;
+			Window.DummyHandleEater (this.Handle);
+		}
+		
+		internal void MakeButtonlessWindow()
+		{
 			this.ControlBox      = false;
 			this.MaximizeBox     = false;
 			this.MinimizeBox     = false;

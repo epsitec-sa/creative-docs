@@ -62,23 +62,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.buttonStyle != value )
 				{
-					if ( this.buttonStyle == ButtonStyle.DefaultAccept ||
-						 this.buttonStyle == ButtonStyle.DefaultCancel )
-					{
-						this.Shortcut = null;
-					}
-					
 					this.buttonStyle = value;
-					
-					if ( this.buttonStyle == ButtonStyle.DefaultAccept )
-					{
-						this.Shortcut = Feel.Factory.Active.AcceptShortcut;
-					}
-					else if ( this.buttonStyle == ButtonStyle.DefaultCancel )
-					{
-						this.Shortcut = Feel.Factory.Active.CancelShortcut;
-					}
-					
 					this.Invalidate();
 				}
 			}
@@ -105,6 +89,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		protected override void OnShortcutChanged()
 		{
 			base.OnShortcutChanged ();
@@ -123,6 +108,32 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		protected override bool ProcessShortcut(Shortcut shortcut)
+		{
+			IFeel feel = Feel.Factory.Active;
+			
+			if ( this.buttonStyle == ButtonStyle.DefaultAccept )
+			{
+				if ( feel.AcceptShortcut.Match(shortcut) )
+				{
+					this.OnShortcutPressed ();
+					return true;
+				}
+			}
+			
+			if ( this.buttonStyle == ButtonStyle.DefaultCancel )
+			{
+				if ( feel.CancelShortcut.Match(shortcut) )
+				{
+					this.OnShortcutPressed ();
+					return true;
+				}
+			}
+			
+			return base.ProcessShortcut (shortcut);
+		}
+
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{

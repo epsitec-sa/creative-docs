@@ -219,20 +219,26 @@ namespace Epsitec.Common.Support
 				
 				for (int i = 0; i < assemblies.Length; i++)
 				{
-					string[] names = assemblies[i].GetManifestResourceNames ();
-					
-					for (int j = 0; j < names.Length; j++)
+					try
 					{
-						if (names[j] == res_name)
+						string[] names = assemblies[i].GetManifestResourceNames ();
+					
+						for (int j = 0; j < names.Length; j++)
 						{
-							assembly = assemblies[i];
+							if (names[j] == res_name)
+							{
+								assembly = assemblies[i];
+								break;
+							}
+						}
+					
+						if (assembly != null)
+						{
 							break;
 						}
 					}
-					
-					if (assembly != null)
+					catch
 					{
-						break;
 					}
 				}
 				

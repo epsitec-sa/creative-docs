@@ -190,7 +190,7 @@ namespace Epsitec.Common.Widgets
 				{
 					window = menu.Window;
 					
-					while ( window.IsOwned )
+					while ( window != null && window.IsOwned )
 					{
 						window = window.Owner;
 					}
