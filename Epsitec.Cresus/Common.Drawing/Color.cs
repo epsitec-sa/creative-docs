@@ -84,6 +84,11 @@ namespace Epsitec.Common.Drawing
 			get { return !this.is_empty && (this.a == 0.0); }
 		}
 		
+		public bool						IsOpaque
+		{
+			get { return !this.is_empty && (this.a == 1.0); }
+		}
+		
 		public bool						IsVisible
 		{
 			get { return !this.is_empty && (this.a != 0.0); }
