@@ -250,71 +250,71 @@ namespace Epsitec.Common.Tests
 
 #if true
 			VMenu fileMenu = new VMenu();
-			fileMenu.Name = "0";
-			fileMenu.InsertItem("open", "Ouvrir...", "Ctrl+O");
-			fileMenu.InsertItem("save", "Enregistrer...", "Ctrl+S");
-			fileMenu.InsertSep();
-			fileMenu.InsertItem("", "Options 1", "");
-			fileMenu.InsertItem("", "Options 2", "");
-			fileMenu.InsertSep();
-			fileMenu.InsertItem("", "Quitter", "");
+			fileMenu.Name = "0 (root menu)";
+			fileMenu.Items.Add(new MenuItem ("open", "open", "Ouvrir...", "Ctrl+O"));
+			fileMenu.Items.Add(new MenuItem ("save", "save", "Enregistrer...", "Ctrl+S"));
+			fileMenu.Items.Add(new MenuSeparator ());
+			fileMenu.Items.Add(new MenuItem ("opt1", "", "Options 1", ""));
+			fileMenu.Items.Add(new MenuItem ("opt2", "", "Options 2", ""));
+			fileMenu.Items.Add (new MenuSeparator ());
+			fileMenu.Items.Add(new MenuItem ("quit", "", "Quitter", ""));
 			fileMenu.AdjustSize();
 			fileMenu.Location = new Point(370, 70);
 			window.Root.Children.Add(fileMenu);
 
 			VMenu optMenu1 = new VMenu();
 			optMenu1.Name = "1a";
-			optMenu1.InsertItem("", "Reglages 1.A", "");
-			optMenu1.InsertItem("", "Reglages 1.B", "");
-			optMenu1.InsertItem("print", "Impression...", "");
-			optMenu1.InsertItem("open", "Fichiers...", "");
+			optMenu1.Items.Add(new MenuItem ("set1A", "", "Reglages 1.A", ""));
+			optMenu1.Items.Add(new MenuItem ("set1B", "", "Reglages 1.B", ""));
+			optMenu1.Items.Add(new MenuItem ("print", "print", "Impression...", ""));
+			optMenu1.Items.Add(new MenuItem ("open",  "open", "Fichiers...", ""));
 			optMenu1.AdjustSize();
-			fileMenu[3].Submenu = optMenu1;
+			fileMenu.Items[3].Submenu = optMenu1;
 
 			VMenu optMenu2 = new VMenu();
 			optMenu2.Name = "1b";
-			optMenu2.InsertItem("", "Reglages 2.A", "");
-			optMenu2.InsertItem("", "Reglages 2.B", "");
-			optMenu2.InsertItem("print", "Impression...", "");
-			optMenu2.InsertItem("open", "Fichiers...", "");
+			optMenu2.Items.Add(new MenuItem ("set2A", "", "Reglages 2.A", ""));
+			optMenu2.Items.Add(new MenuItem ("set2B", "", "Reglages 2.B", ""));
+			optMenu2.Items.Add(new MenuItem ("print", "print", "Impression...", ""));
+			optMenu2.Items.Add(new MenuItem ("open",  "open", "Fichiers...", ""));
 			optMenu2.AdjustSize();
-			fileMenu[4].Submenu = optMenu2;
+			fileMenu.Items[4].Submenu = optMenu2;
 
 			VMenu setupMenu1A = new VMenu();
 			setupMenu1A.Name = "2a";
-			setupMenu1A.InsertItem("", "Reglage 1.A.a", "");
-			setupMenu1A.InsertItem("", "Reglage 1.A.b", "");
-			setupMenu1A.InsertItem("", "Reglage 1.A.c", "");
-			setupMenu1A.InsertItem("", "Reglage 1.A.d", "");
+			setupMenu1A.Items.Add(new MenuItem ("set1Aa", "", "Reglage 1.A.a", ""));
+			setupMenu1A.Items.Add(new MenuItem ("set1Ab", "", "Reglage 1.A.b", ""));
+			setupMenu1A.Items.Add(new MenuItem ("set1Ac", "", "Reglage 1.A.c", ""));
+			setupMenu1A.Items.Add(new MenuItem ("set1Ad", "", "Reglage 1.A.d", ""));
 			setupMenu1A.AdjustSize();
-			optMenu1[0].Submenu = setupMenu1A;
+			optMenu1.Items[0].Submenu = setupMenu1A;
 
 			VMenu setupMenu1B = new VMenu();
 			setupMenu1B.Name = "2b";
-			setupMenu1B.InsertItem("", "Reglage 1.B.a", "");
-			setupMenu1B.InsertItem("", "Reglage 1.B.b", "");
-			setupMenu1B.InsertItem("", "Reglage 1.B.c", "");
-			setupMenu1B.InsertItem("", "Reglage 1.B.d", "");
+			setupMenu1B.Items.Add(new MenuItem ("set1Ba", "", "Reglage 1.B.a", ""));
+			setupMenu1B.Items.Add(new MenuItem ("set1Bb", "", "Reglage 1.B.b", ""));
+			setupMenu1B.Items.Add(new MenuItem ("set1Bc", "", "Reglage 1.B.c", ""));
+			setupMenu1B.Items.Add(new MenuItem ("set1Bd", "", "Reglage 1.B.d", ""));
 			setupMenu1B.AdjustSize();
-			optMenu1[1].Submenu = setupMenu1B;
+			optMenu1.Items[1].Submenu = setupMenu1B;
 
 			VMenu setupMenu2A = new VMenu();
 			setupMenu2A.Name = "2c";
-			setupMenu2A.InsertItem("", "Reglage 2.A.a", "");
-			setupMenu2A.InsertItem("", "Reglage 2.A.b", "");
-			setupMenu2A.InsertItem("", "Reglage 2.A.c", "");
-			setupMenu2A.InsertItem("", "Reglage 2.A.d", "");
+			setupMenu2A.Items.Add(new MenuItem ("set2Aa", "", "Reglage 2.A.a", ""));
+			setupMenu2A.Items.Add(new MenuItem ("set2Ab", "", "Reglage 2.A.b", ""));
+			setupMenu2A.Items.Add(new MenuItem ("set2Ac", "", "Reglage 2.A.c", ""));
+			setupMenu2A.Items.Add(new MenuItem ("set2Ad", "", "Reglage 2.A.d", ""));
 			setupMenu2A.AdjustSize();
-			optMenu2[0].Submenu = setupMenu2A;
+			optMenu2.Items[0].Submenu = setupMenu2A;
 
 			VMenu setupMenu2B = new VMenu();
 			setupMenu2B.Name = "2d";
-			setupMenu2B.InsertItem("", "Reglage 2.B.a", "");
-			setupMenu2B.InsertItem("", "Reglage 2.B.b", "");
-			setupMenu2B.InsertItem("", "Reglage 2.B.c", "");
-			setupMenu2B.InsertItem("", "Reglage 2.B.d", "");
+			setupMenu2B.Items.Add(new MenuItem ("set2Ba", "", "Reglage 2.B.a", ""));
+			setupMenu2B.Items.Add(new MenuItem ("set2Bb", "", "Reglage 2.B.b", ""));
+			setupMenu2B.Items.Add(new MenuItem ("set2Bc", "", "Reglage 2.B.c", ""));
+			setupMenu2B.Items.Add(new MenuItem ("set2Bd", "", "Reglage 2.B.d", ""));
 			setupMenu2B.AdjustSize();
-			optMenu2[1].Submenu = setupMenu2B;
+			optMenu2.Items[1].Submenu = setupMenu2B;
 #endif
 
 			window.FocusedWidget = a;
@@ -1235,13 +1235,13 @@ namespace Epsitec.Common.Tests
 			tb[1].SetEnabled(false);
 
 			VMenu fileMenu = new VMenu();
-			fileMenu.InsertItem("open", "Ouvrir...", "Ctrl+O");
-			fileMenu.InsertItem("save", "Enregistrer...", "Ctrl+S");
-			fileMenu.InsertSep();
-			fileMenu.InsertItem("", "Quitter", "");
+			fileMenu.Items.Add(new MenuItem ("open", "open", "Ouvrir...", "Ctrl+O"));
+			fileMenu.Items.Add(new MenuItem ("save", "save", "Enregistrer...", "Ctrl+S"));
+			fileMenu.Items.Add (new MenuSeparator ());
+			fileMenu.Items.Add(new MenuItem ("quit", "", "Quitter", ""));
 			fileMenu.AdjustSize();
 			fileMenu.Location = new Point(370, 70);
-			fileMenu[1].SetEnabled(false);
+			fileMenu.Items[1].SetEnabled(false);
 			window.Root.Children.Add(fileMenu);
 
 			window.Show();

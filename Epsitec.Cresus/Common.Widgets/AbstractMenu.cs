@@ -17,37 +17,211 @@ namespace Epsitec.Common.Widgets
 			Delay,
 			Quick,
 		}
+		
+		public class MenuItemCollection : System.Collections.IList
+		{
+			public MenuItemCollection(AbstractMenu menu)
+			{
+				this.menu = menu;
+				this.list = new System.Collections.ArrayList ();
+			}
+			
+			public MenuItem this[int index]
+			{
+				get
+				{
+					return this.list[index] as MenuItem;
+				}
+			}
+			
+			public MenuItem this[string name]
+			{
+				get
+				{
+					foreach (MenuItem item in this.list)
+					{
+						if (item.Name == name)
+						{
+							return item;
+						}
+					}
+					return null;
+				}
+			}
+			
+			public void Dispose()
+			{
+				System.Diagnostics.Debug.Assert (this.list.Count == 0);
+				
+				this.menu = null;
+				this.list = null;
+			}
+			
+			#region IList Members
+			public bool IsReadOnly
+			{
+				get
+				{
+					return false;
+				}
+			}
+
+			object System.Collections.IList.this[int index]
+			{
+				get
+				{
+					return this.list[index];
+				}
+				set
+				{
+					this.list[index] = value;
+				}
+			}
+
+			public void RemoveAt(int index)
+			{
+				this.list.RemoveAt (index);
+			}
+
+			public void Insert(int index, object value)
+			{
+				this.list.Insert (index, value);
+				this.HandleInsert (value as MenuItem);
+			}
+
+			public void Remove(object value)
+			{
+				this.HandleRemove (value as MenuItem);
+				this.list.Remove (value);
+			}
+
+			public bool Contains(object value)
+			{
+				return this.Contains (value);
+			}
+
+			public void Clear()
+			{
+				foreach (MenuItem item in this.list)
+				{
+					this.HandleRemove (item);
+				}
+				this.list.Clear ();
+			}
+
+			public int IndexOf(object value)
+			{
+				return this.list.IndexOf (value);
+			}
+
+			public int Add(object value)
+			{
+				int index = this.list.Add (value);
+				this.HandleInsert (value as MenuItem);
+				return index;
+			}
+
+			public bool IsFixedSize
+			{
+				get
+				{
+					return this.list.IsFixedSize;
+				}
+			}
+			#endregion
+			
+			#region ICollection Members
+			public bool IsSynchronized
+			{
+				get
+				{
+					return this.list.IsSynchronized;
+				}
+			}
+
+			public int Count
+			{
+				get
+				{
+					return this.list.Count;
+				}
+			}
+
+			public void CopyTo(System.Array array, int index)
+			{
+				this.list.CopyTo (array, index);
+			}
+
+			public object SyncRoot
+			{
+				get
+				{
+					return this.list.SyncRoot;
+				}
+			}
+
+			#endregion
+			
+			#region IEnumerable Members
+			public System.Collections.IEnumerator GetEnumerator()
+			{
+				return this.list.GetEnumerator ();
+			}
+			#endregion
+			
+			protected void HandleInsert(MenuItem item)
+			{
+				this.menu.Children.Add (item);
+				this.menu.isDirty = true;
+				
+				item.Pressed += new MessageEventHandler(this.menu.HandleCellPressed);
+				item.Entered += new MessageEventHandler(this.menu.HandleCellEntered);
+				item.Exited  += new MessageEventHandler(this.menu.HandleCellExited);
+			}
+			
+			protected void HandleRemove(MenuItem item)
+			{
+				item.Pressed -= new MessageEventHandler(this.menu.HandleCellPressed);
+				item.Entered -= new MessageEventHandler(this.menu.HandleCellEntered);
+				item.Exited  -= new MessageEventHandler(this.menu.HandleCellExited);
+				
+				this.menu.Children.Remove (item);
+				this.menu.isDirty = true;
+			}
+			
+			private System.Collections.ArrayList	list;
+			private AbstractMenu					menu;
+		}
+
 
 		protected AbstractMenu(MenuType type)
 		{
-			this.type = type;
+			this.items = new MenuItemCollection (this);
+			this.type  = type;
 			this.timer = new Timer();
 			this.timer.TimeElapsed += new EventHandler(this.HandleTimerTimeElapsed);
 		}
 
 		protected override void Dispose(bool disposing)
 		{
+			System.Diagnostics.Debug.WriteLine ("Disposing menu " + this.Name);
 			if ( disposing )
 			{
-				System.Diagnostics.Debug.WriteLine("Dispose Menu " + this.Text);
+				MenuItem[] items = new MenuItem[this.items.Count];
+				this.items.CopyTo (items, 0);
+				this.items.Clear ();
 				
-				for ( int i=0 ; i<this.array.Length ; i++ )
+				foreach (MenuItem item in items)
 				{
-					Widget widget = this.array[i];
-					MenuItem item = widget as MenuItem;
-					if ( item != null && item.Submenu != null )
-					{
-						item.Submenu.Dispose();
-					}
-					this.array[i].Dispose();
-					this.array[i] = null;
+					item.Dispose ();
 				}
 				
 				this.timer.TimeElapsed -= new EventHandler(this.HandleTimerTimeElapsed);
 				this.timer.Dispose();
+				this.items.Dispose();
 				
+				this.items = null;
 				this.timer = null;
-				this.array = null;
 			}
 			
 			base.Dispose(disposing);
@@ -94,109 +268,36 @@ namespace Epsitec.Common.Widgets
 		// Ajoute une case.
 		public int InsertItem(string iconName, string mainText, string shortKey)
 		{
-			MenuItem item = new MenuItem(this.type);
-			item.OnlyText = false;
-			item.IconName = iconName;
-			item.MainText = mainText;
-			item.ShortKey = shortKey;
-			return this.Insert(item);
+			string   name = this.items.Count.ToString ();
+			MenuItem item = new MenuItem(this.type, name, iconName, mainText, shortKey);
+			return this.items.Add(item);
 		}
 
 		// Ajoute une case.
-		public int InsertItem(string name)
+		public int InsertItem(string text)
 		{
-			MenuItem item = new MenuItem(this.type);
-			item.OnlyText = true;
-			item.MainText = name;
-			return this.Insert(item);
+			string   name = this.items.Count.ToString ();
+			MenuItem item = new MenuItem(this.type, name, text);
+			return this.items.Add(item);
 		}
 
 		// Ajoute un séparateur -----.
 		public int InsertSep()
 		{
 			MenuItem item = new MenuItem(this.type);
-			item.Separator = true;
-			return this.Insert(item);
+			return this.items.Add(item);
 		}
 
-		// Ajoute une case.
-		public int Insert(MenuItem cell)
-		{
-			int rank = this.totalUsed;
-			this.AllocateArray(rank+1);
-			this.array[rank].Dispose();
-			this.array[rank] = cell;
-			this.Children.Add(cell);
-			this.totalUsed ++;
-			this.isDirty = true;
-
-			cell.Pressed += new MessageEventHandler(this.HandleCellPressed);
-			cell.Entered += new MessageEventHandler(this.HandleCellEntered);
-			cell.Exited  += new MessageEventHandler(this.HandleCellExited);
-
-			return rank;
-		}
-
-		// Modifie une case.
-		public void Modify(int rank, MenuItem cell)
-		{
-			this.AllocateArray(rank+1);
-			this.array[rank].Dispose();
-			this.array[rank] = cell;
-			this.Children.Add(cell);
-			this.isDirty = true;
-		}
 
 		// Objet occupant une case.		
-		public MenuItem this[int rank]
+		public MenuItemCollection Items
 		{
 			get
 			{
-				System.Diagnostics.Debug.Assert(this.array[rank] != null);
-				return this.array[rank];
-			}
-			
-			set
-			{
-				System.Diagnostics.Debug.Assert(this.array[rank] != null);
-				if ( value == null )  value = new MenuItem(this.type);
-				
-				this.array[rank] = value;
+				return this.items;
 			}
 		}
 
-		// Spécifie le nombre de cases qui seront contenues dans la barre.
-		// Cet appel est facultatif.
-		public void SetSize(int max)
-		{
-			this.AllocateArray(max);
-		}
-
-		// Dimensionne le tableau des cases si nécessaire.
-		protected void AllocateArray(int max)
-		{
-			if ( this.array == null )
-			{
-				this.array = new MenuItem[0];  // alloue un tableau vide
-			}
-
-			if ( max <= this.array.Length )  return;  // déjà assez grand ?
-
-			MenuItem[] newArray = new MenuItem[max];  // nouveau tableau
-			for ( int i=0 ; i<max ; i++ )
-			{
-				if ( i < this.array.Length )
-				{
-					newArray[i] = this.array[i];
-				}
-				else
-				{
-					newArray[i] = new MenuItem(this.type);
-					newArray[i].Size = new Drawing.Size(0, 0);
-				}
-			}
-			this.array = newArray;
-		}
 
 		// Ajuste les dimensions du menu selon son contenu.
 		// Il faut appeler AdjustSize après avoir fini tous les InsertItem.
@@ -214,14 +315,14 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				double maxWidth = 0;
-				foreach ( MenuItem cell in this.array )
+				foreach ( MenuItem cell in this.items )
 				{
 					maxWidth = System.Math.Max(maxWidth, cell.IconWidth);
 				}
 				this.iconWidth = maxWidth;
 
 				Drawing.Size size = new Drawing.Size(0, 0);
-				foreach ( MenuItem cell in this.array )
+				foreach ( MenuItem cell in this.items )
 				{
 					cell.IconWidth = maxWidth;
 					Drawing.Size rs = cell.RequiredSize;
@@ -245,13 +346,13 @@ namespace Epsitec.Common.Widgets
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
-
-			if ( this.array == null )  return;
+			
+			if ( this.items == null ) return;
 
 			if ( this.type == MenuType.Horizontal )
 			{
 				double x = this.margin;
-				foreach ( MenuItem cell in this.array )
+				foreach ( MenuItem cell in this.items )
 				{
 					Drawing.Size rs = cell.RequiredSize;
 					Drawing.Rectangle rect = new Drawing.Rectangle();
@@ -267,7 +368,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.type == MenuType.Vertical )
 			{
 				double y = this.Height-this.margin;
-				foreach ( MenuItem cell in this.array )
+				foreach ( MenuItem cell in this.items )
 				{
 					Drawing.Size rs = cell.RequiredSize;
 					y -= rs.Height;
@@ -322,7 +423,7 @@ namespace Epsitec.Common.Widgets
 						{
 							parent.CloseSubmenu();
 							parent.OtherMenuItem(-1);
-							MenuItem item = parent[parent.RetSelectMenuItem()];
+							MenuItem item = parent.Items[parent.RetSelectMenuItem()];
 							if ( parent.OpenSubmenu(item, true) )
 							{
 								parent.submenu.SelectMenuItem(0);
@@ -347,14 +448,14 @@ namespace Epsitec.Common.Widgets
 					else
 					{
 						int sel = this.RetSelectMenuItem();
-						if ( sel == -1 || this[sel].Submenu == null )
+						if ( sel == -1 || this.items[sel].Submenu == null )
 						{
 							while ( parent.parentMenu != null )  parent = parent.parentMenu;
 							if ( parent.type == MenuType.Horizontal )
 							{
 								parent.CloseSubmenu();
 								parent.OtherMenuItem(1);
-								MenuItem item = parent[parent.RetSelectMenuItem()];
+								MenuItem item = parent.Items[parent.RetSelectMenuItem()];
 								if ( parent.OpenSubmenu(item, true) )
 								{
 									parent.submenu.SelectMenuItem(0);
@@ -393,18 +494,18 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				for ( int i=0 ; i<this.totalUsed ; i++ )
+				for ( int i=0 ; i<this.items.Count ; i++ )
 				{
 					sel += dir;
-					if ( sel >= this.totalUsed )
+					if ( sel >= this.items.Count )
 					{
 						sel = 0;
 					}
 					if ( sel < 0 )
 					{
-						sel = this.totalUsed-1;
+						sel = this.items.Count-1;
 					}
-					if ( !this[sel].Separator )  break;
+					if ( !this.items[sel].Separator )  break;
 				}
 			}
 			this.SelectMenuItem(sel);
@@ -415,7 +516,7 @@ namespace Epsitec.Common.Widgets
 		{
 			int sel = this.RetSelectMenuItem();
 			if ( sel == -1 )  return false;
-			if ( !this.OpenSubmenu(this[sel], true) )  return false;
+			if ( !this.OpenSubmenu(this.items[sel], true) )  return false;
 			this.submenu.SelectMenuItem(0);
 			return true;
 		}
@@ -430,10 +531,10 @@ namespace Epsitec.Common.Widgets
 		// Retourne la case sélectionnée dans un menu.
 		protected int RetSelectMenuItem()
 		{
-			int max = this.totalUsed;
+			int max = this.items.Count;
 			for ( int i=0 ; i<max ; i++ )
 			{
-				MenuItem mi = this[i];
+				MenuItem mi = this.items[i];
 				if ( mi.ItemType != MenuItemType.Deselect )  return i;
 			}
 			return -1;
@@ -442,10 +543,10 @@ namespace Epsitec.Common.Widgets
 		// Sélectionne une (et une seule) case dans un menu.
 		protected void SelectMenuItem(int rank)
 		{
-			int max = this.totalUsed;
+			int max = this.items.Count;
 			for ( int i=0 ; i<max ; i++ )
 			{
-				MenuItem mi = this[i];
+				MenuItem mi = this.items[i];
 				if ( i == rank )  // case sélectionnée ?
 				{
 					mi.ItemType = this.isActive ? MenuItemType.Select : MenuItemType.Parent;
@@ -460,10 +561,10 @@ namespace Epsitec.Common.Widgets
 		// Sélectionne une (et une seule) case dans un menu.
 		protected void SelectMenuItem(MenuItem item)
 		{
-			int max = this.totalUsed;
+			int max = this.items.Count;
 			for ( int i=0 ; i<max ; i++ )
 			{
-				MenuItem mi = this[i];
+				MenuItem mi = this.items[i];
 				if ( mi == item )  // case sélectionnée ?
 				{
 					mi.ItemType = this.isActive ? MenuItemType.Select : MenuItemType.Parent;
@@ -618,7 +719,7 @@ namespace Epsitec.Common.Widgets
 		// Cherche dans quel item d'un menu est la souris.
 		protected MenuItem SearchItem(Drawing.Point mouse, AbstractMenu menu)
 		{
-			foreach ( MenuItem cell in menu.array )
+			foreach ( MenuItem cell in menu.items )
 			{
 				Drawing.Point pos;
 				pos = this.MapScreenToClient(cell, mouse);
@@ -636,7 +737,8 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.parentMenu == null )
 				{
-					WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
+					System.Diagnostics.Debug.WriteLine ("Filter removed in " + this.Name);
+					WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
 					this.menuDeveloped = TypeDeveloped.Close;
 					this.CloseSubmenu();
 				}
@@ -648,7 +750,8 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				WindowFrame.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
+				System.Diagnostics.Debug.WriteLine ("Filter added in " + this.Name);
+				WindowFrame.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
 				this.menuDeveloped = TypeDeveloped.Quick;
 				MenuItem item = (MenuItem)sender;
 				this.parentMenu = null;
@@ -658,7 +761,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void HandlerMessageFilter(object sender, Message message)
+		private void MessageFilter(object sender, Message message)
 		{
 			if ( this.menuDeveloped == TypeDeveloped.Close )  return;
 			WindowFrame window = sender as WindowFrame;
@@ -832,9 +935,7 @@ namespace Epsitec.Common.Widgets
 		protected bool					isDirty;
 		protected bool					isActive = true;  // dernier menu (feuille)
 		protected double				margin = 2;
-		protected MenuItem[]			array;			// tableau des cases
-		protected int					totalUsed;
-		protected TypeDeveloped			menuDeveloped = TypeDeveloped.Close;
+		protected MenuItemCollection	items;
 		protected WindowFrame			window;
 		protected Timer					timer;
 		protected AbstractMenu			submenu;
@@ -843,5 +944,7 @@ namespace Epsitec.Common.Widgets
 		protected double				iconWidth;
 		protected Drawing.Rectangle		parentRect;
 		protected MenuItem				delayedMenuItem;
+		
+		protected TypeDeveloped			menuDeveloped = TypeDeveloped.Close;
 	}
 }
