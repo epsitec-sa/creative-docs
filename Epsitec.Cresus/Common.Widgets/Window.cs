@@ -342,7 +342,10 @@ namespace Epsitec.Common.Widgets
 		
 		public Widget							FocusedWidget
 		{
-			get { return this.focused_widget; }
+			get
+			{
+				return this.focused_widget;
+			}
 			set
 			{
 				if (this.focused_widget != value)
@@ -363,6 +366,8 @@ namespace Epsitec.Common.Widgets
 					{
 						new_focus.SetFocused (true);
 					}
+					
+					this.OnFocusedWidgetChanged ();
 				}
 			}
 		}
@@ -1016,6 +1021,15 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected virtual void OnFocusedWidgetChanged()
+		{
+			if (this.FocusedWidgetChanged != null)
+			{
+				this.FocusedWidgetChanged (this);
+			}
+		}
+		
+		
 		#region QueueItem class
 		protected class QueueItem
 		{
@@ -1516,6 +1530,8 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				WindowFocused;
 		public event EventHandler				WindowDefocused;
 		public event EventHandler				WindowDisposed;
+		
+		public event EventHandler				FocusedWidgetChanged;
 		
 		public static event MessageHandler		MessageFilter;
 		public static event EventHandler		ApplicationActivated;
