@@ -481,8 +481,22 @@ namespace Epsitec.Common.Widgets
 		
 		public MouseCursor							MouseCursor
 		{
-			get { return this.mouse_cursor == null ? MouseCursor.Default : this.mouse_cursor; }
-			set { this.mouse_cursor = value; }
+			get
+			{
+				return this.mouse_cursor == null ? MouseCursor.Default : this.mouse_cursor;
+			}
+			set
+			{
+				if (this.mouse_cursor != value)
+				{
+					this.mouse_cursor = value;
+					
+					if (this.IsEntered)
+					{
+						this.Window.MouseCursor = this.MouseCursor;
+					}
+				}
+			}
 		}
 		
 		public virtual Drawing.Color				BackColor
@@ -3788,6 +3802,16 @@ namespace Epsitec.Common.Widgets
 				{
 					window.QueueCommand (this);
 				}
+			}
+		}
+		
+		public virtual void ExecuteCommand(string command)
+		{
+			Window window = this.Window;
+			
+			if (window != null)
+			{
+				window.QueueCommand (this, command, this.CommandDispatcher);
 			}
 		}
 		
