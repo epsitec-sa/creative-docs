@@ -194,16 +194,10 @@ namespace Epsitec.Common.Designer.Widgets
 		
 		protected virtual void AttachWidget(Widget widget)
 		{
-			if (this.Parent == null)
-			{
-				this.Parent = widget.Window.Root;
-				this.Bounds = this.Parent.Client.Bounds;
-				this.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
-			}
-			else
-			{
-				System.Diagnostics.Debug.Assert (this.Parent == widget.Window.Root);
-			}
+			this.Parent = null;
+			this.SetEmbedder (widget);
+			this.Bounds = this.Parent.Client.Bounds;
+			this.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 		}
 		
 		protected virtual void DetachWidget(Widget widget)
