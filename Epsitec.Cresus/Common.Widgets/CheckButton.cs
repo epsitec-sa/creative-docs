@@ -1,5 +1,11 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
+	using BundleAttribute  = Support.BundleAttribute;
+	using ContentAlignment = Drawing.ContentAlignment;
+	
 	/// <summary>
 	/// La classe CheckButton réalise un bouton cochable.
 	/// </summary>
@@ -10,35 +16,21 @@ namespace Epsitec.Common.Widgets
 			this.InternalState |= InternalState.AutoToggle;
 		}
 		
-		public CheckButton(Widget embedder) : this()
+		public CheckButton(Widget embedder) : this ()
 		{
 			this.SetEmbedder(embedder);
 		}
 
 		
-		// Retourne la hauteur standard.
-		public override double DefaultHeight
+		public override double					DefaultHeight
 		{
 			get
 			{
-				return this.DefaultFontHeight+1;
+				return System.Math.Ceiling (this.DefaultFontHeight + 1);
 			}
 		}
 
-		protected override void UpdateTextLayout()
-		{
-			if ( this.TextLayout != null )
-			{
-				Drawing.Point offset = this.LabelOffset;
-				double dx = this.Client.Width - offset.X;
-				double dy = this.Client.Height;
-				this.TextLayout.Alignment = this.Alignment;
-				this.TextLayout.LayoutSize = new Drawing.Size(dx, dy);
-			}
-		}
-
-		// Retourne l'alignement par défaut d'un bouton.
-		public override Drawing.ContentAlignment DefaultAlignment
+		public override ContentAlignment		DefaultAlignment
 		{
 			get
 			{
@@ -46,46 +38,68 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public Drawing.Point					LabelOffset
+		{
+			get
+			{
+				return new Drawing.Point (CheckButton.CheckWidth, 0);
+			}
+		}
+		
+		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			Drawing.Rectangle rect = base.GetShapeBounds();
+			Drawing.Rectangle rect = base.GetShapeBounds ();
 			
-			if ( this.TextLayout != null )
+			if (this.TextLayout != null)
 			{
-				Drawing.Rectangle text = this.TextLayout.StandardRectangle;
-				text.Offset(this.LabelOffset);
-				text.Inflate(1, 1);
-				rect.MergeWith(text);
+				Drawing.Rectangle text_rect = this.TextLayout.StandardRectangle;
+				
+				text_rect.Offset (this.LabelOffset);
+				text_rect.Inflate (1, 1);
+				
+				rect.MergeWith (text_rect);
 			}
 			
 			return rect;
 		}
-
-
-		// Dessine le bouton.
+		
+		public override Epsitec.Common.Drawing.Size GetBestFitSize()
+		{
+			Drawing.Size size = this.TextLayout.SingleLineSize;
+			
+			size.Width  = System.Math.Ceiling (size.Width + CheckButton.CheckWidth + 3);
+			size.Height = System.Math.Max (System.Math.Ceiling (size.Height), CheckButton.CheckHeight);
+			
+			return size;
+		}
+		
+		
+		protected override void UpdateTextLayout()
+		{
+			System.Diagnostics.Debug.Assert (this.TextLayout != null);
+			
+			Drawing.Point offset = this.LabelOffset;
+			double        dx     = this.Client.Width - offset.X;
+			double        dy     = this.Client.Height;
+			
+			this.TextLayout.Alignment  = this.Alignment;
+			this.TextLayout.LayoutSize = new Drawing.Size (dx, dy);
+		}
+		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-
-			Drawing.Rectangle rect = new Drawing.Rectangle();
-			rect.Left   = 0;
-			rect.Right  = CheckButton.checkHeight;
-			rect.Bottom = (this.Client.Height-CheckButton.checkHeight)/2;
-			rect.Top    = rect.Bottom+CheckButton.checkHeight;
-			adorner.PaintCheck(graphics, rect, this.PaintState);
-
-			adorner.PaintGeneralTextLayout(graphics, this.LabelOffset, this.TextLayout, this.PaintState, PaintTextStyle.CheckButton, this.BackColor);
+			
+			Drawing.Rectangle rect  = new Drawing.Rectangle (0, (this.Client.Height-CheckButton.CheckHeight)/2, CheckButton.CheckHeight, CheckButton.CheckHeight);
+			WidgetState       state = this.PaintState;
+			
+			adorner.PaintCheck (graphics, rect, state);
+			adorner.PaintGeneralTextLayout (graphics, this.LabelOffset, this.TextLayout, state, PaintTextStyle.CheckButton, this.BackColor);
 		}
 
-		protected Drawing.Point LabelOffset
-		{
-			get
-			{
-				return new Drawing.Point(CheckButton.checkWidth, 0);
-			}
-		}
-
-		protected static readonly double checkHeight = 13;
-		protected static readonly double checkWidth = 20;
+		
+		protected static readonly double CheckHeight = 13;
+		protected static readonly double CheckWidth  = 20;
 	}
 }
