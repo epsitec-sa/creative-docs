@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace Epsitec.Common.Support.Tests
+namespace Epsitec.Common.Support
 {
 	[TestFixture]
 	public class ObjectBundlerTest
