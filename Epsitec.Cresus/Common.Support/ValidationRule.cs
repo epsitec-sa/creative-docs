@@ -590,9 +590,11 @@ namespace Epsitec.Common.Support
 			//	L'état final a changé; il faut donc mettre à jour les diverses commandes
 			//	qui dépendent de cette règle de validation :
 			
+			bool is_valid = this.IsValid;
+			
 			foreach (CommandState command_state in this.command_states)
 			{
-				command_state.Enabled = this.IsValid;
+				command_state.Enabled = is_valid;
 			}
 		}
 		
