@@ -4,10 +4,10 @@
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// L'interface IPersist permet de sérialiser/désérialiser des données à
+	/// L'interface IPersistable permet de sérialiser/désérialiser des données à
 	/// partir de la base de données (objets persistants).
 	/// </summary>
-	public interface IPersist
+	public interface IPersistable
 	{
 		void Attach(DbInfrastructure infrastructure, DbTable table);
 		void Detach();

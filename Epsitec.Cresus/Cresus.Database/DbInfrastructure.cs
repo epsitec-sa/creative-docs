@@ -461,7 +461,7 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (Tags.ColumnRefParent, SqlField.CreateConstant (parent_table_key.Id, DbKey.RawTypeForId));
 
-			this.AddKeyExtraction (conds, source_column_key);
+			DbInfrastructure.AddKeyExtraction (conds, Tags.TableColumnDef, source_column_key);
 			
 			this.sql_builder.UpdateData (Tags.TableColumnDef, fields, conds);
 			this.ExecuteSilent (transaction);
@@ -975,7 +975,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public int CountMatchingRows(DbTransaction transaction, string table, string name_column, string value)
+		public int CountMatchingRows(DbTransaction transaction, string table_name, string name_column, string value)
 		{
 			//	Compte combien de lignes dans la table ont le texte spécifié dans la colonne spécifiée.
 			//	Ne considère que les lignes actives.
@@ -983,11 +983,11 @@ namespace Epsitec.Cresus.Database
 			SqlSelect query = new SqlSelect ();
 			
 			query.Fields.Add ("N", new SqlAggregate (SqlAggregateType.Count, SqlField.CreateAll ()));
-			query.Tables.Add ("T", SqlField.CreateName (table));
+			query.Tables.Add ("T", SqlField.CreateName (table_name));
 			
 			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName ("T", name_column), SqlField.CreateConstant (value, DbRawType.String)));
 
-			this.AddKeyExtraction (query, "T", DbRowSearchMode.LiveActive);
+			DbInfrastructure.AddKeyExtraction (query.Conditions, "T", DbRowSearchMode.LiveActive);
 			
 			this.sql_builder.SelectData (query);
 			
@@ -999,7 +999,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public void UpdateKeyInRow(DbTransaction transaction, string table, DbKey old_key, DbKey new_key)
+		public void UpdateKeyInRow(DbTransaction transaction, string table_name, DbKey old_key, DbKey new_key)
 		{
 			//	Met à jour la clef de la ligne spécifiée.
 			
@@ -1009,9 +1009,9 @@ namespace Epsitec.Cresus.Database
 			fields.Add (Tags.ColumnId,     SqlField.CreateConstant (new_key.Id,        DbKey.RawTypeForId));
 			fields.Add (Tags.ColumnStatus, SqlField.CreateConstant (new_key.IntStatus, DbKey.RawTypeForStatus));
 
-			this.AddKeyExtraction (conds, old_key);
+			DbInfrastructure.AddKeyExtraction (conds, table_name, old_key);
 			
-			this.sql_builder.UpdateData (table, fields, conds);
+			this.sql_builder.UpdateData (table_name, fields, conds);
 			
 			int num_rows_affected;
 			
@@ -1019,7 +1019,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (num_rows_affected != 1)
 			{
-				throw new DbException (this.db_access, string.Format ("Update of row {0} in table {1} produced {2} updates.", old_key, table, num_rows_affected));
+				throw new DbException (this.db_access, string.Format ("Update of row {0} in table {1} produced {2} updates.", old_key, table_name, num_rows_affected));
 			}
 		}
 		
@@ -1062,16 +1062,16 @@ namespace Epsitec.Cresus.Database
 				//	'active' (ignore les versions archivées et détruites). Extrait aussi les colonnes
 				//	correspondantes.
 				
-				this.AddKeyExtraction (query, "T_TABLE", DbRowSearchMode.LiveActive);
-				this.AddKeyExtraction (query, "T_COLUMN", Tags.ColumnRefTable, "T_TABLE");
+				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TABLE", DbRowSearchMode.LiveActive);
+				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_COLUMN", Tags.ColumnRefTable, "T_TABLE");
 			}
 			else
 			{
 				//	On extrait toutes les lignes de T_TABLE qui ont un CR_ID = key, ainsi que
 				//	les lignes correspondantes de T_COLUMN qui ont un CREF_TABLE = key.
 				
-				this.AddKeyExtraction (query, "T_TABLE", key);
-				this.AddKeyExtraction (query, "T_COLUMN", Tags.ColumnRefTable, key);
+				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TABLE", key);
+				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_COLUMN", Tags.ColumnRefTable, key);
 			}
 			
 			System.Data.DataTable data_table = this.ExecuteSqlSelect (transaction, query, 1);
@@ -1211,13 +1211,13 @@ namespace Epsitec.Cresus.Database
 				//	On extrait toutes les définitions de types qui correspondent à la version
 				//	'active'.
 				
-				this.AddKeyExtraction (query, "T_TYPE", DbRowSearchMode.LiveActive);
+				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", DbRowSearchMode.LiveActive);
 			}
 			else
 			{
 				//	Cherche la ligne de la table dont 'CR_ID = key'.
 				
-				this.AddKeyExtraction (query, "T_TYPE", key);
+				DbInfrastructure.AddKeyExtraction (query.Conditions, "T_TYPE", key);
 			}
 			
 			System.Data.DataTable        data_table = this.ExecuteSqlSelect (transaction, query, 1);
@@ -1287,7 +1287,7 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (Tags.ColumnNextId, new SqlFunction (SqlFunctionType.MathAdd, field_next_id, field_const_n));
 			
-			this.AddKeyExtraction (conds, key);
+			DbInfrastructure.AddKeyExtraction (conds, Tags.TableTableDef, key);
 			
 			if (num_keys != 0)
 			{
@@ -1331,7 +1331,7 @@ namespace Epsitec.Cresus.Database
 			
 			//	Cherche les lignes de la table dont la colonne CREF_TYPE correspond à l'ID du type.
 			
-			this.AddKeyExtraction (query, "T_ENUM", Tags.ColumnRefType, type_enum.InternalKey);
+			DbInfrastructure.AddKeyExtraction (query.Conditions, "T_ENUM", Tags.ColumnRefType, type_enum.InternalKey);
 			
 			System.Data.DataTable data_table = this.ExecuteSqlSelect (transaction, query, 1);
 			
@@ -1424,85 +1424,59 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		protected void AddKeyExtraction(Collections.SqlFields conditions, DbKey key)
+		
+		protected static void AddKeyExtraction(Collections.SqlFields conditions, string table_name, DbKey key)
 		{
-			SqlField name_col_id = SqlField.CreateName (Tags.ColumnId);
+			SqlField name_col_id = SqlField.CreateName (table_name, Tags.ColumnId);
 			SqlField constant_id = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
 			
 			conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, name_col_id, constant_id));
 		}
 
-		protected void AddKeyExtraction(SqlSelect query, string table_name, DbKey key)
+		protected static void AddKeyExtraction(Collections.SqlFields conditions, string source_table_name, string source_col_name, string parent_table_name)
 		{
-			SqlField name_col_id = SqlField.CreateName (table_name, Tags.ColumnId);
-			SqlField constant_id = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
+			SqlField parent_col_id = SqlField.CreateName (parent_table_name, Tags.ColumnId);
+			SqlField source_col_id = SqlField.CreateName (source_table_name, source_col_name);
 			
-			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, name_col_id, constant_id));
+			conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, source_col_id, parent_col_id));
 		}
 		
-		protected void AddKeyExtraction(SqlSelect query, string source_table_name, string source_col_id, string parent_table_name)
+		protected static void AddKeyExtraction(Collections.SqlFields conditions, string source_table_name, string source_col_name, DbKey key)
 		{
-			SqlField parent_col = SqlField.CreateName (parent_table_name, Tags.ColumnId);
-			SqlField source_col = SqlField.CreateName (source_table_name, source_col_id);
+			SqlField source_col_id = SqlField.CreateName (source_table_name, source_col_name);
+			SqlField constant_id   = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
 			
-			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, source_col, parent_col));
-		}
-		
-		protected void AddKeyExtraction(SqlSelect query, string source_table_name, string source_col_id, DbKey key)
-		{
-			SqlField source_col  = SqlField.CreateName (source_table_name, source_col_id);
-			SqlField constant_id = SqlField.CreateConstant (key.Id, DbKey.RawTypeForId);
-			
-			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, source_col, constant_id));
+			conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, source_col_id, constant_id));
 		}
 
-		protected void AddKeyExtraction(SqlSelect query, string table_name, DbRowSearchMode search_mode)
+		protected static void AddKeyExtraction(Collections.SqlFields conditions, string table_name, DbRowSearchMode search_mode)
 		{
+			//	Génère la condition d'extraction pour une recherche selon le statut des lignes
+			//	(voir aussi la définition de DbRowStatus).
+			
 			SqlFunctionType function;
-			DbRowStatus status;
+			DbRowStatus     status;
 			
 			switch (search_mode)
 			{
-				case DbRowSearchMode.Copied:
-					status = DbRowStatus.Copied;
-					function = SqlFunctionType.CompareEqual;
-					break;
-				
-				case DbRowSearchMode.Live:
-					status = DbRowStatus.Live;
-					function = SqlFunctionType.CompareEqual;
-					break;
-				
-				case DbRowSearchMode.LiveActive:
-					status = DbRowStatus.ArchiveCopy;
-					function = SqlFunctionType.CompareLessThan;
-					break;
+				case DbRowSearchMode.Copied:		status = DbRowStatus.Copied;		function = SqlFunctionType.CompareEqual;	break;
+				case DbRowSearchMode.Live:			status = DbRowStatus.Live;			function = SqlFunctionType.CompareEqual;	break;
+				case DbRowSearchMode.LiveActive:	status = DbRowStatus.ArchiveCopy;	function = SqlFunctionType.CompareLessThan;	break;
+				case DbRowSearchMode.ArchiveCopy:	status = DbRowStatus.ArchiveCopy;	function = SqlFunctionType.CompareEqual;	break;
+				case DbRowSearchMode.LiveAll:		status = DbRowStatus.Deleted;		function = SqlFunctionType.CompareLessThan;	break;
+				case DbRowSearchMode.Deleted:		status = DbRowStatus.Deleted;		function = SqlFunctionType.CompareEqual;	break;
 				
 				case DbRowSearchMode.All:
 					return;
 				
-				case DbRowSearchMode.ArchiveCopy:
-					status = DbRowStatus.ArchiveCopy;
-					function = SqlFunctionType.CompareEqual;
-					break;
-
-				case DbRowSearchMode.LiveAll:
-					status = DbRowStatus.Deleted;
-					function = SqlFunctionType.CompareLessThan;
-					break;
-
-				case DbRowSearchMode.Deleted:
-					status = DbRowStatus.Deleted;
-					function = SqlFunctionType.CompareEqual;
-					break;
 				default:
 					throw new System.ArgumentException (string.Format ("Search mode {0} not supported.", search_mode), "search_mode");
 			}
-
-			SqlField name_status = SqlField.CreateName (table_name, Tags.ColumnStatus);
+			
+			SqlField name_status  = SqlField.CreateName (table_name, Tags.ColumnStatus);
 			SqlField const_status = SqlField.CreateConstant (DbKey.ConvertToIntStatus (status), DbKey.RawTypeForStatus);
-
-			query.Conditions.Add (new SqlFunction (function, name_status, const_status));
+			
+			conditions.Add (new SqlFunction (function, name_status, const_status));
 		}
 
 
@@ -1515,6 +1489,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		#region BootHelper Class
 		public class BootHelper
 		{
 			public BootHelper(DbInfrastructure infrastructure, DbTransaction transaction)
@@ -1638,9 +1613,7 @@ namespace Epsitec.Cresus.Database
 			private DbInfrastructure			infrastructure;
 			private DbTransaction				transaction;
 		}
-		
-		
-		
+		#endregion
 		
 		
 		protected void BootInsertLogRow(DbTransaction transaction, DbID id, long date_time)
@@ -1730,7 +1703,7 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (Tags.ColumnNextId, SqlField.CreateConstant (next_id, DbRawType.Int64));
 
-			this.AddKeyExtraction (conds, key);
+			DbInfrastructure.AddKeyExtraction (conds, Tags.TableTableDef, key);
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Table {0}, next ID will be {1}.", key, next_id));
 			
@@ -1772,7 +1745,7 @@ namespace Epsitec.Cresus.Database
 			
 			fields.Add (Tags.ColumnRefParent, SqlField.CreateConstant (parent.InternalKey.Id, DbRawType.Int64));
 
-			this.AddKeyExtraction (conds, column.InternalKey);
+			DbInfrastructure.AddKeyExtraction (conds, Tags.TableColumnDef, column.InternalKey);
 			
 			this.sql_builder.UpdateData (Tags.TableColumnDef, fields, conds);
 			this.ExecuteSilent (transaction);
