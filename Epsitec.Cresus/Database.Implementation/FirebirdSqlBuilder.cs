@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.command_params = new System.Collections.ArrayList ();
 		}
 		
+		
 		protected void UpdateCommand()
 		{
 			if (this.command_cache == null)
@@ -24,26 +25,42 @@ namespace Epsitec.Cresus.Database.Implementation
 				
 				int field_i = 0;
 				
+				//	Construit l'objet commande en se basant sur les paramètres définis pour
+				//	celle-ci.
+				
 				foreach (SqlField field in this.command_params)
 				{
 					FbDbType    fb_type  = this.GetFbType (field.RawType);
-					string      fb_name    = string.Format (TypeConverter.InvariantFormatProvider, "@PARAM_{0}", field_i++);
+					string      fb_name  = string.Format (TypeConverter.InvariantFormatProvider, "@PARAM_{0}", field_i++);
 					FbParameter fb_param = new FbParameter (fb_name, fb_type);
+					
+					//	Pour l'instant, on ne supporte que des valeurs constantes dans la définition des
+					//	paramètres de la commande (on aurait pu imaginer accepter ici les résultats d'une
+					//	sous-requête ou encore d'une procédure SQL) :
+					
+					System.Diagnostics.Debug.Assert (field.Type == SqlFieldType.Constant);
 					
 					fb_param.Value = field.AsConstant;
 					
 					this.command_cache.Parameters.Add (fb_param);
 				}
 				
+				//	Pour l'instant, la commande est toujours de type texte et construite par les
+				//	diverses méthodes publiques.
+				
 				this.command_cache.CommandType = System.Data.CommandType.Text;
 				this.command_cache.CommandText = this.buffer.ToString ();
 			}
 		}
 		
+		
 		protected string GetSqlType(SqlColumn column)
 		{
 			string basic_type = null;
 			string length;
+			
+			//	Construit le nom du type SQL en fonction de la description de la
+			//	colonne.
 			
 			switch (column.Type)
 			{
@@ -80,6 +97,10 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		protected string AddFieldAsParam(SqlField field)
 		{
+			//	Ajoute un champ SQL comme paramètre de la commande. C'est la méthode UpdateCommand qui
+			//	va faire le lien entre le num du paramètre (@PARAM_n) et sa valeur, telle que définie
+			//	dans le champ SqlField.
+			
 			string name = string.Format (TypeConverter.InvariantFormatProvider, "@PARAM_{0}", this.command_params.Count);
 			this.command_params.Add (field);
 			return name;
@@ -87,6 +108,9 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		protected string GetSqlColumnAttributes(SqlColumn column)
 		{
+			//	Construit les attributs de la colonne, tels qu'ils sont utilisés dans la
+			//	définition d'une table (se sont généralement des contraintes).
+			
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
 			if (!column.IsNullAllowed)
@@ -102,8 +126,11 @@ namespace Epsitec.Cresus.Database.Implementation
 			return buffer.ToString ();
 		}
 		
+		
 		protected FbDbType GetFbType(DbRawType raw_type)
 		{
+			//	Convertit un type brut en un type Firebird correspondant.
+			
 			switch (raw_type)
 			{
 				case DbRawType.Int16:			return FbDbType.SmallInt;
@@ -126,10 +153,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 		
 		
-		
-		
 		#region ISqlBuilder Members
-
 		public bool								AutoClear
 		{
 			get { return this.auto_clear; }
@@ -140,20 +164,28 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			get
 			{
+				this.UpdateCommand ();
+				
+				FbCommand command = this.command_cache;
+				
 				if (this.auto_clear)
 				{
+					//	Chaque accès à 'Command' purge la commande précédente et force la reconstruction
+					//	d'un nouvel objet commande lors du prochain accès.
+					
 					this.Clear ();
 				}
 				
-				this.UpdateCommand ();
-				
-				return this.command_cache;
+				return command;
 			}
 		}
 
 		
 		public void Clear()
 		{
+			//	On n'a pas le droit de faire un Dispose de l'objet 'commande', car il peut encore
+			//	être utilisé par un appelant. C'est le cas lorsque l'on est en mode AutoClear.
+			
 			this.command_cache = null;
 			this.buffer = new System.Text.StringBuilder ();
 			this.command_params.Clear ();
@@ -175,12 +207,11 @@ namespace Epsitec.Cresus.Database.Implementation
 			return DbSqlStandard.ValidateNumber (value);
 		}
 
+		
 		public void ThrowError(string message)
 		{
 			throw new DbSyntaxException (this.fb.DbAccess, message);
 		}
-		
-		
 		
 		
 		public void InsertTable(SqlTable table)

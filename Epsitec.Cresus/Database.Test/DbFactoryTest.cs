@@ -5,16 +5,14 @@ namespace Epsitec.Cresus.Database
 	[TestFixture]
 	public class DbFactoryTest
 	{
-		[SetUp]
-		public void LoadAssemblies()
+		[SetUp] public void LoadAssemblies()
 		{
 			DbFactory.Initialise ();
 		}
 		
-		[Test]
-		public void CheckFindDbAbstractionAndOpenClose()
+		[Test] public void CheckFindDbAbstractionAndOpenClose()
 		{
-			IDbAbstraction db_abstraction = this.CreateDbAbstraction (true);
+			IDbAbstraction db_abstraction = DbFactoryTest.CreateDbAbstraction (true);
 			
 			Assertion.AssertNotNull ("Could not instanciate Firebird abstraction", db_abstraction);
 			Assertion.AssertNotNull ("Cannot retrieve the factory", db_abstraction.Factory);
@@ -30,19 +28,17 @@ namespace Epsitec.Cresus.Database
 			db_abstraction.Connection.Close ();
 		}
 		
-		[Test]
-		public void CheckNewDbCommand()
+		[Test] public void CheckNewDbCommand()
 		{
-			IDbAbstraction  db_abstraction = this.CreateDbAbstraction (false);
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			System.Data.IDbCommand command = db_abstraction.NewDbCommand ();
 			
 			Assertion.AssertNotNull (command);
 		}
 		
-		[Test]
-		public void CheckNewDataAdapter()
+		[Test] public void CheckNewDataAdapter()
 		{
-			IDbAbstraction  db_abstraction = this.CreateDbAbstraction (false);
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			
 			db_abstraction.Connection.Open ();
 			
@@ -54,10 +50,9 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertNotNull (adapter);
 		}
 		
-		[Test]
-		public void CheckExecuteScalar()
+		[Test] public void CheckExecuteScalar()
 		{
-			IDbAbstraction  db_abstraction = this.CreateDbAbstraction (false);
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			System.Data.IDbCommand command = db_abstraction.NewDbCommand ();
 			
 			command.Transaction = db_abstraction.BeginTransaction ();
@@ -73,10 +68,9 @@ namespace Epsitec.Cresus.Database
 			command.Dispose ();
 		}
 		
-		[Test]
-		public void CheckExecuteReader()
+		[Test] public void CheckExecuteReader()
 		{
-			IDbAbstraction  db_abstraction = this.CreateDbAbstraction (false);
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			System.Data.IDbCommand command = db_abstraction.NewDbCommand ();
 			
 			command.Transaction = db_abstraction.BeginTransaction ();
@@ -103,10 +97,9 @@ namespace Epsitec.Cresus.Database
 			command.Dispose ();
 		}
 
-		[Test]
-		public void CheckUserTableNames()
+		[Test] public void CheckUserTableNames()
 		{
-			IDbAbstraction  db_abstraction = this.CreateDbAbstraction (false);
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			
 			try
 			{
@@ -134,13 +127,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test]
-		public void CheckDebugDumpRegisteredDbAbstractions ()
+		[Test] public void CheckDebugDumpRegisteredDbAbstractions ()
 		{
 			DbFactory.DebugDumpRegisteredDbAbstractions ();
 		}
 		
-		protected DbAccess CreateDbAccess(bool force_db_creation)
+		
+		
+		public static DbAccess CreateDbAccess(bool force_db_creation)
 		{
 			DbAccess db_access = new DbAccess ();
 			
@@ -154,10 +148,10 @@ namespace Epsitec.Cresus.Database
 			return db_access;
 		}
 		
-		protected IDbAbstraction CreateDbAbstraction(bool force_db_creation)
+		public static IDbAbstraction CreateDbAbstraction(bool force_db_creation)
 		{
 			IDbAbstraction db_abstraction = null;
-			DbAccess db_access = this.CreateDbAccess (force_db_creation);
+			DbAccess db_access = DbFactoryTest.CreateDbAccess (force_db_creation);
 			
 			try
 			{
@@ -174,6 +168,11 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			return db_abstraction;
+		}
+		
+		public static IDbAbstractionFactory CreateDbAbstractionFactory()
+		{
+			return DbFactory.FindDbAbstractionFactory ("Firebird");
 		}
 	}
 }

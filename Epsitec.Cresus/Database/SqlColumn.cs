@@ -1,5 +1,12 @@
 namespace Epsitec.Cresus.Database
 {
+	public enum Nullable
+	{
+		Undefined,
+		No,
+		Yes
+	}
+	
 	/// <summary>
 	/// La classe SqlColumn décrit une colonne dans une table de la base de données.
 	/// Cette classe ressemble fortement à System.Data.DataColumn.
@@ -8,6 +15,37 @@ namespace Epsitec.Cresus.Database
 	{
 		public SqlColumn()
 		{
+		}
+		
+		public SqlColumn(string name)
+		{
+			this.Name = name;
+		}
+		
+		public SqlColumn(string name, DbRawType raw_type)
+		{
+			this.Name = name;
+			this.SetType (raw_type);
+		}
+		
+		public SqlColumn(string name, DbRawType raw_type, int length, bool is_fixed_length)
+		{
+			this.Name = name;
+			this.SetType (raw_type, length, is_fixed_length);
+		}
+		
+		public SqlColumn(string name, DbRawType raw_type, Nullable nullable)
+		{
+			this.Name = name;
+			this.SetType (raw_type);
+			this.IsNullAllowed = (nullable == Nullable.Yes);
+		}
+		
+		public SqlColumn(string name, DbRawType raw_type, int length, bool is_fixed_length, Nullable nullable)
+		{
+			this.Name = name;
+			this.SetType (raw_type, length, is_fixed_length);
+			this.IsNullAllowed = (nullable == Nullable.Yes);
 		}
 		
 		
@@ -81,7 +119,10 @@ namespace Epsitec.Cresus.Database
 		
 		public void SetType(DbRawType type, int length, bool is_fixed_length)
 		{
-			System.Diagnostics.Debug.Assert (length > 0);
+			if (length < 1)
+			{
+				throw new System.ArgumentOutOfRangeException ("Invalid length");
+			}
 			
 			switch (type)
 			{

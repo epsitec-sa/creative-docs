@@ -16,7 +16,17 @@ namespace Epsitec.Cresus.Database
 
 		public SqlField(string name)
 		{
-			this.type = SqlFieldType.Name;
+			int dot_pos = name.IndexOf (".");
+			
+			if (dot_pos < 0)
+			{
+				this.type = SqlFieldType.Name;
+			}
+			else
+			{
+				this.type = SqlFieldType.QualifiedName;
+			}
+			
 			this.value = name;
 		}
 		
@@ -28,6 +38,13 @@ namespace Epsitec.Cresus.Database
 		public SqlField(string name, string alias, SqlFieldOrder order) : this (name, alias)
 		{
 			this.order = order;
+		}
+		
+		
+		public static string QualifyName(string qualifier, string name)
+		{
+			System.Diagnostics.Debug.Assert (name.Length > 0);
+			return qualifier + "." + name;
 		}
 		
 		
@@ -88,6 +105,31 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				if (this.type == SqlFieldType.Name)
+				{
+					return this.value as string;
+				}
+				if (this.type == SqlFieldType.QualifiedName)
+				{
+					string name = this.value as string;
+					int dot_pos = name.IndexOf (".");
+					
+					if (dot_pos < 0)
+					{
+						return name;
+					}
+					
+					return name.Substring (dot_pos+1);
+				}
+				
+				return null;
+			}
+		}
+		
+		public string					AsQualifiedName
+		{
+			get
+			{
+				if (this.type == SqlFieldType.QualifiedName)
 				{
 					return this.value as string;
 				}
@@ -293,7 +335,8 @@ namespace Epsitec.Cresus.Database
 		ParameterInOut,					//	paramètre en entrée et en sortie
 		ParameterResult,				//	paramètre en sortie (résultat de procédure)
 		
-		Name,							//	nom (nom de colonne, nom de table, ...)
+		Name,							//	nom simple (nom de colonne, nom de table, ...)
+		QualifiedName,					//	nom qualifié (nom de table + nom de colonne)
 		
 		Aggregate,
 		Variable,						//	variable SQL (?)

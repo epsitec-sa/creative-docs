@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void CheckFindTypeConverter()
 		{
-			IDbAbstractionFactory dbf = this.CreateDbAbstractionFactory ();
+			IDbAbstractionFactory dbf = DbFactoryTest.CreateDbAbstractionFactory ();
 			ITypeConverter  converter = dbf.TypeConverter;
 			
 			Assertion.AssertNotNull (converter);
@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void CheckNativeSupport()
 		{
-			IDbAbstractionFactory dbf = this.CreateDbAbstractionFactory ();
+			IDbAbstractionFactory dbf = DbFactoryTest.CreateDbAbstractionFactory ();
 			ITypeConverter  converter = dbf.TypeConverter;
 			
 			Assertion.Assert (converter.CheckNativeSupport (DbRawType.Int16));
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void CheckRawTypeConverter()
 		{
-			IDbAbstractionFactory dbf = this.CreateDbAbstractionFactory ();
+			IDbAbstractionFactory dbf = DbFactoryTest.CreateDbAbstractionFactory ();
 			ITypeConverter  converter = dbf.TypeConverter;
 			IRawTypeConverter raw_conv;
 			
@@ -61,12 +61,6 @@ namespace Epsitec.Cresus.Database
 			oext = raw_conv.ConvertFromInternalType (oint);
 			Assertion.AssertEquals (oorg, oext);
 			System.Console.Out.WriteLine ("{0} maps to {1}", oorg, oint);
-		}
-		
-		
-		protected IDbAbstractionFactory CreateDbAbstractionFactory()
-		{
-			return DbFactory.FindDbAbstractionFactory ("Firebird");
 		}
 	}
 }

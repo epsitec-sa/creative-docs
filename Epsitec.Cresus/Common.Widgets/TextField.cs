@@ -496,7 +496,6 @@ namespace Epsitec.Common.Widgets
 			
 			if ( TextField.Blinking != null )
 			{
-				System.Diagnostics.Debug.WriteLine("Blinking");
 				TextField.Blinking(null);
 			}
 		}

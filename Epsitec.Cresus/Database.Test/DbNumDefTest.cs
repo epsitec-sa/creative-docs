@@ -14,8 +14,8 @@ namespace Epsitec.Cresus.Database
 			
 			Assertion.AssertEquals (false, def.IsMinMaxDefined);
 			Assertion.AssertEquals (true, def.IsDigitDefined);
-			Assertion.AssertEquals ( 999.000M, def.MaxValue);
-			Assertion.AssertEquals (-999.000M, def.MinValue);
+			Assertion.AssertEquals ( 999M, def.MaxValue);
+			Assertion.AssertEquals (-999M, def.MinValue);
 			
 			def.DigitPrecision = 6;
 			def.DigitShift     = 3;
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void CheckCheckCompatibility()
 		{
-			DbNumDef def = new DbNumDef (6, 2, 0, 1000);
+			DbNumDef def = new DbNumDef (6, 2, 0, 1000.00M);
 			
 			Assertion.AssertEquals (false, def.CheckCompatibility (-1));
 			Assertion.AssertEquals (true,  def.CheckCompatibility (0));
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void CheckRound()
 		{
-			DbNumDef def = new DbNumDef (6, 2, -1000, 1000);
+			DbNumDef def = new DbNumDef (6, 2, -1000.00M, 1000.00M);
 			
 			//	Si la valeur est hors des bornes, l'arrondi doit quand-même se faire !
 			
@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void CheckClip()
 		{
-			DbNumDef def = new DbNumDef (6, 2, -1000, 1000);
+			DbNumDef def = new DbNumDef (6, 2, -1000.00M, 1000.00M);
 			
 			//	Si la valeur a une précision trop élevée, la valeur n'est pas
 			//	arrondie...
@@ -234,11 +234,15 @@ namespace Epsitec.Cresus.Database
 		[Test] public void CheckToString()
 		{
 			System.IFormatProvider format_provider = System.Globalization.CultureInfo.InvariantCulture;
-			DbNumDef def = new DbNumDef (3, 1, 0.0M, 49.9M);
+			DbNumDef def;
+			def = new DbNumDef (3, 1, 0.0M, 49.9M);
 			Assertion.AssertEquals ("10.5", def.ToString (10.5M, format_provider));
 			
+			def = new DbNumDef (6, 3, 0.0M, 49.995M);
+			Assertion.AssertEquals ("10.500", def.ToString (10.5M, format_provider));
+			
 			def = new DbNumDef (3, 2, -9.99M, 9.99M);
-			Assertion.AssertEquals ("1.00", def.ToString (1.00M, format_provider));
+			Assertion.AssertEquals ("1.00", def.ToString (1.000M, format_provider));
 			Assertion.AssertEquals ("-3.50", def.ToString (-3.5M, format_provider));
 		}
 	}

@@ -326,6 +326,7 @@ namespace Epsitec.Common.Tests
 			//multi.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			multi.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			window.Root.Children.Add(multi);
+			window.Root.DebugActive = true;
 
 			window.FocusedWidget = multi;
 

@@ -10,6 +10,12 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
+		public SqlTable(string name)
+		{
+			this.Name = name;
+		}
+		
+		
 		public bool Validate(ISqlValidator validator)
 		{
 			return validator.ValidateName (this.name);

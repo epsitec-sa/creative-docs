@@ -127,6 +127,10 @@
                     RelPath = "TODO.txt"
                     BuildAction = "Content"
                 />
+                <File
+                    RelPath = "TODO-Denis.txt"
+                    BuildAction = "Content"
+                />
             </Include>
         </Files>
     </CSHARP>

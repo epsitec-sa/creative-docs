@@ -1,6 +1,5 @@
 using System;
 using NUnit.Framework;
-using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Tests
 {
@@ -9,13 +8,13 @@ namespace Epsitec.Common.Tests
 	{
 		[Test] public void CheckVersion()
 		{
-			string text = Epsitec.Common.Drawing.Agg.Library.Current.Version;
+			string text = AntiGrain.Interface.GetVersion ();
 			System.Console.Out.WriteLine ("Version: " + text);
 		}
 		
 		[Test] public void CheckProductName()
 		{
-			string text = Epsitec.Common.Drawing.Agg.Library.Current.ProductName;
+			string text = AntiGrain.Interface.GetProductName ();
 			System.Console.Out.WriteLine ("ProductName: " + text);
 		}
 		

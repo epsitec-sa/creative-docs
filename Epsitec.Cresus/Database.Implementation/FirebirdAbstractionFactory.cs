@@ -12,8 +12,8 @@ namespace Epsitec.Cresus.Database.Implementation
 			DbFactory.RegisterDbAbstraction (this);
 		}
 		
-		#region IDbAbstractionFactory Members
 		
+		#region IDbAbstractionFactory Members
 		public IDbAbstraction NewDbAbstraction(DbAccess db_access)
 		{
 			System.Diagnostics.Debug.Assert (db_access.Provider == this.ProviderName);

@@ -1,9 +1,15 @@
+using System.Text;
+
+
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
 	/// La classe DbNumDef définit un format numérique.
+	/// digit_precision défini le nombre de digits acceptable pour le nombre (1 à 24)
+	/// digit_shift défini la position de la virgule
+	/// par exemple, precision = 5, shift = 3, accepte les nombres de -99.999 à +99.999
 	/// </summary>
-	public class DbNumDef
+	public class DbNumDef : System.ICloneable
 	{
 		public DbNumDef()
 		{
@@ -11,13 +17,14 @@ namespace Epsitec.Cresus.Database
 		
 		public DbNumDef(int digit_precision)
 		{
+			System.Diagnostics.Debug.Assert ((digit_precision >= 0) && (digit_precision < DbNumDef.digit_max));
 			this.digit_precision = digit_precision;
 		}
 		
 		public DbNumDef(int digit_precision, int digit_shift)
 		{
-			System.Diagnostics.Debug.Assert (digit_precision < DbNumDef.digit_max);
-			System.Diagnostics.Debug.Assert (digit_shift < DbNumDef.digit_max);
+			System.Diagnostics.Debug.Assert ((digit_precision >= 0) && (digit_precision < DbNumDef.digit_max));
+			System.Diagnostics.Debug.Assert ((digit_shift >= 0) && (digit_shift < DbNumDef.digit_max));
 			
 			this.digit_precision = digit_precision;
 			this.digit_shift     = digit_shift;
@@ -25,14 +32,32 @@ namespace Epsitec.Cresus.Database
 		
 		public DbNumDef(int digit_precision, int digit_shift, decimal min_value, decimal max_value)
 		{
-			System.Diagnostics.Debug.Assert (digit_precision < DbNumDef.digit_max);
-			System.Diagnostics.Debug.Assert (digit_shift < DbNumDef.digit_max);
+			System.Diagnostics.Debug.Assert ((digit_precision >= 0) && (digit_precision < DbNumDef.digit_max));
+			System.Diagnostics.Debug.Assert ((digit_shift >= 0) && (digit_shift < DbNumDef.digit_max));
 			
 			this.digit_precision = digit_precision;
 			this.digit_shift     = digit_shift;
 			this.min_value       = min_value;
 			this.max_value       = max_value;
 		}
+		
+		
+		#region ICloneable Members
+		public object Clone()
+		{
+			DbNumDef num = new DbNumDef ();
+			
+			num.raw_type  = this.raw_type;
+			
+			num.min_value = this.min_value;
+			num.max_value = this.max_value;
+			
+			num.digit_precision = this.digit_precision;
+			num.digit_shift     = this.digit_shift;
+			
+			return num;
+		}
+		#endregion
 		
 		
 		public static DbNumDef FromRawType(DbRawType raw_type)
@@ -80,29 +105,104 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		protected void UpdateAutoPrecision()
+		{
+			//	Détermine la précision nécessaire à la représentation d'un nombre donné.
+			
+			//	La routine donne à la fois la précision (nombre total de décimales) et
+			//	le "shift" (nombre de décimales après le point décimal).
+			
+			//	Le résultat est mémorisé de manière à ne pas devoir recalculer cela à
+			//	chaque fois.
+			
+			//	TODO: que faire en cas de dépassement des capacités ?
+			//	TODO: ne pourrait-on pas stocker le résultat dans digit_shift/precision ?
+			
+			System.Diagnostics.Debug.Assert (this.IsMinMaxDefined);		
+			System.Diagnostics.Debug.Assert (this.digit_shift_auto == 0);
+			System.Diagnostics.Debug.Assert (this.digit_precision_auto == 0);
+			
+			decimal min = this.MinValue > 0 ? this.MinValue : -this.MinValue;
+			decimal max = this.MaxValue > 0 ? this.MaxValue : -this.MaxValue;
+
+			//	Cherche déjà le nombre de décimales :
+			
+			while ((System.Decimal.Truncate(min) != min) ||
+				   (System.Decimal.Truncate(max) != max))
+			{
+				this.digit_shift_auto++;
+				min *= 10M; 
+				max *= 10M; 
+				System.Diagnostics.Debug.Assert (this.digit_shift_auto < DbNumDef.digit_max);
+			}
+			
+			//	Puis cherche le nombre de digits :
+			
+			while ((DbNumDef.digit_table[this.digit_precision_auto] <= min) || 
+				   (DbNumDef.digit_table[this.digit_precision_auto] <= max))
+			{
+				this.digit_precision_auto++;
+				System.Diagnostics.Debug.Assert (this.digit_precision_auto < DbNumDef.digit_max);
+			}
+		}
+		
+		protected void InvalidateAutoPrecision()
+		{
+			this.digit_precision_auto = 0;
+			this.digit_shift_auto     = 0;
+		}
+		
+		
 		public int						DigitPrecision
 		{
 			get
 			{
 				if (this.digit_precision == 0)
 				{
-					//	TODO: extrait la précision des valeurs minimum et maximum.
-					
-					return 0;
+					if (this.digit_precision_auto == 0)
+					{
+						if (this.IsMinMaxDefined)
+						{
+							this.UpdateAutoPrecision ();
+						}
+					}
+					return this.digit_precision_auto;
 				}
 				
 				return this.digit_precision;
 			}
 			set
 			{
+				//	On ne touche pas aux valeurs min/max, car l'utilisateur a peut-être décidé
+				//	de spécifier le min, le max, la précision puis le shift. C'est superflu,
+				//	mais il ne faudrait pas que ça altère les définitions.
+				
 				this.digit_precision = value;
 			}
 		}
 		
 		public int						DigitShift
 		{
-			get { return this.digit_shift; }
-			set { this.digit_shift = value; }
+			get
+			{ 
+				if (this.digit_precision == 0)
+				{
+					if (this.digit_precision_auto == 0)
+					{
+						if (this.IsMinMaxDefined)
+						{
+							this.UpdateAutoPrecision ();
+						}
+					}
+					return this.digit_shift_auto;
+				}
+				return this.digit_shift;
+			}
+			set 
+			{
+				//	Cf. remarque DigitPrecision.
+				this.digit_shift = value; 
+			}
 		}
 		
 		public bool						IsDigitDefined
@@ -117,7 +217,7 @@ namespace Epsitec.Cresus.Database
 		{
 			get
 			{
-				return this.min_value <= this.max_value;
+				return this.min_value < this.max_value;
 			}
 		}
 		
@@ -146,11 +246,18 @@ namespace Epsitec.Cresus.Database
 					return this.min_value;
 				}
 				
+				//	MaxValue est peut-être définie. Si ce n'est pas le cas, il y a un
+				//	algorithme dans MaxValue qui détermine une valeur plausible en
+				//	fonction du nombre de décimales.
+				
 				return - this.MaxValue;
 			}
 			set
 			{
 				this.min_value = value;
+				this.InvalidateAutoPrecision ();
+				
+				//	TODO: vérifier que la valeur n'est pas hors limites
 			}
 		}
 		
@@ -163,13 +270,24 @@ namespace Epsitec.Cresus.Database
 					return this.max_value;
 				}
 				
+				//	Le maximum n'est pas défini, alors on va utiliser une valeur automatique
+				//	liée au nombre de décimales et à la précision (nombre de décimales après
+				//	le point décimal) :
+				
 				decimal max = DbNumDef.digit_table[this.digit_precision] - 1M;
 				
-				return max / DbNumDef.digit_table[this.digit_shift];
+				System.Diagnostics.Debug.Assert (max == decimal.Truncate (max));
+				
+				max *= DbNumDef.digit_table_scale[this.digit_shift];
+				
+				return max;
 			}
 			set
 			{
 				this.max_value = value;
+				this.InvalidateAutoPrecision ();
+				
+				//	TODO: vérifier que la valeur n'est pas hors limites
 			}
 		}
 		
@@ -180,7 +298,7 @@ namespace Epsitec.Cresus.Database
 				//	Calcule le nombre de bits nécessaire pour représenter un nombre
 				//	compris entre le minimum et le maximum (bornes comprises), en tenant
 				//	en outre compte de l'échelle (shift).
-				
+
 				switch (this.raw_type)
 				{
 					case DbRawType.Boolean:
@@ -196,11 +314,15 @@ namespace Epsitec.Cresus.Database
 						return 64;
 				}
 				
+				//	Le nombre ne correspond à aucun format prédéfini. On va donc convertir
+				//	la plus grande valeur possible en une représentation "transportable"
+				//	(entier positif) et déterminer combien de bits sont nécessaires à son
+				//	stockage :
+				
 				long span = this.ConvertToInt64 (this.MaxValue);
+				int  bits = 0;
 				
 				System.Diagnostics.Debug.Assert (span > 0);
-				
-				int bits = 0;
 				
 				while (span > 0)
 				{
@@ -217,8 +339,8 @@ namespace Epsitec.Cresus.Database
 		{
 			if ((value >= this.MinValue) && (value <= this.MaxValue))
 			{
-				//	TODO: détermine le nombre de chiffres après la virgule et vérifie
-				//	qu'elle n'excède pas DigitShift.
+				//	Vérifie que le nombre de décimales après le point décimal ne
+				//	dépasse le maximum autorisé :
 				
 				decimal v1 = value * DbNumDef.digit_table[this.digit_shift];
 				decimal v2 = System.Decimal.Truncate (v1);
@@ -245,27 +367,21 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		/// <summary>
-		/// Arrondit la valeur selon l'échelle (shift).
-		/// </summary>
-		/// <param name="value">valeur à arrondir</param>
-		/// <returns>valeur arrondie</returns>
 		public decimal Round(decimal value)
 		{
+			//	Arrondit la valeur selon l'échelle (shift) :
+			
 			value *= DbNumDef.digit_table[this.digit_shift];
 			value  = System.Decimal.Truncate (value + 0.5M);
-			value /= DbNumDef.digit_table[this.digit_shift];
+			value *= DbNumDef.digit_table_scale[this.digit_shift];
 			
 			return value;
 		}
 		
-		/// <summary>
-		///	Limite la valeur aux bornes minimales/maximales actives.
-		/// </summary>
-		/// <param name="value">valeur à limiter</param>
-		/// <returns>valeur limitée</returns>
 		public decimal Clip(decimal value)
 		{
+			//	Limite la valeur aux bornes minimales/maximales actives.
+			
 			if (value < this.MinValue)
 			{
 				return this.MinValue;
@@ -279,30 +395,24 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		/// <summary>
-		/// Convertit (encode) la valeur décimale en une représentation
-		/// compacte, occupant au maximum 63 bits dans un entier positif.
-		/// </summary>
-		/// <param name="value">valeur à encoder</param>
-		/// <returns>valeur encodée</returns>
 		public long ConvertToInt64(decimal value)
 		{
+			//	Convertit (encode) la valeur décimale en une représentation compacte,
+			//	occupant au maximum 63 bits dans un entier positif.
+			
 			value -= this.MinValue;
 			value *= DbNumDef.digit_table[this.DigitShift];
 			
 			return (long) value;
 		}
 		
-		/// <summary>
-		/// Convertit (décode) une représentation compacte générée par
-		/// <c>ConvertToInt64</c> en sa valeur décimale d'origine.
-		/// </summary>
-		/// <param name="value">valeur à décoder</param>
-		/// <returns>valeur décodée</returns>
 		public decimal ConvertFromInt64(long value)
 		{
+			//	Convertit (décode) une représentation compacte générée par la méthode
+			//	ConvertToInt64 en sa valeur décimale d'origine.
+			
 			decimal conv = value;
-			conv /= DbNumDef.digit_table[this.DigitShift];
+			conv *= DbNumDef.digit_table_scale[this.DigitShift];
 			conv += this.MinValue;
 			
 			return (decimal) conv;
@@ -316,11 +426,18 @@ namespace Epsitec.Cresus.Database
 		
 		public decimal Parse(string value, System.IFormatProvider format_provider)
 		{
-			//	TODO: convertit le texte en une valeur numérique correspondant, vérifie que la
+			//	Convertit le texte en une valeur numérique correspondante, vérifie que la
 			//	syntaxe est respectée et que la valeur est dans les bornes admises. Lève une
 			//	exception dans le cas contraire...
 			
-			return System.Decimal.Parse (value, format_provider);
+			decimal	retval = System.Decimal.Parse (value, format_provider);
+			
+			if (!this.CheckCompatibility (retval))
+			{
+				throw new System.OverflowException (value);
+			}
+			
+			return retval;
 		}
 		
 		
@@ -331,36 +448,96 @@ namespace Epsitec.Cresus.Database
 		
 		public string ToString(decimal value, System.IFormatProvider format_provider)
 		{
-			//	TODO: convertit la valeur en un texte, en tenant compte des divers réglages
+			if (!this.CheckCompatibility (value))
+			{
+				throw new System.OverflowException (value.ToString (format_provider));
+			}
+			
+			int frac_digits = this.DigitShift;
+			
+			//	Commence par faire en sorte de laisser tomber les zéros superflus (ce qui
+			//	peut arriver avec le type 'decimal', car 1.00M stocke en effet les deux
+			//	décimales).
+			
+			value *= DbNumDef.digit_table[frac_digits];
+			value  = decimal.Truncate (value);
+			value *= DbNumDef.digit_table_scale[frac_digits];
+			
+			//	Convertit la valeur en un texte, en tenant compte des divers réglages
 			//	internes (nombre de décimales, etc.)
 			
-			return value.ToString (format_provider);
+			//	(1) Convertit déjà le nombre en chaîne selon ToString de la classe "decimal" :
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			string decimal_string = value.ToString (format_provider);
+			
+			buffer.Append (decimal_string);
+			
+			//	(2) Détermine quel séparateur utiliser :
+			
+			System.Globalization.CultureInfo culture = format_provider as System.Globalization.CultureInfo;
+			string sep = (culture == null) ? "." : culture.NumberFormat.NumberDecimalSeparator;
+			
+			//	(3) Retrouve la position du séparateur décimal dans le nombre :
+			
+			int pos = decimal_string.IndexOf (sep);
+			
+			if (pos < 0)
+			{
+				if (frac_digits > 0)
+				{
+					buffer.Append (sep);
+				}
+			}
+			else
+			{
+				frac_digits -= decimal_string.Length - pos - 1;
+				System.Diagnostics.Debug.Assert (frac_digits >= 0);
+			}
+			
+			if (frac_digits > 0)
+			{
+				buffer.Append ('0', frac_digits);
+			}
+			
+			return buffer.ToString ();
 		}
 		
 		
 		static DbNumDef()
 		{
+			//  Constructeur statique de la classe.
 			//	Initialise la table de conversion entre nombre de décimales après la
-			//	virgule et facteur multiplicatif.
+			//	virgule et facteur multiplicatif/facteur d'échelle.
 			
 			DbNumDef.digit_table = new decimal[DbNumDef.digit_max];
+			DbNumDef.digit_table_scale = new decimal[DbNumDef.digit_max];
+			
 			decimal multiple = 1;
+			decimal scale = 1;
 			
 			for (int i = 0; i < DbNumDef.digit_max; i++)
 			{
 				DbNumDef.digit_table[i] = multiple;
-				multiple *= 10.0M;
+				DbNumDef.digit_table_scale[i] = scale;
+				multiple *= 10M;
+				scale *= 0.1M;
 			}
 		}
 		
 		
 		protected static readonly int	digit_max	= 24;
 		protected static decimal[]		digit_table;
+		protected static decimal[]		digit_table_scale;
 		
 		protected DbRawType				raw_type = DbRawType.Unsupported;
 		protected int					digit_precision;
 		protected int					digit_shift;
 		protected decimal				min_value	=  0.0M;
 		protected decimal				max_value	= -1.0M;
+
+		// mémorise les valeurs déterminées selon Min et Max
+		protected int					digit_precision_auto;
+		protected int					digit_shift_auto;
 	}
 }

@@ -389,29 +389,29 @@ namespace Epsitec.Common.Tests
 			double   size = 10.6;
 			string   text = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
 			
-			long c1 = AntiGrain.Interface.DebugGetCycleDelta ();
-			long c2 = AntiGrain.Interface.DebugGetCycleDelta ();
-			long c0 = AntiGrain.Interface.DebugGetCycleDelta ();
+			long c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			long c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			long c0 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			
 			System.Console.Out.WriteLine ("Zero work: " + c0.ToString ());
 			
-			c1 = AntiGrain.Interface.DebugGetCycleDelta ();
+			c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			AntiGrain.Interface.NoOp ();
-			c2 = AntiGrain.Interface.DebugGetCycleDelta () - c0;
+			c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 			System.Console.Out.WriteLine ("No-op work: " + c2.ToString ());
 			
-			c1 = AntiGrain.Interface.DebugGetCycleDelta ();
+			c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			AntiGrain.Interface.NoOpString (text);
-			c2 = AntiGrain.Interface.DebugGetCycleDelta () - c0;
+			c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 			System.Console.Out.WriteLine ("No-op work with string: " + c2.ToString ());
 			
 			gra.SetPixmapSize (1000, 400);
 			gra.SolidRenderer.Color = Color.FromBrightness (0);
 			
-			c1 = AntiGrain.Interface.DebugGetCycleDelta ();
+			c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			gra.AddText (10, 200, text, font, size);
 			gra.RenderSolid ();
-			c2 = AntiGrain.Interface.DebugGetCycleDelta () - c0;
+			c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 			
 			System.Console.Out.WriteLine ("First rendering: " + c2.ToString ());
 			
@@ -419,10 +419,10 @@ namespace Epsitec.Common.Tests
 			
 			for (int i = 0; i < 100; i++)
 			{
-				c1 = AntiGrain.Interface.DebugGetCycleDelta ();
+				c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 				gra.AddText (10, 200, text, font, size);
 				gra.RenderSolid ();
-				c2 = AntiGrain.Interface.DebugGetCycleDelta () - c0;
+				c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 				
 				tot += c2;
 			}
@@ -439,15 +439,15 @@ namespace Epsitec.Common.Tests
 			System.Drawing.Graphics gra = System.Drawing.Graphics.FromImage (image);
 			System.Drawing.Font font = new System.Drawing.Font ("Tahoma", (float) size);
 			
-			long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
-			long c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
-			long c0 = c2 - c1;
+			long c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			long c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			long c0 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			
 			System.Console.Out.WriteLine ("Zero work: " + c0.ToString ());
 			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			gra.DrawString (text, font, System.Drawing.Brushes.Black, 10, 200);
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+			c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 			
 			System.Console.Out.WriteLine ("First rendering: " + c2.ToString ());
 			
@@ -455,9 +455,9 @@ namespace Epsitec.Common.Tests
 			
 			for (int i = 0; i < 100; i++)
 			{
-				c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+				c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 				gra.DrawString (text, font, System.Drawing.Brushes.Black, 10, 200);
-				c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+				c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 				
 				tot += c2;
 			}
@@ -477,23 +477,23 @@ namespace Epsitec.Common.Tests
 			System.Drawing.Graphics gra = System.Drawing.Graphics.FromImage (image);
 			System.Drawing.Font font = new System.Drawing.Font ("Tahoma", (float) size);
 			
-			long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
-			long c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
-			long c0 = c2 - c1;
+			long c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			long c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			long c0 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			
 			System.Console.Out.WriteLine ("Zero work: " + c0.ToString ());
 			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			System.IntPtr hFont = font.ToHfont ();
 			System.IntPtr hDC   = gra.GetHdc ();
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+			c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 			
 			System.Console.Out.WriteLine ("Setup: " + c2.ToString ());
 			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			SelectObject(hDC, hFont);
 			TextOut (hDC, 10, 200, text, text.Length);
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+			c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 			
 			System.Console.Out.WriteLine ("First rendering: " + c2.ToString ());
 			
@@ -501,10 +501,10 @@ namespace Epsitec.Common.Tests
 			
 			for (int i = 0; i < 100; i++)
 			{
-				c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+				c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 				SelectObject(hDC, hFont);
 				TextOut (hDC, 10, 200, text, text.Length);
-				c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+				c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 				
 				tot += c2;
 			}
@@ -522,9 +522,9 @@ namespace Epsitec.Common.Tests
 			Font     font  = Font.GetFont ("Tahoma", "Regular");
 			Color    color = Color.FromBrightness (0);
 			
-			long cc = Epsitec.Common.Drawing.Agg.Library.Cycles;
-			long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
-			long c2 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			long cc = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			long c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			long c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			long c0 = c2 - c1;
 			
 			System.Console.Out.WriteLine ("Timer overhead: " + (c0) + " cycles -> " + (c0 / cpu_speed) + "us");
@@ -535,15 +535,15 @@ namespace Epsitec.Common.Tests
 			font.FillPixelCache ("", size, 10, 200);
 			font.RenderPixelCache (gra.Pixmap, "", size, 10, 200);
 			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			font.FillPixelCache ("", size, 10, 200);
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+			c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 			
 			System.Console.Out.WriteLine ("Calling FillPixelCache, no work done: " + (c2) + " cycles -> " + (c2 * 1000 / cpu_speed) + "ns");
 			
-			c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+			c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 			font.FillPixelCache (text, size, 10, 200);
-			c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+			c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 			
 			System.Console.Out.WriteLine ("Filling the cache: " + (c2) + " cycles -> " + (c2 * 1000 / cpu_speed / text.Length) + "ns / char");
 			
@@ -555,9 +555,9 @@ namespace Epsitec.Common.Tests
 			
 			for (int i = 0; i < 100; i++)
 			{
-				c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+				c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 				font.RenderPixelCache (gra.Pixmap, text, size, 10, 200);
-				c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+				c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 				
 				tot += c2;
 			}
@@ -570,9 +570,9 @@ namespace Epsitec.Common.Tests
 			
 			for (int i = 0; i < 100; i++)
 			{
-				c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+				c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
 				gra.PaintText (10, 180, text, font, size, color);
-				c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+				c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
 				
 				tot += c2;
 			}
