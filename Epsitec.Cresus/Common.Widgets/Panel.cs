@@ -13,5 +13,13 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
+		
+		public override Drawing.Rectangle GetClipBounds()
+		{
+			Drawing.Rectangle parent_clip = this.MapParentToClient (this.parent.GetClipBounds ());
+			Drawing.Rectangle client_clip = base.GetClipBounds ();
+			
+			return Drawing.Rectangle.Intersection (parent_clip, client_clip);
+		}
 	}
 }
