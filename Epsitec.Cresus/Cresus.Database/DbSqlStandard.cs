@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier
 
 namespace Epsitec.Cresus.Database
@@ -200,6 +200,7 @@ namespace Epsitec.Cresus.Database
 			return false;
 		}
 		
+		
 		public static string CreateSqlTableName(string name, DbElementCat category, DbKey key)
 		{
 			//	Crée un nom de table SQL à partir du nom "haut niveau" ainsi que de la catégorie
@@ -327,8 +328,8 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected static Regex		regex_name;
-		protected static Regex		regex_string;
-		protected static Regex		regex_number;
+		protected static Regex					regex_name;
+		protected static Regex					regex_string;
+		protected static Regex					regex_number;
 	}
 }

@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 01/12/2003
 
 namespace Epsitec.Cresus.Database
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Database
 			this.infrastructure = null;
 		}
 
-		public System.Data.IDbConnection Connection
+		public System.Data.IDbConnection		Connection
 		{
 			get
 			{
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		public System.Data.IsolationLevel IsolationLevel
+		public System.Data.IsolationLevel		IsolationLevel
 		{
 			get
 			{
