@@ -1,3 +1,6 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : en chantier/PA
+
 namespace Epsitec.Cresus.Support.Implementation
 {
 	using System.Globalization;
@@ -30,6 +33,7 @@ namespace Epsitec.Cresus.Support.Implementation
 			this.id_regex = new Regex (@"^([a-zA-Z0-9_]((?![ \.]$)(?<X>[ \+\-\.])(?!\k<X>))*)+$", RegexOptions.Compiled | RegexOptions.ExplicitCapture);
 		}
 		
+		
 		#region IResourceProvider Members
 		public string Prefix
 		{
@@ -48,29 +52,21 @@ namespace Epsitec.Cresus.Support.Implementation
 		
 		public bool ValidateId(string id)
 		{
-			return this.id_regex.IsMatch (id);
+			return (id != null) && (id != "") && (id.Length < 100) && this.id_regex.IsMatch (id);
 		}
 		
 		public bool Contains(string id)
 		{
-			// TODO:  Add FileProvider.Contains implementation
+			if (this.ValidateId (id))
+			{
+				//	On valide toujours le nom avant, pour éviter des mauvaises surprises si
+				//	l'appelant est malicieux.
+				
+				//	TODO: vérifie si la ressource existe, en cherchant uniquement le niveau
+				//	ResourceLevel.Default.
+			}
+			
 			return false;
-		}
-		
-		public System.IO.Stream GetDataStream(string id, Epsitec.Cresus.Support.ResourceLevel level)
-		{
-			// TODO:  Add FileProvider.GetDataStream implementation
-			return null;
-		}
-		
-		public void Remove(string id, Epsitec.Cresus.Support.ResourceLevel level)
-		{
-			// TODO:  Add FileProvider.Remove implementation
-		}
-		
-		public void Create(string id, Epsitec.Cresus.Support.ResourceLevel level)
-		{
-			// TODO:  Add FileProvider.Create implementation
 		}
 		
 		public byte[] GetData(string id, Epsitec.Cresus.Support.ResourceLevel level)
@@ -79,9 +75,28 @@ namespace Epsitec.Cresus.Support.Implementation
 			return null;
 		}
 		
+		public System.IO.Stream GetDataStream(string id, Epsitec.Cresus.Support.ResourceLevel level)
+		{
+			byte[] data = this.GetData (id, level);
+			return (data == null) ? null : new System.IO.MemoryStream (data, false);
+		}
+		
+		public void Create(string id, Epsitec.Cresus.Support.ResourceLevel level)
+		{
+			// TODO:  Add FileProvider.Create implementation
+			throw new ResourceException ("Not implemented");
+		}
+		
 		public void Update(string id, Epsitec.Cresus.Support.ResourceLevel level, byte[] data)
 		{
 			// TODO:  Add FileProvider.Update implementation
+			throw new ResourceException ("Not implemented");
+		}
+		
+		public void Remove(string id, Epsitec.Cresus.Support.ResourceLevel level)
+		{
+			// TODO:  Add FileProvider.Remove implementation
+			throw new ResourceException ("Not implemented");
 		}
 		#endregion
 		
