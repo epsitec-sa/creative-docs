@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 23/11/2003
 
 namespace Epsitec.Cresus.Database
@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Database
 		public virtual void Add(DbTable table)
 		{
 			this.List.Add (table);
+			this.OnChanged ();
 		}
 
 		public virtual void AddRange(DbTable[] tables)
@@ -26,11 +27,13 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.List.AddRange (tables);
+			this.OnChanged ();
 		}
 		
 		public virtual void Remove(DbTable table)
 		{
 			this.List.Remove (table);
+			this.OnChanged ();
 		}
 		
 		
@@ -60,7 +63,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public virtual DbTable			this[int index]
+		public virtual DbTable				this[int index]
 		{
 			get
 			{
@@ -68,7 +71,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public virtual DbTable			this[string table_name]
+		public virtual DbTable				this[string table_name]
 		{
 			get
 			{
