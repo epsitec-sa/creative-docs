@@ -83,6 +83,8 @@ namespace Epsitec.Common.Support
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckGetBundleRecursive()
 		{
 			ResourceBundle bundle = Resources.GetBundle ("file:recursive");
+			
+			string data = bundle.GetFieldString ("loop");
 		}
 		
 		[Test] public void CheckGetComplexBundle()
@@ -92,8 +94,8 @@ namespace Epsitec.Common.Support
 			bundle = Resources.GetBundle ("file:complex");
 			
 			Assertion.AssertNotNull (bundle);
-			Assertion.AssertEquals (ResourceFieldType.String, bundle.GetFieldType ("class"));
-			Assertion.AssertEquals (ResourceFieldType.BundleList, bundle.GetFieldType ("widgets"));
+			Assertion.AssertEquals (ResourceFieldType.Data, bundle.GetFieldType ("class"));
+			Assertion.AssertEquals (ResourceFieldType.List, bundle.GetFieldType ("widgets"));
 			Assertion.AssertEquals (3, bundle.GetFieldBundleListLength ("widgets"));
 			Assertion.AssertEquals ("CheckButton", bundle.GetFieldBundleListItem ("widgets", 0)["class"]);
 			Assertion.AssertEquals ("RadioButton", bundle.GetFieldBundleListItem ("widgets", 1)["class"]);
