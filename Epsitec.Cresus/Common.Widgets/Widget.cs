@@ -1755,7 +1755,7 @@ namespace Epsitec.Common.Widgets
 		#region Serialization support
 		protected virtual bool ShouldSerializeLocation()
 		{
-			return (this.Dock == DockStyle.None);
+			return (this.Dock == DockStyle.None) && (this.Anchor == AnchorStyles.None);
 		}
 		
 		protected virtual bool ShouldSerializeSize()
@@ -4443,6 +4443,8 @@ namespace Epsitec.Common.Widgets
 					//	si l'on désire réaliser des effets de transparence par dessus le dessin des
 					//	widgets enfants.
 					
+					graphics.ResetLineStyle ();
+					
 					this.OnPaintBackground (local_paint_args);
 					
 					//	Peint tous les widgets enfants, en commençant par le numéro 0, lequel se trouve
@@ -4468,6 +4470,8 @@ namespace Epsitec.Common.Widgets
 				
 					//	Peint l'avant-plan du widget, à n'utiliser que pour faire un "effet" spécial
 					//	après coup.
+					
+					graphics.ResetLineStyle ();
 					
 					this.OnPaintForeground (local_paint_args);
 				}

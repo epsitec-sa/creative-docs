@@ -52,13 +52,20 @@ namespace Epsitec.Common.Widgets
 		
 		public override void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
+			string       name = this.Name;
+			Drawing.Size size = this.Size;
+			string       text = this.Text;
+			
 			this.window = new Window (this);
 			
-			base.RestoreFromBundle (bundler, bundle);
+			this.window.Name       = name;
+			this.window.ClientSize = size;
+			this.window.Text       = text;
 			
-			this.window.Name       = this.Name;
-			this.window.ClientSize = this.Size;
-			this.window.Text       = this.Text;
+			this.Name = name;
+			this.Text = text;
+			
+			base.RestoreFromBundle (bundler, bundle);
 			
 			if (bundle["icon"].Type == Support.ResourceFieldType.Data)
 			{

@@ -1,5 +1,4 @@
 <bundle>
- <data name='Anchor'>Bottom, Left</data>
  <data name='class'>Button</data>
  <data name='Size'>100;*</data>
  <data name='Name'>cancel</data>

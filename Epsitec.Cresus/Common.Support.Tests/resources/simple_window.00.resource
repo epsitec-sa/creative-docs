@@ -2,7 +2,7 @@
  <data name='class'>Window</data>
  <data name='Name'>my_window</data>
  <data name='Text'><ref target='strings#title.SettingsWindow'/></data>
- <data name='Size'>240;280</data>
+ <data name='Size'>240;288</data>
  <data name='Icon'>file:icon</data>
  <list name='widgets'>
   <bundle>									<!-- Définition du menu -->
@@ -91,7 +91,6 @@
   <bundle>
    <data name='class'>Widget</data>
    <data name='Dock'>Fill</data>
-   <data name='Size'>240;235</data>
    <list name='widgets'>
     <bundle>
      <data name='class'>CheckButton</data>
@@ -116,13 +115,13 @@
     <bundle>
      <data name='class'>TextField</data>
      <data name='Size'>80;*</data>
-     <data name='Location'>100;190</data>
+     <data name='Location'>100;184</data>
     </bundle>
     <bundle>
      <data name='class'>TextFieldCombo</data>
      <data name='IsReadOnly'>true</data>
      <data name='Size'>80;*</data>
-     <data name='Location'>100;170</data>
+     <data name='Location'>100;164</data>
      <bundle name='items'>
       <data name='00/SelectA'>Choix A</data>
       <data name='01/SelectB'>Choix B</data>
@@ -141,9 +140,8 @@
     <bundle>
      <data name='class'>GroupBox</data>
      <data name='Anchor'>Left, Right, Top, Bottom</data>
-     <data name='Text'><![CDATA[Choix <i>cornelien</i>...]]></data>
-     <data name='Size'>215;85</data>
-     <data name='Location'>10;50</data>
+     <data name='AnchorMargins'>10;10;100;50</data>
+     <data name='Text'><![CDATA[Choix <i>cornélien</i>...]]></data>
      <data name='DockH'>no</data>
      <data name='DockPadding'>5;5;5;5</data>
      <list name='widgets'>
@@ -166,7 +164,8 @@
     </bundle>
     <bundle>
      <ref target='button.cancel'/>
-     <data name='Location'>10;10</data>
+     <data name='Anchor'>Bottom, Left</data>
+     <data name='AnchorMargins'>10;0;0;10</data>
      <data name='Command'>CancelSimpleWindow</data>
     </bundle>
    </list>

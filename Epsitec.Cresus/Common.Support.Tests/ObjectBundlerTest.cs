@@ -30,7 +30,7 @@ namespace Epsitec.Common.Support
 			Assertion.AssertNotNull (button);
 			Assertion.AssertEquals ("cancel", button.Name);
 			Assertion.Assert (button.Text.Length > 0);
-			Assertion.AssertEquals (Widgets.AnchorStyles.Left | Widgets.AnchorStyles.Bottom, button.Anchor);
+			Assertion.AssertEquals (Widgets.AnchorStyles.None, button.Anchor);
 			Assertion.AssertEquals (100, button.Width);
 			Assertion.AssertEquals (new Widgets.Button ().Height, button.Height);
 		}

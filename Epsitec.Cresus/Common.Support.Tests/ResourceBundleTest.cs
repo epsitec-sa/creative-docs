@@ -208,13 +208,12 @@ namespace Epsitec.Common.Support
 			
 			System.Array.Sort (names);
 			
-			Assertion.AssertEquals (6, bundle.CountFields);
+			Assertion.AssertEquals (5, bundle.CountFields);
 			Assertion.AssertEquals ("a",      names[0]);
-			Assertion.AssertEquals ("Anchor", names[1]);
-			Assertion.AssertEquals ("class",  names[2]);
-			Assertion.AssertEquals ("Name",   names[3]);
-			Assertion.AssertEquals ("Size",   names[4]);
-			Assertion.AssertEquals ("Text",   names[5]);
+			Assertion.AssertEquals ("class",  names[1]);
+			Assertion.AssertEquals ("Name",   names[2]);
+			Assertion.AssertEquals ("Size",   names[3]);
+			Assertion.AssertEquals ("Text",   names[4]);
 		}
 		
 		[Test] public void CheckCompileRefLevel2()
