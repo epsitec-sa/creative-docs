@@ -210,8 +210,11 @@ namespace Epsitec.Common.Drawing
 			
 			Transform transform = new Transform ();
 			
+			double sx = (fill_width > 1)  ? (fill_width-1)  / (ix2-ix1-1) : 1.0;
+			double sy = (fill_height > 1) ? (fill_height-1) / (iy2-iy1-1) : 1.0;
+			
 			transform.Translate (-ix1, -iy1);
-			transform.Scale ((fill_width-1) / (ix2-ix1-1), (fill_height-1) / (iy2-iy1-1));
+			transform.Scale (sx, sy);
 			transform.Translate (fill_x, fill_y);
 			
 			this.AddFilledRectangle (fill_x, fill_y, fill_width, fill_height);
