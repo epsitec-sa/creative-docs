@@ -6,6 +6,7 @@ namespace Epsitec.Common.Drawing
 		
 		Normal		= 0,	//	texte/icône peints normalement
 		Disabled	= 1,	//	texte/icône grisés
-		Selected	= 2		//	texte/icône sélectionnés (couleurs "inversées")
+		Selected	= 2,	//	texte/icône sélectionnés (couleurs "inversées")
+		Entered		= 3		//	texte/icône survolés par la souris
 	}
 }
