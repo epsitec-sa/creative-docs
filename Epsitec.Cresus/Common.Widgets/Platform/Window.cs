@@ -1766,7 +1766,7 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		internal void ShowWindow()
 		{
-			System.Windows.Forms.Application.DoEvents ();
+//			System.Windows.Forms.Application.DoEvents ();
 			this.UpdateLayeredWindow ();
 			if (this.IsMouseActivationEnabled)
 			{
