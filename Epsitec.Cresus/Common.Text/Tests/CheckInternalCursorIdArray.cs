@@ -73,7 +73,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (array.GetCursorPosition (id2) == 2);
 			Debug.Assert.IsTrue (array.GetCursorPosition (id3) == 3);
-			Debug.Assert.IsTrue (array.CountElements () == 2);
+			Debug.Assert.IsTrue (array.GetElementCount () == 2);
 			
 			array.Add (id1, 1);
 			
@@ -85,7 +85,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (array.GetCursorPosition (id1) == 1);
 			Debug.Assert.IsTrue (array.GetCursorPosition (id3) == 3);
-			Debug.Assert.IsTrue (array.CountElements () == 2);
+			Debug.Assert.IsTrue (array.GetElementCount () == 2);
 			
 			array.Add (id2, 2);
 			
@@ -97,7 +97,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (array.GetCursorPosition (id1) == 1);
 			Debug.Assert.IsTrue (array.GetCursorPosition (id2) == 2);
-			Debug.Assert.IsTrue (array.CountElements () == 2);
+			Debug.Assert.IsTrue (array.GetElementCount () == 2);
 			
 			array.Add (id3, 3);
 			
@@ -109,11 +109,11 @@ namespace Epsitec.Common.Text.Tests
 			array.Remove (id1);
 			
 			Debug.Assert.IsTrue (array.GetCursorPosition (id2) == 2);
-			Debug.Assert.IsTrue (array.CountElements () == 1);
+			Debug.Assert.IsTrue (array.GetElementCount () == 1);
 			
 			array.Remove (id2);
 			
-			Debug.Assert.IsTrue (array.CountElements () == 0);
+			Debug.Assert.IsTrue (array.GetElementCount () == 0);
 		}
 	}
 }

@@ -105,9 +105,70 @@ namespace Epsitec.Common.Text.Internal
 			return this.FindElementPosition (this.FindElement (id));
 		}
 		
-		public int CountElements()
+		public int GetElementCount()
 		{
 			return this.length;
+		}
+		
+		
+		public void ProcessInsertion(int position, int length)
+		{
+			//	Décale les curseurs en fonction d'une insertion à la position
+			//	spécifiée. Ceci affecte en fait le curseur placé immédiatement
+			//	après le point d'insertion.
+			
+			int index = this.FindElementBeforePosition (position) + 1;
+			
+			if (index < this.length)
+			{
+				this.elements[index].offset += length;
+			}
+		}
+		
+		public void ProcessRemoval(int position, int length)
+		{
+			//	Décale les curseurs en fonction d'une suppression depuis la
+			//	position indiquée.
+			
+			//	Si des curseurs se trouvent dans la tranche supprimée, ils
+			//	sont déplacés au début de la tranche.
+			
+			int index_before = this.FindElementBeforePosition (position);
+			int index_after  = this.FindElementBeforePosition (position + length) + 1;
+			
+			int pos_at   = this.FindElementPosition (index_before);
+			int index_at = index_before + 1;
+			
+			//	S'il y a des curseurs dans la tranche supprimée, on les déplace
+			//	un à un :
+			
+			while ((index_at < index_after)
+				&& (index_at < this.length))
+			{
+				pos_at += this.elements[index_at].offset;
+				
+				int coverage = pos_at - position;
+				
+				Debug.Assert.IsTrue (this.FindElementPosition (index_at) == pos_at);
+				Debug.Assert.IsTrue (coverage >= 0);
+				
+				this.elements[index_at].offset -= coverage;
+				
+				Debug.Assert.IsTrue (this.FindElementPosition (index_at) == position);
+				
+				length -= coverage;
+				pos_at  = position;
+				
+				index_at++;
+			}
+			
+			if (index_after < this.length)
+			{
+				Debug.Assert.IsTrue (this.GetCursorPosition (this.elements[index_after].id) >= position + length);
+				Debug.Assert.IsTrue (this.elements[index_after].offset >= length);
+					
+				this.elements[index_after].offset -= length;
+			}
 		}
 		
 		
@@ -134,7 +195,9 @@ namespace Epsitec.Common.Text.Internal
 			//	précédent.
 			
 			//	L'index de l'élément retourné correspond en fait au point
-			//	d'insertion pour la position spécifiée.
+			//	d'insertion pour la position spécifiée. S'il y a déjà des
+			//	éléments à cette position, on va retourner l'index après
+			//	ces éléments-là.
 			
 			for (int i = 0; i < this.length; i++)
 			{
@@ -151,6 +214,25 @@ namespace Epsitec.Common.Text.Internal
 			
 			delta = position;
 			return this.length;
+		}
+		
+		private int FindElementBeforePosition(int position)
+		{
+			//	Trouve l'élément qui précède la position indiquée et
+			//	retourne son index. S'il n'y a aucun élément avant la
+			//	position en question, retourne -1.
+			
+			for (int i = 0; i < this.length; i++)
+			{
+				position -= this.elements[i].offset;
+				
+				if (position <= 0)
+				{
+					return i-1;
+				}
+			}
+			
+			return this.length-1;
 		}
 		
 		private int FindElementPosition(int index)
