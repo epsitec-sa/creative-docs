@@ -84,6 +84,15 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
+		internal void OpenStringPicker()
+		{
+			//	TODO: ...
+			
+			this.switcher.Mode         = Widgets.SwitcherMode.AcceptReject;
+			this.switcher.SelectedName = PanelName.StringEdit.ToString ();
+		}
+		
+		
 		protected void Initialise()
 		{
 			if ((this.is_initialised) ||
@@ -111,28 +120,45 @@ namespace Epsitec.Common.Designer
 			this.interf_edit_controller.Initialise ();
 			this.string_edit_controller.Initialise ();
 			
-			this.switcher = new Widgets.Switcher ();
-			
-			this.switcher.Items.Add ("interface", "Interface utilisateur");
-			this.switcher.Items.Add ("string",    "Ressources (textes)");
-			
-			this.switcher.Dock   = DockStyle.Top;
-			this.switcher.Parent = this.main_window.Root;
-			this.switcher.Mode   = Widgets.SwitcherMode.Select;
-			
-			this.switcher.SelectedName = "interface";
+			this.CreateToolBar ();
+			this.CreateSwitcher ();
 			
 			Widget panel;
 			
-			panel = this.interf_edit_controller.Panel;
+			panel = this.interf_edit_controller.MainPanel;
 			
-			panel.Dock   = DockStyle.Top;
+			panel.Dock   = DockStyle.Fill;
 			panel.Parent = this.main_window.Root;
 			
-			this.main_window.ClientSize = this.main_window.Root.MinSize;
+			panel = this.string_edit_controller.MainPanel;
 			
+			panel.Dock   = DockStyle.Fill;
+			panel.Parent = this.main_window.Root;
+			
+			this.main_window.MakeFixedSizeWindow ();
+			this.main_window.ClientSize = new Drawing.Size (312, 704);
 		}
 		
+		
+		private void CreateSwitcher()
+		{
+			this.switcher = new Widgets.Switcher (this.main_window.Root);
+			
+			this.switcher.Items.Add (PanelName.InterfaceEdit.ToString (), "Interface utilisateur");
+			this.switcher.Items.Add (PanelName.StringEdit.ToString (),    "Ressources (textes)");
+			
+			this.switcher.Dock   = DockStyle.Top;
+			this.switcher.Mode   = Widgets.SwitcherMode.Select;
+			this.switcher.SelectedIndexChanged += new EventHandler (this.HandleSwitcherSelectedIndexChanged);
+			this.switcher.SelectedName = PanelName.InterfaceEdit.ToString ();
+		}
+		
+		private void CreateToolBar()
+		{
+			this.tool_bar = new HToolBar (this.main_window.Root);
+			
+			this.tool_bar.Dock = DockStyle.Top;
+		}
 		
 		private void CreateMainWindow()
 		{
@@ -152,6 +178,50 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
+		private void UpdateVisiblePanel()
+		{
+			bool show_string_edit = false;
+			bool show_interf_edit = false;
+			
+			PanelName panel = (PanelName) System.Enum.Parse (typeof (PanelName), this.switcher.SelectedName);
+			
+			this.tool_bar.Items.Clear ();
+			
+			switch (panel)
+			{
+				case PanelName.InterfaceEdit:
+					this.interf_edit_controller.FillToolBar (this.tool_bar);
+					show_interf_edit = true;
+					break;
+				
+				case PanelName.StringEdit:
+					this.string_edit_controller.FillToolBar (this.tool_bar);
+					show_string_edit = true;
+					break;
+			}
+			
+			this.interf_edit_controller.MainPanel.SetVisible (show_interf_edit);
+			this.string_edit_controller.MainPanel.SetVisible (show_string_edit);
+		}
+		
+		
+		private void HandleSwitcherSelectedIndexChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.switcher == sender);
+			
+			this.UpdateVisiblePanel ();
+		}
+		
+		
+		
+		protected enum PanelName
+		{
+			None,
+			InterfaceEdit,
+			StringEdit
+		}
+		
+		
 		public static Application				Current
 		{
 			get
@@ -160,16 +230,20 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		
 		protected bool							is_initialised;
 		protected bool							is_initialising;
 		
 		protected Window						main_window;
 		protected Support.CommandDispatcher		dispatcher;
+		
 		protected StringEditController			string_edit_controller;
 		protected InterfaceEditController		interf_edit_controller;
 		protected BundleEditController			bundle_edit_controller;
+		
 		protected string						name;
 		
+		protected AbstractToolBar				tool_bar;
 		protected Widgets.Switcher				switcher;
 		
 		protected static Application			application;

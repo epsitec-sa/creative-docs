@@ -47,7 +47,7 @@ namespace Epsitec.Common.Designer.Panels
 		{
 			get
 			{
-				return new Drawing.Size (500, 400);
+				return new Drawing.Size (298, 400);
 			}
 		}
 		
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Designer.Panels
 			
 			this.edit_array.CommandDispatcher = new Support.CommandDispatcher ("StringEditTable", true);
 			this.edit_array.Anchor            = AnchorStyles.All;
-			this.edit_array.AnchorMargins     = new Drawing.Margins (5, 5, 5, 65);
+			this.edit_array.AnchorMargins     = new Drawing.Margins (4, 4, 4, 65);
 			this.edit_array.ColumnCount       = 2;
 			this.edit_array.RowCount          = 0;
 			
@@ -86,7 +86,7 @@ namespace Epsitec.Common.Designer.Panels
 			this.edit_array.Columns[1].HeaderText = "Valeur";
 			this.edit_array.Columns[1].IsReadOnly = false;
 			
-			this.edit_array.SetColumnWidth (0, 160);
+			this.edit_array.SetColumnWidth (0, 110);
 			this.edit_array.SetColumnWidth (1, this.edit_array.GetColumnWidth (1) + this.edit_array.FreeTableWidth);
 			this.edit_array.TextArrayStore = this.store;
 			this.edit_array.TitleWidget = title;
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Designer.Panels
 			this.edit_array.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
 			this.lang_combo.IsReadOnly = true;
-			this.lang_combo.Width      = 80;
+			this.lang_combo.Width      = 60;
 			this.lang_combo.Dock       = this.edit_array.ArrayToolBar.OppositeIconDockStyle;
 			this.lang_combo.SelectedIndexChanged += new EventHandler (this.HandleLanguageComboSelectedIndexChanged);
 			
@@ -116,17 +116,17 @@ namespace Epsitec.Common.Designer.Panels
 			text_label.Height           = 15;
 			text_label.Text             = "Co<m>m</m>mentaire :";
 			text_label.Anchor           = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
-			text_label.AnchorMargins    = new Drawing.Margins (5, 5, 0, 50);
+			text_label.AnchorMargins    = new Drawing.Margins (4, 4, 0, 50);
 			text_label.ShortcutPressed += new EventHandler (this.HandleCommentTextLabelShortcutPressed);
 			
 			text_field.Height        = 44;
 			text_field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			text_field.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.Bottom;
-			text_field.AnchorMargins = new Drawing.Margins (5, 5, 0, 5);
+			text_field.AnchorMargins = new Drawing.Margins (4, 4, 0, 4);
 			text_field.TabIndex      = 1;
 			text_field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
-			title.Caption = @"<font size=""120%"">Bundle.</font> Édition des données contenues dans la ressource.";
+//			title.Caption = @"<font size=""120%"">Bundle.</font> Édition des données contenues dans la ressource.";
 			
 			ctrl.CreateCommands ();
 			ctrl.CreateToolBarButtons ();

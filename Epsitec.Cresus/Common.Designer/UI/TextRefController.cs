@@ -36,6 +36,7 @@ namespace Epsitec.Common.Designer.UI
 			this.combo_text.TextChanged     += new EventHandler (this.HandleComboTextTextChanged);
 			this.combo_text.TextEdited      += new EventHandler (this.HandleComboTextTextEdited);
 			this.combo_text.OpeningCombo    += new CancelEventHandler (this.HandleComboTextOpeningCombo);
+			this.combo_text.Button.Clicked  += new MessageEventHandler (this.HandleComboTextButtonClicked);
 			this.combo_text.ButtonGlyphShape = GlyphShape.Dots;
 			this.combo_text.TabIndex         = 10;
 			this.combo_text.Name             = "Value_1";
@@ -200,8 +201,11 @@ namespace Epsitec.Common.Designer.UI
 		private void HandleComboTextOpeningCombo(object sender, CancelEventArgs e)
 		{
 			e.Cancel = true;
-			
-			//	TODO: ouvre le dialogue permettant de choisir un texte.
+		}
+		
+		private void HandleComboTextButtonClicked(object sender, MessageEventArgs e)
+		{
+			Application.Current.OpenStringPicker ();
 		}
 		
 		private void HandleComboBundleSelectedIndexChanged(object sender)

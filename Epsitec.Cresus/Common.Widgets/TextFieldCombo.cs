@@ -39,6 +39,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Button								Button
+		{
+			get
+			{
+				return this.button;
+			}
+		}
+		
 		
 		#region Interface IBundleSupport
 		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)

@@ -20,10 +20,29 @@ namespace Epsitec.Common.Designer
 			this.panels     = new System.Collections.ArrayList ();
 			this.provider   = new BundleStringProvider (this);
 			
-			Support.Globals.Properties.SetProperty ("$resources$string controller", this);
-			
 			this.save_command_state = CommandState.Find ("SaveStringBundle", this.dispatcher);
 			this.UpdateCommandStates ();
+		}
+		
+		
+		public override void Initialise()
+		{
+			System.Diagnostics.Debug.Assert (this.is_initialised == false);
+			
+			this.CreateMainPanel ();
+			this.UpdateCommandStates ();
+			this.SyncCommandStates ();
+			
+			this.is_initialised = true;
+		}
+		
+		public override void FillToolBar(AbstractToolBar tool_bar)
+		{
+			tool_bar.Items.Add (IconButton.CreateSimple ("CreateStringBundle", "manifest:Epsitec.Common.Designer.Images.New.icon"));
+			tool_bar.Items.Add (IconButton.CreateSimple ("OpenStringBundle()", "manifest:Epsitec.Common.Designer.Images.Open.icon"));
+			tool_bar.Items.Add (IconButton.CreateSimple ("SaveStringBundle()", "manifest:Epsitec.Common.Designer.Images.Save.icon"));
+			
+			this.SyncCommandStates ();
 		}
 		
 		
@@ -208,14 +227,6 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		public static StringEditController		Current
-		{
-			get
-			{
-				return Support.Globals.Properties.GetProperty ("$resources$string controller") as StringEditController;
-			}
-		}
-		
 		
 		public Store							ActiveStore
 		{
@@ -262,20 +273,21 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		
-		public Window							Window
+		public Widget							MainPanel
 		{
 			get
 			{
-				if (this.window == null)
-				{
-					this.CreateWindow ();
-				}
-				
-				return this.window;
+				return this.main_panel;
 			}
 		}
 		
+		public Support.Data.IPropertyProvider	Provider
+		{
+			get
+			{
+				return this.provider;
+			}
+		}
 		
 		
 		public bool IsStringBundleLoaded(string name)
@@ -747,8 +759,6 @@ namespace Epsitec.Common.Designer
 			public BundleStringProvider(StringEditController host)
 			{
 				this.host = host;
-				
-				Support.Globals.Properties.SetProperty ("$resources$string provider", this);
 			}
 			
 			
@@ -849,10 +859,8 @@ namespace Epsitec.Common.Designer
 			store.Panel = panel;
 			
 			Widget  widget = panel.Widget;
-			Window  window = this.Window;
 			TabPage page   = new TabPage ();
 			
-			System.Diagnostics.Debug.Assert (this.window != null);
 			System.Diagnostics.Debug.Assert (this.tab_book != null);
 			
 			widget.Dock   = DockStyle.Fill;
@@ -865,32 +873,20 @@ namespace Epsitec.Common.Designer
 			return panel;
 		}
 		
-		protected void CreateWindow()
+		protected void CreateMainPanel()
 		{
 			Drawing.Size size = Panels.StringEditPanel.DefaultSize;
 			
-			this.window = new Window ();
-			this.window.ClientSize = size + new Drawing.Size (20, 60);
-			this.window.CommandDispatcher = this.dispatcher;
-			this.Window.Text = "Ressources textuelles";
+			this.main_panel = new Widget ();
+			this.main_panel.Size = size + new Drawing.Size (20, 60);
+			this.main_panel.CommandDispatcher = this.dispatcher;
 			
-			this.tool_bar = new HToolBar (this.Window.Root);
-			this.tool_bar.Dock = DockStyle.Top;
-			this.tool_bar.CommandDispatcher = this.dispatcher;
-			
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("CreateStringBundle", "manifest:Epsitec.Common.Designer.Images.New.icon"));
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("OpenStringBundle()", "manifest:Epsitec.Common.Designer.Images.Open.icon"));
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("SaveStringBundle()", "manifest:Epsitec.Common.Designer.Images.Save.icon"));
-			
-			this.tab_book = new TabBook (this.Window.Root);
+			this.tab_book = new TabBook (this.main_panel);
 			this.tab_book.Dock = DockStyle.Fill;
-			this.tab_book.DockMargins = new Drawing.Margins (8, 8, 8, 8);
+			this.tab_book.DockMargins = new Drawing.Margins (4, 4, 4, 4);
 			this.tab_book.HasCloseButton = true;
 			this.tab_book.CloseClicked      += new EventHandler (this.HandleTabBookCloseClicked);
 			this.tab_book.ActivePageChanged += new EventHandler (this.HandleTabBookActivePageChanged);
-			
-			this.UpdateCommandStates ();
-			this.SyncCommandStates ();
 		}
 		
 		
@@ -899,7 +895,7 @@ namespace Epsitec.Common.Designer
 			if (e.CommandArgs.Length == 0)
 			{
 				Dialogs.BundleName dialog = new Dialogs.BundleName ("CreateStringBundle (\"{0}\", \"{1}\")", this.dispatcher);
-				dialog.Owner = this.Window;
+				dialog.Owner = this.main_panel.Window;
 				dialog.Show ();
 			}
 			else if (e.CommandArgs.Length == 2)
@@ -921,7 +917,7 @@ namespace Epsitec.Common.Designer
 			{
 				Dialogs.OpenExistingBundle dialog = new Dialogs.OpenExistingBundle ("OpenStringBundle (\"{0}\")", this.dispatcher);
 				dialog.SubBundleSpec.TypeFilter = "String";
-				dialog.Owner = this.Window;
+				dialog.Owner = this.main_panel.Window;
 				dialog.UpdateListContents ();
 				dialog.Show ();
 			}
@@ -990,7 +986,7 @@ namespace Epsitec.Common.Designer
 					
 					Common.Dialogs.IDialog dialog = Common.Dialogs.Message.CreateYesNoCancel (Application.Current.Name, Common.Dialogs.Icon.Warning, question, command_yes, command_no, this.dispatcher);
 					
-					dialog.Owner = this.Window;
+					dialog.Owner = this.main_panel.Window;
 					dialog.Show ();
 				}
 			}
@@ -1071,14 +1067,15 @@ namespace Epsitec.Common.Designer
 		public event Support.EventHandler		StoreContentsChanged;
 		
 		
+		private bool							is_initialised;
+		
 		protected System.Collections.Hashtable	bundles;
 		protected System.Collections.ArrayList	panels;
 		
 		private BundleStringProvider			provider;
 		
 		protected string						default_prefix = "file";
-		protected Window						window;
-		protected AbstractToolBar				tool_bar;
+		protected Widget						main_panel;
 		protected TabBook						tab_book;
 		protected CommandState					save_command_state;
 	}

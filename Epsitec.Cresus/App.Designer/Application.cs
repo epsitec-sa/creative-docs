@@ -36,15 +36,11 @@ namespace Epsitec.Designer
 //			button.CreateCommandState ();
 			
 			this.MainWindow.Show ();
-			
-			this.StringEditController.Window.Show ();
 		}
 		
 		#region Application Commands
 		[Command ("QuitDesigner")] void CommandQuitDesigner()
 		{
-			this.StringEditController.Window.Close ();
-			
 			if (this.runs_as_plug_in)
 			{
 				this.MainWindow.Close ();

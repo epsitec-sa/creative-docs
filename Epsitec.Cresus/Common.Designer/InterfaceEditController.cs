@@ -17,28 +17,6 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		public override void Initialise()
-		{
-			System.Diagnostics.Debug.Assert (this.is_initialised == false);
-			
-			//	Crée toute l'infrastructure nécessaire au designer de GUI :
-			
-			this.CreateRootPanel ();
-			this.CreateCreationPanel ();
-			this.CreateAttributePanel ();
-			
-			//	Définit l'état initial des commandes :
-			
-			this.UpdateSelectionState ();
-			this.SetTabIndexSetter (false);
-			this.UpdateTabIndexIcons ();
-			
-			this.panel.Size = this.panel.MinSize;
-			
-			this.is_initialised = true;
-		}
-		
-		
 		public Editors.WidgetEditor[]			WidgetEditors
 		{
 			get
@@ -48,30 +26,43 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		public Widget							Panel
+		public Widget							MainPanel
 		{
 			get
 			{
-				return this.panel;
+				return this.main_panel;
 			}
 		}
 		
-		protected CommandState GetCommandState(Command command)
+		
+		public override void Initialise()
 		{
-			return CommandState.Find (command.ToString (), this.dispatcher);
+			System.Diagnostics.Debug.Assert (this.is_initialised == false);
+			
+			//	Crée toute l'infrastructure nécessaire au designer de GUI :
+			
+			this.CreateMainPanel ();
+			this.CreateCreationPanel ();
+			this.CreateAttributePanel ();
+			
+			//	Définit l'état initial des commandes :
+			
+			this.SetTabIndexSetter (false);
+			this.UpdateTabIndexIcons ();
+			this.UpdateCommandStates ();
+			
+			this.main_panel.Size = this.main_panel.MinSize;
+			
+			this.is_initialised = true;
 		}
 		
-		
-		protected Widget CreatePanel(string name, string caption)
+		public override void FillToolBar(AbstractToolBar tool_bar)
 		{
-			Widget panel = new Widget ();
+			tool_bar.Items.Add (IconButton.CreateSimple (Command.CreateNewInterface,  "manifest:Epsitec.Common.Designer.Images.New.icon"));
+			tool_bar.Items.Add (IconButton.CreateSimple (Command.OpenLoadInterface,   "manifest:Epsitec.Common.Designer.Images.Open.icon"));
+			tool_bar.Items.Add (IconButton.CreateSimple (Command.SaveActiveInterface, "manifest:Epsitec.Common.Designer.Images.Save.icon"));
 			
-			panel.Dock = DockStyle.Top;
-			panel.Name = name;
-			panel.Text = caption;
-			panel.CommandDispatcher = this.dispatcher;
-			
-			return panel;
+			this.SyncCommandStates ();
 		}
 		
 		
@@ -86,29 +77,9 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		protected void UpdateEditorArray()
+		protected void CreateMainPanel()
 		{
-			if (this.editors == null)
-			{
-				int n = this.edit_window_list.Count;
-				
-				Window[]               windows = new Window[n];
-				Editors.WidgetEditor[] editors = new Editors.WidgetEditor[n];
-				
-				this.edit_window_list.CopyTo (windows);
-				
-				for (int i = 0; i < n; i++)
-				{
-					editors[i] = Editors.WidgetEditor.FromWindow (windows[i]);
-				}
-				
-				this.editors = editors;
-			}
-		}
-		
-		protected void CreateRootPanel()
-		{
-			this.panel = new Widget ();
+			this.main_panel = new Widget ();
 		}
 		
 		protected void CreateCreationPanel()
@@ -129,9 +100,10 @@ namespace Epsitec.Common.Designer
 			dx += book_frame_size.Width;
 			dy += book_frame_size.Height;
 			
-			this.creation_panel.Size    = new Drawing.Size (dx, dy);
-			this.creation_panel.MinSize = new Drawing.Size (dx, dy);
-			this.creation_book.Dock     = DockStyle.Fill;
+			this.creation_panel.Size       = new Drawing.Size (dx, dy);
+			this.creation_panel.MinSize    = new Drawing.Size (dx, dy);
+			this.creation_book.Dock        = DockStyle.Fill;
+			this.creation_book.DockMargins = new Drawing.Margins (4, 4, 4, 4);
 			
 			TabPage page_1 = new TabPage ();
 			TabPage page_2 = new TabPage ();
@@ -158,7 +130,7 @@ namespace Epsitec.Common.Designer
 			this.widget_palette.DragEnd   += new Support.EventHandler (this.HandleSourceDragEnd);
 			this.data_palette.DragEnd     += new Support.EventHandler (this.HandleSourceDragEnd);
 			
-			this.creation_panel.Parent = this.panel;
+			this.creation_panel.Parent = this.MainPanel;
 		}
 		
 		protected void CreateAttributePanel()
@@ -182,15 +154,12 @@ namespace Epsitec.Common.Designer
 			
 			widget = this.attribute_palette.Widget;
 			
-			widget.Parent = root;
-			widget.Dock   = DockStyle.Fill;
+			widget.Parent      = root;
+			widget.Dock        = DockStyle.Fill;
+			widget.DockMargins = new Drawing.Margins (4, 4, 4, 4);
 			
 			//	Initialisation de la barre d'outils pour l'édition :
 			
-			this.tool_bar.Items.Add (IconButton.CreateSimple (Command.CreateNewInterface,  "manifest:Epsitec.Common.Designer.Images.New.icon"));
-			this.tool_bar.Items.Add (IconButton.CreateSimple (Command.OpenLoadInterface,   "manifest:Epsitec.Common.Designer.Images.Open.icon"));
-			this.tool_bar.Items.Add (IconButton.CreateSimple (Command.SaveActiveInterface, "manifest:Epsitec.Common.Designer.Images.Save.icon"));
-			this.tool_bar.Items.Add (new IconSeparator ());
 			this.tool_bar.Items.Add (IconButton.CreateToggle (Command.TabIndexSetter.ToString () + "(this.IsActive)", "manifest:Epsitec.Common.Designer.Images.NumTabIndex.icon"));
 			this.tool_bar.Items.Add (IconButton.CreateSimple (Command.TabIndexResetSeq,				                  "manifest:Epsitec.Common.Designer.Images.NumOne.icon"));
 			this.tool_bar.Items.Add (IconButton.CreateToggle (Command.TabIndexPicker.ToString () + "(this.IsActive)", "manifest:Epsitec.Common.Designer.Images.NumPicker.icon"));
@@ -206,20 +175,67 @@ namespace Epsitec.Common.Designer
 			this.tool_bar.Parent = root;
 			this.tool_bar.Dock   = DockStyle.Top;
 			
-			this.attribute_panel.Parent = this.panel;
+			this.attribute_panel.Parent = this.MainPanel;
 		}
 		
 		
-		protected void SetWidgetEnable(string name, bool enabled)
+		protected CommandState GetCommandState(Command command)
 		{
-			System.Text.RegularExpressions.Regex regex = Support.RegexFactory.FromSimpleJoker (name);
+			return CommandState.Find (command.ToString (), this.dispatcher);
+		}
+		
+		protected Widget CreatePanel(string name, string caption)
+		{
+			Widget panel = new Widget ();
 			
-			Widget[] widgets = Widget.FindAllCommandWidgets (regex, this.dispatcher);
+			panel.Dock = DockStyle.Top;
+			panel.Name = name;
+			panel.Text = caption;
+			panel.CommandDispatcher = this.dispatcher;
 			
-			for (int i = 0; i < widgets.Length; i++)
+			return panel;
+		}
+		
+		
+		protected void UpdateEditorArray()
+		{
+			if (this.editors == null)
 			{
-				widgets[i].SetEnabled (enabled);
+				int n = this.edit_window_list.Count;
+				
+				Window[]               windows = new Window[n];
+				Editors.WidgetEditor[] editors = new Editors.WidgetEditor[n];
+				
+				this.edit_window_list.CopyTo (windows);
+				
+				for (int i = 0; i < n; i++)
+				{
+					editors[i] = Editors.WidgetEditor.FromWindow (windows[i]);
+				}
+				
+				this.editors = editors;
 			}
+		}
+		
+		protected void CreateEditorForWindow(Window window)
+		{
+			window.Root.IsEditionEnabled = true;
+			
+			this.edit_window_list.Add (window);
+			this.editors = null;
+			
+			Editors.WidgetEditor editor = new Editors.WidgetEditor (this);
+			
+			editor.Root  = window.Root;
+			
+			editor.Selected   += new SelectionEventHandler (this.HandleEditorSelected);
+			editor.Deselected += new SelectionEventHandler (this.HandleEditorDeselected);
+			
+			editor.DragSelectionBegin += new EventHandler (this.HandleEditorDragSelectionBegin);
+			editor.DragSelectionEnd   += new EventHandler (this.HandleEditorDragSelectionEnd);
+			
+			window.WindowActivated += new Support.EventHandler (this.HandleEditWindowWindowActivated);
+			window.Show ();
 		}
 		
 		
@@ -298,6 +314,15 @@ namespace Epsitec.Common.Designer
 			this.UpdateActiveWidget ();
 		}
 		
+		private void HandleEditorDragSelectionBegin(object sender)
+		{
+		}
+		
+		private void HandleEditorDragSelectionEnd(object sender)
+		{
+			this.UpdateCommandStates ();
+		}
+		
 		private void HandleEditWindowWindowActivated(object sender)
 		{
 			Window			     window = sender as Window;
@@ -338,6 +363,43 @@ namespace Epsitec.Common.Designer
 			this.GetCommandState (Command.ZUpActiveSelection).Enabled     = has_selection;
 			this.GetCommandState (Command.ZDownActiveSelection).Enabled   = has_selection;
 		}
+		
+		protected void UpdateCommandStates()
+		{
+			CommandState state = this.GetCommandState (Command.TabIndexSetter);
+			
+			if (this.active_editor != null)
+			{
+				this.active_editor.CommandDispatcher = this.CommandDispatcher;
+				
+				state.Enabled = true;
+				
+				this.active_editor.SetTabIndexSetterMode (this.tool_tab_setter_active);
+				this.active_editor.SetTabIndexPickerMode (this.tool_tab_picker_active);
+				this.active_editor.IsActiveEditor = true;
+			}
+			else
+			{
+				state.Enabled = false;
+			}
+			
+			this.UpdateSelectionState ();
+			
+			bool is_dirty = false;
+			
+			if (this.active_editor != null)
+			{
+				is_dirty = this.active_editor.IsDirty;
+			}
+			
+			this.GetCommandState (Command.SaveActiveInterface).Enabled = is_dirty;
+		}
+		
+		protected void SyncCommandStates()
+		{
+			this.GetCommandState (Command.SaveActiveInterface).Synchronise ();
+		}
+		
 		
 		protected void UpdateActiveWidget ()
 		{
@@ -396,22 +458,7 @@ namespace Epsitec.Common.Designer
 					}
 				}
 				
-				CommandState state = this.GetCommandState (Command.TabIndexSetter);
-				
-				if (this.active_editor != null)
-				{
-					this.active_editor.CommandDispatcher = this.CommandDispatcher;
-					
-					state.Enabled = true;
-					
-					this.active_editor.SetTabIndexSetterMode (this.tool_tab_setter_active);
-					this.active_editor.SetTabIndexPickerMode (this.tool_tab_picker_active);
-					this.active_editor.IsActiveEditor = true;
-				}
-				else
-				{
-					state.Enabled = false;
-				}
+				this.UpdateCommandStates ();
 			}
 		}
 		
@@ -543,20 +590,8 @@ namespace Epsitec.Common.Designer
 			Window window = new Window ();
 			
 			window.ClientSize = new Drawing.Size (400, 300);
-			window.Root.IsEditionEnabled = true;
 			
-			this.edit_window_list.Add (window);
-			this.editors = null;
-			
-			Editors.WidgetEditor editor = new Editors.WidgetEditor (this);
-			
-			editor.Root  = window.Root;
-			
-			editor.Selected   += new SelectionEventHandler (this.HandleEditorSelected);
-			editor.Deselected += new SelectionEventHandler (this.HandleEditorDeselected);
-			
-			window.WindowActivated += new Support.EventHandler (this.HandleEditWindowWindowActivated);
-			window.Show ();
+			this.CreateEditorForWindow (window);
 		}
 		
 		[Command ("SaveActiveInterface")]		void CommandSaveActiveInterface()
@@ -569,17 +604,11 @@ namespace Epsitec.Common.Designer
 			
 			this.DeselectAllWidgets ();
 			
-			Support.ObjectBundler  bundler = new Support.ObjectBundler ();
-			Support.ResourceBundle bundle  = Support.ResourceBundle.Create ("file", root.Name, ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
-			
-			bundler.SetupPrefix ("file");
-			bundler.FillBundleFromObject (bundle, root);
-			
-			StringEditController.Current.SaveAllBundles ();
-			
-			bundle.CreateXmlDocument (false).Save (@"resources\test.00.resource");
+			this.application.StringEditController.SaveAllBundles ();
+			this.active_editor.Save (@"resources\test.00.resource");
 			
 			this.ReselectWidgets (selected);
+			this.UpdateCommandStates ();
 		}
 		
 		[Command ("OpenLoadInterface")]			void CommandOpenLoadInterface()
@@ -592,20 +621,7 @@ namespace Epsitec.Common.Designer
 			Widget root   = bundler.CreateFromBundle (bundle) as Widget;
 			Window window = root.Window;
 			
-			root.IsEditionEnabled = true;
-			
-			this.edit_window_list.Add (window);
-			this.editors = null;
-			
-			Editors.WidgetEditor editor = new Editors.WidgetEditor (this);
-			
-			editor.Root  = window.Root;
-			
-			editor.Selected   += new SelectionEventHandler (this.HandleEditorSelected);
-			editor.Deselected += new SelectionEventHandler (this.HandleEditorDeselected);
-			
-			window.WindowActivated += new Support.EventHandler (this.HandleEditWindowWindowActivated);
-			window.Show ();
+			this.CreateEditorForWindow (window);
 		}
 		
 		
@@ -754,7 +770,7 @@ namespace Epsitec.Common.Designer
 		
 		
 		private bool							is_initialised;
-		private Widget							panel;
+		private Widget							main_panel;
 		
 		protected Widget						creation_panel;
 		protected TabBook						creation_book;

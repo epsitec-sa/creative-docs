@@ -51,6 +51,10 @@ namespace Epsitec.Common.Designer
 		{
 		}
 		
+		public virtual void FillToolBar(AbstractToolBar tool_bar)
+		{
+		}
+		
 		
 		#region IDisposable Members
 		public void Dispose()

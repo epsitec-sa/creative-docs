@@ -24,6 +24,9 @@ namespace Epsitec.Common.Designer.Editors
 			this.grips_overlay.SelectedTarget    += new SelectionEventHandler (this.HandleSelectedTarget);
 			this.grips_overlay.DeselectingTarget += new SelectionEventHandler (this.HandleDeselectingTarget);
 			this.grips_overlay.DeselectedTarget  += new SelectionEventHandler (this.HandleDeselectedTarget);
+			
+			this.grips_overlay.DragBegin += new EventHandler (this.HandleGripsDragBegin);
+			this.grips_overlay.DragEnd   += new EventHandler (this.HandleGripsDragEnd);
 		}
 		
 		
@@ -71,6 +74,14 @@ namespace Epsitec.Common.Designer.Editors
 					this.is_active_editor = value;
 					this.OnActiveEditorChanged ();
 				}
+			}
+		}
+		
+		public bool								IsDirty
+		{
+			get
+			{
+				return this.is_dirty;
 			}
 		}
 		
@@ -155,6 +166,18 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
+		public void Save(string path)
+		{
+			Support.ObjectBundler  bundler = new Support.ObjectBundler ();
+			Support.ResourceBundle bundle  = Support.ResourceBundle.Create ("file", this.root.Name, ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
+			
+			bundler.SetupPrefix ("file");
+			bundler.FillBundleFromObject (bundle, this.root);
+			
+			bundle.CreateXmlDocument (false).Save (path);
+			
+			this.is_dirty = false;
+		}
 		
 		public static WidgetEditor FromWidget(Widget widget)
 		{
@@ -392,6 +415,24 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
+		protected virtual void HandleGripsDragBegin(object sender)
+		{
+			if (this.DragSelectionBegin != null)
+			{
+				this.DragSelectionBegin (this);
+			}
+		}
+		
+		protected virtual void HandleGripsDragEnd(object sender)
+		{
+			this.is_dirty = true;
+			
+			if (this.DragSelectionEnd != null)
+			{
+				this.DragSelectionEnd (this);
+			}
+		}
+		
 		
 		protected virtual void OnCommandDispatcherChanged()
 		{
@@ -420,6 +461,8 @@ namespace Epsitec.Common.Designer.Editors
 		public event SelectionEventHandler		Deselecting;
 		public event SelectionEventHandler		Deselected;
 		public event Support.EventHandler		ActiveEditorChanged;
+		public event Support.EventHandler		DragSelectionBegin;
+		public event Support.EventHandler		DragSelectionEnd;
 		
 		
 		protected Support.CommandDispatcher		dispatcher;
@@ -429,6 +472,7 @@ namespace Epsitec.Common.Designer.Editors
 		protected Widget						root;
 		protected Window						window;
 		
+		protected bool							is_dirty;
 		protected bool							is_active_editor;
 		
 		protected HiliteWidgetAdorner			hilite_adorner;

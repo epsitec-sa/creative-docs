@@ -133,7 +133,7 @@ namespace Epsitec.Common.Designer.UI
 			{
 				if (this.string_provider == null)
 				{
-					this.string_provider = Support.Globals.Properties.GetProperty ("$resources$string provider") as Support.Data.IPropertyProvider;
+					this.string_provider = Application.Current.StringEditController.Provider;
 				}
 				
 				return this.string_provider;
@@ -146,7 +146,7 @@ namespace Epsitec.Common.Designer.UI
 			{
 				if (this.string_controller == null)
 				{
-					this.string_controller = StringEditController.Current;
+					this.string_controller = Application.Current.StringEditController;
 				}
 				
 				return this.string_controller;
