@@ -14,6 +14,10 @@ namespace Epsitec.Common.Widgets
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetDC(System.IntPtr handle);
 		[DllImport ("User32.dll")]	internal extern static int ReleaseDC(System.IntPtr handle, System.IntPtr dc);
 		[DllImport ("User32.dll")]	internal extern static bool PostMessage(System.IntPtr handle, int msg, System.IntPtr w_param, System.IntPtr l_param);
+		[DllImport ("User32.dll")]  internal extern static int GetWindowThreadProcessId(System.IntPtr handle, out int pid);		
+		[DllImport ("User32.dll")]	internal extern static System.IntPtr GetWindow(System.IntPtr handle, int direction);
+		[DllImport ("User32.dll")]	internal extern static bool IsWindowVisible(System.IntPtr handle);
+		[DllImport ("User32.dll")]	internal extern static bool BringWindowToTop(System.IntPtr handle);
 		
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr CreateCompatibleDC(System.IntPtr dc);
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr SelectObject(System.IntPtr dc, System.IntPtr handle_object);

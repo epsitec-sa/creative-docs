@@ -661,6 +661,11 @@
                     SubType = "Form"
                     BuildAction = "Compile"
                 />
+                <File
+                    RelPath = "Platform\WindowList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
             </Include>
         </Files>
     </CSHARP>

@@ -32,11 +32,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Drawing.Point				DragLocation
+		public Drawing.Rectangle			DragScreenBounds
 		{
 			get
 			{
-				return this.drag_window.WindowLocation;
+				Drawing.Point pos  = this.drag_window.WindowLocation;
+				
+				return new Drawing.Rectangle (pos.X + this.widget_margins.Left, pos.Y + this.widget_margins.Bottom, this.widget.Width, this.widget.Height);
 			}
 		}
 		
@@ -53,7 +55,10 @@ namespace Epsitec.Common.Widgets
 			return window;
 		}
 		
-		
+		public Window FindTargetWindow(Drawing.Rectangle bounds)
+		{
+			return null;
+		}
 		
 		protected void AttachWidget(Widget widget)
 		{
@@ -74,6 +79,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
 		{
 			if (this.drag_behavior.ProcessMessage (message, pos))
@@ -82,6 +88,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
+		#region Interface IDragBehaviorHost
+		public Drawing.Point				DragLocation
+		{
+			get
+			{
+				return this.drag_window.WindowLocation;
+			}
+		}
 		
 		void Helpers.IDragBehaviorHost.OnDragBegin()
 		{
@@ -97,7 +112,10 @@ namespace Epsitec.Common.Widgets
 		
 		void Helpers.IDragBehaviorHost.OnDragging(DragEventArgs e)
 		{
+			this.drag_location = this.Window.MapWindowToScreen (Message.State.LastPosition) - new Drawing.Point (1, 1);
 			this.drag_window.WindowLocation += e.Offset;
+			
+			System.Diagnostics.Debug.WriteLine ("Hot: " + this.drag_location.ToString () + " Wdo: " + this.drag_window.WindowBounds.ToString ());
 			
 			if (this.Dragging != null)
 			{
@@ -111,13 +129,14 @@ namespace Epsitec.Common.Widgets
 			this.drag_window.Dispose ();
 			this.drag_window = null;
 		}
-		
+		#endregion
 		
 		public event DragEventHandler		Dragging;
 		
 		
 		protected Widget					widget;
 		protected Drawing.Margins			widget_margins;
+		protected Drawing.Point				drag_location;
 		protected DragWindow				drag_window;
 		protected Helpers.DragBehavior		drag_behavior;
 	}

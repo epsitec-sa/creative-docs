@@ -1,7 +1,9 @@
 namespace Epsitec.Common.Widgets.Helpers
 {
 	/// <summary>
-	/// Summary description for DragBehavior.
+	/// La classe DragBehavior implémente le comportement de dragging, à savoir
+	/// détecter la condition de début de drag, gérer le déplacement et terminer
+	/// le drag.
 	/// </summary>
 	public class DragBehavior
 	{
@@ -13,6 +15,22 @@ namespace Epsitec.Common.Widgets.Helpers
 		
 		public DragBehavior(Widget widget) : this(widget as IDragBehaviorHost, widget)
 		{
+		}
+		
+		
+		public IDragBehaviorHost			Host
+		{
+			get { return this.host; }
+		}
+		
+		public Widget						Widget
+		{
+			get { return this.widget; }
+		}
+		
+		public bool							IsDragging
+		{
+			get { return this.is_dragging; }
 		}
 		
 		
@@ -50,7 +68,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		}
 		
 		
-		protected virtual void StartDragging(Message message, Drawing.Point pos)
+		protected void StartDragging(Message message, Drawing.Point pos)
 		{
 			message.Captured = true;
 			message.Consumer = this.widget;
@@ -61,7 +79,7 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.drag_offset = message.Cursor - this.host.DragLocation;
 		}
 		
-		protected virtual void StopDragging(Message message, Drawing.Point pos)
+		protected void StopDragging(Message message, Drawing.Point pos)
 		{
 			if (this.is_dragging)
 			{
@@ -73,12 +91,10 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 		
-		protected virtual void HandleDragging(Message message, Drawing.Point pos)
+		protected void HandleDragging(Message message, Drawing.Point pos)
 		{
 			if (this.is_dragging)
 			{
-				System.Diagnostics.Debug.WriteLine ("Pos: " + pos.ToString () + ", message.Cursor: " + message.Cursor.ToString ());
-				
 				message.Consumer = this.widget;
 				
 				Drawing.Point old_pos = this.host.DragLocation;

@@ -172,6 +172,15 @@ namespace Epsitec.Common.Widgets
 			Window.ApplicationDeactivated += new EventHandler(Window_ApplicationDeactivated);
 		}
 
+		[Test] public void CheckWindowList()
+		{
+			Window[] windows = Epsitec.Common.Widgets.Platform.WindowList.GetVisibleWindows ();
+			for (int i = 0; i < windows.Length; i++)
+			{
+				System.Console.Out.WriteLine ("{0}: {1}", i, windows[i].Text);
+			}
+		}
+		
 		private void Root_Clicked(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine ("Root Clicked");
