@@ -7,6 +7,46 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckRegisterController()
 		{
 			CommandDispatcher     dispatcher = new CommandDispatcher ();
+			BaseTestController    controller = new BaseTestController ();
+			DerivedTestController derived    = new DerivedTestController ();
+			
+			dispatcher.RegisterController (controller);
+			dispatcher.RegisterController (derived);
+		}
+		
+		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckRegisterControllerEx1()
+		{
+			CommandDispatcher    dispatcher = new CommandDispatcher ();
+			BrokenTestController broken     = new BrokenTestController ();
+			
+			dispatcher.RegisterController (broken);
+		}
+		
+		
+		[Test] public void CheckDispatch()
+		{
+			CommandDispatcher  dispatcher = new CommandDispatcher ();
+			BaseTestController controller = new BaseTestController ();
+			
+			dispatcher.RegisterController (controller);
+			
+			CommandDispatcherTest.buffer.Length = 0;
+			
+			//	Vérifie que le dispatch se fait correctement.
+			
+			dispatcher.Dispatch ("private-base-a", null);
+			dispatcher.Dispatch ("private-base-x", null);
+			dispatcher.Dispatch ("protected-base-b", null);
+			dispatcher.Dispatch ("public-base-virtual-c", null);
+			dispatcher.Dispatch ("public-base-d", null);
+			dispatcher.Dispatch ("public-base-virtual-e", null);	//	n'existe pas
+			
+			Assertion.AssertEquals ("ba/bx/bb/bc/bd/", CommandDispatcherTest.buffer.ToString ());
+		}
+		
+		[Test] public void CheckDispatchDerived()
+		{
+			CommandDispatcher     dispatcher = new CommandDispatcher ();
 			DerivedTestController derived    = new DerivedTestController ();
 			
 			dispatcher.RegisterController (derived);
@@ -30,15 +70,7 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals ("bb/bd/da/db/dc/de/", CommandDispatcherTest.buffer.ToString ());
 		}
 		
-		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckRegisterControllerEx1()
-		{
-			CommandDispatcher    dispatcher = new CommandDispatcher ();
-			BrokenTestController broken     = new BrokenTestController ();
-			
-			dispatcher.RegisterController (broken);
-		}
-		
-		[Test] public void CheckRegisterControllerMultipart()
+		[Test] public void CheckDispatchMultipart()
 		{
 			CommandDispatcher       dispatcher = new CommandDispatcher ();
 			MultipartTestController multipart  = new MultipartTestController ();
@@ -64,6 +96,7 @@ namespace Epsitec.Common.Support
 			dispatcher.Dispatch ("q.r.s.b.c", null);
 			Assertion.AssertEquals ("*.b.c/*.c/", CommandDispatcherTest.buffer.ToString ());
 		}
+		
 		
 		static System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 		
