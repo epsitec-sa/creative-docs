@@ -64,7 +64,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.window != null)
 			{
-				this.window.MarkForRepaint (rect);
+				this.window.MarkForRepaint (this.MapClientToParent (rect));
 			}
 		}
 		
