@@ -375,16 +375,12 @@ namespace Epsitec.Common.Widgets
 				
 				int time_new   = message.TickCount;
 				int time_delta = time_new - Message.state.button_down_time;
-				int time_max   = System.Windows.Forms.SystemInformation.DoubleClickTime;
+				int time_max   = SystemInformation.DoubleClickDelay;
 				int down_count = 1;
 				
 				if ((time_delta < time_max) && (time_delta > 0) && (Message.state.button_down_id == message.button))
 				{
-					System.Drawing.Size offset_max = System.Windows.Forms.SystemInformation.DoubleClickSize;
-					
-					int max_dx  = offset_max.Width;
-					int max_dy  = offset_max.Height;
-					int max_dr2 = max_dx*max_dx + max_dy*max_dy;
+					int max_dr2 = SystemInformation.DoubleClickRadius2;
 					
 					int dx  = x - Message.state.button_down_x;
 					int dy  = y - Message.state.button_down_y;

@@ -22,6 +22,11 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class TextField : Widget
 	{
+		static TextField()
+		{
+			TextField.flashTimer.Elapsed += new System.Timers.ElapsedEventHandler(TextField.HandleFlashTimer);
+		}
+		
 		// Crée une ligne éditable d'un type quelconque.
 		public TextField(TextFieldType type)
 		{
@@ -33,8 +38,6 @@ namespace Epsitec.Common.Widgets
 			this.internalState |= InternalState.Engageable;
 			this.textStyle = TextFieldStyle.Normal;
 
-			this.flashTimer = new System.Timers.Timer(400);  // ms
-			this.flashTimer.Elapsed += new System.Timers.ElapsedEventHandler(FlashCursor);
 			this.ResetCursor();
 			this.MouseCursor = MouseCursor.AsIBeam;
 
@@ -78,6 +81,23 @@ namespace Epsitec.Common.Widgets
 			
 			this.CreateTextLayout ();
 		}
+		
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				System.Diagnostics.Debug.WriteLine("Dispose TextField " + this.Text);
+				
+				TextField.Blinking -= new EventHandler(this.FlashCursor);
+				
+				// TODO: détruit aussi le reste...
+			}
+			
+			base.Dispose(disposing);
+		}
+
+		
 
 		
 		// Retourne la hauteur standard d'une ligne éditable.
@@ -167,7 +187,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.textStyle != value )
 				{
 					this.textStyle = value;
-					this.Invalidate ();
+					this.Invalidate();
 				}
 			}
 		}
@@ -456,23 +476,49 @@ namespace Epsitec.Common.Widgets
 		}
 #endif
 
-
-		// Fait clignotter le curseur.
-		protected void FlashCursor(object source, System.Timers.ElapsedEventArgs e)
+		// Gère le temps écoulé pour faire clignoter un curseur.
+		protected static void HandleFlashTimer(object source, System.Timers.ElapsedEventArgs e)
 		{
-			this.showCursor = !this.showCursor;
-
-			if ( (this.PaintState&WidgetState.Focused) != 0 )
+			TextField.showCursor = !TextField.showCursor;
+			
+			if (TextField.Blinking != null)
 			{
-				this.Invalidate();  // on repeint tout !
+				System.Diagnostics.Debug.WriteLine ("Blinking");
+				TextField.Blinking(null);
 			}
+		}
+		
+		protected override void OnFocused()
+		{
+			base.OnFocused ();
+			TextField.Blinking += new EventHandler(this.FlashCursor);
+			this.ResetCursor ();
+		}
+
+		protected override void OnDefocused()
+		{
+			TextField.Blinking -= new EventHandler(this.FlashCursor);
+			base.OnDefocused ();
+		}
+
+		
+		// Fait clignoter le curseur.
+		protected void FlashCursor(object sender)
+		{
+			this.Invalidate ();
 		}
 
 		// Allume le curseur au prochain affichage.
 		protected void ResetCursor()
 		{
-			this.flashTimer.Start();  // restart du timer
-			this.showCursor = true;  // avec le curseur visible
+			if (this.IsFocused && this.WindowFrame.Focused)
+			{
+				TextField.flashTimer.Interval = SystemInformation.CursorBlinkDelay;
+				TextField.flashTimer.AutoReset = true;
+				TextField.flashTimer.Stop ();
+				TextField.flashTimer.Start();  // restart du timer
+				TextField.showCursor = true;  // avec le curseur visible
+			}
 		}
 
 
@@ -1153,12 +1199,16 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
+				bool visibleCursor = false;
+				
 				int from = System.Math.Min(this.cursorFrom, this.cursorTo);
 				int to   = System.Math.Max(this.cursorFrom, this.cursorTo);
+				
 				if ( from == to )
 				{
 					pos.Y += 1;
 					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
+					visibleCursor = TextField.showCursor && this.WindowFrame.Focused;
 				}
 				else
 				{
@@ -1175,7 +1225,8 @@ namespace Epsitec.Common.Widgets
 				double y = rCursor.Bottom;
 				graphics.Align(ref x, ref y);
 				rCursor.Offset(x-rCursor.Left+0.5, 0);
-				adorner.PaintTextCursor(graphics, pos, rCursor, this.showCursor);
+				
+				adorner.PaintTextCursor(graphics, pos, rCursor, visibleCursor);
 			}
 
 			graphics.RestoreClippingRectangle(rSaveClip);
@@ -1185,9 +1236,11 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler TextChanged;
 		public event EventHandler TextInserted;
 		public event EventHandler TextDeleted;
-
+		
+		
 		protected TextFieldType					type = TextFieldType.SingleLine;
 		protected static readonly double		margin = 3;
+		protected static readonly double		infinity = 1000000;
 		protected double						leftMargin = 0;
 		protected double						rightMargin = 0;
 		protected Drawing.Size					realSize;
@@ -1208,8 +1261,10 @@ namespace Epsitec.Common.Widgets
 		protected WindowFrame					comboWindow;
 		protected ScrollList					scrollList;
 		protected System.Collections.ArrayList	comboList = new System.Collections.ArrayList();
-		protected System.Timers.Timer			flashTimer;
-		protected bool							showCursor = true;
-		protected static readonly double		infinity = 1000000;
+		
+		protected static System.Timers.Timer	flashTimer = new System.Timers.Timer(SystemInformation.CursorBlinkDelay);
+		protected static bool					showCursor = true;
+		
+		protected static event EventHandler		Blinking;
 	}
 }

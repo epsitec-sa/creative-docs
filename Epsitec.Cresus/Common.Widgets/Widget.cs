@@ -78,7 +78,20 @@ namespace Epsitec.Common.Widgets
 		{
 			if (disposing)
 			{
-				this.SetEntered (false);
+				this.Parent = null;
+				
+				if (this.HasChildren)
+				{
+					Widget[] widgets = this.children.Widgets;
+					
+					this.children.Clear ();
+					
+					for (int i = 0; i < widgets.Length; i++)
+					{
+						System.Diagnostics.Debug.Assert (widgets[i].parent == null);
+						widgets[i].Dispose ();
+					}
+				}
 			}
 		}
 
@@ -2711,6 +2724,7 @@ namespace Epsitec.Common.Widgets
 				widget.SetFocused (false);
 				widget.SetEngaged (false);
 				widget.SetEntered (false);
+				widget.SetSelected (false);
 				widget.parent = null;
 			}
 			

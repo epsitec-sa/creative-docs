@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.graphics = Epsitec.Common.Drawing.GraphicsFactory.NewGraphics ();
 			this.root     = new WindowRoot (this);
-			this.root.MinSizeChanged += new EventHandler (RootMinSizeChanged);
+			this.root.MinSizeChanged += new EventHandler (HandleRootMinSizeChanged);
 			
 			this.root.Size = new Drawing.Size (this.ClientSize);
 			this.root.Name = "Root";
@@ -99,7 +99,7 @@ namespace Epsitec.Common.Widgets
 						if (new_engage.AutoRepeatEngaged)
 						{
 							this.winforms_timer.Enabled = true;
-							this.winforms_timer.Interval = (int) (1000 * WindowFrame.InitialKeyboardDelay);
+							this.winforms_timer.Interval = (int) (1000 * SystemInformation.InitialKeyboardDelay);
 							this.tick_count = 0;
 						}
 					}
@@ -128,7 +128,7 @@ namespace Epsitec.Common.Widgets
 						throw new System.Exception ("A layered window may not have a border");
 					}
 					
-					if (WindowFrame.SupportsLayeredWindows)
+					if (SystemInformation.SupportsLayeredWindows)
 					{
 						int ex_style = Win32Api.GetWindowExStyle (this.Handle);
 						ex_style |= Win32Const.WS_EX_LAYERED;
@@ -225,6 +225,11 @@ namespace Epsitec.Common.Widgets
 				if (this.graphics != null)
 				{
 					this.graphics.Dispose ();
+				}
+				
+				if (this.root != null)
+				{
+					this.root.Dispose ();
 				}
 				
 				this.graphics = null;
@@ -490,7 +495,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected void HandleWinFormsTimerTick(object sender, System.EventArgs e)
+		protected virtual void HandleWinFormsTimerTick(object sender, System.EventArgs e)
 		{
 			if (this.engaged_widget != null)
 			{
@@ -501,8 +506,8 @@ namespace Epsitec.Common.Widgets
 				
 				int max   = 10;
 				int phase = System.Math.Min (this.tick_count, max);
-				double t1 = WindowFrame.InitialKeyboardDelay;
-				double t2 = WindowFrame.KeyboardRepeatPeriod;
+				double t1 = SystemInformation.InitialKeyboardDelay;
+				double t2 = SystemInformation.KeyboardRepeatPeriod;
 				double t3 = System.Math.Min (t1, t2 * 5);
 				
 				this.winforms_timer.Interval = (int) ((t3*(max-phase) + t2*phase) * 1000 / max);
@@ -517,6 +522,16 @@ namespace Epsitec.Common.Widgets
 			this.winforms_timer.Enabled = false;
 		}
 		
+		protected virtual void HandleRootMinSizeChanged(object sender)
+		{
+			int width  = (int) (this.root.MinSize.Width + 0.5);
+			int height = (int) (this.root.MinSize.Height + 0.5);
+			
+			width  += this.Size.Width  - this.ClientSize.Width;
+			height += this.Size.Height - this.ClientSize.Height;
+			
+			this.MinimumSize = new System.Drawing.Size (width, height);
+		}
 		
 		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
@@ -908,70 +923,6 @@ namespace Epsitec.Common.Widgets
 			return (child == null) ? this.root : child;
 		}
 
-		
-		protected virtual void RootMinSizeChanged(object sender)
-		{
-			int width  = (int) (this.root.MinSize.Width + 0.5);
-			int height = (int) (this.root.MinSize.Height + 0.5);
-			
-			width  += this.Size.Width  - this.ClientSize.Width;
-			height += this.Size.Height - this.ClientSize.Height;
-			
-			this.MinimumSize = new System.Drawing.Size (width, height);
-		}
-		
-		public static double					InitialKeyboardDelay
-		{
-			get
-			{
-				try
-				{
-					using (Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey (@"Control Panel\Keyboard"))
-					{
-						switch (System.Int32.Parse ((string) key.GetValue ("KeyboardDelay")))
-						{
-							case 0:	return 0.250;
-							case 1: return 0.500;
-							case 2: return 0.750;
-							case 3: return 1.000;
-						}
-					}
-				}
-				catch
-				{
-				}
-				
-				return 0.5;
-			}
-		}
-		
-		public static double					KeyboardRepeatPeriod
-		{
-			get
-			{
-				try
-				{
-					using (Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey (@"Control Panel\Keyboard"))
-					{
-						int speed = System.Int32.Parse ((string) key.GetValue ("KeyboardSpeed")) + 2;
-						return 1.0 / speed;
-					}
-				}
-				catch
-				{
-				}
-				
-				return 0.1;
-			}
-		}
-		
-		public static bool						SupportsLayeredWindows
-		{
-			get
-			{
-				return System.Windows.Forms.OSFeature.Feature.GetVersionPresent (System.Windows.Forms.OSFeature.LayeredWindows) != null;
-			}
-		}
 		
 		
 		

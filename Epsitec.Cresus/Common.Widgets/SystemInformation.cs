@@ -66,7 +66,27 @@ namespace Epsitec.Common.Widgets
 				{
 				}
 				
-				return 530;
+				return 499;
+			}
+		}
+		
+		public static int				MenuShowDelay
+		{
+			get
+			{
+				try
+				{
+					using (Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey (@"Control Panel\Desktop"))
+					{
+						int delay = System.Int32.Parse ((string) key.GetValue ("MenuShowDelay"));
+						return delay;
+					}
+				}
+				catch
+				{
+				}
+				
+				return 199;
 			}
 		}
 		
