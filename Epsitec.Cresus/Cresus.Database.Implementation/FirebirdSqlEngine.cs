@@ -19,9 +19,9 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		
 		#region ISqlEngine Members
-		public void Execute(System.Data.IDbCommand command, DbCommandType type)
+		public void Execute(System.Data.IDbCommand command, DbCommandType type, int command_count)
 		{
-			switch (type & DbCommandType.Mask)
+			switch (type)
 			{
 				case DbCommandType.Silent:
 				case DbCommandType.NonQuery:
@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					throw new DbException (this.fb.DbAccess, "Illegal command type");
 			}
 			
-			if ((type & DbCommandType.FlagMultiple) != 0)
+			if (command_count > 1)
 			{
 				using (System.Data.IDataReader reader = command.ExecuteReader ())
 				{
@@ -44,21 +44,26 @@ namespace Epsitec.Cresus.Database.Implementation
 					}
 				}
 			}
-			else
+			else if (command_count > 0)
 			{
 				command.ExecuteNonQuery ();
 			}
 			
 		}
 		
-		public void Execute(System.Data.IDbCommand command, DbCommandType type, out object simple_data)
+		public void Execute(System.Data.IDbCommand command, DbCommandType type, int command_count, out object simple_data)
 		{
-			if ((type & DbCommandType.FlagMultiple) != 0)
+			if (command_count > 1)
 			{
 				throw new DbException (this.fb.DbAccess, "Multiple command not supported");
 			}
+			if (command_count < 1)
+			{
+				simple_data = null;
+				return;
+			}
 			
-			switch (type & DbCommandType.Mask)
+			switch (type)
 			{
 				case DbCommandType.Silent:
 				case DbCommandType.NonQuery:
@@ -74,13 +79,19 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 		
-		public void Execute(System.Data.IDbCommand command, DbCommandType type, out System.Data.DataSet data_set)
+		public void Execute(System.Data.IDbCommand command, DbCommandType type, int command_count, out System.Data.DataSet data_set)
 		{
-			switch (type & DbCommandType.Mask)
+			if (command_count < 1)
+			{
+				data_set = null;
+				return;
+			}
+			
+			switch (type)
 			{
 				case DbCommandType.Silent:
 				case DbCommandType.NonQuery:
-					this.Execute (command, type);
+					this.Execute (command, type, command_count);
 					data_set = null;
 					break;
 				

@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Database
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
 			command.Transaction = db_abstraction.BeginTransaction ();
-			sql_engine.Execute (command, sql_builder.CommandType);
+			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 
 			command.Transaction.Commit ();
 			command.Transaction.Dispose ();
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Database
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
 			command.Transaction = db_abstraction.BeginTransaction ();
-			sql_engine.Execute (command, sql_builder.CommandType);
+			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 
 			command.Transaction.Commit ();
 			command.Transaction.Dispose ();
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Database
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
 			command.Transaction = db_abstraction.BeginTransaction ();
-			sql_engine.Execute (command, sql_builder.CommandType);
+			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 			
 			command.Transaction.Commit ();
 			command.Transaction.Dispose ();
@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.Database
 			
 			command.Transaction = db_abstraction.BeginTransaction ();
 			
-			sql_engine.Execute (command, command_type);
+			sql_engine.Execute (command, command_type, sql_builder.CommandCount);
 			
 			command.Transaction.Commit ();
 			command.Transaction.Dispose ();
@@ -282,7 +282,7 @@ namespace Epsitec.Cresus.Database
 			
 			command.Transaction = db_abstraction.BeginTransaction ();
 			
-			sql_engine.Execute (command, command_type);
+			sql_engine.Execute (command, command_type, sql_builder.CommandCount);
 			
 			command.Transaction.Commit ();
 			command.Transaction.Dispose ();

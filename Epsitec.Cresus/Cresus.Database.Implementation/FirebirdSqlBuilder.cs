@@ -185,6 +185,11 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			get { return this.command_type; }
 		}
+		
+		public int								CommandCount
+		{
+			get { return this.command_count; }
+		}
 
 		public System.Data.IDbCommand			Command
 		{
@@ -203,6 +208,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			this.command_cache = null;
 			this.command_type  = DbCommandType.None;
+			this.command_count = 0;
 			this.buffer = new System.Text.StringBuilder ();
 			this.command_params.Clear ();
 		}
@@ -244,6 +250,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			this.PrepareCommand ();
 			this.command_type = DbCommandType.Silent;
+			this.command_count++;
 			
 			this.buffer.Append ("CREATE TABLE ");
 			this.buffer.Append (table.Name);
@@ -277,7 +284,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			if (table.HasPrimaryKeys)
 			{
-				this.command_type |= DbCommandType.FlagMultiple;
+				this.command_count++;
 				
 				this.buffer.Append ("ALTER TABLE ");
 				this.buffer.Append (table.Name);
@@ -320,6 +327,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			this.PrepareCommand ();
 			this.command_type = DbCommandType.Silent;
+			this.command_count++;
 			
 			this.buffer.Append ("DROP TABLE ");
 			this.buffer.Append (table_name);
@@ -343,6 +351,8 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.ThrowError (string.Format ("Invalid column {0} in table {1}.", column.Name, table_name));
 				}
 				
+				this.command_count++;
+				
 				this.buffer.Append ("ALTER TABLE ");
 				this.buffer.Append (table_name);
 				this.buffer.Append (" ADD ");	//	not 	this.buffer.Append (" ADD COLUMN ");
@@ -351,11 +361,6 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.buffer.Append (this.GetSqlType (column));
 				this.buffer.Append (this.GetSqlColumnAttributes (column));
 				this.buffer.Append (";\n");
-			}
-			
-			if (columns.Length > 1)
-			{
-				this.command_type |= DbCommandType.FlagMultiple;
 			}
 		}
 
@@ -384,16 +389,13 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.ThrowError (string.Format ("Invalid column {0} in table {1}.", column.Name, table_name));
 				}
 				
+				this.command_count++;
+				
 				this.buffer.Append ("ALTER TABLE ");
 				this.buffer.Append (table_name);
 				this.buffer.Append (" DROP ");		// not this.buffer.Append (" DROP COLUMN ");
 				this.buffer.Append (column.Name);
 				this.buffer.Append (";\n");
-			}
-			
-			if (columns.Length > 1)
-			{
-				this.command_type |= DbCommandType.FlagMultiple;
 			}
 		}
 		
@@ -414,7 +416,9 @@ namespace Epsitec.Cresus.Database.Implementation
 		public void SelectData(SqlSelect query)
 		{
 			this.PrepareCommand ();
+			
 			this.command_type = DbCommandType.ReturningData;
+			this.command_count++;
 			
 			//	TODO-DD:  Add FirebirdSqlBuilder.SelectData implementation
 
@@ -569,6 +573,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			this.PrepareCommand ();
 			this.command_type = DbCommandType.NonQuery;
+			this.command_count++;
 			
 			this.buffer.Append ("INSERT INTO ");
 			this.buffer.Append (table_name);
@@ -633,6 +638,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			this.PrepareCommand ();
 			this.command_type = DbCommandType.NonQuery;
+//			this.command_count++;
 			
 			// TODO:  Add FirebirdSqlBuilder.UpdateData implementation
 		}
@@ -641,6 +647,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			this.PrepareCommand ();
 			this.command_type = DbCommandType.NonQuery;
+//			this.command_count++;
 			
 			// TODO:  Add FirebirdSqlBuilder.RemoveData implementation
 		}
@@ -650,6 +657,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			this.PrepareCommand ();
 //?			this.command_type = DbCommandType.NonQuery;
+//			this.command_count++;
 			
 			// TODO:  Add FirebirdSqlBuilder.ExecuteProcedure implementation
 		}
@@ -718,5 +726,6 @@ namespace Epsitec.Cresus.Database.Implementation
 		private System.Text.StringBuilder		buffer;
 		private System.Collections.ArrayList	command_params;
 		private DbCommandType					command_type;
+		private int								command_count;
 	}
 }
