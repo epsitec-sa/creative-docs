@@ -7,8 +7,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public VScroller() : base(true)
 		{
-			this.arrowUp.Name = "Up";
-			this.arrowDown.Name = "Down";
+			this.ArrowUp.Name   = "Up";
+			this.ArrowDown.Name = "Down";
 		}
 		
 		public VScroller(Widget embedder) : this()
@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override double DefaultWidth
+		public override double				DefaultWidth
 		{
 			get
 			{
@@ -25,7 +25,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public override Drawing.Size DefaultMinSize
+		public override Drawing.Size		DefaultMinSize
 		{
 			get
 			{
