@@ -9,6 +9,8 @@ namespace Epsitec.Common.Drawing
 		{
 			this.size   = new Size ();
 			this.origin = new Point ();
+			
+			this.unique_id = System.Threading.Interlocked.Increment (ref Image.unique_id_seed);
 		}
 		
 		
@@ -47,6 +49,11 @@ namespace Epsitec.Common.Drawing
 			get;
 		}
 		
+		public long						UniqueId
+		{
+			get { return this.unique_id; }
+		}
+		
 		
 		public static readonly Image	Empty;
 		
@@ -54,5 +61,8 @@ namespace Epsitec.Common.Drawing
 		protected bool					is_origin_defined;
 		protected Size					size;
 		protected Point					origin;
+		protected long					unique_id;
+		
+		private static long				unique_id_seed;
 	}
 }

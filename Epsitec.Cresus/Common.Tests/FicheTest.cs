@@ -245,6 +245,7 @@ namespace Epsitec.Common.Tests
 			Rectangle rect = this.window.Root.Client.Bounds;
 
 			this.menu = new Menu(MenuType.Horizontal);
+			this.menu.Name = "base";
 			this.menu.Location = new Point(0, rect.Height-this.menu.DefaultHeight);
 			this.menu.Size = new Size(rect.Width, this.menu.DefaultHeight);
 			this.menu.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
@@ -255,6 +256,7 @@ namespace Epsitec.Common.Tests
 			this.menu.Parent = this.window.Root;
 
 			Menu fileMenu = new Menu(MenuType.Vertical);
+			fileMenu.Name = "fileMenu";
 			fileMenu.InsertItem("", "Nouveau", "Ctrl+N");
 			fileMenu.InsertItem("open", "Ouvrir...", "Ctrl+O");
 			fileMenu.InsertItem("", "Fermer", "");
@@ -268,37 +270,53 @@ namespace Epsitec.Common.Tests
 			fileMenu.InsertSep();
 			fileMenu.InsertItem("", "Quitter", "");
 			fileMenu.AdjustSize();
-			this.menu.GetWidget(0).SonMenu = fileMenu;
+			this.menu.GetWidget(0).Submenu = fileMenu;
 
 			Menu editMenu = new Menu(MenuType.Vertical);
+			editMenu.Name = "editMenu";
 			editMenu.InsertItem("", "Annuler", "Ctrl+Z");
 			editMenu.InsertSep();
 			editMenu.InsertItem("cut", "Couper", "Ctrl+X");
 			editMenu.InsertItem("copy", "Copier", "Ctrl+C");
 			editMenu.InsertItem("paste", "Coller", "Ctrl+V");
 			editMenu.AdjustSize();
-			this.menu.GetWidget(1).SonMenu = editMenu;
+			this.menu.GetWidget(1).Submenu = editMenu;
 
 			Menu showMenu = new Menu(MenuType.Vertical);
+			showMenu.Name = "showMenu";
 			showMenu.InsertItem("", "Adresses", "F5");
 			showMenu.InsertItem("", "Objets", "F6");
 			showMenu.InsertSep();
 			showMenu.InsertItem("", "Options", "");
+			showMenu.InsertItem("", "Reglages", "");
 			showMenu.AdjustSize();
-			this.menu.GetWidget(2).SonMenu = showMenu;
+			this.menu.GetWidget(2).Submenu = showMenu;
 
 			Menu optMenu = new Menu(MenuType.Vertical);
-			optMenu.InsertItem("", "Réglages...", "");
-			optMenu.InsertItem("", "Machins...", "");
-			optMenu.InsertItem("", "Bidules...", "");
+			optMenu.Name = "optMenu";
+			optMenu.InsertItem("", "Divers...", "");
+			optMenu.InsertItem("print", "Impression...", "");
+			optMenu.InsertItem("open", "Fichiers...", "");
 			optMenu.AdjustSize();
-			showMenu.GetWidget(3).SonMenu = optMenu;
+			showMenu.GetWidget(3).Submenu = optMenu;
+
+			Menu setupMenu = new Menu(MenuType.Vertical);
+			setupMenu.Name = "setupMenu";
+			setupMenu.InsertItem("", "Base...", "");
+			setupMenu.InsertItem("", "Global...", "");
+			setupMenu.InsertItem("", "Liste...", "");
+			setupMenu.InsertItem("", "Edition...", "");
+			setupMenu.InsertItem("", "Langue...", "");
+			setupMenu.AdjustSize();
+			showMenu.GetWidget(4).Submenu = setupMenu;
 
 			Menu helpMenu = new Menu(MenuType.Vertical);
+			helpMenu.Name = "helpMenu";
 			helpMenu.InsertItem("", "Aide", "F1");
+			helpMenu.InsertItem("help", "Aide contextuelle", "");
 			helpMenu.InsertItem("", "A propos de...", "");
 			helpMenu.AdjustSize();
-			this.menu.GetWidget(3).SonMenu = helpMenu;
+			this.menu.GetWidget(3).Submenu = helpMenu;
 
 			this.toolBar = new ToolBar();
 			this.toolBar.Location = new Point(0, rect.Height-this.menu.DefaultHeight-this.toolBar.DefaultHeight);

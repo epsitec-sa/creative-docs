@@ -96,14 +96,61 @@ namespace Epsitec.Common.Drawing
 		{
 			Bitmap bitmap = new Bitmap ();
 			
-			bitmap.bitmap = System.Drawing.Image.FromFile (file_name) as System.Drawing.Bitmap;
-			bitmap.size   = new Size (bitmap.bitmap.Width, bitmap.bitmap.Height);
-			bitmap.origin = origin;
-			
-			bitmap.is_origin_defined = true;
+			using (System.Drawing.Image src_image = System.Drawing.Image.FromFile (file_name))
+			{
+				bitmap.bitmap = new System.Drawing.Bitmap (src_image);
+				bitmap.size   = new Size (bitmap.bitmap.Width, bitmap.bitmap.Height);
+				bitmap.origin = origin;
+				
+				bitmap.is_origin_defined = true;
+			}
 			
 			return bitmap;
 		}
+		
+		public static Bitmap FromImageDisabled(Image image, Color background)
+		{
+			if (image == null)
+			{
+				return null;
+			}
+			
+			int r = (int)(background.R * 255.5);
+			int g = (int)(background.G * 255.5);
+			int b = (int)(background.B * 255.5);
+			
+			ImageSeed seed = new ImageSeed (r, g, b, image.UniqueId);
+			
+			lock (Bitmap.disabled_images)
+			{
+				if (Bitmap.disabled_images.Contains (seed))
+				{
+					return Bitmap.disabled_images[seed] as Bitmap;
+				}
+				
+				System.Drawing.Color  color = System.Drawing.Color.FromArgb (r, g, b);
+				
+				System.Drawing.Bitmap src_bitmap = image.BitmapImage.bitmap;
+				System.Drawing.Bitmap dst_bitmap = new System.Drawing.Bitmap (src_bitmap.Width, src_bitmap.Height);
+				
+				using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (dst_bitmap))
+				{
+					System.Windows.Forms.ControlPaint.DrawImageDisabled (graphics, src_bitmap, 0, 0, color);
+				}
+				
+				Bitmap bitmap = new Bitmap ();
+				
+				bitmap.bitmap			 = dst_bitmap;
+				bitmap.size				 = image.Size;
+				bitmap.origin			 = image.Origin;
+				bitmap.is_origin_defined = image.IsOriginDefined;
+				
+				Bitmap.disabled_images[seed] = bitmap;
+				
+				return bitmap;
+			}
+		}
+		
 		
 		public void Dispose()
 		{
@@ -127,8 +174,49 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		protected System.Drawing.Bitmap	bitmap;
-		protected BitmapData			bitmap_data;
-		protected volatile int			bitmap_lock_count;
+		
+		private class ImageSeed
+		{
+			public ImageSeed(int r, int g, int b, long id)
+			{
+				this.r  = r;
+				this.g  = g;
+				this.b  = b;
+				this.id = id;
+			}
+			
+			public override int GetHashCode()
+			{
+				return this.r ^ this.g ^ this.b ^ this.id.GetHashCode ();
+			}
+			
+			public override bool Equals(object obj)
+			{
+				ImageSeed that = obj as ImageSeed;
+				
+				if (that != null)
+				{
+					if ((this.r == that.r) &&
+						(this.g == that.g) &&
+						(this.b == that.b) &&
+						(this.id == that.id))
+					{
+						return true;
+					}
+				}
+				
+				return false;
+			}
+			
+			private int							r, g, b;
+			private long						id;
+		}
+		
+		
+		protected System.Drawing.Bitmap			bitmap;
+		protected BitmapData					bitmap_data;
+		protected volatile int					bitmap_lock_count;
+		
+		static System.Collections.Hashtable		disabled_images = new System.Collections.Hashtable ();
 	}
 }

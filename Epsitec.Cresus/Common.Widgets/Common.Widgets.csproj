@@ -282,6 +282,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "SystemInformation.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "TabBook.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -24,6 +24,7 @@ namespace Epsitec.Common.Widgets
 			this.colorControlDark = Drawing.Color.FromName("ControlDark");
 		}
 
+		// Indique s'il s'agit d'une case d'un menu horizontal avec un texte seul.
 		public bool OnlyText
 		{
 			get
@@ -37,6 +38,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		// Indique s'il s'agit d'une ligne de séparation horizontale.
 		public bool Separator
 		{
 			get
@@ -50,6 +52,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		// Nom de l'icône affichée à gauche.
 		public string IconName
 		{
 			get
@@ -73,6 +76,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		// Nom du texte principal affiché à droite de l'icône.
 		public string MainText
 		{
 			get
@@ -88,6 +92,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		// Nom du raccourci clavier affiché à droite.
 		public string ShortKey
 		{
 			get
@@ -103,20 +108,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Menu SonMenu
+		// Sous-menu éventuel associé à la case.
+		public Menu Submenu
 		{
 			get
 			{
-				return this.sonMenu;
+				return this.submenu;
 			}
 
 			set
 			{
-				this.sonMenu = value;
+				this.submenu = value;
 			}
 		}
 
-		// Ajuste des dimensions.
+		// Ajuste des dimensions d'un TextLayout.
 		protected void AdjustSize(ref Drawing.Size size)
 		{
 			size.Width  = System.Math.Ceiling(size.Width);
@@ -129,7 +135,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Largeur effective pour l'icône.
+		// Largeur effective pour l'icône. Cette largeur doit être identique
+		// dans toutes les lignes d'un menu vertical.
 		public double IconWidth
 		{
 			get
@@ -206,7 +213,17 @@ namespace Epsitec.Common.Widgets
 			WidgetState       state = this.PaintState;
 			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
-			
+
+			ButtonStyle bs = ButtonStyle.Normal;
+			if ( this.onlyText )
+			{
+				bs = ButtonStyle.MenuItemH;
+			}
+			else
+			{
+				bs = ButtonStyle.MenuItemV;
+			}
+
 			if ( (state & WidgetState.Enabled) == 0 )
 			{
 				state &= ~WidgetState.Focused;
@@ -219,13 +236,13 @@ namespace Epsitec.Common.Widgets
 				state &= ~WidgetState.Entered;
 				state &= ~WidgetState.Engaged;
 			}
-			adorner.PaintButtonBackground(graphics, rect, state, dir, ButtonStyle.MenuItem);
+			adorner.PaintButtonBackground(graphics, rect, state, dir, bs);
 
 			if ( this.onlyText )
 			{
 				pos.X = (rect.Width-this.mainTextSize.Width)/2;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
-				adorner.PaintMenuTextLayout(graphics, pos, this.mainText, state, dir, ButtonStyle.MenuItem);
+				adorner.PaintMenuTextLayout(graphics, pos, this.mainText, state, dir, bs);
 			}
 			else if ( this.separator )
 			{
@@ -241,18 +258,18 @@ namespace Epsitec.Common.Widgets
 				{
 					pos.X = this.marginItem;
 					pos.Y = (rect.Height-this.iconSize.Height)/2;
-					adorner.PaintMenuTextLayout(graphics, pos, this.icon, state, dir, ButtonStyle.MenuItem);
+					adorner.PaintMenuTextLayout(graphics, pos, this.icon, state, dir, bs);
 				}
 
 				pos.X = this.marginItem*2+this.iconSize.Width;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
-				adorner.PaintMenuTextLayout(graphics, pos, this.mainText, state, dir, ButtonStyle.MenuItem);
+				adorner.PaintMenuTextLayout(graphics, pos, this.mainText, state, dir, bs);
 
 				pos.X = rect.Width-this.subIndicatorWidth-this.shortKeySize.Width+this.marginItem;
 				pos.Y = (rect.Height-this.shortKeySize.Height)/2;
-				adorner.PaintMenuTextLayout(graphics, pos, this.shortKey, state, dir, ButtonStyle.MenuItem);
+				adorner.PaintMenuTextLayout(graphics, pos, this.shortKey, state, dir, bs);
 
-				if ( this.sonMenu != null )  // triangle ">" ?
+				if ( this.submenu != null )  // triangle ">" ?
 				{
 					Drawing.Rectangle aRect = rect;
 					aRect.Left = aRect.Right-this.subIndicatorWidth;
@@ -278,7 +295,7 @@ namespace Epsitec.Common.Widgets
 		protected Drawing.Size		iconSize;
 		protected Drawing.Size		mainTextSize;
 		protected Drawing.Size		shortKeySize;
-		protected Menu				sonMenu;
+		protected Menu				submenu;
 		protected Drawing.Color		colorControlDark;
 	}
 }

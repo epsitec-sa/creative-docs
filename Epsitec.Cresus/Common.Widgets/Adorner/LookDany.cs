@@ -29,9 +29,9 @@ namespace Epsitec.Common.Widgets.Adorner
 			b = 1-(1-this.colorControlLight.B)*0.5;
 			this.colorScrollerBack = Drawing.Color.FromRGB(r,g,b);
 
-			r = 1-(1-this.colorCaption.R)*0.3;
-			g = 1-(1-this.colorCaption.G)*0.3;
-			b = 1-(1-this.colorCaption.B)*0.3;
+			r = 1-(1-this.colorCaption.R)*0.25;
+			g = 1-(1-this.colorCaption.G)*0.25;
+			b = 1-(1-this.colorCaption.B)*0.25;
 			this.colorCaptionLight = Drawing.Color.FromRGB(r,g,b);
 
 			r = 1-(1-this.colorControlLight.R)*0.7;
@@ -322,7 +322,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 				state &= ~WidgetState.Focused;
 			}
-			else if ( style == ButtonStyle.MenuItem )
+			else if ( style == ButtonStyle.MenuItemH )
 			{
 				if ( (state&WidgetState.Entered)  != 0 ||  // bouton survolé ?
 					 (state&WidgetState.Engaged)  != 0 )   // bouton pressé ?
@@ -349,6 +349,24 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.AddLine(rInside.Left, rInside.Top, rInside.Right, rInside.Top);
 					graphics.AddLine(rInside.Right, rInside.Top, rInside.Right, rInside.Bottom-0.5);
 					graphics.RenderSolid(this.colorControlDark);
+				}
+
+				state &= ~WidgetState.Focused;
+			}
+			else if ( style == ButtonStyle.MenuItemV )
+			{
+				if ( (state&WidgetState.Entered)  != 0 ||  // bouton survolé ?
+					 (state&WidgetState.Engaged)  != 0 ||  // bouton pressé ?
+					 (state&WidgetState.Selected) != 0 )   // bouton sélectionné ?
+				{
+					graphics.AddFilledRectangle(rect);
+					graphics.RenderSolid(this.colorCaptionLight);
+
+					Drawing.Rectangle rInside;
+					rInside = rect;
+					rInside.Inflate(-0.5, -0.5);
+					graphics.AddRectangle(rInside);
+					graphics.RenderSolid(this.colorCaption);
 				}
 
 				state &= ~WidgetState.Focused;

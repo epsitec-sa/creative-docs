@@ -217,13 +217,71 @@ namespace Epsitec.Common.Tests
 
 #if true
 			Menu fileMenu = new Menu(MenuType.Vertical);
+			fileMenu.Name = "0";
 			fileMenu.InsertItem("open", "Ouvrir...", "Ctrl+O");
 			fileMenu.InsertItem("save", "Enregistrer...", "Ctrl+S");
+			fileMenu.InsertSep();
+			fileMenu.InsertItem("", "Options 1", "");
+			fileMenu.InsertItem("", "Options 2", "");
 			fileMenu.InsertSep();
 			fileMenu.InsertItem("", "Quitter", "");
 			fileMenu.AdjustSize();
 			fileMenu.Location = new Point(370, 70);
 			window.Root.Children.Add(fileMenu);
+
+			Menu optMenu1 = new Menu(MenuType.Vertical);
+			optMenu1.Name = "1";
+			optMenu1.InsertItem("", "Reglages 1.A", "");
+			optMenu1.InsertItem("", "Reglages 1.B", "");
+			optMenu1.InsertItem("print", "Impression...", "");
+			optMenu1.InsertItem("open", "Fichiers...", "");
+			optMenu1.AdjustSize();
+			fileMenu.GetWidget(3).Submenu = optMenu1;
+
+			Menu optMenu2 = new Menu(MenuType.Vertical);
+			optMenu2.Name = "1";
+			optMenu2.InsertItem("", "Reglages 2.A", "");
+			optMenu2.InsertItem("", "Reglages 2.B", "");
+			optMenu2.InsertItem("print", "Impression...", "");
+			optMenu2.InsertItem("open", "Fichiers...", "");
+			optMenu2.AdjustSize();
+			fileMenu.GetWidget(4).Submenu = optMenu2;
+
+			Menu setupMenu1A = new Menu(MenuType.Vertical);
+			setupMenu1A.Name = "2";
+			setupMenu1A.InsertItem("", "Reglage 1.A.a", "");
+			setupMenu1A.InsertItem("", "Reglage 1.A.b", "");
+			setupMenu1A.InsertItem("", "Reglage 1.A.c", "");
+			setupMenu1A.InsertItem("", "Reglage 1.A.d", "");
+			setupMenu1A.AdjustSize();
+			optMenu1.GetWidget(0).Submenu = setupMenu1A;
+
+			Menu setupMenu1B = new Menu(MenuType.Vertical);
+			setupMenu1B.Name = "2";
+			setupMenu1B.InsertItem("", "Reglage 1.B.a", "");
+			setupMenu1B.InsertItem("", "Reglage 1.B.b", "");
+			setupMenu1B.InsertItem("", "Reglage 1.B.c", "");
+			setupMenu1B.InsertItem("", "Reglage 1.B.d", "");
+			setupMenu1B.AdjustSize();
+			optMenu1.GetWidget(1).Submenu = setupMenu1B;
+
+			Menu setupMenu2A = new Menu(MenuType.Vertical);
+			setupMenu2A.Name = "2";
+			setupMenu2A.InsertItem("", "Reglage 2.A.a", "");
+			setupMenu2A.InsertItem("", "Reglage 2.A.b", "");
+			setupMenu2A.InsertItem("", "Reglage 2.A.c", "");
+			setupMenu2A.InsertItem("", "Reglage 2.A.d", "");
+			setupMenu2A.AdjustSize();
+			optMenu2.GetWidget(0).Submenu = setupMenu2A;
+
+			Menu setupMenu2B = new Menu(MenuType.Vertical);
+			setupMenu2B.Name = "2";
+			setupMenu2B.InsertItem("", "Reglage 2.B.a", "");
+			setupMenu2B.InsertItem("", "Reglage 2.B.b", "");
+			setupMenu2B.InsertItem("", "Reglage 2.B.c", "");
+			setupMenu2B.InsertItem("", "Reglage 2.B.d", "");
+			setupMenu2B.AdjustSize();
+			optMenu2.GetWidget(1).Submenu = setupMenu2B;
 #endif
 
 			window.FocusedWidget = a;
@@ -475,9 +533,7 @@ namespace Epsitec.Common.Tests
 						CheckButton widget = new CheckButton();
 						widget.Text = "surprise";
 						widget.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
-						widget.MouseCursor = MouseCursor.AsHand;
 						table[x,y].Insert(widget);
-						//?widget.Bounds = widget.Parent.Bounds;
 					}
 					else if ( x == 3 && y == 3 )
 					{
@@ -485,12 +541,10 @@ namespace Epsitec.Common.Tests
 						widget.Text = "OK";
 						widget.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 						table[x,y].Insert(widget);
-						//?widget.Bounds = widget.Parent.Bounds;
 					}
 					else if ( x != 1 || y != 1 )
 					{
 						table[x,y].Insert(text);
-						//?text.Bounds = text.Parent.Bounds;
 					}
 				}
 			}
@@ -648,7 +702,6 @@ namespace Epsitec.Common.Tests
 					//text.Alignment = ContentAlignment.BottomLeft;
 					text.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 					table[x,y].Insert(text);
-					//?text.Size = text.Parent.Size;
 #endif
 				}
 			}

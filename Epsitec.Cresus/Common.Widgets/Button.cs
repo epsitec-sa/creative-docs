@@ -6,7 +6,8 @@ namespace Epsitec.Common.Widgets
 		Normal,							// bouton normal
 		Scroller,						// bouton pour scroller
 		ToolItem,						// bouton pour barre d'icône
-		MenuItem,						// bouton pour menu
+		MenuItemH,						// bouton pour menu horizontal
+		MenuItemV,						// bouton pour menu vertical
 		DefaultActive,					// bouton pour l'action par défaut (OK)
 	}
 	

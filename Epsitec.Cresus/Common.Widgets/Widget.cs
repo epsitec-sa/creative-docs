@@ -2810,7 +2810,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			#endregion
-
+			
 			#region ICollection Members
 
 			public bool IsSynchronized
@@ -2834,7 +2834,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			#endregion
-
+			
 			#region IEnumerable Members
 
 			public System.Collections.IEnumerator GetEnumerator()

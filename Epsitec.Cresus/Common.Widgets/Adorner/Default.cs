@@ -29,9 +29,9 @@ namespace Epsitec.Common.Widgets.Adorner
 			b = 1-(1-this.colorControlLight.B)/2;
 			this.colorScrollerBack = Drawing.Color.FromRGB(r,g,b);
 
-			r = 1-(1-this.colorCaption.R)*0.3;
-			g = 1-(1-this.colorCaption.G)*0.3;
-			b = 1-(1-this.colorCaption.B)*0.3;
+			r = 1-(1-this.colorCaption.R)*0.25;
+			g = 1-(1-this.colorCaption.G)*0.25;
+			b = 1-(1-this.colorCaption.B)*0.25;
 			this.colorCaptionLight = Drawing.Color.FromRGB(r,g,b);
 		}
 		
@@ -292,7 +292,8 @@ namespace Epsitec.Common.Widgets.Adorner
 
 				state &= ~WidgetState.Focused;
 			}
-			else if ( style == ButtonStyle.MenuItem )
+			else if ( style == ButtonStyle.MenuItemH ||
+					  style == ButtonStyle.MenuItemV )
 			{
 				if ( (state&WidgetState.Entered)  != 0 ||  // bouton survolé ?
 					 (state&WidgetState.Engaged)  != 0 ||  // bouton pressé ?

@@ -277,8 +277,14 @@ namespace Epsitec.Common.Drawing.Agg
 		}
 		
 		
-		public override void SetPixmapSize(int width, int height)
+		public override bool SetPixmapSize(int width, int height)
 		{
+			if ((this.pixmap.Size.Width == width) &&
+				(this.pixmap.Size.Height == height))
+			{
+				return false;
+			}
+			
 			this.pixmap.Size = new System.Drawing.Size (width, height);
 			
 			this.solid_renderer.Pixmap    = null;
@@ -288,6 +294,8 @@ namespace Epsitec.Common.Drawing.Agg
 			this.solid_renderer.Pixmap    = this.pixmap;
 			this.image_renderer.Pixmap    = this.pixmap;
 			this.gradient_renderer.Pixmap = this.pixmap;
+			
+			return true;
 		}
 		
 		

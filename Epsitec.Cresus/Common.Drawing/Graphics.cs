@@ -266,8 +266,9 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public virtual void SetPixmapSize(int width, int height)
+		public virtual bool SetPixmapSize(int width, int height)
 		{
+			return false;
 		}
 		
 		

@@ -21,6 +21,8 @@ namespace Epsitec.Common.Widgets
 			this.color[1] = Drawing.Color.FromName("ControlLight");
 			this.color[2] = Drawing.Color.FromName("ControlDark");
 			this.color[3] = Drawing.Color.FromName("ControlDarkDark");
+
+			this.MouseCursor = MouseCursor.AsVSplit;
 		}
 		
 		// Bouton dans en-tête supérieure ou gauche ?
@@ -36,6 +38,16 @@ namespace Epsitec.Common.Widgets
 				if ( this.paneButtonStyle != value )
 				{
 					this.paneButtonStyle = value;
+
+					if ( this.paneButtonStyle == PaneButtonStyle.Vertical )
+					{
+						this.MouseCursor = MouseCursor.AsVSplit;
+					}
+					if ( this.paneButtonStyle == PaneButtonStyle.Horizontal )
+					{
+						this.MouseCursor = MouseCursor.AsHSplit;
+					}
+
 					this.Invalidate();
 				}
 			}

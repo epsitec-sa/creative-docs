@@ -11,6 +11,13 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class Menu : Widget
 	{
+		public enum TypeDeveloped
+		{
+			Close,
+			Delay,
+			Quick,
+		}
+
 		public Menu(MenuType type)
 		{
 			this.type = type;
@@ -36,6 +43,20 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.parentRect = value;
+			}
+		}
+
+		// Indique s'il faut développer les sous-menus.
+		public TypeDeveloped MenuDeveloped
+		{
+			get
+			{
+				return this.menuDeveloped;
+			}
+
+			set
+			{
+				this.menuDeveloped = value;
 			}
 		}
 
@@ -81,6 +102,8 @@ namespace Epsitec.Common.Widgets
 			cell.Entered += new MessageEventHandler(this.HandleCellEntered);
 			cell.Exited  += new MessageEventHandler(this.HandleCellExited);
 
+			// debug !
+			cell.Name = this.Name+":"+this.totalUsed;
 			return rank;
 		}
 
@@ -137,7 +160,10 @@ namespace Epsitec.Common.Widgets
 		// Il faut appeler AdjustSize après avoir fini tous les InsertItem.
 		public void AdjustSize()
 		{
-			this.Size = this.RequiredSize;
+			if ( this.type == MenuType.Vertical )
+			{
+				this.Size = this.RequiredSize;
+			}
 		}
 
 		// Donne les dimensions nécessaires pour tout le menu.
@@ -219,27 +245,51 @@ namespace Epsitec.Common.Widgets
 		// Ouvre le sous-menu correspondant à un item.
 		protected bool OpenSubmenu(MenuItem item)
 		{
-			Menu list = item.SonMenu;
-			if ( list == null )  return false;
+			if ( this.submenu == item.Submenu )  return false;
+			this.CloseSubmenu();
+			this.submenu = item.Submenu;
+			if ( this.submenu == null )  return false;
+			System.Diagnostics.Debug.WriteLine("OpenSubmenu "+this.submenu.Name);
+
+			int max = this.submenu.totalUsed;
+			for ( int i=0 ; i<max ; i++ )
+			{
+				MenuItem mi = this.submenu.GetWidget(i);
+				mi.SetSelected(false);
+			}
 
 			this.itemParent = item;
 			this.itemParent.SetSelected(true);
+			this.submenu.MenuDeveloped = TypeDeveloped.Delay;
 
-			Drawing.Rectangle pRect = item.Bounds;
-			pRect.Offset(-pRect.Left, -pRect.Bottom);
-			pRect.Offset(list.Left, list.Bottom);
-			list.ParentRect = pRect;
-			
+			Drawing.Point pos = new Drawing.Point(0, 0);
+
+			if ( this.type == MenuType.Horizontal )
+			{
+				Drawing.Rectangle pRect = item.Bounds;
+				pRect.Offset(-pRect.Left, -pRect.Bottom);
+				pRect.Offset(this.submenu.Left, this.submenu.Bottom);
+				this.submenu.ParentRect = pRect;
+
+				pos = item.MapClientToRoot(new Drawing.Point(0, -this.submenu.Height));
+			}
+
+			if ( this.type == MenuType.Vertical )
+			{
+				this.submenu.ParentRect = Drawing.Rectangle.Empty;
+
+				pos = item.MapClientToRoot(new Drawing.Point(item.Width, item.Height-this.submenu.Height));
+			}
+
 			this.window = new WindowFrame();
 			this.window.MakeFramelessWindow();
-			this.window.Owner = this.WindowFrame;
-			Drawing.Point pos = item.MapClientToRoot(new Drawing.Point(0, -list.Height));
+//			this.window.Owner = this.WindowFrame;
 			pos = item.WindowFrame.MapWindowToScreen(pos);
-			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, list.Width, list.Height);
-			this.window.Show();
+			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
 			this.window.WindowDeactivated += new System.EventHandler(this.HandleWindowDeactivated);
-			this.window.Root.Children.Add(list);
-			list.SetFocused(true);
+			this.window.Root.Children.Add(this.submenu);
+			this.window.AnimateShow(Animation.RollDown);
+			this.submenu.SetFocused(true);
 			return true;
 		}
 
@@ -247,12 +297,30 @@ namespace Epsitec.Common.Widgets
 		protected bool CloseSubmenu()
 		{
 			if ( this.window == null )  return false;
-
+			
+			System.Diagnostics.Debug.WriteLine("CloseSubmenu "+this.submenu.Name);
+			System.Diagnostics.Debug.Assert(this.window.Root.HasChildren);
+			
+			// Commence par fermer immédiatement les sous-menus du sous-menu actuel.
+			Widget[] widgets = this.window.Root.Children.Widgets;
+			foreach ( Widget widget in widgets )
+			{
+				Menu submenu = widget as Menu;
+				
+				// Est-ce que le widget trouvé est un menu ?
+				// Si oui, on le ferme. Si non, on le saute simplement.
+				if ( submenu != null )
+				{
+					submenu.CloseSubmenu();
+				}
+			}
+			
 			this.itemParent.SetSelected(false);
 			this.window.WindowDeactivated -= new System.EventHandler(this.HandleWindowDeactivated);
-			this.window.Root.Children.Clear ();
+			this.window.Root.Children.Clear();
 			this.window.Dispose();
 			this.window = null;
+			this.submenu = null;
 			return true;
 		}
 
@@ -260,16 +328,16 @@ namespace Epsitec.Common.Widgets
 		private void HandleCellPressed(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.WriteLine("HandleCellPressed "+this.menuDeveloped);
-			if ( this.menuDeveloped )
+			if ( this.menuDeveloped != TypeDeveloped.Close )
 			{
 				//WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
-				this.menuDeveloped = false;
+				this.menuDeveloped = TypeDeveloped.Close;
 				this.CloseSubmenu();
 			}
 			else
 			{
 				//WindowFrame.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
-				this.menuDeveloped = true;
+				this.menuDeveloped = TypeDeveloped.Quick;
 				MenuItem item = (MenuItem)sender;
 				this.OpenSubmenu(item);
 			}
@@ -278,25 +346,38 @@ namespace Epsitec.Common.Widgets
 		private void HandlerMessageFilter(object sender, Message message)
 		{
 			WindowFrame window = sender as WindowFrame;
+
+			switch ( message.Type )
+			{
+				case MessageType.MouseDown:
+					break;
+				
+				case MessageType.MouseMove:
+					break;
+
+				case MessageType.MouseUp:
+					break;
+			}
+			//message.Consumer = this;
 		}
 
 		private void HandleCellEntered(object sender, MessageEventArgs e)
 		{
-			if ( !this.menuDeveloped )  return;
+			if ( this.menuDeveloped == TypeDeveloped.Close )  return;
 			MenuItem item = (MenuItem)sender;
-			this.CloseSubmenu();
+			System.Diagnostics.Debug.WriteLine("HandleCellEntered "+item.MainText);
 			this.OpenSubmenu(item);
 		}
 		
 		private void HandleCellExited(object sender, MessageEventArgs e)
 		{
-			if ( !this.menuDeveloped )  return;
+			if ( this.menuDeveloped == TypeDeveloped.Close )  return;
 		}
 		
 		// Appelé lorsque la fenêtre du sous-menu est désactivée.
 		private void HandleWindowDeactivated(object sender, System.EventArgs e)
 		{
-			this.CloseSubmenu();
+			//this.CloseSubmenu();
 		}
 
 
@@ -328,8 +409,9 @@ namespace Epsitec.Common.Widgets
 		protected double				margin = 2;
 		protected MenuItem[]			array;			// tableau des cases
 		protected int					totalUsed;
-		protected bool					menuDeveloped = false;
+		protected TypeDeveloped			menuDeveloped = TypeDeveloped.Close;
 		protected WindowFrame			window;
+		protected Menu					submenu;
 		protected MenuItem				itemParent;
 		protected double				iconWidth;
 		protected Drawing.Rectangle		parentRect;

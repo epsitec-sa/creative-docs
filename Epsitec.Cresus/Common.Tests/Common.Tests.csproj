@@ -182,6 +182,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "SystemInformationTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "test.png"
                     BuildAction = "None"
                 />
