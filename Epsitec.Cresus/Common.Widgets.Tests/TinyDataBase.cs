@@ -48,11 +48,11 @@ namespace Epsitec.Common
 		public TinyDataBase()
 		{
 			this.sortField = new int[this.maxSort];
-			this.sortMode = new int[this.maxSort];
+			this.sortMode = new Widgets.SortMode[this.maxSort];
 			for ( int i=0 ; i<this.maxSort ; i++ )
 			{
 				this.sortField[i] = -1;  // pas de tri
-				this.sortMode[i] = 0;
+				this.sortMode[i] = Widgets.SortMode.None;
 			}
 		}
 
@@ -306,7 +306,7 @@ namespace Epsitec.Common
 		// Si renkSort=2 -> etc.
 		// Si mode= 1 -> tri croissant
 		// Si mode=-1 -> tri décroissant
-		public bool SetSortField(int rankSort, int fieldID, int mode)
+		public bool SetSortField(int rankSort, int fieldID, Widgets.SortMode mode)
 		{
 			System.Diagnostics.Debug.Assert( fieldID >= 0 && fieldID < this.TotalField );
 			if ( rankSort < 0 || rankSort >= this.maxSort )  return false;
@@ -317,7 +317,7 @@ namespace Epsitec.Common
 		}
 
 		// Retourne l'identificateur d'une rubrique et le mode de tri.
-		public bool GetSortField(int rankSort, out int fieldID, out int mode)
+		public bool GetSortField(int rankSort, out int fieldID, out Widgets.SortMode mode)
 		{
 			if ( rankSort < 0 || rankSort >= this.maxSort )
 			{
@@ -402,7 +402,8 @@ namespace Epsitec.Common
 				s1 = (string)r1[this.sortField[i]];
 				s2 = (string)r2[this.sortField[i]];
 				n = string.Compare(s1, s2);
-				n *= this.sortMode[i];  // tri croissant ou décroissant
+				
+				n = (int)n * (int)this.sortMode[i];  // tri croissant ou décroissant
 				if ( n != 0 )  return n;
 			}
 			return 0;
@@ -488,7 +489,7 @@ namespace Epsitec.Common
 		protected System.Collections.ArrayList	records = new System.Collections.ArrayList();
 		protected readonly int					maxSort = 10;
 		protected int[]							sortField;
-		protected int[]							sortMode;
+		protected Widgets.SortMode[]			sortMode;
 		protected int[]							index;
 	}
 }
