@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 			else
 			{
-				this.CreateConnection (true);
+				this.CreateConnection (db_access.CheckConnection);
 			}
 			
 			this.sql_builder = new FirebirdSqlBuilder (this);
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			switch (this.engine_type)
 			{
 				case EngineType.Embedded:
-					buffer.Append (Common.Support.Globals.Directories.CommonAppData);
+					buffer.Append (Common.Support.Globals.Directories.UserAppData);
 					buffer.Append (System.IO.Path.DirectorySeparatorChar);
 					break;
 				

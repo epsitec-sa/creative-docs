@@ -235,6 +235,7 @@ namespace Epsitec.Cresus.Database
 				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableTypeDef));
 				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableEnumValDef));
 				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableClientDef));
+				this.internal_tables.Add (this.ResolveDbTable (transaction, Tags.TableRequestQueue));
 				
 				this.types.ResolveTypes (transaction);
 				
@@ -242,6 +243,61 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.StartUsingDatabase ();
+		}
+		
+		public void SetupRoamingDatabase(int client_id)
+		{
+			if (this.client_id != client_id)
+			{
+				using (DbTransaction transaction = this.BeginTransaction ())
+				{
+					DbId last_server_id = this.logger.CurrentId;
+					
+					this.ResetIdColumn (transaction, this.internal_tables[Tags.TableTableDef], Tags.ColumnNextId, DbId.CreateId (1, client_id));
+					
+					this.logger.Detach ();
+					
+					this.ClearTable (transaction, this.internal_tables[Tags.TableRequestQueue]);
+					this.ClearTable (transaction, this.internal_tables[Tags.TableClientDef]);
+					
+					this.logger = new DbLogger ();
+					this.logger.DefineClientId (client_id);
+					this.logger.DefineLogId (1);
+					this.logger.Attach (this, this.internal_tables[Tags.TableLog]);
+					this.logger.Insert (transaction, new DbLogger.Entry (1, client_id));
+					
+					//	Adapte les réglages locaux pour le client :
+					
+					this.LocalSettings.ClientId  = client_id;
+					this.LocalSettings.IsServer  = false;
+					this.LocalSettings.SyncLogId = last_server_id.Value;
+					
+					this.LocalSettings.PersistToBase (transaction);
+					
+					transaction.Commit ();
+					
+					this.client_id = client_id;
+				}
+			}
+		}
+		
+		protected void ClearTable(DbTransaction transaction, DbTable table)
+		{
+			transaction.SqlBuilder.RemoveData (table.CreateSqlName (), null);
+			this.ExecuteNonQuery (transaction);
+		}
+		
+		protected void ResetIdColumn(DbTransaction transaction, DbTable table, string column_name, DbId id)
+		{
+			DbColumn column     = table.Columns[column_name];
+			string   sql_column = column.CreateSqlName ();
+			
+			Collections.SqlFields fields = new Collections.SqlFields ();
+			
+			fields.Add (sql_column, SqlField.CreateConstant (id.Value, DbKey.RawTypeForId));
+			
+			transaction.SqlBuilder.UpdateData (table.CreateSqlName (), fields, null);
+			this.ExecuteNonQuery (transaction);
 		}
 		
 		public void ReleaseConnection()

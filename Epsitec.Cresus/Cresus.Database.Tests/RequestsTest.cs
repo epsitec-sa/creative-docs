@@ -430,7 +430,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-#if false
+#if true
 		[Test] [Ignore ("Temporary")] public void Check12ServiceServer()
 		{
 			DbInfrastructure      infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
@@ -651,6 +651,20 @@ namespace Epsitec.Cresus.Database
 					System.Console.WriteLine (ex.ToString ());
 				}
 			}
+		}
+		
+		[Test] /*[Ignore ("Temporary")]*/ public void Check18RoamingClientTool()
+		{
+			Remoting.IOperatorService service = Services.Engine.GetRemoteOperatorService ("localhost", 1234);
+			Remoting.IOperation operation;
+			
+			Assert.IsNotNull (service);
+			
+			System.Diagnostics.Debug.WriteLine ("Starting asynchronous request.");
+			
+			service.CreateRoamingClient ("test", out operation);
+			
+			Services.RoamingClientTool.CreateDatabase (service, operation, "roaming");
 		}
 		
 		[Test] public void Check20ServiceServer_Kill()

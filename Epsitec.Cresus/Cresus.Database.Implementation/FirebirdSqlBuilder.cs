@@ -1095,7 +1095,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.Append ("UPDATE ");
 			this.Append (table_name);
 			bool first_field = true;
-
+			
 			foreach (SqlField field in fields)
 			{
 				if (first_field)
@@ -1107,7 +1107,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				{
 					this.Append (",");
 				}
-
+				
 				this.Append (field.Alias);
 				this.Append (" = ");
 #if false
@@ -1130,34 +1130,39 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append (field);
 #endif
 			}
-
+			
 			if (first_field)
 			{
 				this.ThrowError (string.Format ("No field specified in UPDATE."));
 			}
-
+			
 			first_field = true;
-
-			foreach (SqlField field in conditions)
+			
+			if ((conditions != null) &&
+				(conditions.Count > 0))
 			{
-				if (first_field)
+				foreach (SqlField field in conditions)
 				{
-					this.Append (" WHERE ");
-					first_field = false;
+					if (first_field)
+					{
+						this.Append (" WHERE ");
+						first_field = false;
+					}
+					else
+					{
+						this.Append (" AND ");
+					}
+					
+					if (field.Type != SqlFieldType.Function)
+					{
+						this.ThrowError (string.Format ("Invalid field {0} in UPDATE ... WHERE.", field.AsName));
+						break;
+					}
+					
+					this.Append (field.AsFunction);
 				}
-				else
-				{
-					this.Append (" AND ");
-				}
-
-				if (field.Type != SqlFieldType.Function)
-				{
-					this.ThrowError (string.Format ("Invalid field {0} in UPDATE ... WHERE.", field.AsName));
-					break;
-				}
-
-				this.Append (field.AsFunction);
 			}
+			
 			this.Append (";\n");
 		}
 
@@ -1170,27 +1175,32 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.Append ("DELETE FROM ");
 			this.Append (table_name);
 			bool first_field = true;
-
-			foreach (SqlField field in conditions)
+			
+			if ((conditions != null) &&
+				(conditions.Count > 0))
 			{
-				if (first_field)
+				foreach (SqlField field in conditions)
 				{
-					this.Append (" WHERE ");
-					first_field = false;
-				}
-				else
-				{
-					this.Append (" AND ");
-				}
+					if (first_field)
+					{
+						this.Append (" WHERE ");
+						first_field = false;
+					}
+					else
+					{
+						this.Append (" AND ");
+					}
 
-				if (field.Type != SqlFieldType.Function)
-				{
-					this.ThrowError (string.Format ("Invalid field {0} in UPDATE ... WHERE.", field.AsName));
-					break;
-				}
+					if (field.Type != SqlFieldType.Function)
+					{
+						this.ThrowError (string.Format ("Invalid field {0} in UPDATE ... WHERE.", field.AsName));
+						break;
+					}
 
-				this.Append (field.AsFunction);
+					this.Append (field.AsFunction);
+				}
 			}
+			
 			this.Append (";\n");
 		}
 

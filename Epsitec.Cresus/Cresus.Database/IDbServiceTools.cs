@@ -10,5 +10,6 @@ namespace Epsitec.Cresus.Database
 	public interface IDbServiceTools
 	{
 		void Backup(string file_name);
+		void Restore(string file_name);
 	}
 }

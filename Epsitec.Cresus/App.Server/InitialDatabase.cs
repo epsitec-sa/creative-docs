@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Server
 			service.EventLog.WriteEntry ("Created empty database.", System.Diagnostics.EventLogEntryType.Warning);
 			
 			infrastructure.LocalSettings.IsServer = true;
-			infrastructure.LocalSettings.ClientId = 100;
+			infrastructure.LocalSettings.ClientId = 1;
 			
 			using (Database.DbTransaction transaction = infrastructure.BeginTransaction (Database.DbTransactionMode.ReadWrite))
 			{

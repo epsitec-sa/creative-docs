@@ -42,6 +42,21 @@ namespace Epsitec.Cresus.Database.Implementation
 				System.Diagnostics.Debug.WriteLine ("Backup: done.");
 			}
 		}
+		
+		public void Restore(string file_name)
+		{
+			FbRestore restore = new FbRestore();
+			
+			restore.ConnectionString = FirebirdAbstraction.MakeStandardConnectionString (fb.DbAccess, fb.MakeDbFileName (fb.DbAccess), fb.ServerType);
+			restore.BackupFiles.Add (new FbBackupFile (file_name, 2048));
+			
+			restore.Verbose        = false;
+			restore.PageSize       = 4096;
+			restore.Options        = FbRestoreFlags.Create | FbRestoreFlags.Replace;
+			restore.ServiceOutput += new ServiceOutputEventHandler (FirebirdServiceTools.ServiceOutput);
+
+			restore.Execute();
+		}
 		#endregion
 		
 		private static void ServiceOutput(object sender, ServiceOutputEventArgs e)

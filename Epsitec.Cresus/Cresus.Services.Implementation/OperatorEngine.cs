@@ -122,12 +122,12 @@ namespace Epsitec.Cresus.Services
 				Database.DbInfrastructure infrastructure = this.oper.engine.Orchestrator.Infrastructure;
 				Database.DbClientManager  client_manager = infrastructure.ClientManager;
 				
-				Database.DbClientManager.Entry client = client_manager.CreateAndInsertNewClient (this.client_name);
-				
-				this.client_id = client.ClientId;
-				
 				using (Database.DbTransaction transaction = infrastructure.BeginTransaction (Database.DbTransactionMode.ReadWrite))
 				{
+					infrastructure.Logger.CreatePermanentEntry (transaction);
+					
+					this.client_id = client_manager.CreateAndInsertNewClient (this.client_name).ClientId;
+					
 					client_manager.SerializeToBase (transaction);
 					
 					transaction.Commit ();

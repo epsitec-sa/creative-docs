@@ -13,12 +13,13 @@ namespace Epsitec.Cresus.Database
 	{
 		public DbAccess (string provider, string database, string server, string login_name, string login_pwd, bool create)
 		{
-			this.Provider		= provider;
-			this.Database		= database;
-			this.Server			= server;
-			this.LoginName		= login_name;
-			this.LoginPassword	= login_pwd;
-			this.Create			= create;
+			this.Provider		 = provider;
+			this.Database		 = database;
+			this.Server			 = server;
+			this.LoginName		 = login_name;
+			this.LoginPassword	 = login_pwd;
+			this.Create			 = create;
+			this.CheckConnection = true;
 		}
 		
 		
@@ -40,6 +41,7 @@ namespace Epsitec.Cresus.Database
 		public string						LoginName;
 		public string						LoginPassword;
 		public bool							Create;
+		public bool							CheckConnection;
 		
 		public static readonly DbAccess		Empty;
 	}
