@@ -38,6 +38,17 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 		
+		[Test] public void CheckPixmapRawData()
+		{
+			Window window = new Window ();
+			
+			window.ClientSize = new Size (40*8, 40*8);
+			window.Text = "CheckPixmapRawData";
+			window.Root.PaintForeground += new PaintEventHandler(CheckPixmapRawData_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+		
 		[Test] public void CheckCurve()
 		{
 			Window window = new Window ();
@@ -261,6 +272,29 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
 			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
+		}
+		
+		private void CheckPixmapRawData_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			Agg.Graphics gfx = new Agg.Graphics ();
+			gfx.Pixmap.Size  = new System.Drawing.Size (40, 40);
+			
+			gfx.PaintText (2, 8, "@", Font.DefaultFont, 40, Color.FromRGB (1, 0.2, 0));
+			
+			using (Pixmap.RawData src = new Pixmap.RawData (gfx.Pixmap))
+			{
+				for (int y = 0; y < src.Height; y++)
+				{
+					for (int x = 0; x < src.Width; x++)
+					{
+						Color pixel = src[x, y];
+						e.Graphics.AddFilledRectangle (x * 8, y * 8, 7, 7);
+						e.Graphics.RenderSolid (pixel);
+					}
+				}
+			}
 		}
 		
 		private void Smooth_PaintForeground(object sender, PaintEventArgs e)
