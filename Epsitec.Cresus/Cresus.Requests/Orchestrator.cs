@@ -11,8 +11,12 @@ namespace Epsitec.Cresus.Requests
 	/// </summary>
 	public class Orchestrator
 	{
-		public Orchestrator()
+		public Orchestrator(DbInfrastructure infrastructure)
 		{
+			this.infrastructure   = infrastructure;
+			this.execution_engine = new ExecutionEngine (this.infrastructure);
+			this.execution_queue  = new ExecutionQueue (this.infrastructure);
+			
 		}
 		
 		public void WorkerThread()
@@ -46,6 +50,8 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
+		protected DbInfrastructure				infrastructure;
 		protected ExecutionQueue				execution_queue;
+		protected ExecutionEngine				execution_engine;
 	}
 }

@@ -16,7 +16,9 @@ namespace Epsitec.Cresus.Database
 	{
 		public DbInfrastructure()
 		{
-			this.localisations = new string[] { "", "FR" };
+			this.localisations     = new string[] { "", "FR" };
+			this.live_transactions = new System.Collections.Hashtable (20, 0.2f);
+			this.release_requested = new System.Collections.ArrayList ();
 		}
 		
 		
@@ -56,11 +58,16 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public DbTransaction					LiveTransaction
+		public DbTransaction[]					LiveTransactions
 		{
 			get
 			{
-				return this.live_transaction;
+				lock (this.live_transactions)
+				{
+					DbTransaction[] transactions = new DbTransaction[this.live_transactions.Count];
+					this.live_transactions.Values.CopyTo (transactions, 0);
+					return transactions;
+				}
 			}
 		}
 		
@@ -205,13 +212,21 @@ namespace Epsitec.Cresus.Database
 		
 		public void ReleaseConnection()
 		{
-			if (this.live_transaction == null)
+			this.ReleaseConnection (this.db_abstraction);
+		}
+		
+		public void ReleaseConnection(IDbAbstraction db_abstraction)
+		{
+			lock (this.live_transactions)
 			{
-				this.db_abstraction.ReleaseConnection ();
-			}
-			else
-			{
-				this.release_connection_requested = true;
+				if (this.live_transactions.ContainsKey (db_abstraction))
+				{
+					this.release_requested.Add (db_abstraction);
+				}
+				else
+				{
+					db_abstraction.ReleaseConnection ();
+				}
 			}
 		}
 		
@@ -246,11 +261,11 @@ namespace Epsitec.Cresus.Database
 			switch (mode)
 			{
 				case DbTransactionMode.ReadOnly:
-					transaction = new DbTransaction (this.db_abstraction.BeginReadOnlyTransaction (), this, mode);
+					transaction = new DbTransaction (this.db_abstraction.BeginReadOnlyTransaction (), this.db_abstraction, this, mode);
 					break;
 				
 				case DbTransactionMode.ReadWrite:
-					transaction = new DbTransaction (this.db_abstraction.BeginReadWriteTransaction (), this, mode);
+					transaction = new DbTransaction (this.db_abstraction.BeginReadWriteTransaction (), this.db_abstraction, this, mode);
 					break;
 				
 				default:
@@ -794,27 +809,37 @@ namespace Epsitec.Cresus.Database
 		
 		internal void NotifyBeginTransaction(DbTransaction transaction)
 		{
-			if (this.live_transaction != null)
-			{
-				throw new Exceptions.GenericException (this.db_access, string.Format ("Nested transactions not supported."));
-			}
+			IDbAbstraction db_abstraction = transaction.Database;
 			
-			this.live_transaction = transaction;
+			lock (this.live_transactions)
+			{
+				if (this.live_transactions.ContainsKey (db_abstraction))
+				{
+					throw new Exceptions.GenericException (this.db_access, string.Format ("Nested transactions not supported."));
+				}
+				
+				this.live_transactions[db_abstraction] = transaction;
+			}
 		}
 		
 		internal void NotifyEndTransaction(DbTransaction transaction)
 		{
-			if (this.live_transaction != transaction)
-			{
-				throw new Exceptions.GenericException (this.db_access, string.Format ("Ending wrong transaction."));
-			}
+			IDbAbstraction db_abstraction = transaction.Database;
 			
-			this.live_transaction = null;
-			
-			if (this.release_connection_requested)
+			lock (this.live_transactions)
 			{
-				this.release_connection_requested = false;
-				this.ReleaseConnection ();
+				if (this.live_transactions[db_abstraction] != transaction)
+				{
+					throw new Exceptions.GenericException (this.db_access, string.Format ("Ending wrong transaction."));
+				}
+				
+				this.live_transactions.Remove (db_abstraction);
+				
+				if (this.release_requested.Contains (db_abstraction))
+				{
+					this.release_requested.Remove (db_abstraction);
+					this.ReleaseConnection (db_abstraction);
+				}
 			}
 		}
 		
@@ -2239,7 +2264,7 @@ namespace Epsitec.Cresus.Database
 		Cache.DbTypes							cache_db_types = new Cache.DbTypes ();
 		Cache.DbTables							cache_db_tables = new Cache.DbTables ();
 		
-		protected DbTransaction					live_transaction;
-		protected bool							release_connection_requested;
+		protected System.Collections.Hashtable	live_transactions;
+		protected System.Collections.ArrayList	release_requested;
 	}
 }

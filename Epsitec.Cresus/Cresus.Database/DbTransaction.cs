@@ -13,9 +13,10 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public sealed class DbTransaction : System.IDisposable, System.Data.IDbTransaction, Epsitec.Common.Types.IReadOnly
 	{
-		internal DbTransaction(System.Data.IDbTransaction transaction, DbInfrastructure infrastructure, DbTransactionMode mode)
+		internal DbTransaction(System.Data.IDbTransaction transaction, IDbAbstraction database, DbInfrastructure infrastructure, DbTransactionMode mode)
 		{
 			this.transaction    = transaction;
+			this.database       = database;
 			this.infrastructure = infrastructure;
 			this.mode           = mode;
 			
@@ -28,6 +29,14 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return this.transaction;
+			}
+		}
+		
+		public IDbAbstraction					Database
+		{
+			get
+			{
+				return this.database;
 			}
 		}
 		
@@ -105,6 +114,8 @@ namespace Epsitec.Cresus.Database
 				this.transaction.Dispose ();
 				this.transaction = null;
 			}
+			
+			this.database = null;
 		}
 		#endregion
 		
@@ -120,6 +131,7 @@ namespace Epsitec.Cresus.Database
 		public event EventHandler				Released;
 		
 		private System.Data.IDbTransaction		transaction;
+		private IDbAbstraction					database;
 		private DbInfrastructure				infrastructure;
 		private readonly DbTransactionMode		mode;
 	}

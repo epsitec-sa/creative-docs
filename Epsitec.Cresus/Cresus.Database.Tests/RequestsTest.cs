@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Database
 			
 			DataLayer.RequestFactory factory = new DataLayer.RequestFactory ();
 			
-			table.Rows.Add (new object[] { 1L, 0, "Pierre Arnaud", new System.DateTime (1972, 2, 11) });
+			table.Rows.Add (new object[] { DbId.CreateId (1, 1).Value, 0, "Pierre Arnaud", new System.DateTime (1972, 2, 11) });
 			
 			factory.GenerateRequests (table);
 			
