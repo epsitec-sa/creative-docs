@@ -143,6 +143,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		void Helpers.IDragBehaviorHost.OnDragBegin()
 		{
 			Drawing.Point pos = this.MapClientToScreen (this.widget.Location);
