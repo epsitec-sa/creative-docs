@@ -405,7 +405,7 @@ namespace Epsitec.Common.Drawing
 				r[i] = 0.5 + sin1*sin1 * 0.3;
 				g[i] = 0.5 + sin2*sin2 * 0.3;
 				b[i] = 1.0;
-				Color.HSVtoRGB (i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
+				Color.ConvertHSVtoRGB (i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
 				a[i] = 1.0;
 			}
 			
@@ -462,7 +462,7 @@ namespace Epsitec.Common.Drawing
 			
 			for (int i = 0 ; i < 256 ; i++)
 			{
-				Color.HSVtoRGB (i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
+				Color.ConvertHSVtoRGB (i/256.0*360.0, 1.0, 1.0, out r[i], out g[i], out b[i]);
 				a[i] = 1.0;
 			}
 			
