@@ -3,32 +3,6 @@
 
 namespace Epsitec.Cresus.DataLayer
 {
-	public class DataChangeEventArgs : System.EventArgs
-	{
-		public DataChangeEventArgs(string path, System.Data.DataRowAction action)
-		{
-			this.path   = path;
-			this.action = action;
-		}
-		
-		
-		public string							Path
-		{
-			get { return this.path; }
-		}
-		
-		public System.Data.DataRowAction		Action
-		{
-			get { return this.action; }
-		}
-		
-		
-		protected string						path;
-		protected System.Data.DataRowAction		action;
-	}
-	
-	public delegate void DataChangeEventHandler(object sender, DataChangeEventArgs e);
-	
 	/// <summary>
 	/// La classe DataStore encapsule les données stockées dans
 	/// un System.Data.DataSet.
@@ -114,6 +88,19 @@ namespace Epsitec.Cresus.DataLayer
 		}
 		
 		
+		public Database.DbKey GetRowKey(string path)
+		{
+			string[] elem = this.SplitPath (path);
+			this.CheckPathLength (elem, 2);
+			
+			string table_name  = elem[0];
+			
+			System.Data.DataRow row   = this.GetRow (elem);
+			Database.DbTable    table = this.FindDbTable (table_name);
+			Database.DbKey      key   = table.CreateKeyFromRow (row);
+			
+			return key;
+		}
 		
 		public void AttachObserver(string path, DataChangeEventHandler handler)
 		{

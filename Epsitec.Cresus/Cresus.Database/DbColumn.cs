@@ -414,5 +414,10 @@ namespace Epsitec.Cresus.Database
 		protected bool					is_unique			= false;
 		protected bool					is_indexed			= false;
 		protected DbElementCat			category;
+		
+		
+		internal const string			TagId				= "CR_ID";
+		internal const string			TagRevision			= "CR_REV";
+		internal const string			TagStatus			= "CR_STAT";
 	}
 }
