@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets
 						return;
 					}
 					
-					if ((message.KeyCodeAsKeys == System.Windows.Forms.Keys.Space) &&
+					if ((message.KeyCode == KeyCode.Space) &&
 						(this.is_keyboard_pressed == false))
 					{
 						this.is_keyboard_pressed = true;
@@ -73,7 +73,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				this.WindowFrame.EngagedWidget = this;
+				this.Window.EngagedWidget = this;
 				this.SimulatePressed ();
 			}
 			

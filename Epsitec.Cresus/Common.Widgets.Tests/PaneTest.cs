@@ -9,9 +9,9 @@ namespace Epsitec.Common.Tests
 	{
 		[Test] public void CheckPane()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			
-			window.ClientSize = new System.Drawing.Size (400, 300);
+			window.ClientSize = new Size (400, 300);
 			window.Text = "CheckPane";
 			
 			Pane pane = new Pane ();

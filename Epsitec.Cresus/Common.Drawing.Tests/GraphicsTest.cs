@@ -10,9 +10,9 @@ namespace Epsitec.Common.Tests
 	{
 		[Test] public void CheckTextOutput()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			
-			window.ClientSize = new System.Drawing.Size (300, 290);
+			window.ClientSize = new Size (300, 290);
 			window.Text = "CheckTextOutput";
 			window.Root.PaintForeground += new PaintEventHandler(Text_PaintForeground);
 			window.Root.Invalidate ();
@@ -21,9 +21,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckGammaOutput()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			
-			window.ClientSize = new System.Drawing.Size (370, 210);
+			window.ClientSize = new Size (370, 210);
 			window.Text = "CheckGammaOutput";
 			window.Root.PaintForeground += new PaintEventHandler(Gamma_PaintForeground);
 			window.Root.Invalidate ();
@@ -32,7 +32,7 @@ namespace Epsitec.Common.Tests
 		
 		[Test] public void CheckEvenOddFill()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			
 			window.Text = "CheckEvenOddFill";
 			window.Root.PaintForeground += new PaintEventHandler(EvenOddFill_PaintForeground);
@@ -42,7 +42,7 @@ namespace Epsitec.Common.Tests
 		
 		[Test] public void CheckNonZeroFill()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			
 			window.Text = "CheckNonZeroFill";
 			window.Root.PaintForeground += new PaintEventHandler(NonZeroFill_PaintForeground);
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckClipping()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			
 			window.Text = "CheckClipping";
 			window.Root.PaintForeground += new PaintEventHandler(Clipping_PaintForeground);
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckTransform()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			
 			window.Text = "CheckTransform";
 			window.Root.PaintForeground += new PaintEventHandler(Transform_PaintForeground);
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckGradient()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			
 			window.Text = "CheckGradient";
 			window.Root.PaintForeground += new PaintEventHandler(Gradient_PaintForeground);
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckImage()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			
 			window.Text = "CheckImage";
 			window.Root.PaintForeground += new PaintEventHandler(Image_PaintForeground);
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckImageRect()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			
 			window.Text = "CheckImageRect";
 			window.Root.PaintForeground += new PaintEventHandler(ImageRect_PaintForeground);
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckImageRectTIFF()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			
 			window.Text = "CheckImageRectTIFF";
 			window.Root.PaintForeground += new PaintEventHandler(ImageRectTIFF_PaintForeground);

@@ -1,6 +1,5 @@
 namespace Epsitec.Common.Widgets
 {
-	using Keys = System.Windows.Forms.Keys;
 	using BundleAttribute  = Epsitec.Common.Support.BundleAttribute;
 	
 	public enum TextFieldStyle
@@ -21,7 +20,7 @@ namespace Epsitec.Common.Widgets
 	{
 		static AbstractTextField()
 		{
-			TextField.flashTimer.Tick += new System.EventHandler(TextField.HandleFlashTimer);
+			TextField.flashTimer.TimeElapsed += new EventHandler(TextField.HandleFlashTimer);
 		}
 		
 		
@@ -267,7 +266,7 @@ namespace Epsitec.Common.Widgets
 
 
 		// Gère le temps écoulé pour faire clignoter un curseur.
-		protected static void HandleFlashTimer(object source, System.EventArgs e)
+		protected static void HandleFlashTimer(object source)
 		{
 			TextField.showCursor = !TextField.showCursor;
 			
@@ -300,10 +299,11 @@ namespace Epsitec.Common.Widgets
 		// Allume le curseur au prochain affichage.
 		protected void ResetCursor()
 		{
-			if ( this.IsFocused && this.WindowFrame.Focused )
+			if ( this.IsFocused && this.Window.IsFocused )
 			{
-				TextField.flashTimer.Interval = SystemInformation.CursorBlinkDelay;
-				TextField.flashTimer.Stop();
+				double delay = SystemInformation.CursorBlinkDelay;
+				TextField.flashTimer.Delay = delay;
+				TextField.flashTimer.AutoRepeat = delay;
 				TextField.flashTimer.Start();  // restart du timer
 				TextField.showCursor = true;  // avec le curseur visible
 			}
@@ -341,7 +341,7 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.KeyDown:
-					this.ProcessKeyDown(message.KeyCodeAsKeys, message.IsShiftPressed, message.IsCtrlPressed);
+					this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
 					break;
 
 				case MessageType.KeyPress:
@@ -393,50 +393,50 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Gestion d'une touche pressée avec KeyDown dans le texte.
-		protected virtual void ProcessKeyDown(Keys key, bool isShiftPressed, bool isCtrlPressed)
+		protected virtual void ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
 			switch ( key )
 			{
-				case Keys.Back:
+				case KeyCode.Back:
 					this.DeleteCharacter(-1);
 					break;
 
-				case Keys.Delete:
+				case KeyCode.Delete:
 					this.DeleteCharacter(1);
 					break;
 
-				case Keys.Escape:
+				case KeyCode.Escape:
 					break;
 
-				case Keys.Home:
+				case KeyCode.Home:
 					this.MoveCursor(-1000000, isShiftPressed, false);  // recule beaucoup
 					break;
 
-				case Keys.End:
+				case KeyCode.End:
 					this.MoveCursor(1000000, isShiftPressed, false);  // avance beaucoup
 					break;
 
-				case Keys.PageUp:
+				case KeyCode.PageUp:
 					this.MoveCursor(-1000000, isShiftPressed, false);  // recule beaucoup
 					break;
 
-				case Keys.PageDown:
+				case KeyCode.PageDown:
 					this.MoveCursor(1000000, isShiftPressed, false);  // avance beaucoup
 					break;
 
-				case Keys.Left:
+				case KeyCode.ArrowLeft:
 					this.MoveCursor(-1, isShiftPressed, isCtrlPressed);
 					break;
 
-				case Keys.Right:
+				case KeyCode.ArrowRight:
 					this.MoveCursor(1, isShiftPressed, isCtrlPressed);
 					break;
 
-				case Keys.Up:
+				case KeyCode.ArrowUp:
 					this.MoveCursor(-1, isShiftPressed, isCtrlPressed);
 					break;
 
-				case Keys.Down:
+				case KeyCode.ArrowDown:
 					this.MoveCursor(1, isShiftPressed, isCtrlPressed);
 					break;
 			}
@@ -766,7 +766,7 @@ namespace Epsitec.Common.Widgets
 				else if ( from == to )
 				{
 					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
-					visibleCursor = TextField.showCursor && this.WindowFrame.Focused;
+					visibleCursor = TextField.showCursor && this.Window.IsFocused;
 				}
 				else
 				{
@@ -820,7 +820,7 @@ namespace Epsitec.Common.Widgets
 		protected int							maxChar = 1000;
 		protected bool							mouseDown = false;
 		
-		protected static System.Windows.Forms.Timer	flashTimer = new System.Windows.Forms.Timer();
+		protected static Timer					flashTimer = new Timer();
 		protected static bool					showCursor = true;
 		
 		protected static AbstractTextField		blinking;

@@ -522,9 +522,9 @@ namespace Epsitec.Common.Tests
 		
 		[Test] public void CheckDocking()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckDocking";
 			window.Root.PreferHorizontalDockLayout = true;
 			window.Root.SetAutoMinMax (true);

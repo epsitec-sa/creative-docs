@@ -13,7 +13,7 @@ namespace Epsitec.Common.Tests
 		
 		[Test] public void CheckCustomWidgetSimpleWindow()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			window.Text = "CheckCustomWidgetSimpleWindow";
 			
 			CustomWidget a = new CustomWidget ();
@@ -204,12 +204,12 @@ namespace Epsitec.Common.Tests
 					}
 					if (message.IsCtrlPressed == false)
 					{
-						switch (message.KeyCodeAsKeys)
+						switch (message.KeyCode)
 						{
-							case System.Windows.Forms.Keys.Escape:
+							case KeyCode.Escape:
 								this.SetFocused (false);
 								break;
-							case System.Windows.Forms.Keys.Space:
+							case KeyCode.Space:
 								this.Toggle ();
 								break;
 						}

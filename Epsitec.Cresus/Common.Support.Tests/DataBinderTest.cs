@@ -36,8 +36,8 @@ namespace Epsitec.Common.Support.Tests
 			Assertion.AssertNotNull (bundle);
 			Assertion.AssertNotNull (bundler);
 			
-			object              obj    = bundler.CreateFromBundle (bundle);
-			Widgets.WindowFrame window = obj as Widgets.WindowFrame;
+			object         obj    = bundler.CreateFromBundle (bundle);
+			Widgets.Window window = obj as Widgets.Window;
 			
 			Assertion.AssertNotNull (obj);
 			Assertion.AssertNotNull (window);

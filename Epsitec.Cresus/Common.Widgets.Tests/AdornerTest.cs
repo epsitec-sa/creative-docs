@@ -9,9 +9,9 @@ namespace Epsitec.Common.Tests
 	{
 		[Test] public void CheckAdornerWidgets()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(600, 300);
+			window.ClientSize = new Size(600, 300);
 			window.Text = "CheckAdornerWidgets";
 
 			ToolTip tip = new ToolTip();
@@ -355,9 +355,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckAdornerBigText()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerBigText";
 
 			TextFieldMulti multi = new TextFieldMulti();
@@ -386,11 +386,11 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckAdornerTab()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerTab";
-			window.Closed += new System.EventHandler(this.HandleWindowClosed);
+			window.WindowClosed += new EventHandler(this.HandleWindowClosed);
 
 			TabBook tb = new TabBook(TabBookStyle.Normal);
 			//TabBook tb = new TabBook(TabBookStyle.Right);
@@ -536,7 +536,7 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 
-		private void HandleWindowClosed(object sender, System.EventArgs e)
+		private void HandleWindowClosed(object sender)
 		{
 			this.tabBook = null;
 		}
@@ -552,9 +552,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckAdornerCell1()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerCell1";
 
 			CreateListLook(window.Root.Children, new Point(10, 230), null);
@@ -616,9 +616,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckAdornerCell2()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(500, 300);
+			window.ClientSize = new Size(500, 300);
 			window.Text = "CheckAdornerCell2";
 
 			CreateListLook(window.Root.Children, new Point(10, 230), null);
@@ -690,9 +690,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckAdornerCell3()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerCell3";
 
 			CreateListLook(window.Root.Children, new Point(10, 230), null);
@@ -773,9 +773,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckAdornerScrollArray()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerScrollArray";
 
 			CreateListLook(window.Root.Children, new Point(10, 230), null);
@@ -861,9 +861,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckAdornerBug1()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerBug1";
 
 			Button button1 = new Button();
@@ -878,9 +878,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckAdornerBug2()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerBug2";
 
 			TextField text = new TextField();
@@ -898,9 +898,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckAdornerBugAlive1()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(600, 300);
+			window.ClientSize = new Size(600, 300);
 			window.Text = "CheckAdornerBugAlive1";
 
 			Button a = new Button();
@@ -914,9 +914,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckAdornerBugAlive2()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerBugAlive2";
 
 			CellTable table = new CellTable();
@@ -973,9 +973,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckAdornerBugAlive3()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerTab";
 
 			TabBook tb = new TabBook(TabBookStyle.Normal);
@@ -1035,9 +1035,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckAdornerTestParents1()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(400, 300);
+			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckAdornerTestParents1";
 
 			Button button1 = new Button();
@@ -1059,9 +1059,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckAdornerTestParents2()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(300, 300);
+			window.ClientSize = new Size(300, 300);
 			window.Text = "CheckAdornerTestParents2";
 
 			Button button1 = new Button();
@@ -1097,9 +1097,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckAdornerDisabled()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(600, 300);
+			window.ClientSize = new Size(600, 300);
 			window.Text = "CheckAdornerDisabled";
 
 			StaticText st = new StaticText();

@@ -1,7 +1,5 @@
 namespace Epsitec.Common.Widgets
 {
-	using Keys = System.Windows.Forms.Keys;
-	
 	/// <summary>
 	/// La classe TextFieldMulti implémente la ligne éditable multiple.
 	/// </summary>
@@ -61,27 +59,27 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override void ProcessKeyDown(Keys key, bool isShiftPressed, bool isCtrlPressed)
+		protected override void ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
 			switch ( key )
 			{
-				case Keys.Enter:
+				case KeyCode.Return:
 					this.InsertCharacter('\n');
 					break;
 
-				case Keys.Home:
+				case KeyCode.Home:
 					this.MoveExtremity(-1, isShiftPressed, isCtrlPressed);
 					break;
 
-				case Keys.End:
+				case KeyCode.End:
 					this.MoveExtremity(1, isShiftPressed, isCtrlPressed);
 					break;
 
-				case Keys.Up:
+				case KeyCode.ArrowUp:
 					this.MoveLine(-1, isShiftPressed, isCtrlPressed);
 					break;
 
-				case Keys.Down:
+				case KeyCode.ArrowDown:
 					this.MoveLine(1, isShiftPressed, isCtrlPressed);
 					break;
 				

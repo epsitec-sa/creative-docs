@@ -1,7 +1,5 @@
 namespace Epsitec.Common.Widgets
 {
-	using Keys = System.Windows.Forms.Keys;
-	
 	[System.Flags] public enum AbstractCellArrayStyle
 	{
 		None			= 0x00000000,		// neutre
@@ -791,7 +789,7 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.KeyDown:
-					this.ProcessKeyDown(message.KeyCodeAsKeys);
+					this.ProcessKeyDown(message.KeyCode);
 					break;
 			}
 			
@@ -799,23 +797,23 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Gestion d'une touche pressée avec KeyDown.
-		protected void ProcessKeyDown(System.Windows.Forms.Keys key)
+		protected void ProcessKeyDown(KeyCode key)
 		{
 			switch ( key )
 			{
-				case Keys.Left:
+				case KeyCode.ArrowLeft:
 					this.SelectCellDir(-1, 0);
 					break;
 
-				case Keys.Right:
+				case KeyCode.ArrowRight:
 					this.SelectCellDir(1, 0);
 					break;
 
-				case Keys.Up:
+				case KeyCode.ArrowUp:
 					this.SelectCellDir(0, -1);
 					break;
 
-				case Keys.Down:
+				case KeyCode.ArrowDown:
 					this.SelectCellDir(0, 1);
 					break;
 			}

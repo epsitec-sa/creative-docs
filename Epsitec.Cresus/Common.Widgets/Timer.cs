@@ -53,6 +53,12 @@ namespace Epsitec.Common.Widgets
 			get { return this.state; }
 		}
 		
+		public double							AutoRepeat
+		{
+			get { return this.auto_repeat; }
+			set { this.auto_repeat = value; }
+		}
+		
 		
 		#region IDisposable Members
 		public void Dispose()
@@ -68,6 +74,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.CleanupTimerIfNeeded ();
 				this.state = TimerState.Disposed;
+				this.auto_repeat = 0;
 			}
 		}
 		
@@ -85,6 +92,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.timer != null)
 			{
+				this.timer.Stop ();
 				this.timer.Tick -= new System.EventHandler (this.HandleTimerTick);
 				this.timer.Dispose ();
 				this.timer = null;
@@ -230,6 +238,12 @@ namespace Epsitec.Common.Widgets
 			{
 				this.TimeElapsed (this);
 			}
+			
+			if (this.auto_repeat > 0)
+			{
+				this.ExpirationDate = this.ExpirationDate.AddSeconds (this.auto_repeat);
+				this.Start ();
+			}
 		}
 		
 		
@@ -241,6 +255,7 @@ namespace Epsitec.Common.Widgets
 		protected TimerState					state;
 		protected System.DateTime				expiration_date;
 		protected double						delay_seconds;
+		protected double						auto_repeat;
 		protected System.TimeSpan				remaining_time;
 	}
 	

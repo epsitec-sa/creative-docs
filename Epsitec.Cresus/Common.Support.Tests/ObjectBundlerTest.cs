@@ -55,8 +55,8 @@ namespace Epsitec.Common.Support.Tests
 			
 			Assertion.AssertNotNull (bundle);
 			
-			object              obj    = bundler.CreateFromBundle (bundle);
-			Widgets.WindowFrame window = obj as Widgets.WindowFrame;
+			object         obj    = bundler.CreateFromBundle (bundle);
+			Widgets.Window window = obj as Widgets.Window;
 			
 			Assertion.AssertNotNull (obj);
 			Assertion.AssertNotNull (window);
@@ -80,7 +80,7 @@ namespace Epsitec.Common.Support.Tests
 			System.Diagnostics.Debug.WriteLine ("User clicked cancel button -> close window");
 			
 			Widgets.Widget widget = sender as Widgets.Widget;
-			widget.WindowFrame.Dispose ();
+			widget.Window.Dispose ();
 		}
 	}
 }

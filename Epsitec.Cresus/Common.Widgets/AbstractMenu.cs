@@ -1,7 +1,5 @@
 namespace Epsitec.Common.Widgets
 {
-	using Keys = System.Windows.Forms.Keys;
-	
 	public enum MenuType
 	{
 		Invalid,
@@ -215,7 +213,7 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.KeyDown:
-					this.ProcessKeyDown(message.KeyCodeAsKeys);
+					this.ProcessKeyDown(message.KeyCode);
 					break;
 			}
 			
@@ -223,24 +221,21 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Gestion d'une touche pressée avec KeyDown dans le menu.
-		protected void ProcessKeyDown(System.Windows.Forms.Keys key)
+		protected void ProcessKeyDown(KeyCode key)
 		{
 			AbstractMenu parent = this.parentMenu;
 
 			switch ( key )
 			{
-				case Keys.Up:
-					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Up "+this.Name);
+				case KeyCode.ArrowUp:
 					this.SelectOtherMenuItem(-1);
 					break;
 
-				case Keys.Down:
-					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Down "+this.Name);
+				case KeyCode.ArrowDown:
 					this.SelectOtherMenuItem(1);
 					break;
 
-				case Keys.Left:
-					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Left "+this.Name);
+				case KeyCode.ArrowLeft:
 					if ( parent != null )
 					{
 						if ( parent.IsHorizontal )
@@ -263,8 +258,7 @@ namespace Epsitec.Common.Widgets
 					}
 					break;
 
-				case Keys.Right:
-					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Right "+this.Name);
+				case KeyCode.ArrowRight:
 					if ( parent == null )
 					{
 						this.OpenMenuItem();
@@ -297,12 +291,11 @@ namespace Epsitec.Common.Widgets
 					}
 					break;
 
-				case Keys.Return:
-				case Keys.Space:
+				case KeyCode.Return:
+				case KeyCode.Space:
 					break;
 
-				case Keys.Escape:
-					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Escape "+this.Name);
+				case KeyCode.Escape:
 					this.CloseAll();
 					break;
 			}
@@ -389,13 +382,11 @@ namespace Epsitec.Common.Widgets
 		{
 			AbstractMenu root = this;
 			while ( root.parentMenu != null )  root = root.parentMenu;
-			System.Diagnostics.Debug.WriteLine("CloseAll "+root.Name+" "+this.Name);
 
 			root.CloseSubmenu();
 			root.SelectedIndex = -1;
 			
-			System.Diagnostics.Debug.WriteLine ("Filter removed in " + root.Name);
-			WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
+			Window.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
 			AbstractMenu.menuDeveloped = false;
 		}
 
@@ -406,7 +397,6 @@ namespace Epsitec.Common.Widgets
 			bool closed = this.CloseSubmenu();
 			this.submenu = item.Submenu;
 			if ( this.submenu == null )  return false;
-			System.Diagnostics.Debug.WriteLine("OpenSubmenu "+this.submenu.Name);
 
 			this.isActive = false;
 			this.SelectedIndex = item.Index;  // sélectionne la case parent
@@ -432,8 +422,7 @@ namespace Epsitec.Common.Widgets
 				this.submenu.ParentRect = Drawing.Rectangle.Empty;
 
 				Drawing.Point test = new Drawing.Point(item.Width+this.submenu.Width, 0);
-				test = this.MapClientToRoot(test);
-				test = this.WindowFrame.MapWindowToScreen(test);
+				test = this.MapClientToScreen(test);
 				ScreenInfo si = ScreenInfo.Find(test);
 				Drawing.Rectangle wa = si.WorkingArea;
 
@@ -445,22 +434,15 @@ namespace Epsitec.Common.Widgets
 				{
 					pos = new Drawing.Point(-this.submenu.Width, item.Height-this.submenu.Height+1);
 				}
-#if false
-				// TODO: Pourquoi la première case est mal positionnée verticalement ?
-				// TODO: c'est MapWindowToScreen aui foire !
-				Drawing.Point pp = item.WindowFrame.MapWindowToScreen(pos);
-				System.Diagnostics.Debug.WriteLine("pos: "+item.Height+" "+this.submenu.Height+" "+item.Bottom+" "+pp.Y);
-#endif
 			}
 
-			pos = item.MapClientToRoot(pos);
+			pos = item.MapClientToScreen(pos);
 
-			this.window = new WindowFrame();
+			this.window = new Window();
 			this.window.MakeFramelessWindow();
 			this.window.IsMouseActivationEnabled = false;
-			pos = item.WindowFrame.MapWindowToScreen(pos);
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
-			WindowFrame.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
+			Window.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
 			this.window.Root.Children.Add(this.submenu);
 
 			Animation anim = Animation.None;
@@ -476,7 +458,6 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.window == null )  return false;
 			
-			System.Diagnostics.Debug.WriteLine("CloseSubmenu "+this.submenu.Name);
 			System.Diagnostics.Debug.Assert(this.window.Root.HasChildren);
 			
 			this.submenu.isActive = false;
@@ -485,7 +466,7 @@ namespace Epsitec.Common.Widgets
 			this.submenu.parentMenu = null;
 			this.submenu.parentItem = null;
 			
-			WindowFrame.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
+			Window.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
 			this.window.Root.Children.Clear();
 			this.window.Dispose();
 			this.window = null;
@@ -547,7 +528,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				WindowFrame.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
+				Window.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
 				AbstractMenu.menuDeveloped = true;
 				MenuItem item = sender as MenuItem;
 				this.parentMenu = null;
@@ -561,7 +542,7 @@ namespace Epsitec.Common.Widgets
 		{
 			System.Diagnostics.Debug.Assert ( AbstractMenu.menuDeveloped );
 			
-			WindowFrame window = sender as WindowFrame;
+			Window window = sender as Window;
 
 			Drawing.Point	mouse;
 			AbstractMenu	menu;
@@ -569,7 +550,7 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
-					mouse = window.MapWindowToScreen(message.Cursor);
+					mouse = window.Root.MapClientToScreen(message.Cursor);
 					menu = this.DetectMenu(mouse);
 					if ( menu == null )
 					{
@@ -594,7 +575,7 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.MouseUp:
-					mouse = window.MapWindowToScreen(message.Cursor);
+					mouse = window.Root.MapClientToScreen(message.Cursor);
 					menu = this.DetectMenu(mouse);
 					if ( menu != null )
 					{
@@ -633,7 +614,7 @@ namespace Epsitec.Common.Widgets
 						this.delayedMenuItem = item;
 						
 						this.timer.Suspend();
-						this.timer.Delay = SystemInformation.MenuShowDelay / 1000.0;
+						this.timer.Delay = SystemInformation.MenuShowDelay;
 						this.timer.Start();
 					}
 					else
@@ -653,7 +634,7 @@ namespace Epsitec.Common.Widgets
 						if ( this.timer.State != TimerState.Running )
 						{
 							this.timer.Suspend();
-							this.timer.Delay = SystemInformation.MenuShowDelay / 1000.0;
+							this.timer.Delay = SystemInformation.MenuShowDelay;
 							this.timer.Start();
 						}
 					}
@@ -664,7 +645,6 @@ namespace Epsitec.Common.Widgets
 		private void HandleCellExited(object sender, MessageEventArgs e)
 		{
 			MenuItem item = (MenuItem)sender;
-			System.Diagnostics.Debug.WriteLine("HandleCellExited "+this.Name+":"+item.MainText);
 			this.delayedMenuItem = null;
 			
 			if ( this.isActive )
@@ -676,7 +656,6 @@ namespace Epsitec.Common.Widgets
 		private void HandleApplicationDeactivated(object sender)
 		{
 			// TODO: pourquoi ce n'est pas toujours appelé ?
-			System.Diagnostics.Debug.WriteLine("HandleApplicationDeactivated");
 			this.CloseAll();
 		}
 
@@ -933,7 +912,7 @@ namespace Epsitec.Common.Widgets
 		protected bool					isActive = true;  // dernier menu (feuille)
 		protected double				margin = 2;
 		protected MenuItemCollection	items;
-		protected WindowFrame			window;
+		protected Window				window;
 		protected Timer					timer;
 		protected AbstractMenu			submenu;
 		protected AbstractMenu			parentMenu;

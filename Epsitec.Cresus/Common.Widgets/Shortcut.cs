@@ -57,7 +57,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int						KeyCode
+		public KeyCode					KeyCode
 		{
 			get
 			{
@@ -72,11 +72,8 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.key_code != value)
 				{
-//					char key_char  = System.Char.ToUpper ((char) (value & 0x0000ffff), System.Globalization.CultureInfo.CurrentCulture);
-//					int  modifiers = value & 0x0fff0000;
-					
 					this.mode     = ShortcutMode.KeyCode;
-					this.key_code = value; //key_char | modifiers;
+					this.key_code = value;
 				}
 			}
 		}
@@ -88,7 +85,7 @@ namespace Epsitec.Common.Widgets
 				switch (this.mode)
 				{
 					case ShortcutMode.KeyCode:
-						return (char) (this.KeyCode & 0x0000FFFF);
+						return (char) (this.KeyCode & KeyCode.KeyCodeMask);
 					case ShortcutMode.Mnemonic:
 						return this.mnemonic_code;
 				}
@@ -106,7 +103,7 @@ namespace Epsitec.Common.Widgets
 		
 		private ShortcutMode			mode;
 		private char					mnemonic_code;
-		private int						key_code;
+		private KeyCode					key_code;
 	}
 	
 	public enum ShortcutMode

@@ -1,7 +1,5 @@
 namespace Epsitec.Common.Widgets
 {
-	using Keys = System.Windows.Forms.Keys;
-
 	/// <summary>
 	/// La classe TextFieldCombo implémente la ligne éditable avec bouton "v".
 	/// </summary>
@@ -91,11 +89,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void ProcessKeyDown(Keys key, bool isShiftPressed, bool isCtrlPressed)
+		protected override void ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
 			if (this.IsReadOnly)
 			{
-				if (key == Keys.Down)
+				if (key == KeyCode.ArrowDown)
 				{
 					this.OpenCombo ();
 				}
@@ -104,10 +102,10 @@ namespace Epsitec.Common.Widgets
 			{
 				switch (key)
 				{
-					case Keys.Up:
+					case KeyCode.ArrowUp:
 						this.Navigate(-1);
 						break;
-					case Keys.Down:
+					case KeyCode.ArrowDown:
 						this.Navigate(1);
 						break;
 					default:
@@ -157,20 +155,20 @@ namespace Epsitec.Common.Widgets
 		private void MessageFilter(object sender, Message message)
 		{
 			if ( this.scrollList == null )  return;
-			WindowFrame window = sender as WindowFrame;
+			Window window = sender as Window;
 
 			switch ( message.Type )
 			{
 				case MessageType.KeyPress:
-					if (message.KeyCodeAsKeys == Keys.Escape)
+					if (message.KeyCode == KeyCode.Escape)
 					{
 						this.CloseCombo ();
 						message.Swallowed = true;
 					}
 					break;
 				case MessageType.MouseDown:
-					Drawing.Point mouse = window.MapWindowToScreen(message.Cursor);
-					Drawing.Point pos = this.scrollList.MapScreenToClient (mouse);
+					Drawing.Point mouse = window.Root.MapClientToScreen(message.Cursor);
+					Drawing.Point pos = this.scrollList.MapScreenToClient(mouse);
 					if ( !this.scrollList.HitTest(pos) )
 					{
 						this.CloseCombo ();
@@ -203,14 +201,14 @@ namespace Epsitec.Common.Widgets
 			this.scrollList.SelectedIndex = this.items.FindExactMatch (this.Text);
 			this.scrollList.ShowSelectedLine(ScrollListShow.Middle);
 			
-			this.comboWindow = new WindowFrame();
+			this.comboWindow = new Window();
 			this.comboWindow.MakeFramelessWindow();
 			pos = this.MapClientToScreen (new Drawing.Point(0, -this.scrollList.Height));
 			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width, this.scrollList.Height);
 			this.scrollList.SelectedIndexChanged += new EventHandler(this.HandleScrollerSelectedIndexChanged);
 			this.scrollList.Validation += new EventHandler(this.HandleScrollListValidation);
-			WindowFrame.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
-			WindowFrame.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
+			Window.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
+			Window.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
 			this.comboWindow.Root.Children.Add(this.scrollList);
 			this.comboWindow.AnimateShow(Animation.RollDown);
 			
@@ -223,8 +221,8 @@ namespace Epsitec.Common.Widgets
 		{
 			this.scrollList.Validation -= new EventHandler(this.HandleScrollListValidation);
 			this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollerSelectedIndexChanged);
-			WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
-			WindowFrame.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
+			Window.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
+			Window.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
 			
 			this.scrollList.Dispose();
 			this.scrollList = null;
@@ -276,7 +274,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected ArrowButton						button;
 		protected Helpers.StringCollection			items;
-		protected WindowFrame						comboWindow;
+		protected Window							comboWindow;
 		protected ScrollList						scrollList;
 	}
 }

@@ -57,7 +57,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public static int				CursorBlinkDelay
+		public static double			CursorBlinkDelay
 		{
 			get
 			{
@@ -66,19 +66,19 @@ namespace Epsitec.Common.Widgets
 					using (Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey (@"Control Panel\Desktop"))
 					{
 						int delay = System.Int32.Parse ((string) key.GetValue ("CursorBlinkRate"));
-						return delay;
+						return delay / 1000.0;
 					}
 				}
 				catch
 				{
 				}
 				
-				return 499;
+				return 0.499;
 			}
 		}
 		
 		
-		public static int				MenuShowDelay
+		public static double			MenuShowDelay
 		{
 			get
 			{
@@ -87,14 +87,14 @@ namespace Epsitec.Common.Widgets
 					using (Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey (@"Control Panel\Desktop"))
 					{
 						int delay = System.Int32.Parse ((string) key.GetValue ("MenuShowDelay"));
-						return delay;
+						return delay / 1000.0;
 					}
 				}
 				catch
 				{
 				}
 				
-				return 199;
+				return 0.199;
 			}
 		}
 		
@@ -111,19 +111,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public static int				MenuAnimationRollTime
+		public static double			MenuAnimationRollTime
 		{
-			get { return 250; }
+			get { return 0.250; }
 		}
 		
-		public static int				MenuAnimationFadeInTime
+		public static double			MenuAnimationFadeInTime
 		{
-			get { return 200; }
+			get { return 0.200; }
 		}
 		
-		public static int				MenuAnimationFadeOutTime
+		public static double			MenuAnimationFadeOutTime
 		{
-			get { return 200; }
+			get { return 0.200; }
 		}
 		
 		

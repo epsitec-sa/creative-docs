@@ -9,14 +9,14 @@ namespace Epsitec.Common.Tests
 	{
 		[Test] public void CheckFicheApplication()
 		{
-			this.window = new WindowFrame();
+			this.window = new Window();
 			this.window.Root.LayoutChanged += new EventHandler(this.Root_LayoutChanged);
 			
 			Widgets.Adorner.Factory.SetActive("LookDany");
 
-			this.window.ClientSize = new System.Drawing.Size(1024, 768);
+			this.window.ClientSize = new Size(1024, 768);
 			this.window.Text = "Crésus-fiche";
-			this.window.Closed += new System.EventHandler(this.HandleWindowClosed);
+			this.window.WindowClosed += new EventHandler(this.HandleWindowClosed);
 
 			this.db = new TinyDataBase();
 			this.db.Title = "Adresses";
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 
-		private void HandleWindowClosed(object sender, System.EventArgs e)
+		private void HandleWindowClosed(object sender)
 		{
 			this.window = null;
 			this.tip = null;
@@ -1027,7 +1027,7 @@ namespace Epsitec.Common.Tests
 		protected double						labelWidth = 120;
 		protected double						buttonWidth = 80;
 		protected double						buttonHeight = 21;
-		protected WindowFrame					window;
+		protected Window						window;
 		protected ToolTip						tip;
 		protected HMenu							menu;
 		protected ToolBar						toolBar;

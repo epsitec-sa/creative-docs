@@ -1,7 +1,5 @@
 namespace Epsitec.Common.Widgets
 {
-	using Keys = System.Windows.Forms.Keys;
-	
 	public enum ScrollArrayShow
 	{
 		Extremity,		// déplacement minimal aux extrémités
@@ -547,7 +545,7 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.KeyDown:
-					ProcessKeyDown(message.KeyCodeAsKeys, message.IsShiftPressed, message.IsCtrlPressed);
+					ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
 					break;
 			}
 			
@@ -567,13 +565,13 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Gestion d'une touche pressée avec KeyDown dans la liste.
-		protected void ProcessKeyDown(System.Windows.Forms.Keys key, bool isShiftPressed, bool isCtrlPressed)
+		protected void ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
 			int		sel;
 
 			switch ( key )
 			{
-				case Keys.Up:
+				case KeyCode.ArrowUp:
 					sel = this.SelectedIndex-1;
 					if ( sel >= 0 )
 					{
@@ -582,7 +580,7 @@ namespace Epsitec.Common.Widgets
 					}
 					break;
 
-				case Keys.Down:
+				case KeyCode.ArrowDown:
 					sel = this.SelectedIndex+1;
 					if ( sel < this.maxRows )
 					{

@@ -167,14 +167,14 @@ namespace Epsitec.Common.Widgets
 			get { return this.key_char; }
 		}
 		
-		public int							KeyCode
+		public KeyCode						KeyCode
 		{
 			get { return this.key_code; }
 		}
 		
-		public System.Windows.Forms.Keys	KeyCodeAsKeys
+		public KeyCode						KeyCodeOnly
 		{
-			get { return (System.Windows.Forms.Keys) this.key_code; }
+			get { return this.KeyCode & KeyCode.KeyCodeMask; }
 		}
 		
 		
@@ -344,7 +344,7 @@ namespace Epsitec.Common.Widgets
 			return System.Windows.Forms.MouseButtons.None;
 		}
 		
-		internal static Message FromWndProcMessage(System.Windows.Forms.Form form, ref System.Windows.Forms.Message msg)
+		internal static Message FromWndProcMessage(Platform.Window form, ref System.Windows.Forms.Message msg)
 		{
 			Message message = null;
 			System.Windows.Forms.MouseButtons buttons;
@@ -426,7 +426,7 @@ namespace Epsitec.Common.Widgets
 			return message;
 		}
 		
-		internal static Message FromMouseEvent(MessageType type, System.Windows.Forms.Form form, System.Windows.Forms.MouseEventArgs e)
+		internal static Message FromMouseEvent(MessageType type, Platform.Window form, System.Windows.Forms.MouseEventArgs e)
 		{
 			Message message = new Message ();
 			
@@ -448,6 +448,7 @@ namespace Epsitec.Common.Widgets
 				message.button = (MouseButtons) (int) e.Button;
 				message.wheel  = e.Delta;
 				
+				Message.state.window = form.HostingWidgetWindow;
 				Message.state.cursor = message.cursor;
 			}
 			
@@ -498,7 +499,7 @@ namespace Epsitec.Common.Widgets
 			Message message = new Message ();
 			
 			message.type     = type;
-			message.key_code = (int) e.KeyCode;
+			message.key_code = (KeyCode) (int) e.KeyCode;
 			
 			message.filter_no_children  = false;
 			message.filter_only_focused = true;
@@ -521,14 +522,13 @@ namespace Epsitec.Common.Widgets
 			
 			if (type == MessageType.KeyDown)
 			{
-				Message.state.key_down_code = e.KeyValue;
+				Message.state.key_down_code = message.key_code;
 			}
 			
 			return message;
 		}
 		
 		
-		static int last_code = 0;
 		
 		internal static Message FromKeyEvent(int msg, System.IntPtr w_param, System.IntPtr l_param)
 		{
@@ -570,7 +570,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				Message.last_code = (int) w_param;
+				Message.last_code = (KeyCode) (int) w_param;
 				message.key_code  = Message.last_code;
 			}
 			
@@ -666,9 +666,10 @@ namespace Epsitec.Common.Widgets
 		protected int						wheel;
 		
 		protected ModifierKeys				modifiers;
-		protected int						key_code;
+		protected KeyCode					key_code;
 		protected int						key_char;
 		
+		protected static KeyCode			last_code = 0;
 		protected static MessageState		state;
 	}
 	
@@ -729,9 +730,14 @@ namespace Epsitec.Common.Widgets
 			get { return this.cursor; }
 		}
 		
+		public Window						LastWindow
+		{
+			get { return this.window; }
+		}
+		
 		
 		internal ModifierKeys				modifiers;
-		internal int						key_down_code;
+		internal KeyCode					key_down_code;
 		internal MouseButtons				buttons;
 		internal MouseButtons				button_down_id;
 		internal int						button_down_count;
@@ -739,6 +745,7 @@ namespace Epsitec.Common.Widgets
 		internal int						button_down_x;
 		internal int						button_down_y;
 		internal Drawing.Point				cursor;
+		internal Window						window;
 	}
 	
 	
@@ -758,7 +765,92 @@ namespace Epsitec.Common.Widgets
 		KeyUp,
 		KeyPress,
 	}
-
+	
+	
+	[System.Flags] public enum KeyCode
+	{
+		None			= 0,
+		
+		AlphaA			= 65,
+		AlphaB			= 66,
+		AlphaC			= 67,
+		AlphaD			= 68,
+		AlphaE			= 69,
+		AlphaF			= 70,
+		
+		Digit0			= 48,
+		Digit1			= 49,
+		Digit2			= 50,
+		Digit3			= 51,
+		Digit4			= 52,
+		Digit5			= 53,
+		Digit6			= 54,
+		Digit7			= 55,
+		Digit8			= 56,
+		Digit9			= 57,
+		
+		FuncF1			= 112,
+		FuncF2			= 113,
+		FuncF3			= 114,
+		FuncF4			= 115,
+		FuncF5			= 116,
+		FuncF6			= 117,
+		FuncF7			= 118,
+		FuncF8			= 119,
+		FuncF9			= 120,
+		FuncF10			= 121,
+		FuncF11			= 122,
+		FuncF12			= 123,
+		FuncF13			= 124,
+		FuncF14			= 125,
+		FuncF15			= 126,
+		FuncF16			= 127,
+		FuncF17			= 128,
+		FuncF18			= 129,
+		FuncF19			= 130,
+		FuncF20			= 131,
+		FuncF21			= 132,
+		FuncF22			= 133,
+		FuncF23			= 134,
+		FuncF24			= 135,
+		
+		AltKey			= 18,
+		AltKeyLeft		= 164,
+		AltKeyRight		= 165,
+		ArrowDown		= 40,
+		ArrowLeft		= 37,
+		ArrowRight		= 39,
+		ArrowUp			= 38,
+		Back			= 8,
+		Clear			= 12,
+		ControlKey		= 17,
+		ControlKeyLeft	= 162,
+		ControlKeyRight	= 163,
+		Decimal			= 110,
+		Delete			= 46,
+		Divide			= 111,
+		End				= 35,
+		Escape			= 27,
+		Home			= 36,
+		Insert			= 45,
+		Multiply		= 106,
+		PageDown		= 34,
+		PageUp			= 33,
+		Pause			= 19,
+		Return			= 13,
+		ShiftKeyLeft	= 160,
+		ShiftKeyRight	= 161,
+		Space			= 32,
+		Substract		= 109,
+		Tab				= 9,
+		
+		KeyCodeMask		= 0x0000ffff,
+		ModifierMask	= 0x00ff0000,
+		
+		ModifierShift	= 0x10000,
+		ModifierControl	= 0x20000,
+		ModifierAlt		= 0x40000
+	}
 	
 	[System.Flags] public enum MouseButtons
 	{

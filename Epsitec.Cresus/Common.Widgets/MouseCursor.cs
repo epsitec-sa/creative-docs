@@ -5,13 +5,13 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class MouseCursor
 	{
-		protected MouseCursor(System.Windows.Forms.Cursor cursor)
+		private MouseCursor(System.Windows.Forms.Cursor cursor)
 		{
 			this.cursor = cursor;
 		}
 		
 		
-		public void SetWindowCursor(WindowFrame window)
+		public void SetWindowCursor(Window window)
 		{
 			if (window != null)
 			{

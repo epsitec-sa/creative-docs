@@ -9,9 +9,9 @@ namespace Epsitec.Common.Tests
 	{
 		[Test] public void CheckPaint()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(300, 200);
+			window.ClientSize = new Size(300, 200);
 			window.Text = "CheckPaint";
 			window.Root.PaintForeground += new PaintEventHandler(CheckPaint_Paint1);
 			window.Root.Invalidate();
@@ -53,9 +53,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckRectangle()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(300, 200);
+			window.ClientSize = new Size(300, 200);
 			window.Text = "CheckRectangle";
 			window.Root.PaintForeground += new PaintEventHandler(CheckRectangle_Paint1);
 			window.Root.Invalidate();
@@ -87,9 +87,9 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckImage()
 		{
-			WindowFrame window = new WindowFrame();
+			Window window = new Window();
 			
-			window.ClientSize = new System.Drawing.Size(300, 200);
+			window.ClientSize = new Size(300, 200);
 			window.Text = "CheckImage";
 			window.Root.PaintForeground += new PaintEventHandler(CheckImage_Paint1);
 			window.Root.Invalidate ();
@@ -98,10 +98,10 @@ namespace Epsitec.Common.Tests
 		
 		[Test] public void CheckAnchorAsStaticText()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			window.Text = "CheckAnchorAsStaticText";
 			
-			window.ClientSize = new System.Drawing.Size (240, 180);
+			window.ClientSize = new Size (240, 180);
 			window.Root.DockMargins = new Margins (10, 10, 10, 10);
 			
 			StaticText text = new StaticText ();

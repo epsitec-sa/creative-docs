@@ -75,9 +75,9 @@ namespace Epsitec.Common.Tests
 		
 		[Test] public void CheckNamedColors()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			
-			window.ClientSize = new System.Drawing.Size (870, 360);
+			window.ClientSize = new Size (870, 360);
 			window.Text = "CheckNamedColors";
 			window.Root.PaintForeground += new PaintEventHandler(NamedColors_PaintForeground);
 			window.Root.Invalidate ();

@@ -72,9 +72,10 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.timer == null)
 			{
-				this.timer = new System.Windows.Forms.Timer ();
-				this.timer.Interval = 10;
-				this.timer.Tick += new System.EventHandler (HandleTimerTick);
+				this.timer = new Timer ();
+				this.timer.Delay = 0.010;
+				this.timer.AutoRepeat = 0.010;
+				this.timer.TimeElapsed += new EventHandler (HandleTimerTimeElapsed);
 			}
 			
 			this.tick_begin  = System.DateTime.Now.Ticks;
@@ -112,13 +113,13 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				Finished;
 		
 		
-		protected virtual void HandleTimerTick(object sender, System.EventArgs e)
+		protected virtual void HandleTimerTimeElapsed(object sender)
 		{
 			long now = System.DateTime.Now.Ticks;
 			
 			if (now > this.tick_end)
 			{
-				this.timer.Enabled = false;
+				this.timer.Stop ();
 				now = this.tick_end;
 			}
 			
@@ -172,7 +173,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.timer != null)
 				{
-					this.timer.Tick -= new System.EventHandler (HandleTimerTick);
+					this.timer.TimeElapsed -= new EventHandler (HandleTimerTimeElapsed);
 					this.timer.Dispose ();
 					this.timer = null;
 				}
@@ -320,7 +321,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
-		protected System.Windows.Forms.Timer	timer;
+		protected Timer							timer;
 		protected Value[]						values;
 		protected double						ratio;
 		protected double						time_span;

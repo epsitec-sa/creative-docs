@@ -13,7 +13,7 @@ namespace Epsitec.Common.Tests
 		
 		[Test] public void CheckWidgetTransform()
 		{
-			WindowFrame window = new WindowFrame ();
+			Window window = new Window ();
 			window.Text = "CheckWidgetTransform";
 			
 			TransformWidget a = new TransformWidget ();	a.Text = "A"; a.Bounds = new Rectangle (10, 10, 270, 200);
