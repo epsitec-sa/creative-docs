@@ -171,6 +171,7 @@ namespace Epsitec.Common.Drawing
 			window.Show ();
 		}
 
+		
 		private void Text_PaintForeground(object sender, PaintEventArgs e)
 		{
 			WindowRoot root = sender as WindowRoot;
@@ -465,6 +466,8 @@ namespace Epsitec.Common.Drawing
 			double cx = root.Client.Width / 2;
 			double cy = root.Client.Height / 2;
 			
+			Transform t = e.Graphics.SaveTransform ();
+			
 			e.Graphics.RotateTransform (15, cx, cy);
 			e.Graphics.ScaleTransform (1.2, 1.2, 0, 0);
 			
@@ -503,6 +506,20 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
 			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
 			e.Graphics.ResetClippingRectangle ();
+			e.Graphics.RestoreTransform (t);
+			
+			Rectangle r1 = new Rectangle (10, root.Client.Height - 20, 100, 10);
+			Rectangle r2 = new Rectangle (10, root.Client.Height - 32, 100,  5);
+			Rectangle r3 = new Rectangle (10, root.Client.Height - 41, 100,  5);
+			
+			e.Graphics.AddFilledRectangle (r1);
+			e.Graphics.AddFilledRectangle (r2);
+			e.Graphics.AddFilledRectangle (r3);
+			e.Graphics.RenderSolid (Color.FromRGB (0, 1, 0));
+			
+			e.Graphics.SetClippingRectangles (new Rectangle[] { r2, r1, r3 });
+			e.Graphics.AddText (0, root.Client.Height - 50, "AAAAAAAAAAAAAAAAAAA", font, 70);
+			e.Graphics.RenderSolid (Color.FromRGB (0, 0, 1));
 		}
 		
 		private void Transform_PaintForeground(object sender, PaintEventArgs e)
