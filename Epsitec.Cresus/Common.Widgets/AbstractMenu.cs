@@ -433,6 +433,29 @@ namespace Epsitec.Common.Widgets
 			AbstractMenu.menuLastLeaf  = null;
 		}
 
+		// Affiche un menu contextuel dont on spécifie le coin sup/gauche.
+		public void ShowContextMenu(Drawing.Point pos)
+		{
+			pos.Y -= this.Height;
+
+			this.window = new Window();
+			this.window.MakeFramelessWindow();
+			this.window.DisableMouseActivation();
+			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.Width, this.Height);
+			Window.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
+			
+			Window.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
+			AbstractMenu.menuDeveloped = true;
+			AbstractMenu.menuFiltering = this;
+
+			this.window.Root.Children.Add(this);
+			this.window.AnimateShow(Animation.FadeIn);
+			this.SetFocused(true);
+			
+			//	TODO: vérifier que lorsque le menu est refermé, les deux event handlers sont
+			//	bien supprimés correctement...
+		}
+
 		// Ouvre le sous-menu correspondant à un item.
 		protected bool OpenSubmenu(MenuItem item, bool forceQuick)
 		{
@@ -508,11 +531,14 @@ namespace Epsitec.Common.Widgets
 			
 			System.Diagnostics.Debug.Assert(this.window.Root.HasChildren);
 			
-			this.submenu.isActive = false;
-			this.submenu.CloseSubmenu();  // ferme les sous-menus (reccursif)
-			this.submenu.SelectedIndex = -1;
-			this.submenu.parentMenu = null;
-			this.submenu.parentItem = null;
+			if ( this.submenu != null )
+			{
+				this.submenu.isActive = false;
+				this.submenu.CloseSubmenu();  // ferme les sous-menus (reccursif)
+				this.submenu.SelectedIndex = -1;
+				this.submenu.parentMenu = null;
+				this.submenu.parentItem = null;
+			}
 			
 			Window.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
 			this.window.Root.Children.Clear();
@@ -520,14 +546,16 @@ namespace Epsitec.Common.Widgets
 			this.window = null;
 			this.submenu = null;
 			
-			this.Window.MakeActive ();
+			if ( this.Window != null )
+			{
+				this.Window.MakeActive();
 			
-			// Ce menu devient la dernière feuille de l'arbre des menus...
+				// Ce menu devient la dernière feuille de l'arbre des menus...
+				AbstractMenu.menuLastLeaf = this;
 			
-			AbstractMenu.menuLastLeaf = this;
-			
-			this.isActive = true;
-			this.SelectedIndex = this.SelectedIndex;
+				this.isActive = true;
+				this.SelectedIndex = this.SelectedIndex;
+			}
 			return true;
 		}
 
