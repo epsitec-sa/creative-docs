@@ -54,7 +54,7 @@ namespace Epsitec.Common.Dialogs
 			body.Parent          = this.window.Root;
 			body.Bounds          = new Drawing.Rectangle (8, 16+24+16, dx, dy);
 			body.TabIndex        = 1;
-			body.TabNavigation   = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
+			body.TabNavigation   = Widget.TabNavigationMode.ForwardTabPassive;
 			
 			button               = new Button (this.window.Root);
 			button.Bounds        = new Drawing.Rectangle (this.window.Root.Width - 2*80 - 2*8, 16, 80, 24);
