@@ -1126,6 +1126,29 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public Drawing.TextBreakMode		TextBreakMode
+		{
+			get
+			{
+				if (this.textLayout != null)
+				{
+					return this.textLayout.BreakMode;
+				}
+				
+				return Drawing.TextBreakMode.None;
+			}
+			set
+			{
+				if (this.textLayout == null)
+				{
+					this.CreateTextLayout ();
+				}
+				
+				this.textLayout.BreakMode = value;
+			}
+		}
+		
+		
 		public event PaintEventHandler		PaintBackground;
 		public event PaintEventHandler		PaintForeground;
 		public event EventHandler			ChildrenChanged;

@@ -69,9 +69,10 @@ namespace Epsitec.Cresus.UserInterface.Debugging
 				for (int col = 0; col < col_n; col++)
 				{
 					Widgets.StaticText text = new Widgets.StaticText ();
-					text.Text      = Widgets.TextLayout.ConvertToTaggedText (data_row[col].ToString ());
-					text.Alignment = Drawing.ContentAlignment.MiddleLeft;
-					text.Dock      = Widgets.DockStyle.Fill;
+					text.Text          = Widgets.TextLayout.ConvertToTaggedText (data_row[col].ToString ());
+					text.Alignment     = Drawing.ContentAlignment.MiddleLeft;
+					text.TextBreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
+					text.Dock          = Widgets.DockStyle.Fill;
 					table[col,row].Insert (text);
 				}
 			}
