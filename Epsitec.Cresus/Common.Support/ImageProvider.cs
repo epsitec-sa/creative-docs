@@ -51,12 +51,6 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public static void RegisterAssembly(string name, System.Reflection.Assembly assembly)
-		{
-			ImageProvider.Default.assemblies[name] = assembly;
-		}
-		
-		
 		public Drawing.Image GetImage(string name)
 		{
 			if ((name == null) ||
@@ -87,6 +81,11 @@ namespace Epsitec.Common.Support
 				string                       base_name = name.Remove (0, 5);
 				System.Collections.ArrayList attempts  = new System.Collections.ArrayList ();
 				
+				if ((base_name.StartsWith ("/")) ||
+					(! RegexFactory.PathName.IsMatch (base_name)))
+				{
+					throw new System.ArgumentException (string.Format ("Illegal file name for image ({0}).", base_name));
+				}
 				
 				for (int i = 0; i < ImageProvider.default_paths.Length; i++)
 				{
@@ -186,27 +185,39 @@ namespace Epsitec.Common.Support
 				//	.NET et des transformations futures pourraient ne pas fonctionner.
 				
 				string res_name = name.Remove (0, 9);
-				string[] args = res_name.Split ('/');
 				
-				if (args.Length != 2)
+				System.AppDomain             domain     = System.AppDomain.CurrentDomain;
+				System.Reflection.Assembly[] assemblies = domain.GetAssemblies ();
+				System.Reflection.Assembly   assembly   = null;
+				
+				for (int i = 0; i < assemblies.Length; i++)
 				{
-					throw new System.ArgumentException (string.Format ("Illegal name format for manifest image ({0}).", res_name));
+					string[] names = assemblies[i].GetManifestResourceNames ();
+					
+					for (int j = 0; j < names.Length; j++)
+					{
+						if (names[j] == res_name)
+						{
+							assembly = assemblies[i];
+							break;
+						}
+					}
+					
+					if (assembly != null)
+					{
+						break;
+					}
 				}
-				
-				string assembly_name = args[0];
-				string resource_name = args[1];
-				
-				System.Reflection.Assembly assembly = this.assemblies[assembly_name] as System.Reflection.Assembly;
 				
 				if (assembly == null)
 				{
-					throw new System.ArgumentException (string.Format ("Illegal assembly name for manifest image ({0}).", res_name));
+					throw new System.ArgumentException (string.Format ("Illegal assembly or resource name for manifest image ({0}).", res_name));
 				}
 				
-				Drawing.Image image = Drawing.Bitmap.FromManifestResource (assembly_name + "." + resource_name, assembly);
+				Drawing.Image image = Drawing.Bitmap.FromManifestResource (res_name, assembly);
 				image = Drawing.Bitmap.CopyImage (image);
 				
-				System.Diagnostics.Debug.WriteLine ("Loaded image " + resource_name + " from assembly " + assembly_name);
+				System.Diagnostics.Debug.WriteLine ("Loaded image " + res_name + " from assembly " + assembly.GetName ());
 				
 				if (image != null)
 				{
@@ -303,7 +314,6 @@ namespace Epsitec.Common.Support
 		
 		protected Hashtable				images = new Hashtable ();
 		protected Hashtable				bundle_hash = new Hashtable ();
-		protected Hashtable				assemblies = new Hashtable ();
 		protected string				default_resource_provider = "file:";
 		
 		protected static ImageProvider	default_provider;
