@@ -209,7 +209,7 @@ namespace Epsitec.Common.Widgets
 			Button a = new Button();
 			a.Location = new Point(10, 30);
 			a.Width = 75;
-			a.Text = "O<m>K</m>";
+			a.Text = "OK";
 			a.ButtonStyle = ButtonStyle.DefaultAccept;
 			a.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			a.TabIndex = 20;
@@ -691,7 +691,7 @@ namespace Epsitec.Common.Widgets
 			a.Name = "A";
 			a.Location = new Point(10, 10);
 			a.Size = new Size(75, 24);
-			a.Text = "O<m>K</m>";
+			a.Text = "OK";
 			a.ButtonStyle = ButtonStyle.DefaultAccept;
 			//a.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			page1.Children.Add(a);
@@ -1413,7 +1413,7 @@ namespace Epsitec.Common.Widgets
 			a.Name = "A";
 			a.Location = new Point(10, 10);
 			a.Size = new Size(75, 24);
-			a.Text = "O<m>K</m>";
+			a.Text = "OK";
 			a.ButtonStyle = ButtonStyle.DefaultAccept;
 			page1.Children.Add(a);
 #endif
