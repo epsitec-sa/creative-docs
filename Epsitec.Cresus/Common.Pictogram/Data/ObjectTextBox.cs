@@ -312,22 +312,26 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( jv == JustifVertical.Top )
 			{
-				if ( jh == JustifHorizontal.Left   )  this.textLayout.Alignment = Drawing.ContentAlignment.TopLeft;
-				if ( jh == JustifHorizontal.Center )  this.textLayout.Alignment = Drawing.ContentAlignment.TopCenter;
-				if ( jh == JustifHorizontal.Right  )  this.textLayout.Alignment = Drawing.ContentAlignment.TopRight;
+				     if ( jh == JustifHorizontal.Center )  this.textLayout.Alignment = Drawing.ContentAlignment.TopCenter;
+				else if ( jh == JustifHorizontal.Right  )  this.textLayout.Alignment = Drawing.ContentAlignment.TopRight;
+				else                                       this.textLayout.Alignment = Drawing.ContentAlignment.TopLeft;
 			}
 			if ( jv == JustifVertical.Center )
 			{
-				if ( jh == JustifHorizontal.Left   )  this.textLayout.Alignment = Drawing.ContentAlignment.MiddleLeft;
-				if ( jh == JustifHorizontal.Center )  this.textLayout.Alignment = Drawing.ContentAlignment.MiddleCenter;
-				if ( jh == JustifHorizontal.Right  )  this.textLayout.Alignment = Drawing.ContentAlignment.MiddleRight;
+				     if ( jh == JustifHorizontal.Center )  this.textLayout.Alignment = Drawing.ContentAlignment.MiddleCenter;
+				else if ( jh == JustifHorizontal.Right  )  this.textLayout.Alignment = Drawing.ContentAlignment.MiddleRight;
+				else                                       this.textLayout.Alignment = Drawing.ContentAlignment.MiddleLeft;
 			}
 			if ( jv == JustifVertical.Bottom )
 			{
-				if ( jh == JustifHorizontal.Left   )  this.textLayout.Alignment = Drawing.ContentAlignment.BottomLeft;
-				if ( jh == JustifHorizontal.Center )  this.textLayout.Alignment = Drawing.ContentAlignment.BottomCenter;
-				if ( jh == JustifHorizontal.Right  )  this.textLayout.Alignment = Drawing.ContentAlignment.BottomRight;
+				     if ( jh == JustifHorizontal.Center )  this.textLayout.Alignment = Drawing.ContentAlignment.BottomCenter;
+				else if ( jh == JustifHorizontal.Right  )  this.textLayout.Alignment = Drawing.ContentAlignment.BottomRight;
+				else                                       this.textLayout.Alignment = Drawing.ContentAlignment.BottomLeft;
 			}
+
+			     if ( jh == JustifHorizontal.Justif )  this.textLayout.JustifMode = TextJustifMode.AllButLast;
+			else if ( jh == JustifHorizontal.All    )  this.textLayout.JustifMode = TextJustifMode.All;
+			else                                       this.textLayout.JustifMode = TextJustifMode.None;
 
 			Drawing.Transform ot = graphics.SaveTransform();
 
@@ -351,6 +355,7 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 			}
 
+			this.textLayout.ShowLineBreak = this.edited;
 			Drawing.Color color = iconContext.AdaptColor(this.PropertyFont(5).FontColor);
 			this.textLayout.Paint(new Drawing.Point(0,0), graphics, Drawing.Rectangle.Empty, color, Drawing.GlyphPaintStyle.Normal);
 

@@ -1467,10 +1467,44 @@ namespace Epsitec.Common.Pictogram.Data
 			Drawing.Transform transform = this.Cell(c,r).Transform;
 
 			pos = transform.TransformInverse(pos);
-			if ( !textNavigator.ProcessMessage(message, pos) )  return false;
+			if ( textNavigator.ProcessMessage(message, pos) )
+			{
+				this.Cell(c,r).TextString.String = textLayout.Text;
+				return true;
+			}
+			else
+			{
+				if ( message.Type == MessageType.KeyDown )
+				{
+					switch ( message.KeyCode )
+					{
+						case KeyCode.ArrowDown:
+							if ( r <= 0 )  break;
+							this.cellToHilite = this.cellToEdit-(this.columns+1);
+							this.Select(true, true);
+							return true;
 
-			this.Cell(c,r).TextString.String = textLayout.Text;
-			return true;
+						case KeyCode.ArrowUp:
+							if ( r >= this.rows-1 )  break;
+							this.cellToHilite = this.cellToEdit+(this.columns+1);
+							this.Select(true, true);
+							return true;
+
+						case KeyCode.ArrowLeft:
+							if ( c <= 0 )  break;
+							this.cellToHilite = this.cellToEdit-1;
+							this.Select(true, true);
+							return true;
+
+						case KeyCode.ArrowRight:
+							if ( c >= this.columns-1 )  break;
+							this.cellToHilite = this.cellToEdit+1;
+							this.Select(true, true);
+							return true;
+					}
+				}
+				return false;
+			}
 		}
 
 		// Gestion d'un événement pendant l'édition.
@@ -2099,22 +2133,26 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( jv == JustifVertical.Top )
 			{
-				if ( jh == JustifHorizontal.Left   )  textLayout.Alignment = Drawing.ContentAlignment.TopLeft;
-				if ( jh == JustifHorizontal.Center )  textLayout.Alignment = Drawing.ContentAlignment.TopCenter;
-				if ( jh == JustifHorizontal.Right  )  textLayout.Alignment = Drawing.ContentAlignment.TopRight;
+				     if ( jh == JustifHorizontal.Center )  textLayout.Alignment = Drawing.ContentAlignment.TopCenter;
+				else if ( jh == JustifHorizontal.Right  )  textLayout.Alignment = Drawing.ContentAlignment.TopRight;
+				else                                       textLayout.Alignment = Drawing.ContentAlignment.TopLeft;
 			}
 			if ( jv == JustifVertical.Center )
 			{
-				if ( jh == JustifHorizontal.Left   )  textLayout.Alignment = Drawing.ContentAlignment.MiddleLeft;
-				if ( jh == JustifHorizontal.Center )  textLayout.Alignment = Drawing.ContentAlignment.MiddleCenter;
-				if ( jh == JustifHorizontal.Right  )  textLayout.Alignment = Drawing.ContentAlignment.MiddleRight;
+				     if ( jh == JustifHorizontal.Center )  textLayout.Alignment = Drawing.ContentAlignment.MiddleCenter;
+				else if ( jh == JustifHorizontal.Right  )  textLayout.Alignment = Drawing.ContentAlignment.MiddleRight;
+				else                                       textLayout.Alignment = Drawing.ContentAlignment.MiddleLeft;
 			}
 			if ( jv == JustifVertical.Bottom )
 			{
-				if ( jh == JustifHorizontal.Left   )  textLayout.Alignment = Drawing.ContentAlignment.BottomLeft;
-				if ( jh == JustifHorizontal.Center )  textLayout.Alignment = Drawing.ContentAlignment.BottomCenter;
-				if ( jh == JustifHorizontal.Right  )  textLayout.Alignment = Drawing.ContentAlignment.BottomRight;
+				     if ( jh == JustifHorizontal.Center )  textLayout.Alignment = Drawing.ContentAlignment.BottomCenter;
+				else if ( jh == JustifHorizontal.Right  )  textLayout.Alignment = Drawing.ContentAlignment.BottomRight;
+				else                                       textLayout.Alignment = Drawing.ContentAlignment.BottomLeft;
 			}
+
+			     if ( jh == JustifHorizontal.Justif )  textLayout.JustifMode = TextJustifMode.AllButLast;
+			else if ( jh == JustifHorizontal.All    )  textLayout.JustifMode = TextJustifMode.All;
+			else                                       textLayout.JustifMode = TextJustifMode.None;
 
 			Drawing.Transform ot = graphics.SaveTransform();
 
@@ -2144,6 +2182,7 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 			}
 
+			textLayout.ShowLineBreak = edited;
 			Drawing.Color color = iconContext.AdaptColor(this.Cell(c,r).TextFont.FontColor);
 			textLayout.Paint(new Drawing.Point(0,0), graphics, Drawing.Rectangle.Empty, color, Drawing.GlyphPaintStyle.Normal);
 

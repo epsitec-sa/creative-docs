@@ -10,7 +10,9 @@ namespace Epsitec.Common.Pictogram.Data
 		Left,				// |abc  |
 		Center,				// | abc |
 		Right,				// |  abc|
-		Stretch,			// |a b c|
+		Justif,				// |a b c| sauf la dernière ligne
+		All,				// |a b c| avec la dernière ligne
+		Stretch,			// |abc| étendu pour ObjectTextLine
 	}
 
 	public enum JustifVertical
