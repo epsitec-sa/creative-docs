@@ -37,8 +37,8 @@ namespace Epsitec.Common.Support.Implementation
 		
 		public abstract bool Contains(string id);
 		
-		public abstract byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level);
-		public abstract string[] GetIds(string filter, ResourceLevel level);
+		public abstract byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture);
+		public abstract string[] GetIds(string filter, ResourceLevel level, System.Globalization.CultureInfo culture);
 		
 		public abstract void Create(string id, Epsitec.Common.Support.ResourceLevel level);
 		public abstract void Update(string id, Epsitec.Common.Support.ResourceLevel level, byte[] data);

@@ -119,8 +119,13 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public override byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level)
+		public override byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
+			if (this.culture != culture)
+			{
+				this.SelectLocale (culture);
+			}
+			
 			string row_name = this.GetRowNameFromId (id, level);
 			
 			//	TODO: implémenter GetData.
@@ -129,8 +134,13 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public override string[] GetIds(string filter, ResourceLevel level)
+		public override string[] GetIds(string filter, ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
+			if (this.culture != culture)
+			{
+				this.SelectLocale (culture);
+			}
+			
 			//	TODO: retourne la liste de tous les <id> de ressources connus.
 			
 			return null;

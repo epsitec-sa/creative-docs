@@ -130,8 +130,13 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public override byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level)
+		public override byte[] GetData(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
+			if (this.culture != culture)
+			{
+				this.SelectLocale (culture);
+			}
+			
 			string path = this.GetPathFromId (id, level);
 			
 			if (path != null)
@@ -155,8 +160,13 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public override string[] GetIds(string filter, ResourceLevel level)
+		public override string[] GetIds(string filter, ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
+			if (this.culture != culture)
+			{
+				this.SelectLocale (culture);
+			}
+			
 			filter = "*";
 			
 			string path   = this.path_prefix;
