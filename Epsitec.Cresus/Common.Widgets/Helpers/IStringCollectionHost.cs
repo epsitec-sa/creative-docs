@@ -8,6 +8,6 @@ namespace Epsitec.Common.Widgets.Helpers
 	{
 		void StringCollectionChanged();
 		
-		StringCollection	Items		{ get; }
+		StringCollection	Items	{ get; }
 	}
 }

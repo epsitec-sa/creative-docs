@@ -3,7 +3,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe TextFieldCombo implémente la ligne éditable avec bouton "v".
 	/// </summary>
-	public class TextFieldCombo : AbstractTextField, Helpers.IStringCollectionHost
+	public class TextFieldCombo : AbstractTextField, Helpers.IStringCollectionHost, Support.INamedStringSelection
 	{
 		public TextFieldCombo()
 		{
@@ -43,82 +43,6 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		
-		public int									SelectedIndex
-		{
-			get
-			{
-				int		sel;
-				bool	exact;
-				if ( this.FindMatch(this.Text, out sel, out exact) )  return sel;
-				return -1;
-			}
-
-			set
-			{
-				string text = "";
-				if ( value >= 0 && value < this.items.Count )
-				{
-					text = this.items[value];
-				}
-
-				if ( this.Text != text )
-				{
-					this.Text = text;
-					this.OnTextChanged();
-					this.OnTextInserted();
-					this.OnSelectedIndexChanged();
-					this.SelectAll();
-				}
-			}
-		}
-		
-		public string								SelectedItem
-		{
-			get
-			{
-				int index = this.SelectedIndex;
-				if ( index < 0 )  return null;
-				return this.Items[index];
-			}
-			
-			set
-			{
-				this.SelectedIndex = this.Items.IndexOf (value);
-			}
-		}
-
-		public string								SelectedName
-		{
-			// Nom de la ligne sélectionnée, null si aucune.
-			get
-			{
-				int index = this.SelectedIndex;
-				if ( index < 0 )  return null;
-				return this.items.GetName(index);
-			}
-			
-			set
-			{
-				if ( this.SelectedName != value )
-				{
-					int index = -1;
-					
-					if ( value != null )
-					{
-						index = this.items.FindNameIndex(value);
-						
-						if ( index < 0 )
-						{
-							throw new System.ArgumentException(string.Format("No element named '{0}' in list", value));
-						}
-					}
-					
-					this.SelectedIndex = index;
-				}
-			}
 		}
 
 		
@@ -320,7 +244,7 @@ namespace Epsitec.Common.Widgets
 			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width+shadow.Width, this.scrollList.Height+shadow.Height);
 			this.scrollList.Location = new Drawing.Point(shadow.Left, shadow.Bottom);
 			this.scrollList.SelectedIndexChanged += new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
-			this.scrollList.Validation += new Support.EventHandler(this.HandleScrollListValidation);
+			this.scrollList.SelectionActivated += new Support.EventHandler(this.HandleScrollListSelectionActivated);
 			Window.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
 			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
 			this.comboWindow.Root.Children.Add(this.scrollList);
@@ -333,7 +257,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void CloseCombo()
 		{
-			this.scrollList.Validation -= new Support.EventHandler(this.HandleScrollListValidation);
+			this.scrollList.SelectionActivated -= new Support.EventHandler(this.HandleScrollListSelectionActivated);
 			this.scrollList.SelectedIndexChanged -= new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
 			Window.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
 			Window.ApplicationDeactivated -= new Support.EventHandler(this.HandleApplicationDeactivated);
@@ -364,7 +288,7 @@ namespace Epsitec.Common.Widgets
 			this.OpenCombo();
 		}
 		
-		private void HandleScrollListValidation(object sender)
+		private void HandleScrollListSelectionActivated(object sender)
 		{
 			// Gestion d'un événement lorsque la scroll-liste est sélectionnée.
 			
@@ -393,7 +317,85 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		#region INamedStringSelection Members
+		public int									SelectedIndex
+		{
+			get
+			{
+				int		sel;
+				bool	exact;
+				if ( this.FindMatch(this.Text, out sel, out exact) )  return sel;
+				return -1;
+			}
+
+			set
+			{
+				string text = "";
+				if ( value >= 0 && value < this.items.Count )
+				{
+					text = this.items[value];
+				}
+
+				if ( this.Text != text )
+				{
+					this.Text = text;
+					this.OnTextChanged();
+					this.OnTextInserted();
+					this.OnSelectedIndexChanged();
+					this.SelectAll();
+				}
+			}
+		}
+		
+		public string								SelectedItem
+		{
+			get
+			{
+				int index = this.SelectedIndex;
+				if ( index < 0 )  return null;
+				return this.Items[index];
+			}
+			
+			set
+			{
+				this.SelectedIndex = this.Items.IndexOf (value);
+			}
+		}
+
+		public string								SelectedName
+		{
+			// Nom de la ligne sélectionnée, null si aucune.
+			get
+			{
+				int index = this.SelectedIndex;
+				if ( index < 0 )  return null;
+				return this.items.GetName(index);
+			}
+			
+			set
+			{
+				if ( this.SelectedName != value )
+				{
+					int index = -1;
+					
+					if ( value != null )
+					{
+						index = this.items.FindNameIndex(value);
+						
+						if ( index < 0 )
+						{
+							throw new System.ArgumentException(string.Format("No element named '{0}' in list", value));
+						}
+					}
+					
+					this.SelectedIndex = index;
+				}
+			}
+		}
+		
+		
 		public event Support.EventHandler			SelectedIndexChanged;
+		#endregion
 		
 		protected GlyphButton						button;
 		protected Helpers.StringCollection			items;

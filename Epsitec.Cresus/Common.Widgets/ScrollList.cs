@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe ScrollList réalise une liste déroulante simple.
 	/// </summary>
-	public class ScrollList : Widget, Helpers.IStringCollectionHost
+	public class ScrollList : Widget, Helpers.IStringCollectionHost, Support.INamedStringSelection
 	{
 		public ScrollList()
 		{
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public ScrollListStyle				ScrollListStyle
+		public ScrollListStyle					ScrollListStyle
 		{
 			get
 			{
@@ -79,84 +79,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public AbstractScroller				Scroller
+		public AbstractScroller					Scroller
 		{
 			get { return this.scroller; }
 		}
 
-		public int							SelectedIndex
-		{
-			// Ligne sélectionnée, -1 si aucune.
-			get
-			{
-				return this.selectedLine;
-			}
-
-			set
-			{
-				if ( value != -1 )
-				{
-					value = System.Math.Max(value, 0);
-					value = System.Math.Min(value, this.items.Count-1);
-				}
-				if ( value != this.selectedLine )
-				{
-					this.selectedLine = value;
-					this.SetDirty();
-				}
-			}
-		}
-
-		public string						SelectedItem
-		{
-			get
-			{
-				int index = this.SelectedIndex;
-				if ( index < 0 )  return null;
-				return this.Items[index];
-			}
-			
-			set
-			{
-				this.SelectedIndex = this.Items.IndexOf (value);
-			}
-		}
-		
-		public string						SelectedName
-		{
-			// Nom de la ligne sélectionnée, null si aucune.
-			get
-			{
-				if ( this.selectedLine == -1 )
-				{
-					return null;
-				}
-				
-				return this.items.GetName(this.selectedLine);
-			}
-
-			set
-			{
-				if ( this.SelectedName != value )
-				{
-					int index = -1;
-					
-					if ( value != null )
-					{
-						index = this.items.FindNameIndex(value);
-					
-						if ( index < 0 )
-						{
-							throw new System.ArgumentException(string.Format("No element named '{0}' in list", value));
-						}
-					}
-					
-					this.SelectedIndex = index;
-				}
-			}
-		}
-
-		public int							FirstVisibleLine
+		public int								FirstVisibleLine
 		{
 			// Première ligne visible.
 			get
@@ -177,8 +105,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
-		
 		
 		public void ShowSelectedLine(ScrollListShow mode)
 		{
@@ -289,7 +215,7 @@ namespace Epsitec.Common.Widgets
 					{
 						this.MouseSelect(pos);
 						this.OnSelectedIndexChanged();
-						this.OnValidation();
+						this.OnSelectionActivated();
 						this.mouseDown = false;
 					}
 					break;
@@ -363,7 +289,7 @@ namespace Epsitec.Common.Widgets
 
 				case KeyCode.Return:
 				case KeyCode.Space:
-					this.OnValidation();
+					this.OnSelectionActivated();
 					break;
 
 				default:
@@ -509,13 +435,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected virtual void OnValidation()
+		protected virtual void OnSelectionActivated()
 		{
 			// Génère un événement pour dire que la sélection a été validée
 			
-			if ( this.Validation != null )
+			if ( this.SelectionActivated != null )
 			{
-				this.Validation(this);
+				this.SelectionActivated(this);
 			}
 		}
 
@@ -584,15 +510,94 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Helpers.StringCollection		Items
+		public Helpers.StringCollection			Items
 		{
-			get { return this.items; }
+			get
+			{
+				return this.items;
+			}
 		}
 		#endregion
+		
+		#region INamedStringSelection Members
+		public int								SelectedIndex
+		{
+			get
+			{
+				//	-1 => pas de ligne sélectionnée
+				
+				return this.selectedLine;
+			}
 
+			set
+			{
+				if ( value != -1 )
+				{
+					value = System.Math.Max(value, 0);
+					value = System.Math.Min(value, this.items.Count-1);
+				}
+				if ( value != this.selectedLine )
+				{
+					this.selectedLine = value;
+					this.SetDirty();
+				}
+			}
+		}
 
+		public string							SelectedItem
+		{
+			get
+			{
+				int index = this.SelectedIndex;
+				if ( index < 0 )  return null;
+				return this.Items[index];
+			}
+			
+			set
+			{
+				this.SelectedIndex = this.Items.IndexOf (value);
+			}
+		}
+		
+		public string							SelectedName
+		{
+			// Nom de la ligne sélectionnée, null si aucune.
+			get
+			{
+				if ( this.selectedLine == -1 )
+				{
+					return null;
+				}
+				
+				return this.items.GetName(this.selectedLine);
+			}
+
+			set
+			{
+				if ( this.SelectedName != value )
+				{
+					int index = -1;
+					
+					if ( value != null )
+					{
+						index = this.items.FindNameIndex(value);
+					
+						if ( index < 0 )
+						{
+							throw new System.ArgumentException(string.Format("No element named '{0}' in list", value));
+						}
+					}
+					
+					this.SelectedIndex = index;
+				}
+			}
+		}
+		
+		
 		public event Support.EventHandler		SelectedIndexChanged;
-		public event Support.EventHandler		Validation;
+		#endregion
+		
+		public event Support.EventHandler		SelectionActivated;
 		
 
 		protected static readonly double		Margin = 3;
