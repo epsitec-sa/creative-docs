@@ -210,11 +210,11 @@ namespace Epsitec.Common.Support
 			
 			Assertion.AssertEquals (6, bundle.CountFields);
 			Assertion.AssertEquals ("a",      names[0]);
-			Assertion.AssertEquals ("anchor", names[1]);
+			Assertion.AssertEquals ("Anchor", names[1]);
 			Assertion.AssertEquals ("class",  names[2]);
-			Assertion.AssertEquals ("name",   names[3]);
-			Assertion.AssertEquals ("size",   names[4]);
-			Assertion.AssertEquals ("text",   names[5]);
+			Assertion.AssertEquals ("Name",   names[3]);
+			Assertion.AssertEquals ("Size",   names[4]);
+			Assertion.AssertEquals ("Text",   names[5]);
 		}
 		
 		[Test] public void CheckCompileRefLevel2()
@@ -241,7 +241,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckCompileRefLevel2AutoPrefix()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test", "file", ResourceLevel.Default, 0);
-			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='button.cancel#text'/></data></bundle>";
+			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='button.cancel#Text'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
@@ -259,7 +259,7 @@ namespace Epsitec.Common.Support
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx1()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='button.cancel#text'/></data></bundle>";
+			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='button.cancel#Text'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
@@ -271,7 +271,7 @@ namespace Epsitec.Common.Support
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileRefEx2()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
-			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='file:does-not-exist#text'/></data></bundle>";
+			string test_string = "<bundle><data name='a'>A</data><data name='b'><ref target='file:does-not-exist#Text'/></data></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			bundle.Compile (test_data);
