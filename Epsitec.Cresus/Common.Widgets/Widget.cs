@@ -1364,6 +1364,49 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public int									ZOrder
+		{
+			get
+			{
+				//	Retourne la position dans la "pile" des widgets, en ne considérant que les
+				//	frères et soeurs. 0 => widget sur le sommet de la pile des widgets.
+				
+				if (this.parent == null)
+				{
+					return -1;
+				}
+				
+				Widget[] siblings = this.parent.children.Widgets;
+				int      bottom_z = siblings.Length;
+				
+				for (int i = 0; i < bottom_z; i++)
+				{
+					if (siblings[i] == this)
+					{
+						return bottom_z - i - 1;
+					}
+				}
+				
+				return -1;
+			}
+			set
+			{
+				if (this.parent == null)
+				{
+					throw new System.InvalidOperationException ("Cannot change Z-order of an orphan.");
+				}
+				
+				if ((value < 0) ||
+					(value >= this.parent.children.Count))
+				{
+					throw new System.ArgumentOutOfRangeException ("value", value, "Invalid Z-order specified.");
+				}
+				
+				this.parent.children.ChangeZOrder (this, value);
+				
+				System.Diagnostics.Debug.Assert (this.ZOrder == value);
+			}
+		}
 		
 		public bool									ContainsFocus
 		{
@@ -5865,6 +5908,38 @@ namespace Epsitec.Common.Widgets
 				return null;
 			}
 			
+			
+			internal void ChangeZOrder(Widget widget, int z)
+			{
+				System.Diagnostics.Debug.Assert (widget != null);
+				
+				int z_old = widget.ZOrder;
+				int z_new = z;
+				
+				System.Diagnostics.Debug.Assert (z_old >= 0);
+				System.Diagnostics.Debug.Assert (z_new >= 0);
+				
+				if (z_old == z_new)
+				{
+					return;
+				}
+				
+				int n = this.list.Count;
+				
+				System.Diagnostics.Debug.Assert (z_old < n);
+				System.Diagnostics.Debug.Assert (z_new < n);
+				
+				z_old = n - z_old - 1;
+				z_new = n - z_new - 1;
+				
+				System.Diagnostics.Debug.Assert (this.list[z_old] == widget);
+				
+				this.list.RemoveAt (z_old);
+				this.list.Insert (z_new, widget);
+				
+				this.array = null;
+				this.NotifyChanged ();
+			}
 			
 			internal void Replace(Widget old_widget, Widget new_widget)
 			{

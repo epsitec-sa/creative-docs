@@ -163,6 +163,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Behaviors\DropBehavior.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Behaviors\IGuideAlignHint.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -289,6 +294,7 @@
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
+                <Folder RelPath = "Widgets\Helpers\" />
             </Include>
         </Files>
     </CSHARP>

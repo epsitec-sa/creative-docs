@@ -40,6 +40,14 @@ namespace Epsitec.Common.Designer.Panels
 		
 		public void ActivateEditor(Widget widget, bool restart_edition)
 		{
+			if (this.active == null)
+			{
+				//	Aucun widget actif => probablement plusieurs widgets sélectionnés. On ne
+				//	fait donc rien de plus ici.
+
+				return;
+			}
+			
 			System.Diagnostics.Debug.Assert (this.active == widget);
 			System.Diagnostics.Debug.WriteLine ("Activated widget " + widget.ToString ());
 			
