@@ -44,6 +44,18 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public Properties.LayoutProperty		LayoutProperty
+		{
+			get
+			{
+				return this.layout_property;
+			}
+			set
+			{
+				this.layout_property = value;
+			}
+		}
+		
 		
 		public Text.Context						TextContext
 		{
@@ -173,14 +185,18 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
-		public Layout.Status Fit(Layout.BaseEngine engine, ref Layout.BreakCollection result)
+		public Layout.Status Fit(ref Layout.BreakCollection result)
 		{
 			//	Détermine les points de découpe pour le texte, selon le contexte
 			//	courant.
 			
-			this.layout_engine = engine;
+			this.SelectLayoutEngine (this.text_offset);
 			this.Reset ();
 			
+			Debug.Assert.IsNotNull (this.layout_engine);
+			Debug.Assert.IsNotNull (this.text);
+			Debug.Assert.IsNotNull (this.text_context);
+
 			Snapshot snapshot = new Snapshot (this);
 			
 			if (result == null)
@@ -232,6 +248,10 @@ namespace Epsitec.Common.Text.Layout
 			snapshot.Restore (this);
 			
 			return Layout.Status.ErrorCannotFit;
+		}
+		
+		public void RenderLine(ITextRenderer renderer)
+		{
 		}
 		
 		
@@ -311,6 +331,12 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		private void SelectLayoutEngine(int offset)
+		{
+			ulong code = this.text[this.text_start + offset];
+			this.text_context.GetLayoutEngine (code, out this.layout_engine, out this.layout_property);
+		}
+		
 		private ulong[] GetInternalBuffer(int length)
 		{
 			if (this.buffer == null)
@@ -374,6 +400,8 @@ namespace Epsitec.Common.Text.Layout
 		private bool							hyphenate;
 		
 		private Layout.BaseEngine				layout_engine;
+		private Properties.LayoutProperty		layout_property;
+		
 		private Snapshot						snapshot;
 		
 		private ulong[]							buffer;

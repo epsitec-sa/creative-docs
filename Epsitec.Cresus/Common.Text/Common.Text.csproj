@@ -154,6 +154,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ITextRenderer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "LayoutList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "SerializerSupport.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

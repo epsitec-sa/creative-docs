@@ -210,7 +210,7 @@ namespace Epsitec.Common.Text.Internal
 			return System.Math.Min (total_κ * delta_width, StretchProfile.MaxPenalty);
 		}
 		
-		public double AdjustWidths(double width, double[] glyph_widths, Unicode.StretchClass[] glyph_classes)
+		public double AdjustWidths(double width, double[] glyph_widths, Unicode.StretchClass[] glyph_classes, double[] glyph_scale)
 		{
 			double total_width = this.TotalWidth;
 			int    count       = glyph_widths.Length;
@@ -276,8 +276,8 @@ namespace Epsitec.Common.Text.Internal
 						break;
 				}
 				
-				changed         += glyph_widths[i] * force * ε;
-				glyph_widths[i] *= 1 + force * ε;
+				changed       += glyph_widths[i] * force * ε;
+				glyph_scale[i] = 1 + force * ε;
 			}
 			
 			return changed;

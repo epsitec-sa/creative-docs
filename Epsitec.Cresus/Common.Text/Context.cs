@@ -12,6 +12,7 @@ namespace Epsitec.Common.Text
 		public Context()
 		{
 			this.style_list  = new StyleList ();
+			this.layout_list = new LayoutList (this);
 			this.char_marker = new Internal.CharMarker ();
 			
 			this.char_marker.Add (Context.Markers.TagSelected);
@@ -23,6 +24,8 @@ namespace Epsitec.Common.Text
 			this.font_collection.Initialize ();
 			
 			this.font_cache = new System.Collections.Hashtable ();
+			
+			this.CreateDefaultLayout ();
 		}
 		
 		
@@ -34,11 +37,11 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		internal Internal.CharMarker			CharMarker
+		public LayoutList						LayoutList
 		{
 			get
 			{
-				return this.char_marker;
+				return this.layout_list;
 			}
 		}
 		
@@ -47,6 +50,15 @@ namespace Epsitec.Common.Text
 			get
 			{
 				return this.markers;
+			}
+		}
+		
+		
+		internal Internal.CharMarker			CharMarker
+		{
+			get
+			{
+				return this.char_marker;
 			}
 		}
 		
@@ -94,7 +106,7 @@ namespace Epsitec.Common.Text
 			this.get_font_last_font_size     = font_size;
 		}
 		
-		public void GetLayout(ulong code, out Layout.BaseEngine engine)
+		public void GetLayoutEngine(ulong code, out Layout.BaseEngine engine, out Properties.LayoutProperty property)
 		{
 			code = Internal.CharMarker.ExtractStyleAndSettings (code);
 			
@@ -103,7 +115,8 @@ namespace Epsitec.Common.Text
 			if ((this.get_layout_last_style_version == current_style_version) &&
 				(this.get_layout_last_code == code))
 			{
-				engine = this.get_layout_last_engine;
+				engine   = this.get_layout_last_engine;
+				property = this.get_layout_last_property;
 				
 				return;
 			}
@@ -113,15 +126,25 @@ namespace Epsitec.Common.Text
 			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
 			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
 			
-			Properties.LayoutProperty layout_p = style[Properties.WellKnownType.Layout] as Properties.LayoutProperty;
+			property = style[Properties.WellKnownType.Layout] as Properties.LayoutProperty;
 			
-			//	TODO: détermine l'engine à utiliser
+			if (property == null)
+			{
+				engine = null;
+			}
+			else
+			{
+				engine = this.layout_list[property.EngineName];
+			}
 			
-			engine = null;
+			if (engine == null)
+			{
+				engine = this.layout_list["*"];
+			}
 			
 			this.get_layout_last_style_version = current_style_version;
 			this.get_layout_last_code          = code;
-			this.get_layout_last_layout        = layout_p;
+			this.get_layout_last_property      = property;
 			this.get_layout_last_engine        = engine;
 		}
 		
@@ -161,7 +184,14 @@ namespace Epsitec.Common.Text
 		}
 		#endregion
 		
+		private void CreateDefaultLayout()
+		{
+			this.layout_list.NewEngine ("*", typeof (Layout.LineEngine));
+		}
+		
+		
 		private StyleList						style_list;
+		private LayoutList						layout_list;
 		private Internal.CharMarker				char_marker;
 		private Markers							markers;
 		private OpenType.FontCollection			font_collection;
@@ -174,7 +204,7 @@ namespace Epsitec.Common.Text
 		
 		private long							get_layout_last_style_version;
 		private ulong							get_layout_last_code;
-		private Properties.LayoutProperty		get_layout_last_layout;
+		private Properties.LayoutProperty		get_layout_last_property;
 		private Layout.BaseEngine				get_layout_last_engine;
 	}
 }

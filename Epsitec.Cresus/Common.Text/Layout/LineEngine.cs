@@ -48,20 +48,23 @@ namespace Epsitec.Common.Text.Layout
 						scratch.RunLength = this.GetRunLength (scratch.Text, scratch.TextStart, scratch.TextLength);
 						
 						ulong code = scratch.Text[scratch.TextStart];
-						Layout.BaseEngine layout;
+						
+						Layout.BaseEngine         engine;
+						Properties.LayoutProperty layout;
 						
 						context.TextContext.GetFont (code, out scratch.Font, out scratch.FontSize);
-						context.TextContext.GetLayout (code, out layout);
+						context.TextContext.GetLayoutEngine (code, out engine, out layout);
 						
-						if ((layout != null) &&
-							(layout != this))
+						if ((engine != this) ||
+							(layout != context.LayoutProperty))
 						{
 							//	Change de moteur de layout. Il faut par conséquent mémoriser où on
 							//	s'arrête pour que le suivant sache où reprendre :
 							
-							context.X           += scratch.Advance;
-							context.TextOffset  += scratch.Offset;
-							context.LayoutEngine = layout;
+							context.X             += scratch.Advance;
+							context.TextOffset    += scratch.Offset;
+							context.LayoutEngine   = engine;
+							context.LayoutProperty = layout;
 							
 							return Layout.Status.SwitchLayout;
 						}

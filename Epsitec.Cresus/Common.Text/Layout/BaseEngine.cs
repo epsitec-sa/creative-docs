@@ -7,16 +7,44 @@ namespace Epsitec.Common.Text.Layout
 	/// La classe BaseEngine sert de classe de base pour tous les moteurs de
 	/// layout (LineEngine, etc.)
 	/// </summary>
-	public abstract class BaseEngine
+	public abstract class BaseEngine : System.IDisposable
 	{
 		public BaseEngine()
 		{
 		}
 		
 		
+		public Text.Context						Context
+		{
+			get
+			{
+				return this.context;
+			}
+		}
+		
+		public string							Name
+		{
+			get
+			{
+				return this.name;
+			}
+		}
+		
+		
+		public virtual void Initialise(Text.Context context, string name)
+		{
+			this.context = context;
+			this.name    = name;
+		}
+		
+		
 		public virtual Layout.Status Fit(Layout.Context context, ref Layout.BreakCollection result)
 		{
 			return Layout.Status.Ok;
+		}
+		
+		public virtual void RenderLine(Layout.Context context, ITextRenderer renderer)
+		{
 		}
 		
 		
@@ -58,5 +86,26 @@ namespace Epsitec.Common.Text.Layout
 			
 			return length;
 		}
+		
+		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		#endregion
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.context = null;
+			}
+		}
+		
+		
+		private Text.Context					context;
+		private string							name;
 	}
 }
