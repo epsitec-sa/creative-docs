@@ -1,3 +1,6 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 13/02/2004
+
 namespace Epsitec.Common.Widgets
 {
 	public enum ScrollArrayShowMode
@@ -75,62 +78,11 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ((this.text_provider_callback != null) ||
-					(this.column_widths == null) ||
-					(row < 0) ||
-					(column < 0) ||
-					(row >= this.text_array.Count))
-				{
-					return "";
-				}
-				
-				System.Collections.ArrayList line = this.text_array[row] as System.Collections.ArrayList;
-				
-				return (column >= line.Count) ? "" : line[column] as string;
+				return this.GetCellText (row, column);
 			}
 			set
 			{
-				if ((this.text_provider_callback != null) ||
-					(this.column_widths == null) ||
-					(row < 0) ||
-					(column < 0))
-				{
-					return;
-				}
-				
-				System.Diagnostics.Debug.Assert (this.text_array.Count == this.max_rows);
-				
-				bool changed = false;
-				
-				changed |= (row >= this.max_rows);
-				changed |= (column >= this.max_columns);
-				
-				this.RowCount    = System.Math.Max (this.max_rows, row + 1);
-				this.ColumnCount = System.Math.Max (this.max_columns, column + 1);
-				
-				System.Collections.ArrayList line = this.text_array[row] as System.Collections.ArrayList;
-				
-				if (column >= line.Count)
-				{
-					for (int i = line.Count; i <= column; i++)
-					{
-						line.Add ("");
-					}
-				}
-				
-				string text = line[column] as string;
-				
-				if (text != value)
-				{
-					line[column] = value;
-					changed      = true;
-				}
-				
-				if (changed)
-				{
-					this.OnContentsChanged ();
-					this.InvalidateContents ();
-				}
+				this.SetCellText (row, column, value);
 			}
 		}
 
@@ -146,25 +98,7 @@ namespace Epsitec.Common.Widgets
 				if (this.max_columns != value)
 				{
 					this.max_columns = value;
-					
-					this.is_header_dirty   = true;
-					this.column_widths     = new double[this.max_columns];
-					this.column_alignments = new Drawing.ContentAlignment[this.max_columns];
-					
-					for (int i = 0; i < this.max_columns; i++)
-					{
-						this.column_widths[i] = this.def_width;
-					}
-					
-					for (int i = 0; i < this.max_columns; i++)
-					{
-						this.column_alignments[i] = Drawing.ContentAlignment.MiddleLeft;
-					}
-					
-					this.RefreshContents ();
-					this.UpdateTotalWidth ();
-					this.UpdateHeader ();
-					this.Update ();
+					this.UpdateColumnCount ();
 				}
 			}
 		}
@@ -287,6 +221,7 @@ namespace Epsitec.Common.Widgets
 					this.first_virtvis_row = this.ToVirtualRow (top);
 					
 					this.RefreshContents ();
+					this.OnEditionIndexChanged ();
 				}
 			}
 		}
@@ -441,6 +376,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.column_widths[column] = width;
 				this.UpdateTotalWidth ();
+				this.UpdateScrollView ();
 				this.InvalidateContents ();
 			}
 		}
@@ -452,6 +388,186 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (column < this.column_widths.Length);
 			
 			return this.column_widths[column];
+		}
+		
+		
+		public virtual string GetCellText(int row, int column)
+		{
+			if (this.column_widths == null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Cannot get cell [{0},{1}] in this ScrollArray.", row, column));
+			}
+			
+			if ((row < 0) || (row >= this.max_rows))
+			{
+				throw new System.ArgumentOutOfRangeException ("row", row, "Row out of range.");
+			}
+			
+			if ((column < 0) || (column >= this.max_columns))
+			{
+				throw new System.ArgumentOutOfRangeException ("column", column, "Column out of range.");
+			}
+			
+			if (this.text_provider_callback != null)
+			{
+				return this.text_provider_callback (row, column);
+			}
+			
+			System.Collections.ArrayList line = this.text_array[row] as System.Collections.ArrayList;
+			
+			return (column >= line.Count) ? "" : line[column] as string;
+		}
+		
+		public virtual string[] GetRowTexts(int row)
+		{
+			if (this.column_widths == null)
+			{
+				throw new System.InvalidOperationException (string.Format ("Cannot get row [{0}] in this ScrollArray.", row));
+			}
+			
+			if ((row < 0) || (row >= this.max_rows))
+			{
+				throw new System.ArgumentOutOfRangeException ("row", row, "Row out of range.");
+			}
+			
+			string[] values = new string[this.max_columns];
+			 
+			if (this.text_provider_callback != null)
+			{
+				for (int i = 0; i < this.max_columns; i++)
+				{
+					values[i] = this.text_provider_callback (row, i);
+				}
+			}
+			else
+			{
+				System.Collections.ArrayList line = this.text_array[row] as System.Collections.ArrayList;
+				
+				for (int i = 0; i < this.max_columns; i++)
+				{
+					if (i < line.Count)
+					{
+						values[i] = line[i] as string;
+					}
+					else
+					{
+						values[i] = "";
+					}
+				}
+			}
+			
+			return values;
+		}
+		
+		public virtual void SetCellText(int row, int column, string value)
+		{
+			if ((this.text_provider_callback != null) ||
+				(this.column_widths == null))
+			{
+				throw new System.InvalidOperationException (string.Format ("Cannot set cell [{0},{1}] in this ScrollArray.", row, column));
+			}
+			
+			if (row < 0)
+			{
+				throw new System.ArgumentOutOfRangeException ("row", row, "Row out of range.");
+			}
+			
+			if (column < 0)
+			{
+				throw new System.ArgumentOutOfRangeException ("column", column, "Column out of range.");
+			}
+			
+			System.Diagnostics.Debug.Assert (this.text_array.Count == this.max_rows);
+			
+			bool changed = false;
+			
+			changed |= (row >= this.max_rows);
+			changed |= (column >= this.max_columns);
+			
+			this.RowCount    = System.Math.Max (this.max_rows, row + 1);
+			this.ColumnCount = System.Math.Max (this.max_columns, column + 1);
+			
+			System.Collections.ArrayList line = this.text_array[row] as System.Collections.ArrayList;
+			
+			if (column >= line.Count)
+			{
+				for (int i = line.Count; i <= column; i++)
+				{
+					line.Add ("");
+				}
+			}
+			
+			string text = line[column] as string;
+			
+			if (text != value)
+			{
+				line[column] = value;
+				changed      = true;
+			}
+			
+			if (changed)
+			{
+				this.OnContentsChanged ();
+				this.InvalidateContents ();
+			}
+		}
+		
+		public virtual void SetRowTexts(int row, string[] values)
+		{
+			if ((this.text_provider_callback != null) ||
+				(this.column_widths == null))
+			{
+				throw new System.InvalidOperationException (string.Format ("Cannot set row [{0}] in this ScrollArray.", row));
+			}
+			
+			if ((row < 0) || (row >= this.max_rows))
+			{
+				throw new System.ArgumentOutOfRangeException ("row", row, "Row out of range.");
+			}
+			
+			if (values.Length > this.max_columns)
+			{
+				throw new System.ArgumentOutOfRangeException ("values", values, string.Format ("Too many values ({0}, expected {1}).", values.Length, this.max_columns));
+			}
+			
+			System.Diagnostics.Debug.Assert (this.text_array.Count == this.max_rows);
+			
+			bool changed = (row >= this.max_rows);
+			
+			this.RowCount = System.Math.Max (this.max_rows, row + 1);
+			
+			if (! changed)
+			{
+				//	Vérifie si la nouvelle ligne est identique à la version originale dans
+				//	la table :
+				
+				string[] original = this.GetRowTexts (row);
+				
+				if (original.Length == values.Length)
+				{
+					for (int i = 0; i < values.Length; i++)
+					{
+						if (original[i] != values[i])
+						{
+							changed = true;
+							break;
+						}
+					}
+					
+					if (! changed)
+					{
+						return;
+					}
+				}
+			}
+			
+			System.Collections.ArrayList line = this.text_array[row] as System.Collections.ArrayList;
+			
+			line.Clear ();
+			line.AddRange (values);
+			
+			this.OnContentsChanged ();
+			this.InvalidateContents ();
 		}
 		
 		
@@ -513,6 +629,76 @@ namespace Epsitec.Common.Widgets
 						x2 += this.table_bounds.Left - this.offset;
 						x1 = System.Math.Max (this.table_bounds.Left, x1);
 						x2 = System.Math.Min (this.table_bounds.Right, x2);
+						
+						if (x1 < x2)
+						{
+							bounds.Left  = x1;
+							bounds.Right = x2;
+							
+							return bounds;
+						}
+						
+						break;
+					}
+				}
+			}
+			
+			return Drawing.Rectangle.Empty;
+		}
+		
+		public Drawing.Rectangle GetUnclippedRowBounds(int row)
+		{
+			if ((row < 0) || (row >= this.max_rows))
+			{
+				return Drawing.Rectangle.Empty;
+			}
+			
+			int add_rows  = (row == this.edition_row) ? this.edition_add_rows : 0;
+			int first_row = this.ToVirtualRow (row);
+			int last_row  = first_row + add_rows;
+			
+			if ((last_row >= this.first_virtvis_row) &&
+				(first_row < this.first_virtvis_row + this.n_visible_rows))
+			{
+				//	La ligne spécifiée est (en tout cas partiellement) visible; calcule sa
+				//	position dans la liste :
+				
+				first_row = System.Math.Max (first_row, this.first_virtvis_row);
+				last_row  = System.Math.Min (last_row, this.first_virtvis_row + this.n_visible_rows - 1);
+				
+				double y1 = (first_row - this.first_virtvis_row) * this.row_height;
+				double y2 = (last_row - this.first_virtvis_row + 1) * this.row_height;
+				
+				if (y2 > y1)
+				{
+					y1 = this.table_bounds.Top - y1;
+					y2 = this.table_bounds.Top - y2;
+					
+					return new Drawing.Rectangle (this.table_bounds.Left, y2, this.table_bounds.Width, y1 - y2);
+				}
+			}
+			
+			return Drawing.Rectangle.Empty;
+		}
+		
+		public Drawing.Rectangle GetUnclippedCellBounds(int row, int column)
+		{
+			Drawing.Rectangle bounds = this.GetUnclippedRowBounds (row);
+			
+			if (bounds.IsValid)
+			{
+				double x1 = 0;
+				double x2 = 0;
+				
+				for (int i = 0; i < this.max_columns; i++)
+				{
+					x1 = x2;
+					x2 = x1 + this.column_widths[i];
+					
+					if (column == i)
+					{
+						x1 += this.table_bounds.Left - this.offset;
+						x2 += this.table_bounds.Left - this.offset;
 						
 						if (x1 < x2)
 						{
@@ -867,11 +1053,13 @@ invalid:	row    = -1;
 		{
 			int virtual_row = (int) System.Math.Floor (this.v_scroller.Value + 0.5);
 			this.SetFirstVirtualVisibleIndex (virtual_row);
+			this.UpdateScrollView ();
 		}
 
 		private void HandleHScrollerChanged(object sender)
 		{
 			this.Offset = System.Math.Floor (this.h_scroller.Value);
+			this.UpdateScrollView ();
 		}
 
 		private void HandleHeaderButtonClicked(object sender, MessageEventArgs e)
@@ -1027,7 +1215,6 @@ invalid:	row    = -1;
 		{
 			base.UpdateClientGeometry ();
 			
-			
 			if ((this.column_widths == null) ||
 				(this.v_scroller == null) ||
 				(this.h_scroller == null) ||
@@ -1036,6 +1223,35 @@ invalid:	row    = -1;
 				return;
 			}
 			
+			this.UpdateGeometry ();
+		}
+		
+		
+		public override Drawing.Rectangle GetShapeBounds()
+		{
+			IAdorner          adorner = Widgets.Adorner.Factory.Active;
+			Drawing.Rectangle rect    = this.Client.Bounds;
+			
+			rect.Inflate (adorner.GeometryListShapeBounds);
+			
+			return rect;
+		}
+		
+		
+		protected virtual void Update()
+		{
+			if (this.is_dirty)
+			{
+				this.UpdateClientGeometry ();
+			}
+		}
+		
+		protected virtual void UpdateScrollView()
+		{
+		}
+		
+		protected virtual void UpdateGeometry()
+		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 			
 			this.is_dirty      = false;
@@ -1145,27 +1361,29 @@ invalid:	row    = -1;
 			this.UpdateScrollers ();
 		}
 		
-		
-		public override Drawing.Rectangle GetShapeBounds()
+		protected virtual void UpdateColumnCount()
 		{
-			IAdorner          adorner = Widgets.Adorner.Factory.Active;
-			Drawing.Rectangle rect    = this.Client.Bounds;
-			
-			rect.Inflate (adorner.GeometryListShapeBounds);
-			
-			return rect;
-		}
-		
-		
-		protected void Update()
-		{
-			if (this.is_dirty)
+			this.is_header_dirty   = true;
+			this.column_widths     = new double[this.max_columns];
+			this.column_alignments = new Drawing.ContentAlignment[this.max_columns];
+					
+			for (int i = 0; i < this.max_columns; i++)
 			{
-				this.UpdateClientGeometry ();
+				this.column_widths[i] = this.def_width;
 			}
+					
+			for (int i = 0; i < this.max_columns; i++)
+			{
+				this.column_alignments[i] = Drawing.ContentAlignment.MiddleLeft;
+			}
+					
+			this.RefreshContents ();
+			this.UpdateTotalWidth ();
+			this.UpdateHeader ();
+			this.Update ();
 		}
 		
-		protected void UpdateScrollers()
+		protected virtual void UpdateScrollers()
 		{
 			//	Met à jour l'ascenseur vertical :
 			
@@ -1215,10 +1433,11 @@ invalid:	row    = -1;
 				this.h_scroller.LargeChange       = this.table_bounds.Width / 2.0;
 			}
 			
+			this.UpdateScrollView ();
 			this.Invalidate ();
 		}
 		
-		protected void UpdateTextLayouts()
+		protected virtual void UpdateTextLayouts()
 		{
 			if (this.column_widths == null)
 			{
@@ -1265,7 +1484,7 @@ invalid:	row    = -1;
 			this.OnLayoutUpdated ();
 		}
 
-		protected void UpdateTotalWidth()
+		protected virtual void UpdateTotalWidth()
 		{
 			this.total_width = 0;
 			
@@ -1275,7 +1494,7 @@ invalid:	row    = -1;
 			}
 		}
 		
-		protected void UpdateHeader()
+		protected virtual void UpdateHeader()
 		{
 			foreach (HeaderButton button in this.header_buttons)
 			{
@@ -1331,8 +1550,18 @@ invalid:	row    = -1;
 			}
 		}
 		
+		protected virtual  void OnEditionIndexChanged()
+		{
+			if (this.EditionIndexChanged != null)
+			{
+				this.EditionIndexChanged (this);
+			}
+		}
+		
 		protected virtual  void OnContentsChanged()
 		{
+			System.Diagnostics.Debug.WriteLine ("Contents changed.");
+			
 			if (this.ContentsChanged != null)
 			{
 				this.ContentsChanged (this);
@@ -1418,7 +1647,7 @@ invalid:	row    = -1;
 					pos.Y -= this.row_height * num_add_lines;
 					
 					adorner.PaintCellBackground (graphics, new Drawing.Rectangle (pos.X, pos.Y, right - pos.X, this.row_height * (num_add_lines + 1)), widget_state);
-					
+#if false
 					pos.X += this.text_margin - System.Math.Floor (this.offset);
 					
 					for (int column = 0; column < this.max_columns; column++)
@@ -1433,7 +1662,7 @@ invalid:	row    = -1;
 						
 						pos.X = end;
 					}
-					
+#endif
 					n_rows -= num_add_lines;
 				}
 				else
@@ -1532,6 +1761,7 @@ invalid:	row    = -1;
 		
 		
 		public event EventHandler				SelectedIndexChanged;
+		public event EventHandler				EditionIndexChanged;
 		public event EventHandler				ContentsChanged;
 		public event EventHandler				SortChanged;
 		public event EventHandler				LayoutUpdated;

@@ -324,6 +324,7 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
+		
 		internal static System.Windows.Forms.MouseButtons ButtonFromMsg(System.Windows.Forms.Message msg)
 		{
 			switch (msg.Msg)
@@ -361,6 +362,7 @@ namespace Epsitec.Common.Widgets
 			
 			return System.Windows.Forms.MouseButtons.None;
 		}
+		
 		
 		internal static Message FromWndProcMessage(Platform.Window form, ref System.Windows.Forms.Message msg)
 		{
@@ -553,8 +555,6 @@ namespace Epsitec.Common.Widgets
 			return message;
 		}
 		
-		
-		
 		internal static Message FromKeyEvent(int msg, System.IntPtr w_param, System.IntPtr l_param)
 		{
 			//	Synthétise un événement clavier à partir de la description de
@@ -613,6 +613,18 @@ namespace Epsitec.Common.Widgets
 			message.filter_no_children  = false;
 			message.filter_only_focused = true;
 			message.filter_only_on_hit  = false;
+			
+			return message;
+		}
+		
+		internal static Message CreateDummyMouseMoveEvent()
+		{
+			Message message = new Message ();
+			
+			message.type                = MessageType.MouseMove;
+			message.filter_no_children  = false;
+			message.filter_only_focused = false;
+			message.filter_only_on_hit  = true;
 			
 			return message;
 		}
