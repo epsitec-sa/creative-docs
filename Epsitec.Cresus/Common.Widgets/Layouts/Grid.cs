@@ -128,7 +128,10 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		public void Invalidate()
 		{
-			this.is_dirty = true;
+			if (this.is_dirty == false)
+			{
+				this.is_dirty = true;
+			}
 		}
 		
 		
@@ -724,6 +727,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			return true;
 		}
 		
+		
 		protected void HandleMouseDrag(Drawing.Point rel_mouse, Drawing.Point abs_mouse, Message message)
 		{
 			bool end_dragging = (message.Button == MouseButtons.None) | (message.Type == MessageType.MouseUp);
@@ -856,21 +860,17 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		protected void WidgetDraggingBegin(Drawing.Point mouse)
 		{
+			//	Active le dragging d'un widget sélectionné; un widget "bidon" remplace le
+			//	widget sélectionné et ce dernier est déplacé à la position de "drop" pour
+			//	assurer un feed-back visuel.
+			
 			this.is_dragging_widget = true;
 			
-			//	Conserve une copie des positions verticales des diverses séparations
-			//	horizontales :
-			
-			this.frozen_lines_y = new double[this.horizontals.Length];
-			
-			for (int i = 0; i < this.horizontals.Length; i++)
-			{
-				this.frozen_lines_y[i] = this.horizontals[i].y_live;
-			}
+			this.SetupFrozenLinePositions ();
+			this.Invalidate ();
 			
 			this.designer.DraggingBegin (mouse);
 			
-			this.Invalidate ();
 			this.Update ();
 			this.WidgetDraggingMove (mouse);
 		}
@@ -885,54 +885,53 @@ namespace Epsitec.Common.Widgets.Layouts
 			double center_x  = this.designer_drag_rect.Center.X;
 			double corner_y  = this.designer_drag_rect.Top;
 			
-			if (this.FindBestColumns (center_x, col_count, out this.hot_designer_col1, out this.hot_designer_col2))
+			int  col1, col2, line;
+			bool insert;
+			
+			if ((this.FindBestColumns (center_x, col_count, out col1, out col2)) &&
+				(this.FindBestHotLine (corner_y, out line, out insert)))
 			{
-				if (this.FindBestHotLine (corner_y, out this.hot_designer_line, out this.hot_designer_insert))
+				this.hot_designer_col1   = col1;
+				this.hot_designer_col2   = col2;
+				this.hot_designer_line   = line;
+				this.hot_designer_insert = insert;
+				
+				double x1 = this.verticals[col1].x_live;
+				double x2 = this.verticals[col2].x_live;
+				
+				if (insert)
 				{
-					if ((this.hot_designer_insert) ||
-						(this.IsHorizontalRangeEmpty (this.hot_designer_line, this.hot_designer_col1, this.hot_designer_col2, this.designer.WidgetOriginalSurface)))
+					Widget original = this.designer.WidgetOriginalSurface;
+					
+					//	Evite d'insérer une ligne vide après (ou avant) si la ligne courante est adjacente
+					//	et qu'elle ne contient que notre élément; ce déplacement n'aurait aucun sens !
+					
+					if ((line > 0) &&
+						(this.horizontals[line-1].list.Count == 1) &&
+						(this.horizontals[line-1].list[0] == original))
 					{
-						//	Evite d'insérer une ligne vide après (ou avant) si la ligne courante est adjacente
-						//	et qu'elle ne contient que notre élément; ce déplacement n'aurait aucun sens !
-						
-						if ((this.hot_designer_insert) &&
-							(this.hot_designer_line > 0) &&
-							(this.horizontals[this.hot_designer_line-1].list.Count == 1) &&
-							(this.horizontals[this.hot_designer_line-1].list[0] == this.designer.WidgetOriginalSurface))
-						{
-							this.hot_designer_insert = false;
-							this.hot_designer_line--;
-						}
-						
-						if ((this.hot_designer_insert) &&
-							(this.horizontals[this.hot_designer_line].list.Count == 1) &&
-							(this.horizontals[this.hot_designer_line].list[0] == this.designer.WidgetOriginalSurface))
-						{
-							this.hot_designer_insert = false;
-						}
-						
-						double x1 = this.verticals[this.hot_designer_col1].x_live;
-						double x2 = this.verticals[this.hot_designer_col2].x_live;
-						double y2 = this.frozen_lines_y[this.hot_designer_line];
-						double dy = this.designer.OriginalBounds.Height;
-						
-						if (this.hot_designer_insert == false)
-						{
-							//	Utilise la hauteur de la ligne en cours, sauf si c'est une ligne qui va être
-							//	créée suite à une insertion, ou si c'est la même ligne que celle où se
-							//	trouve l'original...
-							
-							int index = this.hot_designer_line+1;
-							
-							System.Diagnostics.Debug.Assert (index < this.frozen_lines_y.Length);
-							
-							double y1 = this.frozen_lines_y[index];
-							
-							dy = System.Math.Min (dy, y2-y1);
-						}
-						
-						rect_drop = new Drawing.Rectangle (x1, y2-dy, x2-x1, dy);
+						this.hot_designer_line   = --line;
+						this.hot_designer_insert = false;
 					}
+					
+					if ((this.horizontals[line].list.Count == 1) &&
+						(this.horizontals[line].list[0] == original))
+					{
+						this.hot_designer_insert = false;
+					}
+					
+					double dy = this.designer.OriginalBounds.Height;
+					rect_drop = new Drawing.Rectangle (x1, this.frozen_lines_y[line]-dy, x2-x1, dy);
+				}
+				else if (this.IsHorizontalRangeEmpty (line, col1, col2, this.designer.WidgetOriginalSurface))
+				{
+					System.Diagnostics.Debug.Assert (line+1 < this.frozen_lines_y.Length);
+					
+					double y1 = this.frozen_lines_y[line+1];
+					double y2 = this.frozen_lines_y[this.hot_designer_line];
+					double dy = System.Math.Min (this.designer.OriginalBounds.Height, y2-y1);
+					
+					rect_drop = new Drawing.Rectangle (x1, y2-dy, x2-x1, dy);
 				}
 			}
 			
@@ -941,8 +940,6 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.UpdateLineGap ();
 			this.UpdateGeometry ();
 		}
-		
-		
 		
 		protected void WidgetDraggingEnd(Drawing.Point mouse)
 		{
@@ -998,6 +995,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.is_dragging_widget  = false;
 			this.designer_drag_rect  = Drawing.Rectangle.Empty;
 			
+			this.DisposeFrozenLinePositions ();
 			this.Invalidate ();
 			this.UpdateLineGap ();
 			this.Update ();
@@ -1056,6 +1054,24 @@ namespace Epsitec.Common.Widgets.Layouts
 			return -1;
 		}
 		
+		
+		protected void SetupFrozenLinePositions()
+		{
+			//	Conserve une copie des positions verticales des diverses séparations
+			//	horizontales :
+			
+			this.frozen_lines_y = new double[this.horizontals.Length];
+			
+			for (int i = 0; i < this.horizontals.Length; i++)
+			{
+				this.frozen_lines_y[i] = this.horizontals[i].y_live;
+			}
+		}
+		
+		protected void DisposeFrozenLinePositions()
+		{
+			this.frozen_lines_y = null;
+		}
 		
 		protected bool IsHorizontalRangeEmpty(int index, int col1, int col2, Widget exclude)
 		{
