@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public TabButton()
 		{
-			this.internalState &= ~InternalState.Engageable;
+			this.InternalState &= ~InternalState.Engageable;
 		}
 		
 		public TabButton(Widget embedder) : this()
@@ -17,8 +17,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
-			//return new Drawing.Rectangle(0, -2, this.clientInfo.width, this.clientInfo.height+2);
-			return new Drawing.Rectangle(-2, -2, this.clientInfo.width+2, this.clientInfo.height+2);
+			return new Drawing.Rectangle(-2, -2, this.Client.Width+2, this.Client.Height+2);
 		}
 
 		// Dessine le bouton.
