@@ -158,11 +158,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Adapters\TextRefAdapter.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Binders\AbstractBinder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -219,11 +214,6 @@
                 />
                 <File
                     RelPath = "Controllers\StringController.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Controllers\TextRefController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -73,6 +73,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.navigator.IsReadOnly = value;
 					this.MouseCursor = this.navigator.IsReadOnly ? MouseCursor.AsArrow : MouseCursor.AsIBeam;
+					this.OnReadOnlyChanged();
 				}
 			}
 		}
@@ -737,6 +738,14 @@ namespace Epsitec.Common.Widgets
 			this.lastCursorFrom = this.navigator.Context.CursorFrom;
 			this.lastCursorTo   = this.navigator.Context.CursorTo;
 		}
+		
+		protected virtual void OnReadOnlyChanged()
+		{
+			if (this.ReadOnlyChanged != null)
+			{
+				this.ReadOnlyChanged (this);
+			}
+		}
 
 		
 		protected void CursorScroll(bool force)
@@ -974,6 +983,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		TextDeleted;
 		public event Support.EventHandler		SelectionChanged;
 		public event Support.EventHandler		CursorChanged;
+		public event Support.EventHandler		ReadOnlyChanged;
 		
 		
 		internal static readonly double			TextMargin = 2;

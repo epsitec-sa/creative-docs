@@ -20,10 +20,10 @@ namespace Epsitec.Common.Designer.UI
 		{
 			this.caption_label = new StaticText (panel);
 			this.text_field    = new TextField (panel);
-			this.label_field   = new StaticText (panel);
-			this.combo_field   = new TextFieldCombo (panel);
 			this.label_bundle  = new StaticText (panel);
 			this.combo_bundle  = new TextFieldCombo (panel);
+			this.label_field   = new StaticText (panel);
+			this.combo_field   = new TextFieldExList (panel);
 			
 			panel.Height = System.Math.Max (panel.Height, 82);
 			
@@ -35,26 +35,27 @@ namespace Epsitec.Common.Designer.UI
 			this.text_field.AnchorMargins    = new Drawing.Margins (this.caption_label.Right, 0, 4, 0);
 			this.text_field.TextChanged     += new EventHandler (this.HandleTextFieldTextChanged);
 			
-			this.label_field.Width           = this.caption_label.Width;
-			this.label_field.Anchor          = this.caption_label.Anchor;
-			this.label_field.AnchorMargins   = new Drawing.Margins (0, 0, 8+20+8, 0);
-			this.label_field.Text            = "Field Name";
-			
-			this.combo_field.Anchor          = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.combo_field.AnchorMargins   = new Drawing.Margins (this.caption_label.Right, 0, 4+20+8, 0);
-			this.combo_field.IsReadOnly      = true;
-			
 			this.label_bundle.Width          = this.caption_label.Width;
 			this.label_bundle.Anchor         = this.caption_label.Anchor;
-			this.label_bundle.AnchorMargins  = new Drawing.Margins (0, 0, 8+20+8+20+4, 0);
+			this.label_bundle.AnchorMargins  = new Drawing.Margins (0, 0, 8+20+8, 0);
 			this.label_bundle.Text           = "Bundle Name";
 			
 			this.combo_bundle.Anchor         = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.combo_bundle.AnchorMargins  = new Drawing.Margins (this.caption_label.Right, 0, 4+20+8+20+4, 0);
+			this.combo_bundle.AnchorMargins  = new Drawing.Margins (this.caption_label.Right, 0, 4+20+8, 0);
 			this.combo_bundle.IsReadOnly     = true;
 			
-			this.combo_field.SelectedIndexChanged  += new EventHandler(this.HandleComboFieldSelectedIndexChanged);
+			this.label_field.Width           = this.caption_label.Width;
+			this.label_field.Anchor          = this.caption_label.Anchor;
+			this.label_field.AnchorMargins   = new Drawing.Margins (0, 0, 8+20+8+20+4, 0);
+			this.label_field.Text            = "Field Name";
+			
+			this.combo_field.Anchor          = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.combo_field.AnchorMargins   = new Drawing.Margins (this.caption_label.Right, 0, 4+20+8+20+4, 0);
+			this.combo_field.IsReadOnly      = true;
+			this.combo_field.PlaceHolder     = "<b>&lt;create new field&gt;</b>";
+			
 			this.combo_bundle.SelectedIndexChanged += new EventHandler(this.HandleComboBundleSelectedIndexChanged);
+			this.combo_field.SelectedIndexChanged  += new EventHandler(this.HandleComboFieldSelectedIndexChanged);
 			
 			this.OnCaptionChanged ();
 			
@@ -76,8 +77,10 @@ namespace Epsitec.Common.Designer.UI
 				this.UpdateBundleList (adapter);
 				this.UpdateFieldList (adapter, bundle);
 				
-				this.combo_bundle.Text = bundle;
-				this.combo_field.Text  = field;
+				this.combo_bundle.Text   = bundle;
+				this.combo_bundle.Cursor = 0;
+				this.combo_field.Text    = field;
+				this.combo_field.Cursor  = 0;
 			}
 		}
 		
@@ -147,7 +150,7 @@ namespace Epsitec.Common.Designer.UI
 		private StaticText						label_field;
 		private StaticText						label_bundle;
 		
-		private TextFieldCombo					combo_field;
 		private TextFieldCombo					combo_bundle;
+		private TextFieldExList					combo_field;
 	}
 }

@@ -365,6 +365,7 @@ namespace Epsitec.Common.Widgets
 					this.OnTextChanged();
 					this.OnTextInserted();
 					this.OnSelectedIndexChanged();
+					this.Cursor = 0;
 					this.SelectAll();
 				}
 			}

@@ -86,7 +86,7 @@ namespace Epsitec.Common.Widgets
 				value = System.Math.Max(value, 0);
 				value = System.Math.Min(value, this.textLayout.Text.Length);
 
-				if ( value != this.context.CursorFrom && value != this.context.CursorTo )
+				if ( value != this.context.CursorFrom || value != this.context.CursorTo )
 				{
 					this.context.CursorFrom = value;
 					this.context.CursorTo   = value;
