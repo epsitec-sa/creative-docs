@@ -338,6 +338,15 @@ namespace Epsitec.Common.Designer
 				return (row >= 0) && (row < max) && (row + distance >= 0) && (row + distance < max);
 			}
 			
+			public bool CheckEnabledCell(int row, int column)
+			{
+				if (this.ActiveBundle == this.DefaultBundle)
+				{
+					return true;
+				}
+				
+				return this.ActiveBundle[this.DefaultBundle[row].Name].IsEmpty ? false : true;
+			}
 			
 			public event Support.EventHandler	StoreChanged;
 			#endregion
@@ -354,7 +363,7 @@ namespace Epsitec.Common.Designer
 			{
 				get
 				{
-					return this.bundles[ResourceLevel.Default];
+					return this.default_bundle;
 				}
 			}
 			
@@ -382,7 +391,8 @@ namespace Epsitec.Common.Designer
 			
 			public void SetActive(ResourceLevel level, CultureInfo culture)
 			{
-				this.active_bundle = this.bundles[level, culture];
+				this.active_bundle  = this.bundles[level, culture];
+				this.default_bundle = this.bundles[ResourceLevel.Default];
 			}
 			
 			public void GetLevelNamesAndCaptions(out string[] names, out string[] captions)
@@ -422,6 +432,7 @@ namespace Epsitec.Common.Designer
 			
 			private ResourceBundleCollection	bundles;
 			private ResourceBundle				active_bundle;
+			private ResourceBundle				default_bundle;
 			private StringEditController		controller;
 			private int							changing;
 		}
