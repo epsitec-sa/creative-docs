@@ -12,14 +12,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public abstract class AbstractPanel : Epsitec.Common.Widgets.Widget
 	{
-		public AbstractPanel()
+		public AbstractPanel(Drawer drawer)
 		{
+			this.drawer = drawer;
+
 			this.extendedButton = new GlyphButton(this);
 			this.extendedButton.ButtonStyle = ButtonStyle.Icon;
 			this.extendedButton.GlyphShape = GlyphShape.ArrowDown;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 			this.extendedButton.TabIndex = 0;
 			this.extendedButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.extendedButton, "Etend ou réduit le panneau");
 
 			this.stylesButton = new GlyphButton(this);
 			this.stylesButton.ButtonStyle = ButtonStyle.Icon;
@@ -27,13 +30,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.stylesButton.Clicked += new MessageEventHandler(this.StylesButtonClicked);
 			this.stylesButton.TabIndex = 1000;
 			this.stylesButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.stylesButton, "Styles");
 
 			this.colorBlack = Drawing.Color.FromName("WindowFrame");
-		}
-		
-		public AbstractPanel(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)
@@ -45,11 +44,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			
 			base.Dispose(disposing);
-		}
-
-		public Drawer Drawer
-		{
-			set { this.drawer = value; }
 		}
 
 		
