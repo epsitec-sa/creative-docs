@@ -93,8 +93,8 @@
     <bundle>
      <data name='class'>CheckButton</data>
      <data name='text'><![CDATA[Pour rire, voici une icone&nbsp;:&nbsp;<img src="res:image#open"/>]]></data>
-     <data name='name'>checkA</data>
-     <data name='cmd'>on</data>
+     <data name='name'>A</data>
+     <data name='cmd'>ChangeOption</data>
      <data name='size'>200;*</data>
      <data name='pos'>10;215</data>
      <data name='bind'><![CDATA[x.0.a<setup mode="on-off"/>;x.*.a#capt]]></data>
@@ -131,8 +131,8 @@
     <bundle>
      <data name='class'>CheckButton</data>
      <data name='text'><![CDATA[Copie du premier bouton]]></data>
-     <data name='name'>checkB</data>
-     <data name='cmd'>on</data>
+     <data name='name'>B</data>
+     <data name='cmd'>ChangeOption</data>
      <data name='size'>200;*</data>
      <data name='pos'>10;140</data>
      <data name='bind'>x.0.b;x.*.b#capt</data>
@@ -167,7 +167,7 @@
      <data name='class'>Button</data>
      <data name='text'>Annule</data>
      <data name='size'>80;*</data>
-     <data name='cmd'>on</data>
+     <data name='cmd'>Cancel</data>
      <data name='pos'>10;10</data>
     </bundle>
    </list>
