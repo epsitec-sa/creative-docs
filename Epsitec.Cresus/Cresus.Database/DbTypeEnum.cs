@@ -25,11 +25,19 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public DbEnumValue						this[int index]
+		public DbEnumValue						this[int rank]
 		{
 			get
 			{
-				return this.values[index];
+				for (int i = 0; i < this.values.Length; i++)
+				{
+					if (this.values[i].Rank == rank)
+					{
+						return this.values[i];
+					}
+				}
+				
+				return null;
 			}
 		}
 		
@@ -49,14 +57,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		
-		public int								MaxNameLength
-		{
-			get { return this.max_name_length; }
-		}
-		
-		
-		public IEnumValue[]						Values
+		public DbEnumValue[]					Values
 		{
 			get
 			{
@@ -65,6 +66,39 @@ namespace Epsitec.Cresus.Database
 				return values;
 			}
 		}
+		
+		
+		public int								MaxNameLength
+		{
+			get { return this.max_name_length; }
+		}
+		
+		
+		#region IEnum Members
+		IEnumValue[]							IEnum.Values
+		{
+			get
+			{
+				return this.Values;
+			}
+		}
+		
+		IEnumValue								IEnum.this[int rank]
+		{
+			get
+			{
+				return this[rank];
+			}
+		}
+		
+		IEnumValue								IEnum.this[string name]
+		{
+			get
+			{
+				return this[name];
+			}
+		}
+		#endregion
 		
 		public System.Type						SystemType
 		{
