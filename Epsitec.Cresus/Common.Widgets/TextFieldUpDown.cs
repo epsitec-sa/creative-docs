@@ -28,25 +28,25 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing)
+			if ( disposing )
 			{
 				this.arrowUp.Engaged -= new EventHandler(this.HandleButton);
 				this.arrowDown.Engaged -= new EventHandler(this.HandleButton);
 				this.arrowUp.StillEngaged -= new EventHandler(this.HandleButton);
 				this.arrowDown.StillEngaged -= new EventHandler(this.HandleButton);
 				
-				this.arrowUp.Dispose ();
-				this.arrowDown.Dispose ();
+				this.arrowUp.Dispose();
+				this.arrowDown.Dispose();
 				this.arrowUp = null;
 				this.arrowDown = null;
 			}
 			
-			base.Dispose (disposing);
+			base.Dispose(disposing);
 		}
 		
 		protected override void UpdateClientGeometry()
 		{
-			base.UpdateClientGeometry ();
+			base.UpdateClientGeometry();
 			
 			Drawing.Rectangle rect = this.Bounds;
 			//this.rightMargin = System.Math.Floor(rect.Height/2+1);
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Widgets
 			{
 				number = System.Convert.ToDouble(text);
 			}
-			catch (System.Exception)
+			catch ( System.Exception )
 			{
 				return;
 			}
@@ -104,17 +104,14 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				string text = this.Text;
-				double number = 0;
-				if ( text != "" )
+				double number = this.minRange;
+				try
 				{
-					try
-					{
-						number = System.Convert.ToDouble(text);
-					}
-					catch (System.Exception)
-					{
-						number = 0;
-					}
+					number = System.Convert.ToDouble(text);
+				}
+				catch ( System.Exception )
+				{
+					number = this.minRange;
 				}
 				return number;
 			}
