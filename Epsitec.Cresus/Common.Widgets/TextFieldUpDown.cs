@@ -74,7 +74,7 @@ namespace Epsitec.Common.Widgets
 			{
 				number = System.Convert.ToDouble(text);
 			}
-			catch (System.Exception ex)
+			catch (System.Exception)
 			{
 				return;
 			}
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Widgets
 					{
 						number = System.Convert.ToDouble(text);
 					}
-					catch (System.Exception ex)
+					catch (System.Exception)
 					{
 						number = 0;
 					}
