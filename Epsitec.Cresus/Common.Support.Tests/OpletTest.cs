@@ -169,6 +169,94 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (0, queue.RedoActionCount);
 		}
 		
+		[Test] public void CheckHistory()
+		{
+			OpletQueue queue = new OpletQueue ();
+			
+			using (queue.BeginAction ("a"))
+			{
+				queue.Insert (this.CreateOplet ("A1"));
+				queue.Insert (this.CreateOplet ("A2"));
+				queue.ValidateAction ();
+			}
+			
+			Assert.AreEqual (1, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
+			Assert.AreEqual (1, queue.UndoActionNames.Length);
+			Assert.AreEqual (0, queue.RedoActionNames.Length);
+			Assert.AreEqual ("a", queue.UndoActionNames[0]);
+			
+			queue.UndoAction ();
+			
+			Assert.AreEqual (0, queue.UndoActionCount);
+			Assert.AreEqual (1, queue.RedoActionCount);
+			Assert.AreEqual (0, queue.UndoActionNames.Length);
+			Assert.AreEqual (1, queue.RedoActionNames.Length);
+			Assert.AreEqual ("a", queue.RedoActionNames[0]);
+			
+			queue.RedoAction ();
+			
+			using (queue.BeginAction ("b"))
+			{
+				queue.Insert (this.CreateOplet ("B1"));
+				queue.Insert (this.CreateOplet ("B2"));
+				
+				using (queue.BeginAction ("b-a"))
+				{
+					queue.Insert (this.CreateOplet ("B-A1"));
+					queue.Insert (this.CreateOplet ("B-A2"));
+					queue.Insert (this.CreateOplet ("B-A3"));
+					queue.ValidateAction ();
+				}
+				
+				queue.Insert (this.CreateOplet ("B3"));
+				queue.ValidateAction ();
+			}
+			
+			using (queue.BeginAction ("c"))
+			{
+				queue.Insert (this.CreateOplet ("C1"));
+				queue.ValidateAction ();
+			}
+			
+			Assert.AreEqual (3, queue.UndoActionCount);
+			Assert.AreEqual (0, queue.RedoActionCount);
+			Assert.AreEqual (3, queue.UndoActionNames.Length);
+			Assert.AreEqual (0, queue.RedoActionNames.Length);
+			Assert.AreEqual ("c", queue.UndoActionNames[0]);
+			Assert.AreEqual ("b", queue.UndoActionNames[1]);
+			Assert.AreEqual ("a", queue.UndoActionNames[2]);
+			
+			queue.UndoAction ();
+			
+			Assert.AreEqual (2, queue.UndoActionCount);
+			Assert.AreEqual (1, queue.RedoActionCount);
+			Assert.AreEqual (2, queue.UndoActionNames.Length);
+			Assert.AreEqual (1, queue.RedoActionNames.Length);
+			Assert.AreEqual ("b", queue.UndoActionNames[0]);
+			Assert.AreEqual ("a", queue.UndoActionNames[1]);
+			Assert.AreEqual ("c", queue.RedoActionNames[0]);
+			
+			queue.UndoAction ();
+			
+			Assert.AreEqual (1, queue.UndoActionCount);
+			Assert.AreEqual (2, queue.RedoActionCount);
+			Assert.AreEqual (1, queue.UndoActionNames.Length);
+			Assert.AreEqual (2, queue.RedoActionNames.Length);
+			Assert.AreEqual ("a", queue.UndoActionNames[0]);
+			Assert.AreEqual ("b", queue.RedoActionNames[0]);
+			Assert.AreEqual ("c", queue.RedoActionNames[1]);
+			
+			queue.UndoAction ();
+			
+			Assert.AreEqual (0, queue.UndoActionCount);
+			Assert.AreEqual (3, queue.RedoActionCount);
+			Assert.AreEqual (0, queue.UndoActionNames.Length);
+			Assert.AreEqual (3, queue.RedoActionNames.Length);
+			Assert.AreEqual ("a", queue.RedoActionNames[0]);
+			Assert.AreEqual ("b", queue.RedoActionNames[1]);
+			Assert.AreEqual ("c", queue.RedoActionNames[2]);
+		}
 		
 		[Test] public void CheckFailUndo()
 		{

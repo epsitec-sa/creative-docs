@@ -8,9 +8,9 @@ namespace Epsitec.Common.Types
 	/// les diverses classes qui exportent un nom, un titre et une
 	/// éventuelle description.
 	/// </summary>
-	public interface INameCaption
+	public interface INameCaption : IName
 	{
-		string	Name		{ get; }
+//		string	Name		{ get; }
 		string	Caption		{ get; }
 		string	Description	{ get; }
 	}

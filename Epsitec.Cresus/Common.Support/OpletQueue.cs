@@ -100,7 +100,79 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public string[]							UndoActionNames
+		{
+			get
+			{
+				if (this.live_fence > 0)
+				{
+					System.Diagnostics.Debug.Assert (this.live_index > 0);
+					System.Diagnostics.Debug.Assert (this.queue.Count > 0);
+					
+					int i = this.live_index;
+					int n = this.live_fence;
+					int j = 0;
+					
+					string[] names = new string[n];
+					
+					while (--i > 0)
+					{
+						IOplet oplet = this.queue[i] as IOplet;
+						
+						if (oplet.IsFence)
+						{
+							Types.IName fence = oplet as Types.IName;
+							names[j++] = (fence == null) ? "" : fence.Name;
+						}
+					}
+					
+					return names;
+				}
+				
+				return new string[0];
+			}
+		}
+		
+		public string[]							RedoActionNames
+		{
+			get
+			{
+				if (this.live_fence < this.fence_count)
+				{
+					System.Diagnostics.Debug.Assert (this.live_index < this.queue.Count);
+					System.Diagnostics.Debug.Assert (this.queue.Count > 0);
+					
+					int i = this.live_index - 1;
+					int n = this.fence_count - this.live_fence;
+					int j = 0;
+					
+					string[] names = new string[n];
+					
+					while (++i < this.queue.Count)
+					{
+						IOplet oplet = this.queue[i] as IOplet;
+						
+						if (oplet.IsFence)
+						{
+							Types.IName fence = oplet as Types.IName;
+							names[j++] = (fence == null) ? "" : fence.Name;
+						}
+					}
+					
+					return names;
+				}
+				
+				return new string[0];
+			}
+		}
+		
+		
 		public System.IDisposable BeginAction()
+		{
+			return this.BeginAction (null);
+		}
+		
+		public System.IDisposable BeginAction(string name)
 		{
 			if (this.is_undo_redo_in_progress)
 			{
@@ -114,7 +186,7 @@ namespace Epsitec.Common.Support
 			
 			System.Diagnostics.Debug.Assert (this.CanRedo == false);
 			
-			return new AutoActionCleanup (this);
+			return new AutoActionCleanup (this, name);
 		}
 		
 		public void Insert(IOplet oplet)
@@ -147,7 +219,7 @@ namespace Epsitec.Common.Support
 				
 				this.PurgeRedo ();
 				this.queue.AddRange (this.temp_queue);
-				this.queue.Add (new Fence ());
+				this.queue.Add (new Fence (this.temp_name));
 				this.temp_queue.Clear ();
 				
 				this.fence_count++;
@@ -359,7 +431,7 @@ namespace Epsitec.Common.Support
 		
 		protected class AutoActionCleanup : System.IDisposable
 		{
-			public AutoActionCleanup(OpletQueue queue)
+			public AutoActionCleanup(OpletQueue queue, string name)
 			{
 				queue.fence_id++;
 				
@@ -367,6 +439,7 @@ namespace Epsitec.Common.Support
 				this.fence_id = queue.fence_id;
 				this.link     = queue.action;
 				this.depth    = queue.temp_queue.Count;
+				this.name     = name;
 				
 				queue.action = this;
 			}
@@ -398,7 +471,8 @@ namespace Epsitec.Common.Support
 				}
 				
 				this.queue.fence_id--;
-				this.queue.action = this.link;
+				this.queue.action    = this.link;
+				this.queue.temp_name = this.name;
 				
 				this.queue = null;
 				this.link  = null;
@@ -420,12 +494,14 @@ namespace Epsitec.Common.Support
 			
 			protected AutoActionCleanup			link;
 			protected int						depth;
+			protected string					name;
 		}
 		
-		protected class Fence : IOplet
+		protected class Fence : IOplet, Types.IName
 		{
-			public Fence()
+			public Fence(string name)
 			{
+				this.name = name;
 			}
 			
 			
@@ -434,6 +510,14 @@ namespace Epsitec.Common.Support
 				get
 				{
 					return true;
+				}
+			}
+			
+			public string						Name
+			{
+				get
+				{
+					return this.name;
 				}
 			}
 			
@@ -451,12 +535,15 @@ namespace Epsitec.Common.Support
 			public void Dispose()
 			{
 			}
-
+			
+			
+			protected string					name;
 		}
 		
 		
 		protected System.Collections.ArrayList	queue;
 		protected System.Collections.ArrayList	temp_queue;
+		protected string						temp_name;
 		
 		protected AutoActionCleanup				action;
 		
