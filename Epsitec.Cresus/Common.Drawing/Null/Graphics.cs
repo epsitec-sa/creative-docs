@@ -82,6 +82,10 @@ namespace Epsitec.Common.Drawing.Null
 		{
 		}
 		
+		public override void TranslateTransform(double ox, double oy)
+		{
+		}
+		
 		
 		public override void SetClippingRectangle(double x, double y, double width, double height)
 		{
