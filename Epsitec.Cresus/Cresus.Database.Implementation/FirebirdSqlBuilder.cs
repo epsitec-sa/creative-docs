@@ -322,7 +322,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			}			
 		}
 		
-		protected void Append(SqlJoin sql_join, SqlFieldCollection sql_tables, int row)
+		protected void Append(SqlJoin sql_join, Collections.SqlFields sql_tables, int row)
 		{
 			System.Diagnostics.Debug.Assert (sql_join != null);
 
@@ -770,7 +770,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			this.Append (");\n");
 			
-			if (table.HasPrimaryKeys)
+			if (table.HasPrimaryKey)
 			{
 				this.command_count++;
 				
@@ -899,7 +899,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.Append (";\n");
 		}
 
-		public void InsertData(string table_name, SqlFieldCollection fields)
+		public void InsertData(string table_name, Collections.SqlFields fields)
 		{
 			if (!this.ValidateName (table_name))
 			{
@@ -974,7 +974,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.Append (");\n");
 		}
 
-		public void UpdateData(string table_name, SqlFieldCollection fields, SqlFieldCollection conditions)
+		public void UpdateData(string table_name, Collections.SqlFields fields, Collections.SqlFields conditions)
 		{
 			this.PrepareCommand ();
 			this.command_type = DbCommandType.NonQuery;
@@ -1049,7 +1049,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.Append (";\n");
 		}
 
-		public void RemoveData(string table_name, SqlFieldCollection conditions)
+		public void RemoveData(string table_name, Collections.SqlFields conditions)
 		{
 			this.PrepareCommand ();
 			this.command_type = DbCommandType.NonQuery;
@@ -1083,7 +1083,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 
 		
-		public void ExecuteProcedure(string procedure_name, SqlFieldCollection fields)
+		public void ExecuteProcedure(string procedure_name, Collections.SqlFields fields)
 		{
 			this.PrepareCommand ();
 //?			this.command_type = DbCommandType.NonQuery;
@@ -1093,7 +1093,7 @@ namespace Epsitec.Cresus.Database.Implementation
 		}
 
 		
-		public void GetSqlParameters(System.Data.IDbCommand command, SqlFieldCollection fields)
+		public void GetSqlParameters(System.Data.IDbCommand command, Collections.SqlFields fields)
 		{
 			// TODO:  Add FirebirdSqlBuilder.GetSqlParameters implementation
 #if false
@@ -1122,7 +1122,7 @@ namespace Epsitec.Cresus.Database.Implementation
 #endif
 		}
 
-		public void SetSqlParameters(System.Data.IDbCommand command, SqlFieldCollection fields)
+		public void SetSqlParameters(System.Data.IDbCommand command, Collections.SqlFields fields)
 		{
 			// TODO:  Add FirebirdSqlBuilder.SetSqlParameters implementation
 		}

@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_a = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
 			DbColumn column_b = new DbColumn ("B", DbSimpleType.Guid);
 			DbColumn column_c = new DbColumn ("C", DbSimpleType.String, 100, true);
-			DbColumn column_x = DbColumn.NewColumn ("<col null='1' index='1' unique='0' cat='1'/>");
+			DbColumn column_x = DbColumn.CreateColumn ("<col null='1' index='1' unique='0' cat='1'/>");
 			
 			Assertion.AssertEquals ("A", column_a.Name);
 			Assertion.AssertEquals (DbSimpleType.Decimal, column_a.SimpleType);

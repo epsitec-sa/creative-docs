@@ -110,9 +110,9 @@ de la base de données.
 
 
 - Vérifier l'implémentation de InternalCollectionList et de ses classes
-  dérivées, à savoir SqlColumnCollection, SqlFieldCollection, ...
+  dérivées, à savoir Collection.SqlColumns, Collections.SqlFields, ...
 
-- Ecrire les tests pour SqlTable, SqlColumn, SqlColumnCollection.
+- Ecrire les tests pour SqlTable, SqlColumn, Collection.SqlColumns.
 
 - Compléter la classe SqlField.
 
@@ -184,11 +184,11 @@ System.Data.IDataAdapter via IDbAbstraction.NewDataAdapter, par
 exemple).
 
 ISqlBuilder.Command doit savoir extraire les informations des
-SqlFieldCollection (InsertData, UpdateData) et si besoin créer
+Collections.SqlFields (InsertData, UpdateData) et si besoin créer
 des paramètres pour passer les données. On peut en effet imaginer
 un code du genre:
 
-	SqlFieldCollection fields = ...;
+	Collections.SqlFields fields = ...;
 	ISqlBuilder builder = ...;
 	...
 	fields.Add (SqlField.CreateParameterIn (data, DbRawType.ByteArray));
@@ -230,7 +230,7 @@ supplémentaire entre la base de données et le logiciel.
 ISqlBuilder ne supporte pas non plus les mises à jour de type "UPDATE
 Table SET ROW = ... WHERE ...", mais uniquement la version "UPDATE Table
 SET ... WHERE ...". Les conditions de mise à jour pour la clause WHERE
-sont extraites d'une SqlFieldCollection; chaque SqlField référence une
+sont extraites d'une Collections.SqlFields; chaque SqlField référence une
 fonction de comparaison (SqlFunction.Type = Compare). Tous les termes
 sont unis par des AND. Si on désire faire des OR, il faut construire
 soi-même l'arbre des SqlFunction.
