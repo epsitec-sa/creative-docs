@@ -330,8 +330,8 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 			else
 			{
-				double t = Drawing.Point.Bezier(this.Handle(prev+1).Position, this.Handle(prev+2).Position, this.Handle(next+0).Position, this.Handle(next+1).Position, pos);
-				this.Handle(curr+1).Position = Drawing.Point.Bezier(this.Handle(prev+1).Position, this.Handle(prev+2).Position, this.Handle(next+0).Position, this.Handle(next+1).Position, t);
+				double t = Drawing.Point.FindBezierParameter(this.Handle(prev+1).Position, this.Handle(prev+2).Position, this.Handle(next+0).Position, this.Handle(next+1).Position, pos);
+				this.Handle(curr+1).Position = Drawing.Point.FromBezier(this.Handle(prev+1).Position, this.Handle(prev+2).Position, this.Handle(next+0).Position, this.Handle(next+1).Position, t);
 				pos = Drawing.Point.Scale(this.Handle(prev+2).Position, this.Handle(next+0).Position, t);
 				this.Handle(prev+2).Position = Drawing.Point.Scale(this.Handle(prev+1).Position, this.Handle(prev+2).Position, t);
 				this.Handle(next+0).Position = Drawing.Point.Scale(this.Handle(next+1).Position, this.Handle(next+0).Position, 1-t);
@@ -645,7 +645,7 @@ namespace Epsitec.Common.Pictogram.Data
 					for ( int rank=1 ; rank<=total ; rank ++ )
 					{
 						double t = ObjectTextLine.step*rank;
-						Drawing.Point next = Drawing.Point.Bezier(p1,s1,s2,p2, t);
+						Drawing.Point next = Drawing.Point.FromBezier(p1,s1,s2,p2, t);
 						length += Drawing.Point.Distance(pos, next);
 						pos = next;
 					}
@@ -690,7 +690,7 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 				else	// courbe ?
 				{
-					pos = Drawing.Point.Bezier(p1,s1,s2,p2, t);
+					pos = Drawing.Point.FromBezier(p1,s1,s2,p2, t);
 					double t1 = t;
 					double t2 = t;
 					double l1 = 0.0;
@@ -700,7 +700,7 @@ namespace Epsitec.Common.Pictogram.Data
 					while ( true )
 					{
 						t2 = System.Math.Min(t2+ObjectTextLine.step, 1.0);
-						next2 = Drawing.Point.Bezier(p1,s1,s2,p2, t2);  // segment suivant
+						next2 = Drawing.Point.FromBezier(p1,s1,s2,p2, t2);  // segment suivant
 						l2 += Drawing.Point.Distance(next1, next2);
 						if ( l2 >= width )  // a-t-on trop avancé ?
 						{
@@ -1032,7 +1032,7 @@ namespace Epsitec.Common.Pictogram.Data
 				double width = font.GetCharAdvance(text[i])*fs + justif.Add*fs;
 				if ( !this.Advance(width, checkEnd, ref index, ref bzt, ref p2) )  break;
 
-				Drawing.Transform ot = graphics.SaveTransform();
+				Drawing.Transform ot = graphics.Transform;
 
 				pos = p1;
 				if ( justif.Offset > 0.0 )

@@ -85,7 +85,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			if ( this.color.A == 0 )  return;
 
-			Drawing.Transform save = graphics.SaveTransform();
+			Drawing.Transform save = graphics.Transform;
 			graphics.TranslateTransform(this.ox, this.oy);
 
 			if ( this.radius == 0 )

@@ -442,7 +442,7 @@ namespace Epsitec.Common.Pictogram.Data
 					pos = Drawing.Transform.RotatePointDeg(pos, angle+90, new Drawing.Point(pos.X+this.width*shift, pos.Y));
 				}
 
-				Drawing.Transform ot = graphics.SaveTransform();
+				Drawing.Transform ot = graphics.Transform;
 				graphics.TranslateTransform(pos.X, pos.Y);
 				graphics.ScaleTransform(this.width/10*ps, this.width/10*ps, 0, 0);
 				graphics.RotateTransformDeg(angle+pa, 0, 0);
@@ -470,7 +470,7 @@ namespace Epsitec.Common.Pictogram.Data
 			for ( int rank=1 ; rank<=100 ; rank ++ )
 			{
 				double t = PropertyLine.step*rank;
-				Drawing.Point next = Drawing.Point.Bezier(p1,s1,s2,p2, t);
+				Drawing.Point next = Drawing.Point.FromBezier(p1,s1,s2,p2, t);
 				this.DrawPatternLine(graphics, iconContext, iconObjects, pattern, rndMove, rndSize, rndShift, rndAngle, rndPage, ref advance, ref page, pos, next);
 				pos = next;
 			}

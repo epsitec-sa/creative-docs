@@ -332,7 +332,7 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 			else
 			{
-				Drawing.Transform ot = graphics.SaveTransform();
+				Drawing.Transform ot = graphics.Transform;
 
 				Drawing.Point center;
 				double width, height, angle;

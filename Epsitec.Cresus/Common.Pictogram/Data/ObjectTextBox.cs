@@ -333,7 +333,7 @@ namespace Epsitec.Common.Pictogram.Data
 			else if ( jh == JustifHorizontal.All    )  this.textLayout.JustifMode = TextJustifMode.All;
 			else                                       this.textLayout.JustifMode = TextJustifMode.None;
 
-			Drawing.Transform ot = graphics.SaveTransform();
+			Drawing.Transform ot = graphics.Transform;
 
 			double angle = Drawing.Point.ComputeAngleDeg(p1, p2);
 			this.transform = new Drawing.Transform();

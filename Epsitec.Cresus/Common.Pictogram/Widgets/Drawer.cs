@@ -2462,7 +2462,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconContext.UniqueColor = Drawing.Color.Empty;
 
 			double initialWidth = graphics.LineWidth;
-			Drawing.Transform save = graphics.SaveTransform();
+			Drawing.Transform save = graphics.Transform;
 			this.iconContext.ScaleX = this.iconContext.Zoom*this.Client.Width/this.iconObjects.Size.Width;
 			this.iconContext.ScaleY = this.iconContext.Zoom*this.Client.Height/this.iconObjects.Size.Height;
 			graphics.ScaleTransform(this.iconContext.ScaleX, this.iconContext.ScaleY, 0, 0);
