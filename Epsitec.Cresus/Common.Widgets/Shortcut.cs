@@ -63,6 +63,10 @@ namespace Epsitec.Common.Widgets
 						case KeyCode.PageUp:
 						case KeyCode.Pause:
 							break;
+
+						case KeyCode.Digit0: case KeyCode.Digit1: case KeyCode.Digit2: case KeyCode.Digit3: case KeyCode.Digit4:
+						case KeyCode.Digit5: case KeyCode.Digit6: case KeyCode.Digit7: case KeyCode.Digit8: case KeyCode.Digit9:
+							break;
 						
 						default:
 							key_code = KeyCode.None;
