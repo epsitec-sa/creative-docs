@@ -15,7 +15,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public System.Drawing.Size		Size
+		public System.Drawing.Size				Size
 		{
 			get
 			{
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public System.IntPtr			Handle
+		public System.IntPtr					Handle
 		{
 			get { return this.agg_buffer; }
 		}
@@ -139,11 +139,13 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		#region IDisposable Members
 		public void Dispose()
 		{
 			this.Dispose (true);
 			System.GC.SuppressFinalize (this);
 		}
+		#endregion
 		
 		protected virtual void Dispose(bool disposing)
 		{
@@ -191,38 +193,38 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			
-			public PixelFormat				PixelFormat
+			public PixelFormat					PixelFormat
 			{
 				get { return this.format; }
 			}
 			
-			public int						Stride
+			public int							Stride
 			{
 				get { return this.stride; }
 			}
 			
-			public System.IntPtr			Pixels
+			public System.IntPtr				Pixels
 			{
 				get { return this.pixels; }
 			}
 			
-			public int						Width
+			public int							Width
 			{
 				get { return this.dx; }
 			}
 			
-			public int						Height
+			public int							Height
 			{
 				get { return this.dy; }
 			}
 			
-			public bool						IsBottomUp
+			public bool							IsBottomUp
 			{
 				get { return this.bm == null; }
 			}
 			
 			
-			public Color					this[int x, int y]
+			public Color						this[int x, int y]
 			{
 				get
 				{
@@ -276,6 +278,7 @@ namespace Epsitec.Common.Drawing
 					}
 				}
 			}
+			
 			
 			#region IDisposable Members
 			public void Dispose()
@@ -370,16 +373,16 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			
-			protected int					stride;
-			protected System.IntPtr			pixels;
-			protected int					dx, dy;
-			protected PixelFormat			format;
+			protected int						stride;
+			protected System.IntPtr				pixels;
+			protected int						dx, dy;
+			protected PixelFormat				format;
 			
-			protected System.Drawing.Bitmap	bm;
-			protected BitmapData			bm_data;
+			protected System.Drawing.Bitmap		bm;
+			protected BitmapData				bm_data;
 		}
 		
-		protected System.IntPtr				agg_buffer;
-		protected System.Drawing.Size		size;
+		protected System.IntPtr					agg_buffer;
+		protected System.Drawing.Size			size;
 	}
 }
