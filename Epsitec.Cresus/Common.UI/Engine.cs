@@ -88,9 +88,38 @@ namespace Epsitec.Common.UI
 				return;
 			}
 			
-			if (type is Types.IEnum)
+			Types.IEnum enum_type = source.DataType as Types.IEnum;
+			
+			if ((enum_type != null) &&
+				(enum_type.IsCustomizable))
 			{
-				Types.IEnum             enum_type  = source.DataType as Types.IEnum;
+				//	Le type est une énumération acceptant des valeurs en dehors de la
+				//	liste des valeurs définies. Il faut donc utiliser une interface de
+				//	type 'texte' :
+				
+				Types.IDataConstraint   constraint = source.DataConstraint;
+				Binders.DataValueBinder binder     = new Binders.DataValueBinder (source);
+				Adapters.StringAdapter  adapter    = new Adapters.StringAdapter (binder);
+				
+				if (constraint == null)
+				{
+					constraint = enum_type as Types.IDataConstraint;
+				}
+				
+				if (widget is Support.Data.INamedStringSelection)
+				{
+					new Controllers.WidgetNamedSelController (adapter, widget, constraint, enum_type);
+				}
+				else
+				{
+					new Controllers.WidgetTextController (adapter, widget, constraint);
+				}
+				
+				return;
+			}
+			
+			if (enum_type != null)
+			{
 				Binders.DataValueBinder binder     = new Binders.DataValueBinder (source);
 				Adapters.DecimalAdapter adapter    = new Adapters.DecimalAdapter (binder);
 				
@@ -104,11 +133,6 @@ namespace Epsitec.Common.UI
 				}
 				
 				return;
-			}
-			
-			if (type is Types.IEnum)
-			{
-				//	TODO: attache le widget à cette énumération
 			}
 			
 			throw new System.ArgumentException (string.Format ("Cannot bind widget; path ({0}) points to data of unknown type ({1}).", path, type.Name), "binding");

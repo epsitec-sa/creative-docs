@@ -66,6 +66,8 @@ namespace Epsitec.Common.UI.Controllers
 			if ((this.data_type is Types.IEnum) &&
 				(string_host != null))
 			{
+				//	La donnée est de type 'enum' et le widget accepte des listes de valeurs.
+				
 				Types.IEnum        enum_type   = this.data_type as Types.IEnum;
 				Types.IEnumValue[] enum_values = enum_type.Values;
 				

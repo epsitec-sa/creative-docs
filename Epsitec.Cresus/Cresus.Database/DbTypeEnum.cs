@@ -75,6 +75,14 @@ namespace Epsitec.Cresus.Database
 		
 		
 		#region IEnum Members
+		bool									IEnum.IsCustomizable
+		{
+			get
+			{
+				return false;
+			}
+		}
+		
 		IEnumValue[]							IEnum.Values
 		{
 			get

@@ -11,43 +11,61 @@ namespace Epsitec.Common.UI
 			Types.IDataGraph graph  = record;
 			
 			Assert.AreEqual (record, graph.Root);
-			Assert.AreEqual (5, graph.Root.Count);
+			Assert.AreEqual (6, graph.Root.Count);
 			
 			Types.IDataValue v1 = graph.Navigate ("FontName")  as Types.IDataValue;
 			Types.IDataValue v2 = graph.Navigate ("FontSize")  as Types.IDataValue;
 			Types.IDataValue v3 = graph.Navigate ("UseHyphen") as Types.IDataValue;
 			Types.IDataValue v4 = graph.Navigate ("FontStyle") as Types.IDataValue;
 			Types.IDataValue v5 = graph.Navigate ("Quality")   as Types.IDataValue;
+			Types.IDataValue v6 = graph.Navigate ("Optical")   as Types.IDataValue;
 			
 			Assert.IsNotNull (v1);
 			Assert.IsNotNull (v2);
 			Assert.IsNotNull (v3);
 			Assert.IsNotNull (v4);
 			Assert.IsNotNull (v5);
+			Assert.IsNotNull (v6);
 			
 			Assert.AreEqual ("String",      v1.DataType.Name);
 			Assert.AreEqual ("Decimal",     v2.DataType.Name);
 			Assert.AreEqual ("Boolean",     v3.DataType.Name);
 			Assert.AreEqual ("Integer",     v4.DataType.Name);
 			Assert.AreEqual ("Enumeration", v5.DataType.Name);
+			Assert.AreEqual ("Enumeration", v6.DataType.Name);
+			
+			Types.IEnum e1 = v5.DataType as Types.IEnum;
+			Types.IEnum e2 = v6.DataType as Types.IEnum;
+			
+			Assert.IsFalse (e1.IsCustomizable);
+			Assert.IsTrue  (e2.IsCustomizable);
 			
 			Assert.AreEqual (v1, record["FontName"]);
 			Assert.AreEqual (v2, record["FontSize"]);
 			Assert.AreEqual (v3, record["UseHyphen"]);
 			Assert.AreEqual (v4, record["FontStyle"]);
 			Assert.AreEqual (v5, record["Quality"]);
+			Assert.AreEqual (v6, record["Optical"]);
 			
 			Assert.AreEqual (typeof (string),  v1.DataType.SystemType);
 			Assert.AreEqual (typeof (decimal), v2.DataType.SystemType);
 			Assert.AreEqual (typeof (bool),    v3.DataType.SystemType);
 			Assert.AreEqual (typeof (int),     v4.DataType.SystemType);
 			Assert.AreEqual (typeof (Quality), v5.DataType.SystemType);
+			Assert.AreEqual (typeof (string) , v6.DataType.SystemType);
 			
 			Assert.AreEqual ("Times", v1.ReadValue ());
 			Assert.AreEqual (12.0, (double)(decimal) v2.ReadValue ());
 			Assert.AreEqual (false, v3.ReadValue ());
 			Assert.AreEqual (1, (int) v4.ReadValue ());
 			Assert.AreEqual (Quality.Default, v5.ReadValue ());
+			Assert.AreEqual ("Default", v6.ReadValue ());
+			
+			v5.WriteValue (Quality.Fast);
+			v6.WriteValue (Optical.Small.ToString ());
+			
+			Assert.AreEqual (Quality.Fast, v5.ReadValue ());
+			Assert.AreEqual ("Small", v6.ReadValue ());
 		}
 		
 		[Test] public void CheckBindWidget()
@@ -211,6 +229,7 @@ namespace Epsitec.Common.UI
 			record.Add (new Data.Field ("UseHyphen", false));
 			record.Add (new Data.Field ("FontStyle", 1));
 			record.Add (new Data.Field ("Quality", Quality.Default));
+			record.Add (new Data.Field ("Optical", Optical.Default.ToString (), new Types.CustomEnumType (typeof (Optical))));
 			
 			return record;
 		}
@@ -220,6 +239,13 @@ namespace Epsitec.Common.UI
 			Default,
 			Smooth,
 			Fast
+		}
+		
+		private enum Optical
+		{
+			Default,
+			Small,
+			Large
 		}
 		
 		private class XStringConstraint : Types.IDataConstraint
@@ -244,7 +270,6 @@ namespace Epsitec.Common.UI
 				return false;
 			}
 			#endregion
-
 		}
 
 	}

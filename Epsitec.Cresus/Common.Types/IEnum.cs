@@ -12,5 +12,7 @@ namespace Epsitec.Common.Types
 		
 		IEnumValue		this[string name]	{ get; }
 		IEnumValue		this[int rank]		{ get; }
+		
+		bool			IsCustomizable		{ get; }
 	}
 }

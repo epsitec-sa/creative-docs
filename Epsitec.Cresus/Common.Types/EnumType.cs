@@ -6,7 +6,7 @@ namespace Epsitec.Common.Types
 	using IComparer = System.Collections.IComparer;
 	
 	/// <summary>
-	/// La classe EnumType décrit divers types numériques natifs.
+	/// La classe EnumType décrit divers une énumération native.
 	/// </summary>
 	public class EnumType : IEnum
 	{
@@ -41,8 +41,48 @@ namespace Epsitec.Common.Types
 		}
 		
 		
+		public IEnumValue FindValueFromRank(int rank)
+		{
+			for (int i = 0; i < this.enum_values.Length; i++)
+			{
+				if (this.enum_values[i].Rank == rank)
+				{
+					return this.enum_values[i];
+				}
+			}
+			
+			return null;
+		}
+		
+		public IEnumValue FindValueFromName(string name)
+		{
+			for (int i = 0; i < this.enum_values.Length; i++)
+			{
+				if (this.enum_values[i].Name == name)
+				{
+					return this.enum_values[i];
+				}
+			}
+			
+			return null;
+		}
+		
+		public IEnumValue FindValueFromCaption(string caption)
+		{
+			for (int i = 0; i < this.enum_values.Length; i++)
+			{
+				if (this.enum_values[i].Caption == caption)
+				{
+					return this.enum_values[i];
+				}
+			}
+			
+			return null;
+		}
+		
+		
 		#region INamedType Members
-		public System.Type						SystemType
+		public virtual System.Type				SystemType
 		{
 			get
 			{
@@ -52,6 +92,14 @@ namespace Epsitec.Common.Types
 		#endregion
 		
 		#region IEnum Members
+		public virtual bool						IsCustomizable
+		{
+			get
+			{
+				return false;
+			}
+		}
+		
 		public IEnumValue[]						Values
 		{
 			get
@@ -63,15 +111,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				for (int i = 0; i < this.enum_values.Length; i++)
-				{
-					if (this.enum_values[i].Name == name)
-					{
-						return this.enum_values[i];
-					}
-				}
-				
-				return null;
+				return this.FindValueFromName (name);
 			}
 		}
 		
@@ -79,15 +119,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				for (int i = 0; i < this.enum_values.Length; i++)
-				{
-					if (this.enum_values[i].Rank == rank)
-					{
-						return this.enum_values[i];
-					}
-				}
-				
-				return null;
+				return this.FindValueFromRank (rank);
 			}
 		}
 		#endregion
