@@ -146,6 +146,90 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals (".z", md.Groups[3].Value);
 		}
 		
+		
+		[Test] public void CheckAlphaName()
+		{
+			Assertion.AssertEquals (true,  RegexFactory.AlphaName.IsMatch ("aAb"));
+			Assertion.AssertEquals (false, RegexFactory.AlphaName.IsMatch ("a_b"));
+			Assertion.AssertEquals (false, RegexFactory.AlphaName.IsMatch ("a1b"));
+			Assertion.AssertEquals (false, RegexFactory.AlphaName.IsMatch ("_ab"));
+			Assertion.AssertEquals (false, RegexFactory.AlphaName.IsMatch ("1ab"));
+			Assertion.AssertEquals (false, RegexFactory.AlphaName.IsMatch ("a b"));
+			Assertion.AssertEquals (false, RegexFactory.AlphaName.IsMatch ("a.b"));
+		}
+		
+		[Test] public void CheckAlphaNumName()
+		{
+			Assertion.AssertEquals (true,  RegexFactory.AlphaNumName.IsMatch ("aAb"));
+			Assertion.AssertEquals (true,  RegexFactory.AlphaNumName.IsMatch ("a_b"));
+			Assertion.AssertEquals (true,  RegexFactory.AlphaNumName.IsMatch ("a1b"));
+			Assertion.AssertEquals (true,  RegexFactory.AlphaNumName.IsMatch ("_ab"));
+			Assertion.AssertEquals (false, RegexFactory.AlphaNumName.IsMatch ("1ab"));
+			Assertion.AssertEquals (false, RegexFactory.AlphaNumName.IsMatch ("a b"));
+			Assertion.AssertEquals (false, RegexFactory.AlphaNumName.IsMatch ("a.b"));
+		}
+		
+		[Test] public void CheckAlphaDotName()
+		{
+			Assertion.AssertEquals (true,  RegexFactory.AlphaDotName.IsMatch ("aAb"));
+			Assertion.AssertEquals (true,  RegexFactory.AlphaDotName.IsMatch ("a_b"));
+			Assertion.AssertEquals (true,  RegexFactory.AlphaDotName.IsMatch ("a1b"));
+			Assertion.AssertEquals (true,  RegexFactory.AlphaDotName.IsMatch ("_ab"));
+			Assertion.AssertEquals (false, RegexFactory.AlphaDotName.IsMatch ("1ab"));
+			Assertion.AssertEquals (true,  RegexFactory.AlphaDotName.IsMatch ("a.b"));
+			Assertion.AssertEquals (false, RegexFactory.AlphaDotName.IsMatch ("a.b."));
+			Assertion.AssertEquals (false, RegexFactory.AlphaDotName.IsMatch (".a.b"));
+			Assertion.AssertEquals (false, RegexFactory.AlphaDotName.IsMatch ("a#b"));
+			Assertion.AssertEquals (false, RegexFactory.AlphaDotName.IsMatch ("a b"));
+		}
+		
+		[Test] public void CheckFileName()
+		{
+			Assertion.AssertEquals (true,  RegexFactory.FileName.IsMatch ("aAb"));
+			Assertion.AssertEquals (true,  RegexFactory.FileName.IsMatch ("a_b"));
+			Assertion.AssertEquals (true,  RegexFactory.FileName.IsMatch ("a1b"));
+			Assertion.AssertEquals (true,  RegexFactory.FileName.IsMatch ("_ab"));
+			Assertion.AssertEquals (true,  RegexFactory.FileName.IsMatch ("1ab"));
+			Assertion.AssertEquals (true,  RegexFactory.FileName.IsMatch ("a.b"));
+			Assertion.AssertEquals (false, RegexFactory.FileName.IsMatch ("a.b."));
+			Assertion.AssertEquals (false, RegexFactory.FileName.IsMatch (".a.b"));
+			Assertion.AssertEquals (false, RegexFactory.FileName.IsMatch ("ab "));
+			Assertion.AssertEquals (false, RegexFactory.FileName.IsMatch ("a  b"));
+			Assertion.AssertEquals (true,  RegexFactory.FileName.IsMatch ("a b"));
+			Assertion.AssertEquals (true,  RegexFactory.FileName.IsMatch ("$(x-'\"y+z)!"));
+			Assertion.AssertEquals (true,  RegexFactory.FileName.IsMatch ("(x---z)!"));
+			Assertion.AssertEquals (false, RegexFactory.FileName.IsMatch ("(x...z)!"));
+			Assertion.AssertEquals (false, RegexFactory.FileName.IsMatch ("(x/y)"));
+			Assertion.AssertEquals (false, RegexFactory.FileName.IsMatch ("(x\\y)"));
+			Assertion.AssertEquals (false, RegexFactory.FileName.IsMatch ("(x#y)"));
+		}
+		
+		[Test] public void CheckResourceName()
+		{
+			Assertion.AssertEquals (true,  RegexFactory.ResourceName.IsMatch ("aAb"));
+			Assertion.AssertEquals (true,  RegexFactory.ResourceName.IsMatch ("a_b"));
+			Assertion.AssertEquals (true,  RegexFactory.ResourceName.IsMatch ("a1b"));
+			Assertion.AssertEquals (true,  RegexFactory.ResourceName.IsMatch ("_ab"));
+			Assertion.AssertEquals (false, RegexFactory.ResourceName.IsMatch ("1ab"));
+			Assertion.AssertEquals (true,  RegexFactory.ResourceName.IsMatch ("a.b"));
+			Assertion.AssertEquals (true,  RegexFactory.ResourceName.IsMatch ("a#b"));
+			Assertion.AssertEquals (true,  RegexFactory.ResourceName.IsMatch ("a#b[0]"));
+			Assertion.AssertEquals (false, RegexFactory.ResourceName.IsMatch ("a#b[x]"));
+			Assertion.AssertEquals (false, RegexFactory.ResourceName.IsMatch ("a#b[0]]"));
+			Assertion.AssertEquals (false, RegexFactory.ResourceName.IsMatch ("a.b."));
+			Assertion.AssertEquals (false, RegexFactory.ResourceName.IsMatch (".a.b"));
+			Assertion.AssertEquals (false, RegexFactory.ResourceName.IsMatch ("ab "));
+			Assertion.AssertEquals (false, RegexFactory.ResourceName.IsMatch ("a  b"));
+			Assertion.AssertEquals (false, RegexFactory.ResourceName.IsMatch ("a b"));
+			Assertion.AssertEquals (false, RegexFactory.ResourceName.IsMatch ("$(x-'\"y+z)!"));
+			Assertion.AssertEquals (false, RegexFactory.ResourceName.IsMatch ("(x---z)!"));
+			Assertion.AssertEquals (false, RegexFactory.ResourceName.IsMatch ("(x...z)!"));
+			Assertion.AssertEquals (false, RegexFactory.ResourceName.IsMatch ("(x/y)"));
+			Assertion.AssertEquals (false, RegexFactory.ResourceName.IsMatch ("(x\\y)"));
+			Assertion.AssertEquals (false, RegexFactory.ResourceName.IsMatch ("(x#y)"));
+		}
+		
+		
 		protected void DumpGroups(GroupCollection groups)
 		{
 			System.Console.Out.WriteLine ("Group has {0} elements : ", groups.Count);
