@@ -540,19 +540,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			dimx -= this.vScroller.DefaultWidth;
 			dimy -= this.hScroller.DefaultHeight;
-			this.drawer.Location = new Drawing.Point(10, this.leftPane.Height-10-dimy);
-			this.drawer.Size = new Drawing.Size(dimx, dimy);
+			this.drawer.Location = new Drawing.Point(10, this.leftPane.Height-10-dimy-1);
+			this.drawer.Size = new Drawing.Size(dimx+1, dimy+1);
 
 			rect.Left   = 10;
-			rect.Width  = dimx;
+			rect.Width  = dimx+1;
 			rect.Bottom = this.leftPane.Height-10-dimy-this.hScroller.DefaultHeight;
 			rect.Height = this.hScroller.DefaultHeight;
 			this.hScroller.Bounds = rect;
 
 			rect.Left   = 10+dimx;
 			rect.Width  = this.vScroller.DefaultWidth;
-			rect.Bottom = this.leftPane.Height-10-dimy;
-			rect.Height = dimy;
+			rect.Bottom = this.leftPane.Height-10-dimy-1;
+			rect.Height = dimy+1;
 			this.vScroller.Bounds = rect;
 
 			this.lister.Location = new Drawing.Point(10, 10);
