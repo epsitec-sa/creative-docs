@@ -578,6 +578,12 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public ulong GetHyphen()
+		{
+			return '-';
+		}
+		
+		
 		private void MapToGlyphs(string text, out ushort[] glyphs, out int[] gl_map)
 		{
 			int length = text.Length;
