@@ -38,8 +38,8 @@ namespace Epsitec.Common.Widgets
 		
 		public double						Top
 		{
-			get { return this.y1; }
-			set { this.SetBounds (this.x1, value, this.x2, this.y2); }
+			get { return this.y2; }
+			set { this.SetBounds (this.x1, this.y1, this.x2, value); }
 		}
 		
 		public double						Left
@@ -50,8 +50,8 @@ namespace Epsitec.Common.Widgets
 		
 		public double						Bottom
 		{
-			get { return this.y2; }
-			set { this.SetBounds (this.x1, this.y1, this.x2, value); }
+			get { return this.y1; }
+			set { this.SetBounds (this.x1, value, this.x2, this.y2); }
 		}
 		
 		public double						Right
@@ -606,9 +606,9 @@ namespace Epsitec.Common.Widgets
 			//	nouveau rectangle aligné, englobant le rectangle transformé.
 			
 			double x1 = rect.Left   - this.x1;
-			double y1 = rect.Top    - this.y1;
+			double y1 = rect.Bottom - this.y1;
 			double x2 = rect.Right  - this.x1;
-			double y2 = rect.Bottom - this.y1;
+			double y2 = rect.Top    - this.y1;
 			
 			double angle = this.client_info.angle * System.Math.PI / 180.0;
 			double zoom  = this.client_info.zoom;
@@ -679,9 +679,9 @@ namespace Epsitec.Common.Widgets
 			//	nouveau rectangle aligné, englobant le rectangle transformé.
 			
 			double x1 = rect.Left;
-			double y1 = rect.Top;
+			double y1 = rect.Bottom;
 			double x2 = rect.Right;
-			double y2 = rect.Bottom;
+			double y2 = rect.Top;
 			
 			double angle = this.client_info.angle * System.Math.PI / 180.0;
 			double zoom  = this.client_info.zoom;
@@ -982,9 +982,9 @@ namespace Epsitec.Common.Widgets
 					
 					switch (anchor_y)
 					{
-						case AnchorStyles.Top:							//	[y1] fixe en haut
+						case AnchorStyles.Bottom:						//	[y1] fixe en bas
 							break;
-						case AnchorStyles.Bottom:						//	[y2] fixe en bas
+						case AnchorStyles.Top:							//	[y2] fixe en haut
 							y1 += height_diff;
 							y2 += height_diff;
 							break;
@@ -992,7 +992,7 @@ namespace Epsitec.Common.Widgets
 							y1 += height_diff / 2.0f;
 							y2 += height_diff / 2.0f;
 							break;
-						case AnchorStyles.TopAndBottom:					//	[y1] fixe en haut, [y2] fixe en bas
+						case AnchorStyles.TopAndBottom:					//	[y1] fixe en bas, [y2] fixe en haut
 							y2 += height_diff;
 							break;
 					}

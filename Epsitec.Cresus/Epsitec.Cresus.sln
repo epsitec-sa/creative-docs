@@ -97,6 +97,10 @@ Global
 		{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}.Release.ActiveCfg = Release|.NET
 		{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}.Release.Build.0 = Release|.NET
 	EndGlobalSection
+	GlobalSection(SolutionItems) = postSolution
+		Epsitec.Cresus.snk = Epsitec.Cresus.snk
+		import-bin.bat = import-bin.bat
+	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
 	GlobalSection(ExtensibilityAddIns) = postSolution

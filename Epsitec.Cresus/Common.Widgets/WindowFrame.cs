@@ -173,7 +173,7 @@ namespace Epsitec.Common.Widgets
 			this.dirty_rectangle.MergeWith (rect);
 			
 			int x = (int) rect.Left;
-			int y = this.ClientSize.Height - 1 - (int) rect.Bottom;
+			int y = this.ClientSize.Height - 1 - (int) rect.Top;
 			int width  = (int) rect.Width;
 			int height = (int) rect.Height;
 			
