@@ -9,7 +9,9 @@ namespace Epsitec.Common.DynamicData
 	/// </summary>
 	public interface IDynamicField
 	{
-		FieldMatch Match(System.Data.DataRow row);
-		FieldMatch Match(System.Data.DataColumn column);
+		FieldMatchResult Match(System.Data.DataRow row);
+		FieldMatchResult Match(System.Data.DataColumn column);
+		
+		bool Match(System.Data.DataRow row, System.Data.DataColumn column);
 	}
 }

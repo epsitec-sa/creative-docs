@@ -76,7 +76,7 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
             </References>
@@ -89,12 +89,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "CellIndex.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DynamicFieldCollection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "FieldMatch.cs"
+                    RelPath = "FieldMatchResult.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -99,6 +99,11 @@
                     Project = "{8960D1EA-3B82-49A1-9D44-F92F467209FF}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Common.DynamicData"
+                    Project = "{380B6C79-26C5-4274-8F40-BA21DEE4354F}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
