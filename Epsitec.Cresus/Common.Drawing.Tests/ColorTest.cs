@@ -84,6 +84,120 @@ namespace Epsitec.Common.Tests
 			window.Show ();
 		}
 
+		[Test] public void CheckHSVConvert()
+		{
+			Color c1, c2;
+			double h,s,v;
+
+			// rouge
+			c1 = Color.FromRGB(1.0, 0.0, 0.0);
+			c1.ToHSV(out h, out s, out v);
+			Assertion.Assert(h == 0.0/6.0);
+			Assertion.Assert(s == 1.0);
+			Assertion.Assert(v == 1.0);
+			c2 = Color.FromHSV(h,s,v);
+			Assertion.Assert(c1 == c2);
+
+			// jaune
+			c1 = Color.FromRGB(1.0, 1.0, 0.0);
+			c1.ToHSV(out h, out s, out v);
+			Assertion.Assert(h == 1.0/6.0);
+			Assertion.Assert(s == 1.0);
+			Assertion.Assert(v == 1.0);
+			c2 = Color.FromHSV(h,s,v);
+			Assertion.Assert(c1 == c2);
+
+			// vert
+			c1 = Color.FromRGB(0.0, 1.0, 0.0);
+			c1.ToHSV(out h, out s, out v);
+			Assertion.Assert(h == 2.0/6.0);
+			Assertion.Assert(s == 1.0);
+			Assertion.Assert(v == 1.0);
+			c2 = Color.FromHSV(h,s,v);
+			Assertion.Assert(c1 == c2);
+
+			// cyan
+			c1 = Color.FromRGB(0.0, 1.0, 1.0);
+			c1.ToHSV(out h, out s, out v);
+			Assertion.Assert(h == 3.0/6.0);
+			Assertion.Assert(s == 1.0);
+			Assertion.Assert(v == 1.0);
+			c2 = Color.FromHSV(h,s,v);
+			Assertion.Assert(c1 == c2);
+
+			// bleu
+			c1 = Color.FromRGB(0.0, 0.0, 1.0);
+			c1.ToHSV(out h, out s, out v);
+			Assertion.Assert(h == 4.0/6.0);
+			Assertion.Assert(s == 1.0);
+			Assertion.Assert(v == 1.0);
+			c2 = Color.FromHSV(h,s,v);
+			Assertion.Assert(c1 == c2);
+
+			// magenta
+			c1 = Color.FromRGB(1.0, 0.0, 1.0);
+			c1.ToHSV(out h, out s, out v);
+			Assertion.Assert(h == 5.0/6.0);
+			Assertion.Assert(s == 1.0);
+			Assertion.Assert(v == 1.0);
+			c2 = Color.FromHSV(h,s,v);
+			Assertion.Assert(c1 == c2);
+
+			// rose
+			c1 = Color.FromRGB(1.0, 0.5, 0.5);
+			c1.ToHSV(out h, out s, out v);
+			Assertion.Assert(h == 0.0/6.0);
+			Assertion.Assert(s == 0.5);
+			Assertion.Assert(v == 1.0);
+			c2 = Color.FromHSV(h,s,v);
+			Assertion.Assert(c1 == c2);
+
+			// brun-rouge
+			c1 = Color.FromRGB(0.5, 0.0, 0.0);
+			c1.ToHSV(out h, out s, out v);
+			Assertion.Assert(h == 0.0/6.0);
+			Assertion.Assert(s == 1.0);
+			Assertion.Assert(v == 0.5);
+			c2 = Color.FromHSV(h,s,v);
+			Assertion.Assert(c1 == c2);
+
+			// brun
+			c1 = Color.FromRGB(0.5, 0.25, 0.25);
+			c1.ToHSV(out h, out s, out v);
+			Assertion.Assert(h == 0.0/6.0);
+			Assertion.Assert(s == 0.5);
+			Assertion.Assert(v == 0.5);
+			c2 = Color.FromHSV(h,s,v);
+			Assertion.Assert(c1 == c2);
+
+			// gris
+			c1 = Color.FromRGB(0.5, 0.5, 0.5);
+			c1.ToHSV(out h, out s, out v);
+			Assertion.Assert(h == 0.0/6.0);
+			Assertion.Assert(s == 0.0);
+			Assertion.Assert(v == 0.5);
+			c2 = Color.FromHSV(h,s,v);
+			Assertion.Assert(c1 == c2);
+
+			// blanc
+			c1 = Color.FromRGB(1.0, 1.0, 1.0);
+			c1.ToHSV(out h, out s, out v);
+			Assertion.Assert(h == 0.0/6.0);
+			Assertion.Assert(s == 0.0);
+			Assertion.Assert(v == 1.0);
+			c2 = Color.FromHSV(h,s,v);
+			Assertion.Assert(c1 == c2);
+
+			// noir
+			c1 = Color.FromRGB(0.0, 0.0, 0.0);
+			c1.ToHSV(out h, out s, out v);
+			Assertion.Assert(h == 0.0/6.0);
+			Assertion.Assert(s == 0.0);
+			Assertion.Assert(v == 0.0);
+			c2 = Color.FromHSV(h,s,v);
+			Assertion.Assert(c1 == c2);
+		}
+
 		private void NamedColors_PaintForeground(object sender, PaintEventArgs e)
 		{
 			WindowRoot root = sender as WindowRoot;
