@@ -48,6 +48,7 @@ class CopyProject:
         self.copy_ext.append('.sln')
         self.copy_ext.append('.config')
         self.copy_ext.append('.info')
+        self.copy_ext.append('.icon')
         self.copy_ext.append('.log')
         self.copy_ext.append('.vdproj')
 
