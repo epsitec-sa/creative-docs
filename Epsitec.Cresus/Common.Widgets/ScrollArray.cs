@@ -839,7 +839,7 @@ namespace Epsitec.Common.Widgets
 			WidgetState       state = this.PaintState;
 			Direction         dir   = this.RootDirection;
 			
-			adorner.PaintTextFieldBackground(graphics, rect, state, dir, TextFieldStyle.Normal, false);
+			adorner.PaintArrayBackground(graphics, rect, state, dir);
 
 			Drawing.Rectangle localClip = this.MapClientToRoot(this.rectInside);
 			Drawing.Rectangle saveClip  = graphics.SaveClippingRectangle();
@@ -888,7 +888,7 @@ namespace Epsitec.Common.Widgets
 
 			graphics.LineWidth = 1;
 			Drawing.Color color;
-			color = Drawing.Color.FromRGB(0.9,0.9,0.9);  // gris-clair
+			color = adorner.GetColorBorder();
 
 			// Dessine le rectangle englobant.
 			graphics.AddRectangle(rect);
