@@ -1,5 +1,7 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier/PA
+
+using System;
 
 namespace Epsitec.Common.Support
 {
@@ -8,6 +10,9 @@ namespace Epsitec.Common.Support
 	/// peut être utilisé pour spécifier des champs qui sont stockés
 	/// dans un bundle.
 	/// </summary>
+	
+	[AttributeUsage (AttributeTargets.Property)]
+	
 	public class BundleAttribute : System.Attribute
 	{
 		public BundleAttribute()
