@@ -39,8 +39,8 @@ namespace Epsitec.Common.Widgets
 			this.v_scroller = new VScroller (this);
 			this.h_scroller = new HScroller (this);
 			this.v_scroller.IsInverted = true;
-			this.v_scroller.ValueChanged += new EventHandler (this.HandleVScrollerChanged);
-			this.h_scroller.ValueChanged += new EventHandler (this.HandleHScrollerChanged);
+			this.v_scroller.ValueChanged += new Support.EventHandler (this.HandleVScrollerChanged);
+			this.h_scroller.ValueChanged += new Support.EventHandler (this.HandleHScrollerChanged);
 			
 			this.is_dirty        = true;
 			this.is_header_dirty = true;
@@ -69,8 +69,12 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.text_provider_callback != value)
 				{
+					if (value != null)
+					{
+						this.TextArrayStore = null;
+					}
+					
 					this.text_provider_callback = value;
-					this.text_array_store       = null;
 					
 					this.Clear ();
 				}
@@ -87,16 +91,24 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.text_array_store != value)
 				{
-					this.text_array_store       = value;
-					this.text_provider_callback = null;
-					
-					this.Clear ();
+					if (value != null)
+					{
+						this.TextProviderCallback = null;
+					}
 					
 					if (this.text_array_store != null)
 					{
-						this.ColumnCount = this.text_array_store.GetColumnCount ();
-						this.RowCount    = this.text_array_store.GetRowCount ();
+						this.text_array_store.StoreChanged -= new Support.EventHandler (this.HandleStoreChanged);
 					}
+					
+					this.text_array_store = value;
+					
+					if (this.text_array_store != null)
+					{
+						this.text_array_store.StoreChanged += new Support.EventHandler (this.HandleStoreChanged);
+					}
+					
+					this.SyncWithTextArrayStore ();
 				}
 			}
 		}
@@ -835,6 +847,16 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate ();
 		}
 		
+		public void SyncWithTextArrayStore()
+		{
+			this.Clear ();
+			
+			if (this.text_array_store != null)
+			{
+				this.ColumnCount = this.text_array_store.GetColumnCount ();
+				this.RowCount    = this.text_array_store.GetRowCount ();
+			}
+		}
 		
 		public bool HitTestTable(Drawing.Point pos)
 		{
@@ -1258,6 +1280,11 @@ invalid:	row    = -1;
 			this.DragEndedColumn (slider.Index, e.Point.X);
 		}
 
+		private void HandleStoreChanged(object sender)
+		{
+			this.SyncWithTextArrayStore ();
+		}
+		
 		
 		protected virtual void DragStartedColumn(int column, double pos)
 		{
@@ -1949,11 +1976,11 @@ invalid:	row    = -1;
 		}
 		
 		
-		public event EventHandler				SelectedIndexChanged;
-		public event EventHandler				EditionIndexChanged;
-		public event EventHandler				ContentsChanged;
-		public event EventHandler				SortChanged;
-		public event EventHandler				LayoutUpdated;
+		public event Support.EventHandler		SelectedIndexChanged;
+		public event Support.EventHandler		EditionIndexChanged;
+		public event Support.EventHandler		ContentsChanged;
+		public event Support.EventHandler		SortChanged;
+		public event Support.EventHandler		LayoutUpdated;
 		
 		
 		protected bool							is_dirty;
