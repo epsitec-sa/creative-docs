@@ -108,10 +108,19 @@
                 />
                 <File
                     RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "resources\AppIcon.resource"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "resources\BaseIcons.resource"
+                    BuildAction = "Content"
+                />
+                <File
+                    RelPath = "resources\BaseIconsImage.resource"
                     BuildAction = "Content"
                 />
                 <File
