@@ -18,19 +18,19 @@ namespace Epsitec.Common.Types
 			
 			graph.DefineRoot (root);
 			
-			Assertion.AssertEquals (5, root.Count);
-			Assertion.AssertEquals ("a", root[0].Name);
-			Assertion.AssertEquals ("b", root[1].Name);
-			Assertion.AssertEquals ("c", root[2].Name);
-			Assertion.AssertEquals ("test", root[3].Name);
-			Assertion.AssertEquals ("long item name", root[4].Name);
+			Assert.AreEqual (5, root.Count);
+			Assert.AreEqual ("a", root[0].Name);
+			Assert.AreEqual ("b", root[1].Name);
+			Assert.AreEqual ("c", root[2].Name);
+			Assert.AreEqual ("test", root[3].Name);
+			Assert.AreEqual ("long item name", root[4].Name);
 			
-			Assertion.AssertEquals ("x", graph.Navigate ("c.x").Name);
-			Assertion.AssertEquals ("x", graph.Navigate ("c.[0]").Name);
-			Assertion.AssertEquals ("y", graph.Navigate ("c.[1]").Name);
-			Assertion.AssertEquals ("one", graph.Navigate ("c.[0].[0]").Name);
-			Assertion.AssertEquals ("two", graph.Navigate ("c.[0].[1]").Name);
-			Assertion.AssertEquals ("three", graph.Navigate ("c.[1].three").Name);
+			Assert.AreEqual ("x", graph.Navigate ("c.x").Name);
+			Assert.AreEqual ("x", graph.Navigate ("c.[0]").Name);
+			Assert.AreEqual ("y", graph.Navigate ("c.[1]").Name);
+			Assert.AreEqual ("one", graph.Navigate ("c.[0].[0]").Name);
+			Assert.AreEqual ("two", graph.Navigate ("c.[0].[1]").Name);
+			Assert.AreEqual ("three", graph.Navigate ("c.[1].three").Name);
 		}
 		
 		[Test] public void CheckQuery()
@@ -59,55 +59,55 @@ namespace Epsitec.Common.Types
 			index = 0;
 			foreach (IDataItem item in graph.Select ("*"))
 			{
-				Assertion.AssertEquals (result_1[index++], item.Name);
+				Assert.AreEqual (result_1[index++], item.Name);
 			}
 			
 			index = 0;
 			foreach (IDataItem item in graph.Select ("*.*"))
 			{
-				Assertion.AssertEquals (result_1[index++], item.Name);
+				Assert.AreEqual (result_1[index++], item.Name);
 			}
 			
 			index = 0;
 			foreach (IDataItem item in graph.Select ("?"))
 			{
-				Assertion.AssertEquals (result_2[index++], item.Name);
+				Assert.AreEqual (result_2[index++], item.Name);
 			}
 			
 			index = 0;
 			foreach (IDataItem item in graph.Select ("?.?"))
 			{
-				Assertion.AssertEquals (result_3[index++], item.Name);
+				Assert.AreEqual (result_3[index++], item.Name);
 			}
 			
 			index = 0;
 			foreach (IDataItem item in graph.Select ("?.?.*"))
 			{
-				Assertion.AssertEquals (result_4[index++], item.Name);
+				Assert.AreEqual (result_4[index++], item.Name);
 			}
 			
 			index = 0;
 			foreach (IDataItem item in graph.Select ("c.?.*"))
 			{
-				Assertion.AssertEquals (result_4[index++], item.Name);
+				Assert.AreEqual (result_4[index++], item.Name);
 			}
 			
 			index = 0;
 			foreach (IDataItem item in graph.Select ("*.x"))
 			{
-				Assertion.AssertEquals (result_5[index++], item.Name);
+				Assert.AreEqual (result_5[index++], item.Name);
 			}
 			
 			index = 0;
 			foreach (IDataItem item in graph.Select ("*.x.?.*"))
 			{
-				Assertion.AssertEquals (result_6[index++], item.Name);
+				Assert.AreEqual (result_6[index++], item.Name);
 			}
 			
 			index = 0;
 			foreach (IDataItem item in graph.Select ("*.[0].*"))
 			{
-				Assertion.AssertEquals (result_7[index++], item.Name);
+				Assert.AreEqual (result_7[index++], item.Name);
 			}
 		}
 		
