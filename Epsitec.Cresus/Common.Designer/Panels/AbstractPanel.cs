@@ -9,7 +9,7 @@ namespace Epsitec.Common.Designer.Panels
 	/// <summary>
 	/// La classe AbstractPanel est la base de toutes les classes XyzPanel.
 	/// </summary>
-	public abstract class AbstractPanel : Support.ICommandDispatcherHost
+	public abstract class AbstractPanel : Support.ICommandDispatcherHost, System.IDisposable
 	{
 		public AbstractPanel()
 		{
@@ -63,6 +63,25 @@ namespace Epsitec.Common.Designer.Panels
 			}
 		}
 		
+		
+		#region IDisposable Members
+		public void Dispose()
+		{
+			this.Dispose (true);
+			System.GC.SuppressFinalize (this);
+		}
+		#endregion
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.widget.Dispose ();
+				
+				this.widget     = null;
+				this.dispatcher = null;
+			}
+		}
 		
 		protected virtual void CreateWidget()
 		{
