@@ -129,14 +129,26 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+		// Indique s'il faut éditer les propriétés.
+		[XmlIgnore]
+		public bool EditProperties
+		{
+			get
+			{
+				return this.editProperties;
+			}
+
+			set
+			{
+				this.editProperties = value;
+			}
+		}
+
 		// Effectue une copie de la propriété.
 		public virtual void CopyTo(AbstractProperty property)
 		{
-			property.type            = this.type;
-			property.text            = this.text;
-			property.backgroundColor = this.backgroundColor;
-			property.extendedSize    = this.extendedSize;
-			property.multi           = this.multi;
+			this.CopyInfoTo(property);
+			property.editProperties = this.editProperties;
 		}
 
 		// Effectue une copie des informations de base de la propriété.
@@ -162,11 +174,49 @@ namespace Epsitec.Common.Pictogram.Data
 			return null;
 		}
 
-		protected string			text;
-		protected Drawing.Color		backgroundColor;
-		protected bool				extendedSize = false;
-		protected bool				multi = false;
 
-		protected PropertyType		type;
+		// Nombre de poignées.
+		public virtual int TotalHandle
+		{
+			get { return this.handles.Count; }
+		}
+
+		// Donne une poignée de la propriété.
+		public virtual Handle Handle(int rank, Drawing.Rectangle bbox)
+		{
+			return null;
+		}
+
+		// Début du déplacement d'une poignée de la propriété.
+		public virtual void MoveHandleStarting(int rank, Drawing.Point pos, Drawing.Rectangle bbox, IconContext iconContext)
+		{
+			iconContext.ConstrainFixStarting(pos);
+		}
+
+		// Déplace une poignée de la propriété.
+		public virtual void MoveHandleProcess(int rank, Drawing.Point pos, Drawing.Rectangle bbox, IconContext iconContext)
+		{
+		}
+
+		// Indique si les poignées sont visibles.
+		public virtual bool IsHandleVisible()
+		{
+			return false;
+		}
+
+		// Dessine les traits de construction avant les poignées.
+		public virtual void DrawEdit(Drawing.Graphics graphics, IconContext iconContext, Drawing.Rectangle bbox)
+		{
+		}
+
+
+		protected string						text;
+		protected Drawing.Color					backgroundColor;
+		protected bool							extendedSize = false;
+		protected bool							multi = false;
+		protected bool							editProperties = false;
+
+		protected PropertyType					type;
+		protected System.Collections.ArrayList	handles = new System.Collections.ArrayList();
 	}
 }

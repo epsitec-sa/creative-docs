@@ -309,8 +309,9 @@ namespace Epsitec.Common.Pictogram.Data
 				path.LineTo(this.Handle(0).Position);
 				path.Close();
 			}
+			this.bbox = path.ComputeBounds();
 
-			this.PropertyGradient(2).Render(graphics, iconContext, path);
+			this.PropertyGradient(2).Render(graphics, iconContext, path, this.bbox);
 
 			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));

@@ -34,13 +34,15 @@ namespace Epsitec.Common.Pictogram.Data
 			fillGradient.BackgroundColor = Drawing.Color.FromBrightness(0.9);
 			fillGradient.Fill   = GradientFill.None;
 			fillGradient.Color1 = Drawing.Color.FromBrightness(1.0);
-			fillGradient.Color2 = Drawing.Color.FromBrightness(0.6);
+			fillGradient.Color2 = Drawing.Color.FromBrightness(0.5);
 			fillGradient.Angle  = 0.0;
 			fillGradient.Cx     = 0.5;
 			fillGradient.Cy     = 0.5;
+			fillGradient.Sx     = 1.0;
+			fillGradient.Sy     = 1.0;
 			fillGradient.Repeat = 1;
 			fillGradient.Middle = 0.0;
-			fillGradient.Range  = 0.0;
+			fillGradient.Smooth = 0.0;
 			this.AddProperty(fillGradient);
 
 #if false

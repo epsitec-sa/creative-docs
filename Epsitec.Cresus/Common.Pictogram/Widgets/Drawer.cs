@@ -140,6 +140,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 						if ( this.rankLastCreated != -1 )
 						{
 							this.objects[this.rankLastCreated].SelectObject();
+							this.UpdateEditProperties();
 							this.rankLastCreated = -1;
 						}
 
@@ -254,6 +255,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 					obj.SetProperty(property);
 				}
+				this.UpdateEditProperties();
 				this.InvalidateAll();
 			}
 			else
@@ -526,7 +528,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 
 					if ( message.KeyCode == KeyCode.Back   ||
-						message.KeyCode == KeyCode.Delete )
+						 message.KeyCode == KeyCode.Delete )
 					{
 						this.DeleteSelection();
 						this.OnPanelChanged();
@@ -665,6 +667,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.moveObject = obj;
 				this.moveHandle = rank;
 				this.moveOffset = mouse-obj.Handle(rank).Position;
+				this.moveObject.MoveHandleStarting(this.moveHandle, mouse, this.iconContext);
 			}
 			else
 			{
@@ -686,6 +689,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 						if ( isCtrl )
 						{
 							obj.DeselectObject();
+							this.UpdateEditProperties();
 							this.OnPanelChanged();
 						}
 					}
@@ -704,8 +708,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconContext.IsCtrl = isCtrl;
 			if ( this.mouseDown )
 			{
-				this.iconContext.ConstrainSnapPos(ref mouse);
-
 				if ( this.selectRect )
 				{
 					this.selectRectP2 = mouse;
@@ -714,6 +716,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 				{
 					if ( this.moveHandle == -1 )  // déplace tout l'objet ?
 					{
+						this.iconContext.ConstrainSnapPos(ref mouse);
+
 						double len = Drawing.Point.Distance(mouse, this.moveStart);
 						if ( len <= this.iconContext.MinimalSize )
 						{
@@ -727,7 +731,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					{
 						mouse -= this.moveOffset;
 						this.SnapGrid(ref mouse);
-						this.moveObject.MoveHandle(this.moveHandle, mouse);
+						this.moveObject.MoveHandleProcess(this.moveHandle, mouse, this.iconContext);
 					}
 				}
 			}
@@ -784,6 +788,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			if ( this.moveObject != null )
 			{
+				if ( this.moveHandle != -1 )  // déplace une poignée ?
+				{
+					if ( this.moveObject.Handle(this.moveHandle).Type == HandleType.Property )
+					{
+						this.OnPanelChanged();
+					}
+				}
+
 				this.moveObject = null;
 				this.moveHandle = -1;
 
@@ -886,6 +898,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					if ( !add )  ob.DeselectObject();
 				}
 			}
+			this.UpdateEditProperties();
 			this.OnPanelChanged();
 		}
 
@@ -904,7 +917,26 @@ namespace Epsitec.Common.Pictogram.Widgets
 					if ( !add )  obj.DeselectObject();
 				}
 			}
+			this.UpdateEditProperties();
 			this.OnPanelChanged();
+		}
+
+		// Adapte le mode d'édition des propriétés.
+		protected void UpdateEditProperties()
+		{
+			int sel = this.TotalSelected();
+			for ( int index=0 ; index<this.objects.Count ; index++ )
+			{
+				AbstractObject obj = this.objects[index];
+				if ( obj.IsSelected() )
+				{
+					obj.EditProperties = ( sel == 1 );
+				}
+				else
+				{
+					obj.EditProperties = false;
+				}
+			}
 		}
 
 		// Détruit tous les objets sélectionnés.
@@ -948,6 +980,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					obj.DeselectObject();
 				}
 			}
+			this.UpdateEditProperties();
 			this.InvalidateAll();
 		}
 
@@ -1005,6 +1038,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 				AbstractObject obj = this.CreateObject();
 				if ( obj == null )  return;
 				obj.CloneProperties(this.newObject);
+				obj.SelectObject();
+				obj.EditProperties = false;
 				this.objects.Add(obj);
 				this.createRank = this.objects.Count-1;
 			}

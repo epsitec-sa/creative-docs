@@ -37,12 +37,13 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			Drawing.Point a = p1;
 			double step = 1.0/InsideSurface.bezierStep;
-			for ( double t=step ; t<=1.0 ; t+=step )
+			for ( double t=step ; t<1.0 ; t+=step )
 			{
 				Drawing.Point b = Drawing.Point.Bezier(p1, s1, s2, p2, t);
 				this.AddLine(a, b);
 				a = b;
 			}
+			this.AddLine(a, p2);
 		}
 
 		// Indique si le point donné dans le constructeur est à l'intérieur de la surface.

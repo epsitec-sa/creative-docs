@@ -9,6 +9,7 @@ namespace Epsitec.Common.Pictogram.Data
 		Starting,		// poignée de départ
 		Ending,			// poignée d'arrivée
 		Hide,			// poignée invisible
+		Property,		// poignée d'une propriété
 	}
 
 	public enum HandleConstrainType
@@ -175,6 +176,16 @@ namespace Epsitec.Common.Pictogram.Data
 				rect.Inflate(1/this.scaleX, 1/this.scaleY);
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(Drawing.Color.FromRGB(1,0,0));
+			}
+
+			if ( this.type == HandleType.Property )
+			{
+				graphics.AddFilledRectangle(rect);
+				graphics.RenderSolid(Drawing.Color.FromRGB(0,1,1));
+
+				rect.Inflate(-0.5/this.scaleX, -0.5/this.scaleY);
+				graphics.AddRectangle(rect);
+				graphics.RenderSolid(Drawing.Color.FromRGB(0,0,0));
 			}
 
 			graphics.LineWidth = initialWidth;

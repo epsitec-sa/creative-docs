@@ -76,8 +76,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Détecte si l'objet est dans un rectangle.
 		public override bool Detect(Drawing.Rectangle rect)
 		{
-			Drawing.Rectangle fullBbox = new Drawing.Rectangle();
-			fullBbox = this.bbox;
+			Drawing.Rectangle fullBbox = this.bbox;
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
 			fullBbox.Inflate(width, width);
 			return rect.Contains(fullBbox);
@@ -193,7 +192,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			Drawing.Path path = this.PathRegular();
 			this.bbox = path.ComputeBounds();
-			this.PropertyGradient(2).Render(graphics, iconContext, path);
+			this.PropertyGradient(2).Render(graphics, iconContext, path, this.bbox);
 
 			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
@@ -204,8 +203,5 @@ namespace Epsitec.Common.Pictogram.Data
 				graphics.RenderSolid(iconContext.HiliteColor);
 			}
 		}
-
-
-		protected Drawing.Rectangle			bbox;
 	}
 }

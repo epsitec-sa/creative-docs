@@ -69,8 +69,16 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Déplace une poignée.
-		public override void MoveHandle(int rank, Drawing.Point pos)
+		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
+			{
+				base.MoveHandleProcess(rank, pos, iconContext);
+				return;
+			}
+
+			iconContext.ConstrainSnapPos(ref pos);
+
 			if ( rank == 2 )
 			{
 				this.ComputeDistances(pos);
@@ -171,6 +179,8 @@ namespace Epsitec.Common.Pictogram.Data
 			path.MoveTo(this.ComputeExtremity(0));
 			path.LineTo(this.Handle(1).Position);
 			path.LineTo(this.ComputeExtremity(1));
+
+			this.bbox = path.ComputeBounds();
 
 			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));

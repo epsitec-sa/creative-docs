@@ -73,8 +73,16 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Déplace une poignée.
-		public override void MoveHandle(int rank, Drawing.Point pos)
+		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
+			{
+				base.MoveHandleProcess(rank, pos, iconContext);
+				return;
+			}
+
+			iconContext.ConstrainSnapPos(ref pos);
+
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
 
@@ -202,15 +210,15 @@ namespace Epsitec.Common.Pictogram.Data
 
 			double radius = this.PropertyDouble(3).Value;
 			Drawing.Path path = this.PathRoundRectangle(rect, radius);
-			this.PropertyGradient(2).Render(graphics, iconContext, path);
+			this.bbox = path.ComputeBounds();
+			this.PropertyGradient(2).Render(graphics, iconContext, path, this.bbox);
 
 			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
-				graphics.LineWidth = this.PropertyLine(0).Width+iconContext.HiliteSize;
-				graphics.AddRectangle(rect);
+				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 				graphics.RenderSolid(iconContext.HiliteColor);
 			}
 		}

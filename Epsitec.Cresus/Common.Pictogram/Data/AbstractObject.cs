@@ -44,12 +44,26 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Nombre de poignées.
+		// Nombre de poignées, sans compter celles des propriétés.
 		public int TotalHandle
 		{
 			get
 			{
 				return this.handles.Count;
+			}
+		}
+
+		// Nombre de poignées, avec celles des propriétés.
+		public int TotalHandleProperties
+		{
+			get
+			{
+				int total = 0;
+				foreach ( AbstractProperty property in this.properties )
+				{
+					total += property.TotalHandle;
+				}
+				return this.handles.Count + total;
 			}
 		}
 
@@ -77,25 +91,87 @@ namespace Epsitec.Common.Pictogram.Data
 		// Donne une poignée de l'objet.
 		public Handle Handle(int rank)
 		{
-			System.Diagnostics.Debug.Assert(this.handles[rank] != null);
-			return this.handles[rank] as Handle;
+			if ( rank < this.handles.Count )  // poignée de l'objet ?
+			{
+				System.Diagnostics.Debug.Assert(this.handles[rank] != null);
+				return this.handles[rank] as Handle;
+			}
+			else	// poignée d'une propriété ?
+			{
+				rank -= this.handles.Count;
+				int index = 0;
+				foreach ( AbstractProperty property in this.properties )
+				{
+					int count = property.TotalHandle;
+					if ( rank >= index && rank < index+count )
+					{
+						return property.Handle(rank-index, this.bbox);
+					}
+					index += count;
+				}
+				return null;
+			}
 		}
 
 		// Détecte la poignée pointée par la souris.
 		public virtual int DetectHandle(Drawing.Point pos)
 		{
-			int total = this.handles.Count;
-			for ( int i=0 ; i<total ; i++ )
+			int total = this.TotalHandleProperties;
+			//for ( int i=0 ; i<total ; i++ )
+			for ( int i=total-1 ; i>=0 ; i-- )
 			{
 				if ( this.Handle(i).Detect(pos) )  return i;
 			}
 			return -1;
 		}
 
-		// Déplace une poignée.
-		public virtual void MoveHandle(int rank, Drawing.Point pos)
+		// Début du déplacement une poignée.
+		public virtual void MoveHandleStarting(int rank, Drawing.Point pos, IconContext iconContext)
 		{
-			this.Handle(rank).Position = pos;
+			if ( rank < this.handles.Count )  // poignée de l'objet ?
+			{
+				iconContext.ConstrainFixStarting(pos);
+			}
+			else	// poignée d'une propriété ?
+			{
+				rank -= this.handles.Count;
+				int index = 0;
+				foreach ( AbstractProperty property in this.properties )
+				{
+					int count = property.TotalHandle;
+					if ( rank >= index && rank < index+count )
+					{
+						property.MoveHandleStarting(rank-index, pos, this.bbox, iconContext);
+						break;
+					}
+					index += count;
+				}
+			}
+		}
+
+		// Déplace une poignée.
+		public virtual void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
+		{
+			if ( rank < this.handles.Count )  // poignée de l'objet ?
+			{
+				iconContext.ConstrainSnapPos(ref pos);
+				this.Handle(rank).Position = pos;
+			}
+			else	// poignée d'une propriété ?
+			{
+				rank -= this.handles.Count;
+				int index = 0;
+				foreach ( AbstractProperty property in this.properties )
+				{
+					int count = property.TotalHandle;
+					if ( rank >= index && rank < index+count )
+					{
+						property.MoveHandleProcess(rank-index, pos, this.bbox, iconContext);
+						break;
+					}
+					index += count;
+				}
+			}
 		}
 
 		// Déplace tout l'objet.
@@ -124,39 +200,55 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Sélectionne ou désélectionne toutes les poignées de l'objet.
-		public void SelectObject(bool select)
-		{
-			if ( select )  this.SelectObject();
-			else           this.DeselectObject();
-		}
-
 		// Sélectionne toutes les poignées de l'objet.
 		public void SelectObject()
 		{
-			foreach ( Handle handle in this.handles )
-			{
-				handle.IsSelected = true;
-			}
+			this.SelectObject(true);
 		}
 
 		// Désélectionne toutes les poignées de l'objet.
 		public void DeselectObject()
 		{
-			foreach ( Handle handle in this.handles )
+			this.SelectObject(false);
+		}
+
+		// Sélectionne ou désélectionne toutes les poignées de l'objet.
+		public void SelectObject(bool select)
+		{
+			this.selected = select;
+
+			int total = this.TotalHandleProperties;
+			for ( int i=0 ; i<total ; i++ )
 			{
-				handle.IsSelected = false;
+				Handle handle = this.Handle(i);
+				handle.IsSelected = select;
 			}
 		}
 
 		// Indique si l'objet est sélectionné.
 		public bool IsSelected()
 		{
-			foreach ( Handle handle in this.handles )
+			return this.selected;
+		}
+
+		// Indique si les propriétés de l'objet sont en cours d'édition.
+		[XmlIgnore]
+		public bool EditProperties
+		{
+			get
 			{
-				if ( handle.IsSelected )  return true;
+				return this.editProperties;
 			}
-			return false;
+
+			set
+			{
+				this.editProperties = value;
+
+				foreach ( AbstractProperty property in this.properties )
+				{
+					property.EditProperties = editProperties;
+				}
+			}
 		}
 
 
@@ -395,6 +487,10 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 
 			this.CloneProperties(src);
+
+			this.selected       = src.selected;
+			this.editProperties = src.editProperties;
+			this.bbox           = src.bbox;
 		}
 
 
@@ -414,8 +510,21 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine les poignées de l'objet.
 		public virtual void DrawHandle(Drawing.Graphics graphics, IconContext iconContext)
 		{
-			foreach ( Handle handle in this.handles )
+			foreach ( AbstractProperty property in this.properties )
 			{
+				property.DrawEdit(graphics, iconContext, this.bbox);
+			}
+
+			int total = this.TotalHandleProperties;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				Handle handle = this.Handle(i);
+
+				if ( handle.Type == HandleType.Property )
+				{
+					handle.IsSelected = this.editProperties;
+				}
+
 				if ( handle.Type != HandleType.Hide )
 				{
 					handle.Draw(graphics, iconContext);
@@ -430,6 +539,9 @@ namespace Epsitec.Common.Pictogram.Data
 		protected double						minimalSize;
 		protected double						minimalWidth;
 		protected double						closeMargin;
+		protected bool							selected = false;
+		protected bool							editProperties = false;
+		protected Drawing.Rectangle				bbox = new Drawing.Rectangle();
 
 		[XmlAttribute]
 		protected System.Collections.ArrayList	properties = new System.Collections.ArrayList();

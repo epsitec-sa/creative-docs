@@ -59,7 +59,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					path.LineTo(rect.Right, rect.Bottom);
 					path.Close();
 
-					gradient.Render(graphics, null, path);
+					gradient.Render(graphics, null, path, rect);
 				}
 			}
 

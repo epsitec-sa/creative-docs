@@ -465,9 +465,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 #if true
 			if ( cmd == "open" )
 			{
-				System.Console.Out.WriteLine(System.IO.Directory.GetCurrentDirectory());
+				//System.Console.Out.WriteLine(System.IO.Directory.GetCurrentDirectory());
 				FileOpen dialog = new FileOpen();
-			
+		
 				dialog.Title = "Ouvrir une icone";
 				dialog.FileName = this.filename;
 				dialog.Filters.Add ("icon", "Icônes", "*.icon");
@@ -475,7 +475,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				dialog.Show();
 
 				this.filename = dialog.FileName;
-				System.Console.Out.WriteLine(System.IO.Directory.GetCurrentDirectory());
+				//System.Console.Out.WriteLine(System.IO.Directory.GetCurrentDirectory());
 			}
 
 			if ( cmd == "save" )

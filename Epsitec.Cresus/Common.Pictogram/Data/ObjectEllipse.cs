@@ -70,8 +70,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Détecte si l'objet est dans un rectangle.
 		public override bool Detect(Drawing.Rectangle rect)
 		{
-			Drawing.Rectangle fullBbox = new Drawing.Rectangle();
-			fullBbox = this.bbox;
+			Drawing.Rectangle fullBbox = this.bbox;
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
 			fullBbox.Inflate(width, width);
 			return rect.Contains(fullBbox);
@@ -79,8 +78,16 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Déplace une poignée.
-		public override void MoveHandle(int rank, Drawing.Point pos)
+		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
+			{
+				base.MoveHandleProcess(rank, pos, iconContext);
+				return;
+			}
+
+			iconContext.ConstrainSnapPos(ref pos);
+
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
 
@@ -235,7 +242,7 @@ namespace Epsitec.Common.Pictogram.Data
 			double ry = System.Math.Abs(p1.Y-center.Y);
 			Drawing.Path path = this.PathCircle(center, rx, ry);
 			this.bbox = path.ComputeBounds();
-			this.PropertyGradient(2).Render(graphics, iconContext, path);
+			this.PropertyGradient(2).Render(graphics, iconContext, path, this.bbox);
 
 			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
@@ -246,8 +253,5 @@ namespace Epsitec.Common.Pictogram.Data
 				graphics.RenderSolid(iconContext.HiliteColor);
 			}
 		}
-
-
-		protected Drawing.Rectangle			bbox;
 	}
 }

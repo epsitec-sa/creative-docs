@@ -88,6 +88,8 @@ namespace Epsitec.Common.Pictogram.Data
 			path.MoveTo(this.Handle(0).Position);
 			path.LineTo(this.Handle(1).Position);
 
+			this.bbox = path.ComputeBounds();
+
 			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
 

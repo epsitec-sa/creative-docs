@@ -109,53 +109,13 @@ namespace Epsitec.Common.Pictogram.Data
 			return surf.IsInside();
 		}
 
-		// Ajoute un courbe de Bézier dans la bbox.
-		protected void BboxBezier(ref Drawing.Rectangle bbox, Drawing.Point p1, Drawing.Point s1, Drawing.Point s2, Drawing.Point p2)
-		{
-			double step = 1.0/10.0;  // nombre arbitraire de 10 subdivisions
-			for ( double t=0 ; t<=1.0 ; t+=step )
-			{
-				Drawing.Point a = Drawing.Point.Bezier(p1, s1, s2, p2, t);
-				bbox.Left   = System.Math.Min(bbox.Left,   a.X);
-				bbox.Right  = System.Math.Max(bbox.Right,  a.X);
-				bbox.Bottom = System.Math.Min(bbox.Bottom, a.Y);
-				bbox.Top    = System.Math.Max(bbox.Top,    a.Y);
-			}
-		}
-
 		// Détecte si l'objet est dans un rectangle.
 		public override bool Detect(Drawing.Rectangle rect)
 		{
-			int total = this.TotalHandle;
-			if ( total < 3 )  return false;
-
-			Drawing.Rectangle bbox = new Drawing.Rectangle();
-			Drawing.Point p = this.Handle(1).Position;
-			bbox.Left   = p.X;
-			bbox.Right  = p.X;
-			bbox.Bottom = p.Y;
-			bbox.Top    = p.Y;
-
-			for ( int i=0 ; i<total-3 ; i+=3 )
-			{
-				Drawing.Point p1 = this.Handle(i+1).Position;
-				Drawing.Point s1 = this.Handle(i+2).Position;
-				Drawing.Point s2 = this.Handle(i+3).Position;
-				Drawing.Point p2 = this.Handle(i+4).Position;
-				this.BboxBezier(ref bbox, p1, s1, s2, p2);
-			}
-			if ( this.PropertyBool(3).Bool )  // fermé ?
-			{
-				Drawing.Point p1 = this.Handle(total-2).Position;
-				Drawing.Point s1 = this.Handle(total-1).Position;
-				Drawing.Point s2 = this.Handle(0).Position;
-				Drawing.Point p2 = this.Handle(1).Position;
-				this.BboxBezier(ref bbox, p1, s1, s2, p2);
-			}
-
+			Drawing.Rectangle fullBbox = this.bbox;
 			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
-			bbox.Inflate(width, width);
-			return rect.Contains(bbox);
+			fullBbox.Inflate(width, width);
+			return rect.Contains(fullBbox);
 		}
 
 
@@ -497,9 +457,24 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		// Déplace une poignée.
-		public override void MoveHandle(int rank, Drawing.Point pos)
+		// Début du déplacement une poignée.
+		public override void MoveHandleStarting(int rank, Drawing.Point pos, IconContext iconContext)
 		{
+			pos = this.Handle((rank/3)*3+1).Position;
+			iconContext.ConstrainFixStarting(pos);
+		}
+
+		// Déplace une poignée.
+		public override void MoveHandleProcess(int rank, Drawing.Point pos, IconContext iconContext)
+		{
+			if ( rank >= this.handles.Count )  // poignée d'une propriété ?
+			{
+				base.MoveHandleProcess(rank, pos, iconContext);
+				return;
+			}
+
+			iconContext.ConstrainSnapPos(ref pos);
+
 			if ( rank%3 == 0 )  // poignée secondaire ?
 			{
 				this.MoveSecondary(rank+1, rank, rank+2, pos);
@@ -664,6 +639,52 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
+		// Ajoute un courbe de Bézier dans la bbox.
+		protected void BboxBezier(Drawing.Point p1, Drawing.Point s1, Drawing.Point s2, Drawing.Point p2)
+		{
+			double step = 1.0/10.0;  // nombre arbitraire de 10 subdivisions
+			for ( double t=0 ; t<=1.0 ; t+=step )
+			{
+				Drawing.Point a = Drawing.Point.Bezier(p1, s1, s2, p2, t);
+				this.bbox.Left   = System.Math.Min(this.bbox.Left,   a.X);
+				this.bbox.Right  = System.Math.Max(this.bbox.Right,  a.X);
+				this.bbox.Bottom = System.Math.Min(this.bbox.Bottom, a.Y);
+				this.bbox.Top    = System.Math.Max(this.bbox.Top,    a.Y);
+			}
+		}
+
+		// Calcule la bbox de l'objet.
+		protected void BboxCompute()
+		{
+			this.bbox = Drawing.Rectangle.Empty;
+
+			int total = this.TotalHandle;
+			if ( total < 3 )  return;
+
+			Drawing.Point p = this.Handle(1).Position;
+			this.bbox.Left   = p.X;
+			this.bbox.Right  = p.X;
+			this.bbox.Bottom = p.Y;
+			this.bbox.Top    = p.Y;
+
+			for ( int i=0 ; i<total-3 ; i+=3 )
+			{
+				Drawing.Point p1 = this.Handle(i+1).Position;
+				Drawing.Point s1 = this.Handle(i+2).Position;
+				Drawing.Point s2 = this.Handle(i+3).Position;
+				Drawing.Point p2 = this.Handle(i+4).Position;
+				this.BboxBezier(p1, s1, s2, p2);
+			}
+			if ( this.PropertyBool(3).Bool )  // fermé ?
+			{
+				Drawing.Point p1 = this.Handle(total-2).Position;
+				Drawing.Point s1 = this.Handle(total-1).Position;
+				Drawing.Point s2 = this.Handle(0).Position;
+				Drawing.Point p2 = this.Handle(1).Position;
+				this.BboxBezier(p1, s1, s2, p2);
+			}
+		}
+
 		// Dessine l'objet.
 		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
 		{
@@ -691,8 +712,9 @@ namespace Epsitec.Common.Pictogram.Data
 				path.CurveTo(this.Handle(total-1).Position, this.Handle(0).Position, this.Handle(1).Position);
 				path.Close();
 			}
+			this.BboxCompute();
 
-			this.PropertyGradient(2).Render(graphics, iconContext, path);
+			this.PropertyGradient(2).Render(graphics, iconContext, path, this.bbox);
 
 			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
