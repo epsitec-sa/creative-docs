@@ -10,6 +10,7 @@ namespace Epsitec.Common.Widgets
 		bool TestSelectItemKey(Message message);		//	touche SPACE ou RETURN
 		bool TestPressButtonKey(Message message);		//	touche SPACE
 		bool TestCancelKey(Message message);			//	touche ESCAPE
+		bool TestNavigationKey(Message message);		//	touche de navigation dans l'interface
 		
 		Shortcut		AcceptShortcut		{ get; }
 		Shortcut		CancelShortcut		{ get; }

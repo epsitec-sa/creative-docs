@@ -12,30 +12,74 @@ namespace Epsitec.Common.Widgets.Feel
 		#region IFeel Members
 		public bool TestAcceptKey(Epsitec.Common.Widgets.Message message)
 		{
-			return (message.KeyCode == KeyCode.Return);
+			if ((message.Type == MessageType.KeyPress) &&
+				(message.IsShiftPressed == false) &&
+				(message.IsCtrlPressed == false) &&
+				(message.IsAltPressed == false))
+			{
+				return (message.KeyCode == KeyCode.Return);
+			}
+			
+			return false;
 		}
 		
 		public bool TestSelectItemKey(Message message)
 		{
-			switch (message.KeyCode)
+			if ((message.Type == MessageType.KeyPress) &&
+				(message.IsShiftPressed == false) &&
+				(message.IsCtrlPressed == false) &&
+				(message.IsAltPressed == false))
 			{
-				case KeyCode.Space:
-				case KeyCode.Return:
-					return true;
+				switch (message.KeyCode)
+				{
+					case KeyCode.Space:
+					case KeyCode.Return:
+						return true;
 				
-				default:
-					return false;
+					default:
+						return false;
+				}
 			}
+			
+			return false;
 		}
 		
 		public bool TestPressButtonKey(Message message)
 		{
-			return (message.KeyCode == KeyCode.Space);
+			if ((message.Type == MessageType.KeyPress) &&
+				(message.IsShiftPressed == false) &&
+				(message.IsCtrlPressed == false) &&
+				(message.IsAltPressed == false))
+			{
+				return (message.KeyCode == KeyCode.Space);
+			}
+			
+			return false;
 		}
 		
 		public bool TestCancelKey(Epsitec.Common.Widgets.Message message)
 		{
-			return (message.KeyCode == KeyCode.Escape);
+			if ((message.Type == MessageType.KeyPress) &&
+				(message.IsShiftPressed == false) &&
+				(message.IsCtrlPressed == false) &&
+				(message.IsAltPressed == false))
+			{
+				return (message.KeyCode == KeyCode.Escape);
+			}
+			
+			return false;
+		}
+		
+		public bool TestNavigationKey(Epsitec.Common.Widgets.Message message)
+		{
+			if ((message.Type == MessageType.KeyPress) &&
+				(message.IsCtrlPressed == false) &&
+				(message.IsAltPressed == false))
+			{
+				return (message.KeyCode == KeyCode.Tab);
+			}
+			
+			return false;
 		}
 		
 		public Shortcut							AcceptShortcut
