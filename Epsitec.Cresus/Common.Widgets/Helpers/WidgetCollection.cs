@@ -85,7 +85,7 @@ namespace Epsitec.Common.Widgets.Helpers
 
 		public bool Contains(object value)
 		{
-			return this.Contains (value);
+			return this.list.Contains (value);
 		}
 
 		public void Clear()
