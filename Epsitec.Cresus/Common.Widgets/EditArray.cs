@@ -150,7 +150,7 @@ namespace Epsitec.Common.Widgets
 					this.edit_widgets[i].Index         = i;
 					this.edit_widgets[i].TabIndex      = i;
 					this.edit_widgets[i].TabNavigation = TabNavigationMode.ActivateOnTab;
-					this.edit_widgets[i].Focused      += new EventHandler (this.HandleEditArrayFocused);
+					this.edit_widgets[i].Focused      += new Support.EventHandler (this.HandleEditArrayFocused);
 				}
 			}
 		}
@@ -161,7 +161,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.edit_widgets[i] != null)
 				{
-					this.edit_widgets[i].Focused -= new EventHandler (this.HandleEditArrayFocused);
+					this.edit_widgets[i].Focused -= new Support.EventHandler (this.HandleEditArrayFocused);
 					this.edit_widgets[i].Parent   = null;
 					this.edit_widgets[i].Dispose ();
 					this.edit_widgets[i] = null;
@@ -306,6 +306,12 @@ namespace Epsitec.Common.Widgets
 					if (message.KeyCode == KeyCode.Escape)
 					{
 						this.host.CancelEdition ();
+						message.Consumer = this;
+						return;
+					}
+					if (message.KeyCode == KeyCode.Return)
+					{
+						this.host.ValidateEdition ();
 						message.Consumer = this;
 						return;
 					}

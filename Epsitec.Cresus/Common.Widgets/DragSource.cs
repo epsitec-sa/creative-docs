@@ -352,8 +352,8 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public event EventHandler			DragBegin;
-		public event EventHandler			DragEnd;
+		public event Support.EventHandler	DragBegin;
+		public event Support.EventHandler	DragEnd;
 		public event DragEventHandler		Dragging;
 		
 		

@@ -26,12 +26,18 @@ namespace Epsitec.Common.Widgets.Design.Tools
 		#region ITextArrayStore Members
 		public void InsertRows(int row, int num)
 		{
-			// TODO:  Add TextBundleArrayStore.InsertRows implementation
+			if (this.StoreChanged != null)
+			{
+				this.StoreChanged (this);
+			}
 		}
 		
 		public void RemoveRows(int row, int num)
 		{
-			// TODO:  Add TextBundleArrayStore.RemoveRows implementation
+			if (this.StoreChanged != null)
+			{
+				this.StoreChanged (this);
+			}
 		}
 		
 		public string GetCellText(int row, int column)
@@ -78,6 +84,8 @@ namespace Epsitec.Common.Widgets.Design.Tools
 			
 			return 0;
 		}
+		
+		public event Support.EventHandler		StoreChanged;
 		#endregion
 		
 		protected void DumpXml()

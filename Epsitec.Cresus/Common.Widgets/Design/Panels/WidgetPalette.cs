@@ -18,7 +18,7 @@ namespace Epsitec.Common.Widgets.Design.Panels
 		}
 		
 		
-		public PreferredLayout			PreferredLayout
+		public PreferredLayout				PreferredLayout
 		{
 			get
 			{
@@ -26,7 +26,7 @@ namespace Epsitec.Common.Widgets.Design.Panels
 			}
 		}
 		
-		public DragSource				ActiveDragSource
+		public DragSource					ActiveDragSource
 		{
 			get
 			{
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Widgets.Design.Panels
 			}
 		}
 		
-		public Widget					DroppedWidget
+		public Widget						DroppedWidget
 		{
 			get
 			{
@@ -96,8 +96,8 @@ namespace Epsitec.Common.Widgets.Design.Panels
 			source.Location = new Drawing.Point (x, this.size.Height - y - dy);
 			source.Size     = new Drawing.Size (dx, dy);
 			
-			source.DragBegin += new EventHandler (this.HandleSourceDragBegin);
-			source.DragEnd   += new EventHandler (this.HandleSourceDragEnd);
+			source.DragBegin += new Support.EventHandler (this.HandleSourceDragBegin);
+			source.DragEnd   += new Support.EventHandler (this.HandleSourceDragEnd);
 		}
 		
 		
@@ -126,10 +126,10 @@ namespace Epsitec.Common.Widgets.Design.Panels
 		}
 		
 		
-		public event EventHandler		DragBegin;
-		public event EventHandler		DragEnd;
+		public event Support.EventHandler	DragBegin;
+		public event Support.EventHandler	DragEnd;
 		
-		public static IGuideAlign		Guide
+		public static IGuideAlign			Guide
 		{
 			get { return new GuideAlign (); }
 		}
@@ -274,8 +274,8 @@ namespace Epsitec.Common.Widgets.Design.Panels
 			Tight,
 		}
 		
-		protected Widget				parent;
-		protected PreferredLayout		preference;
-		protected DragSource			active_drag_source;
+		protected Widget					parent;
+		protected PreferredLayout			preference;
+		protected DragSource				active_drag_source;
 	}
 }
