@@ -17,7 +17,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.field = new TextFieldSlider(this);
 			this.field.MinValue = 0;
 			this.field.MaxValue = 5;
-			this.field.Step = 0.5M;
+			this.field.Step = 0.1M;
 			this.field.Resolution = 0.1M;
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
 			this.field.TabIndex = 1;
@@ -32,13 +32,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.buttons[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
-			this.buttons[0].IconName = @"file:images/capround1.icon";
-			this.buttons[1].IconName = @"file:images/capsquare1.icon";
-			this.buttons[2].IconName = @"file:images/capbutt1.icon";
+			this.buttons[0].IconName = @"file:images/capround.icon";
+			this.buttons[1].IconName = @"file:images/capsquare.icon";
+			this.buttons[2].IconName = @"file:images/capbutt.icon";
 
-			this.buttons[3].IconName = @"file:images/joinround1.icon";
-			this.buttons[4].IconName = @"file:images/joinmiter1.icon";
-			this.buttons[5].IconName = @"file:images/joinbevel1.icon";
+			this.buttons[3].IconName = @"file:images/joinround.icon";
+			this.buttons[4].IconName = @"file:images/joinmiter.icon";
+			this.buttons[5].IconName = @"file:images/joinbevel.icon";
 
 			this.isNormalAndExtended = true;
 		}
@@ -77,7 +77,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public override void SetProperty(AbstractProperty property)
 		{
 			base.SetProperty(property);
-			this.label.Text = this.text;
+			this.label.Text = this.textStyle;
 
 			PropertyLine p = property as PropertyLine;
 			if ( p == null )  return;
@@ -178,8 +178,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( this.buttons == null )  return;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Left += this.extendedZoneWidth;
-			rect.Inflate(-5, -5);
+			rect.Deflate(this.extendedZoneWidth, 0);
+			rect.Deflate(5);
 
 			Drawing.Rectangle r = rect;
 			r.Bottom = r.Top-20;
