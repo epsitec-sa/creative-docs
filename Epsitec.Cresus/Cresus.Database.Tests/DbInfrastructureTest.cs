@@ -2,8 +2,7 @@ using NUnit.Framework;
 
 namespace Epsitec.Cresus.Database
 {
-	[TestFixture]
-	public class DbInfrastructureTest
+	[TestFixture] public class DbInfrastructureTest
 	{
 		[Test] public void CheckCreateDatabase()
 		{
@@ -61,7 +60,7 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void CheckAttachDatabase()
 		{
-			using (DbInfrastructure infrastructure = this.GetInfrastructureFromBase ("fiche", true))
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
 			{
 				Assertion.AssertNotNull (infrastructure);
 				
@@ -86,10 +85,10 @@ namespace Epsitec.Cresus.Database
 			//	Ce test ne marche que pour une base qui est propre (i.e. qui vient d'être
 			//	créée par CheckCreateDatabase).
 			
-			using (DbInfrastructure infrastructure = this.GetInfrastructureFromBase ("fiche", false))
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
 				DbTable db_table1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.UserDataManaged);
-				infrastructure.RegisterNewDbTable (db_table1);
+				infrastructure.RegisterNewDbTable (null, db_table1);
 				
 				DbTable db_table2 = infrastructure.ResolveDbTable (null, "SimpleTest");
 				
@@ -100,47 +99,101 @@ namespace Epsitec.Cresus.Database
 				Assertion.AssertEquals (db_table1.PrimaryKeys.Count,	db_table2.PrimaryKeys.Count);
 				Assertion.AssertEquals (db_table1.PrimaryKeys[0].Name,	db_table2.PrimaryKeys[0].Name);
 				Assertion.AssertEquals (db_table1.Columns.Count,		db_table2.Columns.Count);
+				
+				Assertion.Assert (infrastructure.FindHighestRowRevision (null, "CR_TABLE_DEF", 1) >= 0);
+				Assertion.Assert (infrastructure.FindHighestRowRevision (null, "CR_TABLE_DEF", 100) == -1);
 			}
 		}
 		
-		[Test] [ ExpectedException (typeof (DbException)) ] public void CheckCreateDbTableEx1()
+		[Test] [ExpectedException (typeof (DbException))] public void CheckCreateDbTableEx1()
 		{
 			//	Exécuter deux fois une création de table va nécessairement générer une exception.
 			//	Il faut exécuter le test CheckCreateDbTable avant celui-ci.
 			
-			using (DbInfrastructure infrastructure = this.GetInfrastructureFromBase ("fiche", false))
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
 				DbTable db_table = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.UserDataManaged);
-				infrastructure.RegisterNewDbTable (db_table);
-				infrastructure.ResolveDbTable (null, db_table.Name);
+				infrastructure.RegisterNewDbTable (null, db_table);
 			}
 		}
 		
-		private DbInfrastructure GetInfrastructureFromBase(string name, bool debug_attach)
+		[Test] public void CheckUnregisterDbTable()
+		{
+			//	Il faut exécuter le test CheckCreateDbTable avant celui-ci.
+			
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
+			{
+				DbTable db_table1 = infrastructure.ResolveDbTable (null, "SimpleTest");
+				
+				Assertion.AssertNotNull (db_table1);
+				
+				infrastructure.UnregisterDbTable (null, db_table1);
+				
+				DbTable db_table2 = infrastructure.ResolveDbTable (null, "SimpleTest");
+				
+				Assertion.AssertNull (db_table2);
+			}
+		}
+		
+		[Test] public void CheckRegisterDbTableSameAsUnregistered()
+		{
+			//	Il faut exécuter le test CheckUnregisterDbTable avant celui-ci.
+			
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
+			{
+				DbTable db_table = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.UserDataManaged);
+				infrastructure.RegisterNewDbTable (null, db_table);
+				
+				Assertion.AssertNotNull (infrastructure.ResolveDbTable (null, db_table.Name));
+				Assertion.AssertEquals (9L, db_table.InternalKey.Id);
+				Assertion.AssertEquals (0, db_table.InternalKey.Revision);
+			}
+		}
+		
+		[Test] [ExpectedException (typeof (DbException))] public void CheckUnregisterDbTableEx1()
+		{
+			//	Il faut exécuter le test CheckRegisterDbTableSameAsUnregistered avant celui-ci.
+			
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
+			{
+				DbTable db_table = infrastructure.ResolveDbTable (null, "SimpleTest");
+				
+				Assertion.AssertNotNull (db_table);
+				
+				infrastructure.UnregisterDbTable (null, db_table);
+				Assertion.AssertNull (infrastructure.ResolveDbTable (null, db_table.Name));
+				infrastructure.UnregisterDbTable (null, db_table);
+			}
+		}
+		
+		
+		#region Support Code
+		internal static DbInfrastructure GetInfrastructureFromBase(string name, bool debug_attach)
 		{
 			DbInfrastructure infrastructure = new DbInfrastructure ();
 			DbAccess db_access = DbFactoryTest.CreateDbAccess (name);
 			
 			if (debug_attach)
 			{
-				infrastructure.DisplayDataSet = new CallbackDisplayDataSet (this.DisplayDataSet);
+				infrastructure.DisplayDataSet = new CallbackDisplayDataSet (DbInfrastructureTest.DisplayDataSet);
 				infrastructure.AttachDatabase (db_access);
 			}
 			else
 			{
 				infrastructure.AttachDatabase (db_access);
-				infrastructure.DisplayDataSet = new CallbackDisplayDataSet (this.DisplayDataSet);
+				infrastructure.DisplayDataSet = new CallbackDisplayDataSet (DbInfrastructureTest.DisplayDataSet);
 			}
 			
 			return infrastructure;
 		}
 		
-		private void DisplayDataSet(DbInfrastructure infrastructure, string name, System.Data.DataTable table)
+		public static void DisplayDataSet(DbInfrastructure infrastructure, string name, System.Data.DataTable table)
 		{
-			this.display.AddTable (name, table);
-			this.display.ShowWindow ();
+			DbInfrastructureTest.display.AddTable (name, table);
+			DbInfrastructureTest.display.ShowWindow ();
 		}
+		#endregion
 		
-		UserInterface.Debugging.DataSetDisplay	display = new UserInterface.Debugging.DataSetDisplay ();
+		static UserInterface.Debugging.DataSetDisplay	display = new UserInterface.Debugging.DataSetDisplay ();
 	}
 }
