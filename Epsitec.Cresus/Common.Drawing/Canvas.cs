@@ -63,11 +63,30 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public static ICanvasEngine		Engine
+		public static void RegisterEngine(ICanvasEngine engine)
 		{
-			get { return Canvas.engine; }
-			set { Canvas.engine = value; }
+			int n = Canvas.engines.Length;
+			ICanvasEngine[] engines = new ICanvasEngine[n+1];
+			Canvas.engines.CopyTo (engines, 0);
+			engines[n] = engine;
+			Canvas.engines = engines;
 		}
+		
+		public static ICanvasEngine FindEngine(byte[] data)
+		{
+			for (int i = 0; i < Canvas.engines.Length; i++)
+			{
+				ICanvasEngine engine = Canvas.engines[i];
+				
+				if (engine.IsDataCompatible (data))
+				{
+					return engine;
+				}
+			}
+			
+			return null;
+		}
+		
 		
 		public override Bitmap			BitmapImage
 		{
@@ -116,7 +135,9 @@ namespace Epsitec.Common.Drawing
 				
 				Size size = new Size (dx, dy);
 				
-				System.Diagnostics.Debug.Assert (Canvas.Engine != null);
+				ICanvasEngine engine = Canvas.FindEngine (this.data);
+				
+				System.Diagnostics.Debug.Assert (engine != null);
 				
 				using (Graphics graphics = new Graphics ())
 				{
@@ -124,7 +145,7 @@ namespace Epsitec.Common.Drawing
 					Drawing.Pixmap pixmap = graphics.Pixmap;
 					pixmap.Clear ();
 					
-					Canvas.Engine.Paint (graphics, size, this.data, this.paint_style, this.color, this.adorner);
+					engine.Paint (graphics, size, this.data, this.paint_style, this.color, this.adorner);
 					
 					int width, height, stride;
 					System.Drawing.Imaging.PixelFormat format;
@@ -176,9 +197,11 @@ namespace Epsitec.Common.Drawing
 		{
 			if (this.is_geom_ok == false)
 			{
-				System.Diagnostics.Debug.Assert (Canvas.Engine != null);
+				ICanvasEngine engine = Canvas.FindEngine (this.data);
 				
-				Canvas.Engine.GetSizeAndOrigin (this.data, out this.size, out this.origin);
+				System.Diagnostics.Debug.Assert (engine != null);
+				
+				engine.GetSizeAndOrigin (this.data, out this.size, out this.origin);
 				
 				this.is_geom_ok = true;
 			}
@@ -320,18 +343,18 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		protected bool					is_disposed;
-		protected bool					is_geom_ok;
+		protected bool							is_disposed;
+		protected bool							is_geom_ok;
 		
-		protected GlyphPaintStyle		paint_style = GlyphPaintStyle.Invalid;
-		protected EffectTable			effects;
-		protected byte[]				data;
-		protected double				zoom = 1.0;
-		protected Drawing.Color			color = Drawing.Color.Empty;
-		protected object				adorner = null;
-		protected Bitmap				cache;
+		protected GlyphPaintStyle				paint_style = GlyphPaintStyle.Invalid;
+		protected EffectTable					effects;
+		protected byte[]						data;
+		protected double						zoom = 1.0;
+		protected Drawing.Color					color = Drawing.Color.Empty;
+		protected object						adorner = null;
+		protected Bitmap						cache;
 		
-		protected static ICanvasEngine	engine;
-		protected static System.Collections.ArrayList global_icon_cache = new System.Collections.ArrayList ();
+		static ICanvasEngine[]					engines = new ICanvasEngine[0];
+		static System.Collections.ArrayList		global_icon_cache = new System.Collections.ArrayList ();
 	}
 }

@@ -10,7 +10,7 @@ namespace Epsitec.Common.Pictogram
 	{
 		private Engine()
 		{
-			Drawing.Canvas.Engine = this;
+			Drawing.Canvas.RegisterEngine(this);
 		}
 		
 		public static void Initialise()
@@ -22,6 +22,19 @@ namespace Epsitec.Common.Pictogram
 		}
 		
 		#region ICanvasEngine Members
+		public bool IsDataCompatible(byte[] data)
+		{
+			if ( ( data[0] == (byte) '<' ) &&
+				 ( data[1] == (byte) '?' ) &&
+				 ( data[2] == (byte) 'x' ) &&
+				 ( data[3] == (byte) 'm' ) )
+			{
+				return true;
+			}
+			
+			return false;
+		}
+		
 		public void GetSizeAndOrigin(byte[] data, out Drawing.Size size, out Drawing.Point origin)
 		{
 			size   = new Drawing.Size(20, 20);

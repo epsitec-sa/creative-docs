@@ -327,8 +327,7 @@ namespace Epsitec.Common.Drawing
 			if (data.Length > 40)
 			{
 				if ((data[0] == (byte) '<') &&
-					(data[1] == (byte) '?') &&
-					(data[2] == (byte) 'x'))
+					(data[1] == (byte) '?'))
 				{
 					//	Il y a de très fortes chances que ce soit une image vectorielle définie
 					//	au moyen du format interne propre à EPSITEC.
