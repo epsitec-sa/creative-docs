@@ -611,8 +611,23 @@ namespace Epsitec.Cresus.Requests
 			//	Maintenant que le serveur n'a plus aucune trace de nos requêtes, on peut
 			//	marquer la requête actuelle comme Conflicting.
 			
+			//	-------------------------------------------------------------------------
 			//	TODO: demander une réplication "Pull" pour se remettre dans l'état avant
 			//	l'exécution de la requête en local.
+			//
+			//	Il faut :
+			//	
+			//	  - Trouver toutes les lignes de toutes les tables qui ont été modifiées
+			//		depuis l'exécution en local de la requête (cf ReplicationTest et
+			//		DataCruncher.ExtractRowSetsUsingLogId)
+			//
+			//	  - Supprimer toutes ces lignes. Le code pour une suppression multiple
+			//		doit encore être écrit (on peut utiliser DbSelectCondition).
+			//
+			//	  - Demander la réplication via PullReplication, en spécifiant à la fois
+			//		la fourchette à répliquer (LOG_ID de .. à ..) et la liste des CR_ID.
+			//	
+			//	-------------------------------------------------------------------------
 			
 			//	Si cette opération échoue, on se retrouve avec une requête dans l'état
 			//	ConflictingOnServer et aucune requêtes sur le serveur; ça peut être
