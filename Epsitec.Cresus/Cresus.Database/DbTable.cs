@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 26/10/2003
 
 namespace Epsitec.Cresus.Database
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Database
 		{
 			return new DbTable (xml);
 		}
-
+		
 		
 		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer)
 		{

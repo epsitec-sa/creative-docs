@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 19/11/2003
 
 namespace Epsitec.Cresus.Database
@@ -176,6 +176,6 @@ namespace Epsitec.Cresus.Database
 		
 		
 		protected DbEnumValue[]				values;
-		protected int						max_name_length = 8;
+		private int							max_name_length = 8;
 	}
 }

@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 26/11/2003
 
 namespace Epsitec.Cresus.Database
@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Database
 			//	accumulées à la fin; ça évite que la composition de "a" avec "" ne
 			//	donne "a_" en fin de compte (le résultat sera "a", simplement).
 			
-			while (num > 0 && (list[num-1].Length == 0))
+			while ((num > 0) && (list[num-1].Length == 0))
 			{
 				num--;
 			}

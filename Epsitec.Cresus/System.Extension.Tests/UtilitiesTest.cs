@@ -128,5 +128,61 @@ namespace System
 			Assertion.AssertEquals ("d", args[2]);
 		}
 		
+		[Test] public void CheckStringSimplify()
+		{
+			string s1 = @"'xyz'";
+			string s2 = @"'ab''cd'";
+			string s3 = @"'abcd'''";
+			string s4 = @"""xyz'abc""";
+			string s5 = @"<abc>";
+			string s6 = @"abc";
+			
+			Assertion.AssertEquals (true,  Utilities.StringSimplify (ref s1));
+			Assertion.AssertEquals (true,  Utilities.StringSimplify (ref s2));
+			Assertion.AssertEquals (true,  Utilities.StringSimplify (ref s3));
+			Assertion.AssertEquals (true,  Utilities.StringSimplify (ref s4));
+			Assertion.AssertEquals (true,  Utilities.StringSimplify (ref s5, '<', '>'));
+			Assertion.AssertEquals (false, Utilities.StringSimplify (ref s6));
+			
+			Assertion.AssertEquals ("xyz", s1);
+			Assertion.AssertEquals ("ab'cd", s2);
+			Assertion.AssertEquals ("abcd'", s3);
+			Assertion.AssertEquals ("xyz'abc", s4);
+			Assertion.AssertEquals ("abc", s5);
+			Assertion.AssertEquals ("abc", s6);
+		}
+		
+		[Test] [ExpectedException (typeof (System.Exception))] public void CheckStringSimplifyEx1()
+		{
+			string s1 = @"'xy'z'";
+			Utilities.StringSimplify (ref s1);
+		}
+		
+		[Test] [ExpectedException (typeof (System.Exception))] public void CheckStringSimplifyEx2()
+		{
+			string s1 = @"'xyz";
+			Utilities.StringSimplify (ref s1);
+		}
+		
+		[Test] [ExpectedException (typeof (System.Exception))] public void CheckStringSimplifyEx3()
+		{
+			string s1 = @"<xyz<";
+			Utilities.StringSimplify (ref s1, '<', '>');
+		}
+		
+		[Test] public void CheckTextToXml()
+		{
+			Assertion.AssertEquals ("&lt;#&apos;&quot;&gt;&#160;&#8212;x", Utilities.TextToXml ("<#'\">\u00A0\u2014x"));
+		}
+		
+		[Test] public void CheckXmlToText()
+		{
+			Assertion.AssertEquals ("<#'\">\u00A0\u2014x", Utilities.XmlToText ("&lt;#&apos;&quot;&gt;&#160;&#8212;x"));
+		}
+		
+		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckXmlToTextEx1()
+		{
+			Utilities.XmlToText ("&nbsp;");
+		}
 	}
 }

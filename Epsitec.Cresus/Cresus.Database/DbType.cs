@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 19/10/2003
 
 namespace Epsitec.Cresus.Database
@@ -182,10 +182,9 @@ namespace Epsitec.Cresus.Database
 		
 		
 		
-		
-		protected DbAttributes			attributes;
-		protected DbSimpleType			simple_type;
-		protected DbKey					internal_type_key;
+		private DbAttributes			attributes;
+		private DbSimpleType			simple_type;
+		private DbKey					internal_type_key;
 		
 		internal const string			TagKeyId		= "CR_KeyId";
 		internal const string			TagKeyRevision	= "CR_KeyRevision";
@@ -194,11 +193,5 @@ namespace Epsitec.Cresus.Database
 		internal const string			TagCaption		= "CR_Caption";
 		internal const string			TagDescription	= "CR_Description";
 		internal const string			TagInfoXml		= "CR_InfoXml";
-
-		
-
-
-
-
 	}
 }

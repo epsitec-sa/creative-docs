@@ -6,33 +6,58 @@ namespace System
 
 	public class Utilities
 	{
+		public static string StringSimplify(string value)
+		{
+			Utilities.StringSimplify (ref value);
+			return value;
+		}
+		
 		public static bool StringSimplify(ref string value)
 		{
-			return Utilities.StringSimplify(ref value, '"');
+			if (value.Length > 1)
+			{
+				char quote = value[0];
+				
+				switch (quote)
+				{
+					case '\'':
+					case '\"':
+						return Utilities.StringSimplify (ref value, quote, quote);
+				}
+			}
+			
+			return false;
 		}
-
+		
 		public static bool StringSimplify(ref string value, char quote)
 		{
-			//	Converti une chaîne entre guillemets en une chaîne sans guillemets
+			return Utilities.StringSimplify (ref value, quote, quote);
+		}
+		
+		public static bool StringSimplify(ref string value, char start_quote, char end_quote)
+		{
+			//	Convertit une chaîne entre guillemets en une chaîne sans guillemets
 			//	retourne "true" si la chaîne avait des guillemets "false" sinon
 			//	une exception est levée si des guillemets non apparentés sont trouvés
 			//	enlève les doubles guillemets en milieu de chaîne pour n'en mettre qu'un.
-			//	Faudrait-il traiter aussi les séquences BOA genre \t ?
-
-			if (value.IndexOf (quote) == 0)
+			
+			if (value.IndexOf (start_quote) == 0)
 			{
-				if ((value.Length > 1) && (value.LastIndexOf (quote) == value.Length-1))
+				if ((value.Length > 1) && (value.LastIndexOf (end_quote) == value.Length-1))
 				{
 					System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-
+					
 					for (int i = 1 ; i < value.Length-1 ; i++)
 					{
-						char	c = value[i];
-						if (c == quote)
+						char c = value[i];
+						
+						if ((c == start_quote) &&
+							(start_quote == end_quote))
 						{
 							i++;
 							c = value[i];
-							if ((i == value.Length-1) || (c != quote))
+							if ((i == value.Length-1) ||
+								(c != start_quote))
 							{
 								throw new System.Exception (string.Format ("Quotes mismatch in {0}", value));
 							}
@@ -44,9 +69,11 @@ namespace System
 				}
 				throw new System.Exception (string.Format ("Quotes mismatch in {0}", value));
 			}
+			
 			return false;
 		}
 
+		
 		public static int StringToTokens(string value, char sep, out string[] tokens)
 		{
 			return StringToTokens (value, sep, null, out tokens);
@@ -109,6 +136,7 @@ namespace System
 			return nb;
 		}
 		
+		
 		public static bool CheckForDuplicates(System.Collections.ICollection data)
 		{
 			return Utilities.CheckForDuplicates (data, true);
@@ -155,6 +183,68 @@ namespace System
 			return false;
 		}
 		
+		
+		public static string TextToXml(string text)
+		{
+			text = text.Replace (@"&",  "&amp;");
+			text = text.Replace (@"<",  "&lt;");
+			text = text.Replace (@">",  "&gt;");
+			text = text.Replace (@"""", "&quot;");
+			text = text.Replace (@"'",  "&apos;");
+			text = text.Replace ("\u00A0", "&#160;");
+			text = text.Replace ("\u2014", "&#8212;");
+			
+			return text;
+		}
+		
+		public static string XmlToText(string text)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			for (int offset = 0; offset < text.Length; )
+			{
+				buffer.Append (Utilities.ParseCharOrXmlEntity (text, ref offset));
+			}
+
+			return buffer.ToString();
+		}
+		
+		
+		public static char ParseCharOrXmlEntity(string text, ref int offset)
+		{
+			if (text[offset] == '&')
+			{
+				int length = text.IndexOf (";", offset) - offset + 1;
+				
+				if (length < 3)
+				{
+					throw new System.FormatException (string.Format ("Bad entity syntax in '{0}'.", text.Substring (offset)));
+				}
+				
+				char   code;
+				string entity = text.Substring (offset, length).ToLower ();
+				
+				switch (entity)
+				{
+					case "&lt;":	code = '<';			break;
+					case "&gt;":	code = '>';			break;
+					case "&amp;":	code = '&';			break;
+					case "&quot;":	code = '"';			break;
+					case "&apos;":	code = '\'';		break;
+					case "&#160;":	code = (char)160;	break;
+					case "&#8212;":	code = (char)8212;	break;
+					
+					default:
+						throw new System.FormatException (string.Format ("Unrecognized entity '{0}'.", entity));
+				}
+				
+				offset += length;
+				
+				return code;
+			}
+			
+			return text[offset++];
+		}
 		
 		
 		private enum SplitState
