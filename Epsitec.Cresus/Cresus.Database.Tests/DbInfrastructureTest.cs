@@ -115,14 +115,39 @@ namespace Epsitec.Cresus.Database
 				
 				infrastructure.UnregisterDbType (null, db_type_1);
 				infrastructure.UnregisterDbType (null, db_type_2);
-				infrastructure.UnregisterDbType (null, db_type_3);
+//				infrastructure.UnregisterDbType (null, db_type_3);
 				
 				db_type_1 = infrastructure.ResolveDbType (null, "Nom");
 				db_type_2 = infrastructure.ResolveDbType (null, "NUPO");
-				db_type_3 = infrastructure.ResolveDbType (null, "Titre");
+//				db_type_3 = infrastructure.ResolveDbType (null, "Titre");
 				
 				Assertion.AssertNull (db_type_1);
 				Assertion.AssertNull (db_type_2);
+//				Assertion.AssertNull (db_type_3);
+			}
+		}
+		
+		[Test] public void CheckReadBackDbType()
+		{
+			//	Ce test ne marche que pour une base qui a été peuplée par la méthode
+			//	CheckCreateDbType...
+			
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
+			{
+				DbType db_type_1 = infrastructure.ResolveDbType (null, "Nom");
+				DbType db_type_2 = infrastructure.ResolveDbType (null, "NUPO");
+				DbType db_type_3 = infrastructure.ResolveDbType (null, "Titre");
+				
+				Assertion.AssertNull (db_type_1);
+				Assertion.AssertNull (db_type_2);
+				Assertion.AssertNotNull (db_type_3);
+				
+				Assertion.AssertEquals ("Titre", db_type_3.Name);
+				
+				infrastructure.UnregisterDbType (null, db_type_3);
+				
+				db_type_3 = infrastructure.ResolveDbType (null, "Titre");
+				
 				Assertion.AssertNull (db_type_3);
 			}
 		}

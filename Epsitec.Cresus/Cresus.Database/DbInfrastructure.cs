@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Database
 	{
 		public DbInfrastructure()
 		{
-			this.localisations = new string[1] { "" };
+			this.localisations = new string[2] { "", "FR" };
 		}
 		
 		
@@ -492,7 +492,7 @@ namespace Epsitec.Cresus.Database
 			
 			DbTypeEnum type_enum = type as DbTypeEnum;
 			
-			long table_id = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagTableDef].InternalKey, 1);
+			long table_id = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagTypeDef].InternalKey, 1);
 			long enum_id  = (type_enum == null) ? 0 : this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagEnumValDef].InternalKey, type_enum.Count);
 			
 			//	Crée la ligne de description du type :
@@ -1357,6 +1357,8 @@ namespace Epsitec.Cresus.Database
 				}
 				
 				string index = buffer.ToString ();
+				
+				//	TODO: adapte le nom de la colonne en fonction de la localisation
 				
 				query.Fields.Add (index, SqlField.CreateName (table, column));
 			}
