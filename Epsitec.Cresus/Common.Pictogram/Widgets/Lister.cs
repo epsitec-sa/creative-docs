@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe Lister permet de représenter un tableau des icônes.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class Lister : Epsitec.Common.Widgets.Widget
 	{
 		public Lister()
