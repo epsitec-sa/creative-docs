@@ -273,9 +273,9 @@ namespace Epsitec.Common.Support
 						ok = true;
 						break;
 					
-					case ResourceFieldType.String:
+					case ResourceFieldType.Data:
 						
-						//	La valeur source trouvée dans le bundle est une string. Il faut faire
+						//	La valeur source trouvée dans le bundle est un texte. Il faut faire
 						//	en sorte que cette valeur puisse être affectée à la propriété.
 						
 						string str_value = bundle.GetFieldString (prop_name);
