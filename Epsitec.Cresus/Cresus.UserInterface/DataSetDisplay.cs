@@ -1,12 +1,11 @@
-using System;
-
-namespace Epsitec.Cresus.UserInterface
+namespace Epsitec.Cresus.UserInterface.Debugging
 {
 	using Widgets = Epsitec.Common.Widgets;
 	using Drawing = Epsitec.Common.Drawing;
 	
 	/// <summary>
-	/// Summary description for DataSetDisplay.
+	/// La classe DataSetDisplay permet de visualiser le contenu d'un DataSet ou de
+	/// une ou plusieurs instances de DataTable.
 	/// </summary>
 	public class DataSetDisplay
 	{
@@ -15,22 +14,17 @@ namespace Epsitec.Cresus.UserInterface
 			this.CreateWindow ();
 		}
 		
+		public void Dispose()
+		{
+			this.window.Dispose ();
+			
+			this.window = null;
+			this.book   = null;
+		}
+		
 		public void ShowWindow()
 		{
 			this.window.Show();
-		}
-		
-		private void CreateWindow()
-		{
-			this.window = new Widgets.Window ();
-			
-			this.window.ClientSize = new Drawing.Size (400, 300);
-			this.window.Text = "DataSet Explorer";
-			this.window.Root.PreferHorizontalDockLayout = false;
-			
-			this.book = new Widgets.TabBook ();
-			this.book.Dock = Widgets.DockStyle.Fill;
-			this.book.Parent = this.window.Root;
 		}
 		
 		public void AddTable(string table_name, System.Data.DataTable data_table)
@@ -86,7 +80,21 @@ namespace Epsitec.Cresus.UserInterface
 			this.book.ActivePage = page;
 		}
 		
-		private System.Data.DataSet		data;
+		
+		private void CreateWindow()
+		{
+			this.window = new Widgets.Window ();
+			
+			this.window.ClientSize = new Drawing.Size (400, 300);
+			this.window.Text = "DataSet Explorer";
+			this.window.Root.PreferHorizontalDockLayout = false;
+			
+			this.book = new Widgets.TabBook ();
+			this.book.Dock = Widgets.DockStyle.Fill;
+			this.book.Parent = this.window.Root;
+		}
+		
+		
 		private Widgets.Window			window;
 		private Widgets.TabBook			book;
 	}

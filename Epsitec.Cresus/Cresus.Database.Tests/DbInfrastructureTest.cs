@@ -44,6 +44,6 @@ namespace Epsitec.Cresus.Database
 			this.display.ShowWindow ();
 		}
 		
-		Epsitec.Cresus.UserInterface.DataSetDisplay		display = new Epsitec.Cresus.UserInterface.DataSetDisplay ();
+		UserInterface.Debugging.DataSetDisplay	display = new UserInterface.Debugging.DataSetDisplay ();
 	}
 }
