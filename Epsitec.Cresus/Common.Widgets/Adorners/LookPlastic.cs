@@ -40,9 +40,10 @@ namespace Epsitec.Common.Widgets.Adorner
 			b = 1-(1-this.colorControlLight.B)*0.7;
 			this.colorButton = Drawing.Color.FromRGB(r,g,b);
 
-			this.colorHilite = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
-			this.colorBorder = Drawing.Color.FromRGB( 23.0/255.0, 132.0/255.0, 198.0/255.0);
-			this.colorWindow = Drawing.Color.FromRGB(198.0/255.0, 226.0/255.0, 234.0/255.0);
+			this.colorCaption = Drawing.Color.FromRGB( 58.0/255.0, 167.0/255.0, 233.0/255.0);
+			this.colorHilite  = Drawing.Color.FromRGB(250.0/255.0, 196.0/255.0,  89.0/255.0);
+			this.colorBorder  = Drawing.Color.FromRGB( 23.0/255.0, 132.0/255.0, 198.0/255.0);
+			this.colorWindow  = Drawing.Color.FromRGB(198.0/255.0, 226.0/255.0, 234.0/255.0);
 		}
 		
 
