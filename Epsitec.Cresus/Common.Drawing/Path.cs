@@ -162,7 +162,9 @@ namespace Epsitec.Common.Drawing
 			double ex = x + System.Math.Cos (a2) * rx;
 			double ey = y + System.Math.Sin (a2) * ry;
 			
-			this.current_point = new Point (ex, ey);
+			this.has_current_point = true;
+			this.current_point     = new Point (ex, ey);
+			this.is_empty          = false;
 		}
 		
 		public void Arc(Point c, double rx, double ry, double a1, double a2, bool ccw)
@@ -183,7 +185,9 @@ namespace Epsitec.Common.Drawing
 			double ex = x + System.Math.Cos (a2) * rx;
 			double ey = y + System.Math.Sin (a2) * ry;
 			
-			this.current_point = new Point (ex, ey);
+			this.has_current_point = true;
+			this.current_point     = new Point (ex, ey);
+			this.is_empty          = false;
 		}
 		
 		public void Close()
