@@ -118,7 +118,20 @@ namespace Epsitec.Common.Printing
 			{
 				switch (this.ps.PrintRange)
 				{
-					//	TODO: case...
+					case System.Drawing.Printing.PrintRange.AllPages:	return PrintRange.AllPages;
+					case System.Drawing.Printing.PrintRange.Selection:	return PrintRange.SelectedPages;
+					case System.Drawing.Printing.PrintRange.SomePages:	return PrintRange.FromPageToPage;
+				}
+				
+				return PrintRange.AllPages;
+			}
+			set
+			{
+				switch (value)
+				{
+					case PrintRange.AllPages:		this.ps.PrintRange = System.Drawing.Printing.PrintRange.AllPages;	break;
+					case PrintRange.SelectedPages:	this.ps.PrintRange = System.Drawing.Printing.PrintRange.Selection;	break;
+					case PrintRange.FromPageToPage:	this.ps.PrintRange = System.Drawing.Printing.PrintRange.SomePages;	break;
 				}
 			}
 		}
@@ -144,6 +157,39 @@ namespace Epsitec.Common.Printing
 			set
 			{
 				this.ps.MinimumPage = value;
+			}
+		}
+		
+		
+		public string							OutputPort
+		{
+			get
+			{
+				System.Type                    type = typeof (System.Drawing.Printing.PrinterSettings);
+				System.Reflection.PropertyInfo info = type.GetProperty ("OutputPort", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+				return info.GetValue (this.ps, null) as string;
+			}
+			set
+			{
+				System.Type                    type = typeof (System.Drawing.Printing.PrinterSettings);
+				System.Reflection.PropertyInfo info = type.GetProperty ("OutputPort", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+				info.SetValue (this.ps, value, null);
+			}
+		}
+		
+		public string							DriverName
+		{
+			get
+			{
+				System.Type                    type = typeof (System.Drawing.Printing.PrinterSettings);
+				System.Reflection.PropertyInfo info = type.GetProperty ("DriverName", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+				return info.GetValue (this.ps, null) as string;
+			}
+			set
+			{
+				System.Type                    type = typeof (System.Drawing.Printing.PrinterSettings);
+				System.Reflection.PropertyInfo info = type.GetProperty ("DriverName", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+				info.SetValue (this.ps, value, null);
 			}
 		}
 		
@@ -218,11 +264,27 @@ namespace Epsitec.Common.Printing
 			get
 			{
 				System.Drawing.Printing.PrinterSettings.PrinterResolutionCollection list = this.ps.PrinterResolutions;
-				PrinterResolution[] values = new PrinterResolution[list.Count];
+				int n = 0;
 				
 				for (int i = 0; i < list.Count; i++)
 				{
-					values[i] = new PrinterResolution (list[i]);
+					if ((list[i].X > 0) && (list[i].Y > 0))
+					{
+						n++;
+					}
+				}
+				
+				PrinterResolution[] values = new PrinterResolution[n];
+				
+				n = 0;
+				
+				for (int i = 0; i < list.Count; i++)
+				{
+					if ((list[i].X > 0) && (list[i].Y > 0))
+					{
+						values[n] = new PrinterResolution (list[i]);
+						n++;
+					}
 				}
 				
 				return values;
@@ -251,6 +313,15 @@ namespace Epsitec.Common.Printing
 			get
 			{
 				return this.ps.SupportsColor;
+			}
+		}
+		
+		
+		public object							Object
+		{
+			get
+			{
+				return this.ps;
 			}
 		}
 		
