@@ -11,6 +11,7 @@ namespace Epsitec.Common.Support
 	using BindingFlags   = System.Reflection.BindingFlags;
 	
 	using TypeDescriptor = System.ComponentModel.TypeDescriptor;
+	using TypeConverter  = System.ComponentModel.TypeConverter;
 	
 	public class BundlingEventArgs : System.EventArgs
 	{
@@ -212,6 +213,54 @@ namespace Epsitec.Common.Support
 			ObjectBundler.classes[name] = type;
 		}
 		
+		
+		public object CopyObject(object source)
+		{
+			IBundleSupport src_obj = source as IBundleSupport;
+			
+			if (src_obj == null)
+			{
+				return null;
+			}
+			
+			object         copy    = System.Activator.CreateInstance (source.GetType ());
+			IBundleSupport dst_obj = copy as IBundleSupport;
+			
+			System.Diagnostics.Debug.Assert (dst_obj != null);
+			
+			foreach (MemberInfo member_info in source.GetType ().GetMembers (BindingFlags.Public | BindingFlags.Instance))
+			{
+				//	Passe en revue tous les membres publics. Ceux qui sont des propriétés
+				//	vont nécessiter une attention toute particulière...
+				
+				if (member_info.MemberType == MemberTypes.Property)
+				{
+					System.Type  type      = source.GetType ();
+					PropertyInfo prop_info = member_info as PropertyInfo;
+					
+					System.Diagnostics.Debug.Assert (prop_info != null);
+					
+					while (this.CopyProperty (source, copy, prop_info) == false)
+					{
+						type = type.BaseType;
+						
+						if (type == null)
+						{
+							break;
+						}
+						
+						prop_info = type.GetProperty (prop_info.Name, prop_info.PropertyType);
+						
+						if (prop_info == null)
+						{
+							break;
+						}
+					}
+				}
+			}
+			
+			return copy;
+		}
 		
 		public object CreateFromBundle(ResourceBundle bundle)
 		{
@@ -644,6 +693,30 @@ namespace Epsitec.Common.Support
 			}
 			
 			return ok;
+		}
+		
+		
+		public bool CopyProperty(object source, object copy, PropertyInfo prop_info)
+		{
+			if ((prop_info.CanRead) &&
+				(prop_info.CanWrite) &&
+				(prop_info.IsDefined (typeof (BundleAttribute), true)))
+			{
+				//	C'est bien une propriété qui peut être lue et écrite, et qui a l'attribut
+				//	[Bundle] défini.
+				
+				object        data = prop_info.GetValue (source, null);
+				TypeConverter conv = TypeDescriptor.GetConverter (prop_info.PropertyType);
+				string        text = conv.ConvertToInvariantString (data);
+				
+				data = conv.ConvertFromInvariantString (text);
+				
+				prop_info.SetValue (copy, data, null);
+				
+				return true;
+			}
+			
+			return false;
 		}
 		
 		
