@@ -26,11 +26,6 @@ namespace Epsitec.Cresus.Database
 			this.Initialise (type);
 		}
 		
-		public DbType(DbNumDef num_def, params string[] attributes) : this (attributes)
-		{
-			this.Initialise (num_def);
-		}
-		
 		
 		internal void DefineAttributes(string[] attributes)
 		{
@@ -43,20 +38,11 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		internal void Initialise(DbNumDef num_def)
-		{
-			this.EnsureTypeIsNotInitialised();
-			
-			this.simple_type = DbSimpleType.Decimal;
-			this.num_def     = num_def.Clone () as DbNumDef;
-		}
-		
 		internal void Initialise(DbSimpleType type)
 		{
 			this.EnsureTypeIsNotInitialised();
 			
 			this.simple_type = type;
-			this.num_def     = null;
 		}
 		
 		
@@ -76,11 +62,6 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public DbNumDef						NumDef
-		{
-			get { return this.num_def; }
-		}
-		
 		public DbSimpleType					SimpleType
 		{
 			get { return this.simple_type; }
@@ -94,7 +75,6 @@ namespace Epsitec.Cresus.Database
 			
 			type.attributes  = this.attributes == null ? null : this.attributes.Clone () as DbAttributes;
 			type.simple_type = this.simple_type;
-			type.num_def     = this.num_def == null ? null : this.num_def.Clone () as DbNumDef;
 			
 			return type;
 		}
@@ -152,6 +132,5 @@ namespace Epsitec.Cresus.Database
 		
 		protected DbAttributes				attributes;
 		protected DbSimpleType				simple_type;
-		protected DbNumDef					num_def;
 	}
 }

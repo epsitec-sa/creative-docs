@@ -102,7 +102,16 @@ namespace Epsitec.Cresus.Database
 		
 		public DbNumDef					NumDef
 		{
-			get { return this.type.NumDef; }
+			get
+			{
+				if (this.type is DbTypeNum)
+				{
+					DbTypeNum type = this.type as DbTypeNum;
+					return type.NumDef;
+				}
+				
+				return null;
+			}
 		}
 		
 		public int						Length
@@ -140,7 +149,16 @@ namespace Epsitec.Cresus.Database
 		
 		public bool						IsFixedLength
 		{
-			get { return this.is_fixed_length; }
+			get
+			{
+				if (this.type is DbTypeString)
+				{
+					DbTypeString type = this.type as DbTypeString;
+					return type.IsFixedLength;
+				}
+				
+				return true;
+			}
 		}
 		
 		
@@ -209,10 +227,13 @@ namespace Epsitec.Cresus.Database
 					break;
 				
 				default:
-					if ((length != 1) ||
-						(is_fixed_length != true))
+					if (length != 1)
 					{
-						throw new System.ArgumentOutOfRangeException ("Length and Type mismatch");
+						throw new System.ArgumentOutOfRangeException ("length", length, "Length must be 1.");
+					}
+					if (is_fixed_length != true)
+					{
+						throw new System.ArgumentOutOfRangeException ("is_fixed_length", is_fixed_length, "Type must be of fixed length.");
 					}
 					break;
 			}
@@ -220,22 +241,20 @@ namespace Epsitec.Cresus.Database
 			switch (type)
 			{
 				case DbSimpleType.String:
-					this.type = new DbTypeString (length);
+					this.type = new DbTypeString (length, is_fixed_length);
 					break;
 				
 				case DbSimpleType.ByteArray:
 					throw new System.NotImplementedException ("ByteArray not implemented yet");
 					
 				case DbSimpleType.Decimal:
-					this.type = new DbType (num_def);
+					this.type = new DbTypeNum (num_def);
 					break;
 				
 				default:
 					this.type = new DbType (type);
 					break;
 			}
-			
-			this.is_fixed_length = is_fixed_length;
 		}
 		
 		
@@ -268,6 +287,5 @@ namespace Epsitec.Cresus.Database
 		protected bool					is_null_allowed		= false;
 		protected bool					is_unique			= false;
 		protected bool					is_indexed			= false;
-		protected bool					is_fixed_length		= true;
 	}
 }
