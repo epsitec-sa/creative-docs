@@ -157,16 +157,20 @@ namespace Epsitec.Cresus.Database.Implementation
 			//	L'appel FbConnection.CreateDatabase ne sait pas créer le dossier si nécessaire
 			string filename = this.CreateDbFileName (db_access);
 			System.IO.Directory.CreateDirectory (Path.GetDirectoryName (filename));
-
-			FbConnection.CreateDatabase (db_access.Server,
-				/**/					 FirebirdAbstraction.fb_port,
-				/**/					 filename,
-				/**/					 db_access.LoginName,
-				/**/					 db_access.LoginPassword,
-				/**/					 FirebirdAbstraction.fb_dialect,
-				/**/					 true, // <- true means synchronous writes on server
-				/**/					 FirebirdAbstraction.fb_page_size,
-				/**/					 FirebirdAbstraction.fb_charset);
+			
+			System.Collections.Hashtable values = new System.Collections.Hashtable ();
+			
+			values["Database"]    = filename;
+			values["User"]        = db_access.LoginName;
+			values["Password"]    = db_access.LoginPassword;
+			values["Dialect"]     = FirebirdAbstraction.fb_dialect;
+			values["DataSource"]  = db_access.Server;
+			values["Port"]        = FirebirdAbstraction.fb_port;
+			values["Charset"]     = FirebirdAbstraction.fb_charset;
+			values["PageSize"]    = FirebirdAbstraction.fb_page_size;
+			values["ForcedWrite"] = true;
+			
+			FbConnection.CreateDatabase (values);
 		}
 		
 		
