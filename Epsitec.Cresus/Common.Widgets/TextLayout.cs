@@ -542,7 +542,7 @@ namespace Epsitec.Common.Widgets
 						}
 
 						if ( posx >= block.pos.X       &&
-							posx <= block.pos.X+width )
+							 posx <= block.pos.X+width )
 						{
 							if ( block.image )
 							{
