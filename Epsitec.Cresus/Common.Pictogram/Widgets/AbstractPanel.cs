@@ -202,7 +202,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			Drawing.Color color = adorner.ColorWindow;
 			color = Drawing.Color.FromRGB(color.R*this.backgroundIntensity, color.G*this.backgroundIntensity, color.B*this.backgroundIntensity);
 #else
-			Drawing.Color color = Drawing.Color.FromARGB(1.0-this.backgroundIntensity, 0.5,0.5,0.5);
+			Drawing.Color cap = adorner.ColorCaption;
+			Drawing.Color color = Drawing.Color.FromARGB(1.0-this.backgroundIntensity, 0.5+cap.R*0.5, 0.5+cap.G*0.5, 0.5+cap.B*0.5);
 #endif
 			graphics.RenderSolid(color);
 
