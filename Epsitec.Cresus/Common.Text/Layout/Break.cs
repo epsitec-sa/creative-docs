@@ -42,6 +42,14 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
+		public StretchProfile					Profile
+		{
+			get
+			{
+				return this.profile;
+			}
+		}
+		
 		
 		private int								offset;
 		private double							advance;

@@ -80,8 +80,21 @@ namespace Epsitec.Common.Text.Cursors
 				}
 			}
 			
+			public Layout.StretchProfile		Profile
+			{
+				get
+				{
+					return this.profile;
+				}
+				set
+				{
+					this.profile = value;
+				}
+			}
+			
 			
 			private ushort						length;
+			private Layout.StretchProfile		profile;
 		}
 		
 		

@@ -169,6 +169,8 @@ namespace Epsitec.Common.Text
 				int offset;
 				int n_breaks = result.Count;
 				
+				Layout.StretchProfile profile;
+				
 				if (n_breaks > 1)
 				{
 					double penalty = Layout.StretchProfile.MaxPenalty;
@@ -183,16 +185,19 @@ namespace Epsitec.Common.Text
 						}
 					}
 					
-					offset = result[p_index].Offset;
+					offset  = result[p_index].Offset;
+					profile = result[p_index].Profile;
 				}
 				else
 				{
-					offset = result[0].Offset;
+					offset  = result[0].Offset;
+					profile = result[0].Profile;
 				}
 				
 				Cursors.FitterCursor.Element element = new Cursors.FitterCursor.Element ();
 				
-				element.Length = offset - line_start;
+				element.Length  = offset - line_start;
+				element.Profile = profile;
 				
 				list.Add (element);
 				
