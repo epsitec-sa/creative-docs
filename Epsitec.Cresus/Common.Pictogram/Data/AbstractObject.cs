@@ -1168,6 +1168,11 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+		// Imprime la géométrie de l'objet.
+		public virtual void PrintGeometry(Printing.PrintPort port, IconContext iconContext, IconObjects iconObjects)
+		{
+		}
+
 
 		// Arrange un objet après sa désérialisation. Il faut supprimer les
 		// propriétés créées à double dans le constructeur et lors de la désérialisation.
