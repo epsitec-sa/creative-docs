@@ -158,16 +158,16 @@ namespace Epsitec.Common.Support
 				{
 					case ResourceLevel.Merged:
 						bundle = new ResourceBundle (id);
-						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Default), prefix, level, recursion);
-						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Localised), prefix, level, recursion);
-						bundle.Compile (provider.GetDataStream (resource_id, ResourceLevel.Customised), prefix, level, recursion);
+						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Default), prefix, level, recursion);
+						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Localised), prefix, level, recursion);
+						bundle.Compile (provider.GetData (resource_id, ResourceLevel.Customised), prefix, level, recursion);
 						break;
 					
 					case ResourceLevel.Default:
 					case ResourceLevel.Localised:
 					case ResourceLevel.Customised:
 						bundle = new ResourceBundle (id);
-						bundle.Compile (provider.GetDataStream (resource_id, level), prefix, level, recursion);
+						bundle.Compile (provider.GetData (resource_id, level), prefix, level, recursion);
 						break;
 					
 					default:

@@ -367,6 +367,30 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public new Drawing.Bitmap			Icon
+		{
+			get
+			{
+				if (base.Icon == null)
+				{
+					return null;
+				}
+				
+				return Drawing.Bitmap.FromNativeBitmap (base.Icon.ToBitmap ());
+			}
+			set
+			{
+				if (value == null)
+				{
+					base.Icon = null;
+				}
+				else
+				{
+					base.Icon = System.Drawing.Icon.FromHandle (value.NativeBitmap.GetHicon ());
+				}
+			}
+		}
+		
 		
 		[Bundle ("pos")]	public Drawing.Point	WindowLocation
 		{
@@ -420,6 +444,12 @@ namespace Epsitec.Common.Widgets
 			
 			this.Root.Name = this.Name;
 			this.Root.RestoreFromBundle (bundler, bundle);
+			
+			if (bundle.GetFieldType ("icon") == Support.ResourceFieldType.Binary)
+			{
+				byte[] data = bundle.GetFieldBinary ("icon");
+				this.Icon = Drawing.Bitmap.FromData (data);
+			}
 		}
 		#endregion
 		

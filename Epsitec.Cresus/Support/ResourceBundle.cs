@@ -118,17 +118,17 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public void Compile(System.IO.Stream stream)
+		public void Compile(byte[] data)
 		{
-			this.Compile (stream, null, ResourceLevel.Merged, 0);
+			this.Compile (data, null, ResourceLevel.Merged, 0);
 		}
 		
-		public void Compile(System.IO.Stream stream, string default_prefix, ResourceLevel level)
+		public void Compile(byte[] data, string default_prefix, ResourceLevel level)
 		{
-			this.Compile (stream, default_prefix, level, 0);
+			this.Compile (data, default_prefix, level, 0);
 		}
 		
-		public void Compile(System.IO.Stream stream, string default_prefix, ResourceLevel level, int recursion)
+		public void Compile(byte[] data, string default_prefix, ResourceLevel level, int recursion)
 		{
 			//	La compilation des données part du principe que le bundle XML est "well formed",
 			//	c'est-à-dire qu'il comprend un seul bloc à la racine (<bundle>..</bundle>), et
@@ -139,15 +139,15 @@ namespace Epsitec.Common.Support
 			//	(voir http://www.w3.org/TR/2000/REC-xml-20001006#sec-cdata-sect). Cette encapsulation ne
 			//	peut se faire que sur un niveau.
 			
-			if (stream != null)
+			if (data != null)
 			{
+				System.IO.MemoryStream   stream = new System.IO.MemoryStream (data, false);
 				System.Xml.XmlTextReader reader = new System.Xml.XmlTextReader (stream);
 				
 				try
 				{
 					this.ParseXml (reader, default_prefix, level, 0, recursion);
 				}
-				
 				finally
 				{
 					reader.Close ();
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Support
 					case System.Xml.XmlNodeType.Element:
 						
 						//	Un élément peut être soit un élément racine <bundle>, soit un élément signalant
-						//	une référence <ref t='target'/>, soit un élément commençant une liste, soit
+						//	une référence <ref target='target'/>, soit un élément commençant une liste, soit
 						//	un élément <bundle> commençant un sous-bundle, soit un élément définissant un
 						//	champ 'string' du bundle.
 						
@@ -210,7 +210,7 @@ namespace Epsitec.Common.Support
 						
 						if (name == "list")
 						{
-							this.ParseXmlList (reader, default_prefix, level, reader_depth, recursion, element_name, buffer);
+							this.ParseXmlList (reader, default_prefix, level, reader_depth, recursion, ref element_name, buffer);
 							
 							//	On ne change pas la profondeur (reader_depth) ici, car on a terminé
 							//	sur un tag </list>.
@@ -252,26 +252,26 @@ namespace Epsitec.Common.Support
 								default:
 									throw new ResourceException ("Illegal bundle depth");
 							}
+							
+							reader_depth++;
+							continue;
 						}
-						else if (reader_depth == 1)
+						
+						if (name == "field")
 						{
-							System.Diagnostics.Debug.Assert (element_name == null);
-							element_name = name;
+							this.ParseXmlField (reader, reader_depth, out element_name);
+							reader_depth++;
+							continue;
+						}
+						
+						if (reader_depth == 0)
+						{
+							throw new ResourceException (string.Format ("Bundle does not start with root <bundle>, but <{0}>", name));
 						}
 						else
 						{
-							if (reader_depth == 0)
-							{
-								throw new ResourceException (string.Format ("Bundle does not start with root <bundle>, but <{0}>", name));
-							}
-							else
-							{
-								throw new ResourceException (string.Format ("Malformed XML bundle at {0} in {1}", name, element_name));
-							}
+							throw new ResourceException (string.Format ("Malformed XML bundle, unknown tag '{0}' found", name));
 						}
-						
-						reader_depth++;
-						break;
 					
 					
 					
@@ -294,7 +294,7 @@ namespace Epsitec.Common.Support
 						//	pas laisser passer ce genre d'erreurs.
 						
 						System.Diagnostics.Debug.Assert (element_name != null);
-						System.Diagnostics.Debug.Assert (element_name == name);
+						System.Diagnostics.Debug.Assert (name == "field");
 						
 						if (reader_depth == 1)
 						{
@@ -331,7 +331,24 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		protected void ParseXmlList(System.Xml.XmlTextReader reader, string default_prefix, ResourceLevel level, int reader_depth, int recursion, string element_name, System.Text.StringBuilder buffer)
+		protected void ParseXmlField(System.Xml.XmlTextReader reader, int reader_depth, out string element_name)
+		{
+			if (reader_depth != 1)
+			{
+				throw new ResourceException (string.Format ("Found field at depth {0}.", reader_depth));
+			}
+			
+			string name = reader.GetAttribute ("name");
+			
+			if (name == null)
+			{
+				throw new ResourceException ("Field has no name");
+			}
+			
+			element_name = name;
+		}
+		
+		protected void ParseXmlList(System.Xml.XmlTextReader reader, string default_prefix, ResourceLevel level, int reader_depth, int recursion, ref string element_name, System.Text.StringBuilder buffer)
 		{
 			//	Une liste est identifée par <list>...</list> et peut contenir exclusivement :
 			//
@@ -340,12 +357,20 @@ namespace Epsitec.Common.Support
 			//
 			//	On ne peut pas (encore) faire des listes de listes, ou des listes de textes.
 			
-			if (reader_depth != 2)
+			if (reader_depth != 1)
 			{
 				throw new ResourceException (string.Format ("Found list at depth {0}.", reader_depth));
 			}
 			
-			System.Diagnostics.Debug.Assert (element_name != null);
+			System.Diagnostics.Debug.Assert (element_name == null);
+			
+			element_name = reader.GetAttribute ("name");
+			
+			if (element_name == null)
+			{
+				throw new ResourceException ("List has no name");
+			}
+			
 			System.Collections.ArrayList list = new System.Collections.ArrayList (); 
 			
 			bool stop_loop = false;
@@ -414,7 +439,7 @@ namespace Epsitec.Common.Support
 			//	trouvé (niveau 1), soit simplement insérer les données dans le buffer
 			//	courant (niveau 2).
 			
-			string target = reader.GetAttribute ("t");
+			string target = reader.GetAttribute ("target");
 			
 			if (target == null)
 			{

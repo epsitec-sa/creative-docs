@@ -17,6 +17,11 @@ namespace Epsitec.Common.Drawing
 			get { return this; }
 		}
 		
+		public System.Drawing.Bitmap	NativeBitmap
+		{
+			get { return this.bitmap; }
+		}
+		
 		public System.IntPtr			Scan0
 		{
 			get { return this.bitmap_data.Scan0; }
@@ -82,6 +87,27 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		
+		public static Bitmap FromNativeBitmap(System.Drawing.Bitmap native)
+		{
+			Bitmap bitmap = new Bitmap ();
+			bitmap.bitmap = native;
+			bitmap.size   = new Size (bitmap.bitmap.Width, bitmap.bitmap.Height);
+			bitmap.origin = new Point (0, 0);
+				
+			bitmap.is_origin_defined = false;
+			
+			return bitmap;
+		}
+		
+		public static Bitmap FromData(byte[] data)
+		{
+			using (System.IO.MemoryStream stream = new System.IO.MemoryStream (data, false))
+			{
+				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (stream);
+				return Bitmap.FromNativeBitmap (bitmap);
+			}
+		}
 		
 		public static Bitmap FromFile(string file_name)
 		{

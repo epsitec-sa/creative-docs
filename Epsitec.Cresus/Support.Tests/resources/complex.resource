@@ -1,16 +1,14 @@
 <bundle>
- <class>GroupBox</class>
- <name>my_group</name>
- <size>500;300</size>
- <widgets>				<!-- le champ 'widgets' est constitué par une liste de bundles -->
-  <list>				<!-- début de la liste -->
-   <bundle>				<!-- premier bundle -->
-    <class>CheckButton</class>
-   </bundle>
-   <bundle>				<!-- second bundle -->
-    <class>RadioButton</class>
-   </bundle>
-   <ref t='button.cancel'/>
-  </list>				<!-- fin de la liste -->
- </widgets>
+ <field name='class'>GroupBox</field>
+ <field name='name'>my_group</field>
+ <field name='size'>500;300</field>
+ <list name='widgets'>				<!-- la liste 'widgets' est constitué par une collection de bundles -->
+  <bundle>							<!-- premier bundle -->
+   <field name='class'>CheckButton</field>
+  </bundle>
+  <bundle>							<!-- second bundle -->
+   <field name='class'>RadioButton</field>
+  </bundle>
+  <ref target='button.cancel'/>
+ </list>							<!-- fin de la liste -->
 </bundle>

@@ -1,51 +1,47 @@
 <bundle>
- <class>Window</class>
- <name>my_window</name>
- <text>Ressource: démo</text>
- <size>240;280</size>
- <widgets>
-  <list>
-   <bundle>
-    <class>CheckButton</class>
-    <text>Bouton A</text>
-    <name>checkA</name>
-    <cmd>on</cmd>
-    <size>200;*</size>
-    <pos>10;210</pos>
-   </bundle>
-   <bundle>
-    <class>GroupBox</class>
-    <anchor>Left, Right, Top, Bottom</anchor>
-    <text>Choix cornélien</text>
-    <size>215;85</size>
-    <pos>10;60</pos>
-    <dock_h>no</dock_h>
-    <dock_m>5;5;20;5</dock_m>
-    <widgets>
-     <list>
-      <bundle>
-       <class>RadioButton</class>
-       <text>Bouton B</text>
-       <dock>Fill</dock>
-      </bundle>
-      <bundle>
-       <class>RadioButton</class>
-       <text>Bouton C</text>
-       <dock>Fill</dock>
-      </bundle>
-      <bundle>
-       <class>RadioButton</class>
-       <text>Bouton D</text>
-       <dock>Fill</dock>
-      </bundle>
-     </list>
-    </widgets>
-   </bundle>
-   <bundle>
-    <ref t='button.cancel'/>
-    <cmd>on</cmd>
-    <pos>10;10</pos>
-   </bundle>
-  </list>
- </widgets>
+ <field name='class'>Window</field>
+ <field name='name'>my_window</field>
+ <field name='text'>Ressource: démo</field>
+ <field name='size'>240;280</field>
+ <list name='widgets'>
+  <bundle>
+   <field name='class'>CheckButton</field>
+   <field name='text'>Bouton A</field>
+   <field name='name'>checkA</field>
+   <field name='cmd'>on</field>
+   <field name='size'>200;*</field>
+   <field name='pos'>10;210</field>
+  </bundle>
+  <bundle>
+   <field name='class'>GroupBox</field>
+   <field name='anchor'>Left, Right, Top, Bottom</field>
+   <field name='text'><![CDATA[Choix <i>cornélien</i>...]]></field>
+   <field name='size'>215;85</field>
+   <field name='pos'>10;60</field>
+   <field name='dock_h'>no</field>
+   <field name='dock_m'>5;5;20;5</field>
+   <list name='widgets'>
+    <bundle>
+     <field name='class'>RadioButton</field>
+     <field name='text'>Bouton B</field>
+     <field name='dock'>Fill</field>
+    </bundle>
+    <bundle>
+     <field name='class'>RadioButton</field>
+     <field name='text'>Bouton C</field>
+     <field name='dock'>Fill</field>
+    </bundle>
+    <bundle>
+     <field name='class'>RadioButton</field>
+     <field name='text'>Bouton D</field>
+     <field name='dock'>Fill</field>
+    </bundle>
+   </list>
+  </bundle>
+  <bundle>
+   <ref target='button.cancel'/>
+   <field name='cmd'>on</field>
+   <field name='pos'>10;10</field>
+  </bundle>
+ </list>
 </bundle>

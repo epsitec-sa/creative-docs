@@ -1,3 +1,3 @@
 <bundle>
- <text><![CDATA[Annuler]]></text>
+ <field name='text'><![CDATA[Annuler]]></field>
 </bundle>

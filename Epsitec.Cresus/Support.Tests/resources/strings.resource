@@ -1,8 +1,8 @@
 ﻿<!-- Save as UTF-8 -->
 
 <bundle>
-<label.OK>OK</label.OK>
-<label.Hello><![CDATA[Hello <i>world</i>&nbsp;!]]></label.Hello>
-<title.MainWindow>Crésus Réseau</title.MainWindow>
-<title.SettingsWindow>Réglages</title.SettingsWindow>
+<field name='label.OK'>OK</field>
+<field name='label.Hello'><![CDATA[Hello <i>world</i>&nbsp;!]]></field>
+<field name='title.MainWindow'>Crésus Réseau</field>
+<field name='title.SettingsWindow'>Réglages</field>
 </bundle>

@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 08/10/2003
+//	Statut : OK/PA, 29/10/2003
 
 namespace Epsitec.Common.Support
 {
@@ -21,8 +21,7 @@ namespace Epsitec.Common.Support
 		bool ValidateId(string id);
 		bool Contains(string id);
 		
-		byte[]				GetData(string id, ResourceLevel level);
-		System.IO.Stream	GetDataStream(string id, ResourceLevel level);
+		byte[] GetData(string id, ResourceLevel level);
 		
 		//	Méthodes d'accès en écriture/modification :
 		

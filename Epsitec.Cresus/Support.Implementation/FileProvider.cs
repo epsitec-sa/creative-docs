@@ -132,24 +132,6 @@ namespace Epsitec.Common.Support.Implementation
 			return null;
 		}
 		
-		public System.IO.Stream GetDataStream(string id, Epsitec.Common.Support.ResourceLevel level)
-		{
-			string path = this.GetPathFromId (id, level);
-			
-			if (path != null)
-			{
-				try
-				{
-					System.IO.FileStream stream = new System.IO.FileStream (path, System.IO.FileMode.Open, System.IO.FileAccess.Read);
-					return stream;
-				}
-				catch
-				{
-				}
-			}
-			
-			return null;
-		}
 		
 		public void Create(string id, Epsitec.Common.Support.ResourceLevel level)
 		{

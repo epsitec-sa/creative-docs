@@ -66,8 +66,14 @@ namespace Epsitec.Common.Support.Tests
 		
 		[Test] public void CheckCommandDispatcher()
 		{
-			CommandDispatcher.Default.Register ("my_window.cancel", new CommandEventHandler (this.HandleCommandCancel));
+			if (ObjectBundlerTest.register_window_cancel)
+			{
+				CommandDispatcher.Default.Register ("my_window.cancel", new CommandEventHandler (this.HandleCommandCancel));
+				ObjectBundlerTest.register_window_cancel = false;
+			}
 		}
+		
+		private static bool register_window_cancel = true;
 		
 		private void HandleCommandCancel(object sender, CommandEventArgs e)
 		{
