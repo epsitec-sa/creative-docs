@@ -9,8 +9,8 @@ namespace Epsitec.Cresus.Remoting
 	/// </summary>
 	public interface IConnectionService
 	{
-		void CheckConnectivity(ClientIdentity client_id);
+		void CheckConnectivity(ClientIdentity client);
 		
-		void QueryAvailableServices(ClientIdentity client_id, out string[] service_names);
+		void QueryAvailableServices(ClientIdentity client, out string[] service_names);
 	}
 }

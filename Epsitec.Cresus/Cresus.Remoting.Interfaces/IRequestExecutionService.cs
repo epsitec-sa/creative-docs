@@ -9,9 +9,9 @@ namespace Epsitec.Cresus.Remoting
 	/// </summary>
 	public interface IRequestExecutionService
 	{
-		void EnqueueRequest(SerializedRequest[] requests);
+		void EnqueueRequest(ClientIdentity client, SerializedRequest[] requests);
 		
-		void QueryRequestStates(ClientIdentity client_id, out RequestState[] states);
-		void ClearRequestStates(RequestState[] states);
+		void QueryRequestStates(ClientIdentity client, out RequestState[] states);
+		void ClearRequestStates(ClientIdentity client, RequestState[] states);
 	}
 }

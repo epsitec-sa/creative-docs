@@ -474,6 +474,7 @@ namespace Epsitec.Cresus.Database
 		[Test] /*[Ignore ("Temporary")]*/ public void Check13ConnectionClient()
 		{
 			Remoting.IConnectionService service = Services.Engine.GetRemoteConnectionService ("localhost", 1234);
+			Remoting.ClientIdentity client = new Remoting.ClientIdentity ("NUnit Test Client", 1000);
 			
 			Assert.IsNotNull (service);
 			
@@ -481,8 +482,8 @@ namespace Epsitec.Cresus.Database
 			
 			Remoting.ClientIdentity.DefineDefaultClientId (1);
 			
-			service.CheckConnectivity (new Remoting.ClientIdentity ("NUnit Test Client"));
-			service.QueryAvailableServices (new Remoting.ClientIdentity ("NUnit Test Client"), out service_names);
+			service.CheckConnectivity (client);
+			service.QueryAvailableServices (client, out service_names);
 			
 			System.Diagnostics.Debug.WriteLine ("Found " + service_names.Length + " services:");
 			foreach (string name in service_names)
@@ -576,6 +577,7 @@ namespace Epsitec.Cresus.Database
 			System.Data.DataTable table = RequestsTest.GetDataTableFromTable (infrastructure, "ServiceTest");
 			
 			Remoting.ClientIdentity.DefineDefaultClientId (1);
+			Remoting.ClientIdentity client = new Remoting.ClientIdentity ("NUnit Test Client", 1000);
 			
 			Remoting.IRequestExecutionService service = Services.Engine.GetRemoteRequestExecutionService ("localhost", 1234);
 			
@@ -608,12 +610,12 @@ namespace Epsitec.Cresus.Database
 			
 			byte[] serialized_2 = Requests.AbstractRequest.SerializeToMemory (factory.CreateGroup ());
 			
-			service.EnqueueRequest (new Remoting.SerializedRequest[] { new Remoting.SerializedRequest (DbId.CreateId (100, 1000).Value, serialized_1),
-																		 /**/												   new Remoting.SerializedRequest (DbId.CreateId (101, 1000).Value, serialized_2) });
+			service.EnqueueRequest (client, new Remoting.SerializedRequest[] { new Remoting.SerializedRequest (DbId.CreateId (100, 1000).Value, serialized_1),
+				/**/														   new Remoting.SerializedRequest (DbId.CreateId (101, 1000).Value, serialized_2) });
 			
 			Remoting.RequestState[] states;
 			
-			service.QueryRequestStates (new Remoting.ClientIdentity ("NUnit Test Client", 1000), out states);
+			service.QueryRequestStates (client, out states);
 			
 			System.Diagnostics.Debug.WriteLine ("1/ Got " + states.Length + " states back from server :");
 			
@@ -624,7 +626,9 @@ namespace Epsitec.Cresus.Database
 			
 			System.Threading.Thread.Sleep (500);
 			
-			service.QueryRequestStates (new Remoting.ClientIdentity ("NUnit Test Client", 1000), out states);
+			
+			
+			service.QueryRequestStates (client, out states);
 			
 			System.Diagnostics.Debug.WriteLine ("2/ Got " + states.Length + " states back from server :");
 			
@@ -633,8 +637,8 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.WriteLine ("-- " + states[i].Identifier + ", state = " + (Requests.ExecutionState) states[i].State);
 			}
 			
-			service.ClearRequestStates (new Remoting.RequestState[] { states[0] });
-			service.QueryRequestStates (new Remoting.ClientIdentity ("NUnit Test Client", 1000), out states);
+			service.ClearRequestStates (client, new Remoting.RequestState[] { states[0] });
+			service.QueryRequestStates (client, out states);
 			
 			System.Diagnostics.Debug.WriteLine ("3/ After clearing first state, got " + states.Length + " states back from server :");
 			

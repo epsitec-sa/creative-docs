@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Services
 		
 		
 		#region IRequestExecutionService Members
-		void IRequestExecutionService.EnqueueRequest(SerializedRequest[] requests)
+		void IRequestExecutionService.EnqueueRequest(ClientIdentity client, SerializedRequest[] requests)
 		{
 			//	Place une série de requêtes dans la queue.
 			
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Services
 			list.CopyTo (states);
 		}
 		
-		void IRequestExecutionService.ClearRequestStates(RequestState[] states)
+		void IRequestExecutionService.ClearRequestStates(ClientIdentity client, RequestState[] states)
 		{
 			//	Supprime de la queue les requêtes dont l'état correspond à celui
 			//	décrit.
