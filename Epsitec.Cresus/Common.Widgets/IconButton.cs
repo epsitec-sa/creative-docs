@@ -57,23 +57,23 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.icon_name;
+				return this.iconName;
 			}
 
 			set
 			{
-				if (this.icon_name != value)
+				if ( this.iconName != value )
 				{
-					this.icon_name = value;
+					this.iconName = value;
 					
-					if ((this.icon_name == null) ||
-						(this.icon_name == ""))
+					if ( this.iconName == null ||
+						 this.iconName == ""   )
 					{
 						this.Text = null;
 					}
 					else
 					{
-						this.Text = @"<img src=""" + this.icon_name + @"""/>";
+						this.Text = @"<img src=""" + this.iconName + @"""/>";
 					}
 				}
 			}
@@ -89,6 +89,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected string				icon_name;
+		protected string				iconName;
 	}
 }

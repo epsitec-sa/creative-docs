@@ -161,7 +161,6 @@ namespace Epsitec.Common.Widgets
 					this.circle.Color = value;
 					this.UpdateColors ();
 					this.suspendColorEvents = false;
-					this.OnChanged ();
 				}
 			}
 		}
