@@ -96,7 +96,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (panel != null)
 			{
-				panel.Parent   = this;
+				panel.SetEmbedder (this);
 				panel.Aperture = Drawing.Rectangle.Empty;
 				
 				panel.LayoutChanged += new EventHandler (this.HandlePanelLayoutChanged);
@@ -111,7 +111,7 @@ namespace Epsitec.Common.Widgets
 				panel.LayoutChanged -= new EventHandler (this.HandlePanelLayoutChanged);
 				panel.SurfaceSizeChanged -= new EventHandler (this.HandlePanelSurfaceSizeChanged);
 				
-				panel.Parent   = null;
+				panel.SetEmbedder (null);
 				panel.Aperture = Drawing.Rectangle.Infinite;
 			}
 		}
@@ -209,6 +209,9 @@ namespace Epsitec.Common.Widgets
 			
 			double offset_x = 0;
 			double offset_y = 0;
+			
+			panel_dx = System.Math.Max (panel_dx, vis_dx);
+			panel_dy = System.Math.Max (panel_dy, vis_dy);
 			
 			//	Détermine l'aspect des ascenceurs ainsi que les offsets [x] et [y] qui
 			//	doivent s'appliquer à l'ouverture (aperture) qui permet de voir le panel.
@@ -320,7 +323,6 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (this.panel == sender);
 			
 			this.UpdateGeometry ();
-//?			this.UpdatePanelLocation ();
 		}
 		
 		
