@@ -476,6 +476,7 @@ namespace Epsitec.Common.Designer.Widgets
 					(this.overlay.SelectedWidgets.Count == 1))
 				{
 					Drawing.Rectangle bounds = this.target_widget.Bounds;
+					Widget            parent = this.target_widget.Parent;
 					
 					this.target_z_order  = this.target_widget.ZOrder;
 					this.target_z_parent = this.target_widget.Parent;
@@ -488,7 +489,7 @@ namespace Epsitec.Common.Designer.Widgets
 					this.overlay.drop_behavior.DropTarget           = null;
 					this.overlay.drop_behavior.DropTargetHiliteMode = WidgetHiliteMode.DropCandidate;
 					
-					this.overlay.drop_behavior.StartWidgetDragging (bounds.Size);
+					this.overlay.drop_behavior.StartWidgetDragging (bounds.Size, bounds, parent);
 					
 					this.drag_window_origin = this.overlay.drop_behavior.DragWindowLocation;
 					this.drag_drop_active   = true;
@@ -499,6 +500,8 @@ namespace Epsitec.Common.Designer.Widgets
 				{
 					this.overlay.drop_behavior.Widget               = this.target_widget;
 					this.overlay.drop_behavior.DropTarget           = this.target_parent;
+					this.overlay.drop_behavior.WidgetDefaultBounds  = this.target_widget.Bounds;
+					this.overlay.drop_behavior.WidgetDefaultTarget  = this.target_parent;
 					this.overlay.drop_behavior.DropTargetHiliteMode = WidgetHiliteMode.None;
 					
 					this.drag_window_origin = Drawing.Point.Empty;
@@ -534,6 +537,10 @@ namespace Epsitec.Common.Designer.Widgets
 						{
 							this.target_widget.ZOrder = this.target_z_order;
 						}
+						else
+						{
+							this.overlay.ZOrder = 0;
+						}
 					}
 					else
 					{
@@ -545,6 +552,9 @@ namespace Epsitec.Common.Designer.Widgets
 					
 					this.drag_drop_active = false;
 				}
+				
+				this.overlay.drop_behavior.WidgetDefaultBounds = Drawing.Rectangle.Empty;
+				this.overlay.drop_behavior.WidgetDefaultTarget = null;
 				
 				System.Diagnostics.Debug.Assert (grip != null);
 				System.Diagnostics.Debug.Assert (grip.Index >= 0);

@@ -18,8 +18,8 @@ La base de données des ressources d'une application se nomme :
 (avec éventuellement l'extension ajoutée par DbInfrastructure et
 les autres couches).
 
-En plus des tables décrivant les méta-données, il y a les tables
-suivantes :
+En plus des tables décrivant les méta-données, il y a la table
+suivante :
 
 -	DbTable.Name = "Data";
 

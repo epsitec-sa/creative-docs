@@ -12,9 +12,10 @@ namespace Epsitec.Common.Designer.Behaviors
 	{
 		public DropBehavior(object host)
 		{
-			this.host                = host;
-			this.drop_adorner        = new HiliteWidgetAdorner ();
-			this.drag_window_margins = new Drawing.Margins (3, 3, 3, 3);
+			this.host                  = host;
+			this.drop_adorner          = new HiliteWidgetAdorner ();
+			this.drag_window_margins   = new Drawing.Margins (3, 3, 3, 3);
+			this.widget_default_bounds = Drawing.Rectangle.Empty;
 		}
 		
 		
@@ -72,6 +73,30 @@ namespace Epsitec.Common.Designer.Behaviors
 				}
 				
 				return base_line.Y;
+			}
+		}
+		
+		public Drawing.Rectangle				WidgetDefaultBounds
+		{
+			get
+			{
+				return this.widget_default_bounds;
+			}
+			set
+			{
+				this.widget_default_bounds = value;
+			}
+		}
+		
+		public Widget							WidgetDefaultTarget
+		{
+			get
+			{
+				return this.widget_default_target;
+			}
+			set
+			{
+				this.widget_default_target = value;
 			}
 		}
 		
@@ -157,10 +182,13 @@ namespace Epsitec.Common.Designer.Behaviors
 		}
 		
 		
-		public void StartWidgetDragging(Drawing.Size initial_size)
+		public void StartWidgetDragging(Drawing.Size initial_size, Drawing.Rectangle initial_bounds, Widget initial_target)
 		{
 			System.Diagnostics.Debug.Assert (this.widget != null);
 			System.Diagnostics.Debug.Assert (this.drag_window == null);
+			
+			this.widget_default_bounds = initial_bounds;
+			this.widget_default_target = initial_target;
 			
 			Drawing.Point offset = new Drawing.Point (this.widget.Width - initial_size.Width, this.widget.Height - initial_size.Height);
 			Drawing.Point pos    = this.WidgetScreenBounds.Location;
@@ -173,6 +201,9 @@ namespace Epsitec.Common.Designer.Behaviors
 		
 		public void CancelWidgetDragging()
 		{
+			this.widget_default_bounds = Drawing.Rectangle.Empty;
+			this.widget_default_target = null;
+			
 			if (this.widget == null)
 			{
 				return;
@@ -185,6 +216,9 @@ namespace Epsitec.Common.Designer.Behaviors
 		
 		public bool ValidateWidgetDragging()
 		{
+			this.widget_default_bounds = Drawing.Rectangle.Empty;
+			this.widget_default_target = null;
+			
 			Widget drop_target = this.DropTarget;
 			
 			if (drop_target == null)
@@ -280,6 +314,9 @@ namespace Epsitec.Common.Designer.Behaviors
 				Behaviors.SmartGuideBehavior guide  = new Behaviors.SmartGuideBehavior (this.widget, Drawing.GripId.Body, drop_target);
 				Drawing.Rectangle            bounds = this.DropTargetRelativeWidgetBounds;
 				
+				guide.DefaultBounds = this.widget_default_bounds;
+				guide.DefaultTarget = this.widget_default_target;
+				
 				guide.Constrain (bounds, this.WidgetBaseLineOffset, cx, cy);
 				
 				//	Prend note des marques verticales (cx) et horizontales (cy) définissant visuellement les
@@ -333,6 +370,9 @@ namespace Epsitec.Common.Designer.Behaviors
 			Behaviors.SmartGuideBehavior guide  = new Behaviors.SmartGuideBehavior (widget, grip, parent, filter);
 			Drawing.Rectangle            bounds = new_bounds;
 			Drawing.Point                bline  = widget.BaseLine;
+			
+			guide.DefaultBounds = this.widget_default_bounds;
+			guide.DefaultTarget = this.widget_default_target;
 			
 			if ((grip == Drawing.GripId.Body) &&
 				(! bline.IsEmpty))
@@ -479,6 +519,8 @@ namespace Epsitec.Common.Designer.Behaviors
 		
 		private object							host;
 		private Widget							widget;
+		private Drawing.Rectangle				widget_default_bounds;
+		private Widget							widget_default_target;
 		private Drawing.Margins					drag_window_margins;
 		private DragWindow						drag_window;
 		

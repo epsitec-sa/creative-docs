@@ -75,6 +75,16 @@ namespace Epsitec.Common.Widgets.Helpers
 							this.HandleDragging (message, pos);
 						}
 						break;
+					
+					case MessageType.KeyDown:
+					case MessageType.KeyUp:
+						if ((message.KeyCode == KeyCode.AltKey) ||
+							(message.KeyCode == KeyCode.ShiftKey) ||
+							(message.KeyCode == KeyCode.ControlKey))
+						{
+							this.HandleDragging (message, pos);
+						}
+						break;
 				}
 			}
 			

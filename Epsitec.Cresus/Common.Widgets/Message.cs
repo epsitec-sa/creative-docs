@@ -1,3 +1,6 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
 	public delegate void MessageHandler(object sender, Message message);
@@ -921,6 +924,7 @@ namespace Epsitec.Common.Widgets
 		PageUp			= 33,
 		Pause			= 19,
 		Return			= 13,
+		ShiftKey		= 16,
 		ShiftKeyLeft	= 160,
 		ShiftKeyRight	= 161,
 		Space			= 32,

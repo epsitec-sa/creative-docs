@@ -10,9 +10,10 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	public interface IDialogDesigner : System.IDisposable
 	{
-		Widgets.Window			DialogWindow		{ get; set; }
-		Types.IDataGraph		DialogData			{ get; set; }
-		string					ResourceName		{ get; set; }
+		Widgets.Window				DialogWindow		{ get; set; }
+		Types.IDataGraph			DialogData			{ get; set; }
+		Support.CommandDispatcher	DialogCommands		{ get; set; }
+		string						ResourceName		{ get; set; }
 		
 		void StartDesign();
 	}

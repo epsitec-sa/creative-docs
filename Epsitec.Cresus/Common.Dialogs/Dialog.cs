@@ -7,7 +7,7 @@ namespace Epsitec.Common.Dialogs
 	/// La classe Dialog permet d'ouvrir et de gérer un dialogue à partir d'une
 	/// ressource et d'une source de données.
 	/// </summary>
-	public class Dialog
+	public class Dialog : Support.ICommandDispatcherHost
 	{
 		public Dialog()
 		{
@@ -48,6 +48,30 @@ namespace Epsitec.Common.Dialogs
 			get
 			{
 				return this.window;
+			}
+		}
+		
+		public Support.CommandDispatcher		CommandDispatcher
+		{
+			get
+			{
+				return this.dispatcher;
+			}
+			set
+			{
+				if (this.dispatcher != value)
+				{
+					this.dispatcher = value;
+					
+					if (this.designer != null)
+					{
+						this.designer.DialogCommands = this.dispatcher;
+					}
+					else if (this.window != null)
+					{
+						this.window.CommandDispatcher = this.dispatcher;
+					}
+				}
 			}
 		}
 		
@@ -143,6 +167,7 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
+		
 		protected virtual void UpdateWindowBindings()
 		{
 			if (this.window != null)
@@ -207,6 +232,7 @@ namespace Epsitec.Common.Dialogs
 		protected InternalMode					mode;
 		protected Types.IDataGraph				data;
 		protected Widgets.Window				window;
+		protected Support.CommandDispatcher		dispatcher;
 		protected IDialogDesigner				designer;
 	}
 }

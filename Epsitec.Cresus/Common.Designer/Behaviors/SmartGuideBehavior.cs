@@ -16,48 +16,91 @@ namespace Epsitec.Common.Designer.Behaviors
 		public SmartGuideBehavior()
 		{
 			this.align = Panels.WidgetSourcePalette.Guide;
+			this.default_bounds = Drawing.Rectangle.Empty;
 		}
 		
-		public SmartGuideBehavior(Widget widget) : this()
+		public SmartGuideBehavior(Widget widget) : this ()
 		{
 			this.widget  = widget;
 		}
 		
-		public SmartGuideBehavior(Widget widget, Drawing.GripId id) : this(widget)
+		public SmartGuideBehavior(Widget widget, Drawing.GripId id) : this (widget)
 		{
 			this.grip_id = id;
 		}
 		
-		public SmartGuideBehavior(Widget widget, Drawing.GripId id, Widget target) : this(widget, id)
+		public SmartGuideBehavior(Widget widget, Drawing.GripId id, Widget target) : this (widget, id)
 		{
 			this.target = target;
 		}
 		
-		public SmartGuideBehavior(Widget widget, Drawing.GripId id, Widget target, Filter filter) : this(widget, id, target)
+		public SmartGuideBehavior(Widget widget, Drawing.GripId id, Widget target, Filter filter) : this (widget, id, target)
 		{
 			this.filter = filter;
 		}
 		
 		
-		public Drawing.GripId			GripId
+		public Drawing.GripId					GripId
 		{
-			get { return this.grip_id; }
-			set { this.grip_id = value; }
+			get
+			{
+				return this.grip_id;
+			}
+			set
+			{
+				this.grip_id = value;
+			}
 		}
 		
-		public Widget					Widget
+		public Widget							Widget
 		{
-			get { return this.widget; }
-			set { this.widget = value; }
+			get
+			{
+				return this.widget;
+			}
+			set
+			{
+				this.widget = value;
+			}
 		}
 		
-		public Widget					Target
+		public Drawing.Rectangle				DefaultBounds
 		{
-			get { return this.target; }
-			set { this.target = value; }
+			get
+			{
+				return this.default_bounds;
+			}
+			set
+			{
+				this.default_bounds = value;
+			}
 		}
 		
-		public IGuideAlignHint			GuideAlign
+		public Widget							DefaultTarget
+		{
+			get
+			{
+				return this.default_target;
+			}
+			set
+			{
+				this.default_target = value;
+			}
+		}
+		
+		public Widget							Target
+		{
+			get
+			{
+				return this.target;
+			}
+			set
+			{
+				this.target = value;
+			}
+		}
+		
+		public IGuideAlignHint					GuideAlign
 		{
 			get
 			{
@@ -89,6 +132,11 @@ namespace Epsitec.Common.Designer.Behaviors
 		
 		public void Constrain(Drawing.Rectangle bounds, double base_line_offset, ConstraintBehavior cx, ConstraintBehavior cy)
 		{
+			if (Message.State.IsAltPressed)
+			{
+				return;
+			}
+			
 			if ((this.widget != null) &&
 				(this.target != null))
 			{
@@ -125,9 +173,9 @@ namespace Epsitec.Common.Designer.Behaviors
 			double xl = bounds.Left;
 			double xr = bounds.Right;
 			
-			Widget            widget  = this.target;
-			Drawing.Rectangle model   = widget.InnerBounds;
-			Drawing.Margins   margins = this.align.GetInnerMargins (widget);
+			Widget            parent  = this.target;
+			Drawing.Rectangle model   = parent.InnerBounds;
+			Drawing.Margins   margins = this.align.GetInnerMargins (parent);
 			
 			double mx;
 			
@@ -135,19 +183,34 @@ namespace Epsitec.Common.Designer.Behaviors
 			
 			if ((edges & Drawing.EdgeId.Left) != 0)
 			{
-				mx = model.Left + widget.DockPadding.Left + margins.Left;
+				mx = model.Left + parent.DockPadding.Left + margins.Left;
 				constraint.Add (xl, mx, mx, model.Bottom, mx, model.Top, ConstraintBehavior.Priority.Low, AnchorStyles.Left);
+				
+				if ((this.default_bounds.IsValid) &&
+					(this.default_target == parent))
+				{
+					mx = this.default_bounds.Left;
+					constraint.Add (xl, mx, mx, this.default_bounds.Bottom, mx, this.default_bounds.Top, ConstraintBehavior.Priority.Low);
+				}
 			}
 			
 			if ((edges & Drawing.EdgeId.Right) != 0)
 			{
-				mx = model.Right - widget.DockPadding.Right - margins.Right;
+				mx = model.Right - parent.DockPadding.Right - margins.Right;
 				constraint.Add (xr, mx, mx, model.Bottom, mx, model.Top, ConstraintBehavior.Priority.Low, AnchorStyles.Right);
+				
+				if ((this.default_bounds.IsValid) &&
+					(this.default_target == parent))
+				{
+					mx = this.default_bounds.Right;
+					constraint.Add (xr, mx, mx, this.default_bounds.Bottom, mx, this.default_bounds.Top, ConstraintBehavior.Priority.Low);
+				}
 			}
 			
 			//	Passe en revue tous les frères et détermine les alignements respectifs :
 			
-			Widget[] children = widget.Children.Widgets;
+			Widget[] children = parent.Children.Widgets;
+			Widget   widget   = null;
 			
 			for (int i = 0; i < children.Length; i++)
 			{
@@ -209,10 +272,10 @@ namespace Epsitec.Common.Designer.Behaviors
 			double y2 = bounds.Bottom + base_line_offset;
 			double y3 = bounds.Top;
 			
-			Widget            widget  = this.target;
-			Drawing.Rectangle model   = widget.InnerBounds;
-			Drawing.Point     basel   = widget.BaseLine;
-			Drawing.Margins   margins = this.align.GetInnerMargins (widget);
+			Widget            parent  = this.target;
+			Drawing.Rectangle model   = parent.InnerBounds;
+			Drawing.Point     basel   = parent.BaseLine;
+			Drawing.Margins   margins = this.align.GetInnerMargins (parent);
 			
 			double my;
 			
@@ -220,19 +283,34 @@ namespace Epsitec.Common.Designer.Behaviors
 			
 			if ((edges & Drawing.EdgeId.Bottom) != 0)
 			{
-				my = model.Bottom + widget.DockPadding.Bottom + margins.Bottom;
+				my = model.Bottom + parent.DockPadding.Bottom + margins.Bottom;
 				constraint.Add (y1, my, model.Left, my, model.Right, my, ConstraintBehavior.Priority.Low, AnchorStyles.Bottom);
+				
+				if ((this.default_bounds.IsValid) &&
+					(this.default_target == parent))
+				{
+					my = this.default_bounds.Bottom;
+					constraint.Add (y1, my, this.default_bounds.Left, my, this.default_bounds.Right, my, ConstraintBehavior.Priority.Low);
+				}
 			}
 			
 			if ((edges & Drawing.EdgeId.Top) != 0)
 			{
-				my = model.Top - widget.DockPadding.Top - margins.Top;
+				my = model.Top - parent.DockPadding.Top - margins.Top;
 				constraint.Add (y3, my, model.Left, my, model.Right, my, ConstraintBehavior.Priority.Low, AnchorStyles.Top);
+				
+				if ((this.default_bounds.IsValid) &&
+					(this.default_target == parent))
+				{
+					my = this.default_bounds.Top;
+					constraint.Add (y3, my, this.default_bounds.Left, my, this.default_bounds.Right, my, ConstraintBehavior.Priority.Low);
+				}
 			}
 			
 			//	Passe en revue tous les frères et détermine les alignements respectifs :
 			
-			Widget[] children = widget.Children.Widgets;
+			Widget[] children = parent.Children.Widgets;
+			Widget   widget   = null;
 			
 			for (int i = 0; i < children.Length; i++)
 			{
@@ -321,6 +399,8 @@ namespace Epsitec.Common.Designer.Behaviors
 		protected Widget						target;
 		protected IGuideAlignHint				align;
 		protected Filter						filter;
+		protected Drawing.Rectangle				default_bounds;
+		protected Widget						default_target;
 		
 		protected static IGuideAlignHint		default_align = new DefaultGuideAlign();
 		protected static Drawing.Margins		root_margins  = new Drawing.Margins (12, 12, 20, 20);

@@ -181,7 +181,7 @@ namespace Epsitec.Common.Designer.Widgets
 			this.drop_behavior.Widget     = copy;
 			this.drop_behavior.DropTarget = null;
 			
-			this.drop_behavior.StartWidgetDragging (initial_size);
+			this.drop_behavior.StartWidgetDragging (initial_size, Drawing.Rectangle.Empty, null);
 			
 			if (this.DragBegin != null)
 			{

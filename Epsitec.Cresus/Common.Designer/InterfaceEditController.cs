@@ -619,7 +619,10 @@ namespace Epsitec.Common.Designer
 		
 		protected void DeselectAllWidgets()
 		{
-			this.active_editor.SelectedWidgets.Clear ();
+			if (this.active_editor != null)
+			{
+				this.active_editor.SelectedWidgets.Clear ();
+			}
 		}
 		
 		protected void ReselectWidgets(Widget[] widgets)
