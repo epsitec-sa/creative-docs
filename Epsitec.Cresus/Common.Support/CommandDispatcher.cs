@@ -790,6 +790,8 @@ namespace Epsitec.Common.Support
 			{
 				System.Diagnostics.Debug.WriteLine ("Command '" + command_name + "' not handled.");
 			}
+			
+			this.OnCommandDispatched ();
 		}
 		
 		
@@ -809,9 +811,20 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		protected void OnCommandDispatched()
+		{
+			//	Indique qu'une commande (ou un paquet de commandes) a été exécutée.
+			
+			if (this.CommandDispatched != null)
+			{
+				this.CommandDispatched (this);
+			}
+		}
+		
 		
 		public event EventHandler				ValidationRuleBecameDirty;
 		public event EventHandler				OpletQueueBindingChanged;
+		public event EventHandler				CommandDispatched;
 		
 		public static CommandDispatcher			Default
 		{
