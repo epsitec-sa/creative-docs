@@ -1,6 +1,6 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier
-//	DD 15/04/2004
+//	DD 19/04/2004, modif pour jointures
 
 using FirebirdSql.Data.Firebird;
 
@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			switch (sql_function.ArgumentCount)
 			{
 				case 2:
-					if ( sql_function.Type == SqlFunctionType.JoinInner )
+/*					if ( sql_function.Type == SqlFunctionType.JoinInner )
 					{
 						this.Append (sql_function.A.AsName);
 						this.Append (" INNER JOIN ");
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Database.Implementation
 						this.Append (" = ");
 						this.Append (sql_function.B.AsQualifiedName);
 						return;
-					}
+					}*/
 
 					this.Append (sql_function.A);
 					switch (sql_function.Type)
@@ -334,6 +334,35 @@ namespace Epsitec.Cresus.Database.Implementation
 			}			
 		}
 		
+		protected void Append(SqlJoin sql_join)
+		{
+			System.Diagnostics.Debug.Assert (sql_join != null);
+
+			//	Converti la fonction en chaîne de caractère SQL
+//			switch (sql_join.ArgumentCount)
+			{
+//				case 2:
+					if (sql_join.Type == SqlJoinType.Inner)
+					{
+						this.Append (sql_join.A.AsQualifier);
+						this.Append (" INNER JOIN ");
+						this.Append (sql_join.B.AsQualifier);
+						this.Append (" ON ");
+						this.Append (sql_join.A.AsQualifiedName);
+						this.Append (" = ");
+						this.Append (sql_join.B.AsQualifiedName);
+						return;
+					}
+
+					System.Diagnostics.Debug.Assert (false);
+/*					break;
+
+				default:
+					System.Diagnostics.Debug.Assert (false);
+					return;*/
+			}			
+		}
+		
 		protected void Append(SqlSelect sql_query)
 		{
 			//	TODO-DD:  Compléter encore, notemment pour les JOINTURES
@@ -391,7 +420,16 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.Append (" FROM ");
 			first_field = true;
 
-			foreach (SqlField field in sql_query.Tables)
+			if (sql_query.Joins.Count > 0)
+			{
+				//	cas particulier pour les jointures
+				foreach (SqlField field in sql_query.Joins)
+				{
+					this.Append (field.AsJoin);
+					first_field = false;
+				}
+			}
+			else foreach (SqlField field in sql_query.Tables)
 			{
 				if (first_field)
 				{

@@ -1,7 +1,7 @@
 <bundle>
  <data name='class'>Window</data>
  <data name='Name'>my_window</data>
- <data name='Text'>Ressource: démo</data>
+ <data name='Text'><ref target='strings#title.SettingsWindow'/></data>
  <data name='Size'>240;280</data>
  <data name='Icon'>file:icon</data>
  <list name='widgets'>
