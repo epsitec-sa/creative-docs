@@ -418,10 +418,10 @@ namespace Epsitec.Common.Widgets
 					
 					string text = this.items[i+this.firstLine];
 					
-					this.textLayouts[i].Text = this.AutoResolveResRef ? Support.Resources.ResolveTextRef (text) : text;
-					this.textLayouts[i].Font = this.DefaultFont;
-					this.textLayouts[i].FontSize = this.DefaultFontSize;
-					this.textLayouts[i].LayoutSize = new Drawing.Size(this.GetTextWidth(), this.lineHeight);
+					this.textLayouts[i].Text            = this.AutoResolveResRef ? Support.Resources.ResolveTextRef (text) : text;
+					this.textLayouts[i].DefaultFont     = this.DefaultFont;
+					this.textLayouts[i].DefaultFontSize = this.DefaultFontSize;
+					this.textLayouts[i].LayoutSize      = new Drawing.Size(this.GetTextWidth(), this.lineHeight);
 				}
 				this.isDirty = false;
 			}
