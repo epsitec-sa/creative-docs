@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Database
 			
 			command.CreateNewRow ("Personnes", out row_1); row_1["Nom"] = "Toto"; row_1["Prenom"] = "Foo";
 			command.CreateNewRow ("Personnes", out row_2); row_2["Nom"] = "Titi"; row_2["Prenom"] = "Bar";
-			command.CreateNewRow ("Domiciles", out row_3); row_3["Ville"] = System.DBNull.Value; // "New York";
+			command.CreateNewRow ("Domiciles", out row_3); row_3["Ville"] = "New York";
 			
 			DbKey k1 = new DbKey (row_1);
 			DbKey k2 = new DbKey (row_2);
