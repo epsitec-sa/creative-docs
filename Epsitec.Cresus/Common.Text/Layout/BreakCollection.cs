@@ -32,6 +32,20 @@ namespace Epsitec.Common.Text.Layout
 		}
 		
 		
+		public Layout.Break						this[int index]
+		{
+			get
+			{
+				if (index < this.break_count)
+				{
+					return this.breaks[index];
+				}
+				
+				throw new System.ArgumentOutOfRangeException ("index", index, "Index out of range.");
+			}
+		}
+		
+		
 		#region ICollection Members
 		public bool								IsSynchronized
 		{
