@@ -39,7 +39,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public static void InvalidateAll()
+		public static void InvalidateAll(Window.InvalidateReason reason)
 		{
 			for (int i = 0; i < Window.windows.Count; )
 			{
@@ -53,7 +53,15 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					target.Root.Invalidate ();
+					WindowRoot root = target.Root;
+					
+					if (reason == InvalidateReason.AdornerChanged)
+					{
+						root.NotifyAdornerChanged ();
+					}
+					
+					root.Invalidate ();
+					
 					i++;
 				}
 			}
@@ -918,6 +926,12 @@ namespace Epsitec.Common.Widgets
 		public static event MessageHandler	MessageFilter;
 		public static event EventHandler	ApplicationActivated;
 		public static event EventHandler	ApplicationDeactivated;
+		
+		public enum InvalidateReason
+		{
+			Generic,
+			AdornerChanged
+		}
 		
 		
 		private string						name;

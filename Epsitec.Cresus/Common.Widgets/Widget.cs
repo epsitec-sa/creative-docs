@@ -552,6 +552,13 @@ namespace Epsitec.Common.Widgets
 			this.OnChildrenChanged ();
 		}
 		
+		protected virtual void HandleAdornerChanged()
+		{
+			foreach (Widget child in this.Children)
+			{
+				child.HandleAdornerChanged ();
+			}
+		}
 		
 		public void SetClientAngle(int angle)
 		{
