@@ -1,3 +1,5 @@
+//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Statut : OK/PA, 09/12/2003
 
 namespace Epsitec.Common.Widgets.Layouts
 {
@@ -54,7 +56,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				double[] dx = new double[this.verticals.Length-1];
 				for (int i = 1; i < this.verticals.Length; i++)
 				{
-					dx[i-1] = this.verticals[i].x - this.verticals[i-1].x;
+					dx[i-1] = this.verticals[i].x_live - this.verticals[i-1].x_live;
 				}
 				return dx;
 			}
@@ -85,6 +87,28 @@ namespace Epsitec.Common.Widgets.Layouts
 			{
 				this.Update ();
 				return this.current_width;
+			}
+		}
+		
+		public double					DesiredHeight
+		{
+			get { return this.desired_height; }
+			set
+			{
+				if (this.desired_height != value)
+				{
+					this.desired_height = value;
+					this.UpdateGeometry ();
+				}
+			}
+		}
+		
+		public double					CurrentHeight
+		{
+			get
+			{
+				this.Update ();
+				return this.current_height;
 			}
 		}
 		
@@ -150,9 +174,24 @@ namespace Epsitec.Common.Widgets.Layouts
 				return;
 			}
 			
+			this.UpdateColumnsGeometry ();
+			this.UpdateLinesGeometry ();
+			this.LayoutWidgets (this.root, 0, 0, this.current_height);
+			
+			this.root.Size = new Drawing.Size (this.current_width, this.current_height);
+		}
+		
+		protected void UpdateColumnsGeometry()
+		{
+			System.Diagnostics.Debug.Assert (this.is_dirty == false);
+			
+			//	Met à jour les colonnes, en calculant la largeur de chaque colonne, ainsi que
+			//	son élasticité résiduelle. Les frontières verticales sont positionnées aux
+			//	bonnes coordonnées.
+			
 			for (int i = 0; i < this.columns.Count; i++)
 			{
-				this.columns[i].Reset ();
+				this.columns[i].Reset (this.is_dragging);
 			}
 			
 			again:
@@ -199,12 +238,89 @@ namespace Epsitec.Common.Widgets.Layouts
 						goto again;
 					}
 					
+					column.x_live  = x;
 					x += width;
-					
-					vertical.x = x;
+					vertical.x_live = x;
 				}
 				
 				this.current_width = x;
+				
+				for (int i = 0; i < this.columns.Count; i++)
+				{
+					this.columns[i].dx_live = this.verticals[i+1].x_live - this.verticals[i].x_live;
+				}
+			}
+		}
+		
+		protected void UpdateLinesGeometry()
+		{
+			this.current_height = this.desired_height;
+			
+			//	TODO: calculer la hauteur réelle...
+		}
+		
+		protected void LayoutWidgets(Widget root, int left_index, double x_offset, double y_offset)
+		{
+			double max_dy = 0;
+			
+			int lines = 1;
+			int count = 0;
+			
+			Widget.WidgetCollection widgets = root.Children;
+			
+			for (int i = 0; i < widgets.Count; i++)
+			{
+				Widget widget = widgets[i] as Widget;
+				
+				if (widget.Dock == DockStyle.Layout)
+				{
+					int arg1, arg2;
+					LayoutFlags flags = widget.LayoutFlags;
+					
+					widget.GetLayoutArgs (out arg1, out arg2);
+					
+					//	Les index des séparations sont relatives au parent; il faut donc ajuster en
+					//	fonction de l'origine du parent.
+					
+					arg1 += left_index;
+					arg2 += left_index;
+					
+					if ((flags & LayoutFlags.StartNewLine) != 0)
+					{
+						//	Si c'est le premier widget, implicitement, c'est une nouvelle ligne, laquelle
+						//	est déjà comptée. Il ne faut donc changer de ligne que si on a déjà des widgets
+						//	avant le nôtre.
+						
+						if (count > 0)
+						{
+							lines++;
+							
+							y_offset -= max_dy;
+							max_dy = 0;
+						}
+					}
+					
+					Drawing.Margins margins = widget.LayoutMargins;
+					
+					double x1 = this.verticals[arg1].x_live + margins.Left;
+					double x2 = this.verticals[arg2].x_live - margins.Right;
+					double dx = x2 - x1;
+					double dy = widget.Height - margins.Top - margins.Bottom;
+					
+					widget.Bounds = new Drawing.Rectangle (x1 - x_offset, y_offset - margins.Top - dy, dx, dy);
+					
+					if (max_dy < dy)
+					{
+						max_dy = dy;
+					}
+					
+					if ((flags & LayoutFlags.IncludeChildren) != 0)
+					{
+						this.LayoutWidgets (widget, arg1, x1, dy);
+					}
+					
+					count++;
+				}
 			}
 		}
 		
@@ -213,7 +329,16 @@ namespace Epsitec.Common.Widgets.Layouts
 		{
 			this.root = root;
 			this.Invalidate ();
+			
+			this.root.LayoutChanged   += new EventHandler (this.HandleRootLayoutChanged);
+			this.root.ChildrenChanged += new EventHandler (this.HandleRootChildrenChanged);
+			this.root.PreparePaint    += new EventHandler (this.HandleRootPreparePaint);
+			this.root.PaintForeground += new PaintEventHandler (this.HandleRootPaintForeground);
+			this.root.PreProcessing   += new MessageEventHandler (this.HandleRootPreProcessing);
+			
+			this.root.SetPropagationModes (Widget.PropagationModes.UpChildrenChanged, true, true);
 		}
+		
 		
 		protected void AnalyseVerticals(Widget root, int left_index, ref int max_index, out int lines)
 		{
@@ -313,9 +438,10 @@ namespace Epsitec.Common.Widgets.Layouts
 				
 				for (int j = 0; j < vertical.list.Count; j++)
 				{
-					Widget widget = vertical.list[j] as Widget;
+					Widget          widget  = vertical.list[j] as Widget;
+					Drawing.Margins margins = widget.LayoutMargins;
 					
-					double next_x = widget.MinSize.Width + vertical.min_x;
+					double next_x = widget.MinSize.Width + vertical.min_x + margins.Left + margins.Right;
 					int    next_i = widget.LayoutArg2 - widget.LayoutArg1 + i;
 					
 					System.Diagnostics.Debug.Assert (next_i > 0);
@@ -343,14 +469,141 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 		
 		
+		private void HandleRootLayoutChanged(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.root == sender);
+			this.UpdateGeometry ();
+		}
+		
+		private void HandleRootChildrenChanged(object sender)
+		{
+			this.Invalidate ();
+		}
+		
+		private void HandleRootPreparePaint(object sender)
+		{
+			System.Diagnostics.Debug.Assert (this.root == sender);
+			this.Update ();
+		}
+		
+		private void HandleRootPaintForeground(object sender, PaintEventArgs e)
+		{
+			System.Diagnostics.Debug.Assert (this.root == sender);
+			System.Diagnostics.Debug.Assert (this.is_dirty == false);
+			
+			Drawing.Graphics graphics = e.Graphics;
+			
+			double dy = this.root.Client.Height;
+			
+			for (int i = 1; i < this.verticals.Length; i++)
+			{
+				double x = this.verticals[i].x_live - 1;
+				
+				graphics.AddLine (x+0.5, 0, x+0.5, dy);
+				graphics.AddFilledRectangle (x-1,    0, 3, 3);
+				graphics.AddFilledRectangle (x-1, dy-3, 3, 3);
+			}
+			
+			graphics.RenderSolid (Drawing.Color.FromARGB (0.5, 1.0, 0.0, 0.0));
+		}
+		
+		private void HandleRootPreProcessing(object sender, MessageEventArgs e)
+		{
+			System.Diagnostics.Debug.Assert (this.root == sender);
+			
+			if (e.Message.IsMouseType)
+			{
+				this.Update ();
+				
+				Drawing.Point pos = e.Point;
+				
+				if (this.is_dragging)
+				{
+					System.Diagnostics.Debug.WriteLine ("Dragging...");
+					if (e.Message.IsLeftButton)
+					{
+						double x  = pos.X - this.drag_column_offset;
+						double dx = x - this.verticals[this.drag_column_index-1].x_live;
+						
+						this.columns[this.drag_column_index-1].dx_init = dx;
+						this.UpdateGeometry ();
+						this.root.Invalidate ();
+						this.root.Window.MouseCursor = MouseCursor.AsVSplit;
+						
+						e.Message.Consumer     = this.root;
+						e.Message.ForceCapture = true;
+						e.Suppress = true;
+						
+						return;
+					}
+					else
+					{
+						this.is_dragging = false;
+					}
+				}
+				
+				double mouse_x = pos.X;
+				
+				if (e.Message.Type == MessageType.MouseLeave)
+				{
+					mouse_x = -100;
+				}
+				
+				for (int i = 1; i < this.verticals.Length; i++)
+				{
+					double x = this.verticals[i].x_live;
+					
+					if ((mouse_x <= x+1) &&
+						(mouse_x >= x-1))
+					{
+						System.Diagnostics.Debug.WriteLine (i + ": " + x);
+						
+						this.root.Window.MouseCursor = MouseCursor.AsVSplit;
+						this.drag_column_index  = i;
+						this.drag_column_offset = mouse_x - x;
+						
+						if ((e.Message.Type == MessageType.MouseDown) &&
+							(e.Message.IsLeftButton) &&
+							(i > 0))
+						{
+							System.Diagnostics.Debug.WriteLine ("Start dragging now.");
+							this.is_dragging = true;
+							
+							for (int j = 0; j < this.columns.Count; j++)
+							{
+								this.columns[j].dx_init = this.columns[j].dx_live;
+							}
+							
+							e.Message.Consumer     = this.root;
+							e.Message.ForceCapture = true;
+							e.Suppress = true;
+							
+							this.UpdateGeometry ();
+							this.root.Invalidate ();
+						}
+						
+						return;
+					}
+				}
+				
+				if (this.drag_column_index >= 0)
+				{
+					this.root.Window.MouseCursor = MouseCursor.Default;
+					this.drag_column_index = -1;
+				}
+			}
+		}
+		
+		
+		#region Class: Vertical & Horizontal
 		protected class Vertical
 		{
 			public Vertical()
 			{
-				this.list  = new ArrayList ();
-				this.min_x = 0;
-				this.max_x = 1000000;
-				this.x     = 0;
+				this.list   = new ArrayList ();
+				this.min_x  = 0;
+				this.max_x  = 1000000;
+				this.x_live = 0;
 			}
 			
 			
@@ -359,10 +612,18 @@ namespace Epsitec.Common.Widgets.Layouts
 			internal double				min_x;
 			internal double				max_x;
 			
-			internal double				x;
+			internal double				x_live;
 		}
 		
+		protected class Horizontal
+		{
+			public Horizontal(int num_verticals)
+			{
+			}
+		}
+		#endregion
 		
+		#region Class: Column & ColumnCollection
 		public class Column
 		{
 			public Column(double width, double elasticity)
@@ -390,16 +651,19 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			
 			
-			internal void Reset()
+			internal void Reset(bool suppress_elasticity)
 			{
 				this.dx_live = this.dx_init;
-				this.k_live  = this.k_init;
+				this.k_live  = suppress_elasticity ? 0 : this.k_init;
+				this.x_live  = 0;
 			}
+			
 			
 			internal double				dx_init;
 			internal double				dx_live;
 			internal double				k_init;			//	élasticité initiale
 			internal double				k_live;			//	élasticité active
+			internal double				x_live;
 		}
 		
 		public class ColumnCollection : IList, System.IDisposable
@@ -546,15 +810,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			private Grid				host;
 			private ArrayList			list;
 		}
-		
-		protected class Horizontal
-		{
-			public Horizontal(int num_verticals)
-			{
-			}
-		}
-		
-		
+		#endregion
 		
 		
 		protected Widget				root;
@@ -564,8 +820,14 @@ namespace Epsitec.Common.Widgets.Layouts
 		protected Grid.Horizontal[]		horizontals;
 		
 		protected double				desired_width;
+		protected double				desired_height;
 		protected double				current_width;
+		protected double				current_height;
 		
 		protected bool					is_dirty;
+		
+		protected bool					is_dragging;
+		protected int					drag_column_index = -1;
+		protected double				drag_column_offset;
 	}
 }
