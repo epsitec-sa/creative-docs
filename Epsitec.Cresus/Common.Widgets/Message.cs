@@ -84,6 +84,12 @@ namespace Epsitec.Common.Widgets
 			set { this.in_widget = value; }
 		}
 		
+		public bool							ForceCapture
+		{
+			get { return this.force_capture; }
+			set { this.force_capture = value; }
+		}
+		
 		
 		public MessageType					Type
 		{
@@ -447,7 +453,12 @@ namespace Epsitec.Common.Widgets
 			int x = 0;
 			int y = 0;
 			
-			if (e != null)
+			if (e == null)
+			{
+				message.button    = Message.state.buttons;
+				message.modifiers = Message.state.modifiers;
+			}
+			else
 			{
 				x = e.X;
 				y = form.ClientSize.Height - e.Y - 1;
@@ -664,6 +675,7 @@ namespace Epsitec.Common.Widgets
 		protected bool						is_swallowed;
 		protected Widget					in_widget;
 		protected Widget					consumer;
+		protected bool						force_capture;
 		
 		protected MessageType				type;
 		protected int						tick_count;
