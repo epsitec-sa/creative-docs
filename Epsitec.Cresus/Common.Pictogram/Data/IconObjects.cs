@@ -516,6 +516,28 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Répand un style modifié à tous les objets.
+		public void StyleSpread(AbstractProperty property)
+		{
+			this.StyleSpread(this.objects, property);
+		}
+
+		protected void StyleSpread(UndoList objects, AbstractProperty property)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				obj.PropertySpread(property);
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					this.StyleSpread(obj.Objects, property);
+				}
+			}
+		}
+
+
 		// Retourne la bounding box de tous les objets.
 		public Drawing.Rectangle RetBbox()
 		{

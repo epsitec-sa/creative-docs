@@ -102,7 +102,8 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return TextLayout.ConvertToSimpleText(this.InternalText);
+				this.UpdateLayout();
+				return this.simpleText;
 			}
 		}
 		
@@ -1422,7 +1423,7 @@ namespace Epsitec.Common.Widgets
 
 		public void Paint(Drawing.Point pos, Drawing.IPaintPort graphics, Drawing.Rectangle clipRect, Drawing.Color uniqueColor, Drawing.GlyphPaintStyle paintStyle)
 		{
-			if (this.Text.Length > 1000)
+			if ( this.Text.Length > 1000 )
 			{
 				this.UpdateLayout();
 			}
@@ -1437,6 +1438,13 @@ namespace Epsitec.Common.Widgets
 			foreach ( JustifBlock block in this.blocks )
 			{
 				if ( !block.Visible )  continue;
+
+				Drawing.Rectangle blockRect = new Drawing.Rectangle();
+				blockRect.Top    = pos.Y+block.Pos.Y+block.Font.Ascender*block.FontSize;
+				blockRect.Bottom = pos.Y+block.Pos.Y+block.Font.Descender*block.FontSize;
+				blockRect.Left   = pos.X+block.Pos.X;
+				blockRect.Width  = block.Width;
+				if ( !blockRect.IntersectsWith(clipRect) )  continue;
 
 				if ( block.IsImage )
 				{
@@ -1487,29 +1495,17 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( this.ShowTab )
 					{
-						double width = block.Width;
-						Drawing.Rectangle rect = new Drawing.Rectangle();
-						rect.Top    = pos.Y+block.Pos.Y+block.Font.Ascender*block.FontSize;
-						rect.Bottom = pos.Y+block.Pos.Y+block.Font.Descender*block.FontSize;
-						rect.Left   = pos.X+block.Pos.X;
-						rect.Width  = width;
 						graphics.LineWidth = 1.0/this.drawingScale;
 						graphics.Color = new Drawing.Color(0.35, color.R, color.G, color.B);
-						graphics.PaintOutline(this.PathTab(graphics, rect));
+						graphics.PaintOutline(this.PathTab(graphics, blockRect));
 					}
 					continue;
 				}
 
 				if ( block.List )
 				{
-					double width = block.Width;
-					Drawing.Rectangle rect = new Drawing.Rectangle();
-					rect.Top    = pos.Y+block.Pos.Y+block.Font.Ascender*block.FontSize;
-					rect.Bottom = pos.Y+block.Pos.Y+block.Font.Descender*block.FontSize;
-					rect.Left   = pos.X+block.Pos.X;
-					rect.Width  = width;
 					graphics.Color = color;
-					this.PaintList(graphics, rect, pos.Y+block.Pos.Y, block, ref listValue);
+					this.PaintList(graphics, blockRect, pos.Y+block.Pos.Y, block, ref listValue);
 					listEncounter = true;
 					continue;
 				}
@@ -2868,6 +2864,7 @@ namespace Epsitec.Common.Widgets
 		protected void MarkContentsAsDirty()
 		{
 			this.isContentsDirty = true;
+			this.isSimpleDirty = true;
 			this.isLayoutDirty = true;
 		}
 		
@@ -2878,6 +2875,12 @@ namespace Epsitec.Common.Widgets
 		
 		protected void UpdateLayout()
 		{
+			if ( this.isSimpleDirty )
+			{
+				this.simpleText = TextLayout.ConvertToSimpleText(this.InternalText);
+				this.isSimpleDirty = false;
+			}
+
 			if ( this.layoutSize.Width > 0 )
 			{
 				if ( this.isContentsDirty )
@@ -3441,10 +3444,13 @@ namespace Epsitec.Common.Widgets
 			int		startIndex = 0, currentIndex = 0;
 			Tag 	tagEnding;
 
+			System.Text.StringBuilder		buffer  = new System.Text.StringBuilder(textLength);
+			System.Collections.ArrayList	runList = new System.Collections.ArrayList();
 			do
 			{
-				System.Text.StringBuilder		buffer = new System.Text.StringBuilder();
-				System.Collections.ArrayList	runList = new System.Collections.ArrayList();
+				buffer.Length = 0;
+				runList.Clear ();
+				
 				tagEnding = Tag.None;
 
 				while ( endOffset <= textLength )
@@ -4711,9 +4717,11 @@ noText:
 		protected Drawing.TextStyle				style;
 		
 		protected bool							isContentsDirty;
+		protected bool							isSimpleDirty;
 		protected bool							isLayoutDirty;
 		protected bool							isPrepareDirty;
 		protected string						text;
+		protected string						simpleText;
 		protected Drawing.Size					layoutSize;
 		protected double						drawingScale;
 		protected double						verticalMark;

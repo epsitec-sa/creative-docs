@@ -3,9 +3,14 @@
 
 namespace Epsitec.Common.UI.Widgets
 {
+	using SuppressBundleSupportAttribute = Support.SuppressBundleSupportAttribute;
+	
 	/// <summary>
 	/// La classe DataWidgetValidator implémente IValidator pour un DataWidget.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class DataWidgetValidator : Common.Widgets.Validators.AbstractValidator
 	{
 		public DataWidgetValidator(Common.Widgets.Widget widget) : base (widget)

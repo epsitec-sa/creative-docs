@@ -71,13 +71,26 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( UndoList.Operations != null )  // mémorise l'opération ?
 			{
 				System.Diagnostics.Debug.Assert(UndoList.Beginning);
+
 				AbstractObject obj = this[index] as AbstractObject;
+				if ( obj != null )
+				{
+					AbstractObject newObject = null;
+					obj.DuplicateObject(ref newObject);  // effectue une copie complète de l'objet
 
-				AbstractObject newObject = null;
-				obj.DuplicateObject(ref newObject);  // effectue une copie complète de l'objet
+					OpletUndoList operation = new OpletUndoList(this, OperationType.Modify, false, index, newObject);
+					UndoList.Operations.Add(operation);
+				}
 
-				OpletUndoList operation = new OpletUndoList(this, OperationType.Modify, false, index, newObject);
-				UndoList.Operations.Add(operation);
+				AbstractProperty prop = this[index] as AbstractProperty;
+				if ( prop != null )
+				{
+					AbstractProperty newProp = AbstractProperty.NewProperty(prop.Type);
+					prop.CopyTo(newProp);  // effectue une copie complète de la proptiété
+
+					OpletUndoList operation = new OpletUndoList(this, OperationType.Modify, false, index, newProp);
+					UndoList.Operations.Add(operation);
+				}
 			}
 		}
 
@@ -99,26 +112,44 @@ namespace Epsitec.Common.Pictogram.Data
 				operation.Type = OperationType.Insert;
 
 				AbstractObject undoObj = operation.Object as AbstractObject;
-				undoObj.UndoStamp = true;
-
-				if ( operation.Created )
+				if ( undoObj != null )
 				{
-					undoObj.Select();
-					UndoList.SelectAfterCreate = true;
+					undoObj.UndoStamp = true;
+
+					if ( operation.Created )
+					{
+						undoObj.Select();
+						UndoList.SelectAfterCreate = true;
+					}
 				}
 			}
 			else if ( operation.Type == OperationType.Modify )
 			{
-				AbstractObject currObj = objects[index] as AbstractObject;
-				AbstractObject undoObj = operation.Object as AbstractObject;
+				if ( objects[index] is AbstractObject )
+				{
+					AbstractObject currObj = objects[index] as AbstractObject;
+					AbstractObject undoObj = operation.Object as AbstractObject;
 
-				AbstractObject tempObj = null;
-				currObj.DuplicateObject(ref tempObj);
+					AbstractObject tempObj = null;
+					currObj.DuplicateObject(ref tempObj);
 
-				currObj.CloneObject(undoObj);  // reprend les caractéristiques de l'objet dans la liste
-				undoObj.CloneObject(tempObj);
+					currObj.CloneObject(undoObj);  // reprend les caractéristiques de l'objet dans la liste
+					undoObj.CloneObject(tempObj);
 
-				currObj.UndoStamp = true;
+					currObj.UndoStamp = true;
+				}
+
+				if ( objects[index] is AbstractProperty )
+				{
+					AbstractProperty currProp = objects[index] as AbstractProperty;
+					AbstractProperty undoProp = operation.Object as AbstractProperty;
+
+					AbstractProperty tempProp = AbstractProperty.NewProperty(currProp.Type);
+					currProp.CopyTo(tempProp);
+
+					undoProp.CopyTo(currProp);
+					tempProp.CopyTo(undoProp);
+				}
 			}
 		}
 
@@ -272,14 +303,41 @@ namespace Epsitec.Common.Pictogram.Data
 	// Oplet créé toujours au début.
 	public class OpletBeginning : AbstractOplet
 	{
-		public OpletBeginning(Widgets.Drawer drawer)
+		public OpletBeginning(Widgets.Drawer drawer, int styleID, string operation)
 		{
 			this.host = drawer;
+			this.styleID = styleID;
+			this.operation = operation;
+
+			if ( this.styleID != 0 && this.operation != "StyleChanged" )
+			{
+				AbstractProperty style = this.host.IconObjects.StylesCollection.GetProperty(this.styleID-1);
+				this.property = AbstractProperty.NewProperty(style.Type);
+				style.CopyTo(this.property);
+			}
+		}
+
+		public void SwapStyle()
+		{
+			if ( this.styleID != 0 && this.operation != "StyleChanged" )
+			{
+				AbstractProperty style = this.host.IconObjects.StylesCollection.GetProperty(this.styleID-1);
+				AbstractProperty temp = AbstractProperty.NewProperty(style.Type);
+				style.CopyTo(temp);
+				this.property.CopyTo(style);
+				temp.CopyTo(this.property);
+			}
+		}
+
+		public int StyleID
+		{
+			get { return this.styleID; }
 		}
 
 		public override IOplet Undo()
 		{
-			this.host.UndoFinalWork();  // lorsque tout est fini
+			this.SwapStyle();
+			this.host.UndoFinalWork(this.styleID);  // lorsque tout est fini
 			return this;
 		}
 
@@ -290,15 +348,19 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		protected Widgets.Drawer		host;
+		protected int					styleID;
+		protected AbstractProperty		property;
+		protected string				operation;
 	}
 
 
 	// Oplet créé toujours à la fin.
 	public class OpletEnding : AbstractOplet
 	{
-		public OpletEnding(Widgets.Drawer drawer)
+		public OpletEnding(Widgets.Drawer drawer, OpletBeginning beginning)
 		{
 			this.host = drawer;
+			this.beginning = beginning;
 		}
 
 		public override IOplet Undo()
@@ -309,10 +371,12 @@ namespace Epsitec.Common.Pictogram.Data
 
 		public override IOplet Redo()
 		{
-			this.host.UndoFinalWork();  // lorsque tout est fini
+			this.beginning.SwapStyle();
+			this.host.UndoFinalWork(this.beginning.StyleID);  // lorsque tout est fini
 			return this;
 		}
 
 		protected Widgets.Drawer		host;
+		protected OpletBeginning		beginning;
 	}
 }

@@ -806,6 +806,16 @@ namespace Epsitec.Common.Pictogram.Data
 			return ( actual.StyleID == property.StyleID );
 		}
 
+		// Répand une propriété faisant partie d'un style.
+		public void PropertySpread(AbstractProperty property)
+		{
+			if ( property.StyleID == 0 )  return;
+			AbstractProperty actual = this.SearchProperty(property.Type);
+			if ( actual == null )  return;
+			if ( actual.StyleID != property.StyleID )  return;
+			property.CopyTo(actual);
+		}
+
 		// Retourne une copie d'une propriété.
 		public virtual AbstractProperty GetProperty(PropertyType type)
 		{

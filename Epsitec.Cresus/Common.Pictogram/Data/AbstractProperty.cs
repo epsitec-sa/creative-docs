@@ -130,7 +130,7 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.styleName = value; }
 		}
 
-		// Type de la propriété.
+		// Style de la propriété (0 = pas un style).
 		[XmlAttribute]
 		public int StyleID
 		{

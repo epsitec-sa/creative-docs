@@ -784,6 +784,9 @@ namespace Epsitec.Common.Pictogram.Data
 			int c1,r1, c2,r2;
 			this.RetSelectedRect(out c1, out r1, out c2, out r2);
 
+			int c = this.cellToEdit%(this.columns+1);
+			int r = this.cellToEdit/(this.columns+1);
+
 			if ( cmd == "ArrayOutlineFrame" )
 			{
 				this.outlineFrame = !this.outlineFrame;
@@ -853,6 +856,10 @@ namespace Epsitec.Common.Pictogram.Data
 					default:         this.LookSerie(arg);  break;
 				}
 			}
+
+			c = System.Math.Min(c, this.columns-1);
+			r = System.Math.Min(r, this.rows-1);
+			this.cellToEdit = c + r*(this.columns+1);
 		}
 
 		// Insère des colonnes avant la colonne spécifiée.
@@ -1493,6 +1500,7 @@ namespace Epsitec.Common.Pictogram.Data
 			TextLayout textLayout = this.Cell(c,r).TextLayout;
 			TextNavigator textNavigator = this.Cell(c,r).TextNavigator;
 			Drawing.Transform transform = this.Cell(c,r).Transform;
+			if ( transform == null )  return false;
 
 			pos = transform.TransformInverse(pos);
 			if ( textNavigator.ProcessMessage(message, pos) )
@@ -1543,6 +1551,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			TextNavigator textNavigator = this.Cell(c,r).TextNavigator;
 			Drawing.Transform transform = this.Cell(c,r).Transform;
+			if ( transform == null )  return;
 
 			pos = transform.TransformInverse(pos);
 			textNavigator.MouseDownMessage(pos);
@@ -1574,7 +1583,10 @@ namespace Epsitec.Common.Pictogram.Data
 			while ( this.handles.Count < total )
 			{
 				this.HandleAdd(new Drawing.Point(0,0), HandleType.Secondary);
-				this.Handle(this.handles.Count-1).IsSelected = true;
+				if ( !this.IsEdited() )
+				{
+					this.Handle(this.handles.Count-1).IsSelected = true;
+				}
 			}
 
 			// Positionne la poignée centrale de déplacement global.
@@ -1860,7 +1872,10 @@ namespace Epsitec.Common.Pictogram.Data
 				this.heights[r] = array.heights[r];
 			}
 
-			this.InitCells();
+			if ( this.cells.Count != array.cells.Count )
+			{
+				this.InitCells();
+			}
 			for ( int c=0 ; c<this.columns+1 ; c++ )
 			{
 				for ( int r=0 ; r<this.rows+1 ; r++ )

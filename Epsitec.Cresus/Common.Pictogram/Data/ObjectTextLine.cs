@@ -609,6 +609,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Lie l'objet éditable à une règle.
 		public override bool EditRulerLink(TextRuler ruler, IconContext iconContext)
 		{
+			ruler.ListCapability = false;
 			ruler.TabCapability = false;
 			ruler.AttachToText(this.textNavigator);
 			return true;
@@ -634,6 +635,12 @@ namespace Epsitec.Common.Pictogram.Data
 				int rank = this.DetectTextCurveRank(pos);
 				pos = this.RankToLinearPos(rank);
 				if ( pos == Drawing.Point.Empty )  return false;
+			}
+
+			if ( message.Type == MessageType.KeyDown )
+			{
+				if ( message.KeyCode == KeyCode.Return ||
+					 message.KeyCode == KeyCode.Tab    )  return false;
 			}
 
 			if ( !this.textNavigator.ProcessMessage(message, pos) )  return false;

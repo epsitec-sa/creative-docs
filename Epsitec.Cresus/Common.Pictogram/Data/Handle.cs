@@ -97,6 +97,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			if ( !this.isSelected || this.isGlobalSelected )  return false;
 			if ( this.type == HandleType.Hide )  return false;
+			if ( this.scaleX == 0 || this.scaleY == 0 )  return false;
 			Drawing.Rectangle rect = new Drawing.Rectangle();
 			rect.Left   = this.position.X - this.handleSize/2 - 3.0/this.scaleX;
 			rect.Right  = this.position.X + this.handleSize/2 + 1.0/this.scaleX;

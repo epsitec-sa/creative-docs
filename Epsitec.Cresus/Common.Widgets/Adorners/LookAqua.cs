@@ -577,7 +577,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				state &= ~WidgetState.Focused;
 			}
-			this.PaintGeneralTextLayout(graphics, pos, text, state, PaintTextStyle.Button, Drawing.Color.Empty);
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, PaintTextStyle.Button, Drawing.Color.Empty);
 		}
 
 		public void PaintButtonForeground(Drawing.Graphics graphics,
@@ -1179,7 +1179,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				state |= WidgetState.Selected;
 			}
 			PaintTextStyle style = ( type == MenuType.Horizontal ) ? PaintTextStyle.HMenu : PaintTextStyle.VMenu;
-			this.PaintGeneralTextLayout(graphics, pos, text, state, style, Drawing.Color.Empty);
+			this.PaintGeneralTextLayout(graphics, Drawing.Rectangle.Infinite, pos, text, state, style, Drawing.Color.Empty);
 		}
 
 		// Dessine le devant d'une case de menu.
@@ -1445,6 +1445,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 		// Dessine le texte d'un widget.
 		public void PaintGeneralTextLayout(Drawing.Graphics graphics,
+										   Drawing.Rectangle clipRect,
 										   Drawing.Point pos,
 										   TextLayout text,
 										   WidgetState state,
@@ -1459,7 +1460,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( (state&WidgetState.Selected) != 0 )
 				{
-					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorCaptionText, Drawing.GlyphPaintStyle.Selected);
+					text.Paint(pos, graphics, clipRect, this.colorCaptionText, Drawing.GlyphPaintStyle.Selected);
 				}
 				else
 				{
@@ -1471,15 +1472,15 @@ namespace Epsitec.Common.Widgets.Adorner
 						  style == PaintTextStyle.HMenu       ) )
 					{
 						pos.Y --;
-						text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.FromBrightness(1), Drawing.GlyphPaintStyle.Disabled);
+						text.Paint(pos, graphics, clipRect, Drawing.Color.FromBrightness(1), Drawing.GlyphPaintStyle.Disabled);
 						pos.Y ++;
 					}
-					text.Paint(pos, graphics);
+					text.Paint(pos, graphics, clipRect, Drawing.Color.Empty, Drawing.GlyphPaintStyle.Normal);
 				}
 			}
 			else
 			{
-				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorDisabled, Drawing.GlyphPaintStyle.Disabled);
+				text.Paint(pos, graphics, clipRect, this.colorDisabled, Drawing.GlyphPaintStyle.Disabled);
 			}
 
 			if ( (state&WidgetState.Focused) != 0 )

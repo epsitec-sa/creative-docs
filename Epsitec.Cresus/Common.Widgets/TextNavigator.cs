@@ -701,25 +701,20 @@ namespace Epsitec.Common.Widgets
 				 !this.context.UndoSeparator )
 			{
 				TextOplet lastOplet = oplets[0] as TextOplet;
-				if ( type != UndoType.AutonomusStyle && lastOplet.Type == type )
+				if ( type != UndoType.AutonomusStyle &&
+					 lastOplet.Navigator == this     &&
+					 lastOplet.Type == type          )
 				{
 					return;  // situation initiale déjà mémorisée
 				}
 			}
 
-#if true
 			using ( this.undoQueue.BeginAction() )
 			{
 				TextOplet oplet = new TextOplet(this, type);
 				this.undoQueue.Insert(oplet);
 				this.undoQueue.ValidateAction();
 			}
-#else
-			this.undoQueue.BeginAction();
-			TextOplet oplet = new TextOplet(this, type);
-			this.undoQueue.Insert(oplet);
-			this.undoQueue.ValidateAction();
-#endif
 
 			this.context.UndoSeparator = false;
 		}
@@ -735,6 +730,11 @@ namespace Epsitec.Common.Widgets
 				this.contextCopy = TextLayout.Context.Copy(this.host.context);
 			}
 
+			public TextNavigator Navigator
+			{
+				get { return this.host; }
+			}
+
 			public UndoType Type
 			{
 				get { return this.type; }
@@ -742,7 +742,7 @@ namespace Epsitec.Common.Widgets
 
 			// Permute le texte et le contexte contenus par l'hôte avec ceux
 			// contenus dans TextOplet.
-			protected void UndoRedo()
+			protected void Swap()
 			{
 				string undoText = string.Copy(this.textCopy);
 				string redoText = string.Copy(this.host.textLayout.InternalText);
@@ -759,7 +759,7 @@ namespace Epsitec.Common.Widgets
 
 			public override Support.IOplet Undo()
 			{
-				this.UndoRedo();  // permutation
+				this.Swap();  // permutation
 
 				if ( this.type == UndoType.Insert )
 				{
@@ -779,7 +779,7 @@ namespace Epsitec.Common.Widgets
 
 			public override Support.IOplet Redo()
 			{
-				this.UndoRedo();  // permutation
+				this.Swap();  // permutation
 
 				if ( this.type == UndoType.Insert )
 				{

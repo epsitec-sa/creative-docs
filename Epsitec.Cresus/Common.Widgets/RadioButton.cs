@@ -478,7 +478,7 @@ namespace Epsitec.Common.Widgets
 			WidgetState       state = this.PaintState;
 			
 			adorner.PaintRadio (graphics, rect, state);
-			adorner.PaintGeneralTextLayout (graphics, this.LabelOffset, this.TextLayout, state, PaintTextStyle.RadioButton, this.BackColor);
+			adorner.PaintGeneralTextLayout (graphics, clipRect, this.LabelOffset, this.TextLayout, state, PaintTextStyle.RadioButton, this.BackColor);
 		}
 		
 

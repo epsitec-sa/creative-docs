@@ -31,7 +31,7 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlArrayItem("Corner",   Type=typeof(PropertyCorner))]
 		[XmlArrayItem("Regular",  Type=typeof(PropertyRegular))]
 		[XmlArrayItem("ModColor", Type=typeof(PropertyModColor))]
-		public System.Collections.ArrayList Styles
+		public UndoList Styles
 		{
 			get { return this.styles; }
 			set { this.styles = value; }
@@ -97,9 +97,10 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			System.Diagnostics.Debug.Assert(i >= 0 && i < this.styles.Count);
 			System.Diagnostics.Debug.Assert(j >= 0 && j < this.styles.Count);
+			
 			AbstractProperty temp = this.styles[i] as AbstractProperty;
-			this.styles[i] = this.styles[j];
-			this.styles[j] = temp;
+			this.styles.RemoveAt(i);
+			this.styles.Insert(j, temp);
 		}
 
 		// Change un style après une modification d'une propriété d'un objet.
@@ -157,6 +158,13 @@ namespace Epsitec.Common.Pictogram.Data
 		public void CollectionChanged()
 		{
 			this.OnStyleListChanged();
+		}
+
+		// Indique qu'une propriété va changer, pour le undo.
+		public void UndoWillBeChanged(AbstractProperty property)
+		{
+			if ( property.StyleID == 0 )  return;
+			this.styles.WillBeChanged(property.StyleID-1);
 		}
 
 
@@ -228,7 +236,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public event StyleEventHandler OneStyleChanged;
 
 
-		protected int							nextID = 1;
-		protected System.Collections.ArrayList	styles = new System.Collections.ArrayList();
+		protected int					nextID = 1;
+		protected UndoList				styles = new UndoList();
 	}
 }

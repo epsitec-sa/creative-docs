@@ -1326,9 +1326,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("StyleCreate")]
 		void CommandStyleCreate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.drawer.UndoBeginning("StyleCreate");
-			this.drawer.UndoSelectionWillBeChanged();
-			this.drawer.UndoValidate();
 			PropertyType type = AbstractProperty.TypeName(e.CommandArgs[0]);
 			this.panelStyles.CommandStyleCreate(type);
 		}
@@ -1338,9 +1335,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.drawer.UndoBeginning("StyleMake");
 			this.drawer.UndoSelectionWillBeChanged();
-			this.drawer.UndoValidate();
 			PropertyType type = AbstractProperty.TypeName(e.CommandArgs[0]);
 			int sel = this.drawer.StyleMake(type);
+			this.drawer.UndoValidate();
 			if ( sel == -1 )  return;
 			this.panelStyles.UpdateAll(sel);
 			this.UpdatePanels();
@@ -1351,9 +1348,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.drawer.UndoBeginning("StyleFree");
 			this.drawer.UndoSelectionWillBeChanged();
-			this.drawer.UndoValidate();
 			PropertyType type = AbstractProperty.TypeName(e.CommandArgs[0]);
 			this.drawer.StyleFree(type);
+			this.drawer.UndoValidate();
 			this.UpdatePanels();
 		}
 
@@ -1362,9 +1359,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.drawer.UndoBeginning("StyleUse");
 			this.drawer.UndoSelectionWillBeChanged();
-			this.drawer.UndoValidate();
 			int rank = System.Convert.ToInt32(e.CommandArgs[0]);
 			this.drawer.StyleUse(rank);
+			this.drawer.UndoValidate();
 			this.UpdatePanels();
 		}
 

@@ -19,7 +19,11 @@ namespace Epsitec.Common.Pictogram.Data
 		public string Content
 		{
 			get { return this.textLayout.Text; }
-			set { this.textLayout.Text = value; }
+			set
+			{
+				this.textLayout.Text = value;
+				this.textNavigator.ValidateCursors();
+			}
 		}
 
 		[XmlIgnore]

@@ -454,11 +454,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			if ( this.IsTool() || property.StyleID != 0 )
 			{
-				AbstractObject obj = this.iconObjects.RetFirstSelected();
-				int nbSel = this.iconObjects.TotalSelected();
-				this.UndoBeginning("Property", obj, nbSel, property.Type);
-				this.UndoSelectionWillBeChanged();
-				this.UndoValidate();
+				if ( changeStylesCollection )
+				{
+					AbstractObject obj = this.iconObjects.RetFirstSelected();
+					int nbSel = this.iconObjects.TotalSelected();
+					this.UndoBeginning("PropertyChanged", obj, nbSel, property.Type, property.StyleID);
+					this.UndoSelectionWillBeChanged();
+					this.UndoValidate();
+				}
 
 				Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 				this.iconObjects.SetProperty(property, ref bbox, changeStylesCollection);
@@ -988,6 +991,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("Deselect")]
 		void CommandDeselect(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.rankLastCreated = -1;
 			this.SelectedTool = "Select";
 			this.ChangeSelection("Deselect");
 			this.OnPanelChanged();
@@ -1000,6 +1004,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("SelectAll")]
 		void CommandSelectAll(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.rankLastCreated = -1;
 			this.SelectedTool = "Select";
 			this.ChangeSelection("SelectAll");
 			this.OnPanelChanged();
@@ -1013,6 +1018,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("SelectInvert")]
 		void CommandSelectInvert(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.rankLastCreated = -1;
 			this.SelectedTool = "Select";
 			this.ChangeSelection("SelectInvert");
 			this.OnPanelChanged();
@@ -1173,7 +1179,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			ObjectArray array = this.iconObjects.RetFirstSelected() as ObjectArray;
 			if ( array == null )  return;
+
+			this.UndoBeginning("ArrayOperation");
+			this.UndoSelectionWillBeChanged();
 			array.ExecuteCommand(e.CommandName, (e.CommandArgs.Length == 0) ? "" : e.CommandArgs[0]);
+			this.UndoValidate();
+
 			this.OnPanelChanged();
 			this.OnInfoObjectChanged();
 			this.OnCommandChanged();
@@ -2205,10 +2216,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected void ChangeSelection(string cmd)
 		{
 			this.UndoBeginning("ChangeSelection");
-			this.UndoSelectionWillBeChanged();
 
 			bool validate = false;
 			int nbsel = 0;
+			UndoList cg = this.iconObjects.CurrentGroup;
 			for ( int index=0 ; index<this.iconObjects.Count ; index++ )
 			{
 				AbstractObject obj = this.iconObjects[index];
@@ -2217,6 +2228,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				{
 					if ( obj.IsSelected() )
 					{
+						cg.WillBeChanged(index);
 						obj.Deselect();
 						validate = true;
 					}
@@ -2227,6 +2239,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					if ( obj.IsHide )  continue;
 					if ( !obj.IsSelected() )
 					{
+						cg.WillBeChanged(index);
 						obj.Select();
 						validate = true;
 					}
@@ -2236,6 +2249,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				if ( cmd == "SelectInvert" )
 				{
 					if ( obj.IsHide )  continue;
+					cg.WillBeChanged(index);
 					obj.Select(!obj.IsSelected());
 					if ( obj.IsSelected() )  nbsel ++;
 					validate = true;
@@ -2372,11 +2386,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Indique que l'on va modifier l'icône.
 		public void UndoBeginning(string operation)
 		{
-			this.UndoBeginning(operation, null, 0, PropertyType.None);
+			this.UndoBeginning(operation, null, 0, PropertyType.None, 0);
 		}
 
-		protected void UndoBeginning(string operation,
-									 AbstractObject obj, int nbSel, PropertyType propertyType)
+		public void UndoBeginning(string operation,
+								  AbstractObject obj, int nbSel,
+								  PropertyType propertyType, int styleID)
 		{
 			System.Diagnostics.Debug.Assert(!UndoList.Beginning);
 			UndoList.Beginning = true;
@@ -2403,7 +2418,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			UndoList.Operations = new System.Collections.ArrayList();  // début mémorisation
 
-			Data.OpletBeginning ob = new Data.OpletBeginning(this);
+			Data.OpletBeginning ob = new Data.OpletBeginning(this, styleID, operation);
 			UndoList.Operations.Add(ob);
 
 			Data.OpletMisc om = new Data.OpletMisc(this);
@@ -2440,7 +2455,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			if ( UndoList.Operations.Count > 2 )  // plus que OpletBeginning et OpletMisc ?
 			{
-				Data.OpletEnding oe = new Data.OpletEnding(this);
+				OpletBeginning beginning = UndoList.Operations[0] as OpletBeginning;
+				Data.OpletEnding oe = new Data.OpletEnding(this, beginning);
 				UndoList.Operations.Add(oe);
 
 				using ( IconEditor.OpletQueue.BeginAction() )
@@ -2503,9 +2519,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		// Effectue quelques petites opérations, toujours à la fin d'un
 		// undo ou d'un redo.
-		public void UndoFinalWork()
+		public void UndoFinalWork(int styleID)
 		{
 			this.iconObjects.DeselectNoUndoStamp();
+
+			if ( styleID != 0 )
+			{
+				AbstractProperty property = this.iconObjects.StylesCollection.GetProperty(styleID-1) as AbstractProperty;
+				this.iconObjects.StyleSpread(property);
+			}
 
 			if ( UndoList.SelectAfterCreate )
 			{

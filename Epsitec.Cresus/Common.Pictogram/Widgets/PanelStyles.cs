@@ -211,8 +211,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Monte d'une ligne la propriété sélectionnée.
 		private void HandleButtonUp(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("StyleUp");
 			int sel = this.TableSelect();
 			this.Styles.SwapProperty(sel, sel-1);
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(sel-1, true, false);
 			this.UpdateToolBar();
@@ -221,8 +224,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Descend d'une ligne la propriété sélectionnée.
 		private void HandleButtonDown(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("StyleDown");
 			int sel = this.TableSelect();
 			this.Styles.SwapProperty(sel, sel+1);
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(sel+1, true, false);
 			this.UpdateToolBar();
@@ -233,8 +239,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			int sel = this.TableSelect();
 			AbstractProperty property = this.Styles.GetProperty(sel);
+
+			this.drawer.UndoBeginning("StyleDeleted", null, 0, property.Type, property.StyleID);
 			this.drawer.StyleFreeAll(property);
 			this.Styles.RemoveProperty(sel);
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			if ( sel >= this.table.Rows-1 )  sel = this.table.Rows-1;
 			this.TableSelect(sel, true, false);
@@ -356,6 +366,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 			TextField edit = sender as TextField;
 			int sel = System.Convert.ToInt32(edit.Name);
 			AbstractProperty property = this.Styles.GetProperty(sel);
+
+			this.drawer.UndoBeginning("StyleName", null, 0, property.Type, property.StyleID);
+			this.drawer.IconObjects.StylesCollection.UndoWillBeChanged(property);
+			this.drawer.UndoValidate();
+
 			property.StyleName = edit.Text;
 			this.UpdatePanels(property);
 			this.drawer.SetProperty(property, false);
@@ -450,6 +465,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 			int sel = this.TableSelect();
 			if ( sel == -1 )  return;
 			AbstractProperty currentProperty = this.Styles.GetProperty(sel);
+
+			this.drawer.UndoBeginning("StyleChanged", null, 0, currentProperty.Type, currentProperty.StyleID);
+			this.drawer.UndoSelectionWillBeChanged();
+			this.drawer.IconObjects.StylesCollection.UndoWillBeChanged(currentProperty);
+			this.drawer.UndoValidate();
+
 			newProperty.StyleName = currentProperty.StyleName;
 			newProperty.StyleID   = currentProperty.StyleID;
 			newProperty.CopyTo(currentProperty);
@@ -512,6 +533,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 			int sel = this.TableSelect();
 			if ( sel == -1 )  return;
 			AbstractProperty currentProperty = this.Styles.GetProperty(sel);
+
+			this.drawer.UndoBeginning("StyleChanged", null, 0, currentProperty.Type, currentProperty.StyleID);
+			this.drawer.UndoSelectionWillBeChanged();
+			this.drawer.IconObjects.StylesCollection.UndoWillBeChanged(currentProperty);
+			this.drawer.UndoValidate();
+
 			newProperty.StyleName = currentProperty.StyleName;
 			newProperty.StyleID   = currentProperty.StyleID;
 			newProperty.CopyTo(currentProperty);
@@ -553,7 +580,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			AbstractProperty property = this.drawer.NewProperty(type);
 			if ( property == null )  return;
+
+			this.drawer.UndoBeginning("StyleCreate");
 			int sel = this.Styles.CreateProperty(property);
+			this.drawer.UndoValidate();
+
 			if ( sel == -1 )  return;
 			this.UpdateTable();
 			this.TableSelect(sel, true, true);

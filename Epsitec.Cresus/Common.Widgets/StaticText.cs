@@ -112,7 +112,7 @@ namespace Epsitec.Common.Widgets
 				graphics.RenderSolid (this.BackColor);
 			}
 			
-			adorner.PaintGeneralTextLayout (graphics, pos, this.TextLayout, state, this.paint_text_style, this.BackColor);
+			adorner.PaintGeneralTextLayout (graphics, clipRect, pos, this.TextLayout, state, this.paint_text_style, this.BackColor);
 		}
 
 

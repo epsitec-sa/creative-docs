@@ -126,9 +126,18 @@ namespace Epsitec.Common.Widgets
 			// Retourne la largeur minimale pour les widgets fixes.
 			get
 			{
-				return TextRuler.buttonFontScaleWidth +
-					   TextRuler.buttonWidth*6 +
-					   TextRuler.buttonFontColorWidth + 15;
+				if ( this.listCapability )
+				{
+					return TextRuler.buttonFontScaleWidth +
+						   TextRuler.buttonWidth*6 +
+						   TextRuler.buttonFontColorWidth + 15;
+				}
+				else
+				{
+					return TextRuler.buttonFontScaleWidth +
+						   TextRuler.buttonWidth*4 +
+						   TextRuler.buttonFontColorWidth + 12;
+				}
 			}
 		}
 
@@ -147,6 +156,26 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return TextRuler.zoneSupHeight + (this.tabCapability ? TextRuler.zoneInfHeight : 0.0);
+			}
+		}
+
+		public bool								ListCapability
+		{
+			// Indique si la règle permet l'utilisation des puces.
+			get
+			{
+				return this.listCapability;
+			}
+
+			set
+			{
+				if ( this.listCapability != value )
+				{
+					this.listCapability = value;
+					this.UpdateButtons();  // màj. les widgets
+					this.UpdateGeometry();
+					this.Invalidate();
+				}
 			}
 		}
 
@@ -809,6 +838,8 @@ namespace Epsitec.Common.Widgets
 			this.ComboSelectedColor(this.fieldFontColor, this.fontColor);
 			this.ButtonActive(this.buttonListNum, this.list == Drawing.TextListType.Num);
 			this.ButtonActive(this.buttonListFix, this.list == Drawing.TextListType.Fix);
+			this.buttonListNum.SetVisible(this.listCapability);
+			this.buttonListFix.SetVisible(this.listCapability);
 			this.silent = false;
 		}
 
@@ -1138,6 +1169,7 @@ namespace Epsitec.Common.Widgets
 		protected double					rightMargin = 0.0;
 		protected double					ppm = 4.0;
 		protected double					scale = 1.0;
+		protected bool						listCapability = true;
 		protected bool						tabCapability = true;
 
 		protected GlyphButton				buttonTab;
