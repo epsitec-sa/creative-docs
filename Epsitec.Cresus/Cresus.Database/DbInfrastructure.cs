@@ -291,6 +291,28 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public DbColumn[] CreateRefColumns(string column_name, string target_table_name, DbKeyMatchMode match_mode)
+		{
+			//	Crée la ou les colonnes nécessaires à la définition d'une référence à
+			//	une autre table.
+			
+			switch (match_mode)
+			{
+				case DbKeyMatchMode.SimpleId:
+					return new DbColumn[] { DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefSimpleId) };
+				
+				case DbKeyMatchMode.LiveId:
+					return new DbColumn[] { DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefLiveId) };
+				
+				case DbKeyMatchMode.ExactIdRevision:
+					return new DbColumn[] { DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefTupleId),
+											DbColumn.NewRefColumn(column_name, target_table_name, DbColumnClass.RefTupleRevision) };
+			}
+			
+			return null;
+		}
+		
+		
 		public DbType    CreateDbType(string name, int length, bool is_fixed)
 		{
 			DbTypeString type = new DbTypeString (length, is_fixed);
@@ -443,8 +465,13 @@ namespace Epsitec.Cresus.Database
 			DbColumn col_stat = new DbColumn (DbColumn.TagStatus,   this.internal_types["CR.KeyStatus"]);
 			
 			col_id.DefineCategory (DbElementCat.Internal);
+			col_id.DefineColumnClass (DbColumnClass.KeyId);
+			
 			col_rev.DefineCategory (DbElementCat.Internal);
+			col_rev.DefineColumnClass (DbColumnClass.KeyRevision);
+			
 			col_stat.DefineCategory (DbElementCat.Internal);
+			col_stat.DefineColumnClass (DbColumnClass.KeyStatus);
 			
 			table.DefineCategory (DbElementCat.UserDataManaged);
 			
@@ -897,7 +924,7 @@ namespace Epsitec.Cresus.Database
 				//	On extrait toutes les lignes de T_TABLE qui ont un CR_ID = key, ainsi que
 				//	les lignes correspondantes de T_COLUMN qui ont un CREF_TABLE = key.
 				
-				this.AddKeyExtraction (query, key, "T_TABLE", DbKeyMatchMode.ExactRevisionId);
+				this.AddKeyExtraction (query, key, "T_TABLE", DbKeyMatchMode.ExactIdRevision);
 				this.AddKeyExtraction (query, "T_COLUMN", DbColumn.TagRefTable, key);
 			}
 			
@@ -1201,13 +1228,13 @@ namespace Epsitec.Cresus.Database
 			
 			int revision = 0;
 			
-			if (mode == DbKeyMatchMode.ExactRevisionId)
+			if (mode == DbKeyMatchMode.ExactIdRevision)
 			{
 				revision = key.Revision;
 			}
 			
 			if ((mode == DbKeyMatchMode.LiveId) ||
-				(mode == DbKeyMatchMode.ExactRevisionId))
+				(mode == DbKeyMatchMode.ExactIdRevision))
 			{
 				SqlField name_col_rev = SqlField.CreateName (target_table_name, DbColumn.TagRevision);
 				SqlField constant_rev = SqlField.CreateConstant (revision, DbRawType.Int32);
@@ -1259,6 +1286,7 @@ namespace Epsitec.Cresus.Database
 			
 			columns[0].DefineColumnClass (DbColumnClass.KeyId);
 			columns[1].DefineColumnClass (DbColumnClass.KeyRevision);
+			columns[2].DefineColumnClass (DbColumnClass.KeyStatus);
 			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
 			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
 			
@@ -1294,10 +1322,11 @@ namespace Epsitec.Cresus.Database
 			
 			columns[0].DefineColumnClass (DbColumnClass.KeyId);
 			columns[1].DefineColumnClass (DbColumnClass.KeyRevision);
+			columns[2].DefineColumnClass (DbColumnClass.KeyStatus);
 			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
 			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			columns[7].DefineColumnClass (DbColumnClass.Ref);
-			columns[8].DefineColumnClass (DbColumnClass.Ref);
+			columns[7].DefineColumnClass (DbColumnClass.RefLiveId);
+			columns[8].DefineColumnClass (DbColumnClass.RefLiveId);
 			
 			this.SetCategory (columns, DbElementCat.Internal);
 			
@@ -1329,6 +1358,7 @@ namespace Epsitec.Cresus.Database
 			
 			columns[0].DefineColumnClass (DbColumnClass.KeyId);
 			columns[1].DefineColumnClass (DbColumnClass.KeyRevision);
+			columns[2].DefineColumnClass (DbColumnClass.KeyStatus);
 			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
 			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
 			
@@ -1363,9 +1393,10 @@ namespace Epsitec.Cresus.Database
 			
 			columns[0].DefineColumnClass (DbColumnClass.KeyId);
 			columns[1].DefineColumnClass (DbColumnClass.KeyRevision);
+			columns[2].DefineColumnClass (DbColumnClass.KeyStatus);
 			columns[4].DefineColumnLocalisation (DbColumnLocalisation.Default);
 			columns[5].DefineColumnLocalisation (DbColumnLocalisation.Default);
-			columns[7].DefineColumnClass (DbColumnClass.Ref);
+			columns[7].DefineColumnClass (DbColumnClass.RefLiveId);
 			
 			this.SetCategory (columns, DbElementCat.Internal);
 			
@@ -1393,9 +1424,9 @@ namespace Epsitec.Cresus.Database
 			columns[3] = new DbColumn (DbColumn.TagRefTarget,	this.num_type_id);
 			
 			columns[0].DefineColumnClass (DbColumnClass.KeyId);
-			columns[1].DefineColumnClass (DbColumnClass.Ref);
-			columns[2].DefineColumnClass (DbColumnClass.Ref);
-			columns[3].DefineColumnClass (DbColumnClass.Ref);
+			columns[1].DefineColumnClass (DbColumnClass.RefLiveId);
+			columns[2].DefineColumnClass (DbColumnClass.RefLiveId);
+			columns[3].DefineColumnClass (DbColumnClass.RefLiveId);
 			
 			this.SetCategory (columns, DbElementCat.Internal);
 			
@@ -1403,7 +1434,6 @@ namespace Epsitec.Cresus.Database
 			table.Columns.AddRange (columns);
 			
 			table.PrimaryKeys.Add (columns[0]);
-			table.PrimaryKeys.Add (columns[1]);
 			
 			this.internal_tables.Add (table);
 			

@@ -84,15 +84,18 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_a = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
 			DbColumn column_b = new DbColumn ("B", DbSimpleType.Guid);
 			
+			column_a.DefineCategory (DbElementCat.UserDataManaged);
+			column_b.DefineCategory (DbElementCat.UserDataManaged);
+			
 			SqlColumn sql_a = column_a.CreateSqlColumn (type_converter);
 			SqlColumn sql_b = column_b.CreateSqlColumn (type_converter);
 			
 			Assertion.AssertEquals (DbRawType.SmallDecimal, sql_a.Type);
-			Assertion.AssertEquals ("A", sql_a.Name);
+			Assertion.AssertEquals ("U_A", sql_a.Name);
 			Assertion.AssertEquals (true, sql_a.IsNullAllowed);
 			
 			Assertion.Assert (DbRawType.Guid != sql_b.Type);
-			Assertion.AssertEquals ("B", sql_b.Name);
+			Assertion.AssertEquals ("U_B", sql_b.Name);
 			Assertion.AssertEquals (false, sql_b.IsNullAllowed);
 			Assertion.Assert (sql_b.HasRawConverter);
 			Assertion.AssertEquals (sql_b.RawConverter.InternalType, sql_b.Type);

@@ -45,13 +45,21 @@ namespace Epsitec.Cresus.Database
 			
 			DbTable db_table = new DbTable ("Test (1)");
 			
+			db_table.DefineInternalKey (new DbKey (9));
+			db_table.DefineCategory (DbElementCat.UserDataManaged);
+			column_a.DefineCategory (DbElementCat.UserDataManaged);
+			column_b.DefineCategory (DbElementCat.UserDataManaged);
+			column_c.DefineCategory (DbElementCat.UserDataManaged);
+			column_d.DefineCategory (DbElementCat.UserDataManaged);
+			column_e.DefineCategory (DbElementCat.UserDataManaged);
+			
 			db_table.PrimaryKeys.AddRange (new DbColumn[] { column_a, column_b });
 			db_table.Columns.AddRange (new DbColumn[] { column_a, column_b, column_c, column_d, column_e });
 			
 			SqlTable sql_table = db_table.CreateSqlTable (type_converter);
 			
 			Assertion.AssertNotNull (sql_table);
-			Assertion.AssertEquals ("TEST__1_", sql_table.Name);
+			Assertion.AssertEquals ("U_TEST__1__9", sql_table.Name);
 			Assertion.AssertEquals (db_table.Columns.Count, sql_table.Columns.Count);
 			Assertion.AssertEquals (db_table.PrimaryKeys.Count, sql_table.PrimaryKey.Length);
 		}
@@ -68,6 +76,14 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_e = new DbColumn ("E", DbNumDef.FromRawType (DbRawType.Boolean), Nullable.No);
 			
 			DbTable db_table = new DbTable ("Test");
+			
+			db_table.DefineInternalKey (new DbKey (0));
+			db_table.DefineCategory (DbElementCat.UserDataManaged);
+			column_a.DefineCategory (DbElementCat.UserDataManaged);
+			column_b.DefineCategory (DbElementCat.UserDataManaged);
+			column_c.DefineCategory (DbElementCat.UserDataManaged);
+			column_d.DefineCategory (DbElementCat.UserDataManaged);
+			column_e.DefineCategory (DbElementCat.UserDataManaged);
 			
 			db_table.PrimaryKeys.AddRange (new DbColumn[] { column_a, column_b });
 			db_table.Columns.AddRange (new DbColumn[] { column_b, column_c, column_d, column_e });
@@ -90,6 +106,14 @@ namespace Epsitec.Cresus.Database
 			
 			DbTable db_table = new DbTable ("Test");
 			
+			db_table.DefineInternalKey (new DbKey (0));
+			db_table.DefineCategory (DbElementCat.UserDataManaged);
+			column_a.DefineCategory (DbElementCat.UserDataManaged);
+			column_b.DefineCategory (DbElementCat.UserDataManaged);
+			column_c.DefineCategory (DbElementCat.UserDataManaged);
+			column_d.DefineCategory (DbElementCat.UserDataManaged);
+			column_e.DefineCategory (DbElementCat.UserDataManaged);
+			
 			db_table.PrimaryKeys.AddRange (new DbColumn[] { column_a, column_b });
 			db_table.Columns.AddRange (new DbColumn[] { column_a, column_b, column_c, column_d, column_e });
 			
@@ -108,6 +132,12 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_b2 = new DbColumn ("B", DbSimpleType.String, 50, false, Nullable.Yes);
 			
 			DbTable db_table = new DbTable ("Test");
+			
+			db_table.DefineInternalKey (new DbKey (0));
+			db_table.DefineCategory (DbElementCat.UserDataManaged);
+			column_a.DefineCategory (DbElementCat.UserDataManaged);
+			column_b1.DefineCategory (DbElementCat.UserDataManaged);
+			column_b2.DefineCategory (DbElementCat.UserDataManaged);
 			
 			db_table.Columns.AddRange (new DbColumn[] { column_a, column_b1, column_b2 });
 			

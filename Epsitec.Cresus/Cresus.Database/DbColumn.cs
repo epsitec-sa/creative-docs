@@ -9,19 +9,22 @@ namespace Epsitec.Cresus.Database
 	
 	public enum DbColumnLocalisation : byte
 	{
-		None			= 0,	//	n'est pas/ne peut pas être localisée
-		Default			= 1,	//	peut être localisée, elle contient les valeurs par défaut
-		Localised		= 2		//	est localisée pour une langue particulière
+		None				= 0,	//	n'est pas/ne peut pas être localisée
+		Default				= 1,	//	peut être localisée, elle contient les valeurs par défaut
+		Localised			= 2		//	est localisée pour une langue particulière
 	}
 	
 	public enum DbColumnClass : byte
 	{
-		Data			= 0,	//	contient des données
-		KeyId			= 1,	//	définit une clef (ID)
-		KeyRevision		= 2,	//	définit une clef (révision)
-		Ref				= 3,	//	définit une référence à une clef (ID, révision = 0)
-		RefId			= 4,	//	définit une référence à une clef (ID)
-		RefRevision		= 5		//	définit une référence à une clef (révision)
+		Data				= 0,	//	contient des données
+		KeyId				= 1,	//	définit une clef (ID)
+		KeyRevision			= 2,	//	définit une clef (révision)
+		KeyStatus			= 3,	//	définit un statut
+		
+		RefSimpleId			= 4,	//	définit une référence à une clef (ID, version simplifiée)
+		RefLiveId			= 5,	//	définit une référence à une clef (ID, révision = 0)
+		RefTupleId			= 6,	//	définit une référence à une clef (tuple: ID)
+		RefTupleRevision	= 7,	//	définit une référence à une clef (tuple: révision)
 	}
 	
 	/// <summary>
@@ -79,6 +82,18 @@ namespace Epsitec.Cresus.Database
 			this.IsNullAllowed = (nullable == Nullable.Yes);
 		}
 		
+		public DbColumn(string name, DbType type, DbColumnClass column_class, DbElementCat category) : this (name, type, Nullable.Undefined)
+		{
+			this.DefineColumnClass (column_class);
+			this.DefineCategory (category);
+		}
+		
+		public DbColumn(string name, DbType type, Nullable nullable, DbColumnClass column_class, DbElementCat category) : this (name, type, nullable)
+		{
+			this.DefineColumnClass (column_class);
+			this.DefineCategory (category);
+		}
+		
 		public DbColumn(System.Xml.XmlElement xml)
 		{
 			this.ProcessXmlDefinition (xml);
@@ -99,6 +114,10 @@ namespace Epsitec.Cresus.Database
 			return new DbColumn (xml);
 		}
 
+		public static DbColumn NewRefColumn(string column_name, string target_table_name, DbColumnClass column_class)
+		{
+			return null;
+		}
 		
 		public static string ConvertColumnToXml(DbColumn column)
 		{
@@ -377,6 +396,42 @@ namespace Epsitec.Cresus.Database
 			DbRawType raw_type = TypeConverter.MapToRawType (this.SimpleType, this.NumDef);
 			SqlColumn column   = null;
 			
+			//	Vérifie que la définition de la colonne est bien correcte. On ne permet ainsi
+			//	pas de localiser des colonnes de type référence (ça n'aurait pas de sens).
+			
+			switch (this.column_localisation)
+			{
+				case DbColumnLocalisation.Default:
+				case DbColumnLocalisation.Localised:
+					if (this.column_class != DbColumnClass.Data)
+					{
+						string message = string.Format ("Column '{0}' specifies localisation {1} for class {2}.",
+							/**/						this.Name, this.column_localisation, this.column_class);
+						throw new System.InvalidOperationException (message);
+					}
+					break;
+				
+				case DbColumnLocalisation.None:
+					break;
+				
+				default:
+					throw new System.InvalidOperationException (string.Format ("Column '{0}' specifies invalid localisation.", this.Name));
+			}
+			
+			switch (this.column_class)
+			{
+				case DbColumnClass.KeyId:
+				case DbColumnClass.KeyRevision:
+				case DbColumnClass.KeyStatus:
+					if (this.Category != DbElementCat.Internal)
+					{
+						throw new System.InvalidOperationException (string.Format ("Column '{0}' category should be internal, but is {1}.", this.Name, this.Category));
+					}
+					break;
+				default:
+					break;
+			}
+			
 			IRawTypeConverter raw_converter;
 			
 			if (type_converter.CheckNativeSupport (raw_type))
@@ -405,9 +460,63 @@ namespace Epsitec.Cresus.Database
 			return column;
 		}
 		
+		public string CreateDisplayName()
+		{
+			//	Ajoute un suffixe éventuel au nom de la colonne pour distinguer plusieurs
+			//	colonnes qui auraient un même nom. C'est le cas pour les références qui
+			//	sont visibles par l'utilisateur sous le même nom.
+			
+			switch (this.column_class)
+			{
+				case DbColumnClass.RefLiveId:			return this.Name + " (live)";
+				case DbColumnClass.RefSimpleId:			return this.Name;
+				case DbColumnClass.RefTupleId:			return this.Name + " (ID)";
+				case DbColumnClass.RefTupleRevision:	return this.Name + " (REV)";
+			}
+			
+			return this.Name;
+		}
+		
 		public string CreateSqlName()
 		{
-			return DbSqlStandard.CreateSimpleSqlName (this.Name);
+			//	Crée le nom SQL de la colonne. Ce nom peut être différent du nom "haut niveau"
+			//	utilisé par DbColumn, indépendamment des caractères autorisés.
+			
+			if (this.Category == DbElementCat.Internal)
+			{
+				//	Les colonnes "internes" doivent déjà avoir un nom valide et elles sont
+				//	traitées de manière spéciale ici :
+				
+				return DbSqlStandard.CreateSimpleSqlName (this.Name, DbElementCat.Internal);
+			}
+			
+			string prefix;
+			string suffix;
+			
+			switch (this.column_class)
+			{
+				case DbColumnClass.Data:		return DbSqlStandard.CreateSimpleSqlName (this.Name, this.Category);
+				case DbColumnClass.KeyId:		return DbColumn.TagId;
+				case DbColumnClass.KeyRevision:	return DbColumn.TagRevision;
+				case DbColumnClass.KeyStatus:	return DbColumn.TagStatus;
+				
+				case DbColumnClass.RefLiveId:
+				case DbColumnClass.RefSimpleId:
+				case DbColumnClass.RefTupleId:
+					prefix = "REF";
+					suffix = "ID";
+					break;
+				
+				case DbColumnClass.RefTupleRevision:
+					prefix = "REF";
+					suffix = "REV";
+					break;
+				
+				default:
+					throw new System.NotSupportedException (string.Format ("Column '{0}' column class not supported.", this.Name));
+			}
+			
+			return DbSqlStandard.CreateSimpleSqlName (this.Name, prefix, suffix);;
 		}
 		
 		
@@ -546,8 +655,8 @@ namespace Epsitec.Cresus.Database
 		protected DbElementCat			category;
 		protected DbKey					internal_column_key;
 		
-		protected DbColumnLocalisation	column_localisation;
-		protected DbColumnClass			column_class;
+		protected DbColumnLocalisation	column_localisation	= DbColumnLocalisation.None;
+		protected DbColumnClass			column_class		= DbColumnClass.Data;
 		
 		
 		internal const string			TagId				= "CR_ID";

@@ -20,12 +20,15 @@ namespace Epsitec.Cresus.Database
 			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR.KeyId");
 			DbType db_type_rev  = infrastructure.ResolveDbType (null, "CR.KeyRevision");
 			
-			db_table_a.Columns.Add (new DbColumn ("Nom", db_type_name));
-			db_table_a.Columns.Add (new DbColumn ("Prenom", db_type_name));
+			db_table_a.Columns.Add (new DbColumn ("Nom",      db_type_name, DbColumnClass.Data, DbElementCat.UserDataManaged));
+			db_table_a.Columns.Add (new DbColumn ("Prenom",   db_type_name, DbColumnClass.Data, DbElementCat.UserDataManaged));
 			
-			db_table_b.Columns.Add (new DbColumn ("RefId",  db_type_id));
-			db_table_b.Columns.Add (new DbColumn ("RefRev", db_type_rev));
-			db_table_b.Columns.Add (new DbColumn ("Ville", db_type_name));
+			db_table_b.Columns.Add (new DbColumn ("Personne", db_type_id,   DbColumnClass.RefTupleId, DbElementCat.UserDataManaged));
+			db_table_b.Columns.Add (new DbColumn ("Personne", db_type_rev,  DbColumnClass.RefTupleRevision, DbElementCat.UserDataManaged));
+			db_table_b.Columns.Add (new DbColumn ("Ville",    db_type_name, DbColumnClass.Data, DbElementCat.UserDataManaged));
+			
+			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_a.Name, db_table_a.Columns.Count);
+			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_b.Name, db_table_b.Columns.Count);
 			
 			infrastructure.RegisterNewDbTable (null, db_table_a);
 			infrastructure.RegisterNewDbTable (null, db_table_b);
