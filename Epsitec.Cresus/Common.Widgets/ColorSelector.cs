@@ -19,7 +19,7 @@ namespace Epsitec.Common.Widgets
 				this.labels[i] = new StaticText(this);
 				this.fields[i] = new TextFieldSlider(this);
 
-				this.fields[i].TabIndex = i;
+				this.fields[i].TabIndex = i+100;
 				this.fields[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.fields[i].Value = 0;
 				if ( i < 4 )
@@ -33,7 +33,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.fields[i].MinRange = 0;
 					this.fields[i].MaxRange = 360;
-					this.fields[i].Step = 15;
+					this.fields[i].Step = 10;
 					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextHSVChanged);
 				}
 				else
@@ -75,6 +75,8 @@ namespace Epsitec.Common.Widgets
 			{
 				this.palette[i] = new ColorSample(this);
 				this.palette[i].Clicked += new MessageEventHandler(this.ColorSelectorClicked);
+				this.palette[i].TabIndex = i;
+				this.palette[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
 
 			this.palette[ 0].Color = Drawing.Color.FromARGB(0.0, 1.0, 1.0, 1.0);
@@ -364,7 +366,7 @@ namespace Epsitec.Common.Widgets
 		private void ColorSelectorClicked(object sender, MessageEventArgs e)
 		{
 			ColorSample cs = sender as ColorSample;
-			if ( e.Message.IsShiftPressed || e.Message.IsCtrlPressed )
+			if ( e != null && (e.Message.IsShiftPressed || e.Message.IsCtrlPressed) )
 			{
 				cs.Color = this.Color;
 			}
