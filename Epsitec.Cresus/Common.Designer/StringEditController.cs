@@ -112,8 +112,6 @@ namespace Epsitec.Common.Designer
 			#region ITextArrayStore Members
 			public void InsertRows(int row, int num)
 			{
-				// TODO:  Add TextBundleArrayStore.InsertRows implementation
-				
 				if (row == this.CountBundleFields)
 				{
 					ResourceBundle.Field field = this.bundle.CreateEmptyField (ResourceFieldType.Data);
@@ -123,7 +121,10 @@ namespace Epsitec.Common.Designer
 			
 			public void RemoveRows(int row, int num)
 			{
-				// TODO:  Add TextBundleArrayStore.RemoveRows implementation
+			}
+			
+			public void MoveRow(int row, int distance)
+			{
 			}
 			
 			public string GetCellText(int row, int column)
@@ -199,6 +200,26 @@ namespace Epsitec.Common.Designer
 				return this.CountBundleFields + 1;
 			}
 			
+			public bool CheckSetRow(int row)
+			{
+				return (row >= 0) && (row < this.GetRowCount ());
+			}
+		
+			public bool CheckInsertRows(int row, int num)
+			{
+				return true;
+			}
+
+			public bool CheckRemoveRows(int row, int num)
+			{
+				return false;
+			}
+
+			public bool CheckMoveRow(int row, int distance)
+			{
+				return false;
+			}
+		
 			public event Support.EventHandler	StoreChanged;
 			#endregion
 			

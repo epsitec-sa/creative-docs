@@ -236,17 +236,30 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual Drawing.Rectangle GetEditBounds()
 		{
+			Drawing.Rectangle bounds = Drawing.Rectangle.Empty;
+			
 			switch (this.mode)
 			{
 				case EditArrayMode.Standard:
 					break;
+				
 				case EditArrayMode.Edition:
-					return this.GetRowBounds (this.EditionIndex);
+					bounds = this.GetRowBounds (this.EditionIndex);
+					break;
+				
 				case EditArrayMode.Search:
-					return new Drawing.Rectangle (this.inner_bounds.Left, this.inner_bounds.Top, this.inner_bounds.Width, this.table_bounds.Height - this.inner_bounds.Height);
+					bounds = new Drawing.Rectangle (this.inner_bounds.Left, this.inner_bounds.Top, this.inner_bounds.Width, this.table_bounds.Height - this.inner_bounds.Height);
+					break;
 			}
 			
-			return Drawing.Rectangle.Empty;
+			if ((this.h_scroller.IsVisible) &&
+				(bounds.IsValid) &&
+				(bounds.Bottom <= this.h_scroller.Top))
+			{
+				bounds.Bottom = this.h_scroller.Top + 1;
+			}
+			
+			return bounds;
 		}
 		
 		protected virtual Drawing.Rectangle GetEditCellBounds(int column)
@@ -277,8 +290,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
 		{
-			base.ProcessMessage (message, pos);
-			
 			if ((message.IsMouseType) &&
 				(message.Type != MessageType.MouseLeave))
 			{
@@ -299,15 +310,23 @@ namespace Epsitec.Common.Widgets
 							(row >= 0) && (row < this.max_rows))
 						{
 							//	L'utilisateur a cliqué dans une cellule de la table. On va faire en sorte
-							//	de changer la cellule active (repositionner les lignes éditables) tout en
-							//	passant l'événement plus loin :
+							//	de changer la cellule active (repositionner les lignes éditables) :
 							
-							this.is_mouse_down = false;
 							this.EditionIndex  = row;
+							this.SelectedIndex = row;
 							this.Update ();
+							
 							this.edit_line.FocusColumn (column);
-							window.DispatchMessage (message);
-							System.Diagnostics.Debug.Assert (message.Consumer == this.edit_line[column]);
+							
+							message.Consumer  = this.edit_line[column];
+							message.Swallowed = true;
+							
+//							window.DispatchMessage (message, this.edit_line[column]);
+//							
+//							System.Diagnostics.Debug.Assert (this.is_mouse_down == false);
+//							System.Diagnostics.Debug.Assert (message.Consumer == this.edit_line[column]);
+							
+							return;
 						}
 					}
 					else
@@ -316,6 +335,8 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 			}
+			
+			base.ProcessMessage (message, pos);
 		}
 
 		
@@ -746,6 +767,7 @@ namespace Epsitec.Common.Widgets
 				widget.TabNavigation = TabNavigationMode.ActivateOnTab;
 				widget.Focused      += new Support.EventHandler (this.HandleEditArrayFocused);
 				widget.TextChanged  += new Epsitec.Common.Support.EventHandler (this.HandleTextChanged);
+				widget.AutoSelectOnFocus = true;
 				widget.Hide ();
 			}
 			
@@ -764,7 +786,7 @@ namespace Epsitec.Common.Widgets
 			
 			private void HandleEditArrayFocused(object sender)
 			{
-				Widget widget = sender as Widget;
+				AbstractTextField widget = sender as AbstractTextField;
 				
 				int row    = this.host.EditionIndex;
 				int column = widget.Index;
@@ -930,9 +952,9 @@ namespace Epsitec.Common.Widgets
 			{
 				Support.CommandDispatcher dispatcher = this.host.CommandDispatcher;
 				
+				dispatcher.Register (this.GetCommandName ("StartReadOnly"), new Support.CommandEventHandler (this.CommandStartReadOnly));
 				dispatcher.Register (this.GetCommandName ("StartEdition"),  new Support.CommandEventHandler (this.CommandStartEdition));
 				dispatcher.Register (this.GetCommandName ("StartSearch"),   new Support.CommandEventHandler (this.CommandStartSearch));
-				dispatcher.Register (this.GetCommandName ("StartReadOnly"), new Support.CommandEventHandler (this.CommandStartReadOnly));
 				dispatcher.Register (this.GetCommandName ("InsertBefore"),  new Support.CommandEventHandler (this.CommandInsertBefore));
 				dispatcher.Register (this.GetCommandName ("InsertAfter"),   new Support.CommandEventHandler (this.CommandInsertAfter));
 				dispatcher.Register (this.GetCommandName ("Delete"),        new Support.CommandEventHandler (this.CommandDelete));
@@ -949,9 +971,9 @@ namespace Epsitec.Common.Widgets
 					AbstractToolBar toolbar = header.ToolBar;
 					
 					toolbar.SuspendLayout ();
+					toolbar.Items.Add (this.CreateIconButton ("StartReadOnly", "manifest:Epsitec.Common.Widgets/Images.TableReadOnly.icon", "Consultation uniquement"));
 					toolbar.Items.Add (this.CreateIconButton ("StartEdition",  "manifest:Epsitec.Common.Widgets/Images.TableEdition.icon",  "Modifie les données"));
 					toolbar.Items.Add (this.CreateIconButton ("StartSearch",   "manifest:Epsitec.Common.Widgets/Images.TableSearch.icon",   "Démarre une recherche"));
-					toolbar.Items.Add (this.CreateIconButton ("StartReadOnly", "manifest:Epsitec.Common.Widgets/Images.TableReadOnly.icon", "Consultation uniquement"));
 					toolbar.Items.Add (new IconSeparator ());
 					toolbar.Items.Add (this.CreateIconButton ("InsertBefore",  "manifest:Epsitec.Common.Widgets/Images.InsertBeforeCell.icon", "Insère une ligne avant"));
 					toolbar.Items.Add (this.CreateIconButton ("InsertAfter",   "manifest:Epsitec.Common.Widgets/Images.InsertAfterCell.icon",  "Insère une ligne après"));
@@ -965,6 +987,17 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
+			public virtual void StartReadOnly()
+			{
+				if (this.host.EditArrayMode == EditArrayMode.Edition)
+				{
+					this.host.ValidateEdition ();
+				}
+				
+				this.host.EditArrayMode = EditArrayMode.Standard;
+				this.host.SetFocused (true);
+			}
+			
 			public virtual void StartEdition()
 			{
 				this.StartReadOnly ();
@@ -976,17 +1009,6 @@ namespace Epsitec.Common.Widgets
 				this.StartReadOnly ();
 				this.host.StartSearch ();
 				
-			}
-			
-			public virtual void StartReadOnly()
-			{
-				if (this.host.EditArrayMode == EditArrayMode.Edition)
-				{
-					this.host.ValidateEdition ();
-				}
-				
-				this.host.EditArrayMode = EditArrayMode.Standard;
-				this.host.SetFocused (true);
 			}
 			
 			public virtual void InsertBefore()
@@ -1040,6 +1062,11 @@ namespace Epsitec.Common.Widgets
 			
 			
 			#region Commands...
+			private void CommandStartReadOnly(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+			{
+				this.StartReadOnly ();
+			}
+			
 			private void CommandStartEdition(Support.CommandDispatcher sender, Support.CommandEventArgs e)
 			{
 				this.StartEdition ();
@@ -1048,11 +1075,6 @@ namespace Epsitec.Common.Widgets
 			private void CommandStartSearch(Support.CommandDispatcher sender, Support.CommandEventArgs e)
 			{
 				this.StartSearch ();
-			}
-			
-			private void CommandStartReadOnly(Support.CommandDispatcher sender, Support.CommandEventArgs e)
-			{
-				this.StartReadOnly ();
 			}
 			
 			private void CommandInsertBefore(Support.CommandDispatcher sender, Support.CommandEventArgs e)
@@ -1120,9 +1142,9 @@ namespace Epsitec.Common.Widgets
 						break;
 				}
 				
+				this.UpdateCommandState ("StartReadOnly", true, act_readonly);
 				this.UpdateCommandState ("StartEdition", (act_index >= 0), act_edition);
 				this.UpdateCommandState ("StartSearch", true, act_search);
-				this.UpdateCommandState ("StartReadOnly", true, act_readonly);
 				
 				this.UpdateCommandState ("InsertBefore", (act_index >= 0), WidgetState.ActiveNo);
 				this.UpdateCommandState ("InsertAfter", (act_index >= 0), WidgetState.ActiveNo);

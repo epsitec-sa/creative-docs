@@ -956,6 +956,11 @@ namespace Epsitec.Common.Widgets
 		
 		internal void DispatchMessage(Message message)
 		{
+			this.DispatchMessage (message, null);
+		}
+		
+		internal void DispatchMessage(Message message, Widget root)
+		{
 			if (this.IsFrozen || (message == null))
 			{
 				return;
@@ -992,7 +997,19 @@ namespace Epsitec.Common.Widgets
 				//	Dans les autres cas, les événements sont simplement acheminés de widget en widget,
 				//	en utilisant une approche en profondeur d'abord.
 				
-				this.root.MessageHandler (message, message.Cursor);
+				Drawing.Point pos = message.Cursor;
+				
+				if (root == null)
+				{
+					root = this.root;
+				}
+				else
+				{
+					pos = root.MapRootToClient (pos);
+					pos = root.MapClientToParent (pos);
+				}
+				
+				root.MessageHandler (message, pos);
 				
 				if (this.IsDisposed) return;
 				
@@ -1125,6 +1142,25 @@ namespace Epsitec.Common.Widgets
 						}
 						break;
 				}
+				
+				if (message.Swallowed)
+				{
+					//	Le message a été mangé. Il faut donc aussi manger le message
+					//	correspondant si les messages viennent par paire.
+							
+					switch (message.Type)
+					{
+						case MessageType.MouseDown:
+							this.window.FilterMouseMessages = true;
+							this.capturing_widget = null;
+							break;
+								
+						case MessageType.KeyDown:
+							//	TODO: prend note qu'il faut manger l'événement
+							break;
+					}
+				}
+				
 			}
 			else
 			{
