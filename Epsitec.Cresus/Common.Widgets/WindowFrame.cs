@@ -1,7 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
-	/// La classe Window fait le lien avec les WinForms.
+	/// La classe WindowFrame fait le lien avec les WinForms.
 	/// </summary>
 	public class WindowFrame : System.Windows.Forms.Form
 	{
@@ -27,7 +27,37 @@ namespace Epsitec.Common.Widgets
 			get { return this.root; }
 		}
 		
-
+		public Widget					CapturingWidget
+		{
+			get { return this.capturing_widget; }
+		}
+		
+		public Widget					FocusedWidget
+		{
+			get { return this.focused_widget; }
+			set
+			{
+				if (this.focused_widget != value)
+				{
+					Widget old_focus = this.focused_widget;
+					Widget new_focus = value;
+					
+					this.focused_widget = new_focus;
+					
+					if (old_focus != null)
+					{
+						old_focus.SetFocus (false);
+					}
+					
+					if (new_focus != null)
+					{
+						new_focus.SetFocus (true);
+					}
+				}
+			}
+		}
+		
+		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -43,6 +73,7 @@ namespace Epsitec.Common.Widgets
 			
 			base.Dispose (disposing);
 		}
+		
 		
 		protected override void OnClosed(System.EventArgs e)
 		{
@@ -90,7 +121,6 @@ namespace Epsitec.Common.Widgets
 			e.Handled = message.Handled;
 		}
 
-		
 		protected override void OnMouseDown(System.Windows.Forms.MouseEventArgs e)
 		{
 			base.OnMouseDown (e);
@@ -131,7 +161,6 @@ namespace Epsitec.Common.Widgets
 			this.DispatchMessage (Message.FromMouseEvent (MessageType.MouseLeave, this, null));
 		}
 
-		
 		protected override void OnPaint(System.Windows.Forms.PaintEventArgs e)
 		{
 			base.OnPaint (e);
@@ -145,7 +174,6 @@ namespace Epsitec.Common.Widgets
 			this.DispatchPaint (e.Graphics, e.ClipRectangle);
 		}
 
-		
 		protected override void OnResize(System.EventArgs e)
 		{
 			base.OnResize (e);
@@ -156,6 +184,7 @@ namespace Epsitec.Common.Widgets
 			base.OnSizeChanged (e);
 			this.ReallocatePixmap ();
 		}
+		
 		
 		protected virtual void ReallocatePixmap()
 		{
@@ -261,11 +290,53 @@ namespace Epsitec.Common.Widgets
 				//	on les retire de la liste en leur signalant qu'ils viennent de perdre la souris.
 				
 				Widget.UpdateEntered (message);
+				
+				this.last_in_widget = this.DetectWidget (message.Cursor);
 			}
 			
-			this.root.MessageHandler (message, message.Cursor);
+			message.InWidget = this.last_in_widget;
+			message.Consumer = null;
 			
-			if (message.Handled == false)
+			if (this.capturing_widget == null)
+			{
+				//	La capture des événements souris n'est pas active. Si un widget a le focus, il va
+				//	recevoir les événements clavier en priorité (message.FilterOnlyFocused = true).
+				//	Dans les autres cas, les événements sont simplement acheminés de widget en widget,
+				//	en utilisant une approche en profondeur d'abord.
+				
+				this.root.MessageHandler (message, message.Cursor);
+			}
+			else
+			{
+				message.FilterNoChildren = true;
+				message.Captured         = true;
+				
+				this.capturing_widget.MessageHandler (message);
+			}
+			
+			if (message.Handled)
+			{
+				if (message.Type == MessageType.MouseDown)
+				{
+					Widget consumer = message.Consumer;
+					if (consumer != null)
+					{
+						if (consumer.AutoCapture)
+						{
+							this.capturing_widget = consumer;
+							this.Capture = true;
+						}
+						
+						if ((consumer.AutoFocus) &&
+							(consumer.IsFocused == false) &&
+							(consumer.CanFocus))
+						{
+							this.FocusedWidget = consumer;
+						}
+					}
+				}
+			}
+			else
 			{
 				Shortcut shortcut = null;
 				
@@ -293,11 +364,26 @@ namespace Epsitec.Common.Widgets
 					message.Handled = this.root.ShortcutHandler (shortcut);
 				}
 			}
+			
+			if (message.Type == MessageType.MouseUp)
+			{
+				this.capturing_widget = null;
+				this.Capture = false;
+			}
+		}
+		
+		protected virtual Widget DetectWidget(Drawing.Point pos)
+		{
+			Widget child = this.root.FindChild (pos);
+			return (child == null) ? this.root : child;
 		}
 		
 		
 		protected WindowRoot			root;
 		protected Drawing.Graphics		graphics;
 		protected Drawing.Rectangle		dirty_rectangle;
+		protected Widget				last_in_widget;
+		protected Widget				capturing_widget;
+		protected Widget				focused_widget;
 	}
 }

@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public Widget()
 		{
-			this.internal_state = InternalState.Enabled | InternalState.Visible;
+			this.internal_state = InternalState.Enabled | InternalState.Visible | InternalState.AutoCapture;
 			this.anchor = AnchorStyles.Left | AnchorStyles.Top;
 			this.back_color = new Drawing.Color (0.9);
 			this.fore_color = new Drawing.Color (0.0);
@@ -155,25 +155,10 @@ namespace Epsitec.Common.Widgets
 		
 		
 #if false
-		public bool							CanFocus
-		{
-			get;
-		}
-		
-		public bool							CanSelect
-		{
-			get;
-		}
-		
 		public bool							CausesValidation
 		{
 			get;
 			set;
-		}
-		
-		public bool							ContainsFocus
-		{
-			get;
 		}
 #endif
 		public virtual bool					IsEnabled
@@ -218,6 +203,77 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public bool							AutoCapture
+		{
+			get { return (this.internal_state & InternalState.AutoCapture) != 0; }
+			set
+			{
+				if (value)
+				{
+					this.internal_state |= InternalState.AutoCapture;
+				}
+				else
+				{
+					this.internal_state &= ~InternalState.AutoCapture;
+				}
+			}
+		}
+		
+		public bool							AutoFocus
+		{
+			get { return (this.internal_state & InternalState.AutoFocus) != 0; }
+			set
+			{
+				if (value)
+				{
+					this.internal_state |= InternalState.AutoFocus;
+				}
+				else
+				{
+					this.internal_state &= ~InternalState.AutoFocus;
+				}
+			}
+		}
+		
+		
+		public bool							ContainsFocus
+		{
+			get
+			{
+				if (this.IsFocused)
+				{
+					return true;
+				}
+				
+				if (this.Children.Count > 0)
+				{
+					Widget[] children = this.Children.Widgets;
+					int  children_num = children.Length;
+					
+					for (int i = 0; i < children_num; i++)
+					{
+						if (children[i].ContainsFocus)
+						{
+							return true;
+						}
+					}
+				}
+				
+				return false;
+			}
+		}
+		
+		public bool							CanFocus
+		{
+			get { return (this.internal_state & InternalState.Focusable) != 0; }
+		}
+		
+		public bool							CanSelect
+		{
+			get { return (this.internal_state & InternalState.Selectable) != 0; }
+		}
+		
+		
 		public WidgetCollection				Children
 		{
 			get
@@ -257,7 +313,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Widget						RootParent
+		public virtual WindowFrame			WindowFrame
+		{
+			get
+			{
+				Widget root = this.RootParent;
+				
+				if ((root == null) ||
+					(root == this))
+				{
+					return null;
+				}
+				
+				return root.WindowFrame;
+			}
+		}
+		
+		public virtual Widget				RootParent
 		{
 			get
 			{
@@ -395,9 +467,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 		//	Cursor
-		//	Focus/SetFocus
 		//	FindNextWidget/FindPrevWidget
-		//	Invalidate/Update/Refresh
 		
 		public virtual void Hide()
 		{
@@ -428,6 +498,35 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
+		public virtual void SetFocus(bool focused)
+		{
+			WindowFrame frame = this.WindowFrame;
+			
+			if (frame == null)
+			{
+				return;
+			}
+			
+			if ((this.internal_state & InternalState.Focused) == 0)
+			{
+				if (focused)
+				{
+					this.internal_state |= InternalState.Focused;
+					frame.FocusedWidget = this;
+					this.Invalidate ();
+				}
+			}
+			else
+			{
+				if (!focused)
+				{
+					this.internal_state &= ~ InternalState.Focused;
+					this.Invalidate ();
+				}
+			}
+		}
+		
 		
 		
 		protected void SetEntered(bool entered)
@@ -844,12 +943,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected Widget FindChild(Drawing.Point point)
+		public Widget FindChild(Drawing.Point point)
 		{
-			return this.FindChild (point, ChildFindMode.All);
+			return this.FindChild (point, ChildFindMode.SkipHidden);
 		}
 		
-		protected virtual Widget FindChild(Drawing.Point point, ChildFindMode mode)
+		public virtual Widget FindChild(Drawing.Point point, ChildFindMode mode)
 		{
 			if (this.Children.Count == 0)
 			{
@@ -1123,7 +1222,7 @@ namespace Epsitec.Common.Widgets
 					Widget widget = children[children_num-1 - i];
 					
 					if ((widget.IsEnabled) &&
-						((message.FilterOnlyFocused == false) || (widget.IsFocused)) &&
+						((message.FilterOnlyFocused == false) || (widget.ContainsFocus)) &&
 						((message.FilterOnlyOnHit == false) || (widget.HitTest (client_pos))))
 					{
 						if (message.IsMouseType)
@@ -1144,6 +1243,16 @@ namespace Epsitec.Common.Widgets
 							break;
 						}
 					}
+				}
+			}
+			else if ((message.Handled == false) &&
+				/**/ (message.Captured) &&
+				/**/ (message.IsMouseType))
+			{
+				if ((this.IsEntered == false) &&
+					(message.InWidget == this))
+				{
+					this.SetEntered (true);
 				}
 			}
 			
@@ -1202,9 +1311,9 @@ namespace Epsitec.Common.Widgets
 					Widget widget = children[children_num-1 - i];
 				
 					if ((widget.IsEnabled) &&
-						(widget.IsFocused))
+						(widget.ContainsFocus))
 					{
-						if (this.ShortcutHandler (shortcut))
+						if (widget.ShortcutHandler (shortcut))
 						{
 							return true;
 						}
@@ -1221,8 +1330,7 @@ namespace Epsitec.Common.Widgets
 			{
 				Widget widget = children[children_num-1 - i];
 				
-				if ((widget.IsEnabled) &&
-					(widget.IsFocused == false))
+				if (widget.IsEnabled)
 				{
 					if (widget.ShortcutHandler (shortcut, false))
 					{
@@ -1310,7 +1418,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.Clicked != null)
 			{
-				e.Message.Handled = true;
+				e.Message.Consumer = this;
 				this.Clicked (this, e);
 			}
 		}
@@ -1319,7 +1427,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.DoubleClicked != null)
 			{
-				e.Message.Handled = true;
+				e.Message.Consumer = this;
 				this.DoubleClicked (this, e);
 			}
 		}
@@ -1338,10 +1446,17 @@ namespace Epsitec.Common.Widgets
 			None				= 0,
 			ChildrenChanged		= 0x00000001,
 			
+			Focusable			= 0x00000010,
+			Selectable			= 0x00000020,
+			
 			Visible				= 0x00000100,
 			Enabled				= 0x00000200,
 			Focused				= 0x00000400,
 			Entered				= 0x00000800,
+			Selected			= 0x00001000,
+			
+			AutoCapture			= 0x00010000,
+			AutoFocus			= 0x00020000,
 		}
 		
 		[System.Flags] public enum TabNavigationMode

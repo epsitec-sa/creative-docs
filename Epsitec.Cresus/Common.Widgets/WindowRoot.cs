@@ -15,7 +15,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return true; }
 		}
-
+		
+		public override WindowFrame		WindowFrame
+		{
+			get { return this.window_frame; }
+		}
+		
 		
 		protected override bool ShortcutHandler(Shortcut shortcut, bool execute_focused)
 		{
