@@ -177,6 +177,22 @@ namespace Epsitec.Common.Document
 			get { return this.printer; }
 			set { this.printer = value; }
 		}
+		
+		// Dialogue d'impression pour ce document.
+		public Common.Dialogs.Print PrintDialog
+		{
+			get
+			{
+				if ( this.printDialog == null )
+				{
+					this.printDialog = new Common.Dialogs.Print();
+					this.printDialog.Document.SelectPrinter(this.PrinterName);
+					this.printDialog.AllowFromPageToPage = true;
+					this.printDialog.AllowSelectedPages  = true;
+				}
+				return this.printDialog;
+			}
+		}
 
 
 		// Taille du document.
@@ -299,7 +315,15 @@ namespace Epsitec.Common.Document
 
 			set
 			{
-				this.printerName = value;
+				if ( this.printerName != value )
+				{
+					this.printerName = value;
+					
+					if ( this.printDialog != null )
+					{
+						this.printDialog.Document.SelectPrinter(this.PrinterName);
+					}
+				}
 			}
 		}
 
@@ -1313,6 +1337,7 @@ namespace Epsitec.Common.Document
 		protected Modifier						modifier;
 		protected Notifier						notifier;
 		protected Printer						printer;
+		protected Common.Dialogs.Print			printDialog;
 		protected Dialogs						dialogs;
 		protected string						ioDirectory;
 		protected int							readRevision;

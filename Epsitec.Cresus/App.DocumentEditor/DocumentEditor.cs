@@ -1279,17 +1279,18 @@ namespace Epsitec.App.DocumentEditor
 		[Command ("Print")]
 		void CommandPrint(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			Dialogs.Print dialog = new Dialogs.Print();
-			dialog.Document.SelectPrinter(this.CurrentDocument.PrinterName);
-			dialog.AllowFromPageToPage = true;
-			dialog.AllowSelectedPages  = true;
-			this.CurrentDocument.Printer.RestoreSettings(dialog.Document.PrinterSettings);
+			Document document = this.CurrentDocument;
+			Dialogs.Print dialog = document.PrintDialog;
+			document.Printer.RestoreSettings(dialog.Document.PrinterSettings);
+			
 			dialog.Owner = this.Window;
 			dialog.OpenDialog();
-			if ( dialog.Result != Dialogs.DialogResult.Accept )  return;
-
-			this.CurrentDocument.Printer.SaveSettings(dialog.Document.PrinterSettings);
-			this.CurrentDocument.Print(dialog);
+			
+			if ( dialog.Result == Dialogs.DialogResult.Accept )
+			{
+				document.Printer.SaveSettings(dialog.Document.PrinterSettings);
+				document.Print(dialog);
+			}
 		}
 		
 		[Command ("Export")]
