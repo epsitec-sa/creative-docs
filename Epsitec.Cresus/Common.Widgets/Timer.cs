@@ -1,3 +1,6 @@
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Widgets
 {
 	/// <summary>
@@ -10,6 +13,18 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		
+		public bool								HighAccuracy
+		{
+			get
+			{
+				return this.high_accuracy;
+			}
+			set
+			{
+				this.high_accuracy = value;
+			}
+		}
 		
 		public double							Delay
 		{
@@ -118,6 +133,16 @@ namespace Epsitec.Common.Widgets
 					System.TimeSpan wait = this.expiration_date.Subtract (now);
 					
 					int delta = (int) wait.TotalMilliseconds;
+					
+					if ((this.high_accuracy == false) &&
+						(delta <= 0))
+					{
+						//	Si l'exactitude temporelle des événements n'importe pas trop, il
+						//	vaut mieux tricher ici et prendre un peu de retard, mais au moins
+						//	passer par la boucle des événements...
+						
+						delta = 1;
+					}
 					
 					if (delta > 0)
 					{
@@ -276,6 +301,7 @@ namespace Epsitec.Common.Widgets
 		protected double						delay_seconds;
 		protected double						auto_repeat;
 		protected System.TimeSpan				remaining_time;
+		protected bool							high_accuracy;
 	}
 	
 	public enum TimerState
