@@ -129,6 +129,14 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public DbRawType				InternalRawType
+		{
+			get
+			{
+				return this.raw_type;
+			}
+		}
+		
 		public decimal					MinValue
 		{
 			get
