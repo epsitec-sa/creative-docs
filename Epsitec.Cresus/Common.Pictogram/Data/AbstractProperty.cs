@@ -10,6 +10,7 @@ namespace Epsitec.Common.Pictogram.Data
 		LineColor,			// couleur du trait
 		LineMode,			// mode du trait
 		FillGradient,		// dégradé de remplissage
+		Shadow,				// ombre sous l'objet
 		PolyClose,			// mode de fermeture des polygones
 		RoundRect,			// rayons des rectangles arrondis
 		RegularFaces,		// polygone régulier: nb de faces
@@ -38,6 +39,7 @@ namespace Epsitec.Common.Pictogram.Data
 				case PropertyType.LineColor:        property = new PropertyColor();     break;
 				case PropertyType.LineMode:         property = new PropertyLine();      break;
 				case PropertyType.FillGradient:     property = new PropertyGradient();  break;
+				case PropertyType.Shadow:           property = new PropertyShadow();    break;
 				case PropertyType.PolyClose:        property = new PropertyBool();      break;
 				case PropertyType.RoundRect:        property = new PropertyDouble();    break;
 				case PropertyType.RegularFaces:     property = new PropertyDouble();    break;

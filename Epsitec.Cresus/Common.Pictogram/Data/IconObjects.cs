@@ -26,6 +26,7 @@ namespace Epsitec.Common.Pictogram.Data
 	XmlInclude(typeof(PropertyColor)),
 	XmlInclude(typeof(PropertyDouble)),
 	XmlInclude(typeof(PropertyGradient)),
+	XmlInclude(typeof(PropertyShadow)),
 	XmlInclude(typeof(PropertyLine)),
 	XmlInclude(typeof(PropertyList)),
 	XmlInclude(typeof(PropertyString)),
@@ -209,9 +210,9 @@ namespace Epsitec.Common.Pictogram.Data
 				this.origin = obj.origin;
 
 				this.objects.Clear();
-				foreach ( AbstractObject ob in obj.Objects )
+				foreach ( AbstractObject src in obj.Objects )
 				{
-					this.objects.Add(ob);
+					this.objects.Add(src);
 				}
 			}
 			catch ( System.Exception )

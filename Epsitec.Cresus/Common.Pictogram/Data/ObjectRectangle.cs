@@ -158,20 +158,31 @@ namespace Epsitec.Common.Pictogram.Data
 			double dx = System.Math.Abs(rect.Width);
 			double dy = System.Math.Abs(rect.Height);
 
+			Drawing.Path path = new Drawing.Path();
 			radius = System.Math.Min(radius, System.Math.Min(dx,dy)/2);
 			
-			Drawing.Path path = new Drawing.Path();
-			path.MoveTo (ox+radius, oy);
-			path.LineTo (ox+dx-radius, oy);
-			path.CurveTo(ox+dx, oy, ox+dx, oy+radius);
-			path.LineTo (ox+dx, oy+dy-radius);
-			path.CurveTo(ox+dx, oy+dy, ox+dx-radius, oy+dy);
-			path.LineTo (ox+radius, oy+dy);
-			path.CurveTo(ox, oy+dy, ox, oy+dy-radius);
-			path.LineTo (ox, oy+radius);
-			path.CurveTo(ox, oy, ox+radius, oy);
-			path.Close();
+			if ( radius == 0 )
+			{
+				path.MoveTo(ox, oy);
+				path.LineTo(ox+dx, oy);
+				path.LineTo(ox+dx, oy+dy);
+				path.LineTo(ox, oy+dy);
+				path.Close();
+			}
+			else
+			{
+				path.MoveTo (ox+radius, oy);
+				path.LineTo (ox+dx-radius, oy);
+				path.CurveTo(ox+dx, oy, ox+dx, oy+radius);
+				path.LineTo (ox+dx, oy+dy-radius);
+				path.CurveTo(ox+dx, oy+dy, ox+dx-radius, oy+dy);
+				path.LineTo (ox+radius, oy+dy);
+				path.CurveTo(ox, oy+dy, ox, oy+dy-radius);
+				path.LineTo (ox, oy+radius);
+				path.CurveTo(ox, oy, ox+radius, oy);
+				path.Close();
 
+			}
 			return path;
 		}
 
@@ -190,29 +201,11 @@ namespace Epsitec.Common.Pictogram.Data
 			rect.Normalise();
 
 			double radius = this.PropertyDouble(3).Value;
-			if ( radius == 0 )
-			{
-				graphics.AddFilledRectangle(rect);
-				this.PropertyGradient(2).Render(graphics, iconContext, rect);
+			Drawing.Path path = this.PathRoundRectangle(rect, radius);
+			this.PropertyGradient(2).Render(graphics, iconContext, path);
 
-				Drawing.Path path = new Drawing.Path();
-				path.MoveTo(rect.Left, rect.Bottom);
-				path.LineTo(rect.Left, rect.Top);
-				path.LineTo(rect.Right, rect.Top);
-				path.LineTo(rect.Right, rect.Bottom);
-				path.Close();
-				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
-				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
-			}
-			else
-			{
-				Drawing.Path path = this.PathRoundRectangle(rect, radius);
-				graphics.Rasterizer.AddSurface(path);
-				this.PropertyGradient(2).Render(graphics, iconContext, rect);
-
-				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
-				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
-			}
+			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
+			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{

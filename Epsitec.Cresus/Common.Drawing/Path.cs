@@ -91,33 +91,33 @@ namespace Epsitec.Common.Drawing
 		
 		public void Append(Path path)
 		{
-			this.Append (path, 1, 0, 0, 1, 0, 0);
+			this.Append (path, 1, 0, 0, 1, 0, 0, 1);
 		}
 		
-		public void Append(Path path, Transform transform)
+		public void Append(Path path, Transform transform, double approximation_scale)
 		{
-			this.Append (path, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY);
+			this.Append (path, transform.XX, transform.XY, transform.YX, transform.YY, transform.TX, transform.TY, approximation_scale);
 		}
 		
-		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty)
-		{
-			this.CreateOnTheFly ();
-			this.has_curve |= path.has_curve;
-			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, 0);
-		}
-		
-		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty, double bold_width)
+		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty, double approximation_scale)
 		{
 			this.CreateOnTheFly ();
 			this.has_curve |= path.has_curve;
-			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, bold_width);
+			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, approximation_scale, 0);
 		}
 		
-		public void Append(Path path, double bold_width)
+		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty, double approximation_scale, double bold_width)
 		{
 			this.CreateOnTheFly ();
 			this.has_curve |= path.has_curve;
-			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, 1, 0, 0, 1, 0, 0, bold_width);
+			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, approximation_scale, bold_width);
+		}
+		
+		public void Append(Path path, double approximation_scale, double bold_width)
+		{
+			this.CreateOnTheFly ();
+			this.has_curve |= path.has_curve;
+			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, 1, 0, 0, 1, 0, 0, approximation_scale, bold_width);
 		}
 		
 		public void Append(Font font, int glyph, double x, double y, double size)

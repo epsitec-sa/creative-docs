@@ -192,9 +192,8 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( this.TotalHandle != 2 )  return;
 
 			Drawing.Path path = this.PathRegular();
-			graphics.Rasterizer.AddSurface(path);
 			this.bbox = path.ComputeBounds();
-			this.PropertyGradient(2).Render(graphics, iconContext, bbox);
+			this.PropertyGradient(2).Render(graphics, iconContext, path);
 
 			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));

@@ -310,9 +310,7 @@ namespace Epsitec.Common.Pictogram.Data
 				path.Close();
 			}
 
-			graphics.Rasterizer.AddSurface(path);
-			Drawing.Rectangle rect = path.ComputeBounds();
-			this.PropertyGradient(2).Render(graphics, iconContext, rect);
+			this.PropertyGradient(2).Render(graphics, iconContext, path);
 
 			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));

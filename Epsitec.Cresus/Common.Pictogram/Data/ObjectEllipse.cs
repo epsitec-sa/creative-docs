@@ -234,9 +234,8 @@ namespace Epsitec.Common.Pictogram.Data
 			double rx = System.Math.Abs(p1.X-center.X);
 			double ry = System.Math.Abs(p1.Y-center.Y);
 			Drawing.Path path = this.PathCircle(center, rx, ry);
-			graphics.Rasterizer.AddSurface(path);
 			this.bbox = path.ComputeBounds();
-			this.PropertyGradient(2).Render(graphics, iconContext, this.bbox);
+			this.PropertyGradient(2).Render(graphics, iconContext, path);
 
 			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join);
 			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));

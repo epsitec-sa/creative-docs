@@ -4,6 +4,15 @@ using System.Xml.Serialization;
 
 namespace Epsitec.Common.Pictogram.Data
 {
+	public enum GradientFill
+	{
+		None,
+		Linear,
+		Circle,
+		Diamond,
+		Conic,
+	}
+
 	/// <summary>
 	/// La classe PropertyGradient représente une propriété d'un objet graphique.
 	/// </summary>
@@ -11,7 +20,7 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public PropertyGradient()
 		{
-			this.fill   = Drawing.GradientFill.None;
+			this.fill   = GradientFill.None;
 			this.color1 = Drawing.Color.FromBrightness(1.0);
 			this.color2 = Drawing.Color.FromBrightness(0.6);
 			this.angle  = 0.0;
@@ -20,11 +29,12 @@ namespace Epsitec.Common.Pictogram.Data
 			this.repeat = 1;
 			this.middle = 0.0;
 			this.range  = 0.0;
+			this.smooth = 0.0;
 		}
 
 		// Mode de remplissage du dégradé.
 		[XmlAttribute]
-		public Drawing.GradientFill Fill
+		public GradientFill Fill
 		{
 			get
 			{
@@ -167,10 +177,27 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+		// Rayon du flou.
+		[XmlAttribute]
+		public double Smooth
+		{
+			get
+			{
+				return this.smooth;
+			}
+
+			set
+			{
+				value = System.Math.Max(value,  0.0);
+				value = System.Math.Min(value, 10.0);
+				this.smooth = value;
+			}
+		}
+
 		// Indique si le dégradé est visible.
 		public bool IsVisible()
 		{
-			if ( this.fill == Drawing.GradientFill.None )
+			if ( this.fill == GradientFill.None )
 			{
 				return ( this.color1.A > 0 );
 			}
@@ -194,6 +221,7 @@ namespace Epsitec.Common.Pictogram.Data
 			p.Repeat = this.repeat;
 			p.Middle = this.middle;
 			p.Range  = this.range;
+			p.Smooth = this.smooth;
 		}
 
 		// Compare deux propriétés.
@@ -211,6 +239,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( p.Repeat != this.repeat )  return false;
 			if ( p.Middle != this.middle )  return false;
 			if ( p.Range  != this.range  )  return false;
+			if ( p.Smooth != this.smooth )  return false;
 
 			return true;
 		}
@@ -241,22 +270,59 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Effectue le rendu du chemin courant avec le dégradé.
-		public void Render(Drawing.Graphics graphics, IconContext iconContext, Drawing.Rectangle rect)
+		public void Render(Drawing.Graphics graphics, IconContext iconContext, Drawing.Path path)
 		{
-			if ( this.fill == Drawing.GradientFill.None )  // uniforme ?
+			Drawing.Rectangle bbox = path.ComputeBounds();
+			Drawing.Graphics mask = null;
+
+			if ( this.smooth > 0 )  // flou ?
+			{
+				double sx = 1;
+				double sy = 1;
+
+				if ( iconContext != null )
+				{
+					sx = iconContext.ScaleX;
+					sy = iconContext.ScaleY;
+				}
+
+				mask = graphics.CreateAlphaMask();
+
+				int step = (int)(this.smooth*sx);
+				if ( step <  0 )  step =  2;
+				if ( step > 20 )  step = 20;
+				for ( int i=0 ; i<step ; i++ )
+				{
+					double width = this.smooth-i*this.smooth/step;
+					mask.Rasterizer.AddOutline(path, width*2, Drawing.CapStyle.Round, Drawing.JoinStyle.Round);
+					double intensity = (i+1.0)/step;
+					mask.RenderSolid(Drawing.Color.FromBrightness(intensity));
+				}
+				mask.Rasterizer.AddSurface(path);
+				mask.RenderSolid(Drawing.Color.FromBrightness(1));
+
+				graphics.SolidRenderer.SetAlphaMask(mask.Pixmap, Drawing.MaskComponent.R);
+
+				bbox.Inflate(this.smooth, this.smooth);
+				graphics.AddFilledRectangle(bbox);
+			}
+			else
+			{
+				graphics.Rasterizer.AddSurface(path);
+			}
+
+			if ( this.fill == GradientFill.None )  // uniforme ?
 			{
 				Drawing.Color c1 = this.color1;
 				if ( iconContext != null )
 				{
 					c1 = iconContext.AdaptColor(c1);
 				}
+
 				graphics.RenderSolid(c1);
 			}
 			else	// dégradé ?
 			{
-				graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
-				graphics.GradientRenderer.Fill = this.fill;
-
 				Drawing.Color c1 = this.color1;
 				Drawing.Color c2 = this.color2;
 				if ( iconContext != null )
@@ -264,6 +330,8 @@ namespace Epsitec.Common.Pictogram.Data
 					c1 = iconContext.AdaptColor(c1);
 					c2 = iconContext.AdaptColor(c2);
 				}
+
+				graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
 
 				if ( this.repeat == 1 && this.middle == 0.0 )
 				{
@@ -293,15 +361,16 @@ namespace Epsitec.Common.Pictogram.Data
 
 				double zoom = System.Math.Pow(2.0, this.range);
 
-				if ( this.fill == Drawing.GradientFill.X )
+				if ( this.fill == GradientFill.Linear )
 				{
-					Drawing.Point center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
+					graphics.GradientRenderer.Fill = Drawing.GradientFill.X;
+					Drawing.Point center = new Drawing.Point((bbox.Left+bbox.Right)/2, (bbox.Bottom+bbox.Top)/2);
 					double a = ((this.angle-90.0)*System.Math.PI/180);  // en radians
 					a = System.Math.Sin(a);
 					a = System.Math.Abs(a);
 					a = System.Math.Asin(a);
-					Drawing.Point p1 = Drawing.Transform.RotatePoint(center, a, new Drawing.Point(rect.Right, center.Y));
-					Drawing.Point p2 = Drawing.Point.Projection(center, p1, new Drawing.Point(rect.Right, rect.Top));
+					Drawing.Point p1 = Drawing.Transform.RotatePoint(center, a, new Drawing.Point(bbox.Right, center.Y));
+					Drawing.Point p2 = Drawing.Point.Projection(center, p1, new Drawing.Point(bbox.Right, bbox.Top));
 					double len = Drawing.Point.Distance(center, p2)*2;
 					graphics.GradientRenderer.SetParameters(0, len);
 					t.Translate(-len/2, 0);
@@ -309,32 +378,28 @@ namespace Epsitec.Common.Pictogram.Data
 					t.Scale(zoom, zoom);
 					t.Translate(center);
 				}
-				else if ( this.fill == Drawing.GradientFill.Circle )
+				else if ( this.fill == GradientFill.Circle )
 				{
-					Drawing.Point center = new Drawing.Point(rect.Left+rect.Width*this.cx, rect.Bottom+rect.Height*this.cy);
+					graphics.GradientRenderer.Fill = Drawing.GradientFill.Circle;
+					Drawing.Point center = new Drawing.Point(bbox.Left+bbox.Width*this.cx, bbox.Bottom+bbox.Height*this.cy);
 					graphics.GradientRenderer.SetParameters(0, 100);
-					t.Scale(rect.Width/100/2*zoom, rect.Height/100/2*zoom);
+					t.Scale(bbox.Width/100/2*zoom, bbox.Height/100/2*zoom);
 					t.Translate(center);
 				}
-				else if ( this.fill == Drawing.GradientFill.Diamond )
+				else if ( this.fill == GradientFill.Diamond )
 				{
-					Drawing.Point center = new Drawing.Point(rect.Left+rect.Width*this.cx, rect.Bottom+rect.Height*this.cy);
+					graphics.GradientRenderer.Fill = Drawing.GradientFill.Diamond;
+					Drawing.Point center = new Drawing.Point(bbox.Left+bbox.Width*this.cx, bbox.Bottom+bbox.Height*this.cy);
 					graphics.GradientRenderer.SetParameters(0, 100);
-					t.Scale(rect.Width/100/2*zoom, rect.Height/100/2*zoom);
+					t.Scale(bbox.Width/100/2*zoom, bbox.Height/100/2*zoom);
 					t.Translate(center);
 					t.Rotate(this.angle, center);
 				}
-				else if ( this.fill == Drawing.GradientFill.Conic )
+				else if ( this.fill == GradientFill.Conic )
 				{
-					Drawing.Point center = new Drawing.Point(rect.Left+rect.Width*this.cx, rect.Bottom+rect.Height*this.cy);
+					graphics.GradientRenderer.Fill = Drawing.GradientFill.Conic;
+					Drawing.Point center = new Drawing.Point(bbox.Left+bbox.Width*this.cx, bbox.Bottom+bbox.Height*this.cy);
 					graphics.GradientRenderer.SetParameters(0, 250);
-					t.Translate(center);
-					t.Rotate(this.angle-90.0, center);
-				}
-				else
-				{
-					Drawing.Point center = new Drawing.Point(rect.Left+rect.Width*this.cx, rect.Bottom+rect.Height*this.cy);
-					graphics.GradientRenderer.SetParameters(0, rect.Right-center.X);
 					t.Translate(center);
 					t.Rotate(this.angle-90.0, center);
 				}
@@ -343,11 +408,17 @@ namespace Epsitec.Common.Pictogram.Data
 				graphics.RenderGradient();
 				graphics.GradientRenderer.Transform = ot;
 			}
+
+			if ( this.smooth > 0 )  // flou ?
+			{
+				graphics.SolidRenderer.SetAlphaMask(null, Drawing.MaskComponent.None);
+				mask.Dispose();
+			}
 		}
 
 
 		[XmlAttribute]
-		protected Drawing.GradientFill	fill;
+		protected GradientFill			fill;
 		protected Drawing.Color			color1;
 		protected Drawing.Color			color2;
 		protected double				angle;
@@ -356,5 +427,6 @@ namespace Epsitec.Common.Pictogram.Data
 		protected int					repeat;
 		protected double				middle;
 		protected double				range;
+		protected double				smooth;
 	}
 }

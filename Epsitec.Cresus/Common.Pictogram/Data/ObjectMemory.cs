@@ -32,7 +32,7 @@ namespace Epsitec.Common.Pictogram.Data
 			fillGradient.Type = PropertyType.FillGradient;
 			fillGradient.Text = "Couleur interieure";
 			fillGradient.BackgroundColor = Drawing.Color.FromBrightness(0.9);
-			fillGradient.Fill   = Drawing.GradientFill.None;
+			fillGradient.Fill   = GradientFill.None;
 			fillGradient.Color1 = Drawing.Color.FromBrightness(1.0);
 			fillGradient.Color2 = Drawing.Color.FromBrightness(0.6);
 			fillGradient.Angle  = 0.0;
@@ -42,6 +42,18 @@ namespace Epsitec.Common.Pictogram.Data
 			fillGradient.Middle = 0.0;
 			fillGradient.Range  = 0.0;
 			this.AddProperty(fillGradient);
+
+#if false
+			PropertyShadow shadow = new PropertyShadow();
+			shadow.Type = PropertyType.Shadow;
+			shadow.Text = "Ombre";
+			shadow.BackgroundColor = Drawing.Color.FromBrightness(0.9);
+			shadow.Color  = Drawing.Color.FromARGB(0.0, 0.5, 0.5, 0.5);
+			shadow.Radius =  2.0;
+			shadow.Ox     =  1.0;
+			shadow.Oy     = -1.0;
+			this.AddProperty(shadow);
+#endif
 
 			PropertyBool fillClose = new PropertyBool();
 			fillClose.Type = PropertyType.PolyClose;

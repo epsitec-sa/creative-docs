@@ -15,13 +15,14 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 		}
 
-		[XmlArrayItem("Bool", Type=typeof(PropertyBool))]
-		[XmlArrayItem("Color", Type=typeof(PropertyColor))]
-		[XmlArrayItem("Double", Type=typeof(PropertyDouble))]
+		[XmlArrayItem("Bool",     Type=typeof(PropertyBool))]
+		[XmlArrayItem("Color",    Type=typeof(PropertyColor))]
+		[XmlArrayItem("Double",   Type=typeof(PropertyDouble))]
 		[XmlArrayItem("Gradient", Type=typeof(PropertyGradient))]
-		[XmlArrayItem("Line", Type=typeof(PropertyLine))]
-		[XmlArrayItem("List", Type=typeof(PropertyList))]
-		[XmlArrayItem("String", Type=typeof(PropertyString))]
+		[XmlArrayItem("Shadow",   Type=typeof(PropertyShadow))]
+		[XmlArrayItem("Line",     Type=typeof(PropertyLine))]
+		[XmlArrayItem("List",     Type=typeof(PropertyList))]
+		[XmlArrayItem("String",   Type=typeof(PropertyString))]
 		public System.Collections.ArrayList Properties
 		{
 			get { return this.properties; }
@@ -207,6 +208,13 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			System.Diagnostics.Debug.Assert(this.properties[rank] != null);
 			return this.properties[rank] as PropertyGradient;
+		}
+
+		// Donne une propriété de l'objet.
+		public PropertyShadow PropertyShadow(int rank)
+		{
+			System.Diagnostics.Debug.Assert(this.properties[rank] != null);
+			return this.properties[rank] as PropertyShadow;
 		}
 
 		// Donne une propriété de l'objet.

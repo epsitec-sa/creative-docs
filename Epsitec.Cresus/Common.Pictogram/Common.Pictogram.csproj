@@ -74,11 +74,6 @@
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
-                    Name = "Common.Drawing"
-                    Project = "{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}"
-                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
-                />
-                <Reference
                     Name = "Common.Support"
                     Project = "{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
@@ -92,6 +87,16 @@
                     Name = "System.XML"
                     AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
+                <Reference
+                    Name = "Common.Dialogs"
+                    Project = "{560DFD49-3052-4F41-A4C3-6216E6135DC9}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Common.Drawing"
+                    Project = "{35FFBEF6-6A7D-4FEA-A4C6-AAB784FA709B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>
@@ -223,6 +228,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Data\PropertyShadow.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Data\PropertyString.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -284,6 +294,11 @@
                 />
                 <File
                     RelPath = "Widgets\PanelList.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\PanelShadow.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

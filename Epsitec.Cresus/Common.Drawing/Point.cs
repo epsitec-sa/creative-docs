@@ -250,6 +250,11 @@ namespace Epsitec.Common.Drawing
 		public static Point Projection(Point a, Point b, Point p)
 		{
 			//	Calcule la projection d'un point P sur une droite AB.
+
+			if ((a.X == b.X) && (a.Y == b.Y))
+			{
+				return a;
+			}
 			
 			double k;
 			
