@@ -13,6 +13,6 @@ namespace Epsitec.Common.Support
 		string			BundleName			{ get; }
 		
 		void RestoreFromBundle(ObjectBundler bundler, ResourceBundle bundle);
-		void SerialiseToBundle(ObjectBundler bundler, ResourceBundle bundle);
+		void SerializeToBundle(ObjectBundler bundler, ResourceBundle bundle);
 	}
 }

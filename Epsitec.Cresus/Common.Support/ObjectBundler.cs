@@ -6,6 +6,7 @@ namespace Epsitec.Common.Support
 	using System.Collections;
 	
 	using PropertyInfo   = System.Reflection.PropertyInfo;
+	using MethodInfo     = System.Reflection.MethodInfo;
 	using MemberInfo     = System.Reflection.MemberInfo;
 	using MemberTypes    = System.Reflection.MemberTypes;
 	using BindingFlags   = System.Reflection.BindingFlags;
@@ -402,7 +403,7 @@ namespace Epsitec.Common.Support
 					
 					System.Diagnostics.Debug.Assert (prop_info != null);
 					
-					this.SerialiseProperty (bundle, obj, obj_default, prop_info);
+					this.SerializeProperty (bundle, obj, obj_default, prop_info);
 				}
 			}
 			
@@ -413,7 +414,7 @@ namespace Epsitec.Common.Support
 				obj_default_disposable.Dispose ();
 			}
 			
-			obj.SerialiseToBundle (this, bundle);
+			obj.SerializeToBundle (this, bundle);
 //			this.OnObjectBundled (obj, bundle);
 			
 			System.Diagnostics.Debug.Assert (ObjectBundler.xmldoc.ChildNodes.Count == 0);
@@ -453,7 +454,7 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		protected bool SerialiseProperty(ResourceBundle bundle, object obj, object obj_default, string property_name)
+		protected bool SerializeProperty(ResourceBundle bundle, object obj, object obj_default, string property_name)
 		{
 			PropertyInfo prop_info = this.FindPropertyInfo (obj, property_name);
 			
@@ -462,10 +463,10 @@ namespace Epsitec.Common.Support
 				return false;
 			}
 			
-			return this.SerialiseProperty (bundle, obj, obj_default, prop_info);
+			return this.SerializeProperty (bundle, obj, obj_default, prop_info);
 		}
 		
-		protected bool SerialiseProperty(ResourceBundle bundle, object obj, object obj_default, PropertyInfo prop_info)
+		protected bool SerializeProperty(ResourceBundle bundle, object obj, object obj_default, PropertyInfo prop_info)
 		{
 			//	Pout un objet donné, fait un "get" de la propriété spécifiée et stocke les
 			//	données dans le champ correspondant du bundle.
@@ -475,6 +476,24 @@ namespace Epsitec.Common.Support
 				(prop_info.IsDefined (typeof (BundleAttribute), false)))
 			{
 				//	C'est bien une propriété qui peut être lue et qui a l'attribut [Bundle] défini.
+				//	Il faut vérifier si l'objet est d'accord que l'on sérialise cette propriété.
+				
+				MethodInfo method_info = obj.GetType ().GetMethod ("ShouldSerialize" + prop_info.Name, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+				
+				if ((method_info != null) &&
+					(method_info.ReturnType == typeof (bool)) &&
+					(method_info.GetParameters ().Length == 0))
+				{
+					bool result = (bool) method_info.Invoke (obj, null);
+					
+					//	Si la méthode "ShouldSerialize..." indique qu'il ne faut pas sérialiser cette propriété, alors
+					//	on ne fait rien et on indique le succès de l'opération.
+					
+					if (result == false)
+					{
+						return true;
+					}
+				}
 				
 				object[] attributes = prop_info.GetCustomAttributes (typeof (BundleAttribute), true);
 				
@@ -527,7 +546,7 @@ namespace Epsitec.Common.Support
 						//	Sérialise la valeur de la propriété en tant que bundle.
 						
 						IBundleSupport bundle_sup  = prop_value as IBundleSupport;
-						ResourceBundle prop_bundle = this.CreateEmptyBundle (bundle_sup.BundleName);
+						ResourceBundle prop_bundle = this.CreateEmptyBundle (prop_name);
 						
 						this.FillBundleFromObject (prop_bundle, prop_value);
 						
@@ -768,7 +787,7 @@ namespace Epsitec.Common.Support
 					//	source :
 					
 					if ((prop != null) &&
-						(field.IsRef))
+						(field.IsDataRef))
 					{
 						prop.SetProperty (ObjectBundler.GetPropNameForXmlRef (prop_name), field.Xml.InnerXml);
 					}

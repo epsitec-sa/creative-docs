@@ -982,7 +982,21 @@ namespace Epsitec.Common.Support
 			{
 				get
 				{
+					if (this.xml != null)
+					{
+						return this.xml.Name == "ref";
+					}
+					
+					return false;
+				}
+			}
+			
+			public bool						IsDataRef
+			{
+				get
+				{
 					if ((this.xml != null) &&
+						(this.xml.Name == "data") &&
 						(this.xml.FirstChild != null))
 					{
 						return this.xml.FirstChild.Name == "ref";

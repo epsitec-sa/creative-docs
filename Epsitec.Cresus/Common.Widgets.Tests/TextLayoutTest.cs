@@ -63,13 +63,13 @@ namespace Epsitec.Common.Widgets
 			int n = System.Convert.ToByte("17", 16);
 
 			layout.Text = "Normal, <b>gras</b>, <i><i>italique</i></i>, <b><i>italique+gras</b></i>, <font face=\"Arial\">arial <font size=\"20\">grand</font></font>, fin";
-			layout.JustifConsoleOut();
+			layout.DebugDumpJustif(System.Console.Out);
 
 			layout.Text = "<font size=\"12\">Premier deuxième troisième quatrième cinquième sixième septième huitième neuvième et dixième.</font>";
-			layout.JustifConsoleOut();
+			layout.DebugDumpJustif(System.Console.Out);
 
 			layout.Text = "Ceciestuntrèslongtextesansespacesjustepourvoir.";
-			layout.JustifConsoleOut();
+			layout.DebugDumpJustif(System.Console.Out);
 		}
 
 		
