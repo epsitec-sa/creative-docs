@@ -16,7 +16,6 @@ namespace Epsitec.Common.Widgets
 		
 		public CommandState(string name, Support.CommandDispatcher dispatcher) : base (name, dispatcher)
 		{
-			this.state = WidgetState.Enabled | WidgetState.ActiveNo;
 		}
 		
 		
@@ -98,6 +97,36 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected WidgetState				state;
+		public static CommandState Find(string command_name, Support.CommandDispatcher dispatcher)
+		{
+			if (dispatcher == null)
+			{
+				return null;
+			}
+			
+			System.Diagnostics.Debug.Assert (command_name != null);
+			System.Diagnostics.Debug.Assert (command_name != "");
+			
+			Support.CommandDispatcher.CommandState[] states = dispatcher.FindCommandStates (command_name);
+			
+			for (int i = 0; i < states.Length; i++)
+			{
+				CommandState state = states[i] as CommandState;
+				
+				if (state != null)
+				{
+					return state;
+				}
+			}
+			
+			//	Il n'y a pas d'objet CommandState avec ce nom de commande. Il faut donc
+			//	en créer un. La prochaine fois que cette méthode sera appelée, on retournera
+			//	le même objet (grâce à CommandDispatcher).
+			
+			return new CommandState (command_name, dispatcher);
+		}
+		
+		
+		protected WidgetState				state = WidgetState.Enabled | WidgetState.ActiveNo;
 	}
 }
