@@ -131,6 +131,36 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public Line[] GetLines(double max_width)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			this.Rewind ();
+			
+			string line_text;
+			double line_width;
+			int    line_skip;
+			
+			while (this.GetNextBreak (max_width, out line_text, out line_width, out line_skip))
+			{
+				if ((line_text == "") &&
+					(line_skip == 0))
+				{
+					//	Panique: il n'est pas possible de couper cette ligne, quel que soit
+					//	le moyen utilisé. On abandonne !
+					
+					return null;
+				}
+				
+				list.Add (new Line (line_text, line_width, line_skip));
+			}
+			
+			Line[] lines = new Line[list.Count];
+			list.CopyTo (lines);
+			
+			return lines;
+		}
+		
+		
 		public class Run
 		{
 			public Run()
@@ -157,11 +187,42 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			
-			public int			Length    = 0;
-			public int			FontId    = -1;
-			public double		FontScale = 0;
+			public int					Length    = 0;
+			public int					FontId    = -1;
+			public double				FontScale = 0;
 		}
 		
+		public class Line
+		{
+			public Line(string text, double width, int skip)
+			{
+				this.text  = text;
+				this.width = width;
+				this.skip  = skip;
+			}
+			
+			
+			public int					Skip
+			{
+				get { return this.skip; }
+			}
+			
+			public string				Text
+			{
+				get { return this.text; }
+			}
+			
+			public double				Width
+			{
+				get { return this.width; }
+
+			}
+			
+			
+			private int					skip;
+			private string				text;
+			private double				width;
+		}
 		
 		private System.IntPtr			handle;
 	}
