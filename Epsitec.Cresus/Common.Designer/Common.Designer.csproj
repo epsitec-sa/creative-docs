@@ -240,6 +240,22 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\ZBottom.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ZDown.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ZTop.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ZUp.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Panels\AbstractPalette.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

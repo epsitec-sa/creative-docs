@@ -15,18 +15,17 @@ namespace Epsitec.Common.Designer.Widgets
 	/// (widgets Grip) et un rectangle correspondant au Bounds du widget
 	/// cible.
 	/// </summary>
+	
+	[Support.SuppressBundleSupport]
+	
 	public class GripsOverlay : Widget, IWidgetCollectionHost
 	{
-		public GripsOverlay()
+		public GripsOverlay(Support.ICommandDispatcherHost host)
 		{
 			this.drop_behavior = new Behaviors.DropBehavior (this);
 			this.selections    = new System.Collections.ArrayList ();
 			this.Name          = string.Format ("GripsOverlay_{0}", GripsOverlay.overlay_id++);
-		}
-		
-		public GripsOverlay(Widget embedder) : this()
-		{
-			this.SetEmbedder (embedder);
+			this.host          = host;
 		}
 		
 		
@@ -534,7 +533,7 @@ namespace Epsitec.Common.Designer.Widgets
 						//	Le widget a été déposé hors de la fenêtre et il faut donc le mettre à la
 						//	poubelle...
 						
-						this.overlay.SelectedWidgets.Remove (this.target_widget);
+						this.overlay.host.CommandDispatcher.Dispatch ("DeleteActiveSelection", this.overlay);
 					}
 					
 					this.drag_drop_active = false;
@@ -612,24 +611,6 @@ namespace Epsitec.Common.Designer.Widgets
 			}
 		}
 		
-		protected void HandleGripDragEnd(Selection selection)
-		{
-			foreach (Selection sel in this.selections)
-			{
-				if (sel != selection)
-				{
-					sel.ShowGrips ();
-				}
-			}
-			
-			this.UpdateGeometry ();
-			
-			if (this.DragEnd != null)
-			{
-				this.DragEnd (this);
-			}
-		}
-		
 		protected void HandleGripDragging(Selection selection, Drawing.GripId id, Drawing.Point p1, Drawing.Point p2)
 		{
 			Drawing.Point offset = p2 - p1;
@@ -648,6 +629,24 @@ namespace Epsitec.Common.Designer.Widgets
 			{
 				DragEventArgs e = new DragEventArgs (p1, p2);
 				this.Dragging (this, e);
+			}
+		}
+		
+		protected void HandleGripDragEnd(Selection selection)
+		{
+			foreach (Selection sel in this.selections)
+			{
+				if (sel != selection)
+				{
+					sel.ShowGrips ();
+				}
+			}
+			
+			this.UpdateGeometry ();
+			
+			if (this.DragEnd != null)
+			{
+				this.DragEnd (this);
 			}
 		}
 		
@@ -670,5 +669,6 @@ namespace Epsitec.Common.Designer.Widgets
 		
 		private static GripMap[]				grip_map;
 		private const string					prop_selected_by = "$grips overlay$selected by$";
+		private Support.ICommandDispatcherHost	host;
 	}
 }
