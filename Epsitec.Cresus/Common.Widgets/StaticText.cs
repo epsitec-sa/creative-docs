@@ -50,7 +50,12 @@ namespace Epsitec.Common.Widgets
 		{
 			// Dessine le texte.
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-
+			
+			if (this.Name == "A4")
+			{
+				System.Diagnostics.Debug.WriteLine ("A4 at " + this.Bounds);
+			}
+			
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
 			Direction         dir   = this.RootDirection;

@@ -2716,6 +2716,8 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void PaintHandler(Drawing.Graphics graphics, Drawing.Rectangle repaint)
 		{
+//			System.Diagnostics.Debug.WriteLine ("Paint: " + this.GetType ().Name + " " + this.Bounds.ToString () + " oy=" + this.client_info.oy);
+			
 			this.OnPreparePaint ();
 			
 			long cycles = Drawing.Agg.Library.Cycles;
@@ -2798,6 +2800,15 @@ namespace Epsitec.Common.Widgets
 					graphics.RestoreClippingRectangle (original_clipping);
 				}
 			}
+#if false
+			else
+			{
+				Drawing.Rectangle bounds = this.GetPaintBounds ();
+				System.Diagnostics.Debug.WriteLine ("Clipped : repaint="+repaint+", bounds="+bounds+", parent="+this.MapClientToParent (bounds));
+				System.Diagnostics.Debug.WriteLine ("          widget ="+this.Bounds);
+			}
+#endif
+			
 			if (this.DebugActive)
 			{
 				cycles = Drawing.Agg.Library.Cycles - cycles;
