@@ -161,7 +161,7 @@ namespace Epsitec.Common.Widgets
 		{
 			// Ajuste la hauteur pour afficher pile un nombre entier de lignes.
 			
-			double h = this.Client.Height-this.margins.Height;
+			double h = this.Client.Height-ScrollList.TextOffsetY*2;
 			int count = (int)(h/this.lineHeight);
 			
 			return this.AdjustHeightToRows (mode, count);
@@ -171,7 +171,7 @@ namespace Epsitec.Common.Widgets
 		{
 			// Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
 			
-			double h = this.lineHeight*this.items.Count+this.margins.Height;
+			double h = this.lineHeight*this.items.Count+ScrollList.TextOffsetY*2;
 			double hope = h;
 			h = System.Math.Max(h, min_height);
 			h = System.Math.Min(h, max_height);
@@ -210,7 +210,7 @@ namespace Epsitec.Common.Widgets
 		{
 			//	Ajuste la hauteur pour afficher exactement le nombre de lignes spécifié.
 			
-			double h = this.Client.Height-this.margins.Height;
+			double h = this.Client.Height-ScrollList.TextOffsetY*2;
 			double adjust = h - count*this.lineHeight;
 			
 			if (adjust == 0)
@@ -303,7 +303,7 @@ namespace Epsitec.Common.Widgets
 		{
 			// Sélectionne la ligne selon la souris.
 			
-			double y = this.Client.Height-pos.Y-1-this.margins.Top;
+			double y = this.Client.Height-pos.Y-1-ScrollList.TextOffsetY;
 			double x = pos.X-this.margins.Left;
 			
 			if (y < 0) return false;
@@ -433,7 +433,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.lineHeight == 0 )  return;
 
-			this.visibleLines = (int)((this.Bounds.Height-this.margins.Height)/this.lineHeight);
+			this.visibleLines = (int)((this.Bounds.Height-ScrollList.TextOffsetY*2)/this.lineHeight);
 			if ( this.visibleLines < 1 )  this.visibleLines = 1;
 			this.textLayouts = new TextLayout[this.visibleLines];
 			
@@ -441,12 +441,13 @@ namespace Epsitec.Common.Widgets
 
 			if ( this.scroller != null )
 			{
+				this.UpdateMargins ();
 				IAdorner adorner = Widgets.Adorner.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle();
 				rect.Right  = this.Client.Width-adorner.GeometryScrollerRightMargin;
 				rect.Left   = rect.Right-this.scroller.Width;
-				rect.Bottom = adorner.GeometryScrollerBottomMargin;
-				rect.Top    = this.Client.Height-adorner.GeometryScrollerTopMargin;
+				rect.Bottom = adorner.GeometryScrollerBottomMargin+ScrollList.TextOffsetY-this.margins.Bottom;
+				rect.Top    = this.Client.Height-adorner.GeometryScrollerTopMargin-ScrollList.TextOffsetY+this.margins.Top;
 				this.scroller.Bounds = rect;
 			}
 		}
@@ -514,14 +515,17 @@ namespace Epsitec.Common.Widgets
 			{
 				Drawing.Rectangle menu = rect;
 				menu.Inflate(adorner.GeometryMenuShadow);
+				menu.Deflate(0, 0, ScrollList.TextOffsetY-this.margins.Top, ScrollList.TextOffsetY-this.margins.Bottom);
 				adorner.PaintMenuBackground(graphics, menu, state, Direction.Down, Drawing.Rectangle.Empty, 0);
 			}
 			else
 			{
-				adorner.PaintTextFieldBackground(graphics, rect, state, TextFieldStyle.Multi, false);
+				Drawing.Rectangle menu = rect;
+				menu.Deflate(0, 0, ScrollList.TextOffsetY-this.margins.Top, ScrollList.TextOffsetY-this.margins.Bottom);
+				adorner.PaintTextFieldBackground(graphics, menu, state, TextFieldStyle.Multi, false);
 			}
 
-			Drawing.Point pos = new Drawing.Point(ScrollList.TextOffsetX, rect.Height-this.margins.Top-this.lineHeight);
+			Drawing.Point pos = new Drawing.Point(ScrollList.TextOffsetX, rect.Height-ScrollList.TextOffsetY-this.lineHeight);
 			int max = System.Math.Min(this.visibleLines, this.items.Count);
 			for ( int i=0 ; i<max ; i++ )
 			{
@@ -663,6 +667,7 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		SelectionActivated;
 		
 		protected const double					TextOffsetX = 3;
+		protected const double					TextOffsetY = 3;
 
 		protected ScrollListStyle				scrollListStyle;
 		protected bool							isDirty;
