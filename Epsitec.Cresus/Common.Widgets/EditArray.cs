@@ -1278,8 +1278,12 @@ namespace Epsitec.Common.Widgets
 			public virtual void StartEdition()
 			{
 				this.StartReadOnly ();
-				this.host.StartEdition (this.host.SelectedIndex, 0);
-				this.host.ShowEdition (ScrollShowMode.Extremity);
+				
+				if (this.host.SelectedIndex >= 0)
+				{
+					this.host.StartEdition (this.host.SelectedIndex, 0);
+					this.host.ShowEdition (ScrollShowMode.Extremity);
+				}
 			}
 			
 			public virtual void StartSearch()
