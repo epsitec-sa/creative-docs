@@ -565,7 +565,19 @@ namespace Epsitec.Common.Drawing
 			public override string ToString(object value, System.Globalization.CultureInfo culture)
 			{
 				Rectangle rect = (Rectangle) value;
-				return string.Format ("{0};{1};{2};{3}", rect.X, rect.Y, rect.Width, rect.Height);
+				return string.Format (culture, "{0};{1};{2};{3}", rect.X, rect.Y, rect.Width, rect.Height);
+			}
+			
+			public static string ToString(object value, System.Globalization.CultureInfo culture, bool suppress_x, bool suppress_y, bool suppress_width, bool suppress_height)
+			{
+				Rectangle rect = (Rectangle) value;
+				
+				string arg1 = suppress_x      ? "*" : rect.X.ToString (culture);
+				string arg2 = suppress_y      ? "*" : rect.Y.ToString (culture);
+				string arg3 = suppress_width  ? "*" : rect.Width.ToString (culture);
+				string arg4 = suppress_height ? "*" : rect.Height.ToString (culture);
+				
+				return string.Format (culture, "{0};{1};{2};{3}", arg1, arg2, arg3, arg4);
 			}
 		}
 		

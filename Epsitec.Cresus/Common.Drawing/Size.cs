@@ -160,7 +160,17 @@ namespace Epsitec.Common.Drawing
 			public override string ToString(object value, System.Globalization.CultureInfo culture)
 			{
 				Size size = (Size) value;
-				return string.Format ("{0};{1}", size.Width, size.Height);
+				return string.Format (culture, "{0};{1}", size.Width, size.Height);
+			}
+			
+			public static string ToString(object value, System.Globalization.CultureInfo culture, bool suppress_width, bool suppress_height)
+			{
+				Size size = (Size) value;
+				
+				string arg1 = suppress_width  ? "*" : size.Width.ToString (culture);
+				string arg2 = suppress_height ? "*" : size.Height.ToString (culture);
+				
+				return string.Format (culture, "{0};{1}", arg1, arg2);
 			}
 		}
 		
