@@ -330,12 +330,12 @@ namespace Epsitec.Common.Widgets
 		// Dessine le texte, en fonction du layout...
 		// Si une couleur est donnée avec uniqueColor, tout le texte est peint
 		// avec cette couleur, en ignorant les <font color=...>.
-		public void Paint(Drawing.Point pos, Drawing.Graphics graphics)
+		public void Paint(Drawing.Point pos, Drawing.IPaintPort graphics)
 		{
 			this.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.Empty, Drawing.GlyphPaintStyle.Normal);
 		}
 
-		public void Paint(Drawing.Point pos, Drawing.Graphics graphics, Drawing.Rectangle clipRect, Drawing.Color uniqueColor, Drawing.GlyphPaintStyle paintStyle)
+		public void Paint(Drawing.Point pos, Drawing.IPaintPort graphics, Drawing.Rectangle clipRect, Drawing.Color uniqueColor, Drawing.GlyphPaintStyle paintStyle)
 		{
 			this.UpdateLayout();
 
@@ -373,17 +373,7 @@ namespace Epsitec.Common.Widgets
 					}
 					
 					graphics.Align(ref ix, ref iy);
-					graphics.AddFilledRectangle(ix, iy, dx, dy);
-					
-					Drawing.Transform t = new Drawing.Transform();
-					Drawing.Bitmap    b = image.BitmapImage;
-					
-					t.Translate(ix, iy);
-					b.MergeTransform (t);
-					
-					graphics.ImageRenderer.BitmapImage = b;
-					graphics.ImageRenderer.Transform = t;
-					graphics.RenderImage();
+					graphics.PaintImage(image.BitmapImage, ix, iy, dx, dy, 0, 0, image.Width, image.Height);
 					continue;
 				}
 
@@ -429,8 +419,8 @@ namespace Epsitec.Common.Widgets
 					graphics.Align(ref p2x, ref py);
 					py -= 0.5;  // pour feinter l'anti-aliasing !
 					graphics.LineWidth = 1;
-					graphics.AddLine(p1x, py, p2x, py);
-					graphics.RenderSolid(color);
+					graphics.Color = color;
+					graphics.PaintOutline (Drawing.Path.FromLine(p1x, py, p2x, py));
 				}
 			}
 		}

@@ -195,6 +195,10 @@ namespace Epsitec.Common.Printing
 		}
 		
 		
+		public void Align(ref double x, ref double y)
+		{
+		}
+		
 		protected void ResetTransform()
 		{
 			this.graphics.ResetTransform ();
@@ -205,6 +209,20 @@ namespace Epsitec.Common.Printing
 		public Drawing.Transform SaveTransform()
 		{
 			return new Drawing.Transform (this.transform);
+		}
+		
+		public double GetTransformZoom()
+		{
+			//	Détermine le zoom approximatif en vigueur dans la transformation actuelle.
+			//	Calcule la longueur d'un segment diagonal [1 1] après transformation pour
+			//	connaître ce zoom.
+			
+			Drawing.Transform transform = this.SaveTransform ();
+			
+			double a = transform.XX + transform.XY;
+			double b = transform.YX + transform.YY;
+			
+			return System.Math.Sqrt ((a*a + b*b) / 2);
 		}
 		
 		public void RestoreTransform(Drawing.Transform transform)
