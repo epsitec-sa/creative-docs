@@ -126,7 +126,7 @@ namespace Epsitec.Common.Support
 		
 		public static string					CustomisedSuffix
 		{
-			get { return "99"; }
+			get { return string.Concat ("X", Resources.LocalisedSuffix); }
 		}
 		
 		
@@ -170,6 +170,42 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 		
+		public static string ExtractSuffix(string full_id)
+		{
+			//	L'extraction d'un suffixe n'a de sens que si l'on utilise GetBundleIds
+			//	avec level = ResourceLevel.All; sinon, en principe, on n'a jamais besoin
+			//	de se soucier des suffixes.
+			
+			if (full_id != null)
+			{
+				int pos = full_id.LastIndexOf (".") + 1;
+				int len = full_id.Length;
+				
+				if (pos > 0)
+				{
+					if ((pos + 2 == len) ||
+						(pos + 3 == len))
+					{
+						return full_id.Substring (pos);
+					}
+				}
+			}
+			
+			return null;
+		}
+		
+		public static string StripSuffix(string full_id)
+		{
+			string suffix = Resources.ExtractSuffix (full_id);
+			
+			if (suffix != null)
+			{
+				return full_id.Substring (0, full_id.Length - suffix.Length - 1);
+			}
+			
+			return full_id;
+		}
+		
 		public static string ExtractName(string full_id)
 		{
 			if (full_id != null)
@@ -202,6 +238,62 @@ namespace Epsitec.Common.Support
 			
 			return string.Concat (prefix, ":", name);
 		}
+		
+		
+		public static void MapToSuffix(ResourceLevel level, CultureInfo culture, out string suffix)
+		{
+			if (culture == null)
+			{
+				culture = Resources.Culture;
+			}
+			
+			switch (level)
+			{
+				case ResourceLevel.Default:		suffix = Resources.DefaultSuffix;								return;
+				case ResourceLevel.Localised:	suffix = culture.TwoLetterISOLanguageName;						return;
+				case ResourceLevel.Customised:	suffix = string.Concat ("X", culture.TwoLetterISOLanguageName);	return;
+			}
+			
+			throw new ResourceException (string.Format ("Invalid level {0} specified in MapToSuffix.", level));
+		}
+		
+		public static void MapFromSuffix(string suffix, out ResourceLevel level, out CultureInfo culture)
+		{
+			int len = suffix.Length;
+			
+			if (len == 2)
+			{
+				if (suffix == "00")
+				{
+					level   = ResourceLevel.Default;
+					culture = Resources.Culture;
+					return;
+				}
+				
+				culture = Resources.FindCultureInfo (suffix);
+				
+				if (culture != null)
+				{
+					level = ResourceLevel.Localised;
+					return;
+				}
+			}
+			
+			if ((len == 3) &&
+				(suffix[0] == 'X'))
+			{
+				culture = Resources.FindCultureInfo (suffix.Substring (1, 2));
+				
+				if (culture != null)
+				{
+					level = ResourceLevel.Customised;
+					return;
+				}
+			}
+			
+			throw new ResourceException (string.Format ("Invalid suffix ({0}) specified in MapFromSuffix.", suffix));
+		}
+		
 		
 		public static string[] GetBundleIds(string name_filter)
 		{
@@ -240,6 +332,7 @@ namespace Epsitec.Common.Support
 				case ResourceLevel.Default:
 				case ResourceLevel.Customised:
 				case ResourceLevel.Localised:
+				case ResourceLevel.All:
 					break;
 				default:
 					throw new ResourceException (string.Format ("Invalid level {0} specified in GetBundleIds.", level));
