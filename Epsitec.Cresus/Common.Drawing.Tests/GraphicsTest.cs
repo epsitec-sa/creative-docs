@@ -55,6 +55,7 @@ namespace Epsitec.Common.Drawing
 			window.Text = "CheckAlphaMask";
 			window.Root.PaintForeground += new PaintEventHandler(AlphaMask_PaintForeground);
 			window.Root.Invalidate ();
+			window.ClientSize = new Size (300, 250);
 			window.Show ();
 		}
 		
@@ -278,7 +279,7 @@ namespace Epsitec.Common.Drawing
 			path2.CurveTo (20, 20, 5, 20, 5, 15);
 			
 			e.Graphics.SmoothRenderer.Color = Color.FromRGB (0, 0, 1);
-			e.Graphics.SmoothRenderer.SetParameters (9, 9);
+			e.Graphics.SmoothRenderer.SetParameters (1, 1);
 			e.Graphics.SmoothRenderer.AddPath (path1);
 			e.Graphics.SmoothRenderer.AddPath (path2);
 			
@@ -286,7 +287,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.TranslateTransform (5, 2);
 			
 			e.Graphics.SmoothRenderer.Color = Color.FromARGB (0.5, 0, 0, 1);
-			e.Graphics.SmoothRenderer.SetParameters (9, 9);
+			e.Graphics.SmoothRenderer.SetParameters (1, 1);
 			e.Graphics.SmoothRenderer.AddPath (path1);
 			e.Graphics.SmoothRenderer.AddPath (path2);
 		}
@@ -302,38 +303,39 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
 			e.Graphics.RenderSolid (Color.FromBrightness (0));
 			
-			Graphics mask_graphics = new Agg.Graphics ();
-			mask_graphics.SetPixmapSize ((int)root.Client.Width, (int)root.Client.Height);
+			e.Graphics.ScaleTransform (root.Client.Width / 300.0, root.Client.Height / 250.0, 0, 0);
+			
+			Graphics mask = e.Graphics.CreateAlphaMask ();
 			
 			for (int i = 0; i <= 200; i++)
 			{
 				Path path = new Path ();
 				
 				path.MoveTo ( 10, 10+i);
-				path.LineTo (300, 10+i);
-				path.LineTo (300, 11+i);
-				path.LineTo ( 10, 11+i);
+				path.LineTo (250, 10+i);
+				path.LineTo (250, 10+i+2);
+				path.LineTo ( 10, 10+i+2);
 				path.Close ();
 				
-				mask_graphics.Rasterizer.AddSurface (path);
-				mask_graphics.RenderSolid (Color.FromRGB (i/200.0, 0, 0));
+				mask.Rasterizer.AddSurface (path);
+				mask.RenderSolid (Color.FromRGB (i/200.0, 0, 0));
 			}
 			
-			e.Graphics.AddText (10, 10, "AAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
-			e.Graphics.AddText (10, 50, "AAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
-			e.Graphics.AddText (10, 90, "AAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
-			e.Graphics.AddText (10,130, "AAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
-			e.Graphics.AddText (10,170, "AAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
-			e.Graphics.AddText (10,210, "AAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
+			e.Graphics.AddText (10, 10, "AAAAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
+			e.Graphics.AddText (10, 50, "AAAAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
+			e.Graphics.AddText (10, 90, "AAAAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
+			e.Graphics.AddText (10,130, "AAAAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
+			e.Graphics.AddText (10,170, "AAAAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
+			e.Graphics.AddText (10,210, "AAAAAAAAAAAA", Font.GetFont ("Tahoma", "Regular"), 40);
 			e.Graphics.RenderSolid (Color.FromRGB (1, 0.5, 0));
-			e.Graphics.SolidRenderer.SetAlphaMask (mask_graphics.Pixmap, MaskComponent.R);
-			e.Graphics.AddText (30, 30, "A!", Font.GetFont ("Tahoma", "Regular"), 250);
+			e.Graphics.SolidRenderer.SetAlphaMask (mask.Pixmap, MaskComponent.R);
+			e.Graphics.AddText (30, 30, "A!!", Font.GetFont ("Tahoma", "Regular"), 250);
 			e.Graphics.RenderSolid (Color.FromARGB (1.0, 0, 0, 1));
 			e.Graphics.SolidRenderer.SetAlphaMask (null, MaskComponent.None);
 			e.Graphics.AddText (-30, 50, "|", Font.GetFont ("Tahoma", "Regular"), 250);
 			e.Graphics.RenderSolid (Color.FromARGB (1.0, 0, 1, 0));
 			
-			mask_graphics.Dispose ();
+			mask.Dispose ();
 		}
 		
 		private void Curve_PaintForeground(object sender, PaintEventArgs e)

@@ -50,6 +50,18 @@ namespace Epsitec.Common.Drawing.Agg
 		}
 		
 
+		public override Epsitec.Common.Drawing.Graphics CreateAlphaMask()
+		{
+			Agg.Graphics mask = new Agg.Graphics ();
+			
+			mask.SetPixmapSize (this.pixmap.Size.Width, this.pixmap.Size.Height);
+			mask.SolidRenderer.Clear (0, 0, 0, 0);
+			mask.RestoreTransform (this.SaveTransform ());
+			
+			return mask;
+		}
+		
+		
 		public override double PaintText(double x, double y, string text, Font font, double size, Color color)
 		{
 			if (this.transform.OnlyTranslate && ! font.IsSynthetic)

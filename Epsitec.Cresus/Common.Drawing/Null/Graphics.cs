@@ -31,6 +31,12 @@ namespace Epsitec.Common.Drawing.Null
 		}
 		
 		
+		public override Epsitec.Common.Drawing.Graphics CreateAlphaMask()
+		{
+			return null;
+		}
+		
+		
 		public override double PaintText(double x, double y, string text, Font font, double size, Color color)
 		{
 			return font.GetTextAdvance (text) * size;

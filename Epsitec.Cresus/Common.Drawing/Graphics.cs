@@ -93,6 +93,8 @@ namespace Epsitec.Common.Drawing
 		
 		public abstract double PaintText(double x, double y, string text, Font font, double size, Color color);
 		
+		public abstract Graphics CreateAlphaMask();
+		
 		public void PaintText(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment align, Color color)
 		{
 			double text_width  = font.GetTextAdvance (text) * size;
