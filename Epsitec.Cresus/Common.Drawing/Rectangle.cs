@@ -152,6 +152,22 @@ namespace Epsitec.Common.Drawing
 			this.y2 += y;
 		}
 		
+		public void Scale(double s)
+		{
+			this.x1 *= s;
+			this.y1 *= s;
+			this.x2 *= s;
+			this.y2 *= s;
+		}
+		
+		public void Scale(double sx, double sy)
+		{
+			this.x1 *= sx;
+			this.y1 *= sy;
+			this.x2 *= sx;
+			this.y2 *= sy;
+		}
+		
 		public void MergeWith(Rectangle r)
 		{
 			double x1 = System.Math.Min (this.x1, r.x1);
