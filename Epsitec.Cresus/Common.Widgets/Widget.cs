@@ -1116,10 +1116,6 @@ namespace Epsitec.Common.Widgets
 			{
 				this.parent.Invalidate (rect);
 			}
-			else
-			{
-				System.Diagnostics.Debug.WriteLine ("Widget.Invalidate has no parent");
-			}
 		}
 		
 		
@@ -1590,11 +1586,16 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.PaintCheckClipping (repaint))
 			{
+				Drawing.Rectangle bounds = this.GetPaintBounds ();
+				
+				bounds  = this.MapClientToRoot (bounds);
 				repaint = this.MapParentToClient (repaint);
 				
+				Drawing.Rectangle original_clipping  = graphics.SaveClippingRectangle ();
 				Drawing.Transform original_transform = graphics.SaveTransform ();
 				Drawing.Transform graphics_transform = this.GetTransformToParent ();
 				
+				graphics.SetClippingRectangle (bounds);
 				graphics_transform.MultiplyBy (original_transform);
 				
 				graphics.Transform = graphics_transform;
@@ -1638,6 +1639,7 @@ namespace Epsitec.Common.Widgets
 				finally
 				{
 					graphics.Transform = original_transform;
+					graphics.RestoreClippingRectangle (original_clipping);
 				}
 			}
 		}

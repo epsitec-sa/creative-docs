@@ -308,6 +308,26 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected override void OnActivated(System.EventArgs e)
+		{
+			base.OnActivated (e);
+			
+			if (this.WindowActivated != null)
+			{
+				this.WindowActivated (this, e);
+			}
+		}
+		
+		protected override void OnDeactivate(System.EventArgs e)
+		{
+			base.OnDeactivate (e);
+			
+			if (this.WindowDeactivated != null)
+			{
+				this.WindowDeactivated (this, e);
+			}
+		}
+
 		
 		protected virtual void ReallocatePixmap()
 		{
@@ -709,6 +729,10 @@ namespace Epsitec.Common.Widgets
 				return 0.1;
 			}
 		}
+		
+		
+		public event System.EventHandler		WindowActivated;
+		public event System.EventHandler		WindowDeactivated;
 		
 		
 		protected WindowRoot					root;
