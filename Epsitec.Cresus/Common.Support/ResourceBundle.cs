@@ -440,9 +440,14 @@ namespace Epsitec.Common.Support
 				
 			decoder.GetChars (data, 0, byte_length, chars, 0);
 				
-			string header = new string (chars);
-				
+			//	Le header peut commencer par un "byte order mark" Unicode; il faut le sauter
+			//	car il n'est pas signifiant pour le fichier XML considéré :
+			
+			int    start  = chars[0] == 0xfeff ? 1 : 0;
+			string header = new string (chars, start, chars.Length - start);
+			
 			if ((header.StartsWith ("<?xml")) ||
+				(header.StartsWith ("<!--")) ||
 				(header.StartsWith ("<bundle")))
 			{
 				return true;
@@ -982,7 +987,7 @@ namespace Epsitec.Common.Support
 		}
 		#endregion
 		
-		#region Class FieldList
+		#region FieldList Class
 		public class FieldList : System.Collections.IList
 		{
 			internal FieldList(ArrayList list)
@@ -1086,7 +1091,7 @@ namespace Epsitec.Common.Support
 		}
 		#endregion
 		
-		#region Class Field
+		#region Field Class
 		public class Field
 		{
 			protected Field()
@@ -1330,6 +1335,27 @@ namespace Epsitec.Common.Support
 					this.data = value;
 					
 					this.xml.InnerText = value;
+					
+					this.parent.OnFieldsChanged ();
+				}
+			}
+			
+			public void SetXmlValue(string value)
+			{
+				if (this.IsEmpty)
+				{
+					throw new ResourceException ("An empty field cannot be modified.");
+				}
+				
+				string xml = string.Concat ("<xml>", value, "</xml>");
+				
+				if ((this.type != ResourceFieldType.Data) ||
+					((string)this.data != value))
+				{
+					this.type = ResourceFieldType.Data;
+					this.data = value;
+					
+					this.xml.InnerXml = xml;
 					
 					this.parent.OnFieldsChanged ();
 				}

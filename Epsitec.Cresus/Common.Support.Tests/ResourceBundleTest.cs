@@ -71,7 +71,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("A1", bundle["b"].AsBundle["a"].AsString);
 			Assert.AreEqual ("B1", bundle["b"].AsBundle["b"].AsString);
 			Assert.AreEqual ("test", bundle.Name);
-			Assert.AreEqual ("test#b", bundle["b"].AsBundle.Name);
+			Assert.AreEqual ("b", bundle["b"].AsBundle.Name);
 		}
 		
 		[Test] public void CheckCompileCDATA()
@@ -169,7 +169,7 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("c", names[3]);
 		}
 		
-		[Test] [ExpectedException (typeof (System.Xml.XmlException))] public void CheckCompileEx1()
+		[Test] [ExpectedException (typeof (ResourceException))] public void CheckCompileEx1()
 		{
 			ResourceBundle bundle = ResourceBundle.Create ("test");
 			string test_string = "<data name='a'>A</data><data name='b'>B</data>";
@@ -418,9 +418,11 @@ namespace Epsitec.Common.Support
 			string test_string = 
 				"<bundle name='test' type='String' about='Simple description...'>\r\n" +
 				"  <data name='a'>A</data>\r\n" +
-				"  <data name='b'>\r\n" +
-				"    <xml>\r\n" + 
-				"      <b>B  B</b>\r\n" +
+				"  <data name='b'>&lt;b&gt;B  B&lt;/b&gt;</data>\r\n" +
+				"  <data name='c'>\r\n" +
+				"    <xml>\r\n" +
+				"      <c id='1'>\r\n" + 
+				"        <d />   x   \n   a</c>\r\n" +
 				"    </xml>\r\n" +
 				"  </data>\r\n" +
 				"</bundle>";
@@ -430,6 +432,7 @@ namespace Epsitec.Common.Support
 			
 			ResourceBundle.Field field_1 = bundle.CreateField (ResourceFieldType.Data);
 			ResourceBundle.Field field_2 = bundle.CreateField (ResourceFieldType.Data);
+			ResourceBundle.Field field_3 = bundle.CreateField (ResourceFieldType.Data);
 			
 			field_1.SetName ("a");
 			field_1.SetStringValue ("A");
@@ -437,8 +440,12 @@ namespace Epsitec.Common.Support
 			field_2.SetName ("b");
 			field_2.SetStringValue ("<b>B  B</b>");
 			
+			field_3.SetName ("c");
+			field_3.SetXmlValue ("<c id=\"1\"><d />   x   \n   a</c>");
+			
 			bundle.Add (field_1);
 			bundle.Add (field_2);
+			bundle.Add (field_3);
 			
 			bundle.DefineName ("test");
 			bundle.DefineType ("String");
@@ -454,6 +461,7 @@ namespace Epsitec.Common.Support
 			
 			Assert.AreEqual ("A", bundle[0].AsString);
 			Assert.AreEqual ("<b>B  B</b>", bundle[1].AsString);
+			Assert.AreEqual ("<c id=\"1\"><d />   x   \n   a</c>", bundle[2].AsString);
 			Assert.AreEqual ("Simple description...", bundle.About);
 		}
 		

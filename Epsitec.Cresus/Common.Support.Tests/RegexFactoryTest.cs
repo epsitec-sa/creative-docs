@@ -169,18 +169,18 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual (false, RegexFactory.AlphaNumName.IsMatch ("a.b"));
 		}
 		
-		[Test] public void CheckAlphaDotName()
+		[Test] public void CheckAlphaNumDotName()
 		{
-			Assert.AreEqual (true,  RegexFactory.AlphaDotName.IsMatch ("aAb"));
-			Assert.AreEqual (true,  RegexFactory.AlphaDotName.IsMatch ("a_b"));
-			Assert.AreEqual (true,  RegexFactory.AlphaDotName.IsMatch ("a1b"));
-			Assert.AreEqual (true,  RegexFactory.AlphaDotName.IsMatch ("_ab"));
-			Assert.AreEqual (false, RegexFactory.AlphaDotName.IsMatch ("1ab"));
-			Assert.AreEqual (true,  RegexFactory.AlphaDotName.IsMatch ("a.b"));
-			Assert.AreEqual (false, RegexFactory.AlphaDotName.IsMatch ("a.b."));
-			Assert.AreEqual (false, RegexFactory.AlphaDotName.IsMatch (".a.b"));
-			Assert.AreEqual (false, RegexFactory.AlphaDotName.IsMatch ("a#b"));
-			Assert.AreEqual (false, RegexFactory.AlphaDotName.IsMatch ("a b"));
+			Assert.AreEqual (true,  RegexFactory.AlphaNumDotName.IsMatch ("aAb"));
+			Assert.AreEqual (true,  RegexFactory.AlphaNumDotName.IsMatch ("a_b"));
+			Assert.AreEqual (true,  RegexFactory.AlphaNumDotName.IsMatch ("a1b"));
+			Assert.AreEqual (true,  RegexFactory.AlphaNumDotName.IsMatch ("_ab"));
+			Assert.AreEqual (false, RegexFactory.AlphaNumDotName.IsMatch ("1ab"));
+			Assert.AreEqual (true,  RegexFactory.AlphaNumDotName.IsMatch ("a.b"));
+			Assert.AreEqual (false, RegexFactory.AlphaNumDotName.IsMatch ("a.b."));
+			Assert.AreEqual (false, RegexFactory.AlphaNumDotName.IsMatch (".a.b"));
+			Assert.AreEqual (false, RegexFactory.AlphaNumDotName.IsMatch ("a#b"));
+			Assert.AreEqual (false, RegexFactory.AlphaNumDotName.IsMatch ("a b"));
 		}
 		
 		[Test] public void CheckFileName()

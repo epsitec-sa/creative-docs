@@ -101,8 +101,8 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("RadioButton", bundle["widgets"].AsList[1].AsBundle["class"].AsString);
 			Assert.AreEqual ("Button",      bundle["widgets"].AsList[2].AsBundle["class"].AsString);
 			Assert.AreEqual ("complex", bundle.Name);
-			Assert.AreEqual ("complex#widgets[0]", bundle["widgets"].AsList[0].AsBundle.Name);
-			Assert.AreEqual ("complex#widgets[1]", bundle["widgets"].AsList[1].AsBundle.Name);
+//-			Assert.AreEqual ("complex#widgets[0]", bundle["widgets"].AsList[0].AsBundle.Name);
+//-			Assert.AreEqual ("complex#widgets[1]", bundle["widgets"].AsList[1].AsBundle.Name);
 			Assert.AreEqual ("button.cancel",      bundle["widgets"].AsList[2].AsBundle.Name);
 		}
 		

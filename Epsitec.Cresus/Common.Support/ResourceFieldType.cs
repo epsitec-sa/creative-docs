@@ -13,6 +13,6 @@ namespace Epsitec.Common.Support
 		Data,							//	champ contient des données (string)
 		Binary,							//	champ contient des données binaires
 		Bundle,							//	champ contient un bundle
-		List							//	champ contient une liste (de bundles)
+		List,							//	champ contient une liste (de bundles)
 	}
 }
