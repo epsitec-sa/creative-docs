@@ -7,6 +7,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public VScroller() : base(true)
 		{
+			this.arrowUp.Name = "Up";
+			this.arrowDown.Name = "Down";
 		}
 		
 		public VScroller(Widget embedder) : this()
