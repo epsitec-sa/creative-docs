@@ -1139,7 +1139,6 @@ namespace Epsitec.Common.Widgets
 			ScrollList sl = sender as ScrollList;
 			int sel = sl.SelectedIndex;
 			Widgets.Adorner.Factory.SetActive(sl.Items[sel]);
-			Window.InvalidateAll();  // redessine toutes les fenêtres
 		}
 
 		[Test] public void CheckAdornerBug1()

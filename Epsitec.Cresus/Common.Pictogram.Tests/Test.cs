@@ -161,7 +161,6 @@ namespace Epsitec.Common.Pictogram
 		{
 			RadioButton button = sender as RadioButton;
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive(button.Text);
-			Window.InvalidateAll();  // redessine toutes les fenêtres
 		}
 
 		private void Root_LayoutChanged(object sender)

@@ -199,6 +199,217 @@ namespace Epsitec.Common.Support
 			return obj;
 		}
 		
+		public bool FillBundleFromObject(ResourceBundle bundle, object source)
+		{
+			//	A partir d'un objet supportant l'interface IBundleSupport, remplit un bundle avec
+			//	les informations nécessaires à recréer cet objet.
+			
+			//	Si l'objet ne supporte pas IBundleSupport, alors on retourne simplement false sans
+			//	générer d'exception.
+			
+			IBundleSupport obj = source as IBundleSupport;
+			
+			if (obj == null)
+			{
+				return false;
+			}
+			
+			System.Type obj_type  = source.GetType ();
+			string      obj_class = null;
+			
+			foreach (System.Collections.DictionaryEntry entry in ObjectBundler.classes)
+			{
+				if (entry.Value == obj_type)
+				{
+					obj_class = entry.Key as string;
+					break;
+				}
+			}
+			
+			if (obj_class == null)
+			{
+				return false;
+			}
+			
+			System.Xml.XmlDocument xmldoc = new System.Xml.XmlDocument ();
+			
+			this.BundleAddDataField (bundle, xmldoc, "class", obj_class);
+			
+			object obj_default = System.Activator.CreateInstance (obj_type);
+			
+			foreach (System.Reflection.MemberInfo member_info in obj_type.GetMembers (System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
+			{
+				//	Passe en revue tous les membres publics. Ceux qui sont des propriétés
+				//	vont nécessiter une attention toute particulière...
+				
+				if (member_info.MemberType == System.Reflection.MemberTypes.Property)
+				{
+					System.Type type = obj_type;
+					System.Reflection.PropertyInfo prop_info = member_info as System.Reflection.PropertyInfo;
+					
+					System.Diagnostics.Debug.Assert (prop_info != null);
+					
+					while (this.SerialiseProperty (bundle, xmldoc, obj, obj_default, prop_info) == false)
+					{
+						type = type.BaseType;
+						
+						if (type == null)
+						{
+							break;
+						}
+						
+						prop_info = type.GetProperty (prop_info.Name, prop_info.PropertyType);
+						
+						if (prop_info == null)
+						{
+							break;
+						}
+					}
+				}
+			}
+			
+			System.IDisposable obj_default_disposable = obj_default as System.IDisposable;
+			
+			if (obj_default_disposable != null)
+			{
+				obj_default_disposable.Dispose ();
+			}
+			
+//			obj.RestoreFromBundle (this, bundle);
+//			this.OnObjectUnbundled (obj, bundle);
+			
+			return true;
+		}
+		
+		protected void BundleAddDataField(ResourceBundle bundle, System.Xml.XmlDocument xmldoc, string name, string value)
+		{
+			System.Xml.XmlElement   xmlnode = xmldoc.CreateElement ("data");
+			System.Xml.XmlAttribute xmlattr = xmldoc.CreateAttribute ("name");
+			
+			xmlattr.Value = name;
+			xmlnode.Attributes.Append (xmlattr);
+			xmlnode.InnerText = value;
+			
+			bundle.Add (new ResourceBundle.Field (bundle, xmlnode));
+		}
+		
+		protected bool SerialiseProperty(ResourceBundle bundle, System.Xml.XmlDocument xmldoc, object obj, object obj_default, string property_name)
+		{
+			System.Reflection.PropertyInfo prop_info = this.FindPropertyInfo (obj, property_name);
+			
+			if (prop_info == null)
+			{
+				return false;
+			}
+			
+			return this.SerialiseProperty (bundle, xmldoc, obj, obj_default, prop_info);
+		}
+		
+		protected bool SerialiseProperty(ResourceBundle bundle, System.Xml.XmlDocument xmldoc, object obj, object obj_default, System.Reflection.PropertyInfo prop_info)
+		{
+			//	Pout un objet donné, fait un "get" de la propriété spécifiée et stocke les
+			//	données dans le champ correspondant du bundle.
+			
+			bool ok = false;
+			
+			if ((prop_info != null) &&
+				(prop_info.CanRead) &&
+				(prop_info.IsDefined (typeof (BundleAttribute), true)))
+			{
+				//	C'est bien une propriété qui peut être lue et qui a l'attribut [Bundle] défini.
+				
+				object[] attributes = prop_info.GetCustomAttributes (typeof (BundleAttribute), true);
+				
+				System.Diagnostics.Debug.Assert (attributes.Length == 1);
+				
+				BundleAttribute attr = attributes[0] as BundleAttribute;
+				
+				string      prop_name  = attr.PropertyName;
+				object      prop_value = prop_info.GetValue (obj, null);
+				object      prop_def   = prop_info.GetValue (obj_default, null);
+				System.Type prop_type  = prop_info.PropertyType;
+				string      prop_data  = null;
+				
+				if ((prop_value == prop_def) ||
+					((prop_value != null) && (prop_value.Equals (prop_def))))
+				{
+					//	Même donnée que dans l'objet par défaut... On peut donc s'économiser du travail
+					//	car à la désérialisation, la valeur sera déjà initialisée correctement.
+				}
+				else if (prop_type == typeof (string))
+				{
+					prop_data = prop_value as string;
+					ok = true;
+				}
+				else if (prop_type == typeof (double))
+				{
+					double num_value = (double) prop_value;
+					prop_data = num_value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+					ok = true;
+				}
+				else if (prop_type == typeof (int))
+				{
+					int num_value = (int) prop_value;
+					prop_data = num_value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+					ok = true;
+				}
+				else if (prop_type == typeof (long))
+				{
+					long num_value = (long) prop_value;
+					prop_data = num_value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+					ok = true;
+				}
+				else if (prop_type == typeof (decimal))
+				{
+					decimal num_value = (decimal) prop_value;
+					prop_data = num_value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+					ok = true;
+				}
+				else if (prop_type.IsSubclassOf (typeof (System.Enum)))
+				{
+					System.Enum enum_value = prop_value as System.Enum;
+					prop_data = enum_value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+					ok = true;
+				}
+				else if (prop_type == typeof (Drawing.Size))
+				{
+					prop_data = System.ComponentModel.TypeDescriptor.GetConverter (prop_type).ConvertToInvariantString (prop_value);
+					ok = true;
+				}
+				else if (prop_type == typeof (Drawing.Point))
+				{
+					prop_data = System.ComponentModel.TypeDescriptor.GetConverter (prop_type).ConvertToInvariantString (prop_value);
+					ok = true;
+				}
+				else if (prop_type == typeof (Drawing.Rectangle))
+				{
+					prop_data = System.ComponentModel.TypeDescriptor.GetConverter (prop_type).ConvertToInvariantString (prop_value);
+					ok = true;
+				}
+				else if (prop_type == typeof (Drawing.Margins))
+				{
+					prop_data = System.ComponentModel.TypeDescriptor.GetConverter (prop_type).ConvertToInvariantString (prop_value);
+					ok = true;
+				}
+				else if (prop_type == typeof (bool))
+				{
+					prop_data = System.ComponentModel.TypeDescriptor.GetConverter (prop_type).ConvertToInvariantString (prop_value);
+					ok = true;
+				}
+				else
+				{
+					//	TODO: gérer les autres cas fréquents ici... (types numériques, couleur, etc.)
+				}
+				
+				if (prop_data != null)
+				{
+					this.BundleAddDataField (bundle, xmldoc, prop_name, prop_data);
+				}
+			}
+			
+			return ok;
+		}
+		
 		
 		public bool IsPropertyEqual(object obj, string property_name, string ref_value)
 		{
