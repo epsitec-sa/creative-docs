@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public override Drawing.ContentAlignment DefaultAlignment
+		public override Drawing.ContentAlignment	DefaultAlignment
 		{
 			get
 			{
@@ -29,8 +29,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public override Drawing.Point				BaseLine
+		{
+			get
+			{
+				if (this.TextLayout != null)
+				{
+					return this.TextLayout.GetLineOrigin (0);
+				}
+				
+				return base.BaseLine;
+			}
+		}
 		
-
+		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
 			switch ( message.Type )
@@ -70,7 +82,6 @@ namespace Epsitec.Common.Widgets
 			message.Consumer = this;
 		}
 		
-
 		protected override void OnShortcutPressed()
 		{
 			if ( this.AutoToggle )
@@ -87,6 +98,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected bool					isKeyboardPressed;
+		protected bool								isKeyboardPressed;
 	}
 }
