@@ -15,7 +15,6 @@ namespace Epsitec.Common.Text.Internal
 			this.next_cursor_id = cursor.next_cursor_id;
 			this.prev_cursor_id = cursor.prev_cursor_id;
 			this.chunk_id       = cursor.chunk_id;
-			this.chunk_offset   = cursor.chunk_offset;
 			
 			//	Indique explicitement que ceci est une copie :
 			
@@ -61,18 +60,6 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		public int							TextChunkOffset
-		{
-			get
-			{
-				return this.chunk_offset;
-			}
-			set
-			{
-				this.chunk_offset = value;
-			}
-		}
-		
 		public Internal.CursorState			CursorState
 		{
 			get
@@ -97,8 +84,7 @@ namespace Epsitec.Common.Text.Internal
 		{
 			return this.next_cursor_id
 				 ^ this.prev_cursor_id
-				 ^ this.chunk_id
-				 ^ this.chunk_offset;
+				 ^ this.chunk_id;
 		}
 
 		
@@ -112,16 +98,14 @@ namespace Epsitec.Common.Text.Internal
 		{
 			return (a.next_cursor_id == b.next_cursor_id)
 				&& (a.prev_cursor_id == b.prev_cursor_id)
-				&& (a.chunk_id == b.chunk_id)
-				&& (a.chunk_offset == b.chunk_offset);
+				&& (a.chunk_id == b.chunk_id);
 		}
 		
 		public static bool operator !=(Cursor a, Cursor b)
 		{
 			return (a.next_cursor_id != b.next_cursor_id)
 				|| (a.prev_cursor_id != b.prev_cursor_id)
-				|| (a.chunk_id != b.chunk_id)
-				|| (a.chunk_offset != b.chunk_offset);
+				|| (a.chunk_id != b.chunk_id);
 		}
 		
 		
@@ -140,7 +124,6 @@ namespace Epsitec.Common.Text.Internal
 		private Internal.CursorId			prev_cursor_id;
 		
 		private Internal.TextChunkId		chunk_id;
-		private int							chunk_offset;
 		
 		private Internal.CursorState		cursor_state;
 	}

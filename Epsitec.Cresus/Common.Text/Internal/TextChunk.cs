@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text.Internal
 	/// <summary>
 	/// Summary description for TextChunk.
 	/// </summary>
-	internal class TextChunk
+	internal sealed class TextChunk
 	{
 		public TextChunk()
 		{
@@ -20,6 +20,28 @@ namespace Epsitec.Common.Text.Internal
 			get
 			{
 				return this.length;
+			}
+		}
+		
+		public Internal.CursorIdArray		Cursors
+		{
+			get
+			{
+				return this.cursors;
+			}
+		}
+		
+		public ulong						this[Internal.TextChunkId position]
+		{
+			get
+			{
+				if ((position < 0) ||
+					(position >= this.length))
+				{
+					throw new System.ArgumentOutOfRangeException ("position", position, "Index out of range.");
+				}
+				
+				return this.text[position];
 			}
 		}
 		
@@ -51,6 +73,8 @@ namespace Epsitec.Common.Text.Internal
 			
 			this.length += length;
 			
+			//	TODO: support pour le undo
+			
 			this.cursors.ProcessInsertion (position, length);
 		}
 		
@@ -70,6 +94,8 @@ namespace Epsitec.Common.Text.Internal
 			System.Buffer.BlockCopy (this.text, 8*offset_1, this.text, 8*offset_2, 8*count);
 			
 			this.length -= length;
+			
+			//	TODO: support pour le undo
 			
 			this.cursors.ProcessRemoval (position, length);
 		}
@@ -96,6 +122,44 @@ namespace Epsitec.Common.Text.Internal
 			System.Buffer.BlockCopy (this.text, 8*position, buffer, 8*offset, 8*length);
 		}
 		
+		
+		public static void ShuffleEnd(TextChunk a, TextChunk b, int offset)
+		{
+			//	Réorganisation de la fin du texte de 'a' : déplace tout ce qui
+			//	dépasse l'offset spécifié de 'a' vers 'b' (texte et curseurs).
+			
+			if (offset >= a.length)
+			{
+				return;
+			}
+			
+			//	Copie le texte de la fin de 'a' vers le début de 'b' :
+			
+			int length = a.length - offset;
+			
+			Debug.Assert.IsTrue (length > 0);
+			
+			if (b.length + length > b.text.Length)
+			{
+				//	Il n'y a plus assez de place dans le buffer actuel de 'b'.
+				//	Il faut donc agrandir celui-ci.
+				
+				b.GrowTextBuffer (b.length + length);
+			}
+			
+			System.Buffer.BlockCopy (b.text, 0, b.text, 8*length, 8*(b.length - length));
+			System.Buffer.BlockCopy (a.text, 8*offset, b.text, 0, 8*length);
+			
+			//	Déplace aussi les curseurs. Commence par ajuster la position du
+			//	premier curseur dans 'b' (s'il y en a un) :
+			
+			b.cursors.ProcessInsertion (0, length);
+			
+			//	Ensuite, il faut déplacer les curseurs de 'a' situés après l'offset
+			//	vers 'b' :
+			
+			a.cursors.ProcessMigration (offset, b.cursors);
+		}
 		
 		
 		private void GrowTextBuffer(int length)

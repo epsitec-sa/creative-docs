@@ -26,8 +26,8 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Assert.IsTrue (str1 == str2);
 			
-			Debug.Expect.Exception (new Debug.Method (Ex1), typeof (TextConverter.IllegalUnicodeException));
-			Debug.Expect.Exception (new Debug.Method (Ex2), typeof (TextConverter.IllegalUnicodeException));
+			Debug.Expect.Exception (new Debug.Method (Ex1), typeof (Unicode.IllegalCodeException));
+			Debug.Expect.Exception (new Debug.Method (Ex2), typeof (Unicode.IllegalCodeException));
 		}
 		
 		

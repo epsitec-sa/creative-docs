@@ -114,6 +114,55 @@ namespace Epsitec.Common.Text.Tests
 			array.Remove (id2);
 			
 			Debug.Assert.IsTrue (array.GetElementCount () == 0);
+			
+			Internal.CursorIdArray a = new Internal.CursorIdArray ();
+			Internal.CursorIdArray b = new Internal.CursorIdArray ();
+			
+			a.Add (id1, 10);
+			a.Add (id2, 20);
+			a.Add (id3, 30);
+			
+			a.ProcessMigration (25, b);
+			
+			Debug.Assert.IsTrue (a.GetElementCount () == 2);
+			Debug.Assert.IsTrue (b.GetElementCount () == 1);
+			
+			Debug.Assert.IsTrue (a.GetCursorPosition (id1) == 10);
+			Debug.Assert.IsTrue (a.GetCursorPosition (id2) == 20);
+			Debug.Assert.IsTrue (b.GetCursorPosition (id3) == 5);
+			
+			a.ProcessMigration (20, b);
+			
+			Debug.Assert.IsTrue (a.GetElementCount () == 2);
+			Debug.Assert.IsTrue (b.GetElementCount () == 1);
+			
+			Debug.Assert.IsTrue (a.GetCursorPosition (id1) == 10);
+			Debug.Assert.IsTrue (a.GetCursorPosition (id2) == 20);
+			Debug.Assert.IsTrue (b.GetCursorPosition (id3) == 5);
+			
+			a.ProcessMigration (18, b);
+			
+			Debug.Assert.IsTrue (a.GetElementCount () == 1);
+			Debug.Assert.IsTrue (b.GetElementCount () == 2);
+			
+			Debug.Assert.IsTrue (a.GetCursorPosition (id1) == 10);
+			Debug.Assert.IsTrue (b.GetCursorPosition (id2) == 2);
+			Debug.Assert.IsTrue (b.GetCursorPosition (id3) == 5);
+			
+			a.Add (id2, 20);
+			a.Add (id3, 30);
+			
+			b.Remove (id2);
+			b.Remove (id3);
+			
+			a.ProcessMigration (5, b);
+			
+			Debug.Assert.IsTrue (a.GetElementCount () == 0);
+			Debug.Assert.IsTrue (b.GetElementCount () == 3);
+			
+			Debug.Assert.IsTrue (b.GetCursorPosition (id1) == 5);
+			Debug.Assert.IsTrue (b.GetCursorPosition (id2) == 15);
+			Debug.Assert.IsTrue (b.GetCursorPosition (id3) == 25);
 		}
 	}
 }

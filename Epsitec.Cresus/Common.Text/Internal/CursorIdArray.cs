@@ -16,7 +16,7 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public void Add(CursorId id, int position)
+		public void Add(Internal.CursorId id, int position)
 		{
 			//	Insère un élément pour représenter le curseur à la position
 			//	donnée.
@@ -36,7 +36,7 @@ namespace Epsitec.Common.Text.Internal
 			this.InsertElement (index, new Element (id, offset));
 		}
 		
-		public void Move(CursorId id, int position)
+		public void Move(Internal.CursorId id, int position)
 		{
 			//	Déplace le curseur spécifié à la nouvelle position donnée.
 			
@@ -87,7 +87,7 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		public void Remove(CursorId id)
+		public void Remove(Internal.CursorId id)
 		{
 			Debug.Assert.IsTrue (this.Contains (id));
 			
@@ -95,16 +95,24 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		public int GetCursorPosition(CursorId id)
+		public int GetCursorPosition(Internal.CursorId id)
 		{
 			Debug.Assert.IsTrue (this.Contains (id));
 			
 			return this.FindElementPosition (this.FindElement (id));
 		}
 		
-		public int GetElementCount()
+		
+		public int               GetElementCount()
 		{
 			return this.length;
+		}
+		
+		public Internal.CursorId GetElementCursorId(int element)
+		{
+			Debug.Assert.IsInBounds (element, 0, this.elements.Length-1);
+			
+			return this.elements[element].id;
 		}
 		
 		
@@ -166,6 +174,34 @@ namespace Epsitec.Common.Text.Internal
 					
 				this.elements[index_after].offset -= length;
 			}
+		}
+		
+		public void ProcessMigration(int origin, CursorIdArray destination)
+		{
+			//	Migre des curseurs situés après la position indiquée vers
+			//	la destination.
+			
+			int delta;
+			int index = this.FindElementAtPosition (origin, out delta);
+			int pos   = (index > 0) ? this.FindElementPosition (index-1) : 0;
+			int count = index;
+			int dst_i = 0;
+			
+			while (index < this.length)
+			{
+				Element element = this.elements[index++];
+				
+				pos           += element.offset;
+				element.offset = pos - origin;
+				origin         = pos;
+				
+				destination.InsertElement (dst_i++, element);
+			}
+			
+			//	Supprime encore les curseurs que l'on vient de copier vers la
+			//	destination :
+			
+			this.length = count;
 		}
 		
 		

@@ -33,6 +33,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public Internal.Cursor ReadCursor(Internal.CursorId id)
 		{
+			Debug.Assert.IsInBounds (id, 1, this.cursors.Length-1);
 			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
 			
 			return new Internal.Cursor (this.cursors[id]);
@@ -40,6 +41,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void WriteCursor(Internal.CursorId id, Internal.Cursor cursor)
 		{
+			Debug.Assert.IsInBounds (id, 1, this.cursors.Length-1);
 			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
 			
 			//	Copie les champs individuellement; on n'utilise pas l'assignation car cela
@@ -48,7 +50,31 @@ namespace Epsitec.Common.Text.Internal
 			this.cursors[id].NextCursorId    = cursor.NextCursorId;
 			this.cursors[id].PrevCursorId    = cursor.PrevCursorId;
 			this.cursors[id].TextChunkId     = cursor.TextChunkId;
-			this.cursors[id].TextChunkOffset = cursor.TextChunkOffset;
+		}
+		
+		
+		public Internal.TextChunkId GetCursorTextChunkId(Internal.CursorId id)
+		{
+			Debug.Assert.IsInBounds (id, 1, this.cursors.Length-1);
+			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
+			
+			return this.cursors[id].TextChunkId;
+		}
+		
+		public void SetCursorTextChunkId(Internal.CursorId id, Internal.TextChunkId text_chunk_id)
+		{
+			Debug.Assert.IsInBounds (id, 1, this.cursors.Length-1);
+			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
+			
+			this.cursors[id].TextChunkId = text_chunk_id;
+		}
+		
+		public void ModifyCursorTextChunkId(Internal.CursorId id, int delta)
+		{
+			Debug.Assert.IsInBounds (id, 1, this.cursors.Length-1);
+			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);
+			
+			this.cursors[id].TextChunkId += delta;
 		}
 		
 		
@@ -82,7 +108,6 @@ namespace Epsitec.Common.Text.Internal
 			this.cursors[id].NextCursorId    = this.free_cursor_id;
 			this.cursors[id].PrevCursorId    = 0;
 			this.cursors[id].TextChunkId     = 0;
-			this.cursors[id].TextChunkOffset = 0;
 			this.cursors[id].DefineCursorState (Internal.CursorState.Free);
 			
 			this.free_cursor_id = id;

@@ -60,7 +60,7 @@ namespace Epsitec.Common.Text
 				{
 					if (code > 0x10FFFF)
 					{
-						throw new IllegalUnicodeException ();
+						throw new Unicode.IllegalCodeException ();
 					}
 					
 					//	Il faut coder ce caractère comme un surrogate pair.
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Text
 						//	Un surrogate pair n'a pas le droit d'apparaître dans le texte
 						//	source, car UTF-32 considère ces codes comme non valides.
 						
-						throw new IllegalUnicodeException ();
+						throw new Unicode.IllegalCodeException ();
 					}
 					
 					buffer.Append ((char) code);
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Text
 						//	Demi paire ou paire incorrecte; ceci implique une erreur de
 						//	codage de la part de l'appelant.
 						
-						throw new IllegalUnicodeException ();
+						throw new Unicode.IllegalCodeException ();
 					}
 					
 					uint low  = (uint)text[i+0] - Unicode.SurrogateLowMin;
@@ -140,7 +140,7 @@ namespace Epsitec.Common.Text
 				else if ((c >= Unicode.SurrogateHighMin) &&
 					/**/ (c <= Unicode.SurrogateHighMax))
 				{
-					throw new IllegalUnicodeException ();
+					throw new Unicode.IllegalCodeException ();
 				}
 				
 				result[index++] = code;
@@ -158,17 +158,5 @@ namespace Epsitec.Common.Text
 		}
 		
 		
-		#region IllegalUnicodeException Class
-		public class IllegalUnicodeException : System.ApplicationException
-		{
-			public IllegalUnicodeException()
-			{
-			}
-			
-			public IllegalUnicodeException(string message) : base (message)
-			{
-			}
-		}
-		#endregion
 	}
 }

@@ -20,7 +20,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			Debug.Expect.Exception (new Debug.Method (Ex1), typeof (Debug.AssertFailedException));
 			Debug.Expect.Exception (new Debug.Method (Ex2), typeof (Debug.AssertFailedException));
-			Debug.Expect.Exception (new Debug.Method (Ex3), typeof (System.IndexOutOfRangeException));
+			Debug.Expect.Exception (new Debug.Method (Ex3), typeof (Debug.AssertFailedException));
 			
 			table.RecycleCursor (id1);
 			
