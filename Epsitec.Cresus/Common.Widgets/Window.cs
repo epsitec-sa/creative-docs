@@ -370,7 +370,7 @@ namespace Epsitec.Common.Widgets
 			this.Root.Name = this.Name;
 			this.Root.RestoreFromBundle (bundler, bundle);
 			
-			if (bundle.GetFieldType ("icon") == Support.ResourceFieldType.String)
+			if (bundle.GetFieldType ("icon") == Support.ResourceFieldType.Data)
 			{
 				this.Icon = Support.ImageProvider.Default.GetImage ("res:" + bundle.GetFieldString ("icon"));
 			}
