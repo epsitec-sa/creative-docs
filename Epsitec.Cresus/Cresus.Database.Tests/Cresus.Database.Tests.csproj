@@ -149,6 +149,11 @@
                     Project = "{E076F23E-635F-42D1-8B3F-59AF3D3DCDFB}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Cresus.Replication"
+                    Project = "{431A7EAC-87E4-489E-901D-FE3FE182700B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>
@@ -220,6 +225,11 @@
                 />
                 <File
                     RelPath = "ISqlBuilderTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ReplicationTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

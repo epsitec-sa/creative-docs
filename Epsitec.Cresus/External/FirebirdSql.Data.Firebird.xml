@@ -398,6 +398,16 @@
             Clean up any resources being used.
             </summary>
         </member>
+        <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep6.ShowStep">
+            <summary>
+            Shows the step in the wizard
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep6.SaveSettings">
+            <summary>
+            Saves step settings
+            </summary>
+        </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep6.InitializeComponent">
             <summary> 
             Required method for Designer support - do not modify 
@@ -3344,14 +3354,6 @@ finally
         </member>
         <member name="M:FirebirdSql.Data.Firebird.FbConnection.GetDbSchemaTable(FirebirdSql.Data.Firebird.FbDbSchemaType,System.Object[])">
             <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbConnection.xml" path="doc/class[@name=&quot;FbConnection&quot;]/method[@name=&quot;GetDbSchemaTable&quot;]/*"/>
-        </member>
-        <member name="M:FirebirdSql.Data.Firebird.FbConnection.QueueEvents(FirebirdSql.Data.Firebird.FbEvent)">
-            <summary>
-				Register interest in a set of events (works in asynchronous mode).
-			</summary><param name="events">A <see cref="T:FirebirdSql.Data.Firebird.FbEvent">FbEvent</see> instance.</param>
-        </member>
-        <member name="M:FirebirdSql.Data.Firebird.FbConnection.CancelEvents(FirebirdSql.Data.Firebird.FbEvent)">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbConnection.xml" path="doc/class[@name=&quot;FbConnection&quot;]/method[@name=&quot;CancelEvents(FbEvent)&quot;]/*"/>
         </member>
         <member name="E:FirebirdSql.Data.Firebird.FbConnection.StateChange">
             <summary>Occurs when the state of the connection changes.</summary><remarks>
@@ -6472,46 +6474,6 @@ public void DisplayFbErrors(FbException myException)
 			Gets the number of <see cref="T:FirebirdSql.Data.Firebird.FbError"/> objects in the collection.
 			</summary><value>The number of <see cref="T:FirebirdSql.Data.Firebird.FbError"/> objects in the collection.</value>
         </member>
-        <member name="T:FirebirdSql.Data.Firebird.FbEvent">
-            <summary>
-			Represents a Firebird Event. This class cannot be inherited.
-			</summary>
-        </member>
-        <member name="M:FirebirdSql.Data.Firebird.FbEvent.#ctor(FirebirdSql.Data.Firebird.FbConnection)">
-            <summary>
-			Creates a new instance of the <see cref="T:FirebirdSql.Data.Firebird.FbEvent"/> class with the given <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> instance.
-			</summary><param name="connection">A <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> instance.</param>
-        </member>
-        <member name="M:FirebirdSql.Data.Firebird.FbEvent.#ctor(FirebirdSql.Data.Firebird.FbConnection,System.String[])">
-            <summary>
-			Creates a new instance of the <see cref="T:FirebirdSql.Data.Firebird.FbEvent"/> class with the given <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> instance and
-			the given list of events.
-			</summary><param name="connection">A <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> instance.</param><param name="events">List of requested events.</param><exception name="ArgumentException">If the event list count is greater than 15.</exception>
-        </member>
-        <member name="M:FirebirdSql.Data.Firebird.FbEvent.AddEvents(System.String[])">
-            <summary>
-			Adds the specified events to the event list.
-			</summary><remarks>
-			If there are existent events in the list of requested events
-			that will be lost.
-			</remarks><param name="events">List of requested events.</param><exception name="ArgumentNullException">If the events parameter is null.</exception><exception name="ArgumentException">If the event list count is greater than 15.</exception>
-        </member>
-        <member name="E:FirebirdSql.Data.Firebird.FbEvent.RemoteEventCounts">
-            <summary>
-			Gets or sets the event handlers that will be fired each time the event counts notification is received from server.
-			</summary>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.FbEvent.Item(System.Int32)">
-            <summary>
-			Gets the event name at the specified index.
-			</summary>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.FbEvent.Connection">
-            <summary>Gets or sets the <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> associated to the remote event.</summary>
-        </member>
-        <member name="P:FirebirdSql.Data.Firebird.FbEvent.HasChanges">
-            <summary>Incates if there are changes in the event counts since the last time they were received.</summary>
-        </member>
         <member name="T:FirebirdSql.Data.Firebird.FbException">
             <summary>
 			The exception that is thrown when Firebird Server returns a warning or error. 
@@ -6828,8 +6790,56 @@ myDataAdapter.Fill(myDataSet);
 			Gets the number of <see cref="T:FirebirdSql.Data.Firebird.FbParameter"/> objects in the collection.
 			</summary><value>The number of <see cref="T:FirebirdSql.Data.Firebird.FbParameter"/> objects in the collection.</value>
         </member>
-        <member name="T:FirebirdSql.Data.Firebird.FbRemoteEventHandler">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbRemoteEventEventArgs.xml" path="doc/delegate[@name=&quot;FbRemoteEventHandler&quot;]/overview/*"/>
+        <member name="T:FirebirdSql.Data.Firebird.FbRemoteEvent">
+            <summary>
+			Represents a Firebird Event. This class cannot be inherited.
+			</summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.FbRemoteEvent.#ctor(FirebirdSql.Data.Firebird.FbConnection)">
+            <summary>
+			Creates a new instance of the <see cref="!:FbEvent"/> class with the given <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> instance.
+			</summary><param name="connection">A <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> instance.</param>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.FbRemoteEvent.#ctor(FirebirdSql.Data.Firebird.FbConnection,System.String[])">
+            <summary>
+			Creates a new instance of the <see cref="!:FbEvent"/> class with the given <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> instance and
+			the given list of events.
+			</summary><param name="connection">A <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> instance.</param><param name="events">List of requested events.</param><exception name="ArgumentException">If the event list count is greater than 15.</exception>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.FbRemoteEvent.AddEvents(System.String[])">
+            <summary>
+			Adds the specified events to the event list.
+			</summary><remarks>
+			If there are existent events in the list of requested events
+			that will be lost.
+			</remarks><param name="events">List of requested events.</param><exception name="ArgumentNullException">If the events parameter is null.</exception><exception name="ArgumentException">If the event list count is greater than 15.</exception>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.FbRemoteEvent.QueueEvents">
+            <summary>
+				Register interest in a set of events (works in asynchronous mode).
+			</summary><param name="">A <see cref="!:FbEvent">FbEvent</see> instance.</param>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.FbRemoteEvent.CancelEvents">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbConnection.xml" path="doc/class[@name=&quot;FbConnection&quot;]/method[@name=&quot;CancelEvents(FbEvent)&quot;]/*"/>
+        </member>
+        <member name="E:FirebirdSql.Data.Firebird.FbRemoteEvent.RemoteEventCounts">
+            <summary>
+			Gets or sets the event handlers that will be fired each time the event counts notification is received from server.
+			</summary>
+        </member>
+        <member name="P:FirebirdSql.Data.Firebird.FbRemoteEvent.Item(System.Int32)">
+            <summary>
+			Gets the event name at the specified index.
+			</summary>
+        </member>
+        <member name="P:FirebirdSql.Data.Firebird.FbRemoteEvent.Connection">
+            <summary>Gets or sets the <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> associated to the remote event.</summary>
+        </member>
+        <member name="P:FirebirdSql.Data.Firebird.FbRemoteEvent.HasChanges">
+            <summary>Incates if there are changes in the event counts since the last time they were received.</summary>
+        </member>
+        <member name="T:FirebirdSql.Data.Firebird.FbRemoteEventEventHandler">
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbRemoteEventEventArgs.xml" path="doc/delegate[@name=&quot;FbRemoteEventEventHandler&quot;]/overview/*"/>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.FbRemoteEventEventArgs">
             <summary>
