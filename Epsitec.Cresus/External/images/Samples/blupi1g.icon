@@ -420,68 +420,6 @@
                   <Color R="0" G="0" B="0" A="1" />
                 </Color>
                 <Arrow Type="Arrow" StyleName="" StyleID="0" ArrowType1="Right" Length1="2" Effect11="0.5" Effect12="0.5" ArrowType2="Right" Length2="2" Effect21="0.5" Effect22="0.5" />
-                <Gradient Type="FillGradient" StyleName="" StyleID="0" Fill="Circle" Angle="-11.929180500839017" Cx="0.654068167741203" Cy="0.61151912869551728" Sx="1.857555664665755" Sy="1.4699813642713262" Repeat="1" Middle="-1" Smooth="0">
-                  <Color1 R="1" G="1" B="0" A="1" />
-                  <Color2 R="0.60266523138824646" G="0.60266523138824646" B="0.05796640500229655" A="1" />
-                </Gradient>
-                <Bool Type="PolyClose" StyleName="" StyleID="0" Bool="false" />
-              </Properties>
-              <Handles>
-                <Handle Type="Bezier" ConstrainType="Symmetric">
-                  <Position X="8.099722709887029" Y="10.280671936458512" />
-                </Handle>
-                <Handle Type="Primary" ConstrainType="Symmetric">
-                  <Position X="7.7131256206581993" Y="10.860567570301754" />
-                </Handle>
-                <Handle Type="Bezier" ConstrainType="Symmetric">
-                  <Position X="7.32652853142937" Y="11.440463204144995" />
-                </Handle>
-                <Handle Type="Bezier" ConstrainType="Symmetric">
-                  <Position X="6.6635599365879647" Y="11.653372542946494" />
-                </Handle>
-                <Handle Type="Primary" ConstrainType="Smooth">
-                  <Position X="6.2771205455460874" Y="11.642331417488155" />
-                </Handle>
-                <Handle Type="Bezier" ConstrainType="Symmetric">
-                  <Position X="5.7567013869688175" Y="11.627462298671661" />
-                </Handle>
-                <Handle Type="Bezier" ConstrainType="Symmetric">
-                  <Position X="4.7158630698142776" Y="11.300341684708807" />
-                </Handle>
-                <Handle Type="Primary" ConstrainType="Symmetric">
-                  <Position X="4.7158630698142776" Y="10.274372486370758" />
-                </Handle>
-                <Handle Type="Bezier" ConstrainType="Symmetric">
-                  <Position X="4.7158630698142776" Y="9.24840328803271" />
-                </Handle>
-                <Handle Type="Bezier" ConstrainType="Symmetric">
-                  <Position X="5.5187954859049224" Y="8.6982458918224559" />
-                </Handle>
-                <Handle Type="Primary" ConstrainType="Smooth">
-                  <Position X="6.2325131890966068" Y="8.6833767730059623" />
-                </Handle>
-                <Handle Type="Bezier" ConstrainType="Symmetric">
-                  <Position X="6.7976126954253395" Y="8.671603866624114" />
-                </Handle>
-                <Handle Type="Bezier" ConstrainType="Symmetric">
-                  <Position X="7.1692676745356936" Y="8.9212826740698574" />
-                </Handle>
-                <Handle Type="Primary" ConstrainType="Symmetric">
-                  <Position X="7.3328279815171209" Y="9.0551047434182976" />
-                </Handle>
-                <Handle Type="Bezier" ConstrainType="Symmetric">
-                  <Position X="7.4963882884985482" Y="9.1889268127667378" />
-                </Handle>
-              </Handles>
-              <Objects />
-            </Bezier>
-            <Bezier>
-              <Properties>
-                <Line Type="LineMode" StyleName="" StyleID="0" Width="0.1" Cap="Round" Join="Round" Limit="5" />
-                <Color Type="LineColor" StyleName="" StyleID="0">
-                  <Color R="0" G="0" B="0" A="1" />
-                </Color>
-                <Arrow Type="Arrow" StyleName="" StyleID="0" ArrowType1="Right" Length1="2" Effect11="0.5" Effect12="0.5" ArrowType2="Right" Length2="2" Effect21="0.5" Effect22="0.5" />
                 <Gradient Type="FillGradient" StyleName="" StyleID="0" Fill="Circle" Angle="53.910374707266364" Cx="0.45622938280856928" Cy="0.046173673525791478" Sx="2.3595588169826729" Sy="0.32858895129071675" Repeat="1" Middle="0" Smooth="0">
                   <Color1 R="0.58897653386981363" G="0.58897653386981363" B="0" A="1" />
                   <Color2 R="0.8216843916831722" G="0.82168439168317209" B="0" A="1" />
@@ -983,6 +921,68 @@
                 </Bezier>
               </Objects>
             </Group>
+            <Bezier>
+              <Properties>
+                <Line Type="LineMode" StyleName="" StyleID="0" Width="0.1" Cap="Round" Join="Round" Limit="5" />
+                <Color Type="LineColor" StyleName="" StyleID="0">
+                  <Color R="0" G="0" B="0" A="1" />
+                </Color>
+                <Arrow Type="Arrow" StyleName="" StyleID="0" ArrowType1="Right" Length1="2" Effect11="0.5" Effect12="0.5" ArrowType2="Right" Length2="2" Effect21="0.5" Effect22="0.5" />
+                <Gradient Type="FillGradient" StyleName="" StyleID="0" Fill="Circle" Angle="-11.929180500839017" Cx="0.654068167741203" Cy="0.61151912869551728" Sx="1.857555664665755" Sy="1.4699813642713262" Repeat="1" Middle="-1" Smooth="0">
+                  <Color1 R="1" G="1" B="0" A="1" />
+                  <Color2 R="0.60266523138824646" G="0.60266523138824646" B="0.05796640500229655" A="1" />
+                </Gradient>
+                <Bool Type="PolyClose" StyleName="" StyleID="0" Bool="false" />
+              </Properties>
+              <Handles>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="8.099722709887029" Y="10.280671936458512" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="7.7131256206581993" Y="10.860567570301754" />
+                </Handle>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="7.32652853142937" Y="11.440463204144995" />
+                </Handle>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="6.6635599365879647" Y="11.653372542946494" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Smooth">
+                  <Position X="6.2771205455460874" Y="11.642331417488155" />
+                </Handle>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="5.7567013869688175" Y="11.627462298671661" />
+                </Handle>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="4.7158630698142776" Y="11.300341684708807" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="4.7158630698142776" Y="10.274372486370758" />
+                </Handle>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="4.7158630698142776" Y="9.24840328803271" />
+                </Handle>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="5.5187954859049224" Y="8.6982458918224559" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Smooth">
+                  <Position X="6.2325131890966068" Y="8.6833767730059623" />
+                </Handle>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="6.7976126954253395" Y="8.671603866624114" />
+                </Handle>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="7.1692676745356936" Y="8.9212826740698574" />
+                </Handle>
+                <Handle Type="Primary" ConstrainType="Symmetric">
+                  <Position X="7.3328279815171209" Y="9.0551047434182976" />
+                </Handle>
+                <Handle Type="Bezier" ConstrainType="Symmetric">
+                  <Position X="7.4963882884985482" Y="9.1889268127667378" />
+                </Handle>
+              </Handles>
+              <Objects />
+            </Bezier>
           </Objects>
         </Layer>
       </Objects>
