@@ -59,6 +59,7 @@ namespace Epsitec.Common.Support
 			RegexOptions              regex_options = RegexOptions.ExplicitCapture;
 			System.Text.StringBuilder regex_pattern = new System.Text.StringBuilder ();
 			
+			bool escape     = false;
 			bool capture    = (options & Options.Capture) != 0;
 			int  capture_id = 1;
 			
@@ -70,7 +71,17 @@ namespace Epsitec.Common.Support
 			for (int i = 0; i < pattern.Length; i++)
 			{
 				char c = pattern[i];
-				if (c == '*')
+				
+				if (escape)
+				{
+					regex_pattern.Append (Regex.Escape (pattern.Substring (i, 1)));
+					escape = false;
+				}
+				else if (c == '\\')
+				{
+					escape = true;
+				}
+				else if (c == '*')
 				{
 					if (capture)
 					{

@@ -31,6 +31,7 @@ Les colonnes dans "Data" sont les suivantes :
 -	Clef et statut (CR_ID, CR_REV, CR_STAT).
 -	Name  (DbColumn.Name = "Name"; ), type DbTypeString, max=100
 -	Level (DbColumn.Name = "Level";), type DbTypeString, max=4
+-	Type  (DbColumn.Name = "Type";),  type DbTypeString, max=25
 -	Data  (DbColumn.Name = "Data"; ), type DbType(DbSimpleType.ByteArray)
 	contenant des BLOBs binaires.
 
@@ -39,4 +40,3 @@ La recherche se fait au moyen d'un SELECT tel que :
 -	Name   = id de la ressource
 -	Level  = niveau (Default="00", Localised="fr", Customised="Xfr")
 -	CR_REV = 0
-

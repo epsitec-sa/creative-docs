@@ -83,6 +83,7 @@ namespace Epsitec.Common.Support
 			Regex r2 = RegexFactory.FromSimpleJoker ("a.b.c*", RegexFactory.Options.Capture);
 			Regex r3 = RegexFactory.FromSimpleJoker ("*a.b.c*", RegexFactory.Options.Capture);
 			Regex r4 = RegexFactory.FromSimpleJoker ("*a.*.c*", RegexFactory.Options.Capture);
+			Regex r5 = RegexFactory.FromSimpleJoker ("x\\*\\.\\\\x\\?x", RegexFactory.Options.Capture);
 			
 			Match ma, mb, mc, md;
 			
@@ -144,6 +145,8 @@ namespace Epsitec.Common.Support
 			Assert.AreEqual ("x.", md.Groups[1].Value);
 			Assert.AreEqual ("b",  md.Groups[2].Value);
 			Assert.AreEqual (".z", md.Groups[3].Value);
+			
+			Assert.IsTrue (r5.IsMatch ("x*.\\x?x"));
 		}
 		
 		
