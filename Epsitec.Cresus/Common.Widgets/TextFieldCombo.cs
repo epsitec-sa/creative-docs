@@ -5,11 +5,11 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe TextFieldCombo implémente la ligne éditable avec bouton "v".
 	/// </summary>
-	public class TextFieldCombo : AbstractTextField
+	public class TextFieldCombo : AbstractTextField, Helpers.IStringCollectionHost
 	{
 		public TextFieldCombo()
 		{
-			this.items = new Helpers.StringCollection ();
+			this.items = new Helpers.StringCollection (this);
 			
 			this.button = new ArrowButton();
 			this.button.Direction = Direction.Down;
@@ -153,7 +153,7 @@ namespace Epsitec.Common.Widgets
 			
 			foreach (string text in this.items)
 			{
-				this.scrollList.AddText(text);
+				this.scrollList.Items.Add(text);
 			}
 			
 			Drawing.Point     pos  = this.MapClientToScreen (new Drawing.Point(0, 0));
@@ -200,6 +200,13 @@ namespace Epsitec.Common.Widgets
 			this.comboWindow = null;
 		}
 
+		#region IStringCollectionHost Members
+		public void StringCollectionChanged()
+		{
+		}
+		#endregion
+		
+		
 		
 		protected ArrowButton						button;
 		protected Helpers.StringCollection			items;

@@ -53,7 +53,14 @@ namespace Epsitec.Common.Widgets
 		public bool							Swallowed
 		{
 			get { return this.is_swallowed; }
-			set { this.is_swallowed = value; }
+			set
+			{
+				if (value)
+				{
+					this.is_handled = true;
+					this.is_swallowed = true;
+				}
+			}
 		}
 		
 		public bool							NonClient
@@ -163,6 +170,11 @@ namespace Epsitec.Common.Widgets
 		public int							KeyCode
 		{
 			get { return this.key_code; }
+		}
+		
+		public System.Windows.Forms.Keys	KeyCodeAsKeys
+		{
+			get { return (System.Windows.Forms.Keys) this.key_code; }
 		}
 		
 		
@@ -346,7 +358,8 @@ namespace Epsitec.Common.Widgets
 				case Win32Const.WM_KEYDOWN:
 				case Win32Const.WM_KEYUP:
 				case Win32Const.WM_CHAR:
-					//	TODO: génère le message clavier
+					message = Message.FromKeyEvent (msg.Msg, msg.WParam, msg.LParam);
+					System.Diagnostics.Debug.WriteLine ("Message = " + message);
 					break;
 				
 				case Win32Const.WM_MOUSEMOVE:
@@ -515,6 +528,56 @@ namespace Epsitec.Common.Widgets
 			return message;
 		}
 		
+		
+		static int last_code = 0;
+		
+		internal static Message FromKeyEvent(int msg, System.IntPtr w_param, System.IntPtr l_param)
+		{
+			//	Synthétise un événement clavier à partir de la description de
+			//	très bas niveau...
+			
+			Message message = new Message ();
+			
+			switch (msg)
+			{
+				case Win32Const.WM_KEYDOWN:		message.type = MessageType.KeyDown;		break;
+				case Win32Const.WM_KEYUP:		message.type = MessageType.KeyUp;		break;
+				case Win32Const.WM_CHAR:		message.type = MessageType.KeyPress;	break;
+			}
+			
+			message.filter_no_children  = false;
+			message.filter_only_focused = true;
+			message.filter_only_on_hit  = false;
+			
+			if ((System.Windows.Forms.Control.ModifierKeys & System.Windows.Forms.Keys.Alt) != 0)
+			{
+				message.modifiers |= ModifierKeys.Alt;
+			}
+			
+			if ((System.Windows.Forms.Control.ModifierKeys & System.Windows.Forms.Keys.Shift) != 0)
+			{
+				message.modifiers |= ModifierKeys.Shift;
+			}
+			
+			if ((System.Windows.Forms.Control.ModifierKeys & System.Windows.Forms.Keys.Control) != 0)
+			{
+				message.modifiers |= ModifierKeys.Ctrl;
+			}
+			
+			if (message.type == MessageType.KeyPress)
+			{
+				message.key_code = Message.last_code;
+				message.key_char = (int) w_param;
+			}
+			else
+			{
+				Message.last_code = (int) w_param;
+				message.key_code  = Message.last_code;
+			}
+			
+			return message;
+		}
+		
 		internal static Message FromKeyEvent(MessageType type, System.Windows.Forms.KeyPressEventArgs e)
 		{
 			Message message = new Message ();
@@ -559,6 +622,12 @@ namespace Epsitec.Common.Widgets
 			{
 				buffer.Append (" char=");
 				buffer.Append (this.key_char.ToString ());
+			}
+			
+			if (this.key_code != 0)
+			{
+				buffer.Append (" code=");
+				buffer.Append (this.key_code.ToString ());
 			}
 			
 			if (this.in_widget != null)

@@ -1,6 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
 	using Keys = System.Windows.Forms.Keys;
+	using BundleAttribute  = Epsitec.Common.Support.BundleAttribute;
 	
 	public enum TextFieldStyle
 	{
@@ -57,19 +58,19 @@ namespace Epsitec.Common.Widgets
 
 		
 		// Mode pour la ligne éditable.
-		public bool ReadOnly
+		[ Bundle ("ro") ] public bool IsReadOnly
 		{
 			get
 			{
-				return this.readOnly;
+				return this.isReadOnly;
 			}
 
 			set
 			{
-				if ( this.readOnly != value )
+				if ( this.isReadOnly != value )
 				{
-					this.readOnly = value;
-					this.MouseCursor = this.readOnly ? MouseCursor.AsArrow : MouseCursor.AsIBeam;
+					this.isReadOnly = value;
+					this.MouseCursor = this.isReadOnly ? MouseCursor.AsArrow : MouseCursor.AsIBeam;
 				}
 			}
 		}
@@ -341,12 +342,10 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.KeyDown:
-					//System.Diagnostics.Debug.WriteLine("KeyDown "+message.KeyChar+" "+message.KeyCode);
-					this.ProcessKeyDown((Keys)message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
+					this.ProcessKeyDown(message.KeyCodeAsKeys, message.IsShiftPressed, message.IsCtrlPressed);
 					break;
 
 				case MessageType.KeyPress:
-					//System.Diagnostics.Debug.WriteLine("KeyPress "+message.KeyChar+" "+message.KeyCode);
 					this.ProcessKeyPress(message.KeyChar);
 					break;
 			}
@@ -463,7 +462,7 @@ namespace Epsitec.Common.Widgets
 		protected bool InsertString(string ins)
 		{
 			System.Diagnostics.Debug.Assert(this.textLayout != null);
-			if ( this.readOnly )  return false;
+			if ( this.isReadOnly )  return false;
 			this.DeleteSelectedCharacter(false);
 
 			if ( this.Text.Length+ins.Length > this.maxChar )  return false;
@@ -486,7 +485,7 @@ namespace Epsitec.Common.Widgets
 		protected bool DeleteCharacter(int dir)
 		{
 			System.Diagnostics.Debug.Assert(this.textLayout != null);
-			if ( this.readOnly )  return false;
+			if ( this.isReadOnly )  return false;
 			if ( this.DeleteSelectedCharacter(true) )  return false;
 
 			int cursor = this.textLayout.FindOffsetFromIndex(this.cursorTo);
@@ -529,7 +528,7 @@ namespace Epsitec.Common.Widgets
 		protected bool DeleteSelectedCharacter(bool signalTextChanged)
 		{
 			System.Diagnostics.Debug.Assert(this.textLayout != null);
-			if ( this.readOnly )  return false;
+			if ( this.isReadOnly )  return false;
 			
 			int cursorFrom = this.textLayout.FindOffsetFromIndex(this.cursorFrom);
 			int cursorTo   = this.textLayout.FindOffsetFromIndex(this.cursorTo);
@@ -725,33 +724,47 @@ namespace Epsitec.Common.Widgets
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
-			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
-			Drawing.Point     pos   = new Drawing.Point(AbstractTextField.Margin, AbstractTextField.Margin);
+			Drawing.Rectangle rect   = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			WidgetState       state  = this.PaintState;
+			Direction         dir    = this.RootDirection;
+			Drawing.Point     pos    = new Drawing.Point(AbstractTextField.Margin, AbstractTextField.Margin);
+			double            button = (this.rightMargin == 0) ? 0 : (this.rightMargin + 1);
+			
 			pos -= this.scrollOffset;
 			
-			adorner.PaintTextFieldBackground(graphics, rect, state, dir, this.textStyle, this.readOnly);
+			if (this.isCombo)
+			{
+				adorner.PaintTextFieldBackground(graphics, rect, state, dir, this.textStyle, false);
+			}
+			else
+			{
+				adorner.PaintTextFieldBackground(graphics, rect, state, dir, this.textStyle, this.isReadOnly);
+			}
 			
 			Drawing.Rectangle rSaveClip = graphics.SaveClippingRectangle ();
-			Drawing.Rectangle rClip = new Drawing.Rectangle();
-			rClip = rect;
+			Drawing.Rectangle rClip = rect;
 			rClip.Inflate(-2, -2);
 			rClip = this.MapClientToRoot (rClip);
 			graphics.SetClippingRectangle(rClip);
 
-			if ( (state&WidgetState.Focused) == 0 )
-			{
-				adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
-			}
-			else
+			if ( this.IsFocused )
 			{
 				bool visibleCursor = false;
 				
 				int from = System.Math.Min(this.cursorFrom, this.cursorTo);
 				int to   = System.Math.Max(this.cursorFrom, this.cursorTo);
 				
-				if ( from == to )
+				if (this.isCombo && this.isReadOnly)
+				{
+					Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
+					rects[0] = rect;
+					rects[0].Inflate(-3, -3);
+					rects[0].Right -= button;
+					adorner.PaintTextSelectionBackground(graphics, new Drawing.Point (0, 0), rects);
+					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
+					adorner.PaintFocusBox(graphics, rects[0]);
+				}
+				else if ( from == to )
 				{
 					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
 					visibleCursor = TextField.showCursor && this.WindowFrame.Focused;
@@ -763,8 +776,9 @@ namespace Epsitec.Common.Widgets
 					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
 				}
 
+
 				// Dessine le curseur.
-				if ( !this.readOnly )
+				if ( !this.isReadOnly )
 				{
 					Drawing.Rectangle rCursor = this.textLayout.FindTextCursor(this.cursorTo, out this.cursorLine);
 					this.cursorPosX = (rCursor.Left+rCursor.Right)/2;
@@ -775,6 +789,10 @@ namespace Epsitec.Common.Widgets
 					rCursor.Right = x+1;
 					adorner.PaintTextCursor(graphics, pos, rCursor, visibleCursor);
 				}
+			}
+			else
+			{
+				adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
 			}
 
 			graphics.RestoreClippingRectangle(rSaveClip);
@@ -789,7 +807,8 @@ namespace Epsitec.Common.Widgets
 		protected static readonly double		Margin = 4;
 		protected static readonly double		Infinity = 1000000;
 		
-		protected bool							readOnly = false;
+		protected bool							isReadOnly = false;
+		protected bool							isCombo = false;
 		protected double						leftMargin = 0;
 		protected double						rightMargin = 0;
 		protected Drawing.Size					realSize;

@@ -46,7 +46,7 @@ namespace Epsitec.Common.Widgets
 						return;
 					}
 					
-					if ((message.KeyCode == ' ') &&
+					if ((message.KeyCodeAsKeys == System.Windows.Forms.Keys.Space) &&
 						(this.is_keyboard_pressed == false))
 					{
 						this.is_keyboard_pressed = true;

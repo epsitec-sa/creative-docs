@@ -12,6 +12,7 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			get
 			{
+				if (index == -1) return null;
 				return this.list[index].ToString ();
 			}
 		}

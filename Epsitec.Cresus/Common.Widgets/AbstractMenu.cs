@@ -1,5 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
+	using Keys = System.Windows.Forms.Keys;
+	
 	public enum MenuType
 	{
 		Invalid,
@@ -23,6 +25,8 @@ namespace Epsitec.Common.Widgets
 		#region Interface IBundleSupport
 		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
 		{
+			base.RestoreFromBundle (bundler, bundle);
+			
 			System.Collections.IList item_list = bundle.GetFieldBundleList ("items");
 			
 			if (item_list != null)
@@ -210,7 +214,7 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.KeyDown:
-					this.ProcessKeyDown(message.KeyCode);
+					this.ProcessKeyDown(message.KeyCodeAsKeys);
 					break;
 			}
 			
@@ -218,23 +222,23 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Gestion d'une touche pressée avec KeyDown dans le menu.
-		protected void ProcessKeyDown(int key)
+		protected void ProcessKeyDown(System.Windows.Forms.Keys key)
 		{
 			AbstractMenu parent = this.parentMenu;
 
 			switch ( key )
 			{
-				case (int)System.Windows.Forms.Keys.Up:
+				case Keys.Up:
 					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Up "+this.Name);
 					this.SelectOtherMenuItem(-1);
 					break;
 
-				case (int)System.Windows.Forms.Keys.Down:
+				case Keys.Down:
 					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Down "+this.Name);
 					this.SelectOtherMenuItem(1);
 					break;
 
-				case (int)System.Windows.Forms.Keys.Left:
+				case Keys.Left:
 					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Left "+this.Name);
 					if ( parent != null )
 					{
@@ -258,7 +262,7 @@ namespace Epsitec.Common.Widgets
 					}
 					break;
 
-				case (int)System.Windows.Forms.Keys.Right:
+				case Keys.Right:
 					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Right "+this.Name);
 					if ( parent == null )
 					{
@@ -292,11 +296,11 @@ namespace Epsitec.Common.Widgets
 					}
 					break;
 
-				case (int)System.Windows.Forms.Keys.Return:
-				case (int)System.Windows.Forms.Keys.Space:
+				case Keys.Return:
+				case Keys.Space:
 					break;
 
-				case (int)System.Windows.Forms.Keys.Escape:
+				case Keys.Escape:
 					System.Diagnostics.Debug.WriteLine("ProcessKeyDown.Escape "+this.Name);
 					this.CloseAll();
 					break;
@@ -574,7 +578,6 @@ namespace Epsitec.Common.Widgets
 						// la partie client de la fenêtre...						
 						if ( !message.NonClient )
 						{
-							message.Handled = true;
 							message.Swallowed = true;
 						}
 					}
@@ -584,7 +587,6 @@ namespace Epsitec.Common.Widgets
 						if ( cell == null )
 						{
 							this.CloseAll();
-							message.Handled = true;
 							message.Swallowed = true;
 						}
 					}

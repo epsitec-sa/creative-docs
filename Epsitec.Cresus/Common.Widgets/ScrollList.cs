@@ -1,5 +1,7 @@
 namespace Epsitec.Common.Widgets
 {
+	using Keys = System.Windows.Forms.Keys;
+	
 	public enum ScrollListStyle
 	{
 		Flat,							// pas de cadre, ni de relief
@@ -37,28 +39,30 @@ namespace Epsitec.Common.Widgets
 			this.scroller.IsInverted = true;
 			this.scroller.Parent = this;
 			this.scroller.Dock = DockStyle.Right;
-			this.scroller.Moved += new EventHandler(this.HandleScroller);
+			this.scroller.Moved += new EventHandler(this.HandleScrollerMoved);
 			this.scroller.Hide ();
 		}
 
+		
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
 			{
 				System.Diagnostics.Debug.WriteLine("Dispose ScrollList " + this.Text);
 				
-				this.scroller.Moved -= new EventHandler(this.HandleScroller);
+				this.scroller.Moved -= new EventHandler(this.HandleScrollerMoved);
 			}
 			
 			base.Dispose(disposing);
 		}
 
-		public Helpers.StringCollection Items
+		
+		public Helpers.StringCollection		Items
 		{
 			get { return this.items; }
 		}
 
-		public ScrollListStyle ScrollListStyle
+		public ScrollListStyle				ScrollListStyle
 		{
 			get
 			{
@@ -75,7 +79,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool ComboMode
+		public bool							ComboMode
 		{
 			set
 			{
@@ -88,22 +92,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public AbstractScroller Scroller
+		public AbstractScroller				Scroller
 		{
 			get { return this.scroller; }
 		}
 
 
-		// Donne un texte de la liste.
-		public string GetText(int index)
+		public int							SelectedIndex
 		{
-			if ( index < 0 || index >= this.items.Count )  return "";
-			return this.items[index];
-		}
-
-		// Ligne sélectionnée, -1 si aucune.
-		public int SelectedIndex
-		{
+			// Ligne sélectionnée, -1 si aucune.
 			get
 			{
 				return this.selectedLine;
@@ -119,19 +116,15 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.selectedLine )
 				{
 					this.selectedLine = value;
-					this.isDirty = true;
-					this.Invalidate();
-					if ( !this.isComboList )
-					{
-						this.OnSelectedIndexChanged();
-					}
+					this.SetDirty ();
+					this.OnSelectedIndexChanged();
 				}
 			}
 		}
 
-		// Première ligne visible.
-		public int FirstVisibleLine
+		public int							FirstVisibleLine
 		{
+			// Première ligne visible.
 			get
 			{
 				return this.firstLine;
@@ -144,26 +137,20 @@ namespace Epsitec.Common.Widgets
 				if ( value != this.firstLine )
 				{
 					this.firstLine = value;
-					this.isDirty = true;
+					this.SetDirty ();
 					this.Invalidate();
 				}
 			}
 		}
 
-		// Indique si la ligne sélectionnée est visible.
-		public bool IsShowSelect()
+		
+		public void ShowSelectedLine(ScrollListShow mode)
 		{
-			if ( this.selectedLine == -1 )  return true;
-			if ( this.selectedLine >= this.firstLine &&
-				 this.selectedLine <  this.firstLine+this.visibleLines )  return true;
-			return false;
-		}
-
-		// Rend la ligne sélectionnée visible.
-		public void ShowSelect(ScrollListShow mode)
-		{
-			if ( this.selectedLine == -1 )  return;
-
+			// Rend la ligne sélectionnée visible.
+			
+			if ( this.selectedLine == -1 ) return;
+			if ( this.selectedLine >= this.firstLine && this.selectedLine <  this.firstLine+this.visibleLines ) return;
+			
 			int fl = this.FirstVisibleLine;
 			if ( mode == ScrollListShow.Extremity )
 			{
@@ -185,9 +172,11 @@ namespace Epsitec.Common.Widgets
 			this.FirstVisibleLine = fl;
 		}
 
-		// Ajuste la hauteur pour afficher pile un nombre entier de lignes.
-		public bool AdjustToMultiple(ScrollListAdjust mode)
+		
+		public bool AdjustHeight(ScrollListAdjust mode)
 		{
+			// Ajuste la hauteur pour afficher pile un nombre entier de lignes.
+			
 			double h = this.Height-ScrollList.Margin*2;
 			int nbLines = (int)(h/this.lineHeight);
 			double adjust = h - nbLines*this.lineHeight;
@@ -205,9 +194,10 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		// Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
-		public bool AdjustToContent(ScrollListAdjust mode, double hMin, double hMax)
+		public bool AdjustHeightToContent(ScrollListAdjust mode, double hMin, double hMax)
 		{
+			// Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
+			
 			double h = this.lineHeight*this.items.Count+ScrollList.Margin*2;
 			double hope = h;
 			h = System.Math.Max(h, hMin);
@@ -223,22 +213,23 @@ namespace Epsitec.Common.Widgets
 				this.Bottom = this.Top-h;
 			}
 			this.Invalidate();
-			if ( h != hope )  AdjustToMultiple(mode);
+			if ( h != hope )  AdjustHeight(mode);
 			return true;
 		}
 
 
-		// Appelé lorsque l'ascenseur a bougé.
-		private void HandleScroller(object sender)
+		private void HandleScrollerMoved(object sender)
 		{
-			this.FirstVisibleLine = (int)this.scroller.Value;
-			//this.SetFocused(true);
+			// Appelé lorsque l'ascenseur a bougé.
+			
+			this.FirstVisibleLine = (int)(this.scroller.Value + 0.5);
 		}
 
 
-		// Gestion d'un événement.
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
+			// Gestion d'un événement.
+			
 			switch ( message.Type )
 			{
 				case MessageType.MouseDown:
@@ -257,26 +248,23 @@ namespace Epsitec.Common.Widgets
 					if ( this.mouseDown )
 					{
 						this.MouseSelect(pos);
-						if ( this.isComboList )
-						{
-							this.OnSelectedIndexChanged();
-						}
+						this.OnValidation();
 						this.mouseDown = false;
 					}
 					break;
 
 				case MessageType.KeyDown:
-					//System.Diagnostics.Debug.WriteLine("KeyDown "+message.KeyChar+" "+message.KeyCode);
-					ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
+					this.ProcessKeyDown(message.KeyCodeAsKeys, message.IsShiftPressed, message.IsCtrlPressed);
 					break;
 			}
 			
 			message.Consumer = this;
 		}
 
-		// Sélectionne la ligne selon la souris.
 		protected bool MouseSelect(Drawing.Point pos)
 		{
+			// Sélectionne la ligne selon la souris.
+			
 			double y = this.Client.Height-pos.Y-1-ScrollList.Margin;
 			double x = pos.X-ScrollList.Margin;
 			
@@ -294,52 +282,55 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		// Gestion d'une touche pressée avec KeyDown dans la liste.
-		protected void ProcessKeyDown(int key, bool isShiftPressed, bool isCtrlPressed)
+		protected bool ProcessKeyDown(Keys key, bool isShiftPressed, bool isCtrlPressed)
 		{
-			int		sel;
+			// Gestion d'une touche pressée avec KeyDown dans la liste.
+			
+			int sel;
 
 			switch ( key )
 			{
-				case (int)System.Windows.Forms.Keys.Up:
+				case Keys.Up:
 					sel = this.SelectedIndex-1;
 					if ( sel >= 0 )
 					{
 						this.SelectedIndex = sel;
-						if ( !this.IsShowSelect() )  this.ShowSelect(ScrollListShow.Extremity);
+						this.ShowSelectedLine(ScrollListShow.Extremity);
 					}
 					break;
 
-				case (int)System.Windows.Forms.Keys.Down:
+				case Keys.Down:
 					sel = this.SelectedIndex+1;
 					if ( sel < this.items.Count )
 					{
 						this.SelectedIndex = sel;
-						if ( !this.IsShowSelect() )  this.ShowSelect(ScrollListShow.Extremity);
+						this.ShowSelectedLine(ScrollListShow.Extremity);
 					}
 					break;
 
-				case (int)System.Windows.Forms.Keys.Return:
-				case (int)System.Windows.Forms.Keys.Space:
-					if ( this.isComboList )
-					{
-						this.OnSelectedIndexChanged();
-					}
+				case Keys.Return:
+				case Keys.Space:
+					this.OnValidation();
 					break;
+				default:
+					return false;
 			}
+			
+			return true;
 		}
 
 
-		// Met à jour l'ascenseur en fonction de la liste.
 		protected void UpdateScroller()
 		{
+			// Met à jour l'ascenseur en fonction de la liste.
+			
 			int total = this.items.Count;
 			if ( total <= this.visibleLines )
 			{
 				if (this.scroller.IsVisible)
 				{
 					this.scroller.Hide();
-					this.UpdateClientGeometry();
+					this.rightMargin = 0;
 				}
 			}
 			else
@@ -352,9 +343,18 @@ namespace Epsitec.Common.Widgets
 				
 				if (this.scroller.IsVisible == false)
 				{
+					this.rightMargin = this.scroller.Width;
 					this.scroller.Show();
-					this.UpdateClientGeometry();
 				}
+			}
+		}
+		
+		protected void SetDirty()
+		{
+			if (this.isDirty == false)
+			{
+				this.isDirty = true;
+				this.Invalidate ();
 			}
 		}
 
@@ -370,6 +370,7 @@ namespace Epsitec.Common.Widgets
 					if ( this.textLayouts[i] == null )
 					{
 						this.textLayouts[i] = new TextLayout();
+						this.textLayouts[i].BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 					}
 					this.textLayouts[i].Text = this.items[i+this.firstLine];
 					this.textLayouts[i].Font = this.DefaultFont;
@@ -393,27 +394,28 @@ namespace Epsitec.Common.Widgets
 
 			this.visibleLines = (int)(rect.Height/this.lineHeight);
 			this.textLayouts = new TextLayout[this.visibleLines];
-
-			if ( this.scroller.IsVisible )
-			{
-				this.rightMargin = this.scroller.Width;
-			}
-			else
-			{
-				this.rightMargin = 0;
-			}
 			
-			this.isDirty = true;
-			this.Invalidate ();
+			this.SetDirty ();
 		}
 
 
-		// Génère un événement pour dire que la sélection dans la liste a changé.
 		protected virtual void OnSelectedIndexChanged()
 		{
+			// Génère un événement pour dire que la sélection dans la liste a changé.
+			
 			if ( this.SelectedIndexChanged != null )  // qq'un écoute ?
 			{
 				this.SelectedIndexChanged(this);
+			}
+		}
+
+		protected virtual void OnValidation()
+		{
+			// Génère un événement pour dire que la sélection a été validée
+			
+			if ( this.Validation != null )
+			{
+				this.Validation (this);
 			}
 		}
 
@@ -479,13 +481,14 @@ namespace Epsitec.Common.Widgets
 				this.SelectedIndex = -1;
 			}
 			
-			this.isDirty = true;
-			this.Invalidate();
+			this.SetDirty ();
 		}
 		#endregion
 
 
-		public event EventHandler SelectedIndexChanged;
+		public event EventHandler				SelectedIndexChanged;
+		public event EventHandler				Validation;
+		
 
 		protected static readonly double		Margin = 3;
 		
