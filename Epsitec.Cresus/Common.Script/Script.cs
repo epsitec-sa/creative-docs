@@ -6,7 +6,7 @@ namespace Epsitec.Common.Script
 	/// <summary>
 	/// Summary description for Script.
 	/// </summary>
-	public class Script : System.MarshalByRefObject, System.IDisposable, Glue.IScriptHost
+	public class Script : System.MarshalByRefObject, System.IDisposable, Glue.IScriptHost, Support.ICommandDispatcher
 	{
 		internal Script()
 		{
@@ -36,7 +36,6 @@ namespace Epsitec.Common.Script
 				return this.domain;
 			}
 		}
-		
 		
 		public void Attach(Types.IDataGraph data)
 		{
@@ -133,6 +132,13 @@ namespace Epsitec.Common.Script
 		public bool GetEnableState(string name)
 		{
 			return false;
+		}
+		#endregion
+		
+		#region ICommandDispatcher Members
+		bool Support.ICommandDispatcher.DispatchCommand(Support.CommandDispatcher sender, Support.CommandEventArgs e)
+		{
+			return this.Execute (e.CommandName, e.CommandArgs);
 		}
 		#endregion
 		
