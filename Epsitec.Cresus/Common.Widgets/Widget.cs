@@ -3779,12 +3779,26 @@ namespace Epsitec.Common.Widgets
 			
 			this.Invalidate ();
 			
+			bool loc_changed  = (this.x1 != x1) || (this.y1 != y1);
+			bool size_changed = (this.x2-this.x1 != x2-x1) || (this.y2-this.y1 != y2-y1);
+			
 			this.x1 = x1;
 			this.y1 = y1;
 			this.x2 = x2;
 			this.y2 = y2;
 			
 			this.UpdateClientGeometry ();
+			
+			if (loc_changed)
+			{
+				this.OnLocationChanged ();
+			}
+			
+			if (size_changed)
+			{
+				this.OnSizeChanged ();
+			}
+			
 			this.Invalidate ();
 		}
 		
@@ -5068,6 +5082,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnSizeChanged()
+		{
+			if (this.SizeChanged != null)
+			{
+				this.SizeChanged (this);
+			}
+		}
+		
+		protected virtual void OnLocationChanged()
+		{
+			if (this.LocationChanged != null)
+			{
+				this.LocationChanged (this);
+			}
+		}
+		
 		
 		protected virtual void OnFocused()
 		{
@@ -5198,6 +5228,8 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler			Disposing;
 		public event Support.EventHandler			TextChanged;
 		public event Support.EventHandler			NameChanged;
+		public event Support.EventHandler			SizeChanged;
+		public event Support.EventHandler			LocationChanged;
 		
 		public event PaintBoundsCallback			PaintBoundsCallback;
 		#endregion
