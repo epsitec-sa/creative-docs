@@ -172,7 +172,8 @@ namespace Epsitec.Common.Designer.Editors
 				this.hot_widget = null;
 				
 				if ((Message.State.Buttons == MouseButtons.None) &&
-					(!this.SelectedWidgets.Contains (hot)))
+					(!this.SelectedWidgets.Contains (hot)) &&
+					(e.Message.Type != MessageType.MouseLeave))
 				{
 					//	Ne met en évidence le widget "chaud" que si celui-ci n'est pas sélectionné comme
 					//	cible. Si l'utilisateur survole la poignée d'un objet sélectionné, c'est celle-ci

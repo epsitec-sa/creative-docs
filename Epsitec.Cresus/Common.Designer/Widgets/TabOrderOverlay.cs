@@ -325,23 +325,30 @@ namespace Epsitec.Common.Designer.Widgets
 			{
 				if (this.hot_widget != null)
 				{
-					if (this.is_picker_active)
+					if (message.IsLeftButton)
 					{
-						int tab_index = this.hot_widget.TabIndex;
-						
-						if (tab_index > 0)
+						if (this.is_picker_active)
 						{
-							this.parent_filter = this.hot_widget.Parent;
-							this.internal_set  = true;
-							this.CommandDispatcher.Dispatch (string.Format ("StartTabIndexAtIndex({0})", tab_index), this);
-							this.internal_set  = false;
+							int tab_index = this.hot_widget.TabIndex;
+							
+							if (tab_index > 0)
+							{
+								this.parent_filter = this.hot_widget.Parent;
+								this.internal_set  = true;
+								this.CommandDispatcher.Dispatch (string.Format ("StartTabIndexAtIndex({0})", tab_index), this);
+								this.internal_set  = false;
+							}
+						}
+						else if (this.is_setter_active)
+						{
+							this.DefineTabIndex (this.hot_widget, this.FindNextIndex (this.hot_widget));
+							this.hot_widget = null;
+							this.Invalidate ();
 						}
 					}
-					else if (this.is_setter_active)
+					else if (message.IsRightButton)
 					{
-						this.DefineTabIndex (this.hot_widget, this.FindNextIndex (this.hot_widget));
-						this.hot_widget = null;
-						this.Invalidate ();
+						//	TODO: afficher un menu permettant de supprimer/modifier un élément
 					}
 				}
 			}
@@ -376,19 +383,38 @@ namespace Epsitec.Common.Designer.Widgets
 				
 				TabNavigationMode mode = widget.TabNavigation;
 			
-				if ((mode != TabNavigationMode.Passive) &&
-					(widget.TabIndex > 0))
+				if (((mode != TabNavigationMode.Passive) && (widget.TabIndex > 0)) ||
+					(this.hot_widget == widget))
 				{
-					int index = widget.TabIndex;
+					string text = string.Format ("{0}{1}", prefix, widget.TabIndex);
 					
 					if ((widget == this.hot_widget) &&
 						(! this.is_picker_active) &&
 						(this.is_setter_active))
 					{
-						index = this.FindNextIndex (widget);
+						text = string.Format ("{0}", this.FindNextIndex (widget));
+						
+						Widget parent = widget.Parent;
+						
+						while (parent != this.root_widget)
+						{
+							if (parent == null) break;
+							
+							if (parent.TabNavigation != TabNavigationMode.Passive)
+							{
+								if (parent.TabIndex == 0)
+								{
+									text = string.Format ("{0}.{1}", this.FindNextIndex (parent), text);
+								}
+								else
+								{
+									text = string.Format ("{0}.{1}", parent.TabIndex, text);
+								}
+							}
+							
+							parent = parent.Parent;
+						}
 					}
-					
-					string text = string.Format ("{0}{1}", prefix, index);
 					
 					Drawing.Font font  = this.DefaultFont;
 					double       size  = this.DefaultFontSize;

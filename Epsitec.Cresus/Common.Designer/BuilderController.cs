@@ -137,7 +137,6 @@ namespace Epsitec.Common.Designer
 			
 			this.widget_palette = new Panels.WidgetSourcePalette ();
 			this.tool_bar       = new HToolBar ();
-			this.tool_tab_index = new TextFieldUpDown ();
 			
 			double dx = this.widget_palette.Size.Width;
 			double dy = this.widget_palette.Size.Height;
@@ -162,29 +161,17 @@ namespace Epsitec.Common.Designer
 			
 			//	Initialisation de la barre d'outils pour l'édition :
 			
-			this.tool_tab_index.Name       = "TabIndex";
-			this.tool_tab_index.Value      = 1;
-			this.tool_tab_index.MinValue   = 1;
-			this.tool_tab_index.MaxValue   = 9999;
-			this.tool_tab_index.Width      = 40;
-			this.tool_tab_index.DockSpacer = new Drawing.Margins (2, 0, 0, 0);
-			this.tool_tab_index.SetVisible (false);
-			
 			this.tool_bar.Items.Add (IconButton.CreateSimple ("CreateNewWindow", "file:images/new.icon"));
 			this.tool_bar.Items.Add (new IconSeparator ());
 			this.tool_bar.Items.Add (IconButton.CreateToggle ("SetTabIndexEdition(this.IsActive)",	"file:images/numtabindex.icon"));
 			this.tool_bar.Items.Add (IconButton.CreateSimple ("StartTabIndexAtIndex(1)",			"file:images/numone.icon"));
 			this.tool_bar.Items.Add (IconButton.CreateToggle ("SetTabIndexPicker(this.IsActive)",	"file:images/numpicker.icon"));
-			this.tool_bar.Items.Add (this.tool_tab_index);
 			this.tool_bar.Items.Add (new IconSeparator ());
 			this.tool_bar.Items.Add (IconButton.CreateSimple ("DeleteActiveSelection", "file:images/delete.icon"));
 			
 			this.tool_bar.Size   = new Drawing.Size (dx, this.tool_bar.DefaultHeight);
 			this.tool_bar.Parent = root;
 			this.tool_bar.Dock   = DockStyle.Top;
-			
-			this.tool_tab_index.AutoFocus = true;
-			this.tool_tab_index.ValueChanged += new EventHandler (this.HandleToolTabIndexValueChanged);
 		}
 		
 		protected void CreateAttributeWindow()
@@ -317,13 +304,6 @@ namespace Epsitec.Common.Designer
 			this.UpdateActiveWidget ();
 		}
 
-		private void HandleToolTabIndexValueChanged(object sender)
-		{
-			if (this.active_editor != null)
-			{
-				this.dispatcher.Dispatch (string.Format ("StartTabIndexAtIndex({0})", this.tool_tab_index.Value), this.tool_tab_index);
-			}
-		}
 		
 		
 		protected void UpdateSelectionState()
@@ -376,9 +356,6 @@ namespace Epsitec.Common.Designer
 			
 			this.tool_bar.FindChild ("StartTabIndexAtIndex").SetVisible (enable);
 			this.tool_bar.FindChild ("SetTabIndexPicker").SetVisible (enable);
-			this.tool_bar.FindChild ("TabIndex").SetVisible (enable);
-			
-			this.tool_tab_index.Value = this.tool_tab_index_value;
 		}
 		
 		
@@ -527,6 +504,7 @@ namespace Epsitec.Common.Designer
 			bool enable;
 			Converters.Converter.Convert (e.CommandArgs[0], out enable);
 			
+			this.active_editor.SelectedWidgets.Clear ();
 			this.SetTabIndexEdition (enable);
 		}
 		
@@ -534,9 +512,10 @@ namespace Epsitec.Common.Designer
 		{
 			Converters.Converter.Convert (e.CommandArgs[0], out this.tool_tab_index_value);
 			
+			this.active_editor.SelectedWidgets.Clear ();
 			this.SetTabIndexPicker (false);
-			this.UpdateTabIndexIcons ();
 			this.SetTabIndexEditors ();
+			this.UpdateTabIndexIcons ();
 		}
 		
 		[Command ("SetTabIndexPicker")]			void CommandSetTabIndexPicker(CommandDispatcher d, CommandEventArgs e)
@@ -560,7 +539,6 @@ namespace Epsitec.Common.Designer
 		protected Panels.WidgetSourcePalette	widget_palette;
 		protected Panels.WidgetAttributePalette	attribute_palette;
 		protected AbstractToolBar				tool_bar;
-		protected TextFieldUpDown				tool_tab_index;
 		protected int							tool_tab_index_value = 1;
 		protected bool							tool_tab_editor_active;
 		protected bool							tool_tab_picker_active;
