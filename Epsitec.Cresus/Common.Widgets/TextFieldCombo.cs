@@ -17,7 +17,7 @@ namespace Epsitec.Common.Widgets
 			this.button.GlyphShape = GlyphShape.ArrowDown;
 			this.button.ButtonStyle = ButtonStyle.Combo;
 			this.button.Pressed += new MessageEventHandler(this.HandleButtonPressed);
-
+			
 			this.margins.Right = this.button.Width;
 		}
 		
@@ -87,17 +87,26 @@ namespace Epsitec.Common.Widgets
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
-			
+			this.UpdateButtonGeometry();
+		}
+		
+		protected virtual void UpdateButtonGeometry()
+		{
 			if ( this.button != null )
 			{
-				IAdorner adorner = Widgets.Adorner.Factory.Active;
-				Drawing.Rectangle rect = new Drawing.Rectangle();
-				rect.Left   = this.Bounds.Width-this.margins.Right-adorner.GeometryComboRightMargin;
-				rect.Right  = this.Bounds.Width-adorner.GeometryComboRightMargin;
-				rect.Bottom = adorner.GeometryComboBottomMargin;
-				rect.Top    = this.Bounds.Height-adorner.GeometryComboTopMargin;
-				this.button.Bounds = rect;
+				this.button.Bounds = this.GetButtonBounds();
 			}
+		}
+		
+		protected virtual Drawing.Rectangle GetButtonBounds()
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			Drawing.Rectangle rect = new Drawing.Rectangle();
+			rect.Left   = this.Bounds.Width-this.margins.Right-adorner.GeometryComboRightMargin;
+			rect.Right  = this.Bounds.Width-adorner.GeometryComboRightMargin;
+			rect.Bottom = adorner.GeometryComboBottomMargin;
+			rect.Top    = this.Bounds.Height-adorner.GeometryComboTopMargin;
+			return rect;
 		}
 
 		protected override void OnAdornerChanged()
@@ -214,7 +223,29 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		private void OpenCombo()
+		
+		protected virtual void FillComboList(Helpers.StringCollection list)
+		{
+			for ( int i=0 ; i<this.items.Count ; i++ )
+			{
+				string name = this.items.GetName(i);
+				string text = this.items[i];
+				list.Add(name, text);
+			}
+		}
+		
+		protected virtual int MapComboListToIndex(int value)
+		{
+			return (value < 0) ? -1 : value;
+		}
+		
+		protected virtual int MapIndexToComboList(int value)
+		{
+			return (value < 0) ? -1 : value;
+		}
+		
+		
+		protected void OpenCombo()
 		{
 			if ( this.scrollList != null )
 			{
@@ -228,12 +259,7 @@ namespace Epsitec.Common.Widgets
 			this.scrollList.ScrollListStyle = ScrollListStyle.Menu;
 			this.scrollList.Bounds = new Drawing.Rectangle(0, 0, this.Width, 200);
 			
-			for ( int i=0 ; i<this.items.Count ; i++ )
-			{
-				string name = this.items.GetName(i);
-				string text = this.items[i];
-				this.scrollList.Items.Add(name, text);
-			}
+			this.FillComboList(this.scrollList.Items);
 			
 			Drawing.Point     pos  = this.MapClientToScreen(new Drawing.Point(0, 0));
 			ScreenInfo        info = ScreenInfo.Find(pos);
@@ -241,7 +267,7 @@ namespace Epsitec.Common.Widgets
 			double            hMax = pos.Y-area.Bottom;
 			
 			this.scrollList.AdjustHeightToContent(ScrollAdjustMode.MoveUp, 40, hMax);
-			this.scrollList.SelectedIndex = this.SelectedIndex;
+			this.scrollList.SelectedIndex = this.MapIndexToComboList(this.SelectedIndex);
 			this.scrollList.ShowSelected(ScrollShowMode.Center);
 			
 			this.comboWindow = new Window();
@@ -273,7 +299,7 @@ namespace Epsitec.Common.Widgets
 			this.openText = this.Text;
 		}
 		
-		private void CloseCombo()
+		protected void CloseCombo()
 		{
 			this.scrollList.SelectionActivated -= new Support.EventHandler(this.HandleScrollListSelectionActivated);
 			this.scrollList.SelectedIndexChanged -= new Support.EventHandler(this.HandleScrollerSelectedIndexChanged);
@@ -313,19 +339,39 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleScrollListSelectionActivated(object sender)
 		{
-			// Gestion d'un événement lorsque la scroll-liste est sélectionnée.
+			// L'utilisateur a cliqué dans la liste pour terminer son choix.
 			
-			int sel = this.scrollList.SelectedIndex;
+			this.ComboActivatedIndex(this.scrollList.SelectedIndex);
+		}
+		
+		private void HandleScrollerSelectedIndexChanged(object sender)
+		{
+			// L'utilisateur a simplement déplacé la souris dans la liste.
+			
+			this.ComboSelectedIndex(this.scrollList.SelectedIndex);
+		}
+		
+		
+		protected virtual void ComboActivatedIndex(int sel)
+		{
+			sel = this.MapComboListToIndex(sel);
+			
+			// Cette méthode n'est appelée que lorsque le contenu de la liste déroulée
+			// est validée par un clic de souris, au contraire de ComboSelectedIndex
+			// qui est appelée à chaque changement "visuel".
+			
 			if ( sel == -1 )  return;
+			
 			this.SelectedIndex = sel;
 			this.SetFocused(true);
 			this.CloseCombo();
 		}
 		
-		private void HandleScrollerSelectedIndexChanged(object sender)
+		protected virtual void ComboSelectedIndex(int sel)
 		{
-			this.SelectedIndex = this.scrollList.SelectedIndex;
+			this.SelectedIndex = this.MapComboListToIndex(sel);
 		}
+		
 
 		
 		#region IStringCollectionHost Members
@@ -362,8 +408,6 @@ namespace Epsitec.Common.Widgets
 				if ( this.Text != text )
 				{
 					this.Text = text;
-					this.OnTextChanged();
-					this.OnTextInserted();
 					this.OnSelectedIndexChanged();
 					this.Cursor = 0;
 					this.SelectAll();
@@ -382,7 +426,17 @@ namespace Epsitec.Common.Widgets
 			
 			set
 			{
-				this.SelectedIndex = this.Items.IndexOf(value);
+				int index = this.Items.IndexOf(value);
+				if ( index < 0 )
+				{
+					this.Text = value;
+					this.Cursor = 0;
+					this.SelectAll();
+				}
+				else
+				{
+					this.SelectedIndex = index;
+				}
 			}
 		}
 
