@@ -83,5 +83,24 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals ("\"ABC.XY\"", qualifier);
 			Assertion.AssertEquals ("Y12", name);
 		}
+		
+		[Test] public void CheckCreateSqlTableName()
+		{
+			string nam1 = "test-x";
+			string nam2 = "CR_TEST";
+			string std1 = DbSqlStandard.CreateSqlTableName (nam1, DbElementCat.UserDataManaged, new DbKey (123));
+			string std2 = DbSqlStandard.CreateSqlTableName (nam2, DbElementCat.Internal, null);
+			
+			Assertion.AssertEquals ("U_TEST_X_123", std1);
+			Assertion.AssertEquals ("CR_TEST",      std2);
+		}
+		
+		[Test] [ExpectedException (typeof (DbException))] public void CheckCreateSqlTableNameEx1()
+		{
+			string name = "test-x";
+			string std  = DbSqlStandard.CreateSqlTableName (name, DbElementCat.Internal, new DbKey (123));
+			
+			Assertion.AssertEquals ("U_TEST_X_123", std);
+		}
 	}
 }
