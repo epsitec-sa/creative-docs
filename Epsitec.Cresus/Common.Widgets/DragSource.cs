@@ -84,7 +84,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			pos = window.Root.MapScreenToClient (pos);
-			Widget hit    = window.Root;
+			Widget hit    = null;
 			Widget widget = window.Root;
 			Widget temp   = window.Root;
 			
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Widgets
 				pos    = widget.MapParentToClient (pos);
 				temp   = widget.FindChild (pos, Widget.ChildFindMode.SkipDisabled | Widget.ChildFindMode.SkipHidden);
 				
-				if (widget.PossibleContainer)
+				if (widget.PossibleContainer && !widget.IsEditionDisabled)
 				{
 					hit = widget;
 				}

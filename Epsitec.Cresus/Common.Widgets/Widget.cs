@@ -44,18 +44,18 @@ namespace Epsitec.Common.Widgets
 		None				= 0,
 		ChildrenChanged		= 0x00000001,
 		ChildrenDocked		= 0x00000002,		//	=> il y a des enfants avec Dock != None
-			
+		
 		Embedded			= 0x00000008,		//	=> widget appartient au parent (widgets composés)
-			
+		
 		Focusable			= 0x00000010,
 		Selectable			= 0x00000020,
 		Engageable			= 0x00000040,		//	=> peut être enfoncé par une pression
 		Frozen				= 0x00000080,		//	=> n'accepte aucun événement
 		Visible				= 0x00000100,
 		AcceptThreeState	= 0x00000200,
-			
+		
 		PreferXLayout		= 0x00000400,		//	=> en cas de DockStyle.Fill multiple, place le contenu horizontalement
-			
+		
 		AutoMinMax			= 0x00008000,		//	=> calcule automatiquement les tailles min et max
 		AutoCapture			= 0x00010000,
 		AutoFocus			= 0x00020000,
@@ -63,7 +63,9 @@ namespace Epsitec.Common.Widgets
 		AutoToggle			= 0x00080000,
 		AutoMnemonic		= 0x00100000,
 		AutoRepeatEngaged	= 0x00200000,
-			
+		
+		PossibleContainer	= 0x01000000,		//	widget peut être la cible d'un drag & drop en mode édition
+		
 		Command				= 0x40000000,		//	widget génère des commandes
 		DebugActive			= 0x80000000		//	widget marqué pour le debug
 	}
@@ -951,6 +953,11 @@ namespace Epsitec.Common.Widgets
 					this.internal_state &= ~InternalState.AcceptThreeState;
 				}
 			}
+		}
+		
+		public virtual bool					PossibleContainer
+		{
+			get { return ((this.internal_state & InternalState.PossibleContainer) != 0) && !this.IsFrozen; }
 		}
 		
 		
@@ -2187,7 +2194,7 @@ namespace Epsitec.Common.Widgets
 							continue;
 						}
 					}
-					else if ((mode & ChildFindMode.SkipHidden) != 0)
+					if ((mode & ChildFindMode.SkipHidden) != 0)
 					{
 						if (widget.IsVisible == false)
 						{

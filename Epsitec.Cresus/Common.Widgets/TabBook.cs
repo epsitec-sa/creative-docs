@@ -16,6 +16,8 @@ namespace Epsitec.Common.Widgets
 		{
 			this.type = TabBookStyle.Right;
 			this.items = new TabPageCollection(this);
+			
+			this.InternalState &= ~InternalState.PossibleContainer;
 
 			this.arrowLeft = new ArrowButton(this);
 			this.arrowRight = new ArrowButton(this);

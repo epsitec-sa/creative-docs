@@ -64,6 +64,8 @@ namespace Epsitec.Common.Widgets
 			source4.Parent = window.Root;
 			source4.Widget = textfld;
 			
+			window.Root.IsEditionDisabled = true;
+			
 			window.Text = "CheckDragSource";
 			window.Show ();
 		}

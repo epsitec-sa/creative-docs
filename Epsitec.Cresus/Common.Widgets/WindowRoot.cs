@@ -11,6 +11,8 @@ namespace Epsitec.Common.Widgets
 		{
 			this.window    = window;
 			this.BackColor = Drawing.Color.Empty;
+			
+			this.InternalState |= InternalState.PossibleContainer;
 		}
 		
 		public override bool			IsVisible
