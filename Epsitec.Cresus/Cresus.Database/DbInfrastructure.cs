@@ -180,35 +180,132 @@ namespace Epsitec.Cresus.Database
 			query.Tables.Add ("T_TYPE", SqlField.CreateName (DbTable.TagTypeDef));
 //			query.Tables.Add ("T_ENUM", SqlField.CreateName (DbTable.TagEnumValDef));
 			
-			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName ("T_TYPE", DbColumn.TagId), SqlField.CreateConstant (type_ref.Id, DbRawType.Int64)));
+			this.AddKeyExtraction (query, type_ref, "T_TYPE", DbKeyMatchMode.LiveId);
 			
 			this.sql_builder.SelectData (query);
 			
 			System.Data.DataSet   data_set;
 			System.Data.DataTable data_table;
+			System.Data.DataRow   data_row;
 			
 			this.ExecuteReturningData (out data_set);
 			
 			if (data_set.Tables.Count == 0)
 			{
-				//	La table n'existe pas (on n'a pas trouvé de description dans la base),
-				//	alors on retourne simplement null plutôt que de lever une exception.
+				//	Aucune information n'existe pour ce type ! C'est une erreur fatale,
+				//	car on avait une référence valide.
 				
 				return null;
 			}
 			
 			System.Diagnostics.Debug.Assert (data_set.Tables.Count == 1);
+			System.Diagnostics.Debug.Assert (data_set.Tables[0].Rows.Count == 1);
 			
 			data_table = data_set.Tables[0];
+			data_row   = data_table.Rows[0];
 			
 			if (this.debug_display_data_set != null)
 			{
 				this.debug_display_data_set (this, "CR_TYPE_DEF("+type_ref.Id.ToString ()+")", data_table);
 			}
 			
-			return null;
+			//	A partir de l'information trouvée dans la base, génère l'objet DbType
+			//	adéquat.
+			
+			string type_name = data_row["T_NAME"] as string;
+			string type_info = data_row["T_INFO"] as string;
+			
+			DbType type = DbTypeFactory.NewType (type_info);
+			
+			type.DefineName (type_name);
+			type.DefineInternalKey (type_ref);
+			
+			if (type is DbTypeEnum)
+			{
+				this.PopulateEnumValues (type as DbTypeEnum);
+			}
+			
+			data_set.Dispose ();
+			
+			return type;
 		}
 		
+		protected void PopulateEnumValues(DbTypeEnum type_enum)
+		{
+			SqlSelect query = new SqlSelect ();
+			
+			query.Fields.Add ("E_ID",   SqlField.CreateName ("T_ENUM", DbColumn.TagId));
+			query.Fields.Add ("E_NAME", SqlField.CreateName ("T_ENUM", DbColumn.TagName));
+			query.Fields.Add ("E_CAPT", SqlField.CreateName ("T_ENUM", DbColumn.TagCaption));
+			query.Fields.Add ("E_DESC", SqlField.CreateName ("T_ENUM", DbColumn.TagDescription));
+			
+			query.Tables.Add ("T_ENUM", SqlField.CreateName (DbTable.TagEnumValDef));
+			
+			this.AddKeyExtraction (query, "T_ENUM", DbColumn.TagRefType, type_enum.InternalKey);
+			
+			this.sql_builder.SelectData (query);
+			
+			System.Data.DataSet data_set;
+			
+			this.ExecuteReturningData (out data_set);
+			
+			if (data_set.Tables.Count == 0)
+			{
+				//	Aucune information n'existe pour ce type ! C'est une erreur fatale,
+				//	car on avait une référence valide.
+				
+				throw new System.ArgumentException (string.Format ("Type {0} has no DbEnumValues defined.", type_enum.Name));
+			}
+			
+			System.Diagnostics.Debug.Assert (data_set.Tables.Count == 1);
+			
+			foreach (System.Data.DataRow data_row in data_set.Tables[0].Rows)
+			{
+				System.Console.Out.WriteLine (string.Format ("Enum {0} : {1}, {2}", type_enum.Name, data_row["E_NAME"], data_row["E_CAPT"]));
+			}
+			
+			data_set.Dispose ();
+		}
+		
+		protected void AddKeyExtraction(SqlSelect query, DbKey key, string target_table_name, DbKeyMatchMode mode)
+		{
+			SqlField name_col_id = SqlField.CreateName (target_table_name, DbColumn.TagId);
+			SqlField constant_id = SqlField.CreateConstant (key.Id, DbRawType.Int64);
+			
+			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, name_col_id, constant_id));
+			
+			int revision = 0;
+			
+			if (mode == DbKeyMatchMode.ExactRevisionId)
+			{
+				revision = key.Revision;
+			}
+			
+			if ((mode == DbKeyMatchMode.LiveId) ||
+				(mode == DbKeyMatchMode.ExactRevisionId))
+			{
+				SqlField name_col_rev = SqlField.CreateName (target_table_name, DbColumn.TagRevision);
+				SqlField constant_rev = SqlField.CreateConstant (revision, DbRawType.Int32);
+			
+				query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, name_col_rev, constant_rev));
+			}
+		}
+		
+		protected void AddKeyExtraction(SqlSelect query, string source_table_name, string source_col_id, string target_table_name)
+		{
+			SqlField target_col = SqlField.CreateName (target_table_name, DbColumn.TagId);
+			SqlField source_col = SqlField.CreateName (source_table_name, source_col_id);
+			
+			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, source_col, target_col));
+		}
+		
+		protected void AddKeyExtraction(SqlSelect query, string source_table_name, string source_col_id, DbKey key)
+		{
+			SqlField source_col  = SqlField.CreateName (source_table_name, source_col_id);
+			SqlField constant_id = SqlField.CreateConstant (key.Id, DbRawType.Int64);
+			
+			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, source_col, constant_id));
+		}
 		
 		public CallbackDebugDisplayDataSet DebugDisplayDataSet
 		{

@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Database
 			infrastructure.DebugDisplayDataSet = new CallbackDebugDisplayDataSet (this.DebugDisplay);
 			
 			DbTable db_table = infrastructure.ReadDbTableMeta ("CR_TABLE_DEF");
+			DbType  db_type  = infrastructure.ResolveType (new DbKey (8));
 			
 			infrastructure.Dispose ();
 		}

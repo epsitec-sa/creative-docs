@@ -109,10 +109,6 @@
                 />
                 <File
                     RelPath = "DataChangeEvent.cs"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DataCopier.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -19,44 +19,6 @@ namespace Epsitec.Common.Support
 			Assertion.AssertNull (binder);
 		}
 		
-		[Test] public void CheckSplit()
-		{
-			string[] args;
-			
-			args = DataBinder.Split ("a;b;c", ';');
-			
-			Assertion.AssertEquals (3, args.Length);
-			Assertion.AssertEquals ("a", args[0]);
-			Assertion.AssertEquals ("b", args[1]);
-			Assertion.AssertEquals ("c", args[2]);
-			
-			args = DataBinder.Split ("'a;b';c", ';');
-			
-			Assertion.AssertEquals (2, args.Length);
-			Assertion.AssertEquals ("'a;b'", args[0]);
-			Assertion.AssertEquals ("c", args[1]);
-			
-			args = DataBinder.Split ("'a;\"b';\"c\"", ';');
-			
-			Assertion.AssertEquals (2, args.Length);
-			Assertion.AssertEquals ("'a;\"b'", args[0]);
-			Assertion.AssertEquals ("\"c\"", args[1]);
-			
-			args = DataBinder.Split ("a;<b;c>;d", ';');
-			
-			Assertion.AssertEquals (3, args.Length);
-			Assertion.AssertEquals ("a", args[0]);
-			Assertion.AssertEquals ("<b;c>", args[1]);
-			Assertion.AssertEquals ("d", args[2]);
-			
-			args = DataBinder.Split ("a;<x arg='1;2'/>;d", ';');
-			
-			Assertion.AssertEquals (3, args.Length);
-			Assertion.AssertEquals ("a", args[0]);
-			Assertion.AssertEquals ("<x arg='1;2'/>", args[1]);
-			Assertion.AssertEquals ("d", args[2]);
-		}
-		
 		[Test] public void CheckBinderWithSimpleWindow()
 		{
 			System.Data.DataSet data_set = new System.Data.DataSet ("test");

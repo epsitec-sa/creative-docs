@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.UserInterface
 				
 				if (binding != null)
 				{
-					string[] bind_args = DataBinder.Split (binding, ';');
+					string[] bind_args = System.Utilities.Split (binding, ';');
 					
 					for (int i = 0; i < bind_args.Length; i++)
 					{
@@ -249,93 +249,6 @@ namespace Epsitec.Cresus.UserInterface
 			}
 		}
 		
-		private enum SplitState
-		{
-			Normal, DoubleQuote, SingleQuote
-		}
-		
-		
-		public static string[] Split(string text, char sep)
-		{
-			if (text.IndexOf (sep) < 0)
-			{
-				//	Optimisation pour le cas le plus fréquent : il n'y a qu'un seul élément
-				//	et aucun séparateur.
-				
-				return new string[1] { text };
-			}
-			
-			const int max = 50;
-			int[] sep_pos = new int[max];
-			int arg_count = 1;
-			
-			SplitState state  = SplitState.Normal;
-			int        depth  = 0;
-			bool       escape = false;
-			
-			for (int i = 0; i < text.Length; i++)
-			{
-				char c = text[i];
-				
-				if (escape)
-				{
-					escape = false;
-					continue;
-				}
-				
-				switch (state)
-				{
-					case SplitState.Normal:
-						switch (c)
-						{
-							case '\"':	state = SplitState.DoubleQuote; break;
-							case '\'':	state = SplitState.SingleQuote; break;
-							case '<':	depth++;						break;
-							case '>':	depth--;						break;
-							case '\\':	escape = true;					break;
-							
-							default:
-								if ((depth == 0) && (c == sep))
-								{
-									sep_pos[arg_count] = i;
-									arg_count++;
-									if (arg_count >= max-1)
-									{
-										throw new System.ArgumentException (string.Format ("Text too complex to split: {0}.", text));
-									}
-								}
-								break;
-						}
-						break;
-					
-					case SplitState.SingleQuote:
-						if (c == '\'')
-						{
-							state = SplitState.Normal;
-						}
-						break;
-					
-					case SplitState.DoubleQuote:
-						if (c == '\"')
-						{
-							state = SplitState.Normal;
-						}
-						break;
-				}
-			}
-			
-			sep_pos[0]         = -1;
-			sep_pos[arg_count] = text.Length;
-			
-			string[] args = new string[arg_count];
-			
-			for (int i = 0; i < arg_count; i++)
-			{
-				args[i] = text.Substring (sep_pos[i]+1, sep_pos[i+1]-sep_pos[i]-1);
-			}
-			
-			return args;
-		}
 		
 		
 		protected ObjectBundler					object_bundler;

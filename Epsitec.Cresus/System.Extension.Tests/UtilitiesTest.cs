@@ -88,5 +88,45 @@ namespace System.Tests
 				#endregion
 			}
 		}
+		
+		
+		[Test] public void CheckSplit()
+		{
+			string[] args;
+			
+			args = Utilities.Split ("a;b;c", ';');
+			
+			Assertion.AssertEquals (3, args.Length);
+			Assertion.AssertEquals ("a", args[0]);
+			Assertion.AssertEquals ("b", args[1]);
+			Assertion.AssertEquals ("c", args[2]);
+			
+			args = Utilities.Split ("'a;b';c", ';');
+			
+			Assertion.AssertEquals (2, args.Length);
+			Assertion.AssertEquals ("'a;b'", args[0]);
+			Assertion.AssertEquals ("c", args[1]);
+			
+			args = Utilities.Split ("'a;\"b';\"c\"", ';');
+			
+			Assertion.AssertEquals (2, args.Length);
+			Assertion.AssertEquals ("'a;\"b'", args[0]);
+			Assertion.AssertEquals ("\"c\"", args[1]);
+			
+			args = Utilities.Split ("a;<b;c>;d", ';');
+			
+			Assertion.AssertEquals (3, args.Length);
+			Assertion.AssertEquals ("a", args[0]);
+			Assertion.AssertEquals ("<b;c>", args[1]);
+			Assertion.AssertEquals ("d", args[2]);
+			
+			args = Utilities.Split ("a;<x arg='1;2'/>;d", ';');
+			
+			Assertion.AssertEquals (3, args.Length);
+			Assertion.AssertEquals ("a", args[0]);
+			Assertion.AssertEquals ("<x arg='1;2'/>", args[1]);
+			Assertion.AssertEquals ("d", args[2]);
+		}
+		
 	}
 }

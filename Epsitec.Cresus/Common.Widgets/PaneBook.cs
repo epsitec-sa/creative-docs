@@ -577,7 +577,7 @@ namespace Epsitec.Common.Widgets
 				double future = size*this.totalRelativeSize/this.windowSize;
 				if ( future > current )
 				{
-					int i=123;
+//					int i=123;
 				}
 			}
 			page.PaneRelativeSize = size*this.totalRelativeSize/this.windowSize;
