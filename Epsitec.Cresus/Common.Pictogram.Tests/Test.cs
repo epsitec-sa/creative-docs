@@ -193,6 +193,7 @@ namespace Epsitec.Common.Pictogram
 			editor.Bounds = rect;
 			editor.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			window.Root.Children.Add(editor);
+			window.CommandDispatcher = editor.CommandDispatcher;
 
 			rect.Left   = 0;
 			rect.Width  = window.ClientSize.Width;

@@ -872,7 +872,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 
 			this.contextMenu = new VMenu();
-			this.contextMenu.AppWindow = this.Window;
+			this.contextMenu.Host = this;
 			
 			foreach ( ContextMenuItem cmi in list )
 			{
@@ -1825,7 +1825,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 				rect.Inflate(-0.5, -0.5);
 				graphics.AddRectangle(rect);
-				graphics.RenderSolid(this.colorBlack);
+				graphics.RenderSolid(adorner.ColorBorder);
 			}
 		}
 

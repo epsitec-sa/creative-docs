@@ -1,5 +1,6 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Dialogs;
+using Epsitec.Common.Support;
 using Epsitec.Common.Pictogram.Data;
 
 namespace Epsitec.Common.Pictogram.Widgets
@@ -49,6 +50,23 @@ namespace Epsitec.Common.Pictogram.Widgets
 			
 			base.Dispose(disposing);
 		}
+		
+		public override CommandDispatcher CommandDispatcher
+		{
+			get
+			{
+				if (this.commandDispatcher == null)
+				{
+					//	On se crée notre propre dispatcher, pour éviter de marcher sur les
+					//	autres commandes...
+					
+					this.commandDispatcher = new Support.CommandDispatcher ("IconEditor");
+				}
+				
+				return this.commandDispatcher;
+			}
+		}
+
 
 
 		protected void CreateLayout()
@@ -57,7 +75,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.toolTip.Behaviour = ToolTipBehaviour.Normal;
 
 			this.menu = new HMenu();
-			this.menu.AppWindow = this.Window;
+			this.menu.Host = this;
 			this.menu.Items.Add(new MenuItem("", "Fichier"));
 			this.menu.Items.Add(new MenuItem("", "Edition"));
 			this.menu.Items.Add(new MenuItem("", "Objets"));
@@ -65,7 +83,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.menu.Items.Add(new MenuItem("", "Aide"));
 
 			VMenu fileMenu = new VMenu();
-			fileMenu.AppWindow = this.Window;
+			fileMenu.Name = "file";
+			fileMenu.Host = this;
 			this.MenuAdd(fileMenu, @"file:images/new1.icon", "New", "Nouveau", "Ctrl+N");
 			this.MenuAdd(fileMenu, @"file:images/open1.icon", "Open", "Ouvrir...", "Ctrl+O");
 			this.MenuAdd(fileMenu, @"file:images/save1.icon", "Save", "Enregistrer sous...", "Ctrl+S");
@@ -76,7 +95,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.collector.Add(fileMenu);
 
 			VMenu editMenu = new VMenu();
-			editMenu.AppWindow = this.Window;
+			editMenu.Name = "edit";
+			editMenu.Host = this;
 			this.MenuAdd(editMenu, @"file:images/undo1.icon", "Undo", "Annuler", "Ctrl+Z");
 			this.MenuAdd(editMenu, @"file:images/redo1.icon", "Redo", "Refaire", "Ctrl+Y");
 			this.MenuAdd(editMenu, @"", "", "", "");
@@ -91,7 +111,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.collector.Add(editMenu);
 
 			VMenu objMenu = new VMenu();
-			objMenu.AppWindow = this.Window;
+			objMenu.Name = "obj";
+			objMenu.Host = this;
 			this.MenuAdd(objMenu, @"file:images/deselect1.icon", "Deselect", "Deselectionner tout", "");
 			this.MenuAdd(objMenu, @"file:images/selectall1.icon", "SelectAll", "Tout selectionner", "");
 			this.MenuAdd(objMenu, @"file:images/selectinvert1.icon", "SelectInvert", "Inverser la selection", "");
@@ -105,7 +126,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.collector.Add(objMenu);
 
 			VMenu groupMenu = new VMenu();
-			groupMenu.AppWindow = this.Window;
+			groupMenu.Name = "group";
+			groupMenu.Host = this;
 			this.MenuAdd(groupMenu, @"file:images/merge1.icon", "Merge", "Fusionner", "");
 			this.MenuAdd(groupMenu, @"file:images/group1.icon", "Group", "Associer", "");
 			this.MenuAdd(groupMenu, @"file:images/ungroup1.icon", "Ungroup", "Dissocier", "");
@@ -117,7 +139,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.collector.Add(groupMenu);
 
 			VMenu showMenu = new VMenu();
-			showMenu.AppWindow = this.Window;
+			showMenu.Name = "show";
+			showMenu.Host = this;
 			this.MenuAdd(showMenu, @"file:images/grid1.icon", "Grid", "Grille magnetique", "");
 			this.MenuAdd(showMenu, @"file:images/mode1.icon", "Mode", "Tableau des objets", "");
 			this.MenuAdd(showMenu, @"", "", "", "");
@@ -129,7 +152,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.collector.Add(showMenu);
 
 			VMenu zoomMenu = new VMenu();
-			zoomMenu.AppWindow = this.Window;
+			zoomMenu.Name = "zoom";
+			zoomMenu.Host = this;
 			this.MenuAdd(zoomMenu, @"file:images/zoommin1.icon", "ZoomMin", "Zoom minimal", "");
 			this.MenuAdd(zoomMenu, @"file:images/zoomdefault1.icon", "ZoomDefault", "Zoom 100%", "");
 			this.MenuAdd(zoomMenu, @"file:images/zoomsel1.icon", "ZoomSel", "Zoom selection", "");
@@ -142,7 +166,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.collector.Add(zoomMenu);
 
 			VMenu lookMenu = new VMenu();
-			lookMenu.AppWindow = this.Window;
+			lookMenu.Name = "look";
+			lookMenu.Host = this;
 			string[] list = Epsitec.Common.Widgets.Adorner.Factory.AdornerNames;
 			foreach ( string name in list )
 			{
@@ -153,7 +178,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.collector.Add(lookMenu);
 
 			VMenu helpMenu = new VMenu();
-			helpMenu.AppWindow = this.Window;
+			helpMenu.Name = "help";
+			helpMenu.Host = this;
 			helpMenu.Items.Add(new MenuItem("help", "", "Aide", "F1"));
 			helpMenu.Items.Add(new MenuItem("ctxhelp", "", "Aide contextuelle", ""));
 			helpMenu.Items.Add(new MenuItem("about", "", "A propos de...", ""));
@@ -360,8 +386,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 				MenuItem item = new MenuItem(name, icon, text, shortcut);
 				if ( iconNo  != "" )  item.IconNameActiveNo  = iconNo;
 				if ( iconYes != "" )  item.IconNameActiveYes = iconYes;
-				item.Pressed += new MessageEventHandler(this.ToolBarClicked);
 				vmenu.Items.Add(item);
+
+				CommandDispatcher disp = this.CommandDispatcher;
+				disp.Register("*."+name, new CommandEventHandler(this.HandleCommand));
 			}
 		}
 
@@ -376,13 +404,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			else
 			{
-				IconButton button = new IconButton(icon);
+				IconButton button = new IconButton(name, icon);
 				this.hToolBar.Items.Add(button);
 				this.toolTip.SetToolTip(button, tooltip);
 
-				int i = this.hToolBar.Children.Count-1;
-				this.hToolBar.Items[i].Name = name;
-				this.hToolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClicked);
+				CommandDispatcher disp = this.CommandDispatcher;
+				disp.Register("*."+name, new CommandEventHandler(this.HandleCommand));
 			}
 		}
 
@@ -397,13 +424,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			else
 			{
-				IconButton button = new IconButton(icon);
+				IconButton button = new IconButton(name, icon);
 				this.vToolBar.Items.Add(button);
 				this.toolTip.SetToolTip(button, tooltip);
 
-				int i = this.vToolBar.Children.Count-1;
-				this.vToolBar.Items[i].Name = name;
-				this.vToolBar.Items[i].Clicked += new MessageEventHandler(this.ToolBarClicked);
+				CommandDispatcher disp = this.CommandDispatcher;
+				disp.Register("*."+name, new CommandEventHandler(this.HandleCommand));
 			}
 		}
 
@@ -421,15 +447,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			else
 			{
-				IconButton button = new IconButton(icon);
+				IconButton button = new IconButton(name, icon);
 				double h = this.info.DefaultHeight-3;
 				button.Size = new Drawing.Size(h, h);
 				this.info.Items.Add(button);
 				this.toolTip.SetToolTip(button, tooltip);
 
-				int i = this.info.Children.Count-1;
-				this.info.Items[i].Name = name;
-				this.info.Items[i].Clicked += new MessageEventHandler(this.ToolBarClicked);
+				CommandDispatcher disp = this.CommandDispatcher;
+				disp.Register("*."+name, new CommandEventHandler(this.HandleCommand));
 			}
 		}
 
@@ -714,19 +739,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 
 		// Bouton de la toolbar cliqué.
-		private void ToolBarClicked(object sender, MessageEventArgs e)
+		//?private void ToolBarClicked(object sender, MessageEventArgs e)
+		private void HandleCommand(CommandDispatcher sender, CommandEventArgs e)
 		{
-			string cmd = "";
-			if ( sender is IconButton )
-			{
-				IconButton button = sender as IconButton;
-				cmd = button.Name;
-			}
-			if ( sender is MenuItem )
-			{
-				MenuItem item = sender as MenuItem;
-				cmd = item.Name;
-			}
+			string   fullCmd   = e.Name;
+			string[] splitCmd  = fullCmd.Split ('.');
+			int      elemCount = splitCmd.Length;
+			
+			string cmd = splitCmd[elemCount-1];
 
 			if ( cmd == "Select"          ||
 				 cmd == "Zoom"            ||
@@ -829,9 +849,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.UpdateToolBar();
 			}
 
-			if ( cmd.StartsWith("Look.") )
+			if ( cmd.StartsWith("Look") )
 			{
-				Epsitec.Common.Widgets.Adorner.Factory.SetActive(cmd.Substring(5));
+				Epsitec.Common.Widgets.Adorner.Factory.SetActive(cmd);
 				this.UpdateToolBar();
 			}
 
@@ -998,5 +1018,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected double						leftHeightUsed = 0;
 		protected string						filename = "";
 		protected System.Collections.ArrayList	collector = new System.Collections.ArrayList();
+		private Support.CommandDispatcher		commandDispatcher;
 	}
 }

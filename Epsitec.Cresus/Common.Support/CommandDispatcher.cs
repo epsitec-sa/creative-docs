@@ -60,6 +60,10 @@ namespace Epsitec.Common.Support
 		
 		public void SynchroniseCommandStates()
 		{
+			//	Passe en revue tous les CommandStates connus et resynchronise ceux-ci. Afin d'éviter
+			//	des surprises en cas de modifications en cours de synchronisation, on copie la liste
+			//	dans une table temporaire :
+			
 			CommandState[] states = new CommandState[this.command_states.Count];
 			this.command_states.CopyTo (states);
 			
