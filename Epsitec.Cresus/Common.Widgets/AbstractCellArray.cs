@@ -1299,7 +1299,8 @@ namespace Epsitec.Common.Widgets
 					totalHeight += this.RetHeightRow(i);
 				}
 
-				if ( totalHeight <= areaHeight )
+				if ((totalHeight <= areaHeight) ||
+					(totalHeight <= 0))
 				{
 					this.scrollerV.SetEnabled(false);
 					this.scrollerV.Range = 1;
@@ -1328,7 +1329,8 @@ namespace Epsitec.Common.Widgets
 					totalWidth += this.RetWidthColumn(i);
 				}
 
-				if ( totalWidth <= areaWidth )
+				if ((totalWidth <= areaWidth) ||
+					(totalWidth <= 0))
 				{
 					this.scrollerH.SetEnabled(false);
 					this.scrollerH.Range = 1;
