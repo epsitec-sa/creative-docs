@@ -68,6 +68,8 @@ namespace Epsitec.Common.Widgets.Helpers
 				bounds = Drawing.Rectangle.Union (bounds, widget.Bounds);
 			}
 			
+			System.Diagnostics.Debug.WriteLine("UpdateStructure: " + bounds.ToString ());
+			
 			//	TODO: gérer les transformation de coordonnées client
 			//	TODO: gérer la marge du cadre du panel (FrameMargin)
 			
@@ -127,8 +129,6 @@ namespace Epsitec.Common.Widgets.Helpers
 					case AnchorStyles.Top:		offset.Y = y_change;	break;
 				}
 			}
-			
-			System.Diagnostics.Debug.WriteLine ("Offset: " + offset.ToString () + ", panel bounds: " + this.panel.Bounds.ToString ());
 			
 			if ((offset.X != 0) ||
 				(offset.Y != 0))
