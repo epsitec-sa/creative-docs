@@ -72,6 +72,6 @@ namespace Epsitec.Cresus.Remoting
 		private string							name;
 		private int								client_id;
 		
-//		private static int						default_client_id;
+		private static int						default_client_id;
 	}
 }

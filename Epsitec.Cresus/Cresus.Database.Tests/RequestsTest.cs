@@ -411,7 +411,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 		
-		[Test] [Ignore ("Temporary")] public void Check11ServiceServer()
+		[Test] /*[Ignore ("Temporary")]*/ public void Check11ServiceServer()
 		{
 			DbInfrastructure      infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			Requests.Orchestrator orchestrator   = new Requests.Orchestrator (infrastructure);
@@ -430,7 +430,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		[Test] [Ignore ("Temporary")] public void Check12ConnectionClient()
+		[Test] /*[Ignore ("Temporary")]*/ public void Check12ConnectionClient()
 		{
 			Remoting.IConnectionService service = Services.Engine.GetRemoteConnectionService ("localhost", 1234);
 			
@@ -438,7 +438,7 @@ namespace Epsitec.Cresus.Database
 			
 			string[] service_names;
 			
-			//Remoting.ClientIdentity.DefineDefaultClientId (1);
+			Remoting.ClientIdentity.DefineDefaultClientId (1);
 			
 			service.CheckConnectivity (new Remoting.ClientIdentity ("NUnit Test Client"));
 			service.QueryAvailableServices (new Remoting.ClientIdentity ("NUnit Test Client"), out service_names);
@@ -450,12 +450,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] [Ignore ("Temporary")] public void Check13RequestExecutionClient()
+		[Test] /*[Ignore ("Temporary")]*/ public void Check13RequestExecutionClient()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			System.Data.DataTable table = RequestsTest.GetDataTableFromTable (infrastructure, "ServiceTest");
 			
-			//Remoting.ClientIdentity.DefineDefaultClientId (1);
+			Remoting.ClientIdentity.DefineDefaultClientId (1);
 			
 			Remoting.IRequestExecutionService service = Services.Engine.GetRemoteRequestExecutionService ("localhost", 1234);
 			
