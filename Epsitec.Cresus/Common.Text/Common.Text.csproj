@@ -70,16 +70,6 @@
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.dll"
                 />
                 <Reference
-                    Name = "System.Data"
-                    AssemblyName = "System.Data"
-                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Data.dll"
-                />
-                <Reference
-                    Name = "System.XML"
-                    AssemblyName = "System.Xml"
-                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
-                />
-                <Reference
                     Name = "Common.Debug"
                     Project = "{AF58270B-4B5C-49F7-81D8-723CFF122F2C}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
@@ -98,6 +88,11 @@
                     Name = "Common.Support"
                     AssemblyName = "Common.Support"
                     HintPath = "..\..\..\..\..\Epsitec.Cresus\Common.Support\bin\Debug\Common.Support.dll"
+                />
+                <Reference
+                    Name = "Common.OpenType"
+                    Project = "{7703436A-1D8D-46AA-BB44-699AE5EAAA2F}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>

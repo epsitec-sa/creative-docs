@@ -253,7 +253,12 @@ namespace Epsitec.Common.Text.Internal
 			Debug.Assert.IsTrue (style.StyleIndex == 0);
 			Debug.Assert.IsTrue (style.CountUsers == 0);
 			
-			for (int i = 0; i < styles.Count; i++)
+			if (this.styles == null)
+			{
+				this.styles = new System.Collections.ArrayList ();
+			}
+			
+			for (int i = 0; i < this.styles.Count; i++)
 			{
 				if (this.styles[i] == null)
 				{

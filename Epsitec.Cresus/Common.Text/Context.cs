@@ -18,6 +18,11 @@ namespace Epsitec.Common.Text
 			this.char_marker.Add (Context.Markers.TagRequiresSpellChecking);
 			
 			this.markers = new Context.Markers (this.char_marker);
+			 
+			this.font_collection = new OpenType.FontCollection ();
+			this.font_collection.Initialize ();
+			
+			this.font_cache = new System.Collections.Hashtable ();
 		}
 		
 		
@@ -42,6 +47,32 @@ namespace Epsitec.Common.Text
 			get
 			{
 				return this.markers;
+			}
+		}
+		
+		
+		public void GetFont(ulong code, out OpenType.Font font, out double font_size)
+		{
+			Styles.SimpleStyle style = this.style_list[code];
+			
+			Styles.LocalSettings local_settings = style.GetLocalSettings (code);
+			Styles.ExtraSettings extra_settings = style.GetExtraSettings (code);
+			
+			Properties.FontProperty     font_p      = style[Properties.WellKnownType.Font] as Properties.FontProperty;
+			Properties.FontSizeProperty font_size_p = style[Properties.WellKnownType.FontSize] as Properties.FontSizeProperty;
+			
+			string font_face  = font_p.FaceName;
+			string font_style = font_p.StyleName;
+			string font_full  = string.Concat (font_face, "/", font_style);
+			
+			font_size  = font_size_p.PointSize;
+			
+			font = this.font_cache[font_full] as OpenType.Font;
+			
+			if (font == null)
+			{
+				font = this.font_collection.CreateFont (font_face, font_style);
+				this.font_cache[font_full] = font;
 			}
 		}
 		
@@ -84,5 +115,7 @@ namespace Epsitec.Common.Text
 		private StyleList						style_list;
 		private Internal.CharMarker				char_marker;
 		private Markers							markers;
+		private OpenType.FontCollection			font_collection;
+		private System.Collections.Hashtable	font_cache;
 	}
 }

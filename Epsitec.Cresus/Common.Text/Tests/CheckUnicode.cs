@@ -26,6 +26,13 @@ namespace Epsitec.Common.Text.Tests
 			CheckUnicode.CheckText (analyzer, "AB  \r  \nC",	@"AB  \r#  \n#C");
 			CheckUnicode.CheckText (analyzer, "AB  \n\r  \nC",	@"AB  \n#\r#  \n#C");
 			CheckUnicode.CheckText (analyzer, "AB  \r\n  \nC",	@"AB  \r\n#  \n#C");
+			CheckUnicode.CheckText (analyzer, "readme.txt",		@"readme.*txt");
+			CheckUnicode.CheckText (analyzer, "100.000",		@"100.000");
+			CheckUnicode.CheckText (analyzer, "100,000",		@"100,000");
+			CheckUnicode.CheckText (analyzer, "100'000",		@"100'000");
+			CheckUnicode.CheckText (analyzer, "100/000",		@"100/000");
+			
+			CheckUnicode.CheckText (analyzer, "abc \u2014 x \u2014 def", "abc *\u2014 x *\u2014 def");
 		}
 		
 		

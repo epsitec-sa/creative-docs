@@ -223,19 +223,19 @@ namespace Epsitec.Common.Text.Internal
 		public static void SetStyleIndex(ref ulong code, int value)
 		{
 			code &= 0xFFFC0000FFFFFFFFul;
-			code |= (uint) (value & 0x0003FFFF) << 32;
+			code |= (ulong) (value & 0x0003FFFF) << 32;
 		}
 		
 		public static void SetLocalIndex(ref ulong code, int value)
 		{
 			code &= 0xFE03FFFFFFFFFFFFul;
-			code |= (uint) (value & 0x0000007F) << 50;
+			code |= (ulong) (value & 0x0000007F) << 50;
 		}
 		
 		public static void SetExtraIndex(ref ulong code, int value)
 		{
 			code &= 0x01FFFFFFFFFFFFFFul;
-			code |= (uint) (value & 0x0000007F) << 57;
+			code |= (ulong) (value & 0x0000007F) << 57;
 		}
 		
 		

@@ -52,6 +52,19 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public double							PointSize
+		{
+			get
+			{
+				if (this.units == FontSizeUnits.Points)
+				{
+					return this.size;
+				}
+				
+				throw new System.InvalidOperationException ();
+			}
+		}
+		
 		public FontSizeUnits					Units
 		{
 			get

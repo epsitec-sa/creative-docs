@@ -10,11 +10,36 @@ namespace Epsitec.Common.Text.Tests
 	{
 		public static void RunTests()
 		{
+			CheckTextStory.TestStyles ();
 			CheckTextStory.TestInsertUndoRedo ();
 			CheckTextStory.TestDeleteUndoRedo ();
 			CheckTextStory.TestBreaks ();
 		}
 
+		
+		private static void TestStyles()
+		{
+			TextStory story = new TextStory ();
+			
+			ulong[] text;
+			System.Collections.ArrayList properties = new System.Collections.ArrayList ();
+			
+			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
+			properties.Add (new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points));
+			
+			story.ConvertToStyledText ("Affiche", properties, out text);
+			
+			Debug.Assert.IsTrue (text.Length == 7);
+			
+			OpenType.Font font;
+			double font_size;
+			
+			story.Context.GetFont (text[0], out font, out font_size);
+			
+			Debug.Assert.IsTrue (font.FontIdentity.InvariantFaceName == "Arial");
+			Debug.Assert.IsTrue (font.FontIdentity.InvariantStyleName == "Regular");
+			Debug.Assert.IsTrue (font_size == 12.0);
+		}
 		
 		private static void TestInsertUndoRedo()
 		{

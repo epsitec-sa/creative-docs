@@ -27,6 +27,14 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		internal Styles.SimpleStyle				this[ulong code]
+		{
+			get
+			{
+				return this.internal_styles.GetStyle (code);
+			}
+		}
+		
 		
 		public TextStyle NewTextStyle(string name)
 		{

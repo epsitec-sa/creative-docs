@@ -277,7 +277,7 @@ namespace Epsitec.Common.Text
 				foreach (TextStyle style in text_styles)
 				{
 					//	Passe en revue toutes les propriétés définies par le style
-					//	en cours d'analyse et ajoute celles-ci séquentillement dans
+					//	en cours d'analyse et ajoute celles-ci séquentiellement dans
 					//	la liste des propriétés :
 					
 					int n = style.CountProperties;
