@@ -6,18 +6,10 @@ namespace Epsitec.Common.Designer.Dialogs
 	/// <summary>
 	/// Summary description for BundleName.
 	/// </summary>
-	public class BundleName : AbstractOkCancel
+	public class BundleName : Epsitec.Common.Dialogs.AbstractOkCancel
 	{
-		public BundleName(string command_template, CommandDispatcher command_dispatcher) : base (command_template, command_dispatcher)
+		public BundleName(string command_template, CommandDispatcher command_dispatcher) : base ("Nom de la ressource", command_template, command_dispatcher)
 		{
-		}
-		
-		public override string[]				CommandArgs
-		{
-			get
-			{
-				return new string[1] { this.text.Text };
-			}
 		}
 		
 		
@@ -37,6 +29,8 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.text.Bounds = new Drawing.Rectangle (label.Right + 8, label.Bottom - 1, body.Width - label.Right - 8, label.Height);
 			this.text.TabIndex = 1;
 			this.text.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			this.AddValueWidget ("name", this.text);
 			
 			return body;
 		}
