@@ -84,12 +84,20 @@ namespace Epsitec.Cresus.Database
 		
 		public CallbackDisplayDataSet	DisplayDataSet
 		{
+			get { return this.display_data_set; }
 			set { this.display_data_set = value; }
 		}
 		
 		
 		public void ExecuteSilent()
 		{
+			int count = this.sql_builder.CommandCount;
+			
+			if (count < 1)
+			{
+				return;
+			}
+			
 			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
 			{
 				using (System.Data.IDbCommand command = this.sql_builder.Command)
@@ -99,7 +107,7 @@ namespace Epsitec.Cresus.Database
 					try
 					{
 						System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
-						this.sql_engine.Execute (command, DbCommandType.Silent);
+						this.sql_engine.Execute (command, DbCommandType.Silent, count);
 					}
 					catch
 					{
@@ -116,6 +124,13 @@ namespace Epsitec.Cresus.Database
 		
 		public object ExecuteScalar(System.Data.IDbTransaction transaction)
 		{
+			int count = this.sql_builder.CommandCount;
+			
+			if (count < 1)
+			{
+				return null;
+			}
+			
 			using (System.Data.IDbCommand command = this.sql_builder.Command)
 			{
 				command.Transaction = transaction;
@@ -123,7 +138,7 @@ namespace Epsitec.Cresus.Database
 				object data;
 				
 				System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
-				this.sql_engine.Execute (command, DbCommandType.ReturningData, out data);
+				this.sql_engine.Execute (command, DbCommandType.ReturningData, count, out data);
 				
 				return data;
 			}
@@ -131,6 +146,14 @@ namespace Epsitec.Cresus.Database
 		
 		public void ExecuteReturningData(out System.Data.DataSet data)
 		{
+			int count = this.sql_builder.CommandCount;
+			
+			if (count < 1)
+			{
+				data = null;
+				return;
+			}
+			
 			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
 			{
 				using (System.Data.IDbCommand command = this.sql_builder.Command)
@@ -140,7 +163,7 @@ namespace Epsitec.Cresus.Database
 					try
 					{
 						System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
-						this.sql_engine.Execute (command, DbCommandType.ReturningData, out data);
+						this.sql_engine.Execute (command, DbCommandType.ReturningData, count, out data);
 					}
 					catch
 					{
@@ -510,10 +533,7 @@ namespace Epsitec.Cresus.Database
 			if (num_keys != 0)
 			{
 				this.sql_builder.UpdateData (DbTable.TagTableDef, fields, conds);
-				
-#if false // PA: en attendant le support de UpdateData...
 				this.ExecuteSilent ();
-#endif
 			}
 			
 			SqlSelect query = new SqlSelect ();
@@ -595,7 +615,7 @@ namespace Epsitec.Cresus.Database
 				string locale = this.localisations[i];
 				buffer.Length = initial_length;
 				
-				if (locale != "")
+				if (locale.Length > 0)
 				{
 					buffer.Append ("_");
 					buffer.Append (locale);
@@ -624,7 +644,7 @@ namespace Epsitec.Cresus.Database
 				string locale = this.localisations[i];
 				buffer.Length = initial_length;
 				
-				if (locale != "")
+				if (locale.Length > 0)
 				{
 					buffer.Append ("_");
 					buffer.Append (locale);
@@ -897,10 +917,7 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.WriteLine (string.Format ("Table {0}, next ID will be {1}.", key, next_id));
 			
 			this.sql_builder.UpdateData (DbTable.TagTableDef, fields, conds);
-			
-#if false // PA: en attendant le support de UpdateData...
 			this.ExecuteSilent ();
-#endif
 		}
 		
 		protected void BootInsertColumnDefRow(DbTable table, DbColumn column)
