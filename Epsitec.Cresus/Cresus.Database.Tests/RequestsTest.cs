@@ -161,6 +161,7 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals ("Name", req_2.ColumnNames[1]);
 			Assertion.AssertEquals (1L, req_2.ColumnValues[0]);
 			Assertion.AssertEquals ("Pierre Arnaud-Bühlmann", req_2.ColumnValues[1]);
+			Assertion.AssertEquals ("Pierre Arnaud", req_2.ColumnOriginalValues[1]);
 			
 			Assertion.AssertEquals (3, req_3.ColumnNames.Length);
 			Assertion.AssertEquals ("ID", req_3.ColumnNames[0]);

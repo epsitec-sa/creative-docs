@@ -34,7 +34,15 @@ namespace Epsitec.Cresus.Requests
 		{
 			get
 			{
-				return this.col_values;
+				return this.col_cur_values;
+			}
+		}
+		
+		public object[]							ColumnOriginalValues
+		{
+			get
+			{
+				return this.col_org_values;
 			}
 		}
 		
@@ -62,20 +70,29 @@ namespace Epsitec.Cresus.Requests
 			
 			if (mode == UpdateMode.Full)
 			{
-				this.col_names  = new string[n];
-				this.col_values = row.ItemArray;
+				//	Réalise une mise à jour de toutes les colonnes :
+				
+				this.col_names      = new string[n];
+				this.col_cur_values = new object[n];
+				this.col_org_values = new object[n];
 				
 				for (int i = 0; i < n; i++)
 				{
-					this.col_names[i] = columns[i].ColumnName;
+					this.col_names[i]      = columns[i].ColumnName;
+					this.col_cur_values[i] = row[i, System.Data.DataRowVersion.Current];
+					this.col_org_values[i] = row[i, System.Data.DataRowVersion.Original];
 				}
 			}
 			else if (mode == UpdateMode.Changed)
 			{
-				System.Collections.ArrayList names  = new System.Collections.ArrayList ();
-				System.Collections.ArrayList values = new System.Collections.ArrayList ();
+				//	Réalise uniquement une mise à jour des colonnes modifiées et enregistre
+				//	aussi les colonnes servant d'index :
 				
-				int unique_count = 0;
+				int[] indexes      = new int[n];
+				int   unique_count = 0;
+				int   index_count  = 0;
+				
+				//	Cherche quelles colonnes devront être conservées :
 				
 				for (int i = 0; i < n; i++)
 				{
@@ -91,24 +108,30 @@ namespace Epsitec.Cresus.Requests
 						continue;
 					}
 					
-					names.Add (columns[i].ColumnName);
-					values.Add (o_current);
+					indexes[index_count] = i;
+					index_count++;
 				}
 				
-				n = names.Count;
+				//	Il se peut qu'aucune colonne n'ait été modifiée...
 				
-				if (n > unique_count)
+				if (index_count > unique_count)
 				{
-					this.col_names  = new string[n];
-					this.col_values = new object[n];
+					this.col_names      = new string[index_count];
+					this.col_cur_values = new object[index_count];
+					this.col_org_values = new object[index_count];
 					
-					names.CopyTo (this.col_names);
-					values.CopyTo (this.col_values);
+					for (int i = 0; i < index_count; i++)
+					{
+						this.col_names[i]      = columns[indexes[i]].ColumnName;
+						this.col_cur_values[i] = row[indexes[i], System.Data.DataRowVersion.Current];
+						this.col_org_values[i] = row[indexes[i], System.Data.DataRowVersion.Original];
+					}
 				}
 				else
 				{
-					this.col_names = null;
-					this.col_values = null;
+					this.col_names      = null;
+					this.col_cur_values = null;
+					this.col_org_values = null;
 				}
 			}
 			else
@@ -124,7 +147,8 @@ namespace Epsitec.Cresus.Requests
 			this.SetupType (Type.UpdateStaticData);
 			
 			this.col_names  = info.GetValue ("ColNames", typeof (string[])) as string[];
-			this.col_values = info.GetValue ("ColValues", typeof (object[])) as object[];
+			this.col_cur_values = info.GetValue ("ColCurValues", typeof (object[])) as object[];
+			this.col_org_values = info.GetValue ("ColOrgValues", typeof (object[])) as object[];
 		}
 		
 		public override void GetObjectData(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
@@ -132,11 +156,13 @@ namespace Epsitec.Cresus.Requests
 			base.GetObjectData (info, context);
 			
 			info.AddValue ("ColNames", this.col_names);
-			info.AddValue ("ColValues", this.col_values);
+			info.AddValue ("ColCurValues", this.col_cur_values);
+			info.AddValue ("ColOrgValues", this.col_org_values);
 		}
 		#endregion
 		
 		private string[]						col_names;
-		private object[]						col_values;
+		private object[]						col_cur_values;
+		private object[]						col_org_values;
 	}
 }
