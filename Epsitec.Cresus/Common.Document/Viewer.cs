@@ -2493,7 +2493,12 @@ namespace Epsitec.Common.Document
 		// Dessine le document.
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			//?System.Diagnostics.Debug.WriteLine("PaintBackgroundImplementation "+clipRect.ToString());
+			if ( this.Window.IsSizeMoveInProgress )
+			{
+				return;
+			}
+			
+			System.Diagnostics.Debug.WriteLine("PaintBackgroundImplementation "+clipRect.ToString());
 			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
 
 			if ( this.document.Type == DocumentType.Pictogram )

@@ -444,6 +444,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public bool								IsSyncPaintDisabled
+		{
+			get
+			{
+				return (this.window == null) || (this.window.PreventSyncPaint);
+			}
+		}
+
 		public bool								IsVisible
 		{
 			get
@@ -509,6 +517,14 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.window.IsToolWindow;
+			}
+		}
+		
+		public bool								IsSizeMoveInProgress
+		{
+			get
+			{
+				return (this.window != null) && (this.window.IsSizeMoveInProgress);
 			}
 		}
 		
@@ -1085,6 +1101,14 @@ namespace Epsitec.Common.Widgets
 			if (this.WindowDragDropped != null)
 			{
 				this.WindowDragDropped (this, e);
+			}
+		}
+		
+		internal void OnWindowSizeMoveStatusChanged()
+		{
+			if (this.WindowSizeMoveStatusChanged != null)
+			{
+				this.WindowSizeMoveStatusChanged (this);
 			}
 		}
 		
@@ -1684,6 +1708,7 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler				WindowFocused;
 		public event EventHandler				WindowDefocused;
 		public event EventHandler				WindowDisposed;
+		public event EventHandler				WindowSizeMoveStatusChanged;
 		
 		public event EventHandler				FocusedWidgetChanged;
 		

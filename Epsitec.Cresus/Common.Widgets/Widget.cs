@@ -2923,11 +2923,18 @@ namespace Epsitec.Common.Widgets
 						
 						if (window != null)
 						{
-							window.SynchronousRepaint ();
-							this.parent.Invalidate (this.MapClientToParent (rect));
-							window.PaintFilter = new WidgetPaintFilter (this);
-							window.SynchronousRepaint ();
-							window.PaintFilter = null;
+							if (window.IsSyncPaintDisabled)
+							{
+								this.parent.Invalidate (this.MapClientToParent (rect));
+							}
+							else
+							{
+								window.SynchronousRepaint ();
+								this.parent.Invalidate (this.MapClientToParent (rect));
+								window.PaintFilter = new WidgetPaintFilter (this);
+								window.SynchronousRepaint ();
+								window.PaintFilter = null;
+							}
 						}
 					}
 					else

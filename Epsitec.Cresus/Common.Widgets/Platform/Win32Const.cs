@@ -11,6 +11,8 @@ namespace Epsitec.Common.Widgets
 		public const int WM_ACTIVATE		= 0x0006;
 		public const int WM_ACTIVATEAPP		= 0x001C;
 		public const int WM_MOUSEACTIVATE	= 0x0021;
+		public const int WM_WINDOWPOSCHANGING = 0x0046;
+		public const int WM_WINDOWPOSCHANGED = 0x0047;
 		public const int WM_NCACTIVATE		= 0x0086;
 		public const int WM_NCLBUTTONDOWN	= 0x00A1;
 		public const int WM_NCRBUTTONDOWN	= 0x00A4;
@@ -38,6 +40,8 @@ namespace Epsitec.Common.Widgets
 		public const int WM_XBUTTONDOWN		= 0x020B;
 		public const int WM_XBUTTONUP		= 0x020C;
 		public const int WM_XBUTTONDBLCLK	= 0x020D;
+		public const int WM_ENTERSIZEMOVE	= 0x0231;
+		public const int WM_EXITSIZEMOVE	= 0x0232;
 		public const int WM_MOUSELEAVE		= 0x02A3;
 		public const int WM_NCCALCSIZE		= 0x0083;
 		public const int WM_CHANGEUISTATE	= 0x0127;

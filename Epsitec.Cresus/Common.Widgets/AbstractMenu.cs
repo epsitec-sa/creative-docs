@@ -366,9 +366,16 @@ namespace Epsitec.Common.Widgets
 					
 					if ( window != null )
 					{
-						window.SynchronousRepaint();
-						this.Parent.Invalidate(this.MapClientToParent(rect));
-						window.SynchronousRepaint();
+						if ( window.IsSyncPaintDisabled )
+						{
+							base.Invalidate(rect);
+						}
+						else
+						{
+							window.SynchronousRepaint();
+							this.Parent.Invalidate(this.MapClientToParent(rect));
+							window.SynchronousRepaint();
+						}
 						return;
 					}
 				}
@@ -1068,6 +1075,7 @@ namespace Epsitec.Common.Widgets
 
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			System.Diagnostics.Debug.WriteLine("Menu:Paint");
 			System.Diagnostics.Debug.Assert (this.GetHost() != null, "No Host defined for menu.",
 				/**/						 "The menu you are trying to display has no associated command dispatcher host.\n"+
 				/**/						 "Use AbstractMenu.Host to define it when you setup the menu.");

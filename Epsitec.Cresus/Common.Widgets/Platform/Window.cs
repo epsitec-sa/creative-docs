@@ -406,6 +406,14 @@ namespace Epsitec.Common.Widgets.Platform
 		}
 		
 		
+		internal bool							PreventSyncPaint
+		{
+			get
+			{
+				return this.disable_sync_paint > 0;
+			}
+		}
+		
 		internal bool							PreventAutoClose
 		{
 			get
@@ -491,6 +499,21 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
+		internal bool							IsSizeMoveInProgress
+		{
+			get
+			{
+				return this.is_size_move_in_progress;
+			}
+			set
+			{
+				if (this.is_size_move_in_progress != value)
+				{
+					this.is_size_move_in_progress = value;
+					this.widget_window.OnWindowSizeMoveStatusChanged ();
+				}
+			}
+		}
 		
 		internal Drawing.Rectangle				WindowBounds
 		{
@@ -870,30 +893,39 @@ namespace Epsitec.Common.Widgets.Platform
 
 		protected override void OnSizeChanged(System.EventArgs e)
 		{
-			if ((this.Created == false) &&
-				(this.form_bounds_set) &&
-				(this.form_bounds.Size != this.Size))
-			{
-				this.Size = this.form_bounds.Size;
-			}
-			else if ((this.form_bounds_set) &&
-				(this.form_bounds.Size == this.Size) &&
-				(this.on_resize_event == false))
-			{
-				//	Rien à faire, car la taille correspond à la dernière taille mémorisée.
-			}
-			else
-			{
-				this.form_bounds_set = true;
-				this.on_resize_event = false;
-				this.form_bounds     = this.Bounds;
-				this.window_bounds   = this.WindowBounds;
-				
-				base.OnSizeChanged (e);
-				this.ReallocatePixmap ();
-			}
+			this.disable_sync_paint++;
 			
-			this.form_bounds_set = false;
+			try
+			{
+				if ((this.Created == false) &&
+					(this.form_bounds_set) &&
+					(this.form_bounds.Size != this.Size))
+				{
+					this.Size = this.form_bounds.Size;
+				}
+				else if ((this.form_bounds_set) &&
+					(this.form_bounds.Size == this.Size) &&
+					(this.on_resize_event == false))
+				{
+					//	Rien à faire, car la taille correspond à la dernière taille mémorisée.
+				}
+				else
+				{
+					this.form_bounds_set = true;
+					this.on_resize_event = false;
+					this.form_bounds     = this.Bounds;
+					this.window_bounds   = this.WindowBounds;
+					
+					base.OnSizeChanged (e);
+					this.ReallocatePixmap ();
+				}
+				
+				this.form_bounds_set = false;
+			}
+			finally
+			{
+				this.disable_sync_paint--;
+			}
 		}
 		
 		protected override void OnActivated(System.EventArgs e)
@@ -1091,6 +1123,13 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
 		{
+			System.Diagnostics.Debug.WriteLine ("WndProc: " + msg.Msg.ToString ("X4"));
+			
+			if (msg.Msg == Win32Const.WM_WINDOWPOSCHANGED)
+			{
+				System.Diagnostics.Debug.WriteLine ("WM_WINDOWPOSCHANGED");
+			}
+			
 			if (msg.Msg == Win32Const.WM_APP_DISPOSE)
 			{
 				System.Diagnostics.Debug.Assert (this.wnd_proc_depth == 0);
@@ -1183,6 +1222,18 @@ namespace Epsitec.Common.Widgets.Platform
 					
 					msg.Result = (System.IntPtr) (this.is_no_activate ? Win32Const.MA_NOACTIVATE : Win32Const.MA_ACTIVATE);
 					return;
+				}
+				
+				if (msg.Msg == Win32Const.WM_ENTERSIZEMOVE)
+				{
+					this.IsSizeMoveInProgress = true;
+					this.disable_sync_paint++;
+				}
+				
+				if (msg.Msg == Win32Const.WM_EXITSIZEMOVE)
+				{
+					this.IsSizeMoveInProgress = false;
+					this.disable_sync_paint--;
 				}
 				
 				if (this.WndProcFiltering (ref msg))
@@ -1694,6 +1745,8 @@ namespace Epsitec.Common.Widgets.Platform
 		private int								wnd_proc_depth;
 		private bool							is_dispatch_pending;
 		private bool							is_pixmap_ok;
+		private bool							is_size_move_in_progress;
+		private int								disable_sync_paint;
 		
 		private static bool						is_app_active;
 	}
