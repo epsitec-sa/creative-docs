@@ -3012,6 +3012,7 @@ namespace Epsitec.Common.Widgets
 
 		public void Simplify(TextLayout.Context context)
 		{
+			if ( this.text == null )  return;
 			this.text = this.GetSimplify();
 			this.isPrepareDirty = false;
 			context.PrepareOffset  = -1;  // annule la préparation pour l'insertion
