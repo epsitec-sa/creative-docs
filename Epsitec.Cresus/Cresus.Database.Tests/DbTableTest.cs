@@ -9,16 +9,16 @@ namespace Epsitec.Cresus.Database
 		{
 			DbTable table = new DbTable ("Test");
 			
-			Assertion.AssertNotNull (table);
-			Assertion.AssertEquals ("Test", table.Name);
-			Assertion.AssertEquals (DbElementCat.Unknown, table.Category);
-			Assertion.AssertEquals (false, table.HasPrimaryKey);
-			Assertion.AssertEquals (0, table.PrimaryKeys.Count);
-			Assertion.AssertEquals (0, table.Columns.Count);
+			Assert.IsNotNull (table);
+			Assert.AreEqual ("Test", table.Name);
+			Assert.AreEqual (DbElementCat.Unknown, table.Category);
+			Assert.AreEqual (false, table.HasPrimaryKey);
+			Assert.AreEqual (0, table.PrimaryKeys.Count);
+			Assert.AreEqual (0, table.Columns.Count);
 			
 			table.DefineCategory (DbElementCat.Internal);
 			
-			Assertion.AssertEquals (DbElementCat.Internal, table.Category);
+			Assert.AreEqual (DbElementCat.Internal, table.Category);
 			
 			table.DefineCategory (DbElementCat.Internal);
 		}
@@ -76,10 +76,10 @@ namespace Epsitec.Cresus.Database
 			
 			SqlTable sql_table = db_table.CreateSqlTable (type_converter);
 			
-			Assertion.AssertNotNull (sql_table);
-			Assertion.AssertEquals ("U_TEST__1__9", sql_table.Name);
-			Assertion.AssertEquals (db_table.Columns.Count, sql_table.Columns.Count);
-			Assertion.AssertEquals (db_table.PrimaryKeys.Count, sql_table.PrimaryKey.Length);
+			Assert.IsNotNull (sql_table);
+			Assert.AreEqual ("U_TEST__1__9", sql_table.Name);
+			Assert.AreEqual (db_table.Columns.Count, sql_table.Columns.Count);
+			Assert.AreEqual (db_table.PrimaryKeys.Count, sql_table.PrimaryKey.Length);
 		}
 		
 		[Test] [ExpectedException (typeof (DbSyntaxException))] public void CheckCreateSqlTableEx1()
