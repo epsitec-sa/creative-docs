@@ -898,6 +898,7 @@ namespace Epsitec.Common.Widgets
 			this.cache_visible_rows = -1;
 			this.is_dirty = true;
 			this.Invalidate ();
+			this.OnContentsInvalidated ();
 		}
 		
 		public void SyncWithTextArrayStore(bool update)
@@ -1301,23 +1302,25 @@ invalid:	row    = -1;
 		{
 			HeaderButton button = sender as HeaderButton;
 			
-			int      column = button.Index;
-			SortMode mode   = button.SortMode;
-			
-			switch (mode)
+			if (button.IsDynamic)
 			{
-				case SortMode.Up:
-				case SortMode.None:
-					mode = SortMode.Down;
-					break;
+				int      column = button.Index;
+				SortMode mode   = button.SortMode;
+				
+				switch (mode)
+				{
+					case SortMode.Up:
+					case SortMode.None:
+						mode = SortMode.Down;
+						break;
 
-				case SortMode.Down:
-					mode = SortMode.Up;
-					break;
+					case SortMode.Down:
+						mode = SortMode.Up;
+						break;
+				}
+				
+				this.SetSortingHeader (column, mode);
 			}
-			
-			this.SetSortingHeader (column, mode);
-			
 		}
 
 		private void HandleSliderDragStarted(object sender, MessageEventArgs e)
@@ -1870,6 +1873,16 @@ invalid:	row    = -1;
 			}
 		}
 
+		protected virtual  void OnContentsInvalidated()
+		{
+			System.Diagnostics.Debug.WriteLine ("Contents invalidated.");
+			
+			if (this.ContentsInvalidated != null)
+			{
+				this.ContentsInvalidated (this);
+			}
+		}
+
 		protected virtual  void OnSortChanged()
 		{
 			if (this.SortChanged != null)
@@ -2194,6 +2207,7 @@ invalid:	row    = -1;
 		
 		public event Support.EventHandler		InteractionModeChanged;
 		public event Support.EventHandler		ContentsChanged;
+		public event Support.EventHandler		ContentsInvalidated;
 		public event Support.EventHandler		SortChanged;
 		public event Support.EventHandler		LayoutUpdated;
 		public event Support.EventHandler		TextArrayStoreChanged;
@@ -2212,10 +2226,10 @@ invalid:	row    = -1;
 				
 				this.header_button = new HeaderButton ();
 				
-				this.header_button.Style    = HeaderButtonStyle.Top;
-				this.header_button.Dynamic  = true;
-				this.header_button.Index    = this.column;
-				this.header_button.Clicked += new MessageEventHandler (this.host.HandleHeaderButtonClicked);
+				this.header_button.Style     = HeaderButtonStyle.Top;
+				this.header_button.IsDynamic = false;
+				this.header_button.Index     = this.column;
+				this.header_button.Clicked  += new MessageEventHandler (this.host.HandleHeaderButtonClicked);
 				this.header_button.SetEmbedder (this.host.header);
 				
 				this.header_slider = new HeaderSlider ();
