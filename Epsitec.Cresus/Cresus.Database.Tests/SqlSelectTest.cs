@@ -19,10 +19,6 @@ namespace Epsitec.Cresus.Database
 			sql_select1.Fields.Add (SqlField.CreateName ("Table1", "Colonne1"));
 			sql_select1.Fields.Add (SqlField.CreateName ("Table1", "Colonne2"));
 			sql_select1.Fields.Add (SqlField.CreateName ("Table2", "Colonne3"));
-			//	DD?	il faudrait que les champs créés aient le nom qualifié comme Alias, automatiquement ?
-			//	PA: non, parce que le nom d'alias ne peut en principe pas contenir de ".", d'après ce que
-			//	j'ai compris de la norme SQL... A voir. A moins de transformer les noms d'alias avec "_"
-			//	à la place de ".".
 
 			//	crée une seconde instance, par exemple pour faire un UNION
 			SqlSelect sql_select2 = new SqlSelect ();

@@ -215,6 +215,52 @@ namespace Epsitec.Cresus.Database
 			command.Dispose ();
 		}
 
+		[Test] public void CheckRemoveData()
+		{
+			// doit être fait après CheckInsertData
+			// pour que la table existe dans le bon état
+
+			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
+			ISqlBuilder     sql_builder    = db_abstraction.SqlBuilder;
+			ISqlEngine		sql_engine     = db_abstraction.SqlEngine;
+
+			SqlFieldCollection conditions = new SqlFieldCollection ();
+
+			SqlField field1, field2;
+			
+			field1 = SqlField.CreateConstant (123, DbRawType.Int32);
+			field1.Alias = "Cr_ID";
+			
+			field2 = SqlField.CreateConstant (456, DbRawType.Int32);
+			field2.Alias = "Cr_REV";
+			
+			//	défini la fonction Cr_ID == 123
+			SqlFunction sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+				SqlField.CreateName("Cr_ID"),
+				field1);
+
+			conditions.Add (SqlField.CreateFunction(sql_func));
+
+			//	défini la fonction Cr_REV == 456
+			sql_func = new SqlFunction (SqlFunctionType.CompareEqual, 
+				SqlField.CreateName("Cr_REV"),
+				field1);
+
+			conditions.Add (SqlField.CreateFunction(sql_func));
+
+			sql_builder.RemoveData ("FbTestTable", conditions);
+			
+			System.Data.IDbCommand command = sql_builder.Command;
+			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
+			
+			command.Transaction = db_abstraction.BeginTransaction ();
+			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
+			
+			command.Transaction.Commit ();
+			command.Transaction.Dispose ();
+			command.Dispose ();
+		}
+
 		[Test] public void CheckRemoveTable()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
