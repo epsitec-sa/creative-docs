@@ -58,6 +58,8 @@ class CopyProject:
             for line in lines:
                 if line[0:2].isdigit():
                     revnum += 1
+                    if line[16:21] == ' Rev ':
+                        revnum = int (line[21:]) + 1
             f.close ()
         except IOError, e:
             lines = list()

@@ -115,17 +115,18 @@ namespace Epsitec.Cresus.Support.Tests
 			
 			System.Array.Sort (names);
 			
-			Assertion.AssertEquals (4, bundle.CountFields);
+			Assertion.AssertEquals (5, bundle.CountFields);
 			Assertion.AssertEquals ("a", names[0]);
 			Assertion.AssertEquals ("cls", names[1]);
-			Assertion.AssertEquals ("siz", names[2]);
-			Assertion.AssertEquals ("txt", names[3]);
+			Assertion.AssertEquals ("nam", names[2]);
+			Assertion.AssertEquals ("siz", names[3]);
+			Assertion.AssertEquals ("txt", names[4]);
 		}
 		
 		[Test] public void CheckCompileRefLevel2()
 		{
 			ResourceBundle bundle = new ResourceBundle ();
-			string test_string = "<bundle><a>A</a><b><ref t='file:button.cancel#txt'/></b></bundle>";
+			string test_string = "<bundle><a>A</a><b><ref t='file:strings#label.Hello'/></b><c><ref t='file:strings#title.MainWindow'/></c></bundle>";
 			System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
 			byte[] test_data = encoding.GetBytes (test_string);
 			System.IO.MemoryStream stream = new System.IO.MemoryStream (test_data);
@@ -135,11 +136,13 @@ namespace Epsitec.Cresus.Support.Tests
 			
 			System.Array.Sort (names);
 			
-			Assertion.AssertEquals (2, bundle.CountFields);
+			Assertion.AssertEquals (3, bundle.CountFields);
 			Assertion.AssertEquals ("a", names[0]);
 			Assertion.AssertEquals ("b", names[1]);
+			Assertion.AssertEquals ("c", names[2]);
 			
-			System.Console.Out.WriteLine ("Referenced field contains '{0}'.", bundle["b"]);
+			System.Console.Out.WriteLine ("Referenced field 'b' contains '{0}'.", bundle["b"]);
+			System.Console.Out.WriteLine ("Referenced field 'c' contains '{0}'.", bundle["c"]);
 		}
 		
 		[Test] public void CheckCompileRefLevel2AutoPrefix()
