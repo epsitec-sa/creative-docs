@@ -77,9 +77,8 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
 			
-			adorner.PaintCellBackground(graphics, rect, state, dir);
+			adorner.PaintCellBackground(graphics, rect, state);
 		}
 		
 		
