@@ -64,7 +64,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.BackColor.A != 1.0)
 			{
-				graphics.Pixmap.Erase (new System.Drawing.Rectangle ((int) x1, (int) y1, (int) x2, (int) y2));
+				graphics.Pixmap.Erase (new System.Drawing.Rectangle ((int) x1, (int) y1, (int) x2 - (int) x1, (int) y2 - (int) y1));
 			}
 			if (this.BackColor.A > 0.0)
 			{

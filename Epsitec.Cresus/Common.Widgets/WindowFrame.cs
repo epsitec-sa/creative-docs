@@ -687,16 +687,18 @@ namespace Epsitec.Common.Widgets
 					this.root.PaintHandler (this.graphics, repaint);
 				}
 				
-				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (this.Width, this.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-				System.Drawing.Point  client = this.PointToScreen (new System.Drawing.Point (0, 0));
-				System.Drawing.Point  offset = new System.Drawing.Point (client.X - this.Location.X, client.Y - this.Location.Y);
-				
-				using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (bitmap))
+				using (System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (this.Width, this.Height, System.Drawing.Imaging.PixelFormat.Format32bppArgb))
 				{
-					System.Drawing.Rectangle clip = new System.Drawing.Rectangle (0, 0, this.ClientSize.Width, this.ClientSize.Height);
-					Drawing.Pixmap pixmap = this.graphics.Pixmap;
-					pixmap.Blend (graphics, offset, clip);
-					paint_needed = ! Win32Api.UpdateLayeredWindow (this.Handle, bitmap, this.Bounds, this.alpha);
+					System.Drawing.Point  client = this.PointToScreen (new System.Drawing.Point (0, 0));
+					System.Drawing.Point  offset = new System.Drawing.Point (client.X - this.Location.X, client.Y - this.Location.Y);
+					
+					using (System.Drawing.Graphics graphics = System.Drawing.Graphics.FromImage (bitmap))
+					{
+						System.Drawing.Rectangle clip = new System.Drawing.Rectangle (0, 0, this.ClientSize.Width, this.ClientSize.Height);
+						Drawing.Pixmap pixmap = this.graphics.Pixmap;
+						pixmap.Blend (graphics, offset, clip);
+						paint_needed = ! Win32Api.UpdateLayeredWindow (this.Handle, bitmap, this.Bounds, this.alpha);
+					}
 				}
 			}
 			

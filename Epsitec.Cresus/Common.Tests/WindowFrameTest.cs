@@ -113,12 +113,19 @@ namespace Epsitec.Common.Tests
 
 		[Test] public void CheckLayeredWindows()
 		{
+			double zoom = 2.0;
+			
 			WindowFrame window = new WindowFrame ();
 			window.Root.BackColor = new Color (0, 0, 0, 0);
 			window.MakeFramelessWindow ();
 			window.IsLayered = true;
 			window.Alpha = 0.5;
-			window.WindowBounds = new Rectangle (100, 100, 200, 200);
+			window.WindowBounds = new Rectangle (ScreenInfo.GlobalArea.Left+50, 200, 100*zoom, 200*zoom);
+			
+			Widget back = new Widget ();
+			back.Dock = DockStyle.Fill;
+			back.Parent = window.Root;
+			back.SetClientZoom (zoom);
 			
 			Button button = new Button ();
 			Scroller scroller = new Scroller ();
@@ -126,22 +133,21 @@ namespace Epsitec.Common.Tests
 			button.Location = new Point (10, 10);
 			button.Size     = new Size (60, 24);
 			button.Text     = "Test";
-			button.Parent   = window.Root;
+			button.Parent   = back;
 			button.Clicked += new MessageEventHandler(button_Clicked);
 			
-			scroller.Location = new Point (100, 10);
+			scroller.Location = new Point (80, 10);
 			scroller.Size = new Size(15, 180);
 			scroller.Range = 1.0;
 			scroller.Display = 0.1;
 			scroller.Position = 0.0;
 			scroller.ButtonStep = 0.01;
 			scroller.PageStep = 0.10;
-			scroller.Parent = window.Root;
+			scroller.Parent = back;
 			scroller.Moved += new EventHandler(scroller_Moved);
 			
 			window.Show ();
 			window.Root.Invalidate ();
-			window.Update ();
 		}
 
 		private void Root_Clicked(object sender, MessageEventArgs e)
