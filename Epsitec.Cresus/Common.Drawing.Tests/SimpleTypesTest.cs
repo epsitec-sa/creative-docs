@@ -1,5 +1,6 @@
 using NUnit.Framework;
 using System.Runtime.Serialization.Formatters.Binary;
+using System.Runtime.Serialization.Formatters.Soap;
 
 namespace Epsitec.Common.Drawing
 {
@@ -23,6 +24,32 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			System.IO.File.Delete ("test.bin");
+			
+			Assertion.AssertNotNull (point_2);
+			Assertion.AssertEquals (typeof (Point), point_2.GetType ());
+			Assertion.AssertEquals (point_1, point_2);
+			
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Create))
+			{
+				SoapFormatter formatter = new SoapFormatter ();
+				formatter.Serialize (stream, point_1);
+			}
+			
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Open))
+			{
+				SoapFormatter formatter = new SoapFormatter ();
+				point_2 = formatter.Deserialize (stream);
+			}
+			
+			using (System.IO.Stream stream = System.IO.File.Open ("test.soap", System.IO.FileMode.Open))
+			{
+				System.Text.UTF8Encoding encoding = new System.Text.UTF8Encoding ();
+				byte[] buffer = new byte[stream.Length];
+				stream.Read (buffer, 0, (int) stream.Length);
+				System.Console.Out.WriteLine ("{0}", encoding.GetString (buffer));
+			}
+			
+			System.IO.File.Delete ("test.soap");
 			
 			Assertion.AssertNotNull (point_2);
 			Assertion.AssertEquals (typeof (Point), point_2.GetType ());
