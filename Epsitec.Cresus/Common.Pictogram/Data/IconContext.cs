@@ -70,6 +70,13 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Indique si Drawer a le focus.
+		public bool IsFocused
+		{
+			get { return this.isFocused; }
+			set { this.isFocused = value; }
+		}
+
 		// Mode "aperçu avant impression".
 		public bool PreviewActive
 		{
@@ -449,6 +456,7 @@ namespace Epsitec.Common.Pictogram.Data
 		protected double					zoom = 1;
 		protected double					originX = 0;
 		protected double					originY = 0;
+		protected bool						isFocused = false;
 		protected bool						previewActive = false;
 		protected bool						gridActive = false;
 		protected Drawing.Point				gridStep = new Drawing.Point(1, 1);
