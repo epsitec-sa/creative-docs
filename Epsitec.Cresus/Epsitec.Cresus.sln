@@ -395,6 +395,7 @@ Global
 		import-bin.bat = import-bin.bat
 		loc-bigdell.txt = loc-bigdell.txt
 		External\nunit-gui.exe = External\nunit-gui.exe
+		External\nunit-gui.exe.manifest = External\nunit-gui.exe.manifest
 		External\nunit.framework.dll = External\nunit.framework.dll
 		External\nunit.uikit.dll = External\nunit.uikit.dll
 		External\nunit.util.dll = External\nunit.util.dll

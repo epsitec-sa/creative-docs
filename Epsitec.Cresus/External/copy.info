@@ -5,6 +5,7 @@ nunit.framework.dll
 nunit.uikit.dll
 nunit.util.dll
 nunit-gui.exe.config
+nunit-gui.exe.manifest
 
 # Copy the Firebird .NET provider
 
