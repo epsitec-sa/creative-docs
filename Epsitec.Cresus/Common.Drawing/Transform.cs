@@ -11,7 +11,7 @@ namespace Epsitec.Common.Drawing
 		{
 		}
 		
-		public Transform(float xx, float xy, float yx, float yy, float tx, float ty)
+		public Transform(double xx, double xy, double yx, double yy, double tx, double ty)
 		{
 			this.xx = xx;
 			this.xy = xy;
@@ -32,47 +32,47 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public float				XX
+		public double				XX
 		{
 			get { return this.xx; }
 			set { this.xx = value; }
 		}
 		
-		public float				XY
+		public double				XY
 		{
 			get { return this.xy; }
 			set { this.xy = value; }
 		}
 		
-		public float				YX
+		public double				YX
 		{
 			get { return this.yx; }
 			set { this.yx = value; }
 		}
 		
-		public float				YY
+		public double				YY
 		{
 			get { return this.yy; }
 			set { this.yy = value; }
 		}
 		
-		public float				TX
+		public double				TX
 		{
 			get { return this.tx; }
 			set { this.tx = value; }
 		}
 		
-		public float				TY
+		public double				TY
 		{
 			get { return this.ty; }
 			set { this.ty = value; }
 		}
 		
 		
-		public System.Drawing.PointF TransformDirect(System.Drawing.PointF pt)
+		public Point TransformDirect(Point pt)
 		{
-			float x = pt.X;
-			float y = pt.Y;
+			double x = pt.X;
+			double y = pt.Y;
 			
 			pt.X = this.xx * x + this.xy * y + this.tx;
 			pt.Y = this.yx * x + this.yy * y + this.ty;
@@ -80,14 +80,14 @@ namespace Epsitec.Common.Drawing
 			return pt;
 		}
 		
-		public System.Drawing.PointF TransformInverse(System.Drawing.PointF pt)
+		public Point TransformInverse(Point pt)
 		{
-			float det = this.xx * this.yy - this.xy * this.yx;
+			double det = this.xx * this.yy - this.xy * this.yx;
 			
 			System.Diagnostics.Debug.Assert (det != 0.0f);
 			
-			float x = pt.X - this.tx;
-			float y = pt.Y - this.ty;
+			double x = pt.X - this.tx;
+			double y = pt.Y - this.ty;
 			
 			pt.X = (  this.yy * x - this.xy * y) / det;
 			pt.Y = (- this.yx * x + this.xx * y) / det;
@@ -140,13 +140,19 @@ namespace Epsitec.Common.Drawing
 			Round (ref this.ty);
 		}
 		
-		public void Translate(float tx, float ty)
+		public void Translate(double tx, double ty)
 		{
 			this.tx += tx;
 			this.ty += ty;
 		}
 		
-		public void Rotate(int angle)
+		public void Translate(Point offset)
+		{
+			this.tx += offset.X;
+			this.ty += offset.Y;
+		}
+		
+		public void Rotate(double angle)
 		{
 			if (angle != 0)
 			{
@@ -154,15 +160,23 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public void Rotate(int angle, System.Drawing.PointF center)
+		public void Rotate(double angle, Point center)
 		{
 			if (angle != 0)
 			{
-				this.MultiplyBy (Transform.FromRotation (angle, center));
+				this.MultiplyBy (Transform.FromRotation (angle, center.X, center.Y));
 			}
 		}
 		
-		public void Scale(float s)
+		public void Rotate(double angle, double x, double y)
+		{
+			if (angle != 0)
+			{
+				this.MultiplyBy (Transform.FromRotation (angle, x, y));
+			}
+		}
+		
+		public void Scale(double s)
 		{
 			if (s != 1.0f)
 			{
@@ -170,7 +184,7 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
-		public void Scale(float sx, float sy)
+		public void Scale(double sx, double sy)
 		{
 			this.xx *= sx;
 			this.xy *= sy;
@@ -181,46 +195,54 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public static Transform FromScale(float sx, float sy)
+		public static Transform FromScale(double sx, double sy)
 		{
 			return new Transform (sx, 0, 0, sy, 0, 0);
 		}
 		
-		public static Transform FromTranslation(float tx, float ty)
+		public static Transform FromTranslation(double tx, double ty)
 		{
 			return new Transform (1, 0, 0, 1, tx, ty);
 		}
 		
-		public static Transform FromRotation(int angle)
+		public static Transform FromTranslation(Point offset)
 		{
-			double alpha = angle * System.Math.PI / 180;
-			float  sin   = (float) System.Math.Sin (alpha);
-			float  cos   = (float) System.Math.Cos (alpha);
-			
-			return new Transform (cos, sin, -sin, cos, 0, 0);
+			return new Transform (1, 0, 0, 1, offset.X, offset.Y);
 		}
 		
-		public static Transform FromRotation(int angle, System.Drawing.PointF center)
+		public static Transform FromRotation(double angle)
+		{
+			double alpha = angle * System.Math.PI / 180;
+			double sin   = System.Math.Sin (alpha);
+			double cos   = System.Math.Cos (alpha);
+			
+			return new Transform (cos, -sin, sin, cos, 0, 0);
+		}
+		
+		public static Transform FromRotation(double angle, Point center)
+		{
+			return Transform.FromRotation (angle, center.X, center.Y);
+		}
+		
+		public static Transform FromRotation(double angle, double cx, double cy)
 		{
 			Transform m = FromRotation (angle);
 			
-			float cx = center.X;
-			float cy = center.Y;
-			
-			m.tx = - (m.xx * cx + m.xy * cy) + cx;
-			m.ty = - (m.yx * cx + m.yy * cy) + cy;
+			m.tx = cx - m.xx * cx - m.xy * cy;
+			m.ty = cy - m.yx * cx - m.yy * cy;
 			
 			return m;
 		}
 		
+		
 		public static Transform Inverse(Transform m)
 		{
-			float det   = m.xx * m.yy - m.xy * m.yx;
+			double det   = m.xx * m.yy - m.xy * m.yx;
 			Transform c = new Transform ();
 			
 			System.Diagnostics.Debug.Assert (det != 0.0f);
 			
-			float det_1 = 1.0f / det;
+			double det_1 = 1.0f / det;
 			
 			c.xx =   m.yy * det_1;
 			c.xy = - m.xy * det_1;
@@ -247,9 +269,9 @@ namespace Epsitec.Common.Drawing
 			return c;
 		}
 		
-		public static System.Drawing.PointF Multiply(Transform a, System.Drawing.PointF b)
+		public static Point Multiply(Transform a, Point b)
 		{
-			System.Drawing.PointF c = new System.Drawing.PointF ();
+			Point c = new Point ();
 			
 			c.X = a.xx * b.X + a.xy * b.Y + a.tx;
 			c.Y = a.yx * b.X + a.yy * b.Y + a.ty;
@@ -258,40 +280,40 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		protected static readonly float epsilon = 0.00001f;
+		protected static readonly double epsilon = 0.00001;
 		
-		public static bool Equal(float a, float b)
+		public static bool Equal(double a, double b)
 		{
-			float delta = a - b;
+			double delta = a - b;
 			return (delta < epsilon) && (delta > -epsilon);
 		}
 		
-		public static bool Equal(System.Drawing.PointF a, System.Drawing.PointF b)
+		public static bool Equal(Point a, Point b)
 		{
 			return Equal (a.X, b.X) && Equal (a.Y, b.Y);
 		}
 		
-		public static bool Equal(System.Drawing.SizeF a, System.Drawing.SizeF b)
+		public static bool Equal(Size a, Size b)
 		{
 			return Equal (a.Width, b.Width) && Equal (a.Height, b.Height);
 		}
 		
-		public static bool Equal(System.Drawing.RectangleF a, System.Drawing.RectangleF b)
+		public static bool Equal(Rectangle a, Rectangle b)
 		{
 			return Equal (a.Location, b.Location) && Equal (a.Size, b.Size);
 		}
 		
-		public static bool IsZero(float a)
+		public static bool IsZero(double a)
 		{
 			return (a < epsilon) && (a > -epsilon);
 		}
 		
-		public static bool IsOne(float a)
+		public static bool IsOne(double a)
 		{
 			return (a < 1+epsilon) && (a > 1-epsilon);
 		}
 		
-		public static void Round(ref float a)
+		public static void Round(ref double a)
 		{
 			if (IsZero (a))
 				a = 0;
@@ -342,6 +364,59 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		#endregion
+		
+		public static bool operator ==(Transform a, Transform b)
+		{
+			object oa = a;
+			object ob = b;
+			
+			if (oa == ob)
+			{
+				return true;
+			}
+			
+			if ((oa != null) && (ob != null))
+			{
+				if (Equal (a.XX, b.XX) &&
+					Equal (a.XY, b.XY) &&
+					Equal (a.YX, b.YX) &&
+					Equal (a.YY, b.YY) &&
+					Equal (a.TX, b.TX) &&
+					Equal (a.TY, b.TY))
+				{
+					return true;
+				}
+			}
+			
+			return false;
+		}
+		
+		public static bool operator !=(Transform a, Transform b)
+		{
+			object oa = a;
+			object ob = b;
+			
+			if (oa == ob)
+			{
+				return false;
+			}
+			
+			if ((oa != null) && (ob != null))
+			{
+				if (!Equal (a.XX, b.XX) ||
+					!Equal (a.XY, b.XY) ||
+					!Equal (a.YX, b.YX) ||
+					!Equal (a.YY, b.YY) ||
+					!Equal (a.TX, b.TX) ||
+					!Equal (a.TY, b.TY))
+				{
+					return true;
+				}
+			}
+			
+			return true;
+		}
+		
 		
 		public override bool Equals(object obj)
 		{
@@ -417,7 +492,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		private float				xx, xy, yx, yy;
-		private float				tx, ty;
+		private double				xx, xy, yx, yy;
+		private double				tx, ty;
 	}
 }

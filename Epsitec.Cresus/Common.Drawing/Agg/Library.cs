@@ -1,0 +1,120 @@
+using System;
+using System.Runtime.InteropServices;
+
+namespace Epsitec.Common.Drawing.Agg
+{
+	public class Library : System.IDisposable
+	{
+		private Library()
+		{
+			Library.AggInitialise ();
+		}
+		
+		~Library()
+		{
+			this.Dispose (false);
+		}
+		
+		[DllImport ("AGG-Wrapper.dll")] internal extern static bool		AggInitialise();
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggShutDown();
+		[DllImport ("AGG-Wrapper.dll")] internal extern static string	AggGetVersion();
+		[DllImport ("AGG-Wrapper.dll")] internal extern static string	AggGetProductName();
+		
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggBufferNew(int dx, int dy, int bpp);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggBufferResize(IntPtr buffer, int dx, int dy, int bpp);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggBufferPaint(IntPtr buffer, IntPtr hdc);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggBufferClear(IntPtr buffer);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggBufferDelete(IntPtr buffer);
+		
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggRendererSolidNew(System.IntPtr buffer);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererSolidClear(System.IntPtr renderer, double r, double g, double b, double a);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererSolidColor(System.IntPtr renderer, double r, double g, double b, double a);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererSolidDelete(System.IntPtr renderer);
+		
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggRendererGradientNew(System.IntPtr buffer);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererGradientDelete(System.IntPtr renderer);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererGradientSelect(System.IntPtr renderer, int id);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererGradientColor1(System.IntPtr renderer, [MarshalAs(UnmanagedType.LPArray, SizeConst=256)] double[] r,
+																														  [MarshalAs(UnmanagedType.LPArray, SizeConst=256)] double[] g,
+																														  [MarshalAs(UnmanagedType.LPArray, SizeConst=256)] double[] b,
+																														  [MarshalAs(UnmanagedType.LPArray, SizeConst=256)] double[] a);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererGradientRange(System.IntPtr renderer, double r1, double r2);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRendererGradientMatrix(System.IntPtr renderer, double xx, double xy, double yx, double yy, double tx, double ty);
+		
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggRasterizerNew();
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerFillingRule(System.IntPtr rasterizer, int mode);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerSetTransform(System.IntPtr rasterizer, double xx, double xy, double yx, double yy, double tx, double ty);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerAddPath(System.IntPtr rasterizer, System.IntPtr path, bool curves);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerAddGlyph(System.IntPtr rasterizer, System.IntPtr face, int glyph, double x, double y, double scale);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerAddPathStroke1(System.IntPtr rasterizer, System.IntPtr path, double width, bool curves);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerAddPathStroke2(System.IntPtr rasterizer, System.IntPtr path, double width, int cap, int join, double miter_limit, bool curves);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerRenderSolid(System.IntPtr rasterizer, System.IntPtr renderer);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerRenderGradient(System.IntPtr rasterizer, System.IntPtr renderer);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggRasterizerDelete(System.IntPtr rasterizer);
+		
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathNew();
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathMoveTo(System.IntPtr path, double x, double y);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathLineTo(System.IntPtr path, double x, double y);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathCurve3(System.IntPtr path, double x_c, double y_c, double x, double y);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathCurve4(System.IntPtr path, double x_c1, double y_c1, double x_c2, double y_c2, double x, double y);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathClose(System.IntPtr path);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathAddNewPath(System.IntPtr path);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathRemoveAll(System.IntPtr path);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggPathDelete(System.IntPtr path);
+		
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggFontInitialise();
+		[DllImport ("AGG-Wrapper.dll")] internal extern static int		AggFontGetFaceCount();
+		[DllImport ("AGG-Wrapper.dll")] internal extern static IntPtr	AggFontGetFaceByRank(int n);
+		[DllImport ("AGG-Wrapper.dll", CharSet=CharSet.Unicode)]
+										internal extern static IntPtr	AggFontGetFaceByName(string family, string style, string optical);
+		[DllImport ("AGG-Wrapper.dll", CharSet=CharSet.Unicode)]
+										internal extern static string	AggFontFaceGetName(System.IntPtr face, int id);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static int		AggFontFaceGetGlyphIndex(System.IntPtr face, int unicode);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static double	AggFontFaceGetGlyphAdvance(System.IntPtr face, int glyph);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static double	AggFontFaceGetCharAdvance(System.IntPtr face, int unicode);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static double	AggFontFaceGetMetrics(System.IntPtr face, int id);
+		
+		public void Dispose()
+		{
+			this.Dispose (true);
+			GC.SuppressFinalize (this);
+		}
+		
+		protected virtual void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+			}
+			
+			Library.instance = null;
+			Library.AggShutDown ();
+		}
+		
+		public string				ProductName
+		{
+			get { return Library.AggGetProductName (); }
+		}
+		
+		public string				Version
+		{
+			get { return Library.AggGetVersion (); }
+		}
+		
+		
+		public static Library		Current
+		{
+			get
+			{
+				if (Library.instance == null)
+				{
+					Library.instance = new Library ();
+				}
+				
+				return Library.instance;
+			}
+		}
+		
+		
+		static Library				instance;
+	}
+}
