@@ -140,24 +140,69 @@ namespace Epsitec.Common.Drawing
 		{
 			System.Windows.Forms.Form form = new System.Windows.Forms.Form ();
 			form.Paint += new System.Windows.Forms.PaintEventHandler(this.HandleFormPaint);
-			form.Width  = 400;
-			form.Height = 200;
+			form.Width  = 800;
+			form.Height = 400;
 			form.Text   = "CheckSystemInterop";
+			form.SizeChanged += new System.EventHandler(this.HandleFormSizeChanged);
+			
 			form.Show ();
 		}
 
+		
+		static readonly int cpu_speed = 1700;
+		
 		private void HandleFormPaint(object sender, System.Windows.Forms.PaintEventArgs e)
 		{
+			System.Windows.Forms.Form form = sender as System.Windows.Forms.Form;
+			
 			Font font = Font.GetFont ("Times New Roman", "Italic");
 			Path path = new Path ();
 			
-			path.Append (font, font.GetGlyphIndex ('f'),   0, 30, 120.0);
-			path.Append (font, font.GetGlyphIndex ('j'),  80, 30, 120.0);
-			path.Append (font, font.GetGlyphIndex ('@'), 160, 30, 120.0);
+			path.Append (font, font.GetGlyphIndex ('f'),  70, 100, 300.0);
+			path.Append (font, font.GetGlyphIndex ('j'), 200, 100, 300.0);
+			path.Append (font, font.GetGlyphIndex ('@'), 400, 100, 300.0);
 			
 			System.Drawing.Drawing2D.GraphicsPath os_path = path.CreateSystemPath ();
 			
+			long cc = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			long c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			long c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			long c0 = c2 - c1;
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			
+			e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighSpeed;
+			e.Graphics.TranslateTransform (0, form.ClientSize.Height);
+			e.Graphics.ScaleTransform (1, -1);
 			e.Graphics.DrawPath (System.Drawing.Pens.Black, os_path);
+			e.Graphics.FillPath (System.Drawing.Brushes.Gold, os_path);
+			
+			c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
+			
+			e.Graphics.ResetTransform ();
+			e.Graphics.FillRectangle (System.Drawing.Brushes.White, 0, 0, form.Width, form.Height);
+			e.Graphics.DrawString (string.Format ("Drawing & Filling the path: {1} ms, high speed.", c2, c2 / cpu_speed / 1000), form.Font, System.Drawing.Brushes.Black, 10, 5);
+			
+			c1 = Epsitec.Common.Drawing.Agg.Library.CycleDelta;
+			
+			e.Graphics.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+			e.Graphics.TranslateTransform (0, form.ClientSize.Height);
+			e.Graphics.ScaleTransform (1, -1);
+			e.Graphics.DrawPath (System.Drawing.Pens.Black, os_path);
+			e.Graphics.FillPath (System.Drawing.Brushes.Gold, os_path);
+			
+			c2 = Epsitec.Common.Drawing.Agg.Library.CycleDelta - c0;
+			
+			e.Graphics.ResetTransform ();
+			e.Graphics.DrawString (string.Format ("Drawing & Filling the path: {1} ms, high quality.", c2, c2 / cpu_speed / 1000), form.Font, System.Drawing.Brushes.Black, 10, 20);
+			
+			//	Mesures: 3ms en HighSpeed, 15ms en HighQuality; en cas de redimensionnement: 50ms et 200ms ?!
+		}
+
+		private void HandleFormSizeChanged(object sender, System.EventArgs e)
+		{
+			System.Windows.Forms.Form form = sender as System.Windows.Forms.Form;
+			form.Invalidate ();
 		}
 	}
 }

@@ -382,44 +382,58 @@ namespace Epsitec.Common.Drawing
 			
 			this.GetElements (out elements, out points);
 			
+			System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath ();
+			
 			int n = elements.Length;
-			int m = 0;
 			
-			for (int i = 0; i < n; i++)
-			{
-				if ((elements[i] & PathElement.MaskCommand) != PathElement.Stop)
-				{
-					m++;
-				}
-			}
-			
-			System.Drawing.PointF[] gp_pts   = new System.Drawing.PointF[m];
-			byte[]                  gp_types = new byte[m];
-			
-			int j = 0;
+			float ox = 0;
+			float oy = 0;
+			float x1,x2,x3,xc;
+			float y1,y2,y3,yc;
 			
 			for (int i = 0; i < n; i++)
 			{
 				switch (elements[i] & PathElement.MaskCommand)
 				{
 					case PathElement.MoveTo:
-						gp_pts[j]     = new System.Drawing.PointF ((float) points[i].X, (float) points[i].Y);
-						gp_types[j++] = (byte) System.Drawing.Drawing2D.PathPointType.Start;
+						ox = (float) points[i].X;
+						oy = (float) points[i].Y;
 						break;
 					
 					case PathElement.LineTo:
-						gp_pts[j]     = new System.Drawing.PointF ((float) points[i].X, (float) points[i].Y);
-						gp_types[j++] = (byte) System.Drawing.Drawing2D.PathPointType.Line;
+						x1 = (float) points[i].X;
+						y1 = (float) points[i].Y;
+						gp.AddLine (ox, oy, x1, y1);
+						ox = x1;
+						oy = y1;
 						break;
 					
 					case PathElement.Curve3:
-						gp_pts[j]     = new System.Drawing.PointF ((float) points[i].X, (float) points[i].Y);
-						gp_types[j++] = (byte) System.Drawing.Drawing2D.PathPointType.Bezier;
+						xc = (float) points[i+0].X;
+						yc = (float) points[i+0].Y;
+						x3 = (float) points[i+1].X;
+						y3 = (float) points[i+1].Y;
+						x1 = (ox + 2 * xc) / 3;
+						y1 = (oy + 2 * yc) / 3;
+						x2 = (x3 + 2 * xc) / 3;
+						y2 = (y3 + 2 * yc) / 3;
+						gp.AddBezier (ox, oy, x1, y1, x2, y2, x3, y3);
+						ox = x3;
+						oy = y3;
+						i += 1;
 						break;
 					
 					case PathElement.Curve4:
-						gp_pts[j]     = new System.Drawing.PointF ((float) points[i].X, (float) points[i].Y);
-						gp_types[j++] = (byte) System.Drawing.Drawing2D.PathPointType.Bezier3;
+						x1 = (float) points[i+0].X;
+						y1 = (float) points[i+0].Y;
+						x2 = (float) points[i+1].X;
+						y2 = (float) points[i+1].Y;
+						x3 = (float) points[i+2].X;
+						y3 = (float) points[i+2].Y;
+						gp.AddBezier (ox, oy, x1, y1, x2, y2, x3, y3);
+						ox = x3;
+						oy = y3;
+						i += 2;
 						break;
 					
 					case PathElement.Stop:
@@ -431,11 +445,9 @@ namespace Epsitec.Common.Drawing
 				
 				if ((elements[i] & PathElement.FlagClose) != 0)
 				{
-					gp_types[j-1] = (byte) System.Drawing.Drawing2D.PathPointType.CloseSubpath;
+					gp.CloseFigure ();
 				}
 			}
-			
-			System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath (gp_pts,gp_types);
 			
 			return gp;
 		}
