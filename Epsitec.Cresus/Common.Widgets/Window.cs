@@ -79,6 +79,84 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public static Window FindFromText(string text)
+		{
+			for (int i = 0; i < Window.windows.Count; )
+			{
+				System.WeakReference weak_ref = Window.windows[i] as System.WeakReference;
+				
+				Window target = weak_ref.Target as Window;
+				
+				if ((target == null) || (target.IsDisposed))
+				{
+					Window.windows.RemoveAt (i);
+				}
+				else
+				{
+					if (target.Text == text)
+					{
+						return target;
+					}
+					
+					i++;
+				}
+			}
+			
+			return null;
+		}
+		
+		public static Window FindFromHandle(System.IntPtr handle)
+		{
+			for (int i = 0; i < Window.windows.Count; )
+			{
+				System.WeakReference weak_ref = Window.windows[i] as System.WeakReference;
+				
+				Window target = weak_ref.Target as Window;
+				
+				if ((target == null) || (target.IsDisposed))
+				{
+					Window.windows.RemoveAt (i);
+				}
+				else
+				{
+					if (target.window.Handle == handle)
+					{
+						return target;
+					}
+					
+					i++;
+				}
+			}
+			
+			return null;
+		}
+		
+		public static Window FindFromName(string name)
+		{
+			for (int i = 0; i < Window.windows.Count; )
+			{
+				System.WeakReference weak_ref = Window.windows[i] as System.WeakReference;
+				
+				Window target = weak_ref.Target as Window;
+				
+				if ((target == null) || (target.IsDisposed))
+				{
+					Window.windows.RemoveAt (i);
+				}
+				else
+				{
+					if (target.Name == name)
+					{
+						return target;
+					}
+					
+					i++;
+				}
+			}
+			
+			return null;
+		}
+		
 		
 		public void MakeFramelessWindow()
 		{
@@ -98,6 +176,11 @@ namespace Epsitec.Common.Widgets
 		public void MakeSecondaryWindow()
 		{
 			this.window.MakeSecondaryWindow ();
+		}
+		
+		public void MakeToolWindow()
+		{
+			this.window.MakeToolWindow ();
 		}
 		
 		public void MakeActive()
@@ -369,6 +452,10 @@ namespace Epsitec.Common.Widgets
 			set { this.window.Size = new System.Drawing.Size ((int)(value.Width + 0.5), (int)(value.Height + 0.5)); }
 		}
 		
+		internal Platform.Window				PlatformWindow
+		{
+			get { return this.window; }
+		}
 		
 		public Drawing.Point					WindowLocation
 		{
@@ -946,7 +1033,6 @@ namespace Epsitec.Common.Widgets
 				if ((! message.Handled) &&
 					(this.owner != null))
 				{
-					System.Diagnostics.Debug.WriteLine ("> " + message);
 					this.owner.DispatchMessage (message);
 				}
 			}

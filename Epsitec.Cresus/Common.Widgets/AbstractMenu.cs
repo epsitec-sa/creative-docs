@@ -626,8 +626,6 @@ namespace Epsitec.Common.Widgets
 			
 			Window.ApplicationDeactivated -= new Support.EventHandler(this.HandleApplicationDeactivated);
 			this.window.Root.Children.Clear();
-			this.window.Dispose();
-			this.window = null;
 			this.submenu = null;
 			
 			if ( this.Window != null )
@@ -640,6 +638,9 @@ namespace Epsitec.Common.Widgets
 				this.isActive = true;
 				this.SelectedIndex = this.SelectedIndex;
 			}
+			
+			this.window.Dispose();
+			this.window = null;
 			return true;
 		}
 

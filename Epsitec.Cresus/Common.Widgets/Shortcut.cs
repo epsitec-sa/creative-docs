@@ -9,6 +9,12 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		public Shortcut(KeyCode code)
+		{
+			this.KeyCode = code;
+		}
+		
+		
 		public bool Match(Shortcut shortcut)
 		{
 			switch (this.mode)

@@ -54,6 +54,12 @@ namespace Epsitec.Common.Widgets.Platform
 			Window.DummyHandleEater (this.Handle);
 		}
 		
+		internal void MakeToolWindow()
+		{
+			this.MakeSecondaryWindow ();
+			this.is_tool_window = true;
+		}
+		
 		internal void ResetHostingWidgetWindow()
 		{
 			this.widget_window_disposed = true;
@@ -829,8 +835,6 @@ namespace Epsitec.Common.Widgets.Platform
 		
 		protected bool WndProcActivation(ref System.Windows.Forms.Message msg)
 		{
-			System.Windows.Forms.Message message;
-			
 			//	Top Level forms should keep their 'active' visual style as long as any top level
 			//	form is active. This is implemented by faking WM_NCACTIVATE messages with the
 			//	proper settings.
@@ -839,17 +843,74 @@ namespace Epsitec.Common.Widgets.Platform
 			//	style is that a modal dialog is being shown; and class CommonDialogs keeps track
 			//	of this, which makes it the ideal fake Message provider.
 			
+			bool active = false;
+
 			switch (msg.Msg)
 			{
 				case Win32Const.WM_ACTIVATE:
+					active = (((int) msg.WParam) != 0);
+					
+					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} got WM_ACTIVATE {1}.", this.Name, active));
+					
+					if (active)
+					{
+						//	Notre fenêtre vient d'être activée. Si c'est une fenêtre "flottante", alors il faut activer
+						//	la fenêtre principale et les autres fenêtres "flottantes".
+						
+						if (this.is_tool_window)
+						{
+							Window owner = this.Owner as Window;
+							
+							if (owner != null)
+							{
+								owner.FakeActivateOwned (true);
+							}
+						}
+					}
+					else
+					{
+						//	Notre fenêtre vient d'être désactivée.
+						
+						Widgets.Window window = Widgets.Window.FindFromHandle (msg.LParam);
+						
+						System.Diagnostics.Debug.WriteLine (string.Format ("because window {0} got activated.", window == null ? "<unknown>" : window.Name));
+						
+						if (window != null)
+						{
+							if (this.IsOwnedWindow (window))
+							{
+								//	La fenêtre qui sera activée (et qui a causé notre désactivation) nous appartient.
+								//	Si cette fenêtre est "flottante", alors on doit s'assurer que notre état visuel
+								//	reste actif.
+								
+								if (window.PlatformWindow.is_tool_window)
+								{
+									active = true;
+								}
+							}
+							else if (this.is_tool_window)
+							{
+								if (this.FindRootOwner () == window.PlatformWindow)
+								{
+									//	La fenêtre qui va être activée est en fait la propriétaire de cette fenêtre
+									//	"flottante". On doit donc conserver l'activation.
+									
+									active = true;
+								}
+							}
+						}
+					}
+					
+					this.FindRootOwner ().FakeActivateOwned (active);
 					break;
 				
 				case Win32Const.WM_ACTIVATEAPP:
-					bool app_active = ((int) msg.WParam) != 0;
-					if (Window.is_app_active != app_active)
+					active = (((int) msg.WParam) != 0);
+					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} got WM_ACTIVATEAPP {1}.", this.Name, active));
+					if (Window.is_app_active != active)
 					{
-						Window.is_app_active = app_active;
-						if (app_active)
+						Window.is_app_active = active;
+						if (active)
 						{
 							this.widget_window.OnApplicationActivated ();
 						}
@@ -858,19 +919,103 @@ namespace Epsitec.Common.Widgets.Platform
 							this.widget_window.OnApplicationDeactivated ();
 						}
 					}
-					message = Window.CreateNCActivate (this, Window.is_app_active);
-					base.WndProc (ref message);
 					break;
 				
 				case Win32Const.WM_NCACTIVATE:
-					if ((int)msg.WParam != 1)
+					active = (((int) msg.WParam) != 0);
+					System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} got WM_NCACTIVATE {1}.", this.Name, active));
+					msg.Result = (System.IntPtr) 1;
+					return true;
+			}
+			
+			return false;
+		}
+		
+		protected void FakeActivate(bool active)
+		{
+			this.has_active_frame = active;
+			
+			if (this.FormBorderStyle != System.Windows.Forms.FormBorderStyle.None)
+			{
+				System.Windows.Forms.Message message = Window.CreateNCActivate (this, active);
+				System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} faking WM_NCACTIVATE {1}.", this.Name, active));
+				base.WndProc (ref message);
+			}
+		}
+		
+		protected Platform.Window FindRootOwner()
+		{
+			Window owner = this.Owner as Window;
+			
+			if (owner != null)
+			{
+				return owner.FindRootOwner ();
+			}
+			
+			return this;
+		}
+		
+		protected void FakeActivateOwned(bool active)
+		{
+			this.FakeActivate (active);
+
+			System.Windows.Forms.Form[] forms = this.OwnedForms;
+			
+			for (int i = 0; i < forms.Length; i++)
+			{
+				Window window = forms[i] as Window;
+				
+				if (window != null)
+				{
+					if (window.is_tool_window)
 					{
-						message = Window.CreateNCActivate (this, true);
-						base.WndProc (ref message);
-						msg.Result = message.Result;
+						window.FakeActivate (active);
+					}
+				}
+			}
+		}
+		
+		protected bool IsOwnedWindow(Widgets.Window find)
+		{
+			System.Windows.Forms.Form[] forms = this.OwnedForms;
+			
+			for (int i = 0; i < forms.Length; i++)
+			{
+				Window window = forms[i] as Window;
+				
+				if (window != null)
+				{
+					if (window.widget_window == find)
+					{
 						return true;
 					}
-					break;
+				}
+			}
+			
+			return false;
+		}
+		
+		protected bool PatchActivate()
+		{
+			if (this.is_tool_window)
+			{
+				return true;
+			}
+			
+			System.Windows.Forms.Form[] forms = this.OwnedForms;
+			
+			for (int i = 0; i < forms.Length; i++)
+			{
+				Window window = forms[i] as Window;
+				
+				if (window != null)
+				{
+					if (window.is_tool_window)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Window {0} has child {1}.", this.Name, window.Name));
+						return true;
+					}
+				}
 			}
 			
 			return false;
@@ -1044,6 +1189,10 @@ namespace Epsitec.Common.Widgets.Platform
 		private bool							is_layered;
 		private bool							is_frozen;
 		private bool							is_no_activate;
+		private bool							is_tool_window;
+		
+		private bool							has_active_frame;
+		
 		private bool							prevent_close = false;
 		private bool							filter_mouse_messages;
 		private double							alpha = 1.0;

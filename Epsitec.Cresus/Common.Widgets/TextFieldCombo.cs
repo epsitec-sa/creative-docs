@@ -329,6 +329,8 @@ namespace Epsitec.Common.Widgets
 			
 			this.comboWindow = new Window();
 			this.comboWindow.MakeFramelessWindow();
+			this.comboWindow.MakeToolWindow();
+			this.comboWindow.Owner = this.Window;
 			if ( adorner.AlphaVMenu < 1.0 )
 			{
 				this.comboWindow.MakeLayeredWindow();

@@ -1,6 +1,6 @@
 namespace Epsitec.Common.Widgets
 {
-	public enum TabBookStyle
+	public enum TabBookArrows
 	{
 		Right,							// les 2 flèches à droite
 		LeftRight,						// flèches à gauche et à droite
@@ -14,7 +14,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public TabBook()
 		{
-			this.type = TabBookStyle.Right;
+			this.arrows = TabBookArrows.Right;
 			this.items = new TabPageCollection(this);
 			
 			this.InternalState &= ~InternalState.PossibleContainer;
@@ -47,6 +47,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
+		
 		
 		#region Interface IBundleSupport
 		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
@@ -92,8 +93,8 @@ namespace Epsitec.Common.Widgets
 			base.Dispose(disposing);
 		}
 
-
-		public bool HasMenuButton
+		
+		public bool							HasMenuButton
 		{
 			get
 			{
@@ -110,7 +111,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public bool HasCloseButton
+		public bool							HasCloseButton
 		{
 			get
 			{
@@ -127,7 +128,31 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public override Drawing.Rectangle InnerBounds
+		public GlyphButton					CloseButton
+		{
+			get
+			{
+				if ( this.hasCloseButton )
+				{
+					return this.buttonClose;
+				}
+				return null;
+			}
+		}
+		
+		public GlyphButton					MenuButton
+		{
+			get
+			{
+				if ( this.HasMenuButton )
+				{
+					return this.buttonMenu;
+				}
+				return null;
+			}
+		}
+		
+		public override Drawing.Rectangle	InnerBounds
 		{
 			get
 			{
@@ -140,7 +165,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public TabPageCollection Items
+		public TabPageCollection			Items
 		{
 			get
 			{
@@ -148,7 +173,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Direction Direction
+		public Direction					Direction
 		{
 			get
 			{
@@ -156,19 +181,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public TabBookStyle TabBookStyle
+		public TabBookArrows				Arrows
 		{
 			get
 			{
-				return this.type;
+				return this.arrows;
 			}
 			set
 			{
-				this.type = value;
+				this.arrows = value;
 			}
 		}
 		
-		public int ActivePageIndex
+		public int							ActivePageIndex
 		{
 			get
 			{
@@ -182,7 +207,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public TabPage ActivePage
+		public TabPage						ActivePage
 		{
 			get
 			{
@@ -197,6 +222,7 @@ namespace Epsitec.Common.Widgets
 					this.UpdateVisiblePages();
 					this.ShowSelectedTabButton();
 					this.Invalidate();
+					this.OnActivePageChanged();
 				}
 				else
 				{
@@ -208,7 +234,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int PageCount
+		public int							PageCount
 		{
 			get
 			{
@@ -216,7 +242,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual double TabHeight
+		public virtual double				TabHeight
 		{
 			get
 			{
@@ -224,7 +250,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Drawing.Rectangle TabClipRectangle
+		public Drawing.Rectangle			TabClipRectangle
 		{
 			get
 			{
@@ -236,14 +262,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public double TabOffsetMin
+		public double						TabOffsetMin
 		{
 			get
 			{
 				double min = 2;
 				if ( this.scrollArrow )
 				{
-					if ( this.type == TabBookStyle.LeftRight )
+					if ( this.Arrows == TabBookArrows.LeftRight )
 					{
 						min = this.tabHeight-2;
 					}
@@ -252,18 +278,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public double TabOffsetMax
+		public double						TabOffsetMax
 		{
 			get
 			{
 				double max = this.Client.Width-2;
 				if ( this.scrollArrow )
 				{
-					if ( this.type == TabBookStyle.LeftRight )
+					if ( this.Arrows == TabBookArrows.LeftRight )
 					{
 						max = this.Client.Width-(this.tabHeight-2);
 					}
-					if ( this.type == TabBookStyle.Right )
+					else if ( this.Arrows == TabBookArrows.Right )
 					{
 						max = this.Client.Width-(this.tabHeight*2-6);
 					}
@@ -274,6 +300,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
 		public void Clear()
 		{
 			this.items.Clear();
@@ -290,10 +317,10 @@ namespace Epsitec.Common.Widgets
 			return this.items.IndexOf(page);
 		}
 
-
-		// Gestion d'un événement lorsqu'un bouton d'onglet est pressé.
+		
 		private void HandleTabButton(object sender, MessageEventArgs e)
 		{
+			// Gestion d'un événement lorsqu'un bouton d'onglet est pressé.
 			if ( !(sender is TabButton) )  return;
 			TabButton button = sender as TabButton;
 
@@ -308,9 +335,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		// Gestion d'un événement lorsqu'un bouton de scroll < > est pressé.
 		private void HandleScrollButton(object sender)
 		{
+			// Gestion d'un événement lorsqu'un bouton de scroll < > est pressé.
 			GlyphButton button = sender as GlyphButton;
 
 			double move = 0;
@@ -340,74 +367,17 @@ namespace Epsitec.Common.Widgets
 			this.OnCloseClicked();
 		}
 
-		protected override void UpdateClientGeometry()
-		{
-			base.UpdateClientGeometry();
-			
-			Direction newDir = this.RootDirection;
-			Direction oldDir = this.direction;
-			
-			if ( oldDir != newDir )
-			{
-				this.UpdateDirection(newDir);
-			}
-
-			this.UpdateOffset();
-			this.UpdateButtons();
-		}
-
-		protected void UpdateOffset()
-		{
-			if ( this.items == null )  return;
-
-			this.scrollTotalWidth = 0;
-			foreach ( TabPage page in this.items )
-			{
-				Drawing.Size size = page.TabSize;
-				double len = System.Math.Floor(size.Width+size.Height);
-				this.scrollTotalWidth += len;
-			}
-
-			this.scrollOffset = System.Math.Min(this.scrollOffset, this.scrollTotalWidth-this.TabOffsetMax);
-			this.scrollOffset = System.Math.Max(this.scrollOffset, -this.TabOffsetMin);
-		}
 		
-		protected void UpdateDirection(Direction dir)
-		{
-			this.direction = dir;
-			this.Invalidate();
-		}
-		
-		// Met à jour la page visible. Toutes les autres sont cachées.
-		protected void UpdateVisiblePages()
-		{
-			foreach ( TabPage page in this.items )
-			{
-				if ( page == this.activePage )  // est-ce la page active ?
-				{
-					page.SetVisible(true);
-					page.TabButton.ActiveState = WidgetState.ActiveYes;
-					page.TabButton.InheritFocus = true;
-				}
-				else
-				{
-					page.SetVisible(false);
-					page.TabButton.ActiveState = WidgetState.ActiveNo;
-					page.TabButton.InheritFocus = false;
-				}
-			}
-		}
-
-		// Scroll les boutons pour rendre entièrement visible l'onglet actif.
 		protected bool ShowSelectedTabButton()
 		{
+			// Scroll les boutons pour rendre entièrement visible l'onglet actif.
 			if ( !this.scrollArrow )  return false;
 
 			double begin = 0;
 			double end = 0;
 			foreach ( TabPage page in this.items )
 			{
-				if ( page == this.activePage )  // est-ce la page active ?
+				if ( page == this.ActivePage )  // est-ce la page active ?
 				{
 					Drawing.Rectangle rect = page.TabButton.Bounds;
 					begin = rect.Left;
@@ -434,16 +404,58 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
-		// Met à jour les boutons, en faisant disparaître les flèches si nécessaire.
+		protected void UpdateOffset()
+		{
+			if ( this.items == null )  return;
+
+			this.scrollTotalWidth = 0;
+			foreach ( TabPage page in this.items )
+			{
+				Drawing.Size size = page.TabSize;
+				double len = System.Math.Floor(size.Width+size.Height);
+				this.scrollTotalWidth += len;
+			}
+
+			this.scrollOffset = System.Math.Min(this.scrollOffset, this.scrollTotalWidth-this.TabOffsetMax);
+			this.scrollOffset = System.Math.Max(this.scrollOffset, -this.TabOffsetMin);
+		}
+		
+		protected void UpdateDirection(Direction dir)
+		{
+			this.direction = dir;
+			this.Invalidate();
+		}
+		
+		protected void UpdateVisiblePages()
+		{
+			// Met à jour la page visible. Toutes les autres sont cachées.
+			foreach ( TabPage page in this.items )
+			{
+				if ( page == this.ActivePage )  // est-ce la page active ?
+				{
+					page.SetVisible(true);
+					page.TabButton.ActiveState = WidgetState.ActiveYes;
+					page.TabButton.InheritFocus = true;
+				}
+				else
+				{
+					page.SetVisible(false);
+					page.TabButton.ActiveState = WidgetState.ActiveNo;
+					page.TabButton.InheritFocus = false;
+				}
+			}
+		}
+
 		protected void UpdateButtons()
 		{
+			// Met à jour les boutons, en faisant disparaître les flèches si nécessaire.
 			this.UpdateTabButtons();
 			this.UpdateGlyphButtons();
 		}
 
-		// Met à jour tous les boutons des onglets.
 		protected void UpdateTabButtons()
 		{
+			// Met à jour tous les boutons des onglets.
 			if ( this.items == null )  return;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
@@ -463,20 +475,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		// Met à jour les 4 boutons spéciaux.
 		protected void UpdateGlyphButtons()
 		{
+			// Met à jour les 4 boutons spéciaux.
 			this.scrollArrow = ( this.scrollTotalWidth > this.Client.Width-4 );
 
 			if ( this.arrowLeft == null )  return;
 
 			if ( this.scrollArrow )
 			{
-				if ( this.type == TabBookStyle.LeftRight )
+				if ( this.Arrows == TabBookArrows.LeftRight )
 				{
 					Drawing.Rectangle rect;
 					rect = new Drawing.Rectangle(0, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
-					rect.Inflate(-2, -2);
+					rect.Deflate(2, 2);
 					rect.Offset(-2, 0);
 					this.arrowLeft.Bounds = rect;
 					this.arrowLeft.SetVisible(true);
@@ -486,20 +498,19 @@ namespace Epsitec.Common.Widgets
 					if ( this.hasMenuButton  )  x -= this.tabHeight-4;
 					if ( this.hasCloseButton )  x -= this.tabHeight-4;
 					rect = new Drawing.Rectangle(x, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
-					rect.Inflate(-2, -2);
+					rect.Deflate(2, 2);
 					rect.Offset(2, 0);
 					this.arrowRight.Bounds = rect;
 					this.arrowRight.SetVisible(true);
 					this.arrowRight.SetEnabled(this.scrollOffset < this.scrollTotalWidth-this.TabOffsetMax);
 				}
-
-				if ( this.type == TabBookStyle.Right )
+				else if ( this.Arrows == TabBookArrows.Right )
 				{
 					double x = this.Client.Width-this.tabHeight*2;
 					if ( this.hasMenuButton  )  x -= this.tabHeight-4;
 					if ( this.hasCloseButton )  x -= this.tabHeight-4;
 					Drawing.Rectangle rect = new Drawing.Rectangle(x, this.Client.Height-this.tabHeight, this.tabHeight, this.tabHeight);
-					rect.Inflate(-2, -2);
+					rect.Deflate(2, 2);
 					rect.Offset(6, 0);
 					this.arrowLeft.Bounds = rect;
 					this.arrowLeft.SetVisible(true);
@@ -544,7 +555,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			// Pour détecter le clic sur les flèches en premier.
-			if ( this.isGrimy )
+			if ( this.isRefreshNeeded )
 			{
 				this.Children.Remove(this.arrowLeft);
 				this.Children.Remove(this.arrowRight);
@@ -554,11 +565,11 @@ namespace Epsitec.Common.Widgets
 				this.Children.Add(this.arrowRight);
 				this.Children.Add(this.buttonMenu);
 				this.Children.Add(this.buttonClose);
-				this.isGrimy = false;
+				this.isRefreshNeeded = false;
 			}
 		}
 
-
+		
 		protected virtual void HandlePageRankChanged(object sender, System.EventArgs e)
 		{
 		}
@@ -572,8 +583,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public event Support.EventHandler CloseClicked;
-
 		protected virtual void OnMenuClicked()
 		{
 			if ( this.MenuClicked != null )
@@ -582,24 +591,42 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public event Support.EventHandler MenuClicked;
-
-		
-		class TabComparer : System.Collections.IComparer
+		protected virtual void OnPageCountChanged()
 		{
-			public int Compare(object x, object y)
+			if ( this.PageCountChanged != null )
 			{
-				TabPage page1 = x as TabPage;
-				TabPage page2 = y as TabPage;
-				
-				return page1.Rank.CompareTo(page2.Rank);
+				this.PageCountChanged(this);
 			}
 		}
 		
+		protected virtual void OnActivePageChanged()
+		{
+			if ( this.ActivePageChanged != null )
+			{
+				this.ActivePageChanged(this);
+			}
+		}
+
 		
-		// Dessine le groupe d'onglets.
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry();
+			
+			Direction newDir = this.RootDirection;
+			Direction oldDir = this.direction;
+			
+			if ( oldDir != newDir )
+			{
+				this.UpdateDirection(newDir);
+			}
+
+			this.UpdateOffset();
+			this.UpdateButtons();
+		}
+
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
+			// Dessine le groupe d'onglets.
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			Drawing.Rectangle rect  = this.Client.Bounds;
@@ -615,7 +642,6 @@ namespace Epsitec.Common.Widgets
 			part.Top -= this.TabHeight;
 			adorner.PaintTabFrame(graphics, part, state, Direction.Down);
 		}
-		
 		
 		protected override void ProcessMessage(Message message, Epsitec.Common.Drawing.Point pos)
 		{
@@ -650,7 +676,7 @@ namespace Epsitec.Common.Widgets
 				if ( dir != 0 )
 				{
 					int index = this.ActivePageIndex + dir;
-					index = System.Math.Min(index, this.items.Count-1);
+					index = System.Math.Min(index, this.PageCount-1);
 					index = System.Math.Max(index, 0);
 					this.ActivePageIndex = index;
 					message.Consumer = this;
@@ -661,7 +687,7 @@ namespace Epsitec.Common.Widgets
 			base.ProcessMessage(message, pos);
 		}
 
-
+		
 		public override Drawing.Rectangle GetShapeBounds()
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
@@ -694,10 +720,11 @@ namespace Epsitec.Common.Widgets
 			this.Children.Add(item.TabButton);  // TabButton fils de TabBook !
 			item.TabButton.Pressed += new MessageEventHandler(this.HandleTabButton);
 			item.RankChanged += new System.EventHandler(this.HandlePageRankChanged);
-			this.isGrimy = true;
+			this.isRefreshNeeded = true;
 			
 			this.UpdateVisiblePages();
 			this.UpdateButtons();
+			this.OnPageCountChanged();
 		}
 
 		public void NotifyRemoval(Widget widget)
@@ -709,7 +736,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.Children.Remove(item);
 			this.Children.Remove(item.TabButton);
-			this.isGrimy = true;
+			this.isRefreshNeeded = true;
 		}
 		
 		public void NotifyPostRemoval(Widget widget)
@@ -717,9 +744,9 @@ namespace Epsitec.Common.Widgets
 			TabPage item  = widget as TabPage;
 			int     index = item.Index;
 
-			if ( this.activePage == item )
+			if ( this.ActivePage == item )
 			{
-				if ( index >= this.items.Count )
+				if ( index >= this.PageCount )
 				{
 					index--;
 				}
@@ -729,9 +756,23 @@ namespace Epsitec.Common.Widgets
 			
 			this.UpdateVisiblePages();
 			this.UpdateButtons();
+			this.OnPageCountChanged();
 		}
 		#endregion
-
+		
+		#region TabComparer class
+		class TabComparer : System.Collections.IComparer
+		{
+			public int Compare(object x, object y)
+			{
+				TabPage page1 = x as TabPage;
+				TabPage page2 = y as TabPage;
+				
+				return page1.Rank.CompareTo(page2.Rank);
+			}
+		}
+		#endregion
+		
 		#region TabPageCollection Class
 		public class TabPageCollection : Helpers.WidgetCollection
 		{
@@ -756,22 +797,27 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		#endregion
-
-
-		protected TabBookStyle					type;
-		protected TabPageCollection				items;
-		protected TabPage						activePage;
-		protected Direction						direction;
-		protected double						tabHeight = 20;
-		protected bool							scrollArrow = false;
-		protected bool							hasMenuButton = false;
-		protected bool							hasCloseButton = false;
-		protected GlyphButton					arrowLeft;
-		protected GlyphButton					arrowRight;
-		protected GlyphButton					buttonMenu;
-		protected GlyphButton					buttonClose;
-		protected double						scrollTotalWidth;
-		protected double						scrollOffset = 0;
-		protected bool							isGrimy;
+		
+		public event Support.EventHandler	CloseClicked;
+		public event Support.EventHandler	MenuClicked;
+		public event Support.EventHandler	PageCountChanged;
+		public event Support.EventHandler	ActivePageChanged;
+		
+		
+		private TabBookArrows				arrows;
+		private TabPageCollection			items;
+		private TabPage						activePage;
+		protected Direction					direction;
+		protected double					tabHeight = 20;
+		protected bool						scrollArrow = false;
+		protected bool						hasMenuButton = false;
+		protected bool						hasCloseButton = false;
+		protected GlyphButton				arrowLeft;
+		protected GlyphButton				arrowRight;
+		protected GlyphButton				buttonMenu;
+		protected GlyphButton				buttonClose;
+		protected double					scrollTotalWidth;
+		protected double					scrollOffset = 0;
+		protected bool						isRefreshNeeded;
 	}
 }

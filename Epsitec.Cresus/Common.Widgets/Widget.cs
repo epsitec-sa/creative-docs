@@ -911,14 +911,33 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					this.internal_state &= InternalState.AutoToggle;
+					this.internal_state &= ~InternalState.AutoToggle;
 				}
 			}
 		}
 		
 		public bool									AutoMnemonic
 		{
-			get { return (this.internal_state & InternalState.AutoMnemonic) != 0; }
+			get
+			{
+				return (this.internal_state & InternalState.AutoMnemonic) != 0;
+			}
+			set
+			{
+				if (this.AutoMnemonic != value)
+				{
+					if (value)
+					{
+						this.internal_state |= InternalState.AutoMnemonic;
+					}
+					else
+					{
+						this.internal_state &= ~InternalState.AutoMnemonic;
+					}
+					
+					this.ResetMnemonicShortcut ();
+				}
+			}
 		}
 		
 		public bool									InheritFocus
@@ -1363,7 +1382,6 @@ namespace Epsitec.Common.Widgets
 					if (this.text_layout != null)
 					{
 						this.DisposeTextLayout ();
-						this.Shortcut.Mnemonic = (char) 0;
 						this.OnTextChanged ();
 						this.Invalidate ();
 					}
@@ -1372,10 +1390,13 @@ namespace Epsitec.Common.Widgets
 				{
 					this.CreateTextLayout ();
 					this.ModifyTextLayout (value);
-					
-					this.Shortcut.Mnemonic = this.Mnemonic;
 					this.OnTextChanged ();
 					this.Invalidate ();
+				}
+				
+				if (this.AutoMnemonic)
+				{
+					this.ResetMnemonicShortcut ();
 				}
 			}
 		}
@@ -1457,6 +1478,24 @@ namespace Epsitec.Common.Widgets
 				
 				return this.shortcut;
 			}
+			
+			set
+			{
+				if (this.AutoMnemonic)
+				{
+					//	Supprime le flag 'auto mnemonic' sans altérer le raccourci,
+					//	ce qui évite de générer un événement ShortcutChanged avant
+					//	l'heure :
+					
+					this.internal_state &= ~InternalState.AutoMnemonic;
+				}
+				
+				if (this.shortcut != value)
+				{
+					this.shortcut = value;
+					this.OnShortcutChanged ();
+				}
+			}
 		}
 		
 		public string								Hypertext
@@ -1490,6 +1529,7 @@ namespace Epsitec.Common.Widgets
 		public event MessageEventHandler			Entered;
 		public event MessageEventHandler			Exited;
 		public event Support.EventHandler			ShortcutPressed;
+		public event Support.EventHandler			ShortcutChanged;
 		public event Support.EventHandler			HypertextHot;
 		public event MessageEventHandler			HypertextClicked;
 		
@@ -1889,7 +1929,12 @@ namespace Epsitec.Common.Widgets
 					Widget.entered_widgets.Add (this);
 					this.widget_state |= WidgetState.Entered;
 					
-					System.Diagnostics.Debug.Assert ((this.parent == null) || (this.parent.IsEntered) || (this.parent == this.RootParent));
+					if ((this.parent != null) &&
+						(this.parent.IsEntered == false) &&
+						(!(this.parent is WindowRoot)))
+					{
+						this.parent.SetEntered (true);
+					}
 					
 					message = Message.FromMouseEvent (MessageType.MouseEnter, null, null);
 					
@@ -4333,6 +4378,18 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
+		protected virtual void ResetMnemonicShortcut()
+		{
+			if (this.AutoMnemonic)
+			{
+				if (this.Shortcut.Mnemonic != this.Mnemonic)
+				{
+					this.Shortcut.Mnemonic = this.Mnemonic;
+					this.OnShortcutChanged ();
+				}
+			}
+		}
+		
 		
 		protected virtual void BuildFullPathName(System.Text.StringBuilder buffer)
 		{
@@ -4687,6 +4744,14 @@ namespace Epsitec.Common.Widgets
 			if (this.ShortcutPressed != null)
 			{
 				this.ShortcutPressed (this);
+			}
+		}
+		
+		protected virtual void OnShortcutChanged()
+		{
+			if (this.ShortcutChanged != null)
+			{
+				this.ShortcutChanged (this);
 			}
 		}
 		
