@@ -48,13 +48,13 @@ namespace Epsitec.Common.Widgets
 			this.fields[3].Color = Drawing.Color.FromRGB(0.5,0.5,0.5);
 
 			this.fields[4].Color = Drawing.Color.FromRGB(0,0,0);
-			this.fields[4].ColorBack = Drawing.Color.FromRGB(0.5,0.5,0.5);
+			this.fields[4].BackColor = Drawing.Color.FromRGB(0.5,0.5,0.5);
 
 			this.fields[5].Color = Drawing.Color.FromRGB(0,0,0);
-			this.fields[5].ColorBack = Drawing.Color.FromRGB(1,1,1);
+			this.fields[5].BackColor = Drawing.Color.FromRGB(1,1,1);
 			
 			this.fields[6].Color = Drawing.Color.FromRGB(1,1,1);
-			this.fields[6].ColorBack = Drawing.Color.FromRGB(0,0,0);
+			this.fields[6].BackColor = Drawing.Color.FromRGB(0,0,0);
 
 			this.labels[0].Text = "R";
 			this.labels[1].Text = "V";
@@ -150,10 +150,14 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.color != value )
 				{
+					System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
+					
+					this.suspendColorEvents = true;
 					this.color = value;
 					this.circle.Color = this.color;
 					this.ColorToFieldsRGB();
 					this.ColorToFieldsHSV();
+					this.suspendColorEvents = false;
 					this.Invalidate();
 				}
 			}
@@ -375,5 +379,6 @@ namespace Epsitec.Common.Widgets
 		protected int						nbField;
 		protected StaticText[]				labels;
 		protected TextFieldSlider[]			fields;
+		protected bool						suspendColorEvents = false;
 	}
 }
