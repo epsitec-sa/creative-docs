@@ -207,6 +207,7 @@ namespace Epsitec.Cresus.Database
 					Assertion.AssertEquals (row_1, row_2);
 					Assertion.AssertEquals (n+1, queue.Rows.Count);
 					Assertion.AssertEquals (DbIdClass.Temporary, DbId.AnalyzeClass ((long) row_1[Tags.ColumnId]));
+					Assertion.AssertEquals (Requests.ExecutionState.Pending, queue.GetExecutionState (row_1));
 					
 					queue.SerializeToBase (transaction);
 					
@@ -223,7 +224,7 @@ namespace Epsitec.Cresus.Database
 				
 				foreach (System.Data.DataRow row in rows)
 				{
-					System.Diagnostics.Debug.WriteLine ("Row " + row[0] + " contains " + ((byte[])row[3]).Length + " bytes.");
+					System.Diagnostics.Debug.WriteLine ("Row " + row[0] + " contains " + ((byte[])row[Tags.ColumnReqData]).Length + " bytes.");
 				}
 			}
 		}

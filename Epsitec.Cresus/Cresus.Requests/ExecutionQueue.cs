@@ -39,7 +39,8 @@ namespace Epsitec.Cresus.Requests
 			this.queue_command.CreateNewRow (Tags.TableRequestQueue, out row);
 			
 			row.BeginEdit ();
-			row[Tags.ColumnQueueData] = buffer;
+			row[Tags.ColumnReqData]    = buffer;
+			row[Tags.ColumnReqExState] = (int) ExecutionState.Pending;
 			row.EndEdit ();
 			
 			return row;
@@ -49,11 +50,26 @@ namespace Epsitec.Cresus.Requests
 		{
 			if (row != null)
 			{
-				byte[] buffer = row[Tags.ColumnQueueData] as byte[];
+				byte[] buffer = row[Tags.ColumnReqData] as byte[];
 				return Requests.Base.DeserializeFromMemory (buffer);
 			}
 			
 			return null;
+		}
+		
+		public ExecutionState GetExecutionState(System.Data.DataRow row)
+		{
+			if (row != null)
+			{
+				System.Enum state;
+				
+				if (Epsitec.Common.Types.Converter.Convert (row[Tags.ColumnReqExState], typeof (ExecutionState), out state))
+				{
+					return (ExecutionState) state;
+				}
+			}
+			
+			throw new System.InvalidCastException ("Invalid ExecutionState in row.");
 		}
 		
 		

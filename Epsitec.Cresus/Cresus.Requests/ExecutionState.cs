@@ -10,11 +10,11 @@ namespace Epsitec.Cresus.Requests
 	/// </summary>
 	public enum ExecutionState
 	{
-		Pending,								//	en attente, exécution locale
-		Conflicting,							//	en attente, conflit à résoudre
-		ExecutedByClient,						//	exécution par le client OK
-		SentToServer,							//	envoi au serveur OK
-		ExecutedByServer,						//	exécution par le serveur OK
+		Pending				= 0,				//	en attente, exécution locale
+		Conflicting			= 1,				//	en attente, conflit à résoudre
+		ExecutedByClient	= 2,				//	exécution par le client OK
+		SentToServer		= 3,				//	envoi au serveur OK
+		ExecutedByServer	= 4,				//	exécution par le serveur OK
 	}
 	
 	//	Les transitions suivantes sont possibles :

@@ -14,9 +14,10 @@ namespace Epsitec.Cresus.Database
 		public const string	TypeDescription		= "CR_DescriptionType";
 		public const string	TypeInfoXml			= "CR_InfoXmlType";
 		public const string	TypeDateTime		= "CR_DateTimeType";
-		public const string TypeRawData			= "CR_RawDataType";
 		public const string TypeDictKey			= "CR_DictKeyType";
-		public const string TypeDictValue		= "CR_DictKeyValue";
+		public const string TypeDictValue		= "CR_DictValueType";
+		public const string TypeReqRawData		= "CR_ReqRawDataType";
+		public const string TypeReqExState		= "CR_ReqExStateType";
 		
 		//	Noms des colonnes "Crésus" fondamentales :
 		
@@ -32,7 +33,8 @@ namespace Epsitec.Cresus.Database
 		public const string ColumnDictKey		= "CR_DICT_KEY";
 		public const string ColumnDictValue		= "CR_DICT_VALUE";
 		
-		public const string ColumnQueueData		= "CR_QUEUE_DATA";
+		public const string ColumnReqData		= "CR_REQ_DATA";
+		public const string ColumnReqExState	= "CR_REQ_EX_STATE";
 		
 		public const string	ColumnRefTable		= "CREF_TABLE";
 		public const string	ColumnRefType		= "CREF_TYPE";

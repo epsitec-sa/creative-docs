@@ -1969,7 +1969,8 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnId,		  types.KeyId,		 Nullable.No,  DbColumnClass.KeyId),
 						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
 						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefInternal),
-						new DbColumn (Tags.ColumnQueueData,	  types.RawData,	 Nullable.No,  DbColumnClass.Data)
+						new DbColumn (Tags.ColumnReqExState,  types.ReqExState,  Nullable.No,  DbColumnClass.Data),
+						new DbColumn (Tags.ColumnReqData,	  types.ReqRawData,	 Nullable.No,  DbColumnClass.Data)
 					};
 				
 				this.CreateTable (table, columns);
@@ -2018,8 +2019,9 @@ namespace Epsitec.Cresus.Database
 			
 			public void ResolveTypes(DbTransaction transaction)
 			{
-				this.num_type_key_id      = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyId) as DbTypeNum;
-				this.num_type_key_status  = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyStatus) as DbTypeNum;
+				this.num_type_key_id       = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyId) as DbTypeNum;
+				this.num_type_key_status   = this.infrastructure.ResolveDbType (transaction, Tags.TypeKeyStatus) as DbTypeNum;
+				this.num_type_req_ex_state = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqExState) as DbTypeNum;
 				
 				this.str_type_name        = this.infrastructure.ResolveDbType (transaction, Tags.TypeName) as DbTypeString;
 				this.str_type_caption     = this.infrastructure.ResolveDbType (transaction, Tags.TypeCaption) as DbTypeString;
@@ -2029,10 +2031,11 @@ namespace Epsitec.Cresus.Database
 				this.str_type_dict_value  = this.infrastructure.ResolveDbType (transaction, Tags.TypeDictValue) as DbTypeString;
 				
 				this.d_t_type_datetime    = this.infrastructure.ResolveDbType (transaction, Tags.TypeDateTime) as DbTypeDateTime;
-				this.bin_type_raw_data    = this.infrastructure.ResolveDbType (transaction, Tags.TypeRawData) as DbTypeByteArray;
+				this.bin_type_raw_data    = this.infrastructure.ResolveDbType (transaction, Tags.TypeReqRawData) as DbTypeByteArray;
 				
 				this.infrastructure.internal_types.Add (this.num_type_key_id);
 				this.infrastructure.internal_types.Add (this.num_type_key_status);
+				this.infrastructure.internal_types.Add (this.num_type_req_ex_state);
 				
 				this.infrastructure.internal_types.Add (this.str_type_name);
 				this.infrastructure.internal_types.Add (this.str_type_caption);
@@ -2050,17 +2053,19 @@ namespace Epsitec.Cresus.Database
 			
 			void InitialiseNumTypes()
 			{
-				this.num_type_key_id     = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId),     Tags.Name + "=" + Tags.TypeKeyId);
-				this.num_type_key_status = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForStatus), Tags.Name + "=" + Tags.TypeKeyStatus);
+				this.num_type_key_id       = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForId),     Tags.Name + "=" + Tags.TypeKeyId);
+				this.num_type_key_status   = new DbTypeNum (DbNumDef.FromRawType (DbKey.RawTypeForStatus), Tags.Name + "=" + Tags.TypeKeyStatus);
+				this.num_type_req_ex_state = new DbTypeNum (new DbNumDef (1, 0, 0M, 9M),                   Tags.Name + "=" + Tags.TypeReqExState);
 			
 				this.infrastructure.internal_types.Add (this.num_type_key_id);
 				this.infrastructure.internal_types.Add (this.num_type_key_status);
+				this.infrastructure.internal_types.Add (this.num_type_req_ex_state);
 			}
 			
 			void InitialiseOtherTypes()
 			{
 				this.d_t_type_datetime   = new DbTypeDateTime (Tags.Name + "=" + Tags.TypeDateTime);
-				this.bin_type_raw_data   = new DbTypeByteArray (Tags.Name + "=" + Tags.TypeRawData);
+				this.bin_type_raw_data   = new DbTypeByteArray (Tags.Name + "=" + Tags.TypeReqRawData);
 			
 				this.infrastructure.internal_types.Add (this.d_t_type_datetime);
 				this.infrastructure.internal_types.Add (this.bin_type_raw_data);
@@ -2088,6 +2093,7 @@ namespace Epsitec.Cresus.Database
 			{
 				System.Diagnostics.Debug.Assert (this.num_type_key_id != null);
 				System.Diagnostics.Debug.Assert (this.num_type_key_status != null);
+				System.Diagnostics.Debug.Assert (this.num_type_req_ex_state != null);
 				
 				System.Diagnostics.Debug.Assert (this.str_type_name != null);
 				System.Diagnostics.Debug.Assert (this.str_type_caption != null);
@@ -2117,6 +2123,14 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
+			public DbTypeNum					ReqExState
+			{
+				get
+				{
+					return this.num_type_req_ex_state;
+				}
+			}
+			
 			public DbTypeDateTime				DateTime
 			{
 				get
@@ -2125,7 +2139,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			public DbTypeByteArray				RawData
+			public DbTypeByteArray				ReqRawData
 			{
 				get
 				{
@@ -2186,6 +2200,7 @@ namespace Epsitec.Cresus.Database
 			
 			protected DbTypeNum					num_type_key_id;
 			protected DbTypeNum					num_type_key_status;
+			protected DbTypeNum					num_type_req_ex_state;
 			
 			protected DbTypeDateTime			d_t_type_datetime;
 			protected DbTypeByteArray			bin_type_raw_data;
