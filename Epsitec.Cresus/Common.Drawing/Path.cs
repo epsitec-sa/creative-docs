@@ -144,17 +144,43 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public void ArcTo(Point c, double rx, double ry, double a1, double a2, bool ccw)
+		public void ArcToDeg(Point c, double rx, double ry, double a1, double a2, bool ccw)
 		{
-			this.ArcTo (c.X, c.Y, rx, ry, a1, a2, ccw);
+			this.ArcToDeg (c.X, c.Y, rx, ry, a1, a2, ccw);
 		}
 		
-		public void ArcTo(double x, double y, double rx, double ry, double a1, double a2, bool ccw)
+		public void ArcToDeg(double x, double y, double rx, double ry, double a1, double a2, bool ccw)
 		{
-			this.ArcTo (x, y, rx, ry, a1, a2, ccw, this.default_zoom);
+			this.ArcToDeg (x, y, rx, ry, a1, a2, ccw, this.default_zoom);
 		}
 		
-		public void ArcTo(double x, double y, double rx, double ry, double a1, double a2, bool ccw, double approximation_zoom)
+		public void ArcToDeg(double x, double y, double rx, double ry, double a1, double a2, bool ccw, double approximation_zoom)
+		{
+			a1 = Math.DegToRad (a1);
+			a2 = Math.DegToRad (a2);
+			
+			this.CreateOnTheFly ();
+			AntiGrain.Path.AppendArc (this.agg_path, x, y, rx, ry, a1, a2, ccw, approximation_zoom, true);
+			
+			double ex = x + System.Math.Cos (a2) * rx;
+			double ey = y + System.Math.Sin (a2) * ry;
+			
+			this.has_current_point = true;
+			this.current_point     = new Point (ex, ey);
+			this.is_empty          = false;
+		}
+		
+		public void ArcToRad(Point c, double rx, double ry, double a1, double a2, bool ccw)
+		{
+			this.ArcToRad (c.X, c.Y, rx, ry, a1, a2, ccw);
+		}
+		
+		public void ArcToRad(double x, double y, double rx, double ry, double a1, double a2, bool ccw)
+		{
+			this.ArcToRad (x, y, rx, ry, a1, a2, ccw, this.default_zoom);
+		}
+		
+		public void ArcToRad(double x, double y, double rx, double ry, double a1, double a2, bool ccw, double approximation_zoom)
 		{
 			this.CreateOnTheFly ();
 			AntiGrain.Path.AppendArc (this.agg_path, x, y, rx, ry, a1, a2, ccw, approximation_zoom, true);
@@ -167,17 +193,43 @@ namespace Epsitec.Common.Drawing
 			this.is_empty          = false;
 		}
 		
-		public void Arc(Point c, double rx, double ry, double a1, double a2, bool ccw)
+		public void ArcDeg(Point c, double rx, double ry, double a1, double a2, bool ccw)
 		{
-			this.Arc (c.X, c.Y, rx, ry, a1, a2, ccw);
+			this.ArcDeg (c.X, c.Y, rx, ry, a1, a2, ccw);
 		}
 		
-		public void Arc(double x, double y, double rx, double ry, double a1, double a2, bool ccw)
+		public void ArcDeg(double x, double y, double rx, double ry, double a1, double a2, bool ccw)
 		{
-			this.Arc (x, y, rx, ry, a1, a2, ccw, this.default_zoom);
+			this.ArcDeg (x, y, rx, ry, a1, a2, ccw, this.default_zoom);
 		}
 		
-		public void Arc(double x, double y, double rx, double ry, double a1, double a2, bool ccw, double approximation_zoom)
+		public void ArcDeg(double x, double y, double rx, double ry, double a1, double a2, bool ccw, double approximation_zoom)
+		{
+			a1 = Math.DegToRad (a1);
+			a2 = Math.DegToRad (a2);
+			
+			this.CreateOnTheFly ();
+			AntiGrain.Path.AppendArc (this.agg_path, x, y, rx, ry, a1, a2, ccw, approximation_zoom, false);
+			
+			double ex = x + System.Math.Cos (a2) * rx;
+			double ey = y + System.Math.Sin (a2) * ry;
+			
+			this.has_current_point = true;
+			this.current_point     = new Point (ex, ey);
+			this.is_empty          = false;
+		}
+		
+		public void ArcRad(Point c, double rx, double ry, double a1, double a2, bool ccw)
+		{
+			this.ArcRad (c.X, c.Y, rx, ry, a1, a2, ccw);
+		}
+		
+		public void ArcRad(double x, double y, double rx, double ry, double a1, double a2, bool ccw)
+		{
+			this.ArcRad (x, y, rx, ry, a1, a2, ccw, this.default_zoom);
+		}
+		
+		public void ArcRad(double x, double y, double rx, double ry, double a1, double a2, bool ccw, double approximation_zoom)
 		{
 			this.CreateOnTheFly ();
 			AntiGrain.Path.AppendArc (this.agg_path, x, y, rx, ry, a1, a2, ccw, approximation_zoom, false);

@@ -200,7 +200,7 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
-		public static double ComputeAngle(Point c, Point a)
+		public static double ComputeAngleRad(Point c, Point a)
 		{
 			// Calcule l'angle d'un triangle rectangle.
 			// L'angle est anti-horaire (CCW), compris entre 0 et 2*PI.
@@ -215,42 +215,23 @@ namespace Epsitec.Common.Drawing
 			//      |    x 
 			//      |
 			
-			return Point.ComputeAngle(a.X-c.X, a.Y-c.Y);
+			return Point.ComputeAngleRad(a.X-c.X, a.Y-c.Y);
 		}
 
-		public static double ComputeAngle(double x, double y)
+		public static double ComputeAngleRad(double x, double y)
 		{
 			if ( x == 0.0 && y == 0.0 )  return 0.0;
-#if true
 			return System.Math.Atan2 (y, x);
-#else
-			if ( x >= 0.0 )
-			{
-				if ( y >= 0.0 )
-				{
-					if ( x > y )  return System.Math.PI*0.0 + System.Math.Atan(y/x);
-					else          return System.Math.PI*0.5 - System.Math.Atan(x/y);
-				}
-				else
-				{
-					if ( x > -y )  return System.Math.PI*2.0 + System.Math.Atan(y/x);
-					else           return System.Math.PI*1.5 - System.Math.Atan(x/y);
-				}
-			}
-			else
-			{
-				if ( y >= 0.0 )
-				{
-					if ( -x > y )  return System.Math.PI*1.0 + System.Math.Atan(y/x);
-					else           return System.Math.PI*0.5 - System.Math.Atan(x/y);
-				}
-				else
-				{
-					if ( -x > -y )  return System.Math.PI*1.0 + System.Math.Atan(y/x);
-					else            return System.Math.PI*1.5 - System.Math.Atan(x/y);
-				}
-			}
-#endif
+		}
+		
+		public static double ComputeAngleDeg(Point c, Point a)
+		{
+			return Math.RadToDeg (Point.ComputeAngleRad (c, a));
+		}
+
+		public static double ComputeAngleDeg(double x, double y)
+		{
+			return Math.RadToDeg (Point.ComputeAngleRad (x, y));
 		}
 
 		
