@@ -573,8 +573,8 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.VerticalMarkShow(pos);
-			this.ShowManualToolTip(pos);
-			this.UpdateManualToolTip(pos);
+			//-this.ShowManualToolTip(pos);
+			//-this.UpdateManualToolTip(pos);
 
 			this.mouseDown = true;
 			this.TabChanged();
@@ -596,7 +596,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.VerticalMarkShow(pos);
-			this.UpdateManualToolTip(pos);
+			//-this.UpdateManualToolTip(pos);
 
 			this.TabChanged();
 			return true;
@@ -615,7 +615,7 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.VerticalMarkHide();
-			this.HideManualToolTip(pos);
+			//-this.HideManualToolTip(pos);
 
 			this.mouseDown = false;
 			return true;
@@ -1207,7 +1207,7 @@ namespace Epsitec.Common.Widgets
 		protected int						mouseTabRank;
 		protected double					leftMargin = 0.0;
 		protected double					rightMargin = 0.0;
-		protected double					ppm = 4.0;
+		protected double					ppm = 10.0;
 		protected double					scale = 1.0;
 		protected bool						listCapability = true;
 		protected bool						tabCapability = true;
