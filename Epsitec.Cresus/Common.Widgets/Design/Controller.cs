@@ -108,8 +108,8 @@ namespace Epsitec.Common.Widgets.Design
 			widget.Parent = root;
 			widget.Dock   = DockStyle.Fill;
 			
-			this.widget_palette.DragBegin += new EventHandler (this.HandleSourceDragBegin);
-			this.widget_palette.DragEnd   += new EventHandler (this.HandleSourceDragEnd);
+			this.widget_palette.DragBegin += new Support.EventHandler (this.HandleSourceDragBegin);
+			this.widget_palette.DragEnd   += new Support.EventHandler (this.HandleSourceDragEnd);
 			
 			//	Initialisation de la barre d'outils pour l'édition :
 			
@@ -349,7 +349,7 @@ namespace Epsitec.Common.Widgets.Design
 			editor.Selected   += new SelectionEventHandler (this.HandleEditorSelected);
 			editor.Deselected += new SelectionEventHandler (this.HandleEditorDeselected);
 			
-			window.WindowActivated += new EventHandler (this.HandleEditWindowWindowActivated);
+			window.WindowActivated += new Support.EventHandler (this.HandleEditWindowWindowActivated);
 			
 			window.SetProperty ("$editor", editor);
 			window.Show ();
