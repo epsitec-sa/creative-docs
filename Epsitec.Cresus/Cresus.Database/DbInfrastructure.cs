@@ -1333,7 +1333,7 @@ namespace Epsitec.Cresus.Database
 					DbKey   parent_key   = new DbKey (parent_table_ref_id);
 					DbTable parent_table = this.ResolveDbTable (transaction, parent_key);
 					
-					System.Diagnostics.Debug.WriteLine (string.Format ("Column {0}.{1} ({4}) refers to table {3} (ID {2}).", db_table.Name, db_column.Name, parent_key.Id, parent_table.Name, db_column.ColumnClass));
+//-					System.Diagnostics.Debug.WriteLine (string.Format ("Column {0}.{1} ({4}) refers to table {3} (ID {2}).", db_table.Name, db_column.Name, parent_key.Id, parent_table.Name, db_column.ColumnClass));
 					
 					db_column.DefineParentTableName (parent_table.Name);
 				}

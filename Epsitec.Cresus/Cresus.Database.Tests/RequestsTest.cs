@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Database
 				
 				foreach (System.Data.DataRow row in rows)
 				{
-					System.Diagnostics.Debug.WriteLine ("Row " + row[0] + " contains " + ((byte[])row[Tags.ColumnReqData]).Length + " bytes.");
+					System.Diagnostics.Debug.WriteLine ("Row " + row[0] + " contains " + ((byte[])row[Tags.ColumnReqData]).Length + " bytes, state = " + queue.GetRequestExecutionState (row));
 				}
 				
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
@@ -384,7 +384,7 @@ namespace Epsitec.Cresus.Database
 			infrastructure.UnregisterDbTable (null, db_table);
 		}
 
-		[Test] public void Check10ExecutionQueueClearQueue()
+		[Test] public void Check10ExecutionQueueDump()
 		{
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
 			{
@@ -398,7 +398,26 @@ namespace Epsitec.Cresus.Database
 				
 				foreach (System.Data.DataRow row in rows)
 				{
-					System.Diagnostics.Debug.WriteLine ("Row " + row[0] + " contains " + ((byte[])row[Tags.ColumnReqData]).Length + " bytes.");
+					System.Diagnostics.Debug.WriteLine ("Row " + row[0] + " contains " + ((byte[])row[Tags.ColumnReqData]).Length + " bytes, state = " + queue.GetRequestExecutionState (row));
+				}
+			}
+		}
+
+		[Test] public void Check11ExecutionQueueClearQueue()
+		{
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", true))
+			{
+				Assert.IsNotNull (infrastructure);
+				
+				Requests.ExecutionQueue queue = new Requests.ExecutionQueue (infrastructure, null);
+				System.Data.DataRow[] rows;
+				
+				queue = new Requests.ExecutionQueue (infrastructure, null);
+				rows  = queue.Rows;
+				
+				foreach (System.Data.DataRow row in rows)
+				{
+					System.Diagnostics.Debug.WriteLine ("Row " + row[0] + " contains " + ((byte[])row[Tags.ColumnReqData]).Length + " bytes, state = " + queue.GetRequestExecutionState (row));
 				}
 				
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
@@ -411,7 +430,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 		
-		[Test] /*[Ignore ("Temporary")]*/ public void Check11ServiceServer()
+		[Test] /*[Ignore ("Temporary")]*/ public void Check12ServiceServer()
 		{
 			DbInfrastructure      infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			
@@ -435,7 +454,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		[Test] /*[Ignore ("Temporary")]*/ public void Check12ConnectionClient()
+		[Test] /*[Ignore ("Temporary")]*/ public void Check13ConnectionClient()
 		{
 			Remoting.IConnectionService service = Services.Engine.GetRemoteConnectionService ("localhost", 1234);
 			
@@ -455,7 +474,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] /*[Ignore ("Temporary")]*/ public void Check13RequestExecutionClient()
+		[Test] /*[Ignore ("Temporary")]*/ public void Check14RequestExecutionClient()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			System.Data.DataTable table = RequestsTest.GetDataTableFromTable (infrastructure, "ServiceTest");

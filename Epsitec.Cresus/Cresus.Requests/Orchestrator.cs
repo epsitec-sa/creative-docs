@@ -58,13 +58,20 @@ namespace Epsitec.Cresus.Requests
 				{
 					int handle_index = System.Threading.WaitHandle.WaitAny (handles);
 					
+					//	Gère le cas particulier décrit dans la documentation où l'index peut être
+					//	incorrect dans certains cas :
+					
 					if (handle_index >= 128)
 					{
 						handle_index -= 128;
 					}
 					
+					//	Tout événement autre que celui lié à la queue provoque l'interruption
+					//	du processus :
+					
 					if (handle_index != 0)
 					{
+						this.ProcessShutdown ();
 						break;
 					}
 					
@@ -98,8 +105,14 @@ namespace Epsitec.Cresus.Requests
 			
 			for (int i = 0; i < n; i++)
 			{
-				System.Data.DataRow row   = rows[i];
-				ExecutionState      state = this.execution_queue.GetRequestExecutionState (row);
+				System.Data.DataRow row = rows[i];
+				
+				if (row.RowState == System.Data.DataRowState.Deleted)
+				{
+					continue;
+				}
+				
+				ExecutionState state = this.execution_queue.GetRequestExecutionState (row);
 				
 				System.Diagnostics.Debug.WriteLine (string.Format (" {0} --> {1}", i, state));
 				
@@ -166,6 +179,21 @@ namespace Epsitec.Cresus.Requests
 			//	requête (la dernière exécution n'a eu aucun effet de bord).
 			
 			this.execution_queue.SetRequestExecutionState (row, ExecutionState.Conflicting);
+		}
+		
+		protected virtual void ProcessShutdown()
+		{
+			//	Avant l'arrêt planifié du processus, on s'empresse encore de mettre à jour
+			//	l'état de la queue dans la base de données (la queue possède un cache en
+			//	mémoire).
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Processing shutdown."));
+			
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, this.database))
+			{
+				this.execution_queue.SerializeToBase (transaction);
+				transaction.Commit ();
+			}
 		}
 		
 		

@@ -237,6 +237,11 @@ namespace Epsitec.Cresus.Requests
 			{
 				throw new System.ArgumentNullException ("Row is null.");
 			}
+			if (row.RowState == System.Data.DataRowState.Deleted)
+			{
+				throw new System.ArgumentException ("Row has been deleted.");
+			}
+			
 			if (row.Table.DataSet != this.queue_data_set)
 			{
 				throw new System.ArgumentException ("Invalid row specified.");
