@@ -273,10 +273,18 @@ namespace Epsitec.Common.Tests
 
 			this.listCrit = new ScrollList();
 			
+			
+			//	Génère les infos de debug pour le fond de la fenêtre, ce qui permet de
+			//	réaliser des timings.
+			
+			this.window.Root.DebugActive = true;
+
+#if false
 			this.listCrit.Scroller.ArrowDown.Name = "Down";
 			this.listCrit.Scroller.ArrowDown.DebugActive = true;
 			this.listCrit.Scroller.ArrowUp.Name = "Up";
 			this.listCrit.Scroller.ArrowUp.DebugActive = true;
+#endif
 			
 			this.topPane.Children.Add(this.listCrit);
 

@@ -1558,6 +1558,8 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void PaintHandler(Drawing.Graphics graphics, Drawing.Rectangle repaint)
 		{
+			long cycles = Drawing.Agg.Library.Cycles;
+			
 			if (this.DebugActive)
 			{
 				System.Diagnostics.Debug.WriteLine (string.Format ("{0}: clip {1}, widget {2}", this.Name, graphics.SaveClippingRectangle ().ToString (), this.MapClientToRoot (this.Client.Bounds).ToString ()));
@@ -1575,6 +1577,16 @@ namespace Epsitec.Common.Widgets
 				Drawing.Transform graphics_transform = this.GetTransformToParent ();
 				
 				graphics.SetClippingRectangle (bounds);
+				
+				if (graphics.TestForEmptyClippingRectangle ())
+				{
+					//	Optimisation du cas où la région de clipping devient vide: on restaure
+					//	la région précédente et on ne fait rien de plus.
+					
+					graphics.RestoreClippingRectangle (original_clipping);
+					return;
+				}
+				
 				graphics_transform.MultiplyBy (original_transform);
 				
 				graphics.Transform = graphics_transform;
@@ -1620,6 +1632,11 @@ namespace Epsitec.Common.Widgets
 					graphics.Transform = original_transform;
 					graphics.RestoreClippingRectangle (original_clipping);
 				}
+			}
+			if (this.DebugActive)
+			{
+				cycles = Drawing.Agg.Library.Cycles - cycles;
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}: {1} us @ 1.7GHz", this.Name, cycles/1700));
 			}
 		}
 		
