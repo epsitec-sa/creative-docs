@@ -296,27 +296,26 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
 			MenuItemType      iType = this.itemType;
-			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 
 			if ( (state & WidgetState.Enabled) == 0 || this.separator )
 			{
 				iType = MenuItemType.Deselect;
 			}
-			adorner.PaintMenuItemBackground(graphics, rect, state, dir, this.type, iType);
+			adorner.PaintMenuItemBackground(graphics, rect, state, Direction.Up, this.type, iType);
 
 			if ( this.onlyText || this.type == MenuType.Horizontal )
 			{
 				pos.X = (rect.Width-this.mainTextSize.Width)/2;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
-				adorner.PaintMenuItemTextLayout(graphics, pos, this.mainText, state, dir, this.type, iType);
+				adorner.PaintMenuItemTextLayout(graphics, pos, this.mainText, state, Direction.Up, this.type, iType);
 			}
 			else if ( this.separator )
 			{
 				Drawing.Rectangle inside = rect;
 				inside.Left  = this.marginItem*2+this.iconSize.Width;
 				inside.Right = rect.Width-this.marginItem;
-				adorner.PaintSeparatorBackground(graphics, inside, state, dir, Direction.Down, false);
+				adorner.PaintSeparatorBackground(graphics, inside, state, Direction.Up, false);
 			}
 			else
 			{
@@ -324,16 +323,16 @@ namespace Epsitec.Common.Widgets
 				{
 					pos.X = this.marginItem;
 					pos.Y = (rect.Height-this.iconSize.Height)/2;
-					adorner.PaintMenuItemTextLayout(graphics, pos, this.icon, state, dir, this.type, iType);
+					adorner.PaintMenuItemTextLayout(graphics, pos, this.icon, state, Direction.Up, this.type, iType);
 				}
 
 				pos.X = this.marginItem*2+this.iconSize.Width;
 				pos.Y = (rect.Height-this.mainTextSize.Height)/2;
-				adorner.PaintMenuItemTextLayout(graphics, pos, this.mainText, state, dir, this.type, iType);
+				adorner.PaintMenuItemTextLayout(graphics, pos, this.mainText, state, Direction.Up, this.type, iType);
 
 				pos.X = rect.Width-this.subIndicatorWidth-this.shortKeySize.Width+this.marginItem;
 				pos.Y = (rect.Height-this.shortKeySize.Height)/2;
-				adorner.PaintMenuItemTextLayout(graphics, pos, this.shortKey, state, dir, this.type, iType);
+				adorner.PaintMenuItemTextLayout(graphics, pos, this.shortKey, state, Direction.Up, this.type, iType);
 
 				if ( this.submenu != null )  // triangle ">" ?
 				{
@@ -341,7 +340,7 @@ namespace Epsitec.Common.Widgets
 					aRect.Left = aRect.Right-this.subIndicatorWidth;
 					aRect.Bottom = (rect.Height-this.subIndicatorWidth)/2;
 					aRect.Top = aRect.Bottom+this.subIndicatorWidth;
-					adorner.PaintArrow(graphics, aRect, state, dir, Direction.Right);
+					adorner.PaintArrow(graphics, aRect, state, Direction.Right);
 				}
 			}
 		}

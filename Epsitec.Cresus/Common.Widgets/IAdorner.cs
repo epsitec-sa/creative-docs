@@ -19,81 +19,92 @@ namespace Epsitec.Common.Widgets
 		 * Direction.Right  => ombre à droite et en haut
 		 */
 
-		void PaintWindowBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
+		void PaintWindowBackground(Drawing.Graphics graphics, Drawing.Rectangle windowRect, Drawing.Rectangle paintRect, WidgetState state);
 
-		void PaintArrow(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction dir);
-		void PaintCheck(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
-		void PaintRadio(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
-		void PaintIcon(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, string icon);
+		void PaintArrow(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir);
+		void PaintCheck(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
+		void PaintRadio(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
+		void PaintIcon(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, string icon);
 		
-		void PaintButtonBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, ButtonStyle style);
-		void PaintButtonTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, Direction shadow, ButtonStyle style);
-		void PaintButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, ButtonStyle style);
+		void PaintButtonBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir, ButtonStyle style);
+		void PaintButtonTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, ButtonStyle style);
+		void PaintButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir, ButtonStyle style);
 		
-		void PaintTextFieldBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, TextFieldStyle style, bool readOnly);
-		void PaintTextFieldForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, TextFieldStyle style, bool readOnly);
+		void PaintTextFieldBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, TextFieldStyle style, bool readOnly);
+		void PaintTextFieldForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, TextFieldStyle style, bool readOnly);
 		
-		void PaintScrollerBackground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle tab_rect, WidgetState state, Direction shadow);
-		void PaintScrollerHandle(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle tab_rect, WidgetState state, Direction shadow);
-		void PaintScrollerForeground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle tab_rect, WidgetState state, Direction shadow);
+		void PaintScrollerBackground(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, WidgetState state, Direction dir);
+		void PaintScrollerHandle(Drawing.Graphics graphics, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, WidgetState state, Direction dir);
+		void PaintScrollerForeground(Drawing.Graphics graphics, Drawing.Rectangle thumbRect, Drawing.Rectangle tabRect, WidgetState state, Direction dir);
 		
-		void PaintGroupBox(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
-		void PaintSepLine(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
+		void PaintGroupBox(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle titleRect, WidgetState state);
+		void PaintSepLine(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle titleRect, WidgetState state, Direction dir);
 
-		void PaintFrameTitleBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
-		void PaintFrameTitleForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
-		void PaintFrameBody(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
+		void PaintFrameTitleBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Drawing.Rectangle titleRect, WidgetState state, Direction dir);
+		void PaintFrameTitleForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Drawing.Rectangle titleRect, WidgetState state, Direction dir);
+		void PaintFrameBody(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir);
 		
-		void PaintTabBand(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
-		void PaintTabFrame(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
-		void PaintTabAboveBackground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
-		void PaintTabAboveForeground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
-		void PaintTabSunkenBackground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
-		void PaintTabSunkenForeground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
+		void PaintTabBand(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir);
+		void PaintTabFrame(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir);
+		void PaintTabAboveBackground(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle titleRect, WidgetState state, Direction dir);
+		void PaintTabAboveForeground(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle titleRect, WidgetState state, Direction dir);
+		void PaintTabSunkenBackground(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle titleRect, WidgetState state, Direction dir);
+		void PaintTabSunkenForeground(Drawing.Graphics graphics, Drawing.Rectangle frameRect, Drawing.Rectangle titleRect, WidgetState state, Direction dir);
 		
-		void PaintArrayBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
-		void PaintCellBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
+		void PaintArrayBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
+		void PaintCellBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 
-		void PaintHeaderBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction type);
-		void PaintHeaderForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction type);
+		void PaintHeaderBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir);
+		void PaintHeaderForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir);
 
-		void PaintToolBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction type);
-		void PaintToolForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction type);
+		void PaintToolBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir);
+		void PaintToolForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir);
 
-		void PaintMenuBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Drawing.Rectangle parentRect, double iconWidth);
-		void PaintMenuForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Drawing.Rectangle parentRect, double iconWidth);
+		void PaintMenuBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir, Drawing.Rectangle parentRect, double iconWidth);
+		void PaintMenuForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir, Drawing.Rectangle parentRect, double iconWidth);
+		void PaintMenuItemBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir, MenuType type, MenuItemType itemType);
+		void PaintMenuItemTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, Direction dir, MenuType type, MenuItemType itemType);
+		void PaintMenuItemForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir, MenuType type, MenuItemType itemType);
 
-		void PaintMenuItemBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, MenuType type, MenuItemType itemType);
-		void PaintMenuItemTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, Direction shadow, MenuType type, MenuItemType itemType);
-		void PaintMenuItemForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, MenuType type, MenuItemType itemType);
+		void PaintSeparatorBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir, bool optional);
+		void PaintSeparatorForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction dir, bool optional);
 
-		void PaintSeparatorBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction type, bool optional);
-		void PaintSeparatorForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction type, bool optional);
+		void PaintStatusBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
+		void PaintStatusForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
+		void PaintStatusItemBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
+		void PaintStatusItemForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state);
 
-		void PaintStatusBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
-		void PaintStatusForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
-
-		void PaintTooltipBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Direction shadow);
-		void PaintTooltipTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, Direction shadow);
+		void PaintTooltipBackground(Drawing.Graphics graphics, Drawing.Rectangle rect);
+		void PaintTooltipTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text);
 
 		/*
 		 * Méthodes de dessin complémentaires.
 		 */
 		
 		void PaintFocusBox(Drawing.Graphics graphics, Drawing.Rectangle rect);
-		void PaintTextCursor(Drawing.Graphics graphics, Drawing.Rectangle rect, bool cursor_on);
+		void PaintTextCursor(Drawing.Graphics graphics, Drawing.Rectangle rect, bool cursorOn);
 		void PaintTextSelectionBackground(Drawing.Graphics graphics, Drawing.Rectangle[] rect);
 		void PaintTextSelectionForeground(Drawing.Graphics graphics, Drawing.Rectangle[] rect);
 		
-		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state, Direction shadow);
+		void PaintGeneralTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, WidgetState state);
 
 		void AdaptEnabledTextColor(ref Drawing.Color color);
 		void AdaptDisabledTextColor(ref Drawing.Color color, Drawing.Color uniqueColor);
 
-		Drawing.Color GetColorCaption();
-		Drawing.Color GetColorControl();
-		Drawing.Color GetColorWindow();
-		Drawing.Color GetColorBorder();
+		Drawing.Color ColorCaption { get; }
+		Drawing.Color ColorControl { get; }
+		Drawing.Color ColorWindow { get; }
+		Drawing.Color ColorBorder { get; }
+
+		double GeometryComboRightMargin { get; }
+		double GeometryComboBottomMargin { get; }
+		double GeometryComboTopMargin { get; }
+		double GeometryUpDownRightMargin { get; }
+		double GeometryUpDownBottomMargin { get; }
+		double GeometryUpDownTopMargin { get; }
+		double GeometryScrollerRightMargin { get; }
+		double GeometryScrollerBottomMargin { get; }
+		double GeometryScrollerTopMargin { get; }
 	}
 	
 	public enum Direction

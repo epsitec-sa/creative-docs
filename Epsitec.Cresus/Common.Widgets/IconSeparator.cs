@@ -88,16 +88,15 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 			
 			if ( this.isHorizontal )
 			{
-				adorner.PaintSeparatorBackground(graphics, rect, state, dir, Direction.Right, true);
+				adorner.PaintSeparatorBackground(graphics, rect, state, Direction.Right, true);
 			}
 			else
 			{
-				adorner.PaintSeparatorBackground(graphics, rect, state, dir, Direction.Down, true);
+				adorner.PaintSeparatorBackground(graphics, rect, state, Direction.Down, true);
 			}
 		}
 
