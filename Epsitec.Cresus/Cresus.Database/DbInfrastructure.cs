@@ -270,8 +270,6 @@ namespace Epsitec.Cresus.Database
 						
 						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", table.GetType ().Name, table.Name));
 						System.Diagnostics.Debug.Assert (tables.Count == 1);
-						
-						this.cache_db_tables[key] = table;
 					}
 				}
 				
@@ -1045,10 +1043,11 @@ namespace Epsitec.Cresus.Database
 			
 			//	Ce qui est propre aux colonnes :
 			
-			query.Fields.Add ("C_ID",   SqlField.CreateName ("T_COLUMN", Tags.ColumnId));
-			query.Fields.Add ("C_NAME", SqlField.CreateName ("T_COLUMN", Tags.ColumnName));
-			query.Fields.Add ("C_INFO", SqlField.CreateName ("T_COLUMN", Tags.ColumnInfoXml));
-			query.Fields.Add ("C_TYPE", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType));
+			query.Fields.Add ("C_ID",     SqlField.CreateName ("T_COLUMN", Tags.ColumnId));
+			query.Fields.Add ("C_NAME",   SqlField.CreateName ("T_COLUMN", Tags.ColumnName));
+			query.Fields.Add ("C_INFO",   SqlField.CreateName ("T_COLUMN", Tags.ColumnInfoXml));
+			query.Fields.Add ("C_TYPE",   SqlField.CreateName ("T_COLUMN", Tags.ColumnRefType));
+			query.Fields.Add ("C_PARENT", SqlField.CreateName ("T_COLUMN", Tags.ColumnRefParent));
 			
 			this.AddLocalisedColumns (query, "COLUMN_CAPTION", "T_COLUMN", Tags.ColumnCaption);
 			this.AddLocalisedColumns (query, "COLUMN_DESCRIPTION", "T_COLUMN", Tags.ColumnDescription);
@@ -1090,6 +1089,11 @@ namespace Epsitec.Cresus.Database
 			long                          row_id   = -1;
 			System.Collections.ArrayList  tables   = new System.Collections.ArrayList ();
 			DbTable						  db_table = null;
+			bool                          recycle  = false;
+			
+			
+			//	Analyse toutes les lignes retournées. On suppose que les lignes sont groupées
+			//	logiquement par tables.
 			
 			for (int i = 0; i < rows.Count; i++)
 			{
@@ -1101,20 +1105,48 @@ namespace Epsitec.Cresus.Database
 				if (row_id != current_row_id)
 				{
 					row_id   = current_row_id;
-					db_table = DbTable.CreateTable (Converter.ToString (data_row["T_INFO"]));
+					db_table = null;
 					
-					db_table.Attributes.SetAttribute (Tags.Name, Converter.ToString (data_row["T_NAME"]));
-					db_table.DefineInternalKey (key);
+					string table_info = Converter.ToString (data_row["T_INFO"]);
+					DbKey  table_key  = (key == null) ? new DbKey (row_id) : key;
 					
-					this.DefineLocalisedAttributes (data_row, "TABLE_CAPTION", Tags.ColumnCaption, db_table.Attributes, Tags.Caption);
-					this.DefineLocalisedAttributes (data_row, "TABLE_DESCRIPTION", Tags.ColumnDescription, db_table.Attributes, Tags.Description);
+					db_table = this.cache_db_tables[table_key];
+					
+					if (db_table == null)
+					{
+						db_table = DbTable.CreateTable (table_info);
+						recycle  = false;
+						
+						db_table.Attributes.SetAttribute (Tags.Name, Converter.ToString (data_row["T_NAME"]));
+						db_table.DefineInternalKey (table_key);
+						
+						this.DefineLocalisedAttributes (data_row, "TABLE_CAPTION", Tags.ColumnCaption, db_table.Attributes, Tags.Caption);
+						this.DefineLocalisedAttributes (data_row, "TABLE_DESCRIPTION", Tags.ColumnDescription, db_table.Attributes, Tags.Description);
+						
+						//	Afin d'éviter de recharger cette table plus tard, on va en prendre note tout de suite; ça permet
+						//	aussi d'éviter des boucles sans fin dans le cas de tables qui ont des références circulaires, car
+						//	la prochaine recherche avec ResolveDbTable s'appliquant à cette table se terminera avec succès.
+						
+						this.cache_db_tables[table_key] = db_table;
+					}
+					else
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Recycling known table {0}.", db_table.Name));
+						recycle = true;
+					}
 					
 					tables.Add (db_table);
+				}
+				
+				if (recycle)
+				{
+					continue;
 				}
 				
 				//	Chaque ligne contient une définition de colonne.
 				
 				long type_ref_id;
+				long parent_table_ref_id;
 				long column_id;
 				
 				DbColumn db_column = DbColumn.CreateColumn (Converter.ToString (data_row["C_INFO"]));
@@ -1122,11 +1154,23 @@ namespace Epsitec.Cresus.Database
 				Converter.Convert (data_row["C_ID"], out column_id);
 				Converter.Convert (data_row["C_TYPE"], out type_ref_id);
 				
+				bool has_parent_table = Converter.Convert (data_row["C_PARENT"], out parent_table_ref_id);
+				
 				db_column.Attributes.SetAttribute (Tags.Name, Converter.ToString (data_row["C_NAME"]));
 				db_column.DefineInternalKey (new DbKey (column_id));
 				
 				this.DefineLocalisedAttributes (data_row, "COLUMN_CAPTION", Tags.ColumnCaption, db_column.Attributes, Tags.Caption);
 				this.DefineLocalisedAttributes (data_row, "COLUMN_DESCRIPTION", Tags.ColumnDescription, db_column.Attributes, Tags.Description);
+				
+				if (has_parent_table)
+				{
+					DbKey   parent_key   = new DbKey (parent_table_ref_id);
+					DbTable parent_table = this.ResolveDbTable (transaction, parent_key);
+					
+					System.Diagnostics.Debug.WriteLine (string.Format ("Column {0}.{1} refers to table {3} (ID {2}).", db_table.Name, db_column.Name, parent_key.Id, parent_table.Name));
+					
+					db_column.DefineParentTableName (parent_table.Name);
+				}
 				
 				DbType db_type = this.ResolveDbType (transaction, new DbKey (type_ref_id));
 				

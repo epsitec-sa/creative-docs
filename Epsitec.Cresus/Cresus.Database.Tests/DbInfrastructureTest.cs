@@ -213,7 +213,12 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
+				System.Diagnostics.Debug.WriteLine ("FindDbTables :");
+				System.Diagnostics.Debug.WriteLine ("--------------");
 				DbTable[] tables = infrastructure.FindDbTables (null, DbElementCat.Any);
+				System.Diagnostics.Debug.WriteLine ("--- again! ---");
+				infrastructure.FindDbTables (null, DbElementCat.Any);
+				System.Diagnostics.Debug.WriteLine ("--- (done) ---");
 				
 				for (int i = 0; i < tables.Length; i++)
 				{
