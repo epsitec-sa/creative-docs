@@ -118,12 +118,22 @@
         <Files>
             <Include>
                 <File
+                    RelPath = "AbstractController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Application.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "BundleEditController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
