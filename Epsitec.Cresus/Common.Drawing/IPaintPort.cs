@@ -19,7 +19,10 @@ namespace Epsitec.Common.Drawing
 		void ResetClippingRectangle();
 		bool TestForEmptyClippingRectangle();
 		
+		void Align(ref double x, ref double y);
+		
 		Transform SaveTransform();
+		double GetTransformZoom();
 		void RestoreTransform(Transform transform);
 		void ScaleTransform(double sx, double sy, double cx, double cy);
 		void RotateTransform(double angle, double cx, double cy);

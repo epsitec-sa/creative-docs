@@ -6,9 +6,9 @@ namespace Epsitec.Common.Printing
 	/// <summary>
 	/// La classe PrintPort permet d'imprimer des éléments graphiques simples.
 	/// </summary>
-	public class PrintPort
+	public class PrintPort : Drawing.IPaintPort
 	{
-		internal PrintPort(System.Drawing.Graphics graphics, PageSettings settings)
+		public PrintPort(System.Drawing.Graphics graphics, PageSettings settings)
 		{
 			this.graphics = graphics;
 			this.settings = settings;
@@ -17,15 +17,27 @@ namespace Epsitec.Common.Printing
 			
 			if (this.settings != null)
 			{
-				double dx = this.settings.Bounds.Width;
-				double dy = this.settings.Bounds.Height;
-				
-				this.graphics.ResetTransform ();
-				this.graphics.TranslateTransform (0, (float) dy);
-				this.graphics.ScaleTransform (0, -1);
+				this.height = (float) this.settings.Bounds.Height;
 			}
+			
+			this.transform = new Drawing.Transform ();
+			
+			this.ResetTransform ();
 		}
 		
+		public PrintPort(System.Drawing.Graphics graphics, int dx, int dy)
+		{
+			this.graphics = graphics;
+			this.settings = settings;
+			this.brush    = System.Drawing.Brushes.Black;
+			this.pen      = new System.Drawing.Pen (this.brush, 1.0f);
+			
+			this.height = (float) dy;
+			
+			this.transform = new Drawing.Transform ();
+			
+			this.ResetTransform ();
+		}
 		
 		public double							LineWidth
 		{
@@ -116,6 +128,131 @@ namespace Epsitec.Common.Printing
 		}
 		
 		
+		public void SetClippingRectangle(Drawing.Point p, Drawing.Size s)
+		{
+			this.SetClippingRectangle (p.X, p.Y, s.Width, s.Height);
+		}
+		
+		public void SetClippingRectangle(Drawing.Rectangle rect)
+		{
+			this.SetClippingRectangle (rect.X, rect.Y, rect.Width, rect.Height);
+		}
+
+		public void SetClippingRectangle(double x, double y, double width, double height)
+		{
+			//	Le rectangle de clipping est passé en coordonnées brutes (sans aucune
+			//	transformation), c'est pourquoi on supprime temporairement la transformation
+			//	avant d'appliquer le rectangle de clipping :
+			
+			System.Drawing.Drawing2D.Matrix matrix = this.graphics.Transform;
+			System.Drawing.RectangleF       rect   = new System.Drawing.RectangleF ((float)(x), (float)(y), (float)(width), (float)(height));
+			
+			this.ResetTransform ();
+			
+			this.graphics.SetClip (rect, System.Drawing.Drawing2D.CombineMode.Intersect);
+			this.graphics.Transform = matrix;
+			
+			this.clip = Drawing.Rectangle.Intersection (this.clip, new Drawing.Rectangle (x, y, width, height));
+		}
+		
+		public Drawing.Rectangle SaveClippingRectangle()
+		{
+			return this.clip;
+		}
+		
+		public void RestoreClippingRectangle(Drawing.Rectangle clip)
+		{
+			if (clip == Drawing.Rectangle.Infinite)
+			{
+				this.ResetClippingRectangle ();
+				return;
+			}
+			
+			//	Le rectangle de clipping est passé en coordonnées brutes (sans aucune
+			//	transformation), c'est pourquoi on supprime temporairement la transformation
+			//	avant d'appliquer le rectangle de clipping :
+			
+			System.Drawing.Drawing2D.Matrix matrix = this.graphics.Transform;
+			System.Drawing.RectangleF       rect   = new System.Drawing.RectangleF ((float)(clip.X), (float)(clip.Y), (float)(clip.Width), (float)(clip.Height));
+			
+			this.ResetTransform ();
+			
+			this.graphics.SetClip (rect, System.Drawing.Drawing2D.CombineMode.Replace);
+			this.graphics.Transform = matrix;
+			
+			this.clip = clip;
+		}
+		
+		public void ResetClippingRectangle()
+		{
+			this.clip = Drawing.Rectangle.Infinite;
+			this.graphics.ResetClip ();
+		}
+		
+		public bool TestForEmptyClippingRectangle()
+		{
+			return this.clip.IsSurfaceZero;
+		}
+		
+		
+		protected void ResetTransform()
+		{
+			this.graphics.ResetTransform ();
+			this.graphics.TranslateTransform (0, (float)(this.height));
+			this.graphics.ScaleTransform (1, -1);
+		}
+		
+		public Drawing.Transform SaveTransform()
+		{
+			return new Drawing.Transform (this.transform);
+		}
+		
+		public void RestoreTransform(Drawing.Transform transform)
+		{
+			this.ResetTransform ();
+			
+			this.transform = new Drawing.Transform (transform);
+			
+			float m11 = (float)(transform.XX);
+			float m12 = (float)(transform.YX);
+			float m21 = (float)(transform.XY);
+			float m22 = (float)(transform.YY);
+			float dx  = (float)(transform.TX);
+			float dy  = (float)(transform.TY);
+			
+			System.Drawing.Drawing2D.Matrix matrix = new System.Drawing.Drawing2D.Matrix (m11, m12, m21, m22, dx, dy);
+			
+			this.graphics.MultiplyTransform (matrix, System.Drawing.Drawing2D.MatrixOrder.Prepend);
+		}
+		
+		public void ScaleTransform(double sx, double sy, double cx, double cy)
+		{
+			Drawing.Transform transform = new Drawing.Transform (this.transform);
+			
+			transform.MultiplyByPostfix (Drawing.Transform.FromScale (sx, sy, cx, cy));
+			
+			this.RestoreTransform (transform);
+		}
+		
+		public void RotateTransform(double angle, double cx, double cy)
+		{
+			Drawing.Transform transform = new Drawing.Transform (this.transform);
+			
+			transform.MultiplyByPostfix (Drawing.Transform.FromRotation (angle, cx, cy));
+			
+			this.RestoreTransform (transform);
+		}
+		
+		public void TranslateTransform(double ox, double oy)
+		{
+			Drawing.Transform transform = new Drawing.Transform (this.transform);
+			
+			transform.MultiplyByPostfix (Drawing.Transform.FromTranslation (ox, oy));
+			
+			this.RestoreTransform (transform);
+		}
+		
+		
 		public void PaintOutline(Drawing.Path path)
 		{
 			this.UpdatePen ();
@@ -131,6 +268,8 @@ namespace Epsitec.Common.Printing
 		
 		public double PaintText(double x, double y, string text, Drawing.Font font, double size)
 		{
+			this.UpdateBrush ();
+			
 			System.Drawing.Font os_font = font.GetOsFont (size);
 			
 			double width = 0;
@@ -164,7 +303,7 @@ namespace Epsitec.Common.Printing
 					ox = glyph_x[i];
 				}
 				
-				width = glyph_x[n-1];
+				width = glyph_x[n-1] * size;
 				
 				this.PaintSurface (path);
 			}
@@ -174,20 +313,30 @@ namespace Epsitec.Common.Printing
 				double   ox = 0;
 				
 				font.GetTextCharEndX (text, out end_x);
-			
+				
+				y += font.Ascender * size;
+				
 				int n = text.Length;
 				
 				System.Diagnostics.Debug.Assert (end_x.Length == n);
 				
 				for (int i = 0; i < n; i++)
 				{
-					this.graphics.DrawString (text.Substring (i, 1), os_font, this.brush, (float) x, (float) y);
+					float tx = (float) (x);
+					float ty = (float) (y);
+					
+					this.graphics.TranslateTransform (tx, ty);
+					this.graphics.ScaleTransform (1, -1);
+					this.graphics.DrawString (text.Substring (i, 1), os_font, this.brush, 0, 0);
+					this.graphics.ScaleTransform (1, -1);
+					this.graphics.TranslateTransform (-tx, -ty);
 					
 					x += (end_x[i]-ox) * size;
 					ox = end_x[i];
 				}
 				
-				width = end_x[n-1];
+				
+				width = end_x[n-1] * size;
 			}
 			
 			return width;
@@ -351,10 +500,10 @@ namespace Epsitec.Common.Printing
 		{
 			if (this.is_brush_dirty)
 			{
-				int a = 0;
-				int r = 0;
-				int g = 0;
-				int b = 0;
+				int a = (int)(this.color.A * 255.5);
+				int r = (int)(this.color.R * 255.5);
+				int g = (int)(this.color.G * 255.5);
+				int b = (int)(this.color.B * 255.5);
 				
 				System.Drawing.Color color = System.Drawing.Color.FromArgb (a, r, g, b);
 				
@@ -380,6 +529,10 @@ namespace Epsitec.Common.Printing
 		protected Drawing.CapStyle				line_cap         = Drawing.CapStyle.Square;
 		protected double						line_miter_limit = 4.0;
 		
+		protected float							height;
+		
 		protected Drawing.Color					color = Drawing.Color.FromRGB (0, 0, 0);
+		protected Drawing.Rectangle				clip = Drawing.Rectangle.Infinite;
+		protected Drawing.Transform				transform = new Drawing.Transform ();
 	}
 }
