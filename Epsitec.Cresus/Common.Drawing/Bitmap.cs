@@ -63,6 +63,9 @@ namespace Epsitec.Common.Drawing
 					
 					if (this.bitmap_lock_count == 0)
 					{
+						System.Diagnostics.Debug.Assert (this.bitmap != null);
+						System.Diagnostics.Debug.Assert (this.bitmap_data != null);
+						
 						this.bitmap.UnlockBits (this.bitmap_data);
 						this.bitmap_data = null;
 					}

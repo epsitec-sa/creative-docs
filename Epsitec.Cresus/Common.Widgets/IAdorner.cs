@@ -6,6 +6,19 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public interface IAdorner
 	{
+		/*
+		 * Le dessin de l'ombre se fait en principe sur le bord droit et sur le bord
+		 * inférieur (orientation normale, éclairage venant du coin supérieur gauche).
+		 * 
+		 * Lorsqu'un widget est tourné, Widget.RootDirection indique comment peindre
+		 * l'ombre. Les cas suivants doivent être traités :
+		 * 
+		 * Direction.Up     => ombre en bas et à droite (standard, pas de rotation)
+		 * Direction.Left   => ombre à gauche et en bas
+		 * Direction.Down   => ombre en haut et à gauche
+		 * Direction.Right  => ombre à droite et en haut
+		 */
+		
 		void PaintArrow(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, Direction dir);
 		void PaintCheck(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
 		void PaintRadio(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
@@ -14,11 +27,35 @@ namespace Epsitec.Common.Widgets
 		void PaintButtonBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, ButtonStyle style);
 		void PaintButtonForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, ButtonStyle style);
 		
-		void PaintTabSunkenBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
-		void PaintTabSunkenForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
+		void PaintTextFieldBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, TextFieldStyle style);
+		void PaintTextFieldForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow, TextFieldStyle style);
 		
-		void PaintTabFrameBackground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle tab_rect, WidgetState state, Direction shadow);
-		void PaintTabFrameForeground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle tab_rect, WidgetState state, Direction shadow);
+		void PaintScrollerBackground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle tab_rect, WidgetState state, Direction shadow);
+		void PaintScrollerHandle(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle tab_rect, WidgetState state, Direction shadow);
+		void PaintScrollerForeground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle tab_rect, WidgetState state, Direction shadow);
+		
+		void PaintGroupBox(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
+		void PaintSepLine(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
+
+		void PaintFrameTitleBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
+		void PaintFrameTitleForeground(Drawing.Graphics graphics, Drawing.Rectangle rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
+		void PaintFrameBody(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
+		
+		void PaintTabBand(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
+		void PaintTabFrame(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow);
+		void PaintTabAboveBackground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
+		void PaintTabAboveForeground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
+		void PaintTabSunkenBackground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
+		void PaintTabSunkenForeground(Drawing.Graphics graphics, Drawing.Rectangle frame_rect, Drawing.Rectangle title_rect, WidgetState state, Direction shadow);
+		
+		/*
+		 * Méthodes de dessin complémentaires.
+		 */
+		
+		void PaintFocusBox(Drawing.Graphics graphics, Drawing.Rectangle rect);
+		void PaintTextCursor(Drawing.Graphics graphics, Drawing.Rectangle rect, bool cursor_on);
+		void PaintTextSelectionBackground(Drawing.Graphics graphics, Drawing.Rectangle[] rect);
+		void PaintTextSelectionForeground(Drawing.Graphics graphics, Drawing.Rectangle[] rect);
 	}
 	
 	public enum Direction

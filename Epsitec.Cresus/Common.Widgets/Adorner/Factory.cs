@@ -6,15 +6,16 @@ namespace Epsitec.Common.Widgets.Adorner
 	/// </summary>
 	public class Factory
 	{
-		private Factory()
+		Factory()
 		{
 			//	On ne peut pas instancier Factory !
 		}
 		
 		static Factory()
 		{
-			Factory.adorner = null; // TODO: new Default ();
+			Factory.adorner = new Default ();
 		}
+		
 		
 		public static IAdorner			Adorner
 		{

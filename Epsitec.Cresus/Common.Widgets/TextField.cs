@@ -1,5 +1,11 @@
 namespace Epsitec.Common.Widgets
 {
+	public enum TextFieldStyle
+	{
+		Flat,							//	pas de cadre, ni de relief
+		Normal,							//	ligne éditable normale
+	}
+	
 	/// <summary>
 	/// La classe TextField implémente la ligne éditable, tout en permettant
 	/// aussi de réaliser l'équivalent de la ComboBox Windows.
@@ -18,6 +24,19 @@ namespace Epsitec.Common.Widgets
 		public virtual double			RightMargin
 		{
 			get { return this.right_margin; }
+		}
+		
+		public TextFieldStyle			TextFieldStyle
+		{
+			get { return this.text_style; }
+			set
+			{
+				if (this.text_style != value)
+				{
+					this.text_style = value;
+					this.Invalidate ();
+				}
+			}
 		}
 		
 		
@@ -49,5 +68,6 @@ namespace Epsitec.Common.Widgets
 		
 		protected double				left_margin;
 		protected double				right_margin;
+		protected TextFieldStyle		text_style;
 	}
 }
