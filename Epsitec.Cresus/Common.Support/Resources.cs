@@ -170,18 +170,65 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 		
-		
-		public static string[] GetBundleIds(string filter)
+		public static string ExtractName(string full_id)
 		{
-			return Resources.GetBundleIds (filter, ResourceLevel.Default, Resources.Culture);
+			if (full_id != null)
+			{
+				int pos = full_id.IndexOf (":");
+			
+				if (pos > 0)
+				{
+					return full_id.Substring (pos+1);
+				}
+				else
+				{
+					return full_id;
+				}
+			}
+			
+			return null;
 		}
 		
-		public static string[] GetBundleIds(string filter, ResourceLevel level)
+		public static string MakeFullName(string prefix, string name)
 		{
-			return Resources.GetBundleIds (filter, level, Resources.Culture);
+			if (name == null)
+			{
+				throw new ResourceException ("Cannot make full name if name is missing.");
+			}
+			if (prefix == null)
+			{
+				throw new ResourceException ("Cannot make full name if prefix is missing.");
+			}
+			
+			return string.Concat (prefix, ":", name);
 		}
 		
-		public static string[] GetBundleIds(string filter, ResourceLevel level, CultureInfo culture)
+		public static string[] GetBundleIds(string name_filter)
+		{
+			return Resources.GetBundleIds (name_filter, null, ResourceLevel.Default, Resources.Culture);
+		}
+		
+		public static string[] GetBundleIds(string name_filter, string type_filter)
+		{
+			return Resources.GetBundleIds (name_filter, type_filter, ResourceLevel.Default, Resources.Culture);
+		}
+		
+		public static string[] GetBundleIds(string name_filter, ResourceLevel level)
+		{
+			return Resources.GetBundleIds (name_filter, null, level, Resources.Culture);
+		}
+		
+		public static string[] GetBundleIds(string name_filter, string type_filter, ResourceLevel level)
+		{
+			return Resources.GetBundleIds (name_filter, type_filter, level, Resources.Culture);
+		}
+		
+		public static string[] GetBundleIds(string name_filter, ResourceLevel level, CultureInfo culture)
+		{
+			return Resources.GetBundleIds (name_filter, null, level, culture);
+		}
+		
+		public static string[] GetBundleIds(string name_filter, string type_filter, ResourceLevel level, CultureInfo culture)
 		{
 			if (culture == null)
 			{
@@ -198,13 +245,13 @@ namespace Epsitec.Common.Support
 					throw new ResourceException (string.Format ("Invalid level {0} specified in GetBundleIds.", level));
 			}
 			
-			string resource_id;
+			string name_filter_id;
 			
-			IResourceProvider provider = Resources.FindProvider (filter, out resource_id);
+			IResourceProvider provider = Resources.FindProvider (name_filter, out name_filter_id);
 			
 			if (provider != null)
 			{
-				return provider.GetIds (resource_id, level, culture);
+				return provider.GetIds (name_filter_id, type_filter, level, culture);
 			}
 			
 			return null;
@@ -392,7 +439,10 @@ namespace Epsitec.Common.Support
 			
 			if (provider != null)
 			{
-				provider.SetData (resource_id, level, culture, data, mode);
+				if (provider.SetData (resource_id, level, culture, data, mode) == false)
+				{
+					throw new ResourceException (string.Format ("Could not store bundle '{0}'.", id));
+				}
 			}
 		}
 		
