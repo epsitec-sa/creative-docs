@@ -31,15 +31,16 @@ namespace Epsitec.Common.Designer.UI
 			this.caption_label.Anchor        = AnchorStyles.TopLeft;
 			this.caption_label.AnchorMargins = new Drawing.Margins (0, 0, 8, 0);
 			
-			this.combo_text.Anchor           = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.combo_text.AnchorMargins    = new Drawing.Margins (this.caption_label.Right, 0, 4, 0);
-			this.combo_text.TextChanged     += new EventHandler (this.HandleComboTextTextChanged);
-			this.combo_text.TextEdited      += new EventHandler (this.HandleComboTextTextEdited);
-			this.combo_text.OpeningCombo    += new CancelEventHandler (this.HandleComboTextOpeningCombo);
-			this.combo_text.Button.Clicked  += new MessageEventHandler (this.HandleComboTextButtonClicked);
-			this.combo_text.ButtonGlyphShape = GlyphShape.Dots;
-			this.combo_text.TabIndex         = 10;
-			this.combo_text.Name             = "Value_1";
+			this.combo_text.Anchor            = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.combo_text.AnchorMargins     = new Drawing.Margins (this.caption_label.Right, 0, 4, 0);
+			this.combo_text.TextChanged      += new EventHandler (this.HandleComboTextTextChanged);
+			this.combo_text.TextEdited       += new EventHandler (this.HandleComboTextTextEdited);
+			this.combo_text.OpeningCombo     += new CancelEventHandler (this.HandleComboTextOpeningCombo);
+			this.combo_text.Button.Clicked   += new MessageEventHandler (this.HandleComboTextButtonClicked);
+			this.combo_text.ButtonGlyphShape  = GlyphShape.Dots;
+			this.combo_text.TabIndex          = 10;
+			this.combo_text.Name              = "Value_1";
+			this.combo_text.AutoResolveResRef = true;
 			
 			this.label_bundle.Width          = this.caption_label.Width;
 			this.label_bundle.Anchor         = this.caption_label.Anchor;
@@ -96,12 +97,11 @@ namespace Epsitec.Common.Designer.UI
 			if ((adapter != null) &&
 				(this.combo_text != null))
 			{
-				string current_text = adapter.Value;
-				string stored_text  = adapter.GetFieldValue ();
+				string text = adapter.Value;
 				
-				this.combo_text.Text = current_text;
+				this.combo_text.Text = text;
 				
-				if (current_text == stored_text)
+				if (Resources.IsTextRef (text))
 				{
 					string field  = adapter.FieldName;
 					string bundle = adapter.BundleName;
@@ -114,7 +114,7 @@ namespace Epsitec.Common.Designer.UI
 					this.combo_field.Text    = field;
 					this.combo_field.Cursor  = 0;
 				}
-				else if (stored_text == null)
+				else
 				{
 					if (this.State != InternalState.UsingCustomText)
 					{
@@ -272,25 +272,18 @@ namespace Epsitec.Common.Designer.UI
 			string bundle = this.combo_bundle.SelectedItem;
 			string field  = this.combo_field.SelectedItem;
 			
-			if ((bundle != "") &&
-				(field != ""))
+			if ((bundle.Length > 0) &&
+				(field.Length > 0))
 			{
-#if false
-				adapter.XmlRefTarget = ResourceBundle.MakeTarget (bundle, field);
-#else
-				adapter.TextRef = ResourceBundle.MakeTarget (bundle, field);
-#endif
+				adapter.Value = Resources.MakeTextRef (ResourceBundle.MakeTarget (bundle, field));
 				
 				this.SyncFromAdapter (Common.UI.SyncReason.AdapterChanged);
 				this.State = InternalState.UsingExistingText;
 			}
 			else
 			{
-#if false
-				adapter.XmlRefTarget = "";
-#else
-				adapter.TextRef = "";
-#endif
+				//	TODO: supprimer le texte ?
+				adapter.Value = Resources.ResolveTextRef (adapter.Value);
 			}
 		}
 		
@@ -311,15 +304,10 @@ namespace Epsitec.Common.Designer.UI
 			string field  = this.combo_field.Text;
 			string value  = this.combo_text.Text;
 			
-			if ((bundle != "") &&
-				(field != ""))
+			if ((bundle.Length > 0) &&
+				(field.Length > 0))
 			{
-				adapter.DefineFieldValue (bundle, field, value);
-#if false
-				adapter.XmlRefTarget = ResourceBundle.MakeTarget (bundle, field);
-#else
-				adapter.TextRef = ResourceBundle.MakeTarget (bundle, field);
-#endif
+				adapter.Value = Resources.MakeTextRef (ResourceBundle.MakeTarget (bundle, field));
 				
 				this.SyncFromAdapter (Common.UI.SyncReason.AdapterChanged);
 				this.State = InternalState.UsingExistingText;
@@ -366,12 +354,9 @@ namespace Epsitec.Common.Designer.UI
 							{
 								this.combo_field.StartPassiveEdition (this.combo_field.PlaceHolder);
 							}
-#if false
-							adapter.XmlRefTarget = "";
-#else
-							adapter.TextRef = "";
-#endif
+							//	TODO: effacer le texte actuel ?
 							break;
+						
 						case InternalState.UsingExistingText:
 							this.combo_field.RejectEdition ();
 							break;

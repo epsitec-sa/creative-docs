@@ -38,102 +38,18 @@ namespace Epsitec.Common.Designer.UI
 			}
 		}
 		
-#if false
-		public string							XmlRefTarget
-		{
-			//	Accès à la définition de la référence XML; plus précisément, cette propriété permet
-			//	d'accéder directement à la cible définie par le tag <ref target="cible"/>, à condition
-			//	que le binder soit bien attaché à la propriété d'un objet supportant l'interface
-			//	Data.IPropertyProvider.
-			
-			get
-			{
-				Common.UI.Binders.PropertyBinder binder = this.binder as Common.UI.Binders.PropertyBinder;
-				
-				if (binder != null)
-				{
-					object source = binder.Source;
-					string name   = binder.PropertyName;
-					string target;
-					
-					if (Support.ObjectBundler.FindXmlRef (source, name, out target))
-					{
-						return target;
-					}
-				}
-				
-				return "";
-			}
-			set
-			{
-				Common.UI.Binders.PropertyBinder binder = this.binder as Common.UI.Binders.PropertyBinder;
-				
-				if (binder != null)
-				{
-					object source = binder.Source;
-					string name   = binder.PropertyName;
-					
-					Support.ObjectBundler.DefineXmlRef (source, name, value);
-					
-					this.SyncFromBinder (Common.UI.SyncReason.AdapterChanged);
-					this.OnValueChanged ();
-				}
-			}
-		}
-#else
-		public string							TextRef
-		{
-			get
-			{
-				Common.UI.Binders.PropertyBinder binder = this.binder as Common.UI.Binders.PropertyBinder;
-				
-				if (binder != null)
-				{
-					object data;
-					
-					if (binder.ReadData (out data))
-					{
-						string text = Support.Resources.ExtractTextRefTarget (data as string);
-						
-						if (text != null)
-						{
-							return text;
-						}
-					}
-				}
-				
-				return "";
-			}
-			set
-			{
-				if (this.TextRef != value)
-				{
-					Common.UI.Binders.PropertyBinder binder = this.binder as Common.UI.Binders.PropertyBinder;
-					
-					if (binder != null)
-					{
-						binder.WriteData (Support.Resources.MakeTextRef (value));
-						
-						this.SyncFromBinder (Common.UI.SyncReason.AdapterChanged);
-						this.OnValueChanged ();
-					}
-				}
-			}
-		}
-#endif
 		
 		public string							BundleName
 		{
 			get
 			{
-#if false
-				string target = this.XmlRefTarget;
-#else
-				string target = this.TextRef;
-#endif				
-				if (target != null)
+				string text = this.Value;
+				
+				if (Resources.IsTextRef (text))
 				{
-					string bundle, field;
+					string target = Resources.ExtractTextRefTarget (text);
+					string bundle;
+					string field;
 					
 					if (Support.ResourceBundle.SplitTarget (target, out bundle, out field))
 					{
@@ -149,15 +65,13 @@ namespace Epsitec.Common.Designer.UI
 		{
 			get
 			{
-#if false
-				string target = this.XmlRefTarget;
-#else
-				string target = this.TextRef;
-#endif
+				string text = this.Value;
 				
-				if (target != null)
+				if (Resources.IsTextRef (text))
 				{
-					string bundle, field;
+					string target = Resources.ExtractTextRefTarget (text);
+					string bundle;
+					string field;
 					
 					if (Support.ResourceBundle.SplitTarget (target, out bundle, out field))
 					{
@@ -205,65 +119,6 @@ namespace Epsitec.Common.Designer.UI
 		}
 		
 		
-		public string GetFieldValue()
-		{
-#if false
-			string target = this.XmlRefTarget;
-#else
-			string target = this.TextRef;
-#endif
-			
-			if ((target != null) &&
-				(target.Length > 0) &&
-				(this.StringProvider != null))
-			{
-				string bundle;
-				string field;
-				
-				if (Support.ResourceBundle.SplitTarget (target, out bundle, out field))
-				{
-					this.StringController.LoadStringBundle (bundle);
-					
-					if ((this.StringController.IsStringBundleLoaded (bundle)) &&
-						(this.StringProvider.IsPropertyDefined (target)))
-					{
-						return this.StringProvider.GetProperty (target) as string;
-					}
-				}
-			}
-			
-			return null;
-		}
-		
-		public bool DefineFieldValue(string bundle, string field, string value)
-		{
-			if (this.StringController.IsStringBundleLoaded (bundle))
-			{
-				StringEditController.Store store = this.StringController.FindStore (bundle);
-				
-				if (store != null)
-				{
-					ResourceLevel active_level   = store.ActiveBundle.ResourceLevel;
-					CultureInfo   active_culture = store.ActiveBundle.Culture;
-					
-					store.SetActive (ResourceLevel.Default, active_culture);
-					
-					int row = store.GetRowCount ();
-					
-					if (store.CheckInsertRows (row, 1))
-					{
-						store.InsertRows (row, 1);
-						store.SetCellText (row, 0, field);
-						store.SetCellText (row, 1, value);
-					}
-					
-					store.SetActive (active_level, active_culture);
-				}
-			}
-			
-			return false;
-		}
-		
 		
 		protected override object ConvertToObject()
 		{
@@ -273,14 +128,6 @@ namespace Epsitec.Common.Designer.UI
 		
 		protected override bool ConvertFromObject(object data)
 		{
-			string field_value = this.GetFieldValue ();
-			
-			if (field_value != null)
-			{
-				this.Value = field_value;
-				return true;
-			}
-			
 			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (this.binder.GetDataType ());
 			this.Value = converter.ConvertToString (data);
 			

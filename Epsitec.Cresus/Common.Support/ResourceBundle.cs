@@ -1329,7 +1329,7 @@ namespace Epsitec.Common.Support
 			
 			protected void CompileBundle()
 			{
-				this.data = new ResourceBundle (this.parent, ResourceBundle.MakeTarget (this.parent.Name, this.Name), this.xml);
+				this.data = new ResourceBundle (this.parent, /*ResourceBundle.MakeTarget (this.parent.Name, this.Name)*/ null, this.xml);
 				this.type = ResourceFieldType.Bundle;
 			}
 			

@@ -1914,7 +1914,7 @@ namespace Epsitec.Common.Widgets
 				{
 					//	Le code mnémonique est encapsulé par des tags <m>..</m>.
 					
-					return TextLayout.ExtractMnemonic (this.Text);
+					return TextLayout.ExtractMnemonic (this.AutoResolveResRef ? Support.Resources.ResolveTextRef (this.Text) : this.Text);
 				}
 				
 				return (char) 0;
