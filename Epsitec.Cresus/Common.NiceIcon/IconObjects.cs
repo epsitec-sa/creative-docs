@@ -145,14 +145,27 @@ namespace Epsitec.Common.NiceIcon
 		{
 			try
 			{
+				using (FileStream fs = new FileStream(filename, FileMode.Open))
+				{
+					return this.Read(fs);
+				}
+			}
+			catch ( System.Exception )
+			{
+				return false;
+			}
+		}
+
+		public bool Read(System.IO.Stream stream)
+		{
+			try
+			{
 				XmlSerializer serializer = new XmlSerializer(typeof(IconObjects));
 				//serializer.UnknownNode += new XmlNodeEventHandler(serializer_UnknownNode);
 				//serializer.UnknownAttribute += new XmlAttributeEventHandler(serializer_UnknownAttribute);
-	    
-				FileStream fs = new FileStream(filename, FileMode.Open);
+				
 				IconObjects obj;
-				obj = (IconObjects)serializer.Deserialize(fs);
-				fs.Close();
+				obj = (IconObjects)serializer.Deserialize(stream);
 
 				this.objects.Clear();
 				foreach ( AbstractObject ob in obj.Objects )
