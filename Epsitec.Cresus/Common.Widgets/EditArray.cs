@@ -50,6 +50,30 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public EditArray.Header					ArrayHeader
+		{
+			get
+			{
+				return this.title_widget as EditArray.Header;
+			}
+		}
+		
+		public AbstractToolBar					ArrayToolBar
+		{
+			get
+			{
+				Header header = this.ArrayHeader;
+				
+				if (header != null)
+				{
+					return header.ToolBar;
+				}
+				
+				return null;
+			}
+		}
+		
+		
 		public void StartEdition(int row, int column)
 		{
 			if ((row < 0) || (row >= this.max_rows))
@@ -157,6 +181,7 @@ namespace Epsitec.Common.Widgets
 			
 			return false;
 		}
+		
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -1084,7 +1109,7 @@ namespace Epsitec.Common.Widgets
 			
 			public void CreateToolBarButtons()
 			{
-				EditArray.Header header = this.host.TitleWidget as EditArray.Header;
+				EditArray.Header header = this.host.ArrayHeader;
 				
 				if (header != null)
 				{
