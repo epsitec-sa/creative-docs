@@ -201,7 +201,28 @@ namespace System
 			
 			for (int offset = 0; offset < text.Length; )
 			{
-				buffer.Append (Utilities.ParseCharOrXmlEntity (text, ref offset));
+				char c = text[offset];
+				
+				if (c == '&')
+				{
+					buffer.Append (Utilities.ParseCharOrXmlEntity (text, ref offset));
+				}
+				else if (c == '<')
+				{
+					int pos = text.IndexOf ('>', offset);
+					
+					if (pos < offset)
+					{
+						throw new System.FormatException (string.Format ("Invalid XML cannot be converted to text."));
+					}
+					
+					offset = pos+1;
+				}
+				else
+				{
+					buffer.Append (c);
+					offset++;
+				}
 			}
 
 			return buffer.ToString();
