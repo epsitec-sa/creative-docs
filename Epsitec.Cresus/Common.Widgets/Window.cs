@@ -1,17 +1,18 @@
+using Epsitec.Common.Support;
+
 namespace Epsitec.Common.Widgets
 {
-	using BundleAttribute  = Epsitec.Common.Support.BundleAttribute;
-	
 	/// <summary>
 	/// La classe Window représente une fenêtre du système d'exploitation. Ce
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : System.IDisposable, Epsitec.Common.Support.IBundleSupport
+	public class Window : System.IDisposable, IBundleSupport, IContainer
 	{
 		public Window()
 		{
 			this.cmd_dispatcher = Support.CommandDispatcher.Default;
+			this.components = new ComponentCollection (this);
 			
 			this.root   = new WindowRoot (this);
 			this.window = new Platform.Window (this);
@@ -37,6 +38,7 @@ namespace Epsitec.Common.Widgets
 			System.Windows.Forms.Application.Exit ();
 		}
 		
+		
 		public static void InvalidateAll()
 		{
 			for (int i = 0; i < Window.windows.Count; )
@@ -56,6 +58,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
 		
 		public void MakeFramelessWindow()
 		{
@@ -102,6 +105,7 @@ namespace Epsitec.Common.Widgets
 			this.window.AnimateShow (animation, bounds);
 		}
 
+		
 		
 		public WindowRoot					Root
 		{
@@ -254,6 +258,45 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public static int					DebugAliveWindowsCount
+		{
+			get
+			{
+				int n = 0;
+				
+				foreach (System.WeakReference weak_ref in Window.windows)
+				{
+					if (weak_ref.IsAlive)
+					{
+						n++;
+					}
+				}
+				
+				return n;
+			}
+		}
+		
+		public static Window[]				DebugAliveWindows
+		{
+			get
+			{
+				Window[] windows = new Window[Window.DebugAliveWindowsCount];
+				
+				int i = 0;
+				
+				foreach (System.WeakReference weak_ref in Window.windows)
+				{
+					if (weak_ref.IsAlive)
+					{
+						windows[i++] = weak_ref.Target as Window;
+					}
+				}
+				
+				return windows;
+			}
+		}
+		
+		
 		public Drawing.Rectangle			PlatformBounds
 		{
 			get { return new Drawing.Rectangle (this.window.Bounds); }
@@ -294,24 +337,24 @@ namespace Epsitec.Common.Widgets
 		
 		[Bundle ("text")]	public string			Text
 		{
-			get { return this.window.Text; }
-			set { this.window.Text = value; }
+			get { return this.text; }
+			set { this.window.Text = this.text = value; }
 		}
 
 		[Bundle ("name")]	public string			Name
 		{
-			get { return this.window.Name; }
-			set { this.window.Name = value; }
+			get { return this.name; }
+			set { this.window.Name = this.name = value; }
 		}
 		
 		
-		#region Interface IBundleSupport
+		#region IBundleSupport Members
 		public virtual string				PublicClassName
 		{
 			get { return "Window"; }
 		}
 		
-		public virtual void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
+		public virtual void RestoreFromBundle(ObjectBundler bundler, ResourceBundle bundle)
 		{
 			//	Il faut tricher un petit peu ici, car la classe WindowFrame ne fait pas
 			//	partie de la hiérarchie dérivée de Widget. Cependant, l'utilisateur ne
@@ -324,6 +367,24 @@ namespace Epsitec.Common.Widgets
 			if (bundle.GetFieldType ("icon") == Support.ResourceFieldType.String)
 			{
 				this.Icon = Support.ImageProvider.Default.GetImage ("res:" + bundle.GetFieldString ("icon"));
+			}
+		}
+		#endregion
+		
+		#region IContainer Members
+		public void NotifyComponentInsertion(ComponentCollection collection, IComponent component)
+		{
+		}
+
+		public void NotifyComponentRemoval(ComponentCollection collection, IComponent component)
+		{
+		}
+
+		public ComponentCollection			Components
+		{
+			get
+			{
+				return this.components;
 			}
 		}
 		#endregion
@@ -342,17 +403,58 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.root != null)
 				{
+					this.root.MinSizeChanged -= new EventHandler (HandleRootMinSizeChanged);
 					this.root.Dispose ();
 				}
 				
 				if (this.window != null)
 				{
+					this.window.ResetWindow ();
 					this.window.Dispose ();
 				}
 				
+				this.timer.TimeElapsed -= new EventHandler(HandleTimeElapsed);
+				this.timer.Dispose ();
+				
 				this.root   = null;
 				this.window = null;
+				this.owner  = null;
+				
+				this.last_in_widget   = null;
+				this.capturing_widget = null;
+				this.focused_widget   = null;
+				this.engaged_widget   = null;;
+				
+				if (this.components.Count > 0)
+				{
+					IComponent[] components = new IComponent[this.components.Count];
+					this.components.CopyTo (components, 0);
+					
+					//	S'il y a des composants attachés, on les détruit aussi. Si l'utilisateur
+					//	ne désire pas que ses composants soient détruits, il doit les détacher
+					//	avant de faire le Dispose de la fenêtre !
+					
+					for (int i = 0; i < components.Length; i++)
+					{
+						IComponent component = components[i];
+						this.components.Remove (component);
+						component.Dispose ();
+					}
+				}
+				
+				this.components.Dispose ();
+				this.components = null;
+				
+				if (Message.State.LastWindow == this)
+				{
+					Message.ClearLastWindow ();
+				}
 			}
+		}
+		
+		internal void ResetWindow()
+		{
+			this.window = null;
 		}
 		
 		
@@ -484,7 +586,7 @@ namespace Epsitec.Common.Widgets
 		
 		internal void DispatchMessage(Message message)
 		{
-			if (this.IsFrozen)
+			if (this.IsFrozen || (message == null))
 			{
 				return;
 			}
@@ -748,6 +850,8 @@ namespace Epsitec.Common.Widgets
 		public static event EventHandler	ApplicationDeactivated;
 		
 		
+		private string						name;
+		private string						text;
 		
 		private Platform.Window				window;
 		private Window						owner;
@@ -762,6 +866,8 @@ namespace Epsitec.Common.Widgets
 		private Support.CommandDispatcher	 cmd_dispatcher;
 		private System.Collections.Queue	 cmd_queue = new System.Collections.Queue ();
 		private System.Collections.Hashtable cmd_names = new System.Collections.Hashtable ();
+		
+		private ComponentCollection			components;
 		
 		static System.Collections.ArrayList	windows = new System.Collections.ArrayList ();
 	}

@@ -34,6 +34,11 @@ namespace Epsitec.Common.Widgets.Platform
 			this.ShowInTaskbar   = false;
 		}
 		
+		internal void ResetWindow()
+		{
+			this.window = null;
+		}
+		
 		
 		internal void AnimateShow(Animation animation, Drawing.Rectangle bounds)
 		{
@@ -362,6 +367,12 @@ namespace Epsitec.Common.Widgets.Platform
 				}
 				
 				this.graphics = null;
+				
+				if (this.window != null)
+				{
+					this.window.ResetWindow ();
+					this.window.Dispose ();
+				}
 			}
 			
 			base.Dispose (disposing);
@@ -503,13 +514,21 @@ namespace Epsitec.Common.Widgets.Platform
 		protected override void OnActivated(System.EventArgs e)
 		{
 			base.OnActivated (e);
-			this.window.OnWindowActivated ();
+			
+			if (this.window != null)
+			{
+				this.window.OnWindowActivated ();
+			}
 		}
 		
 		protected override void OnDeactivate(System.EventArgs e)
 		{
 			base.OnDeactivate (e);
-			this.window.OnWindowDeactivated ();
+			
+			if (this.window != null)
+			{
+				this.window.OnWindowDeactivated ();
+			}
 		}
 
 		protected override void OnVisibleChanged(System.EventArgs e)

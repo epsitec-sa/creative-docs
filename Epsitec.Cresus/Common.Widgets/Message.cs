@@ -231,6 +231,12 @@ namespace Epsitec.Common.Widgets
 		
 		
 		
+		static internal void ClearLastWindow()
+		{
+			Message.state.window = null;
+		}
+		
+		
 		internal static System.Windows.Forms.MouseButtons ButtonsFromWParam(System.IntPtr w_param)
 		{
 			System.Windows.Forms.MouseButtons buttons = System.Windows.Forms.MouseButtons.None;
@@ -737,7 +743,7 @@ namespace Epsitec.Common.Widgets
 			get { return this.window; }
 		}
 		
-		
+
 		internal ModifierKeys				modifiers;
 		internal KeyCode					key_down_code;
 		internal MouseButtons				buttons;

@@ -23,6 +23,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.window = null;
+			}
+			
+			base.Dispose (disposing);
+		}
+
 		protected override bool ShortcutHandler(Shortcut shortcut, bool execute_focused)
 		{
 			if (base.ShortcutHandler (shortcut, execute_focused) == false)
@@ -40,9 +50,10 @@ namespace Epsitec.Common.Widgets
 		
 		public override void Invalidate()
 		{
+			System.Diagnostics.Debug.Assert (this.parent == null);
+			
 			if (this.window != null)
 			{
-				System.Diagnostics.Debug.Assert (this.parent == null);
 				this.window.MarkForRepaint (this.Bounds);
 			}
 		}
@@ -50,7 +61,11 @@ namespace Epsitec.Common.Widgets
 		public override void Invalidate(Drawing.Rectangle rect)
 		{
 			System.Diagnostics.Debug.Assert (this.parent == null);
-			this.window.MarkForRepaint (rect);
+			
+			if (this.window != null)
+			{
+				this.window.MarkForRepaint (rect);
+			}
 		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
