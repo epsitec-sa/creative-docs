@@ -23,6 +23,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorControlDark       = Drawing.Color.FromName("ControlDark");
 			this.colorControlDarkDark   = Drawing.Color.FromName("ControlDarkDark");
 			this.colorCaptionText       = Drawing.Color.FromName("ActiveCaptionText");
+			this.colorInfo              = Drawing.Color.FromName("Info");
 
 			r = 1-(1-this.colorControlLight.R)*0.5;
 			g = 1-(1-this.colorControlLight.G)*0.5;
@@ -366,7 +367,7 @@ namespace Epsitec.Common.Widgets.Adorner
 											 Widgets.TextFieldStyle style,
 											 bool readOnly)
 		{
-			if ( style == TextFieldStyle.Normal )
+			if ( style == TextFieldStyle.Normal || style == TextFieldStyle.UpDown )
 			{
 				graphics.AddFilledRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
@@ -422,7 +423,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				this.PaintImageButton(graphics, frameRect, 18);
 			}
 
-			if ( !tabRect.IsEmpty )
+			if ( !tabRect.IsSurfaceZero )
 			{
 				this.PaintImageButton(graphics, tabRect, 19);
 			}
@@ -595,8 +596,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				this.PaintImageButton(graphics, titleRect, 24);
 			}
 
-			double radius = this.RetRadius(titleRect);
-			Drawing.Path pTitle = PathTopRoundRectangle(titleRect, radius);
+			Drawing.Path pTitle = PathTopCornerRectangle(titleRect);
 			graphics.SolidRenderer.Color = this.colorBorder;
 			graphics.Rasterizer.AddOutline(pTitle, 1);
 			graphics.RenderSolid();
@@ -628,8 +628,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				this.PaintImageButton(graphics, titleRect, 25);
 			}
 
-			double radius = this.RetRadius(titleRect);
-			Drawing.Path pTitle = PathTopRoundRectangle(titleRect, radius);
+			Drawing.Path pTitle = PathTopCornerRectangle(titleRect);
 			graphics.SolidRenderer.Color = this.colorBorder;
 			graphics.Rasterizer.AddOutline(pTitle, 1);
 			graphics.RenderSolid();
@@ -641,6 +640,23 @@ namespace Epsitec.Common.Widgets.Adorner
 											 Widgets.WidgetState state,
 											 Widgets.Direction shadow)
 		{
+		}
+
+		// Dessine le fond d'un tableau.
+		public void PaintArrayBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, WidgetState state, Direction shadow)
+		{
+			graphics.AddFilledRectangle(rect);
+			if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
+			{
+				this.PaintImageButton(graphics, rect, 16);
+			}
+			else
+			{
+				this.PaintImageButton(graphics, rect, 18);
+			}
+			rect.Inflate(-0.5, -0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(this.colorBorder);
 		}
 
 		// Dessine le fond d'une cellule.
@@ -697,16 +713,14 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			if ( type == Direction.Up )
 			{
-				double radius = this.RetRadius(rect);
-				Drawing.Path pTitle = PathTopRoundRectangle(rect, radius);
+				Drawing.Path pTitle = PathTopCornerRectangle(rect);
 				graphics.SolidRenderer.Color = this.colorBorder;
 				graphics.Rasterizer.AddOutline(pTitle, 1);
 				graphics.RenderSolid();
 			}
 			if ( type == Direction.Left )
 			{
-				double radius = this.RetRadius(rect);
-				Drawing.Path pTitle = PathLeftRoundRectangle(rect, radius);
+				Drawing.Path pTitle = PathLeftCornerRectangle(rect);
 				graphics.SolidRenderer.Color = this.colorBorder;
 				graphics.Rasterizer.AddOutline(pTitle, 1);
 				graphics.RenderSolid();
@@ -728,7 +742,7 @@ namespace Epsitec.Common.Widgets.Adorner
 										Direction shadow,
 										Direction type)
 		{
-			this.PaintImageButton(graphics, rect, 23);
+			this.PaintImageButton(graphics, rect, (type == Direction.Right) ? 23 : 31);
 		}
 
 		public void PaintToolForeground(Drawing.Graphics graphics,
@@ -816,6 +830,84 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 		}
 
+		// Dessine un séparateur horizontal ou vertical.
+		public void PaintSeparatorBackground(Drawing.Graphics graphics,
+											 Drawing.Rectangle rect,
+											 WidgetState state,
+											 Direction shadow,
+											 Direction type,
+											 bool optional)
+		{
+			if ( type == Direction.Right )
+			{
+				Drawing.Point p1 = new Drawing.Point(rect.Left+rect.Width/2, rect.Bottom);
+				Drawing.Point p2 = new Drawing.Point(rect.Left+rect.Width/2, rect.Top);
+				graphics.Align(ref p1);
+				graphics.Align(ref p2);
+				p1.X += 0.5;
+				p2.X += 0.5;
+				graphics.AddLine(p1, p2);
+			}
+			else
+			{
+				Drawing.Point p1 = new Drawing.Point(rect.Left, rect.Bottom+rect.Height/2);
+				Drawing.Point p2 = new Drawing.Point(rect.Right, rect.Bottom+rect.Height/2);
+				graphics.Align(ref p1);
+				graphics.Align(ref p2);
+				p1.Y += 0.5;
+				p2.Y += 0.5;
+				graphics.AddLine(p1, p2);
+			}
+
+			graphics.RenderSolid(Drawing.Color.FromBrightness(0.75));
+		}
+
+		public void PaintSeparatorForeground(Drawing.Graphics graphics,
+											 Drawing.Rectangle rect,
+											 WidgetState state,
+											 Direction shadow,
+											 Direction type,
+											 bool optional)
+		{
+		}
+
+		// Dessine une case de statuts.
+		public void PaintStatusBackground(Drawing.Graphics graphics,
+										  Drawing.Rectangle rect,
+										  WidgetState state,
+										  Direction shadow)
+		{
+			rect.Width -= 1;
+			rect.Inflate(-0.5, -0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
+		}
+
+		public void PaintStatusForeground(Drawing.Graphics graphics,
+										  Drawing.Rectangle rect,
+										  WidgetState state,
+										  Direction shadow)
+		{
+		}
+
+		// Dessine le fond d'une bulle d'aide.
+		public void PaintTooltipBackground(Drawing.Graphics graphics, Drawing.Rectangle rect, Direction shadow)
+		{
+			graphics.AddFilledRectangle(rect);
+			graphics.RenderSolid(this.colorInfo);  // fond jaune pale
+			
+			rect.Inflate(-0.5, -0.5);
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(this.colorBlack);  // cadre noir
+		}
+
+		// Dessine le texte d'une bulle d'aide.
+		public void PaintTooltipTextLayout(Drawing.Graphics graphics, Drawing.Point pos, TextLayout text, Direction shadow)
+		{
+			text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorBlack);
+		}
+
+
 		// Dessine le rectangle pour indiquer le focus.
 		public void PaintFocusBox(Drawing.Graphics graphics,
 								  Drawing.Rectangle rect)
@@ -874,7 +966,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				Drawing.Rectangle rFocus = text.StandardRectangle;
 				rFocus.Offset(pos);
-				graphics.Align (ref rFocus);
+				graphics.Align(ref rFocus);
 				rFocus.Inflate(2.5, -0.5);
 				PaintFocusBox(graphics, rFocus);
 			}
@@ -909,46 +1001,38 @@ namespace Epsitec.Common.Widgets.Adorner
 			return path;
 		}
 
-		// Crée le chemin d'un rectangle à coins arrondis en forme de "U" inversé.
-		protected Drawing.Path PathTopRoundRectangle(Drawing.Rectangle rect, double radius)
+		// Crée le chemin d'un rectangle "corné" en forme de "U" inversé.
+		protected Drawing.Path PathTopCornerRectangle(Drawing.Rectangle rect)
 		{
 			double ox = rect.Left;
 			double oy = rect.Bottom;
 			double dx = rect.Width;
 			double dy = rect.Height;
 
-			if ( radius == 0 )
-			{
-				radius = System.Math.Min(dx, dy)/8;
-			}
-			
 			Drawing.Path path = new Drawing.Path();
-			path.MoveTo (ox+0.5, oy);
-			path.LineTo (ox+0.5, oy+dy-0.5);
-			path.LineTo (ox+dx-0.5, oy+dy-0.5);
-			path.LineTo (ox+dx-0.5, oy);
+			path.MoveTo(ox+0.5, oy);
+			path.LineTo(ox+0.5, oy+dy-0.5-5);
+			path.LineTo(ox+0.5+5, oy+dy-0.5);
+			path.LineTo(ox+dx-0.5, oy+dy-0.5);
+			path.LineTo(ox+dx-0.5, oy);
 
 			return path;
 		}
 
-		// Crée le chemin d'un rectangle à coins arrondis en forme de "D" inversé.
-		protected Drawing.Path PathLeftRoundRectangle(Drawing.Rectangle rect, double radius)
+		// Crée le chemin d'un rectangle "corné" en forme de "D" inversé.
+		protected Drawing.Path PathLeftCornerRectangle(Drawing.Rectangle rect)
 		{
 			double ox = rect.Left;
 			double oy = rect.Bottom;
 			double dx = rect.Width;
 			double dy = rect.Height;
 
-			if ( radius == 0 )
-			{
-				radius = System.Math.Min(dx, dy)/8;
-			}
-			
 			Drawing.Path path = new Drawing.Path();
-			path.MoveTo (ox+dx-0.5, oy+0.5);
-			path.LineTo (ox+0.5, oy+0.5);
-			path.LineTo (ox+0.5, oy+dy-0.5);
-			path.LineTo (ox+dx-0.5, oy+dy-0.5);
+			path.MoveTo(ox+dx-0.5, oy+0.5);
+			path.LineTo(ox+0.5, oy+0.5);
+			path.LineTo(ox+0.5, oy+dy-0.5-5);
+			path.LineTo(ox+0.5+5, oy+dy-0.5);
+			path.LineTo(ox+dx-0.5, oy+dy-0.5);
 
 			return path;
 		}
@@ -993,6 +1077,10 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( rank == 16 || rank == 17 || rank == 18 || rank == 21 || rank == 27 || rank == 44 )
 			{
 				this.PaintImageButton1(graphics, rect, icon);
+			}
+			else if ( rank == 24 || rank == 25 || rank == 26 || rank == 32 || rank == 33 || rank == 34 )
+			{
+				this.PaintImageButton9(graphics, rect, 5, icon, 5);
 			}
 			else
 			{
@@ -1072,6 +1160,20 @@ namespace Epsitec.Common.Widgets.Adorner
 		}
 
 
+		public void AdaptEnabledTextColor(ref Drawing.Color color)
+		{
+		}
+
+		public void AdaptDisabledTextColor(ref Drawing.Color color, Drawing.Color uniqueColor)
+		{
+			double alpha = color.A;
+			double intensity = color.GetBrightness ();
+			intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
+			intensity = System.Math.Min(intensity+0.3, 1.0);  // augmente l'intensité
+			color = Drawing.Color.FromBrightness(intensity);
+			color.A = alpha;
+		}
+
 		public Drawing.Color GetColorCaption()
 		{
 			return this.colorCaption;
@@ -1087,8 +1189,12 @@ namespace Epsitec.Common.Widgets.Adorner
 			return this.colorWindow;
 		}
 
+		public Drawing.Color GetColorBorder()
+		{
+			return Drawing.Color.FromBrightness(0.0);
+		}
 
-		// Variables membres.
+
 		protected Drawing.Image		bitmap;
 		protected Drawing.Color		colorBlack;
 		protected Drawing.Color		colorControl;
@@ -1100,6 +1206,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorCaption;
 		protected Drawing.Color		colorCaptionText;
 		protected Drawing.Color		colorCaptionLight;
+		protected Drawing.Color		colorInfo;
 		protected Drawing.Color		colorButton;
 		protected Drawing.Color		colorHilite;
 		protected Drawing.Color		colorBorder;
