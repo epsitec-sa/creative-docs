@@ -3186,7 +3186,7 @@ namespace Epsitec.Common.Widgets
 							if ((dispatcher == null) ||
 								(widget.CommandDispatcher == dispatcher))
 							{
-								if (regex.Match (widget.CommandName).Success)
+								if (regex.IsMatch (widget.CommandName))
 								{
 									list.Add (widget);
 								}
@@ -3238,7 +3238,7 @@ namespace Epsitec.Common.Widgets
 						if ((widget != null) &&
 							(widget.Name != ""))
 						{
-							if (regex.Match (widget.FullPathName).Success)
+							if (regex.IsMatch (widget.FullPathName))
 							{
 								list.Add (widget);
 							}
