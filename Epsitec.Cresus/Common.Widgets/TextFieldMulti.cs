@@ -71,8 +71,8 @@ namespace Epsitec.Common.Widgets
 				if ( h <= this.realSize.Height || this.realSize.Height < 0 )
 				{
 					this.scroller.SetEnabled(false);
-					this.scroller.MaxValue          = 1;
-					this.scroller.VisibleRangeRatio = 1;
+					this.scroller.MaxValue          = 0;
+					this.scroller.VisibleRangeRatio = 0;
 					this.scroller.Value             = 0;
 				}
 				else
