@@ -134,7 +134,7 @@ namespace Epsitec.Common.Text
 			//	Passe en revue tous les caractères et met à jour les compteurs
 			//	d'utilisation pour les styles associés :
 			
-			Internal.StyleTable styles = this.style_list.StyleTable;
+			Internal.StyleTable styles = this.style_list.InternalStyleTable;
 			
 			for (int i = 0; i < length; i++)
 			{
@@ -307,7 +307,7 @@ namespace Epsitec.Common.Text
 			//	Attache le style et les réglages; réutilise de manière interne
 			//	un style existant, si possible :
 			
-			this.style_list.StyleTable.Attach (ref style, search_style, search_local, search_extra);
+			this.style_list.InternalStyleTable.Attach (ref style, search_style, search_local, search_extra);
 			
 			length      = utf32.Length;
 			styled_text = new ulong[length];
@@ -354,7 +354,7 @@ namespace Epsitec.Common.Text
 				this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
 				this.text.ReadText (this.temp_cursor.CursorId, length, text);
 				
-				Internal.StyleTable styles = this.style_list.StyleTable;
+				Internal.StyleTable styles = this.style_list.InternalStyleTable;
 			
 				for (int i = 0; i < length; i++)
 				{

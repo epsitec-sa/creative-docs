@@ -13,6 +13,12 @@ namespace Epsitec.Common.Text.Properties
 		{
 			this.styles = new TextStyle[0];
 		}
+		
+		public CascadedStylesProperty(TextStyle style)
+		{
+			this.styles = new TextStyle[1];
+			this.styles[0] = style;
+		}
 
 		
 		public override PropertyType			PropertyType
@@ -32,6 +38,39 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public override void SerializeToText(System.Text.StringBuilder buffer)
+		{
+			for (int i = 0; i < this.styles.Length; i++)
+			{
+				if (i > 0)
+				{
+					buffer.Append (';');
+				}
+				
+				buffer.Append (this.styles[i].Name);
+			}
+		}
+		
+		public override void DeserializeFromText(Context context, string text, int pos, int length)
+		{
+			string[] args = text.Substring (pos, length).Split (';');
+			
+			if (args[0].Length > 0)
+			{
+				this.styles = new TextStyle[args.Length];
+				
+				for (int i = 0; i < args.Length; i++)
+				{
+					this.styles[i] = context.StyleList.GetTextStyle (args[i]);
+				}
+			}
+			else
+			{
+				this.styles = new TextStyle[0];
+			}
+		}
+
+
 		public override BaseProperty GetCombination(BaseProperty property)
 		{
 			//	Produit une propriété qui est le résultat de la combinaison de

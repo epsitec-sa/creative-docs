@@ -109,6 +109,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Context.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "CursorAttachment.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -135,6 +140,11 @@
                 />
                 <File
                     RelPath = "ICursor.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ISerializableAsText.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

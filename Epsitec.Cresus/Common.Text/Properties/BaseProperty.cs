@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text.Properties
 	/// <summary>
 	/// Summary description for BaseProperty.
 	/// </summary>
-	public abstract class BaseProperty : IContentsSignature, IContentsSignatureUpdater, IContentsComparer
+	public abstract class BaseProperty : IContentsSignature, IContentsSignatureUpdater, IContentsComparer, ISerializableAsText
 	{
 		protected BaseProperty()
 		{
@@ -44,6 +44,8 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public abstract Properties.BaseProperty GetCombination(Properties.BaseProperty property);
+		
 		#region IContentsSignatureUpdater Members
 		public abstract void UpdateContentsSignature(IO.IChecksum checksum);
 		#endregion
@@ -74,8 +76,18 @@ namespace Epsitec.Common.Text.Properties
 		}
 		#endregion
 		
+		#region ISerializableAsText Members
+		public abstract void SerializeToText(System.Text.StringBuilder buffer);
+		public abstract void DeserializeFromText(Context context, string text, int pos, int length);
+		#endregion
 		
-		public abstract Properties.BaseProperty GetCombination(Properties.BaseProperty property);
+		public override string ToString()
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			this.SerializeToText (buffer);
+			return buffer.ToString ();
+		}
+		
 		
 		
 		private int								contents_signature;

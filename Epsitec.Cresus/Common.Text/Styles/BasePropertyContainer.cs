@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text.Styles
 	/// <summary>
 	/// Summary description for BasePropertyContainer.
 	/// </summary>
-	public abstract class BasePropertyContainer : IContentsSignature, IContentsSignatureUpdater
+	public abstract class BasePropertyContainer : IContentsSignature, IContentsSignatureUpdater, System.Collections.IEnumerable
 	{
 		public BasePropertyContainer()
 		{
@@ -316,6 +316,13 @@ namespace Epsitec.Common.Text.Styles
 			}
 			
 			return this.contents_signature;
+		}
+		#endregion
+		
+		#region IEnumerable Members
+		public System.Collections.IEnumerator GetEnumerator()
+		{
+			return this.properties.GetEnumerator ();
 		}
 		#endregion
 		

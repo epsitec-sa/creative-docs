@@ -30,7 +30,16 @@ namespace Epsitec.Common.Text.Properties
 		}
 
 		
-		
+		public override void SerializeToText(System.Text.StringBuilder buffer)
+		{
+			//	TODO: ...
+		}
+
+		public override void DeserializeFromText(Context context, string text, int pos, int length)
+		{
+			//	TODO: ...
+		}
+
 		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
 		{
 			Debug.Assert.IsTrue (property is Properties.FontProperty);
