@@ -4,7 +4,9 @@ namespace Epsitec.Common.Widgets
 	{
 		Flat,							// pas de cadre, ni de relief
 		Normal,							// bouton normal
-		Scroller,						// bouton pour scroller
+		Scroller,						// bouton pour Scroller
+		Combo,							// bouton pour TextFieldCombo
+		UpDown,							// bouton pour TextFieldUpDown
 		ToolItem,						// bouton pour barre d'icône
 		ListItem,						// bouton pour liste
 		DefaultActive,					// bouton pour l'action par défaut (OK)
@@ -65,7 +67,6 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 			
 			if ( (state & WidgetState.Enabled) == 0 )
@@ -74,8 +75,8 @@ namespace Epsitec.Common.Widgets
 				state &= ~WidgetState.Entered;
 				state &= ~WidgetState.Engaged;
 			}
-			adorner.PaintButtonBackground(graphics, rect, state, dir, this.buttonStyle);
-			adorner.PaintButtonTextLayout(graphics, pos, this.textLayout, state, dir, this.buttonStyle);
+			adorner.PaintButtonBackground(graphics, rect, state, Direction.Down, this.buttonStyle);
+			adorner.PaintButtonTextLayout(graphics, pos, this.textLayout, state, this.buttonStyle);
 		}
 		
 		
