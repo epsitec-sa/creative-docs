@@ -1058,13 +1058,11 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		[XmlAttribute]
 		protected Drawing.Size					size = new Drawing.Size(20, 20);
 		protected Drawing.Size					sizeArea = new Drawing.Size(20*3, 20*3);
 		protected Drawing.Point					origin = new Drawing.Point(0, 0);
 		protected System.Collections.ArrayList	objects = new System.Collections.ArrayList();
 
-		[XmlIgnore]
 		protected System.Collections.ArrayList	roots = new System.Collections.ArrayList();
 	}
 }

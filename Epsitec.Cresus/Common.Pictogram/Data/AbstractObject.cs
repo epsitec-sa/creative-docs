@@ -31,12 +31,29 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlArrayItem("String",   Type=typeof(PropertyString))]
 		[XmlArrayItem("Corner",   Type=typeof(PropertyCorner))]
 		[XmlArrayItem("Regular",  Type=typeof(PropertyRegular))]
-		public System.Collections.ArrayList Properties
+		public object[] Properties
 		{
-			get { return this.properties; }
-			set { this.properties = value; }
+			get
+			{
+				object[] copy = new object[this.properties.Count];
+				this.properties.CopyTo (copy);
+				return copy;
+			}
+			set
+			{
+				this.properties.Clear ();
+				this.hash.Clear ();
+				
+				if (value != null)
+				{
+					for (int i = 0; i < value.Length; i++)
+					{
+						this.AddProperty (value[i] as AbstractProperty);
+					}
+				}
+			}
 		}
-
+		
 		[XmlArrayItem(Type=typeof(Handle))]
 		public System.Collections.ArrayList Handles
 		{
@@ -384,6 +401,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public void AddProperty(AbstractProperty property)
 		{
 			this.properties.Add(property);
+			this.hash[property.Type] = property;
 		}
 
 		// Donne une propriété de l'objet.
@@ -889,8 +907,8 @@ namespace Epsitec.Common.Pictogram.Data
 		protected bool							dirtyBbox = true;
 		protected Drawing.Rectangle				bbox = new Drawing.Rectangle();
 
-		[XmlAttribute]
-		protected System.Collections.ArrayList	properties = new System.Collections.ArrayList();
+		private System.Collections.ArrayList	properties = new System.Collections.ArrayList();
+		protected System.Collections.Hashtable	hash = new System.Collections.Hashtable();
 		protected System.Collections.ArrayList	handles = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	objects = null;
 	}

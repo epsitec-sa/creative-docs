@@ -291,7 +291,6 @@ namespace Epsitec.Common.Pictogram.Data
 		protected HandleType			type = HandleType.Primary;
 		protected HandleConstrainType	constrainType = HandleConstrainType.Symmetric;
 
-		[XmlAttribute]
 		protected Drawing.Point			position = new Drawing.Point(0, 0);
 	}
 }
