@@ -118,6 +118,19 @@ namespace Epsitec.Common.Drawing
 			this.current_point = new Point (x, y);
 			AntiGrain.Path.Curve3 (this.agg_path, x_c, y_c, x, y);
 		}
+
+		public void ArcTo(double x_c, double y_c, double x, double y)
+		{
+			this.ArcTo (new Point(x_c, y_c), new Point(x, y));
+		}
+		
+		public void ArcTo(Point c, Point p)
+		{
+			Point p1 = this.CurrentPoint;
+			Point s1 = Point.Scale (p1, c, 0.56);
+			Point s2 = Point.Scale (p, c, 0.56);
+			this.CurveTo (s1, s2, p);
+		}
 		
 		public void Close()
 		{
