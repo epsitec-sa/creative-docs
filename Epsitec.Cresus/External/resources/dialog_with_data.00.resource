@@ -38,7 +38,7 @@
     <bundle>
       <data name="class">Button</data>
       <data name="Anchor">BottomRight</data>
-      <data name="AnchorMargins">6;184;171;16</data>
+      <data name="AnchorMargins">66;184;221;16</data>
       <data name="Command">Ok</data>
       <data name="Text">[res:strings#label.OK]</data>
       <data name="TabIndex">5</data>
@@ -46,7 +46,7 @@
     <bundle>
       <data name="class">Button</data>
       <data name="Anchor">BottomRight</data>
-      <data name="AnchorMargins">188;96;171;16</data>
+      <data name="AnchorMargins">154;96;221;16</data>
       <data name="Command">Cancel</data>
       <data name="Text">[res:strings#label.Cancel]</data>
       <data name="TabIndex">6</data>

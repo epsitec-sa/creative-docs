@@ -226,6 +226,23 @@ namespace Epsitec.Common.Designer.Editors
 		}
 		
 		
+		internal void NotifyWidgetAdded(Widget widget)
+		{
+			this.SelectedWidgets.Add (widget);
+			this.MakeDirty ();
+		}
+		
+		internal void NotifyWidgetRemoved(Widget widget)
+		{
+			this.MakeDirty ();
+		}
+		
+		internal void NotifyWidgetModified(Widget widget)
+		{
+			this.MakeDirty ();
+		}
+		
+		
 		public static WidgetEditor FromWidget(Widget widget)
 		{
 			return widget == null ? null : WidgetEditor.FromWindow (widget.Window);
@@ -315,6 +332,16 @@ namespace Epsitec.Common.Designer.Editors
 				this.dialog_designer = null;
 				this.interface_type  = Common.UI.InterfaceType.Any;
 			}
+		}
+		
+		
+		protected virtual void MakeDirty()
+		{
+			//	Il n'y a pas besoin de générer un événement ici, car l'état "dirty" sera
+			//	évalué manuellement à la fin de l'exécution de chaque commande, et les
+			//	commandes mises à jour en conséquence dans InterfaceEditController.
+			
+			this.is_dirty = true;
 		}
 		
 		
@@ -486,7 +513,8 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
-		protected virtual void HandleSelectedTarget(object sender, object o)
+		
+		private void HandleSelectedTarget(object sender, object o)
 		{
 			if (this.Selected != null)
 			{
@@ -494,7 +522,7 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
-		protected virtual void HandleDeselectingTarget(object sender, object o)
+		private void HandleDeselectingTarget(object sender, object o)
 		{
 			if (this.Deselecting != null)
 			{
@@ -502,7 +530,7 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
-		protected virtual void HandleDeselectedTarget(object sender, object o)
+		private void HandleDeselectedTarget(object sender, object o)
 		{
 			if (this.Deselected != null)
 			{
@@ -510,7 +538,7 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
-		protected virtual void HandleGripsDragBegin(object sender)
+		private void HandleGripsDragBegin(object sender)
 		{
 			if (this.DragSelectionBegin != null)
 			{
@@ -518,9 +546,9 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
-		protected virtual void HandleGripsDragEnd(object sender)
+		private void HandleGripsDragEnd(object sender)
 		{
-			this.is_dirty = true;
+			this.MakeDirty ();
 			
 			if (this.DragSelectionEnd != null)
 			{

@@ -15,6 +15,7 @@ namespace Epsitec.Common.Designer
 	{
 		public InterfaceEditController(Application application) : base (application)
 		{
+			this.dispatcher.CommandDispatched += new EventHandler (this.HandleCommandDispatched);
 		}
 		
 		
@@ -142,7 +143,9 @@ namespace Epsitec.Common.Designer
 			this.attribute_palette.NotifyActiveEditionWidgetChanged (widget, restart_edition);
 		}
 		
-		class SavedWindowParams
+		
+		#region SavedWindowParams Class
+		protected class SavedWindowParams
 		{
 			public SavedWindowParams(Window window)
 			{
@@ -174,6 +177,7 @@ namespace Epsitec.Common.Designer
 			bool				prevent_auto_quit;
 			Window				owner;
 		}
+		#endregion
 		
 		internal void CreateEditorForWindow(Window window, string resource_name)
 		{
@@ -440,7 +444,7 @@ namespace Epsitec.Common.Designer
 			
 			Panels.IDropSource drop_source = sender as Panels.IDropSource;
 			
-			//	Le drag & drop vient de se terminer.
+			//	Le drag & drop lié à la création d'un widget vient de se terminer.
 			
 			Widget widget = drop_source.DroppedWidget;
 			
@@ -451,9 +455,10 @@ namespace Epsitec.Common.Designer
 				System.Diagnostics.Debug.Assert (editor != null);
 				System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Count == 0);
 				
-				editor.SelectedWidgets.Add (widget);
+				editor.NotifyWidgetAdded (widget);
 				
 				this.NotifyActiveEditionWidgetChanged (widget, true);
+				this.UpdateCommandStates ();
 			}
 		}
 		
@@ -515,6 +520,10 @@ namespace Epsitec.Common.Designer
 			this.UpdateActiveWidget ();
 		}
 
+		private void HandleCommandDispatched(object sender)
+		{
+			this.UpdateCommandStates ();
+		}
 		
 		
 		protected void UpdateSelectionState()
@@ -767,7 +776,15 @@ namespace Epsitec.Common.Designer
 			
 			for (int i = 0; i < n; i++)
 			{
-				widgets[i].ZOrder = z[i];
+				Widget widget = widgets[i];
+				
+				System.Diagnostics.Debug.Assert (Editors.WidgetEditor.FromWidget (widget) == this.active_editor);
+				
+				//	TODO: gérer le undo.
+				
+				widget.ZOrder = z[i];
+				
+				this.active_editor.NotifyWidgetModified (widget);
 			}
 			
 			this.active_editor.GripsOverlay.ZOrder = 0;
@@ -797,7 +814,6 @@ namespace Epsitec.Common.Designer
 			this.active_editor.Save ();
 			
 			this.ReselectWidgets (selected);
-			this.UpdateCommandStates ();
 		}
 		
 		[Command ("OpenLoadInterface")]			void CommandOpenLoadInterface()
@@ -824,7 +840,14 @@ namespace Epsitec.Common.Designer
 			
 			foreach (Widget widget in widgets)
 			{
+				System.Diagnostics.Debug.Assert (Editors.WidgetEditor.FromWidget (widget) == this.active_editor);
+				
+				//	TODO: gère le undo; pour cela, il ne faut pas détruire le widget mais le conserver
+				//	pour un usage ultérieur.
+				
 				widget.Dispose ();
+				
+				this.active_editor.NotifyWidgetRemoved (widget);
 			}
 		}
 		

@@ -25,7 +25,7 @@ namespace Epsitec.Common.Designer
 		
 		public Application()
 		{
-			this.name = "Designer";				//	TODO: L10N
+			this.name = "Designer";				//	TODO: L10n
 			this.Initialise ();
 		}
 		
@@ -168,8 +168,8 @@ namespace Epsitec.Common.Designer
 		{
 			this.switcher = new Widgets.Switcher (this.main_window.Root);
 			
-			this.switcher.Items.Add (PanelName.InterfaceEdit.ToString (), "Interface utilisateur");	//	TODO: L10N
-			this.switcher.Items.Add (PanelName.StringEdit.ToString (),    "Ressources (textes)");	//	TODO: L10N
+			this.switcher.Items.Add (PanelName.InterfaceEdit.ToString (), "Interface utilisateur");	//	TODO: L10n
+			this.switcher.Items.Add (PanelName.StringEdit.ToString (),    "Ressources (textes)");	//	TODO: L10n
 			
 			this.switcher.Dock   = DockStyle.Top;
 			this.switcher.Mode   = Widgets.SwitcherMode.Select;

@@ -103,9 +103,17 @@ namespace Epsitec.Common.Designer.Widgets
 		
 		public void DefineTabIndex(int tab_index)
 		{
-			System.Diagnostics.Debug.Assert (this.SelectedWidget != null);
+			Widget               widget = this.SelectedWidget;
+			Editors.WidgetEditor editor = Editors.WidgetEditor.FromWidget (widget);
 			
-			this.DefineTabIndex (this.SelectedWidget, tab_index);
+			System.Diagnostics.Debug.Assert (widget != null);
+			System.Diagnostics.Debug.Assert (editor != null);
+			
+			//	TODO: gérer le undo.
+			
+			this.DefineTabIndex (widget, tab_index);
+			
+			editor.NotifyWidgetModified (widget);
 		}
 		
 		public void StartTabIndexSeq()

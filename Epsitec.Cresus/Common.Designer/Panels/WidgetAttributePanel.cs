@@ -8,7 +8,7 @@ namespace Epsitec.Common.Designer.Panels
 {
 	/// <summary>
 	/// La classe WidgetAttributePalette offre l'accès aux propriétés d'un
-	/// widget.
+	/// widget, lesquelles sont gérées par les classes XyzPropEdit..
 	/// </summary>
 	public class WidgetAttributePanel : AbstractPanel
 	{
@@ -16,24 +16,23 @@ namespace Epsitec.Common.Designer.Panels
 		{
 			this.size  = new Drawing.Size (250, 600);
 			this.props = new System.Collections.ArrayList ();
-			this.infos = new System.Collections.Hashtable ();
 			
 			this.application = application;
 		}
 		
 		
-		public object					ActiveObject
+		public object							ActiveObject
 		{
 			get
 			{
-				return this.active;
+				return this.active_object;
 			}
 			set
 			{
-				if (this.active != value)
+				if (this.active_object != value)
 				{
-					this.active = value;
-					this.type   = value == null ? null : this.active.GetType ();
+					this.active_object = value;
+					this.active_type   = value == null ? null : this.active_object.GetType ();
 					
 					this.RebindContents ();
 				}
@@ -43,7 +42,7 @@ namespace Epsitec.Common.Designer.Panels
 		
 		internal void NotifyActiveEditionWidgetChanged(Widget widget, bool restart_edition)
 		{
-			if (this.active == null)
+			if (this.active_object == null)
 			{
 				//	Aucun widget actif => probablement plusieurs widgets sélectionnés. On ne
 				//	fait donc rien de plus ici.
@@ -51,7 +50,7 @@ namespace Epsitec.Common.Designer.Panels
 				return;
 			}
 			
-			System.Diagnostics.Debug.Assert (this.active == widget);
+			System.Diagnostics.Debug.Assert (this.active_object == widget);
 			System.Diagnostics.Debug.WriteLine ("Activated widget " + widget.ToString ());
 			
 			if (this.widget != null)
@@ -115,14 +114,16 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		
 		
-		protected void RebindContents()
+		private void RebindContents()
 		{
-			if (this.active == null)
+			if (this.active_object == null)
 			{
+				//	TODO: L10n
+				
 				this.title.Text = @"<font size=""120%""><b>Object Attributes</b><br/>(no selected object)</font>";
 				
-				this.DetachAllProps ();
-				this.DisposeUnusedProps ();
+				this.DetachAllProperties ();
+				this.DisposeUnusedProperties ();
 				
 				System.Diagnostics.Debug.Assert (this.props.Count == 0);
 				
@@ -130,8 +131,8 @@ namespace Epsitec.Common.Designer.Panels
 			}
 			else
 			{
-				string         name           = this.type.Name;
-				IBundleSupport bundle_support = this.active as IBundleSupport;
+				string         name           = this.active_type.Name;
+				IBundleSupport bundle_support = this.active_object as IBundleSupport;
 				
 				if (bundle_support != null)
 				{
@@ -142,11 +143,11 @@ namespace Epsitec.Common.Designer.Panels
 				
 				//	Il faut recréer les pages permettant d'éditer les diverses propriétés.
 				
-				this.CreateProps ();
+				this.UpdateProperties ();
 			}
 		}
 		
-		protected void DetachAllProps()
+		private void DetachAllProperties()
 		{
 			foreach (Editors.AbstractPropEdit prop in this.props)
 			{
@@ -154,7 +155,7 @@ namespace Epsitec.Common.Designer.Panels
 			}
 		}
 		
-		protected void DisposeUnusedProps()
+		private void DisposeUnusedProperties()
 		{
 			int i = 0;
 			
@@ -174,17 +175,26 @@ namespace Epsitec.Common.Designer.Panels
 			}
 		}
 		
-		protected void CreateProps()
+		
+		private void UpdateProperties()
 		{
-			System.Diagnostics.Debug.Assert (this.type != null);
+			//	Re-crée les propriétés liées à l'objet actif, si possible en conservant les réglages
+			//	actifs précédemment si on ne change pas de type d'objet (le focus est aussi conservé
+			//	dans la mesure du possible).
+			
+			System.Diagnostics.Debug.Assert (this.active_type != null);
 			
 			int         active_index    = this.book.ActivePageIndex;
 			System.Type active_tab_type = (active_index < 0) ? null : this.props[active_index].GetType ();
 			
-			this.SavePropsVisibleViews ();
-			this.DetachAllProps ();
-			this.SelectMatchingProps ();
-			this.DisposeUnusedProps ();
+			System.Collections.Hashtable saved_views = this.SaveVisiblePropViews ();
+			string                       saved_focus = this.SaveFocus ();
+			
+			this.DetachAllProperties ();
+			this.SelectMatchingProperties ();
+			this.DisposeUnusedProperties ();
+			
+			//	Met à jour la liste des propriétés à utiliser pour l'édition de l'objet actif :
 			
 			Editors.AbstractPropEdit[] props = new Editors.AbstractPropEdit[this.props.Count];
 			this.props.CopyTo (props);
@@ -193,23 +203,20 @@ namespace Epsitec.Common.Designer.Panels
 			this.props.Clear ();
 			this.props.AddRange (props);
 			
-			string focused_property_name = null;
+			//	Rafraîchit le contenu des divers onglets en s'appuyant sur les éditeurs de
+			//	propriétés sélectionnés :
 			
-			if (this.book.ActivePage != null)
-			{
-				Widget focused = this.book.ActivePage.FindFocusedChild ();
-				
-				if (focused != null)
-				{
-					focused_property_name = focused.FullPathName;
-				}
-			}
+			this.UpdateBookPages (active_tab_type);
 			
-			
+			this.RestoreVisiblePropViews (saved_views);
+			this.RestoreFocus (saved_focus);
+		}
+
+		private void UpdateBookPages(System.Type active_tab_type)
+		{
 			this.book.Items.Clear ();
 			
-			active_index = -1;
-			
+			int active_index = -1;
 			int i = 0;
 			
 			foreach (Editors.AbstractPropEdit prop in this.props)
@@ -231,9 +238,46 @@ namespace Epsitec.Common.Designer.Panels
 			}
 			
 			this.book.ActivePageIndex = active_index;
+		}
+		
+		
+		private string SaveFocus()
+		{
+			if (this.book.ActivePage != null)
+			{
+				Widget focused = this.book.ActivePage.FindFocusedChild ();
+				
+				if (focused != null)
+				{
+					return focused.FullPathName;
+				}
+			}
 			
-			this.RestorePropsVisibleViews ();
+			return null;
+		}
+		
+		private System.Collections.Hashtable SaveVisiblePropViews()
+		{
+			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
 			
+			foreach (Editors.AbstractPropEdit prop in this.props)
+			{
+				int[] views = new int[prop.PropPanes.Length];
+				
+				for (int i = 0; i < prop.PropPanes.Length; i++)
+				{
+					views[i] = prop.PropPanes[i].VisibleViewIndex;
+				}
+				
+				hash[prop.GetType ()] = views;
+			}
+			
+			return hash;
+		}
+		
+		
+		private void RestoreFocus(string focused_property_name)
+		{
 			//	Lors du changement du contenu des onglets, on aimerait conserver le focus clavier
 			//	sur le widget précédent, si cela est possible. Pour ce faire, on a pris note plus
 			//	haut du chemin d'accès au widget qui avait le focus, et on tente de trouver quelque
@@ -251,26 +295,11 @@ namespace Epsitec.Common.Designer.Panels
 			}
 		}
 		
-		protected void SavePropsVisibleViews()
+		private void RestoreVisiblePropViews(System.Collections.Hashtable hash)
 		{
 			foreach (Editors.AbstractPropEdit prop in this.props)
 			{
-				int[] infos = new int[prop.PropPanes.Length];
-				
-				for (int i = 0; i < prop.PropPanes.Length; i++)
-				{
-					infos[i] = prop.PropPanes[i].VisibleViewIndex;
-				}
-				
-				this.infos[prop.GetType ()] = infos;
-			}
-		}
-		
-		protected void RestorePropsVisibleViews()
-		{
-			foreach (Editors.AbstractPropEdit prop in this.props)
-			{
-				System.Array array = this.infos[prop.GetType ()] as System.Array;
+				System.Array array = hash[prop.GetType ()] as System.Array;
 				
 				if (array != null)
 				{
@@ -282,50 +311,57 @@ namespace Epsitec.Common.Designer.Panels
 			}
 		}
 		
-		protected void SelectMatchingProps()
+		
+		private void SelectMatchingProperties()
 		{
-			System.Type[] types = Editors.AbstractPropEdit.FindMatching (this.type);
+			System.Type[] types = Editors.AbstractPropEdit.FindMatchingPropertyEditors (this.active_type);
+			
+			//	On a obtenu la table des types d'éditeurs applicables pour l'objet actuellement
+			//	actif. C'est en principe l'un des suivants :
+			//
+			//	- WindowPropEdit.. pour l'édition d'une fenêtre
+			//	- DataWidgetPropEdit.. pour l'édition d'un widget standard
+			//	- WidgetPropEdit.. pour l'édition d'un "data widget" (avec binding)
 			
 			for (int i = 0; i < types.Length; i++)
 			{
-				this.CreateOrReuseProp (types[i]);
+				this.CreateOrReuseProperty (types[i]);
 			}
 		}
 		
-		protected void CreateOrReuseProp(System.Type prop_type)
+		private void CreateOrReuseProperty(System.Type prop_type)
 		{
 			foreach (Editors.AbstractPropEdit prop in this.props)
 			{
 				if (prop.GetType () == prop_type)
 				{
-					prop.ActiveObject = this.active;
+					prop.ActiveObject = this.active_object;
 					return;
 				}
 			}
 			
 			//	Pas trouvé de propriété correspondante. Il faut donc en créer une nouvelle !
 			
-			object[] args = new object[1];
-			
-			args[0] = this.application;
+			object[] args = new object[] { this.application };
 			
 			Editors.AbstractPropEdit new_prop = System.Activator.CreateInstance (prop_type, args) as Editors.AbstractPropEdit;
 			
-			new_prop.ActiveObject = this.active;
+			new_prop.ActiveObject = this.active_object;
 			
 			this.props.Add (new_prop);
 		}
 		
 		
 		
+		private StaticText						title;				//	titre dans le panneau
+		private Scrollable						surface;			//	surface qui contient les onglets
+		private TabBook							book;				//	onglets avec les divers attributs
 		
-		protected StaticText					title;
-		protected Scrollable					surface;
-		protected object						active;
-		protected System.Type					type;
-		protected TabBook						book;
-		protected System.Collections.ArrayList	props;
-		protected System.Collections.Hashtable	infos;
-		protected Application					application;
+		private object							active_object;		//	objet actif (dont les propriétés sont visibles)
+		private System.Type						active_type;		//	type de l'objet actif
+		
+		private System.Collections.ArrayList	props;				//	propriétés
+		
+		private Application						application;
 	}
 }

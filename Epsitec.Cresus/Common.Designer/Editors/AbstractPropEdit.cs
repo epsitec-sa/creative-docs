@@ -74,7 +74,8 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
-		public static System.Type[] FindMatching(System.Type type)
+		
+		public static System.Type[] FindMatchingPropertyEditors(System.Type type)
 		{
 			//	Analyse le type passé en entrée et retourne une liste avec tous les
 			//	types d'éditeurs de propriétés adéquats.
