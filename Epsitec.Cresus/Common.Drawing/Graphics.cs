@@ -18,7 +18,7 @@ namespace Epsitec.Common.Drawing
 	/// <summary>
 	/// La classe Graphics encapsule le contexte graphique utilisé pour peindre.
 	/// </summary>
-	public abstract class Graphics : System.IDisposable
+	public abstract class Graphics : System.IDisposable, IPaintPort
 	{
 		protected Graphics()
 		{
@@ -77,6 +77,18 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public Color						Color
+		{
+			get
+			{
+				return this.SolidRenderer.Color;
+			}
+			set
+			{
+				this.SolidRenderer.Color = value;
+			}
+		}
+		
 		
 		internal Transform					InternalTransform
 		{
@@ -95,6 +107,18 @@ namespace Epsitec.Common.Drawing
 		public abstract double PaintText(double x, double y, string text, Font font, double size, Font.ClassInfo[] infos);
 		
 		public abstract Graphics CreateAlphaMask();
+		
+		public void PaintOutline(Path path)
+		{
+			this.Rasterizer.AddOutline (path, this.line_width, this.line_cap, this.line_join, this.line_miter_limit);
+			this.RenderSolid ();
+		}
+		
+		public void PaintSurface(Path path)
+		{
+			this.Rasterizer.AddSurface (path);
+			this.RenderSolid ();
+		}
 		
 		public void PaintText(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment align)
 		{
@@ -229,6 +253,7 @@ namespace Epsitec.Common.Drawing
 			this.ImageRenderer.BitmapImage = bitmap;
 			this.ImageRenderer.Transform = transform;
 			this.RenderImage ();
+			this.ImageRenderer.BitmapImage = null;
 		}
 		
 		public abstract Point ApplyTransformDirect(Point pt);

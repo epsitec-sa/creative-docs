@@ -36,12 +36,8 @@ namespace Epsitec.Common.Drawing
 			System.Diagnostics.Debug.Assert (result != System.IntPtr.Zero);
 			
 			System.Diagnostics.Debug.WriteLine ("AntiGrain.Win32.dll loaded successfully");
-			Font.initialised = true;
-			System.Diagnostics.Debug.WriteLine ("Calling AntiGrain.Interface.");
-			AntiGrain.Interface.Initialise ();
-			System.Diagnostics.Debug.WriteLine ("AntiGrain.Interface initialised.");
-			AntiGrain.Font.Initialise ();
-			System.Diagnostics.Debug.WriteLine ("AntiGrain.Font initialised.");
+			
+			Font.Initialise ();
 		}
 		#endregion
 		
@@ -397,8 +393,16 @@ namespace Epsitec.Common.Drawing
 		
 		public static void Initialise()
 		{
-			//	En appelant cette méthode statique, on peut garantir que le constructeur
-			//	statique de Font a bien été exécuté.
+			if (Font.initialised == false)
+			{
+				Font.initialised = true;
+				
+				System.Diagnostics.Debug.WriteLine ("Calling AntiGrain.Interface.");
+				AntiGrain.Interface.Initialise ();
+				System.Diagnostics.Debug.WriteLine ("AntiGrain.Interface initialised.");
+				AntiGrain.Font.Initialise ();
+				System.Diagnostics.Debug.WriteLine ("AntiGrain.Font initialised.");
+			}
 		}
 
 		protected static void SetupFonts()
