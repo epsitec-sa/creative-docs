@@ -117,6 +117,57 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		[Test] public void CheckFindDbTables()
+		{
+			//	Il faut exécuter le test CheckCreateDbTable avant celui-ci.
+			
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
+			{
+				DbTable[] tables = infrastructure.FindDbTables (null, DbElementCat.Any);
+				
+				for (int i = 0; i < tables.Length; i++)
+				{
+					System.Console.Out.WriteLine ("Table {0} has {1} columns. Category is {2}.", tables[i].Name, tables[i].Columns.Count, tables[i].Category);
+					for (int j = 0; j < tables[i].Columns.Count; j++)
+					{
+						System.Console.Out.WriteLine (" {0}: {1}, {2} (type {3}).", j, tables[i].Columns[j].Name, tables[i].Columns[j].Type.Name, tables[i].Columns[j].Type.SimpleType);
+					}
+				}
+			}
+		}
+		
+		[Test] public void CheckFindDbTypes()
+		{
+			//	Il faut exécuter le test CheckCreateDbTable avant celui-ci.
+			
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
+			{
+				DbType[] types = infrastructure.FindDbTypes (null);
+				
+				for (int i = 0; i < types.Length; i++)
+				{
+					DbType type = types[i];
+					
+					System.Console.Out.Write ("Type {0}, {1}.", type.Name, type.SimpleType);
+					
+					if (type is DbTypeString)
+					{
+						DbTypeString type_string = type as DbTypeString;
+						System.Console.Out.WriteLine ("  Length={0}, is fixed length={1}.", type_string.Length, type_string.IsFixedLength);
+					}
+					else if (type is DbTypeNum)
+					{
+						DbTypeNum type_num = type as DbTypeNum;
+						System.Console.Out.WriteLine ("  Numeric type={0}, {1} digits, {2} shift.", type_num.NumDef.InternalRawType, type_num.NumDef.DigitPrecision, type_num.NumDef.DigitShift);
+					}
+					else
+					{
+						System.Console.Out.WriteLine ();
+					}
+				}
+			}
+		}
+		
 		[Test] public void CheckUnregisterDbTable()
 		{
 			//	Il faut exécuter le test CheckCreateDbTable avant celui-ci.

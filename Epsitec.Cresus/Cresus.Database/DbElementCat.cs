@@ -17,5 +17,6 @@ namespace Epsitec.Cresus.Database
 		UserDataExternal	= 3,	//	élément sous contrôle de l'utilisateur, non géré (source externe)
 		
 		Synthetic			= 4,	//	élément synthétique (n'existe pas en tant que tel dans la base)
+		Any					= 5,	//	n'importe (utilisable uniquement dans les critères d'extraction)
 	}
 }

@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Database
 			
 			//	Il faut créer les tables internes utilisées pour la gestion des méta-données.
 			
-			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
+			using (DbTransaction transaction = this.BeginTransaction ())
 			{
 				this.BootCreateTableTableDef (transaction);
 				this.BootCreateTableColumnDef (transaction);
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Database
 			//	Les tables ont toutes été créées. Il faut maintenant les remplir avec
 			//	les informations de départ.
 				
-			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
+			using (DbTransaction transaction = this.BeginTransaction ())
 			{
 				this.BootSetupTables (transaction);
 				
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Database
 			
 			System.Diagnostics.Debug.Assert (this.db_abstraction.UserTableNames.Length > 0);
 			
-			using (System.Data.IDbTransaction transaction = this.db_abstraction.BeginTransaction ())
+			using (DbTransaction transaction = this.BeginTransaction ())
 			{
 				this.internal_tables.Add (this.ResolveDbTable (transaction, DbTable.TagTableDef));
 				this.internal_tables.Add (this.ResolveDbTable (transaction, DbTable.TagColumnDef));
@@ -117,10 +117,35 @@ namespace Epsitec.Cresus.Database
 			get { return this.sql_engine; }
 		}
 		
-		
-		public System.Data.IDbTransaction BeginTransaction()
+		public DbTransaction				LiveTransaction
 		{
-			return this.db_abstraction.BeginTransaction ();
+			get { return this.live_transaction; }
+		}
+		
+		
+		public DbTransaction BeginTransaction()
+		{
+			return new DbTransaction (this.db_abstraction.BeginTransaction (), this);
+		}
+		
+		internal void NotifyBeginTransaction(DbTransaction transaction)
+		{
+			if (this.live_transaction != null)
+			{
+				throw new DbException (this.db_access, string.Format ("Nested transactions not supported."));
+			}
+			
+			this.live_transaction = transaction;
+		}
+		
+		internal void NotifyEndTransaction(DbTransaction transaction)
+		{
+			if (this.live_transaction != transaction)
+			{
+				throw new DbException (this.db_access, string.Format ("Ending wrong transaction."));
+			}
+			
+			this.live_transaction = null;
 		}
 		
 		
@@ -143,7 +168,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public void RegisterNewDbTable(System.Data.IDbTransaction transaction, DbTable table)
+		public void RegisterNewDbTable(DbTransaction transaction, DbTable table)
 		{
 			//	Enregistre une nouvelle table dans la base de données. Ceci va attribuer à
 			//	la table une clef DbKey et vérifier qu'il n'y a pas de collision avec une
@@ -152,7 +177,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (transaction == null)
 			{
-				using (transaction = this.db_abstraction.BeginTransaction ())
+				using (transaction = this.BeginTransaction ())
 				{
 					this.RegisterNewDbTable (transaction, table);
 					transaction.Commit ();
@@ -189,14 +214,14 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (transaction);
 		}
 		
-		public void UnregisterDbTable(System.Data.IDbTransaction transaction, DbTable table)
+		public void UnregisterDbTable(DbTransaction transaction, DbTable table)
 		{
 			//	Supprime la description de la table de la base. Pour des raisons de sécurité,
 			//	la table SQL n'est pas réellement supprimée.
 			
 			if (transaction == null)
 			{
-				using (transaction = this.db_abstraction.BeginTransaction ())
+				using (transaction = this.BeginTransaction ())
 				{
 					this.UnregisterDbTable (transaction, table);
 					transaction.Commit ();
@@ -214,6 +239,75 @@ namespace Epsitec.Cresus.Database
 			DbKey new_key = new DbKey (old_key.Id, revision, revision);
 			
 			this.UpdateKeyInRow (transaction, DbTable.TagTableDef, old_key, new_key);
+		}
+		
+		
+		public DbTable ResolveDbTable(DbTransaction transaction, string table_name)
+		{
+			DbKey key = this.FindDbTableKey (transaction, table_name);
+			return this.ResolveDbTable (transaction, key);
+		}
+		
+		public DbTable ResolveDbTable(DbTransaction transaction, DbKey key)
+		{
+			if (key == null)
+			{
+				return null;
+			}
+
+			lock (this.cache_db_tables)
+			{
+				DbTable table = this.cache_db_tables[key];
+				
+				if (table == null)
+				{
+					table = this.LoadDbTable (transaction, key);
+					
+					if (table != null)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", table.GetType ().Name, table.Name));
+						
+						this.cache_db_tables[key] = table;
+					}
+				}
+				
+				return table;
+			}
+		}
+		
+		public DbType  ResolveDbType(DbTransaction transaction, string type_name)
+		{
+			DbKey key = this.FindDbTypeKey (transaction, type_name);
+			return this.ResolveDbType (transaction, key);
+		}
+		
+		public DbType  ResolveDbType(DbTransaction transaction, DbKey key)
+		{
+			if (key == null)
+			{
+				return null;
+			}
+
+			//	Trouve le type corredpondant à une clef spécifique.
+			
+			lock (this.cache_db_types)
+			{
+				DbType type = this.cache_db_types[key];
+				
+				if (type == null)
+				{
+					type = this.LoadDbType (transaction, key);
+					
+					if (type != null)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", type.GetType ().Name, type.Name));
+						
+						this.cache_db_types[key] = type;
+					}
+				}
+				
+				return type;
+			}
 		}
 		
 		
@@ -244,7 +338,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected void CheckForRegisteredTypes(System.Data.IDbTransaction transaction, DbTable table)
+		protected void CheckForRegisteredTypes(DbTransaction transaction, DbTable table)
 		{
 			//	Vérifie que tous les types utilisés dans la définition des colonnes sont bien
 			//	connus (on vérifie qu'ils ont une clef valide).
@@ -267,7 +361,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		protected void CheckForUnknownTable(System.Data.IDbTransaction transaction, DbTable table)
+		protected void CheckForUnknownTable(DbTransaction transaction, DbTable table)
 		{
 			//	Cherche si une table avec ce nom existe dans la base. Si c'est le cas,
 			//	génère une exception.
@@ -286,7 +380,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		protected void CheckForKnownTable(System.Data.IDbTransaction transaction, DbTable table)
+		protected void CheckForKnownTable(DbTransaction transaction, DbTable table)
 		{
 			//	Cherche si une table avec ce nom existe dans la base. Si ce n'est pas le cas,
 			//	génère une exception.
@@ -309,7 +403,7 @@ namespace Epsitec.Cresus.Database
 		
 		
 		
-		public void					ExecuteSilent(System.Data.IDbTransaction transaction)
+		public void					ExecuteSilent(DbTransaction transaction)
 		{
 			int count = this.sql_builder.CommandCount;
 			
@@ -320,7 +414,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (transaction == null)
 			{
-				using (transaction = this.db_abstraction.BeginTransaction ())
+				using (transaction = this.BeginTransaction ())
 				{
 					this.ExecuteSilent (transaction);
 					transaction.Commit ();
@@ -328,14 +422,14 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			using (System.Data.IDbCommand command = this.sql_builder.CreateCommand (transaction))
+			using (System.Data.IDbCommand command = this.sql_builder.CreateCommand (transaction.Transaction))
 			{
 				System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 				this.sql_engine.Execute (command, DbCommandType.Silent, count);
 			}
 		}
 		
-		public object				ExecuteScalar(System.Data.IDbTransaction transaction)
+		public object				ExecuteScalar(DbTransaction transaction)
 		{
 			int count = this.sql_builder.CommandCount;
 			
@@ -346,7 +440,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (transaction == null)
 			{
-				using (transaction = this.db_abstraction.BeginTransaction ())
+				using (transaction = this.BeginTransaction ())
 				{
 					object value = this.ExecuteScalar (transaction);
 					transaction.Commit ();
@@ -354,7 +448,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			using (System.Data.IDbCommand command = this.sql_builder.CreateCommand (transaction))
+			using (System.Data.IDbCommand command = this.sql_builder.CreateCommand (transaction.Transaction))
 			{
 				object data;
 				
@@ -365,7 +459,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public object				ExecuteNonQuery(System.Data.IDbTransaction transaction)
+		public object				ExecuteNonQuery(DbTransaction transaction)
 		{
 			int count = this.sql_builder.CommandCount;
 			
@@ -376,7 +470,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (transaction == null)
 			{
-				using (transaction = this.db_abstraction.BeginTransaction ())
+				using (transaction = this.BeginTransaction ())
 				{
 					object value = this.ExecuteNonQuery (transaction);
 					transaction.Commit ();
@@ -384,7 +478,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			using (System.Data.IDbCommand command = this.sql_builder.CreateCommand (transaction))
+			using (System.Data.IDbCommand command = this.sql_builder.CreateCommand (transaction.Transaction))
 			{
 				object data;
 				
@@ -395,7 +489,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public System.Data.DataSet	ExecuteRetData(System.Data.IDbTransaction transaction)
+		public System.Data.DataSet	ExecuteRetData(DbTransaction transaction)
 		{
 			int count = this.sql_builder.CommandCount;
 			
@@ -406,7 +500,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (transaction == null)
 			{
-				using (transaction = this.db_abstraction.BeginTransaction ())
+				using (transaction = this.BeginTransaction ())
 				{
 					System.Data.DataSet value = this.ExecuteRetData (transaction);
 					transaction.Commit ();
@@ -414,7 +508,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			using (System.Data.IDbCommand command = this.sql_builder.CreateCommand (transaction))
+			using (System.Data.IDbCommand command = this.sql_builder.CreateCommand (transaction.Transaction))
 			{
 				System.Data.DataSet data;
 				
@@ -426,7 +520,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public System.Data.DataTable ExecuteSqlSelect(System.Data.IDbTransaction transaction, SqlSelect query, int min_rows)
+		public System.Data.DataTable ExecuteSqlSelect(DbTransaction transaction, SqlSelect query, int min_rows)
 		{
 			this.sql_builder.SelectData (query);
 			
@@ -452,12 +546,12 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public DbKey FindDbTableKey(System.Data.IDbTransaction transaction, string name)
+		public DbKey FindDbTableKey(DbTransaction transaction, string name)
 		{
 			return this.FindLiveKey (this.FindDbKeys (transaction, DbTable.TagTableDef, name));
 		}
 		
-		public DbKey FindDbTypeKey(System.Data.IDbTransaction transaction, string name)
+		public DbKey FindDbTypeKey(DbTransaction transaction, string name)
 		{
 			return this.FindLiveKey (this.FindDbKeys (transaction, DbTable.TagTypeDef, name));
 		}
@@ -476,7 +570,7 @@ namespace Epsitec.Cresus.Database
 			return null;
 		}
 		
-		internal DbKey[] FindDbKeys(System.Data.IDbTransaction transaction, string table_name, string row_name)
+		internal DbKey[] FindDbKeys(DbTransaction transaction, string table_name, string row_name)
 		{
 			//	Trouve la (ou les) clefs.
 			
@@ -518,7 +612,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public int CountMatchingRows(System.Data.IDbTransaction transaction, string table, string name_column, string value)
+		public int CountMatchingRows(DbTransaction transaction, string table, string name_column, string value)
 		{
 			//	Compte combien de lignes dans la table ont le texte spécifié dans la colonne spécifiée.
 			//	Ne considère que les lignes dont la révision est zéro.
@@ -541,7 +635,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public int FindHighestRowRevision(System.Data.IDbTransaction transaction, string table, long id)
+		public int FindHighestRowRevision(DbTransaction transaction, string table, long id)
 		{
 			//	Trouve la révision la plus élevée (-1 si aucune n'est trouvée) pour une clef
 			//	donnée.
@@ -566,7 +660,7 @@ namespace Epsitec.Cresus.Database
 			return max_rev;
 		}
 		
-		public void UpdateKeyInRow(System.Data.IDbTransaction transaction, string table, DbKey old_key, DbKey new_key)
+		public void UpdateKeyInRow(DbTransaction transaction, string table, DbKey old_key, DbKey new_key)
 		{
 			//	Met à jour la clef de la ligne spécifiée.
 			
@@ -592,76 +686,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public DbTable ResolveDbTable(System.Data.IDbTransaction transaction, string table_name)
-		{
-			DbKey key = this.FindDbTableKey (transaction, table_name);
-			return this.ResolveDbTable (transaction, key);
-		}
-		
-		public DbTable ResolveDbTable(System.Data.IDbTransaction transaction, DbKey key)
-		{
-			if (key == null)
-			{
-				return null;
-			}
-
-			lock (this.cache_db_tables)
-			{
-				DbTable table = this.cache_db_tables[key];
-				
-				if (table == null)
-				{
-					table = this.LoadDbTable (transaction, key);
-					
-					if (table != null)
-					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", table.GetType ().Name, table.Name));
-						
-						this.cache_db_tables[key] = table;
-					}
-				}
-				
-				return table;
-			}
-		}
-		
-		public DbType  ResolveDbType(System.Data.IDbTransaction transaction, string type_name)
-		{
-			DbKey key = this.FindDbTypeKey (transaction, type_name);
-			return this.ResolveDbType (transaction, key);
-		}
-		
-		public DbType  ResolveDbType(System.Data.IDbTransaction transaction, DbKey key)
-		{
-			if (key == null)
-			{
-				return null;
-			}
-
-			//	Trouve le type corredpondant à une clef spécifique.
-			
-			lock (this.cache_db_types)
-			{
-				DbType type = this.cache_db_types[key];
-				
-				if (type == null)
-				{
-					type = this.LoadDbType (transaction, key);
-					
-					if (type != null)
-					{
-						System.Diagnostics.Debug.WriteLine (string.Format ("Loaded {0} {1} from database.", type.GetType ().Name, type.Name));
-						
-						this.cache_db_types[key] = type;
-					}
-				}
-				
-				return type;
-			}
-		}
-		
-		
-		public DbTable LoadDbTable(System.Data.IDbTransaction transaction, DbKey key)
+		public DbTable LoadDbTable(DbTransaction transaction, DbKey key)
 		{
 			//	Charge les définitions pour la table au moyen d'une requête unique qui va
 			//	aussi retourner les diverses définitions de colonnes.
@@ -749,7 +774,7 @@ namespace Epsitec.Cresus.Database
 			return db_table;
 		}
 		
-		public DbType  LoadDbType(System.Data.IDbTransaction transaction, DbKey key)
+		public DbType  LoadDbType(DbTransaction transaction, DbKey key)
 		{
 			SqlSelect query = new SqlSelect ();
 			
@@ -795,7 +820,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public long NewRowIdInTable(System.Data.IDbTransaction transaction, DbKey key, int num_keys)
+		public long NewRowIdInTable(DbTransaction transaction, DbKey key, int num_keys)
 		{
 			//	Attribue 'num_keys' clef consécutives dans la table spécifiée.
 			
@@ -803,7 +828,7 @@ namespace Epsitec.Cresus.Database
 			
 			if (transaction == null)
 			{
-				using (transaction = this.db_abstraction.BeginTransaction ())
+				using (transaction = this.BeginTransaction ())
 				{
 					long id = this.NewRowIdInTable (transaction, key, num_keys);
 					transaction.Commit ();
@@ -845,7 +870,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected DbEnumValue[] LoadEnumValues(System.Data.IDbTransaction transaction, DbTypeEnum type_enum)
+		protected DbEnumValue[] LoadEnumValues(DbTransaction transaction, DbTypeEnum type_enum)
 		{
 			System.Diagnostics.Debug.Assert (type_enum != null);
 			System.Diagnostics.Debug.Assert (type_enum.Count == 0);
@@ -1000,7 +1025,7 @@ namespace Epsitec.Cresus.Database
 		
 		
 		#region Bootstrapping
-		protected void BootCreateTableTableDef(System.Data.IDbTransaction transaction)
+		protected void BootCreateTableTableDef(DbTransaction transaction)
 		{
 			DbTable    table   = new DbTable (DbTable.TagTableDef);
 			DbColumn[] columns = new DbColumn[8];
@@ -1034,7 +1059,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (transaction);
 		}
 		
-		protected void BootCreateTableColumnDef(System.Data.IDbTransaction transaction)
+		protected void BootCreateTableColumnDef(DbTransaction transaction)
 		{
 			DbTable    table   = new DbTable (DbTable.TagColumnDef);
 			DbColumn[] columns = new DbColumn[9];
@@ -1071,7 +1096,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (transaction);
 		}
 		
-		protected void BootCreateTableTypeDef(System.Data.IDbTransaction transaction)
+		protected void BootCreateTableTypeDef(DbTransaction transaction)
 		{
 			DbTable    table   = new DbTable (DbTable.TagTypeDef);
 			DbColumn[] columns = new DbColumn[7];
@@ -1104,7 +1129,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (transaction);
 		}
 		
-		protected void BootCreateTableEnumValDef(System.Data.IDbTransaction transaction)
+		protected void BootCreateTableEnumValDef(DbTransaction transaction)
 		{
 			DbTable    table   = new DbTable (DbTable.TagEnumValDef);
 			DbColumn[] columns = new DbColumn[8];
@@ -1139,7 +1164,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (transaction);
 		}
 		
-		protected void BootCreateTableRefDef(System.Data.IDbTransaction transaction)
+		protected void BootCreateTableRefDef(DbTransaction transaction)
 		{
 			DbTable    table   = new DbTable (DbTable.TagRefDef);
 			DbColumn[] columns = new DbColumn[4];
@@ -1170,7 +1195,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected void BootInsertTypeDefRow(System.Data.IDbTransaction transaction, DbType type)
+		protected void BootInsertTypeDefRow(DbTransaction transaction, DbType type)
 		{
 			DbTable type_def = this.internal_tables[DbTable.TagTypeDef];
 			
@@ -1189,7 +1214,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (transaction);
 		}
 		
-		protected void BootInsertTableDefRow(System.Data.IDbTransaction transaction, DbTable table)
+		protected void BootInsertTableDefRow(DbTransaction transaction, DbTable table)
 		{
 			DbTable table_def = this.internal_tables[DbTable.TagTableDef];
 			
@@ -1209,7 +1234,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (transaction);
 		}
 		
-		protected void BootUpdateTableNextId(System.Data.IDbTransaction transaction, DbKey key, long next_id)
+		protected void BootUpdateTableNextId(DbTransaction transaction, DbKey key, long next_id)
 		{
 			SqlFieldCollection fields = new SqlFieldCollection ();
 			SqlFieldCollection conds  = new SqlFieldCollection ();
@@ -1225,7 +1250,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (transaction);
 		}
 		
-		protected void BootInsertColumnDefRow(System.Data.IDbTransaction transaction, DbTable table, DbColumn column)
+		protected void BootInsertColumnDefRow(DbTransaction transaction, DbTable table, DbColumn column)
 		{
 			DbTable column_def = this.internal_tables[DbTable.TagColumnDef];
 			
@@ -1237,7 +1262,7 @@ namespace Epsitec.Cresus.Database
 			fields.Add (column_def.Columns[DbColumn.TagId]		.CreateSqlField (this.type_converter, column.InternalKey.Id));
 			fields.Add (column_def.Columns[DbColumn.TagRevision].CreateSqlField (this.type_converter, column.InternalKey.Revision));
 			fields.Add (column_def.Columns[DbColumn.TagStatus]	.CreateSqlField (this.type_converter, column.InternalKey.RawStatus));
-			fields.Add (column_def.Columns[DbColumn.TagName]	.CreateSqlField (this.type_converter, column.CreateSqlName ()));
+			fields.Add (column_def.Columns[DbColumn.TagName]	.CreateSqlField (this.type_converter, column.Name));
 			fields.Add (column_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, DbColumn.ConvertColumnToXml (column)));
 			fields.Add (column_def.Columns[DbColumn.TagRefTable].CreateSqlField (this.type_converter, table.InternalKey.Id));
 			fields.Add (column_def.Columns[DbColumn.TagRefType]	.CreateSqlField (this.type_converter, column.Type.InternalKey.Id));
@@ -1246,7 +1271,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (transaction);
 		}
 		
-		protected void BootInsertRefDefRow(System.Data.IDbTransaction transaction, int ref_id, string src_table_name, string src_column_name, string target_table_name)
+		protected void BootInsertRefDefRow(DbTransaction transaction, int ref_id, string src_table_name, string src_column_name, string target_table_name)
 		{
 			DbTable ref_def = this.internal_tables[DbTable.TagRefDef];
 			
@@ -1269,7 +1294,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected void BootSetupTables(System.Data.IDbTransaction transaction)
+		protected void BootSetupTables(DbTransaction transaction)
 		{
 			int type_key_id     = 1;
 			int table_key_id    = 1;
@@ -1429,5 +1454,7 @@ namespace Epsitec.Cresus.Database
 		
 		Cache.DbTypes					cache_db_types = new Cache.DbTypes ();
 		Cache.DbTables					cache_db_tables = new Cache.DbTables ();
+		
+		protected DbTransaction			live_transaction;
 	}
 }

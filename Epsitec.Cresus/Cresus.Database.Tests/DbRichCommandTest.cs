@@ -36,21 +36,24 @@ namespace Epsitec.Cresus.Database
 			select_a.Tables.Add ("A", SqlField.CreateName (db_table_a.CreateSqlName ()));
 			select_b.Tables.Add ("B", SqlField.CreateName (db_table_b.CreateSqlName ()));
 			
-			System.Data.IDbTransaction transaction = infrastructure.BeginTransaction ();
-			
+			DbTransaction transaction;
 			DbRichCommand command = new DbRichCommand ();
 			
-			sql_builder.SelectData (select_a);
-			command.Commands.Add (sql_builder.Command);
-			
-			sql_builder.SelectData (select_b);
-			command.Commands.Add (sql_builder.Command);
-			
-			command.Transaction = transaction;
-			command.Tables.Add (db_table_a);
-			command.Tables.Add (db_table_b);
-			
-			sql_engine.Execute (command);
+			using (transaction = infrastructure.BeginTransaction ())
+			{
+				sql_builder.SelectData (select_a);
+				command.Commands.Add (sql_builder.Command);
+				
+				sql_builder.SelectData (select_b);
+				command.Commands.Add (sql_builder.Command);
+				
+				command.Transaction = transaction.Transaction;
+				command.Tables.Add (db_table_a);
+				command.Tables.Add (db_table_b);
+				
+				sql_engine.Execute (command);
+				transaction.Commit ();
+			}
 			
 			System.Console.Out.WriteLine ("Tables : {0}", command.DataSet.Tables.Count);
 			foreach (System.Data.DataTable table in command.DataSet.Tables)
@@ -77,9 +80,12 @@ namespace Epsitec.Cresus.Database
 			DbInfrastructureTest.DisplayDataSet (infrastructure, ado_table_a.TableName, ado_table_a);
 			DbInfrastructureTest.DisplayDataSet (infrastructure, ado_table_b.TableName, ado_table_b);
 			
-			command.UpdateTables ();
-			
-			transaction.Commit ();
+			using (transaction = infrastructure.BeginTransaction ())
+			{
+				command.Transaction = transaction.Transaction;
+				command.UpdateTables ();
+				transaction.Commit ();
+			}
 			
 			infrastructure.UnregisterDbTable (null, db_table_a);
 			infrastructure.UnregisterDbTable (null, db_table_b);
