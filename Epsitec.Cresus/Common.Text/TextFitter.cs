@@ -113,7 +113,8 @@ namespace Epsitec.Common.Text
 				
 				layout.Frame.MapToView (ref ox, ref oy);
 				
-				if (renderer.IsFrameAreaVisible (layout.Frame, ox, oy+desc, width, asc+desc))
+				if ((count > 0) &&
+					(renderer.IsFrameAreaVisible (layout.Frame, ox, oy+desc, width, asc+desc)))
 				{
 					layout.RenderLine (renderer, profile, count, ox, oy, width, i, i == n-1);
 				}

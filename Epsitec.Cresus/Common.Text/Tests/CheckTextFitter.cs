@@ -83,24 +83,36 @@ namespace Epsitec.Common.Text.Tests
 			
 			System.Diagnostics.Trace.WriteLine ("Generating random text.");
 			
+			System.Text.StringBuilder paragraph = new System.Text.StringBuilder ();
+			
 			while (story.TextLength < 1000000)
 			{
 				int    index  = random.Next (words.Length);
 				string source = words[index];
 				
+				paragraph.Append (source);
+				
 				if (source.EndsWith (".\n"))
 				{
+					story.ConvertToStyledText (paragraph.ToString (), properties, out text);
+					story.InsertText (cursor, text);
+					
+					paragraph.Length = 0;
+					
 					para++;
 				}
 				else
 				{
-					source = source + " ";
+					paragraph.Append (" ");
 				}
 				
-				story.ConvertToStyledText (source, properties, out text);
-				story.InsertText (cursor, text);
-				
 				count++;
+			}
+			
+			if (paragraph.Length > 0)
+			{
+				story.ConvertToStyledText (paragraph.ToString (), properties, out text);
+				story.InsertText (cursor, text);
 			}
 			
 			System.Diagnostics.Trace.WriteLine (string.Format ("Generated {0} words, {1} paragraphs, total: {2} characters, {3:0.00} words/paragraph.", count, para, story.TextLength, 1.0*count/para));
@@ -170,15 +182,30 @@ namespace Epsitec.Common.Text.Tests
 			
 			ZeroRenderer renderer = new ZeroRenderer ();
 			
-			System.Diagnostics.Trace.WriteLine ("Fitter: render.");
+			System.Diagnostics.Trace.WriteLine ("Fitter: render (1) -- full document x 1");
 			foreach (CursorInfo info in infos)
 			{
 				Cursors.FitterCursor fitter_cursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
-//				System.Console.Out.WriteLine ("{0}:", story.GetCursorPosition (fitter_cursor));
 				fitter.RenderParagraph (fitter_cursor, renderer);
 				renderer.NewParagraph ();
 			}
 			System.Diagnostics.Trace.WriteLine ("Done.");
+			
+			foreach (CursorInfo info in infos)
+			{
+				Cursors.FitterCursor fitter_cursor = story.TextTable.GetCursorInstance (info.CursorId) as Cursors.FitterCursor;
+				
+				if (fitter_cursor.Elements.Length == 5)
+				{
+					System.Diagnostics.Trace.WriteLine ("Fitter: render (2) -- single paragraph x 1000");
+					for (int i = 0; i < 1000; i++)
+					{
+						fitter.RenderParagraph (fitter_cursor, renderer);
+					}
+					System.Diagnostics.Trace.WriteLine ("Done.");
+					break;
+				}
+			}
 			
 			
 			System.Diagnostics.Trace.WriteLine ("Fitter: clear.");
