@@ -125,6 +125,7 @@ namespace Epsitec.Common.Support
 		{
 			string[] names_1 = Resources.GetBundleIds ("file:*");
 			string[] names_2 = Resources.GetBundleIds ("file:*", ResourceLevel.Localised);
+			string[] names_3 = Resources.GetBundleIds ("file:*", "String", ResourceLevel.Localised);
 			
 			for (int i = 0; i < names_1.Length; i++)
 			{
@@ -134,6 +135,11 @@ namespace Epsitec.Common.Support
 			for (int i = 0; i < names_2.Length; i++)
 			{
 				System.Console.Out.WriteLine ("{0} : {1}", i, names_2[i]);
+			}
+			
+			for (int i = 0; i < names_3.Length; i++)
+			{
+				System.Console.Out.WriteLine ("{0} : {1}", i, names_3[i]);
 			}
 		}
 	}
