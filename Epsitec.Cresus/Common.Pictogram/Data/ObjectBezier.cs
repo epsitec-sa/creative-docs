@@ -135,14 +135,16 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( this.Handle(rank+2).Type == HandleType.Hide )
 				{
 					item = new ContextMenuItem();
-					item.Name = "Object.Curve";
+					item.Command = "Object";
+					item.Name = "Curve";
 					item.Text = "Courbe";
 					list.Add(item);
 				}
 				else
 				{
 					item = new ContextMenuItem();
-					item.Name = "Object.Line";
+					item.Command = "Object";
+					item.Name = "Line";
 					item.Text = "Droit";
 					list.Add(item);
 				}
@@ -151,7 +153,8 @@ namespace Epsitec.Common.Pictogram.Data
 				list.Add(item);  // séparateur
 
 				item = new ContextMenuItem();
-				item.Name = "Object.HandleAdd";
+				item.Command = "Object";
+				item.Name = "HandleAdd";
 				item.Icon = @"file:images/add1.icon";
 				item.Text = "Ajouter un point";
 				list.Add(item);
@@ -168,7 +171,8 @@ namespace Epsitec.Common.Pictogram.Data
 						HandleConstrainType type = this.Handle(handleRank).ConstrainType;
 
 						item = new ContextMenuItem();
-						item.Name = "Object.HandleSym";
+						item.Command = "Object";
+						item.Name = "HandleSym";
 						item.IconActiveNo = @"file:images/activeno1.icon";
 						item.IconActiveYes = @"file:images/activeyes1.icon";
 						item.Active = ( type == HandleConstrainType.Symmetric );
@@ -176,7 +180,8 @@ namespace Epsitec.Common.Pictogram.Data
 						list.Add(item);
 
 						item = new ContextMenuItem();
-						item.Name = "Object.HandleSmooth";
+						item.Command = "Object";
+						item.Name = "HandleSmooth";
 						item.IconActiveNo = @"file:images/activeno1.icon";
 						item.IconActiveYes = @"file:images/activeyes1.icon";
 						item.Active = ( type == HandleConstrainType.Smooth );
@@ -184,7 +189,8 @@ namespace Epsitec.Common.Pictogram.Data
 						list.Add(item);
 
 						item = new ContextMenuItem();
-						item.Name = "Object.HandleCorner";
+						item.Command = "Object";
+						item.Name = "HandleCorner";
 						item.IconActiveNo = @"file:images/activeno1.icon";
 						item.IconActiveYes = @"file:images/activeyes1.icon";
 						item.Active = ( type == HandleConstrainType.Corner );
@@ -199,7 +205,8 @@ namespace Epsitec.Common.Pictogram.Data
 						HandleConstrainType type = this.Handle(handleRank).ConstrainType;
 
 						item = new ContextMenuItem();
-						item.Name = "Object.HandleSmooth";
+						item.Command = "Object";
+						item.Name = "HandleSmooth";
 						item.IconActiveNo = @"file:images/activeno1.icon";
 						item.IconActiveYes = @"file:images/activeyes1.icon";
 						item.Active = ( type == HandleConstrainType.Smooth );
@@ -207,7 +214,8 @@ namespace Epsitec.Common.Pictogram.Data
 						list.Add(item);
 
 						item = new ContextMenuItem();
-						item.Name = "Object.HandleCorner";
+						item.Command = "Object";
+						item.Name = "HandleCorner";
 						item.IconActiveNo = @"file:images/activeno1.icon";
 						item.IconActiveYes = @"file:images/activeyes1.icon";
 						item.Active = ( type != HandleConstrainType.Smooth );
@@ -221,7 +229,8 @@ namespace Epsitec.Common.Pictogram.Data
 						list.Add(item);  // séparateur
 
 						item = new ContextMenuItem();
-						item.Name = "Object.HandleDelete";
+						item.Command = "Object";
+						item.Name = "HandleDelete";
 						item.Icon = @"file:images/sub1.icon";
 						item.Text = "Enlever le point";
 						list.Add(item);
@@ -235,40 +244,40 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			int rank = this.DetectOutline(pos);
 
-			if ( cmd == "Object.Line" )
+			if ( cmd == "Line" )
 			{
 				if ( rank == -1 )  return;
 				this.ContextToLine(rank);
 			}
 
-			if ( cmd == "Object.Curve" )
+			if ( cmd == "Curve" )
 			{
 				if ( rank == -1 )  return;
 				this.ContextToCurve(rank);
 			}
 
-			if ( cmd == "Object.HandleAdd" )
+			if ( cmd == "HandleAdd" )
 			{
 				if ( rank == -1 )  return;
 				this.ContextAddHandle(pos, rank);
 			}
 
-			if ( cmd == "Object.HandleSym" )
+			if ( cmd == "HandleSym" )
 			{
 				this.ContextSym(handleRank);
 			}
 
-			if ( cmd == "Object.HandleSmooth" )
+			if ( cmd == "HandleSmooth" )
 			{
 				this.ContextSmooth(handleRank);
 			}
 
-			if ( cmd == "Object.HandleCorner" )
+			if ( cmd == "HandleCorner" )
 			{
 				this.ContextCorner(handleRank);
 			}
 
-			if ( cmd == "Object.HandleDelete" )
+			if ( cmd == "HandleDelete" )
 			{
 				this.ContextSubHandle(pos, handleRank);
 			}

@@ -1,4 +1,5 @@
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Common.Pictogram.Data;
 
 namespace Epsitec.Common.Pictogram.Widgets
@@ -12,22 +13,20 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			this.ButtonStyle = ButtonStyle.ToolItem;
 
-			this.colorBlack   = Drawing.Color.FromName("WindowFrame");
-			this.colorWindow  = Drawing.Color.FromName("Control");
-			this.colorControl = Drawing.Color.FromName("Control");
-
 			this.iconObjects = new IconObjects();
 			this.iconContext = new IconContext();
 			this.objectMemory = new ObjectMemory();
 			this.objectMemory.CreateProperties();
+
+			this.Exited += new MessageEventHandler(this.HandleMouseExited);
 		}
 		
 		public Drawer(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
 		}
-		
-		
+
+
 		// Retourne la largeur standard d'une icône.
 		public override double DefaultWidth
 		{
@@ -264,6 +263,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
+		// Appelé lorsque la souris est sortie du widget.
+		private void HandleMouseExited(object sender, MessageEventArgs e)
+		{
+			this.iconObjects.Hilite(null);
+		}
+
+
 		// Indique si l'outil sélectionné n'est pas un objet.
 		protected bool IsTool()
 		{
@@ -352,182 +358,307 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Exécute une commande.
-		public void ExecuteCommand(string cmd)
+		public void CommandNew()
 		{
-			this.ExecuteCommand(cmd, "");
+			this.UndoFlush();
+			this.iconObjects.Clear();
+			this.rankLastCreated = -1;
+			this.Zoom = 1;
+			this.OriginX = 0;
+			this.OriginY = 0;
+			this.OnPanelChanged();
+			this.OnInfoObjectChanged();
+			this.OnToolChanged();
+			this.InvalidateAll();
 		}
 
-		// Exécute une commande.
-		public void ExecuteCommand(string cmd, string filename)
+		public void CommandOpen(string filename)
 		{
-			switch ( cmd )
+			if ( filename == "" )  return;
+			this.UndoFlush();
+			this.iconObjects.Clear();
+			this.rankLastCreated = -1;
+			this.iconObjects.Read(filename);
+			this.Zoom = 1;
+			this.OriginX = 0;
+			this.OriginY = 0;
+			this.OnInfoObjectChanged();
+			this.OnToolChanged();
+			this.InvalidateAll();
+		}
+
+		public void CommandSave(string filename)
+		{
+			if ( filename == "" )  return;
+			if ( this.iconObjects.InitialCount == 0 )  return;
+			this.iconObjects.Write(filename);
+		}
+
+		[Command ("Delete")]
+		void CommandDelete(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CommandDelete();
+		}
+
+		void CommandDelete()
+		{
+			this.UndoMemorize("Delete");
+			this.iconObjects.DeleteSelection();
+			this.OnPanelChanged();
+			this.OnToolChanged();
+			this.OnInfoObjectChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("Duplicate")]
+		void CommandDuplicate(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.UndoMemorize("Duplicate");
+			this.iconObjects.DuplicateSelection(new Drawing.Point(1, 1));
+			this.iconObjects.UpdateEditProperties();
+			this.OnToolChanged();
+			this.OnInfoObjectChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("Undo")]
+		void CommandUndo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.UndoRestore() )  return;
+			this.InvalidateAll();
+			this.OnToolChanged();
+		}
+
+		[Command ("Redo")]
+		void CommandRedo(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( !this.RedoRestore() )  return;
+			this.InvalidateAll();
+			this.OnToolChanged();
+		}
+
+		[Command ("OrderUp")]
+		void CommandOrderUp(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.UndoMemorize("OrderUp");
+			this.iconObjects.OrderSelection(1);
+			this.OnToolChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("OrderDown")]
+		void CommandOrderDown(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.UndoMemorize("OrderDown");
+			this.iconObjects.OrderSelection(-1);
+			this.OnToolChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("Merge")]
+		void CommandMerge(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.UndoMemorize("Merge");
+			this.iconObjects.UngroupSelection();
+			this.iconObjects.GroupSelection();
+			this.OnToolChanged();
+			this.OnInfoObjectChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("Group")]
+		void CommandGroup(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.UndoMemorize("Group");
+			this.iconObjects.GroupSelection();
+			this.OnToolChanged();
+			this.OnInfoObjectChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("UnGroup")]
+		void CommandUngroup(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.UndoMemorize("UnGroup");
+			this.iconObjects.UngroupSelection();
+			this.OnToolChanged();
+			this.OnInfoObjectChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("Inside")]
+		void CommandInside(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.InsideSelection();
+			this.OnToolChanged();
+			this.OnInfoObjectChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("Outside")]
+		void CommandOutside(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.OutsideSelection();
+			this.OnPanelChanged();
+			this.OnToolChanged();
+			this.OnInfoObjectChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("Grid")]
+		void CommandGrid(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.gridShow = !this.gridShow;
+			this.Invalidate();
+			this.OnToolChanged();
+		}
+
+		[Command ("Deselect")]
+		void CommandDeselect(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.SelectedTool = "Select";
+			this.ChangeSelection("Deselect");
+			this.OnPanelChanged();
+			this.iconObjects.UpdateEditProperties();
+			this.OnToolChanged();
+			this.OnInfoObjectChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("SelectAll")]
+		void CommandSelectAll(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.SelectedTool = "Select";
+			this.ChangeSelection("SelectAll");
+			this.OnPanelChanged();
+			this.iconObjects.UpdateEditProperties();
+			this.OnToolChanged();
+			this.OnInfoObjectChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("SelectInvert")]
+		void CommandSelectInvert(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.SelectedTool = "Select";
+			this.ChangeSelection("SelectInvert");
+			this.OnPanelChanged();
+			this.iconObjects.UpdateEditProperties();
+			this.OnToolChanged();
+			this.OnInfoObjectChanged();
+			this.InvalidateAll();
+		}
+
+		[Command ("ZoomMin")]
+		void CommandZoomMin(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ZoomMemorize();
+			this.Zoom = this.ZoomMin;
+			this.OriginX = 0;
+			this.OriginY = 0;
+		}
+
+		[Command ("ZoomDefault")]
+		void CommandZoomDefault(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ZoomMemorize();
+			this.Zoom = 1;
+			this.OriginX = 0;
+			this.OriginY = 0;
+		}
+
+		[Command ("ZoomSel")]
+		void CommandZoomSel(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ZoomSel();
+		}
+
+		[Command ("ZoomPrev")]
+		void CommandZoomPrev(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ZoomPrev();
+		}
+
+		[Command ("ZoomSub")]
+		void CommandZoomSub(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ZoomChange(0.5);
+		}
+
+		[Command ("ZoomAdd")]
+		void CommandZoomAdd(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ZoomChange(2.0);
+		}
+
+		// Initialise toutes les commandes.
+		public void InitCommands(CommandDispatcher commandDispatcher)
+		{
+			this.commandDispatcher = commandDispatcher;
+
+			this.saveState = new CommandState("Save", this.commandDispatcher);
+			this.deleteState = new CommandState("Delete", this.commandDispatcher);
+			this.duplicateState = new CommandState("Duplicate", this.commandDispatcher);
+			this.orderUpState = new CommandState("OrderUp", this.commandDispatcher);
+			this.orderDownState = new CommandState("OrderDown", this.commandDispatcher);
+			this.mergeState = new CommandState("Merge", this.commandDispatcher);
+			this.groupState = new CommandState("Group", this.commandDispatcher);
+			this.ungroupState = new CommandState("Ungroup", this.commandDispatcher);
+			this.insideState = new CommandState("Inside", this.commandDispatcher);
+			this.outsideState = new CommandState("Outside", this.commandDispatcher);
+			this.undoState = new CommandState("Undo", this.commandDispatcher);
+			this.redoState = new CommandState("Redo", this.commandDispatcher);
+			this.deselectState = new CommandState("Deselect", this.commandDispatcher);
+			this.selectAllState = new CommandState("SelectAll", this.commandDispatcher);
+			this.selectInvertState = new CommandState("SelectInvert", this.commandDispatcher);
+			this.zoomMinState = new CommandState("ZoomMin", this.commandDispatcher);
+			this.zoomDefaultState = new CommandState("ZoomDefault", this.commandDispatcher);
+			this.zoomSelState = new CommandState("ZoomSel", this.commandDispatcher);
+			this.zoomPrevState = new CommandState("ZoomPrev", this.commandDispatcher);
+			this.zoomSubState = new CommandState("ZoomSub", this.commandDispatcher);
+			this.zoomAddState = new CommandState("ZoomAdd", this.commandDispatcher);
+			this.gridState = new CommandState("Grid", this.commandDispatcher);
+			this.modeState = new CommandState("Mode", this.commandDispatcher);
+		}
+
+		// Met à jour toutes les commandes (dans les menus, les barres, etc.).
+		public void UpdateCommands()
+		{
+			Widget[] toolWidgets = Widget.FindAllCommandWidgets("SelectTool", this.commandDispatcher);
+			foreach ( Widget widget in toolWidgets )
 			{
-				case "New":
-					this.UndoFlush();
-					this.iconObjects.Clear();
-					this.rankLastCreated = -1;
-					this.Zoom = 1;
-					this.OriginX = 0;
-					this.OriginY = 0;
-					this.OnPanelChanged();
-					this.OnInfoObjectChanged();
-					this.OnToolChanged();
-					this.InvalidateAll();
-					break;
-
-				case "Open":
-					if ( filename == "" )  break;
-					this.UndoFlush();
-					this.iconObjects.Clear();
-					this.rankLastCreated = -1;
-					this.iconObjects.Read(filename);
-					this.Zoom = 1;
-					this.OriginX = 0;
-					this.OriginY = 0;
-					this.OnInfoObjectChanged();
-					this.OnToolChanged();
-					this.InvalidateAll();
-					break;
-
-				case "Save":
-					if ( filename == "" )  break;
-					if ( this.iconObjects.InitialCount == 0 )  break;
-					this.iconObjects.Write(filename);
-					break;
-
-				case "Delete":
-					this.UndoMemorize(cmd);
-					this.iconObjects.DeleteSelection();
-					this.OnPanelChanged();
-					this.OnToolChanged();
-					this.OnInfoObjectChanged();
-					this.InvalidateAll();
-					break;
-
-				case "Duplicate":
-					this.UndoMemorize(cmd);
-					this.iconObjects.DuplicateSelection(new Drawing.Point(1, 1));
-					this.iconObjects.UpdateEditProperties();
-					this.OnToolChanged();
-					this.OnInfoObjectChanged();
-					this.InvalidateAll();
-					break;
-
-				case "Undo":
-					if ( !this.UndoRestore() )  break;
-					this.InvalidateAll();
-					this.OnToolChanged();
-					break;
-
-				case "Redo":
-					if ( !this.RedoRestore() )  break;
-					this.InvalidateAll();
-					this.OnToolChanged();
-					break;
-
-				case "OrderUp":
-					this.UndoMemorize(cmd);
-					this.iconObjects.OrderSelection(1);
-					this.OnToolChanged();
-					this.InvalidateAll();
-					break;
-
-				case "OrderDown":
-					this.UndoMemorize(cmd);
-					this.iconObjects.OrderSelection(-1);
-					this.OnToolChanged();
-					this.InvalidateAll();
-					break;
-
-				case "Merge":
-					this.UndoMemorize(cmd);
-					this.iconObjects.UngroupSelection();
-					this.iconObjects.GroupSelection();
-					this.OnToolChanged();
-					this.OnInfoObjectChanged();
-					this.InvalidateAll();
-					break;
-
-				case "Group":
-					this.UndoMemorize(cmd);
-					this.iconObjects.GroupSelection();
-					this.OnToolChanged();
-					this.OnInfoObjectChanged();
-					this.InvalidateAll();
-					break;
-
-				case "Ungroup":
-					this.UndoMemorize(cmd);
-					this.iconObjects.UngroupSelection();
-					this.OnToolChanged();
-					this.OnInfoObjectChanged();
-					this.InvalidateAll();
-					break;
-
-				case "Inside":
-					this.InsideSelection();
-					this.OnToolChanged();
-					this.OnInfoObjectChanged();
-					this.InvalidateAll();
-					break;
-
-				case "Outside":
-					this.OutsideSelection();
-					this.OnPanelChanged();
-					this.OnToolChanged();
-					this.OnInfoObjectChanged();
-					this.InvalidateAll();
-					break;
-
-				case "Grid":
-					this.gridShow = !this.gridShow;
-					this.Invalidate();
-					this.OnToolChanged();
-					break;
-
-				case "Deselect":
-				case "SelectAll":
-				case "SelectInvert":
-					this.SelectedTool = "Select";
-					this.ChangeSelection(cmd);
-					this.OnPanelChanged();
-					this.iconObjects.UpdateEditProperties();
-					this.OnToolChanged();
-					this.OnInfoObjectChanged();
-					this.InvalidateAll();
-					break;
-
-				case "ZoomMin":
-					this.ZoomMemorize();
-					this.Zoom = this.ZoomMin;
-					this.OriginX = 0;
-					this.OriginY = 0;
-					break;
-
-				case "ZoomDefault":
-					this.ZoomMemorize();
-					this.Zoom = 1;
-					this.OriginX = 0;
-					this.OriginY = 0;
-					break;
-
-				case "ZoomSel":
-					this.ZoomSel();
-					break;
-
-				case "ZoomPrev":
-					this.ZoomPrev();
-					break;
-
-				case "ZoomSub":
-					this.ZoomChange(0.5);
-					break;
-
-				case "ZoomAdd":
-					this.ZoomChange(2);
-					break;
+				widget.ActiveState = ( widget.Name == this.selectedTool ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			}
+
+			Widget[] lookWidgets = Widget.FindAllCommandWidgets("SelectLook", this.commandDispatcher);
+			foreach ( Widget widget in lookWidgets )
+			{
+				widget.ActiveState = ( widget.Name == Epsitec.Common.Widgets.Adorner.Factory.ActiveName ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			}
+
+			this.saveState.Enabled = ( this.iconObjects.InitialCount > 0 );
+			this.deleteState.Enabled = ( this.iconObjects.TotalSelected() > 0 );
+			this.duplicateState.Enabled = ( this.iconObjects.TotalSelected() > 0 );
+			this.orderUpState.Enabled = ( this.iconObjects.Count > 1 && this.iconObjects.TotalSelected() > 0 );
+			this.orderDownState.Enabled = ( this.iconObjects.Count > 1 && this.iconObjects.TotalSelected() > 0 );
+			this.mergeState.Enabled = ( this.iconObjects.TotalSelected() > 1 );
+			this.groupState.Enabled = ( this.iconObjects.TotalSelected() > 1 );
+			this.ungroupState.Enabled = ( this.iconObjects.TotalSelected() == 1 && this.iconObjects.RetFirstSelected() is ObjectGroup );
+			this.insideState.Enabled = ( this.iconObjects.TotalSelected() == 1 && this.iconObjects.RetFirstSelected() is ObjectGroup );
+			this.outsideState.Enabled = ( !this.iconObjects.IsInitialGroup() );
+			this.undoState.Enabled = ( this.undoIndex > 0 );
+			this.redoState.Enabled = ( this.undoIndex < this.undoList.Count-1 );
+			this.deselectState.Enabled = ( this.iconObjects.TotalSelected() > 0 );
+			this.selectAllState.Enabled = ( this.iconObjects.TotalSelected() < this.iconObjects.Count );
+			this.selectInvertState.Enabled = ( this.iconObjects.Count > 0 );
+			this.zoomMinState.Enabled = ( this.Zoom > this.ZoomMin );
+			this.zoomDefaultState.Enabled = ( this.Zoom != 1 || this.OriginX != 0 || this.OriginY != 0 );
+			this.zoomSelState.Enabled = ( this.iconObjects.TotalSelected() > 0 );
+			this.zoomPrevState.Enabled = ( this.zoomHistory.Count > 0 );
+			this.zoomSubState.Enabled = ( this.Zoom > this.ZoomMin );
+			this.zoomAddState.Enabled = ( this.Zoom < this.ZoomMax );
+			this.gridState.ActiveState = this.gridShow ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+			this.modeState.ActiveState = !this.isActive ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 		}
 
 		// Indique si une commande est enable.
@@ -614,34 +745,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 
 			return enable;
-		}
-
-		// Indique si une commande est active.
-		public bool IsCommandActive(string cmd)
-		{
-			bool active = true;
-
-			switch ( cmd )
-			{
-				case "Grid":
-					active = this.gridShow;
-					break;
-
-				case "Mode":
-					active = !this.isActive;
-					break;
-
-				default:
-					active = ( cmd == this.selectedTool );
-					break;
-			}
-
-			if ( cmd.StartsWith("Look.") )
-			{
-				active = ( cmd.Substring(5) == Epsitec.Common.Widgets.Adorner.Factory.ActiveName );
-			}
-
-			return active;
 		}
 
 
@@ -803,7 +906,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					if ( message.KeyCode == KeyCode.Back   ||
 						 message.KeyCode == KeyCode.Delete )
 					{
-						this.ExecuteCommand("Delete");
+						this.CommandDelete();
 					}
 					break;
 
@@ -841,7 +944,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.MenuAddItem(list, "ZoomAdd",      "file:images/zoomadd1.icon",      "Agrandissement");
 				this.MenuAddSep(list);
 				this.MenuAddItem(list, "Outside",      "file:images/outside1.icon",      "Sortir du groupe");
-				this.MenuAddItem(list, "Grid",         "file:images/grid1.icon",         "Grille");
+				this.MenuAddItem(list, "Grid",         "file:images/grid1.icon",         "Grille magnetique");
 			}
 			else
 			{
@@ -882,17 +985,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 				}
 				else
 				{
-					MenuItem mi = new MenuItem(cmi.Name, cmi.Icon, cmi.Text, "");
+					MenuItem mi = new MenuItem(cmi.Command, cmi.Icon, cmi.Text, "", cmi.Name);
 					mi.IconNameActiveNo = cmi.IconActiveNo;
 					mi.IconNameActiveYes = cmi.IconActiveYes;
 					mi.ActiveState = cmi.Active ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-					mi.Pressed += new MessageEventHandler(this.MenuPressed);
 					this.contextMenu.Items.Add(mi);
 				}
 			}
 			this.contextMenu.AdjustSize();
 			mouse = this.IconToScreen(mouse);
 			mouse = this.MapClientToScreen(mouse);
+			this.commandDispatcher.SynchroniseCommandStates();
 			this.contextMenu.ShowContextMenu(mouse);
 		}
 
@@ -902,6 +1005,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( !this.IsCommandEnable(cmd) )  return;
 
 			ContextMenuItem item = new ContextMenuItem();
+			item.Command = cmd;
 			item.Name = cmd;
 			item.Icon = @icon;
 			item.Text = text;
@@ -922,27 +1026,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return this.contextMenu.IsVisible;
 		}
 
-		// Appelé lorsqu'une case du menu est actionnée.
-		private void MenuPressed(object sender, MessageEventArgs e)
+		// Exécute une commande locale à un objet.
+		[Command ("Object")]
+		void CommandObject(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			MenuItem item = sender as MenuItem;
-			this.ContextCommand(item.Name);
-			this.contextMenu = null;
-		}
-
-		// Effectue une commande du menu.
-		protected void ContextCommand(string cmd)
-		{
-			if ( this.contextMenuObject != null && cmd.StartsWith("Object.") )
-			{
-				this.UndoMemorize("Object");
-				this.contextMenuObject.ContextCommand(cmd, this.contextMenuPos, this.contextMenuRank);
-				this.InvalidateAll();
-			}
-			else
-			{
-				this.ExecuteCommand(cmd);
-			}
+			Widget widget = e.Source as Widget;
+			this.UndoMemorize("Object");
+			this.contextMenuObject.ContextCommand(widget.Name, this.contextMenuPos, this.contextMenuRank);
+			this.InvalidateAll();
 		}
 
 
@@ -1926,10 +2017,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected Drawing.Point		gridStep = new Drawing.Point(1, 1);
 		protected int				rankLastCreated = -1;
 
-		protected Drawing.Color		colorBlack;
-		protected Drawing.Color		colorWindow;
-		protected Drawing.Color		colorControl;
-
 		protected Window			contextMenuWindow;
 		protected VMenu				contextMenu;
 		protected AbstractObject	contextMenuObject;
@@ -1946,5 +2033,30 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected int				undoIndex = 0;
 		protected System.Collections.ArrayList	undoList = new System.Collections.ArrayList();
 		protected ZoomHistory		zoomHistory = new ZoomHistory();
+
+		protected CommandDispatcher	commandDispatcher;
+		protected CommandState		saveState;
+		protected CommandState		deleteState;
+		protected CommandState		duplicateState;
+		protected CommandState		orderUpState;
+		protected CommandState		orderDownState;
+		protected CommandState		mergeState;
+		protected CommandState		groupState;
+		protected CommandState		ungroupState;
+		protected CommandState		insideState;
+		protected CommandState		outsideState;
+		protected CommandState		undoState;
+		protected CommandState		redoState;
+		protected CommandState		deselectState;
+		protected CommandState		selectAllState;
+		protected CommandState		selectInvertState;
+		protected CommandState		zoomMinState;
+		protected CommandState		zoomDefaultState;
+		protected CommandState		zoomSelState;
+		protected CommandState		zoomPrevState;
+		protected CommandState		zoomSubState;
+		protected CommandState		zoomAddState;
+		protected CommandState		gridState;
+		protected CommandState		modeState;
 	}
 }

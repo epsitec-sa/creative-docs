@@ -22,8 +22,9 @@ namespace Epsitec.Common.Widgets
 			this.window = new Window();
 			this.window.MakeFramelessWindow();
 			this.window.DisableMouseActivation();
+			this.window.WindowBounds = new Drawing.Rectangle (0, 0, 8, 8);
+			
 			this.SetEmbedder(this.window.Root);
-			this.window.Hide();
 			
 			this.timer = new Timer();
 			this.timer.TimeElapsed += new EventHandler(this.HandleTimerTimeElapsed);
@@ -230,6 +231,7 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect = new Drawing.Rectangle();
 			rect.Size = size;
 			rect.Location = mouse;
+			this.window.ClientSize = size;
 			this.window.WindowBounds = rect;
 
 			this.Location = new Drawing.Point(0, 0);

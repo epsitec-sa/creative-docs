@@ -149,7 +149,7 @@ namespace Epsitec.Common.Widgets
 			window.MakeFramelessWindow ();
 			window.WindowActivated += new EventHandler(window_Activated);
 			window.WindowDeactivated += new EventHandler(window_Deactivated);
-			window.WindowBounds = new Rectangle (ox+10, oy+10, 50, 25);
+			window.WindowBounds = new Rectangle (ox+10, oy+30, 50, 10);
 			window.Root.BackColor = Color.FromRGB (1, 0, 0);
 			window.Show ();
 		}

@@ -90,15 +90,15 @@ namespace Epsitec.Common.Widgets
 
 		protected override void UpdateClientGeometry()
 		{
+			this.margins.Bottom = TextFieldSlider.sliderHeight-AbstractTextField.FrameMargin;
+			
 			base.UpdateClientGeometry();
 
 			if ( this.arrowUp == null )  return;
 
-			this.margins.Bottom = this.sliderHeight-AbstractTextField.FrameMargin;
-			
 			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			rect.Width -= System.Math.Floor(rect.Height*0.6)-1;
-			rect.Height = this.sliderHeight;
+			rect.Height = TextFieldSlider.sliderHeight;
 			this.slider.Bounds = rect;
 		}
 
@@ -117,6 +117,6 @@ namespace Epsitec.Common.Widgets
 
 
 		protected Slider						slider;
-		protected double						sliderHeight = 5;
+		protected static readonly double		sliderHeight = 5;
 	}
 }

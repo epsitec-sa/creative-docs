@@ -55,19 +55,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			get
 			{
-				if (this.commandDispatcher == null)
+				if ( this.commandDispatcher == null )
 				{
-					//	On se crée notre propre dispatcher, pour éviter de marcher sur les
-					//	autres commandes...
-					
-					this.commandDispatcher = new Support.CommandDispatcher ("IconEditor");
-					this.commandDispatcher.RegisterController (this);
+					// On crée son propre dispatcher, pour éviter de marcher sur les autres commandes.
+					this.commandDispatcher = new Support.CommandDispatcher("IconEditor");
+					this.commandDispatcher.RegisterController(this);
 				}
 				
 				return this.commandDispatcher;
 			}
 		}
-
 
 
 		protected void CreateLayout()
@@ -84,7 +81,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.menu.Items.Add(new MenuItem("", "Aide"));
 
 			VMenu fileMenu = new VMenu();
-			fileMenu.Name = "file";
+			fileMenu.Name = "File";
 			fileMenu.Host = this;
 			this.MenuAdd(fileMenu, @"file:images/new1.icon", "New", "Nouveau", "Ctrl+N");
 			this.MenuAdd(fileMenu, @"file:images/open1.icon", "Open", "Ouvrir...", "Ctrl+O");
@@ -93,10 +90,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.MenuAdd(fileMenu, @"", "Quit", "Quitter", "");
 			fileMenu.AdjustSize();
 			this.menu.Items[0].Submenu = fileMenu;
-			this.collector.Add(fileMenu);
 
 			VMenu editMenu = new VMenu();
-			editMenu.Name = "edit";
+			editMenu.Name = "Edit";
 			editMenu.Host = this;
 			this.MenuAdd(editMenu, @"file:images/undo1.icon", "Undo", "Annuler", "Ctrl+Z");
 			this.MenuAdd(editMenu, @"file:images/redo1.icon", "Redo", "Refaire", "Ctrl+Y");
@@ -109,10 +105,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.MenuAdd(editMenu, @"file:images/duplicate1.icon", "Duplicate", "Dupliquer", "");
 			editMenu.AdjustSize();
 			this.menu.Items[1].Submenu = editMenu;
-			this.collector.Add(editMenu);
 
 			VMenu objMenu = new VMenu();
-			objMenu.Name = "obj";
+			objMenu.Name = "Obj";
 			objMenu.Host = this;
 			this.MenuAdd(objMenu, @"file:images/deselect1.icon", "Deselect", "Deselectionner tout", "");
 			this.MenuAdd(objMenu, @"file:images/selectall1.icon", "SelectAll", "Tout selectionner", "");
@@ -124,10 +119,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.MenuAdd(objMenu, @"file:images/groupempty1.icon", "", "Groupe", "");
 			objMenu.AdjustSize();
 			this.menu.Items[2].Submenu = objMenu;
-			this.collector.Add(objMenu);
 
 			VMenu groupMenu = new VMenu();
-			groupMenu.Name = "group";
+			groupMenu.Name = "Group";
 			groupMenu.Host = this;
 			this.MenuAdd(groupMenu, @"file:images/merge1.icon", "Merge", "Fusionner", "");
 			this.MenuAdd(groupMenu, @"file:images/group1.icon", "Group", "Associer", "");
@@ -137,10 +131,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.MenuAdd(groupMenu, @"file:images/outside1.icon", "Outside", "Sortir du groupe", "");
 			groupMenu.AdjustSize();
 			objMenu.Items[7].Submenu = groupMenu;
-			this.collector.Add(groupMenu);
 
 			VMenu showMenu = new VMenu();
-			showMenu.Name = "show";
+			showMenu.Name = "Show";
 			showMenu.Host = this;
 			this.MenuAdd(showMenu, @"file:images/grid1.icon", "Grid", "Grille magnetique", "");
 			this.MenuAdd(showMenu, @"file:images/mode1.icon", "Mode", "Tableau des objets", "");
@@ -150,10 +143,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.MenuAdd(showMenu, @"", "", "Apparence", "");
 			showMenu.AdjustSize();
 			this.menu.Items[3].Submenu = showMenu;
-			this.collector.Add(showMenu);
 
 			VMenu zoomMenu = new VMenu();
-			zoomMenu.Name = "zoom";
+			zoomMenu.Name = "Zoom";
 			zoomMenu.Host = this;
 			this.MenuAdd(zoomMenu, @"file:images/zoommin1.icon", "ZoomMin", "Zoom minimal", "");
 			this.MenuAdd(zoomMenu, @"file:images/zoomdefault1.icon", "ZoomDefault", "Zoom 100%", "");
@@ -164,10 +156,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.MenuAdd(zoomMenu, @"file:images/zoomadd1.icon", "ZoomAdd", "Agrandissement", "");
 			zoomMenu.AdjustSize();
 			showMenu.Items[3].Submenu = zoomMenu;
-			this.collector.Add(zoomMenu);
 
 			VMenu lookMenu = new VMenu();
-			lookMenu.Name = "look";
+			lookMenu.Name = "Look";
 			lookMenu.Host = this;
 			string[] list = Epsitec.Common.Widgets.Adorner.Factory.AdornerNames;
 			foreach ( string name in list )
@@ -176,10 +167,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			lookMenu.AdjustSize();
 			showMenu.Items[5].Submenu = lookMenu;
-			this.collector.Add(lookMenu);
 
 			VMenu helpMenu = new VMenu();
-			helpMenu.Name = "help";
+			helpMenu.Name = "Help";
 			helpMenu.Host = this;
 			helpMenu.Items.Add(new MenuItem("help", "", "Aide", "F1"));
 			helpMenu.Items.Add(new MenuItem("ctxhelp", "", "Aide contextuelle", ""));
@@ -189,7 +179,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			this.hToolBar = new HToolBar();
 			this.hToolBar.Parent = this;
-			this.collector.Add(this.hToolBar);
 			this.HToolBarAdd(@"file:images/new1.icon", "New", "Nouveau");
 			this.HToolBarAdd(@"file:images/open1.icon", "Open", "Ouvrir");
 			this.HToolBarAdd(@"file:images/save1.icon", "Save", "Enregistrer");
@@ -215,21 +204,20 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			this.vToolBar = new VToolBar();
 			this.vToolBar.Parent = this;
-			this.collector.Add(this.vToolBar);
-			this.VToolBarAdd(@"file:images/select1.icon", "Select", "Selectionner");
-			this.VToolBarAdd(@"file:images/zoom1.icon", "Zoom", "Agrandir");
-			this.VToolBarAdd(@"file:images/hand1.icon", "Hand", "Deplacer");
-			this.VToolBarAdd(@"file:images/picker1.icon", "Picker", "Pipette");
+			this.VToolBarAdd(@"file:images/select1.icon", "SelectTool", "Selectionner", "Select");
+			this.VToolBarAdd(@"file:images/zoom1.icon", "SelectTool", "Agrandir", "Zoom");
+			this.VToolBarAdd(@"file:images/hand1.icon", "SelectTool", "Deplacer", "Hand");
+			this.VToolBarAdd(@"file:images/picker1.icon", "SelectTool", "Pipette", "Picker");
 			this.VToolBarAdd("", "", "");
-			this.VToolBarAdd(@"file:images/line1.icon", "ObjectLine", "Segment de ligne");
-			this.VToolBarAdd(@"file:images/arrow1.icon", "ObjectArrow", "Fleche");
-			this.VToolBarAdd(@"file:images/rectangle1.icon", "ObjectRectangle", "Rectangle");
-			this.VToolBarAdd(@"file:images/circle1.icon", "ObjectCircle", "Cercle");
-			this.VToolBarAdd(@"file:images/ellipse1.icon", "ObjectEllipse", "Ellipse");
-			this.VToolBarAdd(@"file:images/regular1.icon", "ObjectRegular", "Polygone regulier");
-			this.VToolBarAdd(@"file:images/poly1.icon", "ObjectPoly", "Polygone quelconque");
-			this.VToolBarAdd(@"file:images/bezier1.icon", "ObjectBezier", "Courbes de Bezier");
-			this.VToolBarAdd(@"file:images/text1.icon", "ObjectText", "Texte");
+			this.VToolBarAdd(@"file:images/line1.icon", "SelectTool", "Segment de ligne", "ObjectLine");
+			this.VToolBarAdd(@"file:images/arrow1.icon", "SelectTool", "Fleche", "ObjectArrow");
+			this.VToolBarAdd(@"file:images/rectangle1.icon", "SelectTool", "Rectangle", "ObjectRectangle");
+			this.VToolBarAdd(@"file:images/circle1.icon", "SelectTool", "Cercle", "ObjectCircle");
+			this.VToolBarAdd(@"file:images/ellipse1.icon", "SelectTool", "Ellipse", "ObjectEllipse");
+			this.VToolBarAdd(@"file:images/regular1.icon", "SelectTool", "Polygone regulier", "ObjectRegular");
+			this.VToolBarAdd(@"file:images/poly1.icon", "SelectTool", "Polygone quelconque", "ObjectPoly");
+			this.VToolBarAdd(@"file:images/bezier1.icon", "SelectTool", "Courbes de Bezier", "ObjectBezier");
+			this.VToolBarAdd(@"file:images/text1.icon", "SelectTool", "Texte", "ObjectText");
 			this.VToolBarAdd("", "", "");
 			
 			this.root = new Widget();
@@ -238,7 +226,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.pane = new PaneBook();
 			this.pane.PaneBookStyle = PaneBookStyle.LeftRight;
 			this.pane.PaneBehaviour = PaneBookBehaviour.FollowMe;
-			this.pane.SizeChanged += new EventHandler(this.pane_SizeChanged);
+			this.pane.SizeChanged += new EventHandler(this.HandlePaneSizeChanged);
 			this.pane.Parent = root;
 
 			this.leftPane = new PanePage();
@@ -261,19 +249,21 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.panel.Parent = this;
 
 			this.drawer = new Drawer();
+			this.drawer.InitCommands(this.CommandDispatcher);
+			this.CommandDispatcher.RegisterController(this.drawer);
 			this.drawer.IsEditable = true;
 			this.drawer.SelectedTool = "Select";
-			this.drawer.PanelChanged += new EventHandler(this.DrawerPanelChanged);
-			this.drawer.ToolChanged += new EventHandler(this.DrawerToolChanged);
-			this.drawer.AllChanged += new EventHandler(this.DrawerAllChanged);
-			this.drawer.ScrollerChanged += new EventHandler(this.DrawerScrollerChanged);
-			this.drawer.InfoObjectChanged += new EventHandler(this.DrawerInfoObjectChanged);
-			this.drawer.InfoMouseChanged += new EventHandler(this.DrawerInfoMouseChanged);
-			this.drawer.InfoZoomChanged += new EventHandler(this.DrawerInfoZoomChanged);
+			this.drawer.PanelChanged += new EventHandler(this.HandleDrawerPanelChanged);
+			this.drawer.ToolChanged += new EventHandler(this.HandleDrawerToolChanged);
+			this.drawer.AllChanged += new EventHandler(this.HandleDrawerAllChanged);
+			this.drawer.ScrollerChanged += new EventHandler(this.HandleDrawerScrollerChanged);
+			this.drawer.InfoObjectChanged += new EventHandler(this.HandleDrawerInfoObjectChanged);
+			this.drawer.InfoMouseChanged += new EventHandler(this.HandleDrawerInfoMouseChanged);
+			this.drawer.InfoZoomChanged += new EventHandler(this.HandleDrawerInfoZoomChanged);
 			this.drawer.Parent = this.leftPane;
 
 			this.lister = new Lister();
-			this.lister.PanelChanged += new EventHandler(this.DrawerAllChanged);
+			this.lister.PanelChanged += new EventHandler(this.HandleDrawerAllChanged);
 			this.lister.IconObjects = this.drawer.IconObjects;
 			this.lister.Parent = this.leftPane;
 			this.lister.Hide();
@@ -296,33 +286,32 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.AddClone(this.lister);
 
 			this.hScroller = new HScroller();
-			this.hScroller.ValueChanged += new EventHandler(this.HScrollerValueChanged);
+			this.hScroller.ValueChanged += new EventHandler(this.HandleHScrollerValueChanged);
 			this.hScroller.Parent = this.leftPane;
 
 			this.vScroller = new VScroller();
-			this.vScroller.ValueChanged += new EventHandler(this.VScrollerValueChanged);
+			this.vScroller.ValueChanged += new EventHandler(this.HandleVScrollerValueChanged);
 			this.vScroller.Parent = this.leftPane;
 
 			this.info = new StatusBar();
 			this.info.Parent = this;
-			this.collector.Add(this.info);
-			this.InfoAdd("", 200, "", "", "StatusDocument");
+			this.InfoAdd("", 200, "StatusDocument", "");
 			this.InfoAdd(@"file:images/deselect1.icon", 0, "Deselect", "Deselectionner tout");
 			this.InfoAdd(@"file:images/selectall1.icon", 0, "SelectAll", "Tout selectionner");
 			this.InfoAdd(@"file:images/selectinvert1.icon", 0, "SelectInvert", "Inverser la selection");
-			this.InfoAdd("", 120, "", "", "StatusObject");
+			this.InfoAdd("", 120, "StatusObject", "");
 			this.InfoAdd(@"file:images/zoommin1.icon", 0, "ZoomMin", "Zoom minimal");
 			this.InfoAdd(@"file:images/zoomdefault1.icon", 0, "ZoomDefault", "Zoom 100%");
 			this.InfoAdd(@"file:images/zoomsel1.icon", 0, "ZoomSel", "Zoom selection");
 			this.InfoAdd(@"file:images/zoomprev1.icon", 0, "ZoomPrev", "Zoom precedent");
 			this.InfoAdd(@"file:images/zoomsub1.icon", 0, "ZoomSub", "Reduction");
 			this.InfoAdd(@"file:images/zoomadd1.icon", 0, "ZoomAdd", "Agrandissement");
-			this.InfoAdd("", 90, "", "", "StatusZoom");
-			this.InfoAdd("", 120, "", "", "StatusMouse");
+			this.InfoAdd("", 90, "StatusZoom", "");
+			this.InfoAdd("", 120, "StatusMouse", "");
 
 			this.allWidgets = true;
 			this.ResizeLayout();
-			this.UpdateToolBar();
+			this.drawer.UpdateCommands();
 		}
 
 		public HMenu GetMenu()
@@ -330,23 +319,23 @@ namespace Epsitec.Common.Pictogram.Widgets
 			return this.menu;
 		}
 
-		private void DrawerPanelChanged(object sender)
+		private void HandleDrawerPanelChanged(object sender)
 		{
 			this.UpdatePanels();
 		}
 
-		private void DrawerToolChanged(object sender)
+		private void HandleDrawerToolChanged(object sender)
 		{
-			this.UpdateToolBar();
+			this.drawer.UpdateCommands();
 		}
 
-		private void DrawerAllChanged(object sender)
+		private void HandleDrawerAllChanged(object sender)
 		{
-			this.UpdateToolBar();
+			this.drawer.UpdateCommands();
 			this.UpdatePanels();
 		}
 
-		private void DrawerScrollerChanged(object sender)
+		private void HandleDrawerScrollerChanged(object sender)
 		{
 			IconObjects icon = this.drawer.IconObjects;
 			Drawing.Size size = icon.Size;
@@ -355,13 +344,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.hScroller.Minimum = (size.Width-area.Width)/2;
 			this.hScroller.Maximum = (area.Width+this.hScroller.Minimum) - size.Width/this.drawer.Zoom;
 			this.hScroller.VisibleRangeRatio = (size.Width/area.Width)/this.drawer.Zoom;
-			this.hScroller.Value   = -this.drawer.OriginX;
+			this.hScroller.Value = -this.drawer.OriginX;
 			this.drawer.OriginX = -this.hScroller.Value;
 
 			this.vScroller.Minimum = (size.Height-area.Height)/2;
 			this.vScroller.Maximum = (area.Height+this.vScroller.Minimum) - size.Height/this.drawer.Zoom;
 			this.vScroller.VisibleRangeRatio = (size.Height/area.Height)/this.drawer.Zoom;
-			this.vScroller.Value   = -this.drawer.OriginY;
+			this.vScroller.Value = -this.drawer.OriginY;
 			this.drawer.OriginY = -this.vScroller.Value;
 		}
 
@@ -393,9 +382,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 				if ( iconNo  != "" )  item.IconNameActiveNo  = iconNo;
 				if ( iconYes != "" )  item.IconNameActiveYes = iconYes;
 				vmenu.Items.Add(item);
-
-//-				CommandDispatcher disp = this.CommandDispatcher;
-//-				disp.Register(command, new CommandEventHandler(this.HandleCommand));
 			}
 		}
 
@@ -413,14 +399,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 				IconButton button = new IconButton(command, icon, command);
 				this.hToolBar.Items.Add(button);
 				this.toolTip.SetToolTip(button, tooltip);
-
-//-				CommandDispatcher disp = this.CommandDispatcher;
-//-				disp.Register(command, new CommandEventHandler(this.HandleCommand));
 			}
 		}
 
 		// Ajoute une icône.
 		protected void VToolBarAdd(string icon, string command, string tooltip)
+		{
+			this.VToolBarAdd(icon, command, tooltip, command);
+		}
+
+		protected void VToolBarAdd(string icon, string command, string tooltip, string name)
 		{
 			if ( icon == "" )
 			{
@@ -430,12 +418,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			else
 			{
-				IconButton button = new IconButton(command, icon, command);
+				IconButton button = new IconButton(command, icon, name);
 				this.vToolBar.Items.Add(button);
 				this.toolTip.SetToolTip(button, tooltip);
-
-//-				CommandDispatcher disp = this.CommandDispatcher;
-//-				disp.Register(command, new CommandEventHandler(this.HandleCommand));
 			}
 		}
 
@@ -463,9 +448,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 				button.Size = new Drawing.Size(h, h);
 				this.info.Items.Add(button);
 				this.toolTip.SetToolTip(button, tooltip);
-
-//-				CommandDispatcher disp = this.CommandDispatcher;
-//-				disp.Register(command, new CommandEventHandler(this.HandleCommand));
 			}
 		}
 
@@ -490,33 +472,33 @@ namespace Epsitec.Common.Pictogram.Widgets
 			field.Invalidate();
 		}
 
-		private void DrawerInfoObjectChanged(object sender)
+		private void HandleDrawerInfoObjectChanged(object sender)
 		{
 			StatusField field = this.info.Items["StatusObject"] as StatusField;
 			field.Text = this.drawer.TextInfoObject;
 			field.Invalidate();
 		}
 
-		private void DrawerInfoMouseChanged(object sender)
+		private void HandleDrawerInfoMouseChanged(object sender)
 		{
 			StatusField field = this.info.Items["StatusMouse"] as StatusField;
 			field.Text = this.drawer.TextInfoMouse;
 			field.Invalidate();
 		}
 
-		private void DrawerInfoZoomChanged(object sender)
+		private void HandleDrawerInfoZoomChanged(object sender)
 		{
 			StatusField field = this.info.Items["StatusZoom"] as StatusField;
 			field.Text = this.drawer.TextInfoZoom;
 			field.Invalidate();
 		}
 
-		private void HScrollerValueChanged(object sender)
+		private void HandleHScrollerValueChanged(object sender)
 		{
 			this.drawer.OriginX = -this.hScroller.Value;
 		}
 
-		private void VScrollerValueChanged(object sender)
+		private void HandleVScrollerValueChanged(object sender)
 		{
 			this.drawer.OriginY = -this.vScroller.Value;
 		}
@@ -545,9 +527,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 				rect.Top    = posy;
 				panel.Bounds = rect;
 				panel.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
-				panel.Changed += new EventHandler(this.PanelChanged);
-				panel.ExtendedChanged += new EventHandler(this.ExtendedChanged);
-				panel.OriginColorChanged += new EventHandler(this.OriginColorChanged);
+				panel.Changed += new EventHandler(this.HandlePanelChanged);
+				panel.ExtendedChanged += new EventHandler(this.HandleExtendedChanged);
+				panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
 				panel.Parent = this.panel;
 
 				if ( panel.PropertyType == this.originColorType )
@@ -569,19 +551,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 			rect.Top    = System.Math.Min(this.colorSelector.DefaultHeight, this.panel.Height-this.leftHeightUsed);
 			this.colorSelector.Bounds = rect;
 			this.colorSelector.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
-			this.colorSelector.Changed += new EventHandler(this.ColorSelectorChanged);
+			this.colorSelector.Changed += new EventHandler(this.HandleColorSelectorChanged);
 			this.colorSelector.Parent = this.panel;
 
-			this.OriginColorChanged(originColorLastPanel, true);
-			this.DrawerScrollerChanged(null);
-			this.DrawerInfoObjectChanged(null);
-			this.DrawerInfoMouseChanged(null);
-			this.DrawerInfoZoomChanged(null);
+			this.HandleOriginColorChanged(originColorLastPanel, true);
+			this.HandleDrawerScrollerChanged(null);
+			this.HandleDrawerInfoObjectChanged(null);
+			this.HandleDrawerInfoMouseChanged(null);
+			this.HandleDrawerInfoZoomChanged(null);
 			this.UpdateInfoDocument();
 		}
 
 		// Le contenu d'un panneau a été changé.
-		private void PanelChanged(object sender)
+		private void HandlePanelChanged(object sender)
 		{
 			AbstractPanel panel = sender as AbstractPanel;
 			AbstractProperty property = panel.GetProperty();
@@ -590,7 +572,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		// La hauteur d'un panneau a été changée.
-		private void ExtendedChanged(object sender)
+		private void HandleExtendedChanged(object sender)
 		{
 			AbstractPanel panel = sender as AbstractPanel;
 			AbstractProperty property = panel.GetProperty();
@@ -599,12 +581,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		// Le widget qui détermine la couleur d'origine a changé.
-		private void OriginColorChanged(object sender)
+		private void HandleOriginColorChanged(object sender)
 		{
-			this.OriginColorChanged(sender, false);
+			this.HandleOriginColorChanged(sender, false);
 		}
 
-		private void OriginColorChanged(object sender, bool lastOrigin)
+		private void HandleOriginColorChanged(object sender, bool lastOrigin)
 		{
 			this.originColorPanel = null;
 
@@ -638,7 +620,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		// Couleur d'origine changée dans la roue.
-		private void ColorSelectorChanged(object sender)
+		private void HandleColorSelectorChanged(object sender)
 		{
 			if ( this.originColorPanel == null )  return;
 			this.originColorPanel.OriginColorChange(this.colorSelector.Color);
@@ -738,7 +720,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			rect.Inflate(-1, -1);
 		}
 
-		private void pane_SizeChanged(object sender)
+		private void HandlePaneSizeChanged(object sender)
 		{
 			PaneBook pane = (PaneBook)sender;
 
@@ -749,289 +731,102 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
-		// Bouton de la toolbar cliqué.
-		//?private void ToolBarClicked(object sender, MessageEventArgs e)
-		private void HandleCommand(CommandDispatcher sender, CommandEventArgs e)
-		{
-			string   fullCmd   = e.Name;
-			string[] splitCmd  = fullCmd.Split ('.');
-			int      elemCount = splitCmd.Length;
-			
-			string cmd = splitCmd[elemCount-1];
-
-			if ( cmd == "Select"          ||
-				 cmd == "Zoom"            ||
-				 cmd == "Hand"            ||
-				 cmd == "Picker"          ||
-				 cmd == "ObjectLine"      ||
-				 cmd == "ObjectArrow"     ||
-				 cmd == "ObjectRectangle" ||
-				 cmd == "ObjectCircle"    ||
-				 cmd == "ObjectEllipse"   ||
-				 cmd == "ObjectRegular"   ||
-				 cmd == "ObjectPoly"      ||
-				 cmd == "ObjectBezier"    ||
-				 cmd == "ObjectText"      )
-			{
-				if ( this.drawer.IsVisible )
-				{
-					this.drawer.SelectedTool = cmd;
-				}
-				else
-				{
-					this.drawer.SelectedTool = "Select";
-				}
-				this.UpdateToolBar();
-				this.UpdatePanels();
-			}
-
-			if ( cmd == "Open" )
-			{
-				//System.Console.Out.WriteLine(System.IO.Directory.GetCurrentDirectory());
-				FileOpen dialog = new FileOpen();
-		
-				dialog.Title = "Ouvrir une icone";
-				dialog.FileName = this.filename;
-				dialog.Filters.Add ("icon", "Icônes", "*.icon");
-				//dialog.InitialDirectory = "..\\..\\images\\";			
-				dialog.Show();
-
-				this.filename = dialog.FileName;
-				//System.Console.Out.WriteLine(System.IO.Directory.GetCurrentDirectory());
-				this.UpdateInfoDocument();
-			}
-
-			if ( cmd == "Save" )
-			{
-				FileSave dialog = new FileSave();
-			
-				dialog.Title = "Enregisrter une icone";
-				dialog.FileName = this.filename;
-				dialog.Filters.Add ("icon", "Icônes", "*.icon");
-				//dialog.InitialDirectory = "..\\..\\images\\";			
-				dialog.Show();
-
-				this.filename = dialog.FileName;
-				this.UpdateInfoDocument();
-			}
-
-			// Exécute la commande.
-			this.drawer.ExecuteCommand(cmd, this.filename);
-
-			if ( cmd == "New" )
-			{
-				this.filename = "";
-				this.UpdateInfoDocument();
-			}
-
-			if ( cmd == "Open" )
-			{
-				this.ResizeLayout();
-				this.Invalidate();
-				this.UpdateInfoDocument();
-			}
-
-			if ( cmd == "Mode" )
-			{
-				if ( this.drawer.IsActive )
-				{
-					this.drawer.IsActive = false;
-					this.drawer.Hide();
-					this.hScroller.Hide();
-					this.vScroller.Hide();
-					this.lister.Show();
-
-					this.drawer.SelectedTool = "Select";
-					this.UpdatePanels();
-				}
-				else
-				{
-					this.drawer.IsActive = true;
-					this.drawer.Show();
-					this.hScroller.Show();
-					this.vScroller.Show();
-					this.lister.Hide();
-				}
-				this.UpdateToolBar();
-			}
-
-			if ( cmd == "Grid" )
-			{
-				this.UpdateToolBar();
-			}
-
-			if ( this.lister.IsVisible )
-			{
-				this.lister.UpdateContent();
-			}
-		}
-		
-		[Command ("SelectLook")] void CommandSelectLook(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			Widget widget = e.Source as Widget;
-			Epsitec.Common.Widgets.Adorner.Factory.SetActive(widget.Name);
-			this.UpdateToolBar();
-		}
-		
-		[Command ("Select")]
-		[Command ("Zoom")]
-		[Command ("Hand")]
-		[Command ("Picker")]
-		[Command ("ObjectLine")]
-		[Command ("ObjectArrow")]
-		[Command ("ObjectRectangle")]
-		[Command ("ObjectCircle")]
-		[Command ("ObjectEllipse")]
-		[Command ("ObjectRegular")]
-		[Command ("ObjectPoly")]
-		[Command ("ObjectBezier")]
-		[Command ("ObjectText")]
+		[Command ("SelectTool")]
 		void CommandActivateTool(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			if ( this.drawer.IsVisible )
 			{
-				this.drawer.SelectedTool = e.Name;
+				Widget widget = e.Source as Widget;
+				this.drawer.SelectedTool = widget.Name;
 			}
 			else
 			{
 				this.drawer.SelectedTool = "Select";
 			}
 			
-			this.UpdateToolBar();
+			this.drawer.UpdateCommands();
 			this.UpdatePanels();
 		}
 
-		// Bouton de la toolbar cliqué.
-		private void ToolBarDoubleClicked(object sender, MessageEventArgs e)
+		[Command ("SelectLook")]
+		void CommandSelectLook(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			string cmd = "";
-			if ( sender is IconButton )
-			{
-				IconButton button = sender as IconButton;
-				cmd = button.Name;
-			}
-			if ( sender is MenuItem )
-			{
-				MenuItem item = sender as MenuItem;
-				cmd = item.Name;
-			}
+			Widget widget = e.Source as Widget;
+			Epsitec.Common.Widgets.Adorner.Factory.SetActive(widget.Name);
+			this.drawer.UpdateCommands();
+		}
+		
+		[Command ("New")]
+		void CommandNew(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.drawer.CommandNew();
+			this.filename = "";
+			this.UpdateInfoDocument();
+		}
 
-			if ( this.drawer.IsVisible )
+		[Command ("Open")]
+		void CommandOpen(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			FileOpen dialog = new FileOpen();
+		
+			dialog.Title = "Ouvrir une icone";
+			dialog.FileName = this.filename;
+			dialog.Filters.Add("icon", "Icônes", "*.icon");
+			dialog.Show();
+
+			this.filename = dialog.FileName;
+			this.UpdateInfoDocument();
+
+			this.drawer.CommandOpen(this.filename);
+
+			this.ResizeLayout();
+			this.Invalidate();
+			this.UpdateInfoDocument();
+		}
+
+		[Command ("Save")]
+		void CommandSave(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			FileSave dialog = new FileSave();
+			
+			dialog.Title = "Enregisrter une icone";
+			dialog.FileName = this.filename;
+			dialog.Filters.Add("icon", "Icônes", "*.icon");
+			dialog.Show();
+
+			this.filename = dialog.FileName;
+			this.UpdateInfoDocument();
+
+			this.drawer.CommandSave(this.filename);
+		}
+
+		[Command ("Mode")]
+		void CommandMode(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			if ( this.drawer.IsActive )
 			{
-				this.drawer.SelectedTool = cmd;
+				this.drawer.IsActive = false;
+				this.drawer.Hide();
+				this.hScroller.Hide();
+				this.vScroller.Hide();
+				this.lister.Show();
+
+				this.drawer.SelectedTool = "Select";
+				this.UpdatePanels();
 			}
 			else
 			{
-				this.drawer.SelectedTool = "Select";
+				this.drawer.IsActive = true;
+				this.drawer.Show();
+				this.hScroller.Show();
+				this.vScroller.Show();
+				this.lister.Hide();
 			}
-
-			if ( cmd == "Zoom" || cmd == "Hand" )
-			{
-				this.drawer.Zoom = 1;
-				this.drawer.OriginX = 0;
-				this.drawer.OriginY = 0;
-			}
-
-			this.UpdateToolBar();
-			this.UpdatePanels();
-		}
-
-		// Met à jour l'outil sélectionné dans la toolbar.
-		protected void UpdateToolBar()
-		{
-#if false
-			foreach ( Widget widget in this.hToolBar.Items )
-			{
-				IconButton button = widget as IconButton;
-				if ( button == null )  continue;
-
-				string cmd = button.Name;
-				button.SetEnabled(this.drawer.IsCommandEnable(cmd));
-				//?button.SetVisible(this.drawer.IsCommandEnable(cmd));
-				button.ActiveState = this.drawer.IsCommandActive(cmd) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			}
-
-			foreach ( Widget widget in this.vToolBar.Items )
-			{
-				IconButton button = widget as IconButton;
-				if ( button == null )  continue;
-
-				string cmd = button.Name;
-				button.SetEnabled(this.drawer.IsCommandEnable(cmd));
-				//?button.SetVisible(this.drawer.IsCommandEnable(cmd));
-				button.ActiveState = this.drawer.IsCommandActive(cmd) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			}
-
-			foreach ( Widget widget in this.info.Items )
-			{
-				IconButton button = widget as IconButton;
-				if ( button == null )  continue;
-
-				string cmd = button.Name;
-				button.SetEnabled(this.drawer.IsCommandEnable(cmd));
-				//?button.SetVisible(this.drawer.IsCommandEnable(cmd));
-				button.ActiveState = this.drawer.IsCommandActive(cmd) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			}
-#else
-			foreach ( Widget list in this.collector )
-			{
-				if ( list is HToolBar )
-				{
-					HToolBar bar = list as HToolBar;
-					foreach ( Widget widget in bar.Items )
-					{
-						IconButton button = widget as IconButton;
-						if ( button == null )  continue;
-
-						string cmd = button.Name;
-						button.SetEnabled(this.drawer.IsCommandEnable(cmd));
-						button.ActiveState = this.drawer.IsCommandActive(cmd) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-					}
-				}
-				if ( list is VToolBar )
-				{
-					VToolBar bar = list as VToolBar;
-					foreach ( Widget widget in bar.Items )
-					{
-						IconButton button = widget as IconButton;
-						if ( button == null )  continue;
-
-						string cmd = button.Name;
-						button.SetEnabled(this.drawer.IsCommandEnable(cmd));
-						button.ActiveState = this.drawer.IsCommandActive(cmd) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-					}
-				}
-				if ( list is StatusBar )
-				{
-					StatusBar bar = list as StatusBar;
-					foreach ( Widget widget in bar.Items )
-					{
-						IconButton button = widget as IconButton;
-						if ( button == null )  continue;
-
-						string cmd = button.Name;
-						button.SetEnabled(this.drawer.IsCommandEnable(cmd));
-						button.ActiveState = this.drawer.IsCommandActive(cmd) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-					}
-				}
-				if ( list is VMenu )
-				{
-					VMenu bar = list as VMenu;
-					foreach ( Widget widget in bar.Items )
-					{
-						MenuItem button = widget as MenuItem;
-						if ( button == null )  continue;
-
-						string cmd = button.Name;
-						button.SetEnabled(this.drawer.IsCommandEnable(cmd));
-						button.ActiveState = this.drawer.IsCommandActive(cmd) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-					}
-				}
-			}
-#endif
+			this.drawer.UpdateCommands();
 		}
 
 
+		protected CommandDispatcher				commandDispatcher;
 		protected bool							allWidgets = false;
 		protected ToolTip						toolTip;
 		protected HMenu							menu;
@@ -1057,7 +852,5 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected int							originColorRank = -1;
 		protected double						leftHeightUsed = 0;
 		protected string						filename = "";
-		protected System.Collections.ArrayList	collector = new System.Collections.ArrayList();
-		private Support.CommandDispatcher		commandDispatcher;
 	}
 }

@@ -26,6 +26,7 @@ namespace Epsitec.Common.Widgets.Platform
 			this.graphics = Epsitec.Common.Drawing.GraphicsFactory.NewGraphics ();
 			
 			this.ReallocatePixmap ();
+			this.CreateHandle ();
 			
 			WindowList.Insert (this);
 		}

@@ -7,12 +7,19 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ContextMenuItem()
 		{
+			this.command = "";
 			this.name = "";
 			this.icon = "";
 			this.iconActiveNo = "";
 			this.iconActiveYes = "";
 			this.text = "";
 			this.active = false;
+		}
+
+		public string Command
+		{
+			get { return this.command; }
+			set { this.command = value; }
 		}
 
 		public string Name
@@ -51,6 +58,7 @@ namespace Epsitec.Common.Pictogram.Data
 			set { this.active = value; }
 		}
 
+		protected string			command;
 		protected string			name;
 		protected string			icon;
 		protected string			iconActiveNo;
