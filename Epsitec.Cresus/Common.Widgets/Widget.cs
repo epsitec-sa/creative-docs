@@ -1059,12 +1059,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected virtual void PaintBackgroundImplementation(Drawing.Graphics graphics)
+		protected virtual void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
 			//	Implémenter le dessin du fond dans cette méthode.
 		}
 		
-		protected virtual void PaintForegroundImplementation(Drawing.Graphics graphics)
+		protected virtual void PaintForegroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
 			//	Implémenter le dessin des enjoliveurs additionnels dans cette méthode.
 		}
@@ -1208,7 +1208,7 @@ namespace Epsitec.Common.Widgets
 				if ((widget.IsEnabled) &&
 					(widget.IsFocused == false))
 				{
-					if (this.ShortcutHandler (shortcut, false))
+					if (widget.ShortcutHandler (shortcut, false))
 					{
 						return true;
 					}
@@ -1220,7 +1220,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual bool ProcessShortcut(Shortcut shortcut)
 		{
-			if (this.shortcut.Match (shortcut))
+			if ((this.shortcut != null) &&
+				(this.shortcut.Match (shortcut)))
 			{
 				this.OnShortcutPressed (System.EventArgs.Empty);
 				return true;
@@ -1250,7 +1251,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			this.PaintBackgroundImplementation (e.Graphics);
+			this.PaintBackgroundImplementation (e.Graphics, e.ClipRectangle);
 		}
 		
 		protected virtual void OnPaintForeground(PaintEventArgs e)
@@ -1267,7 +1268,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 			
-			this.PaintForegroundImplementation (e.Graphics);
+			this.PaintForegroundImplementation (e.Graphics, e.ClipRectangle);
 		}
 		
 		protected virtual void OnChildrenChanged(System.EventArgs e)
