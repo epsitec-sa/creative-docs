@@ -1,4 +1,4 @@
-C:\Documents and Settings\Arnaud\My Documents\Visual Studio Projects\Epsitec.Cresus
+S:\Epsitec.Cresus
 C:\Epsitec
 Epsitec.Cresus
 history.log

@@ -361,7 +361,7 @@ namespace Epsitec.Common.Types
 			{
 				get
 				{
-					return false;
+					return true;
 				}
 			}
 			
