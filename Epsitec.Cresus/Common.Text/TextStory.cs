@@ -497,7 +497,7 @@ namespace Epsitec.Common.Text
 				int word_begin = from_pos;
 				int word_end   = to_pos;
 				
-				for (int i = position - 1; i >= from_pos; i--)
+				for (int i = position - 2; i >= from_pos; i--)
 				{
 					if (Unicode.Bits.GetBreakInfo (text[i - area_begin]) == Unicode.BreakInfo.Optional)
 					{
@@ -524,9 +524,12 @@ namespace Epsitec.Common.Text
 				//	Demande une analyse du passage considéré et recopie les
 				//	informations dans le texte lui-même :
 				
-				Unicode.BreakInfo[] breaks = new Unicode.BreakInfo[to_pos - from_pos];
-				Unicode.DefaultBreakAnalyzer.GenerateBreaks (text, from_pos - area_begin, to_pos - from_pos, breaks);
-				Unicode.Bits.SetBreakInfo (text, from_pos - area_begin, breaks);
+//				Unicode.BreakInfo[] breaks = new Unicode.BreakInfo[to_pos - from_pos];
+//				Unicode.DefaultBreakAnalyzer.GenerateBreaks (text, from_pos - area_begin, to_pos - from_pos, breaks);
+//				Unicode.Bits.SetBreakInfo (text, from_pos - area_begin, breaks);
+				Unicode.BreakInfo[] breaks = new Unicode.BreakInfo[word_end - word_begin];
+				Unicode.DefaultBreakAnalyzer.GenerateBreaks (text, word_begin - area_begin, word_end - word_begin, breaks);
+				Unicode.Bits.SetBreakInfo (text, word_begin - area_begin, breaks);
 				
 				Internal.CharMarker.SetMarkers (this.context.Marker.RequiresSpellChecking, text, word_begin - area_begin, word_end - word_begin);
 				

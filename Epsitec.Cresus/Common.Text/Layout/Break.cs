@@ -9,11 +9,12 @@ namespace Epsitec.Common.Text.Layout
 	/// </summary>
 	public class Break
 	{
-		public Break(int offset, double advance, int penalty)
+		public Break(int offset, double advance, double penalty, StretchProfile profile)
 		{
 			this.offset  = offset;
 			this.advance = advance;
 			this.penalty = penalty;
+			this.profile = new StretchProfile (profile);
 		}
 		
 		
@@ -33,7 +34,7 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		public int								Penalty
+		public double							Penalty
 		{
 			get
 			{
@@ -44,6 +45,7 @@ namespace Epsitec.Common.Text.Layout
 		
 		private int								offset;
 		private double							advance;
-		private int								penalty;
+		private double							penalty;
+		private StretchProfile					profile;
 	}
 }

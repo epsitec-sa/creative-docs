@@ -192,6 +192,9 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (breaks[0].Offset == 35);
 			Debug.Assert.IsTrue (breaks[1].Offset == 42);
 			Debug.Assert.IsTrue (breaks[2].Offset == 50);
+			Debug.Assert.IsTrue (System.Math.Round (breaks[0].Penalty) == 68);
+			Debug.Assert.IsTrue (System.Math.Round (breaks[1].Penalty) == 46);
+			Debug.Assert.IsTrue (System.Math.Round (breaks[2].Penalty) == 0);
 			
 			
 			OpenType.Font font;
@@ -199,8 +202,8 @@ namespace Epsitec.Common.Text.Tests
 			
 			story.Context.GetFont (story_text[0], out font, out font_size);
 			
-			Internal.StretchProfile profile = new Internal.StretchProfile ();
-			Internal.StretchProfile.Analyse (font, font_size, story_text, 0, 26, profile);
+			Layout.StretchProfile profile = new Layout.StretchProfile ();
+			Layout.StretchProfile.Analyse (font, font_size, story_text, 0, 26, profile);
 			
 			context = new Layout.Context (story.Context, story_text, 0, 0, 1000, 1270, 30, 0);
 			status  = context.Fit (ref breaks);

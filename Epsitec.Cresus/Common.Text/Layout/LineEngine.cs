@@ -24,8 +24,9 @@ namespace Epsitec.Common.Text.Layout
 			scratch.FenceMinX = context.RightMargin-context.BreakFenceBefore;
 			scratch.FenceMaxX = context.RightMargin+context.BreakFenceAfter;
 			
-			scratch.Advance       = context.X;
-			scratch.WordBreakInfo = Unicode.BreakInfo.No;
+			scratch.Advance        = context.X;
+			scratch.WordBreakInfo  = Unicode.BreakInfo.No;
+			scratch.StretchProfile = new StretchProfile ();
 			
 			for (;;)
 			{
@@ -107,7 +108,7 @@ namespace Epsitec.Common.Text.Layout
 			
 			//	Le texte se termine par une fin forcée avant d'arriver dans la marge droite.						:
 			
-			result.Add (new Layout.Break (scratch.Offset, scratch.Advance, 0));
+			result.Add (new Layout.Break (scratch.Offset, scratch.Advance, 0, scratch.StretchProfile));
 			
 			return Layout.Status.OkFitEnded;
 			
@@ -119,7 +120,12 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			{
 				if (scratch.LastBreakOffset > 0)
 				{
-					result.Add (new Layout.Break (scratch.LastBreakOffset, scratch.LastBreakAdvance, scratch.LastBreakPenalty));
+					StretchProfile profile = scratch.LastStretchProfile;
+					
+					double total_width   = context.RightMargin - context.LeftMargin;
+					double total_penalty = scratch.LastBreakPenalty * profile.ComputePenalty (total_width, context.BreakFenceBefore, context.BreakFenceAfter);
+						
+					result.Add (new Layout.Break (scratch.LastBreakOffset, scratch.LastBreakAdvance, total_penalty, profile));
 				}
 				else
 				{
@@ -142,6 +148,8 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			bool hyphenate = scratch.Hyphenate;
 			
+			StretchProfile profile = null;
+			
 			for (int frag_length = 0; frag_length < scratch.RunLength; )
 			{
 				if (hyphenate)
@@ -155,7 +163,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				
 				ushort[] glyphs;
 				bool     can_break;
-				int      penalty;
+				double   penalty;
 				
 				if (frag_length < scratch.RunLength)
 				{
@@ -163,14 +171,17 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					//	correctement des langues comme le norvégien ou l'ancien allemand
 					//	qui peuvent provoquer le dédoublement de certains caractères) :
 					
-					ulong save = scratch.Text[frag_length];
-					scratch.Text[frag_length] = '-';
+					ulong save = scratch.Text[scratch.TextStart+frag_length];
+					scratch.Text[scratch.TextStart+frag_length] = '-';
 					
 					glyphs    = scratch.Font.GenerateGlyphs (scratch.Text, scratch.TextStart, frag_length+1);
 					can_break = true;
 					penalty   = -1;
+					profile   = new StretchProfile (scratch.StretchProfile);
 					
-					scratch.Text[frag_length] = save;
+					profile.Add (scratch.Font, scratch.FontSize, scratch.Text, scratch.TextStart, frag_length+1);
+					
+					scratch.Text[scratch.TextStart+frag_length] = save;
 				}
 				else
 				{
@@ -178,6 +189,9 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					can_break = (scratch.RunLength == scratch.TextLength);
 					hyphenate = hyphenate && (scratch.WordBreakInfo == Unicode.BreakInfo.Optional);
 					penalty   = 1;
+					profile   = scratch.StretchProfile;
+					
+					scratch.StretchProfile.Add (scratch.Font, scratch.FontSize, scratch.Text, scratch.TextStart, frag_length);
 				}
 				
 				scratch.TextWidth = scratch.Font.GetTotalWidth (glyphs, scratch.FontSize);
@@ -192,6 +206,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 				
 				if (can_break)
 				{
+#if false
 					double total_width = context.RightMargin - context.LeftMargin;
 					double text_width  = scratch.Advance + scratch.TextWidth - context.LeftMargin;
 					
@@ -219,15 +234,19 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 					Debug.Assert.IsTrue (badness >=  0.0);
 					Debug.Assert.IsTrue (badness <= 10.0);
 					
-					penalty = penalty * (int)(100 * badness);
-					
-					scratch.LastBreakOffset  = scratch.Offset + frag_length;
-					scratch.LastBreakAdvance = scratch.Advance + scratch.TextWidth;
-					scratch.LastBreakPenalty = penalty;
+					penalty = penalty * (100 * badness);
+#endif
+					scratch.LastBreakOffset    = scratch.Offset + frag_length;
+					scratch.LastBreakAdvance   = scratch.Advance + scratch.TextWidth;
+					scratch.LastBreakPenalty   = penalty;
+					scratch.LastStretchProfile = new StretchProfile (profile);
 					
 					if (hyphenate)
 					{
-						result.Add (new Layout.Break (scratch.LastBreakOffset, scratch.LastBreakAdvance, scratch.LastBreakPenalty));
+						double total_width   = context.RightMargin - context.LeftMargin;
+						double total_penalty = scratch.LastBreakPenalty * profile.ComputePenalty (total_width, context.BreakFenceBefore, context.BreakFenceAfter);
+						
+						result.Add (new Layout.Break (scratch.LastBreakOffset, scratch.LastBreakAdvance, total_penalty, profile));
 					}
 				}
 			}
@@ -240,9 +259,12 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 		{
 			public int							Offset;
 			public double						Advance;
+			public StretchProfile				StretchProfile;
+			
 			public int							LastBreakOffset;
 			public double						LastBreakAdvance;
-			public int							LastBreakPenalty;
+			public double						LastBreakPenalty;
+			public StretchProfile				LastStretchProfile;
 			public bool							Hyphenate;
 			
 			public ulong[]						Text;

@@ -162,7 +162,33 @@ namespace Epsitec.Common.Text
 						throw new System.InvalidOperationException ("Invalid layout status received.");
 				}
 				
-				int offset = result[0].Offset;
+				//	Le système de layout propose un certain nombre de points de découpe
+				//	possibles pour la ligne. Il faut maintenant déterminer lequel est le
+				//	meilleur.
+				
+				int offset;
+				int n_breaks = result.Count;
+				
+				if (n_breaks > 1)
+				{
+					double penalty = Layout.StretchProfile.MaxPenalty;
+					int    p_index = -1;
+					
+					for (int i = 0; i < n_breaks; i++)
+					{
+						if (result[i].Penalty < penalty)
+						{
+							penalty = result[i].Penalty;
+							p_index = i;
+						}
+					}
+					
+					offset = result[p_index].Offset;
+				}
+				else
+				{
+					offset = result[0].Offset;
+				}
 				
 				Cursors.FitterCursor.Element element = new Cursors.FitterCursor.Element ();
 				

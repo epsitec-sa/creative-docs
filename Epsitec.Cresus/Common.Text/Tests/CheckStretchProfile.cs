@@ -10,7 +10,7 @@ namespace Epsitec.Common.Text.Tests
 	{
 		public static void RunTests()
 		{
-			Internal.StretchProfile profile = new Internal.StretchProfile ();
+			Layout.StretchProfile profile = new Layout.StretchProfile ();
 			
 			double p1;
 			double p2;

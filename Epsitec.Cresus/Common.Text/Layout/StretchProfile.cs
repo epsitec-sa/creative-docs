@@ -1,7 +1,7 @@
 ﻿//	Copyright © 2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
-namespace Epsitec.Common.Text.Internal
+namespace Epsitec.Common.Text.Layout
 {
 	/// <summary>
 	/// La classe StretchProfile permet de compter les caractères selon leur
@@ -114,6 +114,20 @@ namespace Epsitec.Common.Text.Internal
 			this.width_character = 0;
 			this.width_space     = 0;
 			this.width_kashida   = 0;
+		}
+		
+		
+		public void Add(StretchProfile profile)
+		{
+			this.count_no        += profile.count_no;
+			this.count_character += profile.count_character;
+			this.count_space     += profile.count_space;
+			this.count_kashida   += profile.count_kashida;
+			
+			this.width_no        += profile.width_no;
+			this.width_character += profile.width_character;
+			this.width_space     += profile.width_space;
+			this.width_kashida   += profile.width_kashida;
 		}
 		
 		public void Add(Unicode.StretchClass stretch, double width)
@@ -298,16 +312,14 @@ namespace Epsitec.Common.Text.Internal
 			
 			int      count = glyphs.Length;
 			double[] x_pos = new double[count];
-			double   x     = 0.0;
+			double   x_end = font.GetPositions (glyphs, size, 0, x_pos);
 			
-			font.GetPositions (glyphs, size, x, x_pos);
-			
-			for (int i = 0; i < count; i++)
+			for (int i = 0; i < count-1; i++)
 			{
-				profile.Add ((Unicode.StretchClass) attributes[i], x_pos[i] - x);
-				
-				x = x_pos[i];
+				profile.Add ((Unicode.StretchClass) attributes[i], x_pos[i+1] - x_pos[i]);
 			}
+			
+			profile.Add ((Unicode.StretchClass) attributes[count-1], x_end - x_pos[count-1]);
 		}
 		
 		
