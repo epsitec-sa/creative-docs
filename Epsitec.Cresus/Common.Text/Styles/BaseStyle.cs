@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text.Styles
 	/// <summary>
 	/// Summary description for BaseStyle.
 	/// </summary>
-	internal abstract class BaseStyle : IContentsSignature
+	public abstract class BaseStyle : IContentsSignature, IContentsSignatureUpdater, IContentsComparer
 	{
 		protected BaseStyle()
 		{
@@ -328,7 +328,7 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		public static bool CompareEqual(BaseStyle a, BaseStyle b)
+		public static bool CompareEqual(Styles.BaseStyle a, Styles.BaseStyle b)
 		{
 			//	Détermine si les deux styles ont le même contenu. Utilise le
 			//	plus d'indices possibles avant de passer à la comparaison.
@@ -347,6 +347,10 @@ namespace Epsitec.Common.Text.Styles
 			{
 				return false;
 			}
+			if (a.GetType () != b.GetType ())
+			{
+				return false;
+			}
 			if (a.IsRichStyle != b.IsRichStyle)
 			{
 				return false;
@@ -359,9 +363,7 @@ namespace Epsitec.Common.Text.Styles
 			//	Il y a de fortes chances que les deux objets aient le même
 			//	contenu. Il faut donc opérer une comparaison des contenus.
 			
-			//	TODO: comparer les contenus
-			
-			return true;
+			return a.CompareEqualContents (b);
 		}
 		
 		
@@ -370,7 +372,14 @@ namespace Epsitec.Common.Text.Styles
 			this.contents_signature = 0;
 		}
 		
-		protected abstract int ComputeContentsSignature();
+		
+		#region IContentsSignatureUpdater Members
+		public abstract void UpdateContentsSignature(IO.IChecksum checksum);
+		#endregion
+		
+		#region IContentsComparer Members
+		public abstract bool CompareEqualContents(object value);
+		#endregion
 		
 		#region IContentsSignature Members
 		public int GetContentsSignature()
@@ -384,7 +393,11 @@ namespace Epsitec.Common.Text.Styles
 			
 			if (this.contents_signature == 0)
 			{
-				int signature = this.ComputeContentsSignature();
+				IO.IChecksum checksum = IO.Checksum.CreateAdler32 ();
+				
+				this.UpdateContentsSignature (checksum);
+				
+				int signature = (int) checksum.Value;
 				
 				//	La signature calculée pourrait être nulle; dans ce cas, on
 				//	l'ajuste pour éviter d'interpréter cela comme une absence

@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text.Styles
 	/// <summary>
 	/// Summary description for LocalSettings.
 	/// </summary>
-	internal sealed class LocalSettings : BaseSettings
+	public sealed class LocalSettings : BaseSettings
 	{
 		public LocalSettings()
 		{
@@ -32,6 +32,10 @@ namespace Epsitec.Common.Text.Styles
 			{
 				return false;
 			}
+			if (a.GetType () != b.GetType ())
+			{
+				return false;
+			}
 			if (a.GetContentsSignature () != b.GetContentsSignature ())
 			{
 				return false;
@@ -40,15 +44,17 @@ namespace Epsitec.Common.Text.Styles
 			//	Il y a de fortes chances que les deux objets aient le même
 			//	contenu. Il faut donc opérer une comparaison des contenus.
 			
-			//	TODO: comparer les contenus
-			
-			return true;
+			return a.CompareEqualContents (b);
 		}
 		
 		
-		protected override int ComputeContentsSignature()
+		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			return 0;
+		}
+		
+		public override bool CompareEqualContents(object value)
+		{
+			return true;
 		}
 	}
 }

@@ -6,7 +6,7 @@ namespace Epsitec.Common.Text.Styles
 	/// <summary>
 	/// Summary description for RichStyle.
 	/// </summary>
-	internal sealed class RichStyle : BaseStyle
+	public class RichStyle : BaseStyle
 	{
 		public RichStyle()
 		{
@@ -22,9 +22,13 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		protected override int ComputeContentsSignature()
+		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			return 0;
+		}
+		
+		public override bool CompareEqualContents(object value)
+		{
+			return true;
 		}
 	}
 }

@@ -119,7 +119,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "IContentsComparer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IContentsSignature.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IContentsSignatureUpdater.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -140,6 +150,11 @@
                 />
                 <File
                     RelPath = "TextStory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TextStyle.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -205,6 +220,16 @@
                 />
                 <File
                     RelPath = "Internal\TextTable.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\BaseProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\FontProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

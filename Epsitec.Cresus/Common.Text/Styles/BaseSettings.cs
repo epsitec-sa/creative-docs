@@ -7,7 +7,7 @@ namespace Epsitec.Common.Text.Styles
 	/// La classe BaseSettings sert de base pour les réglages, en particulier
 	/// LocalSettings et ExtraSettings.
 	/// </summary>
-	internal abstract class BaseSettings : IContentsSignature
+	public abstract class BaseSettings : IContentsSignature, IContentsSignatureUpdater, IContentsComparer
 	{
 		protected BaseSettings()
 		{
@@ -49,14 +49,19 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		
-		
 		protected void ClearContentsSignature()
 		{
 			this.contents_signature = 0;
 		}
 		
-		protected abstract int ComputeContentsSignature();
+		
+		#region IContentsSignatureUpdater Members
+		public abstract void UpdateContentsSignature(IO.IChecksum checksum);
+		#endregion
+		
+		#region IContentsComparer Members
+		public abstract bool CompareEqualContents(object value);
+		#endregion
 		
 		#region IContentsSignature Members
 		public int GetContentsSignature()
@@ -70,7 +75,11 @@ namespace Epsitec.Common.Text.Styles
 			
 			if (this.contents_signature == 0)
 			{
-				int signature = this.ComputeContentsSignature();
+				IO.IChecksum checksum = IO.Checksum.CreateAdler32 ();
+				
+				this.UpdateContentsSignature (checksum);
+				
+				int signature = (int) checksum.Value;
 				
 				//	La signature calculée pourrait être nulle; dans ce cas, on
 				//	l'ajuste pour éviter d'interpréter cela comme une absence
