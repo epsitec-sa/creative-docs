@@ -100,6 +100,16 @@ namespace Epsitec.Common.Tests
 			window.Show ();
 		}
 
+		[Test] public void CheckImageRectTIFF()
+		{
+			WindowFrame window = new WindowFrame ();
+			
+			window.Text = "CheckImageRect";
+			window.Root.PaintForeground += new PaintEventHandler(ImageRectTIFF_PaintForeground);
+			window.Root.Invalidate ();
+			window.Show ();
+		}
+
 		private void Text_PaintForeground(object sender, PaintEventArgs e)
 		{
 			WindowRoot root = sender as WindowRoot;
@@ -483,6 +493,26 @@ namespace Epsitec.Common.Tests
 			e.Graphics.PaintImage (bitmap,  10, 126, 200, 20, 0, 10, 200, 80);	//	clip + stretch
 			e.Graphics.PaintImage (bitmap,  10, 148, 200, 20, 100, 10, 200, 80);//	clip + stretch (déborde de l'image, 185 pixels en dehors à droite)
 			e.Graphics.PaintImage (bitmap,  10, 148, 200, 20, 120, 10, 200, 80);//	clip + stretch (plus rien)
+		}
+		
+		private void ImageRectTIFF_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double cx = root.Client.Width / 2;
+			double cy = root.Client.Height / 2;
+			
+			e.Graphics.RotateTransform (0, cx, cy);
+			
+			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
+			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
+			e.Graphics.RenderSolid (Color.FromBrightness (0));
+			
+			Bitmap bitmap = Support.ImageProvider.Default.GetImage (@"file:..\..\image1.tif").BitmapImage;
+			
+			//	L'image fait 96 x 96 pixels
+			
+			e.Graphics.PaintImage (bitmap, new Rectangle (110,  10, 64, 32), new Rectangle (32, 32, 32, 32));
 		}
 	}
 }

@@ -5,6 +5,8 @@ namespace Epsitec.Common.Support
 {
 	using System.Collections;
 	
+	public delegate void BundlingEventHandler(object sender, object obj, ResourceBundle bundle);
+	
 	/// <summary>
 	/// La classe ObjectBundler s'occupe de déballer des bundles pour en
 	/// faire des objets.
@@ -17,10 +19,18 @@ namespace Epsitec.Common.Support
 		
 		public ObjectBundler(bool store_mapping)
 		{
-			this.store_mapping = store_mapping;
-			
-			if (this.store_mapping)
+			if (store_mapping)
 			{
+				this.EnableMapping ();
+			}
+		}
+		
+		
+		public void EnableMapping()
+		{
+			if (this.store_mapping == false)
+			{
+				this.store_mapping = true;
 				this.obj_to_bundle = new System.Collections.Hashtable ();
 			}
 		}
@@ -115,6 +125,12 @@ namespace Epsitec.Common.Support
 		
 		public object CreateFromBundle(ResourceBundle bundle)
 		{
+			//	A partir d'une description stockée dans un bundle, crée un objet de toutes pièces
+			//	et initialise les propriétés connues.
+			
+			//	Si l'objet est inconnu (ou que le bundle ne décrit pas un objet), alors on retourne
+			//	simplement null sans générer d'exception.
+			
 			if (bundle == null)
 			{
 				return null;
@@ -153,10 +169,15 @@ namespace Epsitec.Common.Support
 			
 			obj.RestoreFromBundle (this, bundle);
 			
+			//	Si le ObjectBundler a été configuré de manière à se souvenir des objets créés,
+			//	on prend note de l'objet et de son bundle associé.
+			
 			if (this.store_mapping)
 			{
 				this.obj_to_bundle[obj] = bundle;
 			}
+			
+			this.OnObjectUnbundled (obj, bundle);
 			
 			return obj;
 		}
@@ -210,6 +231,9 @@ namespace Epsitec.Common.Support
 		
 		public bool RestoreProperty(ResourceBundle bundle, object obj, System.Reflection.PropertyInfo prop_info)
 		{
+			//	Pout un objet donné, fait un "set" de la propriété spécifiée en se
+			//	basant sur les données stockées dans le champ correspondant du bundle.
+			
 			bool ok = false;
 			
 			if ((prop_info != null) &&
@@ -407,9 +431,20 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		protected static Hashtable		classes;
+		protected virtual void OnObjectUnbundled(object obj, ResourceBundle bundle)
+		{
+			if (this.ObjectUnbundled != null)
+			{
+				this.ObjectUnbundled (this, obj, bundle);
+			}
+		}
 		
-		protected bool					store_mapping;
-		protected Hashtable				obj_to_bundle;			//	lien entre noms de bundles et objets
+		
+		public event BundlingEventHandler	ObjectUnbundled;
+		
+		protected static Hashtable			classes;
+		
+		protected bool						store_mapping;
+		protected Hashtable					obj_to_bundle;			//	lien entre noms de bundles et objets
 	}
 }

@@ -44,7 +44,7 @@ namespace Epsitec.Common.Tests
 			st.Anchor = AnchorStyles.Top|AnchorStyles.Left;
 			window.Root.Children.Add(st);
 
-			CreateRadioLook(window.Root.Children, new Point(10, 215));
+			CreateListLook(window.Root.Children, new Point(10, 195));
 
 			CheckButton check = new CheckButton();
 			check.Location = new Point(10, 50);
@@ -428,7 +428,7 @@ namespace Epsitec.Common.Tests
 			page4.TabTitle = "<m>L</m>ook";
 			tb.Add(page4);
 
-			CreateRadioLook(page4.Children, new Point(10, 115));
+			CreateListLook(page4.Children, new Point(10, 95));
 
 			StaticText link = new StaticText();
 			link.Name = "Link";
@@ -506,7 +506,7 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size(400, 300);
 			window.Text = "CheckAdornerCell1";
 
-			CreateRadioLook(window.Root.Children, new Point(10, 245));
+			CreateListLook(window.Root.Children, new Point(10, 230));
 
 			StaticText title = new StaticText();
 			title.Location = new Point(120, 245);
@@ -570,7 +570,7 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size(500, 300);
 			window.Text = "CheckAdornerCell2";
 
-			CreateRadioLook(window.Root.Children, new Point(10, 245));
+			CreateListLook(window.Root.Children, new Point(10, 230));
 
 			StaticText title = new StaticText();
 			title.Location = new Point(120, 245);
@@ -644,7 +644,7 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size(400, 300);
 			window.Text = "CheckAdornerCell3";
 
-			CreateRadioLook(window.Root.Children, new Point(10, 245));
+			CreateListLook(window.Root.Children, new Point(10, 230));
 
 			StaticText title = new StaticText();
 			title.Location = new Point(120, 245);
@@ -727,7 +727,7 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size(400, 300);
 			window.Text = "CheckAdornerScrollArray";
 
-			CreateRadioLook(window.Root.Children, new Point(10, 245));
+			CreateListLook(window.Root.Children, new Point(10, 230));
 
 			StaticText title = new StaticText();
 			title.Location = new Point(120, 245);
@@ -770,49 +770,37 @@ namespace Epsitec.Common.Tests
 
 
 		
-		// Crée les 3 boutons radio pour changer de look.
-		protected void CreateRadioLook(Widget.WidgetCollection collection, Point origine)
+		// Crée la liste pour changer de look.
+		protected void CreateListLook(Widget.WidgetCollection collection, Point origine)
 		{
-			RadioButton look1 = new RadioButton();
-			look1.Name = "Default";
-			look1.Location = new Point(origine.X, origine.Y+(look1.DefaultHeight+2)*2);
-			look1.Width = 100;
-			look1.Text = "Look <m>s</m>tandard";
-			look1.ActiveState = WidgetState.ActiveYes;
-			look1.Group = "Look";
-			look1.Anchor = AnchorStyles.Top|AnchorStyles.Left;
-			look1.ActiveStateChanged += new EventHandler(this.HandleLook);
-			collection.Add(look1);
+			ScrollList sl = new ScrollList();
+			sl.Location = origine;
+			sl.Size = new Size(100, 64);
+			sl.AdjustToMultiple(ScrollListAdjust.MoveDown);
 
-			RadioButton look2 = new RadioButton();
-			look2.Name = "LookXP";
-			look2.Location = new Point(origine.X, origine.Y+(look1.DefaultHeight+2)*1);
-			look2.Width = 100;
-			look2.Text = "Look <m>X</m>P";
-			look2.Group = "Look";
-			look2.Anchor = AnchorStyles.Top|AnchorStyles.Left;
-			look2.ActiveStateChanged += new EventHandler(this.HandleLook);
-			collection.Add(look2);
+			string[] list = Widgets.Adorner.Factory.AdornerNames;
+			int i = 0;
+			int sel = 0;
+			foreach ( string name in list )
+			{
+				sl.AddText(name);
+				if ( name == Widgets.Adorner.Factory.ActiveName )  sel = i;
+				i ++;
+			}
 
-			RadioButton look3 = new RadioButton();
-			look3.Name = "LookDany";
-			look3.Location = new Point(origine.X, origine.Y+(look1.DefaultHeight+2)*0);
-			look3.Width = 100;
-			look3.Text = "Look <m>D</m>any";
-			look3.Group = "Look";
-			look3.Anchor = AnchorStyles.Top|AnchorStyles.Left;
-			look3.ActiveStateChanged += new EventHandler(this.HandleLook);
-			collection.Add(look3);
+			sl.SelectedIndex = sel;
+			if ( !sl.IsShowSelect() )  sl.ShowSelect(ScrollListShow.Middle);
+			sl.Anchor = AnchorStyles.Top|AnchorStyles.Left;
+			sl.SelectedIndexChanged += new EventHandler(this.HandleLook);
+			collection.Add(sl);
 		}
 
 		private void HandleLook(object sender)
 		{
-			RadioButton button = sender as RadioButton;
-			if (button.ActiveState == WidgetState.ActiveYes)
-			{
-				Widgets.Adorner.Factory.SetActive(button.Name);
-				button.RootParent.Invalidate();  // redessine toute la fenêtre
-			}
+			ScrollList sl = sender as ScrollList;
+			int sel = sl.SelectedIndex;
+			Widgets.Adorner.Factory.SetActive(sl.GetText(sel));
+			sl.RootParent.Invalidate();  // redessine toute la fenêtre
 		}
 
 		[Test] public void CheckAdornerBug1()
@@ -1013,6 +1001,40 @@ namespace Epsitec.Common.Tests
 			window.Show();
 		}
 
+		[Test] public void CheckAdornerPaintImage()
+		{
+			WindowFrame window = new WindowFrame();
+			
+			window.ClientSize = new System.Drawing.Size(300, 300);
+			window.Text = "CheckAdornerTestParents";
+
+			Button button1 = new Button();
+			button1.Location = new Point(50, 50);
+			button1.Size = new Size(200, 200);
+			button1.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(button1);
+
+			Button button2 = new Button();
+			button2.Location = new Point(100, 100);
+			button2.Size = new Size(100, 100);
+			button2.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(button2);
+
+			Button button3 = new Button();
+			button3.Location = new Point(120, 120);
+			button3.Size = new Size(60, 60);
+			button3.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(button3);
+
+			Button button4 = new Button();
+			button4.Location = new Point(140, 140);
+			button4.Size = new Size(20, 20);
+			button4.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
+			window.Root.Children.Add(button4);
+
+			window.Show();
+		}
+
 		[Test] public void CheckAdornerDisabled()
 		{
 			WindowFrame window = new WindowFrame();
@@ -1030,7 +1052,7 @@ namespace Epsitec.Common.Tests
 			st.SetEnabled(false);
 			window.Root.Children.Add(st);
 
-			CreateRadioLook(window.Root.Children, new Point(10, 200));
+			CreateListLook(window.Root.Children, new Point(10, 180));
 
 			Button a = new Button();
 			a.Location = new Point(10, 10);

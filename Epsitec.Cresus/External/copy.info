@@ -11,3 +11,4 @@ FirebirdSql.Data.Firebird.dll
 # Copy the AGG .NET interface
 
 AntiGrain.NET.dll
+AntiGrain.Win32.dll

@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace Epsitec.Common.Drawing
 {
 	public class Font : System.IDisposable
@@ -19,8 +21,17 @@ namespace Epsitec.Common.Drawing
 			this.Dispose (false);
 		}
 		
+		[System.Runtime.InteropServices.DllImport("Kernel32.dll")] private static extern System.IntPtr LoadLibrary(string fullpath);
+		
 		static Font()
 		{
+			//	Pour une raison étrange, la DLL Win32 doit être chargée très, très tôt, sinon
+			//	elle pourrait ne pas être trouvée (c'est probablement lié à la copie locale des
+			//	assemblies .NET qui est faite lors de l'exécution avec NUnit).
+			
+			System.IntPtr result = Font.LoadLibrary ("AntiGrain.Win32.dll");
+			System.Diagnostics.Debug.Assert (result != System.IntPtr.Zero);
+			
 			Font.Initialise ();
 		}
 		

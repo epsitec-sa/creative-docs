@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Database
 		
 		protected static void Initialise()
 		{
-			System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadWithPartialName ("Database.Implementation");
+			System.Reflection.Assembly assembly = System.Reflection.Assembly.LoadWithPartialName ("Cresus.Database.Implementation");
 			System.Type[] types_in_assembly = assembly.GetTypes ();
 			
 			foreach (System.Type type in types_in_assembly)

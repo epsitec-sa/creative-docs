@@ -143,10 +143,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "copy.info"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "CustomWidgetTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -118,10 +118,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "copy.info"
-                    BuildAction = "None"
-                />
-                <File
                     RelPath = "ObjectBundlerTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
