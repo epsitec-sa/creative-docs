@@ -19,6 +19,23 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
+		public string							Name
+		{
+			get
+			{
+				return this.table_name;
+			}
+		}
+		
+		public int								RowCount
+		{
+			get
+			{
+				return this.row_count;
+			}
+		}
+		
+		
 		public bool HasNullValues(int column)
 		{
 			this.UnpackNullFlags ();
@@ -50,6 +67,16 @@ namespace Epsitec.Cresus.Replication
 		
 		public void FillTable(System.Data.DataTable table)
 		{
+			object[][] values = this.GetValuesArray ();
+			
+			for (int i = 0; i < this.row_count; i++)
+			{
+				table.Rows.Add (values[i]);
+			}
+		}
+		
+		public object[][] GetValuesArray()
+		{
 			this.UnpackNullFlags ();
 			
 			object[][] values = new object[this.row_count][];
@@ -64,11 +91,9 @@ namespace Epsitec.Cresus.Replication
 				DataCruncher.UnpackColumnFromArray (values, i, n, data, null_flags);
 			}
 			
-			for (int i = 0; i < this.row_count; i++)
-			{
-				table.Rows.Add (values[i]);
-			}
+			return values;
 		}
+		
 		
 		public static PackedTableData CreateFromTable(System.Data.DataTable table)
 		{
@@ -77,7 +102,8 @@ namespace Epsitec.Cresus.Replication
 			int r = table.Rows.Count;
 			int n = table.Columns.Count;
 			
-			data.row_count = r;
+			data.row_count  = r;
+			data.table_name = table.TableName;
 			
 			for (int i = 0; i < n; i++)
 			{
@@ -123,6 +149,7 @@ namespace Epsitec.Cresus.Replication
 				this.column_null_flags.Add (info.GetValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, "IsNull.{0}", i), typeof (byte[])));
 			}
 			
+			this.table_name = info.GetString ("Name");
 			this.row_count = r;
 			this.is_null_flags_array_packed = true;
 		}
@@ -160,6 +187,8 @@ namespace Epsitec.Cresus.Replication
 				
 				info.AddValue (string.Format (System.Globalization.CultureInfo.InvariantCulture, "IsNull.{0}", i), packed);
 			}
+			
+			info.AddValue ("Name", this.table_name);
 		}
 		#endregion
 		
@@ -213,6 +242,7 @@ namespace Epsitec.Cresus.Replication
 		}
 		
 		
+		private string							table_name;
 		private int								row_count;
 		private System.Collections.ArrayList	column_data_rows  = new System.Collections.ArrayList ();
 		private System.Collections.ArrayList	column_null_flags = new System.Collections.ArrayList ();

@@ -115,11 +115,20 @@ namespace Epsitec.Cresus.Replication
 				
 				try
 				{
+					job.Data  = null;
+					job.Error = null;
+					
 					this.ProcessQueueEntry (job);
 				}
 				catch (System.Exception ex)
 				{
 					System.Diagnostics.Debug.WriteLine (string.Format ("Replication: ServerEngine.ProcessQueue failed job for client {0}; {1}", job.Client.ToString (), ex.Message));
+					
+					job.Error = ex.ToString ();
+				}
+				finally
+				{
+					job.SignalReady ();
 				}
 			}
 		}
@@ -127,14 +136,113 @@ namespace Epsitec.Cresus.Replication
 		
 		protected virtual void ProcessQueueEntry(Job job)
 		{
-			//	TODO: traiter la requête...
+			int client_id = job.Client.ClientId;
 			
-			job.SignalReady ();
+			DbId sync_start = job.SyncStartId;
+			DbId sync_end   = job.SyncEndId;
+			
+			using (DbTransaction transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadOnly, this.database))
+			{
+				DataCruncher cruncher = new DataCruncher (this.infrastructure, transaction);
+				System.Collections.ArrayList tables = new System.Collections.ArrayList ();
+				
+				tables.AddRange (this.infrastructure.FindDbTables (transaction, DbElementCat.Any));
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("Found {0} tables.", tables.Count));
+				
+				DbTable def_table_table   = ServerEngine.FindTable (tables, Tags.TableTableDef);
+				DbTable def_column_table  = ServerEngine.FindTable (tables, Tags.TableColumnDef);
+				DbTable def_type_table    = ServerEngine.FindTable (tables, Tags.TableTypeDef);
+				DbTable def_enumval_table = ServerEngine.FindTable (tables, Tags.TableEnumValDef);
+				DbTable log_table         = ServerEngine.FindTable (tables, Tags.TableLog);
+				
+				//	Ces tables sont répliquées de manière un peu particulière, alors on les retire
+				//	de la liste des tables à répliquer automatiquement :
+				
+				tables.Remove (def_table_table);
+				tables.Remove (def_column_table);
+				tables.Remove (def_type_table);
+				tables.Remove (def_enumval_table);
+				tables.Remove (log_table);
+				
+				ReplicationData data = new ReplicationData ();
+				
+				this.ProcessTable (cruncher, sync_start, sync_end, def_table_table, data);
+				this.ProcessTable (cruncher, sync_start, sync_end, def_column_table, data);
+				this.ProcessTable (cruncher, sync_start, sync_end, def_type_table, data);
+				this.ProcessTable (cruncher, sync_start, sync_end, def_enumval_table, data);
+				
+				ServerEngine.RemoveTables (tables, DbReplicationMode.Private);
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("Scrubbed, remaining {0} tables.", tables.Count));
+				
+				for (int i = 0; i < tables.Count; i++)
+				{
+					DbTable table = tables[i] as DbTable;
+					
+					System.Diagnostics.Debug.Assert (table.ReplicationMode == DbReplicationMode.Shared);
+					
+					this.ProcessTable (cruncher, sync_start, sync_end, table, data);
+				}
+				
+				//	Sérialise et comprime le "delta" produit par les appels à la méthode
+				//	ProcessTable. On va faire transiter sur le réseau un nombre minimal de
+				//	données :
+				
+				job.Data = DataCruncher.SerializeAndCompressToMemory (data);
+				
+				transaction.Commit ();
+			}
+		}
+		
+		protected virtual void ProcessTable(DataCruncher cruncher, DbId sync_start, DbId sync_end, DbTable table, ReplicationData data)
+		{
+			System.Data.DataTable data_table = cruncher.ExtractData (table, sync_start, sync_end);
+					
+			if (data_table.Rows.Count > 0)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Table {0} contains {1} rows to replicate.", data_table.TableName, data_table.Rows.Count));
+				
+				data.Add (PackedTableData.CreateFromTable (data_table));
+			}
 		}
 		
 		protected virtual void ProcessShutdown()
 		{
 			System.Diagnostics.Debug.WriteLine (string.Format ("Processing shutdown."));
+		}
+		
+		
+		private static DbTable FindTable(System.Collections.IEnumerable tables, string name)
+		{
+			foreach (DbTable table in tables)
+			{
+				if (table.Name == name)
+				{
+					return table;
+				}
+			}
+			
+			return null;
+		}
+		
+		private static void RemoveTables(System.Collections.ArrayList tables, DbReplicationMode mode)
+		{
+			int i = 0;
+			
+			while (i < tables.Count)
+			{
+				DbTable table = tables[i] as DbTable;
+				
+				if (table.ReplicationMode == mode)
+				{
+					tables.RemoveAt (i);
+				}
+				else
+				{
+					i++;
+				}
+			}
 		}
 		
 		

@@ -2095,7 +2095,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnNextId,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefInternal)
 					};
 				
-				this.CreateTable (table, columns, DbReplicationMode.Shared);
+				this.CreateTable (table, columns, DbReplicationMode.Manual);
 			}
 			
 			public void CreateTableColumnDef()
@@ -2116,7 +2116,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnRefParent,	  types.KeyId,       Nullable.Yes, DbColumnClass.RefId)
 					};
 				
-				this.CreateTable (table, columns, DbReplicationMode.Shared);
+				this.CreateTable (table, columns, DbReplicationMode.Manual);
 			}
 			
 			public void CreateTableTypeDef()
@@ -2134,7 +2134,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnInfoXml,	  types.InfoXml,	 Nullable.No,  DbColumnClass.Data)
 					};
 				
-				this.CreateTable (table, columns, DbReplicationMode.Shared);
+				this.CreateTable (table, columns, DbReplicationMode.Manual);
 			}
 			
 			public void CreateTableEnumValDef()
@@ -2153,7 +2153,7 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnRefType,	  types.KeyId,       Nullable.No,  DbColumnClass.RefId)
 					};
 				
-				this.CreateTable (table, columns, DbReplicationMode.Shared);
+				this.CreateTable (table, columns, DbReplicationMode.Manual);
 			}
 			
 			public void CreateTableLog()
@@ -2169,7 +2169,7 @@ namespace Epsitec.Cresus.Database
 				//	TODO: ajouter ici une colonne définissant la nature du changement (et l'utilisateur
 				//	qui en est la cause).
 				
-				this.CreateTable (table, columns, DbReplicationMode.Shared);
+				this.CreateTable (table, columns, DbReplicationMode.Manual);
 			}
 			
 			public void CreateTableRequestQueue()

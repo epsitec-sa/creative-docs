@@ -23,8 +23,13 @@ namespace Epsitec.Cresus.Replication
 			//	Extrait les données de la table spécifiée en ne considérant que ce qui a changé
 			//	depuis la synchronisation définie par 'sync_id'.
 			
-			long sync_id_min = sync_id.Value;
-			long sync_id_max = DbId.LocalRange * (sync_id.ClientId + 1) - 1;
+			return this.ExtractData (table, sync_id, DbId.CreateId (DbId.LocalRange-1, sync_id.ClientId));
+		}
+		
+		public System.Data.DataTable ExtractData(DbTable table, DbId sync_start_id, DbId sync_end_id)
+		{
+			long sync_id_min = sync_start_id.Value;
+			long sync_id_max = sync_end_id.Value;
 			
 			System.Diagnostics.Debug.Assert (DbId.AnalyzeClass (sync_id_min) == DbIdClass.Standard);
 			System.Diagnostics.Debug.Assert (DbId.AnalyzeClass (sync_id_max) == DbIdClass.Standard);

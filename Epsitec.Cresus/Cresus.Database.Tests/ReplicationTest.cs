@@ -243,5 +243,48 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 		}
+		[Test] public void Check05ServerEngine()
+		{
+			Remoting.IReplicationService service = Services.Engine.GetRemoteReplicationService ("localhost", 1234);
+			
+			Assert.IsNotNull (service);
+			
+			byte[] buffer;
+			
+			DbId from_id = DbId.CreateId (1, 1);
+			DbId to_id   = DbId.CreateId (999999, 1);
+			
+			service.AcceptReplication (new Remoting.ClientIdentity ("test", 1000), from_id, to_id, out buffer);
+			
+			System.Console.WriteLine ("Replication produced {0} bytes of data.", (buffer == null ? 0 : buffer.Length));
+			
+			if (buffer != null)
+			{
+				Replication.ReplicationData data = Replication.DataCruncher.DeserializeAndDecompressFromMemory (buffer) as Replication.ReplicationData;
+				
+				foreach (Replication.PackedTableData packed_table in data.TableData)
+				{
+					System.Console.WriteLine ("Table {0} contains {1} changed rows:", packed_table.Name, packed_table.RowCount);
+					
+					object[][] values = packed_table.GetValuesArray ();
+					
+					foreach (object[] row in values)
+					{
+						System.Text.StringBuilder message = new System.Text.StringBuilder ();
+						
+						for (int i = 0; i < row.Length; i++)
+						{
+							if (i > 0)
+							{
+								message.Append ("; ");
+							}
+							message.Append (row[i]);
+						}
+						
+						System.Console.WriteLine ("  {0}", message.ToString ());
+					}
+				}
+			}
+		}
 	}
 }

@@ -10,5 +10,6 @@ namespace Epsitec.Cresus.Database
 		
 		Private				= 1,		//	information privée, pas de réplication
 		Shared				= 2,		//	information partagée par tous, répliquée
+		Manual				= 3,		//	information partagée, répliquée manuellement
 	}
 }

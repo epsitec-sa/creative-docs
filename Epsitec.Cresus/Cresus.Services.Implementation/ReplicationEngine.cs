@@ -37,6 +37,11 @@ namespace Epsitec.Cresus.Services
 			
 			job.WaitForReady ();
 			
+			if (job.Error != null)
+			{
+				System.Diagnostics.Debug.WriteLine (job.Error);
+			}
+			
 			data = job.Data;
 		}
 		#endregion

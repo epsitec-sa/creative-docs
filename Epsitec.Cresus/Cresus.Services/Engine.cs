@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Services
 		public static Remoting.IConnectionService GetRemoteConnectionService(string machine, int port)
 		{
 			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/ConnectionService.soap", machine, port);
-			System.Type type = typeof (Remoting.IRequestExecutionService);
+			System.Type type = typeof (Remoting.IConnectionService);
 			
 			Remoting.IConnectionService service = (Remoting.IConnectionService) System.Activator.GetObject (type, url);
 			
@@ -157,9 +157,19 @@ namespace Epsitec.Cresus.Services
 		public static Remoting.IOperatorService GetRemoteOperatorService(string machine, int port)
 		{
 			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/OperatorService.soap", machine, port);
-			System.Type type = typeof (Remoting.IRequestExecutionService);
+			System.Type type = typeof (Remoting.IOperatorService);
 			
 			Remoting.IOperatorService service = (Remoting.IOperatorService) System.Activator.GetObject (type, url);
+			
+			return service;
+		}
+		
+		public static Remoting.IReplicationService GetRemoteReplicationService(string machine, int port)
+		{
+			string      url  = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/ReplicationService.soap", machine, port);
+			System.Type type = typeof (Remoting.IReplicationService);
+			
+			Remoting.IReplicationService service = (Remoting.IReplicationService) System.Activator.GetObject (type, url);
 			
 			return service;
 		}

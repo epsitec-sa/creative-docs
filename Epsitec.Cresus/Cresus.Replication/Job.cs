@@ -62,6 +62,18 @@ namespace Epsitec.Cresus.Replication
 			}
 		}
 		
+		public string							Error
+		{
+			get
+			{
+				return this.error;
+			}
+			set
+			{
+				this.error = value;
+			}
+		}
+		
 		
 		public void SignalReady()
 		{
@@ -78,6 +90,7 @@ namespace Epsitec.Cresus.Replication
 		private Database.DbId					sync_start_id;
 		private Database.DbId					sync_end_id;
 		private byte[]							sync_data;
+		private string							error;
 		private System.Threading.AutoResetEvent	wait_event;
 	}
 }
