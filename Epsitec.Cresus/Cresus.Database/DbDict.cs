@@ -8,13 +8,14 @@ namespace Epsitec.Cresus.Database
 	/// paires clef/valeur) stocké dans une table de la base.
 	/// </summary>
 	
-	public class DbDict : IPersistable, IAttachable, System.IDisposable
+	public class DbDict : Epsitec.Common.Types.IStringDict, IPersistable, IAttachable, System.IDisposable
 	{
 		public DbDict()
 		{
 		}
 		
 		
+		#region IStringDict Members
 		public string							this[string key]
 		{
 			get
@@ -40,6 +41,22 @@ namespace Epsitec.Cresus.Database
 				row.BeginEdit ();
 				row[Tags.ColumnDictValue] = value;
 				row.EndEdit ();
+			}
+		}
+		
+		public string[]							Keys
+		{
+			get
+			{
+				System.Data.DataRowCollection rows = this.data_table.Rows;
+				string[] keys = new string[rows.Count];
+				
+				for (int i = 0; i < rows.Count; i++)
+				{
+					keys[i] = rows[i][Tags.ColumnDictKey] as string;
+				}
+				
+				return keys;
 			}
 		}
 		
@@ -79,25 +96,17 @@ namespace Epsitec.Cresus.Database
 			this.command.DeleteRow (row);
 		}
 		
-		
-		public static void CreateTable(DbInfrastructure infrastructure, DbTransaction transaction, string table_name)
+		public void Clear()
 		{
-			//	Crée une table pour stocker un dictionnaire.
-			
-			DbTable table = infrastructure.CreateDbTable (table_name, DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
-			
-			DbType type_dict_key   = infrastructure.ResolveDbType (transaction, Tags.TypeDictKey);
-			DbType type_dict_value = infrastructure.ResolveDbType (transaction, Tags.TypeDictValue);
-			
-			DbColumn col1 = new DbColumn (Tags.ColumnDictKey,   type_dict_key,   Nullable.No, DbColumnClass.Data, DbElementCat.Internal);
-			DbColumn col2 = new DbColumn (Tags.ColumnDictValue, type_dict_value, Nullable.No, DbColumnClass.Data, DbElementCat.Internal);
-			
-			table.Columns.Add (col1);
-			table.Columns.Add (col2);
-			
-			infrastructure.RegisterNewDbTable (transaction, table);
+			this.data_table.Rows.Clear ();
 		}
 		
+		public bool Contains(string key)
+		{
+			System.Data.DataRow row = this.FindRow (key, false);
+			return (row != null);
+		}
+		#endregion
 		
 		#region IAttachable Members
 		public void Attach(DbInfrastructure infrastructure, DbTable table)
@@ -143,6 +152,30 @@ namespace Epsitec.Cresus.Database
 			System.GC.SuppressFinalize (this);
 		}
 		#endregion
+		
+		public static void CreateTable(DbInfrastructure infrastructure, DbTransaction transaction, string table_name)
+		{
+			DbDict.CreateTable (infrastructure, transaction, table_name, DbElementCat.UserDataManaged, DbRevisionMode.Disabled);
+		}
+		
+		public static void CreateTable(DbInfrastructure infrastructure, DbTransaction transaction, string table_name, DbElementCat category, DbRevisionMode revision_mode)
+		{
+			//	Crée une table pour stocker un dictionnaire.
+			
+			DbTable table = infrastructure.CreateDbTable (table_name, category, revision_mode);
+			
+			DbType type_dict_key   = infrastructure.ResolveDbType (transaction, Tags.TypeDictKey);
+			DbType type_dict_value = infrastructure.ResolveDbType (transaction, Tags.TypeDictValue);
+			
+			DbColumn col1 = new DbColumn (Tags.ColumnDictKey,   type_dict_key,   Nullable.No, DbColumnClass.Data, DbElementCat.Internal);
+			DbColumn col2 = new DbColumn (Tags.ColumnDictValue, type_dict_value, Nullable.No, DbColumnClass.Data, DbElementCat.Internal);
+			
+			table.Columns.Add (col1);
+			table.Columns.Add (col2);
+			
+			infrastructure.RegisterNewDbTable (transaction, table);
+		}
+		
 		
 		protected virtual void Dispose(bool disposing)
 		{

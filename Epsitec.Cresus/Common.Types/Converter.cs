@@ -130,6 +130,7 @@ namespace Epsitec.Common.Types
 			}
 		}
 		
+		
 		public static bool Convert(object obj, out string value)
 		{
 			if ((obj == null) || (obj is System.DBNull))
@@ -147,6 +148,8 @@ namespace Epsitec.Common.Types
 			{
 				System.TypeCode code = System.Convert.GetTypeCode (obj);
 				
+				long num;
+				
 				switch (code)
 				{
 					case System.TypeCode.Boolean:	value = ((System.Boolean) obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
@@ -157,6 +160,11 @@ namespace Epsitec.Common.Types
 					case System.TypeCode.Int16:		value = ((System.Int16)   obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
 					case System.TypeCode.Int32:		value = ((System.Int32)   obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
 					case System.TypeCode.Int64:		value = ((System.Int64)   obj).ToString (System.Globalization.CultureInfo.InvariantCulture); return true;
+					
+					case System.TypeCode.DateTime:
+						num   = ((System.DateTime)obj).Ticks % 10000000;
+						value = string.Concat (((System.DateTime)obj).ToString ("s", System.Globalization.CultureInfo.InvariantCulture), "+", num.ToString (System.Globalization.CultureInfo.InvariantCulture));
+						return true;
 				}
 			}
 			
@@ -327,14 +335,53 @@ namespace Epsitec.Common.Types
 		{
 			if ((obj == null) || (obj is System.DBNull))
 			{
-				throw new System.NullReferenceException ("Cannot convert null to DateTime.");
+				value = new System.DateTime ();
+				return false;
 			}
 			
-			if (obj.GetType () == typeof (System.DateTime))
+			System.TypeCode code = System.Convert.GetTypeCode (obj);
+			
+			if (code == System.TypeCode.DateTime)
 			{
 				value = (System.DateTime) obj;
 				return true;
 			}
+			if (code == System.TypeCode.String)
+			{
+				string text = obj as string;
+				
+				if (text.Length == 0)
+				{
+					value = new System.DateTime ();
+					return false;
+				}
+				
+				string[] args = text.Split ('+');
+				
+				if (args.Length == 1)
+				{
+					value = System.DateTime.Parse (text, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal);
+					return true;
+				}
+				else if (args.Length == 2)
+				{
+					long ticks  = System.DateTime.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.AdjustToUniversal).Ticks;
+					long adjust = System.Int64.Parse (args[1], System.Globalization.CultureInfo.InvariantCulture);
+					
+					value = new System.DateTime (ticks + adjust);
+					
+					return true;
+				}
+			}
+			
+			long num;
+
+			if (Converter.Convert (obj, out num))
+			{
+				value = new System.DateTime (num);
+				return true;
+			}
+			
 			
 			throw new System.NotSupportedException (string.Format ("Type {0}: conversion not supported.", obj.GetType ().Name));
 		}
@@ -406,6 +453,16 @@ namespace Epsitec.Common.Types
 						return true;
 					}
 				}
+				else if (type == typeof (System.DateTime))
+				{
+					System.DateTime result;
+					
+					if (Converter.Convert (obj, out result))
+					{
+						value = result;
+						return true;
+					}
+				}
 				else if (type.IsEnum)
 				{
 					System.Enum result;
@@ -443,6 +500,7 @@ namespace Epsitec.Common.Types
 			value = null;
 			return false;
 		}
+		
 		
 		public static string[] GetSplitEnumValues(System.Type type, System.Enum value)
 		{
