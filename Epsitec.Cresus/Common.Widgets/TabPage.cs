@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public string					TabTitle
+		public string							TabTitle
 		{
 			get
 			{
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Drawing.Rectangle		TabBounds
+		public Drawing.Rectangle				TabBounds
 		{
 			get
 			{
@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Drawing.Size				TabSize
+		public Drawing.Size						TabSize
 		{
 			get
 			{
@@ -57,7 +57,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public TabButton				TabButton
+		public TabButton						TabButton
 		{
 			get
 			{
@@ -65,7 +65,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public TabBook					Book
+		public TabBook							Book
 		{
 			get
 			{
@@ -74,7 +74,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Direction				Direction
+		public Direction						Direction
 		{
 			get
 			{
@@ -88,7 +88,7 @@ namespace Epsitec.Common.Widgets
 				return book.Direction;
 			}
 		}
-		public int						Rank
+		public int								Rank
 		{
 			get
 			{
@@ -101,19 +101,19 @@ namespace Epsitec.Common.Widgets
 				{
 					this.rank     = value;
 					this.TabIndex = this.rank;
-					this.OnRankChanged(System.EventArgs.Empty);
+					this.OnRankChanged();
 				}
 			}
 		}
 		
 		
-		public event System.EventHandler RankChanged;
+		public event Support.EventHandler		RankChanged;
 		
-		protected virtual void OnRankChanged(System.EventArgs e)
+		protected virtual void OnRankChanged()
 		{
 			if ( this.RankChanged != null )
 			{
-				this.RankChanged(this, e);
+				this.RankChanged(this);
 			}
 		}
 
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		protected int					rank;
-		protected TabButton				tabButton;
+		protected int							rank;
+		protected TabButton						tabButton;
 	}
 }
