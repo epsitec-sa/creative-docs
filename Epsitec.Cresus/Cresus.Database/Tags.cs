@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 23/04/2004
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
@@ -29,8 +29,7 @@ namespace Epsitec.Cresus.Database
 		public const string	ColumnRefTable		= "CREF_TABLE";
 		public const string	ColumnRefType		= "CREF_TYPE";
 		public const string	ColumnRefColumn		= "CREF_COLUMN";
-		public const string	ColumnRefSource		= "CREF_SOURCE";
-		public const string	ColumnRefTarget		= "CREF_TARGET";
+		public const string	ColumnRefParent		= "CREF_PARENT_TABLE";
 		
 		//	Noms des tables "Crésus" fondamentales :
 		
@@ -38,6 +37,5 @@ namespace Epsitec.Cresus.Database
 		public const string	TableColumnDef		= "CR_COLUMN_DEF";
 		public const string	TableTypeDef		= "CR_TYPE_DEF";
 		public const string	TableEnumValDef		= "CR_ENUMVAL_DEF";
-		public const string	TableRelationDef	= "CR_RELATION_DEF";
 	}
 }

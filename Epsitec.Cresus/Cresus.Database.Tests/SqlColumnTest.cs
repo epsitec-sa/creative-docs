@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Database
 			SqlColumn sql_col_a = new SqlColumn ("A", DbRawType.Int32);
 			SqlColumn sql_col_b = new SqlColumn ("B", DbRawType.Int64, Nullable.Yes);
 			SqlColumn sql_col_c = new SqlColumn ("C", DbRawType.String, 100, false, Nullable.Undefined);
-			SqlColumn sql_col_d = new SqlColumn ("D", DbRawType.ByteArray, 50, true, Nullable.Yes);
+			SqlColumn sql_col_d = new SqlColumn ("D", DbRawType.ByteArray, Nullable.Yes);
 			
 			Assert.AreEqual ("A",				sql_col_a.Name);
 			Assert.AreEqual (DbRawType.Int32,	sql_col_a.Type);
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual ("D",				sql_col_d.Name);
 			Assert.AreEqual (DbRawType.ByteArray,sql_col_d.Type);
 			Assert.AreEqual (true,				sql_col_d.IsNullAllowed);
-			Assert.AreEqual (50,					sql_col_d.Length);
+			Assert.AreEqual (1,					sql_col_d.Length);
 			Assert.AreEqual (true,				sql_col_d.IsFixedLength);
 		}
 

@@ -29,20 +29,20 @@ namespace Epsitec.Cresus.Database
 				table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
 				
 				Assert.IsNotNull (table);
-				Assert.IsTrue (table.InternalKey.Id == 1);
-				Assert.IsTrue (table.Columns.Count == 8);
+				Assert.AreEqual (1L, table.InternalKey.Id);
+				Assert.AreEqual (8,  table.Columns.Count);
 				
 				table = infrastructure.ResolveDbTable (null, "CR_COLUMN_DEF");
 				
 				Assert.IsNotNull (table);
-				Assert.IsTrue (table.InternalKey.Id == 2);
-				Assert.IsTrue (table.Columns.Count == 9);
+				Assert.AreEqual (2L, table.InternalKey.Id);
+				Assert.AreEqual (10, table.Columns.Count);
 				
 				table = infrastructure.ResolveDbTable (null, "CR_TYPE_DEF");
 				
 				Assert.IsNotNull (table);
-				Assert.IsTrue (table.InternalKey.Id == 3);
-				Assert.IsTrue (table.Columns.Count == 7);
+				Assert.AreEqual (3L, table.InternalKey.Id);
+				Assert.AreEqual (7,  table.Columns.Count);
 				
 				Assert.AreEqual (0, infrastructure.CountMatchingRows (null, "CR_COLUMN_DEF", "CR_NAME", DbSqlStandard.MakeSimpleSqlName ("MyColumn")));
 				Assert.AreEqual (4, infrastructure.CountMatchingRows (null, "CR_COLUMN_DEF", "CR_NAME", "CR_INFO"));
@@ -52,9 +52,9 @@ namespace Epsitec.Cresus.Database
 				
 				table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
 				
-				Assert.AreEqual (6L, infrastructure.NewRowIdInTable (null, table.InternalKey, 2));
-				Assert.AreEqual (8L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
-				Assert.AreEqual (8L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
+				Assert.AreEqual (5L, infrastructure.NewRowIdInTable (null, table.InternalKey, 2));
+				Assert.AreEqual (7L, infrastructure.NewRowIdInTable (null, table.InternalKey, 0));
+				Assert.AreEqual (7L, infrastructure.NewRowIdInTable (null, table.InternalKey, 1));
 			}
 		}
 		

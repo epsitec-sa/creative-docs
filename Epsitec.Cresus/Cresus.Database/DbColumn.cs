@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Database
 			return (xml.Name == "null") ? null : new DbColumn (xml);
 		}
 		
-		public static DbColumn CreateRefColumn(string column_name, string target_table_name, DbColumnClass column_class, DbType type)
+		public static DbColumn CreateRefColumn(string column_name, string parent_table_name, DbColumnClass column_class, DbType type)
 		{
 			System.Diagnostics.Debug.Assert (type != null);
 			
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Database
 			
 			column.DefineColumnClass (column_class);
 			column.DefineCategory (DbElementCat.UserDataManaged);
-			column.DefineTargetTableName (target_table_name);
+			column.DefineParentTableName (parent_table_name);
 			
 			return column;
 		}
@@ -157,15 +157,15 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public string							TargetTableName
+		public string							ParentTableName
 		{
 			//	Lorsqu'une colonne appartient à l'une des classes DbColumnClass.RefXyz, cela signifie
 			//	que le colonne pointe sur une autre table (foreign key); le nom de cette table est défini
-			//	par la propriété TargetTableName :
+			//	par la propriété ParentTableName :
 			
 			get
 			{
-				return this.Attributes[Tags.Target];
+				return this.Attributes[Tags.Parent];
 			}
 		}
 		
@@ -294,23 +294,23 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		internal void DefineTargetTableName(string target_table_name)
+		internal void DefineParentTableName(string parent_table_name)
 		{
-			string current_name = this.TargetTableName;
+			string current_name = this.ParentTableName;
 			
-			if (current_name == target_table_name)
+			if (current_name == parent_table_name)
 			{
 				return;
 			}
 			
 			if (current_name != null)
 			{
-				string message = string.Format ("Column '{0}' cannot change its target table name from '{1}' to '{2}'.",
-					/**/						this.Name, current_name, target_table_name);
+				string message = string.Format ("Column '{0}' cannot change its parent table name from '{1}' to '{2}'.",
+					/**/						this.Name, current_name, parent_table_name);
 				throw new System.InvalidOperationException (message);
 			}
 
-			this.Attributes.SetAttribute (Tags.Target, target_table_name);
+			this.Attributes.SetAttribute (Tags.Parent, parent_table_name);
 		}
 		
 		internal void DefineInternalKey(DbKey key)

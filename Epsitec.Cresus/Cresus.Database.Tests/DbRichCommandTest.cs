@@ -26,11 +26,17 @@ namespace Epsitec.Cresus.Database
 			db_table_b.Columns.AddRange (infrastructure.CreateRefColumns ("Personne", "Personnes", DbKeyMatchMode.ExactIdRevision));
 			db_table_b.Columns.Add (infrastructure.CreateColumn ("Ville", db_type_name));
 			
+			Assertion.AssertEquals ("Personnes", db_table_b.Columns[3].ParentTableName);
+			Assertion.AssertEquals ("Personnes", db_table_b.Columns[4].ParentTableName);
+			
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_a.Name, db_table_a.Columns.Count);
 			System.Console.Out.WriteLine ("Table {0} has {1} columns.", db_table_b.Name, db_table_b.Columns.Count);
 			
 			infrastructure.RegisterNewDbTable (null, db_table_a);
 			infrastructure.RegisterNewDbTable (null, db_table_b);
+			
+			infrastructure.RegisterCrossTableReferences (null, db_table_a);
+			infrastructure.RegisterCrossTableReferences (null, db_table_b);
 			
 			SqlSelect select_a = new SqlSelect ();
 			SqlSelect select_b = new SqlSelect ();
@@ -91,45 +97,49 @@ namespace Epsitec.Cresus.Database
 				command.UpdateTables ();
 				transaction.Commit ();
 			}
-			
-			infrastructure.UnregisterDbTable (null, db_table_a);
-			infrastructure.UnregisterDbTable (null, db_table_b);
 		}
 		
 		[Test] public void Check02CreateEmptyDataSet()
 		{
-			try
-			{
-				System.IO.File.Delete (@"C:\Program Files\firebird15\Data\Epsitec\FICHE.FIREBIRD");
-			}
-			catch {}
+			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
 			
-			DbAccess db_access = DbInfrastructure.CreateDbAccess ("fiche");
-			DbInfrastructure infrastructure = new DbInfrastructure ();
-			
-			infrastructure.CreateDatabase (db_access);
-			
-			DbTable db_table_a = infrastructure.CreateDbTable ("Personnes", DbElementCat.UserDataManaged);
-			DbTable db_table_b = infrastructure.CreateDbTable ("Domiciles", DbElementCat.UserDataManaged);
+			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
+			DbTable db_table_b = infrastructure.ResolveDbTable (null, "Domiciles");
 			
 			DbType db_type_name = infrastructure.ResolveDbType (null, "CR_NameType");
 			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR_KeyIdType");
 			DbType db_type_rev  = infrastructure.ResolveDbType (null, "CR_KeyRevisionType");
 			
-			db_table_a.Columns.Add (infrastructure.CreateColumn ("Nom", db_type_name));
-			db_table_a.Columns.Add (infrastructure.CreateColumn ("Prenom", db_type_name));
+			Assertion.AssertEquals (5, db_table_a.Columns.Count);
+			Assertion.AssertEquals (6, db_table_b.Columns.Count);
 			
-			db_table_b.Columns.AddRange (infrastructure.CreateRefColumns ("Personne", "Personnes", DbKeyMatchMode.ExactIdRevision));
-			db_table_b.Columns.Add (infrastructure.CreateColumn ("Ville", db_type_name));
+			Assertion.AssertEquals ("Nom",    db_table_a.Columns[3].Name);
+			Assertion.AssertEquals ("Prenom", db_table_a.Columns[4].Name);
+			Assertion.AssertEquals (db_type_name.InternalKey,  db_table_a.Columns[3].Type.InternalKey);
+			Assertion.AssertEquals (db_type_name.InternalKey,  db_table_a.Columns[4].Type.InternalKey);
 			
-			infrastructure.RegisterNewDbTable (null, db_table_a);
-			infrastructure.RegisterNewDbTable (null, db_table_b);
+			Assertion.AssertEquals ("Personne", db_table_b.Columns[3].Name);
+			Assertion.AssertEquals (DbColumnClass.RefTupleId, db_table_b.Columns[3].ColumnClass);
+			Assertion.AssertEquals ("Personnes", db_table_b.Columns[3].ParentTableName);
+			Assertion.AssertEquals ("Personne", db_table_b.Columns[4].Name);
+			Assertion.AssertEquals (DbColumnClass.RefTupleRevision, db_table_b.Columns[4].ColumnClass);
+			Assertion.AssertEquals ("Personnes", db_table_b.Columns[4].ParentTableName);
+			Assertion.AssertEquals ("Ville", db_table_b.Columns[5].Name);
+			Assertion.AssertEquals (db_type_name.InternalKey, db_table_b.Columns[5].Type.InternalKey);
 			
 			DbRichCommand command = new DbRichCommand ();
 			
 			command.Tables.Add (db_table_a);
 			command.Tables.Add (db_table_b);
 			command.CreateEmptyDataSet (infrastructure);
+		}
+		
+		[Test] public void Check99UnregisterDbTables()
+		{
+			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
+			
+			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
+			DbTable db_table_b = infrastructure.ResolveDbTable (null, "Domiciles");
 			
 			infrastructure.UnregisterDbTable (null, db_table_a);
 			infrastructure.UnregisterDbTable (null, db_table_b);
