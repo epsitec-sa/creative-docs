@@ -26,6 +26,15 @@ namespace Epsitec.Cresus.Database
 			this.Initialise (type);
 		}
 		
+		public DbType(System.Xml.XmlElement xml)
+		{
+		}
+		
+		
+		internal virtual void SerialiseXmlAttributes(System.Text.StringBuilder buffer)
+		{
+		}
+		
 		
 		internal void DefineAttributes(string[] attributes)
 		{
@@ -36,7 +45,6 @@ namespace Epsitec.Cresus.Database
 			
 			this.attributes = new DbAttributes (attributes);
 		}
-		
 		
 		internal void Initialise(DbSimpleType type)
 		{

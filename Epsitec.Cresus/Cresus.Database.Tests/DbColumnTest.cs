@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_b = new DbColumn ("B", DbSimpleType.String, 100, true);
 			DbColumn column_c = new DbColumn ("C", DbSimpleType.Time);
 			
-			Assertion.Assert (column_a.Type.GetType () == typeof (DbType));
+			Assertion.Assert (column_a.Type.GetType () == typeof (DbTypeNum));
 			Assertion.Assert (column_b.Type.GetType () == typeof (DbTypeString));
 			Assertion.Assert (column_c.Type.GetType () == typeof (DbType));
 		}

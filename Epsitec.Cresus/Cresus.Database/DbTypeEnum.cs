@@ -8,17 +8,35 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public class DbTypeEnum : DbType, System.Collections.ICollection
 	{
-		public DbTypeEnum() : base ()
+		public DbTypeEnum() : base (DbSimpleType.String)
 		{
 		}
 		
-		public DbTypeEnum(params string[] attributes) : base (attributes)
+		public DbTypeEnum(params string[] attributes) : base (DbSimpleType.String, attributes)
 		{
 		}
 		
 		public DbTypeEnum(System.Collections.ICollection values, params string[] attributes) : this (attributes)
 		{
 			this.Initialise (values);
+		}
+		
+		public DbTypeEnum(System.Xml.XmlElement xml) : base (DbSimpleType.String)
+		{
+			string arg_nmlen = xml.GetAttribute ("nmlen");
+			
+			if (arg_nmlen != "")
+			{
+				this.max_name_length = System.Int32.Parse (arg_nmlen, System.Globalization.CultureInfo.InvariantCulture);
+			}
+		}
+		
+		
+		internal override void SerialiseXmlAttributes(System.Text.StringBuilder buffer)
+		{
+			buffer.Append (@" nmlen=""");
+			buffer.Append (this.max_name_length.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			buffer.Append (@"""");
 		}
 		
 		
@@ -64,6 +82,11 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public int							MaxNameLength
+		{
+			get { return this.max_name_length; }
+		}
+		
 		
 		
 		public override object Clone()
@@ -71,6 +94,7 @@ namespace Epsitec.Cresus.Database
 			DbTypeEnum type = base.Clone () as DbTypeEnum;
 			
 			type.CopyValues (this.values);
+			type.max_name_length = this.max_name_length;
 			
 			return type;
 		}
@@ -96,8 +120,6 @@ namespace Epsitec.Cresus.Database
 		
 		protected override void EnsureTypeIsNotInitialised()
 		{
-			base.EnsureTypeIsNotInitialised ();
-			
 			if (this.values != null)
 			{
 				throw new System.InvalidOperationException ("Cannot reinitialise type");
@@ -146,5 +168,6 @@ namespace Epsitec.Cresus.Database
 		
 		
 		protected DbEnumValue[]				values;
+		protected int						max_name_length = 8;
 	}
 }

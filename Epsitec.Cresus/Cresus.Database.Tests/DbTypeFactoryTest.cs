@@ -7,56 +7,98 @@ namespace Epsitec.Cresus.Database
 	{
 		[Test] public void CheckNewTypeBase()
 		{
-			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
-			
-			doc.LoadXml ("<type class='base' />");
-			DbType type = DbTypeFactory.NewType (doc.DocumentElement);
+			DbType type = DbTypeFactory.NewType ("<type class='base'/>");
 			
 			Assertion.Assert (type.GetType () == typeof (DbType));
 		}
 		
 		[Test] public void CheckNewTypeNum()
 		{
-			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+			DbTypeNum type;
 			
-			doc.LoadXml ("<type class='num' />");
-			DbType type = DbTypeFactory.NewType (doc.DocumentElement);
+			type = DbTypeFactory.NewType ("<type class='num' type='Int16'/>") as DbTypeNum;
 			
 			Assertion.Assert (type.GetType () == typeof (DbTypeNum));
+			Assertion.AssertEquals (DbRawType.Int16, type.NumDef.InternalRawType);
+			
+			type = DbTypeFactory.NewType ("<type class='num' digits='5' shift='2' min='0.00' max='200.00'/>") as DbTypeNum;
+			Assertion.Assert (type.GetType () == typeof (DbTypeNum));
+			Assertion.AssertEquals (DbRawType.Unsupported, type.NumDef.InternalRawType);
+			Assertion.AssertEquals (5, type.NumDef.DigitPrecision);
+			Assertion.AssertEquals (2, type.NumDef.DigitShift);
+			Assertion.AssertEquals (  0.00M, type.NumDef.MinValue);
+			Assertion.AssertEquals (200.00M, type.NumDef.MaxValue);
 		}
 		
 		[Test] public void CheckNewTypeEnum()
 		{
-			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+			DbTypeEnum type;
 			
-			doc.LoadXml ("<type class='enum' />");
-			DbType type = DbTypeFactory.NewType (doc.DocumentElement);
+			type = DbTypeFactory.NewType ("<type class='enum' nmlen='5'/>") as DbTypeEnum;
 			
 			Assertion.Assert (type.GetType () == typeof (DbTypeEnum));
+			Assertion.AssertEquals (5, type.MaxNameLength);
 		}
 		
 		[Test] public void CheckNewTypeString()
 		{
-			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+			DbTypeString type;
 			
-			doc.LoadXml ("<type class='str' />");
-			DbType type = DbTypeFactory.NewType (doc.DocumentElement);
-			
+			type = DbTypeFactory.NewType ("<type class='str' length='100'/>") as DbTypeString;
 			Assertion.Assert (type.GetType () == typeof (DbTypeString));
+			Assertion.AssertEquals (100, type.Length);
+			Assertion.AssertEquals (false, type.IsFixedLength);
+			
+			type = DbTypeFactory.NewType ("<type class='str' length='100' fixed='0'/>") as DbTypeString;
+			Assertion.AssertEquals (false, type.IsFixedLength);
+			
+			type = DbTypeFactory.NewType ("<type class='str' length='100' fixed='1'/>") as DbTypeString;
+			Assertion.AssertEquals (true, type.IsFixedLength);
 		}
 		
 		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckNewTypeXmlEx1()
 		{
-			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
-			doc.LoadXml ("<foo><bar>x</bar></foo>");
-			DbType type = DbTypeFactory.NewType (doc.DocumentElement);
+			DbType type = DbTypeFactory.NewType ("<foo><bar>x</bar></foo>");
 		}
 		
 		[Test] [ExpectedException (typeof (System.ArgumentException))] public void CheckNewTypeXmlEx2()
 		{
-			System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
-			doc.LoadXml ("<type x='a'></type>");
-			DbType type = DbTypeFactory.NewType (doc.DocumentElement);
+			DbType type = DbTypeFactory.NewType ("<type x='a'></type>");
+		}
+		
+		[Test] public void CheckConvertTypeToXml()
+		{
+			DbType type;
+			string xml;
+			DbType temp;
+			
+			type = new DbType (DbSimpleType.Guid);
+			xml  = DbTypeFactory.ConvertTypeToXml (type);
+			temp = DbTypeFactory.NewType (xml);
+			
+			System.Console.Out.WriteLine ("XML: " + xml);
+			Assertion.Assert (temp.GetType () == type.GetType ());
+			
+			type = new DbTypeEnum ();
+			xml  = DbTypeFactory.ConvertTypeToXml (type);
+			temp = DbTypeFactory.NewType (xml);
+			
+			System.Console.Out.WriteLine ("XML: " + xml);
+			Assertion.Assert (temp.GetType () == type.GetType ());
+			
+			type = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int16));
+			xml  = DbTypeFactory.ConvertTypeToXml (type);
+			temp = DbTypeFactory.NewType (xml);
+			
+			System.Console.Out.WriteLine ("XML: " + xml);
+			Assertion.Assert (temp.GetType () == type.GetType ());
+			
+			type = new DbTypeString (100);
+			xml  = DbTypeFactory.ConvertTypeToXml (type);
+			temp = DbTypeFactory.NewType (xml);
+			
+			System.Console.Out.WriteLine ("XML: " + xml);
+			Assertion.Assert (temp.GetType () == type.GetType ());
 		}
 	}
 }

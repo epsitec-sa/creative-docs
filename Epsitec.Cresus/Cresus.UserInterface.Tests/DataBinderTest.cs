@@ -41,7 +41,7 @@ namespace Epsitec.Common.Support.Tests
 			
 			binder.DataStore = data;
 			
-			DbType   db_bool_type = new DbType (DbNumDef.FromRawType (DbRawType.Boolean), "name=boolean");
+			DbType   db_bool_type = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Boolean), "name=boolean");
 			DbTable  db_table = new DbTable ("x");
 			DbColumn db_col_a = new DbColumn ("a", db_bool_type);
 			DbColumn db_col_b = new DbColumn ("b", db_bool_type);

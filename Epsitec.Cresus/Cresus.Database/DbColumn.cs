@@ -123,6 +123,11 @@ namespace Epsitec.Cresus.Database
 					DbTypeString type = this.type as DbTypeString;
 					return type.Length;
 				}
+				if (this.Type is DbTypeEnum)
+				{
+					DbTypeEnum type = this.Type as DbTypeEnum;
+					return type.MaxNameLength;
+				}
 				
 				return 1;
 			}
