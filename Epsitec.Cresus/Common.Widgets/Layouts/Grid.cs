@@ -453,9 +453,9 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.root = root;
 			this.Invalidate ();
 			
-			this.root.LayoutChanged       += new EventHandler (this.HandleRootLayoutChanged);
-			this.root.ChildrenChanged     += new EventHandler (this.HandleRootChildrenChanged);
-			this.root.PreparePaint        += new EventHandler (this.HandleRootPreparePaint);
+			this.root.LayoutChanged       += new Support.EventHandler (this.HandleRootLayoutChanged);
+			this.root.ChildrenChanged     += new Support.EventHandler (this.HandleRootChildrenChanged);
+			this.root.PreparePaint        += new Support.EventHandler (this.HandleRootPreparePaint);
 			this.root.PaintForeground     += new PaintEventHandler (this.HandleRootPaintForeground);
 			this.root.PreProcessing	      += new MessageEventHandler (this.HandleRootPreProcessing);
 			this.root.PaintBoundsCallback += new PaintBoundsCallback (this.HandleRootPaintBoundsCallback);
@@ -465,9 +465,9 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		protected void DetachRootWidget()
 		{
-			this.root.LayoutChanged       -= new EventHandler (this.HandleRootLayoutChanged);
-			this.root.ChildrenChanged     -= new EventHandler (this.HandleRootChildrenChanged);
-			this.root.PreparePaint        -= new EventHandler (this.HandleRootPreparePaint);
+			this.root.LayoutChanged       -= new Support.EventHandler (this.HandleRootLayoutChanged);
+			this.root.ChildrenChanged     -= new Support.EventHandler (this.HandleRootChildrenChanged);
+			this.root.PreparePaint        -= new Support.EventHandler (this.HandleRootPreparePaint);
 			this.root.PaintForeground     -= new PaintEventHandler (this.HandleRootPaintForeground);
 			this.root.PreProcessing	      -= new MessageEventHandler (this.HandleRootPreProcessing);
 			this.root.PaintBoundsCallback -= new PaintBoundsCallback (this.HandleRootPaintBoundsCallback);

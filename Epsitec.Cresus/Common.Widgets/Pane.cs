@@ -494,7 +494,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public event EventHandler SizeChanged;
+		public event Support.EventHandler	SizeChanged;
 
 		protected PaneStyle					paneStyle = PaneStyle.LeftRight;
 		protected PaneBehaviour				paneBehaviour = PaneBehaviour.Draft;

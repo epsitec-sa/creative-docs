@@ -144,18 +144,18 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		protected void AttachPanel()
 		{
-			this.panel.LayoutChanged   += new EventHandler (this.HandlePanelLayoutChanged);
-			this.panel.ChildrenChanged += new EventHandler (this.HandlePanelChildrenChanged);
-			this.panel.PreparePaint    += new EventHandler (this.HandlePanelPreparePaint);
+			this.panel.LayoutChanged   += new Support.EventHandler (this.HandlePanelLayoutChanged);
+			this.panel.ChildrenChanged += new Support.EventHandler (this.HandlePanelChildrenChanged);
+			this.panel.PreparePaint    += new Support.EventHandler (this.HandlePanelPreparePaint);
 			
 			this.panel.SetEventPropagation (Widget.Propagate.ChildrenChanged, true, Widget.Setting.IncludeChildren);
 		}
 		
 		protected void DetachPanel()
 		{
-			this.panel.LayoutChanged   -= new EventHandler (this.HandlePanelLayoutChanged);
-			this.panel.ChildrenChanged -= new EventHandler (this.HandlePanelChildrenChanged);
-			this.panel.PreparePaint    -= new EventHandler (this.HandlePanelPreparePaint);
+			this.panel.LayoutChanged   -= new Support.EventHandler (this.HandlePanelLayoutChanged);
+			this.panel.ChildrenChanged -= new Support.EventHandler (this.HandlePanelChildrenChanged);
+			this.panel.PreparePaint    -= new Support.EventHandler (this.HandlePanelPreparePaint);
 		}
 		
 		

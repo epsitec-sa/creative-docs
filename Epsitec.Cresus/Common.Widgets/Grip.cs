@@ -202,8 +202,8 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public event EventHandler			DragBegin;
-		public event EventHandler			DragEnd;
+		public event Support.EventHandler	DragBegin;
+		public event Support.EventHandler	DragEnd;
 		public event DragEventHandler		Dragging;
 		
 		protected GripType					grip_type;

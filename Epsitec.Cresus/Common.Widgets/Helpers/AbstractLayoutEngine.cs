@@ -77,9 +77,9 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			if (panel != null)
 			{
-				panel.LayoutChanged   += new EventHandler (this.HandlePanelLayoutChanged);
-				panel.ChildrenChanged += new EventHandler (this.HandlePanelChildrenChanged);
-				panel.PreparePaint    += new EventHandler (this.HandlePanelPreparePaint);
+				panel.LayoutChanged   += new Support.EventHandler (this.HandlePanelLayoutChanged);
+				panel.ChildrenChanged += new Support.EventHandler (this.HandlePanelChildrenChanged);
+				panel.PreparePaint    += new Support.EventHandler (this.HandlePanelPreparePaint);
 				panel.LayoutUpdate    += new Epsitec.Common.Widgets.Layouts.UpdateEventHandler(this.HandlePanelLayoutUpdate);
 				
 				panel.SetEventPropagation (Widget.Propagate.ChildrenChanged, true,
@@ -93,9 +93,9 @@ namespace Epsitec.Common.Widgets.Helpers
 		{
 			if (panel != null)
 			{
-				panel.LayoutChanged   -= new EventHandler (this.HandlePanelLayoutChanged);
-				panel.ChildrenChanged -= new EventHandler (this.HandlePanelChildrenChanged);
-				panel.PreparePaint    -= new EventHandler (this.HandlePanelPreparePaint);
+				panel.LayoutChanged   -= new Support.EventHandler (this.HandlePanelLayoutChanged);
+				panel.ChildrenChanged -= new Support.EventHandler (this.HandlePanelChildrenChanged);
+				panel.PreparePaint    -= new Support.EventHandler (this.HandlePanelPreparePaint);
 				panel.LayoutUpdate    -= new Epsitec.Common.Widgets.Layouts.UpdateEventHandler(this.HandlePanelLayoutUpdate);
 			}
 		}
