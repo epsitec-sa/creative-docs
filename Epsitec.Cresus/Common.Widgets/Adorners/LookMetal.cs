@@ -316,7 +316,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 				else
 				{
-					this.PaintImageButton(graphics, rInside, 3);
+					this.PaintImageButton(graphics, rect, 3);
 				}
 			}
 			else if ( style == ButtonStyle.Scroller ||
@@ -491,7 +491,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				this.PaintImageButton(graphics, frameRect, 18);
 			}
 
-			if ( !tabRect.IsSurfaceZero )
+			if ( !tabRect.IsSurfaceZero && (state&WidgetState.Engaged) != 0 )
 			{
 				this.PaintImageButton(graphics, tabRect, 19);
 			}
@@ -585,11 +585,8 @@ namespace Epsitec.Common.Widgets.Adorner
 			rect = frameRect;
 			rect.Deflate(0.5);
 			graphics.LineWidth = 1;
-			graphics.AddRectangle(rect);
+			this.RectangleGroupBox(graphics, rect, titleRect.Left, titleRect.Right);
 			graphics.RenderSolid(this.colorBorder);
-
-			graphics.AddFilledRectangle(titleRect);
-			graphics.RenderSolid(this.colorWindow);
 		}
 
 		public void PaintSepLine(Drawing.Graphics graphics,
@@ -1244,6 +1241,18 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 		}
 
+
+		// Dessine un rectangle
+		protected void RectangleGroupBox(Drawing.Graphics graphics,
+										 Drawing.Rectangle rect,
+										 double startX, double endX)
+		{
+			graphics.AddLine(rect.Left, rect.Top, startX, rect.Top);
+			graphics.AddLine(endX, rect.Top, rect.Right, rect.Top);
+			graphics.AddLine(rect.Left, rect.Bottom, rect.Right, rect.Bottom);
+			graphics.AddLine(rect.Left, rect.Bottom, rect.Left, rect.Top);
+			graphics.AddLine(rect.Right, rect.Bottom, rect.Right, rect.Top);
+		}
 
 		// Crée le chemin d'un rectangle à coins arrondis.
 		protected Drawing.Path PathRoundRectangle(Drawing.Rectangle rect, double radius)

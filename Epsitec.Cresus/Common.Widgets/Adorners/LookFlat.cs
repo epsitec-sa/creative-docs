@@ -409,7 +409,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.RenderSolid(this.colorBackDisabled);
 			}
 
-			if ( !tabRect.IsSurfaceZero )
+			if ( !tabRect.IsSurfaceZero && (state&WidgetState.Engaged) != 0 )
 			{
 				if ( dir == Direction.Up )
 				{

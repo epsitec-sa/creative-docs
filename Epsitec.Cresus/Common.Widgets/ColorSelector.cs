@@ -390,6 +390,16 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler	Changed;
 		
 
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			if ( !this.BackColor.IsEmpty )
+			{
+				graphics.AddFilledRectangle(this.Client.Bounds);
+				graphics.RenderSolid(this.BackColor);
+			}
+		}
+
+
 		protected Drawing.Color				colorBlack;
 		protected ColorWheel				circle;
 		protected int						nbPalette;

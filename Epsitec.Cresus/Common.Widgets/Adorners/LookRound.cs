@@ -543,7 +543,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.Rasterizer.AddOutline(path, 1);
 			graphics.RenderSolid(this.colorControlDark);
 
-			if ( !tabRect.IsSurfaceZero )
+			if ( !tabRect.IsSurfaceZero && (state&WidgetState.Engaged) != 0 )
 			{
 				graphics.AddFilledRectangle(tabRect);
 				graphics.RenderSolid(this.colorControlDark);
@@ -584,13 +584,9 @@ namespace Epsitec.Common.Widgets.Adorner
 								  Drawing.Rectangle titleRect,
 								  Widgets.WidgetState state)
 		{
-			double radius = System.Math.Min(7, System.Math.Min(frameRect.Width, frameRect.Height));
-			Drawing.Path path = this.PathRoundRectangle(frameRect, radius);
+			Drawing.Path path = this.PathRoundRectangleGroupBox(frameRect, titleRect.Left, titleRect.Right);
 			graphics.Rasterizer.AddOutline(path, 1);
 			graphics.RenderSolid(this.colorControlDark);
-
-			graphics.AddFilledRectangle(titleRect);
-			graphics.RenderSolid(this.colorControl);
 		}
 
 		public void PaintSepLine(Drawing.Graphics graphics,
@@ -1323,6 +1319,33 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 		}
 
+
+		// Crée le chemin d'un rectangle à coins arrondis.
+		protected Drawing.Path PathRoundRectangleGroupBox(Drawing.Rectangle rect,
+														  double startX, double endX)
+		{
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			double radius = System.Math.Min(7, System.Math.Min(rect.Width, rect.Height));
+			radius = System.Math.Min(radius, startX);
+			
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo (ox+radius+0.5, oy+0.5);
+			path.LineTo (ox+dx-radius-0.5, oy+0.5);
+			path.CurveTo(ox+dx-0.5, oy+0.5, ox+dx-0.5, oy+radius+0.5);
+			path.LineTo (ox+dx-0.5, oy+dy-radius-0.5);
+			path.CurveTo(ox+dx-0.5, oy+dy-0.5, ox+dx-radius-0.5, oy+dy-0.5);
+			path.LineTo (endX, oy+dy-0.5);
+			path.MoveTo (ox+radius+0.5, oy+dy-0.5);
+			path.CurveTo(ox+0.5, oy+dy-0.5, ox+0.5, oy+dy-radius-0.5);
+			path.LineTo (ox+0.5, oy+radius+0.5);
+			path.CurveTo(ox+0.5, oy+0.5, ox+radius+0.5, oy+0.5);
+
+			return path;
+		}
 
 		// Crée le chemin d'un rectangle à coins arrondis.
 		protected Drawing.Path PathRoundRectangle(Drawing.Rectangle rect, double radius)

@@ -518,7 +518,11 @@ namespace Epsitec.Common.Drawing
 		
 		public void MergeWith(Rectangle r)
 		{
-			if (this.IsEmpty)
+			if (r.IsEmpty)
+			{
+				//	Rien à faire...
+			}
+			else if (this.IsEmpty)
 			{
 				this.x1 = r.x1;
 				this.y1 = r.y1;
