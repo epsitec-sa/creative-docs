@@ -48,6 +48,11 @@ namespace Epsitec.Common.Widgets
 			// Texte associé, contenant des commandes HTML.
 			get
 			{
+				if ( this.text == null )
+				{
+					return "";
+				}
+				
 				return this.text;
 			}
 

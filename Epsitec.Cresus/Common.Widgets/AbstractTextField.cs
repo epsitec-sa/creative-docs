@@ -630,6 +630,7 @@ namespace Epsitec.Common.Widgets
 			//	Calcule le scrolling pour que le curseur soit visible.
 			
 			if ( this.TextLayout == null )  return;
+			if ( this.navigator == null )  return;
 			if ( this.mouseDown )  return;
 
 			this.scrollOffset = new Drawing.Point();
