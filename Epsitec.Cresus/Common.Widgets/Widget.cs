@@ -228,7 +228,7 @@ namespace Epsitec.Common.Widgets
 //			this.ResumeLayout ();
 		}
 		
-		public virtual void SerialiseToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
+		public virtual void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
 			if (this.HasChildren)
 			{
@@ -1717,6 +1717,19 @@ namespace Epsitec.Common.Widgets
 				return this.validator;
 			}
 		}
+		
+		
+		#region Serialization support
+		protected virtual bool ShouldSerializeLocation()
+		{
+			return (this.Dock == DockStyle.None);
+		}
+		
+		protected virtual bool ShouldSerializeSize()
+		{
+			return (this.Dock != DockStyle.Fill);
+		}
+		#endregion
 		
 		public void SuspendLayout()
 		{
