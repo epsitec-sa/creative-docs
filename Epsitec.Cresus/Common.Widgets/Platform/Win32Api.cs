@@ -27,6 +27,7 @@ namespace Epsitec.Common.Widgets
 		[DllImport ("User32.dll")]	internal extern static System.IntPtr CreateIconIndirect(ref IconInfo info);
 		[DllImport ("User32.dll")]	internal extern static bool DestroyIcon(System.IntPtr handle);
 		[DllImport ("User32.dll")]	internal extern static bool ShowWindow(System.IntPtr handle, int cmd_show);
+		[DllImport ("User32.dll")]	internal extern static bool GetWindowPlacement(System.IntPtr handle, out WindowPlacement placement);
 		
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr CreateCompatibleDC(System.IntPtr dc);
 		[DllImport ("GDI32.dll")]	internal extern static System.IntPtr SelectObject(System.IntPtr dc, System.IntPtr handle_object);
@@ -34,17 +35,25 @@ namespace Epsitec.Common.Widgets
 		[DllImport ("GDI32.dll")]	internal extern static bool DeleteDC(System.IntPtr dc);
 		[DllImport ("GDI32.dll")]	internal extern static void SetStretchBltMode(System.IntPtr dc, int mode);
 		[DllImport ("GDI32.dll")]	internal extern static void StretchBlt(System.IntPtr dc, int x, int y, int dx, int dy, System.IntPtr src_dc, int src_x, int src_y, int src_dx, int src_dy, int rop);
-		
+
 		[StructLayout(LayoutKind.Sequential, Pack=1)] public struct Point
 		{
-			public int x;
-			public int y;
+			public int X;
+			public int Y;
 		}
 		
 		[StructLayout(LayoutKind.Sequential, Pack=1)] public struct Size
 		{
-			public int cx;
-			public int cy;
+			public int Width;
+			public int Height;
+		}
+		
+		[StructLayout(LayoutKind.Sequential, Pack=1)] public struct Rect
+		{
+			public int Left;
+			public int Top;
+			public int Right;
+			public int Bottom;
 		}
 		
 		[StructLayout(LayoutKind.Sequential, Pack=1)] public struct BlendFunction
@@ -65,6 +74,17 @@ namespace Epsitec.Common.Widgets
 			public System.IntPtr BitmapColor;
 		}
 		
+		[StructLayout(LayoutKind.Sequential, Pack=1) ] public struct WindowPlacement
+		{
+			public int Length;
+			public int Flags;
+			public int ShowCmd;
+			public Point MinPosition;
+			public Point MaxPosition;
+			public Rect NormalPosition;
+
+		}
+
 		
 		internal static int GetWindowStyle(System.IntPtr handle)
 		{
@@ -104,12 +124,12 @@ namespace Epsitec.Common.Widgets
 			System.IntPtr memory_bitmap = bitmap.GetHbitmap (System.Drawing.Color.FromArgb (0));
 			System.IntPtr old_bitmap    = Win32Api.SelectObject (memory_dc, memory_bitmap);
 			
-			new_size.cx = bounds.Width;
-			new_size.cy = bounds.Height;
-			dst_point.x = bounds.Left;
-			dst_point.y = bounds.Top;
-			src_point.x = 0;
-			src_point.y = 0;
+			new_size.Width  = bounds.Width;
+			new_size.Height = bounds.Height;
+			dst_point.X = bounds.Left;
+			dst_point.Y = bounds.Top;
+			src_point.X = 0;
+			src_point.Y = 0;
 			
 			blend_function.BlendOp				= Win32Const.AC_SRC_OVER;
 			blend_function.BlendFlags			= 0;

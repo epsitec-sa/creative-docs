@@ -520,6 +520,23 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
+		internal Drawing.Rectangle				WindowPlacementNormalBounds
+		{
+			get
+			{
+				Win32Api.WindowPlacement placement = new Win32Api.WindowPlacement ();
+				placement.Length = 4+4+4+8+8+16;
+				Win32Api.GetWindowPlacement (this.Handle, out placement);
+				
+				double ox = this.MapFromWinFormsX (placement.NormalPosition.Left);
+				double oy = this.MapFromWinFormsY (placement.NormalPosition.Bottom);
+				double dx = this.MapFromWinFormsWidth (placement.NormalPosition.Right - placement.NormalPosition.Left);
+				double dy = this.MapFromWinFormsHeight (placement.NormalPosition.Bottom - placement.NormalPosition.Top);
+				
+				return new Drawing.Rectangle (ox, oy, dx, dy);
+			}
+		}
+		
 		internal Drawing.Point					WindowLocation
 		{
 			get

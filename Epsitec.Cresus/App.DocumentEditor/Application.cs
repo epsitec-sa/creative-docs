@@ -51,11 +51,18 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.mainWindow.Root.MinSize = new Size(430, 250);
 			}
+#if false
 			this.mainWindow.WindowLocation = this.editor.GlobalSettings.WindowLocation;
 			this.mainWindow.ClientSize = this.editor.GlobalSettings.WindowSize;
 			this.mainWindow.Show();
 			
 			this.mainWindow.IsFullScreen = this.editor.GlobalSettings.IsFullScreen;
+#else
+			this.mainWindow.WindowLocation = this.editor.GlobalSettings.WindowLocation;
+			this.mainWindow.WindowSize = this.editor.GlobalSettings.WindowSize;
+			this.mainWindow.IsFullScreen = this.editor.GlobalSettings.IsFullScreen;
+			this.mainWindow.Show();
+#endif
 
 			switch ( type )
 			{

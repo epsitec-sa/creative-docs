@@ -38,6 +38,10 @@ namespace Epsitec.App.DocumentEditor
 				 this.globalSettings.SplashScreen )
 			{
 				this.CreateWindowSplash();
+				
+				// Donne l'occasion aux événements d'affichage d'être traités:
+				
+				Window.PumpEvents();
 			}
 			this.CreateLayout();
 			this.InitCommands();
@@ -3097,7 +3101,7 @@ namespace Epsitec.App.DocumentEditor
 				sv.SetClientZoom(0.8);
 
 				StaticText ep = new StaticText(this.windowSplash.Root);
-				ep.Text = "(c) 2004-2005 EPSITEC SA, Daniel Roux, Pierre Arnaud";
+				ep.Text = "© 2004-2005 EPSITEC SA, Daniel Roux, Pierre Arnaud";
 				ep.Location = new Point(22, 10);
 				ep.Size = new Size(270, 14);
 				ep.SetClientZoom(0.8);
@@ -3390,10 +3394,16 @@ namespace Epsitec.App.DocumentEditor
 		// Ecrit le fichier des réglages de l'application.
 		protected bool WritedGlobalSettings()
 		{
+#if false
 			this.globalSettings.IsFullScreen = this.Window.IsFullScreen;
 			this.Window.IsFullScreen = false;
 			this.globalSettings.WindowLocation = this.Window.WindowLocation;
 			this.globalSettings.WindowSize = this.Window.ClientSize;
+#else
+			this.globalSettings.IsFullScreen = this.Window.IsFullScreen;
+			this.globalSettings.WindowLocation = this.Window.WindowPlacementNormalBounds.Location;
+			this.globalSettings.WindowSize = this.Window.WindowPlacementNormalBounds.Size;
+#endif
 
 			if ( this.windowSettings != null )
 			{

@@ -197,6 +197,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public static void PumpEvents()
+		{
+			System.Windows.Forms.Application.DoEvents ();
+		}
+		
 		public void MakeTopLevelWindow()
 		{
 			this.window.MakeTopLevelWindow ();
@@ -692,6 +697,18 @@ namespace Epsitec.Common.Widgets
 			set { this.window.WindowSize = value; }
 		}
 		
+		public Drawing.Rectangle				WindowPlacementNormalBounds
+		{
+			get
+			{
+				if (this.window == null)
+				{
+					return Drawing.Rectangle.Empty;
+				}
+				
+				return this.window.WindowPlacementNormalBounds;
+			}
+		}
 
 		[Bundle ("Size")]	public Drawing.Size	ClientSize
 		{
