@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Database
 		{
 			DbType type = DbTypeFactory.CreateType ("<type class='base'/>");
 			
-			Assertion.Assert (type.GetType () == typeof (DbType));
+			Assert.IsTrue (type.GetType () == typeof (DbType));
 		}
 		
 		[Test] public void CheckNewTypeNum()
@@ -18,16 +18,16 @@ namespace Epsitec.Cresus.Database
 			
 			type = DbTypeFactory.CreateType ("<type class='num' type='Int16'/>") as DbTypeNum;
 			
-			Assertion.Assert (type.GetType () == typeof (DbTypeNum));
-			Assertion.AssertEquals (DbRawType.Int16, type.NumDef.InternalRawType);
+			Assert.IsTrue (type.GetType () == typeof (DbTypeNum));
+			Assert.AreEqual (DbRawType.Int16, type.NumDef.InternalRawType);
 			
 			type = DbTypeFactory.CreateType ("<type class='num' digits='5' shift='2' min='0.00' max='200.00'/>") as DbTypeNum;
-			Assertion.Assert (type.GetType () == typeof (DbTypeNum));
-			Assertion.AssertEquals (DbRawType.Unsupported, type.NumDef.InternalRawType);
-			Assertion.AssertEquals (5, type.NumDef.DigitPrecision);
-			Assertion.AssertEquals (2, type.NumDef.DigitShift);
-			Assertion.AssertEquals (  0.00M, type.NumDef.MinValue);
-			Assertion.AssertEquals (200.00M, type.NumDef.MaxValue);
+			Assert.IsTrue (type.GetType () == typeof (DbTypeNum));
+			Assert.AreEqual (DbRawType.Unsupported, type.NumDef.InternalRawType);
+			Assert.AreEqual (5, type.NumDef.DigitPrecision);
+			Assert.AreEqual (2, type.NumDef.DigitShift);
+			Assert.AreEqual (  0.00M, type.NumDef.MinValue);
+			Assert.AreEqual (200.00M, type.NumDef.MaxValue);
 		}
 		
 		[Test] public void CheckNewTypeEnum()
@@ -36,8 +36,8 @@ namespace Epsitec.Cresus.Database
 			
 			type = DbTypeFactory.CreateType ("<type class='enum' nmlen='5'/>") as DbTypeEnum;
 			
-			Assertion.Assert (type.GetType () == typeof (DbTypeEnum));
-			Assertion.AssertEquals (5, type.MaxNameLength);
+			Assert.IsTrue (type.GetType () == typeof (DbTypeEnum));
+			Assert.AreEqual (5, type.MaxNameLength);
 		}
 		
 		[Test] public void CheckNewTypeString()
@@ -45,15 +45,15 @@ namespace Epsitec.Cresus.Database
 			DbTypeString type;
 			
 			type = DbTypeFactory.CreateType ("<type class='str' length='100'/>") as DbTypeString;
-			Assertion.Assert (type.GetType () == typeof (DbTypeString));
-			Assertion.AssertEquals (100, type.Length);
-			Assertion.AssertEquals (false, type.IsFixedLength);
+			Assert.IsTrue (type.GetType () == typeof (DbTypeString));
+			Assert.AreEqual (100, type.Length);
+			Assert.AreEqual (false, type.IsFixedLength);
 			
 			type = DbTypeFactory.CreateType ("<type class='str' length='100' fixed='0'/>") as DbTypeString;
-			Assertion.AssertEquals (false, type.IsFixedLength);
+			Assert.AreEqual (false, type.IsFixedLength);
 			
 			type = DbTypeFactory.CreateType ("<type class='str' length='100' fixed='1'/>") as DbTypeString;
-			Assertion.AssertEquals (true, type.IsFixedLength);
+			Assert.AreEqual (true, type.IsFixedLength);
 		}
 		
 		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckNewTypeXmlEx1()
@@ -77,28 +77,28 @@ namespace Epsitec.Cresus.Database
 			temp = DbTypeFactory.CreateType (xml);
 			
 			System.Console.Out.WriteLine ("XML: {0}", xml);
-			Assertion.Assert (temp.GetType () == type.GetType ());
+			Assert.IsTrue (temp.GetType () == type.GetType ());
 			
 			type = new DbTypeEnum ();
 			xml  = DbTypeFactory.SerializeToXml (type, true);
 			temp = DbTypeFactory.CreateType (xml);
 			
 			System.Console.Out.WriteLine ("XML: {0}", xml);
-			Assertion.Assert (temp.GetType () == type.GetType ());
+			Assert.IsTrue (temp.GetType () == type.GetType ());
 			
 			type = new DbTypeNum (DbNumDef.FromRawType (DbRawType.Int16));
 			xml  = DbTypeFactory.SerializeToXml (type, true);
 			temp = DbTypeFactory.CreateType (xml);
 			
 			System.Console.Out.WriteLine ("XML: {0}", xml);
-			Assertion.Assert (temp.GetType () == type.GetType ());
+			Assert.IsTrue (temp.GetType () == type.GetType ());
 			
 			type = new DbTypeString (100);
 			xml  = DbTypeFactory.SerializeToXml (type, true);
 			temp = DbTypeFactory.CreateType (xml);
 			
 			System.Console.Out.WriteLine ("XML: {0}", xml);
-			Assertion.Assert (temp.GetType () == type.GetType ());
+			Assert.IsTrue (temp.GetType () == type.GetType ());
 		}
 	}
 }
