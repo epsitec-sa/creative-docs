@@ -256,8 +256,10 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Drawing.Size (450, 230);
 			window.MakeFixedSizeWindow ();
 			
-			Button   button;
-			GroupBox group;
+			Button      button;
+			GroupBox    group;
+			Widget      widget;
+			RadioButton radio;
 			
 			button = new Button ("A");
 			button.Bounds = new Drawing.Rectangle (10, 170, 40, 25);
@@ -284,7 +286,7 @@ namespace Epsitec.Common.Widgets
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
 			group = new GroupBox ();
-			group.Bounds = new Drawing.Rectangle (60, 80, 110, 115);
+			group.Bounds = new Drawing.Rectangle (60, 110, 110, 85);
 			group.Parent = window.Root;
 			group.TabIndex = 10;
 			group.Text = "Group 1";
@@ -315,7 +317,7 @@ namespace Epsitec.Common.Widgets
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
 			group = new GroupBox ();
-			group.Bounds = new Drawing.Rectangle (180, 80, 110, 115);
+			group.Bounds = new Drawing.Rectangle (180, 110, 110, 85);
 			group.Parent = window.Root;
 			group.TabIndex = 11;
 			group.Text = "Group 2";
@@ -346,7 +348,7 @@ namespace Epsitec.Common.Widgets
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
 			group = new GroupBox ();
-			group.Bounds = new Drawing.Rectangle (300, 80, 110, 115);
+			group.Bounds = new Drawing.Rectangle (300, 110, 110, 85);
 			group.Parent = window.Root;
 			group.TabIndex = 12;
 			group.Text = "Group 3";
@@ -388,9 +390,27 @@ namespace Epsitec.Common.Widgets
 			button.TabIndex = 21;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
+			widget = new TextField ();
+			widget.Bounds = new Drawing.Rectangle (60, 74, 100, 22);
+			widget.Parent = window.Root;
+			widget.TabIndex = 30;
+			widget.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			widget = new TextFieldUpDown ();
+			widget.Bounds = new Drawing.Rectangle (165, 74, 40, 22);
+			widget.Parent = window.Root;
+			widget.TabIndex = 31;
+			widget.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
+			widget = new TextFieldUpDown ();
+			widget.Bounds = new Drawing.Rectangle (210, 74, 40, 22);
+			widget.Parent = window.Root;
+			widget.TabIndex = 32;
+			widget.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			
 			StaticText text = new StaticText ();
 			
-			text.Bounds    = new Drawing.Rectangle (60, 20, 420, 50);
+			text.Bounds    = new Drawing.Rectangle (60, 15, 420, 50);
 			text.Parent    = window.Root;
 			text.Alignment = Drawing.ContentAlignment.TopLeft;
 			text.Text      = "<b>Group 1:</b> cannot be entered with TAB<br/>"
@@ -402,6 +422,25 @@ namespace Epsitec.Common.Widgets
 			text.Bounds = new Drawing.Rectangle (10, 200, 230, 25);
 			text.Text   = "<font size=\"130%\">Press <b>TAB</b> to move the focus...</font>";
 			text.Parent = window.Root;
+			
+			radio = new RadioButton ();
+			radio.Bounds = new Drawing.Rectangle (260, 75+7, 60, 20);
+			radio.Text   = "A";
+			radio.Group  = "Option";
+			radio.Index  = 0;
+			radio.Parent = window.Root;
+			radio.TabIndex = 40;
+			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			radio.ActiveState = WidgetState.ActiveYes;
+			
+			radio = new RadioButton ();
+			radio.Bounds = new Drawing.Rectangle (260, 61+7, 60, 20);
+			radio.Text   = "B";
+			radio.Group  = "Option";
+			radio.Index  = 1;
+			radio.Parent = window.Root;
+			radio.TabIndex = 40;
+			radio.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			
 			window.Show ();
 		}

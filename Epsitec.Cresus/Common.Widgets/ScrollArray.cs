@@ -1134,33 +1134,35 @@ invalid:	row    = -1;
 					{
 						this.is_mouse_down = true;
 						this.ProcessMouseSelect (pos);
+						message.Consumer = this;
 					}
 					break;
-
+				
 				case MessageType.MouseMove:
 					if (this.is_mouse_down)
 					{
 						this.ProcessMouseSelect (pos);
+						message.Consumer = this;
 					}
-
 					break;
-
+				
 				case MessageType.MouseUp:
 					if (this.is_mouse_down)
 					{
 						this.ProcessMouseSelect (pos);
 						this.is_mouse_down = false;
 						this.ShowSelected (ScrollArrayShowMode.Extremity);
+						message.Consumer = this;
 					}
-
 					break;
-
+				
 				case MessageType.KeyDown:
-					this.ProcessKeyDown (message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
+					if (this.ProcessKeyDown (message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed))
+					{
+						message.Consumer = this;
+					}
 					break;
 			}
-			
-			message.Consumer = this;
 		}
 
 		protected virtual  void ProcessMouseSelect(Drawing.Point pos)
@@ -1173,7 +1175,7 @@ invalid:	row    = -1;
 			}
 		}
 
-		protected virtual  void ProcessKeyDown(KeyCode key, bool is_shift_pressed, bool is_ctrl_pressed)
+		protected virtual  bool ProcessKeyDown(KeyCode key, bool is_shift_pressed, bool is_ctrl_pressed)
 		{
 			int sel = this.SelectedIndex;
 			
@@ -1194,6 +1196,9 @@ invalid:	row    = -1;
 				case KeyCode.PageDown:
 					sel += this.n_fully_visible_rows - 1;
 					break;
+				
+				default:
+					return false;
 			}
 			
 			sel = System.Math.Max (0, sel);
@@ -1208,6 +1213,8 @@ invalid:	row    = -1;
 					this.ShowSelected (ScrollArrayShowMode.Extremity);
 				}
 			}
+			
+			return true;
 		}
 
 		
@@ -1446,6 +1453,10 @@ invalid:	row    = -1;
 			
 			int  top     = this.FromVirtualRow (this.first_virtvis_row);
 			int  bottom  = this.FromVirtualRow (this.first_virtvis_row + this.n_visible_rows);
+			
+			top    = System.Math.Min (top,    this.max_rows);
+			bottom = System.Math.Min (bottom, this.max_rows);
+			
 			int  height  = bottom - top;
 			int  max     = System.Math.Min (height, this.max_rows);
 			bool refresh = (max != this.cache_visible_rows) || (this.first_virtvis_row != this.cache_first_virtvis_row);
@@ -1480,6 +1491,13 @@ invalid:	row    = -1;
 					this.layouts[row, column].LayoutSize = new Drawing.Size (this.column_widths[column] - this.text_margin * 2, this.row_height);
 					this.layouts[row, column].Alignment  = this.column_alignments[column];
 					this.layouts[row, column].BreakMode  = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
+				}
+			}
+			for (int row = max; row < this.cache_dx; row++)
+			{
+				for (int column = 0; column < this.max_columns; column++)
+				{
+					this.layouts[row, column] = null;
 				}
 			}
 			
@@ -1680,7 +1698,12 @@ invalid:	row    = -1;
 						if ((pos.X < local_clip.Right) &&
 							(end > local_clip.Left))
 						{
-							adorner.PaintGeneralTextLayout (graphics, pos, this.layouts[row, column], widget_state, PaintTextStyle.Array, this.BackColor);
+							TextLayout layout = this.layouts[row, column];
+							
+							if (layout != null)
+							{
+								adorner.PaintGeneralTextLayout (graphics, pos, layout, widget_state, PaintTextStyle.Array, this.BackColor);
+							}
 						}
 						
 						pos.X = end;

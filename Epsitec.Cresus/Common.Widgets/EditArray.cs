@@ -10,7 +10,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public EditArray()
 		{
-			this.edit_line = new Widget (this);
+			this.edit_line = new EditWidget (this);
 			this.edit_line.SetVisible (false);
 		}
 		
@@ -59,6 +59,8 @@ namespace Epsitec.Common.Widgets
 					if (widgets[i] == null)
 					{
 						widgets[i] = new TextFieldMulti (this.edit_line);
+						widgets[i].TabIndex = i;
+						widgets[i].TabNavigation = TabNavigationMode.ActivateOnTab;
 					}
 				}
 				
@@ -143,12 +145,70 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-
-
+		
+		protected bool MoveEditionToLine(int offset)
+		{
+			int row = this.edition_row + offset;
+			
+			row = System.Math.Min (row, this.max_rows-1);
+			row = System.Math.Max (row, 0);
+			
+			if (this.edition_row != row)
+			{
+				this.EditionIndex = row;
+				return true;
+			}
+			
+			return false;
+		}
+		
+		
+		protected class EditWidget : Widget
+		{
+			public EditWidget(EditArray host)
+			{
+				this.host = host;
+				
+				this.SetEmbedder (this.host);
+				this.TabNavigation = TabNavigationMode.ActivateOnTab | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly;
+			}
+			
+			protected override bool ProcessTabChildrenExit(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
+			{
+				int move = 0;
+				
+				switch (dir)
+				{
+					case TabNavigationDir.Forwards:  move =  1; break;
+					case TabNavigationDir.Backwards: move = -1; break;
+				}
+				
+				if (this.host.MoveEditionToLine (move))
+				{
+					if (move > 0)
+					{
+						focus = this.host.edit_widgets[0];
+					}
+					else
+					{
+						focus = this.host.edit_widgets[this.host.edit_widgets.Length-1];
+					}
+				}
+				else
+				{
+					focus = null;
+				}
+				
+				return true;
+			}
+			
+			protected EditArray					host;
+		}
+		
 		
 		protected int							edit_active  = -1;
 		protected AbstractTextField[]			edit_widgets = new AbstractTextField[0];
-		protected Widget						edit_line    = null;
+		protected EditWidget					edit_line    = null;
 		protected Drawing.Rectangle				edit_bounds  = Drawing.Rectangle.Empty;
 		protected double						edit_offset  = 0;
 	}

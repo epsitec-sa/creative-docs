@@ -157,6 +157,17 @@ namespace Epsitec.Common.Widgets
 			this.TextLayout.Text = "";
 		}
 		
+		
+		internal override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode)
+		{
+			if (mode != TabNavigationMode.Passive)
+			{
+				this.SelectAll ();
+			}
+			
+			return base.AboutToGetFocus (dir, mode);
+		}
+
 
 		// Nombre max de caractères dans la ligne éditée.
 		public int MaxChar
@@ -361,33 +372,40 @@ namespace Epsitec.Common.Widgets
 				case MessageType.MouseDown:
 					this.mouseDown = true;
 					this.BeginPress(pos);
+					message.Consumer = this;
 					break;
 				
 				case MessageType.MouseMove:
 					if ( this.mouseDown )
 					{
 						this.MovePress(pos);
+						message.Consumer = this;
 					}
 					break;
-
+				
 				case MessageType.MouseUp:
 					if ( this.mouseDown )
 					{
 						this.EndPress(pos);
 						this.mouseDown = false;
+						message.Consumer = this;
 					}
 					break;
-
+				
 				case MessageType.KeyDown:
-					this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
+					if (this.ProcessKeyDown(message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed))
+					{
+						message.Consumer = this;
+					}
 					break;
-
+				
 				case MessageType.KeyPress:
-					this.ProcessKeyPress(message.KeyChar);
+					if (this.ProcessKeyPress(message.KeyChar))
+					{
+						message.Consumer = this;
+					}
 					break;
 			}
-			
-			message.Consumer = this;
 		}
 
 		// Appelé lorsque le bouton de la souris est pressé.
@@ -431,62 +449,70 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Gestion d'une touche pressée avec KeyDown dans le texte.
-		protected virtual void ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
+		protected virtual bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
-			switch ( key )
+			switch (key)
 			{
 				case KeyCode.Back:
 					this.DeleteCharacter(-1);
 					break;
-
+				
 				case KeyCode.Delete:
 					this.DeleteCharacter(1);
 					break;
-
+				
 				case KeyCode.Escape:
 					break;
-
+				
 				case KeyCode.Home:
 					this.MoveCursor(-1000000, isShiftPressed, false);  // recule beaucoup
 					break;
-
+				
 				case KeyCode.End:
 					this.MoveCursor(1000000, isShiftPressed, false);  // avance beaucoup
 					break;
-
+				
 				case KeyCode.PageUp:
 					this.MoveCursor(-1000000, isShiftPressed, false);  // recule beaucoup
 					break;
-
+				
 				case KeyCode.PageDown:
 					this.MoveCursor(1000000, isShiftPressed, false);  // avance beaucoup
 					break;
-
+				
 				case KeyCode.ArrowLeft:
 					this.MoveCursor(-1, isShiftPressed, isCtrlPressed);
 					break;
-
+				
 				case KeyCode.ArrowRight:
 					this.MoveCursor(1, isShiftPressed, isCtrlPressed);
 					break;
-
+				
 				case KeyCode.ArrowUp:
 					this.MoveCursor(-1, isShiftPressed, isCtrlPressed);
 					break;
-
+				
 				case KeyCode.ArrowDown:
 					this.MoveCursor(1, isShiftPressed, isCtrlPressed);
 					break;
+				
+				default:
+					return false;
 			}
+			
+			return true;
 		}
 
 		// Gestion d'une touche pressée avec KeyPress dans le texte.
-		protected void ProcessKeyPress(int key)
+		protected virtual bool ProcessKeyPress(int key)
 		{
-			if ( key >= 32 )  // TODO: à vérifier ...
+			if (key >= 32)  // TODO: à vérifier ...
 			{
-				this.InsertCharacter((char)key);
+				this.InsertCharacter ((char)key);
+				return true;
 			}
+			
+			return false;
 		}
 
 		// Insère un caractère.
