@@ -86,5 +86,175 @@ namespace Epsitec.Common.Dialogs
 				System.Console.Out.WriteLine ("  {0}: {1} x {2}", i, resols[i].DpiX, resols[i].DpiY);
 			}
 		}
+		
+		[Test] public void CheckPort()
+		{
+			Widgets.Widget.Initialise ();
+			
+			Drawing.Agg.Graphics preview = new Drawing.Agg.Graphics ();
+			preview.SetPixmapSize (250, 120);
+			
+			PrintDialogTest.TestDocument (preview);
+			
+			Widgets.Window window = new Widgets.Window ();
+			AggPreview     widget = new AggPreview (preview);
+			
+			window.Text = "CheckPort - AGG";
+			window.ClientSize = new Drawing.Size (250, 120);
+			widget.Dock       = Widgets.DockStyle.Fill;
+			widget.Parent     = window.Root;
+			
+			window.Show ();
+			
+			System.Windows.Forms.Form form;
+			
+			form = new System.Windows.Forms.Form ();
+			form.BackColor = System.Drawing.Color.FromArgb (255, 255, 255);
+			form.Text = "CheckPort/GDI+/Smooth";
+			form.ClientSize = new System.Drawing.Size (250, 120);
+			form.Paint += new System.Windows.Forms.PaintEventHandler (HandleFormPaintSmooth);
+			form.Show ();
+			
+			form = new System.Windows.Forms.Form ();
+			form.BackColor = System.Drawing.Color.FromArgb (255, 255, 255);
+			form.Text = "CheckPort/GDI+/Default";
+			form.ClientSize = new System.Drawing.Size (250, 120);
+			form.Paint += new System.Windows.Forms.PaintEventHandler (HandleFormPaintDefault);
+			form.Show ();
+		}
+		
+		protected class AggPreview : Widgets.Widget
+		{
+			public AggPreview(Drawing.Agg.Graphics port)
+			{
+				this.port = port;
+			}
+			
+			protected override void PaintBackgroundImplementation(Epsitec.Common.Drawing.Graphics graphics, Epsitec.Common.Drawing.Rectangle clip_rect)
+			{
+				System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap (250, 120, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+				
+				using (bitmap)
+				{
+					Drawing.Pixmap.RawData src = new Drawing.Pixmap.RawData (this.port.Pixmap);
+					Drawing.Pixmap.RawData dst = new Drawing.Pixmap.RawData (bitmap, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+					
+					using (src)
+					{
+						using (dst)
+						{
+							src.CopyTo (dst);
+						}
+					}
+					
+					graphics.PaintImage (Drawing.Bitmap.FromNativeBitmap (bitmap), 0, 0, 250, 120, 0, 0, 250, 120);
+				}
+			}
+
+			
+			Drawing.Agg.Graphics				port;
+		}
+		
+		private static void TestDocument(Drawing.IPaintPort port)
+		{
+			Drawing.Font font_1 = Drawing.Font.GetFont ("Tahoma", "Regular");
+			Drawing.Font font_2 = Drawing.Font.GetFont ("Times New Roman", "Regular");
+			Drawing.Font font_3 = Drawing.Font.GetFont ("Times New Roman", "Italic");
+			
+//			port.RotateTransform (15, 125, 60);
+			
+			Drawing.Path path = new Drawing.Path ();
+			
+			path.MoveTo (10, 10);
+			path.CurveTo (10, 20, 20, 30, 30, 30);
+			path.CurveTo (30, 20, 20, 10, 10, 10);
+			path.Close ();
+			
+			for (int i = 0; i < 2; i++)
+			{
+				port.Color     = Drawing.Color.FromRGB (0, 0, 0);
+				port.LineCap   = Drawing.CapStyle.Square;
+				port.LineJoin  = Drawing.JoinStyle.Miter;
+				port.LineWidth = 1.5;
+				
+				port.PaintOutline (path);
+				port.PaintOutline (Drawing.Path.FromLine (40, 10, 60, 20));
+				port.PaintOutline (Drawing.Path.FromCircle (40, 30, 5));
+				
+				port.TranslateTransform (60, 0);
+				
+				port.Color     = Drawing.Color.FromRGB (0, 0, 0);
+				port.LineCap   = Drawing.CapStyle.Square;
+				port.LineJoin  = Drawing.JoinStyle.Miter;
+				port.LineWidth = 0.5;
+				
+				port.PaintOutline (path);
+				port.PaintOutline (Drawing.Path.FromLine (40, 10, 60, 20));
+				port.PaintOutline (Drawing.Path.FromCircle (40, 30, 5));
+				
+				port.TranslateTransform (60, 0);
+				
+				port.Color = Drawing.Color.FromRGB (0, 1, 0);
+				
+				port.PaintSurface (path);
+				port.PaintSurface (Drawing.Path.FromLine (40, 10, 60, 20));
+				port.PaintSurface (Drawing.Path.FromCircle (40, 30, 5));
+				
+				port.TranslateTransform (60, 0);
+				
+				port.Color = Drawing.Color.FromRGB (1, 1, 0);
+				
+				port.PaintSurface (path);
+				port.PaintSurface (Drawing.Path.FromLine (40, 10, 60, 20));
+				port.PaintSurface (Drawing.Path.FromCircle (40, 30, 5));
+				
+				port.Color     = Drawing.Color.FromRGB (1, 0, 0);
+				port.LineCap   = Drawing.CapStyle.Square;
+				port.LineJoin  = Drawing.JoinStyle.Miter;
+				port.LineWidth = 1.0;
+				
+				port.PaintOutline (path);
+				port.PaintOutline (Drawing.Path.FromLine (40, 10, 60, 20));
+				port.PaintOutline (Drawing.Path.FromCircle (40, 30, 5));
+				
+				port.TranslateTransform (-180, 0);
+				
+				port.Color = Drawing.Color.FromRGB (0, 0, 0.5);
+				
+				double ox = 10;
+				
+				ox += port.PaintText (ox, 40, "Test document: ", font_1, 12);
+				ox += port.PaintText (ox, 40, " Times New Roman ", font_2, 12);
+				ox += port.PaintText (ox, 40, "Italic.", font_3, 12);
+				
+				if (i == 0)
+				{
+					port.TranslateTransform (0, 60);
+					port.SetClippingRectangle (40, 80, 160, 25);
+				}
+			}
+		}
+
+		private static void HandleFormPaintSmooth(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			System.Windows.Forms.Form form = sender as System.Windows.Forms.Form;
+			
+			e.Graphics.SmoothingMode     = System.Drawing.Drawing2D.SmoothingMode.HighQuality;
+			e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.AntiAlias;
+			
+			Printing.PrintPort port = new Printing.PrintPort (e.Graphics, form.ClientSize.Width, form.ClientSize.Height);
+			PrintDialogTest.TestDocument (port);
+		}
+		
+		private static void HandleFormPaintDefault(object sender, System.Windows.Forms.PaintEventArgs e)
+		{
+			System.Windows.Forms.Form form = sender as System.Windows.Forms.Form;
+			
+			e.Graphics.SmoothingMode     = System.Drawing.Drawing2D.SmoothingMode.Default;
+			e.Graphics.TextRenderingHint = System.Drawing.Text.TextRenderingHint.SystemDefault;
+			
+			Printing.PrintPort port = new Printing.PrintPort (e.Graphics, form.ClientSize.Width, form.ClientSize.Height);
+			PrintDialogTest.TestDocument (port);
+		}
 	}
 }
