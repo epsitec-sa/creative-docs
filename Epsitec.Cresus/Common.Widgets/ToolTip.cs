@@ -12,7 +12,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe ToolTip implémente les "info bulles".
 	/// </summary>
 	[SuppressBundleSupport]
-	public class ToolTip : Widget, IComponent
+	public class ToolTip : Widget, Support.Data.IComponent
 	{
 		public ToolTip()
 		{
