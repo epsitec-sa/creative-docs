@@ -7,8 +7,8 @@ using Epsitec.Common.Support;
 namespace Epsitec.Common.UI.Binders
 {
 	/// <summary>
-	/// La classe DataValueBinder permet d'accéder à la propriété d'un objet
-	/// comme source de données.
+	/// La classe DataValueBinder permet de faire le lien avec une source
+	/// compatible avec l'interface IDataValue.
 	/// </summary>
 	public class DataValueBinder : AbstractBinder, System.IDisposable
 	{

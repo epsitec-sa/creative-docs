@@ -138,6 +138,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Adapters\DataFolderAdapter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Adapters\DecimalAdapter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -164,6 +169,11 @@
                 />
                 <File
                     RelPath = "Binders\AbstractBinder.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Binders\DataFolderBinder.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -203,6 +213,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Controllers\DataFolderController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Controllers\IController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -219,6 +234,11 @@
                 />
                 <File
                     RelPath = "Controllers\StringController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Controllers\WidgetDataFolderController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
