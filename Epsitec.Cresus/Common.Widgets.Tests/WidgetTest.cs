@@ -585,7 +585,7 @@ namespace Epsitec.Common.Widgets
 			window.ClientSize = new Size(400, 300);
 			window.Text = "CheckDocking";
 			window.Root.PreferHorizontalDockLayout = true;
-			window.Root.SetAutoMinMax (true);
+			window.Root.AutoMinMax = true;
 			
 			Button button;
 			button = new Button();

@@ -237,10 +237,10 @@ namespace Epsitec.Common.Widgets
 			this.isDirty = false;
 		}
 
-		protected override void HandleAdornerChanged()
+		protected override void OnAdornerChanged()
 		{
 			this.UpdateClientGeometry();
-			base.HandleAdornerChanged();
+			base.OnAdornerChanged();
 		}
 
 

@@ -1290,10 +1290,10 @@ namespace Epsitec.Common.Widgets
 			this.UpdateScrollers();
 		}
 
-		protected override void HandleAdornerChanged()
+		protected override void OnAdornerChanged()
 		{
 			this.UpdateClientGeometry();
-			base.HandleAdornerChanged();
+			base.OnAdornerChanged();
 		}
 
 		public override Drawing.Rectangle GetShapeBounds()

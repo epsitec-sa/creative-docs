@@ -140,29 +140,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		// Texte édité.
-		public override string Text
+		protected override void ModifyTextLayout(string text)
 		{
-			get
+			if ( text.Length > this.maxChar )
 			{
-				return base.Text;
+				text = text.Substring(0, this.maxChar);
 			}
-
-			set
-			{
-				if ( value.Length > this.maxChar )
-				{
-					value = value.Substring(0, this.maxChar);
-				}
-				
-				System.Diagnostics.Debug.Assert(this.TextLayout != null);
-				
-				if ( base.Text != value )
-				{
-					base.Text = value;
-					this.Invalidate();
-					this.CursorScroll();
-				}
-			}
+			
+			base.ModifyTextLayout (text);
+			
+			this.Invalidate();
+			this.CursorScroll();
 		}
 		
 		protected override void DisposeTextLayout()
@@ -302,7 +290,7 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 		}
 
-		protected override void UpdateLayoutSize()
+		protected override void UpdateTextLayout()
 		{
 			if ( this.TextLayout != null )
 			{

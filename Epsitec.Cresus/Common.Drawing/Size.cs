@@ -46,6 +46,7 @@ namespace Epsitec.Common.Drawing
 		
 		
 		public static readonly Size		Empty;
+		public static readonly Size		Infinite = new Drawing.Size (1000000, 1000000);
 		
 		public Point ToPoint()
 		{

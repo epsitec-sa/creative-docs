@@ -13,6 +13,7 @@ namespace Epsitec.Common.Widgets.Design
 	{
 		public GripsOverlay()
 		{
+			this.drop_adorner = new Design.HiliteAdorner ();
 		}
 		
 		public GripsOverlay(Widget embedder) : this()
@@ -35,6 +36,7 @@ namespace Epsitec.Common.Widgets.Design
 			GripsOverlay.grip_map[7] = new GripMap (Drawing.GripId.EdgeTop, GripType.Edge, 0, 0);
 			GripsOverlay.grip_map[8] = new GripMap (Drawing.GripId.EdgeLeft, GripType.Edge, 0, 0);
 		}
+		
 		
 		public Widget					TargetWidget
 		{
@@ -153,6 +155,7 @@ namespace Epsitec.Common.Widgets.Design
 			}
 		}
 		
+		
 		public virtual Grip FindGrip(Drawing.GripId id)
 		{
 			if (this.grips != null)
@@ -214,6 +217,7 @@ namespace Epsitec.Common.Widgets.Design
 #endif
 		}
 		
+		
 		private void HandleTargetLayoutChanged(object sender)
 		{
 			this.UpdateGeometry ();
@@ -239,7 +243,8 @@ namespace Epsitec.Common.Widgets.Design
 			bounds.OffsetGrip (map.id, e.Offset);
 			bounds = this.target_widget.MapRootToClient (bounds);
 			bounds = this.target_widget.MapClientToParent (bounds);
-			bounds = this.ConstrainWidgetBounds (map.id, bounds);
+			bounds = this.ConstrainWidgetBoundsRelative (map.id, bounds);
+			bounds = this.ConstrainWidgetBoundsMinMax (map.id, bounds);
 			
 			this.target_widget.Bounds = bounds;
 		}
@@ -274,15 +279,86 @@ namespace Epsitec.Common.Widgets.Design
 					this.grips[i].SetVisible (true);
 				}
 			}
+			
+			this.drop_adorner.Widget = null;
+			this.drop_cx = null;
+			this.drop_cy = null;
 		}
 		
-		private Drawing.Rectangle ConstrainWidgetBounds(Drawing.GripId grip, Drawing.Rectangle new_bounds)
+		
+		private Drawing.Rectangle ConstrainWidgetBoundsRelative(Drawing.GripId grip, Drawing.Rectangle new_bounds)
 		{
-			return GripsOverlay.ConstrainWidgetBounds (grip, this.target_widget.Bounds, new_bounds, this.target_widget.MinSize, this.target_widget.MaxSize);
+			Design.Constraint cx = new Design.Constraint (5);
+			Design.Constraint cy = new Design.Constraint (5);
+			
+			Widget widget = this.target_widget;
+			Widget parent = this.target_widget.Parent;
+			
+			this.drop_adorner.Widget = parent;
+			this.drop_adorner.Path.Clear ();
+			
+			Design.SmartGuide guide  = new Design.SmartGuide (widget, grip, parent);
+			Drawing.Rectangle bounds = new_bounds;
+			Drawing.Point     bline  = widget.BaseLine;
+			
+			if ((grip == Drawing.GripId.Body) &&
+				(! bline.IsEmpty))
+			{
+				guide.Constrain (bounds, bline.Y, cx, cy);
+			}
+			else
+			{
+				guide.Constrain (bounds, cx, cy);
+			}
+			
+			if (cx.Segments.Length > 0)
+			{
+				for (int i = 0; i < cx.Segments.Length; i++)
+				{
+					this.drop_adorner.Path.MoveTo (cx.Segments[i].P1);
+					this.drop_adorner.Path.LineTo (cx.Segments[i].P2);
+				}
+			}
+			
+			if (cy.Segments.Length > 0)
+			{
+				for (int i = 0; i < cy.Segments.Length; i++)
+				{
+					this.drop_adorner.Path.MoveTo (cy.Segments[i].P1);
+					this.drop_adorner.Path.LineTo (cy.Segments[i].P2);
+				}
+			}
+			
+			if (! cx.Equals (this.drop_cx))
+			{
+				this.drop_cx = cx.Clone ();
+				parent.Invalidate ();
+			}
+			if (! cy.Equals (this.drop_cy))
+			{
+				this.drop_cy = cy.Clone ();
+				parent.Invalidate ();
+			}
+			
+			if (cx.IsValid)
+			{
+				bounds.OffsetGrip (grip, new Drawing.Point (- cx.Distance, 0));
+			}
+			if (cy.IsValid)
+			{
+				bounds.OffsetGrip (grip, new Drawing.Point (0, - cy.Distance));
+			}
+			
+			return bounds;
+		}
+		
+		private Drawing.Rectangle ConstrainWidgetBoundsMinMax(Drawing.GripId grip, Drawing.Rectangle new_bounds)
+		{
+			return GripsOverlay.ConstrainWidgetBoundsMinMax (grip, this.target_widget.Bounds, new_bounds, this.target_widget.MinSize, this.target_widget.MaxSize);
 		}
 		
 		
-		public static Drawing.Rectangle ConstrainWidgetBounds(Drawing.GripId grip, Drawing.Rectangle old_bounds, Drawing.Rectangle new_bounds, Drawing.Size min, Drawing.Size max)
+		public static Drawing.Rectangle ConstrainWidgetBoundsMinMax(Drawing.GripId grip, Drawing.Rectangle old_bounds, Drawing.Rectangle new_bounds, Drawing.Size min, Drawing.Size max)
 		{
 			if (new_bounds.Width < min.Width)
 			{
@@ -376,5 +452,9 @@ namespace Epsitec.Common.Widgets.Design
 		protected Drawing.Rectangle			target_clip;
 		
 		protected Grip[]					grips;
+		
+		protected Design.HiliteAdorner		drop_adorner;
+		protected Design.Constraint			drop_cx;
+		protected Design.Constraint			drop_cy;
 	}
 }

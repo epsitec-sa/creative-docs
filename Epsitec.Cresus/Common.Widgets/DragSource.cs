@@ -270,13 +270,13 @@ namespace Epsitec.Common.Widgets
 				if (this.drop_cx.IsValid)
 				{
 					offset.X -= this.drop_cx.Distance;
-					anchor   |= this.drop_cx.Anchor;
+					anchor   |= Design.Constraint.Hint.MergedAnchor (this.drop_cx.Hints);
 				}
 				
 				if (this.drop_cy.IsValid)
 				{
 					offset.Y -= this.drop_cy.Distance;
-					anchor   |= this.drop_cy.Anchor;
+					anchor   |= Design.Constraint.Hint.MergedAnchor (this.drop_cy.Hints);
 				}
 				
 				if ((anchor & AnchorStyles.LeftAndRight) == 0)

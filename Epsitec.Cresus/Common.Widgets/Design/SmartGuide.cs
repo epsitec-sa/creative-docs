@@ -45,6 +45,10 @@ namespace Epsitec.Common.Widgets.Design
 			set { this.target = value; }
 		}
 		
+		public void Constrain(Drawing.Rectangle bounds, Constraint cx, Constraint cy)
+		{
+			this.Constrain (bounds, -1, cx, cy);
+		}
 		
 		public void Constrain(Drawing.Rectangle bounds, double base_line_offset, Constraint cx, Constraint cy)
 		{
@@ -101,6 +105,11 @@ namespace Epsitec.Common.Widgets.Design
 			{
 				widget = children[i];
 				model  = widget.Bounds;
+				
+				if (widget == this.widget)
+				{
+					continue;
+				}
 				
 				double y1 = System.Math.Min (model.Bottom, bounds.Bottom);
 				double y2 = System.Math.Max (model.Top, bounds.Top);
@@ -170,6 +179,11 @@ namespace Epsitec.Common.Widgets.Design
 				widget = children[i];
 				model  = widget.Bounds;
 				basel  = widget.BaseLine;
+				
+				if (widget == this.widget)
+				{
+					continue;
+				}
 				
 				double x1 = System.Math.Min (model.Left, bounds.Left);
 				double x2 = System.Math.Max (model.Right, bounds.Right);
