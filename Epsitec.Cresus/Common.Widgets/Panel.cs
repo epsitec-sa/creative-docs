@@ -69,7 +69,10 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.desired_size;
+				double width  = System.Math.Max (this.desired_size.Width, this.MinSize.Width);
+				double height = System.Math.Max (this.desired_size.Height, this.MinSize.Height);
+				
+				return new Drawing.Size (width, height);
 			}
 			set
 			{
@@ -95,7 +98,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.desired_size + this.frame_margins;
+				return this.DesiredSize + this.FrameMargins;
 			}
 		}
 		
@@ -135,6 +138,19 @@ namespace Epsitec.Common.Widgets
 			{
 				this.SurfaceSizeChanged (this);
 			}
+		}
+		
+		protected override void OnMinSizeChanged()
+		{
+			base.OnMinSizeChanged ();
+			this.OnSurfaceSizeChanged ();
+		}
+
+		
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			graphics.AddRectangle (Drawing.Rectangle.Deflate (this.Client.Bounds, 0.5, 0.5));
+			graphics.RenderSolid (Drawing.Color.FromRGB (0, 1, 0));
 		}
 		
 		
