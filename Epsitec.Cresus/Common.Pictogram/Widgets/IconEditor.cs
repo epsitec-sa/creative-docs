@@ -109,9 +109,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			VMenu objMenu = new VMenu();
 			objMenu.Name = "Obj";
 			objMenu.Host = this;
-			this.MenuAdd(objMenu, @"file:images/deselect1.icon", "Deselect", "Deselectionner tout", "");
-			this.MenuAdd(objMenu, @"file:images/selectall1.icon", "SelectAll", "Tout selectionner", "");
-			this.MenuAdd(objMenu, @"file:images/selectinvert1.icon", "SelectInvert", "Inverser la selection", "");
+			this.MenuAdd(objMenu, @"file:images/deselect1.icon", "Deselect", "Désélectionner tout", "");
+			this.MenuAdd(objMenu, @"file:images/selectall1.icon", "SelectAll", "Tout sélectionner", "");
+			this.MenuAdd(objMenu, @"file:images/selectinvert1.icon", "SelectInvert", "Inverser la sélection", "");
+			this.MenuAdd(objMenu, @"file:images/selectmode1.icon", "SelectMode", "Sélection partielle", "");
 			this.MenuAdd(objMenu, @"", "", "", "");
 			this.MenuAdd(objMenu, @"file:images/orderup1.icon", "OrderUp", "Dessus", "");
 			this.MenuAdd(objMenu, @"file:images/orderdown1.icon", "OrderDown", "Dessous", "");
@@ -135,7 +136,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			VMenu showMenu = new VMenu();
 			showMenu.Name = "Show";
 			showMenu.Host = this;
-			this.MenuAdd(showMenu, @"file:images/grid1.icon", "Grid", "Grille magnetique", "");
+			this.MenuAdd(showMenu, @"file:images/grid1.icon", "Grid", "Grille magnétique", "");
 			this.MenuAdd(showMenu, @"file:images/mode1.icon", "Mode", "Tableau des objets", "");
 			this.MenuAdd(showMenu, @"", "", "", "");
 			this.MenuAdd(showMenu, @"file:images/zoom1.icon", "", "Zoom", "");
@@ -149,10 +150,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			zoomMenu.Host = this;
 			this.MenuAdd(zoomMenu, @"file:images/zoommin1.icon", "ZoomMin", "Zoom minimal", "");
 			this.MenuAdd(zoomMenu, @"file:images/zoomdefault1.icon", "ZoomDefault", "Zoom 100%", "");
-			this.MenuAdd(zoomMenu, @"file:images/zoomsel1.icon", "ZoomSel", "Zoom selection", "");
-			this.MenuAdd(zoomMenu, @"file:images/zoomprev1.icon", "ZoomPrev", "Zoom precedent", "");
+			this.MenuAdd(zoomMenu, @"file:images/zoomsel1.icon", "ZoomSel", "Zoom sélection", "");
+			this.MenuAdd(zoomMenu, @"file:images/zoomprev1.icon", "ZoomPrev", "Zoom précédent", "");
 			this.MenuAdd(zoomMenu, @"", "", "", "");
-			this.MenuAdd(zoomMenu, @"file:images/zoomsub1.icon", "ZoomSub", "Reduction", "");
+			this.MenuAdd(zoomMenu, @"file:images/zoomsub1.icon", "ZoomSub", "Réduction", "");
 			this.MenuAdd(zoomMenu, @"file:images/zoomadd1.icon", "ZoomAdd", "Agrandissement", "");
 			zoomMenu.AdjustSize();
 			showMenu.Items[3].Submenu = zoomMenu;
@@ -198,25 +199,25 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.HToolBarAdd(@"file:images/inside1.icon", "Inside", "Entrer dans le groupe");
 			this.HToolBarAdd(@"file:images/outside1.icon", "Outside", "Sortir du groupe");
 			this.HToolBarAdd("", "", "");
-			this.HToolBarAdd(@"file:images/grid1.icon", "Grid", "Grille magnetique");
+			this.HToolBarAdd(@"file:images/grid1.icon", "Grid", "Grille magnétique");
 			this.HToolBarAdd(@"file:images/mode1.icon", "Mode", "Tableau des objets");
 			this.HToolBarAdd("", "", "");
 
 			this.vToolBar = new VToolBar();
 			this.vToolBar.Parent = this;
-			this.VToolBarAdd(@"file:images/select1.icon", "SelectTool", "Selectionner", "Select");
+			this.VToolBarAdd(@"file:images/select1.icon", "SelectTool", "Sélectionner", "Select");
 			this.VToolBarAdd(@"file:images/zoom1.icon", "SelectTool", "Agrandir", "Zoom");
-			this.VToolBarAdd(@"file:images/hand1.icon", "SelectTool", "Deplacer", "Hand");
+			this.VToolBarAdd(@"file:images/hand1.icon", "SelectTool", "Déplacer", "Hand");
 			this.VToolBarAdd(@"file:images/picker1.icon", "SelectTool", "Pipette", "Picker");
 			this.VToolBarAdd("", "", "");
 			this.VToolBarAdd(@"file:images/line1.icon", "SelectTool", "Segment de ligne", "ObjectLine");
-			this.VToolBarAdd(@"file:images/arrow1.icon", "SelectTool", "Fleche", "ObjectArrow");
+			this.VToolBarAdd(@"file:images/arrow1.icon", "SelectTool", "Flèche", "ObjectArrow");
 			this.VToolBarAdd(@"file:images/rectangle1.icon", "SelectTool", "Rectangle", "ObjectRectangle");
 			this.VToolBarAdd(@"file:images/circle1.icon", "SelectTool", "Cercle", "ObjectCircle");
 			this.VToolBarAdd(@"file:images/ellipse1.icon", "SelectTool", "Ellipse", "ObjectEllipse");
-			this.VToolBarAdd(@"file:images/regular1.icon", "SelectTool", "Polygone regulier", "ObjectRegular");
+			this.VToolBarAdd(@"file:images/regular1.icon", "SelectTool", "Polygone régulier", "ObjectRegular");
 			this.VToolBarAdd(@"file:images/poly1.icon", "SelectTool", "Polygone quelconque", "ObjectPoly");
-			this.VToolBarAdd(@"file:images/bezier1.icon", "SelectTool", "Courbes de Bezier", "ObjectBezier");
+			this.VToolBarAdd(@"file:images/bezier1.icon", "SelectTool", "Courbes de Bézier", "ObjectBezier");
 			this.VToolBarAdd(@"file:images/text1.icon", "SelectTool", "Texte", "ObjectText");
 			this.VToolBarAdd("", "", "");
 			
@@ -254,7 +255,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.IsEditable = true;
 			this.drawer.SelectedTool = "Select";
 			this.drawer.PanelChanged += new EventHandler(this.HandleDrawerPanelChanged);
-			this.drawer.ToolChanged += new EventHandler(this.HandleDrawerToolChanged);
+			this.drawer.CommandChanged += new EventHandler(this.HandleDrawerCommandChanged);
 			this.drawer.AllChanged += new EventHandler(this.HandleDrawerAllChanged);
 			this.drawer.ScrollerChanged += new EventHandler(this.HandleDrawerScrollerChanged);
 			this.drawer.InfoObjectChanged += new EventHandler(this.HandleDrawerInfoObjectChanged);
@@ -296,15 +297,16 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.info = new StatusBar();
 			this.info.Parent = this;
 			this.InfoAdd("", 200, "StatusDocument", "");
-			this.InfoAdd(@"file:images/deselect1.icon", 0, "Deselect", "Deselectionner tout");
-			this.InfoAdd(@"file:images/selectall1.icon", 0, "SelectAll", "Tout selectionner");
-			this.InfoAdd(@"file:images/selectinvert1.icon", 0, "SelectInvert", "Inverser la selection");
+			this.InfoAdd(@"file:images/deselect1.icon", 0, "Deselect", "Désélectionner tout");
+			this.InfoAdd(@"file:images/selectall1.icon", 0, "SelectAll", "Tout sélectionner");
+			this.InfoAdd(@"file:images/selectinvert1.icon", 0, "SelectInvert", "Inverser la sélection");
+			this.InfoAdd(@"file:images/selectmode1.icon", 0, "SelectMode", "Sélection partielle");
 			this.InfoAdd("", 120, "StatusObject", "");
 			this.InfoAdd(@"file:images/zoommin1.icon", 0, "ZoomMin", "Zoom minimal");
 			this.InfoAdd(@"file:images/zoomdefault1.icon", 0, "ZoomDefault", "Zoom 100%");
-			this.InfoAdd(@"file:images/zoomsel1.icon", 0, "ZoomSel", "Zoom selection");
-			this.InfoAdd(@"file:images/zoomprev1.icon", 0, "ZoomPrev", "Zoom precedent");
-			this.InfoAdd(@"file:images/zoomsub1.icon", 0, "ZoomSub", "Reduction");
+			this.InfoAdd(@"file:images/zoomsel1.icon", 0, "ZoomSel", "Zoom sélection");
+			this.InfoAdd(@"file:images/zoomprev1.icon", 0, "ZoomPrev", "Zoom précédent");
+			this.InfoAdd(@"file:images/zoomsub1.icon", 0, "ZoomSub", "Réduction");
 			this.InfoAdd(@"file:images/zoomadd1.icon", 0, "ZoomAdd", "Agrandissement");
 			this.InfoAdd("", 90, "StatusZoom", "");
 			this.InfoAdd("", 120, "StatusMouse", "");
@@ -324,7 +326,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.UpdatePanels();
 		}
 
-		private void HandleDrawerToolChanged(object sender)
+		private void HandleDrawerCommandChanged(object sender)
 		{
 			this.drawer.UpdateCommands();
 		}
@@ -613,7 +615,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 			else
 			{
 				this.colorSelector.SetEnabled(true);
+				this.ignoreColorChanged = true;
 				this.colorSelector.Color = this.originColorPanel.OriginColorGet();
+				this.ignoreColorChanged = false;
 				this.originColorType = this.originColorPanel.PropertyType;
 				this.originColorRank = this.originColorPanel.OriginColorRank();
 			}
@@ -622,7 +626,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Couleur d'origine changée dans la roue.
 		private void HandleColorSelectorChanged(object sender)
 		{
-			if ( this.originColorPanel == null )  return;
+			if ( this.ignoreColorChanged || this.originColorPanel == null )  return;
 			this.originColorPanel.OriginColorChange(this.colorSelector.Color);
 
 			AbstractProperty property = this.originColorPanel.GetProperty();
@@ -851,5 +855,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected int							originColorRank = -1;
 		protected double						leftHeightUsed = 0;
 		protected string						filename = "";
+		protected bool							ignoreColorChanged = false;
 	}
 }
