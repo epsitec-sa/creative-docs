@@ -208,7 +208,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "resources\strings.resource"
+                    RelPath = "resources\strings.00.resource"
                     BuildAction = "None"
                 />
             </Include>
