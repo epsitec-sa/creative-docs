@@ -12,9 +12,9 @@ namespace Epsitec.Common.Widgets
 		{
 			this.vertical = vertical;
 			
-			this.internalState |= InternalState.AutoEngage;
-			this.internalState |= InternalState.Engageable;
-			this.internalState |= InternalState.AutoRepeatEngaged;
+			this.InternalState |= InternalState.AutoEngage;
+			this.InternalState |= InternalState.Engageable;
+			this.InternalState |= InternalState.AutoRepeatEngaged;
 
 			this.arrowUp = new ArrowButton(this);
 			this.arrowDown = new ArrowButton(this);
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Widgets
 				{
 					this.position = value;
 					this.Invalidate();
-					OnMoved();
+					this.OnValueChanged();
 				}
 			}
 		}
@@ -397,11 +397,11 @@ namespace Epsitec.Common.Widgets
 
 
 		// Génère un événement pour dire que l'ascenseur a bougé.
-		protected virtual void OnMoved()
+		protected virtual void OnValueChanged()
 		{
-			if ( this.Moved != null )  // qq'un écoute ?
+			if ( this.ValueChanged != null )  // qq'un écoute ?
 			{
-				this.Moved(this);
+				this.ValueChanged(this);
 			}
 		}
 
@@ -485,7 +485,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public event EventHandler Moved;
+		public event EventHandler ValueChanged;
 
 		
 		protected static readonly double	defaultBreadth = 17;
