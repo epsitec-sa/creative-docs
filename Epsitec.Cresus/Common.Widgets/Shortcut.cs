@@ -145,6 +145,34 @@ namespace Epsitec.Common.Widgets
 			return System.String.Format ("[{0}{1}]", this.KeyCodeOnly.ToString (), extra.ToString ());
 		}
 
+		public override bool Equals(object obj)
+		{
+			Shortcut s = obj as Shortcut;
+			
+			if (s == null)
+			{
+				return false;
+			}
+			
+			return (this.mode == s.mode) && (this.key_code == s.key_code);
+		}
+		
+		public override int GetHashCode()
+		{
+			return base.GetHashCode ();
+		}
+		
+		
+		public static bool operator==(Shortcut a, Shortcut b)
+		{
+			return System.Object.Equals (a, b);
+		}
+		
+		public static bool operator!=(Shortcut a, Shortcut b)
+		{
+			return ! System.Object.Equals (a, b);
+		}
+		
 		
 		private ShortcutMode			mode;
 		private char					mnemonic_code;
