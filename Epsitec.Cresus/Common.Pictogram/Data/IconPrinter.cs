@@ -56,7 +56,11 @@ namespace Epsitec.Common.Pictogram.Data
 			public Printing.PrintEngineStatus PrintPage(Printing.PrintPort port)
 			{
 				double zoom = this.paperSize.Width / this.iconPrinter.iconObjects.Size.Width;
+#if true
 				port.ScaleTransform(zoom, zoom, 0, 0);
+#else
+				port.TranslateTransform(5, 5);
+#endif
 				this.iconPrinter.PrintGeometry(port, this.iconContext, 0, true);
 				return Printing.PrintEngineStatus.FinishJob;
 			}
@@ -69,10 +73,10 @@ namespace Epsitec.Common.Pictogram.Data
 
 		
 		// Imprime la géométrie de tous les objets.
-		public void PrintGeometry(Printing.PrintPort port,
-								  IconContext iconContext,
-								  int pageNumber,
-								  bool showAllLayers)
+		protected void PrintGeometry(Printing.PrintPort port,
+									 IconContext iconContext,
+									 int pageNumber,
+									 bool showAllLayers)
 		{
 			if ( this.iconObjects.Objects.Count == 0 )  return;
 			ObjectPattern pattern = this.iconObjects.Objects[0] as ObjectPattern;
@@ -81,11 +85,11 @@ namespace Epsitec.Common.Pictogram.Data
 			this.PrintGeometry(page.Objects, port, iconContext, showAllLayers, !showAllLayers);
 		}
 
-		public void PrintGeometry(System.Collections.ArrayList objects,
-								 Printing.PrintPort port,
-								 IconContext iconContext,
-								 bool showAllLayers,
-								 bool dimmed)
+		protected void PrintGeometry(System.Collections.ArrayList objects,
+									 Printing.PrintPort port,
+									 IconContext iconContext,
+									 bool showAllLayers,
+									 bool dimmed)
 		{
 			System.Collections.ArrayList root = this.iconObjects.CurrentGroup;
 			if ( objects == root )  dimmed = false;

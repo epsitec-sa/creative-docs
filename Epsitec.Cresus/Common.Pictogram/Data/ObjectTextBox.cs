@@ -281,7 +281,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Dessine le texte du pavé.
-		protected void DrawText(Drawing.IPaintPort graphics, IconContext iconContext)
+		protected void DrawText(Drawing.IPaintPort port, IconContext iconContext)
 		{
 			Drawing.Point p1, p2, p3, p4;
 			switch ( this.PropertyJustif(4).Orientation )
@@ -345,46 +345,55 @@ namespace Epsitec.Common.Pictogram.Data
 
 			     if ( jh == JustifHorizontal.Justif )  this.textLayout.JustifMode = Drawing.TextJustifMode.AllButLast;
 			else if ( jh == JustifHorizontal.All    )  this.textLayout.JustifMode = Drawing.TextJustifMode.All;
-			else                                       this.textLayout.JustifMode = Drawing.TextJustifMode.None;
+			else                                       this.textLayout.JustifMode = Drawing.TextJustifMode.NoLine;
 
-			Drawing.Transform ot = graphics.Transform;
+			Drawing.Transform ot = port.Transform;
 
 			double angle = Drawing.Point.ComputeAngleDeg(p1, p2);
 			this.transform = new Drawing.Transform();
-			transform.Translate(p1);
-			transform.RotateDeg(angle, p1);
-			graphics.MergeTransform(transform);
+			this.transform.Translate(p1);
+			this.transform.RotateDeg(angle, p1);
+			port.MergeTransform(transform);
 
-			if ( graphics is Drawing.Graphics && this.edited && this.textNavigator.Context.CursorFrom != this.textNavigator.Context.CursorTo )
+			if ( port is Drawing.Graphics && this.edited && this.textNavigator.Context.CursorFrom != this.textNavigator.Context.CursorTo )
 			{
-				Drawing.Graphics g = graphics as Drawing.Graphics;
+				Drawing.Graphics graphics = port as Drawing.Graphics;
 				int from = System.Math.Min(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
 				int to   = System.Math.Max(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
 				TextLayout.SelectedArea[] areas = this.textLayout.FindTextRange(new Drawing.Point(0,0), from, to);
 				for ( int i=0 ; i<areas.Length ; i++ )
 				{
-					g.Align(ref areas[i].Rect);
-					g.AddFilledRectangle(areas[i].Rect);
-					g.RenderSolid(IconContext.ColorSelectEdit);
+					graphics.Align(ref areas[i].Rect);
+					graphics.AddFilledRectangle(areas[i].Rect);
+					graphics.RenderSolid(IconContext.ColorSelectEdit);
 				}
 			}
 
 			this.textLayout.ShowLineBreak = this.edited;
-			this.textLayout.Paint(new Drawing.Point(0,0), graphics);
-
-			if ( graphics is Drawing.Graphics && this.edited && this.textNavigator.Context.CursorTo != -1 )
+			this.textLayout.Paint(new Drawing.Point(0,0), port);
+#if true
+			if ( port is Printing.PrintPort )
 			{
+				port.Color = Drawing.Color.FromBrightness(0.5);
+				port.LineWidth = 1.0/iconContext.ScaleX;
+				port.PaintOutline(Drawing.Path.FromLine(new Drawing.Point(-2,0), new Drawing.Point(2,0)));
+				port.PaintOutline(Drawing.Path.FromLine(new Drawing.Point(0,-2), new Drawing.Point(0,2)));
+			}
+#endif
+
+			if ( port is Drawing.Graphics && this.edited && this.textNavigator.Context.CursorTo != -1 )
+			{
+				Drawing.Graphics graphics = port as Drawing.Graphics;
 				Drawing.Point c1, c2;
 				if ( this.textLayout.FindTextCursor(this.textNavigator.Context, out c1, out c2) )
 				{
-					Drawing.Graphics g = graphics as Drawing.Graphics;
 					graphics.LineWidth = 1.0/iconContext.ScaleX;
-					g.AddLine(c1, c2);
-					g.RenderSolid(IconContext.ColorFrameEdit);
+					graphics.AddLine(c1, c2);
+					graphics.RenderSolid(IconContext.ColorFrameEdit);
 				}
 			}
 
-			graphics.Transform = ot;
+			port.Transform = ot;
 		}
 
 		// Dessine l'objet.

@@ -2091,7 +2091,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Dessine le texte d'une cellule.
-		protected void DrawCellText(Drawing.Graphics graphics, IconContext iconContext, int c, int r)
+		protected void DrawCellText(Drawing.IPaintPort port, IconContext iconContext, int c, int r)
 		{
 			TextLayout textLayout = this.Cell(c,r).TextLayout;
 			TextNavigator textNavigator = this.Cell(c,r).TextNavigator;
@@ -2129,24 +2129,25 @@ namespace Epsitec.Common.Pictogram.Data
 
 			     if ( jh == JustifHorizontal.Justif )  textLayout.JustifMode = Drawing.TextJustifMode.AllButLast;
 			else if ( jh == JustifHorizontal.All    )  textLayout.JustifMode = Drawing.TextJustifMode.All;
-			else                                       textLayout.JustifMode = Drawing.TextJustifMode.None;
+			else                                       textLayout.JustifMode = Drawing.TextJustifMode.NoLine;
 
-			Drawing.Transform ot = graphics.Transform;
+			Drawing.Transform ot = port.Transform;
 
 			double angle = Drawing.Point.ComputeAngleDeg(p1, p2);
 			Drawing.Transform transform = new Drawing.Transform();
 			transform.Translate(p1);
 			transform.RotateDeg(angle, p1);
 			this.Cell(c,r).Transform = transform;
-			graphics.MergeTransform(transform);
+			port.MergeTransform(transform);
 
 			bool edited = this.edited;
 			int ce = this.cellToEdit%(this.columns+1);
 			int re = this.cellToEdit/(this.columns+1);
 			if ( ce != c || re != r )  edited = false;
 
-			if ( edited && textNavigator.Context.CursorFrom != textNavigator.Context.CursorTo )
+			if ( port is Drawing.Graphics && edited && textNavigator.Context.CursorFrom != textNavigator.Context.CursorTo )
 			{
+				Drawing.Graphics graphics = port as Drawing.Graphics;
 				int from = System.Math.Min(textNavigator.Context.CursorFrom, textNavigator.Context.CursorTo);
 				int to   = System.Math.Max(textNavigator.Context.CursorFrom, textNavigator.Context.CursorTo);
 				TextLayout.SelectedArea[] areas = textLayout.FindTextRange(new Drawing.Point(0,0), from, to);
@@ -2159,10 +2160,11 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 
 			textLayout.ShowLineBreak = edited;
-			textLayout.Paint(new Drawing.Point(0,0), graphics);
+			textLayout.Paint(new Drawing.Point(0,0), port);
 
-			if ( edited && textNavigator.Context.CursorTo != -1 )
+			if ( port is Drawing.Graphics && edited && textNavigator.Context.CursorTo != -1 )
 			{
+				Drawing.Graphics graphics = port as Drawing.Graphics;
 				Drawing.Point c1, c2;
 				if ( textLayout.FindTextCursor(textNavigator.Context, out c1, out c2) )
 				{
@@ -2172,11 +2174,11 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 			}
 
-			graphics.Transform = ot;
+			port.Transform = ot;
 		}
 
 		// Dessine le fond d'une cellule.
-		protected void DrawCellSurface(Drawing.Graphics graphics, IconContext iconContext, int c, int r)
+		protected void DrawCellSurface(Drawing.IPaintPort port, IconContext iconContext, int c, int r)
 		{
 			Drawing.Path path = new Drawing.Path();
 			path.MoveTo(this.Cell(c,r).BottomLeft);
@@ -2184,12 +2186,21 @@ namespace Epsitec.Common.Pictogram.Data
 			path.LineTo(this.Cell(c,r).TopRight);
 			path.LineTo(this.Cell(c,r).BottomRight);
 			path.Close();
-			graphics.Rasterizer.AddSurface(path);
-			graphics.RenderSolid(iconContext.AdaptColor(this.Cell(c,r).BackColor.Color));
+			if ( port is Drawing.Graphics )
+			{
+				Drawing.Graphics graphics = port as Drawing.Graphics;
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(iconContext.AdaptColor(this.Cell(c,r).BackColor.Color));
+			}
+			else
+			{
+				port.Color = this.Cell(c,r).BackColor.Color;
+				port.PaintSurface(path);
+			}
 		}
 
 		// Dessine les traits d'une cellule.
-		protected void DrawCellOutline(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects, int c, int r)
+		protected void DrawCellOutline(Drawing.IPaintPort port, IconContext iconContext, IconObjects iconObjects, int c, int r)
 		{
 			PropertyLine line;
 			PropertyColor color;
@@ -2199,14 +2210,34 @@ namespace Epsitec.Common.Pictogram.Data
 			path.LineTo(this.Cell(c,r).BottomRight);
 			line = this.Cell(c,r).BottomLine;
 			color = this.Cell(c,r).BottomColor;
-			line.DrawPath(graphics, iconContext, iconObjects, path, color.Color);
+			if ( port is Drawing.Graphics )
+			{
+				Drawing.Graphics graphics = port as Drawing.Graphics;
+				line.DrawPath(graphics, iconContext, iconObjects, path, color.Color);
+			}
+			else
+			{
+				Printing.PrintPort pp = port as Printing.PrintPort;
+				pp.Color = color.Color;
+				line.PaintOutline(pp, iconContext, path);
+			}
 
 			path = new Drawing.Path();
 			path.MoveTo(this.Cell(c,r).BottomLeft);
 			path.LineTo(this.Cell(c,r).TopLeft);
 			line = this.Cell(c,r).LeftLine;
 			color = this.Cell(c,r).LeftColor;
-			line.DrawPath(graphics, iconContext, iconObjects, path, color.Color);
+			if ( port is Drawing.Graphics )
+			{
+				Drawing.Graphics graphics = port as Drawing.Graphics;
+				line.DrawPath(graphics, iconContext, iconObjects, path, color.Color);
+			}
+			else
+			{
+				Printing.PrintPort pp = port as Printing.PrintPort;
+				pp.Color = color.Color;
+				line.PaintOutline(pp, iconContext, path);
+			}
 		}
 
 		// Dessine la mise en évidence d'une cellule.
@@ -2344,6 +2375,42 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Imprime l'objet.
+		public override void PrintGeometry(Printing.PrintPort port, IconContext iconContext, IconObjects iconObjects)
+		{
+			base.PrintGeometry(port, iconContext, iconObjects);
+
+			if ( this.TotalHandle < 2 )  return;
+
+			// Imprime tous fonds de cellules.
+			for ( int c=0 ; c<this.columns ; c++ )
+			{
+				for ( int r=0 ; r<this.rows ; r++ )
+				{
+					this.DrawCellSurface(port, iconContext, c,r);
+				}
+			}
+
+			// Imprime tous les textes des cellules.
+			for ( int c=0 ; c<this.columns ; c++ )
+			{
+				for ( int r=0 ; r<this.rows ; r++ )
+				{
+					this.DrawCellText(port, iconContext, c,r);
+				}
+			}
+
+			// Imprime tous les traits des cellules.
+			for ( int c=0 ; c<this.columns+1 ; c++ )
+			{
+				for ( int r=0 ; r<this.rows+1 ; r++ )
+				{
+					this.DrawCellOutline(port, iconContext, iconObjects, c,r);
+				}
+			}
+		}
+
+		
 		// Arrange un objet après sa désérialisation. Il faut supprimer les
 		// premières cellules crées dans le constructeur, pour laisser celles
 		// qui ont été désérialisées prendre leurs places.

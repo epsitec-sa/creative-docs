@@ -1032,7 +1032,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Dessine le texte le long de la courbe multiple.
-		protected void DrawTextCurve(Drawing.IPaintPort graphics, IconContext iconContext)
+		protected void DrawTextCurve(Drawing.IPaintPort port, IconContext iconContext)
 		{
 			if ( !this.AdvanceInit() )  return;
 
@@ -1051,52 +1051,52 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				int rank = this.advanceRank-1;
 
-				if ( graphics is Drawing.Graphics && this.edited && cursorFrom != cursorTo && rank >= cursorFrom && rank < cursorTo )
+				if ( port is Drawing.Graphics && this.edited && cursorFrom != cursorTo && rank >= cursorFrom && rank < cursorTo )
 				{
-					Drawing.Graphics g = graphics as Drawing.Graphics;
+					Drawing.Graphics graphics = port as Drawing.Graphics;
 					Drawing.Path path = new Drawing.Path();
 					path.MoveTo(pbl);
 					path.LineTo(pbr);
 					path.LineTo(ptr);
 					path.LineTo(ptl);
 					path.Close();
-					g.Rasterizer.AddSurface(path);
-					g.RenderSolid(IconContext.ColorSelectEdit);
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(IconContext.ColorSelectEdit);
 				}
 
-				Drawing.Transform ot = graphics.Transform;
-				graphics.RotateTransformDeg(angle, pos.X, pos.Y);
-				if ( graphics is Drawing.Graphics )
+				Drawing.Transform ot = port.Transform;
+				port.RotateTransformDeg(angle, pos.X, pos.Y);
+				if ( port is Drawing.Graphics )
 				{
-					Drawing.Graphics g = graphics as Drawing.Graphics;
-					g.AddText(pos.X, pos.Y, character, font, fontSize);
-					g.RenderSolid(iconContext.AdaptColor(fontColor));
+					Drawing.Graphics graphics = port as Drawing.Graphics;
+					graphics.AddText(pos.X, pos.Y, character, font, fontSize);
+					graphics.RenderSolid(iconContext.AdaptColor(fontColor));
 				}
 				else
 				{
-					graphics.Color = iconContext.AdaptColor(fontColor);
-					graphics.PaintText(pos.X, pos.Y, character, font, fontSize);
+					port.Color = iconContext.AdaptColor(fontColor);
+					port.PaintText(pos.X, pos.Y, character, font, fontSize);
 				}
-				graphics.Transform = ot;
+				port.Transform = ot;
 
-				if ( graphics is Drawing.Graphics && this.edited && rank == this.textNavigator.Context.CursorTo )
+				if ( port is Drawing.Graphics && this.edited && rank == this.textNavigator.Context.CursorTo )
 				{
-					Drawing.Graphics g = graphics as Drawing.Graphics;
-					g.LineWidth = 1.0/iconContext.ScaleX;
-					g.AddLine(ptl, pbl);
-					g.RenderSolid(IconContext.ColorFrameEdit);
+					Drawing.Graphics graphics = port as Drawing.Graphics;
+					graphics.LineWidth = 1.0/iconContext.ScaleX;
+					graphics.AddLine(ptl, pbl);
+					graphics.RenderSolid(IconContext.ColorFrameEdit);
 				}
 				
 				lastTop    = ptr;
 				lastBottom = pbr;
 			}
 
-			if ( graphics is Drawing.Graphics && this.edited && this.advanceRank-1 == this.textNavigator.Context.CursorTo )
+			if ( port is Drawing.Graphics && this.edited && this.advanceRank-1 == this.textNavigator.Context.CursorTo )
 			{
-				Drawing.Graphics g = graphics as Drawing.Graphics;
-				g.LineWidth = 1.0/iconContext.ScaleX;
-				g.AddLine(lastTop, lastBottom);
-				g.RenderSolid(IconContext.ColorFrameEdit);
+				Drawing.Graphics graphics = port as Drawing.Graphics;
+				graphics.LineWidth = 1.0/iconContext.ScaleX;
+				graphics.AddLine(lastTop, lastBottom);
+				graphics.RenderSolid(IconContext.ColorFrameEdit);
 			}
 		}
 
