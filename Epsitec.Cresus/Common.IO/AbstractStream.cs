@@ -1,5 +1,5 @@
-//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : OK/PA, 15/04/2004
+//	Copyright © 2004-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Common.IO
 {
@@ -10,9 +10,6 @@ namespace Epsitec.Common.IO
 	{
 		public AbstractStream()
 		{
-			//
-			// TODO: Add constructor logic here
-			//
 		}
 		
 		
@@ -101,6 +98,7 @@ namespace Epsitec.Common.IO
 		public override void Close()
 		{
 			this.stream.Close ();
+			this.stream = null;
 		}
 
 		public override void Flush()
