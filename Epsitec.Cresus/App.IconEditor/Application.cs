@@ -71,12 +71,14 @@ namespace Epsitec.Icons
 
 		private void HandleRootClientGeometryUpdated(object sender)
 		{
+#if DEBUG
 			if (this.in_geom_update == 0)
 			{
 				this.in_geom_update++;
 				this.main_window.Root.SetClientZoom (this.main_window.Root.Width / 800);
 				this.in_geom_update--;
 			}
+#endif
 		}
 	}
 }
