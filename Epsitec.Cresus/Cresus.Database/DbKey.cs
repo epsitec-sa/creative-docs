@@ -110,14 +110,11 @@ namespace Epsitec.Cresus.Database
 		}
 
 		
-		internal void SerialiseXmlAttributes(System.Text.StringBuilder buffer)
+		public void SerialiseXmlAttributes(System.Text.StringBuilder buffer)
 		{
-			if (this.id != 0)
-			{
-				buffer.Append (@" key.id=""");
-				buffer.Append (this.id.ToString (System.Globalization.CultureInfo.InvariantCulture));
-				buffer.Append (@"""");
-			}
+			buffer.Append (@" key.id=""");
+			buffer.Append (this.id.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			buffer.Append (@"""");
 			
 			if (this.revision != 0)
 			{
@@ -134,26 +131,43 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		internal void ProcessXmlAttributes(System.Xml.XmlElement xml)
+		
+		public static DbKey NewDbKeyFromAttributes(System.Xml.XmlElement xml)
 		{
+			//	Utilise les attributs de l'élément passé en entrée pour reconstruire
+			//	une instance de DbKey. Retourne null si aucun attribut ne correspond.
+			
 			string arg_id   = xml.GetAttribute ("key.id");
 			string arg_rev  = xml.GetAttribute ("key.rev");
 			string arg_stat = xml.GetAttribute ("key.stat");
 			
+			if ((arg_id == "") &&
+				(arg_rev == "") &&
+				(arg_stat == ""))
+			{
+				return null;
+			}
+			
+			long id         = 0;
+			int  revision   = 0;
+			int  raw_status = 0;
+			
 			if (arg_id.Length > 0)
 			{
-				this.id = System.Int64.Parse (arg_id, System.Globalization.CultureInfo.InvariantCulture);
+				id = System.Int64.Parse (arg_id, System.Globalization.CultureInfo.InvariantCulture);
 			}
 			
 			if (arg_rev.Length > 0)
 			{
-				this.revision = System.Int32.Parse (arg_rev, System.Globalization.CultureInfo.InvariantCulture);
+				revision = System.Int32.Parse (arg_rev, System.Globalization.CultureInfo.InvariantCulture);
 			}
 			
-			if (arg_id.Length > 0)
+			if (arg_stat.Length > 0)
 			{
-				this.raw_status = System.Int32.Parse (arg_stat, System.Globalization.CultureInfo.InvariantCulture);
+				raw_status = System.Int32.Parse (arg_stat, System.Globalization.CultureInfo.InvariantCulture);
 			}
+			
+			return new DbKey (id, revision, raw_status);
 		}
 		
 		
