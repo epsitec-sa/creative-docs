@@ -192,6 +192,7 @@ namespace Epsitec.Common.Script
 		{
 			buffer.Append ("public override bool Execute(string name, object[] in_args, out object[] out_args)\n");
 			buffer.Append ("{\n");
+			buffer.Append ("out_args = null;\n");
 			buffer.Append ("switch (name)\n{\n");
 			
 			foreach (Method method in this.methods)
@@ -208,7 +209,6 @@ namespace Epsitec.Common.Script
 			}
 			
 			buffer.Append ("}\n");
-			buffer.Append ("out_args = null;\n");
 			buffer.Append ("return false;\n");
 			buffer.Append ("}\n");
 		}
@@ -225,14 +225,30 @@ namespace Epsitec.Common.Script
 				buffer.Append (parameter.Type.SystemType.FullName);
 				buffer.Append (" p_");
 				buffer.Append (parameter.Name);
+				buffer.Append (";\n");
 				
 				if (parameter.IsIn)
 				{
-					buffer.Append (" = (");
-					buffer.Append (parameter.Type.SystemType.FullName);
-					buffer.Append (") in_args[");
-					buffer.Append (in_index.ToString (System.Globalization.CultureInfo.InvariantCulture));
-					buffer.Append ("]");
+					if (parameter.Type is Types.IEnum)
+					{
+						buffer.Append ("if (! Epsitec.Common.Types.Converter.SafeConvert (");
+						buffer.Append ("in_args[");
+						buffer.Append (in_index.ToString (System.Globalization.CultureInfo.InvariantCulture));
+						buffer.Append ("], typeof (");
+						buffer.Append (parameter.Type.SystemType.FullName);
+						buffer.Append ("), out p_");
+						buffer.Append (parameter.Name);
+						buffer.Append (")) return false;\n");
+					}
+					else
+					{
+						buffer.Append ("if (! Epsitec.Common.Types.Converter.SafeConvert (");
+						buffer.Append ("in_args[");
+						buffer.Append (in_index.ToString (System.Globalization.CultureInfo.InvariantCulture));
+						buffer.Append ("], out p_");
+						buffer.Append (parameter.Name);
+						buffer.Append (")) return false;\n");
+					}
 					
 					in_index++;
 				}
@@ -240,8 +256,6 @@ namespace Epsitec.Common.Script
 				{
 					out_index++;
 				}
-				
-				buffer.Append (";\n");
 			}
 			
 			if (out_index == 0)
