@@ -148,11 +148,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ComponentCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Events.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -168,27 +163,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "IComponent.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "IContainer.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "ImageProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "INamedStringSelection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "INumValue.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -198,17 +173,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "IPropertyProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "IResourceProvider.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "IStringSelection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -273,6 +238,46 @@
                 />
                 <File
                     RelPath = "ValidationRule.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\ComponentCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\IChangedSource.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\IComponent.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\IContainer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\INamedStringSelection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\INumValue.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\IPropertyProvider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Data\IStringSelection.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
