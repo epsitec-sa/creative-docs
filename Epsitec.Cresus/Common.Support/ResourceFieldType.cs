@@ -10,9 +10,9 @@ namespace Epsitec.Common.Support
 	public enum ResourceFieldType
 	{
 		None,							//	champ n'existe pas
-		String,							//	champ contient du texte
+		Data,							//	champ contient des données (string)
 		Binary,							//	champ contient des données binaires
 		Bundle,							//	champ contient un bundle
-		BundleList						//	champ contient une liste de bundles
+		List							//	champ contient une liste (de bundles)
 	}
 }

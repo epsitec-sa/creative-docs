@@ -15,10 +15,12 @@ namespace Epsitec.Common.Support
 		
 		public ResourceException(string message) : base (message)
 		{
+			System.Diagnostics.Debug.WriteLine ("Raising ResourceException: " + message);
 		}
 		
 		public ResourceException(string message, System.Exception inner_exception) : base (message, inner_exception)
 		{
+			System.Diagnostics.Debug.WriteLine ("Raising ResourceException: " + message + "/" + inner_exception.Message);
 		}
 	}
 }
