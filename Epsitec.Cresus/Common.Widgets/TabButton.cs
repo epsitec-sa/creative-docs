@@ -17,7 +17,8 @@ namespace Epsitec.Common.Widgets
 		
 		public override Drawing.Rectangle GetPaintBounds()
 		{
-			return new Drawing.Rectangle(0, -2, this.clientInfo.width, this.clientInfo.height+2);
+			//return new Drawing.Rectangle(0, -2, this.clientInfo.width, this.clientInfo.height+2);
+			return new Drawing.Rectangle(-2, -2, this.clientInfo.width+2, this.clientInfo.height+2);
 		}
 
 		// Dessine le bouton.
@@ -40,11 +41,13 @@ namespace Epsitec.Common.Widgets
 			{
 				rect.Bottom -= 2;
 				adorner.PaintTabAboveBackground(graphics, frameRect, rect, state, dir);
+				pos.Y += 1;
 			}
 			else
 			{
 				rect.Top -= 2;
 				adorner.PaintTabSunkenBackground(graphics, frameRect, rect, state, dir);
+				pos.Y -= 1;
 			}
 
 			adorner.PaintButtonTextLayout(graphics, pos, this.textLayout, state, dir, ButtonStyle.Normal);
