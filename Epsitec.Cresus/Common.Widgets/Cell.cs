@@ -8,6 +8,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public Cell()
 		{
+			this.InternalState |= InternalState.InheritFocus;
 		}
 		
 		public Cell(Widget embedder) : this()
