@@ -46,6 +46,15 @@ namespace Epsitec.Common.Tests
 			window.Show ();
 		}
 
+		[Test] public void CheckClipping()
+		{
+			WindowFrame window = new WindowFrame ();
+			
+			window.Text = "CheckClipping";
+			window.Root.PaintForeground += new PaintEventHandler(Clipping_PaintForeground);
+			window.Show ();
+		}
+
 		[Test] public void CheckTransform()
 		{
 			WindowFrame window = new WindowFrame ();
@@ -216,6 +225,53 @@ namespace Epsitec.Common.Tests
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
 			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
 			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
+		}
+		
+		private void Clipping_PaintForeground(object sender, PaintEventArgs e)
+		{
+			WindowRoot root = sender as WindowRoot;
+			
+			double cx = root.Client.Width / 2;
+			double cy = root.Client.Height / 2;
+			
+			e.Graphics.RotateTransform (15, cx, cy);
+			e.Graphics.ScaleTransform (1.2, 1.2, 0, 0);
+			
+			e.Graphics.AddLine (cx, cy-5, cx, cy+5);
+			e.Graphics.AddLine (cx-5, cy, cx+5, cy);
+			e.Graphics.RenderSolid (Color.FromBrightness (0));
+			
+			Path path1 = new Path ();
+			Path path2 = new Path ();
+			Font font  = Font.GetFont ("Times New Roman", "Regular");
+			
+			path1.MoveTo (10, 10);
+			path1.LineTo (10, 110);
+			path1.LineTo (110, 60);
+			path1.Close ();
+			path1.MoveTo (20, 25);
+			path1.LineTo (95, 60);
+			path1.LineTo (20, 95);
+			path1.Close ();
+			
+			path2.MoveTo (210, 10);
+			path2.LineTo (210, 110);
+			path2.LineTo (310, 60);
+			path2.Close ();
+			path2.MoveTo (220, 25);
+			path2.LineTo (220, 95);
+			path2.LineTo (295, 60);
+			path2.Close ();
+			
+			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
+			e.Graphics.SetClippingRectangle (50, 50, root.Client.Width - 100, 50);
+			
+			e.Graphics.Rasterizer.AddSurface (path1);
+			e.Graphics.Rasterizer.AddSurface (path2);
+			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'),  30, 60, 100);
+			e.Graphics.Rasterizer.AddGlyph (font, font.GetGlyphIndex ('A'), 230, 60, 100);
+			e.Graphics.RenderSolid (Color.FromRGB (1, 0, 0));
+			e.Graphics.ResetClippingRectangle ();
 		}
 		
 		private void Transform_PaintForeground(object sender, PaintEventArgs e)
