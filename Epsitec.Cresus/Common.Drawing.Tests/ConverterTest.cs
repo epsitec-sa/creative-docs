@@ -12,8 +12,8 @@ namespace Epsitec.Common.Drawing
 			string sa = conv.ConvertToString (a);
 			Point b = (Point) conv.ConvertFromString (sa);
 			
-			Assertion.AssertEquals (a, b);
-			Assertion.AssertEquals (sa, conv.ConvertToString (b));
+			Assert.AreEqual (a, b);
+			Assert.AreEqual (sa, conv.ConvertToString (b));
 		}
 		
 		[Test] public void CheckSize()
@@ -24,8 +24,8 @@ namespace Epsitec.Common.Drawing
 			string sa = conv.ConvertToString (a);
 			Size b = (Size) conv.ConvertFromString (sa);
 			
-			Assertion.AssertEquals (a, b);
-			Assertion.AssertEquals (sa, conv.ConvertToString (b));
+			Assert.AreEqual (a, b);
+			Assert.AreEqual (sa, conv.ConvertToString (b));
 		}
 		
 		[Test] public void CheckRectangle()
@@ -36,8 +36,8 @@ namespace Epsitec.Common.Drawing
 			string sa = conv.ConvertToString (a);
 			Rectangle b = (Rectangle) conv.ConvertFromString (sa);
 			
-			Assertion.AssertEquals (a, b);
-			Assertion.AssertEquals (sa, conv.ConvertToString (b));
+			Assert.AreEqual (a, b);
+			Assert.AreEqual (sa, conv.ConvertToString (b));
 		}
 		
 		[Test] public void CheckColor()
@@ -53,10 +53,10 @@ namespace Epsitec.Common.Drawing
 			Color b1 = (Color) conv.ConvertFromString (sa1);
 			Color b2 = (Color) conv.ConvertFromString (sa2);
 			
-			Assertion.AssertEquals (a1, b1);
-			Assertion.AssertEquals (a2, b2);
-			Assertion.AssertEquals (sa1, conv.ConvertToString (b1));
-			Assertion.AssertEquals (sa2, conv.ConvertToString (b2));
+			Assert.AreEqual (a1, b1);
+			Assert.AreEqual (a2, b2);
+			Assert.AreEqual (sa1, conv.ConvertToString (b1));
+			Assert.AreEqual (sa2, conv.ConvertToString (b2));
 		}
 	}
 }

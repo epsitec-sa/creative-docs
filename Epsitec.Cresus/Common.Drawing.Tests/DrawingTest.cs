@@ -26,10 +26,10 @@ namespace Epsitec.Common.Drawing
 			Point pt3 = Point.Parse ("*;30", System.Globalization.CultureInfo.InvariantCulture, pt1);
 			Point pt4 = Point.Parse ("40;*", System.Globalization.CultureInfo.InvariantCulture, pt1);
 			
-			Assertion.AssertEquals (pt1, pt2);
-			Assertion.AssertEquals (new Point (10, 30), pt3);
-			Assertion.AssertEquals (new Point (40, 20), pt4);
-			Assertion.AssertEquals ("[10;20]", pt1.ToString ());
+			Assert.AreEqual (pt1, pt2);
+			Assert.AreEqual (new Point (10, 30), pt3);
+			Assert.AreEqual (new Point (40, 20), pt4);
+			Assert.AreEqual ("[10;20]", pt1.ToString ());
 		}
 		
 		[Test] public void CheckSizeToStringParse()
@@ -39,10 +39,10 @@ namespace Epsitec.Common.Drawing
 			Size sz3 = Size.Parse ("*;30", System.Globalization.CultureInfo.InvariantCulture, sz1);
 			Size sz4 = Size.Parse ("40;*", System.Globalization.CultureInfo.InvariantCulture, sz1);
 			
-			Assertion.AssertEquals (sz1, sz2);
-			Assertion.AssertEquals (new Size (10, 30), sz3);
-			Assertion.AssertEquals (new Size (40, 20), sz4);
-			Assertion.AssertEquals ("[10;20]", sz1.ToString ());
+			Assert.AreEqual (sz1, sz2);
+			Assert.AreEqual (new Size (10, 30), sz3);
+			Assert.AreEqual (new Size (40, 20), sz4);
+			Assert.AreEqual ("[10;20]", sz1.ToString ());
 		}
 		
 		[Test] [ExpectedException (typeof (System.NullReferenceException))]

@@ -16,15 +16,15 @@ namespace Epsitec.Common.Drawing
 			Color c4 = Color.FromName ("White");
 			Color c5 = new Color (System.Drawing.Color.Empty);
 			
-			Assertion.Assert (c1 == c2);
-			Assertion.Assert (c1 == c3);
-			Assertion.Assert (c1 != c4);
-			Assertion.Assert (c1.IsValid);
-			Assertion.Assert (c1.IsInRange == true);
-			Assertion.Assert (c4.IsValid);
-			Assertion.Assert (c4.IsInRange == true);
-			Assertion.Assert (c5.IsEmpty);
-			Assertion.AssertEquals ("Empty test failed", c5, Color.Empty);
+			Assert.IsTrue (c1 == c2);
+			Assert.IsTrue (c1 == c3);
+			Assert.IsTrue (c1 != c4);
+			Assert.IsTrue (c1.IsValid);
+			Assert.IsTrue (c1.IsInRange == true);
+			Assert.IsTrue (c4.IsValid);
+			Assert.IsTrue (c4.IsInRange == true);
+			Assert.IsTrue (c5.IsEmpty);
+			Assert.AreEqual (c5, Color.Empty, "Empty test failed");
 		}
 		
 		[Test] public void CheckComponents()
@@ -36,27 +36,27 @@ namespace Epsitec.Common.Drawing
 			
 			Color color = Color.FromARGB (a, r, g, b);
 			
-			Assertion.Assert (color.A == a);
-			Assertion.Assert (color.R == r);
-			Assertion.Assert (color.G == g);
-			Assertion.Assert (color.B == b);
+			Assert.IsTrue (color.A == a);
+			Assert.IsTrue (color.R == r);
+			Assert.IsTrue (color.G == g);
+			Assert.IsTrue (color.B == b);
 			
-			Assertion.AssertEquals ("Color.ToString failure", color.ToString (), "{R=0.40,G=0.10,B=0.60,A=0.80}");
+			Assert.AreEqual ("{R=0.40,G=0.10,B=0.60,A=0.80}", color.ToString (), "Color.ToString failure");
 		}
 		
 		[Test] public void CheckRanges()
 		{
 			Color color = Color.FromARGB (1.8, 0.5, -0.1, 10);
 			
-			Assertion.Assert (color.IsValid);
-			Assertion.Assert (color.IsInRange == false);
+			Assert.IsTrue (color.IsValid);
+			Assert.IsTrue (color.IsInRange == false);
 			
 			color = color.ClipToRange ();
 			
-			Assertion.Assert (color.IsInRange);
-			Assertion.Assert (color.A == 1.0);
-			Assertion.Assert (color.G == 0.0);
-			Assertion.Assert (color.B == 1.0);
+			Assert.IsTrue (color.IsInRange);
+			Assert.IsTrue (color.A == 1.0);
+			Assert.IsTrue (color.G == 0.0);
+			Assert.IsTrue (color.B == 1.0);
 		}
 		
 		[Test] public void CheckFromNameAndHexa()
@@ -66,9 +66,9 @@ namespace Epsitec.Common.Drawing
 			Color color_3 = Color.FromName ("#ff0000");
 			Color color_4 = Color.FromName ("#blabla");
 			
-			Assertion.AssertEquals (color_1, color_2);
-			Assertion.AssertEquals (color_1, color_3);
-			Assertion.AssertEquals (Color.Empty, color_4);
+			Assert.AreEqual (color_1, color_2);
+			Assert.AreEqual (color_1, color_3);
+			Assert.AreEqual (Color.Empty, color_4);
 		}
 		
 		
@@ -91,121 +91,121 @@ namespace Epsitec.Common.Drawing
 			// rouge
 			c1 = Color.FromRGB(1.0, 0.0, 0.0);
 			c1.GetHSV(out h, out s, out v);
-			Assertion.Assert(h == 0.0);
-			Assertion.Assert(s == 1.0);
-			Assertion.Assert(v == 1.0);
+			Assert.IsTrue(h == 0.0);
+			Assert.IsTrue(s == 1.0);
+			Assert.IsTrue(v == 1.0);
 			c2 = Color.FromHSV(h,s,v);
-			Assertion.Assert(c1 == c2);
+			Assert.IsTrue(c1 == c2);
 
 			// jaune
 			c1 = Color.FromRGB(1.0, 1.0, 0.0);
 			c1.GetHSV(out h, out s, out v);
-			Assertion.Assert(h == 60.0);
-			Assertion.Assert(s == 1.0);
-			Assertion.Assert(v == 1.0);
+			Assert.IsTrue(h == 60.0);
+			Assert.IsTrue(s == 1.0);
+			Assert.IsTrue(v == 1.0);
 			c2 = Color.FromHSV(h,s,v);
-			Assertion.Assert(c1 == c2);
+			Assert.IsTrue(c1 == c2);
 
 			// vert
 			c1 = Color.FromRGB(0.0, 1.0, 0.0);
 			c1.GetHSV(out h, out s, out v);
-			Assertion.Assert(h == 120.0);
-			Assertion.Assert(s == 1.0);
-			Assertion.Assert(v == 1.0);
+			Assert.IsTrue(h == 120.0);
+			Assert.IsTrue(s == 1.0);
+			Assert.IsTrue(v == 1.0);
 			c2 = Color.FromHSV(h,s,v);
-			Assertion.Assert(c1 == c2);
+			Assert.IsTrue(c1 == c2);
 
 			// cyan
 			c1 = Color.FromRGB(0.0, 1.0, 1.0);
 			c1.GetHSV(out h, out s, out v);
-			Assertion.Assert(h == 180.0);
-			Assertion.Assert(s == 1.0);
-			Assertion.Assert(v == 1.0);
+			Assert.IsTrue(h == 180.0);
+			Assert.IsTrue(s == 1.0);
+			Assert.IsTrue(v == 1.0);
 			c2 = Color.FromHSV(h,s,v);
-			Assertion.Assert(c1 == c2);
+			Assert.IsTrue(c1 == c2);
 
 			// bleu
 			c1 = Color.FromRGB(0.0, 0.0, 1.0);
 			c1.GetHSV(out h, out s, out v);
-			Assertion.Assert(h == 240.0);
-			Assertion.Assert(s == 1.0);
-			Assertion.Assert(v == 1.0);
+			Assert.IsTrue(h == 240.0);
+			Assert.IsTrue(s == 1.0);
+			Assert.IsTrue(v == 1.0);
 			c2 = Color.FromHSV(h,s,v);
-			Assertion.Assert(c1 == c2);
+			Assert.IsTrue(c1 == c2);
 
 			// magenta
 			c1 = Color.FromRGB(1.0, 0.0, 1.0);
 			c1.GetHSV(out h, out s, out v);
-			Assertion.Assert(h == 300.0);
-			Assertion.Assert(s == 1.0);
-			Assertion.Assert(v == 1.0);
+			Assert.IsTrue(h == 300.0);
+			Assert.IsTrue(s == 1.0);
+			Assert.IsTrue(v == 1.0);
 			c2 = Color.FromHSV(h,s,v);
-			Assertion.Assert(c1 == c2);
+			Assert.IsTrue(c1 == c2);
 
 			// rose
 			c1 = Color.FromRGB(1.0, 0.5, 0.5);
 			c1.GetHSV(out h, out s, out v);
-			Assertion.Assert(h == 0.0);
-			Assertion.Assert(s == 0.5);
-			Assertion.Assert(v == 1.0);
+			Assert.IsTrue(h == 0.0);
+			Assert.IsTrue(s == 0.5);
+			Assert.IsTrue(v == 1.0);
 			c2 = Color.FromHSV(h,s,v);
-			Assertion.Assert(c1 == c2);
+			Assert.IsTrue(c1 == c2);
 
 			// brun-rouge
 			c1 = Color.FromRGB(0.5, 0.0, 0.0);
 			c1.GetHSV(out h, out s, out v);
-			Assertion.Assert(h == 0.0);
-			Assertion.Assert(s == 1.0);
-			Assertion.Assert(v == 0.5);
+			Assert.IsTrue(h == 0.0);
+			Assert.IsTrue(s == 1.0);
+			Assert.IsTrue(v == 0.5);
 			c2 = Color.FromHSV(h,s,v);
-			Assertion.Assert(c1 == c2);
+			Assert.IsTrue(c1 == c2);
 
 			// brun
 			c1 = Color.FromRGB(0.5, 0.25, 0.25);
 			c1.GetHSV(out h, out s, out v);
-			Assertion.Assert(h == 0.0);
-			Assertion.Assert(s == 0.5);
-			Assertion.Assert(v == 0.5);
+			Assert.IsTrue(h == 0.0);
+			Assert.IsTrue(s == 0.5);
+			Assert.IsTrue(v == 0.5);
 			c2 = Color.FromHSV(h,s,v);
-			Assertion.Assert(c1 == c2);
+			Assert.IsTrue(c1 == c2);
 
 			// gris
 			c1 = Color.FromRGB(0.5, 0.5, 0.5);
 			c1.GetHSV(out h, out s, out v);
-			Assertion.Assert(h == 0.0);
-			Assertion.Assert(s == 0.0);
-			Assertion.Assert(v == 0.5);
+			Assert.IsTrue(h == 0.0);
+			Assert.IsTrue(s == 0.0);
+			Assert.IsTrue(v == 0.5);
 			c2 = Color.FromHSV(h,s,v);
-			Assertion.Assert(c1 == c2);
+			Assert.IsTrue(c1 == c2);
 
 			// blanc
 			c1 = Color.FromRGB(1.0, 1.0, 1.0);
 			c1.GetHSV(out h, out s, out v);
-			Assertion.Assert(h == 0.0);
-			Assertion.Assert(s == 0.0);
-			Assertion.Assert(v == 1.0);
+			Assert.IsTrue(h == 0.0);
+			Assert.IsTrue(s == 0.0);
+			Assert.IsTrue(v == 1.0);
 			c2 = Color.FromHSV(h,s,v);
-			Assertion.Assert(c1 == c2);
+			Assert.IsTrue(c1 == c2);
 
 			// noir
 			c1 = Color.FromRGB(0.0, 0.0, 0.0);
 			c1.GetHSV(out h, out s, out v);
-			Assertion.Assert(h == 0.0);
-			Assertion.Assert(s == 0.0);
-			Assertion.Assert(v == 0.0);
+			Assert.IsTrue(h == 0.0);
+			Assert.IsTrue(s == 0.0);
+			Assert.IsTrue(v == 0.0);
 			c2 = Color.FromHSV(h,s,v);
-			Assertion.Assert(c1 == c2);
+			Assert.IsTrue(c1 == c2);
 
 			// jaune
 			c1 = Color.FromHSV(60+360,1,1);
-			Assertion.Assert(c1.R == 1.0);
-			Assertion.Assert(c1.G == 1.0);
-			Assertion.Assert(c1.B == 0.0);
+			Assert.IsTrue(c1.R == 1.0);
+			Assert.IsTrue(c1.G == 1.0);
+			Assert.IsTrue(c1.B == 0.0);
 
 			c1 = Color.FromHSV(60-360,1,1);
-			Assertion.Assert(c1.R == 1.0);
-			Assertion.Assert(c1.G == 1.0);
-			Assertion.Assert(c1.B == 0.0);
+			Assert.IsTrue(c1.R == 1.0);
+			Assert.IsTrue(c1.G == 1.0);
+			Assert.IsTrue(c1.B == 0.0);
 		}
 
 		private void NamedColors_PaintForeground(object sender, PaintEventArgs e)
