@@ -1,5 +1,6 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : en chantier
+//	DD 27/11/2003	Ajouté la construction de la chaîne pour SqlFunction / SqlField en utilisant les paramètres
 
 using FirebirdSql.Data.Firebird;
 
@@ -111,6 +112,193 @@ namespace Epsitec.Cresus.Database.Implementation
 			string name = string.Format (TypeConverter.InvariantFormatProvider, "@PARAM_{0}", this.command_params.Count);
 			this.command_params.Add (field);
 			return name;
+		}
+
+		protected void AppendField(SqlField field)
+		{
+			//	Ajoute au buffer un champ, quel que soit son type
+
+			switch(field.Type)
+			{
+				case SqlFieldType.Unsupported:
+					this.buffer.Append("<unsupported>");
+					return;
+				case SqlFieldType.Null:
+					this.buffer.Append("NULL");
+					return;
+				case SqlFieldType.All:
+					this.buffer.Append("*");
+					return;
+				case SqlFieldType.Default:
+					this.buffer.Append("<default>");
+					return;
+				case SqlFieldType.Constant:
+				case SqlFieldType.ParameterOut:
+				case SqlFieldType.ParameterInOut:
+				case SqlFieldType.ParameterResult:
+					this.buffer.Append(this.AddFieldAsParam(field));
+					return;
+				case SqlFieldType.Name:
+					this.buffer.Append(field.AsName);
+					return;
+				case SqlFieldType.QualifiedName:
+					this.buffer.Append(field.AsQualifiedName);
+					return;
+				case SqlFieldType.Aggregate:
+					this.buffer.Append(field.AsAggregate.ToString());
+					return;
+				case SqlFieldType.Variable:
+					this.buffer.Append(field.AsVariable.ToString());
+					return;
+				case SqlFieldType.Function:
+					this.AppendFieldAsFunction(field);
+					return;
+				case SqlFieldType.Procedure:
+					this.buffer.Append(field.AsProcedure);
+					return;
+				case SqlFieldType.SubQuery:
+					this.buffer.Append(field.AsSubQuery.ToString());
+					return;
+				default:
+					this.buffer.Append("<unsupported>");
+					return;
+			}
+		}
+		
+		protected void AppendFieldAsFunction(SqlField field)
+		{
+			System.Diagnostics.Debug.Assert (field.Type == SqlFieldType.Function);
+
+			SqlFunction sql_function = field.AsFunction;
+			//	Converti la fonction en chaîne de caractère SQL
+			switch (sql_function.ArgumentCount)
+			{
+				case 2:
+					if ( sql_function.Type == SqlFunctionType.JoinInner )
+					{
+						this.buffer.Append (sql_function.A.AsName);
+						this.buffer.Append (" INNER JOIN ");
+						this.buffer.Append (sql_function.B.AsName);
+						this.buffer.Append (" ON ");
+						this.buffer.Append (sql_function.A.AsQualifiedName);
+						this.buffer.Append (" = ");
+						this.buffer.Append (sql_function.B.AsQualifiedName);
+						return;
+					}
+
+					AppendField (sql_function.A);
+					switch (sql_function.Type)
+					{
+						case SqlFunctionType.MathAdd:
+							this.buffer.Append (" + ");	break;
+						case SqlFunctionType.MathSubstract:
+							this.buffer.Append (" - "); break;
+						case SqlFunctionType.MathMultiply:
+							this.buffer.Append (" * "); break;
+						case SqlFunctionType.MathDivide:
+							this.buffer.Append (" / "); break;
+						case SqlFunctionType.CompareEqual:
+							this.buffer.Append (" = "); break;
+						case SqlFunctionType.CompareNotEqual:
+							this.buffer.Append (" <> "); break;
+						case SqlFunctionType.CompareLessThan:
+							this.buffer.Append (" < "); break;
+						case SqlFunctionType.CompareLessThanOrEqual:
+							this.buffer.Append (" <= "); break;
+						case SqlFunctionType.CompareGreaterThan:
+							this.buffer.Append (" > "); break;
+						case SqlFunctionType.CompareGreaterThanOrEqual:
+							this.buffer.Append (" >= "); break;
+						case SqlFunctionType.CompareLike:
+							this.buffer.Append (" LIKE "); break;
+						case SqlFunctionType.CompareNotLike:
+							this.buffer.Append (" NOT LIKE "); break;				
+						case SqlFunctionType.SetIn:
+							this.buffer.Append (" IN "); break;
+						case SqlFunctionType.SetNotIn:
+							this.buffer.Append (" NOT IN "); break;
+						case SqlFunctionType.LogicAnd:
+							this.buffer.Append (" AND "); break;
+						case SqlFunctionType.LogicOr:
+							this.buffer.Append (" OR "); break;
+						default:
+							System.Diagnostics.Debug.Assert (false); break;
+					}
+					AppendField (sql_function.B);
+					return;
+				
+				case 1:
+					switch (sql_function.Type)
+					{
+						case SqlFunctionType.LogicNot:
+							this.buffer.Append("NOT ");
+							AppendField (sql_function.A);
+							return;
+						case SqlFunctionType.CompareIsNull:
+							AppendField (sql_function.A);
+							this.buffer.Append(" IS NULL");
+							return;
+						case SqlFunctionType.CompareIsNotNull:
+							AppendField (sql_function.A);
+							this.buffer.Append(" IS NOT NULL");
+							return;
+						case SqlFunctionType.SetExists:
+							AppendField (sql_function.A);
+							this.buffer.Append(" EXISTS");
+							return;
+
+						case SqlFunctionType.SetNotExists:
+							AppendField (sql_function.A);
+							this.buffer.Append(" NOT EXISTS");
+							return;
+						case SqlFunctionType.Upper:
+							this.buffer.Append("UPPER(");
+							AppendField (sql_function.A);
+							this.buffer.Append(")");
+							return;
+						default:
+							System.Diagnostics.Debug.Assert (false);
+							return;
+					}
+
+				case 3:
+					if (sql_function.Type == SqlFunctionType.Substring)
+					{
+						this.buffer.Append("SUBSTRING(");
+						this.AppendField (sql_function.A);
+						this.buffer.Append (" FROM ");
+						this.AppendField (sql_function.B);
+						this.buffer.Append (" FOR ");
+						this.AppendField (sql_function.C);
+						this.buffer.Append (")");
+						return;
+					}
+
+					AppendField (sql_function.A);
+					switch (sql_function.Type)
+					{
+						case SqlFunctionType.SetBetween:
+							this.buffer.Append(" BETWEEN ");
+							this.AppendField (sql_function.B);
+							this.buffer.Append (" AND ");
+							break;
+
+						case SqlFunctionType.SetNotBetween:
+							this.buffer.Append(" NOT BETWEEN ");
+							this.AppendField (sql_function.B);
+							this.buffer.Append (" AND ");
+							break;
+						default:
+							System.Diagnostics.Debug.Assert (false);
+							break;
+					}
+					AppendField (sql_function.C);
+					return;
+
+				default:
+					System.Diagnostics.Debug.Assert (false);
+					return;
+			}			
 		}
 		
 		protected string GetSqlColumnAttributes(SqlColumn column)
@@ -460,7 +648,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.buffer.Append (", ");
 				}
 
-				switch ( field.Type )
+				switch (field.Type)
 				{
 					case SqlFieldType.All:
 						this.buffer.Append ("* ");
@@ -545,7 +733,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 				}
 
-				this.buffer.Append( field.AsFunction.ToString() );
+				this.AppendFieldAsFunction (field);
 			}
 
 			first_field = true;

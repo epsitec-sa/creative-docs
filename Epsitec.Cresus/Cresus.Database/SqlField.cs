@@ -1,5 +1,5 @@
 //	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier, complété DD 2003.11.14
+//	Statut : en chantier, complété DD 2003.11.27
 
 namespace Epsitec.Cresus.Database
 {
@@ -399,67 +399,8 @@ namespace Epsitec.Cresus.Database
 			return field;
 		}
 
-		public override string ToString()
-		{
-			//	Convertion d'un champ en chaîne, quel que soit son type
-			//	DD: me semble pratique d'avoir cela ici, même s'il 
-			//		est imaginable que le ToString dépende du moteur utilisé
 
-			switch(this.type)
-			{
-				case SqlFieldType.Unsupported:
-                    return "<unsupported>";
-				case SqlFieldType.Null:
-                    return "NULL";
-				case SqlFieldType.All:
-                    return "*";
-				case SqlFieldType.Default:
-                    return "<default>";
-				case SqlFieldType.Constant:
-				case SqlFieldType.ParameterOut:
-				case SqlFieldType.ParameterInOut:
-				case SqlFieldType.ParameterResult:
-                    return this.ConstantToString();
-				case SqlFieldType.Name:
-                    return this.AsName;
-				case SqlFieldType.QualifiedName:
-                    return this.AsQualifiedName;
-				case SqlFieldType.Aggregate:
-                    return this.AsAggregate.ToString();
-				case SqlFieldType.Variable:
-                    return this.AsVariable.ToString();
-				case SqlFieldType.Function:
-                    return this.AsFunction.ToString();
-				case SqlFieldType.Procedure:
-                    return this.AsProcedure;
-				case SqlFieldType.SubQuery:
-                    return this.AsSubQuery.ToString();
-				default:
-					return "<unsupported>";
-			}
-		}
-
-		protected string ConstantToString()
-		{
-			//	TODO: supprimer cette méthode qui n'a rien à faire ici et passer les arguments
-			//	comme des paramètres SQL @... en lieu et place de leur version "in-line".
-			
-			object value = this.AsConstant;
-			
-			if (value is string)
-			{
-				return DbSqlStandard.QuoteString (value as string);
-			}
-			else
-			{
-				//	On espère que c'est une valeur numérique... Il faudrait utiliser
-				//	le bon convertisseur, avec le "locale" invariant.
-				
-				return value.ToString ();
-			}
-		}
-
-				
+		
 		
 		protected SqlFieldType			type = SqlFieldType.Unsupported;
 		protected SqlFieldOrder			order = SqlFieldOrder.None;
