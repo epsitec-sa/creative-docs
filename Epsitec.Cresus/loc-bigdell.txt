@@ -1,0 +1,5 @@
+C:\Documents and Settings\Arnaud\My Documents\Visual Studio Projects\Epsitec.Cresus
+C:\Epsitec
+Cresus.Epsitec
+history.log
+c:\\Progra~1\\winzip\\wzzip
