@@ -20,7 +20,7 @@ namespace Epsitec.Common.Designer.Editors
 			base.FillTabPage ();
 			
 			this.CreatePropPane ("Name",		new UI.Adapters.StringAdapter ());
-			this.CreatePropPane ("Text",		new UI.Adapters.StringAdapter ());
+			this.CreatePropPane ("Text",		new UI.Adapters.TextRefAdapter ());
 			this.CreatePropPane ("Command",		new UI.Adapters.StringAdapter ());
 			this.CreatePropPane ("Location",	new UI.Adapters.Num2Adapter ());
 			this.CreatePropPane ("Size",		new UI.Adapters.Num2Adapter ());
