@@ -1,5 +1,5 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en développement DD, 17/04/2004
+//	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
 {
