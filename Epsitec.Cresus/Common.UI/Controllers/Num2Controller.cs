@@ -37,16 +37,16 @@ namespace Epsitec.Common.UI.Controllers
 			this.container.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.container.PreferHorizontalDockLayout = true;
 			
-			this.text_field_1.Dock       = DockStyle.Fill;
-			this.text_field_1.DockSpacer = new Drawing.Margins (0, 2, 0, 0);
-			this.text_field_1.MinValue   = 0;
-			this.text_field_1.MaxValue   = 9999;
-			this.text_field_1.Resolution = 1;
-			this.text_field_2.Dock       = DockStyle.Fill;
-			this.text_field_2.DockSpacer = new Drawing.Margins (2, 0, 0, 0);
-			this.text_field_2.MinValue   = 0;
-			this.text_field_2.MaxValue   = 9999;
-			this.text_field_2.Resolution = 1;
+			this.text_field_1.Dock        = DockStyle.Fill;
+			this.text_field_1.DockMargins = new Drawing.Margins (0, 2, 0, 0);
+			this.text_field_1.MinValue    = 0;
+			this.text_field_1.MaxValue    = 9999;
+			this.text_field_1.Resolution  = 1;
+			this.text_field_2.Dock        = DockStyle.Fill;
+			this.text_field_2.DockMargins = new Drawing.Margins (2, 0, 0, 0);
+			this.text_field_2.MinValue    = 0;
+			this.text_field_2.MaxValue    = 9999;
+			this.text_field_2.Resolution  = 1;
 			
 			this.text_field_1.TextChanged += new EventHandler (this.HandleTextFieldTextChanged);
 			this.text_field_2.TextChanged += new EventHandler (this.HandleTextFieldTextChanged);
