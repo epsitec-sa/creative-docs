@@ -29,6 +29,7 @@ class CopyProject:
         self.copy_ext.append('.ico')
         self.copy_ext.append('.txt')
         self.copy_ext.append('.png')
+        self.copy_ext.append('.jpg')
         self.copy_ext.append('.icon')
         self.copy_ext.append('.tif')
         self.copy_ext.append('.chm')
