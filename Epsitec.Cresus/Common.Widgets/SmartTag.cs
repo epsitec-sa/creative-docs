@@ -69,7 +69,7 @@ namespace Epsitec.Common.Widgets
 			menu.Host = this;
 			pos.X    -= menu.Width;
 			
-			menu.ShowContextMenu (this.Window, pos);
+			menu.ShowAsContextMenu (this.Window, pos);
 		}
 		
 		protected virtual  void OnPrepareMenu()
