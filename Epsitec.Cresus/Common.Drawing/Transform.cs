@@ -1,3 +1,6 @@
+//	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Responsable: Pierre ARNAUD
+
 namespace Epsitec.Common.Drawing
 {
 	/// <summary>
@@ -124,6 +127,19 @@ namespace Epsitec.Common.Drawing
 					this.OnChanged (System.EventArgs.Empty);
 				}
 			}
+		}
+		
+		
+		public double GetZoom()
+		{
+			//	Détermine le zoom approximatif en vigueur dans la transformation actuelle.
+			//	Calcule la longueur d'un segment diagonal [1 1] après transformation pour
+			//	connaître ce zoom.
+			
+			double a = this.xx + this.xy;
+			double b = this.yx + this.yy;
+			
+			return System.Math.Sqrt ((a*a + b*b) / 2);
 		}
 		
 		
@@ -411,7 +427,12 @@ namespace Epsitec.Common.Drawing
 			double det   = m.xx * m.yy - m.xy * m.yx;
 			Transform c = new Transform ();
 			
-			System.Diagnostics.Debug.Assert (det != 0.0f);
+			if (det == 0)
+			{
+				throw new System.DivideByZeroException ("Transform matrix cannot be inverted.");
+			}
+			
+			System.Diagnostics.Debug.Assert (det != 0.0);
 			
 			double det_1 = 1.0f / det;
 			
