@@ -1,4 +1,5 @@
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Common.Pictogram.Data;
 
 namespace Epsitec.Common.Pictogram.Widgets
@@ -8,6 +9,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe GradientSample permet de représenter une dégradé.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class GradientSample : Epsitec.Common.Widgets.AbstractButton
 	{
 		public GradientSample()
