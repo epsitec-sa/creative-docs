@@ -204,12 +204,12 @@ namespace Epsitec.Common.Tests
 					}
 					if (message.IsCtrlPressed == false)
 					{
-						switch (message.KeyCode)
+						switch (message.KeyCodeAsKeys)
 						{
-							case 27:
+							case System.Windows.Forms.Keys.Escape:
 								this.SetFocused (false);
 								break;
-							case ' ':
+							case System.Windows.Forms.Keys.Space:
 								this.Toggle ();
 								break;
 						}

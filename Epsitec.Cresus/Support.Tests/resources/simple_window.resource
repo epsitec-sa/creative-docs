@@ -48,7 +48,7 @@
      <field name='name'>checkA</field>
      <field name='cmd'>on</field>
      <field name='size'>200;*</field>
-     <field name='pos'>10;210</field>
+     <field name='pos'>10;215</field>
      <field name='binding'>a</field>
     </bundle>
     <bundle>
@@ -62,6 +62,23 @@
      <field name='text'><![CDATA[<img src="res:file:image#forward"/>]]></field>
      <field name='size'>40;40</field>
      <field name='pos'>50;165</field>
+    </bundle>
+    <bundle>
+     <field name='class'>TextField</field>
+     <field name='size'>80;*</field>
+     <field name='pos'>100;190</field>
+    </bundle>
+    <bundle>
+     <field name='class'>TextFieldCombo</field>
+     <field name='ro'>true</field>
+     <field name='size'>80;*</field>
+     <field name='pos'>100;170</field>
+     <bundle name='items'>
+      <field name='0'>Choix A</field>
+      <field name='1'>Choix B</field>
+      <field name='2'><![CDATA[Choix <b>C</b> <i>(meilleur de tous)</i>]]></field>
+      <field name='3'>Choix D</field>
+     </bundle>
     </bundle>
     <bundle>
      <field name='class'>CheckButton</field>

@@ -1044,7 +1044,7 @@ namespace Epsitec.Common.Widgets
 				
 				this.DispatchMessage (message);
 				
-				return false;
+				return true;
 			}
 			
 			return false;

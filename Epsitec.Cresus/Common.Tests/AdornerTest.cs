@@ -186,7 +186,7 @@ namespace Epsitec.Common.Tests
 			ScrollList sl = new ScrollList();
 			sl.Location = new Point(270, 70);
 			sl.Size = new Size(90, 100);
-			sl.AdjustToMultiple(ScrollListAdjust.MoveDown);
+			sl.AdjustHeight(ScrollListAdjust.MoveDown);
 			sl.Items.Add("Janvier");
 			sl.Items.Add("Fevrier");
 			sl.Items.Add("Mars <i>(A)</i>");
@@ -200,7 +200,7 @@ namespace Epsitec.Common.Tests
 			sl.Items.Add("Novembre");
 			sl.Items.Add("Decembre");
 			sl.SelectedIndex = 5;  // sélectionne juin
-			if ( !sl.IsShowSelect() )  sl.ShowSelect(ScrollListShow.Middle);
+			sl.ShowSelectedLine(ScrollListShow.Middle);
 			sl.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(sl);
 			tip.SetToolTip(sl, "Choix du mois");
@@ -216,7 +216,7 @@ namespace Epsitec.Common.Tests
 			textfix.Location = new Point(260, 220);
 			textfix.Width = 100;
 			textfix.Text = "Texte fixe";
-			textfix.ReadOnly = true;
+			textfix.IsReadOnly = true;
 			textfix.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(textfix);
 
@@ -224,7 +224,7 @@ namespace Epsitec.Common.Tests
 			combofix.Location = new Point(370, 220);
 			combofix.Width = 100;
 			combofix.Text = "Mardi";
-			combofix.ReadOnly = true;
+			combofix.IsReadOnly = true;
 			combofix.Items.Add("Lundi");
 			combofix.Items.Add("Mardi");
 			combofix.Items.Add("Mercredi");
@@ -809,8 +809,8 @@ namespace Epsitec.Common.Tests
 					table.SetText(y, x, s);
 				}
 			}
-			//table.AdjustToMultiple(Widgets.ScrollArrayAdjust.MoveDown);
-			//table.AdjustToContent(Widgets.ScrollArrayAdjust.MoveDown, 10, 1000);
+			//table.AdjustHeight(Widgets.ScrollArrayAdjust.MoveDown);
+			//table.AdjustHeightToContent(Widgets.ScrollArrayAdjust.MoveDown, 10, 1000);
 			table.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			window.Root.Children.Add(table);
 
@@ -827,7 +827,7 @@ namespace Epsitec.Common.Tests
 			ScrollList sl = new ScrollList();
 			sl.Location = origine;
 			sl.Size = new Size(100, 64);
-			sl.AdjustToMultiple(ScrollListAdjust.MoveDown);
+			sl.AdjustHeight(ScrollListAdjust.MoveDown);
 
 			string[] list = Widgets.Adorner.Factory.AdornerNames;
 			int i = 0;
@@ -840,7 +840,7 @@ namespace Epsitec.Common.Tests
 			}
 
 			sl.SelectedIndex = sel;
-			if ( !sl.IsShowSelect() )  sl.ShowSelect(ScrollListShow.Middle);
+			sl.ShowSelectedLine(ScrollListShow.Middle);
 			sl.Anchor = AnchorStyles.Top|AnchorStyles.Left;
 			sl.SelectedIndexChanged += new EventHandler(this.HandleLook);
 			collection.Add(sl);
@@ -855,7 +855,7 @@ namespace Epsitec.Common.Tests
 		{
 			ScrollList sl = sender as ScrollList;
 			int sel = sl.SelectedIndex;
-			Widgets.Adorner.Factory.SetActive(sl.GetText(sel));
+			Widgets.Adorner.Factory.SetActive(sl.Items[sel]);
 			sl.RootParent.Invalidate();  // redessine toute la fenêtre
 		}
 
@@ -1217,7 +1217,7 @@ namespace Epsitec.Common.Tests
 			ScrollList sl = new ScrollList();
 			sl.Location = new Point(270, 70);
 			sl.Size = new Size(90, 100);
-			sl.AdjustToMultiple(ScrollListAdjust.MoveDown);
+			sl.AdjustHeight(ScrollListAdjust.MoveDown);
 			sl.Items.Add("Janvier");
 			sl.Items.Add("Fevrier");
 			sl.Items.Add("Mars <i>(A)</i>");
@@ -1231,7 +1231,7 @@ namespace Epsitec.Common.Tests
 			sl.Items.Add("Novembre");
 			sl.Items.Add("Decembre");
 			sl.SelectedIndex = 5;  // sélectionne juin
-			if ( !sl.IsShowSelect() )  sl.ShowSelect(ScrollListShow.Middle);
+			sl.ShowSelectedLine(ScrollListShow.Middle);
 			sl.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			sl.SetEnabled(false);
 			window.Root.Children.Add(sl);

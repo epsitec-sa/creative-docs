@@ -552,7 +552,7 @@ namespace Epsitec.Common.Tests
 		{
 			ScrollList sl = sender as ScrollList;
 			int sel = sl.SelectedIndex;
-			Widgets.Adorner.Factory.SetActive(sl.GetText(sel));
+			Widgets.Adorner.Factory.SetActive(sl.Items[sel]);
 			sl.RootParent.Invalidate();  // redessine toute la fenêtre
 		}
 

@@ -5,11 +5,12 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe TextFieldCombo implémente la ligne éditable avec bouton "v".
 	/// </summary>
-	public class TextFieldCombo : AbstractTextField, Helpers.IStringCollectionHost
+	public class TextFieldCombo : AbstractTextField, Helpers.IStringCollectionHost, Support.IBundleSupport
 	{
 		public TextFieldCombo()
 		{
 			this.items = new Helpers.StringCollection (this);
+			this.isCombo = true;
 			
 			this.button = new ArrowButton();
 			this.button.Direction = Direction.Down;
@@ -19,6 +20,33 @@ namespace Epsitec.Common.Widgets
 			this.button.Dock = DockStyle.Right;
 			
 			this.rightMargin = this.button.Width;
+		}
+		
+		
+		public override void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
+		{
+			base.RestoreFromBundle (bundler, bundle);
+			
+			Support.ResourceBundle items = bundle.GetFieldBundle ("items");
+			
+			if (items != null)
+			{
+				string[] names = items.FieldNames;
+				System.Array.Sort (names);
+				
+				for (int i = 0; i < items.CountFields; i++)
+				{
+					string name = names[i];
+					string item = items[name] as string;
+					
+					if (item == null)
+					{
+						throw new Support.ResourceException (string.Format ("Item '{0}' is invalid", name));
+					}
+					
+					this.Items.Add (item);
+				}
+			}
 		}
 		
 		
@@ -65,17 +93,27 @@ namespace Epsitec.Common.Widgets
 
 		protected override void ProcessKeyDown(Keys key, bool isShiftPressed, bool isCtrlPressed)
 		{
-			switch (key)
+			if (this.IsReadOnly)
 			{
-				case Keys.Up:
-					this.Navigate(-1);
-					break;
-				case Keys.Down:
-					this.Navigate(1);
-					break;
-				default:
-					base.ProcessKeyDown (key, isShiftPressed, isCtrlPressed);
-					break;
+				if (key == Keys.Down)
+				{
+					this.OpenCombo ();
+				}
+			}
+			else
+			{
+				switch (key)
+				{
+					case Keys.Up:
+						this.Navigate(-1);
+						break;
+					case Keys.Down:
+						this.Navigate(1);
+						break;
+					default:
+						base.ProcessKeyDown (key, isShiftPressed, isCtrlPressed);
+						break;
+				}
 			}
 		}
 		
@@ -101,50 +139,48 @@ namespace Epsitec.Common.Widgets
 			this.SetFocused(true);
 		}
 		
+		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		{
+			if (this.IsReadOnly)
+			{
+				if (message.Type == MessageType.MouseDown)
+				{
+					this.OpenCombo ();
+					return;
+				}
+			}
+			
+			base.ProcessMessage (message, pos);
+		}
+
 		
-		private void HandlerMessageFilter(object sender, Message message)
+		private void MessageFilter(object sender, Message message)
 		{
 			if ( this.scrollList == null )  return;
 			WindowFrame window = sender as WindowFrame;
 
 			switch ( message.Type )
 			{
+				case MessageType.KeyPress:
+					if (message.KeyCodeAsKeys == Keys.Escape)
+					{
+						this.CloseCombo ();
+						message.Swallowed = true;
+					}
+					break;
 				case MessageType.MouseDown:
 					Drawing.Point mouse = window.MapWindowToScreen(message.Cursor);
 					Drawing.Point pos = this.scrollList.MapScreenToClient (mouse);
 					if ( !this.scrollList.HitTest(pos) )
 					{
-						this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollListSelectedIndexChanged);
-						WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
-						WindowFrame.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
-						this.scrollList.Dispose();
-						this.scrollList = null;
-						this.comboWindow.Dispose();
-						this.comboWindow = null;
-
-						if ( !message.NonClient )
-						{
-							message.Handled = true;
-							message.Swallowed = true;
-						}
+						this.CloseCombo ();
+						message.Swallowed = ! message.NonClient;
 					}
 					break;
 			}
 		}
-
-		private void HandleApplicationDeactivated(object sender)
-		{
-			this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollListSelectedIndexChanged);
-			WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
-			WindowFrame.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
-			this.scrollList.Dispose();
-			this.scrollList = null;
-			this.comboWindow.Dispose();
-			this.comboWindow = null;
-		}
-
 		
-		private void HandleButtonPressed(object sender, MessageEventArgs e)
+		private void OpenCombo()
 		{
 			this.scrollList = new ScrollList();
 			this.scrollList.ScrollListStyle = ScrollListStyle.Simple;
@@ -161,43 +197,71 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle area = info.WorkingArea;
 			double            hMax = pos.Y-area.Bottom;
 			
-			this.scrollList.AdjustToContent(ScrollListAdjust.MoveUp, 40, hMax);
-			
+			this.scrollList.AdjustHeightToContent(ScrollListAdjust.MoveUp, 40, hMax);
 			this.scrollList.SelectedIndex = this.items.FindExactMatch (this.Text);
-			this.scrollList.ShowSelect(ScrollListShow.Middle);
-			this.scrollList.SelectedIndexChanged += new EventHandler(this.HandleScrollListSelectedIndexChanged);
+			this.scrollList.ShowSelectedLine(ScrollListShow.Middle);
 			
 			this.comboWindow = new WindowFrame();
 			this.comboWindow.MakeFramelessWindow();
 			pos = this.MapClientToScreen (new Drawing.Point(0, -this.scrollList.Height));
 			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width, this.scrollList.Height);
-			WindowFrame.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
+			this.scrollList.SelectedIndexChanged += new EventHandler(this.HandleScrollerSelectedIndexChanged);
+			this.scrollList.Validation += new EventHandler(this.HandleScrollListValidation);
+			WindowFrame.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
 			WindowFrame.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
 			this.comboWindow.Root.Children.Add(this.scrollList);
 			this.comboWindow.AnimateShow(Animation.RollDown);
 			
+			this.SetFocused(true);
 			this.SetFocused(false);
 			this.scrollList.SetFocused(true);
 		}
 		
-		// Gestion d'un événement lorsque la scroll-liste est sélectionnée.
-		private void HandleScrollListSelectedIndexChanged(object sender)
+		private void CloseCombo()
 		{
-			int sel = this.scrollList.SelectedIndex;
-			if ( sel == -1 )  return;
-			this.Text = this.scrollList.GetText(sel);
-			this.OnTextChanged();
-			this.OnTextInserted();
-			this.SelectAll();
-			this.SetFocused(true);
-
-			this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollListSelectedIndexChanged);
-			WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.HandlerMessageFilter);
+			this.scrollList.Validation -= new EventHandler(this.HandleScrollListValidation);
+			this.scrollList.SelectedIndexChanged -= new EventHandler(this.HandleScrollerSelectedIndexChanged);
+			WindowFrame.MessageFilter -= new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
 			WindowFrame.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
+			
 			this.scrollList.Dispose();
 			this.scrollList = null;
 			this.comboWindow.Dispose();
 			this.comboWindow = null;
+			
+			this.SelectAll ();
+			this.SetFocused (true);
+		}
+
+		private void HandleApplicationDeactivated(object sender)
+		{
+			this.CloseCombo ();
+		}
+
+		
+		private void HandleButtonPressed(object sender, MessageEventArgs e)
+		{
+			this.OpenCombo ();
+		}
+		
+		private void HandleScrollListValidation(object sender)
+		{
+			// Gestion d'un événement lorsque la scroll-liste est sélectionnée.
+			
+			int sel = this.scrollList.SelectedIndex;
+			if ( sel == -1 )  return;
+			this.Text = this.scrollList.Items[sel];
+			this.OnTextChanged();
+			this.OnTextInserted();
+			this.SelectAll();
+			this.SetFocused(true);
+			this.CloseCombo();
+		}
+		
+		private void HandleScrollerSelectedIndexChanged(object sender)
+		{
+			int sel = this.scrollList.SelectedIndex;
+			this.Text = this.scrollList.Items[sel];
 		}
 
 		#region IStringCollectionHost Members
