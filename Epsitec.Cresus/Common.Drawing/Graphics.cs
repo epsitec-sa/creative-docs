@@ -312,6 +312,7 @@ namespace Epsitec.Common.Drawing
 		public abstract void RestoreTransform(Transform transform);
 		public abstract void ScaleTransform(double sx, double sy, double cx, double cy);
 		public abstract void RotateTransform(double angle, double cx, double cy);
+		public abstract void TranslateTransform(double ox, double oy);
 		public abstract void SetClippingRectangle(double x, double y, double width, double height);
 		public abstract void SetClippingRectangles(Drawing.Rectangle[] rectangles);
 		public abstract Drawing.Rectangle SaveClippingRectangle();
