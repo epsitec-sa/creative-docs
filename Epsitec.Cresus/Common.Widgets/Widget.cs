@@ -65,6 +65,7 @@ namespace Epsitec.Common.Widgets
 		AutoRepeatEngaged	= 0x00200000,
 		
 		PossibleContainer	= 0x01000000,		//	widget peut être la cible d'un drag & drop en mode édition
+		EditionDisabled		= 0x02000000,		//	widget ne peut en aucun cas être édité
 		
 		Command				= 0x40000000,		//	widget génère des commandes
 		DebugActive			= 0x80000000		//	widget marqué pour le debug
@@ -755,6 +756,25 @@ namespace Epsitec.Common.Widgets
 		public bool							IsEmbedded
 		{
 			get { return (this.internal_state & InternalState.Embedded) != 0; }
+		}
+		
+		public bool							IsEditionDisabled
+		{
+			get { return (this.internal_state & InternalState.EditionDisabled) != 0; }
+			set
+			{
+				if (this.IsEditionDisabled != value)
+				{
+					if (value)
+					{
+						this.internal_state |= InternalState.EditionDisabled;
+					}
+					else
+					{
+						this.internal_state &= ~InternalState.EditionDisabled;
+					}
+				}
+			}
 		}
 		
 		public bool							AutoCapture
