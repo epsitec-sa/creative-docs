@@ -167,6 +167,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ScreenInfoTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "test.png"
                     BuildAction = "None"
                 />

@@ -5,6 +5,10 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class ScreenInfo
 	{
+		/// <summary>
+		/// Retourne le rectangle correspondant à l'écran par rapport à la surface
+		/// de travail globale.
+		/// </summary>
 		public Drawing.Rectangle			Bounds
 		{
 			get
@@ -18,6 +22,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		/// <summary>
+		/// Retourne le rectangle correspondant à la surface de travail sur l'écran
+		/// par rapport à la surface de travail globale. L'espace pris par la barre
+		/// des tâches est automatiquement enlevé.
+		/// </summary>
 		public Drawing.Rectangle			WorkingArea
 		{
 			get
@@ -31,6 +40,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		/// <summary>
+		/// Indique s'il s'agit de l'écran principal (celui où il y a la barre des
+		/// tâches).
+		/// </summary>
 		public bool							IsPrimary
 		{
 			get { return this.screen.Primary; }
@@ -53,6 +66,10 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		/// <summary>
+		/// Retourne le rectangle correspondant à la surface de travail globale. Cette
+		/// surface peut avoir une origine négative...
+		/// </summary>
 		public static Drawing.Rectangle		GlobalArea
 		{
 			get
@@ -66,6 +83,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		/// <summary>
+		/// Construit la table de tous les écrans disponibles.
+		/// </summary>
 		public static ScreenInfo[]			AllScreens
 		{
 			get
@@ -86,6 +106,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		/// <summary>
+		/// Trouve l'écran qui se trouve au point indiqué.
+		/// </summary>
+		/// <param name="point">position absolue</param>
+		/// <returns>écran trouvé</returns>
 		public static ScreenInfo Find(Drawing.Point point)
 		{
 			int ox = (int)(point.X + 0.5);
@@ -95,6 +120,11 @@ namespace Epsitec.Common.Widgets
 			return screen == null ? null : new ScreenInfo (screen);
 		}
 		
+		/// <summary>
+		/// Trouve l'écran qui est le plus recouvert par le rectangle indiqué.
+		/// </summary>
+		/// <param name="rect">rectangle à tester</param>
+		/// <returns>écran trouvé</returns>
 		public static ScreenInfo Find(Drawing.Rectangle rect)
 		{
 			int ox = (int)(rect.Left + 0.5);
@@ -105,6 +135,8 @@ namespace Epsitec.Common.Widgets
 			System.Windows.Forms.Screen screen = System.Windows.Forms.Screen.FromRectangle (new System.Drawing.Rectangle (ox, oy, dx, dy));
 			return screen == null ? null : new ScreenInfo (screen);
 		}
+		
+		
 		
 		protected ScreenInfo(System.Windows.Forms.Screen screen)
 		{
