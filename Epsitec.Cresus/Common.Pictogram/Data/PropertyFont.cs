@@ -11,10 +11,9 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public PropertyFont()
 		{
-			this.fontName    = "Arial";
-			this.fontOptical = "Regular";
-			this.fontSize    = 1.0;
-			this.fontColor   = Drawing.Color.FromBrightness(0);
+			this.fontName  = "Arial";
+			this.fontSize  = 1.0;
+			this.fontColor = Drawing.Color.FromBrightness(0);
 		}
 
 		[XmlAttribute]
@@ -30,24 +29,6 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( this.fontName != value )
 				{
 					this.fontName = value;
-					this.OnChanged();
-				}
-			}
-		}
-
-		[XmlAttribute]
-		public string FontOptical
-		{
-			get
-			{
-				return this.fontOptical;
-			}
-
-			set
-			{
-				if ( this.fontOptical != value )
-				{
-					this.fontOptical = value;
 					this.OnChanged();
 				}
 			}
@@ -106,10 +87,9 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			base.CopyTo(property);
 			PropertyFont p = property as PropertyFont;
-			p.FontName    = this.fontName;
-			p.FontOptical = this.fontOptical;
-			p.FontSize    = this.fontSize;
-			p.FontColor   = this.fontColor;
+			p.FontName  = this.fontName;
+			p.FontSize  = this.fontSize;
+			p.FontColor = this.fontColor;
 		}
 
 		// Compare deux propriétés.
@@ -118,10 +98,9 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( !base.Compare(property) )  return false;
 
 			PropertyFont p = property as PropertyFont;
-			if ( p.FontName    != this.fontName    )  return false;
-			if ( p.FontOptical != this.fontOptical )  return false;
-			if ( p.FontSize    != this.fontSize    )  return false;
-			if ( p.FontColor   != this.fontColor   )  return false;
+			if ( p.FontName  != this.fontName  )  return false;
+			if ( p.FontSize  != this.fontSize  )  return false;
+			if ( p.FontColor != this.fontColor )  return false;
 
 			return true;
 		}
@@ -136,12 +115,11 @@ namespace Epsitec.Common.Pictogram.Data
 		// Retourne la fonte à utiliser.
 		public Drawing.Font GetFont()
 		{
-			return Drawing.Font.GetFont(this.fontName, this.fontOptical);
+			return Drawing.Font.GetFont(this.fontName, "Regular");
 		}
 
 
 		protected string				fontName;
-		protected string				fontOptical;
 		protected double				fontSize;
 
 		[XmlAttribute]
