@@ -320,15 +320,7 @@ namespace Epsitec.Common.Pictogram.Data
 			double radius = System.Math.Min(corner.Radius, min/2);
 
 			Drawing.Path path = new Drawing.Path();
-			
-			if ( iconContext == null )
-			{
-				path.DefaultZoom = 10.0;
-			}
-			else
-			{
-				path.DefaultZoom = iconContext.ScaleX;
-			}
+			path.DefaultZoom = AbstractProperty.DefaultZoom(iconContext);;
 
 			if ( corner.CornerType == CornerType.Right || radius == 0 )
 			{

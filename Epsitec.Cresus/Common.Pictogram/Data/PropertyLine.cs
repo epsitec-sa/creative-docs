@@ -447,7 +447,13 @@ namespace Epsitec.Common.Pictogram.Data
 				graphics.ScaleTransform(this.width/10*ps, this.width/10*ps, 0, 0);
 				graphics.RotateTransformDeg(angle+pa, 0, 0);
 				graphics.TranslateTransform(-5, -5);
+				double isx = iconContext.ScaleX;
+				double isy = iconContext.ScaleY;
+				iconContext.ScaleX *= this.width/10*ps;
+				iconContext.ScaleY *= this.width/10*ps;
 				iconObjects.DrawGeometry(objPage.Objects, graphics, iconContext, iconObjects, adorner, Drawing.Rectangle.Infinite, true, false);
+				iconContext.ScaleX = isx;
+				iconContext.ScaleY = isy;
 				graphics.Transform = ot;
 			}
 			advance -= len;

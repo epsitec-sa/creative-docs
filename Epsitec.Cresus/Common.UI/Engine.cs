@@ -260,7 +260,7 @@ namespace Epsitec.Common.UI
 		}
 		
 		
-		public static string CreateBindingDefinition(string path)
+		public static string MakeBindingDefinition(string path)
 		{
 			//	Produit le code XML qui permet de définir un "binding" avec une donnée
 			//	correspondant au chemin spécifié. C'est ce code XML qui sera consommé

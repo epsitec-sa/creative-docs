@@ -412,8 +412,6 @@ namespace Epsitec.Common.Pictogram.Data
 
 		protected TextLayout			textLayout;
 		protected TextNavigator			textNavigator;
-		protected int					cursorFrom = -1;
-		protected int					cursorTo   = -1;
 		protected Drawing.Transform		transform;
 	}
 }

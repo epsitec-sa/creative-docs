@@ -1854,12 +1854,12 @@ namespace Epsitec.Common.Widgets
 						this.CreateTextLayout ();
 					}
 					
+					this.ModifyText (value);
+					
 					string text = this.AutoResolveResRef ? Support.Resources.ResolveTextRef (value) : value;
 					
-					if ((this.text_layout.Text != text) ||
-						(this.text != value))
+					if (this.text_layout.Text != text)
 					{
-						this.ModifyText (value);
 						this.ModifyTextLayout (text);
 						this.OnTextDefined ();
 						this.OnTextChanged ();

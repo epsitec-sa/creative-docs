@@ -155,7 +155,7 @@ namespace Epsitec.Common.Designer.Panels
 			widget.Representation = mode;
 			widget.DataSource     = data;
 			widget.Size           = widget.GetBestFitSize ();
-			widget.BindingInfo    = Common.UI.Engine.CreateBindingDefinition (this.data_list.SelectedName);
+			widget.BindingInfo    = Common.UI.Engine.MakeBindingDefinition (this.data_list.SelectedName);
 			
 			return widget;
 		}

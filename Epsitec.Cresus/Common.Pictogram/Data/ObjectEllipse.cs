@@ -312,10 +312,7 @@ namespace Epsitec.Common.Pictogram.Data
 			double rx, ry, rot;
 			this.ComputeGeometry(out center, out rx, out ry, out rot);
 
-			double zoom;
-			if ( iconContext == null )  zoom = 10.0;
-			else                        zoom = iconContext.ScaleX;
-
+			double zoom = AbstractProperty.DefaultZoom(iconContext);
 			Drawing.Path rightPath = new Drawing.Path();
 			rightPath.DefaultZoom = zoom;
 

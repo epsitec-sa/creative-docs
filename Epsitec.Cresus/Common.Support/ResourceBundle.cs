@@ -718,7 +718,7 @@ namespace Epsitec.Common.Support
 			return sort_name.Substring (pos+1);
 		}
 		
-		public static string CreateSortName(string name, int rank, int num_digits)
+		public static string MakeSortName(string name, int rank, int num_digits)
 		{
 			string rank_text = rank.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			

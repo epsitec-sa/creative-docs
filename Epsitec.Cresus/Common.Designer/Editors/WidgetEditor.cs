@@ -441,7 +441,7 @@ namespace Epsitec.Common.Designer.Editors
 		{
 			if (this.IsActiveEditor)
 			{
-				this.window.Text = string.Format ("[ {0} ]", this.root.Text);
+				this.window.Text = string.Format ("[ {0} ]", Support.Resources.ResolveTextRef (this.root.Text));
 			}
 			else
 			{

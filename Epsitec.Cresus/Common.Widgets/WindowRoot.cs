@@ -75,7 +75,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.window.Name       = name;
 			this.window.ClientSize = size;
-			this.window.Text       = text;
+			this.window.Text       = Support.Resources.ResolveTextRef (text);
 			
 			this.Name = name;
 			this.Text = text;
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.window != null)
 			{
-				this.window.Text = this.Text;
+				this.window.Text = Support.Resources.ResolveTextRef (this.Text);
 			}
 		}
 		

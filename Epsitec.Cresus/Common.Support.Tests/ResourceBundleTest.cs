@@ -459,9 +459,9 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckSortName()
 		{
-			string x1 = ResourceBundle.CreateSortName ("abc",  0, 1);
-			string x2 = ResourceBundle.CreateSortName ("abc",  5, 2);
-			string x3 = ResourceBundle.CreateSortName ("abc", 54, 2);
+			string x1 = ResourceBundle.MakeSortName ("abc",  0, 1);
+			string x2 = ResourceBundle.MakeSortName ("abc",  5, 2);
+			string x3 = ResourceBundle.MakeSortName ("abc", 54, 2);
 			
 			Assert.AreEqual ("0/abc",  x1);
 			Assert.AreEqual ("05/abc", x2);
@@ -474,7 +474,7 @@ namespace Epsitec.Common.Support
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckSortNameEx1()
 		{
-			string x1 = ResourceBundle.CreateSortName ("abc",  10, 1);
+			string x1 = ResourceBundle.MakeSortName ("abc",  10, 1);
 		}
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckSortNameEx2()

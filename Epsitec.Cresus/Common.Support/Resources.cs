@@ -127,6 +127,28 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public static string					DefaultPrefix
+		{
+			get
+			{
+				if (Resources.default_prefix == null)
+				{
+					return "";
+				}
+				
+				return Resources.default_prefix;
+			}
+			set
+			{
+				if (value == "")
+				{
+					value = null;
+				}
+				
+				Resources.default_prefix = value;
+			}
+		}
+		
 		public static CultureInfo[]				Cultures
 		{
 			get
@@ -134,6 +156,7 @@ namespace Epsitec.Common.Support
 				return Resources.cultures;
 			}
 		}
+		
 		
 		public static string					DefaultSuffix
 		{
@@ -528,9 +551,25 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 		
-		public static string CreateTextRef(string id)
+		public static string MakeTextRef(string id)
 		{
+			if ((id == null) ||
+				(id.Length == 0))
+			{
+				return id;
+			}
+			
 			return string.Concat ("[res:", id, "]");
+		}
+		
+		public static string ExtractTextRefTarget(string text)
+		{
+			if (Resources.IsTextRef (text))
+			{
+				return text.Substring (5, text.Length-6);
+			}
+			
+			return null;
 		}
 		
 		public static string ResolveTextRef(string text)
@@ -687,6 +726,18 @@ namespace Epsitec.Common.Support
 					
 					return provider;
 				}
+				
+				if (Resources.default_prefix != null)
+				{
+					string prefix;
+					
+					prefix   = Resources.DefaultPrefix;
+					local_id = full_id;
+					
+					IResourceProvider provider = Resources.provider_hash[prefix] as IResourceProvider;
+					
+					return provider;
+				}
 			}
 			
 			local_id = null;
@@ -700,5 +751,6 @@ namespace Epsitec.Common.Support
 		protected static IResourceProvider[]	providers;
 		protected static Hashtable				provider_hash;
 		protected static string					application_name;
+		protected static string					default_prefix = "file";
 	}
 }

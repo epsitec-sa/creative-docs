@@ -315,7 +315,7 @@ namespace Epsitec.Common.Widgets.Helpers
 					
 					field = items.CreateField (Support.ResourceFieldType.Data);
 					
-					field.SetName (Support.ResourceBundle.CreateSortName (name, i, digits));
+					field.SetName (Support.ResourceBundle.MakeSortName (name, i, digits));
 					field.SetStringValue (item);
 					
 					items.Add (field);

@@ -287,15 +287,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.ComputeGeometry(out center, out radius, out rot);
 
 			Drawing.Path path = new Drawing.Path();
-
-			if ( iconContext == null )
-			{
-				path.DefaultZoom = 10.0;
-			}
-			else
-			{
-				path.DefaultZoom = iconContext.ScaleX;
-			}
+			path.DefaultZoom = AbstractProperty.DefaultZoom(iconContext);
 
 			PropertyArc arc = this.PropertyArc(4);
 			double a1, a2;

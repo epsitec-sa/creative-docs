@@ -1,3 +1,5 @@
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using System.Xml.Serialization;
 
 namespace Epsitec.Common.Pictogram.Data
@@ -576,6 +578,22 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Gestion d'un événement pendant l'édition.
+		public override bool EditProcessMessage(Message message, Drawing.Point pos)
+		{
+			if ( !this.textNavigator.ProcessMessage(message, pos) )  return false;
+
+			this.PropertyString(1).String = this.textLayout.Text;
+			return true;
+		}
+
+		// Gestion d'un événement pendant l'édition.
+		public override void EditMouseDownMessage(Drawing.Point pos)
+		{
+			this.textNavigator.MouseDownMessage(pos);
+		}
+
+		
 		// Met à jour le rectangle englobant l'objet.
 		protected override void UpdateBoundingBox()
 		{
@@ -989,11 +1007,20 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine le texte le long de la courbe multiple.
 		protected void DrawTextCurve(Drawing.Graphics graphics, IconContext iconContext)
 		{
+			string text = this.PropertyString(1).String;
+
+			if ( this.textLayout == null )
+			{
+				this.textLayout = new TextLayout();
+				this.textNavigator = new TextNavigator(this.textLayout);
+				this.textLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
+			}
+			this.textLayout.Text = text;
+			if ( text == "" )  return;
+
 			Drawing.Font font = this.PropertyFont(2).GetFont();
 			double fs = this.PropertyFont(2).FontSize;
 
-			string text = this.PropertyString(1).String;
-			if ( text == "" )  return;
 			PropertyTextLine justif = this.PropertyTextLine(3);
 
 			int index = 0;
@@ -1107,6 +1134,8 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		protected static readonly double				step = 0.01;
+		protected TextLayout				textLayout;
+		protected TextNavigator				textNavigator;
+		protected static readonly double	step = 0.01;
 	}
 }

@@ -275,18 +275,10 @@ namespace Epsitec.Common.Pictogram.Data
 			pathEnd   = new Drawing.Path();
 			pathLine  = new Drawing.Path();
 
-			if ( iconContext == null )
-			{
-				pathStart.DefaultZoom = 10.0;
-				pathEnd.DefaultZoom = 10.0;
-				pathLine.DefaultZoom = 10.0;
-			}
-			else
-			{
-				pathStart.DefaultZoom = iconContext.ScaleX;
-				pathEnd.DefaultZoom = iconContext.ScaleX;
-				pathLine.DefaultZoom = iconContext.ScaleX;
-			}
+			double zoom = AbstractProperty.DefaultZoom(iconContext);
+			pathStart.DefaultZoom = zoom;
+			pathEnd.DefaultZoom = zoom;
+			pathLine.DefaultZoom = zoom;
 
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;

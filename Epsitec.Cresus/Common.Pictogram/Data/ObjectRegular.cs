@@ -262,15 +262,7 @@ namespace Epsitec.Common.Pictogram.Data
 		protected Drawing.Path PathBuild(IconContext iconContext)
 		{
 			Drawing.Path path = new Drawing.Path();
-
-			if ( iconContext == null )
-			{
-				path.DefaultZoom = 10.0;
-			}
-			else
-			{
-				path.DefaultZoom = iconContext.ScaleX;
-			}
+			path.DefaultZoom = AbstractProperty.DefaultZoom(iconContext);;
 
 			int total = this.PropertyRegular(4).NbFaces;
 			PropertyCorner corner = this.PropertyCorner(5);

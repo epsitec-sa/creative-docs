@@ -328,6 +328,20 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Initialise le zoom par défaut d'un chemin.
+		static public double DefaultZoom(IconContext iconContext)
+		{
+			if ( iconContext == null )
+			{
+				return 2.0;
+			}
+			else
+			{
+				return iconContext.ScaleX;
+			}
+		}
+
+
 		// Génère un événement pour dire que la propriété a changé.
 		// En fait, ce sont les objets qui vont écouter cet événement, pour
 		// éventuellement modifier les poignées qui reflètent les propriétés.
