@@ -281,7 +281,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public int		MacStyles
+		public int		MacStyle
 		{
 			get
 			{
@@ -957,6 +957,7 @@ namespace Epsitec.Common.OpenType
 			return encodings;
 		}
 		
+		
 		public string GetLatinName(int language, NameId name, PlatformId platform)
 		{
 			int num = (int) this.NumNameRecords;
@@ -1034,6 +1035,34 @@ namespace Epsitec.Common.OpenType
 			
 			return null;
 		}
+		
+		public string GetUniqueFontIdentifier()
+		{
+			string name;
+			
+			name = this.GetLatinName (0, NameId.UniqueFontIdentifier, PlatformId.Macintosh);
+			
+			if (name == null)
+			{
+				name = this.GetUnicodeName (1033, NameId.UniqueFontIdentifier, PlatformId.Microsoft);
+			}
+			
+			return name;
+		}
+		
+		public string GetFullFontName()
+		{
+			string name;
+			
+			name = this.GetLatinName (0, NameId.FullFontName, PlatformId.Macintosh);
+			
+			if (name == null)
+			{
+				name = this.GetUnicodeName (1033, NameId.FullFontName, PlatformId.Microsoft);
+			}
+			
+			return name;
+		}
 	}
 	
 	#region PlatformId and NameId Enumeration
@@ -1082,6 +1111,7 @@ namespace Epsitec.Common.OpenType
 		public Table_hhea(TableEntry entry) : base (entry.BaseData, entry.Offset)
 		{
 		}
+		
 		
 		public int		TableVersion
 		{

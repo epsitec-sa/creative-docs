@@ -10,7 +10,17 @@ namespace Epsitec.Common.OpenType.Tests
 	{
 		public static void RunTests()
 		{
-			//			Platform.Win32.LoadFontDataDrawing ();
+			FontCollection collection = new FontCollection ();
+			
+			System.Diagnostics.Trace.WriteLine ("Building font collection.");
+			collection.Initialize ();
+			System.Diagnostics.Trace.WriteLine ("Done.");
+			
+			foreach (FontIdentity font in collection)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("{0}/{1} ({2}/{3}) weight={5}, italic={6} ---> {4}", font.InvariantFaceName, font.InvariantStyleName, font.LocaleFaceName, font.LocaleStyleName, font.FullFontName, font.FontWeight, font.FontIsItalic));
+			}
+			
 			
 			CheckTables.TestFeatureTable ();
 			CheckTables.TestArial ();
@@ -21,7 +31,7 @@ namespace Epsitec.Common.OpenType.Tests
 		private static void TestArial()
 		{
 			string font = "Arial Unicode MS";
-			byte[] data = Platform.Win32.LoadFontData (font);
+			byte[] data = Platform.Win32.LoadFontData (font, "Normal");
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Loaded font {0}: length {1}", font, data.Length));
 			
@@ -136,7 +146,7 @@ namespace Epsitec.Common.OpenType.Tests
 		private static void TestFeatureTable()
 		{
 			string font = "Palatino Linotype";
-			byte[] data = Platform.Win32.LoadFontData (font);
+			byte[] data = Platform.Win32.LoadFontData (font, "Normal");
 			
 			TableDirectory td = new TableDirectory (data, 0);
 			Table_GSUB gsub_t = new Table_GSUB (td.FindTable ("GSUB"));
@@ -352,8 +362,8 @@ namespace Epsitec.Common.OpenType.Tests
 			Font font_1 = new Font ();
 			Font font_2 = new Font ();
 			
-			font_1.Initialize (new TableDirectory (Platform.Win32.LoadFontData (font_name_1), 0));
-			font_2.Initialize (new TableDirectory (Platform.Win32.LoadFontData (font_name_2), 0));
+			font_1.Initialize (new FontData (Platform.Win32.LoadFontData (font_name_1, "Normal")));
+			font_2.Initialize (new FontData (Platform.Win32.LoadFontData (font_name_2, "Normal")));
 			
 			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_1.GetSupportedScripts ()));
 			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_2.GetSupportedScripts ()));
@@ -410,6 +420,8 @@ namespace Epsitec.Common.OpenType.Tests
 			font_1.HitTest (text, 10.0, 14.0, 0.0, out pos, out subpos);
 			
 			font_1.HitTest (text, 10.0, x, y, out pos, out subpos);
+			
+			Debug.Assert.IsTrue (pos == text.Length);
 			
 			font_1.SelectFeatures ();
 			font_2.SelectFeatures ();

@@ -4,7 +4,9 @@
 namespace Epsitec.Common.OpenType
 {
 	/// <summary>
-	/// Summary description for Font.
+	/// La classe Font fait le lien entre une fonte réelle (description sous
+	/// la forme OpenType) et les besoins concrets des applications désirant
+	/// manipuler des glyphes.
 	/// </summary>
 	public class Font
 	{
@@ -12,18 +14,41 @@ namespace Epsitec.Common.OpenType
 		{
 		}
 		
-		
-		public void Initialize(TableDirectory directory)
+		public Font(FontData font_data)
 		{
-			this.ot_directory = directory;
+			this.Initialize (font_data);
+		}
+		
+		
+		
+		public bool								IsBold
+		{
+			get
+			{
+				return (this.ot_head.MacStyle & 0x01) != 0;
+			}
+		}
+		
+		public bool								IsItalic
+		{
+			get
+			{
+				return (this.ot_head.MacStyle & 0x02) != 0;
+			}
+		}
+		
+		
+		public void Initialize(FontData font_data)
+		{
+			this.font_data = font_data;
 			
-			this.ot_GSUB = new Table_GSUB (directory.FindTable ("GSUB"));
-			this.ot_GDEF = new Table_GDEF (directory.FindTable ("GDEF"));
-			this.ot_cmap = new Table_cmap (directory.FindTable ("cmap"));
-			this.ot_maxp = new Table_maxp (directory.FindTable ("maxp"));
-			this.ot_head = new Table_head (directory.FindTable ("head"));
-			this.ot_hhea = new Table_hhea (directory.FindTable ("hhea"));
-			this.ot_hmtx = new Table_hmtx (directory.FindTable ("hmtx"));
+			this.ot_GSUB = new Table_GSUB (this.font_data["GSUB"]);
+			this.ot_GDEF = new Table_GDEF (this.font_data["GDEF"]);
+			this.ot_cmap = new Table_cmap (this.font_data["cmap"]);
+			this.ot_maxp = new Table_maxp (this.font_data["maxp"]);
+			this.ot_head = new Table_head (this.font_data["head"]);
+			this.ot_hhea = new Table_hhea (this.font_data["hhea"]);
+			this.ot_hmtx = new Table_hmtx (this.font_data["hmtx"]);
 			
 			this.ot_index_mapping = this.ot_cmap.FindFormatSubTable ();
 		}
@@ -899,7 +924,8 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		private TableDirectory					ot_directory;
+		private FontData						font_data;
+		
 		private Table_GSUB						ot_GSUB;
 		private Table_GDEF						ot_GDEF;
 		private Table_cmap						ot_cmap;
