@@ -21,6 +21,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorBlack       = Drawing.Color.FromRGB(  0.0/255.0,   0.0/255.0,   0.0/255.0);
 			this.colorControl     = Drawing.Color.FromRGB( 53.0/255.0, 146.0/255.0, 255.0/255.0);
 			this.colorCaption     = Drawing.Color.FromRGB(  0.0/255.0, 115.0/255.0, 244.0/255.0);
+			this.colorCaptionNF   = Drawing.Color.FromRGB(190.0/255.0, 190.0/255.0, 190.0/255.0);
 			this.colorCaptionText = Drawing.Color.FromRGB(255.0/255.0, 255.0/255.0, 255.0/255.0);
 			this.colorInfo        = Drawing.Color.FromRGB(213.0/255.0, 233.0/255.0, 255.0/255.0);
 			this.colorBorder      = Drawing.Color.FromRGB(170.0/255.0, 170.0/255.0, 170.0/255.0);
@@ -234,6 +235,20 @@ namespace Epsitec.Common.Widgets.Adorner
 					shadow.Bottom -= 5;
 					this.PaintImageButton(graphics, shadow, 72);
 
+					if ( (state&WidgetState.Focused) != 0 )
+					{
+						Drawing.Path path = this.PathRoundRectangle(rect, this.RetRadiusButton(rect));
+						graphics.Rasterizer.AddSurface(path);
+						if ( style == ButtonStyle.DefaultActive )
+						{
+							graphics.RenderSolid(Drawing.Color.FromRGB(1.0, 0.0, 1.0));
+						}
+						else
+						{
+							graphics.RenderSolid(Drawing.Color.FromRGB(0.0, 0.7, 1.0));
+						}
+					}
+
 					if ( style == ButtonStyle.DefaultActive )
 					{
 						this.PaintImageButton(graphics, rect, 0);
@@ -423,7 +438,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				 style == TextFieldStyle.Combo  )
 			{
 				double radius = this.RetRadiusFrame(rect);
-				Drawing.Path path = PathRoundRectangle(rect, radius);
+				Drawing.Path path = this.PathRoundRectangle(rect, radius);
 
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
@@ -452,7 +467,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			else if ( style == TextFieldStyle.UpDown )
 			{
 				double radius = this.RetRadiusFrame(rect);
-				Drawing.Path path = PathRoundRectangle(rect, radius);
+				Drawing.Path path = this.PathRoundRectangle(rect, radius);
 
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
@@ -641,20 +656,20 @@ namespace Epsitec.Common.Widgets.Adorner
 			double radius = this.RetRadiusFrame(frameRect);
 			Drawing.Path path;
 
-			path = PathRoundRectangle(frameRect, radius);
+			path = this.PathRoundRectangle(frameRect, radius);
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(Drawing.Color.FromARGB(0.05, 0,0,0));
 
 			if ( this.metalRenderer )
 			{
 				frameRect.Offset(0, -1);
-				path = PathRoundRectangle(frameRect, radius);
+				path = this.PathRoundRectangle(frameRect, radius);
 				graphics.Rasterizer.AddOutline(path, 1);
 				graphics.RenderSolid(Drawing.Color.FromARGB(0.7, 1,1,1));
 				frameRect.Offset(0, 1);
 			}
 
-			path = PathRoundRectangle(frameRect, radius);
+			path = this.PathRoundRectangle(frameRect, radius);
 			graphics.Rasterizer.AddOutline(path, 1);
 			graphics.RenderSolid(this.ColorBorder);
 		}
@@ -825,7 +840,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( (state&WidgetState.Selected) != 0 )
 			{
 				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.colorCaption);
+				if ( (state&WidgetState.Focused) != 0 )
+				{
+					graphics.RenderSolid(this.colorCaption);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorCaptionNF);
+				}
 			}
 			else
 			{
@@ -1106,7 +1128,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				rect.Inflate(-1, -1);
 
 				double radius = this.RetRadiusFrame(rect);
-				Drawing.Path pInside = PathRoundRectangle(rect, radius);
+				Drawing.Path pInside = this.PathRoundRectangle(rect, radius);
 
 				graphics.Rasterizer.AddSurface(pInside);
 				graphics.RenderSolid(Drawing.Color.FromARGB(0.6, 1,1,1));
@@ -1121,7 +1143,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			else
 			{
 				double radius = this.RetRadiusFrame(rect);
-				Drawing.Path pInside = PathRoundRectangle(rect, radius);
+				Drawing.Path pInside = this.PathRoundRectangle(rect, radius);
 
 				graphics.Rasterizer.AddSurface(pInside);
 				graphics.RenderSolid(Drawing.Color.FromARGB(0.2, 1,1,1));
@@ -1134,6 +1156,45 @@ namespace Epsitec.Common.Widgets.Adorner
 		public void PaintStatusItemForeground(Drawing.Graphics graphics,
 											  Drawing.Rectangle rect,
 											  WidgetState state)
+		{
+		}
+
+		// Dessine un tag.
+		public void PaintTagBackground(Drawing.Graphics graphics,
+									   Drawing.Rectangle rect,
+									   WidgetState state,
+									   Drawing.Color color)
+		{
+			if ( !color.IsEmpty && (state&WidgetState.Enabled) != 0 )
+			{
+				Drawing.Path path = new Drawing.Path();
+				path.AppendCircle(rect.Center, rect.Width/2, rect.Height/2);
+				graphics.Rasterizer.AddSurface(path);
+				graphics.RenderSolid(color);
+			}
+
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				this.PaintImageButton(graphics, rect, 41);
+			}
+			else
+			{
+				this.PaintImageButton(graphics, rect, 43);
+			}
+
+			if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
+				 (state&WidgetState.Entered) != 0 )   // bouton survolé ?
+			{
+				this.PaintImageButton(graphics, rect, 42);
+			}
+
+			this.PaintArrow(graphics, rect, state, Direction.Down, PaintTextStyle.Button);
+		}
+
+		public void PaintTagForeground(Drawing.Graphics graphics,
+									   Drawing.Rectangle rect,
+									   WidgetState state,
+									   Drawing.Color color)
 		{
 		}
 
@@ -1162,6 +1223,8 @@ namespace Epsitec.Common.Widgets.Adorner
 		public void PaintFocusBox(Drawing.Graphics graphics,
 								  Drawing.Rectangle rect)
 		{
+			graphics.AddRectangle(rect);
+			graphics.RenderSolid(this.colorCaption);
 		}
 
 		// Dessine le curseur du texte.
@@ -1178,17 +1241,26 @@ namespace Epsitec.Common.Widgets.Adorner
 		
 		// Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 		public void PaintTextSelectionBackground(Drawing.Graphics graphics,
-												 Drawing.Rectangle[] rects)
+												 Drawing.Rectangle[] rects,
+												 WidgetState state)
 		{
 			for (int i = 0; i < rects.Length; i++)
 			{
 				graphics.AddFilledRectangle(rects[i]);
-				graphics.RenderSolid(this.colorCaption);
+				if ( (state&WidgetState.Focused) != 0 )
+				{
+					graphics.RenderSolid(this.colorCaption);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorCaptionNF);
+				}
 			}
 		}
 
 		public void PaintTextSelectionForeground(Drawing.Graphics graphics,
-												 Drawing.Rectangle[] rects)
+												 Drawing.Rectangle[] rects,
+												 WidgetState state)
 		{
 		}
 
@@ -1235,7 +1307,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				rFocus.Offset(pos);
 				graphics.Align(ref rFocus);
 				rFocus.Inflate(2.5, -0.5);
-				PaintFocusBox(graphics, rFocus);
+				this.PaintFocusBox(graphics, rFocus);
 			}
 		}
 
@@ -1364,10 +1436,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		// Retourne le rayon à utiliser pour une zone rectangulaire.
 		protected double RetRadiusButton(Drawing.Rectangle rect)
 		{
-			double dim = System.Math.Min(rect.Width, rect.Height);
-			double radius = System.Math.Min(dim/2, 10);
-			double middle = System.Math.Max(dim-radius*2, 2);
-			return System.Math.Floor((dim-middle)/2);
+			return System.Math.Min(rect.Width, rect.Height)/2;
 		}
 
 		// Retourne le rayon à utiliser pour une zone rectangulaire.
@@ -1876,6 +1945,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorBlack;
 		protected Drawing.Color		colorControl;
 		protected Drawing.Color		colorCaption;
+		protected Drawing.Color		colorCaptionNF;  // NF = no focused
 		protected Drawing.Color		colorCaptionText;
 		protected Drawing.Color		colorInfo;
 		protected Drawing.Color		colorBorder;

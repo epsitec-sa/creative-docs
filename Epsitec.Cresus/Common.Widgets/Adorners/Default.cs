@@ -23,6 +23,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.colorControlDark       = Drawing.Color.FromName("ControlDark");
 			this.colorControlDarkDark   = Drawing.Color.FromName("ControlDarkDark");
 			this.colorCaption           = Drawing.Color.FromName("ActiveCaption");
+			this.colorCaptionNF         = Drawing.Color.FromName("ControlDark");
 			this.colorCaptionText       = Drawing.Color.FromName("ActiveCaptionText");
 			this.colorInfo              = Drawing.Color.FromName("Info");
 
@@ -35,11 +36,6 @@ namespace Epsitec.Common.Widgets.Adorner
 			g = 1-(1-this.colorControlLight.G)*0.7;
 			b = 1-(1-this.colorControlLight.B)*0.7;
 			this.colorControlReadOnly = Drawing.Color.FromRGB(r,g,b);
-
-			r = 1-(1-this.colorCaption.R)*0.25;
-			g = 1-(1-this.colorCaption.G)*0.25;
-			b = 1-(1-this.colorCaption.B)*0.25;
-			this.colorCaptionLight = Drawing.Color.FromRGB(r,g,b);
 		}
 		
 
@@ -344,7 +340,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				Drawing.Rectangle rFocus = rect;
 				rFocus.Inflate(-3.5, -3.5);
-				PaintFocusBox(graphics, rFocus);
+				this.PaintFocusBox(graphics, rFocus);
 			}
 		}
 
@@ -998,6 +994,49 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 		}
 
+		// Dessine un tag.
+		public void PaintTagBackground(Drawing.Graphics graphics,
+									   Drawing.Rectangle rect,
+									   WidgetState state,
+									   Drawing.Color color)
+		{
+			graphics.Align(ref rect);
+			Drawing.Rectangle rInside = rect;
+			rInside.Inflate(-1, -1);
+
+			// Ombre foncée en bas à droite.
+			Direction shadow = Direction.Up;
+			this.PaintHalfCircle(graphics, rect, this.colorControlLightLight, Opposite(shadow));
+			this.PaintHalfCircle(graphics, rInside, this.colorControlLight, Opposite(shadow));
+
+			// Ombre claire en haut à droite.
+			this.PaintHalfCircle(graphics, rect, this.colorControlDarkDark, shadow);
+			this.PaintHalfCircle(graphics, rInside, this.colorControlDark, shadow);
+
+			rInside = rect;
+			rInside.Inflate(-2, -2);
+			if ( color.IsEmpty || (state&WidgetState.Enabled) == 0 )
+			{
+				this.PaintCircle(graphics, rInside, this.colorControl);
+			}
+			else
+			{
+				color.R = 1.0-(1.0-color.R)*0.5;
+				color.G = 1.0-(1.0-color.G)*0.5;
+				color.B = 1.0-(1.0-color.B)*0.5;
+				this.PaintCircle(graphics, rInside, color);
+			}
+
+			this.PaintArrow(graphics, rect, state, Direction.Down, PaintTextStyle.Button);
+		}
+
+		public void PaintTagForeground(Drawing.Graphics graphics,
+									   Drawing.Rectangle rect,
+									   WidgetState state,
+									   Drawing.Color color)
+		{
+		}
+
 		// Dessine le fond d'une bulle d'aide.
 		public void PaintTooltipBackground(Drawing.Graphics graphics,
 										   Drawing.Rectangle rect)
@@ -1041,17 +1080,26 @@ namespace Epsitec.Common.Widgets.Adorner
 		
 		// Dessine les zones rectanglaires correspondant aux caractères sélectionnés.
 		public void PaintTextSelectionBackground(Drawing.Graphics graphics,
-												 Drawing.Rectangle[] rects)
+												 Drawing.Rectangle[] rects,
+												 WidgetState state)
 		{
 			for (int i = 0; i < rects.Length; i++)
 			{
 				graphics.AddFilledRectangle(rects[i]);
-				graphics.RenderSolid(this.colorCaption);
+				if ( (state&WidgetState.Focused) != 0 )
+				{
+					graphics.RenderSolid(this.colorCaption);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorCaptionNF);
+				}
 			}
 		}
 
 		public void PaintTextSelectionForeground(Drawing.Graphics graphics,
-												 Drawing.Rectangle[] rects)
+												 Drawing.Rectangle[] rects,
+												 WidgetState state)
 		{
 		}
 
@@ -1095,7 +1143,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				rFocus.Offset(pos);
 				graphics.Align(ref rFocus);
 				rFocus.Inflate(2.5, -0.5);
-				PaintFocusBox(graphics, rFocus);
+				this.PaintFocusBox(graphics, rFocus);
 			}
 		}
 
@@ -1336,8 +1384,8 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorControlReadOnly;
 		protected Drawing.Color		colorScrollerBack;
 		protected Drawing.Color		colorCaption;
+		protected Drawing.Color		colorCaptionNF;  // NF = no focused
 		protected Drawing.Color		colorCaptionText;
-		protected Drawing.Color		colorCaptionLight;
 		protected Drawing.Color		colorInfo;
 		protected Drawing.Color		colorWindow;
 	}
