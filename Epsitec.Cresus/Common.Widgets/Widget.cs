@@ -863,7 +863,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public virtual WindowFrame			WindowFrame
+		public virtual Window			Window
 		{
 			get
 			{
@@ -875,7 +875,7 @@ namespace Epsitec.Common.Widgets
 					return null;
 				}
 				
-				return root.WindowFrame;
+				return root.Window;
 			}
 		}
 		
@@ -883,8 +883,8 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				WindowFrame frame = this.WindowFrame;
-				return (frame == null) ? null : frame.CommandDispatcher;
+				Window window = this.Window;
+				return (window == null) ? null : window.CommandDispatcher;
 			}
 		}
 		
@@ -1226,9 +1226,9 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void SetFocused(bool focused)
 		{
-			WindowFrame frame = this.WindowFrame;
+			Window window = this.Window;
 			
-			if (frame == null)
+			if (window == null)
 			{
 				return;
 			}
@@ -1238,7 +1238,7 @@ namespace Epsitec.Common.Widgets
 				if (focused)
 				{
 					this.widgetState |= WidgetState.Focused;
-					frame.FocusedWidget = this;
+					window.FocusedWidget = this;
 					this.OnFocused ();
 					this.Invalidate ();
 				}
@@ -1248,7 +1248,7 @@ namespace Epsitec.Common.Widgets
 				if (!focused)
 				{
 					this.widgetState &= ~ WidgetState.Focused;
-					frame.FocusedWidget = null;
+					window.FocusedWidget = null;
 					this.OnDefocused ();
 					this.Invalidate ();
 				}
@@ -1279,9 +1279,9 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void SetEngaged(bool engaged)
 		{
-			WindowFrame frame = this.WindowFrame;
+			Window window = this.Window;
 			
-			if (frame == null)
+			if (window == null)
 			{
 				return;
 			}
@@ -1296,7 +1296,7 @@ namespace Epsitec.Common.Widgets
 				if (engaged)
 				{
 					this.widgetState |= WidgetState.Engaged;
-					frame.EngagedWidget = this;
+					window.EngagedWidget = this;
 					this.Invalidate ();
 					this.OnEngaged ();
 				}
@@ -1306,7 +1306,7 @@ namespace Epsitec.Common.Widgets
 				if (!engaged)
 				{
 					this.widgetState &= ~ WidgetState.Engaged;
-					frame.EngagedWidget = null;
+					window.EngagedWidget = null;
 					this.Invalidate ();
 					this.OnDisengaged ();
 				}
@@ -1354,7 +1354,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.IsEntered != entered)
 			{
-				WindowFrame frame = this.WindowFrame;
+				Window window = this.Window;
 				Message message = null;
 				
 				if (entered)
@@ -1405,13 +1405,13 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				this.MessageHandler (message);
-				frame.PostProcessMessage (message);
+				window.PostProcessMessage (message);
 				this.Invalidate ();
 			}
 		}
 		
 		
-		public static void UpdateEntered(WindowFrame window, Message message)
+		public static void UpdateEntered(Window window, Message message)
 		{
 			int index = Widget.enteredWidgets.Count;
 			
@@ -1427,11 +1427,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public static void UpdateEntered(WindowFrame window, Widget widget, Message message)
+		public static void UpdateEntered(Window window, Widget widget, Message message)
 		{
 			Drawing.Point point_in_widget = widget.MapRootToClient (message.Cursor);
 			
-			if ((widget.WindowFrame != window) ||
+			if ((widget.Window != window) ||
 				(point_in_widget.X < 0) ||
 				(point_in_widget.Y < 0) ||
 				(point_in_widget.X >= widget.Client.Width) ||
@@ -1584,14 +1584,14 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Point MapScreenToClient(Drawing.Point point)
 		{
-			point = this.WindowFrame.MapScreenToWindow (point);
+			point = this.Window.MapScreenToWindow (point);
 			point = this.MapRootToClient (point);
 			return point;
 		}
 		
 		public virtual Drawing.Point MapScreenToParent(Drawing.Point point)
 		{
-			point = this.WindowFrame.MapScreenToWindow (point);
+			point = this.Window.MapScreenToWindow (point);
 			point = this.MapRootToClient (point);
 			point = this.MapClientToParent (point);
 			return point;
@@ -1600,7 +1600,7 @@ namespace Epsitec.Common.Widgets
 		public virtual Drawing.Point MapClientToScreen(Drawing.Point point)
 		{
 			point = this.MapClientToRoot (point);
-			point = this.WindowFrame.MapWindowToScreen (point);
+			point = this.Window.MapWindowToScreen (point);
 			return point;
 		}
 		
@@ -1608,7 +1608,7 @@ namespace Epsitec.Common.Widgets
 		{
 			point = this.MapParentToClient (point);
 			point = this.MapClientToRoot (point);
-			point = this.WindowFrame.MapWindowToScreen (point);
+			point = this.Window.MapWindowToScreen (point);
 			return point;
 		}
 		
@@ -2941,7 +2941,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.IsCommand)
 			{
-				WindowFrame window = this.WindowFrame;
+				Window window = this.Window;
 				
 				if (window != null)
 				{
@@ -2961,7 +2961,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void OnEntered(MessageEventArgs e)
 		{
-			this.MouseCursor.SetWindowCursor (this.WindowFrame);
+			this.MouseCursor.SetWindowCursor (this.Window);
 			
 			if (this.Entered != null)
 			{
@@ -2978,7 +2978,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.parent != null)
 			{
-				this.parent.MouseCursor.SetWindowCursor (this.WindowFrame);
+				this.parent.MouseCursor.SetWindowCursor (this.Window);
 			}
 			
 			if (this.Exited != null)
@@ -3004,11 +3004,11 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.hyperText == null)
 			{
-				this.MouseCursor.SetWindowCursor (this.WindowFrame);
+				this.MouseCursor.SetWindowCursor (this.Window);
 			}
 			else
 			{
-				MouseCursor.AsHand.SetWindowCursor (this.WindowFrame);
+				MouseCursor.AsHand.SetWindowCursor (this.Window);
 			}
 			
 			if (this.HyperTextHot != null)

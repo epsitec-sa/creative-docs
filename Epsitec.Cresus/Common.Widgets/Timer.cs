@@ -56,7 +56,14 @@ namespace Epsitec.Common.Widgets
 		public double							AutoRepeat
 		{
 			get { return this.auto_repeat; }
-			set { this.auto_repeat = value; }
+			set
+			{
+				if (this.auto_repeat != value)
+				{
+					this.auto_repeat = value;
+					this.Delay = value;
+				}
+			}
 		}
 		
 		

@@ -10,7 +10,7 @@ namespace Epsitec.Common.Widgets
 			this.colorBack  = Drawing.Color.FromName("Info");
 			this.colorFrame = Drawing.Color.FromName("Black");
 
-			this.window = new WindowFrame();
+			this.window = new Window();
 			this.window.MakeFramelessWindow();
 			this.window.IsMouseActivationEnabled = false;
 			this.window.Root.Children.Add(this);
@@ -94,7 +94,7 @@ namespace Epsitec.Common.Widgets
 			size.Width  += this.margin.X*2;
 			size.Height += this.margin.Y*2;
 
-			Drawing.Point mouse = this.widget.WindowFrame.MapWindowToScreen(Message.State.LastPosition);
+			Drawing.Point mouse = Message.State.LastWindow.MapWindowToScreen(Message.State.LastPosition);
 			mouse += this.offset;
 			mouse.Y -= size.Height;
 
@@ -142,7 +142,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected WindowFrame			window;
+		protected Window				window;
 		protected bool					isVisible = false;
 		protected Timer					timer;
 		protected double				openDelay = 1;  // délai d'ouverture en secondes

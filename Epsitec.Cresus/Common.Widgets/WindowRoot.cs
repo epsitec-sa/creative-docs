@@ -2,14 +2,14 @@ namespace Epsitec.Common.Widgets
 {
 	/// <summary>
 	/// La classe WindowRoot implémente le fond de chaque fenêtre. L'utilisateur obtient
-	/// en général une instance de WindowRoot en appeland WindowFrame.Root.
+	/// en général une instance de WindowRoot en appelant Window.Root.
 	/// </summary>
 	[Support.SuppressBundleSupport]
 	public class WindowRoot : AbstractGroup
 	{
-		public WindowRoot(WindowFrame frame)
+		public WindowRoot(Window window)
 		{
-			this.window_frame = frame;
+			this.window = window;
 		}
 		
 		public override bool			IsVisible
@@ -17,9 +17,9 @@ namespace Epsitec.Common.Widgets
 			get { return true; }
 		}
 		
-		public override WindowFrame		WindowFrame
+		public override Window			Window
 		{
-			get { return this.window_frame; }
+			get { return this.window; }
 		}
 		
 		
@@ -40,17 +40,17 @@ namespace Epsitec.Common.Widgets
 		
 		public override void Invalidate()
 		{
-			if (this.window_frame != null)
+			if (this.window != null)
 			{
 				System.Diagnostics.Debug.Assert (this.parent == null);
-				this.window_frame.MarkForRepaint (this.Bounds);
+				this.window.MarkForRepaint (this.Bounds);
 			}
 		}
 		
 		public override void Invalidate(Drawing.Rectangle rect)
 		{
 			System.Diagnostics.Debug.Assert (this.parent == null);
-			this.window_frame.MarkForRepaint (rect);
+			this.window.MarkForRepaint (rect);
 		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
@@ -82,6 +82,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected WindowFrame				window_frame;
+		protected Window					window;
 	}
 }
