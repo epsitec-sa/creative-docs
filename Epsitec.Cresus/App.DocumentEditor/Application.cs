@@ -14,6 +14,18 @@ namespace Epsitec.App.DocumentEditor
 		[System.STAThread]
 		static void Main() 
 		{
+			// Il faut indiquer ci-après la date de diffusion du logiciel, qui doit être mise
+			// à jour chaque fois que l'on génère un nouveau CD :
+			
+			Common.Support.SerialAlgorithm.SetProductBuildDate(new System.DateTime(2005, 1, 20));
+			Common.Support.SerialAlgorithm.SetProductGenerationNumber(1, 0);
+			
+// -------- Juste pour le test -------
+			string key = Common.Support.SerialAlgorithm.ReadSerial();
+			System.Diagnostics.Trace.WriteLine("Serial: " + key);
+			System.Diagnostics.Trace.WriteLine("Validation: " + Common.Support.SerialAlgorithm.CheckSerial(key));
+// -------- Fin du test --------------
+			
 			Widget.Initialise();
 			
 			Common.Support.ImageProvider.Default.EnableLongLifeCache = true;

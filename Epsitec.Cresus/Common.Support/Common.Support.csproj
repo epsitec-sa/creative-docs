@@ -269,6 +269,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "SerialAlgorithm.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "SuppressBundleSupportAttribute.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

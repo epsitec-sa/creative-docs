@@ -879,31 +879,6 @@
                     RelPath = "Images\ZoomSub.icon"
                     BuildAction = "EmbeddedResource"
                 />
-                <File
-                    RelPath = "Installer\CustomInstaller.cs"
-                    SubType = "Component"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Installer\CustomInstaller.resx"
-                    DependentUpon = "CustomInstaller.cs"
-                    BuildAction = "EmbeddedResource"
-                />
-                <File
-                    RelPath = "Installer\SerialAlgorithm.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Installer\SerialInput.cs"
-                    SubType = "Form"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Installer\SerialInput.resx"
-                    DependentUpon = "SerialInput.cs"
-                    BuildAction = "EmbeddedResource"
-                />
             </Include>
         </Files>
     </CSHARP>
