@@ -228,7 +228,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.UpdateLayout();
 
-			Drawing.Rectangle totalRect = new Drawing.Rectangle();
+			Drawing.Rectangle totalRect = Drawing.Rectangle.Empty;
 			foreach ( JustifBlock block in this.blocks )
 			{
 				if ( !all && !block.visible )  continue;
@@ -282,7 +282,7 @@ namespace Epsitec.Common.Widgets
 			{
 				this.UpdateLayout();
 
-				Drawing.Rectangle totalRect = new Drawing.Rectangle();
+				Drawing.Rectangle totalRect = Drawing.Rectangle.Empty;
 				foreach ( JustifBlock block in this.blocks )
 				{
 					if ( !block.visible )  continue;
@@ -334,6 +334,7 @@ namespace Epsitec.Common.Widgets
 		{
 			this.UpdateLayout();
 
+			IAdorner adorner = Adorner.Factory.Active;
 			foreach ( JustifBlock block in this.blocks )
 			{
 				if ( !block.visible )  continue;
@@ -342,7 +343,7 @@ namespace Epsitec.Common.Widgets
 				{
 					Drawing.Image image = this.imageProvider.GetImage(block.text);
 					
-					if (image == null)
+					if ( image == null )
 					{
 						throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", block.text, System.IO.Directory.GetCurrentDirectory ()));
 					}
@@ -352,9 +353,9 @@ namespace Epsitec.Common.Widgets
 						image = Drawing.Bitmap.FromImageDisabled(image, uniqueColor);
 					}
 					
-					image.DefineZoom(graphics.GetTransformZoom ());
+					image.DefineZoom(graphics.GetTransformZoom());
 					image.DefineColor(uniqueColor);
-					image.DefineAdorner(Adorner.Factory.Active);
+					image.DefineAdorner(adorner);
 					
 					double dx = image.Width;
 					double dy = image.Height;
@@ -384,8 +385,15 @@ namespace Epsitec.Common.Widgets
 				Drawing.Color color;
 				if ( uniqueColor.IsEmpty )
 				{
-					if ( block.anchor )  color = TextLayout.anchorColor;
-					else                 color = block.fontColor;
+					if ( block.anchor )
+					{
+						color = TextLayout.anchorColor;
+					}
+					else
+					{
+						color = block.fontColor;
+						adorner.AdaptEnabledTextColor(ref color);
+					}
 				}
 				else
 				{
@@ -404,7 +412,6 @@ namespace Epsitec.Common.Widgets
 				}
 
 				graphics.PaintText(x, y, block.text, block.font, block.fontSize, color);
-//				graphics.RenderSolid(color);
 
 				if ( block.underline )
 				{
