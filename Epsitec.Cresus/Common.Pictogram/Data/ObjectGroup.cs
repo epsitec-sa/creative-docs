@@ -57,7 +57,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			iconContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
-			this.durtyBbox = true;
+			this.dirtyBbox = true;
 		}
 
 		// Fin de la création d'un objet.
@@ -173,7 +173,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				path = this.PathRectangle(rect);
 				graphics.Rasterizer.AddSurface(path);
-				graphics.RenderSolid(iconContext.HiliteColor);
+				graphics.RenderSolid(Drawing.Color.FromColor(iconContext.HiliteColor, 0.3));
 			}
 		}
 

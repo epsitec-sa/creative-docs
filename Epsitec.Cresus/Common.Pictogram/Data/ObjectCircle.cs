@@ -81,7 +81,7 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			iconContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
-			this.durtyBbox = true;
+			this.dirtyBbox = true;
 		}
 
 		// Fin de la création d'un objet.
@@ -106,6 +106,8 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			Drawing.Path path = this.PathBuild();
 			this.bbox = path.ComputeBounds();
+			double width = this.PropertyLine(0).Width/2.0;
+			this.bbox.Inflate(width, width);
 		}
 
 		// Crée le chemin d'un cercle.
