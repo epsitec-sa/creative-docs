@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Database
 	/// La classe DbTypeString définit les paramètres d'un texte 'string'
 	/// (DbSimpleType.String).
 	/// </summary>
-	public class DbTypeString : DbType
+	public class DbTypeString : DbType, Common.Types.IString
 	{
 		internal DbTypeString() : base (DbSimpleType.String)
 		{

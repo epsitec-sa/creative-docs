@@ -440,6 +440,13 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public Common.Types.DecimalRange ToDecimalRange()
+		{
+			decimal resolution = DbNumDef.digit_table_scale[this.DigitShift];
+			return new Common.Types.DecimalRange (this.MinValue, this.MaxValue, resolution);
+		}
+		
+		
 		#region ICloneable Members
 		public object Clone()
 		{

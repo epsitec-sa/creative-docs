@@ -3,10 +3,13 @@
 
 namespace Epsitec.Cresus.Database
 {
+	using IEnum      = Common.Types.IEnum;
+	using IEnumValue = Common.Types.IEnumValue;
+	
 	/// <summary>
 	/// La classe DbTypeEnum définit une énumération.
 	/// </summary>
-	public class DbTypeEnum : DbType, System.Collections.ICollection
+	public class DbTypeEnum : DbType, System.Collections.ICollection, IEnum
 	{
 		public DbTypeEnum() : base (DbSimpleType.String)
 		{
@@ -52,6 +55,16 @@ namespace Epsitec.Cresus.Database
 			get { return this.max_name_length; }
 		}
 		
+		
+		public IEnumValue[]						Values
+		{
+			get
+			{
+				DbEnumValue[] values = new DbEnumValue[this.values.Length];
+				this.values.CopyTo (values, 0);
+				return values;
+			}
+		}
 		
 		internal override void SerializeXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{

@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Database
 	/// La classe DbType décrit un type de donnée pour spécifier DbColumn de
 	/// manière plus précise.
 	/// </summary>
-	public class DbType : IDbAttributesHost, System.ICloneable, Epsitec.Common.Support.INameCaption
+	public class DbType : IDbAttributesHost, System.ICloneable, Common.Types.INameCaption
 	{
 		public DbType()
 		{

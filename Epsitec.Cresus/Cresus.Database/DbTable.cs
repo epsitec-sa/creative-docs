@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Database
 	/// La classe DbTable décrit la structure d'une table dans la base de données.
 	/// Cette classe ressemble dans l'esprit à System.Data.DataTable.
 	/// </summary>
-	public class DbTable : IDbAttributesHost, Epsitec.Common.Support.INameCaption
+	public class DbTable : IDbAttributesHost, Common.Types.INameCaption
 	{
 		public DbTable()
 		{
