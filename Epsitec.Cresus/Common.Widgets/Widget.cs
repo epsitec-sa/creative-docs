@@ -74,7 +74,6 @@ namespace Epsitec.Common.Widgets
 		PossibleContainer	= 0x01000000,		//	widget peut être la cible d'un drag & drop en mode édition
 		EditionDisabled		= 0x02000000,		//	widget ne peut en aucun cas être édité
 		
-		Command				= 0x40000000,		//	widget génère des commandes
 		DebugActive			= 0x80000000		//	widget marqué pour le debug
 	}
 	
@@ -642,23 +641,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		[Bundle ("cmd")] public bool				IsCommand
+		public bool									IsCommand
 		{
-			get
-			{
-				return (this.internal_state & InternalState.Command) != 0;
-			}
-			set
-			{
-				if (value)
-				{
-					this.internal_state |= InternalState.Command;
-				}
-				else
-				{
-					this.internal_state &= ~ InternalState.Command;
-				}
-			}
+			get { return (this.command_name != null); }
 		}
 		
 		
@@ -1199,18 +1184,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public string								CommandName
-		{
-			get
-			{
-				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-				
-				this.BuildCommandName (buffer);
-				
-				return buffer.ToString ();
-			}
-		}
-		
 		public int									Index
 		{
 			get
@@ -1228,7 +1201,7 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if ((this.name == null) || (this.name.Length == 0))
+				if (this.name == null)
 				{
 					return "";
 				}
@@ -1249,6 +1222,43 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		[Bundle ("cmd")]	public string			CommandName
+		{
+			get
+			{
+				if (this.command_name == null)
+				{
+					return "";
+				}
+
+				return this.command_name;
+			}
+			
+			set
+			{
+				if ((value == null) || (value.Length == 0))
+				{
+					this.command_name = null;
+				}
+				else
+				{
+					this.command_name = value;
+				}
+			}
+		}
+
+		public string								FullPathName
+		{
+			get
+			{
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				this.BuildFullPathName (buffer);
+				
+				return buffer.ToString ();
+			}
+		}
+		
 		[Bundle ("text")]	public string			Text
 		{
 			get
@@ -1731,7 +1741,7 @@ namespace Epsitec.Common.Widgets
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
 			buffer.Append (this.GetType ().Name);
-			this.BuildCommandName (buffer);
+			this.BuildFullPathName (buffer);
 			buffer.Append (@".""");
 			buffer.Append (this.Text);
 			buffer.Append (@"""");
@@ -2627,7 +2637,7 @@ namespace Epsitec.Common.Widgets
 			return null;
 		}
 		
-		public virtual Widget	FindChild(string[] names, int offset)
+		public virtual Widget	FindChildByPath(string[] names, int offset)
 		{
 			if (offset >= names.Length)
 			{
@@ -2650,7 +2660,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (widget.Name == "")
 				{
-					Widget child = widget.FindChild (names, offset);
+					Widget child = widget.FindChildByPath (names, offset);
 					
 					if (child != null)
 					{
@@ -2659,24 +2669,24 @@ namespace Epsitec.Common.Widgets
 				}
 				else if (widget.Name == names[offset])
 				{
-					return widget.FindChild (names, offset+1);
+					return widget.FindChildByPath (names, offset+1);
 				}
 			}
 			
 			return null;
 		}
 		
-		public Widget			FindCommandWidget(string command_name)
+		public Widget			FindChildByPath(string path)
 		{
-			string[] names = command_name.Split (new char[] { '.' });
+			string[] names = path.Split ('.');
 			
 			if (this.Name == "")
 			{
-				return this.FindChild (names, 0);
+				return this.FindChildByPath (names, 0);
 			}
 			if (this.Name == names[0])
 			{
-				return this.FindChild (names, 1);
+				return this.FindChildByPath (names, 1);
 			}
 			
 			return null;
@@ -2688,6 +2698,19 @@ namespace Epsitec.Common.Widgets
 			//	ceux qui sont des widgets de commande.
 			
 			CommandWidgetFinder finder = new CommandWidgetFinder ();
+			
+			this.WalkChildren (new WalkWidgetCallback (finder.Analyse));
+			
+			return finder.Widgets;
+		}
+		
+		public Widget[]	        FindCommandWidgets(string command)
+		{
+			//	Passe en revue tous les widgets de la descendance et accumule
+			//	ceux qui sont des widgets de commande qui correspondent au critère
+			//	de recherche.
+			
+			CommandWidgetFinder finder = new CommandWidgetFinder (command);
 			
 			this.WalkChildren (new WalkWidgetCallback (finder.Analyse));
 			
@@ -2707,9 +2730,69 @@ namespace Epsitec.Common.Widgets
 			return finder.Widgets;
 		}
 		
+		public static Widget[]	FindAllCommandWidgets(string command)
+		{
+			return Widget.FindAllCommandWidgets (command, null);
+		}
+		
 		public static Widget[]	FindAllCommandWidgets(System.Text.RegularExpressions.Regex regex)
 		{
 			return Widget.FindAllCommandWidgets (regex, null);
+		}
+		
+		public static Widget[]	FindAllCommandWidgets(string command, Support.CommandDispatcher dispatcher)
+		{
+			//	Passe en revue absolument tous les widgets qui existent et cherche ceux qui ont
+			//	une commande qui correspond au critère spécifié.
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			System.Collections.ArrayList dead = new System.Collections.ArrayList ();
+			
+			lock (Widget.alive_widgets)
+			{
+				foreach (System.WeakReference weak_ref in Widget.alive_widgets)
+				{
+					//	On utilise la liste des widgets connus qui permet d'avoir accès immédiatement
+					//	à tous les widgets sans nécessiter de descente récursive :
+					
+					if (weak_ref.IsAlive)
+					{
+						//	Le widget trouvé existe (encore) :
+						
+						Widget widget = weak_ref.Target as Widget;
+						
+						if ((widget != null) &&
+							(widget.IsCommand))
+						{
+							if ((dispatcher == null) ||
+								(widget.CommandDispatcher == dispatcher))
+							{
+								if (widget.CommandName == command)
+								{
+									list.Add (widget);
+								}
+							}
+						}
+					}
+					else
+					{
+						dead.Add (weak_ref);
+					}
+				}
+				
+				//	Profite de l'occasion, puisqu'on vient de passer en revue tous les widgets,
+				//	de supprimer ceux qui sont morts entre temps :
+				
+				foreach (System.WeakReference weak_ref in dead)
+				{
+					Widget.alive_widgets.Remove (weak_ref);
+				}
+			}
+			
+			Widget[] widgets = new Widget[list.Count];
+			list.CopyTo (widgets);
+			
+			return widgets;
 		}
 		
 		public static Widget[]	FindAllCommandWidgets(System.Text.RegularExpressions.Regex regex, Support.CommandDispatcher dispatcher)
@@ -2733,11 +2816,65 @@ namespace Epsitec.Common.Widgets
 						
 						Widget widget = weak_ref.Target as Widget;
 						
-						if ((widget.IsCommand) &&
-							(widget.Name != "") &&
-							((dispatcher == null) || (widget.CommandDispatcher == dispatcher)))
+						if ((widget != null) &&
+							(widget.IsCommand))
 						{
-							if (regex.Match (widget.CommandName).Success)
+							if ((dispatcher == null) ||
+								(widget.CommandDispatcher == dispatcher))
+							{
+								if (regex.Match (widget.CommandName).Success)
+								{
+									list.Add (widget);
+								}
+							}
+						}
+					}
+					else
+					{
+						dead.Add (weak_ref);
+					}
+				}
+				
+				//	Profite de l'occasion, puisqu'on vient de passer en revue tous les widgets,
+				//	de supprimer ceux qui sont morts entre temps :
+				
+				foreach (System.WeakReference weak_ref in dead)
+				{
+					Widget.alive_widgets.Remove (weak_ref);
+				}
+			}
+			
+			Widget[] widgets = new Widget[list.Count];
+			list.CopyTo (widgets);
+			
+			return widgets;
+		}
+		
+		public static Widget[]	FindAllFullPathWidgets(System.Text.RegularExpressions.Regex regex)
+		{
+			//	Passe en revue absolument tous les widgets qui existent et cherche ceux qui ont
+			//	une commande qui correspond au critère spécifié.
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			System.Collections.ArrayList dead = new System.Collections.ArrayList ();
+			
+			lock (Widget.alive_widgets)
+			{
+				foreach (System.WeakReference weak_ref in Widget.alive_widgets)
+				{
+					//	On utilise la liste des widgets connus qui permet d'avoir accès immédiatement
+					//	à tous les widgets sans nécessiter de descente récursive :
+					
+					if (weak_ref.IsAlive)
+					{
+						//	Le widget trouvé existe (encore) :
+						
+						Widget widget = weak_ref.Target as Widget;
+						
+						if ((widget != null) &&
+							(widget.Name != ""))
+						{
+							if (regex.Match (widget.FullPathName).Success)
 							{
 								list.Add (widget);
 							}
@@ -2772,19 +2909,31 @@ namespace Epsitec.Common.Widgets
 			{
 			}
 			
+			public CommandWidgetFinder(string filter)
+			{
+				this.filter = filter;
+			}
+			
 			public CommandWidgetFinder(System.Text.RegularExpressions.Regex regex)
 			{
 				this.regex = regex;
 			}
 			
+			
 			public bool Analyse(Widget widget)
 			{
-				if ((widget.IsCommand) &&
-					(widget.Name != ""))
+				if (widget.IsCommand)
 				{
 					if (this.regex == null)
 					{
-						this.list.Add (widget);
+						if (this.filter == null)
+						{
+							this.list.Add (widget);
+						}
+						else if (this.filter == widget.CommandName)
+						{
+							this.list.Add (widget);
+						}
 					}
 					else
 					{
@@ -2819,8 +2968,9 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			System.Collections.ArrayList			list  = new System.Collections.ArrayList ();
-			System.Text.RegularExpressions.Regex	regex = null;
+			System.Collections.ArrayList			list   = new System.Collections.ArrayList ();
+			System.Text.RegularExpressions.Regex	regex  = null;
+			string									filter = null;
 		}
 		#endregion
 		
@@ -2851,8 +3001,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void ExecuteCommand()
 		{
-			if ((this.IsCommand) &&
-				(this.Name != ""))
+			if (this.IsCommand)
 			{
 				Window window = this.Window;
 				
@@ -3686,11 +3835,11 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected virtual void BuildCommandName(System.Text.StringBuilder buffer)
+		protected virtual void BuildFullPathName(System.Text.StringBuilder buffer)
 		{
 			if (this.parent != null)
 			{
-				this.parent.BuildCommandName (buffer);
+				this.parent.BuildFullPathName (buffer);
 			}
 			
 			string name = this.Name;
@@ -4588,6 +4737,7 @@ namespace Epsitec.Common.Widgets
 		private WidgetCollection				children;
 		private Widget							parent;
 		private string							name;
+		private string							command_name;
 		private int								index;
 		private TextLayout						text_layout;
 		private ContentAlignment				alignment;

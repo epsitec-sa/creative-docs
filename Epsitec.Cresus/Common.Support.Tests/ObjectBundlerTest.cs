@@ -93,8 +93,7 @@ namespace Epsitec.Common.Support
 		{
 			if (ObjectBundlerTest.register_window_cancel)
 			{
-				CommandDispatcher.Default.Register ("my_window.cancel", new CommandEventHandler (this.HandleCommandCancel));
-				CommandDispatcher.Default.Register ("main_menu.quit", new CommandEventHandler (this.HandleCommandCancel));
+				CommandDispatcher.Default.RegisterController (this);
 				
 				ObjectBundlerTest.register_window_cancel = false;
 			}
@@ -103,8 +102,12 @@ namespace Epsitec.Common.Support
 		private static bool		register_window_cancel = true;
 		private Widgets.Window	test_window;
 		
+		[Command ("CancelSimpleWindow")]
+		[Command ("QuitSimpleWindow")]
 		private void HandleCommandCancel(CommandDispatcher sender, CommandEventArgs e)
 		{
+			System.Diagnostics.Debug.WriteLine ("Execute command " + e.Name + " from " + e.Source);
+			
 			if (this.test_window != null)
 			{
 				this.test_window.Dispose ();

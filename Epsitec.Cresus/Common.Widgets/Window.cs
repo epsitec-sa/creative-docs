@@ -852,8 +852,6 @@ namespace Epsitec.Common.Widgets
 		
 		internal void RefreshGraphics(Drawing.Graphics graphics, Drawing.Rectangle repaint)
 		{
-			System.Diagnostics.Debug.Write ("Refresh Graphics : " + repaint);
-			
 			graphics.Transform = new Drawing.Transform ();
 			graphics.ResetClippingRectangle ();
 			graphics.SetClippingRectangle (repaint);
