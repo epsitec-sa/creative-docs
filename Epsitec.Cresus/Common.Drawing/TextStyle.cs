@@ -49,6 +49,9 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		//	UnderlineThickness
+		//	UnderlineOffset
+		
 		public Font								Font
 		{
 			get
