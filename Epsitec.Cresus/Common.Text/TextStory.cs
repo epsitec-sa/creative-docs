@@ -219,6 +219,16 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void ConvertToStyledText(string simple_text, TextStyle text_style, out ulong[] styled_text)
+		{
+			//	Génère un texte en lui appliquant les propriétés qui définissent
+			//	le style et les réglages associés.
+			
+			TextStyle[] text_styles = { text_style };
+			
+			this.ConvertToStyledText (simple_text, text_styles, null, out styled_text);
+		}
+		
 		public void ConvertToStyledText(string simple_text, TextStyle text_style, System.Collections.ICollection properties, out ulong[] styled_text)
 		{
 			TextStyle[] text_styles = { text_style };
@@ -228,39 +238,55 @@ namespace Epsitec.Common.Text
 		
 		public void ConvertToStyledText(string simple_text, System.Collections.ICollection text_styles, System.Collections.ICollection properties, out ulong[] styled_text)
 		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
-			
-			//	TODO: générer une StylesProperty s'il y a plusieurs styles en cascade
-			
-			foreach (TextStyle style in text_styles)
+			if ((text_styles != null) &&
+				(text_styles.Count > 0))
 			{
-				//	Passe en revue toutes les propriétés définies par le style
-				//	en cours d'analyse et ajoute celles-ci séquentillement dans
-				//	la liste des propriétés :
+				//	Les diverses propriétés des styles passés en entrée sont
+				//	d'abord extraites et ajoutées dans la liste complète des
+				//	propriétés :
 				
-				int n = style.CountProperties;
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
 				
-				for (int i = 0; i < n; i++)
+				foreach (TextStyle style in text_styles)
 				{
-					list.Add (style[i]);
+					//	Passe en revue toutes les propriétés définies par le style
+					//	en cours d'analyse et ajoute celles-ci séquentillement dans
+					//	la liste des propriétés :
+					
+					int n = style.CountProperties;
+					
+					for (int i = 0; i < n; i++)
+					{
+						Properties.BaseProperty property = style[i];
+						
+						if (property.WellKnownType != Properties.WellKnownType.Styles)
+						{
+							list.Add (style[i]);
+						}
+					}
 				}
 				
-				//	TODO: ajouter les réglages associés au style, s'il y en a
+				//	Les propriétés "manuelles" viennent s'ajouter à la fin de la
+				//	liste, après les propriétés du/des styles :
+				
+				list.Add (new Properties.StylesProperty (text_styles));
+				
+				if ((properties != null) &&
+					(properties.Count > 0))
+				{
+					list.AddRange (properties);
+				}
+				
+				this.ConvertToStyledText (simple_text, list, out styled_text);
 			}
-			
-			//	Les propriétés "manuelles" viennent s'ajouter à la fin de la
-			//	liste, après les propriétés du/des styles :
-			
-			list.AddRange (properties);
-			
-			this.ConvertToStyledText (simple_text, list, out styled_text);
+			else
+			{
+				this.ConvertToStyledText (simple_text, properties, out styled_text);
+			}
 		}
 		
 		public void ConvertToStyledText(string simple_text, System.Collections.ICollection properties, out ulong[] styled_text)
 		{
-			//	Génère un texte en lui appliquant les propriétés qui définissent
-			//	le style et les réglages associés.
-			
 			uint[] utf32;
 			
 			TextConverter.ConvertFromString (simple_text, out utf32);
@@ -269,7 +295,7 @@ namespace Epsitec.Common.Text
 			//	définir le style, d'autres à définir les réglages locaux et
 			//	spéciaux :
 			
-			int length = properties.Count;
+			int length = properties == null ? 0 : properties.Count;
 			
 			Properties.BaseProperty[] prop_mixed = new Properties.BaseProperty[length];
 			
@@ -281,7 +307,10 @@ namespace Epsitec.Common.Text
 			Styles.BasePropertyContainer.Accumulator local_acc = search_local.StartAccumulation ();
 			Styles.BasePropertyContainer.Accumulator extra_acc = search_extra.StartAccumulation ();
 			
-			properties.CopyTo (prop_mixed, 0);
+			if (length > 0)
+			{
+				properties.CopyTo (prop_mixed, 0);
+			}
 			
 			for (int i = 0; i < length; i++)
 			{

@@ -19,6 +19,12 @@ namespace Epsitec.Common.Text.Properties
 			this.styles = new TextStyle[1];
 			this.styles[0] = style;
 		}
+		
+		public StylesProperty(System.Collections.ICollection styles)
+		{
+			this.styles = new TextStyle[styles.Count];
+			styles.CopyTo (this.styles, 0);
+		}
 
 		
 		public override PropertyType			PropertyType
