@@ -8,7 +8,7 @@ namespace Epsitec.Common.Widgets.Helpers
 	{
 		Drawing.Point	DragLocation		{ get; }
 		
-		void OnDragBegin();
+		void OnDragBegin(Drawing.Point cursor);
 		void OnDragging(DragEventArgs e);
 		void OnDragEnd();
 	}
