@@ -55,10 +55,24 @@ namespace Epsitec.Cresus.Database
 		{
 			if (this.attributes != null)
 			{
-				throw new System.InvalidOperationException ("Cannot redefine attributes");
+				this.attributes.SetFromInitialisationList (attributes);
 			}
-			
-			this.attributes = new DbAttributes (attributes);
+			else
+			{
+				this.attributes = new DbAttributes (attributes);
+			}
+		}
+		
+		internal void DefineName(string name)
+		{
+			if (this.attributes != null)
+			{
+				this.attributes.SetAttribute (Epsitec.Common.Support.Tags.Name, name);
+			}
+			else
+			{
+				this.attributes = new DbAttributes ();
+			}
 		}
 		
 		internal void Initialise(DbSimpleType type)

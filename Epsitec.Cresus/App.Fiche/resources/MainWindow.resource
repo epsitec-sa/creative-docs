@@ -114,17 +114,27 @@
     </bundle>
    </list>
   </bundle>
-
+  
   <bundle>
-   <field name='class'>Button</field>
-   <field name='text'>D'accord</field>
-   <field name='size'>80;*</field>
-   <field name='pos'>200;100</field>
-  </bundle>
-  <bundle>
-   <field name='class'>Widget</field>
+   <field name='class'>PaneBook</field>
    <field name='dock'>Fill</field>
-   <field name='size'>800;570</field>
+   <field name='style'>LeftRight</field>
+   <field name='behaviour'>FollowMe</field>
+   <list name='items'>
+    <bundle>
+     <field name='class'>PanePage</field>
+     <field name='rs'>10</field>
+     <field name='min'>50</field>
+     <field name='e'>1</field>
+    </bundle>
+    <bundle>
+     <field name='class'>PanePage</field>
+     <field name='rs'>10</field>
+     <field name='min'>50</field>
+     <field name='e'>0</field>
+    </bundle>
+   </list>
   </bundle>
+  
  </list>
 </bundle>

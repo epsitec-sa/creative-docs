@@ -292,6 +292,13 @@ namespace Epsitec.Common.Support
 								prop_info.SetValue (obj, str_value, null);
 								ok = true;
 							}
+							else if (prop_type == typeof (double))
+							{
+								//	C'est un double...
+								
+								prop_info.SetValue (obj, System.Double.Parse (str_value, System.Globalization.CultureInfo.InvariantCulture), null);
+								ok = true;
+							}
 							else if (prop_type.IsSubclassOf (typeof (System.Enum)))
 							{
 								//	C'est une énumération. On va tenter de convertir la valeur 'string' en
