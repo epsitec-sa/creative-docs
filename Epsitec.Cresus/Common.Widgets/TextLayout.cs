@@ -159,8 +159,20 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( !all && !block.visible )  continue;
 
-				Drawing.Rectangle blockRect = block.font.GetTextBounds(block.text);
-				blockRect.Scale(block.fontSize);
+				Drawing.Rectangle blockRect;
+				if ( block.image )
+				{
+					blockRect = new Drawing.Rectangle();
+					blockRect.Left   = 0;
+					blockRect.Right  = block.width;
+					blockRect.Top    = block.imageAscender;
+					blockRect.Bottom = block.imageDescender;
+				}
+				else
+				{
+					blockRect = block.font.GetTextBounds(block.text);
+					blockRect.Scale(block.fontSize);
+				}
 				blockRect.Offset(block.pos.X, block.pos.Y);
 				totalRect.MergeWith(blockRect);
 			}
@@ -289,12 +301,20 @@ namespace Epsitec.Common.Widgets
 							 pos.X <= line.pos.X+line.width )
 						{
 							JustifBlock block = (JustifBlock)this.blocks[j];
-							double[] charsWidth = block.font.GetTextCharEndX(block.text);
-							for ( int k=0 ; k<charsWidth.Length ; k++ )
+							if ( block.image )
 							{
-								if ( pos.X-line.pos.X <= charsWidth[k]*block.fontSize )  // TODO: faire mieux !
+								return block.beginOffset;
+							}
+							else
+							{
+								double[] charsWidth = block.font.GetTextCharEndX(block.text);
+								for ( int k=0 ; k<charsWidth.Length ; k++ )
 								{
-									return block.beginOffset+k;
+									// TODO: faire mieux !
+									if ( pos.X-line.pos.X <= charsWidth[k]*block.fontSize )
+									{
+										return block.beginOffset+k;
+									}
 								}
 							}
 						}
@@ -379,8 +399,16 @@ namespace Epsitec.Common.Widgets
 					rect.Right  = -100000;
 				}
 
-				rect.Left  = System.Math.Min(rect.Left,  OffsetToPosX(block, localBegin));
-				rect.Right = System.Math.Max(rect.Right, OffsetToPosX(block, localEnd  ));
+				if ( block.image )
+				{
+					rect.Left  = System.Math.Min(rect.Left,  block.pos.X);
+					rect.Right = System.Math.Max(rect.Right, block.pos.X+block.width);
+				}
+				else
+				{
+					rect.Left  = System.Math.Min(rect.Left,  OffsetToPosX(block, localBegin));
+					rect.Right = System.Math.Max(rect.Right, OffsetToPosX(block, localEnd  ));
+				}
 			}
 			
 			if ( rect.Top > -100000 && rect.Left < 100000 )

@@ -24,7 +24,7 @@ namespace Epsitec.Common.Tests
 //?			layout.Text = "Ceci est un petit texte ridicule, juste pour essayer !";
 //?			layout.Text = "Normal <b>bold <i>bold-italic </b>italic </i>normal.";
 //?			layout.Text = "<b>Première ligne</b> assez longue pour nécessiter une coupure.<br/><b>Deuxième ligne</b> assez longue pour nécessiter une coupure.";
-			layout.Text = "Ceci est un <a href=\"x\">petit texte <b>ridicule</b></a>, juste pour <font color=\"#ff0000\">tester</font> le comportement de la <font size=\"20\">classe</font> <font face=\"Courier New\">TextLayout</font>, mes premiers pas en C# !";
+			layout.Text = "Ceci est un <a href=\"x\">petit texte <b>ridicule</b></a>, juste pour <font color=\"#ff0000\">tester</font> le comportement de la <font size=\"20\">classe</font> <font face=\"Courier New\">TextLayout</font>, mes premiers pas en C# !<br/>Et voilà une image <img src=\"..\\..\\icon.png\"/> simple.";
 			layout.Font = Font.GetFont("Tahoma", "Regular");
 			layout.FontSize = 11.0;
 			layout.Alignment = ContentAlignment.MiddleCenter;
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Tests
 		{
 			TextLayout layout = new TextLayout();
 
-			layout.Text = "Juste <font size=\"30\">deux</font> lignes de texte ...";
+			layout.Text = "Juste <font size=\"30\">trois</font> lignes de texte <font size=\"10\">(et une image <img src=\"..\\..\\icon.png\"/>)</font> pour rigoler !";
 			layout.Font = Font.GetFont("Tahoma", "Regular");
 			layout.FontSize = 20.0;
 			layout.Alignment = ContentAlignment.MiddleCenter;
