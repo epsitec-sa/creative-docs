@@ -1002,7 +1002,7 @@ namespace Epsitec.Common.Widgets
 		
 		// Retourne le caractère à un offset quelconque, en interprétant les
 		// commandes &...;
-		public static char AnalyseMetaChar(string text, ref int offset)
+		public static char AnalyseEntityChar(string text, ref int offset)
 		{
 			if ( text[offset] == '&' )
 			{
@@ -1010,24 +1010,31 @@ namespace Epsitec.Common.Widgets
 				
 				if ( length < 3 )
 				{
-					throw new System.FormatException("Bad meta");
+					throw new System.FormatException(string.Format ("Invalid entity found (too short)."));
 				}
 				
 				char code;
-				string meta = text.Substring(offset, length).ToLower();
+				string entity = text.Substring(offset, length).ToLower();
 				
-				switch ( meta )
+				switch ( entity )
 				{
-					case "&lt;":	code = '<';			break;
-					case "&gt;":	code = '>';			break;
-					case "&amp;":	code = '&';			break;
-					case "&quot;":	code = '"';			break;
-					case "&apos;":	code = '\'';		break;
-					case "&#160;":	code = (char)160;	break;
-					case "&#8212;":	code = (char)8212;	break;
+					case "&lt;":	code = '<';		break;
+					case "&gt;":	code = '>';		break;
+					case "&amp;":	code = '&';		break;
+					case "&quot;":	code = '"';		break;
+					case "&apos;":	code = '\'';	break;
 					
 					default:
-						throw new System.FormatException("Bad meta: " + meta);
+						if (entity.StartsWith ("&#"))
+						{
+							entity = entity.Substring (2, entity.Length - 3);
+							code   = (char) System.Int32.Parse (entity, System.Globalization.CultureInfo.InvariantCulture);
+						}
+						else
+						{
+							throw new System.FormatException(string.Format ("Invalid entity {0} found.", entity));
+						}
+						break;
 				}
 				
 				offset += length;
@@ -1204,14 +1211,13 @@ namespace Epsitec.Common.Widgets
 					
 					switch ( text[pos] )
 					{
-						case '<':		buffer.Append("&lt;");		break;
-						case '>':		buffer.Append("&gt;");		break;
-						case '\"':		buffer.Append("&quot;");	break;
-						case '\'':		buffer.Append("&apos;");	break;
-						case (char)160:	buffer.Append("&#160;");	break;
-						case (char)8212:buffer.Append("&#8212;");	break;
-						case '\n':		buffer.Append("<br/>");		break;
-						default:		buffer.Append(text[pos]);	break;
+						case '&':	buffer.Append("&amp;");		break;
+						case '<':	buffer.Append("&lt;");		break;
+						case '>':	buffer.Append("&gt;");		break;
+						case '\"':	buffer.Append("&quot;");	break;
+						case '\'':	buffer.Append("&apos;");	break;
+						case '\n':	buffer.Append("<br/>");		break;
+						default:	buffer.Append(text[pos]);	break;
 					}
 				}
 				
@@ -1219,14 +1225,12 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				text = text.Replace("&",      "&amp;");
-				text = text.Replace("<",      "&lt;");
-				text = text.Replace(">",      "&gt;");
-				text = text.Replace("\"",     "&quot;");
-				text = text.Replace("'",      "&apos;");
-				text = text.Replace("\u00A0", "&#160;");
-				text = text.Replace("\u2014", "&#8212;");
-				text = text.Replace("\n",     "<br/>");
+				text = text.Replace("&",  "&amp;");
+				text = text.Replace("<",  "&lt;");
+				text = text.Replace(">",  "&gt;");
+				text = text.Replace("\"", "&quot;");
+				text = text.Replace("\'", "&apos;");
+				text = text.Replace("\n", "<br/>");
 				return text;
 			}
 		}
@@ -1268,7 +1272,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else if ( text[offset] == '&' )
 				{
-					buffer.Append(TextLayout.AnalyseMetaChar(text, ref offset));
+					buffer.Append(TextLayout.AnalyseEntityChar(text, ref offset));
 				}
 				else
 				{
@@ -1646,7 +1650,7 @@ namespace Epsitec.Common.Widgets
 					case TextLayout.Tag.None:
 						if ( buffer.Length == 0 )  textIndex = index;
 						endOffset = beginOffset;
-						char c = TextLayout.AnalyseMetaChar(this.text, ref endOffset);
+						char c = TextLayout.AnalyseEntityChar(this.text, ref endOffset);
 						buffer.Append(c);
 						stringExist = true;
 						index ++;
@@ -1838,20 +1842,35 @@ namespace Epsitec.Common.Widgets
 						return false;
 					}
 				
-					string meta = text.Substring(endOffset, length).ToLower();
-					switch ( meta )
+					string entity = text.Substring(endOffset, length).ToLower();
+					switch ( entity )
 					{
+						case "&amp;":	break;
 						case "&lt;":	break;
 						case "&gt;":	break;
-						case "&amp;":	break;
 						case "&quot;":	break;
 						case "&apos;":	break;
-						case "&#160;":	break;
-						case "&#8212;":	break;
 					
 						default:
-							offsetError = beginOffset;
-							return false;
+							if (entity.StartsWith ("&#"))
+							{
+								for (int i = 2; i < entity.Length - 1; i++)
+								{
+									char c = entity[i];
+									
+									if ((c < '0') || (c > '9'))
+									{
+										offsetError = beginOffset;
+										return false;
+									}
+								}
+							}
+							else
+							{
+								offsetError = beginOffset;
+								return false;
+							}
+							break;
 					}
 				
 					endOffset += length;

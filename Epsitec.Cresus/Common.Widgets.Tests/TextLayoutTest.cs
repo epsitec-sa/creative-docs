@@ -152,18 +152,18 @@ namespace Epsitec.Common.Widgets
 //?			Assertion.AssertEquals(reference.Length, layout.FindIndexFromOffset(layout.Text.Length));
 		}
 		
-		[Test] public void CheckMetaChar()
+		[Test] public void CheckEntityChar()
 		{
 			int index = 0;
 			string text = "A&lt;&Amp;&GT;.&quot;&#160;";
 			
-			Assertion.AssertEquals('A', TextLayout.AnalyseMetaChar(text, ref index));
-			Assertion.AssertEquals('<', TextLayout.AnalyseMetaChar(text, ref index));
-			Assertion.AssertEquals('&', TextLayout.AnalyseMetaChar(text, ref index));
-			Assertion.AssertEquals('>', TextLayout.AnalyseMetaChar(text, ref index));
-			Assertion.AssertEquals('.', TextLayout.AnalyseMetaChar(text, ref index));
-			Assertion.AssertEquals('"', TextLayout.AnalyseMetaChar(text, ref index));
-			Assertion.AssertEquals(160, TextLayout.AnalyseMetaChar(text, ref index));
+			Assertion.AssertEquals('A', TextLayout.AnalyseEntityChar(text, ref index));
+			Assertion.AssertEquals('<', TextLayout.AnalyseEntityChar(text, ref index));
+			Assertion.AssertEquals('&', TextLayout.AnalyseEntityChar(text, ref index));
+			Assertion.AssertEquals('>', TextLayout.AnalyseEntityChar(text, ref index));
+			Assertion.AssertEquals('.', TextLayout.AnalyseEntityChar(text, ref index));
+			Assertion.AssertEquals('"', TextLayout.AnalyseEntityChar(text, ref index));
+			Assertion.AssertEquals(160, TextLayout.AnalyseEntityChar(text, ref index));
 			Assertion.AssertEquals(text.Length, index);
 		}
 		
