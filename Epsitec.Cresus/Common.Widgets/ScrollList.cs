@@ -467,7 +467,7 @@ namespace Epsitec.Common.Widgets
 		public override Drawing.Rectangle GetShapeBounds()
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Inflate(adorner.GeometryListShapeBounds);
 			if ( this.scrollListStyle == ScrollListStyle.Menu )
 			{
@@ -519,7 +519,7 @@ namespace Epsitec.Common.Widgets
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
-			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetState       state = this.PaintState;
 			
 			if ( this.scrollListStyle == ScrollListStyle.Menu )

@@ -134,7 +134,7 @@ namespace Epsitec.Common.Widgets
 		protected double Detect(Drawing.Point pos)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			Drawing.Rectangle rect = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect = this.Client.Bounds;
 			rect.Left  += adorner.GeometrySliderLeftMargin;
 			rect.Right += adorner.GeometrySliderRightMargin;
 			rect.Inflate(-this.margin, -this.margin);
@@ -162,7 +162,7 @@ namespace Epsitec.Common.Widgets
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
-			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
+			Drawing.Rectangle rect  = this.Client.Bounds;
 			WidgetState       state = this.PaintState;
 
 			double width = rect.Width;
