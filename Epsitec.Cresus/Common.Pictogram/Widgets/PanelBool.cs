@@ -12,17 +12,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelBool : AbstractPanel
 	{
-		public PanelBool()
+		public PanelBool(Drawer drawer) : base(drawer)
 		{
 			this.button = new CheckButton(this);
 			this.button.ActiveStateChanged += new EventHandler(this.ButtonActiveStateChanged);
 			this.button.TabIndex = 1;
 			this.button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-		}
-		
-		public PanelBool(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)

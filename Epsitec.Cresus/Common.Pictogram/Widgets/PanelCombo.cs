@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelCombo : AbstractPanel
 	{
-		public PanelCombo()
+		public PanelCombo(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -22,11 +22,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.list.TextChanged += new EventHandler(this.ListChanged);
 			this.list.TabIndex = 1;
 			this.list.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-		}
-		
-		public PanelCombo(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)

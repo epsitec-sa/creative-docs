@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelColor : AbstractPanel
 	{
-		public PanelColor()
+		public PanelColor(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -22,11 +22,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.field.Clicked += new MessageEventHandler(this.FieldClicked);
 			this.field.TabIndex = 1;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-		}
-		
-		public PanelColor(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
+			ToolTip.Default.SetToolTip(this.field, "Couleur");
 		}
 		
 		protected override void Dispose(bool disposing)
