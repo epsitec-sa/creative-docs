@@ -618,9 +618,9 @@ namespace Epsitec.Common.OpenType
 					{
 						switch (fmt.Format)
 						{
-							case 0:  return new IndexMappingTable0 (this.data, this.offset + (int) this.GetSubtableOffset (n));
-							case 4:  return new IndexMappingTable4 (this.data, this.offset + (int) this.GetSubtableOffset (n));
-							case 12: return new IndexMappingTable12 (this.data, this.offset + (int) this.GetSubtableOffset (n));
+							case 0:  return new IndexMappingTable0 (this.data, this.offset + (int) this.GetSubtableOffset (i));
+							case 4:  return new IndexMappingTable4 (this.data, this.offset + (int) this.GetSubtableOffset (i));
+							case 12: return new IndexMappingTable12 (this.data, this.offset + (int) this.GetSubtableOffset (i));
 						}
 						
 						return null;
@@ -629,6 +629,20 @@ namespace Epsitec.Common.OpenType
 			}
 			
 			return null;
+		}
+		
+		public IndexMappingTable FindFormatSubtable()
+		{
+			IndexMappingTable sub;
+			
+			sub = this.FindFormatSubtable (3, 1, 12);
+			
+			if (sub == null)
+			{
+				sub = this.FindFormatSubtable (3, 1, 4);
+			}
+			
+			return sub;
 		}
 	}
 	
@@ -874,6 +888,36 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
+		public struct NameEncoding
+		{
+			public PlatformId		Platform;
+			public uint				Encoding;
+			public uint				Language;
+			public NameId			Name;
+		}
+		
+		public NameEncoding[] GetAvailableNameEncodings()
+		{
+			int num = (int) this.NumNameRecords;
+			
+			NameEncoding[] encodings = new NameEncoding[num];
+			
+			int o_platform_id   = 6;
+			int o_encoding_id   = 8;
+			int o_language_id   = 10;
+			int o_name_id       = 12;
+			
+			for (int i = 0; i < num; i++)
+			{
+				encodings[i].Platform = (PlatformId) (this.ReadInt16 (i*12 + o_platform_id));
+				encodings[i].Encoding = this.ReadInt16 (i*12 + o_encoding_id);
+				encodings[i].Language = this.ReadInt16 (i*12 + o_language_id);
+				encodings[i].Name     = (NameId) (this.ReadInt16 (i*12 + o_name_id));
+			}
+			
+			return encodings;
+		}
+		
 		public string GetLatinName(uint language, NameId name, PlatformId platform)
 		{
 			int num = (int) this.NumNameRecords;
@@ -931,7 +975,7 @@ namespace Epsitec.Common.OpenType
 			for (int i = 0; i < num; i++)
 			{
 				if ((this.ReadInt16 (i*12 + o_platform_id) == plat_id) &&
-					(this.ReadInt16 (i*12 + o_encoding_id) == 1) &&
+					((this.ReadInt16 (i*12 + o_encoding_id) == 1) || (plat_id == 0)) &&
 					(this.ReadInt16 (i*12 + o_language_id) == lang_id) &&
 					(this.ReadInt16 (i*12 + o_name_id)     == name_id))
 				{
@@ -1093,7 +1137,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		NumberOfHMetrics
+		public uint		NumHMetrics
 		{
 			get
 			{
@@ -1111,19 +1155,19 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetAdvanceWidth(int n)
+		public uint GetAdvanceWidth(uint n)
 		{
-			return this.ReadInt16 (n*4+0);
+			return this.ReadInt16 ((int)(n*4+0));
 		}
 		
-		public int GetLeftSideBearing(int n)
+		public int GetLeftSideBearing(uint n)
 		{
-			return (short) this.ReadInt16 (n*4+2);
+			return (short) this.ReadInt16 ((int)(n*4+2));
 		}
 		
-		public int GetExtraLeftSideBearing(int number_h_metrics, int n)
+		public int GetExtraLeftSideBearing(uint number_h_metrics, uint n)
 		{
-			return (short) this.ReadInt16 (number_h_metrics*4 + n*2);
+			return (short) this.ReadInt16 ((int)(number_h_metrics*4 + n*2));
 		}
 	}
 	
