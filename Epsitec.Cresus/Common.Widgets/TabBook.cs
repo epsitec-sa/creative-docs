@@ -79,7 +79,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public override Drawing.Rectangle Inside
+		public override Drawing.Rectangle InnerBounds
 		{
 			get
 			{
@@ -510,7 +510,7 @@ namespace Epsitec.Common.Widgets
 				oldBook.items.Remove(item);
 			}
 			
-			item.Bounds = this.Inside;
+			item.Bounds = this.InnerBounds;
 			item.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
 			
 			this.Children.Add(item);
