@@ -36,6 +36,10 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (1, def.DigitPrecision);
 			Assertion.AssertEquals (0, def.DigitShift);
 			
+			Assertion.AssertEquals (0,    def.ToDecimalRange ().Minimum);
+			Assertion.AssertEquals (9,    def.ToDecimalRange ().Maximum);
+			Assertion.AssertEquals (1.0M, def.ToDecimalRange ().Resolution);
+			
 			def.MinValue =  0.01M;
 			def.MaxValue = 10.00M;
 			
@@ -43,12 +47,20 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals (4, def.DigitPrecision);
 			Assertion.AssertEquals (2, def.DigitShift);
 			
+			Assertion.AssertEquals ( 0.01M, def.ToDecimalRange ().Minimum);
+			Assertion.AssertEquals (10.00M, def.ToDecimalRange ().Maximum);
+			Assertion.AssertEquals ( 0.01M, def.ToDecimalRange ().Resolution);
+			
 			def.MinValue = -9.999M;
 			def.MaxValue =  9.999M;
 			
 			Assertion.AssertEquals (false, def.IsDigitDefined);
 			Assertion.AssertEquals (4, def.DigitPrecision);
 			Assertion.AssertEquals (3, def.DigitShift);
+			
+			Assertion.AssertEquals (-9.999M, def.ToDecimalRange ().Minimum);
+			Assertion.AssertEquals ( 9.999M, def.ToDecimalRange ().Maximum);
+			Assertion.AssertEquals ( 0.001M, def.ToDecimalRange ().Resolution);
 		}
 
 		[Test] public void CheckInvalidCase()
