@@ -1,6 +1,6 @@
 using NUnit.Framework;
 
-namespace Epsitec.Common.Tests
+namespace Epsitec.Common.Widgets
 {
 	[TestFixture]
 	public class AdornerFactoryTest
