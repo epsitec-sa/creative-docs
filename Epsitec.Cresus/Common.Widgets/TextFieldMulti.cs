@@ -48,14 +48,14 @@ namespace Epsitec.Common.Widgets
 				{
 					this.scroller.SetEnabled(false);
 					this.scroller.Range = 1;
-					this.scroller.Display = 1;
+					this.scroller.VisibleRange = 1;
 					this.scroller.Value = 0;
 				}
 				else
 				{
 					this.scroller.SetEnabled(true);
 					this.scroller.Range = h-this.realSize.Height;
-					this.scroller.Display = this.realSize.Height/h * this.scroller.Range;
+					this.scroller.VisibleRange = this.realSize.Height/h * this.scroller.Range;
 					this.scroller.Value = this.scroller.Range - (AbstractTextField.Infinity-offset);
 					this.scroller.SmallChange = 20;
 					this.scroller.LargeChange = this.realSize.Height/2;

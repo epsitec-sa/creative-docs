@@ -400,7 +400,7 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				this.scroller.Range = total-this.visibleLines;
-				this.scroller.Display = this.scroller.Range*((double)this.visibleLines/total);
+				this.scroller.VisibleRange = this.scroller.Range*((double)this.visibleLines/total);
 				this.scroller.Value = this.firstLine;
 				this.scroller.SmallChange = 1;
 				this.scroller.LargeChange = this.visibleLines/2;
