@@ -16,15 +16,15 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlAttribute]
 		public string String
 		{
-			get
-			{
-				return this.stringValue;
-			}
+			get { return this.stringValue; }
+			set { this.stringValue = value; }
+		}
 
-			set
-			{
-				this.stringValue = value;
-			}
+		// Indique si un changement de cette propriété modifie la bbox de l'objet.
+		[XmlIgnore]
+		public override bool AlterBoundingBox
+		{
+			get { return ( this.type == PropertyType.TextString ); }
 		}
 
 		// Effectue une copie de la propriété.

@@ -20,60 +20,32 @@ namespace Epsitec.Common.Pictogram.Data
 		// Couleur de l'ombre.
 		public Drawing.Color Color
 		{
-			get
-			{
-				return this.color;
-			}
-
-			set
-			{
-				this.color = value;
-			}
+			get { return this.color; }
+			set { this.color = value; }
 		}
 
 		// Rayon de l'ombre.
 		[XmlAttribute]
 		public double Radius
 		{
-			get
-			{
-				return this.radius;
-			}
-
-			set
-			{
-				this.radius = value;
-			}
+			get { return this.radius; }
+			set { this.radius = value; }
 		}
 
 		// Offset x de l'ombre.
 		[XmlAttribute]
 		public double Ox
 		{
-			get
-			{
-				return this.ox;
-			}
-
-			set
-			{
-				this.ox = value;
-			}
+			get { return this.ox; }
+			set { this.ox = value; }
 		}
 
 		// Offset y de l'ombre.
 		[XmlAttribute]
 		public double Oy
 		{
-			get
-			{
-				return this.oy;
-			}
-
-			set
-			{
-				this.oy = value;
-			}
+			get { return this.oy; }
+			set { this.oy = value; }
 		}
 
 		// Effectue une copie de la propriété.
