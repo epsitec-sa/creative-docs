@@ -85,6 +85,12 @@ namespace Epsitec.Common.Widgets
 		static Widget()
 		{
 			Drawing.Font.Initialise ();
+			Support.ObjectBundler.RegisterAssembly (typeof (Widget).Assembly);
+		}
+		
+		public static void Initialise()
+		{
+			System.Threading.Thread.CurrentThread.CurrentUICulture = System.Threading.Thread.CurrentThread.CurrentCulture;
 		}
 		
 		
