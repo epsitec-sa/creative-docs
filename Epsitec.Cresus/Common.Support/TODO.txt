@@ -2,32 +2,6 @@
 Ce qu'il reste à faire dans "Support"
 -------------------------------------
 
--	Les exceptions (pas seulement celles définies dans Common.Support)
-	devraient toutes être marquées comme étant [Serializable] afin de
-	permettre leur utilisation dans des contextes de "remoting".
-	
-	Voir à ce sujet l'article :
-	
-	ms-help://MS.VSCC.2003/MS.MSDNQTR.2003FEB.1033/cpref/html/frlrfSystemExceptionClassctorTopic3.htm
-	
--	Il faut faire de même pour les attributs :
-	
-	o	BundleAttribute
-	o	CommandAttribute
-	o	SuppressBundleSupportAttribute
-	
-
--	Dans ImageProvider.cs, ajouter une REGEX pour vérifier que le nom
-	de l'image (si le protocole file: est utilisé) ne contient que des
-	caractères valides (pas de \ ni de /, ni de ..).
-
-
--	La classe ObjectBundler ne contient pas encore le code qui
-	énumère toutes les assemblies chargées et les analyse
-	dynamiquement pour enregistrer tous les types qui implémentent
-	l'interface IBundleSupport.
-
-
 -	La classe Implementation.BaseProvider ne fait pour l'instant aucun
 	accès à la base de données. Il faut implémenter les méthodes qui
 	manquent, en particulier compléter GetData et Setup.
