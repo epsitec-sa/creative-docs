@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelArrow permet de choisir un type d'extrémité.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelArrow : AbstractPanel
 	{
 		public PanelArrow()
