@@ -7,7 +7,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckInsertUndoRedo()
 		{
 			OpletQueue queue = new OpletQueue ();
-			
+			IOplet[] oplets;
 			
 			//	Insère une action composée de deux oplets :
 			
@@ -24,6 +24,15 @@ namespace Epsitec.Common.Support
 			Assertion.Assert (queue.CanRedo == false);
 			Assertion.AssertEquals (1, queue.UndoActionCount);
 			Assertion.AssertEquals (0, queue.RedoActionCount);
+			
+			//	Accède aux éléments de l'action en cours :
+			
+			oplets = queue.LastActionOplets;
+			
+			Assertion.AssertNotNull (oplets);
+			Assertion.AssertEquals (2, oplets.Length);
+			Assertion.AssertEquals ("A1", (oplets[0] as NamedOplet).Name);
+			Assertion.AssertEquals ("A2", (oplets[1] as NamedOplet).Name);
 			
 			//	Défait l'action.
 			
@@ -119,6 +128,17 @@ namespace Epsitec.Common.Support
 			Assertion.AssertEquals (3, queue.UndoActionCount);
 			Assertion.AssertEquals (0, queue.RedoActionCount);
 			
+			//	Accède aux éléments de l'action en cours :
+			
+			oplets = queue.LastActionOplets;
+			
+			Assertion.AssertNotNull (oplets);
+			Assertion.AssertEquals (4, oplets.Length);
+			Assertion.AssertEquals ("D1",   (oplets[0] as NamedOplet).Name);
+			Assertion.AssertEquals ("D1-1", (oplets[1] as NamedOplet).Name);
+			Assertion.AssertEquals ("D1-2", (oplets[2] as NamedOplet).Name);
+			Assertion.AssertEquals ("D2",   (oplets[3] as NamedOplet).Name);
+			
 			queue.UndoAction ();
 			queue.UndoAction ();
 			
@@ -126,6 +146,13 @@ namespace Epsitec.Common.Support
 			
 			Assertion.AssertEquals (1, queue.UndoActionCount);
 			Assertion.AssertEquals (2, queue.RedoActionCount);
+			
+			oplets = queue.LastActionOplets;
+			
+			Assertion.AssertNotNull (oplets);
+			Assertion.AssertEquals (2, oplets.Length);
+			Assertion.AssertEquals ("A1", (oplets[0] as NamedOplet).Name);
+			Assertion.AssertEquals ("A2", (oplets[1] as NamedOplet).Name);
 			
 			queue.PurgeRedo ();
 			
@@ -226,6 +253,15 @@ namespace Epsitec.Common.Support
 			public NamedOplet(string name)
 			{
 				this.name = name;
+			}
+			
+			
+			public string						Name
+			{
+				get
+				{
+					return this.name;
+				}
 			}
 			
 			

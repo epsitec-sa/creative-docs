@@ -48,6 +48,57 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public IOplet[]							LastActionOplets
+		{
+			get
+			{
+				if ((this.action == null) &&
+					(this.live_fence > 0) &&
+					(this.live_index > 0))
+				{
+					int i = this.live_index - 1;
+					int n = 0;
+					
+					IOplet oplet = this.queue[i] as IOplet;
+					
+					System.Diagnostics.Debug.Assert (oplet.IsFence);
+					
+					i--;
+					
+					while (i >= 0)
+					{
+						oplet = this.queue[i] as IOplet;
+						
+						if (oplet.IsFence)
+						{
+							break;
+						}
+						
+						i--;
+						n++;
+					}
+					
+					IOplet[] oplets = new IOplet[n];
+					
+					int j = 0;
+					i++;
+					
+					while (n > 0)
+					{
+						oplets[j] = this.queue[i] as IOplet;
+						
+						i++;
+						j++;
+						
+						n--;
+					}
+					
+					return oplets;
+				}
+				
+				return new IOplet[0];
+			}
+		}
 		
 		public System.IDisposable BeginAction()
 		{
