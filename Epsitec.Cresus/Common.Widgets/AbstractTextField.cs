@@ -103,7 +103,7 @@ namespace Epsitec.Common.Widgets
 					double y_from_top = this.TextLayout.LayoutSize.Height - pos.Y;
 					double y_from_bot = this.realSize.Height - y_from_top + shift.Y + 1;
 					
-					return new Drawing.Point(shift.X, y_from_bot);
+					return this.MapClientToParent (new Drawing.Point(shift.X, y_from_bot)) - this.Location;
 				}
 				
 				return base.BaseLine;
