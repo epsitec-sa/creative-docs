@@ -425,6 +425,11 @@ namespace Epsitec.Common.Drawing
 			this.Inflate (s.Width, s.Height);
 		}
 		
+		public void Inflate(double s)
+		{
+			this.Inflate (s, s);
+		}
+		
 		public void Inflate(double x, double y)
 		{
 			if (! this.IsEmpty)
@@ -450,6 +455,11 @@ namespace Epsitec.Common.Drawing
 		public void Deflate(Size s)
 		{
 			this.Deflate (s.Width, s.Height);
+		}
+		
+		public void Deflate(double s)
+		{
+			this.Deflate (s, s);
 		}
 		
 		public void Deflate(double x, double y)
@@ -517,15 +527,10 @@ namespace Epsitec.Common.Drawing
 			}
 			else
 			{
-				double x1 = System.Math.Min (this.x1, r.x1);
-				double y1 = System.Math.Min (this.y1, r.y1);
-				double x2 = System.Math.Max (this.x2, r.x2);
-				double y2 = System.Math.Max (this.y2, r.y2);
-			
-				this.x1 = x1;
-				this.y1 = y1;
-				this.x2 = x2;
-				this.y2 = y2;
+				this.x1 = System.Math.Min (this.x1, r.x1);
+				this.y1 = System.Math.Min (this.y1, r.y1);
+				this.x2 = System.Math.Max (this.x2, r.x2);
+				this.y2 = System.Math.Max (this.y2, r.y2);
 			}
 		}
 		
