@@ -17,8 +17,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
 
-			this.buttons = new IconButton[3+3+4];
-			for ( int i=0 ; i<3+3+4 ; i++ )
+			this.buttons = new IconButton[5+3+4];
+			for ( int i=0 ; i<5+3+4 ; i++ )
 			{
 				this.buttons[i] = new IconButton(this);
 				this.buttons[i].Clicked += new MessageEventHandler(this.PanelJustifClicked);
@@ -29,15 +29,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.buttons[0].IconName = @"file:images/justifhleft.icon";
 			this.buttons[1].IconName = @"file:images/justifhcenter.icon";
 			this.buttons[2].IconName = @"file:images/justifhright.icon";
+			this.buttons[3].IconName = @"file:images/justifhjustif.icon";
+			this.buttons[4].IconName = @"file:images/justifhall.icon";
 
-			this.buttons[3].IconName = @"file:images/justifvtop.icon";
-			this.buttons[4].IconName = @"file:images/justifvcenter.icon";
-			this.buttons[5].IconName = @"file:images/justifvbottom.icon";
+			this.buttons[5].IconName = @"file:images/justifvtop.icon";
+			this.buttons[6].IconName = @"file:images/justifvcenter.icon";
+			this.buttons[7].IconName = @"file:images/justifvbottom.icon";
 
-			this.buttons[6].IconName = @"file:images/justifolr.icon";
-			this.buttons[7].IconName = @"file:images/justifobt.icon";
-			this.buttons[8].IconName = @"file:images/justiforl.icon";
-			this.buttons[9].IconName = @"file:images/justifotb.icon";
+			this.buttons[8].IconName = @"file:images/justifolr.icon";
+			this.buttons[9].IconName = @"file:images/justifobt.icon";
+			this.buttons[10].IconName = @"file:images/justiforl.icon";
+			this.buttons[11].IconName = @"file:images/justifotb.icon";
 
 			this.fieldMarginH = new TextFieldSlider(this);
 			this.fieldMarginH.MinValue = 0;
@@ -90,7 +92,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			if ( disposing )
 			{
-				for ( int i=0 ; i<3+3+4 ; i++ )
+				for ( int i=0 ; i<5+3+4 ; i++ )
 				{
 					this.buttons[i].Clicked -= new MessageEventHandler(this.PanelJustifClicked);
 				}
@@ -154,6 +156,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 				if ( this.ButtonActive(0) )  return JustifHorizontal.Left;
 				if ( this.ButtonActive(1) )  return JustifHorizontal.Center;
 				if ( this.ButtonActive(2) )  return JustifHorizontal.Right;
+				if ( this.ButtonActive(3) )  return JustifHorizontal.Justif;
+				if ( this.ButtonActive(4) )  return JustifHorizontal.All;
 				return JustifHorizontal.None;
 			}
 
@@ -162,6 +166,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.ButtonActive(0, value == JustifHorizontal.Left);
 				this.ButtonActive(1, value == JustifHorizontal.Center);
 				this.ButtonActive(2, value == JustifHorizontal.Right);
+				this.ButtonActive(3, value == JustifHorizontal.Justif);
+				this.ButtonActive(4, value == JustifHorizontal.All);
 			}
 		}
 
@@ -169,17 +175,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			get
 			{
-				if ( this.ButtonActive(3) )  return JustifVertical.Top;
-				if ( this.ButtonActive(4) )  return JustifVertical.Center;
-				if ( this.ButtonActive(5) )  return JustifVertical.Bottom;
+				if ( this.ButtonActive(5) )  return JustifVertical.Top;
+				if ( this.ButtonActive(6) )  return JustifVertical.Center;
+				if ( this.ButtonActive(7) )  return JustifVertical.Bottom;
 				return JustifVertical.None;
 			}
 
 			set
 			{
-				this.ButtonActive(3, value == JustifVertical.Top);
-				this.ButtonActive(4, value == JustifVertical.Center);
-				this.ButtonActive(5, value == JustifVertical.Bottom);
+				this.ButtonActive(5, value == JustifVertical.Top);
+				this.ButtonActive(6, value == JustifVertical.Center);
+				this.ButtonActive(7, value == JustifVertical.Bottom);
 			}
 		}
 
@@ -187,19 +193,19 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			get
 			{
-				if ( this.ButtonActive(6) )  return JustifOrientation.LeftToRight;
-				if ( this.ButtonActive(7) )  return JustifOrientation.BottomToTop;
-				if ( this.ButtonActive(8) )  return JustifOrientation.RightToLeft;
-				if ( this.ButtonActive(9) )  return JustifOrientation.TopToBottom;
+				if ( this.ButtonActive( 8) )  return JustifOrientation.LeftToRight;
+				if ( this.ButtonActive( 9) )  return JustifOrientation.BottomToTop;
+				if ( this.ButtonActive(10) )  return JustifOrientation.RightToLeft;
+				if ( this.ButtonActive(11) )  return JustifOrientation.TopToBottom;
 				return JustifOrientation.None;
 			}
 
 			set
 			{
-				this.ButtonActive(6, value == JustifOrientation.LeftToRight);
-				this.ButtonActive(7, value == JustifOrientation.BottomToTop);
-				this.ButtonActive(8, value == JustifOrientation.RightToLeft);
-				this.ButtonActive(9, value == JustifOrientation.TopToBottom);
+				this.ButtonActive( 8, value == JustifOrientation.LeftToRight);
+				this.ButtonActive( 9, value == JustifOrientation.BottomToTop);
+				this.ButtonActive(10, value == JustifOrientation.RightToLeft);
+				this.ButtonActive(11, value == JustifOrientation.TopToBottom);
 			}
 		}
 
@@ -217,7 +223,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Grise les widgets nécessaires.
 		protected void EnableWidgets()
 		{
-			for ( int i=3 ; i<3+3+4 ; i++ )
+			for ( int i=5 ; i<5+3+4 ; i++ )
 			{
 				this.buttons[i].SetVisible(this.extendedSize);
 			}
@@ -226,7 +232,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			if ( this.extendedSize )
 			{
-				if ( this.ButtonActive(4) )  // JustifVertical.Center ?
+				if ( this.ButtonActive(6) )  // JustifVertical.Center ?
 				{
 					this.fieldMarginV.SetVisible(false);
 					this.fieldOffsetV.SetVisible(true);
@@ -263,12 +269,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			Drawing.Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			r.Right = rect.Right-50;
+			r.Right = rect.Right-20*5;
 			this.label.Bounds = r;
 
-			r.Left = rect.Right-20*3;
+			r.Left = rect.Right-20*5;
 			r.Width = 20;
-			for ( int i=0 ; i<3 ; i++ )
+			for ( int i=0 ; i<5 ; i++ )
 			{
 				this.buttons[i].Bounds = r;
 				r.Offset(20, 0);
@@ -277,7 +283,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			r.Offset(0, -25);
 			r.Left = rect.Right-20*3;
 			r.Width = 20;
-			for ( int i=3 ; i<3+3 ; i++ )
+			for ( int i=5 ; i<5+3 ; i++ )
 			{
 				this.buttons[i].Bounds = r;
 				r.Offset(20, 0);
@@ -286,7 +292,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			r.Offset(0, -25);
 			r.Left = rect.Right-20*4;
 			r.Width = 20;
-			for ( int i=3+3 ; i<3+3+4 ; i++ )
+			for ( int i=5+3 ; i<5+3+4 ; i++ )
 			{
 				this.buttons[i].Bounds = r;
 				r.Offset(20, 0);
@@ -327,15 +333,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( button == this.buttons[0] )  this.SelectButtonHorizontal = JustifHorizontal.Left;
 			if ( button == this.buttons[1] )  this.SelectButtonHorizontal = JustifHorizontal.Center;
 			if ( button == this.buttons[2] )  this.SelectButtonHorizontal = JustifHorizontal.Right;
+			if ( button == this.buttons[3] )  this.SelectButtonHorizontal = JustifHorizontal.Justif;
+			if ( button == this.buttons[4] )  this.SelectButtonHorizontal = JustifHorizontal.All;
 
-			if ( button == this.buttons[3] )  this.SelectButtonVertical = JustifVertical.Top;
-			if ( button == this.buttons[4] )  this.SelectButtonVertical = JustifVertical.Center;
-			if ( button == this.buttons[5] )  this.SelectButtonVertical = JustifVertical.Bottom;
+			if ( button == this.buttons[5] )  this.SelectButtonVertical = JustifVertical.Top;
+			if ( button == this.buttons[6] )  this.SelectButtonVertical = JustifVertical.Center;
+			if ( button == this.buttons[7] )  this.SelectButtonVertical = JustifVertical.Bottom;
 
-			if ( button == this.buttons[6] )  this.SelectButtonOrientation = JustifOrientation.LeftToRight;
-			if ( button == this.buttons[7] )  this.SelectButtonOrientation = JustifOrientation.BottomToTop;
-			if ( button == this.buttons[8] )  this.SelectButtonOrientation = JustifOrientation.RightToLeft;
-			if ( button == this.buttons[9] )  this.SelectButtonOrientation = JustifOrientation.TopToBottom;
+			if ( button == this.buttons[8] )  this.SelectButtonOrientation = JustifOrientation.LeftToRight;
+			if ( button == this.buttons[9] )  this.SelectButtonOrientation = JustifOrientation.BottomToTop;
+			if ( button == this.buttons[10])  this.SelectButtonOrientation = JustifOrientation.RightToLeft;
+			if ( button == this.buttons[11])  this.SelectButtonOrientation = JustifOrientation.TopToBottom;
 
 			this.EnableWidgets();
 			this.OnChanged();
