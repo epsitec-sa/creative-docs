@@ -374,10 +374,12 @@ namespace Epsitec.Common.Widgets
 			{
 				this.Update ();
 				
-				Drawing.Rectangle bounds = this.header.Bounds;
+				Drawing.Rectangle bounds = new Drawing.Rectangle ();
 				
+				bounds.Left   = this.table_bounds.Left;
 				bounds.Bottom = this.header.Top;
 				bounds.Height = this.title_height;
+				bounds.Right  = this.v_scroller.Right;
 				
 				return bounds;
 			}
@@ -450,6 +452,82 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (column < this.column_widths.Length);
 			
 			return this.column_widths[column];
+		}
+		
+		
+		public Drawing.Rectangle GetRowBounds(int row)
+		{
+			if ((row < 0) || (row >= this.max_rows))
+			{
+				return Drawing.Rectangle.Empty;
+			}
+			
+			int add_rows  = (row == this.edition_row) ? this.edition_add_rows : 0;
+			int first_row = this.ToVirtualRow (row);
+			int last_row  = first_row + add_rows;
+			
+			if ((last_row >= this.first_virtvis_row) &&
+				(first_row < this.first_virtvis_row + this.n_visible_rows))
+			{
+				//	La ligne spécifiée est (en tout cas partiellement) visible; calcule sa
+				//	position dans la liste :
+				
+				first_row = System.Math.Max (first_row, this.first_virtvis_row);
+				last_row  = System.Math.Min (last_row, this.first_virtvis_row + this.n_visible_rows - 1);
+				
+				double y1 = (first_row - this.first_virtvis_row) * this.row_height;
+				double y2 = (last_row - this.first_virtvis_row + 1) * this.row_height;
+				
+				y1 = System.Math.Min (y1, this.table_bounds.Height);
+				y2 = System.Math.Min (y2, this.table_bounds.Height);
+				
+				if (y2 > y1)
+				{
+					y1 = this.table_bounds.Top - y1;
+					y2 = this.table_bounds.Top - y2;
+					
+					return new Drawing.Rectangle (this.table_bounds.Left, y2, this.table_bounds.Width, y1 - y2);
+				}
+			}
+			
+			return Drawing.Rectangle.Empty;
+		}
+		
+		public Drawing.Rectangle GetCellBounds(int row, int column)
+		{
+			Drawing.Rectangle bounds = this.GetRowBounds (row);
+			
+			if (bounds.IsValid)
+			{
+				double x1 = 0;
+				double x2 = 0;
+				
+				for (int i = 0; i < this.max_columns; i++)
+				{
+					x1 = x2;
+					x2 = x1 + this.column_widths[i];
+					
+					if (column == i)
+					{
+						x1 += this.table_bounds.Left - this.offset;
+						x2 += this.table_bounds.Left - this.offset;
+						x1 = System.Math.Max (this.table_bounds.Left, x1);
+						x2 = System.Math.Min (this.table_bounds.Right, x2);
+						
+						if (x1 < x2)
+						{
+							bounds.Left  = x1;
+							bounds.Right = x2;
+							
+							return bounds;
+						}
+						
+						break;
+					}
+				}
+			}
+			
+			return Drawing.Rectangle.Empty;
 		}
 		
 		
@@ -1328,7 +1406,12 @@ invalid:	row    = -1;
 				
 				int         row_line      = row + top;
 				int         num_add_lines = (this.edition_row == row_line)  ? this.edition_add_rows - delta : 0;
-				WidgetState widget_state  = (this.selected_row == row_line) ? WidgetState.Selected : WidgetState.Enabled;
+				WidgetState widget_state  = state & WidgetState.Enabled;
+				
+				if (this.selected_row == row_line)
+				{
+					widget_state |= WidgetState.Selected;
+				}
 				
 				if (this.edition_row == row_line)
 				{

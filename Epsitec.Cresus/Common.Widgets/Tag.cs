@@ -42,6 +42,7 @@ namespace Epsitec.Common.Widgets
 			this.Color     = Drawing.Color.Empty; //Drawing.Color.FromHSV (200, 1.00, 1.00);
 		}
 		
+		
 		public Drawing.Color					Color
 		{
 			get
@@ -58,9 +59,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected Drawing.Color GetColorLight()
+		
+		protected Drawing.Color GetColorLight(bool disable)
 		{
 			Drawing.Color color;
+			
 			if (this.BackColor.IsValid)
 			{
 				color = this.BackColor;
@@ -68,12 +71,12 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				double h, s, v;
-				color = (this.color.IsValid) ? this.color : Adorner.Factory.Active.ColorCaption;
+				color = this.GetColorDark (false);
 				color.GetHSV (out h, out s, out v);
 				color = Drawing.Color.FromAHSV (color.A, h, s * 0.4, v);
 			}
 			
-			if (! this.IsEnabled)
+			if (disable)
 			{
 				color = Drawing.Color.FromBrightness (color.GetBrightness ());
 			}
@@ -81,9 +84,10 @@ namespace Epsitec.Common.Widgets
 			return color;
 		}
 		
-		protected Drawing.Color GetColorDark()
+		protected Drawing.Color GetColorDark(bool disable)
 		{
 			Drawing.Color color;
+			
 			if (this.color.IsValid)
 			{
 				color = this.color;
@@ -96,13 +100,40 @@ namespace Epsitec.Common.Widgets
 				color = Drawing.Color.FromAHSV (color.A, h, s, v * 0.8);
 			}
 			
-			if (! this.IsEnabled)
+			if (disable)
 			{
 				color = Drawing.Color.FromBrightness (color.GetBrightness ());
 			}
 			
 			return color;
 		}
+		
+		protected Drawing.Color GetColorIcon(bool disable)
+		{
+			double h, s, v;
+			Drawing.Color color = this.GetColorLight (false);
+			
+			color.GetHSV (out h, out s, out v);
+			
+			if (v < 0.5)
+			{
+				v += 0.5;
+			}
+			else
+			{
+				v -= 0.5;
+			}
+			
+			color = Drawing.Color.FromAHSV (color.A, h, s, v);
+			
+			if (disable)
+			{
+				color = Drawing.Color.FromBrightness (color.GetBrightness ());
+			}
+			
+			return color;
+		}
+		
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
@@ -124,30 +155,41 @@ namespace Epsitec.Common.Widgets
 				ox = cx * 1.2;
 				oy = cy * 0.8;
 			}
-			
-			if ((this.State & WidgetState.Entered) != 0)
+			else if ((this.State & WidgetState.Entered) != 0)
 			{
-				r *= 1.2;
+				ox = cx * 1.0;
+				oy = cy * 1.0;
 			}
 			
-			this.DefineGradientShape (graphics);
+			bool disabled = ! this.IsEnabled;
+			
+			this.DefineGradientShape (graphics, disabled);
 			this.DefineGradientOffset (graphics, ox, oy, r);
 			
 			graphics.Rasterizer.AddSurface (path);
 			graphics.RenderGradient ();
 			graphics.Rasterizer.AddOutline (path, 1);
-			graphics.RenderSolid (this.GetColorLight ());
+			graphics.RenderSolid (this.GetColorLight (disabled));
+			
+			path.Clear ();
+			path.MoveTo (cx*0.7, cy*1.3);
+			path.LineTo (cx*1.0, cy*0.6);
+			path.LineTo (cx*1.3, cy*1.3);
+			path.Close ();
+			
+			graphics.Rasterizer.AddSurface (path);
+			graphics.RenderSolid (this.GetColorIcon (disabled));
 		}
 		
-		protected void DefineGradientShape(Drawing.Graphics graphics)
+		protected void DefineGradientShape(Drawing.Graphics graphics, bool disabled)
 		{
 			double[] r = new double[256];
 			double[] g = new double[256];
 			double[] b = new double[256];
 			double[] a = new double[256];
 			
-			Drawing.Color color = this.GetColorDark ();
-			Drawing.Color spot  = this.GetColorLight ();
+			Drawing.Color color = this.GetColorDark (disabled);
+			Drawing.Color spot  = this.GetColorLight (disabled);
 			
 			for (int i = 0; i < 256; i++)
 			{
@@ -157,7 +199,7 @@ namespace Epsitec.Common.Widgets
 				r[i] = mix1*color.R + mix2*spot.R;
 				g[i] = mix1*color.G + mix2*spot.G;
 				b[i] = mix1*color.B + mix2*spot.B;
-				a[i] = 1.0;
+				a[i] = mix1*color.A + mix2*spot.A;
 			}
 			
 			graphics.GradientRenderer.SetParameters (0, 100);

@@ -131,6 +131,7 @@ namespace Epsitec.Common.Widgets
 			table.SelectedIndexChanged += new EventHandler(this.HandleSelectedIndexChanged);
 			table.Clicked              += new MessageEventHandler(this.HandleClicked);
 			table.DoubleClicked        += new MessageEventHandler(this.HandleDoubleClicked);
+			table.PaintForeground      += new PaintEventHandler(this.HandlePaintForeground);
 			
 			for (int x = 0 ; x < table.ColumnCount; x++)
 			{
@@ -214,13 +215,25 @@ namespace Epsitec.Common.Widgets
 		private void HandleDoubleClicked(object sender, MessageEventArgs e)
 		{
 			ScrollArray table = sender as ScrollArray;
-			int row, column;
-			table.HitTestTable (e.Point, out row, out column);
-			System.Diagnostics.Debug.WriteLine ("Double-clicked : " + row + "," + column);
-			table.EditionIndex = row;
+			table.HitTestTable (e.Point, out this.hilite_row, out this.hilite_column);
+			System.Diagnostics.Debug.WriteLine ("Double-clicked : " + this.hilite_row + "," + this.hilite_column);
+			table.EditionIndex = this.hilite_row;
 			table.ShowEdition (ScrollArrayShowMode.Extremity);
+			table.Invalidate ();
 		}
 
+		private void HandlePaintForeground(object sender, PaintEventArgs e)
+		{
+			ScrollArray table = sender as ScrollArray;
+			Drawing.Rectangle hilite = table.GetCellBounds (this.hilite_row, this.hilite_column);
+			
+			if (hilite.IsValid)
+			{
+				e.Graphics.AddFilledRectangle (hilite);
+				e.Graphics.RenderSolid (Drawing.Color.FromARGB (0.25, 0, 0, 1));
+			}
+		}
+		
 		private void HandleSelectorChangedForeground(object sender)
 		{
 			ColorSelector selector = sender as ColorSelector;
@@ -262,5 +275,8 @@ namespace Epsitec.Common.Widgets
 			tag = parent.FindChild ("tag4", Widget.ChildFindMode.Deep) as Tag;
 			tag.BackColor = color;
 		}
+		
+		private int						hilite_row		= -1;
+		private int						hilite_column	= -1;
 	}
 }

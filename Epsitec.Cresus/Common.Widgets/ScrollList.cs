@@ -539,8 +539,6 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayouts[i] == null )  break;
 
-				Drawing.Color color = Drawing.Color.Empty;
-
 				if ( i+this.firstLine == this.selectedLine &&
 					 (state&WidgetState.Enabled) != 0 )
 				{
@@ -553,7 +551,6 @@ namespace Epsitec.Common.Widgets
 					rects[0].Height = this.lineHeight;
 					adorner.PaintTextSelectionBackground(graphics, rects);
 
-					color = Drawing.Color.FromName("ActiveCaptionText");
 					state |= WidgetState.Selected;
 				}
 				else
