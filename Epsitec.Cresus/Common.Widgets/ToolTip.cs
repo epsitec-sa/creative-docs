@@ -21,7 +21,7 @@ namespace Epsitec.Common.Widgets
 
 			this.window = new Window();
 			this.window.MakeFramelessWindow();
-			this.window.MakeToolWindow();
+			this.window.MakeFloatingWindow();
 			this.window.Name = "ToolTip";
 			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle (0, 0, 8, 8);

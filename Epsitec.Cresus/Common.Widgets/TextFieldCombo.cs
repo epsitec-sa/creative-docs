@@ -229,7 +229,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.comboWindow = new Window();
 			this.comboWindow.MakeFramelessWindow();
-			this.comboWindow.MakeToolWindow();
+			this.comboWindow.MakeFloatingWindow();
 			this.comboWindow.Owner = this.Window;
 			if ( adorner.AlphaVMenu < 1.0 )
 			{
