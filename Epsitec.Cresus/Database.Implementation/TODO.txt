@@ -57,18 +57,18 @@ Implémentation (suite)
 
 Bien que cela puisse paraître redondant, j'ai défini des classes pour
 la représentation des tables et des colonnes. Contrairement à DataTable,
-la DbTable n'est pas prévue pour stocker des données, mais juste pour
+la SqlTable n'est pas prévue pour stocker des données, mais juste pour
 stocker les informations de schéma.
 
-Les classes DbTable et DbColumn sont donc utilisées principalement
+Les classes SqlTable et SqlColumn sont donc utilisées principalement
 par ISqlBuilder, ainsi que par IDbAbstraction, pour décrire le schéma
 de la base de données.
 
 
 - Vérifier l'implémentation de InternalCollectionList et de ses classes
-  dérivées, à savoir DbColumnCollection, SqlFieldCollection, ...
+  dérivées, à savoir SqlColumnCollection, SqlFieldCollection, ...
 
-- Ecrire les tests pour DbTable, DbColumn, DbColumnCollection.
+- Ecrire les tests pour SqlTable, SqlColumn, SqlColumnCollection.
 
 - Implémenter FirebirdAbstraction.QueryTableNames et QueryTableSchema;
   ces méthodes sont étroitement liées à une implémentation de ISqlBuilder
@@ -129,4 +129,26 @@ par l'objet SqlSelect. En particulier :
   clause 'FROM Table1 JOIN Table2 ON Table1.id = Table2.id'.
 
 - La clause GROUP BY n'est pas supportée.
+
+
+Détails sur ISqlBuilder.Insert/Update/RemoveData
+------------------------------------------------
+
+L'insertion de données dans une table nécessite à la fois un nom de
+table et un nom de colonne par champ à écrire. Le nom de la table est
+passé explicitement à l'appel ISqlBuilder.InsertData et les noms des
+champs sont extraits au moyen de SqlField.Alias.
+
+Pour l'instant, ISqlBuilder ne supporte pas d'insertion à partir de
+données provenant directement d'une requête de type SELECT. Certaines
+base n'aiment pas cela, et on peut s'en passer au prix d'un "hop"
+supplémentaire entre la base de données et le logiciel.
+
+ISqlBuilder ne supporte pas non plus les mises à jour de type "UPDATE
+Table SET ROW = ... WHERE ...", mais uniquement la version "UPDATE Table
+SET ... WHERE ...". Les conditions de mise à jour pour la clause WHERE
+sont extraites d'une SqlFieldCollection; chaque SqlField référence une
+fonction de comparaison (SqlFunction.Type = Compare). Tous les termes
+sont unis par des AND. Si on désire faire des OR, il faut construire
+soi-même l'arbre des SqlFunction.
 

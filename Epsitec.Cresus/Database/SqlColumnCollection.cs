@@ -1,21 +1,21 @@
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbColumnCollection encapsule une collection d'instances de type DbColumn.
+	/// La classe SqlColumnCollection encapsule une collection d'instances de type SqlColumn.
 	/// </summary>
-	public class DbColumnCollection : InternalCollectionList
+	public class SqlColumnCollection : InternalCollectionList
 	{
-		public DbColumnCollection()
+		public SqlColumnCollection()
 		{
 		}
 		
 		
-		public virtual void Add(DbColumn column)
+		public virtual void Add(SqlColumn column)
 		{
 			this.List.Add (column);
 		}
 
-		public virtual void AddRange(DbColumn[] columns)
+		public virtual void AddRange(SqlColumn[] columns)
 		{
 			if (columns == null)
 			{
@@ -25,18 +25,18 @@ namespace Epsitec.Cresus.Database
 			this.List.AddRange (columns);
 		}
 		
-		public virtual void Remove(DbColumn column)
+		public virtual void Remove(SqlColumn column)
 		{
 			this.List.Remove (column);
 		}
 		
 		
-		public virtual bool Contains(DbColumn column)
+		public virtual bool Contains(SqlColumn column)
 		{
 			return this.List.Contains (column);
 		}
 		
-		public virtual int IndexOf(DbColumn column)
+		public virtual int IndexOf(SqlColumn column)
 		{
 			return this.List.IndexOf (column);
 		}
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Database
 		{
 			for (int i = 0; i < this.List.Count; i++)
 			{
-				DbColumn column = this.List[i] as DbColumn;
+				SqlColumn column = this.List[i] as SqlColumn;
 				
 				if (column.Name == column_name)
 				{
@@ -58,15 +58,15 @@ namespace Epsitec.Cresus.Database
 		
 		
 		
-		public virtual DbColumn							this[int index]
+		public virtual SqlColumn						this[int index]
 		{
 			get
 			{
-				return this.List[index] as DbColumn;
+				return this.List[index] as SqlColumn;
 			}
 		}
 		
-		public virtual DbColumn							this[string column_name]
+		public virtual SqlColumn						this[string column_name]
 		{
 			get
 			{

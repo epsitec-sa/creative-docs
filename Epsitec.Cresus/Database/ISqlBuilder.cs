@@ -26,17 +26,18 @@ namespace Epsitec.Cresus.Database
 		
 		//	Manipulation de tables :
 		
-		void AddTable(DbTable table);
+		void InsertTable(SqlTable table);
 		void RemoveTable(string table_name);
 		
-		void AddTableColumns(string table_name, DbColumn[] columns);
-		void UpdateTableColumns(string table_name, DbColumn[] columns);
-		void RemoveTableColumns(string table_name, DbColumn[] columns);
+		void InsertTableColumns(string table_name, SqlColumn[] columns);
+		void UpdateTableColumns(string table_name, SqlColumn[] columns);
+		void RemoveTableColumns(string table_name, SqlColumn[] columns);
 		
 		//	Création de requêtes standard :
 		
 		void SelectData(SqlSelect query);
-		void InsertData(SqlTable table, SqlFieldCollection fields);
-		void UpdateData(SqlTable table, SqlFieldCollection fields);
+		void InsertData(string table_name, SqlFieldCollection fields);
+		void UpdateData(string table_name, SqlFieldCollection fields, SqlFieldCollection conditions);
+		void RemoveData(string table_name, SqlFieldCollection conditions);
 	}
 }

@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			return new string[0];
 		}
 		
-		public DbTable QueryTableSchema(string table_name)
+		public SqlTable QueryTableSchema(string table_name)
 		{
 			//	TODO: trouver le schéma de la table (si elle existe). Si la table ne peut pas
 			//	être trouvée, on retourne simplement null.

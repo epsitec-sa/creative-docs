@@ -98,16 +98,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DbColumn.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DbColumnCollection.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "DbFactory.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -124,11 +114,6 @@
                 />
                 <File
                     RelPath = "DbSimpleType.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "DbTable.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -168,6 +153,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "SqlColumn.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SqlColumnCollection.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "SqlField.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -184,6 +179,11 @@
                 />
                 <File
                     RelPath = "SqlSelect.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SqlTable.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

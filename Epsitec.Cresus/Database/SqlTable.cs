@@ -1,12 +1,12 @@
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbTable décrit une table dans la base de données. Cette classe
+	/// La classe SqlTable décrit une table dans la base de données. Cette classe
 	/// ressemble fortement à System.Data.DataTable.
 	/// </summary>
-	public class DbTable
+	public class SqlTable
 	{
-		public DbTable()
+		public SqlTable()
 		{
 		}
 		
@@ -17,21 +17,21 @@ namespace Epsitec.Cresus.Database
 			set { this.name = value; }
 		}
 		
-		public DbColumnCollection				Columns
+		public SqlColumnCollection				Columns
 		{
 			get { return this.columns; }
 		}
 		
-		public DbColumn[]						PrimaryKey
+		public SqlColumn[]						PrimaryKey
 		{
 			get
 			{
 				if (this.primary_key == null)
 				{
-					return new DbColumn[0];
+					return new SqlColumn[0];
 				}
 				
-				DbColumn[] columns = new DbColumn[this.primary_key.Count];
+				SqlColumn[] columns = new SqlColumn[this.primary_key.Count];
 				this.primary_key.CopyTo (columns, 0);
 				return columns;
 			}
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Database
 						return;
 					}
 					
-					this.primary_key = new DbColumnCollection ();
+					this.primary_key = new SqlColumnCollection ();
 				}
 				
 				this.primary_key.Clear ();
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Database
 		
 		
 		protected string						name;
-		protected DbColumnCollection			columns = new DbColumnCollection ();
-		protected DbColumnCollection			primary_key = null;
+		protected SqlColumnCollection			columns = new SqlColumnCollection ();
+		protected SqlColumnCollection			primary_key = null;
 	}
 }

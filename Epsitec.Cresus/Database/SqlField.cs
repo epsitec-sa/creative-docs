@@ -143,8 +143,20 @@ namespace Epsitec.Cresus.Database
 		
 		public static SqlField CreateNull()
 		{
-			//	TODO: crée et initialise une instance de SqlField.
-			return null;
+			SqlField field = new SqlField ();
+			
+			field.type = SqlFieldType.Null;
+			
+			return field;
+		}
+		
+		public static SqlField CreateDefault()
+		{
+			SqlField field = new SqlField ();
+			
+			field.type = SqlFieldType.Default;
+			
+			return field;
 		}
 		
 		public static SqlField CreateConstant(object raw_value)
@@ -223,6 +235,7 @@ namespace Epsitec.Cresus.Database
 		Null,							//	constante NULL
 		Constant,						//	constante (donnée compatible DbRawType)
 		All,							//	constante spéciale pour aggrégats: *
+		Default,						//	constante spéciale pour INSERT INTO...
 		
 		Name,							//	nom (nom de colonne, nom de table, ...)
 		
