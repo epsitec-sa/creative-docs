@@ -1106,7 +1106,15 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.cmd_queue.Count == 1)
 			{
-				this.window.SendQueueCommand ();
+				if (this.window != null)
+				{
+					this.window.SendQueueCommand ();
+				}
+			}
+			
+			if (this.window == null)
+			{
+				this.DispatchQueuedCommands ();
 			}
 		}
 		
