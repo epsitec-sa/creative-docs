@@ -25,44 +25,44 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbCommandDesigner.#ctor">
             <summary>
-            Initializes a new Instance of the <b>FbCommandDesigner</b> class.
+            Initializes	a new Instance of the <b>FbCommandDesigner</b> class.
             </summary>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.Design.FbCommandDesigner.Verbs">
             <summary>
-            Gets the design-time verbs supported by the component that is associated with the designer.
+            Gets the design-time verbs supported by the	component that is associated with the designer.
             </summary>
             <value>
-            A DesignerVerbCollection of DesignerVerb objects, or null if no designer verbs are available. 
+            A DesignerVerbCollection of	DesignerVerb objects, or null if no	designer verbs are available. 
             </value>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.DataSetGenerator.GenerateDataset(FirebirdSql.Data.Firebird.FbDataAdapter,System.String,System.Boolean)">
             <summary>
-            Generates a DataSet using the given <see cref="T:FirebirdSql.Data.Firebird.FbDataAdapter"/>
+            Generates a	DataSet	using the given	<see cref="T:FirebirdSql.Data.Firebird.FbDataAdapter"/>
             </summary>
             <param name="adapter">A <see cref="T:FirebirdSql.Data.Firebird.FbDataAdapter"/> objects.</param>
             <param name="name">The DataSet name.</param>
-            <param name="properCase">Indicates wheter table and columns names should be generated using a proper case.</param>
+            <param name="properCase">Indicates wheter table	and	columns	names should be	generated using	a proper case.</param>
             <returns>A DataSet object.</returns>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.DataSetGenerator.GenerateDataset(System.String,System.Collections.ArrayList,System.String,System.Boolean)">
             <summary>
-            Generates a DataSet using the given connection string and tables.
+            Generates a	DataSet	using the given	connection string and tables.
             </summary>
-            <param name="connectionString">A connection string.</param>
-            <param name="tables">The list of tables to add to the DataSet.</param>
+            <param name="connectionString">A connection	string.</param>
+            <param name="tables">The list of tables	to add to the DataSet.</param>
             <param name="name">The DataSet name.</param>
-            <param name="properCase">Indicates wheter table and columns names should be generated using a proper case.</param>
+            <param name="properCase">Indicates wheter table	and	columns	names should be	generated using	a proper case.</param>
             <returns>A DataSet object.</returns>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep1">
             <summary>
-            Step 1 of the Firebird Data Adapter Configuration Wizard
+            Step 1 of the Firebird Data	Adapter	Configuration Wizard
             </summary>
         </member>
         <member name="T:FirebirdSql.WizardFramework.WizardStep">
             <summary>
-            Represents an step of a Wizard.
+            Represents an step of a	Wizard.
             </summary>
         </member>
         <member name="F:FirebirdSql.WizardFramework.WizardStep.components">
@@ -72,7 +72,7 @@
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardStep.#ctor">
             <summary>
-            Initializes a new instance of the <b>WizardStep</b> class.
+            Initializes	a new instance of the <b>WizardStep</b>	class.
             </summary>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardStep.Dispose(System.Boolean)">
@@ -82,12 +82,12 @@
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardStep.ShowStep">
             <summary>
-            Perform the necessary operations before the step gets shown in the Wizard.
+            Perform	the	necessary operations before	the	step gets shown	in the Wizard.
             </summary>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardStep.HideStep">
             <summary>
-            Perform the necessary operations before the step gets hidden in the Wizard.
+            Perform	the	necessary operations before	the	step gets hidden in	the	Wizard.
             </summary>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardStep.IsValid">
@@ -108,75 +108,75 @@
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardStep.GetBackStep">
             <summary>
-            Returns the back step to navigate to.
+            Returns	the	back step to navigate to.
             </summary>
-            <returns>A <see cref="T:FirebirdSql.WizardFramework.WizardStep"/> object.</returns>
+            <returns>A <see cref="T:FirebirdSql.WizardFramework.WizardStep"/>	object.</returns>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardStep.GetNextStep">
             <summary>
-            Returns the next step to navigate to.
+            Returns	the	next step to navigate to.
             </summary>
-            <returns>A <see cref="T:FirebirdSql.WizardFramework.WizardStep"/> object.</returns>
+            <returns>A <see cref="T:FirebirdSql.WizardFramework.WizardStep"/>	object.</returns>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardStep.InitializeComponent">
             <summary> 
-            Required method for Designer support - do not modify 
-            the contents of this method with the code editor.
+            Required method	for	Designer support - do not modify 
+            the	contents of	this method	with the code editor.
             </summary>
         </member>
         <member name="P:FirebirdSql.WizardFramework.WizardStep.CanMoveBack">
             <summary>
-            Gets a value that indicates wheter the panel can navigate back to the
+            Gets a value that indicates	wheter the panel can navigate back to the
             previous panel.
             </summary>
             <value></value>
         </member>
         <member name="P:FirebirdSql.WizardFramework.WizardStep.CanMoveNext">
             <summary>
-            Gets a value that indicates wheter the panel can navigate to the
+            Gets a value that indicates	wheter the panel can navigate to the
             next panel.
             </summary>
             <value></value>
         </member>
         <member name="P:FirebirdSql.WizardFramework.WizardStep.CanFinish">
             <summary>
-            Gets a value that indicates wheter the panel should allow navigation to
-            the final panel.
+            Gets a value that indicates	wheter the panel should	allow navigation to
+            the	final panel.
             </summary>
             <value></value>
         </member>
         <member name="P:FirebirdSql.WizardFramework.WizardStep.CanCancel">
             <summary>
-            Gets a value that indicates if the wizard can be canceled.
+            Gets a value that indicates	if the wizard can be canceled.
             </summary>
             <value></value>
         </member>
         <member name="P:FirebirdSql.WizardFramework.WizardStep.PreviousStep">
             <summary>
-            Gets or the return back step.
+            Gets or	the	return back	step.
             </summary>
-            <value>The previous step to navigate to.</value>
+            <value>The previous	step to	navigate to.</value>
         </member>
         <member name="P:FirebirdSql.WizardFramework.WizardStep.NextStep">
             <summary>
             Gets the next step.
             </summary>
-            <value>The next step to navigate to.</value>
-            <remarks>By default it will return always the step with index 0 in the collection of <see cref="P:FirebirdSql.WizardFramework.WizardStep.NextSteps">Next Steps</see></remarks>
+            <value>The next	step to	navigate to.</value>
+            <remarks>By	default	it will	return always the step with	index 0	in the collection of <see cref="P:FirebirdSql.WizardFramework.WizardStep.NextSteps">Next Steps</see></remarks>
         </member>
         <member name="P:FirebirdSql.WizardFramework.WizardStep.NextSteps">
             <summary>
-            Gets the collection of steps that the current step can navigate to.
+            Gets the collection	of steps that the current step can navigate	to.
             </summary>
             <value>An <see cref="T:FirebirdSql.WizardFramework.WizardStepCollection"/> object.</value>
-            <remarks>This collection handles the steps we can navigate to througth the next buttong of a Wizard.</remarks>
+            <remarks>This collection handles the steps we can navigate to througth the next	buttong	of a Wizard.</remarks>
         </member>
         <member name="P:FirebirdSql.WizardFramework.WizardStep.BackSteps">
             <summary>
-            Gets the collection of steps that the current step can navigate to.
+            Gets the collection	of steps that the current step can navigate	to.
             </summary>
             <value>An <see cref="T:FirebirdSql.WizardFramework.WizardStepCollection"/> object.</value>
-            <remarks>This collection handles the steps we can navigate to througth the next buttong of a Wizard.</remarks>
+            <remarks>This collection handles the steps we can navigate to througth the next	buttong	of a Wizard.</remarks>
         </member>
         <member name="F:FirebirdSql.WizardFramework.WelcomeStep.components">
             <summary> 
@@ -185,7 +185,7 @@
         </member>
         <member name="M:FirebirdSql.WizardFramework.WelcomeStep.#ctor">
             <summary>
-            Initializes a new instance of the <b>WelcomeStep</b> class.
+            Initializes	a new instance of the <b>WelcomeStep</b> class.
             </summary>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WelcomeStep.Dispose(System.Boolean)">
@@ -195,8 +195,8 @@
         </member>
         <member name="M:FirebirdSql.WizardFramework.WelcomeStep.InitializeComponent">
             <summary> 
-            Required method for Designer support - do not modify 
-            the contents of this method with the code editor.
+            Required method	for	Designer support - do not modify 
+            the	contents of	this method	with the code editor.
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep1.components">
@@ -206,7 +206,13 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep1.#ctor">
             <summary>
-            Initializes a new instance of the <b>FbDataAdapterConfigurationStep1</b> class.
+            Initializes	a new instance of the <b>FbDataAdapterConfigurationStep1</b> class.
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep1.InitializeComponent">
+            <summary> 
+            Required method	for	Designer support - do not modify 
+            the	contents of	this method	with the code editor.
             </summary>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep1.Dispose(System.Boolean)">
@@ -214,15 +220,9 @@
             Clean up any resources being used.
             </summary>
         </member>
-        <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep1.InitializeComponent">
-            <summary> 
-            Required method for Designer support - do not modify 
-            the contents of this method with the code editor.
-            </summary>
-        </member>
         <member name="T:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep2">
             <summary>
-            Step 2 of the Firebird Data Adapter Configuration Wizard
+            Step 2 of the Firebird Data	Adapter	Configuration Wizard
             </summary>
         </member>
         <member name="F:FirebirdSql.WizardFramework.ActionStep.components">
@@ -232,7 +232,7 @@
         </member>
         <member name="M:FirebirdSql.WizardFramework.ActionStep.#ctor">
             <summary>
-            Initializes a new instance of the <b>ActionStep</b> class.
+            Initializes	a new instance of the <b>ActionStep</b>	class.
             </summary>
         </member>
         <member name="M:FirebirdSql.WizardFramework.ActionStep.Dispose(System.Boolean)">
@@ -242,8 +242,8 @@
         </member>
         <member name="M:FirebirdSql.WizardFramework.ActionStep.InitializeComponent">
             <summary> 
-            Required method for Designer support - do not modify 
-            the contents of this method with the code editor.
+            Required method	for	Designer support - do not modify 
+            the	contents of	this method	with the code editor.
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep2.components">
@@ -253,7 +253,7 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep2.#ctor">
             <summary>
-            Initializes a new instance of the <b>WizardStep</b> class.
+            Initializes	a new instance of the <b>WizardStep</b>	class.
             </summary>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep2.Dispose(System.Boolean)">
@@ -274,13 +274,13 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep2.InitializeComponent">
             <summary> 
-            Required method for Designer support - do not modify 
-            the contents of this method with the code editor.
+            Required method	for	Designer support - do not modify 
+            the	contents of	this method	with the code editor.
             </summary>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep3">
             <summary>
-            Step 3 of the Firebird Data Adapter Configuration Wizard
+            Step 3 of the Firebird Data	Adapter	Configuration Wizard
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep3.components">
@@ -290,7 +290,13 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep3.#ctor">
             <summary>
-            Initializes a new instance of the <b>WizardStep</b> class.
+            Initializes	a new instance of the <b>WizardStep</b>	class.
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep3.InitializeComponent">
+            <summary> 
+            Required method	for	Designer support - do not modify 
+            the	contents of	this method	with the code editor.
             </summary>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep3.Dispose(System.Boolean)">
@@ -298,15 +304,9 @@
             Clean up any resources being used.
             </summary>
         </member>
-        <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep3.InitializeComponent">
-            <summary> 
-            Required method for Designer support - do not modify 
-            the contents of this method with the code editor.
-            </summary>
-        </member>
         <member name="T:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep4">
             <summary>
-            Step 4 of the Firebird Data Adapter Configuration Wizard
+            Step 4 of the Firebird Data	Adapter	Configuration Wizard
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep4.components">
@@ -316,7 +316,13 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep4.#ctor">
             <summary>
-            Initializes a new instance of the <b>WizardStep</b> class.
+            Initializes	a new instance of the <b>WizardStep</b>	class.
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep4.InitializeComponent">
+            <summary> 
+            Required method	for	Designer support - do not modify 
+            the	contents of	this method	with the code editor.
             </summary>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep4.Dispose(System.Boolean)">
@@ -335,15 +341,9 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep4.InitializeComponent">
-            <summary> 
-            Required method for Designer support - do not modify 
-            the contents of this method with the code editor.
-            </summary>
-        </member>
         <member name="T:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep5">
             <summary>
-            Step 5 of the Firebird Data Adapter Configuration Wizard
+            Step 5 of the Firebird Data	Adapter	Configuration Wizard
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep5.components">
@@ -353,7 +353,13 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep5.#ctor">
             <summary>
-            Initializes a new instance of the <b>WizardStep</b> class.
+            Initializes	a new instance of the <b>WizardStep</b>	class.
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep5.InitializeComponent">
+            <summary> 
+            Required method	for	Designer support - do not modify 
+            the	contents of	this method	with the code editor.
             </summary>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep5.Dispose(System.Boolean)">
@@ -372,15 +378,9 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep5.InitializeComponent">
-            <summary> 
-            Required method for Designer support - do not modify 
-            the contents of this method with the code editor.
-            </summary>
-        </member>
         <member name="T:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep6">
             <summary>
-            Step 6 of the Firebird Data Adapter Configuration Wizard
+            Step 6 of the Firebird Data	Adapter	Configuration Wizard
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep6.components">
@@ -390,7 +390,13 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep6.#ctor">
             <summary>
-            Initializes a new instance of the <b>WizardStep</b> class.
+            Initializes	a new instance of the <b>WizardStep</b>	class.
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep6.InitializeComponent">
+            <summary> 
+            Required method	for	Designer support - do not modify 
+            the	contents of	this method	with the code editor.
             </summary>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep6.Dispose(System.Boolean)">
@@ -408,15 +414,9 @@
             Saves step settings
             </summary>
         </member>
-        <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep6.InitializeComponent">
-            <summary> 
-            Required method for Designer support - do not modify 
-            the contents of this method with the code editor.
-            </summary>
-        </member>
         <member name="T:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep7">
             <summary>
-            Step 7 of the Firebird Data Adapter Configuration Wizard
+            Step 7 of the Firebird Data	Adapter	Configuration Wizard
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep7.components">
@@ -426,7 +426,13 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep7.#ctor">
             <summary>
-            Initializes a new instance of the <b>WizardStep</b> class.
+            Initializes	a new instance of the <b>WizardStep</b>	class.
+            </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep7.InitializeComponent">
+            <summary> 
+            Required method	for	Designer support - do not modify 
+            the	contents of	this method	with the code editor.
             </summary>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep7.Dispose(System.Boolean)">
@@ -440,15 +446,9 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationStep7.InitializeComponent">
-            <summary> 
-            Required method for Designer support - do not modify 
-            the contents of this method with the code editor.
-            </summary>
-        </member>
         <member name="T:FirebirdSql.WizardFramework.WizardForm">
             <summary>
-            Represents the base form for Wizard implementations.
+            Represents the base	form for Wizard	implementations.
             </summary>
         </member>
         <member name="F:FirebirdSql.WizardFramework.WizardForm.components">
@@ -458,7 +458,7 @@
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardForm.#ctor">
             <summary>
-            Initializes a new instance of the <b>WizardForm</b> class.
+            Initializes	a new instance of the <b>WizardForm</b>	class.
             </summary>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardForm.Dispose(System.Boolean)">
@@ -468,45 +468,45 @@
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardForm.InitializeComponent">
             <summary>
-            Required method for Designer support - do not modify
-            the contents of this method with the code editor.
+            Required method	for	Designer support - do not modify
+            the	contents of	this method	with the code editor.
             </summary>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardForm.InitializeWizard">
             <summary>
-            Initializes the Wizard.
+            Initializes	the	Wizard.
             </summary>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardForm.ShowStep(FirebirdSql.WizardFramework.WizardStep)">
             <summary>
-            Shows the specified step in the Wizard.
+            Shows the specified	step in	the	Wizard.
             </summary>
-            <param name="step">The <see cref="T:FirebirdSql.WizardFramework.WizardStep"/> to show.</param>
+            <param name="step">The <see cref="T:FirebirdSql.WizardFramework.WizardStep"/> to	show.</param>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardForm.GetCurrentStep">
             <summary>
-            Returns the current step.
+            Returns	the	current	step.
             </summary>
             <returns>A <see cref="T:FirebirdSql.WizardFramework.WizardStep"/> object.</returns>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardForm.GetPreviousStep">
             <summary>
-            Returns the previous step.
+            Returns	the	previous step.
             </summary>
             <returns>A <see cref="T:FirebirdSql.WizardFramework.WizardStep"/> object.</returns>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardForm.GetNextStep">
             <summary>
-            Returns the next step.
+            Returns	the	next step.
             </summary>
             <returns>A <see cref="T:FirebirdSql.WizardFramework.WizardStep"/> object.</returns>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardForm.GetStepIndex(FirebirdSql.WizardFramework.WizardStep)">
             <summary>
-            Returns the zero-based index of the given step..
+            Returns	the	zero-based index of	the	given step..
             </summary>
             <param name="step">A <see cref="T:FirebirdSql.WizardFramework.WizardStep"/> object.</param>
-            <returns>The zero-based index of the step.</returns>
+            <returns>The zero-based	index of the step.</returns>
         </member>
         <member name="E:FirebirdSql.WizardFramework.WizardForm.Initialize">
             <summary>
@@ -517,37 +517,37 @@
             <summary>
             Occurs during the wizard initialization.
             </summary>
-            <remarks>The event allows to define the steps that will be used in the wizard.</remarks>
+            <remarks>The event allows to define	the	steps that will	be used	in the wizard.</remarks>
         </member>
         <member name="E:FirebirdSql.WizardFramework.WizardForm.BeforeCancel">
             <summary>
-            Occurs before the <b>Cancel</b> button is clicked.
+            Occurs before the <b>Cancel</b>	button is clicked.
             </summary>
         </member>
         <member name="E:FirebirdSql.WizardFramework.WizardForm.BeforeMoveBack">
             <summary>
-            Occurs before the <b>Back</b> button is clicked.
+            Occurs before the <b>Back</b> button is	clicked.
             </summary>
         </member>
         <member name="E:FirebirdSql.WizardFramework.WizardForm.BeforeMoveNext">
             <summary>
-            Occurs before the <b>Next</b> button is clicked.
+            Occurs before the <b>Next</b> button is	clicked.
             </summary>
         </member>
         <member name="E:FirebirdSql.WizardFramework.WizardForm.BeforeFinish">
             <summary>
-            Occurs before the <b>Finish</b> button is clicked.
+            Occurs before the <b>Finish</b>	button is clicked.
             </summary>
         </member>
         <member name="P:FirebirdSql.WizardFramework.WizardForm.Steps">
             <summary>
-            Gets the collection of steps that will be used in the Wizard.
+            Gets the collection	of steps that will be used in the Wizard.
             </summary>
             <value></value>
         </member>
         <member name="P:FirebirdSql.WizardFramework.WizardForm.StepIndex">
             <summary>
-            Gets the zero-based index of the current step.
+            Gets the zero-based	index of the current step.
             </summary>
             <value></value>
         </member>
@@ -563,8 +563,8 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterConfigurationWizard.InitializeComponent">
             <summary>
-            Required method for Designer support - do not modify
-            the contents of this method with the code editor.
+            Required method	for	Designer support - do not modify
+            the	contents of	this method	with the code editor.
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Design.FbDataAdapterDataSetGenerator.components">
@@ -579,8 +579,8 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterDataSetGenerator.InitializeComponent">
             <summary>
-            Required method for Designer support - do not modify
-            the contents of this method with the code editor.
+            Required method	for	Designer support - do not modify
+            the	contents of	this method	with the code editor.
             </summary>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Design.FbDataAdapterDesigner">
@@ -590,7 +590,7 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterDesigner.#ctor">
             <summary>
-            Initializes a new Instance of the <b>FbDataAdapterDesigner</b> class.
+            Initializes	a new Instance of the <b>FbDataAdapterDesigner</b> class.
             </summary>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterDesigner.OnConfigureDataAdapter(System.Object,System.EventArgs)">
@@ -602,23 +602,23 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Design.FbDataAdapterDesigner.OnGenerateTypeDataSet(System.Object,System.EventArgs)">
             <summary>
-            Handles the "Generate Type DataSet" designer option.
+            Handles	the	"Generate Type DataSet"	designer option.
             </summary>
             <param name="sender"></param>
             <param name="e"></param>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.Design.FbDataAdapterDesigner.DataAdapter">
             <summary>
-            Gets the Designer Component as a FbDataAdapter instance.
+            Gets the Designer Component	as a FbDataAdapter instance.
             </summary>
             <value>An <see cref="T:FirebirdSql.Data.Firebird.FbDataAdapter"/> object</value>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.Design.FbDataAdapterDesigner.Verbs">
             <summary>
-            Gets the design-time verbs supported by the component that is associated with the designer.
+            Gets the design-time verbs supported by the	component that is associated with the designer.
             </summary>
             <value>
-            A DesignerVerbCollection of DesignerVerb objects, or null if no designer verbs are available. 
+            A DesignerVerbCollection of	DesignerVerb objects, or null if no	designer verbs are available. 
             </value>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Isql.CommandExecutedEventHandler">
@@ -664,13 +664,13 @@
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Isql.CommandExecutingEventHandler">
             <summary>
-            The event handler type trigged before a SQL statement execution.
+            The	event handler type trigged before a	SQL	statement execution.
             </summary>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Isql.CommandExecutingEventArgs">
             <summary>
-            CommandExecutingEventArgs encapsulates the events arguments for the event trigged 
-            from the <see cref="T:FirebirdSql.Data.Firebird.Isql.FbBatchExecution"/> during the execution. 
+            CommandExecutingEventArgs encapsulates the events arguments	for	the	event trigged 
+            from the <see cref="T:FirebirdSql.Data.Firebird.Isql.FbBatchExecution"/>	during the execution. 
             </summary>
             <remarks>
             
@@ -678,10 +678,10 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.CommandExecutingEventArgs.#ctor(FirebirdSql.Data.Firebird.FbCommand)">
             <summary>
-            Creates an instance of CommandExecutingEventArgs class.
+            Creates	an instance	of CommandExecutingEventArgs class.
             </summary>
-            <param name="sqlCommand">The FbCommand properly instanciated.</param>
-            <remarks>The <b>sqlCommand</b> should be proper instanciated with a valid 
+            <param name="sqlCommand">The FbCommand properly	instanciated.</param>
+            <remarks>The <b>sqlCommand</b> should be proper	instanciated with a	valid 
             <see cref="T:FirebirdSql.Data.Firebird.FbCommand"/> and with the SQL statement loaded in <see cref="P:FirebirdSql.Data.Firebird.FbCommand.CommandText"/>.
             </remarks>
         </member>
@@ -689,22 +689,22 @@
             <summary>
             Overrided. Returns the SQL statement that goes for execution.
             </summary>
-            <returns>The SQL statement that will be executed.</returns>
+            <returns>The SQL statement that	will be	executed.</returns>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.Isql.CommandExecutingEventArgs.SqlCommand">
             <summary>
-            Returns the <see cref="T:FirebirdSql.Data.Firebird.FbCommand"/> instance that created for the SQL statement that goes 
-            for execution. 
+            Returns	the	<see cref="T:FirebirdSql.Data.Firebird.FbCommand"/>	instance that created for the SQL statement	that goes 
+            for	execution. 
             </summary>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.Isql.CommandExecutingEventArgs.StatementType">
             <summary>
-            Returns the <see cref="T:FirebirdSql.Data.Firebird.Isql.SqlStatementType"/> of the current <see cref="P:FirebirdSql.Data.Firebird.Isql.CommandExecutingEventArgs.SqlCommand"/>.
+            Returns	the	<see cref="T:FirebirdSql.Data.Firebird.Isql.SqlStatementType"/> of the current <see cref="P:FirebirdSql.Data.Firebird.Isql.CommandExecutingEventArgs.SqlCommand"/>.
             </summary>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Isql.SqlStatementType">
             <summary>
-            DSQL and ISQL statement types.
+            DSQL and ISQL statement	types.
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.AlterDatabase">
@@ -759,57 +759,57 @@
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.CreateDatabase">
             <summary>
-            Represents the SQL statement: <b>CREATE DATABASE</b>
+            Represents the SQL statement: <b>CREATE	DATABASE</b>
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.CreateDomain">
             <summary>
-            Represents the SQL statement: <b>CREATE DOMAIN</b>
+            Represents the SQL statement: <b>CREATE	DOMAIN</b>
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.CreateException">
             <summary>
-            Represents the SQL statement: <b>CREATE EXCEPTION</b>
+            Represents the SQL statement: <b>CREATE	EXCEPTION</b>
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.CreateGenerator">
             <summary>
-            Represents the SQL statement: <b>CREATE GENERATOR</b>
+            Represents the SQL statement: <b>CREATE	GENERATOR</b>
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.CreateIndex">
             <summary>
-            Represents the SQL statement: <b>CREATE INDEX</b>
+            Represents the SQL statement: <b>CREATE	INDEX</b>
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.CreateProcedure">
             <summary>
-            Represents the SQL statement: <b>CREATE PROCEDURE</b>
+            Represents the SQL statement: <b>CREATE	PROCEDURE</b>
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.CreateRole">
             <summary>
-            Represents the SQL statement: <b>CREATE ROLE</b>
+            Represents the SQL statement: <b>CREATE	ROLE</b>
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.CreateShadow">
             <summary>
-            Represents the SQL statement: <b>CREATE SHADOW</b>
+            Represents the SQL statement: <b>CREATE	SHADOW</b>
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.CreateTable">
             <summary>
-            Represents the SQL statement: <b>CREATE TABLE</b>
+            Represents the SQL statement: <b>CREATE	TABLE</b>
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.CreateTrigger">
             <summary>
-            Represents the SQL statement: <b>CREATE TRIGGER</b>
+            Represents the SQL statement: <b>CREATE	TRIGGER</b>
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.CreateView">
             <summary>
-            Represents the SQL statement: <b>CREATE VIEW</b>
+            Represents the SQL statement: <b>CREATE	VIEW</b>
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.DeclareCursor">
@@ -964,7 +964,7 @@
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.InsertCursor">
             <summary>
-            Represents the SQL statement: <b>INSERT CURSOR</b>
+            Represents the SQL statement: <b>INSERT	CURSOR</b>
             </summary>
         </member>
         <member name="F:FirebirdSql.Data.Firebird.Isql.SqlStatementType.Open">
@@ -1039,38 +1039,44 @@
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Isql.FbBatchExecution">
             <summary>
-            Summary description for BatchExecution.
+            Summary	description	for	BatchExecution.
             </summary>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.#ctor">
             <summary>
-            Creates an instance of FbBatchExecution engine.
+            Creates	an instance	of FbBatchExecution	engine.
             </summary>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.#ctor(FirebirdSql.Data.Firebird.FbConnection)">
             <summary>
-            Creates an instance of FbBatchExecution engine with the given
+            Creates	an instance	of FbBatchExecution	engine with	the	given
             connection.
             </summary>
             <param name="sqlConnection">A <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> object.</param>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.Execute">
             <summary>
-            Starts the ordered execution of the SQL statements that are in <see cref="P:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.SqlStatements"/> collection.
+            Starts the ordered execution of	the	SQL	statements that	are	in <see cref="P:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.SqlStatements"/> collection.
             </summary>
+        </member>
+        <member name="M:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.Execute(System.Boolean)">
+            <summary>
+            Starts the ordered execution of	the	SQL	statements that	are	in <see cref="P:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.SqlStatements"/> collection.
+            </summary>
+            <param name="autoCommit">Specifies if the transaction should be	committed after	a DDL command execution</param>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.ConnectToDatabase(System.String)">
             <summary>
-            Updates the connection string with the data parsed from the parameter and opens a connection
+            Updates	the	connection string with the data	parsed from	the parameter and opens	a connection
             to the database.
             </summary>
             <param name="connectDbStatement"></param>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.CreateDatabase(System.String)">
             <summary>
-            Parses the isql statement CREATE DATABASE and creates the database and opens a connection to the recently created database.
+            Parses the isql	statement CREATE DATABASE and creates the database and opens a connection to the recently created database.
             </summary>
-            <param name="createDbStatement">the create database statement.</param>
+            <param name="createDbStatement">the	create database	statement.</param>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.SetDatabase(System.String)">
             <summary>
@@ -1090,22 +1096,30 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.ExecuteCommand(FirebirdSql.Data.Firebird.FbCommand,System.Boolean)">
+            <summary>
+            Executes a command and optionally commits the transaction.
+            </summary>
+            <param name="command">Command to execute.</param>
+            <param name="autocommit">true to commit	the	transaction	after execution; or	false if not.</param>
+            <returns>The number	of rows	affected by the	query execution.</returns>
+        </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.OnCommandExecuting(FirebirdSql.Data.Firebird.FbCommand)">
             <summary>
-            The trigger function for <see cref="E:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.CommandExecuting"/>	event.
+            The	trigger	function for <see cref="E:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.CommandExecuting"/>	event.
             </summary>
             <param name="sqlCommand">The SQL command that is going for execution.</param>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.OnCommandExecuted(System.String,FirebirdSql.Data.Firebird.FbDataReader,System.Int32)">
             <summary>
-            The trigger function for <see cref="E:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.CommandExecuted"/> event.
+            The	trigger	function for <see cref="E:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.CommandExecuted"/> event.
             </summary>
             <param name="commandText">The <see cref="P:FirebirdSql.Data.Firebird.FbCommand.CommandText"/> of the executed SQL command.</param>
-            <param name="dataReader">The <see cref="T:FirebirdSql.Data.Firebird.FbDataReader"/> instance with the returned data. If the 
-            command executed is not meant to return data (ex: UPDATE, INSERT...) this parameter must be 
+            <param name="dataReader">The <see cref="T:FirebirdSql.Data.Firebird.FbDataReader"/>	instance with the returned data. If	the	
+            command	executed is	not	meant to return	data (ex: UPDATE, INSERT...) this parameter	must be	
             setled to <b>null</b>.</param>
-            <param name="rowsAffected">The rows that were affected by the executed SQL command. If the executed 
-            command is not meant to return this kind of information (ex: SELECT) this parameter must 
+            <param name="rowsAffected">The rows	that were affected by the executed SQL command.	If the executed	
+            command	is not meant to	return this	kind of	information	(ex: SELECT) this parameter	must 
             be setled to <b>-1</b>.</param>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.GetStatementType(System.String)">
@@ -1113,93 +1127,93 @@
             Determines the <see cref="T:FirebirdSql.Data.Firebird.Isql.SqlStatementType"/> of the provided SQL statement.
             </summary>
             <param name="sqlStatement">The string containing the SQL statement.</param>
-            <returns>The <see cref="T:FirebirdSql.Data.Firebird.Isql.SqlStatementType"/> of the <b>sqlStatement</b>.</returns>
-            <remarks>If the type of <b>sqlStatement</b> could not be determinated this 
-            method will throw an exception.</remarks>
+            <returns>The <see cref="T:FirebirdSql.Data.Firebird.Isql.SqlStatementType"/>	of the <b>sqlStatement</b>.</returns>
+            <remarks>If	the	type of	<b>sqlStatement</b>	could not be determinated this 
+            method will	throw an exception.</remarks>
         </member>
         <member name="E:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.CommandExecuting">
             <summary>
-            The event trigged before a SQL statement goes for execution.
+            The	event trigged before a SQL statement goes for execution.
             </summary>
         </member>
         <member name="E:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.CommandExecuted">
             <summary>
-            The event trigged after a SQL statement execution.
+            The	event trigged after	a SQL statement	execution.
             </summary>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.Isql.FbBatchExecution.SqlStatements">
             <summary>
-            Represents the list of SQL statements for batch execution.
+            Represents the list	of SQL statements for batch	execution.
             </summary>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Isql.FbScript">
             <summary>
-            FbScript parses a SQL file and returns its SQL statements. 
-            The class take in consideration that the statement separator can change in code. 
-            For instance, in Firebird databases the statement <c>SET TERM !! ;</c> will change the
-            statement token terminator <b>;</b> into <b>!!</b>.
+            FbScript parses	a SQL file and returns its SQL statements. 
+            The	class take in consideration	that the statement separator can change	in code. 
+            For	instance, in Firebird databases	the	statement <c>SET TERM !! ;</c> will	change the
+            statement token	terminator <b>;</b>	into <b>!!</b>.
             </summary>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.FbScript.#ctor(System.String)">
             <summary>
-            Creates an instance of FbScript class.
+            Creates	an instance	of FbScript	class.
             </summary>
             <param name="sqlFilename">The filename for the SQL file.</param>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.FbScript.#ctor(System.IO.TextReader)">
             <summary>
-            Creates an instance of FbScript class.
+            Creates	an instance	of FbScript	class.
             </summary>
             <param name="sqlCode">A <see cref="T:System.IO.TextReader"/> instance.</param>
             <remarks>The all data in <see cref="T:System.IO.TextReader"/> is read.</remarks>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.FbScript.Parse">
             <summary>
-            Parses the SQL code and loads the SQL statements into the StringCollection <see cref="P:FirebirdSql.Data.Firebird.Isql.FbScript.Results"/>.
+            Parses the SQL code	and	loads the SQL statements into the StringCollection <see cref="P:FirebirdSql.Data.Firebird.Isql.FbScript.Results"/>.
             </summary>
-            <returns>The number of statements found.</returns>
+            <returns>The number	of statements found.</returns>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.FbScript.ToString">
             <summary>
-            Overrided method, returns the the SQL code to be parsed (with comments removed).
+            Overrided method, returns the the SQL code to be parsed	(with comments removed).
             </summary>
-            <returns>The SQL code to be parsed (without comments).</returns>
+            <returns>The SQL code to be	parsed (without	comments).</returns>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.FbScript.RemoveComments(System.String)">
             <summary>
-            Removes from the SQL code all comments of the type: /*...*/ or --
+            Removes	from the SQL code all comments of the type:	/*...*/	or --
             </summary>
-            <param name="source">The string containing the original SQL code.</param>
+            <param name="source">The string	containing the original	SQL	code.</param>
             <returns>A string containing the SQL code without comments.</returns>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.Isql.FbScript.Results">
             <summary>
-            Returns a StringCollection containing all the SQL statements (without comments) present on the file.
-            This property is loaded after the method call <see cref="M:FirebirdSql.Data.Firebird.Isql.FbScript.Parse"/>.
+            Returns	a StringCollection containing all the SQL statements (without comments)	present	on the file.
+            This property is loaded	after the method call <see cref="M:FirebirdSql.Data.Firebird.Isql.FbScript.Parse"/>.
             </summary>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Isql.StringParser">
             <summary>
-            StringParser parses a string returnning the (sub)strings between tokens.
+            StringParser parses	a string returnning	the	(sub)strings between tokens.
             </summary>
             <example>
             An example of how to use this class.
             <code>
             [STAThread]
-            static void Main(string[] args) {
-            	int currentIndex = 0;
+            static void	Main(string[] args)	{
+            	int	currentIndex = 0;
             	string s = ".NET Framework doesn't have a string parsing class?!";
             	StringParser parser = new StringParser(s, false);			
-            	while (currentIndex &lt; s.Length) {
+            	while (currentIndex	&lt; s.Length) {
             		Console.WriteLine("Returned Index: {0}", currentIndex = parser.ParseNext());
-            		Console.WriteLine("Chars scanned: {0}", parser.CharsParsed);
+            		Console.WriteLine("Chars scanned: {0}",	parser.CharsParsed);
             		Console.WriteLine("Parsing result: {0}\n", parser.Result);
             	}
             }
             </code>
             <para>The output:</para>
             <code>
-            Returned Index: 5
+            Returned Index:	5
             Chars scanned: 5
             Parsing	result:	.NET
             
@@ -1235,107 +1249,107 @@
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.StringParser.#ctor(System.Boolean)">
             <summary>
-            Creates an instance of StringParser.
+            Creates	an instance	of StringParser.
             </summary>
-            <param name="caseSensitive">Indicates if parser system should be case-sensitive (true) or case-intensitive (false).</param>
+            <param name="caseSensitive">Indicates if parser	system should be case-sensitive	(true) or case-intensitive (false).</param>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.StringParser.#ctor(System.String,System.Boolean)">
             <summary>
-            Creates an instance of StringParser.
+            Creates	an instance	of StringParser.
             </summary>
-            <param name="targetString">Indicates if parser system should be case-sensitive (true) or case-intensitive (false).</param>
-            <param name="caseSensitive">The string to parse.</param>
-            <remarks>By defining the string (to parse) in constructor you can call directly the method <see cref="M:FirebirdSql.Data.Firebird.Isql.StringParser.ParseNext"/>
-            without having to initializate the target string on <see cref="M:FirebirdSql.Data.Firebird.Isql.StringParser.Parse(System.String)"/> method. See the example for further details.
+            <param name="targetString">Indicates if	parser system should be	case-sensitive (true) or case-intensitive (false).</param>
+            <param name="caseSensitive">The	string to parse.</param>
+            <remarks>By	defining the string	(to	parse) in constructor you can call directly	the	method <see cref="M:FirebirdSql.Data.Firebird.Isql.StringParser.ParseNext"/>
+            without	having to initializate the target string on	<see cref="M:FirebirdSql.Data.Firebird.Isql.StringParser.Parse(System.String)"/> method. See the example for further details.
             </remarks>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.StringParser.Parse(System.String)">
             <summary>
-            Parses target string attempting to determine the (sub)string between the beginning of this string and the <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token"/>.
+            Parses target string attempting	to determine the (sub)string between the beginning of this string and the <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token"/>.
             After the parse is complete system will load into <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.CharsParsed"/> then number of chars scanned and into <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Result"/>
-            the string that was found.
+            the	string that	was	found.
             </summary>
-            <param name="targetString">The string to be parsed.</param>
-            <returns>The index of the char next char after the <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token"/> end.</returns>
-            <remarks>If nothing is parsed the method will return -1. Case the <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token"/> wasn't found until the end of the string the method retuns 
-            (in <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Result"/>) the string found between the starting index and the end of the string. </remarks>
+            <param name="targetString">The string to be	parsed.</param>
+            <returns>The index of the char next	char after the <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token"/> end.</returns>
+            <remarks>If	nothing	is parsed the method will return -1. Case the <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token"/> wasn't found until the end of	the	string the method retuns 
+            (in	<see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Result"/>) the string found between the starting	index and the end of the string. </remarks>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.StringParser.Parse(System.String,System.Int32)">
             <summary>
-            Parses target string attempting to determine the (sub)string between the index <b>start</b> of this string and the <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token"/>.
+            Parses target string attempting	to determine the (sub)string between the index <b>start</b>	of this	string and the <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token"/>.
             After the parse is complete system will load into <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.CharsParsed"/> then number of chars scanned and into <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Result"/>
-            the string that was found.
+            the	string that	was	found.
             </summary>
-            <param name="targetString">The string to be parsed.</param>
-            <param name="start">The start index for parsing purposes.</param>
-            <returns>The index of the char next char after the <c>Token</c> end.</returns>
-            <remarks>If nothing is parsed the method will return -1. Case the <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token"/> wasn't found until the end of the string the method returns 
-            (in <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Result"/>) the string found between the starting index and the end of the string. </remarks>
+            <param name="targetString">The string to be	parsed.</param>
+            <param name="start">The	start index	for	parsing	purposes.</param>
+            <returns>The index of the char next	char after the <c>Token</c>	end.</returns>
+            <remarks>If	nothing	is parsed the method will return -1. Case the <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token"/> wasn't found until the end of	the	string the method returns 
+            (in	<see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Result"/>) the string found between the starting	index and the end of the string. </remarks>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.StringParser.ParseNext">
             <summary>
-            <para>Repeats the parsing starting on the index returned by <see cref="M:FirebirdSql.Data.Firebird.Isql.StringParser.Parse(System.String)"/> method.</para>
-            You can also call <b>ParseNext</b> directly (without calling <see cref="M:FirebirdSql.Data.Firebird.Isql.StringParser.Parse(System.String)"/>) if you define the text to be parsed at instance construction.  
+            <para>Repeats the parsing starting on the index	returned by <see cref="M:FirebirdSql.Data.Firebird.Isql.StringParser.Parse(System.String)"/> method.</para>
+            You	can	also call <b>ParseNext</b> directly	(without calling <see cref="M:FirebirdSql.Data.Firebird.Isql.StringParser.Parse(System.String)"/>) if	you	define the text	to be parsed at	instance construction.	
             </summary>
-            <returns>The index of the char next char after the <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token"/> end.</returns>
-            <remarks>If nothing is parsed the method will return -1. Case the <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token"/> wasn't found until the end of the string the method returns 
-            (in <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Result"/>) the string found between the starting index and the end of the string.</remarks>
+            <returns>The index of the char next	char after the <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token"/> end.</returns>
+            <remarks>If	nothing	is parsed the method will return -1. Case the <see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token"/> wasn't found until the end of	the	string the method returns 
+            (in	<see cref="P:FirebirdSql.Data.Firebird.Isql.StringParser.Result"/>) the string found between the starting	index and the end of the string.</remarks>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.StringParser.IndexOf(System.String)">
             <summary>
-            Returns the index of the substring in the string. If the substring does not exists the method returns <b>-1</b>.
+            Returns	the	index of the substring in the string. If the substring does	not	exists the method returns <b>-1</b>.
             </summary>
-            <param name="substring">The string to be located.</param>
-            <returns>The index of the substring or -1 if the string does not exists within the source string.
-            If the the substring is empty method returns 0.</returns>
-            <remarks>The instance parses for the substring in a case sensitive or intensive way, as you specify at 
+            <param name="substring">The	string to be located.</param>
+            <returns>The index of the substring	or -1 if the string	does not exists	within the source string.
+            If the the substring is	empty method returns 0.</returns>
+            <remarks>The instance parses for the substring in a	case sensitive or intensive	way, as you	specify	at 
             class construction.</remarks>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.StringParser.IndexOf(System.String,System.Int32)">
             <summary>
-            Returns the index of the substring in the string starting on index <b>startIndex</b>. 
-            If the substring does not exists the method returns <b>-1</b>.
+            Returns	the	index of the substring in the string starting on index <b>startIndex</b>. 
+            If the substring does not exists the method	returns	<b>-1</b>.
             </summary>
-            <param name="substring">The string to be located.</param>
-            <param name="startIndex">The start index of the source string where parser will start.</param>
-            <returns>The index of the substring or -1 if the string does not exists within the source string.
-            If the the substring is empty method returns <i>startIndex</i>.</returns>
-            <remarks>The instance parses for the substring in a case sensitive or intensive way, as you specify at 
+            <param name="substring">The	string to be located.</param>
+            <param name="startIndex">The start index of	the	source string where	parser will	start.</param>
+            <returns>The index of the substring	or -1 if the string	does not exists	within the source string.
+            If the the substring is	empty method returns <i>startIndex</i>.</returns>
+            <remarks>The instance parses for the substring in a	case sensitive or intensive	way, as you	specify	at 
             class construction.</remarks>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.StringParser.ToString">
             <summary>
-            Overrided method that returns the string to be parsed.
+            Overrided method that returns the string to	be parsed.
             </summary>
-            <returns>The string to be parsed.</returns>
+            <returns>The string	to be parsed.</returns>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.Isql.StringParser.StartsWith(System.String,System.String,System.Boolean)">
             <summary>
-            Indicates if the string specified as <b>source</b> starts with the <b>token</b> string.
+            Indicates if the string	specified as <b>source</b> starts with the <b>token</b>	string.
             </summary>
-            <param name="source">The source string.</param>
-            <param name="token">The token that is intended to find.</param>
-            <param name="ignoreCase">Indicated is char case should be ignored.</param>
-            <returns>Returns <b>true</b> if the <b>token</b> precedes the <b>source</b>.</returns>
+            <param name="source">The source	string.</param>
+            <param name="token">The	token that is intended to find.</param>
+            <param name="ignoreCase">Indicated is char case	should be ignored.</param>
+            <returns>Returns <b>true</b> if	the	<b>token</b> precedes the <b>source</b>.</returns>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.Isql.StringParser.CharsParsed">
             <summary>
-            Loaded after a parsing operation with the number of chars parsed.
+            Loaded after a parsing operation with the number of	chars parsed.
             </summary>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.Isql.StringParser.Result">
             <summary>
-            Loaded after a parsing operation with the string that was found between tokens.
+            Loaded after a parsing operation with the string that was found	between	tokens.
             </summary>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.Isql.StringParser.Token">
             <summary>
-            The string separator. The default value is a white space: 0x32 ASCII code.
+            The	string separator. The default value	is a white space: 0x32 ASCII code.
             </summary>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.Isql.StringParser.Length">
             <summary>
-            Returns the length of the string that is being parsed.
+            Returns	the	length of the string that is being parsed.
             </summary>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.Services.FbBackup">
@@ -2649,12 +2663,12 @@ finally
 				<code>
 public DataSet SelectRows(DataSet myDataSet,string myConnection,string mySelectQuery,string myTableName) 
 {
-    FbConnection  myConn		= new FbConnection(myConnection);    
+    FbConnection  myConn	 = new FbConnection(myConnection);    
     FbDataAdapter myDataAdapter = new FbDataAdapter();
-    FbTransaction myTxn			= myConn.BeginTransaction();
+    FbTransaction myTxn		 = myConn.BeginTransaction();
     
     myDataAdapter.SelectCommand = new FbCommand(mySelectQuery, myConn, myTxn);
-    FbCommandBuilder custCB		= new FbCommandBuilder(myDataAdapter);
+    FbCommandBuilder custCB	 = new FbCommandBuilder(myDataAdapter);
 
     myConn.Open();
 
@@ -2882,16 +2896,16 @@ public void InsertRow(string connectionString)
 		
 		cs.DataSource = "localhost";
 		cs.Database = "C:\\PROGRAM FILES\\FIREBIRD\\EXAMPLES\\EMPLOYEE.FDB";
-		cs.UserID	= "SYSDBA";
-		cs.Password	= "masterkey";
-		cs.Dialect	= 3;
+		cs.UserID = "SYSDBA";
+		cs.Password = "masterkey";
+		cs.Dialect = 3;
 		
 		connectionString = cs.ToString();
 	}
 	
 	FbConnection connection = new FbConnection(connectionString);					
 	connection.Open();					
-	FbTransaction transaction	= connection.BeginTransaction();
+	FbTransaction transaction = connection.BeginTransaction();
 	
 	string insertQuery = "INSERT INTO PROJECT(proj_id, proj_name, product) Values('FBNP', '.NET Provider', 'N/A')";
 	FbCommand command = new FbCommand(insertQuery, myConn, myTxn);	
@@ -2921,7 +2935,7 @@ public void InsertRow(string connectionString)
 				<para>
 				This method is called by the public <b>Dispose()</b> method and the <b>Finalize</b> method. 
 				<b>Dispose()</b> invokes the protected <b>Dispose(Boolean)</b> method with the disposing 
-				parameter set to <b>true</b>. <b>Finalize</b> invokes <b>Dispose</b> with <i>disposing</i> set to <b>false</b>.
+			 parameter set to <b>true</b>. <b>Finalize</b> invokes <b>Dispose</b> with <i>disposing</i> set to <b>false</b>.
 				</para>
 				<para>
 				When the disposing parameter is true, the method releases all resources held 
@@ -3462,7 +3476,7 @@ finally
 							The minimun number of connections allowed in the pool.
 							</description>
 							<description>
-							0
+						 0
 							</description>
 						</item>
 						<item>
@@ -3689,13 +3703,13 @@ finally
 				<code>
 FbConnectionStringBuilder cs = new FbConnectionStringBuilder();
 
-cs.DataSource	= "localhost";
-cs.UserID		= "SYSDBA";
-cs.Password		= "masterkey";
-cs.Database		= "nunit_testdb";
-cs.Port			= 3050;
-cs.Charset		= "UNICODE_FSS";
-cs.Pooling		= true;
+cs.DataSource = "localhost";
+cs.UserID	 = "SYSDBA";
+cs.Password	 = "masterkey";
+cs.Database	 = "nunit_testdb";
+cs.Port		 = 3050;
+cs.Charset	 = "UNICODE_FSS";
+cs.Pooling	 = true;
 cs.ConnectionLifeTime = 30;
 // To use the embedded server set the ServerType to 1
 cs.ServerType = 0;
@@ -3725,10 +3739,10 @@ Console.WriteLine(cs.ToString());
             <summary>Gets or sets the connection string.</summary><value>The connection string.</value>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.FbConnectionStringBuilder.UserID">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbConnectionStringBuilder.xml" path="doc/class[@name=&quot;FbConnectionStringBuilder&quot;]/property[@name=&quot;UserID&quot;]/*"/>
+            <summary>Gets or sets the firebird User account for login.</summary><value>The user name.</value>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.FbConnectionStringBuilder.Password">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbConnectionStringBuilder.xml" path="doc/class[@name=&quot;FbConnectionStringBuilder&quot;]/property[@name=&quot;Password&quot;]/*"/>
+            <summary>Gets ort sets the password for the Firebird user account.</summary><value>The user password.</value>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.FbConnectionStringBuilder.DataSource">
             <summary>
@@ -3906,7 +3920,7 @@ Console.WriteLine(cs.ToString());
             <summary>Gets or sets the maximun pool size.</summary><value>The maximun number of connections allowed in the pool. Default is 100.</value>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.FbConnectionStringBuilder.FetchSize">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbConnectionStringBuilder.xml" path="doc/class[@name=&quot;FbConnectionStringBuilder&quot;]/property[@name=&quot;FetchSize&quot;]/*"/>
+            <summary>Indicates the number of rows that will be fetched at the same time on <see cref="M:FirebirdSql.Data.Firebird.FbDataReader.Read"/> calls into the internal row buffer.</summary><value>The maximun number of rows to be fetched in a single call to <see cref="M:FirebirdSql.Data.Firebird.FbDataReader.Read"/> into the internal row buffer.</value>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.FbConnectionStringBuilder.ServerType">
             <summary>Gets or sets the server type to wich we want to connect.</summary><value>The default value is 0.</value><remarks>
@@ -3917,7 +3931,7 @@ Console.WriteLine(cs.ToString());
 			</remarks>
         </member>
         <member name="P:FirebirdSql.Data.Firebird.FbConnectionStringBuilder.IsolationLevel">
-            <summary>Gets or sets the default Isolation Leve for implicit transactions.</summary><value>An IsolationLevel..</value>
+            <summary>Gets or sets the default Isolation Leve for implicit transactions.</summary><value>An IsolationLevel.</value>
         </member>
         <member name="T:FirebirdSql.Data.Firebird.FbDataAdapter">
             <summary>
@@ -3947,9 +3961,9 @@ Console.WriteLine(cs.ToString());
 				<code>    
 public static void CreateFbDataAdapter() 
 {
-    FbConnection	conn	= new FbConnection("Database=C:\\PROGRAM FILES\\FIREBIRD\\EXAMPLES\\EMPLOYEE.GDB;User=SYSDBA;Password=masterkey;Dialect=3;Server=localhost");
-    FbDataAdapter	custDA	= new FbDataAdapter();
-    FbTransaction	txn		= conn.BeginTransaction();
+    FbConnection	conn = new FbConnection("Database=C:\\PROGRAM FILES\\FIREBIRD\\EXAMPLES\\EMPLOYEE.GDB;User=SYSDBA;Password=masterkey;Dialect=3;Server=localhost");
+    FbDataAdapter	custDA = new FbDataAdapter();
+    FbTransaction	txn	 = conn.BeginTransaction();
 
     custDA.MissingSchemaAction = MissingSchemaAction.AddWithKey;
    
@@ -4081,7 +4095,7 @@ public static void CreateFbDataAdapter()
         </member>
         <member name="M:FirebirdSql.Data.Firebird.FbDataAdapter.Update(System.Data.DataRow[],System.Data.Common.DataTableMapping)">
             <summary>
-            Review .NET Framework documentation.
+            Review .NET	Framework documentation.
             </summary>
         </member>
         <member name="E:FirebirdSql.Data.Firebird.FbDataAdapter.RowUpdated">
@@ -4600,13 +4614,13 @@ public void ReadMyData(string myConnString)
 					<item>
 						<description>BaseSchemaName</description>
 						<description>
-						As Firebird doesn't support Schemas this column will be always <b>&gt;NULL</b>.
+						As Firebird doesn't support Schemas this column will be always <b>NULL</b>.
 						</description>
 					</item>
 					<item>
 						<description>BaseCatalogName</description>
 						<description>
-						As Firebird doesn't support Catalogs this column will be always <b>&gt;NULL</b>.
+						As Firebird doesn't support Catalogs this column will be always <b>NULL</b>.
 						</description>
 					</item>
 					<item>
@@ -6805,12 +6819,12 @@ myDataAdapter.Fill(myDataSet);
         </member>
         <member name="M:FirebirdSql.Data.Firebird.FbRemoteEvent.#ctor(FirebirdSql.Data.Firebird.FbConnection)">
             <summary>
-			Creates a new instance of the <see cref="!:FbEvent"/> class with the given <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> instance.
+			Creates a new instance of the <see cref="T:FirebirdSql.Data.Firebird.FbRemoteEvent"/> class with the given <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> instance.
 			</summary><param name="connection">A <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> instance.</param>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.FbRemoteEvent.#ctor(FirebirdSql.Data.Firebird.FbConnection,System.String[])">
             <summary>
-			Creates a new instance of the <see cref="!:FbEvent"/> class with the given <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> instance and
+			Creates a new instance of the <see cref="T:FirebirdSql.Data.Firebird.FbRemoteEvent"/> class with the given <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> instance and
 			the given list of events.
 			</summary><param name="connection">A <see cref="T:FirebirdSql.Data.Firebird.FbConnection"/> instance.</param><param name="events">List of requested events.</param><exception name="ArgumentException">If the event list count is greater than 15.</exception>
         </member>
@@ -6825,10 +6839,10 @@ myDataAdapter.Fill(myDataSet);
         <member name="M:FirebirdSql.Data.Firebird.FbRemoteEvent.QueueEvents">
             <summary>
 				Register interest in a set of events (works in asynchronous mode).
-			</summary><param name="">A <see cref="!:FbEvent">FbEvent</see> instance.</param>
+			</summary>
         </member>
         <member name="M:FirebirdSql.Data.Firebird.FbRemoteEvent.CancelEvents">
-            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbConnection.xml" path="doc/class[@name=&quot;FbConnection&quot;]/method[@name=&quot;CancelEvents(FbEvent)&quot;]/*"/>
+            <!-- No matching elements were found for the following include tag --><include file="Doc/en_EN/FbRemoteEvent.xml" path="doc/class[@name=&quot;FbRemoteEvent&quot;]/method[@name=&quot;CancelEvents&quot;]/*"/>
         </member>
         <member name="E:FirebirdSql.Data.Firebird.FbRemoteEvent.RemoteEventCounts">
             <summary>
@@ -7196,45 +7210,45 @@ finally
         </member>
         <member name="T:FirebirdSql.WizardFramework.WizardSettings">
             <summary>
-            Represents a set of settings for a specific Wizard instance.
+            Represents a set of	settings for a specific	Wizard instance.
             </summary>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardSettings.#ctor">
             <summary>
-            Initializes a new instance of the <b>WizardSettings</b> class.
+            Initializes	a new instance of the <b>WizardSettings</b>	class.
             </summary>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardSettings.Add(System.String)">
             <summary>
-            Adds a new setting with the given name.
+            Adds a new setting with	the	given name.
             </summary>
-            <param name="name">The name of the setting to be added.</param>
-            <value>The value of the new setting will be <b>null</b></value>
+            <param name="name">The name	of the setting to be added.</param>
+            <value>The value of	the	new	setting	will be	<b>null</b></value>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardSettings.Add(System.String,System.Object)">
             <summary>
-            Adds a new setting with the given name and value.
+            Adds a new setting with	the	given name and value.
             </summary>
-            <param name="name">The name of the setting to be added.</param>
-            <param name="value">The value of the setting to be added.</param>
+            <param name="name">The name	of the setting to be added.</param>
+            <param name="value">The	value of the setting to	be added.</param>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardSettings.Contains(System.String)">
             <summary>
-            Determines wheter a setting is defined.
+            Determines wheter a	setting	is defined.
             </summary>
-            <param name="name">The name of the setting.</param>
-            <returns><b>true</b> if the setting is defined; or <b>false</b> if not.</returns>
+            <param name="name">The name	of the setting.</param>
+            <returns><b>true</b> if	the	setting	is defined;	or <b>false</b>	if not.</returns>
         </member>
         <member name="P:FirebirdSql.WizardFramework.WizardSettings.Item(System.String)">
             <summary>
-            Gets or sets the setting value with the specified name.
+            Gets or	sets the setting value with	the	specified name.
             </summary>
             <param name="name">Te name of the setting to retrieve.</param>
-            <returns>The element with the specified name.</returns>
+            <returns>The element with the specified	name.</returns>
         </member>
         <member name="T:FirebirdSql.WizardFramework.WizardSettingsManager">
             <summary>
-            Manages settings of teh Wizards.
+            Manages	settings of	teh	Wizards.
             </summary>
         </member>
         <member name="F:FirebirdSql.WizardFramework.WizardSettingsManager.Instance">
@@ -7244,59 +7258,59 @@ finally
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardSettingsManager.#ctor">
             <summary>
-            Initializes a new instance of the WizardSettingsManager class
+            Initializes	a new instance of the WizardSettingsManager	class
             </summary>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardSettingsManager.RegisterSettings(System.String)">
             <summary>
-            Regioster a new set of settings using the specified name
+            Regioster a	new	set	of settings	using the specified	name
             </summary>
-            <param name="name">The settings key name.</param>
+            <param name="name">The settings	key	name.</param>
             <returns></returns>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardSettingsManager.GetSettings(System.String)">
             <summary>
-            Returns the set of settings that matches the give name.
+            Returns	the	set	of settings	that matches the give name.
             </summary>
             <param name="name">The key name.</param>
-            <returns>An instance of the <see cref="T:FirebirdSql.WizardFramework.WizardSettings"/> class.</returns>
+            <returns>An	instance of	the	<see cref="T:FirebirdSql.WizardFramework.WizardSettings"/> class.</returns>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardSettingsManager.UnregisterSettings(System.String)">
             <summary>
-            Unregister the set of keys that matches the give name.
+            Unregister the set of keys that	matches	the	give name.
             </summary>
             <param name="name">The key name.</param>
         </member>
         <member name="T:FirebirdSql.WizardFramework.WizardStepCollection">
             <summary>
-            Represents a collection of Wizard Steps
+            Represents a collection	of Wizard Steps
             </summary>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardStepCollection.#ctor">
             <summary>
-            Initializes a new instance of the <b>WizardStepCollection</b> class.
+            Initializes	a new instance of the <b>WizardStepCollection</b> class.
             </summary>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardStepCollection.Add(FirebirdSql.WizardFramework.WizardStep)">
             <summary>
-            Adds a new stpe to the collection
+            Adds a new stpe	to the collection
             </summary>
             <param name="step"></param>
             <returns></returns>
         </member>
         <member name="M:FirebirdSql.WizardFramework.WizardStepCollection.IndexOf(FirebirdSql.WizardFramework.WizardStep)">
             <summary>
-            Returns the zero-based index of the requested step.
+            Returns	the	zero-based index of	the	requested step.
             </summary>
             <param name="step">A <see cref="T:FirebirdSql.WizardFramework.WizardStep"/> object.</param>
-            <returns>The zero-based index of the requested step.</returns>
+            <returns>The zero-based	index of the requested step.</returns>
         </member>
         <member name="P:FirebirdSql.WizardFramework.WizardStepCollection.Item(System.Int32)">
             <summary>
             Gets the step at the specified index.
             </summary>
-            <param name="index">The zero-based index of the element to get or set. </param>
-            <returns>The element at the specified index</returns>
+            <param name="index">The	zero-based index of	the	element	to get or set. </param>
+            <returns>The element at	the	specified index</returns>
         </member>
     </members>
 </doc>

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2005, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Database
@@ -297,6 +297,47 @@ namespace Epsitec.Cresus.Database
 			
 			DbSqlStandard.CreateSimpleSqlName (name, buffer);
 			return buffer.ToString ();
+		}
+		
+		
+		public static string MakeDelimitedIdentifier(string name)
+		{
+			bool ok  = true;
+			bool bad = false;
+			
+			for (int i = 0; i < name.Length; i++)
+			{
+				char c = name[i];
+				
+				if (((c >= 'a') && (c <= 'z')) ||
+					((c >= 'A') && (c <= 'Z')) ||
+					((c == '_')))
+				{
+					continue;
+				}
+				if ((i > 0) &&
+					(c >= '0') && (c <= '9'))
+				{
+					continue;
+				}
+				if (c == '"')
+				{
+					bad = true;
+				}
+				ok = false;
+			}
+			
+			if (ok)
+			{
+				return name;
+			}
+			
+			if (bad)
+			{
+				throw new Exceptions.FormatException (string.Format ("Expected valid name: {0}", name));
+			}
+			
+			return string.Concat (@"""", name, @"""");
 		}
 		
 		

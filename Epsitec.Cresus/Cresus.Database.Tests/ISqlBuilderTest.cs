@@ -560,19 +560,21 @@ namespace Epsitec.Cresus.Database
 			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount, out data_set);
 
-			Assert.AreEqual (typeof (int),          data_set.Tables[0].Columns[0].DataType);
-			Assert.AreEqual (typeof (System.Array), data_set.Tables[0].Columns[1].DataType);
+			Assert.AreEqual (typeof (int),    data_set.Tables[0].Columns[0].DataType);
+			Assert.AreEqual (typeof (byte[]), data_set.Tables[0].Columns[1].DataType);
 			
 			//	récupère l'objet de la première ligne, seconde colonne
 			
 			DataTable  data_table  = data_set.Tables[0];
 			DataColumn blob_column = data_table.Columns[1];
 			System.Type blob_type  = blob_column.DataType;
-			
+
+			//	------------- Commentaire plus valable depuis .NET provider 1.7 RC 1. ---------------
 			//	Hélas, on n'a pas un type exact pour la colonne ici... J'aurais bien aimé que le
 			//	provider retourne un type byte[] ! Mais System.Array est déjà une bonne approximation.
+			//	-------------------------------------------------------------------------------------
 			
-			Assert.AreEqual (typeof (System.Array), blob_type);
+			Assert.AreEqual (typeof (byte[]), blob_type);
 			
 			DataRow     data_row  = data_table.Rows[0];
 			object	    blob      = data_row[1];

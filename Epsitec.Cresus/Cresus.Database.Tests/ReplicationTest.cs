@@ -340,13 +340,17 @@ namespace Epsitec.Cresus.Database
 			
 			if (buffer != null)
 			{
-				try
+				for (int i = 0; i < 3; i++)
 				{
-					System.IO.File.Delete (@"C:\Program Files\firebird15\Data\Epsitec\REPLITEST.FIREBIRD");
-				}
-				catch (System.IO.IOException ex)
-				{
-					System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}\nWaiting for 5 seconds...", ex.ToString ());
+					try
+					{
+						System.IO.File.Delete (@"C:\Program Files\firebird15\Data\Epsitec\REPLITEST.FIREBIRD");
+					}
+					catch (System.IO.IOException ex)
+					{
+						System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}\nWaiting for 2 {1}seconds...", ex.ToString (), (i == 0) ? "" : "more ");
+						System.Threading.Thread.Sleep (2000);
+					}
 				}
 				
 				using (DbInfrastructure infrastructure = new DbInfrastructure ())
@@ -385,13 +389,17 @@ namespace Epsitec.Cresus.Database
 			
 			if (buffer != null)
 			{
-				try
+				for (int i = 0; i < 3; i++)
 				{
-					System.IO.File.Delete (@"C:\Program Files\firebird15\Data\Epsitec\REPLITEST.FIREBIRD");
-				}
-				catch (System.IO.IOException ex)
-				{
-					System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}\nWaiting for 5 seconds...", ex.ToString ());
+					try
+					{
+						System.IO.File.Delete (@"C:\Program Files\firebird15\Data\Epsitec\REPLITEST.FIREBIRD");
+					}
+					catch (System.IO.IOException ex)
+					{
+						System.Console.Out.WriteLine ("Cannot delete database file. Error message :\n{0}\nWaiting for 2 {1}seconds...", ex.ToString (), (i == 0) ? "" : "more ");
+						System.Threading.Thread.Sleep (2000);
+					}
 				}
 				
 				using (DbInfrastructure infrastructure = new DbInfrastructure ())
