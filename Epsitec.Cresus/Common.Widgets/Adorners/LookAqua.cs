@@ -8,7 +8,8 @@ namespace Epsitec.Common.Widgets.Adorner
 		public LookAqua()
 		{
 			this.bitmap = Drawing.Bitmap.FromManifestResource("Epsitec.Common.Widgets.Adorners.Resources.LookAqua.png", this.GetType().Assembly);
-			this.metal = Drawing.Bitmap.FromManifestResource("Epsitec.Common.Widgets.Adorners.Resources.metal1.png", this.GetType().Assembly);
+			this.metal1 = Drawing.Bitmap.FromManifestResource("Epsitec.Common.Widgets.Adorners.Resources.metal1.png", this.GetType().Assembly);
+			this.metal2 = Drawing.Bitmap.FromManifestResource("Epsitec.Common.Widgets.Adorners.Resources.metal2.png", this.GetType().Assembly);
 			this.metalRenderer = false;
 			this.dynamicReflect = false;
 			this.RefreshColors();
@@ -636,22 +637,13 @@ namespace Epsitec.Common.Widgets.Adorner
 								  Drawing.Rectangle titleRect,
 								  Widgets.WidgetState state)
 		{
-#if false
-			this.PaintBackground(graphics, frameRect, frameRect, 0.95, 8.0);
-
-			frameRect.Inflate(-0.5, -0.5);
-			graphics.AddRectangle(frameRect);
-			graphics.RenderSolid(this.colorBorder);
-
-			titleRect.Left   -= 5;
-			titleRect.Right  += 5;
-			titleRect.Bottom -= 2;
-			titleRect.Top    += 2;
-			this.PaintImageButton(graphics, titleRect, 2);
-#else
 			frameRect.Top -= titleRect.Height/2;
 			double radius = this.RetRadiusFrame(frameRect);
 			Drawing.Path path;
+
+			path = PathRoundRectangle(frameRect, radius);
+			graphics.Rasterizer.AddSurface(path);
+			graphics.RenderSolid(Drawing.Color.FromARGB(0.05, 0,0,0));
 
 			if ( this.metalRenderer )
 			{
@@ -665,7 +657,6 @@ namespace Epsitec.Common.Widgets.Adorner
 			path = PathRoundRectangle(frameRect, radius);
 			graphics.Rasterizer.AddOutline(path, 1);
 			graphics.RenderSolid(this.ColorBorder);
-#endif
 		}
 
 		public void PaintSepLine(Drawing.Graphics graphics,
@@ -1591,7 +1582,7 @@ namespace Epsitec.Common.Widgets.Adorner
 							Drawing.Rectangle rect = new Drawing.Rectangle(x, y, dx, dy);
 							if ( rect.IntersectsWith(paintRect) )
 							{
-								graphics.PaintImage(this.metal, rect, new Drawing.Rectangle(0,0,dx,dy));
+								graphics.PaintImage(this.dynamicReflect ? this.metal2 : this.metal1, rect, new Drawing.Rectangle(0,0,dx,dy));
 							}
 						}
 					}
@@ -1872,7 +1863,8 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double GeometrySliderRightMargin { get { return 0; } }
 
 		protected Drawing.Image		bitmap;
-		protected Drawing.Image		metal;
+		protected Drawing.Image		metal1;
+		protected Drawing.Image		metal2;
 		protected bool				metalRenderer;
 		protected bool				dynamicReflect;
 		protected Drawing.Color		colorBlack;
@@ -1888,6 +1880,16 @@ namespace Epsitec.Common.Widgets.Adorner
 	public class LookAquaMetal : LookAqua
 	{
 		public LookAquaMetal()
+		{
+			this.metalRenderer = true;
+			this.dynamicReflect = false;
+			this.RefreshColors();
+		}
+	}
+
+	public class LookAquaDyna : LookAqua
+	{
+		public LookAquaDyna()
 		{
 			this.metalRenderer = true;
 			this.dynamicReflect = true;
