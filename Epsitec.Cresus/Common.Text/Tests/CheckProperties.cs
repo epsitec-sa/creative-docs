@@ -10,6 +10,13 @@ namespace Epsitec.Common.Text.Tests
 	{
 		public static void RunTests()
 		{
+			CheckProperties.TestFont ();
+			CheckProperties.TestFontSize ();
+			CheckProperties.TestMargins ();
+		}
+
+		private static void TestFont()
+		{
 			Properties.FontProperty font_a = new Properties.FontProperty ("Futura", "Roman");
 			Properties.FontProperty font_b = new Properties.FontProperty (null, "Heavy");
 			Properties.FontProperty font_c = new Properties.FontProperty ("Arial", null);
@@ -25,7 +32,10 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (font_a.ToString () == "Futura/Roman");
 			Debug.Assert.IsTrue (font_b.ToString () == "<null>/Heavy");
 			Debug.Assert.IsTrue (font_c.ToString () == "Arial/<null>");
-			
+		}
+		
+		private static void TestFontSize()
+		{
 			Properties.FontSizeProperty font_size_a = new Properties.FontSizeProperty (12.0, Properties.FontSizeUnits.Points);
 			Properties.FontSizeProperty font_size_b = new Properties.FontSizeProperty (50.0, Properties.FontSizeUnits.Percent);
 			Properties.FontSizeProperty font_size_c = new Properties.FontSizeProperty (-2.0, Properties.FontSizeUnits.DeltaPoints);
@@ -44,6 +54,37 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (font_size_bd.ToString () == "100/Percent");
 			
 			Debug.Expect.Exception (new Debug.Method (Ex1), typeof (System.InvalidOperationException));
+		}
+		
+		private static void TestMargins()
+		{
+			Properties.MarginsProperty margins_a = new Properties.MarginsProperty ();
+			Properties.MarginsProperty margins_b = new Properties.MarginsProperty (15.0, 20.0, 0.0);
+			
+			Properties.MarginsProperty margins_c = margins_a.GetCombination (margins_b) as Properties.MarginsProperty;
+			Properties.MarginsProperty margins_d = margins_b.GetCombination (margins_a) as Properties.MarginsProperty;
+			
+			margins_a.LeftMarginBody = 10;
+			margins_a.RightMargin    = 10;
+			
+			Properties.MarginsProperty margins_e = margins_a.GetCombination (margins_b) as Properties.MarginsProperty;
+			Properties.MarginsProperty margins_f = margins_b.GetCombination (margins_a) as Properties.MarginsProperty;
+			
+			Debug.Assert.IsTrue (margins_c.LeftMarginFirstLine == 15.0);
+			Debug.Assert.IsTrue (margins_c.LeftMarginBody      == 20.0);
+			Debug.Assert.IsTrue (margins_c.RightMargin         ==  0.0);
+			
+			Debug.Assert.IsTrue (margins_d.LeftMarginFirstLine == 15.0);
+			Debug.Assert.IsTrue (margins_d.LeftMarginBody      == 20.0);
+			Debug.Assert.IsTrue (margins_d.RightMargin         ==  0.0);
+			
+			Debug.Assert.IsTrue (margins_e.LeftMarginFirstLine == 15.0);
+			Debug.Assert.IsTrue (margins_e.LeftMarginBody      == 20.0);
+			Debug.Assert.IsTrue (margins_e.RightMargin         ==  0.0);
+			
+			Debug.Assert.IsTrue (margins_f.LeftMarginFirstLine == 15.0);
+			Debug.Assert.IsTrue (margins_f.LeftMarginBody      == 10.0);
+			Debug.Assert.IsTrue (margins_f.RightMargin         == 10.0);
 		}
 		
 		private static void Ex1()

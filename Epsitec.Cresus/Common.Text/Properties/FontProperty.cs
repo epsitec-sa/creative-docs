@@ -71,19 +71,19 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
-			buffer.Append (SerializerSupport.SerializeString (this.face_name));
-			buffer.Append ("/");
-			buffer.Append (SerializerSupport.SerializeString (this.style_name));
+			SerializerSupport.Join (buffer,
+				/**/				SerializerSupport.SerializeString (this.face_name),
+				/**/				SerializerSupport.SerializeString (this.style_name));
 		}
 		
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
-			string[] args = text.Substring (pos, length).Split ('/');
+			string[] args = SerializerSupport.Split (text, pos, length);
 			
 			Debug.Assert.IsTrue (args.Length == 2);
 			
 			this.face_name  = SerializerSupport.DeserializeString (args[0]);
-			this.style_name = SerializerSupport.DeserializeString (args[0]);
+			this.style_name = SerializerSupport.DeserializeString (args[1]);
 		}
 		
 		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)

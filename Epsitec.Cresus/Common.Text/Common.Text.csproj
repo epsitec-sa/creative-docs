@@ -164,6 +164,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "NumberSupport.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "SerializerSupport.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -320,6 +325,11 @@
                 />
                 <File
                     RelPath = "Properties\LayoutProperty.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Properties\MarginsProperty.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

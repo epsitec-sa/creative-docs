@@ -84,14 +84,14 @@ namespace Epsitec.Common.Text.Properties
 		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
-			buffer.Append (this.size.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			buffer.Append ("/");
-			buffer.Append (this.units.ToString ());
+			SerializerSupport.Join (buffer,
+				/**/				this.size.ToString (System.Globalization.CultureInfo.InvariantCulture),
+				/**/				this.units.ToString ());
 		}
 
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
-			string[] args = text.Substring (pos, length).Split ('/');
+			string[] args = SerializerSupport.Split (text, pos, length);
 			
 			Debug.Assert.IsTrue (args.Length == 2);
 			

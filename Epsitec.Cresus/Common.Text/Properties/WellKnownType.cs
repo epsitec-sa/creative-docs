@@ -15,6 +15,7 @@ namespace Epsitec.Common.Text.Properties
 		
 		Styles,
 		Layout,
+		Margins,
 		
 		Other			= 1000000,
 	}
