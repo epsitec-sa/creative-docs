@@ -1,0 +1,104 @@
+namespace Epsitec.Common.Dialogs
+{
+	/// <summary>
+	/// La classe FileSave présente le dialogue pour enregistrer un fichier.
+	/// </summary>
+	public class FileSave : Helpers.IFilterCollectionHost
+	{
+		public FileSave()
+		{
+			this.dialog = new System.Windows.Forms.SaveFileDialog ();
+			this.filters = new Helpers.FilterCollection (this);
+			
+			this.dialog.AddExtension = true;
+			this.dialog.CheckFileExists = false;
+			this.dialog.CheckPathExists = true;
+			this.dialog.CreatePrompt = false;
+			this.dialog.DereferenceLinks = true;
+			this.dialog.OverwritePrompt = false;
+			this.dialog.RestoreDirectory = true;
+			this.dialog.ShowHelp = false;
+			this.dialog.ValidateNames = true;
+		}
+		
+		public void Show()
+		{
+			this.dialog.Filter = this.Filters.FileDialogFilter;
+			this.dialog.FilterIndex = this.filter_index + 1;
+			this.dialog.ShowDialog ();
+			this.filter_index = this.dialog.FilterIndex - 1;
+		}
+		
+		public string					DefaultExt
+		{
+			get { return this.dialog.DefaultExt; }
+			set { this.dialog.DefaultExt = value; }
+		}
+		
+		public string					FileName
+		{
+			get { return this.dialog.FileName; }
+			set { this.dialog.FileName = value; }
+		}
+		
+		public string[]					FileNames
+		{
+			get { return this.dialog.FileNames; }
+		}
+		
+		public Helpers.FilterCollection	Filters
+		{
+			get { return this.filters; }
+		}
+		
+		public int						FilterIndex
+		{
+			get { return this.filter_index; }
+			set { this.filter_index = value; }
+		}
+		
+		public string					InitialDirectory
+		{
+			get { return this.dialog.InitialDirectory; }
+			set { this.dialog.InitialDirectory = value; }
+		}
+		
+		public bool						CheckFileExists
+		{
+			get { return this.dialog.CheckFileExists; }
+			set { this.dialog.CheckFileExists = value; }
+		}
+		
+		public bool						PromptForCreation
+		{
+			get { return this.dialog.CreatePrompt; }
+			set { this.dialog.CreatePrompt = value; }
+		}
+		
+		public bool						PromptForOverwriting
+		{
+			get { return this.dialog.OverwritePrompt; }
+			set { this.dialog.OverwritePrompt = value; }
+		}
+		
+		
+		public string					Title
+		{
+			get { return this.dialog.Title; }
+			set { this.dialog.Title = value; }
+		}
+		
+		
+		#region IFilterCollectionHost Members
+		public void FilterCollectionChanged()
+		{
+			//	Rien de spécial à faire...
+		}
+		#endregion
+		
+		
+		System.Windows.Forms.SaveFileDialog 	dialog;
+		Helpers.FilterCollection				filters;
+		int										filter_index;
+	}
+}
