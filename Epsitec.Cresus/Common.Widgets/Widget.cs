@@ -5288,9 +5288,9 @@ namespace Epsitec.Common.Widgets
 			{
 				this.text_layout = new TextLayout ();
 				
-				this.text_layout.Font     = this.DefaultFont;
-				this.text_layout.FontSize = this.DefaultFontSize;
-				this.text_layout.Anchor  += new AnchorEventHandler (this.HandleTextLayoutAnchor);
+				this.text_layout.DefaultFont     = this.DefaultFont;
+				this.text_layout.DefaultFontSize = this.DefaultFontSize;
+				this.text_layout.Anchor         += new AnchorEventHandler (this.HandleTextLayoutAnchor);
 				
 				this.UpdateTextLayout ();
 			}

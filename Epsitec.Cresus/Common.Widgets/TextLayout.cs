@@ -1,5 +1,6 @@
 namespace Epsitec.Common.Widgets
 {
+	#region AnchorEvent Definitions
 	public class AnchorEventArgs : Support.EventArgs
 	{
 		public AnchorEventArgs(double x, double y, double dx, double dy, int index)
@@ -25,14 +26,8 @@ namespace Epsitec.Common.Widgets
 	}
 	
 	public delegate void AnchorEventHandler(object sender, AnchorEventArgs e);
+	#endregion
 
-
-	public enum TextJustifMode
-	{
-		None,
-		AllButLast,
-		All,
-	}
 
 	/// <summary>
 	/// La classe TextLayout permet de stocker et d'afficher des contenus
@@ -42,6 +37,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextLayout()
 		{
+			this.style = Drawing.TextStyle.Default;
 		}
 		
 
@@ -111,60 +107,88 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Drawing.Font						Font
+		public Drawing.Font						DefaultFont
 		{
 			// Fonte par défaut.
 			get
 			{
-				return this.font;
+				return this.style.Font;
 			}
-
 			set
 			{
-				if ( value != this.font )
+				if ( this.DefaultFont != value )
 				{
-					this.font = value;
-					this.MarkContentsAsDirty();
+					this.CloneStyleIfDefaultStyleInUse();
+					this.style.Font = value;
 				}
 			}
 		}
 		
-		public double							FontSize
+		public double							DefaultFontSize
 		{
 			// Taille de la fonte par défaut.
 			get
 			{
-				return this.fontSize;
+				return this.style.Size;
 			}
-
 			set
 			{
-				if ( this.fontSize != value )
+				if ( this.DefaultFontSize != value )
 				{
-					this.fontSize = value;
-					this.MarkContentsAsDirty();
+					this.CloneStyleIfDefaultStyleInUse();
+					this.style.Size = value;
 				}
 			}
 		}
 
-		public static Drawing.Color				DefaultColor
+		public Drawing.Color					DefaultColor
 		{
-			get { return TextLayout.defaultColor; }
-			set { TextLayout.defaultColor = value; }
+			get
+			{
+				return this.style.Color;
+			}
+			set
+			{
+				if ( this.DefaultColor != value )
+				{
+					this.CloneStyleIfDefaultStyleInUse();
+					this.style.Color = value;
+				}
+			}
 		}
 
-		public static Drawing.Color				AnchorColor
+		public Drawing.Color					AnchorColor
 		{
 			// Couleur pour les liens.
-			get { return TextLayout.anchorColor; }
-			set { TextLayout.anchorColor = value; }
+			get
+			{
+				return this.style.AnchorColor;
+			}
+			set
+			{
+				if ( this.AnchorColor != value )
+				{
+					this.CloneStyleIfDefaultStyleInUse();
+					this.style.AnchorColor = value;
+				}
+			}
 		}
 
-		public static Drawing.Color				WaveColor
+		public Drawing.Color					WaveColor
 		{
 			// Couleur pour les vagues.
-			get { return TextLayout.waveColor; }
-			set { TextLayout.waveColor = value; }
+			get
+			{
+				return this.style.WaveColor;
+			}
+			set
+			{
+				if ( this.WaveColor != value )
+				{
+					this.CloneStyleIfDefaultStyleInUse();
+					this.style.WaveColor = value;
+				}
+			}
 		}
 
 		public Drawing.ContentAlignment			Alignment
@@ -172,15 +196,14 @@ namespace Epsitec.Common.Widgets
 			// Alignement du texte dans le rectangle.
 			get
 			{
-				return this.alignment;
+				return this.style.Alignment;
 			}
-
 			set
 			{
-				if ( this.alignment != value )
+				if ( this.Alignment != value )
 				{
-					this.alignment = value;
-					this.MarkLayoutAsDirty();
+					this.CloneStyleIfDefaultStyleInUse();
+					this.style.Alignment = value;
 				}
 			}
 		}
@@ -190,33 +213,31 @@ namespace Epsitec.Common.Widgets
 			// Mode de césure.
 			get
 			{
-				return this.breakMode;
+				return this.style.BreakMode;
 			}
-
 			set
 			{
-				if ( this.breakMode != value )
+				if ( this.BreakMode != value )
 				{
-					this.breakMode = value;
-					this.MarkContentsAsDirty();
+					this.CloneStyleIfDefaultStyleInUse();
+					this.style.BreakMode = value;
 				}
 			}
 		}
 
-		public TextJustifMode					JustifMode
+		public Drawing.TextJustifMode			JustifMode
 		{
 			// Mode de justification.
 			get
 			{
-				return this.justifMode;
+				return this.style.JustifMode;
 			}
-
 			set
 			{
-				if ( this.justifMode != value )
+				if ( this.JustifMode != value )
 				{
-					this.justifMode = value;
-					this.MarkLayoutAsDirty();
+					this.CloneStyleIfDefaultStyleInUse();
+					this.style.JustifMode = value;
 				}
 			}
 		}
@@ -226,15 +247,35 @@ namespace Epsitec.Common.Widgets
 			// Détermine si les <br/> sont visibles ou non.
 			get
 			{
-				return this.showLineBreak;
+				return this.style.ShowLineBreak;
 			}
-
 			set
 			{
-				this.showLineBreak = value;
+				if ( this.ShowLineBreak != value )
+				{
+					this.CloneStyleIfDefaultStyleInUse();
+					this.style.ShowLineBreak = value;
+				}
 			}
 		}
 		
+		public Drawing.IImageProvider			ImageProvider
+		{
+			// Gestionnaire d'images.
+			get
+			{
+				return this.style.ImageProvider;
+			}
+			set
+			{
+				if ( this.ImageProvider != value )
+				{
+					this.CloneStyleIfDefaultStyleInUse();
+					this.style.ImageProvider = value;
+				}
+			}
+		}
+
 		public Drawing.Size						LayoutSize
 		{
 			// Dimensions du rectangle.
@@ -344,13 +385,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Drawing.IImageProvider			ImageProvider
-		{
-			// Gestionnaire d'images.
-			get { return this.imageProvider; }
-			set { this.imageProvider = value; }
-		}
-
 
 		protected Drawing.Rectangle GetRectangleBounds(bool all)
 		{
@@ -463,13 +497,13 @@ namespace Epsitec.Common.Widgets
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
 			{
 				string s = this.SearchPrepared(context, "face");
-				if ( s == "" )  return this.font.FaceName;
+				if ( s == "" )  return this.DefaultFont.FaceName;
 				return s;
 			}
 			else
 			{
 				JustifBlock block = this.SearchJustifBlock(context);
-				if ( block == null )  return this.font.FaceName;
+				if ( block == null )  return this.DefaultFont.FaceName;
 				return block.font.FaceName;
 			}
 		}
@@ -486,13 +520,13 @@ namespace Epsitec.Common.Widgets
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
 			{
 				string s = this.SearchPrepared(context, "size");
-				if ( s == "" )  return this.fontSize;
+				if ( s == "" )  return this.DefaultFontSize;
 				return System.Double.Parse(s);
 			}
 			else
 			{
 				JustifBlock block = this.SearchJustifBlock(context);
-				if ( block == null )  return this.fontSize;
+				if ( block == null )  return this.DefaultFontSize;
 				return block.fontSize;
 			}
 		}
@@ -1116,14 +1150,14 @@ namespace Epsitec.Common.Widgets
 				{
 					if ( block.anchor )
 					{
-						color = TextLayout.anchorColor;
+						color = this.AnchorColor;
 					}
 					else
 					{
 						color = block.fontColor;
 						if ( color.IsEmpty )
 						{
-							color = TextLayout.defaultColor;
+							color = this.DefaultColor;
 						}
 					}
 				}
@@ -1169,7 +1203,7 @@ namespace Epsitec.Common.Widgets
 					graphics.LineWidth = 0.75;
 					if ( block.waveColor.IsEmpty )
 					{
-						graphics.Color = TextLayout.waveColor;
+						graphics.Color = this.WaveColor;;
 					}
 					else
 					{
@@ -1178,7 +1212,7 @@ namespace Epsitec.Common.Widgets
 					graphics.PaintOutline(this.PathWave(p1, p2));
 				}
 
-				if ( this.showLineBreak && block.lineBreak )
+				if ( this.ShowLineBreak && block.lineBreak )
 				{
 					double width = block.width;
 
@@ -2337,8 +2371,8 @@ namespace Epsitec.Common.Widgets
 
 			// Prépare la fonte initiale par défaut.
 			fontItem = new FontSimplify();
-			fontItem.fontName  = this.font.FaceName;
-			fontItem.fontSize  = this.fontSize.ToString();
+			fontItem.fontName  = this.DefaultFont.FaceName;
+			fontItem.fontSize  = this.DefaultFontSize.ToString();
 			//?fontItem.fontName  = "";
 			//?fontItem.fontSize  = "";
 			fontItem.fontColor = "";
@@ -2599,8 +2633,8 @@ namespace Epsitec.Common.Widgets
 			System.Collections.Stack stack = new System.Collections.Stack();
 			FontItem font = new FontItem(this);
 			
-			font.fontName  = this.font.FaceName;
-			font.fontSize  = this.fontSize;
+			font.fontName  = this.DefaultFont.FaceName;
+			font.fontSize  = this.DefaultFontSize;
 			font.fontColor = Drawing.Color.Empty;
 			
 			stack.Push(font);  // push la fonte initiale (jamais de pop)
@@ -2636,7 +2670,7 @@ namespace Epsitec.Common.Widgets
 								
 					if ( s.EndsWith("%") )
 					{
-						font.fontSize = System.Double.Parse(s.Substring(0, s.Length-1), System.Globalization.CultureInfo.InvariantCulture) * this.fontSize / 100.0;
+						font.fontSize = System.Double.Parse(s.Substring(0, s.Length-1), System.Globalization.CultureInfo.InvariantCulture) * this.DefaultFontSize / 100.0;
 					}
 					else
 					{
@@ -2788,12 +2822,12 @@ namespace Epsitec.Common.Widgets
 							
 							string imageName = parameters["src"] as string;
 							
-							if ( this.imageProvider == null )
+							if ( this.ImageProvider == null )
 							{
 								throw new System.FormatException(string.Format("<img> tag for image '{0}' needs an Image Provider.", imageName));
 							}
 							
-							Drawing.Image image = this.imageProvider.GetImage(imageName);
+							Drawing.Image image = this.ImageProvider.GetImage(imageName);
 							
 							if ( image == null )
 							{
@@ -2840,7 +2874,7 @@ namespace Epsitec.Common.Widgets
 			//	est modifié.
 			
 			this.textBreak = new Drawing.TextBreak();
-			this.textBreak.SetText(buffer.ToString(), this.breakMode);
+			this.textBreak.SetText(buffer.ToString(), this.BreakMode);
 			this.textBreak.SetFonts(fontList);
 			this.textBreak.SetRuns(runList);
 		}
@@ -2995,7 +3029,7 @@ noText:
 						block.width      = blockFont.GetTextAdvance(text)*fontItem.fontSize;
 						block.DefineFont(blockFont, fontItem, supplItem);
 						
-						if ( this.justifMode == TextJustifMode.None )
+						if ( this.JustifMode == Drawing.TextJustifMode.None )
 						{
 							block.infos     = null;
 							block.infoWidth = 0;
@@ -3074,7 +3108,7 @@ noText:
 									block.imageDescender = dy*fontDescender/fontHeight;
 								}
 								
-								if ( this.justifMode != TextJustifMode.None )
+								if ( this.JustifMode != Drawing.TextJustifMode.None )
 								{
 									double width = dx/fontItem.fontSize;
 									block.infos = new Drawing.Font.ClassInfo[1];
@@ -3218,8 +3252,8 @@ noText:
 				JustifBlock lastBlock = (JustifBlock)this.blocks[j-1];
 				bool lastLine = lastBlock.lineBreak;
 				if ( j-1 >= this.blocks.Count-1 )  lastLine = true;
-				if ( (this.justifMode == TextJustifMode.AllButLast && !lastLine) ||
-					 this.justifMode == TextJustifMode.All )
+				if ( (this.JustifMode == Drawing.TextJustifMode.AllButLast && !lastLine) ||
+					 this.JustifMode == Drawing.TextJustifMode.All )
 				{
 					double w = 0;
 					double e = 0;
@@ -3264,7 +3298,7 @@ noText:
 
 				if ( !justif )
 				{
-					switch ( this.alignment )
+					switch ( this.Alignment )
 					{
 						case Drawing.ContentAlignment.TopLeft:
 						case Drawing.ContentAlignment.MiddleLeft:
@@ -3306,7 +3340,7 @@ noText:
 			// Effectue l'alignement vertical.
 			totalHeight -= overflow;
 			double offset = 0;
-			switch ( this.alignment )
+			switch ( this.Alignment )
 			{
 				case Drawing.ContentAlignment.TopLeft:
 				case Drawing.ContentAlignment.TopCenter:
@@ -3656,7 +3690,7 @@ noText:
 				
 				if ( font == null )
 				{
-					font = this.host.font;
+					font = this.host.DefaultFont;
 				}
 				
 				return font;
@@ -3822,25 +3856,33 @@ noText:
 		
 		public event AnchorEventHandler			Anchor;
 		
+		
+		protected void CloneStyleIfDefaultStyleInUse()
+		{
+			if ( this.style.IsDefaultStyle )
+			{
+				this.style = new Drawing.TextStyle();
+				this.style.Changed += new Support.EventHandler(this.HandleTextStyleChanged);
+			}
+		}
+		
+		private void HandleTextStyleChanged(object sender)
+		{
+			this.MarkLayoutAsDirty();
+		}
+		
+		
+		protected Drawing.TextStyle				style;
+		
 		protected bool							isContentsDirty;
 		protected bool							isLayoutDirty;
 		protected bool							isPrepareDirty;
 		protected string						text;
-		protected Drawing.Font					font			= Drawing.Font.DefaultFont;
-		protected double						fontSize		= Drawing.Font.DefaultFontSize;
 		protected Drawing.Size					layoutSize;
-		protected Drawing.TextBreakMode			breakMode		= Drawing.TextBreakMode.Split;
-		protected TextJustifMode				justifMode		= TextJustifMode.None;
 		protected int							totalLine;
 		protected int							visibleLine;
-		protected Drawing.IImageProvider		imageProvider	= Support.ImageProvider.Default;
-		protected Drawing.ContentAlignment		alignment		= Drawing.ContentAlignment.TopLeft;
 		protected System.Collections.ArrayList	blocks			= new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	lines			= new System.Collections.ArrayList();
-		protected static Drawing.Color			defaultColor	= new Drawing.Color(0,0,0);
-		protected static Drawing.Color			anchorColor		= new Drawing.Color(0,0,1);
-		protected static Drawing.Color			waveColor		= new Drawing.Color(1,0,0);
-		protected bool							showLineBreak	= false;
 		protected Drawing.TextBreak				textBreak;
 		protected System.Collections.ArrayList	imageList;
 		
