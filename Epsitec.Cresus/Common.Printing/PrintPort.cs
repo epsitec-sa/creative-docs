@@ -145,7 +145,7 @@ namespace Epsitec.Common.Printing
 				//	on va générer le chemin équivalent et le peindre ainsi. Ca va revenir exactement
 				//	au même.
 				
-				font.GetGlyphAndTextCharEndX (text, out glyph_x, out glyph, out glyph_n);
+				font.GetGlyphsEndX (text, out glyph_x, out glyph, out glyph_n);
 				
 				for (int i = 0; i < text.Length; i++)
 				{
@@ -159,8 +159,10 @@ namespace Epsitec.Common.Printing
 			}
 			else
 			{
-				double[] end_x = font.GetTextCharEndX (text);
-				double   ox    = 0;
+				double[] end_x;
+				double   ox = 0;
+				
+				font.GetTextCharEndX (text, out end_x);
 			
 				for (int i = 0; i < text.Length; i++)
 				{
