@@ -3,7 +3,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe Slider implémente un curseur de réglage.
 	/// </summary>
-	public class Slider : Widget, INumValue, Helpers.IDragBehaviorHost
+	public class Slider : Widget, Support.INumValue, Helpers.IDragBehaviorHost
 	{
 		public Slider()
 		{

@@ -3,7 +3,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe TextFieldUpDown implémente la ligne éditable numérique.
 	/// </summary>
-	public class TextFieldUpDown : AbstractTextField, INumValue
+	public class TextFieldUpDown : AbstractTextField, Support.INumValue
 	{
 		public TextFieldUpDown()
 		{

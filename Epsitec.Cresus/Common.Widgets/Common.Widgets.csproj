@@ -292,11 +292,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "INumValue.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "MenuItem.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
