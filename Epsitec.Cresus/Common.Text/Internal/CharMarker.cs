@@ -214,6 +214,17 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public static bool HasStyleOrSettings(ulong code)
+		{
+			return ((code & 0xFFFFFFFF00000000ul) == 0) ? false : true;
+		}
+		
+		public static bool HasSettings(ulong code)
+		{
+			return ((code & 0x7FFE000000000000ul) == 0) ? false : true;
+		}
+		
+		
 		public static bool HasRichStyleFlag(ulong code)
 		{
 			return ((code & 0x8000000000000000ul) == 0) ? false : true;

@@ -31,6 +31,7 @@ namespace Epsitec.Common.Text.Internal
 				find = style;
 			}
 			
+			Debug.Assert.IsFalse (Internal.CharMarker.HasStyleOrSettings (code));
 			Debug.Assert.IsTrue (find.StyleIndex > 0);
 			
 			find.IncrementUserCount ();
@@ -43,7 +44,8 @@ namespace Epsitec.Common.Text.Internal
 		
 		public void Attach(ref ulong code, Styles.BaseStyle style, Styles.LocalSettings local_settings, Styles.ExtraSettings extra_settings)
 		{
-			//	Variante avec réglages de Attach (voir méthode simple ci-dessus).
+			//	Variante de Attach avec réglages spécifiques (voir méthode simple
+			//	ci-dessus).
 			
 			if ((local_settings == null) &&
 				(extra_settings == null))
@@ -82,6 +84,7 @@ namespace Epsitec.Common.Text.Internal
 				}
 				
 				Debug.Assert.IsTrue (find.StyleIndex > 0);
+				Debug.Assert.IsFalse (Internal.CharMarker.HasStyleOrSettings (code));
 				
 				//	Ajoute les réglages au style s'ils n'en font pas encore partie :
 				
@@ -105,6 +108,94 @@ namespace Epsitec.Common.Text.Internal
 				Internal.CharMarker.SetExtraIndex (ref code, extra_settings == null ? 0 : extra_settings.SettingsIndex);
 				Internal.CharMarker.SetRichStyleFlag (ref code, find.IsRichStyle);
 			}
+		}
+		
+		
+		public void Detach(ref ulong code)
+		{
+			//	Détache le style et les réglages associés au caractère 'code'.
+			//	Ceci décrémente les divers compteurs d'utilisation.
+			
+			bool rich = Internal.CharMarker.HasRichStyleFlag (code);
+			
+			int style_index = Internal.CharMarker.GetStyleIndex (code);
+			int extra_index = Internal.CharMarker.GetExtraIndex (code);
+			int local_index = Internal.CharMarker.GetLocalIndex (code);
+			
+			if (style_index == 0)
+			{
+				Debug.Assert.IsTrue (rich == false);
+				Debug.Assert.IsTrue (extra_index == 0);
+				Debug.Assert.IsTrue (local_index == 0);
+			}
+			else
+			{
+				Styles.BaseStyle style = (rich ? this.rich_styles[style_index-1] : this.simple_styles[style_index-1]) as Styles.SimpleStyle;
+				
+				Debug.Assert.IsNotNull (style);
+				
+				if (local_index != 0)
+				{
+					style.GetLocalSettings (code).DecrementUserCount ();
+					Internal.CharMarker.SetLocalIndex (ref code, 0);
+				}
+				if (extra_index != 0)
+				{
+					style.GetExtraSettings (code).DecrementUserCount ();
+					Internal.CharMarker.SetExtraIndex (ref code, 0);
+				}
+				
+				style.DecrementUserCount ();
+				
+				Internal.CharMarker.SetStyleIndex (ref code, 0);
+				Internal.CharMarker.SetRichStyleFlag (ref code, false);
+			}
+			
+			Debug.Assert.IsFalse (Internal.CharMarker.HasStyleOrSettings (code));
+		}
+		
+		
+		public Styles.BaseStyle GetStyle(ulong code)
+		{
+			int index = Internal.CharMarker.GetStyleIndex (code);
+			
+			if (index == 0)
+			{
+				return null;
+			}
+			
+			if (Internal.CharMarker.HasRichStyleFlag (code))
+			{
+				return this.rich_styles[index-1] as Styles.BaseStyle;
+			}
+			else
+			{
+				return this.simple_styles[index-1] as Styles.BaseStyle;
+			}
+		}
+		
+		public Styles.LocalSettings GetLocalSettings(ulong code)
+		{
+			if (Internal.CharMarker.HasSettings (code))
+			{
+				Styles.BaseStyle style = this.GetStyle (code);
+			
+				return (style == null) ? null : style.GetLocalSettings (code);
+			}
+			
+			return null;
+		}
+		
+		public Styles.ExtraSettings GetExtraSettings(ulong code)
+		{
+			if (Internal.CharMarker.HasSettings (code))
+			{
+				Styles.BaseStyle style = this.GetStyle (code);
+				
+				return (style == null) ? null : style.GetExtraSettings (code);
+			}
+			
+			return null;
 		}
 		
 		
