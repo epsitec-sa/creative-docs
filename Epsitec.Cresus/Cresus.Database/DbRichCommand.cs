@@ -381,6 +381,25 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public static System.Data.DataRow[] CopyLiveRows(System.Collections.IEnumerable rows)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			foreach (System.Data.DataRow row in rows)
+			{
+				if (DbRichCommand.IsRowDeleted (row) == false)
+				{
+					list.Add (row);
+				}
+			}
+			
+			System.Data.DataRow[] copy = new System.Data.DataRow[list.Count];
+			list.CopyTo (copy);
+			
+			return copy;
+		}
+		
+		
 		public static bool IsRowDeleted(System.Data.DataRow row)
 		{
 			if (row.RowState == System.Data.DataRowState.Deleted)
@@ -514,6 +533,33 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		
+		public static System.Data.DataRow FindRow(System.Data.DataTable table, DbId id)
+		{
+			int n = table.Rows.Count;
+			
+			for (int i = 0; i < n; i++)
+			{
+				System.Data.DataRow row = table.Rows[i];
+				long row_id;
+				
+				if (row.RowState == System.Data.DataRowState.Deleted)
+				{
+					row_id = (long) row[Tags.ColumnId, System.Data.DataRowVersion.Original];
+				}
+				else
+				{
+					row_id = (long) row[Tags.ColumnId];
+				}
+						
+				if (id.Value == row_id)
+				{
+					return row;
+				}
+			}
+			
+			return null;
+		}
 		
 		public static System.Collections.ArrayList FindRowsUsingTemporaryIds(System.Data.DataTable table)
 		{

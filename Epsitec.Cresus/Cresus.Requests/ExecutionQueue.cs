@@ -50,6 +50,16 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
+		public System.Data.DataRow[]			DateTimeSortedRows
+		{
+			get
+			{
+				System.Data.DataRow[] rows = this.Rows;
+				System.Array.Sort (rows, new DateTimeRowComparer ());
+				return rows;
+			}
+		}
+		
 		
 		public System.Threading.AutoResetEvent	EnqueueWaitEvent
 		{
@@ -169,14 +179,32 @@ namespace Epsitec.Cresus.Requests
 			{
 				for (int i = 0; i < serialized_requests.Length; i++)
 				{
-					System.Data.DataRow row = this.AddRequest (serialized_requests[i]);
+					System.Data.DataRow row  = this.AddRequest (serialized_requests[i]);
+					System.Data.DataRow find = DbRichCommand.FindRow (this.queue_data_table, ids[i]);
 					
 					//	L'appelant force des IDs pour les diverses requêtes (parce qu'elles proviennent
-					//	d'un client distant qui a déjà attribués les IDs).
+					//	d'un client distant qui a déjà attribué les IDs).
 					
 					row[Tags.ColumnId] = ids[i].Value;
 					
-					this.queue_data_table.Rows.Add (row);
+					if ((find != null) &&
+						(find.RowState != System.Data.DataRowState.Deleted))
+					{
+						//	Si la table contient déjà une requête avec cet ID, on va simplement la
+						//	remplacer par la nouvelle requête :
+						
+						find.BeginEdit ();
+						find.ItemArray = row.ItemArray;
+						find.EndEdit ();
+						
+						System.Diagnostics.Debug.WriteLine ("Server: Replaced request " + ids[i].Value);
+					}
+					else
+					{
+						this.queue_data_table.Rows.Add (row);
+						
+						System.Diagnostics.Debug.WriteLine ("Server: Inserted request " + ids[i].Value);
+					}
 				}
 			}
 			
@@ -221,6 +249,7 @@ namespace Epsitec.Cresus.Requests
 			row.BeginEdit ();
 			row[Tags.ColumnReqData]    = data;
 			row[Tags.ColumnReqExState] = (int) ExecutionState.Pending;
+			row[Tags.ColumnDateTime]   = System.DateTime.UtcNow;
 			row.EndEdit ();
 			
 			return row;
@@ -334,6 +363,24 @@ namespace Epsitec.Cresus.Requests
 				
 				this.queue_command.AcceptChanges ();
 			}
+		}
+		#endregion
+		
+		#region DateTimeRowComparer Class
+		public class DateTimeRowComparer : System.Collections.IComparer
+		{
+			#region IComparer Members
+			public int Compare(object x, object y)
+			{
+				System.Data.DataRow row_x = x as System.Data.DataRow;
+				System.Data.DataRow row_y = y as System.Data.DataRow;
+				
+				System.DateTime date_x = (System.DateTime) row_x[Tags.ColumnDateTime];
+				System.DateTime date_y = (System.DateTime) row_y[Tags.ColumnDateTime];
+				
+				return date_x.CompareTo (date_y);
+			}
+			#endregion
 		}
 		#endregion
 		

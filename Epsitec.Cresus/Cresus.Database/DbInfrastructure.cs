@@ -2241,7 +2241,8 @@ namespace Epsitec.Cresus.Database
 						new DbColumn (Tags.ColumnStatus,	  types.KeyStatus,	 Nullable.No,  DbColumnClass.KeyStatus),
 						new DbColumn (Tags.ColumnRefLog,	  types.KeyId,		 Nullable.No,  DbColumnClass.RefInternal),
 						new DbColumn (Tags.ColumnReqExState,  types.ReqExState,  Nullable.No,  DbColumnClass.Data),
-						new DbColumn (Tags.ColumnReqData,	  types.ReqRawData,	 Nullable.No,  DbColumnClass.Data)
+						new DbColumn (Tags.ColumnReqData,	  types.ReqRawData,	 Nullable.No,  DbColumnClass.Data),
+						new DbColumn (Tags.ColumnDateTime,    types.DateTime,    Nullable.No,  DbColumnClass.Data)
 					};
 				
 				this.CreateTable (table, columns, DbReplicationMode.Private);

@@ -66,9 +66,23 @@ namespace Epsitec.Cresus.Services
 		
 		void IRequestExecutionService.QueryRequestStates(ClientIdentity client, ref int change_id, System.TimeSpan timeout, out RequestState[] states)
 		{
+			//	Retourne les informations sur les états uniquement en cas de changement
+			//	ou si le temps imparti est écoulé.
+			
+			//	De manière interne, le serveur conserve une table qui fait le lien entre
+			//	chaque client avec lequel il a été en contact et le compteur de changement
+			//	associé :
+			
 			ClientChangeInfo info = this.GetClientChangeInfo (client.ClientId);
 			
+			//	Attend jusqu'à ce que l'état soit différent de 'change_id' (ou que le temps
+			//	imparti soit écoulé) :
+			
 			info.WaitChange (change_id, timeout);
+			
+			//	L'appelant va être informé de la nouvelle valeur du compteur de changements.
+			//	Il faut considérer ce compteur comme une valeur "opaque"; il n'a pas de sens
+			//	à l'extérieur du serveur !
 			
 			change_id = info.ChangeId;
 			
@@ -80,7 +94,7 @@ namespace Epsitec.Cresus.Services
 			//	Supprime de la queue les requêtes dont l'état correspond à celui
 			//	décrit.
 			
-			System.Data.DataRow[] rows = this.execution_queue.Rows;
+			System.Data.DataRow[] rows = this.execution_queue.DateTimeSortedRows;
 			
 			for (int i = 0; i < rows.Length; i++)
 			{
@@ -134,7 +148,7 @@ namespace Epsitec.Cresus.Services
 			//	Détermine l'état de toutes les requêtes soumises par le client
 			//	spécifié.
 			
-			System.Data.DataRow[] rows = this.execution_queue.Rows;
+			System.Data.DataRow[] rows = this.execution_queue.DateTimeSortedRows;
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
@@ -201,7 +215,7 @@ namespace Epsitec.Cresus.Services
 		}
 		
 		
-		#region ClienChangeInfo Class
+		#region ClientChangeInfo Class
 		private class ClientChangeInfo
 		{
 			public ClientChangeInfo(int client_id)
