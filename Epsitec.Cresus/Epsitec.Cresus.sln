@@ -143,6 +143,18 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.Document", "Common.D
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Remoting.Interfaces", "Cresus.Remoting.Interfaces\Cresus.Remoting.Interfaces.csproj", "{5C2BEC8F-849C-41EB-993A-2536E466B538}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Replication", "Cresus.Replication\Cresus.Replication.csproj", "{431A7EAC-87E4-489E-901D-FE3FE182700B}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Requests", "Cresus.Requests\Cresus.Requests.csproj", "{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}
@@ -294,6 +306,18 @@ Global
 		{B324896E-2CDE-45B8-91CE-B476687EA384}.Debug.Build.0 = Debug|.NET
 		{B324896E-2CDE-45B8-91CE-B476687EA384}.Release.ActiveCfg = Release|.NET
 		{B324896E-2CDE-45B8-91CE-B476687EA384}.Release.Build.0 = Release|.NET
+		{5C2BEC8F-849C-41EB-993A-2536E466B538}.Debug.ActiveCfg = Debug|.NET
+		{5C2BEC8F-849C-41EB-993A-2536E466B538}.Debug.Build.0 = Debug|.NET
+		{5C2BEC8F-849C-41EB-993A-2536E466B538}.Release.ActiveCfg = Release|.NET
+		{5C2BEC8F-849C-41EB-993A-2536E466B538}.Release.Build.0 = Release|.NET
+		{431A7EAC-87E4-489E-901D-FE3FE182700B}.Debug.ActiveCfg = Debug|.NET
+		{431A7EAC-87E4-489E-901D-FE3FE182700B}.Debug.Build.0 = Debug|.NET
+		{431A7EAC-87E4-489E-901D-FE3FE182700B}.Release.ActiveCfg = Release|.NET
+		{431A7EAC-87E4-489E-901D-FE3FE182700B}.Release.Build.0 = Release|.NET
+		{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}.Debug.ActiveCfg = Debug|.NET
+		{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}.Debug.Build.0 = Debug|.NET
+		{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}.Release.ActiveCfg = Release|.NET
+		{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info

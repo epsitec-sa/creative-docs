@@ -13,11 +13,11 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
-		public DbKey(long id) : this (id, 0, DbRowStatus.Clean)
+		public DbKey(DbID id) : this (id, 0, DbRowStatus.Clean)
 		{
 		}
 		
-		public DbKey(long id, int revision, DbRowStatus status)
+		public DbKey(DbID id, int revision, DbRowStatus status)
 		{
 			this.id         = id;
 			this.revision   = revision;
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public long								Id
+		public DbID								Id
 		{
 			get { return this.id; }
 		}
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public static long CreateTemporaryId()
+		public static DbID CreateTemporaryId()
 		{
 			lock (DbKey.temp_lock)
 			{
@@ -95,10 +95,10 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public static bool CheckTemporaryId(long id)
+		public static bool CheckTemporaryId(DbID id)
 		{
-			if ((id >= DbKey.MinimumTempId) &&
-				(id <= DbKey.MaximumTempId))
+			if ((id >= DbID.MinimumTemp) &&
+				(id <= DbID.MaximumTemp))
 			{
 				return true;
 			}
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Database
 				return null;
 			}
 			
-			long id         = 0;
+			DbID id         = 0;
 			int  revision   = 0;
 			int  int_status = 0;
 			
@@ -260,13 +260,10 @@ namespace Epsitec.Cresus.Database
 		public const DbRawType					RawTypeForRevision	= DbRawType.Int32;
 		public const DbRawType					RawTypeForStatus	= DbRawType.Int16;
 		
-		public const long						MinimumTempId		= 1000000000000000000;
-		public const long						MaximumTempId		= 1000000999999999999;
-		
 		private static object					temp_lock	= new object ();
-		private static long						temp_id		= DbKey.MinimumTempId;
+		private static long						temp_id		= DbID.MinimumTemp;
 		
-		protected long							id;
+		protected DbID							id;
 		protected int							revision;
 		protected short							int_status;
 	}
