@@ -35,12 +35,12 @@ namespace Epsitec.Common.Widgets
 			this.buttonMenu = new ArrowButton(this);
 			this.buttonMenu.GlyphType = GlyphType.Menu;
 			this.buttonMenu.ButtonStyle = ButtonStyle.Icon;
-			this.buttonMenu.Command = "MenuClicked";
+			this.buttonMenu.Clicked += new MessageEventHandler(this.HandleButtonMenuClicked);
 
 			this.buttonClose = new ArrowButton(this);
 			this.buttonClose.GlyphType = GlyphType.Close;
 			this.buttonClose.ButtonStyle = ButtonStyle.Icon;
-			this.buttonClose.Command = "CloseClicked";
+			this.buttonClose.Clicked += new MessageEventHandler(this.HandleButtonCloseClicked);
 		}
 		
 		public TabBook(Widget embedder) : this()
@@ -79,11 +79,13 @@ namespace Epsitec.Common.Widgets
 				this.arrowRight.Engaged -= new Support.EventHandler(this.HandleScrollButton);
 				this.arrowLeft.StillEngaged -= new Support.EventHandler(this.HandleScrollButton);
 				this.arrowRight.StillEngaged -= new Support.EventHandler(this.HandleScrollButton);
+				this.buttonClose.Clicked -= new MessageEventHandler(this.HandleButtonCloseClicked);
+				this.buttonMenu.Clicked -= new MessageEventHandler(this.HandleButtonMenuClicked);
 				this.arrowLeft = null;
 				this.arrowRight = null;
 				this.buttonMenu = null;
 				this.buttonClose = null;
-
+				
 				this.Clear();
 			}
 			
@@ -328,6 +330,15 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 		}
 
+		private void HandleButtonMenuClicked(object sender, MessageEventArgs e)
+		{
+			this.OnMenuClicked ();
+		}
+
+		private void HandleButtonCloseClicked(object sender, MessageEventArgs e)
+		{
+			this.OnCloseClicked ();
+		}
 
 		protected override void UpdateClientGeometry()
 		{
@@ -553,6 +564,21 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		protected virtual void OnCloseClicked()
+		{
+			if (this.CloseClicked != null)
+			{
+				this.CloseClicked (this);
+			}
+		}
+		
+		protected virtual void OnMenuClicked()
+		{
+			if (this.MenuClicked != null)
+			{
+				this.MenuClicked (this);
+			}
+		}
 		
 		
 		class TabComparer : System.Collections.IComparer
@@ -726,7 +752,9 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		#endregion
-
+		
+		public event Support.EventHandler		CloseClicked;
+		public event Support.EventHandler		MenuClicked;
 
 		protected TabBookStyle					type;
 		protected TabPageCollection				items;
