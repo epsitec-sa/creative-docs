@@ -351,6 +351,7 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.ScaleTransform (10, 10, 0, 0);
 			
 			Path path2 = new Path ();
+			Path path3 = new Path ();
 			
 			path2.MoveTo (5, 5);
 			path2.LineTo (20, 5);
@@ -365,6 +366,10 @@ namespace Epsitec.Common.Drawing
 			e.Graphics.TranslateTransform (20, 2);
 			e.Graphics.Rasterizer.AddSurface (path2);
 			e.Graphics.RenderSolid (Color.FromRGB (1, 1, 0));
+			
+			path3.Append (path2, 10, -2);
+			e.Graphics.Rasterizer.AddSurface (path3);
+			e.Graphics.RenderSolid (Color.FromARGB (0.5, 0, 1, 0));
 		}
 		
 		private void NonZeroFill_PaintForeground(object sender, PaintEventArgs e)
