@@ -1662,18 +1662,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 					this.OnInfoObjectChanged();
 					this.UndoMemorizeRemove();
 				}
+				bbox = Drawing.Rectangle.Infinite;
 			}
 			else if ( this.moveGlobal != -1 )  // déplace le modificateur global ?
 			{
 				this.iconObjects.GroupUpdate(ref bbox);
 				this.iconObjects.GroupUpdateParents(ref bbox);
-				//this.InvalidateAll(bbox);
 			}
 			else if ( this.moveObject != null )
 			{
 				this.iconObjects.GroupUpdate(ref bbox);
 				this.iconObjects.GroupUpdateParents(ref bbox);
-				//this.InvalidateAll(bbox);
 
 				if ( this.moveHandle != -1 )  // déplace une poignée ?
 				{
@@ -1700,7 +1699,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 
 			this.iconContext.ConstrainDelStarting();
-			this.InvalidateAll(bbox);
+
+			if ( bbox == Drawing.Rectangle.Infinite )
+			{
+				this.InvalidateAll();
+			}
+			else
+			{
+				this.InvalidateAll(bbox);
+			}
 
 			if ( isRight )  // avec le bouton de droite de la souris ?
 			{
@@ -2439,14 +2446,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 		// Dessine l'icône.
-		static Drawing.Color debugColor = Drawing.Color.FromBrightness(1);
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			//?Drawing.Rectangle clip = graphics.SaveClippingRectangle();
 			//?graphics.ResetClippingRectangle();
 			//?graphics.SetClippingRectangle(this.InnerBounds);
 
-#if true
 			if ( this.iconObjects.CurrentPattern != 0 )
 			{
 				graphics.AddFilledRectangle(clipRect);
@@ -2457,13 +2462,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 				graphics.AddFilledRectangle(clipRect);
 				graphics.RenderSolid(this.BackColor);
 			}
-#else
-			graphics.AddFilledRectangle(clipRect);
-			graphics.RenderSolid(Drawer.debugColor);
-			Drawer.debugColor.R = (Drawer.debugColor.R+0.35)%1.0;
-			Drawer.debugColor.G = (Drawer.debugColor.G+0.17)%1.0;
-			Drawer.debugColor.B = (Drawer.debugColor.B+0.59)%1.0;
-#endif
 
 			IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
 			this.iconContext.UniqueColor = Drawing.Color.Empty;
@@ -2485,7 +2483,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 
 			// Dessine les géométries.
+#if false
 			this.iconObjects.DrawGeometry(graphics, this.iconContext, this.iconObjects, adorner, clipRect, false);
+#else
+			Drawer.totalObjectDraw = 0;
+			long cycles = Drawing.Agg.Library.Cycles;
+			this.iconObjects.DrawGeometry(graphics, this.iconContext, this.iconObjects, adorner, clipRect, false);
+			cycles = Drawing.Agg.Library.Cycles - cycles;
+			System.Diagnostics.Debug.WriteLine(string.Format("DrawGeometry: {0} us/object @ 1.7GHz", cycles/1700/Drawer.totalObjectDraw));
+#endif
 
 			// Dessine la grille magnétique.
 			if ( this.isEditable && !this.iconContext.PreviewActive )
@@ -2532,6 +2538,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 				graphics.RenderSolid(adorner.ColorBorder);
 			}
 		}
+
+		static public int totalObjectDraw = 0;
 
 
 		// Génère un événement pour dire qu'il faut changer les panneaux.

@@ -6,6 +6,8 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Designer.UI
 {
+	using CultureInfo = System.Globalization.CultureInfo;
+	
 	/// <summary>
 	/// Summary description for TextRefController.
 	/// </summary>
@@ -84,57 +86,62 @@ namespace Epsitec.Common.Designer.UI
 		{
 			System.Diagnostics.Debug.Assert (this.sync_level == 0);
 			
-			this.sync_level++;
-			
-			if ((reason == Common.UI.SyncReason.SourceChanged) ||
-				(reason == Common.UI.SyncReason.Initialisation))
+			try
 			{
-				this.State = InternalState.Passive;
-			}
-			
-			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
-			
-			if ((adapter != null) &&
-				(this.combo_text != null))
-			{
-				string text = adapter.Value;
-				
-				this.combo_text.Text = text;
-				
-				if (Resources.IsTextRef (text))
-				{
-					string field  = adapter.FieldName;
-					string bundle = adapter.BundleName;
-					
-					this.UpdateBundleList (adapter);
-					this.UpdateFieldList (adapter, bundle);
-					
-					this.combo_bundle.Text   = bundle;
-					this.combo_bundle.Cursor = 0;
-					this.combo_field.Text    = field;
-					this.combo_field.Cursor  = 0;
-				}
-				else
-				{
-					if (this.State != InternalState.UsingCustomText)
-					{
-						this.State = InternalState.UsingUndefinedText;
-					}
-				}
-				
-				if (reason != Common.UI.SyncReason.ValueChanged)
-				{
-					this.combo_text.SelectAll ();
-				}
+				this.sync_level++;
 				
 				if ((reason == Common.UI.SyncReason.SourceChanged) ||
 					(reason == Common.UI.SyncReason.Initialisation))
 				{
-					this.combo_text.SelectAll ();
+					this.State = InternalState.Passive;
+				}
+				
+				TextRefAdapter adapter = this.Adapter as TextRefAdapter;
+				
+				if ((adapter != null) &&
+					(this.combo_text != null))
+				{
+					string text = adapter.Value;
+					
+					this.combo_text.Text = text;
+					
+					if (Resources.IsTextRef (text))
+					{
+						string field  = adapter.FieldName;
+						string bundle = adapter.BundleName;
+						
+						this.UpdateBundleList (adapter);
+						this.UpdateFieldList (adapter, bundle);
+						
+						this.combo_bundle.Text   = bundle;
+						this.combo_bundle.Cursor = 0;
+						this.combo_field.Text    = field;
+						this.combo_field.Cursor  = 0;
+					}
+					else
+					{
+						if (this.State != InternalState.UsingCustomText)
+						{
+							this.State = InternalState.UsingUndefinedText;
+						}
+					}
+					
+					if (reason != Common.UI.SyncReason.ValueChanged)
+					{
+						this.combo_text.SelectAll ();
+					}
+					
+					if ((reason == Common.UI.SyncReason.SourceChanged) ||
+						(reason == Common.UI.SyncReason.Initialisation))
+					{
+						this.combo_text.SelectAll ();
+					}
 				}
 			}
-			
-			this.sync_level--;
+			finally
+			{
+				this.sync_level--;
+			}
 		}
 		
 		public override void SyncFromUI()
@@ -306,10 +313,41 @@ namespace Epsitec.Common.Designer.UI
 			if ((bundle.Length > 0) &&
 				(field.Length > 0))
 			{
+				this.CreateTextValue (adapter, Resources.ResolveTextRef (value), bundle, field);
+				
 				adapter.Value = Resources.MakeTextRef (ResourceBundle.MakeTarget (bundle, field));
 				
 				this.SyncFromAdapter (Common.UI.SyncReason.AdapterChanged);
 				this.State = InternalState.UsingExistingText;
+			}
+		}
+		
+		protected void CreateTextValue(TextRefAdapter adapter, string value, string bundle, string field)
+		{
+			adapter.StringController.LoadStringBundle (bundle);
+			
+			if (adapter.StringController.IsStringBundleLoaded (bundle))
+			{
+				StringEditController.Store store = adapter.StringController.FindStore (bundle);
+				
+				if (store != null)
+				{
+					ResourceLevel active_level   = store.ActiveBundle.ResourceLevel;
+					CultureInfo   active_culture = store.ActiveBundle.Culture;
+					
+					store.SetActive (ResourceLevel.Default, active_culture);
+					
+					int row = store.GetRowCount ();
+					
+					if (store.CheckInsertRows (row, 1))
+					{
+						store.InsertRows (row, 1);
+						store.SetCellText (row, 0, field);
+						store.SetCellText (row, 1, value);
+					}
+					
+					store.SetActive (active_level, active_culture);
+				}
 			}
 		}
 		

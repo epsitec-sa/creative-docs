@@ -1091,6 +1091,8 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			if ( this.IsFullHide(iconContext) )  return;
 
+			Pictogram.Widgets.Drawer.totalObjectDraw ++;
+
 			if ( iconContext.IsEditable )
 			{
 				this.scaleX       = iconContext.ScaleX;
