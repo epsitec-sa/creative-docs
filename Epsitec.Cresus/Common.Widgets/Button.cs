@@ -20,6 +20,12 @@ namespace Epsitec.Common.Widgets
 			this.buttonStyle = ButtonStyle.Normal;
 		}
 		
+		public Button(string text)
+		{
+			this.buttonStyle = ButtonStyle.Normal;
+			this.Text = text;
+		}
+		
 		public Button(Widget embedder) : this()
 		{
 			this.SetEmbedder(embedder);
