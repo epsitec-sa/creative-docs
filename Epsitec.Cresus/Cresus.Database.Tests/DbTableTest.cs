@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_b = new DbColumn ("B", DbNumDef.FromRawType (DbRawType.Int16));
 			DbColumn column_c = new DbColumn ("C", DbSimpleType.String, 50, false, Nullable.Yes);
 			DbColumn column_d = new DbColumn ("D", DbSimpleType.Guid, Nullable.Yes);
-			DbColumn column_e = new DbColumn ("E", DbNumDef.FromRawType (DbRawType.Boolean), Nullable.No);
+			DbColumn column_e = new DbColumn ("e/x", DbNumDef.FromRawType (DbRawType.Boolean), Nullable.No);
 			
 			DbTable db_table = new DbTable ("Test (1)");
 			
@@ -80,6 +80,8 @@ namespace Epsitec.Cresus.Database
 			Assert.AreEqual ("U_TEST__1__9", sql_table.Name);
 			Assert.AreEqual (db_table.Columns.Count, sql_table.Columns.Count);
 			Assert.AreEqual (db_table.PrimaryKeys.Count, sql_table.PrimaryKey.Length);
+			Assert.AreEqual ("U_A", sql_table.Columns[0].Name);
+			Assert.AreEqual ("U_E_X", sql_table.Columns[4].Name);
 		}
 		
 		[Test] [ExpectedException (typeof (DbSyntaxException))] public void CheckCreateSqlTableEx1()

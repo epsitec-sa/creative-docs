@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public class DbTypeByteArray : DbType
 	{
-		internal DbTypeByteArray() : base (DbSimpleType.ByteArray)
+		public DbTypeByteArray() : this (-1)
 		{
 		}
 		

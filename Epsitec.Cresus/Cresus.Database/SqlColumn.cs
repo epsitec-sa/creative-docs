@@ -123,7 +123,12 @@ namespace Epsitec.Cresus.Database
 		
 		public void SetType(DbRawType type, int length, bool is_fixed_length)
 		{
-			if (length < 1)
+			if ((type == DbRawType.ByteArray) &&
+				(length == -1))
+			{
+				//	Cas particulier: c'est un BLOB sans spécification de taille.
+			}
+			else if (length < 1)
 			{
 				throw new System.ArgumentOutOfRangeException ("Invalid length");
 			}

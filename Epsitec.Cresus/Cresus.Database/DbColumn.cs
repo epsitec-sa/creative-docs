@@ -126,6 +126,11 @@ namespace Epsitec.Cresus.Database
 			return column;
 		}
 		
+		public static DbColumn CreateUserDataColumn(string column_name, DbType type, Nullable nullable)
+		{
+			return new DbColumn (column_name, type, nullable, DbColumnClass.Data, DbElementCat.UserDataManaged);
+		}
+		
 		
 		public string							Name
 		{
@@ -547,7 +552,12 @@ namespace Epsitec.Cresus.Database
 				throw new System.InvalidOperationException ("Cannot reinitialise type of column.");
 			}
 			
-			if (length < 1)
+			if ((type == DbSimpleType.ByteArray) &&
+				(length == -1))
+			{
+				//	Cas particulier: c'est un BLOB sans spécification de taille.
+			}
+			else if (length < 1)
 			{
 				throw new System.ArgumentOutOfRangeException ("length", length, "Invalid length");
 			}

@@ -99,6 +99,22 @@ namespace Epsitec.Cresus.Database
 			
 			System.Console.Out.WriteLine ("XML: {0}", xml);
 			Assert.IsTrue (temp.GetType () == type.GetType ());
+			
+			type = new DbTypeByteArray ();
+			xml  = DbTypeFactory.SerializeToXml (type, true);
+			temp = DbTypeFactory.CreateType (xml);
+			
+			System.Console.Out.WriteLine ("XML: {0}", xml);
+			Assert.IsTrue (temp.GetType () == type.GetType ());
+			Assert.AreEqual (((DbTypeByteArray)type).Length, ((DbTypeByteArray)temp).Length);
+			
+			type = new DbTypeByteArray (1000);
+			xml  = DbTypeFactory.SerializeToXml (type, true);
+			temp = DbTypeFactory.CreateType (xml);
+			
+			System.Console.Out.WriteLine ("XML: {0}", xml);
+			Assert.IsTrue (temp.GetType () == type.GetType ());
+			Assert.AreEqual (((DbTypeByteArray)type).Length, ((DbTypeByteArray)temp).Length);
 		}
 	}
 }

@@ -472,6 +472,13 @@ namespace Epsitec.Cresus.Database
 			return type;
 		}
 		
+		public DbType    CreateDbTypeByteArray(string name)
+		{
+			DbTypeByteArray type = new DbTypeByteArray ();
+			type.DefineName (name);
+			return type;
+		}
+		
 		public void      RegisterNewDbType(DbTransaction transaction, DbType type)
 		{
 			//	Enregistre un nouveau type dans la base de données. Ceci va attribuer au

@@ -160,6 +160,24 @@ namespace Epsitec.Cresus.Database
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{
 				DbTable db_table1 = infrastructure.CreateDbTable ("SimpleTest", DbElementCat.UserDataManaged);
+				
+				DbType db_type_name  = infrastructure.CreateDbType ("Name", 80, false) as DbTypeString;
+				DbType db_type_level = infrastructure.CreateDbType ("Level", 4, false) as DbTypeString;
+				DbType db_type_type  = infrastructure.CreateDbType ("Type", 25, false) as DbTypeString;
+				DbType db_type_data  = infrastructure.CreateDbTypeByteArray ("Data");
+				
+				infrastructure.RegisterNewDbType (null, db_type_name);
+				infrastructure.RegisterNewDbType (null, db_type_level);
+				infrastructure.RegisterNewDbType (null, db_type_type);
+				infrastructure.RegisterNewDbType (null, db_type_data);
+				
+				DbColumn col1 = DbColumn.CreateUserDataColumn ("Name",  db_type_name,  Nullable.No);
+				DbColumn col2 = DbColumn.CreateUserDataColumn ("Level", db_type_level, Nullable.No);
+				DbColumn col3 = DbColumn.CreateUserDataColumn ("Type",  db_type_type,  Nullable.Yes);
+				DbColumn col4 = DbColumn.CreateUserDataColumn ("Data",  db_type_data,  Nullable.Yes);
+				
+				db_table1.Columns.AddRange (new DbColumn[] { col1, col2, col3, col4 });
+				
 				infrastructure.RegisterNewDbTable (null, db_table1);
 				
 				DbTable db_table2 = infrastructure.ResolveDbTable (null, "SimpleTest");

@@ -89,8 +89,12 @@ namespace Epsitec.Cresus.Database.Implementation
 					break;
 				
 				case DbRawType.ByteArray:
+#if false
 					length     = column.Length.ToString (TypeConverter.InvariantFormatProvider);
 					basic_type = "BLOB SUB_TYPE 0 SEGMENT SIZE " + length;
+#else
+					basic_type = "BLOB SUB_TYPE 0 SEGMENT SIZE 1024";
+#endif
 					break;
 				
 				//	Tous les types ne sont pas gérés ici, seuls ceux supportés en natif par

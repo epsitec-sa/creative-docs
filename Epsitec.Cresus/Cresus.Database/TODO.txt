@@ -43,6 +43,10 @@ sont toutes préfixées par "CR_" et celles de l'utilisateur par "U_".
 Il y a aussi un champ DbElementCat dans DbTable/DbColumn qui permet
 de savoir de quoi il retourne.
 
+Les noms des éléments (tables, colonnes, etc.) n'utilisent qu'un
+sous-ensemble restreint de ASCII, à savoir A-Z, _ et 0-9, afin
+d'éviter des problèmes avec des anciens moteurs SQL.
+
 Les tables suivantes sont définies :
 
     CR_TABLE_DEF        (nom DbTable.TagTableDef)
