@@ -6,7 +6,7 @@ using Epsitec.Common.Widgets;
 namespace Epsitec.Common.Designer.Behaviors
 {
 	/// <summary>
-	/// Summary description for DropBehavior.
+	/// La classe DropBehavior gère le drag & drop d'un widget.
 	/// </summary>
 	public class DropBehavior
 	{
