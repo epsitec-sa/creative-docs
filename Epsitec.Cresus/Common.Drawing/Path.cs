@@ -373,7 +373,72 @@ namespace Epsitec.Common.Drawing
 			buffer.Append ("\r\n");
 			return buffer.ToString ();
 		}
-
+		
+		
+		public System.Drawing.Drawing2D.GraphicsPath CreateSystemPath()
+		{
+			PathElement[] elements;
+			Point[]       points;
+			
+			this.GetElements (out elements, out points);
+			
+			int n = elements.Length;
+			int m = 0;
+			
+			for (int i = 0; i < n; i++)
+			{
+				if ((elements[i] & PathElement.MaskCommand) != PathElement.Stop)
+				{
+					m++;
+				}
+			}
+			
+			System.Drawing.PointF[] gp_pts   = new System.Drawing.PointF[m];
+			byte[]                  gp_types = new byte[m];
+			
+			int j = 0;
+			
+			for (int i = 0; i < n; i++)
+			{
+				switch (elements[i] & PathElement.MaskCommand)
+				{
+					case PathElement.MoveTo:
+						gp_pts[j]     = new System.Drawing.PointF ((float) points[i].X, (float) points[i].Y);
+						gp_types[j++] = (byte) System.Drawing.Drawing2D.PathPointType.Start;
+						break;
+					
+					case PathElement.LineTo:
+						gp_pts[j]     = new System.Drawing.PointF ((float) points[i].X, (float) points[i].Y);
+						gp_types[j++] = (byte) System.Drawing.Drawing2D.PathPointType.Line;
+						break;
+					
+					case PathElement.Curve3:
+						gp_pts[j]     = new System.Drawing.PointF ((float) points[i].X, (float) points[i].Y);
+						gp_types[j++] = (byte) System.Drawing.Drawing2D.PathPointType.Bezier;
+						break;
+					
+					case PathElement.Curve4:
+						gp_pts[j]     = new System.Drawing.PointF ((float) points[i].X, (float) points[i].Y);
+						gp_types[j++] = (byte) System.Drawing.Drawing2D.PathPointType.Bezier3;
+						break;
+					
+					case PathElement.Stop:
+						break;
+					
+					default:
+						throw new System.InvalidOperationException (string.Format ("Path cannot be converted, element {0} set to {1}.", i, elements[i]));
+				}
+				
+				if ((elements[i] & PathElement.FlagClose) != 0)
+				{
+					gp_types[j-1] = (byte) System.Drawing.Drawing2D.PathPointType.CloseSubpath;
+				}
+			}
+			
+			System.Drawing.Drawing2D.GraphicsPath gp = new System.Drawing.Drawing2D.GraphicsPath (gp_pts,gp_types);
+			
+			return gp;
+		}
 		
 		
 		
