@@ -919,12 +919,12 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleMultiSize1(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectionFontSize = Drawing.Font.DefaultFontSize;
+			this.bigText.SelectionFontScale = 1;
 		}
 
 		private void HandleMultiSize2(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectionFontSize = 20;
+			this.bigText.SelectionFontScale = 2;
 		}
 
 		private void HandleMultiColor1(object sender, MessageEventArgs e)
@@ -943,7 +943,7 @@ namespace Epsitec.Common.Widgets
 			Window window = new Window();
 			
 			window.ClientSize = new Size(400, 300);
-			window.Text = "CheckAdornerBigText";
+			window.Text = "CheckAdornerTextRuler";
 
 			TextFieldMulti	multi = new TextFieldMulti();
 			TextRuler		ruler = new TextRuler();
@@ -954,6 +954,7 @@ namespace Epsitec.Common.Widgets
 			multi.Name = "Multi";
 			multi.MaxChar = 10000;
 			
+			//?string s = "Voilà <w color=\"#00ff00\" id=\"1\">un</w> <i>texte</i> <b>multi-fontes</b>.";
 			string s = "Voilà un <i>texte</i> <b>multi-fontes</b>.";
 			multi.Text = s;
 
