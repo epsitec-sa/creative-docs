@@ -16,7 +16,14 @@ namespace Epsitec.Cresus.DataLayer
 		
 		public static string BuildCompositeName(params string[] list)
 		{
-			return string.Join ("_", list);
+			int num = list.Length;
+			
+			while (num > 0 && (list[num-1] == ""))
+			{
+				num--;
+			}
+			
+			return (num == 0) ? "" : string.Join ("_", list, 0, num);
 		}
 	}
 }

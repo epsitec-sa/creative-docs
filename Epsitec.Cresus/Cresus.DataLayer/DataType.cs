@@ -30,6 +30,26 @@ namespace Epsitec.Cresus.DataLayer
 		}
 		
 		
+		public override bool Equals(object obj)
+		{
+			DataType that = obj as DataType;
+			
+			if (that == null)
+			{
+				return false;
+			}
+			
+			return (this.binder_name == that.binder_name);
+		}
+		
+		public override int GetHashCode()
+		{
+			return (this.binder_name == null) ? 0 : this.binder_name.GetHashCode ();
+		}
+
+
+		
+		
 		protected string						binder_name;
 	}
 }

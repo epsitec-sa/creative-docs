@@ -290,22 +290,32 @@ namespace Epsitec.Cresus.DataLayer
 			return (this.attributes.Contains (find)) ? this.attributes[find] as string : null;
 		}
 		
+		public void SetAttribute(string name, string value)
+		{
+			this.SetAttribute (name, value, "");
+		}
+		
 		public void SetAttribute(string name, string value, ResourceLevel level)
+		{
+			switch (level)
+			{
+				case ResourceLevel.Default:		this.SetAttribute (name, value, "");							break;
+				case ResourceLevel.Customised:	this.SetAttribute (name, value, Resources.CustomisedSuffix);	break;
+				case ResourceLevel.Localised:	this.SetAttribute (name, value, Resources.LocalisedSuffix);		break;
+				
+				default:
+					throw new System.ArgumentException ("Unsupported ResourceLevel");
+			}
+		}
+		
+		public void SetAttribute(string name, string value, string localisation_suffix)
 		{
 			if (this.attributes == null)
 			{
 				this.attributes = new System.Collections.Hashtable ();
 			}
 			
-			switch (level)
-			{
-				case ResourceLevel.Default:		break;
-				case ResourceLevel.Customised:	name = DbTools.BuildCompositeName (name, Resources.CustomisedSuffix);	break;
-				case ResourceLevel.Localised:	name = DbTools.BuildCompositeName (name, Resources.LocalisedSuffix);	break;
-				
-				default:
-					throw new ResourceException ("Invalid ResourceLevel");
-			}
+			name = DbTools.BuildCompositeName (name, localisation_suffix);
 			
 			this.attributes[name] = value;
 		}
