@@ -19,7 +19,6 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.command_params = new System.Collections.ArrayList ();
 		}
 		
-		
 		protected void UpdateCommand()
 		{
 			if (this.command_cache == null)
@@ -199,7 +198,24 @@ namespace Epsitec.Cresus.Database.Implementation
 				return this.command_cache;
 			}
 		}
-
+		
+		
+		public System.Data.IDbCommand CreateCommand(System.Data.IDbTransaction transaction)
+		{
+			this.UpdateCommand ();
+			this.command_cache.Transaction = transaction as FirebirdSql.Data.Firebird.FbTransaction;
+			return this.command_cache;
+		}
+		
+		public System.Data.IDbCommand CreateCommand(System.Data.IDbTransaction transaction, string text)
+		{
+			FbCommand command = this.fb.NewDbCommand () as FbCommand;
+			command.CommandText = text;
+			command.CommandType = System.Data.CommandType.Text;
+			command.Transaction = transaction as FirebirdSql.Data.Firebird.FbTransaction;
+			return command;
+		}
+		
 		
 		public void Clear()
 		{

@@ -38,6 +38,19 @@ namespace Epsitec.Cresus.Database
 			this.List.Add (field);
 		}
 		
+		public virtual void Add(SqlAggregate sql_aggregate)
+		{
+			SqlField field = SqlField.CreateAggregate (sql_aggregate);
+			this.List.Add (field);
+		}
+
+		public virtual void Add(string alias, SqlAggregate sql_aggregate)
+		{
+			SqlField field = SqlField.CreateAggregate (sql_aggregate);
+			field.Alias = alias;
+			this.List.Add (field);
+		}
+		
 		public virtual void AddRange(SqlField[] fields)
 		{
 			if (fields == null)

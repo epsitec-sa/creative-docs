@@ -26,19 +26,19 @@ namespace Epsitec.Cresus.Database
 			
 			//	Vérifie que les tables principales ont été créées correctement :
 			
-			table = infrastructure.ResolveDbTable ("CR_TABLE_DEF");
+			table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
 			
 			Assertion.AssertNotNull (table);
 			Assertion.Assert (table.InternalKey.Id == 1);
 			Assertion.Assert (table.Columns.Count == 8);
 			
-			table = infrastructure.ResolveDbTable ("CR_COLUMN_DEF");
+			table = infrastructure.ResolveDbTable (null, "CR_COLUMN_DEF");
 			
 			Assertion.AssertNotNull (table);
 			Assertion.Assert (table.InternalKey.Id == 2);
 			Assertion.Assert (table.Columns.Count == 9);
 			
-			table = infrastructure.ResolveDbTable ("CR_TYPE_DEF");
+			table = infrastructure.ResolveDbTable (null, "CR_TYPE_DEF");
 			
 			Assertion.AssertNotNull (table);
 			Assertion.Assert (table.InternalKey.Id == 3);
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Database
 			//	Vérifie que les statements UPDATE ... lors de la création ont bien passé,
 			//	puis vérifie aussi que l'incrément de l'ID fonctionne correctement.
 			
-			table = infrastructure.ResolveDbTable ("CR_TABLE_DEF");
+			table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
 			
 			Assertion.AssertEquals ( 8L, infrastructure.NewRowIdInTable (table.InternalKey, 2));
 			Assertion.AssertEquals (10L, infrastructure.NewRowIdInTable (table.InternalKey, 0));
@@ -68,10 +68,10 @@ namespace Epsitec.Cresus.Database
 			infrastructure.AttachDatabase (db_access);
 			
 			{
-				DbTable db_table = infrastructure.ResolveDbTable ("CR_TABLE_DEF");
-				DbType  db_type1 = infrastructure.ResolveDbType ("CR.Name");
-				DbType  db_type2 = infrastructure.ResolveDbType ("CR.Name");
-				DbType  db_type3 = infrastructure.ResolveDbType ("CR.KeyId");
+				DbTable db_table = infrastructure.ResolveDbTable (null, "CR_TABLE_DEF");
+				DbType  db_type1 = infrastructure.ResolveDbType (null, "CR.Name");
+				DbType  db_type2 = infrastructure.ResolveDbType (null, "CR.Name");
+				DbType  db_type3 = infrastructure.ResolveDbType (null, "CR.KeyId");
 				
 				System.Console.Out.WriteLine ("Table {0} has {1} columns:", db_table.Name, db_table.Columns.Count);
 				
