@@ -747,6 +747,11 @@ namespace Epsitec.Common.Widgets.Platform
 		{
 			Win32Api.PostMessage (this.Handle, Win32Const.WM_APP_EXEC_CMD, System.IntPtr.Zero, System.IntPtr.Zero);
 		}
+		
+		internal void SendValidation()
+		{
+			Win32Api.PostMessage (this.Handle, Win32Const.WM_APP_VALIDATION, System.IntPtr.Zero, System.IntPtr.Zero);
+		}
 
 		
 		protected override void WndProc(ref System.Windows.Forms.Message msg)
@@ -768,6 +773,11 @@ namespace Epsitec.Common.Widgets.Platform
 				System.Diagnostics.Debug.Assert (this.wnd_proc_depth == 0);
 				this.widget_window.DispatchQueuedCommands ();
 				return;
+			}
+			
+			if (msg.Msg == Win32Const.WM_APP_VALIDATION)
+			{
+				this.widget_window.DispatchValidation ();
 			}
 			
 			this.wnd_proc_depth++;

@@ -22,8 +22,8 @@ namespace Epsitec.Common.Widgets
 		
 		private void Initialise(WindowRoot root)
 		{
-			this.cmd_dispatcher = Support.CommandDispatcher.Default;
-			this.components     = new ComponentCollection (this);
+			this.CommandDispatcher = Support.CommandDispatcher.Default;
+			this.components        = new ComponentCollection (this);
 			
 			this.root   = root;
 			this.window = new Platform.Window (this);
@@ -397,8 +397,27 @@ namespace Epsitec.Common.Widgets
 		
 		public Support.CommandDispatcher		CommandDispatcher
 		{
-			get { return this.cmd_dispatcher; }
-			set { this.cmd_dispatcher = value; }
+			get
+			{
+				return this.cmd_dispatcher;
+			}
+			set
+			{
+				if (this.cmd_dispatcher != value)
+				{
+					if (this.cmd_dispatcher != null)
+					{
+						this.cmd_dispatcher.ValidationRulesBecameDirty -= new Support.EventHandler (this.HandleValidationRulesBecameDirty);
+					}
+					
+					this.cmd_dispatcher = value;
+					
+					if (this.cmd_dispatcher != null)
+					{
+						this.cmd_dispatcher.ValidationRulesBecameDirty += new Support.EventHandler (this.HandleValidationRulesBecameDirty);
+					}
+				}
+			}
 		}
 		
 		
@@ -853,6 +872,7 @@ namespace Epsitec.Common.Widgets
 			this.QueueCommand (new QueueItem (source, command, dispatcher));
 		}
 		
+		
 		protected void QueueCommand(QueueItem item)
 		{
 			this.cmd_queue.Enqueue (item);
@@ -863,12 +883,26 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		public void AsyncDispose()
 		{
 			this.is_dispose_queued = true;
 			this.window.SendQueueCommand ();
 		}
 		
+		public void AsyncValidation()
+		{
+			if (this.pending_validation == false)
+			{
+				this.pending_validation = true;
+				this.window.SendValidation ();
+			}
+		}
+		
+		private void HandleValidationRulesBecameDirty(object sender)
+		{
+			this.AsyncValidation ();
+		}
 		
 		internal void DispatchQueuedCommands()
 		{
@@ -892,6 +926,12 @@ namespace Epsitec.Common.Widgets
 			{
 				this.Dispose ();
 			}
+		}
+		
+		internal void DispatchValidation()
+		{
+			this.pending_validation = false;
+			Support.CommandDispatcher.ApplyAllValidationRules ();
 		}
 		
 		internal void DispatchMessage(Message message)
@@ -950,6 +990,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.PostProcessMessage (message);
 		}
+		
 		
 		internal void PostProcessMessage(Message message)
 		{
@@ -1270,6 +1311,7 @@ namespace Epsitec.Common.Widgets
 		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();
 		private bool							is_dispose_queued;
 		private bool							is_disposed;
+		private bool							pending_validation;
 		
 		private System.Collections.Queue		post_paint_queue = new System.Collections.Queue ();
 		private System.Collections.Hashtable	property_hash;

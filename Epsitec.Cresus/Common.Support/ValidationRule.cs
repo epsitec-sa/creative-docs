@@ -523,6 +523,10 @@ namespace Epsitec.Common.Support
 			{
 				this.BecameDirty (this);
 			}
+			if (this.dispatcher != null)
+			{
+				this.dispatcher.NotifyValidationRulesBecameDirty ();
+			}
 		}
 		
 		protected virtual void OnValidatorsChanged()

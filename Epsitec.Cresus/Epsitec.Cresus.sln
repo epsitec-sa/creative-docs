@@ -370,6 +370,8 @@ Global
 		External\nunit-gui.exe = External\nunit-gui.exe
 		External\nunit.framework.dll = External\nunit.framework.dll
 		External\nunit.util.dll = External\nunit.util.dll
+		External\resources\strings.00.resource = External\resources\strings.00.resource
+		External\resources\strings.fr.resource = External\resources\strings.fr.resource
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

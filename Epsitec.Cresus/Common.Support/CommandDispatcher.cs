@@ -153,7 +153,31 @@ namespace Epsitec.Common.Support
 		
 		public void ApplyValidationRules()
 		{
-			this.validation_rules.Validate ();
+			if (this.validation_rules.State == ValidationState.Dirty)
+			{
+				this.validation_rules.Validate ();
+			}
+		}
+		
+		public static void ApplyAllValidationRules()
+		{
+			foreach (CommandDispatcher dispatcher in CommandDispatcher.global_list)
+			{
+				dispatcher.ApplyValidationRules ();
+			}
+		}
+		
+		internal void NotifyValidationRulesBecameDirty()
+		{
+			this.OnValidationRulesBecameDirty ();
+		}
+		
+		protected virtual void OnValidationRulesBecameDirty()
+		{
+			if (this.ValidationRulesBecameDirty != null)
+			{
+				this.ValidationRulesBecameDirty (this);
+			}
 		}
 		
 		
@@ -164,6 +188,8 @@ namespace Epsitec.Common.Support
 				return this.validation_rules.Validators;
 			}
 		}
+		
+		public event EventHandler				ValidationRulesBecameDirty;
 		
 		
 		public void RegisterController(object controller)

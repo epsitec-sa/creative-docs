@@ -42,6 +42,7 @@ namespace Epsitec.Common.Widgets
 		public const int WM_APP				= 0x8000;
 		public const int WM_APP_DISPOSE		= WM_APP + 1;
 		public const int WM_APP_EXEC_CMD	= WM_APP + 2;
+		public const int WM_APP_VALIDATION	= WM_APP + 3;
 		
 		public const int VK_SHIFT			= 0x0010;
 		public const int VK_CONTROL			= 0x0011;
