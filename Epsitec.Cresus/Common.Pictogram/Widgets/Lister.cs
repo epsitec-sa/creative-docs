@@ -283,7 +283,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 					else
 					{
-						this.table[p+3, index] = new Cell();  // cellule vide
+						this.table[p+3, index].Clear ();	// cellule vide
 					}
 
 					this.table.SelectRow(index, obj.IsSelected());
