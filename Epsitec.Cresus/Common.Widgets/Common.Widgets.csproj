@@ -247,6 +247,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "HToolBar.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "IAdorner.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -337,6 +342,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Separator.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Shortcut.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -358,6 +368,16 @@
                 />
                 <File
                     RelPath = "StaticText.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "StatusBar.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "StatusField.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -422,11 +442,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "ToolBar.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "ToolTip.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -438,6 +453,11 @@
                 />
                 <File
                     RelPath = "VScroller.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "VToolBar.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -477,12 +497,22 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Adorners\LookBlue.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Adorners\LookCeeBot.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "Adorners\LookDany.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Adorners\LookDark.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
