@@ -300,56 +300,41 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed, ref TextLayout.Context context)
+		// Sélectionne tout le texte.
+		public void SelectAll(TextLayout.Context context)
 		{
-			// Gestion d'une touche pressée avec KeyDown dans le texte.
-			switch ( key )
-			{
-				case KeyCode.Back:
-					if ( isShiftPressed || isCtrlPressed )  return false;
-					this.DeleteCharacter(-1, ref context);
-					break;
-				
-				case KeyCode.Delete:
-					this.DeleteCharacter(1, ref context);
-					break;
-				
-				case KeyCode.Home:
-					this.MoveCursor(-1000000, isShiftPressed, false, ref context);  // recule beaucoup
-					break;
-				
-				case KeyCode.End:
-					this.MoveCursor(1000000, isShiftPressed, false, ref context);  // avance beaucoup
-					break;
-				
-				case KeyCode.ArrowLeft:
-					this.MoveCursor(-1, isShiftPressed, isCtrlPressed, ref context);
-					break;
-				
-				case KeyCode.ArrowRight:
-					this.MoveCursor(1, isShiftPressed, isCtrlPressed, ref context);
-					break;
-				
-				default:
-					return false;
-			}
-			
-			return true;
+			context.CursorFrom = 0;
+			context.CursorTo   = this.Text.Length;
 		}
 
-		public bool ProcessKeyPress(int key, ref TextLayout.Context context)
+		// Sélectionne toute la ligne.
+		public void SelectLine(TextLayout.Context context)
 		{
-			// Gestion d'une touche pressée avec KeyPress dans le texte.
-			if ( key >= 32 )  // TODO: à vérifier ...
-			{
-				this.InsertCharacter((char)key, ref context);
-				return true;
-			}
-			
-			return false;
+			this.MoveExtremity(context, -1, false);
+			int from = context.CursorFrom;
+			this.MoveExtremity(context, 1, false);
+			context.CursorFrom = from;
 		}
 
-		public bool DeleteSelection(ref TextLayout.Context context)
+		// Sélectionne tout le mot.
+		public void SelectWord(TextLayout.Context context)
+		{
+			string simple = TextLayout.ConvertToSimpleText(this.Text);
+
+			while ( context.CursorFrom > 0 )
+			{
+				if ( this.IsWordSeparator(simple[context.CursorFrom-1]) )  break;
+				context.CursorFrom --;
+			}
+
+			while ( context.CursorTo < simple.Length )
+			{
+				if ( this.IsWordSeparator(simple[context.CursorTo]) )  break;
+				context.CursorTo ++;
+			}
+		}
+
+		public bool DeleteSelection(TextLayout.Context context)
 		{
 			// Supprime les caractères sélectionnés dans le texte.
 			int cursorFrom = this.FindOffsetFromIndex(context.CursorFrom);
@@ -366,13 +351,11 @@ namespace Epsitec.Common.Widgets
 			context.CursorTo   = from;
 			context.CursorFrom = from;
 			this.Text = text;
-			context.TextDeleted = true;
-			context.CursorChanged = true;
 			
 			return true;
 		}
 
-		public bool ReplaceSelection(string ins, ref TextLayout.Context context)
+		public bool ReplaceSelection(TextLayout.Context context, string ins)
 		{
 			// Insère une chaîne correspondant à un caractère ou un tag (jamais plus).
 			int cursorFrom = this.FindOffsetFromIndex(context.CursorFrom);
@@ -394,8 +377,6 @@ namespace Epsitec.Common.Widgets
 			if ( this.Text.Length+ins.Length > context.MaxChar )
 			{
 				this.Text = text;
-				context.TextDeleted = true;
-				context.CursorChanged = true;
 				return false;
 			}
 			
@@ -404,21 +385,19 @@ namespace Epsitec.Common.Widgets
 			this.Text = text;
 			context.CursorTo   = this.FindIndexFromOffset(cursor + ins.Length);
 			context.CursorFrom = context.CursorTo;
-			context.TextInserted = true;
-			context.CursorChanged = true;
 			return true;
 		}
 
-		public bool InsertCharacter(char character, ref TextLayout.Context context)
+		public bool InsertCharacter(TextLayout.Context context, char character)
 		{
 			// Insère un caractère.
-			return this.ReplaceSelection(TextLayout.ConvertToTaggedText(character), ref context);
+			return this.ReplaceSelection(context, TextLayout.ConvertToTaggedText(character));
 		}
 
-		public bool DeleteCharacter(int dir, ref TextLayout.Context context)
+		public bool DeleteCharacter(TextLayout.Context context, int dir)
 		{
 			// Supprime le caractère à gauche ou à droite du curseur.
-			if ( this.DeleteSelection(ref context) )  return false;
+			if ( this.DeleteSelection(context) )  return false;
 
 			int cursor = this.FindOffsetFromIndex(context.CursorTo);
 
@@ -432,8 +411,6 @@ namespace Epsitec.Common.Widgets
 				context.CursorTo --;
 				context.CursorFrom = context.CursorTo;
 				this.Text = text;
-				context.TextDeleted = true;
-				context.CursorChanged = true;
 			}
 			else	// à droite du curseur ?
 			{
@@ -443,71 +420,61 @@ namespace Epsitec.Common.Widgets
 				int len = this.AdvanceTag(cursor);
 				text = text.Remove(cursor, len);
 				this.Text = text;
-				context.TextDeleted = true;
 			}
-
 			return true;
 		}
 		
 		
-		protected bool IsWordSeparator(char character)
+		public bool MoveLine(TextLayout.Context context, int move, bool select)
 		{
-			// Indique si un caractère est un séparateur pour les déplacements
-			// avec Ctrl+flèche.
-			character = System.Char.ToUpper(character);
-			if ( character == '_' )  return false;
-			if ( character >= 'A' && character <= 'Z' )  return false;
-			if ( character >= '0' && character <= '9' )  return false;
+			// Déplace le curseur par lignes.
+			int cursor = this.DetectIndex(context.CursorPosX, context.CursorLine+move);
+			if ( cursor == -1 )  return false;
+
+			context.CursorTo = cursor;
+			if ( !select )  context.CursorFrom = cursor;
 			return true;
 		}
 
-		protected bool MoveExtremity(int move, bool isShiftPressed, bool isCtrlPressed, ref TextLayout.Context context)
+		public bool MoveExtremity(TextLayout.Context context, int move, bool select)
 		{
 			// Déplace le curseur au début ou à la fin d'une ligne.
-			if ( isCtrlPressed )  // début/fin du texte ?
-			{
-				return this.MoveCursor(move*1000000, isShiftPressed, false, ref context);
-			}
-
 			double posx;
 			if ( move < 0 )  posx = 0;
 			else             posx = this.LayoutSize.Width;
 			int cursor = this.DetectIndex(posx, context.CursorLine);
 			if ( cursor == -1 )  return false;
+
 			context.CursorTo = cursor;
-			
-			if ( !isShiftPressed )
-			{
-				context.CursorFrom = cursor;
-			}
-			
-			context.CursorChanged = true;
+			if ( !select )  context.CursorFrom = cursor;
 			return true;
 		}
 
-		protected bool MoveLine(int move, bool isShiftPressed, bool isCtrlPressed, ref TextLayout.Context context)
+		protected bool IsWordSeparator(char character)
 		{
-			// Déplace le curseur par lignes.
-			int cursor = this.DetectIndex(context.CursorPosX, context.CursorLine+move);
-			if ( cursor == -1 )  return false;
-			context.CursorTo = cursor;
-			
-			if ( !isShiftPressed )
-			{
-				context.CursorFrom = cursor;
-			}
-			
-			context.CursorChanged = true;
+			// Indique si un caractère est un séparateur pour les déplacements
+			// avec Ctrl+flèche.
+			character = System.Char.ToLower(character);
+			if ( character == '_' ||
+				 character == 'á' || character == 'à' || character == 'â' || character == 'ä' ||
+				 character == 'ç' ||
+				 character == 'é' || character == 'è' || character == 'ê' || character == 'ë' ||
+				 character == 'í' || character == 'ì' || character == 'î' || character == 'ï' ||
+				 character == 'ó' || character == 'ò' || character == 'ô' || character == 'ö' ||
+				 character == 'ú' || character == 'ù' || character == 'û' || character == 'ü' )  return false;
+			// TODO: généraliser avec tous les accents exotiques ?
+			if ( character >= 'a' && character <= 'z' )  return false;
+			if ( character >= '0' && character <= '9' )  return false;
 			return true;
 		}
 
-		protected bool MoveCursor(int move, bool isShiftPressed, bool isCtrlPressed, ref TextLayout.Context context)
+		public bool MoveCursor(TextLayout.Context context, int move, bool select, bool word)
 		{
 			// Déplace le curseur.
 			int cursor = context.CursorTo;
 			string simple = TextLayout.ConvertToSimpleText(this.Text);
 
-			if ( isCtrlPressed )  // déplacement par mots ?
+			if ( word )  // déplacement par mots ?
 			{
 				if ( move < 0 )
 				{
@@ -544,13 +511,9 @@ namespace Epsitec.Common.Widgets
 			cursor = System.Math.Max(cursor, 0);
 			cursor = System.Math.Min(cursor, simple.Length);
 			if ( cursor == context.CursorTo && cursor == context.CursorFrom )  return false;
+
 			context.CursorTo = cursor;
-			if ( !isShiftPressed )
-			{
-				context.CursorFrom = cursor;
-			}
-			
-			context.CursorChanged = true;
+			if ( !select )  context.CursorFrom = cursor;
 			return true;
 		}
 
@@ -2282,16 +2245,12 @@ namespace Epsitec.Common.Widgets
 
 		public class Context
 		{
-			public int							CursorFrom;
-			public int							CursorTo;
-			public int							CursorLine;
-			public double						CursorPosX;
+			public int							CursorFrom = 0;
+			public int							CursorTo   = 0;
+			public int							CursorLine = 0;
+			public double						CursorPosX = 0;
 			
 			public int							MaxChar = 1000;
-			
-			public bool							CursorChanged;
-			public bool							TextInserted;
-			public bool							TextDeleted;
 		}
 		
 		public event AnchorEventHandler			Anchor;
