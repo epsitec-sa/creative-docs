@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using FirebirdSql.Data.Firebird;
 
 namespace Epsitec.Cresus.Database
 {
@@ -19,12 +20,14 @@ namespace Epsitec.Cresus.Database
 			DbType db_type_name = infrastructure.ResolveDbType (null, "CR_NameType");
 			DbType db_type_id   = infrastructure.ResolveDbType (null, "CR_KeyIdType");
 			DbType db_type_rev  = infrastructure.ResolveDbType (null, "CR_KeyRevisionType");
+			DbType db_type_npa  = infrastructure.ResolveDbType (null, "CR_KeyRevisionType");
 			
 			db_table_a.Columns.Add (infrastructure.CreateColumn ("Nom", db_type_name));
 			db_table_a.Columns.Add (infrastructure.CreateColumn ("Prenom", db_type_name));
 			
 			db_table_b.Columns.AddRange (infrastructure.CreateRefColumns ("Personne", "Personnes", DbKeyMatchMode.ExactIdRevision, Nullable.Yes));
 			db_table_b.Columns.Add (infrastructure.CreateColumn ("Ville", db_type_name));
+			db_table_b.Columns.Add (infrastructure.CreateColumn ("NPA", db_type_npa, Nullable.No));
 			
 			Assertion.AssertEquals ("Personnes", db_table_b.Columns[3].ParentTableName);
 			Assertion.AssertEquals ("Personnes", db_table_b.Columns[4].ParentTableName);
@@ -91,10 +94,10 @@ namespace Epsitec.Cresus.Database
 			row_p2.BeginEdit (); row_p2["Nom"] = "Dumoulin"; row_p2["Prenom"] = "Denis";  row_p2.EndEdit ();
 			row_p3.BeginEdit (); row_p3["Nom"] = "Roux";     row_p3["Prenom"] = "Daniel"; row_p3.EndEdit ();
 			
-			row_d1.BeginEdit (); row_d1["Ville"] = "Yverdon";  row_d1["Personne (ID)"] = row_p1["CR_ID"]; row_d1["Personne (REV)"] = row_p1["CR_REV"]; row_d1.EndEdit ();
-			row_d2.BeginEdit (); row_d2["Ville"] = "Morges";   row_d2["Personne (ID)"] = row_p2["CR_ID"]; row_d2["Personne (REV)"] = row_p2["CR_REV"]; row_d2.EndEdit ();
-			row_d3.BeginEdit (); row_d3["Ville"] = "Saverne";  row_d3["Personne (ID)"] = row_p2["CR_ID"]; row_d3["Personne (REV)"] = row_p2["CR_REV"]; row_d3.EndEdit ();
-			row_d4.BeginEdit (); row_d4["Ville"] = "Crissier"; row_d4["Personne (ID)"] = row_p3["CR_ID"]; row_d4["Personne (REV)"] = row_p3["CR_REV"]; row_d4.EndEdit ();
+			row_d1.BeginEdit (); row_d1["Ville"] = "Yverdon";  row_d1["NPA"] = 1400; row_d1["Personne (ID)"] = row_p1["CR_ID"]; row_d1["Personne (REV)"] = row_p1["CR_REV"]; row_d1.EndEdit ();
+			row_d2.BeginEdit (); row_d2["Ville"] = "Morges";   row_d2["NPA"] = 1110; row_d2["Personne (ID)"] = row_p2["CR_ID"]; row_d2["Personne (REV)"] = row_p2["CR_REV"]; row_d2.EndEdit ();
+			row_d3.BeginEdit (); row_d3["Ville"] = "Saverne";  row_d3["NPA"] = 9999; row_d3["Personne (ID)"] = row_p2["CR_ID"]; row_d3["Personne (REV)"] = row_p2["CR_REV"]; row_d3.EndEdit ();
+			row_d4.BeginEdit (); row_d4["Ville"] = "Crissier"; row_d4["NPA"] = 1023; row_d4["Personne (ID)"] = row_p3["CR_ID"]; row_d4["Personne (REV)"] = row_p3["CR_REV"]; row_d4.EndEdit ();
 			
 			DbInfrastructureTest.DisplayDataSet (infrastructure, ado_table_a.TableName, ado_table_a);
 			DbInfrastructureTest.DisplayDataSet (infrastructure, ado_table_b.TableName, ado_table_b);
@@ -199,6 +202,54 @@ namespace Epsitec.Cresus.Database
 			
 			infrastructure.Dispose ();
 		}
+		
+#if false
+		[Test] public void XxxTest()
+		{
+			//	Test synthétique pour soumission du problème à Carlos Guzman Alvarez.
+			
+			FbConnection connection = new FbConnection (@"User=sysdba;Password=masterkey;" +
+				/**/									@"DataSource=localhost;Database=C:\Program Files\Firebird15\Data\Epsitec\fiche.firebird;Port=3050;Dialect=3;Packet Size=8192;" +
+				/**/									@"ServerType=1;Charset=UNICODE_FSS;Role=;Pooling=false;Connection Lifetime=60;");
+			
+			FbCommand    command    = connection.CreateCommand ();
+			
+			command.CommandType = System.Data.CommandType.Text;
+			command.CommandText = "SELECT * FROM U_DOMICILES_35 WHERE 0=1;";
+			
+			FbDataAdapter    adapter = new FbDataAdapter (command);
+			FbCommandBuilder builder = new FbCommandBuilder (adapter);
+			
+			connection.Open ();
+			
+			FbTransaction transaction = connection.BeginTransaction (System.Data.IsolationLevel.RepeatableRead);
+			
+			System.Data.DataSet set = new System.Data.DataSet ();
+			command.Transaction = transaction;
+			adapter.Fill (set);
+			transaction.Commit ();
+			
+			System.Data.DataTable table = set.Tables[0];
+			System.Data.DataRow   row   = table.NewRow ();
+			
+			row["CR_ID"] = 1000;
+			row["CR_REV"] = 0;
+			row["CR_STAT"] = 0;
+			row["REF_PERSONNE_ID"] = System.DBNull.Value;
+			row["REF_PERSONNE_REV"] = System.DBNull.Value;
+			row["U_VILLE"] = "Yverdon";
+			row["U_NPA"] = System.DBNull.Value;		//	<- devrait être rejeté
+			
+			table.Rows.Add (row);
+			
+			transaction = connection.BeginTransaction (System.Data.IsolationLevel.RepeatableRead);
+			command.Transaction = transaction;
+			adapter.Update (set);
+			transaction.Rollback ();
+
+			connection.Close ();
+		}
+#endif
 		
 		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckInternalFillDataSetEx()
 		{

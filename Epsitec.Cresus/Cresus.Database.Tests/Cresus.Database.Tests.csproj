@@ -119,6 +119,11 @@
                     Project = "{8960D1EA-3B82-49A1-9D44-F92F467209FF}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "FirebirdSql.Data.Firebird"
+                    AssemblyName = "FirebirdSql.Data.Firebird"
+                    HintPath = "..\External\FirebirdSql.Data.Firebird.dll"
+                />
             </References>
         </Build>
         <Files>

@@ -312,6 +312,11 @@ namespace Epsitec.Cresus.Database
 			return new DbColumn (column_name, type, DbColumnClass.Data, DbElementCat.UserDataManaged);
 		}
 		
+		public DbColumn   CreateColumn(string column_name, DbType type, Nullable nullable)
+		{
+			return new DbColumn (column_name, type, nullable, DbColumnClass.Data, DbElementCat.UserDataManaged);
+		}
+		
 		public DbColumn[] CreateLocalisedColumns(string column_name, DbType type)
 		{
 			//	TODO: crée la ou les colonnes localisées
