@@ -29,7 +29,11 @@ namespace Epsitec.Common.Script
 			
 			CodeDomProvider    compiler = Helpers.CompilerFactory.CreateCompiler ();
 			CompilerParameters options  = Helpers.CompilerFactory.CreateCompilerParameters (short_name);
-			CompilerResults    results  = compiler.CompileAssemblyFromSource (options, source);
+			
+			//	.NET 2.0 n'aime pas l'usage du CreateCompiler () et .NET 1.1 n'aime pas son absence. Pour
+			//	que cela compile proprement, il faudrait ici une compilation conditionnelle :-(
+			
+			CompilerResults    results  = compiler.CreateCompiler ().CompileAssemblyFromSource (options, source);
 			
 			Script script = new Script ();
 			
