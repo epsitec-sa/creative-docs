@@ -8,6 +8,7 @@ namespace Epsitec.Common.Widgets
 		public TabButton()
 		{
 			this.InternalState &= ~InternalState.Engageable;
+			this.InternalState &= ~InternalState.AutoFocus;
 		}
 		
 		public TabButton(Widget embedder) : this()
@@ -48,7 +49,7 @@ namespace Epsitec.Common.Widgets
 				pos.Y -= 1;
 			}
 
-			adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, ButtonStyle.Normal);
+			adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, ButtonStyle.Tab);
 
 			graphics.RestoreClippingRectangle(saveClip);
 		}
