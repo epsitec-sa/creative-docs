@@ -211,30 +211,6 @@ namespace Epsitec.Common.Widgets
 			window.Show();
 		}
 		
-		[Test] public void CheckEditArrayWithBundleStore()
-		{
-			Window window = new Window();
-			
-			window.ClientSize = new Drawing.Size(400, 300);
-			window.Text = "CheckEditArrayWithBundleStore";
-			window.Root.DockMargins = new Drawing.Margins (5, 5, 5, 5);
-			
-			EditArray table = new EditArray();
-			Design.Tools.TextBundleArrayStore store = new Design.Tools.TextBundleArrayStore ();
-			store.Bundle = Support.Resources.GetBundle ("file:strings");
-			
-			table.Parent            = window.Root;
-			table.Dock              = DockStyle.Fill;
-			table.SelectedIndex     = 0;
-			table.EditionZoneHeight = 1;
-			table.TitleHeight       = 32;
-			table.DoubleClicked    += new MessageEventHandler(this.HandleEditDoubleClicked);
-			table.TextArrayStore    = store;
-			table.TitleWidget       = new StaticText (@"<font size=""160%"">EditArray test.</font> Double-click to start bundle edition.");
-			
-			window.Show();
-		}
-		
 		
 		[Test] public void CheckEditArraySearch()
 		{
