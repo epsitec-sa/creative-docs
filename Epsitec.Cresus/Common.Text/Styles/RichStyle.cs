@@ -25,6 +25,7 @@ namespace Epsitec.Common.Text.Styles
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
+			base.UpdateContentsSignature (checksum);
 		}
 		
 		public override bool CompareEqualContents(object value)

@@ -13,6 +13,14 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public override WellKnownType			WellKnownType
+		{
+			get
+			{
+				return WellKnownType.Font;
+			}
+		}
+		
 		public override PropertyType			PropertyType
 		{
 			get

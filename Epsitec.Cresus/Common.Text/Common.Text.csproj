@@ -244,6 +244,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Properties\WellKnownType.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Styles\BasePropertyContainer.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

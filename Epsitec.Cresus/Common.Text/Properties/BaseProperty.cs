@@ -21,6 +21,11 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public abstract WellKnownType			WellKnownType
+		{
+			get;
+		}
+		
 		public abstract PropertyType			PropertyType
 		{
 			get;

@@ -13,30 +13,19 @@ namespace Epsitec.Common.Text.Styles
 		{
 		}
 		
-		public SimpleStyle(System.Collections.ICollection properties)
+		public SimpleStyle(System.Collections.ICollection properties) : base (properties)
 		{
-			this.Initialise (properties);
 		}
 		
 		
 		public override void UpdateContentsSignature(IO.IChecksum checksum)
 		{
-			//	Calcule la signature en se basant exclusivement sur celle des
-			//	propriétés.
-			
-			if ((this.properties != null) &&
-				(this.properties.Length > 0))
-			{
-				for (int i = 0; i < this.properties.Length; i++)
-				{
-					checksum.UpdateValue (this.properties[i].GetContentsSignature ());
-				}
-			}
+			base.UpdateContentsSignature (checksum);
 		}
 		
 		public override bool CompareEqualContents(object value)
 		{
-			return SimpleStyle.CompareEqualContents(this, value as Styles.SimpleStyle);
+			return Styles.BasePropertyContainer.CompareEqualContents (this, value as Styles.SimpleStyle);
 		}
 		
 		
@@ -57,22 +46,22 @@ namespace Epsitec.Common.Text.Styles
 			
 			public void Accumulate(Styles.SimpleStyle source)
 			{
-				Properties.BaseProperty[] props = source.Properties;
+				int n = source.CountProperties;
 				
-				for (int i = 0; i < props.Length; i++)
+				for (int i = 0; i < n; i++)
 				{
-					System.Type type = props[i].GetType ();
+					System.Type type = source[i].GetType ();
 					
 					if (this.hash.Contains (type))
 					{
 						Properties.BaseProperty base_prop = this.hash[type] as Properties.BaseProperty;
-						Properties.BaseProperty comb_prop = base_prop.GetCombination (props[i]);
+						Properties.BaseProperty comb_prop = base_prop.GetCombination (source[i]);
 						
 						this.hash[type] = comb_prop;
 					}
 					else
 					{
-						this.hash[type] = props[i];
+						this.hash[type] = source[i];
 					}
 				}
 			}
@@ -88,53 +77,6 @@ namespace Epsitec.Common.Text.Styles
 			
 			Styles.SimpleStyle					host;
 			System.Collections.Hashtable		hash;
-		}
-		
-		
-		public static bool CompareEqualContents(Styles.SimpleStyle a, Styles.SimpleStyle b)
-		{
-			if ((a.properties == null) &&
-				(b.properties == null))
-			{
-				return true;
-			}
-			if ((a.properties == null) ||
-				(b.properties == null))
-			{
-				return false;
-			}
-			if (a.properties.Length != b.properties.Length)
-			{
-				return false;
-			}
-			
-			for (int i = 0; i < a.properties.Length; i++)
-			{
-				Properties.BaseProperty pa = a.properties[i];
-				Properties.BaseProperty pb = b.properties[i];
-				
-				if (pa.GetType () != pb.GetType ())
-				{
-					return false;
-				}
-				if (pa.GetContentsSignature () != pb.GetContentsSignature ())
-				{
-					return false;
-				}
-			}
-			
-			for (int i = 0; i < a.properties.Length; i++)
-			{
-				Properties.BaseProperty pa = a.properties[i];
-				Properties.BaseProperty pb = b.properties[i];
-				
-				if (pa.CompareEqualContents (pb) == false)
-				{
-					return false;
-				}
-			}
-			
-			return true;
 		}
 		
 		

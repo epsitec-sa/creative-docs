@@ -19,6 +19,73 @@ namespace Epsitec.Common.Text.Styles
 		
 		
 		
+		public Properties.BaseProperty			this[int index]
+		{
+			get
+			{
+				if (this.properties == null)
+				{
+					throw new System.IndexOutOfRangeException ("Index out of range.");
+				}
+				
+				return this.properties[index];
+			}
+		}
+		
+		public Properties.BaseProperty			this[System.Type type]
+		{
+			get
+			{
+				if (this.properties == null)
+				{
+					return null;
+				}
+				
+				for (int i = 0; i < this.properties.Length; i++)
+				{
+					if (this.properties[i].GetType () == type)
+					{
+						return this.properties[i];
+					}
+				}
+				
+				return null;
+			}
+		}
+		
+		public Properties.BaseProperty			this[Properties.WellKnownType type]
+		{
+			get
+			{
+				if (this.properties == null)
+				{
+					return null;
+				}
+				
+				for (int i = 0; i < this.properties.Length; i++)
+				{
+					Properties.WellKnownType found = this.properties[i].WellKnownType;
+					
+					if (found == type)
+					{
+						return this.properties[i];
+					}
+					
+					//	On peut s'arrêter dès que l'on trouve une propriété avec
+					//	un WellKnownType plus grand que celui recherché, car la
+					//	table est triée :
+					
+					if (found > type)
+					{
+						break;
+					}
+				}
+				
+				return null;
+			}
+		}
+		
+		
 		public long 							Version
 		{
 			get
@@ -32,16 +99,11 @@ namespace Epsitec.Common.Text.Styles
 			}
 		}
 		
-		public Properties.BaseProperty[]		Properties
+		public int								CountProperties
 		{
 			get
 			{
-				if (this.properties == null)
-				{
-					this.properties = new Properties.BaseProperty[0];
-				}
-				
-				return this.properties;
+				return (this.properties == null) ? 0 : this.properties.Length;
 			}
 		}
 		
@@ -77,11 +139,22 @@ namespace Epsitec.Common.Text.Styles
 		
 		public virtual void Initialise(System.Collections.ICollection properties)
 		{
+			//	Insère les propriétés dans notre table interne. Les propriétés
+			//	sont toujours triées en s'appuyant sur leur WellKnownType, ce
+			//	qui permet une comparaison rapide.
+			
+			//	De plus, les propriétés les plus souvent utilisées ont une
+			//	valeur WellKnownType plus faible, ce qui les place en tête du
+			//	tableau et accélère la recherche.
+			
 			this.properties = new Properties.BaseProperty[properties.Count];
 			properties.CopyTo (this.properties, 0);
 			
+			System.Array.Sort (this.properties, new PropertyComparer ());
+			
 			this.Invalidate ();
 		}
+		
 		
 		public void Invalidate()
 		{
@@ -128,9 +201,21 @@ namespace Epsitec.Common.Text.Styles
 		}
 		
 		
-		
 		#region IContentsSignatureUpdater Members
-		public abstract void UpdateContentsSignature(IO.IChecksum checksum);
+		public virtual void UpdateContentsSignature(IO.IChecksum checksum)
+		{
+			//	Calcule la signature en se basant exclusivement sur celle des
+			//	propriétés.
+			
+			if ((this.properties != null) &&
+				(this.properties.Length > 0))
+			{
+				for (int i = 0; i < this.properties.Length; i++)
+				{
+					checksum.UpdateValue (this.properties[i].GetContentsSignature ());
+				}
+			}
+		}
 		#endregion
 		
 		#region IContentsSignature Members
@@ -167,6 +252,89 @@ namespace Epsitec.Common.Text.Styles
 			this.contents_signature = 0;
 		}
 		
+		
+		public static bool CompareEqualContents(Styles.BasePropertyContainer a, Styles.BasePropertyContainer b)
+		{
+			if (a.properties == b.properties)
+			{
+				return true;
+			}
+			if ((a.properties == null) ||
+				(b.properties == null))
+			{
+				return false;
+			}
+			if (a.properties.Length != b.properties.Length)
+			{
+				return false;
+			}
+			
+			int n = a.properties.Length;
+			
+			for (int i = 0; i < n; i++)
+			{
+				Properties.BaseProperty pa = a.properties[i];
+				Properties.BaseProperty pb = b.properties[i];
+				
+				if (pa.GetType () != pb.GetType ())
+				{
+					return false;
+				}
+				if (pa.GetContentsSignature () != pb.GetContentsSignature ())
+				{
+					return false;
+				}
+			}
+			
+			for (int i = 0; i < n; i++)
+			{
+				Properties.BaseProperty pa = a.properties[i];
+				Properties.BaseProperty pb = b.properties[i];
+				
+				if (pa.CompareEqualContents (pb) == false)
+				{
+					return false;
+				}
+			}
+			
+			return true;
+		}
+		
+		
+		#region PropertyComparer Class
+		private class PropertyComparer : System.Collections.IComparer
+		{
+			#region IComparer Members
+			public int Compare(object x, object y)
+			{
+				Properties.BaseProperty px = x as Properties.BaseProperty;
+				Properties.BaseProperty py = y as Properties.BaseProperty;
+				
+				Properties.WellKnownType wpx = px.WellKnownType;
+				Properties.WellKnownType wpy = py.WellKnownType;
+				
+				if (wpx < wpy)
+				{
+					return -1;
+				}
+				if (wpx > wpy)
+				{
+					return 1;
+				}
+				
+				if (wpx == Epsitec.Common.Text.Properties.WellKnownType.Other)
+				{
+					string x_name = px.GetType ().Name;
+					string y_name = py.GetType ().Name;
+					
+					return string.Compare (x_name, y_name);
+				}
+				
+				return 0;
+			}
+			#endregion
+		}
+		#endregion
 		
 		private long							version;
 		private int								contents_signature;
