@@ -404,6 +404,43 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public static Point RotatePoint(Point center, double angle, Point p)
+		{
+			// Fait tourner un point autour d'un centre.
+			// L'angle est exprimé en radians.
+			// Un angle positif est anti-horaire (CCW).
+			
+			Point a = new Point();
+			Point b = new Point();
+
+			a.X = p.X-center.X;
+			a.Y = p.Y-center.Y;
+
+			b.X = a.X*System.Math.Cos(angle) - a.Y*System.Math.Sin(angle);
+			b.Y = a.X*System.Math.Sin(angle) + a.Y*System.Math.Cos(angle);
+
+			b.X += center.X;
+			b.Y += center.Y;
+			return b;
+		}
+
+		public static Point RotatePoint(double angle, Point p)
+		{
+			// Fait tourner un point autour de l'origine.
+			// L'angle est exprimé en radians.
+			// Un angle positif est anti-horaire (CCW).
+			
+			Drawing.Point a = new Drawing.Point();
+
+			a.X = p.X*System.Math.Cos(angle) - p.Y*System.Math.Sin(angle);
+			a.Y = p.X*System.Math.Sin(angle) + p.Y*System.Math.Cos(angle);
+
+			return a;
+		}
+
+
+		
+		
 		protected static readonly double epsilon = 0.00001;
 		
 		public static bool Equal(double a, double b)
