@@ -22,12 +22,30 @@ namespace Epsitec.Common
 		}
 		
 		
-		public static double ClipAngle(double angle)
+		public static double ClipAngleRad(double angle)
 		{
 			//	Retourne un angle normalisé, c'est-à-dire compris entre 0 et 2*PI.
 			
 			angle = angle % (System.Math.PI*2.0);
 			return (angle < 0.0) ? System.Math.PI*2.0 + angle : angle;
+		}
+		
+		public static double ClipAngleDeg(double angle)
+		{
+			//	Retourne un angle normalisé, c'est-à-dire compris entre 0 et 360°.
+			
+			angle = angle % 360.0;
+			return (angle < 0.0) ? 360.0 + angle : angle;
+		}
+		
+		public static double DegToRad(double angle)
+		{
+			return angle * System.Math.PI / 180.0;
+		}
+		
+		public static double RadToDeg(double angle)
+		{
+			return angle * 180.0 / System.Math.PI;
 		}
 	}
 }
