@@ -496,13 +496,14 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
+			Widgets.Direction dir = this.vertical ? Direction.Up : Direction.Left;
+
 			// Dessine le fond.
-			adorner.PaintScrollerBackground(graphics, rect, tabRect, this.PaintState, this.RootDirection);
+			adorner.PaintScrollerBackground(graphics, rect, this.thumbRect, tabRect, this.PaintState, dir);
 			
 			// Dessine la cabine.
 			if ( this.Range > 0 && this.VisibleRangeRatio > 0 && this.IsEnabled )
 			{
-				Widgets.Direction dir = this.vertical ? Direction.Up : Direction.Left;
 				adorner.PaintScrollerHandle(graphics, this.thumbRect, Drawing.Rectangle.Empty, this.PaintState&(~WidgetState.Engaged), dir);
 			}
 		}
