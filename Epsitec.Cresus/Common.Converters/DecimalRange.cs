@@ -30,13 +30,27 @@ namespace Epsitec.Common.Converters
 		public decimal						Minimum
 		{
 			get { return this.minimum; }
-			set { this.minimum = value; }
+			set
+			{
+				if (this.minimum != value)
+				{
+					this.minimum = value;
+					this.OnChanged ();
+				}
+			}
 		}
 		
 		public decimal						Maximum
 		{
 			get { return this.maximum; }
-			set { this.maximum = value; }
+			set
+			{
+				if (this.maximum != value)
+				{
+					this.maximum = value;
+					this.OnChanged ();
+				}
+			}
 		}
 		
 		public bool							IsValid
@@ -69,8 +83,9 @@ namespace Epsitec.Common.Converters
 					//	Ceci est utile, car le nombre decimal 1M n'est pas représenté de la même
 					//	manière que les nombres 1.0M ou 1.00M, quand il sont convertis en string.
 					
-					this.digits_div = 1M;
-					this.digits_mul = 1M;
+					this.digits_div  = 1M;
+					this.digits_mul  = 1M;
+					this.frac_digits = 0;
 					
 					decimal iter = value;
 					
@@ -78,8 +93,11 @@ namespace Epsitec.Common.Converters
 					{
 						this.digits_mul *= 10M;
 						this.digits_div *= 0.1M;
+						this.frac_digits++;
 						iter *= 10M;
 					}
+					
+					this.OnChanged ();
 				}
 			}
 		}
@@ -122,7 +140,7 @@ namespace Epsitec.Common.Converters
 				return value;
 			}
 			
-			throw new System.InvalidOperationException (string.Format ("DecimalRange cannot constrain while invalid."));
+			throw new System.InvalidOperationException (string.Format ("DecimalRange is invalid."));
 		}
 		
 		public decimal Constrain(double value)
@@ -136,10 +154,102 @@ namespace Epsitec.Common.Converters
 		}
 		
 		
+		public decimal ConstrainToZero(decimal value)
+		{
+			if (this.IsValid)
+			{
+				if (this.resolution != 0)
+				{
+					decimal scale = 1M / this.resolution;
+					
+					value *= scale;
+					
+					if (value < 0)
+					{
+						value = -System.Decimal.Truncate (-value);
+					}
+					else
+					{
+						value = System.Decimal.Truncate (value);
+					}
+					
+					value /= scale;
+				}
+				
+				value = System.Math.Min (value, this.maximum);
+				value = System.Math.Max (value, this.minimum);
+				
+				//	Assure que le nombre de décimales après le point est constant et conforme à
+				//	la précision définie.
+				//
+				//	Ceci permet de garantir que ToString() se comporte de manière prévisible.
+				
+				value *= this.digits_mul;
+				value  = System.Decimal.Truncate (value);
+				value *= this.digits_div;
+				
+				return value;
+			}
+			
+			throw new System.InvalidOperationException (string.Format ("DecimalRange is invalid."));
+		}
+		
+		public decimal ConstrainToZero(double value)
+		{
+			return this.ConstrainToZero ((decimal) value);
+		}
+		
+		public decimal ConstrainToZero(int value)
+		{
+			return this.ConstrainToZero ((decimal) value);
+		}
+		
+		
+		public string ConvertToString(decimal value)
+		{
+			value = this.Constrain (value);
+			
+			if (this.frac_digits > 0)
+			{
+				return value.ToString (string.Format ("F{0}", this.frac_digits));
+			}
+			else
+			{
+				return ((int)value).ToString ();
+			}
+		}
+		
+		public string ConvertToString(decimal value, System.Globalization.CultureInfo culture)
+		{
+			value = this.Constrain (value);
+			
+			if (this.frac_digits > 0)
+			{
+				return value.ToString (string.Format ("F{0}", this.frac_digits), culture);
+			}
+			else
+			{
+				return ((int)value).ToString (culture);
+			}
+		}
+		
+		
+		protected virtual void OnChanged()
+		{
+			if (this.Changed != null)
+			{
+				this.Changed (this, System.EventArgs.Empty);
+			}
+		}
+		
+		
+		public event System.EventHandler	Changed;
+		
 		private decimal						minimum		=   0.0M;
 		private decimal						maximum		= 100.0M;
 		private decimal						resolution	=   1.0M;
 		private decimal						digits_mul	=   1M;
 		private decimal						digits_div	=   1M;
+		private int							frac_digits	=   0;
 	}
 }

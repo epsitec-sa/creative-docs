@@ -50,6 +50,41 @@ namespace Epsitec.Common.Converters
 			Assertion.Assert (-2.0M == range4.Constrain (-1.500M));
 		}
 		
+		[Test] public void CheckConstrainToZero()
+		{
+			DecimalRange range1 = new DecimalRange (0.0M, 100.0M, 0.01M);
+			DecimalRange range2 = new DecimalRange (0.0M, 100.0M, 0.05M);
+			DecimalRange range3 = new DecimalRange (0.0M, 100.0M, 4.00M);
+			DecimalRange range4 = new DecimalRange (-100.0M, 100.0M, 1.00M);
+			
+			Assertion.Assert (0.50M == range1.ConstrainToZero (0.50M));
+			Assertion.Assert (0.50M == range1.ConstrainToZero (0.501M));
+			Assertion.Assert (0.49M == range1.ConstrainToZero (0.496M));
+			Assertion.Assert (0.49M == range1.ConstrainToZero (0.495M));
+			Assertion.Assert (0.49M == range1.ConstrainToZero (0.494M));
+			
+			Assertion.Assert (0.50M == range2.ConstrainToZero (0.50M));
+			Assertion.Assert (0.50M == range2.ConstrainToZero (0.52M));
+			Assertion.Assert (0.45M == range2.ConstrainToZero (0.475M));
+			Assertion.Assert (0.50M == range2.ConstrainToZero (0.52499M));
+			Assertion.Assert (0.45M == range2.ConstrainToZero (0.474M));
+			
+			Assertion.Assert (12.0M == range3.ConstrainToZero (13.0M));
+			Assertion.Assert ( 8.0M == range3.ConstrainToZero (10.0M));
+			Assertion.Assert (12.0M == range3.ConstrainToZero (13.999M));
+			Assertion.Assert (12.0M == range3.ConstrainToZero (14.0M));
+			Assertion.Assert ( 8.0M == range3.ConstrainToZero (9.9999M));
+			
+			Assertion.Assert ( 0.0M == range4.ConstrainToZero ( 0.500M));
+			Assertion.Assert ( 1.0M == range4.ConstrainToZero ( 1.499M));
+			Assertion.Assert ( 1.0M == range4.ConstrainToZero ( 1.500M));
+			Assertion.Assert ( 0.0M == range4.ConstrainToZero ( 0.499M));
+			Assertion.Assert ( 0.0M == range4.ConstrainToZero (-0.499M));
+			Assertion.Assert ( 0.0M == range4.ConstrainToZero (-0.500M));
+			Assertion.Assert (-1.0M == range4.ConstrainToZero (-1.499M));
+			Assertion.Assert (-1.0M == range4.ConstrainToZero (-1.500M));
+		}
+		
 		[Test] public void CheckPrecision()
 		{
 			DecimalRange range1 = new DecimalRange (0.0M, 100.0M, 1.0M);
@@ -61,6 +96,29 @@ namespace Epsitec.Common.Converters
 			Assertion.AssertEquals (50.0M,  range2.Constrain (50.0M));
 			Assertion.AssertEquals (50.00M, range3.Constrain (50.0M));
 			Assertion.AssertEquals (50M,    range4.Constrain (50.0M));
+			
+			Assertion.AssertEquals (0M,     range1.Constrain (0.0M));
+			Assertion.AssertEquals (0.0M,   range2.Constrain (0.0M));
+			Assertion.AssertEquals (0.00M,  range3.Constrain (0.0M));
+			Assertion.AssertEquals (0M,     range4.Constrain (0.0M));
+		}
+		
+		[Test] public void CheckConvertToString()
+		{
+			DecimalRange range1 = new DecimalRange (0.0M, 100.0M, 1.0M);
+			DecimalRange range2 = new DecimalRange (0.0M, 100.0M, 0.1M);
+			DecimalRange range3 = new DecimalRange (0.0M, 100.0M, 0.01M);
+			DecimalRange range4 = new DecimalRange (0.0M, 100.0M, 10.0M);
+			
+			Assertion.AssertEquals ("50",    range1.ConvertToString (50.0M));
+			Assertion.AssertEquals ("50.0",  range2.ConvertToString (50.0M));
+			Assertion.AssertEquals ("50.00", range3.ConvertToString (50.0M));
+			Assertion.AssertEquals ("50",    range4.ConvertToString (50.0M));
+			
+			Assertion.AssertEquals ("0",     range1.ConvertToString (0.0M));
+			Assertion.AssertEquals ("0.0",   range2.ConvertToString (0.0M));
+			Assertion.AssertEquals ("0.00",  range3.ConvertToString (0.0M));
+			Assertion.AssertEquals ("0",     range4.ConvertToString (0.0M));
 		}
 	}
 }

@@ -177,7 +177,7 @@ namespace Epsitec.Common.Widgets
 			graphics.GradientRenderer.Transform = t;
 		}
 		
-		void Helpers.IDragBehaviorHost.OnDragBegin()
+		void Helpers.IDragBehaviorHost.OnDragBegin(Drawing.Point cursor)
 		{
 			if (this.DragBegin != null)
 			{

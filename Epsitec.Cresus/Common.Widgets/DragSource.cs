@@ -194,7 +194,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		void Helpers.IDragBehaviorHost.OnDragBegin()
+		void Helpers.IDragBehaviorHost.OnDragBegin(Drawing.Point cursor)
 		{
 			//	L'utilisateur aimerait déplacer le widget pour faire du drag & drop. Il faut créer
 			//	la fenêtre miniature qui contient le widget en déplacement :

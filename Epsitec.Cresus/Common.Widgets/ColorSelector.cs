@@ -24,22 +24,22 @@ namespace Epsitec.Common.Widgets
 				this.fields[i].Value = 0;
 				if ( i < 4 )
 				{
-					this.fields[i].MinRange = 0;
-					this.fields[i].MaxRange = 255;
+					this.fields[i].MinValue = 0;
+					this.fields[i].MaxValue = 255;
 					this.fields[i].Step = 10;
 					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextRGBChanged);
 				}
 				else if ( i == 4 )
 				{
-					this.fields[i].MinRange = 0;
-					this.fields[i].MaxRange = 360;
+					this.fields[i].MinValue = 0;
+					this.fields[i].MaxValue = 360;
 					this.fields[i].Step = 10;
 					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextHSVChanged);
 				}
 				else
 				{
-					this.fields[i].MinRange = 0;
-					this.fields[i].MaxRange = 100;
+					this.fields[i].MinValue = 0;
+					this.fields[i].MaxValue = 100;
 					this.fields[i].Step = 5;
 					this.fields[i].TextChanged += new Support.EventHandler(this.HandleTextHSVChanged);
 				}
@@ -183,10 +183,10 @@ namespace Epsitec.Common.Widgets
 			double a,r,g,b;
 			this.Color.GetARGB(out a, out r, out g, out b);
 			
-			this.fields[0].Value = System.Math.Floor(r*255+0.5);
-			this.fields[1].Value = System.Math.Floor(g*255+0.5);
-			this.fields[2].Value = System.Math.Floor(b*255+0.5);
-			this.fields[3].Value = System.Math.Floor(a*255+0.5);
+			this.fields[0].Value = (decimal) System.Math.Floor(r*255+0.5);
+			this.fields[1].Value = (decimal) System.Math.Floor(g*255+0.5);
+			this.fields[2].Value = (decimal) System.Math.Floor(b*255+0.5);
+			this.fields[3].Value = (decimal) System.Math.Floor(a*255+0.5);
 		}
 
 		// Couleur -> textes éditables.
@@ -195,9 +195,9 @@ namespace Epsitec.Common.Widgets
 			double h,s,v;
 			this.circle.GetHSV(out h, out s, out v);
 			
-			this.fields[4].Value = System.Math.Floor(h);
-			this.fields[5].Value = System.Math.Floor(s*100+0.5);
-			this.fields[6].Value = System.Math.Floor(v*100+0.5);
+			this.fields[4].Value = (decimal) System.Math.Floor(h);
+			this.fields[5].Value = (decimal) System.Math.Floor(s*100+0.5);
+			this.fields[6].Value = (decimal) System.Math.Floor(v*100+0.5);
 			
 			this.ColoriseSliders();
 		}
@@ -205,10 +205,10 @@ namespace Epsitec.Common.Widgets
 		// Textes éditables RGB -> couleur.
 		protected void FieldsRGBToColor()
 		{
-			double r = this.fields[0].Value/255;
-			double g = this.fields[1].Value/255;
-			double b = this.fields[2].Value/255;
-			double a = this.fields[3].Value/255;
+			double r = (double) this.fields[0].Value/255;
+			double g = (double) this.fields[1].Value/255;
+			double b = (double) this.fields[2].Value/255;
+			double a = (double) this.fields[3].Value/255;
 			
 			this.Color = Drawing.Color.FromARGB(a,r,g,b);
 		}
@@ -216,9 +216,9 @@ namespace Epsitec.Common.Widgets
 		// Textes éditables HSV -> couleur.
 		protected void FieldsHSVToColor()
 		{
-			double h = this.fields[4].Value;
-			double s = this.fields[5].Value/100;
-			double v = this.fields[6].Value/100;
+			double h = (double) this.fields[4].Value;
+			double s = (double) this.fields[5].Value/100;
+			double v = (double) this.fields[6].Value/100;
 			
 			System.Diagnostics.Debug.Assert(this.suspendColorEvents == false);
 			
