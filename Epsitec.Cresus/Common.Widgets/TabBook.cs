@@ -679,6 +679,7 @@ namespace Epsitec.Common.Widgets
 					index = System.Math.Min(index, this.PageCount-1);
 					index = System.Math.Max(index, 0);
 					this.ActivePageIndex = index;
+					this.SetFocused(true);
 					message.Consumer = this;
 					return;
 				}

@@ -37,6 +37,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public void Clear()
+		{
+			this.Children.Clear ();
+			
+			if ( this.cellArray != null )
+			{
+				this.cellArray.NotifyCellChanged(this);
+			}
+		}
+		
 		
 		public AbstractCellArray CellArray
 		{
