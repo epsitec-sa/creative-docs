@@ -9,7 +9,7 @@ namespace Epsitec.Common.Script.Developer
 	/// <summary>
 	/// Summary description for EditionController.
 	/// </summary>
-	public class EditionController
+	public class EditionController : IScriptSource
 	{
 		public EditionController()
 		{
@@ -35,6 +35,18 @@ namespace Epsitec.Common.Script.Developer
 					this.source = value;
 					this.UpdateFromSource ();
 				}
+			}
+		}
+		
+		public string							Name
+		{
+			get
+			{
+				return this.name;
+			}
+			set
+			{
+				this.name = value;
 			}
 		}
 		
@@ -263,7 +275,7 @@ namespace Epsitec.Common.Script.Developer
 		{
 			string source = this.source.GenerateAssemblySource ();
 			Engine engine = new Engine ();
-			Script script = engine.Compile (source);
+			Script script = engine.Compile (this.name, source);
 			
 			foreach (Source.Method method in this.source.Methods)
 			{
@@ -361,6 +373,7 @@ namespace Epsitec.Common.Script.Developer
 			//	TODO: déterminer le nom de la nouvelle méthode
 			//	TODO: ajouter une méthode
 		}
+		
 		
 		private void HandlePanelIsModifiedChanged(object sender)
 		{
@@ -701,6 +714,7 @@ namespace Epsitec.Common.Script.Developer
 		}
 		
 		protected CommandDispatcher				dispatcher;
+		protected string						name;
 		protected Source						source;
 		protected System.Collections.Hashtable	source_cursor_from = new System.Collections.Hashtable ();
 		protected System.Collections.Hashtable	source_cursor_to   = new System.Collections.Hashtable ();
