@@ -117,6 +117,7 @@ namespace Epsitec.Common.Widgets.Helpers
 					}
 					
 					text.Selection = html;
+					text.SimulateEdited ();
 					return true;
 				}
 			}
@@ -138,6 +139,7 @@ namespace Epsitec.Common.Widgets.Helpers
 				}
 				
 				text.DeleteSelection ();
+				text.SimulateEdited ();
 				
 				return true;
 			}
