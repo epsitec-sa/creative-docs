@@ -17,7 +17,9 @@ namespace Epsitec.Common.Printing
 			
 			if (this.settings != null)
 			{
-				this.height = (float) this.settings.Bounds.Height;
+				this.offset_x = (float) (- graphics.VisibleClipBounds.Left);
+				this.offset_y = (float) (graphics.VisibleClipBounds.Top + graphics.VisibleClipBounds.Height);
+				this.scale  = (float) (100.0 / 25.4);
 			}
 			
 			this.transform = new Drawing.Transform ();
@@ -32,7 +34,9 @@ namespace Epsitec.Common.Printing
 			this.brush    = System.Drawing.Brushes.Black;
 			this.pen      = new System.Drawing.Pen (this.brush, 1.0f);
 			
-			this.height = (float) dy;
+			this.offset_x = 0;
+			this.offset_y = (float) (dy);
+			this.scale    = 1.0f;
 			
 			this.transform = new Drawing.Transform ();
 			
@@ -112,9 +116,16 @@ namespace Epsitec.Common.Printing
 			{
 				if (this.color != value)
 				{
-					this.color = value;
-					this.InvalidateBrush ();
-					this.InvalidatePen ();
+					if (value.IsOpaque)
+					{
+						this.color = value;
+						this.InvalidateBrush ();
+						this.InvalidatePen ();
+					}
+					else
+					{
+						throw new System.FormatException (string.Format ("The color {0} is not compatible with the PrintPort.", value.ToString ()));
+					}
 				}
 			}
 		}
@@ -202,8 +213,8 @@ namespace Epsitec.Common.Printing
 		protected void ResetTransform()
 		{
 			this.graphics.ResetTransform ();
-			this.graphics.TranslateTransform (0, (float)(this.height));
-			this.graphics.ScaleTransform (1, -1);
+			this.graphics.TranslateTransform (this.offset_x, this.offset_y);
+			this.graphics.ScaleTransform (this.scale, -this.scale);
 		}
 		
 		public Drawing.Transform SaveTransform()
@@ -455,9 +466,16 @@ namespace Epsitec.Common.Printing
 			}
 			
 			System.Drawing.RectangleF src = new System.Drawing.RectangleF ((float)(ix1), (float)(iy1), (float)(ix2-ix1), (float)(iy2-iy1));
-			System.Drawing.RectangleF dst = new System.Drawing.RectangleF ((float)(fill_x), (float)(fill_y), (float)(fill_width), (float)(fill_height));
+			System.Drawing.RectangleF dst = new System.Drawing.RectangleF (0, 0, (float)(fill_width), (float)(fill_height));
 			
-			this.graphics.DrawImage (bitmap.BitmapImage.NativeBitmap, src, dst, System.Drawing.GraphicsUnit.Pixel);
+			float tx = (float)(fill_x);
+			float ty = (float)(fill_y + fill_height);
+			
+			this.graphics.TranslateTransform (tx, ty);
+			this.graphics.ScaleTransform (1, -1);
+			this.graphics.DrawImage (bitmap.BitmapImage.NativeBitmap, dst, src, System.Drawing.GraphicsUnit.Pixel);
+			this.graphics.ScaleTransform (1, -1);
+			this.graphics.TranslateTransform (-tx, -ty);
 		}
 		
 		
@@ -547,7 +565,8 @@ namespace Epsitec.Common.Printing
 		protected Drawing.CapStyle				line_cap         = Drawing.CapStyle.Square;
 		protected double						line_miter_limit = 4.0;
 		
-		protected float							height;
+		protected float							offset_x, offset_y;
+		protected float							scale;
 		
 		protected Drawing.Color					color = Drawing.Color.FromRGB (0, 0, 0);
 		protected Drawing.Rectangle				clip = Drawing.Rectangle.Infinite;
