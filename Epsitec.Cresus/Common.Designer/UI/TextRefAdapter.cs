@@ -77,7 +77,7 @@ namespace Epsitec.Common.Designer.UI
 					
 					Support.ObjectBundler.DefineXmlRef (source, name, value);
 					
-					this.SyncFromBinder ();
+					this.SyncFromBinder (Common.UI.SyncReason.AdapterChanged);
 					this.OnValueChanged ();
 				}
 			}
@@ -152,6 +152,31 @@ namespace Epsitec.Common.Designer.UI
 		}
 		
 		
+		public string GetFieldValue()
+		{
+			string target = this.XmlRefTarget;
+			
+			if ((target != null) &&
+				(this.StringProvider != null))
+			{
+				string bundle;
+				string field;
+				
+				if (Support.ResourceBundle.SplitTarget (target, out bundle, out field))
+				{
+					this.StringController.LoadStringBundle (bundle);
+					
+					if ((this.StringController.IsStringBundleLoaded (bundle)) &&
+						(this.StringProvider.IsPropertyDefined (target)))
+					{
+						return this.StringProvider.GetProperty (target) as string;
+					}
+				}
+			}
+			
+			return null;
+		}
+		
 		
 		protected override object ConvertToObject()
 		{
@@ -161,24 +186,12 @@ namespace Epsitec.Common.Designer.UI
 		
 		protected override bool ConvertFromObject(object data)
 		{
-			string target = this.XmlRefTarget;
+			string field_value = this.GetFieldValue ();
 			
-			if ((target != null) &&
-				(this.StringProvider != null))
+			if (field_value != null)
 			{
-				string bundle, field;
-				
-				if (Support.ResourceBundle.SplitTarget (target, out bundle, out field))
-				{
-					this.StringController.LoadStringBundle (bundle);
-					
-					if ((this.StringController.IsStringBundleLoaded (bundle)) &&
-						(this.StringProvider.IsPropertyDefined (target)))
-					{
-						this.Value = this.StringProvider.GetProperty (target) as string;
-						return true;
-					}
-				}
+				this.Value = field_value;
+				return true;
 			}
 			
 			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (this.binder.GetDataType ());

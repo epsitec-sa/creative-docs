@@ -19,7 +19,7 @@ namespace Epsitec.Common.Designer.UI
 		public override void CreateUI(Widget panel)
 		{
 			this.caption_label = new StaticText (panel);
-			this.text_field    = new TextField (panel);
+			this.combo_text    = new TextFieldCombo (panel);
 			this.label_bundle  = new StaticText (panel);
 			this.combo_bundle  = new TextFieldCombo (panel);
 			this.label_field   = new StaticText (panel);
@@ -31,9 +31,12 @@ namespace Epsitec.Common.Designer.UI
 			this.caption_label.Anchor        = AnchorStyles.TopLeft;
 			this.caption_label.AnchorMargins = new Drawing.Margins (0, 0, 8, 0);
 			
-			this.text_field.Anchor           = AnchorStyles.LeftAndRight | AnchorStyles.Top;
-			this.text_field.AnchorMargins    = new Drawing.Margins (this.caption_label.Right, 0, 4, 0);
-			this.text_field.TextChanged     += new EventHandler (this.HandleTextFieldTextChanged);
+			this.combo_text.Anchor           = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			this.combo_text.AnchorMargins    = new Drawing.Margins (this.caption_label.Right, 0, 4, 0);
+			this.combo_text.TextChanged     += new EventHandler (this.HandleComboTextTextChanged);
+			this.combo_text.TextEdited      += new EventHandler (this.HandleComboTextTextEdited);
+			this.combo_text.OpeningCombo    += new CancelEventHandler (this.HandleComboTextOpeningCombo);
+			this.combo_text.ButtonGlyphShape = GlyphShape.Dots;
 			
 			this.label_bundle.Width          = this.caption_label.Width;
 			this.label_bundle.Anchor         = this.caption_label.Anchor;
@@ -53,38 +56,60 @@ namespace Epsitec.Common.Designer.UI
 			this.combo_field.AnchorMargins   = new Drawing.Margins (this.caption_label.Right, 0, 4+20+8+20+4, 0);
 			this.combo_field.IsReadOnly      = true;
 			this.combo_field.PlaceHolder     = "<b>&lt;create new field&gt;</b>";
+			this.combo_field.AutoErasing    += new CancelEventHandler (this.HandleComboFieldAutoErasing);
 			
 			IValidator field_validator  = new Common.Widgets.Validators.RegexValidator (this.combo_field, RegexFactory.ResourceName, false);
 			IValidator bundle_validator = new Common.Widgets.Validators.RegexValidator (this.combo_bundle, RegexFactory.ResourceName, false);
 			
-			this.combo_bundle.SelectedIndexChanged += new EventHandler(this.HandleComboBundleSelectedIndexChanged);
-			this.combo_field.SelectedIndexChanged  += new EventHandler(this.HandleComboFieldSelectedIndexChanged);
-			this.combo_field.EditionValidated      += new EventHandler(this.HandleComboFieldEditionValidated);
+			this.combo_bundle.SelectedIndexChanged += new EventHandler (this.HandleComboBundleSelectedIndexChanged);
+			this.combo_field.SelectedIndexChanged  += new EventHandler (this.HandleComboFieldSelectedIndexChanged);
+			this.combo_field.EditionValidated      += new EventHandler (this.HandleComboFieldEditionValidated);
+			this.combo_field.EditionCancelled      += new EventHandler (this.HandleComboFieldEditionCancelled);
 			
 			this.OnCaptionChanged ();
 			
-			this.SyncFromAdapter ();
+			this.SyncFromAdapter (Common.UI.SyncReason.Initialisation);
 		}
 		
-		public override void SyncFromAdapter()
+		public override void SyncFromAdapter(Common.UI.SyncReason reason)
 		{
+			if (reason == Common.UI.SyncReason.SourceChanged)
+			{
+				this.State = InternalState.Passive;
+			}
+			
 			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
 			
 			if ((adapter != null) &&
-				(this.text_field != null))
+				(this.combo_text != null))
 			{
-				this.text_field.Text = adapter.Value;
+				string current_text = adapter.Value;
+				string stored_text  = adapter.GetFieldValue ();
 				
-				string field  = adapter.FieldName;
-				string bundle = adapter.BundleName;
+				this.combo_text.Text = current_text;
 				
-				this.UpdateBundleList (adapter);
-				this.UpdateFieldList (adapter, bundle);
+				if (current_text == stored_text)
+				{
+					string field  = adapter.FieldName;
+					string bundle = adapter.BundleName;
+					
+					this.UpdateBundleList (adapter);
+					this.UpdateFieldList (adapter, bundle);
+					
+					this.combo_bundle.Text   = bundle;
+					this.combo_bundle.Cursor = 0;
+					this.combo_field.Text    = field;
+					this.combo_field.Cursor  = 0;
+				}
+				else if (stored_text == null)
+				{
+					this.State = InternalState.UsingUndefinedText;
+				}
 				
-				this.combo_bundle.Text   = bundle;
-				this.combo_bundle.Cursor = 0;
-				this.combo_field.Text    = field;
-				this.combo_field.Cursor  = 0;
+				if (reason != Common.UI.SyncReason.ValueChanged)
+				{
+					this.combo_text.SelectAll ();
+				}
 			}
 		}
 		
@@ -93,9 +118,9 @@ namespace Epsitec.Common.Designer.UI
 			TextRefAdapter adapter = this.Adapter as TextRefAdapter;
 			
 			if ((adapter != null) &&
-				(this.text_field != null))
+				(this.combo_text != null))
 			{
-				adapter.Value = this.text_field.Text;
+				adapter.Value = this.combo_text.Text;
 			}
 		}
 		
@@ -127,9 +152,21 @@ namespace Epsitec.Common.Designer.UI
 		}
 		
 		
-		private void HandleTextFieldTextChanged(object sender)
+		private void HandleComboTextTextChanged(object sender)
 		{
 			this.SyncFromUI ();
+		}
+		
+		private void HandleComboTextTextEdited(object sender)
+		{
+			this.State = InternalState.UsingCustomText;
+		}
+		
+		private void HandleComboTextOpeningCombo(object sender, CancelEventArgs e)
+		{
+			e.Cancel = true;
+			
+			//	TODO: ouvre le dialogue permettant de choisir un texte.
 		}
 		
 		private void HandleComboBundleSelectedIndexChanged(object sender)
@@ -152,7 +189,12 @@ namespace Epsitec.Common.Designer.UI
 			{
 				adapter.XmlRefTarget = ResourceBundle.MakeTarget (bundle, field);
 				
-				this.SyncFromAdapter ();
+				this.SyncFromAdapter (Common.UI.SyncReason.AdapterChanged);
+				this.State = InternalState.UsingExistingText;
+			}
+			else
+			{
+				this.State = InternalState.Passive;
 			}
 		}
 		
@@ -165,8 +207,69 @@ namespace Epsitec.Common.Designer.UI
 			System.Diagnostics.Debug.WriteLine (string.Format ("Create field {0}#{1}.", this.combo_bundle.Text, this.combo_field.Text));
 		}
 		
+		private void HandleComboFieldEditionCancelled(object sender)
+		{
+			System.Diagnostics.Debug.Assert (sender == this.combo_field);
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Cancelled field, restored to {0}#{1}.", this.combo_bundle.Text, this.combo_field.Text));
+		}
 		
-		private TextField						text_field;
+		private void HandleComboFieldAutoErasing(object sender, CancelEventArgs e)
+		{
+			System.Diagnostics.Debug.Assert (sender == this.combo_field);
+			
+			if (this.combo_field.Text != this.combo_field.PlaceHolder)
+			{
+				e.Cancel = true;
+			}
+		}
+		
+		
+		
+		private InternalState					State
+		{
+			get
+			{
+				return this.state;
+			}
+			set
+			{
+				if (this.state != value)
+				{
+					switch (value)
+					{
+						case InternalState.Passive:
+							this.combo_field.CancelEdition ();
+							break;
+						case InternalState.UsingCustomText:
+							this.combo_field.StartPassiveEdition (this.combo_field.PlaceHolder);
+							break;
+						case InternalState.UsingExistingText:
+							this.combo_field.CancelEdition ();
+							break;
+						case InternalState.UsingUndefinedText:
+							this.combo_field.StartPassiveEdition (this.combo_field.PlaceHolder);
+							break;
+					}
+					
+					this.state = value;
+				}
+			}
+		}
+		
+		
+		private enum InternalState
+		{
+			None,
+			Passive,
+			UsingCustomText,
+			UsingUndefinedText,
+			UsingExistingText
+		}
+		
+		
+		private InternalState					state;
+		private TextFieldCombo					combo_text;
 		
 		private StaticText						label_field;
 		private StaticText						label_bundle;

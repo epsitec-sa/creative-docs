@@ -173,12 +173,12 @@ namespace Epsitec.Common.Designer.Panels
 		{
 			if (this.comment.ContainsFocus)
 			{
-				this.edit_array.SetFocused (true);
+				this.edit_array.Focus ();
 			}
 			else
 			{
 				this.comment.SelectAll ();
-				this.comment.SetFocused (true);
+				this.comment.Focus ();
 			}
 		}
 		
@@ -212,7 +212,7 @@ namespace Epsitec.Common.Designer.Panels
 				this.lang_suffix_1 = suffix;
 			}
 			
-			this.edit_array.SetFocused (true);
+			this.edit_array.Focus ();
 		}
 		
 		private void HandleLangSwapClicked(object sender, MessageEventArgs e)

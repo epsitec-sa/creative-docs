@@ -871,24 +871,24 @@ namespace Epsitec.Common.Widgets
 		public bool MoveCursor(TextLayout.Context context, int move, bool select, bool word)
 		{
 			// Déplace le curseur.
-			if ( move == 1 && !select && !word )
+			if ( move == 1 && !select && !word &&
+				 context.CursorFrom == context.CursorTo &&
+				 !context.CursorAfter &&
+				 this.IsDualCursor(context.CursorTo) )
 			{
-				if ( !context.CursorAfter && this.IsDualCursor(context.CursorTo) )
-				{
-					context.CursorAfter = true;
-					this.DefineCursorPosX(context);
-					return true;
-				}
+				context.CursorAfter = true;
+				this.DefineCursorPosX(context);
+				return true;
 			}
 
-			if ( move == -1 && !select && !word )
+			if ( move == -1 && !select && !word &&
+				 context.CursorFrom == context.CursorTo &&
+				 context.CursorAfter &&
+				 this.IsDualCursor(context.CursorTo) )
 			{
-				if ( context.CursorAfter && this.IsDualCursor(context.CursorTo) )
-				{
-					context.CursorAfter = false;
-					this.DefineCursorPosX(context);
-					return true;
-				}
+				context.CursorAfter = false;
+				this.DefineCursorPosX(context);
+				return true;
 			}
 
 			context.CursorAfter = (move < 0);
@@ -2629,7 +2629,7 @@ namespace Epsitec.Common.Widgets
 				
 				if ( tag == Tag.EndOfText )  break;
 				
-				bool processed_tag = this.ProcessFormatTags(tag, fontStack, supplItem, parameters);
+				bool processedTag = this.ProcessFormatTags(tag, fontStack, supplItem, parameters);
 				
 				if ( tag != Tag.None || beginOffset == 0 )
 				{
@@ -2654,7 +2654,7 @@ namespace Epsitec.Common.Widgets
 					run.FontScale = fontItem.fontSize;
 				}
 				
-				if ( !processed_tag )
+				if ( !processedTag )
 				{
 					switch ( tag )
 					{
@@ -2734,7 +2734,7 @@ namespace Epsitec.Common.Widgets
 			// Si le texte n'existe pas, met quand même un bloc vide,
 			// afin de voir apparaître le curseur (FindTextCursor).
 			int textLength = this.TextLength;
-no_text:
+noText:
 			if ( textLength == 0 )
 			{
 				fontItem = (FontItem)fontStack.Peek();
@@ -2756,13 +2756,11 @@ no_text:
 			if ( lines == null )
 			{
 				textLength = 0;
-				goto no_text;
+				goto noText;
 			}
-			
 			
 			int lineNumber = 0;
 			int lineSkip   = 0;
-			
 			int sourceLength = 0;
 			
 			SupplItem supplItem = new SupplItem();
