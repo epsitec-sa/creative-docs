@@ -164,22 +164,53 @@ namespace Epsitec.Common.Support
 			System.Time time_2 = System.Time.Now;
 			
 			bundler = new ObjectBundler ();
-			bundle  = ResourceBundle.Create ("cloned_simple_window");
+			bundle  = ResourceBundle.Create ("cloned_simple_window", "file", ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
 			
 			bundler.SetupPrefix ("file");
 			bundler.FillBundleFromObject (bundle, root);
 			
 			System.Time time_3 = System.Time.Now;
 			
-			string xml = bundle.CreateXmlDocument (false).OuterXml;
+			bundle.CreateXmlDocument (false).Save ("test.xml");
 			
 			System.Time time_4 = System.Time.Now;
 			
-			System.Console.Out.WriteLine (xml);
 			
 			System.Console.Out.WriteLine ("Load:  {0} ms", (time_2.Ticks-time_1.Ticks)/10000);
 			System.Console.Out.WriteLine ("Store: {0} ms", (time_3.Ticks-time_2.Ticks)/10000);
 			System.Console.Out.WriteLine ("XML:   {0} ms", (time_4.Ticks-time_3.Ticks)/10000);
+		}
+		
+		[Test] public void CheckFillBundleFromSimpleWindowAndRestore()
+		{
+			ResourceBundle bundle = Resources.GetBundle ("file:simple_window");
+			ObjectBundler bundler = new ObjectBundler ();
+			
+			Assertion.AssertNotNull (bundle);
+			
+			bundler.EnableMapping ();
+			
+			object             obj  = bundler.CreateFromBundle (bundle);
+			Widgets.WindowRoot root = obj as Widgets.WindowRoot;
+			
+			Assertion.AssertNotNull (obj);
+			Assertion.AssertNotNull (root);
+			
+			bundler = new ObjectBundler ();
+			bundle  = ResourceBundle.Create ("cloned_simple_window", "file", ResourceLevel.Default, System.Globalization.CultureInfo.CurrentCulture);
+			
+			bundler.SetupPrefix ("file");
+			bundler.FillBundleFromObject (bundle, root);
+			
+			bundler = new ObjectBundler ();
+			
+			obj  = bundler.CreateFromBundle (bundle);
+			root = obj as Widgets.WindowRoot;
+			
+			Assertion.AssertNotNull (obj);
+			Assertion.AssertNotNull (root);
+			
+			root.Window.Show ();
 		}
 		
 		[Test] public void CheckCommandDispatcher()
@@ -256,7 +287,7 @@ namespace Epsitec.Common.Support
 			
 			
 			#region IBundleSupport Members
-			public void SerialiseToBundle(ObjectBundler bundler, ResourceBundle bundle)
+			public void SerializeToBundle(ObjectBundler bundler, ResourceBundle bundle)
 			{
 			}
 

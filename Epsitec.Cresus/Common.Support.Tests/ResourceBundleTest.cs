@@ -360,7 +360,7 @@ namespace Epsitec.Common.Support
 			byte[] live_data = bundle.CreateXmlAsData ();
 			
 			ResourceBundleTest.XmlDumpIfDifferent (test_data, live_data, bundle);
-			Assertion.Assert ("Serialised data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
+			Assertion.Assert ("Serialized data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
 		}
 		
 		[Test] public void CheckCreateXmlNode2()
@@ -383,7 +383,7 @@ namespace Epsitec.Common.Support
 			byte[] live_data = bundle.CreateXmlAsData ();
 			
 			ResourceBundleTest.XmlDumpIfDifferent (test_data, live_data, bundle);
-			Assertion.Assert ("Serialised data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
+			Assertion.Assert ("Serialized data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
 			
 			System.Console.Out.WriteLine (bundle[0].Xml.InnerXml);
 		}
@@ -406,7 +406,7 @@ namespace Epsitec.Common.Support
 			
 			ResourceBundleTest.XmlDumpIfDifferent (test_data, live_data, bundle);
 			
-			Assertion.Assert ("Serialised data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
+			Assertion.Assert ("Serialized data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
 			Assertion.Assert ("Field not recognized as <ref> tag.", bundle[0].IsRef);
 			
 			System.Console.Out.WriteLine (bundle[0].Xml.OuterXml);
@@ -448,7 +448,7 @@ namespace Epsitec.Common.Support
 			byte[] live_data = bundle.CreateXmlAsData ();
 			
 			ResourceBundleTest.XmlDumpIfDifferent (test_data, live_data, bundle);
-			Assertion.Assert ("Serialised data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
+			Assertion.Assert ("Serialized data not equal to source data", ResourceBundleTest.XmlTestEqual (test_data, live_data));
 			
 			bundle = ResourceBundle.Create ();
 			bundle.Compile (test_data);

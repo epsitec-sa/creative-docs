@@ -178,7 +178,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "SerialisationTest.cs"
+                    RelPath = "SerializationTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
