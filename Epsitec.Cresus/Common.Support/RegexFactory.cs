@@ -23,6 +23,7 @@ namespace Epsitec.Common.Support
 			RegexFactory.alpha_num_name = new Regex (@"^[a-zA-Z_][a-zA-Z0-9_]*$", options);
 			RegexFactory.alpha_dot_name = new Regex (@"^[a-zA-Z_]([a-zA-Z0-9_]*((?![\.]$)(?<X>[\.])(?!\k<X>))*)*$", options);
 			RegexFactory.file_name      = new Regex (@"^[a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]([a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]*((?![\. ]$)(?<X>[\. ])(?!\k<X>))*)*$", options);
+			RegexFactory.path_name      = new Regex (@"^[a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]([a-zA-Z0-9_\""\'\$\+\-\=\@\&\(\)\!]*((?![\.\/\ ]$)(?<X>[\.\/\ ])(?!\k<X>))*)*$", options);
 			RegexFactory.resource_name  = new Regex (@"^[a-zA-Z_](([a-zA-Z0-9_]*((?![\.\#]$)(?<X>[\.\#])(?!\k<X>))*)|(\[[0-9]+\]))*$", options);
 		}
 		
@@ -118,6 +119,14 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public static Regex						PathName
+		{
+			get
+			{
+				return RegexFactory.path_name;
+			}
+		}
+		
 		public static Regex						ResourceName
 		{
 			get
@@ -140,6 +149,7 @@ namespace Epsitec.Common.Support
 		private static Regex					alpha_num_name;
 		private static Regex					alpha_dot_name;
 		private static Regex					file_name;
+		private static Regex					path_name;
 		private static Regex					resource_name;
 	}
 }
