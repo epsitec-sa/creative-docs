@@ -419,5 +419,14 @@ namespace Epsitec.Cresus.Database
 		internal const string			TagId				= "CR_ID";
 		internal const string			TagRevision			= "CR_REV";
 		internal const string			TagStatus			= "CR_STAT";
+		internal const string			TagName				= "NAME";
+		internal const string			TagCaption			= "CAPTION";
+		internal const string			TagDescription		= "DESCRIPTION";
+		internal const string			TagInformation		= "INFO";
+		
+		internal const int				MaxNameLength		= 40;
+		internal const int				MaxCaptionLength	= 100;
+		internal const int				MaxDescriptionLength= 500;
+		internal const int				MaxInformationLength= 500;
 	}
 }
