@@ -58,11 +58,9 @@ namespace Epsitec.Cresus.Database
 		public void CheckExecuteScalar()
 		{
 			IDbAbstraction  db_abstraction = this.CreateDbAbstraction (false);
+			System.Data.IDbCommand command = db_abstraction.NewDbCommand ();
 			
-			db_abstraction.Connection.Open ();
-			
-			System.Data.IDbCommand   command = db_abstraction.NewDbCommand ();
-			
+			command.Transaction = db_abstraction.BeginTransaction ();
 			command.CommandType = System.Data.CommandType.Text;
 			command.CommandText = "SELECT CURRENT_TIMESTAMP FROM RDB$DATABASE;";
 			
@@ -70,24 +68,22 @@ namespace Epsitec.Cresus.Database
 			
 			System.Console.Out.WriteLine ("Result: " + result.ToString () + ", type is " + result.GetType ().ToString ());
 			
+			command.Transaction.Commit ();
+			command.Transaction.Dispose ();
 			command.Dispose ();
-			db_abstraction.Connection.Close ();
 		}
 		
 		[Test]
 		public void CheckExecuteReader()
 		{
 			IDbAbstraction  db_abstraction = this.CreateDbAbstraction (false);
+			System.Data.IDbCommand command = db_abstraction.NewDbCommand ();
 			
-			db_abstraction.Connection.Open ();
-			
-			System.Data.IDbCommand   command = db_abstraction.NewDbCommand ();
-			
+			command.Transaction = db_abstraction.BeginTransaction ();
 			command.CommandType = System.Data.CommandType.Text;
 			command.CommandText = "SELECT * FROM RDB$DATABASE;";
 			
 			System.Data.IDataAdapter adapter = db_abstraction.NewDataAdapter (command);
-//			FbDataAdapter fb_adapter = adapter as FbDataAdapter;
 			
 			System.Data.DataSet data_set = new System.Data.DataSet ();
 			int rows = adapter.Fill (data_set);
@@ -102,7 +98,40 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			db_abstraction.Connection.Close ();
+			command.Transaction.Commit ();
+			command.Transaction.Dispose ();
+			command.Dispose ();
+		}
+
+		[Test]
+		public void CheckUserTableNames()
+		{
+			IDbAbstraction  db_abstraction = this.CreateDbAbstraction (false);
+			
+			try
+			{
+				using (System.Data.IDbCommand command = db_abstraction.NewDbCommand ())
+				{
+					using (System.Data.IDbTransaction transaction = db_abstraction.BeginTransaction ())
+					{
+						command.Transaction = transaction;
+						command.CommandType = System.Data.CommandType.Text;
+						command.CommandText = "CREATE TABLE TestTable(MyField VARCHAR(50));";
+						command.ExecuteNonQuery ();
+						transaction.Commit ();
+					}
+				}
+			}
+			catch (System.Exception e)
+			{
+				System.Console.WriteLine (e.Message);
+			}
+			
+			foreach (string name in db_abstraction.UserTableNames)
+			{
+				Assertion.Assert (string.Format ("Name contains white space: ({0})", name), name.IndexOf (' ') == -1);
+				System.Console.Out.WriteLine ("Table : " + name);
+			}
 		}
 		
 		[Test]
