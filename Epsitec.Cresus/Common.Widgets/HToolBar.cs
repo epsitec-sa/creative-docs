@@ -11,7 +11,7 @@ namespace Epsitec.Common.Widgets
 			this.iconDockStyle = DockStyle.Left;
 			
 			double m = (this.DefaultHeight-this.defaultButtonHeight)/2;
-			this.DockMargins = new Drawing.Margins(m, m, m, m);
+			this.DockPadding = new Drawing.Margins(m, m, m, m);
 		}
 		
 		public HToolBar(Widget embedder) : this()
