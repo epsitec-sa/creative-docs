@@ -86,6 +86,12 @@ namespace Epsitec.Common.Widgets
 		
 		public void Show()
 		{
+			if (this.show_count == 0)
+			{
+				this.show_count++;
+				this.root.InternalUpdateGeometry ();
+			}
+			
 			this.window.Show ();
 		}
 		
@@ -921,6 +927,7 @@ namespace Epsitec.Common.Widgets
 		private Window						owner;
 		private WindowRoot					root;
 		
+		private int							show_count;
 		private Widget						last_in_widget;
 		private Widget						capturing_widget;
 		private Widget						focused_widget;

@@ -2330,6 +2330,12 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		internal void InternalUpdateGeometry()
+		{
+			this.UpdateClientGeometry ();
+		}
+		
+		
 		protected virtual void SetBounds(double x1, double y1, double x2, double y2)
 		{
 			if ((x1 == this.x1) && (y1 == this.y1) && (x2 == this.x2) && (y2 == this.y2))
