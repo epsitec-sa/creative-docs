@@ -373,8 +373,8 @@ namespace Epsitec.Cresus.Database
 			SqlTable  sql_table = new SqlTable ();
 			
 			SqlColumn sql_col_1 = new SqlColumn ("Cr_ID", DbRawType.Int32);
-			SqlColumn sql_col_2 = new SqlColumn ("ArrayDynamic", DbRawType.ByteArray, 11000, false);
-			SqlColumn sql_col_3 = new SqlColumn ("ArrayFixed",   DbRawType.ByteArray, 50, true, Nullable.Yes);	// les blobs fixes existent-ils ?
+			SqlColumn sql_col_2 = new SqlColumn ("ArrayDynamic", DbRawType.ByteArray);
+			SqlColumn sql_col_3 = new SqlColumn ("ArrayFixed",   DbRawType.ByteArray, Nullable.Yes);	// les blobs fixes n'existent pas !
 			
 			sql_table.Name = "FbTestArrayTable";
 			sql_table.Columns.Add (sql_col_1);
@@ -467,7 +467,6 @@ namespace Epsitec.Cresus.Database
 			//	provider retourne un type byte[] ! Mais System.Array est déjà une bonne approximation.
 			
 			Assert.AreEqual (typeof (System.Array), blob_type);
-//-			Assert.AreEqual (11000, blob_column.MaxLength);
 			
 			DataRow     data_row  = data_table.Rows[0];
 			object	    blob      = data_row[1];

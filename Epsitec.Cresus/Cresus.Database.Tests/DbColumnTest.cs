@@ -40,11 +40,10 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void CheckNewDbColumnByteArray()
 		{
-			DbColumn column_d = new DbColumn ("D", DbSimpleType.ByteArray, 10, false);
-			Assert.AreEqual ("D", column_d.Name);
-			Assert.AreEqual (DbSimpleType.ByteArray, column_d.SimpleType);
-			Assert.AreEqual (10, column_d.Length);
-			Assert.AreEqual (false, column_d.IsFixedLength);
+			DbColumn column = new DbColumn ("A", DbSimpleType.ByteArray);
+			
+			Assert.AreEqual ("A", column.Name);
+			Assert.AreEqual (DbSimpleType.ByteArray, column.SimpleType);
 		}
 		
 		[Test] [ExpectedException (typeof (System.InvalidOperationException))] public void CheckNewDbColumnEx1()
@@ -70,7 +69,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_a = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.Int32));
 			DbColumn column_b = new DbColumn ("B", DbSimpleType.String, 100, true);
 			DbColumn column_c = new DbColumn ("C", DbSimpleType.Time);
-			DbColumn column_d = new DbColumn ("D", DbSimpleType.ByteArray, 1000000, false);
+			DbColumn column_d = new DbColumn ("D", DbSimpleType.ByteArray);
 			
 			Assert.IsTrue (column_a.Type.GetType () == typeof (DbTypeNum));
 			Assert.IsTrue (column_b.Type.GetType () == typeof (DbTypeString));
@@ -86,7 +85,7 @@ namespace Epsitec.Cresus.Database
 			DbColumn column_a = new DbColumn ("A", DbNumDef.FromRawType (DbRawType.SmallDecimal), Nullable.Yes);
 			DbColumn column_b = new DbColumn ("B", DbSimpleType.Guid);
 			DbColumn column_c = new DbColumn ("C", DbSimpleType.String, 100, true);
-			DbColumn column_d = new DbColumn ("D", DbSimpleType.ByteArray, 1000000, false);
+			DbColumn column_d = new DbColumn ("D", DbSimpleType.ByteArray);
 			
 			column_a.DefineCategory (DbElementCat.UserDataManaged);
 			column_b.DefineCategory (DbElementCat.UserDataManaged);
@@ -117,7 +116,6 @@ namespace Epsitec.Cresus.Database
 
 			Assert.AreEqual (DbRawType.ByteArray, sql_d.Type);
 			Assert.AreEqual ("U_D", sql_d.Name);
-			Assert.AreEqual (false, sql_d.IsFixedLength);
 			Assert.AreEqual (false, sql_d.IsNullAllowed);
 			Assert.AreEqual (false, sql_d.HasRawConverter);
 

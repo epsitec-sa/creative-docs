@@ -9,49 +9,23 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public class DbTypeByteArray : DbType
 	{
-		public DbTypeByteArray() : this (-1)
+		public DbTypeByteArray() : base (DbSimpleType.ByteArray)
 		{
 		}
 		
-		
-		public DbTypeByteArray(int length) : base (DbSimpleType.ByteArray)
+		public DbTypeByteArray(params string[] attributes) : base (DbSimpleType.ByteArray, attributes)
 		{
-			this.length = length;
-		}
-		
-		public DbTypeByteArray(int length, params string[] attributes) : base (DbSimpleType.ByteArray, attributes)
-		{
-			this.length = length;
-		}
-		
-		
-		public int								Length
-		{
-			get { return this.length; }
 		}
 		
 		
 		internal override void SerializeXmlAttributes(System.Text.StringBuilder buffer, bool full)
 		{
-			buffer.Append (@" length=""");
-			buffer.Append (this.length.ToString (System.Globalization.CultureInfo.InvariantCulture));
-			buffer.Append (@"""");
-			
 			base.SerializeXmlAttributes (buffer, full);
 		}
 		
 		internal override void DeserializeXmlAttributes(System.Xml.XmlElement xml)
 		{
 			base.DeserializeXmlAttributes (xml);
-			
-			string arg_length = xml.GetAttribute ("length");
-			
-			if (arg_length.Length == 0)
-			{
-				throw new System.ArgumentException ("No length specification found.");
-			}
-			
-			this.length = System.Int32.Parse (arg_length, System.Globalization.CultureInfo.InvariantCulture);
 		}
 		
 		
@@ -66,12 +40,7 @@ namespace Epsitec.Cresus.Database
 			
 			base.CloneCopyToNewObject (that);
 			
-			that.length = this.length;
-			
 			return that;
 		}
-		
-		
-		private int								length;
 	}
 }

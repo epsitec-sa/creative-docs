@@ -123,12 +123,7 @@ namespace Epsitec.Cresus.Database
 		
 		public void SetType(DbRawType type, int length, bool is_fixed_length)
 		{
-			if ((type == DbRawType.ByteArray) &&
-				(length == -1))
-			{
-				//	Cas particulier: c'est un BLOB sans spécification de taille.
-			}
-			else if (length < 1)
+			if (length < 1)
 			{
 				throw new System.ArgumentOutOfRangeException ("Invalid length");
 			}
@@ -136,9 +131,8 @@ namespace Epsitec.Cresus.Database
 			switch (type)
 			{
 				case DbRawType.String:
-				case DbRawType.ByteArray:
-					//	Ce sont les seuls types qui acceptent des données de longueur autres
-					//	que '1'...
+					//	C'est le seul type qui accepte une spécification de taille (le ByteArray n'a pas
+					//	de taille maximale définie dans la base, donc on ignore son paramètre de longueur).
 					break;
 				
 				default:

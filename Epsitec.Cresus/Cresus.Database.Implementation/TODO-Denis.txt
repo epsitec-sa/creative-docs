@@ -46,12 +46,12 @@ A FAIRE
 -	Compléter SqlSelect pour les jointures
 -	Tester toutes (?) les fonctions d'extraction
 
--	Créer une classe DbTypeByteArray à l'image de DbTypeString
--	Compléter DbColumn en conséquence
--	Faire tourner le teste CheckNewDbColumnByteArray
-
 DEJA FAIT
 ---------
+
+-	Créer une classe DbTypeByteArray à l'image de DbTypeString
+-	Compléter DbColumn en conséquence
+-	Faire tourner le test CheckNewDbColumnByteArray
 
 -	Tester la fonctionalité actuelle du FirebirdSqlBuilder, en passant par
 	l'interface ISqlBuilder :

@@ -207,11 +207,6 @@ namespace Epsitec.Cresus.Database
 					DbTypeEnum type = this.Type as DbTypeEnum;
 					return type.MaxNameLength;
 				}
-				if (this.Type is DbTypeByteArray)
-				{
-					DbTypeByteArray type = this.Type as DbTypeByteArray;
-					return type.Length;
-				}
 				
 				return 1;
 			}
@@ -225,10 +220,6 @@ namespace Epsitec.Cresus.Database
 				{
 					DbTypeString type = this.type as DbTypeString;
 					return type.IsFixedLength;
-				}
-				if (this.type is DbTypeByteArray)
-				{
-					return false;
 				}
 				
 				return true;
@@ -552,12 +543,7 @@ namespace Epsitec.Cresus.Database
 				throw new System.InvalidOperationException ("Cannot reinitialise type of column.");
 			}
 			
-			if ((type == DbSimpleType.ByteArray) &&
-				(length == -1))
-			{
-				//	Cas particulier: c'est un BLOB sans spécification de taille.
-			}
-			else if (length < 1)
+			if (length < 1)
 			{
 				throw new System.ArgumentOutOfRangeException ("length", length, "Invalid length");
 			}
@@ -565,9 +551,8 @@ namespace Epsitec.Cresus.Database
 			switch (type)
 			{
 				case DbSimpleType.String:
-				case DbSimpleType.ByteArray:
-					//	Ce sont les seuls types qui acceptent des données de longueur autres
-					//	que '1'...
+					//	C'est le seul type qui accepte une spécification de taille (le ByteArray n'a pas
+					//	de taille maximale en SQL, donc on ignore son paramètre de longueur).
 					break;
 				
 				default:
@@ -589,7 +574,7 @@ namespace Epsitec.Cresus.Database
 					break;
 				
 				case DbSimpleType.ByteArray:
-					this.type = new DbTypeByteArray (length);
+					this.type = new DbTypeByteArray ();
 					break;
 					
 				case DbSimpleType.Decimal:
