@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
@@ -181,7 +181,7 @@ namespace Epsitec.Common.Designer.Behaviors
 						(bounds.Top > model.Bottom))
 					{
 						mx = model.Right + margins.Right;
-						constraint.Add (xl, mx, mx, y1, mx, y2);
+						constraint.Add (xl, mx, mx, y1, mx, y2, ConstraintBehavior.Priority.Low, widget.Anchor & AnchorStyles.LeftAndRight);
 					}
 				}
 				
@@ -197,7 +197,7 @@ namespace Epsitec.Common.Designer.Behaviors
 						(bounds.Top > model.Bottom))
 					{
 						mx = model.Left - margins.Left;
-						constraint.Add (xr, mx, mx, y1, mx, y2);
+						constraint.Add (xr, mx, mx, y1, mx, y2, ConstraintBehavior.Priority.Low, widget.Anchor & AnchorStyles.LeftAndRight);
 					}
 				}
 			}
