@@ -1,0 +1,120 @@
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Document;
+
+namespace Epsitec.App.DocumentEditor.Dialogs
+{
+	using GlobalSettings = Common.Document.Settings.GlobalSettings;
+
+	/// <summary>
+	/// Dialogue des informations sur le document.
+	/// </summary>
+	public class Export : Abstract
+	{
+		public Export(DocumentEditor editor) : base(editor)
+		{
+		}
+
+		// Crée et montre la fenêtre du dialogue.
+		public void Show(string filename)
+		{
+			if ( this.window == null )
+			{
+				double dx = 300;
+				double dy = 300;
+				this.window = new Window();
+				this.window.MakeFixedSizeWindow();
+				this.window.MakeSecondaryWindow();
+				if ( this.globalSettings.ExportLocation.IsEmpty )
+				{
+					Rectangle wrect = this.CurrentBounds;
+					this.window.ClientSize = new Size(dx, dy);
+					this.window.WindowLocation = new Point(wrect.Center.X-dx/2, wrect.Center.Y-dy/2);
+				}
+				else
+				{
+					this.window.ClientSize = new Size(dx, dy);
+					this.window.WindowLocation = this.globalSettings.ExportLocation;
+				}
+				this.window.PreventAutoClose = true;
+				this.window.Owner = this.editor.Window;
+				this.window.WindowCloseClicked += new EventHandler(this.HandleWindowExportCloseClicked);
+
+				Panel panel = new Panel(this.window.Root);
+				panel.Name = "Panel";
+				panel.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+				panel.AnchorMargins = new Margins(10, 10, 10, 40);
+
+				// Boutons de fermeture.
+				Button buttonOk = new Button(this.window.Root);
+				buttonOk.Width = 75;
+				buttonOk.Text = "Exporter";
+				buttonOk.ButtonStyle = ButtonStyle.DefaultAccept;
+				buttonOk.Anchor = AnchorStyles.BottomLeft;
+				buttonOk.AnchorMargins = new Margins(10, 0, 0, 10);
+				buttonOk.Clicked += new MessageEventHandler(this.HandleExportButtonOkClicked);
+				buttonOk.TabIndex = 10;
+				buttonOk.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				ToolTip.Default.SetToolTip(buttonOk, "Exporter l'image");
+
+				Button buttonCancel = new Button(this.window.Root);
+				buttonCancel.Width = 75;
+				buttonCancel.Text = "Annuler";
+				buttonCancel.Anchor = AnchorStyles.BottomLeft;
+				buttonCancel.AnchorMargins = new Margins(10+75+10, 0, 0, 10);
+				buttonCancel.Clicked += new MessageEventHandler(this.HandleExportButtonCancelClicked);
+				buttonCancel.TabIndex = 11;
+				buttonCancel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+				ToolTip.Default.SetToolTip(buttonCancel, "Annuler l'exportation");
+			}
+
+			this.window.Text = string.Format("Exportation de {0}", System.IO.Path.GetFileName(filename));
+			this.window.Show();
+
+			if ( this.editor.IsCurrentDocument )
+			{
+				this.editor.CurrentDocument.Dialogs.BuildExport(this.window);
+			}
+		}
+
+		// Enregistre la position de la fenêtre du dialogue.
+		public override void Save()
+		{
+			if ( this.window == null )  return;
+			this.globalSettings.ExportLocation = this.window.WindowLocation;
+			this.globalSettings.ExportSize = this.window.ClientSize;
+		}
+
+		// Reconstruit le dialogue.
+		public override void Rebuild()
+		{
+			if ( !this.editor.IsCurrentDocument )  return;
+			if ( this.window == null )  return;
+			this.editor.CurrentDocument.Dialogs.BuildExport(this.window);
+		}
+
+
+		private void HandleWindowExportCloseClicked(object sender)
+		{
+			this.editor.Window.MakeActive();
+			this.window.Hide();
+		}
+
+		private void HandleExportButtonCancelClicked(object sender, MessageEventArgs e)
+		{
+			this.editor.Window.MakeActive();
+			this.window.Hide();
+		}
+
+		private void HandleExportButtonOkClicked(object sender, MessageEventArgs e)
+		{
+			this.editor.Window.MakeActive();
+			this.window.Hide();
+			string filename = string.Format("{0}\\{1}", this.editor.CurrentDocument.ExportDirectory, this.editor.CurrentDocument.ExportFilename);
+			string err = this.editor.CurrentDocument.Export(filename);
+			this.editor.DialogError(this.editor.CommandDispatcher, err);
+		}
+
+	}
+}

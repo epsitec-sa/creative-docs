@@ -63,11 +63,12 @@ namespace Epsitec.Common.Support
 		}
 
 		
-		private static bool TestSerial(string snum)
+		private static bool TestSyntax(string snum)
 		{
 			//	ppppp-nnnnnn-ssss-cccccc
 			
-			if (snum.Length != 24)
+			if ((snum == null) ||
+				(snum.Length != 24))
 			{
 				return false;
 			}
@@ -78,101 +79,128 @@ namespace Epsitec.Common.Support
 			{
 				return false;
 			}
-
-			try
+			
+			string[] chunks = new string[4];
+			
+			chunks[0] = snum.Substring ( 0, 5);
+			chunks[1] = snum.Substring ( 6, 6);
+			chunks[2] = snum.Substring (13, 4); 
+			chunks[3] = snum.Substring (18, 6);
+			
+			foreach (string chunk in chunks)
 			{
-				string sprodid   = snum.Substring ( 0, 5);
-				string snumero   = snum.Substring ( 6, 6);
-				string schecksum = snum.Substring (13, 4); 
-				string scompl    = snum.Substring (18, 6);
-				
-				int prodid   = System.Int32.Parse (sprodid);
-				int numero   = System.Int32.Parse (snumero);
-				int checksum = System.Int32.Parse (schecksum);
-			  
-				if (!SerialAlgorithm.TestSerial0 (prodid, numero, checksum))
+				for (int i = 0; i < chunk.Length; i++)
 				{
-					return false;
-				}
-				
-				int complement = System.Int32.Parse (scompl);
-				int limite     = (complement/100)%1000;			//	extrait la date limite
-				complement     = complement/100000 + 10 * ((complement/10)%10) + 100 * (complement%10);
-				
-				int product = prodid / 100;
-				int prodrev = prodid % 100;
-				
-				if (product != 40)
-				{
-					//	Le produit 40, c'est "Crésus Documents". Si l'utilisateur donne un
-					//	autre numéro, on échoue ici.
-					
-					return false;
-				}
-				
-				//	Soit, l'appelant fournit un numéro complémentaire valide par rapport à
-				//	la date de compilation du logiciel...
-				
-				if (scompl != "000000")
-				{
-					int month       = SerialAlgorithm.BuildDate.Month + (SerialAlgorithm.BuildDate.Year - 2000) * 12;
-					int serialcompl = SerialAlgorithm.GetSerialCompl (checksum, numero, limite);
-					
-					if ((complement == serialcompl) &&
-						(month <= limite) &&
-						(SerialAlgorithm.BuildDate < System.DateTime.Now))
+					if (System.Char.IsDigit (chunk, i) == false)
 					{
-						return true;
+						return false;
 					}
 				}
+			}
+			
+			return true;
+		}
+		
+		private static bool TestSerial(string snum)
+		{
+			//	ppppp-nnnnnn-ssss-cccccc
+			
+			if (SerialAlgorithm.TestSyntax (snum) == false)
+			{
+				return false;
+			}
+			
+			string sprodid   = snum.Substring ( 0, 5);
+			string snumero   = snum.Substring ( 6, 6);
+			string schecksum = snum.Substring (13, 4); 
+			string scompl    = snum.Substring (18, 6);
+			
+			int prodid   = System.Int32.Parse (sprodid);
+			int numero   = System.Int32.Parse (snumero);
+			int checksum = System.Int32.Parse (schecksum);
+			
+			if (!SerialAlgorithm.TestSerial0 (prodid, numero, checksum))
+			{
+				return false;
+			}
+			
+			int complement = System.Int32.Parse (scompl);
+			int limite     = (complement/100)%1000;			//	extrait la date limite
+			complement     = complement/100000 + 10 * ((complement/10)%10) + 100 * (complement%10);
+			
+			int product = prodid / 100;
+			int prodrev = prodid % 100;
+			
+			if (product != 40)
+			{
+				//	Le produit 40, c'est "Crésus Documents". Si l'utilisateur donne un
+				//	autre numéro, on échoue ici.
 				
-				//	...soit l'appelant utilise une révision de produit qui est conforme à la
-				//	révision actuelle (en se basant cette fois-ci sur le "build generation" à
-				//	la place de la date de "release").
+				return false;
+			}
+			
+			//	Soit, l'appelant fournit un numéro complémentaire valide par rapport à
+			//	la date de compilation du logiciel...
+			
+			if (scompl != "000000")
+			{
+				int month       = SerialAlgorithm.BuildDate.Month + (SerialAlgorithm.BuildDate.Year - 2000) * 12;
+				int serialcompl = SerialAlgorithm.GetSerialCompl (checksum, numero, limite);
 				
-				if (prodrev >= (SerialAlgorithm.ProductGeneration - SerialAlgorithm.ProductGracePeriod))
+				if ((complement == serialcompl) &&
+					(month <= limite) &&
+					(SerialAlgorithm.BuildDate < System.DateTime.Now))
 				{
 					return true;
 				}
 			}
-			catch
+			
+			//	...soit l'appelant utilise une révision de produit qui est conforme à la
+			//	révision actuelle (en se basant cette fois-ci sur le "build generation" à
+			//	la place de la date de "release").
+			
+			if (prodrev >= (SerialAlgorithm.ProductGeneration - SerialAlgorithm.ProductGracePeriod))
 			{
+				return true;
 			}
 			
 			return false;
 		}
 		
-		private static System.DateTime SerialLimit(string snum)
+		private static System.DateTime GetSerialLimit(string snum)
 		{
-			//	ppppp-nnnnnn-ssss-cccccc
+			//	Si on ne peut pas déterminer de date limite pour la clef, on prétend simplement
+			//	que la clef a échu le mois passé. Ca devrait suffire dans la majeure partie des
+			//	cas.
 			
-			if (snum.Length != 24)
-			{
-				return System.DateTime.Now;
-			}
+			System.DateTime past = new System.DateTime (System.DateTime.Now.Year, System.DateTime.Now.Month, 1).Subtract (System.TimeSpan.FromDays (1));
 			
-			if ((snum[ 5] != '-') ||
-				(snum[12] != '-') ||
-				(snum[17] != '-'))
+			if (SerialAlgorithm.TestSyntax (snum) == false)
 			{
-				return System.DateTime.Now;
-			}
-
-			try
-			{
-				string scompl  = snum.Substring (18, 6);
-				int complement = System.Int32.Parse (scompl);
-				int limite     = (complement/100)%1000;			//	extrait la date limite
-
-				int year = 2000+limite/12;
-				int month = 1+limite%12;
-				return new System.DateTime(year, month, 1);
-			}
-			catch
-			{
+				return past;
 			}
 			
-			return System.DateTime.Now;
+			string sprodid   = snum.Substring ( 0, 5);
+			string snumero   = snum.Substring ( 6, 6);
+			string schecksum = snum.Substring (13, 4); 
+			string scompl    = snum.Substring (18, 6);
+			
+			int prodid   = System.Int32.Parse (sprodid);
+			int numero   = System.Int32.Parse (snumero);
+			int checksum = System.Int32.Parse (schecksum);
+			
+			if (!SerialAlgorithm.TestSerial0 (prodid, numero, checksum))
+			{
+				return past;
+			}
+			
+			int complement = System.Int32.Parse (scompl);
+			int limite     = (complement/100)%1000;			//	extrait la date limite
+			
+			int year  = 2000+limite/12;
+			int month = 1+limite%12;
+			
+			return new System.DateTime (year, month, 1);
 		}
 		
 		private static string GetAppDataPath()
@@ -239,17 +267,11 @@ namespace Epsitec.Common.Support
 			return SerialAlgorithm.TestSerial (key);
 		}
 
-		public static System.DateTime DateLimit(string key)
+		public static System.DateTime GetExpirationDate(string key)
 		{
-			return SerialAlgorithm.SerialLimit(key);
+			return SerialAlgorithm.GetSerialLimit(key);
 		}
 		
-		public static int DaysBreakdown(string key)
-		{
-			System.DateTime limit = SerialAlgorithm.SerialLimit(key);
-			System.TimeSpan diff = limit.Subtract(System.DateTime.Now);
-			return diff.Days;
-		}
 		
 		
 		public static void SetProductBuildDate(System.DateTime date)
