@@ -6,18 +6,6 @@ namespace Epsitec.Common.Widgets
 		Menu,			// menu d'un TextFieldCombo
 	}
 
-	public enum ScrollListShow
-	{
-		Extremity,		// déplacement minimal aux extrémités
-		Middle,			// déplacement central
-	}
-
-	public enum ScrollListAdjust
-	{
-		MoveUp,			// déplace le haut
-		MoveDown,		// déplace le bas
-	}
-
 	/// <summary>
 	/// La classe ScrollList réalise une liste déroulante simple.
 	/// </summary>
@@ -106,7 +94,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public void ShowSelectedLine(ScrollListShow mode)
+		public void ShowSelected(ScrollShowMode mode)
 		{
 			// Rend la ligne sélectionnée visible.
 			
@@ -114,7 +102,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.selectedLine >= this.firstLine && this.selectedLine <  this.firstLine+this.visibleLines ) return;
 			
 			int fl = this.FirstVisibleLine;
-			if ( mode == ScrollListShow.Extremity )
+			if ( mode == ScrollShowMode.Extremity )
 			{
 				if ( this.selectedLine < this.firstLine )
 				{
@@ -125,7 +113,7 @@ namespace Epsitec.Common.Widgets
 					fl = this.selectedLine-(this.visibleLines-1);
 				}
 			}
-			if ( mode == ScrollListShow.Middle )
+			if ( mode == ScrollShowMode.Center )
 			{
 				int display = System.Math.Min(this.visibleLines, this.items.Count);
 				fl = System.Math.Min(this.selectedLine+display/2, this.items.Count-1);
@@ -135,7 +123,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public bool AdjustHeight(ScrollListAdjust mode)
+		public bool AdjustHeight(ScrollAdjustMode mode)
 		{
 			// Ajuste la hauteur pour afficher pile un nombre entier de lignes.
 			
@@ -144,11 +132,11 @@ namespace Epsitec.Common.Widgets
 			double adjust = h - nbLines*this.lineHeight;
 			if ( adjust == 0 )  return false;
 
-			if ( mode == ScrollListAdjust.MoveUp )
+			if ( mode == ScrollAdjustMode.MoveUp )
 			{
 				this.Top = System.Math.Floor(this.Top-adjust);
 			}
-			if ( mode == ScrollListAdjust.MoveDown )
+			if ( mode == ScrollAdjustMode.MoveDown )
 			{
 				this.Bottom = System.Math.Floor(this.Bottom+adjust);
 			}
@@ -156,7 +144,7 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-		public bool AdjustHeightToContent(ScrollListAdjust mode, double hMin, double hMax)
+		public bool AdjustHeightToContent(ScrollAdjustMode mode, double hMin, double hMax)
 		{
 			// Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
 			
@@ -166,11 +154,11 @@ namespace Epsitec.Common.Widgets
 			h = System.Math.Min(h, hMax);
 			if ( h == this.Height )  return false;
 
-			if ( mode == ScrollListAdjust.MoveUp )
+			if ( mode == ScrollAdjustMode.MoveUp )
 			{
 				this.Top = this.Bottom+h;
 			}
-			if ( mode == ScrollListAdjust.MoveDown )
+			if ( mode == ScrollAdjustMode.MoveDown )
 			{
 				this.Bottom = this.Top-h;
 			}
@@ -272,7 +260,7 @@ namespace Epsitec.Common.Widgets
 					if ( sel >= 0 )
 					{
 						this.SelectedIndex = sel;
-						this.ShowSelectedLine(ScrollListShow.Extremity);
+						this.ShowSelected(ScrollShowMode.Extremity);
 					}
 					break;
 
@@ -281,7 +269,7 @@ namespace Epsitec.Common.Widgets
 					if ( sel < this.items.Count )
 					{
 						this.SelectedIndex = sel;
-						this.ShowSelectedLine(ScrollListShow.Extremity);
+						this.ShowSelected(ScrollShowMode.Extremity);
 					}
 					break;
 

@@ -226,9 +226,9 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle area = info.WorkingArea;
 			double            hMax = pos.Y-area.Bottom;
 			
-			this.scrollList.AdjustHeightToContent(ScrollListAdjust.MoveUp, 40, hMax);
+			this.scrollList.AdjustHeightToContent(ScrollAdjustMode.MoveUp, 40, hMax);
 			this.scrollList.SelectedIndex = this.SelectedIndex;
-			this.scrollList.ShowSelectedLine(ScrollListShow.Middle);
+			this.scrollList.ShowSelected(ScrollShowMode.Center);
 			
 			this.comboWindow = new Window();
 			this.comboWindow.MakeFramelessWindow();

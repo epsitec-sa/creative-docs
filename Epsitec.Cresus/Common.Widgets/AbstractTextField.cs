@@ -498,14 +498,12 @@ namespace Epsitec.Common.Widgets
 			switch ( key )
 			{
 				case KeyCode.Back:
+					if ( isShiftPressed || isCtrlPressed )  return false;
 					this.DeleteCharacter(-1);
 					break;
 				
 				case KeyCode.Delete:
 					this.DeleteCharacter(1);
-					break;
-				
-				case KeyCode.Escape:
 					break;
 				
 				case KeyCode.Home:
@@ -516,27 +514,11 @@ namespace Epsitec.Common.Widgets
 					this.MoveCursor(1000000, isShiftPressed, false);  // avance beaucoup
 					break;
 				
-				case KeyCode.PageUp:
-					this.MoveCursor(-1000000, isShiftPressed, false);  // recule beaucoup
-					break;
-				
-				case KeyCode.PageDown:
-					this.MoveCursor(1000000, isShiftPressed, false);  // avance beaucoup
-					break;
-				
 				case KeyCode.ArrowLeft:
 					this.MoveCursor(-1, isShiftPressed, isCtrlPressed);
 					break;
 				
 				case KeyCode.ArrowRight:
-					this.MoveCursor(1, isShiftPressed, isCtrlPressed);
-					break;
-				
-				case KeyCode.ArrowUp:
-					this.MoveCursor(-1, isShiftPressed, isCtrlPressed);
-					break;
-				
-				case KeyCode.ArrowDown:
 					this.MoveCursor(1, isShiftPressed, isCtrlPressed);
 					break;
 				

@@ -3,13 +3,13 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public enum ScrollArrayShowMode
+	public enum ScrollShowMode
 	{
 		Extremity,		// déplacement minimal aux extrémités
 		Center,			// déplacement central
 	}
 
-	public enum ScrollArrayAdjustMode
+	public enum ScrollAdjustMode
 	{
 		MoveUp,			// déplace le haut
 		MoveDown,		// déplace le bas
@@ -1023,17 +1023,17 @@ invalid:	row    = -1;
 		}
 		
 		
-		public void ShowSelected(ScrollArrayShowMode mode)
+		public void ShowSelected(ScrollShowMode mode)
 		{
 			this.ShowRow (mode, this.selected_row);
 		}
 		
-		public void ShowEdition(ScrollArrayShowMode mode)
+		public void ShowEdition(ScrollShowMode mode)
 		{
 			this.ShowRow (mode, this.edition_row);
 		}
 		
-		public void ShowRow(ScrollArrayShowMode mode, int row)
+		public void ShowRow(ScrollShowMode mode, int row)
 		{
 			if ((row == -1) ||
 				(this.is_mouse_down))
@@ -1050,7 +1050,7 @@ invalid:	row    = -1;
 			
 			switch (mode)
 			{
-				case ScrollArrayShowMode.Extremity:
+				case ScrollShowMode.Extremity:
 					
 					if (row < top)
 					{
@@ -1068,7 +1068,7 @@ invalid:	row    = -1;
 					}
 					break;
 				
-				case ScrollArrayShowMode.Center:
+				case ScrollShowMode.Center:
 					first = System.Math.Min (row + num / 2, this.max_rows - 1);
 					first = System.Math.Max (first - num + 1, 0);
 					break;
@@ -1083,7 +1083,7 @@ invalid:	row    = -1;
 			}
 		}
 		
-		public void ShowColumn(ScrollArrayShowMode mode, int column)
+		public void ShowColumn(ScrollShowMode mode, int column)
 		{
 			if ((column == -1) ||
 				(this.is_mouse_down))
@@ -1104,7 +1104,7 @@ invalid:	row    = -1;
 			
 			switch (mode)
 			{
-				case ScrollArrayShowMode.Extremity:
+				case ScrollShowMode.Extremity:
 					
 					if (x2 > max_x)
 					{
@@ -1125,7 +1125,7 @@ invalid:	row    = -1;
 					}
 					break;
 				
-				case ScrollArrayShowMode.Center:
+				case ScrollShowMode.Center:
 					
 					x1 = (max_x - min_x - dx) / 2;
 					x2 = x1 + dx;
@@ -1143,14 +1143,14 @@ invalid:	row    = -1;
 			}
 		}
 		
-		public void ShowCell(ScrollArrayShowMode mode, int row, int column)
+		public void ShowCell(ScrollShowMode mode, int row, int column)
 		{
 			this.ShowRow (mode, row);
 			this.ShowColumn (mode, column);
 		}
 
 		
-		public bool AdjustToMultiple(ScrollArrayAdjustMode mode)
+		public bool AdjustToMultiple(ScrollAdjustMode mode)
 		{
 			//	Ajuste la hauteur pour afficher pile un nombre entier de lignes.
 			
@@ -1167,11 +1167,11 @@ invalid:	row    = -1;
 			
 			switch (mode)
 			{
-				case ScrollArrayAdjustMode.MoveUp:
+				case ScrollAdjustMode.MoveUp:
 					this.Top    = System.Math.Floor (this.Top - adjust);
 					break;
 				
-				case ScrollArrayAdjustMode.MoveDown:
+				case ScrollAdjustMode.MoveDown:
 					this.Bottom = System.Math.Floor (this.Bottom + adjust);
 					break;
 			}
@@ -1181,7 +1181,7 @@ invalid:	row    = -1;
 			return true;
 		}
 
-		public bool AdjustToContents(ScrollArrayAdjustMode mode, double min_height, double max_height)
+		public bool AdjustToContents(ScrollAdjustMode mode, double min_height, double max_height)
 		{
 			//	Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
 			
@@ -1200,10 +1200,10 @@ invalid:	row    = -1;
 			
 			switch (mode)
 			{
-				case ScrollArrayAdjustMode.MoveUp:
+				case ScrollAdjustMode.MoveUp:
 					this.Top    = this.Bottom + height;
 					break;
-				case ScrollArrayAdjustMode.MoveDown:
+				case ScrollAdjustMode.MoveDown:
 					this.Bottom = this.Top - height;
 					break;
 			}
@@ -1218,7 +1218,7 @@ invalid:	row    = -1;
 			return true;
 		}
 		
-		public bool AdjustToRows(ScrollArrayAdjustMode mode, int count)
+		public bool AdjustToRows(ScrollAdjustMode mode, int count)
 		{
 			//	Ajuste la hauteur pour afficher exactement le nombre de lignes spécifié.
 			
@@ -1233,10 +1233,10 @@ invalid:	row    = -1;
 			
 			switch (mode)
 			{
-				case ScrollArrayAdjustMode.MoveUp:
+				case ScrollAdjustMode.MoveUp:
 					this.Top    = this.Bottom + height;
 					break;
-				case ScrollArrayAdjustMode.MoveDown:
+				case ScrollAdjustMode.MoveDown:
 					this.Bottom = this.Top - height;
 					break;
 			}
@@ -1368,7 +1368,7 @@ invalid:	row    = -1;
 					{
 						this.ProcessMouseSelect (pos);
 						this.is_mouse_down = false;
-						this.ShowSelected (ScrollArrayShowMode.Extremity);
+						this.ShowSelected (ScrollShowMode.Extremity);
 						message.Consumer = this;
 					}
 					break;
@@ -1433,7 +1433,7 @@ invalid:	row    = -1;
 				
 				if (!this.IsSelectedVisible)
 				{
-					this.ShowSelected (ScrollArrayShowMode.Extremity);
+					this.ShowSelected (ScrollShowMode.Extremity);
 				}
 			}
 			

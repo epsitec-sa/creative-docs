@@ -337,6 +337,44 @@ namespace Epsitec.Common.Widgets
 			window.Show();
 		}
 		
+		[Test] public void CheckEditArraySearchWithCaption()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Drawing.Size(400, 300);
+			window.Text = "CheckEditArraySearchWithCaption";
+			window.Root.DockMargins = new Drawing.Margins (5, 5, 5, 5);
+			
+			EditArray table = new EditArray();
+			
+			table.Parent            = window.Root;
+			table.Dock              = DockStyle.Fill;
+			table.ColumnCount       = 5;
+			table.RowCount          = 100;
+			table.SelectedIndex     = 0;
+			table.EditionZoneHeight = 1;
+			table.EditArrayMode     = EditArrayMode.Search;
+			table.SearchCaption     = @"<b>Search. </b><font size=""90%"">Type in some text below to search for it in the table.</font>";
+			
+			for (int x = 0 ; x < table.ColumnCount; x++)
+			{
+				table.SetHeaderText (x, string.Format ("C{0}", x));
+				table.SetColumnWidth (x, 80);
+			}
+			for (int y = 0; y < 100; y++)
+			{
+				table[y,0] = string.Format ("Val {0}.{1}", y/5, 0);
+				table[y,1] = string.Format ("Val {0}.{1}", "X", y%5);
+				table[y,2] = string.Format ("Val {0}.{1}", y/10, "A");
+				table[y,3] = string.Format ("Val {0}.{1}", "Y", y%10);
+				table[y,4] = string.Format ("Val {0}.{1}", y/5, "C");
+			}
+			
+			table.EditTextChanged += new EventHandler(HandleTableEditTextChanged);
+			
+			window.Show();
+		}
+		
 		
 		protected class TextStore : Support.Data.ITextArrayStore
 		{
@@ -377,7 +415,6 @@ namespace Epsitec.Common.Widgets
 			
 			public event Support.EventHandler	StoreChanged;
 		}
-
 		
 		
 		private void HandleCheckScrollArraySearchTextChanged(object sender)

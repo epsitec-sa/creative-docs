@@ -76,7 +76,7 @@ namespace Epsitec.Common.Widgets
 				column = System.Math.Max (column, 0);
 				column = System.Math.Min (column, this.max_columns-1);
 			
-				this.ShowEdition (ScrollArrayShowMode.Extremity);
+				this.ShowEdition (ScrollShowMode.Extremity);
 				this.Update ();
 				this.DispatchDummyMouseMoveEvent ();
 				this.edit_line.FocusColumn (column);
@@ -455,7 +455,7 @@ namespace Epsitec.Common.Widgets
 								if (this.host.SelectedIndex > 0)
 								{
 									this.host.SelectedIndex--;
-									this.host.ShowSelected (ScrollListShow.Extremity);
+									this.host.ShowSelected (ScrollShowMode.Extremity);
 								}
 								break;
 							
@@ -463,7 +463,7 @@ namespace Epsitec.Common.Widgets
 								if (this.host.SelectedIndex+1 < this.host.RowCount)
 								{
 									this.host.SelectedIndex++;
-									this.host.ShowSelected (ScrollListShow.Extremity);
+									this.host.ShowSelected (ScrollShowMode.Extremity);
 								}
 								break;
 							
@@ -562,7 +562,7 @@ namespace Epsitec.Common.Widgets
 				int row    = this.host.EditionIndex;
 				int column = widget.Index;
 				
-				this.host.ShowCell (ScrollArrayShowMode.Extremity, row, column);
+				this.host.ShowCell (ScrollShowMode.Extremity, row, column);
 			}
 			
 			private void HandleTextChanged(object sender)
