@@ -39,7 +39,7 @@ namespace Epsitec.Common.Designer
 			//	Définit l'état initial des commandes :
 			
 			this.StateDeleteActiveSelection.Enabled = false;
-			this.StateSetTabIndexEdition.Enabled = false;
+			this.StateTabIndexSetter.Enabled        = false;
 			
 			this.UpdateTabIndexIcons ();
 			
@@ -98,19 +98,19 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		public CommandState						StateSetTabIndexEdition
+		public CommandState						StateTabIndexSetter
 		{
 			get
 			{
-				return CommandState.Find ("SetTabIndexEdition", this.dispatcher);
+				return CommandState.Find ("TabIndexSetter", this.dispatcher);
 			}
 		}
 		
-		public CommandState						StateSetTabIndexPicker
+		public CommandState						StateTabIndexPicker
 		{
 			get
 			{
-				return CommandState.Find ("SetTabIndexPicker", this.dispatcher);
+				return CommandState.Find ("TabIndexPicker", this.dispatcher);
 			}
 		}
 		
@@ -163,9 +163,9 @@ namespace Epsitec.Common.Designer
 			
 			this.tool_bar.Items.Add (IconButton.CreateSimple ("CreateNewWindow", "file:images/new.icon"));
 			this.tool_bar.Items.Add (new IconSeparator ());
-			this.tool_bar.Items.Add (IconButton.CreateToggle ("SetTabIndexEdition(this.IsActive)",	"file:images/numtabindex.icon"));
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("StartTabIndexAtIndex(1)",			"file:images/numone.icon"));
-			this.tool_bar.Items.Add (IconButton.CreateToggle ("SetTabIndexPicker(this.IsActive)",	"file:images/numpicker.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateToggle ("TabIndexSetter(this.IsActive)",	"file:images/numtabindex.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("TabIndexResetSeq",				"file:images/numone.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateToggle ("TabIndexPicker(this.IsActive)",	"file:images/numpicker.icon"));
 			this.tool_bar.Items.Add (new IconSeparator ());
 			this.tool_bar.Items.Add (IconButton.CreateSimple ("DeleteActiveSelection", "file:images/delete.icon"));
 			
@@ -223,16 +223,17 @@ namespace Epsitec.Common.Designer
 		{
 			System.Diagnostics.Debug.Assert (this.widget_palette == sender);
 			
+			this.SetTabIndexSetter (false);
+			this.SetTabIndexPicker (false);
+			
 			//	Quand on commence une opération de drag & drop depuis la palette des widgets, on commence
 			//	par dé-sélectionner tous les widgets de toutes les fenêtres :
 			
-			foreach (Window window in this.edit_window_list)
+			Editors.AbstractWidgetEdit[] editors = this.Editors;
+			
+			for (int i = 0; i < editors.Length; i++)
 			{
-				Editors.AbstractWidgetEdit editor = this.FindEditor (window);
-				
-				editor.SelectedWidgets.Clear ();
-				
-				this.dispatcher.Dispatch ("SetTabIndexEdition(False)", this);
+				editors[i].SelectedWidgets.Clear ();
 			}
 		}
 		
@@ -352,10 +353,10 @@ namespace Epsitec.Common.Designer
 		
 		protected void UpdateTabIndexIcons()
 		{
-			bool enable = this.StateSetTabIndexEdition.ActiveState == WidgetState.ActiveYes;
+			bool enable = this.StateTabIndexSetter.ActiveState == WidgetState.ActiveYes;
 			
-			this.tool_bar.FindChild ("StartTabIndexAtIndex").SetVisible (enable);
-			this.tool_bar.FindChild ("SetTabIndexPicker").SetVisible (enable);
+			this.tool_bar.FindChild ("TabIndexResetSeq").SetVisible (enable);
+			this.tool_bar.FindChild ("TabIndexPicker").SetVisible (enable);
 		}
 		
 		
@@ -382,14 +383,14 @@ namespace Epsitec.Common.Designer
 				if (this.active_editor != null)
 				{
 					this.active_editor.CommandDispatcher = this.CommandDispatcher;
-					this.StateSetTabIndexEdition.Enabled = true;
+					this.StateTabIndexSetter.Enabled     = true;
 					
-					this.active_editor.SetTabIndexEdition (this.tool_tab_editor_active, this.tool_tab_index_value);
-					this.active_editor.SetTabIndexPicker (this.tool_tab_picker_active);
+					this.active_editor.SetTabIndexSetterMode (this.tool_tab_setter_active);
+					this.active_editor.SetTabIndexPickerMode (this.tool_tab_picker_active);
 				}
 				else
 				{
-					this.StateSetTabIndexEdition.Enabled = false;
+					this.StateTabIndexSetter.Enabled = false;
 				}
 			}
 		}
@@ -405,26 +406,16 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
-		protected void SetTabIndexEdition(bool enable)
+		protected void SetTabIndexSetter(bool enable)
 		{
-			if (this.tool_tab_editor_active != enable)
+			if (this.tool_tab_setter_active != enable)
 			{
-				this.StateSetTabIndexEdition.ActiveState = enable ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				this.tool_tab_editor_active = enable;
+				this.StateTabIndexSetter.ActiveState = enable ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.tool_tab_setter_active          = enable;
 				
-				this.SetTabIndexEditors ();
+				this.SetTabIndexSetter (this.Editors);
 				this.SetTabIndexPicker (false);
 				this.UpdateTabIndexIcons ();
-			}
-		}
-		
-		protected void SetTabIndexEditors()
-		{
-			Editors.AbstractWidgetEdit[] editors = this.Editors;
-			
-			for (int i = 0; i < editors.Length; i++)
-			{
-				editors[i].SetTabIndexEdition (this.tool_tab_editor_active, this.tool_tab_index_value);
 			}
 		}
 		
@@ -432,15 +423,35 @@ namespace Epsitec.Common.Designer
 		{
 			if (this.tool_tab_picker_active != enable)
 			{
-				this.StateSetTabIndexPicker.ActiveState = enable ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-				this.tool_tab_picker_active = enable;
+				this.StateTabIndexPicker.ActiveState = enable ? WidgetState.ActiveYes : WidgetState.ActiveNo;
+				this.tool_tab_picker_active          = enable;
 				
-				Editors.AbstractWidgetEdit[] editors = this.Editors;
+				this.SetTabIndexPicker (this.Editors);
+				this.UpdateTabIndexIcons ();
+			}
+		}
 				
-				for (int i = 0; i < editors.Length; i++)
-				{
-					editors[i].SetTabIndexPicker (enable);
-				}
+		protected void SetTabIndexSetter(Editors.AbstractWidgetEdit[] editors)
+		{
+			for (int i = 0; i < editors.Length; i++)
+			{
+				editors[i].SetTabIndexSetterMode (this.tool_tab_setter_active);
+			}
+		}
+		
+		protected void SetTabIndexPicker(Editors.AbstractWidgetEdit[] editors)
+		{
+			for (int i = 0; i < editors.Length; i++)
+			{
+				editors[i].SetTabIndexPickerMode (this.tool_tab_picker_active);
+			}
+		}
+		
+		protected void ResetTabIndexSeq(Editors.AbstractWidgetEdit[] editors)
+		{
+			for (int i = 0; i < editors.Length; i++)
+			{
+				editors[i].ResetTabIndexSeq ();
 			}
 		}
 		
@@ -497,7 +508,8 @@ namespace Epsitec.Common.Designer
 			this.active_editor.SelectedWidgets.Clear ();
 		}
 		
-		[Command ("SetTabIndexEdition")]		void CommandSetTabIndexEdition(CommandDispatcher d, CommandEventArgs e)
+		
+		[Command ("TabIndexSetter")]			void CommandTabIndexSetter(CommandDispatcher d, CommandEventArgs e)
 		{
 			System.Diagnostics.Debug.Assert (this.active_editor != null);
 			
@@ -505,20 +517,10 @@ namespace Epsitec.Common.Designer
 			Converters.Converter.Convert (e.CommandArgs[0], out enable);
 			
 			this.active_editor.SelectedWidgets.Clear ();
-			this.SetTabIndexEdition (enable);
+			this.SetTabIndexSetter (enable);
 		}
 		
-		[Command ("StartTabIndexAtIndex")]		void CommandStartTabIndexAtIndex(CommandDispatcher d, CommandEventArgs e)
-		{
-			Converters.Converter.Convert (e.CommandArgs[0], out this.tool_tab_index_value);
-			
-			this.active_editor.SelectedWidgets.Clear ();
-			this.SetTabIndexPicker (false);
-			this.SetTabIndexEditors ();
-			this.UpdateTabIndexIcons ();
-		}
-		
-		[Command ("SetTabIndexPicker")]			void CommandSetTabIndexPicker(CommandDispatcher d, CommandEventArgs e)
+		[Command ("TabIndexPicker")]			void CommandTabIndexPicker(CommandDispatcher d, CommandEventArgs e)
 		{
 			System.Diagnostics.Debug.Assert (this.active_editor != null);
 			
@@ -527,7 +529,31 @@ namespace Epsitec.Common.Designer
 			
 			this.active_editor.SelectedWidgets.Clear ();
 			this.SetTabIndexPicker (enable);
-			this.SetTabIndexEditors ();
+		}
+		
+		[Command ("TabIndexResetSeq")]			void CommandTabIndexResetSeq()
+		{
+			this.SetTabIndexPicker (false);
+			this.ResetTabIndexSeq (this.Editors);
+		}
+		
+		[Command ("TabIndexStartSeq")]			void CommandTabIndexStartSeq()
+		{
+			System.Diagnostics.Debug.Assert (this.active_editor != null);
+			
+			this.SetTabIndexPicker (false);
+			this.ResetTabIndexSeq (this.Editors);
+			this.active_editor.StartTabIndexSeq ();
+		}
+		
+		[Command ("TabIndexDefine")]			void CommandTabIndexDefine(CommandDispatcher d, CommandEventArgs e)
+		{
+			System.Diagnostics.Debug.Assert (this.active_editor != null);
+			
+			int index;
+			Converters.Converter.Convert (e.CommandArgs[0], out index);
+			
+			this.active_editor.DefineTabIndex (index);
 		}
 		
 		
@@ -539,8 +565,7 @@ namespace Epsitec.Common.Designer
 		protected Panels.WidgetSourcePalette	widget_palette;
 		protected Panels.WidgetAttributePalette	attribute_palette;
 		protected AbstractToolBar				tool_bar;
-		protected int							tool_tab_index_value = 1;
-		protected bool							tool_tab_editor_active;
+		protected bool							tool_tab_setter_active;
 		protected bool							tool_tab_picker_active;
 		
 		protected Window						creation_window;

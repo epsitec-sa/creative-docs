@@ -87,13 +87,12 @@ namespace Epsitec.Common.Designer.Editors
 		#endregion
 		
 		
-		public void SetTabIndexEdition(bool enable, int index)
+		public void SetTabIndexSetterMode(bool enable)
 		{
 			if (enable)
 			{
 				this.tab_o_overlay.RootWidget     = this.panel;
 				this.tab_o_overlay.IsSetterActive = true;
-				this.tab_o_overlay.SetNextIndex (index);
 			}
 			else
 			{
@@ -102,11 +101,35 @@ namespace Epsitec.Common.Designer.Editors
 			}
 		}
 		
-		public void SetTabIndexPicker(bool enable)
+		public void SetTabIndexPickerMode(bool enable)
 		{
 			if (this.tab_o_overlay != null)
 			{
 				this.tab_o_overlay.IsPickerActive = enable;
+			}
+		}
+		
+		public void DefineTabIndex(int tab_index)
+		{
+			if (this.tab_o_overlay != null)
+			{
+				this.tab_o_overlay.DefineTabIndex (tab_index);
+			}
+		}
+
+		public void ResetTabIndexSeq()
+		{
+			if (this.tab_o_overlay != null)
+			{
+				this.tab_o_overlay.ResetTabIndexSeq ();
+			}
+		}
+		
+		public void StartTabIndexSeq()
+		{
+			if (this.tab_o_overlay != null)
+			{
+				this.tab_o_overlay.StartTabIndexSeq ();
 			}
 		}
 		

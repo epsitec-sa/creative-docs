@@ -56,6 +56,14 @@ namespace Epsitec.Common.Designer.Widgets
 			}
 		}
 		
+		public Widget							SelectedWidget
+		{
+			get
+			{
+				return this.selected_widget;
+			}
+		}
+		
 		public bool								IsPickerActive
 		{
 			get
@@ -68,6 +76,7 @@ namespace Epsitec.Common.Designer.Widgets
 				{
 					this.is_picker_active = value;
 					
+					this.ResetTabIndexSeq ();
 					this.UpdateInteraction ();
 				}
 			}
@@ -85,27 +94,50 @@ namespace Epsitec.Common.Designer.Widgets
 				{
 					this.is_setter_active = value;
 					
+					this.ResetTabIndexSeq ();
 					this.UpdateInteraction ();
 				}
 			}
 		}
 		
 		
-		public void SetNextIndex(int index)
+		public void DefineTabIndex(int tab_index)
 		{
+			System.Diagnostics.Debug.Assert (this.SelectedWidget != null);
+			
+			this.DefineTabIndex (this.SelectedWidget, tab_index);
+		}
+		
+		public void StartTabIndexSeq()
+		{
+			System.Diagnostics.Debug.Assert (this.SelectedWidget != null);
+			
 			this.black_list.Clear ();
 			
-			if (this.internal_set == false)
-			{
-				this.parent_filter = null;
-			}
+			this.parent_filter = this.SelectedWidget.Parent;
+			this.default_index = this.SelectedWidget.TabIndex;
 			
-			this.default_index = index;
 			this.Invalidate ();
 		}
 		
+		public void ResetTabIndexSeq()
+		{
+			this.black_list.Clear ();
+			
+			this.parent_filter = null;
+			this.default_index = 1;
+			
+			this.Invalidate ();
+		}
+		
+		
 		protected bool CheckDisabled(Widget widget)
 		{
+			if (widget == null)
+			{
+				return true;
+			}
+			
 			if (this.black_list.Contains (widget))
 			{
 				return true;
@@ -216,38 +248,50 @@ namespace Epsitec.Common.Designer.Widgets
 						continue;
 					}
 					
-					if (this.black_list.Contains (radios[i]))
-					{
-						continue;
-					}
-					
-					this.black_list.Insert (0, radios[i]);
-					
 					radios[i].TabIndex = tab_index;
+					
+					if (tab_index == 0)
+					{
+						this.black_list.Remove (radios[i]);
+					}
+					else
+					{
+						if (this.black_list.Contains (radios[i]) == false)
+						{
+							this.black_list.Insert (0, radios[i]);
+						}
+					}
 				}
 			}
 			
-			while (widget != this.root_widget)
+			if (tab_index == 0)
 			{
-				if (this.black_list.Contains (widget))
+				this.black_list.Remove (widget);
+			}
+			else
+			{
+				while (widget != this.root_widget)
 				{
-					break;
-				}
-				
-				if (widget.TabNavigation != TabNavigationMode.Passive)
-				{
-					if (widget.TabIndex == 0)
+					if (this.black_list.Contains (widget))
 					{
-						//	Le parent du widget qui a reçu un nouveau numéro d'index
-						//	n'a pas d'index défini; il faut donc lui en attribuer un :
-						
-						widget.TabIndex = this.FindNextIndex (widget);
+						break;
 					}
 					
-					this.black_list.Insert (0, widget);
+					if (widget.TabNavigation != TabNavigationMode.Passive)
+					{
+						if (widget.TabIndex == 0)
+						{
+							//	Le parent du widget qui a reçu un nouveau numéro d'index
+							//	n'a pas d'index défini; il faut donc lui en attribuer un :
+							
+							widget.TabIndex = this.FindNextIndex (widget);
+						}
+						
+						this.black_list.Insert (0, widget);
+					}
+					
+					widget = widget.Parent;
 				}
-				
-				widget = widget.Parent;
 			}
 		}
 		
@@ -288,13 +332,10 @@ namespace Epsitec.Common.Designer.Widgets
 				
 				if (hot != null)
 				{
-					if (this.CheckDisabled (hot))
+					if (this.is_picker_active)
 					{
-						hot = null;
-					}
-					else if (this.is_picker_active)
-					{
-						if (hot.TabNavigation == TabNavigationMode.Passive)
+						if ((hot.TabNavigation == TabNavigationMode.Passive) ||
+							(hot.TabIndex <= 0))
 						{
 							hot = null;
 						}
@@ -310,7 +351,7 @@ namespace Epsitec.Common.Designer.Widgets
 				if ((! this.is_picker_active) &&
 					(this.is_setter_active))
 				{
-					if (this.hot_widget != null)
+					if (this.CheckDisabled (hot) == false)
 					{
 						this.MouseCursor = MouseCursor.AsHand;
 					}
@@ -325,6 +366,11 @@ namespace Epsitec.Common.Designer.Widgets
 			{
 				if (this.hot_widget != null)
 				{
+					//	Prend note du widget actuellement "chaud", qui va être le widget
+					//	cible des éventuelles commandes.
+					
+					this.selected_widget = this.hot_widget;
+					
 					if (message.IsLeftButton)
 					{
 						if (this.is_picker_active)
@@ -333,23 +379,39 @@ namespace Epsitec.Common.Designer.Widgets
 							
 							if (tab_index > 0)
 							{
-								this.parent_filter = this.hot_widget.Parent;
-								this.internal_set  = true;
-								this.CommandDispatcher.Dispatch (string.Format ("StartTabIndexAtIndex({0})", tab_index), this);
-								this.internal_set  = false;
+								this.ExecuteCommand ("TabIndexStartSeq");
 							}
 						}
 						else if (this.is_setter_active)
 						{
-							this.DefineTabIndex (this.hot_widget, this.FindNextIndex (this.hot_widget));
-							this.hot_widget = null;
-							this.Invalidate ();
+							if (this.CheckDisabled (this.hot_widget) == false)
+							{
+								this.ExecuteCommand (string.Format ("TabIndexDefine({0})", this.FindNextIndex (this.hot_widget)));
+								this.hot_widget = null;
+							}
 						}
 					}
 					else if (message.IsRightButton)
 					{
-						//	TODO: afficher un menu permettant de supprimer/modifier un élément
+						VMenu         menu = new VMenu ();
+						Drawing.Point spos = new Drawing.Point (0, this.hot_widget.Client.Height - this.DefaultFontHeight - 2);
+						
+						spos = this.hot_widget.MapClientToScreen (spos);
+						
+						menu.Items.Add (new MenuItem ("TabIndexDefine(0)",	"file:images/deletetabindex.icon",	"Retire de la liste",		"", null));
+						menu.Items.Add (new MenuItem ("TabIndexStartSeq",	"file:images/numpicker.icon",		"Reprend à partir de...",	"", null));
+						menu.Items.Add (new MenuSeparator ());
+						menu.Items.Add (new MenuItem ("TabIndexResetSeq",	"file:images/numone.icon",			"Reprend au début",			"", null));
+						
+						menu.Host = this;
+						menu.AdjustSize ();
+						menu.ShowContextMenu (this.Window, spos);
 					}
+					
+					this.hot_widget = null;
+					this.Invalidate ();
+					
+					message.Swallowed = true;
 				}
 			}
 			if (message.IsMouseType)
@@ -362,6 +424,7 @@ namespace Epsitec.Common.Designer.Widgets
 		{
 			this.PaintTag (this.root_widget, null, graphics, clip_rect);
 		}
+		
 		
 		protected void PaintTag(Widget widget, string prefix, Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
@@ -390,8 +453,13 @@ namespace Epsitec.Common.Designer.Widgets
 					
 					if ((widget == this.hot_widget) &&
 						(! this.is_picker_active) &&
-						(this.is_setter_active))
+						(this.is_setter_active) &&
+						(this.CheckDisabled (widget) == false))
 					{
+						//	Le widget "chaud" pourrait recevoir une nouvelle valeur s'il
+						//	était cliqué. On affiche la valeur potentielle en lieu et place
+						//	de la valeur actuelle :
+						
 						text = string.Format ("{0}", this.FindNextIndex (widget));
 						
 						Widget parent = widget.Parent;
@@ -478,11 +546,11 @@ namespace Epsitec.Common.Designer.Widgets
 		
 		protected Widget						root_widget;
 		protected Widget						hot_widget;
+		protected Widget						selected_widget;
 		protected Widget						parent_filter;
 		protected System.Collections.ArrayList	black_list;
 		protected bool							is_picker_active;
 		protected bool							is_setter_active;
-		protected bool							internal_set;
 		protected int							default_index;
 		
 		static long								overlay_id;
