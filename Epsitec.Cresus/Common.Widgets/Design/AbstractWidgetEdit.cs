@@ -76,13 +76,21 @@ namespace Epsitec.Common.Widgets.Design
 					hot = this.panel.FindChild (pos);
 				}
 				
-				if (Message.State.Buttons == MouseButtons.None)
+				this.hot_widget = null;
+				
+				if ((Message.State.Buttons == MouseButtons.None) &&
+					(this.grips_overlay.TargetWidget != hot))
 				{
-					this.hot_widget = hot;
-				}
-				else
-				{
-					this.hot_widget = null;
+					//	Ne met en évidence le widget "chaud" que si celui-ci n'est pas sélectionné comme
+					//	cible. Si l'utilisateur survole la poignée d'un objet sélectionné, c'est celle-ci
+					//	qui est prioritaire par rapport au mécanisme de détection.
+					
+					Grip grip = this.grips_overlay.FindChild (e.Message.Cursor) as Grip;
+					
+					if (grip == null)
+					{
+						this.hot_widget = hot;
+					}
 				}
 				
 				this.hilite_adorner.Widget = this.hot_widget;
