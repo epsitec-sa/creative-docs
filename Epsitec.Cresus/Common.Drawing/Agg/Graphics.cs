@@ -26,6 +26,7 @@ namespace Epsitec.Common.Drawing.Agg
 			this.rasterizer.Gamma = 1.2;
 		}
 
+		
 		public override void RenderSolid()
 		{
 			this.rasterizer.Render (this.solid_renderer);
@@ -47,7 +48,6 @@ namespace Epsitec.Common.Drawing.Agg
 			this.rasterizer.Render (this.gradient_renderer);
 		}
 		
-		
 
 		public override double PaintText(double x, double y, string text, Font font, double size, Color color)
 		{
@@ -67,8 +67,7 @@ namespace Epsitec.Common.Drawing.Agg
 		}
 		
 		
-		
-		public override void AddLine(double x1, double y1, double x2, double y2)
+		public override void   AddLine(double x1, double y1, double x2, double y2)
 		{
 			using (Path path = new Path ())
 			{
@@ -79,7 +78,7 @@ namespace Epsitec.Common.Drawing.Agg
 			}
 		}
 		
-		public override void AddRectangle(double x, double y, double width, double height)
+		public override void   AddRectangle(double x, double y, double width, double height)
 		{
 			using (Path path = new Path ())
 			{
@@ -98,7 +97,7 @@ namespace Epsitec.Common.Drawing.Agg
 			return this.rasterizer.AddText (font, text, x, y, size);
 		}
 		
-		public override void AddFilledRectangle(double x, double y, double width, double height)
+		public override void   AddFilledRectangle(double x, double y, double width, double height)
 		{
 			using (Path path = new Path ())
 			{
@@ -147,6 +146,11 @@ namespace Epsitec.Common.Drawing.Agg
 		public override Transform SaveTransform()
 		{
 			return new Transform (this.transform);
+		}
+		
+		public override void RestoreTransform(Transform transform)
+		{
+			this.Transform = transform;
 		}
 		
 		public override void ScaleTransform(double sx, double sy, double cx, double cy)
@@ -296,12 +300,12 @@ namespace Epsitec.Common.Drawing.Agg
 		}
 		
 		
-		public override Epsitec.Common.Drawing.Rasterizer	Rasterizer
+		public override Drawing.Rasterizer	Rasterizer
 		{
 			get { return this.rasterizer; }
 		}
 		
-		public override Epsitec.Common.Drawing.Transform	Transform
+		public override Drawing.Transform	Transform
 		{
 			set
 			{
@@ -310,22 +314,22 @@ namespace Epsitec.Common.Drawing.Agg
 			}
 		}
 		
-		public override Epsitec.Common.Drawing.Pixmap		Pixmap
+		public override Drawing.Pixmap		Pixmap
 		{
 			get { return this.pixmap; }
 		}
 		
-		public override Renderers.Solid						SolidRenderer
+		public override Renderers.Solid		SolidRenderer
 		{
 			get { return this.solid_renderer; }
 		}
 		
-		public override Renderers.Image						ImageRenderer
+		public override Renderers.Image		ImageRenderer
 		{
 			get { return this.image_renderer; }
 		}
 		
-		public override Renderers.Gradient					GradientRenderer
+		public override Renderers.Gradient	GradientRenderer
 		{
 			get { return this.gradient_renderer; }
 		}
