@@ -148,17 +148,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DesignTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "FicheTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "LayoutsGridTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
