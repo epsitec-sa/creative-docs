@@ -31,7 +31,7 @@ namespace Epsitec.Common.Tests
 		{
 			TextLayout layout = this.NewTextLayout ();
 			
-			string reference = "Link, Bold text, normal text, italic text...\nAnd some <more> text, nice & clean.";
+			string reference = "Link, Bold text, normal text, italic text...\nAnd some <more> text, # nice & clean.";
 			string text = layout.CleanText;
 			int pos_0   = layout.FindOffsetFromIndex (0);
 			int pos_1   = layout.FindOffsetFromIndex (1);
@@ -82,11 +82,56 @@ namespace Epsitec.Common.Tests
 			Assertion.AssertEquals ("x", anchor);
 		}
 		
+		[Test] public void CheckParseTags()
+		{
+			TextLayout layout = this.NewTextLayout ();
+			TextLayout.Tag[] expected_tags = new TextLayout.Tag[]
+				{
+					TextLayout.Tag.Anchor, TextLayout.Tag.AnchorEnd,
+					TextLayout.Tag.Bold, TextLayout.Tag.BoldEnd,
+					TextLayout.Tag.Italic, TextLayout.Tag.ItalicEnd,
+					TextLayout.Tag.LineBreak
+				};
+			
+			System.Collections.Hashtable parameters;
+			
+			int    index = 0;
+			string text  = layout.Text;
+			
+			for (int i = 0; i < expected_tags.Length; )
+			{
+				TextLayout.Tag tag = TextLayout.ParseTag (text, ref index, out parameters);
+				
+				if (tag == TextLayout.Tag.None)
+				{
+					continue;
+				}
+				
+				Assertion.AssertEquals (expected_tags[i], tag);
+				i++;
+			}
+			
+			text  = "<img src='x'>";
+			index = 0;
+			
+			Assertion.AssertEquals (TextLayout.Tag.SyntaxError, TextLayout.ParseTag (text, ref index, out parameters));
+			Assertion.AssertNull (parameters);
+			Assertion.AssertEquals (text.Length, index);
+			
+			text  = "<img src='x'/>";
+			index = 0;
+			
+			Assertion.AssertEquals (TextLayout.Tag.Image, TextLayout.ParseTag (text, ref index, out parameters));
+			Assertion.AssertNotNull (parameters);
+			Assertion.AssertEquals ("x", parameters["src"]);
+			Assertion.AssertEquals (text.Length, index);
+		}
+		
 		private TextLayout NewTextLayout()
 		{
 			TextLayout layout = new TextLayout ();
 			
-			layout.Text       = "<a href='x'>Link</a>, <b>Bold text</b>, normal text, <i>italic text</i>...<br/>And some &lt;more&gt; text, nice &amp; clean.";
+			layout.Text       = "<a href='x'>Link</a>, <b>Bold text</b>, normal text, <i>italic text</i>...<br/>And some &lt;more&gt; text, <img src='x'/> nice &amp; clean.";
 			layout.Font       = Font.GetFont ("Tahoma", "Regular");
 			layout.FontSize   = 11.0;
 			layout.LayoutSize = new Size (100, 50);
