@@ -167,6 +167,21 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public override bool				IsEnabled
+		{
+			get
+			{
+				if ((this.range.IsEmpty) ||
+					(this.display == 1.0M))
+				{
+					return false;
+				}
+				
+				return base.IsEnabled;
+			}
+		}
+		
+		
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry();
@@ -312,6 +327,11 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
+			if (this.IsEnabled == false)
+			{
+				return;
+			}
+			
 			if (message.IsMouseType)
 			{
 				if (this.is_scrolling)
