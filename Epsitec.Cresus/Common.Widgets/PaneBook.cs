@@ -130,6 +130,7 @@ namespace Epsitec.Common.Widgets
 		{
 			base.UpdateClientGeometry();
 
+			if ( this.items == null )  return;
 			this.UpdateGeometryPages();
 			this.UpdatePaneButtons();
 			this.lastWindowSize = this.Client.Size;
@@ -153,11 +154,42 @@ namespace Epsitec.Common.Widgets
 			this.windowSize = this.RetWindowSize();
 			this.totalRelativeSize = this.RetTotalRelativeSize();
 
+			while ( this.AbsoluteUpdate() );
 			this.StretchPages();
 			this.CheckMinMax();
+			this.UpdateAbsoluteSizes();
 		}
 
-		// Stretch les panneaux selon leurs elasticités.
+		// Assigne les tailles absolues.
+		protected bool AbsoluteUpdate()
+		{
+			int count = this.items.Count;
+			for ( int i=0 ; i<count ; i++ )
+			{
+				PanePage page = this.items[i];
+				double abs = page.GetAbsoluteOrder();
+				if ( System.Double.IsNaN(abs) )  continue;
+
+				double delta = page.PaneRelativeSize;
+				this.SetSizeBase(i, abs);
+				delta -= page.PaneRelativeSize;
+
+				for ( int j=0 ; j<count ; j++ )
+				{
+					if ( j == i )  continue;
+					page = this.items[j];
+					double dim = page.PaneRelativeSize;
+					dim += delta;
+					if ( dim < 0 )  dim = 0;
+					delta -= System.Math.Abs(page.PaneRelativeSize-dim);
+					page.PaneRelativeSize = dim;
+				}
+				return true;
+			}
+			return false;
+		}
+
+		// Stretch les panneaux selon leurs élasticités.
 		protected void StretchPages()
 		{
 			if ( this.lastWindowSize.Width == 0 )  return;
@@ -270,6 +302,7 @@ namespace Epsitec.Common.Widgets
 					rect.Width = end.X-start.X-this.sliderDim;
 					this.Align(ref rect);
 					page.Bounds = rect;
+					page.SetVisible(rect.Width >= page.PaneHideSize);
 
 					rect.Left = end.X-this.sliderDim;
 					rect.Width = this.sliderDim;
@@ -345,6 +378,18 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.OnSizeChanged();
+		}
+
+		// Met à jour les tailles absolues en fonction des tailles relatives.
+		protected void UpdateAbsoluteSizes()
+		{
+			int count = this.items.Count;
+			for ( int i=0 ; i<count ; i++ )
+			{
+				PanePage page = this.items[i];
+				double size = this.RetSize(i);
+				page.SetAbsoluteSize(size);
+			}
 		}
 
 
@@ -477,6 +522,8 @@ namespace Epsitec.Common.Widgets
 				case PaneBookBehaviour.FollowMe:
 					break;
 			}
+
+			this.UpdateAbsoluteSizes();
 		}
 
 		// Bouton flèche cliqué.
@@ -497,6 +544,7 @@ namespace Epsitec.Common.Widgets
 				this.SetSize(index, this.RetMinSize(index));
 			}
 			this.UpdatePaneButtons();
+			this.UpdateAbsoluteSizes();
 		}
 
 		// Déplace le rectangle provisoire.
@@ -571,15 +619,6 @@ namespace Epsitec.Common.Widgets
 			PanePage page = this.items[index];
 			size = System.Math.Max(size, page.PaneMinSize);
 			size = System.Math.Min(size, page.PaneMaxSize);
-			if ( index == 0 )
-			{
-				double current = page.PaneRelativeSize;
-				double future = size*this.totalRelativeSize/this.windowSize;
-				if ( future > current )
-				{
-//					int i=123;
-				}
-			}
 			page.PaneRelativeSize = size*this.totalRelativeSize/this.windowSize;
 		}
 

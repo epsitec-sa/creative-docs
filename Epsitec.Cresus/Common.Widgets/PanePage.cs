@@ -9,6 +9,9 @@ namespace Epsitec.Common.Widgets
 		{
 			this.paneButton = new PaneButton(null);
 			this.paneButton.Alignment = Drawing.ContentAlignment.MiddleCenter;
+
+			this.arrowButton = new ArrowButton(this);
+			this.arrowButton.Hide();
 		}
 		
 		public PanePage(Widget embedder) : this()
@@ -17,7 +20,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Largeur ou hauteur relative du panneau.
-		public double PaneRelativeSize
+		[ Support.Bundle ("rs") ] public double PaneRelativeSize
 		{
 			get
 			{
@@ -26,12 +29,47 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				this.paneRelativeSize = value;
+				if ( this.paneRelativeSize != value )
+				{
+					this.paneRelativeSize = value;
+					this.isDirty = true;
+				}
 			}
 		}
 
+		// Largeur ou hauteur absolue (en points) du panneau.
+		[ Support.Bundle ("as") ] public double PaneAbsoluteSize
+		{
+			get
+			{
+				return this.paneAbsoluteSize;
+			}
+
+			set
+			{
+				if ( this.paneAbsoluteSize != value )
+				{
+					this.paneAbsoluteSize = value;
+					this.paneAbsoluteOrder = value;
+					this.isDirty = true;
+				}
+			}
+		}
+
+		public double GetAbsoluteOrder()
+		{
+			double ret = this.paneAbsoluteOrder;
+			this.paneAbsoluteOrder = System.Double.NaN;
+			return ret;
+		}
+
+		public void SetAbsoluteSize(double value)
+		{
+			this.paneAbsoluteSize = value;
+		}
+
 		// Largeur ou hauteur minimale du panneau en points.
-		public double PaneMinSize
+		[ Support.Bundle ("min") ] public double PaneMinSize
 		{
 			get
 			{
@@ -40,12 +78,16 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				this.paneMinSize = value;
+				if ( this.paneMinSize != value )
+				{
+					this.paneMinSize = value;
+					this.isDirty = true;
+				}
 			}
 		}
 
 		// Largeur ou hauteur maximale du panneau en points.
-		public double PaneMaxSize
+		[ Support.Bundle ("max") ] public double PaneMaxSize
 		{
 			get
 			{
@@ -54,12 +96,34 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				this.paneMaxSize = value;
+				if ( this.paneMaxSize != value )
+				{
+					this.paneMaxSize = value;
+					this.isDirty = true;
+				}
 			}
 		}
 
-		// Elasticité du panneau (0=fixe, 1=elastique).
-		public double PaneElasticity
+		// Largeur ou hauteur maximale en dessous de laquelle le contenu est caché.
+		[ Support.Bundle ("hs") ] public double PaneHideSize
+		{
+			get
+			{
+				return this.paneHideSize;
+			}
+
+			set
+			{
+				if ( this.paneHideSize != value )
+				{
+					this.paneHideSize = value;
+					this.isDirty = true;
+				}
+			}
+		}
+
+		// Elasticité du panneau (0=fixe, 1=élastique).
+		[ Support.Bundle ("e") ] public double PaneElasticity
 		{
 			get
 			{
@@ -68,7 +132,29 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				this.paneElasticity = value;
+				if ( this.paneElasticity != value )
+				{
+					this.paneElasticity = value;
+					this.isDirty = true;
+				}
+			}
+		}
+
+		// Mode du panneau.
+		[ Support.Bundle ("toggle") ] public bool PaneToggle
+		{
+			get
+			{
+				return this.paneToggle;
+			}
+
+			set
+			{
+				if ( this.paneToggle != value )
+				{
+					this.paneToggle = value;
+					this.isDirty = true;
+				}
 			}
 		}
 
@@ -81,6 +167,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		// Retourne le bouton associé.
+		public ArrowButton ArrowButton
+		{
+			get
+			{
+				return this.arrowButton;
+			}
+		}
+		
 		// Retourne le PaneBook parent.
 		public PaneBook Book
 		{
@@ -88,6 +183,20 @@ namespace Epsitec.Common.Widgets
 			{
 				PaneBook book = this.Parent as PaneBook;
 				return book;
+			}
+		}
+
+		// Indique si le PanePage doit être recalculé.
+		public bool IsDirty
+		{
+			get
+			{
+				return this.isDirty;
+			}
+
+			set
+			{
+				this.isDirty = value;
 			}
 		}
 		
@@ -121,11 +230,17 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		protected int					rank;
-		protected double				paneRelativeSize = 0;
-		protected double				paneMinSize = 0;
-		protected double				paneMaxSize = 1000000;
-		protected double				paneElasticity = 1;
-		protected PaneButton			paneButton;
+		protected int						rank;
+		protected double					paneRelativeSize = 0;
+		protected double					paneAbsoluteSize = 0;
+		protected double					paneAbsoluteOrder = System.Double.NaN;
+		protected double					paneMinSize = 0;
+		protected double					paneMaxSize = 1000000;
+		protected double					paneHideSize = 0;
+		protected double					paneElasticity = 1;
+		protected bool						paneToggle;
+		protected PaneButton				paneButton;
+		protected ArrowButton				arrowButton;
+		protected bool						isDirty = true;
 	}
 }
