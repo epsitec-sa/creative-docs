@@ -168,6 +168,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "RegexConstraintTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "RegexFactoryTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

@@ -24,6 +24,7 @@ namespace Epsitec.Common.Support
 			this.validators     = new ValidatorList (this);
 		}
 		
+		
 		public ValidationRule(string name) : this (name, false)
 		{
 		}
@@ -168,7 +169,7 @@ namespace Epsitec.Common.Support
 		}
 		#endregion
 		
-		#region ValidatorList class
+		#region ValidatorList Class
 		public class ValidatorList : System.Collections.IList
 		{
 			public ValidatorList(ValidationRule host)
@@ -382,7 +383,7 @@ namespace Epsitec.Common.Support
 		}
 		#endregion
 		
-		#region CommandStateList class
+		#region CommandStateList Class
 		public class CommandStateList : System.Collections.IList
 		{
 			public CommandStateList(ValidationRule host)
@@ -433,6 +434,7 @@ namespace Epsitec.Common.Support
 					this.names.Add (value);
 				}
 			}
+			
 			
 			#region IList Members
 			public bool							IsReadOnly

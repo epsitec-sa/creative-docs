@@ -5,6 +5,21 @@ using System.Text.RegularExpressions;
 
 namespace Epsitec.Common.Support
 {
+	public enum PredefinedRegex
+	{
+		None,
+		
+		Alpha,
+		AlphaNum,
+		AlphaNumDot,
+		
+		FileName,
+		PathName,
+		ResourceName,
+		
+		DecimalNum
+	}
+	
 	/// <summary>
 	/// La classe RegexFactory permet de construire des objets "regex" à partir de
 	/// textes simples avec des jokers "*"...
@@ -88,6 +103,23 @@ namespace Epsitec.Common.Support
 		}
 		
 		
+		public static Regex	FromPredefinedRegex(PredefinedRegex regex)
+		{
+			switch (regex)
+			{
+				case PredefinedRegex.Alpha:			return RegexFactory.AlphaName;
+				case PredefinedRegex.AlphaNum:		return RegexFactory.AlphaNumName;
+				case PredefinedRegex.AlphaNumDot:	return RegexFactory.AlphaNumDotName;
+				case PredefinedRegex.FileName:		return RegexFactory.FileName;
+				case PredefinedRegex.PathName:		return RegexFactory.PathName;
+				case PredefinedRegex.ResourceName:	return RegexFactory.ResourceName;
+				case PredefinedRegex.DecimalNum:	return RegexFactory.DecimalNum;
+			}
+			
+			return null;
+		}
+		
+		
 		public static Regex						AlphaName
 		{
 			get
@@ -104,7 +136,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public static Regex						AlphaDotName
+		public static Regex						AlphaNumDotName
 		{
 			get
 			{
@@ -143,6 +175,7 @@ namespace Epsitec.Common.Support
 				return RegexFactory.decimal_num;
 			}
 		}
+		
 		
 		
 		[System.Flags] public enum Options
