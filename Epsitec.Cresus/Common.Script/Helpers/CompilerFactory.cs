@@ -30,6 +30,7 @@ namespace Epsitec.Common.Script.Helpers
 			
 			ref_list.Add ("System.dll");
 			ref_list.Add (string.Concat (dll_path, System.IO.Path.DirectorySeparatorChar, "Common.Script.Glue.dll"));
+			ref_list.Add (string.Concat (dll_path, System.IO.Path.DirectorySeparatorChar, "Common.Types.dll"));
 			
 			string[] ref_names = new string[ref_list.Count];
 			ref_list.CopyTo (ref_names, 0);
