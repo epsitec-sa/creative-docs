@@ -147,6 +147,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "AbstractWidgetAdorner.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AlphaBar.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -263,6 +268,11 @@
                 />
                 <File
                     RelPath = "HeaderSlider.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "HiliteWidgetAdorner.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
