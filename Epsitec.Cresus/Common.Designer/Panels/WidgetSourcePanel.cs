@@ -10,9 +10,9 @@ namespace Epsitec.Common.Designer.Panels
 	/// La classe WidgetSourcePalette permet de remplir un panel servant de base à la
 	/// palette des widgets servant à la construction de la GUI.
 	/// </summary>
-	public class WidgetSourcePalette : AbstractPalette, IDropSource
+	public class WidgetSourcePanel : Panel, IDropSource
 	{
-		public WidgetSourcePalette()
+		public WidgetSourcePanel()
 		{
 			this.size = new Drawing.Size (172+2*10, 145+2*10);
 		}
@@ -125,15 +125,15 @@ namespace Epsitec.Common.Designer.Panels
 				
 				System.Type type = widget.GetType ();
 				
-				if (WidgetSourcePalette.MatchClass (type, typeof (WindowRoot)))
+				if (WidgetSourcePanel.MatchClass (type, typeof (WindowRoot)))
 				{
 					return new Drawing.Margins (8, 8, 16, 16);;
 				}
 			
-				if (WidgetSourcePalette.MatchClass (type, typeof (GroupBox)) ||
-					WidgetSourcePalette.MatchClass (type, typeof (TabPage)) ||
-					WidgetSourcePalette.MatchClass (type, typeof (PanePage)) ||
-					WidgetSourcePalette.MatchClass (type, typeof (Panel)))
+				if (WidgetSourcePanel.MatchClass (type, typeof (GroupBox)) ||
+					WidgetSourcePanel.MatchClass (type, typeof (TabPage)) ||
+					WidgetSourcePanel.MatchClass (type, typeof (PanePage)) ||
+					WidgetSourcePanel.MatchClass (type, typeof (Panel)))
 				{
 					return new Drawing.Margins (4, 4, 6, 6);
 				}
@@ -146,9 +146,9 @@ namespace Epsitec.Common.Designer.Panels
 				System.Type type_a = widget_a.GetType ();
 				System.Type type_b = widget_b.GetType ();
 				
-				SpaceClass a = WidgetSourcePalette.GetSpaceClass (type_a);
-				SpaceClass b = WidgetSourcePalette.GetSpaceClass (type_b);
-				SpaceClass x = WidgetSourcePalette.Combine (a, b);
+				SpaceClass a = WidgetSourcePanel.GetSpaceClass (type_a);
+				SpaceClass b = WidgetSourcePanel.GetSpaceClass (type_b);
+				SpaceClass x = WidgetSourcePanel.Combine (a, b);
 				
 				switch (x)
 				{
@@ -177,30 +177,30 @@ namespace Epsitec.Common.Designer.Panels
 		
 		public static SpaceClass GetSpaceClass(System.Type type)
 		{
-			if (WidgetSourcePalette.MatchClass (type, typeof (TextFieldCombo)) ||
-				WidgetSourcePalette.MatchClass (type, typeof (Button)))
+			if (WidgetSourcePanel.MatchClass (type, typeof (TextFieldCombo)) ||
+				WidgetSourcePanel.MatchClass (type, typeof (Button)))
 			{
 				return SpaceClass.Button;
 			}
 			
-			if (WidgetSourcePalette.MatchClass (type, typeof (AbstractTextField)))
+			if (WidgetSourcePanel.MatchClass (type, typeof (AbstractTextField)))
 			{
 				return SpaceClass.TextField;
 			}
 			
-			if (WidgetSourcePalette.MatchClass (type, typeof (CheckButton)) ||
-				WidgetSourcePalette.MatchClass (type, typeof (RadioButton)) ||
-				WidgetSourcePalette.MatchClass (type, typeof (StaticText)) ||
-				WidgetSourcePalette.MatchClass (type, typeof (GroupBox)) ||
-				WidgetSourcePalette.MatchClass (type, typeof (TabBook)))
+			if (WidgetSourcePanel.MatchClass (type, typeof (CheckButton)) ||
+				WidgetSourcePanel.MatchClass (type, typeof (RadioButton)) ||
+				WidgetSourcePanel.MatchClass (type, typeof (StaticText)) ||
+				WidgetSourcePanel.MatchClass (type, typeof (GroupBox)) ||
+				WidgetSourcePanel.MatchClass (type, typeof (TabBook)))
 			{
 				return SpaceClass.Compact;
 			}
 			
-			if (WidgetSourcePalette.MatchClass (type, typeof (HScroller)) ||
-				WidgetSourcePalette.MatchClass (type, typeof (VScroller)) ||
-				WidgetSourcePalette.MatchClass (type, typeof (PaneBook)) ||
-				WidgetSourcePalette.MatchClass (type, typeof (Panel)))
+			if (WidgetSourcePanel.MatchClass (type, typeof (HScroller)) ||
+				WidgetSourcePanel.MatchClass (type, typeof (VScroller)) ||
+				WidgetSourcePanel.MatchClass (type, typeof (PaneBook)) ||
+				WidgetSourcePanel.MatchClass (type, typeof (Panel)))
 			{
 				return SpaceClass.Tight;
 			}

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer.Panels
 	/// La classe StringEditPanel réalise un panneau pour l'édition de
 	/// textes contenus dans un bundle.
 	/// </summary>
-	public class StringEditPanel : AbstractPalette
+	public class StringEditPanel : Panel
 	{
 		public StringEditPanel(StringEditController.Store store)
 		{

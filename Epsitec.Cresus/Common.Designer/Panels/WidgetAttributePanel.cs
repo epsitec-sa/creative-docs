@@ -10,9 +10,9 @@ namespace Epsitec.Common.Designer.Panels
 	/// La classe WidgetAttributePalette offre l'accès aux propriétés d'un
 	/// widget.
 	/// </summary>
-	public class WidgetAttributePalette : AbstractPalette
+	public class WidgetAttributePanel : Panel
 	{
-		public WidgetAttributePalette(Application application)
+		public WidgetAttributePanel(Application application)
 		{
 			this.size  = new Drawing.Size (250, 600);
 			this.props = new System.Collections.ArrayList ();

@@ -4,11 +4,11 @@
 namespace Epsitec.Common.Designer.Panels
 {
 	/// <summary>
-	/// La classe AbstractPalette est la base de toutes les palettes.
+	/// La classe Panel est la base de tous les panneaux du designer.
 	/// </summary>
-	public abstract class AbstractPalette : Common.UI.AbstractPanel
+	public abstract class Panel : Common.UI.AbstractPanel
 	{
-		public AbstractPalette()
+		public Panel()
 		{
 		}
 	}
