@@ -45,7 +45,9 @@ namespace Epsitec.Common.Support
 			Widgets.Button button = obj as Widgets.Button;
 			
 			bundle = ResourceBundle.Create ("button.cancel");
+			bundler.PropertyBundled += new BundlingPropertyEventHandler(this.HandleBundlerPropertyBundled);
 			bundler.FillBundleFromObject (bundle, button);
+			bundler.PropertyBundled -= new BundlingPropertyEventHandler(this.HandleBundlerPropertyBundled);
 			
 			bundle.CreateXmlDocument (false).Save (System.Console.Out);
 		}
@@ -107,6 +109,25 @@ namespace Epsitec.Common.Support
 			{
 				this.test_window.Dispose ();
 				this.test_window = null;
+			}
+		}
+
+		private void HandleBundlerPropertyBundled(object sender, BundlingPropertyEventArgs e)
+		{
+			System.Console.Out.WriteLine ("Processing property {0}, data='{1}', suppress={2}.", e.PropertyName, e.PropertyData, e.SuppressProperty);
+			
+			if (e.SuppressProperty == false)
+			{
+				if (e.PropertyType == typeof (Drawing.Size))
+				{
+					Drawing.Size def_value = (Drawing.Size) e.PropertyDefault;
+					Drawing.Size cur_value = (Drawing.Size) e.PropertyValue;
+					
+					bool sw = (def_value.Width == cur_value.Width);
+					bool sh = (def_value.Height == cur_value.Height);
+					
+					e.PropertyData = Drawing.Size.Converter.ToString (cur_value, System.Globalization.CultureInfo.InvariantCulture, sw, sh);
+				}
 			}
 		}
 	}

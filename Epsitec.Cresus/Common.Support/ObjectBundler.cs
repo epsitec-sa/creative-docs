@@ -5,7 +5,96 @@ namespace Epsitec.Common.Support
 {
 	using System.Collections;
 	
-	public delegate void BundlingEventHandler(object sender, object obj, ResourceBundle bundle);
+	using PropertyInfo   = System.Reflection.PropertyInfo;
+	using MemberInfo     = System.Reflection.MemberInfo;
+	using MemberTypes    = System.Reflection.MemberTypes;
+	using BindingFlags   = System.Reflection.BindingFlags;
+	
+	using TypeDescriptor = System.ComponentModel.TypeDescriptor;
+	
+	public class BundlingEventArgs : System.EventArgs
+	{
+		public BundlingEventArgs(ResourceBundle bundle, object obj)
+		{
+			this.obj    = obj;
+			this.bundle = bundle;
+		}
+		
+		
+		public object					Object
+		{
+			get { return this.obj; }
+		}
+		
+		public ResourceBundle			Bundle
+		{
+			get { return this.bundle; }
+		}
+		
+		
+		protected object				obj;
+		protected ResourceBundle		bundle;
+	}
+	
+	public class BundlingPropertyEventArgs : BundlingEventArgs
+	{
+		public BundlingPropertyEventArgs(ResourceBundle bundle, object obj, PropertyInfo prop_info, string prop_name, object prop_value, object prop_default) : base(bundle, obj)
+		{
+			this.prop_info    = prop_info;
+			this.prop_name    = prop_name;
+			this.prop_value   = prop_value;
+			this.prop_default = prop_default;
+		}
+		
+		public string					PropertyName
+		{
+			get { return this.prop_name; }
+		}
+		
+		public object					PropertyValue
+		{
+			get { return this.prop_value; }
+		}
+		
+		public object					PropertyDefault
+		{
+			get { return this.prop_default; }
+		}
+		
+		public string					PropertyData
+		{
+			get { return this.prop_data; }
+			set { this.prop_data = value; }
+		}
+		
+		public PropertyInfo				PropertyInfo
+		{
+			get { return this.prop_info; }
+		}
+		
+		public System.Type				PropertyType
+		{
+			get { return this.prop_info.PropertyType; }
+		}
+		
+		public bool						SuppressProperty
+		{
+			get { return this.suppress; }
+			set { this.suppress = value; }
+		}
+		
+		
+		protected string				prop_name;
+		protected object				prop_value;
+		protected string				prop_data;
+		protected object				prop_default;
+		protected bool					suppress;
+		protected PropertyInfo			prop_info;
+	}
+	
+	
+	public delegate void BundlingEventHandler(object sender, BundlingEventArgs e);
+	public delegate void BundlingPropertyEventHandler(object sender, BundlingPropertyEventArgs e);
 	
 	/// <summary>
 	/// La classe ObjectBundler s'occupe de déballer des bundles pour en
@@ -153,15 +242,15 @@ namespace Epsitec.Common.Support
 			
 			IBundleSupport obj = System.Activator.CreateInstance (obj_type) as IBundleSupport;
 			
-			foreach (System.Reflection.MemberInfo member_info in obj_type.GetMembers (System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
+			foreach (MemberInfo member_info in obj_type.GetMembers (BindingFlags.Public | BindingFlags.Instance))
 			{
 				//	Passe en revue tous les membres publics. Ceux qui sont des propriétés
 				//	vont nécessiter une attention toute particulière...
 				
-				if (member_info.MemberType == System.Reflection.MemberTypes.Property)
+				if (member_info.MemberType == MemberTypes.Property)
 				{
 					System.Type type = obj_type;
-					System.Reflection.PropertyInfo prop_info = member_info as System.Reflection.PropertyInfo;
+					PropertyInfo prop_info = member_info as PropertyInfo;
 					
 					System.Diagnostics.Debug.Assert (prop_info != null);
 					
@@ -194,7 +283,7 @@ namespace Epsitec.Common.Support
 				this.obj_to_bundle[obj] = bundle;
 			}
 			
-			this.OnObjectUnbundled (obj, bundle);
+			this.OnObjectUnbundled (new BundlingEventArgs (bundle, obj));
 			
 			return obj;
 		}
@@ -231,25 +320,26 @@ namespace Epsitec.Common.Support
 				return false;
 			}
 			
-			System.Xml.XmlDocument xmldoc = new System.Xml.XmlDocument ();
+			System.Diagnostics.Debug.Assert (ObjectBundler.xmldoc != null);
+			System.Diagnostics.Debug.Assert (ObjectBundler.xmldoc.ChildNodes.Count == 0);
 			
-			this.BundleAddDataField (bundle, xmldoc, "class", obj_class);
+			this.BundleAddDataField (bundle, "class", obj_class);
 			
 			object obj_default = System.Activator.CreateInstance (obj_type);
 			
-			foreach (System.Reflection.MemberInfo member_info in obj_type.GetMembers (System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
+			foreach (MemberInfo member_info in obj_type.GetMembers (BindingFlags.Public | BindingFlags.Instance))
 			{
 				//	Passe en revue tous les membres publics. Ceux qui sont des propriétés
 				//	vont nécessiter une attention toute particulière...
 				
-				if (member_info.MemberType == System.Reflection.MemberTypes.Property)
+				if (member_info.MemberType == MemberTypes.Property)
 				{
 					System.Type type = obj_type;
-					System.Reflection.PropertyInfo prop_info = member_info as System.Reflection.PropertyInfo;
+					PropertyInfo prop_info = member_info as PropertyInfo;
 					
 					System.Diagnostics.Debug.Assert (prop_info != null);
 					
-					while (this.SerialiseProperty (bundle, xmldoc, obj, obj_default, prop_info) == false)
+					while (this.SerialiseProperty (bundle, obj, obj_default, prop_info) == false)
 					{
 						type = type.BaseType;
 						
@@ -278,13 +368,16 @@ namespace Epsitec.Common.Support
 //			obj.RestoreFromBundle (this, bundle);
 //			this.OnObjectUnbundled (obj, bundle);
 			
+			System.Diagnostics.Debug.Assert (ObjectBundler.xmldoc.ChildNodes.Count == 0);
+			
 			return true;
 		}
 		
-		protected void BundleAddDataField(ResourceBundle bundle, System.Xml.XmlDocument xmldoc, string name, string value)
+		
+		protected void BundleAddDataField(ResourceBundle bundle, string name, string value)
 		{
-			System.Xml.XmlElement   xmlnode = xmldoc.CreateElement ("data");
-			System.Xml.XmlAttribute xmlattr = xmldoc.CreateAttribute ("name");
+			System.Xml.XmlElement   xmlnode = ObjectBundler.xmldoc.CreateElement ("data");
+			System.Xml.XmlAttribute xmlattr = ObjectBundler.xmldoc.CreateAttribute ("name");
 			
 			xmlattr.Value = name;
 			xmlnode.Attributes.Append (xmlattr);
@@ -293,24 +386,22 @@ namespace Epsitec.Common.Support
 			bundle.Add (new ResourceBundle.Field (bundle, xmlnode));
 		}
 		
-		protected bool SerialiseProperty(ResourceBundle bundle, System.Xml.XmlDocument xmldoc, object obj, object obj_default, string property_name)
+		protected bool SerialiseProperty(ResourceBundle bundle, object obj, object obj_default, string property_name)
 		{
-			System.Reflection.PropertyInfo prop_info = this.FindPropertyInfo (obj, property_name);
+			PropertyInfo prop_info = this.FindPropertyInfo (obj, property_name);
 			
 			if (prop_info == null)
 			{
 				return false;
 			}
 			
-			return this.SerialiseProperty (bundle, xmldoc, obj, obj_default, prop_info);
+			return this.SerialiseProperty (bundle, obj, obj_default, prop_info);
 		}
 		
-		protected bool SerialiseProperty(ResourceBundle bundle, System.Xml.XmlDocument xmldoc, object obj, object obj_default, System.Reflection.PropertyInfo prop_info)
+		protected bool SerialiseProperty(ResourceBundle bundle, object obj, object obj_default, PropertyInfo prop_info)
 		{
 			//	Pout un objet donné, fait un "get" de la propriété spécifiée et stocke les
 			//	données dans le champ correspondant du bundle.
-			
-			bool ok = false;
 			
 			if ((prop_info != null) &&
 				(prop_info.CanRead) &&
@@ -324,90 +415,25 @@ namespace Epsitec.Common.Support
 				
 				BundleAttribute attr = attributes[0] as BundleAttribute;
 				
-				string      prop_name  = attr.PropertyName;
-				object      prop_value = prop_info.GetValue (obj, null);
-				object      prop_def   = prop_info.GetValue (obj_default, null);
-				System.Type prop_type  = prop_info.PropertyType;
-				string      prop_data  = null;
+				object prop_value = prop_info.GetValue (obj, null);
+				object prop_def   = prop_info.GetValue (obj_default, null);
 				
-				if ((prop_value == prop_def) ||
-					((prop_value != null) && (prop_value.Equals (prop_def))))
+				BundlingPropertyEventArgs e = new BundlingPropertyEventArgs (bundle, obj, prop_info, attr.PropertyName, prop_value, prop_def);
+				
+				e.PropertyData     = TypeDescriptor.GetConverter (prop_info.PropertyType).ConvertToInvariantString (prop_value);
+				e.SuppressProperty = this.IsPropertyEqual (obj_default, prop_info, e.PropertyData);
+				
+				this.OnPropertyBundled (e);
+				
+				if (e.SuppressProperty == false)
 				{
-					//	Même donnée que dans l'objet par défaut... On peut donc s'économiser du travail
-					//	car à la désérialisation, la valeur sera déjà initialisée correctement.
-				}
-				else if (prop_type == typeof (string))
-				{
-					prop_data = prop_value as string;
-					ok = true;
-				}
-				else if (prop_type == typeof (double))
-				{
-					double num_value = (double) prop_value;
-					prop_data = num_value.ToString (System.Globalization.CultureInfo.InvariantCulture);
-					ok = true;
-				}
-				else if (prop_type == typeof (int))
-				{
-					int num_value = (int) prop_value;
-					prop_data = num_value.ToString (System.Globalization.CultureInfo.InvariantCulture);
-					ok = true;
-				}
-				else if (prop_type == typeof (long))
-				{
-					long num_value = (long) prop_value;
-					prop_data = num_value.ToString (System.Globalization.CultureInfo.InvariantCulture);
-					ok = true;
-				}
-				else if (prop_type == typeof (decimal))
-				{
-					decimal num_value = (decimal) prop_value;
-					prop_data = num_value.ToString (System.Globalization.CultureInfo.InvariantCulture);
-					ok = true;
-				}
-				else if (prop_type.IsSubclassOf (typeof (System.Enum)))
-				{
-					System.Enum enum_value = prop_value as System.Enum;
-					prop_data = enum_value.ToString (System.Globalization.CultureInfo.InvariantCulture);
-					ok = true;
-				}
-				else if (prop_type == typeof (Drawing.Size))
-				{
-					prop_data = System.ComponentModel.TypeDescriptor.GetConverter (prop_type).ConvertToInvariantString (prop_value);
-					ok = true;
-				}
-				else if (prop_type == typeof (Drawing.Point))
-				{
-					prop_data = System.ComponentModel.TypeDescriptor.GetConverter (prop_type).ConvertToInvariantString (prop_value);
-					ok = true;
-				}
-				else if (prop_type == typeof (Drawing.Rectangle))
-				{
-					prop_data = System.ComponentModel.TypeDescriptor.GetConverter (prop_type).ConvertToInvariantString (prop_value);
-					ok = true;
-				}
-				else if (prop_type == typeof (Drawing.Margins))
-				{
-					prop_data = System.ComponentModel.TypeDescriptor.GetConverter (prop_type).ConvertToInvariantString (prop_value);
-					ok = true;
-				}
-				else if (prop_type == typeof (bool))
-				{
-					prop_data = System.ComponentModel.TypeDescriptor.GetConverter (prop_type).ConvertToInvariantString (prop_value);
-					ok = true;
-				}
-				else
-				{
-					//	TODO: gérer les autres cas fréquents ici... (types numériques, couleur, etc.)
+					this.BundleAddDataField (bundle, e.PropertyName, e.PropertyData);
 				}
 				
-				if (prop_data != null)
-				{
-					this.BundleAddDataField (bundle, xmldoc, prop_name, prop_data);
-				}
+				return true;
 			}
 			
-			return ok;
+			return false;
 		}
 		
 		
@@ -418,7 +444,7 @@ namespace Epsitec.Common.Support
 			//	valeur diffère de la valeur par défaut d'une propriété (on passe alors comme
 			//	objet en entrée un objet fraîchement construit).
 			
-			System.Reflection.PropertyInfo prop_info = this.FindPropertyInfo (obj, property_name);
+			PropertyInfo prop_info = this.FindPropertyInfo (obj, property_name);
 			
 			if (prop_info == null)
 			{
@@ -428,7 +454,7 @@ namespace Epsitec.Common.Support
 			return this.IsPropertyEqual (obj, prop_info, ref_value);
 		}
 		
-		public bool IsPropertyEqual(object obj, System.Reflection.PropertyInfo prop_info, string ref_value)
+		public bool IsPropertyEqual(object obj, PropertyInfo prop_info, string ref_value)
 		{
 			if ((prop_info != null) &&
 				(prop_info.CanRead) &&
@@ -436,9 +462,11 @@ namespace Epsitec.Common.Support
 			{
 				//	C'est bien une propriété qui peut être lue et qui a l'attribut [Bundle] défini.
 				
-				string obj_value = prop_info.GetValue (obj, null).ToString  ();
+				System.Type prop_type   = prop_info.PropertyType;
+				object      prop_object = prop_info.GetValue (obj, null);
+				string      prop_value  = TypeDescriptor.GetConverter (prop_type).ConvertToInvariantString (prop_object);
 				
-				return obj_value == ref_value;
+				return prop_value == ref_value;
 			}
 			
 			return false;
@@ -447,7 +475,7 @@ namespace Epsitec.Common.Support
 		
 		public bool RestoreProperty(ResourceBundle bundle, object obj, string property_name)
 		{
-			System.Reflection.PropertyInfo prop_info = this.FindPropertyInfo (obj, property_name);
+			PropertyInfo prop_info = this.FindPropertyInfo (obj, property_name);
 			
 			if (prop_info == null)
 			{
@@ -457,7 +485,7 @@ namespace Epsitec.Common.Support
 			return this.RestoreProperty (bundle, obj, prop_info);
 		}
 		
-		public bool RestoreProperty(ResourceBundle bundle, object obj, System.Reflection.PropertyInfo prop_info)
+		public bool RestoreProperty(ResourceBundle bundle, object obj, PropertyInfo prop_info)
 		{
 			//	Pout un objet donné, fait un "set" de la propriété spécifiée en se
 			//	basant sur les données stockées dans le champ correspondant du bundle.
@@ -576,7 +604,7 @@ namespace Epsitec.Common.Support
 								//	peuvent être remplacés par "*" (ce qui signifie: utiliser la valeur par défaut)
 								
 								Drawing.Margins def_margins = (Drawing.Margins) prop_info.GetValue (obj, null);
-								prop_info.SetValue (obj, Drawing.Margins.Parse (str_value, def_margins), null);
+								prop_info.SetValue (obj, Drawing.Margins.Parse (str_value, System.Globalization.CultureInfo.InvariantCulture, def_margins), null);
 								ok = true;
 							}
 							else if (prop_type == typeof (bool))
@@ -619,16 +647,16 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public System.Reflection.PropertyInfo FindPropertyInfo(object obj, string property_name)
+		public PropertyInfo FindPropertyInfo(object obj, string property_name)
 		{
 			//	Parcourt les propriétés publiques de l'objet à la recherche de celle
 			//	qui a un attribut [Bundle] avec le PropertyName spécifié.
 			
-			foreach (System.Reflection.MemberInfo member_info in obj.GetType ().GetMembers (System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance))
+			foreach (MemberInfo member_info in obj.GetType ().GetMembers (BindingFlags.Public | BindingFlags.Instance))
 			{
-				if (member_info.MemberType == System.Reflection.MemberTypes.Property)
+				if (member_info.MemberType == MemberTypes.Property)
 				{
-					System.Reflection.PropertyInfo prop_info = member_info as System.Reflection.PropertyInfo;
+					PropertyInfo prop_info = member_info as PropertyInfo;
 					
 					System.Diagnostics.Debug.Assert (prop_info != null);
 					
@@ -701,20 +729,42 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		protected virtual void OnObjectUnbundled(object obj, ResourceBundle bundle)
+		protected virtual void OnObjectUnbundled(BundlingEventArgs e)
 		{
 			if (this.ObjectUnbundled != null)
 			{
-				this.ObjectUnbundled (this, obj, bundle);
+				this.ObjectUnbundled (this, e);
+			}
+		}
+		
+		protected virtual void OnPropertyBundled(BundlingPropertyEventArgs e)
+		{
+			if (this.PropertyBundled != null)
+			{
+				this.PropertyBundled (this, e);
 			}
 		}
 		
 		
-		public event BundlingEventHandler	ObjectUnbundled;
+		public static System.Xml.XmlDocument		XmlDocument
+		{
+			get
+			{
+				System.Diagnostics.Debug.Assert (ObjectBundler.xmldoc != null);
+				System.Diagnostics.Debug.Assert (ObjectBundler.xmldoc.ChildNodes.Count == 0);
+				
+				return ObjectBundler.xmldoc;
+			}
+		}
 		
-		protected static Hashtable			classes;
 		
-		protected bool						store_mapping;
-		protected Hashtable					obj_to_bundle;			//	lien entre noms de bundles et objets
+		public event BundlingEventHandler			ObjectUnbundled;
+		public event BundlingPropertyEventHandler	PropertyBundled;
+		
+		protected static Hashtable					classes;
+		protected static System.Xml.XmlDocument		xmldoc = new System.Xml.XmlDocument ();
+		
+		protected bool								store_mapping;
+		protected Hashtable							obj_to_bundle;			//	lien entre noms de bundles et objets
 	}
 }
