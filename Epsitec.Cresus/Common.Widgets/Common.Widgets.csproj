@@ -222,11 +222,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "DragSource.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "DragWindow.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -248,11 +243,6 @@
                 />
                 <File
                     RelPath = "GlyphButton.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Grip.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -624,86 +614,8 @@
                     RelPath = "Adorners\Resources\metal2.png"
                     BuildAction = "EmbeddedResource"
                 />
-                <File
-                    RelPath = "Design\AbsPosWidgetEdit.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\AbstractAdorner.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\AbstractWidgetEdit.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\Constraint.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\Controller.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\GripsOverlay.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\HiliteAdorner.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\IGuideAlign.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\SmartGuide.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\WidgetWrapper.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\Panels\AbstractPalette.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\Panels\EditToolsBar.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\Panels\PreferredLayout.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\Panels\WidgetAttributePalette.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\Panels\WidgetPalette.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Design\Tools\TextBundleArrayStore.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
+                <Folder RelPath = "Design\Panels\" />
+                <Folder RelPath = "Design\Tools\" />
                 <File
                     RelPath = "Helpers\AbsPosLayoutEngine.cs"
                     SubType = "Code"
@@ -792,17 +704,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Layouts\Grid.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Layouts\LayoutInfo.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Layouts\Table.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
