@@ -52,5 +52,10 @@ namespace Epsitec.Cresus.Database
 		
 		void SetSqlParameters(System.Data.IDbCommand command, Collections.SqlFields fields);
 		void GetSqlParameters(System.Data.IDbCommand command, Collections.SqlFields fields);
+		
+		//	Divers :
+		
+		void SetCommandParameterValue(System.Data.IDbCommand command, int index, object value);
+		void GetCommandParameterValue(System.Data.IDbCommand command, int index, out object value);
 	}
 }

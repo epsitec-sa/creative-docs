@@ -564,6 +564,14 @@ namespace Epsitec.Cresus.Database
 			return field;
 		}
 		
+		public SqlField CreateEmptySqlField(ITypeConverter type_converter)
+		{
+			DbRawType raw_type = TypeConverter.MapToRawType (this.SimpleType, this.NumDef);
+			SqlField  field    = SqlField.CreateConstant (null, raw_type);
+			field.Alias = this.CreateSqlName ();
+			return field;
+		}
+		
 		
 		public static string SerializeToXml(DbColumn column, bool full)
 		{

@@ -32,25 +32,6 @@ namespace Epsitec.Cresus.Replication
 			
 			list.AddRange (data.TableData);
 			
-			this.infrastructure.GlobalLock ();
-			
-			try
-			{
-				this.ApplyChanges (database, list);
-			}
-			finally
-			{
-				this.infrastructure.GlobalUnlock ();
-			}
-		}
-		
-		protected void ApplyChanges(IDbAbstraction database, System.Collections.ArrayList list)
-		{
-			//	Cette méthode doit s'exécuter dans un bloc verrouillé (aucune exécution concurrente
-			//	n'est tolérée) :
-			
-			System.Diagnostics.Debug.Assert (this.infrastructure.IsInGlobalLock);
-			
 			PackedTableData def_table   = ClientEngine.FindPackedTable (list, Tags.TableTableDef);
 			PackedTableData def_column  = ClientEngine.FindPackedTable (list, Tags.TableColumnDef);
 			PackedTableData def_type    = ClientEngine.FindPackedTable (list, Tags.TableTypeDef);
@@ -64,39 +45,75 @@ namespace Epsitec.Cresus.Replication
 				(def_type != null) ||
 				(def_enumval != null))
 			{
+				//	Ces opérations ne sont possibles qu'au sein d'un bloc d'exclusion global au
+				//	niveau des accès à la base de données :
+				
+				this.infrastructure.GlobalLock ();
+				
+				try
+				{
+					using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, database))
+					{
+						if (def_table  != null)  this.ApplyChanges (transaction, def_table);
+						if (def_column != null)  this.ApplyChanges (transaction, def_column);
+						if (def_type   != null)  this.ApplyChanges (transaction, def_type);
+						if (def_enumval != null) this.ApplyChanges (transaction, def_enumval);
+						
+						//	Il est indispensable de valider la transaction à ce stade, car on va peut-être
+						//	modifier la structure interne de la base de données, et cela ne sera visible
+						//	qu'après validation :
+						
+						this.infrastructure.ClearCaches ();
+						
+						transaction.Commit ();
+					}
+					
+					list.Remove (def_table);
+					list.Remove (def_column);
+					list.Remove (def_type);
+					list.Remove (def_enumval);
+					
+					//	Met à jour la structure de la base de données selon les nouvelles descriptions de
+					//	tables/colonnes/types :
+					
+					this.ApplyStructuralChanges (def_table, def_column, def_type);
+					
+					using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, database))
+					{
+						this.ApplyChanges (transaction, list);
+						transaction.Commit ();
+					}
+				}
+				finally
+				{
+					this.infrastructure.GlobalUnlock ();
+				}
+			}
+			else
+			{
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, database))
 				{
-					this.ApplyChanges (transaction, def_table);
-					this.ApplyChanges (transaction, def_column);
-					this.ApplyChanges (transaction, def_type);
-					this.ApplyChanges (transaction, def_enumval);
-					
-					//	Il est indispensable de valider la transaction à ce stade, car on va peut-être
-					//	modifier la structure interne de la base de données, et cela ne sera visible
-					//	qu'après validation :
-					
-					this.infrastructure.ClearCaches ();
-					
+					this.ApplyChanges (transaction, list);
 					transaction.Commit ();
 				}
-				
-				list.Remove (def_table);
-				list.Remove (def_column);
-				list.Remove (def_type);
-				list.Remove (def_enumval);
-				
-				//	Met à jour la structure de la base de données selon les nouvelles descriptions de
-				//	tables/colonnes/types :
-				
-				this.ApplyStructuralChanges (def_table, def_column, def_type);
 			}
-			
-			//	A ce stade, les informations "run-time" sont à jour, mais pas les tables réelles
-			//	dans la base de données. Peut-être faudra-t-il procéder à des modifications...
+		}
+		
+		protected void ApplyChanges(DbTransaction transaction, System.Collections.ArrayList list)
+		{
+			foreach (PackedTableData data in list)
+			{
+				this.ApplyChanges (transaction, data);
+			}
 		}
 		
 		protected void ApplyChanges(DbTransaction transaction, PackedTableData data)
 		{
+			//	Applique les modifications décrites pour la table spécifiée.
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Applying changes in table {0}.", data.Name));
+			
+			
 		}
 		
 		protected void ApplyStructuralChanges(PackedTableData def_table, PackedTableData def_column, PackedTableData def_type)

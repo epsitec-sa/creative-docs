@@ -1248,6 +1248,22 @@ namespace Epsitec.Cresus.Database.Implementation
 			// TODO:  Add FirebirdSqlBuilder.SetSqlParameters implementation
 		}
 
+		
+		public void SetCommandParameterValue(System.Data.IDbCommand command, int index, object value)
+		{
+			FbCommand   fb_command = command as FbCommand;
+			FbParameter fb_param   = fb_command.Parameters[index] as FbParameter;
+			
+			fb_param.Value = value;
+		}
+		
+		public void GetCommandParameterValue(System.Data.IDbCommand command, int index, out object value)
+		{
+			FbCommand   fb_command = command as FbCommand;
+			FbParameter fb_param   = fb_command.Parameters[index] as FbParameter;
+			
+			value = fb_param.Value;
+		}
 		#endregion
 		
 		#region IDisposable Members

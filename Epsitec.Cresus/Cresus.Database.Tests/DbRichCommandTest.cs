@@ -344,6 +344,69 @@ namespace Epsitec.Cresus.Database
 			infrastructure.Dispose ();
 		}
 		
+		[Test] public void Check06ReplaceTables()
+		{
+			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
+			
+			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
+			
+			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, null, db_table_a);
+			
+			System.Data.DataRow row;
+			
+			command.CreateNewRow ("Personnes", out row);
+			
+			row.BeginEdit ();
+			row["Prenom"] = "Albert";
+			row["Nom"]    = "Einstein";
+			row.EndEdit ();
+			
+			command.CreateNewRow ("Personnes", out row);
+			
+			row.BeginEdit ();
+			row["Prenom"] = "Jean";
+			row["Nom"]    = "Dupont";
+			row.EndEdit ();
+			
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
+			{
+				command.UpdateRealIds (transaction);
+				command.UpdateTables (transaction);
+				transaction.Commit ();
+			}
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("A: Inserted {0}, Updated {1}.", command.ReplaceStatisticsInsertCount, command.ReplaceStatisticsUpdateCount));
+			
+			row = command.DataSet.Tables[0].Rows[1];
+			
+			row.BeginEdit ();
+			row["Nom"] = "Dupond";
+			row.EndEdit ();
+			
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
+			{
+				command.ReplaceTables (transaction);
+				transaction.Commit ();
+			}
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("B: Inserted {0}, Updated {1}.", command.ReplaceStatisticsInsertCount, command.ReplaceStatisticsUpdateCount));
+			
+			command.DataSet.Tables[0].Rows.Clear ();
+			command.DataSet.Tables[0].Rows.Add (new object[] { 1000000000003L, 0, 123456L, "Walz", "Michael" });
+			command.DataSet.Tables[0].Rows.Add (new object[] { 1000000000004L, 0, 123456L, "Raboud", "Yves" });
+			command.DataSet.Tables[0].Rows.Add (new object[] { 1000000000100L, 0, 123456L, "Alleyn", "Christian" });
+			
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
+			{
+				command.ReplaceTables (transaction);
+				transaction.Commit ();
+			}
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("C: Inserted {0}, Updated {1}.", command.ReplaceStatisticsInsertCount, command.ReplaceStatisticsUpdateCount));
+			
+			infrastructure.Dispose ();
+		}
+		
 		[Test] public void Check99UnregisterDbTables()
 		{
 			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);

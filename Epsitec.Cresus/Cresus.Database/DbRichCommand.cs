@@ -69,6 +69,23 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public int								ReplaceStatisticsInsertCount
+		{
+			get
+			{
+				return this.stat_replace_insert_count;
+			}
+		}
+		
+		public int								ReplaceStatisticsUpdateCount
+		{
+			get
+			{
+				return this.stat_replace_update_count;
+			}
+		}
+		
+		
 		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table)
 		{
 			return DbRichCommand.CreateFromTables (infrastructure, transaction, new DbTable[] { table }, new DbSelectCondition[] { null });
@@ -166,9 +183,10 @@ namespace Epsitec.Cresus.Database
 				throw new Exceptions.ReadOnlyException (this.db_access);
 			}
 			
-			//	Sauve les données contenues du DataSet dans la base de données;
-			//	pour cela, il faut que DbRichCommand ait été rempli correctement
-			//	au moyen de DbInfrastructure.Execute.
+			//	Sauve les données du DataSet dans la base de données (mise à jour soit
+			//	par UPDATE, soit par INSERT, en fonction de l'état de chaque ligne);
+			//	pour que cela fonctionne, il faut que DbRichCommand ait été rempli
+			//	correctement au préalable, au moyen de DbInfrastructure.Execute.
 			
 			if (transaction == null)
 			{
@@ -239,6 +257,131 @@ namespace Epsitec.Cresus.Database
 			foreach (System.Data.DataTable table in this.data_set.Tables)
 			{
 				DbRichCommand.UpdateLogId (table, this.infrastructure.Logger.CurrentId);
+			}
+		}
+		
+		public void ReplaceTables(DbTransaction transaction)
+		{
+			if (this.is_read_only)
+			{
+				throw new Exceptions.ReadOnlyException (this.db_access);
+			}
+			
+			//	Similaire à UpdateTables, mais en écrasant les données contenues dans
+			//	la base, sans égard pour d'éventuelles anciennes données déjà présentes
+			//	(là aussi, UPDATE sera utilisé d'abord et INSERT en cas de besoin).
+			
+			if (transaction == null)
+			{
+				throw new Exceptions.MissingTransactionException (this.db_access);
+			}
+			
+			this.CheckValidState ();
+			this.CheckRowIds ();
+			
+			//	On ne touche à rien dans la table ! Le log ID par exemple est conservé
+			//	tel quel.
+			
+			this.SetCommandTransaction (transaction);
+			
+			try
+			{
+				for (int i = 0; i < this.adapters.Length; i++)
+				{
+					System.Data.DataTable table_data = this.data_set.Tables[i];
+					string                table_name = this.Tables[i].CreateSqlName ();
+					
+					//	...
+					
+					ISqlBuilder    builder   = transaction.Database.SqlBuilder;
+					ITypeConverter converter = this.infrastructure.TypeConverter;
+					
+					Collections.SqlFields sql_fields = new Collections.SqlFields ();
+					Collections.SqlFields sql_conds  = new Collections.SqlFields ();
+					
+					int col_count = this.Tables[i].Columns.Count;
+					int row_count = table_data.Rows.Count;
+					
+					SqlColumn[] sql_columns = new SqlColumn[col_count];
+					
+					for (int c = 0; c < col_count; c++)
+					{
+						DbColumn column = this.Tables[i].Columns[c];
+						sql_columns[c] = column.CreateSqlColumn (converter);
+						sql_fields.Add (column.CreateEmptySqlField (converter));
+					}
+					
+					SqlField field_id_name  = SqlField.CreateName (table_name, sql_columns[0].Name);
+					SqlField field_id_value = sql_fields[0];
+					
+					sql_conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, field_id_name, field_id_value));
+					
+					builder.Clear ();
+					builder.UpdateData (table_name, sql_fields, sql_conds);
+					
+					System.Data.IDbCommand update_command = builder.Command;
+					
+					int param_id_index = update_command.Parameters.Count - 1;
+					
+					builder.Clear ();
+					builder.InsertData (table_name, sql_fields);
+					
+					System.Data.IDbCommand insert_command = builder.Command;
+					
+					System.Diagnostics.Debug.Assert (insert_command.Parameters.Count + 1 == update_command.Parameters.Count);
+					
+					update_command.Transaction = transaction.Transaction;
+					insert_command.Transaction = transaction.Transaction;
+					
+					try
+					{
+						for (int r = 0; r < row_count; r++)
+						{
+							System.Data.DataRow row = table_data.Rows[r];
+							
+							for (int c = 0; c < col_count; c++)
+							{
+								object value = sql_columns[c].ConvertToInternalType (row[c]);
+								
+								builder.SetCommandParameterValue (update_command, c, value);
+								builder.SetCommandParameterValue (insert_command, c, value);
+							}
+							
+							builder.SetCommandParameterValue (update_command, param_id_index, sql_columns[0].ConvertToInternalType (row[0]));
+							
+							int update_count = update_command.ExecuteNonQuery ();
+							
+							if (update_count == 0)
+							{
+								int insert_count = insert_command.ExecuteNonQuery ();
+								
+								if (insert_count != 1)
+								{
+									throw new Exceptions.FormatException (string.Format ("Insert into table {0} produced {1} changes (ID = {2}). Expected exactly 1.", table_name, insert_count, insert_command.Parameters[0]));
+								}
+								
+								this.stat_replace_insert_count++;
+							}
+							else if (update_count == 1)
+							{
+								this.stat_replace_update_count++;
+							}
+							else
+							{
+								throw new Exceptions.FormatException (string.Format ("Update of table {0} produced {1} changes (ID = {2}). Expected 0 or 1.", table_name, update_count, update_command.Parameters[0]));
+							}
+						}
+					}
+					finally
+					{
+						update_command.Dispose ();
+						insert_command.Dispose ();
+					}
+				}
+			}
+			finally
+			{
+				this.SetCommandTransaction (null);
 			}
 		}
 		
@@ -674,5 +817,7 @@ namespace Epsitec.Cresus.Database
 		protected System.Data.IDataAdapter[]	adapters;
 		
 		private bool							is_read_only;
+		private int								stat_replace_update_count;
+		private int								stat_replace_insert_count;
 	}
 }

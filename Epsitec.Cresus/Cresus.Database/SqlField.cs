@@ -344,6 +344,10 @@ namespace Epsitec.Cresus.Database
 			{
 				raw_value = ((DbId) raw_value).Value;
 			}
+			if (raw_value == null)
+			{
+				raw_value = System.DBNull.Value;
+			}
 			
 			field.type		= SqlFieldType.Constant;
 			field.raw_type	= raw_type;
