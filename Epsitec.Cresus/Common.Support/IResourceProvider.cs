@@ -28,8 +28,8 @@ namespace Epsitec.Common.Support
 		
 		//	Méthodes d'accès en écriture/modification :
 		
-		void Create(string id, ResourceLevel level);
-		void Update(string id, ResourceLevel level, byte[] data);
-		void Remove(string id, ResourceLevel level);
+		bool Create(string id, ResourceLevel level, System.Globalization.CultureInfo culture);
+		bool Update(string id, ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data);
+		bool Remove(string id, ResourceLevel level, System.Globalization.CultureInfo culture);
 	}
 }

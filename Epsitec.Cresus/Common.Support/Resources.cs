@@ -210,6 +210,7 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 		
+		
 		public static ResourceBundle GetBundle(string id)
 		{
 			return Resources.GetBundle (id, ResourceLevel.Merged, 0);
@@ -361,6 +362,34 @@ namespace Epsitec.Common.Support
 			return null;
 		}
 		
+		
+		public static void UpdateBundle(ResourceBundle bundle)
+		{
+			ResourceLevel level   = bundle.ResourceLevel;
+			CultureInfo   culture = bundle.Culture;
+			string        id      = bundle.Name;
+			
+			switch (level)
+			{
+				case ResourceLevel.Default:
+				case ResourceLevel.Localised:
+				case ResourceLevel.Customised:
+					break;
+				
+				default:
+					throw new ResourceException (string.Format ("Invalid level {0} for resource '{1}'", level, id));
+			}
+			
+			string resource_id;
+			
+			IResourceProvider provider = Resources.FindProvider (id, out resource_id);
+			byte[]            data     = bundle.CreateXmlAsData ();
+			
+			if (provider != null)
+			{
+				provider.Update (resource_id, level, culture, data);
+			}
+		}
 		
 		public static void DebugDumpProviders()
 		{

@@ -12,6 +12,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		public OpenExistingBundle(string command_template, CommandDispatcher command_dispatcher)
 			: base ("Ouvrir", "Ressource à ouvrir :", null, command_template, command_dispatcher)
 		{
+			this.culture = CultureInfo.CurrentUICulture;
 			this.Items = this.GetAvailableNames ();
 		}
 		
@@ -19,7 +20,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		public string[] GetAvailableNames()
 		{
 			string   filter = this.prefix + "*";
-			string[] array  = Support.Resources.GetBundleIds (filter, this.ResourceLevel, this.culture);
+			string[] array  = Support.Resources.GetBundleIds (filter, this.ResourceLevel, this.CultureInfo);
 			return array;
 		}
 		
@@ -41,6 +42,23 @@ namespace Epsitec.Common.Designer.Dialogs
 						RadioButton.Activate (this.window.Root, "level", (int) this.level);
 						this.Items = this.GetAvailableNames ();
 					}
+				}
+			}
+		}
+		
+		protected virtual CultureInfo			CultureInfo
+		{
+			get
+			{
+				return this.culture;
+			}
+			set
+			{
+				if (this.culture != value)
+				{
+					this.culture = value;
+					this.Items = this.GetAvailableNames ();
+					this.lang_id.SelectedName = this.CultureInfo.TwoLetterISOLanguageName;
 				}
 			}
 		}
@@ -94,7 +112,10 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.lang_id.Items.Add ("en", "anglais");
 			this.lang_id.Items.Add ("it", "italien");
 			this.lang_id.Items.Add ("fr", "français");
-			this.lang_id.SelectedIndex = 3;
+			this.lang_id.IsReadOnly = true;
+			this.lang_id.SelectedName = this.CultureInfo.TwoLetterISOLanguageName;
+			this.lang_id.SelectedIndexChanged += new Support.EventHandler (this.HandleLangIdSelectedIndexChanged);
+			this.lang_id.Focused += new Support.EventHandler (this.HandleLangIdFocused);
 			
 			radio = new RadioButton (body);
 			radio.Text = "version personnalisée";
@@ -120,7 +141,36 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 		
+		private void HandleLangIdSelectedIndexChanged(object sender)
+		{
+			TextFieldCombo list = sender as TextFieldCombo;
+			
+			int    index = list.SelectedIndex;
+			string name  = list.Items.GetName (index);
+			
+			this.CultureInfo = this.FindCultureInfo (name);
+		}
 		
+		private void HandleLangIdFocused(object sender)
+		{
+			TextFieldCombo list = sender as TextFieldCombo;
+			RadioButton radio = RadioButton.FindRadio (list.Parent, "level", (int) ResourceLevel.Localised);
+			radio.ActiveState = WidgetState.ActiveYes;
+		}
+		
+		private CultureInfo FindCultureInfo(string two_letter_code)
+		{
+			CultureInfo[] cultures = CultureInfo.GetCultures (System.Globalization.CultureTypes.NeutralCultures);
+			
+			for (int i = 0; i < cultures.Length; i++)
+			{
+				if (cultures[i].TwoLetterISOLanguageName == two_letter_code)
+				{
+					return cultures[i];
+				}
+			}
+			return null;
+		}
 		
 		protected string						prefix = "file:";
 		protected CultureInfo					culture = null;

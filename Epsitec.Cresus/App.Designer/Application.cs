@@ -28,6 +28,12 @@ namespace Epsitec.Designer
 			button.Parent  = this.MainWindow.Root;
 			button.Anchor  = AnchorStyles.BottomLeft;
 			
+			button = new Button ("Save bundle");
+			button.Bounds  = new Rectangle (190, 10, 80, 24);
+			button.Command = "SaveStringBundle";
+			button.Parent  = this.MainWindow.Root;
+			button.Anchor  = AnchorStyles.BottomLeft;
+			
 			this.StringEditController.Window.Show ();
 		}
 		

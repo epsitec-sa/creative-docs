@@ -2837,6 +2837,23 @@ namespace Epsitec.Common.Widgets
 			return finder.Widgets;
 		}
 		
+		public Widget	        FindCommandWidget(string command)
+		{
+			//	Passe en revue tous les widgets de la descendance et retourne le
+			//	premier qui correspond parfaitement.
+			
+			CommandWidgetFinder finder = new CommandWidgetFinder (command);
+			
+			this.WalkChildren (new WalkWidgetCallback (finder.Analyse));
+			
+			if (finder.Widgets.Length > 0)
+			{
+				return finder.Widgets[0];
+			}
+			
+			return null;
+		}
+		
 		public Widget[]         FindAllChildren()
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
@@ -3442,7 +3459,8 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void ExecuteCommand()
 		{
-			if (this.IsCommand)
+			if ((this.IsCommand) &&
+				(this.IsEnabled))
 			{
 				Window window = this.Window;
 				

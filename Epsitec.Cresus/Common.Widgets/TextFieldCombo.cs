@@ -84,7 +84,54 @@ namespace Epsitec.Common.Widgets
 					this.Text = text;
 					this.OnTextChanged();
 					this.OnTextInserted();
+					this.OnSelectedIndexChanged();
 					this.SelectAll();
+				}
+			}
+		}
+		
+		public string SelectedItem
+		{
+			get
+			{
+				int index = this.SelectedIndex;
+				if ( index < 0 )  return null;
+				return this.Items[index];
+			}
+			
+			set
+			{
+				this.SelectedIndex = this.Items.IndexOf (value);
+			}
+		}
+
+		public string SelectedName
+		{
+			// Nom de la ligne sélectionnée, null si aucune.
+			get
+			{
+				int index = this.SelectedIndex;
+				if ( index < 0 )  return null;
+				return this.items.GetName(index);
+			}
+			
+			set
+			{
+				if ( this.SelectedName != value )
+				{
+					int index = -1;
+					
+					if ( value != null )
+					{
+						index = this.items.FindNameIndex(value);
+						
+						if ( index < 0 )
+						{
+							throw new System.ArgumentException(string.Format("No element named '{0}' in list", value));
+						}
+					}
+					
+					this.SelectedIndex = index;
 				}
 			}
 		}
@@ -145,7 +192,16 @@ namespace Epsitec.Common.Widgets
 			this.UpdateClientGeometry();
 			base.OnAdornerChanged();
 		}
+		
+		protected virtual void OnSelectedIndexChanged()
+		{
+			if (this.SelectedIndexChanged != null)
+			{
+				this.SelectedIndexChanged (this);
+			}
+		}
 
+		
 		protected override bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
 			if ( this.IsReadOnly )
@@ -193,8 +249,7 @@ namespace Epsitec.Common.Widgets
 			sel = System.Math.Max(sel, 0);
 			sel = System.Math.Min(sel, this.items.Count-1);
 			
-			this.Text = this.items[sel];
-			this.SelectAll();
+			this.SelectedIndex = sel;
 			this.SetFocused(true);
 		}
 		
@@ -269,7 +324,7 @@ namespace Epsitec.Common.Widgets
 			double            hMax = pos.Y-area.Bottom;
 			
 			this.scrollList.AdjustHeightToContent(ScrollListAdjust.MoveUp, 40, hMax);
-			this.scrollList.SelectedIndex = this.items.FindExactMatch(this.Text);
+			this.scrollList.SelectedIndex = this.SelectedIndex;
 			this.scrollList.ShowSelectedLine(ScrollListShow.Middle);
 			
 			this.comboWindow = new Window();
@@ -329,18 +384,14 @@ namespace Epsitec.Common.Widgets
 			
 			int sel = this.scrollList.SelectedIndex;
 			if ( sel == -1 )  return;
-			this.Text = this.scrollList.Items[sel];
-			this.OnTextChanged();
-			this.OnTextInserted();
-			this.SelectAll();
+			this.SelectedIndex = sel;
 			this.SetFocused(true);
 			this.CloseCombo();
 		}
 		
 		private void HandleScrollerSelectedIndexChanged(object sender)
 		{
-			int sel = this.scrollList.SelectedIndex;
-			this.Text = this.scrollList.Items[sel];
+			this.SelectedIndex = this.scrollList.SelectedIndex;
 		}
 
 		#region IStringCollectionHost Members
@@ -350,6 +401,7 @@ namespace Epsitec.Common.Widgets
 		#endregion
 		
 		
+		public event Support.EventHandler			SelectedIndexChanged;
 		
 		protected GlyphButton						button;
 		protected Helpers.StringCollection			items;

@@ -64,12 +64,24 @@ namespace Epsitec.Common.Dialogs
 			this.list.Items.AddRange (this.data);
 			this.list.TabIndex       = 1;
 			this.list.TabNavigation  = Widget.TabNavigationMode.ActivateOnTab;
+			this.list.DoubleClicked += new MessageEventHandler (this.HandleListDoubleClicked);
 			
 			this.AddValueWidget ("elem", this.list);
 			this.AddExtraWidgets (body);
 			
 			return body;
 		}
+		
+		private void HandleListDoubleClicked(object sender, MessageEventArgs e)
+		{
+			Widget widget = this.list.Window.Root.FindCommandWidget ("ValidateDialog");
+			
+			System.Diagnostics.Debug.Assert (widget != null);
+			System.Diagnostics.Debug.Assert (widget.Parent == this.list.Window.Root);
+			
+			widget.ExecuteCommand ();
+		}
+		
 		
 		protected string[]						data;
 		protected string						caption;

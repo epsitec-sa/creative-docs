@@ -177,7 +177,7 @@ namespace Epsitec.Common.Widgets
 			}
 			set
 			{
-				TabPage page = (value < this.PageCount) ? this.Items[value] : null;
+				TabPage page = ((value >= 0) && (value < this.PageCount)) ? this.Items[value] : null;
 				this.ActivePage = page;
 			}
 		}
@@ -702,33 +702,33 @@ namespace Epsitec.Common.Widgets
 
 		public void NotifyRemoval(Widget widget)
 		{
-			TabPage item  = widget as TabPage;
-			int     index = item.Index;
-
-			if ( this.activePage == item )
-			{
-				System.Diagnostics.Debug.Assert(index >= 0);
-				System.Diagnostics.Debug.Assert(index < this.items.Count);
-				
-				if ( index > 0 )
-				{
-					this.activePage = this.items[index] as TabPage;
-				}
-				else
-				{
-					this.activePage = null;
-				}
-			}
-
+			TabPage item = widget as TabPage;
+			
 			item.TabButton.Clicked -= new MessageEventHandler(this.HandleTabButton);
 			item.RankChanged -= new System.EventHandler(this.HandlePageRankChanged);
-
+			
 			this.Children.Remove(item);
+			this.Children.Remove(item.TabButton);
 			this.isGrimy = true;
 		}
 		
 		public void NotifyPostRemoval(Widget widget)
 		{
+			TabPage item  = widget as TabPage;
+			int     index = item.Index;
+
+			if ( this.activePage == item )
+			{
+				if ( index >= this.items.Count )
+				{
+					index--;
+				}
+				
+				this.ActivePageIndex = index;
+			}
+			
+			this.UpdateVisiblePages();
+			this.UpdateButtons();
 		}
 		#endregion
 

@@ -24,6 +24,7 @@ namespace Epsitec.Common.Designer
 			ResourceBundle bundle = ResourceBundle.Create (id, level);
 			
 			this.AttachExistingBundle (bundle);
+			this.ActivateTabBookPage ();
 		}
 		
 		public void AttachExistingBundle(ResourceBundle bundle)
@@ -35,6 +36,8 @@ namespace Epsitec.Common.Designer
 			
 			this.bundles.Add (bundle);
 			this.panels.Add (this.CreatePanel (bundle));
+			
+			this.ActivateTabBookPage ();
 		}
 		
 		
@@ -264,10 +267,13 @@ namespace Epsitec.Common.Designer
 			this.window = new Window ();
 			this.window.ClientSize = size + new Drawing.Size (20, 60);
 			this.window.CommandDispatcher = this.dispatcher;
+			this.Window.Text = "Ressources textuelles";
 			
 			this.tab_book = new TabBook ();
 			this.tab_book.Dock = DockStyle.Fill;
 			this.tab_book.Parent = this.window.Root;
+			this.tab_book.HasCloseButton = true;
+			this.tab_book.CloseClicked += new EventHandler (this.HandleTabBookCloseClicked);
 		}
 		
 		
@@ -281,13 +287,10 @@ namespace Epsitec.Common.Designer
 			else if (e.CommandArgs.Length == 1)
 			{
 				this.AttachNewBundle (e.CommandArgs[0], ResourceLevel.Default);
-				
-				this.tab_book.ActivePageIndex = this.bundles.Count - 1;
-				this.tab_book.Invalidate ();
 			}
 			else
 			{
-				throw new System.InvalidOperationException (string.Format ("Command {0} requires one argument.", e.CommandName));
+				this.ThrowInvalidOperationException (e, 1);
 			}
 		}
 		
@@ -303,20 +306,58 @@ namespace Epsitec.Common.Designer
 				ResourceLevel  level  = (ResourceLevel) System.Enum.Parse (typeof (ResourceLevel), e.CommandArgs[1]);
 				ResourceBundle bundle = Resources.GetBundle (e.CommandArgs[0], level);
 				this.AttachExistingBundle (bundle);
-				
-				this.tab_book.ActivePageIndex = this.bundles.Count - 1;
-				this.tab_book.Invalidate ();
 			}
 			else
 			{
-				throw new System.InvalidOperationException (string.Format ("Command {0} requires one argument.", e.CommandName));
+				this.ThrowInvalidOperationException (e, 2);
 			}
+		}
+		
+		[Command ("SaveStringBundle")] void CommandSaveStringBundle(CommandDispatcher d, CommandEventArgs e)
+		{
+			if (e.CommandArgs.Length > 0)
+			{
+				this.ThrowInvalidOperationException (e, 0);
+			}
+			
+			ResourceBundle bundle = this.ActiveBundle;
+			
+			if (bundle != null)
+			{
+				Resources.UpdateBundle (bundle);
+			}
+		}
+		
+		private void ThrowInvalidOperationException(CommandEventArgs e, int num_expected)
+		{
+			string command   = e.CommandName;
+			int    num_found = e.CommandArgs.Length;
+			
+			throw new System.InvalidOperationException (string.Format ("Command {0} requires {1} argument(s), got {2}.", command, num_expected, num_found));
+		}
+		
+		private void HandleTabBookCloseClicked(object sender)
+		{
+			ResourceBundle bundle = this.ActiveBundle;
+			
+			if (bundle != null)
+			{
+				//	Ferme la page active...
+				
+				this.tab_book.Items.RemoveAt (this.tab_book.ActivePageIndex);
+				this.bundles.Remove (bundle);
+			}
+		}
+		
+		private void ActivateTabBookPage()
+		{
+			this.tab_book.ActivePageIndex = this.bundles.Count - 1;
+			this.tab_book.Invalidate ();
 		}
 		
 		
 		protected System.Collections.ArrayList	bundles;
 		protected System.Collections.ArrayList	panels;
-		protected int							active = -1;
 		protected Window						window;
 		protected TabBook						tab_book;
 		protected Support.CommandDispatcher		dispatcher;

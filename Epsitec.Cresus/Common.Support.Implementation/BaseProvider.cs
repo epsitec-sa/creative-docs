@@ -147,19 +147,19 @@ namespace Epsitec.Common.Support.Implementation
 		}
 
 		
-		public override void Create(string id, Epsitec.Common.Support.ResourceLevel level)
+		public override bool Create(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
 			// TODO:  Add FileProvider.Create implementation
 			throw new ResourceException ("Not implemented");
 		}
 		
-		public override void Update(string id, Epsitec.Common.Support.ResourceLevel level, byte[] data)
+		public override bool Update(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture, byte[] data)
 		{
 			// TODO:  Add FileProvider.Update implementation
 			throw new ResourceException ("Not implemented");
 		}
 		
-		public override void Remove(string id, Epsitec.Common.Support.ResourceLevel level)
+		public override bool Remove(string id, Epsitec.Common.Support.ResourceLevel level, System.Globalization.CultureInfo culture)
 		{
 			// TODO:  Add FileProvider.Remove implementation
 			throw new ResourceException ("Not implemented");

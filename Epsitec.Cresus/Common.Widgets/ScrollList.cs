@@ -28,6 +28,7 @@ namespace Epsitec.Common.Widgets
 			this.items = new Helpers.StringCollection(this);
 			this.DockMargins = new Drawing.Margins(2, 2, 2, 2);
 			this.InternalState |= InternalState.AutoFocus;
+			this.InternalState |= InternalState.AutoDoubleClick;
 			this.InternalState |= InternalState.Focusable;
 
 			this.scrollListStyle = ScrollListStyle.Normal;
@@ -134,6 +135,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public string						SelectedItem
+		{
+			get
+			{
+				int index = this.SelectedIndex;
+				if ( index < 0 )  return null;
+				return this.Items[index];
+			}
+			
+			set
+			{
+				this.SelectedIndex = this.Items.IndexOf (value);
+			}
+		}
+		
 		public string						SelectedName
 		{
 			// Nom de la ligne sélectionnée, null si aucune.
