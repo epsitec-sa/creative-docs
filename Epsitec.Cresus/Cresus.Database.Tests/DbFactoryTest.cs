@@ -139,7 +139,9 @@ namespace Epsitec.Cresus.Database
 			{
 				using (System.Data.IDbCommand command = db_abstraction.NewDbCommand ())
 				{
-					using (System.Data.IDbTransaction transaction = db_abstraction.BeginReadOnlyTransaction ())
+					System.Data.IDbTransaction transaction = db_abstraction.BeginReadOnlyTransaction ();
+					
+					try
 					{
 						command.Transaction = transaction;
 						command.CommandType = System.Data.CommandType.Text;
@@ -147,12 +149,18 @@ namespace Epsitec.Cresus.Database
 						command.ExecuteNonQuery ();
 						transaction.Commit ();
 					}
+					finally
+					{
+						transaction.Dispose ();
+					}
 				}
 			}
 			catch (System.Exception e)
 			{
 				error_message = e.Message;
 			}
+			
+			System.Console.WriteLine (error_message);
 			
 			Assert.IsTrue (error_message.IndexOf ("attempted update during read-only transaction") > 0);
 		}

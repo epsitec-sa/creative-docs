@@ -163,6 +163,32 @@ namespace Epsitec.Cresus.Remoting
 			}
 		}
 		
+		protected virtual void SetCurrentStep(int step)
+		{
+			if (this.current_step == step)
+			{
+				return;
+			}
+			
+			lock (this)
+			{
+				this.current_step = step;
+			}
+		}
+		
+		protected virtual void SetLastStep(int step)
+		{
+			if (this.last_step == step)
+			{
+				return;
+			}
+			
+			lock (this)
+			{
+				this.last_step = step;
+			}
+		}
+		
 		
 		private System.Threading.AutoResetEvent	wait_progress_event;
 		

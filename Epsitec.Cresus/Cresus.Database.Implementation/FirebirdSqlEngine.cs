@@ -34,13 +34,14 @@ namespace Epsitec.Cresus.Database.Implementation
 			
 			if (command_count > 1)
 			{
-				using (System.Data.IDataReader reader = command.ExecuteReader ())
+				string[] commands = command.CommandText.Split ('\n');
+				
+				for (int i = 0; i < commands.Length; i++)
 				{
-					while (reader.NextResult ())
+					if (commands[i].Length > 0)
 					{
-						//	Il faut appeler NextResult plusieurs fois, jusqu'à ce qu'il retourne
-						//	false avec Firebird, car c'est le seul moyen d'exécuter des commandes
-						//	multiples.
+						command.CommandText = commands[i];
+						command.ExecuteNonQuery ();
 					}
 				}
 			}

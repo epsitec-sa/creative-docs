@@ -35,6 +35,8 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand command = sql_builder.Command;
 		}
 		
+#if false
+		/* plus supporté depuis version 1.7 du provider .NET */
 		[Test] public void Check03InsertTableFbProblem()
 		{
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
@@ -81,6 +83,7 @@ namespace Epsitec.Cresus.Database
 			//command.Transaction.Dispose ();
 			command.Dispose ();
 		}
+#endif
 		
 		[Test] public void Check04InsertTable()
 		{
@@ -106,17 +109,20 @@ namespace Epsitec.Cresus.Database
 			System.Data.IDbCommand command = sql_builder.Command;
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 			
+			string[] commands = command.CommandText.Split ('\n');
+			
 			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			
-			using (System.Data.IDataReader reader = command.ExecuteReader ())
+			for (int i = 0; i < commands.Length-1; i++)
 			{
-				int n = 1;
-				while (reader.NextResult ()) n++;
-				System.Console.Out.WriteLine ("Executed {0} commands", n);
+				command.CommandText = commands[i];
+				command.ExecuteNonQuery ();
 			}
 			
-			command.Transaction.Commit ();
-			//command.Transaction.Dispose ();
+			IDbTransaction transaction = command.Transaction;
+			
+			transaction.Commit ();
+			transaction.Dispose ();
 			command.Dispose ();
 		}
 		
@@ -144,8 +150,10 @@ namespace Epsitec.Cresus.Database
 			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 
-			command.Transaction.Commit ();
-			//command.Transaction.Dispose ();
+			IDbTransaction transaction = command.Transaction;
+			
+			transaction.Commit ();
+			transaction.Dispose ();
 			command.Dispose ();
 		}
 
@@ -173,8 +181,10 @@ namespace Epsitec.Cresus.Database
 			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 
-			command.Transaction.Commit ();
-			//command.Transaction.Dispose ();
+			IDbTransaction transaction = command.Transaction;
+			
+			transaction.Commit ();
+			transaction.Dispose ();
 			command.Dispose ();
 		}
 
@@ -212,8 +222,10 @@ namespace Epsitec.Cresus.Database
 			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 			
-			command.Transaction.Commit ();
-			//command.Transaction.Dispose ();
+			IDbTransaction transaction = command.Transaction;
+			
+			transaction.Commit ();
+			transaction.Dispose ();
 			command.Dispose ();
 		}
 
@@ -266,8 +278,10 @@ namespace Epsitec.Cresus.Database
 			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 			
-			command.Transaction.Commit ();
-			//command.Transaction.Dispose ();
+			IDbTransaction transaction = command.Transaction;
+			
+			transaction.Commit ();
+			transaction.Dispose ();
 			command.Dispose ();
 		}
 
@@ -312,8 +326,10 @@ namespace Epsitec.Cresus.Database
 			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			sql_engine.Execute (command, sql_builder.CommandType, sql_builder.CommandCount);
 			
-			command.Transaction.Commit ();
-			//command.Transaction.Dispose ();
+			IDbTransaction transaction = command.Transaction;
+			
+			transaction.Commit ();
+			transaction.Dispose ();
 			command.Dispose ();
 		}
 
@@ -329,8 +345,11 @@ namespace Epsitec.Cresus.Database
 			
 			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
 			command.ExecuteNonQuery ();
-			command.Transaction.Commit ();
-			//command.Transaction.Dispose ();
+			
+			IDbTransaction transaction = command.Transaction;
+			
+			transaction.Commit ();
+			transaction.Dispose ();
 			command.Dispose ();
 		}
 
@@ -363,8 +382,10 @@ namespace Epsitec.Cresus.Database
 			
 			sql_engine.Execute (command, command_type, sql_builder.CommandCount);
 			
-			command.Transaction.Commit ();
-			//command.Transaction.Dispose ();
+			IDbTransaction transaction = command.Transaction;
+			
+			transaction.Commit ();
+			transaction.Dispose ();
 			command.Dispose ();
 		}
 		
@@ -386,8 +407,10 @@ namespace Epsitec.Cresus.Database
 			
 			sql_engine.Execute (command, command_type, sql_builder.CommandCount);
 			
-			command.Transaction.Commit ();
-			//command.Transaction.Dispose ();
+			IDbTransaction transaction = command.Transaction;
+			
+			transaction.Commit ();
+			transaction.Dispose ();
 			command.Dispose ();
 		}
 
@@ -408,17 +431,21 @@ namespace Epsitec.Cresus.Database
 			System.Console.Out.WriteLine ("SQL Command: {0}", command.CommandText);
 				
 			command.Transaction = db_abstraction.BeginReadWriteTransaction ();
+			
+			IDbTransaction transaction = command.Transaction;
+			
 			try
 			{
 				command.ExecuteNonQuery ();
-				command.Transaction.Commit ();
-				//command.Transaction.Dispose ();
+				
+				transaction.Commit ();
+				transaction.Dispose ();
 				command.Dispose ();
 			}
 			catch
 			{
-				command.Transaction.Rollback ();
-				//command.Transaction.Dispose ();
+				transaction.Rollback ();
+				transaction.Dispose ();
 				command.Dispose ();
 			}
 			

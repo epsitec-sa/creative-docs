@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.server_type = (int) engine_type;
 			this.db_access   = db_access;
 			this.db_factory  = db_factory;
-			this.db_connection_string = this.MakeConnectionString (db_access);
+			this.db_connection_string = FirebirdAbstraction.MakeStandardConnectionString (db_access, this.MakeDbFileName (db_access), this.server_type);
 			
 			if (db_access.Create)
 			{
@@ -66,6 +66,14 @@ namespace Epsitec.Cresus.Database.Implementation
 		public DbAccess					DbAccess
 		{
 			get { return this.db_access; }
+		}
+		
+		internal int					ServerType
+		{
+			get
+			{
+				return this.server_type;
+			}
 		}
 		
 		
@@ -161,32 +169,36 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			System.Diagnostics.Debug.Assert (db_access.Create);
 			
-			FirebirdAbstraction.ValidateName (db_access, db_access.LoginName);
-			FirebirdAbstraction.ValidateName (db_access, db_access.LoginPassword);
-			FirebirdAbstraction.ValidateName (db_access, db_access.Server);
-			
 			//	L'appel FbConnection.CreateDatabase ne sait pas créer le dossier si nécessaire
 			string filename = this.MakeDbFileName (db_access);
 			System.IO.Directory.CreateDirectory (Path.GetDirectoryName (filename));
 			
-			System.Collections.Hashtable values = new System.Collections.Hashtable ();
+			string connection = FirebirdAbstraction.MakeCreationConnectionString (db_access, filename, this.server_type);
 			
-			values["Database"]    = filename;
-			values["User"]        = db_access.LoginName;
-			values["Password"]    = db_access.LoginPassword;
-			values["Dialect"]     = FirebirdAbstraction.fb_dialect;
-			values["DataSource"]  = db_access.Server;
-			values["Port"]        = FirebirdAbstraction.fb_port;
-			values["Charset"]     = FirebirdAbstraction.fb_charset;
-			values["PageSize"]    = FirebirdAbstraction.fb_page_size;
-			values["ServerType"]  = this.server_type;
-			values["ForcedWrite"] = true;
-			
-			FbConnection.CreateDatabase (values);
+			FbConnection.CreateDatabase (connection, FirebirdAbstraction.fb_page_size, true, false);
 		}
 		
+		internal static string MakeCreationConnectionString(DbAccess db_access, string filename, int server_type)
+		{
+			FirebirdAbstraction.ValidateName (db_access, db_access.LoginName);
+			FirebirdAbstraction.ValidateName (db_access, db_access.LoginPassword);
+			FirebirdAbstraction.ValidateName (db_access, db_access.Server);
+			
+			FbConnectionStringBuilder cs = new FbConnectionStringBuilder ();
+			
+			cs.UserID     = db_access.LoginName;
+			cs.Password   = db_access.LoginPassword;
+			cs.DataSource = db_access.Server;
+			cs.Port       = FirebirdAbstraction.fb_port;
+			cs.Database   = filename;
+			cs.Dialect    = FirebirdAbstraction.fb_dialect;
+			cs.Charset    = FirebirdAbstraction.fb_charset;
+			cs.ServerType = server_type;
+			
+			return cs.ConnectionString;
+		}
 		
-		protected virtual string MakeConnectionString(DbAccess db_access)
+		internal static string MakeStandardConnectionString(DbAccess db_access, string filename, int server_type)
 		{
 			FirebirdAbstraction.ValidateName (db_access, db_access.LoginName);
 			FirebirdAbstraction.ValidateName (db_access, db_access.LoginPassword);
@@ -197,11 +209,11 @@ namespace Epsitec.Cresus.Database.Implementation
 			buffer.AppendFormat ("User={0};", db_access.LoginName);
 			buffer.AppendFormat ("Password={0};", db_access.LoginPassword);
 			buffer.AppendFormat ("DataSource={0};", db_access.Server);
-			buffer.AppendFormat ("Database={0};", this.MakeDbFileName (db_access));
+			buffer.AppendFormat ("Database={0};", filename);
 			buffer.AppendFormat ("Port={0};", FirebirdAbstraction.fb_port);
 			buffer.AppendFormat ("Dialect={0};", FirebirdAbstraction.fb_dialect);
 			buffer.AppendFormat ("Packet Size={0};", FirebirdAbstraction.fb_page_size);
-			buffer.AppendFormat ("ServerType={0};", this.server_type);
+			buffer.AppendFormat ("ServerType={0};", server_type);
 			buffer.AppendFormat ("Charset={0};", FirebirdAbstraction.fb_charset);
 			
 			buffer.Append ("Role=;");
@@ -211,7 +223,7 @@ namespace Epsitec.Cresus.Database.Implementation
 			return buffer.ToString ();
 		}
 		
-		protected virtual string MakeDbFileName(DbAccess db_access)
+		internal virtual string MakeDbFileName(DbAccess db_access)
 		{
 			FirebirdAbstraction.ValidateName (db_access, db_access.Database);
 			

@@ -453,7 +453,6 @@ namespace Epsitec.Cresus.Database
 			Common.Support.Globals.SignalAbort ();
 		}
 		
-		
 		[Test] /*[Ignore ("Temporary")]*/ public void Check13ConnectionClient()
 		{
 			Remoting.IConnectionService service = Services.Engine.GetRemoteConnectionService ("localhost", 1234);

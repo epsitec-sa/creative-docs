@@ -22,22 +22,32 @@ namespace Epsitec.Cresus.Database.Implementation
 		#region IServiceTools Members
 		public void Backup(string file_name)
 		{
-			//	TODO: vérifier l'implémentation du backup vers un fichier
-			
 			FbBackup backup = new FbBackup ();
 			
-			backup.Parameters.Database = this.fb.DbAccess.Database;
-			backup.Parameters.DataSource = this.fb.DbAccess.Server;
-			backup.Parameters.UserName = this.fb.DbAccess.LoginName;
-			backup.Parameters.UserPassword = this.fb.DbAccess.LoginPassword;
-			backup.Options = FbBackupFlags.IgnoreLimbo;
 			backup.BackupFiles.Add (new FbBackupFile (file_name, 2048));
-			backup.Verbose = true;
-			backup.Start ();
-			backup.Close ();
 			
+			backup.ConnectionString = FirebirdAbstraction.MakeStandardConnectionString (fb.DbAccess, fb.MakeDbFileName (fb.DbAccess), fb.ServerType);
+			backup.Options          = FbBackupFlags.IgnoreLimbo;
+			backup.Verbose          = true;
+			backup.ServiceOutput   += new ServiceOutputEventHandler (FirebirdServiceTools.ServiceOutput);
+			
+			System.Diagnostics.Debug.WriteLine ("Backup: running.");
+			
+			try
+			{
+				backup.Execute ();
+			}
+			finally
+			{
+				System.Diagnostics.Debug.WriteLine ("Backup: done.");
+			}
 		}
 		#endregion
+		
+		private static void ServiceOutput(object sender, ServiceOutputEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine (e.Message);
+		}
 		
 		#region IDisposable Members
 		public void Dispose()
