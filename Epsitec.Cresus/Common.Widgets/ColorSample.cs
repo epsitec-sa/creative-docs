@@ -85,9 +85,30 @@ namespace Epsitec.Common.Widgets
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.color);
 
-				rect.Inflate(-0.5, -0.5);
+				rect.Deflate(0.5, 0.5);
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(adorner.ColorBorder);
+
+				if ( (this.PaintState&WidgetState.Focused) != 0 )
+				{
+					Drawing.Color cFocus = this.Color;
+					double h,s,v;
+					cFocus.GetHSV(out h, out s, out v);
+					if ( s < 0.2 )  // gris ou presque ?
+					{
+						cFocus = adorner.ColorCaption;
+					}
+					else
+					{
+						cFocus.R = 1.0-cFocus.R;
+						cFocus.G = 1.0-cFocus.G;
+						cFocus.B = 1.0-cFocus.B;  // couleur opposée
+					}
+					cFocus.A = 1.0;
+					rect.Deflate(1, 1);
+					graphics.AddRectangle(rect);
+					graphics.RenderSolid(cFocus);
+				}
 			}
 			else
 			{

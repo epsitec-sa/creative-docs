@@ -7,7 +7,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public ArrowButton()
 		{
-			this.direction = Direction.None;
+			this.glyphType = GlyphType.None;
 			this.InternalState &= ~InternalState.AutoFocus;
 			this.InternalState &= ~InternalState.Focusable;
 		}
@@ -18,16 +18,16 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Direction Direction
+		public GlyphType GlyphType
 		{
 			get
 			{
-				return this.direction;
+				return this.glyphType;
 			}
 
 			set
 			{
-				this.direction = value;
+				this.glyphType = value;
 			}
 		}
 		
@@ -52,13 +52,21 @@ namespace Epsitec.Common.Widgets
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-
 			Drawing.Rectangle rect = this.Client.Bounds;
-			adorner.PaintButtonBackground(graphics, rect, this.PaintState, this.direction, this.buttonStyle);
-			adorner.PaintArrow(graphics, rect, this.PaintState, this.direction, PaintTextStyle.Button);
+
+			Direction dir = Direction.None;
+			switch ( this.glyphType )
+			{
+				case GlyphType.ArrowUp:     dir = Direction.Up;     break;
+				case GlyphType.ArrowDown:   dir = Direction.Down;   break;
+				case GlyphType.ArrowLeft:   dir = Direction.Left;   break;
+				case GlyphType.ArrowRight:  dir = Direction.Right;  break;
+			}
+			adorner.PaintButtonBackground(graphics, rect, this.PaintState, dir, this.buttonStyle);
+			adorner.PaintGlyph(graphics, rect, this.PaintState, this.glyphType, PaintTextStyle.Button);
 		}
 
 		
-		protected Direction				direction;
+		protected GlyphType				glyphType;
 	}
 }
