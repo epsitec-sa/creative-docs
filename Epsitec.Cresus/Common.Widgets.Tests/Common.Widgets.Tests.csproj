@@ -128,6 +128,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "ArrayTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -164,11 +169,6 @@
                 />
                 <File
                     RelPath = "ScreenInfoTest.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "ScrollArrayTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
