@@ -245,6 +245,8 @@ namespace Epsitec.Cresus.Database
 		
 		public void CreateNewRow(string table_name, out System.Data.DataRow data_row)
 		{
+			//	Crée une ligne et ajoute celle-ci dans la table.
+			
 			if (this.is_read_only)
 			{
 				throw new Exceptions.ReadOnlyException (this.db_access);
@@ -260,6 +262,8 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			DbRichCommand.CreateRow (table, out data_row);
+			
+			table.Rows.Add (data_row);
 		}
 		
 		public void DeleteExistingRow(System.Data.DataRow data_row)
@@ -363,6 +367,8 @@ namespace Epsitec.Cresus.Database
 		
 		public static void CreateRow(System.Data.DataTable table, out System.Data.DataRow data_row)
 		{
+			//	Crée une ligne, mais ne l'ajoute pas à la table.
+			
 			data_row = table.NewRow ();
 			
 			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
@@ -371,8 +377,6 @@ namespace Epsitec.Cresus.Database
 			data_row[Tags.ColumnId]     = key.Id.Value;
 			data_row[Tags.ColumnStatus] = key.IntStatus;
 			data_row.EndEdit ();
-			
-			table.Rows.Add (data_row);
 		}
 		
 		public static void DeleteRow(System.Data.DataRow data_row)

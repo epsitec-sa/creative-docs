@@ -86,13 +86,13 @@ namespace Epsitec.Cresus.Requests
 		{
 			//	Passe en revue la queue à la recherche de requêtes en attente d'exécution.
 			
-			System.Data.DataRowCollection rows = this.execution_queue.Rows;
+			System.Data.DataRow[] rows = this.execution_queue.Rows;
 			
 			//	Prend note du nombre de lignes dans la queue; si des nouvelles lignes sont
 			//	rajoutées pendant notre exécution, on les ignore. Elles seront traitées au
 			//	prochain tour.
 			
-			int n = rows.Count;
+			int n = rows.Length;
 			
 			System.Diagnostics.Debug.WriteLine (string.Format ("Queue contains {0} {1}.", n, (n == 1) ? "request" : "requests"));
 			

@@ -76,7 +76,7 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.XML"
+                    AssemblyName = "System.Xml"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
                 />
             </References>
@@ -85,6 +85,11 @@
             <Include>
                 <File
                     RelPath = "AssemblyInfo.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IRequestExecutionService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

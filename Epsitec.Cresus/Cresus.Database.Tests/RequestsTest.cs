@@ -180,6 +180,8 @@ namespace Epsitec.Cresus.Database
 				
 				Requests.ExecutionQueue queue = new Requests.ExecutionQueue (infrastructure, null);
 				
+				System.Data.DataRow[] rows;
+				
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))
 				{
 					System.Data.DataTable table = RequestsTest.CreateSampleTable ();
@@ -199,13 +201,15 @@ namespace Epsitec.Cresus.Database
 					group.Add (req_2);
 					group.Add (req_3);
 					
-					int n = queue.Rows.Count;
+					rows = queue.Rows;
+					
+					int n = rows.Length;
 					
 					System.Data.DataRow row_1 = queue.AddRequest (group);
-					System.Data.DataRow row_2 = queue.Rows[n];
+					System.Data.DataRow row_2 = rows[n];
 					
 					Assert.AreEqual (row_1, row_2);
-					Assert.AreEqual (n+1, queue.Rows.Count);
+					Assert.AreEqual (n+1, rows.Length);
 					Assert.AreEqual (DbIdClass.Temporary, DbId.AnalyzeClass ((long) row_1[Tags.ColumnId]));
 					Assert.AreEqual (Requests.ExecutionState.Pending, queue.GetRequestExecutionState (row_1));
 					
@@ -219,8 +223,7 @@ namespace Epsitec.Cresus.Database
 				queue.Detach ();
 				
 				queue = new Requests.ExecutionQueue (infrastructure, null);
-				
-				System.Data.DataRowCollection rows = queue.Rows;
+				rows  = queue.Rows;
 				
 				foreach (System.Data.DataRow row in rows)
 				{
@@ -384,10 +387,10 @@ namespace Epsitec.Cresus.Database
 				Assert.IsNotNull (infrastructure);
 				
 				Requests.ExecutionQueue queue = new Requests.ExecutionQueue (infrastructure, null);
+				System.Data.DataRow[] rows;
 				
 				queue = new Requests.ExecutionQueue (infrastructure, null);
-				
-				System.Data.DataRowCollection rows = queue.Rows;
+				rows  = queue.Rows;
 				
 				foreach (System.Data.DataRow row in rows)
 				{
@@ -403,6 +406,31 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		
+		[Test] public void Check11ServiceServer()
+		{
+			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
+			Requests.Orchestrator orchestrator = new Requests.Orchestrator (infrastructure);
+			Requests.ExecutionService service = new Requests.ExecutionService (orchestrator);
+			Requests.ExecutionService.StartService (service, 1234);
+		}
+		
+		[Test] public void Check12ServiceClient()
+		{
+			Remoting.IRequestExecutionService service = Requests.ExecutionService.GetRemoteService ("localhost", 1234);
+			
+			Assert.IsNotNull (service);
+			
+			string reply;
+			
+			System.Diagnostics.Debug.WriteLine ("Sending ping (1) to server.");
+			service.Ping ("Hello !", out reply);
+			System.Diagnostics.Debug.WriteLine ("Reply from server: " + reply);
+			
+			System.Diagnostics.Debug.WriteLine ("Sending ping (2) to server.");
+			service.Ping ("Bye, bye...", out reply);
+			System.Diagnostics.Debug.WriteLine ("Reply from server: " + reply);
+		}
 		
 		public static System.Data.DataTable CreateSampleTable()
 		{

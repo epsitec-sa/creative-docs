@@ -30,11 +30,18 @@ namespace Epsitec.Cresus.Requests
 		}
 		
 		
-		public System.Data.DataRowCollection	Rows
+		public System.Data.DataRow[]			Rows
 		{
 			get
 			{
-				return this.queue_data_set.Tables[Tags.TableRequestQueue].Rows;
+				lock (this.queue_data_table)
+				{
+					System.Data.DataRow[] rows = new System.Data.DataRow[this.queue_data_table.Rows.Count];
+					
+					this.queue_data_table.Rows.CopyTo (rows, 0);
+					
+					return rows;
+				}
 			}
 		}
 		
@@ -49,32 +56,45 @@ namespace Epsitec.Cresus.Requests
 		
 		public void Enqueue(AbstractRequest request)
 		{
-			this.AddRequest (request);
+			System.Data.DataRow row = this.AddRequest (request);
+			
+			lock (this.queue_data_table)
+			{
+				this.queue_data_table.Rows.Add (row);
+			}
+			
+			this.enqueue_event.Set ();
+		}
+		
+		public void Enqueue(byte[][] serialized_requests, DbId[] ids)
+		{
+			//	Ajoute une série de requêtes qui sont déjà sous forme sérialisée et leur
+			//	attribue un ID particulier (cet ID dépend du client et doit être associé
+			//	à la requête pour permettre de dialoguer correctement avec le client).
+			
+			System.Diagnostics.Debug.Assert (serialized_requests.Length == ids.Length);
+			
+			lock (this.queue_data_table)
+			{
+				for (int i = 0; i < serialized_requests.Length; i++)
+				{
+					System.Data.DataRow row = this.AddRequest (serialized_requests[i]);
+					
+					//	L'appelant force des IDs pour les diverses requêtes (parce qu'elles proviennent
+					//	d'un client distant qui a déjà attribués les IDs).
+					
+					row[Tags.ColumnId] = ids[i].Value;
+					
+					this.queue_data_table.Rows.Add (row);
+				}
+			}
+			
 			this.enqueue_event.Set ();
 		}
 		
 		public void ClearQueue()
 		{
-			System.Data.DataTable table = this.queue_data_set.Tables[0];
-			System.Data.DataRow[] rows  = new System.Data.DataRow[table.Rows.Count];
-			
-			for (;;)
-			{
-				try
-				{
-					table.Rows.CopyTo (rows, 0);
-				}
-				catch (System.ArgumentException)
-				{
-					//	S'il y a plus d'éléments dans la table des lignes qu'il n'y en avait
-					//	il y a quelques microsecondes, on re-alloue le tableau et on tente une
-					//	nouvelle copie :
-					
-					rows = new System.Data.DataRow[table.Rows.Count];
-					continue;
-				}
-				break;
-			}
+			System.Data.DataRow[] rows = this.Rows;
 			
 			for (int i = 0; i < rows.Length; i++)
 			{
@@ -90,17 +110,21 @@ namespace Epsitec.Cresus.Requests
 		
 		public System.Data.DataRow AddRequest(AbstractRequest request)
 		{
-			byte[] buffer = AbstractRequest.SerializeToMemory (request);
-			int    length = buffer.Length;
+			return this.AddRequest (AbstractRequest.SerializeToMemory (request));
+		}
+		
+		public System.Data.DataRow AddRequest(byte[] data)
+		{
+			int length = data.Length;
 			
 			System.Diagnostics.Debug.Assert (length > 0);
 			
 			System.Data.DataRow row;
 			
-			this.queue_command.CreateNewRow (Tags.TableRequestQueue, out row);
+			DbRichCommand.CreateRow (this.queue_data_table, out row);
 			
 			row.BeginEdit ();
-			row[Tags.ColumnReqData]    = buffer;
+			row[Tags.ColumnReqData]    = data;
 			row[Tags.ColumnReqExState] = (int) ExecutionState.Pending;
 			row.EndEdit ();
 			
@@ -176,8 +200,9 @@ namespace Epsitec.Cresus.Requests
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (this.infrastructure != null);
 			
-			this.queue_command  = DbRichCommand.CreateFromTable (this.infrastructure, transaction, this.queue_db_table, DbSelectRevision.LiveActive);
-			this.queue_data_set = this.queue_command.DataSet;
+			this.queue_command    = DbRichCommand.CreateFromTable (this.infrastructure, transaction, this.queue_db_table, DbSelectRevision.LiveActive);
+			this.queue_data_set   = this.queue_command.DataSet;
+			this.queue_data_table = this.queue_data_set.Tables[Tags.TableRequestQueue];
 		}
 		
 		public void SerializeToBase(DbTransaction transaction)
@@ -185,10 +210,13 @@ namespace Epsitec.Cresus.Requests
 			System.Diagnostics.Debug.Assert (transaction != null);
 			System.Diagnostics.Debug.Assert (this.queue_command != null);
 			
-			this.queue_command.UpdateRealIds (transaction);
-			this.queue_command.UpdateTables (transaction);
-			
-			this.queue_command.AcceptChanges ();
+			lock (this.queue_data_table)
+			{
+				this.queue_command.UpdateRealIds (transaction);
+				this.queue_command.UpdateTables (transaction);
+				
+				this.queue_command.AcceptChanges ();
+			}
 		}
 		#endregion
 		
@@ -210,6 +238,7 @@ namespace Epsitec.Cresus.Requests
 		private DbTable							queue_db_table;
 		private DbRichCommand					queue_command;
 		private System.Data.DataSet				queue_data_set;
+		private System.Data.DataTable			queue_data_table;
 		
 		private System.Threading.AutoResetEvent	enqueue_event;
 	}

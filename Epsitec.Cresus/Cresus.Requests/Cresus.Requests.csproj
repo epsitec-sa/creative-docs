@@ -104,6 +104,11 @@
                     Project = "{380B6C79-26C5-4274-8F40-BA21DEE4354F}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "System.Runtime.Remoting"
+                    AssemblyName = "System.Runtime.Remoting"
+                    HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Remoting.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -130,6 +135,11 @@
                 />
                 <File
                     RelPath = "ExecutionQueue.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ExecutionService.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
