@@ -3,6 +3,13 @@
 
 namespace Epsitec.Common.Widgets.Design
 {
+	public enum HiliteMode
+	{
+		None,
+		SelectCandidate,
+		DropCandidate
+	}
+	
 	/// <summary>
 	/// La classe HiliteAdorner dessine une mise en évidence permettant
 	/// d'identifier quel widget est actuellement "chaud" (survolé par la
@@ -20,18 +27,43 @@ namespace Epsitec.Common.Widgets.Design
 			get { return this.path; }
 		}
 		
+		public virtual Drawing.Rectangle	HiliteBounds
+		{
+			get
+			{
+				switch (this.hilite_mode)
+				{
+					case HiliteMode.DropCandidate:   return this.widget.InnerBounds;
+					case HiliteMode.SelectCandidate: return this.widget.Client.Bounds;
+				}
+				
+				return Drawing.Rectangle.Empty;
+			}
+		}
+		
+		public HiliteMode					HiliteMode
+		{
+			get { return this.hilite_mode; }
+			set { this.hilite_mode = value; }
+		}
+		
 		
 		protected override void PaintDecoration(Drawing.Graphics graphics, Drawing.Rectangle repaint)
 		{
-			Drawing.FillMode old_fill_mode = graphics.Rasterizer.FillMode;
 			
-			graphics.Rasterizer.FillMode = Drawing.FillMode.EvenOdd;
-			graphics.AddFilledRectangle (this.widget.Client.Bounds);
-			graphics.AddFilledRectangle (Drawing.Rectangle.Inflate (this.widget.Client.Bounds, -1, -1));
-			graphics.RenderSolid (Drawing.Color.FromColor (HiliteAdorner.FrameColor, 0.75));
-			graphics.AddFilledRectangle (Drawing.Rectangle.Inflate (this.widget.Client.Bounds, -1, -1));
-			graphics.AddFilledRectangle (Drawing.Rectangle.Inflate (this.widget.Client.Bounds, -2, -2));
-			graphics.RenderSolid (HiliteAdorner.FrameColor);
+			Drawing.FillMode  old_fill_mode = graphics.Rasterizer.FillMode;
+			Drawing.Rectangle bounds        = this.HiliteBounds;
+			
+			if (bounds.IsValid)
+			{
+				graphics.Rasterizer.FillMode = Drawing.FillMode.EvenOdd;
+				graphics.AddFilledRectangle (bounds);
+				graphics.AddFilledRectangle (Drawing.Rectangle.Inflate (bounds, -1, -1));
+				graphics.RenderSolid (Drawing.Color.FromColor (HiliteAdorner.FrameColor, 0.75));
+				graphics.AddFilledRectangle (Drawing.Rectangle.Inflate (bounds, -1, -1));
+				graphics.AddFilledRectangle (Drawing.Rectangle.Inflate (bounds, -2, -2));
+				graphics.RenderSolid (HiliteAdorner.FrameColor);
+			}
 			
 			if (this.path.IsValid)
 			{
@@ -56,5 +88,6 @@ namespace Epsitec.Common.Widgets.Design
 		
 		
 		protected Drawing.Path				path;
+		protected HiliteMode				hilite_mode;
 	}
 }

@@ -33,12 +33,14 @@ namespace Epsitec.Common.Widgets
 			DragSource  source4 = new DragSource ();
 			DragSource  source5 = new DragSource ();
 			DragSource  source6 = new DragSource ();
+			DragSource  source7 = new DragSource ();
 			CheckButton button1 = new CheckButton ();
 			RadioButton button2 = new RadioButton ();
 			Button      button3 = new Button ();
 			TextField   textfld = new TextField ();
 			GroupBox    groupbx = new GroupBox ();
 			StaticText  textlbl = new StaticText ();
+			TextFieldUpDown textfud = new TextFieldUpDown ();
 			
 			button1.Text = "CheckBox";
 			button1.Size = new Drawing.Size (80, button1.DefaultHeight);
@@ -57,6 +59,9 @@ namespace Epsitec.Common.Widgets
 			
 			textlbl.Text = "StaticText";
 			textlbl.Size = new Drawing.Size (80, textlbl.DefaultHeight);
+			
+			textfud.Text = "TextFieldUpDown";
+			textfud.Size = new Drawing.Size (80, textfud.DefaultHeight);
 			
 			source1.Bounds = new Drawing.Rectangle (10, 10, button1.Width, button1.Height);
 			source1.Parent = window.Root;
@@ -81,6 +86,10 @@ namespace Epsitec.Common.Widgets
 			source6.Bounds = new Drawing.Rectangle (10, 130, textlbl.Width, textlbl.Height);
 			source6.Parent = window.Root;
 			source6.Widget = textlbl;
+			
+			source7.Bounds = new Drawing.Rectangle (10, 160, textfud.Width, textfud.Height);
+			source7.Parent = window.Root;
+			source7.Widget = textfud;
 			
 			window.Root.IsEditionDisabled = true;
 			

@@ -83,7 +83,7 @@ namespace Epsitec.Common.Widgets.Design
 			double xr = bounds.Right;
 			
 			Widget            widget = this.target;
-			Drawing.Rectangle model  = widget.Client.Bounds;
+			Drawing.Rectangle model  = widget.InnerBounds;
 			
 			double mx;
 			
@@ -155,7 +155,7 @@ namespace Epsitec.Common.Widgets.Design
 			double y3 = bounds.Top;
 			
 			Widget            widget = this.target;
-			Drawing.Rectangle model  = widget.Client.Bounds;
+			Drawing.Rectangle model  = widget.InnerBounds;
 			Drawing.Point     basel  = widget.BaseLine;
 			
 			double my;

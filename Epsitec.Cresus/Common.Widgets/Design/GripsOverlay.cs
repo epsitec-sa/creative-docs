@@ -300,6 +300,7 @@ namespace Epsitec.Common.Widgets.Design
 			Widget parent = this.target_widget.Parent;
 			
 			this.drop_adorner.Widget = parent;
+			this.drop_adorner.HiliteMode = HiliteMode.DropCandidate;
 			this.drop_adorner.Path.Clear ();
 			
 			Design.SmartGuide guide  = new Design.SmartGuide (widget, grip, parent);

@@ -71,7 +71,11 @@ namespace Epsitec.Common.Widgets.Design
 				
 				if (clip.Contains (pos))
 				{
-					hot = this.panel.FindChild (pos);
+					Widget.ChildFindMode mode = Widget.ChildFindMode.SkipHidden
+						/**/				  | Widget.ChildFindMode.SkipEmbedded
+						/**/				  | Widget.ChildFindMode.Deep;
+					
+					hot = this.panel.FindChild (pos, mode);
 				}
 				
 				this.hot_widget = null;
@@ -92,6 +96,7 @@ namespace Epsitec.Common.Widgets.Design
 				}
 				
 				this.hilite_adorner.Widget = this.hot_widget;
+				this.hilite_adorner.HiliteMode = HiliteMode.SelectCandidate;
 				
 				switch (e.Message.Type)
 				{

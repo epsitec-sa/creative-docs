@@ -1846,14 +1846,20 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void Invalidate()
 		{
-			this.Invalidate (this.GetPaintBounds ());
+			if (this.IsVisible)
+			{
+				this.Invalidate (this.GetPaintBounds ());
+			}
 		}
 		
 		public virtual void Invalidate(Drawing.Rectangle rect)
 		{
-			if (this.parent != null)
+			if (this.IsVisible)
 			{
-				this.parent.Invalidate (this.MapClientToParent (rect));
+				if (this.parent != null)
+				{
+					this.parent.Invalidate (this.MapClientToParent (rect));
+				}
 			}
 		}
 		
@@ -1984,7 +1990,6 @@ namespace Epsitec.Common.Widgets
 			point = this.MapClientToRoot (point);
 			Drawing.Point point_wdo = point;
 			point = this.Window.MapWindowToScreen (point);
-			System.Diagnostics.Debug.WriteLine (string.Format ("{0} -> {1}", point_wdo, point));
 			return point;
 		}
 		
@@ -2424,7 +2429,7 @@ namespace Epsitec.Common.Widgets
 				
 				System.Diagnostics.Debug.Assert (widget != null);
 				
-				if (mode != ChildFindMode.All)
+				if ((mode & ChildFindMode.SkipMask) != ChildFindMode.All)
 				{
 					if ((mode & ChildFindMode.SkipDisabled) != 0)
 					{
@@ -2447,6 +2452,35 @@ namespace Epsitec.Common.Widgets
 					if ((mode & ChildFindMode.SkipTransparent) != 0)
 					{
 						//	TODO: vérifier que le point en question n'est pas transparent
+					}
+					
+					if ((mode & ChildFindMode.Deep) != 0)
+					{
+						//	Si on fait une recherche en profondeur, on regarde si le point correspond à
+						//	un descendant du widget trouvé...
+						
+						Widget deep = widget.FindChild (widget.MapParentToClient (point), mode);
+						
+						//	Si oui, pas de test supplémentaire: on s'arrête et on retourne le widget
+						//	terminal trouvé lors de la descente récursive :
+						
+						if (deep != null)
+						{
+							return deep;
+						}
+					}
+					
+					if ((mode & ChildFindMode.SkipEmbedded) != 0)
+					{
+						//	Si l'appelant a demandé de sauter les widgets spéciaux, marqués comme étant
+						//	"embedded" dans un parent, on vérifie que l'on ne retourne pas un tel widget.
+						//	Ce test doit se faire en dernier, parce qu'une descente récursive dans un
+						//	widget "embedded" peut éventuellement donner des résultats positifs :
+						
+						if (widget.IsEmbedded)
+						{
+							continue;
+						}
 					}
 					
 					return widget;
@@ -2477,7 +2511,7 @@ namespace Epsitec.Common.Widgets
 				
 				System.Diagnostics.Debug.Assert (widget != null);
 				
-				if (mode != ChildFindMode.All)
+				if ((mode & ChildFindMode.SkipMask) != ChildFindMode.All)
 				{
 					if ((mode & ChildFindMode.SkipDisabled) != 0)
 					{
@@ -3954,9 +3988,13 @@ namespace Epsitec.Common.Widgets
 		[System.Flags] public enum ChildFindMode
 		{
 			All					= 0,
-			SkipHidden			= 1,
-			SkipDisabled		= 2,
-			SkipTransparent		= 4
+			SkipHidden			= 0x00000001,
+			SkipDisabled		= 0x00000002,
+			SkipTransparent		= 0x00000004,
+			SkipEmbedded		= 0x00000008,
+			SkipMask			= 0x000000ff,
+			
+			Deep				= 0x00010000
 		}
 		
 		

@@ -210,6 +210,7 @@ namespace Epsitec.Common.Widgets
 			string title  = widget == null ? "-" : widget.ToString ();
 			
 			this.drop_adorner.Widget = widget;
+			this.drop_adorner.HiliteMode = Design.HiliteMode.DropCandidate;
 			this.drop_adorner.Path.Clear ();
 			
 			if (widget != null)

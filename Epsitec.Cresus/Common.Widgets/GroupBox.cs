@@ -28,10 +28,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				//	TODO: augmenter les marges gauche, droite, haute et basse pour que le
-				//	contenu n'empiète pas sur le titre, ni sur le cadre...
+				Drawing.Rectangle frame = this.FrameRectangle;
+				Drawing.Rectangle title = this.TitleRectangle;
 				
-				return base.InnerBounds;
+				frame.Top = title.Bottom;
+				frame.Deflate (2, 2);
+				
+				return frame;
 			}
 		}
 		
