@@ -382,8 +382,11 @@ namespace Epsitec.Cresus.Database
 					DbTypeEnum type = this.Type as DbTypeEnum;
 					return type.MaxNameLength;
 				}
-
-				// DD TODO: ajouter DbTypeByteArray
+				if (this.Type is DbTypeByteArray)
+				{
+					DbTypeByteArray type = this.Type as DbTypeByteArray;
+					return type.Length;
+				}
 				
 				return 1;
 			}
@@ -425,6 +428,11 @@ namespace Epsitec.Cresus.Database
 				if (this.type is DbTypeString)
 				{
 					DbTypeString type = this.type as DbTypeString;
+					return type.IsFixedLength;
+				}
+				if (this.type is DbTypeByteArray)
+				{
+					DbTypeByteArray type = this.type as DbTypeByteArray;
 					return type.IsFixedLength;
 				}
 				
@@ -655,11 +663,8 @@ namespace Epsitec.Cresus.Database
 					break;
 				
 				case DbSimpleType.ByteArray:
-					throw new System.NotImplementedException ("ByteArray not implemented yet");
-
-//					this.type = new DbType (DbSimpleType.ByteArray);	
-					// DD TODO	il faudra créer une classe DbTypeByteArray
-//					break;
+					this.type = new DbTypeByteArray (length, is_fixed_length);
+					break;
 					
 				case DbSimpleType.Decimal:
 					this.type = new DbTypeNum (num_def);
