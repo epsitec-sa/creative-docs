@@ -91,21 +91,21 @@ namespace Epsitec.Common.Pictogram.Data
 			handle.Position = pos;
 			handle.Type = type;
 			this.handles.Add(handle);
-			this.durtyBbox = true;
+			this.dirtyBbox = true;
 		}
 
 		// Insère une poignée.
 		public void HandleInsert(int rank, Handle handle)
 		{
 			this.handles.Insert(rank, handle);
-			this.durtyBbox = true;
+			this.dirtyBbox = true;
 		}
 
 		// Supprime une poignée.
 		public void HandleDelete(int rank)
 		{
 			this.handles.RemoveAt(rank);
-			this.durtyBbox = true;
+			this.dirtyBbox = true;
 		}
 
 		// Donne une poignée de l'objet.
@@ -176,7 +176,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				iconContext.ConstrainSnapPos(ref pos);
 				this.Handle(rank).Position = pos;
-				this.durtyBbox = true;
+				this.dirtyBbox = true;
 			}
 			else	// poignée d'une propriété ?
 			{
@@ -216,10 +216,10 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			get
 			{
-				if ( this.durtyBbox )
+				if ( this.dirtyBbox )
 				{
 					this.UpdateBoundingBox();
-					this.durtyBbox = false;
+					this.dirtyBbox = false;
 				}
 				return this.bbox;
 			}
@@ -409,6 +409,11 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( actual == null )  return;
 
 			property.CopyTo(actual);
+
+			if ( actual.AlterBoundingBox )
+			{
+				this.dirtyBbox = true;
+			}
 		}
 
 		// Modifie juste l'état "étendu" d'une propriété.
@@ -482,7 +487,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Déplacement pendant la création d'un objet.
 		public virtual void CreateMouseMove(Drawing.Point pos, IconContext iconContext)
 		{
-			this.durtyBbox = true;
+			this.dirtyBbox = true;
 		}
 
 		// Fin de la création d'un objet.
@@ -540,7 +545,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			this.selected       = src.selected;
 			this.editProperties = src.editProperties;
-			this.durtyBbox      = src.durtyBbox;
+			this.dirtyBbox      = src.dirtyBbox;
 			this.bbox           = src.bbox;
 		}
 
@@ -601,7 +606,7 @@ namespace Epsitec.Common.Pictogram.Data
 		protected double						closeMargin;
 		protected bool							selected = false;
 		protected bool							editProperties = false;
-		protected bool							durtyBbox = true;
+		protected bool							dirtyBbox = true;
 		protected Drawing.Rectangle				bbox = new Drawing.Rectangle();
 
 		[XmlAttribute]

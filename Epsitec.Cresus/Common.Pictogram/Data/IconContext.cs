@@ -136,16 +136,11 @@ namespace Epsitec.Common.Pictogram.Data
 		// Couleur lorsqu'un objet est survolé par la souris.
 		public Drawing.Color HiliteColor
 		{
-#if false
-			get { return Drawing.Color.FromARGB(0.3, 1,1,0); }
-#else
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
-				Drawing.Color color = adorner.ColorCaption;
-				return Drawing.Color.FromARGB(0.8, color.R, color.G, color.B);
+				return Drawing.Color.FromColor(adorner.ColorCaption, 0.8);
 			}
-#endif
 		}
 
 

@@ -919,8 +919,8 @@ namespace Epsitec.Common.Pictogram.Data
 
 				Drawing.Rectangle actualBbox = group.BoundingBox;
 				Drawing.Rectangle newBbox = this.RetBbox(group.Objects);
-				group.Handle(0).Position = new Drawing.Point(newBbox.Left, newBbox.Bottom);
-				group.Handle(1).Position = new Drawing.Point(newBbox.Right, newBbox.Top);
+				group.Handle(0).Position = newBbox.BottomLeft;
+				group.Handle(1).Position = newBbox.TopRight;
 				group.UpdateBoundingBox();
 
 				bbox.MergeWith(actualBbox);

@@ -58,90 +58,55 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlAttribute]
 		public PropertyType Type
 		{
-			get
-			{
-				return this.type;
-			}
-
-			set
-			{
-				this.type = value;
-			}
+			get { return this.type; }
+			set { this.type = value; }
 		}
 
 		// Nom de la propriété.
 		[XmlIgnore]
 		public string Text
 		{
-			get
-			{
-				return this.text;
-			}
-
-			set
-			{
-				this.text = value;
-			}
+			get { return this.text; }
+			set { this.text = value; }
 		}
 
 		// Couleur de fond du panneau associé.
 		[XmlIgnore]
 		public double BackgroundIntensity
 		{
-			get
-			{
-				return this.backgroundIntensity;
-			}
-
-			set
-			{
-				this.backgroundIntensity = value;
-			}
+			get { return this.backgroundIntensity; }
+			set { this.backgroundIntensity = value; }
 		}
 
 		// Mode de déploiement du panneau associé.
 		[XmlIgnore]
 		public bool ExtendedSize
 		{
-			get
-			{
-				return this.extendedSize;
-			}
-
-			set
-			{
-				this.extendedSize = value;
-			}
+			get { return this.extendedSize; }
+			set { this.extendedSize = value; }
 		}
 
 		// Représentation de plusieurs propriétés contradictoires.
 		[XmlIgnore]
 		public bool Multi
 		{
-			get
-			{
-				return this.multi;
-			}
-
-			set
-			{
-				this.multi = value;
-			}
+			get { return this.multi; }
+			set { this.multi = value; }
 		}
 
 		// Indique s'il faut éditer les propriétés.
 		[XmlIgnore]
 		public bool EditProperties
 		{
-			get
-			{
-				return this.editProperties;
-			}
+			get { return this.editProperties; }
+			set { this.editProperties = value; }
+		}
 
-			set
-			{
-				this.editProperties = value;
-			}
+		// Indique si un changement de cette propriété modifie la bbox de l'objet.
+		[XmlIgnore]
+		public virtual bool AlterBoundingBox
+		{
+			get { return false; }
 		}
 
 		// Effectue une copie de la propriété.
