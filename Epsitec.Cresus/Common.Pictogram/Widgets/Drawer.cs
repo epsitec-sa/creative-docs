@@ -1788,7 +1788,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 
 			// Dessine les géométries.
-			this.iconObjects.DrawGeometry(graphics, this.iconContext, Drawing.Color.Empty, adorner);
+			this.iconObjects.DrawGeometry(graphics, this.iconContext, adorner);
 
 			// Dessine la grille magnétique.
 			if ( this.isEditable )
