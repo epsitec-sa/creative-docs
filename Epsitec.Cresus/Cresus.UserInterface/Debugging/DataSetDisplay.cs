@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.UserInterface.Debugging
 			Widgets.TabPage page = new Widgets.TabPage ();
 			
 			page.TabTitle = string.Format ("Table <i>{0}</i>...", table_name);
-			page.DockMargins = new Drawing.Margins (4, 4, 4, 4);
+			page.DockPadding = new Drawing.Margins (4, 4, 4, 4);
 			
 			Widgets.CellTable table = new Widgets.CellTable ();
 			
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.UserInterface.Debugging
 			this.window.ClientSize = new Drawing.Size (400, 300);
 			this.window.Text = "DataSet Explorer";
 			this.window.Root.PreferHorizontalDockLayout = false;
-			this.window.Root.DockMargins = new Drawing.Margins (2, 2, 2, 2);
+			this.window.Root.DockPadding = new Drawing.Margins (2, 2, 2, 2);
 			
 			this.book = new Widgets.TabBook ();
 			this.book.Dock = Widgets.DockStyle.Fill;
