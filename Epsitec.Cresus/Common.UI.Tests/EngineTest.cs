@@ -199,8 +199,8 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual (1,        combo_r.SelectedIndex);
 			Assert.AreEqual ("Smooth", combo_r.SelectedName);
 			
-			Assert.AreEqual (-1,   combo_w.SelectedIndex);
-			Assert.AreEqual (null, combo_w.SelectedName);
+			Assert.AreEqual (-1, combo_w.SelectedIndex);
+			Assert.AreEqual ("", combo_w.SelectedName);
 			
 			Assert.AreEqual ("Helvetica",             record["FontName"].ReadValue ());
 			Assert.AreEqual (14.0, (double) (decimal) record["FontSize"].ReadValue ());
@@ -232,9 +232,9 @@ namespace Epsitec.Common.UI
 			Assert.AreEqual ("Fast", combo_r.SelectedName);
 			
 			Assert.AreEqual ("Subtitle", combo_w.Text);
-			Assert.AreEqual (null,       combo_w.SelectedItem);
+			Assert.AreEqual ("",         combo_w.SelectedItem);
 			Assert.AreEqual (-1,         combo_w.SelectedIndex);
-			Assert.AreEqual (null,       combo_w.SelectedName);
+			Assert.AreEqual ("",         combo_w.SelectedName);
 			
 			combo_r.SelectedName = "Smooth";
 			combo_w.SelectedName = "Large";
@@ -254,7 +254,7 @@ namespace Epsitec.Common.UI
 			
 			Assert.AreEqual (Quality.Default, record["Quality"].ReadValue ());
 			
-			combo_r.SelectedName = null;
+			combo_r.SelectedName = "";
 			
 			Assert.AreEqual (Quality.Default, record["Quality"].ReadValue ());
 		}

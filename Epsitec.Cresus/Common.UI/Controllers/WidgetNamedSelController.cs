@@ -214,12 +214,12 @@ namespace Epsitec.Common.UI.Controllers
 				
 				Types.IReadOnly read_only = this.widget as Types.IReadOnly;
 				
-				if ((value == null) &&
+				if ((value == "") &&
 					(read_only != null) &&
 					(read_only.IsReadOnly == false))
 				{
 					//	Il n'y a pas d'élément sélectionné dans la liste, mais peut-être y a-t-il un
-					//	text personnalisé à la place ?
+					//	texte personnalisé à la place ?
 					
 					value = Types.CustomEnumType.ToCustomName (this.widget.Text);
 				}
