@@ -506,6 +506,36 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Retourne la bounding box d'un pattern.
+		public Drawing.Rectangle RetPatternBbox(int rank)
+		{
+			ObjectPattern pattern = this.Pattern(rank);
+			if ( pattern == null )  return Drawing.Rectangle.Empty;
+			return this.RetPatternBbox(pattern.Objects);
+		}
+
+		protected Drawing.Rectangle RetPatternBbox(System.Collections.ArrayList objects)
+		{
+			int total = objects.Count;
+			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+
+				if ( !(obj is ObjectPage) && !(obj is ObjectLayer) )
+				{
+					bbox.MergeWith(obj.BoundingBoxGeom);
+				}
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					bbox.MergeWith(this.RetPatternBbox(obj.Objects));
+				}
+			}
+			return bbox;
+		}
+
+
 		// Retourne la bounding box des objets sélectionnés.
 		public Drawing.Rectangle RetSelectedBbox()
 		{
@@ -1513,6 +1543,70 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Adapte toutes les bbox en fonction des patterns.
+		public void UpdatePattern()
+		{
+			AbstractObject doc = this.objects[0] as AbstractObject;
+			this.UpdatePattern(doc.Objects);
+		}
+
+		protected void UpdatePattern(System.Collections.ArrayList objects)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					this.UpdatePattern(obj.Objects);
+				}
+
+				if ( !(obj is ObjectPage) && !(obj is ObjectLayer) )
+				{
+					obj.PatternUpdateBoundingBox(this);
+				}
+			}
+		}
+
+		
+		// Adapte tous les styles après une suppression de pattern.
+		public void StylesDeletePattern(int rank)
+		{
+			int total = this.styles.TotalProperty;
+			for ( int i=0 ; i<total ; i++ )
+			{
+				PropertyLine line = this.styles.GetProperty(i) as PropertyLine;
+				if ( line != null )
+				{
+					line.AdaptDeletePattern(rank);
+				}
+			}
+		}
+
+		// Adapte tous les objets après une suppression de pattern.
+		public void UpdateDeletePattern(int rank)
+		{
+			AbstractObject doc = this.objects[0] as AbstractObject;
+			this.UpdateDeletePattern(doc.Objects, rank);
+		}
+
+		protected void UpdateDeletePattern(System.Collections.ArrayList objects, int rank)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				obj.DeletePattern(rank);
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					this.UpdateDeletePattern(obj.Objects, rank);
+				}
+			}
+		}
+
+		
 		// Retourne le nombre total de patterns.
 		public int TotalPatterns()
 		{
@@ -1551,6 +1645,11 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( value != this.currentPattern )
 				{
 					this.UsePatternPageLayer(value, -1, -1);  // -1 = dernier calque utilisé
+
+					if ( value == 0 )
+					{
+						this.UpdatePattern();  // màj les bbox
+					}
 				}
 			}
 		}
@@ -1659,6 +1758,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Donne un pattern.
 		public ObjectPattern Pattern(int rank)
 		{
+			if ( rank < 0 )  rank = 0;  // traitillé ?
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			System.Diagnostics.Debug.Assert(rank < this.objects.Count);
 			return this.objects[rank] as ObjectPattern;
@@ -1939,6 +2039,7 @@ namespace Epsitec.Common.Pictogram.Data
 				this.ArrangeAfterRead(this.objects);
 
 				this.UsePatternPageLayer(0, 0, 0);
+				this.UpdatePattern();  // màj les bbox
 			}
 			catch ( System.Exception )
 			{
