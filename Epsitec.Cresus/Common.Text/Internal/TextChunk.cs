@@ -15,6 +15,15 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
+		public int							TextLength
+		{
+			get
+			{
+				return this.length;
+			}
+		}
+		
+		
 		public void InsertText(int position, uint[] text)
 		{
 			int length = text.Length;

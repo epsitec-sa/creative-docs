@@ -21,7 +21,16 @@ namespace Epsitec.Common.Text.Internal
 			this.cursors[1].DefineCursorState (Internal.CursorState.Free);
 		}
 		
-
+		
+		public int								CursorCount
+		{
+			get
+			{
+				return this.cursors.Length - this.free_cursor_count - 1;
+			}
+		}
+		
+		
 		public Internal.Cursor ReadCursor(Internal.CursorId id)
 		{
 			Debug.Assert.IsTrue (this.cursors[id].CursorState == Internal.CursorState.Allocated);

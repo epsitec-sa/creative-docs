@@ -94,6 +94,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "TextConverter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "TextStory.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Internal\Cursor.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -134,12 +144,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Tests\CheckInternalCursorTable.cs"
+                    RelPath = "Tests\CheckInternalCursorIdArray.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Tests\CheckInternalCursorIdArray.cs"
+                    RelPath = "Tests\CheckInternalCursorTable.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

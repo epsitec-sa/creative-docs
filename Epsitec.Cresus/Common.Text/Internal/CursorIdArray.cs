@@ -31,8 +31,7 @@ namespace Epsitec.Common.Text.Internal
 			int offset;
 			int index = this.FindElementAtPosition (position, out offset);
 			
-			Debug.Assert.IsTrue (index >= 0);
-			Debug.Assert.IsTrue (index <= this.length);
+			Debug.Assert.IsInBounds (index, 0, this.length);
 			
 			this.InsertElement (index, new Element (id, offset));
 		}
@@ -48,11 +47,9 @@ namespace Epsitec.Common.Text.Internal
 			int from_index = this.FindElement (id);
 			int to_index   = this.FindElementAtPosition (position, out offset);
 			
-			Debug.Assert.IsTrue (from_index >= 0);
-			Debug.Assert.IsTrue (from_index < this.length);
 			Debug.Assert.IsTrue (offset >= 0);
-			Debug.Assert.IsTrue (to_index >= 0);
-			Debug.Assert.IsTrue (to_index <= this.length);
+			Debug.Assert.IsInBounds (from_index, 0, this.length-1);
+			Debug.Assert.IsInBounds (to_index, 0, this.length);
 			
 			if (from_index == to_index)
 			{
@@ -237,8 +234,7 @@ namespace Epsitec.Common.Text.Internal
 		
 		private int FindElementPosition(int index)
 		{
-			Debug.Assert.IsTrue (index >= 0);
-			Debug.Assert.IsTrue (index < this.length);
+			Debug.Assert.IsInBounds (index, 0, this.length-1);
 			
 			int position = 0;
 			
@@ -264,11 +260,8 @@ namespace Epsitec.Common.Text.Internal
 			//
 			//	Ajuste l'offset de l'élément suivant.
 			
-			Debug.Assert.IsTrue (this.length >= 0);
-			Debug.Assert.IsTrue (this.length <= this.elements.Length);
-			
-			Debug.Assert.IsTrue (index >= 0);
-			Debug.Assert.IsTrue (index <= this.length);
+			Debug.Assert.IsInBounds (this.length, 0, this.elements.Length);
+			Debug.Assert.IsInBounds (index, 0, this.length);
 			
 			Element[] old_elements = this.elements;
 			Element[] new_elements = new Element[this.length+1];
@@ -301,11 +294,8 @@ namespace Epsitec.Common.Text.Internal
 			//
 			//	Ajuste l'offset de l'élément suivant.
 			
-			Debug.Assert.IsTrue (this.length > 0);
-			Debug.Assert.IsTrue (this.length <= this.elements.Length);
-			
-			Debug.Assert.IsTrue (index >= 0);
-			Debug.Assert.IsTrue (index < this.length);
+			Debug.Assert.IsInBounds (this.length, 1, this.elements.Length);
+			Debug.Assert.IsInBounds (index, 0, this.length-1);
 			
 			int offset = this.elements[index].offset;
 			int last   = this.elements.Length-1;
@@ -345,10 +335,8 @@ namespace Epsitec.Common.Text.Internal
 			Debug.Assert.IsTrue (this.length > 0);
 			Debug.Assert.IsTrue (this.length <= this.elements.Length);
 			
-			Debug.Assert.IsTrue (from_index >= 0);
-			Debug.Assert.IsTrue (from_index < this.length);
-			Debug.Assert.IsTrue (to_index >= 0);
-			Debug.Assert.IsTrue (to_index <= this.length);
+			Debug.Assert.IsInBounds (from_index, 0, this.length-1);
+			Debug.Assert.IsInBounds (to_index, 0, this.length);
 			
 			if (from_index < to_index)
 			{
