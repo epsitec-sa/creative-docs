@@ -630,7 +630,7 @@ namespace Epsitec.Common.Support
 		
 		public static bool SplitTarget(string target, out string target_bundle, out string target_field)
 		{
-			int pos = target.IndexOf ("#");
+			int pos = target.IndexOf ('#');
 			
 			target_bundle = target;
 			target_field  = null;
@@ -644,6 +644,19 @@ namespace Epsitec.Common.Support
 			}
 			
 			return false;
+		}
+		
+		public static string MakeTarget(string target_bundle, string target_field)
+		{
+			if ((target_bundle == null) ||
+				(target_bundle.IndexOf ('#') != -1) ||
+				(target_field == null) ||
+				(target_field.IndexOf ('#') != -1))
+			{
+				throw new ResourceException ("Invalid target specified.");
+			}
+			
+			return string.Concat (target_bundle, "#", target_field);
 		}
 		
 		public static string ExtractSortName(string sort_name)
@@ -1270,7 +1283,7 @@ namespace Epsitec.Common.Support
 			
 			protected void CompileBundle()
 			{
-				this.data = new ResourceBundle (this.parent, this.parent.Name + "#" + this.Name, this.xml);
+				this.data = new ResourceBundle (this.parent, ResourceBundle.MakeTarget (this.parent.Name, this.Name), this.xml);
 				this.type = ResourceFieldType.Bundle;
 			}
 			

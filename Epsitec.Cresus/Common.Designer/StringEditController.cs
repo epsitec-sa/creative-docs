@@ -676,6 +676,29 @@ namespace Epsitec.Common.Designer
 			
 			
 			#region IPropertyProvider Members
+			public string[] GetPropertyNames()
+			{
+				System.Collections.ArrayList list = new System.Collections.ArrayList ();
+				
+				foreach (System.Collections.DictionaryEntry entry in this.host.bundles)
+				{
+					string         bundle_name = entry.Key as string;
+					ResourceBundle bundle      = (entry.Value as ResourceBundleCollection)[ResourceLevel.Default];
+					string[]       field_names = bundle.FieldNames;
+					
+					for (int i = 0; i < field_names.Length; i++)
+					{
+						list.Add (ResourceBundle.MakeTarget (bundle_name, field_names[i]));
+					}
+				}
+				
+				string[] names = new string[list.Count];
+				list.CopyTo (names);
+				System.Array.Sort (names);
+				
+				return names;
+			}
+		
 			public object GetProperty(string key)
 			{
 				string bundle_name;

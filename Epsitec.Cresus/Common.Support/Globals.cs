@@ -50,6 +50,20 @@ namespace Epsitec.Common.Support
 		
 		
 		#region IPropertyProvider Members
+		public string[] GetPropertyNames()
+		{
+			if (this.property_hash == null)
+			{
+				return new string[0];
+			}
+			
+			string[] names = new string[this.property_hash.Count];
+			this.property_hash.Keys.CopyTo (names, 0);
+			System.Array.Sort (names);
+			
+			return names;
+		}
+		
 		public void SetProperty(string key, object value)
 		{
 			lock (this)

@@ -260,6 +260,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "UI\TextRefAdapter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "UI\TextRefController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Widgets\DragSource.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
