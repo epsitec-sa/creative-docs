@@ -85,14 +85,14 @@ namespace Epsitec.Common.OpenType.Tests
 			{
 				for (char c = ' '; c < '\u01F6'; c++)
 				{
-					uint c_index   = (uint) c;
+					int c_index   = (int) c;
 					
 					if ((c_index >= 127) && (c_index < 160))
 					{
 						continue;
 					}
 					
-					uint glyph     = cmap_sub_t.GetGlyphIndex ((int) c);
+					int glyph     = cmap_sub_t.GetGlyphIndex ((int) c);
 					
 					if (glyph == 0)
 					{
@@ -102,10 +102,10 @@ namespace Epsitec.Common.OpenType.Tests
 					
 					total++;
 					
-					uint num_glyph = maxp_t.NumGlyphs;
-					uint num_h_metrics = hhea_t.NumHMetrics;
+					int num_glyph = maxp_t.NumGlyphs;
+					int num_h_metrics = hhea_t.NumHMetrics;
 					
-					uint advance = 0;
+					int advance = 0;
 					int  lsb     = 0;
 					
 					if (glyph < num_glyph)
@@ -146,7 +146,7 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			System.Collections.Hashtable referenced_features = new System.Collections.Hashtable ();
 			
-			for (uint i = 0; i < script_l.ScriptCount; i++)
+			for (int i = 0; i < script_l.ScriptCount; i++)
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 				
@@ -157,7 +157,7 @@ namespace Epsitec.Common.OpenType.Tests
 				
 				buffer.Append ("default=[");
 				
-				for (uint k = 0; k < script_t.DefaultLangSysTable.FeatureCount; k++)
+				for (int k = 0; k < script_t.DefaultLangSysTable.FeatureCount; k++)
 				{
 					if (k > 0) buffer.Append (";");
 					buffer.Append (script_t.DefaultLangSysTable.GetFeatureIndex (k));
@@ -166,7 +166,7 @@ namespace Epsitec.Common.OpenType.Tests
 				
 				buffer.Append ("]");
 				
-				for (uint j = 0; j < script_t.LangSysCount; j++)
+				for (int j = 0; j < script_t.LangSysCount; j++)
 				{
 					buffer.Append (", '");
 					buffer.Append (script_t.GetLangSysTag (j));
@@ -178,7 +178,7 @@ namespace Epsitec.Common.OpenType.Tests
 						referenced_features[(int) script_t.GetLangSysTable (j).RequiredFeatureIndex] = true;
 					}
 					
-					for (uint k = 0; k < script_t.GetLangSysTable (j).FeatureCount; k++)
+					for (int k = 0; k < script_t.GetLangSysTable (j).FeatureCount; k++)
 					{
 						buffer.Append (";");
 						buffer.Append (script_t.GetLangSysTable (j).GetFeatureIndex (k));
@@ -195,9 +195,9 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			
 			string[] feature_names = new string[feature_l.FeatureCount];
-			uint[]   feature_index = new uint[feature_l.FeatureCount];
+			int[]   feature_index = new int[feature_l.FeatureCount];
 			
-			for (uint i = 0; i < feature_l.FeatureCount; i++)
+			for (int i = 0; i < feature_l.FeatureCount; i++)
 			{
 				feature_names[i] = feature_l.GetFeatureTag (i) + "-" + i.ToString ("X4");
 				feature_index[i] = i;
@@ -214,13 +214,13 @@ namespace Epsitec.Common.OpenType.Tests
 				
 			}
 			
-			uint rq_feature_arab_urdu = gsub_t.GetRequiredFeatureIndex ("arab", "URD ");
-			uint[] features_arab_urdu = gsub_t.GetFeatureIndexes ("arab", "URD ");
+			int rq_feature_arab_urdu = gsub_t.GetRequiredFeatureIndex ("arab", "URD ");
+			int[] features_arab_urdu = gsub_t.GetFeatureIndexes ("arab", "URD ");
 			
-			uint rq_feature_arab_xxxx = gsub_t.GetRequiredFeatureIndex ("arab", "XXXX");
-			uint[] features_arab_xxxx = gsub_t.GetFeatureIndexes ("arab", "XXXX");
+			int rq_feature_arab_xxxx = gsub_t.GetRequiredFeatureIndex ("arab", "XXXX");
+			int[] features_arab_xxxx = gsub_t.GetFeatureIndexes ("arab", "XXXX");
 			
-			uint[] fina_features = gsub_t.GetFeatureIndexes ("fina");
+			int[] fina_features = gsub_t.GetFeatureIndexes ("fina");
 			
 //			Debug.Assert.IsTrue (fina_features.Length == 3);
 //			Debug.Assert.IsTrue (fina_features[0] == 3);
@@ -229,9 +229,9 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			LookupListTable gsub_lookup = gsub_t.LookupListTable;
 			
-			uint[] liga_features = gsub_t.GetFeatureIndexes ("liga");
-			uint[] rlig_features = gsub_t.GetFeatureIndexes ("rlig");
-			uint[] dlig_features = gsub_t.GetFeatureIndexes ("dlig");
+			int[] liga_features = gsub_t.GetFeatureIndexes ("liga");
+			int[] rlig_features = gsub_t.GetFeatureIndexes ("rlig");
+			int[] dlig_features = gsub_t.GetFeatureIndexes ("dlig");
 			
 			System.Collections.ArrayList ligature_list = new System.Collections.ArrayList ();
 			
@@ -241,11 +241,11 @@ namespace Epsitec.Common.OpenType.Tests
 			
 			for (int i = 0; i < ligature_list.Count; i++)
 			{
-				uint         feature_i    = (uint)ligature_list[i];
+				int         feature_i    = (int)ligature_list[i];
 				FeatureTable feature      = gsub_t.FeatureListTable.GetFeatureTable (feature_i);
-				uint         lookup_count = feature.LookupCount;
+				int         lookup_count = feature.LookupCount;
 				
-				for (uint feature_lookup_i = 0; feature_lookup_i < lookup_count; feature_lookup_i++)
+				for (int feature_lookup_i = 0; feature_lookup_i < lookup_count; feature_lookup_i++)
 				{
 					LookupTable lookup = gsub_lookup.GetLookupTable (feature.GetLookupIndex (feature_lookup_i));
 					
@@ -253,12 +253,12 @@ namespace Epsitec.Common.OpenType.Tests
 					
 					if (lookup.LookupType == 1)
 					{
-						for (uint s = 0; s < lookup.SubTableCount; s++)
+						for (int s = 0; s < lookup.SubTableCount; s++)
 						{
 							SubstSubTable base_subst = lookup.GetSubTable (s);
 							SingleSubstitution single_subst = new SingleSubstitution (base_subst);
 							
-							uint[] covered = CheckTables.GetCoverageIndexes (single_subst.Coverage);
+							int[] covered = CheckTables.GetCoverageIndexes (single_subst.Coverage);
 							
 							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2}", single_subst.SubstFormat, single_subst.Coverage.CoverageFormat, covered.Length));
 							
@@ -270,33 +270,33 @@ namespace Epsitec.Common.OpenType.Tests
 					}
 					else if (lookup.LookupType == 4)
 					{
-						for (uint s = 0; s < lookup.SubTableCount; s++)
+						for (int s = 0; s < lookup.SubTableCount; s++)
 						{
 							SubstSubTable base_subst = lookup.GetSubTable (s);
 							LigatureSubstitution liga_subst = new LigatureSubstitution (base_subst);
 							
-							uint[] covered = CheckTables.GetCoverageIndexes (liga_subst.Coverage);
+							int[] covered = CheckTables.GetCoverageIndexes (liga_subst.Coverage);
 							
 							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2}", liga_subst.SubstFormat, liga_subst.Coverage.CoverageFormat, covered.Length));
 							System.Diagnostics.Debug.WriteLine (string.Format ("            # of ligature sets: {0}", liga_subst.LigatureSetCount));
 							
 							Debug.Assert.IsTrue (liga_subst.LigatureSetCount == covered.Length);
 							
-							for (uint j = 0; j < liga_subst.LigatureSetCount; j++)
+							for (int j = 0; j < liga_subst.LigatureSetCount; j++)
 							{
 								LigatureSet liga_set = liga_subst.GetLigatureSet (j);
 								
-								for (uint k = 0; k < liga_set.LigatureInfoCount; k++)
+								for (int k = 0; k < liga_set.LigatureInfoCount; k++)
 								{
 									System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 									
 									LigatureInfo ligature = liga_set.GetLigatureInfo (k);
-									uint result_glyph = ligature.Glyph;
+									int result_glyph = ligature.Glyph;
 									
 									buffer.Append ("  o ");
 									buffer.Append (covered[j]);
 									
-									for (uint l = 1; l < ligature.ComponentCount; l++)
+									for (int l = 1; l < ligature.ComponentCount; l++)
 									{
 										buffer.Append ("+");
 										buffer.Append (ligature.GetComponent (l-1));
@@ -309,31 +309,33 @@ namespace Epsitec.Common.OpenType.Tests
 								}
 							}
 							
-							uint[] glyphs = new uint[] { 143, 143, 139, 143, 143, 12, 143, 147, 157, 157, 25, 0, 0, 0 };
-							uint[] substitution;
-							int[]  starts;
-							int    offset;
+							ushort[] glyphs = new ushort[] { 143, 143, 139, 143, 143, 12, 143, 147, 157, 157, 25, 0, 0, 0 };
+							ushort[] result = new ushort[20];
 							
 							System.Diagnostics.Trace.WriteLine ("Starting ligature substitution:");
-							for (int zz = 0; zz < 1000000; zz++)
+							for (int zz = 0; zz < 1000; zz++)
 							{
-								offset = liga_subst.ProcessSubstitution (glyphs, 0, out substitution, out starts);
-								offset = liga_subst.ProcessSubstitution (glyphs, 3, out substitution, out starts);
-								offset = liga_subst.ProcessSubstitution (glyphs, 5, out substitution, out starts);
-								offset = liga_subst.ProcessSubstitution (glyphs, 6, out substitution, out starts);
-								offset = liga_subst.ProcessSubstitution (glyphs, 8, out substitution, out starts);
+								int i_offset = 0;
+								int o_offset = 0;
+								int length   = glyphs.Length;
+								
+								liga_subst.ProcessSubstitution (glyphs, ref i_offset, length, result, ref o_offset);
+								liga_subst.ProcessSubstitution (glyphs, ref i_offset, length, result, ref o_offset);
+								liga_subst.ProcessSubstitution (glyphs, ref i_offset, length, result, ref o_offset); i_offset++; o_offset++;
+								liga_subst.ProcessSubstitution (glyphs, ref i_offset, length, result, ref o_offset);
+								liga_subst.ProcessSubstitution (glyphs, ref i_offset, length, result, ref o_offset);
 							}
 							System.Diagnostics.Trace.WriteLine ("Done.");
 						}
 					}
 					else if (lookup.LookupType == 6)
 					{
-						for (uint s = 0; s < lookup.SubTableCount; s++)
+						for (int s = 0; s < lookup.SubTableCount; s++)
 						{
 							SubstSubTable base_subst = lookup.GetSubTable (s);
 							ChainingContextSubstitution cctx_subst = new ChainingContextSubstitution (base_subst);
 							
-							uint[] covered = CheckTables.GetCoverageIndexes (cctx_subst.Coverage);
+							int[] covered = CheckTables.GetCoverageIndexes (cctx_subst.Coverage);
 							
 							System.Diagnostics.Debug.WriteLine (string.Format ("  Subtable: format {0}, coverage format {1}, covered {2}", cctx_subst.SubstFormat, cctx_subst.Coverage.CoverageFormat, covered.Length));
 						}
@@ -369,14 +371,20 @@ namespace Epsitec.Common.OpenType.Tests
 			System.Diagnostics.Debug.WriteLine (string.Join ("; ", font_2.GetSupportedFeatures ()));
 			
 			font_2.SelectScript ("latn");
+			font_2.SelectFeatures ("liga");
+			
+			string text = "Quelle fin affreuse, affligeant !";
+			
+			ushort[] glyphs_1 = font_1.GenerateGlyphs (text);
+			ushort[] glyphs_2 = font_2.GenerateGlyphs (text);
 		}
 		
 		
-		private static uint[] GetCoverageIndexes(Coverage coverage)
+		private static int[] GetCoverageIndexes(Coverage coverage)
 		{
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			for (uint i = 0; i < 0xffff; i++)
+			for (int i = 0; i < 0xffff; i++)
 			{
 				int index = coverage.FindIndex (i);
 				
@@ -386,7 +394,7 @@ namespace Epsitec.Common.OpenType.Tests
 				}
 			}
 			
-			return (uint[]) list.ToArray (typeof (uint));
+			return (int[]) list.ToArray (typeof (int));
 		}
 	}
 }

@@ -14,12 +14,6 @@ namespace Epsitec.Common.OpenType
 			this.offset = offset;
 		}
 		
-		public Tables(byte[] data, uint offset)
-		{
-			this.data   = data;
-			this.offset = (int) offset;
-		}
-		
 		
 		public byte[]							BaseData
 		{
@@ -38,19 +32,19 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		protected uint ReadInt8(int offset)
+		protected int ReadInt8(int offset)
 		{
-			return (uint) this.data[this.offset + offset];
+			return (int) this.data[this.offset + offset];
 		}
 		
-		protected uint ReadInt16(int offset)
+		protected int ReadInt16(int offset)
 		{
-			return Support.ReadInt16 (this.data, this.offset + offset);
+			return (int) Support.ReadInt16 (this.data, this.offset + offset);
 		}
 		
-		protected uint ReadInt32(int offset)
+		protected int ReadInt32(int offset)
 		{
-			return Support.ReadInt32 (this.data, this.offset + offset);
+			return (int) Support.ReadInt32 (this.data, this.offset + offset);
 		}
 		
 		
@@ -81,7 +75,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		Checksum
+		public int		Checksum
 		{
 			get
 			{
@@ -89,7 +83,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		Offset
+		public int		Offset
 		{
 			get
 			{
@@ -97,7 +91,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		Length
+		public int		Length
 		{
 			get
 			{
@@ -113,7 +107,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		Version
+		public int		Version
 		{
 			get
 			{
@@ -121,7 +115,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		NumTables
+		public int		NumTables
 		{
 			get
 			{
@@ -129,7 +123,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		SearchRange
+		public int		SearchRange
 		{
 			get
 			{
@@ -137,7 +131,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		EntrySelector
+		public int		EntrySelector
 		{
 			get
 			{
@@ -145,7 +139,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		RangeShift
+		public int		RangeShift
 		{
 			get
 			{
@@ -187,7 +181,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		TableVersion
+		public int		TableVersion
 		{
 			get
 			{
@@ -195,7 +189,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		FontRevision
+		public int		FontRevision
 		{
 			get
 			{
@@ -203,7 +197,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		ChecksumAdjustment
+		public int		ChecksumAdjustment
 		{
 			get
 			{
@@ -211,7 +205,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MagicNumber
+		public int		MagicNumber
 		{
 			get
 			{
@@ -219,7 +213,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		Flags
+		public int		Flags
 		{
 			get
 			{
@@ -227,7 +221,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		UnitsPerEm
+		public int		UnitsPerEm
 		{
 			get
 			{
@@ -239,8 +233,8 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				ulong h = this.ReadInt32 (20);
-				ulong l = this.ReadInt32 (24);
+				ulong h = (uint) this.ReadInt32 (20);
+				ulong l = (uint) this.ReadInt32 (24);
 				return (h << 32) | l;
 			}
 		}
@@ -249,13 +243,13 @@ namespace Epsitec.Common.OpenType
 		{
 			get
 			{
-				ulong h = this.ReadInt32 (28);
-				ulong l = this.ReadInt32 (32);
+				ulong h = (uint) this.ReadInt32 (28);
+				ulong l = (uint) this.ReadInt32 (32);
 				return (h << 32) | l;
 			}
 		}
 		
-		public uint		XMin
+		public int		XMin
 		{
 			get
 			{
@@ -263,7 +257,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		YMin
+		public int		YMin
 		{
 			get
 			{
@@ -271,7 +265,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		XMax
+		public int		XMax
 		{
 			get
 			{
@@ -279,7 +273,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		YMax
+		public int		YMax
 		{
 			get
 			{
@@ -287,7 +281,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MacStyles
+		public int		MacStyles
 		{
 			get
 			{
@@ -295,7 +289,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		LowestRecPpEm
+		public int		LowestRecPpEm
 		{
 			get
 			{
@@ -303,7 +297,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		FontDirectionHint
+		public int		FontDirectionHint
 		{
 			get
 			{
@@ -311,7 +305,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		IndexToLocFormat
+		public int		IndexToLocFormat
 		{
 			get
 			{
@@ -319,7 +313,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		GlyphDataFormat
+		public int		GlyphDataFormat
 		{
 			get
 			{
@@ -339,7 +333,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		NumContours
+		public int		NumContours
 		{
 			get
 			{
@@ -347,7 +341,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		XMin
+		public int		XMin
 		{
 			get
 			{
@@ -355,7 +349,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		YMin
+		public int		YMin
 		{
 			get
 			{
@@ -363,7 +357,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		XMax
+		public int		XMax
 		{
 			get
 			{
@@ -371,7 +365,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		YMax
+		public int		YMax
 		{
 			get
 			{
@@ -397,28 +391,28 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetSimpleEndPtsOfContour(int n)
+		public int GetSimpleEndPtsOfContour(int n)
 		{
 			return this.ReadInt16 (10+n*2);
 		}
 		
-		public uint	GetSimpleInstructionLength()
+		public int GetSimpleInstructionLength()
 		{
 			return this.ReadInt16 ((int)(10+2*this.NumContours+0));
 		}
 		
-		public uint GetSimpleInstruction(int n)
+		public int GetSimpleInstruction(int n)
 		{
 			return this.ReadInt8 ((int)(10+2*this.NumContours+2+n));
 		}
 		
-		public uint GetSimpleFlag(int n)
+		public int GetSimpleFlag(int n)
 		{
 			return this.ReadInt8 ((int)(10+2*this.NumContours+2+this.GetSimpleInstructionLength ()+n));
 		}
 		
 		
-		public uint		CompositeFlags
+		public int		CompositeFlags
 		{
 			get
 			{
@@ -426,7 +420,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		CompositeGlyphIndex
+		public int		CompositeGlyphIndex
 		{
 			get
 			{
@@ -442,7 +436,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetOffset(int n)
+		public int GetOffset(int n)
 		{
 			return this.ReadInt16 (n*2);
 		}
@@ -455,7 +449,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetOffset(int n)
+		public int GetOffset(int n)
 		{
 			return this.ReadInt32 (n*4);
 		}
@@ -472,7 +466,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		TableVersion
+		public int		TableVersion
 		{
 			get
 			{
@@ -480,7 +474,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		NumGlyphs
+		public int		NumGlyphs
 		{
 			get
 			{
@@ -488,7 +482,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MaxPoints
+		public int		MaxPoints
 		{
 			get
 			{
@@ -496,7 +490,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MaxContours
+		public int		MaxContours
 		{
 			get
 			{
@@ -504,7 +498,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MaxCompositePoints
+		public int		MaxCompositePoints
 		{
 			get
 			{
@@ -512,7 +506,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MaxCompositeContours
+		public int		MaxCompositeContours
 		{
 			get
 			{
@@ -520,7 +514,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MaxZones
+		public int		MaxZones
 		{
 			get
 			{
@@ -528,7 +522,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MaxTwilightPoints
+		public int		MaxTwilightPoints
 		{
 			get
 			{
@@ -536,7 +530,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MaxStorage
+		public int		MaxStorage
 		{
 			get
 			{
@@ -544,7 +538,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MaxFunctionDefs
+		public int		MaxFunctionDefs
 		{
 			get
 			{
@@ -552,7 +546,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MaxInstructionDefs
+		public int		MaxInstructionDefs
 		{
 			get
 			{
@@ -560,7 +554,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MaxStackElements
+		public int		MaxStackElements
 		{
 			get
 			{
@@ -568,7 +562,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MaxSizeOfInstructions
+		public int		MaxSizeOfInstructions
 		{
 			get
 			{
@@ -576,7 +570,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MaxComponentElements
+		public int		MaxComponentElements
 		{
 			get
 			{
@@ -584,7 +578,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MaxComponentDepth
+		public int		MaxComponentDepth
 		{
 			get
 			{
@@ -605,7 +599,8 @@ namespace Epsitec.Common.OpenType
 		{
 		}
 		
-		public uint		TableVersion
+		
+		public int		TableVersion
 		{
 			get
 			{
@@ -613,7 +608,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		NumEncodingTables
+		public int		NumEncodingTables
 		{
 			get
 			{
@@ -622,17 +617,17 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetSubTablePlatformId(int n)
+		public int GetSubTablePlatformId(int n)
 		{
 			return this.ReadInt16 (4+n*8+0);
 		}
 		
-		public uint GetSubTableEncodingId(int n)
+		public int GetSubTableEncodingId(int n)
 		{
 			return this.ReadInt16 (4+n*8+2);
 		}
 		
-		public uint GetSubTableOffset(int n)
+		public int GetSubTableOffset(int n)
 		{
 			return this.ReadInt32 (4+n*8+4);
 		}
@@ -643,7 +638,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public IndexMappingTable FindFormatSubTable(uint platform, uint encoding, uint format)
+		public IndexMappingTable FindFormatSubTable(int platform, int encoding, int format)
 		{
 			int n = (int) this.NumEncodingTables;
 			
@@ -693,7 +688,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		Format
+		public int		Format
 		{
 			get
 			{
@@ -701,7 +696,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		Length
+		public int		Length
 		{
 			get
 			{
@@ -710,7 +705,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public virtual uint GetGlyphIndex(int n)
+		public virtual ushort GetGlyphIndex(int n)
 		{
 			throw new System.NotSupportedException ();
 		}
@@ -723,7 +718,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		Language
+		public int		Language
 		{
 			get
 			{
@@ -732,9 +727,9 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public override uint GetGlyphIndex(int n)
+		public override ushort GetGlyphIndex(int n)
 		{
-			return this.ReadInt8 (6+n);
+			return (ushort) this.ReadInt8 (6+n);
 		}
 	}
 	
@@ -745,7 +740,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		Language
+		public int		Language
 		{
 			get
 			{
@@ -753,7 +748,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		SegCountX2
+		public int		SegCountX2
 		{
 			get
 			{
@@ -761,7 +756,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		SearchRange
+		public int		SearchRange
 		{
 			get
 			{
@@ -769,7 +764,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		EntrySelector
+		public int		EntrySelector
 		{
 			get
 			{
@@ -777,7 +772,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		RangeShift
+		public int		RangeShift
 		{
 			get
 			{
@@ -786,9 +781,9 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public override uint GetGlyphIndex(int n)
+		public override ushort GetGlyphIndex(int n)
 		{
-			uint code = (uint) n;
+			int code = (int) n;
 			
 			int max = (int) this.SegCountX2;
 			
@@ -802,12 +797,12 @@ namespace Epsitec.Common.OpenType
 			{
 				if (this.ReadInt16 (o_end_code + i) >= code)
 				{
-					uint start = this.ReadInt16 (o_start_code + i);
+					int start = this.ReadInt16 (o_start_code + i);
 					
 					if (start <= code)
 					{
-						uint id_range_offset = this.ReadInt16 (o_id_range_o + i);
-						uint index = 0;
+						int id_range_offset = this.ReadInt16 (o_id_range_o + i);
+						int index = 0;
 						
 						if (id_range_offset != 0)
 						{
@@ -823,7 +818,7 @@ namespace Epsitec.Common.OpenType
 							index = this.ReadInt16 (o_id_delta + i) + code;
 						}
 						
-						return index & 0xffff;
+						return (ushort)(index);
 					}
 					else
 					{
@@ -843,7 +838,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		LongLength
+		public int		LongLength
 		{
 			get
 			{
@@ -851,7 +846,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		Language
+		public int		Language
 		{
 			get
 			{
@@ -859,7 +854,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		NumGroups
+		public int		NumGroups
 		{
 			get
 			{
@@ -868,9 +863,9 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public override uint GetGlyphIndex(int n)
+		public override ushort GetGlyphIndex(int n)
 		{
-			uint code = (uint) n;
+			int code = (int) n;
 			
 			int max = (int) this.NumGroups;
 			
@@ -884,8 +879,8 @@ namespace Epsitec.Common.OpenType
 				{
 					if (code >= this.ReadInt32 (12*i + o_start_char_code))
 					{
-						return code - this.ReadInt32 (12*i + o_start_char_code)
-							/**/    + this.ReadInt32 (12*i + o_start_glyph_id);
+						return (ushort) (code - this.ReadInt32 (12*i + o_start_char_code)
+							/**/              + this.ReadInt32 (12*i + o_start_glyph_id));
 					}
 					
 					return 0;
@@ -907,7 +902,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		FormatSelector
+		public int		FormatSelector
 		{
 			get
 			{
@@ -915,7 +910,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		NumNameRecords
+		public int		NumNameRecords
 		{
 			get
 			{
@@ -923,7 +918,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		StorageAreaOffset
+		public int		StorageAreaOffset
 		{
 			get
 			{
@@ -935,8 +930,8 @@ namespace Epsitec.Common.OpenType
 		public struct NameEncoding
 		{
 			public PlatformId		Platform;
-			public uint				Encoding;
-			public uint				Language;
+			public int				Encoding;
+			public int				Language;
 			public NameId			Name;
 		}
 		
@@ -962,13 +957,13 @@ namespace Epsitec.Common.OpenType
 			return encodings;
 		}
 		
-		public string GetLatinName(uint language, NameId name, PlatformId platform)
+		public string GetLatinName(int language, NameId name, PlatformId platform)
 		{
 			int num = (int) this.NumNameRecords;
 			
-			uint lang_id = (uint) language;
-			uint name_id = (uint) name;
-			uint plat_id = (uint) platform;
+			int lang_id = (int) language;
+			int name_id = (int) name;
+			int plat_id = (int) platform;
 			
 			int o_platform_id   = 6;
 			int o_encoding_id   = 8;
@@ -1001,13 +996,13 @@ namespace Epsitec.Common.OpenType
 			return null;
 		}
 		
-		public string GetUnicodeName(uint language, NameId name, PlatformId platform)
+		public string GetUnicodeName(int language, NameId name, PlatformId platform)
 		{
 			int num = (int) this.NumNameRecords;
 			
-			uint lang_id = (uint) language;
-			uint name_id = (uint) name;
-			uint plat_id = (uint) platform;
+			int lang_id = (int) language;
+			int name_id = (int) name;
+			int plat_id = (int) platform;
 			
 			int o_platform_id   = 6;
 			int o_encoding_id   = 8;
@@ -1088,7 +1083,7 @@ namespace Epsitec.Common.OpenType
 		{
 		}
 		
-		public uint		TableVersion
+		public int		TableVersion
 		{
 			get
 			{
@@ -1120,7 +1115,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		AdvanceWidthMax
+		public int		AdvanceWidthMax
 		{
 			get
 			{
@@ -1152,7 +1147,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		CaretSlopeRise
+		public int		CaretSlopeRise
 		{
 			get
 			{
@@ -1160,7 +1155,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		CaretSlopeRun
+		public int		CaretSlopeRun
 		{
 			get
 			{
@@ -1168,7 +1163,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		CaretOffset
+		public int		CaretOffset
 		{
 			get
 			{
@@ -1176,7 +1171,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MetricDataFormat
+		public int		MetricDataFormat
 		{
 			get
 			{
@@ -1184,7 +1179,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		NumHMetrics
+		public int		NumHMetrics
 		{
 			get
 			{
@@ -1206,17 +1201,17 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetAdvanceWidth(uint n)
+		public int GetAdvanceWidth(int n)
 		{
 			return this.ReadInt16 ((int)(n*4+0));
 		}
 		
-		public int GetLeftSideBearing(uint n)
+		public int GetLeftSideBearing(int n)
 		{
 			return (short) this.ReadInt16 ((int)(n*4+2));
 		}
 		
-		public int GetExtraLeftSideBearing(uint number_h_metrics, uint n)
+		public int GetExtraLeftSideBearing(int number_h_metrics, int n)
 		{
 			return (short) this.ReadInt16 ((int)(number_h_metrics*4 + n*2));
 		}
@@ -1235,7 +1230,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		TableVersion
+		public int		TableVersion
 		{
 			get
 			{
@@ -1243,7 +1238,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		GlyphClassDefOffset
+		public int		GlyphClassDefOffset
 		{
 			get
 			{
@@ -1251,7 +1246,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		AttachListOffset
+		public int		AttachListOffset
 		{
 			get
 			{
@@ -1259,7 +1254,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		LigCaretListOffset
+		public int		LigCaretListOffset
 		{
 			get
 			{
@@ -1267,7 +1262,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		MarkAttachClassDefOffset
+		public int		MarkAttachClassDefOffset
 		{
 			get
 			{
@@ -1293,7 +1288,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		TableVersion
+		public int		TableVersion
 		{
 			get
 			{
@@ -1301,7 +1296,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		ScriptListOffset
+		public int		ScriptListOffset
 		{
 			get
 			{
@@ -1309,7 +1304,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		FeatureListOffset
+		public int		FeatureListOffset
 		{
 			get
 			{
@@ -1317,7 +1312,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		LookupListOffset
+		public int		LookupListOffset
 		{
 			get
 			{
@@ -1351,7 +1346,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetRequiredFeatureIndex(string script_tag, string language_tag)
+		public int GetRequiredFeatureIndex(string script_tag, string language_tag)
 		{
 			ScriptTable script_table = this.ScriptListTable.GetScriptTable (script_tag);
 			
@@ -1368,12 +1363,12 @@ namespace Epsitec.Common.OpenType
 			}
 			else
 			{
-				return 0xffffu;
+				return 0xffff;
 			}
 		}
 		
 		
-		public uint[] GetFeatureIndexes(string script_tag, string language_tag)
+		public int[] GetFeatureIndexes(string script_tag, string language_tag)
 		{
 			ScriptTable script_table = this.ScriptListTable.GetScriptTable (script_tag);
 			
@@ -1386,10 +1381,10 @@ namespace Epsitec.Common.OpenType
 					lang_sys_table = script_table.DefaultLangSysTable;
 				}
 				
-				uint   f_count  = lang_sys_table.FeatureCount;
-				uint[] features = new uint[f_count];
+				int   f_count  = lang_sys_table.FeatureCount;
+				int[] features = new int[f_count];
 				
-				for (uint i = 0; i < f_count; i++)
+				for (int i = 0; i < f_count; i++)
 				{
 					features[i] = lang_sys_table.GetFeatureIndex (i);
 				}
@@ -1398,19 +1393,19 @@ namespace Epsitec.Common.OpenType
 			}
 			else
 			{
-				return new uint[0];
+				return new int[0];
 			}
 		}
 		
-		public uint[] GetFeatureIndexes(string feature_tag)
+		public int[] GetFeatureIndexes(string feature_tag)
 		{
 			FeatureListTable table = this.FeatureListTable;
 			
-			uint max = table.FeatureCount;
-			uint hit = 0xffff;
+			int max = table.FeatureCount;
+			int hit = 0xffff;
 			int  num = 0;
 			
-			for (uint i = 0; i < max; i++)
+			for (int i = 0; i < max; i++)
 			{
 				if (table.GetFeatureTag (i) == feature_tag)
 				{
@@ -1423,10 +1418,10 @@ namespace Epsitec.Common.OpenType
 				}
 			}
 			
-			uint[] features = new uint[num];
+			int[] features = new int[num];
 			int    index    = 0;
 			
-			for (uint i = hit; i < max; i++)
+			for (int i = hit; i < max; i++)
 			{
 				if (table.GetFeatureTag (i) == feature_tag)
 				{
@@ -1451,7 +1446,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		ScriptCount
+		public int		ScriptCount
 		{
 			get
 			{
@@ -1460,7 +1455,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public string GetScriptTag(uint n)
+		public string GetScriptTag(int n)
 		{
 			char[] tag = new char[4];
 			int offset = (int)(2+6*n+0);
@@ -1473,21 +1468,21 @@ namespace Epsitec.Common.OpenType
 			return new string (tag);
 		}
 		
-		public uint GetScriptOffset(uint n)
+		public int GetScriptOffset(int n)
 		{
 			return this.ReadInt16 ((int)(2+6*n+4));
 		}
 		
-		public ScriptTable GetScriptTable(uint n)
+		public ScriptTable GetScriptTable(int n)
 		{
 			return new ScriptTable (this.data, this.offset + (int) this.GetScriptOffset (n));
 		}
 		
 		public ScriptTable GetScriptTable(string tag)
 		{
-			uint max  = this.ScriptCount;
+			int max  = this.ScriptCount;
 			
-			for (uint i = 0; i < max; i++)
+			for (int i = 0; i < max; i++)
 			{
 				if (this.GetScriptTag (i) == tag)
 				{
@@ -1500,9 +1495,9 @@ namespace Epsitec.Common.OpenType
 		
 		public bool ContainsScript(string tag)
 		{
-			uint max  = this.ScriptCount;
+			int max  = this.ScriptCount;
 			
-			for (uint i = 0; i < max; i++)
+			for (int i = 0; i < max; i++)
 			{
 				if (this.GetScriptTag (i) == tag)
 				{
@@ -1521,7 +1516,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint			DefaultLangSysOffset
+		public int			DefaultLangSysOffset
 		{
 			get
 			{
@@ -1537,7 +1532,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint			LangSysCount
+		public int			LangSysCount
 		{
 			get
 			{
@@ -1546,7 +1541,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public string GetLangSysTag(uint n)
+		public string GetLangSysTag(int n)
 		{
 			char[] tag = new char[4];
 			int offset = (int)(4+6*n+0);
@@ -1559,22 +1554,22 @@ namespace Epsitec.Common.OpenType
 			return new string (tag);
 		}
 		
-		public uint GetLangSysOffset(uint n)
+		public int GetLangSysOffset(int n)
 		{
 			return this.ReadInt16 ((int)(4+6*n+4));
 		}
 		
 		
-		public LangSysTable GetLangSysTable(uint n)
+		public LangSysTable GetLangSysTable(int n)
 		{
 			return new LangSysTable (this.data, this.offset + (int) this.GetLangSysOffset (n));
 		}
 		
 		public LangSysTable GetLangSysTable(string tag)
 		{
-			uint max  = this.LangSysCount;
+			int max  = this.LangSysCount;
 			
-			for (uint i = 0; i < max; i++)
+			for (int i = 0; i < max; i++)
 			{
 				if (this.GetLangSysTag (i) == tag)
 				{
@@ -1593,7 +1588,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		RequiredFeatureIndex
+		public int		RequiredFeatureIndex
 		{
 			get
 			{
@@ -1601,7 +1596,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		FeatureCount
+		public int		FeatureCount
 		{
 			get
 			{
@@ -1610,7 +1605,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetFeatureIndex(uint n)
+		public int GetFeatureIndex(int n)
 		{
 			return this.ReadInt16 ((int)(6+2*n));
 		}
@@ -1623,7 +1618,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		FeatureCount
+		public int		FeatureCount
 		{
 			get
 			{
@@ -1632,7 +1627,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public string GetFeatureTag(uint n)
+		public string GetFeatureTag(int n)
 		{
 			char[] tag = new char[4];
 			int offset = (int)(2+6*n+0);
@@ -1645,26 +1640,26 @@ namespace Epsitec.Common.OpenType
 			return new string (tag);
 		}
 		
-		public uint GetFeatureOffset(uint n)
+		public int GetFeatureOffset(int n)
 		{
 			return this.ReadInt16 ((int)(2+6*n+4));
 		}
 		
-		public FeatureTable GetFeatureTable(uint n)
+		public FeatureTable GetFeatureTable(int n)
 		{
 			return new FeatureTable (this.data, this.offset + (int) this.GetFeatureOffset (n));
 		}
 		
-		public TaggedFeatureTable GetTaggedFeatureTable(uint n)
+		public TaggedFeatureTable GetTaggedFeatureTable(int n)
 		{
 			return new TaggedFeatureTable (this.data, this.offset + (int) this.GetFeatureOffset (n), this.GetFeatureTag (n));
 		}
 		
 		public FeatureTable GetFeatureTable(string tag)
 		{
-			uint max  = this.FeatureCount;
+			int max  = this.FeatureCount;
 			
-			for (uint i = 0; i < max; i++)
+			for (int i = 0; i < max; i++)
 			{
 				if (this.GetFeatureTag (i) == tag)
 				{
@@ -1683,7 +1678,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		LookupCount
+		public int		LookupCount
 		{
 			get
 			{
@@ -1692,7 +1687,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetLookupIndex(uint n)
+		public int GetLookupIndex(int n)
 		{
 			return this.ReadInt16 ((int)(4+2*n));
 		}
@@ -1725,7 +1720,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		LookupCount
+		public int		LookupCount
 		{
 			get
 			{
@@ -1734,12 +1729,12 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetLookupOffset(uint n)
+		public int GetLookupOffset(int n)
 		{
 			return this.ReadInt16 ((int)(2+n*2));
 		}
 		
-		public LookupTable GetLookupTable(uint n)
+		public LookupTable GetLookupTable(int n)
 		{
 			return new LookupTable (this.data, this.offset + (int) this.GetLookupOffset (n));
 		}
@@ -1752,7 +1747,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		LookupType
+		public int		LookupType
 		{
 			get
 			{
@@ -1760,7 +1755,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		LookupFlags
+		public int		LookupFlags
 		{
 			get
 			{
@@ -1768,7 +1763,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		SubTableCount
+		public int		SubTableCount
 		{
 			get
 			{
@@ -1777,17 +1772,17 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetSubTableOffset(uint n)
+		public int GetSubTableOffset(int n)
 		{
 			return this.ReadInt16 ((int)(6+n*2));
 		}
 		
-		public SubstSubTable GetSubTable(uint n)
+		public SubstSubTable GetSubTable(int n)
 		{
 			return new SubstSubTable (this.data, this.offset + (int) this.GetSubTableOffset (n));
 		}
 		
-		public BaseSubstitution GetSubstitution(uint n)
+		public BaseSubstitution GetSubstitution(int n)
 		{
 			int offset = this.offset + (int) this.GetSubTableOffset (n);
 			
@@ -1811,7 +1806,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint					SubstFormat
+		public int					SubstFormat
 		{
 			get
 			{
@@ -1819,7 +1814,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		protected virtual uint		CoverageOffset
+		protected virtual int		CoverageOffset
 		{
 			get
 			{
@@ -1843,7 +1838,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		CoverageFormat
+		public int		CoverageFormat
 		{
 			get
 			{
@@ -1852,7 +1847,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public int FindIndex(uint glyph)
+		public int FindIndex(int glyph)
 		{
 			switch (this.CoverageFormat)
 			{
@@ -1865,15 +1860,15 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		private int FindIndexFmt1(uint glyph)
+		private int FindIndexFmt1(int glyph)
 		{
-			uint max  = this.ReadInt16 (2);
-			uint dist = max / 2;
-			uint iter = dist;
+			int max  = this.ReadInt16 (2);
+			int dist = max / 2;
+			int iter = dist;
 			
 			for (;;)
 			{
-				uint find = this.ReadInt16 ((int)(4+2*iter));
+				int find = this.ReadInt16 ((int)(4+2*iter));
 				
 				if (find == glyph)
 				{
@@ -1929,19 +1924,19 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		private int FindIndexFmt2(uint glyph)
+		private int FindIndexFmt2(int glyph)
 		{
-			uint range = this.ReadInt16 (2);
+			int range = this.ReadInt16 (2);
 			
-			for (uint i = 0; i < range; i++)
+			for (int i = 0; i < range; i++)
 			{
-				uint start = this.ReadInt16 ((int)(4+6*i+0));
-				uint end   = this.ReadInt16 ((int)(4+6*i+2));
+				int start = this.ReadInt16 ((int)(4+6*i+0));
+				int end   = this.ReadInt16 ((int)(4+6*i+2));
 				
 				if ((glyph >= start) &&
 					(glyph <= end))
 				{
-					uint start_coverage = this.ReadInt16 ((int)(4+6*i+4));
+					int start_coverage = this.ReadInt16 ((int)(4+6*i+4));
 					
 					return (int)(start_coverage + glyph - start);
 				}
@@ -1958,12 +1953,9 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public virtual int ProcessSubstitution(uint[] glyphs, int offset, out uint[] substitution, out int[] glyph_starts)
+		public virtual bool ProcessSubstitution(ushort[] i_glyphs, ref int i_offset, int length, ushort[] o_glyphs, ref int o_offset)
 		{
-			substitution = null;
-			glyph_starts = null;
-			
-			return 0;
+			return false;
 		}
 	}
 		
@@ -1979,7 +1971,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint FindSubstitution(uint glyph)
+		public ushort FindSubstitution(int glyph)
 		{
 			switch (this.SubstFormat)
 			{
@@ -1992,42 +1984,46 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public override int ProcessSubstitution(uint[] glyphs, int offset, out uint[] substitution, out int[] glyph_starts)
+		public override bool ProcessSubstitution(ushort[] i_glyphs, ref int i_offset, int length, ushort[] o_glyphs, ref int o_offset)
 		{
-			int cov = this.Coverage.FindIndex (glyphs[offset]);
+			length -= i_offset;
 			
-			if (cov >= 0)
+			if (length > 0)
 			{
-				substitution = new uint[1];
-				glyph_starts = new int[1];
+				int cov = this.Coverage.FindIndex (i_glyphs[i_offset]);
 				
-				substitution[0] = this.FindSubstitution (glyphs[offset]);
-				glyph_starts[0] = offset;
-				
-				return 1;
+				if (cov >= 0)
+				{
+					o_glyphs[o_offset] = this.FindSubstitution (i_glyphs[i_offset]);
+					
+					i_offset += 1;
+					o_offset += 1;
+					
+					return true;
+				}
 			}
 			
-			return base.ProcessSubstitution (glyphs, offset, out substitution, out glyph_starts);
+			return false;
 		}
 		
 		
-		private uint FindSubstitutionFmt1(uint glyph)
+		private ushort FindSubstitutionFmt1(int glyph)
 		{
-			return this.ReadInt16 (4) + glyph;
+			return (ushort) (this.ReadInt16 (4) + glyph);
 		}
 		
-		private uint FindSubstitutionFmt2(uint glyph)
+		private ushort FindSubstitutionFmt2(int glyph)
 		{
-			uint max = this.ReadInt16 (4);
+			int max = this.ReadInt16 (4);
 			int  cov = this.Coverage.FindIndex (glyph);
 			
 			if ((cov >= 0) &&
 				(cov < max))
 			{
-				return this.ReadInt16 ((int)(6+2*cov));
+				return (ushort) (this.ReadInt16 ((int)(6+2*cov)));
 			}
 			
-			return 0xffff;
+			return (ushort) (0xffff);
 		}
 	}
 	
@@ -2042,7 +2038,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		protected override uint		CoverageOffset
+		protected override int		CoverageOffset
 		{
 			get
 			{
@@ -2059,7 +2055,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 
-		public uint					ChainSubRuleSetCount
+		public int					ChainSubRuleSetCount
 		{
 			get
 			{
@@ -2079,7 +2075,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		LigatureSetCount
+		public int		LigatureSetCount
 		{
 			get
 			{
@@ -2088,72 +2084,79 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetLigatureSetOffset(uint n)
+		public int GetLigatureSetOffset(int n)
 		{
 			return this.ReadInt16 ((int)(6+n*2));
 		}
 		
-		private uint GetLigatureSetInfoCount(uint offset, uint n)
+		private int GetLigatureSetInfoCount(int offset, int n)
 		{
 			return this.ReadInt16 ((int)(offset+0));
 		}
 		
-		private uint GetLigatureSetInfoOffset(uint offset, uint info)
+		private int GetLigatureSetInfoOffset(int offset, int info)
 		{
 			return this.ReadInt16 ((int)(offset+2+2*info));
 		}
 		
 		
-		public LigatureSet GetLigatureSet(uint n)
+		public LigatureSet GetLigatureSet(int n)
 		{
 			return new LigatureSet (this.data, this.offset + (int) this.GetLigatureSetOffset (n));
 		}
 		
 		
-		public override int ProcessSubstitution(uint[] glyphs, int offset, out uint[] substitution, out int[] glyph_starts)
+		public override bool ProcessSubstitution(ushort[] i_glyphs, ref int i_offset, int length, ushort[] o_glyphs, ref int o_offset)
 		{
-			int cov = this.Coverage.FindIndex (glyphs[offset]);
+			length -= i_offset;
 			
-			if (cov >= 0)
+			if (length > 0)
 			{
-				uint max_set = this.LigatureSetCount;
+				int cov = this.Coverage.FindIndex (i_glyphs[i_offset]);
 				
-				Debug.Assert.IsTrue (cov < max_set);
-				
-				uint set_offset = this.GetLigatureSetOffset ((uint)cov);
-				uint max_info   = this.GetLigatureSetInfoCount (set_offset, (uint)cov);
-				
-				for (uint j = 0; j < max_info; j++)
+				if (cov >= 0)
 				{
-					uint info_offset = this.GetLigatureSetInfoOffset (set_offset, j) + set_offset;
-					uint comp_count  = this.ReadInt16 ((int)(2+info_offset));
+					int max_set = this.LigatureSetCount;
 					
-					for (uint k = 1; k < comp_count; k++)
+					Debug.Assert.IsTrue (cov < max_set);
+					
+					int set_offset = this.GetLigatureSetOffset ((int)cov);
+					int max_info   = this.GetLigatureSetInfoCount (set_offset, (int)cov);
+					
+					for (int j = 0; j < max_info; j++)
 					{
-						uint comp_elem = this.ReadInt16 ((int)(2+info_offset+2*k));
+						int info_offset = this.GetLigatureSetInfoOffset (set_offset, j) + set_offset;
+						int comp_count  = this.ReadInt16 ((int)(2+info_offset));
 						
-						if (comp_elem != glyphs[offset+k])
+						if (comp_count <= length)
 						{
-							goto try_next_in_set;
+							for (int k = 1; k < comp_count; k++)
+							{
+								int comp_elem = this.ReadInt16 ((int)(2+info_offset+2*k));
+								
+								if (comp_elem != i_glyphs[i_offset+k])
+								{
+									goto try_next_in_set;
+								}
+							}
+							
+							//	Hit: input glyph sequence matched.
+							
+							o_glyphs[o_offset] = (ushort) this.ReadInt16 ((int)(0+info_offset));
+							
+							i_offset += comp_count;
+							o_offset += 1;
+							
+							return true;
 						}
+						
+					try_next_in_set:
+						continue;
 					}
-					
-					//	Hit: input glyph sequence matched.
-					
-					substitution = new uint[1];
-					glyph_starts = new int[1];
-					
-					substitution[0] = this.ReadInt16 ((int)(0+info_offset));
-					glyph_starts[0] = offset;
-					
-					return (int)(comp_count);
-					
-				try_next_in_set:
-					continue;
 				}
 			}
 			
-			return base.ProcessSubstitution (glyphs, offset, out substitution, out glyph_starts);
+			return false;
 		}
 	}
 	
@@ -2164,7 +2167,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		LigatureInfoCount
+		public int		LigatureInfoCount
 		{
 			get
 			{
@@ -2173,12 +2176,12 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetLigatureInfoOffset(uint n)
+		public int GetLigatureInfoOffset(int n)
 		{
 			return this.ReadInt16 ((int)(2+2*n));
 		}
 		
-		public LigatureInfo GetLigatureInfo(uint n)
+		public LigatureInfo GetLigatureInfo(int n)
 		{
 			return new LigatureInfo (this.data, this.offset + (int) this.GetLigatureInfoOffset (n));
 		}
@@ -2191,7 +2194,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint		Glyph
+		public int		Glyph
 		{
 			get
 			{
@@ -2199,7 +2202,7 @@ namespace Epsitec.Common.OpenType
 			}
 		}
 		
-		public uint		ComponentCount
+		public int		ComponentCount
 		{
 			get
 			{
@@ -2208,7 +2211,7 @@ namespace Epsitec.Common.OpenType
 		}
 		
 		
-		public uint GetComponent(uint n)
+		public int GetComponent(int n)
 		{
 			return this.ReadInt16 ((int)(4+n*2));
 		}

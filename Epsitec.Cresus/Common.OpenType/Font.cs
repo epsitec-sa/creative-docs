@@ -17,6 +17,70 @@ namespace Epsitec.Common.OpenType
 		{
 			this.ot_directory = directory;
 			this.ot_GSUB      = new Table_GSUB (directory.FindTable ("GSUB"));
+			this.ot_cmap      = new Table_cmap (directory.FindTable ("cmap"));
+			
+			this.ot_index_mapping = this.ot_cmap.FindFormatSubTable ();
+		}
+		
+		
+		public ushort[] GenerateGlyphs(string text)
+		{
+			int      count  = text.Length;
+			ushort[] glyphs = new ushort[count];
+			
+			for (int i = 0; i < count; i++)
+			{
+				glyphs[i] = this.ot_index_mapping.GetGlyphIndex (text[i]);
+			}
+			
+			//	Exécute les substitutions de glyphes en fonction des 'features'
+			//	sélectionnées :
+			
+			int        max_size = count + 16;
+			ushort[][] temp     = new ushort[2][];
+			
+		try_again:
+			
+			temp[0] = new ushort[max_size];
+			temp[1] = new ushort[max_size];
+			
+			try
+			{
+				ushort[] input  = glyphs;
+				ushort[] output = temp[0];
+				
+				int length = count;
+				int toggle = 1;
+				
+				if ((this.substitution_lookups != null) &&
+					(this.substitution_lookups.Length > 0))
+				{
+					for (int i = 0; i < this.substitution_lookups.Length; i++)
+					{
+						this.ApplySubstitutions (this.substitution_lookups[i], input, length, output, out length);
+						
+						input   = output;
+						output  = temp[toggle & 1];
+						toggle += 1;
+					}
+				}
+				
+				this.ApplyManualLigatureSubstitutions (input, length, output, out length);
+				
+				glyphs = new ushort[length];
+				
+				for (int i = 0; i < length; i++)
+				{
+					glyphs[i] = output[i];
+				}
+			}
+			catch (System.IndexOutOfRangeException)
+			{
+				max_size += max_size / 8;
+				goto try_again;
+			}
+			
+			return glyphs;
 		}
 		
 		
@@ -29,8 +93,8 @@ namespace Epsitec.Common.OpenType
 		{
 			if (this.ot_GSUB.ScriptListTable.ContainsScript (script))
 			{
-				uint   required_feature  = this.ot_GSUB.GetRequiredFeatureIndex (script, language);
-				uint[] optional_features = this.ot_GSUB.GetFeatureIndexes (script, language);
+				int   required_feature  = this.ot_GSUB.GetRequiredFeatureIndex (script, language);
+				int[] optional_features = this.ot_GSUB.GetFeatureIndexes (script, language);
 				
 				if (required_feature == 0xffff)
 				{
@@ -75,9 +139,9 @@ namespace Epsitec.Common.OpenType
 			
 			if (this.script_optional_features == null)
 			{
-				uint n = feature_list.FeatureCount;
+				int n = feature_list.FeatureCount;
 				
-				for (uint i = 0; i < n; i++)
+				for (int i = 0; i < n; i++)
 				{
 					if (active_names.Contains (feature_list.GetFeatureTag (i)))
 					{
@@ -108,9 +172,9 @@ namespace Epsitec.Common.OpenType
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
 			ScriptListTable script_list = this.ot_GSUB.ScriptListTable;
-			uint n = script_list.ScriptCount;
+			int n = script_list.ScriptCount;
 			
-			for (uint i = 0; i < n; i++)
+			for (int i = 0; i < n; i++)
 			{
 				string      script_tag   = script_list.GetScriptTag (i);
 				ScriptTable script_table = script_list.GetScriptTable (i);
@@ -122,9 +186,9 @@ namespace Epsitec.Common.OpenType
 				
 				buffer.Append (script_tag);
 				
-				uint m = script_table.LangSysCount;
+				int m = script_table.LangSysCount;
 				
-				for (uint j = 0; j < m; j++)
+				for (int j = 0; j < m; j++)
 				{
 					buffer.Append ("|");
 					buffer.Append (script_tag);
@@ -143,9 +207,9 @@ namespace Epsitec.Common.OpenType
 				FeatureListTable feature_list = this.ot_GSUB.FeatureListTable;
 				System.Collections.Hashtable hash = new System.Collections.Hashtable ();
 				
-				uint n = feature_list.FeatureCount;
+				int n = feature_list.FeatureCount;
 				
-				for (uint i = 0; i < n; i++)
+				for (int i = 0; i < n; i++)
 				{
 					hash[feature_list.GetFeatureTag (i)] = null;
 				}
@@ -177,11 +241,11 @@ namespace Epsitec.Common.OpenType
 			
 			foreach (FeatureTable feature_table in feature_tables)
 			{
-				uint n = feature_table.LookupCount;
+				int n = feature_table.LookupCount;
 				
-				for (uint i = 0; i < n; i++)
+				for (int i = 0; i < n; i++)
 				{
-					uint lookup = feature_table.GetLookupIndex (i);
+					int lookup = feature_table.GetLookupIndex (i);
 					
 					if (lookup_indexes.Contains (lookup) == false)
 					{
@@ -195,32 +259,170 @@ namespace Epsitec.Common.OpenType
 			int count = 0;
 			int index = 0;
 			
-			foreach (uint lookup in lookup_indexes)
+			foreach (int lookup in lookup_indexes)
 			{
 				count += (int) this.ot_GSUB.LookupListTable.GetLookupTable (lookup).SubTableCount;
 			}
 			
-			this.substitution_lookups = new SubstSubTable[count];
+			this.substitution_lookups = new BaseSubstitution[count];
 			
-			foreach (uint lookup in lookup_indexes)
+			foreach (int lookup in lookup_indexes)
 			{
 				LookupTable lookup_table = this.ot_GSUB.LookupListTable.GetLookupTable (lookup);
 				
-				uint n = lookup_table.SubTableCount;
+				int n = lookup_table.SubTableCount;
 				
-				for (uint i = 0; i < n; i++)
+				for (int i = 0; i < n; i++)
 				{
-					this.substitution_lookups[index++] = lookup_table.GetSubTable (i);
+					this.substitution_lookups[index++] = lookup_table.GetSubstitution (i);
 				}
 			}
+		}
+		
+		protected void ApplyManualLigatureSubstitutions(ushort[] input_glyphs, int input_length, ushort[] output_glyphs, out int output_length)
+		{
+			int input_offset  = 0;
+			int output_offset = 0;
+			
+			ushort glyph_f = this.ot_index_mapping.GetGlyphIndex ('f');
+			ushort glyph_i = this.ot_index_mapping.GetGlyphIndex ('i');
+			ushort glyph_l = this.ot_index_mapping.GetGlyphIndex ('l');
+			ushort lig_ff  = this.ot_index_mapping.GetGlyphIndex (0xfb00);
+			ushort lig_fi  = this.ot_index_mapping.GetGlyphIndex (0xfb01);
+			ushort lig_fl  = this.ot_index_mapping.GetGlyphIndex (0xfb02);
+			ushort lig_ffi = this.ot_index_mapping.GetGlyphIndex (0xfb03);
+			ushort lig_ffl = this.ot_index_mapping.GetGlyphIndex (0xfb04);
+			
+			while (input_offset < input_length)
+			{
+				int length = input_length - input_offset;
+				
+				if (length > 2)
+				{
+					if ((lig_ffi > 0) &&
+						(input_glyphs[input_offset+0] == glyph_f) &&
+						(input_glyphs[input_offset+1] == glyph_f) &&
+						(input_glyphs[input_offset+2] == glyph_i))
+					{
+						output_glyphs[output_offset] = lig_ffi;
+						
+						input_offset  += 3;
+						output_offset += 1;
+						
+						continue;
+					}
+					
+					if ((lig_ffl > 0) &&
+						(input_glyphs[input_offset+0] == glyph_f) &&
+						(input_glyphs[input_offset+1] == glyph_f) &&
+						(input_glyphs[input_offset+2] == glyph_l))
+					{
+						output_glyphs[output_offset] = lig_ffl;
+						
+						input_offset  += 3;
+						output_offset += 1;
+						
+						continue;
+					}
+				}
+				
+				if (length > 1)
+				{
+					if ((lig_ff > 0) &&
+						(input_glyphs[input_offset+0] == glyph_f) &&
+						(input_glyphs[input_offset+1] == glyph_f))
+					{
+						output_glyphs[output_offset] = lig_ff;
+						
+						input_offset  += 2;
+						output_offset += 1;
+						
+						continue;
+					}
+					
+					if ((lig_fi > 0) &&
+						(input_glyphs[input_offset+0] == glyph_f) &&
+						(input_glyphs[input_offset+1] == glyph_i))
+					{
+						output_glyphs[output_offset] = lig_fi;
+						
+						input_offset  += 2;
+						output_offset += 1;
+						
+						continue;
+					}
+					
+					if ((lig_fl > 0) &&
+						(input_glyphs[input_offset+0] == glyph_f) &&
+						(input_glyphs[input_offset+1] == glyph_l))
+					{
+						output_glyphs[output_offset] = lig_fl;
+						
+						input_offset  += 2;
+						output_offset += 1;
+						
+						continue;
+					}
+				}
+				
+				output_glyphs[output_offset] = input_glyphs[input_offset];
+				
+				input_offset  += 1;
+				output_offset += 1;
+			}
+			
+			output_length = output_offset;
+		}
+		
+		protected void ApplySubstitutions(BaseSubstitution substitution, ushort[] input_glyphs, int input_length, ushort[] output_glyphs, out int output_length)
+		{
+			int input_offset  = 0;
+			int output_offset = 0;
+			
+			while (input_offset < input_length)
+			{
+				if (substitution.ProcessSubstitution (input_glyphs, ref input_offset, input_length, output_glyphs, ref output_offset))
+				{
+					//	Substitution avec succès.
+				}
+				else
+				{
+					output_glyphs[output_offset] = input_glyphs[input_offset];
+					
+					input_offset++;
+					output_offset++;
+				}
+			}
+			
+			output_length = output_offset;
+		}
+		
+		
+		private static int[] GetCoverageIndexes(Coverage coverage)
+		{
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			for (int i = 0; i < 0xffff; i++)
+			{
+				int index = coverage.FindIndex (i);
+				
+				if (index != -1)
+				{
+					list.Add (i);
+				}
+			}
+			
+			return (int[]) list.ToArray (typeof (int));
 		}
 		
 		
 		private TableDirectory					ot_directory;
 		private Table_GSUB						ot_GSUB;
+		private Table_cmap						ot_cmap;
+		private IndexMappingTable				ot_index_mapping;
 		
 		private TaggedFeatureTable				script_required_feature;
 		private TaggedFeatureTable[]			script_optional_features;
-		private SubstSubTable[]					substitution_lookups;
+		private BaseSubstitution[]				substitution_lookups;
 	}
 }
