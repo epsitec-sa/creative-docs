@@ -118,6 +118,11 @@
                     Project = "{5E8E51FA-AB4A-4E48-BD20-7796EDCA1B63}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "System.Runtime.Serialization.Formatters.Soap"
+                    AssemblyName = "System.Runtime.Serialization.Formatters.Soap"
+                    HintPath = "..\..\..\..\..\..\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.Runtime.Serialization.Formatters.Soap.dll"
+                />
             </References>
         </Build>
         <Files>
@@ -184,6 +189,11 @@
                 />
                 <File
                     RelPath = "ISqlBuilderTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "SerialisationTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
