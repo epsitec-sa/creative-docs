@@ -22,7 +22,7 @@ namespace Epsitec.Common.Types
 				//	TODO: on pourrait utiliser une table de hachage pour accélérer la recherche
 				//	par les noms; à partir de combien d'éléments ceci deviendrait-il utile ?
 				
-				IDataItem[] items = this.GetCachedItemArray ();
+				IDataItem[] items = this.CachedItemArray;
 				
 				for (int i = 0; i < items.Length; i++)
 				{
@@ -40,14 +40,14 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				IDataItem[] items = this.GetCachedItemArray ();
+				IDataItem[] items = this.CachedItemArray;
 				return items[index];
 			}
 		}
 
 		public int IndexOf(IDataItem item)
 		{
-			IDataItem[] items = this.GetCachedItemArray ();
+			IDataItem[] items = this.CachedItemArray;
 			
 			for (int i = 0; i < items.Length; i++)
 			{

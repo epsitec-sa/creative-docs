@@ -67,7 +67,7 @@ namespace Epsitec.Common.Types
 					int index = System.Int32.Parse (name.Substring (1, name.Length-2), System.Globalization.CultureInfo.InvariantCulture);
 					int count = root.Count;
 					
-					if ((index > 0) &&
+					if ((index >= 0) &&
 						(index < count))
 					{
 						item = root[index];
@@ -121,14 +121,27 @@ namespace Epsitec.Common.Types
 			
 			protected void Select(string[] query, int offset, IDataFolder root)
 			{
-				if ((offset >= query.Length) ||
+				int n = query.Length;
+				
+				if ((offset >= n) ||
 					(root == null))
 				{
 					return;
 				}
 				
 				string  name = query[offset];
-				bool is_leaf = (offset == query.Length-1);
+				
+				int i = offset;
+				
+				while (++i < n)
+				{
+					if (query[i] != "*")
+					{
+						break;
+					}
+				}
+				
+				bool is_leaf = (i == n);
 				
 				if (name == "*")
 				{
@@ -143,8 +156,10 @@ namespace Epsitec.Common.Types
 					{
 						if (is_leaf)
 						{
-							this.list.Add (item);
-							continue;
+							if (this.list.Contains (item) == false)
+							{
+								this.list.Add (item);
+							}
 						}
 						
 						if ((item.Classes & DataItemClasses.Folder) != 0)
@@ -163,8 +178,10 @@ namespace Epsitec.Common.Types
 					{
 						if (is_leaf)
 						{
-							this.list.Add (item);
-							continue;
+							if (this.list.Contains (item) == false)
+							{
+								this.list.Add (item);
+							}
 						}
 						
 						if ((item.Classes & DataItemClasses.Folder) != 0)
@@ -183,16 +200,20 @@ namespace Epsitec.Common.Types
 					int index = System.Int32.Parse (name.Substring (1, name.Length-2), System.Globalization.CultureInfo.InvariantCulture);
 					int count = root.Count;
 						
-					if ((index > 0) &&
+					if ((index >= 0) &&
 						(index < count))
 					{
 						IDataItem item = root[index];
 						
 						if (is_leaf)
 						{
-							this.list.Add (item);
+							if (this.list.Contains (item) == false)
+							{
+								this.list.Add (item);
+							}
 						}
-						else if ((item.Classes & DataItemClasses.Folder) != 0)
+						
+						if ((item.Classes & DataItemClasses.Folder) != 0)
 						{
 							this.Select (query, offset+1, item as IDataFolder);
 						}
@@ -206,9 +227,13 @@ namespace Epsitec.Common.Types
 					{
 						if (is_leaf)
 						{
-							this.list.Add (item);
+							if (this.list.Contains (item) == false)
+							{
+								this.list.Add (item);
+							}
 						}
-						else if ((item.Classes & DataItemClasses.Folder) != 0)
+						
+						if ((item.Classes & DataItemClasses.Folder) != 0)
 						{
 							this.Select (query, offset+1, item as IDataFolder);
 						}
