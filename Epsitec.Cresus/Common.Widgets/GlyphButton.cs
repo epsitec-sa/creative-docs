@@ -41,6 +41,12 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder(embedder);
 		}
 		
+		public GlyphButton(Widget embedder, GlyphShape shape) : this (embedder)
+		{
+			this.ButtonStyle = ButtonStyle.Icon;
+			this.GlyphShape  = shape;
+		}
+		
 		
 		public GlyphShape						GlyphShape
 		{
