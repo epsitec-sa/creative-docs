@@ -998,70 +998,72 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Point MapParentToClient(Drawing.Point point)
 		{
-			double x = point.X - this.x1;
-			double y = point.Y - this.y1;
+			Drawing.Point result = new Drawing.Point ();
 			
-			double angle = this.client_info.angle * System.Math.PI / 180.0;
-			double zoom  = this.client_info.zoom;
+			double z = this.client_info.zoom;
 			
-			System.Diagnostics.Debug.Assert (zoom > 0.0f);
-			System.Diagnostics.Debug.Assert ((angle >= 0) && (angle < 360));
-			
-			if (angle != 0)
+			switch (this.client_info.angle)
 			{
-				double sin = System.Math.Sin (angle);
-				double cos = System.Math.Cos (angle);
+				case 0:
+					result.X = (point.X - this.x1) / z;
+					result.Y = (point.Y - this.y1) / z;
+					break;
 				
-				x -= (this.x2 - this.x1) / 2;
-				y -= (this.y2 - this.y1) / 2;
+				case 90:
+					result.X = (point.Y - this.y1) / z;
+					result.Y = (this.x2 - point.X) / z;
+					break;
 				
-				double xr = (x * cos - y * sin) / zoom;
-				double yr = (x * sin + y * cos) / zoom;
+				case 180:
+					result.X = (this.x2 - point.X) / z;
+					result.Y = (this.y2 - point.Y) / z;
+					break;
 				
-				x = xr + this.client_info.width / 2;
-				y = yr + this.client_info.height / 2;
-			}
-			else
-			{
-				x /= zoom;
-				y /= zoom;
+				case 270:
+					result.X = (this.y2 - point.Y) / z;
+					result.Y = (point.X - this.x1) / z;
+					break;
+				
+				default:
+					throw new System.ArgumentOutOfRangeException ("Invalid angle");
 			}
 			
-			return new Drawing.Point (x, y);
+			return result;
 		}
 		
 		public virtual Drawing.Point MapClientToParent(Drawing.Point point)
 		{
-			double x = point.X;
-			double y = point.Y;
+			Drawing.Point result = new Drawing.Point ();
 			
-			double angle = this.client_info.angle * System.Math.PI / 180.0;
-			double zoom  = this.client_info.zoom;
+			double z = this.client_info.zoom;
 			
-			System.Diagnostics.Debug.Assert (zoom > 0.0f);
-			System.Diagnostics.Debug.Assert ((angle >= 0) && (angle < 360));
-			
-			if (angle != 0)
+			switch (this.client_info.angle)
 			{
-				double sin = System.Math.Sin (angle);
-				double cos = System.Math.Cos (angle);
+				case 0:
+					result.X = point.X * z + this.x1;
+					result.Y = point.Y * z + this.y1;
+					break;
 				
-				x -= this.client_info.width / 2;
-				y -= this.client_info.height / 2;
+				case 90:
+					result.X = this.x2 - z * point.Y;
+					result.Y = this.y1 + z * point.X;
+					break;
 				
-				double xr = (  x * cos + y * sin) * zoom;
-				double yr = (- x * sin + y * cos) * zoom;
+				case 180:
+					result.X = this.x2 - z * point.X;
+					result.Y = this.y2 - z * point.Y;
+					break;
 				
-				x = xr + (this.x2 - this.x1) / 2;
-				y = yr + (this.y2 - this.y1) / 2;
-			}
-			else
-			{
-				x *= zoom;
-				y *= zoom;
+				case 270:
+					result.X = this.x1 + z * point.Y;
+					result.Y = this.y2 - z * point.X;
+					break;
+				
+				default:
+					throw new System.ArgumentOutOfRangeException ("Invalid angle");
 			}
 			
-			return new Drawing.Point (x + this.x1, y + this.y1);
+			return result;
 		}
 		
 		public virtual Drawing.Point MapRootToClient(Drawing.Point point)
@@ -1098,147 +1100,28 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual Drawing.Rectangle MapParentToClient(Drawing.Rectangle rect)
 		{
-			//	La conversion du rectangle du parent vers le client se fait en traitant le rectangle
-			//	comme un bounding-box. En effet, si une rotation intervient, le rectangle résultant
-			//	n'est plus aligné sur les axes Ox/Oy, et il n'a plus de sens; on calcule donc le
-			//	nouveau rectangle aligné, englobant le rectangle transformé.
+			Drawing.Point p1 = this.MapParentToClient (new Drawing.Point (rect.Left, rect.Bottom));
+			Drawing.Point p2 = this.MapParentToClient (new Drawing.Point (rect.Right, rect.Top));
 			
-			double x1 = rect.Left   - this.x1;
-			double y1 = rect.Bottom - this.y1;
-			double x2 = rect.Right  - this.x1;
-			double y2 = rect.Top    - this.y1;
+			rect.X = System.Math.Min (p1.X, p2.X);
+			rect.Y = System.Math.Min (p1.Y, p2.Y);
 			
-			double angle = this.client_info.angle * System.Math.PI / 180.0;
-			double zoom  = this.client_info.zoom;
-			
-			System.Diagnostics.Debug.Assert (zoom > 0.0f);
-			System.Diagnostics.Debug.Assert ((angle >= 0) && (angle < 360));
-			
-			if (angle != 0)
-			{
-				double sin = System.Math.Sin (angle);
-				double cos = System.Math.Cos (angle);
-				
-				double cx = (this.x2 - this.x1) / 2;
-				double cy = (this.y2 - this.y1) / 2;
-				
-				x1 -= cx;		x2 -= cx;
-				y1 -= cy;		y2 -= cy;
-				
-				//	La rotation d'un rectangle peut être périlleuse... Il faut donc considérer les quatre
-				//	coins, et prendre en fin de compte les extrêmes.
-				
-				double xr1 = (x1 * cos - y1 * sin);
-				double yr1 = (x1 * sin + y1 * cos);
-				double xr2 = (x2 * cos - y2 * sin);
-				double yr2 = (x2 * sin + y2 * cos);
-				
-				double xr3 = (x1 * cos - y2 * sin);
-				double yr3 = (x1 * sin + y2 * cos);
-				double xr4 = (x2 * cos - y1 * sin);
-				double yr4 = (x2 * sin + y1 * cos);
-				
-				xr1 = System.Math.Min (xr1, System.Math.Min (xr2, System.Math.Min (xr3, xr4)));
-				xr2 = System.Math.Max (xr1, System.Math.Max (xr2, System.Math.Max (xr3, xr4)));
-				yr1 = System.Math.Min (yr1, System.Math.Min (yr2, System.Math.Min (yr3, yr4)));
-				yr2 = System.Math.Max (yr1, System.Math.Max (yr2, System.Math.Max (yr3, yr4)));
-				
-				xr1 /= zoom;
-				yr1 /= zoom;
-				xr2 /= zoom;
-				yr2 /= zoom;
-				
-				cx = this.client_info.width / 2;
-				cy = this.client_info.height / 2;
-				
-				x1 = xr1 + cx;		x2 = xr2 + cx;
-				y1 = yr1 + cy;		y2 = yr2 + cy;
-			}
-			else
-			{
-				x1 /= zoom;		x2 /= zoom;
-				y1 /= zoom;		y2 /= zoom;
-			}
-			
-			rect.X = x1;
-			rect.Y = y1;
-			
-			rect.Width  = x2 - x1;
-			rect.Height = y2 - y1;
+			rect.Width  = System.Math.Abs (p1.X - p2.X);
+			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
 			return rect;
 		}
 		
 		public virtual Drawing.Rectangle MapClientToParent(Drawing.Rectangle rect)
 		{
-			//	La conversion du rectangle du client vers le parent se fait en traitant le rectangle
-			//	comme un bounding-box. En effet, si une rotation intervient, le rectangle résultant
-			//	n'est plus aligné sur les axes Ox/Oy, et il n'a plus de sens; on calcule donc le
-			//	nouveau rectangle aligné, englobant le rectangle transformé.
+			Drawing.Point p1 = this.MapClientToParent (new Drawing.Point (rect.Left, rect.Bottom));
+			Drawing.Point p2 = this.MapClientToParent (new Drawing.Point (rect.Right, rect.Top));
 			
-			double x1 = rect.Left;
-			double y1 = rect.Bottom;
-			double x2 = rect.Right;
-			double y2 = rect.Top;
+			rect.X = System.Math.Min (p1.X, p2.X);
+			rect.Y = System.Math.Min (p1.Y, p2.Y);
 			
-			double angle = this.client_info.angle * System.Math.PI / 180.0;
-			double zoom  = this.client_info.zoom;
-			
-			System.Diagnostics.Debug.Assert (zoom > 0.0f);
-			System.Diagnostics.Debug.Assert ((angle >= 0) && (angle < 360));
-			
-			if (angle != 0)
-			{
-				double sin = System.Math.Sin (angle);
-				double cos = System.Math.Cos (angle);
-				
-				double cx = this.client_info.width / 2;
-				double cy = this.client_info.height / 2;
-				
-				x1 -= cx;		x2 -= cx;
-				y1 -= cy;		y2 -= cy;
-				
-				//	La rotation d'un rectangle peut être périlleuse... Il faut donc considérer les quatre
-				//	coins, et prendre en fin de compte les extrêmes.
-				
-				double xr1 = ( x1 * cos + y1 * sin);
-				double yr1 = (-x1 * sin + y1 * cos);
-				double xr2 = ( x2 * cos + y2 * sin);
-				double yr2 = (-x2 * sin + y2 * cos);
-				
-				double xr3 = ( x1 * cos + y2 * sin);
-				double yr3 = (-x1 * sin + y2 * cos);
-				double xr4 = ( x2 * cos + y1 * sin);
-				double yr4 = (-x2 * sin + y1 * cos);
-				
-				xr1 = System.Math.Min (xr1, System.Math.Min (xr2, System.Math.Min (xr3, xr4)));
-				xr2 = System.Math.Max (xr1, System.Math.Max (xr2, System.Math.Max (xr3, xr4)));
-				yr1 = System.Math.Min (yr1, System.Math.Min (yr2, System.Math.Min (yr3, yr4)));
-				yr2 = System.Math.Max (yr1, System.Math.Max (yr2, System.Math.Max (yr3, yr4)));
-				
-				xr1 *= zoom;
-				yr1 *= zoom;
-				xr2 *= zoom;
-				yr2 *= zoom;
-				
-				
-				cx = (this.x2 - this.x1) / 2;
-				cy = (this.y2 - this.y1) / 2;
-				
-				x1 = xr1 + cx;		x2 = xr2 + cx;
-				y1 = yr1 + cy;		y2 = yr2 + cy;
-			}
-			else
-			{
-				x1 *= zoom;		x2 *= zoom;
-				y1 *= zoom;		y2 *= zoom;
-			}
-			
-			rect.X = x1 + this.x1;
-			rect.Y = y1 + this.y1;
-			
-			rect.Width  = x2 - x1;
-			rect.Height = y2 - y1;
+			rect.Width  = System.Math.Abs (p1.X - p2.X);
+			rect.Height = System.Math.Abs (p1.Y - p2.Y);
 			
 			return rect;
 		}
@@ -1248,13 +1131,11 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget iter = this;
 			
-			Drawing.Transform full_transform  = new Drawing.Transform ();
-			Drawing.Transform local_transform = new Drawing.Transform ();
+			Drawing.Transform full_transform = new Drawing.Transform ();
 			
 			while (iter != null)
 			{
-				local_transform.Reset ();
-				iter.MergeTransformToClient (local_transform);
+				Drawing.Transform local_transform = iter.GetTransformToClient ();
 				
 				//	Les transformations de la racine au client doivent s'appliquer en commençant par
 				//	la racine. Comme nous remontons la hiérarchie des widgets en sens inverse, il nous
@@ -1276,13 +1157,11 @@ namespace Epsitec.Common.Widgets
 		{
 			Widget iter = this;
 			
-			Drawing.Transform full_transform  = new Drawing.Transform ();
-			Drawing.Transform local_transform = new Drawing.Transform ();
+			Drawing.Transform full_transform = new Drawing.Transform ();
 			
 			while (iter != null)
 			{
-				local_transform.Reset ();
-				iter.MergeTransformToParent (local_transform);
+				Drawing.Transform local_transform = iter.GetTransformToParent ();
 				
 				//	Les transformations du client à la racine doivent s'appliquer en commençant par
 				//	le client. Comme nous remontons la hiérarchie des widgets dans ce sens là, il nous
@@ -1301,28 +1180,50 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual void MergeTransformToClient(Epsitec.Common.Drawing.Transform t)
+		public virtual Epsitec.Common.Drawing.Transform GetTransformToClient()
 		{
-			double scale = 1 / this.client_info.zoom;
+			Epsitec.Common.Drawing.Transform t = new Epsitec.Common.Drawing.Transform ();
 			
-			t.Translate (- this.x1, - this.y1);
-			t.Translate (- this.Width / 2, - this.Height / 2);
-			t.Rotate (this.client_info.angle);
-			t.Scale (scale);
-			t.Translate (this.client_info.width / 2, this.client_info.height / 2);
+			double ox, oy;
+			
+			switch (this.client_info.angle)
+			{
+				case 0:		ox = this.x1; oy = this.y1; break;
+				case 90:	ox = this.x2; oy = this.y1; break;
+				case 180:	ox = this.x2; oy = this.y2; break;
+				case 270:	ox = this.x1; oy = this.y2; break;
+				default:	throw new System.ArgumentOutOfRangeException ("Invalid angle");
+			}
+			
+			t.Translate (-ox, -oy);
+			t.Rotate (-this.client_info.angle);
+			t.Scale (1 / this.client_info.zoom);
 			t.Round ();
+			
+			return t;
 		}
 		
-		public virtual void MergeTransformToParent(Epsitec.Common.Drawing.Transform t)
+		public virtual Epsitec.Common.Drawing.Transform GetTransformToParent()
 		{
-			double scale = this.client_info.zoom;
+			Epsitec.Common.Drawing.Transform t = new Epsitec.Common.Drawing.Transform ();
 			
-			t.Translate (- this.client_info.width / 2, - this.client_info.height / 2);
-			t.Scale (scale);
-			t.Rotate (- this.client_info.angle);
-			t.Translate (this.Width / 2, this.Height / 2);
-			t.Translate (this.x1, this.y1);
+			double ox, oy;
+			
+			switch (this.client_info.angle)
+			{
+				case 0:		ox = this.x1; oy = this.y1; break;
+				case 90:	ox = this.x2; oy = this.y1; break;
+				case 180:	ox = this.x2; oy = this.y2; break;
+				case 270:	ox = this.x1; oy = this.y2; break;
+				default:	throw new System.ArgumentOutOfRangeException ("Invalid angle");
+			}
+			
+			t.Scale (this.client_info.zoom);
+			t.Rotate (this.client_info.angle);
+			t.Translate (ox, oy);
 			t.Round ();
+			
+			return t;
 		}
 		
 		
@@ -1537,9 +1438,9 @@ namespace Epsitec.Common.Widgets
 				repaint = this.MapParentToClient (repaint);
 				
 				Drawing.Transform original_transform = graphics.SaveTransform ();
-				Drawing.Transform graphics_transform = new Drawing.Transform (original_transform);
+				Drawing.Transform graphics_transform = this.GetTransformToParent ();
 				
-				this.MergeTransformToParent (graphics_transform);
+				graphics_transform.MultiplyBy (original_transform);
 				
 				graphics.Transform = graphics_transform;
 			

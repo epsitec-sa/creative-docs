@@ -166,6 +166,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "WidgetTransformTest.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "WindowFrameTest.cs"
                     SubType = "Code"
                     BuildAction = "Compile"

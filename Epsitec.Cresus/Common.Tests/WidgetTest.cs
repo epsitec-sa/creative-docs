@@ -139,7 +139,7 @@ namespace Epsitec.Common.Tests
 			widget.SetClientAngle (180);
 			widget.SetClientZoom (0.5f);
 			
-			pt_test   = widget.Location;
+			pt_test   = new Point (widget.Left, widget.Bottom);
 			pt_client = widget.MapParentToClient (pt_test);
 			pt_widget = widget.MapClientToParent (pt_client);
 			
@@ -171,8 +171,8 @@ namespace Epsitec.Common.Tests
 						break;
 					
 					case 90:
-						Assertion.Assert ("90° failed", Transform.Equal (pt_client.X, (widget.Client.Width - oy / zoom)));
-						Assertion.Assert ("90° failed", Transform.Equal (pt_client.Y, ox / zoom));
+						Assertion.Assert ("90° failed", Transform.Equal (pt_client.X, oy / zoom));
+						Assertion.Assert ("90° failed", Transform.Equal (pt_client.Y, widget.Client.Height - ox / zoom));
 						break;
 					
 					case 180:
@@ -181,8 +181,8 @@ namespace Epsitec.Common.Tests
 						break;
 					
 					case 270:
-						Assertion.Assert ("270° failed", Transform.Equal (pt_client.X, oy / zoom));
-						Assertion.Assert ("270° failed", Transform.Equal (pt_client.Y, (widget.Client.Height - ox / zoom)));
+						Assertion.Assert ("270° failed", Transform.Equal (pt_client.X, (widget.Client.Width - oy / zoom)));
+						Assertion.Assert ("270° failed", Transform.Equal (pt_client.Y, ox / zoom));
 						break;
 				}
 			}
@@ -210,34 +210,30 @@ namespace Epsitec.Common.Tests
 			Point pt2;
 			Point pt3;
 			
-			transform.Reset ();
 			widget.SetClientAngle (0);
-			widget.MergeTransformToClient (transform);
+			transform = widget.GetTransformToClient ();
 			
 			pt2 = widget.MapParentToClient (pt1);
 			pt3 = transform.TransformDirect (pt1);
 			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
-			transform.Reset ();
 			widget.SetClientZoom (3);
 			widget.SetClientAngle (90);
-			widget.MergeTransformToClient (transform);
+			transform = widget.GetTransformToClient ();
 			
 			pt2 = widget.MapParentToClient (pt1);
 			pt3 = transform.TransformDirect (pt1);
 			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
-			transform.Reset ();
 			widget.SetClientAngle (180);
-			widget.MergeTransformToClient (transform);
+			transform = widget.GetTransformToClient ();
 			
 			pt2 = widget.MapParentToClient (pt1);
 			pt3 = transform.TransformDirect (pt1);
 			Assertion.Assert (Epsitec.Common.Drawing.Transform.Equal (pt2, pt3));
 			
-			transform.Reset ();
 			widget.SetClientAngle (270);
-			widget.MergeTransformToClient (transform);
+			transform = widget.GetTransformToClient ();
 			
 			pt2 = widget.MapParentToClient (pt1);
 			pt3 = transform.TransformDirect (pt1);
@@ -438,9 +434,8 @@ namespace Epsitec.Common.Tests
 			Point pt2;
 			Point pt3;
 			
-			transform.Reset ();
 			widget.SetClientAngle (0);
-			widget.MergeTransformToParent (transform);
+			transform = widget.GetTransformToParent ();
 			
 			pt2 = widget.MapClientToParent (pt1);
 			pt3 = transform.TransformDirect (pt1);
@@ -449,7 +444,7 @@ namespace Epsitec.Common.Tests
 			transform.Reset ();
 			widget.SetClientZoom (3);
 			widget.SetClientAngle (90);
-			widget.MergeTransformToParent (transform);
+			transform = widget.GetTransformToParent ();
 			
 			pt2 = widget.MapClientToParent (pt1);
 			pt3 = transform.TransformDirect (pt1);
@@ -457,7 +452,7 @@ namespace Epsitec.Common.Tests
 			
 			transform.Reset ();
 			widget.SetClientAngle (180);
-			widget.MergeTransformToParent (transform);
+			transform = widget.GetTransformToParent ();
 			
 			pt2 = widget.MapClientToParent (pt1);
 			pt3 = transform.TransformDirect (pt1);
@@ -465,7 +460,7 @@ namespace Epsitec.Common.Tests
 			
 			transform.Reset ();
 			widget.SetClientAngle (270);
-			widget.MergeTransformToParent (transform);
+			transform = widget.GetTransformToParent ();
 			
 			pt2 = widget.MapClientToParent (pt1);
 			pt3 = transform.TransformDirect (pt1);
@@ -491,15 +486,13 @@ namespace Epsitec.Common.Tests
 			widget.SetClientZoom (3);
 			widget.SetClientAngle (90);
 			
-			transform.Reset ();
-			widget.MergeTransformToClient (transform);
-			widget.MergeTransformToParent (transform);
+			transform = widget.GetTransformToClient ();
+			transform.MultiplyBy (widget.GetTransformToParent ());
 			
 			Assertion.Assert (identity.Equals (transform));
 			
-			transform.Reset ();
-			widget.MergeTransformToParent (transform);
-			widget.MergeTransformToClient (transform);
+			transform = widget.GetTransformToParent ();
+			transform.MultiplyBy (widget.GetTransformToClient ());
 			
 			Assertion.Assert (identity.Equals (transform));
 		}

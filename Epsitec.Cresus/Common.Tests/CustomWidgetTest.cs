@@ -14,10 +14,10 @@ namespace Epsitec.Common.Tests
 			catch { }
 		}
 		
-		[Test] public void CheckSimpleWindow()
+		[Test] public void CheckCustomWidgetSimpleWindow()
 		{
 			WindowFrame window = new WindowFrame ();
-			window.Text = "Simple demo";
+			window.Text = "CheckCustomWidgetSimpleWindow";
 			
 			CustomWidget a = new CustomWidget ();
 			CustomWidget b = new CustomWidget ();
