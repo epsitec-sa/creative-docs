@@ -46,10 +46,9 @@ namespace Epsitec.Cresus.Database
 			
 			DbEnumValue[] temp = new DbEnumValue[values.Count];
 			values.CopyTo (temp, 0);
-			System.Array.Sort (temp, DbEnumValue.IdComparer);
+			System.Array.Sort (temp, DbEnumValue.RankComparer);
 			
-			if ((System.Utilities.CheckForDuplicates (temp, DbEnumValue.IdComparer, false)) ||
-				(System.Utilities.CheckForDuplicates (temp, DbEnumValue.NameComparer)))
+			if (System.Utilities.CheckForDuplicates (temp, DbEnumValue.NameComparer))
 			{
 				throw new System.ArgumentException ("Duplicates found");
 			}

@@ -458,7 +458,7 @@ namespace Epsitec.Common.Tests
 			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
 			e.Graphics.Rasterizer.AddSurface (path1);
 			e.Graphics.GradientRenderer.Fill = Epsitec.Common.Drawing.GradientFill.Conic;
-			e.Graphics.GradientRenderer.SetParameters (-1, 200);
+			e.Graphics.GradientRenderer.SetParameters (0, 200);
 			e.Graphics.GradientRenderer.SetColors (r, g, b, a);
 			//e.Graphics.GradientRenderer.SetColors (Color.FromRGB(1,0,0), Color.FromRGB(0,0,1));
 			

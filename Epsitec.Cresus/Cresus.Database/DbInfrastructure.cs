@@ -291,6 +291,95 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public DbType    CreateDbType(string name, int length, bool is_fixed)
+		{
+			DbTypeString type = new DbTypeString (length, is_fixed);
+			type.DefineName (name);
+			return type;
+		}
+		
+		public DbType    CreateDbType(string name, DbNumDef num_def)
+		{
+			DbTypeNum type = new DbTypeNum (num_def);
+			type.DefineName (name);
+			return type;
+		}
+		
+		public DbType    CreateDbType(string name, DbEnumValue[] values)
+		{
+			DbTypeEnum type = new DbTypeEnum (values);
+			type.DefineName (name);
+			return type;
+		}
+		
+		public void      RegisterNewDbType(DbTransaction transaction, DbType type)
+		{
+			//	Enregistre un nouveau type dans la base de données. Ceci va attribuer au
+			//	type une clef DbKey et vérifier qu'il n'y a pas de collision avec un
+			//	éventuel type déjà existant.
+			
+			if (transaction == null)
+			{
+				using (transaction = this.BeginTransaction ())
+				{
+					this.RegisterNewDbType (transaction, type);
+					transaction.Commit ();
+					return;
+				}
+			}
+			
+			this.CheckForUnknownType (transaction, type);
+			
+			DbTypeEnum type_enum = type as DbTypeEnum;
+			
+			long table_id = this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagTableDef].InternalKey, 1);
+			long enum_id  = (type_enum == null) ? 0 : this.NewRowIdInTable (transaction, this.internal_tables[DbTable.TagEnumValDef].InternalKey, type_enum.Count);
+			
+			//	Crée la ligne de description du type :
+			
+			type.DefineInternalKey (new DbKey (table_id));
+			
+			this.BootInsertTypeDefRow (transaction, type);
+			
+			if (type_enum != null)
+			{
+				//	Crée les lignes de description des valeurs de l'énumération :
+				
+				for (int i = 0; i < type_enum.Count; i++)
+				{
+					type_enum[i].DefineInternalKey (new DbKey (enum_id + i));
+					this.BootInsertEnumValueDefRow (transaction, type, type_enum[i]);
+				}
+			}
+		}
+		
+		public void      UnregisterDbType(DbTransaction transaction, DbType type)
+		{
+			//	Supprime la description du type de la base. Pour des raisons de sécurité,
+			//	le type SQL n'est pas réellement supprimé.
+			
+			if (transaction == null)
+			{
+				using (transaction = this.BeginTransaction ())
+				{
+					this.UnregisterDbType (transaction, type);
+					transaction.Commit ();
+					return;
+				}
+			}
+			
+			this.CheckForKnownType (transaction, type);
+			
+			int revision = this.FindHighestRowRevision (transaction, DbTable.TagTypeDef, type.InternalKey.Id) + 1;
+			
+			System.Diagnostics.Debug.Assert (revision > 0);
+			
+			DbKey old_key = type.InternalKey;
+			DbKey new_key = new DbKey (old_key.Id, revision, revision);
+			
+			this.UpdateKeyInRow (transaction, DbTable.TagTypeDef, old_key, new_key);
+		}
+		
 		public DbType    ResolveDbType(DbTransaction transaction, string type_name)
 		{
 			DbKey key = this.FindDbTypeKey (transaction, type_name);
@@ -365,7 +454,7 @@ namespace Epsitec.Cresus.Database
 			
 			table.PrimaryKeys.Add (col_id);
 			table.PrimaryKeys.Add (col_rev);
-
+			
 			return table;
 		}
 		
@@ -390,6 +479,28 @@ namespace Epsitec.Cresus.Database
 					
 					throw new DbException (this.db_access, message);
 				}
+			}
+		}
+		
+		protected void CheckForUnknownType(DbTransaction transaction, DbType type)
+		{
+			System.Diagnostics.Debug.Assert (type != null);
+			
+			if (this.CountMatchingRows (transaction, DbTable.TagTypeDef, DbColumn.TagName, type.Name) > 0)
+			{
+				string message = string.Format ("Type {0} already exists in database.", type.Name);
+				throw new DbException (this.db_access, message);
+			}
+		}
+		
+		protected void CheckForKnownType(DbTransaction transaction, DbType type)
+		{
+			System.Diagnostics.Debug.Assert (type != null);
+			
+			if (this.CountMatchingRows (transaction, DbTable.TagTypeDef, DbColumn.TagName, type.Name) == 0)
+			{
+				string message = string.Format ("Type {0} does not exist in database.", type.Name);
+				throw new DbException (this.db_access, message);
 			}
 		}
 		
@@ -1318,6 +1429,26 @@ namespace Epsitec.Cresus.Database
 			fields.Add (type_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, DbTypeFactory.ConvertTypeToXml (type)));
 			
 			this.sql_builder.InsertData (type_def.CreateSqlName (), fields);
+			this.ExecuteSilent (transaction);
+		}
+		
+		protected void BootInsertEnumValueDefRow(DbTransaction transaction, DbType type, DbEnumValue value)
+		{
+			DbTable enum_def = this.internal_tables[DbTable.TagEnumValDef];
+			
+			//	Phase d'initialisation de la base : insère une ligne dans la table de définition des
+			//	énumérations. Les colonnes descriptives (pour l'utilisateur) ne sont pas initialisées.
+			
+			SqlFieldCollection fields = new SqlFieldCollection ();
+			
+			fields.Add (enum_def.Columns[DbColumn.TagId]		.CreateSqlField (this.type_converter, value.InternalKey.Id));
+			fields.Add (enum_def.Columns[DbColumn.TagRevision]	.CreateSqlField (this.type_converter, value.InternalKey.Revision));
+			fields.Add (enum_def.Columns[DbColumn.TagStatus]	.CreateSqlField (this.type_converter, value.InternalKey.RawStatus));
+			fields.Add (enum_def.Columns[DbColumn.TagName]		.CreateSqlField (this.type_converter, value.Name));
+			fields.Add (enum_def.Columns[DbColumn.TagInfoXml]	.CreateSqlField (this.type_converter, DbEnumValue.ConvertValueToXml (value)));
+			fields.Add (enum_def.Columns[DbColumn.TagRefType]	.CreateSqlField (this.type_converter, type.InternalKey.Id));
+			
+			this.sql_builder.InsertData (enum_def.CreateSqlName (), fields);
 			this.ExecuteSilent (transaction);
 		}
 		

@@ -18,14 +18,25 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 		
-		public DbEnumValue(params string[] attributes) : this ()
+		public DbEnumValue(string name) : this ()
 		{
-			this.attributes = new DbAttributes (attributes);
+			this.attributes[Tags.Name] = name;
+		}
+		
+		public DbEnumValue(int rank, string name) : this (name)
+		{
+			this.rank = rank;
 		}
 		
 		public DbEnumValue(System.Xml.XmlElement xml)
 		{
 			this.ProcessXmlDefinition (xml);
+		}
+		
+		
+		public   void DefineAttributes(params string[] attributes)
+		{
+			this.attributes.SetFromInitialisationList (attributes);
 		}
 		
 		internal void DefineInternalKey(DbKey key)
@@ -77,7 +88,7 @@ namespace Epsitec.Cresus.Database
 		protected void SerialiseXmlDefinition(System.Text.StringBuilder buffer)
 		{
 			buffer.Append (@"<enumval");
-			if (this.rank != 0)
+			if (this.rank >= 0)
 			{
 				buffer.Append (@" rank=""");
 				buffer.Append (Converter.ToString (this.rank));
@@ -96,11 +107,21 @@ namespace Epsitec.Cresus.Database
 			Converter.Convert (xml.GetAttribute ("rank"), out this.rank);
 		}
 		
-		
-		protected string						Id
+		protected void ParseInfo()
 		{
-			get { return this.Attributes[Tags.Id, ResourceLevel.Default]; }
+			this.rank = -1;
+			
+			string info_xml = this.Information;
+			
+			if (info_xml != null)
+			{
+				System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
+				doc.LoadXml (info_xml);
+				
+				this.ProcessXmlDefinition (doc.DocumentElement);
+			}
 		}
+		
 		
 		public string						Information
 		{
@@ -131,12 +152,7 @@ namespace Epsitec.Cresus.Database
 					//	Si 'rank' n'a jamais été initialisé, faisons-le maintenant en se
 					//	basant sur l'attribut contenant l'information XML.
 					
-					this.rank = -1;
-					
-					System.Xml.XmlDocument doc = new System.Xml.XmlDocument ();
-					doc.LoadXml (this.Information);
-					
-					this.ProcessXmlDefinition (doc.DocumentElement);
+					this.ParseInfo ();
 				}
 				
 				return this.rank;
@@ -155,7 +171,9 @@ namespace Epsitec.Cresus.Database
 		{
 			DbEnumValue value = System.Activator.CreateInstance (this.GetType ()) as DbEnumValue;
 			
-			value.attributes = (this.attributes == null) ? null : this.attributes.Clone () as DbAttributes;
+			value.rank         = this.rank;
+			value.internal_key = (this.internal_key == null) ? null : this.internal_key.Clone () as DbKey; 
+			value.attributes   = (this.attributes == null) ? null : this.attributes.Clone () as DbAttributes;
 			
 			return value;
 		}
@@ -198,14 +216,6 @@ namespace Epsitec.Cresus.Database
 			return (name == null) ? 0 : name.GetHashCode ();
 		}
 		#endregion
-		
-		public static System.Collections.IComparer	IdComparer
-		{
-			get
-			{
-				return new ComparerClass (Tags.Id);
-			}
-		}
 		
 		public static System.Collections.IComparer	NameComparer
 		{
@@ -291,7 +301,7 @@ namespace Epsitec.Cresus.Database
 		
 		
 		
-		protected DbAttributes				attributes;
+		protected DbAttributes				attributes = new DbAttributes ();
 		protected int						rank = -2;
 		protected DbKey						internal_key;
 	}
