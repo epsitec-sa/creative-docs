@@ -849,11 +849,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 				int index = 0;
 				foreach ( AbstractProperty property in list )
 				{
-					if ( property.Type == PropertyType.TextString )
-					{
-						if ( this.drawer.SelectedTool == "Edit" )  continue;
-					}
-
 					panel = property.CreatePanel(this.drawer);
 					panel.ExtendedSize = this.drawer.GetPropertyExtended(property.Type);
 					panel.Multi = property.Multi;
