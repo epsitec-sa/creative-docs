@@ -292,12 +292,23 @@ namespace Epsitec.Common.Widgets.Adorner
 			else if ( style == ButtonStyle.ToolItem )
 			{
 				graphics.AddFilledRectangle(rect);
-				graphics.RenderSolid(this.colorControl);
+				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
+				{
+					graphics.RenderSolid(this.colorControlLight);
+				}
+				else
+				{
+					graphics.RenderSolid(this.colorControl);
+				}
 
 				graphics.LineWidth = 1;
 				graphics.LineCap = Drawing.CapStyle.Butt;
 
 				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
+				{
+					shadow = Opposite(shadow);
+				}
+				if ( (state&WidgetState.ActiveYes) != 0 )   // bouton activé ?
 				{
 					shadow = Opposite(shadow);
 				}
@@ -1028,6 +1039,22 @@ namespace Epsitec.Common.Widgets.Adorner
 			return Direction.Up;
 		}
 		
+
+		public Drawing.Color GetColorCaption()
+		{
+			return this.colorCaption;
+		}
+
+		public Drawing.Color GetColorControl()
+		{
+			return this.colorControl;
+		}
+
+		public Drawing.Color GetColorWindow()
+		{
+			return this.colorWindow;
+		}
+
 
 		// Variables membres de TextLayout.
 		protected Drawing.Color		colorBlack;
