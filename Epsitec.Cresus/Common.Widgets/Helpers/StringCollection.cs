@@ -18,7 +18,8 @@ namespace Epsitec.Common.Widgets.Helpers
 			}
 		}
 		
-		public int Add(string name, object value)
+		
+		public int  Add(string name, object value)
 		{
 			int index_0 = this.list.Add (value);
 			int index_1 = this.names.Add (name);
@@ -29,6 +30,17 @@ namespace Epsitec.Common.Widgets.Helpers
 			this.HandleChange ();
 			
 			return index_0;
+		}
+		
+		public void AddRange(System.Collections.ICollection values)
+		{
+			if (values != null)
+			{
+				foreach (object o in values)
+				{
+					this.Add (o);
+				}
+			}
 		}
 		
 		
