@@ -17,16 +17,16 @@ namespace Epsitec.Cresus.Database
 
 			IDbAbstraction db_abstraction = DbFactoryTest.CreateDbAbstraction (true);
 			
-			Assertion.AssertNotNull ("Could not instanciate Firebird abstraction", db_abstraction);
-			Assertion.AssertNotNull ("Cannot retrieve the factory", db_abstraction.Factory);
+			Assert.IsNotNull (db_abstraction, "Could not instanciate Firebird abstraction");
+			Assert.IsNotNull (db_abstraction.Factory, "Cannot retrieve the factory");
 			
-			Assertion.AssertEquals ("Connection should not be alive", db_abstraction.IsConnectionAlive, false);
-			Assertion.AssertEquals ("Connection should not be open", db_abstraction.IsConnectionOpen, false);
+			Assert.IsFalse (db_abstraction.IsConnectionAlive, "Connection should not be alive");
+			Assert.IsFalse (db_abstraction.IsConnectionOpen, "Connection should not be open");
 			
 			db_abstraction.Connection.Open ();
 			
-			Assertion.AssertEquals ("Connection should be alive", db_abstraction.IsConnectionAlive, true);
-			Assertion.AssertEquals ("Connection should be open", db_abstraction.IsConnectionOpen, true);
+			Assert.IsTrue (db_abstraction.IsConnectionAlive, "Connection should be alive");
+			Assert.IsTrue (db_abstraction.IsConnectionOpen, "Connection should be open");
 			
 			db_abstraction.Connection.Close ();
 		}
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Database
 			IDbAbstraction  db_abstraction = DbFactoryTest.CreateDbAbstraction (false);
 			System.Data.IDbCommand command = db_abstraction.NewDbCommand ();
 			
-			Assertion.AssertNotNull (command);
+			Assert.IsNotNull (command);
 		}
 		
 		[Test] public void CheckNewDataAdapter()
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Database
 			
 			db_abstraction.Connection.Close ();
 			
-			Assertion.AssertNotNull (adapter);
+			Assert.IsNotNull (adapter);
 		}
 		
 		[Test] public void CheckExecuteScalar()
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Database
 			
 			foreach (string name in db_abstraction.UserTableNames)
 			{
-				Assertion.Assert (string.Format ("Name contains white space: ({0})", name), name.IndexOf (' ') == -1);
+				Assert.AreEqual (-1, name.IndexOf (' '), string.Format ("Name contains white space: ({0})", name));
 				System.Console.Out.WriteLine ("Table : " + name);
 			}
 		}
