@@ -65,7 +65,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-			adorner.PaintToolBackground(graphics, rect, WidgetState.None, Direction.None, Direction.Right);
+			adorner.PaintToolBackground(graphics, rect, WidgetState.None, Direction.Right);
 		}
 
 
