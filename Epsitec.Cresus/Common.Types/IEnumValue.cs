@@ -8,6 +8,7 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	public interface IEnumValue : INameCaption
 	{
-		int		Rank	{ get; }
+		int		Rank		{ get; }
+		bool	IsHidden	{ get; }
 	}
 }

@@ -133,6 +133,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Adapters\BooleanAdapter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Adapters\ControllerAttribute.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -144,6 +149,16 @@
                 />
                 <File
                     RelPath = "Adapters\DecimalAdapter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Adapters\EnumAdapter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Adapters\FlagsAdapter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -203,6 +218,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Controllers\BooleanController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Controllers\CaptionOnlyController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -214,6 +234,16 @@
                 />
                 <File
                     RelPath = "Controllers\DataFolderController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Controllers\EnumController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Controllers\FlagsController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -239,6 +269,11 @@
                 />
                 <File
                     RelPath = "Controllers\WidgetDataFolderController.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Controllers\WidgetFlagController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
