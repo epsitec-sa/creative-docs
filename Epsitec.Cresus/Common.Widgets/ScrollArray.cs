@@ -33,6 +33,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public ScrollArray()
 		{
+			this.columns = new ColumnDefinition[0];
+			
 			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.Focusable;
 			this.InternalState |= InternalState.AutoDoubleClick;
@@ -51,8 +53,7 @@ namespace Epsitec.Common.Widgets
 			this.v_scroller.ValueChanged += new Support.EventHandler (this.HandleVScrollerChanged);
 			this.h_scroller.ValueChanged += new Support.EventHandler (this.HandleHScrollerChanged);
 			
-			this.is_dirty        = true;
-			this.is_header_dirty = true;
+			this.is_dirty = true;
 		}
 
 		public ScrollArray(Widget embedder) : this()
@@ -460,6 +461,15 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public ColumnDefinition[]				Columns
+		{
+			get
+			{
+				return this.columns;
+			}
+		}
+		
+		
 		public int ToVirtualRow(int row)
 		{
 			if (this.edition_row < 0)
@@ -502,58 +512,41 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		
+		protected virtual void OnColumnWidthChanged(ColumnDefinition column)
+		{
+			this.UpdateTotalWidth ();
+			this.UpdateScrollView ();
+			this.InvalidateContents ();
+		}
+		
+		protected virtual void OnColumnAlignmentChanged(ColumnDefinition column)
+		{
+			this.InvalidateContents ();
+		}
+		
 		public void SetColumnWidth(int column, double width)
 		{
-			System.Diagnostics.Debug.Assert (this.column_widths != null);
-			System.Diagnostics.Debug.Assert (column > -1);
-			System.Diagnostics.Debug.Assert (column < this.column_widths.Length);
-			
 			width = System.Math.Floor (width);
 			width = System.Math.Max (width, this.min_width);
 			
-			if (this.column_widths[column] != width)
-			{
-				this.column_widths[column] = width;
-				this.UpdateTotalWidth ();
-				this.UpdateScrollView ();
-				this.InvalidateContents ();
-			}
+			this.Columns[column].Width = width;
 		}
 		
 		public double GetColumnWidth(int column)
 		{
-			System.Diagnostics.Debug.Assert (this.column_widths != null);
-			System.Diagnostics.Debug.Assert (column > -1);
-			System.Diagnostics.Debug.Assert (column < this.column_widths.Length);
-			
-			return this.column_widths[column];
+			return this.Columns[column].Width;
 		}
 		
 		
 		public double GetColumnOffset(int column)
 		{
-			System.Diagnostics.Debug.Assert (this.column_widths != null);
-			System.Diagnostics.Debug.Assert (column > -1);
-			System.Diagnostics.Debug.Assert (column < this.column_widths.Length);
-			
-			double offset = 0;
-			
-			for (int i = 0; i < column; i++)
-			{
-				offset += this.column_widths[i];
-			}
-			
-			return offset;
+			return this.Columns[column].Offset;
 		}
 		
 		
 		public virtual string GetCellText(int row, int column)
 		{
-			if (this.column_widths == null)
-			{
-				throw new System.InvalidOperationException (string.Format ("Cannot get cell [{0},{1}] in this ScrollArray.", row, column));
-			}
-			
 			if ((row < 0) || (row >= this.max_rows))
 			{
 				throw new System.ArgumentOutOfRangeException ("row", row, "Row out of range.");
@@ -580,11 +573,6 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual string[] GetRowTexts(int row)
 		{
-			if (this.column_widths == null)
-			{
-				throw new System.InvalidOperationException (string.Format ("Cannot get row [{0}] in this ScrollArray.", row));
-			}
-			
 			if ((row < 0) || (row >= this.max_rows))
 			{
 				throw new System.ArgumentOutOfRangeException ("row", row, "Row out of range.");
@@ -628,8 +616,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void SetCellText(int row, int column, string value)
 		{
-			if ((this.text_provider_callback != null) ||
-				(this.column_widths == null))
+			if (this.text_provider_callback != null)
 			{
 				throw new System.InvalidOperationException (string.Format ("Cannot set cell [{0},{1}] in this ScrollArray.", row, column));
 			}
@@ -687,8 +674,7 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void SetRowTexts(int row, string[] values)
 		{
-			if ((this.text_provider_callback != null) ||
-				(this.column_widths == null))
+			if (this.text_provider_callback != null)
 			{
 				throw new System.InvalidOperationException (string.Format ("Cannot set row [{0}] in this ScrollArray.", row));
 			}
@@ -798,31 +784,20 @@ namespace Epsitec.Common.Widgets
 			
 			if (bounds.IsValid)
 			{
-				double x1 = 0;
-				double x2 = 0;
+				ColumnDefinition def = this.Columns[column];
 				
-				for (int i = 0; i < this.max_columns; i++)
+				double x1 = this.inner_bounds.Left - this.offset + def.Offset;
+				double x2 = x1 + def.Width;
+				
+				x1 = System.Math.Max (this.inner_bounds.Left, x1);
+				x2 = System.Math.Min (this.inner_bounds.Right, x2);
+				
+				if (x1 < x2)
 				{
-					x1 = x2;
-					x2 = x1 + this.column_widths[i];
+					bounds.Left  = x1;
+					bounds.Right = x2;
 					
-					if (column == i)
-					{
-						x1 += this.inner_bounds.Left - this.offset;
-						x2 += this.inner_bounds.Left - this.offset;
-						x1 = System.Math.Max (this.inner_bounds.Left, x1);
-						x2 = System.Math.Min (this.inner_bounds.Right, x2);
-						
-						if (x1 < x2)
-						{
-							bounds.Left  = x1;
-							bounds.Right = x2;
-							
-							return bounds;
-						}
-						
-						break;
-					}
+					return bounds;
 				}
 			}
 			
@@ -887,26 +862,14 @@ namespace Epsitec.Common.Widgets
 		
 		protected bool GetUnclippedCellX(int column, out double x1, out double x2)
 		{
-			x1 = 0;
-			x2 = 0;
+			ColumnDefinition def = this.Columns[column];
 			
-			for (int i = 0; i < this.max_columns; i++)
+			x1 = this.inner_bounds.Left - this.offset + def.Offset;
+			x2 = x1 + def.Width;
+			
+			if (x1 < x2)
 			{
-				x1 = x2;
-				x2 = x1 + this.column_widths[i];
-				
-				if (column == i)
-				{
-					x1 += this.inner_bounds.Left - this.offset;
-					x2 += this.inner_bounds.Left - this.offset;
-					
-					if (x1 < x2)
-					{
-						return true;
-					}
-					
-					break;
-				}
+				return true;
 			}
 			
 			return false;
@@ -977,9 +940,9 @@ namespace Epsitec.Common.Widgets
 				
 				double width = 0;
 				
-				for (int i = 0; i < this.column_widths.Length; i++)
+				for (int i = 0; i < this.Columns.Length; i++)
 				{
-					width += this.column_widths[i];
+					width += this.Columns[i].Width;
 					
 					if (x < width)
 					{
@@ -1000,24 +963,12 @@ invalid:	row    = -1;
 		
 		public void SetColumnAlignment(int column, Drawing.ContentAlignment alignment)
 		{
-			System.Diagnostics.Debug.Assert (this.column_alignments != null);
-			System.Diagnostics.Debug.Assert (column > -1);
-			System.Diagnostics.Debug.Assert (column < this.column_alignments.Length);
-			
-			if (this.column_alignments[column] != alignment)
-			{
-				this.column_alignments[column] = alignment;
-				this.InvalidateContents ();
-			}
+			this.Columns[column].Alignment = alignment;
 		}
 
 		public Drawing.ContentAlignment GetColumnAlignment(int column)
 		{
-			System.Diagnostics.Debug.Assert (this.column_alignments != null);
-			System.Diagnostics.Debug.Assert (column > -1);
-			System.Diagnostics.Debug.Assert (column < this.column_alignments.Length);
-			
-			return this.column_alignments[column];
+			return this.Columns[column].Alignment;
 		}
 		
 		
@@ -1510,8 +1461,7 @@ invalid:	row    = -1;
 		{
 			base.UpdateClientGeometry ();
 			
-			if ((this.column_widths == null) ||
-				(this.v_scroller == null) ||
+			if ((this.v_scroller == null) ||
 				(this.h_scroller == null) ||
 				(this.header == null))
 			{
@@ -1562,23 +1512,30 @@ invalid:	row    = -1;
 		
 		protected virtual void UpdateColumnCount()
 		{
-			this.is_header_dirty   = true;
-			this.column_widths     = new double[this.max_columns];
-			this.column_alignments = new Drawing.ContentAlignment[this.max_columns];
-					
-			for (int i = 0; i < this.max_columns; i++)
+			ColumnDefinition[] old_columns = this.columns;
+			ColumnDefinition[] new_columns = new ColumnDefinition[this.max_columns];
+			
+			int n = System.Math.Min (old_columns.Length, new_columns.Length);
+			
+			for (int i = 0; i < n; i++)
 			{
-				this.column_widths[i] = this.def_width;
+				new_columns[i] = old_columns[i];
+				old_columns[i] = null;
 			}
-					
-			for (int i = 0; i < this.max_columns; i++)
+			for (int i = n; i < new_columns.Length; i++)
 			{
-				this.column_alignments[i] = Drawing.ContentAlignment.MiddleLeft;
+				new_columns[i] = new ColumnDefinition (this, i, this.def_width, Drawing.ContentAlignment.MiddleLeft);
 			}
+			for (int i = n; i < old_columns.Length; i++)
+			{
+				old_columns[i].Dispose ();
+				old_columns[i] = null;
+			}
+			
+			this.columns = new_columns;
 					
 			this.InvalidateContents ();
 			this.UpdateTotalWidth ();
-			this.UpdateHeaderContents ();
 			this.Update ();
 		}
 		
@@ -1679,15 +1636,7 @@ invalid:	row    = -1;
 				slider.Bounds = bounds;
 			}
 			
-			if (this.is_header_dirty)
-			{
-				this.header.Children.Clear ();
-				this.header.Children.AddRange (this.header_buttons);
-				this.header.Children.AddRange (this.header_sliders);
-			}
-			
 			this.header.ResumeLayout ();
-			this.is_header_dirty = false;
 		}
 		
 		protected virtual void UpdateScrollerGeometry()
@@ -1769,7 +1718,7 @@ invalid:	row    = -1;
 		
 		protected virtual void UpdateTextLayouts()
 		{
-			if (this.column_widths == null)
+			if (this.columns.Length == 0)
 			{
 				return;
 			}
@@ -1803,8 +1752,8 @@ invalid:	row    = -1;
 						this.layouts[row, column].FontSize = this.DefaultFontSize;
 					}
 					
-					this.layouts[row, column].LayoutSize = new Drawing.Size (this.column_widths[column] - this.text_margin * 2, this.row_height);
-					this.layouts[row, column].Alignment  = this.column_alignments[column];
+					this.layouts[row, column].LayoutSize = new Drawing.Size (this.Columns[column].Width - this.text_margin * 2, this.row_height);
+					this.layouts[row, column].Alignment  = this.Columns[column].Alignment;
 					this.layouts[row, column].BreakMode  = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 				}
 			}
@@ -1824,54 +1773,18 @@ invalid:	row    = -1;
 
 		protected virtual void UpdateTotalWidth()
 		{
+			double x = 0;
 			this.total_width = 0;
 			
 			for (int i = 0; i < this.max_columns; i++)
 			{
-				this.total_width += this.column_widths[i];
+				this.Columns[i].DefineOffset (x);
+				x += this.Columns[i].Width;
 			}
+			
+			this.total_width = x;
 		}
 		
-		protected virtual void UpdateHeaderContents()
-		{
-			foreach (HeaderButton button in this.header_buttons)
-			{
-				button.Clicked     -= new MessageEventHandler (this.HandleHeaderButtonClicked);
-			}
-			foreach (HeaderSlider slider in this.header_sliders)
-			{
-				slider.DragStarted -= new MessageEventHandler (this.HandleSliderDragStarted);
-				slider.DragMoved   -= new MessageEventHandler (this.HandleSliderDragMoved);
-				slider.DragEnded   -= new MessageEventHandler (this.HandleSliderDragEnded);
-			}
-			
-			this.header_buttons.Clear ();
-			this.header_sliders.Clear ();
-			
-			for (int i = 0; i < this.max_columns; i++)
-			{
-				HeaderButton button = new HeaderButton ();
-				
-				button.Style    = HeaderButtonStyle.Top;
-				button.Dynamic  = true;
-				button.Index    = i;
-				button.Clicked += new MessageEventHandler (this.HandleHeaderButtonClicked);
-				
-				this.header_buttons.Add (button);
-			}
-			for (int i = 0; i < this.max_columns; i++)
-			{
-				HeaderSlider slider = new HeaderSlider ();
-				
-				slider.Style        = HeaderSliderStyle.Top;
-				slider.Index        = i;
-				slider.DragStarted += new MessageEventHandler (this.HandleSliderDragStarted);
-				slider.DragMoved   += new MessageEventHandler (this.HandleSliderDragMoved);
-				slider.DragEnded   += new MessageEventHandler (this.HandleSliderDragEnded);
-				
-				this.header_sliders.Add (slider);
-			}
-		}
 
 		protected virtual void UpdateTitleWidget()
 		{
@@ -1992,12 +1905,12 @@ invalid:	row    = -1;
 		
 		protected HeaderButton FindButton(int index)
 		{
-			return this.header_buttons[index] as HeaderButton;
+			return this.Columns[index].HeaderButton;
 		}
 
 		protected HeaderSlider FindSlider(int index)
 		{
-			return this.header_sliders[index] as HeaderSlider;
+			return this.Columns[index].HeaderSlider;
 		}
 
 		
@@ -2036,7 +1949,7 @@ invalid:	row    = -1;
 		{
 			base.PaintBackgroundImplementation (graphics, clip_rect);
 			
-			if (this.column_widths == null)
+			if (this.Columns.Length == 0)
 			{
 				return;
 			}
@@ -2107,7 +2020,7 @@ invalid:	row    = -1;
 					
 					for (int column = 0; column < this.max_columns; column++)
 					{
-						double end = pos.X + this.column_widths[column];
+						double end = pos.X + this.columns[column].Width;
 						
 						if ((pos.X < local_clip.Right) &&
 							(end > local_clip.Left))
@@ -2263,8 +2176,151 @@ invalid:	row    = -1;
 		public event Support.EventHandler		SelectedIndexChanging;
 		public event Support.EventHandler		SelectedIndexChanged;
 		
+		
+		public class ColumnDefinition : System.IDisposable
+		{
+			internal ColumnDefinition(ScrollArray host, int column, double width, Drawing.ContentAlignment alignment)
+			{
+				this.host      = host;
+				this.column    = column;
+				this.width     = width;
+				this.alignment = alignment;
+				
+				this.header_button = new HeaderButton ();
+				
+				this.header_button.Style    = HeaderButtonStyle.Top;
+				this.header_button.Dynamic  = true;
+				this.header_button.Index    = this.column;
+				this.header_button.Clicked += new MessageEventHandler (this.host.HandleHeaderButtonClicked);
+				this.header_button.SetEmbedder (this.host.header);
+				
+				this.header_slider = new HeaderSlider ();
+				
+				this.header_slider.Style        = HeaderSliderStyle.Top;
+				this.header_slider.Index        = this.column;
+				this.header_slider.DragStarted += new MessageEventHandler (this.host.HandleSliderDragStarted);
+				this.header_slider.DragMoved   += new MessageEventHandler (this.host.HandleSliderDragMoved);
+				this.header_slider.DragEnded   += new MessageEventHandler (this.host.HandleSliderDragEnded);
+				this.header_slider.SetEmbedder (this.host.header);
+			}
+			
+			
+			public double						Width
+			{
+				get
+				{
+					return this.width;
+				}
+				set
+				{
+					if (this.width != value)
+					{
+						this.width = value;
+						this.host.OnColumnWidthChanged (this);
+					}
+				}
+			}
+			
+			public double						Offset
+			{
+				get
+				{
+					return this.offset;
+				}
+			}
+			
+			public Drawing.ContentAlignment		Alignment
+			{
+				get
+				{
+					return this.alignment;
+				}
+				set
+				{
+					if (this.alignment != value)
+					{
+						this.alignment = value;
+						this.host.OnColumnAlignmentChanged (this);
+					}
+				}
+			}
+			
+			public HeaderButton					HeaderButton
+			{
+				get
+				{
+					return this.header_button;
+				}
+			}
+			
+			public HeaderSlider					HeaderSlider
+			{
+				get
+				{
+					return this.header_slider;
+				}
+			}
+			
+			
+			internal void DefineColumnIndex(int index)
+			{
+				if (this.column != index)
+				{
+					this.header_button.Index = index;
+					this.header_slider.Index = index;
+				}
+			}
+			
+			internal void DefineOffset(double offset)
+			{
+				this.offset = offset;
+			}
+			
+			
+			#region IDisposable Members
+			public void Dispose()
+			{
+				this.Dispose (true);
+			}
+			#endregion
+			
+			protected virtual void Dispose(bool is_disposing)
+			{
+				if (is_disposing)
+				{
+					if (this.header_button != null)
+					{
+						this.header_button.Clicked -= new MessageEventHandler (this.host.HandleHeaderButtonClicked);
+						this.header_button.Parent = null;
+						this.header_button = null;
+					}
+					if (this.header_slider != null)
+					{
+						this.header_slider.DragStarted -= new MessageEventHandler (this.host.HandleSliderDragStarted);
+						this.header_slider.DragMoved   -= new MessageEventHandler (this.host.HandleSliderDragMoved);
+						this.header_slider.DragEnded   -= new MessageEventHandler (this.host.HandleSliderDragEnded);
+						this.header_slider.Parent = null;
+						this.header_slider = null;
+					}
+				}
+			}
+			
+			
+			private ScrollArray					host;
+			private int							column;
+			private double						width;
+			private double						offset;
+			private Drawing.ContentAlignment	alignment;
+			private SortMode					sort_mode;
+			private string						header;
+			
+			private HeaderButton				header_button;
+			private HeaderSlider				header_slider;
+		}
+		
+		
+		
 		protected bool							is_dirty;
-		protected bool							is_header_dirty;
 		protected bool							is_mouse_down;
 		
 		protected int							max_rows;
@@ -2278,8 +2334,10 @@ invalid:	row    = -1;
 		protected double						def_width			= 100;
 		protected double						min_width			= 10;
 		protected double						total_width;
-		protected double[]						column_widths;
-		protected Drawing.ContentAlignment[]	column_alignments;
+//		protected double[]						column_widths;
+//		protected Drawing.ContentAlignment[]	column_alignments;
+		
+		protected ColumnDefinition[]			columns;
 		
 		protected Drawing.Margins				frame_margins;				//	marges du cadre
 		protected Drawing.Margins				table_margins;				//	marges de la table interne
@@ -2296,8 +2354,6 @@ invalid:	row    = -1;
 		protected Drawing.Rectangle				table_bounds;
 		protected Drawing.Rectangle				inner_bounds;
 		protected Widget						header;
-		protected System.Collections.ArrayList	header_buttons		= new System.Collections.ArrayList ();
-		protected System.Collections.ArrayList	header_sliders		= new System.Collections.ArrayList ();
 		
 		protected VScroller						v_scroller;
 		protected HScroller						h_scroller;
