@@ -17,6 +17,9 @@ namespace Epsitec.Common.Designer.Panels
 			this.size  = new Drawing.Size (250, 600);
 			this.props = new System.Collections.ArrayList ();
 			
+			this.saved_views = new System.Collections.Hashtable ();
+			this.saved_focus = null;
+			
 			this.application = application;
 		}
 		
@@ -202,8 +205,8 @@ namespace Epsitec.Common.Designer.Panels
 			int         active_index    = this.book.ActivePageIndex;
 			System.Type active_tab_type = (active_index < 0) ? null : this.props[active_index].GetType ();
 			
-			System.Collections.Hashtable saved_views = this.SaveVisiblePropViews ();
-			string                       saved_focus = this.SaveFocus ();
+			this.SaveVisiblePropViews ();
+			this.SaveFocus ();
 			
 			this.DetachAllProperties ();
 			this.SelectMatchingProperties ();
@@ -223,8 +226,8 @@ namespace Epsitec.Common.Designer.Panels
 			
 			this.UpdateBookPages (active_tab_type);
 			
-			this.RestoreVisiblePropViews (saved_views);
-			this.RestoreFocus (saved_focus);
+			this.RestoreVisiblePropViews ();
+			this.RestoreFocus ();
 		}
 
 		private void UpdateBookPages(System.Type active_tab_type)
@@ -256,7 +259,7 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		
 		
-		private string SaveFocus()
+		private void SaveFocus()
 		{
 			if (this.book.ActivePage != null)
 			{
@@ -264,17 +267,13 @@ namespace Epsitec.Common.Designer.Panels
 				
 				if (focused != null)
 				{
-					return focused.FullPathName;
+					this.saved_focus = focused.FullPathName;
 				}
 			}
-			
-			return null;
 		}
 		
-		private System.Collections.Hashtable SaveVisiblePropViews()
+		private void SaveVisiblePropViews()
 		{
-			System.Collections.Hashtable hash = new System.Collections.Hashtable ();
-			
 			foreach (Editors.AbstractPropEdit prop in this.props)
 			{
 				int[] views = new int[prop.PropPanes.Length];
@@ -284,24 +283,22 @@ namespace Epsitec.Common.Designer.Panels
 					views[i] = prop.PropPanes[i].VisibleViewIndex;
 				}
 				
-				hash[prop.GetType ()] = views;
+				this.saved_views[prop.GetType ()] = views;
 			}
-			
-			return hash;
 		}
 		
 		
-		private void RestoreFocus(string focused_property_name)
+		private void RestoreFocus()
 		{
 			//	Lors du changement du contenu des onglets, on aimerait conserver le focus clavier
 			//	sur le widget précédent, si cela est possible. Pour ce faire, on a pris note plus
 			//	haut du chemin d'accès au widget qui avait le focus, et on tente de trouver quelque
 			//	chose de correspondant ici :
 			
-			if ((focused_property_name != null) &&
+			if ((this.saved_focus != null) &&
 				(this.book.ActivePage != null))
 			{
-				Widget to_be_focused = this.book.RootParent.FindChildByPath (focused_property_name);
+				Widget to_be_focused = this.book.RootParent.FindChildByPath (this.saved_focus);
 				
 				if (to_be_focused != null)
 				{
@@ -310,11 +307,11 @@ namespace Epsitec.Common.Designer.Panels
 			}
 		}
 		
-		private void RestoreVisiblePropViews(System.Collections.Hashtable hash)
+		private void RestoreVisiblePropViews()
 		{
 			foreach (Editors.AbstractPropEdit prop in this.props)
 			{
-				System.Array array = hash[prop.GetType ()] as System.Array;
+				System.Array array = this.saved_views[prop.GetType ()] as System.Array;
 				
 				if (array != null)
 				{
@@ -379,6 +376,9 @@ namespace Epsitec.Common.Designer.Panels
 		private Editors.WidgetEditor			active_editor;		//	éditeur associé à l'objet actif
 		
 		private System.Collections.ArrayList	props;				//	propriétés
+		
+		private System.Collections.Hashtable	saved_views;
+		private string							saved_focus;
 		
 		private Application						application;
 	}
