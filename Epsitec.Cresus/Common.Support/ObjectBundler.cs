@@ -479,8 +479,14 @@ namespace Epsitec.Common.Support
 				
 				object prop_value = prop_info.GetValue (obj, null);
 				object prop_def   = prop_info.GetValue (obj_default, null);
+				string prop_name  = attr.PropertyName;
 				
-				BundlingPropertyEventArgs e = new BundlingPropertyEventArgs (bundle, obj, prop_info, attr.PropertyName, prop_value, prop_def);
+				if (prop_name == null)
+				{
+					prop_name = prop_info.Name;
+				}
+				
+				BundlingPropertyEventArgs e = new BundlingPropertyEventArgs (bundle, obj, prop_info, prop_name, prop_value, prop_def);
 				
 				e.PropertyData     = TypeDescriptor.GetConverter (prop_info.PropertyType).ConvertToInvariantString (prop_value);
 				e.SuppressProperty = this.IsPropertyEqual (obj_default, prop_info, e.PropertyData);
@@ -566,6 +572,11 @@ namespace Epsitec.Common.Support
 				
 				BundleAttribute attr = attributes[0] as BundleAttribute;
 				string     prop_name = attr.PropertyName;
+				
+				if (prop_name == null)
+				{
+					prop_name = prop_info.Name;
+				}
 				
 				switch (bundle[prop_name].Type)
 				{
@@ -759,7 +770,14 @@ namespace Epsitec.Common.Support
 						
 						BundleAttribute attr = attributes[0] as BundleAttribute;
 						
-						if (attr.PropertyName == property_name)
+						string name = attr.PropertyName;
+						
+						if (name == null)
+						{
+							name = prop_info.Name;
+						}
+						
+						if (name == property_name)
 						{
 							//	Cette propriété est la bonne !
 							
