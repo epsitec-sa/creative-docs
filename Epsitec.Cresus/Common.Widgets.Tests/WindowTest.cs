@@ -214,7 +214,7 @@ namespace Epsitec.Common.Widgets
 			button.Parent = window.Root;
 			button.TabIndex = 1;
 			button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			button.SetFocused(true);
+			button.Focus();
 			button.ButtonStyle = ButtonStyle.DefaultAccept;
 			
 			button = new Button ("B");

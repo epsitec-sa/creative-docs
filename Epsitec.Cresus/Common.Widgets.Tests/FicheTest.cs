@@ -774,7 +774,7 @@ namespace Epsitec.Common.Widgets
 				this.UpdateTable();
 				this.UpdateLayout();
 				this.UpdateButton();
-				this.table.SetFocused(true);
+				this.table.Focus();
 			}
 		}
 
@@ -853,7 +853,7 @@ namespace Epsitec.Common.Widgets
 			this.UpdateLayout();
 			this.UpdateTable();
 			this.UpdateButton();
-			this.table.SetFocused(true);
+			this.table.Focus();
 		}
 
 		// Bouton "Valider" cliqué.
@@ -872,7 +872,7 @@ namespace Epsitec.Common.Widgets
 			this.recordCreated = false;
 			this.UpdateTable();
 			this.UpdateButton();
-			this.table.SetFocused(true);
+			this.table.Focus();
 		}
 
 		// Bouton "Annuler" cliqué.
@@ -882,7 +882,7 @@ namespace Epsitec.Common.Widgets
 			this.recordRank = this.table.SelectedIndex;
 			this.UpdateLayout();
 			this.UpdateButton();
-			this.table.SetFocused(true);
+			this.table.Focus();
 		}
 
 		// Texte d'une rubrique changé.
@@ -956,7 +956,7 @@ namespace Epsitec.Common.Widgets
 		{
 			AbstractTextField tf = this.textFields[rank] as AbstractTextField;
 			tf.SelectAll();
-			tf.SetFocused(true);
+			tf.Focus();
 		}
 
 

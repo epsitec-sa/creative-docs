@@ -72,7 +72,23 @@ namespace Epsitec.Common.Widgets
 				if ( this.navigator.IsReadOnly != value )
 				{
 					this.navigator.IsReadOnly = value;
-					this.MouseCursor = this.navigator.IsReadOnly ? MouseCursor.AsArrow : MouseCursor.AsIBeam;
+					
+					
+					if ( Message.State.LastWindow == this.Window &&
+					     this.IsEntered )
+					{
+						// Ne changeons l'aspect de la souris que si actuellement le curseur se trouve
+						// dans la zone éditable; si la souris se trouve sur un bouton, on ne fait rien.
+						
+						Drawing.Point pos = this.MapRootToClient(Message.State.LastPosition);
+					    
+						if ( pos.X >= this.margins.Left &&
+						     pos.X <= this.Client.Width - this.margins.Right )
+						{
+							this.MouseCursor = this.navigator.IsReadOnly ? MouseCursor.AsArrow : MouseCursor.AsIBeam;
+						}
+					}
+					
 					this.OnReadOnlyChanged();
 				}
 			}
@@ -82,6 +98,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return this.autoSelectOnFocus; }
 			set { this.autoSelectOnFocus = value; }
+		}
+		
+		[Bundle]	public bool					AutoEraseOnFocus
+		{
+			get { return this.autoEraseOnFocus; }
+			set { this.autoEraseOnFocus = value; }
 		}
 		
 		
@@ -340,6 +362,8 @@ namespace Epsitec.Common.Widgets
 		
 		protected override bool AboutToGetFocus(TabNavigationDir dir, TabNavigationMode mode, out Widget focus)
 		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("About to get focus on '{0}'.", this.Text));
+			
 			if ( mode != TabNavigationMode.Passive )
 			{
 				this.SelectAll();
@@ -369,6 +393,7 @@ namespace Epsitec.Common.Widgets
 		public void SelectAll()
 		{
 			// Sélectione tous les caractères.
+			this.Cursor = 0;
 			this.SelectAll(false);
 		}
 
@@ -386,6 +411,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public void SimulateEdited()
+		{
+			this.OnTextEdited();
+		}
+		
 		
 		public bool								SelectionBold
 		{
@@ -570,6 +600,15 @@ namespace Epsitec.Common.Widgets
 						this.navigator.ProcessMessage(message, pos);
 						message.Consumer = this;
 					}
+					else
+					{
+						if ( pos.X >= this.margins.Left &&
+						     pos.X <= this.Client.Width - this.margins.Right )
+						{
+							this.MouseCursor = this.navigator.IsReadOnly ? MouseCursor.AsArrow : MouseCursor.AsIBeam;
+							message.Consumer = this;
+						}
+					}
 					break;
 				
 				case MessageType.MouseUp:
@@ -652,11 +691,13 @@ namespace Epsitec.Common.Widgets
 		
 		private void HandleNavigatorTextDeleted(object sender)
 		{
+			this.OnTextEdited();
 			this.OnTextDeleted();
 		}
 
 		private void HandleNavigatorTextInserted(object sender)
 		{
+			this.OnTextEdited();
 			this.OnTextInserted();
 		}
 
@@ -673,14 +714,32 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void OnFocused()
 		{
-			base.OnFocused();
 			TextField.blinking = this;
 			this.ResetCursor();
 			
-			if ( this.autoSelectOnFocus )
+			if ( this.AutoSelectOnFocus )
 			{
-				this.SelectAll();
+				Support.CancelEventArgs cancelEvent = new Support.CancelEventArgs();
+				this.OnAutoSelecting(cancelEvent);
+				
+				if ( !cancelEvent.Cancel )
+				{
+					this.SelectAll();
+				}
 			}
+			
+			if ( this.AutoEraseOnFocus )
+			{
+				Support.CancelEventArgs cancelEvent = new Support.CancelEventArgs();
+				this.OnAutoErasing(cancelEvent);
+				
+				if ( !cancelEvent.Cancel )
+				{
+					this.Text = "";
+				}
+			}
+			
+			base.OnFocused();
 		}
 
 		protected override void OnDefocused()
@@ -716,6 +775,14 @@ namespace Epsitec.Common.Widgets
 			if ( this.TextInserted != null )  // qq'un écoute ?
 			{
 				this.TextInserted(this);
+			}
+		}
+
+		protected void OnTextEdited()
+		{
+			if ( this.TextEdited != null )
+			{
+				this.TextEdited(this);
 			}
 		}
 
@@ -755,6 +822,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected virtual void OnAutoSelecting(Support.CancelEventArgs e)
+		{
+			if ( this.AutoSelecting != null )
+			{
+				this.AutoSelecting(this, e);
+			}
+		}
+		
+		protected virtual void OnAutoErasing(Support.CancelEventArgs e)
+		{
+			if ( this.AutoErasing != null )
+			{
+				this.AutoErasing(this, e);
+			}
+		}
+		
 		
 		protected void CursorScroll(bool force)
 		{
@@ -988,11 +1071,14 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
+		public event Support.EventHandler		TextEdited;
 		public event Support.EventHandler		TextInserted;
 		public event Support.EventHandler		TextDeleted;
 		public event Support.EventHandler		SelectionChanged;
 		public event Support.EventHandler		CursorChanged;
 		public event Support.EventHandler		ReadOnlyChanged;
+		public event Support.CancelEventHandler	AutoSelecting;
+		public event Support.CancelEventHandler	AutoErasing;
 		
 		
 		internal static readonly double			TextMargin = 2;
@@ -1000,7 +1086,8 @@ namespace Epsitec.Common.Widgets
 		internal static readonly double			Infinity = 1000000;
 		
 		protected bool							isCombo = false;
-		protected bool							autoSelectOnFocus = false;
+		private bool							autoSelectOnFocus;
+		private bool							autoEraseOnFocus;
 		protected Drawing.Margins				margins = new Drawing.Margins();
 		protected Drawing.Size					realSize;
 		protected Drawing.Point					scrollOffset = new Drawing.Point();

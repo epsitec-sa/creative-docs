@@ -70,7 +70,7 @@ namespace Epsitec.Common.Widgets
 			
 			glass.Dock   = DockStyle.Fill;
 			glass.Parent = window.Root;
-			glass.SetFocused (true);
+			glass.Focus();
 			
 			glass.HotColorChanged += new Support.EventHandler (this.HandleMagnifierHotColorChanged);
 			
