@@ -1,9 +1,10 @@
 //	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier
+//	Statut : OK/PA, 21/01/2004
 
 namespace Epsitec.Common.Support
 {
-	using System.Collections;
+	using ArrayList = System.Collections.ArrayList;
+	using Hashtable = System.Collections.Hashtable;
 	
 	/// <summary>
 	/// Implémentation d'un ResourceBundle basé sur un stockage interne de
@@ -25,37 +26,6 @@ namespace Epsitec.Common.Support
 			bundle.depth  = recursion;
 			
 			return bundle;
-		}
-		
-		
-		public static bool SplitTarget(string target, out string target_bundle, out string target_field)
-		{
-			int pos = target.IndexOf ("#");
-			
-			target_bundle = target;
-			target_field  = null;
-			
-			if (pos >= 0)
-			{
-				target_bundle = target.Substring (0, pos);
-				target_field  = target.Substring (pos+1);
-				
-				return true;
-			}
-			
-			return false;
-		}
-		
-		public static string ExtractName(string sort_name)
-		{
-			int pos = sort_name.IndexOf ('/');
-			
-			if (pos < 0)
-			{
-				throw new ResourceException (string.Format ("'{0}' is an invalid sort name", sort_name));
-			}
-			
-			return sort_name.Substring (pos+1);
 		}
 		
 		
@@ -108,6 +78,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+		public const int					MaxRecursion = 50;
 		
 		public bool							RefInclusionEnabled
 		{
@@ -330,6 +301,37 @@ namespace Epsitec.Common.Support
 			}
 			
 			return bundle_node;
+		}
+		
+		
+		public static bool SplitTarget(string target, out string target_bundle, out string target_field)
+		{
+			int pos = target.IndexOf ("#");
+			
+			target_bundle = target;
+			target_field  = null;
+			
+			if (pos >= 0)
+			{
+				target_bundle = target.Substring (0, pos);
+				target_field  = target.Substring (pos+1);
+				
+				return true;
+			}
+			
+			return false;
+		}
+		
+		public static string ExtractName(string sort_name)
+		{
+			int pos = sort_name.IndexOf ('/');
+			
+			if (pos < 0)
+			{
+				throw new ResourceException (string.Format ("'{0}' is an invalid sort name", sort_name));
+			}
+			
+			return sort_name.Substring (pos+1);
 		}
 		
 		
@@ -587,7 +589,7 @@ namespace Epsitec.Common.Support
 			#endregion
 			
 			#region IEnumerable Members
-			public IEnumerator GetEnumerator()
+			public System.Collections.IEnumerator GetEnumerator()
 			{
 				return this.list.GetEnumerator ();
 			}
@@ -868,7 +870,5 @@ namespace Epsitec.Common.Support
 		protected Field[]					fields;
 		protected bool						ref_inclusion = true;
 		protected bool						auto_merge    = true;
-		
-		protected const int					MaxRecursion = 50;
 	}
 }
