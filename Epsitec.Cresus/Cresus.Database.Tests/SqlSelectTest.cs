@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Database
 			SqlSelect sql_select = new SqlSelect ();
 			sql_select.Predicate = SqlSelectPredicate.Distinct;
 
-			sql_select.Fields.Add(new SqlField("LAST_NAME", null, SqlFieldOrder.Inverse));
+			sql_select.Fields.Add(SqlField.CreateName ("LAST_NAME"), SqlFieldOrder.Inverse);
 			sql_select.Tables.Add(SqlField.CreateName ("EMPLOYEE"));
 
 			//	construit la commande d'extraction

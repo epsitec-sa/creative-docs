@@ -13,11 +13,11 @@ namespace Epsitec.Cresus.Database
 	/// </summary>
 	public class SqlField
 	{
-		public SqlField()
+		internal SqlField()
 		{
 		}
 
-		public SqlField(string name)
+		internal SqlField(string name)
 		{
 			//	Comme on ne sait pas à priori si l'appelant passe un nom qualifié ou un nom
 			//	simple, on doit bien l'analyser. On utiliser l'analyse SQL générique, dans
@@ -36,12 +36,12 @@ namespace Epsitec.Cresus.Database
 			this.value = name;
 		}
 		
-		public SqlField(string name, string alias) : this (name)
+		internal SqlField(string name, string alias) : this (name)
 		{
 			this.alias = alias;
 		}
 		
-		public SqlField(string name, string alias, SqlFieldOrder order) : this (name, alias)
+		internal SqlField(string name, string alias, SqlFieldOrder order) : this (name, alias)
 		{
 			this.order = order;
 		}
@@ -325,12 +325,24 @@ namespace Epsitec.Cresus.Database
 		
 		public static SqlField CreateName(string name)
 		{
-			return new SqlField (name);
+			if (DbSqlStandard.ValidateName (name))
+			{
+				return new SqlField (name);
+			}
+			
+			throw new DbFormatException (string.Format ("{0} is not a valid SQL name.", name));
 		}
 		
 		public static SqlField CreateName(string table_name, string column_name)
 		{
-			return new SqlField (DbSqlStandard.QualifyName (table_name, column_name));
+			string name = DbSqlStandard.QualifyName (table_name, column_name);
+			
+			if (DbSqlStandard.ValidateQualifiedName (name))
+			{
+				return new SqlField (name);
+			}
+			
+			throw new DbFormatException (string.Format ("{0} is not a valid SQL name.", name));
 		}
 		
 		public static SqlField CreateAggregate(SqlAggregate aggregate)
