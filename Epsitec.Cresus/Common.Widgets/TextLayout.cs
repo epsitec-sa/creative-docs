@@ -1353,8 +1353,43 @@ namespace Epsitec.Common.Widgets
 				{
 					fontItem = (FontItem)fontStack.Peek();
 					Drawing.Font blockFont = fontItem.RetFont();
-
-					if ( buffer.Length == 0 )  // ligne vide ?
+					
+					bool start_new_line = false;
+					
+					if (buffer.Length == 0)
+					{
+						if (this.blocks.Count > 0)
+						{
+							JustifBlock block = this.blocks[this.blocks.Count-1] as JustifBlock;
+							
+							if ((bol) && (block.beginIndex == block.endIndex))
+							{
+								//	Ligne vide créée par un tag <BR/>. On peut l'utiliser sans
+								//	vergogne, à moins que ce ne soit à second <BR/> qui vient
+								//	d'être reconnu.
+								
+								if (tag == TextLayout.Tag.LineBreak)
+								{
+									start_new_line = true;
+								}
+							}
+							else
+							{
+								//	Ligne vide, pas de </BR> immédiatement avant. Commence donc
+								//	un nouveau bloc.
+								
+								start_new_line = true;
+							}
+						}
+						else
+						{
+							//	Ligne vide, la première de la liste...
+							
+							start_new_line = true;
+						}
+					}
+					
+					if (start_new_line)
 					{
 						JustifBlock block = new JustifBlock();
 						block.bol        = bol;
@@ -1451,7 +1486,15 @@ namespace Epsitec.Common.Widgets
 							if ( parameters.ContainsKey("size") )
 							{
 								string s = parameters["size"] as string;
-								fontItem.fontSize = System.Double.Parse(s);
+								
+								if (s.EndsWith ("%"))
+								{
+									fontItem.fontSize = System.Double.Parse(s.Substring (0, s.Length-1)) * this.fontSize / 100.0;
+								}
+								else
+								{
+									fontItem.fontSize = System.Double.Parse(s);
+								}
 							}
 							if ( parameters.ContainsKey("color") )
 							{

@@ -1305,6 +1305,7 @@ namespace Epsitec.Common.Widgets
 						this.DisposeTextLayout ();
 						this.Shortcut.Mnemonic = (char) 0;
 						this.OnTextChanged ();
+						this.Invalidate ();
 					}
 				}
 				else if (this.Text != value)
@@ -1314,6 +1315,7 @@ namespace Epsitec.Common.Widgets
 					
 					this.Shortcut.Mnemonic = this.Mnemonic;
 					this.OnTextChanged ();
+					this.Invalidate ();
 				}
 			}
 		}
