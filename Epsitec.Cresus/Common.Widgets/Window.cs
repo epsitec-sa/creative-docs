@@ -7,14 +7,25 @@ namespace Epsitec.Common.Widgets
 	/// n'est pas un widget en tant que tel: Window.Root définit le widget à la
 	/// racine de la fenêtre.
 	/// </summary>
-	public class Window : System.IDisposable, IBundleSupport, IContainer, Support.ICommandDispatcherHost, Support.IPropertyProvider
+	public class Window : System.IDisposable, Support.IContainer, Support.ICommandDispatcherHost, Support.IPropertyProvider
 	{
 		public Window()
 		{
+			this.Initialise (new WindowRoot (this));
+		}
+		
+		internal Window(WindowRoot root)
+		{
+			this.Initialise (root);
+		}
+		
+		
+		private void Initialise(WindowRoot root)
+		{
 			this.cmd_dispatcher = Support.CommandDispatcher.Default;
-			this.components = new ComponentCollection (this);
+			this.components     = new ComponentCollection (this);
 			
-			this.root   = new WindowRoot (this);
+			this.root   = root;
 			this.window = new Platform.Window (this);
 			this.timer  = new Timer ();
 			
@@ -27,6 +38,7 @@ namespace Epsitec.Common.Widgets
 			
 			Window.windows.Add (new System.WeakReference (this));
 		}
+		
 		
 		public void Run()
 		{
@@ -138,12 +150,12 @@ namespace Epsitec.Common.Widgets
 
 		
 		
-		public WindowRoot					Root
+		public WindowRoot						Root
 		{
 			get { return this.root; }
 		}
 		
-		public Window						Owner
+		public Window							Owner
 		{
 			get { return this.owner; }
 			set
@@ -165,7 +177,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Widget						FocusedWidget
+		public Widget							FocusedWidget
 		{
 			get { return this.focused_widget; }
 			set
@@ -192,7 +204,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public Widget						EngagedWidget
+		public Widget							EngagedWidget
 		{
 			get { return this.engaged_widget; }
 			set
@@ -227,7 +239,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public MouseCursor					MouseCursor
+		public MouseCursor						MouseCursor
 		{
 			set
 			{
@@ -236,61 +248,61 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public bool							IsFrozen
+		public bool								IsFrozen
 		{
 			get { return (this.window == null) || this.window.IsFrozen; }
 		}
 		
-		public bool							IsDisposed
+		public bool								IsDisposed
 		{
 			get { return (this.window == null); }
 		}
 		
-		public bool							IsFocused
+		public bool								IsFocused
 		{
 			get { return this.window.Focused; }
 		}
 		
-		public double						Alpha
+		public double							Alpha
 		{
 			get { return this.window.Alpha; }
 			set { this.window.Alpha = value; }
 		}
 		
-		public Drawing.Rectangle			WindowBounds
+		public Drawing.Rectangle				WindowBounds
 		{
 			get { return this.window.WindowBounds; }
 			set { this.window.WindowBounds = value; }
 		}
 		
-		public Drawing.Image				Icon
+		public Drawing.Image					Icon
 		{
 			get { return this.window.Icon; }
 			set { this.window.Icon = value; }
 		}
 		
 		
-		public Support.CommandDispatcher	CommandDispatcher
+		public Support.CommandDispatcher		CommandDispatcher
 		{
 			get { return this.cmd_dispatcher; }
 			set { this.cmd_dispatcher = value; }
 		}
 		
 		
-		public bool							PreventAutoClose
+		public bool								PreventAutoClose
 		{
 			get { return this.window.PreventAutoClose; }
 			set { this.window.PreventAutoClose = value; }
 		}
 		
 		
-		public static bool					IsApplicationActive
+		public static bool						IsApplicationActive
 		{
 			get { return Platform.Window.IsApplicationActive; }
 		}
 		
 		
-		public static int					DebugAliveWindowsCount
+		public static int						DebugAliveWindowsCount
 		{
 			get
 			{
@@ -308,7 +320,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public static Window[]				DebugAliveWindows
+		public static Window[]					DebugAliveWindows
 		{
 			get
 			{
@@ -329,50 +341,50 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public Drawing.Rectangle			PlatformBounds
+		public Drawing.Rectangle				PlatformBounds
 		{
 			get { return new Drawing.Rectangle (this.window.Bounds); }
 		}
 		
-		public Drawing.Point				PlatformLocation
+		public Drawing.Point					PlatformLocation
 		{
 			get { return new Drawing.Point (this.window.Location); }
 			set { this.window.Location = new System.Drawing.Point ((int)(value.X + 0.5), (int)(value.Y + 0.5)); }
 		}
 		
-		public Drawing.Size					PlatformSize
+		public Drawing.Size						PlatformSize
 		{
 			get { return new Drawing.Size (this.window.Size); }
 			set { this.window.Size = new System.Drawing.Size ((int)(value.Width + 0.5), (int)(value.Height + 0.5)); }
 		}
 		
 		
-		public Drawing.Point				WindowLocation
+		public Drawing.Point					WindowLocation
 		{
 			get { return this.window.WindowLocation; }
 			set { this.window.WindowLocation = value; }
 		}
 		
-		public Drawing.Size					WindowSize
+		public Drawing.Size						WindowSize
 		{
 			get { return this.window.WindowSize; }
 			set { this.window.WindowSize = value; }
 		}
 		
 
-		[Bundle ("size")]	public Drawing.Size		ClientSize
+		[Bundle ("size")] public Drawing.Size	ClientSize
 		{
 			get { return new Drawing.Size (this.window.ClientSize); }
 			set { this.window.ClientSize = new System.Drawing.Size ((int)(value.Width + 0.5), (int)(value.Height + 0.5)); }
 		}
 		
-		[Bundle ("text")]	public string			Text
+		[Bundle ("text")] public string			Text
 		{
 			get { return this.text; }
 			set { this.window.Text = this.text = value; }
 		}
 
-		[Bundle ("name")]	public string			Name
+		[Bundle ("name")] public string			Name
 		{
 			get { return this.name; }
 			set { this.window.Name = this.name = value; }
@@ -426,29 +438,6 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		#region IBundleSupport Members
-		public virtual string				PublicClassName
-		{
-			get { return "Window"; }
-		}
-		
-		public virtual void RestoreFromBundle(ObjectBundler bundler, ResourceBundle bundle)
-		{
-			//	Il faut tricher un petit peu ici, car la classe WindowFrame ne fait pas
-			//	partie de la hiérarchie dérivée de Widget. Cependant, l'utilisateur ne
-			//	doit pas en avoir conscience. On laisse simplement "Root" gérer toute
-			//	l'initialisation.
-			
-			this.Root.Name = this.Name;
-			this.Root.RestoreFromBundle (bundler, bundle);
-			
-			if (bundle["icon"].Type == Support.ResourceFieldType.Data)
-			{
-				this.Icon = Support.ImageProvider.Default.GetImage ("res:" + bundle["icon"].AsString);
-			}
-		}
-		#endregion
-		
 		#region IContainer Members
 		public void NotifyComponentInsertion(ComponentCollection collection, IComponent component)
 		{
@@ -458,7 +447,8 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
-		public ComponentCollection			Components
+		
+		public ComponentCollection				Components
 		{
 			get
 			{
@@ -529,6 +519,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+		
 		
 		internal void ResetWindow()
 		{
@@ -636,6 +627,8 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
+		
+		#region QueueItem class
 		protected class QueueItem
 		{
 			public QueueItem(Widget source)
@@ -645,20 +638,21 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			
-			public Widget				Source
+			public Widget						Source
 			{
 				get { return this.source; }
 			}
 			
-			public CommandDispatcher	CommandDispatcher
+			public Support.CommandDispatcher	CommandDispatcher
 			{
 				get { return this.dispatcher; }
 			}
 			
 			
-			protected Widget			source;
-			protected CommandDispatcher	dispatcher;
+			protected Widget					source;
+			protected Support.CommandDispatcher	dispatcher;
 		}
+		#endregion
 		
 		internal void QueueCommand(Widget source)
 		{
@@ -1013,16 +1007,16 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public event EventHandler			WindowActivated;
-		public event EventHandler			WindowDeactivated;
-		public event EventHandler			WindowShown;
-		public event EventHandler			WindowHidden;
-		public event EventHandler			WindowClosed;
-		public event EventHandler			WindowAnimationEnded;
+		public event EventHandler				WindowActivated;
+		public event EventHandler				WindowDeactivated;
+		public event EventHandler				WindowShown;
+		public event EventHandler				WindowHidden;
+		public event EventHandler				WindowClosed;
+		public event EventHandler				WindowAnimationEnded;
 		
-		public static event MessageHandler	MessageFilter;
-		public static event EventHandler	ApplicationActivated;
-		public static event EventHandler	ApplicationDeactivated;
+		public static event MessageHandler		MessageFilter;
+		public static event EventHandler		ApplicationActivated;
+		public static event EventHandler		ApplicationDeactivated;
 		
 		public enum InvalidateReason
 		{
@@ -1031,29 +1025,29 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		private string						name;
-		private string						text;
+		private string							name;
+		private string							text;
 		
-		private Platform.Window				window;
-		private Window						owner;
-		private WindowRoot					root;
+		private Platform.Window					window;
+		private Window							owner;
+		private WindowRoot						root;
 		
-		private int							show_count;
-		private Widget						last_in_widget;
-		private Widget						capturing_widget;
-		private Widget						focused_widget;
-		private Widget						engaged_widget;
-		private Timer						timer;
+		private int								show_count;
+		private Widget							last_in_widget;
+		private Widget							capturing_widget;
+		private Widget							focused_widget;
+		private Widget							engaged_widget;
+		private Timer							timer;
 		
-		private Support.CommandDispatcher	 cmd_dispatcher;
-		private System.Collections.Queue	 cmd_queue = new System.Collections.Queue ();
-		private System.Collections.Hashtable cmd_names = new System.Collections.Hashtable ();
+		private Support.CommandDispatcher		cmd_dispatcher;
+		private System.Collections.Queue		cmd_queue = new System.Collections.Queue ();
+		private System.Collections.Hashtable	cmd_names = new System.Collections.Hashtable ();
 		
-		private System.Collections.Queue	 post_paint_queue = new System.Collections.Queue ();
-		private System.Collections.Hashtable property_hash;
+		private System.Collections.Queue		post_paint_queue = new System.Collections.Queue ();
+		private System.Collections.Hashtable	property_hash;
 		
-		private ComponentCollection			 components;
+		private ComponentCollection				components;
 		
-		static System.Collections.ArrayList	windows = new System.Collections.ArrayList ();
+		static System.Collections.ArrayList		windows = new System.Collections.ArrayList ();
 	}
 }

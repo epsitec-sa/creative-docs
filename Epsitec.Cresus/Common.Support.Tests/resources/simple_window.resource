@@ -145,7 +145,7 @@
      <data name='size'>215;85</data>
      <data name='pos'>10;50</data>
      <data name='dock_h'>no</data>
-     <data name='dock_m'>5;5;20;5</data>
+     <data name='dock_m'>5;5;5;5</data>
      <list name='widgets'>
       <bundle>
        <data name='class'>RadioButton</data>

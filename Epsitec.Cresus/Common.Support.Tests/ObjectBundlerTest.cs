@@ -78,15 +78,15 @@ namespace Epsitec.Common.Support
 			
 			Assertion.AssertNotNull (bundle);
 			
-			object         obj    = bundler.CreateFromBundle (bundle);
-			Widgets.Window window = obj as Widgets.Window;
+			object             obj  = bundler.CreateFromBundle (bundle);
+			Widgets.WindowRoot root = obj as Widgets.WindowRoot;
 			
 			Assertion.AssertNotNull (obj);
-			Assertion.AssertNotNull (window);
+			Assertion.AssertNotNull (root);
 			
-			this.test_window = window;
+			this.test_window = root.Window;
 			
-			window.Show ();
+			root.Window.Show ();
 		}
 		
 		[Test] public void CheckCommandDispatcher()

@@ -527,7 +527,7 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 			this.ResetCursor();
 			this.CursorScroll();
-			this.OnTextChanged();
+//-			this.OnTextChanged();
 			this.OnTextInserted();
 			return true;
 		}
@@ -554,7 +554,7 @@ namespace Epsitec.Common.Widgets
 				this.Invalidate();
 				this.ResetCursor();
 				this.CursorScroll();
-				this.OnTextChanged();
+//-				this.OnTextChanged();
 				this.OnTextDeleted();
 			}
 			else	// à droite du curseur ?
@@ -568,7 +568,7 @@ namespace Epsitec.Common.Widgets
 				this.Invalidate();
 				this.ResetCursor();
 				this.CursorScroll();
-				this.OnTextChanged();
+//-				this.OnTextChanged();
 				this.OnTextDeleted();
 			}
 
@@ -598,7 +598,7 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 			this.ResetCursor();
 			this.CursorScroll();
-			if ( signalTextChanged )  this.OnTextChanged();
+//-			if ( signalTextChanged )  this.OnTextChanged();
 			this.OnTextDeleted();
 			return true;
 		}
@@ -712,15 +712,6 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 
-
-		// Génère un événement pour dire que le texte a changé (ajout ou suppression).
-		protected virtual void OnTextChanged()
-		{
-			if ( this.TextChanged != null )  // qq'un écoute ?
-			{
-				this.TextChanged(this);
-			}
-		}
 
 		// Génère un événement pour dire que le texte a changé (ajout).
 		protected virtual void OnTextInserted()
@@ -861,7 +852,6 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		public event EventHandler TextChanged;
 		public event EventHandler TextInserted;
 		public event EventHandler TextDeleted;
 		

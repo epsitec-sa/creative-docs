@@ -487,16 +487,6 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Win32Api.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Win32Const.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
                     RelPath = "Window.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -722,6 +712,16 @@
                 />
                 <File
                     RelPath = "Layouts\Table.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Platform\Win32Api.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Platform\Win32Const.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -55,6 +55,12 @@ namespace Epsitec.Common.Widgets.Design
 			}
 		}
 		
+		public Widget					Root
+		{
+			get { return this.root; }
+			set { this.root = value; }
+		}
+		
 		
 		protected virtual void AttachPanel(Panel panel)
 		{
@@ -228,6 +234,7 @@ namespace Epsitec.Common.Widgets.Design
 		
 		protected Panel						panel;
 		protected Widget					hot_widget;
+		protected Widget					root;
 		
 		protected HiliteAdorner				hilite_adorner;
 		protected GripsOverlay				grips_overlay;

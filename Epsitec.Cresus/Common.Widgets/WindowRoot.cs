@@ -4,15 +4,19 @@ namespace Epsitec.Common.Widgets
 	/// La classe WindowRoot implémente le fond de chaque fenêtre. L'utilisateur obtient
 	/// en général une instance de WindowRoot en appelant Window.Root.
 	/// </summary>
-	[Support.SuppressBundleSupport]
 	public class WindowRoot : AbstractGroup
 	{
-		public WindowRoot(Window window)
+		protected WindowRoot()
 		{
-			this.window = window;
-			
 			this.InternalState |= InternalState.PossibleContainer;
 		}
+		
+		public WindowRoot(Window window) : this ()
+		{
+			this.window   = window;
+			this.is_ready = true;
+		}
+		
 		
 		public override bool						IsVisible
 		{
@@ -34,6 +38,52 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				return null;
+			}
+		}
+		
+		
+		#region IBundleSupport Members
+		public override string						PublicClassName
+		{
+			get { return "Window"; }
+		}
+		
+		public override void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
+		{
+			this.window = new Window (this);
+			
+			base.RestoreFromBundle (bundler, bundle);
+			
+			this.window.Name       = this.Name;
+			this.window.ClientSize = this.Size;
+			this.window.Text       = this.Text;
+			
+			if (bundle["icon"].Type == Support.ResourceFieldType.Data)
+			{
+				this.window.Icon = Support.ImageProvider.Default.GetImage ("res:" + bundle["icon"].AsString);
+			}
+			
+			this.is_ready = true;
+		}
+		#endregion
+		
+		public override void Invalidate()
+		{
+			System.Diagnostics.Debug.Assert (this.Parent == null);
+			
+			if (this.window != null)
+			{
+				this.window.MarkForRepaint (this.Bounds);
+			}
+		}
+		
+		public override void Invalidate(Drawing.Rectangle rect)
+		{
+			System.Diagnostics.Debug.Assert (this.Parent == null);
+			
+			if (this.window != null)
+			{
+				this.window.MarkForRepaint (this.MapClientToParent (rect));
 			}
 		}
 		
@@ -63,28 +113,33 @@ namespace Epsitec.Common.Widgets
 			return true;
 		}
 		
-		public override void Invalidate()
+		protected override void OnTextChanged()
 		{
-			System.Diagnostics.Debug.Assert (this.Parent == null);
+			base.OnTextChanged ();
 			
 			if (this.window != null)
 			{
-				this.window.MarkForRepaint (this.Bounds);
+				this.window.Text = this.Text;
 			}
 		}
 		
-		public override void Invalidate(Drawing.Rectangle rect)
+		protected override void OnNameChanged()
 		{
-			System.Diagnostics.Debug.Assert (this.Parent == null);
+			base.OnNameChanged ();
 			
 			if (this.window != null)
 			{
-				this.window.MarkForRepaint (this.MapClientToParent (rect));
+				this.window.Name = this.Name;
 			}
 		}
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
 		{
+			if (this.is_ready == false)
+			{
+				return;
+			}
+			
 			double dx = this.Client.Width;
 			double dy = this.Client.Height;
 			
@@ -121,5 +176,6 @@ namespace Epsitec.Common.Widgets
 		
 		
 		protected Window							window;
+		protected bool								is_ready;
 	}
 }

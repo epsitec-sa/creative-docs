@@ -1213,11 +1213,16 @@ namespace Epsitec.Common.Widgets
 			{
 				if ((value == null) || (value.Length == 0))
 				{
-					this.name = null;
+					if (this.name != null)
+					{
+						this.name = null;
+						this.OnNameChanged ();
+					}
 				}
-				else
+				else if (this.name != value)
 				{
 					this.name = value;
+					this.OnNameChanged ();
 				}
 			}
 		}
@@ -1282,8 +1287,12 @@ namespace Epsitec.Common.Widgets
 			{
 				if ((value == null) || (value.Length == 0))
 				{
-					this.DisposeTextLayout ();
-					this.Shortcut.Mnemonic = (char) 0;
+					if (this.text_layout != null)
+					{
+						this.DisposeTextLayout ();
+						this.Shortcut.Mnemonic = (char) 0;
+						this.OnTextChanged ();
+					}
 				}
 				else if (this.Text != value)
 				{
@@ -1291,6 +1300,7 @@ namespace Epsitec.Common.Widgets
 					this.ModifyTextLayout (value);
 					
 					this.Shortcut.Mnemonic = this.Mnemonic;
+					this.OnTextChanged ();
 				}
 			}
 		}
@@ -1411,6 +1421,8 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler					MinSizeChanged;
 		public event EventHandler					MaxSizeChanged;
 		public event EventHandler					Disposing;
+		public event EventHandler					TextChanged;
+		public event EventHandler					NameChanged;
 		
 		public event PaintBoundsCallback			PaintBoundsCallback;
 		
@@ -4205,6 +4217,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnNameChanged()
+		{
+			if (this.NameChanged != null)
+			{
+				this.NameChanged (this);
+			}
+		}
+		
+		protected virtual void OnTextChanged()
+		{
+			if (this.TextChanged != null)
+			{
+				this.TextChanged (this);
+			}
+		}
 		
 		protected virtual void OnFocused()
 		{

@@ -158,7 +158,7 @@ namespace Epsitec.Common.Support
 						
 						try
 						{
-							IBundleSupport bundle_support = System.Activator.CreateInstance (type) as IBundleSupport;
+							IBundleSupport bundle_support = System.Activator.CreateInstance (type, true) as IBundleSupport;
 							ObjectBundler.Register (bundle_support);
 							bundle_support.Dispose ();
 						}
@@ -223,7 +223,7 @@ namespace Epsitec.Common.Support
 				return null;
 			}
 			
-			object         copy    = System.Activator.CreateInstance (source.GetType ());
+			object         copy    = System.Activator.CreateInstance (source.GetType (), true);
 			IBundleSupport dst_obj = copy as IBundleSupport;
 			
 			System.Diagnostics.Debug.Assert (dst_obj != null);
@@ -289,7 +289,7 @@ namespace Epsitec.Common.Support
 				return null;
 			}
 			
-			IBundleSupport obj = System.Activator.CreateInstance (obj_type) as IBundleSupport;
+			IBundleSupport obj = System.Activator.CreateInstance (obj_type, true) as IBundleSupport;
 			
 			foreach (MemberInfo member_info in obj_type.GetMembers (BindingFlags.Public | BindingFlags.Instance))
 			{
@@ -374,7 +374,7 @@ namespace Epsitec.Common.Support
 			
 			this.BundleAddDataField (bundle, "class", obj_class);
 			
-			object obj_default = System.Activator.CreateInstance (obj_type);
+			object obj_default = System.Activator.CreateInstance (obj_type, true);
 			
 			foreach (MemberInfo member_info in obj_type.GetMembers (BindingFlags.Public | BindingFlags.Instance))
 			{

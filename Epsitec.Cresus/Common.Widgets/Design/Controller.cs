@@ -138,6 +138,9 @@ namespace Epsitec.Common.Widgets.Design
 		{
 			System.Diagnostics.Debug.Assert (this.widget_palette == sender);
 			
+			//	Quand on commence une opération de drag & drop depuis la palette des widgets, on commence
+			//	par dé-sélectionner tous les widgets de toutes les fenêtres :
+			
 			foreach (Window window in this.edit_window_list)
 			{
 				AbstractWidgetEdit editor = this.FindEditor (window);
@@ -149,27 +152,56 @@ namespace Epsitec.Common.Widgets.Design
 		private void HandleEditorSelected(object sender, object o)
 		{
 			AbstractWidgetEdit editor = sender as AbstractWidgetEdit;
+			Widget             widget = o as Widget;
 			
 			System.Diagnostics.Debug.Assert (editor != null);
+			System.Diagnostics.Debug.Assert (widget != null);
 			System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Count > 0);
 			System.Diagnostics.Debug.Assert (editor.SelectedWidgets.Contains (o));
 			
+			//	Quand un widget est sélectionné dans un éditeur, on vérifie que l'éditeur actif
+			//	est bien à jour, puis on met à jour les informations sur la sélection et sur le
+			//	widget actif :
+			
 			this.SetActiveEditor (editor);
 			this.UpdateSelectionState ();
+			this.UpdateActiveWidget ();
 		}
 		
 		private void HandleEditorDeselected(object sender, object o)
 		{
 			AbstractWidgetEdit editor = sender as AbstractWidgetEdit;
+			Widget             widget = o as Widget;
 			
 			System.Diagnostics.Debug.Assert (editor != null);
+			System.Diagnostics.Debug.Assert (widget != null);
+			
+			//	Quand un widget est dé-sélectionné dans un éditeur, on met à jour les informations
+			//	de sélection ainsi que celles sur le widget actif :
 			
 			this.UpdateSelectionState ();
+			this.UpdateActiveWidget ();
+		}
+		
+		private void HandleEditWindowWindowActivated(object sender)
+		{
+			Window             window = sender as Window;
+			AbstractWidgetEdit editor = this.FindEditor (window);
+			
+			System.Diagnostics.Debug.Assert (window != null);
+			System.Diagnostics.Debug.Assert (editor != null);
+			
+			//	Quand une fenêtre contenant un éditeur est activée, on prend note de l'éditeur comme
+			//	nouvel éditeur actif :
+			
+			this.SetActiveEditor (editor);
 		}
 		
 		
 		protected void UpdateSelectionState()
 		{
+			//	Détermine s'il y a une sélection :
+			
 			bool has_selection = false;
 			
 			if (this.active_editor != null)
@@ -180,11 +212,41 @@ namespace Epsitec.Common.Widgets.Design
 				}
 			}
 			
+			//	S'il y a une sélection, il faut mettre à jour l'état des commandes qui s'y
+			//	rapportent :
+			
 			this.StateDeleteActiveSelection.Enabled = has_selection;
+		}
+		
+		protected void UpdateActiveWidget ()
+		{
+			//	Détermine s'il y a un widget actif pour l'édition. Pour cela, il faut qu'un
+			//	seul widget soit sélectionné. Si aucun widget n'est sélectionné, mais qu'un
+			//	éditeur est actif, alors on utilise la racine de l'éditeur comme widget
+			//	actif (cela permet d'éditer les propriétés du conteneur = fenêtre) :
+			
+			Widget widget = null;
+			
+			if (this.active_editor != null)
+			{
+				if (this.active_editor.SelectedWidgets.Count == 1)
+				{
+					widget = this.active_editor.SelectedWidgets[0];
+				}
+				else if (this.active_editor.SelectedWidgets.Count == 0)
+				{
+					widget = this.active_editor.Root;
+				}
+			}
+			
+			this.SetActiveWidget (widget);
 		}
 		
 		protected void SetActiveEditor(AbstractWidgetEdit editor)
 		{
+			//	Change d'éditeur actif. Si on change d'éditeur, on s'assure qu'aucune
+			//	sélection n'est encore active dans un autre éditeur :
+			
 			if (this.active_editor != editor)
 			{
 				this.active_editor = editor;
@@ -201,6 +263,15 @@ namespace Epsitec.Common.Widgets.Design
 			}
 		}
 		
+		protected void SetActiveWidget(Widget widget)
+		{
+			//	Change de widget actif (= en cours d'édition).
+			
+			if (this.active_widget != widget)
+			{
+				this.active_widget = widget;
+			}
+		}
 		
 		
 		
@@ -220,8 +291,12 @@ namespace Epsitec.Common.Widgets.Design
 			Design.AbsPosWidgetEdit editor = new AbsPosWidgetEdit ();
 			
 			editor.Panel = surface.Panel;
-			editor.Selected   += new SelectionEventHandler(this.HandleEditorSelected);
-			editor.Deselected += new SelectionEventHandler(this.HandleEditorDeselected);
+			editor.Root  = window.Root;
+			
+			editor.Selected   += new SelectionEventHandler (this.HandleEditorSelected);
+			editor.Deselected += new SelectionEventHandler (this.HandleEditorDeselected);
+			
+			window.WindowActivated += new EventHandler (this.HandleEditWindowWindowActivated);
 			
 			window.SetProperty ("$editor", editor);
 			window.Show ();
@@ -251,6 +326,9 @@ namespace Epsitec.Common.Widgets.Design
 			this.active_editor.SelectedWidgets.Clear ();
 		}
 		
+		
+		
+		
 		protected Support.CommandDispatcher		dispatcher;
 		protected bool							is_initialised;
 		
@@ -260,7 +338,9 @@ namespace Epsitec.Common.Widgets.Design
 		protected Window						creation_window;
 		protected System.Collections.ArrayList	edit_window_list;
 		
+		protected Window						active_window;
 		protected AbstractWidgetEdit			active_editor;
+		protected Widget						active_widget;
 		
 		protected CommandState					state_delete_selection;
 	}
