@@ -3,7 +3,7 @@
 
 namespace Epsitec.Cresus.Database
 {
-	using Converter = Epsitec.Common.Converters.Converter;
+	using Converter = Epsitec.Common.Types.Converter;
 	
 	/// <summary>
 	/// La classe DbTools fournit quelques fonctions utilitaires qui n'ont pas
