@@ -11,14 +11,14 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class AbstractMenu : Widget
 	{
-		public enum TypeDeveloped
+		protected enum TypeDeveloped
 		{
 			Close,
 			Delay,
 			Quick,
 		}
 
-		public AbstractMenu(MenuType type)
+		protected AbstractMenu(MenuType type)
 		{
 			this.type = type;
 			this.timer = new Timer();
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Indique s'il faut développer les sous-menus.
-		public TypeDeveloped MenuDeveloped
+		protected TypeDeveloped MenuDeveloped
 		{
 			get
 			{
