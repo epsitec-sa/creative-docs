@@ -25,7 +25,15 @@ namespace Epsitec.Common.Drawing.Renderers
 		
 		public Color						Color
 		{
-			set { this.SetColor (value); }
+			get
+			{
+				return this.color;
+			}
+			set
+			{
+				this.color = value;
+				this.SetColor (value);
+			}
 		}
 		
 		
@@ -81,5 +89,7 @@ namespace Epsitec.Common.Drawing.Renderers
 		{
 		}
 		
+		
+		protected Color						color;
 	}
 }
