@@ -13,6 +13,7 @@ namespace Epsitec.Common.Widgets
 			this.isCombo = true;
 			
 			this.button = new ArrowButton(this);
+			this.button.Name = "Open";
 			this.button.Direction = Direction.Down;
 			this.button.ButtonStyle = ButtonStyle.Combo;
 			this.button.Pressed += new MessageEventHandler(this.HandleButtonPressed);

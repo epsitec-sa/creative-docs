@@ -11,6 +11,8 @@ namespace Epsitec.Common.Widgets
 
 			this.arrowUp = new ArrowButton(this);
 			this.arrowDown = new ArrowButton(this);
+			this.arrowUp.Name = "Up";
+			this.arrowDown.Name = "Down";
 			this.arrowUp.Direction = Direction.Up;
 			this.arrowDown.Direction = Direction.Down;
 			this.arrowUp.ButtonStyle = ButtonStyle.UpDown;
