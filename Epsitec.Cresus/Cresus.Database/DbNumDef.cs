@@ -40,24 +40,29 @@ namespace Epsitec.Cresus.Database
 			this.min_value       = min_value;
 			this.max_value       = max_value;
 
-			this.InvalidateAutoPrecision ();
+			this.InvalidateAndUpdateAutoPrecision ();
 		}
 		
 		
 		#region ICloneable Members
-		public object Clone()
+		public virtual object Clone()
 		{
-			DbNumDef num = new DbNumDef ();
+			//	On ne fait pas un new DbNumDef, car on veut pouvoir réutiliser ce code
+			//	par héritage dans d'éventuelles classes dérivées. Vive le dynamisme !
 			
-			num.raw_type  = this.raw_type;
+			DbNumDef def = System.Activator.CreateInstance (this.GetType ()) as DbNumDef;
 			
-			num.min_value = this.min_value;
-			num.max_value = this.max_value;
+			def.raw_type  = this.raw_type;
 			
-			num.digit_precision = this.digit_precision;
-			num.digit_shift     = this.digit_shift;
+			def.min_value = this.min_value;
+			def.max_value = this.max_value;
 			
-			return num;
+			def.digit_precision = this.digit_precision;
+			def.digit_shift     = this.digit_shift;
+			
+			def.InvalidateAndUpdateAutoPrecision ();
+			
+			return def;
 		}
 		#endregion
 		
@@ -145,7 +150,7 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (this.digit_precision_auto < DbNumDef.digit_max);
 		}
 		
-		protected void InvalidateAutoPrecision()
+		protected void InvalidateAndUpdateAutoPrecision()
 		{
 			this.digit_precision_auto = 0;
 			this.digit_shift_auto     = 0;
@@ -259,7 +264,7 @@ namespace Epsitec.Cresus.Database
 				this.DebugCheckAbsolute (value);
 
 				this.min_value = value;
-				this.InvalidateAutoPrecision ();				
+				this.InvalidateAndUpdateAutoPrecision ();				
 			}
 		}
 		
@@ -289,7 +294,7 @@ namespace Epsitec.Cresus.Database
 				this.DebugCheckAbsolute (value);
 
 				this.max_value = value;
-				this.InvalidateAutoPrecision ();
+				this.InvalidateAndUpdateAutoPrecision ();
 			}
 		}
 		
@@ -543,9 +548,10 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		protected static readonly int		digit_max		= 24;
-		protected static readonly decimal	max_absolute	= 999999999999999999999999.0M;
-		protected static readonly decimal	min_absolute	= -max_absolute;
+		protected const int					digit_max		= 24;
+		protected const decimal				max_absolute	= 999999999999999999999999.0M;
+		protected const decimal				min_absolute	= -max_absolute;
+		
 		protected static decimal[]			digit_table;
 		protected static decimal[]			digit_table_scale;
 		
