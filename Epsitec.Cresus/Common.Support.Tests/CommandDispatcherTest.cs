@@ -38,6 +38,33 @@ namespace Epsitec.Common.Support
 			dispatcher.RegisterController (broken);
 		}
 		
+		[Test] public void CheckRegisterControllerMultipart()
+		{
+			CommandDispatcher       dispatcher = new CommandDispatcher ();
+			MultipartTestController multipart  = new MultipartTestController ();
+			
+			dispatcher.RegisterController (multipart);
+			
+			//	Vérifie que le dispatch se fait correctement et que les sous-parties des commandes sont
+			//	correctement interprétées.
+			
+			CommandDispatcherTest.buffer.Length = 0;
+			dispatcher.Dispatch ("a.b.c", null);
+			Assertion.AssertEquals ("a.b.c/*.b.c/*.c/", CommandDispatcherTest.buffer.ToString ());
+			
+			CommandDispatcherTest.buffer.Length = 0;
+			dispatcher.Dispatch ("x.b.c", null);
+			Assertion.AssertEquals ("*.b.c/*.c/", CommandDispatcherTest.buffer.ToString ());
+			
+			CommandDispatcherTest.buffer.Length = 0;
+			dispatcher.Dispatch ("x.y.c", null);
+			Assertion.AssertEquals ("*.c/", CommandDispatcherTest.buffer.ToString ());
+			
+			CommandDispatcherTest.buffer.Length = 0;
+			dispatcher.Dispatch ("q.r.s.b.c", null);
+			Assertion.AssertEquals ("*.b.c/*.c/", CommandDispatcherTest.buffer.ToString ());
+		}
+		
 		static System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 		
 		#region XyzTestController classes
@@ -113,6 +140,28 @@ namespace Epsitec.Common.Support
 			
 			[Command ("broken")] public void BrokenMethod(string command)
 			{
+			}
+		}
+		
+		public class MultipartTestController
+		{
+			public MultipartTestController()
+			{
+			}
+			
+			[Command ("a.b.c")] public void Method1()
+			{
+				CommandDispatcherTest.buffer.Append ("a.b.c/");
+			}
+			
+			[Command ("*.b.c")] public void Method2()
+			{
+				CommandDispatcherTest.buffer.Append ("*.b.c/");
+			}
+			
+			[Command ("*.c")] public void Method3()
+			{
+				CommandDispatcherTest.buffer.Append ("*.c/");
 			}
 		}
 		#endregion

@@ -21,10 +21,33 @@ namespace Epsitec.Common.Support
 			System.Diagnostics.Debug.WriteLine ("Command: " + command);
 			System.Diagnostics.Debug.WriteLine ("Source:  " + source);
 			
-			if (this.event_handlers.Contains (command))
+			CommandEventArgs command_event = new CommandEventArgs (source, command);
+			
+			string[] command_elements = command.Split ('.');
+			int      command_length   = command_elements.Length;
+			int      command_subpart  = 0;
+			
+			for (;;)
 			{
 				EventSlot slot = this.event_handlers[command] as EventSlot;
-				slot.Fire (this, new CommandEventArgs (source, command));
+				
+				if (slot != null)
+				{
+					slot.Fire (this, command_event);
+				}
+				
+				if (command_length < 2)
+				{
+					break;
+				}
+				
+				//	Réduit une commande du genre a.b.c successivement en *.b.c puis *.c avant
+				//	d'arrêter la recherche d'une commande adéquate.
+				
+				command_elements[command_subpart] = "*";
+				command = string.Join (".", command_elements, command_subpart, command_length);
+				command_subpart++;
+				command_length--;
 			}
 		}
 		
