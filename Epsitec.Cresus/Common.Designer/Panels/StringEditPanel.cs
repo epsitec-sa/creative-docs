@@ -78,6 +78,7 @@ namespace Epsitec.Common.Designer.Panels
 			column_0_edit_model.DefocusAction       = DefocusAction.Modal;
 			
 			new Common.Widgets.Validators.RegexValidator (column_0_edit_model, Support.RegexFactory.ResourceName, false);
+			new UniqueNameValidator (column_0_edit_model);
 			
 			this.edit_array.Columns[0].HeaderText = "Clef";
 			this.edit_array.Columns[0].IsReadOnly = true;
@@ -269,6 +270,57 @@ namespace Epsitec.Common.Designer.Panels
 				(this.lang_suffix_1 != this.lang_suffix_2))
 			{
 				this.lang_combo.SelectedName = this.lang_suffix_2;
+			}
+		}
+		
+		
+		
+		private class UniqueNameValidator : Common.Widgets.Validators.AbstractTextValidator
+		{
+			public UniqueNameValidator() : base (null)
+			{
+			}
+			
+			public UniqueNameValidator(Widget widget) : base (widget)
+			{
+			}
+			
+			
+			protected override void ValidateText(string text)
+			{
+				Widget iter = this.widget;
+				
+				this.state = Support.ValidationState.Ok;
+				
+				while (iter != null)
+				{
+					EditArray edit_array = iter as EditArray;
+					
+					if ((edit_array != null) &&
+						(edit_array.InteractionMode == ScrollInteractionMode.Edition))
+					{
+						int                        index = edit_array.SelectedIndex;
+						StringEditController.Store store = edit_array.TextArrayStore as StringEditController.Store;
+						
+						int max_rows = store.GetRowCount ();
+						
+						for (int i = 0; i < max_rows; i++)
+						{
+							if (i != index)
+							{
+								if (store.GetCellText (i, 0) == text)
+								{
+									this.state = Support.ValidationState.Error;
+									return;
+								}
+							}
+						}
+						
+						break;
+					}
+					
+					iter = iter.Parent;
+				}
 			}
 		}
 		
