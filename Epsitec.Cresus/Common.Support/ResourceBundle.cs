@@ -746,6 +746,36 @@ namespace Epsitec.Common.Support
 			
 			public static readonly Field	Empty = new Field ();
 			
+			public void SetName(string name)
+			{
+				this.name = name;
+				this.xml.Attributes["name"].Value = name;
+			}
+			
+			public void SetStringValue(string value)
+			{
+				//	L'appelant doit s'assurer que la valeur passée en entrée est valide d'un point
+				//	de vue XML (balises équilibrées, etc.)
+				
+				this.type = ResourceFieldType.Data;
+				this.data = value;
+				
+				if (value.IndexOf ('<') < 0)
+				{
+					//	Il n'y a aucune balise <>, donc on peut utiliser le texte tel quel :
+					
+					this.xml.InnerXml = value;
+				}
+				else
+				{
+					//	Il y a des balises, il faut donc signaler que la valeur est du XML et
+					//	pas un texte simple :
+					
+					this.xml.InnerXml = "<xml>" + value + "</xml>";
+				}
+			}
+			
+			
 			protected void Compile()
 			{
 				if ((this.type == ResourceFieldType.None) &&
