@@ -188,9 +188,9 @@ mais je n'ai pas encore d'expérience dans ce domaine. Voici l'idée:
   extraire les paramètres retournés en sortie dans une collection
   de SqlFields. SqlField.AsParameter retourne alors la valeur...
   
-  IDbAbstraction.ExtractSqlParameters va extraire les paramètres
-  de retour et remplir les instances de SqlField au moyen de la
-  méthode SqlField.SetParameterOutResult.
+  ISqlBuilder.GetSqlParameters va extraire les paramètres de retour
+  et remplir les instances de SqlField au moyen de la méthode
+  SqlField.SetParameterOutResult.
 
 
 Pour l'instant, ISqlBuilder ne supporte pas d'insertion à partir de
