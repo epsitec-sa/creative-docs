@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Database
 
 			//	crée un champ à tout usage
 			sql_field = SqlField.CreateAll();
-			Assertion.AssertEquals (SqlFieldType.Unsupported, sql_field.Type);
+			Assertion.AssertEquals (SqlFieldType.All, sql_field.Type);
 			Assertion.AssertEquals (null, sql_field.AsName);
 			Assertion.AssertEquals (null, sql_field.AsQualifiedName);
 			Assertion.AssertEquals (null, sql_field.Alias);
