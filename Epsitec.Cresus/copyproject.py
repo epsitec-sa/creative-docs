@@ -90,6 +90,7 @@ class CopyProject:
         return revnum
     
     def strip_scc_info_csproj(self, name):
+        print "Stripping scc info from " + name
         f = open(name, 'r')
         lines = f.readlines()
         lines_to_remove = list()
@@ -113,6 +114,7 @@ class CopyProject:
 
 
     def strip_scc_info_vdproj(self, name):
+        print "Stripping scc info from " + name
         f = open(name, 'r')
         lines = f.readlines()
         lines_to_remove = list()
@@ -131,6 +133,7 @@ class CopyProject:
         self.proj_count += 1
 
     def patch_path_info(self, name):
+        print "Patching path info in " + name
         f = open(name, 'r')
         lines = f.readlines()
         lines_to_remove = list()
@@ -145,7 +148,7 @@ class CopyProject:
             i += 1
 
         if n > 0:
-            print 'remplaced directory in ' + name
+            print 'replaced directory in ' + name
         
         f = open(name, 'w')
         f.writelines(lines)
@@ -154,6 +157,7 @@ class CopyProject:
         self.proj_count += 1
 
     def strip_solution(self, name):
+        print "Stripping scc info from " + name
         f = open(name, 'r')
         lines = f.readlines()
         f.close()
