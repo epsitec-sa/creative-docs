@@ -11,7 +11,7 @@ namespace Epsitec.Common.Widgets
 			this.slider.HasFrame = false;
 			this.slider.ValueChanged += new Support.EventHandler(this.HandleSliderValueChanged);
 			
-			this.range.Changed += new System.EventHandler(this.HandleRangeChanged);
+			this.range.Changed += new Support.EventHandler(this.HandleRangeChanged);
 			this.UpdateSliderRange();
 		}
 		
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Widgets
 			this.Value = this.slider.Value;
 		}
 		
-		private void HandleRangeChanged(object sender, System.EventArgs e)
+		private void HandleRangeChanged(object sender)
 		{
 			this.UpdateSliderRange();
 		}
