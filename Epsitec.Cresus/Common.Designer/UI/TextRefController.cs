@@ -282,7 +282,6 @@ namespace Epsitec.Common.Designer.UI
 			}
 			else
 			{
-				//	TODO: supprimer le texte ?
 				adapter.Value = Resources.ResolveTextRef (adapter.Value);
 			}
 		}
@@ -354,7 +353,6 @@ namespace Epsitec.Common.Designer.UI
 							{
 								this.combo_field.StartPassiveEdition (this.combo_field.PlaceHolder);
 							}
-							//	TODO: effacer le texte actuel ?
 							break;
 						
 						case InternalState.UsingExistingText:

@@ -12,7 +12,7 @@ namespace Epsitec.Common.Designer
 	/// La classe StringEditController gère l'édition d'un bundle de ressources
 	/// textuelles.
 	/// </summary>
-	public class StringEditController : AbstractController
+	public class StringEditController : AbstractController, Support.IBundleProvider
 	{
 		public StringEditController(Application application) : base (application)
 		{
@@ -22,6 +22,8 @@ namespace Epsitec.Common.Designer
 			
 			this.save_command_state = CommandState.Find ("SaveStringBundle", this.dispatcher);
 			this.UpdateCommandStates ();
+			
+			Support.Resources.Add (this);
 		}
 		
 		
@@ -59,6 +61,7 @@ namespace Epsitec.Common.Designer
 			ResourceBundle           bundle  = ResourceBundle.Create (prefix, name, ResourceLevel.Default);
 			
 			bundle.DefineType ("String");
+			bundles.DefinePrefix (prefix);
 			bundles.Add (bundle);
 			bundles.Name = full_name;
 			
@@ -241,7 +244,47 @@ namespace Epsitec.Common.Designer
 			return false;
 		}
 		
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				Support.Resources.Remove (this);
+			}
+			
+			base.Dispose (disposing);
+		}
+
 		
+		#region IBundleProvider Members
+		public ResourceBundle GetBundle(IResourceProvider provider, string id, Epsitec.Common.Support.ResourceLevel level, CultureInfo culture, int recursion)
+		{
+			//	Le gestionnaire de ressources recherche un bundle; s'il s'avère que nous
+			//	sommes en train de l'éditer, on va utiliser les données de notre copie locale
+			//	plutôt que d'accéder le bundle depuis sa source originale.
+			
+			if (this.bundles.ContainsKey (id))
+			{
+				ResourceBundleCollection bundles = this.bundles[id] as ResourceBundleCollection;
+				
+				System.Diagnostics.Debug.Assert (bundles != null);
+				
+				if (bundles.Prefix == provider.Prefix)
+				{
+					//	OK. Nous avons ce bundle en mémoire; il faut trouver la variante
+					//	correcte du bundle :
+					
+					ResourceBundle bundle = bundles[level, culture];
+				
+					if (bundle != null)
+					{
+						return bundle;
+					}
+				}
+			}
+			
+			return null;
+		}
+		#endregion
 		
 		public Store							ActiveStore
 		{
