@@ -136,7 +136,7 @@ namespace Epsitec.Common.Pictogram.Data
 			get
 			{
 				IAdorner adorner = Epsitec.Common.Widgets.Adorner.Factory.Active;
-				Drawing.Color color = adorner.GetColorCaption();
+				Drawing.Color color = adorner.ColorCaption;
 				return Drawing.Color.FromARGB(0.8, color.R, color.G, color.B);
 			}
 #endif

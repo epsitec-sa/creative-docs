@@ -11,7 +11,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public AbstractPanel()
 		{
 			this.extendedButton = new ArrowButton(this);
-			this.extendedButton.ButtonStyle = ButtonStyle.Scroller;
+			this.extendedButton.ButtonStyle = ButtonStyle.Combo;
 			this.extendedButton.Direction = Direction.Down;
 			this.extendedButton.Clicked += new MessageEventHandler(this.ExtendedButtonClicked);
 
@@ -198,7 +198,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			
 			graphics.AddFilledRectangle(rect);
-			Drawing.Color color = adorner.GetColorWindow();
+			Drawing.Color color = adorner.ColorWindow;
 			color = Drawing.Color.FromRGB(color.R*this.backgroundIntensity, color.G*this.backgroundIntensity, color.B*this.backgroundIntensity);
 			graphics.RenderSolid(color);
 
@@ -213,10 +213,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			rect.Inflate(-0.5, -0.5);
 
 			graphics.AddLine(rect.Left+this.extendedZoneWidth, rect.Bottom-0.5, rect.Left+this.extendedZoneWidth, rect.Top+0.5);
-			graphics.RenderSolid(adorner.GetColorBorder());
+			graphics.RenderSolid(adorner.ColorBorder);
 
 			graphics.AddLine(rect.Left-0.5, rect.Bottom, rect.Right+0.5, rect.Bottom);
-			graphics.RenderSolid(adorner.GetColorBorder());
+			graphics.RenderSolid(adorner.ColorBorder);
 		}
 
 

@@ -339,7 +339,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		private void SwapColorClicked(object sender, MessageEventArgs e)
 		{
-			Drawing.Color temp = this.fieldColor1.Color;
+			Drawing.Color temp     = this.fieldColor1.Color;
 			this.fieldColor1.Color = this.fieldColor2.Color;
 			this.fieldColor2.Color = temp;
 
