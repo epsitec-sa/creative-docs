@@ -198,6 +198,18 @@ namespace System
 			return text;
 		}
 		
+		public static string TextToXmlBreak(string text)
+		{
+			text = text.Replace (@"&",  "&amp;");
+			text = text.Replace (@"<",  "&lt;");
+			text = text.Replace (@">",  "&gt;");
+			text = text.Replace (@"""", "&quot;");
+			text = text.Replace (@"'",  "&apos;");
+			text = text.Replace ("\n",  "<br/>");
+			
+			return text;
+		}
+		
 		public static string XmlToText(string text)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -227,8 +239,13 @@ namespace System
 					offset++;
 				}
 			}
-
+			
 			return buffer.ToString();
+		}
+		
+		public static string XmlBreakToText(string text)
+		{
+			return Utilities.XmlToText (text.Replace ("<br/>", "\n"));
 		}
 		
 		

@@ -179,12 +179,22 @@ namespace System
 		
 		[Test] public void CheckTextToXml()
 		{
-			Assert.AreEqual ("&lt;#&apos;&quot;&gt;\u00A0\u2014x", Utilities.TextToXml ("<#'\">\u00A0\u2014x"));
+			Assert.AreEqual ("&lt;#&apos;&quot;&gt;\u00A0\u2014x\n", Utilities.TextToXml ("<#'\">\u00A0\u2014x\n"));
 		}
 		
 		[Test] public void CheckXmlToText()
 		{
-			Assert.AreEqual ("<#'\">\u00A0\u2014x", Utilities.XmlToText ("&lt;#&apos;&quot;&gt;&#160;&#8212;x"));
+			Assert.AreEqual ("<#'\">\u00A0\u2014x\n", Utilities.XmlToText ("&lt;#&apos;&quot;&gt;&#160;&#8212;x\n"));
+		}
+		
+		[Test] public void CheckTextToXmlBreak()
+		{
+			Assert.AreEqual ("&lt;#&apos;&quot;&gt;\u00A0\u2014x<br/>", Utilities.TextToXmlBreak ("<#'\">\u00A0\u2014x\n"));
+		}
+		
+		[Test] public void CheckXmlBreakToText()
+		{
+			Assert.AreEqual ("<#'\">\u00A0\u2014x\n", Utilities.XmlBreakToText ("&lt;#&apos;&quot;&gt;&#160;&#8212;x<br/>"));
 		}
 		
 		[Test] [ExpectedException (typeof (System.FormatException))] public void CheckXmlToTextEx1()
