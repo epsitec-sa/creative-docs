@@ -782,31 +782,31 @@ namespace Epsitec.Common.Widgets
 
 		public void NotifyRemoval(Widget widget)
 		{
-			TabPage item = widget as TabPage;
+			TabPage item  = widget as TabPage;
+			int     index = item.Index;
 			
 			item.TabButton.Clicked -= new MessageEventHandler(this.HandleTabButton);
-			item.RankChanged -= new System.EventHandler(this.HandlePageRankChanged);
+			item.RankChanged       -= new System.EventHandler(this.HandlePageRankChanged);
 			
 			this.Children.Remove(item);
 			this.Children.Remove(item.TabButton);
 			this.isRefreshNeeded = true;
-		}
-		
-		public void NotifyPostRemoval(Widget widget)
-		{
-			TabPage item  = widget as TabPage;
-			int     index = item.Index;
-
+			
 			if ( this.ActivePage == item )
 			{
-				if ( index >= this.PageCount )
+				int n = this.PageCount - 1;
+				
+				if ( index >= n )
 				{
-					index--;
+					index = n - 1;
 				}
 				
 				this.ActivePageIndex = index;
 			}
-			
+		}
+		
+		public void NotifyPostRemoval(Widget widget)
+		{
 			this.UpdateVisiblePages();
 			this.UpdateButtons();
 			this.OnPageCountChanged();
