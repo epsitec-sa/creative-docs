@@ -23,6 +23,11 @@ namespace Epsitec.Common.Widgets
 			this.CreateBigText();
 		}
 		
+		[Test] public void CheckAdornerTextRuler()
+		{
+			this.CreateTextRuler();
+		}
+		
 		
 		void RecursiveDisable(Widget widget, bool top_level)
 		{
@@ -764,8 +769,9 @@ namespace Epsitec.Common.Widgets
 			multi.AnchorMargins = new Margins(60, 60, 40, 30);
 			multi.Parent = window.Root;
 			multi.SetProperty("stats", stats);
-			multi.SelectionChanged += new EventHandler(this.HandleMultiSelectionOrCursorChanged);
-			multi.CursorChanged    += new EventHandler(this.HandleMultiSelectionOrCursorChanged);
+			multi.SelectionChanged += new EventHandler(this.HandleMultiSelectionOrCursorChanged1);
+			multi.CursorChanged    += new EventHandler(this.HandleMultiSelectionOrCursorChanged1);
+			multi.TextChanged      += new EventHandler(this.HandleMultiSelectionOrCursorChanged1);
 			this.bigText = multi;
 			
 //			stats.Bounds = new Rectangle(10, 2, 380, 26);
@@ -873,12 +879,12 @@ namespace Epsitec.Common.Widgets
 			return window;
 		}
 		
-		private void HandleMultiSelectionOrCursorChanged(object sender)
+		private void HandleMultiSelectionOrCursorChanged1(object sender)
 		{
 			AbstractTextField text  = sender as AbstractTextField;
 			StaticText        stats = text.GetProperty("stats") as StaticText;
 			
-			stats.Text = string.Format("{0} - {1},  after={2}", text.CursorFrom, text.CursorTo, text.CursorAfter);
+			stats.Text = string.Format("from={0},  to={1},  after={2}", text.CursorFrom, text.CursorTo, text.CursorAfter);
 		}
 
 		private void HandleMultiBold(object sender, MessageEventArgs e)
@@ -929,6 +935,87 @@ namespace Epsitec.Common.Widgets
 		private void HandleMultiColor2(object sender, MessageEventArgs e)
 		{
 			this.bigText.SelectionFontColor = Drawing.Color.FromRGB(1,0,0);
+		}
+
+
+		private Window CreateTextRuler()
+		{
+			Window window = new Window();
+			
+			window.ClientSize = new Size(400, 300);
+			window.Text = "CheckAdornerBigText";
+
+			TextFieldMulti	multi = new TextFieldMulti();
+			TextRuler		ruler = new TextRuler();
+			StaticText		stats = new StaticText();
+			StaticText		tags  = new StaticText();
+			StaticText		final = new StaticText();
+			
+			multi.Name = "Multi";
+			multi.MaxChar = 10000;
+			
+			string s = "Voilà un <i>texte</i> <b>multi-fontes</b>.";
+			multi.Text = s;
+
+			multi.Alignment = Drawing.ContentAlignment.TopLeft;
+			multi.TextLayout.JustifMode = TextJustifMode.AllButLast;
+			multi.TextLayout.ShowLineBreak = true;
+			multi.ScrollZone = 0.2;
+			multi.Anchor = AnchorStyles.All;
+			multi.AnchorMargins = new Margins(10, 10, 10+ruler.DefaultHeight, 26+46+46);
+			multi.Parent = window.Root;
+			multi.SetProperty("stats", stats);
+			multi.SetProperty("tags", tags);
+			multi.SetProperty("final", final);
+			multi.SelectionChanged += new EventHandler(this.HandleMultiSelectionOrCursorChanged2);
+			multi.CursorChanged    += new EventHandler(this.HandleMultiSelectionOrCursorChanged2);
+			multi.TextChanged      += new EventHandler(this.HandleMultiSelectionOrCursorChanged2);
+			this.bigText = multi;
+			
+			ruler.Anchor = AnchorStyles.TopLeft|AnchorStyles.LeftAndRight;
+			ruler.AnchorMargins = new Margins(10, 10, 10, 0);
+			ruler.AttachToText(multi);
+			ruler.Parent = window.Root;
+			ruler.Changed += new EventHandler(this.HandleMultiSelectionOrCursorChanged2);
+			
+			stats.Height = 26;
+			stats.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
+			stats.AnchorMargins = new Margins(10, 10, 0, 46+46);
+			stats.Parent = window.Root;
+
+			tags.Height = 46;
+			tags.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
+			tags.AnchorMargins = new Margins(10, 10, 0, 46);
+			tags.SetClientZoom(0.85);
+			tags.Parent = window.Root;
+
+			final.Height = 46;
+			final.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Bottom;
+			final.AnchorMargins = new Margins(10, 10, 0, 0);
+			final.SetClientZoom(0.85);
+			final.Parent = window.Root;
+
+			window.FocusedWidget = multi;
+			window.Show();
+			
+			return window;
+		}
+		
+		private void HandleMultiSelectionOrCursorChanged2(object sender)
+		{
+			TextFieldMulti	text = this.bigText;
+			StaticText		stats = text.GetProperty("stats") as StaticText;
+			StaticText		tags  = text.GetProperty("tags") as StaticText;
+			StaticText		final = text.GetProperty("final") as StaticText;
+			
+			stats.Text = string.Format("from={0},  to={1},  after={2},  prepare={3}:{4}+{5}",
+										text.CursorFrom, text.CursorTo,
+										text.CursorAfter,
+										text.TextNavigator.Context.PrepareOffset,
+										text.TextNavigator.Context.PrepareLength1,
+										text.TextNavigator.Context.PrepareLength2);
+			tags.Text = TextLayout.ConvertToTaggedText(text.TextLayout.InternalText);
+			final.Text = TextLayout.ConvertToTaggedText(text.TextLayout.Text);
 		}
 
 
