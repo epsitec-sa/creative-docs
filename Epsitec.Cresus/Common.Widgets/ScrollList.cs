@@ -26,6 +26,7 @@ namespace Epsitec.Common.Widgets
 			this.scroller.Parent = this;
 			this.scroller.ValueChanged += new Support.EventHandler(this.HandleScrollerValueChanged);
 			this.scroller.Hide();
+			this.UpdateMargins();
 		}
 		
 		public ScrollList(Widget embedder) : this()
@@ -81,7 +82,7 @@ namespace Epsitec.Common.Widgets
 			get { return this.scroller; }
 		}
 
-		public int								FirstVisibleLine
+		public int								FirstVisibleRow
 		{
 			// Première ligne visible.
 			get
@@ -134,7 +135,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.selectedLine == -1 ) return;
 			if ( this.selectedLine >= this.firstLine && this.selectedLine <  this.firstLine+this.visibleLines ) return;
 			
-			int fl = this.FirstVisibleLine;
+			int fl = this.FirstVisibleRow;
 			if ( mode == ScrollShowMode.Extremity )
 			{
 				if ( this.selectedLine < this.firstLine )
@@ -152,7 +153,7 @@ namespace Epsitec.Common.Widgets
 				fl = System.Math.Min(this.selectedLine+display/2, this.items.Count-1);
 				fl = System.Math.Max(fl-display+1, 0);
 			}
-			this.FirstVisibleLine = fl;
+			this.FirstVisibleRow = fl;
 		}
 
 		
@@ -160,54 +161,93 @@ namespace Epsitec.Common.Widgets
 		{
 			// Ajuste la hauteur pour afficher pile un nombre entier de lignes.
 			
-			double h = this.Height-ScrollList.Margin*2;
-			int nbLines = (int)(h/this.lineHeight);
-			double adjust = h - nbLines*this.lineHeight;
-			if ( adjust == 0 )  return false;
-
-			if ( mode == ScrollAdjustMode.MoveUp )
-			{
-				this.Top = System.Math.Floor(this.Top-adjust);
-			}
-			if ( mode == ScrollAdjustMode.MoveDown )
-			{
-				this.Bottom = System.Math.Floor(this.Bottom+adjust);
-			}
-			this.Invalidate();
-			return true;
+			double h = this.Client.Height-this.margins.Height;
+			int count = (int)(h/this.lineHeight);
+			
+			return this.AdjustHeightToRows (mode, count);
 		}
 
-		public bool AdjustHeightToContent(ScrollAdjustMode mode, double hMin, double hMax)
+		public bool AdjustHeightToContent(ScrollAdjustMode mode, double min_height, double max_height)
 		{
 			// Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
 			
-			double h = this.lineHeight*this.items.Count+ScrollList.Margin*2;
+			double h = this.lineHeight*this.items.Count+this.margins.Height;
 			double hope = h;
-			h = System.Math.Max(h, hMin);
-			h = System.Math.Min(h, hMax);
-			if ( h == this.Height )  return false;
+			h = System.Math.Max(h, min_height);
+			h = System.Math.Min(h, max_height);
+			
+			if (h == this.Height)
+			{
+				return false;
+			}
 
-			if ( mode == ScrollAdjustMode.MoveUp )
+			switch (mode)
 			{
-				this.Top = this.Bottom+h;
+				case ScrollAdjustMode.MoveTop:
+					this.Top = this.Bottom + h;
+					break;
+				
+				case ScrollAdjustMode.MoveBottom:
+					this.Bottom = this.Top - h;
+					break;
+				
+				default:
+					throw new System.NotSupportedException (string.Format ("Adjust mode {0} not supported.", mode));
 			}
-			if ( mode == ScrollAdjustMode.MoveDown )
+			
+			if (h == hope)
 			{
-				this.Bottom = this.Top-h;
+				this.Invalidate ();
 			}
-			this.Invalidate();
-			if ( h != hope )  AdjustHeight(mode);
+			else
+			{
+				this.AdjustHeight (mode);
+			}
 			return true;
 		}
-
-
-		private void HandleScrollerValueChanged(object sender)
+		
+		public bool AdjustHeightToRows(ScrollAdjustMode mode, int count)
 		{
-			// Appelé lorsque l'ascenseur a bougé.
+			//	Ajuste la hauteur pour afficher exactement le nombre de lignes spécifié.
 			
-			this.FirstVisibleLine = (int)(this.scroller.DoubleValue + 0.5);
+			double h = this.Client.Height-this.margins.Height;
+			double adjust = h - count*this.lineHeight;
+			
+			if (adjust == 0)
+			{
+				return false;
+			}
+			
+			switch (mode)
+			{
+				case ScrollAdjustMode.MoveTop:
+					this.Top = System.Math.Floor (this.Top - adjust);
+					break;
+				
+				case ScrollAdjustMode.MoveBottom:
+					this.Bottom = System.Math.Floor (this.Bottom + adjust);
+					break;
+				
+				default:
+					throw new System.NotSupportedException (string.Format ("Adjust mode {0} not supported.", mode));
+			}
+			
+			this.Invalidate();
+			return true;
 		}
-
+		
+		
+		public override Drawing.Rectangle GetShapeBounds()
+		{
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			Drawing.Rectangle rect = this.Client.Bounds;
+			rect.Inflate(adorner.GeometryListShapeBounds);
+			if ( this.scrollListStyle == ScrollListStyle.Menu )
+			{
+				rect.Inflate(adorner.GeometryMenuShadow);
+			}
+			return rect;
+		}
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
@@ -241,8 +281,8 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case MessageType.MouseWheel:
-					if ( message.Wheel < 0 )  this.FirstVisibleLine ++;
-					if ( message.Wheel > 0 )  this.FirstVisibleLine --;
+					if ( message.Wheel < 0 )  this.FirstVisibleRow ++;
+					if ( message.Wheel > 0 )  this.FirstVisibleRow --;
 					break;
 
 				case MessageType.KeyDown:
@@ -263,13 +303,13 @@ namespace Epsitec.Common.Widgets
 		{
 			// Sélectionne la ligne selon la souris.
 			
-			double y = this.Client.Height-pos.Y-1-ScrollList.Margin;
-			double x = pos.X-ScrollList.Margin;
+			double y = this.Client.Height-pos.Y-1-this.margins.Top;
+			double x = pos.X-this.margins.Left;
 			
 			if (y < 0) return false;
 			if (y >= this.visibleLines*this.lineHeight) return false;
 			if (x < 0) return false;
-			if (x >= this.Client.Width-ScrollList.Margin*2-this.rightMargin) return false;
+			if (x >= this.Client.Width-this.margins.Width) return false;
 			
 			int line = (int)(y/this.lineHeight);
 			
@@ -331,7 +371,7 @@ namespace Epsitec.Common.Widgets
 				if ( this.scroller.IsVisible )
 				{
 					this.scroller.Hide();
-					this.rightMargin = 0;
+					this.UpdateMargins();
 				}
 			}
 			else
@@ -344,8 +384,8 @@ namespace Epsitec.Common.Widgets
 				
 				if ( !this.scroller.IsVisible )
 				{
-					this.rightMargin = this.scroller.Width;
 					this.scroller.Show();
+					this.UpdateMargins();
 				}
 			}
 		}
@@ -393,7 +433,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.lineHeight == 0 )  return;
 
-			this.visibleLines = (int)((this.Bounds.Height-ScrollList.Margin*2)/this.lineHeight);
+			this.visibleLines = (int)((this.Bounds.Height-this.margins.Height)/this.lineHeight);
 			if ( this.visibleLines < 1 )  this.visibleLines = 1;
 			this.textLayouts = new TextLayout[this.visibleLines];
 			
@@ -403,46 +443,40 @@ namespace Epsitec.Common.Widgets
 			{
 				IAdorner adorner = Widgets.Adorner.Factory.Active;
 				Drawing.Rectangle rect = new Drawing.Rectangle();
-				rect.Right  = this.Bounds.Width-adorner.GeometryScrollerRightMargin;
+				rect.Right  = this.Client.Width-adorner.GeometryScrollerRightMargin;
 				rect.Left   = rect.Right-this.scroller.Width;
 				rect.Bottom = adorner.GeometryScrollerBottomMargin;
-				rect.Top    = this.Bounds.Height-adorner.GeometryScrollerTopMargin;
+				rect.Top    = this.Client.Height-adorner.GeometryScrollerTopMargin;
 				this.scroller.Bounds = rect;
 			}
 		}
 
 		protected override void OnAdornerChanged()
 		{
-			this.UpdateClientGeometry();
-			base.OnAdornerChanged();
+			this.UpdateClientGeometry ();
+			this.UpdateMargins ();
+			base.OnAdornerChanged ();
 		}
-
-		public override Drawing.Rectangle GetShapeBounds()
+		
+		protected void UpdateMargins()
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(adorner.GeometryListShapeBounds);
-			if ( this.scrollListStyle == ScrollListStyle.Menu )
+			
+			this.margins = new Drawing.Margins (adorner.GeometryScrollListXMargin, adorner.GeometryScrollListXMargin,
+				/**/                            adorner.GeometryScrollListYMargin, adorner.GeometryScrollListYMargin);
+			
+			if ((this.scroller != null) &&
+				(this.scroller.IsVisible))
 			{
-				rect.Inflate(adorner.GeometryMenuShadow);
+				this.margins.Right = this.Client.Width - this.scroller.Left;
 			}
-			return rect;
 		}
-
 		
 		protected double GetTextWidth()
 		{
 			//	Calcule la largeur utile pour le texte.
 			
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-
-			double width = this.Client.Width-ScrollList.Margin*2;
-			if ( this.rightMargin > 0 )
-			{
-				width -= this.rightMargin-1+adorner.GeometryScrollerRightMargin;
-			}
-
-			return width;
+			return this.Client.Width - this.margins.Width;
 		}
 
 
@@ -487,7 +521,7 @@ namespace Epsitec.Common.Widgets
 				adorner.PaintTextFieldBackground(graphics, rect, state, TextFieldStyle.Multi, false);
 			}
 
-			Drawing.Point pos = new Drawing.Point(ScrollList.Margin, rect.Height-ScrollList.Margin-this.lineHeight);
+			Drawing.Point pos = new Drawing.Point(ScrollList.TextOffsetX, rect.Height-this.margins.Top-this.lineHeight);
 			int max = System.Math.Min(this.visibleLines, this.items.Count);
 			for ( int i=0 ; i<max ; i++ )
 			{
@@ -498,10 +532,8 @@ namespace Epsitec.Common.Widgets
 				{
 					TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1];
 					areas[0] = new TextLayout.SelectedArea();
-					areas[0].Rect.Left   = ScrollList.Margin;
+					areas[0].Rect.Left   = this.margins.Left;
 					areas[0].Rect.Width  = this.GetTextWidth();
-					areas[0].Rect.Left  += adorner.GeometrySelectedLeftMargin;
-					areas[0].Rect.Right += adorner.GeometrySelectedRightMargin;
 					areas[0].Rect.Bottom = pos.Y;
 					areas[0].Rect.Height = this.lineHeight;
 					adorner.PaintTextSelectionBackground(graphics, areas, state);
@@ -524,8 +556,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.items.Count == 0)
 			{
-				this.FirstVisibleLine = 0;
-				this.SelectedIndex = -1;
+				this.FirstVisibleRow = 0;
+				this.SelectedIndex   = -1;
 			}
 			
 			this.SetDirty ();
@@ -620,17 +652,26 @@ namespace Epsitec.Common.Widgets
 		public event Support.EventHandler		SelectedIndexChanged;
 		#endregion
 		
+		private void HandleScrollerValueChanged(object sender)
+		{
+			// Appelé lorsque l'ascenseur a bougé.
+			
+			this.FirstVisibleRow = (int)(this.scroller.DoubleValue + 0.5);
+		}
+
+
 		public event Support.EventHandler		SelectionActivated;
 		
+		protected const double					TextOffsetX = 3;
 
-		protected static readonly double		Margin = 3;
-		
 		protected ScrollListStyle				scrollListStyle;
 		protected bool							isDirty;
 		protected bool							mouseDown = false;
 		protected Helpers.StringCollection		items;
 		protected TextLayout[]					textLayouts;
-		protected double						rightMargin;
+		
+		protected Drawing.Margins				margins;
+		
 		protected double						lineHeight;
 		protected VScroller						scroller;
 		protected int							visibleLines;

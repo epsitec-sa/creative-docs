@@ -1463,8 +1463,8 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double GeometryScrollerRightMargin { get { return 2; } }
 		public double GeometryScrollerBottomMargin { get { return 2; } }
 		public double GeometryScrollerTopMargin { get { return 2; } }
-		public double GeometrySelectedLeftMargin { get { return 0; } }
-		public double GeometrySelectedRightMargin { get { return 0; } }
+		public double GeometryScrollListXMargin { get { return 3; } }
+		public double GeometryScrollListYMargin { get { return 3; } }
 		public double GeometrySliderLeftMargin { get { return 0; } }
 		public double GeometrySliderRightMargin { get { return 0; } }
 		public double GeometrySliderBottomMargin { get { return 0; } }

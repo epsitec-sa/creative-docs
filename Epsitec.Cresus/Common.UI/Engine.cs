@@ -195,6 +195,18 @@ namespace Epsitec.Common.UI
 			
 			return false;
 		}
+		
+		public static bool BindWidget(Types.IDataFolder folder, Common.Widgets.Widget widget)
+		{
+			Binders.DataFolderBinder   binder  = new Binders.DataFolderBinder (folder);
+			Adapters.DataFolderAdapter adapter = new Adapters.DataFolderAdapter (binder);
+			
+			new Controllers.WidgetDataFolderController (adapter, widget);
+			
+			return true;
+		}
+		
+		
 		public static Data.Representation FindDefaultRepresentation(Types.IDataValue source)
 		{
 			if (source == null)

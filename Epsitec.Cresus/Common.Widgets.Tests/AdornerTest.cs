@@ -258,29 +258,29 @@ namespace Epsitec.Common.Widgets
 			this.CreateListLook(window.Root, 10, 80, tip, 1);
 			
 			Tag tag1 = new Tag("ExecuteTag", "TestTag");
-			tag1.Bounds = new Drawing.Rectangle(115, 241, 18, 18);
+			tag1.Bounds = new Drawing.Rectangle(115, 246, 18, 18);
 			tag1.Parent = window.Root;
 			tip.SetToolTip(tag1, "Je suis un <i>smart tag</i> maison.");
 
 			Tag tag2 = new Tag("ExecuteTag", "TestTag");
-			tag2.Bounds = new Drawing.Rectangle(115, 221, 18, 18);
+			tag2.Bounds = new Drawing.Rectangle(115, 226, 18, 18);
 			tag2.Parent = window.Root;
 			tag2.Color = Drawing.Color.FromRGB(1,0,0);
 			tip.SetToolTip(tag2, "Je suis un <i>smart tag</i> maison rouge.");
 
 			Tag tag3 = new Tag("ExecuteTag", "TestTag");
-			tag3.Bounds = new Drawing.Rectangle(115, 201, 18, 18);
+			tag3.Bounds = new Drawing.Rectangle(115, 206, 18, 18);
 			tag3.Parent = window.Root;
 			tag3.Color = Drawing.Color.FromRGB(0,1,0);
 			tip.SetToolTip(tag3, "Je suis un <i>smart tag</i> maison vert.");
 
 			Tag tag4 = new Tag("ExecuteTag", "TestTag");
-			tag4.Bounds = new Drawing.Rectangle(140, 241, 12, 12);
+			tag4.Bounds = new Drawing.Rectangle(140, 246, 12, 12);
 			tag4.Parent = window.Root;
 			tip.SetToolTip(tag4, "Je suis un petit <i>smart tag</i> maison.");
 
 			Tag tag5 = new Tag("ExecuteTag", "TestTag");
-			tag5.Bounds = new Drawing.Rectangle(140, 221, 12, 12);
+			tag5.Bounds = new Drawing.Rectangle(140, 226, 12, 12);
 			tag5.Parent = window.Root;
 			tag5.Color = Drawing.Color.FromRGB(0,0,1);
 			tip.SetToolTip(tag5, "Je suis un petit <i>smart tag</i> maison bleu.");
@@ -493,7 +493,7 @@ namespace Epsitec.Common.Widgets
 			ScrollList sl = new ScrollList();
 //			sl.Location = new Point(20, 10);
 			sl.Size = new Size(90, 100);
-			sl.AdjustHeight(ScrollAdjustMode.MoveDown);
+			sl.AdjustHeight(ScrollAdjustMode.MoveBottom);
 			sl.Items.Add("Janvier");
 			sl.Items.Add("Fevrier");
 			sl.Items.Add("Mars <i>(A)</i>");
@@ -1374,7 +1374,7 @@ namespace Epsitec.Common.Widgets
 			sl.Size = new Size(100, 64);
 			sl.Anchor = AnchorStyles.TopLeft;
 			sl.AnchorMargins = new Margins(mx, 0, my, 0);
-			sl.AdjustHeight(ScrollAdjustMode.MoveDown);
+			sl.AdjustHeight(ScrollAdjustMode.MoveBottom);
 			if ( tab != -1 )
 			{
 				sl.TabIndex = tab;

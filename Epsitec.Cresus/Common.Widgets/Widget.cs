@@ -673,25 +673,25 @@ namespace Epsitec.Common.Widgets
 		public double								Top
 		{
 			get { return this.y2; }
-			set { this.SetBounds (this.x1, this.y1, this.x2, value); }
+			set { this.Bounds = new Drawing.Rectangle (this.x1, this.y1, this.x2 - this.x1, value - this.y1); }
 		}
 		
 		public double								Left
 		{
 			get { return this.x1; }
-			set { this.SetBounds (value, this.y1, this.x2, this.y2); }
+			set { this.Bounds = new Drawing.Rectangle (value, this.y1, this.x2 - value, this.y2 - this.y1); }
 		}
 		
 		public double								Bottom
 		{
 			get { return this.y1; }
-			set { this.SetBounds (this.x1, value, this.x2, this.y2); }
+			set { this.Bounds = new Drawing.Rectangle (this.x1, value, this.x2 - this.x1, this.y2 - value); }
 		}
 		
 		public double								Right
 		{
 			get { return this.x2; }
-			set { this.SetBounds (this.x1, this.y1, value, this.y2); }
+			set { this.Bounds = new Drawing.Rectangle (this.x1, this.y1, value - this.x1, this.y2 - this.y1); }
 		}
 		
 		public Drawing.Rectangle					Bounds

@@ -11,8 +11,8 @@ namespace Epsitec.Common.Widgets
 
 	public enum ScrollAdjustMode
 	{
-		MoveUp,			// déplace le haut
-		MoveDown,		// déplace le bas
+		MoveTop,		// déplace le haut
+		MoveBottom,		// déplace le bas
 	}
 
 	
@@ -228,7 +228,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int								FirstVisibleIndex
+		public int								FirstVisibleRow
 		{
 			get
 			{
@@ -1162,7 +1162,7 @@ invalid:	row    = -1;
 		}
 
 		
-		public bool AdjustToMultiple(ScrollAdjustMode mode)
+		public bool AdjustHeight(ScrollAdjustMode mode)
 		{
 			//	Ajuste la hauteur pour afficher pile un nombre entier de lignes.
 			
@@ -1179,13 +1179,16 @@ invalid:	row    = -1;
 			
 			switch (mode)
 			{
-				case ScrollAdjustMode.MoveUp:
+				case ScrollAdjustMode.MoveTop:
 					this.Top    = System.Math.Floor (this.Top - adjust);
 					break;
 				
-				case ScrollAdjustMode.MoveDown:
+				case ScrollAdjustMode.MoveBottom:
 					this.Bottom = System.Math.Floor (this.Bottom + adjust);
 					break;
+				
+				default:
+					throw new System.NotSupportedException (string.Format ("Adjust mode {0} not supported.", mode));
 			}
 
 			this.Invalidate ();
@@ -1193,7 +1196,7 @@ invalid:	row    = -1;
 			return true;
 		}
 
-		public bool AdjustToContents(ScrollAdjustMode mode, double min_height, double max_height)
+		public bool AdjustHeightToContent(ScrollAdjustMode mode, double min_height, double max_height)
 		{
 			//	Ajuste la hauteur pour afficher exactement le nombre de lignes contenues.
 			
@@ -1212,25 +1215,29 @@ invalid:	row    = -1;
 			
 			switch (mode)
 			{
-				case ScrollAdjustMode.MoveUp:
+				case ScrollAdjustMode.MoveTop:
 					this.Top    = this.Bottom + height;
 					break;
-				case ScrollAdjustMode.MoveDown:
+				
+				case ScrollAdjustMode.MoveBottom:
 					this.Bottom = this.Top - height;
 					break;
+				
+				default:
+					throw new System.NotSupportedException (string.Format ("Adjust mode {0} not supported.", mode));
 			}
 			
 			this.Invalidate ();
 			
 			if (height != desire)
 			{
-				this.AdjustToMultiple (mode);
+				this.AdjustHeight (mode);
 			}
 			
 			return true;
 		}
 		
-		public bool AdjustToRows(ScrollAdjustMode mode, int count)
+		public bool AdjustHeightToRows(ScrollAdjustMode mode, int count)
 		{
 			//	Ajuste la hauteur pour afficher exactement le nombre de lignes spécifié.
 			
@@ -1245,12 +1252,16 @@ invalid:	row    = -1;
 			
 			switch (mode)
 			{
-				case ScrollAdjustMode.MoveUp:
+				case ScrollAdjustMode.MoveTop:
 					this.Top    = this.Bottom + height;
 					break;
-				case ScrollAdjustMode.MoveDown:
+				
+				case ScrollAdjustMode.MoveBottom:
 					this.Bottom = this.Top - height;
 					break;
+				
+				default:
+					throw new System.NotSupportedException (string.Format ("Adjust mode {0} not supported.", mode));
 			}
 			
 			this.Invalidate ();
@@ -1402,8 +1413,8 @@ invalid:	row    = -1;
 					break;
 				
 				case MessageType.MouseWheel:
-					if ( message.Wheel < 0 )  this.FirstVisibleIndex ++;
-					if ( message.Wheel > 0 )  this.FirstVisibleIndex --;
+					if ( message.Wheel < 0 )  this.FirstVisibleRow ++;
+					if ( message.Wheel > 0 )  this.FirstVisibleRow --;
 					message.Consumer = this;
 					break;
 

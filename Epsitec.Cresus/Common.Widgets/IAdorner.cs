@@ -141,8 +141,8 @@ namespace Epsitec.Common.Widgets
 		double GeometryScrollerRightMargin { get; }
 		double GeometryScrollerBottomMargin { get; }
 		double GeometryScrollerTopMargin { get; }
-		double GeometrySelectedLeftMargin { get; }
-		double GeometrySelectedRightMargin { get; }
+		double GeometryScrollListXMargin { get; }
+		double GeometryScrollListYMargin { get; }
 		double GeometrySliderLeftMargin { get; }
 		double GeometrySliderRightMargin { get; }
 		double GeometrySliderBottomMargin { get; }
