@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Database
 				this.BootCreateTableColumnDef (transaction);
 				this.BootCreateTableTypeDef (transaction);
 				this.BootCreateTableEnumValDef (transaction);
-				this.BootCreateTableRefDef (transaction);
+				this.BootCreateTableRelationDef (transaction);
 				
 				//	Valide la création de toutes ces tables avant de commencer à peupler
 				//	les tables. Firebird requiert ce mode de fonctionnement.
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Database
 				this.internal_tables.Add (this.ResolveDbTable (transaction, DbTable.TagTableDef));
 				this.internal_tables.Add (this.ResolveDbTable (transaction, DbTable.TagColumnDef));
 				this.internal_tables.Add (this.ResolveDbTable (transaction, DbTable.TagTypeDef));
-				this.internal_tables.Add (this.ResolveDbTable (transaction, DbTable.TagRefDef));
+				this.internal_tables.Add (this.ResolveDbTable (transaction, DbTable.TagRelationDef));
 				this.internal_tables.Add (this.ResolveDbTable (transaction, DbTable.TagEnumValDef));
 			
 				this.internal_types.Add (this.ResolveDbType (transaction, DbType.TagKeyId));
@@ -293,8 +293,8 @@ namespace Epsitec.Cresus.Database
 		
 		public DbColumn[] CreateRefColumns(string column_name, string target_table_name, DbKeyMatchMode match_mode)
 		{
-			//	Crée la ou les colonnes nécessaires à la définition d'une référence à
-			//	une autre table.
+			//	Crée la ou les colonnes nécessaires à la définition d'une référence à une autre
+			//	table.
 			
 			DbType type_id;
 			DbType type_rev;
@@ -320,6 +320,104 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			return null;
+		}
+		
+		
+		public void RegisterCrossTableReferences(DbTransaction transaction, DbTable table)
+		{
+			if (transaction == null)
+			{
+				using (transaction = this.BeginTransaction ())
+				{
+					this.RegisterCrossTableReferences (transaction, table);
+					transaction.Commit ();
+					return;
+				}
+			}
+			
+			//	Passe en revue toutes les colonnes de type ID qui font référence à une table
+			//	et enregistre l'information dans la table de définition des références.
+			//
+			//	Note: il faut que les tables aient été enregistrées auprès de Crésus pour
+			//	que cette méthode fonctionne (on a besoin des IDs des tables et des colonnes
+			//	concernées).
+			
+			System.Collections.Hashtable ref_columns = new System.Collections.Hashtable ();
+			
+			for (int i = 0; i < table.Columns.Count; i++)
+			{
+				DbColumn column = table.Columns[i];
+				
+				switch (column.ColumnClass)
+				{
+					case DbColumnClass.RefLiveId:
+					case DbColumnClass.RefSimpleId:
+					case DbColumnClass.RefTupleId:
+						string target_name = column.TargetTableName;
+						
+						if (target_name != null)
+						{
+							DbTable target_table = this.ResolveDbTable (transaction, target_name);
+							
+							if (target_table == null)
+							{
+								string message = string.Format ("Table '{0}' referenced from '{1}.{2}' not found in database.", target_name, table.Name, column.Name);
+								throw new DbException (this.db_access, message);
+							}
+							
+							DbKey source_table_key  = table.InternalKey;
+							DbKey source_column_key = column.InternalKey;
+							DbKey target_table_key  = target_table.InternalKey;
+							
+							if (source_table_key == null)
+							{
+								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{1}'.", target_name, table.Name, column.Name);
+								throw new DbException (this.db_access, message);
+							}
+							
+							if (source_column_key == null)
+							{
+								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered column '{2}'.", target_name, table.Name, column.Name);
+								throw new DbException (this.db_access, message);
+							}
+							
+							if (target_table_key == null)
+							{
+								string message = string.Format ("Reference of '{0}' from '{1}.{2}' specifies unregistered table '{0}'.", target_name, table.Name, column.Name);
+								throw new DbException (this.db_access, message);
+							}
+							
+							this.RegisterCrossTableReferences (transaction, source_table_key, source_column_key, target_table_key);
+						}
+						break;
+					
+					default:
+						break;
+				}
+			}
+		}
+		
+		protected void RegisterCrossTableReferences(DbTransaction transaction, DbKey source_table_key, DbKey source_column_key, DbKey target_table_key)
+		{
+			System.Diagnostics.Debug.Assert (source_table_key  != null);
+			System.Diagnostics.Debug.Assert (source_column_key != null);
+			System.Diagnostics.Debug.Assert (target_table_key  != null);
+			
+			//	TODO: enregistre la relation dans la table DbTable.TagRefTable
+			//
+			//	(1) vérifie que la relation n'est pas encore connue; si elle l'est, génère
+			//		une exception;
+			//	(2) trouve un ID pour la nouvelle ligne qui va être créée dans TagRefTable;
+			//	(3) crée la ligne dans la table;
+			//
+			//	Voir aussi RegisterNewDbTable comme modèle, ainsi que BootInsertRelationDefRow
+			//	pour l'insertion de la ligne. Il faudra créer les méthodes suivantes :
+			//
+			//	- CheckForUnknownRelation/CheckForKnownRelation (prenant 3 DbKey comme arg.)
+			//	- InsertRelationDefRow, à moins de modifier BootInsertRelationDefRow pour
+			//	  accepter des DbKey comme arguments; voir si c'est faisable facilement.
+			
+			throw new System.NotImplementedException ("RegisterCrossTableReferences not implemented.");
 		}
 		
 		
@@ -1423,9 +1521,9 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (transaction);
 		}
 		
-		protected void BootCreateTableRefDef(DbTransaction transaction)
+		protected void BootCreateTableRelationDef(DbTransaction transaction)
 		{
-			DbTable    table   = new DbTable (DbTable.TagRefDef);
+			DbTable    table   = new DbTable (DbTable.TagRelationDef);
 			DbColumn[] columns = new DbColumn[4];
 			
 			columns[0] = new DbColumn (DbColumn.TagId,			this.num_type_id);
@@ -1549,9 +1647,9 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (transaction);
 		}
 		
-		protected void BootInsertRefDefRow(DbTransaction transaction, int ref_id, string src_table_name, string src_column_name, string target_table_name)
+		protected void BootInsertRelationDefRow(DbTransaction transaction, int ref_id, string src_table_name, string src_column_name, string target_table_name)
 		{
-			DbTable ref_def = this.internal_tables[DbTable.TagRefDef];
+			DbTable ref_def = this.internal_tables[DbTable.TagRelationDef];
 			
 			//	Phase d'initialisation de la base : insère une ligne dans la table de définition des
 			//	références.
@@ -1619,17 +1717,17 @@ namespace Epsitec.Cresus.Database
 			//	- La description d'une référence fait elle-même référence à la table
 			//	  source et destination, ainsi qu'à la colonne.
 			
-			this.BootInsertRefDefRow (transaction, ref_key_id++, DbTable.TagColumnDef,  DbColumn.TagRefTable,  DbTable.TagTableDef);
-			this.BootInsertRefDefRow (transaction, ref_key_id++, DbTable.TagColumnDef,  DbColumn.TagRefType,   DbTable.TagTypeDef);
-			this.BootInsertRefDefRow (transaction, ref_key_id++, DbTable.TagEnumValDef, DbColumn.TagRefType,   DbTable.TagTypeDef);
-			this.BootInsertRefDefRow (transaction, ref_key_id++, DbTable.TagRefDef,     DbColumn.TagRefColumn, DbTable.TagColumnDef);
-			this.BootInsertRefDefRow (transaction, ref_key_id++, DbTable.TagRefDef,     DbColumn.TagRefSource, DbTable.TagTableDef);
-			this.BootInsertRefDefRow (transaction, ref_key_id++, DbTable.TagRefDef,     DbColumn.TagRefTarget, DbTable.TagTableDef);
+			this.BootInsertRelationDefRow (transaction, ref_key_id++, DbTable.TagColumnDef,   DbColumn.TagRefTable,  DbTable.TagTableDef);
+			this.BootInsertRelationDefRow (transaction, ref_key_id++, DbTable.TagColumnDef,   DbColumn.TagRefType,   DbTable.TagTypeDef);
+			this.BootInsertRelationDefRow (transaction, ref_key_id++, DbTable.TagEnumValDef,  DbColumn.TagRefType,   DbTable.TagTypeDef);
+			this.BootInsertRelationDefRow (transaction, ref_key_id++, DbTable.TagRelationDef, DbColumn.TagRefColumn, DbTable.TagColumnDef);
+			this.BootInsertRelationDefRow (transaction, ref_key_id++, DbTable.TagRelationDef, DbColumn.TagRefSource, DbTable.TagTableDef);
+			this.BootInsertRelationDefRow (transaction, ref_key_id++, DbTable.TagRelationDef, DbColumn.TagRefTarget, DbTable.TagTableDef);
 			
 			this.BootUpdateTableNextId (transaction, this.internal_tables[DbTable.TagTableDef].InternalKey, table_key_id);
 			this.BootUpdateTableNextId (transaction, this.internal_tables[DbTable.TagColumnDef].InternalKey, column_key_id);
 			this.BootUpdateTableNextId (transaction, this.internal_tables[DbTable.TagTypeDef].InternalKey, type_key_id);
-			this.BootUpdateTableNextId (transaction, this.internal_tables[DbTable.TagRefDef].InternalKey, ref_key_id);
+			this.BootUpdateTableNextId (transaction, this.internal_tables[DbTable.TagRelationDef].InternalKey, ref_key_id);
 			this.BootUpdateTableNextId (transaction, this.internal_tables[DbTable.TagEnumValDef].InternalKey, enum_val_key_id);
 		}
 		#endregion

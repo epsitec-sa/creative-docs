@@ -325,6 +325,6 @@ namespace Epsitec.Cresus.Database
 		internal const string			TagColumnDef		= "CR_COLUMN_DEF";
 		internal const string			TagTypeDef			= "CR_TYPE_DEF";
 		internal const string			TagEnumValDef		= "CR_ENUMVAL_DEF";
-		internal const string			TagRefDef			= "CR_REF_DEF";
+		internal const string			TagRelationDef		= "CR_RELATION_DEF";
 	}
 }
