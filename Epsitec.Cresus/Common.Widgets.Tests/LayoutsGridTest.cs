@@ -114,11 +114,11 @@ namespace Epsitec.Common.Widgets
 			Window       window = new Window ();
 			
 			Widget wa   = new StaticText ("");		wa.BackColor   = Drawing.Color.FromBrightness (1.0);
-			Widget wa1  = new StaticText ("A1");	wa1.BackColor  = Drawing.Color.FromARGB (0.33, 1.0, 1.0, 0.0);	wa1.Height = 40;
-			Widget wa2  = new StaticText ("A2");	wa2.BackColor  = Drawing.Color.FromARGB (0.33, 0.0, 1.0, 1.0);
-			Widget wa3  = new StaticText ("A3");	wa3.BackColor  = Drawing.Color.FromARGB (0.33, 0.0, 1.0, 0.0);
-			Widget wa4  = new StaticText ("A4");	wa4.BackColor  = Drawing.Color.FromARGB (0.33, 1.0, 0.5, 0.0);
-			Widget wa5  = new StaticText ("A5");	wa5.BackColor  = Drawing.Color.FromARGB (0.33, 1.0, 0.0, 0.5);	wa5.Height = 60;
+			Widget wa1  = new StaticText ("A1");	wa1.BackColor  = Drawing.Color.FromARGB (1.0, 1.0, 1.0, 0.6);	wa1.Height = 40;
+			Widget wa2  = new StaticText ("A2");	wa2.BackColor  = Drawing.Color.FromARGB (1.0, 0.6, 1.0, 1.0);
+			Widget wa3  = new StaticText ("A3");	wa3.BackColor  = Drawing.Color.FromARGB (1.0, 0.6, 1.0, 0.6);
+			Widget wa4  = new StaticText ("A4");	wa4.BackColor  = Drawing.Color.FromARGB (1.0, 1.0, 0.8, 0.6);
+			Widget wa5  = new StaticText ("A5");	wa5.BackColor  = Drawing.Color.FromARGB (1.0, 1.0, 0.6, 0.8);	wa5.Height = 60;
 			
 			layout.Columns.Add (new Layouts.Grid.Column (50, 1));
 			layout.Columns.Add (new Layouts.Grid.Column (50, 0));
