@@ -7,6 +7,12 @@ namespace Epsitec.Common.Dialogs
 	/// </summary>
 	[TestFixture] public class PrintDialogTest
 	{
+		public PrintDialogTest()
+		{
+			Widgets.Widget.Initialise ();
+		}
+		
+		
 		[Test] public void CheckPrinterSettingsInstalledPrinters()
 		{
 			string[] printers = Printing.PrinterSettings.InstalledPrinters;
@@ -89,8 +95,6 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckPort()
 		{
-			Widgets.Widget.Initialise ();
-			
 			Drawing.Agg.Graphics preview = new Drawing.Agg.Graphics ();
 			preview.SetPixmapSize (250, 120);
 			
@@ -123,6 +127,31 @@ namespace Epsitec.Common.Dialogs
 			form.Show ();
 		}
 		
+		[Test] public void CheckPrint()
+		{
+			Print dialog = new Print ();
+			
+			dialog.AllowFromPageToPage = false;
+			dialog.AllowSelectedPages  = false;
+			
+			string[] printers = Printing.PrinterSettings.InstalledPrinters;
+			
+			dialog.Document.PrinterSettings.MinimumPage = 1;
+			dialog.Document.PrinterSettings.MaximumPage = 1;
+			dialog.Document.PrinterSettings.FromPage = 1;
+			dialog.Document.PrinterSettings.ToPage = 1;
+			dialog.Document.PrinterSettings.PrintRange = Printing.PrintRange.AllPages;
+			dialog.Document.PrinterSettings.Collate = false;
+			
+			dialog.Show ();
+			
+			if (dialog.Result == Dialogs.DialogResult.Accept)
+			{
+				dialog.Document.Print (new PrintEngine ());
+			}
+		}
+		
+		
 		protected class AggPreview : Widgets.Widget
 		{
 			public AggPreview(Drawing.Agg.Graphics port)
@@ -153,6 +182,66 @@ namespace Epsitec.Common.Dialogs
 
 			
 			Drawing.Agg.Graphics				port;
+		}
+		
+		protected class PrintEngine : Printing.IPrintEngine
+		{
+			#region IPrintEngine Members
+			public void PrepareNewPage(Epsitec.Common.Printing.PageSettings settings)
+			{
+				settings.Margins = new Drawing.Margins (0, 0, 0, 0);
+			}
+			
+			public void FinishingPrintJob()
+			{
+			}
+			
+			public void StartingPrintJob()
+			{
+			}
+			
+			public Printing.PrintEngineStatus PrintPage(Printing.PrintPort port)
+			{
+				Drawing.Font font = Drawing.Font.GetFont ("Arial", "Regular");
+				
+				port.LineWidth = 0.1;
+				port.Color     = Drawing.Color.FromRGB (0, 0, 0);
+				
+				for (int x = 0; x < 210; x++)
+				{
+					double y = 6;
+					if ((x % 5) == 0)
+					{
+						y = 8;
+						port.PaintText (x, 10, string.Format ("{0}", x), font, 1.2);
+					}
+					
+					port.PaintOutline (Drawing.Path.FromLine (x, 5, x, y));
+				}
+				
+				for (int y = 0; y < 297; y++)
+				{
+					double x = 6;
+					if ((y % 5) == 0)
+					{
+						x = 8;
+						port.PaintText (10, y, string.Format ("{0}", y), font, 1.2);
+					}
+					
+					port.PaintOutline (Drawing.Path.FromLine (5, y, x, y));
+				}
+				
+				Drawing.Image bitmap = Drawing.Bitmap.FromFile (@"..\..\Images\picture.jpg");
+				
+				port.PaintText (50, 145, "Image de Délos, définie à 300 dpi, 100mm x 100mm, codé au format JPEG.", font, 2.5);
+				port.PaintText (50, 141, "Imprimé avec les mécanismes de bas niveau de Crésus Réseau.", font, 2.5);
+				port.PaintImage (bitmap, 50, 150, 100, 100, 0, 0, bitmap.Width, bitmap.Height);
+				
+				PrintDialogTest.TestDocument (port);
+				
+				return Printing.PrintEngineStatus.FinishJob;
+			}
+			#endregion
 		}
 		
 		private static void TestDocument(Drawing.IPaintPort port)
