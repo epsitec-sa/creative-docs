@@ -113,6 +113,13 @@ namespace Epsitec.Common.Drawing
 			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, bold_width);
 		}
 		
+		public void Append(Path path, double bold_width)
+		{
+			this.CreateOnTheFly ();
+			this.has_curve |= path.has_curve;
+			AntiGrain.Path.AppendPath (this.agg_path, path.agg_path, 1, 0, 0, 1, 0, 0, bold_width);
+		}
+		
 		public void Append(Font font, int glyph, double x, double y, double size)
 		{
 			this.Append (font, glyph, size, 0, 0, size, x, y);
