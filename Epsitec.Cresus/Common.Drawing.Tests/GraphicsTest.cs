@@ -521,7 +521,7 @@ namespace Epsitec.Common.Drawing
 			foreach (char c in text)
 			{
 				e.Graphics.AddText (x, y, width, height, new string (c, 1), font, size,  ContentAlignment.MiddleCenter);
-				e.Graphics.ImageRenderer.Bitmap = bitmap;
+				e.Graphics.ImageRenderer.BitmapImage = bitmap;
 				
 				Transform t = new Transform ();
 				t.Scale (width / bitmap.Width, height / bitmap.Height);
