@@ -52,6 +52,23 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public bool								IsReadOnly
+		{
+			get
+			{
+				return this.is_read_only;
+			}
+		}
+		
+		public bool								IsReadWrite
+		{
+			get
+			{
+				return ! this.is_read_only;
+			}
+		}
+		
+		
 		public static DbRichCommand CreateFromTable(DbInfrastructure infrastructure, DbTransaction transaction, DbTable table)
 		{
 			return DbRichCommand.CreateFromTables (infrastructure, transaction, new DbTable[] { table }, new DbSelectCondition[] { null });
@@ -119,88 +136,22 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public void InternalFillDataSet(DbAccess db_access, System.Data.IDbTransaction transaction, System.Data.IDbDataAdapter[] adapters)
+		public void LockReadOnly()
 		{
-			//	Utiliser DbInfrastructure.Execute en lieu et place de cette méthode !
+			//	En verrouillant le DbRichCommand contre les modifications, on évite que
+			//	l'utilisateur n'appelle par inadvertance UpdateTables ou UpdateRealIds.
 			
-			//	Cette méthode ne devrait jamais être appelée par un utilisateur : elle est réservée
-			//	aux classes implémentant ISqlEngine. Pour s'assurer que personne ne se trompe, on
-			//	vérifie l'identité de l'appelant :
-			//
-			//	xxx --> DbInfrastructure --> ISqlEngine --> DbRichCommand
-			
-			System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace (true);
-			System.Diagnostics.StackFrame caller_1 = trace.GetFrame (1);
-			System.Diagnostics.StackFrame caller_2 = trace.GetFrame (2);
-			
-			System.Type caller_class_type = caller_1.GetMethod ().DeclaringType;
-			System.Type req_interf_type   = typeof (Epsitec.Cresus.Database.ISqlEngine);
-			
-			if ((caller_class_type.GetInterface (req_interf_type.FullName) != req_interf_type) ||
-				(caller_2.GetMethod ().DeclaringType != typeof (DbInfrastructure)))
-			{
-				throw new System.InvalidOperationException (string.Format ("Method may not be called by {0}.{1}", caller_class_type.FullName, caller_1.GetMethod ().Name));
-			}
-			
-			System.Diagnostics.Debug.Assert (db_access.IsValid);
-			
-			if (transaction == null)
-			{
-				throw new Exceptions.MissingTransactionException (db_access);
-			}
-			
-			if (this.data_set != null)
-			{
-				throw new Exceptions.GenericException (db_access, "DataSet already exists.");
-			}
-			
-			//	Définit et remplit le DataSet en se basant sur les données fournies
-			//	par l'objet 'adapter' (ADO.NET).
-			
-			this.db_access = db_access;
-			this.data_set  = new System.Data.DataSet ();
-			this.adapters  = adapters;
-			
-			this.SetCommandTransaction (transaction);
-			
-			try
-			{
-				for (int i = 0; i < this.tables.Count; i++)
-				{
-					DbTable db_table = this.tables[i];
-					
-					string  ado_name_table = "Table";
-					string  db_name_table  = db_table.Name;
-					
-					//	Il faut (re)nommer les tables afin d'avoir les noms qui correspondent
-					//	à ce que définit DbTable, et faire pareil pour les colonnes.
-					
-					System.Data.ITableMapping mapping = this.adapters[i].TableMappings.Add (ado_name_table, db_name_table);
-					
-					for (int c = 0; c < db_table.Columns.Count; c++)
-					{
-						DbColumn db_column = db_table.Columns[c];
-						
-						string db_name_column  = db_column.CreateDisplayName ();
-						string ado_name_column = db_column.CreateSqlName ();
-						
-						mapping.ColumnMappings.Add (ado_name_column, db_name_column);
-					}
-					
-					this.adapters[i].Fill (this.data_set);
-				}
-			}
-			finally
-			{
-				this.SetCommandTransaction (null);
-			}
-			
-			this.CreateDataRelations ();
+			this.is_read_only = true;
 		}
 		
 		
 		public void UpdateTables(DbTransaction transaction)
 		{
+			if (this.is_read_only)
+			{
+				throw new Exceptions.ReadOnlyException (this.db_access);
+			}
+			
 			//	Sauve les données contenues du DataSet dans la base de données;
 			//	pour cela, il faut que DbRichCommand ait été rempli correctement
 			//	au moyen de DbInfrastructure.Execute.
@@ -232,6 +183,11 @@ namespace Epsitec.Cresus.Database
 		
 		public void UpdateRealIds(DbTransaction transaction)
 		{
+			if (this.is_read_only)
+			{
+				throw new Exceptions.ReadOnlyException (this.db_access);
+			}
+			
 			//	Met à jour les IDs des nouvelles lignes des diverses tables.
 			
 			if (transaction == null)
@@ -259,24 +215,27 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public void CheckRowIds()
-		{
-			foreach (System.Data.DataTable table in this.data_set.Tables)
-			{
-				DbRichCommand.CheckRowIds (table);
-			}
-		}
-		
 		public void UpdateLogId()
 		{
+			if (this.is_read_only)
+			{
+				throw new Exceptions.ReadOnlyException (this.db_access);
+			}
+			
 			foreach (System.Data.DataTable table in this.data_set.Tables)
 			{
 				DbRichCommand.UpdateLogId (table, this.infrastructure.Logger.CurrentId);
 			}
 		}
 		
+		
 		public void CreateNewRow(string table_name, out System.Data.DataRow data_row)
 		{
+			if (this.is_read_only)
+			{
+				throw new Exceptions.ReadOnlyException (this.db_access);
+			}
+			
 			this.CheckValidState ();
 			
 			System.Data.DataTable table = this.data_set.Tables[table_name];
@@ -286,7 +245,47 @@ namespace Epsitec.Cresus.Database
 				throw new System.ArgumentException (string.Format ("Table {0} not found.", table_name), "table_name");
 			}
 			
-			data_row = DbRichCommand.CreateNewRow (table);
+			DbRichCommand.CreateRow (table, out data_row);
+		}
+		
+		public void DeleteExistingRow(System.Data.DataRow data_row)
+		{
+			if (this.is_read_only)
+			{
+				throw new Exceptions.ReadOnlyException (this.db_access);
+			}
+			
+			DbRichCommand.DeleteRow (data_row);
+		}
+		
+		public void AcceptChanges()
+		{
+			if (this.is_read_only)
+			{
+				throw new Exceptions.ReadOnlyException (this.db_access);
+			}
+			
+			this.data_set.AcceptChanges ();
+		}
+		
+		public void CheckRowIds()
+		{
+			foreach (System.Data.DataTable table in this.data_set.Tables)
+			{
+				DbRichCommand.CheckRowIds (table);
+			}
+		}
+		
+		
+		public static void CheckRowIds(System.Data.DataTable table)
+		{
+			for (int i = 0; i < table.Rows.Count; i++)
+			{
+				DbKey key = new DbKey (table.Rows[i]);
+				
+				System.Diagnostics.Debug.Assert (key.IsTemporary == false);
+				System.Diagnostics.Debug.Assert (key.Id.ClientId != 0);
+			}
 		}
 		
 		
@@ -326,17 +325,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public static void CheckRowIds(System.Data.DataTable table)
-		{
-			for (int i = 0; i < table.Rows.Count; i++)
-			{
-				DbKey key = new DbKey (table.Rows[i]);
-				
-				System.Diagnostics.Debug.Assert (key.IsTemporary == false);
-				System.Diagnostics.Debug.Assert (key.Id.ClientId != 0);
-			}
-		}
-		
 		public static void UpdateLogId(System.Data.DataTable table, DbId log_id)
 		{
 			for (int i = 0; i < table.Rows.Count; i++)
@@ -351,6 +339,21 @@ namespace Epsitec.Cresus.Database
 						break;
 				}
 			}
+		}
+		
+		
+		public static void CreateRow(System.Data.DataTable table, out System.Data.DataRow data_row)
+		{
+			data_row = table.NewRow ();
+			
+			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
+			
+			data_row.BeginEdit ();
+			data_row[Tags.ColumnId]     = key.Id.Value;
+			data_row[Tags.ColumnStatus] = key.IntStatus;
+			data_row.EndEdit ();
+			
+			table.Rows.Add (data_row);
 		}
 		
 		public static void DeleteRow(System.Data.DataRow data_row)
@@ -373,22 +376,6 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public static System.Data.DataRow CreateNewRow(System.Data.DataTable table)
-		{
-			System.Data.DataRow data_row = table.NewRow ();
-			
-			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
-			
-			data_row.BeginEdit ();
-			data_row[Tags.ColumnId]     = key.Id.Value;
-			data_row[Tags.ColumnStatus] = key.IntStatus;
-			data_row.EndEdit ();
-			
-			table.Rows.Add (data_row);
-			
-			return data_row;
-		}
-		
 		
 		public static System.Collections.ArrayList FindRowsUsingTemporaryIds(System.Data.DataTable table)
 		{
@@ -408,12 +395,6 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			return list;
-		}
-		
-		
-		public void AcceptChanges()
-		{
-			this.data_set.AcceptChanges ();
 		}
 		
 		
@@ -521,6 +502,86 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
+		public void InternalFillDataSet(DbAccess db_access, System.Data.IDbTransaction transaction, System.Data.IDbDataAdapter[] adapters)
+		{
+			//	Utiliser DbInfrastructure.Execute en lieu et place de cette méthode !
+			
+			//	Cette méthode ne devrait jamais être appelée par un utilisateur : elle est réservée
+			//	aux classes implémentant ISqlEngine. Pour s'assurer que personne ne se trompe, on
+			//	vérifie l'identité de l'appelant :
+			//
+			//	xxx --> DbInfrastructure --> ISqlEngine --> DbRichCommand
+			
+			System.Diagnostics.StackTrace trace = new System.Diagnostics.StackTrace (true);
+			System.Diagnostics.StackFrame caller_1 = trace.GetFrame (1);
+			System.Diagnostics.StackFrame caller_2 = trace.GetFrame (2);
+			
+			System.Type caller_class_type = caller_1.GetMethod ().DeclaringType;
+			System.Type req_interf_type   = typeof (Epsitec.Cresus.Database.ISqlEngine);
+			
+			if ((caller_class_type.GetInterface (req_interf_type.FullName) != req_interf_type) ||
+				(caller_2.GetMethod ().DeclaringType != typeof (DbInfrastructure)))
+			{
+				throw new System.InvalidOperationException (string.Format ("Method may not be called by {0}.{1}", caller_class_type.FullName, caller_1.GetMethod ().Name));
+			}
+			
+			System.Diagnostics.Debug.Assert (db_access.IsValid);
+			
+			if (transaction == null)
+			{
+				throw new Exceptions.MissingTransactionException (db_access);
+			}
+			
+			if (this.data_set != null)
+			{
+				throw new Exceptions.GenericException (db_access, "DataSet already exists.");
+			}
+			
+			//	Définit et remplit le DataSet en se basant sur les données fournies
+			//	par l'objet 'adapter' (ADO.NET).
+			
+			this.db_access = db_access;
+			this.data_set  = new System.Data.DataSet ();
+			this.adapters  = adapters;
+			
+			this.SetCommandTransaction (transaction);
+			
+			try
+			{
+				for (int i = 0; i < this.tables.Count; i++)
+				{
+					DbTable db_table = this.tables[i];
+					
+					string  ado_name_table = "Table";
+					string  db_name_table  = db_table.Name;
+					
+					//	Il faut (re)nommer les tables afin d'avoir les noms qui correspondent
+					//	à ce que définit DbTable, et faire pareil pour les colonnes.
+					
+					System.Data.ITableMapping mapping = this.adapters[i].TableMappings.Add (ado_name_table, db_name_table);
+					
+					for (int c = 0; c < db_table.Columns.Count; c++)
+					{
+						DbColumn db_column = db_table.Columns[c];
+						
+						string db_name_column  = db_column.CreateDisplayName ();
+						string ado_name_column = db_column.CreateSqlName ();
+						
+						mapping.ColumnMappings.Add (ado_name_column, db_name_column);
+					}
+					
+					this.adapters[i].Fill (this.data_set);
+				}
+			}
+			finally
+			{
+				this.SetCommandTransaction (null);
+			}
+			
+			this.CreateDataRelations ();
+		}
+		
+		
 		
 		protected DbInfrastructure				infrastructure;
 		protected Collections.DbCommands		commands;
@@ -528,5 +589,7 @@ namespace Epsitec.Cresus.Database
 		protected System.Data.DataSet			data_set;
 		protected DbAccess						db_access;
 		protected System.Data.IDataAdapter[]	adapters;
+		
+		private bool							is_read_only;
 	}
 }

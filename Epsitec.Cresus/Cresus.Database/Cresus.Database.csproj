@@ -453,7 +453,17 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Exceptions\InvalidIdException.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Exceptions\MissingTransactionException.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Exceptions\ReadOnlyException.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

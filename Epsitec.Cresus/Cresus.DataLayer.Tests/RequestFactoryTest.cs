@@ -18,16 +18,20 @@ namespace Epsitec.Cresus.DataLayer
 			
 			System.Data.DataTable table = new System.Data.DataTable ("Test Table");
 			
-			System.Data.DataColumn col_a = new System.Data.DataColumn ("Column A", typeof (long)); col_a.Unique = true; col_a.AllowDBNull = false;
-			System.Data.DataColumn col_b = new System.Data.DataColumn ("Column B", typeof (string)); col_b.AllowDBNull = false;
-			System.Data.DataColumn col_c = new System.Data.DataColumn ("Column C", typeof (decimal)); col_c.AllowDBNull = true;
+			System.Data.DataColumn col_id   = new System.Data.DataColumn (Database.Tags.ColumnId, typeof (long)); col_id.AllowDBNull = false; col_id.Unique = true;
+			System.Data.DataColumn col_stat = new System.Data.DataColumn (Database.Tags.ColumnStatus, typeof (short)); col_stat.AllowDBNull = false;
+			System.Data.DataColumn col_a    = new System.Data.DataColumn ("Column A", typeof (long)); col_a.AllowDBNull = false;
+			System.Data.DataColumn col_b    = new System.Data.DataColumn ("Column B", typeof (string)); col_b.AllowDBNull = false;
+			System.Data.DataColumn col_c    = new System.Data.DataColumn ("Column C", typeof (decimal)); col_c.AllowDBNull = true;
 			
+			table.Columns.Add (col_id);
+			table.Columns.Add (col_stat);
 			table.Columns.Add (col_a);
 			table.Columns.Add (col_b);
 			table.Columns.Add (col_c);
 			
-			table.Rows.Add (new object[] { 1L, "Item X", 10.50M });
-			table.Rows.Add (new object[] { 2L, "Item Y", System.DBNull.Value });
+			table.Rows.Add (new object[] { Database.DbId.CreateId (1, 1).Value, 0, 1L, "Item X", 10.50M });
+			table.Rows.Add (new object[] { Database.DbId.CreateId (2, 1).Value, 0, 2L, "Item Y", System.DBNull.Value });
 			
 			factory.GenerateRequests (table);
 			
@@ -67,12 +71,64 @@ namespace Epsitec.Cresus.DataLayer
 			
 			Assertion.AssertEquals (table.TableName, update.TableName);
 			Assertion.AssertEquals (2, update.ColumnNames.Length);
-			Assertion.AssertEquals (col_a.ColumnName, update.ColumnNames[0]);
+			Assertion.AssertEquals (col_id.ColumnName, update.ColumnNames[0]);
 			Assertion.AssertEquals (col_c.ColumnName, update.ColumnNames[1]);
-			Assertion.AssertEquals (2L, update.ColumnValues[0]);
-			Assertion.AssertEquals (2L, update.ColumnOriginalValues[0]);
+			Assertion.AssertEquals (1000000000002L, update.ColumnValues[0]);
+			Assertion.AssertEquals (1000000000002L, update.ColumnOriginalValues[0]);
 			Assertion.AssertEquals (System.DBNull.Value, update.ColumnOriginalValues[1]);
 			Assertion.AssertEquals (25M, update.ColumnValues[1]);
+			
+			factory.Dispose ();
+		}
+		
+		[Test] [ExpectedException (typeof (Database.Exceptions.InvalidIdException))] public void Check03GenerateRequestsEx()
+		{
+			RequestFactory factory = new RequestFactory ();
+			
+			System.Data.DataTable table = new System.Data.DataTable ("Test Table");
+			
+			System.Data.DataColumn col_id   = new System.Data.DataColumn (Database.Tags.ColumnId, typeof (long)); col_id.AllowDBNull = false; col_id.Unique = true;
+			System.Data.DataColumn col_stat = new System.Data.DataColumn (Database.Tags.ColumnStatus, typeof (short)); col_stat.AllowDBNull = false;
+			System.Data.DataColumn col_a    = new System.Data.DataColumn ("Column A", typeof (long)); col_a.AllowDBNull = false;
+			System.Data.DataColumn col_b    = new System.Data.DataColumn ("Column B", typeof (string)); col_b.AllowDBNull = false;
+			System.Data.DataColumn col_c    = new System.Data.DataColumn ("Column C", typeof (decimal)); col_c.AllowDBNull = true;
+			
+			table.Columns.Add (col_id);
+			table.Columns.Add (col_stat);
+			table.Columns.Add (col_a);
+			table.Columns.Add (col_b);
+			table.Columns.Add (col_c);
+			
+			table.Rows.Add (new object[] { Database.DbId.CreateId (1, 1).Value, 0, 1L, "Item X", 10.50M });
+			table.Rows.Add (new object[] { Database.DbId.CreateTempId (555).Value, 0, 2L, "Item Y", System.DBNull.Value });
+			
+			factory.GenerateRequests (table);
+			
+			factory.Dispose ();
+		}
+		
+		[Test] [ExpectedException (typeof (Database.Exceptions.InvalidIdException))] public void Check04GenerateRequestsEx()
+		{
+			RequestFactory factory = new RequestFactory ();
+			
+			System.Data.DataTable table = new System.Data.DataTable ("Test Table");
+			
+			System.Data.DataColumn col_id   = new System.Data.DataColumn (Database.Tags.ColumnId, typeof (long)); col_id.AllowDBNull = false; col_id.Unique = true;
+			System.Data.DataColumn col_stat = new System.Data.DataColumn (Database.Tags.ColumnStatus, typeof (short)); col_stat.AllowDBNull = false;
+			System.Data.DataColumn col_a    = new System.Data.DataColumn ("Column A", typeof (long)); col_a.AllowDBNull = false;
+			System.Data.DataColumn col_b    = new System.Data.DataColumn ("Column B", typeof (string)); col_b.AllowDBNull = false;
+			System.Data.DataColumn col_c    = new System.Data.DataColumn ("Column C", typeof (decimal)); col_c.AllowDBNull = true;
+			
+			table.Columns.Add (col_id);
+			table.Columns.Add (col_stat);
+			table.Columns.Add (col_a);
+			table.Columns.Add (col_b);
+			table.Columns.Add (col_c);
+			
+			table.Rows.Add (new object[] { Database.DbId.CreateId (1, 1).Value, 0, 1L, "Item X", 10.50M });
+			table.Rows.Add (new object[] { 0L, 0, 2L, "Item Y", System.DBNull.Value });
+			
+			factory.GenerateRequests (table);
 			
 			factory.Dispose ();
 		}

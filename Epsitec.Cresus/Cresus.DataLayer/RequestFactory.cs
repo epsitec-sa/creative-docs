@@ -49,6 +49,14 @@ namespace Epsitec.Cresus.DataLayer
 				System.Data.DataRow      row   = data_table.Rows[r];
 				System.Data.DataRowState state = row.RowState;
 				
+				Database.DbKey key = new Database.DbKey (row);
+				
+				if ((key.IsTemporary) ||
+					(key.Id.ClientId == 0))
+				{
+					throw new Database.Exceptions.InvalidIdException (string.Format ("Invalid key {0}.", key));
+				}
+				
 				if (state == System.Data.DataRowState.Unchanged)
 				{
 					continue;

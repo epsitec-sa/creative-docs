@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Database
 				throw new System.ArgumentOutOfRangeException ("key", key, "Key does not exist in DbDict.");
 			}
 			
-			DbRichCommand.DeleteRow (row);
+			this.command.DeleteExistingRow (row);
 			
 			this.NotifyChanged ();
 		}
