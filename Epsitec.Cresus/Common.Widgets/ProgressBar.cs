@@ -8,5 +8,10 @@ namespace Epsitec.Common.Widgets
 		public ProgressBar()
 		{
 		}
+		
+		public ProgressBar(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 	}
 }

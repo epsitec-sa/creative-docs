@@ -10,14 +10,18 @@ namespace Epsitec.Common.Widgets
 			this.items = new Helpers.StringCollection (this);
 			this.isCombo = true;
 			
-			this.button = new ArrowButton();
+			this.button = new ArrowButton(this);
 			this.button.Direction = Direction.Down;
 			this.button.ButtonStyle = ButtonStyle.Scroller;
-			this.button.Parent = this;
 			this.button.Pressed += new MessageEventHandler (this.HandleButtonPressed);
 			this.button.Dock = DockStyle.Right;
 			
 			this.rightMargin = this.button.Width;
+		}
+		
+		public TextFieldCombo(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
 		}
 		
 		
@@ -180,7 +184,7 @@ namespace Epsitec.Common.Widgets
 		
 		private void OpenCombo()
 		{
-			this.scrollList = new ScrollList();
+			this.scrollList = new ScrollList(null);
 			this.scrollList.ScrollListStyle = ScrollListStyle.Simple;
 			this.scrollList.ComboMode = true;
 			this.scrollList.Bounds = new Drawing.Rectangle (0, 0, this.Width, 200);

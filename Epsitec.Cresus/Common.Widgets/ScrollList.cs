@@ -26,19 +26,24 @@ namespace Epsitec.Common.Widgets
 	{
 		public ScrollList()
 		{
-			this.items = new Helpers.StringCollection (this);
+			this.items = new Helpers.StringCollection(this);
 			this.DockMargins = new Drawing.Margins (2, 2, 2, 2);
 			this.internalState |= InternalState.AutoFocus;
 			this.internalState |= InternalState.Focusable;
 
 			this.scrollListStyle = ScrollListStyle.Normal;
 			this.lineHeight = this.DefaultFontHeight+1;
-			this.scroller = new VScroller();
+			this.scroller = new VScroller(null);
 			this.scroller.IsInverted = true;
 			this.scroller.Parent = this;
 			this.scroller.Dock = DockStyle.Right;
 			this.scroller.Moved += new EventHandler(this.HandleScrollerMoved);
 			this.scroller.Hide ();
+		}
+		
+		public ScrollList(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
 		}
 
 		

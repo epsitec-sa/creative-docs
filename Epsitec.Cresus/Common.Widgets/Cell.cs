@@ -10,9 +10,9 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
-		public Cell(Widget widget)
+		public Cell(Widget embedder) : this()
 		{
-			this.Insert(widget);
+			this.SetEmbedder(embedder);
 		}
 		
 		public void Insert(Widget widget)
@@ -86,25 +86,6 @@ namespace Epsitec.Common.Widgets
 			adorner.PaintCellBackground(graphics, rect, state, dir);
 		}
 		
-#if false
-		// Dessine la cellule.
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
-		{
-			IAdorner adorner = Widgets.Adorner.Factory.Active;
-
-			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
-			WidgetState       state = this.PaintState;
-			Direction         dir   = this.RootDirection;
-			
-			if ( this.IsSelected )
-			{
-				Drawing.Rectangle[] rects = new Drawing.Rectangle[1];
-				rects[0] = rect;
-				Drawing.Point pos = new Drawing.Point(0,0);
-				adorner.PaintTextSelectionBackground(graphics, pos, rects);
-			}
-		}
-#endif
 		
 		protected AbstractCellArray		cellArray;
 		protected int					rankColumn;

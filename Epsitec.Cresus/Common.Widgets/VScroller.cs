@@ -9,6 +9,12 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		public VScroller(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
+		
 		public override double DefaultWidth
 		{
 			get

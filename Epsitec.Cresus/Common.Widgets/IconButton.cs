@@ -13,6 +13,11 @@ namespace Epsitec.Common.Widgets
 			this.ButtonStyle = ButtonStyle.ToolItem;
 		}
 		
+		public IconButton(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
 		public IconButton(string name) : this()
 		{
 			this.IconName = name;

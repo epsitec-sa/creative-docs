@@ -11,6 +11,11 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		public AbstractGroup(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
 		public virtual Drawing.Rectangle	Inside
 		{
 			get { return this.Client.Bounds; }

@@ -12,6 +12,12 @@ namespace Epsitec.Common.Widgets
 			this.internalState &= ~InternalState.Focusable;
 		}
 		
+		public ArrowButton(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
+		
 		public Direction Direction
 		{
 			get

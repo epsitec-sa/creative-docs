@@ -10,5 +10,10 @@ namespace Epsitec.Common.Widgets
 		{
 			this.separator = true;
 		}
+		
+		public MenuSeparator(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 	}
 }

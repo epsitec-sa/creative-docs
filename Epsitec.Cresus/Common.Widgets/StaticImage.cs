@@ -10,6 +10,11 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		public StaticImage(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
 		public StaticImage(string name)
 		{
 			this.ImageName = name;

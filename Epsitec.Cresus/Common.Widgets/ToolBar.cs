@@ -23,6 +23,11 @@ namespace Epsitec.Common.Widgets
 			this.colorControlDark       = Drawing.Color.FromName("ControlDark");
 			this.colorControlDarkDark   = Drawing.Color.FromName("ControlDarkDark");
 		}
+		
+		public ToolBar(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 
 
 		public override double				DefaultHeight
@@ -95,8 +100,8 @@ namespace Epsitec.Common.Widgets
 		#region IWidgetCollectionHost Members
 		public void NotifyInsertion(Widget widget)
 		{
-			this.Children.Add (widget);
 			widget.Dock = DockStyle.Left;
+			widget.SetEmbedder (this);
 		}
 
 		public void NotifyRemoval(Widget widget)

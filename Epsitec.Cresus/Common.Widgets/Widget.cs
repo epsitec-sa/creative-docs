@@ -77,6 +77,11 @@ namespace Epsitec.Common.Widgets
 			Widget.aliveWidgets.Add (new System.WeakReference (this));
 		}
 		
+		public Widget(Widget embedder) : this()
+		{
+			this.SetEmbedder (embedder);
+		}
+		
 		static Widget()
 		{
 			Drawing.Font.Initialise ();
@@ -1420,6 +1425,12 @@ namespace Epsitec.Common.Widgets
 				window.PostProcessMessage (message);
 				this.Invalidate ();
 			}
+		}
+		
+		public void SetEmbedder(Widget embedder)
+		{
+			this.Parent = embedder;
+			this.internalState |= InternalState.Embedded;
 		}
 		
 		
@@ -3135,6 +3146,8 @@ namespace Epsitec.Common.Widgets
 			None				= 0,
 			ChildrenChanged		= 0x00000001,
 			ChildrenDocked		= 0x00000002,		//	=> il y a des enfants avec Dock != None
+			
+			Embedded			= 0x00000008,		//	=> widget appartient au parent (widgets composés)
 			
 			Focusable			= 0x00000010,
 			Selectable			= 0x00000020,

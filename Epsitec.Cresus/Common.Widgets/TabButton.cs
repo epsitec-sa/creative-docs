@@ -10,6 +10,11 @@ namespace Epsitec.Common.Widgets
 			this.internalState &= ~InternalState.Engageable;
 		}
 		
+		public TabButton(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
 		public override Drawing.Rectangle GetPaintBounds()
 		{
 			return new Drawing.Rectangle(0, -2, this.clientInfo.width, this.clientInfo.height+2);

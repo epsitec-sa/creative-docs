@@ -8,5 +8,10 @@ namespace Epsitec.Common.Widgets
 		public Panel()
 		{
 		}
+		
+		public Panel(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 	}
 }

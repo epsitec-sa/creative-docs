@@ -31,6 +31,11 @@ namespace Epsitec.Common.Widgets
 			this.colorControlDark = Drawing.Color.FromName("ControlDark");
 		}
 		
+		public MenuItem(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
 		public MenuItem(string name, string text) : this()
 		{
 			this.Name     = name;

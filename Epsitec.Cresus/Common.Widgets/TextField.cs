@@ -8,5 +8,10 @@ namespace Epsitec.Common.Widgets
 		public TextField()
 		{
 		}
+		
+		public TextField(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 	}
 }

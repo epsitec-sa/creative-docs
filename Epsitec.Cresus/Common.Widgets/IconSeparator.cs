@@ -10,6 +10,11 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		public IconSeparator(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
 		public IconSeparator(double breadth)
 		{
 			this.Breadth = breadth;

@@ -10,5 +10,10 @@ namespace Epsitec.Common.Widgets
 		{
 			this.internalState |= InternalState.AutoToggle;
 		}
+		
+		public ToggleButton(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 	}
 }

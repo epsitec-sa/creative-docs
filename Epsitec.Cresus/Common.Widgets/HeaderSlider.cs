@@ -18,6 +18,11 @@ namespace Epsitec.Common.Widgets
 			this.HeaderSliderStyle = HeaderSliderStyle.Top;
 		}
 		
+		public HeaderSlider(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
 		// Type du bouton.
 		public HeaderSliderStyle HeaderSliderStyle
 		{

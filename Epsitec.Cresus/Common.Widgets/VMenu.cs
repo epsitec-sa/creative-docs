@@ -8,5 +8,10 @@ namespace Epsitec.Common.Widgets
 		public VMenu() : base(MenuType.Vertical)
 		{
 		}
+		
+		public VMenu(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 	}
 }

@@ -40,6 +40,12 @@ namespace Epsitec.Common.Widgets
 			this.CreateTextLayout();
 		}
 		
+		public AbstractTextField(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
+		
 
 		protected override void Dispose(bool disposing)
 		{

@@ -7,8 +7,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldUpDown()
 		{
-			this.arrowUp = new ArrowButton();
-			this.arrowDown = new ArrowButton();
+			this.arrowUp = new ArrowButton(this);
+			this.arrowDown = new ArrowButton(this);
 			this.arrowUp.Direction = Direction.Up;
 			this.arrowDown.Direction = Direction.Down;
 			this.arrowUp.ButtonStyle = ButtonStyle.Scroller;
@@ -19,8 +19,11 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown.StillEngaged += new EventHandler(this.HandleButton);
 			this.arrowUp.AutoRepeatEngaged = true;
 			this.arrowDown.AutoRepeatEngaged = true;
-			this.Children.Add(this.arrowUp);
-			this.Children.Add(this.arrowDown);
+		}
+		
+		public TextFieldUpDown(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)

@@ -9,6 +9,12 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 		
+		public HScroller(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
+		
 		public override double DefaultHeight
 		{
 			get

@@ -13,12 +13,12 @@ namespace Epsitec.Common.Widgets
 	[Support.SuppressBundleSupport]
 	public class TabBook : AbstractGroup
 	{
-		public TabBook(TabBookStyle type)
+		public TabBook()
 		{
-			this.type = type;
+			this.type = TabBookStyle.Normal;
 
-			this.arrowLeft = new ArrowButton();
-			this.arrowRight = new ArrowButton();
+			this.arrowLeft = new ArrowButton(this);
+			this.arrowRight = new ArrowButton(this);
 			this.arrowLeft.Direction = Direction.Left;
 			this.arrowRight.Direction = Direction.Right;
 			this.arrowLeft.ButtonStyle = ButtonStyle.Scroller;
@@ -29,9 +29,13 @@ namespace Epsitec.Common.Widgets
 			this.arrowRight.StillEngaged += new EventHandler(this.HandleScrollButton);
 			this.arrowLeft.AutoRepeatEngaged = true;
 			this.arrowRight.AutoRepeatEngaged = true;
-			this.Children.Add(this.arrowLeft);
-			this.Children.Add(this.arrowRight);
 		}
+		
+		public TabBook(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
 		
 		protected override void Dispose(bool disposing)
 		{
@@ -72,6 +76,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public TabBookStyle TabBookStyle
+		{
+			get
+			{
+				return this.type;
+			}
+			set
+			{
+				this.type = value;
+			}
+		}
+		
 		public bool Sorted
 		{
 			get

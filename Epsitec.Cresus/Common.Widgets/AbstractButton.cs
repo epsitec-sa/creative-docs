@@ -15,6 +15,11 @@ namespace Epsitec.Common.Widgets
 			this.internalState |= InternalState.Engageable;
 		}
 		
+		public AbstractButton(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
 		
 		public override Drawing.ContentAlignment DefaultAlignment
 		{

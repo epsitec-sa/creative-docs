@@ -8,7 +8,13 @@ namespace Epsitec.Common.Widgets
 		public GroupBox()
 		{
 		}
+		
+		public GroupBox(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 
+		
 		// Retourne l'alignement par défaut d'un bouton.
 		public override Drawing.ContentAlignment DefaultAlignment
 		{

@@ -33,23 +33,15 @@ namespace Epsitec.Common.Widgets
 			this.minHeight = h;
 			this.headerHeight = h;
 
-			this.container = new Widget();
-			this.Children.Add(this.container);
-
-			this.containerV = new Widget();
-			this.Children.Add(this.containerV);
-
-			this.containerH = new Widget();
-			this.Children.Add(this.containerH);
-
-			this.scrollerV = new VScroller();
+			this.container  = new Widget(this);
+			this.containerV = new Widget(this);
+			this.containerH = new Widget(this);
+			this.scrollerV  = new VScroller(this);
+			this.scrollerH  = new HScroller(this);
+			
 			this.scrollerV.IsInverted = true;  // de haut en bas
 			this.scrollerV.Moved += new EventHandler(this.HandleScrollerV);
-			this.Children.Add(this.scrollerV);
-
-			this.scrollerH = new HScroller();
 			this.scrollerH.Moved += new EventHandler(this.HandleScrollerH);
-			this.Children.Add(this.scrollerH);
 		}
 		
 		
@@ -230,7 +222,7 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				System.Diagnostics.Debug.Assert(this.array[column, row] != null);
-				if ( value == null )  value = new Cell();
+				if ( value == null )  value = new Cell(null);
 				
 				this.array[column, row].SetArrayRank(null, -1, -1);
 				this.array[column, row] = value;
@@ -1437,7 +1429,7 @@ namespace Epsitec.Common.Widgets
 				for ( int row=0 ; row<maxRows ; row++ )
 				{
 					System.Diagnostics.Debug.Assert(newArray[col,row] == null);
-					newArray[col,row] = new Cell();
+					newArray[col,row] = new Cell(null);
 					newArray[col,row].SetArrayRank(this, col, row);
 				}
 			}
@@ -1449,7 +1441,7 @@ namespace Epsitec.Common.Widgets
 				for ( int col=0 ; col<minMaxCol ; col++ )
 				{
 					System.Diagnostics.Debug.Assert(newArray[col,row] == null);
-					newArray[col,row] = new Cell();
+					newArray[col,row] = new Cell(null);
 					newArray[col,row].SetArrayRank(this, col, row);
 				}
 			}
@@ -1489,7 +1481,7 @@ namespace Epsitec.Common.Widgets
 			}
 			for ( int i=0 ; i<this.maxRows ; i++ )
 			{
-				HeaderButton button = new HeaderButton();
+				HeaderButton button = new HeaderButton(null);
 				button.HeaderButtonStyle = HeaderButtonStyle.Left;
 				button.Rank = i;
 				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
@@ -1505,7 +1497,7 @@ namespace Epsitec.Common.Widgets
 			}
 			for ( int i=0 ; i<this.maxColumns ; i++ )
 			{
-				HeaderButton button = new HeaderButton();
+				HeaderButton button = new HeaderButton(null);
 				button.HeaderButtonStyle = HeaderButtonStyle.Top;
 				button.Rank = i;
 				button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
@@ -1524,7 +1516,7 @@ namespace Epsitec.Common.Widgets
 			}
 			for ( int i=0 ; i<this.maxRows ; i++ )
 			{
-				HeaderSlider slider = new HeaderSlider();
+				HeaderSlider slider = new HeaderSlider(null);
 				slider.HeaderSliderStyle = HeaderSliderStyle.Left;
 				slider.Rank = i;
 				slider.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);
@@ -1544,7 +1536,7 @@ namespace Epsitec.Common.Widgets
 			}
 			for ( int i=0 ; i<this.maxColumns ; i++ )
 			{
-				HeaderSlider slider = new HeaderSlider();
+				HeaderSlider slider = new HeaderSlider(null);
 				slider.HeaderSliderStyle = HeaderSliderStyle.Top;
 				slider.Rank = i;
 				slider.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);

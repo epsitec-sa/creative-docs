@@ -7,13 +7,17 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldMulti()
 		{
-			this.scroller = new VScroller();
+			this.scroller = new VScroller(this);
 			this.scroller.SetEnabled(false);
 			this.scroller.Moved += new EventHandler(this.HandleScrollerMoved);
-			this.scroller.Parent = this;
 			this.scroller.Dock = DockStyle.Right;
 			
 			this.rightMargin = this.scroller.Width;
+		}
+		
+		public TextFieldMulti(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)

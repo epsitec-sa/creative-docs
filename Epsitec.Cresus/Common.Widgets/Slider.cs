@@ -8,5 +8,10 @@ namespace Epsitec.Common.Widgets
 		public Slider()
 		{
 		}
+		
+		public Slider(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 	}
 }

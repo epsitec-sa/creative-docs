@@ -13,7 +13,7 @@ namespace Epsitec.Common.Widgets
 			this.window = new Window();
 			this.window.MakeFramelessWindow();
 			this.window.DisableMouseActivation();
-			this.window.Root.Children.Add(this);
+			this.SetEmbedder(this.window.Root);
 			this.window.Hide();
 
 			this.timer = new Timer();

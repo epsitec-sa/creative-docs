@@ -15,24 +15,19 @@ namespace Epsitec.Common.Widgets
 		{
 			this.panes = new Widget[2];
 
-			this.panes[0] = new Widget();
-			this.Children.Add(this.panes[0]);
-
-			this.slider = new PaneButton();
+			this.panes[0] = new Widget(this);
+			this.panes[1] = new Widget(this);
+			
+			this.slider = new PaneButton(this);
 			this.slider.PaneButtonStyle = PaneButtonStyle.Vertical;
 			this.slider.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);
 			this.slider.DragMoved   += new MessageEventHandler(this.HandleSliderDragMoved);
 			this.slider.DragEnded   += new MessageEventHandler(this.HandleSliderDragEnded);
-			this.Children.Add(this.slider);
-
-			this.button = new ArrowButton();
+			
+			this.button = new ArrowButton(this);
 			this.button.Hide();
 			this.button.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-			this.Children.Add(this.button);
-
-			this.panes[1] = new Widget();
-			this.Children.Add(this.panes[1]);
-
+			
 			SetHideDimension(0, 20);
 			SetHideDimension(1, 20);
 			SetMinDimension(0, 0);
@@ -40,6 +35,11 @@ namespace Epsitec.Common.Widgets
 			SetMaxDimension(0, 1000000);
 			SetMaxDimension(1, 1000000);
 			SetDimension(0, this.Client.Width/2);
+		}
+		
+		public Pane(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
 		}
 
 		protected override void Dispose(bool disposing)
@@ -49,17 +49,8 @@ namespace Epsitec.Common.Widgets
 				this.slider.DragStarted -= new MessageEventHandler(this.HandleSliderDragStarted);
 				this.slider.DragMoved   -= new MessageEventHandler(this.HandleSliderDragMoved);
 				this.slider.DragEnded   -= new MessageEventHandler(this.HandleSliderDragEnded);
-
+				
 				this.button.Clicked -= new MessageEventHandler(this.HandleButtonClicked);
-
-#if false  // TODO: utile ?
-				for ( int i=0 ; i<this.panes.Length ; i++ )
-				{
-					this.panes[i].Dispose();
-					this.panes[i] = null;
-				}
-				this.panes = null;
-#endif
 			}
 			
 			base.Dispose(disposing);

@@ -8,5 +8,10 @@ namespace Epsitec.Common.Widgets
 		public HMenu() : base(MenuType.Horizontal)
 		{
 		}
+		
+		public HMenu(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 	}
 }

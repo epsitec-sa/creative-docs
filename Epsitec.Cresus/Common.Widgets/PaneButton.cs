@@ -25,6 +25,11 @@ namespace Epsitec.Common.Widgets
 			this.MouseCursor = MouseCursor.AsVSplit;
 		}
 		
+		public PaneButton(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
 		// Bouton dans en-tête supérieure ou gauche ?
 		public PaneButtonStyle PaneButtonStyle
 		{

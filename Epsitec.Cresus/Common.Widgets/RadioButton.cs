@@ -10,6 +10,12 @@ namespace Epsitec.Common.Widgets
 			this.internalState |= InternalState.AutoToggle;
 		}
 		
+		public RadioButton(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
+		
 		// Retourne la hauteur standard.
 		public override double DefaultHeight
 		{

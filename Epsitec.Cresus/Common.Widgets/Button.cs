@@ -20,6 +20,12 @@ namespace Epsitec.Common.Widgets
 			this.buttonStyle = ButtonStyle.Normal;
 		}
 		
+		public Button(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
+		
+		
 		// Retourne la hauteur standard d'un bouton.
 		public override double DefaultHeight
 		{

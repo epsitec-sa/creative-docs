@@ -24,19 +24,21 @@ namespace Epsitec.Common.Widgets
 			this.internalState |= InternalState.AutoFocus;
 			this.internalState |= InternalState.Focusable;
 
-			this.header = new Widget();
-			this.Children.Add(this.header);
+			this.header = new Widget(this);
 
-			this.scrollerV = new VScroller();
+			this.scrollerV = new VScroller(this);
+			this.scrollerH = new HScroller(this);
+			
 			this.scrollerV.IsInverted = true;
 			this.scrollerV.Moved += new EventHandler(this.HandleScrollerV);
-			this.Children.Add(this.scrollerV);
-
-			this.scrollerH = new HScroller();
 			this.scrollerH.Moved += new EventHandler(this.HandleScrollerH);
-			this.Children.Add(this.scrollerH);
 
 			this.rowHeight = this.DefaultFontHeight+2;
+		}
+		
+		public ScrollArray(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
 		}
 
 
@@ -106,7 +108,7 @@ namespace Epsitec.Common.Widgets
 					this.headerButton.Clear();
 					for ( int i=0 ; i<this.maxColumns ; i++ )
 					{
-						HeaderButton button = new HeaderButton();
+						HeaderButton button = new HeaderButton(null);
 						button.HeaderButtonStyle = HeaderButtonStyle.Top;
 						button.Dynamic = true;
 						button.Rank = i;
@@ -117,7 +119,7 @@ namespace Epsitec.Common.Widgets
 					this.headerSlider.Clear();
 					for ( int i=0 ; i<this.maxColumns ; i++ )
 					{
-						HeaderSlider slider = new HeaderSlider();
+						HeaderSlider slider = new HeaderSlider(null);
 						slider.HeaderSliderStyle = HeaderSliderStyle.Top;
 						slider.Rank = i;
 						slider.DragStarted += new MessageEventHandler(this.HandleSliderDragStarted);

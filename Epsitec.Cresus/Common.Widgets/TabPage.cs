@@ -9,8 +9,13 @@ namespace Epsitec.Common.Widgets
 	{
 		public TabPage()
 		{
-			this.tabButton = new TabButton();
+			this.tabButton = new TabButton(null);
 			this.tabButton.Alignment = Drawing.ContentAlignment.MiddleCenter;
+		}
+		
+		public TabPage(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
 		}
 
 		public string TabTitle

@@ -9,5 +9,10 @@ namespace Epsitec.Common.Widgets
 		public StaticLine()
 		{
 		}
+		
+		public StaticLine(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 	}
 }

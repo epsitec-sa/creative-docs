@@ -9,5 +9,10 @@ namespace Epsitec.Common.Widgets
 		public CellTable()
 		{
 		}
+		
+		public CellTable(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 	}
 }

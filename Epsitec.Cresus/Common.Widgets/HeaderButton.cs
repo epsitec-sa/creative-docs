@@ -19,6 +19,11 @@ namespace Epsitec.Common.Widgets
 			this.headerButtonStyle = HeaderButtonStyle.Top;
 		}
 		
+		public HeaderButton(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}		
+		
 		// Bouton dans en-tête supérieure ou gauche ?
 		public HeaderButtonStyle HeaderButtonStyle
 		{

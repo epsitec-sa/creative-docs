@@ -8,5 +8,10 @@ namespace Epsitec.Common.Widgets
 		public FrameBox()
 		{
 		}
+		
+		public FrameBox(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 	}
 }

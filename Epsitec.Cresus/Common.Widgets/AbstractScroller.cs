@@ -16,8 +16,8 @@ namespace Epsitec.Common.Widgets
 			this.internalState |= InternalState.Engageable;
 			this.internalState |= InternalState.AutoRepeatEngaged;
 
-			this.arrowUp = new ArrowButton();
-			this.arrowDown = new ArrowButton();
+			this.arrowUp = new ArrowButton(this);
+			this.arrowDown = new ArrowButton(this);
 			this.arrowUp.Direction = Direction.Up;
 			this.arrowDown.Direction = Direction.Down;
 			this.arrowUp.ButtonStyle = ButtonStyle.Scroller;
@@ -28,8 +28,11 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown.StillEngaged += new EventHandler(this.HandleButton);
 			this.arrowUp.AutoRepeatEngaged = true;
 			this.arrowDown.AutoRepeatEngaged = true;
-			this.Children.Add(this.arrowUp);
-			this.Children.Add(this.arrowDown);
+		}
+		
+		protected AbstractScroller(Widget embedder, bool vertical) : this(vertical)
+		{
+			this.SetEmbedder(embedder);
 		}
 
 

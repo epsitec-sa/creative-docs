@@ -10,6 +10,11 @@ namespace Epsitec.Common.Widgets
 		{
 			this.BackColor = Drawing.Color.Transparent;
 		}
+		
+		public StaticText(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 
 		// Retourne la hauteur standard.
 		public override double DefaultHeight

@@ -8,5 +8,10 @@ namespace Epsitec.Common.Widgets
 		public CellBar()
 		{
 		}
+		
+		public CellBar(Widget embedder) : this()
+		{
+			this.SetEmbedder(embedder);
+		}
 	}
 }
