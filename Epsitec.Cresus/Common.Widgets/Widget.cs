@@ -336,23 +336,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		[Bundle ("lay_f")]	public LayoutFlags		LayoutFlags
-		{
-			get { return this.layout_flags; }
-			set
-			{
-				if (this.layout_flags != value)
-				{
-					this.layout_flags = value;
-					
-					if (this.parent != null)
-					{
-						this.parent.UpdateChildrenLayout ();
-					}
-				}
-			}
-		}
-		
 		[Bundle ("dock_h")]	public bool				PreferHorizontalDockLayout
 		{
 			get { return (this.internal_state & InternalState.PreferXLayout) != 0; }
@@ -374,6 +357,28 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		[Bundle ("lay_f")]	public LayoutFlags		LayoutFlags
+		{
+			get { return this.layout_flags; }
+			set
+			{
+				if (this.layout_flags != value)
+				{
+					this.layout_flags = value;
+					
+					if (this.parent != null)
+					{
+						this.parent.UpdateChildrenLayout ();
+					}
+				}
+			}
+		}
+		
+		
+		public Layouts.LayoutInfo					LayoutInfo
+		{
+			get { return this.layout_info; }
+		}
 		
 		public int									LayoutArg1
 		{
@@ -1289,6 +1294,8 @@ namespace Epsitec.Common.Widgets
 		public event EventHandler					ParentChanged;
 		public event EventHandler					AdornerChanged;
 		public event EventHandler					LayoutChanged;
+		
+		public event Layouts.UpdateEventHandler		LayoutUpdate;
 		
 		public event MessageEventHandler			Pressed;
 		public event MessageEventHandler			Released;
@@ -2673,7 +2680,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.layout_info == null)
 			{
-				this.layout_info = new LayoutInfo (this.client_info.width, this.client_info.height);
+				this.layout_info = new Layouts.LayoutInfo (this.client_info.width, this.client_info.height);
 			}
 			
 			double zoom = this.client_info.zoom;
@@ -2747,7 +2754,16 @@ namespace Epsitec.Common.Widgets
 			
 			try
 			{
+				bool update = false;
+				
 				if (this.HasChildren)
+				{
+					Layouts.UpdateEventArgs e = new Layouts.UpdateEventArgs (this, children, this.layout_info);
+					this.OnLayoutUpdate (e);
+					update = ! e.Cancel;
+				}
+				
+				if (update)
 				{
 					double width_diff  = this.client_info.width  - this.layout_info.OriginalWidth;
 					double height_diff = this.client_info.height - this.layout_info.OriginalHeight;
@@ -3682,6 +3698,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected virtual void OnLayoutUpdate(Layouts.UpdateEventArgs e)
+		{
+			if (this.LayoutUpdate != null)
+			{
+				this.LayoutUpdate (this, e);
+			}
+		}
 		
 		protected virtual void OnPressed(MessageEventArgs e)
 		{
@@ -4257,29 +4280,6 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		protected class LayoutInfo
-		{
-			internal LayoutInfo(double width, double height)
-			{
-				this.width  = width;
-				this.height = height;
-			}
-			
-			
-			public double					OriginalWidth
-			{
-				get { return this.width; }
-			}
-			
-			public double					OriginalHeight
-			{
-				get { return this.height; }
-			}
-			
-			
-			private double					width, height;
-		}
-		
 		protected sealed class HypertextInfo : System.ICloneable, System.IComparable
 		{
 			internal HypertextInfo(TextLayout layout, Drawing.Rectangle bounds, int index)
@@ -4354,7 +4354,7 @@ namespace Epsitec.Common.Widgets
 		private InternalState					internal_state;
 		private WidgetState						widget_state;
 		
-		private LayoutInfo						layout_info;
+		private Layouts.LayoutInfo				layout_info;
 		private LayoutFlags						layout_flags;
 		private byte							layout_arg1;
 		private byte							layout_arg2;

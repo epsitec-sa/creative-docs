@@ -69,8 +69,6 @@ namespace Epsitec.Common.Widgets.Design
 				Drawing.Rectangle clip = this.panel.GetClipStackBounds ();
 				Widget            hot  = null;
 				
-				System.Diagnostics.Debug.WriteLine ("Clip: " + clip.ToString () + ", pos: " + pos.ToString () + ", message: " + e.Message.ToString ());
-				
 				if (clip.Contains (pos))
 				{
 					hot = this.panel.FindChild (pos);

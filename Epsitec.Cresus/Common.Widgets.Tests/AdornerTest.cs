@@ -368,7 +368,7 @@ namespace Epsitec.Common.Widgets
 			tab.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			window.Root.Children.Add(tab);
 
-			Rectangle inside = tab.Inside;
+			Rectangle inside = tab.InnerBounds;
 
 			// Crée l'onglet 1.
 			TabPage page1 = new TabPage();
@@ -571,7 +571,7 @@ namespace Epsitec.Common.Widgets
 			window.Root.Children.Add(tb);
 			this.tabBook = tb;
 
-			Rectangle inside = tb.Inside;
+			Rectangle inside = tb.InnerBounds;
 
 			// Crée l'onglet 1.
 			TabPage page1 = new TabPage();
@@ -710,7 +710,7 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleAdd(object sender, MessageEventArgs e)
 		{
-			Rectangle inside = this.tabBook.Inside;
+			Rectangle inside = this.tabBook.InnerBounds;
 			TabPage page = new TabPage();
 			page.Bounds = inside;
 			page.TabTitle = "Nouveau";
@@ -733,7 +733,7 @@ namespace Epsitec.Common.Widgets
 			tb.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.TopAndBottom;
 			window.Root.Children.Add(tb);
 
-			Rectangle inside = tb.Inside;
+			Rectangle inside = tb.InnerBounds;
 
 			string[] texts =
 			{
@@ -1267,7 +1267,7 @@ namespace Epsitec.Common.Widgets
 			tb.Anchor = AnchorStyles.Bottom|AnchorStyles.Left;
 			window.Root.Children.Add(tb);
 
-			Rectangle inside = tb.Inside;
+			Rectangle inside = tb.InnerBounds;
 
 			// Crée l'onglet 1.
 			TabPage page1 = new TabPage();

@@ -200,7 +200,7 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		// Donne le rectangle intérieur.
-		public override Drawing.Rectangle Inside
+		public override Drawing.Rectangle InnerBounds
 		{
 			get
 			{
@@ -1040,7 +1040,7 @@ namespace Epsitec.Common.Widgets
 		// Rend la cellule sélectionnée visible.
 		public void ShowSelect()
 		{
-			Drawing.Rectangle rect = this.Inside;
+			Drawing.Rectangle rect = this.InnerBounds;
 
 			if ( (this.styleV & CellArrayStyle.Stretch) == 0 &&
 				 (this.styleH & CellArrayStyle.SelectLine) == 0 &&
@@ -1629,7 +1629,7 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
 			WidgetState state = this.PaintState;
-			Drawing.Rectangle rect = this.Inside;
+			Drawing.Rectangle rect = this.InnerBounds;
 			rect.Inflate(-0.5, -0.5);
 
 			graphics.LineWidth = 1;

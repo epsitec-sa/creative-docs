@@ -280,6 +280,11 @@ namespace Epsitec.Common.Widgets.Design
 				}
 			}
 			
+			if (this.drop_adorner.Widget != null)
+			{
+				this.drop_adorner.Widget.InternalUpdateGeometry ();
+			}
+			
 			this.drop_adorner.Widget = null;
 			this.drop_cx = null;
 			this.drop_cy = null;

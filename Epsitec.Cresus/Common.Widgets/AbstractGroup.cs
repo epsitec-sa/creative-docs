@@ -16,10 +16,5 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
-		
-		public virtual Drawing.Rectangle	Inside
-		{
-			get { return this.Client.Bounds; }
-		}
 	}
 }
