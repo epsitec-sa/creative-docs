@@ -104,7 +104,6 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		[XmlAttribute]
 		protected Drawing.Color			color;
 		protected double				radius;
 		protected double				ox;

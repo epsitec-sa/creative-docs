@@ -537,7 +537,6 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		[XmlAttribute]
 		protected GradientFill			fill;
 		protected Drawing.Color			color1;
 		protected Drawing.Color			color2;
