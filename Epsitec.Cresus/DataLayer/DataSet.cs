@@ -8,8 +8,9 @@ namespace Epsitec.Cresus.DataLayer
 	/// </summary>
 	public class DataSet : DataRecord
 	{
-		public DataSet()
+		public DataSet(string name)
 		{
+			this.name = name;
 			this.data_type = new DataType ();
 			this.data_type.Initialise (null);
 			this.data_state = DataState.Added;
@@ -43,6 +44,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			
 			this.MarkAsModified ();
+			this.NotifyDataChanged (name);
 		}
 		
 		public void UpdateData(string name, object data)
@@ -57,6 +59,7 @@ namespace Epsitec.Cresus.DataLayer
 			record.SetData (data);
 			
 			this.MarkAsModified ();
+			this.NotifyDataChanged (name);
 		}
 		
 		public void ResetData(string name)
@@ -69,6 +72,8 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			
 			record.ResetData ();
+			
+			this.NotifyDataChanged (name);
 		}
 		
 		public void RemoveData(string name)
@@ -81,6 +86,7 @@ namespace Epsitec.Cresus.DataLayer
 			}
 			
 			this.Remove (name);
+			this.NotifyDataChanged (name);
 		}
 		
 		
@@ -124,6 +130,11 @@ namespace Epsitec.Cresus.DataLayer
 		public override bool					IsSet
 		{
 			get { return true; }
+		}
+		
+		public override string					Name
+		{
+			get { return this.name; }
 		}
 		
 		
@@ -221,6 +232,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 		
 		
+		protected string						name;
 		protected System.Collections.Hashtable	data = new System.Collections.Hashtable ();
 	}
 }

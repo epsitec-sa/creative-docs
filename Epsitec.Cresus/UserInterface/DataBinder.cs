@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.UserInterface
 				throw new BinderException (string.Format ("No binder for data '{1}' on object {0}", obj.GetType ().Name, binding));
 			}
 			
-			//	TODO: créer le lien au moyen du binder
+			binder.CreateBinding (obj, this.DataSet, binding, data_record);
 		}
 		
 		

@@ -1035,8 +1035,6 @@ namespace Epsitec.Common.Widgets
 				
 				if (message.NonClient)
 				{
-					System.Diagnostics.Debug.WriteLine ("NonClient Message: " + message.ToString ());
-					
 					//	Les messages "non-client" ne sont pas acheminés aux widgets normaux,
 					//	car ils ne présentent aucun intérêt. Par contre, le filtre peut les
 					//	voir.

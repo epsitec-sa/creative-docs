@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.DataLayer.Tests
 		
 		[Test] public void CheckDataSet()
 		{
-			DataRecord test = new DataSet ();
+			DataRecord test = new DataSet ("test");
 			
 			Assertion.AssertEquals (false, test.IsField);
 			Assertion.AssertEquals (true,  test.IsSet);
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.DataLayer.Tests
 		
 		[Test] public void CheckCreateSet()
 		{
-			DataSet test = new DataSet ();
+			DataSet test = new DataSet ("test");
 			
 			test.AddData ("a", 1,		new DataType ("numeric"));
 			test.AddData ("b", "hello", new DataType ("text"));
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.DataLayer.Tests
 		
 		[Test] public void CheckValidateSet()
 		{
-			DataSet test = new DataSet ();
+			DataSet test = new DataSet ("test");
 			
 			test.AddData ("a", 1,		new DataType ("numeric"));
 			test.AddData ("b", "hello", new DataType ("text"));
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.DataLayer.Tests
 		
 		[Test] public void CheckResetDataField()
 		{
-			DataSet test = new DataSet ();
+			DataSet test = new DataSet ("test");
 			
 			test.AddData ("a", 1,		new DataType ("numeric"));
 			test.AddData ("b", "hello", new DataType ("text"));

@@ -3,6 +3,8 @@
 
 namespace Epsitec.Cresus.DataLayer
 {
+	public delegate void DataChangedHandler(DataRecord sender, string path);
+	
 	/// <summary>
 	/// La classe DataRecord sert de base pour DataSet, DataField et DataTable.
 	/// </summary>
@@ -28,6 +30,12 @@ namespace Epsitec.Cresus.DataLayer
 			get { return false; }
 		}
 		
+		
+		public virtual string					Name
+		{
+			get { return null; }
+		}
+				
 		
 		public bool								IsUnchanged
 		{
@@ -151,6 +159,81 @@ namespace Epsitec.Cresus.DataLayer
 			}
 		}
 		
+		internal virtual void NotifyDataChanged(string name)
+		{
+			if (this.Name != null)
+			{
+				name = this.Name + "." + name;
+			}
+			
+			if (this.parent != null)
+			{
+				this.parent.NotifyDataChanged (name);
+			}
+			else if (this.data_changed_events != null)
+			{
+				DataChangedHandler handler = this.data_changed_events[name] as DataChangedHandler;
+				
+				if (handler != null)
+				{
+					handler (this, name);
+				}
+			}
+		}
+		
+		public void AttachObserver(string path, DataChangedHandler handler)
+		{
+			if (this.Name != null)
+			{
+				path = this.Name + "." + path;
+			}
+			
+			if (this.parent != null)
+			{
+				this.parent.AttachObserver (path, handler);
+			}
+			else if (this.data_changed_events == null)
+			{
+				this.data_changed_events = new System.Collections.Hashtable ();
+				this.data_changed_events[path] = handler;
+			}
+			else if (this.data_changed_events.Contains (path))
+			{
+				DataChangedHandler current_handler = this.data_changed_events[path] as DataChangedHandler;
+				this.data_changed_events[path] = current_handler + handler;
+			}
+			else
+			{
+				this.data_changed_events[path] = handler;
+			}
+		}
+		
+		public void DetachObserver(string path, DataChangedHandler handler)
+		{
+			if (this.Name != null)
+			{
+				path = this.Name + "." + path;
+			}
+			
+			if (this.parent != null)
+			{
+				this.parent.DetachObserver (path, handler);
+			}
+			else if (this.data_changed_events == null)
+			{
+				//	Rien à faire...
+			}
+			else if (this.data_changed_events.Contains (path))
+			{
+				DataChangedHandler current_handler = this.data_changed_events[path] as DataChangedHandler;
+				this.data_changed_events[path] = current_handler - handler;
+			}
+			else
+			{
+				//	Rien à faire...
+			}
+		}
+		
 		
 		protected string SplitPath(string path, out string path_remaining)
 		{
@@ -169,8 +252,11 @@ namespace Epsitec.Cresus.DataLayer
 		}
 		
 		
+		
+		
 		protected DataType						data_type;
 		protected DataState						data_state = DataState.Invalid;
 		protected DataRecord					parent;
+		protected System.Collections.Hashtable	data_changed_events;
 	}
 }
