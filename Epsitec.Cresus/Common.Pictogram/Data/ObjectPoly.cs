@@ -198,7 +198,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( this.mouseDown )
 			{
 				this.Handle(rank).Position = pos;
-				this.durtyBbox = true;
+				this.dirtyBbox = true;
 			}
 		}
 
@@ -296,6 +296,8 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			Drawing.Path path = this.PathBuild();
 			this.bbox = path.ComputeBounds();
+			double width = this.PropertyLine(0).Width/2.0;
+			this.bbox.Inflate(width, width);
 		}
 
 		// Crée le chemin de l'objet.
