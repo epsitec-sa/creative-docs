@@ -287,7 +287,6 @@ namespace Epsitec.Common.Widgets
 					this.first_virtvis_row = this.ToVirtualRow (top);
 					
 					this.RefreshContents ();
-					this.ShowSelected (ScrollArrayShowMode.Extremity);
 				}
 			}
 		}
@@ -309,6 +308,7 @@ namespace Epsitec.Common.Widgets
 					
 					this.edition_add_rows  = value;
 					this.first_virtvis_row = this.ToVirtualRow (top);
+					
 					this.RefreshContents ();
 				}
 			}
@@ -349,6 +349,37 @@ namespace Epsitec.Common.Widgets
 				}
 				
 				return false;
+			}
+		}
+		
+		public double							TitleHeight
+		{
+			get
+			{
+				return this.title_height;
+			}
+			set
+			{
+				if (this.title_height != value)
+				{
+					this.title_height = value;
+					this.RefreshContents ();
+				}
+			}
+		}
+		
+		public Drawing.Rectangle				TitleBounds
+		{
+			get
+			{
+				this.Update ();
+				
+				Drawing.Rectangle bounds = this.header.Bounds;
+				
+				bounds.Bottom = this.header.Top;
+				bounds.Height = this.title_height;
+				
+				return bounds;
 			}
 		}
 		
@@ -585,20 +616,27 @@ invalid:	row    = -1;
 		
 		public void ShowSelected(ScrollArrayShowMode mode)
 		{
-			if (this.selected_row == -1)
-			{
-				return;
-			}
-			if (this.is_mouse_down)
+			this.ShowRow (mode, this.selected_row);
+		}
+		
+		public void ShowEdition(ScrollArrayShowMode mode)
+		{
+			this.ShowRow (mode, this.edition_row);
+		}
+		
+		public void ShowRow(ScrollArrayShowMode mode, int show_row)
+		{
+			if ((show_row == -1) ||
+				(this.is_mouse_down))
 			{
 				return;
 			}
 			
-			int row    = this.ToVirtualRow (this.selected_row);
+			int row    = this.ToVirtualRow (show_row);
 			int top    = this.first_virtvis_row;
 			int first  = top;
 			int num    = System.Math.Min (this.n_fully_visible_rows, this.max_rows);
-			int height = (this.selected_row == this.edition_row) ? this.edition_add_rows+1 : 1;
+			int height = (show_row == this.edition_row) ? this.edition_add_rows+1 : 1;
 			
 			switch (mode)
 			{
@@ -630,6 +668,8 @@ invalid:	row    = -1;
 			{
 				this.first_virtvis_row = first;
 				this.RefreshContents ();
+				
+				Message.ResetButtonDownCounter ();
 			}
 		}
 
@@ -735,11 +775,13 @@ invalid:	row    = -1;
 			int n = this.VirtualRowCount - this.n_fully_visible_rows;
 			value = System.Math.Max (value, 0);
 			value = System.Math.Min (value, System.Math.Max (n, 0));
-				
+			
 			if (value != this.first_virtvis_row)
 			{
 				this.first_virtvis_row = value;
 				this.UpdateScrollers ();
+				
+				Message.ResetButtonDownCounter ();
 			}
 		}
 		
@@ -821,7 +863,7 @@ invalid:	row    = -1;
 		{
 			switch (message.Type)
 			{
-				case MessageType.MouseDown :
+				case MessageType.MouseDown:
 					if (this.HitTestTable (pos))
 					{
 						this.is_mouse_down = true;
@@ -829,7 +871,7 @@ invalid:	row    = -1;
 					}
 					break;
 
-				case MessageType.MouseMove :
+				case MessageType.MouseMove:
 					if (this.is_mouse_down)
 					{
 						this.ProcessMouseSelect (pos);
@@ -837,7 +879,7 @@ invalid:	row    = -1;
 
 					break;
 
-				case MessageType.MouseUp :
+				case MessageType.MouseUp:
 					if (this.is_mouse_down)
 					{
 						this.ProcessMouseSelect (pos);
@@ -847,7 +889,7 @@ invalid:	row    = -1;
 
 					break;
 
-				case MessageType.KeyDown :
+				case MessageType.KeyDown:
 					this.ProcessKeyDown (message.KeyCode, message.IsShiftPressed, message.IsCtrlPressed);
 					break;
 			}
@@ -867,36 +909,38 @@ invalid:	row    = -1;
 
 		protected virtual  void ProcessKeyDown(KeyCode key, bool is_shift_pressed, bool is_ctrl_pressed)
 		{
-			int sel;
-
+			int sel = this.SelectedIndex;
+			
 			switch (key)
 			{
-				case KeyCode.ArrowUp :
-					sel = this.SelectedIndex - 1;
-					
-					if (sel >= 0)
-					{
-						this.SelectedIndex = sel;
-						
-						if (!this.IsSelectedVisible)
-						{
-							this.ShowSelected (ScrollArrayShowMode.Extremity);
-						}
-					}
+				case KeyCode.ArrowUp:
+					sel -= 1;
 					break;
 				
-				case KeyCode.ArrowDown :
-					sel = this.SelectedIndex + 1;
-					
-					if (sel < this.max_rows)
-					{
-						this.SelectedIndex = sel;
-						if (!this.IsSelectedVisible)
-						{
-							this.ShowSelected (ScrollArrayShowMode.Extremity);
-						}
-					}
+				case KeyCode.ArrowDown:
+					sel += 1;
 					break;
+				
+				case KeyCode.PageUp:
+					sel -= this.n_fully_visible_rows - 1;
+					break;
+				
+				case KeyCode.PageDown:
+					sel += this.n_fully_visible_rows - 1;
+					break;
+			}
+			
+			sel = System.Math.Max (0, sel);
+			sel = System.Math.Min (sel, this.max_rows-1);
+			
+			if (this.SelectedIndex != sel)
+			{
+				this.SelectedIndex = sel;
+				
+				if (!this.IsSelectedVisible)
+				{
+					this.ShowSelected (ScrollArrayShowMode.Extremity);
+				}
 			}
 		}
 
@@ -919,7 +963,7 @@ invalid:	row    = -1;
 			this.is_dirty      = false;
 			this.row_height    = this.DefaultFontHeight + 2;
 			this.frame_margins = adorner.GeometryArrayMargins;
-			this.table_margins = new Drawing.Margins (0, this.v_scroller.Width - 1, this.row_height, this.h_scroller.Height - 1);
+			this.table_margins = new Drawing.Margins (0, this.v_scroller.Width - 1, this.row_height + this.title_height, this.h_scroller.Height - 1);
 			this.table_bounds  = this.Client.Bounds;
 			
 			this.table_bounds.Deflate (this.frame_margins);
@@ -957,7 +1001,7 @@ invalid:	row    = -1;
 			//	Place les boutons dans l'en-tête :
 			
 			rect.Bottom = 0;
-			rect.Top    = this.table_margins.Top;
+			rect.Top    = this.header.Height;
 			rect.Left   = -this.offset;
 			
 			for (int i = 0; i < this.max_columns; i++)
@@ -975,7 +1019,7 @@ invalid:	row    = -1;
 			//	Place les sliders dans l'en-tête :
 			
 			rect.Bottom = 0;
-			rect.Top    = this.table_margins.Top;
+			rect.Top    = this.header.Height;
 			rect.Left   = -this.offset;
 			
 			for (int i = 0; i < this.max_columns; i++)
@@ -1139,6 +1183,8 @@ invalid:	row    = -1;
 					this.layouts[row, column].BreakMode  = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
 				}
 			}
+			
+			this.OnLayoutUpdated ();
 		}
 
 		protected void UpdateTotalWidth()
@@ -1223,6 +1269,14 @@ invalid:	row    = -1;
 			}
 		}
 
+		protected virtual  void OnLayoutUpdated()
+		{
+			if (this.LayoutUpdated != null)
+			{
+				this.LayoutUpdated (this);
+			}
+		}
+		
 		
 		protected HeaderButton FindButton(int index)
 		{
@@ -1260,7 +1314,8 @@ invalid:	row    = -1;
 			
 			this.Update ();
 			
-			int           top    = this.FromVirtualRow (this.first_virtvis_row);
+			int           top    = this.FromVirtualRow (this.first_virtvis_row);						//	index de la ligne en haut
+			int           delta  = this.first_virtvis_row - this.ToVirtualRow (top);					//	0 si complètement visible, n => déborde n 'lignes'
 			Drawing.Point pos    = new Drawing.Point (this.table_bounds.Left, this.table_bounds.Top);
 			double        limit  = this.total_width - this.offset + this.table_bounds.Left + 1;
 			double        right  = System.Math.Min (this.table_bounds.Right, limit);
@@ -1272,7 +1327,7 @@ invalid:	row    = -1;
 				pos.Y -= this.row_height;
 				
 				int         row_line      = row + top;
-				int         num_add_lines = (this.edition_row == row_line)  ? this.edition_add_rows : 0;
+				int         num_add_lines = (this.edition_row == row_line)  ? this.edition_add_rows - delta : 0;
 				WidgetState widget_state  = (this.selected_row == row_line) ? WidgetState.Selected : WidgetState.Enabled;
 				
 				if (this.edition_row == row_line)
@@ -1296,7 +1351,7 @@ invalid:	row    = -1;
 						pos.X = end;
 					}
 					
-					n_rows -= this.edition_add_rows;
+					n_rows -= num_add_lines;
 				}
 				else
 				{
@@ -1343,7 +1398,7 @@ invalid:	row    = -1;
 					
 					if (this.edition_row == row_line)
 					{
-						y      -= this.row_height * this.edition_add_rows;
+						y      -= this.row_height * (this.edition_add_rows - delta);
 						n_rows -= this.edition_add_rows;
 					}
 					
@@ -1396,6 +1451,7 @@ invalid:	row    = -1;
 		public event EventHandler				SelectedIndexChanged;
 		public event EventHandler				ContentsChanged;
 		public event EventHandler				SortChanged;
+		public event EventHandler				LayoutUpdated;
 		
 		
 		protected bool							is_dirty;
@@ -1419,6 +1475,7 @@ invalid:	row    = -1;
 		protected Drawing.Margins				table_margins;				//	marges de la table interne
 		protected double						text_margin			= 2;
 		protected double						row_height			= 16;
+		protected double						title_height		= 0;
 		protected double						slider_dim			= 6;
 		
 		protected Drawing.Rectangle				table_bounds;
