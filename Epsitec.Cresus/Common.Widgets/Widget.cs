@@ -1628,9 +1628,9 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual Drawing.Rectangle GetPaintBounds()
+		public Drawing.Rectangle GetPaintBounds()
 		{
-			Drawing.Rectangle bounds = new Drawing.Rectangle (0, 0, this.clientInfo.width, this.clientInfo.height);
+			Drawing.Rectangle bounds = this.GetShapeBounds ();
 			
 			if (this.PaintBoundsCallback != null)
 			{
@@ -1638,6 +1638,17 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			return bounds;
+		}
+		
+		
+		public virtual Drawing.Rectangle GetShapeBounds()
+		{
+			return new Drawing.Rectangle (0, 0, this.clientInfo.width, this.clientInfo.height);
+		}
+		
+		public virtual Drawing.Rectangle GetClipBounds()
+		{
+			return this.GetShapeBounds ();
 		}
 		
 		public virtual void Invalidate()
@@ -2670,7 +2681,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.PaintCheckClipping (repaint))
 			{
-				Drawing.Rectangle bounds = this.GetPaintBounds ();
+				Drawing.Rectangle bounds = this.GetClipBounds ();
 				
 				bounds  = this.MapClientToRoot (bounds);
 				repaint = this.MapParentToClient (repaint);

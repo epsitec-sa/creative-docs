@@ -770,6 +770,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		internal void RefreshGraphics(Drawing.Graphics graphics, Drawing.Rectangle repaint)
+		{
+			graphics.Transform = new Drawing.Transform ();
+			graphics.ResetClippingRectangle ();
+			graphics.SetClippingRectangle (repaint);
+				
+			this.Root.PaintHandler (graphics, repaint);
+			
+			while (this.post_paint_queue.Count > 0)
+			{
+				Window.PostPaintRecord record = this.post_paint_queue.Dequeue () as Window.PostPaintRecord;
+				record.Paint (graphics);
+			}
+		}
+		
 		
 		protected Widget DetectWidget(Drawing.Point pos)
 		{
@@ -792,6 +807,12 @@ namespace Epsitec.Common.Widgets
 			{
 				this.window.MarkForRepaint (rect);
 			}
+		}
+		
+		
+		public void QueuePostPaintHandler(Window.IPostPaintHandler handler, Drawing.Graphics graphics, Drawing.Rectangle repaint)
+		{
+			this.post_paint_queue.Enqueue (new Window.PostPaintRecord (handler, graphics, repaint));
 		}
 		
 		
@@ -850,7 +871,36 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
+		#region PostPaint related definitions
+		public interface IPostPaintHandler
+		{
+			void Paint(Drawing.Graphics graphics, Drawing.Rectangle repaint);
+		}
 		
+		protected class PostPaintRecord
+		{
+			public PostPaintRecord(Window.IPostPaintHandler handler, Drawing.Graphics graphics, Drawing.Rectangle repaint)
+			{
+				this.handler   = handler;
+				this.repaint   = repaint;
+				this.clipping  = graphics.SaveClippingRectangle ();
+				this.transform = graphics.SaveTransform ();
+			}
+			
+			public void Paint(Drawing.Graphics graphics)
+			{
+				graphics.RestoreClippingRectangle (this.clipping);
+				graphics.RestoreTransform (this.transform);
+				
+				handler.Paint (graphics, this.repaint);
+			}
+			
+			Window.IPostPaintHandler		handler;
+			Drawing.Rectangle				repaint;
+			Drawing.Rectangle				clipping;
+			Drawing.Transform				transform;
+		}
+		#endregion
 		
 		public event EventHandler			WindowActivated;
 		public event EventHandler			WindowDeactivated;
@@ -880,6 +930,8 @@ namespace Epsitec.Common.Widgets
 		private Support.CommandDispatcher	 cmd_dispatcher;
 		private System.Collections.Queue	 cmd_queue = new System.Collections.Queue ();
 		private System.Collections.Hashtable cmd_names = new System.Collections.Hashtable ();
+		
+		private System.Collections.Queue	post_paint_queue = new System.Collections.Queue ();
 		
 		private ComponentCollection			components;
 		
