@@ -116,7 +116,11 @@ namespace Epsitec.Common.Document
 
 				Settings.PrintInfo pi = this.document.Settings.PrintInfo;
 
-				dp.Document.SelectPrinter(pi.PrintName);
+				if ( dp.Document.PrinterSettings.PrinterName != pi.PrintName )
+				{
+					dp.Document.SelectPrinter(pi.PrintName);
+				}
+				
 				dp.Document.PrinterSettings.Collate = pi.Collate;
 				dp.Document.PrinterSettings.PrintToFile = pi.PrintToFile;
 				dp.Document.PrinterSettings.OutputFileName = pi.PrintFilename;
