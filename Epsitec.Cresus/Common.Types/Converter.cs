@@ -190,10 +190,27 @@ namespace Epsitec.Common.Types
 				{
 					value = (System.Enum) System.Enum.Parse (type, text);
 					
-					if (System.Enum.IsDefined (type, value))
+					string[] values = text.Split (',', '|', ';');
+					bool     ok     = true;
+					
+					for (int i = 0; i < values.Length; i++)
 					{
-						return true;
+						string name = values[i].Trim ();
+						
+						if (name == "")
+						{
+							continue;
+						}
+						
+						System.Enum item = (System.Enum) System.Enum.Parse (type, name);
+						
+						if (System.Enum.IsDefined (type, item) == false)
+						{
+							ok = false;
+						}
 					}
+					
+					return ok;
 				}
 				catch
 				{

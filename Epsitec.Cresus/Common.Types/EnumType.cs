@@ -4,6 +4,8 @@
 namespace Epsitec.Common.Types
 {
 	using IComparer = System.Collections.IComparer;
+	using FieldInfo = System.Reflection.FieldInfo;
+	using BindingFlags = System.Reflection.BindingFlags;
 	
 	/// <summary>
 	/// La classe EnumType décrit divers une énumération native.
@@ -12,19 +14,19 @@ namespace Epsitec.Common.Types
 	{
 		public EnumType(System.Type enum_type)
 		{
-			string[] names = System.Enum.GetNames (enum_type);
-			
-			System.Array.Sort (names);
+			FieldInfo[] fields = enum_type.GetFields (BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Static);
 			
 			this.enum_type   = enum_type;
-			this.enum_values = new EnumValue[names.Length];
+			this.enum_values = new EnumValue[fields.Length];
 			
-			for (int i = 0; i < names.Length; i++)
+			for (int i = 0; i < fields.Length; i++)
 			{
-				string name = names[i];
+				string name = fields[i].Name;
+				bool   hide = (fields[i].GetCustomAttributes (typeof (HideAttribute), false).Length > 0);
 				int    rank = (int) System.Enum.Parse (this.enum_type, name);
 				
 				this.enum_values[i] = new EnumValue (rank, name);
+				this.enum_values[i].DefineHidden (hide);
 			}
 			
 			System.Array.Sort (this.enum_values, EnumType.RankComparer);
@@ -244,6 +246,11 @@ namespace Epsitec.Common.Types
 				this.description = description;
 			}
 			
+			public void DefineHidden(bool hide)
+			{
+				this.hidden = hide;
+			}
+			
 			
 			#region IEnumValue Members
 			public int							Rank
@@ -253,8 +260,16 @@ namespace Epsitec.Common.Types
 					return this.rank;
 				}
 			}
+			
+			public bool							IsHidden
+			{
+				get
+				{
+					return this.hidden;
+				}
+			}
 			#endregion
-
+			
 			#region INameCaption Members
 			public string						Name
 			{
@@ -282,6 +297,7 @@ namespace Epsitec.Common.Types
 			#endregion
 			
 			private int							rank;
+			private bool						hidden;
 			private string						name;
 			private string						caption;
 			private string						description;

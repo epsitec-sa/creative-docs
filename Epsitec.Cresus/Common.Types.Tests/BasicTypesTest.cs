@@ -6,7 +6,9 @@ namespace Epsitec.Common.Types
 	{
 		[Test] public void CheckEnumType()
 		{
-			EnumType et = new EnumType (typeof (MyEnum));
+			System.Type type = typeof (MyEnum);
+			
+			EnumType et = new EnumType (type);
 			
 			Assert.AreEqual (5, et.Values.Length);
 			Assert.IsFalse (et.IsCustomizable);
@@ -16,6 +18,9 @@ namespace Epsitec.Common.Types
 			Assert.AreEqual ("Second", et.Values[2].Name);
 			Assert.AreEqual ("Third",  et.Values[3].Name);
 			Assert.AreEqual ("Extra",  et.Values[4].Name);
+			
+			Assert.IsFalse (et.Values[0].IsHidden);
+			Assert.IsTrue  (et.Values[4].IsHidden);
 			
 			Assert.AreEqual (-1, et["None"]  .Rank);
 			Assert.AreEqual ( 1, et["First"] .Rank);
@@ -74,7 +79,8 @@ namespace Epsitec.Common.Types
 			First	=  1,
 			Second	=  2,
 			Third	=  3,
-			Extra	= 99
+			
+			[Hide] Extra	= 99
 		}
 	}
 }

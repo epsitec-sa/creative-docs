@@ -72,7 +72,7 @@ namespace Epsitec.Common.Designer.Panels
 			this.CreateDragSource (Representation.TextField,     typeof (Button), "[ 1 ]", "1", 4+34*0, 133, 32, 32);
 			this.CreateDragSource (Representation.NumericUpDown, typeof (Button), "[ 2 ]", "2", 4+34*1, 133, 32, 32);
 			this.CreateDragSource (Representation.RadioList,     typeof (Button), "[ 3 ]", "3", 4+34*2, 133, 32, 32);
-			this.CreateDragSource (Representation.RadioColumns,  typeof (Button), "[ 4 ]", "4", 4+34*3, 133, 32, 32);
+			this.CreateDragSource (Representation.CheckColumns,  typeof (Button), "[ 4 ]", "4", 4+34*3, 133, 32, 32);
 			
 			Button test = new Button (this.widget);
 			
@@ -163,8 +163,9 @@ namespace Epsitec.Common.Designer.Panels
 		
 		private void HandleSourceDragBeginning(object sender, Widgets.DragBeginningEventArgs e)
 		{
-			string name   = e.Model.Name;
-			Widget widget = null;
+			string name = e.Model.Name;
+			
+			Common.UI.Widgets.DataWidget widget = null;
 			
 			switch (name)
 			{
@@ -181,7 +182,7 @@ namespace Epsitec.Common.Designer.Panels
 					break;
 				
 				case "4":
-					widget = this.CreateDataWidget (Representation.RadioColumns);
+					widget = this.CreateDataWidget (Representation.CheckColumns);
 					break;
 			}
 			
@@ -222,7 +223,8 @@ namespace Epsitec.Common.Designer.Panels
 		
 		private void HandleTestClicked(object sender, MessageEventArgs e)
 		{
-			Common.UI.Data.Field field = new Common.UI.Data.Field ("Field"+this.data_graph.Count.ToString (), "Abc");
+//			Common.UI.Data.Field field = new Common.UI.Data.Field ("Field"+this.data_graph.Count.ToString (), "Abc");
+			Common.UI.Data.Field field = new Common.UI.Data.Field ("Field"+this.data_graph.Count.ToString (), WindowStyles.CanMaximize | WindowStyles.CanMinimize);
 			
 			field.DefineCaption ("Field " + this.data_graph.Count.ToString ());
 			
