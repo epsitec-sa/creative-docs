@@ -191,9 +191,10 @@ namespace Epsitec.Common.Widgets.Design
 		}
 		
 		
-		public void DraggingBegin()
+		public void DraggingBegin(Drawing.Point mouse)
 		{
 			this.original_bounds = this.widget.Bounds;
+			this.original_mouse  = mouse;
 			
 			this.widget_original_surface = new StaticText ();
 			
@@ -208,6 +209,9 @@ namespace Epsitec.Common.Widgets.Design
 			this.widget_original_surface.SetLayoutArgs (this.widget.LayoutArg1, this.widget.LayoutArg2);
 			
 			this.parent.Children.Replace (this.widget, this.widget_original_surface);
+			
+			this.widget.Dock   = DockStyle.None;
+			this.widget.Parent = this.parent;
 			
 			this.GripsVisible = false;
 		}
@@ -231,6 +235,13 @@ namespace Epsitec.Common.Widgets.Design
 			
 			this.GripsVisible = true;
 		}
+		
+		
+		public Drawing.Rectangle GetDraggingRectangle(Drawing.Point mouse)
+		{
+			return Drawing.Rectangle.Offset (this.original_bounds, mouse - this.original_mouse);
+		}
+		
 		
 		public void DraggingSetDropHint(Drawing.Rectangle drop_bounds)
 		{
@@ -268,6 +279,7 @@ namespace Epsitec.Common.Widgets.Design
 		protected Widget				widget;
 		protected Widget				widget_original_surface;
 		protected Drawing.Rectangle		original_bounds;
+		protected Drawing.Point			original_mouse;
 		protected ArrayList				ancestors = new ArrayList ();
 	}
 }

@@ -13,7 +13,7 @@ namespace Epsitec.Common.Widgets.Layouts
 		public Grid()
 		{
 			this.columns = new Grid.ColumnCollection (this);
-			this.widget_designer = new Design.WidgetWrapper ();
+			this.designer = new Design.WidgetWrapper ();
 		}
 		
 		
@@ -129,6 +129,17 @@ namespace Epsitec.Common.Widgets.Layouts
 		public void Invalidate()
 		{
 			this.is_dirty = true;
+		}
+		
+		
+		protected void FreezeEnter()
+		{
+			System.Threading.Interlocked.Increment (ref this.freeze_count);
+		}
+		
+		protected void FreezeRelease()
+		{
+			System.Threading.Interlocked.Decrement (ref this.freeze_count);
 		}
 		
 		
@@ -260,6 +271,20 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.current_height = this.desired_height;
 			
 			//	TODO: calculer la hauteur réelle...
+		}
+		
+		protected void UpdateLineGap()
+		{
+			if (this.hot_designer_insert)
+			{
+				this.line_gap_index  = this.hot_designer_line;
+				this.line_gap_height = this.designer.OriginalBounds.Height;
+			}
+			else
+			{
+				this.line_gap_height   = 0;
+				this.line_gap_index    = -1;
+			}
 		}
 		
 		protected void LayoutWidgets(Widget root, int left_index, double x_offset, double y_offset)
@@ -637,10 +662,10 @@ namespace Epsitec.Common.Widgets.Layouts
 			//	figure sert de référence dans les opérations de drag & drop, pour représenter
 			//	l'objet en cours de dragging.
 			
-			if (this.hot_designer_rect.IsValid)
+			if (this.designer_drag_rect.IsValid)
 			{
-				double x = this.hot_designer_rect.Left;
-				double y = this.hot_designer_rect.Top;
+				double x = this.designer_drag_rect.Left;
+				double y = this.designer_drag_rect.Top;
 				double w = 6;
 				
 				Drawing.Path path = new Drawing.Path ();
@@ -653,10 +678,10 @@ namespace Epsitec.Common.Widgets.Layouts
 				
 				graphics.Rasterizer.FillMode = Drawing.FillMode.NonZero;
 				graphics.Rasterizer.AddSurface (path);
-				graphics.AddRectangle (this.hot_designer_rect);
+				graphics.AddRectangle (this.designer_drag_rect);
 				graphics.RenderSolid (Drawing.Color.FromARGB (1.0, 1, 0, 0));
 				
-				graphics.AddFilledRectangle (this.hot_designer_rect);
+				graphics.AddFilledRectangle (this.designer_drag_rect);
 				graphics.RenderSolid (Drawing.Color.FromARGB (0.2, 1, 0, 0));
 			}
 		}
@@ -741,12 +766,12 @@ namespace Epsitec.Common.Widgets.Layouts
 			{
 				this.ColumnDraggingBegin (rel_mouse);
 			}
-			else if (this.hot_widget != null)
+			else if (this.is_widget_hot)
 			{
-				this.widget_designer.Attach (this.hot_widget);
+				this.designer.Attach (this.hot_widget);
 				this.WidgetDraggingBegin (rel_mouse);
 			}
-			else if (this.hot_designer)
+			else if (this.is_designer_hot)
 			{
 				this.WidgetDraggingBegin (rel_mouse);
 			}
@@ -757,8 +782,8 @@ namespace Epsitec.Common.Widgets.Layouts
 		protected void HandleMouseMove(Drawing.Point rel_mouse, Drawing.Point abs_mouse)
 		{
 			this.hot_column_index = 0;
-			this.hot_widget       = null;
-			this.hot_designer     = false;
+			this.is_widget_hot    = false;
+			this.is_designer_hot  = false;
 			
 			if (this.DetectSelectedWidget (rel_mouse, abs_mouse))	return;
 			if (this.DetectColumn (rel_mouse))						return;
@@ -768,19 +793,19 @@ namespace Epsitec.Common.Widgets.Layouts
 		
 		protected bool DetectSelectedWidget(Drawing.Point mouse, Drawing.Point root_mouse)
 		{
-			if (this.widget_designer.Widget != null)
+			if (this.designer.Widget != null)
 			{
-				Widget        widget = this.widget_designer.Widget;
+				Widget        widget = this.designer.Widget;
 				Drawing.Point pos    = widget.MapRootToClient (root_mouse);
 				
 				if (widget.Client.Bounds.Contains (pos))
 				{
-					this.widget_designer.GripsHilited = true;
-					this.hot_designer = true;
+					this.designer.GripsHilited = true;
+					this.is_designer_hot = true;
 					return true;
 				}
 				
-				this.widget_designer.GripsHilited = false;
+				this.designer.GripsHilited = false;
 			}
 			
 			return false;
@@ -796,7 +821,8 @@ namespace Epsitec.Common.Widgets.Layouts
 				{
 					if (widget.Dock == DockStyle.Layout)
 					{
-						this.hot_widget = widget;
+						this.is_widget_hot = true;
+						this.hot_widget    = widget;
 						return true;
 					}
 					
@@ -804,7 +830,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				}
 			}
 			
-			this.hot_widget = null;
+			this.is_widget_hot = false;
 			return false;
 		}
 		
@@ -830,9 +856,9 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		protected void WidgetDraggingBegin(Drawing.Point mouse)
 		{
-			this.widget_designer.DraggingBegin ();
+			this.designer.DraggingBegin ();
 			
-			Widget select = this.widget_designer.Widget;
+			Widget select = this.designer.Widget;
 			
 			Drawing.Point center = select.Bounds.Center;
 			Drawing.Point corner = new Drawing.Point (select.Bounds.Left, select.Bounds.Top);
@@ -844,8 +870,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.hot_designer_corner_offset = mouse - corner;
 			this.hot_designer_columns       = select.LayoutArg2 - select.LayoutArg1;
 			
-			this.widget_designer.Widget.Dock   = DockStyle.None;
-			this.widget_designer.Widget.Parent = this.root;
+			this.designer.Widget.Dock   = DockStyle.None;
+			this.designer.Widget.Parent = this.root;
 			
 			this.hot_lines = new Grid.Horizontal[this.horizontals.Length];
 			this.horizontals.CopyTo (this.hot_lines, 0);
@@ -861,20 +887,18 @@ namespace Epsitec.Common.Widgets.Layouts
 			Drawing.Point center = mouse - this.hot_designer_center_offset;
 			Drawing.Point corner = mouse - this.hot_designer_corner_offset;
 			
-			Drawing.Rectangle rect_drop = this.widget_designer.OriginalBounds;
-			Drawing.Rectangle rect_move = Drawing.Rectangle.Offset (this.widget_designer.OriginalBounds, mouse - this.hot_designer_origin);
+			Drawing.Rectangle rect_drop = this.designer.OriginalBounds;
+			Drawing.Rectangle rect_move = Drawing.Rectangle.Offset (this.designer.OriginalBounds, mouse - this.hot_designer_origin);
 			
-			this.hot_designer_rect = rect_move;
+			this.designer_drag_rect = rect_move;
 			this.hot_target_ok     = false;
-			this.line_gap_height   = 0;
-			this.line_gap_index    = -1;
 			
 			if (this.FindBestColumns (center.X, this.hot_designer_columns, out this.hot_designer_col1, out this.hot_designer_col2))
 			{
 				if (this.FindBestHotLine (corner.Y, out this.hot_designer_line, out this.hot_designer_insert))
 				{
 					if ((this.hot_designer_insert) ||
-						(this.IsHorizontalRangeEmpty (this.hot_designer_line, this.hot_designer_col1, this.hot_designer_col2, this.widget_designer.WidgetOriginalSurface)))
+						(this.IsHorizontalRangeEmpty (this.hot_designer_line, this.hot_designer_col1, this.hot_designer_col2, this.designer.WidgetOriginalSurface)))
 					{
 						//	Evite d'insérer une ligne vide après (ou avant) si la ligne courante est adjacente
 						//	et qu'elle ne contient que notre élément; ce déplacement n'aurait aucun sens !
@@ -882,7 +906,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						if ((this.hot_designer_insert) &&
 							(this.hot_designer_line > 0) &&
 							(this.horizontals[this.hot_designer_line-1].list.Count == 1) &&
-							(this.horizontals[this.hot_designer_line-1].list[0] == this.widget_designer.WidgetOriginalSurface))
+							(this.horizontals[this.hot_designer_line-1].list[0] == this.designer.WidgetOriginalSurface))
 						{
 							this.hot_designer_insert = false;
 							this.hot_designer_line--;
@@ -890,7 +914,7 @@ namespace Epsitec.Common.Widgets.Layouts
 						
 						if ((this.hot_designer_insert) &&
 							(this.horizontals[this.hot_designer_line].list.Count == 1) &&
-							(this.horizontals[this.hot_designer_line].list[0] == this.widget_designer.WidgetOriginalSurface))
+							(this.horizontals[this.hot_designer_line].list[0] == this.designer.WidgetOriginalSurface))
 						{
 							this.hot_designer_insert = false;
 						}
@@ -898,14 +922,9 @@ namespace Epsitec.Common.Widgets.Layouts
 						double x1 = this.verticals[this.hot_designer_col1].x_live;
 						double x2 = this.verticals[this.hot_designer_col2].x_live;
 						double y2 = this.hot_lines[this.hot_designer_line].y_live;
-						double dy = this.widget_designer.WidgetOriginalSurface.Height;
+						double dy = this.designer.OriginalBounds.Height;
 						
-						if (this.hot_designer_insert)
-						{
-							this.line_gap_index  = this.hot_designer_line;
-							this.line_gap_height = dy;
-						}
-						else
+						if (this.hot_designer_insert == false)
 						{
 							//	Utilise la hauteur de la ligne en cours, sauf si c'est une ligne qui va être
 							//	créée suite à une insertion, ou si c'est la même ligne que celle où se
@@ -926,37 +945,28 @@ namespace Epsitec.Common.Widgets.Layouts
 				}
 			}
 			
-			this.widget_designer.DraggingSetDropHint (rect_drop);
+			this.UpdateLineGap ();
+			
+			this.designer.DraggingSetDropHint (rect_drop);
 			this.UpdateGeometry ();
-		}
-		
-		
-		protected void FreezeEnter()
-		{
-			System.Threading.Interlocked.Increment (ref this.freeze_count);
-		}
-		
-		protected void FreezeRelease()
-		{
-			System.Threading.Interlocked.Decrement (ref this.freeze_count);
 		}
 		
 		
 		
 		protected void WidgetDraggingEnd(Drawing.Point mouse)
 		{
-			this.is_dragging_widget = false;
+			this.designer.DraggingEnd ();
 			
-			this.widget_designer.DraggingEnd ();
+			//	Reconstruit la liste des lignes avec l'état d'origine. Cela va nous simplifier le
+			//	travail pour trouver les anciennes et nouvelles positions dans le Z-order :
 			
 			this.Update ();
-			this.FreezeEnter ();
 			
-			if (this.widget_designer.IsDropTargetValid)
+			if (this.designer.IsDropTargetValid)
 			{
-				this.RemoveWidgetFromHorizontals (this.widget_designer.Widget);
+				this.RemoveWidgetFromHorizontals (this.designer.Widget);
 				
-				int pos_old = this.root.Children.IndexOf (this.widget_designer.Widget);
+				int pos_old = this.root.Children.IndexOf (this.designer.Widget);
 				int pos_new = this.FindWidgetIndexBeforeHotDrop ();
 				
 				if (pos_old != pos_new)
@@ -964,50 +974,42 @@ namespace Epsitec.Common.Widgets.Layouts
 					//	La position a changé dans le Z-order. La nouvelle position correspond à l'endroit
 					//	où nous devons procéder à l'insertion.
 					
-					Widget temp = new Widget ();
+					if (pos_old < pos_new)
+					{
+						//	La suppression du widget de son ancienne position va décaler les widgets
+						//	qui suivent et il faut par conséquent adapter la position d'insertion :
+						
+						pos_new--;
+					}
 					
-					this.root.Children.InsertAt (pos_new, temp);
-					this.root.Children.Replace (temp, this.widget_designer.Widget);
-					
-					temp.Parent = null;
-					temp.Dispose ();
+					this.designer.Widget.Parent = null;
+					this.root.Children.InsertAt (pos_new, this.designer.Widget);
 				}
 				
-				this.widget_designer.Widget.SetLayoutArgs (this.hot_designer_col1, this.hot_designer_col2);
+				//	Le widget est positionné correctement parmi ses frères; il faut encore définir
+				//	les séparations verticales gauche et droite, puis mettre à jour les passages à
+				//	la ligne forcés :
+				
+				this.designer.Widget.SetLayoutArgs (this.hot_designer_col1, this.hot_designer_col2);
 				
 				if (this.hot_designer_insert)
 				{
+					//	Le widget se trouve dans une nouvelle ligne, il faut donc en insérer une :
+					
 					this.InsertHorizontal (this.hot_designer_line);
 				}
 				
-				this.InsertWidgetIntoHorizontal (this.widget_designer.Widget, this.hot_designer_line);
-				
-				for (int i = 0; i < this.horizontals.Length; i++)
-				{
-					Grid.Horizontal horizontal = this.horizontals[i];
-				
-					for (int j = 0; j < horizontal.list.Count; j++)
-					{
-						Widget widget = horizontal.list[j] as Widget;
-					
-						if (j == 0)
-						{
-							widget.LayoutFlags |= LayoutFlags.StartNewLine;
-						}
-						else
-						{
-							widget.LayoutFlags &= ~LayoutFlags.StartNewLine;
-						}
-					}
-				}
+				this.InsertWidgetIntoHorizontal (this.designer.Widget, this.hot_designer_line);
+				this.UpdateNewLinesInHorizontal ();
 			}
+			
+			this.is_dragging_widget = false;
 			
 			this.line_gap_index  = -1;
 			this.line_gap_height = 0;
 			
-			this.hot_designer_rect = Drawing.Rectangle.Empty;
+			this.designer_drag_rect = Drawing.Rectangle.Empty;
 			
-			this.FreezeRelease ();
 			this.Invalidate ();
 			this.Update ();
 		}
@@ -1039,9 +1041,9 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 			
 			int pos_new = (find == null) ? 0 : (this.root.Children.IndexOf (find) + 1);
-			int pos_old = this.root.Children.IndexOf (this.widget_designer.Widget);
+			int pos_old = this.root.Children.IndexOf (this.designer.Widget);
 			
-			return (find == this.widget_designer.WidgetOriginalSurface) ? pos_old : pos_new;
+			return (find == this.designer.WidgetOriginalSurface) ? pos_old : pos_new;
 		}
 		
 		protected int FindWidgetLineIndex(Widget widget)
@@ -1115,6 +1117,32 @@ namespace Epsitec.Common.Widgets.Layouts
 			horizontal.list.Add (widget);
 		}
 		
+		protected void UpdateNewLinesInHorizontal()
+		{
+			//	Met à jour LayoutFlags des widgets contenus dans toutes les lignes. Pour cela, on
+			//	active StartNewLine pour le premier widget de chaque ligne, et on le désactive pour
+			//	tous les autres widgets.
+			
+			for (int i = 0; i < this.horizontals.Length; i++)
+			{
+				ArrayList list = this.horizontals[i].list;
+				
+				for (int j = 0; j < list.Count; j++)
+				{
+					Widget widget = list[j] as Widget;
+					
+					if (j == 0)
+					{
+						widget.LayoutFlags |= LayoutFlags.StartNewLine;
+					}
+					else
+					{
+						widget.LayoutFlags &= ~LayoutFlags.StartNewLine;
+					}
+				}
+			}
+		}
+
 		protected void InsertHorizontal(int index)
 		{
 			Grid.Horizontal[] copy = new Grid.Horizontal[this.horizontals.Length+1];
@@ -1525,10 +1553,13 @@ namespace Epsitec.Common.Widgets.Layouts
 		protected bool					is_dragging_column;			//	dragging d'une colonne
 		protected bool					is_dragging_widget;			//	dragging d'un widget complet
 		
+		protected bool					is_designer_hot;			//	souris sur le widget sélectionné
+		protected bool					is_widget_hot;				//	souris sur un widget non sélectionné
+		
+		protected Widget				hot_widget;
+		
 		protected int					hot_column_index = -1;
 		protected double				hot_column_offset;
-		protected Widget				hot_widget;
-		protected bool					hot_designer;
 		protected Drawing.Point			hot_designer_origin;
 		protected Drawing.Point			hot_designer_center_offset;
 		protected Drawing.Point			hot_designer_corner_offset;
@@ -1537,11 +1568,11 @@ namespace Epsitec.Common.Widgets.Layouts
 		protected int					hot_designer_col2;
 		protected int					hot_designer_line;
 		protected bool					hot_designer_insert;
-		protected Drawing.Rectangle		hot_designer_rect;
 		protected bool					hot_target_ok;
 		protected Grid.Horizontal[]		hot_lines;
 		
-		protected Design.WidgetWrapper	widget_designer;
+		protected Design.WidgetWrapper	designer;
+		protected Drawing.Rectangle		designer_drag_rect;
 		
 		protected int					line_gap_index;
 		protected double				line_gap_height;
