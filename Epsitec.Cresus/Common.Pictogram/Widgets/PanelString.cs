@@ -130,12 +130,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 				if ( this.extendedSize )
 				{
 					this.fieldMulti.SelectAll();
-					this.fieldMulti.SetFocused(true);
+					this.fieldMulti.Focus();
 				}
 				else
 				{
 					this.fieldSingle.SelectAll();
-					this.fieldSingle.SetFocused(true);
+					this.fieldSingle.Focus();
 				}
 				return true;
 			}
