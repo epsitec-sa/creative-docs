@@ -38,6 +38,67 @@ namespace Epsitec.Common.Drawing
 			Assertion.AssertNull (Font.GetFont (n+1));
 		}
 
+		[Test] public void CheckAllFontComposites()
+		{
+			int n = Font.Count;
+			System.Console.Out.WriteLine (n.ToString () + " fonts found");
+			
+			FontTest.last_font_chunk += 20;
+			
+			if (FontTest.last_font_chunk - 20 >= n)
+			{
+				FontTest.last_font_chunk = 20;
+			}
+			
+			for (int i = FontTest.last_font_chunk - 20; i < n; i++)
+			{
+				if (i > FontTest.last_font_chunk) break;
+				
+				Font font = Font.GetFont (i);
+				Assertion.AssertNotNull (font);
+				
+//				if ((font.FullName == "Haettenschweiler Regular")/* ||
+//					(font.FullName == "Century Gothic Bold") ||
+//					(font.FullName == "Garamond Regular") ||
+//					(font.FullName == "Batang Regular")*/)
+//				{
+//				}
+//				else
+//				{
+//					continue;
+//				}
+				
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				for (char unicode = ' '; unicode < 65500; unicode++)
+				{
+					int glyph_index = font.GetGlyphIndex (unicode);
+					if (glyph_index > 0)
+					{
+						buffer.Append (unicode);
+					}
+				}
+				if (buffer.Length > 0)
+				{
+					Widgets.Window         window = new Widgets.Window ();
+					Widgets.TextFieldMulti text   = new Widgets.TextFieldMulti ();
+					
+					window.Text       = font.FullName;
+					window.ClientSize = new Size (1000, 100);
+					
+					text.Dock   = Widgets.DockStyle.Fill;
+					text.Parent = window.Root;
+					text.Text   = Widgets.TextLayout.ConvertToTaggedText (buffer.ToString ());
+					text.TextLayout.Font = font;
+					text.TextLayout.FontSize = 60;
+					
+					window.Show ();
+				}
+			}
+		}
+		
+		static int last_font_chunk = 0;
+
 		[Test] public void CheckSyntheticFont()
 		{
 			Font font = Font.GetFont ("Tahoma", "Italic");
@@ -189,7 +250,23 @@ namespace Epsitec.Common.Drawing
 			path.MoveTo (0, y);
 			path.LineTo (form.ClientSize.Width, y);
 			
-			string text = "tjfa";
+			string text = "tjfà";
+			
+			Rectangle text_r = font.GetTextBounds (text);
+			text_r.Scale (size);
+			text_r.Offset (x, y);
+			renderer.Color = Color.FromARGB (0.2, 0, 0, 1);
+			
+			path.MoveTo (text_r.BottomLeft);
+			path.LineTo (text_r.BottomRight);
+			path.LineTo (text_r.TopRight);
+			path.LineTo (text_r.TopLeft);
+			path.Close ();
+			
+			rasterizer.AddSurface (path);
+			rasterizer.Render (renderer);
+			
+			path.Clear ();
 			
 			rasterizer.FillMode = FillMode.NonZero;
 			
@@ -265,7 +342,7 @@ namespace Epsitec.Common.Drawing
 			path.MoveTo (0, y);
 			path.LineTo (form.ClientSize.Width, y);
 			
-			string text = "ijfa";
+			string text = "ijfà";
 			
 			rasterizer.FillMode = FillMode.NonZero;
 			
