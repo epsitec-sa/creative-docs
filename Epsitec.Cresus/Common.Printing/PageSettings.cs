@@ -15,11 +15,29 @@ namespace Epsitec.Common.Printing
 		}
 		
 		
+		public static PageSettings FromObject(object o)
+		{
+			System.Drawing.Printing.PageSettings ps = o as System.Drawing.Printing.PageSettings;
+			
+			if (ps != null)
+			{
+				return new PageSettings (ps);
+			}
+			
+			return null;
+		}
+		
+		
 		public Drawing.Rectangle				Bounds
 		{
 			get
 			{
-				return Drawing.Rectangle.Empty;
+				double x  = this.ps.Bounds.Left   * PageSettings.Millimeters;
+				double y  = this.ps.Bounds.Top    * PageSettings.Millimeters;
+				double dx = this.ps.Bounds.Width  * PageSettings.Millimeters;
+				double dy = this.ps.Bounds.Height * PageSettings.Millimeters;
+				
+				return new Drawing.Rectangle (x, y, dx, dy);
 			}
 		}
 		
@@ -27,10 +45,10 @@ namespace Epsitec.Common.Printing
 		{
 			get
 			{
-				double left   = this.ps.Margins.Left * PageSettings.Millimeters;
-				double right  = this.ps.Margins.Right * PageSettings.Millimeters;
-				double top    = this.Margins.Top * PageSettings.Millimeters;
-				double bottom = this.Margins.Bottom * PageSettings.Millimeters;
+				double left   = this.ps.Margins.Left   * PageSettings.Millimeters;
+				double right  = this.ps.Margins.Right  * PageSettings.Millimeters;
+				double top    = this.ps.Margins.Top    * PageSettings.Millimeters;
+				double bottom = this.ps.Margins.Bottom * PageSettings.Millimeters;
 				
 				return new Drawing.Margins (left, right, top, bottom);
 			}
