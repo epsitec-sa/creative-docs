@@ -99,11 +99,24 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
+		#region IDialog Members
 		public void Show()
 		{
-			this.dialog.ShowDialog ();
+			this.dialog.ShowDialog (this.owner == null ? null : this.owner.PlatformWindowObject as System.Windows.Forms.IWin32Window);
 		}
 		
+		public Common.Widgets.Window	Owner
+		{
+			get
+			{
+				return this.owner;
+			}
+			set
+			{
+				this.owner = value;
+			}
+		}
+		#endregion
 		
 		protected virtual void Attach(Printing.PrintDocument document)
 		{
@@ -128,6 +141,7 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
+		Common.Widgets.Window					owner;
 		System.Windows.Forms.PrintDialog		dialog;
 		private Printing.PrintDocument			document;
 	}
