@@ -629,6 +629,34 @@ namespace Epsitec.Common.Document
 		#endregion
 
 
+		#region Ruler
+		// Affichage des règles graduées.
+		public bool RulersShow
+		{
+			get
+			{
+				return this.rulersShow;
+			}
+
+			set
+			{
+				if ( this.rulersShow != value )
+				{
+					this.rulersShow = value;
+
+					if ( this.document.Notifier != null )
+					{
+						this.document.Notifier.NotifyArea(this.viewer);
+						this.document.Notifier.NotifyGridChanged();
+						this.document.IsDirtySerialize = true;
+					}
+				}
+			}
+		}
+
+		#endregion
+
+
 		#region Guides
 		// Action des repères magnétiques.
 		public bool GuidesActive
@@ -671,6 +699,28 @@ namespace Epsitec.Common.Document
 					{
 						this.document.Notifier.NotifyArea(this.viewer);
 						this.document.Notifier.NotifySettingsChanged();
+						this.document.IsDirtySerialize = true;
+					}
+				}
+			}
+		}
+
+		// Déplacement avec la souris des repères magnétiques.
+		public bool GuidesMouse
+		{
+			get
+			{
+				return this.guidesMouse;
+			}
+
+			set
+			{
+				if ( this.guidesMouse != value )
+				{
+					this.guidesMouse = value;
+
+					if ( this.document.Notifier != null )
+					{
 						this.document.IsDirtySerialize = true;
 					}
 				}
@@ -1484,6 +1534,8 @@ namespace Epsitec.Common.Document
 		protected Point							gridOffset = new Point(0, 0);
 		protected bool							guidesActive = true;
 		protected bool							guidesShow = true;
+		protected bool							guidesMouse = true;
+		protected bool							rulersShow = true;
 		protected bool							hideHalfActive = true;
 		protected bool							isDimmed = false;
 		protected bool							isDrawBoxThin = false;

@@ -55,7 +55,7 @@ namespace Epsitec.Common.Document.Containers
 			this.table.StyleV  = CellArrayStyle.ScrollNorm;
 			this.table.StyleV |= CellArrayStyle.Separator;
 			this.table.StyleV |= CellArrayStyle.SelectLine;
-			this.table.DefHeight = 16;
+			this.table.DefHeight = 18;
 
 			this.panelModColor = new Panels.ModColor(this.document);
 			this.panelModColor.IsExtendedSize = true;
@@ -70,43 +70,40 @@ namespace Epsitec.Common.Document.Containers
 			this.panelMisc = new Widget(this);
 			this.panelMisc.Dock = DockStyle.Bottom;
 			this.panelMisc.DockMargins = new Margins(0, 0, 5, 0);
-			this.panelMisc.Height = 152;
+			this.panelMisc.Height = 70;
 			
-			this.panelRadio = new Widget(this.panelMisc);
-			this.panelRadio.Dock = DockStyle.Top;
-			this.panelRadio.DockMargins = new Margins(0, 0, 5, 0);
-			this.panelRadio.Height = 64;
+			this.panelButton = new Widget(this.panelMisc);
+			this.panelButton.Dock = DockStyle.Left;
+			this.panelButton.DockMargins = new Margins(0, 0, 0, 0);
+			this.panelButton.Width = 126;
+			this.panelButton.Height = this.panelMisc.Height;
 			
-			this.radioGroupType = new GroupBox(this.panelRadio);
-			this.radioGroupType.Dock = DockStyle.Left;
-			this.radioGroupType.DockMargins = new Margins(0, 0, 0, 0);
-			this.radioGroupType.Width = 116;
-			this.radioGroupType.Height = this.panelRadio.Height;
-			this.radioGroupType.Text = "Si calque inactif :";
+			this.buttonShow = new Button(this.panelButton);
+			this.buttonShow.Dock = DockStyle.Top;
+			this.buttonShow.DockMargins = new Margins(0, 0, 0, 0);
+			this.buttonShow.Text = "Afficher tous";
+			this.buttonShow.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			ToolTip.Default.SetToolTip(this.buttonShow, "Afficher normalement tous les calques");
 
-			this.radioShowType = new RadioButton(this.radioGroupType);
-			this.radioShowType.Dock = DockStyle.Top;
-			this.radioShowType.DockMargins = new Margins(10, 10, 0, 0);
-			this.radioShowType.Text = "Afficher";
-			this.radioShowType.Clicked += new MessageEventHandler(this.HandleRadioTypeClicked);
+			this.buttonDimmed = new Button(this.panelButton);
+			this.buttonDimmed.Dock = DockStyle.Top;
+			this.buttonDimmed.DockMargins = new Margins(0, 0, 0, 0);
+			this.buttonDimmed.Text = "Estomper les autres";
+			this.buttonDimmed.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			ToolTip.Default.SetToolTip(this.buttonDimmed, "Afficher estompé les autres calques");
 
-			this.radioDimmedType = new RadioButton(this.radioGroupType);
-			this.radioDimmedType.Dock = DockStyle.Top;
-			this.radioDimmedType.DockMargins = new Margins(10, 10, 0, 0);
-			this.radioDimmedType.Text = "Estomper";
-			this.radioDimmedType.Clicked += new MessageEventHandler(this.HandleRadioTypeClicked);
+			this.buttonHide = new Button(this.panelButton);
+			this.buttonHide.Dock = DockStyle.Top;
+			this.buttonHide.DockMargins = new Margins(0, 0, 0, 0);
+			this.buttonHide.Text = "Cacher les autres";
+			this.buttonHide.Clicked += new MessageEventHandler(this.HandleButtonClicked);
+			ToolTip.Default.SetToolTip(this.buttonHide, "Cacher les autres calques");
 
-			this.radioHideType = new RadioButton(this.radioGroupType);
-			this.radioHideType.Dock = DockStyle.Top;
-			this.radioHideType.DockMargins = new Margins(10, 10, 0, 0);
-			this.radioHideType.Text = "Cacher";
-			this.radioHideType.Clicked += new MessageEventHandler(this.HandleRadioTypeClicked);
-
-			this.radioGroupPrint = new GroupBox(this.panelRadio);
+			this.radioGroupPrint = new GroupBox(this.panelMisc);
 			this.radioGroupPrint.Dock = DockStyle.Right;
-			this.radioGroupPrint.DockMargins = new Margins(0, 0, 0, 0);
-			this.radioGroupPrint.Width = 116;
-			this.radioGroupPrint.Height = this.panelRadio.Height;
+			this.radioGroupPrint.DockMargins = new Margins(0, 0, 0, 4);
+			this.radioGroupPrint.Width = 106;
+			this.radioGroupPrint.Height = this.panelMisc.Height;
 			this.radioGroupPrint.Text = "Si impression :";
 
 			this.radioShowPrint = new RadioButton(this.radioGroupPrint);
@@ -126,24 +123,6 @@ namespace Epsitec.Common.Document.Containers
 			this.radioHidePrint.DockMargins = new Margins(10, 10, 0, 0);
 			this.radioHidePrint.Text = "Cacher";
 			this.radioHidePrint.Clicked += new MessageEventHandler(this.HandleRadioPrintClicked);
-
-			this.buttonShow = new Button(this.panelMisc);
-			this.buttonShow.Dock = DockStyle.Top;
-			this.buttonShow.DockMargins = new Margins(0, 0, 3, 0);
-			this.buttonShow.Text = "Afficher normalement tous les calques";
-			this.buttonShow.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-
-			this.buttonDimmed = new Button(this.panelMisc);
-			this.buttonDimmed.Dock = DockStyle.Top;
-			this.buttonDimmed.DockMargins = new Margins(0, 0, 3, 0);
-			this.buttonDimmed.Text = "Afficher estompé les autres calques";
-			this.buttonDimmed.Clicked += new MessageEventHandler(this.HandleButtonClicked);
-
-			this.buttonHide = new Button(this.panelMisc);
-			this.buttonHide.Dock = DockStyle.Top;
-			this.buttonHide.DockMargins = new Margins(0, 0, 3, 0);
-			this.buttonHide.Text = "Cacher les autres calques";
-			this.buttonHide.Clicked += new MessageEventHandler(this.HandleButtonClicked);
 			// --- Fin panelMisc
 			
 			this.extendedButton = new GlyphButton(this);
@@ -184,7 +163,7 @@ namespace Epsitec.Common.Document.Containers
 			Objects.Page page = context.RootObject(1) as Objects.Page;
 			int rank = page.Objects.IndexOf(obj);
 			int i = context.TotalLayers()-rank-1;
-			this.TableUpdateRow(i, layer);
+			this.TableUpdateRow(i, layer, true);
 
 			if ( rank == context.CurrentLayer )
 			{
@@ -213,18 +192,20 @@ namespace Epsitec.Common.Document.Containers
 
 			int rows = context.TotalLayers();
 			int initialColumns = this.table.Columns;
-			this.table.SetArraySize(3, rows);
+			this.table.SetArraySize(4, rows);
 
 			if ( initialColumns == 0 )
 			{
 				this.table.SetWidthColumn(0, 20);
 				this.table.SetWidthColumn(1, 50);
-				this.table.SetWidthColumn(2, 142);
+				this.table.SetWidthColumn(2, 124);
+				this.table.SetWidthColumn(3, 18);
 			}
 
 			this.table.SetHeaderTextH(0, "");
 			this.table.SetHeaderTextH(1, "Position");
 			this.table.SetHeaderTextH(2, "Nom");
+			this.table.SetHeaderTextH(3, "");
 
 			Objects.Page page = context.RootObject(1) as Objects.Page;
 			for ( int i=0 ; i<rows ; i++ )
@@ -232,7 +213,7 @@ namespace Epsitec.Common.Document.Containers
 				int ii = context.TotalLayers()-i-1;
 				Objects.Layer layer = page.Objects[ii] as Objects.Layer;
 				this.TableFillRow(i);
-				this.TableUpdateRow(i, layer);
+				this.TableUpdateRow(i, layer, ii==sel);
 			}
 		}
 
@@ -243,19 +224,34 @@ namespace Epsitec.Common.Document.Containers
 			{
 				if ( this.table[column, row].IsEmpty )
 				{
-					StaticText st = new StaticText();
-					st.Alignment = (column==0) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
-					st.Dock = DockStyle.Fill;
-					this.table[column, row].Insert(st);
+					if ( column == 3 )
+					{
+						CheckButton bt = new CheckButton();
+						bt.Name = row.ToString();
+						bt.AcceptThreeState = true;
+						bt.Dock = DockStyle.Fill;
+						bt.DockMargins = new Margins(2, 0, 0, 0);
+						bt.ActiveStateChanged += new EventHandler(this.HandleCheckActiveStateChanged);
+						this.table[column, row].Insert(bt);
+					}
+					else
+					{
+						StaticText st = new StaticText();
+						st.Alignment = (column==0) ? ContentAlignment.MiddleCenter : ContentAlignment.MiddleLeft;
+						st.Dock = DockStyle.Fill;
+						st.DockMargins = new Margins(4, 4, 0, 0);
+						this.table[column, row].Insert(st);
+					}
 				}
 			}
 		}
 
 		// Met à jour le contenu d'une ligne de la table.
-		protected void TableUpdateRow(int row, Objects.Layer layer)
+		protected void TableUpdateRow(int row, Objects.Layer layer, bool select)
 		{
 			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
 			StaticText st;
+			CheckButton bt;
 
 			st = this.table[0, row].Children[0] as StaticText;
 			int n = context.TotalLayers()-row-1;
@@ -266,6 +262,14 @@ namespace Epsitec.Common.Document.Containers
 
 			st = this.table[2, row].Children[0] as StaticText;
 			st.Text = layer.Name;
+
+			bt = this.table[3, row].Children[0] as CheckButton;
+			bt.Name = row.ToString();
+			WidgetState state = WidgetState.ActiveNo;
+			if ( layer.Type == Objects.LayerType.Show   )  state = WidgetState.ActiveYes;
+			if ( layer.Type == Objects.LayerType.Dimmed )  state = WidgetState.ActiveMaybe;
+			bt.ActiveState = state;
+			bt.SetEnabled(!select);
 
 			this.table.SelectRow(row, n==context.CurrentLayer);
 		}
@@ -332,6 +336,30 @@ namespace Epsitec.Common.Document.Containers
 			this.UpdateToolBar();
 		}
 
+		// Bouton "check" à 3 états dans la liste cliqué.
+		private void HandleCheckActiveStateChanged(object sender)
+		{
+			CheckButton bt = sender as CheckButton;
+			int sel = System.Convert.ToInt32(bt.Name);
+			DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
+			if ( sel < 0 || sel >= context.TotalLayers() )  return;
+			sel = context.TotalLayers()-sel-1;
+			Objects.Page page = context.RootObject(1) as Objects.Page;
+			Objects.Layer layer = page.Objects[sel] as Objects.Layer;
+
+			using ( this.document.Modifier.OpletQueueBeginAction() )
+			{
+				Objects.LayerType type = Objects.LayerType.None;
+				if ( bt.ActiveState == WidgetState.ActiveYes   )  type = Objects.LayerType.Show;
+				if ( bt.ActiveState == WidgetState.ActiveNo    )  type = Objects.LayerType.Hide;
+				if ( bt.ActiveState == WidgetState.ActiveMaybe )  type = Objects.LayerType.Dimmed;
+				layer.Type = type;
+
+				this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
+				this.document.Modifier.OpletQueueValidateAction();
+			}
+		}
+
 
 		// Le bouton pour étendre/réduire le panneau a été cliqué.
 		private void ExtendedButtonClicked(object sender, MessageEventArgs e)
@@ -347,26 +375,6 @@ namespace Epsitec.Common.Document.Containers
 
 			this.panelMisc.SetVisible(this.isExtended);
 			this.panelModColor.SetVisible(this.isExtended);
-		}
-
-		// Un bouton radio a été cliqué.
-		private void HandleRadioTypeClicked(object sender, MessageEventArgs e)
-		{
-			using ( this.document.Modifier.OpletQueueBeginAction() )
-			{
-				DrawingContext context = this.document.Modifier.ActiveViewer.DrawingContext;
-				Objects.LayerType type = Objects.LayerType.None;
-				if ( sender == this.radioShowType   )  type = Objects.LayerType.Show;
-				if ( sender == this.radioDimmedType )  type = Objects.LayerType.Dimmed;
-				if ( sender == this.radioHideType   )  type = Objects.LayerType.Hide;
-				int sel = context.CurrentLayer;
-				Objects.Page page = context.RootObject(1) as Objects.Page;
-				Objects.Layer layer = page.Objects[sel] as Objects.Layer;
-
-				layer.Type = type;
-
-				this.document.Modifier.OpletQueueValidateAction();
-			}
 		}
 
 		// Un bouton radio a été cliqué.
@@ -397,11 +405,6 @@ namespace Epsitec.Common.Document.Containers
 			Objects.Page page = context.RootObject(1) as Objects.Page;
 			Objects.Layer layer = page.Objects[sel] as Objects.Layer;
 
-			Objects.LayerType type = layer.Type;
-			this.radioShowType.ActiveState   = (type == Objects.LayerType.Show  ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radioDimmedType.ActiveState = (type == Objects.LayerType.Dimmed) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-			this.radioHideType.ActiveState   = (type == Objects.LayerType.Hide  ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
-
 			Objects.LayerPrint print = layer.Print;
 			this.radioShowPrint.ActiveState   = (print == Objects.LayerPrint.Show  ) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
 			this.radioDimmedPrint.ActiveState = (print == Objects.LayerPrint.Dimmed) ? WidgetState.ActiveYes : WidgetState.ActiveNo;
@@ -426,7 +429,7 @@ namespace Epsitec.Common.Document.Containers
 					Objects.Layer layer = page.Objects[i] as Objects.Layer;
 					layer.Type = type;
 				}
-				this.UpdateRadio();
+				this.UpdateTable();
 				this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 
 				this.document.Modifier.OpletQueueValidateAction();
@@ -444,18 +447,14 @@ namespace Epsitec.Common.Document.Containers
 		protected Panels.LayerName		panelLayerName;
 		protected GlyphButton			extendedButton;
 		protected Widget				panelMisc;
-		protected Widget				panelRadio;
-		protected GroupBox				radioGroupType;
-		protected RadioButton			radioShowType;
-		protected RadioButton			radioDimmedType;
-		protected RadioButton			radioHideType;
+		protected Widget				panelButton;
+		protected Button				buttonShow;
+		protected Button				buttonDimmed;
+		protected Button				buttonHide;
 		protected GroupBox				radioGroupPrint;
 		protected RadioButton			radioShowPrint;
 		protected RadioButton			radioDimmedPrint;
 		protected RadioButton			radioHidePrint;
-		protected Button				buttonShow;
-		protected Button				buttonDimmed;
-		protected Button				buttonHide;
 		protected Panels.ModColor		panelModColor;
 		protected bool					isExtended = false;
 		protected bool					ignoreChanged = false;

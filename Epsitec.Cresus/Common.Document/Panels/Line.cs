@@ -15,13 +15,20 @@ namespace Epsitec.Common.Document.Panels
 			this.label = new StaticText(this);
 			this.label.Alignment = ContentAlignment.MiddleLeft;
 
+			this.nothingButton = new IconButton(this);
+			this.nothingButton.Clicked += new MessageEventHandler(this.HandleNothingClicked);
+			this.nothingButton.TabIndex = 1;
+			this.nothingButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.nothingButton.IconName = "manifest:Epsitec.App.DocumentEditor.Images.Nothing.icon";
+			ToolTip.Default.SetToolTip(this.nothingButton, "Aucun trait");
+
 			this.field = new TextFieldReal(this);
 			this.field.FactorMinRange = 0.0M;
 			this.field.FactorMaxRange = 0.1M;
 			this.field.FactorStep = 0.1M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.field);
 			this.field.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.field.TabIndex = 1;
+			this.field.TabIndex = 2;
 			this.field.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.field, "Epaisseur du trait");
 
@@ -33,7 +40,7 @@ namespace Epsitec.Common.Document.Panels
 			for ( int i=0 ; i<6 ; i++ )
 			{
 				this.buttons[i] = new IconButton(this);
-				this.buttons[i].Clicked += new MessageEventHandler(this.PanelLineClicked);
+				this.buttons[i].Clicked += new MessageEventHandler(this.HandlePanelLineClicked);
 				this.buttons[i].TabIndex = 3+i;
 				this.buttons[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			}
@@ -99,12 +106,13 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
+				this.nothingButton.Clicked -= new MessageEventHandler(this.HandleNothingClicked);
 				this.field.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.dash.ActiveStateChanged -= new EventHandler(this.HandleDashActiveStateChanged);
 
 				for ( int i=0 ; i<6 ; i++ )
 				{
-					this.buttons[i].Clicked -= new MessageEventHandler(this.PanelLineClicked);
+					this.buttons[i].Clicked -= new MessageEventHandler(this.HandlePanelLineClicked);
 					this.buttons[i] = null;
 				}
 
@@ -343,8 +351,11 @@ namespace Epsitec.Common.Document.Panels
 
 			Rectangle r = rect;
 			r.Bottom = r.Top-20;
-			r.Right = rect.Right-50;
+			r.Right = rect.Right-70;
 			this.label.Bounds = r;
+			r.Left = rect.Right-70;
+			r.Right = rect.Right-50;
+			this.nothingButton.Bounds = r;
 			r.Left = rect.Right-50;
 			r.Right = rect.Right;
 			this.field.Bounds = r;
@@ -404,8 +415,15 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
+		// Le bouton "aucun trait" a été cliqué.
+		private void HandleNothingClicked(object sender, MessageEventArgs e)
+		{
+			this.field.Value = 0.0M;
+			this.OnChanged();
+		}
+
 		// Une valeur a été changée.
-		private void PanelLineClicked(object sender, MessageEventArgs e)
+		private void HandlePanelLineClicked(object sender, MessageEventArgs e)
 		{
 			if ( this.ignoreChanged )  return;
 			IconButton button = sender as IconButton;
@@ -446,6 +464,7 @@ namespace Epsitec.Common.Document.Panels
 
 
 		protected StaticText				label;
+		protected IconButton				nothingButton;
 		protected TextFieldReal				field;
 		protected CheckButton				dash;
 		protected IconButton[]				buttons;

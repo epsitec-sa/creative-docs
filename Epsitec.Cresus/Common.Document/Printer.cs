@@ -11,6 +11,13 @@ namespace Epsitec.Common.Document
 		public Printer(Document document)
 		{
 			this.document = document;
+
+			this.ImageFormat = ImageFormat.Unknown;
+			this.imageDpi = 100;
+			this.imageCompression = ImageCompression.None;
+			this.imageDepth = 24;
+			this.imageQuality = 0.85;
+			this.imageAA = 1.0;
 		}
 
 		// Imprime le document selon les choix faits dans le dialogue Window (dp)
@@ -21,6 +28,74 @@ namespace Epsitec.Common.Document
 			printEngine.Initialise(this, dp);
 			dp.Document.Print(printEngine);
 		}
+
+		// Exporte le document dans un fichier.
+		public string Export(string filename)
+		{
+			// Crée le DrawingContext utilisé pour l'exportation.
+			DrawingContext drawingContext;
+			drawingContext = new DrawingContext(this.document, null);
+			drawingContext.ContainerSize = this.document.Size;
+			drawingContext.PreviewActive = true;
+
+			return this.ExportGeometry(drawingContext, filename);
+		}
+
+
+		#region Image
+		// Trouve le type d'une image en fonction de l'extension.
+		public static ImageFormat GetImageFormat(string ext)
+		{
+			switch ( ext.ToLower() )
+			{
+				case "bmp":  return ImageFormat.Bmp;
+				case "gif":  return ImageFormat.Gif;
+				case "tif":  return ImageFormat.Tiff;
+				case "jpg":  return ImageFormat.Jpeg;
+				case "png":  return ImageFormat.Png;
+				case "exf":  return ImageFormat.Exif;
+				case "emf":  return ImageFormat.WindowsEmf;
+				case "wmf":  return ImageFormat.WindowsWmf;
+			}
+			return ImageFormat.Unknown;
+		}
+
+		public ImageFormat ImageFormat
+		{
+			get { return this.imageFormat; }
+			set { this.imageFormat = value; }
+		}
+
+		public double ImageDpi
+		{
+			get { return this.imageDpi; }
+			set { this.imageDpi = value; }
+		}
+
+		public ImageCompression ImageCompression
+		{
+			get { return this.imageCompression; }
+			set { this.imageCompression = value; }
+		}
+
+		public int ImageDepth
+		{
+			get { return this.imageDepth; }
+			set { this.imageDepth = value; }
+		}
+
+		public double ImageQuality
+		{
+			get { return this.imageQuality; }
+			set { this.imageQuality = value; }
+		}
+
+		public double ImageAA
+		{
+			get { return this.imageAA; }
+			set { this.imageAA = value; }
+		}
+		#endregion
 
 
 		protected class PrintEngine : Printing.IPrintEngine
@@ -246,6 +321,82 @@ namespace Epsitec.Common.Document
 #endif
 		}
 
+		// Exporte la géométrie complexe de tous les objets, en utilisant
+		// un bitmap intermédiaire.
+		protected string ExportGeometry(DrawingContext drawingContext, string filename)
+		{
+			ImageFormat format = this.imageFormat;
+			double dpi = this.imageDpi;
+			int depth = this.imageDepth;  // 8, 16, 24 ou 32
+			int quality = (int) (this.imageQuality*100.0);  // 0..100
+			ImageCompression compression = this.imageCompression;
+
+			if ( format == ImageFormat.Unknown )
+			{
+				return "Format d'image inconnu";
+			}
+
+			Graphics gfx = new Graphics();
+			int dx = (int) ((this.document.Size.Width/10.0)*(dpi/25.4));
+			int dy = (int) ((this.document.Size.Height/10.0)*(dpi/25.4));
+			gfx.SetPixmapSize(dx, dy);
+			gfx.SolidRenderer.ClearARGB((depth==32)?0:1, 1,1,1);
+			gfx.Rasterizer.Gamma = this.imageAA;
+
+			double zoomH = dx / this.document.Size.Width;
+			double zoomV = dy / this.document.Size.Height;
+			double zoom = System.Math.Min(zoomH, zoomV);
+			gfx.TranslateTransform(0, dy);
+			gfx.ScaleTransform(zoom, -zoom, 0, 0);
+
+			DrawingContext cView = this.document.Modifier.ActiveViewer.DrawingContext;
+			Objects.Abstract activLayer = cView.RootObject(2);
+			Objects.Abstract page = cView.RootObject(1);
+			foreach ( Objects.Layer layer in this.document.Flat(page) )
+			{
+				drawingContext.IsDimmed = false;
+				if ( layer != activLayer )  // calque passif ?
+				{
+					if ( layer.Type == Objects.LayerType.Hide )  continue;
+					drawingContext.IsDimmed = (layer.Type == Objects.LayerType.Dimmed);
+				}
+
+				Properties.ModColor modColor = layer.PropertyModColor;
+				drawingContext.modifyColor = new DrawingContext.ModifyColor(modColor.ModifyColor);
+
+				foreach ( Objects.Abstract obj in this.document.Deep(layer) )
+				{
+					if ( obj.IsHide )  continue;  // objet caché ?
+					obj.DrawGeometry(gfx, drawingContext);
+				}
+			}
+
+			Bitmap bitmap = Bitmap.FromPixmap(gfx.Pixmap) as Bitmap;
+			if ( bitmap == null )  return "Pas de bitmap";
+
+			try
+			{
+				byte[] data;
+				System.IO.FileStream stream;
+				data = bitmap.Save(format, depth, quality, compression);
+
+				if ( System.IO.File.Exists(filename) )
+				{
+					System.IO.File.Delete(filename);
+				}
+
+				stream = new System.IO.FileStream(filename, System.IO.FileMode.CreateNew);
+				stream.Write(data, 0, data.Length);
+				stream.Close();
+			}
+			catch ( System.Exception e )
+			{
+				return e.Message;
+			}
+
+			return "";  // ok
+		}
+
 
 		// Donne les réglages de l'impression.
 		protected Settings.PrintInfo PrintInfo
@@ -258,5 +409,11 @@ namespace Epsitec.Common.Document
 
 
 		protected Document					document;
+		protected ImageFormat				imageFormat;
+		protected double					imageDpi;
+		protected ImageCompression			imageCompression;
+		protected int						imageDepth;
+		protected double					imageQuality;
+		protected double					imageAA;
 	}
 }

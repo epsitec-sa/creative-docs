@@ -10,6 +10,7 @@ namespace Epsitec.Common.Document
 		ObjectsInsideProperty,		// liste des objets propriétaires d'une propriété
 		PropertiesInsideDocument,	// liste de propriétés ou de styles du document
 		PropertiesInsideObject,		// liste des propriétés utilisées par un objet
+		Guides,						// liste des repères
 	}
 
 	/// <summary>
@@ -275,6 +276,11 @@ namespace Epsitec.Common.Document
 					Objects.Abstract obj = prop2.Owners[prop2.Owners.Count-1] as Objects.Abstract;
 					document.Notifier.NotifyArea(obj.BoundingBox);
 				}
+			}
+
+			if ( listType == UndoableListType.Guides )
+			{
+				document.Notifier.NotifyGuidesChanged();
 			}
 		}
 

@@ -740,7 +740,7 @@ namespace Epsitec.Common.Widgets
 				if (this.back_color != value)
 				{
 					this.back_color = value;
-					this.Invalidate ();
+					this.Invalidate (InvalidateReason.ColorChanged);
 				}
 			}
 		}
@@ -1481,7 +1481,7 @@ namespace Epsitec.Common.Widgets
 					this.widget_state &= ~WidgetState.ActiveMask;
 					this.widget_state |= value & WidgetState.ActiveMask;
 					this.OnActiveStateChanged ();
-					this.Invalidate ();
+					this.Invalidate (InvalidateReason.ActiveStateChanged);
 				}
 			}
 		}
@@ -2444,7 +2444,7 @@ namespace Epsitec.Common.Widgets
 				if (enabled)
 				{
 					this.widget_state |= WidgetState.Enabled;
-					this.Invalidate ();
+					this.Invalidate (InvalidateReason.EnabledChanged);
 				}
 			}
 			else
@@ -2452,7 +2452,7 @@ namespace Epsitec.Common.Widgets
 				if (!enabled)
 				{
 					this.widget_state &= ~ WidgetState.Enabled;
-					this.Invalidate ();
+					this.Invalidate (InvalidateReason.EnabledChanged);
 				}
 			}
 		}
@@ -2464,7 +2464,7 @@ namespace Epsitec.Common.Widgets
 				if (frozen)
 				{
 					this.internal_state |= InternalState.Frozen;
-					this.Invalidate ();
+					this.Invalidate (InvalidateReason.FrozenChanged);
 				}
 			}
 			else
@@ -2472,7 +2472,7 @@ namespace Epsitec.Common.Widgets
 				if (!frozen)
 				{
 					this.internal_state &= ~ InternalState.Frozen;
-					this.Invalidate ();
+					this.Invalidate (InvalidateReason.FrozenChanged);
 				}
 			}
 		}
@@ -2504,7 +2504,7 @@ namespace Epsitec.Common.Widgets
 					if (this.IsFocused)
 					{
 						this.OnFocused ();
-						this.Invalidate ();
+						this.Invalidate (InvalidateReason.FocusedChanged);
 					}
 				}
 			}
@@ -2520,7 +2520,7 @@ namespace Epsitec.Common.Widgets
 					}
 					
 					this.OnDefocused ();
-					this.Invalidate ();
+					this.Invalidate (InvalidateReason.FocusedChanged);
 				}
 			}
 		}
@@ -2532,8 +2532,8 @@ namespace Epsitec.Common.Widgets
 				if (selected)
 				{
 					this.widget_state |= WidgetState.Selected;
-					this.Invalidate ();
 					this.OnSelected ();
+					this.Invalidate (InvalidateReason.SelectedChanged);
 				}
 			}
 			else
@@ -2541,8 +2541,8 @@ namespace Epsitec.Common.Widgets
 				if (!selected)
 				{
 					this.widget_state &= ~WidgetState.Selected;
-					this.Invalidate ();
 					this.OnDeselected ();
+					this.Invalidate (InvalidateReason.SelectedChanged);
 				}
 			}
 		}
@@ -2567,8 +2567,8 @@ namespace Epsitec.Common.Widgets
 				{
 					this.widget_state |= WidgetState.Engaged;
 					window.EngagedWidget = this;
-					this.Invalidate ();
 					this.OnEngaged ();
+					this.Invalidate (InvalidateReason.EngagedChanged);
 				}
 			}
 			else
@@ -2577,8 +2577,8 @@ namespace Epsitec.Common.Widgets
 				{
 					this.widget_state &= ~ WidgetState.Engaged;
 					window.EngagedWidget = null;
-					this.Invalidate ();
 					this.OnDisengaged ();
+					this.Invalidate (InvalidateReason.EngagedChanged);
 				}
 			}
 		}
@@ -2670,7 +2670,7 @@ namespace Epsitec.Common.Widgets
 			if (this.IsEnabled)
 			{
 				this.OnFocused ();
-				this.Invalidate ();
+				this.Invalidate (InvalidateReason.FocusedChanged);
 			}
 		}
 		
@@ -2679,7 +2679,7 @@ namespace Epsitec.Common.Widgets
 			if (this.IsEnabled)
 			{
 				this.OnDefocused ();
-				this.Invalidate ();
+				this.Invalidate (InvalidateReason.FocusedChanged);
 			}
 		}
 		
@@ -2916,7 +2916,9 @@ namespace Epsitec.Common.Widgets
 						{
 							window.SynchronousRepaint ();
 							this.parent.Invalidate (this.MapClientToParent (rect));
+							window.PaintFilter = new WidgetPaintFilter (this);
 							window.SynchronousRepaint ();
+							window.PaintFilter = null;
 						}
 					}
 					else
@@ -2925,6 +2927,11 @@ namespace Epsitec.Common.Widgets
 					}
 				}
 			}
+		}
+		
+		protected virtual void Invalidate(InvalidateReason reason)
+		{
+			this.Invalidate ();
 		}
 		
 		
@@ -4995,8 +5002,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
-		public virtual void PaintHandler(Drawing.Graphics graphics, Drawing.Rectangle repaint)
+		public virtual void PaintHandler(Drawing.Graphics graphics, Drawing.Rectangle repaint, IPaintFilter paint_filter)
 		{
+			if ((paint_filter != null) &&
+				(paint_filter.IsWidgetFullyDiscarded (this)))
+			{
+				return;
+			}
+			
 //			System.Diagnostics.Debug.WriteLine ("Paint: " + this.ToString () + " " + this.Bounds.ToString () + " oy=" + this.client_info.oy);
 			
 			this.OnPreparePaint ();
@@ -5047,9 +5060,12 @@ namespace Epsitec.Common.Widgets
 					//	si l'on désire réaliser des effets de transparence par dessus le dessin des
 					//	widgets enfants.
 					
-					graphics.ResetLineStyle ();
-					
-					this.OnPaintBackground (local_paint_args);
+					if ((paint_filter == null) ||
+						(paint_filter.IsWidgetPaintDiscarded (this) == false))
+					{
+						graphics.ResetLineStyle ();
+						this.OnPaintBackground (local_paint_args);
+					}
 					
 					//	Peint tous les widgets enfants, en commençant par le numéro 0, lequel se trouve
 					//	derrière tous les autres, etc. On saute les widgets qui ne sont pas visibles.
@@ -5067,7 +5083,7 @@ namespace Epsitec.Common.Widgets
 						
 							if (widget.IsVisibleFlagSet)
 							{
-								widget.PaintHandler (graphics, repaint);
+								widget.PaintHandler (graphics, repaint, paint_filter);
 							}
 						}
 					}
@@ -5075,9 +5091,12 @@ namespace Epsitec.Common.Widgets
 					//	Peint l'avant-plan du widget, à n'utiliser que pour faire un "effet" spécial
 					//	après coup.
 					
-					graphics.ResetLineStyle ();
-					
-					this.OnPaintForeground (local_paint_args);
+					if ((paint_filter == null) ||
+						(paint_filter.IsWidgetPaintDiscarded (this) == false))
+					{
+						graphics.ResetLineStyle ();
+						this.OnPaintForeground (local_paint_args);
+					}
 				}
 				finally
 				{

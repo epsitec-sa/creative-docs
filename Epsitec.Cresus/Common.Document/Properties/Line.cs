@@ -462,6 +462,37 @@ namespace Epsitec.Common.Document.Properties
 			}
 		}
 
+		// Dessine le traitillé le long d'un chemin, lorsque le trait n'existe pas.
+		public void DrawPathDash(Graphics graphics, DrawingContext drawingContext, Path path, Properties.Gradient gradient)
+		{
+			if ( this.width != 0.0 && gradient.IsVisible() )  return;
+			if ( path.IsEmpty )  return;
+
+			DashedPath dp = new DashedPath();
+			dp.DefaultZoom = drawingContext.ScaleX;
+			dp.Append(path);
+			dp.AddDash(0.00001, 4.0/drawingContext.ScaleX);
+
+			using ( Path temp = dp.GenerateDashedPath() )
+			{
+				graphics.Rasterizer.AddOutline(temp, 1.0/drawingContext.ScaleX, CapStyle.Square, JoinStyle.Round, 5.0);
+
+				Drawing.Color color = Drawing.Color.FromBrightness(0);
+				if ( gradient.IsVisible() )
+				{
+					if ( gradient.Color1.A > 0 )
+					{
+						color = gradient.Color1;
+					}
+					else
+					{
+						color = gradient.Color2;
+					}
+				}
+				graphics.RenderSolid(color);
+			}
+		}
+
 
 		#region Serialization
 		// Sérialise la propriété.

@@ -26,6 +26,20 @@ namespace Epsitec.Common.Document.Settings
 					this.maxValue = 100;
 					this.step = 1;
 					break;
+
+				case "ImageDepth":
+					this.text = "Nombre de couleurs";
+					this.minValue = 0;
+					this.maxValue = 100;
+					this.step = 1;
+					break;
+
+				case "ImageCompression":
+					this.text = "Type de compression";
+					this.minValue = 0;
+					this.maxValue = 100;
+					this.step = 1;
+					break;
 			}
 		}
 
@@ -37,6 +51,12 @@ namespace Epsitec.Common.Document.Settings
 				{
 					case "DefaultUnit":
 						return (int) this.document.Modifier.RealUnitDimension;
+
+					case "ImageDepth":
+						return this.document.Printer.ImageDepth;
+
+					case "ImageCompression":
+						return (int) this.document.Printer.ImageCompression;
 				}
 
 				return 0;
@@ -48,6 +68,14 @@ namespace Epsitec.Common.Document.Settings
 				{
 					case "DefaultUnit":
 						this.document.Modifier.RealUnitDimension = (RealUnitType) value;
+						break;
+
+					case "ImageDepth":
+						this.document.Printer.ImageDepth = value;
+						break;
+
+					case "ImageCompression":
+						this.document.Printer.ImageCompression = (ImageCompression) value;
 						break;
 				}
 			}
@@ -80,31 +108,149 @@ namespace Epsitec.Common.Document.Settings
 
 		public void InitCombo(TextFieldCombo combo)
 		{
+			combo.Items.Clear();
+
+			for ( int rank=0 ; rank<10 ; rank++ )
+			{
+				int type = this.RankToType(rank);
+				if ( type == -1 )  break;
+				combo.Items.Add(this.TypeToString(type));
+			}
+
+			if ( combo.Items.Count == 0 )
+			{
+				combo.SelectedIndex = 0;
+			}
+			else
+			{
+				int sel = this.TypeToRank(this.Value);
+				if ( sel == -1 )
+				{
+					this.Value = this.RankToType(0);
+					sel = this.TypeToRank(this.Value);
+				}
+				combo.SelectedIndex = sel;
+			}
+
+			combo.SetEnabled(combo.Items.Count > 1);
+		}
+
+		protected string TypeToString(int type)
+		{
 			switch ( this.name )
 			{
 				case "DefaultUnit":
-					combo.Items.Add("Millimètres");
-					combo.Items.Add("Centimètres");
-					combo.Items.Add("Pouces");
-					combo.SelectedIndex = Integer.TypeToInt(this.document.Modifier.RealUnitDimension);
+					RealUnitType unit = (RealUnitType) type;
+					if ( unit == RealUnitType.DimensionMillimeter )  return "Millimètres";
+					if ( unit == RealUnitType.DimensionCentimeter )  return "Centimètres";
+					if ( unit == RealUnitType.DimensionInch       )  return "Pouces";
+					break;
+
+				case "ImageDepth":
+					if ( type ==  2 )  return "Noir et blanc (1 bit)";
+					if ( type ==  8 )  return "256 (8 bits)";
+					if ( type == 16 )  return "65'000 (16 bits)";
+					if ( type == 24 )  return "16 millions (24 bits)";
+					if ( type == 32 )  return "Avec transparence (32 bits)";
+					break;
+
+				case "ImageCompression":
+					ImageCompression ic = (ImageCompression) type;
+					if ( ic == ImageCompression.None      )  return "Aucune";
+					if ( ic == ImageCompression.Lzw       )  return "LZW";
+					if ( ic == ImageCompression.Rle       )  return "RLE";
+					if ( ic == ImageCompression.FaxGroup3 )  return "Fax Group 3";
+					if ( ic == ImageCompression.FaxGroup4 )  return "Fax Group 4";
 					break;
 			}
+			return "";
 		}
 
-		public static int TypeToInt(RealUnitType type)
+		public int TypeToRank(int type)
 		{
-			if ( type == RealUnitType.DimensionMillimeter )  return 0;
-			if ( type == RealUnitType.DimensionCentimeter )  return 1;
-			if ( type == RealUnitType.DimensionInch       )  return 2;
+			for ( int rank=0 ; rank<10 ; rank++ )
+			{
+				if ( this.RankToType(rank) == type )  return rank;
+			}
 			return -1;
 		}
 
-		public static RealUnitType IntToType(int rank)
+		public int RankToType(int rank)
 		{
-			if ( rank == 0 )  return RealUnitType.DimensionMillimeter;
-			if ( rank == 1 )  return RealUnitType.DimensionCentimeter;
-			if ( rank == 2 )  return RealUnitType.DimensionInch;
-			return RealUnitType.None;
+			switch ( this.name )
+			{
+				case "DefaultUnit":
+					if ( rank == 0 )  return (int) RealUnitType.DimensionMillimeter;
+					if ( rank == 1 )  return (int) RealUnitType.DimensionCentimeter;
+					if ( rank == 2 )  return (int) RealUnitType.DimensionInch;
+					return -1;
+
+				case "ImageDepth":
+					return this.RankToTypeImageDepth(rank);
+
+				case "ImageCompression":
+					return this.RankToTypeImageCompression(rank);
+			}
+			return -1;
+		}
+
+		public int RankToTypeImageDepth(int rank)
+		{
+			switch ( this.document.Printer.ImageFormat )
+			{
+				case ImageFormat.Bmp:
+					if ( rank == 0 ) return 24;
+					break;
+
+				case ImageFormat.Gif:
+					if ( rank == 0 ) return 8;
+					break;
+
+				case ImageFormat.Tiff:
+					if ( rank == 0 ) return 24;
+					if ( rank == 1 ) return 32;
+					break;
+
+				case ImageFormat.Png:
+					if ( rank == 0 ) return 24;
+					if ( rank == 1 ) return 32;
+					break;
+
+				case ImageFormat.Jpeg:
+					if ( rank == 0 ) return 24;
+					break;
+			}
+
+			return -1;
+		}
+
+		public int RankToTypeImageCompression(int rank)
+		{
+			switch ( this.document.Printer.ImageFormat )
+			{
+				case ImageFormat.Bmp:
+					if ( rank == 0 )  return (int) ImageCompression.None;
+					break;
+
+				case ImageFormat.Gif:
+					break;
+
+				case ImageFormat.Tiff:
+					if ( rank == 0 )  return (int) ImageCompression.None;
+					if ( rank == 1 )  return (int) ImageCompression.Lzw;
+					//?if ( rank == 2 )  return (int) ImageCompression.Rle;
+					//?if ( rank == 3 )  return (int) ImageCompression.FaxGroup3;
+					//?if ( rank == 4 )  return (int) ImageCompression.FaxGroup4;
+					break;
+
+				case ImageFormat.Png:
+					break;
+
+				case ImageFormat.Jpeg:
+					break;
+			}
+
+			return -1;
 		}
 
 

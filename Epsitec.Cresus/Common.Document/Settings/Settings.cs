@@ -17,7 +17,7 @@ namespace Epsitec.Common.Document.Settings
 			this.settings = new System.Collections.ArrayList();
 			this.CreateDefault();
 
-			this.guides = new System.Collections.ArrayList();
+			this.guides = new UndoableList(this.document, UndoableListType.Guides);
 
 			this.printInfo = new PrintInfo();
 		}
@@ -37,8 +37,14 @@ namespace Epsitec.Common.Document.Settings
 
 			this.CreateDefaultBool("GuidesActive");
 			this.CreateDefaultBool("GuidesShow");
+			this.CreateDefaultBool("GuidesMouse");
+
+			this.CreateDefaultBool("RulersShow");
 
 			this.CreateDefaultPoint("DuplicateMove");
+			this.CreateDefaultPoint("ArrowMove");
+			this.CreateDefaultDouble("ArrowMoveMul");
+			this.CreateDefaultDouble("ArrowMoveDiv");
 			this.CreateDefaultInteger("DefaultUnit");
 
 			this.CreateDefaultBool("PrintAutoLandscape");
@@ -46,6 +52,12 @@ namespace Epsitec.Common.Document.Settings
 			this.CreateDefaultBool("PrintDraft");
 			this.CreateDefaultBool("PrintAA");
 			this.CreateDefaultDouble("PrintDpi");
+
+			this.CreateDefaultDouble("ImageDpi");
+			this.CreateDefaultInteger("ImageDepth");
+			this.CreateDefaultInteger("ImageCompression");
+			this.CreateDefaultDouble("ImageQuality");
+			this.CreateDefaultDouble("ImageAA");
 		}
 
 		protected void CreateDefaultBool(string name)
@@ -136,10 +148,24 @@ namespace Epsitec.Common.Document.Settings
 			}
 		}
 
+		// Guide sélectionné.
+		public int GuidesSelected
+		{
+			get
+			{
+				return this.guides.Selected;
+			}
+
+			set
+			{
+				this.guides.Selected = value;
+			}
+		}
+
 		// Supprime tous les guides.
 		public void GuidesReset()
 		{
-			this.guides = new System.Collections.ArrayList();
+			this.guides.Clear();
 			this.document.Notifier.NotifyGuidesChanged();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 			this.document.IsDirtySerialize = true;
@@ -185,7 +211,7 @@ namespace Epsitec.Common.Document.Settings
 		public virtual void GetObjectData(SerializationInfo info, StreamingContext context)
 		{
 			info.AddValue("Settings", this.settings);
-			info.AddValue("Guides", this.guides);
+			info.AddValue("GuidesList", this.guides);
 			info.AddValue("PrintInfo", this.printInfo);
 		}
 
@@ -194,7 +220,15 @@ namespace Epsitec.Common.Document.Settings
 		{
 			this.document = Document.ReadDocument;
 			this.settings = (System.Collections.ArrayList) info.GetValue("Settings", typeof(System.Collections.ArrayList));
-			this.guides = (System.Collections.ArrayList) info.GetValue("Guides", typeof(System.Collections.ArrayList));
+
+			if ( Support.Serialization.Helper.FindElement(info, "GuidesList") )
+			{
+				this.guides = (UndoableList) info.GetValue("GuidesList", typeof(UndoableList));
+			}
+			else
+			{
+				this.guides = new UndoableList(this.document, UndoableListType.Guides);
+			}
 
 			if ( Support.Serialization.Helper.FindElement(info, "PrintInfo") )
 			{
@@ -216,7 +250,7 @@ namespace Epsitec.Common.Document.Settings
 
 		protected Document						document;
 		protected System.Collections.ArrayList	settings;
-		protected System.Collections.ArrayList	guides;
+		protected UndoableList					guides;
 		protected PrintInfo						printInfo;
 	}
 }

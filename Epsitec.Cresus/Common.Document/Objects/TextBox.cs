@@ -148,7 +148,7 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(rank).Position = pos;
 			}
 
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Document.Objects
 			this.HandleAdd(new Point(p2.X, p1.Y), HandleType.Primary);  // rang = 3
 
 			this.HandlePropertiesCreate();
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -551,12 +551,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				if ( this.IsSelected || this.isCreating )
 				{
-					if ( this.PropertyLineMode.Width == 0.0 ||
-						 this.PropertyLineColor.Color1.A == 0.0 )
-					{
-						this.PropertyLineMode.AddOutline(graphics, path, 1.0/drawingContext.ScaleX);
-						graphics.RenderSolid(drawingContext.HiliteOutlineColor);
-					}
+					this.PropertyLineMode.DrawPathDash(graphics, drawingContext, path, this.PropertyLineColor);
 				}
 
 				if ( this.IsHilite && drawingContext.IsActive )

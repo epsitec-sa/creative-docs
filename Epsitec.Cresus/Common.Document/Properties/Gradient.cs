@@ -251,8 +251,8 @@ namespace Epsitec.Common.Document.Properties
 
 			set
 			{
-				value = System.Math.Max(value, -1.0);
-				value = System.Math.Min(value,  1.0);
+				value = System.Math.Max(value, -5.0);
+				value = System.Math.Min(value,  5.0);
 				
 				if ( this.middle != value )
 				{
@@ -373,9 +373,14 @@ namespace Epsitec.Common.Document.Properties
 			}
 			if ( this.middle != 0.0 )
 			{
-				double delta = System.Math.Sin(System.Math.PI*progress)*this.middle*0.45;
-				Point p = Transform.RotatePointDeg(45, new Point(progress*System.Math.Sqrt(2), delta));
-				progress = p.Y;
+				if ( this.middle > 0.0 )
+				{
+					progress = 1.0-System.Math.Pow(1.0-progress, 1.0+this.middle);
+				}
+				else
+				{
+					progress = System.Math.Pow(progress, 1.0-this.middle);
+				}
 			}
 			return progress;
 		}

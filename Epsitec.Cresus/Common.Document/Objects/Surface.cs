@@ -87,7 +87,7 @@ namespace Epsitec.Common.Document.Objects
 			else if ( rank == 3 )  this.MoveCorner(pos, 3, 1,0, 2);
 			else                   this.Handle(rank).Position = pos;
 
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -99,6 +99,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainFixType(ConstrainType.Square);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 1
+			this.isCreating = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -122,6 +123,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
 			drawingContext.ConstrainDelStarting();
+			this.isCreating = false;
 
 			// Crée les 2 autres poignées dans les coins opposés.
 			Point p1 = this.Handle(0).Position;
@@ -130,7 +132,7 @@ namespace Epsitec.Common.Document.Objects
 			this.HandleAdd(new Point(p2.X, p1.Y), HandleType.Primary);  // rang = 3
 
 			this.HandlePropertiesCreate();
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -506,10 +508,10 @@ namespace Epsitec.Common.Document.Objects
 			Point p41 = Point.Scale(p4,p1, 0.5);
 
 			path.MoveTo(p12);
-			this.PathArc(path, p12, p2, p23);
-			this.PathArc(path, p23, p3, p34);
-			this.PathArc(path, p34, p4, p41);
-			this.PathArc(path, p41, p1, p12);
+			path.ArcTo(p2, p23);
+			path.ArcTo(p3, p34);
+			path.ArcTo(p4, p41);
+			path.ArcTo(p1, p12);
 			path.Close();
 		}
 
@@ -523,13 +525,7 @@ namespace Epsitec.Common.Document.Objects
 			Point d = Point.Scale(corner, next, r1);
 			Point b = Point.Scale(d, a, r2);
 			Point c = Point.Scale(next, center, r2);
-			this.PathArc(path, a,b,c);
-		}
-
-		// Ajoute le chemin d'un quart d'arc.
-		protected void PathArc(Path path, Point current, Point corner, Point next)
-		{
-			path.CurveTo(Point.Scale(current,corner,0.56), Point.Scale(next,corner,0.56), next);
+			path.ArcTo(b, c);
 		}
 
 		protected double Expo(double value, double factor)
@@ -572,6 +568,11 @@ namespace Epsitec.Common.Document.Objects
 				this.PropertyLineMode.AddOutline(graphics, outline, drawingContext.HiliteSize);
 				graphics.RenderSolid(drawingContext.HiliteOutlineColor);
 			}
+
+			if ( this.IsSelected || this.isCreating )
+			{
+				this.PropertyLineMode.DrawPathDash(graphics, drawingContext, outline, this.PropertyLineColor);
+			}
 		}
 
 		// Imprime l'objet.
@@ -597,8 +598,9 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Retourne le chemin géométrique de l'objet.
-		public override Path GetPath()
+		public override Path GetPath(int rank)
 		{
+			if ( rank > 0 )  return null;
 			Path surface, outline;
 			this.PathBuild(null, out surface, out outline);
 			return outline;

@@ -40,6 +40,7 @@ namespace Epsitec.Common.Document.Settings
 			{
 				if ( this.type != value )
 				{
+					this.OpletQueueInsert();
 					this.type = value;
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 					this.document.IsDirtySerialize = true;
@@ -58,6 +59,7 @@ namespace Epsitec.Common.Document.Settings
 			{
 				if ( this.position != value )
 				{
+					this.OpletQueueInsert();
 					this.position = value;
 					this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer);
 					this.document.IsDirtySerialize = true;
@@ -119,6 +121,37 @@ namespace Epsitec.Common.Document.Settings
 				}
 				return 0.0;
 			}
+
+			set
+			{
+				Size size = this.document.Size;
+				switch ( this.type )
+				{
+					case GuideType.VerticalLeft:
+						this.Position = value;
+						break;
+
+					case GuideType.VerticalCenter:
+						this.Position = size.Width/2 - value;
+						break;
+
+					case GuideType.VerticalRight:
+						this.Position = size.Width - value;
+						break;
+
+					case GuideType.HorizontalBottom:
+						this.Position = value;
+						break;
+
+					case GuideType.HorizontalCenter:
+						this.Position = size.Height/2 - value;
+						break;
+
+					case GuideType.HorizontalTop:
+						this.Position = size.Height - value;
+						break;
+				}
+			}
 		}
 
 		public void CopyTo(Guide dst)
@@ -154,6 +187,53 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
+		#region OpletGuide
+		protected void OpletQueueInsert()
+		{
+			if ( !this.document.Modifier.OpletQueueEnable )  return;
+			OpletGuide oplet = new OpletGuide(this);
+			this.document.Modifier.OpletQueue.Insert(oplet);
+		}
+
+		protected class OpletGuide : AbstractOplet
+		{
+			public OpletGuide(Guide host)
+			{
+				this.host = host;
+
+				this.initial = new Guide(this.host.document);
+				this.host.CopyTo(this.initial);
+			}
+
+			protected void Swap()
+			{
+				Guide temp = new Guide(this.host.document);
+				this.host.CopyTo(temp);
+				this.initial.CopyTo(this.host);
+				temp.CopyTo(this.initial);
+
+				this.host.document.Notifier.NotifyGuidesChanged();
+				this.host.document.Notifier.NotifyArea(this.host.document.Modifier.ActiveViewer);
+			}
+
+			public override IOplet Undo()
+			{
+				this.Swap();
+				return this;
+			}
+
+			public override IOplet Redo()
+			{
+				this.Swap();
+				return this;
+			}
+
+			protected Guide					host;
+			protected Guide					initial;
+		}
+		#endregion
+
+		
 		#region Serialization
 		// Sérialise le repère.
 		public void GetObjectData(SerializationInfo info, StreamingContext context)
@@ -172,9 +252,11 @@ namespace Epsitec.Common.Document.Settings
 		#endregion
 
 
-		protected Document			document;
-		protected GuideType			type;
-		protected double			position;
-		protected bool				hilite;
+		public static readonly double	Undefined = -1000000;
+
+		protected Document				document;
+		protected GuideType				type;
+		protected double				position;
+		protected bool					hilite;
 	}
 }

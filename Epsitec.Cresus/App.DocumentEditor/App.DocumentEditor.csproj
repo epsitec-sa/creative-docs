@@ -220,6 +220,18 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\Arrow.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ArrowDup.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ArrowPlus.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Bezier.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -280,6 +292,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\Export.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Fragment.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -329,6 +345,10 @@
                 />
                 <File
                     RelPath = "Images\Image.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Import.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -425,6 +445,10 @@
                 />
                 <File
                     RelPath = "Images\New.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Nothing.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -568,6 +592,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\Rulers.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Save.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -681,6 +709,10 @@
                 />
                 <File
                     RelPath = "Images\SwapData.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\SwapDataV.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

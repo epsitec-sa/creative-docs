@@ -56,6 +56,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					this.InsertOpletType();
 					this.layerType = value;
+					this.document.IsDirtySerialize = true;
 				}
 			}
 		}
@@ -73,6 +74,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					this.InsertOpletType();
 					this.layerPrint = value;
+					this.document.IsDirtySerialize = true;
 				}
 			}
 		}

@@ -86,7 +86,7 @@ namespace Epsitec.Common.Document.Objects
 			else if ( rank == 3 )  this.MoveCorner(pos, 3, 1,0, 2);
 			else                   this.Handle(rank).Position = pos;
 
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -99,6 +99,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainFixType(ConstrainType.Square);
 			this.HandleAdd(pos, HandleType.Primary);
 			this.HandleAdd(pos, HandleType.Primary);
+			this.isCreating = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -122,6 +123,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
 			drawingContext.ConstrainDelStarting();
+			this.isCreating = false;
 
 			// Crée les 2 autres poignées dans les coins opposés.
 			Point p1 = this.Handle(0).Position;
@@ -130,7 +132,7 @@ namespace Epsitec.Common.Document.Objects
 			this.HandleAdd(new Point(p2.X, p1.Y), HandleType.Primary);  // rang = 3
 
 			this.HandlePropertiesCreate();
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -245,7 +247,6 @@ namespace Epsitec.Common.Document.Objects
 		// Crée le chemin d'une ellipse inscrite dans un quadrilatère.
 		protected Path PathEllipse(DrawingContext drawingContext, Point p1, Point p2, Point p3, Point p4)
 		{
-#if true
 			Point center;
 			double rx, ry, rot;
 			this.ComputeGeometry(out center, out rx, out ry, out rot);
@@ -285,34 +286,9 @@ namespace Epsitec.Common.Document.Objects
 			rotPath.DefaultZoom = zoom;
 			Transform rotate = new Transform();
 			rotate.RotateDeg(rot, center);
-			rotPath.Append(rightPath, rotate, zoom);
+			rotPath.Append(rightPath, rotate, 0.0);
 			rightPath.Dispose();
 			return rotPath;
-#else
-			Point p12 = (p1+p2)/2;
-			Point p23 = (p2+p3)/2;
-			Point p34 = (p3+p4)/2;
-			Point p41 = (p4+p1)/2;
-
-			Path path = new Path();
-
-			if ( drawingContext == null )
-			{
-				path.DefaultZoom = 10.0;
-			}
-			else
-			{
-				path.DefaultZoom = drawingContext.ScaleX;
-			}
-
-			path.MoveTo(p12);
-			path.CurveTo(Point.Scale(p12, p2, 0.56), Point.Scale(p23, p2, 0.56), p23);
-			path.CurveTo(Point.Scale(p23, p3, 0.56), Point.Scale(p34, p3, 0.56), p34);
-			path.CurveTo(Point.Scale(p34, p4, 0.56), Point.Scale(p41, p4, 0.56), p41);
-			path.CurveTo(Point.Scale(p41, p1, 0.56), Point.Scale(p12, p1, 0.56), p12);
-			path.Close();
-			return path;
-#endif
 		}
 
 		// Crée le chemin de l'objet.
@@ -362,6 +338,11 @@ namespace Epsitec.Common.Document.Objects
 				this.PropertyLineMode.AddOutline(graphics, path, drawingContext.HiliteSize);
 				graphics.RenderSolid(drawingContext.HiliteOutlineColor);
 			}
+
+			if ( this.IsSelected || this.isCreating )
+			{
+				this.PropertyLineMode.DrawPathDash(graphics, drawingContext, path, this.PropertyLineColor);
+			}
 		}
 
 		// Imprime l'objet.
@@ -386,8 +367,9 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Retourne le chemin géométrique de l'objet.
-		public override Path GetPath()
+		public override Path GetPath(int rank)
 		{
+			if ( rank > 0 )  return null;
 			return this.PathBuild(null);
 		}
 

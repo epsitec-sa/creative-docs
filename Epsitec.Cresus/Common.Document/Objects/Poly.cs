@@ -97,7 +97,7 @@ namespace Epsitec.Common.Document.Objects
 
 			this.Handle(rank).Position = pos;
 
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void MoveGlobalProcess(Selector selector)
 		{
 			base.MoveGlobalProcess(selector);
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -188,8 +188,7 @@ namespace Epsitec.Common.Document.Objects
 				handle.Type = HandleType.Primary;
 				handle.IsVisible = true;
 				this.HandleInsert(rank+1, handle);
-				this.HandlePropertiesUpdateVisible();
-				this.HandlePropertiesUpdatePosition();
+				this.HandlePropertiesUpdate();
 			}
 
 			if ( cmd == "HandleDelete" )
@@ -197,8 +196,7 @@ namespace Epsitec.Common.Document.Objects
 				this.HandleDelete(handleRank);
 				// Il doit toujours y avoir une poignée de départ !
 				this.Handle(0).Type = HandleType.Starting;
-				this.HandlePropertiesUpdateVisible();
-				this.HandlePropertiesUpdatePosition();
+				this.HandlePropertiesUpdate();
 			}
 
 			if ( cmd == "HandleSym" )
@@ -328,7 +326,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainDelStarting();
 
 			this.HandlePropertiesCreate();
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			return true;
 		}
 
@@ -354,7 +352,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainDelStarting();
 
 			this.HandlePropertiesCreate();
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			return true;
 		}
 
@@ -682,6 +680,21 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.tempLine.DrawGeometry(graphics, drawingContext);
 			}
+
+			if ( this.IsSelected || this.isCreating )
+			{
+				this.PropertyLineMode.DrawPathDash(graphics, drawingContext, pathLine, this.PropertyLineColor);
+
+				if ( outlineStart )
+				{
+					this.PropertyLineMode.DrawPathDash(graphics, drawingContext, pathStart, this.PropertyLineColor);
+				}
+
+				if ( outlineEnd )
+				{
+					this.PropertyLineMode.DrawPathDash(graphics, drawingContext, pathEnd, this.PropertyLineColor);
+				}
+			}
 		}
 
 		// Imprime l'objet.
@@ -730,8 +743,9 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Retourne le chemin géométrique de l'objet.
-		public override Path GetPath()
+		public override Path GetPath(int rank)
 		{
+			if ( rank > 0 )  return null;
 			Path pathStart;  bool outlineStart, surfaceStart;
 			Path pathEnd;    bool outlineEnd,   surfaceEnd;
 			Path pathLine;
@@ -742,12 +756,12 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( outlineStart || surfaceStart )
 			{
-				pathLine.Append(pathStart);
+				pathLine.Append(pathStart, 0.0);
 			}
 
 			if ( outlineEnd || surfaceEnd )
 			{
-				pathLine.Append(pathEnd);
+				pathLine.Append(pathEnd, 0.0);
 			}
 
 			return pathLine;

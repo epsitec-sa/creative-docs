@@ -253,5 +253,14 @@ namespace Epsitec.Common.Document
 			Point p = Point.Projection(p1, corner, p2);
 			return Point.Distance(p, corner) < 0.00001;
 		}
+
+
+		// Teste si deux points sont (presque) identiques.
+		public static bool Compare(Point a, Point b)
+		{
+			double dx = System.Math.Abs(a.X-b.X);
+			double dy = System.Math.Abs(a.Y-b.Y);
+			return ( dx < 0.0000001 && dy < 0.0000001 );
+		}
 	}
 }

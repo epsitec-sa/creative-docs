@@ -40,8 +40,48 @@ namespace Epsitec.Common.Document.Containers
 			this.colorSelector.TabIndex = 100;
 			this.colorSelector.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
 			this.colorSelector.Parent = this;
+
+			// Crée une fois pour toutes toutes les instances possibles des
+			// panneaux pour les propriétés.
+			int total = 0;
+			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
+			{
+				Properties.Type type = (Properties.Type) value;
+				total ++;
+			}
+			this.panelsList = new Panels.Abstract[total];
+
+			foreach ( int value in System.Enum.GetValues(typeof(Properties.Type)) )
+			{
+				Properties.Type type = (Properties.Type) value;
+				Properties.Abstract prop = Properties.Abstract.NewProperty(this.document, type);
+				if ( prop == null )  continue;
+				Panels.Abstract panel = prop.CreatePanel(this.document);
+				panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
+				this.panelsList[value] = panel;
+			}
 		}
 		
+		protected override void Dispose(bool disposing)
+		{
+			if ( disposing )
+			{
+				if ( this.panelsList != null )
+				{
+					for ( int i=0 ; i<this.panelsList.Length ; i++ )
+					{
+						if ( this.panelsList[i] == null )  continue;
+						this.panelsList[i].OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
+						this.panelsList[i].Dispose();
+						this.panelsList[i] = null;
+					}
+					this.panelsList = null;
+				}
+			}
+
+			base.Dispose(disposing);
+		}
+
 		// Crée la toolbar pour les sélections.
 		protected void CreateSelectorToolBar()
 		{
@@ -144,12 +184,6 @@ namespace Epsitec.Common.Document.Containers
 
 			foreach ( Widget widget in this.scrollable.Panel.Children.Widgets )
 			{
-				if ( widget is Panels.Abstract )
-				{
-					Panels.Abstract panel = widget as Panels.Abstract;
-					panel.OriginColorChanged -= new EventHandler(this.HandleOriginColorChanged);
-				}
-
 				widget.Parent = null; // retire de son parent
 			}
 
@@ -199,14 +233,12 @@ namespace Epsitec.Common.Document.Containers
 					}
 					lastBack = Properties.Abstract.BackgroundIntensity(property.Type);
 
-					Panels.Abstract panel = property.CreatePanel(this.document);
+					Panels.Abstract panel = this.panelsList[(int)property.Type];
 					if ( panel == null )  continue;
 					panel.Property = property;
 
 					panel.IsExtendedSize = this.document.Modifier.IsPropertiesExtended(property.Type);
 					panel.IsLayoutDirect = (property.Type == Properties.Type.Name);
-
-					panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
 
 					panel.TabIndex = index++;
 					panel.TabNavigation = Widget.TabNavigationMode.ActivateOnTab | Widget.TabNavigationMode.ForwardToChildren | Widget.TabNavigationMode.ForwardOnly;
@@ -330,19 +362,20 @@ namespace Epsitec.Common.Document.Containers
 		}
 
 
-		protected HToolBar					selectorToolBar;
-		protected IconButton				selectorAuto;
-		protected IconButton				selectorIndividual;
-		protected IconButton				selectorZoom;
-		protected IconButton				selectorStretch;
-		protected IconButton				selectorTotal;
-		protected IconButton				selectorPartial;
-		protected CheckButton				detailButton;
-		protected Scrollable				scrollable;
-		protected ColorSelector				colorSelector;
-		protected Panels.Abstract			originColorPanel = null;
-		protected Properties.Type			originColorType = Properties.Type.None;
-		protected int						originColorRank = -1;
-		protected bool						ignoreColorChanged = false;
+		protected HToolBar						selectorToolBar;
+		protected IconButton					selectorAuto;
+		protected IconButton					selectorIndividual;
+		protected IconButton					selectorZoom;
+		protected IconButton					selectorStretch;
+		protected IconButton					selectorTotal;
+		protected IconButton					selectorPartial;
+		protected CheckButton					detailButton;
+		protected Scrollable					scrollable;
+		protected ColorSelector					colorSelector;
+		protected Panels.Abstract				originColorPanel = null;
+		protected Properties.Type				originColorType = Properties.Type.None;
+		protected int							originColorRank = -1;
+		protected bool							ignoreColorChanged = false;
+		protected Panels.Abstract[]				panelsList;
 	}
 }

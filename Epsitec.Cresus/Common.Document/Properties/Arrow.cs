@@ -42,13 +42,13 @@ namespace Epsitec.Common.Document.Properties
 			this.arrowType[1] = ArrowType.Right;
 			if ( this.document.Type == DocumentType.Pictogram )
 			{
-				this.length[0] = 3.0;
-				this.length[1] = 3.0;
+				this.length[0] = 10.0;
+				this.length[1] = 10.0;
 			}
 			else
 			{
-				this.length[0] = 50.0;
-				this.length[1] = 50.0;
+				this.length[0] = 100.0;
+				this.length[1] = 100.0;
 			}
 			this.effect1[0] = 0.5;
 			this.effect1[1] = 0.5;

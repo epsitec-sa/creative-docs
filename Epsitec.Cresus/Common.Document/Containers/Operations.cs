@@ -244,6 +244,11 @@ namespace Epsitec.Common.Document.Containers
 			this.toolBarShare.Dock = DockStyle.Top;
 			this.toolBarShare.DockMargins = new Margins(0, 0, 0, 10);
 
+			this.buttonShareSpaceX = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareSpaceX.icon");
+			this.buttonShareSpaceX.Clicked += new MessageEventHandler(this.HandleButtonShareSpaceX);
+			ToolTip.Default.SetToolTip(this.buttonShareSpaceX, "Distribution espacée horizontalement");
+			this.toolBarShare.Items.Add(this.buttonShareSpaceX);
+
 			this.buttonShareLeft = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareLeft.icon");
 			this.buttonShareLeft.Clicked += new MessageEventHandler(this.HandleButtonShareLeft);
 			ToolTip.Default.SetToolTip(this.buttonShareLeft, "Distribution sur la gauche");
@@ -254,17 +259,17 @@ namespace Epsitec.Common.Document.Containers
 			ToolTip.Default.SetToolTip(this.buttonShareCenterX, "Distribution centrée horizontalement");
 			this.toolBarShare.Items.Add(this.buttonShareCenterX);
 
-			this.buttonShareSpaceX = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareSpaceX.icon");
-			this.buttonShareSpaceX.Clicked += new MessageEventHandler(this.HandleButtonShareSpaceX);
-			ToolTip.Default.SetToolTip(this.buttonShareSpaceX, "Distribution espacée horizontalement");
-			this.toolBarShare.Items.Add(this.buttonShareSpaceX);
-
 			this.buttonShareRight = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareRight.icon");
 			this.buttonShareRight.Clicked += new MessageEventHandler(this.HandleButtonShareRight);
 			ToolTip.Default.SetToolTip(this.buttonShareRight, "Distribution sur la droite");
 			this.toolBarShare.Items.Add(this.buttonShareRight);
 
 			this.toolBarShare.Items.Add(new IconSeparator());
+
+			this.buttonShareSpaceY = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareSpaceY.icon");
+			this.buttonShareSpaceY.Clicked += new MessageEventHandler(this.HandleButtonShareSpaceY);
+			ToolTip.Default.SetToolTip(this.buttonShareSpaceY, "Distribution espacée verticalement");
+			this.toolBarShare.Items.Add(this.buttonShareSpaceY);
 
 			this.buttonShareTop = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareTop.icon");
 			this.buttonShareTop.Clicked += new MessageEventHandler(this.HandleButtonShareTop);
@@ -275,11 +280,6 @@ namespace Epsitec.Common.Document.Containers
 			this.buttonShareCenterY.Clicked += new MessageEventHandler(this.HandleButtonShareCenterY);
 			ToolTip.Default.SetToolTip(this.buttonShareCenterY, "Distribution centrée verticalement");
 			this.toolBarShare.Items.Add(this.buttonShareCenterY);
-
-			this.buttonShareSpaceY = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareSpaceY.icon");
-			this.buttonShareSpaceY.Clicked += new MessageEventHandler(this.HandleButtonShareSpaceY);
-			ToolTip.Default.SetToolTip(this.buttonShareSpaceY, "Distribution espacée verticalement");
-			this.toolBarShare.Items.Add(this.buttonShareSpaceY);
 
 			this.buttonShareBottom = new IconButton("manifest:Epsitec.App.DocumentEditor.Images.ShareBottom.icon");
 			this.buttonShareBottom.Clicked += new MessageEventHandler(this.HandleButtonShareBottom);

@@ -98,7 +98,7 @@ namespace Epsitec.Common.Document.Objects
 			else if ( rank == 3 )  this.MoveCorner(pos, 3, 1,0, 2);
 			else                   this.Handle(rank).Position = pos;
 
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -110,6 +110,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainFixType(ConstrainType.Square);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 1
+			this.isCreating = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -133,6 +134,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
 			drawingContext.ConstrainDelStarting();
+			this.isCreating = false;
 
 			// Crée les 2 autres poignées dans les coins opposés.
 			Drawing.Rectangle rect = Drawing.Rectangle.FromCorners(this.Handle(0).Position, this.Handle(1).Position);
@@ -144,7 +146,7 @@ namespace Epsitec.Common.Document.Objects
 			this.HandleAdd(new Point(p2.X, p1.Y), HandleType.Primary);  // rang = 3
 
 			this.HandlePropertiesCreate();
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -168,7 +170,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				Path path = paths.Get(i);
 				if ( path == null )  continue;
-				all.Append(path);
+				all.Append(path, 0.0);
 			}
 
 			this.bboxThin = Drawing.Rectangle.Empty;
@@ -430,40 +432,40 @@ namespace Epsitec.Common.Document.Objects
 			paths.FrontLeft.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
 			paths.FrontLeft.MoveTo(p1b);
 			paths.FrontLeft.LineTo(p2b);
-			this.PathArc(paths.FrontLeft, p2b, p2bb, p23b);
-			this.PathArc(paths.FrontLeft, p23b, p3bb, p3b);
+			paths.FrontLeft.ArcTo(p2bb, p23b);
+			paths.FrontLeft.ArcTo(p3bb, p3b);
 			paths.FrontLeft.LineTo(p4b);
-			this.PathArc(paths.FrontLeft, p4b, p4, p14);
-			this.PathArc(paths.FrontLeft, p14, p1, p1b);
+			paths.FrontLeft.ArcTo(p4, p14);
+			paths.FrontLeft.ArcTo(p1, p1b);
 			paths.FrontLeft.Close();
 
 			paths.BackRight = new Path();
 			paths.BackRight.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
 			paths.BackRight.MoveTo(p1b);
 			paths.BackRight.LineTo(p2b);
-			this.PathArc(paths.BackRight, p2b, p2, p23);
-			this.PathArc(paths.BackRight, p23, p3, p3b);
+			paths.BackRight.ArcTo(p2, p23);
+			paths.BackRight.ArcTo(p3, p3b);
 			paths.BackRight.LineTo(p4b);
-			this.PathArc(paths.BackRight, p4b, p4bb, p14b);
-			this.PathArc(paths.BackRight, p14b, p1bb, p1b);
+			paths.BackRight.ArcTo(p4bb, p14b);
+			paths.BackRight.ArcTo(p1bb, p1b);
 			paths.BackRight.Close();
 
 			paths.Top = new Path();
 			paths.Top.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
 			paths.Top.MoveTo(p2b);
-			this.PathArc(paths.Top, p2b, p2, p23);
-			this.PathArc(paths.Top, p23, p3, p3b);
-			this.PathArc(paths.Top, p3b, p3bb, p23b);
-			this.PathArc(paths.Top, p23b, p2bb, p2b);
+			paths.Top.ArcTo(p2, p23);
+			paths.Top.ArcTo(p3, p3b);
+			paths.Top.ArcTo(p3bb, p23b);
+			paths.Top.ArcTo(p2bb, p2b);
 			paths.Top.Close();
 
 			paths.Bottom = new Path();
 			paths.Bottom.DefaultZoom = Properties.Abstract.DefaultZoom(drawingContext);
 			paths.Bottom.MoveTo(p1b);
-			this.PathArc(paths.Bottom, p1b, p1bb, p14b);
-			this.PathArc(paths.Bottom, p14b, p4bb, p4b);
-			this.PathArc(paths.Bottom, p4b, p4, p14);
-			this.PathArc(paths.Bottom, p14, p1, p1b);
+			paths.Bottom.ArcTo(p1bb, p14b);
+			paths.Bottom.ArcTo(p4bb, p4b);
+			paths.Bottom.ArcTo(p4, p14);
+			paths.Bottom.ArcTo(p1, p1b);
 			paths.Bottom.Close();
 		}
 
@@ -476,17 +478,11 @@ namespace Epsitec.Common.Document.Objects
 			Point p41 = Point.Scale(p4,p1, 0.5);
 
 			path.MoveTo(p12);
-			this.PathArc(path, p12, p2, p23);
-			this.PathArc(path, p23, p3, p34);
-			this.PathArc(path, p34, p4, p41);
-			this.PathArc(path, p41, p1, p12);
+			path.ArcTo(p2, p23);
+			path.ArcTo(p3, p34);
+			path.ArcTo(p4, p41);
+			path.ArcTo(p1, p12);
 			path.Close();
-		}
-
-		// Ajoute le chemin d'un quart d'arc.
-		protected void PathArc(Path path, Point current, Point corner, Point next)
-		{
-			path.CurveTo(Point.Scale(current,corner,0.56), Point.Scale(next,corner,0.56), next);
 		}
 
 		// Dessine l'objet.
@@ -529,6 +525,16 @@ namespace Epsitec.Common.Document.Objects
 					graphics.RenderSolid(drawingContext.HiliteOutlineColor);
 				}
 			}
+
+			if ( this.IsSelected || this.isCreating )
+			{
+				for ( int i=0 ; i<paths.Count ; i++ )
+				{
+					Path path = paths.Get(i);
+					if ( path == null )  continue;
+					this.PropertyLineMode.DrawPathDash(graphics, drawingContext, path, this.PropertyLineColor);
+				}
+			}
 		}
 
 		// Imprime l'objet.
@@ -567,15 +573,16 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Retourne le chemin géométrique de l'objet.
-		public override Path GetPath()
+		public override Path GetPath(int rank)
 		{
+			if ( rank > 0 )  return null;
 			Paths paths = this.PathBuild(null);
 			Path path = new Path();
 			for ( int i=0 ; i<paths.Count ; i++ )
 			{
 				Path p = paths.Get(i);
 				if ( p == null )  continue;
-				path.Append(p);
+				path.Append(p, 0.0);
 			}
 			return path;
 		}

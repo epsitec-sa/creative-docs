@@ -59,6 +59,13 @@ namespace Epsitec.Common.Document.Settings
 					this.textY = "Déplacement en haut";
 					this.link = false;
 					break;
+
+				case "ArrowMove":
+					this.textX = "Déplacement horizontal";
+					this.textY = "Déplacement vertical";
+					this.link = true;
+					this.factorMinValue = 0.0;
+					break;
 			}
 		}
 
@@ -100,6 +107,9 @@ namespace Epsitec.Common.Document.Settings
 
 					case "DuplicateMove":
 						return this.document.Modifier.DuplicateMove;
+
+					case "ArrowMove":
+						return this.document.Modifier.ArrowMove;
 				}
 
 				return new Drawing.Point(0,0);
@@ -127,6 +137,10 @@ namespace Epsitec.Common.Document.Settings
 
 					case "DuplicateMove":
 						this.document.Modifier.DuplicateMove = value;
+						break;
+
+					case "ArrowMove":
+						this.document.Modifier.ArrowMove = value;
 						break;
 				}
 			}

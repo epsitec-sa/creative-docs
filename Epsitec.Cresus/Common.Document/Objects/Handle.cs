@@ -325,6 +325,8 @@ namespace Epsitec.Common.Document.Objects
 					 this.type == HandleType.Starting ||
 					 this.type == HandleType.Ending   )
 				{
+					Drawing.Rectangle irect = rect;
+
 					if ( this.constrainType == HandleConstrainType.Smooth )
 					{
 						rect.Inflate(0.5/scaleX, 0.5/scaleY);
@@ -346,11 +348,14 @@ namespace Epsitec.Common.Document.Objects
 
 						rect.Deflate(0.5/scaleX, 0.5/scaleY);
 						graphics.AddRectangle(rect);
-						if ( this.type == HandleType.Ending )
-						{
-							graphics.AddLine(rect.BottomLeft, rect.TopRight);
-							graphics.AddLine(rect.BottomRight, rect.TopLeft);
-						}
+						graphics.RenderSolid(DrawingContext.ColorHandleOutline);
+					}
+
+					if ( this.type == HandleType.Ending )
+					{
+						irect.Deflate(0.5/scaleX, 0.5/scaleY);
+						graphics.AddLine(irect.BottomLeft, irect.TopRight);
+						graphics.AddLine(irect.BottomRight, irect.TopLeft);
 						graphics.RenderSolid(DrawingContext.ColorHandleOutline);
 					}
 				}
@@ -411,16 +416,10 @@ namespace Epsitec.Common.Document.Objects
 		// Dessine un cercle complet.
 		protected void PaintCircle(Graphics graphics, Drawing.Rectangle rect, Color color)
 		{
-			Point c = new Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
 			double rx = rect.Width/2;
 			double ry = rect.Height/2;
 			Path path = new Path();
-			path.MoveTo(c.X-rx, c.Y);
-			path.CurveTo(c.X-rx, c.Y+ry*0.56, c.X-rx*0.56, c.Y+ry, c.X, c.Y+ry);
-			path.CurveTo(c.X+rx*0.56, c.Y+ry, c.X+rx, c.Y+ry*0.56, c.X+rx, c.Y);
-			path.CurveTo(c.X+rx, c.Y-ry*0.56, c.X+rx*0.56, c.Y-ry, c.X, c.Y-ry);
-			path.CurveTo(c.X-rx*0.56, c.Y-ry, c.X-rx, c.Y-ry*0.56, c.X-rx, c.Y);
-			path.Close();
+			path.AppendCircle(rect.Center, rx, ry);
 			graphics.Rasterizer.AddSurface(path);
 			graphics.RenderSolid(color);
 		}

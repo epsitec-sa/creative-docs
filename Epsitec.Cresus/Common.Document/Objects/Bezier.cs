@@ -115,7 +115,7 @@ namespace Epsitec.Common.Document.Objects
 					this.Handle(i+2).Position += move;
 				}
 			}
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -123,10 +123,11 @@ namespace Epsitec.Common.Document.Objects
 		// Sélectionne toutes les poignées de l'objet dans un rectangle.
 		public override void Select(Drawing.Rectangle rect)
 		{
+			this.InsertOpletSelection();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 
-			int total = this.TotalMainHandle;
 			int sel = 0;
+			int total = this.TotalMainHandle;
 			for ( int i=0 ; i<total ; i+=3 )
 			{
 				if ( rect.Contains(this.Handle(i+1).Position) )
@@ -144,6 +145,10 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 			this.selected = ( sel > 0 );
+			this.edited = false;
+			this.globalSelected = false;
+			this.HandlePropertiesUpdate();
+			this.SplitProperties();
 
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 			this.document.Notifier.NotifySelectionChanged();
@@ -383,7 +388,7 @@ namespace Epsitec.Common.Document.Objects
 				if ( this.Handle(next+1).ConstrainType == HandleConstrainType.Symmetric )  this.Handle(next+1).ConstrainType = HandleConstrainType.Smooth;
 			}
 			this.dirtyBbox = true;
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 		}
 
 		// Supprime une poignée sans changer l'aspect de la courbe.
@@ -407,7 +412,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 			this.dirtyBbox = true;
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 		}
 
 		// Conversion d'un segement en ligne droite.
@@ -421,7 +426,7 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(rank+1).ConstrainType = HandleConstrainType.Corner;
 			this.Handle(next+1).ConstrainType = HandleConstrainType.Corner;
 			this.dirtyBbox = true;
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 		}
 
 		// Conversion d'un segement en courbe.
@@ -435,7 +440,7 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(rank+1).ConstrainType = HandleConstrainType.Corner;
 			this.Handle(next+1).ConstrainType = HandleConstrainType.Corner;
 			this.dirtyBbox = true;
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 		}
 
 
@@ -461,7 +466,7 @@ namespace Epsitec.Common.Document.Objects
 			pos = Point.Symmetry(this.Handle(rankPrimary).Position, pos);
 			this.Handle(rankSecondary).Position = pos;
 			this.dirtyBbox = true;
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 		}
 
 		// Cherche le rang du groupe "sps" précédent, en tenant compte
@@ -597,7 +602,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -607,7 +612,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void MoveGlobalProcess(Selector selector)
 		{
 			base.MoveGlobalProcess(selector);
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -631,7 +636,7 @@ namespace Epsitec.Common.Document.Objects
 				}
 			}
 
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -769,7 +774,7 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(1).Type = HandleType.Starting;
 				this.Deselect();
 				this.HandlePropertiesCreate();
-				this.HandlePropertiesUpdatePosition();
+				this.HandlePropertiesUpdate();
 				this.isCreating = false;
 				return true;
 			}
@@ -798,7 +803,7 @@ namespace Epsitec.Common.Document.Objects
 			this.Handle(1).Type = HandleType.Starting;
 			this.Deselect();
 			this.HandlePropertiesCreate();
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			return true;
 		}
 
@@ -1043,6 +1048,21 @@ namespace Epsitec.Common.Document.Objects
 
 				graphics.LineWidth = initialWidth;
 			}
+
+			if ( this.IsSelected || this.isCreating )
+			{
+				this.PropertyLineMode.DrawPathDash(graphics, drawingContext, pathLine, this.PropertyLineColor);
+
+				if ( outlineStart )
+				{
+					this.PropertyLineMode.DrawPathDash(graphics, drawingContext, pathStart, this.PropertyLineColor);
+				}
+
+				if ( outlineEnd )
+				{
+					this.PropertyLineMode.DrawPathDash(graphics, drawingContext, pathEnd, this.PropertyLineColor);
+				}
+			}
 		}
 
 		// Imprime l'objet.
@@ -1095,8 +1115,9 @@ namespace Epsitec.Common.Document.Objects
 
 		#region CreateFromPath
 		// Retourne le chemin géométrique de l'objet.
-		public override Path GetPath()
+		public override Path GetPath(int rank)
 		{
+			if ( rank > 0 )  return null;
 			Path pathStart;  bool outlineStart, surfaceStart;
 			Path pathEnd;    bool outlineEnd,   surfaceEnd;
 			Path pathLine;
@@ -1113,7 +1134,7 @@ namespace Epsitec.Common.Document.Objects
 			PathElement[] elements;
 			Point[] points;
 			path.GetElements(out elements, out points);
-			if ( elements.Length > 100 )  return false;
+			if ( elements.Length > 1000 )  return false;
 
 			int firstHandle = this.TotalMainHandle;
 			Point start = new Point(0, 0);
@@ -1132,6 +1153,7 @@ namespace Epsitec.Common.Document.Objects
 					case PathElement.MoveTo:
 						subRank ++;
 						current = points[i++];
+						firstHandle = this.TotalMainHandle;
 						if ( subPath == -1 || subPath == subRank )
 						{
 							this.HandleAdd(current, HandleType.Bezier);
@@ -1146,7 +1168,7 @@ namespace Epsitec.Common.Document.Objects
 						p1 = points[i++];
 						if ( subPath == -1 || subPath == subRank )
 						{
-							if ( p1 == start )
+							if ( Geometry.Compare(p1, start) )
 							{
 								close = true;
 								this.PathAdjust(firstHandle);
@@ -1164,28 +1186,31 @@ namespace Epsitec.Common.Document.Objects
 						break;
 
 					case PathElement.Curve3:
-						p1 = points[i++];
+						p1 = points[i];
 						p2 = points[i++];
+						p3 = points[i++];
+						p1 = Point.Scale(current, p1, 2.0/3.0);
+						p2 = Point.Scale(p3,      p2, 2.0/3.0);
 						if ( subPath == -1 || subPath == subRank )
 						{
-							if ( p2 == start )
+							if ( Geometry.Compare(p3, start) )
 							{
 								close = true;
 								this.Handle(this.TotalMainHandle-1).Position = p1;
-								this.Handle(firstHandle).Position = p1;
+								this.Handle(firstHandle).Position = p2;
 								this.PathAdjust(firstHandle);
 								firstHandle = this.TotalMainHandle;
 							}
 							else
 							{
 								this.Handle(this.TotalMainHandle-1).Position = p1;
-								this.HandleAdd(p1, HandleType.Bezier);
-								this.HandleAdd(p2, HandleType.Primary);
 								this.HandleAdd(p2, HandleType.Bezier);
+								this.HandleAdd(p3, HandleType.Primary);
+								this.HandleAdd(p3, HandleType.Bezier);
 								bDo = true;
 							}
 						}
-						current = p2;
+						current = p3;
 						break;
 
 					case PathElement.Curve4:
@@ -1194,7 +1219,7 @@ namespace Epsitec.Common.Document.Objects
 						p3 = points[i++];
 						if ( subPath == -1 || subPath == subRank )
 						{
-							if ( p3 == start )
+							if ( Geometry.Compare(p3, start) )
 							{
 								close = true;
 								this.Handle(this.TotalMainHandle-1).Position = p1;
@@ -1292,7 +1317,8 @@ namespace Epsitec.Common.Document.Objects
 			
 			double a1 = Point.ComputeAngleDeg(p, s1);
 			double a2 = Point.ComputeAngleDeg(p, s2);
-			if ( System.Math.Abs(System.Math.Abs(a1-a2)-180.0) < 0.1 )
+			if ( System.Math.Abs(System.Math.Abs(a1-a2)      ) < 0.1 ||
+				 System.Math.Abs(System.Math.Abs(a1-a2)-180.0) < 0.1 )
 			{
 				return HandleConstrainType.Smooth;
 			}
@@ -1312,6 +1338,14 @@ namespace Epsitec.Common.Document.Objects
 			this.HandleAdd(p2, HandleType.Hide);
 
 			this.dirtyBbox = true;
+		}
+
+		// Finalise la création d'une courbe de Bézier.
+		public void CreateFinalise()
+		{
+			this.HandlePropertiesCreate();  // crée les poignées des propriétés
+			this.Select(false);
+			this.Select(true);  // pour sélectionner toutes les poignées
 		}
 		#endregion
 

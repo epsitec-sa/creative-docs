@@ -95,7 +95,7 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.Handle(1).Position = pos;
 			}
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -105,7 +105,7 @@ namespace Epsitec.Common.Document.Objects
 		public override void MoveGlobalProcess(Selector selector)
 		{
 			base.MoveGlobalProcess(selector);
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -125,6 +125,7 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(0).Position = pos;
 				this.Handle(1).Position = pos;
 			}
+			this.isCreating = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -147,9 +148,10 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
 			drawingContext.ConstrainDelStarting();
+			this.isCreating = false;
 
 			this.HandlePropertiesCreate();
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -288,6 +290,21 @@ namespace Epsitec.Common.Document.Objects
 				this.PropertyLineMode.AddOutline(graphics, pathLine, drawingContext.HiliteSize);
 				graphics.RenderSolid(drawingContext.HiliteOutlineColor);
 			}
+
+			if ( this.IsSelected || this.isCreating )
+			{
+				this.PropertyLineMode.DrawPathDash(graphics, drawingContext, pathLine, this.PropertyLineColor);
+
+				if ( outlineStart )
+				{
+					this.PropertyLineMode.DrawPathDash(graphics, drawingContext, pathStart, this.PropertyLineColor);
+				}
+
+				if ( outlineEnd )
+				{
+					this.PropertyLineMode.DrawPathDash(graphics, drawingContext, pathEnd, this.PropertyLineColor);
+				}
+			}
 		}
 
 		// Imprime l'objet.
@@ -331,8 +348,9 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Retourne le chemin géométrique de l'objet.
-		public override Path GetPath()
+		public override Path GetPath(int rank)
 		{
+			if ( rank > 0 )  return null;
 			Path pathStart;  bool outlineStart, surfaceStart;
 			Path pathEnd;    bool outlineEnd,   surfaceEnd;
 			Path pathLine;
@@ -343,12 +361,12 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( outlineStart || surfaceStart )
 			{
-				pathLine.Append(pathStart);
+				pathLine.Append(pathStart, 0.0);
 			}
 
 			if ( outlineEnd || surfaceEnd )
 			{
-				pathLine.Append(pathEnd);
+				pathLine.Append(pathEnd, 0.0);
 			}
 
 			return pathLine;

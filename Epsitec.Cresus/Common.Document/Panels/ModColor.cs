@@ -74,9 +74,16 @@ namespace Epsitec.Common.Document.Panels
 			this.negativ.ActiveStateChanged += new EventHandler(this.HandleNegativChanged);
 			ToolTip.Default.SetToolTip(this.negativ, "Couleurs inversées");
 
+			this.draft = new Button(this);
+			this.draft.Text = "C";
+			this.draft.TabIndex = 11;
+			this.draft.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.draft.Clicked += new MessageEventHandler(this.HandleDraft);
+			ToolTip.Default.SetToolTip(this.draft, "Traits de construction");
+
 			this.reset = new Button(this);
 			this.reset.Text = "R";
-			this.reset.TabIndex = 11;
+			this.reset.TabIndex = 12;
 			this.reset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			this.reset.Clicked += new MessageEventHandler(this.HandleReset);
 			ToolTip.Default.SetToolTip(this.reset, "Reset (valeurs standards)");
@@ -95,10 +102,12 @@ namespace Epsitec.Common.Document.Panels
 					this.labelArray[i] = null;
 				}
 				this.negativ.ActiveStateChanged -= new EventHandler(this.HandleNegativChanged);
+				this.draft.Clicked -= new MessageEventHandler(this.HandleDraft);
 				this.reset.Clicked -= new MessageEventHandler(this.HandleReset);
 
 				this.label = null;
 				this.negativ = null;
+				this.draft = null;
 				this.reset = null;
 			}
 			
@@ -165,6 +174,7 @@ namespace Epsitec.Common.Document.Panels
 				this.fieldArray[i].SetVisible(this.isExtendedSize);
 			}
 			this.negativ.SetVisible(this.isExtendedSize);
+			this.draft.SetVisible(this.isExtendedSize);
 			this.reset.SetVisible(this.isExtendedSize);
 		}
 
@@ -203,10 +213,14 @@ namespace Epsitec.Common.Document.Panels
 			}
 
 			r.Left = rect.Left+72;
-			r.Right = rect.Right-24;
+			r.Right = rect.Right-24-1-24;
 			this.negativ.Bounds = r;
 
 			r.Left = r.Right;
+			r.Width = 24;
+			this.draft.Bounds = r;
+
+			r.Left = r.Right+1;
 			r.Width = 24;
 			this.reset.Bounds = r;
 		}
@@ -235,6 +249,18 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
+		private void HandleDraft(object sender, MessageEventArgs e)
+		{
+			this.fieldArray[0].InternalValue =    0.0M;  // T
+			this.fieldArray[1].InternalValue = -100.0M;  // S
+			this.fieldArray[2].InternalValue =    0.0M;  // L
+			this.fieldArray[3].InternalValue =  100.0M;  // R
+			this.fieldArray[4].InternalValue =    0.0M;  // V
+			this.fieldArray[5].InternalValue =    0.0M;  // B
+			this.fieldArray[6].InternalValue =  -75.0M;  // A
+			this.negativ.ActiveState = WidgetState.ActiveNo;
+		}
+
 		private void HandleReset(object sender, MessageEventArgs e)
 		{
 			this.fieldArray[0].InternalValue = 0.0M;
@@ -252,5 +278,6 @@ namespace Epsitec.Common.Document.Panels
 		protected TextFieldReal[]			fieldArray;
 		protected CheckButton				negativ;
 		protected Button					reset;
+		protected Button					draft;
 	}
 }

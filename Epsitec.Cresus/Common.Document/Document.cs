@@ -668,6 +668,12 @@ namespace Epsitec.Common.Document
 			this.printer.Print(dp);
 		}
 
+		// Exporte le document.
+		public string Export(string filename)
+		{
+			return this.printer.Export(filename);
+		}
+
 
 		#region Flat
 		public System.Collections.IEnumerable Flat(Objects.Abstract root)

@@ -171,7 +171,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Met à jour toutes les poignées des propriétés.
-		public void HandlePropertiesUpdateVisible()
+		public void HandlePropertiesUpdate()
 		{
 			bool sel = this.selected && !this.edited && !this.globalSelected;
 			int total = this.TotalHandle;
@@ -183,22 +183,8 @@ namespace Epsitec.Common.Document.Objects
 					Properties.Abstract property = this.Property(handle.PropertyType);
 					handle.IsVisible = property.IsHandleVisible(this, handle.PropertyRank) && sel;
 					handle.IsGlobalSelected = this.globalSelected && handle.IsVisible;
-					this.dirtyBbox = true;
-				}
-			}
-		}
-
-		// Met à jour toutes les poignées des propriétés.
-		public void HandlePropertiesUpdatePosition()
-		{
-			int total = this.TotalHandle;
-			for ( int i=0 ; i<total ; i++ )
-			{
-				Handle handle = this.Handle(i);
-				if ( handle.PropertyType != Properties.Type.None )
-				{
-					Properties.Abstract property = this.Property(handle.PropertyType);
 					handle.Position = property.GetHandlePosition(this, handle.PropertyRank);
+					this.dirtyBbox = true;
 				}
 			}
 		}
@@ -741,7 +727,7 @@ namespace Epsitec.Common.Document.Objects
 				handle.IsVisible = select && !edit;
 				handle.IsGlobalSelected = false;
 			}
-			this.HandlePropertiesUpdateVisible();
+			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
 
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
@@ -776,7 +762,7 @@ namespace Epsitec.Common.Document.Objects
 			this.selected = ( sel > 0 );
 			this.edited = false;
 			this.globalSelected = false;
-			this.HandlePropertiesUpdateVisible();
+			this.HandlePropertiesUpdate();
 			this.SplitProperties();
 
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
@@ -797,8 +783,7 @@ namespace Epsitec.Common.Document.Objects
 				handle.IsGlobalSelected = handle.IsVisible && global;
 			}
 			this.globalSelected = global;
-			this.HandlePropertiesUpdateVisible();
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 		}
@@ -1581,7 +1566,7 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Retourne le chemin géométrique de l'objet.
-		public virtual Path GetPath()
+		public virtual Path GetPath(int rank)
 		{
 			return null;
 		}

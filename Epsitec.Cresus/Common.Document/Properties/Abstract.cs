@@ -124,12 +124,12 @@ namespace Epsitec.Common.Document.Properties
 			return 0;
 		}
 
-		// Retourne le tyle selon un numéro d'ordre de tri.
+		// Retourne le type selon un numéro d'ordre de tri.
 		static public Type SortOrder(int index)
 		{
 			foreach ( int value in System.Enum.GetValues(typeof(Type)) )
 			{
-				Type type = (Type)value;
+				Type type = (Type) value;
 				if ( index == Abstract.SortOrder(type) )  return type;
 			}
 			return Type.None;
@@ -455,6 +455,13 @@ namespace Epsitec.Common.Document.Properties
 		// Modifie la position d'une poignée.
 		public virtual void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
+			// Si la position est hors limite, les méthodes override n'auront pas
+			// modifié la propriété. Donc, le NotifyAfter qui s'occupe d'appeler
+			// HandlePropertiesUpdate n'aura pas été appelé. C'est pourquoi il
+			// est appelé ici encore une fois, afin d'être certain qu'il soit
+			// exécuté au moins une fois !
+			obj.HandlePropertiesUpdate();
+
 			this.document.Notifier.NotifyPropertyChanged(this);
 		}
 		
@@ -541,8 +548,7 @@ namespace Epsitec.Common.Document.Properties
 				else
 				{
 					Objects.Abstract obj = this.owners[i] as Objects.Abstract;
-					obj.HandlePropertiesUpdateVisible();
-					obj.HandlePropertiesUpdatePosition();
+					obj.HandlePropertiesUpdate();
 
 					if ( this.AlterBoundingBox )
 					{

@@ -98,6 +98,7 @@ namespace Epsitec.Common.Document
 				Dialogs.CreateTitle(container, "Repères magnétiques");
 				this.CreateBool(container, "GuidesActive");
 				this.CreateBool(container, "GuidesShow");
+				this.CreateBool(container, "GuidesMouse");
 				Dialogs.CreateSeparator(container);
 
 				this.containerGuides = new Containers.Guides(this.document);
@@ -128,6 +129,11 @@ namespace Epsitec.Common.Document
 				this.tabIndex = 0;
 				Dialogs.CreateTitle(container, "Déplacement lorsqu'un objet est dupliqué");
 				this.CreatePoint(container, "DuplicateMove");
+
+				Dialogs.CreateTitle(container, "Déplacements avec les touches flèches");
+				this.CreatePoint(container, "ArrowMove");
+				this.CreateDouble(container, "ArrowMoveMul");
+				this.CreateDouble(container, "ArrowMoveDiv");
 			}
 
 			this.UpdateSettings();
@@ -212,6 +218,51 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.containerGuides == null )  return;
 			this.containerGuides.SetDirtyContent();
+		}
+
+		// Sélectionne un repère.
+		public void SelectGuide(int rank)
+		{
+			if ( this.containerGuides == null )  return;
+			this.containerGuides.SelectGuide = rank;
+		}
+		#endregion
+
+		#region Export
+		// Peuple le dialogue des exportations.
+		public void BuildExport(Window window)
+		{
+			if ( this.windowExport == null )
+			{
+				this.windowExport = window;
+
+				Widget parent = this.windowExport.Root.FindChild("Panel");
+				Panel container = new Panel(parent);
+				container.Name = "Container";
+				container.Dock = DockStyle.Fill;
+
+				this.tabIndex = 0;
+
+				Dialogs.CreateTitle(container, "Paramètres pour l'image à exporter");
+				this.CreateDouble(container, "ImageDpi");
+				this.CreateCombo(container, "ImageDepth");
+				this.CreateCombo(container, "ImageCompression");
+				this.CreateDouble(container, "ImageQuality");
+				this.CreateDouble(container, "ImageAA");
+				Dialogs.CreateSeparator(container);
+			}
+
+			this.UpdateExport();
+		}
+
+		// Appelé lorsque les réglages ont changé.
+		public void UpdateExport()
+		{
+			if ( this.windowExport == null || !this.windowExport.IsVisible )  return;
+
+			this.UpdateCombo("ImageDepth");
+			this.UpdateCombo("ImageCompression");
+			this.UpdateDouble("ImageQuality");
 		}
 		#endregion
 
@@ -316,7 +367,7 @@ namespace Epsitec.Common.Document
 			container.Height = 22;
 			container.TabIndex = this.tabIndex++;
 			container.Dock = DockStyle.Top;
-			container.DockMargins = new Margins(10, 10, 0, 5);
+			container.DockMargins = new Margins(10, 10, 0, sDouble.Info?0:5);
 
 			StaticText text = new StaticText(container);
 			text.Text = sDouble.Text;
@@ -332,6 +383,7 @@ namespace Epsitec.Common.Document
 				this.document.Modifier.AdaptTextFieldRealScalar(field);
 				field.MinValue = (decimal) sDouble.FactorMinValue;
 				field.MaxValue = (decimal) sDouble.FactorMaxValue;
+				field.Resolution = (decimal) sDouble.FactorResolution;
 				field.Step = (decimal) sDouble.FactorStep;
 			}
 			else
@@ -348,6 +400,24 @@ namespace Epsitec.Common.Document
 			field.Dock = DockStyle.Left;
 			field.DockMargins = new Margins(0, 0, 0, 0);
 			this.WidgetsTableAdd(field, "");
+
+			if ( sDouble.Info )
+			{
+				container = new Panel(parent);
+				container.Height = 18;
+				container.TabIndex = this.tabIndex++;
+				container.Dock = DockStyle.Top;
+				container.DockMargins = new Margins(10, 10, 0, 5);
+
+				text = new StaticText(container);
+				text.Name = sDouble.Name;
+				text.Text = sDouble.GetInfo();
+				text.Width = 150;
+				text.SetClientZoom(0.8);
+				text.Dock = DockStyle.Left;
+				text.DockMargins = new Margins(120, 0, 0, 0);
+				this.WidgetsTableAdd(text, ".Info");
+			}
 		}
 
 		private void HandleFieldDoubleChanged(object sender)
@@ -362,6 +432,35 @@ namespace Epsitec.Common.Document
 			if ( sDouble == null )  return;
 
 			sDouble.Value = (double) field.InternalValue;
+
+			if ( sDouble.Info )
+			{
+				StaticText info = this.WidgetsTableSearch(sDouble.Name, ".Info") as StaticText;
+				info.Text = sDouble.GetInfo();
+			}
+		}
+
+		protected void UpdateDouble(string name)
+		{
+			Settings.Abstract settings = this.document.Settings.Get(name);
+			if ( settings == null )  return;
+			Settings.Double sDouble = settings as Settings.Double;
+			if ( sDouble == null )  return;
+
+			TextFieldSlider field = this.WidgetsTableSearch(name, "") as TextFieldSlider;
+			if ( field != null )
+			{
+				field.SetEnabled(sDouble.IsEnabled);
+			}
+
+			if ( sDouble.Info )
+			{
+				StaticText info = this.WidgetsTableSearch(name, ".Info") as StaticText;
+				if ( info != null )
+				{
+					info.SetVisible(sDouble.IsEnabled);
+				}
+			}
 		}
 		#endregion
 
@@ -562,7 +661,7 @@ namespace Epsitec.Common.Document
 			text.DockMargins = new Margins(0, 0, 0, 0);
 
 			TextFieldCombo field = new TextFieldCombo(container);
-			field.Width = 100;
+			field.Width = 140;
 			field.IsReadOnly = true;
 			field.Name = sInteger.Name;
 			sInteger.InitCombo(field);
@@ -585,7 +684,20 @@ namespace Epsitec.Common.Document
 			Settings.Integer sInteger = settings as Settings.Integer;
 			if ( sInteger == null )  return;
 
-			this.document.Modifier.RealUnitDimension = Settings.Integer.IntToType(field.SelectedIndex);
+			sInteger.Value = sInteger.RankToType(field.SelectedIndex);
+		}
+
+		protected void UpdateCombo(string name)
+		{
+			Settings.Abstract settings = this.document.Settings.Get(name);
+			if ( settings == null )  return;
+			Settings.Integer sInteger = settings as Settings.Integer;
+			if ( sInteger == null )  return;
+
+			TextFieldCombo combo = this.WidgetsTableSearch(name, "") as TextFieldCombo;
+			if ( combo == null )  return;
+
+			sInteger.InitCombo(combo);
 		}
 		#endregion
 
@@ -639,7 +751,7 @@ namespace Epsitec.Common.Document
 			text.DockMargins = new Margins(0, 0, 0, 0);
 
 			TextFieldCombo field = new TextFieldCombo(container);
-			field.Width = 100;
+			field.Width = 140;
 			field.IsReadOnly = true;
 			field.Name = "PaperFormat";
 
@@ -838,6 +950,20 @@ namespace Epsitec.Common.Document
 				this.windowSettings = null;
 			}
 
+			if ( this.windowExport != null )
+			{
+				Panel panel = this.windowExport.Root.FindChild("Panel") as Panel;
+				if ( panel != null )
+				{
+					Panel container = panel.FindChild("Container") as Panel;
+					if ( container != null )
+					{
+						container.Dispose();
+					}
+				}
+				this.windowExport = null;
+			}
+
 			this.widgetsTable.Clear();
 		}
 
@@ -871,6 +997,7 @@ namespace Epsitec.Common.Document
 		protected Document						document;
 		protected Window						windowInfos;
 		protected Window						windowSettings;
+		protected Window						windowExport;
 		protected Containers.Guides				containerGuides;
 		protected System.Collections.Hashtable	widgetsTable;
 		protected bool							ignoreChanged = false;

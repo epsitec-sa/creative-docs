@@ -36,6 +36,9 @@ namespace Epsitec.Common.Document.Settings
 			this.infosLocation = new Drawing.Point(0, 0);
 			this.infosSize = new Drawing.Size(0, 0);
 			
+			this.exportLocation = new Drawing.Point(0, 0);
+			this.exportSize = new Drawing.Size(0, 0);
+			
 			this.aboutLocation = new Drawing.Point(0, 0);
 			this.aboutSize = new Drawing.Size(0, 0);
 			
@@ -47,6 +50,32 @@ namespace Epsitec.Common.Document.Settings
 			this.firstAction = FirstAction.OpenNewDocument;
 			this.lastFilename = new System.Collections.ArrayList();
 			this.lastFilenameMax = 10;
+
+			// Suppose que le dossier des exemples est dans le même dossier
+			// que l'application.
+			string dir = Support.Globals.Directories.Executable;
+			this.initialDirectory = dir + @"\Samples";
+		}
+
+		// Met tous les fichiers d'exemples dans la liste des 10 premiers
+		// fichiers récents.
+		public void Initialise(DocumentType type)
+		{
+			string ext = "";
+			if ( type == DocumentType.Pictogram )
+			{
+				ext = "*.icon";
+			}
+			else
+			{
+				ext = "*.crdoc";
+			}
+			string[] list = System.IO.Directory.GetFiles(this.initialDirectory, ext);
+			for ( int i=0 ; i<lastFilenameMax ; i++ )
+			{
+				if ( i >= list.Length )  break;
+				this.LastFilenameAdd(list[i]);
+			}
 		}
 
 
@@ -140,6 +169,33 @@ namespace Epsitec.Common.Document.Settings
 			set
 			{
 				this.infosSize = value;
+			}
+		}
+
+
+		public Drawing.Point ExportLocation
+		{
+			get
+			{
+				return this.exportLocation;
+			}
+
+			set
+			{
+				this.exportLocation = value;
+			}
+		}
+
+		public Drawing.Size ExportSize
+		{
+			get
+			{
+				return this.exportSize;
+			}
+
+			set
+			{
+				this.exportSize = value;
 			}
 		}
 
@@ -300,6 +356,20 @@ namespace Epsitec.Common.Document.Settings
 		}
 
 
+		public string InitialDirectory
+		{
+			get
+			{
+				return this.initialDirectory;
+			}
+
+			set
+			{
+				this.initialDirectory = value;
+			}
+		}
+
+
 		#region FirstAction
 		public static int FirstActionCount
 		{
@@ -391,6 +461,9 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("InfosLocation", this.infosLocation);
 			info.AddValue("InfosSize", this.infosSize);
 
+			info.AddValue("ExportLocation", this.exportLocation);
+			info.AddValue("ExportSize", this.exportSize);
+
 			info.AddValue("AboutLocation", this.aboutLocation);
 			info.AddValue("AboutSize", this.aboutSize);
 
@@ -401,6 +474,7 @@ namespace Epsitec.Common.Document.Settings
 			info.AddValue("SplashScreen", this.splashScreen);
 			info.AddValue("FirstAction", this.firstAction);
 			info.AddValue("LastFilename", this.lastFilename);
+			info.AddValue("InitialDirectory", this.initialDirectory);
 		}
 
 		// Constructeur qui désérialise les réglages.
@@ -416,6 +490,9 @@ namespace Epsitec.Common.Document.Settings
 			this.infosLocation = (Drawing.Point) info.GetValue("InfosLocation", typeof(Drawing.Point));
 			this.infosSize = (Drawing.Size) info.GetValue("InfosSize", typeof(Drawing.Size));
 
+			this.exportLocation = (Drawing.Point) info.GetValue("ExportLocation", typeof(Drawing.Point));
+			this.exportSize = (Drawing.Size) info.GetValue("ExportSize", typeof(Drawing.Size));
+
 			this.aboutLocation = (Drawing.Point) info.GetValue("AboutLocation", typeof(Drawing.Point));
 			this.aboutSize = (Drawing.Size) info.GetValue("AboutSize", typeof(Drawing.Size));
 
@@ -426,6 +503,7 @@ namespace Epsitec.Common.Document.Settings
 			this.splashScreen = info.GetBoolean("SplashScreen");
 			this.firstAction = (FirstAction) info.GetValue("FirstAction", typeof(FirstAction));
 			this.lastFilename = (System.Collections.ArrayList) info.GetValue("LastFilename", typeof(System.Collections.ArrayList));
+			this.initialDirectory = info.GetString("InitialDirectory");
 		}
 		#endregion
 
@@ -436,6 +514,8 @@ namespace Epsitec.Common.Document.Settings
 		protected Drawing.Size					settingsSize;
 		protected Drawing.Point					infosLocation;
 		protected Drawing.Size					infosSize;
+		protected Drawing.Point					exportLocation;
+		protected Drawing.Size					exportSize;
 		protected Drawing.Point					aboutLocation;
 		protected Drawing.Size					aboutSize;
 		protected bool							isFullScreen;
@@ -447,5 +527,6 @@ namespace Epsitec.Common.Document.Settings
 		protected FirstAction					firstAction;
 		protected System.Collections.ArrayList	lastFilename;
 		protected int							lastFilenameMax;
+		protected string						initialDirectory;
 	}
 }

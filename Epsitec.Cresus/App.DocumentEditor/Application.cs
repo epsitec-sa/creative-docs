@@ -51,27 +51,19 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.mainWindow.Root.MinSize = new Size(430, 250);
 			}
-#if false
-			this.mainWindow.WindowLocation = this.editor.GlobalSettings.WindowLocation;
-			this.mainWindow.ClientSize = this.editor.GlobalSettings.WindowSize;
-			this.mainWindow.Show();
-			
-			this.mainWindow.IsFullScreen = this.editor.GlobalSettings.IsFullScreen;
-#else
 			this.mainWindow.WindowLocation = this.editor.GlobalSettings.WindowLocation;
 			this.mainWindow.WindowSize = this.editor.GlobalSettings.WindowSize;
 			this.mainWindow.IsFullScreen = this.editor.GlobalSettings.IsFullScreen;
 			this.mainWindow.Show();
-#endif
 
 			switch ( type )
 			{
 				case DocumentType.Graphic:
-					this.mainWindow.Text = "Crésus document";
+					this.mainWindow.Text = "Crésus documents";
 					break;
 
 				case DocumentType.Pictogram:
-					this.mainWindow.Text = "Crésus pictogramme";
+					this.mainWindow.Text = "Crésus pictogrammes";
 					break;
 
 				case DocumentType.Text:
@@ -79,7 +71,7 @@ namespace Epsitec.App.DocumentEditor
 					break;
 
 				default:
-					this.mainWindow.Text = "Crésus document";
+					this.mainWindow.Text = "Crésus documents";
 					break;
 			}
 			

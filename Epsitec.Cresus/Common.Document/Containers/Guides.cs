@@ -93,16 +93,42 @@ namespace Epsitec.Common.Document.Containers
 		}
 		
 
+		// Repère sélectionné.
+		public int SelectGuide
+		{
+			get
+			{
+				return this.document.Settings.GuidesSelected;
+			}
+
+			set
+			{
+				if ( this.document.Settings.GuidesSelected != value )
+				{
+					this.document.Settings.GuidesSelected = value;
+
+					this.ignoreChanged = true;
+					this.UpdateEdits();
+					this.UpdateTable();
+					this.table.ShowSelect();
+					this.ignoreChanged = false;
+				}
+			}
+		}
+
 		// Effectue la mise à jour du contenu.
 		protected override void DoUpdateContent()
 		{
-			if ( this.tableRowSelected >= this.document.Settings.GuidesCount )
+			int sel = this.document.Settings.GuidesSelected;
+			if ( sel >= this.document.Settings.GuidesCount )
 			{
-				this.tableRowSelected = this.document.Settings.GuidesCount-1;
+				sel = this.document.Settings.GuidesCount-1;
+				this.document.Modifier.OpletQueueEnable = false;
+				this.document.Settings.GuidesSelected = sel;
+				this.document.Modifier.OpletQueueEnable = true;
 			}
 
 			this.UpdateTable();
-			this.UpdateToolBar();
 			this.UpdateEdits();
 		}
 
@@ -110,7 +136,7 @@ namespace Epsitec.Common.Document.Containers
 		protected void UpdateToolBar()
 		{
 			int total = this.document.Settings.GuidesCount;
-			int sel = this.tableRowSelected;
+			int sel = this.document.Settings.GuidesSelected;
 
 			this.buttonDuplicate.SetEnabled(sel != -1);
 			this.buttonUp.SetEnabled(sel != -1 && sel > 0);
@@ -151,6 +177,7 @@ namespace Epsitec.Common.Document.Containers
 					StaticText st = new StaticText();
 					st.Alignment = (column==0) ? ContentAlignment.MiddleLeft : ContentAlignment.MiddleRight;
 					st.Dock = DockStyle.Fill;
+					st.DockMargins = new Margins(4, 4, 0, 0);
 					this.table[column, row].Insert(st);
 				}
 			}
@@ -163,12 +190,23 @@ namespace Epsitec.Common.Document.Containers
 			StaticText st;
 
 			st = this.table[0, row].Children[0] as StaticText;
-			st.Text = " " + Settings.Guide.TypeToString(guide.Type);
+			st.Text = Settings.Guide.TypeToString(guide.Type);
 
 			st = this.table[1, row].Children[0] as StaticText;
-			st.Text = (guide.Position/this.document.Modifier.RealScale).ToString() + " ";
+			if ( guide.Position == Settings.Guide.Undefined )
+			{
+				st.Text = "<i>indéfini </i>";
+			}
+			else
+			{
+				double value = guide.Position/this.document.Modifier.RealScale;
+				value *= 100.0;
+				value = System.Math.Floor(value+0.5);  // arrondi à la 2ème décimale
+				value /= 100.0;
+				st.Text = value.ToString();
+			}
 
-			this.table.SelectRow(row, row==this.tableRowSelected);
+			this.table.SelectRow(row, row==this.document.Settings.GuidesSelected);
 		}
 
 		// Met à jour les widgets d'édition en fonction de la ligne sélectionnée.
@@ -176,7 +214,8 @@ namespace Epsitec.Common.Document.Containers
 		{
 			this.ignoreChanged = true;
 
-			if ( this.tableRowSelected < 0 )
+			int sel = this.document.Settings.GuidesSelected;
+			if ( sel < 0 )
 			{
 				this.editType.SetEnabled(false);
 				this.editPosition.SetEnabled(false);
@@ -187,7 +226,7 @@ namespace Epsitec.Common.Document.Containers
 			{
 				this.editType.SetEnabled(true);
 				this.editPosition.SetEnabled(true);
-				Settings.Guide guide = this.document.Settings.GuidesGet(this.tableRowSelected);
+				Settings.Guide guide = this.document.Settings.GuidesGet(sel);
 				this.editType.Text = Settings.Guide.TypeToString(guide.Type);
 				this.editPosition.InternalValue = (decimal) guide.Position;
 			}
@@ -200,10 +239,14 @@ namespace Epsitec.Common.Document.Containers
 		// Crée un nouveau repère.
 		protected void CreateGuide(Settings.GuideType type)
 		{
+			int sel = this.document.Settings.GuidesSelected+1;
+			this.document.Modifier.OpletQueueBeginAction("ChangeGuide", sel);
 			Settings.Guide guide = new Settings.Guide(this.document);
 			guide.Type = type;
 			guide.Position = 0.0;
-			this.document.Settings.GuidesInsert(++this.tableRowSelected, guide);
+			this.document.Settings.GuidesInsert(sel, guide);
+			this.document.Settings.GuidesSelected = sel;
+			this.document.Modifier.OpletQueueValidateAction();
 			this.UpdateEdits();
 			this.editPosition.SelectAll();
 			this.editPosition.Focus();
@@ -224,9 +267,13 @@ namespace Epsitec.Common.Document.Containers
 		// Duplique un repère.
 		private void HandleButtonDuplicate(object sender, MessageEventArgs e)
 		{
+			this.document.Modifier.OpletQueueBeginAction();
+			int sel = this.document.Settings.GuidesSelected;
 			Settings.Guide guide = new Settings.Guide(this.document);
-			this.document.Settings.GuidesGet(this.tableRowSelected).CopyTo(guide);
-			this.document.Settings.GuidesInsert(++this.tableRowSelected, guide);
+			this.document.Settings.GuidesGet(sel).CopyTo(guide);
+			this.document.Settings.GuidesInsert(++sel, guide);
+			this.document.Settings.GuidesSelected = sel;
+			this.document.Modifier.OpletQueueValidateAction();
 			this.UpdateEdits();
 			this.editPosition.SelectAll();
 			this.editPosition.Focus();
@@ -235,11 +282,15 @@ namespace Epsitec.Common.Document.Containers
 		// Monte d'une ligne le repère sélectionné.
 		private void HandleButtonUp(object sender, MessageEventArgs e)
 		{
-			if ( this.tableRowSelected < 1 )  return;
-			Settings.Guide guide = this.document.Settings.GuidesGet(this.tableRowSelected);
-			this.document.Settings.GuidesRemoveAt(this.tableRowSelected);
-			this.tableRowSelected --;
-			this.document.Settings.GuidesInsert(this.tableRowSelected, guide);
+			int sel = this.document.Settings.GuidesSelected;
+			if ( sel < 1 )  return;
+			this.document.Modifier.OpletQueueBeginAction();
+			Settings.Guide guide = this.document.Settings.GuidesGet(sel);
+			this.document.Settings.GuidesRemoveAt(sel);
+			sel --;
+			this.document.Settings.GuidesInsert(sel, guide);
+			this.document.Settings.GuidesSelected = sel;
+			this.document.Modifier.OpletQueueValidateAction();
 			this.UpdateEdits();
 			this.editPosition.SelectAll();
 			this.editPosition.Focus();
@@ -248,11 +299,15 @@ namespace Epsitec.Common.Document.Containers
 		// Descend d'une ligne le repère sélectionné.
 		private void HandleButtonDown(object sender, MessageEventArgs e)
 		{
-			if ( this.tableRowSelected > this.document.Settings.GuidesCount-2 )  return;
-			Settings.Guide guide = this.document.Settings.GuidesGet(this.tableRowSelected);
-			this.document.Settings.GuidesRemoveAt(this.tableRowSelected);
-			this.tableRowSelected ++;
-			this.document.Settings.GuidesInsert(this.tableRowSelected, guide);
+			int sel = this.document.Settings.GuidesSelected;
+			if ( sel > this.document.Settings.GuidesCount-2 )  return;
+			this.document.Modifier.OpletQueueBeginAction();
+			Settings.Guide guide = this.document.Settings.GuidesGet(sel);
+			this.document.Settings.GuidesRemoveAt(sel);
+			sel ++;
+			this.document.Settings.GuidesInsert(sel, guide);
+			this.document.Settings.GuidesSelected = sel;
+			this.document.Modifier.OpletQueueValidateAction();
 			this.UpdateEdits();
 			this.editPosition.SelectAll();
 			this.editPosition.Focus();
@@ -261,19 +316,25 @@ namespace Epsitec.Common.Document.Containers
 		// Supprime le repère sélectionné.
 		private void HandleButtonDelete(object sender, MessageEventArgs e)
 		{
-			this.document.Settings.GuidesRemoveAt(this.tableRowSelected);
-			if ( this.tableRowSelected >= this.document.Settings.GuidesCount )
+			this.document.Modifier.OpletQueueBeginAction();
+			int sel = this.document.Settings.GuidesSelected;
+			this.document.Settings.GuidesRemoveAt(sel);
+			if ( sel >= this.document.Settings.GuidesCount )
 			{
-				this.tableRowSelected = this.document.Settings.GuidesCount-1;
-				this.table.SelectRow(this.tableRowSelected, true);
+				sel = this.document.Settings.GuidesCount-1;
+				this.table.SelectRow(sel, true);
+				this.document.Settings.GuidesSelected = sel;
 				this.UpdateEdits();
 			}
+			this.document.Modifier.OpletQueueValidateAction();
 		}
 
 		// Liste cliquée.
 		private void HandleTableSelectionChanged(object sender)
 		{
-			this.tableRowSelected = this.table.SelectedRow;
+			this.document.Modifier.OpletQueueBeginAction();
+			this.document.Settings.GuidesSelected = this.table.SelectedRow;
+			this.document.Modifier.OpletQueueValidateAction();
 			this.UpdateEdits();
 		}
 
@@ -294,10 +355,13 @@ namespace Epsitec.Common.Document.Containers
 		{
 			if ( this.ignoreChanged )  return;
 
-			Settings.Guide guide = this.document.Settings.GuidesGet(this.tableRowSelected);
+			int sel = this.document.Settings.GuidesSelected;
+			Settings.Guide guide = this.document.Settings.GuidesGet(sel);
 
 			this.ignoreChanged = true;
+			this.document.Modifier.OpletQueueBeginAction("ChangeGuide", sel);
 			guide.Type = Settings.Guide.StringToType(this.editType.Text);
+			this.document.Modifier.OpletQueueValidateAction();
 			this.UpdateTable();
 			this.ignoreChanged = false;
 		}
@@ -306,10 +370,13 @@ namespace Epsitec.Common.Document.Containers
 		{
 			if ( this.ignoreChanged )  return;
 
-			Settings.Guide guide = this.document.Settings.GuidesGet(this.tableRowSelected);
+			int sel = this.document.Settings.GuidesSelected;
+			Settings.Guide guide = this.document.Settings.GuidesGet(sel);
 
 			this.ignoreChanged = true;
+			this.document.Modifier.OpletQueueBeginAction("ChangeGuide", sel);
 			guide.Position = (double) this.editPosition.InternalValue;
+			this.document.Modifier.OpletQueueValidateAction();
 			this.UpdateTable();
 			this.ignoreChanged = false;
 		}
@@ -322,7 +389,6 @@ namespace Epsitec.Common.Document.Containers
 		protected IconButton			buttonUp;
 		protected IconButton			buttonDown;
 		protected IconButton			buttonDelete;
-		protected int					tableRowSelected = -1;
 		protected CellTable				table;
 		protected Widget				editGroup;
 		protected TextFieldCombo		editType;

@@ -92,7 +92,7 @@ namespace Epsitec.Common.Document.Objects
 				this.Handle(1).Position = pos;
 			}
 
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -105,6 +105,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainFixType(ConstrainType.Normal);
 			this.HandleAdd(pos, HandleType.Primary);
 			this.HandleAdd(pos, HandleType.Primary);
+			this.isCreating = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -127,9 +128,10 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
 			drawingContext.ConstrainDelStarting();
+			this.isCreating = false;
 
 			this.HandlePropertiesCreate();
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -292,6 +294,11 @@ namespace Epsitec.Common.Document.Objects
 				this.PropertyLineMode.AddOutline(graphics, path, drawingContext.HiliteSize);
 				graphics.RenderSolid(drawingContext.HiliteOutlineColor);
 			}
+
+			if ( this.IsSelected || this.isCreating )
+			{
+				this.PropertyLineMode.DrawPathDash(graphics, drawingContext, path, this.PropertyLineColor);
+			}
 		}
 
 		// Imprime l'objet.
@@ -316,8 +323,9 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Retourne le chemin géométrique de l'objet.
-		public override Path GetPath()
+		public override Path GetPath(int rank)
 		{
+			if ( rank > 0 )  return null;
 			return this.PathBuild(null);
 		}
 

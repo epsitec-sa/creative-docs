@@ -1086,12 +1086,12 @@ namespace Epsitec.Common.Document.Objects
 
 			lp.X = 0.00001;  // pour feinter Point.IsEmpty !
 			lp.Y = 0.00001;
-			string			character;
+			string	character;
 			Font	font;
-			double			fontSize;
+			double	fontSize;
 			Color	fontColor;
 			Point	pos, ptl, pbl, ptr, pbr;
-			double			angle;
+			double	angle;
 			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
 			{
 				if ( rank == this.advanceRank-1 )  return lp;
@@ -1105,12 +1105,12 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( !this.AdvanceInit() )  return false;
 
-			string			character;
+			string	character;
 			Font	font;
-			double			fontSize;
+			double	fontSize;
 			Color	fontColor;
 			Point	pos, ptl, pbl, ptr, pbr;
-			double			angle;
+			double	angle;
 			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
 			{
 				InsideSurface inside = new InsideSurface(mouse, 4);
@@ -1128,12 +1128,12 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( !this.AdvanceInit() )  return -1;
 
-			string			character;
+			string	character;
 			Font	font;
-			double			fontSize;
+			double	fontSize;
 			Color	fontColor;
 			Point	pos, ptl, pbl, ptr, pbr;
-			double			angle;
+			double	angle;
 			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
 			{
 				Point ptm = (ptl+ptr)/2;
@@ -1161,12 +1161,12 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( !this.AdvanceInit() )  return;
 
-			string			character;
+			string	character;
 			Font	font;
-			double			fontSize;
+			double	fontSize;
 			Color	fontColor;
 			Point	pos, ptl, pbl, ptr, pbr;
-			double			angle;
+			double	angle;
 			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
 			{
 				bbox.MergeWith(pbl);
@@ -1181,12 +1181,12 @@ namespace Epsitec.Common.Document.Objects
 		{
 			if ( !this.AdvanceInit() )  return;
 
-			string			character;
+			string	character;
 			Font	font;
-			double			fontSize;
+			double	fontSize;
 			Color	fontColor;
 			Point	pos, ptl, pbl, ptr, pbr;
-			double			angle;
+			double	angle;
 			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
 			{
 				Path path = new Path();
@@ -1198,6 +1198,40 @@ namespace Epsitec.Common.Document.Objects
 				graphics.Rasterizer.AddSurface(path);
 			}
 			graphics.RenderSolid(drawingContext.HiliteSurfaceColor);
+		}
+
+		// Construit le chemin réel d'un seul caractère.
+		protected Path OneRealPathCurve(int rank)
+		{
+			if ( !this.AdvanceInit() )  return null;
+
+			string	character;
+			Font	font;
+			double	fontSize;
+			Color	fontColor;
+			Point	pos, ptl, pbl, ptr, pbr;
+			double	angle;
+
+			int i = 0;
+			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
+			{
+				if ( i == rank && character[0] != TextLayout.CodeEndOfText )
+				{
+					int glyph = font.GetGlyphIndex(character[0]);
+
+					Transform transform = new Transform();
+					transform.Scale(fontSize);
+					transform.RotateDeg(angle);
+					transform.Translate(pos);
+
+					Path path = new Path();
+					path.Append(font, glyph, transform);
+					return path;
+				}
+
+				i ++;
+			}
+			return null;
 		}
 
 		// Dessine le texte le long de la courbe multiple.
@@ -1370,6 +1404,13 @@ namespace Epsitec.Common.Document.Objects
 		private void HandleTextChanged(object sender)
 		{
 			this.dirtyBbox = true;
+		}
+
+
+		// Retourne le chemin géométrique de l'objet.
+		public override Path GetPath(int rank)
+		{
+			return this.OneRealPathCurve(rank);
 		}
 
 

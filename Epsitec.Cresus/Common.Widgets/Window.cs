@@ -421,6 +421,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public IPaintFilter						PaintFilter
+		{
+			get
+			{
+				return this.paint_filter;
+			}
+			set
+			{
+				this.paint_filter = value;
+			}
+		}
 		
 		public MouseCursor						MouseCursor
 		{
@@ -1510,7 +1521,7 @@ namespace Epsitec.Common.Widgets
 			graphics.ResetClippingRectangle ();
 			graphics.SetClippingRectangle (repaint);
 				
-			this.Root.PaintHandler (graphics, repaint);
+			this.Root.PaintHandler (graphics, repaint, this.paint_filter);
 			
 			while (this.post_paint_queue.Count > 0)
 			{
@@ -1666,7 +1677,6 @@ namespace Epsitec.Common.Widgets
 			CultureChanged
 		}
 		
-		
 		private string							name;
 		private string							text;
 		
@@ -1689,6 +1699,7 @@ namespace Epsitec.Common.Widgets
 		private bool							is_async_notification_queued;
 		private bool							is_disposed;
 		private bool							pending_validation;
+		private IPaintFilter					paint_filter;
 		
 		private System.Collections.Queue		post_paint_queue = new System.Collections.Queue ();
 		private System.Collections.Hashtable	property_hash;

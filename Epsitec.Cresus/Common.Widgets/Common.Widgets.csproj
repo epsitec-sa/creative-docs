@@ -314,6 +314,16 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "InvalidateReason.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IPaintFilter.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "MenuItem.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -545,6 +555,11 @@
                 />
                 <File
                     RelPath = "Widget.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "WidgetPaintFilter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -86,7 +86,7 @@ namespace Epsitec.Common.Document.Objects
 			else if ( rank == 3 )  this.MoveCorner(pos, 3, 1,0, 2);
 			else                   this.Handle(rank).Position = pos;
 
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.dirtyBbox = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
@@ -98,6 +98,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainFixType(ConstrainType.Square);
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 0
 			this.HandleAdd(pos, HandleType.Primary);  // rang = 1
+			this.isCreating = true;
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -121,6 +122,7 @@ namespace Epsitec.Common.Document.Objects
 			drawingContext.ConstrainSnapPos(ref pos);
 			this.Handle(1).Position = pos;
 			drawingContext.ConstrainDelStarting();
+			this.isCreating = false;
 
 			// Crée les 2 autres poignées dans les coins opposés.
 			Point p1 = this.Handle(0).Position;
@@ -129,7 +131,7 @@ namespace Epsitec.Common.Document.Objects
 			this.HandleAdd(new Point(p2.X, p1.Y), HandleType.Primary);  // rang = 3
 
 			this.HandlePropertiesCreate();
-			this.HandlePropertiesUpdatePosition();
+			this.HandlePropertiesUpdate();
 			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
@@ -270,6 +272,11 @@ namespace Epsitec.Common.Document.Objects
 				this.PropertyLineMode.AddOutline(graphics, path, drawingContext.HiliteSize);
 				graphics.RenderSolid(drawingContext.HiliteOutlineColor);
 			}
+
+			if ( this.IsSelected || this.isCreating )
+			{
+				this.PropertyLineMode.DrawPathDash(graphics, drawingContext, path, this.PropertyLineColor);
+			}
 		}
 
 		// Imprime l'objet.
@@ -294,8 +301,9 @@ namespace Epsitec.Common.Document.Objects
 
 
 		// Retourne le chemin géométrique de l'objet.
-		public override Path GetPath()
+		public override Path GetPath(int rank)
 		{
+			if ( rank > 0 )  return null;
 			return this.PathBuild(null);
 		}
 

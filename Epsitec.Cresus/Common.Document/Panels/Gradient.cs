@@ -15,19 +15,12 @@ namespace Epsitec.Common.Document.Panels
 			this.label = new StaticText(this);
 			this.label.Alignment = ContentAlignment.MiddleLeft;
 
-			this.listFill = new ScrollList(this);
-			this.listFill.Items.Add("Uniforme");
-			this.listFill.Items.Add("Linéaire");
-			this.listFill.Items.Add("Circulaire");
-			this.listFill.Items.Add("Diamant");
-			this.listFill.Items.Add("Cônique");
-			this.listFill.SelectedIndexChanged += new EventHandler(this.HandleListChanged);
-			this.listFill.TabIndex = 1;
-			this.listFill.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-
-			this.sample = new GradientSample(this);
-			this.sample.Clicked += new MessageEventHandler(this.HandleSampleClicked);
-			ToolTip.Default.SetToolTip(this.sample, "Echantillon (cliquez pour remettre les valeurs standards)");
+			this.nothingButton = new IconButton(this);
+			this.nothingButton.Clicked += new MessageEventHandler(this.HandleNothingClicked);
+			this.nothingButton.TabIndex = 1;
+			this.nothingButton.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.nothingButton.IconName = "manifest:Epsitec.App.DocumentEditor.Images.Nothing.icon";
+			ToolTip.Default.SetToolTip(this.nothingButton, "Aucune couleur");
 
 			this.fieldColor1 = new ColorSample(this);
 			this.fieldColor1.PossibleOrigin = true;
@@ -43,21 +36,49 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldColor2.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldColor2, "Couleur 2");
 
+			this.listFill = new TextFieldCombo(this);
+			this.listFill.IsReadOnly = true;
+			this.listFill.Items.Add("Uniforme");
+			this.listFill.Items.Add("Linéaire");
+			this.listFill.Items.Add("Circulaire");
+			this.listFill.Items.Add("Diamant");
+			this.listFill.Items.Add("Cônique");
+			this.listFill.SelectedIndexChanged += new EventHandler(this.HandleListChanged);
+			this.listFill.TabIndex = 4;
+			this.listFill.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+
+			this.reset = new Button(this);
+			this.reset.Text = "R";
+			this.reset.TabIndex = 5;
+			this.reset.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			this.reset.Clicked += new MessageEventHandler(this.HandleReset);
+			ToolTip.Default.SetToolTip(this.reset, "Reset (valeurs standards)");
+
+			this.fieldAngle = new TextFieldReal(this);
+			this.document.Modifier.AdaptTextFieldRealAngle(this.fieldAngle);
+			this.fieldAngle.InternalMinValue = -360.0M;
+			this.fieldAngle.InternalMaxValue =  360.0M;
+			this.fieldAngle.TextChanged += new EventHandler(this.HandleTextChanged);
+			this.fieldAngle.TabIndex = 6;
+			this.fieldAngle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
+			ToolTip.Default.SetToolTip(this.fieldAngle, "Angle");
+
 			this.fieldRepeat = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldRepeat);
 			this.fieldRepeat.InternalMinValue = 1;
 			this.fieldRepeat.InternalMaxValue = 8;
 			this.fieldRepeat.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.fieldRepeat.TabIndex = 4;
+			this.fieldRepeat.TabIndex = 7;
 			this.fieldRepeat.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldRepeat, "Nombre de répétitions");
 
 			this.fieldMiddle = new TextFieldReal(this);
 			this.document.Modifier.AdaptTextFieldRealScalar(this.fieldMiddle);
-			this.fieldMiddle.InternalMinValue = -100;
-			this.fieldMiddle.InternalMaxValue =  100;
+			this.fieldMiddle.InternalMinValue = -500;
+			this.fieldMiddle.InternalMaxValue =  500;
+			this.fieldMiddle.Step = 10;
 			this.fieldMiddle.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.fieldMiddle.TabIndex = 5;
+			this.fieldMiddle.TabIndex = 8;
 			this.fieldMiddle.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldMiddle, "Couleur médiane");
 
@@ -67,9 +88,13 @@ namespace Epsitec.Common.Document.Panels
 			this.fieldSmooth.FactorStep = 1.0M;
 			this.document.Modifier.AdaptTextFieldRealDimension(this.fieldSmooth);
 			this.fieldSmooth.TextChanged += new EventHandler(this.HandleTextChanged);
-			this.fieldSmooth.TabIndex = 6;
+			this.fieldSmooth.TabIndex = 9;
 			this.fieldSmooth.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 			ToolTip.Default.SetToolTip(this.fieldSmooth, "Flou");
+
+			this.labelAngle = new StaticText(this);
+			this.labelAngle.Text = "a";
+			this.labelAngle.Alignment = ContentAlignment.MiddleCenter;
 
 			this.labelRepeat = new StaticText(this);
 			this.labelRepeat.Text = "n";
@@ -84,7 +109,7 @@ namespace Epsitec.Common.Document.Panels
 			this.labelSmooth.Alignment = ContentAlignment.MiddleCenter;
 
 			this.swapColor = new IconButton(this);
-			this.swapColor.IconName = "manifest:Epsitec.App.DocumentEditor.Images.SwapData.icon";
+			this.swapColor.IconName = "manifest:Epsitec.App.DocumentEditor.Images.SwapDataV.icon";
 			this.swapColor.Clicked += new MessageEventHandler(this.HandleSwapColorClicked);
 			ToolTip.Default.SetToolTip(this.swapColor, "Permute les 2 couleurs");
 
@@ -95,10 +120,12 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( disposing )
 			{
+				this.nothingButton.Clicked -= new MessageEventHandler(this.HandleNothingClicked);
 				this.listFill.SelectedIndexChanged -= new EventHandler(this.HandleListChanged);
-				this.sample.Clicked -= new MessageEventHandler(this.HandleSampleClicked);
+				this.reset.Clicked -= new MessageEventHandler(this.HandleReset);
 				this.fieldColor1.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
 				this.fieldColor2.Clicked -= new MessageEventHandler(this.HandleFieldColorClicked);
+				this.fieldAngle.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.fieldRepeat.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.fieldMiddle.TextChanged -= new EventHandler(this.HandleTextChanged);
 				this.fieldSmooth.TextChanged -= new EventHandler(this.HandleTextChanged);
@@ -106,13 +133,15 @@ namespace Epsitec.Common.Document.Panels
 
 				this.label = null;
 				this.listFill = null;
-				this.sample = null;
+				this.reset = null;
 				this.fieldColor1 = null;
 				this.fieldColor2 = null;
 				this.swapColor = null;
+				this.fieldAngle = null;
 				this.fieldRepeat = null;
 				this.fieldMiddle = null;
 				this.fieldSmooth = null;
+				this.labelAngle = null;
 				this.labelRepeat = null;
 				this.labelMiddle = null;
 				this.labelSmooth = null;
@@ -155,23 +184,20 @@ namespace Epsitec.Common.Document.Panels
 				case Properties.GradientFillType.Conic:    sel = 4;  break;
 			}
 			this.listFill.SelectedIndex = sel;
-			this.listFill.ShowSelected(ScrollShowMode.Center);
 
 			this.fieldColor1.Color = p.Color1;
 			this.fieldColor2.Color = p.Color2;
+			this.fieldAngle.InternalValue = (decimal) p.Angle;
 			this.fieldRepeat.InternalValue = (decimal) p.Repeat;
 			this.fieldMiddle.InternalValue = (decimal) p.Middle*100;
 			this.fieldSmooth.InternalValue = (decimal) p.Smooth;
 
-			this.angle = p.Angle;
-			this.cx    = p.Cx;
-			this.cy    = p.Cy;
-			this.sx    = p.Sx;
-			this.sy    = p.Sy;
+			this.cx = p.Cx;
+			this.cy = p.Cy;
+			this.sx = p.Sx;
+			this.sy = p.Sy;
 
-			this.sample.Gradient = p;
-
-			this.EnableWidgets();
+			this.UpdateClientGeometry();
 			this.ignoreChanged = false;
 		}
 
@@ -193,17 +219,15 @@ namespace Epsitec.Common.Document.Panels
 
 			p.Color1 = this.fieldColor1.Color;
 			p.Color2 = this.fieldColor2.Color;
-			p.Repeat = (int)this.fieldRepeat.InternalValue;
+			p.Angle  = (double) this.fieldAngle.InternalValue;
+			p.Repeat = (int)    this.fieldRepeat.InternalValue;
 			p.Middle = (double) this.fieldMiddle.InternalValue/100;
 			p.Smooth = (double) this.fieldSmooth.InternalValue;
 
-			p.Angle = this.angle;
-			p.Cx    = this.cx;
-			p.Cy    = this.cy;
-			p.Sx    = this.sx;
-			p.Sy    = this.sy;
-
-			this.sample.Gradient = p;
+			p.Cx = this.cx;
+			p.Cy = this.cy;
+			p.Sx = this.sx;
+			p.Sy = this.sy;
 		}
 
 		// Grise les widgets nécessaires.
@@ -211,26 +235,33 @@ namespace Epsitec.Common.Document.Panels
 		{
 			int sel = this.listFill.SelectedIndex;
 
-			this.label.SetVisible(!this.isExtendedSize);
+			this.label.SetVisible(true);
+			this.nothingButton.SetVisible(true);
 			this.listFill.SetVisible(this.isExtendedSize);
-			this.sample.SetVisible(this.isExtendedSize);
+			this.reset.SetVisible(this.isExtendedSize);
 			this.fieldColor1.SetVisible(true);
-			this.fieldColor2.SetVisible(this.isExtendedSize);
+			this.fieldColor2.SetVisible(sel > 0);
+			this.fieldAngle.SetVisible(this.isExtendedSize);
 			this.fieldRepeat.SetVisible(this.isExtendedSize);
 			this.fieldMiddle.SetVisible(this.isExtendedSize);
 			this.fieldSmooth.SetVisible(this.isExtendedSize);
+			this.labelAngle.SetVisible(this.isExtendedSize);
 			this.labelRepeat.SetVisible(this.isExtendedSize);
 			this.labelMiddle.SetVisible(this.isExtendedSize);
 			this.labelSmooth.SetVisible(this.isExtendedSize);
-			this.swapColor.SetVisible(this.isExtendedSize);
+			this.swapColor.SetVisible(sel > 0);
 
-			if ( sel == 1 || sel == 2 || sel == 3 || sel == 4 )
+			if ( sel > 0 )
 			{
+				this.reset.SetEnabled(this.isExtendedSize);
+				this.fieldAngle.SetEnabled(this.isExtendedSize);
 				this.fieldRepeat.SetEnabled(this.isExtendedSize);
 				this.fieldMiddle.SetEnabled(this.isExtendedSize);
 			}
 			else
 			{
+				this.reset.SetEnabled(false);
+				this.fieldAngle.SetEnabled(false);
 				this.fieldRepeat.SetEnabled(false);
 				this.fieldMiddle.SetEnabled(false);
 			}
@@ -295,77 +326,92 @@ namespace Epsitec.Common.Document.Panels
 			if ( this.fieldColor1 == null )  return;
 
 			this.EnableWidgets();
+			int sel = this.listFill.SelectedIndex;
 
 			Rectangle rect = this.Client.Bounds;
 			rect.Deflate(this.extendedZoneWidth, 0);
 			rect.Deflate(5);
 
-			if ( this.isExtendedSize )
+			rect.Bottom = rect.Top-20;
+			Rectangle r = rect;
+
+			r.Left = rect.Left;
+			r.Right = rect.Right-70;
+			this.label.Bounds = r;
+			r.Left = rect.Right-70;
+			r.Right = rect.Right-50;
+			this.nothingButton.Bounds = r;
+
+			if ( sel == 0 )
 			{
-				Rectangle r = rect;
-				r.Width = 80;
-				r.Bottom = r.Top-48;
-				this.listFill.Bounds = r;
-				this.listFill.ShowSelected(ScrollShowMode.Center);
-
-				r.Left = r.Right+5;
-				r.Width = 33;
-				this.sample.Bounds = r;
-
-				r = rect;
-				r.Left = r.Right-50;
-				r.Bottom = r.Top-20;
+				r.Left = rect.Right-50;
+				r.Right = rect.Right;
 				this.fieldColor1.Bounds = r;
-				r.Offset(0, -28);
+			}
+			else
+			{
+				r.Left = rect.Right-50;
+				r.Right = rect.Right-30;
+				this.fieldColor1.Bounds = r;
+				r.Left = rect.Right-20;
+				r.Right = rect.Right;
 				this.fieldColor2.Bounds = r;
 
-				r.Bottom = r.Top-2;
-				r.Height = 12;
-				r.Left += (r.Width-(r.Height+8))/2;
-				r.Width = r.Height+8;
+				r.Left = rect.Right-30;
+				r.Right = rect.Right-20;
 				this.swapColor.Bounds = r;
+			}
 
+			if ( this.isExtendedSize )
+			{
+				rect.Offset(0, -25);
 				r = rect;
-				r.Bottom = r.Top-48-25;
-				r.Height = 20;
-				r.Width = 14;
+
+				r.Left = rect.Left;
+				r.Right = rect.Left+85;
+				this.listFill.Bounds = r;
+				r.Left = rect.Left+90;
+				r.Right = rect.Left+114;
+				this.reset.Bounds = r;
+				r.Left = rect.Right-62;
+				r.Width = 12;
+				this.labelAngle.Bounds = r;
+				r.Left = rect.Right-50;
+				r.Width = 50;
+				this.fieldAngle.Bounds = r;
+
+				rect.Offset(0, -25);
+				r = rect;
+
+				r.Left = rect.Left;
+				r.Width = 12;
 				this.labelRepeat.Bounds = r;
 				r.Left = r.Right;
-				r.Width = 45;
+				r.Width = 44;
 				this.fieldRepeat.Bounds = r;
 				r.Left = r.Right;
-				r.Width = 13;
+				r.Width = 12;
 				this.labelMiddle.Bounds = r;
 				r.Left = r.Right;
 				r.Width = 45;
 				this.fieldMiddle.Bounds = r;
 				r.Left = r.Right;
-				r.Width = 13;
+				r.Width = 12;
 				this.labelSmooth.Bounds = r;
 				r.Left = r.Right;
-				r.Width = 45;
+				r.Width = 50;
 				this.fieldSmooth.Bounds = r;
-			}
-			else
-			{
-				Rectangle r = rect;
-				r.Right = rect.Right-50;
-				this.label.Bounds = r;
-
-				r = rect;
-				r.Left = r.Right-50;
-				this.fieldColor1.Bounds = r;
 			}
 		}
 		
 
-		private void HandleSampleClicked(object sender, MessageEventArgs e)
+		private void HandleReset(object sender, MessageEventArgs e)
 		{
-			this.angle = 0.0;
-			this.cx    = 0.5;
-			this.cy    = 0.5;
-			this.sx    = 1.0;
-			this.sy    = 1.0;
+			this.fieldAngle.Value = 0.0M;
+			this.cx = 0.5;
+			this.cy = 0.5;
+			this.sx = 1.0;
+			this.sy = 1.0;
 
 			this.OnChanged();
 		}
@@ -405,10 +451,18 @@ namespace Epsitec.Common.Document.Panels
 			this.OnChanged();
 		}
 
+		// Le bouton "aucune couleur" a été cliqué.
+		private void HandleNothingClicked(object sender, MessageEventArgs e)
+		{
+			this.listFill.SelectedIndex = 0;
+			this.fieldColor1.Color = Drawing.Color.FromARGB(0, 1,1,1);
+			this.OnChanged();
+		}
+
 		private void HandleListChanged(object sender)
 		{
 			if ( this.ignoreChanged )  return;
-			this.EnableWidgets();
+			this.UpdateClientGeometry();
 			this.OnChanged();
 		}
 
@@ -420,20 +474,22 @@ namespace Epsitec.Common.Document.Panels
 
 
 		protected StaticText				label;
-		protected ScrollList				listFill;
-		protected GradientSample			sample;
+		protected IconButton				nothingButton;
+		protected TextFieldCombo			listFill;
+		protected Button					reset;
 		protected ColorSample				fieldColor1;
 		protected ColorSample				fieldColor2;
 		protected IconButton				swapColor;
+		protected TextFieldReal				fieldAngle;
 		protected TextFieldReal				fieldRepeat;
 		protected TextFieldReal				fieldMiddle;
 		protected TextFieldReal				fieldSmooth;
+		protected StaticText				labelAngle;
 		protected StaticText				labelRepeat;
 		protected StaticText				labelMiddle;
 		protected StaticText				labelSmooth;
 		protected ColorSample				originFieldColor;
 		protected int						originFieldRank = -1;
-		protected double					angle;
 		protected double					cx, cy;
 		protected double					sx, sy;
 	}

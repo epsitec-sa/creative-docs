@@ -23,11 +23,17 @@ namespace Epsitec.Common.Document
 			{
 				this.RealUnitDimension = RealUnitType.None;
 				this.duplicateMove = new Point(1.0, 1.0);
+				this.arrowMove = new Point(1.0, 1.0);
+				this.arrowMoveMul = 10.0;
+				this.arrowMoveDiv = 10.0;
 			}
 			else
 			{
 				this.RealUnitDimension = RealUnitType.DimensionMillimeter;
 				this.duplicateMove = new Point(50.0, 50.0);  // 5mm
+				this.arrowMove = new Point(10.0, 10.0);  // 1mm
+				this.arrowMoveMul = 10.0;
+				this.arrowMoveDiv = 10.0;
 			}
 
 			int total = 0;
@@ -199,6 +205,15 @@ namespace Epsitec.Common.Document
 				origin.X = (this.document.Size.Width-area.Width)/2;
 				origin.Y = (this.document.Size.Height-area.Height)/2;
 				return origin;
+			}
+		}
+
+		// Rectangle de la zone de travail.
+		public Rectangle RectangleArea
+		{
+			get
+			{
+				return new Rectangle(this.OriginArea, this.SizeArea);
 			}
 		}
 
@@ -590,8 +605,19 @@ namespace Epsitec.Common.Document
 				builder.Append(string.Format("{0}Résumé{1}", t1, t2));
 			}
 
-			info = string.Format("{0}Nom complet: {1}<br/>", chip, Misc.FullName(this.document.Filename, this.document.IsDirtySerialize));
-			builder.Append(info);
+			if ( fonts || images )
+			{
+				info = string.Format("{0}Nom complet: {1}<br/>", chip, Misc.FullName(this.document.Filename, this.document.IsDirtySerialize));
+				builder.Append(info);
+			}
+			else
+			{
+				if ( this.document.Filename != "" )
+				{
+					info = string.Format("{0}Nom complet: {1}<br/>", chip, Misc.FullName(this.document.Filename, this.document.IsDirtySerialize));
+					builder.Append(info);
+				}
+			}
 			
 			info = string.Format("{0}Dimensions: {1}x{2}<br/>", chip, this.document.Size.Width/this.document.Modifier.RealScale, this.document.Size.Height/this.document.Modifier.RealScale);
 			builder.Append(info);
@@ -933,6 +959,63 @@ namespace Epsitec.Common.Document
 				if ( this.duplicateMove != value )
 				{
 					this.duplicateMove = value;
+					this.document.Notifier.NotifySettingsChanged();
+					this.document.IsDirtySerialize = true;
+				}
+			}
+		}
+
+		// Choix du déplacement des objets avec les touches flèches.
+		public Point ArrowMove
+		{
+			get
+			{
+				return this.arrowMove;
+			}
+			
+			set
+			{
+				if ( this.arrowMove != value )
+				{
+					this.arrowMove = value;
+					this.document.Notifier.NotifySettingsChanged();
+					this.document.IsDirtySerialize = true;
+				}
+			}
+		}
+
+		// Choix du multiplicateur avec Shift.
+		public double ArrowMoveMul
+		{
+			get
+			{
+				return this.arrowMoveMul;
+			}
+			
+			set
+			{
+				if ( this.arrowMoveMul != value )
+				{
+					this.arrowMoveMul = value;
+					this.document.Notifier.NotifySettingsChanged();
+					this.document.IsDirtySerialize = true;
+				}
+			}
+		}
+
+		// Choix du diviseur avec Ctrl.
+		public double ArrowMoveDiv
+		{
+			get
+			{
+				return this.arrowMoveDiv;
+			}
+			
+			set
+			{
+				if ( this.arrowMoveDiv != value )
+				{
+					this.arrowMoveDiv = value;
 					this.document.Notifier.NotifySettingsChanged();
 					this.document.IsDirtySerialize = true;
 				}
@@ -1311,8 +1394,6 @@ namespace Epsitec.Common.Document
 		// Distribue tous les objets sélectionnés.
 		public void ShareSelection(int dir, bool horizontal)
 		{
-			this.OpletQueueBeginAction();
-
 			System.Collections.ArrayList list = this.ShareSortedList(dir, horizontal);
 			ShareObject first = list[0] as ShareObject;
 			ShareObject last = list[list.Count-1] as ShareObject;
@@ -1336,6 +1417,15 @@ namespace Epsitec.Common.Document
 				globalBox.Bottom += first.Object.BoundingBox.Height;
 			}
 
+			if ( ( horizontal && globalBox.Width  <= 0.0) ||
+				 (!horizontal && globalBox.Height <= 0.0) )
+			{
+				string message = "Impossible de distribuer les objets,<br/>car ils sont trop serrés.";
+				this.ActiveViewer.DialogError(message);
+				return;
+			}
+
+			this.OpletQueueBeginAction();
 			int total = list.Count;
 			for ( int i=1 ; i<total-1 ; i++ )
 			{
@@ -1361,8 +1451,6 @@ namespace Epsitec.Common.Document
 		// Distribue les espaces entre tous les objets sélectionnés.
 		public void SpaceSelection(bool horizontal)
 		{
-			this.OpletQueueBeginAction();
-
 			System.Collections.ArrayList list = this.ShareSortedList(0, horizontal);
 			ShareObject first = list[0] as ShareObject;
 			int total = list.Count;
@@ -1375,6 +1463,15 @@ namespace Epsitec.Common.Document
 			space /= total-1;
 			Point pos = first.Object.BoundingBox.TopRight;
 
+			if ( ( horizontal && space.Width  <= 0.0) ||
+				 (!horizontal && space.Height <= 0.0) )
+			{
+				string message = "Impossible de distribuer les objets,<br/>car ils sont trop serrés.";
+				this.ActiveViewer.DialogError(message);
+				return;
+			}
+
+			this.OpletQueueBeginAction();
 			for ( int i=1 ; i<total-1 ; i++ )
 			{
 				ShareObject so = list[i] as ShareObject;
@@ -1696,6 +1793,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.OpletQueueBeginAction();
+			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 			Objects.Bezier bezier = null;
@@ -1705,29 +1803,46 @@ namespace Epsitec.Common.Document
 				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
 				if ( !obj.IsSelected )  continue;
 
-				Path path = obj.GetPath();
-				if ( path == null )  continue;
+				for ( int rank=0 ; rank<100 ; rank++ )
+				{
+					Path path = obj.GetPath(rank);
+					if ( path == null )
+					{
+						if ( rank == 0 )  error = true;
+						break;
+					}
 
-				if ( bezier == null )
-				{
-					bezier = new Objects.Bezier(this.document, obj);
-					layer.Objects.Add(bezier);
-					bezier.Select(true);
-					this.TotalSelected ++;
-				}
+					if ( bezier == null )
+					{
+						bezier = new Objects.Bezier(this.document, obj);
+						layer.Objects.Add(bezier);
+						bezier.Select(true);
+						this.TotalSelected ++;
+					}
 			
-				if ( bezier.CreateFromPath(path, -1) )
-				{
-					obj.Mark = true;  // il faudra le détruire
+					if ( bezier.CreateFromPath(path, -1) )
+					{
+						obj.Mark = true;  // il faudra le détruire
+					}
+					else
+					{
+						obj.Mark = false;  // il ne faudra pas le détruire
+						error = true;
+					}
 				}
 			}
-			bezier.Select(false);
-			bezier.Select(true);  // pour sélectionner toutes les poignées
+			bezier.CreateFinalise();
 			this.document.Notifier.NotifyArea(bezier.BoundingBox);
 
 			this.DeleteSelection(true);  // détruit les objets sélectionnés et marqués
 			this.document.Notifier.NotifySelectionChanged();
 			this.OpletQueueValidateAction();
+
+			if ( error )
+			{
+				string message = "Un ou plusieurs objets n'ont pas pu être combinés.";
+				this.ActiveViewer.DialogError(message);
+			}
 		}
 
 		// Sépare tous les objets sélectionnés.
@@ -1735,6 +1850,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.OpletQueueBeginAction();
+			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 			int total = layer.Objects.Count;
@@ -1743,33 +1859,57 @@ namespace Epsitec.Common.Document
 				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
 				if ( !obj.IsSelected )  continue;
 
-				Path path = obj.GetPath();
-				if ( path == null )  continue;
-
-				for ( int i=0 ; i<100 ; i++ )
+				for ( int rank=0 ; rank<100 ; rank++ )
 				{
-					Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
-					layer.Objects.Add(bezier);
-					bezier.Select(true);
-					this.TotalSelected ++;
-
-					if ( bezier.CreateFromPath(path, i) )
+					Path path = obj.GetPath(rank);
+					if ( path == null )
 					{
-						bezier.Select(false);
-						bezier.Select(true);  // pour sélectionner toutes les poignées
-						this.document.Notifier.NotifyArea(bezier.BoundingBox);
-						obj.Mark = true;  // il faudra le détruire
+						if ( rank == 0 )  error = true;
+						break;
 					}
-					else
+
+					Objects.Bezier first = null;
+					for ( int i=0 ; i<100 ; i++ )
 					{
-						layer.Objects.Remove(bezier);
-						this.TotalSelected --;
+						Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
+						layer.Objects.Add(bezier);
+						bezier.Select(true);
+						this.TotalSelected ++;
+						if ( first == null )  first = bezier;
+
+						if ( bezier.CreateFromPath(path, i) )
+						{
+							bezier.CreateFinalise();
+							this.document.Notifier.NotifyArea(bezier.BoundingBox);
+							obj.Mark = true;  // il faudra le détruire
+						}
+						else
+						{
+							layer.Objects.Remove(bezier);
+							this.TotalSelected --;
+
+							if ( i == 1 )  // un seul objet créé ?
+							{
+								layer.Objects.Remove(first);
+								this.TotalSelected --;
+								obj.Mark = false;  // il ne faudra pas le détruire
+								error = true;
+							}
+
+							break;
+						}
 					}
 				}
 			}
 			this.DeleteSelection(true);  // détruit les objets sélectionnés et marqués
 			this.document.Notifier.NotifySelectionChanged();
 			this.OpletQueueValidateAction();
+
+			if ( error )
+			{
+				string message = "Un ou plusieurs objets n'ont pas pu être scindés.";
+				this.ActiveViewer.DialogError(message);
+			}
 		}
 
 		// Converti en Bézier tous les objets sélectionnés.
@@ -1777,6 +1917,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.OpletQueueBeginAction();
+			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 			int total = layer.Objects.Count;
@@ -1785,30 +1926,44 @@ namespace Epsitec.Common.Document
 				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
 				if ( !obj.IsSelected )  continue;
 
-				Path path = obj.GetPath();
-				if ( path == null )  continue;
-
-				Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
-				layer.Objects.Add(bezier);
-				bezier.Select(true);
-				this.TotalSelected ++;
-
-				if ( bezier.CreateFromPath(path, -1) )
+				for ( int rank=0 ; rank<100 ; rank++ )
 				{
-					bezier.Select(false);
-					bezier.Select(true);  // pour sélectionner toutes les poignées
-					this.document.Notifier.NotifyArea(bezier.BoundingBox);
-					obj.Mark = true;  // il faudra le détruire
-				}
-				else
-				{
-					layer.Objects.Remove(bezier);
-					this.TotalSelected --;
+					Path path = obj.GetPath(rank);
+					if ( path == null )
+					{
+						if ( rank == 0 )  error = true;
+						break;
+					}
+
+					Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
+					layer.Objects.Add(bezier);
+					bezier.Select(true);
+					this.TotalSelected ++;
+
+					if ( bezier.CreateFromPath(path, -1) )
+					{
+						bezier.CreateFinalise();
+						this.document.Notifier.NotifyArea(bezier.BoundingBox);
+						obj.Mark = true;  // il faudra le détruire
+					}
+					else
+					{
+						obj.Mark = false;  // il ne faudra pas le détruire
+						layer.Objects.Remove(bezier);
+						this.TotalSelected --;
+						error = true;
+					}
 				}
 			}
 			this.DeleteSelection(true);  // détruit les objets sélectionnés et marqués
 			this.document.Notifier.NotifySelectionChanged();
 			this.OpletQueueValidateAction();
+
+			if ( error )
+			{
+				string message = "Un ou plusieurs objets n'ont pas pu être convertis en courbes.";
+				this.ActiveViewer.DialogError(message);
+			}
 		}
 
 		// Fragmente tous les objets sélectionnés.
@@ -1816,6 +1971,7 @@ namespace Epsitec.Common.Document
 		{
 			if ( this.ActiveViewer.IsCreating )  return;
 			this.OpletQueueBeginAction();
+			bool error = false;
 			DrawingContext context = this.ActiveViewer.DrawingContext;
 			Objects.Abstract layer = context.RootObject();
 			int total = layer.Objects.Count;
@@ -1828,69 +1984,85 @@ namespace Epsitec.Common.Document
 				{
 					obj.Mark = true;  // il faudra le détruire
 				}
+				else
+				{
+					error = true;
+				}
 			}
 			this.DeleteSelection(true);  // détruit les objets sélectionnés et marqués
 			this.document.Notifier.NotifySelectionChanged();
 			this.OpletQueueValidateAction();
+
+			if ( error )
+			{
+				string message = "Un ou plusieurs objets n'ont pas pu être fragmentés.";
+				this.ActiveViewer.DialogError(message);
+			}
 		}
 
 		// Fragmente un objet.
 		protected bool FragmentObject(Objects.Abstract obj)
 		{
-			Path path = obj.GetPath();
-			if ( path == null )  return false;
-
-			PathElement[] elements;
-			Point[] points;
-			path.GetElements(out elements, out points);
-			if ( elements.Length > 100 )  return false;
-
-			Point start = new Point(0, 0);
-			Point current = new Point(0, 0);
-			Point p1 = new Point(0, 0);
-			Point p2 = new Point(0, 0);
-			Point p3 = new Point(0, 0);
-			int i = 0;
-			while ( i < elements.Length )
+			for ( int rank=0 ; rank<100 ; rank++ )
 			{
-				switch ( elements[i] & PathElement.MaskCommand )
+				Path path = obj.GetPath(rank);
+				if ( path == null )
 				{
-					case PathElement.MoveTo:
-						current = points[i++];
-						start = current;
-						break;
+					return (rank != 0);
+				}
 
-					case PathElement.LineTo:
-						p1 = points[i++];
-						this.FragmentCreateLine(current, p1, obj);
-						current = p1;
-						break;
+				PathElement[] elements;
+				Point[] points;
+				path.GetElements(out elements, out points);
+				if ( elements.Length > 100 )  return false;
 
-					case PathElement.Curve3:
-						p1 = points[i++];
-						p2 = points[i++];
-						this.FragmentCreateBezier(current, p1, p1, p2, obj);
-						current = p2;
-						break;
+				Point start = new Point(0, 0);
+				Point current = new Point(0, 0);
+				Point p1 = new Point(0, 0);
+				Point p2 = new Point(0, 0);
+				Point p3 = new Point(0, 0);
+				int i = 0;
+				while ( i < elements.Length )
+				{
+					switch ( elements[i] & PathElement.MaskCommand )
+					{
+						case PathElement.MoveTo:
+							current = points[i++];
+							start = current;
+							break;
 
-					case PathElement.Curve4:
-						p1 = points[i++];
-						p2 = points[i++];
-						p3 = points[i++];
-						this.FragmentCreateBezier(current, p1, p2, p3, obj);
-						current = p3;
-						break;
+						case PathElement.LineTo:
+							p1 = points[i++];
+							this.FragmentCreateLine(current, p1, obj);
+							current = p1;
+							break;
 
-					default:
-						if ( (elements[i] & PathElement.FlagClose) != 0 )
-						{
-							this.FragmentCreateLine(current, start, obj);
-						}
-						i ++;
-						break;
+						case PathElement.Curve3:
+							p1 = points[i++];
+							p2 = points[i++];
+							this.FragmentCreateBezier(current, p1, p1, p2, obj);
+							current = p2;
+							break;
+
+						case PathElement.Curve4:
+							p1 = points[i++];
+							p2 = points[i++];
+							p3 = points[i++];
+							this.FragmentCreateBezier(current, p1, p2, p3, obj);
+							current = p3;
+							break;
+
+						default:
+							if ( (elements[i] & PathElement.FlagClose) != 0 )
+							{
+								this.FragmentCreateLine(current, start, obj);
+							}
+							i ++;
+							break;
+					}
 				}
 			}
-			return true;
+			return false;
 		}
 
 		// Crée un fragment de ligne droite.
@@ -1915,10 +2087,11 @@ namespace Epsitec.Common.Document
 			if ( p1 == p2 )  return false;
 			Objects.Bezier bezier = new Objects.Bezier(this.document, model);
 			bezier.CreateFromPoints(p1, s1, s2, p2);
-			bezier.Select(true);
+			bezier.CreateFinalise();
 			this.TotalSelected ++;
 			bezier.PropertyFillGradient.FillType = Properties.GradientFillType.None;
 			bezier.PropertyFillGradient.Color1 = Drawing.Color.FromARGB(0, 1,1,1);
+			bezier.PropertyPolyClose.BoolValue = false;
 
 			Objects.Abstract layer = this.ActiveViewer.DrawingContext.RootObject();
 			layer.Objects.Add(bezier);
@@ -2510,8 +2683,7 @@ namespace Epsitec.Common.Document
 			Objects.Abstract layer = context.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 			{
-				obj.HandlePropertiesUpdateVisible();
-				obj.HandlePropertiesUpdatePosition();
+				obj.HandlePropertiesUpdate();
 				this.document.Notifier.NotifyArea(this.ActiveViewer, obj.BoundingBox);
 			}
 		}
@@ -3127,7 +3299,8 @@ namespace Epsitec.Common.Document
 			{
 				if ( cmd == "ChangeProperty"  ||
 					 cmd == "ChangePageName"  ||
-					 cmd == "ChangeLayerName" )
+					 cmd == "ChangeLayerName" ||
+					 cmd == "ChangeGuide"     )
 				{
 					this.opletSkip = true;
 					return null;
@@ -3203,6 +3376,9 @@ namespace Epsitec.Common.Document
 		protected RealUnitType					realUnitDimension;
 		protected double						realScale;
 		protected Point							duplicateMove;
+		protected Point							arrowMove;
+		protected double						arrowMoveMul;
+		protected double						arrowMoveDiv;
 
 		public static readonly double			fontSizeScale = 3.5;  // empyrique !
 	}

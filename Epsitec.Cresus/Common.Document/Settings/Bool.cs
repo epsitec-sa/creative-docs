@@ -36,6 +36,14 @@ namespace Epsitec.Common.Document.Settings
 					this.text = "Repères visibles";
 					break;
 
+				case "GuidesMouse":
+					this.text = "Déplacements avec la souris";
+					break;
+
+				case "RulersShow":
+					this.text = "Règles visibles";
+					break;
+
 				case "PrintDraft":
 					this.text = "Brouillon (pas de dégradé ni de transparence)";
 					break;
@@ -72,6 +80,12 @@ namespace Epsitec.Common.Document.Settings
 					case "GuidesShow":
 						return this.document.Modifier.ActiveViewer.DrawingContext.GuidesShow;
 
+					case "GuidesMouse":
+						return this.document.Modifier.ActiveViewer.DrawingContext.GuidesMouse;
+
+					case "RulersShow":
+						return this.document.Modifier.ActiveViewer.DrawingContext.RulersShow;
+
 					case "PrintDraft":
 						return this.document.Settings.PrintInfo.ForceSimply;
 
@@ -106,6 +120,14 @@ namespace Epsitec.Common.Document.Settings
 
 					case "GuidesShow":
 						this.document.Modifier.ActiveViewer.DrawingContext.GuidesShow = value;
+						break;
+
+					case "GuidesMouse":
+						this.document.Modifier.ActiveViewer.DrawingContext.GuidesMouse = value;
+						break;
+
+					case "RulersShow":
+						this.document.Modifier.ActiveViewer.DrawingContext.RulersShow = value;
 						break;
 
 					case "PrintDraft":
