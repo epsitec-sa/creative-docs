@@ -2148,9 +2148,12 @@ namespace Epsitec.Common.Widgets
 					{
 						Window window = this.Window;
 						
-						window.SynchronousRepaint ();
-						this.parent.Invalidate (this.MapClientToParent (rect));
-						window.SynchronousRepaint ();
+						if (window != null)
+						{
+							window.SynchronousRepaint ();
+							this.parent.Invalidate (this.MapClientToParent (rect));
+							window.SynchronousRepaint ();
+						}
 					}
 					else
 					{
