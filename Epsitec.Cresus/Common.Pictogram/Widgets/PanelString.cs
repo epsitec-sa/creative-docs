@@ -12,7 +12,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelString : AbstractPanel
 	{
-		public PanelString()
+		public PanelString(Drawer drawer) : base(drawer)
 		{
 			this.label = new StaticText(this);
 			this.label.Alignment = Drawing.ContentAlignment.MiddleLeft;
@@ -28,11 +28,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.fieldMulti.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 
 			this.isNormalAndExtended = true;
-		}
-		
-		public PanelString(Widget embedder) : this()
-		{
-			this.SetEmbedder(embedder);
 		}
 		
 		protected override void Dispose(bool disposing)

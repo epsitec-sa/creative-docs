@@ -12,41 +12,40 @@ namespace Epsitec.Common.Pictogram.Widgets
 	
 	public class PanelStyles : Epsitec.Common.Widgets.Widget
 	{
-		public PanelStyles(Drawer drawer, ToolTip toolTip)
+		public PanelStyles(Drawer drawer)
 		{
 			this.drawer = drawer;
-			this.toolTip = toolTip;
 
 			this.toolBar = new HToolBar(this);
 
 			this.buttonNew = new IconButton(@"file:images/stylenew.icon");
 			this.buttonNew.Clicked += new MessageEventHandler(this.HandleButtonNew);
 			this.toolBar.Items.Add(this.buttonNew);
-			this.toolTip.SetToolTip(this.buttonNew, "Nouveau style");
+			ToolTip.Default.SetToolTip(this.buttonNew, "Nouveau style");
 
 			this.buttonDuplicate = new IconButton(@"file:images/duplicate.icon");
 			this.buttonDuplicate.Clicked += new MessageEventHandler(this.HandleButtonDuplicate);
 			this.toolBar.Items.Add(this.buttonDuplicate);
-			this.toolTip.SetToolTip(this.buttonDuplicate, "Dupliquer le style");
+			ToolTip.Default.SetToolTip(this.buttonDuplicate, "Dupliquer le style");
 
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonUp = new IconButton(@"file:images/up.icon");
 			this.buttonUp.Clicked += new MessageEventHandler(this.HandleButtonUp);
 			this.toolBar.Items.Add(this.buttonUp);
-			this.toolTip.SetToolTip(this.buttonUp, "Style plus haut");
+			ToolTip.Default.SetToolTip(this.buttonUp, "Style plus haut");
 
 			this.buttonDown = new IconButton(@"file:images/down.icon");
 			this.buttonDown.Clicked += new MessageEventHandler(this.HandleButtonDown);
 			this.toolBar.Items.Add(this.buttonDown);
-			this.toolTip.SetToolTip(this.buttonDown, "Style plus bas");
+			ToolTip.Default.SetToolTip(this.buttonDown, "Style plus bas");
 
 			this.toolBar.Items.Add(new IconSeparator());
 
 			this.buttonDelete = new IconButton(@"file:images/delete.icon");
 			this.buttonDelete.Clicked += new MessageEventHandler(this.HandleButtonDelete);
 			this.toolBar.Items.Add(this.buttonDelete);
-			this.toolTip.SetToolTip(this.buttonDelete, "Supprimer le style");
+			ToolTip.Default.SetToolTip(this.buttonDelete, "Supprimer le style");
 
 			this.table = new CellTable(this);
 			this.table.SelectionChanged += new EventHandler(this.HandleTableSelectionChanged);
@@ -394,19 +393,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			else
 			{
-				panel = property.CreatePanel();
-				panel.Drawer = this.drawer;
+				panel = property.CreatePanel(this.drawer);
 				panel.ExtendedSize = true;
 				panel.SetProperty(property);
 				panel.StyleDirect = true;
 
-				rect = new Drawing.Rectangle();
-				rect.Left   = 1;
-				rect.Right  = this.panel.Width-1;
-				rect.Bottom = this.panel.Height-1-panel.DefaultHeight;
-				rect.Top    = this.panel.Height-1;
-				panel.Bounds = rect;
-				panel.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.Top;
+				panel.Anchor = AnchorStyles.LeftAndRight|AnchorStyles.All;
+				Drawing.Margins margins = new Drawing.Margins();
+				margins.Left   = 1;
+				margins.Right  = 1;
+				margins.Top    = 1;
+				margins.Bottom = this.panel.Height-1-panel.DefaultHeight;
+				panel.AnchorMargins = margins;
 				panel.Changed += new EventHandler(this.HandlePanelChanged);
 				panel.OriginColorChanged += new EventHandler(this.HandleOriginColorChanged);
 				panel.Parent = this.panel;
@@ -416,7 +414,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					originColorLastPanel = panel;
 				}
 
-				this.leftHeightUsed = this.panel.Height-rect.Bottom;
+				this.leftHeightUsed = panel.Height;
 			}
 
 			// Positionne le ColorSelector.
@@ -558,8 +556,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 		}
 
 
+		protected Drawer						drawer;
 		protected HToolBar						toolBar;
-		protected ToolTip						toolTip;
 		protected IconButton					buttonNew;
 		protected IconButton					buttonDuplicate;
 		protected IconButton					buttonUp;
@@ -568,7 +566,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected CellTable						table;
 		protected Widget						panel;
 		protected ColorSelector					colorSelector;
-		protected Drawer						drawer;
 		protected int							nextID = 1;
 		protected VMenu							contextMenu;
 		protected AbstractPanel					originColorPanel = null;
