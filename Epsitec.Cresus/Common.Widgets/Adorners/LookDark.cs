@@ -707,7 +707,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				Drawing.Rectangle rHilite = new Drawing.Rectangle();
 				rHilite = titleRect;
-				rHilite.Bottom = rHilite.Top-3;
+				rHilite.Bottom = rHilite.Top-2;
 				Drawing.Path pHilite = PathTopCornerRectangle(rHilite);
 				graphics.Rasterizer.AddSurface(pHilite);
 				graphics.RenderSolid(this.colorHilite);
@@ -743,7 +743,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				Drawing.Rectangle rHilite = new Drawing.Rectangle();
 				rHilite = titleRect;
-				rHilite.Bottom = rHilite.Top-3;
+				rHilite.Bottom = rHilite.Top-2;
 				Drawing.Path pHilite = PathTopCornerRectangle(rHilite);
 				graphics.Rasterizer.AddSurface(pHilite);
 				graphics.RenderSolid(this.colorHilite);
@@ -1195,7 +1195,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( (state&WidgetState.Selected) != 0 )
 				{
-					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorCaptionText);
+					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorCaptionText, Drawing.GlyphPaintStyle.Selected);
 				}
 				else
 				{
@@ -1204,7 +1204,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlLightLight);
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlLightLight, Drawing.GlyphPaintStyle.Disabled);
 			}
 
 			if ( (state&WidgetState.Focused) != 0 )
@@ -1255,11 +1255,22 @@ namespace Epsitec.Common.Widgets.Adorner
 			double dy = rect.Height;
 
 			Drawing.Path path = new Drawing.Path();
-			path.MoveTo(ox+0.5, oy);
-			path.LineTo(ox+0.5, oy+dy-0.5-5);
-			path.LineTo(ox+0.5+5, oy+dy-0.5);
-			path.LineTo(ox+dx-0.5, oy+dy-0.5);
-			path.LineTo(ox+dx-0.5, oy);
+
+			if ( rect.Height > 5 )
+			{
+				path.MoveTo(ox+0.5, oy);
+				path.LineTo(ox+0.5, oy+dy-0.5-5);
+				path.LineTo(ox+0.5+5, oy+dy-0.5);
+				path.LineTo(ox+dx-0.5, oy+dy-0.5);
+				path.LineTo(ox+dx-0.5, oy);
+			}
+			else
+			{
+				path.MoveTo(ox+0.5+5-rect.Height, oy);
+				path.LineTo(ox+0.5+5, oy+dy-0.5);
+				path.LineTo(ox+dx-0.5, oy+dy-0.5);
+				path.LineTo(ox+dx-0.5, oy);
+			}
 
 			return path;
 		}
@@ -1302,16 +1313,9 @@ namespace Epsitec.Common.Widgets.Adorner
 		}
 
 
-		public void AdaptEnabledTextColor(ref Drawing.Color color)
+		public void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
 		{
-			color.R = 1.0-color.R;
-			color.G = 1.0-color.G;
-			color.B = 1.0-color.B;
-		}
-
-		public void AdaptDisabledTextColor(ref Drawing.Color color, Drawing.Color uniqueColor)
-		{
-			if ( uniqueColor == this.colorControlLightLight )
+			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled )
 			{
 				double alpha = color.A;
 				double intensity = color.GetBrightness ();
@@ -1337,15 +1341,22 @@ namespace Epsitec.Common.Widgets.Adorner
 			get { return this.colorWindow; }
 		}
 
+		public Drawing.Color ColorDisabled
+		{
+			get { return this.colorControlLightLight; }
+		}
+
 		public Drawing.Color ColorBorder
 		{
 			get { return this.colorBlack; }
 		}
 
-		public Drawing.Color ColorDisabled
+		public Drawing.Color ColorTextFieldBorder(bool enabled)
 		{
-			get { return this.colorControlLightLight; }
+			return enabled ? this.colorBlack : this.colorControlDarkDark;
 		}
+
+		public double AlphaVMenu { get { return 1.0; } }
 
 		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(2,2,2,2); } }
 		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }

@@ -8,6 +8,8 @@ namespace Epsitec.Common.Widgets.Adorner
 		public LookAqua()
 		{
 			this.bitmap = Drawing.Bitmap.FromManifestResource("Epsitec.Common.Widgets.Adorners.Resources.LookAqua.png", this.GetType().Assembly);
+			this.metal = Drawing.Bitmap.FromManifestResource("Epsitec.Common.Widgets.Adorners.Resources.metal1.png", this.GetType().Assembly);
+			this.metalRenderer = false;
 			this.RefreshColors();
 		}
 
@@ -304,11 +306,21 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else if ( style == ButtonStyle.UpDown )
 			{
+				if ( (state&WidgetState.Enabled) == 0 )
+				{
+					graphics.AddLine(rect.Left+0.5, rect.Bottom, rect.Left+0.5, rect.Top);
+					graphics.RenderSolid(this.colorBorder);
+				}
+
 				if ( dir == Direction.Up )
 				{
 					if ( (state&WidgetState.Enabled) != 0 )
 					{
 						this.PaintImageButton(graphics, rect, 64);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, 68);
 					}
 
 					if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
@@ -322,6 +334,10 @@ namespace Epsitec.Common.Widgets.Adorner
 					if ( (state&WidgetState.Enabled) != 0 )
 					{
 						this.PaintImageButton(graphics, rect, 65);
+					}
+					else
+					{
+						this.PaintImageButton(graphics, rect, 69);
 					}
 
 					if ( (state&WidgetState.Engaged) != 0 ||  // bouton pressé ?
@@ -401,8 +417,26 @@ namespace Epsitec.Common.Widgets.Adorner
 											 bool readOnly)
 		{
 			if ( style == TextFieldStyle.Normal ||
-				 style == TextFieldStyle.Combo  ||
-				 style == TextFieldStyle.UpDown )
+				 style == TextFieldStyle.Combo  )
+			{
+				double radius = this.RetRadiusFrame(rect);
+				Drawing.Path path = PathRoundRectangle(rect, radius);
+
+				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(Drawing.Color.FromBrightness(readOnly?0.9:1.0));
+				}
+				else
+				{
+					graphics.Rasterizer.AddSurface(path);
+					graphics.RenderSolid(Drawing.Color.FromBrightness(0.9));
+				}
+
+				graphics.Rasterizer.AddOutline(path, 1);
+				graphics.RenderSolid(this.colorBorder);
+			}
+			else if ( style == TextFieldStyle.UpDown )
 			{
 				double radius = this.RetRadiusFrame(rect);
 				Drawing.Path path = PathRoundRectangle(rect, radius);
@@ -496,11 +530,6 @@ namespace Epsitec.Common.Widgets.Adorner
 				this.PaintImageButton(graphics, frameRect, little?50:48);
 			}
 
-			if ( !tabRect.IsSurfaceZero )
-			{
-				// TODO: à faire ...
-			}
-
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(this.colorBorder);
 		}
@@ -574,6 +603,7 @@ namespace Epsitec.Common.Widgets.Adorner
 								  Drawing.Rectangle titleRect,
 								  Widgets.WidgetState state)
 		{
+#if false
 			this.PaintBackground(graphics, frameRect, frameRect, 0.95, 8.0);
 
 			frameRect.Inflate(-0.5, -0.5);
@@ -585,6 +615,13 @@ namespace Epsitec.Common.Widgets.Adorner
 			titleRect.Bottom -= 2;
 			titleRect.Top    += 2;
 			this.PaintImageButton(graphics, titleRect, 2);
+#else
+			frameRect.Top -= titleRect.Height/2;
+			double radius = this.RetRadiusFrame(frameRect);
+			Drawing.Path path = PathRoundRectangle(frameRect, radius);
+			graphics.Rasterizer.AddOutline(path, 1);
+			graphics.RenderSolid(this.colorBorder);
+#endif
 		}
 
 		public void PaintSepLine(Drawing.Graphics graphics,
@@ -640,8 +677,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(this.colorBorder);
 
-			top.Bottom = top.Top-10;
-			this.PaintImageButton(graphics, top, 56);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				top.Bottom = top.Top-10;
+				this.PaintImageButton(graphics, top, 56);
+			}
 		}
 
 		// Dessine l'onglet devant les autres.
@@ -658,7 +698,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				this.PaintImageButton(graphics, titleRect, 8);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintImageButton(graphics, titleRect, 8);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, titleRect, 12);
+				}
 			}
 		}
 
@@ -683,7 +730,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				this.PaintImageButton(graphics, titleRect, 10);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintImageButton(graphics, titleRect, 10);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, titleRect, 12);
+				}
 			}
 		}
 
@@ -780,6 +834,18 @@ namespace Epsitec.Common.Widgets.Adorner
 										Direction dir)
 		{
 			this.PaintBackground(graphics, rect, rect, 0.95, 16.0);
+
+			if ( dir == Direction.Up )
+			{
+				graphics.AddLine(rect.Left, rect.Bottom+0.5, rect.Right, rect.Bottom+0.5);
+				graphics.RenderSolid(this.colorBorder);
+			}
+
+			if ( dir == Direction.Left )
+			{
+				graphics.AddLine(rect.Right-0.5, rect.Bottom, rect.Right-0.5, rect.Top);
+				graphics.RenderSolid(this.colorBorder);
+			}
 		}
 
 		public void PaintToolForeground(Drawing.Graphics graphics,
@@ -940,6 +1006,9 @@ namespace Epsitec.Common.Widgets.Adorner
 										  WidgetState state)
 		{
 			this.PaintBackground(graphics, rect, rect, 0.95, 12.0);
+
+			graphics.AddLine(rect.Left, rect.Top-0.5, rect.Right, rect.Top-0.5);
+			graphics.RenderSolid(this.colorBorder);
 		}
 
 		public void PaintStatusForeground(Drawing.Graphics graphics,
@@ -1037,7 +1106,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( (state&WidgetState.Selected) != 0 )
 				{
-					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorCaptionText);
+					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorCaptionText, Drawing.GlyphPaintStyle.Selected);
 				}
 				else
 				{
@@ -1046,7 +1115,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorDisabled);
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorDisabled, Drawing.GlyphPaintStyle.Disabled);
 			}
 
 			if ( (state&WidgetState.Focused) != 0 )
@@ -1133,6 +1202,31 @@ namespace Epsitec.Common.Widgets.Adorner
 			path.CurveTo(ox+0.5, oy+dy-0.5, ox+radius+0.5, oy+dy-0.5);
 			path.LineTo (ox+dx-0.5, oy+dy-0.5);
 			if ( closed )  path.Close();
+
+			return path;
+		}
+
+		// Crée le chemin d'un rectangle à coins arrondis en forme de "D".
+		protected Drawing.Path PathRightRoundRectangle(Drawing.Rectangle rect, double radius)
+		{
+			double ox = rect.Left;
+			double oy = rect.Bottom;
+			double dx = rect.Width;
+			double dy = rect.Height;
+
+			if ( radius == 0 )
+			{
+				radius = System.Math.Min(dx, dy)/8;
+			}
+			
+			Drawing.Path path = new Drawing.Path();
+			path.MoveTo (ox+0.5, oy+0.5);
+			path.LineTo (ox+dx-radius-0.5, oy+0.5);
+			path.CurveTo(ox+dx-0.5, oy+0.5, ox+dx-0.5, oy+radius+0.5);
+			path.LineTo (ox+dx-0.5, oy+dy-radius-0.5);
+			path.CurveTo(ox+dx-0.5, oy+dy-0.5, ox+dx-radius-0.5, oy+dy-0.5);
+			path.LineTo (ox+0.5, oy+dy-0.5);
+			path.Close();
 
 			return path;
 		}
@@ -1241,7 +1335,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			picon.Left  = icon.Left;
 			picon.Right = icon.Left+iconMargin;
 			graphics.Align(ref prect);
-			if ( !prect.IsSurfaceZero && prect.Width > 1 )
+			if ( !prect.IsSurfaceZero )
 			{
 				graphics.PaintImage(this.bitmap, prect, picon);
 			}
@@ -1251,7 +1345,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			picon.Left  = icon.Left+iconMargin;
 			picon.Right = icon.Right-iconMargin;
 			graphics.Align(ref prect);
-			if ( !prect.IsSurfaceZero && prect.Width > 1 )
+			if ( !prect.IsSurfaceZero )
 			{
 				graphics.PaintImage(this.bitmap, prect, picon);
 			}
@@ -1261,7 +1355,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			picon.Left  = icon.Right-iconMargin;
 			picon.Right = icon.Right;
 			graphics.Align(ref prect);
-			if ( !prect.IsSurfaceZero && prect.Width > 1 )
+			if ( !prect.IsSurfaceZero )
 			{
 				graphics.PaintImage(this.bitmap, prect, picon);
 			}
@@ -1282,7 +1376,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			picon.Bottom = icon.Bottom;
 			picon.Top    = icon.Bottom+iconMargin;
 			graphics.Align(ref prect);
-			if ( !prect.IsSurfaceZero && prect.Height > 1 )
+			if ( !prect.IsSurfaceZero )
 			{
 				graphics.PaintImage(this.bitmap, prect, picon);
 			}
@@ -1292,7 +1386,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			picon.Bottom = icon.Bottom+iconMargin;
 			picon.Top    = icon.Top-iconMargin;
 			graphics.Align(ref prect);
-			if ( !prect.IsSurfaceZero && prect.Height > 1 )
+			if ( !prect.IsSurfaceZero )
 			{
 				graphics.PaintImage(this.bitmap, prect, picon);
 			}
@@ -1302,7 +1396,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			picon.Bottom = icon.Top-iconMargin;
 			picon.Top    = icon.Top;
 			graphics.Align(ref prect);
-			if ( !prect.IsSurfaceZero && prect.Height > 1 )
+			if ( !prect.IsSurfaceZero )
 			{
 				graphics.PaintImage(this.bitmap, prect, picon);
 			}
@@ -1315,28 +1409,47 @@ namespace Epsitec.Common.Widgets.Adorner
 									   double lightning,
 									   double topShadow)
 		{
-			double l1 = System.Math.Min((245.0/255.0)*lightning, 1.0);
-			double l2 = System.Math.Min((237.0/255.0)*lightning, 1.0);
-
-			graphics.AddFilledRectangle(paintRect);
-			graphics.RenderSolid(Drawing.Color.FromBrightness(l1));
-
-			double h=2;
-			double offset = (paintRect.Bottom-windowRect.Bottom)%4;
-			for ( double y=paintRect.Bottom ; y<paintRect.Top+h*2 ; y+=h*2 )
+			if ( this.metalRenderer )
 			{
-				double y1 = y-offset;
-				double y2 = y1+h;
-
-				y1 = System.Math.Max(y1, paintRect.Bottom);
-				y2 = System.Math.Min(y2, paintRect.Top);
-
-				if ( y1 < y2 )
+				double dx = 512;
+				double dy = 512;
+				for ( double y=windowRect.Bottom ; y<windowRect.Top ; y+=dy )
 				{
-					graphics.AddFilledRectangle(new Drawing.Rectangle(paintRect.Left, y1, paintRect.Width, y2-y1));
+					for ( double x=windowRect.Left ; x<windowRect.Right ; x+=dx )
+					{
+						Drawing.Rectangle rect = new Drawing.Rectangle(x, y, dx, dy);
+						if ( rect.IntersectsWith(paintRect) )
+						{
+							graphics.PaintImage(this.metal, rect, new Drawing.Rectangle(0,0,dx,dy));
+						}
+					}
 				}
 			}
-			graphics.RenderSolid(Drawing.Color.FromBrightness(l2));
+			else
+			{
+				double l1 = System.Math.Min((245.0/255.0)*lightning, 1.0);
+				double l2 = System.Math.Min((240.0/255.0)*lightning, 1.0);
+
+				graphics.AddFilledRectangle(paintRect);
+				graphics.RenderSolid(Drawing.Color.FromBrightness(l1));
+
+				double h=2;
+				double offset = (paintRect.Bottom-windowRect.Bottom)%4;
+				for ( double y=paintRect.Bottom ; y<paintRect.Top+h*2 ; y+=h*2 )
+				{
+					double y1 = y-offset;
+					double y2 = y1+h;
+
+					y1 = System.Math.Max(y1, paintRect.Bottom);
+					y2 = System.Math.Min(y2, paintRect.Top);
+
+					if ( y1 < y2 )
+					{
+						graphics.AddFilledRectangle(new Drawing.Rectangle(paintRect.Left, y1, paintRect.Width, y2-y1));
+					}
+				}
+				graphics.RenderSolid(Drawing.Color.FromBrightness(l2));
+			}
 
 			if ( topShadow > 0.0 )
 			{
@@ -1350,13 +1463,9 @@ namespace Epsitec.Common.Widgets.Adorner
 		}
 
 
-		public void AdaptEnabledTextColor(ref Drawing.Color color)
+		public void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
 		{
-		}
-
-		public void AdaptDisabledTextColor(ref Drawing.Color color, Drawing.Color uniqueColor)
-		{
-			if ( uniqueColor == this.colorDisabled )
+			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled )
 			{
 				double alpha = color.A;
 				double intensity = color.GetBrightness ();
@@ -1365,6 +1474,11 @@ namespace Epsitec.Common.Widgets.Adorner
 				color = Drawing.Color.FromBrightness(intensity);
 				color.A = alpha;
 			}
+		}
+
+		public Drawing.Color ColorDisabled
+		{
+			get { return this.colorDisabled; }
 		}
 
 		public Drawing.Color ColorCaption
@@ -1387,10 +1501,12 @@ namespace Epsitec.Common.Widgets.Adorner
 			get { return this.colorBorder; }
 		}
 
-		public Drawing.Color ColorDisabled
+		public Drawing.Color ColorTextFieldBorder(bool enabled)
 		{
-			get { return this.colorDisabled; }
+			return this.colorBorder;
 		}
+
+		public double AlphaVMenu { get { return 0.95; } }
 
 		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(1,1,6,6); } }
 		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
@@ -1406,10 +1522,12 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double GeometryScrollerTopMargin { get { return 0; } }
 		public double GeometryScrollListLeftMargin { get { return -2; } }
 		public double GeometryScrollListRightMargin { get { return 1; } }
-		public double GeometrySliderLeftMargin { get { return 3; } }
-		public double GeometrySliderRightMargin { get { return -3; } }
+		public double GeometrySliderLeftMargin { get { return 4; } }
+		public double GeometrySliderRightMargin { get { return 0; } }
 
 		protected Drawing.Image		bitmap;
+		protected Drawing.Image		metal;
+		protected bool				metalRenderer;
 		protected Drawing.Color		colorBlack;
 		protected Drawing.Color		colorControl;
 		protected Drawing.Color		colorCaption;
@@ -1418,5 +1536,14 @@ namespace Epsitec.Common.Widgets.Adorner
 		protected Drawing.Color		colorBorder;
 		protected Drawing.Color		colorDisabled;
 		protected Drawing.Color		colorWindow;
+	}
+	
+	public class LookAquaMetal : LookAqua
+	{
+		public LookAquaMetal()
+		{
+			this.metalRenderer = true;
+			this.RefreshColors();
+		}
 	}
 }

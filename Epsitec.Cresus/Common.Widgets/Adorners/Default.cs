@@ -40,17 +40,6 @@ namespace Epsitec.Common.Widgets.Adorner
 			g = 1-(1-this.colorCaption.G)*0.25;
 			b = 1-(1-this.colorCaption.B)*0.25;
 			this.colorCaptionLight = Drawing.Color.FromRGB(r,g,b);
-
-			// Voir AdaptDisabledTextColor et PaintGeneralTextLayout !
-			if ( this.colorControlLightLight == this.colorCaptionText )
-			{
-				colorControlLightLight.R += (colorControlLightLight.R<0.5)?0.0001:-0.0001;
-			}
-
-			if ( this.colorControlDark == this.colorCaptionText )
-			{
-				colorControlDark.R += (colorControlDark.R<0.5)?0.0001:-0.0001;
-			}
 		}
 		
 
@@ -1070,7 +1059,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( (state&WidgetState.Selected) != 0 )
 				{
-					text.Paint(pos, graphics, graphics.ClipBounds, this.colorCaptionText);
+					text.Paint(pos, graphics, graphics.ClipBounds, this.colorCaptionText, Drawing.GlyphPaintStyle.Selected);
 				}
 				else
 				{
@@ -1083,11 +1072,11 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.Rasterizer.Gamma = 0.5;
 				pos.X ++;
 				pos.Y --;
-				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlLightLight, Drawing.GlyphPaintStyle.Disabled, false);
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlLightLight, Drawing.GlyphPaintStyle.Disabled);
 				graphics.Rasterizer.Gamma = gamma;  // remet gamma initial
 				pos.X --;
 				pos.Y ++;
-				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlDark, Drawing.GlyphPaintStyle.Disabled, true);
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlDark, Drawing.GlyphPaintStyle.Disabled);
 			}
 
 			if ( (state&WidgetState.Focused) != 0 )
@@ -1256,19 +1245,19 @@ namespace Epsitec.Common.Widgets.Adorner
 		}
 		
 
-		public void AdaptEnabledTextColor(ref Drawing.Color color)
+		public void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
 		{
-		}
-
-		public void AdaptDisabledTextColor(ref Drawing.Color color, Drawing.Color uniqueColor)
-		{
-			if ( uniqueColor == this.colorControlLightLight ||
-				 uniqueColor == this.colorControlDark       )
+			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled )
 			{
 				color.R = uniqueColor.R;
 				color.G = uniqueColor.G;
 				color.B = uniqueColor.B;
 			}
+		}
+
+		public Drawing.Color ColorDisabled
+		{
+			get { return this.colorControlDark; }
 		}
 
 		public Drawing.Color ColorCaption
@@ -1291,10 +1280,12 @@ namespace Epsitec.Common.Widgets.Adorner
 			get { return this.colorControlDarkDark; }
 		}
 
-		public Drawing.Color ColorDisabled
+		public Drawing.Color ColorTextFieldBorder(bool enabled)
 		{
-			get { return this.colorControlDark; }
+			return this.colorControlDarkDark;
 		}
+
+		public double AlphaVMenu { get { return 1.0; } }
 
 		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(2,2,2,2); } }
 		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }

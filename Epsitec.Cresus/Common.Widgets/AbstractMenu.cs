@@ -456,6 +456,12 @@ namespace Epsitec.Common.Widgets
 
 			this.window = new Window();
 			this.window.MakeFramelessWindow();
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			if ( adorner.AlphaVMenu < 1.0 )
+			{
+				this.window.MakeLayeredWindow();
+				this.window.Alpha = adorner.AlphaVMenu;
+			}
 			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.Width, this.Height);
 			Window.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
@@ -465,7 +471,14 @@ namespace Epsitec.Common.Widgets
 			AbstractMenu.menuFiltering = this;
 
 			this.window.Root.Children.Add(this);
-			this.window.AnimateShow(Animation.FadeIn);
+			if ( this.window.Alpha == 1.0 )
+			{
+				this.window.AnimateShow(Animation.FadeIn);
+			}
+			else
+			{
+				this.window.Show();
+			}
 			this.SetFocused(true);
 			
 			//	TODO: vérifier que lorsque le menu est refermé, les deux event handlers sont
@@ -523,6 +536,12 @@ namespace Epsitec.Common.Widgets
 
 			this.window = new Window();
 			this.window.MakeFramelessWindow();
+			IAdorner adorner = Widgets.Adorner.Factory.Active;
+			if ( this.submenu.IsVertical && adorner.AlphaVMenu < 1.0 )
+			{
+				this.window.MakeLayeredWindow();
+				this.window.Alpha = adorner.AlphaVMenu;
+			}
 			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
 			Window.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
@@ -532,7 +551,14 @@ namespace Epsitec.Common.Widgets
 			Animation anim = Animation.None;
 			if ( this.IsVertical || !closed )  anim = Animation.FadeIn;
 			if ( forceQuick )  anim = Animation.None;
-			this.window.AnimateShow(anim);
+			if ( this.window.Alpha == 1.0 )
+			{
+				this.window.AnimateShow(anim);
+			}
+			else
+			{
+				this.window.Show();
+			}
 			this.submenu.SetFocused(true);
 			
 			// Prend note du dernier menu "feuille" actif.

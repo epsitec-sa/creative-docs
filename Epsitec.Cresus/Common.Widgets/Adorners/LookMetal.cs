@@ -580,7 +580,14 @@ namespace Epsitec.Common.Widgets.Adorner
 								  Widgets.WidgetState state,
 								  Widgets.Direction dir)
 		{
-			this.PaintImageButton(graphics, rect, 27);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				this.PaintImageButton(graphics, rect, 28);
+			}
+			else
+			{
+				this.PaintImageButton(graphics, rect, 11);
+			}
 
 			rect.Inflate(-0.5, -0.5);
 			graphics.AddRectangle(rect);
@@ -601,7 +608,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				this.PaintImageButton(graphics, titleRect, 24);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintImageButton(graphics, titleRect, 24);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, titleRect, 27);
+				}
 			}
 
 			Drawing.Path pTitle = PathTopCornerRectangle(titleRect);
@@ -632,7 +646,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				this.PaintImageButton(graphics, titleRect, 25);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintImageButton(graphics, titleRect, 25);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, titleRect, 27);
+				}
 			}
 
 			Drawing.Path pTitle = PathTopCornerRectangle(titleRect);
@@ -747,7 +768,7 @@ namespace Epsitec.Common.Widgets.Adorner
 										WidgetState state,
 										Direction dir)
 		{
-			this.PaintImageButton(graphics, rect, (dir == Direction.Right) ? 23 : 31);
+			this.PaintImageButton(graphics, rect, (dir == Direction.Up) ? 23 : 31);
 		}
 
 		public void PaintToolForeground(Drawing.Graphics graphics,
@@ -1024,11 +1045,18 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				text.Paint(pos, graphics);
+				if ( (state&WidgetState.Selected) != 0 )
+				{
+					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, Drawing.Color.Empty, Drawing.GlyphPaintStyle.Selected);
+				}
+				else
+				{
+					text.Paint(pos, graphics);
+				}
 			}
 			else
 			{
-				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlLightLight);
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlLightLight, Drawing.GlyphPaintStyle.Disabled);
 			}
 
 			if ( (state&WidgetState.Focused) != 0 )
@@ -1143,11 +1171,11 @@ namespace Epsitec.Common.Widgets.Adorner
 			icon.Top    = 256-32*(rank/8);
 			icon.Bottom = icon.Top-32;
 
-			if ( rank == 16 || rank == 17 || rank == 18 || rank == 21 || rank == 27 || rank == 44 )
+			if ( rank == 16 || rank == 17 || rank == 18 || rank == 21 || rank == 28 || rank == 44 )
 			{
 				this.PaintImageButton1(graphics, rect, icon);
 			}
-			else if ( rank == 24 || rank == 25 || rank == 26 || rank == 32 || rank == 33 || rank == 34 )
+			else if ( rank == 24 || rank == 25 || rank == 26 || rank == 27 || rank == 32 || rank == 33 || rank == 34 || rank == 35 )
 			{
 				this.PaintImageButton9(graphics, rect, 5, icon, 5);
 			}
@@ -1229,18 +1257,17 @@ namespace Epsitec.Common.Widgets.Adorner
 		}
 
 
-		public void AdaptEnabledTextColor(ref Drawing.Color color)
+		public void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
 		{
-		}
-
-		public void AdaptDisabledTextColor(ref Drawing.Color color, Drawing.Color uniqueColor)
-		{
-			double alpha = color.A;
-			double intensity = color.GetBrightness ();
-			intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
-			intensity = System.Math.Min(intensity+0.3, 1.0);  // augmente l'intensité
-			color = Drawing.Color.FromBrightness(intensity);
-			color.A = alpha;
+			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled )
+			{
+				double alpha = color.A;
+				double intensity = color.GetBrightness ();
+				intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
+				intensity = System.Math.Min(intensity+0.3, 1.0);  // augmente l'intensité
+				color = Drawing.Color.FromBrightness(intensity);
+				color.A = alpha;
+			}
 		}
 
 		public Drawing.Color ColorCaption
@@ -1258,15 +1285,22 @@ namespace Epsitec.Common.Widgets.Adorner
 			get { return this.colorWindow; }
 		}
 
+		public Drawing.Color ColorDisabled
+		{
+			get { return Drawing.Color.Empty; }
+		}
+
 		public Drawing.Color ColorBorder
 		{
 			get { return Drawing.Color.FromBrightness(0.0); }
 		}
 
-		public Drawing.Color ColorDisabled
+		public Drawing.Color ColorTextFieldBorder(bool enabled)
 		{
-			get { return Drawing.Color.Empty; }
+			return this.colorBorder;
 		}
+
+		public double AlphaVMenu { get { return 1.0; } }
 
 		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(2,2,2,2); } }
 		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }

@@ -128,33 +128,40 @@ namespace Epsitec.Common.Widgets
 		// Nombre max de caractères dans la ligne éditée.
 		public int MaxChar
 		{
-			get
-			{
-				return this.maxChar;
-			}
-
-			set
-			{
-				this.maxChar = value;
-			}
+			get { return this.maxChar; }
+			set { this.maxChar = value; }
 		}
 
-
+		public virtual Drawing.Margins Margins
+		{
+			get { return this.margins; }
+			set { this.margins = value; }
+		}
+		
 		public virtual double LeftMargin
 		{
-			get
-			{
-				return this.leftMargin;
-			}
+			get { return this.margins.Left; }
+			set { this.margins.Left = value; }
 		}
 		
 		public virtual double RightMargin
 		{
-			get
-			{
-				return this.rightMargin;
-			}
+			get { return this.margins.Right; }
+			set { this.margins.Right = value; }
 		}
+		
+		public virtual double BottomMargin
+		{
+			get { return this.margins.Bottom; }
+			set { this.margins.Bottom = value; }
+		}
+		
+		public virtual double TopMargin
+		{
+			get { return this.margins.Top; }
+			set { this.margins.Top = value; }
+		}
+		
 		
 		public TextFieldStyle TextFieldStyle
 		{
@@ -251,8 +258,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( this.textLayout != null )
 			{
-				double dx = this.Client.Width - AbstractTextField.Margin*2 - this.rightMargin - this.leftMargin;
-				double dy = this.Client.Height - AbstractTextField.Margin*2;
+				double dx = this.Client.Width - AbstractTextField.Margin*2 - this.margins.Width;
+				double dy = this.Client.Height - AbstractTextField.Margin*2 - this.margins.Height;
 				this.realSize = new Drawing.Size(dx, dy);
 				this.textLayout.Alignment = this.Alignment;
 				this.textLayout.LayoutSize = new Drawing.Size(AbstractTextField.Infinity, dy);
@@ -735,23 +742,14 @@ namespace Epsitec.Common.Widgets
 			Drawing.Rectangle rect   = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state  = this.PaintState;
 			Drawing.Point     pos    = new Drawing.Point(AbstractTextField.Margin, AbstractTextField.Margin);
-			double            button = (this.rightMargin == 0) ? 0 : (this.rightMargin + 1);
+			double            button = (this.margins.Right == 0) ? 0 : (this.margins.Right + 1);
 			
-#if false
-			if ( this.isCombo )
-			{
-				adorner.PaintTextFieldBackground(graphics, rect, state, this.textStyle, false);
-			}
-			else
-			{
-				adorner.PaintTextFieldBackground(graphics, rect, state, this.textStyle, this.isReadOnly);
-			}
-#else
 			adorner.PaintTextFieldBackground(graphics, rect, state, this.textStyle, this.isReadOnly);
-#endif
 			
-			rect.Left  += this.leftMargin;
-			rect.Right -= button;
+			rect.Left   += this.margins.Left;
+			rect.Right  -= button;
+			rect.Bottom += this.margins.Bottom;
+			rect.Top    -= this.margins.Top;
 			pos -= this.scrollOffset;
 
 			Drawing.Rectangle rSaveClip = graphics.SaveClippingRectangle();
@@ -760,9 +758,9 @@ namespace Epsitec.Common.Widgets
 			rClip = this.MapClientToRoot(rClip);
 			graphics.SetClippingRectangle(rClip);
 
-			if ( rClip.Height < 17 )	//	TODO: remplacer cette constante par qqch de plus adéquat...
+			if ( rClip.Height < 18 )	//	TODO: remplacer cette constante par qqch de plus adéquat...
 			{
-				pos.Y += (17-rClip.Height)/2;  // remonte le texte si la hauteur est très petite
+				pos.Y += 18-rClip.Height;  // remonte le texte si la hauteur est très petite
 			}
 
 			if ( this.IsFocused )
@@ -841,8 +839,7 @@ namespace Epsitec.Common.Widgets
 		
 		protected bool							isReadOnly = false;
 		protected bool							isCombo = false;
-		protected double						leftMargin = 0;
-		protected double						rightMargin = 0;
+		protected Drawing.Margins				margins = new Drawing.Margins();
 		protected Drawing.Size					realSize;
 		protected Drawing.Point					scrollOffset = new Drawing.Point(0, 0);
 		protected TextFieldStyle				textStyle;

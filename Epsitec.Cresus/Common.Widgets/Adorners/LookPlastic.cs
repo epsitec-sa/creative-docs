@@ -308,6 +308,12 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else if ( style == ButtonStyle.UpDown )
 			{
+				if ( (state&WidgetState.Enabled) == 0 )
+				{
+					graphics.AddLine(rect.Left+0.5, rect.Bottom, rect.Left+0.5, rect.Top);
+					graphics.RenderSolid(this.colorBorder);
+				}
+
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
 					if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
@@ -406,7 +412,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				}
 
 				double radius = this.RetRadiusFrame(rect);
-				Drawing.Path path = PathLeftRoundRectangle(rect, radius, true);
+				Drawing.Path path = PathRoundRectangle(rect, radius);
 				graphics.Rasterizer.AddOutline(path, 1);
 				graphics.RenderSolid(this.colorBorder);
 			}
@@ -609,7 +615,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				this.PaintImageButton(graphics, titleRect, 8);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintImageButton(graphics, titleRect, 8);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, titleRect, 11);
+				}
 			}
 		}
 
@@ -636,7 +649,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				this.PaintImageButton(graphics, titleRect, 12);
+				if ( (state&WidgetState.Enabled) != 0 )
+				{
+					this.PaintImageButton(graphics, titleRect, 12);
+				}
+				else
+				{
+					this.PaintImageButton(graphics, titleRect, 11);
+				}
 			}
 		}
 
@@ -1026,7 +1046,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( (state&WidgetState.Selected) != 0 )
 				{
-					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorCaptionText);
+					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorCaptionText, Drawing.GlyphPaintStyle.Selected);
 				}
 				else
 				{
@@ -1035,7 +1055,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlDarkDark);
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlDarkDark, Drawing.GlyphPaintStyle.Disabled);
 			}
 
 			if ( (state&WidgetState.Focused) != 0 )
@@ -1260,20 +1280,24 @@ namespace Epsitec.Common.Widgets.Adorner
 		}
 
 
-		public void AdaptEnabledTextColor(ref Drawing.Color color)
+		public void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
 		{
+			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled )
+			{
+				double alpha = color.A;
+				double intensity = color.GetBrightness ();
+				intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
+				intensity = System.Math.Min(intensity+0.2, 1.0);  // augmente l'intensité
+				color = Drawing.Color.FromBrightness(intensity);
+				color.G = System.Math.Min(color.G*1.4, 1.0);
+				color.B = System.Math.Min(color.B*1.4, 1.0);  // bleuté
+				color.A = alpha;
+			}
 		}
 
-		public void AdaptDisabledTextColor(ref Drawing.Color color, Drawing.Color uniqueColor)
+		public Drawing.Color ColorDisabled
 		{
-			double alpha = color.A;
-			double intensity = color.GetBrightness ();
-			intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
-			intensity = System.Math.Min(intensity+0.2, 1.0);  // augmente l'intensité
-			color = Drawing.Color.FromBrightness(intensity);
-			color.G = System.Math.Min(color.G*1.4, 1.0);
-			color.B = System.Math.Min(color.B*1.4, 1.0);  // bleuté
-			color.A = alpha;
+			get { return Drawing.Color.Empty; }
 		}
 
 		public Drawing.Color ColorCaption
@@ -1296,10 +1320,12 @@ namespace Epsitec.Common.Widgets.Adorner
 			get { return this.colorBorder; }
 		}
 
-		public Drawing.Color ColorDisabled
+		public Drawing.Color ColorTextFieldBorder(bool enabled)
 		{
-			get { return Drawing.Color.Empty; }
+			return this.colorBorder;
 		}
+
+		public double AlphaVMenu { get { return 1.0; } }
 
 		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(2,2,2,2); } }
 		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
@@ -1315,7 +1341,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		public double GeometryScrollerTopMargin { get { return 2; } }
 		public double GeometryScrollListLeftMargin { get { return 0; } }
 		public double GeometryScrollListRightMargin { get { return 0; } }
-		public double GeometrySliderLeftMargin { get { return 3; } }
+		public double GeometrySliderLeftMargin { get { return 4; } }
 		public double GeometrySliderRightMargin { get { return 0; } }
 
 

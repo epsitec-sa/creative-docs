@@ -619,7 +619,14 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			rect.Inflate(-0.5, -0.5);
 			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.colorControlLight);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorControlLight);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControl);
+			}
 		}
 
 		// Dessine l'onglet devant les autres.
@@ -634,7 +641,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			Drawing.Path pTitle = PathTopRoundRectangle(titleRect, 0);
 
 			graphics.Rasterizer.AddSurface(pTitle);
-			graphics.RenderSolid(this.colorControlLight);
+			if ( (state&WidgetState.Enabled) != 0 )
+			{
+				graphics.RenderSolid(this.colorControlLight);
+			}
+			else
+			{
+				graphics.RenderSolid(this.colorControl);
+			}
 
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 			{
@@ -1113,7 +1127,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( (state&WidgetState.Selected) != 0 )
 				{
-					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorCaptionText);
+					text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorCaptionText, Drawing.GlyphPaintStyle.Selected);
 				}
 				else
 				{
@@ -1122,7 +1136,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 			else
 			{
-				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlDark);
+				text.Paint(pos, graphics, Drawing.Rectangle.Infinite, this.colorControlDark, Drawing.GlyphPaintStyle.Disabled);
 			}
 
 			if ( (state&WidgetState.Focused) != 0 )
@@ -1235,20 +1249,19 @@ namespace Epsitec.Common.Widgets.Adorner
 		}
 
 
-		public void AdaptEnabledTextColor(ref Drawing.Color color)
+		public void AdaptPictogramColor(ref Drawing.Color color, Drawing.GlyphPaintStyle paintStyle, Drawing.Color uniqueColor)
 		{
-		}
-
-		public void AdaptDisabledTextColor(ref Drawing.Color color, Drawing.Color uniqueColor)
-		{
-			double alpha = color.A;
-			double intensity = color.GetBrightness ();
-			intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
-			intensity = System.Math.Min(intensity+0.1, 1.0);  // augmente l'intensité
-			color = Drawing.Color.FromBrightness(intensity);
-			color.G = System.Math.Min(color.G*1.1, 1.0);
-			color.B = System.Math.Min(color.B*1.2, 1.0);  // bleuté
-			color.A = alpha;
+			if ( paintStyle == Drawing.GlyphPaintStyle.Disabled )
+			{
+				double alpha = color.A;
+				double intensity = color.GetBrightness ();
+				intensity = 0.5+(intensity-0.5)*0.25;  // diminue le contraste
+				intensity = System.Math.Min(intensity+0.1, 1.0);  // augmente l'intensité
+				color = Drawing.Color.FromBrightness(intensity);
+				color.G = System.Math.Min(color.G*1.1, 1.0);
+				color.B = System.Math.Min(color.B*1.2, 1.0);  // bleuté
+				color.A = alpha;
+			}
 		}
 
 		public Drawing.Color ColorCaption
@@ -1266,15 +1279,22 @@ namespace Epsitec.Common.Widgets.Adorner
 			get { return this.colorWindow; }
 		}
 
+		public Drawing.Color ColorDisabled
+		{
+			get { return Drawing.Color.Empty; }
+		}
+
 		public Drawing.Color ColorBorder
 		{
 			get { return this.colorControlDark; }
 		}
 
-		public Drawing.Color ColorDisabled
+		public Drawing.Color ColorTextFieldBorder(bool enabled)
 		{
-			get { return Drawing.Color.Empty; }
+			return enabled ? this.colorBlack : this.colorControlDark;
 		}
+
+		public double AlphaVMenu { get { return 1.0; } }
 
 		public Drawing.Margins GeometryMenuMargins { get { return new Drawing.Margins(2,2,2,2); } }
 		public Drawing.Margins GeometryRadioShapeBounds { get { return new Drawing.Margins(0,0,3,0); } }
