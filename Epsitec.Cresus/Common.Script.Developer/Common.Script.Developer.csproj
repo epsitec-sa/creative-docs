@@ -158,6 +158,10 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Images\NewMethod.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\Save.icon"
                     BuildAction = "EmbeddedResource"
                 />
