@@ -406,7 +406,7 @@ namespace Epsitec.Common.Tests
 			double size = 50;
 			
 			e.Graphics.Rasterizer.FillMode = FillMode.NonZero;
-			System.Drawing.Bitmap bitmap = System.Drawing.Image.FromFile (@"..\..\test.png") as System.Drawing.Bitmap;
+			Bitmap bitmap = ImageProvider.Default.GetImage (@"file:..\..\test.png").BitmapImage;
 			string text = "TOMATE";
 			
 			double max_width = 0;

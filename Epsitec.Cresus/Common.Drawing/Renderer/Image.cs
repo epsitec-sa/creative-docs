@@ -36,7 +36,7 @@ namespace Epsitec.Common.Drawing.Renderer
 			}
 		}
 
-		public System.Drawing.Bitmap	Bitmap
+		public Bitmap					Bitmap
 		{
 			get
 			{
@@ -50,11 +50,8 @@ namespace Epsitec.Common.Drawing.Renderer
 					if (this.bitmap != null)
 					{
 						System.Diagnostics.Debug.Assert (this.bitmap != null);
-						System.Diagnostics.Debug.Assert (this.bitmap_data != null);
 						
-						this.bitmap.UnlockBits (this.bitmap_data);
-						this.bitmap_data = null;
-						
+						this.bitmap.UnlockBits ();
 						this.AssertAttached ();
 						
 						Agg.Library.AggRendererImageSource2 (this.agg_ren, System.IntPtr.Zero, 0, 0, 0);
@@ -67,14 +64,10 @@ namespace Epsitec.Common.Drawing.Renderer
 						int width  = this.bitmap.Width;
 						int height = this.bitmap.Height;
 						
-						System.Drawing.Imaging.ImageLockMode mode = System.Drawing.Imaging.ImageLockMode.ReadOnly;
-						System.Drawing.Imaging.PixelFormat format = System.Drawing.Imaging.PixelFormat.Format32bppArgb;
-						
-						this.bitmap_data = this.bitmap.LockBits (new System.Drawing.Rectangle (0, 0, width, height), mode, format);
-						
+						this.bitmap.LockBits ();
 						this.AssertAttached ();
 						
-						Agg.Library.AggRendererImageSource2 (this.agg_ren, this.bitmap_data.Scan0, width, height, -this.bitmap_data.Stride);
+						Agg.Library.AggRendererImageSource2 (this.agg_ren, this.bitmap.Scan0, width, height, -this.bitmap.Stride);
 					}
 				}
 				
@@ -135,7 +128,7 @@ namespace Epsitec.Common.Drawing.Renderer
 					this.pixmap = null;
 				}
 				
-				System.Drawing.Bitmap bitmap = this.bitmap;
+				Bitmap bitmap = this.bitmap;
 				this.Bitmap = null;
 				
 				if (bitmap != null)
@@ -187,8 +180,7 @@ namespace Epsitec.Common.Drawing.Renderer
 		
 		private System.IntPtr			agg_ren;
 		private Pixmap					pixmap;
-		private System.Drawing.Bitmap	bitmap;
-		private BitmapData				bitmap_data;
+		private Bitmap					bitmap;
 		private Transform				transform		= new Transform ();
 		private Transform				int_transform	= new Transform ();
 	}

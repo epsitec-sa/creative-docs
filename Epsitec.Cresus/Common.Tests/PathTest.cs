@@ -52,5 +52,17 @@ namespace Epsitec.Common.Tests
 			
 			Assertion.AssertEquals (rp, rf);
 		}
+		
+		[Test] public void CheckGlyphPathToString()
+		{
+			Font font = Font.GetFont ("Times New Roman", "Regular");
+			Path path = new Path ();
+			
+			int glyph = font.GetGlyphIndex ('a');
+			
+			path.Append (font, glyph, 0, 0, 100.0);
+			
+			System.Console.Out.WriteLine (path.ToString ());
+		}
 	}
 }

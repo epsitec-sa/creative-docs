@@ -75,6 +75,8 @@ namespace Epsitec.Common.Drawing.Agg
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathAppendPath(System.IntPtr path, System.IntPtr path2, double xx, double xy, double yx, double yy, double tx, double ty, double bold);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathComputeBounds(System.IntPtr path, out double x1, out double y1, out double x2, out double y2);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathRemoveAll(System.IntPtr path);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static int		AggPathElemCount(System.IntPtr path);
+		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathElemGet(System.IntPtr path, int n, int[] types, double[] x, double[] y);
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggPathDelete(System.IntPtr path);
 		
 		[DllImport ("AGG-Wrapper.dll")] internal extern static void		AggFontInitialise();

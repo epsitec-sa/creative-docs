@@ -103,6 +103,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Bitmap.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Color.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -124,6 +129,11 @@
                 />
                 <File
                     RelPath = "Image.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "ImageProvider.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -82,12 +82,14 @@ namespace Epsitec.Common.Drawing
 		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty)
 		{
 			this.CreateOnTheFly ();
+			this.has_curve |= path.has_curve;
 			Agg.Library.AggPathAppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, 0);
 		}
 		
 		public void Append(Path path, double xx, double xy, double yx, double yy, double tx, double ty, double bold_width)
 		{
 			this.CreateOnTheFly ();
+			this.has_curve |= path.has_curve;
 			Agg.Library.AggPathAppendPath (this.agg_path, path.agg_path, xx, xy, yx, yy, tx, ty, bold_width);
 		}
 		
@@ -104,12 +106,14 @@ namespace Epsitec.Common.Drawing
 		public void Append(Font font, int glyph, double xx, double xy, double yx, double yy, double tx, double ty)
 		{
 			this.CreateOnTheFly ();
+			this.has_curve = true;
 			Agg.Library.AggPathAppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, 0);
 		}
 		
 		public void Append(Font font, int glyph, double xx, double xy, double yx, double yy, double tx, double ty, double bold_width)
 		{
 			this.CreateOnTheFly ();
+			this.has_curve = true;
 			Agg.Library.AggPathAppendGlyph (this.agg_path, font.Handle, glyph, xx, xy, yx, yy, tx, ty, bold_width);
 		}
 		
@@ -127,6 +131,93 @@ namespace Epsitec.Common.Drawing
 			return new Rectangle (x1, y1, x2-x1, y2-y1);
 		}
 		
+		
+		public void GetElements(out PathElement[] elements, out Point[] points)
+		{
+			this.CreateOnTheFly ();
+			
+			int n = Agg.Library.AggPathElemCount (this.agg_path);
+			
+			int[]    e = new int[n];
+			double[] x = new double[n];
+			double[] y = new double[n];
+			
+			Agg.Library.AggPathElemGet (this.agg_path, n, e, x, y);
+			
+			elements = new PathElement[n];
+			points   = new Point[n];
+			
+			for (int i = 0; i < n; i++)
+			{
+				elements[i] = (PathElement) e[i];
+				points[i]   = new Point (x[i], y[i]);
+			}
+		}
+		
+
+		public override string ToString()
+		{
+			PathElement[] elements;
+			Point[] points;
+			
+			this.GetElements (out elements, out points);
+			
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			bool add_space = false;
+			
+			for (int i = 0; i < elements.Length; i++)
+			{
+				if (add_space)
+				{
+					buffer.Append (";\r\n");
+				}
+				
+				add_space = true;
+				
+				switch (elements[i] & PathElement.MaskCommand)
+				{
+					case PathElement.MoveTo:
+						buffer.Append ("move_to ");
+						buffer.Append (System.String.Format ("({0:0.00}, {1:0.00})", points[i].X, points[i].Y));
+						break;
+					case PathElement.LineTo:
+						buffer.Append ("line_to ");
+						buffer.Append (System.String.Format ("({0:0.00}, {1:0.00})", points[i].X, points[i].Y));
+						break;
+					case PathElement.Curve3:
+						buffer.Append ("curve3 ");
+						buffer.Append (System.String.Format ("({0:0.00}, {1:0.00})", points[i].X, points[i].Y));
+						break;
+					case PathElement.Curve4:
+						buffer.Append ("curve4 ");
+						buffer.Append (System.String.Format ("({0:0.00}, {1:0.00})", points[i].X, points[i].Y));
+						break;
+					case PathElement.Arc:
+						buffer.Append ("arc ");
+						buffer.Append (System.String.Format ("({0:0.00}, {1:0.00})", points[i].X, points[i].Y));
+						break;
+					default:
+						add_space = false;
+						break;
+				}
+				
+				if ((elements[i] & PathElement.FlagClose) != 0)
+				{
+					if (add_space)
+					{
+						buffer.Append (";\r\n");
+					}
+					
+					buffer.Append ("close");
+					add_space = true;
+				}
+			}
+			
+			buffer.Append ("\r\n");
+			return buffer.ToString ();
+		}
+
 		
 		
 		
@@ -158,7 +249,26 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		
 		private System.IntPtr			agg_path;
 		private bool					has_curve = false;
+	}
+	
+	[System.Flags]
+	public enum PathElement
+	{
+		Stop		= 0,
+		MoveTo		= 1,
+		LineTo		= 2,
+		Curve3		= 3,
+		Curve4		= 4,
+		Arc			= 5,
+		
+		MaskCommand	= 0x0f,
+		MaskFlags	= 0xf0,
+		
+		FlagCCW		= 0x10,
+		FlagCW		= 0x20,
+		FlagClose	= 0x40,
 	}
 }
