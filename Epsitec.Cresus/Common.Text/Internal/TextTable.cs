@@ -364,6 +364,70 @@ namespace Epsitec.Common.Text.Internal
 			this.cursors.InvalidatePositionCache ();
 		}
 		
+		public void RemoveText(Internal.CursorId cursor_id, int length, out CursorInfo[] infos)
+		{
+			Internal.Cursor cursor = this.cursors.ReadCursor (cursor_id);
+			
+			Debug.Assert.IsTrue (cursor.TextChunkId.IsValid);
+			Debug.Assert.IsTrue (this.GetCursorPosition (cursor_id) + length <= this.text_length);
+			
+			System.Collections.ArrayList list = null;
+			
+			int index  = cursor.TextChunkId - 1;
+			int offset = this.text_chunks[index].GetCursorPosition (cursor_id);
+			int start  = this.FindTextChunkPosition (cursor.TextChunkId);
+			int count  = 0;
+			
+			bool removal_continuation = false;
+			
+			while ((length > 0)
+				&& (index < this.text_chunks.Length))
+			{
+				Internal.TextChunk chunk = this.text_chunks[index];
+				
+				int size = chunk.TextLength;
+				int room = System.Math.Min (length, size - offset);
+				
+				chunk.RemoveText (offset, room, start, removal_continuation, out infos);
+				
+				if ((infos != null) &&
+					(infos.Length > 0))
+				{
+					if (list == null)
+					{
+						list = new System.Collections.ArrayList ();
+					}
+					
+					list.AddRange (infos);
+				}
+				
+				if (size > 0)
+				{
+					removal_continuation = true;
+				}
+				
+				offset  = 0;
+				length -= room;
+				count  += room;
+				index  += 1;
+				start  += size;
+			}
+			
+			if (list == null)
+			{
+				infos = null;
+			}
+			else
+			{
+				infos = new CursorInfo[list.Count];
+				list.CopyTo (infos);
+			}
+			
+			this.text_length -= count;
+			
+			this.cursors.InvalidatePositionCache ();
+		}
+		
 		
 		public int ReadText(Internal.CursorId cursor_id, int length, ref ulong[] buffer)
 		{

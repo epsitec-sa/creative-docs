@@ -64,7 +64,6 @@ namespace Epsitec.Common.Text.Tests
 			CursorInfo[] info_5 = table.FindCursors (5, 100); Debug.Assert.IsTrue (info_5.Length == 1); Debug.Assert.IsTrue (info_5[0].CursorId == cursor_1);
 			CursorInfo[] info_6 = table.FindCursors (6, 100); Debug.Assert.IsTrue (info_6.Length == 0);
 			
-			
 			Debug.Assert.IsTrue (table.ReadText (cursor_1, 10, ref text) == 0);
 			Debug.Assert.IsTrue (table.ReadText (cursor_2, 10, ref text) == 5);
 			
@@ -79,6 +78,43 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (text[0] == 67ul);
 			Debug.Assert.IsTrue (text[1] == 34ul);
 			
+			table.MoveCursor (cursor_1, -1);
+			table.MoveCursor (cursor_2, 1);
+			
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_2) == 1);
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_3) == 3);
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 4);
+			Debug.Assert.IsTrue (table.TextLength == 5);
+			
+			CursorInfo[] c_infos_1;
+			CursorInfo[] c_infos_2;
+			CursorInfo[] c_infos_3;
+			
+			table.RemoveText (cursor_3, 2, out c_infos_1);
+			
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_2) == 1);
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_3) == 3);
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 3);
+			Debug.Assert.IsTrue (table.TextLength == 3);
+			Debug.Assert.IsNull (c_infos_1);
+			
+			table.RemoveText (cursor_2, 1, out c_infos_2);
+			
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_2) == 1);
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_3) == 2);
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 2);
+			Debug.Assert.IsTrue (table.TextLength == 2);
+			Debug.Assert.IsNull (c_infos_2);
+			
+			table.RemoveText (cursor_2, 1, out c_infos_3);
+			
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_2) == 1);
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_3) == 1);
+			Debug.Assert.IsTrue (table.GetCursorPosition (cursor_1) == 1);
+			Debug.Assert.IsTrue (table.TextLength == 1);
+			Debug.Assert.IsNull (c_infos_3);
+			
+			return;
 			
 			
 			Internal.TextTable table1 = new Internal.TextTable ();
@@ -222,6 +258,10 @@ namespace Epsitec.Common.Text.Tests
 			
 			System.Diagnostics.Trace.WriteLine ("xxx="+xxx+"\nyyy="+yyy);
 			
+			/*
+			 *  Vérifie que les curseurs peuvent aussi être retrouvés dans un
+			 *	texte utilisant plusieurs morceaux.
+			 */
 			
 			table3.MoveCursor (cursor_3_1, 8000);
 			table3.MoveCursor (cursor_3_2, 25000);

@@ -98,15 +98,22 @@ namespace Epsitec.Common.Text.Internal
 			this.cursors.ProcessInsertion (position, length);
 		}
 		
-		public void RemoveText(int position, int length)
+		public void RemoveText(int position, int length, int abs_origin, bool removal_continuation, out CursorInfo[] infos)
 		{
+			//	Supprime le texte commençant à la position indiquée et comprenant
+			//	'length' caractères.
+			
+			//	L'appelant doit indiquer dans 'abs_origin' l'origine absolue du
+			//	début du morceau de texte, afin que la table d'information sur
+			//	les curseurs supprimés puisse contenir des positions absolues.
+			
 			Debug.Assert.IsTrue (position >= 0);
 			Debug.Assert.IsTrue (length >= 0);
 			Debug.Assert.IsTrue (position + length <= this.length);
 			
 			int offset_1 = position + length;
 			int offset_2 = position;
-			int count    = this.length - offset_2;
+			int count    = this.length - offset_1;
 			
 			Debug.Assert.IsTrue (offset_2 >= 0);
 			Debug.Assert.IsTrue (offset_1+count <= this.length);
@@ -117,7 +124,8 @@ namespace Epsitec.Common.Text.Internal
 			
 			//	TODO: support pour le undo
 			
-			this.cursors.ProcessRemoval (position, length);
+			this.cursors.ProcessRemoval (position, length, abs_origin, removal_continuation, out infos);
+			this.cursors.ProcessRemovalCleanup (infos);
 			
 			if (this.acc_markers != 0)
 			{

@@ -35,7 +35,7 @@ namespace Epsitec.Common.Text.Internal
 			
 			Debug.Assert.IsInBounds (index, 0, this.length);
 			
-			this.InsertElement (index, new Element (id, offset));
+			this.InsertElement (index, new Element (id, offset, Internal.CursorAttachment.Floating));
 		}
 		
 		public void Move(Internal.CursorId id, int position)
@@ -129,6 +129,13 @@ namespace Epsitec.Common.Text.Internal
 			return this.elements[element].offset;
 		}
 		
+		public Internal.CursorAttachment GetElementCursorAttachment(int element)
+		{
+			Debug.Assert.IsInBounds (element, 0, this.elements.Length-1);
+			
+			return this.elements[element].attachment;
+		}
+		
 		
 		public void ProcessInsertion(int position, int length)
 		{
@@ -144,18 +151,24 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
-		public void ProcessRemoval(int position, int length)
+		public void ProcessRemoval(int position, int length, int abs_origin, bool removal_continuation, out CursorInfo[] removed)
 		{
 			//	Décale les curseurs en fonction d'une suppression depuis la
-			//	position indiquée.
+			//	position indiquée et génère la table des curseurs attachés
+			//	ainsi déplacés (la table contient la position absolue des
+			//	curseurs avant leur déplacement; 'abs_origin' spécifie le
+			//	début absolu du morceau de texte dans lequel on travaille).
 			
 			//	Si des curseurs se trouvent dans la tranche supprimée, ils
 			//	sont déplacés au début de la tranche.
 			
-			int index_before = this.FindElementBeforePosition (position);
-			int index_after  = this.FindElementBeforePosition (position + length) + 1;
+			System.Collections.ArrayList list = null;
 			
-			int pos_at   = this.FindElementPosition (index_before);
+			int index_before = this.FindElementBeforePosition (position);
+			int index_after  = this.FindElementBeforePosition (position + length + 1) + 1;
+			
+			int pos_at   = index_before < 0 ? 0 : this.FindElementPosition (index_before);
+			int pos_abs  = abs_origin + pos_at;
 			int index_at = index_before + 1;
 			
 			//	S'il y a des curseurs dans la tranche supprimée, on les déplace
@@ -164,19 +177,49 @@ namespace Epsitec.Common.Text.Internal
 			while ((index_at < index_after)
 				&& (index_at < this.length))
 			{
-				pos_at += this.elements[index_at].offset;
+				pos_at  += this.elements[index_at].offset;
+				pos_abs += this.elements[index_at].offset;
+				
+				Debug.Assert.IsTrue (this.FindElementPosition (index_at) == pos_at);
 				
 				int coverage = pos_at - position;
 				
-				Debug.Assert.IsTrue (this.FindElementPosition (index_at) == pos_at);
+				length -= coverage;
+				pos_at  = position;
+				
+				if (coverage > 0)
+				{
+					removal_continuation = true;
+				}
+				
 				Debug.Assert.IsTrue (coverage >= 0);
+				Debug.Assert.IsTrue (length >= 0);
+				
+				//	Si le curseur est entièrement compris dans la zone à considérer
+				//	il est directement affecté par la destruction :
+				
+				Internal.CursorAttachment attachment = this.elements[index_at].attachment;
+				
+				if (((length >= 1) && (attachment == Internal.CursorAttachment.ToNext)) ||
+					((removal_continuation) && (attachment == Internal.CursorAttachment.ToPrevious)))
+				{
+					if (list == null)
+					{
+						list = new System.Collections.ArrayList ();
+					}
+					
+					//	Prend note du curseur et de sa position avant le déplacement
+					//	ce qui permet à l'appelant de générer les informations pour
+					//	l'annulation :
+					
+					list.Add (new CursorInfo (this.elements[index_at].id, pos_abs));
+				}
+				
+				//	Déplace le curseur au début de la tranche supprimée :
 				
 				this.elements[index_at].offset -= coverage;
 				
 				Debug.Assert.IsTrue (this.FindElementPosition (index_at) == position);
-				
-				length -= coverage;
-				pos_at  = position;
 				
 				index_at++;
 			}
@@ -185,8 +228,36 @@ namespace Epsitec.Common.Text.Internal
 			{
 				Debug.Assert.IsTrue (this.GetCursorPosition (this.elements[index_after].id) >= position + length);
 				Debug.Assert.IsTrue (this.elements[index_after].offset >= length);
-					
+				
 				this.elements[index_after].offset -= length;
+			}
+			
+			if ((list != null) &&
+				(list.Count > 0))
+			{
+				//	Lors du déplacement des curseurs, on a trouvé des curseurs
+				//	attachés au texte. Retourne à l'appelant la description de
+				//	ceux-ci (il faudra encore appeler ProcessRemovalCleanup).
+				
+				removed = new CursorInfo[list.Count];
+				list.CopyTo (removed);
+			}
+			else
+			{
+				removed = null;
+			}
+		}
+		
+		public void ProcessRemovalCleanup(CursorInfo[] removed)
+		{
+			//	Supprime les curseurs spécifiés de notre table.
+			
+			if (removed != null)
+			{
+				for (int i = 0; i < removed.Length; i++)
+				{
+					this.Remove (removed[i].CursorId);
+				}
 			}
 		}
 		
@@ -476,15 +547,17 @@ namespace Epsitec.Common.Text.Internal
 		
 		private struct Element
 		{
-			public Element(Internal.CursorId id, int offset)
+			public Element(Internal.CursorId id, int offset, Internal.CursorAttachment attachment)
 			{
-				this.id     = id;
-				this.offset = offset;
+				this.id         = id;
+				this.offset     = offset;
+				this.attachment = attachment;
 			}
 			
 			
-			public	Internal.CursorId			id;
-			public	int							offset;
+			public Internal.CursorId			id;
+			public int							offset;
+			public Internal.CursorAttachment	attachment;
 		}
 		
 		
