@@ -34,6 +34,7 @@ namespace Epsitec.Icons
 		static void Main() 
 		{
 			Widget.Initialise ();
+			Epsitec.Common.Pictogram.Engine.Initialise();
 			Application.application = new Application ();
 			Application.application.MainWindow.Run ();
 		}
