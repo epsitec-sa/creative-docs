@@ -36,11 +36,11 @@ namespace Epsitec.Common.Text
 		
 		public static string SerializeString(string value)
 		{
-			Debug.Assert.IsTrue (value != "<null>");
+			Debug.Assert.IsTrue (value != "[null]");
 			
 			if (value == null)
 			{
-				return "<null>";
+				return "[null]";
 			}
 			else
 			{
@@ -52,7 +52,7 @@ namespace Epsitec.Common.Text
 		{
 			if (double.IsNaN (value))
 			{
-				return "<NaN>";
+				return "[NaN]";
 			}
 			else
 			{
@@ -60,10 +60,15 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public static string SerializeBoolean(bool value)
+		{
+			return value ? "[true]" : "[false]";
+		}
+		
 		
 		public static string DeserializeString(string value)
 		{
-			if (value == "<null>")
+			if (value == "[null]")
 			{
 				return null;
 			}
@@ -75,7 +80,7 @@ namespace Epsitec.Common.Text
 		
 		public static double DeserializeDouble(string value)
 		{
-			if (value == "<NaN>")
+			if (value == "[NaN]")
 			{
 				return double.NaN;
 			}
@@ -83,6 +88,20 @@ namespace Epsitec.Common.Text
 			{
 				return double.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
 			}
+		}
+		
+		public static bool DeserializeBoolean(string value)
+		{
+			if (value == "[true]")
+			{
+				return true;
+			}
+			if (value == "[false]")
+			{
+				return false;
+			}
+			
+			throw new System.FormatException (string.Format ("'{0}' is not a boolean", value));
 		}
 	}
 }

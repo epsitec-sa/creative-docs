@@ -165,10 +165,6 @@ namespace Epsitec.Common.Text.Layout
 			{
 				return this.break_fence_before;
 			}
-			set
-			{
-				this.break_fence_before = value;
-			}
 		}
 		
 		public double							BreakFenceAfter
@@ -176,10 +172,6 @@ namespace Epsitec.Common.Text.Layout
 			get
 			{
 				return this.break_fence_after;
-			}
-			set
-			{
-				this.break_fence_after = value;
 			}
 		}
 		
@@ -257,15 +249,19 @@ namespace Epsitec.Common.Text.Layout
 			}
 		}
 		
-		public bool								Hyphenate
+		public bool								EnableHyphenation
 		{
 			get
 			{
-				return this.hyphenate;
+				return this.enable_hyphenation;
 			}
-			set
+		}
+		
+		public bool								BreakAnywhere
+		{
+			get
 			{
-				this.hyphenate = value;
+				return this.break_anywhere;
 			}
 		}
 		
@@ -326,8 +322,8 @@ namespace Epsitec.Common.Text.Layout
 			this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
 			this.SelectLineHeight (this.text_offset);
 			
-			this.ox        = this.mx_left;
-			this.hyphenate = false;
+			this.ox             = this.mx_left;
+			this.break_anywhere = false;
 			
 			Debug.Assert.IsNotNull (this.layout_engine);
 			Debug.Assert.IsNotNull (this.text);
@@ -382,6 +378,8 @@ restart:
 							//	Reprend avec un autre cadre. On reprend tout à zéro depuis
 							//	ici :
 							
+							this.SelectLayoutEngine (this.text_offset);
+							this.SelectMarginsAndJustification (this.text_offset, paragraph_line_count, false);
 							this.SelectFrame (frame_index, 0);
 							this.SelectLineHeight (this.text_offset);
 							
@@ -430,7 +428,7 @@ restart:
 							
 							initial_line_height = this.line_height;
 							result.Clear ();
-							this.hyphenate = false;
+							this.break_anywhere = false;
 							pass = 0;
 							break;
 						}
@@ -445,7 +443,7 @@ restart:
 						continue;
 					
 					case Layout.Status.ErrorCannotFit:
-						this.hyphenate = true;
+						this.break_anywhere = true;
 						pass++;
 						break;
 					
@@ -485,8 +483,8 @@ restart:
 			Debug.Assert.IsNotNull (this.layout_engine);
 			Debug.Assert.IsNotNull (this.text_context);
 			
-			this.text_profile = profile;
-			this.hyphenate    = false;
+			this.text_profile   = profile;
+			this.break_anywhere = false;
 			
 			double space;
 			
@@ -504,11 +502,11 @@ restart:
 			{
 				case Unicode.BreakInfo.HyphenateGoodChoice:
 				case Unicode.BreakInfo.HyphenatePoorChoice:
-					this.hyphenate = true;
+					this.enable_hyphenation = true;
 					break;
 				
 				default:
-					this.hyphenate = false;
+					this.enable_hyphenation = false;
 					break;
 			}
 			
@@ -650,8 +648,11 @@ restart:
 				this.mx_left  = paragraph_line_index == 0 ? margins.LeftMarginFirstLine  : margins.LeftMarginBody;
 				this.mx_right = paragraph_line_index == 0 ? margins.RightMarginFirstLine : margins.RightMarginBody;
 				
-				this.justification = is_last_line ? margins.JustificationLastLine : margins.JustificationBody;
-				this.disposition   = margins.Disposition;
+				this.justification      = is_last_line ? margins.JustificationLastLine : margins.JustificationBody;
+				this.disposition        = margins.Disposition;
+				this.break_fence_before = margins.BreakFenceBefore;
+				this.break_fence_after  = margins.BreakFenceAfter;
+				this.enable_hyphenation = margins.EnableHyphenation;
 			}
 		}
 		
@@ -759,7 +760,8 @@ restart:
 		private double							break_fence_before;
 		private double							break_fence_after;
 		
-		private bool							hyphenate;
+		private bool							enable_hyphenation;
+		private bool							break_anywhere;
 		
 		private Layout.BaseEngine				layout_engine;
 		private Properties.LayoutProperty		layout_property;

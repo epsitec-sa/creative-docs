@@ -20,7 +20,7 @@ namespace Epsitec.Common.Text.Layout
 			FitScratch scratch = new FitScratch ();
 			
 			scratch.Offset    = context.TextOffset;
-			scratch.AddBreak  = context.Hyphenate;
+			scratch.AddBreak  = context.BreakAnywhere;
 			scratch.FenceMinX = context.LineWidth-context.RightMargin-context.BreakFenceBefore;
 			scratch.FenceMaxX = context.LineWidth-context.RightMargin+context.BreakFenceAfter;
 			
@@ -219,7 +219,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			{
 				double break_penalty;
 				
-				if (scratch.AddBreak && context.Hyphenate)
+				if (scratch.AddBreak && context.EnableHyphenation)
 				{
 					frag_length = this.GetNextFragmentLength (text, offset, run_length, frag_length, out break_penalty);
 				}
@@ -271,7 +271,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 						
 						scratch.AddBreak = true;
 						
-						if (context.Hyphenate)
+						if (context.EnableHyphenation)
 						{
 							//	Reprend au début du fragment de mot pour traiter les
 							//	points de césure :
@@ -336,7 +336,7 @@ stop:		//	Le texte ne tient pas entièrement dans l'espace disponible. <---------
 			
 			Unicode.BreakAnalyzer.GetStretchClass (text, offset, length, attributes);
 			
-			if (context.Hyphenate)
+			if (context.EnableHyphenation) // TODO: tirer au clair, où doit-on ajouter la césure ???
 			{
 				//	Produit la césure manuellement (il faudrait faire mieux pour gérer
 				//	correctement des langues comme le norvégien ou l'ancien allemand

@@ -31,8 +31,8 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (font_ac.StyleName == "Roman");
 			
 			Debug.Assert.IsTrue (font_a.ToString () == "Futura/Roman");
-			Debug.Assert.IsTrue (font_b.ToString () == "<null>/Heavy");
-			Debug.Assert.IsTrue (font_c.ToString () == "Arial/<null>");
+			Debug.Assert.IsTrue (font_b.ToString () == "[null]/Heavy");
+			Debug.Assert.IsTrue (font_c.ToString () == "Arial/[null]");
 		}
 		
 		private static void TestFontSize()
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Text.Tests
 		private static void TestMargins()
 		{
 			Properties.MarginsProperty margins_a = new Properties.MarginsProperty ();
-			Properties.MarginsProperty margins_b = new Properties.MarginsProperty (15.0, 20.0, 0.0, 0.0, 0, 0, 0);
+			Properties.MarginsProperty margins_b = new Properties.MarginsProperty (15.0, 20.0, 0.0, 0.0, 0, 0, 0, 0, 0, false);
 			
 			Properties.MarginsProperty margins_c = margins_a.GetCombination (margins_b) as Properties.MarginsProperty;
 			Properties.MarginsProperty margins_d = margins_b.GetCombination (margins_a) as Properties.MarginsProperty;
@@ -87,8 +87,8 @@ namespace Epsitec.Common.Text.Tests
 			Debug.Assert.IsTrue (margins_f.LeftMarginBody      == 10.0);
 			Debug.Assert.IsTrue (margins_f.RightMarginBody     == 10.0);
 			
-			Debug.Assert.IsTrue (margins_a.ToString () == "<NaN>/10/<NaN>/10/0/0/0");
-			Debug.Assert.IsTrue (margins_b.ToString () == "15/20/0/0/0/0/0");
+			Debug.Assert.IsTrue (margins_a.ToString () == "[NaN]/10/[NaN]/10/0/0/0/0/0/[false]");
+			Debug.Assert.IsTrue (margins_b.ToString () == "15/20/0/0/0/0/0/0/0/[false]");
 		}
 		
 		

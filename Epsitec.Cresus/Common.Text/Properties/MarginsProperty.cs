@@ -19,6 +19,11 @@ namespace Epsitec.Common.Text.Properties
 			this.justification_body      = 0.0;
 			this.justification_last_line = 0.0;
 			this.disposition             = 0.0;
+			
+			this.break_fence_before = 0;
+			this.break_fence_after  = 0;
+			
+			this.enable_hyphenation = false;
 		}
 		
 		public MarginsProperty(double left_margin, double right_margin) : this ()
@@ -30,7 +35,7 @@ namespace Epsitec.Common.Text.Properties
 			this.right_margin_body       = right_margin;
 		}
 		
-		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body, double justification_body, double justification_last_line, double disposition) : this ()
+		public MarginsProperty(double left_margin_first_line, double left_margin_body, double right_margin_first_line, double right_margin_body, double justification_body, double justification_last_line, double disposition, double break_fence_before, double break_fence_after, bool enable_hyphenation) : this ()
 		{
 			this.left_margin_first_line  = left_margin_first_line;
 			this.left_margin_body        = left_margin_body;
@@ -40,6 +45,10 @@ namespace Epsitec.Common.Text.Properties
 			this.justification_body      = justification_body;
 			this.justification_last_line = justification_last_line;
 			this.disposition             = disposition;
+			
+			this.break_fence_before = break_fence_before;
+			this.break_fence_after  = break_fence_after;
+			this.enable_hyphenation = enable_hyphenation;
 		}
 		
 		
@@ -173,6 +182,54 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public double							BreakFenceBefore
+		{
+			get
+			{
+				return this.break_fence_before;
+			}
+			set
+			{
+				if (NumberSupport.Different (this.break_fence_before, value))
+				{
+					this.break_fence_before = value;
+					this.Invalidate ();
+				}
+			}
+		}
+		
+		public double							BreakFenceAfter
+		{
+			get
+			{
+				return this.break_fence_after;
+			}
+			set
+			{
+				if (NumberSupport.Different (this.break_fence_after, value))
+				{
+					this.break_fence_after = value;
+					this.Invalidate ();
+				}
+			}
+		}
+		
+		public bool								EnableHyphenation
+		{
+			get
+			{
+				return this.enable_hyphenation;
+			}
+			set
+			{
+				if (this.enable_hyphenation != value)
+				{
+					this.enable_hyphenation = value;
+					this.Invalidate ();
+				}
+			}
+		}
+		
 		
 		public override void SerializeToText(System.Text.StringBuilder buffer)
 		{
@@ -183,14 +240,17 @@ namespace Epsitec.Common.Text.Properties
 				/**/				SerializerSupport.SerializeDouble (this.right_margin_body),
 				/**/				SerializerSupport.SerializeDouble (this.justification_body),
 				/**/				SerializerSupport.SerializeDouble (this.justification_last_line),
-				/**/				SerializerSupport.SerializeDouble (this.disposition));
+				/**/				SerializerSupport.SerializeDouble (this.disposition),
+				/**/				SerializerSupport.SerializeDouble (this.break_fence_before),
+				/**/				SerializerSupport.SerializeDouble (this.break_fence_after),
+				/**/				SerializerSupport.SerializeBoolean (this.enable_hyphenation));
 		}
 		
 		public override void DeserializeFromText(Context context, string text, int pos, int length)
 		{
 			string[] args = SerializerSupport.Split (text, pos, length);
 			
-			Debug.Assert.IsTrue (args.Length == 7);
+			Debug.Assert.IsTrue (args.Length == 10);
 			
 			this.left_margin_first_line  = SerializerSupport.DeserializeDouble (args[0]);
 			this.left_margin_body        = SerializerSupport.DeserializeDouble (args[1]);
@@ -199,6 +259,9 @@ namespace Epsitec.Common.Text.Properties
 			this.justification_body      = SerializerSupport.DeserializeDouble (args[4]);
 			this.justification_last_line = SerializerSupport.DeserializeDouble (args[5]);
 			this.disposition             = SerializerSupport.DeserializeDouble (args[6]);
+			this.break_fence_before      = SerializerSupport.DeserializeDouble (args[7]);
+			this.break_fence_after       = SerializerSupport.DeserializeDouble (args[8]);
+			this.enable_hyphenation      = SerializerSupport.DeserializeBoolean (args[9]);
 		}
 		
 		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
@@ -216,6 +279,9 @@ namespace Epsitec.Common.Text.Properties
 			c.justification_body      = NumberSupport.Combine (a.justification_body,      b.justification_body);
 			c.justification_last_line = NumberSupport.Combine (a.justification_last_line, b.justification_last_line);
 			c.disposition             = NumberSupport.Combine (a.disposition,             b.disposition);
+			c.break_fence_before      = NumberSupport.Combine (a.break_fence_before,      b.break_fence_before);
+			c.break_fence_after       = NumberSupport.Combine (a.break_fence_after,       b.break_fence_after);
+			c.enable_hyphenation      = a.enable_hyphenation | b.enable_hyphenation;
 			
 			return c;
 		}
@@ -229,6 +295,9 @@ namespace Epsitec.Common.Text.Properties
 			checksum.UpdateValue (this.justification_body);
 			checksum.UpdateValue (this.justification_last_line);
 			checksum.UpdateValue (this.disposition);
+			checksum.UpdateValue (this.break_fence_before);
+			checksum.UpdateValue (this.break_fence_after);
+			checksum.UpdateValue (this.enable_hyphenation);
 		}
 		
 		public override bool CompareEqualContents(object value)
@@ -245,7 +314,10 @@ namespace Epsitec.Common.Text.Properties
 				(a.right_margin_body       == b.right_margin_body) &&
 				(a.justification_body      == b.justification_body) &&
 				(a.justification_last_line == b.justification_last_line) &&
-				(a.disposition             == b.disposition))
+				(a.disposition             == b.disposition) &&
+				(a.break_fence_before      == b.break_fence_before) &&
+				(a.break_fence_after       == b.break_fence_after) &&
+				(a.enable_hyphenation      == b.enable_hyphenation))
 			{
 				return true;
 			}
@@ -258,6 +330,11 @@ namespace Epsitec.Common.Text.Properties
 		private double							left_margin_body;
 		private double							right_margin_first_line;
 		private double							right_margin_body;
+		
+		private double							break_fence_before;
+		private double							break_fence_after;
+		
+		private bool							enable_hyphenation;
 		
 		private double							justification_body;			//	0.0 = pas de justification, 1.0 = justification pleine
 		private double							justification_last_line;

@@ -73,7 +73,7 @@ namespace Epsitec.Common.Text.Tests
 			
 			properties.Add (new Properties.FontProperty ("Arial", "Regular"));
 			properties.Add (new Properties.FontSizeProperty (24.0, Properties.FontSizeUnits.Points));
-			properties.Add (new Properties.MarginsProperty (200, 0, 0, 0, 1.0, 0.0, 0.0));
+			properties.Add (new Properties.MarginsProperty (200, 0, 0, 0, 1.0, 0.0, 0.0, 15, 1, false));
 			
 			string[] words = "Bonjour, ceci est un texte d'exemple permettant de vérifier le bon fonctionnement des divers algorithmes de découpe. Le nombre de mots moyen s'élève à environ 40 mots par paragraphe, ce qui correspond à des paragraphes de taille réduite.\n".Split (' ');
 			System.Random random = new System.Random (0);
