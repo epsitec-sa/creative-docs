@@ -354,13 +354,13 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public void RegisterCrossTableReferences(DbTransaction transaction, DbTable table)
+		public void RegisterColumnRelations(DbTransaction transaction, DbTable table)
 		{
 			if (transaction == null)
 			{
 				using (transaction = this.BeginTransaction ())
 				{
-					this.RegisterCrossTableReferences (transaction, table);
+					this.RegisterColumnRelations (transaction, table);
 					transaction.Commit ();
 					return;
 				}
@@ -384,6 +384,8 @@ namespace Epsitec.Cresus.Database
 					case DbColumnClass.RefLiveId:
 					case DbColumnClass.RefSimpleId:
 					case DbColumnClass.RefTupleId:
+					case DbColumnClass.RefTupleRevision:
+						
 						string parent_name = column.ParentTableName;
 						
 						if (parent_name != null)
@@ -418,7 +420,7 @@ namespace Epsitec.Cresus.Database
 								throw new DbException (this.db_access, message);
 							}
 							
-							this.RegisterCrossTableReferences (transaction, source_table_key, source_column_key, parent_table_key);
+							this.UpdateColumnRelation (transaction, source_table_key, source_column_key, parent_table_key);
 						}
 						break;
 					
@@ -428,27 +430,24 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		protected void RegisterCrossTableReferences(DbTransaction transaction, DbKey source_table_key, DbKey source_column_key, DbKey parent_table_key)
+		protected void UpdateColumnRelation(DbTransaction transaction, DbKey source_table_key, DbKey source_column_key, DbKey parent_table_key)
 		{
+			System.Diagnostics.Debug.Assert (transaction != null);
+			
 			System.Diagnostics.Debug.Assert (source_table_key  != null);
 			System.Diagnostics.Debug.Assert (source_column_key != null);
 			System.Diagnostics.Debug.Assert (parent_table_key  != null);
 			
-			//	TODO: enregistre la relation dans la table Tags.TableRefTable
-			//
-			//	(1) vérifie que la relation n'est pas encore connue; si elle l'est, génère
-			//		une exception;
-			//	(2) trouve un ID pour la nouvelle ligne qui va être créée dans TagRefTable;
-			//	(3) crée la ligne dans la table;
-			//
-			//	Voir aussi RegisterNewDbTable comme modèle, ainsi que BootInsertRelationDefRow
-			//	pour l'insertion de la ligne. Il faudra créer les méthodes suivantes :
-			//
-			//	- CheckForUnknownRelation/CheckForKnownRelation (prenant 3 DbKey comme arg.)
-			//	- InsertRelationDefRow, à moins de modifier BootInsertRelationDefRow pour
-			//	  accepter des DbKey comme arguments; voir si c'est faisable facilement.
+			Collections.SqlFields fields = new Collections.SqlFields ();
+			Collections.SqlFields conds  = new Collections.SqlFields ();
 			
-			throw new System.NotImplementedException ("RegisterCrossTableReferences not implemented.");
+			fields.Add (Tags.ColumnRefParent, SqlField.CreateConstant (parent_table_key.Id, DbRawType.Int64));
+			
+			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnId), SqlField.CreateConstant (source_column_key.Id, DbRawType.Int64)));
+			conds.Add (new SqlFunction (SqlFunctionType.CompareEqual, SqlField.CreateName (Tags.ColumnRevision), SqlField.CreateConstant (0, DbRawType.Int32)));
+			
+			this.sql_builder.UpdateData (Tags.TableColumnDef, fields, conds);
+			this.ExecuteSilent (transaction);
 		}
 		
 		
@@ -1167,7 +1166,7 @@ namespace Epsitec.Cresus.Database
 					DbKey   parent_key   = new DbKey (parent_table_ref_id);
 					DbTable parent_table = this.ResolveDbTable (transaction, parent_key);
 					
-					System.Diagnostics.Debug.WriteLine (string.Format ("Column {0}.{1} refers to table {3} (ID {2}).", db_table.Name, db_column.Name, parent_key.Id, parent_table.Name));
+					System.Diagnostics.Debug.WriteLine (string.Format ("Column {0}.{1} ({4}) refers to table {3} (ID {2}).", db_table.Name, db_column.Name, parent_key.Id, parent_table.Name, db_column.ColumnClass));
 					
 					db_column.DefineParentTableName (parent_table.Name);
 				}
@@ -1721,7 +1720,7 @@ namespace Epsitec.Cresus.Database
 			this.ExecuteSilent (transaction);
 		}
 		
-		protected void BootInsertRelationDefRow(DbTransaction transaction, string src_table_name, string src_column_name, string parent_table_name)
+		protected void BootUpdateColumnRelation(DbTransaction transaction, string src_table_name, string src_column_name, string parent_table_name)
 		{
 			Collections.SqlFields fields = new Collections.SqlFields ();
 			Collections.SqlFields conds  = new Collections.SqlFields ();
@@ -1786,10 +1785,10 @@ namespace Epsitec.Cresus.Database
 			//	- La description d'une référence fait elle-même référence à la table
 			//	  source et destination, ainsi qu'à la colonne.
 			
-			this.BootInsertRelationDefRow (transaction, Tags.TableColumnDef,   Tags.ColumnRefTable,  Tags.TableTableDef);
-			this.BootInsertRelationDefRow (transaction, Tags.TableColumnDef,   Tags.ColumnRefType,   Tags.TableTypeDef);
-			this.BootInsertRelationDefRow (transaction, Tags.TableColumnDef,   Tags.ColumnRefParent, Tags.TableTypeDef);
-			this.BootInsertRelationDefRow (transaction, Tags.TableEnumValDef,  Tags.ColumnRefType,   Tags.TableTypeDef);
+			this.BootUpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefTable,  Tags.TableTableDef);
+			this.BootUpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefType,   Tags.TableTypeDef);
+			this.BootUpdateColumnRelation (transaction, Tags.TableColumnDef,   Tags.ColumnRefParent, Tags.TableTypeDef);
+			this.BootUpdateColumnRelation (transaction, Tags.TableEnumValDef,  Tags.ColumnRefType,   Tags.TableTypeDef);
 			
 			this.BootUpdateTableNextId (transaction, this.internal_tables[Tags.TableTableDef].InternalKey, table_key_id);
 			this.BootUpdateTableNextId (transaction, this.internal_tables[Tags.TableColumnDef].InternalKey, column_key_id);

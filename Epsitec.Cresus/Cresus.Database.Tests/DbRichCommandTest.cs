@@ -35,8 +35,8 @@ namespace Epsitec.Cresus.Database
 			infrastructure.RegisterNewDbTable (null, db_table_a);
 			infrastructure.RegisterNewDbTable (null, db_table_b);
 			
-			infrastructure.RegisterCrossTableReferences (null, db_table_a);
-			infrastructure.RegisterCrossTableReferences (null, db_table_b);
+			infrastructure.RegisterColumnRelations (null, db_table_a);
+			infrastructure.RegisterColumnRelations (null, db_table_b);
 			
 			SqlSelect select_a = new SqlSelect ();
 			SqlSelect select_b = new SqlSelect ();
@@ -121,9 +121,11 @@ namespace Epsitec.Cresus.Database
 			Assertion.AssertEquals ("Personne", db_table_b.Columns[3].Name);
 			Assertion.AssertEquals (DbColumnClass.RefTupleId, db_table_b.Columns[3].ColumnClass);
 			Assertion.AssertEquals ("Personnes", db_table_b.Columns[3].ParentTableName);
+			
 			Assertion.AssertEquals ("Personne", db_table_b.Columns[4].Name);
 			Assertion.AssertEquals (DbColumnClass.RefTupleRevision, db_table_b.Columns[4].ColumnClass);
 			Assertion.AssertEquals ("Personnes", db_table_b.Columns[4].ParentTableName);
+			
 			Assertion.AssertEquals ("Ville", db_table_b.Columns[5].Name);
 			Assertion.AssertEquals (db_type_name.InternalKey, db_table_b.Columns[5].Type.InternalKey);
 			

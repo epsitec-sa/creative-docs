@@ -4,19 +4,7 @@ Ce qu'il reste à faire dans "Database"
 
 -	La classe DbInfrastructure n'est pas terminée, en particulier:
 
-	o	La méthode RegisterCrossTableReferences n'est pas implémentée.
-	
 	o	La méthode CreateLocalisedColumns n'est pas implémentée.
-	
-	o	Il faudra aussi compléter LoadDbTable pour que les DbColumn créées
-		soient initialisées correctement par rapport à leur propriété
-		TargetTableName.
-	
-	o	Les instances de DbTable créées par CreateDatabase ne sont pas
-		tout à fait correctes, car leur propriété DbColumn.TargetTableName
-		n'est pas initialisée.
-
--	Tester DbRichCommand.CreateEmptyDataSet.
 
 -	Soit créer une classe DbSelect pour réaliser ce que SqlSelect fait,
 	en se basant sur des données et des descriptions "abstraites" et

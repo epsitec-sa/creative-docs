@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Database
 				System.Diagnostics.Debug.WriteLine ("FindDbTables :");
 				System.Diagnostics.Debug.WriteLine ("--------------");
 				DbTable[] tables = infrastructure.FindDbTables (null, DbElementCat.Any);
-				System.Diagnostics.Debug.WriteLine ("--- again! ---");
+				System.Diagnostics.Debug.WriteLine ("-- (cached) --");
 				infrastructure.FindDbTables (null, DbElementCat.Any);
 				System.Diagnostics.Debug.WriteLine ("--- (done) ---");
 				
