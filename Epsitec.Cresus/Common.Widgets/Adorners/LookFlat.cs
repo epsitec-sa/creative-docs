@@ -105,6 +105,23 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+rect.Width*0.20*zoom, center.Y-rect.Height*0.30*zoom);
 					path.LineTo(center.X+rect.Width*0.00*zoom, center.Y-rect.Height*0.10*zoom);
 					break;
+
+				case GlyphType.Dots:
+					path.MoveTo(center.X-rect.Width*0.30*zoom, center.Y+rect.Height*0.06*zoom);
+					path.LineTo(center.X-rect.Width*0.18*zoom, center.Y+rect.Height*0.06*zoom);
+					path.LineTo(center.X-rect.Width*0.18*zoom, center.Y-rect.Height*0.06*zoom);
+					path.LineTo(center.X-rect.Width*0.30*zoom, center.Y-rect.Height*0.06*zoom);
+					path.Close();
+					path.MoveTo(center.X-rect.Width*0.06*zoom, center.Y+rect.Height*0.06*zoom);
+					path.LineTo(center.X+rect.Width*0.06*zoom, center.Y+rect.Height*0.06*zoom);
+					path.LineTo(center.X+rect.Width*0.06*zoom, center.Y-rect.Height*0.06*zoom);
+					path.LineTo(center.X-rect.Width*0.06*zoom, center.Y-rect.Height*0.06*zoom);
+					path.Close();
+					path.MoveTo(center.X+rect.Width*0.18*zoom, center.Y+rect.Height*0.06*zoom);
+					path.LineTo(center.X+rect.Width*0.30*zoom, center.Y+rect.Height*0.06*zoom);
+					path.LineTo(center.X+rect.Width*0.30*zoom, center.Y-rect.Height*0.06*zoom);
+					path.LineTo(center.X+rect.Width*0.18*zoom, center.Y-rect.Height*0.06*zoom);
+					break;
 			}
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
@@ -186,7 +203,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
 			{
 				Drawing.Rectangle rInside = rect;
-				rInside.Inflate(-rect.Height*0.3, -rect.Height*0.3);
+				rInside.Deflate(rect.Height*0.3);
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
 					this.PaintCircle(graphics, rInside, this.colorBlack);
@@ -265,7 +282,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				{
 					graphics.RenderSolid(this.colorBackDisabled);
 				}
-				rFocus.Inflate(1, 1);
+				rFocus.Inflate(1);
 				radFocus = -1;
 			}
 			else if ( style == ButtonStyle.ToolItem )
@@ -279,7 +296,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.AddFilledRectangle(rect);
 					graphics.RenderSolid(this.colorCaption);
 				}
-				rFocus.Inflate(1, 1);
+				rFocus.Inflate(1);
 				rFocus.Right ++;
 				radFocus = -1;
 			}
@@ -735,7 +752,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				Drawing.Rectangle band = rect;
 				band.Width = iconWidth;
-				band.Inflate(-2, -2);
+				band.Deflate(2);
 				graphics.AddFilledRectangle(band);
 				graphics.RenderSolid(this.colorControlBar);
 			}
@@ -885,7 +902,7 @@ namespace Epsitec.Common.Widgets.Adorner
 											  WidgetState state)
 		{
 			rect.Width -= 1;
-			rect.Inflate(-1, -1);
+			rect.Deflate(1);
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(this.colorWindow);
 		}
@@ -1040,7 +1057,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		// Crée le chemin d'un rectangle à coins arrondis.
 		protected Drawing.Path PathRoundRectangle(Drawing.Rectangle rect, double radius)
 		{
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			double ox = rect.Left;
 			double oy = rect.Bottom;
 			double dx = rect.Width;
@@ -1067,7 +1084,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		// Crée le chemin d'un rectangle à coins arrondis en forme de "u" inversé.
 		protected Drawing.Path PathTopRoundRectangle(Drawing.Rectangle rect, double radius)
 		{
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			double ox = rect.Left;
 			double oy = rect.Bottom;
 			double dx = rect.Width;

@@ -104,6 +104,23 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+rect.Width*0.20*zoom, center.Y-rect.Height*0.30*zoom);
 					path.LineTo(center.X+rect.Width*0.00*zoom, center.Y-rect.Height*0.10*zoom);
 					break;
+
+				case GlyphType.Dots:
+					path.MoveTo(center.X-rect.Width*0.30*zoom, center.Y+rect.Height*0.06*zoom);
+					path.LineTo(center.X-rect.Width*0.18*zoom, center.Y+rect.Height*0.06*zoom);
+					path.LineTo(center.X-rect.Width*0.18*zoom, center.Y-rect.Height*0.06*zoom);
+					path.LineTo(center.X-rect.Width*0.30*zoom, center.Y-rect.Height*0.06*zoom);
+					path.Close();
+					path.MoveTo(center.X-rect.Width*0.06*zoom, center.Y+rect.Height*0.06*zoom);
+					path.LineTo(center.X+rect.Width*0.06*zoom, center.Y+rect.Height*0.06*zoom);
+					path.LineTo(center.X+rect.Width*0.06*zoom, center.Y-rect.Height*0.06*zoom);
+					path.LineTo(center.X-rect.Width*0.06*zoom, center.Y-rect.Height*0.06*zoom);
+					path.Close();
+					path.MoveTo(center.X+rect.Width*0.18*zoom, center.Y+rect.Height*0.06*zoom);
+					path.LineTo(center.X+rect.Width*0.30*zoom, center.Y+rect.Height*0.06*zoom);
+					path.LineTo(center.X+rect.Width*0.30*zoom, center.Y-rect.Height*0.06*zoom);
+					path.LineTo(center.X+rect.Width*0.18*zoom, center.Y-rect.Height*0.06*zoom);
+					break;
 			}
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
@@ -122,7 +139,7 @@ namespace Epsitec.Common.Widgets.Adorner
 							   Drawing.Rectangle rect,
 							   Widgets.WidgetState state)
 		{
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			graphics.Align(ref rect);
 
 			if ( (state&WidgetState.Enabled) != 0 )
@@ -155,7 +172,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			{
 				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 				{
-					rect.Inflate(rect.Height*0.1, rect.Height*0.1);
+					rect.Inflate(rect.Height*0.1);
 				}
 				Drawing.Point center = new Drawing.Point((rect.Left+rect.Right)/2, (rect.Bottom+rect.Top)/2);
 				Drawing.Path path = new Drawing.Path();
@@ -183,7 +200,7 @@ namespace Epsitec.Common.Widgets.Adorner
 							   Drawing.Rectangle rect,
 							   Widgets.WidgetState state)
 		{
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			graphics.Align(ref rect);
 
 			if ( (state&WidgetState.Enabled) != 0 )
@@ -215,10 +232,10 @@ namespace Epsitec.Common.Widgets.Adorner
 				 (state&WidgetState.Engaged) != 0   )
 			{
 				Drawing.Rectangle rInside = rect;
-				rInside.Inflate(-rect.Height*0.3, -rect.Height*0.3);
+				rInside.Deflate(rect.Height*0.3);
 				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 				{
-					rInside.Inflate(rInside.Height*0.1, rInside.Height*0.1);
+					rInside.Inflate(rInside.Height*0.1);
 				}
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
@@ -548,13 +565,13 @@ namespace Epsitec.Common.Widgets.Adorner
 					this.PaintRectTopShadow(graphics, rect);
 				}
 
-				rect.Inflate(-0.5, -0.5);
+				rect.Deflate(0.5);
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(this.ColorBorder);
 
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
-					rect.Inflate(0.5, 0.5);
+					rect.Inflate(0.5);
 					this.PaintRectShadow(graphics, rect, 1, 0.3, 0.7, true);
 				}
 			}
@@ -571,7 +588,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.RenderSolid(Drawing.Color.FromBrightness(0.9));
 				}
 
-				rect.Inflate(-0.5, -0.5);
+				rect.Deflate(0.5);
 				graphics.AddRectangle(rect);
 				graphics.RenderSolid(this.ColorBorder);
 			}
@@ -599,7 +616,7 @@ namespace Epsitec.Common.Widgets.Adorner
 											Widgets.Direction dir)
 		{
 			Drawing.Rectangle rect = frameRect;
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 
 			if ( dir == Direction.Up )
 			{
@@ -627,7 +644,7 @@ namespace Epsitec.Common.Widgets.Adorner
 										Widgets.WidgetState state,
 										Widgets.Direction dir)
 		{
-			thumbRect.Inflate(-1, -1);
+			thumbRect.Deflate(1);
 
 			if ( dir == Direction.Up )
 			{
@@ -761,13 +778,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			Drawing.Rectangle top = rect;
 			Drawing.Rectangle full = rect;
 
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(this.ColorBorder);
 
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
 				top.Bottom = top.Top-10;
+				top.Deflate(1, 0);
 				this.PaintImageButton(graphics, top, 56);
 			}
 
@@ -849,13 +867,13 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			this.PaintBackground(graphics, rect, rect, 0.95, 10.0, false);
 
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(this.ColorBorder);
 
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
-				rect.Inflate(0.5, 0.5);
+				rect.Inflate(0.5);
 				this.PaintRectShadow(graphics, rect, 2, 0.3, 0.7, true);
 			}
 		}
@@ -864,7 +882,7 @@ namespace Epsitec.Common.Widgets.Adorner
 										 Drawing.Rectangle rect,
 										 WidgetState state)
 		{
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(this.ColorBorder);
 		}
@@ -993,7 +1011,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			rect.Inflate(-this.GeometryMenuShadow);
 			this.PaintBackground(graphics, rect, rect, 1.05, 30.0, false);
 
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(this.ColorBorder);
 		}
@@ -1162,7 +1180,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			if ( this.metalRenderer )
 			{
-				rect.Inflate(-1, -1);
+				rect.Deflate(1);
 
 				double radius = this.RetRadiusFrame(rect);
 				Drawing.Path pInside = this.PathRoundRectangle(rect, radius);
@@ -1242,7 +1260,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(this.colorInfo);  // fond jaune pale
 			
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(this.colorBlack);  // cadre noir
 		}
@@ -1756,7 +1774,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			for ( int i=0 ; i<deep ; i++ )
 			{
-				if ( hole )  rect.Inflate(1, 1);
+				if ( hole )  rect.Inflate(1);
 
 				graphics.AddLine(rect.Left+0.5, rect.Bottom, rect.Left+0.5, rect.Top-1.0);
 				graphics.AddLine(rect.Right-0.5, rect.Bottom, rect.Right-0.5, rect.Top-1.0);
@@ -1768,7 +1786,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				if ( hole )  graphics.RenderSolid(Drawing.Color.FromARGB(alphaTop, 0,0,0));
 				else         graphics.RenderSolid(Drawing.Color.FromARGB(alphaTop, 1,1,1));
 
-				if ( !hole )  rect.Inflate(-1, -1);
+				if ( !hole )  rect.Deflate(1);
 				alphaTop -= incTop;
 				alphaBottom -= incBottom;
 			}
@@ -1790,7 +1808,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 			for ( int i=0 ; i<deep ; i++ )
 			{
-				if ( hole )  rect.Inflate(1, 1);
+				if ( hole )  rect.Inflate(1);
 				double radius = this.RetRadiusFrame(rect);
 
 				double ox = rect.Left;
@@ -1824,7 +1842,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				else         topColor    = Drawing.Color.FromARGB(alphaTop, 1,1,1);
 				this.Gradient(graphics, up, bottomColor, topColor);
 
-				if ( !hole )  rect.Inflate(-1, -1);
+				if ( !hole )  rect.Deflate(1);
 				alphaTop -= incTop;
 				alphaBottom -= incBottom;
 			}

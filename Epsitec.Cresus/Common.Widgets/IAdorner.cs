@@ -9,6 +9,7 @@ namespace Epsitec.Common.Widgets
 		ArrowRight,
 		Menu,
 		Close,
+		Dots,
 	}
 
 	public enum PaintTextStyle

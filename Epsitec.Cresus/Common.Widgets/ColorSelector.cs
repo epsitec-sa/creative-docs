@@ -250,7 +250,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.fields == null )  return;
 
 			Drawing.Rectangle rect = this.Client.Bounds;
-			rect.Inflate(-5, -5);
+			rect.Deflate(5);
 			double hCircle = rect.Height-5-20*4;
 			hCircle = System.Math.Min(hCircle, rect.Width);
 			Drawing.Rectangle r = new Drawing.Rectangle();

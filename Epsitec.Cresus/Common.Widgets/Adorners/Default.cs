@@ -111,6 +111,23 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.30);
 					path.LineTo(center.X+rect.Width*0.00, center.Y-rect.Height*0.10);
 					break;
+
+				case GlyphType.Dots:
+					path.MoveTo(center.X-rect.Width*0.30, center.Y+rect.Height*0.06);
+					path.LineTo(center.X-rect.Width*0.18, center.Y+rect.Height*0.06);
+					path.LineTo(center.X-rect.Width*0.18, center.Y-rect.Height*0.06);
+					path.LineTo(center.X-rect.Width*0.30, center.Y-rect.Height*0.06);
+					path.Close();
+					path.MoveTo(center.X-rect.Width*0.06, center.Y+rect.Height*0.06);
+					path.LineTo(center.X+rect.Width*0.06, center.Y+rect.Height*0.06);
+					path.LineTo(center.X+rect.Width*0.06, center.Y-rect.Height*0.06);
+					path.LineTo(center.X-rect.Width*0.06, center.Y-rect.Height*0.06);
+					path.Close();
+					path.MoveTo(center.X+rect.Width*0.18, center.Y+rect.Height*0.06);
+					path.LineTo(center.X+rect.Width*0.30, center.Y+rect.Height*0.06);
+					path.LineTo(center.X+rect.Width*0.30, center.Y-rect.Height*0.06);
+					path.LineTo(center.X+rect.Width*0.18, center.Y-rect.Height*0.06);
+					break;
 			}
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
@@ -144,7 +161,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.LineCap = Drawing.CapStyle.Butt;
 
 			Drawing.Rectangle rInside = rect;
-			rInside.Inflate(-1, -1);
+			rInside.Deflate(1);
 
 			// Ombre claire en bas à droite.
 			Direction shadow = Direction.Up;
@@ -185,7 +202,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			graphics.Align(ref rect);
 			Drawing.Rectangle rInside = rect;
-			rInside.Inflate(-1, -1);
+			rInside.Deflate(1);
 
 			// Ombre claire en bas à droite.
 			Direction shadow = Direction.Up;
@@ -197,7 +214,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.PaintHalfCircle(graphics, rInside, this.colorControlDark, Opposite(shadow));
 
 			rInside = rect;
-			rInside.Inflate(-2, -2);
+			rInside.Deflate(2);
 			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 			{
 				this.PaintCircle(graphics, rInside, this.colorControl);
@@ -210,7 +227,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
 			{
 				rInside = rect;
-				rInside.Inflate(-rect.Height*0.3, -rect.Height*0.3);
+				rInside.Deflate(rect.Height*0.3);
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
 					this.PaintCircle(graphics, rInside, this.colorBlack);
@@ -249,16 +266,16 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.LineCap = Drawing.CapStyle.Butt;
 
 				Drawing.Rectangle rInside = rect;
-				rInside.Inflate(-1, -1);
+				rInside.Deflate(1);
 
 				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 				{
 					// Rectangle noir autour.
 					Drawing.Rectangle rOut = rect;
-					rOut.Inflate(-0.5, -0.5);
+					rOut.Deflate(0.5);
 					graphics.AddRectangle(rOut);
 					graphics.RenderSolid(this.colorBlack);
-					rOut.Inflate(-1, -1);
+					rOut.Deflate(1);
 					graphics.AddRectangle(rOut);
 					graphics.RenderSolid(this.colorControlDark);
 				}
@@ -268,12 +285,12 @@ namespace Epsitec.Common.Widgets.Adorner
 					{
 						// Rectangle noir autour.
 						Drawing.Rectangle rOut = rect;
-						rOut.Inflate(-0.5, -0.5);
+						rOut.Deflate(0.5);
 						graphics.AddRectangle(rOut);
 						graphics.RenderSolid(this.colorBlack);
 
-						rect.Inflate(-1, -1);
-						rInside.Inflate(-1, -1);
+						rect.Deflate(1);
+						rInside.Deflate(1);
 					}
 
 					// Ombre claire en haut à gauche.
@@ -297,7 +314,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.LineCap = Drawing.CapStyle.Butt;
 
 				Drawing.Rectangle rInside = rect;
-				rInside.Inflate(-1, -1);
+				rInside.Deflate(1);
 
 				if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
 				{
@@ -359,7 +376,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( (state&WidgetState.Focused) != 0 )
 			{
 				Drawing.Rectangle rFocus = rect;
-				rFocus.Inflate(-3.5, -3.5);
+				rFocus.Deflate(3.5);
 				this.PaintFocusBox(graphics, rFocus);
 			}
 		}
@@ -426,7 +443,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.LineCap = Drawing.CapStyle.Butt;
 
 				Drawing.Rectangle rInside = rect;
-				rInside.Inflate(-1, -1);
+				rInside.Deflate(1);
 
 				// Ombre foncée en haut à gauche.
 				Direction shadow = Direction.Up;
@@ -449,7 +466,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.RenderSolid(this.colorControl);
 				}
 
-				rect.Inflate(-0.5, -0.5);
+				rect.Deflate(0.5);
 				graphics.AddRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
@@ -520,13 +537,13 @@ namespace Epsitec.Common.Widgets.Adorner
 			Drawing.Rectangle rect = new Drawing.Rectangle();
 
 			rect = frameRect;
-			rect.Inflate(-1, -1);
+			rect.Deflate(1);
 			graphics.LineWidth = 2;
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(this.colorControlLightLight);
 
 			rect = frameRect;
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			rect.Right --;
 			rect.Bottom ++;
 			graphics.LineWidth = 1;
@@ -588,7 +605,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.LineCap = Drawing.CapStyle.Butt;
 
 			Drawing.Rectangle rInside = rect;
-			rInside.Inflate(-1, -1);
+			rInside.Deflate(1);
 
 			// Ombre claire en haut à gauche.
 			Direction shadow = Direction.Up;
@@ -722,7 +739,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.LineCap = Drawing.CapStyle.Butt;
 
 			Drawing.Rectangle rInside = rect;
-			rInside.Inflate(-1, -1);
+			rInside.Deflate(1);
 
 			// Ombre foncée en haut à gauche.
 			Direction shadow = Direction.Up;
@@ -774,7 +791,7 @@ namespace Epsitec.Common.Widgets.Adorner
 										WidgetState state,
 										Direction dir)
 		{
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 
 			graphics.AddLine(rect.Left, rect.Top, rect.Right, rect.Top);
 			graphics.AddLine(rect.Left, rect.Bottom, rect.Left, rect.Top);
@@ -804,7 +821,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(this.colorControlLightLight);
 
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(this.colorControlDark);
 #else
@@ -812,7 +829,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.RenderSolid(this.colorControl);
 
 			Drawing.Rectangle rInside = rect;
-			rInside.Inflate(-1, -1);
+			rInside.Deflate(1);
 
 			// Ombre claire en haut à gauche.
 			PaintL(graphics, rect, this.colorControlLightLight, Opposite(shadow));
@@ -1006,7 +1023,7 @@ namespace Epsitec.Common.Widgets.Adorner
 											  WidgetState state)
 		{
 			rect.Width -= 1;
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(Drawing.Color.FromBrightness(0.5));
 		}
@@ -1025,7 +1042,7 @@ namespace Epsitec.Common.Widgets.Adorner
 		{
 			graphics.Align(ref rect);
 			Drawing.Rectangle rInside = rect;
-			rInside.Inflate(-1, -1);
+			rInside.Deflate(1);
 
 			// Ombre foncée en bas à droite.
 			Direction shadow = Direction.Up;
@@ -1037,7 +1054,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			this.PaintHalfCircle(graphics, rInside, this.colorControlDark, shadow);
 
 			rInside = rect;
-			rInside.Inflate(-2, -2);
+			rInside.Deflate(2);
 			if ( color.IsEmpty || (state&WidgetState.Enabled) == 0 )
 			{
 				this.PaintCircle(graphics, rInside, this.colorControl);
@@ -1067,7 +1084,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(this.colorInfo);  // fond jaune pale
 			
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(this.colorBlack);  // cadre noir
 		}

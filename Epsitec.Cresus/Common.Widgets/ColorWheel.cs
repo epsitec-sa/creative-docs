@@ -209,7 +209,7 @@ namespace Epsitec.Common.Widgets
 			if ( restricted )
 			{
 				Drawing.Rectangle rect = this.rectSquare;
-				rect.Inflate(this.radiusHandler, this.radiusHandler);
+				rect.Inflate(this.radiusHandler);
 				if ( !rect.Contains(pos) )
 				{
 					return false;
@@ -289,27 +289,27 @@ namespace Epsitec.Common.Widgets
 
 				// Dessine l'échantillon au milieu.
 				Drawing.Rectangle rInside = rect;
-				rInside.Inflate(-this.rectCircle.Width*0.125, -this.rectCircle.Width*0.125);
+				rInside.Deflate(this.rectCircle.Width*0.125);
 				path = new Drawing.Path();
 				this.PathAddCircle(path, rInside);
 				graphics.Rasterizer.AddSurface(path);
 				graphics.RenderSolid(colorWindow);
 
-				rInside.Inflate(-0.5, -0.5);
+				rInside.Deflate(0.5);
 				graphics.AddLine(rInside.Left, (rInside.Bottom+rInside.Top)/2, rInside.Right, (rInside.Bottom+rInside.Top)/2);
 				graphics.AddLine((rInside.Left+rInside.Right)/2, rInside.Bottom, (rInside.Left+rInside.Right)/2, rInside.Top);
 				graphics.RenderSolid(colorBorder);
 
-				rInside.Inflate(0.5, 0.5);
+				rInside.Inflate(0.5);
 				path = new Drawing.Path();
 				this.PathAddCircle(path, rInside);
 				graphics.Rasterizer.AddSurface(path);
 				graphics.RenderSolid(this.Color);
 			}
 
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			this.PaintCircle(graphics, rect, colorBorder);
-			rect.Inflate(-this.rectCircle.Width*0.125, -this.rectCircle.Width*0.125);
+			rect.Deflate(this.rectCircle.Width*0.125);
 			this.PaintCircle(graphics, rect, colorBorder);
 		}
 
@@ -412,7 +412,7 @@ namespace Epsitec.Common.Widgets
 
 			rect = this.rectSquare;
 			graphics.Align(ref rect);
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			this.PaintGradientSquare(graphics, rect, colorBorder);
 
 			this.PaintHandler(graphics, this.posHandlerH,  this.radiusHandler);

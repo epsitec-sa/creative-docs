@@ -268,7 +268,7 @@ namespace Epsitec.Cresus.Database
 				infrastructure.RegisterNewDbTable (null, db_table);
 				
 				Assertion.AssertNotNull (infrastructure.ResolveDbTable (null, db_table.Name));
-				Assertion.AssertEquals (12L, db_table.InternalKey.Id);
+				Assertion.AssertEquals (9L, db_table.InternalKey.Id);
 				Assertion.AssertEquals (0, db_table.InternalKey.Revision);
 			}
 		}

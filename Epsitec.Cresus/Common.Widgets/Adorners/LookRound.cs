@@ -119,6 +119,23 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.30);
 					path.LineTo(center.X+rect.Width*0.00, center.Y-rect.Height*0.10);
 					break;
+
+				case GlyphType.Dots:
+					path.MoveTo(center.X-rect.Width*0.30, center.Y+rect.Height*0.06);
+					path.LineTo(center.X-rect.Width*0.18, center.Y+rect.Height*0.06);
+					path.LineTo(center.X-rect.Width*0.18, center.Y-rect.Height*0.06);
+					path.LineTo(center.X-rect.Width*0.30, center.Y-rect.Height*0.06);
+					path.Close();
+					path.MoveTo(center.X-rect.Width*0.06, center.Y+rect.Height*0.06);
+					path.LineTo(center.X+rect.Width*0.06, center.Y+rect.Height*0.06);
+					path.LineTo(center.X+rect.Width*0.06, center.Y-rect.Height*0.06);
+					path.LineTo(center.X-rect.Width*0.06, center.Y-rect.Height*0.06);
+					path.Close();
+					path.MoveTo(center.X+rect.Width*0.18, center.Y+rect.Height*0.06);
+					path.LineTo(center.X+rect.Width*0.30, center.Y+rect.Height*0.06);
+					path.LineTo(center.X+rect.Width*0.30, center.Y-rect.Height*0.06);
+					path.LineTo(center.X+rect.Width*0.18, center.Y-rect.Height*0.06);
+					break;
 			}
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
@@ -157,7 +174,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 			{
 				rInside = rect;
-				rInside.Inflate(-1.5, -1.5);
+				rInside.Deflate(1.5);
 				graphics.LineWidth = 2;
 				graphics.AddRectangle(rInside);
 				graphics.RenderSolid(this.colorHilite);
@@ -167,7 +184,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.LineCap = Drawing.CapStyle.Butt;
 
 			rInside = rect;
-			rInside.Inflate(-0.5, -0.5);
+			rInside.Deflate(0.5);
 			graphics.AddRectangle(rInside);
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
@@ -219,14 +236,14 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 
 			rInside = rect;
-			rInside.Inflate(-1, -1);
+			rInside.Deflate(1);
 
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 			{
 				this.PaintCircle(graphics, rInside, this.colorHilite);
-				rInside.Inflate(-1, -1);
+				rInside.Deflate(1);
 				this.PaintCircle(graphics, rInside, this.colorHilite);
-				rInside.Inflate(-1, -1);
+				rInside.Deflate(1);
 			}
 
 			if ( (state&WidgetState.Engaged) != 0 )  // bouton pressé ?
@@ -245,7 +262,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( (state&WidgetState.ActiveYes) != 0 )  // coché ?
 			{
 				rInside = rect;
-				rInside.Inflate(-rect.Height*0.3, -rect.Height*0.3);
+				rInside.Deflate(rect.Height*0.3);
 				if ( (state&WidgetState.Enabled) != 0 )
 				{
 					this.PaintCircle(graphics, rInside, this.colorBlack);
@@ -308,7 +325,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 				{
 					Drawing.Rectangle rInside = rect;
-					rInside.Inflate(-1.5, -1.5);
+					rInside.Deflate(1.5);
 					Drawing.Path pInside = this.PathRoundRectangle(rInside, 0);
 					graphics.Rasterizer.AddOutline(pInside, 2);
 					graphics.RenderSolid(this.colorHilite);
@@ -338,7 +355,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				if ( (state&WidgetState.Focused) != 0 )
 				{
 					Drawing.Rectangle rInside = rect;
-					rInside.Inflate(-1.5, -1.5);
+					rInside.Deflate(1.5);
 					Drawing.Path pInside = this.PathRoundRectangle(rInside, radius);
 					graphics.Rasterizer.AddOutline(pInside, 2);
 					graphics.RenderSolid(this.colorControlDark);
@@ -347,7 +364,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 				{
 					Drawing.Rectangle rInside = rect;
-					rInside.Inflate(-1.5, -1.5);
+					rInside.Deflate(1.5);
 					Drawing.Path pInside = this.PathRoundRectangle(rInside, radius);
 					graphics.Rasterizer.AddOutline(pInside, 2);
 					graphics.RenderSolid(this.colorHilite);
@@ -380,7 +397,7 @@ namespace Epsitec.Common.Widgets.Adorner
 					graphics.Rasterizer.AddOutline(path, 1);
 					graphics.RenderSolid(this.colorCaption);
 				}
-				rFocus.Inflate(2, 2);
+				rFocus.Inflate(2);
 				rFocus.Right ++;
 				radFocus = System.Math.Min(3, System.Math.Min(rect.Width, rect.Height));
 			}
@@ -483,7 +500,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.colorControlLightLight);
 
-				rect.Inflate(-0.5, -0.5);
+				rect.Deflate(0.5);
 				graphics.AddRectangle(rect);
 				if ( (state&WidgetState.Enabled) != 0 )  // bouton enable ?
 				{
@@ -623,7 +640,7 @@ namespace Epsitec.Common.Widgets.Adorner
 								  Widgets.WidgetState state,
 								  Widgets.Direction dir)
 		{
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
@@ -634,7 +651,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.RenderSolid(this.colorControlDark);
 			}
 
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			graphics.AddFilledRectangle(rect);
 			if ( (state&WidgetState.Enabled) != 0 )
 			{
@@ -909,7 +926,7 @@ namespace Epsitec.Common.Widgets.Adorner
 				graphics.RenderSolid(this.colorControl);
 			}
 
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			if ( parentRect.IsSurfaceZero )
 			{
 				graphics.AddRectangle(rect);
@@ -1173,7 +1190,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			if ( (state&WidgetState.Entered) != 0 )  // bouton survolé ?
 			{
 				rInside = rect;
-				rInside.Inflate(-1.5, -1.5);
+				rInside.Deflate(1.5);
 				path = new Drawing.Path();
 				path.AppendCircle(rInside.Center, rInside.Width/2, rInside.Height/2);
 				graphics.Rasterizer.AddOutline(path, 2);
@@ -1181,7 +1198,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			}
 
 			rInside = rect;
-			rInside.Inflate(-0.5, -0.5);
+			rInside.Deflate(0.5);
 			path = new Drawing.Path();
 			path.AppendCircle(rInside.Center, rInside.Width/2, rInside.Height/2);
 			graphics.Rasterizer.AddOutline(path, 1);
@@ -1211,7 +1228,7 @@ namespace Epsitec.Common.Widgets.Adorner
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(this.colorInfo);  // fond jaune pale
 			
-			rect.Inflate(-0.5, -0.5);
+			rect.Deflate(0.5);
 			graphics.AddRectangle(rect);
 			graphics.RenderSolid(this.colorControlDarkDark);  // cadre noir
 		}
