@@ -19,14 +19,14 @@ namespace Epsitec.Common.Designer.Editors
 		{
 			base.FillTabPage ();
 			
-			this.CreatePropPane ("Name",		new UI.Adapters.StringAdapter ());
-			this.CreatePropPane ("Text",		new UI.Adapters.TextRefAdapter ());
-			this.CreatePropPane ("Command",		new UI.Adapters.StringAdapter ());
-			this.CreatePropPane ("Location",	new UI.Adapters.Num2Adapter ());
-			this.CreatePropPane ("Size",		new UI.Adapters.Num2Adapter ());
-			this.CreatePropPane ("TabIndex",	new UI.Adapters.StringAdapter ());
-			this.CreatePropPane ("Group",		new UI.Adapters.StringAdapter ());
-			this.CreatePropPane ("Layout",		new UI.Adapters.LayoutAdapter ());
+			this.CreatePropPane ("Name",		new Common.UI.Adapters.StringAdapter ());
+			this.CreatePropPane ("Text",		new UI.TextRefAdapter ());
+			this.CreatePropPane ("Command",		new Common.UI.Adapters.StringAdapter ());
+			this.CreatePropPane ("Location",	new Common.UI.Adapters.Num2Adapter ());
+			this.CreatePropPane ("Size",		new Common.UI.Adapters.Num2Adapter ());
+			this.CreatePropPane ("TabIndex",	new Common.UI.Adapters.StringAdapter ());
+			this.CreatePropPane ("Group",		new Common.UI.Adapters.StringAdapter ());
+			this.CreatePropPane ("Layout",		new Common.UI.Adapters.LayoutAdapter ());
 		}
 	}
 }

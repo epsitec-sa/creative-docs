@@ -23,11 +23,11 @@ namespace Epsitec.Common.Designer
 			
 			this.dispatcher.RegisterController (this);
 			
-			Support.Globals.Properties.SetProperty ("$resources$string data provider", this.DataProvider);
+			Support.Globals.Properties.SetProperty ("$resources$string controller", this);
 		}
 		
 		
-		public void AttachNewBundle(string prefix, string name, string type)
+		public void AttachNewBundle(string prefix, string name)
 		{
 			string full_name = Resources.MakeFullName (prefix, name);
 			
@@ -39,7 +39,7 @@ namespace Epsitec.Common.Designer
 			ResourceBundleCollection bundles = new ResourceBundleCollection ();
 			ResourceBundle           bundle  = ResourceBundle.Create (prefix, name, ResourceLevel.Default);
 			
-			bundle.DefineType (type);
+			bundle.DefineType ("String");
 			bundles.Add (bundle);
 			
 			this.CreateMissingBundles (bundles, prefix, name);
@@ -69,6 +69,7 @@ namespace Epsitec.Common.Designer
 			
 			this.ActivateTabBookPage ();
 		}
+		
 		
 		protected void CreateMissingBundles(ResourceBundleCollection bundles, string prefix, string name)
 		{
@@ -152,6 +153,56 @@ namespace Epsitec.Common.Designer
 			{
 				return this.provider;
 			}
+		}
+		
+		
+		public bool IsStringBundleLoaded(string name)
+		{
+			return this.bundles.ContainsKey (name);
+		}
+		
+		public bool LoadStringBundle(string name)
+		{
+			if (this.IsStringBundleLoaded (name))
+			{
+				return true;
+			}
+			
+			try
+			{
+				this.AttachExistingBundle (this.default_prefix, name);
+			}
+			catch
+			{
+				return false;
+			}
+			
+			return this.IsStringBundleLoaded (name);
+		}
+		
+		public string[] GetStringBundleNames()
+		{
+			string[] names = new string[this.bundles.Count];
+			this.bundles.Keys.CopyTo (names, 0);
+			System.Array.Sort (names);
+			return names;
+		}
+		
+		public string[] GetStringFieldNames(string bundle_name)
+		{
+			ResourceBundleCollection bundles = this.bundles[bundle_name] as ResourceBundleCollection;
+			
+			if (bundles != null)
+			{
+				ResourceBundle bundle = bundles[ResourceLevel.Default];
+				
+				if (bundle != null)
+				{
+					return bundle.FieldNames;
+				}
+			}
+			
+			return new string[0];
 		}
 		
 		
@@ -530,148 +581,13 @@ namespace Epsitec.Common.Designer
 			private int							changing;
 		}
 		
-		
-		protected Panels.StringEditPanel CreatePanel(string full_name, ResourceBundleCollection bundles)
-		{
-			Panels.StringEditPanel panel = new Panels.StringEditPanel (new Store (this, full_name, bundles));
-			
-			Widget  widget = panel.Widget;
-			Window  window = this.Window;
-			TabPage page   = new TabPage ();
-			
-			System.Diagnostics.Debug.Assert (this.window != null);
-			System.Diagnostics.Debug.Assert (this.tab_book != null);
-			
-			widget.Dock   = DockStyle.Fill;
-			widget.Parent = page;
-			
-			page.TabTitle = bundles[0].Name;
-			
-			this.tab_book.Items.Add (page);
-			
-			return panel;
-		}
-		
-		protected void CreateWindow()
-		{
-			Drawing.Size size = Panels.StringEditPanel.DefaultSize;
-			
-			this.window = new Window ();
-			this.window.ClientSize = size + new Drawing.Size (20, 60);
-			this.window.CommandDispatcher = this.dispatcher;
-			this.Window.Text = "Ressources textuelles";
-			
-			this.tool_bar = new HToolBar (this.Window.Root);
-			this.tool_bar.Dock = DockStyle.Top;
-			this.tool_bar.CommandDispatcher = this.dispatcher;
-			
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("CreateStringBundle", "manifest:Epsitec.Common.Designer.Images.New.icon"));
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("OpenStringBundle()", "manifest:Epsitec.Common.Designer.Images.Open.icon"));
-			this.tool_bar.Items.Add (IconButton.CreateSimple ("SaveStringBundle()", "manifest:Epsitec.Common.Designer.Images.Save.icon"));
-			
-			this.tab_book = new TabBook (this.Window.Root);
-			this.tab_book.Dock = DockStyle.Fill;
-			this.tab_book.DockMargins = new Drawing.Margins (8, 8, 8, 8);
-			this.tab_book.HasCloseButton = true;
-			this.tab_book.CloseClicked += new EventHandler (this.HandleTabBookCloseClicked);
-		}
-		
-		
-		[Command ("CreateStringBundle")]	void CommandCreateStringBundle(CommandDispatcher d, CommandEventArgs e)
-		{
-			if (e.CommandArgs.Length == 0)
-			{
-				Dialogs.BundleName dialog = new Dialogs.BundleName ("CreateStringBundle (\"{0}\", \"{1}\")", this.dispatcher);
-				dialog.Owner = this.Window;
-				dialog.Show ();
-			}
-			else if (e.CommandArgs.Length == 2)
-			{
-				string bundle_prefix = e.CommandArgs[0];
-				string bundle_name   = e.CommandArgs[1];
-				
-				this.AttachNewBundle (bundle_prefix, bundle_name, "String");
-			}
-			else
-			{
-				this.ThrowInvalidOperationException (e, 2);
-			}
-		}
-		
-		[Command ("OpenStringBundle")]		void CommandOpenStringBundle(CommandDispatcher d, CommandEventArgs e)
-		{
-			if (e.CommandArgs.Length == 0)
-			{
-				Dialogs.OpenExistingBundle dialog = new Dialogs.OpenExistingBundle ("OpenStringBundle (\"{0}\")", this.dispatcher);
-				dialog.SubBundleSpec.TypeFilter = "String";
-				dialog.Owner = this.Window;
-				dialog.UpdateListContents ();
-				dialog.Show ();
-			}
-			else if (e.CommandArgs.Length == 1)
-			{
-				string         full_id = e.CommandArgs[0];
-				string         prefix  = Resources.ExtractPrefix (full_id);
-				string         name    = Resources.ExtractName (full_id);
-				
-				this.AttachExistingBundle (prefix, name);
-			}
-			else
-			{
-				this.ThrowInvalidOperationException (e, 1);
-			}
-		}
-		
-		[Command ("SaveStringBundle")]		void CommandSaveStringBundle(CommandDispatcher d, CommandEventArgs e)
-		{
-			if (e.CommandArgs.Length > 0)
-			{
-				this.ThrowInvalidOperationException (e, 0);
-			}
-			
-			ResourceBundleCollection bundles = this.ActiveBundleCollection;
-			
-			if (bundles != null)
-			{
-				foreach (ResourceBundle bundle in bundles)
-				{
-					if (! bundle.IsEmpty)
-					{
-						Resources.SetBundle (bundle, ResourceSetMode.Write);
-					}
-				}
-			}
-		}
-		
-		
-		private void HandleTabBookCloseClicked(object sender)
-		{
-			int index = this.tab_book.ActivePageIndex;
-			
-			if (index > -1)
-			{
-				//	Ferme la page active.
-				
-				Panels.StringEditPanel panel = this.panels[index] as Panels.StringEditPanel;
-				string name = panel.Store.Name;
-				
-				this.bundles.Remove (name);
-				this.panels.RemoveAt (index);
-				this.tab_book.Items.RemoveAt (index);
-			}
-		}
-		
-		private void ActivateTabBookPage()
-		{
-			this.tab_book.ActivePageIndex = this.bundles.Count - 1;
-		}
-		
-		
 		private class BundleStringProvider : Support.Data.IPropertyProvider
 		{
 			public BundleStringProvider(StringEditController host)
 			{
 				this.host = host;
+				
+				Support.Globals.Properties.SetProperty ("$resources$string provider", this);
 			}
 			
 			
@@ -758,11 +674,150 @@ namespace Epsitec.Common.Designer
 			private StringEditController		host;
 		}
 		
+		
+		protected Panels.StringEditPanel CreatePanel(string full_name, ResourceBundleCollection bundles)
+		{
+			Panels.StringEditPanel panel = new Panels.StringEditPanel (new Store (this, full_name, bundles));
+			
+			Widget  widget = panel.Widget;
+			Window  window = this.Window;
+			TabPage page   = new TabPage ();
+			
+			System.Diagnostics.Debug.Assert (this.window != null);
+			System.Diagnostics.Debug.Assert (this.tab_book != null);
+			
+			widget.Dock   = DockStyle.Fill;
+			widget.Parent = page;
+			
+			page.TabTitle = bundles[0].Name;
+			
+			this.tab_book.Items.Add (page);
+			
+			return panel;
+		}
+		
+		protected void CreateWindow()
+		{
+			Drawing.Size size = Panels.StringEditPanel.DefaultSize;
+			
+			this.window = new Window ();
+			this.window.ClientSize = size + new Drawing.Size (20, 60);
+			this.window.CommandDispatcher = this.dispatcher;
+			this.Window.Text = "Ressources textuelles";
+			
+			this.tool_bar = new HToolBar (this.Window.Root);
+			this.tool_bar.Dock = DockStyle.Top;
+			this.tool_bar.CommandDispatcher = this.dispatcher;
+			
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("CreateStringBundle", "manifest:Epsitec.Common.Designer.Images.New.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("OpenStringBundle()", "manifest:Epsitec.Common.Designer.Images.Open.icon"));
+			this.tool_bar.Items.Add (IconButton.CreateSimple ("SaveStringBundle()", "manifest:Epsitec.Common.Designer.Images.Save.icon"));
+			
+			this.tab_book = new TabBook (this.Window.Root);
+			this.tab_book.Dock = DockStyle.Fill;
+			this.tab_book.DockMargins = new Drawing.Margins (8, 8, 8, 8);
+			this.tab_book.HasCloseButton = true;
+			this.tab_book.CloseClicked += new EventHandler (this.HandleTabBookCloseClicked);
+		}
+		
+		
+		[Command ("CreateStringBundle")]	void CommandCreateStringBundle(CommandDispatcher d, CommandEventArgs e)
+		{
+			if (e.CommandArgs.Length == 0)
+			{
+				Dialogs.BundleName dialog = new Dialogs.BundleName ("CreateStringBundle (\"{0}\", \"{1}\")", this.dispatcher);
+				dialog.Owner = this.Window;
+				dialog.Show ();
+			}
+			else if (e.CommandArgs.Length == 2)
+			{
+				string bundle_prefix = e.CommandArgs[0];
+				string bundle_name   = e.CommandArgs[1];
+				
+				this.AttachNewBundle (bundle_prefix, bundle_name);
+			}
+			else
+			{
+				this.ThrowInvalidOperationException (e, 2);
+			}
+		}
+		
+		[Command ("OpenStringBundle")]		void CommandOpenStringBundle(CommandDispatcher d, CommandEventArgs e)
+		{
+			if (e.CommandArgs.Length == 0)
+			{
+				Dialogs.OpenExistingBundle dialog = new Dialogs.OpenExistingBundle ("OpenStringBundle (\"{0}\")", this.dispatcher);
+				dialog.SubBundleSpec.TypeFilter = "String";
+				dialog.Owner = this.Window;
+				dialog.UpdateListContents ();
+				dialog.Show ();
+			}
+			else if (e.CommandArgs.Length == 1)
+			{
+				string         full_id = e.CommandArgs[0];
+				string         prefix  = Resources.ExtractPrefix (full_id);
+				string         name    = Resources.ExtractName (full_id);
+				
+				this.AttachExistingBundle (prefix, name);
+			}
+			else
+			{
+				this.ThrowInvalidOperationException (e, 1);
+			}
+		}
+		
+		[Command ("SaveStringBundle")]		void CommandSaveStringBundle(CommandDispatcher d, CommandEventArgs e)
+		{
+			if (e.CommandArgs.Length > 0)
+			{
+				this.ThrowInvalidOperationException (e, 0);
+			}
+			
+			ResourceBundleCollection bundles = this.ActiveBundleCollection;
+			
+			if (bundles != null)
+			{
+				foreach (ResourceBundle bundle in bundles)
+				{
+					if (! bundle.IsEmpty)
+					{
+						Resources.SetBundle (bundle, ResourceSetMode.Write);
+					}
+				}
+			}
+		}
+		
+		
+		private void HandleTabBookCloseClicked(object sender)
+		{
+			int index = this.tab_book.ActivePageIndex;
+			
+			if (index > -1)
+			{
+				//	Ferme la page active.
+				
+				Panels.StringEditPanel panel = this.panels[index] as Panels.StringEditPanel;
+				string name = panel.Store.Name;
+				
+				this.bundles.Remove (name);
+				this.panels.RemoveAt (index);
+				this.tab_book.Items.RemoveAt (index);
+			}
+		}
+		
+		private void ActivateTabBookPage()
+		{
+			this.tab_book.ActivePageIndex = this.bundles.Count - 1;
+		}
+		
+		
+		
 		protected System.Collections.Hashtable	bundles;
 		protected System.Collections.ArrayList	panels;
 		
 		private BundleStringProvider			provider;
 		
+		protected string						default_prefix = "file";
 		protected Window						window;
 		protected AbstractToolBar				tool_bar;
 		protected TabBook						tab_book;
