@@ -15,10 +15,16 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public class Clipboard
 	{
-		public static Data GetData()
+		public static ReadData GetData()
 		{
-			return new Data (System.Windows.Forms.Clipboard.GetDataObject ());
+			return new ReadData (System.Windows.Forms.Clipboard.GetDataObject ());
 		}
+		
+		public static void     SetData(WriteData data)
+		{
+			System.Windows.Forms.Clipboard.SetDataObject (data.Data, true);
+		}
+		
 		
 		public static string ConvertBrokenUtf8ToString(string value)
 		{
@@ -51,7 +57,94 @@ namespace Epsitec.Common.Support
 			return System.Text.Encoding.UTF8.GetString (bytes);
 		}
 		
-		public static string ConvertToSimpleXml(string value)
+		public static string ConvertStringToBrokenUtf8(string value)
+		{
+			byte[] bytes = System.Text.Encoding.UTF8.GetBytes (value);
+			char[] chars = new char[bytes.Length];
+			
+			for (int i = 0; i < bytes.Length; i++)
+			{
+				chars[i] = (char) bytes[i];
+			}
+			
+			return new string (chars);
+		}
+		
+		public static string ConvertSimpleXmlToHtml(string value)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			int line_begin  = 0;
+			int last_tag    = -1;
+			int space_count = 0;
+			
+			for (int i = 0; i < value.Length; i++)
+			{
+				char c = value[i];
+				
+				if (c == '<')
+				{
+					last_tag = buffer.Length;
+					space_count = 0;
+				}
+				else if (c == ' ')
+				{
+					if (last_tag == -1)
+					{
+						space_count++;
+					}
+				}
+				else
+				{
+					if (space_count > 1)
+					{
+						//	Il y a plusieurs espaces consécutifs; ceux-ci sont générelement supprimés
+						//	par le consommateur HTML.
+						
+						buffer.Length = buffer.Length - space_count;
+						buffer.Append (@" <span style=""mso-spacerun: yes"">");
+						
+						for (int j = 1; j < space_count; j++)
+						{
+							buffer.Append ((char)160);
+						}
+						
+						buffer.Append (@"</span>");
+					}
+					
+					space_count = 0;
+				}
+				
+				buffer.Append (c);
+				
+				if (c == '>')
+				{
+					//	Si on a trouvé une fin de tag ">", il y a forcément eu un début de tag
+					//	auparavant. On peut maintenant analyser ce tag et déterminer ce qu'il
+					//	faut en faire :
+					
+					System.Diagnostics.Debug.Assert (last_tag >= 0);
+					
+					string tag = buffer.ToString (last_tag, buffer.Length - last_tag);
+					
+					if (tag == "<br/>")
+					{
+						//	FrontPage n'aime pas <br/>, alors on doit modifier le tag pour que ça
+						//	soit plus digeste :
+						
+						buffer.Length = last_tag;
+						buffer.Append ("<br />");
+						line_begin = buffer.Length;
+					}
+					
+					last_tag = -1;
+				}
+			}
+			
+			return buffer.ToString ();
+		}
+		
+		public static string ConvertHtmlToSimpleXml(string value)
 		{
 			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
 			
@@ -133,7 +226,7 @@ namespace Epsitec.Common.Support
 						case "</i>": case "</I>": buffer.Append ("</i>"); continue;
 						
 						case "</p>": case "</P>":
-						case "<br>": case "<BR>": case "<br/>":
+						case "<br>": case "<BR>": case "<br/>": case "<br />":
 							buffer.Append ("<br/>");
 							is_space = true;
 							continue;
@@ -204,9 +297,10 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public class Data
+		#region ReadData class
+		public class ReadData
 		{
-			internal Data(IDataObject data)
+			internal ReadData(IDataObject data)
 			{
 				this.data = data;
 			}
@@ -313,6 +407,22 @@ namespace Epsitec.Common.Support
 			}
 			
 			
+			public bool IsCompatible(Format format)
+			{
+				switch (format)
+				{
+					case Format.Text:
+						return this.data.GetDataPresent ("System.String", true);
+					case Format.Image:
+						return this.data.GetDataPresent ("System.Drawing.Bitmap", true);
+					case Format.MicrosoftHtml:
+						return this.data.GetDataPresent ("HTML Format", false);
+				}
+				
+				return false;
+			}
+			
+			
 			protected string ExtractDigits(string text, int pos)
 			{
 				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
@@ -332,24 +442,79 @@ namespace Epsitec.Common.Support
 				return buffer.ToString ();
 			}
 			
-			public bool IsCompatible(Format format)
+			
+			protected IDataObject				data;
+		}
+		#endregion
+		
+		#region WriteData class
+		public class WriteData
+		{
+			public WriteData()
 			{
-				switch (format)
+				this.data = new System.Windows.Forms.DataObject ();
+			}
+			
+			
+			internal IDataObject				Data
+			{
+				get
 				{
-					case Format.Text:
-						return this.data.GetDataPresent ("System.String", true);
-					case Format.Image:
-						return this.data.GetDataPresent ("System.Drawing.Bitmap", true);
-					case Format.MicrosoftHtml:
-						return this.data.GetDataPresent ("HTML Format", false);
+					return this.data;
 				}
+			}
+			
+			
+			public void WriteText(string value)
+			{
+				this.data.SetData ("UnicodeText", true, value);
+			}
+			
+			public void WriteHtmlFragment(string value)
+			{
+				//	Quand on place un texte HTML dans le presse-papier, il faut aussi en placer une
+				//	version textuelle :
 				
-				return false;
+				this.WriteText (System.Utilities.XmlToText (value).Replace ("<br/>", "\r\n"));
+				
+				System.Text.StringBuilder html = new System.Text.StringBuilder ();
+				string                    utf8 = Clipboard.ConvertStringToBrokenUtf8 (Clipboard.ConvertSimpleXmlToHtml (value));
+				
+				html.Append ("Version:1.0\n");
+				html.Append ("StartHTML:00000000\n");		int idx_start_html = html.Length - 9;
+				html.Append ("EndHTML:00000000\n");			int idx_end_html   = html.Length - 9;
+				html.Append ("StartFragment:00000000\n");	int idx_start_frag = html.Length - 9;
+				html.Append ("EndFragment:00000000\n");		int idx_end_frag   = html.Length - 9;
+				html.Append ("\n");							int idx_html_begin = html.Length;
+				html.Append ("<html>\n");
+				html.Append ("<body>\n");					int idx_frag_begin = html.Length;
+				html.Append ("<!--StartFragment-->\n");
+				html.Append (utf8);
+				html.Append ("<!--EndFragment-->\n");		int idx_frag_end   = html.Length;
+				html.Append ("</body>\n");
+				html.Append ("</html>\n");					int idx_html_end   = html.Length;
+				
+				this.PatchString (html, idx_start_html, string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idx_html_begin));
+				this.PatchString (html, idx_end_html,   string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idx_html_end));
+				this.PatchString (html, idx_start_frag, string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idx_frag_begin));
+				this.PatchString (html, idx_end_frag,   string.Format (System.Globalization.CultureInfo.InvariantCulture, "{0:00000000}", idx_frag_end));
+				
+				this.data.SetData ("HTML Format", false, html.ToString ());
+			}
+			
+			
+			protected void PatchString(System.Text.StringBuilder buffer, int pos, string text)
+			{
+				for (int i = 0; i < text.Length; i++)
+				{
+					buffer[pos+i] = text[i];
+				}
 			}
 			
 			
 			protected IDataObject				data;
 		}
+		#endregion
 		
 		public enum Format
 		{

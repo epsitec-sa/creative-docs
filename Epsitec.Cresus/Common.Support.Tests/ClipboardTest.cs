@@ -6,7 +6,7 @@ namespace Epsitec.Common.Support
 	{
 		[Test] public void CheckGetData()
 		{
-			Clipboard.Data data = Clipboard.GetData ();
+			Clipboard.ReadData data = Clipboard.GetData ();
 			
 			string[] fmt_1 = data.NativeFormats;
 			string[] fmt_2 = data.AllPossibleFormats;
@@ -64,13 +64,13 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckReadHtmlFragment()
 		{
-			Clipboard.Data data = Clipboard.GetData ();
-			string         html = data.ReadHtmlFragment ();
+			Clipboard.ReadData data = Clipboard.GetData ();
+			string             html = data.ReadHtmlFragment ();
 			
 			if (html != null)
 			{
 				System.Console.Out.WriteLine ("[ {0} ]", html);
-				System.Console.Out.WriteLine ("[ {0} ]", Clipboard.ConvertToSimpleXml (html));
+				System.Console.Out.WriteLine ("[ {0} ]", Clipboard.ConvertHtmlToSimpleXml (html));
 			}
 			else
 			{
@@ -80,13 +80,13 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckReadHtmlDocument()
 		{
-			Clipboard.Data data = Clipboard.GetData ();
-			string         html = data.ReadHtmlDocument ();
+			Clipboard.ReadData data = Clipboard.GetData ();
+			string             html = data.ReadHtmlDocument ();
 			
 			if (html != null)
 			{
 				System.Console.Out.WriteLine ("[ {0} ]", html);
-				System.Console.Out.WriteLine ("[ {0} ]", Clipboard.ConvertToSimpleXml (html));
+				System.Console.Out.WriteLine ("[ {0} ]", Clipboard.ConvertHtmlToSimpleXml (html));
 			}
 			else
 			{
@@ -96,13 +96,23 @@ namespace Epsitec.Common.Support
 		
 		[Test] public void CheckIsCompatible()
 		{
-			Clipboard.Data data = Clipboard.GetData ();
+			Clipboard.ReadData data = Clipboard.GetData ();
 			
 			foreach (int i in System.Enum.GetValues (typeof (Clipboard.Format)))
 			{
 				Clipboard.Format format = (Clipboard.Format) i;
 				System.Console.Out.WriteLine ("Compatible with {0}: {1}", format, data.IsCompatible (format));
 			}
+		}
+		
+		[Test] public void CheckWriteHtmlFragment()
+		{
+			Clipboard.WriteData data = new Clipboard.WriteData ();
+			
+			data.WriteText ("Hello world\u00A0! Three [   ] spaces.\r\n\r\nLast line.");
+			data.WriteHtmlFragment ("Hello <i>world</i>&#160;! Three [   ] spaces.<br/><br/>Last line.");
+			
+			Clipboard.SetData (data);
 		}
 	}
 }
