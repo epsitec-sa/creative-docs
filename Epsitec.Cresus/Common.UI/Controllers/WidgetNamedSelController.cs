@@ -163,9 +163,9 @@ namespace Epsitec.Common.UI.Controllers
 				
 				//	Vérifions tout d'abord si la valeur correspond à un texte personnalisé...
 				
-				if (Types.CustomEnumType.IsCustomName (value))
+				if (Types.OpenEnumType.IsCustomName (value))
 				{
-					this.widget.Text = Types.CustomEnumType.FromCustomName (value);
+					this.widget.Text = Types.OpenEnumType.FromCustomName (value);
 				}
 				else
 				{
@@ -221,7 +221,7 @@ namespace Epsitec.Common.UI.Controllers
 					//	Il n'y a pas d'élément sélectionné dans la liste, mais peut-être y a-t-il un
 					//	texte personnalisé à la place ?
 					
-					value = Types.CustomEnumType.ToCustomName (this.widget.Text);
+					value = Types.OpenEnumType.ToCustomName (this.widget.Text);
 				}
 				
 				if (this.CheckConstraint (value))

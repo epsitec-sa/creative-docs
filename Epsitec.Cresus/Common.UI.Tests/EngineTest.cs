@@ -286,7 +286,7 @@ namespace Epsitec.Common.UI
 			record.Add (new Data.Field ("UseHyphen", false));
 			record.Add (new Data.Field ("FontStyle", 1));
 			record.Add (new Data.Field ("Quality", Quality.Default));
-			record.Add (new Data.Field ("Optical", Optical.Default.ToString (), new Types.CustomEnumType (typeof (Optical))));
+			record.Add (new Data.Field ("Optical", Optical.Default.ToString (), new Types.OpenEnumType (typeof (Optical))));
 			
 			record["FontName"] .DefineCaption ("Nom de la fonte");
 			record["FontSize"] .DefineCaption ("Taille de la fonte");
