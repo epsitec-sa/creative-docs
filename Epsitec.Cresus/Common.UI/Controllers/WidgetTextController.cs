@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Statut : en chantier/PA, 27/04/2004
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
@@ -10,7 +10,7 @@ namespace Epsitec.Common.UI.Controllers
 	/// La classe WidgetTextController réalise un contrôleur très simple qui
 	/// s'appuie sur un widget existant et interagit avec sa propriété Text.
 	/// </summary>
-	public class WidgetTextController : AbstractController
+	public class WidgetTextController : AbstractConstrainedController
 	{
 		public WidgetTextController()
 		{
@@ -24,6 +24,13 @@ namespace Epsitec.Common.UI.Controllers
 		public WidgetTextController(Adapters.IAdapter adapter, Widget widget) : this ()
 		{
 			this.Adapter = adapter;
+			this.CreateUI (widget);
+		}
+		
+		public WidgetTextController(Adapters.IAdapter adapter, Widget widget, Types.IDataConstraint constraint) : this ()
+		{
+			this.Adapter    = adapter;
+			this.Constraint = constraint;
 			this.CreateUI (widget);
 		}
 		
@@ -53,7 +60,12 @@ namespace Epsitec.Common.UI.Controllers
 			if ((adapter != null) &&
 				(this.widget != null))
 			{
-				adapter.Value = this.widget.Text;
+				string text = this.widget.Text;
+				
+				if (this.CheckConstraint (text))
+				{
+					adapter.Value = text;
+				}
 			}
 		}
 		
