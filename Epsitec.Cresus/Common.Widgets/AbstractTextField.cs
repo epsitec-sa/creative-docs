@@ -6,6 +6,8 @@ namespace Epsitec.Common.Widgets
 	{
 		Flat,							// pas de cadre, ni de relief, fond blanc
 		Normal,							// ligne éditable normale
+		Multi,							// ligne éditable Multi
+		Combo,							// ligne éditable Combo
 		UpDown,							// ligne éditable UpDown
 		Simple,							// cadre tout simple
 		Static,							// comme Flat mais fond transparent, sélectionnable, pas éditable...
@@ -27,7 +29,7 @@ namespace Epsitec.Common.Widgets
 		
 		public AbstractTextField()
 		{
-			this.DockMargins = new Drawing.Margins (2, 2, 2, 2);
+			this.DockMargins = new Drawing.Margins(2, 2, 2, 2);
 
 			this.InternalState |= InternalState.AutoFocus;
 			this.InternalState |= InternalState.AutoEngage;
@@ -52,7 +54,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				if (TextField.blinking == this)
+				if ( TextField.blinking == this )
 				{
 					TextField.blinking = null;
 				}
@@ -732,7 +734,6 @@ namespace Epsitec.Common.Widgets
 
 			Drawing.Rectangle rect   = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state  = this.PaintState;
-			Direction         dir    = this.RootDirection;
 			Drawing.Point     pos    = new Drawing.Point(AbstractTextField.Margin, AbstractTextField.Margin);
 			double            button = (this.rightMargin == 0) ? 0 : (this.rightMargin + 1);
 			
@@ -740,11 +741,11 @@ namespace Epsitec.Common.Widgets
 			
 			if ( this.isCombo )
 			{
-				adorner.PaintTextFieldBackground(graphics, rect, state, dir, this.textStyle, false);
+				adorner.PaintTextFieldBackground(graphics, rect, state, this.textStyle, false);
 			}
 			else
 			{
-				adorner.PaintTextFieldBackground(graphics, rect, state, dir, this.textStyle, this.isReadOnly);
+				adorner.PaintTextFieldBackground(graphics, rect, state, this.textStyle, this.isReadOnly);
 			}
 			
 			Drawing.Rectangle rSaveClip = graphics.SaveClippingRectangle ();
@@ -772,18 +773,18 @@ namespace Epsitec.Common.Widgets
 					rects[0].Inflate(-3, -3);
 					rects[0].Right -= button;
 					adorner.PaintTextSelectionBackground(graphics, rects);
-					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, (state&~WidgetState.Focused) | WidgetState.Selected, dir);
+					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, (state&~WidgetState.Focused) | WidgetState.Selected);
 					adorner.PaintFocusBox(graphics, rects[0]);
 				}
 				else if ( from == to )
 				{
-					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
+					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused);
 					visibleCursor = TextField.showCursor && this.Window.IsFocused;
 				}
 				else
 				{
 					Drawing.Rectangle[] rects = this.textLayout.FindTextRange(pos, from, to);
-					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~(WidgetState.Focused|WidgetState.Selected), dir);
+					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~(WidgetState.Focused|WidgetState.Selected));
 					
 					for (int i = 0; i < rects.Length; i++)
 					{
@@ -798,7 +799,7 @@ namespace Epsitec.Common.Widgets
 					}
 					
 					graphics.SetClippingRectangles(rects);
-					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, (state&~WidgetState.Focused) | WidgetState.Selected, dir);
+					adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, (state&~WidgetState.Focused) | WidgetState.Selected);
 				}
 
 
@@ -818,7 +819,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused, dir);
+				adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state&~WidgetState.Focused);
 			}
 
 			graphics.RestoreClippingRectangle(rSaveClip);
