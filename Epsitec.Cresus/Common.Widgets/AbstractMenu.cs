@@ -9,7 +9,7 @@ namespace Epsitec.Common.Widgets
 		Horizontal
 	}
 	
-	public class MenuEventArgs : System.EventArgs
+	public class MenuEventArgs : Support.EventArgs
 	{
 		public MenuEventArgs()
 		{

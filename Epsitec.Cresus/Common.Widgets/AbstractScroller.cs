@@ -27,7 +27,7 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown.Engaged += new Support.EventHandler(this.HandleButton);
 			this.arrowUp.StillEngaged += new Support.EventHandler(this.HandleButton);
 			this.arrowDown.StillEngaged += new Support.EventHandler(this.HandleButton);
-			this.range.Changed += new System.EventHandler(this.HandleRangeChanged);
+			this.range.Changed += new Support.EventHandler(this.HandleRangeChanged);
 			this.arrowUp.AutoRepeatEngaged = true;
 			this.arrowDown.AutoRepeatEngaged = true;
 		}
@@ -46,7 +46,7 @@ namespace Epsitec.Common.Widgets
 				this.arrowDown.Engaged -= new Support.EventHandler(this.HandleButton);
 				this.arrowUp.StillEngaged -= new Support.EventHandler(this.HandleButton);
 				this.arrowDown.StillEngaged -= new Support.EventHandler(this.HandleButton);
-				this.range.Changed -= new System.EventHandler(this.HandleRangeChanged);
+				this.range.Changed -= new Support.EventHandler(this.HandleRangeChanged);
 			}
 			
 			base.Dispose(disposing);
@@ -476,7 +476,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void HandleRangeChanged(object sender, System.EventArgs e)
+		private void HandleRangeChanged(object sender)
 		{
 			this.UpdateInternalGeometry ();
 			this.Invalidate ();
