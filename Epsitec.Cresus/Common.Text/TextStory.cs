@@ -190,6 +190,60 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		public void ConvertToStyledText(string simple_text, System.Collections.ICollection attributes, out ulong[] styled_text)
+		{
+			//	Génère un texte en lui appliquant les attributs (propriétés, réglages)
+			//	qui définissent des styles.
+			
+			uint[] utf32;
+			
+			TextConverter.ConvertFromString (simple_text, out utf32);
+			
+			//	Génère l'objet style correspondant aux attributs spécifiés :
+			
+			int length = attributes.Count;
+			
+			Properties.BaseProperty[] prop_mixed = new Properties.BaseProperty[length];
+			
+			System.Collections.ArrayList prop_style = new System.Collections.ArrayList ();
+			System.Collections.ArrayList prop_local = new System.Collections.ArrayList ();
+			System.Collections.ArrayList prop_extra = new System.Collections.ArrayList ();
+			
+			attributes.CopyTo (prop_mixed, 0);
+			
+			for (int i = 0; i < length; i++)
+			{
+				switch (prop_mixed[i].PropertyType)
+				{
+					case Properties.PropertyType.Style:
+						prop_style.Add (prop_mixed[i]);
+						break;
+					case Properties.PropertyType.LocalSetting:
+						prop_local.Add (prop_mixed[i]);
+						break;
+					case Properties.PropertyType.ExtraSetting:
+						prop_extra.Add (prop_mixed[i]);
+						break;
+					default:
+						throw new System.ArgumentException ("Invalid attribute type", "attributes");
+				}
+			}
+			
+			//	TODO: générer 'style'
+			
+			ulong style = 0;
+			
+			length      = utf32.Length;
+			styled_text = new ulong[length];
+			
+			for (int i = 0; i < length; i++)
+			{
+				styled_text[i] = utf32[i] | style;
+			}
+		}
+		
+		
+		
 		private void InternalAddOplet(Support.IOplet oplet)
 		{
 			if ((this.debug_disable_oplet == false) &&

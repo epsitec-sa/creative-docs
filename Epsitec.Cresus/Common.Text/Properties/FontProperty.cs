@@ -13,6 +13,16 @@ namespace Epsitec.Common.Text.Properties
 		}
 		
 		
+		public override PropertyType			PropertyType
+		{
+			get
+			{
+				return PropertyType.Style;
+			}
+		}
+
+		
+		
 		public override Properties.BaseProperty GetCombination(Properties.BaseProperty property)
 		{
 			Debug.Assert.IsTrue (property is Properties.FontProperty);

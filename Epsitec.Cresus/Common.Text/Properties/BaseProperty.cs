@@ -21,6 +21,11 @@ namespace Epsitec.Common.Text.Properties
 			}
 		}
 		
+		public abstract PropertyType			PropertyType
+		{
+			get;
+		}
+		
 		
 		public void Invalidate()
 		{
