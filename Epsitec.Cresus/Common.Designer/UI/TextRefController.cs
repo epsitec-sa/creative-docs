@@ -54,8 +54,12 @@ namespace Epsitec.Common.Designer.UI
 			this.combo_field.IsReadOnly      = true;
 			this.combo_field.PlaceHolder     = "<b>&lt;create new field&gt;</b>";
 			
+			IValidator field_validator  = new Common.Widgets.Validators.RegexValidator (this.combo_field, RegexFactory.ResourceName, false);
+			IValidator bundle_validator = new Common.Widgets.Validators.RegexValidator (this.combo_bundle, RegexFactory.ResourceName, false);
+			
 			this.combo_bundle.SelectedIndexChanged += new EventHandler(this.HandleComboBundleSelectedIndexChanged);
 			this.combo_field.SelectedIndexChanged  += new EventHandler(this.HandleComboFieldSelectedIndexChanged);
+			this.combo_field.EditionValidated      += new EventHandler(this.HandleComboFieldEditionValidated);
 			
 			this.OnCaptionChanged ();
 			
@@ -109,8 +113,16 @@ namespace Epsitec.Common.Designer.UI
 		{
 			if (adapter != null)
 			{
-				this.combo_field.Items.Clear ();
-				this.combo_field.Items.AddRange (adapter.StringController.GetStringFieldNames (name));
+				if (name == "")
+				{
+					this.combo_field.SetEnabled (false);
+				}
+				else
+				{
+					this.combo_field.SetEnabled (true);
+					this.combo_field.Items.Clear ();
+					this.combo_field.Items.AddRange (adapter.StringController.GetStringFieldNames (name));
+				}
 			}
 		}
 		
@@ -142,6 +154,15 @@ namespace Epsitec.Common.Designer.UI
 				
 				this.SyncFromAdapter ();
 			}
+		}
+		
+		private void HandleComboFieldEditionValidated(object sender)
+		{
+			System.Diagnostics.Debug.Assert (sender == this.combo_field);
+			
+			//	Il faut créer un nouveau champ dans le bundle.
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Create field {0}#{1}.", this.combo_bundle.Text, this.combo_field.Text));
 		}
 		
 		
