@@ -7,6 +7,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public TextFieldUpDown()
 		{
+			this.textStyle = TextFieldStyle.UpDown;
+
 			this.arrowUp = new ArrowButton(this);
 			this.arrowDown = new ArrowButton(this);
 			this.arrowUp.Direction = Direction.Up;
