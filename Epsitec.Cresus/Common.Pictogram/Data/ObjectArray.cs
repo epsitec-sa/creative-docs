@@ -40,6 +40,10 @@ namespace Epsitec.Common.Pictogram.Data
 			textJustif.Type = PropertyType.TextJustif;
 			this.AddProperty(textJustif);
 
+			PropertyFont font = new PropertyFont();
+			font.Type = PropertyType.TextFont;
+			this.AddProperty(font);
+
 			this.columns = 1;
 			this.rows    = 1;
 			this.InitWidths();
@@ -211,12 +215,15 @@ namespace Epsitec.Common.Pictogram.Data
 					}
 				}
 			}
+
+			this.PropertyAllList(list, this.Property(5));
 		}
 
 		// Cherche une propriété d'après son type.
 		protected override AbstractProperty SearchProperty(PropertyType type)
 		{
-			if ( type == PropertyType.Name )  return this.Property(0);
+			if ( type == PropertyType.Name     )  return this.Property(0);
+			if ( type == PropertyType.TextFont )  return this.Property(5);
 
 			if ( this.onlyBase )
 			{
@@ -263,7 +270,8 @@ namespace Epsitec.Common.Pictogram.Data
 		// Retourne une copie d'une propriété.
 		public override AbstractProperty GetProperty(PropertyType type)
 		{
-			if ( type == PropertyType.Name )
+			if ( type == PropertyType.Name     ||
+				 type == PropertyType.TextFont )
 			{
 				return base.GetProperty(type);
 			}
@@ -2105,6 +2113,10 @@ namespace Epsitec.Common.Pictogram.Data
 			size.Height = Drawing.Point.Distance(p1,p3);
 			textLayout.LayoutSize = size;
 
+			textLayout.DefaultFont     = this.PropertyFont(5).GetFont();
+			textLayout.DefaultFontSize = this.PropertyFont(5).FontSize;
+			textLayout.DefaultColor    = this.PropertyFont(5).FontColor;
+
 			JustifVertical   jv = this.Cell(c,r).TextJustif.Vertical;
 			JustifHorizontal jh = this.Cell(c,r).TextJustif.Horizontal;
 
@@ -2145,7 +2157,10 @@ namespace Epsitec.Common.Pictogram.Data
 			int re = this.cellToEdit/(this.columns+1);
 			if ( ce != c || re != r )  edited = false;
 
-			if ( port is Drawing.Graphics && edited && textNavigator.Context.CursorFrom != textNavigator.Context.CursorTo )
+			if ( port is Drawing.Graphics &&
+				 iconContext.IsFocused &&
+				 edited &&
+				 textNavigator.Context.CursorFrom != textNavigator.Context.CursorTo )
 			{
 				Drawing.Graphics graphics = port as Drawing.Graphics;
 				int from = System.Math.Min(textNavigator.Context.CursorFrom, textNavigator.Context.CursorTo);
@@ -2162,7 +2177,10 @@ namespace Epsitec.Common.Pictogram.Data
 			textLayout.ShowLineBreak = edited;
 			textLayout.Paint(new Drawing.Point(0,0), port);
 
-			if ( port is Drawing.Graphics && edited && textNavigator.Context.CursorTo != -1 )
+			if ( port is Drawing.Graphics &&
+				 iconContext.IsFocused &&
+				 edited &&
+				 textNavigator.Context.CursorTo != -1 )
 			{
 				Drawing.Graphics graphics = port as Drawing.Graphics;
 				Drawing.Point c1, c2;

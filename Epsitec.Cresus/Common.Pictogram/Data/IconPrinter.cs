@@ -56,11 +56,7 @@ namespace Epsitec.Common.Pictogram.Data
 			public Printing.PrintEngineStatus PrintPage(Printing.PrintPort port)
 			{
 				double zoom = this.paperSize.Width / this.iconPrinter.iconObjects.Size.Width;
-#if true
 				port.ScaleTransform(zoom, zoom, 0, 0);
-#else
-				port.TranslateTransform(5, 5);
-#endif
 				this.iconPrinter.PrintGeometry(port, this.iconContext, 0, true);
 				return Printing.PrintEngineStatus.FinishJob;
 			}
