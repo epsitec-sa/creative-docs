@@ -98,6 +98,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "Comparer.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "Converter.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
