@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 07/10/2003
 
 namespace Epsitec.Cresus.Database
@@ -30,9 +30,9 @@ namespace Epsitec.Cresus.Database
 			TypeConverter.type_hash[typeof (string)]  = DbSimpleType.String;
 			TypeConverter.type_hash[typeof (byte[])]  = DbSimpleType.ByteArray;
 			
-			TypeConverter.type_hash[typeof (System.Date)]     = DbSimpleType.Date;
-			TypeConverter.type_hash[typeof (System.Time)]     = DbSimpleType.Time;
-			TypeConverter.type_hash[typeof (System.DateTime)] = DbSimpleType.DateTime;
+			TypeConverter.type_hash[typeof (Common.Types.Date)] = DbSimpleType.Date;
+			TypeConverter.type_hash[typeof (Common.Types.Time)] = DbSimpleType.Time;
+			TypeConverter.type_hash[typeof (System.DateTime)]   = DbSimpleType.DateTime;
 			
 			TypeConverter.type_hash[typeof (System.Guid)] = DbSimpleType.Guid;
 		}
@@ -50,8 +50,8 @@ namespace Epsitec.Cresus.Database
 				case DbRawType.SmallDecimal:	return typeof (System.Decimal);
 				case DbRawType.LargeDecimal:	return typeof (System.Decimal);
 				case DbRawType.String:			return typeof (System.String);
-				case DbRawType.Date:			return typeof (System.Date);
-				case DbRawType.Time:			return typeof (System.Time);
+				case DbRawType.Date:			return typeof (Common.Types.Date);
+				case DbRawType.Time:			return typeof (Common.Types.Time);
 				case DbRawType.DateTime:		return typeof (System.DateTime);
 				case DbRawType.ByteArray:		return typeof (byte[]);
 				case DbRawType.Guid:			return typeof (System.Guid);
@@ -231,8 +231,8 @@ namespace Epsitec.Cresus.Database
 					throw new DbFormatException (string.Format ("Incompatible numeric format for {0}", num));
 				
 				case DbSimpleType.String:		return value;
-				case DbSimpleType.Date:			return new System.Date (value);
-				case DbSimpleType.Time:			return new System.Time (value);
+				case DbSimpleType.Date:			return new Common.Types.Date (value);
+				case DbSimpleType.Time:			return new Common.Types.Time (value);
 				case DbSimpleType.DateTime:		return value;
 				case DbSimpleType.ByteArray:	return value;
 				case DbSimpleType.Guid:			return value;
@@ -303,14 +303,14 @@ namespace Epsitec.Cresus.Database
 				case DbSimpleType.Date:
 				case DbSimpleType.Time:
 				case DbSimpleType.DateTime:
-					if (value is System.Date)
+					if (value is Common.Types.Date)
 					{
-						System.Date date = (System.Date) value;
+						Common.Types.Date date = (Common.Types.Date) value;
 						return date.ToDateTime ();
 					}
-					if (value is System.Time)
+					if (value is Common.Types.Time)
 					{
-						System.Time time = (System.Time) value;
+						Common.Types.Time time = (Common.Types.Time) value;
 						return time.ToDateTime ();
 					}
 					if (value is System.DateTime)
