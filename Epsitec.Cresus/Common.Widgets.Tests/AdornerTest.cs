@@ -403,6 +403,10 @@ namespace Epsitec.Common.Widgets
 			combo.Items.Add("Vendredi");
 			combo.Items.Add("Samedi");
 			combo.Items.Add("Dimanche");
+			combo.Items.Add("JusteUnLongTexte");
+			combo.Items.Add("JusteUnLongTexte1");
+			combo.Items.Add("JusteUnLongTexte12");
+			combo.Items.Add("JusteUnLongTexte123");
 			combo.Items.Add("JusteUnLongTextePourVoir");
 			combo.Anchor = AnchorStyles.BottomLeft;
 			combo.AnchorMargins = new Margins(160, 0, 0, 220);
@@ -539,6 +543,8 @@ namespace Epsitec.Common.Widgets
 			combofix.Items.Add("Vendredi");
 			combofix.Items.Add("Samedi");
 			combofix.Items.Add("Dimanche");
+			combofix.Items.Add("Juste un long texte pour voir ...");
+			combofix.Items.Add("Encore un autre long texte ...");
 			combofix.Anchor = AnchorStyles.TopLeft;
 			combofix.AnchorMargins = new Margins(160, 0, 80, 0);
 			combofix.TabIndex = 2;

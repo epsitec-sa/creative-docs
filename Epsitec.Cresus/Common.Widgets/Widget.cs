@@ -6042,11 +6042,11 @@ namespace Epsitec.Common.Widgets
 		private Widget							parent;
 		private string							name;
 		private string							command;
-		private int								index;
+		private int								index = -1;
 		private TextLayout						text_layout;
 		private ContentAlignment				alignment;
 		private int								suspend_counter;
-		private int								tab_index;
+		private int								tab_index = 0;
 		private TabNavigationMode				tab_navigation_mode;
 		private Shortcut						shortcut;
 		private double							default_font_height;

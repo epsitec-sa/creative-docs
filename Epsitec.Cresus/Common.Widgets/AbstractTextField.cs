@@ -934,14 +934,7 @@ namespace Epsitec.Common.Widgets
 					{
 						p1 += pos;
 						p2 += pos;
-						graphics.Align(ref p1);
-						graphics.Align(ref p2);
-						p1.X -= 0.5;
-						p2.X -= 0.5;
-						p1.Y -= 0.5;
-						p2.Y -= 0.5;
-						graphics.AddLine(p1, p2);
-						graphics.RenderSolid(Drawing.Color.FromBrightness(0));
+						adorner.PaintTextCursor(graphics, p1, p2, true);
 					}
 				}
 			}
