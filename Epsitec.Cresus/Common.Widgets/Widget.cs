@@ -3087,8 +3087,7 @@ namespace Epsitec.Common.Widgets
 			
 			if ((!disable_first_enter) &&
 				((this.tab_navigation_mode & TabNavigationMode.ForwardToChildren) != 0) &&
-				(this.HasChildren) &&
-				(dir == TabNavigationDir.Forwards))
+				(this.HasChildren))
 			{
 				//	Ce widget permet aux enfants d'entrer dans la liste accessible par la
 				//	touche TAB.
@@ -3097,7 +3096,15 @@ namespace Epsitec.Common.Widgets
 				
 				if (candidates.Length > 0)
 				{
-					find = candidates[0].FindTabWidget (dir, mode, false, true);
+					if (dir == TabNavigationDir.Forwards)
+					{
+						find = candidates[0].FindTabWidget (dir, mode, false, true);
+					}
+					else if (accept_focus)
+					{
+						int count = candidates.Length;
+						find = candidates[count-1].FindTabWidget (dir, mode, false, true);
+					}
 					
 					if (find != null)
 					{
@@ -3141,12 +3148,17 @@ namespace Epsitec.Common.Widgets
 								{
 									//	Entre en marche arrière dans le widget...
 									
-									int    count = find.Children.Count;
-									Widget enter = find.Children[count - 1].FindTabWidget (dir, mode, false, true);
+									Widget[] candidates = find.Children[0].FindTabWidgets (mode);
 									
-									if (find != null)
+									if (candidates.Length > 0)
 									{
-										find = enter;
+										int    count = candidates.Length;
+										Widget enter = candidates[count-1].FindTabWidget (dir, mode, false, true);
+										
+										if (enter != null)
+										{
+											find = enter;
+										}
 									}
 								}
 							}
@@ -3164,11 +3176,16 @@ namespace Epsitec.Common.Widgets
 								{
 									//	Entre en marche avant dans le widget...
 									
-									Widget enter = find.Children[0].FindTabWidget (dir, mode, false, true);
+									Widget[] candidates = find.Children[0].FindTabWidgets (mode);
 									
-									if (find != null)
+									if (candidates.Length > 0)
 									{
-										find = enter;
+										Widget enter = candidates[0].FindTabWidget (dir, mode, false, true);
+										
+										if (enter != null)
+										{
+											find = enter;
+										}
 									}
 								}
 							}

@@ -74,6 +74,39 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		{
+			switch ( message.Type )
+			{
+				case MessageType.MouseWheel:
+					if ( message.Wheel > 0 )  this.IncrementValue(this.step);
+					if ( message.Wheel < 0 )  this.IncrementValue(-this.step);
+					message.Consumer = this;
+					return;
+			}
+
+			base.ProcessMessage(message, pos);
+		}
+
+		protected override bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
+		{
+			switch ( key )
+			{
+				case KeyCode.ArrowUp:
+					this.IncrementValue(this.step);
+					break;
+
+				case KeyCode.ArrowDown:
+					this.IncrementValue(-this.step);
+					break;
+
+				default:
+					return base.ProcessKeyDown(key, isShiftPressed, isCtrlPressed);
+			}
+			
+			return true;
+		}
+		
 		protected override void OnAdornerChanged()
 		{
 			this.UpdateClientGeometry();
@@ -82,8 +115,8 @@ namespace Epsitec.Common.Widgets
 
 		protected override void OnTextChanged()
 		{
-			base.OnTextChanged ();
-			this.OnValueChanged ();
+			base.OnTextChanged();
+			this.OnValueChanged();
 		}
 		
 		protected virtual void OnValueChanged()
@@ -98,6 +131,18 @@ namespace Epsitec.Common.Widgets
 		{
 			ArrowButton button = sender as ArrowButton;
 
+			if ( button == this.arrowUp )
+			{
+				this.IncrementValue(this.step);
+			}
+			if ( button == this.arrowDown )
+			{
+				this.IncrementValue(-this.step);
+			}
+		}
+
+		protected void IncrementValue(double dir)
+		{
 			string text = this.Text;
 			double number;
 			try
@@ -109,14 +154,7 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
-			if ( button == this.arrowUp )
-			{
-				number += this.step;
-			}
-			else if ( button == this.arrowDown )
-			{
-				number -= this.step;
-			}
+			number += dir;
 			number = System.Math.Max(number, this.minRange);
 			number = System.Math.Min(number, this.maxRange);
 
@@ -166,43 +204,22 @@ namespace Epsitec.Common.Widgets
 		// Valeur numérique minimale possible.
 		public virtual double MinRange
 		{
-			get
-			{
-				return this.minRange;
-			}
-
-			set
-			{
-				this.minRange = value;
-			}
+			get { return this.minRange; }
+			set { this.minRange = value; }
 		}
 		
 		// Valeur numérique maximale possible.
 		public virtual double MaxRange
 		{
-			get
-			{
-				return this.maxRange;
-			}
-
-			set
-			{
-				this.maxRange = value;
-			}
+			get { return this.maxRange; }
+			set { this.maxRange = value; }
 		}
 		
 		// Pas pour les boutons up/down.
 		public virtual double Step
 		{
-			get
-			{
-				return this.step;
-			}
-
-			set
-			{
-				this.step = value;
-			}
+			get { return this.step; }
+			set { this.step = value; }
 		}
 		
 		public event Support.EventHandler		ValueChanged;

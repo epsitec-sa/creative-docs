@@ -24,14 +24,14 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void Dispose(bool disposing)
 		{
-			if (disposing)
+			if ( disposing )
 			{
 				this.scroller.ValueChanged -= new Support.EventHandler(this.HandleScrollerValueChanged);
-				this.scroller.Dispose ();
+				this.scroller.Dispose();
 				this.scroller = null;
 			}
 			
-			base.Dispose (disposing);
+			base.Dispose(disposing);
 		}
 		
 		protected override void UpdateClientGeometry()
@@ -60,9 +60,9 @@ namespace Epsitec.Common.Widgets
 		{
 			double offset = cursor.Bottom;
 			offset -= this.realSize.Height/2;
-			offset  = System.Math.Max (offset, end.Y);
+			offset  = System.Math.Max(offset, end.Y);
 			offset += this.realSize.Height;
-			offset  = System.Math.Min (offset, AbstractTextField.Infinity);
+			offset  = System.Math.Min(offset, AbstractTextField.Infinity);
 			this.scrollOffset.Y = offset-this.realSize.Height;
 
 			if ( this.scroller != null )
@@ -87,9 +87,25 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		{
+			switch ( message.Type )
+			{
+				case MessageType.MouseWheel:
+					double v = this.scroller.Value;
+					if ( message.Wheel > 0 )  v = System.Math.Min(v+this.scroller.SmallChange, this.scroller.Range);
+					if ( message.Wheel < 0 )  v = System.Math.Max(v-this.scroller.SmallChange, 0);
+					this.scroller.Value = v;
+					message.Consumer = this;
+					return;
+			}
+
+			base.ProcessMessage(message, pos);
+		}
+
 		protected override bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
-			switch (key)
+			switch ( key )
 			{
 				case KeyCode.Return:
 					this.InsertCharacter('\n');
@@ -112,7 +128,7 @@ namespace Epsitec.Common.Widgets
 					break;
 				
 				default:
-					return base.ProcessKeyDown (key, isShiftPressed, isCtrlPressed);
+					return base.ProcessKeyDown(key, isShiftPressed, isCtrlPressed);
 			}
 			
 			return true;

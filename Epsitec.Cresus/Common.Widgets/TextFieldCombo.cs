@@ -119,7 +119,7 @@ namespace Epsitec.Common.Widgets
 			if ( disposing )
 			{
 				this.button.Pressed -= new MessageEventHandler(this.HandleButtonPressed);
-				this.button.Dispose ();
+				this.button.Dispose();
 				this.button = null;
 			}
 		}
@@ -148,24 +148,26 @@ namespace Epsitec.Common.Widgets
 
 		protected override bool ProcessKeyDown(KeyCode key, bool isShiftPressed, bool isCtrlPressed)
 		{
-			if (this.IsReadOnly)
+			if ( this.IsReadOnly )
 			{
-				if (key == KeyCode.ArrowDown)
+				if ( key == KeyCode.ArrowDown )
 				{
-					this.OpenCombo ();
+					this.OpenCombo();
 					return true;
 				}
 			}
 			else
 			{
-				switch (key)
+				switch ( key )
 				{
 					case KeyCode.ArrowUp:
 						this.Navigate(-1);
 						return true;
+
 					case KeyCode.ArrowDown:
 						this.Navigate(1);
 						return true;
+
 					default:
 						return base.ProcessKeyDown(key, isShiftPressed, isCtrlPressed);
 				}
@@ -198,6 +200,14 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
 		{
+			if ( message.Type == MessageType.MouseWheel )
+			{
+				if ( message.Wheel > 0 )  this.Navigate(-1);
+				if ( message.Wheel < 0 )  this.Navigate(1);
+				message.Consumer = this;
+				return;
+			}
+
 			if ( this.IsReadOnly )
 			{
 				if ( message.Type == MessageType.MouseDown )
@@ -219,7 +229,7 @@ namespace Epsitec.Common.Widgets
 			switch ( message.Type )
 			{
 				case MessageType.KeyPress:
-					if (message.KeyCode == KeyCode.Escape)
+					if ( message.KeyCode == KeyCode.Escape )
 					{
 						this.CloseCombo();
 						message.Swallowed = true;
@@ -297,9 +307,9 @@ namespace Epsitec.Common.Widgets
 			this.comboWindow.Dispose();
 			this.comboWindow = null;
 			
-			this.Window.MakeActive ();
-			this.SelectAll ();
-			this.SetFocused (true);
+			this.Window.MakeActive();
+			this.SelectAll();
+			this.SetFocused(true);
 		}
 
 		private void HandleApplicationDeactivated(object sender)
