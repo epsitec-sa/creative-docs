@@ -67,5 +67,38 @@ namespace Epsitec.Common.Debug
 				throw new AssertFailedException (string.Format (format, args));
 			}
 		}
+		
+		
+		public static void IsNull(object value)
+		{
+			if (value != null)
+			{
+				throw new AssertFailedException ("Value is not null.");
+			}
+		}
+		
+		public static void IsNull(object value, string format, params object[] args)
+		{
+			if (value != null)
+			{
+				throw new AssertFailedException (string.Format (format, args));
+			}
+		}
+		
+		public static void IsNotNull(object value)
+		{
+			if (value == null)
+			{
+				throw new AssertFailedException ("Value is null.");
+			}
+		}
+		
+		public static void IsNotNull(object value, string format, params object[] args)
+		{
+			if (value == null)
+			{
+				throw new AssertFailedException (string.Format (format, args));
+			}
+		}
 	}
 }
