@@ -134,6 +134,11 @@
                     BuildAction = "Compile"
                 />
                 <File
+                    RelPath = "DbDict.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "DbElementCat.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
@@ -185,6 +190,11 @@
                 />
                 <File
                     RelPath = "DbKey.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DbLogger.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -305,6 +315,11 @@
                 />
                 <File
                     RelPath = "IDbAttributesHost.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "IPersist.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

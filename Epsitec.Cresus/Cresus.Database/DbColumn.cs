@@ -782,7 +782,9 @@ namespace Epsitec.Cresus.Database
 		protected DbColumnClass					column_class			= DbColumnClass.Data;
 		
 		
-		internal const int						MaxNameLength			= 40;
+		internal const int						MaxNameLength			= 50;
+		internal const int						MaxDictKeyLength		= 50;
+		internal const int						MaxDictValueLength		= 1000;
 		internal const int						MaxCaptionLength		= 100;
 		internal const int						MaxDescriptionLength	= 500;
 		internal const int						MaxInfoXmlLength		= 500;

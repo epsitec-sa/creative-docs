@@ -142,6 +142,8 @@ namespace Epsitec.Cresus.Database
 				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeCaption));
 				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeDescription));
 				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeInfoXml));
+				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeDictKey));
+				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeDictValue));
 				this.internal_types.Add (this.ResolveDbType (transaction, Tags.TypeDateTime));
 				
 				long log_id = this.NextRowIdInTable (transaction, this.internal_tables[Tags.TableLog].InternalKey);
@@ -1928,11 +1930,15 @@ namespace Epsitec.Cresus.Database
 			this.str_type_caption     = new DbTypeString (DbColumn.MaxCaptionLength, false,		Tags.Name + "=" + Tags.TypeCaption);
 			this.str_type_description = new DbTypeString (DbColumn.MaxDescriptionLength, false, Tags.Name + "=" + Tags.TypeDescription);
 			this.str_type_info_xml    = new DbTypeString (DbColumn.MaxInfoXmlLength, false,		Tags.Name + "=" + Tags.TypeInfoXml);
+			this.str_type_dict_key    = new DbTypeString (DbColumn.MaxDictKeyLength, false,		Tags.Name + "=" + Tags.TypeDictKey);
+			this.str_type_dict_value  = new DbTypeString (DbColumn.MaxDictValueLength, false,	Tags.Name + "=" + Tags.TypeDictValue);
 			
 			this.internal_types.Add (this.str_type_name);
 			this.internal_types.Add (this.str_type_caption);
 			this.internal_types.Add (this.str_type_description);
 			this.internal_types.Add (this.str_type_info_xml);
+			this.internal_types.Add (this.str_type_dict_key);
+			this.internal_types.Add (this.str_type_dict_value);
 		}
 		#endregion
 		
@@ -1983,6 +1989,8 @@ namespace Epsitec.Cresus.Database
 		protected DbTypeString					str_type_caption;
 		protected DbTypeString					str_type_description;
 		protected DbTypeString					str_type_info_xml;
+		protected DbTypeString					str_type_dict_key;
+		protected DbTypeString					str_type_dict_value;
 		
 		protected Collections.DbTables			internal_tables = new Collections.DbTables ();
 		protected Collections.DbTypes			internal_types  = new Collections.DbTypes ();

@@ -265,8 +265,8 @@ namespace Epsitec.Cresus.Database
 								key = new DbKey (id++);
 								
 								data_row.BeginEdit ();
-								data_row[Tags.ColumnId]       = key.Id;
-								data_row[Tags.ColumnStatus]   = key.IntStatus;
+								data_row[Tags.ColumnId]     = key.Id;
+								data_row[Tags.ColumnStatus] = key.IntStatus;
 								data_row.EndEdit ();
 							}
 						}
@@ -282,7 +282,22 @@ namespace Epsitec.Cresus.Database
 		
 		public void DeleteRow(System.Data.DataRow data_row)
 		{
-			data_row[Tags.ColumnStatus] = DbKey.ConvertToIntStatus (DbRowStatus.Deleted);
+			DbKey row_key = new DbKey (data_row);
+			
+			//	Si la ligne a encore une clef temporaire, cela signifie qu'elle n'a pas encore
+			//	été écrite dans la base; on peut donc simplement supprimer la ligne de la table.
+			//	Dans le cas contraire, on ne supprime jamais réellement les lignes effacées et
+			//	on change simplement le statut de la ligne à "deleted".
+			
+			if (row_key.IsTemporary)
+			{
+				System.Data.DataTable data_table = data_row.Table;
+				data_table.Rows.Remove (data_row);
+			}
+			else
+			{
+				data_row[Tags.ColumnStatus] = DbKey.ConvertToIntStatus (DbRowStatus.Deleted);
+			}
 		}
 		
 		public void CreateNewRow(string table_name, out System.Data.DataRow data_row)
@@ -300,8 +315,8 @@ namespace Epsitec.Cresus.Database
 			
 			DbKey key = new DbKey (DbKey.CreateTemporaryId (), DbRowStatus.Live);
 			
-			data_row[Tags.ColumnId]       = key.Id;
-			data_row[Tags.ColumnStatus]   = key.IntStatus;
+			data_row[Tags.ColumnId]     = key.Id;
+			data_row[Tags.ColumnStatus] = key.IntStatus;
 			
 			table.Rows.Add (data_row);
 		}

@@ -226,6 +226,48 @@ namespace Epsitec.Cresus.Database
 			infrastructure.Dispose ();
 		}
 		
+		[Test] public void Check05CreateNewRowAndDelete()
+		{
+			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
+			
+			DbTable db_table_a = infrastructure.ResolveDbTable (null, "Personnes");
+			DbTable db_table_b = infrastructure.ResolveDbTable (null, "Domiciles");
+			
+			System.Data.DataRow row_1;
+			System.Data.DataRow row_2;
+			System.Data.DataRow row_3;
+			
+			DbRichCommand command = DbRichCommand.CreateFromTables (infrastructure, null, db_table_a, db_table_b);
+			
+			command.CreateNewRow ("Personnes", out row_1); row_1["Nom"] = "Toto"; row_1["Prenom"] = "Foo";
+			command.CreateNewRow ("Personnes", out row_2); row_2["Nom"] = "Titi"; row_2["Prenom"] = "Bar";
+			command.CreateNewRow ("Domiciles", out row_3); row_3["Ville"] = "New York"; row_3["NPA"] = 12345;
+			
+			DbKey k1 = new DbKey (row_1);
+			DbKey k2 = new DbKey (row_2);
+			DbKey k3 = new DbKey (row_3);
+			
+			Assertion.AssertEquals (DbRowStatus.Live, k1.Status);
+			Assertion.AssertEquals (DbRowStatus.Live, k2.Status);
+			Assertion.AssertEquals (DbRowStatus.Live, k3.Status);
+			
+			Assertion.AssertEquals (k1.Id + 1, k2.Id);
+			Assertion.AssertEquals (k1.Id + 2, k3.Id);
+			Assertion.Assert (DbKey.CheckTemporaryId (k1.Id));
+			
+			command.DeleteRow (row_2);
+			command.DeleteRow (row_3);
+			
+			using (DbTransaction transaction = infrastructure.BeginTransaction ())
+			{
+				command.UpdateRealIds (transaction);
+				command.UpdateTables (transaction);
+				transaction.Rollback ();
+			}
+			
+			infrastructure.Dispose ();
+		}
+		
 #if false
 		[Test] public void XxxTest()
 		{
