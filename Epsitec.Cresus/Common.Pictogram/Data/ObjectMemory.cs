@@ -93,10 +93,9 @@ namespace Epsitec.Common.Pictogram.Data
 
 			PropertyFont textFont = new PropertyFont();
 			textFont.Type = PropertyType.TextFont;
-			textFont.FontName    = "Tahoma";
-			textFont.FontOptical = "Regular";
-			textFont.FontSize    = 1.0;
-			textFont.FontColor   = Drawing.Color.FromBrightness(0);
+			textFont.FontName  = "Tahoma";
+			textFont.FontSize  = 1.0;
+			textFont.FontColor = Drawing.Color.FromBrightness(0);
 			this.AddProperty(textFont);
 
 			PropertyJustif textJustif = new PropertyJustif();
