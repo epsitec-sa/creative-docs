@@ -8,6 +8,34 @@ namespace Epsitec.Common.Debug
 	/// </summary>
 	public sealed class Assert
 	{
+		public static void Fail()
+		{
+			throw new AssertFailedException ("Exceptional condition found.");
+		}
+		
+		public static void Fail(string format, params object[] args)
+		{
+			throw new AssertFailedException (string.Format (format, args));
+		}
+		
+		
+		public static void IsInBounds(int value, int min, int max)
+		{
+			if ((value < min) || (value > max))
+			{
+				throw new AssertFailedException (string.Format ("Value {0} out of bounds [{1}..{2}].", value, min, max));
+			}
+		}
+		
+		public static void IsInBounds(uint value, uint min, uint max)
+		{
+			if ((value < min) || (value > max))
+			{
+				throw new AssertFailedException (string.Format ("Value {0} out of bounds [{1}..{2}].", value, min, max));
+			}
+		}
+		
+		
 		public static void IsTrue(bool condition)
 		{
 			if (condition != true)
