@@ -152,11 +152,16 @@ namespace Epsitec.Common.Designer
 							this.col_0_cache = value;
 							break;
 						case 1:
-							this.InsertRows (row, 1);
-							this.changing++;
-							this.SetCellText (row, 0, this.col_0_cache);
-							this.SetCellText (row, 1, value);
-							this.changing--;
+							this.col_1_cache = value;
+							if ((this.col_0_cache != "") &&
+								(this.col_1_cache != ""))
+							{
+								this.InsertRows (row, 1);
+								this.changing++;
+								this.SetCellText (row, 0, this.col_0_cache);
+								this.SetCellText (row, 1, this.col_1_cache);
+								this.changing--;
+							}
 							break;
 					}
 				}
@@ -210,6 +215,7 @@ namespace Epsitec.Common.Designer
 			protected ResourceBundle			bundle;
 			protected StringEditController		controller;
 			protected string					col_0_cache;
+			protected string					col_1_cache;
 			protected int						changing;
 		}
 		
