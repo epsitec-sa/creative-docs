@@ -102,31 +102,28 @@ namespace Epsitec.Common.UI.Widgets
 			this.toggle_button = new GlyphButton (this, GlyphShape.ArrowDown);
 			this.extra_button  = new GlyphButton (this, GlyphShape.Dots);
 			
-			Drawing.Rectangle rect = this.Client.Bounds;
 			double dim = PropPane.button_dim;
 			
 			this.toggle_button.Clicked      += new MessageEventHandler (this.HandleToggleButtonClicked);
 			this.toggle_button.TabIndex      = 0;
 			this.toggle_button.TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
-			this.toggle_button.Bounds        = new Drawing.Rectangle (rect.Left + 1, rect.Top - 8 - dim, dim, dim);
+			this.toggle_button.Size          = new Drawing.Size (dim, dim);
 			this.toggle_button.Anchor        = AnchorStyles.TopLeft;
+			this.toggle_button.AnchorMargins = new Drawing.Margins (1, 0, 8, 0);
 			
 			this.extra_button.Clicked       += new MessageEventHandler (this.HandleExtraButtonClicked);
 			this.extra_button.TabIndex       = 1000;
 			this.extra_button.TabNavigation  = Widget.TabNavigationMode.ActivateOnTab;
-			this.extra_button.Bounds         = new Drawing.Rectangle (rect.Right - dim - 1, rect.Top - 8 - dim, dim, dim);
+			this.extra_button.Size           = new Drawing.Size (dim, dim);
 			this.extra_button.Anchor         = AnchorStyles.TopRight;
+			this.extra_button.AnchorMargins  = new Drawing.Margins (0, 1, 8, 0);
 			
 			this.toggle_button.SetVisible (this.accept_toggle);
 			this.extra_button.SetEnabled (this.accept_extra);
 			
 			System.Collections.ArrayList list = new System.Collections.ArrayList ();
 			
-			rect.Left   += PropPane.toggle_width + 5;
-			rect.Right  -= PropPane.extra_width  + 5;
-			rect.Bottom += 1;
-			
-			this.CreateViews (list, rect);
+			this.CreateViews (list, new Drawing.Margins (PropPane.toggle_width + 5, PropPane.extra_width + 5, 0, 1));
 			
 			this.views = new Widget[list.Count];
 			list.CopyTo (this.views);
@@ -134,25 +131,26 @@ namespace Epsitec.Common.UI.Widgets
 			this.views[0].SetVisible (true);
 		}
 		
-		protected virtual void CreateViews(System.Collections.ArrayList list, Drawing.Rectangle bounds)
+		protected virtual void CreateViews(System.Collections.ArrayList list, Drawing.Margins margins)
 		{
 			string caption = this.controllers[0].Adapter.Binder.Caption;
 			
 			for (int i = 0; i < this.controllers.Length; i++)
 			{
-				Widget view = this.CreateViewWidget (bounds);
+				Widget view = this.CreateViewWidget (margins);
 				this.controllers[i].CreateUI (view);
 				this.controllers[i].Caption = caption;
 				list.Add (view);
 			}
 		}
 		
-		protected Widget CreateViewWidget(Drawing.Rectangle bounds)
+		protected Widget CreateViewWidget(Drawing.Margins margins)
 		{
 			Widget widget = new Widget (this);
 			
-			widget.Bounds = bounds;
-			widget.Anchor = AnchorStyles.LeftAndRight | AnchorStyles.Top;
+			widget.Anchor        = AnchorStyles.LeftAndRight | AnchorStyles.TopAndBottom;
+			widget.AnchorMargins = margins;
+			
 			widget.SetVisible (false);
 			
 			return widget;
