@@ -60,6 +60,20 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
+		public DialogDesigner					ActiveDialogDesigner
+		{
+			get
+			{
+				if (this.active_editor != null)
+				{
+					return this.active_editor.DialogDesigner;
+				}
+				
+				return null;
+			}
+		}
+		
+		
 		public override void Initialise()
 		{
 			System.Diagnostics.Debug.Assert (this.is_initialised == false);

@@ -589,9 +589,10 @@ namespace Epsitec.Common.UI.Widgets
 		{
 			Drawing.Size size = new Drawing.Size (dx, dy);
 			
-			if (this.best_fit_size.IsEmpty)
+			if (this.size_change_count < 2)
 			{
 				this.Size = size;
+				this.size_change_count = 2;
 			}
 			
 			this.best_fit_size = size;
@@ -609,6 +610,14 @@ namespace Epsitec.Common.UI.Widgets
 			base.OnBindingInfoChanged ();
 			System.Diagnostics.Debug.WriteLine ("Binding info set to " + this.BindingInfo);
 		}
+		
+		protected override void OnSizeChanged()
+		{
+			base.OnSizeChanged ();
+			
+			this.size_change_count++;
+		}
+
 
 		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clip_rect)
@@ -642,8 +651,9 @@ namespace Epsitec.Common.UI.Widgets
 		
 		protected LayoutMode					widget_layout_mode;
 		protected AbstractGroup					widget_container;
-		protected double						caption_width = 80;
-		protected bool							has_caption   = true;
+		protected double						caption_width     = 80;
+		protected bool							has_caption       = true;
+		protected int							size_change_count = 0;
 		protected Drawing.Size					best_fit_size = Drawing.Size.Empty;
 	}
 }

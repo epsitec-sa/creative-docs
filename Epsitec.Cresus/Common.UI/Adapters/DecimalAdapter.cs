@@ -9,9 +9,6 @@ namespace Epsitec.Common.UI.Adapters
 	/// <summary>
 	/// Summary description for DecimalAdapter.
 	/// </summary>
-	
-//	[Controller (1, typeof (Controllers.StringController))]
-	
 	public class DecimalAdapter : AbstractAdapter
 	{
 		public DecimalAdapter()

@@ -43,6 +43,22 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		public Support.CommandDispatcher		DialogCommands
+		{
+			get
+			{
+				return this.dialog_commands;
+			}
+			set
+			{
+				if (this.dialog_commands != value)
+				{
+					this.dialog_commands = value;
+					this.OnDialogCommandsChanged ();
+				}
+			}
+		}
+		
 		public Window							DialogWindow
 		{
 			get
@@ -129,12 +145,22 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		protected virtual void OnDialogCommandsChanged()
+		{
+			if (this.DialogCommandsChanged != null)
+			{
+				this.DialogCommandsChanged (this);
+			}
+		}
+		
 		
 		public event Support.EventHandler		DialogDataChanged;
+		public event Support.EventHandler		DialogCommandsChanged;
 		
 		private Application						application;
 		private Types.IDataGraph				dialog_data;
 		private Window							dialog_window;
+		private Support.CommandDispatcher		dialog_commands;
 		private string							resource_name;
 		
 		private const string					prop_dialog_designer = "$designer$dialog designer$";

@@ -12,65 +12,14 @@ namespace Epsitec.Common.UI.Adapters
 	
 	[Controller (1, typeof (Controllers.EnumController))]
 	
-	public class EnumAdapter : AbstractAdapter
+	public class EnumAdapter : AbstractEnumAdapter
 	{
-		public EnumAdapter(Types.IEnum enum_type)
+		public EnumAdapter(Types.IEnum enum_type) : base (enum_type)
 		{
-			this.enum_type = enum_type;
 		}
 		
-		public EnumAdapter(Types.IEnum enum_type, Binders.IBinder binder) : this (enum_type)
+		public EnumAdapter(Types.IEnum enum_type, Binders.IBinder binder) : base (enum_type, binder)
 		{
-			this.Binder = binder;
-			this.Binder.Adapter = this;
 		}
-		
-		
-		public System.Enum						Value
-		{
-			get
-			{
-				return this.value;
-			}
-			set
-			{
-				if (this.value != value)
-				{
-					this.value = value;
-					this.OnValueChanged ();
-				}
-			}
-		}
-		
-		public Types.IEnum						EnumType
-		{
-			get
-			{
-				return this.enum_type;
-			}
-		}
-		
-		
-		protected override object ConvertToObject()
-		{
-			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (this.binder.GetDataType ());
-			return converter.ConvertFromString (this.Value.ToString ());
-		}
-		
-		protected override bool ConvertFromObject(object data)
-		{
-			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (this.binder.GetDataType ());
-			System.Enum value;
-			
-			Types.Converter.Convert (data, this.enum_type.SystemType, out value);
-			
-			this.Value = value;
-			return true;
-		}
-		
-		
-		
-		private System.Enum						value;
-		private Types.IEnum						enum_type;
 	}
 }

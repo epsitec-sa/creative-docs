@@ -12,45 +12,14 @@ namespace Epsitec.Common.UI.Adapters
 	
 	[Controller (1, typeof (Controllers.Num2Controller))]
 	
-	public class Num2Adapter : AbstractAdapter
+	public class Num2Adapter : AbstractStringAdapter
 	{
 		public Num2Adapter()
 		{
 		}
 		
-		
-		public string							Value
+		public Num2Adapter(Binders.IBinder binder) : base (binder)
 		{
-			get
-			{
-				return this.value;
-			}
-			set
-			{
-				if (this.value != value)
-				{
-					this.value = value;
-					this.OnValueChanged ();
-				}
-			}
 		}
-		
-		
-		protected override object ConvertToObject()
-		{
-			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (this.binder.GetDataType ());
-			return converter.ConvertFromString (this.Value);
-		}
-		
-		protected override bool ConvertFromObject(object data)
-		{
-			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (this.binder.GetDataType ());
-			this.Value = converter.ConvertToString (data);
-			return true;
-		}
-		
-		
-		
-		private string							value;
 	}
 }

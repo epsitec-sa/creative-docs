@@ -12,51 +12,14 @@ namespace Epsitec.Common.UI.Adapters
 	
 	[Controller (1, typeof (Controllers.StringController))]
 	
-	public class StringAdapter : AbstractAdapter
+	public class StringAdapter : AbstractStringAdapter
 	{
 		public StringAdapter()
 		{
 		}
 		
-		public StringAdapter(Binders.IBinder binder) : this ()
+		public StringAdapter(Binders.IBinder binder) : base (binder)
 		{
-			this.Binder = binder;
-			this.Binder.Adapter = this;
 		}
-		
-		
-		public string							Value
-		{
-			get
-			{
-				return this.value;
-			}
-			set
-			{
-				if (this.value != value)
-				{
-					this.value = value;
-					this.OnValueChanged ();
-				}
-			}
-		}
-		
-		
-		protected override object ConvertToObject()
-		{
-			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (this.binder.GetDataType ());
-			return converter.ConvertFromString (this.Value);
-		}
-		
-		protected override bool ConvertFromObject(object data)
-		{
-			System.ComponentModel.TypeConverter converter = System.ComponentModel.TypeDescriptor.GetConverter (this.binder.GetDataType ());
-			this.Value = converter.ConvertToString (data);
-			return true;
-		}
-		
-		
-		
-		private string							value;
 	}
 }
