@@ -97,13 +97,27 @@ namespace Epsitec.Common.Script
 		}
 		
 		
-		public static bool Find(string[] lines, int line, int column, out string method_signature, out int section_id, out int line_id)
+		public static bool Find(string[] lines, int line, ref int column, out string method_signature, out int section_id, out int line_id)
 		{
 			method_signature = null;
 			section_id       = -1;
 			line_id          = -1;
 			
 			int i = line;
+			
+			if ((line+4 < lines.Length) &&
+				(lines[line+2].StartsWith ("//$MethodBegin=")) &&
+				(lines[line+3].StartsWith ("//$SectionBegin=")))
+			{
+				//	Ajustons la ligne de l'erreur de manière à ce qu'elle pointe dans le
+				//	corps de la méthode. C'est probablement un problème lié à un 'return'
+				//	manquant, qui signale une erreur sur le début du bloc de la méthode.
+				
+				column = -1;
+				line  +=  4;
+				
+				i = line;
+			}
 			
 			while (i >= 0)
 			{
@@ -627,16 +641,24 @@ namespace Epsitec.Common.Script
 					string middle = text.Substring (len);
 					string after  = "";
 					
-					for (int i = 0; i < middle.Length; i++)
+					if (column < 0)
 					{
-						if ((System.Char.IsLetterOrDigit (middle[i])) ||
-							(middle[i] == '_'))
+						after  = middle;
+						middle = "";
+					}
+					else
+					{
+						for (int i = 0; i < middle.Length; i++)
 						{
-							continue;
+							if ((System.Char.IsLetterOrDigit (middle[i])) ||
+								(middle[i] == '_'))
+							{
+								continue;
+							}
+							
+							after  = middle.Substring (i);
+							middle = middle.Substring (0, i);
 						}
-						
-						after  = middle.Substring (i);
-						middle = middle.Substring (0, i);
 					}
 					
 					text = string.Concat (before, "<w id=\"", tag_id.ToString (System.Globalization.CultureInfo.InvariantCulture), "\">", middle, "</w>", after);

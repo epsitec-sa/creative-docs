@@ -24,7 +24,7 @@ namespace Epsitec.Common.Script.Developer.Panels
 		{
 			get
 			{
-//				if (this.IsModified)
+				if (this.IsModified)
 				{
 					this.UpdateFromUI ();
 				}
