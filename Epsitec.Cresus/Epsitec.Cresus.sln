@@ -36,9 +36,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Support", "Support\Support.
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Support.Implementation", "Support.Implementation\Support.Implementation.csproj", "{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Support.Tests", "Support.Tests\Support.Tests.csproj", "{99DC1B23-014D-4BE4-8D4D-3FC613360102}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SourceCodeControl) = preSolution
-		SccNumberOfProjects = 10
+		SccNumberOfProjects = 12
 		SccLocalPath0 = .
 		CanCheckoutShared = false
 		SolutionUniqueID = {2A624BB5-D763-4224-A016-8B608E307D13}
@@ -78,6 +86,14 @@ Global
 		SccLocalPath9 = .
 		CanCheckoutShared = false
 		SccProjectFilePathRelativizedFromConnection9 = Support\\
+		SccProjectUniqueName10 = Support.Implementation\\Support.Implementation.csproj
+		SccLocalPath10 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection10 = Support.Implementation\\
+		SccProjectUniqueName11 = Support.Tests\\Support.Tests.csproj
+		SccLocalPath11 = .
+		CanCheckoutShared = false
+		SccProjectFilePathRelativizedFromConnection11 = Support.Tests\\
 	EndGlobalSection
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -120,6 +136,14 @@ Global
 		{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}.Debug.Build.0 = Debug|.NET
 		{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}.Release.ActiveCfg = Release|.NET
 		{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}.Release.Build.0 = Release|.NET
+		{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}.Debug.ActiveCfg = Debug|.NET
+		{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}.Debug.Build.0 = Debug|.NET
+		{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}.Release.ActiveCfg = Release|.NET
+		{5ABF5752-A44A-4D8B-B4F0-D64CF5E74B2D}.Release.Build.0 = Release|.NET
+		{99DC1B23-014D-4BE4-8D4D-3FC613360102}.Debug.ActiveCfg = Debug|.NET
+		{99DC1B23-014D-4BE4-8D4D-3FC613360102}.Debug.Build.0 = Debug|.NET
+		{99DC1B23-014D-4BE4-8D4D-3FC613360102}.Release.ActiveCfg = Release|.NET
+		{99DC1B23-014D-4BE4-8D4D-3FC613360102}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info
