@@ -1059,7 +1059,7 @@ namespace Epsitec.Common.Widgets.Adorner
 
 
 		// Variables membres.
-		protected Drawing.Bitmap	bitmap;
+		protected Drawing.Image		bitmap;
 		protected Drawing.Color		colorBlack;
 		protected Drawing.Color		colorControl;
 		protected Drawing.Color		colorControlLight;
