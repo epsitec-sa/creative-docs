@@ -117,6 +117,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		public void ShowSelected(ScrollShowMode mode)
 		{
 			// Rend la ligne sélectionnée visible.
