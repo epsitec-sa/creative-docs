@@ -19,6 +19,8 @@ namespace Epsitec.Common.Widgets
 				this.labels[i] = new StaticText(this);
 				this.fields[i] = new TextFieldSlider(this);
 
+				this.fields[i].TabIndex = i;
+				this.fields[i].TabNavigation = Widget.TabNavigationMode.ActivateOnTab;
 				this.fields[i].Value = 0;
 				if ( i < 4 )
 				{
