@@ -1008,7 +1008,11 @@ namespace Epsitec.Common.Widgets
 				
 				if ( AbstractMenu.initiallyFocusedWidget != null )
 				{
-					AbstractMenu.initiallyFocusedWidget.SetFocused(true);
+					if ( AbstractMenu.initiallyFocusedWidget.Window != null )
+					{
+						AbstractMenu.initiallyFocusedWidget.SetFocused(true);
+					}
+					
 					AbstractMenu.initiallyFocusedWidget = null;
 				}
 			}
