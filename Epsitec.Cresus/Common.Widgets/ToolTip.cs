@@ -257,17 +257,10 @@ namespace Epsitec.Common.Widgets
 			WidgetState       state = this.PaintState;
 			Direction         dir   = this.RootDirection;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
-			
-			graphics.AddFilledRectangle(rect);
-			graphics.RenderSolid(this.colorBack);  // fond jaune pale
-			
-			Drawing.Rectangle rInside = rect;
-			rInside.Inflate(-0.5, -0.5);
-			graphics.AddRectangle(rInside);
-			graphics.RenderSolid(this.colorFrame);  // cadre noir
 
 			pos.X += this.margin.X;  // à cause du Drawing.ContentAlignment.MiddleLeft
-			adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state, dir);
+			adorner.PaintTooltipBackground(graphics, rect, dir);
+			adorner.PaintTooltipTextLayout(graphics, pos, this.textLayout, dir);
 		}
 
 
