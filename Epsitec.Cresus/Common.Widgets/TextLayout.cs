@@ -47,7 +47,7 @@ namespace Epsitec.Common.Widgets
 
 		public string							Text
 		{
-			// Texte associé, contenant des commandes HTML.
+			// Texte associé, contenant des commandes HTML, mais sans les commandes <put>.
 			get
 			{
 				if ( this.text == null )
@@ -55,6 +55,11 @@ namespace Epsitec.Common.Widgets
 					return "";
 				}
 				
+				if ( this.isPrepareDirty )  // contient des commandes <put> ?
+				{
+					return this.GetSimplify();
+				}
+
 				return this.text;
 			}
 
@@ -78,6 +83,20 @@ namespace Epsitec.Common.Widgets
 						throw new System.FormatException(string.Format ("Syntax error at char {0}.", offsetError.ToString()));
 					}
 				}
+			}
+		}
+
+		public string							InternalText
+		{
+			// Texte associé, contenant des commandes HTML, y compris les commandes <put>.
+			get
+			{
+				if ( this.text == null )
+				{
+					return "";
+				}
+				
+				return this.text;
 			}
 		}
 		
@@ -376,10 +395,11 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+				JustifBlock block = this.SearchJustifBlock(context);
 				if ( block == null )  return false;
-				int i = block.font.StyleName.IndexOf("Bold");
-				return ( i >= 0 );
+				return block.bold;
+				//?int i = block.font.StyleName.IndexOf("Bold");
+				//?return ( i >= 0 );
 			}
 		}
 
@@ -387,7 +407,7 @@ namespace Epsitec.Common.Widgets
 		{
 			// Met en gras ou en normal tous les caractères sélectionnés.
 			string state = bold ? "yes" : "no";
-			this.PutSelect(context, "bold=\"" + state + "\"");
+			this.InsertPutCommand(context, "bold=\"" + state + "\"");
 		}
 
 		public bool IsSelectionItalic(TextLayout.Context context)
@@ -399,11 +419,12 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+				JustifBlock block = this.SearchJustifBlock(context);
 				if ( block == null )  return false;
-				int i = block.font.StyleName.IndexOf("Italic");
-				int j = block.font.StyleName.IndexOf("Oblique");
-				return ( i >= 0 || j >= 0 );
+				return block.italic;
+				//?int i = block.font.StyleName.IndexOf("Italic");
+				//?int j = block.font.StyleName.IndexOf("Oblique");
+				//?return ( i >= 0 || j >= 0 );
 			}
 		}
 
@@ -411,7 +432,7 @@ namespace Epsitec.Common.Widgets
 		{
 			// Met en italique ou en normal tous les caractères sélectionnés.
 			string state = italic ? "yes" : "no";
-			this.PutSelect(context, "italic=\"" + state + "\"");
+			this.InsertPutCommand(context, "italic=\"" + state + "\"");
 		}
 
 		public bool IsSelectionUnderlined(TextLayout.Context context)
@@ -419,21 +440,21 @@ namespace Epsitec.Common.Widgets
 			// Indique si les caractères sélectionnés sont soulignés.
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
 			{
-				return this.IsPrepared(context, "underline");
+				return this.IsPrepared(context, "underlined");
 			}
 			else
 			{
-				JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+				JustifBlock block = this.SearchJustifBlock(context);
 				if ( block == null )  return false;
-				return block.underline;
+				return block.underlined;
 			}
 		}
 
-		public void SetSelectionUnderlined(TextLayout.Context context, bool underline)
+		public void SetSelectionUnderlined(TextLayout.Context context, bool underlined)
 		{
 			// Met en souligné ou en normal tous les caractères sélectionnés.
-			string state = underline ? "yes" : "no";
-			this.PutSelect(context, "underline=\"" + state + "\"");
+			string state = underlined ? "yes" : "no";
+			this.InsertPutCommand(context, "underlined=\"" + state + "\"");
 		}
 
 		public string GetSelectionFontName(TextLayout.Context context)
@@ -441,12 +462,14 @@ namespace Epsitec.Common.Widgets
 			// Indique le nom de la fonte des caractères sélectionnés.
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
 			{
-				return this.SearchPrepared(context, "face");
+				string s = this.SearchPrepared(context, "face");
+				if ( s == "" )  return this.font.FaceName;
+				return s;
 			}
 			else
 			{
-				JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
-				if ( block == null )  return "";
+				JustifBlock block = this.SearchJustifBlock(context);
+				if ( block == null )  return this.font.FaceName;
 				return block.font.FaceName;
 			}
 		}
@@ -454,7 +477,7 @@ namespace Epsitec.Common.Widgets
 		public void SetSelectionFontName(TextLayout.Context context, string name)
 		{
 			// Modifie le nom de la fonte des caractères sélectionnés.
-			this.PutSelect(context, "face=\"" + name + "\"");
+			this.InsertPutCommand(context, "face=\"" + name + "\"");
 		}
 
 		public double GetSelectionFontSize(TextLayout.Context context)
@@ -463,13 +486,13 @@ namespace Epsitec.Common.Widgets
 			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
 			{
 				string s = this.SearchPrepared(context, "size");
-				if ( s == "" )  return 0.0;
+				if ( s == "" )  return this.fontSize;
 				return System.Double.Parse(s);
 			}
 			else
 			{
-				JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
-				if ( block == null )  return Drawing.Font.DefaultFontSize;
+				JustifBlock block = this.SearchJustifBlock(context);
+				if ( block == null )  return this.fontSize;
 				return block.fontSize;
 			}
 		}
@@ -477,7 +500,7 @@ namespace Epsitec.Common.Widgets
 		public void SetSelectionFontSize(TextLayout.Context context, double size)
 		{
 			// Modifie la taille des caractères sélectionnés.
-			this.PutSelect(context, "size=\"" + size + "\"");
+			this.InsertPutCommand(context, "size=\"" + size + "\"");
 		}
 
 		public Drawing.Color GetSelectionFontColor(TextLayout.Context context)
@@ -490,7 +513,7 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				JustifBlock block = this.SearchJustifBlock(context.CursorFrom);
+				JustifBlock block = this.SearchJustifBlock(context);
 				if ( block == null )  return Drawing.Color.Empty;
 				return block.fontColor;
 			}
@@ -500,28 +523,43 @@ namespace Epsitec.Common.Widgets
 		{
 			// Modifie la couleur des caractères sélectionnés.
 			string s = "#" + Drawing.Color.ToHexa(color);
-			this.PutSelect(context, "color=\"" + s + "\"");
+			this.InsertPutCommand(context, "color=\"" + s + "\"");
 		}
 
 		
-		protected JustifBlock SearchJustifBlock(int index)
+		protected JustifBlock SearchJustifBlock(Context context)
 		{
 			// Cherche le premier bloc correspondant à un index.
 			this.UpdateLayout();
 
-			JustifBlock found = null;
-			foreach ( JustifBlock block in this.blocks )
+			int from = System.Math.Min(context.CursorFrom, context.CursorTo);
+			int to   = System.Math.Max(context.CursorFrom, context.CursorTo);
+
+			if ( context.CursorAfter )
 			{
-				if ( index >= block.beginIndex && index <= block.endIndex )
+				int index = from;
+				for ( int i=this.blocks.Count-1 ; i>=0 ; i-- )
 				{
-					found = block;
-				}
-				if ( index < block.endIndex )
-				{
-					break;
+					JustifBlock block = this.blocks[i] as JustifBlock;
+					if ( index >= block.beginIndex && index <= block.endIndex )
+					{
+						return block;
+					}
 				}
 			}
-			return found;
+			else
+			{
+				int index = to;
+				for ( int i=0 ; i<this.blocks.Count ; i++ )
+				{
+					JustifBlock block = this.blocks[i] as JustifBlock;
+					if ( index >= block.beginIndex && index <= block.endIndex )
+					{
+						return block;
+					}
+				}
+			}
+			return null;
 		}
 
 		protected bool IsPrepared(TextLayout.Context context, string key)
@@ -537,7 +575,7 @@ namespace Epsitec.Common.Widgets
 			if ( context.PrepareOffset == -1 )  return "";
 
 			System.Collections.Hashtable parameters;
-			string text = this.Text;
+			string text = this.InternalText;
 			string found = "";  // rien encore trouvé
 			int from = context.PrepareOffset;
 			int to   = context.PrepareOffset + context.PrepareLength1;
@@ -552,11 +590,16 @@ namespace Epsitec.Common.Widgets
 			return found;  // retourne la *dernière* préparation trouvée
 		}
 
-		protected void PutSelect(TextLayout.Context context, string cmd)
+		protected void InsertPutCommand(TextLayout.Context context, string cmd)
 		{
 			// Modifie les caractères sélectionnés avec une commande <put..>..</put>.
 			string begin = "<put " + cmd + ">";
 			string end   = "</put>";
+
+			if ( context.PrepareOffset != -1 )
+			{
+				this.DeletePutCommand(context, begin, end);
+			}
 
 			if ( context.CursorFrom == context.CursorTo )  // prépare l'insertion ?
 			{
@@ -573,12 +616,13 @@ namespace Epsitec.Common.Widgets
 					cursor1 = context.PrepareOffset + context.PrepareLength1;
 					cursor2 = cursor1 + context.PrepareLength2;
 				}
-				string text = this.Text;
+				string text = this.InternalText;
 				text = text.Insert(cursor2, end);
 				text = text.Insert(cursor1, begin);
 				context.PrepareLength1 += begin.Length;
 				context.PrepareLength2 += end.Length;
 				this.Text = text;
+				this.isPrepareDirty = true;
 				// Il ne faut surtout pas faire de this.Simplify() ici !
 			}
 			else	// modifie les caractères sélectionnés ?
@@ -589,12 +633,37 @@ namespace Epsitec.Common.Widgets
 				int from = this.FindOffsetFromIndex(cursorFrom, false);
 				int to   = this.FindOffsetFromIndex(cursorTo, true);
 
-				string text = this.Text;
+				string text = this.InternalText;
 				text = text.Insert(to, end);
 				text = text.Insert(from, begin);
 				this.Text = text;
 				this.Simplify();
 			}
+		}
+
+		protected void DeletePutCommand(TextLayout.Context context, string beginCmd, string endCmd)
+		{
+			int i, len;
+
+			i = beginCmd.IndexOf("=\"");
+			if ( i > 0 )
+			{
+				beginCmd = beginCmd.Substring(0, i);  // <put bold="yes"> -> <put bold
+			}
+
+			i = this.text.IndexOf(beginCmd, context.PrepareOffset, context.PrepareLength1);
+			if ( i < 0 )  return;
+
+			len = this.text.IndexOf("\">", context.PrepareOffset+i) + 2 - i;
+			this.text = this.text.Remove(i, len);
+			context.PrepareLength1 -= len;
+
+			i = this.text.IndexOf(endCmd, context.PrepareOffset, context.PrepareLength1+context.PrepareLength2);
+			if ( i < 0 )  return;
+
+			len = endCmd.Length;
+			this.text = this.text.Remove(i, len);
+			context.PrepareLength2 -= len;
 		}
 
 
@@ -621,7 +690,7 @@ namespace Epsitec.Common.Widgets
 		public void SelectWord(TextLayout.Context context)
 		{
 			// Sélectionne tout le mot.
-			string simple = TextLayout.ConvertToSimpleText(this.Text);
+			string simple = TextLayout.ConvertToSimpleText(this.InternalText);
 
 			while ( context.CursorFrom > 0 )
 			{
@@ -645,7 +714,7 @@ namespace Epsitec.Common.Widgets
 			// des commandes superflues, elles seront supprimées par Symplify().
 			// Retourne l'index où insérer les éventuels caractères remplaçants.
 			System.Collections.Hashtable parameters;
-			string text = this.Text;
+			string text = this.InternalText;
 
 			int ins = -1;
 			while ( from < to )
@@ -679,6 +748,13 @@ namespace Epsitec.Common.Widgets
 		public bool DeleteSelection(TextLayout.Context context)
 		{
 			// Supprime les caractères sélectionnés dans le texte.
+			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			{
+				this.Simplify();
+			}
+			context.CursorAfter = false;
+			JustifBlock initialBlock = this.SearchJustifBlock(context);
+
 			int cursorFrom = this.FindOffsetFromIndex(context.CursorFrom);
 			int cursorTo   = this.FindOffsetFromIndex(context.CursorTo);
 			
@@ -689,9 +765,19 @@ namespace Epsitec.Common.Widgets
 			
 			this.DeleteText(from, to);
 			from = this.FindIndexFromOffset(from);
-			context.CursorTo   = from;
-			context.CursorFrom = from;
-			this.Simplify();
+			context.CursorTo    = from;
+			context.CursorFrom  = from;
+			context.CursorAfter = false;
+
+			if ( initialBlock != null )
+			{
+				this.SetSelectionFontName(context, initialBlock.font.FaceName);
+				this.SetSelectionFontSize(context, initialBlock.fontSize);
+				this.SetSelectionBold(context, initialBlock.bold);
+				this.SetSelectionItalic(context, initialBlock.italic);
+				this.SetSelectionUnderlined(context, initialBlock.underlined);
+			}
+
 			return true;
 		}
 
@@ -716,7 +802,7 @@ namespace Epsitec.Common.Widgets
 
 				if ( this.MaxTextOffset+ins.Length > context.MaxChar )  return false;
 
-				string text = this.Text;
+				string text = this.InternalText;
 				text = text.Insert(cursor, ins);
 				this.Text = text;
 				context.CursorTo    = this.FindIndexFromOffset(cursor + ins.Length);
@@ -731,7 +817,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.MaxTextOffset+ins.Length > context.MaxChar )  return false;
 			
-				string text = this.Text;
+				string text = this.InternalText;
 				int cursor = this.FindOffsetFromIndex(context.CursorTo, context.CursorAfter);
 				bool prepare = false;
 				if ( context.PrepareOffset != -1 )  // a-t-on préparé des attributs typographiques ?
@@ -763,6 +849,13 @@ namespace Epsitec.Common.Widgets
 			// Supprime le caractère à gauche ou à droite du curseur.
 			if ( this.DeleteSelection(context) )  return false;
 
+			if ( context.PrepareOffset != -1 )  // préparation pour l'insertion ?
+			{
+				this.Simplify();
+			}
+			context.CursorAfter = (dir > 0);
+			JustifBlock initialBlock = this.SearchJustifBlock(context);
+
 			int from, to;
 			if ( dir < 0 )  // à gauche du curseur ?
 			{
@@ -783,13 +876,13 @@ namespace Epsitec.Common.Widgets
 			context.CursorFrom  = cursor;
 			context.CursorAfter = (dir < 0);
 
-			string text = this.Text;
-			this.Simplify();
-			if ( text == this.Text )
+			if ( initialBlock != null )
 			{
-				context.PrepareOffset  = from;
-				context.PrepareLength1 = 0;
-				context.PrepareLength2 = 0;
+				this.SetSelectionFontName(context, initialBlock.font.FaceName);
+				this.SetSelectionFontSize(context, initialBlock.fontSize);
+				this.SetSelectionBold(context, initialBlock.bold);
+				this.SetSelectionItalic(context, initialBlock.italic);
+				this.SetSelectionUnderlined(context, initialBlock.underlined);
 			}
 
 			return true;
@@ -914,7 +1007,7 @@ namespace Epsitec.Common.Widgets
 			int to   = System.Math.Max(context.CursorFrom, context.CursorTo);
 			int cursor = (move < 0) ? from : to;
 			if ( select )  cursor = context.CursorTo;
-			string simple = TextLayout.ConvertToSimpleText(this.Text);
+			string simple = TextLayout.ConvertToSimpleText(this.InternalText);
 
 			if ( word )  // déplacement par mots ?
 			{
@@ -1060,10 +1153,10 @@ namespace Epsitec.Common.Widgets
 					graphics.PaintText(x, y, block.text, block.font, block.fontSize, block.infos);
 				}
 
-				if ( block.underline )
+				if ( block.underlined )
 				{
 					Drawing.Point p1, p2;
-					this.UnderlinePoints(graphics, block, pos, out p1, out p2);
+					this.UnderlinedPoints(graphics, block, pos, out p1, out p2);
 					graphics.LineWidth = 1.0;
 					graphics.Color = color;
 					graphics.PaintOutline(Drawing.Path.FromLine(p1, p2));
@@ -1072,7 +1165,7 @@ namespace Epsitec.Common.Widgets
 				if ( block.wave )
 				{
 					Drawing.Point p1, p2;
-					this.UnderlinePoints(graphics, block, pos, out p1, out p2);
+					this.UnderlinedPoints(graphics, block, pos, out p1, out p2);
 					graphics.LineWidth = 0.75;
 					if ( block.waveColor.IsEmpty )
 					{
@@ -1109,9 +1202,9 @@ namespace Epsitec.Common.Widgets
 		}
 
 		
-		protected void UnderlinePoints(Drawing.IPaintPort graphics, JustifBlock block,
-									   Drawing.Point pos,
-									   out Drawing.Point p1, out Drawing.Point p2)
+		protected void UnderlinedPoints(Drawing.IPaintPort graphics, JustifBlock block,
+										Drawing.Point pos,
+										out Drawing.Point p1, out Drawing.Point p2)
 		{
 			// Calcule les points de la ligne pour souligner un bloc.
 			double width = block.width;
@@ -1591,7 +1684,7 @@ namespace Epsitec.Common.Widgets
 		protected bool ScanItalic(int offset)
 		{
 			System.Collections.Hashtable parameters;
-			string text = this.Text;
+			string text = this.InternalText;
 
 			int from = 0;
 			int to   = offset;
@@ -1863,7 +1956,7 @@ namespace Epsitec.Common.Widgets
 				{
 					case Tag.Bold:
 					case Tag.Italic:
-					case Tag.Underline:
+					case Tag.Underlined:
 					case Tag.Mnemonic:
 					case Tag.Wave:
 					case Tag.Font:
@@ -1873,7 +1966,7 @@ namespace Epsitec.Common.Widgets
 
 					case Tag.BoldEnd:
 					case Tag.ItalicEnd:
-					case Tag.UnderlineEnd:
+					case Tag.UnderlinedEnd:
 					case Tag.MnemonicEnd:
 					case Tag.WaveEnd:
 					case Tag.FontEnd:
@@ -1958,13 +2051,13 @@ namespace Epsitec.Common.Widgets
 						case "<br/>":    return Tag.LineBreak;
 						case "<b>":      return Tag.Bold;
 						case "<i>":      return Tag.Italic;
-						case "<u>":      return Tag.Underline;
+						case "<u>":      return Tag.Underlined;
 						case "<m>":      return Tag.Mnemonic;
 						case "<w>":      return Tag.Wave;
 						
 						case "</b>":     return Tag.BoldEnd;
 						case "</i>":     return Tag.ItalicEnd;
-						case "</u>":     return Tag.UnderlineEnd;
+						case "</u>":     return Tag.UnderlinedEnd;
 						case "</m>":     return Tag.MnemonicEnd;
 						case "</w>":     return Tag.WaveEnd;
 						
@@ -2149,7 +2242,7 @@ namespace Epsitec.Common.Widgets
 		
 		public static string ConvertToSimpleText(string text)
 		{
-			return TextLayout.ConvertToSimpleText(text, TextLayout.CodeObject.ToString ());
+			return TextLayout.ConvertToSimpleText(text, TextLayout.CodeObject.ToString());
 		}
 		
 		public static string ConvertToSimpleText(string text, string imageReplacement)
@@ -2226,21 +2319,28 @@ namespace Epsitec.Common.Widgets
 
 		public void Simplify()
 		{
+			this.text = this.GetSimplify();
+			this.isPrepareDirty = false;
+		}
+
+		public string GetSimplify()
+		{
 			// Simplifie et met à plat toutes les commandes HTML du texte.
-			// Les commandes <put..>..</put> sont gérées puis supprimées.
+			// Les commandes <put..>..</put> sont intégrées puis supprimées.
 			System.Collections.Stack		fontStack;
 			FontSimplify					fontItem;
 			FontSimplify					fontCurrent;
 			System.Text.StringBuilder		buffer;
 			System.Collections.Hashtable	parameters;
 
-			this.blocks.Clear();
 			fontStack = new System.Collections.Stack();
 
 			// Prépare la fonte initiale par défaut.
 			fontItem = new FontSimplify();
-			fontItem.fontName  = "";
-			fontItem.fontSize  = "";
+			fontItem.fontName  = this.font.FaceName;
+			fontItem.fontSize  = this.fontSize.ToString();
+			//?fontItem.fontName  = "";
+			//?fontItem.fontSize  = "";
 			fontItem.fontColor = "";
 
 			fontStack.Push(fontItem);  // push la fonte initiale (jamais de pop)
@@ -2293,11 +2393,11 @@ namespace Epsitec.Common.Widgets
 						supplItem.italic --;
 						break;
 
-					case Tag.Underline:
-						supplItem.underline ++;
+					case Tag.Underlined:
+						supplItem.underlined ++;
 						break;
-					case Tag.UnderlineEnd:
-						supplItem.underline --;
+					case Tag.UnderlinedEnd:
+						supplItem.underlined --;
 						break;
 
 					case Tag.Mnemonic:
@@ -2334,21 +2434,21 @@ namespace Epsitec.Common.Widgets
 					case Tag.Put:
 						if ( parameters != null )
 						{
-							if ( parameters.ContainsKey("face")      )  supplItem.putFontName  = (string)parameters["face"];
-							if ( parameters.ContainsKey("size")      )  supplItem.putFontSize  = (string)parameters["size"];
-							if ( parameters.ContainsKey("color")     )  supplItem.putFontColor = (string)parameters["color"];
-							if ( parameters.ContainsKey("bold")      )  supplItem.putBold      = (string)parameters["bold"];
-							if ( parameters.ContainsKey("italic")    )  supplItem.putItalic    = (string)parameters["italic"];
-							if ( parameters.ContainsKey("underline") )  supplItem.putUnderline = (string)parameters["underline"];
+							if ( parameters.ContainsKey("face")       )  supplItem.putFontName   = (string)parameters["face"];
+							if ( parameters.ContainsKey("size")       )  supplItem.putFontSize   = (string)parameters["size"];
+							if ( parameters.ContainsKey("color")      )  supplItem.putFontColor  = (string)parameters["color"];
+							if ( parameters.ContainsKey("bold")       )  supplItem.putBold       = (string)parameters["bold"];
+							if ( parameters.ContainsKey("italic")     )  supplItem.putItalic     = (string)parameters["italic"];
+							if ( parameters.ContainsKey("underlined") )  supplItem.putUnderlined = (string)parameters["underlined"];
 						}
 						break;
 					case Tag.PutEnd:
-						supplItem.putFontName  = "";
-						supplItem.putFontSize  = "";
-						supplItem.putFontColor = "";
-						supplItem.putBold      = "";
-						supplItem.putItalic    = "";
-						supplItem.putUnderline = "";
+						supplItem.putFontName   = "";
+						supplItem.putFontSize   = "";
+						supplItem.putFontColor  = "";
+						supplItem.putBold       = "";
+						supplItem.putItalic     = "";
+						supplItem.putUnderlined = "";
 						break;
 
 					case Tag.Image:
@@ -2363,16 +2463,17 @@ namespace Epsitec.Common.Widgets
 			}
 
 			fontItem = (FontSimplify)fontStack.Peek();
+			fontItem.fontName  = "";  // pour éviter de remettre une commande <font>
+			fontItem.fontSize  = "";
+			fontItem.fontColor = "";
+			supplItem.putFontName  = "";
+			supplItem.putFontSize  = "";
+			supplItem.putFontColor = "";
 			supplItem.bold   = 0;
 			supplItem.italic = 0;
 			this.SimplifyPutCommand(buffer, fontCurrent, fontItem, supplCurrent, supplItem, ref fontCmd);
 
-			if ( fontCmd )
-			{
-				buffer.Append("</font>");
-			}
-
-			this.text = buffer.ToString();
+			return buffer.ToString();
 		}
 
 		protected void SimplifyPutCommand(System.Text.StringBuilder buffer,
@@ -2440,9 +2541,9 @@ namespace Epsitec.Common.Widgets
 				buffer.Append(supplItem.IsItalic ? "<i>" : "</i>");
 			}
 
-			if ( supplItem.IsUnderline != supplCurrent.IsUnderline )
+			if ( supplItem.IsUnderlined != supplCurrent.IsUnderlined )
 			{
-				buffer.Append(supplItem.IsUnderline ? "<u>" : "</u>");
+				buffer.Append(supplItem.IsUnderlined ? "<u>" : "</u>");
 			}
 
 			if ( (supplItem.mnemonic != 0) != (supplCurrent.mnemonic != 0) )
@@ -2523,7 +2624,6 @@ namespace Epsitec.Common.Widgets
 			if ( parameters != null )
 			{
 				FontItem font = stack.Peek() as FontItem;
-				
 				font = font.Copy();
 				
 				if ( parameters.ContainsKey("face") )
@@ -2553,7 +2653,7 @@ namespace Epsitec.Common.Widgets
 				stack.Push(font);
 			}
 		}
-		
+
 		protected bool ProcessFormatTags(Tag tag, System.Collections.Stack fontStack, SupplItem supplItem, System.Collections.Hashtable parameters)
 		{
 			switch ( tag )
@@ -2575,14 +2675,14 @@ namespace Epsitec.Common.Widgets
 				case Tag.Italic:		supplItem.italic ++;	break;
 				case Tag.ItalicEnd:		supplItem.italic --;	break;
 
-				case Tag.Underline:
-				case Tag.Mnemonic:		supplItem.underline ++;	break;
+				case Tag.Underlined:
+				case Tag.Mnemonic:		supplItem.underlined ++;	break;
 					
-				case Tag.UnderlineEnd:
-				case Tag.MnemonicEnd:	supplItem.underline --;	break;
+				case Tag.UnderlinedEnd:
+				case Tag.MnemonicEnd:	supplItem.underlined --;	break;
 
-				case Tag.Anchor:		supplItem.anchor ++;	supplItem.underline ++;		break;
-				case Tag.AnchorEnd:		supplItem.anchor --;	supplItem.underline --;		break;
+				case Tag.Anchor:		supplItem.anchor ++;	supplItem.underlined ++;		break;
+				case Tag.AnchorEnd:		supplItem.anchor --;	supplItem.underlined --;		break;
 
 				case Tag.Wave:
 					supplItem.wave ++;
@@ -2957,7 +3057,7 @@ noText:
 								JustifBlock block = new JustifBlock();
 								block.bol        = bol;
 								block.image      = image;
-								block.text       = "\ufffc";
+								block.text       = TextLayout.CodeObject.ToString();
 								block.beginIndex = index;
 								block.endIndex   = index+1;
 								block.width      = dx;
@@ -3334,7 +3434,7 @@ noText:
 				{
 					case Tag.Bold:
 					case Tag.Italic:
-					case Tag.Underline:
+					case Tag.Underlined:
 					case Tag.Mnemonic:
 					case Tag.Wave:
 					case Tag.Font:
@@ -3344,7 +3444,7 @@ noText:
 
 					case Tag.BoldEnd:
 					case Tag.ItalicEnd:
-					case Tag.UnderlineEnd:
+					case Tag.UnderlinedEnd:
 					case Tag.MnemonicEnd:
 					case Tag.WaveEnd:
 					case Tag.FontEnd:
@@ -3391,13 +3491,13 @@ noText:
 				{
 					System.Diagnostics.Debug.Assert(index < len);
 					array[index] = new OneCharStructure();
-					array[index].character = block.text[i];
-					array[index].font      = block.font;
-					array[index].fontSize  = block.fontSize;
-					array[index].fontColor = block.fontColor.IsEmpty ? Drawing.Color.FromBrightness(0) : block.fontColor;
-					array[index].bold      = block.bold;
-					array[index].italic    = block.italic;
-					array[index].underline = block.underline;
+					array[index].character  = block.text[i];
+					array[index].font       = block.font;
+					array[index].fontSize   = block.fontSize;
+					array[index].fontColor  = block.fontColor.IsEmpty ? Drawing.Color.FromBrightness(0) : block.fontColor;
+					array[index].bold       = block.bold;
+					array[index].italic     = block.italic;
+					array[index].underlined = block.underlined;
 					index ++;
 				}
 			}
@@ -3414,7 +3514,7 @@ noText:
 			public Drawing.Color			fontColor = Drawing.Color.Empty;
 			public bool						bold;
 			public bool						italic;
-			public bool						underline;
+			public bool						underlined;
 		}
 		
 
@@ -3430,7 +3530,7 @@ noText:
 			
 			Bold,		BoldEnd,			// <b>...</b>
 			Italic,		ItalicEnd,			// <i>...</i>
-			Underline,	UnderlineEnd,		// <u>...</u>
+			Underlined,	UnderlinedEnd,		// <u>...</u>
 			Mnemonic,	MnemonicEnd,		// <m>...</m>  --> comme <u>...</u>
 			Wave,		WaveEnd,			// <w>...</w> ou <w color="#FF00FF">
 			Font,		FontEnd,			// <font ...>...</font>
@@ -3484,31 +3584,31 @@ noText:
 				}
 			}
 
-			public bool IsUnderline
+			public bool IsUnderlined
 			{
 				get
 				{
-					if ( this.putUnderline == "yes" )  return true;
-					if ( this.putUnderline == "no"  )  return false;
-					return (this.underline > 0);
+					if ( this.putUnderlined == "yes" )  return true;
+					if ( this.putUnderlined == "no"  )  return false;
+					return (this.underlined > 0);
 				}
 			}
 
 			
-			public int		bold         = 0;	// gras si > 0
-			public int		italic       = 0;	// italique si > 0
-			public int		underline    = 0;	// souligné si > 0
-			public int		mnemonic     = 0;	// souligné si > 0
-			public int		anchor       = 0;	// lien si > 0
-			public string	stringAnchor = "";
-			public int		wave         = 0;	// vague si > 0
-			public string	waveColor    = "";
-			public string	putFontName  = "";
-			public string	putFontSize  = "";
-			public string	putFontColor = "";
-			public string	putBold      = "";
-			public string	putItalic    = "";
-			public string	putUnderline = "";
+			public int		bold          = 0;	// gras si > 0
+			public int		italic        = 0;	// italique si > 0
+			public int		underlined    = 0;	// souligné si > 0
+			public int		mnemonic      = 0;	// souligné si > 0
+			public int		anchor        = 0;	// lien si > 0
+			public string	stringAnchor  = "";
+			public int		wave          = 0;	// vague si > 0
+			public string	waveColor     = "";
+			public string	putFontName   = "";
+			public string	putFontSize   = "";
+			public string	putFontColor  = "";
+			public string	putBold       = "";
+			public string	putItalic     = "";
+			public string	putUnderlined = "";
 		}
 
 		// Fonte servant à refléter les commandes HTML rencontrées.
@@ -3572,12 +3672,12 @@ noText:
 
 		protected class SupplItem
 		{
-			public int				bold      = 0;	// gras si > 0
-			public int				italic    = 0;	// italique si > 0
-			public int				underline = 0;	// souligné si > 0
-			public int				anchor    = 0;	// lien si > 0
-			public int				wave      = 0;	// vague si > 0
-			public Drawing.Color	waveColor = Drawing.Color.Empty;
+			public int				bold       = 0;  // gras si > 0
+			public int				italic     = 0;  // italique si > 0
+			public int				underlined = 0;  // souligné si > 0
+			public int				anchor     = 0;  // lien si > 0
+			public int				wave       = 0;  // vague si > 0
+			public Drawing.Color	waveColor  = Drawing.Color.Empty;
 		}
 
 		// Descripteur d'un bloc de texte. Tous les caractères du bloc ont
@@ -3605,7 +3705,7 @@ noText:
 				this.fontColor  = fontItem.fontColor;
 				this.bold       = supplItem.bold > 0;
 				this.italic     = supplItem.italic > 0;
-				this.underline  = supplItem.underline > 0;
+				this.underlined = supplItem.underlined > 0;
 				this.anchor     = supplItem.anchor > 0;
 				this.wave       = supplItem.wave > 0;
 				this.waveColor  = supplItem.waveColor;
@@ -3623,7 +3723,7 @@ noText:
 			public Drawing.Color			fontColor = Drawing.Color.Empty;
 			public bool						bold;
 			public bool						italic;
-			public bool						underline;
+			public bool						underlined;
 			public bool						anchor;
 			public bool						wave;
 			public Drawing.Color			waveColor = Drawing.Color.Empty;
@@ -3655,6 +3755,11 @@ noText:
 
 		public class Context
 		{
+			public Context(TextLayout textLayout)
+			{
+				this.textLayout = textLayout;
+			}
+
 			public int CursorFrom
 			{
 				get
@@ -3665,7 +3770,14 @@ noText:
 				set
 				{
 					this.cursorFrom = value;
-					this.PrepareOffset = -1;  // annule la préparation pour l'insertion
+
+					if ( this.PrepareOffset != -1 )
+					{
+						this.PrepareOffset  = -1;  // annule la préparation pour l'insertion
+						this.PrepareLength1 = 0;
+						this.PrepareLength2 = 0;
+						textLayout.Simplify();
+					}
 				}
 			}
 
@@ -3679,10 +3791,18 @@ noText:
 				set
 				{
 					this.cursorTo = value;
-					this.PrepareOffset = -1;  // annule la préparation pour l'insertion
+
+					if ( this.PrepareOffset != -1 )
+					{
+						this.PrepareOffset  = -1;  // annule la préparation pour l'insertion
+						this.PrepareLength1 = 0;
+						this.PrepareLength2 = 0;
+						textLayout.Simplify();
+					}
 				}
 			}
 
+			protected TextLayout			textLayout;
 			protected int					cursorFrom     = 0;
 			protected int					cursorTo       = 0;
 			public bool						CursorAfter    = false;
@@ -3704,6 +3824,7 @@ noText:
 		
 		protected bool							isContentsDirty;
 		protected bool							isLayoutDirty;
+		protected bool							isPrepareDirty;
 		protected string						text;
 		protected Drawing.Font					font			= Drawing.Font.DefaultFont;
 		protected double						fontSize		= Drawing.Font.DefaultFontSize;

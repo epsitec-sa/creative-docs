@@ -57,7 +57,7 @@ namespace Epsitec.Common.Widgets
 		
 		
 
-		protected TextNavigator					TextNavigator
+		public TextNavigator					TextNavigator
 		{
 			get { return this.navigator; }
 		}
