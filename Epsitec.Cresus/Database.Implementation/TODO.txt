@@ -55,8 +55,18 @@ Questions à régler
 Implémentation (suite)
 ----------------------
 
-- Compléter DbColumnCollection (Add/AddRange/Remove/Contains/IndexOf/
-  Clear/this[])
+Bien que cela puisse paraître redondant, j'ai défini des classes pour
+la représentation des tables et des colonnes. Contrairement à DataTable,
+la DbTable n'est pas prévue pour stocker des données, mais juste pour
+stocker les informations de schéma.
+
+Les classes DbTable et DbColumn sont donc utilisées principalement
+par ISqlBuilder, ainsi que par IDbAbstraction, pour décrire le schéma
+de la base de données.
+
+
+- Vérifier l'implémentation de InternalCollectionList et de ses classes
+  dérivées, à savoir DbColumnCollection, SqlFieldCollection, ...
 
 - Ecrire les tests pour DbTable, DbColumn, DbColumnCollection.
 
@@ -64,3 +74,59 @@ Implémentation (suite)
   ces méthodes sont étroitement liées à une implémentation de ISqlBuilder
   et il faudra voir si la classe FirebirdAbstraction implémente elle-
   même ISqlBuilder, ou si elle délègue cette tâche à une classe annexe.
+
+- Compléter la classe SqlField.
+
+- Ecrire les tests pour SqlField, SqlFunction, SqlSelect, si c'est
+  jugé utile. Peut-être ces classes sont-elles suffisamment simples
+  pour ne pas nécessiter de tests spécifiques.
+
+
+Détails au sujet de SqlSelect
+-----------------------------
+
+La commande SELECT en SQL est très riche. La classe SqlSelect tente
+de représenter un sous-ensemble utile de ce que SELECT sait faire.
+
+Un certain nombre d'informations ne sont pas stockées explicitement
+par l'objet SqlSelect. En particulier :
+
+- Lorsqu'un ou plusieurs des champs du SELECT sont de type Aggregate,
+  le SELECT doit comporter une clause GROUP BY. Les champs listés par
+  GROUP BY sont dérivés implicitement de la liste des champs: tous
+  les champs de type non-aggrégat y figurent.
+
+- Les informations de tri pour la clause ORDER BY sont intégrées
+  directement dans les spécifications des champs, au moyen de la
+  propriété SqlField.Order.
+
+- A la place des spécifications des tables, il est bien sûr aussi
+  possible de spécifier des sous-requêtes via SqlField...
+  
+  Note: l'alias des tables est indispensable pour spécifier les
+        noms des champs du SELECT.
+
+- On peut créer des requêtes SQL de type 'set', à savoir plusieurs
+  SELECT composés au moyen de UNION, EXCEPT ou INTERSECT.
+  
+  Note: dans ce cas, le SqlSelectPredicate apparaît avant le deuxième
+        SELECT, alors que pour le premier SELECT, il apparaît après.
+        Ex.: SELECT >DISTINCT< ... UNION >DISTINCT< SELECT ...
+  
+  Pour créer ces requêtes, il faut utiliser SqlSelect.Add pour
+  réaliser le chaînage.
+
+- Les termes de la clause WHERE sont spécifiées en terme de SqlField,
+  mais seules des fonctions ou des procédures peuvent y être utilisées
+  pour l'instant.
+
+- Les JOINs sont spécifiés indirectement au moyen des termes de la
+  clause WHERE (SqlSelect.Condition), où SqlField.Type == Function
+  et SqlField.AsFunction.Type == SqlFunctionType.InnerJoin. Dans un
+  tel cas, les deux termes A et B de la SqlFunction doivent être
+  des noms qualifiés (nom de table + nom de colonne), car ISqlBuilder
+  doit être capable de retrouver le nom des tables pour construire la
+  clause 'FROM Table1 JOIN Table2 ON Table1.id = Table2.id'.
+
+- La clause GROUP BY n'est pas supportée.
+

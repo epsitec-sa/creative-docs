@@ -32,5 +32,11 @@ namespace Epsitec.Cresus.Database
 		void AddTableColumns(string table_name, DbColumn[] columns);
 		void UpdateTableColumns(string table_name, DbColumn[] columns);
 		void RemoveTableColumns(string table_name, DbColumn[] columns);
+		
+		//	Création de requêtes standard :
+		
+		void SelectData(SqlSelect query);
+		void InsertData(SqlTable table, SqlFieldCollection fields);
+		void UpdateData(SqlTable table, SqlFieldCollection fields);
 	}
 }

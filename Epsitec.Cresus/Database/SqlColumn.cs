@@ -1,12 +1,12 @@
 namespace Epsitec.Cresus.Database
 {
 	/// <summary>
-	/// La classe DbColumn décrit une colonne dans une table de la base de données.
+	/// La classe SqlColumn décrit une colonne dans une table de la base de données.
 	/// Cette classe ressemble fortement à System.Data.DataColumn.
 	/// </summary>
-	public class DbColumn
+	public class SqlColumn
 	{
-		public DbColumn()
+		public SqlColumn()
 		{
 		}
 		
