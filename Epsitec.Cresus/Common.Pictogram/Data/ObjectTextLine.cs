@@ -9,6 +9,10 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ObjectTextLine()
 		{
+			PropertyName name = new PropertyName();
+			name.Type = PropertyType.Name;
+			this.AddProperty(name);
+
 			PropertyString textString = new PropertyString();
 			textString.Type = PropertyType.TextString;
 			this.AddProperty(textString);
@@ -44,7 +48,8 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( !bbox.Contains(pos) )  return false;
 
 			Drawing.Path path = this.PathBuild();
-			return AbstractObject.DetectOutline(path, this.minimalWidth, pos);
+			if ( AbstractObject.DetectOutline(path, this.minimalWidth, pos) )  return true;
+			return this.DetectTextCurve(pos);
 		}
 
 		// Détecte si l'objet est dans un rectangle.
@@ -559,7 +564,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Indique s'il faut sélectionner l'objet après sa création.
-		public override bool SelectAfterCreation()
+		public override bool EditAfterCreation()
 		{
 			return true;
 		}
@@ -576,24 +581,11 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			Drawing.Path path = this.PathBuild();
 			this.bboxThin = AbstractObject.ComputeBoundingBox(path);
+			this.BboxTextCurve(ref this.bboxThin);
 
 			this.bboxGeom = this.bboxThin;
-			string text = this.PropertyString(0).String;
-			Drawing.Font font = this.PropertyFont(1).GetFont();
-			double fs = this.PropertyFont(1).FontSize;
-			PropertyTextLine justif = this.PropertyTextLine(2);
-
-			if ( justif.Horizontal == JustifHorizontal.Stretch && text != "" )
-			{
-				double length = this.GetLength();
-				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
-				fs *= length/width;
-			}
-			this.bboxGeom.Inflate(font.Ascender*fs);
-
 			this.bboxFull = this.bboxThin;
 			this.bboxFull.MergeWith(this.FullBoundingBox());
-			this.bboxFull.MergeWith(this.bboxGeom);
 		}
 
 		// Calcule la bbox qui englobe l'objet et les poignées secondaires.
@@ -735,15 +727,274 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
+		// Détecte si la souris est sur un caractère du texte le long de la courbe multiple.
+		protected bool DetectTextCurve(Drawing.Point mouse)
+		{
+			Drawing.Font font = this.PropertyFont(2).GetFont();
+			double fs = this.PropertyFont(2).FontSize;
+
+			string text = this.PropertyString(1).String;
+			if ( text == "" )  return false;
+			PropertyTextLine justif = this.PropertyTextLine(3);
+
+			int index = 0;
+			double bzt = 0.0;
+			Drawing.Point p1 = this.Handle(1).Position;
+			Drawing.Point p2 = p1;
+			Drawing.Point pos;
+
+			bool checkEnd = true;
+			if ( justif.Horizontal == JustifHorizontal.Center )
+			{
+				double length = this.GetLength();
+				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
+				width = System.Math.Max((length-width)/2, 0.0);
+				this.Advance(width, true, ref index, ref bzt, ref p1);
+				checkEnd = (width == 0.0);
+			}
+			if ( justif.Horizontal == JustifHorizontal.Right )
+			{
+				double length = this.GetLength();
+				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
+				width = System.Math.Max(length-width, 0.0);
+				this.Advance(width, true, ref index, ref bzt, ref p1);
+				checkEnd = (width == 0.0);
+			}
+			if ( justif.Horizontal == JustifHorizontal.Stretch )
+			{
+				double length = this.GetLength();
+				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
+				fs *= length/width;
+				checkEnd = false;
+			}
+
+			Drawing.Point lastTop    = new Drawing.Point(0,0);
+			Drawing.Point lastBottom = new Drawing.Point(0,0);
+			for ( int i=0 ; i<text.Length ; i++ )
+			{
+				double width = font.GetCharAdvance(text[i])*fs + justif.Add*fs;
+				if ( !this.Advance(width, checkEnd, ref index, ref bzt, ref p2) )  break;
+
+				pos = p1;
+				if ( justif.Offset > 0.0 )
+				{
+					pos = Drawing.Point.Move(p1, p2, font.Ascender*fs*justif.Offset);
+					pos = Drawing.Transform.RotatePoint(p1, -System.Math.PI/2, pos);
+				}
+
+				double angle = Drawing.Point.ComputeAngle(p1, p2);
+
+				Drawing.Rectangle gb = font.GetGlyphBounds(font.GetGlyphIndex(text[i]));
+				gb.Top    = font.Ascender;
+				gb.Bottom = font.Descender;
+				gb.Scale(fs);
+				gb.Offset(pos);
+				Drawing.Point pbl = Drawing.Transform.RotatePoint(pos, angle, gb.BottomLeft);
+				Drawing.Point pbr = Drawing.Transform.RotatePoint(pos, angle, gb.BottomRight);
+				Drawing.Point ptl = Drawing.Transform.RotatePoint(pos, angle, gb.TopLeft);
+				Drawing.Point ptr = Drawing.Transform.RotatePoint(pos, angle, gb.TopRight);
+
+				if ( i > 0 )
+				{
+					ptl = lastTop;
+					pbl = lastBottom;
+				}
+
+				InsideSurface inside = new InsideSurface(mouse, 4);
+				inside.AddLine(pbl, pbr);
+				inside.AddLine(pbr, ptr);
+				inside.AddLine(ptr, ptl);
+				inside.AddLine(ptl, pbl);
+				if ( inside.IsInside() )  return true;
+
+				lastTop    = ptr;
+				lastBottom = pbr;
+				p1 = p2;
+			}
+			return false;
+		}
+
+		// Calcule la bbox du texte le long de la courbe multiple.
+		protected void BboxTextCurve(ref Drawing.Rectangle bbox)
+		{
+			Drawing.Font font = this.PropertyFont(2).GetFont();
+			double fs = this.PropertyFont(2).FontSize;
+
+			string text = this.PropertyString(1).String;
+			if ( text == "" )  return;
+			PropertyTextLine justif = this.PropertyTextLine(3);
+
+			int index = 0;
+			double bzt = 0.0;
+			Drawing.Point p1 = this.Handle(1).Position;
+			Drawing.Point p2 = p1;
+			Drawing.Point pos;
+
+			bool checkEnd = true;
+			if ( justif.Horizontal == JustifHorizontal.Center )
+			{
+				double length = this.GetLength();
+				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
+				width = System.Math.Max((length-width)/2, 0.0);
+				this.Advance(width, true, ref index, ref bzt, ref p1);
+				checkEnd = (width == 0.0);
+			}
+			if ( justif.Horizontal == JustifHorizontal.Right )
+			{
+				double length = this.GetLength();
+				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
+				width = System.Math.Max(length-width, 0.0);
+				this.Advance(width, true, ref index, ref bzt, ref p1);
+				checkEnd = (width == 0.0);
+			}
+			if ( justif.Horizontal == JustifHorizontal.Stretch )
+			{
+				double length = this.GetLength();
+				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
+				fs *= length/width;
+				checkEnd = false;
+			}
+
+			Drawing.Point lastTop    = new Drawing.Point(0,0);
+			Drawing.Point lastBottom = new Drawing.Point(0,0);
+			for ( int i=0 ; i<text.Length ; i++ )
+			{
+				double width = font.GetCharAdvance(text[i])*fs + justif.Add*fs;
+				if ( !this.Advance(width, checkEnd, ref index, ref bzt, ref p2) )  break;
+
+				pos = p1;
+				if ( justif.Offset > 0.0 )
+				{
+					pos = Drawing.Point.Move(p1, p2, font.Ascender*fs*justif.Offset);
+					pos = Drawing.Transform.RotatePoint(p1, -System.Math.PI/2, pos);
+				}
+
+				double angle = Drawing.Point.ComputeAngle(p1, p2);
+
+				Drawing.Rectangle gb = font.GetGlyphBounds(font.GetGlyphIndex(text[i]));
+				gb.Top    = font.Ascender;
+				gb.Bottom = font.Descender;
+				gb.Scale(fs);
+				gb.Offset(pos);
+				Drawing.Point pbl = Drawing.Transform.RotatePoint(pos, angle, gb.BottomLeft);
+				Drawing.Point pbr = Drawing.Transform.RotatePoint(pos, angle, gb.BottomRight);
+				Drawing.Point ptl = Drawing.Transform.RotatePoint(pos, angle, gb.TopLeft);
+				Drawing.Point ptr = Drawing.Transform.RotatePoint(pos, angle, gb.TopRight);
+
+				if ( i > 0 )
+				{
+					ptl = lastTop;
+					pbl = lastBottom;
+				}
+
+				bbox.MergeWith(pbl);
+				bbox.MergeWith(pbr);
+				bbox.MergeWith(ptl);
+				bbox.MergeWith(ptr);
+
+				lastTop    = ptr;
+				lastBottom = pbr;
+				p1 = p2;
+			}
+		}
+
+		// Dessine le texte le long de la courbe multiple.
+		protected void HiliteTextCurve(Drawing.Graphics graphics, IconContext iconContext)
+		{
+			Drawing.Font font = this.PropertyFont(2).GetFont();
+			double fs = this.PropertyFont(2).FontSize;
+
+			string text = this.PropertyString(1).String;
+			if ( text == "" )  return;
+			PropertyTextLine justif = this.PropertyTextLine(3);
+
+			int index = 0;
+			double bzt = 0.0;
+			Drawing.Point p1 = this.Handle(1).Position;
+			Drawing.Point p2 = p1;
+			Drawing.Point pos;
+
+			bool checkEnd = true;
+			if ( justif.Horizontal == JustifHorizontal.Center )
+			{
+				double length = this.GetLength();
+				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
+				width = System.Math.Max((length-width)/2, 0.0);
+				this.Advance(width, true, ref index, ref bzt, ref p1);
+				checkEnd = (width == 0.0);
+			}
+			if ( justif.Horizontal == JustifHorizontal.Right )
+			{
+				double length = this.GetLength();
+				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
+				width = System.Math.Max(length-width, 0.0);
+				this.Advance(width, true, ref index, ref bzt, ref p1);
+				checkEnd = (width == 0.0);
+			}
+			if ( justif.Horizontal == JustifHorizontal.Stretch )
+			{
+				double length = this.GetLength();
+				double width = font.GetTextAdvance(text)*fs + justif.Add*fs*text.Length;
+				fs *= length/width;
+				checkEnd = false;
+			}
+
+			Drawing.Point lastTop    = new Drawing.Point(0,0);
+			Drawing.Point lastBottom = new Drawing.Point(0,0);
+			for ( int i=0 ; i<text.Length ; i++ )
+			{
+				double width = font.GetCharAdvance(text[i])*fs + justif.Add*fs;
+				if ( !this.Advance(width, checkEnd, ref index, ref bzt, ref p2) )  break;
+
+				pos = p1;
+				if ( justif.Offset > 0.0 )
+				{
+					pos = Drawing.Point.Move(p1, p2, font.Ascender*fs*justif.Offset);
+					pos = Drawing.Transform.RotatePoint(p1, -System.Math.PI/2, pos);
+				}
+
+				double angle = Drawing.Point.ComputeAngle(p1, p2);
+
+				Drawing.Rectangle gb = font.GetGlyphBounds(font.GetGlyphIndex(text[i]));
+				gb.Top    = font.Ascender;
+				gb.Bottom = font.Descender;
+				gb.Scale(fs);
+				gb.Offset(pos);
+				Drawing.Point pbl = Drawing.Transform.RotatePoint(pos, angle, gb.BottomLeft);
+				Drawing.Point pbr = Drawing.Transform.RotatePoint(pos, angle, gb.BottomRight);
+				Drawing.Point ptl = Drawing.Transform.RotatePoint(pos, angle, gb.TopLeft);
+				Drawing.Point ptr = Drawing.Transform.RotatePoint(pos, angle, gb.TopRight);
+
+				if ( i > 0 )
+				{
+					ptl = lastTop;
+					pbl = lastBottom;
+				}
+
+				Drawing.Path path = new Drawing.Path();
+				path.MoveTo(pbl);
+				path.LineTo(pbr);
+				path.LineTo(ptr);
+				path.LineTo(ptl);
+				path.Close();
+				graphics.Rasterizer.AddSurface(path);
+
+				lastTop    = ptr;
+				lastBottom = pbr;
+				p1 = p2;
+			}
+			graphics.RenderSolid(iconContext.HiliteOutlineColor);
+		}
+
 		// Dessine le texte le long de la courbe multiple.
 		protected void DrawTextCurve(Drawing.Graphics graphics, IconContext iconContext)
 		{
-			Drawing.Font font = this.PropertyFont(1).GetFont();
-			double fs = this.PropertyFont(1).FontSize;
+			Drawing.Font font = this.PropertyFont(2).GetFont();
+			double fs = this.PropertyFont(2).FontSize;
 
-			string text = this.PropertyString(0).String;
+			string text = this.PropertyString(1).String;
 			if ( text == "" )  return;
-			PropertyTextLine justif = this.PropertyTextLine(2);
+			PropertyTextLine justif = this.PropertyTextLine(3);
 
 			int index = 0;
 			double bzt = 0.0;
@@ -799,45 +1050,42 @@ namespace Epsitec.Common.Pictogram.Data
 				graphics.Transform = ot;
 				p1 = p2;
 			}
-			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyFont(1).FontColor));
-		}
-
-		// Dessine le texte le long d'une droite.
-		protected void DrawTextLine(Drawing.Graphics graphics, IconContext iconContext,
-									Drawing.Point p1, Drawing.Point p2)
-		{
-			Drawing.Transform ot = graphics.SaveTransform();
-
-			double angle = Drawing.Point.ComputeAngle(p1, p2);
-			angle *= 180.0/System.Math.PI;  // radians -> degrés
-			graphics.RotateTransform(angle, p1.X, p1.Y);
-
-			Drawing.Font font = this.PropertyFont(1).GetFont();
-			string text = this.PropertyString(0).String;
-			double width = font.GetTextAdvance(text);
-			if ( width != 0 )
-			{
-				double fs = this.PropertyFont(1).FontSize;
-				graphics.AddText(p1.X, p1.Y, text, font, fs);
-				graphics.RenderSolid(iconContext.AdaptColor(this.PropertyFont(1).FontColor));
-			}
-
-			graphics.Transform = ot;
+			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyFont(2).FontColor));
 		}
 
 		// Dessine l'objet.
-		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
 			if ( base.IsFullHide(iconContext) )  return;
-			base.DrawGeometry(graphics, iconContext);
+			base.DrawGeometry(graphics, iconContext, iconObjects);
 
 			int total = this.TotalHandle;
 			if ( total < 6 )  return;
 
 			Drawing.Path path = this.PathBuild();
+
+			if ( this.IsHilite && iconContext.IsEditable )
+			{
+				this.HiliteTextCurve(graphics, iconContext);
+			}
+
+			if ( this.edited && iconContext.IsEditable )  // en cours d'édition ?
+			{
+				graphics.Rasterizer.AddOutline(path, 2.0/iconContext.ScaleX);
+				graphics.RenderSolid(IconContext.ColorFrameEdit);
+			}
+			else
+			{
+				if ( this.IsHilite && iconContext.IsEditable )
+				{
+					graphics.Rasterizer.AddOutline(path, iconContext.HiliteSize);
+					graphics.RenderSolid(iconContext.HiliteOutlineColor);
+				}
+			}
+
 			this.DrawTextCurve(graphics, iconContext);  // dessine le texte
 
-			if ( (this.IsSelected() || this.PropertyString(0).String == "") && iconContext.IsEditable )
+			if ( (this.IsSelected() || this.PropertyString(1).String == "") && iconContext.IsEditable )
 			{
 				graphics.Rasterizer.AddOutline(path, 1.0/iconContext.ScaleX);
 				graphics.RenderSolid(Drawing.Color.FromBrightness(0.6));
@@ -856,20 +1104,6 @@ namespace Epsitec.Common.Pictogram.Data
 				}
 
 				graphics.LineWidth = initialWidth;
-			}
-
-			if ( this.edited && iconContext.IsEditable )  // en cours d'édition ?
-			{
-				graphics.Rasterizer.AddOutline(path, 2.0/iconContext.ScaleX);
-				graphics.RenderSolid(IconContext.ColorFrameEdit);
-			}
-			else
-			{
-				if ( this.IsHilite && iconContext.IsEditable )
-				{
-					graphics.Rasterizer.AddOutline(path, iconContext.HiliteSize);
-					graphics.RenderSolid(iconContext.HiliteOutlineColor);
-				}
 			}
 		}
 

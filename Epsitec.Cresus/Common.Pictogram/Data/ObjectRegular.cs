@@ -10,6 +10,10 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ObjectRegular()
 		{
+			PropertyName name = new PropertyName();
+			name.Type = PropertyType.Name;
+			this.AddProperty(name);
+
 			PropertyLine lineMode = new PropertyLine();
 			lineMode.Type = PropertyType.LineMode;
 			this.AddProperty(lineMode);
@@ -39,7 +43,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 		public override void Dispose()
 		{
-			if ( this.ExistProperty(3) )  this.PropertyRegular(3).Changed -= new EventHandler(this.HandleRegularChanged);
+			if ( this.ExistProperty(4) )  this.PropertyRegular(4).Changed -= new EventHandler(this.HandleRegularChanged);
 			base.Dispose();
 		}
 
@@ -61,10 +65,10 @@ namespace Epsitec.Common.Pictogram.Data
 
 			Drawing.Path path = this.PathBuild();
 
-			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
+			double width = System.Math.Max(this.PropertyLine(1).Width/2, this.minimalWidth);
 			if ( AbstractObject.DetectOutline(path, width, pos) )  return true;
 			
-			if ( this.PropertyGradient(2).IsVisible() )
+			if ( this.PropertyGradient(3).IsVisible() )
 			{
 				path.Close();
 				if ( AbstractObject.DetectSurface(path, pos) )  return true;
@@ -78,7 +82,7 @@ namespace Epsitec.Common.Pictogram.Data
 			if ( this.isHide )  return false;
 
 			Drawing.Rectangle fullBbox = this.BoundingBox;
-			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
+			double width = System.Math.Max(this.PropertyLine(1).Width/2, this.minimalWidth);
 			fullBbox.Inflate(width, width);
 			return rect.Contains(fullBbox);
 		}
@@ -110,7 +114,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				double d1 = Drawing.Point.Distance(this.Handle(1).Position, this.Handle(0).Position);
 				double d2 = Drawing.Point.Distance(this.Handle(1).Position, pos);
-				this.PropertyRegular(3).Deep = d2/d1;
+				this.PropertyRegular(4).Deep = d2/d1;
 			}
 			this.UpdateRegularHandle();
 			this.dirtyBbox = true;
@@ -133,7 +137,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				return base.MoveHandleProperty(rank);
 			}
-			if ( rank >= 2 )  return this.PropertyRegular(3);
+			if ( rank >= 2 )  return this.PropertyRegular(4);
 			return null;
 		}
 
@@ -183,7 +187,7 @@ namespace Epsitec.Common.Pictogram.Data
 		protected void UpdateRegularHandle()
 		{
 			if ( this.handles.Count < 2 )  return;
-			PropertyRegular reg = this.PropertyRegular(3);
+			PropertyRegular reg = this.PropertyRegular(4);
 			if ( !reg.Star )  // polygone ?
 			{
 				if ( this.handles.Count > 2 )
@@ -217,29 +221,29 @@ namespace Epsitec.Common.Pictogram.Data
 
 			this.bboxGeom = this.bboxThin;
 			this.bboxGeom.MergeWith(this.Handle(1).Position);
-			this.PropertyLine(0).InflateBoundingBox(ref this.bboxGeom);
+			this.PropertyLine(1).InflateBoundingBox(ref this.bboxGeom);
 
 			this.bboxFull = this.bboxGeom;
-			this.bboxGeom.MergeWith(this.PropertyGradient(2).BoundingBoxGeom(this.bboxThin));
-			this.bboxFull.MergeWith(this.PropertyGradient(2).BoundingBoxFull(this.bboxThin));
+			this.bboxGeom.MergeWith(this.PropertyGradient(3).BoundingBoxGeom(this.bboxThin));
+			this.bboxFull.MergeWith(this.PropertyGradient(3).BoundingBoxFull(this.bboxThin));
 			this.bboxFull.MergeWith(this.bboxGeom);
 		}
 
 		// Calcule une droite de l'objet.
 		protected bool ComputeLine(int i, out Drawing.Point a, out Drawing.Point b)
 		{
-			int total = this.PropertyRegular(3).NbFaces;
+			int total = this.PropertyRegular(4).NbFaces;
 			Drawing.Point center = this.Handle(0).Position;
 			Drawing.Point corner = this.Handle(1).Position;
 
 			a = new Drawing.Point(0, 0);
 			b = new Drawing.Point(0, 0);
 
-			if ( this.PropertyRegular(3).Star )  // étoile ?
+			if ( this.PropertyRegular(4).Star )  // étoile ?
 			{
 				if ( i >= total*2 )  return false;
 
-				Drawing.Point star = center + (corner-center)*(1-this.PropertyRegular(3).Deep);
+				Drawing.Point star = center + (corner-center)*(1-this.PropertyRegular(4).Deep);
 				a = Drawing.Transform.RotatePoint(center, System.Math.PI*2*(i+0)/(total*2), (i%2==0) ? corner : star);
 				b = Drawing.Transform.RotatePoint(center, System.Math.PI*2*(i+1)/(total*2), (i%2==0) ? star : corner);
 				return true;
@@ -258,15 +262,15 @@ namespace Epsitec.Common.Pictogram.Data
 		protected Drawing.Path PathBuild()
 		{
 			Drawing.Path path = new Drawing.Path();
-			int total = this.PropertyRegular(3).NbFaces;
-			PropertyCorner corner = this.PropertyCorner(4);
+			int total = this.PropertyRegular(4).NbFaces;
+			PropertyCorner corner = this.PropertyCorner(5);
 
 			if ( corner.CornerType == CornerType.Right )  // coins droits ?
 			{
 				Drawing.Point a;
 				Drawing.Point b;
 
-				if ( this.PropertyRegular(3).Star )  total *= 2;  // étoile ?
+				if ( this.PropertyRegular(4).Star )  total *= 2;  // étoile ?
 
 				for ( int i=0 ; i<total ; i++ )
 				{
@@ -282,7 +286,7 @@ namespace Epsitec.Common.Pictogram.Data
 				Drawing.Point s;
 				Drawing.Point p2;
 
-				if ( this.PropertyRegular(3).Star )  total *= 2;  // étoile ?
+				if ( this.PropertyRegular(4).Star )  total *= 2;  // étoile ?
 
 				for ( int i=0 ; i<total ; i++ )
 				{
@@ -311,28 +315,27 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Dessine l'objet.
-		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
 			if ( base.IsFullHide(iconContext) )  return;
-			base.DrawGeometry(graphics, iconContext);
+			base.DrawGeometry(graphics, iconContext, iconObjects);
 
 			if ( this.TotalHandle < 2 )  return;
 
 			Drawing.Path path = this.PathBuild();
-			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBoxThin);
+			this.PropertyGradient(3).Render(graphics, iconContext, path, this.BoundingBoxThin);
 
-			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
-			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
+			this.PropertyLine(1).DrawPath(graphics, iconContext, iconObjects, path, this.PropertyColor(2).Color);
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
-				if ( this.PropertyGradient(2).IsVisible() )
+				if ( this.PropertyGradient(3).IsVisible() )
 				{
 					graphics.Rasterizer.AddSurface(path);
 					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 				}
 
-				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
+				graphics.Rasterizer.AddOutline(path, this.PropertyLine(1).Width+iconContext.HiliteSize, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}

@@ -10,6 +10,10 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ObjectRectangle()
 		{
+			PropertyName name = new PropertyName();
+			name.Type = PropertyType.Name;
+			this.AddProperty(name);
+
 			PropertyLine lineMode = new PropertyLine();
 			lineMode.Type = PropertyType.LineMode;
 			this.AddProperty(lineMode);
@@ -35,7 +39,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 		public override void Dispose()
 		{
-			if ( this.ExistProperty(3) )  this.PropertyCorner(3).Changed -= new EventHandler(this.HandleCornerChanged);
+			if ( this.ExistProperty(4) )  this.PropertyCorner(4).Changed -= new EventHandler(this.HandleCornerChanged);
 			base.Dispose();
 		}
 
@@ -57,10 +61,10 @@ namespace Epsitec.Common.Pictogram.Data
 
 			Drawing.Path path = this.PathBuild();
 
-			double width = System.Math.Max(this.PropertyLine(0).Width/2, this.minimalWidth);
+			double width = System.Math.Max(this.PropertyLine(1).Width/2, this.minimalWidth);
 			if ( AbstractObject.DetectOutline(path, width, pos) )  return true;
 			
-			if ( this.PropertyGradient(2).IsVisible() )
+			if ( this.PropertyGradient(3).IsVisible() )
 			{
 				path.Close();
 				if ( AbstractObject.DetectSurface(path, pos) )  return true;
@@ -92,19 +96,19 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 			else if ( rank == 4 || rank == 5 )
 			{
-				this.PropertyCorner(3).Radius = Drawing.Point.Distance(this.Handle(0).Position, pos);
+				this.PropertyCorner(4).Radius = Drawing.Point.Distance(this.Handle(0).Position, pos);
 			}
 			else if ( rank == 6 || rank == 7 )
 			{
-				this.PropertyCorner(3).Radius = Drawing.Point.Distance(this.Handle(2).Position, pos);
+				this.PropertyCorner(4).Radius = Drawing.Point.Distance(this.Handle(2).Position, pos);
 			}
 			else if ( rank == 8 || rank == 9 )
 			{
-				this.PropertyCorner(3).Radius = Drawing.Point.Distance(this.Handle(1).Position, pos);
+				this.PropertyCorner(4).Radius = Drawing.Point.Distance(this.Handle(1).Position, pos);
 			}
 			else if ( rank == 10 || rank == 11 )
 			{
-				this.PropertyCorner(3).Radius = Drawing.Point.Distance(this.Handle(3).Position, pos);
+				this.PropertyCorner(4).Radius = Drawing.Point.Distance(this.Handle(3).Position, pos);
 			}
 			this.UpdateCornerHandle();
 			this.dirtyBbox = true;
@@ -127,7 +131,7 @@ namespace Epsitec.Common.Pictogram.Data
 			{
 				return base.MoveHandleProperty(rank);
 			}
-			if ( rank >= 4 )  return this.PropertyCorner(3);
+			if ( rank >= 4 )  return this.PropertyCorner(4);
 			return null;
 		}
 
@@ -193,7 +197,7 @@ namespace Epsitec.Common.Pictogram.Data
 		protected void UpdateCornerHandle()
 		{
 			if ( this.handles.Count < 4 )  return;
-			PropertyCorner corner = this.PropertyCorner(3);
+			PropertyCorner corner = this.PropertyCorner(4);
 			if ( corner.CornerType == CornerType.Right )
 			{
 				if ( this.handles.Count > 4 )
@@ -266,8 +270,8 @@ namespace Epsitec.Common.Pictogram.Data
 			this.bboxThin = AbstractObject.ComputeBoundingBox(path);
 
 			this.bboxGeom = this.bboxThin;
-			this.PropertyLine(0).InflateBoundingBox(ref this.bboxGeom);
-			this.bboxGeom.MergeWith(this.PropertyGradient(2).BoundingBoxGeom(this.bboxThin));
+			this.PropertyLine(1).InflateBoundingBox(ref this.bboxGeom);
+			this.bboxGeom.MergeWith(this.PropertyGradient(3).BoundingBoxGeom(this.bboxThin));
 
 			this.bboxFull = this.bboxGeom;
 			if ( this.TotalHandle >= 4 )
@@ -277,7 +281,7 @@ namespace Epsitec.Common.Pictogram.Data
 				this.bboxFull.MergeWith(this.Handle(2).Position);
 				this.bboxFull.MergeWith(this.Handle(3).Position);
 			}
-			this.bboxFull.MergeWith(this.PropertyGradient(2).BoundingBoxFull(this.bboxThin));
+			this.bboxFull.MergeWith(this.PropertyGradient(3).BoundingBoxFull(this.bboxThin));
 		}
 
 		// Crée le chemin de l'objet.
@@ -301,7 +305,7 @@ namespace Epsitec.Common.Pictogram.Data
 				p4 = this.Handle(3).Position;
 			}
 
-			PropertyCorner corner = this.PropertyCorner(3);
+			PropertyCorner corner = this.PropertyCorner(4);
 			return this.PathCornerRectangle(p1, p2, p3, p4, corner);
 		}
 
@@ -356,28 +360,27 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Dessine l'objet.
-		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
 			if ( base.IsFullHide(iconContext) )  return;
-			base.DrawGeometry(graphics, iconContext);
+			base.DrawGeometry(graphics, iconContext, iconObjects);
 
 			if ( this.TotalHandle < 2 )  return;
 
 			Drawing.Path path = this.PathBuild();
-			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBoxThin);
+			this.PropertyGradient(3).Render(graphics, iconContext, path, this.BoundingBoxThin);
 
-			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
-			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
+			this.PropertyLine(1).DrawPath(graphics, iconContext, iconObjects, path, this.PropertyColor(2).Color);
 
 			if ( this.IsHilite && iconContext.IsEditable )
 			{
-				if ( this.PropertyGradient(2).IsVisible() )
+				if ( this.PropertyGradient(3).IsVisible() )
 				{
 					graphics.Rasterizer.AddSurface(path);
 					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 				}
 
-				graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width+iconContext.HiliteSize, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
+				graphics.Rasterizer.AddOutline(path, this.PropertyLine(1).Width+iconContext.HiliteSize, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}

@@ -11,6 +11,10 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ObjectTextBox()
 		{
+			PropertyName name = new PropertyName();
+			name.Type = PropertyType.Name;
+			this.AddProperty(name);
+
 			PropertyLine lineMode = new PropertyLine();
 			lineMode.Type = PropertyType.LineMode;
 			this.AddProperty(lineMode);
@@ -64,7 +68,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			Drawing.Path path = this.PathBuild();
 
-			double width = this.PropertyLine(0).Width/2;
+			double width = this.PropertyLine(1).Width/2;
 			if ( width > 0 && AbstractObject.DetectOutline(path, width, pos) )  return true;
 			
 			if ( AbstractObject.DetectSurface(path, pos) )  return true;
@@ -174,7 +178,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Indique s'il faut sélectionner l'objet après sa création.
-		public override bool SelectAfterCreation()
+		public override bool EditAfterCreation()
 		{
 			return true;
 		}
@@ -187,24 +191,23 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
-		// Début du déplacement pendant l'édition.
-		public override void MoveEditStarting(Drawing.Point pos, IconContext iconContext)
+		// Gestion d'un événement pendant l'édition.
+		public override bool EditProcessMessage(Message message, Drawing.Point pos)
 		{
-			if ( this.textLayout == null )  return;
+			if ( this.transform == null )  return false;
 
-			pos -= this.Handle(0).Position;
-			this.cursorFrom = this.textLayout.DetectIndex(pos);
-			this.cursorTo = this.cursorFrom;
+			pos = this.transform.TransformInverse(pos);
+			if ( !this.textNavigator.ProcessMessage(message, pos) )  return false;
+
+			this.PropertyString(4).String = this.textLayout.Text;
+			return true;
 		}
 
-		// Déplacement pendant l'édition.
-		public override void MoveEditProcess(Drawing.Point pos, IconContext iconContext)
+		// Gestion d'un événement pendant l'édition.
+		public override void EditMouseDownMessage(Drawing.Point pos)
 		{
-			if ( this.textLayout == null )  return;
-
-			pos -= this.Handle(0).Position;
-			this.cursorFrom = this.textLayout.DetectIndex(pos);
-			this.cursorTo = this.cursorFrom;
+			pos = this.transform.TransformInverse(pos);
+			this.textNavigator.MouseDownMessage(pos);
 		}
 
 
@@ -215,11 +218,11 @@ namespace Epsitec.Common.Pictogram.Data
 			this.bboxThin = path.ComputeBounds();
 
 			this.bboxGeom = this.bboxThin;
-			this.PropertyLine(0).InflateBoundingBox(ref this.bboxGeom);
+			this.PropertyLine(1).InflateBoundingBox(ref this.bboxGeom);
 
 			this.bboxFull = this.bboxGeom;
-			this.bboxGeom.MergeWith(this.PropertyGradient(2).BoundingBoxGeom(this.bboxThin));
-			this.bboxFull.MergeWith(this.PropertyGradient(2).BoundingBoxFull(this.bboxThin));
+			this.bboxGeom.MergeWith(this.PropertyGradient(3).BoundingBoxGeom(this.bboxThin));
+			this.bboxFull.MergeWith(this.PropertyGradient(3).BoundingBoxFull(this.bboxThin));
 			this.bboxFull.MergeWith(this.bboxGeom);
 		}
 
@@ -256,17 +259,18 @@ namespace Epsitec.Common.Pictogram.Data
 		// Dessine le texte du pavé.
 		protected void DrawText(Drawing.Graphics graphics, IconContext iconContext)
 		{
-			string text = this.PropertyString(3).String;
-			if ( text == "" )  return;
+			string text = this.PropertyString(4).String;
 
 			if ( this.textLayout == null )
 			{
 				this.textLayout = new TextLayout();
+				this.textNavigator = new TextNavigator(this.textLayout);
+				this.textLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
 			}
 			this.textLayout.Text = text;
 
 			Drawing.Point p1, p2, p3, p4;
-			switch ( this.PropertyJustif(5).Orientation )
+			switch ( this.PropertyJustif(6).Orientation )
 			{
 				case JustifOrientation.RightToLeft:  // <-
 					p1 = this.Handle(1).Position;
@@ -293,18 +297,18 @@ namespace Epsitec.Common.Pictogram.Data
 					p4 = this.Handle(1).Position;
 					break;
 			}
-			if ( !this.PropertyJustif(5).DeflateBox(ref p1, ref p2, ref p3, ref p4) )  return;
+			if ( !this.PropertyJustif(6).DeflateBox(ref p1, ref p2, ref p3, ref p4) )  return;
 
 			Drawing.Size size = new Drawing.Size();
 			size.Width  = Drawing.Point.Distance(p1,p2);
 			size.Height = Drawing.Point.Distance(p1,p3);
 			this.textLayout.LayoutSize = size;
 
-			this.textLayout.Font     = this.PropertyFont(4).GetFont();
-			this.textLayout.FontSize = this.PropertyFont(4).FontSize;
+			this.textLayout.Font     = this.PropertyFont(5).GetFont();
+			this.textLayout.FontSize = this.PropertyFont(5).FontSize;
 
-			JustifVertical   jv = this.PropertyJustif(5).Vertical;
-			JustifHorizontal jh = this.PropertyJustif(5).Horizontal;
+			JustifVertical   jv = this.PropertyJustif(6).Vertical;
+			JustifHorizontal jh = this.PropertyJustif(6).Horizontal;
 
 			if ( jv == JustifVertical.Top )
 			{
@@ -329,22 +333,36 @@ namespace Epsitec.Common.Pictogram.Data
 
 			double angle = Drawing.Point.ComputeAngle(p1, p2);
 			angle *= 180.0/System.Math.PI;  // radians -> degrés
-			graphics.RotateTransform(angle, p1.X, p1.Y);
+			this.transform = new Drawing.Transform();
+			transform.Translate(p1);
+			transform.Rotate(angle, p1);
+			graphics.MergeTransform(transform);
 
-			Drawing.Color color = iconContext.AdaptColor(this.PropertyFont(4).FontColor);
-			this.textLayout.Paint(p1, graphics, Drawing.Rectangle.Empty, color, Drawing.GlyphPaintStyle.Normal);
-
-			if ( this.edited & this.cursorFrom != -1 )
+			if ( this.edited && this.textNavigator.Context.CursorFrom != this.textNavigator.Context.CursorTo )
 			{
-				int rankLine;
-				Drawing.Rectangle rect = this.textLayout.FindTextCursor(this.cursorFrom, out rankLine);
+				int from = System.Math.Min(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
+				int to   = System.Math.Max(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
+				Drawing.Rectangle[] rects = this.textLayout.FindTextRange(new Drawing.Point(0,0), from, to);
+				for ( int i=0 ; i<rects.Length ; i++ )
+				{
+					graphics.Align(ref rects[i]);
+					graphics.AddFilledRectangle(rects[i]);
+					graphics.RenderSolid(IconContext.ColorSelectEdit);
+				}
+			}
+
+			Drawing.Color color = iconContext.AdaptColor(this.PropertyFont(5).FontColor);
+			this.textLayout.Paint(new Drawing.Point(0,0), graphics, Drawing.Rectangle.Empty, color, Drawing.GlyphPaintStyle.Normal);
+
+			if ( this.edited && this.textNavigator.Context.CursorTo != -1 )
+			{
+				Drawing.Rectangle rect = this.textLayout.FindTextCursor(this.textNavigator.Context.CursorTo, out this.textNavigator.Context.CursorLine);
 				if ( !rect.IsEmpty )
 				{
-					rect.Left  += 0.5;
-					rect.Right -= 0.5;  // annule l'épaississement ridicule de TextLayout
+					this.textNavigator.Context.CursorPosX = (rect.Left+rect.Right)/2;
+
 					rect.Left  -= 0.5/iconContext.ScaleX;
 					rect.Right += 0.5/iconContext.ScaleX;
-					rect.Offset(p1);
 					graphics.AddFilledRectangle(rect);
 					graphics.RenderSolid(IconContext.ColorFrameEdit);
 				}
@@ -354,18 +372,18 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Dessine l'objet.
-		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext)
+		public override void DrawGeometry(Drawing.Graphics graphics, IconContext iconContext, IconObjects iconObjects)
 		{
 			if ( base.IsFullHide(iconContext) )  return;
-			base.DrawGeometry(graphics, iconContext);
+			base.DrawGeometry(graphics, iconContext, iconObjects);
 
 			if ( this.TotalHandle < 2 )  return;
 
 			Drawing.Path path = this.PathBuild();
-			this.PropertyGradient(2).Render(graphics, iconContext, path, this.BoundingBoxThin);
+			this.PropertyGradient(3).Render(graphics, iconContext, path, this.BoundingBoxThin);
 
-			graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
-			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(1).Color));
+			graphics.Rasterizer.AddOutline(path, this.PropertyLine(1).Width, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
+			graphics.RenderSolid(iconContext.AdaptColor(this.PropertyColor(2).Color));
 
 			if ( this.TotalHandle >= 4 )
 			{
@@ -386,7 +404,7 @@ namespace Epsitec.Common.Pictogram.Data
 						graphics.Rasterizer.AddSurface(path);
 						graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 					}
-					graphics.Rasterizer.AddOutline(path, this.PropertyLine(0).Width, this.PropertyLine(0).Cap, this.PropertyLine(0).Join, this.PropertyLine(0).Limit);
+					graphics.Rasterizer.AddOutline(path, this.PropertyLine(1).Width, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
 					graphics.RenderSolid(iconContext.HiliteOutlineColor);
 				}
 			}
@@ -394,7 +412,9 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		protected TextLayout			textLayout;
+		protected TextNavigator			textNavigator;
 		protected int					cursorFrom = -1;
 		protected int					cursorTo   = -1;
+		protected Drawing.Transform		transform;
 	}
 }
