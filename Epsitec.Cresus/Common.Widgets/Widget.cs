@@ -3013,8 +3013,6 @@ namespace Epsitec.Common.Widgets
 		
 		public virtual void ExecuteCommand()
 		{
-			System.Diagnostics.Debug.WriteLine ("Execute command " + this.CommandName);
-			
 			if (this.IsCommand)
 			{
 				Window window = this.Window;

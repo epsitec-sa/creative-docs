@@ -82,7 +82,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		public void Register(string command, CommandEventHandler handler)
+		internal void Register(string command, CommandEventHandler handler)
 		{
 			System.Diagnostics.Debug.Assert (command.IndexOf ("*") < 0, "Found '*' in command name.", "The command '" + command + "' may not contain a '*' in its name.\nPlease fix the registration source code.");
 			System.Diagnostics.Debug.Assert (command.IndexOf (".") < 0, "Found '.' in command name.", "The command '" + command + "' may not contain a '.' in its name.\nPlease fix the registration source code.");
@@ -102,7 +102,7 @@ namespace Epsitec.Common.Support
 			slot.Register (handler);
 		}
 		
-		public void Unregister(string command, CommandEventHandler handler)
+		internal void Unregister(string command, CommandEventHandler handler)
 		{
 			if (this.event_handlers.Contains (command))
 			{
