@@ -12,15 +12,13 @@ namespace Epsitec.Common.Designer.Panels
 	/// </summary>
 	public class WidgetAttributePanel : AbstractPanel
 	{
-		public WidgetAttributePanel(Application application)
+		public WidgetAttributePanel(Application application) : base (application)
 		{
 			this.size  = new Drawing.Size (250, 600);
 			this.props = new System.Collections.ArrayList ();
 			
 			this.saved_views = new System.Collections.Hashtable ();
 			this.saved_focus = null;
-			
-			this.application = application;
 		}
 		
 		
@@ -379,7 +377,5 @@ namespace Epsitec.Common.Designer.Panels
 		
 		private System.Collections.Hashtable	saved_views;
 		private string							saved_focus;
-		
-		private Application						application;
 	}
 }

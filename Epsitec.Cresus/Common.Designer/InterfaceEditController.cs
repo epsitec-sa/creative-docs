@@ -297,8 +297,8 @@ namespace Epsitec.Common.Designer
 			
 			this.creation_panel = this.CreatePanel ("ToolKitWindow", "Boîte à outils");
 			this.creation_book  = new TabBook (this.creation_panel);
-			this.widget_palette = new Panels.WidgetSourcePanel ();
-			this.data_palette   = new Panels.DataSourcePanel ();
+			this.widget_palette = new Panels.WidgetSourcePanel (this.application);
+			this.data_palette   = new Panels.DataSourcePanel (this.application);
 			
 			double dx = System.Math.Max (this.widget_palette.Size.Width,  this.data_palette.Size.Width);
 			double dy = System.Math.Max (this.widget_palette.Size.Height, this.data_palette.Size.Height);

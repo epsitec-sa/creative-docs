@@ -42,6 +42,7 @@ namespace Epsitec.Common.Designer.UI
 			this.caption_label.Anchor        = AnchorStyles.TopLeft;
 			this.caption_label.AnchorMargins = new Drawing.Margins (0, 0, 8, 0);
 			
+			this.combo_text.ResourceManager   = this.Adapter.Application.UserResourceManager;
 			this.combo_text.Anchor            = AnchorStyles.LeftAndRight | AnchorStyles.Top;
 			this.combo_text.AnchorMargins     = new Drawing.Margins (this.caption_label.Right, 0, 4, 0);
 			this.combo_text.TextChanged      += new EventHandler (this.HandleComboTextTextChanged);

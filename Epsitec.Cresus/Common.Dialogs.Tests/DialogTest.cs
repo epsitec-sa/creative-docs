@@ -11,6 +11,8 @@ namespace Epsitec.Common.Dialogs
 		{
 			Epsitec.Common.UI.Engine.Initialise ();
 			Epsitec.Common.Pictogram.Engine.Initialise ();
+			
+			Support.Resources.DefaultManager.SetupApplication ("DialogTest");
 		}
 		
 		[Test] public void CheckLoadDesignerFactory()
@@ -64,9 +66,9 @@ namespace Epsitec.Common.Dialogs
 		[System.Flags]
 		public enum LoginOptions
 		{
-			None			= 0,
-			RememberUser	= 1,
-			AutoLogin		= 2,
+			[Types.Hide] None	= 0,
+			RememberUser		= 1,
+			AutoLogin			= 2,
 		}
 		
 		[Test] public void CheckLoad3WithData()

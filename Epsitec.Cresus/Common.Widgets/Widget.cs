@@ -224,11 +224,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		void Support.IBundleSupport.AttachResourceManager(Support.ResourceManager resource_manager)
+		{
+			System.Diagnostics.Debug.Assert (this.resource_manager == null);
+			System.Diagnostics.Debug.Assert (resource_manager != null);
+			
+			this.resource_manager = resource_manager;
+		}
+		
 		public virtual void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
 //			this.SuspendLayout ();
 			
-			this.resource_manager = bundler.ResourceManager;
+			System.Diagnostics.Debug.Assert (this.resource_manager != null);
+			System.Diagnostics.Debug.Assert (this.resource_manager == bundler.ResourceManager);
+			
 			
 			//	L'ObjectBundler sait initialiser la plupart des propriétés simples (celles
 			//	qui sont marquées par l'attribut [Bundle]), mais il ne sait pas comment
@@ -1667,6 +1677,13 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.resource_manager;
+			}
+			set
+			{
+				if (this.resource_manager != value)
+				{
+					this.resource_manager = value;
+				}
 			}
 		}
 		

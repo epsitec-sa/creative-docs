@@ -24,7 +24,7 @@ namespace Epsitec.Common.Support.Implementation
 			this.manager = resource_manager;
 		}
 
-		public abstract void SetupApplication(string application);
+		public abstract bool SetupApplication(string application);
 		public virtual void SelectLocale(System.Globalization.CultureInfo culture)
 		{
 			this.culture = culture;

@@ -12,9 +12,10 @@ namespace Epsitec.Common.Designer.Panels
 	/// </summary>
 	public class WidgetSourcePanel : AbstractPanel, IDropSource
 	{
-		public WidgetSourcePanel()
+		public WidgetSourcePanel(Application application) : base (application)
 		{
 			this.size = new Drawing.Size (172+2*10, 145+2*10);
+			this.drag_sources = new System.Collections.ArrayList ();
 		}
 		
 		
@@ -73,6 +74,8 @@ namespace Epsitec.Common.Designer.Panels
 			
 			source.DragBegin += new Support.EventHandler (this.HandleSourceDragBegin);
 			source.DragEnd   += new Support.EventHandler (this.HandleSourceDragEnd);
+			
+			this.drag_sources.Add (source);
 		}
 		
 		
@@ -240,6 +243,17 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		
 		
+		protected override void UpdateUserResourceManager()
+		{
+			Support.ResourceManager resource_manager = this.application.UserResourceManager;
+			
+			foreach (Widgets.DragSource source in this.drag_sources)
+			{
+				source.Widget.ResourceManager = resource_manager;
+			}
+		}
+		
+		
 		public enum SpaceClass
 		{
 			Generic,
@@ -250,5 +264,6 @@ namespace Epsitec.Common.Designer.Panels
 		}
 		
 		protected Widgets.DragSource			active_drag_source;
+		protected System.Collections.ArrayList	drag_sources;
 	}
 }

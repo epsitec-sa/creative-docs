@@ -8,7 +8,7 @@ namespace Epsitec.Common.Support
 		[SetUp] public void SetUp()
 		{
 			Widgets.Widget.Initialise ();
-			Resources.SetupProviders ("test");
+			Resources.SetupApplication ("test");
 		}
 		
 		
@@ -376,6 +376,10 @@ namespace Epsitec.Common.Support
 			
 			
 			#region IBundleSupport Members
+			public void AttachResourceManager(ResourceManager resource_manager)
+			{
+			}
+			
 			public void SerializeToBundle(ObjectBundler bundler, ResourceBundle bundle)
 			{
 			}
@@ -462,6 +466,10 @@ namespace Epsitec.Common.Support
 			
 			
 			#region IBundleSupport Members
+			public void AttachResourceManager(ResourceManager resource_manager)
+			{
+			}
+			
 			public void SerializeToBundle(ObjectBundler bundler, ResourceBundle bundle)
 			{
 			}

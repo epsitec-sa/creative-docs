@@ -250,10 +250,11 @@ namespace Epsitec.Common.UI.Widgets
 			{
 				caption = new StaticText (this.widget_container, this.source.Caption);
 				
-				caption.Text          = this.source.Caption;
-				caption.Anchor        = AnchorStyles.TopLeft;
-				caption.Width         = this.caption_width;
-				caption.AnchorMargins = new Drawing.Margins (0, 0, 0, 0);
+				caption.ResourceManager = this.ResourceManager;
+				caption.Text            = this.source.Caption;
+				caption.Anchor          = AnchorStyles.TopLeft;
+				caption.Width           = this.caption_width;
+				caption.AnchorMargins   = new Drawing.Margins (0, 0, 0, 0);
 			}
 			
 			text_field.TabIndex      = 1;
@@ -281,10 +282,11 @@ namespace Epsitec.Common.UI.Widgets
 			{
 				caption = new StaticText (this.widget_container, this.source.Caption);
 				
-				caption.Text          = this.source.Caption;
-				caption.Anchor        = AnchorStyles.TopLeft;
-				caption.Width         = this.caption_width;
-				caption.AnchorMargins = new Drawing.Margins (0, 0, 0, 0);
+				caption.ResourceManager = this.ResourceManager;
+				caption.Text            = this.source.Caption;
+				caption.Anchor          = AnchorStyles.TopLeft;
+				caption.Width           = this.caption_width;
+				caption.AnchorMargins   = new Drawing.Margins (0, 0, 0, 0);
 			}
 			
 			text_field.TabIndex      = 1;
@@ -319,6 +321,7 @@ namespace Epsitec.Common.UI.Widgets
 			if (this.has_caption)
 			{
 				this.widget_container = new GroupBox (this);
+				this.widget_container.ResourceManager = this.ResourceManager;
 				this.widget_container.Dock = DockStyle.Fill;
 				this.widget_container.Text = this.source.Caption;
 				this.widget_container.DockPadding = new Drawing.Margins (4, 0, 4, 4);
@@ -345,6 +348,8 @@ namespace Epsitec.Common.UI.Widgets
 				{
 					caption = enum_value.Name;
 				}
+				
+				button.ResourceManager = this.ResourceManager;
 				
 				button.Group    = "Group";
 				button.Index    = enum_value.Rank;
@@ -394,6 +399,7 @@ namespace Epsitec.Common.UI.Widgets
 			if (this.has_caption)
 			{
 				this.widget_container = new GroupBox (this);
+				this.widget_container.ResourceManager = this.ResourceManager;
 				this.widget_container.Dock = DockStyle.Fill;
 				this.widget_container.Text = this.source.Caption;
 				this.widget_container.DockPadding = new Drawing.Margins (4, 0, 4, 4);
@@ -421,6 +427,8 @@ namespace Epsitec.Common.UI.Widgets
 				{
 					caption = enum_value.Name;
 				}
+				
+				button.ResourceManager = this.ResourceManager;
 				
 				button.Index    = enum_value.Rank;
 				button.Name     = enum_value.Name;

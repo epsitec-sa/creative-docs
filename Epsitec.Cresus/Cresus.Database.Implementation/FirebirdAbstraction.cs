@@ -229,7 +229,8 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				throw new DbSyntaxException (db_access, string.Format ("Name is too long (length={0})", name));
 			}
-			if (System.Text.RegularExpressions.Regex.IsMatch (name, @"^\w+$") == false)
+			
+			if (Epsitec.Common.Support.RegexFactory.AlphaNumName.IsMatch (name) == false)
 			{
 				throw new DbSyntaxException (db_access, string.Format ("{0} contains an invalid character", name));
 			}

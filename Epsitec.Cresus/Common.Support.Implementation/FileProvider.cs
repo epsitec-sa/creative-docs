@@ -82,8 +82,9 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public override void SetupApplication(string application)
+		public override bool SetupApplication(string application)
 		{
+			return true;
 		}
 
 		public override void SelectLocale(System.Globalization.CultureInfo culture)

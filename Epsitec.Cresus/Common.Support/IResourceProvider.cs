@@ -15,7 +15,7 @@ namespace Epsitec.Common.Support
 		//	fournisseur de ressources :
 		
 		void Setup(ResourceManager resource_manager);
-		void SetupApplication(string application);
+		bool SetupApplication(string application);
 		void SelectLocale(System.Globalization.CultureInfo culture);
 		
 		//	Méthodes d'accès aux données (en lecture) :

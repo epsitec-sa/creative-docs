@@ -135,7 +135,7 @@ namespace Epsitec.Common.Dialogs
 			
 			this.name = name;
 			
-			Support.ResourceBundle bundle = Support.Resources.GetBundle (this.name);
+			Support.ResourceBundle bundle = this.resource_manager.GetBundle (this.name);
 			
 			if (bundle == null)
 			{
@@ -144,6 +144,7 @@ namespace Epsitec.Common.Dialogs
 				this.mode     = InternalMode.Design;
 				
 				this.window.Root.Text = "&lt; à créer ... &gt;";
+				this.window.Root.ResourceManager = this.resource_manager;
 				
 				this.AttachDesigner ();
 				
@@ -314,11 +315,12 @@ namespace Epsitec.Common.Dialogs
 		
 		protected virtual void AttachDesigner()
 		{
-			this.designer.DialogData     = this.data;
-			this.designer.DialogWindow   = this.window;
-			this.designer.ResourceName   = this.name;
-			this.designer.DialogCommands = this.dispatcher;
-			this.designer.DialogScript   = this.script;
+			this.designer.ResourceManager = this.resource_manager;
+			this.designer.ResourceName    = this.name;
+			this.designer.DialogData      = this.data;
+			this.designer.DialogWindow    = this.window;
+			this.designer.DialogCommands  = this.dispatcher;
+			this.designer.DialogScript    = this.script;
 			
 			this.designer.Disposed += new Support.EventHandler (this.HandleDesignerDisposed);
 		}

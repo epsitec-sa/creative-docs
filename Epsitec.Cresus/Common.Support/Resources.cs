@@ -107,9 +107,9 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public static void SetupProviders(string application_name)
+		public static void SetupApplication(string application_name)
 		{
-			Resources.manager.SetupProviders (application_name);
+			Resources.manager.SetupApplication (application_name);
 		}
 		
 		

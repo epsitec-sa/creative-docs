@@ -14,13 +14,11 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class StringEditController : AbstractMainPanelController, Support.IBundleProvider
 	{
-		public StringEditController(Application application, Support.ResourceManager resource_manager) : base (application)
+		public StringEditController(Application application) : base (application)
 		{
 			this.bundles    = new System.Collections.Hashtable ();
 			this.panels     = new System.Collections.ArrayList ();
 			this.provider   = new BundleStringProvider (this);
-			
-			this.resource_manager = resource_manager;
 			
 			this.save_command_state = CommandState.Find ("SaveStringBundle", this.dispatcher);
 			this.UpdateCommandStates ();
@@ -59,8 +57,8 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 			
-			ResourceBundleCollection bundles = new ResourceBundleCollection (this.resource_manager);
-			ResourceBundle           bundle  = ResourceBundle.Create (this.resource_manager, prefix, name, ResourceLevel.Default);
+			ResourceBundleCollection bundles = new ResourceBundleCollection (this.application.UserResourceManager);
+			ResourceBundle           bundle  = ResourceBundle.Create (this.application.UserResourceManager, prefix, name, ResourceLevel.Default);
 			
 			bundle.DefineType ("String");
 			
@@ -79,8 +77,8 @@ namespace Epsitec.Common.Designer
 				return;
 			}
 			
-			string[] ids = this.resource_manager.GetBundleIds (full_name, null, ResourceLevel.All, null);
-			ResourceBundleCollection bundles = new ResourceBundleCollection (this.resource_manager);
+			string[] ids = this.application.UserResourceManager.GetBundleIds (full_name, null, ResourceLevel.All, null);
+			ResourceBundleCollection bundles = new ResourceBundleCollection (this.application.UserResourceManager);
 			
 			bundles.FullName = full_name;
 			bundles.LoadBundles (prefix, ids);
@@ -250,7 +248,7 @@ namespace Epsitec.Common.Designer
 			{
 				if (bundles[ResourceLevel.Localised, culture] == null)
 				{
-					bundles.Add (ResourceBundle.Create (this.resource_manager, prefix, name, ResourceLevel.Localised, culture));
+					bundles.Add (ResourceBundle.Create (this.application.UserResourceManager, prefix, name, ResourceLevel.Localised, culture));
 				}
 			}
 		}
@@ -949,7 +947,7 @@ namespace Epsitec.Common.Designer
 		protected Panels.StringEditPanel CreatePanel(ResourceBundleCollection bundles)
 		{
 			Store                  store = new Store (this, bundles);
-			Panels.StringEditPanel panel = new Panels.StringEditPanel (store);
+			Panels.StringEditPanel panel = new Panels.StringEditPanel (this.application, store);
 			
 			store.Panel = panel;
 			
@@ -1197,7 +1195,6 @@ namespace Epsitec.Common.Designer
 		
 		private BundleStringProvider			provider;
 		
-		protected Support.ResourceManager		resource_manager;
 		protected string						default_prefix = "file";
 		protected TabBook						tab_book;
 		protected CommandState					save_command_state;

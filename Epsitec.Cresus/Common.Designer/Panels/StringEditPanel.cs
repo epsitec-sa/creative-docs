@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer.Panels
 	/// </summary>
 	public class StringEditPanel : AbstractPanel
 	{
-		public StringEditPanel(StringEditController.Store store)
+		public StringEditPanel(Application application, StringEditController.Store store) : base (application)
 		{
 			this.size  = StringEditPanel.DefaultSize;
 			this.store = store;

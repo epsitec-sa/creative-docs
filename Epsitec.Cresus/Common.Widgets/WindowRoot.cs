@@ -136,7 +136,7 @@ namespace Epsitec.Common.Widgets
 			
 			this.window.Name             = name;
 			this.window.ClientSize       = size;
-			this.window.Text             = Support.Resources.ResolveTextRef (text);
+			this.window.Text             = this.ResourceManager.ResolveTextRef (text);
 			this.window.WindowStyles     = window_styles;
 			this.window.WindowType       = window_type;
 			this.window.PreventAutoClose = true;
@@ -273,7 +273,7 @@ namespace Epsitec.Common.Widgets
 			
 			if (this.window != null)
 			{
-				this.window.Text = Support.Resources.ResolveTextRef (this.Text);
+				this.window.Text = this.ResourceManager.ResolveTextRef (this.Text);
 			}
 		}
 		

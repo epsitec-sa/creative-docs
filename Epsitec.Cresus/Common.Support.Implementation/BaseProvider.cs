@@ -95,21 +95,35 @@ namespace Epsitec.Common.Support.Implementation
 		}
 		
 		
-		public override void SetupApplication(string application)
+		public override bool SetupApplication(string application)
 		{
 			//	Le nom de l'application est utile pour déterminer le nom de la
 			//	base de données à laquelle on va se connecter.
 			
-			this.dbi = new DbInfrastructure ();
-			this.dbi.AttachDatabase (BaseProvider.GetDbAccess (application));
+			try
+			{
+				this.dbi = new DbInfrastructure ();
+				this.dbi.AttachDatabase (BaseProvider.GetDbAccess (application));
+			}
+			catch
+			{
+				this.dbi.Dispose ();
+				this.dbi = null;
+				return false;
+			}
+			
 			this.data_table = this.dbi.ResolveDbTable (null, BaseProvider.DataTableName);
 			
 			if (this.data_table == null)
 			{
-				throw new ResourceException ("Cannot find data table.");
+				this.dbi.Dispose ();
+				this.dbi = null;
+				return false;
 			}
 			
 			this.data_column_index = this.data_table.Columns["Data"].TableColumnIndex;
+			
+			return true;
 		}
 		
 		public override void SelectLocale(System.Globalization.CultureInfo culture)

@@ -99,11 +99,15 @@ namespace Epsitec.Common.Widgets.Validators
 		#endregion
 		
 		#region IBundleSupport Members
-		public void SerializeToBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
+		public void AttachResourceManager(Support.ResourceManager resource_manager)
+		{
+		}
+			
+		public void SerializeToBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
 		}
 
-		public void RestoreFromBundle(Epsitec.Common.Support.ObjectBundler bundler, Epsitec.Common.Support.ResourceBundle bundle)
+		public void RestoreFromBundle(Support.ObjectBundler bundler, Support.ResourceBundle bundle)
 		{
 		}
 

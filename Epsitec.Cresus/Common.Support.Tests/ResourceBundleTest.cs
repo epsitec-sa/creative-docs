@@ -7,7 +7,7 @@ namespace Epsitec.Common.Support
 	{
 		[SetUp] public void SetUp()
 		{
-			Resources.SetupProviders ("test");
+			Resources.SetupApplication ("test");
 		}
 		
 		[Test] public void CheckCompile()

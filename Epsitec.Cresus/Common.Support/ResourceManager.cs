@@ -108,8 +108,20 @@ namespace Epsitec.Common.Support
 		}
 		
 		
-		public void SetupProviders(string application_name)
+		public bool								IsReady
 		{
+			get
+			{
+				return this.application_name != null;
+			}
+		}
+		
+		
+		public void SetupApplication(string application_name)
+		{
+			//	Initialise les fournisseurs de ressources pour le nom d'application
+			//	spécifié. Ceci ne peut être fait qu'une seule fois.
+			
 			if (this.application_name == application_name)
 			{
 				return;
@@ -122,10 +134,29 @@ namespace Epsitec.Common.Support
 			
 			this.application_name = application_name;
 			
+			//	On reconstruit la table des fournisseurs disponibles en fonction du
+			//	succès de leur initialisation :
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			
+			this.resource_provider_hash.Clear ();
+			
 			for (int i = 0; i < this.resource_providers.Length; i++)
 			{
-				this.resource_providers[i].SetupApplication (application_name);
+				IResourceProvider provider = this.resource_providers[i];
+				
+				if (provider.SetupApplication (application_name))
+				{
+					//	Conserve le fournisseur qui a réussi son initialisation; un fournisseur qui
+					//	échoue ici est simplement écarté...
+					
+					list.Add (provider);
+					this.resource_provider_hash[provider.Prefix] = provider;
+				}
 			}
+			
+			this.resource_providers = new IResourceProvider[list.Count];
+			list.CopyTo (this.resource_providers);
 		}
 		
 		

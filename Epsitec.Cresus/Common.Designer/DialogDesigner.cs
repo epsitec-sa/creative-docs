@@ -117,6 +117,18 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		public Support.ResourceManager			ResourceManager
+		{
+			get
+			{
+				return this.application.UserResourceManager;
+			}
+			set
+			{
+				this.application.UserResourceManager = value;
+			}
+		}
+		
 		public string							ResourceName
 		{
 			get

@@ -14,6 +14,7 @@ namespace Epsitec.Common.Dialogs
 		Types.IDataGraph			DialogData			{ get; set; }
 		Support.CommandDispatcher	DialogCommands		{ get; set; }
 		string						ResourceName		{ get; set; }
+		Support.ResourceManager		ResourceManager		{ get; set; }
 		Script.ScriptWrapper		DialogScript		{ get; set; }
 		Common.UI.InterfaceType		InterfaceType		{ get; }
 		bool						IsEditOnlyInterface	{ get; set; }

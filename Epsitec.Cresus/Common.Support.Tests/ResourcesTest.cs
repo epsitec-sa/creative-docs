@@ -15,7 +15,7 @@ namespace Epsitec.Common.Support
 			{
 			}
 			
-			Resources.SetupProviders ("test");
+			Resources.SetupApplication ("test");
 		}
 		
 		[Test] public void CheckDebugDumpProviders()

@@ -8,8 +8,23 @@ namespace Epsitec.Common.Designer.Panels
 	/// </summary>
 	public abstract class AbstractPanel : Common.UI.AbstractPanel
 	{
-		public AbstractPanel()
+		public AbstractPanel(Application application)
+		{
+			this.application = application;
+			this.application.UserResourceManagerChanged += new Support.EventHandler (this.HandleUserResourceManagerChanged);
+		}
+		
+		
+		private void HandleUserResourceManagerChanged(object sender)
+		{
+			this.UpdateUserResourceManager ();
+		}
+		
+		protected virtual void UpdateUserResourceManager()
 		{
 		}
+		
+		
+		protected Application					application;
 	}
 }

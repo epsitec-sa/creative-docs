@@ -14,7 +14,7 @@ namespace Epsitec.Common.Designer.Panels
 	/// </summary>
 	public class DataSourcePanel : AbstractPanel, IDropSource
 	{
-		public DataSourcePanel()
+		public DataSourcePanel(Application application) : base (application)
 		{
 			this.size = new Drawing.Size (172+2*10, 145+2*10);
 			this.data_graph = new Common.UI.Data.Record ();
@@ -144,10 +144,11 @@ namespace Epsitec.Common.Designer.Panels
 				return null;
 			}
 			
-			widget.Representation = mode;
-			widget.DataSource     = data;
-			widget.Size           = widget.GetBestFitSize ();
-			widget.BindingInfo    = Common.UI.Engine.MakeBindingDefinition (this.data_list.SelectedName);
+			widget.ResourceManager = this.application.UserResourceManager;
+			widget.Representation  = mode;
+			widget.DataSource      = data;
+			widget.Size            = widget.GetBestFitSize ();
+			widget.BindingInfo     = Common.UI.Engine.MakeBindingDefinition (this.data_list.SelectedName);
 			
 			return widget;
 		}
@@ -219,6 +220,16 @@ namespace Epsitec.Common.Designer.Panels
 			
 			this.UpdateDragSources ();
 		}
+		
+		
+		protected override void UpdateUserResourceManager()
+		{
+			Support.ResourceManager resource_manager = this.application.UserResourceManager;
+			
+			this.data_list.ResourceManager = resource_manager;
+			this.data_list.Invalidate ();
+		}
+
 		
 		
 		

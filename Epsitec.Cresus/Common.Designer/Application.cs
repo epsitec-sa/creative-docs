@@ -21,6 +21,9 @@ namespace Epsitec.Common.Designer
 			Epsitec.Common.Pictogram.Engine.Initialise ();
 			
 			ObjectBundler.RegisterAssembly (System.Reflection.Assembly.GetExecutingAssembly ());
+			
+			Application.resource_manager = new Support.ResourceManager ();
+			Application.resource_manager.SetupApplication ("Cresus_UI_Designer");
 		}
 		
 		public Application()
@@ -29,6 +32,14 @@ namespace Epsitec.Common.Designer
 			this.Initialise ();
 		}
 		
+		
+		public static Support.ResourceManager	ResourceManager
+		{
+			get
+			{
+				return Application.resource_manager;
+			}
+		}
 		
 		public Window							MainWindow
 		{
@@ -82,6 +93,32 @@ namespace Epsitec.Common.Designer
 			}
 		}
 		
+		public Support.ResourceManager			UserResourceManager
+		{
+			get
+			{
+				System.Diagnostics.Debug.Assert (this.is_initialised);
+				System.Diagnostics.Debug.Assert (this.user_resource_manager != null);
+				System.Diagnostics.Debug.Assert (this.user_resource_manager.IsReady);
+				return this.user_resource_manager;
+			}
+			set
+			{
+				if (this.user_resource_manager != value)
+				{
+					if (this.user_resource_manager == null)
+					{
+						this.user_resource_manager = value;
+						this.OnUserResourceManagerChanged ();
+					}
+					else
+					{
+						throw new System.InvalidOperationException ("The resource manager may not be redefined.");
+					}
+				}
+			}
+		}
+		
 		
 		internal void OpenStringPicker(string bundle, string field, Support.EventHandler accept_handler)
 		{
@@ -115,7 +152,7 @@ namespace Epsitec.Common.Designer
 			this.is_initialising = false;
 			
 			this.interf_edit_controller = new InterfaceEditController (this);
-			this.string_edit_controller = new StringEditController (this, this.interf_edit_controller.ResourceManager);
+			this.string_edit_controller = new StringEditController (this);
 			
 			this.interf_edit_controller.Initialise ();
 			this.string_edit_controller.Initialise ();
@@ -416,6 +453,19 @@ namespace Epsitec.Common.Designer
 			private Support.EventHandler		switcher_handler;
 		}
 		
+		protected void OnUserResourceManagerChanged()
+		{
+			if (this.UserResourceManagerChanged != null)
+			{
+				this.UserResourceManagerChanged (this);
+			}
+		}
+		
+		
+		public event Support.EventHandler		UserResourceManagerChanged;
+		
+		
+		private static Support.ResourceManager	resource_manager;			//	ressources pour l'application (designer)
 		
 		private bool							is_initialised;
 		private bool							is_initialising;
@@ -423,6 +473,7 @@ namespace Epsitec.Common.Designer
 		private Window							main_window;
 		private Support.CommandDispatcher		dispatcher;
 		
+		private Support.ResourceManager			user_resource_manager;		//	ressources en cours d'édition
 		private StringEditController			string_edit_controller;
 		private InterfaceEditController			interf_edit_controller;
 		

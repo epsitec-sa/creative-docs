@@ -279,6 +279,8 @@ namespace Epsitec.Common.Support
 			
 			System.Diagnostics.Debug.Assert (dst_obj != null);
 			
+			dst_obj.AttachResourceManager (this.manager);
+			
 			foreach (MemberInfo member_info in source.GetType ().GetMembers (BindingFlags.Public | BindingFlags.Instance))
 			{
 				//	Passe en revue tous les membres publics. Ceux qui sont des propriétés
@@ -403,6 +405,8 @@ namespace Epsitec.Common.Support
 			}
 			
 			IBundleSupport obj = System.Activator.CreateInstance (obj_type, true) as IBundleSupport;
+			
+			obj.AttachResourceManager (this.manager);
 			
 			foreach (MemberInfo member_info in obj_type.GetMembers (BindingFlags.Public | BindingFlags.Instance))
 			{
