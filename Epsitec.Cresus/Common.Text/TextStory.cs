@@ -11,17 +11,30 @@ namespace Epsitec.Common.Text
 	{
 		public TextStory()
 		{
-			this.text = new Internal.TextTable ();
-			
-			this.text_length = 0;
-			this.undo_length = 0;
-			
-			this.temp_cursor = new Cursors.TempCursor ();
-			
-			this.text.NewCursor (this.temp_cursor);
-			this.text.InsertText (this.temp_cursor.CursorId, new ulong[] { 0ul });
-			
-			this.oplet_queue = new Support.OpletQueue ();
+			this.SetupTextStory ();
+			this.SetupOpletQueue (new Support.OpletQueue ());
+			this.SetupStyleList (new StyleList ());
+		}
+		
+		public TextStory(Support.OpletQueue oplet_queue)
+		{
+			this.SetupTextStory ();
+			this.SetupOpletQueue (oplet_queue);
+			this.SetupStyleList (new StyleList ());
+		}
+		
+		public TextStory(StyleList style_list)
+		{
+			this.SetupTextStory ();
+			this.SetupOpletQueue (new Support.OpletQueue ());
+			this.SetupStyleList (style_list);
+		}
+		
+		public TextStory(Support.OpletQueue oplet_queue, StyleList style_list)
+		{
+			this.SetupTextStory ();
+			this.SetupOpletQueue (oplet_queue);
+			this.SetupStyleList (style_list);
 		}
 		
 		
@@ -49,7 +62,16 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
-		public bool								DebugDisableOpletQueue
+		public StyleList						StyleList
+		{
+			get
+			{
+				return this.style_list;
+			}
+		}
+		
+		
+		internal bool							DebugDisableOpletQueue
 		{
 			get
 			{
@@ -80,21 +102,6 @@ namespace Epsitec.Common.Text
 			if (old_pos != new_pos)
 			{
 				this.InternalAddOplet (new CursorMoveOplet (this, cursor, old_pos));
-			}
-		}
-		
-		
-		private void InternalAddOplet(Support.IOplet oplet)
-		{
-			if (this.debug_disable_oplet == false)
-			{
-				//	TODO: gérer la fusion d'oplets identiques
-				
-				using (this.oplet_queue.BeginAction ())
-				{
-					this.oplet_queue.Insert (oplet);
-					this.oplet_queue.ValidateAction ();
-				}
 			}
 		}
 		
@@ -183,6 +190,22 @@ namespace Epsitec.Common.Text
 		}
 		
 		
+		private void InternalAddOplet(Support.IOplet oplet)
+		{
+			if ((this.debug_disable_oplet == false) &&
+				(this.oplet_queue != null))
+			{
+				//	TODO: gérer la fusion d'oplets identiques
+				
+				using (this.oplet_queue.BeginAction ())
+				{
+					this.oplet_queue.Insert (oplet);
+					this.oplet_queue.ValidateAction ();
+				}
+			}
+		}
+		
+		
 		protected void InternalInsertText(int position, ulong[] text)
 		{
 			this.text.SetCursorPosition (this.temp_cursor.CursorId, position);
@@ -250,6 +273,30 @@ namespace Epsitec.Common.Text
 		protected bool FilterSaveCursors(ICursor cursor, int position)
 		{
 			return (cursor != null) && (cursor.Attachment != CursorAttachment.Temporary);
+		}
+		
+		
+		private void SetupTextStory()
+		{
+			this.text = new Internal.TextTable ();
+			
+			this.text_length = 0;
+			this.undo_length = 0;
+			
+			this.temp_cursor = new Cursors.TempCursor ();
+			
+			this.text.NewCursor (this.temp_cursor);
+			this.text.InsertText (this.temp_cursor.CursorId, new ulong[] { 0ul });
+		}
+		
+		private void SetupOpletQueue(Support.OpletQueue oplet_queue)
+		{
+			this.oplet_queue = oplet_queue;
+		}
+		
+		private void SetupStyleList(StyleList style_list)
+		{
+			this.style_list = style_list;
 		}
 		
 		
@@ -470,10 +517,13 @@ namespace Epsitec.Common.Text
 		
 		
 		private Internal.TextTable				text;
-		private int								text_length;
-		private int								undo_length;
+		private int								text_length;		//	texte dans la zone texte
+		private int								undo_length;		//	texte dans la zone undo
 		private ICursor							temp_cursor;
+		
 		private Support.OpletQueue				oplet_queue;
+		private StyleList						style_list;
+		
 		private bool							debug_disable_oplet;
 	}
 }

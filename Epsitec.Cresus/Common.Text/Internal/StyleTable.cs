@@ -199,84 +199,6 @@ namespace Epsitec.Common.Text.Internal
 		}
 		
 		
-		#region SettingsStyleMatcher Class
-		public class SettingsStyleMatcher
-		{
-			public SettingsStyleMatcher(Styles.LocalSettings local_settings, Styles.ExtraSettings extra_settings)
-			{
-				this.local_settings = local_settings;
-				this.extra_settings = extra_settings;
-			}
-			
-			
-			public bool							WasCalled
-			{
-				get
-				{
-					return this.counter > 0;
-				}
-			}
-			
-			
-			public void ResetCounter()
-			{
-				this.counter = 0;
-			}
-			
-			
-			public bool FindExactSettings(Styles.BaseStyle style)
-			{
-				this.counter++;
-				
-				if (this.local_settings != null)
-				{
-					if (style.FindSettings (this.local_settings) == 0)
-					{
-						return false;
-					}
-				}
-				
-				if (this.extra_settings != null)
-				{
-					if (style.FindSettings (this.extra_settings) == 0)
-					{
-						return false;
-					}
-				}
-				
-				return true;
-			}
-			
-			public bool FindFreeSettings(Styles.BaseStyle style)
-			{
-				this.counter++;
-				
-				if (this.local_settings != null)
-				{
-					if (style.FindSettings (this.local_settings) == 0)
-					{
-						return style.CountLocalSettings < Styles.BaseStyle.MaxSettingsCount;
-					}
-				}
-				
-				if (this.extra_settings != null)
-				{
-					if (style.FindSettings (this.extra_settings) == 0)
-					{
-						return style.CountExtraSettings < Styles.BaseStyle.MaxSettingsCount;
-					}
-				}
-				
-				return true;
-			}
-			
-			
-			private Styles.LocalSettings		local_settings;
-			private Styles.ExtraSettings		extra_settings;
-			private int							counter;
-		}
-		#endregion
-		
 		public Styles.BaseStyle FindStyle(Styles.BaseStyle style, StyleMatcher matcher)
 		{
 			//	Cherche si un style identique existe déjà. Si oui, retourne la
@@ -412,6 +334,84 @@ namespace Epsitec.Common.Text.Internal
 			}
 		}
 		
+		
+		#region SettingsStyleMatcher Class
+		private class SettingsStyleMatcher
+		{
+			public SettingsStyleMatcher(Styles.LocalSettings local_settings, Styles.ExtraSettings extra_settings)
+			{
+				this.local_settings = local_settings;
+				this.extra_settings = extra_settings;
+			}
+			
+			
+			public bool							WasCalled
+			{
+				get
+				{
+					return this.counter > 0;
+				}
+			}
+			
+			
+			public void ResetCounter()
+			{
+				this.counter = 0;
+			}
+			
+			
+			public bool FindExactSettings(Styles.BaseStyle style)
+			{
+				this.counter++;
+				
+				if (this.local_settings != null)
+				{
+					if (style.FindSettings (this.local_settings) == 0)
+					{
+						return false;
+					}
+				}
+				
+				if (this.extra_settings != null)
+				{
+					if (style.FindSettings (this.extra_settings) == 0)
+					{
+						return false;
+					}
+				}
+				
+				return true;
+			}
+			
+			public bool FindFreeSettings(Styles.BaseStyle style)
+			{
+				this.counter++;
+				
+				if (this.local_settings != null)
+				{
+					if (style.FindSettings (this.local_settings) == 0)
+					{
+						return style.CountLocalSettings < Styles.BaseStyle.MaxSettingsCount;
+					}
+				}
+				
+				if (this.extra_settings != null)
+				{
+					if (style.FindSettings (this.extra_settings) == 0)
+					{
+						return style.CountExtraSettings < Styles.BaseStyle.MaxSettingsCount;
+					}
+				}
+				
+				return true;
+			}
+			
+			
+			private Styles.LocalSettings		local_settings;
+			private Styles.ExtraSettings		extra_settings;
+			private int							counter;
+		}
+		#endregion
 		
 		public delegate bool StyleMatcher(Styles.BaseStyle style);
 		
