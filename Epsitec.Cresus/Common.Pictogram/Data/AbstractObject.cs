@@ -33,6 +33,7 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlArrayItem("Corner",   Type=typeof(PropertyCorner))]
 		[XmlArrayItem("Regular",  Type=typeof(PropertyRegular))]
 		[XmlArrayItem("Image",    Type=typeof(PropertyImage))]
+		[XmlArrayItem("Arc",      Type=typeof(PropertyArc))]
 		[XmlArrayItem("ModColor", Type=typeof(PropertyModColor))]
 		public System.Collections.ArrayList Properties
 		{
@@ -332,6 +333,27 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Adapte l'objet après la supression d'un pattern.
+		public void DeletePattern(int rank)
+		{
+			PropertyLine line = this.SearchProperty(PropertyType.LineMode) as PropertyLine;
+			if ( line == null )  return;
+			if ( !line.AdaptDeletePattern(rank) )  return;
+			this.UpdateBoundingBox();
+			this.dirtyBbox = false;
+		}
+
+		// Adapte l'objet après la supression de tous les patterns.
+		public void DeletePattern()
+		{
+			PropertyLine line = this.SearchProperty(PropertyType.LineMode) as PropertyLine;
+			if ( line == null )  return;
+			if ( !line.AdaptDeletePattern() )  return;
+			this.UpdateBoundingBox();
+			this.dirtyBbox = false;
+		}
+
+
 		// Rectangle englobant l'objet.
 		public Drawing.Rectangle BoundingBox
 		{
@@ -340,6 +362,16 @@ namespace Epsitec.Common.Pictogram.Data
 				if ( this.IsSelected() )  return this.BoundingBoxFull;
 				else                      return this.BoundingBoxGeom;
 			}
+		}
+
+		// Recalcule la bbox en fonction des patterns.
+		public void PatternUpdateBoundingBox(IconObjects iconObjects)
+		{
+			PropertyLine line = this.SearchProperty(PropertyType.LineMode) as PropertyLine;
+			if ( line == null || line.PatternId == 0 )  return;
+			line.PatternBbox = iconObjects.RetPatternBbox(line.PatternId);
+			this.UpdateBoundingBox();
+			this.dirtyBbox = false;
 		}
 
 		// Rectangle englobant la géométrie de l'objet, sans tenir compte
@@ -717,6 +749,13 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			System.Diagnostics.Debug.Assert(this.properties[rank] != null);
 			return this.properties[rank] as PropertyImage;
+		}
+
+		// Donne une propriété de l'objet.
+		public PropertyArc PropertyArc(int rank)
+		{
+			System.Diagnostics.Debug.Assert(this.properties[rank] != null);
+			return this.properties[rank] as PropertyArc;
 		}
 
 		// Donne une propriété de l'objet.

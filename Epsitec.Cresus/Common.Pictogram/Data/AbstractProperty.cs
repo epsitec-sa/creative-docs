@@ -17,6 +17,7 @@ namespace Epsitec.Common.Pictogram.Data
 		Arrow,				// extrémité des segments
 		Corner,				// coins des rectangles
 		Regular,			// définitions du polygone régulier
+		Arc,				// arc de cercle ou d'ellipse
 		BackColor,			// texte: couleur de fond
 		TextString,			// texte: chaîne
 		TextFont,			// texte: police
@@ -50,6 +51,7 @@ namespace Epsitec.Common.Pictogram.Data
 				case PropertyType.Arrow:            property = new PropertyArrow();     break;
 				case PropertyType.Corner:           property = new PropertyCorner();    break;
 				case PropertyType.Regular:          property = new PropertyRegular();   break;
+				case PropertyType.Arc:              property = new PropertyArc();       break;
 				case PropertyType.BackColor:        property = new PropertyColor();     break;
 				case PropertyType.TextString:       property = new PropertyString();    break;
 				case PropertyType.TextFont:         property = new PropertyFont();      break;
@@ -77,6 +79,7 @@ namespace Epsitec.Common.Pictogram.Data
 				case PropertyType.Arrow:            return "Arrow";
 				case PropertyType.Corner:           return "Corner";
 				case PropertyType.Regular:          return "Regular";
+				case PropertyType.Arc:              return "Arc";
 				case PropertyType.BackColor:        return "BackColor";
 				case PropertyType.TextString:       return "TextString";
 				case PropertyType.TextFont:         return "TextFont";
@@ -102,6 +105,7 @@ namespace Epsitec.Common.Pictogram.Data
 				case "Arrow":            return PropertyType.Arrow;
 				case "Corner":           return PropertyType.Corner;
 				case "Regular":          return PropertyType.Regular;
+				case "Arc":              return PropertyType.Arc;
 				case "BackColor":        return PropertyType.BackColor;
 				case "TextString":       return PropertyType.TextString;
 				case "TextFont":         return PropertyType.TextFont;
@@ -155,6 +159,7 @@ namespace Epsitec.Common.Pictogram.Data
 					case PropertyType.Arrow:            return 0.85;
 					case PropertyType.Corner:           return 0.90;
 					case PropertyType.Regular:          return 0.90;
+					case PropertyType.Arc:              return 0.90;
 					case PropertyType.BackColor:        return 0.80;
 					case PropertyType.TextString:       return 0.80;
 					case PropertyType.TextFont:         return 0.80;
@@ -184,6 +189,7 @@ namespace Epsitec.Common.Pictogram.Data
 					case PropertyType.Arrow:            return "Extrémités";
 					case PropertyType.Corner:           return "Coins";
 					case PropertyType.Regular:          return "Nombre de côtés";
+					case PropertyType.Arc:              return "Arc";
 					case PropertyType.BackColor:        return "Couleur fond";
 					case PropertyType.TextString:       return "Texte";
 					case PropertyType.TextFont:         return "Police";
@@ -281,7 +287,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Crée le panneau permettant d'éditer la propriété.
-		public virtual AbstractPanel CreatePanel()
+		public virtual AbstractPanel CreatePanel(Drawer drawer)
 		{
 			return null;
 		}
