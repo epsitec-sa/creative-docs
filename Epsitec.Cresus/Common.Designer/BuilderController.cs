@@ -458,12 +458,11 @@ namespace Epsitec.Common.Designer
 		
 		[Command ("CreateNewWindow")]			void CommandCreateNewWindow()
 		{
-			Window          window  = new Window ();
-			ScrollablePanel surface = new ScrollablePanel ();
+			Window     window  = new Window ();
+			Scrollable surface = new Scrollable ();
 			
 			window.ClientSize = new Drawing.Size (400, 300);
 			
-			surface.Size   = window.ClientSize;
 			surface.Dock   = DockStyle.Fill;
 			surface.Parent = window.Root;
 			surface.IsEditionEnabled = true;
