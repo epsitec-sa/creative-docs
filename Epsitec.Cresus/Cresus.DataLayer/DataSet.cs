@@ -12,7 +12,63 @@ namespace Epsitec.Cresus.DataLayer
 		{
 			this.name  = name;
 			this.type  = new DataType ();
-			this.state = DataState.Added;
+			
+			this.SetState (DataState.Unchanged);
+		}
+		
+		
+		internal void Initialise(DataColumn[] columns, DataRecord[] records)
+		{
+			if (this.data.Count > 0)
+			{
+				throw new DataException ("Illegal contents redefinition");
+			}
+			if (columns.Length != records.Length)
+			{
+				throw new DataException ("Name and record array size mismatch");
+			}
+			
+			System.Diagnostics.Debug.Assert (this.State == DataState.Unchanged);
+			
+			bool is_removed  = false;
+			bool is_added    = false;
+			bool is_modified = false;
+			
+			for (int i = 0; i < columns.Length; i++)
+			{
+				this.data.Add (columns[i].Name, records[i]);
+				
+				switch (records[i].State)
+				{
+					case DataState.Added:
+						is_added = true;
+						break;
+					case DataState.Removed:
+						is_removed = true;
+						break;
+					case DataState.Modified:
+						is_modified = true;
+						break;
+				}
+			}
+			
+			if (is_added && is_removed)
+			{
+				throw new DataException ("Incoherent states found in set contents");
+			}
+			
+			if (is_added)
+			{
+				this.SetState (DataState.Added);
+			}
+			else if (is_removed)
+			{
+				this.SetState (DataState.Removed);
+			}
+			else if (is_modified)
+			{
+				this.SetState (DataState.Modified);
+			}
 		}
 		
 		
@@ -118,18 +174,18 @@ namespace Epsitec.Cresus.DataLayer
 			{
 				DataRecord record = this.data[name] as DataRecord;
 				
-				switch (record.DataState)
+				switch (record.State)
 				{
 					case DataState.Invalid:
 						break;
 					case DataState.Added:
-						record.SetDataState (DataState.Invalid);
+						record.SetState (DataState.Invalid);
 						break;
 					case DataState.Removed:
 						break;
 					case DataState.Unchanged:
 					case DataState.Modified:
-						record.SetDataState (DataState.Removed);
+						record.SetState (DataState.Removed);
 						break;
 				}
 				
@@ -140,11 +196,6 @@ namespace Epsitec.Cresus.DataLayer
 			throw new DataException (string.Format ("Cannot find '{0}' in data set", name));
 		}
 		
-		
-		public override bool					IsSet
-		{
-			get { return true; }
-		}
 		
 		public override string					Name
 		{
@@ -173,38 +224,7 @@ namespace Epsitec.Cresus.DataLayer
 			if (this.data.Contains (local_path))
 			{
 				DataRecord record = this.data[local_path] as DataRecord;
-				
-				switch (version)
-				{
-					case DataVersion.Original:
-						
-						//	On demande une version originale: il faut donc éviter de
-						//	continuer la recherche si on se rend compte que le record
-						//	a été rajouté (il ne fait pas partie des données d'origine).
-						
-						if (record.DataState != DataState.Added)
-						{
-							return record.FindRecord (remaining, version);
-						}
-						break;
-					
-					case DataVersion.Active:
-						
-						//	On demande une version active: il faut donc éviter de
-						//	continuer la recherche si on se rend compte que le record
-						//	a été supprimé. Dans tous les autres cas, le record est à
-						//	prendre en considération.
-						
-						if ((record.DataState != DataState.Removed) &&
-							(record.DataState != DataState.Invalid))
-						{
-							return record.FindRecord (remaining, version);
-						}
-						break;
-					
-					case DataVersion.ActiveOrDead:
-						return record.FindRecord (remaining, version);
-				}
+				return record.RecursiveFindRecord (remaining, version);
 			}
 			
 			return null;
@@ -219,7 +239,7 @@ namespace Epsitec.Cresus.DataLayer
 				string     name   = entry.Key as string;
 				DataRecord record = entry.Value as DataRecord;
 				
-				switch (record.DataState)
+				switch (record.State)
 				{
 					case DataState.Removed:
 					case DataState.Invalid:
@@ -243,6 +263,8 @@ namespace Epsitec.Cresus.DataLayer
 					this.data.Remove (name);
 				}
 			}
+			
+			base.ValidateChanges ();
 		}
 		
 		

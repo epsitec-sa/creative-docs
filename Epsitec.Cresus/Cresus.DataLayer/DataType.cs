@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.DataLayer
 		
 		public string						UserLabel
 		{
-			get { return this.Attributes.GetAttribute (Tags.Label); }
+			get { return this.Attributes.GetAttribute (Tags.Caption); }
 		}
 		
 		public string						UserDescription
@@ -102,6 +102,7 @@ namespace Epsitec.Cresus.DataLayer
 		}
 		#endregion
 		
+		#region Equals and GetHashCode support
 		public override bool Equals(object obj)
 		{
 			//	ATTENTION: L'égalité se base uniquement sur le nom des types, pas sur les
@@ -123,6 +124,7 @@ namespace Epsitec.Cresus.DataLayer
 			return (name == null) ? 0 : name.GetHashCode ();
 		}
 
+		#endregion
 		
 		protected virtual void EnsureTypeIsNotInitialised()
 		{

@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.DataLayer
 		
 		public string						UserLabel
 		{
-			get { return this.Attributes.GetAttribute (Tags.Label); }
+			get { return this.Attributes.GetAttribute (Tags.Caption); }
 		}
 		
 		public string						UserDescription

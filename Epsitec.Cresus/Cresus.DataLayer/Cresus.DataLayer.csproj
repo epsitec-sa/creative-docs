@@ -103,12 +103,22 @@
         <Files>
             <Include>
                 <File
+                    RelPath = "AbstractRecord.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
                     RelPath = "AssemblyInfo.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
                     RelPath = "DataAttributes.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "DataColumn.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -174,11 +184,6 @@
                 />
                 <File
                     RelPath = "IDataAttributesHost.cs"
-                    SubType = "Code"
-                    BuildAction = "Compile"
-                />
-                <File
-                    RelPath = "Tags.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
