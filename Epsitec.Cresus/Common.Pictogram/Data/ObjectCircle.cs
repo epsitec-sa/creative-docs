@@ -46,7 +46,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			Drawing.Point p1 = this.Handle(0).Position;
 			Drawing.Point p2 = this.Handle(1).Position;
-			double width = System.Math.Max(this.PropertyLine(1).Width/2, this.minimalWidth);
+			double width = System.Math.Max(this.PropertyLine(1).PatternWidth/2, this.minimalWidth);
 			double radius = Drawing.Point.Distance(p1, p2)+width;
 			double dist = Drawing.Point.Distance(p1, pos);
 
@@ -125,7 +125,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Met à jour le rectangle englobant l'objet.
 		protected override void UpdateBoundingBox()
 		{
-			Drawing.Path path = this.PathBuild();
+			Drawing.Path path = this.PathBuild(null);
 			this.bboxThin = path.ComputeBounds();
 
 			this.bboxGeom = this.bboxThin;
@@ -138,12 +138,20 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Crée le chemin d'un cercle.
-		protected Drawing.Path PathCircle(Drawing.Point c, double rx, double ry)
+		protected Drawing.Path PathCircle(IconContext iconContext, Drawing.Point c, double rx, double ry)
 		{
 			Drawing.Path path = new Drawing.Path();
 #if true
-			path.DefaultZoom = 20;
-			path.ArcDeg(c, rx, ry, 0, 360, true);
+			if ( iconContext == null )
+			{
+				path.DefaultZoom = 10.0;
+			}
+			else
+			{
+				path.DefaultZoom = iconContext.ScaleX;
+			}
+
+			path.ArcDeg(c, rx, ry, 0.0, 360.0, true);
 #else
 			path.MoveTo(c.X-rx, c.Y);
 			path.CurveTo(c.X-rx, c.Y+ry*0.56, c.X-rx*0.56, c.Y+ry, c.X, c.Y+ry);
@@ -156,11 +164,11 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Crée le chemin de l'objet.
-		protected Drawing.Path PathBuild()
+		protected Drawing.Path PathBuild(IconContext iconContext)
 		{
 			Drawing.Point center = this.Handle(0).Position;
 			double radius = Drawing.Point.Distance(center, this.Handle(1).Position);
-			return this.PathCircle(center, radius, radius);
+			return this.PathCircle(iconContext, center, radius, radius);
 		}
 
 		// Dessine l'objet.
@@ -171,7 +179,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( this.TotalHandle != 2 )  return;
 
-			Drawing.Path path = this.PathBuild();
+			Drawing.Path path = this.PathBuild(iconContext);
 			this.PropertyGradient(3).Render(graphics, iconContext, path, this.BoundingBoxThin);
 
 			this.PropertyLine(1).DrawPath(graphics, iconContext, iconObjects, path, this.PropertyColor(2).Color);
@@ -184,7 +192,7 @@ namespace Epsitec.Common.Pictogram.Data
 					graphics.RenderSolid(iconContext.HiliteSurfaceColor);
 				}
 
-				graphics.Rasterizer.AddOutline(path, this.PropertyLine(1).Width+iconContext.HiliteSize, this.PropertyLine(1).Cap, this.PropertyLine(1).Join, this.PropertyLine(1).Limit);
+				this.PropertyLine(1).AddOutline(graphics, path, iconContext.HiliteSize);
 				graphics.RenderSolid(iconContext.HiliteOutlineColor);
 			}
 		}
