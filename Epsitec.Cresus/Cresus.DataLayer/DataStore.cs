@@ -14,6 +14,7 @@ namespace Epsitec.Cresus.DataLayer
 			this.data_set = data_set;
 		}
 		
+		
 		public void Attach(Database.DbTable table)
 		{
 			if (this.db_tables == null)
