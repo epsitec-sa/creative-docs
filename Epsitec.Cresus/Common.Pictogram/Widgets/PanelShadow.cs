@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelShadow permet de choisir une ombre.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelShadow : AbstractPanel
 	{
 		public PanelShadow()

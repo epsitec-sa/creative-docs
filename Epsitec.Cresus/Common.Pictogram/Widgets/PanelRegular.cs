@@ -7,6 +7,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 	/// <summary>
 	/// La classe PanelRegular permet de choisir un type de polygone régulier.
 	/// </summary>
+	
+	[SuppressBundleSupport]
+	
 	public class PanelRegular : AbstractPanel
 	{
 		public PanelRegular()
