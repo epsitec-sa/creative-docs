@@ -116,6 +116,9 @@ namespace Epsitec.Common.Designer
 			{
 				this.changing++;
 				
+				//	L'insertion de nouvelles lignes doit se faire dans le bundle par défaut; les variantes
+				//	localisées s'adapteront automatiquement par la suite :
+				
 				for (int i = 0; i < num; i++)
 				{
 					ResourceBundle.Field field = this.DefaultBundle.CreateField (ResourceFieldType.Data);
@@ -130,9 +133,22 @@ namespace Epsitec.Common.Designer
 			{
 				this.changing++;
 				
+				//	La destruction des lignes doit se faire dans tous les bundles :
+				
 				for (int i = 0; i < num; i++)
 				{
+					string name = this.DefaultBundle[row].Name;
+					
+					//	Supprime du bundle par défaut :
+					
 					this.DefaultBundle.Remove (row);
+					
+					//	Supprime aussi ce champ dans tous les autres bundles :
+					
+					foreach (ResourceBundle bundle in this.Bundles)
+					{
+						bundle.Remove (name);
+					}
 				}
 				
 				this.changing--;
@@ -143,25 +159,31 @@ namespace Epsitec.Common.Designer
 			{
 				this.changing++;
 				
+				//	La réorganisation de l'ordre des champs d'un bundle n'a réellement de sens
+				//	que pour le bundle par défaut, vu que les autres bundles sont uniquement
+				//	accédés par leur nom :
+				
 				int row_a = row;
 				int row_b = row + distance;
 				
-				int n = this.GetColumnCount ();
+				ResourceBundle.Field field_a = this.DefaultBundle[row_a];
+				ResourceBundle.Field field_b = this.DefaultBundle[row_b];
 				
-				for (int i = 0; i < n; i++)
-				{
-					string a = this.GetCellText (row_a, i);
-					string b = this.GetCellText (row_b, i);
-					
-					this.SetCellText (row_a, i, b);
-					this.SetCellText (row_b, i, a);
-				}
+				string name_a  = field_a.Name;
+				string name_b  = field_b.Name;
+				string value_a = field_a.AsString;
+				string value_b = field_b.AsString;
+				string about_a = field_a.About;
+				string about_b = field_b.About;
 				
-				string about_a = this.DefaultBundle[row_a].About;
-				string about_b = this.DefaultBundle[row_b].About;
+				//	Permute :
 				
-				this.DefaultBundle[row_a].SetAbout (about_b);
-				this.DefaultBundle[row_b].SetAbout (about_a);
+				field_a.SetName (name_b);
+				field_b.SetName (name_a);
+				field_a.SetStringValue (value_b);
+				field_b.SetStringValue (value_a);
+				field_a.SetAbout (about_b);
+				field_b.SetAbout (about_a);
 				
 				this.changing--;
 				this.OnStoreChanged ();
@@ -175,13 +197,19 @@ namespace Epsitec.Common.Designer
 				switch (column)
 				{
 					case 0:
+						//	Le nom provient toujours du bundle par défaut :
+						
 						field = this.DefaultBundle[row];
 						return TextLayout.ConvertToTaggedText (field.Name);
+					
 					case 1:
+						//	La valeur provient soit du bundle réel, soit du bundle par défaut s'il s'avère
+						//	que le bundle réel ne définit aucune valeur :
+						
 						name  = this.DefaultBundle[row].Name;
 						field = this.ActiveBundle[name];
 						
-						if (field == null)
+						if (field.IsEmpty)
 						{
 							return this.DefaultBundle[row].AsString;
 						}
@@ -196,29 +224,81 @@ namespace Epsitec.Common.Designer
 			{
 				this.changing++;
 				
-				ResourceBundle.Field field;
-				string name;
+				ResourceBundle.Field field_1;
+				ResourceBundle.Field field_2;
+				
+				string value_1;
+				string value_2;
+				
+				string old_name;
+				string new_name;
 				
 				switch (column)
 				{
 					case 0:
-						field = this.DefaultBundle[row];
-						field.SetName (TextLayout.ConvertToSimpleText (value));
-						break;
-					case 1:
-						name  = this.DefaultBundle[row].Name;
-						field = this.ActiveBundle[name];
+						//	Le nom est toujours stocké dans le bundle par défaut, mais il faut aussi
+						//	renommer tous les champs des autres bunldes :
 						
-						if (field == null)
+						field_1 = this.DefaultBundle[row];
+						
+						old_name = field_1.Name;
+						new_name = TextLayout.ConvertToSimpleText (value);
+						
+						if (old_name != new_name)
 						{
-							field = this.ActiveBundle.CreateField (ResourceFieldType.Data);
-							field.SetName (name);
-							field.SetStringValue (value);
-							this.ActiveBundle.Insert (field);
+							//	Renomme tous les bundles d'un coup.
+							
+							foreach (ResourceBundle bundle in this.Bundles)
+							{
+								field_2 = bundle[old_name];
+								
+								if (! field_2.IsEmpty)
+								{
+									field_2.SetName (new_name);
+								}
+							}
+						}
+						break;
+					
+					case 1:
+						//	La valeur doit être stockée dans le bundle actif. Par contre, s'il s'avère que
+						//	le contenu est exactement le même que celui du bundle par défaut, on supprime
+						//	le champ du bundle actif :
+						
+						field_1 = this.DefaultBundle[row];
+						field_2 = this.ActiveBundle[field_1.Name];
+						
+						value_1 = field_1.AsString;
+						value_2 = value;
+						
+						if ((value_1 == value_2) ||
+							(value_2 == ""))
+						{
+							//	Les valeurs sont identiques, on peut/doit donc supprimer le champ dans le
+							//	bundle actif, si celui-ci n'est pas le bundle par défaut :
+							
+							if ((! field_2.IsEmpty) &&
+								(field_2 != field_1))
+							{
+								this.ActiveBundle.Remove (field_1.Name);
+							}
+						}
+						else if (field_2.IsEmpty)
+						{
+							//	Les valeurs ont changé et il n'y a pas encore de champ dans le bundle
+							//	actif; on ajoute donc un champ tout neuf :
+							
+							field_2 = this.ActiveBundle.CreateField (ResourceFieldType.Data);
+							field_2.SetName (field_1.Name);
+							field_2.SetStringValue (value_2);
+							this.ActiveBundle.Insert (field_2);
 						}
 						else
 						{
-							field.SetStringValue (value);
+							//	Les valeurs ont changé et il y avait déjà un champ correspondant dans le
+							//	bundle actif; on met simplement à jour sa valeur :
+							
+							field_2.SetStringValue (value_2);
 						}
 						break;
 				}

@@ -310,6 +310,18 @@ namespace Epsitec.Common.Support
 			this.OnFieldsChanged ();
 		}
 		
+		public void Remove(string name)
+		{
+			for (int i = 0; i < this.fields.Length; i++)
+			{
+				if (this.fields[i].Name == name)
+				{
+					this.Remove (i);
+					return;
+				}
+			}
+		}
+		
 		public int Add(Field field)
 		{
 			int index = this.fields.Length;
@@ -975,13 +987,11 @@ namespace Epsitec.Common.Support
 			public string					Name
 			{
 				get { return this.name; }
-//				set { this.name = value; }
 			}
 			
 			public string					About
 			{
 				get { return this.about; }
-//				set { this.about = value; }
 			}
 			
 			public ResourceFieldType		Type
@@ -1143,6 +1153,11 @@ namespace Epsitec.Common.Support
 			
 			public void SetName(string name)
 			{
+				if (this.IsEmpty)
+				{
+					throw new ResourceException ("An empty field cannot be modified.");
+				}
+				
 				if (this.name != name)
 				{
 					this.name = name;
@@ -1156,6 +1171,11 @@ namespace Epsitec.Common.Support
 			
 			public void SetAbout(string about)
 			{
+				if (this.IsEmpty)
+				{
+					throw new ResourceException ("An empty field cannot be modified.");
+				}
+				
 				if (this.about != about)
 				{
 					this.about = about;
@@ -1169,6 +1189,11 @@ namespace Epsitec.Common.Support
 			
 			public void SetStringValue(string value)
 			{
+				if (this.IsEmpty)
+				{
+					throw new ResourceException ("An empty field cannot be modified.");
+				}
+				
 				if ((this.type != ResourceFieldType.Data) ||
 					((string)this.data != value))
 				{

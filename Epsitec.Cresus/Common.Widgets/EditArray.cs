@@ -198,6 +198,12 @@ namespace Epsitec.Common.Widgets
 		
 		protected int FindFirstReadWriteColumn(int column, int dir)
 		{
+			if ((column < 0) ||
+				(column >= this.max_columns))
+			{
+				return -1;
+			}
+			
 			if (dir > 0)
 			{
 				for (int i = column; i < this.max_columns; i++)
