@@ -139,6 +139,16 @@
                     Project = "{5C2BEC8F-849C-41EB-993A-2536E466B538}"
                     Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
+                <Reference
+                    Name = "Cresus.Services"
+                    Project = "{76A75F71-6965-458C-B0D1-C2741241EDEB}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Cresus.Services.Implementation"
+                    Project = "{E076F23E-635F-42D1-8B3F-59AF3D3DCDFB}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
             </References>
         </Build>
         <Files>

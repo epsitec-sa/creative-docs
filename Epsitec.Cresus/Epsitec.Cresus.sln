@@ -163,6 +163,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common.DynamicData.Tests", 
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Services", "Cresus.Services\Cresus.Services.csproj", "{76A75F71-6965-458C-B0D1-C2741241EDEB}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Services.Implementation", "Cresus.Services.Implementation\Cresus.Services.Implementation.csproj", "{E076F23E-635F-42D1-8B3F-59AF3D3DCDFB}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -331,6 +339,14 @@ Global
 		{393668A9-1463-42B9-83FA-422FDA860F4E}.Debug.Build.0 = Debug|.NET
 		{393668A9-1463-42B9-83FA-422FDA860F4E}.Release.ActiveCfg = Release|.NET
 		{393668A9-1463-42B9-83FA-422FDA860F4E}.Release.Build.0 = Release|.NET
+		{76A75F71-6965-458C-B0D1-C2741241EDEB}.Debug.ActiveCfg = Debug|.NET
+		{76A75F71-6965-458C-B0D1-C2741241EDEB}.Debug.Build.0 = Debug|.NET
+		{76A75F71-6965-458C-B0D1-C2741241EDEB}.Release.ActiveCfg = Release|.NET
+		{76A75F71-6965-458C-B0D1-C2741241EDEB}.Release.Build.0 = Release|.NET
+		{E076F23E-635F-42D1-8B3F-59AF3D3DCDFB}.Debug.ActiveCfg = Debug|.NET
+		{E076F23E-635F-42D1-8B3F-59AF3D3DCDFB}.Debug.Build.0 = Debug|.NET
+		{E076F23E-635F-42D1-8B3F-59AF3D3DCDFB}.Release.ActiveCfg = Release|.NET
+		{E076F23E-635F-42D1-8B3F-59AF3D3DCDFB}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		External\copy.info = External\copy.info

@@ -3,13 +3,13 @@
         ProjectType = "Local"
         ProductVersion = "7.10.3077"
         SchemaVersion = "2.0"
-        ProjectGuid = "{5C2BEC8F-849C-41EB-993A-2536E466B538}"
+        ProjectGuid = "{E076F23E-635F-42D1-8B3F-59AF3D3DCDFB}"
     >
         <Build>
             <Settings
                 ApplicationIcon = ""
                 AssemblyKeyContainerName = ""
-                AssemblyName = "Cresus.Remoting.Interfaces"
+                AssemblyName = "Cresus.Services.Implementation"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -18,7 +18,7 @@
                 OutputType = "Library"
                 PreBuildEvent = ""
                 PostBuildEvent = ""
-                RootNamespace = "Epsitec.Cresus.Remoting"
+                RootNamespace = "Epsitec.Cresus.Services"
                 RunPostBuildEvent = "OnBuildSuccess"
                 StartupObject = ""
             >
@@ -76,8 +76,43 @@
                 />
                 <Reference
                     Name = "System.XML"
-                    AssemblyName = "System.Xml"
+                    AssemblyName = "System.XML"
                     HintPath = "C:\WINDOWS\Microsoft.NET\Framework\v1.1.4322\System.XML.dll"
+                />
+                <Reference
+                    Name = "Common.Support"
+                    Project = "{AC07F95F-9D11-44BE-8ABC-D6E33C3BB10B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Common.Types"
+                    Project = "{8960D1EA-3B82-49A1-9D44-F92F467209FF}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Cresus.Database"
+                    Project = "{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Cresus.Remoting.Interfaces"
+                    Project = "{5C2BEC8F-849C-41EB-993A-2536E466B538}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Cresus.Requests"
+                    Project = "{65CFD9A9-EB09-4380-A56B-5B1D6A32ED50}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Cresus.Replication"
+                    Project = "{431A7EAC-87E4-489E-901D-FE3FE182700B}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
+                />
+                <Reference
+                    Name = "Cresus.Services"
+                    Project = "{76A75F71-6965-458C-B0D1-C2741241EDEB}"
+                    Package = "{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}"
                 />
             </References>
         </Build>
@@ -89,12 +124,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "IConnectionService.cs"
+                    RelPath = "ConnectionEngine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "IRequestExecutionService.cs"
+                    RelPath = "RequestExecutionEngine.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

@@ -1,25 +1,21 @@
-#if false
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Responsable: Pierre ARNAUD
 
 using Epsitec.Cresus.Remoting;
+using Epsitec.Cresus.Requests;
 
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Http;
-
-namespace Epsitec.Cresus.Requests
+namespace Epsitec.Cresus.Services
 {
 	/// <summary>
-	/// La classe ExecutionService implémente un service de réception de
+	/// La classe RequestExecutionEngine implémente un service de réception de
 	/// requêtes via le réseau.
 	/// </summary>
-	public class ExecutionService : System.MarshalByRefObject, IRequestExecutionService
+	internal sealed class RequestExecutionEngine : AbstractServiceEngine, IRequestExecutionService
 	{
-		public ExecutionService(Orchestrator orchestrator)
+		public RequestExecutionEngine(Engine engine) : base (engine, "RequestExecution")
 		{
-			this.orchestrator    = orchestrator;
-			this.execution_queue = orchestrator.ExecutionQueue;
+			this.orchestrator    = this.engine.Orchestrator;
+			this.execution_queue = this.orchestrator.ExecutionQueue;
 		}
 		
 		
@@ -131,25 +127,7 @@ namespace Epsitec.Cresus.Requests
 		}
 		#endregion
 		
-		public static void StartService(ExecutionService service, int port)
-		{
-			HttpChannel channel = new HttpChannel (port);
-			ChannelServices.RegisterChannel (channel);
-			RemotingServices.Marshal (service, "RequestExecutionService.soap");
-		}
-		
-		public static IRequestExecutionService GetRemoteService(string machine, int port)
-		{
-			string url = string.Format (System.Globalization.CultureInfo.InvariantCulture, "http://{0}:{1}/RequestExecutionService.soap", machine, port);
-			
-			IRequestExecutionService service = (IRequestExecutionService) System.Activator.GetObject (typeof (IRequestExecutionService), url);
-			
-			return service;
-		}
-		
-		
-		protected Orchestrator					orchestrator;
-		protected ExecutionQueue				execution_queue;
+		private Orchestrator					orchestrator;
+		private ExecutionQueue					execution_queue;
 	}
 }
-#endif

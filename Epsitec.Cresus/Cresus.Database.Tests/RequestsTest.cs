@@ -409,15 +409,32 @@ namespace Epsitec.Cresus.Database
 		
 		[Test] public void Check11ServiceServer()
 		{
-			DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
-			Requests.Orchestrator orchestrator = new Requests.Orchestrator (infrastructure);
-			Requests.ExecutionService service = new Requests.ExecutionService (orchestrator);
-			Requests.ExecutionService.StartService (service, 1234);
+			DbInfrastructure      infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false);
+			Requests.Orchestrator orchestrator   = new Requests.Orchestrator (infrastructure);
+			Services.Engine       engine         = new Services.Engine (orchestrator, 1234);
 		}
 		
-		[Test] public void Check12ServiceClient()
+		[Test] public void Check12ConnectionClient()
 		{
-			Remoting.IRequestExecutionService service = Requests.ExecutionService.GetRemoteService ("localhost", 1234);
+			Remoting.IConnectionService service = Services.Engine.GetRemoteConnectionService ("localhost", 1234);
+			
+			Assert.IsNotNull (service);
+			
+			string[] service_names;
+			
+			service.CheckConnectivity ("NUnit Test Client");
+			service.QueryAvailableServices ("NUnit Test Client", out service_names);
+			
+			System.Diagnostics.Debug.WriteLine ("Found " + service_names.Length + " services:");
+			foreach (string name in service_names)
+			{
+				System.Diagnostics.Debug.WriteLine ("-- " + name);
+			}
+		}
+		
+		[Test] public void Check13RequestExecutionClient()
+		{
+			Remoting.IRequestExecutionService service = Services.Engine.GetRemoteRequestExecutionService ("localhost", 1234);
 			
 			Assert.IsNotNull (service);
 			
