@@ -1,9 +1,10 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 07/10/2003
 
 namespace Epsitec.Cresus.Database
 {
 	using System.Collections;
+	using Epsitec.Common.Support;
 	
 	/// <summary>
 	/// Summary description for InternalCollectionList.
@@ -15,7 +16,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public override ArrayList	List
+		protected override ArrayList		List
 		{
 			get { return this.list; }
 		}
@@ -34,6 +35,7 @@ namespace Epsitec.Cresus.Database
 		public virtual void RemoveAt(int index)
 		{
 			this.list.RemoveAt (index);
+			this.OnChanged ();
 		}
 		
 		public virtual bool Contains(string name)
@@ -53,9 +55,21 @@ namespace Epsitec.Cresus.Database
 		public virtual void Clear()
 		{
 			this.list.Clear ();
+			this.OnChanged ();
 		}
 		
 		
-		protected ArrayList	list		= new System.Collections.ArrayList ();
+		
+		protected virtual void OnChanged()
+		{
+			if (this.Changed != null)
+			{
+				this.Changed (this);
+			}
+		}
+		
+		public event EventHandler			Changed;
+		
+		protected ArrayList					list = new System.Collections.ArrayList ();
 	}
 }

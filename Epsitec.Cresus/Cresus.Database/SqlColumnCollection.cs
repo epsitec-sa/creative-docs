@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 07/10/2003
 
 namespace Epsitec.Cresus.Database
@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Database
 		public virtual void Add(SqlColumn column)
 		{
 			this.List.Add (column);
+			this.OnChanged ();
 		}
 
 		public virtual void AddRange(SqlColumn[] columns)
@@ -26,11 +27,13 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			this.List.AddRange (columns);
+			this.OnChanged ();
 		}
 		
 		public virtual void Remove(SqlColumn column)
 		{
 			this.List.Remove (column);
+			this.OnChanged ();
 		}
 		
 		
@@ -61,7 +64,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public virtual SqlColumn		this[int index]
+		public virtual SqlColumn			this[int index]
 		{
 			get
 			{
@@ -69,7 +72,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public virtual SqlColumn		this[string column_name]
+		public virtual SqlColumn			this[string column_name]
 		{
 			get
 			{

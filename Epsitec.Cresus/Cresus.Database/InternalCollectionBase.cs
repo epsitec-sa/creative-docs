@@ -1,4 +1,4 @@
-//	Copyright © 2003, EPSITEC SA, CH-1092 BELMONT, Switzerland
+//	Copyright © 2003-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
 //	Statut : OK/PA, 07/10/2003
 
 namespace Epsitec.Cresus.Database
@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public virtual ArrayList		List
+		protected virtual ArrayList			List
 		{
 			get { return null; }
 		}
