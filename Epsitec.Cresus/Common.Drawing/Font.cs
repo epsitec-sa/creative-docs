@@ -227,6 +227,16 @@ namespace Epsitec.Common.Drawing
 			AntiGrain.Font.PixelCache.Render (pixmap.Handle, this.handle, text, size, ox, oy);
 		}
 		
+		public double PaintPixelCache(Pixmap pixmap, string text, double size, double ox, double oy, Drawing.Rectangle clip, Color color)
+		{
+			return AntiGrain.Font.PixelCache.Paint (pixmap.Handle, this.handle, text, size, ox, oy, clip.Left, clip.Bottom, clip.Right, clip.Top, color.R, color.G, color.B, color.A);
+		}
+		
+		public double PaintPixelCache(Pixmap pixmap, string text, double size, double ox, double oy, double x1, double y1, double x2, double y2, Color color)
+		{
+			return AntiGrain.Font.PixelCache.Paint (pixmap.Handle, this.handle, text, size, ox, oy, x1, y1, x2, y2, color.R, color.G, color.B, color.A);
+		}
+		
 		protected virtual void Dispose(bool disposing)
 		{
 			if (disposing)

@@ -337,8 +337,8 @@ namespace Epsitec.Common.Widgets
 
 				double x = pos.X+block.pos.X;
 				double y = pos.Y+block.pos.Y;
-				graphics.AddText(x, y, block.text, block.font, block.fontSize);
-				graphics.RenderSolid(color);
+				graphics.PaintText(x, y, block.text, block.font, block.fontSize, color);
+//				graphics.RenderSolid(color);
 
 				if ( block.underline )
 				{

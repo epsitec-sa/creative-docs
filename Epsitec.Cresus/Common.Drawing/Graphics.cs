@@ -83,6 +83,60 @@ namespace Epsitec.Common.Drawing
 
 		
 		
+		public virtual double PaintText(double x, double y, string text, Font font, double size, Color color)
+		{
+			return font.GetTextAdvance (text) * size;
+		}
+		
+		public void PaintText(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment align, Color color)
+		{
+			double text_width  = font.GetTextAdvance (text) * size;
+			double text_height = (font.Ascender - font.Descender) * size;
+			
+			switch (align)
+			{
+				case ContentAlignment.BottomLeft:
+				case ContentAlignment.BottomCenter:
+				case ContentAlignment.BottomRight:
+					y = y - font.Descender * size;
+					break;
+				
+				case ContentAlignment.MiddleLeft:
+				case ContentAlignment.MiddleCenter:
+				case ContentAlignment.MiddleRight:
+					y = y + (height - text_height) / 2 - font.Descender * size;
+					break;
+				
+				case ContentAlignment.TopLeft:
+				case ContentAlignment.TopCenter:
+				case ContentAlignment.TopRight:
+					y = y + height - text_height - font.Descender * size;
+					break;
+			}
+			
+			switch (align)
+			{
+				case ContentAlignment.BottomLeft:
+				case ContentAlignment.MiddleLeft:
+				case ContentAlignment.TopLeft:
+					break;
+				
+				case ContentAlignment.BottomCenter:
+				case ContentAlignment.MiddleCenter:
+				case ContentAlignment.TopCenter:
+					x = x + (width - text_width) / 2;
+					break;
+				
+				case ContentAlignment.BottomRight:
+				case ContentAlignment.MiddleRight:
+				case ContentAlignment.TopRight:
+					x = x + width - text_width;
+					break;
+			}
+			
+			this.PaintText (x, y, text, font, size, color);
+		}
+		
 		public virtual void AddLine(double x1, double y1, double x2, double y2)
 		{
 		}

@@ -32,6 +32,22 @@ namespace Epsitec.Common.Drawing
 		}
 		
 		
+		public bool					OnlyTranslate
+		{
+			get
+			{
+				if ((this.xx == 1.0) &&
+					(this.yy == 1.0) &&
+					(this.xy == 0.0) &&
+					(this.yx == 0.0))
+				{
+					return true;
+				}
+				
+				return false;
+			}
+		}
+		
 		public double				XX
 		{
 			get { return this.xx; }

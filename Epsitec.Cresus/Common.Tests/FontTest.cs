@@ -516,10 +516,11 @@ namespace Epsitec.Common.Tests
 		
 		[Test] public void CheckFillPixelCache()
 		{
-			Graphics gra  = new Epsitec.Common.Drawing.Agg.Graphics ();
-			double   size = 10.6;
-			string   text = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
-			Font     font = Font.GetFont ("Tahoma", "Regular");
+			Graphics gra   = new Epsitec.Common.Drawing.Agg.Graphics ();
+			double   size  = 10.6;
+			string   text  = "The quick brown fox jumps over the lazy dog. Apportez ce vieux whisky au juge blond qui fume !";
+			Font     font  = Font.GetFont ("Tahoma", "Regular");
+			Color    color = Color.FromBrightness (0);
 			
 			long cc = Epsitec.Common.Drawing.Agg.Library.Cycles;
 			long c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
@@ -546,7 +547,11 @@ namespace Epsitec.Common.Tests
 			
 			System.Console.Out.WriteLine ("Filling the cache: " + (c2) + " cycles -> " + (c2 * 1000 / cpu_speed / text.Length) + "ns / char");
 			
-			long tot = 0;
+			
+			
+			long tot;
+			
+			tot = 0;
 			
 			for (int i = 0; i < 100; i++)
 			{
@@ -558,6 +563,22 @@ namespace Epsitec.Common.Tests
 			}
 			
 			System.Console.Out.WriteLine ("Mean Rendering : " + (tot / 100).ToString () + " cycles -> " + (tot * 10 / cpu_speed / text.Length) + "ns / char in Cached AGG");
+			
+			
+			
+			tot = 0;
+			
+			for (int i = 0; i < 100; i++)
+			{
+				c1 = Epsitec.Common.Drawing.Agg.Library.Cycles;
+				gra.PaintText (10, 180, text, font, size, color);
+				c2 = Epsitec.Common.Drawing.Agg.Library.Cycles - c1 - c0;
+				
+				tot += c2;
+			}
+			
+			System.Console.Out.WriteLine ("Mean Painting : " + (tot / 100).ToString () + " cycles -> " + (tot * 10 / cpu_speed / text.Length) + "ns / char in Cached AGG");
+			
 			
 			
 			font.FillPixelCache (text, size, 10, 240);
