@@ -511,14 +511,13 @@ namespace Epsitec.Common.Widgets
 
 		public void NotifyRemoval(Widget widget)
 		{
-			TabPage item = widget as TabPage;
+			TabPage item  = widget as TabPage;
+			int     index = item.Index;
 
 			if ( this.activePage == item )
 			{
-				if ( index >= this.items.Count )
-				{
-					index --;
-				}
+				System.Diagnostics.Debug.Assert(index >= 0);
+				System.Diagnostics.Debug.Assert(index < this.items.Count);
 				
 				if ( index > 0 )
 				{

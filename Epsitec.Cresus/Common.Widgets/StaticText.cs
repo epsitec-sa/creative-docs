@@ -8,7 +8,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public StaticText()
 		{
-			this.BackColor = Drawing.Color.Transparent;
 		}
 		
 		public StaticText(Widget embedder) : this()
@@ -20,7 +19,8 @@ namespace Epsitec.Common.Widgets
 			this.Text = text;
 		}
 		
-		public override double DefaultHeight
+		
+		public override double						DefaultHeight
 		{
 			// Retourne la hauteur standard.
 			get
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public override Drawing.ContentAlignment DefaultAlignment
+		public override Drawing.ContentAlignment	DefaultAlignment
 		{
 			// Retourne l'alignement par défaut d'un bouton.
 			get
@@ -38,32 +38,35 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
-		public Drawing.Size RetRequiredSize()
+		public override Drawing.Size				PreferredSize
 		{
 			// Retourne les dimensions minimales pour représenter le texte.
-			return this.textLayout.SingleLineSize();
+			get
+			{
+				return this.TextLayout.SingleLineSize();
+			}
 		}
 
+		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			// Dessine le texte.
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
-			if ( this.textLayout == null )  return;
+			if ( this.TextLayout == null )  return;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 			
-			if ( !this.BackColor.IsTransparent )
+			if ( this.BackColor.IsVisible )
 			{
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.BackColor);
 			}
 			
-			this.textLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
-			adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state);
+			this.TextLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
+			adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state);
 		}
 	}
 }

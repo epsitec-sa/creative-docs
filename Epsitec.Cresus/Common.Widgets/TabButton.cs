@@ -48,7 +48,7 @@ namespace Epsitec.Common.Widgets
 				pos.Y -= 1;
 			}
 
-			adorner.PaintButtonTextLayout(graphics, pos, this.textLayout, state, ButtonStyle.Normal);
+			adorner.PaintButtonTextLayout(graphics, pos, this.TextLayout, state, ButtonStyle.Normal);
 
 			graphics.RestoreClippingRectangle(saveClip);
 		}

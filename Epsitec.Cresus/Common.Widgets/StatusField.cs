@@ -7,7 +7,6 @@ namespace Epsitec.Common.Widgets
 	{
 		public StatusField()
 		{
-			this.BackColor = Drawing.Color.Transparent;
 		}
 		
 		public StatusField(Widget embedder) : this()
@@ -39,12 +38,12 @@ namespace Epsitec.Common.Widgets
 
 		protected override void UpdateLayoutSize()
 		{
-			if ( this.textLayout != null )
+			if ( this.TextLayout != null )
 			{
 				double dx = this.Client.Width - this.margin*2;
 				double dy = this.Client.Height;
-				this.textLayout.Alignment = this.Alignment;
-				this.textLayout.LayoutSize = new Drawing.Size(dx, dy);
+				this.TextLayout.Alignment = this.Alignment;
+				this.TextLayout.LayoutSize = new Drawing.Size(dx, dy);
 			}
 		}
 
@@ -57,25 +56,28 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		
-		public Drawing.Size RetRequiredSize()
+		public override Drawing.Size PreferredSize
 		{
 			// Retourne les dimensions minimales pour représenter le texte.
-			return this.textLayout.SingleLineSize();
+			get
+			{
+				return this.TextLayout.SingleLineSize();
+			}
 		}
-
+		
+		
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			// Dessine le texte.
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
-			if ( this.textLayout == null )  return;
+			if ( this.TextLayout == null )  return;
 
 			Drawing.Rectangle rect  = new Drawing.Rectangle(0, 0, this.Client.Width, this.Client.Height);
 			WidgetState       state = this.PaintState;
 			Drawing.Point     pos   = new Drawing.Point(0, 0);
 			
-			if ( !this.BackColor.IsTransparent )
+			if ( this.BackColor.IsVisible )
 			{
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(this.BackColor);
@@ -84,8 +86,8 @@ namespace Epsitec.Common.Widgets
 			adorner.PaintStatusItemBackground(graphics, rect, state);
 			pos.X += this.margin;
 			pos.Y += 0.5;
-			this.textLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
-			adorner.PaintGeneralTextLayout(graphics, pos, this.textLayout, state);
+			this.TextLayout.BreakMode = Drawing.TextBreakMode.Ellipsis | Drawing.TextBreakMode.SingleLine;
+			adorner.PaintGeneralTextLayout(graphics, pos, this.TextLayout, state);
 		}
 
 

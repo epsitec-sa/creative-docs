@@ -422,7 +422,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		// Met à jour les textes.
-		protected void UpdateTextLayouts()
+		protected void UpdatetextLayouts()
 		{
 			if ( this.isDirty )
 			{
@@ -515,7 +515,7 @@ namespace Epsitec.Common.Widgets
 		// Dessine la liste.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			this.UpdateTextLayouts ();
+			this.UpdatetextLayouts ();
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 

@@ -116,13 +116,13 @@ namespace Epsitec.Common.Widgets
 
 		protected override void UpdateLayoutSize()
 		{
-			if ( this.textLayout != null )
+			if ( this.TextLayout != null )
 			{
 				Drawing.Point offset = this.LabelOffset;
 				double dx = this.Client.Width - offset.X;
 				double dy = this.Client.Height;
-				this.textLayout.Alignment = this.Alignment;
-				this.textLayout.LayoutSize = new Drawing.Size(dx, dy);
+				this.TextLayout.Alignment = this.Alignment;
+				this.TextLayout.LayoutSize = new Drawing.Size(dx, dy);
 			}
 		}
 		
@@ -139,9 +139,9 @@ namespace Epsitec.Common.Widgets
 		{
 			Drawing.Rectangle rect = base.GetShapeBounds();
 			
-			if ( this.textLayout != null )
+			if ( this.TextLayout != null )
 			{
-				Drawing.Rectangle text = this.textLayout.StandardRectangle;
+				Drawing.Rectangle text = this.TextLayout.StandardRectangle;
 				text.Offset(this.LabelOffset);
 				text.Inflate(1, 1);
 				text.Inflate(Widgets.Adorner.Factory.Active.GeometryRadioShapeBounds);
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Widgets
 			rect.Top    = rect.Bottom+RadioButton.radioHeight;
 			adorner.PaintRadio(graphics, rect, this.PaintState);
 
-			adorner.PaintGeneralTextLayout(graphics, this.LabelOffset, this.textLayout, this.PaintState);
+			adorner.PaintGeneralTextLayout(graphics, this.LabelOffset, this.TextLayout, this.PaintState);
 		}
 		
 		protected Drawing.Point LabelOffset

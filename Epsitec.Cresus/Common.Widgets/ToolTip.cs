@@ -218,7 +218,7 @@ namespace Epsitec.Common.Widgets
 			if ( this.widget == null )  return;
 
 			this.Text = (string)this.hash[this.widget];
-			Drawing.Size size = this.textLayout.SingleLineSize();
+			Drawing.Size size = this.TextLayout.SingleLineSize();
 			size.Width  += this.margin.X*2;
 			size.Height += this.margin.Y*2;
 
@@ -234,7 +234,7 @@ namespace Epsitec.Common.Widgets
 
 			this.Location = new Drawing.Point(0, 0);
 			this.Size = size;
-			this.textLayout.Alignment = Drawing.ContentAlignment.MiddleLeft;
+			this.TextLayout.Alignment = Drawing.ContentAlignment.MiddleLeft;
 			this.Invalidate();
 
 			this.window.Show();
@@ -251,7 +251,7 @@ namespace Epsitec.Common.Widgets
 		// Dessine le tooltip.
 		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
-			if ( this.textLayout == null )  return;
+			if ( this.TextLayout == null )  return;
 			
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
@@ -261,7 +261,7 @@ namespace Epsitec.Common.Widgets
 
 			pos.X += this.margin.X;  // à cause du Drawing.ContentAlignment.MiddleLeft
 			adorner.PaintTooltipBackground(graphics, rect);
-			adorner.PaintTooltipTextLayout(graphics, pos, this.textLayout);
+			adorner.PaintTooltipTextLayout(graphics, pos, this.TextLayout);
 		}
 
 

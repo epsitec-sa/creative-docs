@@ -8,7 +8,8 @@ namespace Epsitec.Common.Widgets
 			this.index = index;
 		}
 		
-		public Drawing.Rectangle Bounds
+		
+		public Drawing.Rectangle			Bounds
 		{
 			get
 			{
@@ -16,7 +17,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public int Index
+		public int							Index
 		{
 			get
 			{
@@ -24,6 +25,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 				
+		
 		private Drawing.Rectangle			rect;
 		private int							index;
 	}

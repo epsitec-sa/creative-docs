@@ -12,31 +12,36 @@ namespace Epsitec.Common.Widgets
 	
 	[System.Flags] public enum AnchorStyles : byte
 	{
-		None			= 0,
-		Top				= 1,
-		Bottom			= 2,
-		Left			= 4,
-		Right			= 8,
-			
-		LeftAndRight	= Left + Right,
-		TopAndBottom	= Top + Bottom,
+		None				= 0,
+		Top					= 1,
+		Bottom				= 2,
+		Left				= 4,
+		Right				= 8,
+		
+		TopLeft				= Top | Left,
+		BottomLeft			= Bottom | Left,
+		TopRight			= Top | Right,
+		BottomRight			= Bottom | Right,
+		LeftAndRight		= Left | Right,
+		TopAndBottom		= Top | Bottom,
+		All					= TopAndBottom | LeftAndRight
 	}
 	
 	[System.Flags] public enum WidgetState : uint
 	{
-		ActiveNo		= 0,
-		ActiveYes		= 1,
-		ActiveMaybe		= 2,
-		ActiveMask		= ActiveNo | ActiveYes | ActiveMaybe,
+		ActiveNo			= 0,
+		ActiveYes			= 1,
+		ActiveMaybe			= 2,
+		ActiveMask			= ActiveNo | ActiveYes | ActiveMaybe,
 		
 		
-		None			= 0x00000000,		//	=> neutre
-		Enabled			= 0x00010000,		//	=> pas grisé
-		Focused			= 0x00020000,		//	=> reçoit les événements clavier
-		Entered			= 0x00040000,		//	=> contient la souris
-		Selected		= 0x00080000,		//	=> sélectionné
-		Engaged			= 0x00100000,		//	=> pression en cours
-		Error			= 0x00200000,		//	=> signale une erreur
+		None				= 0x00000000,		//	=> neutre
+		Enabled				= 0x00010000,		//	=> pas grisé
+		Focused				= 0x00020000,		//	=> reçoit les événements clavier
+		Entered				= 0x00040000,		//	=> contient la souris
+		Selected			= 0x00080000,		//	=> sélectionné
+		Engaged				= 0x00100000,		//	=> pression en cours
+		Error				= 0x00200000,		//	=> signale une erreur
 	}
 	
 	[System.Flags] public enum InternalState : uint
@@ -73,23 +78,23 @@ namespace Epsitec.Common.Widgets
 	
 	public enum DockStyle : byte
 	{
-		None			= 0,
+		None				= 0,
 		
-		Top				= 1,				//	colle en haut
-		Bottom			= 2,				//	colle en bas
-		Left			= 3,				//	colle à gauche
-		Right			= 4,				//	colle à droite
-		Fill			= 5,				//	remplit tout
+		Top					= 1,				//	colle en haut
+		Bottom				= 2,				//	colle en bas
+		Left				= 3,				//	colle à gauche
+		Right				= 4,				//	colle à droite
+		Fill				= 5,				//	remplit tout
 		
-		Layout			= 6,				//	utilise un Layout Manager externe
+		Layout				= 6,				//	utilise un Layout Manager externe
 	}
 	
 	public enum LayoutFlags : byte
 	{
-		None			= 0,
+		None				= 0,
 		
-		StartNewLine	= 0x40,				//	force layout sur une nouvelle ligne
-		IncludeChildren	= 0x80				//	inclut les enfants
+		StartNewLine		= 0x40,				//	force layout sur une nouvelle ligne
+		IncludeChildren		= 0x80				//	inclut les enfants
 	}
 	
 	
@@ -107,16 +112,15 @@ namespace Epsitec.Common.Widgets
 			
 			this.widget_state |= WidgetState.Enabled;
 			
-			this.defaultFontHeight = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
-			this.alignment = this.DefaultAlignment;
-			this.anchor    = this.DefaultAnchor;
-			this.Size      = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
+			this.default_font_height = System.Math.Floor(this.DefaultFont.LineHeight*this.DefaultFontSize);
+			this.alignment           = this.DefaultAlignment;
+			this.anchor              = this.DefaultAnchor;
+			this.back_color          = Drawing.Color.Empty;
 			
-			this.backColor = Drawing.Color.FromName ("Control");
-			this.foreColor = Drawing.Color.FromName ("ControlText");
+			this.Size = new Drawing.Size (this.DefaultWidth, this.DefaultHeight);
 			
-			this.minSize = this.DefaultMinSize;
-			this.maxSize = this.DefaultMaxSize;
+			this.min_size = this.DefaultMinSize;
+			this.max_size = this.DefaultMaxSize;
 			
 			Widget.alive_widgets.Add (new System.WeakReference (this));
 		}
@@ -358,35 +362,23 @@ namespace Epsitec.Common.Widgets
 		
 		public MouseCursor					MouseCursor
 		{
-			get { return this.mouseCursor == null ? MouseCursor.Default : this.mouseCursor; }
-			set { this.mouseCursor = value; }
+			get { return this.mouse_cursor == null ? MouseCursor.Default : this.mouse_cursor; }
+			set { this.mouse_cursor = value; }
 		}
 		
 		public Drawing.Color				BackColor
 		{
-			get { return this.backColor; }
+			get { return this.back_color; }
 			set
 			{
-				if (this.backColor != value)
+				if (this.back_color != value)
 				{
-					this.backColor = value;
+					this.back_color = value;
 					this.Invalidate ();
 				}
 			}
 		}
 		
-		public Drawing.Color				ForeColor
-		{
-			get { return this.foreColor; }
-			set
-			{
-				if (this.foreColor != value)
-				{
-					this.foreColor = value;
-					this.Invalidate ();
-				}
-			}
-		}
 		
 		
 		public double						Top
@@ -468,13 +460,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.minSize;
+				return this.min_size;
 			}
 			set
 			{
-				if (this.minSize != value)
+				if (this.min_size != value)
 				{
-					this.minSize = value;
+					this.min_size = value;
 					this.OnMinSizeChanged ();
 				}
 			}
@@ -484,13 +476,13 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				return this.maxSize;
+				return this.max_size;
 			}
 			set
 			{
-				if (this.maxSize != value)
+				if (this.max_size != value)
 				{
-					this.maxSize = value;
+					this.max_size = value;
 					this.OnMaxSizeChanged ();
 				}
 			}
@@ -501,7 +493,7 @@ namespace Epsitec.Common.Widgets
 		{
 			lock (this)
 			{
-				this.suspendCounter++;
+				this.suspend_counter++;
 			}
 		}
 		
@@ -509,12 +501,12 @@ namespace Epsitec.Common.Widgets
 		{
 			lock (this)
 			{
-				if (this.suspendCounter > 0)
+				if (this.suspend_counter > 0)
 				{
-					this.suspendCounter--;
+					this.suspend_counter--;
 				}
 				
-				if (this.suspendCounter == 0)
+				if (this.suspend_counter == 0)
 				{
 					if (this.layout_info != null)
 					{
@@ -610,7 +602,7 @@ namespace Epsitec.Common.Widgets
 		}
 		public virtual double				DefaultFontHeight
 		{
-			get { return this.defaultFontHeight; }
+			get { return this.default_font_height; }
 		}
 		public virtual Drawing.Size			DefaultMinSize
 		{
@@ -620,6 +612,11 @@ namespace Epsitec.Common.Widgets
 		public virtual Drawing.Size			DefaultMaxSize
 		{
 			get { return new Drawing.Size (1000000, 1000000); }
+		}
+		
+		public virtual Drawing.Size			PreferredSize
+		{
+			get { return new Drawing.Size (this.DefaultWidth, this.DefaultHeight); }
 		}
 		
 		
@@ -1176,12 +1173,12 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.textLayout == null)
+				if (this.text_layout == null)
 				{
 					return "";
 				}
 				
-				string text = this.textLayout.Text;
+				string text = this.text_layout.Text;
 				
 				if (text == null)
 				{
@@ -1201,10 +1198,15 @@ namespace Epsitec.Common.Widgets
 				else
 				{
 					this.CreateTextLayout ();
-					this.textLayout.Text = value;
+					this.text_layout.Text = value;
 					this.Shortcut.Mnemonic = this.Mnemonic;
 				}
 			}
+		}
+		
+		public TextLayout					TextLayout
+		{
+			get { return this.text_layout; }
 		}
 		
 		
@@ -1225,14 +1227,14 @@ namespace Epsitec.Common.Widgets
 		
 		public int							TabIndex
 		{
-			get { return this.tabIndex; }
-			set { this.tabIndex = value; }
+			get { return this.tab_index; }
+			set { this.tab_index = value; }
 		}
 		
 		public TabNavigationMode			TabNavigation
 		{
-			get { return this.tabNavigationMode; }
-			set { this.tabNavigationMode = value; }
+			get { return this.tab_navigation_mode; }
+			set { this.tab_navigation_mode = value; }
 		}
 		
 		public Shortcut						Shortcut
@@ -1265,21 +1267,21 @@ namespace Epsitec.Common.Widgets
 		{
 			get
 			{
-				if (this.textLayout != null)
+				if (this.text_layout != null)
 				{
-					return this.textLayout.BreakMode;
+					return this.text_layout.BreakMode;
 				}
 				
 				return Drawing.TextBreakMode.None;
 			}
 			set
 			{
-				if (this.textLayout == null)
+				if (this.text_layout == null)
 				{
 					this.CreateTextLayout ();
 				}
 				
-				this.textLayout.BreakMode = value;
+				this.text_layout.BreakMode = value;
 			}
 		}
 		
@@ -2459,10 +2461,10 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void UpdateLayoutSize()
 		{
-			if (this.textLayout != null)
+			if (this.text_layout != null)
 			{
-				this.textLayout.Alignment  = this.Alignment;
-				this.textLayout.LayoutSize = this.Client.Size;
+				this.text_layout.Alignment  = this.Alignment;
+				this.text_layout.LayoutSize = this.Client.Size;
 			}
 		}
 		
@@ -2500,7 +2502,7 @@ namespace Epsitec.Common.Widgets
 						break;
 				}
 				
-				if (this.suspendCounter == 0)
+				if (this.suspend_counter == 0)
 				{
 					this.UpdateChildrenLayout ();
 					this.OnLayoutChanged ();
@@ -2508,7 +2510,7 @@ namespace Epsitec.Common.Widgets
 			}
 			finally
 			{
-				if (this.suspendCounter == 0)
+				if (this.suspend_counter == 0)
 				{
 					this.layout_info = null;
 				}
@@ -2863,9 +2865,9 @@ namespace Epsitec.Common.Widgets
 			
 				try
 				{
-					if (this.hypertextList != null)
+					if (this.hypertext_list != null)
 					{
-						this.hypertextList.Clear ();
+						this.hypertext_list.Clear ();
 					}
 					
 					PaintEventArgs local_paint_args = new PaintEventArgs (graphics, repaint);
@@ -3086,9 +3088,9 @@ namespace Epsitec.Common.Widgets
 			{
 				bool reset = true;
 				
-				if (this.hypertextList != null)
+				if (this.hypertext_list != null)
 				{
-					foreach (HypertextInfo info in this.hypertextList)
+					foreach (HypertextInfo info in this.hypertext_list)
 					{
 						if (info.Bounds.Contains (pos))
 						{
@@ -3246,13 +3248,13 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void CreateTextLayout()
 		{
-			if (this.textLayout == null)
+			if (this.text_layout == null)
 			{
-				this.textLayout = new TextLayout ();
+				this.text_layout = new TextLayout ();
 				
-				this.textLayout.Font     = this.DefaultFont;
-				this.textLayout.FontSize = this.DefaultFontSize;
-				this.textLayout.Anchor  += new AnchorEventHandler (this.HandleTextLayoutAnchor);
+				this.text_layout.Font     = this.DefaultFont;
+				this.text_layout.FontSize = this.DefaultFontSize;
+				this.text_layout.Anchor  += new AnchorEventHandler (this.HandleTextLayoutAnchor);
 				
 				this.UpdateLayoutSize ();
 			}
@@ -3260,25 +3262,25 @@ namespace Epsitec.Common.Widgets
 		
 		protected virtual void DisposeTextLayout()
 		{
-			if (this.textLayout != null)
+			if (this.text_layout != null)
 			{
-				this.textLayout.Anchor -= new AnchorEventHandler (this.HandleTextLayoutAnchor);
-				this.textLayout = null;
+				this.text_layout.Anchor -= new AnchorEventHandler (this.HandleTextLayoutAnchor);
+				this.text_layout = null;
 			}
 		}
 		
 		protected virtual void HandleTextLayoutAnchor(object sender, AnchorEventArgs e)
 		{
-			System.Diagnostics.Debug.Assert (sender == this.textLayout);
+			System.Diagnostics.Debug.Assert (sender == this.text_layout);
 			
-			HypertextInfo info = new HypertextInfo (this.textLayout, e.Bounds, e.Index);
+			HypertextInfo info = new HypertextInfo (this.text_layout, e.Bounds, e.Index);
 			
-			if (this.hypertextList == null)
+			if (this.hypertext_list == null)
 			{
-				this.hypertextList = new System.Collections.ArrayList ();
+				this.hypertext_list = new System.Collections.ArrayList ();
 			}
 			
-			this.hypertextList.Add (info);
+			this.hypertext_list.Add (info);
 		}
 		
 		protected virtual void OnPreparePaint()
@@ -3588,8 +3590,8 @@ namespace Epsitec.Common.Widgets
 		
 		public enum PropagationSetting : byte
 		{
-			None			= 0,
-			IncludeChildren	= 1
+			None				= 0,
+			IncludeChildren		= 1
 		}
 		
 		[System.Flags] public enum PropagationModes : uint
@@ -3614,10 +3616,10 @@ namespace Epsitec.Common.Widgets
 		
 		[System.Flags] public enum ChildFindMode
 		{
-			All				= 0,
-			SkipHidden		= 1,
-			SkipDisabled	= 2,
-			SkipTransparent	= 4
+			All					= 0,
+			SkipHidden			= 1,
+			SkipDisabled		= 2,
+			SkipTransparent		= 4
 		}
 		
 		
@@ -3832,7 +3834,7 @@ namespace Epsitec.Common.Widgets
 			
 			private void NotifyChanged()
 			{
-				if (this.widget.suspendCounter == 0)
+				if (this.widget.suspend_counter == 0)
 				{
 					this.widget.HandleChildrenChanged ();
 				}
@@ -4053,26 +4055,25 @@ namespace Epsitec.Common.Widgets
 		
 		private PropagationModes				propagation;
 		
-		protected Drawing.Color					backColor;
-		protected Drawing.Color					foreColor;
-		protected double						x1, y1, x2, y2;
-		protected Drawing.Size					minSize;
-		protected Drawing.Size					maxSize;
-		protected System.Collections.ArrayList	hypertextList;
-		protected HypertextInfo					hypertext;
+		private Drawing.Color					back_color;
+		private double							x1, y1, x2, y2;
+		private Drawing.Size					min_size;
+		private Drawing.Size					max_size;
+		private System.Collections.ArrayList	hypertext_list;
+		private HypertextInfo					hypertext;
 		
-		protected WidgetCollection				children;
-		protected Widget						parent;
-		protected string						name;
-		protected int							index;
-		protected TextLayout					textLayout;
-		protected ContentAlignment				alignment;
-		protected int							suspendCounter;
-		protected int							tabIndex;
-		protected TabNavigationMode				tabNavigationMode;
-		protected Shortcut						shortcut;
-		protected double						defaultFontHeight;
-		protected MouseCursor					mouseCursor;
+		private WidgetCollection				children;
+		private Widget							parent;
+		private string							name;
+		private int								index;
+		private TextLayout						text_layout;
+		private ContentAlignment				alignment;
+		private int								suspend_counter;
+		private int								tab_index;
+		private TabNavigationMode				tab_navigation_mode;
+		private Shortcut						shortcut;
+		private double							default_font_height;
+		private MouseCursor						mouse_cursor;
 		
 		static System.Collections.ArrayList		entered_widgets = new System.Collections.ArrayList ();
 		static System.Collections.ArrayList		alive_widgets   = new System.Collections.ArrayList ();

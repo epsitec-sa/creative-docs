@@ -119,15 +119,15 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void UpdateLayoutSize()
 		{
-			if ( this.textLayout != null )
+			if ( this.TextLayout != null )
 			{
 				double dx = this.Client.Width - AbstractTextField.Margin*2 - this.margins.Width;
 				double dy = this.Client.Height - AbstractTextField.Margin*2;
 				this.realSize = new Drawing.Size(dx, dy);
-				this.textLayout.Alignment = this.Alignment;
-				this.textLayout.LayoutSize = new Drawing.Size(dx, AbstractTextField.Infinity);
+				this.TextLayout.Alignment = this.Alignment;
+				this.TextLayout.LayoutSize = new Drawing.Size(dx, AbstractTextField.Infinity);
 
-				if ( this.textLayout.Text != null )
+				if ( this.TextLayout.Text != null )
 				{
 					this.CursorScroll();
 				}

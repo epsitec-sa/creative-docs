@@ -9,8 +9,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public WindowRoot(Window window)
 		{
-			this.window    = window;
-			this.BackColor = Drawing.Color.Empty;
+			this.window = window;
 			
 			this.InternalState |= InternalState.PossibleContainer;
 		}
@@ -53,7 +52,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override void Invalidate()
 		{
-			System.Diagnostics.Debug.Assert (this.parent == null);
+			System.Diagnostics.Debug.Assert (this.Parent == null);
 			
 			if (this.window != null)
 			{
@@ -63,7 +62,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override void Invalidate(Drawing.Rectangle rect)
 		{
-			System.Diagnostics.Debug.Assert (this.parent == null);
+			System.Diagnostics.Debug.Assert (this.Parent == null);
 			
 			if (this.window != null)
 			{
