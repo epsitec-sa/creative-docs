@@ -12,7 +12,7 @@ namespace Epsitec.Common.Support
 			dict.Add ("NumValue", "15");
 			dict.Add ("StringValue", "Hello");
 			dict.Add ("DecimalValue", "123.456");
-			dict.Add ("DateTimeValue", "2004-11-03T10:30:05+1230000");
+			dict.Add ("DateTimeValue", "2004-11-03T10:30:05.1230000");
 			
 			MyObject data = new MyObject ();
 			

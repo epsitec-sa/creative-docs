@@ -109,8 +109,12 @@ namespace Epsitec.Common.Support.Implementation
 				//	On valide toujours le nom avant, pour éviter des mauvaises surprises si
 				//	l'appelant est malicieux.
 				
-				//	TODO: vérifie si la ressource existe, en cherchant uniquement le niveau
-				//	ResourceLevel.Default.
+				string path = this.GetPathFromId (id, ResourceLevel.Default);
+				
+				if (System.IO.File.Exists (path))
+				{
+					return true;
+				}
 			}
 			
 			return false;

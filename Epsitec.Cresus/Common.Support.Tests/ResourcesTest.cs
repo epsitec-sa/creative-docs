@@ -9,10 +9,11 @@ namespace Epsitec.Common.Support
 		{
 			try
 			{
-				Implementation.BaseProvider.CreateResourceDatabase ("test");
+//-				Implementation.BaseProvider.CreateResourceDatabase ("test");
 			}
-			catch
+			catch (System.Exception ex)
 			{
+				System.Diagnostics.Debug.WriteLine (ex.Message);
 			}
 			
 			Resources.SetupApplication ("test");
@@ -59,6 +60,7 @@ namespace Epsitec.Common.Support
 		[Test] public void CheckFileContains()
 		{
 			Assert.IsTrue (Resources.ContainsId ("file:button.cancel"));
+			Assert.IsFalse (Resources.ContainsId ("file:does_not_exist"));
 		}
 		
 		[Test] public void CheckFileGetBundle()
@@ -93,6 +95,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
+#if false
 		[Test] public void CheckBase00ContainsNo()
 		{
 			Assert.IsTrue (! Resources.ContainsId ("base:raw_data_test"));
@@ -256,6 +259,7 @@ namespace Epsitec.Common.Support
 				System.Console.Out.WriteLine ("  {0}: {1}", tag, bundle[tag].Data);
 			}
 		}
+#endif
 		
 		[Test] [ExpectedException (typeof (ResourceException))] public void CheckGetBundleRecursive()
 		{

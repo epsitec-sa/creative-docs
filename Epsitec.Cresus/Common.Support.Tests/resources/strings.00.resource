@@ -1,4 +1,5 @@
-﻿<!-- Save as UTF-8 -->
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<!-- Save as UTF-8 -->
 
 <bundle type="String">
 <data name='label.OK'>OK</data>
