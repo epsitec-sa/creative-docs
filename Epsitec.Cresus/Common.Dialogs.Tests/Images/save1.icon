@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EpsitecPictogram xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <Size Width="20" Height="20" />
+  <Origin X="0" Y="0" />
+  <Objects>
+    <Polyline>
+      <Properties>
+        <Line Type="LineMode" Width="1" Cap="Round" Join="Round" />
+        <Color Type="LineColor">
+          <Color R="0" G="0" B="0" A="1" />
+        </Color>
+        <Gradient Type="FillGradient" Fill="None" Angle="0" Cx="0.5" Cy="0.5" Repeat="1" Middle="0" Range="0">
+          <Color1 R="0.58897653386981363" G="0.58897653386981363" B="0" A="1" />
+          <Color2 R="0.6" G="0.6" B="0.6" A="1" />
+        </Gradient>
+        <Bool Type="PolyClose" Bool="true" />
+      </Properties>
+      <Handles>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="2.5" Y="17.5" />
+        </Handle>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="2.5" Y="4.5" />
+        </Handle>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="4.5" Y="2.5" />
+        </Handle>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="17.5" Y="2.5" />
+        </Handle>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="17.5" Y="17.5" />
+        </Handle>
+      </Handles>
+    </Polyline>
+    <Rectangle>
+      <Properties>
+        <Line Type="LineMode" Width="1" Cap="Round" Join="Round" />
+        <Color Type="LineColor">
+          <Color R="0" G="0" B="0" A="1" />
+        </Color>
+        <Gradient Type="FillGradient" Fill="None" Angle="0" Cx="0.5" Cy="0.5" Repeat="1" Middle="0" Range="0">
+          <Color1 R="0.8" G="0.8" B="0.8" A="1" />
+          <Color2 R="0.6" G="0.6" B="0.6" A="1" />
+        </Gradient>
+        <Double Type="RoundRect" Value="0" />
+      </Properties>
+      <Handles>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="5.5" Y="17.5" />
+        </Handle>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="14.5" Y="9.5" />
+        </Handle>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="5.5" Y="9.5" />
+        </Handle>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="14.5" Y="17.5" />
+        </Handle>
+      </Handles>
+    </Rectangle>
+    <Rectangle>
+      <Properties>
+        <Line Type="LineMode" Width="1" Cap="Round" Join="Round" />
+        <Color Type="LineColor">
+          <Color R="0" G="0" B="0" A="1" />
+        </Color>
+        <Gradient Type="FillGradient" Fill="None" Angle="0" Cx="0.5" Cy="0.5" Repeat="1" Middle="0" Range="0">
+          <Color1 R="0.7" G="0.7" B="0.7" A="1" />
+          <Color2 R="0.6" G="0.6" B="0.6" A="1" />
+        </Gradient>
+        <Double Type="RoundRect" Value="0" />
+      </Properties>
+      <Handles>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="6.5" Y="6.5" />
+        </Handle>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="13.5" Y="2.5" />
+        </Handle>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="6.5" Y="2.5" />
+        </Handle>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="13.5" Y="6.5" />
+        </Handle>
+      </Handles>
+    </Rectangle>
+    <Rectangle>
+      <Properties>
+        <Line Type="LineMode" Width="1" Cap="Round" Join="Round" />
+        <Color Type="LineColor">
+          <Color R="0" G="0" B="0" A="1" />
+        </Color>
+        <Gradient Type="FillGradient" Fill="None" Angle="0" Cx="0.5" Cy="0.5" Repeat="1" Middle="0" Range="0">
+          <Color1 R="0" G="0" B="0" A="1" />
+          <Color2 R="0.6" G="0.6" B="0.6" A="1" />
+        </Gradient>
+        <Double Type="RoundRect" Value="0" />
+      </Properties>
+      <Handles>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="6.5" Y="6.5" />
+        </Handle>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="10.5" Y="2.5" />
+        </Handle>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="6.5" Y="2.5" />
+        </Handle>
+        <Handle Type="Primary" ConstrainType="Symmetric">
+          <Position X="10.5" Y="6.5" />
+        </Handle>
+      </Handles>
+    </Rectangle>
+  </Objects>
+</EpsitecPictogram>
