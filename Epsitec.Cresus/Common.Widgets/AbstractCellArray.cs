@@ -75,7 +75,7 @@ namespace Epsitec.Common.Widgets
 		
 
 
-		// Sytle pour l'en-tête supérieure et l'ascenseur horizontal.
+		// Sytle pour l'en-tête supérieur et l'ascenseur horizontal.
 		public CellArrayStyle StyleH
 		{
 			get
@@ -246,7 +246,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		// Choix du nom d'une ligne de l'en-tête verticale.
+		// Choix du nom d'une ligne de l'en-tête vertical.
 		public virtual void SetHeaderTextV(int rank, string text)
 		{
 			if ( rank < 0 || rank >= this.maxRows )
@@ -261,7 +261,7 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate();
 		}
 
-		// Choix du nom d'une colonne de l'en-tête horizontale.
+		// Choix du nom d'une colonne de l'en-tête horizontal.
 		public virtual void SetHeaderTextH(int rank, string text)
 		{
 			if ( rank < 0 || rank >= this.maxColumns )
@@ -1209,7 +1209,7 @@ namespace Epsitec.Common.Widgets
 				this.UpdateArrayGeometry();
 			}
 
-			// Positionne les boutons de l'en-tête verticale.
+			// Positionne les boutons de l'en-tête vertical.
 			if ( (this.styleV & CellArrayStyle.Header) == 0 )
 			{
 				this.containerV.Hide();
@@ -1266,7 +1266,7 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			// Positionne les boutons de l'en-tête horizontale.
+			// Positionne les boutons de l'en-tête horizontal.
 			if ( (this.styleH & CellArrayStyle.Header) == 0 )
 			{
 				this.containerH.Hide();
@@ -1815,8 +1815,8 @@ namespace Epsitec.Common.Widgets
 		protected int							visibleColumns;	// nb de colonnes visibles
 		protected int							visibleRows;	// nb de lignes visibles
 		protected Widget						container;		// père de toutes les cellules
-		protected Widget						containerV;		// père de l'en-tête verticale
-		protected Widget						containerH;		// père de l'en-tête horizontale
+		protected Widget						containerV;		// père de l'en-tête vertical
+		protected Widget						containerH;		// père de l'en-tête horizontal
 		protected Cell[,]						array;			// tableau des cellules
 		protected double						defWidth = 100;
 		protected double						defHeight = 18;
