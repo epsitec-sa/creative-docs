@@ -143,12 +143,12 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "BuilderController.cs"
+                    RelPath = "BundleEditController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "BundleEditController.cs"
+                    RelPath = "InterfaceEditController.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />
@@ -312,6 +312,11 @@
                 />
                 <File
                     RelPath = "Widgets\GripsOverlay.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "Widgets\Switcher.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

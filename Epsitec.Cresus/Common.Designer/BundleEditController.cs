@@ -1,5 +1,5 @@
 //	Copyright © 2004, EPSITEC SA, CH-1092 BELMONT, Switzerland
-//	Statut : en chantier/PA
+//	Responsable: Pierre ARNAUD
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
@@ -14,13 +14,9 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class BundleEditController : AbstractController
 	{
-		public BundleEditController(Application application)
+		public BundleEditController(Application application) : base (application)
 		{
-			this.application = application;
 			this.bundles     = new System.Collections.ArrayList ();
-			this.dispatcher  = this.application.CommandDispatcher;
-			
-			this.dispatcher.RegisterController (this);
 		}
 		
 		
@@ -58,8 +54,6 @@ namespace Epsitec.Common.Designer
 		}
 		
 		
-		protected Application					application;
 		protected System.Collections.ArrayList	bundles;
-		protected Support.CommandDispatcher		dispatcher;
 	}
 }
