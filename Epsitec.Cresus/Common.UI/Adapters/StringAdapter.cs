@@ -21,6 +21,7 @@ namespace Epsitec.Common.UI.Adapters
 		public StringAdapter(Binders.IBinder binder) : this ()
 		{
 			this.Binder = binder;
+			this.Binder.Adapter = this;
 		}
 		
 		

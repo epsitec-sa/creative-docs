@@ -32,7 +32,9 @@ namespace Epsitec.Common.UI.Binders
 			{
 				if (this.source != value)
 				{
+					this.Detach ();
 					this.source = value;
+					this.Attach ();
 					this.OnSourceChanged ();
 				}
 			}
@@ -85,12 +87,33 @@ namespace Epsitec.Common.UI.Binders
 		}
 		
 		
+		protected void Attach()
+		{
+			Support.Data.IChangedSource changed_source = this.source as Support.Data.IChangedSource;
+			
+			if (changed_source != null)
+			{
+				changed_source.Changed += new Support.EventHandler (this.HandleSourceValueChanged);
+			}
+		}
+		
+		protected void Detach()
+		{
+			Support.Data.IChangedSource changed_source = this.source as Support.Data.IChangedSource;
+			
+			if (changed_source != null)
+			{
+				changed_source.Changed -= new Support.EventHandler (this.HandleSourceValueChanged);
+			}
+		}
+		
+		
 		protected virtual void OnSourceChanged()
 		{
 			this.SyncToAdapter ();
 		}
 		
-		protected virtual void OnPropertyChanged()
+		protected virtual void OnSourceValueChanged()
 		{
 			this.SyncToAdapter ();
 		}
@@ -108,10 +131,16 @@ namespace Epsitec.Common.UI.Binders
 		{
 			if (disposing)
 			{
+				this.Detach ();
 				this.source = null;
 			}
 		}
 		
+		
+		private void HandleSourceValueChanged(object sender)
+		{
+			this.OnSourceValueChanged ();
+		}
 		
 		
 		private Types.IDataValue				source;
