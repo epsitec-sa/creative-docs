@@ -283,6 +283,11 @@ namespace Epsitec.Common.Document.Properties
 		// Indique si une poignée est visible.
 		public override bool IsHandleVisible(Objects.Abstract obj, int rank)
 		{
+			if ( !this.document.Modifier.IsPropertiesExtended(this.type) )
+			{
+				return false;
+			}
+
 			if ( obj is Objects.Poly )
 			{
 				return (this.cornerType != CornerType.Right && obj.TotalMainHandle > 2);

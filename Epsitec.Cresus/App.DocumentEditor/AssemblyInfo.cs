@@ -9,7 +9,7 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTitle("EPSITEC Crésus documents")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("EPSITEC SA")]
+[assembly: AssemblyCompany("Epsitec")]
 [assembly: AssemblyProduct("Crésus documents")]
 [assembly: AssemblyCopyright("Copyright © 2002-2004, EPSITEC SA, CH-1092 BELMONT, Switzerland")]
 [assembly: AssemblyTrademark("")]

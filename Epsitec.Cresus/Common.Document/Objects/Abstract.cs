@@ -442,6 +442,24 @@ namespace Epsitec.Common.Document.Objects
 			return false;
 		}
 
+		// Donne la zone contenant le curseur d'édition.
+		public virtual Drawing.Rectangle EditCursorBox
+		{
+			get
+			{
+				return Drawing.Rectangle.Empty;
+			}
+		}
+
+		// Donne la zone contenant le texte sélectionné.
+		public virtual Drawing.Rectangle EditSelectBox
+		{
+			get
+			{
+				return Drawing.Rectangle.Empty;
+			}
+		}
+
 		// Détecte la cellule pointée par la souris.
 		public virtual int DetectCell(Point pos)
 		{
@@ -479,6 +497,37 @@ namespace Epsitec.Common.Document.Objects
 				else
 				{
 					return this.BoundingBoxGeom;
+				}
+			}
+		}
+
+		// Rectangle englobant l'objet complet ou partiel.
+		public Drawing.Rectangle BoundingBoxPartial
+		{
+			get
+			{
+				if ( this.allSelected )
+				{
+					return this.BoundingBoxDetect;
+				}
+				else
+				{
+					Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
+					int total = this.TotalHandle;
+					for ( int i=0 ; i<total ; i++ )
+					{
+						Handle handle = this.Handle(i);
+						if ( handle.PropertyType != Properties.Type.None )  break;
+						if ( !handle.IsVisible )  continue;
+						if ( handle.Type == HandleType.Bezier )  continue;
+						bbox.MergeWith(handle.Position);
+					}
+					Properties.Line line = this.PropertyLineMode;
+					if ( line != null )
+					{
+						bbox.Inflate(line.Width/2.0);
+					}
+					return bbox;
 				}
 			}
 		}
@@ -708,7 +757,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 		// Sélectionne ou désélectionne toutes les poignées de l'objet.
-		public virtual void Select(bool select, bool edit)
+		public void Select(bool select, bool edit)
 		{
 			this.InsertOpletSelection();
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
@@ -716,6 +765,7 @@ namespace Epsitec.Common.Document.Objects
 			this.selected = select;
 			this.edited = edit;
 			this.globalSelected = false;
+			this.allSelected = true;
 			this.SplitProperties();
 
 			int total = this.TotalHandle;
@@ -741,7 +791,7 @@ namespace Epsitec.Common.Document.Objects
 			this.document.Notifier.NotifyArea(this.document.Modifier.ActiveViewer, this.BoundingBox);
 
 			int sel = 0;
-			int total = this.TotalHandle;
+			int total = this.TotalMainHandle;
 			for ( int i=0 ; i<total ; i++ )
 			{
 				Handle handle = this.Handle(i);
@@ -762,6 +812,7 @@ namespace Epsitec.Common.Document.Objects
 			this.selected = ( sel > 0 );
 			this.edited = false;
 			this.globalSelected = false;
+			this.allSelected = (sel == total);
 			this.HandlePropertiesUpdate();
 			this.SplitProperties();
 
@@ -1159,6 +1210,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( pb == null )  return;
 			if ( pb.BoolValue == close )  return;  // on ne veut rien changer
 
+			bool oqe;
 			UndoableList properties = this.document.PropertiesAuto;
 			foreach ( Properties.Abstract property in properties )
 			{
@@ -1168,11 +1220,18 @@ namespace Epsitec.Common.Document.Objects
 
 				if ( existing.BoolValue == close )
 				{
-					this.ChangeProperty(existing);
+					oqe = this.document.Modifier.OpletQueueEnable;
+					this.document.Modifier.OpletQueueEnable = true;
+
 					this.MergeProperty(existing, pb);
+					
+					this.document.Modifier.OpletQueueEnable = oqe;
 					return;
 				}
 			}
+
+			oqe = this.document.Modifier.OpletQueueEnable;
+			this.document.Modifier.OpletQueueEnable = true;
 
 			Properties.Abstract dst = Properties.Abstract.NewProperty(this.document, pb.Type);
 			pb.CopyTo(dst);
@@ -1180,8 +1239,9 @@ namespace Epsitec.Common.Document.Objects
 			npb.BoolValue = close;
 			this.document.Modifier.PropertyAdd(dst);
 
-			this.ChangeProperty(npb);
 			this.MergeProperty(npb, pb);
+
+			this.document.Modifier.OpletQueueEnable = oqe;
 		}
 
 		// Utilise un style donné.
@@ -1191,6 +1251,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( actual == null )  return;
 
 			this.MergeProperty(style, actual);
+			this.document.Notifier.NotifyArea(this.BoundingBox);
 		}
 
 		// Libère un style (style -> propriété).
@@ -1431,6 +1492,7 @@ namespace Epsitec.Common.Document.Objects
 			this.isHide              = src.isHide;
 			this.selected            = src.selected;
 			this.globalSelected      = src.globalSelected;
+			this.allSelected         = src.allSelected;
 			this.edited              = src.edited;
 			this.dirtyBbox           = src.dirtyBbox;
 			this.bboxThin            = src.bboxThin;
@@ -1592,6 +1654,7 @@ namespace Epsitec.Common.Document.Objects
 				this.selected       = host.selected;
 				this.edited         = host.edited;
 				this.globalSelected = host.globalSelected;
+				this.allSelected    = host.allSelected;
 
 				this.list = new System.Collections.ArrayList();
 				foreach ( Handle hObj in this.host.handles )
@@ -1610,13 +1673,23 @@ namespace Epsitec.Common.Document.Objects
 				Misc.Swap(ref this.selected,       ref host.selected      );
 				Misc.Swap(ref this.edited,         ref host.edited        );
 				Misc.Swap(ref this.globalSelected, ref host.globalSelected);
+				Misc.Swap(ref this.allSelected,    ref host.allSelected   );
 
-				int total = this.list.Count;
-				for ( int i=0 ; i<total ; i++ )
+				if ( this.list.Count == this.host.handles.Count )
 				{
-					Handle hObj  = this.host.handles[i] as Handle;
-					Handle hCopy = this.list[i] as Handle;
-					hObj.SwapSelection(hCopy);
+					int total = this.list.Count;
+					for ( int i=0 ; i<total ; i++ )
+					{
+						Handle hObj  = this.host.handles[i] as Handle;
+						Handle hCopy = this.list[i] as Handle;
+						hObj.SwapSelection(hCopy);
+					}
+				}
+				else
+				{
+					System.Collections.ArrayList temp = this.host.handles;
+					this.host.handles = this.list;
+					this.list = temp;
 				}
 
 				this.host.document.Modifier.DirtyCounters();
@@ -1641,6 +1714,7 @@ namespace Epsitec.Common.Document.Objects
 			protected bool							selected;
 			protected bool							edited;
 			protected bool							globalSelected;
+			protected bool							allSelected;
 			protected System.Collections.ArrayList	list;
 		}
 		#endregion
@@ -1838,6 +1912,7 @@ namespace Epsitec.Common.Document.Objects
 		protected bool							selected = false;
 		protected bool							edited = false;
 		protected bool							globalSelected = false;
+		protected bool							allSelected = false;
 		protected bool							isCreating = false;
 		protected bool							dirtyBbox = true;
 		protected bool							autoScrollOneShot = false;

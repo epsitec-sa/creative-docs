@@ -24,7 +24,24 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected void PaintGrad(Drawing.Graphics graphics)
+		protected override void InvalidateBoxMarker()
+		{
+			if ( !this.markerVisible )  return;
+
+			Drawing.Rectangle rect = this.Client.Bounds;
+			double scale = (this.ending-this.starting)/rect.Width;
+			double posx = (this.marker-this.starting)/scale;
+			rect.Left  = posx-4;
+			rect.Right = posx+4;
+
+			if ( rect.IntersectsWith(this.Client.Bounds) )
+			{
+				this.invalidateBox.MergeWith(rect);
+			}
+		}
+
+
+		protected void PaintGrad(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorner.Factory.Active;
 
@@ -52,13 +69,17 @@ namespace Epsitec.Common.Widgets
 				double posx = (grad-this.starting)/scale;
 				int rank = (int) (System.Math.Floor(grad/step+0.5));
 
-				double h = rect.Height;
-				if ( rank%10 == 0 )  h *= 1.0;
-				else if ( rank% 5 == 0 )  h *= 0.4;
-				else                      h *= 0.2;
-				graphics.AddLine(posx, 0, posx, h);
+				if ( posx >= clipRect.Left-1.0  &&
+					 posx <= clipRect.Right+1.0 )
+				{
+					double h = rect.Height;
+					if ( rank%10 == 0 )  h *= 1.0;
+					else if ( rank% 5 == 0 )  h *= 0.4;
+					else                      h *= 0.2;
+					graphics.AddLine(posx, 0, posx, h);
+				}
 
-				if ( rank%10 == 0 )
+				if ( rank%10 == 0 && posx <= clipRect.Right )
 				{
 					double value = grad/this.ppm;
 					value *= 1000000.0;
@@ -69,8 +90,9 @@ namespace Epsitec.Common.Widgets
 					double size = rect.Height*0.6;
 					Drawing.Rectangle bounds = font.GetTextBounds(text);
 					bounds.Scale(size);
+					bounds.Offset(posx+2, 0);
 
-					if ( posx+4+bounds.Width < rect.Right )
+					if ( bounds.IntersectsWith(clipRect) )
 					{
 						graphics.PaintText(posx+2, rect.Top-size, text, font, size);
 					}
@@ -116,7 +138,7 @@ namespace Epsitec.Common.Widgets
 			graphics.AddFilledRectangle(rect);
 			graphics.RenderSolid(adorner.ColorWindow);  // dessine le fond
 
-			this.PaintGrad(graphics);
+			this.PaintGrad(graphics, clipRect);
 			this.PaintMarker(graphics);
 
 			rect.Deflate(0.5);

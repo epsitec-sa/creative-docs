@@ -9,7 +9,7 @@
             <Settings
                 ApplicationIcon = "App.ico"
                 AssemblyKeyContainerName = ""
-                AssemblyName = "App.DocumentEditor"
+                AssemblyName = "CresusDoc"
                 AssemblyOriginatorKeyFile = ""
                 DefaultClientScript = "JScript"
                 DefaultHTMLPageLayout = "Grid"
@@ -188,6 +188,10 @@
                     BuildAction = "EmbeddedResource"
                 />
                 <File
+                    RelPath = "Images\Application.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
                     RelPath = "Images\ArcClose.icon"
                     BuildAction = "EmbeddedResource"
                 />
@@ -293,6 +297,14 @@
                 />
                 <File
                     RelPath = "Images\Export.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\Finger.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\FingerDup.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File
@@ -733,6 +745,10 @@
                 />
                 <File
                     RelPath = "Images\ToLine.icon"
+                    BuildAction = "EmbeddedResource"
+                />
+                <File
+                    RelPath = "Images\ToPoly.icon"
                     BuildAction = "EmbeddedResource"
                 />
                 <File

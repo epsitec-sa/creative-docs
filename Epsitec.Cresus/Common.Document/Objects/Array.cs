@@ -116,29 +116,6 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
-		// Sélectionne ou désélectionne toutes les poignées de l'objet.
-		public override void Select(bool select, bool edit)
-		{
-			base.Select(select, edit);
-			this.DeselectAllCells();
-			if ( select && edit )
-			{
-				this.cellToEdit = this.cellToHilite;
-				if ( this.cellToEdit != -1 )
-				{
-					int c = this.cellToEdit%(this.columns+1);
-					int r = this.cellToEdit/(this.columns+1);
-					this.Cell(c,r).Selected = true;
-				}
-			}
-			else
-			{
-				this.cellToHilite = -1;
-				this.cellToEdit = -1;
-			}
-		}
-
-
 		// Choix du mode de modification.
 		public bool OutlineFrame
 		{
@@ -2048,7 +2025,7 @@ namespace Epsitec.Common.Document.Objects
 				{
 					graphics.Align(ref areas[i].Rect);
 					graphics.AddFilledRectangle(areas[i].Rect);
-					graphics.RenderSolid(DrawingContext.ColorSelectEdit);
+					graphics.RenderSolid(DrawingContext.ColorSelectEdit(active));
 				}
 			}
 

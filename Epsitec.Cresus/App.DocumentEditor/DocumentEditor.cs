@@ -259,6 +259,7 @@ namespace Epsitec.App.DocumentEditor
 			this.MenuAdd(geomMenu, "manifest:Epsitec.App.DocumentEditor.Images.Uncombine.icon", "Uncombine", "Scinder", "");
 			this.MenuAdd(geomMenu, "", "", "", "");
 			this.MenuAdd(geomMenu, "manifest:Epsitec.App.DocumentEditor.Images.ToBezier.icon", "ToBezier", "Convertir en courbes", "");
+			this.MenuAdd(geomMenu, "manifest:Epsitec.App.DocumentEditor.Images.ToPoly.icon", "ToPoly", "Convertir en droites", "");
 			this.MenuAdd(geomMenu, "manifest:Epsitec.App.DocumentEditor.Images.Fragment.icon", "Fragment", "Fragmenter", "");
 			geomMenu.AdjustSize();
 			objMenu.Items[14].Submenu = geomMenu;
@@ -1465,6 +1466,12 @@ namespace Epsitec.App.DocumentEditor
 			this.CurrentDocument.Modifier.ToBezierSelection();
 		}
 
+		[Command ("ToPoly")]
+		void CommandToPoly(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.CurrentDocument.Modifier.ToPolySelection(0.02);
+		}
+
 		[Command ("Fragment")]
 		void CommandFragment(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -1977,6 +1984,7 @@ namespace Epsitec.App.DocumentEditor
 			this.combineState = new CommandState("Combine", this.commandDispatcher);
 			this.uncombineState = new CommandState("Uncombine", this.commandDispatcher);
 			this.toBezierState = new CommandState("ToBezier", this.commandDispatcher);
+			this.toPolyState = new CommandState("ToPoly", this.commandDispatcher);
 			this.fragmentState = new CommandState("Fragment", this.commandDispatcher);
 			this.undoState = new CommandState("Undo", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaZ);
 			this.redoState = new CommandState("Redo", this.commandDispatcher, KeyCode.ModifierControl|KeyCode.AlphaY);
@@ -2279,6 +2287,7 @@ namespace Epsitec.App.DocumentEditor
 				this.combineState.Enabled = ( totalSelected > 1 && !isCreating );
 				this.uncombineState.Enabled = ( totalSelected > 0 && !isCreating );
 				this.toBezierState.Enabled = ( totalSelected > 0 && !isCreating );
+				this.toPolyState.Enabled = ( totalSelected > 0 && !isCreating );
 				this.fragmentState.Enabled = ( totalSelected > 0 && !isCreating );
 
 				this.hideSelState.Enabled = ( totalSelected > 0 && !isCreating );
@@ -2348,6 +2357,7 @@ namespace Epsitec.App.DocumentEditor
 				this.combineState.Enabled = false;
 				this.uncombineState.Enabled = false;
 				this.toBezierState.Enabled = false;
+				this.toPolyState.Enabled = false;
 				this.fragmentState.Enabled = false;
 
 				this.hideSelState.Enabled = false;
@@ -2667,22 +2677,26 @@ namespace Epsitec.App.DocumentEditor
 			min = context.MinOriginX;
 			max = context.MaxOriginX;
 			max = System.Math.Max(min, max);
+			di.hScroller.SetSyncPaint(true);
 			di.hScroller.MinValue = (decimal) min;
 			di.hScroller.MaxValue = (decimal) max;
 			di.hScroller.VisibleRangeRatio = (decimal) ratioH;
 			di.hScroller.Value = (decimal) (-context.OriginX);
 			di.hScroller.SmallChange = (decimal) ((cs.Width*0.1)/scale.X);
 			di.hScroller.LargeChange = (decimal) ((cs.Width*0.9)/scale.X);
+			di.hScroller.SetSyncPaint(false);
 
 			min = context.MinOriginY;
 			max = context.MaxOriginY;
 			max = System.Math.Max(min, max);
+			di.vScroller.SetSyncPaint(true);
 			di.vScroller.MinValue = (decimal) min;
 			di.vScroller.MaxValue = (decimal) max;
 			di.vScroller.VisibleRangeRatio = (decimal) ratioV;
 			di.vScroller.Value = (decimal) (-context.OriginY);
 			di.vScroller.SmallChange = (decimal) ((cs.Height*0.1)/scale.Y);
 			di.vScroller.LargeChange = (decimal) ((cs.Height*0.9)/scale.Y);
+			di.vScroller.SetSyncPaint(false);
 
 			if ( di.hRuler != null && di.hRuler.IsVisible )
 			{
@@ -2690,10 +2704,16 @@ namespace Epsitec.App.DocumentEditor
 				di.vRuler.PPM = this.CurrentDocument.Modifier.RealScale;
 
 				Rectangle rect = this.CurrentDocument.Modifier.ActiveViewer.RectangleDisplayed;
+
+				di.hRuler.SetSyncPaint(true);
 				di.hRuler.Starting = rect.Left;
 				di.hRuler.Ending   = rect.Right;
+				di.hRuler.SetSyncPaint(false);
+
+				di.vRuler.SetSyncPaint(true);
 				di.vRuler.Starting = rect.Bottom;
 				di.vRuler.Ending   = rect.Top;
+				di.vRuler.SetSyncPaint(false);
 			}
 		}
 
@@ -2920,6 +2940,11 @@ namespace Epsitec.App.DocumentEditor
 				int rank = 0;
 				foreach ( string name in list )
 				{
+#if !DEBUG
+					if ( name == "LookAquaMetal" )  continue;
+					if ( name == "LookAquaDyna" )  continue;
+					if ( name == "LookXP" )  continue;
+#endif
 					combo.Items.Add(name);
 					if ( name == Widgets.Adorner.Factory.ActiveName )
 					{
@@ -3169,6 +3194,7 @@ namespace Epsitec.App.DocumentEditor
 				TextFieldMulti multi = new TextFieldMulti(this.windowInfos.Root);
 				multi.Name = "Infos";
 				multi.IsReadOnly = true;
+				multi.MaxChar = 10000;
 				multi.Dock = DockStyle.Fill;
 				multi.DockMargins = new Margins(10, 10, 10, 40);
 
@@ -3267,7 +3293,16 @@ namespace Epsitec.App.DocumentEditor
 			{
 				double dx = 400;
 				double dy = 200;
-				Rectangle wrect = this.CurrentBounds;
+
+				Point wLoc = this.globalSettings.WindowLocation;
+				Size wSize = this.globalSettings.WindowSize;
+				if ( wLoc.IsEmpty )
+				{
+					ScreenInfo si = ScreenInfo.Find(new Point(0,0));
+					Rectangle wa = si.WorkingArea;
+					wLoc = wa.Center-wSize/2;
+				}
+				Rectangle wrect = new Rectangle(wLoc, wSize);
 
 				this.windowSplash = new Window();
 				this.windowSplash.MakeFramelessWindow();
@@ -3742,18 +3777,25 @@ namespace Epsitec.App.DocumentEditor
 
 		// Retourne le nom du fichier des réglages de l'application.
 		// Le dossier est qq chose du genre:
-		// C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\DocumentEditor\1.0.0.0
+		// C:\Documents and Settings\Daniel Roux\Application Data\Epsitec\Crésus documents\1.0.0.0
 		protected string GlobalSettingsFilename
 		{
 			get
 			{
+				string dir = Common.Support.Globals.Directories.UserAppData;
+				int i = dir.LastIndexOf("\\");
+				if ( i > 0 )
+				{
+					dir = dir.Substring(0, i);
+				}
+
 				if ( this.type == DocumentType.Pictogram )
 				{
-					return string.Format("{0}\\{1}", Common.Support.Globals.Directories.UserAppData, "CresusPicto.data");
+					return string.Format("{0}\\{1}", dir, "CresusPicto.data");
 				}
 				else
 				{
-					return string.Format("{0}\\{1}", Common.Support.Globals.Directories.UserAppData, "CresusDoc.data");
+					return string.Format("{0}\\{1}", dir, "CresusDoc.data");
 				}
 			}
 		}
@@ -3820,6 +3862,7 @@ namespace Epsitec.App.DocumentEditor
 		protected CommandState					combineState;
 		protected CommandState					uncombineState;
 		protected CommandState					toBezierState;
+		protected CommandState					toPolyState;
 		protected CommandState					fragmentState;
 		protected CommandState					undoState;
 		protected CommandState					redoState;

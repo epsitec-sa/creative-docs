@@ -771,7 +771,7 @@ namespace Epsitec.Common.Document
 				Objects.Abstract layer = context.RootObject();
 				foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 				{
-					bbox.MergeWith(obj.BoundingBoxDetect);
+					bbox.MergeWith(obj.BoundingBoxPartial);
 				}
 				return bbox;
 			}
@@ -1371,7 +1371,7 @@ namespace Epsitec.Common.Document
 			Objects.Abstract layer = context.RootObject();
 			foreach ( Objects.Abstract obj in this.document.Flat(layer, true) )
 			{
-				Rectangle objBox = obj.BoundingBox;
+				Rectangle objBox = obj.BoundingBoxDetect;
 				Point move = new Point(0,0);
 				if ( horizontal )
 				{
@@ -1401,20 +1401,20 @@ namespace Epsitec.Common.Document
 			Rectangle globalBox = this.SelectedBbox;
 			if ( dir < 0 )
 			{
-				globalBox.Right -= last.Object.BoundingBox.Width;
-				globalBox.Top   -= last.Object.BoundingBox.Height;
+				globalBox.Right -= last.Object.BoundingBoxDetect.Width;
+				globalBox.Top   -= last.Object.BoundingBoxDetect.Height;
 			}
 			if ( dir == 0 )
 			{
-				globalBox.Left   += first.Object.BoundingBox.Width/2;
-				globalBox.Bottom += first.Object.BoundingBox.Height/2;
-				globalBox.Right  -= last.Object.BoundingBox.Width/2;
-				globalBox.Top    -= last.Object.BoundingBox.Height/2;
+				globalBox.Left   += first.Object.BoundingBoxDetect.Width/2;
+				globalBox.Bottom += first.Object.BoundingBoxDetect.Height/2;
+				globalBox.Right  -= last.Object.BoundingBoxDetect.Width/2;
+				globalBox.Top    -= last.Object.BoundingBoxDetect.Height/2;
 			}
 			if ( dir > 0 )
 			{
-				globalBox.Left   += first.Object.BoundingBox.Width;
-				globalBox.Bottom += first.Object.BoundingBox.Height;
+				globalBox.Left   += first.Object.BoundingBoxDetect.Width;
+				globalBox.Bottom += first.Object.BoundingBoxDetect.Height;
 			}
 
 			if ( ( horizontal && globalBox.Width  <= 0.0) ||
@@ -1432,7 +1432,7 @@ namespace Epsitec.Common.Document
 				ShareObject so = list[i] as ShareObject;
 				Objects.Abstract obj = so.Object;
 
-				Rectangle objBox = obj.BoundingBox;
+				Rectangle objBox = obj.BoundingBoxDetect;
 
 				Point pos = new Point();
 				pos.X = globalBox.Left + globalBox.Width*i/(total-1);
@@ -1458,10 +1458,10 @@ namespace Epsitec.Common.Document
 			Size space = this.SelectedBbox.Size;
 			foreach ( ShareObject so in list )
 			{
-				space -= so.Object.BoundingBox.Size;
+				space -= so.Object.BoundingBoxDetect.Size;
 			}
 			space /= total-1;
-			Point pos = first.Object.BoundingBox.TopRight;
+			Point pos = first.Object.BoundingBoxDetect.TopRight;
 
 			if ( ( horizontal && space.Width  <= 0.0) ||
 				 (!horizontal && space.Height <= 0.0) )
@@ -1478,7 +1478,7 @@ namespace Epsitec.Common.Document
 				Objects.Abstract obj = so.Object;
 
 				pos += space;
-				pos += obj.BoundingBox.Size/2;  // position souhaitée du centre de l'objet
+				pos += obj.BoundingBoxDetect.Size/2;  // position souhaitée du centre de l'objet
 
 				Point move = new Point(0,0);
 				if ( horizontal )  move.X = pos.X-so.Position;
@@ -1487,7 +1487,7 @@ namespace Epsitec.Common.Document
 				obj.MoveAllStarting();
 				obj.MoveAllProcess(move);
 
-				pos += obj.BoundingBox.Size/2;
+				pos += obj.BoundingBoxDetect.Size/2;
 			}
 			this.OpletQueueValidateAction();
 		}
@@ -1520,7 +1520,7 @@ namespace Epsitec.Common.Document
 				this.dir = dir;
 				this.horizontal = horizontal;
 
-				Rectangle box = this.obj.BoundingBox;
+				Rectangle box = this.obj.BoundingBoxDetect;
 				if ( this.horizontal )
 				{
 					if ( this.dir <  0 )  this.position = box.Left;
@@ -1817,6 +1817,7 @@ namespace Epsitec.Common.Document
 						bezier = new Objects.Bezier(this.document, obj);
 						layer.Objects.Add(bezier);
 						bezier.Select(true);
+						this.XferProperties(bezier, obj);
 						this.TotalSelected ++;
 					}
 			
@@ -1832,6 +1833,7 @@ namespace Epsitec.Common.Document
 				}
 			}
 			bezier.CreateFinalise();
+			this.Simplify(bezier);
 			this.document.Notifier.NotifyArea(bezier.BoundingBox);
 
 			this.DeleteSelection(true);  // détruit les objets sélectionnés et marqués
@@ -1874,12 +1876,14 @@ namespace Epsitec.Common.Document
 						Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
 						layer.Objects.Add(bezier);
 						bezier.Select(true);
+						this.XferProperties(bezier, obj);
 						this.TotalSelected ++;
 						if ( first == null )  first = bezier;
 
 						if ( bezier.CreateFromPath(path, i) )
 						{
 							bezier.CreateFinalise();
+							this.Simplify(bezier);
 							this.document.Notifier.NotifyArea(bezier.BoundingBox);
 							obj.Mark = true;  // il faudra le détruire
 						}
@@ -1938,11 +1942,13 @@ namespace Epsitec.Common.Document
 					Objects.Bezier bezier = new Objects.Bezier(this.document, obj);
 					layer.Objects.Add(bezier);
 					bezier.Select(true);
+					this.XferProperties(bezier, obj);
 					this.TotalSelected ++;
 
 					if ( bezier.CreateFromPath(path, -1) )
 					{
 						bezier.CreateFinalise();
+						this.Simplify(bezier);
 						this.document.Notifier.NotifyArea(bezier.BoundingBox);
 						obj.Mark = true;  // il faudra le détruire
 					}
@@ -1962,6 +1968,69 @@ namespace Epsitec.Common.Document
 			if ( error )
 			{
 				string message = "Un ou plusieurs objets n'ont pas pu être convertis en courbes.";
+				this.ActiveViewer.DialogError(message);
+			}
+		}
+
+		// Converti en polygone tous les objets sélectionnés.
+		public void ToPolySelection(double precision)
+		{
+			if ( this.ActiveViewer.IsCreating )  return;
+			this.OpletQueueBeginAction();
+			bool error = false;
+			DrawingContext context = this.ActiveViewer.DrawingContext;
+			Objects.Abstract layer = context.RootObject();
+			int total = layer.Objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				Objects.Abstract obj = layer.Objects[index] as Objects.Abstract;
+				if ( !obj.IsSelected )  continue;
+
+				for ( int rank=0 ; rank<100 ; rank++ )
+				{
+					Path path = obj.GetPath(rank);
+					if ( path == null )
+					{
+						if ( rank == 0 )  error = true;
+						break;
+					}
+
+					Path p = path;
+					if ( precision != 0 )
+					{
+						p = new Path();
+						p.Append(path, precision, 0.0);
+					}
+
+					Objects.Poly poly = new Objects.Poly(this.document, obj);
+					layer.Objects.Add(poly);
+					poly.Select(true);
+					this.XferProperties(poly, obj);
+					this.TotalSelected ++;
+
+					if ( poly.CreateFromPath(p, -1) )
+					{
+						poly.CreateFinalise();
+						this.Simplify(poly);
+						this.document.Notifier.NotifyArea(poly.BoundingBox);
+						obj.Mark = true;  // il faudra le détruire
+					}
+					else
+					{
+						obj.Mark = false;  // il ne faudra pas le détruire
+						layer.Objects.Remove(poly);
+						this.TotalSelected --;
+						error = true;
+					}
+				}
+			}
+			this.DeleteSelection(true);  // détruit les objets sélectionnés et marqués
+			this.document.Notifier.NotifySelectionChanged();
+			this.OpletQueueValidateAction();
+
+			if ( error )
+			{
+				string message = "Un ou plusieurs objets n'ont pas pu être convertis en droites.";
 				this.ActiveViewer.DialogError(message);
 			}
 		}
@@ -2088,6 +2157,7 @@ namespace Epsitec.Common.Document
 			Objects.Bezier bezier = new Objects.Bezier(this.document, model);
 			bezier.CreateFromPoints(p1, s1, s2, p2);
 			bezier.CreateFinalise();
+			this.Simplify(bezier);
 			this.TotalSelected ++;
 			bezier.PropertyFillGradient.FillType = Properties.GradientFillType.None;
 			bezier.PropertyFillGradient.Color1 = Drawing.Color.FromARGB(0, 1,1,1);
@@ -2098,6 +2168,35 @@ namespace Epsitec.Common.Document
 
 			this.document.Notifier.NotifyArea(bezier.BoundingBox);
 			return true;
+		}
+
+		// Reprend éventuellement quelques propriétés à l'objet model pour
+		// un objet polygone ou bézier.
+		protected void XferProperties(Objects.Abstract obj, Objects.Abstract model)
+		{
+			if ( model is Objects.TextLine )
+			{
+				obj.PropertyFillGradient.FillType = Properties.GradientFillType.None;
+				obj.PropertyFillGradient.Color1 = model.PropertyTextFont.FontColor;
+				obj.PropertyLineMode.Width = 0.0;
+			}
+		}
+
+		// Simplifie un objet.
+		protected void Simplify(Objects.Abstract obj)
+		{
+			Properties.Arrow arrow = obj.PropertyArrow;
+			if ( arrow != null )
+			{
+				arrow.SetArrowType(0, Properties.ArrowType.Right);
+				arrow.SetArrowType(1, Properties.ArrowType.Right);
+			}
+
+			Properties.Corner corner = obj.PropertyCorner;
+			if ( corner != null )
+			{
+				corner.CornerType = Properties.CornerType.Right;
+			}
 		}
 		#endregion
 

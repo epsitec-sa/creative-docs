@@ -15,7 +15,6 @@ namespace Epsitec.App.DocumentEditor
 		static void Main() 
 		{
 			Widget.Initialise();
-			//Epsitec.Common.Pictogram.Engine.Initialise();
 			Epsitec.Common.Document.Engine.Initialise();
 			//Application.application = new Application(DocumentType.Pictogram);
 			Application.application = new Application(DocumentType.Graphic);
@@ -39,6 +38,7 @@ namespace Epsitec.App.DocumentEditor
 			this.mainWindow.Name = "Application";  // utilisé pour générer "QuitApplication" !
 			this.mainWindow.PreventAutoClose = true;
 			this.mainWindow.IsValidDropTarget = true;
+			this.mainWindow.Icon = Bitmap.FromManifestResource("Epsitec.App.DocumentEditor.Images.Application.icon", this.GetType().Assembly);
 			this.mainWindow.AsyncNotification += new EventHandler(this.HandleWindowAsyncNotification);
 			this.mainWindow.WindowDragEntered += new WindowDragEventHandler(this.HandleMainWindowWindowDragEntered);
 			this.mainWindow.WindowDragDropped += new WindowDragEventHandler(this.HandleMainWindowWindowDragDropped);
@@ -51,9 +51,22 @@ namespace Epsitec.App.DocumentEditor
 			{
 				this.mainWindow.Root.MinSize = new Size(430, 250);
 			}
+
+			if ( this.editor.GlobalSettings.WindowLocation.IsEmpty )
+			{
+				ScreenInfo si = ScreenInfo.Find(new Point(0,0));
+				Rectangle wa = si.WorkingArea;
+				if ( this.editor.GlobalSettings.WindowSize.Width  > wa.Width  ||
+					 this.editor.GlobalSettings.WindowSize.Height > wa.Height )
+				{
+					this.editor.GlobalSettings.WindowSize = wa.Size;
+					this.editor.GlobalSettings.IsFullScreen = true;
+				}
+				this.editor.GlobalSettings.WindowLocation = wa.Center-this.editor.GlobalSettings.WindowSize/2;
+			}
 			this.mainWindow.WindowLocation = this.editor.GlobalSettings.WindowLocation;
-			this.mainWindow.WindowSize = this.editor.GlobalSettings.WindowSize;
-			this.mainWindow.IsFullScreen = this.editor.GlobalSettings.IsFullScreen;
+			this.mainWindow.WindowSize     = this.editor.GlobalSettings.WindowSize;
+			this.mainWindow.IsFullScreen   = this.editor.GlobalSettings.IsFullScreen;
 			this.mainWindow.Show();
 
 			switch ( type )

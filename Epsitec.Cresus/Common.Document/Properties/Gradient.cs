@@ -57,8 +57,8 @@ namespace Epsitec.Common.Document.Properties
 			this.angle  = 0.0;
 			this.cx     = 0.5;
 			this.cy     = 0.5;
-			this.sx     = 1.0;
-			this.sy     = 1.0;
+			this.sx     = 0.5;
+			this.sy     = 0.5;
 			this.repeat = 1;
 			this.middle = 0.0;
 			this.smooth = 0.0;
@@ -448,9 +448,23 @@ namespace Epsitec.Common.Document.Properties
 				}
 			}
 
-			if ( this.fillType == GradientFillType.None ||
-				 System.Math.Abs(this.sx) < 0.0001      ||
-				 System.Math.Abs(this.sy) < 0.0001      )  // uniforme ?
+			bool flat;
+			if ( this.fillType == GradientFillType.None )
+			{
+				flat = true;
+			}
+			else if ( this.fillType == GradientFillType.Linear )
+			{
+				flat = ( System.Math.Abs(this.sx) < 0.01 &&
+						 System.Math.Abs(this.sy) < 0.01 );
+			}
+			else
+			{
+				flat = ( System.Math.Abs(this.sx) < 0.01 ||
+						 System.Math.Abs(this.sy) < 0.01 );
+			}
+
+			if ( flat )  // uniforme ?
 			{
 				Drawing.Color c1 = this.color1;
 				if ( drawingContext != null )
@@ -498,41 +512,42 @@ namespace Epsitec.Common.Document.Properties
 				Transform ot = graphics.GradientRenderer.Transform;
 				Transform t = new Transform();
 
+				Point center = new Point(bbox.Left+bbox.Width*this.cx, bbox.Bottom+bbox.Height*this.cy);
+				Point corner = center+new Size(bbox.Width*this.sx, bbox.Height*this.sy);
+
 				if ( this.fillType == GradientFillType.Linear )
 				{
+					double a = Point.ComputeAngleDeg(center, corner)-90;
+					double d = Point.Distance(center, corner);
 					graphics.GradientRenderer.Fill = GradientFill.Y;
-					Point center = new Point(bbox.Left+bbox.Width*this.cx, bbox.Bottom+bbox.Height*this.cy);
-					graphics.GradientRenderer.SetParameters(-100, 100);
-					t.Scale(bbox.Width/100/2*this.sx, bbox.Height/100/2*this.sy);
+					graphics.GradientRenderer.SetParameters(-255, 255);
+					t.RotateDeg(a);
+					t.Scale(1.0, d/255);
 					t.Translate(center);
-					t.RotateDeg(this.angle+180, center);
 				}
 				else if ( this.fillType == GradientFillType.Circle )
 				{
 					graphics.GradientRenderer.Fill = GradientFill.Circle;
-					Point center = new Point(bbox.Left+bbox.Width*this.cx, bbox.Bottom+bbox.Height*this.cy);
-					graphics.GradientRenderer.SetParameters(0, 100);
-					t.Scale(bbox.Width/100/2*this.sx, bbox.Height/100/2*this.sy);
+					graphics.GradientRenderer.SetParameters(0, 255);
+					t.RotateDeg(this.angle);
+					t.Scale(bbox.Width/255*this.sx, bbox.Height/255*this.sy);
 					t.Translate(center);
-					t.RotateDeg(this.angle, center);
 				}
 				else if ( this.fillType == GradientFillType.Diamond )
 				{
 					graphics.GradientRenderer.Fill = GradientFill.Diamond;
-					Point center = new Point(bbox.Left+bbox.Width*this.cx, bbox.Bottom+bbox.Height*this.cy);
-					graphics.GradientRenderer.SetParameters(0, 100);
-					t.Scale(bbox.Width/100/2*this.sx, bbox.Height/100/2*this.sy);
+					graphics.GradientRenderer.SetParameters(0, 255);
+					t.RotateDeg(this.angle);
+					t.Scale(bbox.Width/255*this.sx, bbox.Height/255*this.sy);
 					t.Translate(center);
-					t.RotateDeg(this.angle, center);
 				}
 				else if ( this.fillType == GradientFillType.Conic )
 				{
 					graphics.GradientRenderer.Fill = GradientFill.Conic;
-					Point center = new Point(bbox.Left+bbox.Width*this.cx, bbox.Bottom+bbox.Height*this.cy);
 					graphics.GradientRenderer.SetParameters(0, 250);
-					t.Scale(bbox.Width/100/2*this.sx, bbox.Height/100/2*this.sy);
+					t.RotateDeg(this.angle-90.0);
+					t.Scale(bbox.Width/255*this.sx, bbox.Height/255*this.sy);
 					t.Translate(center);
-					t.RotateDeg(this.angle-90.0, center);
 				}
 
 				graphics.GradientRenderer.Transform = t;
@@ -566,29 +581,23 @@ namespace Epsitec.Common.Document.Properties
 		{
 			if ( this.fillType == GradientFillType.None )  return;
 
-			Point center = new Point();
-			center.X = bbox.Left+bbox.Width*this.cx;
-			center.Y = bbox.Bottom+bbox.Height*this.cy;
-			double dx = this.sx*bbox.Width/2;
-			double dy = this.sy*bbox.Height/2;
+			Point center = new Point(bbox.Left+bbox.Width*this.cx, bbox.Bottom+bbox.Height*this.cy);
+			Point p1 = center+new Size( bbox.Width*this.sx,  bbox.Height*this.sy);
+			Point p2 = center+new Size(-bbox.Width*this.sx,  bbox.Height*this.sy);
+			Point p3 = center+new Size(-bbox.Width*this.sx, -bbox.Height*this.sy);
+			Point p4 = center+new Size( bbox.Width*this.sx, -bbox.Height*this.sy);
 
 			if ( this.fillType == GradientFillType.Linear )
 			{
-				Point p5 = center + Transform.RotatePointDeg(this.angle, new Point(  0, -dy));
-				Point p6 = center + Transform.RotatePointDeg(this.angle, new Point(  0,  dy));
-
-				bboxFull.MergeWith(this.ComputeExtremity(p5, p6, 0.0, 0.2, 0));
-				bboxFull.MergeWith(this.ComputeExtremity(p5, p6, 0.0, 0.2, 1));
-				bboxFull.MergeWith(this.ComputeExtremity(p6, p5, 0.0, 0.2, 0));
-				bboxFull.MergeWith(this.ComputeExtremity(p6, p5, 0.0, 0.2, 1));
+				bboxFull.MergeWith(p1);
+				bboxFull.MergeWith(p3);
+				bboxFull.MergeWith(this.ComputeExtremity(p3, p1, 0.0, 0.2, 0));
+				bboxFull.MergeWith(this.ComputeExtremity(p3, p1, 0.0, 0.2, 1));
+				bboxFull.MergeWith(this.ComputeExtremity(p1, p3, 0.0, 0.2, 0));
+				bboxFull.MergeWith(this.ComputeExtremity(p1, p3, 0.0, 0.2, 1));
 			}
 			else
 			{
-				Point p1 = center + Transform.RotatePointDeg(this.angle, new Point( dx,  dy));
-				Point p2 = center + Transform.RotatePointDeg(this.angle, new Point(-dx,  dy));
-				Point p3 = center + Transform.RotatePointDeg(this.angle, new Point(-dx, -dy));
-				Point p4 = center + Transform.RotatePointDeg(this.angle, new Point( dx, -dy));
-
 				bboxFull.MergeWith(p1);
 				bboxFull.MergeWith(p2);
 				bboxFull.MergeWith(p3);
@@ -615,13 +624,13 @@ namespace Epsitec.Common.Document.Properties
 			{
 				return false;
 			}
-			else if ( this.fillType == GradientFillType.Linear )
+			else if ( this.fillType == GradientFillType.Conic )
 			{
-				return (rank < 2);
+				return (rank < 3);
 			}
 			else
 			{
-				return (rank < 3);
+				return (rank < 2);
 			}
 		}
 
@@ -640,27 +649,27 @@ namespace Epsitec.Common.Document.Properties
 		{
 			Point pos = new Point();
 			Point center = new Point();
+			Point corner = new Point();
 			Rectangle bbox = this.BoundingBoxHandlesGradient(obj);
 			center.X = bbox.Left+bbox.Width*this.cx;
 			center.Y = bbox.Bottom+bbox.Height*this.cy;
+			corner.X = center.X+bbox.Width*this.sx;
+			corner.Y = center.Y+bbox.Height*this.sy;
 
 			if ( rank == 0 )  // centre ?
 			{
 				pos = center;
 			}
 
-			if ( rank == 1 )  // angle et échelle y ?
+			if ( rank == 1 )  // coin ?
 			{
-				pos = center;
-				pos.Y += this.sy*bbox.Height/2;
-				pos = Transform.RotatePointDeg(center, this.angle, pos);
+				pos = corner;
 			}
 
-			if ( rank == 2 )  // angle et échelle x ?
+			if ( rank == 2 )  // angle ?
 			{
-				pos = center;
-				pos.X += this.sx*bbox.Width/2;
-				pos = Transform.RotatePointDeg(center, this.angle, pos);
+				double radius = System.Math.Min(System.Math.Abs(this.sx*bbox.Width), System.Math.Abs(this.sy*bbox.Height));
+				pos = center+Transform.RotatePointDeg(this.angle, new Point(0, radius));
 			}
 
 			return pos;
@@ -669,10 +678,7 @@ namespace Epsitec.Common.Document.Properties
 		// Modifie la position d'une poignée.
 		public override void SetHandlePosition(Objects.Abstract obj, int rank, Point pos)
 		{
-			Point center = new Point();
 			Rectangle bbox = this.BoundingBoxHandlesGradient(obj);
-			center.X = bbox.Left+bbox.Width*this.cx;
-			center.Y = bbox.Bottom+bbox.Height*this.cy;
 
 			if ( rank == 0 )  // centre ?
 			{
@@ -680,18 +686,18 @@ namespace Epsitec.Common.Document.Properties
 				this.Cy = (pos.Y-bbox.Bottom)/bbox.Height;
 			}
 
-			if ( rank == 1 )  // angle et échelle y ?
+			if ( rank == 1 )  // coin ?
 			{
-				this.Angle = Point.ComputeAngleDeg(center, pos)-90;
-				pos = Transform.RotatePointDeg(center, -this.angle, pos);
-				this.Sy = (pos.Y-center.Y)/bbox.Height*2;
+				this.Sx = (pos.X-bbox.Left-bbox.Width*this.cx)/bbox.Width;
+				this.Sy = (pos.Y-bbox.Bottom-bbox.Height*this.cy)/bbox.Height;
 			}
 
-			if ( rank == 2 )  // angle et échelle x ?
+			if ( rank == 2 )  // angle ?
 			{
-				this.Angle = Point.ComputeAngleDeg(center, pos);
-				pos = Transform.RotatePointDeg(center, -this.angle, pos);
-				this.Sx = (pos.X-center.X)/bbox.Width*2;
+				Point center = new Point();
+				center.X = bbox.Left+bbox.Width*this.cx;
+				center.Y = bbox.Bottom+bbox.Height*this.cy;
+				this.Angle = Point.ComputeAngleDeg(center, pos)-90;
 			}
 
 			base.SetHandlePosition(obj, rank, pos);
@@ -718,46 +724,43 @@ namespace Epsitec.Common.Document.Properties
 				 !this.IsHandleVisible(obj, 0) )  return;
 
 			Rectangle bbox = this.BoundingBoxHandlesGradient(obj);
-			Point center = this.GetHandlePosition(obj, 0);
-			double dx = this.sx*bbox.Width/2;
-			double dy = this.sy*bbox.Height/2;
-			Point p1 = center + Transform.RotatePointDeg(this.angle, new Point( dx,  dy));
-			Point p2 = center + Transform.RotatePointDeg(this.angle, new Point(-dx,  dy));
-			Point p3 = center + Transform.RotatePointDeg(this.angle, new Point(-dx, -dy));
-			Point p4 = center + Transform.RotatePointDeg(this.angle, new Point( dx, -dy));
-			Point p5 = center + Transform.RotatePointDeg(this.angle, new Point(  0, -dy));
-			Point p6 = center + Transform.RotatePointDeg(this.angle, new Point(  0,  dy));
-			Point p7 = center + Transform.RotatePointDeg(this.angle, new Point(-dx,   0));
-			Point p8 = center + Transform.RotatePointDeg(this.angle, new Point( dx,   0));
+			Point center = new Point(bbox.Left+bbox.Width*this.cx, bbox.Bottom+bbox.Height*this.cy);
+			Point p1 = center+new Size( bbox.Width*this.sx,  bbox.Height*this.sy);
+			Point p2 = center+new Size(-bbox.Width*this.sx,  bbox.Height*this.sy);
+			Point p3 = center+new Size(-bbox.Width*this.sx, -bbox.Height*this.sy);
+			Point p4 = center+new Size( bbox.Width*this.sx, -bbox.Height*this.sy);
 
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/drawingContext.ScaleX;
 
 			if ( this.fillType == GradientFillType.Linear )
 			{
-				graphics.AddLine(p5, p6);
-				graphics.AddLine(p6, this.ComputeExtremity(p5, p6, 0.2, 0.1, 0));
-				graphics.AddLine(p6, this.ComputeExtremity(p5, p6, 0.2, 0.1, 1));  // flèche
+				graphics.AddLine(p3, p1);
+				graphics.AddLine(p1, this.ComputeExtremity(p3, p1, 0.2, 0.1, 0));
+				graphics.AddLine(p1, this.ComputeExtremity(p3, p1, 0.2, 0.1, 1));  // flèche
 
-				graphics.AddLine(this.ComputeExtremity(p5, p6, 0.0, 0.2, 0), this.ComputeExtremity(p5, p6, 0.0, 0.2, 1));
-				graphics.AddLine(this.ComputeExtremity(p6, p5, 0.0, 0.2, 0), this.ComputeExtremity(p6, p5, 0.0, 0.2, 1));
+				graphics.AddLine(this.ComputeExtremity(p3, p1, 0.0, 0.2, 0), this.ComputeExtremity(p3, p1, 0.0, 0.2, 1));
+				graphics.AddLine(this.ComputeExtremity(p1, p3, 0.0, 0.2, 0), this.ComputeExtremity(p1, p3, 0.0, 0.2, 1));
 			}
 			else
 			{
 				graphics.AddLine(p1, p2);
 				graphics.AddLine(p2, p3);
 				graphics.AddLine(p3, p4);
-				graphics.AddLine(p4, p1);  // rectangle
+				graphics.AddLine(p4, p1);
 
-				graphics.AddLine(p5, p6);
-				graphics.AddLine(p6, this.ComputeExtremity(p5, p6, 0.2, 0.1, 0));
-				graphics.AddLine(p6, this.ComputeExtremity(p5, p6, 0.2, 0.1, 1));  // flèche
-
-				graphics.AddLine(p7, p8);  // horizontale
+				if ( this.fillType == GradientFillType.Conic )
+				{
+					double radius = System.Math.Min(System.Math.Abs(this.sx*bbox.Width), System.Math.Abs(this.sy*bbox.Height));
+					Point pa = center+Transform.RotatePointDeg(this.angle, new Point(0, radius));
+					//?graphics.AddCircle(center, radius);
+					graphics.AddLine(pa, this.ComputeExtremity(center, pa, 0.4, 0.2, 0));
+					graphics.AddLine(pa, this.ComputeExtremity(center, pa, 0.4, 0.2, 1));  // flèche
+					graphics.AddLine(center, pa);
+				}
 			}
 
 			graphics.RenderSolid(Drawing.Color.FromBrightness(0.6));
-
 			graphics.LineWidth = initialWidth;
 		}
 

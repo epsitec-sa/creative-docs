@@ -26,7 +26,7 @@ namespace Epsitec.Common.Document.Settings
 	{
 		public GlobalSettings()
 		{
-			this.windowLocation = new Drawing.Point(100, 100);
+			this.windowLocation = new Drawing.Point(0, 0);
 			this.windowSize = new Drawing.Size(830, 580);
 			this.isFullScreen = false;
 

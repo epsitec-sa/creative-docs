@@ -126,7 +126,7 @@ namespace Epsitec.Common.Document
 		public void Origin(double originX, double originY)
 		{
 			if ( this.originX != originX ||
-				 this.originY != originY )
+				this.originY != originY )
 			{
 				this.originX = originX;
 				this.originY = originY;
@@ -166,7 +166,7 @@ namespace Epsitec.Common.Document
 				double originY = size.Height/2 - (cs.Height/scale.Y)/2;
 
 				return ( System.Math.Abs(this.originX+originX) < 0.00001 &&
-						 System.Math.Abs(this.originY+originY) < 0.00001 );
+					System.Math.Abs(this.originY+originY) < 0.00001 );
 			}
 		}
 
@@ -184,7 +184,7 @@ namespace Epsitec.Common.Document
 				double originY = size.Height/2 - (cs.Height/scale.Y)/2;
 
 				return ( System.Math.Abs(this.originX+originX) < 0.00001 &&
-						 System.Math.Abs(this.originY+originY) < 0.00001 );
+					System.Math.Abs(this.originY+originY) < 0.00001 );
 			}
 		}
 
@@ -280,8 +280,8 @@ namespace Epsitec.Common.Document
 		protected void ZoomAndOrigin(double zoom, double originX, double originY)
 		{
 			if ( this.zoom    != zoom    ||
-				 this.originX != originX ||
-				 this.originY != originY )
+				this.originX != originX ||
+				this.originY != originY )
 			{
 				this.zoom    = zoom;
 				this.originX = originX;
@@ -1069,7 +1069,7 @@ namespace Epsitec.Common.Document
 			if ( this.constrainType == ConstrainType.None || !this.isShift )  return;
 
 			if ( this.constrainType == ConstrainType.Normal ||
-				 this.constrainType == ConstrainType.Rotate )
+				this.constrainType == ConstrainType.Rotate )
 			{
 				double angle = Point.ComputeAngleDeg(this.constrainStarting, pos);
 				double dist = Point.Distance(pos, this.constrainStarting);
@@ -1145,9 +1145,9 @@ namespace Epsitec.Common.Document
 			double max = System.Math.Max(size.Width, size.Height);
 
 			if ( type == ConstrainType.Normal ||
-				 type == ConstrainType.Rotate ||
-				 type == ConstrainType.Line   ||
-				 type == ConstrainType.Scale  )
+				type == ConstrainType.Rotate ||
+				type == ConstrainType.Line   ||
+				type == ConstrainType.Scale  )
 			{
 				graphics.AddLine(pos.X, -size.Height, pos.X, size.Height);
 				graphics.AddLine(-size.Width, pos.Y, size.Width, pos.Y);
@@ -1155,8 +1155,8 @@ namespace Epsitec.Common.Document
 			}
 
 			if ( type == ConstrainType.Normal ||
-				 type == ConstrainType.Rotate ||
-				 type == ConstrainType.Square )
+				type == ConstrainType.Rotate ||
+				type == ConstrainType.Square )
 			{
 				Point p1 = Transform.RotatePointDeg(pos, 180.0*0.25, pos+new Point(max,0));
 				Point p2 = Transform.RotatePointDeg(pos, 180.0*1.25, pos+new Point(max,0));
@@ -1244,13 +1244,26 @@ namespace Epsitec.Common.Document
 		// Retourne la couleur du cadre pendant l'édition.
 		static public Color ColorFrameEdit
 		{
+			get { return Color.FromARGB(1.0, 0.0, 0.7, 1.0); }  // bleu
+		}
+
+		// Retourne la couleur du curseur pendant l'édition.
+		static public Color ColorCursorEdit
+		{
 			get { return Color.FromARGB(1.0, 1.0, 0.0, 0.0); }  // rouge
 		}
 
 		// Retourne la couleur des sélections pendant l'édition.
-		static public Color ColorSelectEdit
+		static public Color ColorSelectEdit(bool active)
 		{
-			get { return Color.FromARGB(1.0, 1.0, 1.0, 0.0); }  // jaune
+			if ( active )
+			{
+				return Color.FromARGB(1.0, 1.0, 1.0, 0.0);  // jaune
+			}
+			else
+			{
+				return Color.FromBrightness(0.85);  // gris
+			}
 		}
 		#endregion
 

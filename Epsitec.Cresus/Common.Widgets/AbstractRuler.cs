@@ -84,8 +84,13 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.marker != value )
 				{
+					this.invalidateBox = Drawing.Rectangle.Empty;
+					this.InvalidateBoxMarker();
+
 					this.marker = value;
-					this.Invalidate();
+					
+					this.InvalidateBoxMarker();
+					this.Invalidate(this.invalidateBox);
 				}
 			}
 		}
@@ -102,10 +107,20 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.markerVisible != value )
 				{
+					this.invalidateBox = Drawing.Rectangle.Empty;
+					this.InvalidateBoxMarker();
+					
 					this.markerVisible = value;
-					this.Invalidate();
+					
+					this.InvalidateBoxMarker();
+					this.Invalidate(this.invalidateBox);
 				}
 			}
+		}
+
+
+		protected virtual void InvalidateBoxMarker()
+		{
 		}
 
 
@@ -117,5 +132,6 @@ namespace Epsitec.Common.Widgets
 		protected double					ending = 100.0;
 		protected double					marker = 0.0;
 		protected bool						markerVisible = false;
+		protected Drawing.Rectangle			invalidateBox;
 	}
 }

@@ -28,6 +28,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.textNavigator.OpletQueue = this.document.Modifier.OpletQueue;
 			}
+			this.cursorBox = Drawing.Rectangle.Empty;
+			this.selectBox = Drawing.Rectangle.Empty;
 		}
 
 		protected override bool ExistingProperty(Properties.Type type)
@@ -229,6 +231,7 @@ namespace Epsitec.Common.Document.Objects
 		// Lie l'objet éditable à une règle.
 		public override bool EditRulerLink(TextRuler ruler, DrawingContext drawingContext)
 		{
+			ruler.ListCapability = true;
 			ruler.TabCapability = true;
 			ruler.AttachToText(this.textNavigator);
 
@@ -336,6 +339,24 @@ namespace Epsitec.Common.Document.Objects
 		}
 		#endregion
 
+		// Donne la zone contenant le curseur d'édition.
+		public override Drawing.Rectangle EditCursorBox
+		{
+			get
+			{
+				return this.cursorBox;
+			}
+		}
+
+		// Donne la zone contenant le texte sélectionné.
+		public override Drawing.Rectangle EditSelectBox
+		{
+			get
+			{
+				return this.selectBox;
+			}
+		}
+
 		// Gestion d'un événement pendant l'édition.
 		public override void EditMouseDownMessage(Point pos)
 		{
@@ -407,6 +428,9 @@ namespace Epsitec.Common.Document.Objects
 		// Dessine le texte du pavé.
 		protected void DrawText(IPaintPort port, DrawingContext drawingContext)
 		{
+			this.cursorBox = Drawing.Rectangle.Empty;
+			this.selectBox = Drawing.Rectangle.Empty;
+
 			Point p1, p2, p3, p4;
 			switch ( this.PropertyTextJustif.Orientation )
 			{
@@ -481,10 +505,14 @@ namespace Epsitec.Common.Document.Objects
 			this.transform.RotateDeg(angle, p1);
 			port.MergeTransform(transform);
 
-			bool active = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext);
+			bool active = true;
+			if ( this.document.Modifier != null )
+			{
+				active = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext &&
+						  this.document.Modifier.ActiveViewer.IsFocused);
+			}
 
 			if ( port is Graphics &&
-				 active &&
 				 this.edited &&
 				 this.textNavigator.Context.CursorFrom != this.textNavigator.Context.CursorTo )
 			{
@@ -496,7 +524,10 @@ namespace Epsitec.Common.Document.Objects
 				{
 					graphics.Align(ref areas[i].Rect);
 					graphics.AddFilledRectangle(areas[i].Rect);
-					graphics.RenderSolid(DrawingContext.ColorSelectEdit);
+					graphics.RenderSolid(DrawingContext.ColorSelectEdit(active));
+
+					Drawing.Rectangle r = new Drawing.Rectangle(this.transform.TransformDirect(areas[i].Rect.BottomLeft), this.transform.TransformDirect(areas[i].Rect.TopRight));
+					this.selectBox.MergeWith(r);
 				}
 			}
 
@@ -505,7 +536,6 @@ namespace Epsitec.Common.Document.Objects
 			this.textLayout.Paint(new Point(0,0), port);
 
 			if ( port is Graphics &&
-				 active &&
 				 this.edited &&
 				 this.textNavigator.Context.CursorTo != -1 )
 			{
@@ -513,13 +543,19 @@ namespace Epsitec.Common.Document.Objects
 				Point c1, c2;
 				if ( this.textLayout.FindTextCursor(this.textNavigator.Context, out c1, out c2) )
 				{
-					graphics.LineWidth = 1.0/drawingContext.ScaleX;
-					graphics.AddLine(c1, c2);
-					graphics.RenderSolid(DrawingContext.ColorFrameEdit);
-
+					if ( active )
+					{
+						graphics.LineWidth = 1.0/drawingContext.ScaleX;
+						graphics.AddLine(c1, c2);
+						graphics.RenderSolid(DrawingContext.ColorCursorEdit);
+					}
 					c1 = this.transform.TransformDirect(c1);
 					c2 = this.transform.TransformDirect(c2);
 					this.ComputeAutoScroll(c1, c2);
+					this.cursorBox.MergeWith(c1);
+					this.cursorBox.MergeWith(c2);
+					this.selectBox.MergeWith(c1);
+					this.selectBox.MergeWith(c2);
 				}
 			}
 
@@ -537,17 +573,18 @@ namespace Epsitec.Common.Document.Objects
 			this.PropertyFillGradient.RenderSurface(graphics, drawingContext, path, this.BoundingBoxThin);
 			this.PropertyLineMode.DrawPath(graphics, drawingContext, path, this.PropertyLineColor, this.BoundingBoxGeom);
 
-			if ( this.TotalHandle >= 4 )
-			{
-				this.DrawText(graphics, drawingContext);
-			}
-
 			if ( this.edited && drawingContext.IsActive )  // en cours d'édition ?
 			{
 				graphics.Rasterizer.AddOutline(path, 2.0/drawingContext.ScaleX);
 				graphics.RenderSolid(DrawingContext.ColorFrameEdit);
 			}
-			else
+
+			if ( this.TotalHandle >= 4 )
+			{
+				this.DrawText(graphics, drawingContext);
+			}
+
+			if ( !this.edited || !drawingContext.IsActive )  // pas en cours d'édition ?
 			{
 				if ( this.IsSelected || this.isCreating )
 				{
@@ -626,8 +663,10 @@ namespace Epsitec.Common.Document.Objects
 		#endregion
 
 		
-		protected TextLayout			textLayout;
-		protected TextNavigator			textNavigator;
-		protected Transform				transform;
+		protected TextLayout				textLayout;
+		protected TextNavigator				textNavigator;
+		protected Transform					transform;
+		protected Drawing.Rectangle			cursorBox;
+		protected Drawing.Rectangle			selectBox;
 	}
 }

@@ -32,6 +32,8 @@ namespace Epsitec.Common.Document.Objects
 			{
 				this.textNavigator.OpletQueue = this.document.Modifier.OpletQueue;
 			}
+			this.cursorBox = Drawing.Rectangle.Empty;
+			this.selectBox = Drawing.Rectangle.Empty;
 		}
 
 		protected override bool ExistingProperty(Properties.Type type)
@@ -760,6 +762,24 @@ namespace Epsitec.Common.Document.Objects
 		}
 		#endregion
 
+		// Donne la zone contenant le curseur d'édition.
+		public override Drawing.Rectangle EditCursorBox
+		{
+			get
+			{
+				return this.cursorBox;
+			}
+		}
+
+		// Donne la zone contenant le texte sélectionné.
+		public override Drawing.Rectangle EditSelectBox
+		{
+			get
+			{
+				return this.selectBox;
+			}
+		}
+
 		// Gestion d'un événement pendant l'édition.
 		public override void EditMouseDownMessage(Point pos)
 		{
@@ -1237,6 +1257,9 @@ namespace Epsitec.Common.Document.Objects
 		// Dessine le texte le long de la courbe multiple.
 		protected void DrawTextCurve(IPaintPort port, DrawingContext drawingContext)
 		{
+			this.cursorBox = Drawing.Rectangle.Empty;
+			this.selectBox = Drawing.Rectangle.Empty;
+
 			if ( !this.AdvanceInit() )  return;
 
 			this.textLayout.DrawingScale = drawingContext.ScaleX;
@@ -1255,10 +1278,11 @@ namespace Epsitec.Common.Document.Objects
 			Point   c1 = new Point(0,0);
 			Point   c2 = new Point(0,0);
 
-			bool	active = true;
+			bool active = true;
 			if ( this.document.Modifier != null )
 			{
-				active = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext);
+				active = (this.document.Modifier.ActiveViewer.DrawingContext == drawingContext &&
+						  this.document.Modifier.ActiveViewer.IsFocused);
 			}
 
 			while ( this.AdvanceNext(out character, out font, out fontSize, out fontColor, out pos, out ptl, out pbl, out ptr, out pbr, out angle) )
@@ -1266,7 +1290,6 @@ namespace Epsitec.Common.Document.Objects
 				int rank = this.advanceRank-1;
 
 				if ( port is Graphics &&
-					 active &&
 					 this.edited &&
 					 cursorFrom != cursorTo && rank >= cursorFrom && rank < cursorTo )
 				{
@@ -1278,7 +1301,12 @@ namespace Epsitec.Common.Document.Objects
 					path.LineTo(ptl);
 					path.Close();
 					graphics.Rasterizer.AddSurface(path);
-					graphics.RenderSolid(DrawingContext.ColorSelectEdit);
+					graphics.RenderSolid(DrawingContext.ColorSelectEdit(active));
+
+					this.selectBox.MergeWith(pbl);
+					this.selectBox.MergeWith(pbr);
+					this.selectBox.MergeWith(ptr);
+					this.selectBox.MergeWith(ptl);
 				}
 
 				if ( character[0] != TextLayout.CodeEndOfText )
@@ -1300,14 +1328,16 @@ namespace Epsitec.Common.Document.Objects
 				}
 
 				if ( port is Graphics &&
-					 active &&
 					 this.edited &&
 					 rank == this.textNavigator.Context.CursorTo )
 				{
-					Graphics graphics = port as Graphics;
-					graphics.LineWidth = 1.0/drawingContext.ScaleX;
-					graphics.AddLine(ptl, pbl);
-					graphics.RenderSolid(DrawingContext.ColorFrameEdit);
+					if ( active )
+					{
+						Graphics graphics = port as Graphics;
+						graphics.LineWidth = 1.0/drawingContext.ScaleX;
+						graphics.AddLine(ptl, pbl);
+						graphics.RenderSolid(DrawingContext.ColorCursorEdit);
+					}
 					c1 = ptl;
 					c2 = pbl;
 				}
@@ -1317,14 +1347,16 @@ namespace Epsitec.Common.Document.Objects
 			}
 
 			if ( port is Graphics &&
-				 active &&
 				 this.edited &&
 				 this.advanceRank-1 == this.textNavigator.Context.CursorTo )
 			{
-				Graphics graphics = port as Graphics;
-				graphics.LineWidth = 1.0/drawingContext.ScaleX;
-				graphics.AddLine(lastTop, lastBottom);
-				graphics.RenderSolid(DrawingContext.ColorFrameEdit);
+				if ( active )
+				{
+					Graphics graphics = port as Graphics;
+					graphics.LineWidth = 1.0/drawingContext.ScaleX;
+					graphics.AddLine(lastTop, lastBottom);
+					graphics.RenderSolid(DrawingContext.ColorCursorEdit);
+				}
 				c1 = lastTop;
 				c2 = lastBottom;
 			}
@@ -1332,6 +1364,10 @@ namespace Epsitec.Common.Document.Objects
 			if ( c1.X != 0.0 || c1.Y != 0.0 || c2.X != 0.0 || c2.Y != 0.0 )
 			{
 				this.ComputeAutoScroll(c1, c2);
+				this.cursorBox.MergeWith(c1);
+				this.cursorBox.MergeWith(c2);
+				this.selectBox.MergeWith(c1);
+				this.selectBox.MergeWith(c2);
 			}
 		}
 
@@ -1452,6 +1488,8 @@ namespace Epsitec.Common.Document.Objects
 		protected bool						advanceCheckEnd;
 		protected double					advanceFactor;
 		protected double					advanceMaxAscender;
+		protected Drawing.Rectangle			cursorBox;
+		protected Drawing.Rectangle			selectBox;
 
 		protected static readonly double	step = 0.01;
 	}

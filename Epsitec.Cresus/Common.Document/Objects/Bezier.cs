@@ -147,6 +147,7 @@ namespace Epsitec.Common.Document.Objects
 			this.selected = ( sel > 0 );
 			this.edited = false;
 			this.globalSelected = false;
+			this.allSelected = (sel == total);
 			this.HandlePropertiesUpdate();
 			this.SplitProperties();
 
@@ -394,15 +395,21 @@ namespace Epsitec.Common.Document.Objects
 		// Supprime une poignée sans changer l'aspect de la courbe.
 		protected void ContextSubHandle(Point pos, int rank)
 		{
+			bool starting = (this.Handle(rank).Type == HandleType.Starting);
+
 			this.HandleDelete(rank-1);
 			this.HandleDelete(rank-1);
 			this.HandleDelete(rank-1);
 
 			// Il doit toujours y avoir une poignée de départ !
-			this.Handle(1).Type = HandleType.Starting;
+			if ( starting )
+			{
+				this.Handle(rank).Type = HandleType.Starting;
+			}
 
 			int prev = this.PrevRank(rank-1);
-			int next = rank-1;
+			//?int next = rank-1;
+			int next = this.NextRank(prev);
 
 			if ( this.Handle(prev+2).Type == HandleType.Hide || this.Handle(next+0).Type == HandleType.Hide )
 			{
@@ -1041,10 +1048,11 @@ namespace Epsitec.Common.Document.Objects
 
 				for ( int i=0 ; i<total ; i+=3 )
 				{
+					if ( !this.Handle(i+1).IsVisible )  continue;
 					graphics.AddLine(this.Handle(i+0).Position, this.Handle(i+1).Position);
 					graphics.AddLine(this.Handle(i+1).Position, this.Handle(i+2).Position);
-					graphics.RenderSolid(Color.FromBrightness(0.6));
 				}
+				graphics.RenderSolid(Color.FromBrightness(0.6));
 
 				graphics.LineWidth = initialWidth;
 			}

@@ -179,8 +179,7 @@ namespace Epsitec.Common.Document.Objects
 				int rank = this.DetectOutline(pos);
 				if ( rank == -1 )  return;
 
-				int next = rank+1;
-				if ( next >= this.TotalMainHandle )  next = 0;
+				int next = this.NextRank(rank);
 				Point p = Point.Projection(this.Handle(rank).Position, this.Handle(next).Position, pos);
 
 				Handle handle = new Handle(this.document);
@@ -193,9 +192,14 @@ namespace Epsitec.Common.Document.Objects
 
 			if ( cmd == "HandleDelete" )
 			{
+				bool starting = (this.Handle(handleRank).Type == HandleType.Starting);
 				this.HandleDelete(handleRank);
+
 				// Il doit toujours y avoir une poignée de départ !
-				this.Handle(0).Type = HandleType.Starting;
+				if ( starting )
+				{
+					this.Handle(handleRank).Type = HandleType.Starting;
+				}
 				this.HandlePropertiesUpdate();
 			}
 
@@ -509,12 +513,24 @@ namespace Epsitec.Common.Document.Objects
 			Properties.Corner corner = this.PropertyCorner;
 			if ( corner.CornerType == Properties.CornerType.Right )  // coins droits ?
 			{
+				int first = 0;
 				for ( int i=0 ; i<total ; i++ )
 				{
 					p1 = this.Handle(i).Position;
 
 					if ( i == 0 )  // premier point ?
 					{
+						pathLine.MoveTo(pp1);
+					}
+					else if ( this.Handle(i).Type == HandleType.Starting )  // premier point ?
+					{
+						if ( close )
+						{
+							pathLine.LineTo(pp1);
+							pathLine.Close();
+						}
+						first = i;
+						pp1 = this.Handle(i).Position;
 						pathLine.MoveTo(pp1);
 					}
 					else if ( i < total-1 )  // point intermédiaire ?
@@ -534,11 +550,12 @@ namespace Epsitec.Common.Document.Objects
 			}
 			else	// coins spéciaux ?
 			{
+				int first = 0;
 				for ( int i=0 ; i<total ; i++ )
 				{
 					p1 = this.Handle(i).Position;
-					int prev = i-1;  if ( prev < 0 )  prev = total-1;
-					int next = i+1;  if ( next >= total )  next = 0;
+					int prev = this.PrevRank(i);
+					int next = this.NextRank(i);
 					bool simply = ( this.Handle(i).ConstrainType == HandleConstrainType.Simply );
 
 					if ( i == 0 )  // premier point ?
@@ -552,15 +569,42 @@ namespace Epsitec.Common.Document.Objects
 							p1 = this.Handle(prev).Position;
 							s  = this.Handle(i).Position;
 							p2 = this.Handle(next).Position;
-							this.PathCorner(pathLine, p1,s,p2, corner, simply);
+							this.PathCorner(pathLine, p1,s,p2, corner, simply, true);
+						}
+					}
+					else if ( this.Handle(i).Type == HandleType.Starting )  // premier point ?
+					{
+						if ( close )
+						{
+							pathLine.Close();
+						}
+						first = i;
+						pp1 = this.Handle(i).Position;
+						if ( outlineStart || surfaceStart || !close )
+						{
+							pathLine.MoveTo(pp1);
+						}
+						else
+						{
+							p1 = this.Handle(prev).Position;
+							s  = this.Handle(i).Position;
+							p2 = this.Handle(next).Position;
+							this.PathCorner(pathLine, p1,s,p2, corner, simply, true);
 						}
 					}
 					else if ( i < total-1 )  // point intermédiaire ?
 					{
-						p1 = this.Handle(prev).Position;
-						s  = this.Handle(i).Position;
-						p2 = this.Handle(next).Position;
-						this.PathCorner(pathLine, p1,s,p2, corner, simply);
+						if ( i > next && !close )
+						{
+							pathLine.LineTo(this.Handle(i).Position);
+						}
+						else
+						{
+							p1 = this.Handle(prev).Position;
+							s  = this.Handle(i).Position;
+							p2 = this.Handle(next).Position;
+							this.PathCorner(pathLine, p1,s,p2, corner, simply, false);
+						}
 					}
 					else	// dernier point ?
 					{
@@ -573,7 +617,7 @@ namespace Epsitec.Common.Document.Objects
 							p1 = this.Handle(prev).Position;
 							s  = this.Handle(i).Position;
 							p2 = this.Handle(next).Position;
-							this.PathCorner(pathLine, p1,s,p2, corner, simply);
+							this.PathCorner(pathLine, p1,s,p2, corner, simply, false);
 						}
 					}
 				}
@@ -584,13 +628,45 @@ namespace Epsitec.Common.Document.Objects
 			}
 		}
 
+		// Cherche le rang précédent, en tenant compte
+		// des ensembles Starting-Primary(s).
+		protected int PrevRank(int rank)
+		{
+			if ( rank == 0 || this.Handle(rank).Type == HandleType.Starting )
+			{
+				do
+				{
+					rank ++;
+				}
+				while ( rank < this.TotalMainHandle && this.Handle(rank).Type != HandleType.Starting );
+			}
+			rank --;
+			return rank;
+		}
+
+		// Cherche le rang suivant, en tenant compte
+		// des ensembles Starting-Primary(s).
+		protected int NextRank(int rank)
+		{
+			rank ++;
+			if ( rank >= this.TotalMainHandle || this.Handle(rank).Type == HandleType.Starting )
+			{
+				do
+				{
+					rank --;
+				}
+				while ( rank > 0 && this.Handle(rank).Type != HandleType.Starting );
+			}
+			return rank;
+		}
+
 		// Crée le chemin d'un coin.
-		protected void PathCorner(Path path, Point p1, Point s, Point p2, Properties.Corner corner, bool simply)
+		protected void PathCorner(Path path, Point p1, Point s, Point p2, Properties.Corner corner, bool simply, bool first)
 		{
 			if ( simply )
 			{
-				if ( path.IsEmpty )  path.MoveTo(s);
-				else                 path.LineTo(s);
+				if ( first )  path.MoveTo(s);
+				else          path.LineTo(s);
 			}
 			else
 			{
@@ -599,8 +675,8 @@ namespace Epsitec.Common.Document.Objects
 				double radius = System.Math.Min(corner.Radius, System.Math.Min(l1,l2)/2);
 				Point c1 = Point.Move(s, p1, radius);
 				Point c2 = Point.Move(s, p2, radius);
-				if ( path.IsEmpty )  path.MoveTo(c1);
-				else                 path.LineTo(c1);
+				if ( first )  path.MoveTo(c1);
+				else          path.LineTo(c1);
 				corner.PathCorner(path, c1,s,c2, radius);
 			}
 		}
@@ -742,6 +818,7 @@ namespace Epsitec.Common.Document.Objects
 		}
 
 
+		#region CreateFromPath
 		// Retourne le chemin géométrique de l'objet.
 		public override Path GetPath(int rank)
 		{
@@ -766,6 +843,123 @@ namespace Epsitec.Common.Document.Objects
 
 			return pathLine;
 		}
+
+		// Crée un polygone à partir d'un chemin quelconque.
+		public bool CreateFromPath(Path path, int subPath)
+		{
+			PathElement[] elements;
+			Point[] points;
+			path.GetElements(out elements, out points);
+			if ( elements.Length > 1000 )  return false;
+
+			int firstHandle = this.TotalMainHandle;
+			Point start = new Point(0, 0);
+			Point current = new Point(0, 0);
+			Point p1 = new Point(0, 0);
+			Point p2 = new Point(0, 0);
+			Point p3 = new Point(0, 0);
+			bool close = false;
+			bool bDo = false;
+			int subRank = -1;
+			int i = 0;
+			while ( i < elements.Length )
+			{
+				switch ( elements[i] & PathElement.MaskCommand )
+				{
+					case PathElement.MoveTo:
+						subRank ++;
+						current = points[i++];
+						firstHandle = this.TotalMainHandle;
+						if ( subPath == -1 || subPath == subRank )
+						{
+							this.HandleAdd(current, HandleType.Starting);
+							bDo = true;
+						}
+						start = current;
+						break;
+
+					case PathElement.LineTo:
+						p1 = points[i++];
+						if ( subPath == -1 || subPath == subRank )
+						{
+							if ( Geometry.Compare(p1, start) )
+							{
+								close = true;
+								firstHandle = this.TotalMainHandle;
+							}
+							else
+							{
+								this.HandleAdd(p1, HandleType.Primary);
+								bDo = true;
+							}
+						}
+						current = p1;
+						break;
+
+					case PathElement.Curve3:
+						p1 = points[i];
+						p2 = points[i++];
+						p3 = points[i++];
+						p1 = Point.Scale(current, p1, 2.0/3.0);
+						p2 = Point.Scale(p3,      p2, 2.0/3.0);
+						if ( subPath == -1 || subPath == subRank )
+						{
+							if ( Geometry.Compare(p3, start) )
+							{
+								close = true;
+								firstHandle = this.TotalMainHandle;
+							}
+							else
+							{
+								this.HandleAdd(p3, HandleType.Primary);
+								bDo = true;
+							}
+						}
+						current = p3;
+						break;
+
+					case PathElement.Curve4:
+						p1 = points[i++];
+						p2 = points[i++];
+						p3 = points[i++];
+						if ( subPath == -1 || subPath == subRank )
+						{
+							if ( Geometry.Compare(p3, start) )
+							{
+								close = true;
+								firstHandle = this.TotalMainHandle;
+							}
+							else
+							{
+								this.HandleAdd(p3, HandleType.Primary);
+								bDo = true;
+							}
+						}
+						current = p3;
+						break;
+
+					default:
+						if ( (elements[i] & PathElement.FlagClose) != 0 )
+						{
+							close = true;
+						}
+						i ++;
+						break;
+				}
+			}
+			this.PropertyPolyClose.BoolValue = close;
+
+			return bDo;
+		}
+
+		// Finalise la création d'un polygone.
+		public void CreateFinalise()
+		{
+			this.HandlePropertiesCreate();  // crée les poignées des propriétés
+			this.Select(false);
+			this.Select(true);  // pour sélectionner toutes les poignées
+		}
+		#endregion
 
 
 		#region Serialization

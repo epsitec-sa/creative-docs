@@ -187,7 +187,7 @@ namespace Epsitec.Common.Document.Panels
 
 			this.fieldColor1.Color = p.Color1;
 			this.fieldColor2.Color = p.Color2;
-			this.fieldAngle.InternalValue = (decimal) p.Angle;
+			this.fieldAngle.InternalValue = (decimal) this.GetAngle();
 			this.fieldRepeat.InternalValue = (decimal) p.Repeat;
 			this.fieldMiddle.InternalValue = (decimal) p.Middle*100;
 			this.fieldSmooth.InternalValue = (decimal) p.Smooth;
@@ -219,7 +219,7 @@ namespace Epsitec.Common.Document.Panels
 
 			p.Color1 = this.fieldColor1.Color;
 			p.Color2 = this.fieldColor2.Color;
-			p.Angle  = (double) this.fieldAngle.InternalValue;
+			this.SetAngle((double) this.fieldAngle.InternalValue);
 			p.Repeat = (int)    this.fieldRepeat.InternalValue;
 			p.Middle = (double) this.fieldMiddle.InternalValue/100;
 			p.Smooth = (double) this.fieldSmooth.InternalValue;
@@ -228,6 +228,41 @@ namespace Epsitec.Common.Document.Panels
 			p.Cy = this.cy;
 			p.Sx = this.sx;
 			p.Sy = this.sy;
+		}
+
+		// Donne l'angle.
+		protected double GetAngle()
+		{
+			Properties.Gradient p = this.property as Properties.Gradient;
+			int sel = this.listFill.SelectedIndex;
+
+			if ( sel == 1 )  // linéaire ?
+			{
+				return Point.ComputeAngleDeg(p.Sx, p.Sy)-90;
+			}
+			else
+			{
+				return p.Angle;
+			}
+		}
+
+		// Change l'angle.
+		protected void SetAngle(double angle)
+		{
+			Properties.Gradient p = this.property as Properties.Gradient;
+			int sel = this.listFill.SelectedIndex;
+
+			if ( sel == 1 )  // linéaire ?
+			{
+				double d = System.Math.Sqrt(this.sx*this.sx + this.sy*this.sy);
+				Point s = Transform.RotatePointDeg(angle, new Point(0,d));
+				this.sx = s.X;
+				this.sy = s.Y;
+			}
+			else
+			{
+				p.Angle = angle;
+			}
 		}
 
 		// Grise les widgets nécessaires.
@@ -254,16 +289,23 @@ namespace Epsitec.Common.Document.Panels
 			if ( sel > 0 )
 			{
 				this.reset.SetEnabled(this.isExtendedSize);
-				this.fieldAngle.SetEnabled(this.isExtendedSize);
 				this.fieldRepeat.SetEnabled(this.isExtendedSize);
 				this.fieldMiddle.SetEnabled(this.isExtendedSize);
 			}
 			else
 			{
 				this.reset.SetEnabled(false);
-				this.fieldAngle.SetEnabled(false);
 				this.fieldRepeat.SetEnabled(false);
 				this.fieldMiddle.SetEnabled(false);
+			}
+
+			if ( sel == 1 || sel == 4 )  // linéaire ou cônique ?
+			{
+				this.fieldAngle.SetEnabled(this.isExtendedSize);
+			}
+			else
+			{
+				this.fieldAngle.SetEnabled(false);
 			}
 
 			this.fieldSmooth.SetEnabled(this.isExtendedSize);
@@ -407,11 +449,24 @@ namespace Epsitec.Common.Document.Panels
 
 		private void HandleReset(object sender, MessageEventArgs e)
 		{
-			this.fieldAngle.Value = 0.0M;
-			this.cx = 0.5;
-			this.cy = 0.5;
-			this.sx = 1.0;
-			this.sy = 1.0;
+			int sel = this.listFill.SelectedIndex;
+
+			if ( sel == 1 )  // linéaire ?
+			{
+				this.fieldAngle.Value = 0.0M;
+				this.cx = 0.5;
+				this.cy = 0.5;
+				this.sx = 0.0;
+				this.sy = 0.5;
+			}
+			else
+			{
+				this.fieldAngle.Value = 0.0M;
+				this.cx = 0.5;
+				this.cy = 0.5;
+				this.sx = 0.5;
+				this.sy = 0.5;
+			}
 
 			this.OnChanged();
 		}
@@ -463,7 +518,7 @@ namespace Epsitec.Common.Document.Panels
 		{
 			if ( this.ignoreChanged )  return;
 			this.UpdateClientGeometry();
-			this.OnChanged();
+			this.HandleReset(null, null);
 		}
 
 		private void HandleTextChanged(object sender)
