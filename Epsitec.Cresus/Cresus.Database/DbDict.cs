@@ -178,6 +178,7 @@ namespace Epsitec.Cresus.Database
 		#region IPersistable Members
 		public void SerializeToBase(DbTransaction transaction)
 		{
+			this.command.UpdateLogIds ();
 			this.command.UpdateRealIds (transaction);
 			this.command.UpdateTables (transaction);
 		}

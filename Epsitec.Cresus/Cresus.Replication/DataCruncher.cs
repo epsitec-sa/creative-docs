@@ -36,8 +36,8 @@ namespace Epsitec.Cresus.Replication
 			
 			DbSelectCondition condition = new DbSelectCondition (this.infrastructure.TypeConverter);
 			
-			condition.AddCondition (table.Columns[Tags.ColumnRefLog], DbCompare.GreaterThan, sync_id_min);
-			condition.AddCondition (table.Columns[Tags.ColumnRefLog], DbCompare.LessThan, sync_id_max);
+			condition.AddCondition (table.Columns[Tags.ColumnRefLog], DbCompare.GreaterThanOrEqual, sync_id_min);
+			condition.AddCondition (table.Columns[Tags.ColumnRefLog], DbCompare.LessThanOrEqual, sync_id_max);
 			
 			using (DbRichCommand command = DbRichCommand.CreateFromTable (this.infrastructure, this.transaction, table, condition))
 			{

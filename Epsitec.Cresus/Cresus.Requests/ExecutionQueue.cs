@@ -276,13 +276,15 @@ namespace Epsitec.Cresus.Requests
 			
 			System.Data.DataRow row;
 			
-			DbRichCommand.CreateRow (this.queue_data_table, out row);
+			DbRichCommand.CreateRow (this.queue_data_table, this.CreateLogId (), out row);
 			
 			row.BeginEdit ();
 			row[Tags.ColumnReqData]    = data;
 			row[Tags.ColumnReqExState] = ExecutionQueue.ConvertFromExecutionState (ExecutionState.Pending);
 			row[Tags.ColumnDateTime]   = System.DateTime.UtcNow;
 			row.EndEdit ();
+			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Request {0} added, initial state {1}.", row[0], (ExecutionState)row[Tags.ColumnReqExState]));
 			
 			return row;
 		}
@@ -462,6 +464,18 @@ namespace Epsitec.Cresus.Requests
 			return (short) value;
 		}
 		
+		
+		protected DbId CreateLogId()
+		{
+			if (this.is_server)
+			{
+				return this.infrastructure.Logger.CreatePermanentEntry ();
+			}
+			else
+			{
+				return this.infrastructure.Logger.CreateTemporaryEntry ();
+			}
+		}
 		
 		protected void CheckRow(System.Data.DataRow row)
 		{

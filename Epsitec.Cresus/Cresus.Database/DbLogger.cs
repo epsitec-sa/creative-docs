@@ -72,58 +72,38 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (this.next_id < DbId.LocalRange);
 		}
 		
-		
-		public void CreatePermanentEntry(DbTransaction transaction)
+		internal void CreateInitialEntry(DbTransaction transaction)
 		{
-			Entry entry = new Entry (this.next_id, this.client_id);
-			
-			this.Insert (transaction, entry);
-		}
-		
-		public void CreateTemporaryEntry(DbTransaction transaction)
-		{
-			Entry entry = new Entry (this.next_id, DbId.TempClientId);
-			
-			this.Insert (transaction, entry);
+			this.Insert (transaction, new Entry (DbId.CreateId (1, this.client_id)));
 		}
 		
 		
-		public void Insert(DbTransaction transaction, DbLogger.Entry entry)
+		public DbId CreatePermanentEntry()
 		{
-			if (transaction == null)
+			return this.CreatePermanentEntry (null);
+		}
+		
+		public DbId CreateTemporaryEntry()
+		{
+			return this.CreateTemporaryEntry (null);
+		}
+		
+		public DbId CreatePermanentEntry(DbTransaction transaction)
+		{
+			lock (this)
 			{
-				try
-				{
-					transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
-					this.Insert (transaction, entry);
-				}
-				finally
-				{
-					transaction.Commit ();
-					transaction.Dispose ();
-				}
-			}
-			else
-			{
-				Collections.SqlFields fields = new Collections.SqlFields ();
-				
-				fields.Add (this.table.Columns[Tags.ColumnId].CreateSqlField (this.infrastructure.TypeConverter, entry.Id));
-				fields.Add (this.table.Columns[Tags.ColumnDateTime].CreateSqlField (this.infrastructure.TypeConverter, entry.DateTime));
-				
-				long next_id = entry.Id.LocalId + 1;
-				
-				transaction.SqlBuilder.InsertData (this.table_sql_name, fields);
-				this.infrastructure.ExecuteSilent (transaction);
-				
-				//	Enregistre dans la base le prochain ID à utiliser, en prenant note du
-				//	ClientId appliqué à l'élément que l'on vient d'enregistrer dans le LOG :
-				
-				this.infrastructure.UpdateTableNextId (transaction, this.table_key, DbId.CreateId (next_id, entry.Id.ClientId));
-				
-				this.next_id    = next_id;
-				this.current_id = entry.Id;
+				return this.Insert (transaction, new Entry (DbId.CreateId (this.next_id, this.client_id)));
 			}
 		}
+		
+		public DbId CreateTemporaryEntry(DbTransaction transaction)
+		{
+			lock (this)
+			{
+				return this.Insert (transaction, new Entry (DbId.CreateTempId (this.next_id)));
+			}
+		}
+		
 		
 		public bool Remove(DbTransaction transaction, DbId id)
 		{
@@ -142,18 +122,20 @@ namespace Epsitec.Cresus.Database
 					transaction.Dispose ();
 				}
 			}
-			
-			Collections.SqlFields conditions = new Collections.SqlFields ();
-			
-			SqlField log_id_name  = SqlField.CreateName (this.table_sql_name, Tags.ColumnId);
-			SqlField log_id_value = SqlField.CreateConstant (id.Value, DbKey.RawTypeForId);
-			
-			conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, log_id_name, log_id_value));
-			
-			transaction.SqlBuilder.RemoveData (this.table.CreateSqlName (), conditions);
-			object result = this.infrastructure.ExecuteNonQuery (transaction);
-			
-			return 1 == (int) result;
+			else
+			{
+				Collections.SqlFields conditions = new Collections.SqlFields ();
+				
+				SqlField log_id_name  = SqlField.CreateName (this.table_sql_name, Tags.ColumnId);
+				SqlField log_id_value = SqlField.CreateConstant (id.Value, DbKey.RawTypeForId);
+				
+				conditions.Add (new SqlFunction (SqlFunctionType.CompareEqual, log_id_name, log_id_value));
+				
+				transaction.SqlBuilder.RemoveData (this.table.CreateSqlName (), conditions);
+				int result = (int) this.infrastructure.ExecuteNonQuery (transaction);
+				
+				return 1 == result;
+			}
 		}
 		
 		public void RemoveRange(DbTransaction transaction, DbId id_start)
@@ -212,40 +194,42 @@ namespace Epsitec.Cresus.Database
 					transaction.Dispose ();
 				}
 			}
-			
-			SqlField log_id_name  = SqlField.CreateName ("T", Tags.ColumnId);
-			SqlField log_id_val_1 = SqlField.CreateConstant (id_start.Value, DbKey.RawTypeForId);
-			SqlField log_id_val_2 = SqlField.CreateConstant (id_end.Value, DbKey.RawTypeForId);
-			
-			SqlSelect query = new SqlSelect ();
-			
-			query.Fields.Add ("T_ID", SqlField.CreateName ("T", Tags.ColumnId));
-			query.Fields.Add ("T_DT", SqlField.CreateName ("T", Tags.ColumnDateTime));
-			
-			query.Tables.Add ("T", SqlField.CreateName (this.table_sql_name));
-			
-			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareGreaterThanOrEqual, log_id_name, log_id_val_1));
-			query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareLessThanOrEqual, log_id_name, log_id_val_2));
-			
-			System.Data.DataTable data_table = this.infrastructure.ExecuteSqlSelect (transaction, query, 0);
-			
-			int n = data_table.Rows.Count;
-			Entry[] entries = new Entry[n];
-			
-			for (int i = 0; i < n; i++)
+			else
 			{
-				System.Data.DataRow row = data_table.Rows[i];
+				SqlField log_id_name  = SqlField.CreateName ("T", Tags.ColumnId);
+				SqlField log_id_val_1 = SqlField.CreateConstant (id_start.Value, DbKey.RawTypeForId);
+				SqlField log_id_val_2 = SqlField.CreateConstant (id_end.Value, DbKey.RawTypeForId);
 				
-				long            log_id;
-				System.DateTime date_time;
+				SqlSelect query = new SqlSelect ();
 				
-				Epsitec.Common.Types.Converter.Convert (row["T_ID"], out log_id);
-				Epsitec.Common.Types.Converter.Convert (row["T_DT"], out date_time);
+				query.Fields.Add ("T_ID", SqlField.CreateName ("T", Tags.ColumnId));
+				query.Fields.Add ("T_DT", SqlField.CreateName ("T", Tags.ColumnDateTime));
 				
-				entries[i] = new Entry (log_id, date_time);
+				query.Tables.Add ("T", SqlField.CreateName (this.table_sql_name));
+				
+				query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareGreaterThanOrEqual, log_id_name, log_id_val_1));
+				query.Conditions.Add (new SqlFunction (SqlFunctionType.CompareLessThanOrEqual, log_id_name, log_id_val_2));
+				
+				System.Data.DataTable data_table = this.infrastructure.ExecuteSqlSelect (transaction, query, 0);
+				
+				int n = data_table.Rows.Count;
+				Entry[] entries = new Entry[n];
+				
+				for (int i = 0; i < n; i++)
+				{
+					System.Data.DataRow row = data_table.Rows[i];
+					
+					long            log_id;
+					System.DateTime date_time;
+					
+					Epsitec.Common.Types.Converter.Convert (row["T_ID"], out log_id);
+					Epsitec.Common.Types.Converter.Convert (row["T_DT"], out date_time);
+					
+					entries[i] = new Entry (new DbId (log_id), date_time);
+				}
+				
+				return entries;
 			}
-			
-			return entries;
 		}
 		
 		
@@ -266,21 +250,17 @@ namespace Epsitec.Cresus.Database
 		#endregion
 		
 		#region Entry Class
-		public class Entry
+		public sealed class Entry
 		{
-			public Entry() : this (0, 0)
+			public Entry(DbId id)
 			{
-			}
-			
-			public Entry(long log_id, int client_id)
-			{
-				this.id = DbId.CreateId (log_id, client_id);
+				this.id        = id;
 				this.date_time = System.DateTime.UtcNow;
 			}
 			
-			public Entry(long id, System.DateTime date_time)
+			public Entry(DbId id, System.DateTime date_time)
 			{
-				this.id = new DbId (id);
+				this.id        = id;
 				this.date_time = date_time;
 			}
 			
@@ -302,10 +282,68 @@ namespace Epsitec.Cresus.Database
 			}
 			
 			
+			public override bool Equals(object obj)
+			{
+				Entry that = obj as Entry;
+				
+				if (that == null)
+				{
+					return false;
+				}
+				
+				return (this.Id == that.Id) && (this.DateTime == that.DateTime);
+			}
+			
+			public override int GetHashCode()
+			{
+				return (this.Id.Value).GetHashCode () ^ this.DateTime.GetHashCode ();
+			}
+
+
 			private DbId						id;
 			private System.DateTime				date_time;
 		}
 		#endregion
+		
+		private DbId Insert(DbTransaction transaction, DbLogger.Entry entry)
+		{
+			if (transaction == null)
+			{
+				try
+				{
+					transaction = this.infrastructure.BeginTransaction (DbTransactionMode.ReadWrite);
+					return this.Insert (transaction, entry);
+				}
+				finally
+				{
+					transaction.Commit ();
+					transaction.Dispose ();
+				}
+			}
+			else
+			{
+				Collections.SqlFields fields = new Collections.SqlFields ();
+				
+				fields.Add (this.table.Columns[Tags.ColumnId].CreateSqlField (this.infrastructure.TypeConverter, entry.Id));
+				fields.Add (this.table.Columns[Tags.ColumnDateTime].CreateSqlField (this.infrastructure.TypeConverter, entry.DateTime));
+				
+				long next_id = entry.Id.LocalId + 1;
+				
+				transaction.SqlBuilder.InsertData (this.table_sql_name, fields);
+				this.infrastructure.ExecuteSilent (transaction);
+				
+				//	Enregistre dans la base le prochain ID à utiliser, en prenant note du
+				//	ClientId appliqué à l'élément que l'on vient d'enregistrer dans le LOG :
+				
+				this.infrastructure.UpdateTableNextId (transaction, this.table_key, DbId.CreateId (next_id, entry.Id.ClientId));
+				
+				this.next_id    = next_id;
+				this.current_id = entry.Id;
+				
+				return this.current_id;
+			}
+		}
+		
 		
 		private DbInfrastructure				infrastructure;
 		private DbTable							table;

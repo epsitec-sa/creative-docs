@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Database
 		{
 			lock (DbKey.temp_lock)
 			{
-				return DbKey.temp_id++;
+				return DbId.CreateTempId (DbKey.temp_id++);
 			}
 		}
 		
@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Database
 		public const DbRawType					RawTypeForStatus	= DbRawType.Int16;
 		
 		private static object					temp_lock	= new object ();
-		private static long						temp_id		= DbId.MinimumTemp;
+		private static long						temp_id		= 0;
 		
 		protected DbId							id;
 		protected short							int_status;

@@ -102,6 +102,7 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbTransaction transaction = infrastructure.BeginTransaction ())
 			{
+				command.UpdateLogIds ();
 				command.UpdateRealIds (transaction);
 				command.UpdateTables (transaction);
 				transaction.Commit ();
@@ -185,6 +186,7 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbTransaction transaction = infrastructure.BeginTransaction ())
 			{
+				command.UpdateLogIds ();
 				command.UpdateRealIds (transaction);
 				command.UpdateTables (transaction);
 				transaction.Rollback ();
@@ -215,6 +217,7 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbTransaction transaction = infrastructure.BeginTransaction ())
 			{
+				command.UpdateLogIds ();
 				command.UpdateRealIds (transaction);
 				System.Diagnostics.Debug.WriteLine ("-> using real IDs");
 				command.UpdateTables (transaction);
@@ -260,6 +263,7 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbTransaction transaction = infrastructure.BeginTransaction ())
 			{
+				command.UpdateLogIds ();
 				command.UpdateRealIds (transaction);
 				command.UpdateTables (transaction);
 				transaction.Rollback ();
@@ -370,6 +374,7 @@ namespace Epsitec.Cresus.Database
 			
 			using (DbTransaction transaction = infrastructure.BeginTransaction ())
 			{
+				command.UpdateLogIds ();
 				command.UpdateRealIds (transaction);
 				command.UpdateTables (transaction);
 				transaction.Commit ();

@@ -283,7 +283,7 @@ namespace Epsitec.Cresus.Database
 					this.logger.DefineClientId (client_id);
 					this.logger.DefineLogId (1);
 					this.logger.Attach (this, this.internal_tables[Tags.TableLog]);
-					this.logger.Insert (transaction, new DbLogger.Entry (1, client_id));
+					this.logger.CreateInitialEntry (transaction);
 					
 					//	Adapte les divers réglages locaux en fonction du client :
 					
@@ -1971,7 +1971,7 @@ namespace Epsitec.Cresus.Database
 			//	indispensables ne sont pas encore utilisables :
 			
 			this.logger.Attach (this, this.internal_tables[Tags.TableLog]);
-			this.logger.Insert (transaction, new DbLogger.Entry (1, this.client_id));
+			this.logger.CreateInitialEntry (transaction);
 			
 			System.Diagnostics.Debug.Assert (this.logger.CurrentId.LocalId == 1);
 			System.Diagnostics.Debug.Assert (this.NextRowIdInTable (transaction, this.internal_tables[Tags.TableLog].InternalKey) == DbId.CreateId (2, this.client_id));

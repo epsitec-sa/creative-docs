@@ -256,6 +256,7 @@ namespace Epsitec.Common.Support.Implementation
 						throw new System.ArgumentException (string.Format ("Mode {0} not supported.", mode), "mode");
 				}
 				
+				command.UpdateLogIds ();
 				command.UpdateRealIds (transaction);
 				command.UpdateTables (transaction);
 				transaction.Commit ();
@@ -300,6 +301,7 @@ namespace Epsitec.Common.Support.Implementation
 				
 				if (changes > 0)
 				{
+					command.UpdateLogIds ();
 					command.UpdateTables (transaction);
 					transaction.Commit ();
 				}

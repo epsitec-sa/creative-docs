@@ -757,7 +757,43 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		[Test] public void Check20ServiceServer_Kill()
+		[Test] /*[Ignore ("Temporary")]*/ public void Check21RealReplication()
+		{
+			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("roaming", false))
+			{
+				Remoting.ClientIdentity      client  = new Remoting.ClientIdentity ("NUnit Test Client", infrastructure.LocalSettings.ClientId);
+				Remoting.IReplicationService service = Services.Engine.GetRemoteReplicationService ("localhost", 1234);
+				
+				Assert.IsNotNull (service);
+				
+				byte[] buffer;
+				
+				DbId last_sync_id = infrastructure.LocalSettings.SyncLogId;
+				
+				DbId from_id = DbId.CreateId (last_sync_id.LocalId + 1, last_sync_id.ClientId);
+				DbId to_id   = DbId.CreateId (DbId.LocalRange - 1, last_sync_id.ClientId);
+				
+				Remoting.IOperation operation;
+				System.Diagnostics.Debug.WriteLine (string.Format ("Asking server for replication data (starting at {0}).", from_id));
+				service.AcceptReplication (client, from_id, to_id, out operation);
+				System.Diagnostics.Debug.WriteLine ("Waiting...");
+				service.GetReplicationData (operation, out buffer);
+				System.Diagnostics.Debug.WriteLine ("Server reply received.");
+				
+				System.Diagnostics.Debug.WriteLine (string.Format ("Replication produced {0} byte(s) of data.", (buffer == null ? 0 : buffer.Length)));
+				
+				if (buffer != null)
+				{
+					Replication.ClientEngine engine = new Replication.ClientEngine (infrastructure, service);
+					engine.ApplyChanges (infrastructure.DefaultDbAbstraction, operation);
+					operation.WaitForProgress (100, System.TimeSpan.FromSeconds (10.0));
+				}
+				
+				System.Diagnostics.Debug.WriteLine ("Done.");
+			}
+		}
+		
+		[Test] public void Check99ServiceServer_Kill()
 		{
 			using (DbInfrastructure infrastructure = DbInfrastructureTest.GetInfrastructureFromBase ("fiche", false))
 			{

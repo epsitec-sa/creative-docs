@@ -204,8 +204,6 @@ namespace Epsitec.Cresus.Database
 			this.CheckValidState ();
 			this.CheckRowIds ();
 			
-			this.UpdateLogId ();
-			
 			this.SetCommandTransaction (transaction);
 			
 			try
@@ -255,7 +253,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public void UpdateLogId()
+		public void UpdateLogIds()
+		{
+			this.UpdateLogIds (this.infrastructure.Logger.CurrentId);
+		}
+		
+		public void UpdateLogIds(DbId log_id)
 		{
 			if (this.is_read_only)
 			{
@@ -264,7 +267,7 @@ namespace Epsitec.Cresus.Database
 			
 			foreach (System.Data.DataTable table in this.data_set.Tables)
 			{
-				DbRichCommand.UpdateLogId (table, this.infrastructure.Logger.CurrentId);
+				DbRichCommand.UpdateLogIds (table, log_id);
 			}
 		}
 		
@@ -472,7 +475,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public static void UpdateLogId(System.Data.DataTable table, DbId log_id)
+		public static void UpdateLogIds(System.Data.DataTable table, DbId log_id)
 		{
 			for (int i = 0; i < table.Rows.Count; i++)
 			{
@@ -488,10 +491,20 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
+		public static void DefineLogId(System.Data.DataRow row, DbId log_id)
+		{
+			if (row.RowState != System.Data.DataRowState.Deleted)
+			{
+				row.BeginEdit ();
+				row[Tags.ColumnRefLog] = log_id.Value;
+				row.EndEdit ();
+			}
+		}
 		
 		public static void CreateRow(System.Data.DataTable table, out System.Data.DataRow data_row)
 		{
-			//	Crée une ligne, mais ne l'ajoute pas à la table.
+			//	Crée une ligne, mais ne l'ajoute pas à la table. L'ID affecté à la
+			//	ligne est temporaire (mais unique); cf. DbKey.CheckTemporaryId.
 			
 			data_row = table.NewRow ();
 			
@@ -501,6 +514,11 @@ namespace Epsitec.Cresus.Database
 			data_row[Tags.ColumnId]     = key.Id.Value;
 			data_row[Tags.ColumnStatus] = key.IntStatus;
 			data_row.EndEdit ();
+		}
+		public static void CreateRow(System.Data.DataTable table, DbId log_id, out System.Data.DataRow data_row)
+		{
+			DbRichCommand.CreateRow (table, out data_row);
+			DbRichCommand.DefineLogId (data_row, log_id);
 		}
 		
 		public static void DeleteRow(System.Data.DataRow data_row)
