@@ -1217,6 +1217,8 @@ namespace Epsitec.Common.Widgets
 						case '\"':	buffer.Append("&quot;");	break;
 						case '\'':	buffer.Append("&apos;");	break;
 						case '\n':	buffer.Append("<br/>");		break;
+						case '\r':								break;
+						case '\t':	buffer.Append(" ");			break;
 						default:	buffer.Append(text[pos]);	break;
 					}
 				}
@@ -1225,13 +1227,26 @@ namespace Epsitec.Common.Widgets
 			}
 			else
 			{
-				text = text.Replace("&",  "&amp;");
-				text = text.Replace("<",  "&lt;");
-				text = text.Replace(">",  "&gt;");
-				text = text.Replace("\"", "&quot;");
-				text = text.Replace("\'", "&apos;");
-				text = text.Replace("\n", "<br/>");
-				return text;
+				System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+				
+				for (int i = 0; i < text.Length; i++)
+				{
+					char c = text[i];
+					switch (c)
+					{
+						case '&':	buffer.Append ("&amp;");	break;
+						case '<':	buffer.Append ("&lt;");		break;
+						case '>':	buffer.Append ("&gt;");		break;
+						case '\"':	buffer.Append ("&quot;");	break;
+						case '\'':	buffer.Append ("&apos;");	break;
+						case '\n':	buffer.Append ("<br/>");	break;
+						case '\r':								break;
+						case '\t':	buffer.Append (' ');		break;
+						default:	buffer.Append (c);			break;
+					}
+				}
+				
+				return buffer.ToString ();
 			}
 		}
 		
