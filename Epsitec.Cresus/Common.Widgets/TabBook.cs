@@ -333,7 +333,12 @@ namespace Epsitec.Common.Widgets
 				if ( page.TabButton == button )
 				{
 					this.ActivePage = page;
-					this.SetFocused(true);
+					
+					if ( button.AutoFocus )
+					{
+						this.Focus();
+					}
+					
 					break;
 				}
 			}
