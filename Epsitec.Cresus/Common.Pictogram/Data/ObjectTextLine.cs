@@ -25,10 +25,13 @@ namespace Epsitec.Common.Pictogram.Data
 
 			this.textLayout = new TextLayout();
 			this.textNavigator = new TextNavigator(this.textLayout);
-			this.textNavigator.StyleChanged += new EventHandler(this.HandleStyleChanged);
+			this.textNavigator.StyleChanged += new EventHandler(this.HandleTextChanged);
+			this.textNavigator.TextInserted += new EventHandler(this.HandleTextChanged);
+			this.textNavigator.TextDeleted  += new EventHandler(this.HandleTextChanged);
 			this.textLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
 			this.textLayout.LayoutSize = new Drawing.Size(1000000, 1000000);
 			this.textLayout.Alignment = Drawing.ContentAlignment.BottomLeft;
+			this.textNavigator.OpletQueue = Widgets.IconEditor.OpletQueue;
 		}
 
 		protected override AbstractObject CreateNewObject()
@@ -38,7 +41,9 @@ namespace Epsitec.Common.Pictogram.Data
 
 		public override void Dispose()
 		{
-			this.textNavigator.StyleChanged -= new EventHandler(this.HandleStyleChanged);
+			this.textNavigator.StyleChanged -= new EventHandler(this.HandleTextChanged);
+			this.textNavigator.TextInserted -= new EventHandler(this.HandleTextChanged);
+			this.textNavigator.TextDeleted  -= new EventHandler(this.HandleTextChanged);
 			base.Dispose();
 		}
 
@@ -602,9 +607,11 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Lie l'objet éditable à une règle.
-		public override void EditRulerLink(TextRuler ruler)
+		public override bool EditRulerLink(TextRuler ruler, IconContext iconContext)
 		{
+			ruler.TabCapability = false;
 			ruler.AttachToText(this.textNavigator);
+			return true;
 		}
 
 
@@ -615,6 +622,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			ObjectTextLine obj = src as ObjectTextLine;
 			this.textLayout.Text = obj.textLayout.Text;
+			obj.textNavigator.Context.CopyTo(this.textNavigator.Context);
 		}
 
 		
@@ -630,7 +638,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( !this.textNavigator.ProcessMessage(message, pos) )  return false;
 
-			//?this.dirtyBbox = true;
+			this.dirtyBbox = true;
 			return true;
 		}
 
@@ -838,11 +846,11 @@ namespace Epsitec.Common.Pictogram.Data
 			this.advanceMaxAscender = 0;
 			for ( int i=0 ; i<this.advanceCharArray.Length ; i++ )
 			{
-				string s = new string(this.advanceCharArray[i].character, 1);
-				width += ObjectTextLine.AdvanceString(this.advanceCharArray[i].font, s)*this.advanceCharArray[i].fontSize;
-				width += justif.Add*this.advanceCharArray[i].fontSize;
+				string s = new string(this.advanceCharArray[i].Character, 1);
+				width += ObjectTextLine.AdvanceString(this.advanceCharArray[i].Font, s)*this.advanceCharArray[i].FontSize;
+				width += justif.Add*this.advanceCharArray[i].FontSize;
 
-				this.advanceMaxAscender = System.Math.Max(this.advanceMaxAscender, this.advanceCharArray[i].font.Ascender*this.advanceCharArray[i].fontSize);
+				this.advanceMaxAscender = System.Math.Max(this.advanceMaxAscender, this.advanceCharArray[i].Font.Ascender*this.advanceCharArray[i].FontSize);
 			}
 
 			this.advanceRank = 0;
@@ -907,10 +915,10 @@ namespace Epsitec.Common.Pictogram.Data
 			int i = this.advanceRank++;
 			if ( i >= this.advanceCharArray.Length )  return false;
 
-			character = new string(this.advanceCharArray[i].character, 1);
-			font = this.advanceCharArray[i].font;
-			fontSize = this.advanceCharArray[i].fontSize * this.advanceFactor;
-			fontColor = this.advanceCharArray[i].fontColor;
+			character = new string(this.advanceCharArray[i].Character, 1);
+			font = this.advanceCharArray[i].Font;
+			fontSize = this.advanceCharArray[i].FontSize * this.advanceFactor;
+			fontColor = this.advanceCharArray[i].FontColor;
 
 			this.advanceWidth = ObjectTextLine.AdvanceString(font, character)*fontSize;
 			this.advanceWidth += justif.Add*fontSize;
@@ -1079,6 +1087,8 @@ namespace Epsitec.Common.Pictogram.Data
 		{
 			if ( !this.AdvanceInit() )  return;
 
+			this.textLayout.DrawingScale = iconContext.ScaleX;
+
 			int cursorFrom = System.Math.Min(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
 			int cursorTo   = System.Math.Max(this.textNavigator.Context.CursorFrom, this.textNavigator.Context.CursorTo);
 			Drawing.Point lastTop    = Drawing.Point.Empty;
@@ -1222,7 +1232,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		
-		private void HandleStyleChanged(object sender)
+		private void HandleTextChanged(object sender)
 		{
 			this.dirtyBbox = true;
 		}

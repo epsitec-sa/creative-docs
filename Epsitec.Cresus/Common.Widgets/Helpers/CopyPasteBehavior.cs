@@ -138,7 +138,7 @@ namespace Epsitec.Common.Widgets.Helpers
 					text.SelectAll ();
 				}
 				
-				text.DeleteSelection ();
+				text.TextNavigator.DeleteSelection ();
 				text.SimulateEdited ();
 				
 				return true;

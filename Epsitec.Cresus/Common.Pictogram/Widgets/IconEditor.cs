@@ -384,6 +384,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.drawer.InfoMouseChanged += new EventHandler(this.HandleDrawerInfoMouseChanged);
 			this.drawer.InfoZoomChanged += new EventHandler(this.HandleDrawerInfoZoomChanged);
 			this.drawer.UsePropertiesPanel += new EventHandler(this.HandleDrawerUsePropertiesPanel);
+			this.drawer.PageLayerChanged += new EventHandler(this.HandleDrawerPageLayerChanged);
 			this.drawer.Parent = this.leftPane;
 
 			this.lister = new Lister();
@@ -761,6 +762,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 		private void HandleDrawerUsePropertiesPanel(object sender)
 		{
 			this.book.ActivePage = this.bookPanel;
+		}
+
+		private void HandleDrawerPageLayerChanged(object sender)
+		{
+			this.panelPatterns.Update();
+			this.panelPages.Update();
+			this.panelLayers.Update();
+			this.UpdatePagesLayers();
 		}
 
 		private void HandleHScrollerValueChanged(object sender)
@@ -1317,7 +1326,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("StyleCreate")]
 		void CommandStyleCreate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.drawer.UndoMemorize("StyleCreate");
+			this.drawer.UndoBeginning("StyleCreate");
+			this.drawer.UndoSelectionWillBeChanged();
+			this.drawer.UndoValidate();
 			PropertyType type = AbstractProperty.TypeName(e.CommandArgs[0]);
 			this.panelStyles.CommandStyleCreate(type);
 		}
@@ -1325,7 +1336,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("StyleMake")]
 		void CommandStyleMake(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.drawer.UndoMemorize("StyleMake");
+			this.drawer.UndoBeginning("StyleMake");
+			this.drawer.UndoSelectionWillBeChanged();
+			this.drawer.UndoValidate();
 			PropertyType type = AbstractProperty.TypeName(e.CommandArgs[0]);
 			int sel = this.drawer.StyleMake(type);
 			if ( sel == -1 )  return;
@@ -1336,7 +1349,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("StyleFree")]
 		void CommandStyleFree(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.drawer.UndoMemorize("StyleFree");
+			this.drawer.UndoBeginning("StyleFree");
+			this.drawer.UndoSelectionWillBeChanged();
+			this.drawer.UndoValidate();
 			PropertyType type = AbstractProperty.TypeName(e.CommandArgs[0]);
 			this.drawer.StyleFree(type);
 			this.UpdatePanels();
@@ -1345,7 +1360,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("StyleUse")]
 		void CommandStyleUse(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.drawer.UndoMemorize("StyleUse");
+			this.drawer.UndoBeginning("StyleUse");
+			this.drawer.UndoSelectionWillBeChanged();
+			this.drawer.UndoValidate();
 			int rank = System.Convert.ToInt32(e.CommandArgs[0]);
 			this.drawer.StyleUse(rank);
 			this.UpdatePanels();
@@ -1393,5 +1410,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected string						filename = "";
 		protected bool							ignoreColorChanged = false;
 		protected double						panelsWidth = 215;
+
+		public static new OpletQueue			OpletQueue = new OpletQueue();
 	}
 }

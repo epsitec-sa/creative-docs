@@ -1646,13 +1646,17 @@ namespace Epsitec.Common.Widgets
 		}
 		#endregion
 		
-		public Support.OpletQueue					OpletQueue
+		public virtual Support.OpletQueue			OpletQueue
 		{
 			get
 			{
 				Support.CommandDispatcher dispatcher = this.CommandDispatcher;
 				
 				return dispatcher == null ? null : dispatcher.OpletQueue;
+			}
+			set
+			{
+				throw new System.InvalidOperationException ("Cannot set OpletQueue on Widget.");
 			}
 		}
 		

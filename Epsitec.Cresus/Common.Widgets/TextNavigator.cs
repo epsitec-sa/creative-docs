@@ -20,6 +20,12 @@ namespace Epsitec.Common.Widgets
 			get { return this.context; }
 		}
 
+		public Support.OpletQueue				OpletQueue
+		{
+			get { return this.undoQueue; }
+			set { this.undoQueue = value; }
+		}
+
 		public bool								IsReadOnly
 		{
 			get { return this.isReadOnly; }
@@ -67,6 +73,7 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
+				this.UndoMemorise(UndoType.Insert);
 				this.textLayout.ReplaceSelection(this.context, value);
 				this.OnTextInserted(true);
 				this.OnCursorScrolled();
@@ -165,7 +172,6 @@ namespace Epsitec.Common.Widgets
 		public void SetCursors(int from, int to, bool after)
 		{
 			// Modifie les deux curseurs en même temps.
-			
 			int len = this.textLayout.MaxTextIndex;
 			
 			from = System.Math.Max(from, 0);
@@ -196,6 +202,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.IsSelectionBold(this.context) != value )
 				{
+					this.UndoMemorise(UndoType.AutonomusStyle);
 					this.textLayout.SetSelectionBold(this.context, value);
 					this.OnStyleChanged();
 				}
@@ -213,6 +220,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.IsSelectionItalic(this.context) != value )
 				{
+					this.UndoMemorise(UndoType.AutonomusStyle);
 					this.textLayout.SetSelectionItalic(this.context, value);
 					this.OnStyleChanged();
 				}
@@ -230,12 +238,22 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.IsSelectionUnderlined(this.context) != value )
 				{
+					this.UndoMemorise(UndoType.AutonomusStyle);
 					this.textLayout.SetSelectionUnderlined(this.context, value);
 					this.OnStyleChanged();
 				}
 			}
 		}
 
+		public bool								SelectionWaved
+		{
+			// Attribut typographique "ondulé" des caractères sélectionnés.
+			get
+			{
+				return this.textLayout.IsSelectionWaved(this.context);
+			}
+		}
+		
 		public string							SelectionFontName
 		{
 			get
@@ -247,6 +265,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.GetSelectionFontName(this.context) != value )
 				{
+					this.UndoMemorise(UndoType.CascadableStyle);
 					this.textLayout.SetSelectionFontName(this.context, value);
 					this.OnStyleChanged();
 				}
@@ -264,6 +283,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.GetSelectionFontScale(this.context) != value )
 				{
+					this.UndoMemorise(UndoType.CascadableStyle);
 					this.textLayout.SetSelectionFontScale(this.context, value);
 					this.OnStyleChanged();
 				}
@@ -281,10 +301,68 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.GetSelectionFontColor(this.context) != value )
 				{
+					this.UndoMemorise(UndoType.CascadableStyle);
 					this.textLayout.SetSelectionFontColor(this.context, value);
 					this.OnStyleChanged();
 				}
 			}
+		}
+
+		public Drawing.TextListType				SelectionList
+		{
+			get
+			{
+				return this.textLayout.GetSelectionList(this.context);
+			}
+
+			set
+			{
+				if ( this.textLayout.GetSelectionList(this.context) != value )
+				{
+					this.UndoMemorise(UndoType.AutonomusStyle);
+					this.textLayout.SetSelectionList(this.context, value);
+					this.OnStyleChanged();
+				}
+			}
+		}
+
+
+		public void DeleteSelection()
+		{
+			if ( this.textLayout.DeleteSelection(this.context) )
+			{
+				this.OnTextDeleted(true);
+			}
+		}
+
+
+		public int AddTab(Drawing.TextStyle.Tab tab)
+		{
+			int rank = this.textLayout.Style.AddTab(tab);
+			this.OnStyleChanged();
+			return rank;
+		}
+
+		public int TotalTab()
+		{
+			return this.textLayout.Style.TotalTab();
+		}
+
+		public void DeleteTab(int rank)
+		{
+			this.textLayout.Style.DeleteTab(rank);
+			this.OnStyleChanged();
+		}
+
+		public Drawing.TextStyle.Tab GetTab(int rank)
+		{
+			return this.textLayout.Style.GetTab(rank);
+		}
+
+		public void MoveTab(int rank, double pos)
+		{
+			this.textLayout.MoveTab(rank, pos);
+			this.OnStyleChanged();
 		}
 
 
@@ -364,7 +442,14 @@ namespace Epsitec.Common.Widgets
 				switch ( key )
 				{
 					case KeyCode.Return:
+						this.UndoMemorise(UndoType.Insert);
 						this.textLayout.InsertCharacter(this.context, '\n');
+						this.OnTextInserted(false);
+						return true;
+
+					case KeyCode.Tab:
+						this.UndoMemorise(UndoType.Insert);
+						this.textLayout.InsertCharacter(this.context, '\t');
 						this.OnTextInserted(false);
 						return true;
 
@@ -424,6 +509,7 @@ namespace Epsitec.Common.Widgets
 				case KeyCode.Back:
 					if ( this.isReadOnly )  return false;
 					if ( isShiftPressed || isCtrlPressed )  return false;
+					this.UndoMemorise(UndoType.Delete);
 					this.textLayout.DeleteCharacter(this.context, -1);
 					this.OnTextDeleted(false);
 					this.OnCursorScrolled();
@@ -433,6 +519,7 @@ namespace Epsitec.Common.Widgets
 				case KeyCode.Delete:
 					if ( this.isReadOnly )  return false;
 					if ( isShiftPressed || isCtrlPressed )  return false;
+					this.UndoMemorise(UndoType.Delete);
 					this.textLayout.DeleteCharacter(this.context, 1);
 					this.OnTextDeleted(false);
 					this.OnCursorScrolled();
@@ -489,6 +576,7 @@ namespace Epsitec.Common.Widgets
 			{
 				bool replaced = this.textLayout.HasSelection(this.context);
 				
+				this.UndoMemorise(UndoType.Insert);
 				this.textLayout.InsertCharacter(this.context, (char)key);
 				
 				if ( replaced )
@@ -512,7 +600,8 @@ namespace Epsitec.Common.Widgets
 		{
 			int index;
 			bool after;
-			if ( this.textLayout.DetectIndex(pos, out index, out after) )
+			this.mouseSelZone = false;
+			if ( this.textLayout.DetectIndex(pos, false, out index, out after) )
 			{
 				this.context.CursorFrom  = index;
 				this.context.CursorTo    = index;
@@ -530,8 +619,9 @@ namespace Epsitec.Common.Widgets
 		{
 			int index;
 			bool after;
-			if ( this.textLayout.DetectIndex(pos, out index, out after) )
+			if ( this.textLayout.DetectIndex(pos, true, out index, out after) )
 			{
+				this.mouseSelZone = true;
 				this.context.CursorTo    = index;
 				this.context.CursorAfter = after;
 				this.textLayout.DefineCursorPosX(this.context);
@@ -565,7 +655,7 @@ namespace Epsitec.Common.Widgets
 			{
 				int index;
 				bool after;
-				if ( this.textLayout.DetectIndex(pos, out index, out after) )
+				if ( this.textLayout.DetectIndex(pos, this.mouseSelZone, out index, out after) )
 				{
 					this.context.CursorTo    = index;
 					this.context.CursorAfter = after;
@@ -574,6 +664,128 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.OnCursorChanged(false);
+		}
+
+
+		protected enum UndoType
+		{
+			Insert,
+			Delete,
+			CascadableStyle,	// plusieurs modifs -> un seul undo global
+			AutonomusStyle,		// plusieurs modifs -> autant de undo que de modifs
+		}
+
+		// Mémorise l'état actuel complet du texte, pour permettre l'annulation.
+		protected void UndoMemorise(UndoType type)
+		{
+			if ( this.undoQueue == null )  return;
+
+			Support.IOplet[] oplets = this.undoQueue.LastActionOplets;
+			if ( this.undoQueue.CanRedo == false &&
+				 oplets.Length == 1 &&
+				 !this.context.UndoSeparator )
+			{
+				TextOplet lastOplet = oplets[0] as TextOplet;
+				if ( type != UndoType.AutonomusStyle && lastOplet.Type == type )
+				{
+					return;  // situation initiale déjà mémorisée
+				}
+			}
+
+#if true
+			using ( this.undoQueue.BeginAction() )
+			{
+				TextOplet oplet = new TextOplet(this, type);
+				this.undoQueue.Insert(oplet);
+				this.undoQueue.ValidateAction();
+			}
+#else
+			this.undoQueue.BeginAction();
+			TextOplet oplet = new TextOplet(this, type);
+			this.undoQueue.Insert(oplet);
+			this.undoQueue.ValidateAction();
+#endif
+
+			this.context.UndoSeparator = false;
+		}
+
+		protected class TextOplet : Support.AbstractOplet
+		{
+			// Effectue une copie du texte et du contexte.
+			public TextOplet(TextNavigator navigator, UndoType type)
+			{
+				this.host = navigator;
+				this.type = type;
+				this.textCopy = string.Copy(this.host.textLayout.InternalText);
+				this.contextCopy = TextLayout.Context.Copy(this.host.context);
+			}
+
+			public UndoType Type
+			{
+				get { return this.type; }
+			}
+
+			// Permute le texte et le contexte contenus par l'hôte avec ceux
+			// contenus dans TextOplet.
+			protected void UndoRedo()
+			{
+				string undoText = string.Copy(this.textCopy);
+				string redoText = string.Copy(this.host.textLayout.InternalText);
+				this.host.textLayout.Text = undoText;
+				this.textCopy = redoText;
+
+				TextLayout.Context undoContext = TextLayout.Context.Copy(this.contextCopy);
+				TextLayout.Context redoContext = TextLayout.Context.Copy(this.host.context);
+				undoContext.CopyTo(this.host.context);
+				redoContext.CopyTo(this.contextCopy);
+
+				this.host.OnCursorChanged(true);
+			}
+
+			public override Support.IOplet Undo()
+			{
+				this.UndoRedo();  // permutation
+
+				if ( this.type == UndoType.Insert )
+				{
+					this.host.OnTextDeleted(true);
+				}
+				else if ( this.type == UndoType.Delete )
+				{
+					this.host.OnTextInserted(true);
+				}
+				else
+				{
+					this.host.OnStyleChanged();
+				}
+
+				return this;
+			}
+
+			public override Support.IOplet Redo()
+			{
+				this.UndoRedo();  // permutation
+
+				if ( this.type == UndoType.Insert )
+				{
+					this.host.OnTextInserted(true);
+				}
+				else if ( this.type == UndoType.Delete )
+				{
+					this.host.OnTextDeleted(true);
+				}
+				else
+				{
+					this.host.OnStyleChanged();
+				}
+
+				return this;
+			}
+
+			protected TextNavigator			host;
+			protected UndoType				type;
+			protected string				textCopy;
+			protected TextLayout.Context	contextCopy;
 		}
 
 
@@ -653,6 +865,7 @@ namespace Epsitec.Common.Widgets
 
 		protected TextLayout					textLayout;
 		protected TextLayout.Context			context;
+		protected Support.OpletQueue			undoQueue;
 		protected bool							isReadOnly = false;
 		protected bool							isNumeric = false;
 		protected int							iCursorFrom;
@@ -661,5 +874,6 @@ namespace Epsitec.Common.Widgets
 		protected int							iTextLength;
 		protected bool							mouseDown = false;
 		protected bool							mouseDrag = false;
+		protected bool							mouseSelZone = false;
 	}
 }

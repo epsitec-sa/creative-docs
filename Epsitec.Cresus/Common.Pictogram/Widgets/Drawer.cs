@@ -154,11 +154,31 @@ namespace Epsitec.Common.Pictogram.Widgets
 			set { this.iconObjects = value; }
 		}
 
+		// Modificateur global.
+		public GlobalModifier GlobalModifier
+		{
+			get { return this.globalModifier; }
+		}
+
 		// Liste des objets.
-		public System.Collections.ArrayList Objects
+		public UndoList Objects
 		{
 			get { return this.iconObjects.Objects; }
 			set { this.iconObjects.Objects = value; }
+		}
+
+		// Objet en cours d'édition.
+		public AbstractObject EditObject
+		{
+			get { return this.editObject; }
+		}
+
+		// Permute l'objet en cours d'édition (pour undo).
+		public void SwapEditObject(ref AbstractObject obj)
+		{
+			AbstractObject temp = this.editObject;
+			this.editObject = obj;
+			obj = temp;
 		}
 
 		// Ajoute un widget SampleButton qui représente la même icone.
@@ -242,33 +262,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 					{
 						if ( lastTool == false && this.rankLastCreated != -1 )
 						{
-							this.Select(this.iconObjects[this.rankLastCreated], false, false);
+							this.UndoBeginning("Select");
+							this.UndoSelectionWillBeChanged();
+							int nb = this.Select(this.iconObjects[this.rankLastCreated], false, false);
+							this.UndoValidate(nb > 0);
+
 							this.iconObjects.UpdateEditProperties(this.objectMemory);
 							this.rankLastCreated = -1;
 							this.InvalidateAll();
 							this.OnInfoObjectChanged();
 						}
 
-						if ( this.selectedTool == "Select" )
-						{
-							this.MouseCursor = MouseCursor.AsArrow;
-						}
-						if ( this.selectedTool == "Edit" )
-						{
-							this.MouseCursor = MouseCursor.AsIBeam;
-						}
-						if ( this.selectedTool == "Zoom" )
-						{
-							this.MouseCursorImage(ref this.mouseCursorZoom, @"file:images/zoom.icon");
-						}
-						if ( this.selectedTool == "Hand" )
-						{
-							this.MouseCursorImage(ref this.mouseCursorHand, @"file:images/hand.icon");
-						}
-						if ( this.selectedTool == "Picker" )
-						{
-							this.MouseCursorImage(ref this.mouseCursorPicker, @"file:images/picker.icon");
-						}
+						this.MouseTool();
 
 						if ( this.IsTool() && this.selectedTool != "Edit" )
 						{
@@ -297,7 +302,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 									}
 									else
 									{
-										this.iconObjects.DeselectAll();
+										this.DeselectAll();
 										this.editObject = null;
 									}
 									this.OnPanelChanged();
@@ -307,7 +312,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 							}
 							else if ( total > 1 )
 							{
-								this.iconObjects.DeselectAll();
+								this.DeselectAll();
 								this.editObject = null;
 								this.OnPanelChanged();
 								this.OnInfoObjectChanged();
@@ -317,13 +322,54 @@ namespace Epsitec.Common.Pictogram.Widgets
 					}
 					else
 					{
-						this.Select(null, false, false);  // désélectionne tout
+						this.UndoBeginning("Select");
+						this.UndoSelectionWillBeChanged();
+						int nb = this.Select(null, false, false);  // désélectionne tout
+						this.UndoValidate(nb > 0);
+
 						this.editObject = null;
 						this.InvalidateAll();
 						this.OnInfoObjectChanged();
 						this.MouseCursor = MouseCursor.AsCross;
 					}
 				}
+			}
+		}
+
+		// Permute l'outil (pour le undo).
+		public void SwapTool(ref string tool)
+		{
+			if ( tool == this.selectedTool )  return;
+
+			string temp = this.selectedTool;
+			this.selectedTool = tool;
+			tool = temp;
+
+			this.MouseTool();
+		}
+
+		// Utilise le bon sprite de la souris, selon l'outil sélectionné.
+		protected void MouseTool()
+		{
+			if ( this.selectedTool == "Select" )
+			{
+				this.MouseCursor = MouseCursor.AsArrow;
+			}
+			if ( this.selectedTool == "Edit" )
+			{
+				this.MouseCursor = MouseCursor.AsIBeam;
+			}
+			if ( this.selectedTool == "Zoom" )
+			{
+				this.MouseCursorImage(ref this.mouseCursorZoom, @"file:images/zoom.icon");
+			}
+			if ( this.selectedTool == "Hand" )
+			{
+				this.MouseCursorImage(ref this.mouseCursorHand, @"file:images/hand.icon");
+			}
+			if ( this.selectedTool == "Picker" )
+			{
+				this.MouseCursorImage(ref this.mouseCursorPicker, @"file:images/picker.icon");
 			}
 		}
 
@@ -409,7 +455,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 			if ( this.IsTool() || property.StyleID != 0 )
 			{
 				AbstractObject obj = this.iconObjects.RetFirstSelected();
-				this.UndoMemorize("Property", obj, property.Type);
+				int nbSel = this.iconObjects.TotalSelected();
+				this.UndoBeginning("Property", obj, nbSel, property.Type);
+				this.UndoSelectionWillBeChanged();
+				this.UndoValidate();
 
 				Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 				this.iconObjects.SetProperty(property, ref bbox, changeStylesCollection);
@@ -624,10 +673,8 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.ungroupState.Enabled = ( totalSelected == 1 && first is ObjectGroup && this.createRank == -1 );
 			this.insideState.Enabled = ( totalSelected == 1 && first is ObjectGroup && this.createRank == -1 );
 			this.outsideState.Enabled = ( !this.iconObjects.IsInitialGroup() && this.createRank == -1 );
-			//?this.undoState.Enabled = ( this.undoIndex > 0 && this.createRank == -1 );
-			//?this.redoState.Enabled = ( this.undoIndex < this.undoList.Count-1 && this.createRank == -1 );
-			this.undoState.Enabled = false;
-			this.redoState.Enabled = false;
+			this.undoState.Enabled = ( IconEditor.OpletQueue.CanUndo && this.createRank == -1 );
+			this.redoState.Enabled = ( IconEditor.OpletQueue.CanRedo && this.createRank == -1 );
 			this.deselectState.Enabled = ( totalSelected > 0 && this.createRank == -1 );
 			this.selectAllState.Enabled = ( totalSelected < count && this.createRank == -1 );
 			this.selectInvertState.Enabled = ( count > 0 && this.createRank == -1 );
@@ -727,8 +774,17 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("Delete")]
 		void CommandDelete()
 		{
-			this.UndoMemorize("Delete");
-			this.iconObjects.DeleteSelection();
+			if ( this.createRank == -1 )
+			{
+				this.UndoBeginning("Delete");
+				this.iconObjects.DeleteSelection();
+				this.UndoValidate();
+			}
+			else	// détruit l'objet en cours de création ?
+			{
+				this.UndoCancel();
+				this.iconObjects.DeleteSelection();
+			}
 			this.globalModifier.Visible = false;
 			this.createRank = -1;
 			this.editObject = null;
@@ -741,10 +797,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("Duplicate")]
 		void CommandDuplicate(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.UndoMemorize("Duplicate");
+			this.UndoBeginning("Duplicate");
+			this.UndoSelectionWillBeChanged();
 			Drawing.Point move = new Drawing.Point(1, 1);
 			this.iconObjects.DuplicateSelection(move);
 			this.globalModifier.MoveAll(move);
+			this.UndoValidate();
+
 			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.OnPanelChanged();
 			this.OnCommandChanged();
@@ -755,10 +814,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("Cut")]
 		void CommandCut(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.UndoMemorize("Cut");
+			this.UndoBeginning("Cut");
 			this.iconObjects.CopySelection();
 			this.iconObjects.DeleteSelection();
 			this.globalModifier.Visible = false;
+			this.UndoValidate();
+
 			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
@@ -775,9 +836,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("Paste")]
 		void CommandPaste(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.UndoMemorize("Paste");
-			this.ChangeSelection("Deselect");
+			this.UndoBeginning("Paste");
+			this.iconObjects.DeselectAll();
 			this.iconObjects.PasteSelection();
+			this.UndoValidate();
 
 			this.globalModifier.Visible = true;
 			this.iconObjects.GlobalSelect(this.globalModifier.Visible);
@@ -811,8 +873,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("OrderUp")]
 		void CommandOrderUp(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.UndoMemorize("OrderUp");
+			this.UndoBeginning("OrderUp");
 			this.iconObjects.OrderSelection(1);
+			this.UndoValidate();
+
 			this.OnCommandChanged();
 			this.InvalidateAll();
 		}
@@ -820,8 +884,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("OrderDown")]
 		void CommandOrderDown(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.UndoMemorize("OrderDown");
+			this.UndoBeginning("OrderDown");
 			this.iconObjects.OrderSelection(-1);
+			this.UndoValidate();
+
 			this.OnCommandChanged();
 			this.InvalidateAll();
 		}
@@ -829,12 +895,15 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("Merge")]
 		void CommandMerge(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.UndoMemorize("Merge");
+			this.UndoBeginning("Merge");
+			this.UndoSelectionWillBeChanged();
 			string name = this.iconObjects.GroupName();
 			this.iconObjects.UngroupSelection();
 			this.iconObjects.GroupSelection();
 			this.iconObjects.GroupName(name);
 			this.globalModifier.Visible = false;
+			this.UndoValidate();
+
 			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
@@ -844,9 +913,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("Group")]
 		void CommandGroup(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.UndoMemorize("Group");
+			this.UndoBeginning("Group");
+			this.UndoSelectionWillBeChanged();
 			this.iconObjects.GroupSelection();
 			this.globalModifier.Visible = false;
+			this.UndoValidate();
+
 			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
@@ -856,8 +928,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("Ungroup")]
 		void CommandUngroup(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.UndoMemorize("UnGroup");
+			this.UndoBeginning("UnGroup");
+			this.UndoSelectionWillBeChanged();
 			this.iconObjects.UngroupSelection();
+			this.UndoValidate();
+
 			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
@@ -867,8 +942,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("Inside")]
 		void CommandInside(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.UndoBeginning("UnGroup");
+			this.UndoSelectionWillBeChanged();
 			this.InsideSelection();
 			this.globalModifier.Visible = false;
+			this.UndoValidate();
+
 			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
@@ -878,8 +957,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("Outside")]
 		void CommandOutside(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.UndoBeginning("UnGroup");
+			this.UndoSelectionWillBeChanged();
 			this.OutsideSelection();
 			this.globalModifier.Visible = false;
+			this.UndoValidate();
+
 			this.OnPanelChanged();
 			this.OnCommandChanged();
 			this.OnInfoObjectChanged();
@@ -943,6 +1026,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		[Command ("SelectGlobal")]
 		void CommandSelectGlobal(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			this.UndoBeginning("SelectGlobal");
+			this.UndoSelectionWillBeChanged();
+			this.UndoValidate();
+
 			this.SelectedTool = "Select";
 			this.globalModifier.Visible = !this.globalModifier.Visible;
 			this.iconObjects.GlobalSelect(this.globalModifier.Visible);
@@ -980,8 +1067,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		void CommandHideSel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.SelectedTool = "Select";
+			this.UndoBeginning("HideSel");
 			this.iconObjects.HideSelection();
 			this.globalModifier.Visible = false;
+			this.UndoValidate();
+
 			this.OnPanelChanged();
 			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.OnCommandChanged();
@@ -993,7 +1083,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		void CommandHideRest(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.SelectedTool = "Select";
+			this.UndoBeginning("HideRest");
+			this.UndoSelectionWillBeChanged();
 			this.iconObjects.HideRest();
+			this.UndoValidate();
+
 			this.OnPanelChanged();
 			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.OnCommandChanged();
@@ -1005,10 +1099,13 @@ namespace Epsitec.Common.Pictogram.Widgets
 		void CommandHideCancel(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.SelectedTool = "Select";
+			this.UndoBeginning("HideCancel");
 			this.iconObjects.HideCancel();
 			this.globalModifier.Visible = true;
 			this.iconObjects.GlobalSelect(this.globalModifier.Visible);
 			this.globalModifier.Initialize(this.iconObjects.RetSelectedBbox());
+			this.UndoValidate();
+
 			this.OnPanelChanged();
 			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.OnCommandChanged();
@@ -1111,7 +1208,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Crée un nouvel objet selon l'outil sélectionné.
 		protected AbstractObject CreateObject()
 		{
-#if true
 			AbstractObject obj = null;
 			switch ( this.selectedTool )
 			{
@@ -1129,9 +1225,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			if ( obj == null )  return null;
 			return obj;
-#else
-			return AbstractObject obj = System.Activator.CreateInstance(null, this.selectedTool);
-#endif
 		}
 
 
@@ -1160,6 +1253,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				if ( message.Type == MessageType.MouseUp )
 				{
+					this.UndoValidate();
 					this.mouseDown = false;
 				}
 
@@ -1455,7 +1549,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.UpdateCommands();
 				return;
 			}
-			this.UndoMemorize("Object");
+			this.UndoBeginning("Object");
+			this.UndoSelectionWillBeChanged();
+			this.UndoValidate();
+
 			this.contextMenuObject.ContextCommand(widget.Name, this.contextMenuPos, this.contextMenuRank);
 			this.InvalidateAll();
 		}
@@ -1463,7 +1560,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		protected void SelectMouseDown(Drawing.Point mouse, bool isShift, bool isCtrl, int downCount)
 		{
-			this.UndoMemorize("Select");
+			this.UndoBeginning("Select");
+			this.UndoSelectionWillBeChanged();
+
 			this.moveStart = mouse;
 			this.moveAccept = false;
 			this.iconContext.IsCtrl = isCtrl;
@@ -1680,7 +1779,6 @@ namespace Epsitec.Common.Pictogram.Widgets
 						this.globalModifier.Visible = true;
 					}
 					this.OnInfoObjectChanged();
-					this.UndoMemorizeRemove();
 				}
 				bbox = Drawing.Rectangle.Infinite;
 			}
@@ -1697,15 +1795,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 				if ( this.moveHandle != -1 )  // déplace une poignée ?
 				{
 					if ( this.moveObject.IsMoveHandlePropertyChanged(this.moveHandle) ||
-						 this.moveObject.Handle(this.moveHandle).Type == HandleType.Property )
+						this.moveObject.Handle(this.moveHandle).Type == HandleType.Property )
 					{
 						this.OnPanelChanged();
 					}
-				}
-
-				if ( !this.moveAccept )
-				{
-					this.UndoMemorizeRemove();  // juste sélectionné (pas déplacé)
 				}
 
 				this.moveObject = null;
@@ -1718,7 +1811,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.OnPanelChanged();
 			}
 
-			this.iconContext.ConstrainDelStarting();
+			if ( this.iconContext.ConstrainDelStarting() )
+			{
+				bbox = Drawing.Rectangle.Infinite;
+			}
 
 			if ( bbox == Drawing.Rectangle.Infinite )
 			{
@@ -1734,7 +1830,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.ContextMenu(mouse, globalMenu);
 			}
 
-			this.OnCommandChanged();
+			this.UndoValidate();
 		}
 
 
@@ -1745,7 +1841,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 				this.InvalidateAll(this.editObject.BoundingBox);
 				return true;
 			}
-			return false;
+			else
+			{
+				return false;
+			}
 		}
 
 		protected void EditMouseDownMessage(Drawing.Point pos)
@@ -1756,6 +1855,9 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		protected bool EditMouseDown(Drawing.Point mouse, bool isShift, bool isCtrl, int downCount)
 		{
+			this.UndoBeginning("Edit");
+			this.UndoSelectionWillBeChanged();
+
 			bool newEdit = false;
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 
@@ -1817,8 +1919,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		protected void EditMouseUp(Drawing.Point mouse, bool isShift, bool isCtrl, bool isRight)
 		{
-			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
-
+			this.UndoValidate();
 			this.OnPanelChanged();
 			this.InvalidateAll();
 		}
@@ -1969,7 +2070,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 		protected void PickerMouseDown(Drawing.Point mouse, bool isShift, bool isCtrl)
 		{
-			this.UndoMemorize("Picker");
+			this.UndoBeginning("Picker");
+			this.UndoSelectionWillBeChanged();
+			this.UndoValidate();
+
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
 			AbstractObject obj = this.iconObjects.DeepDetect(mouse);
 			this.PickerProperties(mouse, obj, ref bbox);
@@ -2049,21 +2153,23 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 
 		// Sélectionne un objet et désélectionne tous les autres.
-		protected void Select(AbstractObject obj, bool edit, bool add)
+		protected int Select(AbstractObject obj, bool edit, bool add)
 		{
-			this.iconObjects.Select(obj, edit, add);
+			int nb = this.iconObjects.Select(obj, edit, add);
 			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.globalModifier.Visible = false;
 			this.OnPanelChanged();
+			return nb;
 		}
 
 		// Sélectionne tous les objets dans le rectangle.
-		protected void Select(Drawing.Rectangle rect, bool add)
+		protected int Select(Drawing.Rectangle rect, bool add)
 		{
-			this.iconObjects.Select(rect, add, !this.selectModePartial);
+			int nb = this.iconObjects.Select(rect, add, !this.selectModePartial);
 			this.iconObjects.UpdateEditProperties(this.objectMemory);
 			this.globalModifier.Visible = false;
 			this.OnPanelChanged();
+			return nb;
 		}
 
 
@@ -2086,9 +2192,22 @@ namespace Epsitec.Common.Pictogram.Widgets
 			this.iconObjects.UpdateEditProperties(this.objectMemory);
 		}
 
+		// Désélectionne tous les objets.
+		protected void DeselectAll()
+		{
+			this.UndoBeginning("DeselectAll");
+			this.UndoSelectionWillBeChanged();
+			int nb = this.iconObjects.DeselectAll();
+			this.UndoValidate(nb > 0);
+		}
+
 		// Modifie la sélection courante.
 		protected void ChangeSelection(string cmd)
 		{
+			this.UndoBeginning("ChangeSelection");
+			this.UndoSelectionWillBeChanged();
+
+			bool validate = false;
 			int nbsel = 0;
 			for ( int index=0 ; index<this.iconObjects.Count ; index++ )
 			{
@@ -2099,6 +2218,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					if ( obj.IsSelected() )
 					{
 						obj.Deselect();
+						validate = true;
 					}
 				}
 
@@ -2108,6 +2228,7 @@ namespace Epsitec.Common.Pictogram.Widgets
 					if ( !obj.IsSelected() )
 					{
 						obj.Select();
+						validate = true;
 					}
 					nbsel ++;
 				}
@@ -2117,8 +2238,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 					if ( obj.IsHide )  continue;
 					obj.Select(!obj.IsSelected());
 					if ( obj.IsSelected() )  nbsel ++;
+					validate = true;
 				}
 			}
+
+			this.UndoValidate(validate);
 
 			if ( nbsel <= 1 )
 			{
@@ -2140,14 +2264,14 @@ namespace Epsitec.Common.Pictogram.Widgets
 
 			if ( this.createRank == -1 )
 			{
-				this.UndoMemorize("Create");
+				this.UndoBeginning("Create");
 				AbstractObject obj = this.CreateObject();
 				if ( obj == null )  return;
 				obj.CloneProperties(this.newObject);
 				obj.PasteAdaptProperties(this.iconObjects.CurrentPattern == 0);
 				obj.Select();
 				obj.EditProperties = false;
-				this.createRank = this.iconObjects.Add(obj);
+				this.createRank = this.iconObjects.Add(obj, true);  // ajoute à la fin de la liste
 			}
 
 			this.iconObjects[this.createRank].CreateMouseDown(mouse, this.iconContext);
@@ -2185,11 +2309,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 					this.rankLastCreated = this.createRank;
 					selectAfterCreation = this.iconObjects[this.createRank].SelectAfterCreation();
 					editAfterCreation = this.iconObjects[this.createRank].EditAfterCreation();
+					this.UndoValidate();
 				}
 				else
 				{
 					this.iconObjects.RemoveAt(this.createRank);
-					this.UndoMemorizeRemove();
+					this.UndoCancel();
 				}
 				this.createRank = -1;
 			}
@@ -2219,11 +2344,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 			{
 				this.iconObjects[this.createRank].Deselect();
 				this.rankLastCreated = this.createRank;
+				this.UndoValidate();
 			}
 			else
 			{
 				this.iconObjects.RemoveAt(this.createRank);
-				this.UndoMemorizeRemove();
+				this.UndoCancel();
 			}
 			this.createRank = -1;
 			this.InvalidateAll();
@@ -2235,111 +2361,165 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Vide la liste des annulations.
 		protected void UndoFlush()
 		{
-			this.undoList.Clear();
-			this.undoIndex = 0;
+			if ( IconEditor.OpletQueue != null )
+			{
+				IconEditor.OpletQueue.PurgeUndo();
+				IconEditor.OpletQueue.PurgeRedo();
+			}
 			this.zoomHistory.Clear();
 		}
 
-		// Mémorise l'icône dans son état actuel.
-		public void UndoMemorize(string operation)
+		// Indique que l'on va modifier l'icône.
+		public void UndoBeginning(string operation)
 		{
-			this.UndoMemorize(operation, null, PropertyType.None);
+			this.UndoBeginning(operation, null, 0, PropertyType.None);
 		}
 
-		// Mémorise l'icône dans son état actuel.
-		protected void UndoMemorize(string operation, AbstractObject obj, PropertyType propertyType)
+		protected void UndoBeginning(string operation,
+									 AbstractObject obj, int nbSel, PropertyType propertyType)
 		{
-			bool commandChanged = false;
+			System.Diagnostics.Debug.Assert(!UndoList.Beginning);
+			UndoList.Beginning = true;
 
-			int total = this.undoList.Count;
-			if ( total > 0 && propertyType != PropertyType.None )
+			System.Diagnostics.Debug.WriteLine(string.Format("UndoBeginning: {0}", operation));
+			if ( IconEditor.OpletQueue == null )  return;
+
+			if ( propertyType != PropertyType.None )
 			{
-				UndoSituation last = this.undoList[total-1] as UndoSituation;
-				if ( operation    == last.Operation    &&
-					 obj          == last.Object       &&
-					 propertyType == last.PropertyType )
+				if ( this.undoOperation      == operation    &&
+					 this.undoObjectSelected == obj          &&
+					 this.undoTotalSelected  == nbSel        &&
+					 this.undoPropertyType   == propertyType )
 				{
-					return;
+					return;  // situation initiale déjà mémorisée
 				}
-				commandChanged = true;
 			}
 
-			while ( this.undoIndex < this.undoList.Count )
-			{
-				this.undoList.RemoveAt(this.undoList.Count-1);  // efface le redo
-			}
+			this.undoInProgress     = true;
+			this.undoOperation      = operation;
+			this.undoObjectSelected = obj;
+			this.undoTotalSelected  = nbSel;
+			this.undoPropertyType   = propertyType;
 
-			UndoSituation situation = new UndoSituation();
-			situation.Operation    = operation;
-			situation.Object       = obj;
-			situation.PropertyType = propertyType;
-			situation.SelectedTool = this.selectedTool;
+			UndoList.Operations = new System.Collections.ArrayList();  // début mémorisation
 
-			situation.ModifierData = new GlobalModifierData();
-			this.globalModifier.Data.CopyTo(situation.ModifierData);
+			Data.OpletBeginning ob = new Data.OpletBeginning(this);
+			UndoList.Operations.Add(ob);
 
-			IconObjects io = new IconObjects();
-			this.iconObjects.CopyTo(io.Objects);
-			situation.IconObjects = io;
-
-			StylesCollection styles = new StylesCollection();
-			this.iconObjects.StylesCollection.CopyTo(styles);
-			situation.StylesCollection = styles;
-
-			this.undoList.Add(situation);
-			this.undoIndex = this.undoList.Count;
-
-			if ( commandChanged || total == 0 )  this.OnCommandChanged();
+			Data.OpletMisc om = new Data.OpletMisc(this);
+			UndoList.Operations.Add(om);
 		}
 
-		// Supprime le dernier UndoMemorize inutile, par exemple parce que l'objet
-		// créé a finalement été détruit car il était trop petit.
-		protected void UndoMemorizeRemove()
+		// Mémorise tous les objets sélectionnés et leurs fils.
+		public void UndoSelectionWillBeChanged()
 		{
-			int total = this.undoList.Count;
-			if ( total == 0 )  return;
-			this.undoList.RemoveAt(total-1);
-			this.undoIndex = this.undoList.Count;
+			System.Diagnostics.Debug.Assert(UndoList.Beginning);
+			System.Diagnostics.Debug.WriteLine("UndoSelectionWillBeChanged");
+			if ( IconEditor.OpletQueue == null )  return;
+			if ( !this.undoInProgress )  return;
+
+			this.iconObjects.SelectionWillBeChanged();
+		}
+
+		// Valide ou annule le dernier UndoBeginning.
+		public void UndoValidate(bool validate)
+		{
+			if ( validate )  this.UndoValidate();
+			else             this.UndoCancel();
+		}
+
+		// Valide le dernier UndoBeginning.
+		public void UndoValidate()
+		{
+			System.Diagnostics.Debug.Assert(UndoList.Beginning);
+			UndoList.Beginning = false;
+
+			System.Diagnostics.Debug.WriteLine("UndoValidate");
+			if ( IconEditor.OpletQueue == null )  return;
+			if ( !this.undoInProgress )  return;
+
+			if ( UndoList.Operations.Count > 2 )  // plus que OpletBeginning et OpletMisc ?
+			{
+				Data.OpletEnding oe = new Data.OpletEnding(this);
+				UndoList.Operations.Add(oe);
+
+				using ( IconEditor.OpletQueue.BeginAction() )
+				{
+					foreach ( Support.AbstractOplet oplet in UndoList.Operations )
+					{
+						IconEditor.OpletQueue.Insert(oplet);
+					}
+					IconEditor.OpletQueue.ValidateAction();
+				}
+			}
+
+			UndoList.Operations.Clear();
+			UndoList.Operations = null;  // fin mémorisation
+			this.undoInProgress = false;
+			this.OnCommandChanged();
+		}
+
+		// Annule le dernier UndoBeginning.
+		public void UndoCancel()
+		{
+			System.Diagnostics.Debug.Assert(UndoList.Beginning);
+			UndoList.Beginning = false;
+
+			System.Diagnostics.Debug.WriteLine("UndoCancel");
+			if ( IconEditor.OpletQueue == null )  return;
+			if ( !this.undoInProgress )  return;
+
+			UndoList.Operations.Clear();
+			UndoList.Operations = null;  // fin mémorisation
+			this.undoInProgress = false;
 		}
 
 		// Remet le dessin dans son état précédent.
 		protected bool UndoRestore()
 		{
-			if ( this.undoIndex == 0 )  return false;
-
-			if ( this.undoIndex == this.undoList.Count )
-			{
-				this.UndoMemorize("Undo");
-				this.undoIndex --;
-			}
-
-			UndoSituation last = this.undoList[--this.undoIndex] as UndoSituation;
-			this.UndoLast(last);
+			System.Diagnostics.Debug.Assert(!UndoList.Beginning);
+			if ( IconEditor.OpletQueue == null )  return false;
+			if ( !IconEditor.OpletQueue.CanUndo )  return false;
+			IconEditor.OpletQueue.UndoAction();
 			return true;
 		}
 
 		// Annule la dernière annulation.
 		protected bool RedoRestore()
 		{
-			if ( this.undoIndex >= this.undoList.Count-1 )  return false;
-
-			UndoSituation last = this.undoList[++this.undoIndex] as UndoSituation;
-			this.UndoLast(last);
+			System.Diagnostics.Debug.Assert(!UndoList.Beginning);
+			if ( IconEditor.OpletQueue == null )  return false;
+			if ( !IconEditor.OpletQueue.CanRedo )  return false;
+			IconEditor.OpletQueue.RedoAction();
 			return true;
 		}
 
-		// Reprend une situation.
-		protected void UndoLast(UndoSituation last)
+		// Effectue quelques petites opérations, toujours au début d'un
+		// undo ou d'un redo.
+		public void UndoInitialWork()
 		{
-			last.IconObjects.CopyTo(this.iconObjects.Objects);
-			last.StylesCollection.CopyTo(this.iconObjects.StylesCollection);
-			this.selectedTool = last.SelectedTool;
-			last.ModifierData.CopyTo(this.globalModifier.Data);
-			this.globalModifier.UpdateHandle();
+			UndoList.SelectAfterCreate = false;
+		}
 
+		// Effectue quelques petites opérations, toujours à la fin d'un
+		// undo ou d'un redo.
+		public void UndoFinalWork()
+		{
+			this.iconObjects.DeselectNoUndoStamp();
+
+			if ( UndoList.SelectAfterCreate )
+			{
+				this.SelectedTool = "Select";
+			}
+
+			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
+			this.iconObjects.GroupUpdateParents(ref bbox);
+
+			this.globalModifier.UpdateHandle();
 			this.OnAllChanged();
 			this.iconObjects.StylesCollection.CollectionChanged();
 			this.OnInfoObjectChanged();
+			this.OnPageLayerChanged();
 			this.rankLastCreated = -1;
 		}
 
@@ -2420,22 +2600,34 @@ namespace Epsitec.Common.Pictogram.Widgets
 			}
 			else
 			{
-				this.textRuler.SetVisible(true);
-
 				this.iconContext.ScaleX = this.iconContext.Zoom*this.Client.Width/this.iconObjects.Size.Width;
 				this.iconContext.ScaleY = this.iconContext.Zoom*this.Client.Height/this.iconObjects.Size.Height;
 
-				Drawing.Rectangle editRect = this.editObject.BoundingBoxThin;
-				Drawing.Rectangle rulerRect = new Drawing.Rectangle();
-				Drawing.Point p1 = this.IconToScreen(editRect.TopLeft);
-				Drawing.Point p2 = this.IconToScreen(editRect.TopRight);
-				rulerRect.BottomLeft = p1;
-				rulerRect.Width = System.Math.Max(p2.X-p1.X, this.textRuler.MinimalWidth);
-				rulerRect.Height = this.textRuler.DefaultHeight;
-				rulerRect.RoundFloor();
-				this.textRuler.Bounds = rulerRect;
+				if ( this.editObject.EditRulerLink(this.textRuler, this.iconContext) )
+				{
+					Drawing.Rectangle editRect = this.editObject.BoundingBoxThin;
+					Drawing.Rectangle rulerRect = new Drawing.Rectangle();
+					Drawing.Point p1 = this.IconToScreen(editRect.TopLeft);
+					Drawing.Point p2 = this.IconToScreen(editRect.TopRight);
+					rulerRect.BottomLeft = p1;
+					rulerRect.Width = System.Math.Max(p2.X-p1.X, this.textRuler.MinimalWidth);
+					rulerRect.Height = this.textRuler.DefaultHeight;
+					rulerRect.RoundFloor();
+					this.textRuler.Bounds = rulerRect;
 
-				this.editObject.EditRulerLink(this.textRuler);
+					if ( p2.X-p1.X < this.textRuler.MinimalWidth )
+					{
+						this.textRuler.RightMargin += this.textRuler.MinimalWidth-(p2.X-p1.X);
+					}
+
+					this.textRuler.Scale = this.iconContext.ScaleX;
+					this.textRuler.SetVisible(true);
+				}
+				else
+				{
+					this.textRuler.SetVisible(false);
+					this.textRuler.DetachFromText();
+				}
 			}
 		}
 
@@ -2730,6 +2922,18 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public event EventHandler UsePropertiesPanel;
 
 
+		// Génère un événement pour dire que la page ou le calque a changé.
+		protected virtual void OnPageLayerChanged()
+		{
+			if ( this.PageLayerChanged != null )  // qq'un écoute ?
+			{
+				this.PageLayerChanged(this);
+			}
+		}
+
+		public event EventHandler PageLayerChanged;
+
+
 		protected bool					isActive = true;
 		protected bool					isEditable = false;
 		protected string				selectedTool;
@@ -2769,8 +2973,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		protected Drawer				link = null;
 		protected System.Collections.ArrayList	clones = new System.Collections.ArrayList();
 
-		protected int					undoIndex = 0;
-		protected System.Collections.ArrayList	undoList = new System.Collections.ArrayList();
+		protected bool					undoInProgress;
+		protected string				undoOperation;
+		protected AbstractObject		undoObjectSelected;
+		protected int					undoTotalSelected;
+		protected PropertyType			undoPropertyType;
+		protected OpletQueue			undoQueue = new OpletQueue();
 		protected ZoomHistory			zoomHistory = new ZoomHistory();
 
 		protected CommandDispatcher		commandDispatcher;

@@ -18,7 +18,12 @@ namespace Epsitec.Common.Widgets
 		Close,
 		Dots,
 		Accept,
-		Reject
+		Reject,
+		TabRight,
+		TabLeft,
+		TabCenter,
+		TabDecimal,
+		TabIndent,
 	}
 	
 	/// <summary>

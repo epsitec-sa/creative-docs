@@ -9,7 +9,7 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ObjectPage()
 		{
-			this.objects = new System.Collections.ArrayList();
+			this.objects = new UndoList();
 		}
 
 		protected override AbstractObject CreateNewObject()

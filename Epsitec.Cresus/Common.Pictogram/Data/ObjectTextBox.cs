@@ -38,6 +38,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.textLayout = new TextLayout();
 			this.textNavigator = new TextNavigator(this.textLayout);
 			this.textLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
+			this.textNavigator.OpletQueue = Widgets.IconEditor.OpletQueue;
 		}
 
 		protected override AbstractObject CreateNewObject()
@@ -205,9 +206,15 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Lie l'objet éditable à une règle.
-		public override void EditRulerLink(TextRuler ruler)
+		public override bool EditRulerLink(TextRuler ruler, IconContext iconContext)
 		{
+			ruler.TabCapability = true;
 			ruler.AttachToText(this.textNavigator);
+
+			double mx = this.PropertyJustif(4).MarginH;
+			ruler.LeftMargin  = mx*iconContext.ScaleX;
+			ruler.RightMargin = mx*iconContext.ScaleX;
+			return true;
 		}
 
 
@@ -218,6 +225,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 			ObjectTextBox obj = src as ObjectTextBox;
 			this.textLayout.Text = obj.textLayout.Text;
+			obj.textNavigator.Context.CopyTo(this.textNavigator.Context);
 		}
 
 
@@ -321,6 +329,7 @@ namespace Epsitec.Common.Pictogram.Data
 			size.Width  = Drawing.Point.Distance(p1,p2);
 			size.Height = Drawing.Point.Distance(p1,p3);
 			this.textLayout.LayoutSize = size;
+			this.textLayout.DrawingScale = iconContext.ScaleX;
 
 			this.textLayout.DefaultFont     = this.PropertyFont(5).GetFont();
 			this.textLayout.DefaultFontSize = this.PropertyFont(5).FontSize;
@@ -378,6 +387,7 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 
 			this.textLayout.ShowLineBreak = this.edited;
+			this.textLayout.ShowTab       = this.edited;
 			this.textLayout.Paint(new Drawing.Point(0,0), port);
 
 			if ( port is Drawing.Graphics &&

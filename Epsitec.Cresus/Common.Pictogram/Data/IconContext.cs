@@ -336,9 +336,11 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Enlève le point initial pour les contraintes.
-		public void ConstrainDelStarting()
+		public bool ConstrainDelStarting()
 		{
+			if ( this.constrainType == ConstrainType.None )  return false;
 			this.constrainType = ConstrainType.None;
+			return true;
 		}
 
 		// Dessine les contraintes.

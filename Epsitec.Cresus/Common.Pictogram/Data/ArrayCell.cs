@@ -13,6 +13,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.textLayout = new TextLayout();
 			this.textNavigator = new TextNavigator(this.textLayout);
 			this.textLayout.BreakMode = Drawing.TextBreakMode.Hyphenate;
+			this.textNavigator.OpletQueue = Widgets.IconEditor.OpletQueue;
 		}
 
 		public string Content
@@ -139,6 +140,7 @@ namespace Epsitec.Common.Pictogram.Data
 		public void CopyTo(ArrayCell dst)
 		{
 			dst.textLayout.Text = this.textLayout.Text;
+			this.textNavigator.Context.CopyTo(dst.textNavigator.Context);
 			this.leftLine   .CopyTo(dst.leftLine);
 			this.bottomLine .CopyTo(dst.bottomLine);
 			this.leftColor  .CopyTo(dst.leftColor);

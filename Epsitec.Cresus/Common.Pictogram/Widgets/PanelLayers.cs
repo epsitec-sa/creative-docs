@@ -135,7 +135,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public void LayerSelect(int sel)
 		{
 			this.drawer.CreateEnding();
+
+			this.drawer.UndoBeginning("LayerChange");
 			this.drawer.IconObjects.CurrentLayer = sel;
+			this.drawer.UndoValidate();
+
 			this.TableSelect(sel, true, false);
 			this.UpdateRadio();
 			this.UpdatePanels();
@@ -192,7 +196,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Crée un nouveau calque.
 		private void HandleButtonNew(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("LayerCreate");
 			this.drawer.IconObjects.CreateLayer(this.drawer.IconObjects.CurrentLayer, false);
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentLayer, true, true);
 			this.UpdateToolBar();
@@ -204,7 +211,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Duplique un calque.
 		private void HandleButtonDuplicate(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("LayerDuplicate");
 			this.drawer.IconObjects.CreateLayer(this.drawer.IconObjects.CurrentLayer, true);
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentLayer, true, true);
 			this.UpdateToolBar();
@@ -216,9 +226,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Monte d'une ligne le calque sélectionné.
 		private void HandleButtonUp(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("LayerUp");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.SwapLayer(sel, sel+1);
 			this.drawer.IconObjects.CurrentLayer = sel+1;
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentLayer, true, false);
 			this.UpdateToolBar();
@@ -228,9 +241,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Descend d'une ligne le calque sélectionné.
 		private void HandleButtonDown(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("LayerDown");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.SwapLayer(sel, sel-1);
 			this.drawer.IconObjects.CurrentLayer = sel-1;
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentLayer, true, false);
 			this.UpdateToolBar();
@@ -241,8 +257,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Supprime le calque sélectionné.
 		private void HandleButtonDelete(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("LayerDelete");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.DeleteLayer(sel);
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentLayer, true, false);
 			this.UpdateRadio();
@@ -382,7 +401,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 			int sel = this.TableSelect();
 			if ( sel == -1 )  return;
 			this.TableSelect(sel, false, true);
+
+			this.drawer.UndoBeginning("LayerChange");
 			this.drawer.IconObjects.CurrentLayer = sel;
+			this.drawer.UndoValidate();
+
 			this.UpdateRadio();
 			this.UpdatePanels();
 			this.UpdateToolBar();
@@ -394,7 +417,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			TextField edit = sender as TextField;
 			int sel = System.Convert.ToInt32(edit.Name);
+			
+			this.drawer.UndoBeginning("LayerChange");
 			this.drawer.IconObjects.CurrentLayer = sel;
+			this.drawer.UndoValidate();
+
 			this.TableSelect(this.drawer.IconObjects.CurrentLayer, false, false);
 			this.UpdateRadio();
 			this.UpdatePanels();

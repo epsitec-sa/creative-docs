@@ -13,7 +13,7 @@ namespace Epsitec.Common.Pictogram.Data
 			name.Type = PropertyType.Name;
 			this.AddProperty(name);
 
-			this.objects = new System.Collections.ArrayList();
+			this.objects = new UndoList();
 		}
 
 		protected override AbstractObject CreateNewObject()
@@ -122,7 +122,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Déplace tous les objets du groupe.
-		protected void MoveHandleSoon(System.Collections.ArrayList objects,
+		protected void MoveHandleSoon(UndoList objects,
 									  GlobalModifierData initial, GlobalModifierData final)
 		{
 			if ( objects != null && objects.Count != 0 )

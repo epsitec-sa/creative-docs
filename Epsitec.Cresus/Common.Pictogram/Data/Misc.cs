@@ -48,5 +48,27 @@ namespace Epsitec.Common.Pictogram.Data
 
 			return "Copie de " + name;
 		}
+
+		// Permute deux variables.
+		static public void Swap(ref bool a, ref bool b)
+		{
+			bool t = a;
+			a = b;
+			b = t;
+		}
+
+		static public void Swap(ref int a, ref int b)
+		{
+			int t = a;
+			a = b;
+			b = t;
+		}
+
+		static public void Swap(ref double a, ref double b)
+		{
+			double t = a;
+			a = b;
+			b = t;
+		}
 	}
 }

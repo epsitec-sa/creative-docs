@@ -43,6 +43,7 @@ namespace Epsitec.Common.Widgets
 			this.navigator.TextInserted += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextInserted);
 			this.navigator.CursorScrolled += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorScrolled);
 			this.navigator.CursorChanged += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorChanged);
+			this.navigator.StyleChanged += new Epsitec.Common.Support.EventHandler(this.HandleNavigatorStyleChanged);
 			this.textFieldStyle = TextFieldStyle.Normal;
 			
 			this.copyPasteBehavior = new Helpers.CopyPasteBehavior(this);
@@ -59,6 +60,18 @@ namespace Epsitec.Common.Widgets
 		public TextNavigator					TextNavigator
 		{
 			get { return this.navigator; }
+		}
+
+		public override Support.OpletQueue		OpletQueue
+		{
+			get
+			{
+				return this.navigator.OpletQueue;
+			}
+			set
+			{
+				this.navigator.OpletQueue = value;
+			}
 		}
 
 		
@@ -103,6 +116,14 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public override Drawing.ContentAlignment DefaultAlignment
+		{
+			get
+			{
+				return Drawing.ContentAlignment.TopLeft;
+			}
+		}
+
 		public override double					DefaultHeight
 		{
 			get
@@ -365,6 +386,7 @@ namespace Epsitec.Common.Widgets
 					this.navigator.TextInserted -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorTextInserted);
 					this.navigator.CursorScrolled -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorScrolled);
 					this.navigator.CursorChanged -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorCursorChanged);
+					this.navigator.StyleChanged -= new Epsitec.Common.Support.EventHandler(this.HandleNavigatorStyleChanged);
 					TextField.blinking = null;
 				}
 			}
@@ -416,14 +438,6 @@ namespace Epsitec.Common.Widgets
 			this.OnCursorChanged(silent);
 		}
 
-		public void DeleteSelection()
-		{
-			if ( this.TextLayout.DeleteSelection(this.navigator.Context) )
-			{
-				this.OnTextChanged();
-			}
-		}
-
 		public void SimulateEdited()
 		{
 			this.OnTextEdited();
@@ -445,114 +459,6 @@ namespace Epsitec.Common.Widgets
 			return false;
 		}
 		
-		
-		public bool								SelectionBold
-		{
-			// Attribut typographique "gras" des caractères sélectionnés.
-			get
-			{
-				return this.TextLayout.IsSelectionBold(this.navigator.Context);
-			}
-
-			set
-			{
-				this.TextLayout.SetSelectionBold(this.navigator.Context, value);
-				this.OnTextChanged();
-			}
-		}
-
-		public bool								SelectionItalic
-		{
-			// Attribut typographique "italique" des caractères sélectionnés.
-			get
-			{
-				return this.TextLayout.IsSelectionItalic(this.navigator.Context);
-			}
-
-			set
-			{
-				this.TextLayout.SetSelectionItalic(this.navigator.Context, value);
-				this.OnTextChanged();
-			}
-		}
-
-		public bool								SelectionUnderlined
-		{
-			// Attribut typographique "souligné" des caractères sélectionnés.
-			get
-			{
-				return this.TextLayout.IsSelectionUnderlined(this.navigator.Context);
-			}
-
-			set
-			{
-				this.TextLayout.SetSelectionUnderlined(this.navigator.Context, value);
-				this.OnTextChanged();
-			}
-		}
-
-		public bool								SelectionWaved
-		{
-			// Attribut typographique "ondulé" des caractères sélectionnés.
-			get
-			{
-				return this.TextLayout.IsSelectionWaved(this.navigator.Context);
-			}
-		}
-
-		public string							SelectionFontName
-		{
-			// Nom de la police des caractères sélectionnés.
-			get
-			{
-				return this.TextLayout.GetSelectionFontName(this.navigator.Context);
-			}
-
-			set
-			{
-				this.TextLayout.SetSelectionFontName(this.navigator.Context, value);
-				this.OnTextChanged();
-			}
-		}
-
-		public double							SelectionFontScale
-		{
-			// Taille de la police des caractères sélectionnés.
-			get
-			{
-				return this.TextLayout.GetSelectionFontScale(this.navigator.Context);
-			}
-
-			set
-			{
-				this.TextLayout.SetSelectionFontScale(this.navigator.Context, value);
-				this.OnTextChanged();
-			}
-		}
-
-		public Drawing.Color					SelectionFontColor
-		{
-			// Couleur de la police des caractères sélectionnés.
-			get
-			{
-				return this.TextLayout.GetSelectionFontColor(this.navigator.Context);
-			}
-
-			set
-			{
-				this.TextLayout.SetSelectionFontColor(this.navigator.Context, value);
-				this.OnTextChanged();
-			}
-		}
-
-		
-		public override Drawing.ContentAlignment DefaultAlignment
-		{
-			get
-			{
-				return Drawing.ContentAlignment.TopLeft;
-			}
-		}
 
 		
 		public Drawing.Rectangle GetButtonBounds()
@@ -777,6 +683,11 @@ namespace Epsitec.Common.Widgets
 		private void HandleNavigatorCursorChanged(object sender)
 		{
 			this.OnCursorChanged(false);
+		}
+
+		private void HandleNavigatorStyleChanged(object sender)
+		{
+			this.CursorScroll(true);
 		}
 
 		

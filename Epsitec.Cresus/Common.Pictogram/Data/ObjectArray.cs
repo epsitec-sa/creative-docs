@@ -1455,16 +1455,31 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Lie l'objet éditable à une règle.
-		public override void EditRulerLink(TextRuler ruler)
+		public override bool EditRulerLink(TextRuler ruler, IconContext iconContext)
 		{
-			if ( this.cellToEdit == -1 )  return;
+			if ( this.cellToEdit == -1 )  return false;
 			int c = this.cellToEdit%(this.columns+1);
 			int r = this.cellToEdit/(this.columns+1);
 
 			TextLayout textLayout = this.Cell(c,r).TextLayout;
 			TextNavigator textNavigator = this.Cell(c,r).TextNavigator;
 
+			ruler.TabCapability = true;
 			ruler.AttachToText(textNavigator);
+
+			double left = 0.0;
+			if ( c > 0 )  left = this.columnWidth*this.widths[c-1];
+
+			double right = 0.0;
+			if ( c < this.widths.Length )  right = this.columnWidth*(1.0-this.widths[c]);
+
+			PropertyJustif justif = this.Cell(c,r).TextJustif;
+			left  += justif.MarginH;
+			right += justif.MarginH;
+
+			ruler.LeftMargin  = left*iconContext.ScaleX;
+			ruler.RightMargin = right*iconContext.ScaleX;
+			return true;
 		}
 
 		
@@ -1829,8 +1844,9 @@ namespace Epsitec.Common.Pictogram.Data
 			base.CloneObject(src);
 
 			ObjectArray array = src as ObjectArray;
-			this.columns = array.columns;
-			this.rows    = array.rows;
+			this.columns    = array.columns;
+			this.rows       = array.rows;
+			this.cellToEdit = array.cellToEdit;
 
 			this.InitWidths();
 			for ( int c=0 ; c<this.columns-1 ; c++ )
@@ -2112,6 +2128,7 @@ namespace Epsitec.Common.Pictogram.Data
 			size.Width  = Drawing.Point.Distance(p1,p2);
 			size.Height = Drawing.Point.Distance(p1,p3);
 			textLayout.LayoutSize = size;
+			textLayout.DrawingScale = iconContext.ScaleX;
 
 			textLayout.DefaultFont     = this.PropertyFont(5).GetFont();
 			textLayout.DefaultFontSize = this.PropertyFont(5).FontSize;
@@ -2175,6 +2192,7 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 
 			textLayout.ShowLineBreak = edited;
+			textLayout.ShowTab       = edited;
 			textLayout.Paint(new Drawing.Point(0,0), port);
 
 			if ( port is Drawing.Graphics &&

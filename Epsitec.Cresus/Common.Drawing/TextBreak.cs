@@ -108,6 +108,28 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public void SetRuns(XRun[] runs)
+		{
+			AntiGrain.TextBreak.SetRunCount (this.handle, runs.Length);
+			
+			for (int i = 0; i < runs.Length; i++)
+			{
+				int    id   = runs[i].FontId;
+				double size = runs[i].FontSize;
+				
+				if (runs[i].Image != null)
+				{
+					//	Traite une image comme si c'était une fonte spéciale, et prend la largeur
+					//	de l'image comme référence :
+					
+					id   = -1;
+					size = runs[i].Image.Width;
+				}
+
+				AntiGrain.TextBreak.SetNthRun(this.handle, i, runs[i].Length, id, size);
+			}
+		}
+		
 		public void SetRuns(System.Collections.IList runs)
 		{
 			AntiGrain.TextBreak.SetRunCount (this.handle, runs.Count);
@@ -147,16 +169,24 @@ namespace Epsitec.Common.Drawing
 		
 		public Line[] GetLines(double max_width)
 		{
-			System.Collections.ArrayList list = new System.Collections.ArrayList ();
+			return this.GetLines (max_width, max_width, max_width);
+		}
+		
+		public Line[] GetLines(double initial_width, double following_width, double full_width)
+		{
+			//	Effectue le découpage des "runs" en lignes.
+			
+			System.Collections.ArrayList list = new System.Collections.ArrayList();
 			this.Rewind ();
 			
+			double width = initial_width;
 			string line_text;
 			double line_width;
 			int    line_skip;
 			
-			while (this.GetNextBreak (max_width, out line_text, out line_width, out line_skip))
+			while (this.GetNextBreak (width, out line_text, out line_width, out line_skip))
 			{
-				if ((line_text == "") &&
+				if ((line_text.Length == 0) &&
 					(line_skip == 0))
 				{
 					//	Panique: il n'est pas possible de couper cette ligne, quel que soit
@@ -166,6 +196,17 @@ namespace Epsitec.Common.Drawing
 				}
 				
 				list.Add (new Line (line_text, line_width, line_skip));
+				
+				if ((line_text.Length > 0) &&
+					(line_text[line_text.Length-1] == TextBreak.CodeLineBreak))
+				{
+					//	Le texte se termine par une fin de ligne forcée (<br/>) et il faut donc
+					//	continuer à disposer les lignes avec toute la largeur.
+					
+					following_width = full_width;
+				}
+
+				width = following_width;
 			}
 			
 			Line[] lines = new Line[list.Count];
@@ -174,6 +215,26 @@ namespace Epsitec.Common.Drawing
 			return lines;
 		}
 		
+		
+		public class XRun
+		{
+			// Décrit une portion de texte d'une longueur quelconque utilisant
+			// une seule et même typographie.
+			public int					Start       = 0;  // index début
+			public int					Length      = 0;  // index fin - index début
+			public string				FontName    = "";
+			public int					FontId      = -1;
+			public double				FontSize    = 0.0;
+			public double				FontScale   = 0.0;
+			public Color				FontColor   = Color.Empty;
+			public bool					Bold        = false;
+			public bool					Italic      = false;
+			public bool					Underlined  = false;
+			public bool					Anchor      = false;
+			public bool					Wave        = false;
+			public Color				WaveColor   = Color.Empty;
+			public Image				Image       = null;
+		}
 		
 		public class Run
 		{
@@ -208,6 +269,8 @@ namespace Epsitec.Common.Drawing
 		
 		public class Line
 		{
+			// Décrit une ligne physique pouvant contenir plusieurs typographies
+			// différentes.
 			public Line(string text, double width, int skip)
 			{
 				this.text  = text;
@@ -233,12 +296,14 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			
-			private int					skip;
-			private string				text;
-			private double				width;
+			private int					skip;   // nb de caractères à sauter jusqu'au début de la ligne suivante
+			private string				text;   // texte de la ligne, terminée év. par les caractères de césure
+			private double				width;  // largeur occupée par la ligne
 		}
 		
 		private System.IntPtr			handle;
+		
+		public const char				CodeLineBreak	= '\u2028';
 	}
 	
 	[System.Flags] public enum TextBreakMode

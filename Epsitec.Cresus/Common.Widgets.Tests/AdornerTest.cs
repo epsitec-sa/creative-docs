@@ -759,10 +759,15 @@ namespace Epsitec.Common.Widgets
 			multi.MaxChar = 10000;
 			
 			string s = "";
+#if true
+			s += "<br/>";
+			s += "<b>FIN</b><br/><br/>aaaaaaaaaaaaaaaaaaaaaaaVoici une image <img src=\"file:images/icon.png\"/> intégrée dans le texte.";
+#else
 			s += "On donnait ce jour-là un grand dîner, où, pour la première fois, je vis avec beaucoup d'étonnement le maître d'hôtel servir l'épée au côté et le chapeau sur la tête. Par hasard on vint à parler de la devise de la maison de Solar, qui était sur la tapisserie avec les armoiries: <i>Tel fiert qui ne tue pas</i>. Comme les Piémontais ne sont pas pour l'ordinaire consommés par la langue française, quelqu'un trouva dans cette devise une faute d'orthographe, et dit qu'au mot <i>fiert</i> il ne fallait point de <i>t</i>.<br/>";
 			s += "Le vieux comte de Gouvon allait répondre; mais ayant jeté les yeux sur moi, il vit que je souriait sans oser rien dire: il m'ordonna de parler. Alors je dis que je ne croyait pas que le <i>t</i> fût de trop, que <i>fiert</i> était un vieux mots français qui ne venait pas du nom <i>ferus</i>, fier, menaçant, mais du verbe <i>ferit</i>, il frappe, il blesse; qu'ainsi la devise ne me paraissait pas dire: Tel menace, mais <i>tel frappe qui ne tue pas</i>.<br/>";
 			s += "Tout le monde me regardait et se regardait sans rien dire. On ne vit de la vie un pareil étonnement. Mais ce qui me flatta davantage fut de voir clairement sur le visage de Mlle de Breil un air de satisfaction. Cette personne si dédaigneuse daigna me jeter un second regard qui valait tout au moins le premier; puis, tournant les yeux vers son grand-papa, elle semblait attendre avec une sorte d'impatience la louange qu'il me devait, et qu'il me donna en effet si pleine et entière et d'un air si content, que toute la table s'empressa de faire chorus. Ce moment fut court, mais délicieux à tous égards. Ce fut un de ces moments trop rares qui replacent les choses dans leur ordre naturel, et vengent le mérite avili des outrages de la fortune.<br/>";
 			s += "<b>FIN</b><br/><br/>Voici une image <img src=\"file:images/icon.png\"/> intégrée dans le texte.";
+#endif
 			multi.Text = s;
 
 			multi.Alignment = Drawing.ContentAlignment.TopLeft;
@@ -770,6 +775,8 @@ namespace Epsitec.Common.Widgets
 			//?multi.Alignment = Drawing.ContentAlignment.TopRight;
 			//?multi.TextLayout.JustifMode = TextJustifMode.NoLine;
 			multi.TextLayout.ShowLineBreak = true;
+			multi.TextLayout.ShowTab = true;
+			multi.OpletQueue = new OpletQueue();
 			multi.ScrollZone = 0.2;
 			multi.Anchor = AnchorStyles.All;
 			multi.AnchorMargins = new Margins(10, 10, 40, 30);
@@ -877,6 +884,23 @@ namespace Epsitec.Common.Widgets
 			buttonColor2.Parent = window.Root;
 			buttonColor2.Clicked += new MessageEventHandler(this.HandleMultiColor2);
 			
+			Button buttonUndo = new Button();
+			buttonUndo.Text = "U";
+			buttonUndo.Width = 30;
+			buttonUndo.AutoFocus = false;
+			buttonUndo.Anchor = AnchorStyles.TopLeft;
+			buttonUndo.AnchorMargins = new Margins(350, 0, 10, 0);
+			buttonUndo.Parent = window.Root;
+			buttonUndo.Clicked += new MessageEventHandler(this.HandleMultiUndo);
+			
+			Button buttonRedo = new Button();
+			buttonRedo.Text = "R";
+			buttonRedo.Width = 30;
+			buttonRedo.AutoFocus = false;
+			buttonRedo.Anchor = AnchorStyles.TopLeft;
+			buttonRedo.AnchorMargins = new Margins(380, 0, 10, 0);
+			buttonRedo.Parent = window.Root;
+			buttonRedo.Clicked += new MessageEventHandler(this.HandleMultiRedo);
 //			window.Root.DebugActive = true;
 			window.FocusedWidget    = multi;
 			window.Show();
@@ -896,57 +920,68 @@ namespace Epsitec.Common.Widgets
 
 		private void HandleMultiBold(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectionBold = !this.bigText.SelectionBold;
+			this.bigText.TextNavigator.SelectionBold = !this.bigText.TextNavigator.SelectionBold;
 		}
 
 		private void HandleMultiItalic(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectionItalic = !this.bigText.SelectionItalic;
+			this.bigText.TextNavigator.SelectionItalic = !this.bigText.TextNavigator.SelectionItalic;
 		}
 
 		private void HandleMultiUnderline(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectionUnderlined = !this.bigText.SelectionUnderlined;
+			this.bigText.TextNavigator.SelectionUnderlined = !this.bigText.TextNavigator.SelectionUnderlined;
 		}
 
 		private void HandleMultiFace1(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectionFontName = "Tahoma";
+			this.bigText.TextNavigator.SelectionFontName = "Tahoma";
 		}
 
 		private void HandleMultiFace2(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectionFontName = "Courier New";
+			this.bigText.TextNavigator.SelectionFontName = "Courier New";
 		}
 
 		private void HandleMultiFace3(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectionFontName = "Times New Roman";
+			this.bigText.TextNavigator.SelectionFontName = "Times New Roman";
 		}
 
 		private void HandleMultiSize1(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectionFontScale = 1;
+			this.bigText.TextNavigator.SelectionFontScale = 1;
 		}
 
 		private void HandleMultiSize2(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectionFontScale = 2;
+			this.bigText.TextNavigator.SelectionFontScale = 2;
 		}
 
 		private void HandleMultiColor1(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectionFontColor = Drawing.Color.FromBrightness(0);
+			this.bigText.TextNavigator.SelectionFontColor = Drawing.Color.FromBrightness(0);
 		}
 
 		private void HandleMultiColor2(object sender, MessageEventArgs e)
 		{
-			this.bigText.SelectionFontColor = Drawing.Color.FromRGB(1,0,0);
+			this.bigText.TextNavigator.SelectionFontColor = Drawing.Color.FromRGB(1,0,0);
+		}
+
+		private void HandleMultiUndo(object sender, MessageEventArgs e)
+		{
+			this.bigText.OpletQueue.UndoAction();
+		}
+
+		private void HandleMultiRedo(object sender, MessageEventArgs e)
+		{
+			this.bigText.OpletQueue.RedoAction();
 		}
 
 
 		private Window CreateTextRuler()
 		{
+			Pictogram.Engine.Initialise();
 			Window window = new Window();
 			
 			window.ClientSize = new Size(400, 300);
@@ -967,7 +1002,10 @@ namespace Epsitec.Common.Widgets
 
 			multi.Alignment = Drawing.ContentAlignment.TopLeft;
 			multi.TextLayout.JustifMode = TextJustifMode.AllButLast;
+			//?multi.Alignment = Drawing.ContentAlignment.TopRight;
+			//?multi.TextLayout.JustifMode = TextJustifMode.None;
 			multi.TextLayout.ShowLineBreak = true;
+			multi.TextLayout.ShowTab = true;
 			multi.ScrollZone = 0.2;
 			multi.Anchor = AnchorStyles.All;
 			multi.AnchorMargins = new Margins(10, 10, 10+ruler.DefaultHeight, 26+46+46);

@@ -78,17 +78,25 @@ namespace Epsitec.Common.Widgets
 				double ratioTop    = (cursor.Top   -this.scrollOffset.Y)/this.realSize.Height;  // 0..1
 				double zone = this.scrollZone*0.5;
 
-				if ( ratioBottom <= zone )  // curseur trop bas ?
+				double h = AbstractTextField.Infinity-end.Y;  // hauteur de tout le texte
+				if ( h <= this.realSize.Height || this.realSize.Height < 0 )
 				{
-					this.scrollOffset.Y -= (zone-ratioBottom)*this.realSize.Height;
-					double min = System.Math.Min(end.Y, AbstractTextField.Infinity-this.realSize.Height);
-					this.scrollOffset.Y = System.Math.Max(this.scrollOffset.Y, min);
+					this.scrollOffset.Y = AbstractTextField.Infinity-this.realSize.Height;
 				}
-
-				if ( ratioTop >= 1.0-zone )  // curseur trop haut ?
+				else
 				{
-					this.scrollOffset.Y += (ratioTop-(1.0-zone))*this.realSize.Height;
-					this.scrollOffset.Y = System.Math.Min(this.scrollOffset.Y, AbstractTextField.Infinity-this.realSize.Height);
+					if ( ratioBottom <= zone )  // curseur trop bas ?
+					{
+						this.scrollOffset.Y -= (zone-ratioBottom)*this.realSize.Height;
+						double min = System.Math.Min(end.Y, AbstractTextField.Infinity-this.realSize.Height);
+						this.scrollOffset.Y = System.Math.Max(this.scrollOffset.Y, min);
+					}
+
+					if ( ratioTop >= 1.0-zone )  // curseur trop haut ?
+					{
+						this.scrollOffset.Y += (ratioTop-(1.0-zone))*this.realSize.Height;
+						this.scrollOffset.Y = System.Math.Min(this.scrollOffset.Y, AbstractTextField.Infinity-this.realSize.Height);
+					}
 				}
 			}
 

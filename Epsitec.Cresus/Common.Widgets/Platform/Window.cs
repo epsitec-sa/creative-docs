@@ -1416,7 +1416,8 @@ namespace Epsitec.Common.Widgets.Platform
 			//	de type WM_PAINT (PaintEvent), on doit simplement afficher le contenu de la fenêtre, sans regénérer le
 			//	contenu du pixmap servant de cache.
 			
-			if (this.UpdateLayeredWindow ())
+			if ((this.UpdateLayeredWindow ()) &&
+				(this.graphics != null))
 			{
 				Drawing.Pixmap pixmap = this.graphics.Pixmap;
 				

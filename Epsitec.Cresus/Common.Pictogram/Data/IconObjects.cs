@@ -166,10 +166,15 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlArrayItem("Polygon",   Type=typeof(ObjectRegular))]
 		[XmlArrayItem("TextBox",   Type=typeof(ObjectTextBox))]
 		[XmlArrayItem("TextLine",  Type=typeof(ObjectTextLine))]
-		public System.Collections.ArrayList Objects
+		public UndoList Objects
 		{
 			get { return this.objects; }
 			set { this.objects = value; }
+		}
+
+		public System.Collections.ArrayList Roots
+		{
+			get { return this.roots; }
 		}
 
 		public AbstractObject this[int index]
@@ -212,9 +217,9 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.CurrentGroup.Add(obj);
 		}
 
-		public void Insert(int index, AbstractObject obj)
+		public int Add(AbstractObject obj, bool selectAfterCreate)
 		{
-			this.CurrentGroup.Insert(index, obj);
+			return this.CurrentGroup.Add(obj, selectAfterCreate);
 		}
 
 		public void RemoveAt(int index)
@@ -231,7 +236,7 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.TotalCount(this.objects);
 		}
 
-		protected int TotalCount(System.Collections.ArrayList objects)
+		protected int TotalCount(UndoList objects)
 		{
 			int total = objects.Count;
 			int count = 0;
@@ -255,7 +260,7 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.TotalSelected(this.CurrentGroup);
 		}
 
-		protected int TotalSelected(System.Collections.ArrayList objects)
+		protected int TotalSelected(UndoList objects)
 		{
 			int total = objects.Count;
 			int count = 0;
@@ -268,6 +273,30 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Copie tous les objets sélectionnés et leurs fils dans UndoList.Operations.
+		public void SelectionWillBeChanged()
+		{
+			this.SelectionWillBeChanged(this.CurrentGroup, false);
+		}
+
+		protected void SelectionWillBeChanged(UndoList objects, bool all)
+		{
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+				if ( !all && !obj.IsSelected() )  continue;
+
+				objects.WillBeChanged(index);
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					this.SelectionWillBeChanged(obj.Objects, true);
+				}
+			}
+		}
+
+
 		// Ajoute les propriétés des objets sélectionnés dans la liste.
 		// Un type de propriété donné n'est qu'une fois dans la liste.
 		public void PropertiesList(System.Collections.ArrayList list)
@@ -275,7 +304,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.PropertiesList(this.CurrentGroup, list, false);
 		}
 
-		protected void PropertiesList(System.Collections.ArrayList objects,
+		protected void PropertiesList(UndoList objects,
 									  System.Collections.ArrayList list,
 									  bool all)
 		{
@@ -319,7 +348,7 @@ namespace Epsitec.Common.Pictogram.Data
 			}
 		}
 
-		protected void SetProperty(System.Collections.ArrayList objects, AbstractProperty property, ref Drawing.Rectangle bbox, bool all)
+		protected void SetProperty(UndoList objects, AbstractProperty property, ref Drawing.Rectangle bbox, bool all)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -379,7 +408,7 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.GetProperty(this.CurrentGroup, type, objectMemory, false);
 		}
 
-		protected AbstractProperty GetProperty(System.Collections.ArrayList objects, PropertyType type, AbstractObject objectMemory, bool all)
+		protected AbstractProperty GetProperty(UndoList objects, PropertyType type, AbstractObject objectMemory, bool all)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -410,7 +439,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.StyleFree(this.CurrentGroup, type, false);
 		}
 
-		protected void StyleFree(System.Collections.ArrayList objects, PropertyType type, bool all)
+		protected void StyleFree(UndoList objects, PropertyType type, bool all)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -439,7 +468,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.StyleFreeAll(this.CurrentGroup, property);
 		}
 
-		protected void StyleFreeAll(System.Collections.ArrayList objects, AbstractProperty property)
+		protected void StyleFreeAll(UndoList objects, AbstractProperty property)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -469,7 +498,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.StyleUse(this.CurrentGroup, property, false);
 		}
 
-		protected void StyleUse(System.Collections.ArrayList objects, AbstractProperty property, bool all)
+		protected void StyleUse(UndoList objects, AbstractProperty property, bool all)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -493,7 +522,7 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.RetBbox(this.CurrentGroup);
 		}
 
-		protected Drawing.Rectangle RetBbox(System.Collections.ArrayList objects)
+		protected Drawing.Rectangle RetBbox(UndoList objects)
 		{
 			int total = objects.Count;
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
@@ -514,7 +543,7 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.RetPatternBbox(pattern.Objects);
 		}
 
-		protected Drawing.Rectangle RetPatternBbox(System.Collections.ArrayList objects)
+		protected Drawing.Rectangle RetPatternBbox(UndoList objects)
 		{
 			int total = objects.Count;
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
@@ -542,7 +571,7 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.RetSelectedBbox(this.CurrentGroup);
 		}
 
-		protected Drawing.Rectangle RetSelectedBbox(System.Collections.ArrayList objects)
+		protected Drawing.Rectangle RetSelectedBbox(UndoList objects)
 		{
 			int total = objects.Count;
 			Drawing.Rectangle bbox = Drawing.Rectangle.Empty;
@@ -563,7 +592,7 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.Detect(this.CurrentGroup, mouse);
 		}
 
-		protected AbstractObject Detect(System.Collections.ArrayList objects, Drawing.Point mouse)
+		protected AbstractObject Detect(UndoList objects, Drawing.Point mouse)
 		{
 			int total = objects.Count;
 			for ( int index=total-1 ; index>=0 ; index-- )
@@ -582,7 +611,7 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.DetectEdit(this.CurrentGroup, mouse);
 		}
 
-		protected AbstractObject DetectEdit(System.Collections.ArrayList objects, Drawing.Point mouse)
+		protected AbstractObject DetectEdit(UndoList objects, Drawing.Point mouse)
 		{
 			int total = objects.Count;
 			for ( int index=total-1 ; index>=0 ; index-- )
@@ -601,7 +630,7 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.DeepDetect(this.CurrentGroup, mouse);
 		}
 
-		protected AbstractObject DeepDetect(System.Collections.ArrayList objects, Drawing.Point mouse)
+		protected AbstractObject DeepDetect(UndoList objects, Drawing.Point mouse)
 		{
 			int total = objects.Count;
 			for ( int index=total-1 ; index>=0 ; index-- )
@@ -632,7 +661,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Détecte la poignée pointée par la souris.
-		protected bool DetectHandle(System.Collections.ArrayList objects, Drawing.Point mouse, out AbstractObject obj, out int rank)
+		protected bool DetectHandle(UndoList objects, Drawing.Point mouse, out AbstractObject obj, out int rank)
 		{
 			int total = objects.Count;
 			for ( int index=total-1 ; index>=0 ; index-- )
@@ -657,7 +686,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.Hilite(this.CurrentGroup, item, ref bbox);
 		}
 
-		protected void Hilite(System.Collections.ArrayList objects, AbstractObject item, ref Drawing.Rectangle bbox)
+		protected void Hilite(UndoList objects, AbstractObject item, ref Drawing.Rectangle bbox)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -678,7 +707,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.DeepHilite(this.CurrentGroup, item, ref bbox);
 		}
 
-		protected void DeepHilite(System.Collections.ArrayList objects, AbstractObject item, ref Drawing.Rectangle bbox)
+		protected void DeepHilite(UndoList objects, AbstractObject item, ref Drawing.Rectangle bbox)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -721,7 +750,7 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.RetFirstSelected(this.CurrentGroup);
 		}
 
-		protected AbstractObject RetFirstSelected(System.Collections.ArrayList objects)
+		protected AbstractObject RetFirstSelected(UndoList objects)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -740,39 +769,55 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Sélectionne un objet et désélectionne tous les autres.
-		public void Select(AbstractObject item, bool edit, bool add)
+		// Retourne le nombre d'objets sélectionnés.
+		public int Select(AbstractObject item, bool edit, bool add)
 		{
-			this.Select(this.CurrentGroup, item, edit, add);
+			return this.Select(this.CurrentGroup, item, edit, add);
 		}
 
-		protected void Select(System.Collections.ArrayList objects, AbstractObject item, bool edit, bool add)
+		protected int Select(UndoList objects, AbstractObject item, bool edit, bool add)
 		{
+			int nb = 0;
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
 				AbstractObject obj = objects[index] as AbstractObject;
 				if ( obj == item )
 				{
+					if ( !obj.IsSelected() || obj.IsEdited() != edit )
+					{
+						this.CurrentGroup.WillBeChanged(obj);
+						nb ++;
+					}
 					obj.Select(true, edit);
 				}
 				else
 				{
-					if ( !add )  obj.Deselect();
+					if ( !add )
+					{
+						if ( obj.IsSelected() )
+						{
+							nb ++;
+						}
+						obj.Deselect();
+					}
 				}
 			}
+			return nb;
 		}
 
 
 		// Sélectionne tous les objets dans le rectangle.
 		// all = true  -> toutes les poignées doivent être dans le rectangle
 		// all = false -> une seule poignée doit être dans le rectangle
-		public void Select(Drawing.Rectangle rect, bool add, bool all)
+		public int Select(Drawing.Rectangle rect, bool add, bool all)
 		{
-			this.Select(this.CurrentGroup, rect, add, all);
+			return this.Select(this.CurrentGroup, rect, add, all);
 		}
 
-		protected void Select(System.Collections.ArrayList objects, Drawing.Rectangle rect, bool add, bool all)
+		protected int Select(UndoList objects, Drawing.Rectangle rect, bool add, bool all)
 		{
+			int nb = 0;
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
@@ -781,25 +826,41 @@ namespace Epsitec.Common.Pictogram.Data
 				{
 					if ( obj.Detect(rect, all) )
 					{
+						this.CurrentGroup.WillBeChanged(obj);
+						nb ++;
 						obj.Select();
 					}
 					else
 					{
-						if ( !add )  obj.Deselect();
+						if ( !add )
+						{
+							if ( obj.IsSelected() )
+							{
+								nb ++;
+							}
+							obj.Deselect();
+						}
 					}
 				}
 				else
 				{
 					if ( obj.Detect(rect, all) )
 					{
+						this.CurrentGroup.WillBeChanged(obj);
+						nb ++;
 						obj.Select(rect);
 					}
 					else
 					{
+						if ( obj.IsSelected() )
+						{
+							nb ++;
+						}
 						obj.Deselect();
 					}
 				}
 			}
+			return nb;
 		}
 
 
@@ -809,7 +870,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.GlobalSelect(this.CurrentGroup, global);
 		}
 
-		protected void GlobalSelect(System.Collections.ArrayList objects, bool global)
+		protected void GlobalSelect(UndoList objects, bool global)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -821,22 +882,61 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Désélectionne tous les objets, dans toutes les pages et tous les calques.
-		public void DeselectAll()
+		// Retourne le nombre d'objets désélectionnés.
+		public int DeselectAll()
 		{
-			this.DeselectAll(this.objects);
+			return this.DeselectAll(this.objects);
 		}
 
-		protected void DeselectAll(System.Collections.ArrayList objects)
+		protected int DeselectAll(UndoList objects)
+		{
+			int nb = 0;
+			int total = objects.Count;
+			for ( int index=0 ; index<total ; index++ )
+			{
+				AbstractObject obj = objects[index] as AbstractObject;
+
+				if ( obj.IsSelected() )
+				{
+					obj.Deselect();
+					nb ++;
+				}
+
+				if ( obj.Objects != null && obj.Objects.Count > 0 )
+				{
+					nb += this.DeselectAll(obj.Objects);
+				}
+			}
+			return nb;
+		}
+
+
+		// Désélectionne tous les objets qui n'ont pas le "undo stamp",
+		// dans toutes les pages et tous les calques.
+		public void DeselectNoUndoStamp()
+		{
+			this.DeselectNoUndoStamp(this.objects);
+		}
+
+		protected void DeselectNoUndoStamp(UndoList objects)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
 				AbstractObject obj = objects[index] as AbstractObject;
-				obj.Deselect();
+
+				if ( obj.UndoStamp )
+				{
+					obj.UndoStamp = false;
+				}
+				else
+				{
+					obj.Deselect();
+				}
 
 				if ( obj.Objects != null && obj.Objects.Count > 0 )
 				{
-					this.DeselectAll(obj.Objects);
+					this.DeselectNoUndoStamp(obj.Objects);
 				}
 			}
 		}
@@ -848,7 +948,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateEditProperties(this.CurrentGroup, objectMemory);
 		}
 
-		protected void UpdateEditProperties(System.Collections.ArrayList objects, AbstractObject objectMemory)
+		protected void UpdateEditProperties(UndoList objects, AbstractObject objectMemory)
 		{
 			int sel = this.TotalSelected();
 			int total = objects.Count;
@@ -874,7 +974,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.DeleteSelection(this.CurrentGroup);
 		}
 
-		protected void DeleteSelection(System.Collections.ArrayList objects)
+		protected void DeleteSelection(UndoList objects)
 		{
 			bool bDo = false;
 			do
@@ -901,8 +1001,8 @@ namespace Epsitec.Common.Pictogram.Data
 			this.DuplicateSelection(this.CurrentGroup, this.CurrentGroup, move, false);
 		}
 
-		protected void DuplicateSelection(System.Collections.ArrayList objects,
-										  System.Collections.ArrayList dst,
+		protected void DuplicateSelection(UndoList objects,
+										  UndoList dst,
 										  Drawing.Point move,
 										  bool all)
 		{
@@ -934,8 +1034,8 @@ namespace Epsitec.Common.Pictogram.Data
 			this.CopySelection(this.CurrentGroup, this.clipboard, false);
 		}
 
-		protected void CopySelection(System.Collections.ArrayList objects,
-									 System.Collections.ArrayList dst,
+		protected void CopySelection(UndoList objects,
+									 UndoList dst,
 									 bool all)
 		{
 			int total = objects.Count;
@@ -962,8 +1062,8 @@ namespace Epsitec.Common.Pictogram.Data
 			this.StylesCollection.CollectionChanged();  // si PasteAdaptStyles a créé un nouveau style
 		}
 
-		protected void PasteSelection(System.Collections.ArrayList objects,
-									  System.Collections.ArrayList dst,
+		protected void PasteSelection(UndoList objects,
+									  UndoList dst,
 									  bool all)
 		{
 			int total = objects.Count;
@@ -997,7 +1097,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.OrderSelection(this.CurrentGroup, dir);
 		}
 
-		protected void OrderSelection(System.Collections.ArrayList objects, int dir)
+		protected void OrderSelection(UndoList objects, int dir)
 		{
 			System.Collections.ArrayList extract = new System.Collections.ArrayList();
 
@@ -1030,7 +1130,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.GroupSelection(this.CurrentGroup);
 		}
 
-		protected void GroupSelection(System.Collections.ArrayList objects)
+		protected void GroupSelection(UndoList objects)
 		{
 			System.Collections.ArrayList extract = new System.Collections.ArrayList();
 
@@ -1072,7 +1172,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UngroupSelection(this.CurrentGroup);
 		}
 
-		protected void UngroupSelection(System.Collections.ArrayList objects)
+		protected void UngroupSelection(UndoList objects)
 		{
 			int total = objects.Count;
 			int index = 0;
@@ -1102,7 +1202,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UngroupAllSelection(this.CurrentGroup);
 		}
 
-		protected void UngroupAllSelection(System.Collections.ArrayList objects)
+		protected void UngroupAllSelection(UndoList objects)
 		{
 			bool bDo = false;
 			do
@@ -1132,7 +1232,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Retourne le nom du premier groupe sélectionné rencontré.
 		public string GroupName()
 		{
-			System.Collections.ArrayList objects = this.CurrentGroup;
+			UndoList objects = this.CurrentGroup;
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
@@ -1149,7 +1249,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Spécifie le nom du premier groupe sélectionné rencontré.
 		public void GroupName(string name)
 		{
-			System.Collections.ArrayList objects = this.CurrentGroup;
+			UndoList objects = this.CurrentGroup;
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
 			{
@@ -1170,7 +1270,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.MoveSelection(this.CurrentGroup, move, ref bbox, false);
 		}
 
-		protected void MoveSelection(System.Collections.ArrayList objects, Drawing.Point move, ref Drawing.Rectangle bbox, bool all)
+		protected void MoveSelection(UndoList objects, Drawing.Point move, ref Drawing.Rectangle bbox, bool all)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -1196,7 +1296,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.MoveSelection(this.CurrentGroup, initial, final, ref bbox, false);
 		}
 
-		protected void MoveSelection(System.Collections.ArrayList objects, GlobalModifierData initial, GlobalModifierData final, ref Drawing.Rectangle bbox, bool all)
+		protected void MoveSelection(UndoList objects, GlobalModifierData initial, GlobalModifierData final, ref Drawing.Rectangle bbox, bool all)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -1253,28 +1353,7 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Cache un objet et tous ses fils.
-		protected void HideObject(AbstractObject obj, bool onlySelected, bool onlyDeselected, bool hide)
-		{
-			if ( !(obj is ObjectPage) && !(obj is ObjectLayer) )
-			{
-				if ( hide )
-				{
-					obj.Deselect();
-				}
-				else
-				{
-					obj.Select(obj.IsHide);
-				}
-				obj.IsHide = hide;
-			}
-
-			if ( obj.Objects != null && obj.Objects.Count > 0 )
-			{
-				this.HideObject(obj.Objects, onlySelected, onlyDeselected, hide);
-			}
-		}
-
-		protected void HideObject(System.Collections.ArrayList objects, bool onlySelected, bool onlyDeselected, bool hide)
+		protected void HideObject(UndoList objects, bool onlySelected, bool onlyDeselected, bool hide)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -1292,6 +1371,8 @@ namespace Epsitec.Common.Pictogram.Data
 
 				if ( !(obj is ObjectPage) && !(obj is ObjectLayer) )
 				{
+					objects.WillBeChanged(index);
+
 					if ( hide )
 					{
 						obj.Deselect();
@@ -1316,7 +1397,7 @@ namespace Epsitec.Common.Pictogram.Data
 			return this.RetTotalHide(this.objects);
 		}
 
-		protected int RetTotalHide(System.Collections.ArrayList objects)
+		protected int RetTotalHide(UndoList objects)
 		{
 			int count = 0;
 			int total = objects.Count;
@@ -1349,7 +1430,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.DrawGeometry(page.Objects, graphics, iconContext, iconObjects, adorner, clipRect, showAllLayers, !showAllLayers);
 		}
 
-		public void DrawGeometry(System.Collections.ArrayList objects,
+		public void DrawGeometry(UndoList objects,
 								 Drawing.Graphics graphics,
 								 IconContext iconContext,
 								 IconObjects iconObjects,
@@ -1358,7 +1439,7 @@ namespace Epsitec.Common.Pictogram.Data
 								 bool showAllLayers,
 								 bool dimmed)
 		{
-			System.Collections.ArrayList root = this.CurrentGroup;
+			UndoList root = this.CurrentGroup;
 			if ( objects == root )  dimmed = false;
 			iconContext.IsDimmed = dimmed;
 
@@ -1415,7 +1496,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.DrawHandle(this.CurrentGroup, graphics, iconContext);
 		}
 
-		protected void DrawHandle(System.Collections.ArrayList objects, Drawing.Graphics graphics, IconContext iconContext)
+		protected void DrawHandle(UndoList objects, Drawing.Graphics graphics, IconContext iconContext)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -1433,12 +1514,12 @@ namespace Epsitec.Common.Pictogram.Data
 
 
 		// Copie tous les objets.
-		public void CopyTo(System.Collections.ArrayList dst)
+		public void CopyTo(UndoList dst)
 		{
 			this.CopyTo(this.objects, dst);
 		}
 
-		protected void CopyTo(System.Collections.ArrayList objects, System.Collections.ArrayList dst)
+		protected void CopyTo(UndoList objects, UndoList dst)
 		{
 			dst.Clear();
 			foreach ( AbstractObject obj in objects )
@@ -1480,7 +1561,7 @@ namespace Epsitec.Common.Pictogram.Data
 
 		// Retourne la racine courante.
 		[XmlIgnore]
-		public System.Collections.ArrayList CurrentGroup
+		public UndoList CurrentGroup
 		{
 			get
 			{
@@ -1502,7 +1583,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.GroupUpdate(this.CurrentGroup, ref bbox, false);
 		}
 
-		protected void GroupUpdate(System.Collections.ArrayList objects, ref Drawing.Rectangle bbox, bool all)
+		protected void GroupUpdate(UndoList objects, ref Drawing.Rectangle bbox, bool all)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -1550,7 +1631,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdatePattern(doc.Objects);
 		}
 
-		protected void UpdatePattern(System.Collections.ArrayList objects)
+		protected void UpdatePattern(UndoList objects)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -1591,7 +1672,7 @@ namespace Epsitec.Common.Pictogram.Data
 			this.UpdateDeletePattern(doc.Objects, rank);
 		}
 
-		protected void UpdateDeletePattern(System.Collections.ArrayList objects, int rank)
+		protected void UpdateDeletePattern(UndoList objects, int rank)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -1688,6 +1769,14 @@ namespace Epsitec.Common.Pictogram.Data
 					this.UsePatternPageLayer(this.currentPattern, this.currentPage, value);
 				}
 			}
+		}
+
+		// Défini la page et le calque.
+		public void SwapPatternPageLayer(ref int rankPattern, ref int rankPage, ref int rankLayer)
+		{
+			Misc.Swap(ref this.currentPattern, ref rankPattern);
+			Misc.Swap(ref this.currentPage,    ref rankPage   );
+			Misc.Swap(ref this.currentLayer,   ref rankLayer  );
 		}
 
 		// Utilise une page et un calque donné.
@@ -1923,9 +2012,10 @@ namespace Epsitec.Common.Pictogram.Data
 			System.Diagnostics.Debug.Assert(this.roots.Count >= 3);
 			System.Diagnostics.Debug.Assert(rank1 < this.objects.Count);
 			System.Diagnostics.Debug.Assert(rank2 < this.objects.Count);
+
 			ObjectPattern temp = this.objects[rank1] as ObjectPattern;
-			this.objects[rank1] = this.objects[rank2];
-			this.objects[rank2] = temp;
+			this.objects.RemoveAt(rank1);
+			this.objects.Insert(rank2, temp);
 		}
 
 		// Permute deux pages.
@@ -1935,9 +2025,10 @@ namespace Epsitec.Common.Pictogram.Data
 			ObjectPattern pattern = this.roots[0] as ObjectPattern;
 			System.Diagnostics.Debug.Assert(rank1 < pattern.Objects.Count);
 			System.Diagnostics.Debug.Assert(rank2 < pattern.Objects.Count);
+
 			ObjectPage temp = pattern.Objects[rank1] as ObjectPage;
-			pattern.Objects[rank1] = pattern.Objects[rank2];
-			pattern.Objects[rank2] = temp;
+			pattern.Objects.RemoveAt(rank1);
+			pattern.Objects.Insert(rank2, temp);
 		}
 
 		// Permute deux calques.
@@ -1947,9 +2038,10 @@ namespace Epsitec.Common.Pictogram.Data
 			ObjectPage page = this.roots[1] as ObjectPage;
 			System.Diagnostics.Debug.Assert(rank1 < page.Objects.Count);
 			System.Diagnostics.Debug.Assert(rank2 < page.Objects.Count);
+
 			ObjectLayer temp = page.Objects[rank1] as ObjectLayer;
-			page.Objects[rank1] = page.Objects[rank2];
-			page.Objects[rank2] = temp;
+			page.Objects.RemoveAt(rank1);
+			page.Objects.Insert(rank2, temp);
 		}
 
 
@@ -2048,7 +2140,7 @@ namespace Epsitec.Common.Pictogram.Data
 			return true;
 		}
 
-		protected void ArrangeAfterRead(System.Collections.ArrayList objects)
+		protected void ArrangeAfterRead(UndoList objects)
 		{
 			int total = objects.Count;
 			for ( int index=0 ; index<total ; index++ )
@@ -2072,9 +2164,9 @@ namespace Epsitec.Common.Pictogram.Data
 		protected Drawing.Size					motifSizeArea = new Drawing.Size(10*3, 10*3);
 		protected Drawing.Point					motifOrigin = new Drawing.Point(5, 5);
 		protected StylesCollection				styles = new StylesCollection();
-		protected System.Collections.ArrayList	objects = new System.Collections.ArrayList();
+		protected UndoList						objects = new UndoList();
 		protected System.Collections.ArrayList	roots = new System.Collections.ArrayList();
-		protected System.Collections.ArrayList	clipboard = new System.Collections.ArrayList();
+		protected UndoList						clipboard = new UndoList();
 		protected int							currentPattern = 0;
 		protected int							currentPage = 0;
 		protected int							currentLayer = 0;

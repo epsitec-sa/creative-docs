@@ -158,6 +158,57 @@ namespace Epsitec.Common.Widgets.Adorner
 					path.LineTo(center.X+rect.Width*0.30, center.Y+rect.Height*0.20);
 					path.LineTo(center.X-rect.Width*0.10, center.Y-rect.Height*0.30);
 					break;
+
+				case GlyphShape.TabRight:
+					path.MoveTo(center.X-rect.Width*0.10, center.Y+rect.Height*0.15);
+					path.LineTo(center.X+rect.Width*0.00, center.Y+rect.Height*0.15);
+					path.LineTo(center.X+rect.Width*0.00, center.Y-rect.Height*0.05);
+					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.05);
+					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.15);
+					path.LineTo(center.X-rect.Width*0.10, center.Y-rect.Height*0.15);
+					break;
+
+				case GlyphShape.TabLeft:
+					path.MoveTo(center.X+rect.Width*0.00, center.Y+rect.Height*0.15);
+					path.LineTo(center.X+rect.Width*0.10, center.Y+rect.Height*0.15);
+					path.LineTo(center.X+rect.Width*0.10, center.Y-rect.Height*0.15);
+					path.LineTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.15);
+					path.LineTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.05);
+					path.LineTo(center.X+rect.Width*0.00, center.Y-rect.Height*0.05);
+					break;
+
+				case GlyphShape.TabCenter:
+					path.MoveTo(center.X-rect.Width*0.05, center.Y+rect.Height*0.15);
+					path.LineTo(center.X+rect.Width*0.05, center.Y+rect.Height*0.15);
+					path.LineTo(center.X+rect.Width*0.05, center.Y-rect.Height*0.05);
+					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.05);
+					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.15);
+					path.LineTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.15);
+					path.LineTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.05);
+					path.LineTo(center.X-rect.Width*0.05, center.Y-rect.Height*0.05);
+					break;
+
+				case GlyphShape.TabDecimal:
+					path.MoveTo(center.X-rect.Width*0.05, center.Y+rect.Height*0.15);
+					path.LineTo(center.X+rect.Width*0.05, center.Y+rect.Height*0.15);
+					path.LineTo(center.X+rect.Width*0.05, center.Y-rect.Height*0.05);
+					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.05);
+					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.15);
+					path.LineTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.15);
+					path.LineTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.05);
+					path.LineTo(center.X-rect.Width*0.05, center.Y-rect.Height*0.05);
+					path.Close();
+					path.MoveTo(center.X+rect.Width*0.10, center.Y+rect.Height*0.10);
+					path.LineTo(center.X+rect.Width*0.20, center.Y+rect.Height*0.10);
+					path.LineTo(center.X+rect.Width*0.20, center.Y+rect.Height*0.00);
+					path.LineTo(center.X+rect.Width*0.10, center.Y+rect.Height*0.00);
+					break;
+
+				case GlyphShape.TabIndent:
+					path.MoveTo(center.X-rect.Width*0.10, center.Y+rect.Height*0.20);
+					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.00);
+					path.LineTo(center.X-rect.Width*0.10, center.Y-rect.Height*0.20);
+					break;
 			}
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);

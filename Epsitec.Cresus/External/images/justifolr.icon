@@ -6,50 +6,57 @@
     <Styles />
   </StylesCollection>
   <Objects>
-    <Page Name="">
+    <Pattern Name="" Id="0">
       <Properties />
       <Handles />
       <Objects>
-        <Layer Name="" Type="Dimmed">
-          <Properties>
-            <ModColor Type="ModColor" StyleName="" StyleID="0" H="0" S="0" V="0" R="0" G="0" B="0" A="0" N="false" />
-          </Properties>
+        <Page Name="">
+          <Properties />
           <Handles />
           <Objects>
-            <TextLine>
+            <Layer Name="" Type="Dimmed">
               <Properties>
-                <String Type="TextString" StyleName="" StyleID="0" String="Abc" />
-                <Font Type="TextFont" StyleName="" StyleID="0" FontName="Tahoma" FontOptical="Regular" FontSize="9">
-                  <FontColor R="0" G="0" B="0" A="1" />
-                </Font>
-                <TextLine Type="TextLine" StyleName="" StyleID="0" Horizontal="Left" Offset="0" Add="0" />
-                <Justif Type="TextJustif" StyleName="" StyleID="0" Horizontal="Left" Vertical="Center" Orientation="LeftToRight" MarginH="0.2" MarginV="0.1" OffsetV="0" />
+                <ModColor Type="ModColor" StyleName="" StyleID="0" H="0" S="0" V="0" R="0" G="0" B="0" A="0" N="false" />
               </Properties>
-              <Handles>
-                <Handle Type="Hide" ConstrainType="Symmetric">
-                  <Position X="1.5" Y="5.5" />
-                </Handle>
-                <Handle Type="Starting" ConstrainType="Symmetric">
-                  <Position X="1.5" Y="5.5" />
-                </Handle>
-                <Handle Type="Hide" ConstrainType="Symmetric">
-                  <Position X="1.5" Y="5.5" />
-                </Handle>
-                <Handle Type="Hide" ConstrainType="Symmetric">
-                  <Position X="16.5" Y="5.5" />
-                </Handle>
-                <Handle Type="Primary" ConstrainType="Symmetric">
-                  <Position X="16.5" Y="5.5" />
-                </Handle>
-                <Handle Type="Hide" ConstrainType="Symmetric">
-                  <Position X="16.5" Y="5.5" />
-                </Handle>
-              </Handles>
-              <Objects />
-            </TextLine>
+              <Handles />
+              <Objects>
+                <TextLine>
+                  <Properties>
+                    <Name Type="Name" StyleName="" StyleID="0" String="" />
+                    <TextLine Type="TextLine" StyleName="" StyleID="0" Horizontal="Stretch" Offset="0" Add="0" />
+                    <Font Type="TextFont" StyleName="" StyleID="0" FontName="Tahoma" FontSize="5">
+                      <FontColor R="0" G="0" B="0" A="1" />
+                    </Font>
+                    <Justif Type="TextJustif" StyleName="" StyleID="0" Horizontal="Left" Vertical="Center" Orientation="LeftToRight" MarginH="0.2" MarginV="0.1" OffsetV="0" />
+                  </Properties>
+                  <Handles>
+                    <Handle Type="Hide" ConstrainType="Symmetric">
+                      <Position X="1.5" Y="5.5" />
+                    </Handle>
+                    <Handle Type="Starting" ConstrainType="Symmetric">
+                      <Position X="1.5" Y="5.5" />
+                    </Handle>
+                    <Handle Type="Hide" ConstrainType="Symmetric">
+                      <Position X="1.5" Y="5.5" />
+                    </Handle>
+                    <Handle Type="Hide" ConstrainType="Symmetric">
+                      <Position X="16.5" Y="5.5" />
+                    </Handle>
+                    <Handle Type="Primary" ConstrainType="Symmetric">
+                      <Position X="16.5" Y="5.5" />
+                    </Handle>
+                    <Handle Type="Hide" ConstrainType="Symmetric">
+                      <Position X="16.5" Y="5.5" />
+                    </Handle>
+                  </Handles>
+                  <Objects />
+                  <Content>Abc</Content>
+                </TextLine>
+              </Objects>
+            </Layer>
           </Objects>
-        </Layer>
+        </Page>
       </Objects>
-    </Page>
+    </Pattern>
   </Objects>
 </EpsitecPictogram>

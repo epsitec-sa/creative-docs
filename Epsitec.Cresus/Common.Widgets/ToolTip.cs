@@ -81,6 +81,24 @@ namespace Epsitec.Common.Widgets
 		}
 		
 		
+		public void ManualUpdate(Drawing.Point mouse, string text)
+		{
+			this.Text = text;
+
+			Drawing.Size size = this.TextLayout.SingleLineSize;
+			size.Width  += this.margin.X*2;
+			size.Height += this.margin.Y*2;
+		
+			mouse += this.offset;
+			mouse.Y -= size.Height;
+		
+			this.window.ClientSize = size;
+			this.window.WindowBounds = new Drawing.Rectangle(mouse, size);
+
+			this.Location = new Drawing.Point(0, 0);
+			this.Size = size;
+			this.Invalidate();
+		}
 		protected override void Dispose(bool disposing)
 		{
 			if ( disposing )
@@ -293,11 +311,8 @@ namespace Epsitec.Common.Widgets
 			
 			mouse.Y -= size.Height;
 			
-			Drawing.Rectangle rect = new Drawing.Rectangle();
-			rect.Size = size;
-			rect.Location = mouse;
 			this.window.ClientSize = size;
-			this.window.WindowBounds = rect;
+			this.window.WindowBounds = new Drawing.Rectangle(mouse, size);
 			this.window.Owner = this.widget.Window;
 
 			this.Location = new Drawing.Point(0, 0);

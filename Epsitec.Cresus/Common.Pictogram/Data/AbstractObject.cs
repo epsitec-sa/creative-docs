@@ -62,7 +62,7 @@ namespace Epsitec.Common.Pictogram.Data
 		[XmlArrayItem("TextBox",   Type=typeof(ObjectTextBox))]
 		[XmlArrayItem("Array",     Type=typeof(ObjectArray))]
 		[XmlArrayItem("Image",     Type=typeof(ObjectImage))]
-		public System.Collections.ArrayList Objects
+		public UndoList Objects
 		{
 			get { return this.objects; }
 			set { this.objects = value; }
@@ -460,6 +460,22 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 
+		// Etat "modifié par le undo" de l'objet.
+		[XmlIgnore]
+		public bool UndoStamp
+		{
+			get
+			{
+				return this.undoStamp;
+			}
+
+			set
+			{
+				this.undoStamp = value;
+			}
+		}
+
+
 		// Sélectionne toutes les poignées de l'objet.
 		public void Select()
 		{
@@ -564,8 +580,9 @@ namespace Epsitec.Common.Pictogram.Data
 		}
 
 		// Lie l'objet éditable à une règle.
-		public virtual void EditRulerLink(TextRuler ruler)
+		public virtual bool EditRulerLink(TextRuler ruler, IconContext iconContext)
 		{
+			return false;
 		}
 
 		
@@ -1044,6 +1061,7 @@ namespace Epsitec.Common.Pictogram.Data
 		// Reprend toutes les caractéristiques d'un objet.
 		public virtual void CloneObject(AbstractObject src)
 		{
+			this.handles.Clear();
 			int total = src.TotalHandle;
 			for ( int i=0 ; i<total ; i++ )
 			{
@@ -1453,6 +1471,7 @@ namespace Epsitec.Common.Pictogram.Data
 		protected bool							edited = false;
 		protected bool							globalSelected = false;
 		protected bool							editProperties = false;
+		protected bool							undoStamp = false;
 		protected bool							dirtyBbox = true;
 		protected Drawing.Rectangle				bboxThin = new Drawing.Rectangle();
 		protected Drawing.Rectangle				bboxGeom = new Drawing.Rectangle();
@@ -1460,6 +1479,6 @@ namespace Epsitec.Common.Pictogram.Data
 
 		protected System.Collections.ArrayList	properties = new System.Collections.ArrayList();
 		protected System.Collections.ArrayList	handles = new System.Collections.ArrayList();
-		protected System.Collections.ArrayList	objects = null;
+		protected UndoList						objects = null;
 	}
 }

@@ -12,6 +12,43 @@ namespace Epsitec.Common.Drawing
 		All,
 	}
 	
+	// Alignement d'un tabluateur.
+	public enum TextTabType
+	{
+		None,
+		Right,
+		Left,
+		Center,
+		Decimal,
+		Indent,
+	}
+	
+	// Points de suite d'un tabulateur.
+	public enum TextTabLine
+	{
+		None,
+		Dot,
+		Full,
+	}
+	
+	// Types des puces.
+	public enum TextListType
+	{
+		None,
+		Fix,
+		Num,
+	}
+	
+	// Formes des puces.
+	public enum TextListGlyph
+	{
+		Circle,
+		Square,
+		Dash,
+		Triangle,
+		Arrow,
+	}
+	
 	/// <summary>
 	/// La classe TextStyle définit le style d'un texte (paragraphe) qui peut dériver
 	/// d'un style par défaut ou de n'importe quel autre style.
@@ -44,8 +81,12 @@ namespace Epsitec.Common.Drawing
 			this.break_mode      = TextBreakMode.None;
 			this.justif_mode     = TextJustifMode.None;
 			this.show_line_break = ThreeState.None;
+			this.show_tab        = ThreeState.None;
 			
 			this.language        = null;
+
+			this.def_tab_width   = 0.0;
+			this.tabs            = new System.Collections.ArrayList ();
 		}
 		
 		
@@ -62,8 +103,12 @@ namespace Epsitec.Common.Drawing
 			this.break_mode      = TextBreakMode.Ellipsis | TextBreakMode.SingleLine;
 			this.justif_mode     = TextJustifMode.NoLine;
 			this.show_line_break = ThreeState.False;
+			this.show_tab        = ThreeState.False;
 			
 			this.language        = "";
+
+			this.def_tab_width   = 40;
+			this.tabs            = new System.Collections.ArrayList ();
 		}
 		
 		static TextStyle()
@@ -269,6 +314,37 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		public bool								ShowTab
+		{
+			get
+			{
+				if (this.show_tab == ThreeState.None)
+				{
+					return this.parent.ShowTab;
+				}
+				
+				switch (this.show_tab)
+				{
+					case ThreeState.True:	return true;
+					case ThreeState.False:	return false;
+				}
+				
+				throw new System.InvalidOperationException ("TextStyle has invalid ShowTab state.");
+			}
+			set
+			{
+				this.CheckForDefaultStyle();
+				
+				ThreeState test = (value ? ThreeState.True : ThreeState.False);
+				
+				if (this.show_tab != test)
+				{
+					this.show_tab = test;
+					this.OnChanged ();
+				}
+			}
+		}
+		
 		public string							Language
 		{
 			get
@@ -281,10 +357,109 @@ namespace Epsitec.Common.Drawing
 				
 				if (this.language != value)
 				{
+					this.language = value;
 					this.OnChanged ();
 				}
 			}
 		}
+
+
+		public double							DefaultTabWidth
+		{
+			get
+			{
+				return (this.def_tab_width == 0.0) ? this.parent.DefaultTabWidth : this.def_tab_width;
+			}
+			set
+			{
+				this.CheckForDefaultStyle ();
+				
+				if (this.def_tab_width != value)
+				{
+					this.def_tab_width = value;
+					this.OnChanged ();
+				}
+			}
+		}
+		
+		
+		public int AddTab(Tab tab)					//	##TabInsert
+		{
+			this.CheckForDefaultStyle ();
+			int rank = this.tabs.Add (tab);
+			this.OnChanged ();
+			return rank;
+		}
+		
+		public int TotalTab()						// ##TabCount
+		{
+			return this.tabs.Count;
+		}
+		
+		public void DeleteTab(int rank)				//	##TabRemoveAt
+		{
+			System.Diagnostics.Debug.Assert (rank >= 0);
+			System.Diagnostics.Debug.Assert (rank < this.tabs.Count);
+			this.CheckForDefaultStyle ();
+			this.tabs.RemoveAt (rank);
+			this.OnChanged ();
+		}
+		
+		public Tab GetTab(int rank)
+		{
+			System.Diagnostics.Debug.Assert (rank >= 0);
+			System.Diagnostics.Debug.Assert (rank < this.tabs.Count);
+			return new Tab (this.tabs[rank] as Tab);
+		}
+
+		public void MoveTab(int rank, double pos)
+		{
+			System.Diagnostics.Debug.Assert (rank >= 0);
+			System.Diagnostics.Debug.Assert (rank < this.tabs.Count);
+			Tab tab = this.tabs[rank] as Tab;
+			tab.Pos = pos;
+			this.OnChanged ();
+		}
+
+		public Tab NextTab(double pos)				//	##
+		{
+			// Cherche la position du prochain tabulateur après une position donnée.
+			double lastPos = 0.0;
+			double bestDist = 1000000;
+			Tab bestTab = null;
+			foreach ( Tab tab in this.tabs )
+			{
+				lastPos = System.Math.Max(lastPos, tab.Pos);
+
+				if ( pos+0.001 >= tab.Pos )  continue;
+
+				double dist = tab.Pos - pos;
+				if ( bestDist > dist )
+				{
+					bestDist = dist;
+					bestTab = tab;
+				}
+			}
+
+			if ( bestTab == null )
+			{
+				double def = this.DefaultTabWidth;
+				pos -= lastPos;
+				pos = System.Math.Ceiling((pos+1)/def)*def;
+				pos += lastPos;
+
+				Tab tab = new Tab();
+				tab.Pos  = pos;
+				tab.Type = TextTabType.Right;
+				tab.Line = TextTabLine.None;
+				return tab;
+			}
+			else
+			{
+				return bestTab;
+			}
+		}
+
 		
 		public IImageProvider					ImageProvider
 		{
@@ -405,8 +580,8 @@ namespace Epsitec.Common.Drawing
 						string optic = font_args[2];
 							
 						this.Font = Font.GetFont (face, style, optic);
-					}
 						break;
+					}
 						
 					case "Size":
 						this.Size = System.Double.Parse (data, culture);
@@ -460,8 +635,10 @@ namespace Epsitec.Common.Drawing
 			that.break_mode      = this.break_mode;
 			that.justif_mode     = this.justif_mode;
 			that.show_line_break = this.show_line_break;
+			that.show_tab        = this.show_tab;
 			that.language        = this.language;
 			that.image_provider  = this.image_provider;
+			that.tabs            = new System.Collections.ArrayList (this.tabs);	//	##
 			
 			return that;
 		}
@@ -499,6 +676,26 @@ namespace Epsitec.Common.Drawing
 				return that.ToString (culture);
 			}
 		}
+
+
+		public class Tab
+		{
+			public Tab()
+			{
+			}
+			
+			public Tab(Tab model)
+			{
+				this.Pos  = model.Pos;
+				this.Type = model.Type;
+				this.Line = model.Line;
+			}
+			
+			
+			public double			Pos;
+			public TextTabType		Type;
+			public TextTabLine		Line;
+		}
 		
 		
 		public event Support.EventHandler		Changed;
@@ -518,7 +715,10 @@ namespace Epsitec.Common.Drawing
 		private TextBreakMode					break_mode;
 		private TextJustifMode					justif_mode;
 		private ThreeState						show_line_break;
+		private ThreeState						show_tab;
 		private string							language;
+		private double							def_tab_width;
+		private System.Collections.ArrayList	tabs;
 		private IImageProvider					image_provider;
 	}
 }

@@ -373,7 +373,7 @@
                     BuildAction = "Compile"
                 />
                 <File
-                    RelPath = "Data\UndoSituation.cs"
+                    RelPath = "Data\UndoList.cs"
                     SubType = "Code"
                     BuildAction = "Compile"
                 />

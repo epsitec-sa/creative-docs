@@ -17,7 +17,7 @@ namespace Epsitec.Common.Pictogram.Data
 	{
 		public ObjectLayer()
 		{
-			this.objects = new System.Collections.ArrayList();
+			this.objects = new UndoList();
 
 			PropertyModColor modColor = new PropertyModColor();
 			modColor.Type = PropertyType.ModColor;

@@ -90,7 +90,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public void PageSelect(int sel)
 		{
 			this.drawer.CreateEnding();
+
+			this.drawer.UndoBeginning("PageChange");
 			this.drawer.IconObjects.CurrentPage = sel;
+			this.drawer.UndoValidate();
+
 			this.TableSelect(sel, true, false);
 			this.UpdateToolBar();
 			this.OnObjectsChanged();
@@ -136,7 +140,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Crée une nouvelle page.
 		private void HandleButtonNew(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("PageCreate");
 			this.drawer.IconObjects.CreatePage(this.drawer.IconObjects.CurrentPage, false);
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentPage, true, true);
 			this.UpdateToolBar();
@@ -146,7 +153,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Duplique une page.
 		private void HandleButtonDuplicate(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("PageDuplicate");
 			this.drawer.IconObjects.CreatePage(this.drawer.IconObjects.CurrentPage, true);
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentPage, true, true);
 			this.UpdateToolBar();
@@ -156,9 +166,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Monte d'une ligne la page sélectionnée.
 		private void HandleButtonUp(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("PageUp");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.SwapPage(sel, sel-1);
 			this.drawer.IconObjects.CurrentPage = sel-1;
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentPage, true, false);
 			this.UpdateToolBar();
@@ -168,9 +181,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Descend d'une ligne la page sélectionnée.
 		private void HandleButtonDown(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("PageDown");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.SwapPage(sel, sel+1);
 			this.drawer.IconObjects.CurrentPage = sel+1;
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentPage, true, false);
 			this.UpdateToolBar();
@@ -180,8 +196,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Supprime la page sélectionnée.
 		private void HandleButtonDelete(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("PageDelete");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.DeletePage(sel);
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentPage, true, false);
 			this.UpdateToolBar();
@@ -280,7 +299,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 			int sel = this.TableSelect();
 			if ( sel == -1 )  return;
 			this.TableSelect(sel, false, true);
+
+			this.drawer.UndoBeginning("PageChange");
 			this.drawer.IconObjects.CurrentPage = sel;
+			this.drawer.UndoValidate();
+
 			this.UpdateToolBar();
 			this.OnObjectsChanged();
 		}
@@ -290,7 +313,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			TextField edit = sender as TextField;
 			int sel = System.Convert.ToInt32(edit.Name);
+
+			this.drawer.UndoBeginning("PageChange");
 			this.drawer.IconObjects.CurrentPage = sel;
+			this.drawer.UndoValidate();
+
 			this.TableSelect(this.drawer.IconObjects.CurrentPage, false, false);
 			this.UpdateToolBar();
 			this.OnObjectsChanged();

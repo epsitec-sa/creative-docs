@@ -108,7 +108,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		public void PatternSelect(int sel)
 		{
 			this.drawer.CreateEnding();
+
+			this.drawer.UndoBeginning("PatternChange");
 			this.drawer.IconObjects.CurrentPattern = sel;
+			this.drawer.UndoValidate();
+
 			this.TableSelect(sel, true, false);
 			this.UpdateToolBar();
 			this.OnObjectsChanged();
@@ -143,7 +147,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Crée un nouveau pattern.
 		private void HandleButtonNew(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("PatternCreate");
 			this.drawer.IconObjects.CreatePattern(this.drawer.IconObjects.CurrentPattern, false);
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentPattern, true, true);
 			this.UpdateToolBar();
@@ -154,7 +161,10 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Duplique un pattern.
 		private void HandleButtonDuplicate(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("PatternDuplicate");
 			this.drawer.IconObjects.CreatePattern(this.drawer.IconObjects.CurrentPattern, true);
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentPattern, true, true);
 			this.UpdateToolBar();
@@ -165,9 +175,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Monte d'une ligne le pattern sélectionné.
 		private void HandleButtonUp(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("PatternUp");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.SwapPattern(sel, sel-1);
 			this.drawer.IconObjects.CurrentPattern = sel-1;
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentPattern, true, false);
 			this.UpdateToolBar();
@@ -177,9 +190,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Descend d'une ligne le pattern sélectionné.
 		private void HandleButtonDown(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("PatternDown");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.SwapPattern(sel, sel+1);
 			this.drawer.IconObjects.CurrentPattern = sel+1;
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentPattern, true, false);
 			this.UpdateToolBar();
@@ -189,9 +205,12 @@ namespace Epsitec.Common.Pictogram.Widgets
 		// Supprime le pattern sélectionné.
 		private void HandleButtonDelete(object sender, MessageEventArgs e)
 		{
+			this.drawer.UndoBeginning("PatternDelete");
 			int sel = this.TableSelect();
 			this.drawer.IconObjects.DeletePattern(sel);
 			this.drawer.AdaptDeletePattern(sel);
+			this.drawer.UndoValidate();
+
 			this.UpdateTable();
 			this.TableSelect(this.drawer.IconObjects.CurrentPattern, true, false);
 			this.UpdateToolBar();
@@ -304,7 +323,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 			int sel = this.TableSelect();
 			if ( sel == -1 )  return;
 			this.TableSelect(sel, false, true);
+
+			this.drawer.UndoBeginning("PatternChange");
 			this.drawer.IconObjects.CurrentPattern = sel;
+			this.drawer.UndoValidate();
+
 			this.UpdateToolBar();
 			this.OnObjectsChanged();
 		}
@@ -314,7 +337,11 @@ namespace Epsitec.Common.Pictogram.Widgets
 		{
 			TextField edit = sender as TextField;
 			int sel = System.Convert.ToInt32(edit.Name);
+
+			this.drawer.UndoBeginning("PatternChange");
 			this.drawer.IconObjects.CurrentPattern = sel;
+			this.drawer.UndoValidate();
+
 			this.TableSelect(this.drawer.IconObjects.CurrentPattern, false, false);
 			this.UpdateToolBar();
 			this.OnObjectsChanged();
