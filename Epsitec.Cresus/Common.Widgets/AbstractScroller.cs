@@ -22,10 +22,10 @@ namespace Epsitec.Common.Widgets
 			this.arrowDown.Direction = Direction.Down;
 			this.arrowUp.ButtonStyle = ButtonStyle.Scroller;
 			this.arrowDown.ButtonStyle = ButtonStyle.Scroller;
-			this.arrowUp.Engaged += new EventHandler(this.HandleButton);
-			this.arrowDown.Engaged += new EventHandler(this.HandleButton);
-			this.arrowUp.StillEngaged += new EventHandler(this.HandleButton);
-			this.arrowDown.StillEngaged += new EventHandler(this.HandleButton);
+			this.arrowUp.Engaged += new Support.EventHandler(this.HandleButton);
+			this.arrowDown.Engaged += new Support.EventHandler(this.HandleButton);
+			this.arrowUp.StillEngaged += new Support.EventHandler(this.HandleButton);
+			this.arrowDown.StillEngaged += new Support.EventHandler(this.HandleButton);
 			this.arrowUp.AutoRepeatEngaged = true;
 			this.arrowDown.AutoRepeatEngaged = true;
 		}
@@ -40,10 +40,10 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.arrowUp.Engaged -= new EventHandler(this.HandleButton);
-				this.arrowDown.Engaged -= new EventHandler(this.HandleButton);
-				this.arrowUp.StillEngaged -= new EventHandler(this.HandleButton);
-				this.arrowDown.StillEngaged -= new EventHandler(this.HandleButton);
+				this.arrowUp.Engaged -= new Support.EventHandler(this.HandleButton);
+				this.arrowDown.Engaged -= new Support.EventHandler(this.HandleButton);
+				this.arrowUp.StillEngaged -= new Support.EventHandler(this.HandleButton);
+				this.arrowDown.StillEngaged -= new Support.EventHandler(this.HandleButton);
 			}
 			
 			base.Dispose(disposing);
@@ -511,7 +511,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public event EventHandler ValueChanged;
+		public event Support.EventHandler ValueChanged;
 
 		
 		protected static readonly double	defaultBreadth = 17;

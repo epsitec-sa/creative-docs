@@ -22,7 +22,7 @@ namespace Epsitec.Common.Widgets
 			this.type  = type;
 			this.items = new MenuItemCollection(this);
 			this.timer = new Timer();
-			this.timer.TimeElapsed += new EventHandler(this.HandleTimerTimeElapsed);
+			this.timer.TimeElapsed += new Support.EventHandler(this.HandleTimerTimeElapsed);
 		}
 		
 		#region Interface IBundleSupport
@@ -75,7 +75,7 @@ namespace Epsitec.Common.Widgets
 					item.Dispose ();
 				}
 				
-				this.timer.TimeElapsed -= new EventHandler(this.HandleTimerTimeElapsed);
+				this.timer.TimeElapsed -= new Support.EventHandler(this.HandleTimerTimeElapsed);
 				this.timer.Dispose();
 				this.items.Dispose();
 				
@@ -508,7 +508,7 @@ namespace Epsitec.Common.Widgets
 			}
 			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.Width, this.Height);
-			Window.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
+			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
 			
 			Window.MessageFilter += new Epsitec.Common.Widgets.MessageHandler(this.MessageFilter);
 			AbstractMenu.menuContextOpen = true;
@@ -586,7 +586,7 @@ namespace Epsitec.Common.Widgets
 			}
 			this.window.DisableMouseActivation();
 			this.window.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.submenu.Width, this.submenu.Height);
-			Window.ApplicationDeactivated += new EventHandler(this.HandleApplicationDeactivated);
+			Window.ApplicationDeactivated += new Support.EventHandler(this.HandleApplicationDeactivated);
 			
 			this.submenu.Parent = this.window.Root;
 			
@@ -618,7 +618,7 @@ namespace Epsitec.Common.Widgets
 				this.submenu.parentItem = null;
 			}
 			
-			Window.ApplicationDeactivated -= new EventHandler(this.HandleApplicationDeactivated);
+			Window.ApplicationDeactivated -= new Support.EventHandler(this.HandleApplicationDeactivated);
 			this.window.Root.Children.Clear();
 			this.window.Dispose();
 			this.window = null;

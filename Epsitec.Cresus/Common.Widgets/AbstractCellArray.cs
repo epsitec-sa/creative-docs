@@ -43,8 +43,8 @@ namespace Epsitec.Common.Widgets
 			this.scrollerH  = new HScroller(this);
 			
 			this.scrollerV.IsInverted = true;  // de haut en bas
-			this.scrollerV.ValueChanged += new EventHandler(this.HandleScrollerV);
-			this.scrollerH.ValueChanged += new EventHandler(this.HandleScrollerH);
+			this.scrollerV.ValueChanged += new Support.EventHandler(this.HandleScrollerV);
+			this.scrollerH.ValueChanged += new Support.EventHandler(this.HandleScrollerH);
 		}
 		
 		
@@ -52,8 +52,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if ( disposing )
 			{
-				this.scrollerV.ValueChanged -= new EventHandler(this.HandleScrollerV);
-				this.scrollerH.ValueChanged -= new EventHandler(this.HandleScrollerH);
+				this.scrollerV.ValueChanged -= new Support.EventHandler(this.HandleScrollerV);
+				this.scrollerH.ValueChanged -= new Support.EventHandler(this.HandleScrollerH);
 			}
 			
 			base.Dispose(disposing);
@@ -1701,8 +1701,8 @@ namespace Epsitec.Common.Widgets
 		}
 		
 
-		public event EventHandler SelectionChanged;
-		public event EventHandler SortChanged;
+		public event Support.EventHandler SelectionChanged;
+		public event Support.EventHandler SortChanged;
 
 		protected bool							isDirty;
 		protected bool							isGrimy;
