@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public DbTable ReadDbTableMeta(string table_name)
+		public System.Data.DataSet ReadDbTableMeta(string table_name)
 		{
 			SqlSelect query = new SqlSelect ();
 			
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			return null;
+			return data;
 		}
 		
 		

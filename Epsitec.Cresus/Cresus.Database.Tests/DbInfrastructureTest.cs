@@ -24,5 +24,16 @@ namespace Epsitec.Cresus.Database
 			
 			infrastructure.Dispose ();
 		}
+		
+		[Test] public void CheckAttachDatabase()
+		{
+			DbInfrastructure infrastructure = new DbInfrastructure ();
+			DbAccess db_access = DbFactoryTest.CreateDbAccess ("fiche");
+			
+			infrastructure.AttachDatabase (db_access);
+			System.Data.DataSet data = infrastructure.ReadDbTableMeta ("CR_TABLE_DEF");
+			new Epsitec.Cresus.UserInterface.DataSetDisplay (data);
+			infrastructure.Dispose ();
+		}
 	}
 }
