@@ -97,7 +97,11 @@ namespace Epsitec.Common.Drawing.Null
 		{
 		}
 		
-		public override void RotateTransform(double angle, double cx, double cy)
+		public override void RotateTransformDeg(double angle, double cx, double cy)
+		{
+		}
+		
+		public override void RotateTransformRad(double angle, double cx, double cy)
 		{
 		}
 		
