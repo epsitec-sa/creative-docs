@@ -146,8 +146,8 @@ namespace Epsitec.Cresus.Database
 				   (DbNumDef.digit_table[this.digit_precision_auto] <= max))
 			{
 				this.digit_precision_auto++;
+				System.Diagnostics.Debug.Assert (this.digit_precision_auto < DbNumDef.digit_max);
 			}
-			System.Diagnostics.Debug.Assert (this.digit_precision_auto < DbNumDef.digit_max);
 		}
 		
 		protected void InvalidateAndUpdateAutoPrecision()
@@ -549,7 +549,7 @@ namespace Epsitec.Cresus.Database
 		
 		
 		protected const int					digit_max		= 24;
-		protected const decimal				max_absolute	= 999999999999999999999999.0M;
+		protected const decimal				max_absolute	= 99999999999999999999999.0M;
 		protected const decimal				min_absolute	= -max_absolute;
 		
 		protected static decimal[]			digit_table;
