@@ -455,6 +455,8 @@ namespace Epsitec.Cresus.Database
 			
 			long id = infrastructure.NewRowIdInTable (transaction, table_key, list.Count);
 			
+			System.Diagnostics.Debug.WriteLine (string.Format ("Allocating {0} new IDs for table {1} starting at {2}.", list.Count, table.TableName, id));
+			
 			foreach (System.Data.DataRow data_row in list)
 			{
 				DbKey key = new DbKey (data_row);

@@ -715,7 +715,21 @@ namespace Epsitec.Cresus.Database
 				
 				data_row.BeginEdit ();
 				data_row[3] = "Albert Einstein";
-				data_row[4] = new System.DateTime (1905, 2, 11);
+				data_row[4] = new System.DateTime (1904, 5, 14);
+				data_row.EndEdit ();
+				
+				command.CreateNewRow ("ServiceTest", out data_row);
+				
+				data_row.BeginEdit ();
+				data_row[3] = "Max Planck";
+				data_row[4] = new System.DateTime (1858, 4, 23);
+				data_row.EndEdit ();
+				
+				command.CreateNewRow ("ServiceTest", out data_row);
+				
+				data_row.BeginEdit ();
+				data_row[3] = "Niels Bohr";
+				data_row[4] = new System.DateTime (1885, 10, 7);
 				data_row.EndEdit ();
 				
 				using (DbTransaction transaction = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite))

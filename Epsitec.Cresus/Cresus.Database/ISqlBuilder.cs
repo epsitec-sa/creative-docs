@@ -7,8 +7,10 @@ namespace Epsitec.Cresus.Database
 	/// L'interface ISqlBuilder est utilisée pour construire des commandes SQL
 	/// à partir d'une description plus abstraite.
 	/// </summary>
-	public interface ISqlBuilder : ISqlValidator
+	public interface ISqlBuilder : ISqlValidator, System.IDisposable
 	{
+		ISqlBuilder NewSqlBuilder();
+		
 		//	Manipulation du buffer interne, permettant de représenter une ou
 		//	plusieurs commandes SQL. Le buffer interne est vraisemblablement
 		//	implémenté au moyen d'une instance de System.Text.StringBuilder.

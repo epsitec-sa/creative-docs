@@ -1061,32 +1061,42 @@ namespace Epsitec.Cresus.Database
 		}
 		
 		
-		public void					ExecuteSilent(DbTransaction transaction)
+		public void ExecuteSilent(DbTransaction transaction)
+		{
+			this.ExecuteSilent (transaction, transaction.SqlBuilder);
+		}
+		
+		public void ExecuteSilent(DbTransaction transaction, ISqlBuilder builder)
 		{
 			if (transaction == null)
 			{
 				using (transaction = this.BeginTransaction ())
 				{
-					this.ExecuteSilent (transaction);
+					this.ExecuteSilent (transaction, builder);
 					transaction.Commit ();
 					return;
 				}
 			}
 			
-			int count = transaction.SqlBuilder.CommandCount;
+			int count = builder.CommandCount;
 			
 			if (count < 1)
 			{
 				return;
 			}
 			
-			using (System.Data.IDbCommand command = transaction.SqlBuilder.CreateCommand (transaction.Transaction))
+			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
 			{
 				this.sql_engine.Execute (command, DbCommandType.Silent, count);
 			}
 		}
 		
-		public object				ExecuteScalar(DbTransaction transaction)
+		public object ExecuteScalar(DbTransaction transaction)
+		{
+			return this.ExecuteScalar (transaction, transaction.SqlBuilder);
+		}
+		
+		public object ExecuteScalar(DbTransaction transaction, ISqlBuilder builder)
 		{
 			if (transaction == null)
 			{
@@ -1098,14 +1108,14 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			int count = transaction.SqlBuilder.CommandCount;
+			int count = builder.CommandCount;
 			
 			if (count < 1)
 			{
 				return null;
 			}
 			
-			using (System.Data.IDbCommand command = transaction.SqlBuilder.CreateCommand (transaction.Transaction))
+			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
 			{
 				object data;
 				
@@ -1115,7 +1125,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public object				ExecuteNonQuery(DbTransaction transaction)
+		public object ExecuteNonQuery(DbTransaction transaction)
+		{
+			return this.ExecuteNonQuery (transaction, transaction.SqlBuilder);
+		}
+		
+		public object ExecuteNonQuery(DbTransaction transaction, ISqlBuilder builder)
 		{
 			if (transaction == null)
 			{
@@ -1127,14 +1142,14 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			int count = transaction.SqlBuilder.CommandCount;
+			int count = builder.CommandCount;
 			
 			if (count < 1)
 			{
 				return null;
 			}
 			
-			using (System.Data.IDbCommand command = transaction.SqlBuilder.CreateCommand (transaction.Transaction))
+			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
 			{
 				object data;
 				
@@ -1144,7 +1159,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		public System.Data.DataSet	ExecuteRetData(DbTransaction transaction)
+		public System.Data.DataSet ExecuteRetData(DbTransaction transaction)
+		{
+			return this.ExecuteRetData (transaction, transaction.SqlBuilder);
+		}
+		
+		public System.Data.DataSet ExecuteRetData(DbTransaction transaction, ISqlBuilder builder)
 		{
 			if (transaction == null)
 			{
@@ -1156,14 +1176,14 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			int count = transaction.SqlBuilder.CommandCount;
+			int count = builder.CommandCount;
 			
 			if (count < 1)
 			{
 				return null;
 			}
 			
-			using (System.Data.IDbCommand command = transaction.SqlBuilder.CreateCommand (transaction.Transaction))
+			using (System.Data.IDbCommand command = builder.CreateCommand (transaction.Transaction))
 			{
 				System.Data.DataSet data;
 				
@@ -1173,8 +1193,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 		
-		
 		public System.Data.DataTable ExecuteSqlSelect(DbTransaction transaction, SqlSelect query, int min_rows)
+		{
+			return this.ExecuteSqlSelect (transaction, transaction.SqlBuilder, query, min_rows);
+		}
+		
+		public System.Data.DataTable ExecuteSqlSelect(DbTransaction transaction, ISqlBuilder builder, SqlSelect query, int min_rows)
 		{
 			if (transaction == null)
 			{
@@ -1186,7 +1210,7 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 			
-			transaction.SqlBuilder.SelectData (query);
+			builder.SelectData (query);
 			
 			System.Data.DataSet data_set;
 			System.Data.DataTable data_table;

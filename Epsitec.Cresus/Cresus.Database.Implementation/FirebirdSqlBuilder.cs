@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Database.Implementation
 	/// <summary>
 	/// Implémentation de ISqlBuilder pour Firebird.
 	/// </summary>
-	public class FirebirdSqlBuilder : ISqlBuilder, System.IDisposable
+	public class FirebirdSqlBuilder : ISqlBuilder
 	{
 		public FirebirdSqlBuilder(FirebirdAbstraction fb)
 		{
@@ -748,6 +748,12 @@ namespace Epsitec.Cresus.Database.Implementation
 		
 		
 		#region ISqlBuilder Members
+		public ISqlBuilder NewSqlBuilder()
+		{
+			return new FirebirdSqlBuilder (this.fb);
+		}
+		
+		
 		public bool								AutoClear
 		{
 			get { return this.auto_clear; }

@@ -43,6 +43,14 @@ namespace Epsitec.Cresus.Requests
 			}
 		}
 		
+		public ISqlBuilder						CurrentSqlBuilder
+		{
+			get
+			{
+				return this.current_builder;
+			}
+		}
+		
 		
 		public void Execute(DbTransaction transaction, AbstractRequest request)
 		{
@@ -55,10 +63,10 @@ namespace Epsitec.Cresus.Requests
 				System.Threading.Thread.Sleep (100);
 				
 #if false
-				DbRichCommand.DebugDumpCommand (this.CurrentTransaction.SqlBuilder.Command);
+				DbRichCommand.DebugDumpCommand (this.CurrentSqlBuilder.Command);
 #endif
 				
-				this.infrastructure.ExecuteSilent (transaction);
+				this.infrastructure.ExecuteSilent (transaction, this.CurrentSqlBuilder);
 			}
 			finally
 			{
@@ -87,7 +95,7 @@ namespace Epsitec.Cresus.Requests
 			}
 			
 			this.PrepareNewCommand ();
-			this.CurrentTransaction.SqlBuilder.InsertData (table.CreateSqlName (), sql_fields);
+			this.CurrentSqlBuilder.InsertData (table.CreateSqlName (), sql_fields);
 		}
 		
 		public void GenerateUpdateDataCommand(string table_name, string[] cond_columns, object[] cond_values, string[] data_columns, object[] data_values)
@@ -127,7 +135,7 @@ namespace Epsitec.Cresus.Requests
 			}
 			
 			this.PrepareNewCommand ();
-			this.CurrentTransaction.SqlBuilder.UpdateData (table.CreateSqlName (), sql_data_fields, sql_cond_fields);
+			this.CurrentSqlBuilder.UpdateData (table.CreateSqlName (), sql_data_fields, sql_cond_fields);
 		}
 		
 		
@@ -179,6 +187,7 @@ namespace Epsitec.Cresus.Requests
 			System.Diagnostics.Debug.Assert (this.current_transaction == null);
 			
 			this.current_transaction = transaction;
+			this.current_builder     = transaction.SqlBuilder.NewSqlBuilder ();
 		}
 		
 		
@@ -229,7 +238,11 @@ namespace Epsitec.Cresus.Requests
 		{
 			if (this.pending_commands > 0)
 			{
-				this.CurrentTransaction.SqlBuilder.AppendMore ();
+				this.CurrentSqlBuilder.AppendMore ();
+			}
+			else
+			{
+				this.CurrentSqlBuilder.Clear ();
 			}
 			
 			this.pending_commands++;
@@ -241,18 +254,25 @@ namespace Epsitec.Cresus.Requests
 			
 			if (this.pending_commands > 0)
 			{
-				this.CurrentTransaction.SqlBuilder.Clear ();
+				this.CurrentSqlBuilder.Clear ();
 				this.pending_commands = 0;
+			}
+			
+			if (this.current_builder != null)
+			{
+				this.current_builder.Dispose ();
 			}
 			
 			this.current_log_id      = DbId.Zero;
 			this.current_transaction = null;
+			this.current_builder     = null;
 		}
 		
 		
 		private DbInfrastructure				infrastructure;
 		private DbId							current_log_id;
 		private DbTransaction					current_transaction;
+		private ISqlBuilder						current_builder;
 		private int								pending_commands;
 	}
 }
