@@ -2149,7 +2149,8 @@ namespace Epsitec.Common.Widgets
 								//	C'est un message souris. Vérifions d'abord si le widget contenait déjà
 								//	la souris auparavant.
 								
-								if (widget.IsEntered == false)
+								if ((widget.IsEntered == false) &&
+									(message.Type != MessageType.MouseLeave))
 								{
 									widget.SetEntered (true);
 								}
@@ -2724,7 +2725,6 @@ namespace Epsitec.Common.Widgets
 				widget.SetFocused (false);
 				widget.SetEngaged (false);
 				widget.SetEntered (false);
-				widget.SetSelected (false);
 				widget.parent = null;
 			}
 			

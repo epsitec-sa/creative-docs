@@ -95,7 +95,7 @@ namespace Epsitec.Common.Widgets
 					this.IsLayered = true;
 					this.Alpha = 0.0;
 					
-					animator = new Animator (0.5);
+					animator = new Animator (SystemInformation.MenuAnimationFadeInTime / 1000.0);
 					animator.SetCallback (new DoubleCallback (this.AnimateAlpha), new AnimatorCallback (this.AnimateCleanup));
 					animator.SetValue (0.0, 1.0);
 					animator.Start ();
@@ -107,7 +107,7 @@ namespace Epsitec.Common.Widgets
 					this.IsLayered = true;
 					this.Alpha = 1.0;
 					
-					animator = new Animator (0.5);
+					animator = new Animator (SystemInformation.MenuAnimationFadeOutTime / 1000.0);
 					animator.SetCallback (new DoubleCallback (this.AnimateAlpha), new AnimatorCallback (this.AnimateCleanup));
 					animator.SetValue (1.0, 0.0);
 					animator.Start ();
@@ -127,7 +127,7 @@ namespace Epsitec.Common.Widgets
 					this.is_frozen = true;
 					this.WindowBounds = b1;
 					
-					animator = new Animator (bounds.Height * 0.0025);
+					animator = new Animator (SystemInformation.MenuAnimationRollTime / 1000.0);
 					animator.SetCallback (new BoundsOffsetCallback (this.AnimateWindowBounds), new AnimatorCallback (this.AnimateCleanup));
 					animator.SetValue (0, b1, b2);
 					animator.SetValue (1, o1, o2);

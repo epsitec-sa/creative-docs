@@ -621,9 +621,9 @@ namespace Epsitec.Common.Widgets
 			pos = this.MapClientToRoot(new Drawing.Point(0, -this.scrollList.Height));
 			pos = this.WindowFrame.MapWindowToScreen(pos);
 			this.comboWindow.WindowBounds = new Drawing.Rectangle(pos.X, pos.Y, this.scrollList.Width, this.scrollList.Height);
-			this.comboWindow.Show();
 			this.comboWindow.WindowDeactivated += new System.EventHandler(this.HandleComboWindowDeactivated);
 			this.comboWindow.Root.Children.Add(this.scrollList);
+			this.comboWindow.AnimateShow(Animation.RollDown);
 
 			this.SetFocused(false);
 			this.scrollList.SetFocused(true);

@@ -15,6 +15,7 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size (300, 290);
 			window.Text = "CheckTextOutput";
 			window.Root.PaintForeground += new PaintEventHandler(Text_PaintForeground);
+			window.Root.Invalidate ();
 			window.Show ();
 		}
 
@@ -25,6 +26,7 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size (370, 210);
 			window.Text = "CheckGammaOutput";
 			window.Root.PaintForeground += new PaintEventHandler(Gamma_PaintForeground);
+			window.Root.Invalidate ();
 			window.Show ();
 		}
 		
@@ -34,6 +36,7 @@ namespace Epsitec.Common.Tests
 			
 			window.Text = "CheckEvenOddFill";
 			window.Root.PaintForeground += new PaintEventHandler(EvenOddFill_PaintForeground);
+			window.Root.Invalidate ();
 			window.Show ();
 		}
 		
@@ -43,6 +46,7 @@ namespace Epsitec.Common.Tests
 			
 			window.Text = "CheckNonZeroFill";
 			window.Root.PaintForeground += new PaintEventHandler(NonZeroFill_PaintForeground);
+			window.Root.Invalidate ();
 			window.Show ();
 		}
 
@@ -52,6 +56,7 @@ namespace Epsitec.Common.Tests
 			
 			window.Text = "CheckClipping";
 			window.Root.PaintForeground += new PaintEventHandler(Clipping_PaintForeground);
+			window.Root.Invalidate ();
 			window.Show ();
 		}
 
@@ -61,6 +66,7 @@ namespace Epsitec.Common.Tests
 			
 			window.Text = "CheckTransform";
 			window.Root.PaintForeground += new PaintEventHandler(Transform_PaintForeground);
+			window.Root.Invalidate ();
 			window.Show ();
 		}
 
@@ -70,6 +76,7 @@ namespace Epsitec.Common.Tests
 			
 			window.Text = "CheckGradient";
 			window.Root.PaintForeground += new PaintEventHandler(Gradient_PaintForeground);
+			window.Root.Invalidate ();
 			window.Show ();
 		}
 
@@ -79,6 +86,7 @@ namespace Epsitec.Common.Tests
 			
 			window.Text = "CheckImage";
 			window.Root.PaintForeground += new PaintEventHandler(Image_PaintForeground);
+			window.Root.Invalidate ();
 			window.Show ();
 		}
 

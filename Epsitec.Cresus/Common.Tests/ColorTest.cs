@@ -80,6 +80,7 @@ namespace Epsitec.Common.Tests
 			window.ClientSize = new System.Drawing.Size (870, 360);
 			window.Text = "CheckNamedColors";
 			window.Root.PaintForeground += new PaintEventHandler(NamedColors_PaintForeground);
+			window.Root.Invalidate ();
 			window.Show ();
 		}
 

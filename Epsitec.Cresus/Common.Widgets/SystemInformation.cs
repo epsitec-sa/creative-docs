@@ -5,6 +5,13 @@ namespace Epsitec.Common.Widgets
 	/// </summary>
 	public class SystemInformation
 	{
+		public enum Animation
+		{
+			None,
+			Roll,
+			Fade
+		}
+		
 		public static double			InitialKeyboardDelay
 		{
 			get
@@ -70,6 +77,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		
 		public static int				MenuShowDelay
 		{
 			get
@@ -90,6 +98,69 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
+		public static Animation			MenuAnimation
+		{
+			get
+			{
+				if (SystemInformation.IsMenuAnimationEnabled)
+				{
+					return SystemInformation.IsMenuFadingEnabled ? Animation.Fade : Animation.Roll;
+				}
+				
+				return Animation.None;
+			}
+		}
+		
+		public static int				MenuAnimationRollTime
+		{
+			get { return 250; }
+		}
+		
+		public static int				MenuAnimationFadeInTime
+		{
+			get { return 400; }
+		}
+		
+		public static int				MenuAnimationFadeOutTime
+		{
+			get { return 400; }
+		}
+		
+		
+		public static bool				IsMenuAnimationEnabled
+		{
+			get { return (SystemInformation.UserPreferenceMask[0] & 0x02) != 0; }
+		}
+		
+		public static bool				IsComboAnimationEnabled
+		{
+			get { return (SystemInformation.UserPreferenceMask[0] & 0x04) != 0; }
+		}
+		
+		public static bool				IsSmoothScrollEnabled
+		{
+			get { return (SystemInformation.UserPreferenceMask[0] & 0x08) != 0; }
+		}
+		
+		public static bool				IsMetaUnderlineEnabled
+		{
+			get { return (SystemInformation.UserPreferenceMask[0] & 0x20) != 0; }
+		}
+		
+		public static bool				IsMenuFadingEnabled
+		{
+			get { return (SystemInformation.UserPreferenceMask[1] & 0x02) != 0; }
+		}
+		
+		public static bool				IsMenuSelectionFadingEnabled
+		{
+			get { return (SystemInformation.UserPreferenceMask[1] & 0x04) != 0; }
+		}
+		
+		public static bool				IsMenuShadowEnabled
+		{
+			get { return (SystemInformation.UserPreferenceMask[2] & 0x04) != 0; }
+		}
 		
 		public static bool				SupportsLayeredWindows
 		{
@@ -120,6 +191,29 @@ namespace Epsitec.Common.Widgets
 				int dy = size.Height;
 				
 				return dx*dx + dy*dy;
+			}
+		}
+		
+		
+		internal static int[]			UserPreferenceMask
+		{
+			get
+			{
+				try
+				{
+					using (Microsoft.Win32.RegistryKey key = Microsoft.Win32.Registry.CurrentUser.OpenSubKey (@"Control Panel\Desktop"))
+					{
+						System.Array data = key.GetValue ("UserPreferencesMask") as System.Array;
+						int[] copy = new int[data.Length];
+						data.CopyTo (copy, 0);
+						return copy;
+					}
+				}
+				catch
+				{
+				}
+				
+				return new int[] { 0xBE, 0x28, 0x06, 0x80 };
 			}
 		}
 	}

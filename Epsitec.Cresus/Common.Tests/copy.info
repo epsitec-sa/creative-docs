@@ -5,5 +5,8 @@ bin\Release
 
 # Then, copy the DLL files
 
-bin\Debug\AGG-Wrapper.dll
-bin\Release\AGG-Wrapper.dll
+bin\Debug\AntiGrain.Win32.dll
+bin\Debug\AntiGrain.NET.dll
+
+bin\Release\AntiGrain.Win32.dll
+bin\Release\AntiGrain.NET.dll
