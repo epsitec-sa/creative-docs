@@ -29,7 +29,7 @@ namespace Epsitec.Common.Text.Internal
 			//	donnée.
 			
 			Debug.Assert.IsFalse (this.Contains (id));
-			Debug.Assert.IsInBounds (position, 0, 1000000-1);
+			Debug.Assert.IsInBounds (position, 0, CursorIdArray.MaxPosition);
 			
 			//	Ici, il n'y a aucun moyen de savoir si la position spécifiée est
 			//	valide par rapport au TextChunk, car il n'y a pas de lien direct
@@ -48,7 +48,7 @@ namespace Epsitec.Common.Text.Internal
 			//	Déplace le curseur spécifié à la nouvelle position donnée.
 			
 			Debug.Assert.IsTrue (this.Contains (id));
-			Debug.Assert.IsInBounds (position, 0, 1000000-1);
+			Debug.Assert.IsInBounds (position, 0, CursorIdArray.MaxPosition);
 			
 			int offset;
 			int from_index = this.FindElement (id);
@@ -552,6 +552,8 @@ namespace Epsitec.Common.Text.Internal
 			public CursorAttachment				attachment;
 		}
 		
+		
+		public const int						MaxPosition = 10*1000*1000 - 1;
 		
 		private Element[]						elements;
 		private int								length;

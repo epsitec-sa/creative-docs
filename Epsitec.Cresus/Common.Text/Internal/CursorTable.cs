@@ -22,6 +22,8 @@ namespace Epsitec.Common.Text.Internal
 			
 			this.cursors[0].DefineCursorState (Internal.CursorState.Invalid);
 			this.cursors[1].DefineCursorState (Internal.CursorState.Free);
+			
+			Debug.Assert.IsTrue (this.CursorCount == 0);
 		}
 		
 		
@@ -214,6 +216,9 @@ namespace Epsitec.Common.Text.Internal
 				new_data[i].FreeListLink = i+1;
 				new_data[i].DefineCursorState (Internal.CursorState.Free);
 			}
+			
+			new_data[new_length-1].FreeListLink = 0;
+			new_data[new_length-1].DefineCursorState (Internal.CursorState.Free);
 			
 			this.free_cursor_id    = old_length;
 			this.free_cursor_count = new_length - old_length;

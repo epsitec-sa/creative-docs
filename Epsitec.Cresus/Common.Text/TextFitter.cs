@@ -123,7 +123,14 @@ namespace Epsitec.Common.Text
 				text = new ulong[length+1];
 				this.story.ReadText (cursor, length, text);
 				
-				text[length] = (text[length-1] & 0xffffffff00000000ul) | (int) Unicode.Code.EndOfText;
+				ulong code = text[length-1];
+				
+				code &= 0xffffffff00000000ul;
+				code |= (int) Unicode.Code.EndOfText;
+				
+				Unicode.Bits.SetBreakInfo (ref code, Unicode.BreakInfo.Yes);
+				
+				text[length] = code;
 			}
 			
 			Layout.Context         layout = new Layout.Context (this.story.Context, text, 0, oy, mx_left, mx_right, fence_before, fence_after);
@@ -156,15 +163,14 @@ namespace Epsitec.Common.Text
 				}
 				
 				int offset = result[0].Offset;
-				int code   = Unicode.Bits.GetCode (text[offset]);
 				
 				Cursors.FitterCursor.Element element = new Cursors.FitterCursor.Element ();
 				
-				element.Length = offset;
+				element.Length = offset - line_start;
 				
 				list.Add (element);
 				
-				layout.TextOffset = offset + 1;
+				layout.TextOffset = offset;
 				
 				if (status == Layout.Status.OkFitEnded)
 				{
@@ -175,12 +181,12 @@ namespace Epsitec.Common.Text
 					
 					story.MoveCursor (mark, pos + line_start);
 					
-					line_start      = offset + 1;
-					paragraph_start = offset + 1;
+					line_start      = offset;
+					paragraph_start = offset;
 				}
 				else
 				{
-					line_start = offset + 1;
+					line_start = offset;
 				}
 			}
 		}

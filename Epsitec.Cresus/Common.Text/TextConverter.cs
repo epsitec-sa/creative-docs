@@ -113,6 +113,54 @@ namespace Epsitec.Common.Text
 			}
 		}
 		
+		public static void ConvertToString(ulong[] text, out string result)
+		{
+			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
+			
+			TextConverter.ConvertToString (text, buffer);
+			
+			result = buffer.ToString ();
+		}
+		
+		public static void ConvertToString(ulong[] text, System.Text.StringBuilder buffer)
+		{
+			for (int i = 0; i < text.Length; i++)
+			{
+				uint code = (uint) Unicode.Bits.GetCode (text[i]);
+				
+				if (code > 0x00FFFF)
+				{
+					if (code > 0x10FFFF)
+					{
+						throw new Unicode.IllegalCodeException ();
+					}
+					
+					//	Il faut coder ce caractère comme un surrogate pair.
+					
+					code -= 0x010000;
+					
+					uint low  = (code >> 10) & 0x03FF;
+					uint high = (code >>  0) & 0x03FF;
+					
+					buffer.Append ((char) (low  + Unicode.SurrogateLowMin));
+					buffer.Append ((char) (high + Unicode.SurrogateHighMin));
+				}
+				else
+				{
+					if ((code >= Unicode.SurrogateMin) &&
+						(code <= Unicode.SurrogateMax))
+					{
+						//	Un surrogate pair n'a pas le droit d'apparaître dans le texte
+						//	source, car UTF-32 considère ces codes comme non valides.
+						
+						throw new Unicode.IllegalCodeException ();
+					}
+					
+					buffer.Append ((char) code);
+				}
+			}
+		}
+		
 		
 		private TextConverter()
 		{

@@ -190,6 +190,11 @@ namespace Epsitec.Common.Text.Layout
 			//	Détermine les points de découpe pour le texte, selon le contexte
 			//	courant.
 			
+			if (this.text_start + this.text_offset >= this.text.Length)
+			{
+				return Layout.Status.ErrorNeedMoreText;
+			}
+			
 			this.SelectLayoutEngine (this.text_offset);
 			this.Reset ();
 			

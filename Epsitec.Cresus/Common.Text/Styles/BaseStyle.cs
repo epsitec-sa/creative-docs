@@ -345,7 +345,7 @@ namespace Epsitec.Common.Text.Styles
 		
 
 		public const int						MaxSettingsCount = 100;
-		public const int						MaxUserCount = 1000*1000;
+		public const int						MaxUserCount = Internal.CursorIdArray.MaxPosition + 1;
 		
 		private int								style_index;
 		
