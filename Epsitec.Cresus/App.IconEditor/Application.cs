@@ -76,9 +76,14 @@ namespace Epsitec.Icons
 #if DEBUG
 			if (this.in_geom_update == 0)
 			{
-				this.in_geom_update++;
-				this.main_window.Root.SetClientZoom (this.main_window.Root.Width / 800);
-				this.in_geom_update--;
+				double width = this.main_window.Root.Width;
+				
+				if (width > 10)
+				{
+					this.in_geom_update++;
+					this.main_window.Root.SetClientZoom (width / 800);
+					this.in_geom_update--;
+				}
 			}
 #endif
 		}
