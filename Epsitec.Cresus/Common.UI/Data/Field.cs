@@ -52,14 +52,14 @@ namespace Epsitec.Common.UI.Data
 				decimal max   = large - small;
 				
 				this.value = value;
-				this.type  = new Types.NumType (-max, max, small);
+				this.type  = new Types.DecimalType (-max, max, small);
 				
 				return;
 			}
 			if (value is int)
 			{
 				this.value = value;
-				this.type  = new Types.NumType ();
+				this.type  = new Types.DecimalType ();
 				
 				return;
 			}
