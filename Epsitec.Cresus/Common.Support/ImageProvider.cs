@@ -3,6 +3,8 @@
 
 namespace Epsitec.Common.Support
 {
+	using Hashtable = System.Collections.Hashtable;
+	
 	/// <summary>
 	/// La classe ImageProvider permet d'obtenir des images à partir de leur
 	/// nom. Cette implémentation supporte les protocoles suivants :
@@ -14,6 +16,7 @@ namespace Epsitec.Common.Support
 		private ImageProvider()
 		{
 		}
+		
 		
 		public static ImageProvider		Default
 		{
@@ -111,7 +114,7 @@ namespace Epsitec.Common.Support
 					
 					if (bundle != null)
 					{
-						image = bundle.GetBitmap (res_field);
+						image = this.CreateBitmapFromBundle (bundle, res_field);
 					}
 				}
 				else
@@ -195,10 +198,66 @@ namespace Epsitec.Common.Support
 			}
 		}
 		
-		protected System.Collections.Hashtable	images = new System.Collections.Hashtable ();
-		protected System.Collections.Hashtable	assemblies = new System.Collections.Hashtable ();
-		protected string						default_resource_provider = "file:";
 		
-		protected static ImageProvider			default_provider = new ImageProvider ();
+		protected Drawing.Image CreateBitmapFromBundle(ResourceBundle bundle, string image_name)
+		{
+			string field_name = "i." + image_name;
+			
+			Drawing.Image cache = this.bundle_hash[bundle] as Drawing.Image;
+			
+			if (cache == null)
+			{
+				if (bundle["image.data"].Type != ResourceFieldType.Binary)
+				{
+					throw new ResourceException (string.Format ("Bundle does not contain image"));
+				}
+				
+				byte[] image_data = bundle["image.data"].AsBinary;
+				string image_args = bundle["image.size"].AsString;
+				
+				Drawing.Size size = Drawing.Size.Parse (image_args, System.Globalization.CultureInfo.InvariantCulture);
+				
+				cache = Drawing.Bitmap.FromData (image_data, Drawing.Point.Empty, size);
+				
+				this.bundle_hash[bundle] = cache;
+			}
+			
+			System.Diagnostics.Debug.Assert (cache != null);
+			
+			if (bundle.Contains (field_name))
+			{
+				//	Une image est définie par un champ 'i.name' qui contient une chaîne composée
+				//	de 'x;y;dx;dy;ox;oy' définissant l'origine dans l'image mère, la taille et
+				//	l'offset de l'origine dans la sous-image. 'oy;oy' sont facultatifs.
+				
+				string[] args = bundle[field_name].AsString.Split (';', ':');
+				
+				if ((args.Length != 4) && (args.Length != 6))
+				{
+					throw new ResourceException (string.Format ("Invalid image specification for '{0}', {1} arguments", image_name, args.Length));
+				}
+				
+				Drawing.Point rect_pos = Drawing.Point.Parse (args[0] + ";" + args[1], System.Globalization.CultureInfo.InvariantCulture);
+				Drawing.Size  rect_siz = Drawing.Size.Parse (args[2] + ";" + args[3], System.Globalization.CultureInfo.InvariantCulture);
+				Drawing.Point origin   = Drawing.Point.Empty;
+				
+				if (args.Length >= 6)
+				{
+					origin = Drawing.Point.Parse (args[4] + ";" + args[5], System.Globalization.CultureInfo.InvariantCulture);
+				}
+				
+				return Drawing.Bitmap.FromLargerImage (cache, new Drawing.Rectangle (rect_pos, rect_siz), origin);
+			}
+			
+			return null;
+		}
+
+		
+		protected Hashtable				images = new Hashtable ();
+		protected Hashtable				bundle_hash = new Hashtable ();
+		protected Hashtable				assemblies = new Hashtable ();
+		protected string				default_resource_provider = "file:";
+		
+		protected static ImageProvider	default_provider = new ImageProvider ();
 	}
 }
