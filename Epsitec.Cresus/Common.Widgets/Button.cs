@@ -11,7 +11,9 @@ namespace Epsitec.Common.Widgets
 		Icon,							// bouton pour une icône
 		ToolItem,						// bouton pour barre d'icône
 		ListItem,						// bouton pour liste
-		DefaultActive,					// bouton pour l'action par défaut (OK)
+		
+		DefaultAccept,					// bouton pour accepter un choix dans un dialogue (OK)
+		DefaultCancel,					// bouton pour refuser un choix dans un dialogue (Cancel)
 	}
 	
 	/// <summary>
@@ -56,16 +58,21 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.buttonStyle != value )
 				{
-					if ( this.buttonStyle == ButtonStyle.DefaultActive )
+					if ( this.buttonStyle == ButtonStyle.DefaultAccept ||
+						 this.buttonStyle == ButtonStyle.DefaultCancel )
 					{
 						this.Shortcut = null;
 					}
 					
 					this.buttonStyle = value;
 					
-					if ( this.buttonStyle == ButtonStyle.DefaultActive )
+					if ( this.buttonStyle == ButtonStyle.DefaultAccept )
 					{
 						this.Shortcut = new Shortcut(KeyCode.Return);
+					}
+					else if ( this.buttonStyle == ButtonStyle.DefaultCancel )
+					{
+						this.Shortcut = new Shortcut(KeyCode.Escape);
 					}
 					
 					this.Invalidate();
@@ -91,11 +98,16 @@ namespace Epsitec.Common.Widgets
 		{
 			base.OnShortcutChanged ();
 			
-			if (this.Shortcut.KeyCode == KeyCode.Return)
+			if (this.ButtonStyle == ButtonStyle.Normal)
 			{
-				if (this.ButtonStyle == ButtonStyle.Normal)
+				switch (this.Shortcut.KeyCode)
 				{
-					this.ButtonStyle = ButtonStyle.DefaultActive;
+					case KeyCode.Return:
+						this.ButtonStyle = ButtonStyle.DefaultAccept;
+						break;
+					case KeyCode.Escape:
+						this.ButtonStyle = ButtonStyle.DefaultCancel;
+						break;
 				}
 			}
 		}
