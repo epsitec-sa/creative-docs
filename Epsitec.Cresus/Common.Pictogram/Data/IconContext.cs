@@ -277,20 +277,20 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( this.constrainType == ConstrainType.Normal )
 			{
-				double angle = Drawing.Point.ComputeAngle(this.constrainStarting, pos);
+				double angle = Drawing.Point.ComputeAngleRad(this.constrainStarting, pos);
 				double dist = Drawing.Point.Distance(pos, this.constrainStarting);
 				angle = System.Math.Floor((angle+System.Math.PI/8)/(System.Math.PI/4))*(System.Math.PI/4);
-				pos = Drawing.Transform.RotatePoint(this.constrainStarting, angle, this.constrainStarting+new Drawing.Point(dist,0));
+				pos = Drawing.Transform.RotatePointRad(this.constrainStarting, angle, this.constrainStarting+new Drawing.Point(dist,0));
 			}
 
 			if ( this.constrainType == ConstrainType.Square )
 			{
-				double angle = Drawing.Point.ComputeAngle(this.constrainStarting, pos);
+				double angle = Drawing.Point.ComputeAngleRad(this.constrainStarting, pos);
 				double dist = Drawing.Point.Distance(pos, this.constrainStarting);
 				angle += System.Math.PI/4;
 				angle = System.Math.Floor((angle+System.Math.PI/4)/(System.Math.PI/2))*(System.Math.PI/2);
 				angle -= System.Math.PI/4;
-				pos = Drawing.Transform.RotatePoint(this.constrainStarting, angle, this.constrainStarting+new Drawing.Point(dist,0));
+				pos = Drawing.Transform.RotatePointRad(this.constrainStarting, angle, this.constrainStarting+new Drawing.Point(dist,0));
 			}
 
 			if ( this.constrainType == ConstrainType.Line )
@@ -353,12 +353,12 @@ namespace Epsitec.Common.Pictogram.Data
 
 			if ( type == ConstrainType.Normal || type == ConstrainType.Square )
 			{
-				Drawing.Point p1 = Drawing.Transform.RotatePoint(pos, System.Math.PI*0.25, pos+new Drawing.Point(max,0));
-				Drawing.Point p2 = Drawing.Transform.RotatePoint(pos, System.Math.PI*1.25, pos+new Drawing.Point(max,0));
+				Drawing.Point p1 = Drawing.Transform.RotatePointRad(pos, System.Math.PI*0.25, pos+new Drawing.Point(max,0));
+				Drawing.Point p2 = Drawing.Transform.RotatePointRad(pos, System.Math.PI*1.25, pos+new Drawing.Point(max,0));
 				graphics.AddLine(p1, p2);
 
-				p1 = Drawing.Transform.RotatePoint(pos, System.Math.PI*0.75, pos+new Drawing.Point(max,0));
-				p2 = Drawing.Transform.RotatePoint(pos, System.Math.PI*1.75, pos+new Drawing.Point(max,0));
+				p1 = Drawing.Transform.RotatePointRad(pos, System.Math.PI*0.75, pos+new Drawing.Point(max,0));
+				p2 = Drawing.Transform.RotatePointRad(pos, System.Math.PI*1.75, pos+new Drawing.Point(max,0));
 				graphics.AddLine(p1, p2);
 
 				graphics.RenderSolid(IconContext.ColorConstrain);
