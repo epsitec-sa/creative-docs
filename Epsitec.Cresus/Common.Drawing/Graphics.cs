@@ -210,8 +210,15 @@ namespace Epsitec.Common.Drawing
 			
 			Transform transform = new Transform ();
 			
-			double sx = (fill_width > 1)  ? (fill_width-1)  / (ix2-ix1-1) : 1.0;
-			double sy = (fill_height > 1) ? (fill_height-1) / (iy2-iy1-1) : 1.0;
+			Point vector_oo = new Point (0, 0); vector_oo = this.ApplyTransformDirect (vector_oo);
+			Point vector_ox = new Point (1, 0); vector_ox = this.ApplyTransformDirect (vector_ox) - vector_oo;
+			Point vector_oy = new Point (0, 1); vector_oy = this.ApplyTransformDirect (vector_oy) - vector_oo;
+			
+			double fix_x = System.Math.Sqrt (vector_ox.X * vector_ox.X + vector_ox.Y * vector_ox.Y);
+			double fix_y = System.Math.Sqrt (vector_oy.X * vector_oy.X + vector_oy.Y * vector_oy.Y);
+			
+			double sx = (fill_width > 1)  ? (fill_width-1/fix_x)  / (ix2-ix1-1) : 1.0;
+			double sy = (fill_height > 1) ? (fill_height-1/fix_x) / (iy2-iy1-1) : 1.0;
 			
 			transform.Translate (-ix1, -iy1);
 			transform.Scale (sx, sy);
@@ -222,6 +229,9 @@ namespace Epsitec.Common.Drawing
 			this.ImageRenderer.Transform = transform;
 			this.RenderImage ();
 		}
+		
+		public abstract Point ApplyTransformDirect(Point pt);
+		public abstract Point ApplyTransformInverse(Point pt);
 		
 		
 		public void AddLine(Point p1, Point p2)
