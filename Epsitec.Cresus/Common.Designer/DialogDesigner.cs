@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Dialogs;
 
 namespace Epsitec.Common.Designer
 {
@@ -11,9 +12,10 @@ namespace Epsitec.Common.Designer
 	/// </summary>
 	public class DialogDesigner : Epsitec.Common.Dialogs.IDialogDesigner
 	{
-		public DialogDesigner(Application application)
+		public DialogDesigner(Application application, DesignerType type)
 		{
-			this.application = application;
+			this.application   = application;
+			this.designer_type = type;
 		}
 		
 		
@@ -206,6 +208,7 @@ namespace Epsitec.Common.Designer
 		public event Support.EventHandler		Disposed;
 		
 		private Application						application;
+		private DesignerType					designer_type;
 		private Types.IDataGraph				dialog_data;
 		private Window							dialog_window;
 		private Support.CommandDispatcher		dialog_commands;

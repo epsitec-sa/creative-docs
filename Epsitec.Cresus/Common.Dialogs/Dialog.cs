@@ -137,7 +137,7 @@ namespace Epsitec.Common.Dialogs
 			
 			if (bundle == null)
 			{
-				this.designer = Dialog.CreateDesigner ();
+				this.designer = Dialog.CreateDesigner (DesignerType.DialogWindow);
 				this.window   = new Widgets.Window ();
 				this.mode     = InternalMode.Design;
 				
@@ -266,7 +266,7 @@ namespace Epsitec.Common.Dialogs
 				throw new System.InvalidOperationException ("Cannot switch to designer.");
 			}
 			
-			this.designer = Dialog.CreateDesigner ();
+			this.designer = Dialog.CreateDesigner (DesignerType.DialogWindow);
 			this.mode     = InternalMode.Design;
 			
 			if (this.designer_activator_widget != null)
@@ -363,13 +363,13 @@ namespace Epsitec.Common.Dialogs
 		}
 		
 		
-		public static IDialogDesigner CreateDesigner()
+		public static IDialogDesigner CreateDesigner(DesignerType type)
 		{
 			IDialogDesignerFactory factory = Dialog.DesignerFactory;
 			
 			if (factory != null)
 			{
-				return factory.CreateDialogDesigner ();
+				return factory.CreateDialogDesigner (type);
 			}
 			
 			return null;

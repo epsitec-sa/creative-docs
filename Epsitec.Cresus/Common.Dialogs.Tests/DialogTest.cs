@@ -19,14 +19,14 @@ namespace Epsitec.Common.Dialogs
 		
 		[Test] public void CheckCreateDesigner()
 		{
-			IDialogDesigner designer = Dialog.CreateDesigner ();
+			IDialogDesigner designer = Dialog.CreateDesigner (DesignerType.Generic);
 			
 			Assert.IsNotNull (designer);
 		}
 		
 		[Test] public void CheckCreateEmptyDialog()
 		{
-			IDialogDesigner designer = Dialog.CreateDesigner ();
+			IDialogDesigner designer = Dialog.CreateDesigner (DesignerType.DialogWindow);
 			Widgets.Window  window   = new Widgets.Window ();
 			
 			Assert.IsNotNull (designer);

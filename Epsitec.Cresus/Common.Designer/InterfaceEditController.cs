@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
+using Epsitec.Common.Dialogs;
 
 namespace Epsitec.Common.Designer
 {
@@ -167,7 +168,7 @@ namespace Epsitec.Common.Designer
 			
 			if (designer == null)
 			{
-				designer = new DialogDesigner (this.application);
+				designer = new DialogDesigner (this.application, DesignerType.DialogWindow);
 				
 				designer.DialogWindow = window;
 				designer.DialogData   = null;

@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Designer;
 using Epsitec.Common.UI.Data;
+using Epsitec.Common.Dialogs;
 
 namespace Epsitec.Designer
 {
@@ -16,7 +17,7 @@ namespace Epsitec.Designer
 		{
 			Epsitec.Common.Widgets.Adorner.Factory.SetActive ("LookMetal");
 			
-			DialogDesigner designer = DialogDesignerFactory.GetFactory ().CreateDialogDesigner () as DialogDesigner;
+			DialogDesigner designer = DialogDesignerFactory.GetFactory ().CreateDialogDesigner (DesignerType.Generic) as DialogDesigner;
 			
 			Record record = new Record ();
 			

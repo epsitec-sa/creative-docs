@@ -53,10 +53,6 @@ namespace Epsitec.Common.Designer
 				
 				return this.dispatcher;
 			}
-			set
-			{
-				throw new System.InvalidOperationException ("CommandDispatcher cannot be set.");
-			}
 		}
 		
 		public string							Name
@@ -353,6 +349,21 @@ namespace Epsitec.Common.Designer
 				this.Kill ();
 			}
 		}
+		
+		
+		#region ICommandDispatcherHost Members
+		CommandDispatcher					Support.ICommandDispatcherHost.CommandDispatcher
+		{
+			get
+			{
+				return this.CommandDispatcher;
+			}
+			set
+			{
+				throw new System.InvalidOperationException ("CommandDispatcher cannot be set.");
+			}
+		}
+		#endregion
 		
 		#region Application Commands
 		[Command ("QuitDesigner")]	void CommandQuitDesigner()

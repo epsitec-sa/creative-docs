@@ -18,9 +18,9 @@ namespace Epsitec.Common.Designer
 		
 		
 		#region IDialogDesignerFactory Members
-		public Epsitec.Common.Dialogs.IDialogDesigner CreateDialogDesigner()
+		public Epsitec.Common.Dialogs.IDialogDesigner CreateDialogDesigner(Epsitec.Common.Dialogs.DesignerType type)
 		{
-			return new DialogDesigner (this.application);
+			return new DialogDesigner (this.application, type);
 		}
 		#endregion
 		
